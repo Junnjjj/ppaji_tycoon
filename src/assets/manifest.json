@@ -1,0 +1,288 @@
+{
+  "$comment": "스프라이트 명세. 코드에게는 계약, AI 에셋 생성에게는 작업 지시서. 계획서 §4.",
+  "tileSize": 16,
+  "style": "top-down pixel art, warm summer daylight, light from top-left, flat readable silhouettes, transparent background",
+  "sprites": [
+    {
+      "id": "terrain/plain",
+      "size": [16, 16],
+      "anchor": "top-left",
+      "category": "terrain",
+      "variants": { "alt": 3 },
+      "source": "procedural"
+    },
+    {
+      "id": "terrain/sand",
+      "size": [16, 16],
+      "anchor": "top-left",
+      "category": "terrain",
+      "variants": { "alt": 3 },
+      "source": "procedural"
+    },
+    {
+      "id": "terrain/forest",
+      "size": [16, 16],
+      "anchor": "top-left",
+      "category": "terrain",
+      "variants": { "alt": 3 },
+      "source": "procedural"
+    },
+    {
+      "id": "terrain/slope",
+      "size": [16, 16],
+      "anchor": "top-left",
+      "category": "terrain",
+      "variants": { "alt": 3 },
+      "source": "procedural"
+    },
+    {
+      "id": "terrain/rock",
+      "size": [16, 16],
+      "anchor": "top-left",
+      "category": "terrain",
+      "variants": { "alt": 3 },
+      "source": "procedural"
+    },
+    {
+      "id": "terrain/roadside",
+      "size": [16, 16],
+      "anchor": "top-left",
+      "category": "terrain",
+      "variants": { "alt": 3 },
+      "source": "procedural"
+    },
+    {
+      "id": "terrain/shore",
+      "size": [16, 16],
+      "anchor": "top-left",
+      "category": "terrain",
+      "variants": { "alt": 3 },
+      "source": "procedural"
+    },
+    {
+      "id": "terrain/shallow",
+      "size": [16, 16],
+      "anchor": "top-left",
+      "category": "terrain",
+      "variants": { "alt": 3 },
+      "source": "procedural"
+    },
+    {
+      "id": "terrain/deep",
+      "size": [16, 16],
+      "anchor": "top-left",
+      "category": "terrain",
+      "variants": { "alt": 3 },
+      "source": "procedural"
+    },
+    {
+      "id": "terrain/openwater",
+      "size": [16, 16],
+      "anchor": "top-left",
+      "category": "terrain",
+      "variants": { "alt": 3 },
+      "source": "procedural"
+    },
+    {
+      "id": "terrain/current",
+      "size": [16, 16],
+      "anchor": "top-left",
+      "category": "terrain",
+      "variants": { "alt": 3 },
+      "source": "procedural"
+    },
+
+    {
+      "id": "guest/body",
+      "size": [12, 17],
+      "anchor": "bottom-center",
+      "category": "guest",
+      "variants": {
+        "palette": 8,
+        "dir": ["down", "up", "left", "right"],
+        "frame": 3
+      },
+      "source": "procedural",
+      "$note": "부품 조합으로 생성한다. 팔레트 8 × 방향 4 × 프레임 3 = 96장을 조각 몇 개에서 만든다. 계획서 §4."
+    },
+
+    {
+      "id": "facility/gate",
+      "size": [42, 34],
+      "anchor": "bottom-center",
+      "category": "facility",
+      "source": "ai",
+      "prompt": "입장 게이트 건물. 붉은 박공지붕, 크림색 벽, 회전문, 상단 간판. 정면 상단뷰."
+    },
+    {
+      "id": "facility/shop",
+      "size": [34, 30],
+      "anchor": "bottom-center",
+      "category": "facility",
+      "source": "ai",
+      "prompt": "매점. 초록 박공지붕, 빨강·흰색 줄무늬 차양, 진열창. 정면 상단뷰."
+    },
+    {
+      "id": "facility/restroom",
+      "size": [30, 28],
+      "anchor": "bottom-center",
+      "category": "facility",
+      "source": "ai",
+      "prompt": "화장실 건물. 파란 지붕, 남녀 픽토그램 표지판. 정면 상단뷰."
+    },
+    {
+      "id": "facility/shower",
+      "size": [30, 28],
+      "anchor": "bottom-center",
+      "category": "facility",
+      "source": "ai",
+      "prompt": "샤워실 건물. 하늘색 지붕, 물방울 간판. 정면 상단뷰."
+    },
+    {
+      "id": "facility/changing",
+      "size": [30, 28],
+      "anchor": "bottom-center",
+      "category": "facility",
+      "source": "ai",
+      "prompt": "탈의실 건물. 노란 지붕, 커튼 달린 칸막이 입구. 정면 상단뷰."
+    },
+    {
+      "id": "facility/shade",
+      "size": [24, 20],
+      "anchor": "bottom-center",
+      "category": "facility",
+      "source": "ai",
+      "prompt": "그늘막 평상. 나무 데크 위 천막 차양. 상단뷰."
+    },
+    {
+      "id": "facility/dock",
+      "size": [16, 16],
+      "anchor": "top-left",
+      "category": "facility",
+      "variants": { "alt": 2 },
+      "source": "ai",
+      "prompt": "나무 선착장 데크 타일. 판자 결, 로프 매듭. 이어붙일 수 있게 타일링. 상단뷰."
+    },
+    {
+      "id": "facility/slide",
+      "size": [46, 42],
+      "anchor": "bottom-center",
+      "category": "facility",
+      "source": "ai",
+      "prompt": "수상 워터슬라이드. 흰 플랫폼, 청록 계단탑, 곡선 슬라이드 슈트, 착수 지점. 상단 비스듬한 뷰."
+    },
+    {
+      "id": "facility/trampoline",
+      "size": [40, 40],
+      "anchor": "center",
+      "category": "facility",
+      "source": "ai",
+      "prompt": "수상 트램폴린. 원형, 진한 매트와 노란 테두리 튜브. 상단뷰."
+    },
+    {
+      "id": "facility/pool",
+      "size": [48, 40],
+      "anchor": "center",
+      "category": "facility",
+      "source": "ai",
+      "prompt": "수상 놀이터 풀. 부유식 사각 구조, 그물 바닥, 손잡이 로프. 상단뷰."
+    },
+
+    {
+      "id": "vehicle/banana",
+      "size": [34, 13],
+      "anchor": "center",
+      "category": "vehicle",
+      "source": "ai",
+      "prompt": "노란 바나나보트 튜브. 길쭉한 유선형, 손잡이. 상단뷰, 우측을 향함."
+    },
+    {
+      "id": "vehicle/jetski",
+      "size": [22, 11],
+      "anchor": "center",
+      "category": "vehicle",
+      "source": "ai",
+      "prompt": "빨간 제트스키. 상단뷰, 우측을 향함."
+    },
+    {
+      "id": "vehicle/flyfish",
+      "size": [30, 16],
+      "anchor": "center",
+      "category": "vehicle",
+      "source": "ai",
+      "prompt": "플라이피쉬 튜브. 넓적한 날개형, 파랑·노랑. 상단뷰, 우측을 향함."
+    },
+    {
+      "id": "vehicle/wakeboard",
+      "size": [18, 9],
+      "anchor": "center",
+      "category": "vehicle",
+      "source": "ai",
+      "prompt": "웨이크보드와 견인 로프. 상단뷰, 우측을 향함."
+    },
+    {
+      "id": "vehicle/passing-boat",
+      "size": [40, 18],
+      "anchor": "center",
+      "category": "vehicle",
+      "source": "ai",
+      "prompt": "지나가는 소형 어선. 회색·남색. 상단뷰, 우측을 향함."
+    },
+
+    {
+      "id": "prop/tree",
+      "size": [18, 22],
+      "anchor": "bottom-center",
+      "category": "prop",
+      "variants": { "alt": 3 },
+      "source": "ai",
+      "prompt": "활엽수. 둥근 수관, 이단 명암. 상단뷰."
+    },
+    {
+      "id": "prop/parasol",
+      "size": [24, 22],
+      "anchor": "bottom-center",
+      "category": "prop",
+      "variants": { "alt": 2 },
+      "source": "ai",
+      "prompt": "해변 파라솔. 빨강·흰색 또는 노랑·흰색 교차 무늬. 상단 비스듬한 뷰."
+    },
+    {
+      "id": "prop/buoy",
+      "size": [8, 8],
+      "anchor": "center",
+      "category": "prop",
+      "source": "procedural",
+      "$note": "부표 라인은 코드가 그린다 — 경로를 따라 동적으로 배치되므로."
+    },
+
+    {
+      "id": "fx/foam",
+      "size": [9, 9],
+      "anchor": "center",
+      "category": "fx",
+      "source": "procedural"
+    },
+    {
+      "id": "fx/shimmer",
+      "size": [14, 5],
+      "anchor": "center",
+      "category": "fx",
+      "source": "procedural"
+    },
+    {
+      "id": "fx/splash",
+      "size": [16, 12],
+      "anchor": "center",
+      "category": "fx",
+      "source": "procedural"
+    },
+    {
+      "id": "fx/shadow",
+      "size": [24, 8],
+      "anchor": "center",
+      "category": "fx",
+      "source": "procedural"
+    }
+  ]
+}

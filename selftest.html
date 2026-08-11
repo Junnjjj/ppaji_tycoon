@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0d1b26" />
+    <title>빠지 타이쿤 · 기기 자가진단</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        background: #0d1b26;
+        color: #e8f4fa;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+        padding: calc(16px + env(safe-area-inset-top)) 14px
+          calc(24px + env(safe-area-inset-bottom));
+        line-height: 1.5;
+      }
+      h1 { font-size: 17px; margin-bottom: 4px; }
+      .sub { font-size: 12px; color: #8fb6cc; margin-bottom: 14px; }
+      .banner {
+        border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 800;
+        text-align: center; margin-bottom: 14px;
+      }
+      .banner.pass { background: #17452c; color: #6ee7a0; border: 1px solid #2f9e5f; }
+      .banner.warn { background: #4a3a12; color: #ffd45e; border: 1px solid #b0891f; }
+      .banner.fail { background: #4a1e26; color: #ff9aa8; border: 1px solid #a63b4d; }
+      .row {
+        display: flex; gap: 10px; align-items: flex-start;
+        background: linear-gradient(#20364a, #152634);
+        border: 1px solid #3f6480; border-radius: 11px;
+        padding: 10px 12px; margin-bottom: 7px;
+      }
+      .icon {
+        flex: 0 0 20px; text-align: center; font-weight: 900; font-size: 14px;
+        line-height: 1.5;
+      }
+      .row.pass .icon { color: #4ade80; }
+      .row.warn .icon { color: #f2b53f; }
+      .row.fail .icon { color: #e0596a; }
+      .row.info .icon { color: #8fb6cc; }
+      .name { font-size: 13px; font-weight: 700; }
+      .detail {
+        font-size: 11.5px; color: #a8c8da; margin-top: 2px;
+        font-variant-numeric: tabular-nums; word-break: keep-all;
+      }
+      .back {
+        display: block; text-align: center; margin-top: 16px; padding: 13px;
+        background: linear-gradient(#2b4a63, #1d3648); border: 1px solid #467294;
+        border-radius: 11px; color: #dff1fa; text-decoration: none;
+        font-size: 14px; font-weight: 700;
+      }
+      .running { font-size: 13px; color: #8fb6cc; text-align: center; padding: 24px; }
+    </style>
+  </head>
+  <body>
+    <h1>기기 자가진단</h1>
+    <div class="sub">이 폰에서 빠지 타이쿤이 제대로 돌아가는지 검사합니다</div>
+    <div id="report"><div class="running">검사 중… (몇 초 걸립니다)</div></div>
+    <script type="module">
+      // 검사 중 표시를 지우고 실제 검사를 붙인다
+      document.querySelector('.running')?.remove();
+    </script>
+    <script type="module" src="/src/selftest.ts"></script>
+  </body>
+</html>

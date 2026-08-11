@@ -1,0 +1,73 @@
+{
+  "$comment": "수상 코스 장비. 코스는 '시설'이 아니라 '경로'를 설계하는 것이고, 이 장비들이 그 위를 돈다. 계획서 §2.4.",
+  "equipment": [
+    {
+      "id": "banana",
+      "name": "바나나보트",
+      "sprite": "vehicle/banana",
+      "speed": 0.22,
+      "capacity": 5,
+      "boardTicks": 40,
+      "minDepth": 1,
+      "fee": 12000,
+      "vehicleCost": 1200000,
+      "upkeep": 35000,
+      "thrillBase": 34,
+      "safeCurvature": 0.22,
+      "minPoints": 3,
+      "maxPoints": 6,
+      "desc": "여러 명이 함께 탄다. 얕은 물에서도 되어 물가 가까이 코스를 낼 수 있다. 빠지의 주력."
+    },
+    {
+      "id": "jetski",
+      "name": "제트스키",
+      "sprite": "vehicle/jetski",
+      "speed": 0.42,
+      "capacity": 2,
+      "boardTicks": 22,
+      "minDepth": 3,
+      "fee": 25000,
+      "vehicleCost": 1800000,
+      "upkeep": 55000,
+      "thrillBase": 58,
+      "safeCurvature": 0.3,
+      "minPoints": 3,
+      "maxPoints": 6,
+      "desc": "빠르고 스릴이 높다. 넓은 수역이 필요하고 급회전은 위험하다."
+    },
+    {
+      "id": "flyfish",
+      "name": "플라이피쉬",
+      "sprite": "vehicle/flyfish",
+      "speed": 0.3,
+      "capacity": 4,
+      "boardTicks": 45,
+      "minDepth": 3,
+      "fee": 20000,
+      "vehicleCost": 2000000,
+      "upkeep": 60000,
+      "thrillBase": 66,
+      "safeCurvature": 0.18,
+      "minPoints": 3,
+      "maxPoints": 5,
+      "desc": "공중에 뜬다. 스릴 최고지만 급회전에 특히 취약하다."
+    },
+    {
+      "id": "wakeboard",
+      "name": "웨이크보드",
+      "sprite": "vehicle/wakeboard",
+      "speed": 0.34,
+      "capacity": 1,
+      "boardTicks": 30,
+      "minDepth": 2,
+      "fee": 30000,
+      "vehicleCost": 1500000,
+      "upkeep": 45000,
+      "thrillBase": 72,
+      "safeCurvature": 0.26,
+      "minPoints": 4,
+      "maxPoints": 6,
+      "desc": "1인용. 스릴을 좋아하는 손님만 탄다. 처리량은 낮고 요금은 비싸다."
+    }
+  ]
+}

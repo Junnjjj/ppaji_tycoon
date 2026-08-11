@@ -1,0 +1,33 @@
+{
+  "name": "ppaji-tycoon",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "빠지 타이쿤 — 강변 수상레저 경영 시뮬레이션",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "sim": "tsx tools/sim-runner.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "verify": "npm run typecheck && npm run lint && npm run test",
+    "verify:mobile": "tsx tools/verify-mobile.ts"
+  },
+  "dependencies": {
+    "phaser": "3.90.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@types/node": "^26.2.0",
+    "eslint": "^9.39.0",
+    "playwright": "^1.62.1",
+    "tsx": "^4.20.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.38.0",
+    "vite": "^7.3.0",
+    "vitest": "^3.2.0"
+  }
+}

@@ -1,0 +1,528 @@
+:root {
+  --panel: linear-gradient(#20364a, #152634);
+  --panel-border: #3f6480;
+  --text: #e8f4fa;
+  --text-dim: #8fb6cc;
+  --accent: #ffe9a8;
+  --good: #4ade80;
+  --warn: #f2b53f;
+  --bad: #e0596a;
+
+  /* 모바일 최소 터치 타깃 */
+  --tap: 44px;
+  --safe-b: env(safe-area-inset-bottom);
+  --safe-t: env(safe-area-inset-top);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  background: #0d1b26;
+  color: var(--text);
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Apple SD Gothic Neo',
+    'Noto Sans KR', sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  overscroll-behavior: none;
+}
+
+#game {
+  position: fixed;
+  inset: 0;
+  touch-action: none;
+}
+
+#game canvas {
+  display: block;
+}
+
+/* ─────────── HUD 뼈대 ─────────── */
+
+.hud {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─────────── 상단 지표 ─────────── */
+
+.hud-top {
+  position: absolute;
+  top: calc(8px + var(--safe-t));
+  left: 8px;
+  right: 96px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 35%);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pill-icon {
+  font-size: 13px;
+}
+
+.pill-value {
+  color: var(--accent);
+}
+
+.pill-value.warn {
+  color: var(--warn);
+}
+
+.pill-value.bad {
+  color: var(--bad);
+}
+
+.hud-perf {
+  position: absolute;
+  top: calc(8px + var(--safe-t));
+  right: 8px;
+  background: rgb(6 20 28 / 86%);
+  border: 1px solid #2f5a72;
+  border-radius: 11px;
+  padding: 6px 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.perf-fps {
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--good);
+}
+
+.perf-fps.warn {
+  color: var(--warn);
+}
+
+.perf-fps.bad {
+  color: var(--bad);
+}
+
+.perf-sub {
+  font-size: 9.5px;
+  color: var(--text-dim);
+  white-space: pre-line;
+  line-height: 1.45;
+}
+
+/* 첫 안내 — 시설이 하나도 없을 때만 */
+
+.hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(190px + var(--safe-b));
+  transform: translateX(-50%);
+  background: rgb(6 20 28 / 92%);
+  border: 1px solid #2f5a72;
+  border-radius: 18px;
+  padding: 9px 16px;
+  font-size: 12px;
+  color: #bfe4f5;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.hint.on {
+  opacity: 1;
+}
+
+/* ─────────── 하단 ─────────── */
+
+.hud-bottom {
+  margin-top: auto;
+  padding-bottom: calc(8px + var(--safe-b));
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+/* 배치 컨트롤 — 배치 모드에서만 보인다 */
+
+.place-bar {
+  display: none;
+  flex-direction: column;
+  gap: 7px;
+  padding: 0 8px;
+  pointer-events: auto;
+}
+
+.place-bar.on {
+  display: flex;
+}
+
+.place-label {
+  align-self: center;
+  background: rgb(6 20 28 / 92%);
+  border: 1px solid #2f5a72;
+  border-radius: 14px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--good);
+  text-align: center;
+}
+
+.place-label.bad {
+  color: var(--bad);
+  border-color: #6b2f3c;
+}
+
+.place-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.place-btn {
+  flex: 1;
+  min-height: var(--tap);
+  border: 1px solid #467294;
+  border-radius: 12px;
+  background: linear-gradient(#2b4a63, #1d3648);
+  color: #dff1fa;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.place-btn:active {
+  transform: translateY(1px);
+}
+
+.place-btn.confirm {
+  background: linear-gradient(#3ddc84, #2aa763);
+  border-color: #7cf0b0;
+  color: #06301b;
+}
+
+.place-btn.confirm:disabled {
+  background: linear-gradient(#3a4d5c, #2a3a46);
+  border-color: #46586a;
+  color: #7d94a4;
+  cursor: not-allowed;
+}
+
+.place-btn.cancel {
+  flex: 0 0 84px;
+  background: linear-gradient(#5c3340, #43242e);
+  border-color: #8a4a5c;
+}
+
+/* 코스 편집 패널 — 지표가 실시간으로 갱신되는 곳 */
+
+.course-bar {
+  display: none;
+  flex-direction: column;
+  gap: 7px;
+  padding: 0 8px;
+  pointer-events: auto;
+}
+
+.course-bar.on {
+  display: flex;
+}
+
+.course-title {
+  align-self: center;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.course-hint {
+  align-self: center;
+  font-size: 11.5px;
+  color: var(--good);
+  text-align: center;
+}
+
+.course-hint.bad {
+  color: var(--warn);
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.metric {
+  background: rgb(6 20 28 / 92%);
+  border: 1px solid #2f5a72;
+  border-radius: 10px;
+  padding: 6px 4px;
+  text-align: center;
+}
+
+.metric-label {
+  font-size: 9.5px;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.metric-value {
+  font-size: 14px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+}
+
+.metric-value.good {
+  color: var(--good);
+}
+
+.metric-value.warn {
+  color: var(--warn);
+}
+
+.metric-value.bad {
+  color: var(--bad);
+}
+
+.vehicle-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.vehicle-label {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.vehicle-count {
+  min-width: 46px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.vehicle-btn {
+  width: var(--tap);
+  height: var(--tap);
+  border: 1px solid #467294;
+  border-radius: 11px;
+  background: linear-gradient(#2b4a63, #1d3648);
+  color: #dff1fa;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.vehicle-btn:active {
+  transform: translateY(1px);
+}
+
+/* 팔레트 탭 */
+
+.tab-bar {
+  pointer-events: auto;
+  display: flex;
+  gap: 6px;
+  padding: 0 8px;
+}
+
+/*
+ * 배치·코스 편집 중에는 팔레트와 탭을 아예 접는다.
+ * 흐리게만 두면 화면 하단 360px 을 계속 차지해서, 폰에서 지도를 탭할 공간이 없어진다.
+ */
+.tab-bar.hidden,
+.palette-wrap.hidden {
+  display: none;
+}
+
+.tab-btn {
+  flex: 1;
+  min-height: 36px;
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--text-dim);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.tab-btn.on {
+  background: linear-gradient(#2b4a63, #1d3648);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.palette.hidden {
+  display: none;
+}
+
+/* 시설 팔레트 — 가로 스크롤 */
+
+.palette {
+  pointer-events: auto;
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 8px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.palette::-webkit-scrollbar {
+  display: none;
+}
+
+.palette-item {
+  flex: 0 0 auto;
+  width: 72px;
+  min-height: var(--tap);
+  padding: 6px 4px 5px;
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  background: var(--panel);
+  color: var(--text);
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 32%);
+}
+
+.palette-item:active {
+  transform: translateY(1px);
+  border-color: var(--accent);
+}
+
+.palette-icon {
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.palette-name {
+  font-size: 10.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.palette-meta {
+  font-size: 9px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* 배속 */
+
+.speed-bar {
+  pointer-events: auto;
+  align-self: center;
+  display: flex;
+  gap: 6px;
+  background: rgb(6 20 28 / 86%);
+  border: 1px solid #2f5a72;
+  border-radius: 14px;
+  padding: 5px;
+}
+
+.speed-btn {
+  min-width: 52px;
+  min-height: var(--tap); /* 44px — 모바일 최소 터치 타깃 */
+  border: 1px solid #467294;
+  border-radius: 10px;
+  background: linear-gradient(#2b4a63, #1d3648);
+  color: #dff1fa;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.speed-btn:active {
+  transform: translateY(1px);
+}
+
+.speed-btn.on {
+  background: linear-gradient(var(--warn), #d99a2b);
+  border-color: #ffd45e;
+  color: #3a2a08;
+}
+
+/* ─────────── 부팅 실패 표시 ─────────── */
+
+.boot-error {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  background: #0d1b26;
+  text-align: center;
+  overflow: auto;
+}
+
+.boot-error h1 {
+  font-size: 17px;
+  color: var(--bad);
+}
+
+.boot-error pre {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-width: 560px;
+  text-align: left;
+  line-height: 1.6;
+}
+
+/* 화면이 아주 낮으면 팔레트를 줄인다 */
+@media (max-height: 620px) {
+  .palette-item {
+    width: 64px;
+  }
+
+  .palette-icon {
+    font-size: 17px;
+  }
+}

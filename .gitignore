@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.superpowers/
+*.local
+.DS_Store
+.vite/
+coverage/
+tmp-shots/

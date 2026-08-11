@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>빠지 타이쿤 · 렌더링 검증 프로토타입</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden;background:#0d1b26;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    color:#fff;user-select:none}
+  #game{display:block;width:100vw;height:100vh;touch-action:none}
+
+  /* ---- HUD (DOM/CSS — 캔버스 아님. UI는 코드로 충분하다는 증명) ---- */
+  .hud{position:fixed;left:0;right:0;top:0;padding:10px 10px 0;
+    display:flex;gap:8px;pointer-events:none;
+    padding-top:calc(10px + env(safe-area-inset-top))}
+  .pill{background:linear-gradient(#20364a,#152634);border:1px solid #3f6480;
+    border-radius:16px;padding:7px 12px;display:flex;align-items:center;gap:7px;
+    box-shadow:0 3px 10px rgba(0,0,0,.35);font-size:13px;font-weight:600}
+  .pill b{color:#ffe9a8;font-size:14px}
+  .stat{flex:1;background:linear-gradient(#20364a,#152634);border:1px solid #3f6480;
+    border-radius:14px;padding:7px 10px;box-shadow:0 3px 10px rgba(0,0,0,.35)}
+  .stat .k{font-size:10px;color:#8fb6cc;font-weight:600}
+  .stat .v{font-size:17px;font-weight:800;line-height:1.15}
+  .good{color:#4ade80}
+
+  /* ---- 성능 계기판 ---- */
+  .perf{position:fixed;right:10px;top:calc(96px + env(safe-area-inset-top));
+    background:rgba(6,20,28,.86);border:1px solid #2f5a72;border-radius:12px;
+    padding:9px 11px;font-size:11px;line-height:1.65;font-variant-numeric:tabular-nums;
+    backdrop-filter:blur(6px)}
+  .perf .fps{font-size:24px;font-weight:800;line-height:1.1}
+  .perf small{color:#7fa8bf}
+
+  /* ---- 하단 컨트롤 ---- */
+  .dock{position:fixed;left:0;right:0;bottom:0;padding:12px 14px;
+    padding-bottom:calc(12px + env(safe-area-inset-bottom));
+    background:linear-gradient(transparent,rgba(8,22,32,.92) 26%);
+    display:flex;flex-direction:column;gap:9px}
+  .row{display:flex;align-items:center;gap:10px}
+  .row label{font-size:11.5px;color:#a8c8da;font-weight:600;white-space:nowrap}
+  input[type=range]{flex:1;height:26px;-webkit-appearance:none;background:transparent}
+  input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;
+    background:linear-gradient(90deg,#2f9e5f,#f2b53f,#e0596a)}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;
+    border-radius:50%;background:#fff;border:3px solid #2b4a63;margin-top:-8px;
+    box-shadow:0 2px 6px rgba(0,0,0,.4)}
+  .btns{display:flex;gap:8px}
+  .btn{flex:1;background:linear-gradient(#2b4a63,#1d3648);border:1px solid #467294;
+    border-radius:11px;padding:11px 8px;font-size:12px;font-weight:700;color:#dff1fa;
+    text-align:center;cursor:pointer}
+  .btn:active{transform:translateY(1px)}
+  .btn.on{background:linear-gradient(#f2b53f,#d99a2b);border-color:#ffd45e;color:#3a2a08}
+  .hint{position:fixed;left:50%;transform:translateX(-50%);
+    bottom:calc(150px + env(safe-area-inset-bottom));
+    background:rgba(6,20,28,.8);border-radius:20px;padding:7px 16px;font-size:11.5px;
+    color:#bfe4f5;transition:opacity .5s;pointer-events:none}
+
+  /* ---- 아틀라스 뷰어 ---- */
+  .atlas{position:fixed;inset:0;background:rgba(4,12,18,.95);z-index:50;
+    display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px}
+  .atlas.show{display:flex}
+  .atlas canvas{background:
+      repeating-conic-gradient(#233240 0 25%,#1a2734 0 50%) 0 0/16px 16px;
+    border:1px solid #3f6480;border-radius:8px;image-rendering:pixelated;max-width:92vw}
+  .atlas p{font-size:12.5px;color:#a8c8da;text-align:center;line-height:1.75;max-width:460px}
+  .atlas b{color:#ffe9a8}
+</style>
+</head>
+<body>
+
+<canvas id="game"></canvas>
+
+<div class="hud">
+  <div class="pill">☀️ <span>1년 7월 2주</span> <b id="clock">12:30</b></div>
+  <div class="stat"><div class="k">방문객</div><div class="v" id="guests">0<span style="font-size:11px;color:#8fb6cc">명</span></div></div>
+  <div class="stat"><div class="k">만족도</div><div class="v good" id="sat">86%</div></div>
+</div>
+
+<div class="perf">
+  <div class="fps" id="fps">–</div>
+  <small>FPS</small>
+  <div style="margin-top:5px">스프라이트 <b id="sprites">0</b></div>
+  <div>드로우콜 <b id="calls">0</b></div>
+  <div><small id="frametime">–</small></div>
+</div>
+
+<div class="hint" id="hint">손가락으로 드래그 → 맵 스크롤</div>
+
+<div class="dock">
+  <div class="row">
+    <label>손님</label>
+    <input type="range" id="pop" min="10" max="1200" step="10" value="120">
+    <label id="popv" style="width:44px;text-align:right;color:#ffe9a8">120</label>
+  </div>
+  <div class="btns">
+    <div class="btn on" id="bWater">물 이펙트</div>
+    <div class="btn" id="bAtlas">에셋 보기</div>
+    <div class="btn" id="bStress">최대 부하</div>
+  </div>
+</div>
+
+<div class="atlas" id="atlasView">
+  <p><b>이게 전부입니다.</b> 게임에 보이는 모든 캐릭터·시설은 아래 스프라이트를
+     좌표에 찍어서(blit) 만든 거예요. 지금은 부팅할 때 코드로 구워낸 임시 그림이고,
+     <b>나중에 AI가 그린 PNG로 이 아틀라스만 갈아끼우면</b> 게임 코드는 한 줄도 안 바뀝니다.</p>
+  <canvas id="atlasCanvas"></canvas>
+  <p style="font-size:11px">탭하면 닫힙니다</p>
+</div>
+
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════════
+   1. 스프라이트 아틀라스 — 부팅 때 한 번만 굽는다.
+      (실제 게임에선 이 자리에 AI가 그린 PNG가 들어옴)
+   ═══════════════════════════════════════════════════════════ */
+
+function make(w, h, draw) {
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const g = c.getContext('2d');
+  g.imageSmoothingEnabled = false;
+  draw(g, w, h);
+  return c;
+}
+const px = (g, x, y, w, h, col) => { g.fillStyle = col; g.fillRect(x, y, w, h); };
+
+/* --- 손님: 12×17px, 8색상 × 4방향 × 3프레임 = 96장 --- */
+const PALETTES = [
+  { skin:'#ffdcb4', hair:'#3a2a20', suit:'#e0596a' },
+  { skin:'#f5cba0', hair:'#5a3a1e', suit:'#4a86d0' },
+  { skin:'#ffdcb4', hair:'#1e1a18', suit:'#f2b53f' },
+  { skin:'#e8b98a', hair:'#4a3524', suit:'#5fbf8f' },
+  { skin:'#ffdcb4', hair:'#7a4a28', suit:'#b57fd0' },
+  { skin:'#f5cba0', hair:'#2a2018', suit:'#ff8a5c' },
+  { skin:'#e8b98a', hair:'#3a2a20', suit:'#3fc4d8' },
+  { skin:'#ffdcb4', hair:'#8a6a3a', suit:'#e8553f' },
+];
+const DIRS = ['down','up','left','right'];
+
+function guestSprite(p, dir, frame) {
+  return make(12, 17, g => {
+    const legL = frame === 1 ? 1 : 0, legR = frame === 2 ? 1 : 0;
+    px(g, 4, 14 - legL, 2, 3 + legL, p.skin);      // 왼다리
+    px(g, 6, 14 - legR, 2, 3 + legR, p.skin);      // 오른다리
+    px(g, 3, 8, 6, 6, p.suit);                      // 수영복 몸통
+    px(g, 3, 8, 6, 1, '#ffffff33');                 // 상단 하이라이트
+    if (dir === 'left')  px(g, 2, 9, 1, 4, p.skin); // 팔
+    if (dir === 'right') px(g, 9, 9, 1, 4, p.skin);
+    if (dir === 'down' || dir === 'up') { px(g,2,9,1,4,p.skin); px(g,9,9,1,4,p.skin); }
+    px(g, 3, 2, 6, 6, p.skin);                      // 머리
+    px(g, 3, 1, 6, 3, p.hair);                      // 머리카락
+    if (dir === 'down') { px(g,4,5,1,1,'#2a1a12'); px(g,7,5,1,1,'#2a1a12'); }
+    if (dir === 'left')  { px(g,3,1,4,4,p.hair); px(g,4,5,1,1,'#2a1a12'); }
+    if (dir === 'right') { px(g,5,1,4,4,p.hair); px(g,7,5,1,1,'#2a1a12'); }
+    if (dir === 'up') px(g, 3, 1, 6, 5, p.hair);
+  });
+}
+
+const SPR = { guest: [] };
+for (const p of PALETTES) {
+  const byDir = {};
+  for (const d of DIRS) byDir[d] = [0,1,2].map(f => guestSprite(p, d, f));
+  SPR.guest.push(byDir);
+}
+
+/* --- 시설 스프라이트 --- */
+SPR.tree = make(18, 22, g => {
+  px(g, 8, 15, 3, 7, '#7a5a34');
+  g.fillStyle = '#3f6b3a'; g.beginPath(); g.arc(9,10,8,0,7); g.fill();
+  g.fillStyle = '#5d9762'; g.beginPath(); g.arc(7,8,6,0,7); g.fill();
+  g.fillStyle = '#74ad78'; g.beginPath(); g.arc(6,6,3,0,7); g.fill();
+});
+
+SPR.parasol = make(24, 22, g => {
+  px(g, 11, 10, 2, 12, '#8a6a3a');
+  g.fillStyle = '#e05f6a';
+  g.beginPath(); g.moveTo(1,11); g.quadraticCurveTo(12,-5,23,11); g.fill();
+  g.fillStyle = '#f7f2e4';
+  g.beginPath(); g.moveTo(12,11); g.quadraticCurveTo(12,-5,12,11);
+  g.moveTo(6,11); g.quadraticCurveTo(9,1,12,-1); g.lineTo(12,11); g.fill();
+  g.fillStyle = '#00000022'; g.fillRect(1,11,22,1.5);
+});
+
+function building(w, h, roof, roofHi, sign) {
+  return make(w, h, g => {
+    const rh = Math.round(h * 0.42);
+    px(g, 2, rh, w-4, h-rh-1, '#fdf3e0');
+    px(g, 2, rh, w-4, 2, '#e4d3b4');
+    g.fillStyle = roof;
+    g.beginPath(); g.moveTo(0,rh+1); g.lineTo(w/2,1); g.lineTo(w,rh+1); g.fill();
+    g.fillStyle = roofHi;
+    g.beginPath(); g.moveTo(0,rh+1); g.lineTo(w/2,1); g.lineTo(w/2,4); g.lineTo(4,rh+1); g.fill();
+    px(g, 5, rh+5, 6, 5, '#8fc4d8');
+    px(g, w-11, rh+5, 6, 5, '#8fc4d8');
+    px(g, w/2-4, rh+8, 8, h-rh-9, '#3f6b82');
+    if (sign) { px(g, 3, h-8, w-6, 5, '#e0596a'); px(g, 3, h-8, w-6, 2, '#f08a78'); }
+  });
+}
+SPR.shop  = building(34, 30, '#62a58c', '#84c0a8', true);
+SPR.gate  = building(42, 34, '#e0604f', '#f08674', true);
+SPR.wc    = building(30, 28, '#4a90b8', '#6fb0d4', false);
+SPR.hut   = building(26, 24, '#f2b53f', '#ffd06a', false);
+
+SPR.boat = make(34, 13, g => {
+  g.fillStyle = '#d99a2b';
+  g.beginPath(); g.roundRect(0, 3, 34, 9, 5); g.fill();
+  g.fillStyle = '#ffcf4d';
+  g.beginPath(); g.roundRect(0, 2, 34, 7, 4); g.fill();
+  px(g, 3, 3, 28, 1, '#ffe895');
+});
+SPR.jetski = make(22, 11, g => {
+  g.fillStyle = '#b5311f';
+  g.beginPath(); g.roundRect(0, 3, 22, 8, 4); g.fill();
+  g.fillStyle = '#e8553f';
+  g.beginPath(); g.roundRect(0, 2, 22, 6, 3); g.fill();
+  px(g, 13, 0, 5, 4, '#2b4356');
+});
+SPR.slide = make(46, 42, g => {
+  g.fillStyle = '#e8f2f0';
+  g.beginPath(); g.roundRect(0, 8, 46, 32, 6); g.fill();
+  g.fillStyle = '#4fb8a8';
+  g.beginPath(); g.roundRect(3, 4, 15, 30, 4); g.fill();
+  g.strokeStyle = '#ffffffaa'; g.lineWidth = 1.5;
+  for (let i = 0; i < 5; i++) { g.beginPath(); g.moveTo(5, 9+i*5); g.lineTo(16, 9+i*5); g.stroke(); }
+  g.strokeStyle = '#3f9e8f'; g.lineWidth = 11; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(17, 8); g.bezierCurveTo(34, 12, 39, 24, 42, 37); g.stroke();
+  g.strokeStyle = '#9aeade'; g.lineWidth = 6;
+  g.beginPath(); g.moveTo(17, 8); g.bezierCurveTo(34, 12, 39, 24, 42, 37); g.stroke();
+});
+SPR.tramp = make(40, 40, g => {
+  g.fillStyle = '#2b4356'; g.beginPath(); g.arc(20,20,19,0,7); g.fill();
+  g.fillStyle = '#3f6480'; g.beginPath(); g.arc(20,20,15,0,7); g.fill();
+  g.strokeStyle = '#7fd6e8aa'; g.lineWidth = 1.5;
+  g.beginPath(); g.arc(20,20,15,0,7); g.stroke();
+});
+SPR.shimmer = make(14, 5, g => {
+  g.strokeStyle = '#dffaff'; g.lineWidth = 2; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(1,4); g.quadraticCurveTo(7,0,13,4); g.stroke();
+});
+SPR.foam = make(9, 9, g => { g.fillStyle = '#fff'; g.beginPath(); g.arc(4.5,4.5,4.5,0,7); g.fill(); });
+
+/* ── 아틀라스 뷰어 (실제로 스프라이트를 굽는다는 증거) ── */
+(function buildAtlasView() {
+  const c = document.getElementById('atlasCanvas');
+  const g = c.getContext('2d');
+  c.width = 300; c.height = 190;
+  g.imageSmoothingEnabled = false;
+  let x = 4, y = 4;
+  for (let p = 0; p < PALETTES.length; p++)
+    for (let d = 0; d < 4; d++)
+      for (let f = 0; f < 3; f++) { g.drawImage(SPR.guest[p][DIRS[d]][f], x, y); x += 14;
+        if (x > 286) { x = 4; y += 19; } }
+  x = 4; y += 24;
+  for (const k of ['shop','gate','wc','hut','slide','tramp','boat','jetski','tree','parasol']) {
+    g.drawImage(SPR[k], x, y); x += SPR[k].width + 4;
+    if (x > 250) { x = 4; y += 46; }
+  }
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   2. 월드 정의
+   ═══════════════════════════════════════════════════════════ */
+
+const W = 840, H = 1500;
+const SHORE = 470, SAND = 428;
+const DOCK = { x: 300, y: SHORE, w: 54, h: 300 };
+
+const BUILDINGS = [
+  { s:'gate', x:380, y:250 }, { s:'shop', x:170, y:268 }, { s:'wc',  x:70,  y:290 },
+  { s:'hut',  x:560, y:262 }, { s:'shop', x:660, y:290 }, { s:'hut', x:270, y:220 },
+  { s:'wc',   x:470, y:212 }, { s:'gate', x:740, y:246 },
+];
+const PROPS = [];
+for (let i = 0; i < 26; i++)
+  PROPS.push({ s:'tree', x: 20 + Math.random()*800, y: 160 + Math.random()*70 });
+for (let i = 0; i < 9; i++)
+  PROPS.push({ s:'parasol', x: 40 + Math.random()*760, y: 380 + Math.random()*60 });
+PROPS.sort((a,b) => a.y - b.y);
+
+const boatPath = [[330,560],[200,700],[160,900],[300,1030],[520,1000],[640,840],[600,660],[440,600]];
+const skiPath  = [[620,1180],[420,1260],[200,1180],[140,1000],[260,940],[500,1080]];
+
+function onPath(pts, t) {
+  const n = pts.length, s = t * n, i = Math.floor(s) % n, f = s - Math.floor(s);
+  const p0 = pts[(i-1+n)%n], p1 = pts[i], p2 = pts[(i+1)%n], p3 = pts[(i+2)%n];
+  const f2 = f*f, f3 = f2*f;
+  return [
+    0.5*((2*p1[0])+(-p0[0]+p2[0])*f+(2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*f2+(-p0[0]+3*p1[0]-3*p2[0]+p3[0])*f3),
+    0.5*((2*p1[1])+(-p0[1]+p2[1])*f+(2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*f2+(-p0[1]+3*p1[1]-3*p2[1]+p3[1])*f3)
+  ];
+}
+
+/* ── 엔티티 ── */
+const guests = [];
+function spawnGuest() {
+  const onDock = Math.random() < 0.18;
+  const g = {
+    pal: (Math.random()*PALETTES.length)|0,
+    x: 20 + Math.random()*(W-40),
+    y: onDock ? SHORE + Math.random()*260 : 180 + Math.random()*(SAND-180),
+    tx: 0, ty: 0, dir:'down', frame:0, anim: Math.random()*10,
+    speed: 12 + Math.random()*16, wait: 0, onDock
+  };
+  pickTarget(g); return g;
+}
+function pickTarget(g) {
+  if (g.onDock) { g.tx = DOCK.x + 6 + Math.random()*(DOCK.w-14); g.ty = SHORE + 20 + Math.random()*250; }
+  else { g.tx = 20 + Math.random()*(W-40); g.ty = 175 + Math.random()*(SAND-175); }
+}
+function setPop(n) {
+  while (guests.length < n) guests.push(spawnGuest());
+  guests.length = Math.min(guests.length, n);
+}
+
+const boats = [ {t:0.00,sp:0.030,riders:4}, {t:0.42,sp:0.026,riders:3} ];
+const skis  = [ {t:0.00,sp:0.055}, {t:0.55,sp:0.048} ];
+const foam = []; // 항적 파티클 풀
+
+/* ═══════════════════════════════════════════════════════════
+   3. 렌더러
+   ═══════════════════════════════════════════════════════════ */
+
+const cv = document.getElementById('game'), ctx = cv.getContext('2d', { alpha:false });
+let VW = 0, VH = 0, DPR = 1, ZOOM = 2;
+const cam = { x: 0, y: 120 };
+
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2.5);
+  VW = window.innerWidth; VH = window.innerHeight;
+  cv.width = VW*DPR; cv.height = VH*DPR;
+  cv.style.width = VW+'px'; cv.style.height = VH+'px';
+  ZOOM = Math.max(1.6, Math.min(3.2, VW / 380));
+  clampCam();
+}
+function clampCam() {
+  cam.x = Math.max(0, Math.min(W - VW/ZOOM, cam.x));
+  cam.y = Math.max(0, Math.min(H - VH/ZOOM, cam.y));
+}
+addEventListener('resize', resize);
+
+/* 정적 배경(산·잔디·모래)은 한 번만 그려서 캐시 → 매 프레임 재계산 안 함 */
+let bg = null;
+function buildBg() {
+  bg = make(W, SHORE + 6, g => {
+    let s = g.createLinearGradient(0,0,0,150);
+    s.addColorStop(0,'#cfe9f5'); s.addColorStop(1,'#eaf5e6');
+    g.fillStyle = s; g.fillRect(0,0,W,150);
+    const mt = (pts, col) => { g.fillStyle = col; g.beginPath(); g.moveTo(0,152);
+      pts.forEach(p => g.lineTo(p[0],p[1])); g.lineTo(W,152); g.closePath(); g.fill(); };
+    mt([[0,96],[92,54],[184,100],[276,50],[368,104],[460,62],[552,108],[644,58],[736,102],[840,70]],'#a8c7bd');
+    mt([[0,118],[116,80],[232,124],[348,86],[464,128],[580,90],[696,126],[840,96]],'#7fae95');
+    mt([[0,134],[128,104],[256,140],[384,108],[512,142],[640,112],[768,138],[840,122]],'#4a8558');
+    let l = g.createLinearGradient(0,148,0,SAND);
+    l.addColorStop(0,'#a5cd77'); l.addColorStop(1,'#8fbc63');
+    g.fillStyle = l; g.fillRect(0,148,W,SAND-148);
+    let sd = g.createLinearGradient(0,SAND,0,SHORE);
+    sd.addColorStop(0,'#f2dda8'); sd.addColorStop(1,'#e0c68a');
+    g.fillStyle = sd;
+    g.beginPath(); g.moveTo(0,SAND+8);
+    g.bezierCurveTo(210,SAND-10,420,SAND+14,630,SAND-8);
+    g.bezierCurveTo(735,SAND-16,800,SAND-2,840,SAND+2);
+    g.lineTo(840,SHORE+6); g.lineTo(0,SHORE+6); g.fill();
+  });
+}
+buildBg();
+
+/* 물 반짝임: 위치 고정, 위상만 흔들어 blit */
+const SHIMMER = [];
+for (let i = 0; i < 220; i++)
+  SHIMMER.push({ x: Math.random()*W, y: SHORE + Math.random()*(H-SHORE), p: Math.random()*6.28 });
+
+let showWater = true, drawCalls = 0, spriteCount = 0;
+
+function draw(t, dt) {
+  drawCalls = 0; spriteCount = 0;
+  const vw = VW/ZOOM, vh = VH/ZOOM;
+
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.imageSmoothingEnabled = false;
+
+  // ── 물 (단색 그라디언트 1회) ──
+  const wg = ctx.createLinearGradient(0,0,0,VH);
+  wg.addColorStop(0,'#5fcde4'); wg.addColorStop(.55,'#2b9ac4'); wg.addColorStop(1,'#12678f');
+  ctx.fillStyle = wg; ctx.fillRect(0,0,VW,VH); drawCalls++;
+
+  ctx.save();
+  ctx.scale(ZOOM, ZOOM);
+  ctx.translate(-cam.x, -cam.y);
+
+  // ── 캐시된 배경 1장 ──
+  ctx.drawImage(bg, 0, 0); drawCalls++; spriteCount++;
+
+  // ── 물 반짝임 ──
+  if (showWater) {
+    ctx.globalAlpha = .34;
+    for (const s of SHIMMER) {
+      if (s.x < cam.x-20 || s.x > cam.x+vw+20 || s.y < cam.y-20 || s.y > cam.y+vh+20) continue;
+      ctx.drawImage(SPR.shimmer, s.x + Math.sin(t*1.4 + s.p)*3, s.y + Math.cos(t*1.1 + s.p)*1.6);
+      drawCalls++; spriteCount++;
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // ── 부표 라인 ──
+  ctx.strokeStyle = '#f7f2e455'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(0,700); ctx.quadraticCurveTo(420,676,840,704); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0,1120); ctx.quadraticCurveTo(420,1096,840,1124); ctx.stroke();
+  drawCalls += 2;
+  for (let i = 0; i < 15; i++) {
+    ctx.fillStyle = i%2 ? '#ffd45e' : '#ff8a5c';
+    ctx.beginPath(); ctx.arc(30+i*58, 700-Math.sin(i/14*Math.PI)*24, 3.5, 0, 7); ctx.fill();
+    drawCalls++;
+  }
+
+  // ── 항적 거품 ──
+  for (const f of foam) {
+    ctx.globalAlpha = f.life * .55;
+    const s = (1 - f.life) * 7 + 4;
+    ctx.drawImage(SPR.foam, f.x - s/2, f.y - s/2, s, s);
+    drawCalls++; spriteCount++;
+  }
+  ctx.globalAlpha = 1;
+
+  // ── 선착장 ──
+  ctx.fillStyle = '#0a456040';
+  ctx.fillRect(DOCK.x+3, DOCK.y+4, DOCK.w, DOCK.h);
+  const dg = ctx.createLinearGradient(0,DOCK.y,0,DOCK.y+DOCK.h);
+  dg.addColorStop(0,'#dcb079'); dg.addColorStop(1,'#b5844a');
+  ctx.fillStyle = dg; ctx.fillRect(DOCK.x, DOCK.y-20, DOCK.w, DOCK.h+20);
+  ctx.strokeStyle = '#9c6f3d88'; ctx.lineWidth = 1;
+  for (let y = DOCK.y-10; y < DOCK.y+DOCK.h; y += 14) {
+    ctx.beginPath(); ctx.moveTo(DOCK.x,y); ctx.lineTo(DOCK.x+DOCK.w,y); ctx.stroke(); drawCalls++;
+  }
+
+  // ── 수상 시설 ──
+  const blit = (spr, x, y, shadow) => {
+    if (x+spr.width < cam.x || x > cam.x+vw || y+spr.height < cam.y || y > cam.y+vh) return;
+    if (shadow) { ctx.fillStyle = '#0a456033';
+      ctx.beginPath(); ctx.ellipse(x+spr.width/2, y+spr.height-1, spr.width*.52, 5, 0,0,7);
+      ctx.fill(); drawCalls++; }
+    ctx.drawImage(spr, Math.round(x), Math.round(y)); drawCalls++; spriteCount++;
+  };
+  blit(SPR.slide, 520, 560, true);
+  blit(SPR.tramp, 110, 820, true);
+
+  // ── 육지 소품 + 건물 + 손님 (y정렬 깊이) ──
+  const layer = [];
+  for (const b of BUILDINGS) layer.push({ y:b.y, s:SPR[b.s], x:b.x, sd:false });
+  for (const p of PROPS)     layer.push({ y:p.y, s:SPR[p.s], x:p.x, sd:false });
+  for (const g of guests) {
+    if (g.x < cam.x-20 || g.x > cam.x+vw+20 || g.y < cam.y-24 || g.y > cam.y+vh+24) continue;
+    layer.push({ y:g.y, s:SPR.guest[g.pal][g.dir][g.frame], x:g.x-6, gd:true });
+  }
+  layer.sort((a,b) => a.y - b.y);
+  for (const it of layer) {
+    if (it.gd) { ctx.fillStyle = '#00000024';
+      ctx.beginPath(); ctx.ellipse(it.x+6, it.y+1, 4.5, 1.8, 0,0,7); ctx.fill(); drawCalls++; }
+    ctx.drawImage(it.s, Math.round(it.x), Math.round(it.y - it.s.height + 2));
+    drawCalls++; spriteCount++;
+  }
+
+  // ── 보트 / 제트스키 ──
+  const rider = SPR.guest[2]['down'][0];
+  for (const b of boats) {
+    const [x,y] = onPath(boatPath, b.t), [nx,ny] = onPath(boatPath, b.t+0.004);
+    ctx.save(); ctx.translate(x,y); ctx.rotate(Math.atan2(ny-y, nx-x));
+    ctx.fillStyle = '#0a456033';
+    ctx.beginPath(); ctx.ellipse(0,9,19,5,0,0,7); ctx.fill();
+    ctx.drawImage(SPR.boat, -17, -6);
+    for (let i = 0; i < b.riders; i++) ctx.drawImage(rider, -13 + i*8, -18);
+    ctx.restore();
+    drawCalls += 3 + b.riders; spriteCount += 1 + b.riders;
+  }
+  for (const s of skis) {
+    const [x,y] = onPath(skiPath, s.t), [nx,ny] = onPath(skiPath, s.t+0.004);
+    ctx.save(); ctx.translate(x,y); ctx.rotate(Math.atan2(ny-y, nx-x));
+    ctx.fillStyle = '#0a456033';
+    ctx.beginPath(); ctx.ellipse(0,8,13,4,0,0,7); ctx.fill();
+    ctx.drawImage(SPR.jetski, -11, -5);
+    ctx.drawImage(rider, -4, -16);
+    ctx.restore();
+    drawCalls += 4; spriteCount += 2;
+  }
+
+  ctx.restore();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   4. 게임 루프
+   ═══════════════════════════════════════════════════════════ */
+
+function update(t, dt) {
+  for (const g of guests) {
+    const dx = g.tx - g.x, dy = g.ty - g.y, d = Math.hypot(dx,dy);
+    if (g.wait > 0) { g.wait -= dt; g.frame = 0; continue; }
+    if (d < 3) { if (Math.random() < .5) g.wait = .6 + Math.random()*2.4; pickTarget(g); continue; }
+    const v = g.speed * dt;
+    g.x += dx/d * v; g.y += dy/d * v;
+    g.dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
+    g.anim += dt * 7;
+    g.frame = [0,1,0,2][((g.anim)|0) % 4];
+  }
+  for (const b of boats) {
+    b.t = (b.t + b.sp*dt) % 1;
+    const [x,y] = onPath(boatPath, b.t);
+    if (foam.length < 300) foam.push({ x:x-6+Math.random()*12, y:y+4, life:1 });
+  }
+  for (const s of skis) {
+    s.t = (s.t + s.sp*dt) % 1;
+    const [x,y] = onPath(skiPath, s.t);
+    if (foam.length < 300) foam.push({ x:x-4+Math.random()*8, y:y+3, life:1 });
+  }
+  for (let i = foam.length-1; i >= 0; i--) {
+    foam[i].life -= dt * 1.1;
+    if (foam[i].life <= 0) foam.splice(i,1);
+  }
+}
+
+let last = performance.now(), acc = 0, frames = 0, fpsShown = 0, ftAcc = 0;
+const $ = id => document.getElementById(id);
+
+function loop(now) {
+  const dt = Math.min((now - last)/1000, 0.05); last = now;
+  const t = now/1000;
+  const t0 = performance.now();
+  update(t, dt);
+  draw(t, dt);
+  ftAcc += performance.now() - t0;
+
+  frames++; acc += dt;
+  if (acc >= 0.5) {
+    fpsShown = Math.round(frames/acc);
+    $('fps').textContent = fpsShown;
+    $('fps').style.color = fpsShown >= 50 ? '#4ade80' : fpsShown >= 30 ? '#f2b53f' : '#e0596a';
+    $('sprites').textContent = spriteCount.toLocaleString();
+    $('calls').textContent = drawCalls.toLocaleString();
+    $('frametime').textContent = (ftAcc/frames).toFixed(1) + ' ms/frame';
+    $('guests').innerHTML = guests.length.toLocaleString() + '<span style="font-size:11px;color:#8fb6cc">명</span>';
+    frames = 0; acc = 0; ftAcc = 0;
+  }
+  requestAnimationFrame(loop);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   5. 입력
+   ═══════════════════════════════════════════════════════════ */
+
+let dragging = false, lx = 0, ly = 0;
+cv.addEventListener('pointerdown', e => { dragging = true; lx = e.clientX; ly = e.clientY;
+  $('hint').style.opacity = 0; });
+cv.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  cam.x -= (e.clientX - lx)/ZOOM; cam.y -= (e.clientY - ly)/ZOOM;
+  lx = e.clientX; ly = e.clientY; clampCam();
+});
+addEventListener('pointerup', () => dragging = false);
+addEventListener('pointercancel', () => dragging = false);
+
+$('pop').addEventListener('input', e => {
+  setPop(+e.target.value); $('popv').textContent = e.target.value;
+});
+$('bWater').addEventListener('click', e => {
+  showWater = !showWater; e.currentTarget.classList.toggle('on', showWater);
+});
+$('bStress').addEventListener('click', () => {
+  setPop(1200); $('pop').value = 1200; $('popv').textContent = '1200';
+});
+$('bAtlas').addEventListener('click', () => $('atlasView').classList.add('show'));
+$('atlasView').addEventListener('click', () => $('atlasView').classList.remove('show'));
+
+setInterval(() => {
+  const m = new Date();
+  $('clock').textContent = (10 + (m.getSeconds()%8)) + ':' + String(m.getSeconds()).padStart(2,'0');
+}, 1000);
+
+resize();
+setPop(120);
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
