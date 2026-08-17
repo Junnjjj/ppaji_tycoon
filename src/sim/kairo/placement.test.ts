@@ -111,10 +111,43 @@ describe('배치 거절 이유 — 전부 플레이어가 고칠 수 있어야 �
     expect(g.check(t, new WallGrid(12, 12), GATE, 'float_deck', 3, 2).fail).toBe('wrong-terrain');
   });
 
-  it('물 시설은 물 위에 놓인다', () => {
+  it('플로팅덱은 물가에 붙으면 놓인다 — 육지에 이어져야 한다 (결정 11)', () => {
     const t = withWater(12, 12, 8);
     const g = new PlacementGrid(12, 12);
-    expect(g.place(t, new WallGrid(12, 12), GATE, 'float_deck', 3, 9).ok).toBe(true);
+    // (3,8) 은 물이고 (3,7) 은 육지 → 이어진다
+    expect(g.place(t, new WallGrid(12, 12), GATE, 'float_deck', 3, 8).ok).toBe(true);
+  });
+
+  it('물 한가운데 덱은 거절된다 — 이어지지 않으면 손님이 못 온다', () => {
+    const t = withWater(14, 14, 6);
+    const g = new PlacementGrid(14, 14);
+    expect(g.check(t, new WallGrid(14, 14), GATE, 'float_deck', 7, 11).fail).toBe(
+      'deck-not-connected',
+    );
+  });
+
+  it('덱을 이어 붙이면 물 안쪽으로 뻗어 나간다', () => {
+    const t = withWater(14, 14, 6);
+    const w = new WallGrid(14, 14);
+    const g = new PlacementGrid(14, 14);
+    // 물가에서 시작해 한 칸씩
+    for (let j = 6; j <= 10; j++) {
+      expect(g.place(t, w, GATE, 'float_deck', 7, j).ok, `덱 (7,${j})`).toBe(true);
+    }
+    // 이어진 덱은 손님이 밟을 수 있다
+    expect(g.isWalkOn(7, 10)).toBe(true);
+    expect(g.blocksWalk(7, 10)).toBe(false);
+  });
+
+  it('인플레이터블은 덱에 붙어야 한다', () => {
+    const t = withWater(14, 14, 6);
+    const w = new WallGrid(14, 14);
+    const g = new PlacementGrid(14, 14);
+    // 덱 없이 트램폴린 → 거절
+    expect(g.check(t, w, GATE, 'trampoline_w', 5, 8).fail).toBe('needs-deck');
+    // 덱을 깔면 통과
+    for (let j = 6; j <= 9; j++) g.place(t, w, GATE, 'float_deck', 4, j);
+    expect(g.check(t, w, GATE, 'trampoline_w', 5, 7).ok).toBe(true);
   });
 
   it('겹치면 거절', () => {
@@ -163,12 +196,14 @@ describe('배치 거절 이유 — 전부 플레이어가 고칠 수 있어야 �
     expect(g.check(t, w, GATE, 'vending_out', 3, 3).ok).toBe(true);
   });
 
-  it('물 시설은 도달 검사를 건너뛴다 — 플로팅덱 연결이 K6 소관이다', () => {
-    const t = withWater(14, 14, 6);
+  it('시설은 손님의 길을 막는다 — 막지 않으면 배치가 동선에 영향을 주지 않는다', () => {
+    const t = flat(14, 14);
     const w = new WallGrid(14, 14);
     const g = new PlacementGrid(14, 14);
-    // 물 한가운데라 걸어서는 못 오지만 배치는 된다
-    expect(g.place(t, w, GATE, 'float_deck', 7, 11).ok).toBe(true);
+    const r = g.place(t, w, GATE, 'shop', 5, 5);
+    expect(r.ok).toBe(true);
+    expect(g.blocksWalk(5, 5)).toBe(true);
+    expect(g.isWalkOn(5, 5)).toBe(false);
   });
 
   it('알 수 없는 시설', () => {
@@ -249,9 +284,28 @@ describe('실제 지형에서 73종을 다 놓아본다', () => {
     // 벽부착 시설을 위해 벽 한 줄
     for (let i = 2; i < 30; i++) placeWall(t, walls, GATE, i, 2);
 
+    // 물 위 시설을 위해 **잔교 한 줄**을 낸다 — 물 전체에 덱을 깔면 자리가 없어진다
+    let pier: { i: number; j: number } | null = null;
+    for (let i = 1; i < 39 && !pier; i++) {
+      for (let j = 1; j < 31; j++) {
+        if (t.isWalkable(i, j) && !t.isWalkable(i, j + 1)) {
+          pier = { i, j: j + 1 };
+          break;
+        }
+      }
+    }
+    expect(pier).not.toBeNull();
+
     const unplaceable: string[] = [];
     for (const def of allFacilityDefs()) {
       const g = new PlacementGrid(40, 32);
+      if (def.layer === 'water' && pier) {
+        // 물가에서 물 안쪽으로 덱 한 줄
+        for (let k = 0; k < 12; k++) {
+          if (!t.inside(pier.i, pier.j + k) || t.isWalkable(pier.i, pier.j + k)) break;
+          g.place(t, walls, GATE, 'float_deck', pier.i, pier.j + k);
+        }
+      }
       let ok = false;
       for (let j = 0; j < 32 - def.size[1] && !ok; j++) {
         for (let i = 0; i < 40 - def.size[0]; i++) {

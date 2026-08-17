@@ -66,6 +66,12 @@ export interface Guest {
   used: number;
   /** 걷기 tick 누적 (속도 제어) */
   stepAcc: number;
+  /** 슬라이드 탑승 — 남은 tick 과 전체 tick (0 이면 탑승 아님) */
+  rideTicks: number;
+  rideTotal: number;
+  /** 탑승 구간 (입구 → 출구) */
+  rideFrom: readonly [number, number];
+  rideTo: readonly [number, number];
 }
 
 export interface GuestTunables {
@@ -144,8 +150,18 @@ export class GuestStore {
     this.dirty = true;
   }
 
-  private walkable = (i: number, j: number): boolean =>
-    this.terrain.isWalkable(i, j) && !this.walls.blocks(i, j);
+  /**
+   * 손님이 밟을 수 있는 칸.
+   *
+   * 시설은 길을 막는다 — 단 플로팅덱·선착장은 밟고 지나간다. K5 까지는 시설을 통째로
+   * 뚫고 지나갔고, 그러면 배치가 동선에 영향을 주지 않아 "배치가 결과를 바꾼다"가
+   * 성립하지 않는다.
+   */
+  private walkable = (i: number, j: number): boolean => {
+    if (this.walls.blocks(i, j)) return false;
+    if (this.placement.blocksWalk(i, j)) return false;
+    return this.terrain.isWalkable(i, j) || this.placement.isWalkOn(i, j);
+  };
 
   /**
    * 거리장 재구축. 시설마다 **발자국에 인접한 걸을 수 있는 칸**을 목적지로 둔다 —
@@ -170,7 +186,8 @@ export class GuestStore {
           const ni = ti + di;
           const nj = tj + dj;
           if (!this.walkable(ni, nj)) continue;
-          if (this.placement.handleAt(ni, nj) !== 0) continue;
+          // ⚠ "점유된 칸"을 전부 빼면 **덱 위가 목적지가 되지 못한다** — 덱은 시설이면서
+          //   밟을 수 있는 칸이다. 물 위 시설로 가는 유일한 길이 덱이므로 walkable 판정만 쓴다.
           targets.push([ni, nj]);
         }
       }
@@ -267,6 +284,10 @@ export class GuestStore {
       satisfaction: 50,
       used: 0,
       stepAcc: 0,
+      rideTicks: 0,
+      rideTotal: 0,
+      rideFrom: [0, 0],
+      rideTo: [0, 0],
     };
     this.guests.push(g);
     return g;
@@ -290,7 +311,26 @@ export class GuestStore {
       if (g.emoteTicks > 0 && --g.emoteTicks === 0) g.emote = null;
 
       if (g.state === 'using') {
+        // 슬라이드 탑승 — 입구에서 출구로 실제로 이동한다. 서 있기만 하면
+        // "미끄럼틀 로직이 자연스럽다"가 성립하지 않는다 (사용자 요구)
+        if (g.rideTicks > 0) {
+          g.rideTicks--;
+          const p = 1 - g.rideTicks / Math.max(1, g.rideTotal);
+          const ni = Math.round(g.rideFrom[0] + (g.rideTo[0] - g.rideFrom[0]) * p);
+          const nj = Math.round(g.rideFrom[1] + (g.rideTo[1] - g.rideFrom[1]) * p);
+          if (ni !== g.i || nj !== g.j) {
+            g.fromI = g.i;
+            g.fromJ = g.j;
+            g.i = ni;
+            g.j = nj;
+            g.progress = 0;
+          }
+          if (g.rideTicks > 0) continue;
+          // 도착 — 출구에 선다
+          g.useTicks = 1;
+        }
         if (--g.useTicks <= 0) {
+          g.rideTotal = 0;
           this.releaseSlot(g);
           g.used++;
           g.satisfaction = Math.min(100, g.satisfaction + 12);
@@ -351,8 +391,25 @@ export class GuestStore {
           g.state = 'gone';
         } else {
           g.state = 'using';
-          g.useTicks = this.tunables.useTicks;
-          g.pose = this.poseFor(g.usingHandle);
+          const item = this.placement.all().find((f) => f.handle === g.usingHandle);
+          const def = item ? facilityDef(item.defId) : undefined;
+          if (item && def?.ride) {
+            // 입구로 들어가 출구로 나온다
+            g.rideFrom = [item.i + def.ride.entryTile[0], item.j + def.ride.entryTile[1]];
+            g.rideTo = [item.i + def.ride.exitTile[0], item.j + def.ride.exitTile[1]];
+            g.rideTotal = def.ride.traverseTicks;
+            g.rideTicks = def.ride.traverseTicks;
+            g.fromI = g.i;
+            g.fromJ = g.j;
+            g.i = g.rideFrom[0];
+            g.j = g.rideFrom[1];
+            g.progress = 0;
+            g.pose = 'ride';
+            g.useTicks = 1;
+          } else {
+            g.useTicks = this.tunables.useTicks;
+            g.pose = this.poseFor(g.usingHandle);
+          }
         }
         continue;
       }

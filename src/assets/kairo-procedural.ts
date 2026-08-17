@@ -77,6 +77,13 @@ const PAVED = new Set(['path_stone', 'path_deck', 'floor_indoor']);
 
 const DECO_COLOR: Record<string, string> = { safety: '#d9694f', scenery: '#7ea9c9' };
 
+/**
+ * 걸어 올라가는 물 위 구조물(플로팅덱·선착장)은 **목재 색**으로 뺀다.
+ * 물 위 시설과 같은 초록·청록으로 두면 물빛에 묻혀 잔교가 어디까지 뻗었는지 안 보인다
+ * (스크린샷에서 실제로 안 보였다).
+ */
+const WALKON_COLOR: [string, string, string] = ['#b8895a', '#d0a878', '#966d44'];
+
 function createCanvas(w: number, h: number): HTMLCanvasElement {
   if (typeof document === 'undefined') {
     throw new Error(
@@ -206,7 +213,9 @@ function drawFacility(g: CanvasRenderingContext2D, spec: SpriteSpec, simId: stri
   const sim = KAIRO_SIM[simId];
   const [cw, ch] = spec.size;
   const [w, d] = sim ? sim.size : ([1, 1] as const);
-  const [body, top, side] = ZONE_COLOR[sim?.layer ?? 'land'] ?? ZONE_COLOR['land']!;
+  const [body, top, side] = sim?.walkOn
+    ? WALKON_COLOR
+    : (ZONE_COLOR[sim?.layer ?? 'land'] ?? ZONE_COLOR['land']!);
   const bodyH = ch - (w + d) * STEP_Y;
 
   // 바닥 (그림자 겸 발자국 표시) — 몸통이 있으면 아래쪽에 남는 띠만 보인다

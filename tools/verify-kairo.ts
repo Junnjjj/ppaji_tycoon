@@ -828,6 +828,117 @@ async function main(): Promise<void> {
     await page.screenshot({ path: `${SHOT_DIR}/kairo-through-glass.png` });
   }
 
+  // ── 7h. 아쿠아파크 — 덱·부착·슬라이드 ──
+  const aqua = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, g = h.guests, sc = h.scene;
+    const out = {};
+    // 물가를 찾아 잔교를 낸다
+    let pier = null;
+    for (let i = 4; i < 34 && !pier; i++) {
+      for (let j = 4; j < 30; j++) {
+        if (t.isWalkable(i, j) && !t.isWalkable(i, j + 1) && !p.handleAt(i, j)) {
+          pier = { i: i, j: j + 1 }; break;
+        }
+      }
+    }
+    if (!pier) return { ok: false, reason: '물가를 못 찾았다' };
+
+    // 덱 없이 트램폴린 → 거절되어야 한다.
+    // ⚠ 발자국 3×3 이 전부 물이어야 한다 — 육지에 걸치면 wrong-terrain 이 먼저 잡혀
+    //   needs-deck 검사가 무의미해진다 (실측으로 겪었다)
+    let wet = null;
+    for (let j = pier.j; j < 28 && !wet; j++) {
+      for (let i = 3; i < 34; i++) {
+        let allWater = true;
+        for (let di = 0; di < 3 && allWater; di++)
+          for (let dj = 0; dj < 3; dj++)
+            if (t.isWalkable(i + di, j + dj) || p.handleAt(i + di, j + dj)) { allWater = false; break; }
+        if (allWater) { wet = [i, j]; break; }
+      }
+    }
+    if (!wet) return { ok: false, reason: '물 3×3 을 못 찾았다' };
+    const noDeck = p.check(t, w, h.gate, 'trampoline_w', wet[0], wet[1]);
+    out.withoutDeck = noDeck.fail || 'ok';
+
+    // 잔교 6칸
+    let deck = 0;
+    for (let k = 0; k < 6; k++) {
+      const r = p.place(t, w, h.gate, 'float_deck', pier.i, pier.j + k);
+      if (r.ok && r.placed) { sc.refreshFacility(r.placed.handle); deck++; }
+    }
+    out.deck = deck;
+
+    // 덱 옆에 트램폴린 → 통과
+    const withDeck = p.place(t, w, h.gate, 'trampoline_w', pier.i + 1, pier.j + 1);
+    if (withDeck.ok && withDeck.placed) sc.refreshFacility(withDeck.placed.handle);
+    out.withDeck = withDeck.fail || 'ok';
+
+    // 슬라이드
+    const slide = p.place(t, w, h.gate, 'slide_small', pier.i - 3, pier.j + 1);
+    if (slide.ok && slide.placed) sc.refreshFacility(slide.placed.handle);
+    out.slide = slide.fail || 'ok';
+
+    // 덱 위를 밟을 수 있나
+    out.deckWalkable = p.isWalkOn(pier.i, pier.j + 2) && !p.blocksWalk(pier.i, pier.j + 2);
+    out.trampolineBlocks = p.blocksWalk(pier.i + 1, pier.j + 1);
+
+    g.invalidate();
+    out.pier = [pier.i, pier.j];
+    return { ok: true, ...out };
+  })()`)) as
+    | { ok: false; reason: string }
+    | {
+        ok: true;
+        withoutDeck: string;
+        deck: number;
+        withDeck: string;
+        slide: string;
+        deckWalkable: boolean;
+        trampolineBlocks: boolean;
+        pier: number[];
+      };
+
+  if (!aqua.ok) {
+    record('아쿠아파크', 'fail', aqua.reason);
+  } else {
+    record(
+      '덱 없이 인플레이터블은 거절 — 플로팅덱이 물 위 유일 기반',
+      aqua.withoutDeck === 'needs-deck' ? 'pass' : 'fail',
+      aqua.withoutDeck,
+    );
+    record('잔교를 6칸 뻗는다', aqua.deck === 6 ? 'pass' : 'fail', `${aqua.deck}칸`);
+    record('덱 옆에는 놓인다', aqua.withDeck === 'ok' ? 'pass' : 'fail', aqua.withDeck);
+    record('슬라이드도 놓인다', aqua.slide === 'ok' ? 'pass' : 'fail', aqua.slide);
+    record(
+      '덱은 밟히고 인플레이터블은 길을 막는다',
+      aqua.deckWalkable && aqua.trampolineBlocks ? 'pass' : 'fail',
+      `덱 통행 ${aqua.deckWalkable} · 트램폴린 차단 ${aqua.trampolineBlocks}`,
+    );
+
+    // 손님이 덱을 밟고 슬라이드를 타는지 — 시뮬을 직접 돌린다
+    const ride = (await page.evaluate(`(() => {
+      const h = window.__kairo, g = h.guests;
+      const rng = new h.Rng(777);
+      let sawRide = false, deckSteps = 0;
+      for (let k = 0; k < 1500; k++) {
+        if (k % 10 === 0) g.spawn(rng);
+        g.tick(rng);
+        for (const x of g.all) {
+          if (x.pose === 'ride') sawRide = true;
+          if (h.placement.isWalkOn(x.i, x.j)) deckSteps++;
+        }
+      }
+      return { sawRide: sawRide, deckSteps: deckSteps, stats: g.stats() };
+    })()`)) as { sawRide: boolean; deckSteps: number; stats: { exited: number; gaveUp: number } };
+
+    record('손님이 덱을 밟는다', ride.deckSteps > 0 ? 'pass' : 'fail', `${ride.deckSteps} tick·명`);
+    record('손님이 슬라이드를 탄다 (ride 포즈)', ride.sawRide ? 'pass' : 'fail');
+
+    await page.evaluate(`window.__kairo.scene.focusTile(${aqua.pier[0]}, ${aqua.pier[1]! + 2})`);
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: `${SHOT_DIR}/kairo-aqua.png` });
+  }
+
   // ── 8. FPS ──
   await page.waitForTimeout(1200);
   const dbg4 = (await page.evaluate(

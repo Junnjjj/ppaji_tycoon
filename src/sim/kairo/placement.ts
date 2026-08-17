@@ -22,7 +22,21 @@ export interface KairoFacilityDef {
   size: readonly [number, number];
   sprite: string;
   capacity: number;
-  placement: { requiresWallAdjacent?: boolean };
+  /** 손님이 위로 걸어 올라갈 수 있나 — 플로팅덱·선착장만 true */
+  walkOn?: boolean;
+  placement: {
+    requiresWallAdjacent?: boolean;
+    /** 물 위 기반이 필요하다 (인플레이터블·대여소) */
+    requiresDeck?: boolean;
+    /** 육지나 다른 덱에 이어져야 한다 (덱·선착장 자신) */
+    requiresShoreOrDeck?: boolean;
+  };
+  /** 슬라이드류 — 입출구는 게임플레이라 시뮬 데이터다 */
+  ride?: {
+    entryTile: readonly [number, number];
+    exitTile: readonly [number, number];
+    traverseTicks: number;
+  };
 }
 
 const DEFS = (rawFacilities as unknown as { facilities: Record<string, KairoFacilityDef> })
@@ -50,6 +64,8 @@ export type PlaceFail =
   | 'occupied'
   | 'blocked-by-wall'
   | 'needs-wall'
+  | 'needs-deck'
+  | 'deck-not-connected'
   | 'unreachable'
   | 'unknown-def';
 
@@ -66,6 +82,8 @@ export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
   occupied: '다른 시설이 있습니다',
   'blocked-by-wall': '벽이 지나갑니다',
   'needs-wall': '벽에 붙여야 하는 시설입니다',
+  'needs-deck': '플로팅덱에 붙여야 합니다',
+  'deck-not-connected': '덱이 육지나 다른 덱과 이어져야 합니다',
   unreachable: '손님이 닿을 수 없는 자리입니다',
   'unknown-def': '알 수 없는 시설입니다',
 };
@@ -102,6 +120,24 @@ export class PlacementGrid {
   /** 이 칸을 점유한 시설 handle. 0 이면 비었다 */
   handleAt(i: number, j: number): number {
     return this.inside(i, j) ? (this.cells[j * this.width + i] as number) : 0;
+  }
+
+  /**
+   * 손님이 이 칸을 밟을 수 있나 — 플로팅덱·선착장만 true.
+   *
+   * K5 까지는 손님이 시설을 **통째로 뚫고** 지나갔다. 시설이 길을 막지 않으면 배치가
+   * 동선에 영향을 주지 않아 "배치가 결과를 바꾼다"가 성립하지 않는다.
+   */
+  isWalkOn(i: number, j: number): boolean {
+    const item = this.at(i, j);
+    return item ? DEFS[item.defId]?.walkOn === true : false;
+  }
+
+  /** 손님의 길을 막나 — 점유돼 있고 걸어 올라갈 수 없으면 막는다 */
+  blocksWalk(i: number, j: number): boolean {
+    const h = this.handleAt(i, j);
+    if (h === 0) return false;
+    return !this.isWalkOn(i, j);
   }
 
   at(i: number, j: number): PlacedFacility | undefined {
@@ -159,6 +195,37 @@ export class PlacementGrid {
     for (const [ti, tj] of tiles) {
       if (walls.has(ti, tj)) return { ok: false, fail: 'blocked-by-wall' };
       if (ti === gate.i && tj === gate.j) return { ok: false, fail: 'occupied' };
+    }
+
+    // 물 위 부착 규칙 — 플로팅덱이 물 위 유일 기반 (결정 11)
+    if (def.placement.requiresDeck) {
+      const onDeck = tiles.some(([ti, tj]) =>
+        [
+          [0, 0],
+          [1, 0],
+          [-1, 0],
+          [0, 1],
+          [0, -1],
+        ].some(([di, dj]) => this.isWalkOn(ti + (di as number), tj + (dj as number))),
+      );
+      if (!onDeck) return { ok: false, fail: 'needs-deck' };
+    }
+    if (def.placement.requiresShoreOrDeck) {
+      const connected = tiles.some(([ti, tj]) =>
+        [
+          [1, 0],
+          [-1, 0],
+          [0, 1],
+          [0, -1],
+        ].some(([di, dj]) => {
+          const ni = ti + (di as number);
+          const nj = tj + (dj as number);
+          if (!terrain.inside(ni, nj)) return false;
+          // 육지(걸을 수 있는 지면)거나 다른 덱
+          return (terrain.isWalkable(ni, nj) && !walls.blocks(ni, nj)) || this.isWalkOn(ni, nj);
+        }),
+      );
+      if (!connected) return { ok: false, fail: 'deck-not-connected' };
     }
 
     if (def.placement.requiresWallAdjacent) {

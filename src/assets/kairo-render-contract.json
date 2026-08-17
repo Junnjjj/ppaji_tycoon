@@ -2332,13 +2332,13 @@
       "sprite": "facility/float_deck",
       "canvas": [
         32,
-        20
+        22
       ],
       "anchorTexel": [
         16,
-        20
+        22
       ],
-      "bodyH": 4,
+      "bodyH": 6,
       "openTop": false,
       "slots": []
     },

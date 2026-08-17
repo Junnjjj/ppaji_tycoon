@@ -628,8 +628,21 @@
       ],
       "sprite": "facility/slide_small",
       "capacity": 3,
-      "placement": {},
-      "note": "entry/exit + path"
+      "placement": {
+        "requiresDeck": true
+      },
+      "note": "entry/exit + path",
+      "ride": {
+        "entryTile": [
+          2,
+          2
+        ],
+        "exitTile": [
+          0,
+          0
+        ],
+        "traverseTicks": 20
+      }
     },
     "slide_large": {
       "id": "slide_large",
@@ -641,8 +654,21 @@
       ],
       "sprite": "facility/slide_large",
       "capacity": 4,
-      "placement": {},
-      "note": "최고 높이 — 오클루전 주의"
+      "placement": {
+        "requiresDeck": true
+      },
+      "note": "최고 높이 — 오클루전 주의",
+      "ride": {
+        "entryTile": [
+          3,
+          4
+        ],
+        "exitTile": [
+          0,
+          0
+        ],
+        "traverseTicks": 30
+      }
     },
     "slide_tube": {
       "id": "slide_tube",
@@ -654,8 +680,21 @@
       ],
       "sprite": "facility/slide_tube",
       "capacity": 3,
-      "placement": {},
-      "note": "float 포즈로 탑승"
+      "placement": {
+        "requiresDeck": true
+      },
+      "note": "float 포즈로 탑승",
+      "ride": {
+        "entryTile": [
+          3,
+          3
+        ],
+        "exitTile": [
+          0,
+          0
+        ],
+        "traverseTicks": 26
+      }
     },
     "jump_cushion": {
       "id": "jump_cushion",
@@ -667,7 +706,9 @@
       ],
       "sprite": "facility/jump_cushion",
       "capacity": 3,
-      "placement": {},
+      "placement": {
+        "requiresDeck": true
+      },
       "note": "인플레이터블 초록·노랑"
     },
     "trampoline_w": {
@@ -680,7 +721,9 @@
       ],
       "sprite": "facility/trampoline_w",
       "capacity": 3,
-      "placement": {},
+      "placement": {
+        "requiresDeck": true
+      },
       "note": ""
     },
     "airbounce": {
@@ -693,7 +736,9 @@
       ],
       "sprite": "facility/airbounce",
       "capacity": 8,
-      "placement": {},
+      "placement": {
+        "requiresDeck": true
+      },
       "note": "최대 물 위 시설"
     },
     "turtle_island": {
@@ -706,7 +751,9 @@
       ],
       "sprite": "facility/turtle_island",
       "capacity": 8,
-      "placement": {},
+      "placement": {
+        "requiresDeck": true
+      },
       "note": "A트랙 실증 완료(88px)"
     },
     "junglegym_w": {
@@ -719,7 +766,9 @@
       ],
       "sprite": "facility/junglegym_w",
       "capacity": 4,
-      "placement": {},
+      "placement": {
+        "requiresDeck": true
+      },
       "note": "프레임형 — 윤곽 게이트 완화"
     },
     "diving": {
@@ -732,7 +781,9 @@
       ],
       "sprite": "facility/diving",
       "capacity": 2,
-      "placement": {},
+      "placement": {
+        "requiresDeck": true
+      },
       "note": "데크 부착물"
     },
     "waterwalk": {
@@ -745,7 +796,9 @@
       ],
       "sprite": "facility/waterwalk",
       "capacity": 2,
-      "placement": {},
+      "placement": {
+        "requiresDeck": true
+      },
       "note": ""
     },
     "float_deck": {
@@ -758,8 +811,11 @@
       ],
       "sprite": "facility/float_deck",
       "capacity": 0,
-      "placement": {},
-      "note": "★물 위 유일 기반. 부착 앵커 4방"
+      "placement": {
+        "requiresShoreOrDeck": true
+      },
+      "note": "★물 위 유일 기반. 부착 앵커 4방",
+      "walkOn": true
     },
     "dock": {
       "id": "dock",
@@ -771,8 +827,11 @@
       ],
       "sprite": "facility/dock",
       "capacity": 2,
-      "placement": {},
-      "note": "견인 프리셋 루프 시작점"
+      "placement": {
+        "requiresShoreOrDeck": true
+      },
+      "note": "견인 프리셋 루프 시작점",
+      "walkOn": true
     },
     "rent_kayak": {
       "id": "rent_kayak",
@@ -784,7 +843,9 @@
       ],
       "sprite": "facility/rent_kayak",
       "capacity": 1,
-      "placement": {},
+      "placement": {
+        "requiresDeck": true
+      },
       "note": ""
     },
     "rent_pedal": {
@@ -797,7 +858,9 @@
       ],
       "sprite": "facility/rent_pedal",
       "capacity": 1,
-      "placement": {},
+      "placement": {
+        "requiresDeck": true
+      },
       "note": ""
     },
     "rent_duck": {
@@ -810,7 +873,9 @@
       ],
       "sprite": "facility/rent_duck",
       "capacity": 1,
-      "placement": {},
+      "placement": {
+        "requiresDeck": true
+      },
       "note": ""
     },
     "rent_sup": {
@@ -823,7 +888,9 @@
       ],
       "sprite": "facility/rent_sup",
       "capacity": 1,
-      "placement": {},
+      "placement": {
+        "requiresDeck": true
+      },
       "note": ""
     },
     "bungalow": {
@@ -915,7 +982,18 @@
       "sprite": "facility/snow_sled",
       "capacity": 3,
       "placement": {},
-      "note": "겨울"
+      "note": "겨울",
+      "ride": {
+        "entryTile": [
+          3,
+          4
+        ],
+        "exitTile": [
+          0,
+          0
+        ],
+        "traverseTicks": 24
+      }
     },
     "bungeoppang": {
       "id": "bungeoppang",

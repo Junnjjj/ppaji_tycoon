@@ -59,7 +59,13 @@ export interface KairoFacilitySim {
   size: readonly [number, number];
   sprite: string;
   capacity: number;
-  placement: { requiresWallAdjacent?: boolean };
+  /** 손님이 밟고 지나가는 구조물 (플로팅덱·선착장) */
+  walkOn?: boolean;
+  placement: {
+    requiresWallAdjacent?: boolean;
+    requiresDeck?: boolean;
+    requiresShoreOrDeck?: boolean;
+  };
 }
 
 /** 렌더 계약 — 투영·표현·손님·벽·배경 상수 */
