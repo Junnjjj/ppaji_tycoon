@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { Rng } from '../../sim/rng.js';
 import {
   GRID_W,
   GRID_H,
@@ -9,6 +10,8 @@ import {
   screenToTile,
   inGrid,
   footprintAnchor,
+  STEP_X,
+  STEP_Y,
 } from '../kairo/iso.js';
 import { KairoCamera } from '../kairo/kairo-camera.js';
 import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
@@ -17,6 +20,18 @@ import { variantId } from '../../assets/types.js';
 import type { KairoTerrain } from '../../sim/kairo/terrain.js';
 import { WALL_DOOR, type WallGrid } from '../../sim/kairo/walls.js';
 import { facilityDef, type PlacementGrid } from '../../sim/kairo/placement.js';
+import type { GuestStore, Guest } from '../../sim/kairo/guests.js';
+import {
+  bakeGuestAtlas,
+  bakeEmoteAtlas,
+  bodyFrame,
+  faceFrame,
+  GUEST_W,
+  GUEST_H,
+  POSE_SHEET,
+  type Pose,
+  type Facing,
+} from '../../assets/kairo-guest-sprite.js';
 
 /**
  * 카이로 씬 — 2:1 아이소메트릭 격자.
@@ -48,6 +63,10 @@ export interface KairoSceneStats {
   walls: number;
   /** 놓인 시설 수 */
   facilities: number;
+  /** 살아있는 손님 수 */
+  guests: number;
+  /** 퇴장 만족도 평균 */
+  exitSat: number;
   /** 도트 격자 위반 — 비어 있어야 한다 */
   dotGridViolations: readonly string[];
 }
@@ -60,6 +79,12 @@ export interface KairoSceneOptions {
   walls: WallGrid;
   /** 시설 점유 격자 — 역시 시뮬 소유 */
   placement: PlacementGrid;
+  /** 손님 — 역시 시뮬 소유. 씬은 읽고 그린다 */
+  guests: GuestStore;
+  /** 시뮬을 진행시킬지 (검증에서 수동 제어하려면 false) */
+  autoTick?: boolean;
+  /** 손님 RNG 시드 */
+  seed?: number;
   onFrame?: (s: KairoSceneStats) => void;
   /** 탭한 타일 (격자 밖이면 안 부른다) */
   onTapTile?: (i: number, j: number) => void;
@@ -73,6 +98,17 @@ export class KairoScene extends Phaser.Scene {
   private wallImages = new Map<number, Phaser.GameObjects.Image>();
   /** 시설 이미지 — handle 로 관리한다 (발자국이 여러 칸이라 타일 키로는 못 잡는다) */
   private facilityImages = new Map<number, Phaser.GameObjects.Image>();
+  /** 손님 하나당 몸통·표정·이모트 세 이미지 */
+  private guestViews = new Map<
+    number,
+    { body: Phaser.GameObjects.Image; face: Phaser.GameObjects.Image; emote: Phaser.GameObjects.Image }
+  >();
+  private guestAtlas: ReturnType<typeof bakeGuestAtlas> | null = null;
+  private animTick = 0;
+  private simAcc = 0;
+  private simTickCount = 0;
+  /** 손님 시뮬용 RNG — 씬이 들고 있지만 시드는 주입된다 (결정론) */
+  private rng: Rng;
   private dragging = false;
   private dragMoved = 0;
   private lastPointer = { x: 0, y: 0 };
@@ -82,6 +118,12 @@ export class KairoScene extends Phaser.Scene {
   constructor(opts: KairoSceneOptions) {
     super({ key: 'kairo' });
     this.opts = opts;
+    this.rng = new Rng(opts.seed ?? 20260818);
+  }
+
+  /** 매 tick 같은 스트림을 넘긴다 — 새로 만들면 같은 난수가 반복된다 */
+  private tickRng(): Rng {
+    return this.rng;
   }
 
   preload(): void {
@@ -89,6 +131,23 @@ export class KairoScene extends Phaser.Scene {
     for (const id of this.opts.provider.ids) {
       if (this.textures.exists(id)) continue;
       this.textures.addCanvas(id, this.opts.provider.get(id));
+    }
+
+    // 손님·이모트 아틀라스는 코드로 굽는다 (스펙 §2). 프레임을 하나씩 등록한다
+    if (!this.textures.exists('guest')) {
+      const atlas = bakeGuestAtlas();
+      this.guestAtlas = atlas;
+      const tex = this.textures.addCanvas('guest', atlas.canvas);
+      if (tex) {
+        for (const [name, r] of atlas.frames) tex.add(name, 0, r.x, r.y, r.w, r.h);
+      }
+    }
+    if (!this.textures.exists('emote')) {
+      const em = bakeEmoteAtlas();
+      const tex = this.textures.addCanvas('emote', em.canvas);
+      if (tex) {
+        for (const [name, r] of em.frames) tex.add(name, 0, r.x, r.y, r.w, r.h);
+      }
     }
   }
 
@@ -153,6 +212,17 @@ export class KairoScene extends Phaser.Scene {
     img.setOrigin(0.5, 1);
     img.setDepth(depthKey(item.i + w - 1, item.j + d - 1) + 2);
     this.facilityImages.set(handle, img);
+  }
+
+  /** 검증 도구용 — 업스케일을 직접 바꾼다 */
+  setUpscale(s: 1 | 2): void {
+    this.cam.setUpscale(s);
+    this.applyScale(s);
+  }
+
+  /** 검증 도구용 — 화면에 올라간 손님 그림 수 */
+  guestViewCount(): number {
+    return this.guestViews.size;
   }
 
   /** 검증 도구용 — 시설 이미지를 직접 본다 (앵커 좌표를 수치로 확인) */
@@ -323,9 +393,98 @@ export class KairoScene extends Phaser.Scene {
     );
   }
 
-  override update(): void {
+  /**
+   * 손님 그리기. 몸통·표정·이모트를 **따로** 얹는다 — 표정을 몸통에 곱하면 1,280셀이
+   * 되고, 오버레이면 16셀이면 된다 (스펙 §2.1).
+   */
+  private syncGuests(): void {
+    const live = new Set<number>();
+    for (const g of this.opts.guests.all) {
+      live.add(g.id);
+      let v = this.guestViews.get(g.id);
+      if (!v) {
+        const body = this.add.image(0, 0, 'guest', bodyFrame(g.palette, 'idle', '+Z', 0));
+        body.setOrigin(0.5, 1);
+        const face = this.add.image(0, 0, 'guest', faceFrame('calm', '+Z'));
+        face.setOrigin(0, 0);
+        const emote = this.add.image(0, 0, 'emote', 'e_happy');
+        emote.setOrigin(0.5, 1);
+        emote.setVisible(false);
+        v = { body, face, emote };
+        this.guestViews.set(g.id, v);
+      }
+      this.placeGuest(g, v);
+    }
+    // 나간 손님 정리
+    for (const [id, v] of this.guestViews) {
+      if (live.has(id)) continue;
+      v.body.destroy();
+      v.face.destroy();
+      v.emote.destroy();
+      this.guestViews.delete(id);
+    }
+  }
+
+  private placeGuest(
+    g: Guest,
+    v: { body: Phaser.GameObjects.Image; face: Phaser.GameObjects.Image; emote: Phaser.GameObjects.Image },
+  ): void {
+    // 타일 보간 — 정수 스냅은 카메라가 하므로 여기서는 소수를 그대로 쓴다
+    const t = Math.min(1, Math.max(0, g.progress));
+    const fi = g.fromI + (g.i - g.fromI) * t;
+    const fj = g.fromJ + (g.j - g.fromJ) * t;
+    const cx = STEP_X * (fi - fj);
+    const cy = STEP_Y * (fi + fj + 1);
+
+    const pose = g.pose as Pose;
+    const sheet = POSE_SHEET[pose];
+    // 방향이 그 포즈에 없으면 가장 가까운 것으로 (물속은 방향 2)
+    const facing: Facing = sheet.facings.includes(g.facing as Facing)
+      ? (g.facing as Facing)
+      : (sheet.facings[0] as Facing);
+    const frame = sheet.frames <= 1 ? 0 : Math.floor(this.animTick / 6) % sheet.frames;
+
+    v.body.setTexture('guest', bodyFrame(g.palette, pose, facing, frame));
+    v.body.setPosition(cx, cy);
+    v.body.setDepth(depthKey(g.i, g.j) + 3);
+
+    const off = (this.guestAtlas?.headOffset ?? { [pose]: { x: 4, y: 2 } })[pose] ?? { x: 4, y: 2 };
+    v.face.setTexture('guest', faceFrame(g.face, facing));
+    v.face.setPosition(cx - GUEST_W / 2 + off.x, cy - GUEST_H + off.y);
+    v.face.setDepth(depthKey(g.i, g.j) + 4);
+    v.face.setVisible(facing === '+X' || facing === '+Z');
+
+    if (g.emote) {
+      v.emote.setTexture('emote', `e_${g.emote}`);
+      v.emote.setPosition(cx, cy - GUEST_H - 4);
+      v.emote.setDepth(depthKey(g.i, g.j) + 5);
+      v.emote.setVisible(true);
+    } else {
+      v.emote.setVisible(false);
+    }
+  }
+
+  override update(_time: number, delta: number): void {
+    // 시뮬 — 고정 timestep 10Hz. 배속은 tick 수를 곱한다 (tick 크기가 아니다)
+    if (this.opts.autoTick !== false) {
+      this.simAcc += delta;
+      const MS_PER_TICK = 100;
+      let steps = 0;
+      while (this.simAcc >= MS_PER_TICK && steps < 5) {
+        this.simAcc -= MS_PER_TICK;
+        steps++;
+        this.simTickCount++;
+        this.opts.guests.tick(this.tickRng());
+        if (this.simTickCount % 12 === 0) this.opts.guests.spawn(this.tickRng());
+      }
+    }
+    this.animTick++;
+    this.opts.guests.advanceRenderProgress(delta / 1000);
+    this.syncGuests();
+
     const view = this.cam.view();
     const buf = this.cam.bufferSize();
+    const gs = this.opts.guests.stats();
     this.opts.onFrame?.({
       fps: Math.round(this.game.loop.actualFps),
       upscale: this.cam.upscale,
@@ -336,6 +495,8 @@ export class KairoScene extends Phaser.Scene {
       tiles: this.tileImages.length,
       walls: this.wallImages.size,
       facilities: this.facilityImages.size,
+      guests: gs.alive,
+      exitSat: gs.exitSatisfaction,
       dotGridViolations: this.violations,
     });
   }

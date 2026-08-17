@@ -16,8 +16,8 @@
 
 import { KAIRO, KAIRO_SIM, kairoSpriteSpecs } from './kairo-contract.js';
 import {
+  TILE_W,
   TILE_H,
-  STEP_X,
   STEP_Y,
   tileRowSpan,
   tileOffsetInCanvas,
@@ -195,7 +195,13 @@ function punchStipple(
 
 // ─────────────────────────────── 드로어 ───────────────────────────────
 
-/** 시설 — 바닥 다이아몬드 + 아이소 박스 몸통 */
+/**
+ * 시설 — 바닥 다이아몬드 + 아이소 박스 몸통. **전부 정수 채움**.
+ *
+ * ⚠ 측면을 `beginPath`+`fill()` 로 그리면 안 된다. AA 경계가 반투명 픽셀을 남기고
+ * `bakeOutline` 이 거기에 윤곽색을 찍어 **윗면에 검은 대각선**이 생긴다 (S=2 스크린샷에서
+ * 드러났다). 벽과 같은 방식으로 열마다 정수 압출한다.
+ */
 function drawFacility(g: CanvasRenderingContext2D, spec: SpriteSpec, simId: string): void {
   const sim = KAIRO_SIM[simId];
   const [cw, ch] = spec.size;
@@ -203,41 +209,48 @@ function drawFacility(g: CanvasRenderingContext2D, spec: SpriteSpec, simId: stri
   const [body, top, side] = ZONE_COLOR[sim?.layer ?? 'land'] ?? ZONE_COLOR['land']!;
   const bodyH = ch - (w + d) * STEP_Y;
 
-  // 바닥 (그림자 겸 발자국 표시) — 정수 마스크
+  // 바닥 (그림자 겸 발자국 표시) — 몸통이 있으면 아래쪽에 남는 띠만 보인다
   fillFootprint(g, w, d, bodyH, darken(body, 0.72));
 
-  if (bodyH > 0) {
-    // 윗면 — 같은 마스크를 bodyH 만큼 올려 깐다
-    fillFootprint(g, w, d, 0, top);
+  if (bodyH <= 0) {
+    bakeOutline(g, cw, ch);
+    return;
+  }
 
-    // 앞쪽 두 측면 (왼 꼭지점 → 아래 → 오른)
-    const topY = ch - (w + d) * STEP_Y;
-    const L = { x: 0, y: topY + d * STEP_Y };
-    const B = { x: w * STEP_X, y: ch };
-    const R = { x: (w + d) * STEP_X, y: topY + w * STEP_Y };
-    for (const [p, q, col] of [
-      [L, B, side],
-      [B, R, body],
-    ] as const) {
-      g.beginPath();
-      g.moveTo(p.x, p.y - bodyH);
-      g.lineTo(q.x, q.y - bodyH);
-      g.lineTo(q.x, q.y);
-      g.lineTo(p.x, p.y);
-      g.closePath();
-      g.fillStyle = col;
-      g.fill();
-    }
-    // 슬롯 위치를 옅은 점으로 — 배치 검증에 쓴다
-    g.fillStyle = 'rgba(255,255,255,0.45)';
-    const r = KAIRO.facilities.find((f) => f.sprite === spec.id);
-    for (const s of r?.slots ?? []) {
-      const [i, j] = s.tile;
-      const x = (d + i - j) * STEP_X;
-      const y = topY + (i + j + 1) * STEP_Y - bodyH;
-      g.fillRect(x - 1, y - 1, 2, 2);
+  // 윗면 — 같은 마스크를 위로 올려 깐다
+  fillFootprint(g, w, d, 0, top);
+
+  // 열마다 윗면의 최하단 y 를 찾아 아래로 bodyH 만큼 정수 압출한다
+  const bottomOf = new Int16Array(cw).fill(-1);
+  for (let i = 0; i < w; i++) {
+    for (let j = 0; j < d; j++) {
+      const o = tileOffsetInCanvas(i, j, d, 0);
+      for (let y = 0; y < TILE_H; y++) {
+        const sp = tileRowSpan(y);
+        for (let x = sp.x0; x < sp.x1; x++) {
+          const gx = o.x + x;
+          const gy = o.y + y;
+          if (gx >= 0 && gx < cw && gy > bottomOf[gx]!) bottomOf[gx] = gy;
+        }
+      }
     }
   }
+  for (let x = 0; x < cw; x++) {
+    const t = bottomOf[x]!;
+    if (t < 0) continue;
+    g.fillStyle = x < cw / 2 ? side : body;
+    g.fillRect(x, t + 1, 1, bodyH);
+  }
+
+  // 슬롯 위치를 옅은 점으로 — 배치 검증에 쓴다
+  g.fillStyle = 'rgba(255,255,255,0.45)';
+  const r = KAIRO.facilities.find((f) => f.sprite === spec.id);
+  for (const sl of r?.slots ?? []) {
+    const [i, j] = sl.tile;
+    const o = tileOffsetInCanvas(i, j, d, 0);
+    g.fillRect(o.x + TILE_W / 2 - 1, o.y + TILE_H / 2 - 1, 2, 2);
+  }
+
   bakeOutline(g, cw, ch);
 }
 

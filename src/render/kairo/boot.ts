@@ -5,6 +5,7 @@ import { viewport } from './upscale.js';
 import { KairoTerrain } from '../../sim/kairo/terrain.js';
 import { WallGrid } from '../../sim/kairo/walls.js';
 import { PlacementGrid } from '../../sim/kairo/placement.js';
+import { GuestStore } from '../../sim/kairo/guests.js';
 import { Rng } from '../../sim/rng.js';
 import { GRID_W, GRID_H } from './iso.js';
 
@@ -21,6 +22,8 @@ export interface KairoBootOptions {
   terrain?: KairoTerrain;
   walls?: WallGrid;
   placement?: PlacementGrid;
+  /** 손님 게이트 — K4 에서 매표소 배치로 대체된다 */
+  gate?: { i: number; j: number };
   seed?: number;
   onFrame?: (s: KairoSceneStats) => void;
   onTapTile?: (i: number, j: number) => void;
@@ -33,6 +36,8 @@ export interface KairoHandle {
   terrain: KairoTerrain;
   walls: WallGrid;
   placement: PlacementGrid;
+  guests: GuestStore;
+  gate: { i: number; j: number };
 }
 
 export function bootKairo(opts: KairoBootOptions): KairoHandle {
@@ -41,11 +46,15 @@ export function bootKairo(opts: KairoBootOptions): KairoHandle {
     opts.terrain ?? KairoTerrain.generate(GRID_W, GRID_H, new Rng(opts.seed ?? 20260818));
   const walls = opts.walls ?? new WallGrid(GRID_W, GRID_H);
   const placement = opts.placement ?? new PlacementGrid(GRID_W, GRID_H);
+  const gate = opts.gate ?? { i: 0, j: 0 };
+  const guests = new GuestStore(terrain, walls, placement, gate);
   const scene = new KairoScene({
     provider,
     terrain,
     walls,
     placement,
+    guests,
+    ...(opts.seed !== undefined ? { seed: opts.seed } : {}),
     ...(opts.onFrame ? { onFrame: opts.onFrame } : {}),
     ...(opts.onTapTile ? { onTapTile: opts.onTapTile } : {}),
   });
@@ -80,5 +89,5 @@ export function bootKairo(opts: KairoBootOptions): KairoHandle {
     scene: [scene],
   });
 
-  return { game, scene, provider, terrain, walls, placement };
+  return { game, scene, provider, terrain, walls, placement, guests, gate };
 }

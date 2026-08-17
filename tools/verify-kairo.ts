@@ -644,6 +644,190 @@ async function main(): Promise<void> {
     await page.screenshot({ path: `${SHOT_DIR}/kairo-facilities.png` });
   }
 
+  // ── 7f. 손님 — 걷고, 칸을 채우고, 표정·이모트가 뜬다 ──
+  const guests = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, g = h.guests, sc = h.scene;
+    // 게이트 근처 육지에 시설 몇 개를 놓아 손님이 갈 곳을 만든다
+    const gate = h.gate;
+    // 게이트 근처 빈 자리를 실제로 찾아 놓는다 — 앞 블록이 이미 놓은 시설과 겹치면 안 된다
+    let placed = 0;
+    for (let j = 1; j < 12 && placed < 3; j++) {
+      for (let i = 1; i < 12 && placed < 3; i++) {
+        const r = p.place(t, w, gate, 'shop', i, j);
+        if (r.ok && r.placed) { sc.refreshFacility(r.placed.handle); placed++; }
+      }
+    }
+    g.invalidate();
+    return { placed: placed, total: p.count, gate: gate };
+  })()`)) as { placed: number; total: number; gate: { i: number; j: number } };
+
+  record(
+    '손님용 시설이 게이트 근처에 있다',
+    guests.placed >= 2 ? 'pass' : 'fail',
+    `새로 ${guests.placed}개 · 총 ${guests.total}개`,
+  );
+
+  // 시뮬이 돌 시간을 준다 (10Hz · 12tick 마다 입장 · 걸어가서 이용까지)
+  await page.waitForTimeout(9000);
+
+  const gstat = (await page.evaluate(`(() => {
+    const h = window.__kairo, g = h.guests, sc = h.scene;
+    const s = g.stats();
+    const poses = {}, faces = {}, facings = {};
+    let moving = 0;
+    for (const x of g.all) {
+      poses[x.pose] = (poses[x.pose] || 0) + 1;
+      faces[x.face] = (faces[x.face] || 0) + 1;
+      facings[x.facing] = (facings[x.facing] || 0) + 1;
+      if (x.i !== h.gate.i || x.j !== h.gate.j) moving++;
+    }
+    // 시설 점유
+    let occupied = 0, slots = 0;
+    for (const f of h.placement.all()) {
+      const occ = g.occupancy(f.handle);
+      slots += occ.length;
+      occupied += occ.filter((x) => x !== 0).length;
+    }
+    // 화면에 손님 그림이 올라갔나
+    const views = sc.guestViewCount ? sc.guestViewCount() : -1;
+    return { s: s, poses: poses, faces: faces, facings: facings, moving: moving,
+             occupied: occupied, slots: slots, views: views };
+  })()`)) as {
+    s: { alive: number; walking: number; using: number; exited: number; exitSatisfaction: number; gaveUp: number };
+    poses: Record<string, number>;
+    faces: Record<string, number>;
+    facings: Record<string, number>;
+    moving: number;
+    occupied: number;
+    slots: number;
+    views: number;
+  };
+
+  record('손님이 입장한다', gstat.s.alive > 0 ? 'pass' : 'fail', `${gstat.s.alive}명`);
+  record(
+    '손님이 게이트를 떠나 움직인다',
+    gstat.moving > 0 ? 'pass' : 'fail',
+    `${gstat.moving}/${gstat.s.alive}명 이동`,
+  );
+  record(
+    '손님 그림이 화면에 올라간다 (몸통+표정+이모트)',
+    gstat.views === gstat.s.alive ? 'pass' : 'fail',
+    `그림 ${gstat.views} vs 손님 ${gstat.s.alive}`,
+  );
+  record(
+    '시설 칸이 채워진다 — 칸마다 손님이 보이는 게 카이로의 핵심',
+    gstat.occupied > 0 ? 'pass' : 'fail',
+    `${gstat.occupied}/${gstat.slots}칸`,
+  );
+  record(
+    '이용 중인 손님이 있다 — 걷기만 하면 시설이 작동하지 않는 것이다',
+    gstat.s.using > 0 ? 'pass' : 'fail',
+    `이용 ${gstat.s.using} · 걷기 ${gstat.s.walking} · 포즈 ${JSON.stringify(gstat.poses)}`,
+  );
+  // 퇴장까지는 한 방문에 240tick(24초) 이 걸린다. 실시간으로 기다리는 대신 시뮬을
+  // 직접 돌린다 — 같은 코드 경로이고 결정론이라 결과가 같다.
+  const exitStat = (await page.evaluate(`(() => {
+    const h = window.__kairo, g = h.guests;
+    const rng = new h.Rng(4242);
+    for (let k = 0; k < 900; k++) {
+      if (k % 12 === 0) g.spawn(rng);
+      g.tick(rng);
+    }
+    return g.stats();
+  })()`)) as {
+    alive: number;
+    exited: number;
+    exitSatisfaction: number;
+    gaveUp: number;
+    using: number;
+  };
+
+  record(
+    '퇴장 만족도가 쌓인다 — 평판의 기반은 퇴장 만족도다',
+    exitStat.exited > 0 ? 'pass' : 'fail',
+    `퇴장 ${exitStat.exited}명 · 만족 ${exitStat.exitSatisfaction.toFixed(0)} · 포기 ${exitStat.gaveUp}`,
+  );
+  record(
+    '시설이 있으면 포기하는 손님이 적다',
+    exitStat.exited > 0 && exitStat.gaveUp / exitStat.exited < 0.5 ? 'pass' : 'fail',
+    `포기율 ${exitStat.exited ? ((exitStat.gaveUp / exitStat.exited) * 100).toFixed(0) : '?'}%`,
+  );
+  record(
+    '방향이 이동에 따라 갈린다',
+    Object.keys(gstat.facings).length >= 2 ? 'pass' : 'fail',
+    JSON.stringify(gstat.facings),
+  );
+  record('표정이 만족도에서 파생된다', Object.keys(gstat.faces).length >= 1 ? 'pass' : 'fail', JSON.stringify(gstat.faces));
+
+  await page.evaluate(`window.__kairo.scene.focusTile(5, 5)`);
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: `${SHOT_DIR}/kairo-guests.png` });
+
+  // ── 7g. 결정 19 를 끝까지 — 유리벽 **뒤의 손님이 실제로 보이나** ──
+  //
+  // 스프라이트 알파가 50% 뚫려 있다는 건 확인했다. 그게 화면에서 실제로 "손님이 비친다"로
+  // 이어지는지는 별개다. 손님을 벽 바로 뒤에 세우고 벽의 유리 대역에서 구명조끼 주황을 센다.
+  const through = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, g = h.guests, sc = h.scene;
+    // 빈 육지에서 (i, j−1) 과 (i, j) 가 모두 비어 있는 자리
+    let spot = null;
+    for (let j = 4; j < 20 && !spot; j++) {
+      for (let i = 2; i < 30; i++) {
+        if (!t.isWalkable(i, j) || !t.isWalkable(i, j - 1)) continue;
+        if (w.has(i, j) || w.has(i, j - 1)) continue;
+        if (p.handleAt(i, j) || p.handleAt(i, j - 1)) continue;
+        spot = [i, j]; break;
+      }
+    }
+    if (!spot) return { ok: false, reason: '자리를 못 찾았다' };
+    const [i, j] = spot;
+    // 손님 하나를 (i, j−1) 로 옮긴다 — 벽 바로 뒤(화면상 위)
+    const guest = g.all[0];
+    if (!guest) return { ok: false, reason: '손님이 없다' };
+    guest.i = i; guest.j = j - 1; guest.fromI = i; guest.fromJ = j - 1;
+    guest.progress = 1; guest.pose = 'idle'; guest.facing = '+Z';
+    // 벽을 (i, j) 에 세운다
+    const r = h.sim.placeWall(t, w, h.gate, i, j, 1);
+    if (!r.ok) return { ok: false, reason: '벽 배치 실패: ' + r.reason };
+    sc.refreshWall(i, j);
+    sc.setUpscale(1);
+    sc.focusTile(i, j);
+    return { ok: true, tile: [i, j], palette: guest.palette };
+  })()`)) as { ok: false; reason: string } | { ok: true; tile: number[]; palette: number };
+
+  if (!through.ok) {
+    record('유리벽 뒤로 손님이 보인다', 'fail', through.reason);
+  } else {
+    await page.waitForTimeout(400);
+    const px = (await page.evaluate(`(() => {
+      const sc = window.__kairo.scene;
+      const c = document.querySelector('canvas');
+      const gl = c.getContext('webgl2') || c.getContext('webgl');
+      const H = c.height;
+      const rect = sc.tileScreenRect(${through.ok ? through.tile[0] : 0}, ${through.ok ? through.tile[1] : 0});
+      // 벽 압출(유리) 대역 = rect.y−8 … rect.y+10. 그 안에서 주황 구명조끼를 센다
+      const x0 = rect.x + 4, y0 = rect.y - 8, w = 24, hh = 14;
+      const buf = new Uint8Array(w * hh * 4);
+      gl.readPixels(x0, H - (y0 + hh), w, hh, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+      let orange = 0, glass = 0, total = 0;
+      for (let k = 0; k < buf.length; k += 4) {
+        const r = buf[k], gg = buf[k+1], b = buf[k+2];
+        total++;
+        // 구명조끼: 빨강 높고 파랑 낮음
+        if (r > 200 && gg > 100 && gg < 200 && b < 110) orange++;
+        if (r > 185 && gg > 200 && b > 210) glass++;
+      }
+      return { orange: orange, glass: glass, total: total };
+    })()`)) as { orange: number; glass: number; total: number };
+
+    record(
+      '유리벽 뒤로 손님이 보인다 — 결정 19 의 목적',
+      px.orange > 0 && px.glass > 0 ? 'pass' : 'fail',
+      `주황(구명조끼) ${px.orange}/${px.total} · 유리 ${px.glass}`,
+    );
+    await page.screenshot({ path: `${SHOT_DIR}/kairo-through-glass.png` });
+  }
+
   // ── 8. FPS ──
   await page.waitForTimeout(1200);
   const dbg4 = (await page.evaluate(

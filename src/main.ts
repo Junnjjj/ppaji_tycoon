@@ -36,7 +36,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       box.textContent =
         `FPS ${s.fps}  S=${s.upscale}  버퍼 ${s.bufferW}×${s.bufferH}\n` +
         `스크롤 ${s.scrollX},${s.scrollY}  타일 ${s.tiles}\n` +
-        `벽 ${s.walls}  시설 ${s.facilities}\n` +
+        `벽 ${s.walls}  시설 ${s.facilities}  손님 ${s.guests}\n` +
+        `퇴장만족 ${s.exitSat.toFixed(0)}\n` +
         (s.dotGridViolations.length === 0
           ? '도트격자 OK'
           : `도트격자 위반: ${s.dotGridViolations.join(' / ')}`);
@@ -57,6 +58,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         );
         if (r.ok) {
           h.scene.refreshWall(i, j);
+          h.guests.invalidate(); // 벽이 바뀌면 거리장을 다시 만든다
           toast('');
         } else {
           // 밀폐 차단이면 몇 칸이 갇히는지 함께 보여준다
@@ -70,9 +72,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         if (hit) {
           h.placement.remove(hit.handle);
           h.scene.refreshFacility(hit.handle);
+          h.guests.invalidate();
           return;
         }
-        if (removeWall(h.walls, i, j)) h.scene.refreshWall(i, j);
+        if (removeWall(h.walls, i, j)) {
+          h.scene.refreshWall(i, j);
+          h.guests.invalidate();
+        }
         return;
       }
       if (brush === 'facility') {
@@ -80,13 +86,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j);
         if (r.ok && r.placed) {
           h.scene.refreshFacility(r.placed.handle);
+          h.guests.invalidate();
           toast('');
         } else {
           toast(PLACE_FAIL_MESSAGES[r.fail ?? 'unknown-def']);
         }
         return;
       }
-      if (h.terrain.paint(i, j, brush)) h.scene.refreshTile(i, j);
+      if (h.terrain.paint(i, j, brush)) {
+        h.scene.refreshTile(i, j);
+        h.guests.invalidate(); // 통행 가능성이 바뀐다
+      }
     },
   });
 
@@ -174,7 +184,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   document.body.append(picker);
 
   // 검증 도구가 시뮬 규칙을 직접 부를 수 있게 노출한다 (브라우저에서 규칙을 재구현하지 않도록)
+  const { Rng } = await import('./sim/rng.js');
   Object.assign(h, {
+    Rng,
     sim: { placeWall, removeWall, WALL_SOLID, WALL_DOOR, PLACE_MESSAGES },
     simDefs: Object.fromEntries(allFacilityDefs().map((d) => [d.id, d])),
   });
