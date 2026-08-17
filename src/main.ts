@@ -364,6 +364,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       courses: courses.toSnapshot(),
       discovered: [...discovered],
       resortName,
+      priceMult,
     });
   };
 
@@ -402,6 +403,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       season,
       playbackEvery: 6,
       reputation: gr.reputationPull,
+      priceMult,
       modifiers: mods,
       courses: {
         revenue: courseWeek.revenue,
@@ -537,6 +539,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   });
 
   let resortName = saved?.resortName ?? '가평 빠지';
+  /** 요금 배율 (§15.9 "값을 매긴다") — 세이브에 담긴다 */
+  let priceMult = saved?.priceMult ?? 1;
   const showcase = new KairoShowcase(
     document.body,
     h.scene,
@@ -593,16 +597,29 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
 
   const staffBtn = document.createElement('button');
   staffBtn.id = 'kairo-staff-open';
-  staffBtn.textContent = '직원';
+  staffBtn.textContent = '경영';
   staffBtn.style.cssText =
     'position:fixed;right:8px;bottom:172px;z-index:9;min-height:44px;min-width:64px;' +
     'border-radius:10px;border:none;background:#2a5674;color:#eaf6ff;font-size:13px';
   staffBtn.addEventListener('click', () => {
     if (staffPanel.visible) staffPanel.hide();
-    else staffPanel.show(staff, h.placement, () => {
-      refreshStaffBtn();
-      persist();
-    });
+    else
+      staffPanel.show(
+        staff,
+        h.placement,
+        () => {
+          refreshStaffBtn();
+          persist();
+        },
+        {
+          price: () => priceMult,
+          setPrice: (v) => {
+            priceMult = v;
+          },
+          cash: () => week.cash,
+          spend: (n) => week.spend(n),
+        },
+      );
   });
   document.body.append(staffBtn);
 
@@ -610,7 +627,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const refreshStaffBtn = (): void => {
     const eff = staff.effects(h.placement);
     const short = STAFF_ROLE_LIST.filter((r) => eff.coverage[r.id] < 1).length;
-    staffBtn.textContent = short > 0 ? `직원 ${staff.total}명 ⚠${short}` : `직원 ${staff.total}명`;
+    staffBtn.textContent = short > 0 ? `경영 ⚠${short}` : '경영';
     staffBtn.style.background = short > 0 ? '#7a4a1e' : '#2a5674';
     staffPanel.refresh();
   };
@@ -684,6 +701,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     courseApi: course,
     catalog,
     showcase,
+    priceMult: () => priceMult,
     progress,
     refreshQuests,
     getLastReport: () => lastReport,

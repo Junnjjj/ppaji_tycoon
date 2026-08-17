@@ -1,6 +1,6 @@
 import { Rng } from '../rng.js';
 import type { KairoTerrain } from './terrain.js';
-import { PlacementGrid, facilityDef } from './placement.js';
+import { PlacementGrid, facilityDef, LEVEL_SATISFACTION } from './placement.js';
 import type { GroupId } from './groups.js';
 import type { GuestStore } from './guests.js';
 
@@ -22,6 +22,18 @@ import type { GuestStore } from './guests.js';
  * "비 오면 방문객 ×0.6" 은 RNG 세금이다. 대신 비는 `food`·`warm`·`rest` 수요를 올리고
  * `thrill`·`play` 를 내린다 — 플레이어가 시설 구성으로 대응할 수 있는 변화여야 한다.
  */
+
+/**
+ * 요금 배율이 만족도에 주는 영향 (§15.9).
+ *
+ * 정가(1.0)에서 0. 비싸면 깎이고 싸면 오른다 — **비대칭**이다: 싸게 받아 얻는 호감보다
+ * 비싸게 받아 잃는 불만이 크다. 대칭으로 두면 "항상 최대로 올린다"가 정답이 되기 쉽다.
+ */
+export function priceSatisfaction(mult: number): number {
+  const d = mult - 1;
+  // `|| 0` 은 −0 을 0 으로 만든다 — 정가에서 −0 이 나오면 비교가 성가시다
+  return Math.round(d < 0 ? -d * 12 : -d * 30) || 0;
+}
 
 export const DAYS_PER_WEEK = 7;
 /** 하루 tick 수. 10Hz 고정 timestep 기준 = 하루 12초 */
@@ -199,6 +211,14 @@ export interface WeekOptions {
    */
   reputation?: number;
   /**
+   * 요금 배율 (§15.9 "값을 매긴다"). 1.0 이 정가.
+   *
+   * 올리면 매출이 늘고 **만족도가 내려간다** — 그게 이 동사의 전부다. 수요를 직접
+   * 건드리지 않는 이유는, 만족도 → 등급 → 수요라는 기존 사슬이 이미 있기 때문이다.
+   * 두 경로로 넣으면 같은 것을 두 번 세게 된다.
+   */
+  priceMult?: number;
+  /**
    * 직원 효과 (§11). 없으면 직원이 없는 것으로 본다 — 기존 호출자 호환.
    *
    * ⚠ 여기도 `WeekRunner` 안에 직원 규칙을 넣지 않는다. `staff.ts` 가 해석하고
@@ -238,6 +258,8 @@ export interface WeekSnapshot {
 
 export class WeekRunner {
   private weekNo = 0;
+  /** 이번 주 요금 배율 — `run` 이 매주 설정한다 */
+  private priceMult = 1;
   private money = 5_000_000;
 
   /**
@@ -348,6 +370,7 @@ export class WeekRunner {
     const days: DayReport[] = [];
     const playback: PlaybackFrame[] = [];
 
+    this.priceMult = opts.priceMult ?? 1;
     const staff = opts.staff;
     this.guests.setIdle(staff?.idle ?? new Set());
     const supply = this.supply(staff?.idle);
@@ -533,7 +556,9 @@ export class WeekRunner {
                 100,
                 days.reduce((a, d) => a + d.exitSatisfaction, 0) / totalExited +
                   (mod?.satisfactionDelta ?? 0) +
-                  (staff?.satisfactionDelta ?? 0),
+                  (staff?.satisfactionDelta ?? 0) +
+                  priceSatisfaction(this.priceMult) +
+                  (this.placement.averageLevel() - 1) * LEVEL_SATISFACTION,
               ),
             ),
       gaveUp: days.reduce((a, d) => a + d.gaveUp, 0),
@@ -569,10 +594,11 @@ export class WeekRunner {
         | { fee?: number; need?: NeedKind }
         | undefined;
       if (!def?.fee) continue;
-      feeSum += def.fee * (mods[def.need as NeedKind] ?? 1);
+      // 개선 단계가 반영된 요금 — 후반에 확장이 막히면 이게 유일한 매출 성장 축이다
+      feeSum += this.placement.feeOf(item.handle) * (mods[def.need as NeedKind] ?? 1);
       n++;
     }
     if (n === 0) return 0;
-    return Math.round((feeSum / n) * finished);
+    return Math.round((feeSum / n) * finished * this.priceMult);
   }
 }

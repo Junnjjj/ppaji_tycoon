@@ -64,6 +64,14 @@ export interface PlacedFacility {
   defId: string;
   i: number;
   j: number;
+  /**
+   * 개선 단계 1~3 (§15.9 시설 상세의 [업그레이드]).
+   *
+   * **정원은 안 늘린다.** 정원을 늘리면 등급 상한에 막힌 상태에서 아무 효과가 없다 —
+   * 개선은 "같은 손님에게 더 좋은 경험"이고, 그래서 후반(확장이 막힌 구간)의 유일한
+   * 성장 수단이 된다. 요금과 만족도만 올라간다.
+   */
+  level?: number;
 }
 
 export type PlaceFail =
@@ -95,6 +103,13 @@ export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
   unreachable: '손님이 닿을 수 없는 자리입니다',
   'unknown-def': '알 수 없는 시설입니다',
 };
+
+/** 개선 최고 단계 */
+export const MAX_LEVEL = 3;
+/** 단계당 요금 상승 */
+export const LEVEL_FEE_STEP = 0.3;
+/** 평균 단계가 1 오를 때 만족도 보너스 */
+export const LEVEL_SATISFACTION = 6;
 
 export interface PlacementSnapshot {
   w: number;
@@ -309,6 +324,52 @@ export class PlacementGrid {
     let n = 0;
     for (const it of this.items.values()) n += DEFS[it.defId]?.capacity ?? 0;
     return n;
+  }
+
+  /** 개선 단계 (없으면 1) */
+  levelOf(handle: number): number {
+    return this.items.get(handle)?.level ?? 1;
+  }
+
+  /**
+   * 다음 단계 비용. 단계마다 가팔라진다 — 안 그러면 "전부 3단계"가 항상 정답이 되고
+   * 개선이 선택이 아니라 절차가 된다.
+   */
+  upgradeCost(handle: number): number {
+    const item = this.items.get(handle);
+    if (!item) return 0;
+    const def = facilityDef(item.defId);
+    if (!def) return 0;
+    const level = item.level ?? 1;
+    if (level >= MAX_LEVEL) return 0;
+    return Math.round(def.cost * (0.6 + level * 0.5));
+  }
+
+  /** 한 단계 올린다. 이미 최고면 false */
+  upgrade(handle: number): boolean {
+    const item = this.items.get(handle);
+    if (!item) return false;
+    const level = item.level ?? 1;
+    if (level >= MAX_LEVEL) return false;
+    item.level = level + 1;
+    return true;
+  }
+
+  /** 개선이 반영된 요금 */
+  feeOf(handle: number): number {
+    const item = this.items.get(handle);
+    if (!item) return 0;
+    const def = facilityDef(item.defId);
+    if (!def) return 0;
+    return Math.round(def.fee * (1 + (this.levelOf(handle) - 1) * LEVEL_FEE_STEP));
+  }
+
+  /** 전체 시설의 평균 개선 단계 — 만족도 보너스의 근거 */
+  averageLevel(): number {
+    if (this.items.size === 0) return 1;
+    let sum = 0;
+    for (const it of this.items.values()) sum += it.level ?? 1;
+    return sum / this.items.size;
   }
 
   toSnapshot(): PlacementSnapshot {

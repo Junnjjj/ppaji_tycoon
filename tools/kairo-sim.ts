@@ -72,9 +72,13 @@ interface RunResult {
   profitByWeek: number[];
   /** 주차별 계절 — 성장 판정은 **같은 계절끼리** 비교해야 한다 */
   seasonByWeek: Season[];
-  /** 건설이 막힌 주 — 돈이 없어서 / 자리가 없어서를 **나눠서** 센다 */
+  /** 건설이 막힌 주 — **안 짓기로 / 돈이 없어서 / 자리가 없어서**를 나눠서 센다 */
   buildPoor: number;
   buildNoSpace: number;
+  buildCapped: number;
+  /** 개선에 쓴 돈과 평균 단계 — 후반 공백이 메워졌는지 본다 */
+  upgradeSpend: number;
+  avgLevel: number;
   /** 뽑힌 카드 수와 카드로 나간 돈 — 카드가 경제를 얼마나 흔드나 */
   cardsSeen: number;
   cardSpend: number;
@@ -163,6 +167,8 @@ function runOne(seed: number, weeks: number): RunResult {
   const seasonByWeek: Season[] = [];
   let buildPoor = 0;
   let buildNoSpace = 0;
+  let buildCapped = 0;
+  let upgradeSpend = 0;
   let courseFail = '';
   let cardsSeen = 0;
   let cardSpend = 0;
@@ -197,6 +203,43 @@ function runOne(seed: number, weeks: number): RunResult {
       Math.round(income * 1.5),
       Math.floor(Math.max(0, cash - BUILD_RESERVE) * 0.25),
     );
+
+    /*
+     * ⚠ **공급이 등급 상한을 넘으면 그만 짓는다.**
+     *
+     * 입장은 `min(등급 상한, 공급×1.5)` 다. 공급×1.5 가 이미 등급 상한을 넘었으면 시설을
+     * 더 지어도 **한 명도 더 안 들어오고 유지비만 는다.** 봇이 이걸 모르고 계속 지어
+     * 80주에서 시설 133개 · 만석 44% · 유지비가 수익의 74% · 파산 9/48 이 됐다.
+     *
+     * 사람이라면 "만석인데 지어도 안 들어온다"를 보고 멈춘다. 계측 도구가 그 판단을 안 하면
+     * 우리는 **게임이 무너졌다고 잘못 읽는다** — 무너진 건 봇의 정책이다.
+     * (게임 쪽에도 이 사실을 알리는 표시가 필요하다 — 결산 병목 줄에 넣었다.)
+     */
+    const gradeNow = gradeFor(last?.exitSatisfaction ?? 0);
+    const capped = p.totalCapacity() * 1.5 > gradeNow.maxGuests * 1.3;
+    if (capped) weekBudget = 0;
+
+    /*
+     * 확장이 막혔으면 **개선한다** (§15.9). 정원은 안 늘고 요금·만족도가 오르므로,
+     * 등급 상한에 막힌 구간에서 유일하게 남는 성장 수단이다.
+     *
+     * 이게 없으면 80주 중 58주가 "지을 게 없다"가 되고 현금이 2,220만까지 쌓인다 (실측).
+     */
+    if (capped) {
+      for (let k = 0; k < 3; k++) {
+        const targets = p
+          .all()
+          .filter((it) => p.levelOf(it.handle) < 3)
+          .sort((a, b) => p.levelOf(a.handle) - p.levelOf(b.handle) || a.handle - b.handle);
+        const t0 = targets[0];
+        if (!t0) break;
+        const cost = p.upgradeCost(t0.handle);
+        if (cost <= 0 || cost > cash - BUILD_RESERVE) break;
+        p.upgrade(t0.handle);
+        cash -= cost;
+        upgradeSpend += cost;
+      }
+    }
     for (let b = 0; b < 3; b++) {
       /*
        * 예비비를 남긴다. **이게 없으면 봇이 스스로 파산하고, 그러면 우리는 게임이 아니라
@@ -218,7 +261,13 @@ function runOne(seed: number, weeks: number): RunResult {
          * 직원 인건비로 돈이 마른 상태였는데 자리 문제로 보고했다).
          * 가장 싼 시설도 못 살 예산이면 **돈 문제**다.
          */
-        if (budget < CHEAPEST_FACILITY) buildPoor++;
+        /*
+         * ⚠ 셋을 구분해야 한다: **안 짓기로 했다 / 돈이 없다 / 자리가 없다.**
+         * 예산을 0 으로 둔 것(공급이 등급 상한을 넘어 그만 짓기로 한 것)을 "돈이 없다"로
+         * 세면, 현금 2,220만인 판이 "돈이 없어 건설이 막힌다"로 보고된다 (실측).
+         */
+        if (weekBudget <= 0) buildCapped++;
+        else if (budget < CHEAPEST_FACILITY) buildPoor++;
         else buildNoSpace++;
         break;
       }
@@ -322,9 +371,17 @@ function runOne(seed: number, weeks: number): RunResult {
     // 카드 선택이 끝난 뒤에 상한을 정한다 — 혼잡 배율이 이번 주에 반영되어야 한다
     const mods = cards.modifiers();
     g.setMaxGuests(admissionLimit(gr, p.totalCapacity(), mods.crowdMult));
+    /*
+     * 요금 정책: 만족도가 여유 있으면 올리고, 빠듯하면 내린다.
+     * 사람이 슬라이더로 하는 판단을 흉내낸다 — 안 하면 "값을 매긴다"가 경제에 안 나타난다.
+     */
+    const sat = last?.exitSatisfaction ?? 60;
+    const priceMult = sat > 78 ? 1.2 : sat < 62 ? 0.85 : 1;
+
     const rep = week.run(rng, {
       season,
       reputation: gr.reputationPull,
+      priceMult,
       modifiers: mods,
       courses: {
         revenue: courseWeek.revenue,
@@ -373,6 +430,9 @@ function runOne(seed: number, weeks: number): RunResult {
     seasonByWeek,
     buildPoor,
     buildNoSpace,
+    buildCapped,
+    upgradeSpend,
+    avgLevel: p.averageLevel(),
     cardsSeen,
     cardSpend,
     staffWeeks,
@@ -462,7 +522,8 @@ function main(): void {
     .join(' · ');
   console.log(`계절별 손익 중앙값: ${seasonLine}`);
   console.log(
-    `건설 막힘 중앙값: 돈 부족 ${stats(runs.map((r) => r.buildPoor)).med}회 · ` +
+    `건설 막힘 중앙값: 상한 도달 ${stats(runs.map((r) => r.buildCapped)).med}회 · ` +
+      `돈 부족 ${stats(runs.map((r) => r.buildPoor)).med}회 · ` +
       `자리 부족 ${stats(runs.map((r) => r.buildNoSpace)).med}회 (판당)`,
   );
   const perWeekMed = (pick: (r: RunResult) => number[]): number[] => {
@@ -585,6 +646,19 @@ function main(): void {
   if (noSpace.med > WEEKS * 0.3) {
     issues.push(
       `자리가 없어 건설이 막힌다 (중앙 ${noSpace.med}회/판) — 토지 해금으로 격자를 넓혀야 한다`,
+    );
+  }
+  /*
+   * ⚠ **상한에 닿는 것 자체는 문제가 아니다.** 확장이 막혀도 개선(§15.9)이라는 다른
+   * 돈 쓸 곳이 있으면 후반이 비지 않는다. 문제는 **막혔는데 돈이 쌓이는 것** —
+   * 그때가 "할 게 없다"다. 둘을 함께 봐야 경보가 진실을 말한다.
+   */
+  const capped = stats(runs.map((r) => r.buildCapped));
+  const idleCash = stats(runs.map((r) => r.cash));
+  if (capped.med > WEEKS * 0.5 && idleCash.med > 15_000_000) {
+    issues.push(
+      `후반이 빈다 — 절반 넘는 주에 지을 게 없고(중앙 ${capped.med}회/판) ` +
+        `현금이 ${fmt(idleCash.med)} 쌓인다. 등급 상한에 막혔는데 쓸 곳이 없다`,
     );
   }
   if (poor.med > WEEKS * 0.4) {

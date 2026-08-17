@@ -1878,6 +1878,74 @@ async function main(): Promise<void> {
     overflow?: boolean;
   };
 
+  /*
+   * 경영 3탭 (§15.9) — 가격·직원·개선. **후반 공백을 메우는 장치**다:
+   * 확장이 등급 상한에 막힌 뒤에도 값과 개선이 남아야 80주가 비지 않는다.
+   */
+  const manage = (await page.evaluate(`(() => {
+    const panel = document.getElementById('kairo-staff');
+    if (!panel) return { ok: false, why: '경영 패널이 없다' };
+    const tabs = [...panel.querySelectorAll('button[data-manage]')];
+    if (tabs.length !== 3) return { ok: false, why: '탭이 3개가 아니다: ' + tabs.length };
+    // 가격 탭
+    tabs.find((b) => b.dataset.manage === 'price').click();
+    const slider = document.getElementById('kairo-price');
+    const sliderH = Math.round(slider.getBoundingClientRect().height);
+    const before = window.__kairo.priceMult ? window.__kairo.priceMult() : 1;
+    slider.value = '130';
+    slider.dispatchEvent(new Event('input', { bubbles: true }));
+    const after = window.__kairo.priceMult ? window.__kairo.priceMult() : 1;
+    // 개선 탭
+    tabs.find((b) => b.dataset.manage === 'upgrade').click();
+    const rows = [...panel.querySelectorAll('div[data-upgrade]')];
+    const lvBefore = window.__kairo.placement.averageLevel();
+    const btn = rows.length ? rows[0].querySelector('button') : null;
+    const enabled = btn ? !btn.disabled : false;
+    if (btn && !btn.disabled) btn.click();
+    const lvAfter = window.__kairo.placement.averageLevel();
+    // 원상복구 — 뒤 검사들이 정가를 기대한다
+    tabs.find((b) => b.dataset.manage === 'price').click();
+    slider.value = '100';
+    slider.dispatchEvent(new Event('input', { bubbles: true }));
+    return {
+      ok: true, tabs: tabs.length, sliderH: sliderH,
+      priceBefore: before, priceAfter: after,
+      upgradeRows: rows.length, enabled: enabled,
+      lvBefore: lvBefore, lvAfter: lvAfter
+    };
+  })()`)) as {
+    ok: boolean;
+    why?: string;
+    tabs?: number;
+    sliderH?: number;
+    priceBefore?: number;
+    priceAfter?: number;
+    upgradeRows?: number;
+    enabled?: boolean;
+    lvBefore?: number;
+    lvAfter?: number;
+  };
+
+  record(
+    '경영이 가격·직원·개선 3탭이다 (§15.9)',
+    manage.ok ? 'pass' : 'fail',
+    manage.ok ? `${manage.tabs}탭 · 슬라이더 ${manage.sliderH}px` : (manage.why ?? '실패'),
+  );
+  record(
+    '요금 슬라이더가 실제로 값을 바꾼다 — 여섯 동사 중 "값을 매긴다"',
+    (manage.priceAfter ?? 1) > (manage.priceBefore ?? 1) ? 'pass' : 'fail',
+    `${manage.priceBefore} → ${manage.priceAfter}`,
+  );
+  record(
+    '개선 목록이 뜨고 누르면 단계가 오른다 — 확장이 막힌 뒤의 성장 수단',
+    (manage.upgradeRows ?? 0) > 0 &&
+      (!manage.enabled || (manage.lvAfter ?? 0) > (manage.lvBefore ?? 0))
+      ? 'pass'
+      : 'fail',
+    `${manage.upgradeRows}개 · 평균 단계 ${(manage.lvBefore ?? 0).toFixed(2)} → ` +
+      `${(manage.lvAfter ?? 0).toFixed(2)}${manage.enabled ? '' : ' (현금 부족)'}`,
+  );
+
   record(
     '직원 시트가 열리고 5직종이 보인다',
     staffUi.ok && staffUi.rows === 5 ? 'pass' : 'fail',

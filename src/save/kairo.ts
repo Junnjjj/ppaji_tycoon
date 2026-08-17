@@ -71,6 +71,8 @@ export interface KairoSaveV1 {
   discovered?: string[];
   /** 리조트 이름 — 감상 화면에서 바꾼다. 내 리조트라는 감각의 절반은 이름이다 */
   resortName?: string;
+  /** 요금 배율 (§15.9) — 안 저장하면 새로고침이 곧 정가 복귀다 */
+  priceMult?: number;
 }
 
 export type AnyKairoSave = KairoSaveV1;
@@ -107,6 +109,7 @@ export interface KairoSaveInput {
   courses?: CourseSnapshot;
   discovered?: string[];
   resortName?: string;
+  priceMult?: number;
 }
 
 export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave {
@@ -130,6 +133,7 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.courses ? { courses: input.courses } : {}),
     ...(input.discovered ? { discovered: input.discovered } : {}),
     ...(input.resortName ? { resortName: input.resortName } : {}),
+    ...(input.priceMult !== undefined ? { priceMult: input.priceMult } : {}),
   };
 }
 
@@ -180,6 +184,7 @@ export interface KairoRestored {
   courses?: CourseSnapshot;
   discovered?: string[];
   resortName?: string;
+  priceMult?: number;
 }
 
 export function restoreKairo(raw: unknown): KairoRestored {
@@ -203,6 +208,7 @@ export function restoreKairo(raw: unknown): KairoRestored {
     ...(s.courses ? { courses: s.courses } : {}),
     ...(s.discovered ? { discovered: s.discovered } : {}),
     ...(s.resortName ? { resortName: s.resortName } : {}),
+    ...(s.priceMult !== undefined ? { priceMult: s.priceMult } : {}),
   };
 }
 

@@ -8,6 +8,8 @@ import { WeekRunner, type Season } from './week.js';
 import { evaluateCombos } from './combos.js';
 import { questStatuses, ProgressStore, gradeFor, GRADES, admissionLimit } from './progress.js';
 import { assessRisk } from './risk.js';
+import { CardStore, CARD_RNG_SALT } from './cards.js';
+import { StaffStore, STAFF_ROLES, neededFor } from './staff.js';
 
 /**
  * 골든 시나리오 — **밸런스 회귀를 잡는 마지막 장치**.
@@ -53,6 +55,11 @@ const BUILD_ORDER: readonly [string, number, number][] = [
 
 interface Golden {
   facilities: number;
+  /** 새 시스템까지 못박는다 — 안 그러면 카드·직원·코스 회귀를 골든이 못 잡는다 */
+  cards: number;
+  staffWages: number;
+  courseRevenue: number;
+  avgLevel: number;
   combos: number;
   grade: number;
   exitSat: number;
@@ -82,6 +89,18 @@ function playGolden(weeks: number): Golden {
   }
   g.invalidate();
 
+  /*
+   * 새 시스템을 **고정된 방식으로** 넣는다 — 골든은 무작위 정책이 아니라 재현 가능한
+   * 한 판이어야 한다. 카드는 항상 0번(폐쇄 없는 쪽), 직원은 필요 인원, 요금은 정가,
+   * 개선은 앞 세 시설만 한 단계.
+   */
+  const cards = new CardStore();
+  const cardRng = rng.fork(CARD_RNG_SALT);
+  const staff = new StaffStore();
+  const staffRng = rng.fork(0x57aff);
+  for (const role of STAFF_ROLES) staff.set(role.id, neededFor(role, p));
+  for (const item of p.all().slice(0, 3)) p.upgrade(item.handle);
+
   const seasons: Season[] = ['summer', 'summer', 'summer', 'autumn'];
   /**
    * 매주 등급을 반영한다 — 등급이 동시 손님 상한과 방문 수요를 올린다.
@@ -93,16 +112,51 @@ function playGolden(weeks: number): Golden {
     g.setMaxGuests(admissionLimit(gr, p.totalCapacity()));
     return gr.reputationPull;
   };
+  let cardCount = 0;
+  const runOne = (season: Season, pull: number): ReturnType<typeof week.run> => {
+    for (const card of cards.draw(cardRng, { season, week: week.week + 1, grade: gradeFor(0).grade })) {
+      // 폐쇄가 없는 첫 선택지 — 폐쇄를 고르면 그 주 손님이 0이라 골든이 무의미해진다
+      let pick = 0;
+      for (let oi = 0; oi < card.options.length; oi++) {
+        if (!card.options[oi]?.effects.some((e) => e.closed)) {
+          pick = oi;
+          break;
+        }
+      }
+      cards.choose(cardRng, card, pick);
+      cardCount++;
+    }
+    const eff = staff.effects(p);
+    const r = week.run(rng, {
+      season,
+      reputation: pull,
+      priceMult: 1,
+      modifiers: cards.modifiers(),
+      staff: {
+        wages: eff.wages,
+        satisfactionDelta: eff.satisfactionDelta,
+        foodMult: eff.foodMult,
+        idle: staff.idleHandles(p, staffRng),
+      },
+    });
+    cards.tickWeek();
+    return r;
+  };
+
   let pull = applyGrade(0);
-  let last = week.run(rng, { season: 'summer', reputation: pull });
+  let last = runOne('summer', pull);
   for (let k = 1; k < weeks; k++) {
     pull = applyGrade(last.exitSatisfaction);
-    last = week.run(rng, { season: seasons[k % seasons.length] as Season, reputation: pull });
+    last = runOne(seasons[k % seasons.length] as Season, pull);
     progress.claim(questStatuses(p, last));
   }
 
   return {
     facilities: placed,
+    cards: cardCount,
+    staffWages: last.wages,
+    courseRevenue: last.courseRevenue,
+    avgLevel: Math.round(p.averageLevel() * 100) / 100,
     combos: evaluateCombos(p).active.length,
     grade: gradeFor(last.exitSatisfaction).grade,
     exitSat: Math.round(last.exitSatisfaction),
@@ -152,17 +206,28 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
      * "이용을 끝낸 수"를 셌는데 같은 tick 에 시작과 종료가 겹치면 놓쳤다. 손님 쪽이
      * 완료를 직접 세도록 바꾸니 매출이 약 2.15배가 되어, 밸런스 지점을 유지하려고
      * 요금 데이터를 ×0.465 했다. 이 항목의 `profitSign` 은 그대로다.
+     *
+     * **2026-08-18 새 시스템을 골든에 넣었다** (exitSat 69→71 · visitors 93→97 ·
+     * turnedAway 0→1, 그리고 `cards`·`staffWages`·`courseRevenue`·`avgLevel` 추가):
+     * 카드·직원·개선이 골든에 없으면 **그 셋의 회귀를 골든이 못 잡는다** — 시뮬 절반이
+     * 못박히지 않은 상태였다. 직원을 필요 인원만큼 쓰고 앞 세 시설을 한 단계 개선하니
+     * 만족도가 2 오르고 방문객이 늘었다. `courseRevenue` 0 은 이 시나리오에 코스를 안
+     * 놓았기 때문이고, **0 이 아니게 되면 그건 코스가 어딘가에서 새로 생겼다는 뜻**이다.
      */
     expect(g).toEqual({
       facilities: 15,
       combos: 7,
       grade: 3,
-      exitSat: 69,
-      visitors: 93,
-      turnedAway: 0,
+      exitSat: 71,
+      visitors: 97,
+      turnedAway: 1,
       profitSign: 1,
       questsDone: 6,
       riskLevel: 'watch',
+      cards: 12,
+      staffWages: 22_500,
+      courseRevenue: 0,
+      avgLevel: 1.2,
     });
   });
 
