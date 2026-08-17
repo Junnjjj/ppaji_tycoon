@@ -22,6 +22,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     './sim/kairo/walls.js'
   );
   const { allFacilityDefs, PLACE_FAIL_MESSAGES } = await import('./sim/kairo/placement.js');
+  const { WeekRunner } = await import('./sim/kairo/week.js');
+  const { KairoReport } = await import('./ui/kairo-report.js');
+  const { Rng: RngCls } = await import('./sim/rng.js');
   const box = document.createElement('div');
   box.id = 'kairo-debug';
   box.style.cssText =
@@ -37,7 +40,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         `FPS ${s.fps}  S=${s.upscale}  버퍼 ${s.bufferW}×${s.bufferH}\n` +
         `스크롤 ${s.scrollX},${s.scrollY}  타일 ${s.tiles}\n` +
         `벽 ${s.walls}  시설 ${s.facilities}  손님 ${s.guests}\n` +
-        `퇴장만족 ${s.exitSat.toFixed(0)}\n` +
+        `퇴장만족 ${s.exitSat.toFixed(0)}  주차 ${week.week}  현금 ${Math.round(week.cash / 10000)}만\n` +
         (s.dotGridViolations.length === 0
           ? '도트격자 OK'
           : `도트격자 위반: ${s.dotGridViolations.join(' / ')}`);
@@ -190,6 +193,46 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     sim: { placeWall, removeWall, WALL_SOLID, WALL_DOOR, PLACE_MESSAGES },
     simDefs: Object.fromEntries(allFacilityDefs().map((d) => [d.id, d])),
   });
+  /**
+   * 주 단위 루프 — 핵심 루프의 30초 사이클.
+   *   한 주 진행 → 압축 연출(3.5초) → 결산에서 병목 확인 → 구조물을 키움 → 다시 한 주
+   *
+   * 실시간 시뮬은 "만지는 동안"만 돌고, 시간이 흐르는 건 이 버튼뿐이다 — 렌더가 프레임마다
+   * tick 을 돌리면 결산이 언제 끝났는지 알 수 없다.
+   */
+  const week = new WeekRunner(h.terrain, h.placement, h.guests);
+  const report = new KairoReport(document.body);
+  const weekRng = new RngCls(31337);
+  let lastReport: ReturnType<typeof week.run> | null = null;
+
+  const runWeek = (): void => {
+    if (h.scene.isPlaying || report.visible) return;
+    const t0 = performance.now();
+    const rep = week.run(weekRng, { season: 'summer', playbackEvery: 6 });
+    const calcMs = performance.now() - t0;
+    lastReport = rep;
+    console.log(
+      `[카이로] ${rep.week}주차 계산 ${calcMs.toFixed(0)}ms · 방문 ${rep.visitors} · ` +
+        `손익 ${rep.profit} · 프레임 ${rep.playback.length}`,
+    );
+    h.scene.playWeek(rep.playback, 3500, () => {
+      report.show(rep, {
+        onClose: () => undefined,
+        onReplay: () => h.scene.playWeek(rep.playback, 3500, () => report.show(rep, { onClose: () => undefined })),
+      });
+    });
+  };
+
+  const weekBtn = document.createElement('button');
+  weekBtn.id = 'kairo-week';
+  weekBtn.textContent = '한 주 진행 ▶';
+  weekBtn.style.cssText =
+    'position:fixed;right:8px;bottom:64px;z-index:9;min-height:48px;min-width:120px;' +
+    'border-radius:10px;border:none;background:#2f7fc0;color:#fff;font-size:15px;font-weight:600';
+  weekBtn.addEventListener('click', runWeek);
+  document.body.append(weekBtn);
+
+  Object.assign(h, { week, report, runWeek, getLastReport: () => lastReport });
   Object.assign(window, { __kairo: h, __kairoBrush: () => brush });
   console.log(
     `[카이로] 에셋 ${h.provider.name} (${h.provider.ids.length}장 플레이스홀더) · ` +

@@ -21,6 +21,7 @@ import type { KairoTerrain } from '../../sim/kairo/terrain.js';
 import { WALL_DOOR, type WallGrid } from '../../sim/kairo/walls.js';
 import { facilityDef, type PlacementGrid } from '../../sim/kairo/placement.js';
 import type { GuestStore, Guest } from '../../sim/kairo/guests.js';
+import type { PlaybackFrame } from '../../sim/kairo/week.js';
 import {
   bakeGuestAtlas,
   bakeEmoteAtlas,
@@ -106,6 +107,17 @@ export class KairoScene extends Phaser.Scene {
   private guestAtlas: ReturnType<typeof bakeGuestAtlas> | null = null;
   private animTick = 0;
   private simAcc = 0;
+  /**
+   * 압축 연출 상태. 한 주를 0.6초에 계산해도 **3~5초는 보여준다** — 손님이 노는 광경이
+   * 이 게임 최대의 보상이라 리플레이로 격리하면 안 된다 (v4 결정).
+   */
+  private playback: {
+    frames: readonly PlaybackFrame[];
+    elapsed: number;
+    durationMs: number;
+    onDone: () => void;
+  } | null = null;
+  private playbackViews: Phaser.GameObjects.Image[] = [];
   private simTickCount = 0;
   /** 손님 시뮬용 RNG — 씬이 들고 있지만 시드는 주입된다 (결정론) */
   private rng: Rng;
@@ -465,6 +477,26 @@ export class KairoScene extends Phaser.Scene {
   }
 
   override update(_time: number, delta: number): void {
+    // 압축 연출 중에는 실시간 시뮬을 멈춘다 — 둘이 동시에 돌면 결산과 화면이 어긋난다
+    if (this.playback) {
+      this.playback.elapsed += delta;
+      const t = Math.min(1, this.playback.elapsed / this.playback.durationMs);
+      const idx = Math.min(
+        this.playback.frames.length - 1,
+        Math.floor(t * this.playback.frames.length),
+      );
+      this.drawPlaybackFrame(this.playback.frames[idx]);
+      if (t >= 1) {
+        const done = this.playback.onDone;
+        this.playback = null;
+        this.clearPlayback();
+        done();
+      }
+      this.animTick++;
+      this.reportFrame();
+      return;
+    }
+
     // 시뮬 — 고정 timestep 10Hz. 배속은 tick 수를 곱한다 (tick 크기가 아니다)
     if (this.opts.autoTick !== false) {
       this.simAcc += delta;
@@ -481,7 +513,63 @@ export class KairoScene extends Phaser.Scene {
     this.animTick++;
     this.opts.guests.advanceRenderProgress(delta / 1000);
     this.syncGuests();
+    this.reportFrame();
+  }
 
+  /** 압축 연출 시작. `durationMs` 동안 기록을 재생하고 끝나면 `onDone` */
+  playWeek(frames: readonly PlaybackFrame[], durationMs: number, onDone: () => void): void {
+    if (frames.length === 0) {
+      onDone();
+      return;
+    }
+    // 실시간 손님 그림을 치운다 — 기록 재생과 겹치면 두 배로 보인다
+    for (const v of this.guestViews.values()) {
+      v.body.destroy();
+      v.face.destroy();
+      v.emote.destroy();
+    }
+    this.guestViews.clear();
+    this.playback = { frames, elapsed: 0, durationMs, onDone };
+  }
+
+  get isPlaying(): boolean {
+    return this.playback !== null;
+  }
+
+  private clearPlayback(): void {
+    for (const img of this.playbackViews) img.destroy();
+    this.playbackViews = [];
+  }
+
+  private drawPlaybackFrame(frame: PlaybackFrame | undefined): void {
+    if (!frame) return;
+    // 필요한 만큼만 이미지를 늘린다 (프레임마다 만들면 GC 가 튄다)
+    while (this.playbackViews.length < frame.guests.length) {
+      const img = this.add.image(0, 0, 'guest', bodyFrame(0, 'idle', '+Z', 0));
+      img.setOrigin(0.5, 1);
+      this.playbackViews.push(img);
+    }
+    for (let k = 0; k < this.playbackViews.length; k++) {
+      const img = this.playbackViews[k] as Phaser.GameObjects.Image;
+      const g = frame.guests[k];
+      if (!g) {
+        img.setVisible(false);
+        continue;
+      }
+      const pose = g.pose as Pose;
+      const sheet = POSE_SHEET[pose] ?? POSE_SHEET.idle;
+      const facing: Facing = sheet.facings.includes(g.facing as Facing)
+        ? (g.facing as Facing)
+        : (sheet.facings[0] as Facing);
+      const fr = sheet.frames <= 1 ? 0 : Math.floor(this.animTick / 6) % sheet.frames;
+      img.setTexture('guest', bodyFrame(g.palette, pose, facing, fr));
+      img.setPosition(STEP_X * (g.i - g.j), STEP_Y * (g.i + g.j + 1));
+      img.setDepth(depthKey(g.i, g.j) + 3);
+      img.setVisible(true);
+    }
+  }
+
+  private reportFrame(): void {
     const view = this.cam.view();
     const buf = this.cam.bufferSize();
     const gs = this.opts.guests.stats();

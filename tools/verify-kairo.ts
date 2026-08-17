@@ -939,6 +939,122 @@ async function main(): Promise<void> {
     await page.screenshot({ path: `${SHOT_DIR}/kairo-aqua.png` });
   }
 
+  // ── 7i. 주 단위 루프·결산 ──
+  const weekBtn = await page.$('#kairo-week');
+  record('한 주 진행 버튼', weekBtn ? 'pass' : 'fail');
+
+  const calc = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    const t0 = performance.now();
+    const rep = h.week.run(new h.Rng(555), { season: 'summer', playbackEvery: 6 });
+    const ms = performance.now() - t0;
+    return {
+      ms: ms, week: rep.week, visitors: rep.visitors, revenue: rep.revenue,
+      arrivals: rep.arrivals, turnedAway: rep.turnedAway,
+      upkeep: rep.upkeep, profit: rep.profit, days: rep.days.length,
+      frames: rep.playback.length, heatSum: rep.heat.reduce((a, b) => a + b, 0),
+      hotspot: rep.hotspot, bottleneck: rep.bottleneck,
+      weathers: rep.days.map((d) => d.weather),
+      dayVisitors: rep.days.map((d) => d.visitors),
+    };
+  })()`)) as {
+    ms: number;
+    week: number;
+    visitors: number;
+    arrivals: number;
+    turnedAway: number;
+    revenue: number;
+    upkeep: number;
+    profit: number;
+    days: number;
+    frames: number;
+    heatSum: number;
+    hotspot: { i: number; j: number; value: number } | null;
+    bottleneck: { need: string; supply: number } | null;
+    weathers: string[];
+    dayVisitors: number[];
+  };
+
+  record(
+    '한 주 계산이 0.6초 안에 끝난다 — 주 단위 루프의 전제',
+    calc.ms < 600 ? 'pass' : 'fail',
+    `${calc.ms.toFixed(0)}ms`,
+  );
+  record('요일 7일', calc.days === 7 ? 'pass' : 'fail', calc.weathers.join(','));
+  record('방문객·매출이 생긴다', calc.visitors > 0 && calc.revenue > 0 ? 'pass' : 'fail',
+    `수요 ${calc.arrivals} · 입장 ${calc.visitors} · 만석 ${calc.turnedAway} · 매출 ${calc.revenue} · 손익 ${calc.profit}`);
+  record(
+    '수요 = 입장 + 만석 — 실패한 입장이 어디에도 안 남으면 주말이 한가해 보인다',
+    calc.arrivals === calc.visitors + calc.turnedAway ? 'pass' : 'fail',
+    `${calc.arrivals} = ${calc.visitors} + ${calc.turnedAway}`,
+  );
+  record('혼잡 히트맵이 쌓인다', calc.heatSum > 0 && calc.hotspot !== null ? 'pass' : 'fail',
+    `합 ${calc.heatSum} · 최고점 (${calc.hotspot?.i},${calc.hotspot?.j})=${calc.hotspot?.value}`);
+  record('병목을 알려준다 — 다음에 무엇을 지을까', calc.bottleneck !== null ? 'pass' : 'fail',
+    calc.bottleneck ? `${calc.bottleneck.need} 공급 ${calc.bottleneck.supply}` : '');
+  record(
+    '압축 연출용 프레임이 기록된다 — 계산이 빠른 것과 안 보여주는 것은 다르다',
+    calc.frames > 100 ? 'pass' : 'fail',
+    `${calc.frames} 프레임`,
+  );
+
+  // 압축 연출 → 결산 화면
+  await page.evaluate(`window.__kairo.runWeek()`);
+  await page.waitForTimeout(600);
+  const playing = (await page.evaluate(`window.__kairo.scene.isPlaying`)) as boolean;
+  record('연출이 재생된다 (3.5초)', playing ? 'pass' : 'fail');
+  await page.screenshot({ path: `${SHOT_DIR}/kairo-playback.png` });
+
+  await page.waitForFunction(
+    `(() => { const r = document.getElementById('kairo-report'); return !!r && !r.hidden; })()`,
+    undefined,
+    { timeout: 8000 },
+  );
+  // waitForFunction 이 시간 초과로 던지므로 여기 도달했다는 것 자체가 통과다
+  record('연출이 끝나면 결산이 뜬다', 'pass');
+
+  const rep = (await page.evaluate(`(() => {
+    const r = document.getElementById('kairo-report');
+    const canvas = r.querySelector('canvas');
+    const bars = r.querySelectorAll('div[title]');
+    return {
+      hasHeat: !!canvas, heatW: canvas ? canvas.width : 0,
+      bars: bars.length,
+      text: r.textContent.slice(0, 200),
+      closeMinH: (() => {
+        const b = document.getElementById('kairo-report-close');
+        return b ? Math.round(b.getBoundingClientRect().height) : 0;
+      })(),
+      order: [...r.children].map((c) => c.tagName).join(','),
+    };
+  })()`)) as {
+    hasHeat: boolean;
+    heatW: number;
+    bars: number;
+    text: string;
+    closeMinH: number;
+    order: string;
+  };
+
+  record('결산에 혼잡 히트맵이 있다', rep.hasHeat ? 'pass' : 'fail', `${rep.heatW}px`);
+  record('요일 막대 7개', rep.bars === 7 ? 'pass' : 'fail', `${rep.bars}개`);
+  record(
+    '히트맵이 숫자보다 먼저 온다 — 숫자 표만이면 엑셀 게임이 된다',
+    rep.order.indexOf('CANVAS') > 0 && rep.order.indexOf('CANVAS') < rep.order.lastIndexOf('DIV')
+      ? 'pass'
+      : 'fail',
+    rep.order,
+  );
+  record('닫기 버튼 터치 타깃 44px 이상', rep.closeMinH >= 44 ? 'pass' : 'fail', `${rep.closeMinH}px`);
+  await page.screenshot({ path: `${SHOT_DIR}/kairo-report.png` });
+
+  await page.click('#kairo-report-close');
+  await page.waitForTimeout(200);
+  const closed = (await page.evaluate(
+    `document.getElementById('kairo-report').hidden`,
+  )) as boolean;
+  record('결산을 닫으면 게임으로 돌아온다', closed ? 'pass' : 'fail');
+
   // ── 8. FPS ──
   await page.waitForTimeout(1200);
   const dbg4 = (await page.evaluate(

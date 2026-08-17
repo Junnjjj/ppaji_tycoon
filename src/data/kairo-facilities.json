@@ -15,7 +15,11 @@
       "placement": {
         "requiresWallAdjacent": true
       },
-      "note": "칸마다 손님. 칸막이만 세운다"
+      "note": "칸마다 손님. 칸막이만 세운다",
+      "fee": 2400,
+      "upkeep": 2200,
+      "cost": 78000,
+      "need": "hygiene"
     },
     "changing_row": {
       "id": "changing_row",
@@ -30,7 +34,11 @@
       "placement": {
         "requiresWallAdjacent": true
       },
-      "note": "입구 옆 고정. 수영복 전환"
+      "note": "입구 옆 고정. 수영복 전환",
+      "fee": 2050,
+      "upkeep": 1900,
+      "cost": 63000,
+      "need": "hygiene"
     },
     "locker_row": {
       "id": "locker_row",
@@ -45,7 +53,11 @@
       "placement": {
         "requiresWallAdjacent": true
       },
-      "note": ""
+      "note": "",
+      "fee": 2400,
+      "upkeep": 2200,
+      "cost": 78000,
+      "need": "hygiene"
     },
     "washbasin_row": {
       "id": "washbasin_row",
@@ -60,7 +72,11 @@
       "placement": {
         "requiresWallAdjacent": true
       },
-      "note": ""
+      "note": "",
+      "fee": 2050,
+      "upkeep": 1900,
+      "cost": 63000,
+      "need": "hygiene"
     },
     "toilet": {
       "id": "toilet",
@@ -75,7 +91,11 @@
       "placement": {
         "requiresWallAdjacent": true
       },
-      "note": "들어가는 연출 없음 — 문 앞 사용"
+      "note": "들어가는 연출 없음 — 문 앞 사용",
+      "fee": 1700,
+      "upkeep": 2200,
+      "cost": 78000,
+      "need": "hygiene"
     },
     "nursing": {
       "id": "nursing",
@@ -90,7 +110,11 @@
       "placement": {
         "requiresWallAdjacent": true
       },
-      "note": ""
+      "note": "",
+      "fee": 1350,
+      "upkeep": 1600,
+      "cost": 48000,
+      "need": "hygiene"
     },
     "pool_kids": {
       "id": "pool_kids",
@@ -103,7 +127,11 @@
       "sprite": "facility/pool_kids",
       "capacity": 6,
       "placement": {},
-      "note": "bodyH 0 — 바닥에 파인 물"
+      "note": "bodyH 0 — 바닥에 파인 물",
+      "fee": 3100,
+      "upkeep": 4600,
+      "cost": 198000,
+      "need": "play"
     },
     "pool_warm": {
       "id": "pool_warm",
@@ -116,7 +144,11 @@
       "sprite": "facility/pool_warm",
       "capacity": 8,
       "placement": {},
-      "note": "김 파티클은 procedural"
+      "note": "김 파티클은 procedural",
+      "fee": 3800,
+      "upkeep": 5800,
+      "cost": 258000,
+      "need": "warm"
     },
     "pool_lazy": {
       "id": "pool_lazy",
@@ -129,7 +161,11 @@
       "sprite": "facility/pool_lazy",
       "capacity": 8,
       "placement": {},
-      "note": "최대 실내 시설 — 방 8×6 필요"
+      "note": "최대 실내 시설 — 방 8×6 필요",
+      "fee": 3800,
+      "upkeep": 6400,
+      "cost": 288000,
+      "need": "play"
     },
     "sauna": {
       "id": "sauna",
@@ -142,7 +178,11 @@
       "sprite": "facility/sauna",
       "capacity": 4,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 2400,
+      "upkeep": 3700,
+      "cost": 153000,
+      "need": "warm"
     },
     "jjimjilbang": {
       "id": "jjimjilbang",
@@ -155,7 +195,11 @@
       "sprite": "facility/jjimjilbang",
       "capacity": 6,
       "placement": {},
-      "note": "누운 포즈(lie) 슬롯"
+      "note": "누운 포즈(lie) 슬롯",
+      "fee": 3100,
+      "upkeep": 3700,
+      "cost": 153000,
+      "need": "warm"
     },
     "sikhye": {
       "id": "sikhye",
@@ -168,7 +212,11 @@
       "sprite": "facility/sikhye",
       "capacity": 2,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1700,
+      "upkeep": 1600,
+      "cost": 48000,
+      "need": "food"
     },
     "massage_row": {
       "id": "massage_row",
@@ -183,7 +231,11 @@
       "placement": {
         "requiresWallAdjacent": true
       },
-      "note": ""
+      "note": "",
+      "fee": 2050,
+      "upkeep": 1900,
+      "cost": 63000,
+      "need": "rest"
     },
     "shop": {
       "id": "shop",
@@ -196,7 +248,11 @@
       "sprite": "facility/shop",
       "capacity": 2,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1700,
+      "upkeep": 2200,
+      "cost": 78000,
+      "need": "food"
     },
     "snackbar": {
       "id": "snackbar",
@@ -209,7 +265,11 @@
       "sprite": "facility/snackbar",
       "capacity": 2,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1700,
+      "upkeep": 2200,
+      "cost": 78000,
+      "need": "food"
     },
     "chicken": {
       "id": "chicken",
@@ -222,7 +282,11 @@
       "sprite": "facility/chicken",
       "capacity": 2,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1700,
+      "upkeep": 2200,
+      "cost": 78000,
+      "need": "food"
     },
     "icecream": {
       "id": "icecream",
@@ -235,7 +299,11 @@
       "sprite": "facility/icecream",
       "capacity": 1,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1350,
+      "upkeep": 1600,
+      "cost": 48000,
+      "need": "food"
     },
     "cafe": {
       "id": "cafe",
@@ -248,7 +316,11 @@
       "sprite": "facility/cafe",
       "capacity": 4,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 2400,
+      "upkeep": 2800,
+      "cost": 108000,
+      "need": "rest"
     },
     "vending_in": {
       "id": "vending_in",
@@ -263,7 +335,11 @@
       "placement": {
         "requiresWallAdjacent": true
       },
-      "note": ""
+      "note": "",
+      "fee": 1350,
+      "upkeep": 1300,
+      "cost": 33000,
+      "need": "food"
     },
     "arcade": {
       "id": "arcade",
@@ -278,7 +354,11 @@
       "placement": {
         "requiresWallAdjacent": true
       },
-      "note": ""
+      "note": "",
+      "fee": 1350,
+      "upkeep": 1300,
+      "cost": 33000,
+      "need": "play"
     },
     "karaoke": {
       "id": "karaoke",
@@ -291,7 +371,11 @@
       "sprite": "facility/karaoke",
       "capacity": 2,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1700,
+      "upkeep": 2200,
+      "cost": 78000,
+      "need": "play"
     },
     "pingpong": {
       "id": "pingpong",
@@ -304,7 +388,11 @@
       "sprite": "facility/pingpong",
       "capacity": 2,
       "placement": {},
-      "note": "양쪽 2슬롯 — 마주보는 facing"
+      "note": "양쪽 2슬롯 — 마주보는 facing",
+      "fee": 1700,
+      "upkeep": 2200,
+      "cost": 78000,
+      "need": "play"
     },
     "sunbed_row": {
       "id": "sunbed_row",
@@ -317,7 +405,11 @@
       "sprite": "facility/sunbed_row",
       "capacity": 4,
       "placement": {},
-      "note": "lie 포즈"
+      "note": "lie 포즈",
+      "fee": 2400,
+      "upkeep": 2200,
+      "cost": 78000,
+      "need": "rest"
     },
     "info": {
       "id": "info",
@@ -330,7 +422,11 @@
       "sprite": "facility/info",
       "capacity": 1,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1350,
+      "upkeep": 2200,
+      "cost": 78000,
+      "need": "service"
     },
     "infirmary": {
       "id": "infirmary",
@@ -343,7 +439,11 @@
       "sprite": "facility/infirmary",
       "capacity": 1,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1350,
+      "upkeep": 2200,
+      "cost": 78000,
+      "need": "service"
     },
     "office": {
       "id": "office",
@@ -356,7 +456,11 @@
       "sprite": "facility/office",
       "capacity": 1,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1350,
+      "upkeep": 2200,
+      "cost": 78000,
+      "need": "service"
     },
     "storage": {
       "id": "storage",
@@ -369,7 +473,11 @@
       "sprite": "facility/storage",
       "capacity": 0,
       "placement": {},
-      "note": "손님 슬롯 없음"
+      "note": "손님 슬롯 없음",
+      "fee": 1350,
+      "upkeep": 2200,
+      "cost": 78000,
+      "need": "service"
     },
     "ticket": {
       "id": "ticket",
@@ -382,7 +490,11 @@
       "sprite": "facility/ticket",
       "capacity": 2,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1360,
+      "upkeep": 2240,
+      "cost": 86400,
+      "need": "service"
     },
     "parking": {
       "id": "parking",
@@ -395,7 +507,11 @@
       "sprite": "facility/parking",
       "capacity": 0,
       "placement": {},
-      "note": "차량은 별도 스프라이트"
+      "note": "차량은 별도 스프라이트",
+      "fee": 1080,
+      "upkeep": 4640,
+      "cost": 206400,
+      "need": "service"
     },
     "mongol_tent": {
       "id": "mongol_tent",
@@ -408,7 +524,11 @@
       "sprite": "facility/mongol_tent",
       "capacity": 4,
       "placement": {},
-      "note": "한국 빠지 시그니처"
+      "note": "한국 빠지 시그니처",
+      "fee": 1920,
+      "upkeep": 1760,
+      "cost": 62400,
+      "need": "rest"
     },
     "pyeongsang_row": {
       "id": "pyeongsang_row",
@@ -421,7 +541,11 @@
       "sprite": "facility/pyeongsang_row",
       "capacity": 4,
       "placement": {},
-      "note": "칸마다 그룹 4명. sit 포즈"
+      "note": "칸마다 그룹 4명. sit 포즈",
+      "fee": 1920,
+      "upkeep": 1760,
+      "cost": 62400,
+      "need": "rest"
     },
     "shade_net": {
       "id": "shade_net",
@@ -434,7 +558,11 @@
       "sprite": "facility/shade_net",
       "capacity": 2,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1360,
+      "upkeep": 1280,
+      "cost": 38400,
+      "need": "rest"
     },
     "parasol": {
       "id": "parasol",
@@ -447,7 +575,11 @@
       "sprite": "facility/parasol",
       "capacity": 2,
       "placement": {},
-      "note": "2변형"
+      "note": "2변형",
+      "fee": 1360,
+      "upkeep": 1040,
+      "cost": 26400,
+      "need": "rest"
     },
     "bbq_zone": {
       "id": "bbq_zone",
@@ -460,7 +592,11 @@
       "sprite": "facility/bbq_zone",
       "capacity": 6,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 2480,
+      "upkeep": 2960,
+      "cost": 122400,
+      "need": "food"
     },
     "firepit_row": {
       "id": "firepit_row",
@@ -473,7 +609,11 @@
       "sprite": "facility/firepit_row",
       "capacity": 3,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1640,
+      "upkeep": 1520,
+      "cost": 50400,
+      "need": "food"
     },
     "camp_site": {
       "id": "camp_site",
@@ -486,7 +626,11 @@
       "sprite": "facility/camp_site",
       "capacity": 4,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1920,
+      "upkeep": 2960,
+      "cost": 122400,
+      "need": "rest"
     },
     "pavilion": {
       "id": "pavilion",
@@ -499,7 +643,11 @@
       "sprite": "facility/pavilion",
       "capacity": 4,
       "placement": {},
-      "note": "지붕 있음(야외)"
+      "note": "지붕 있음(야외)",
+      "fee": 1920,
+      "upkeep": 2960,
+      "cost": 122400,
+      "need": "rest"
     },
     "lookout": {
       "id": "lookout",
@@ -512,7 +660,11 @@
       "sprite": "facility/lookout",
       "capacity": 2,
       "placement": {},
-      "note": "경관 지표 기여"
+      "note": "경관 지표 기여",
+      "fee": 1360,
+      "upkeep": 1760,
+      "cost": 62400,
+      "need": "scenery"
     },
     "playground": {
       "id": "playground",
@@ -525,7 +677,11 @@
       "sprite": "facility/playground",
       "capacity": 4,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1920,
+      "upkeep": 2960,
+      "cost": 122400,
+      "need": "play"
     },
     "footvolley": {
       "id": "footvolley",
@@ -538,7 +694,11 @@
       "sprite": "facility/footvolley",
       "capacity": 4,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1920,
+      "upkeep": 3680,
+      "cost": 158400,
+      "need": "play"
     },
     "minigolf": {
       "id": "minigolf",
@@ -551,7 +711,11 @@
       "sprite": "facility/minigolf",
       "capacity": 3,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1640,
+      "upkeep": 2720,
+      "cost": 110400,
+      "need": "play"
     },
     "photozone": {
       "id": "photozone",
@@ -564,7 +728,11 @@
       "sprite": "facility/photozone",
       "capacity": 2,
       "placement": {},
-      "note": "경관 지표"
+      "note": "경관 지표",
+      "fee": 1360,
+      "upkeep": 1760,
+      "cost": 62400,
+      "need": "scenery"
     },
     "fountain": {
       "id": "fountain",
@@ -577,7 +745,11 @@
       "sprite": "facility/fountain",
       "capacity": 0,
       "placement": {},
-      "note": "물줄기는 procedural"
+      "note": "물줄기는 procedural",
+      "fee": 1080,
+      "upkeep": 1760,
+      "cost": 62400,
+      "need": "scenery"
     },
     "flowerbed": {
       "id": "flowerbed",
@@ -590,7 +762,11 @@
       "sprite": "facility/flowerbed",
       "capacity": 0,
       "placement": {},
-      "note": "경관 지표"
+      "note": "경관 지표",
+      "fee": 1080,
+      "upkeep": 1040,
+      "cost": 26400,
+      "need": "scenery"
     },
     "vending_out": {
       "id": "vending_out",
@@ -603,7 +779,11 @@
       "sprite": "facility/vending_out",
       "capacity": 1,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 1080,
+      "upkeep": 1040,
+      "cost": 26400,
+      "need": "food"
     },
     "lifering": {
       "id": "lifering",
@@ -616,7 +796,11 @@
       "sprite": "facility/lifering",
       "capacity": 0,
       "placement": {},
-      "note": "안전 지표"
+      "note": "안전 지표",
+      "fee": 1080,
+      "upkeep": 1040,
+      "cost": 26400,
+      "need": "service"
     },
     "slide_small": {
       "id": "slide_small",
@@ -642,7 +826,11 @@
           0
         ],
         "traverseTicks": 20
-      }
+      },
+      "fee": 2870,
+      "upkeep": 5180,
+      "cost": 214200,
+      "need": "thrill"
     },
     "slide_large": {
       "id": "slide_large",
@@ -668,7 +856,11 @@
           0
         ],
         "traverseTicks": 30
-      }
+      },
+      "fee": 3360,
+      "upkeep": 9800,
+      "cost": 445200,
+      "need": "thrill"
     },
     "slide_tube": {
       "id": "slide_tube",
@@ -694,7 +886,11 @@
           0
         ],
         "traverseTicks": 26
-      }
+      },
+      "fee": 2870,
+      "upkeep": 8120,
+      "cost": 361200,
+      "need": "thrill"
     },
     "jump_cushion": {
       "id": "jump_cushion",
@@ -709,7 +905,11 @@
       "placement": {
         "requiresDeck": true
       },
-      "note": "인플레이터블 초록·노랑"
+      "note": "인플레이터블 초록·노랑",
+      "fee": 2870,
+      "upkeep": 6440,
+      "cost": 277200,
+      "need": "thrill"
     },
     "trampoline_w": {
       "id": "trampoline_w",
@@ -724,7 +924,11 @@
       "placement": {
         "requiresDeck": true
       },
-      "note": ""
+      "note": "",
+      "fee": 2870,
+      "upkeep": 5180,
+      "cost": 214200,
+      "need": "thrill"
     },
     "airbounce": {
       "id": "airbounce",
@@ -739,7 +943,11 @@
       "placement": {
         "requiresDeck": true
       },
-      "note": "최대 물 위 시설"
+      "note": "최대 물 위 시설",
+      "fee": 5320,
+      "upkeep": 14000,
+      "cost": 655200,
+      "need": "thrill"
     },
     "turtle_island": {
       "id": "turtle_island",
@@ -754,7 +962,11 @@
       "placement": {
         "requiresDeck": true
       },
-      "note": "A트랙 실증 완료(88px)"
+      "note": "A트랙 실증 완료(88px)",
+      "fee": 5320,
+      "upkeep": 21560,
+      "cost": 1033200,
+      "need": "play"
     },
     "junglegym_w": {
       "id": "junglegym_w",
@@ -769,7 +981,11 @@
       "placement": {
         "requiresDeck": true
       },
-      "note": "프레임형 — 윤곽 게이트 완화"
+      "note": "프레임형 — 윤곽 게이트 완화",
+      "fee": 3360,
+      "upkeep": 8120,
+      "cost": 361200,
+      "need": "play"
     },
     "diving": {
       "id": "diving",
@@ -784,7 +1000,11 @@
       "placement": {
         "requiresDeck": true
       },
-      "note": "데크 부착물"
+      "note": "데크 부착물",
+      "fee": 2380,
+      "upkeep": 3080,
+      "cost": 109200,
+      "need": "thrill"
     },
     "waterwalk": {
       "id": "waterwalk",
@@ -799,7 +1019,11 @@
       "placement": {
         "requiresDeck": true
       },
-      "note": ""
+      "note": "",
+      "fee": 2380,
+      "upkeep": 3080,
+      "cost": 109200,
+      "need": "play"
     },
     "float_deck": {
       "id": "float_deck",
@@ -815,7 +1039,11 @@
         "requiresShoreOrDeck": true
       },
       "note": "★물 위 유일 기반. 부착 앵커 4방",
-      "walkOn": true
+      "walkOn": true,
+      "fee": 1890,
+      "upkeep": 1820,
+      "cost": 46200,
+      "need": "service"
     },
     "dock": {
       "id": "dock",
@@ -831,7 +1059,11 @@
         "requiresShoreOrDeck": true
       },
       "note": "견인 프리셋 루프 시작점",
-      "walkOn": true
+      "walkOn": true,
+      "fee": 2380,
+      "upkeep": 4760,
+      "cost": 193200,
+      "need": "service"
     },
     "rent_kayak": {
       "id": "rent_kayak",
@@ -846,7 +1078,11 @@
       "placement": {
         "requiresDeck": true
       },
-      "note": ""
+      "note": "",
+      "fee": 1890,
+      "upkeep": 3080,
+      "cost": 109200,
+      "need": "thrill"
     },
     "rent_pedal": {
       "id": "rent_pedal",
@@ -861,7 +1097,11 @@
       "placement": {
         "requiresDeck": true
       },
-      "note": ""
+      "note": "",
+      "fee": 1890,
+      "upkeep": 3080,
+      "cost": 109200,
+      "need": "thrill"
     },
     "rent_duck": {
       "id": "rent_duck",
@@ -876,7 +1116,11 @@
       "placement": {
         "requiresDeck": true
       },
-      "note": ""
+      "note": "",
+      "fee": 1890,
+      "upkeep": 3080,
+      "cost": 109200,
+      "need": "play"
     },
     "rent_sup": {
       "id": "rent_sup",
@@ -891,7 +1135,11 @@
       "placement": {
         "requiresDeck": true
       },
-      "note": ""
+      "note": "",
+      "fee": 1890,
+      "upkeep": 3080,
+      "cost": 109200,
+      "need": "thrill"
     },
     "bungalow": {
       "id": "bungalow",
@@ -904,7 +1152,11 @@
       "sprite": "facility/bungalow",
       "capacity": 0,
       "placement": {},
-      "note": "프리셋 벽 발자국 + 지붕"
+      "note": "프리셋 벽 발자국 + 지붕",
+      "fee": 4050,
+      "upkeep": 11100,
+      "cost": 459000,
+      "need": "stay"
     },
     "glamping": {
       "id": "glamping",
@@ -917,7 +1169,11 @@
       "sprite": "facility/glamping",
       "capacity": 0,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 4050,
+      "upkeep": 13800,
+      "cost": 594000,
+      "need": "stay"
     },
     "caravan": {
       "id": "caravan",
@@ -930,7 +1186,11 @@
       "sprite": "facility/caravan",
       "capacity": 0,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 4050,
+      "upkeep": 10200,
+      "cost": 414000,
+      "need": "stay"
     },
     "pension": {
       "id": "pension",
@@ -943,7 +1203,11 @@
       "sprite": "facility/pension",
       "capacity": 0,
       "placement": {},
-      "note": "층 20텍셀 × 3 + 지붕"
+      "note": "층 20텍셀 × 3 + 지붕",
+      "fee": 4050,
+      "upkeep": 21000,
+      "cost": 954000,
+      "need": "stay"
     },
     "pension_duplex": {
       "id": "pension_duplex",
@@ -956,7 +1220,11 @@
       "sprite": "facility/pension_duplex",
       "capacity": 0,
       "placement": {},
-      "note": ""
+      "note": "",
+      "fee": 4050,
+      "upkeep": 30000,
+      "cost": 1404000,
+      "need": "stay"
     },
     "ice_fishing": {
       "id": "ice_fishing",
@@ -969,7 +1237,11 @@
       "sprite": "facility/ice_fishing",
       "capacity": 4,
       "placement": {},
-      "note": "겨울"
+      "note": "겨울",
+      "fee": 2640,
+      "upkeep": 6380,
+      "cost": 283800,
+      "need": "play"
     },
     "snow_sled": {
       "id": "snow_sled",
@@ -993,7 +1265,11 @@
           0
         ],
         "traverseTicks": 24
-      }
+      },
+      "fee": 2255,
+      "upkeep": 7700,
+      "cost": 349800,
+      "need": "thrill"
     },
     "bungeoppang": {
       "id": "bungeoppang",
@@ -1006,7 +1282,11 @@
       "sprite": "facility/bungeoppang",
       "capacity": 1,
       "placement": {},
-      "note": "겨울"
+      "note": "겨울",
+      "fee": 1485,
+      "upkeep": 1760,
+      "cost": 52800,
+      "need": "food"
     },
     "footbath": {
       "id": "footbath",
@@ -1019,7 +1299,11 @@
       "sprite": "facility/footbath",
       "capacity": 3,
       "placement": {},
-      "note": "봄·가을"
+      "note": "봄·가을",
+      "fee": 2255,
+      "upkeep": 2090,
+      "cost": 69300,
+      "need": "warm"
     },
     "fishing": {
       "id": "fishing",
@@ -1032,7 +1316,11 @@
       "sprite": "facility/fishing",
       "capacity": 3,
       "placement": {},
-      "note": "봄·가을"
+      "note": "봄·가을",
+      "fee": 2255,
+      "upkeep": 3740,
+      "cost": 151800,
+      "need": "play"
     },
     "maple_walk": {
       "id": "maple_walk",
@@ -1045,7 +1333,11 @@
       "sprite": "facility/maple_walk",
       "capacity": 0,
       "placement": {},
-      "note": "가을. 경관 지표"
+      "note": "가을. 경관 지표",
+      "fee": 1485,
+      "upkeep": 2420,
+      "cost": 85800,
+      "need": "scenery"
     }
   }
 }
