@@ -42,14 +42,38 @@ const ZONE_COLOR: Record<string, [string, string, string]> = {
   season: ['#b0a8d0', '#cec8e6', '#8b83ad'],
 };
 
-const GROUND_COLOR: Record<string, [string, string]> = {
-  path_stone: ['#c9c6bd', '#b3b0a6'],
-  path_deck: ['#b08a5c', '#96724a'],
-  path_sand: ['#dcc79a', '#c6ae7d'],
-  lawn: ['#7fb055', '#6a9846'],
-  water_edge: ['#5fa8c4', '#4a8ba6'],
-  floor_indoor: ['#dfe6ea', '#c6d0d6'],
+/**
+ * 지면 기본색. 밝음·어두움은 여기서 **파생**한다 (§아래 GROUND_SPREAD).
+ *
+ * ## 레퍼런스 실측 — 지면은 우리보다 **매끈하다**
+ *
+ * 물체 에지를 걸러낸 순수 지면의 명암 표준편차가 **9~11** 이다 (흰 포장 10.9·10.3,
+ * 물 8.9, 탄 데크 9.0). 처음엔 물체·연석이 섞인 박스를 재서 24.7 이 나왔고, 그 숫자를
+ * 맞추려 노이즈를 키웠다가 잔디가 자갈처럼 됐다 (표준편차 16.6).
+ *
+ * 화면의 시각적 정보는 지면 노이즈가 아니라 **물체·연석·색 구역**에서 온다.
+ * 지면은 조용해야 그 위의 것들이 읽힌다.
+ */
+const GROUND_BASE: Record<string, string> = {
+  path_stone: '#c4c1b7',
+  path_deck: '#ab8557',
+  path_sand: '#d9c493',
+  lawn: '#79a94f',
+  water_edge: '#57a4c2',
+  floor_indoor: '#dbe3e8',
 };
+
+/** 기본색에서 밝음·어두움을 만드는 배율. 표준편차 9~11 을 목표로 맞춘 값 */
+const GROUND_SPREAD = { light: 1.10, dark: 0.90 } as const;
+
+function groundTones(kind: string): [string, string, string] | null {
+  const base = GROUND_BASE[kind];
+  if (!base) return null;
+  return [scaleHex(base, GROUND_SPREAD.light), base, scaleHex(base, GROUND_SPREAD.dark)];
+}
+
+/** 포장류는 타일 이음선을 보인다 — 레퍼런스의 포장이 그렇고, 격자가 읽혀야 각도가 보인다 */
+const PAVED = new Set(['path_stone', 'path_deck', 'floor_indoor']);
 
 const DECO_COLOR: Record<string, string> = { safety: '#d9694f', scenery: '#7ea9c9' };
 
@@ -71,6 +95,16 @@ function hash2(x: number, y: number, s: number): number {
   let h = (s ^ Math.imul(x | 0, 0x27d4eb2d) ^ Math.imul(y | 0, 0x165667b1)) >>> 0;
   h = Math.imul(h ^ (h >>> 15), 0x85ebca6b) >>> 0;
   return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+}
+
+/** 밝기 배율. 255 를 넘으면 잘린다 */
+function scaleHex(hex: string, f: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  const c = (v: number): number => Math.max(0, Math.min(255, Math.round(v * f)));
+  const r = c((n >> 16) & 255);
+  const g = c((n >> 8) & 255);
+  const b = c(n & 255);
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
 }
 
 function darken(hex: string, f: number): string {
@@ -291,11 +325,16 @@ function drawWall(g: CanvasRenderingContext2D, spec: SpriteSpec, mask: number, d
   });
 }
 
-/** 지면 타일 — 다이아몬드를 채우고 얼룩을 넣는다. 아웃라인 없음(이음새가 생긴다) */
+/**
+ * 지면 타일 — 3단조 2텍셀 덩어리. 아웃라인 없음(이음새가 생긴다).
+ *
+ * 덩어리를 **2텍셀 가로 × 1텍셀 세로**로 두는 이유: 아이소에서 지면은 가로로 늘어져
+ * 보이므로 정사각 덩어리는 세로로 길어 보인다. 레퍼런스의 자기상관도 가로 쪽이 더 길다.
+ */
 function drawGround(g: CanvasRenderingContext2D, spec: SpriteSpec, kind: string, alt: number): void {
   const [cw, ch] = spec.size;
-  const pair = GROUND_COLOR[kind];
-  if (!pair) {
+  const tri = groundTones(kind);
+  if (!tri) {
     // 다리 — 널 + 난간
     fillTile(g, 0, ch - TILE_H, '#a67c4a');
     g.fillStyle = '#8a6238';
@@ -305,18 +344,39 @@ function drawGround(g: CanvasRenderingContext2D, spec: SpriteSpec, kind: string,
     bakeOutline(g, cw, ch);
     return;
   }
-  const [base, spot] = pair;
+  const [light, base, dark] = tri;
   const oy = ch - TILE_H;
   fillTile(g, 0, oy, base);
-  // 얼룩도 마스크 안에서만 — 밖에 찍으면 이웃 타일과 겹쳐 이음새가 된다
-  g.fillStyle = spot;
+
+  // 마스크 안에서만 덩어리를 찍는다 — 밖에 찍으면 이웃 타일과 겹쳐 이음새가 된다
   for (let y = 0; y < TILE_H; y++) {
     const sp = tileRowSpan(y);
     for (let x = sp.x0; x < sp.x1; x++) {
-      if (hash2(x, y, alt * 977 + kind.length) > 0.82) g.fillRect(x, oy + y, 1, 1);
+      // 2옥타브 — 4×2 텍셀 큰 덩어리 + 2×1 텍셀 잔결.
+      // 한 옥타브(가로만 2텍셀)로 하면 세로가 1텍셀 노이즈라 자기상관이 0.03 밖에
+      // 안 나온다 (레퍼런스는 2px 에서 +0.49). 덩어리가 커야 질감으로 읽힌다.
+      const seed = alt * 977 + kind.length;
+      const r =
+        0.62 * hash2(x >> 2, y >> 1, seed) + 0.38 * hash2(x >> 1, y, seed ^ 0x5bd1);
+      if (r > 0.60) {
+        g.fillStyle = light;
+        g.fillRect(x, oy + y, 1, 1);
+      } else if (r < 0.40) {
+        g.fillStyle = dark;
+        g.fillRect(x, oy + y, 1, 1);
+      }
     }
   }
-  void cw;
+
+  // 포장류는 타일 이음선 — 아래쪽 두 변에 1텍셀 어두운 선
+  if (PAVED.has(kind)) {
+    g.fillStyle = dark;
+    for (let y = TILE_H / 2; y < TILE_H; y++) {
+      const sp = tileRowSpan(y);
+      g.fillRect(sp.x0, oy + y, 1, 1);
+      g.fillRect(sp.x1 - 1, oy + y, 1, 1);
+    }
+  }
 }
 
 /** 콤보 데코 — 작은 기둥 + 머리 */

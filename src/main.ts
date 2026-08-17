@@ -21,6 +21,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { placeWall, removeWall, WALL_SOLID, WALL_DOOR, PLACE_MESSAGES } = await import(
     './sim/kairo/walls.js'
   );
+  const { allFacilityDefs, PLACE_FAIL_MESSAGES } = await import('./sim/kairo/placement.js');
   const box = document.createElement('div');
   box.id = 'kairo-debug';
   box.style.cssText =
@@ -34,7 +35,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     onFrame: (s) => {
       box.textContent =
         `FPS ${s.fps}  S=${s.upscale}  버퍼 ${s.bufferW}×${s.bufferH}\n` +
-        `스크롤 ${s.scrollX},${s.scrollY}  타일 ${s.tiles}  벽 ${s.walls}\n` +
+        `스크롤 ${s.scrollX},${s.scrollY}  타일 ${s.tiles}\n` +
+        `벽 ${s.walls}  시설 ${s.facilities}\n` +
         (s.dotGridViolations.length === 0
           ? '도트격자 OK'
           : `도트격자 위반: ${s.dotGridViolations.join(' / ')}`);
@@ -63,7 +65,25 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         return;
       }
       if (brush === 'erase') {
+        // 시설이 먼저 — 시설 위를 탭했으면 그걸 지운다
+        const hit = h.placement.at(i, j);
+        if (hit) {
+          h.placement.remove(hit.handle);
+          h.scene.refreshFacility(hit.handle);
+          return;
+        }
         if (removeWall(h.walls, i, j)) h.scene.refreshWall(i, j);
+        return;
+      }
+      if (brush === 'facility') {
+        const defId = picker.value;
+        const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j);
+        if (r.ok && r.placed) {
+          h.scene.refreshFacility(r.placed.handle);
+          toast('');
+        } else {
+          toast(PLACE_FAIL_MESSAGES[r.fail ?? 'unknown-def']);
+        }
         return;
       }
       if (h.terrain.paint(i, j, brush)) h.scene.refreshTile(i, j);
@@ -100,7 +120,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     ...GROUND_KINDS.map((k) => ({ id: k.id, name: k.name })),
     { id: 'wall', name: '벽' },
     { id: 'door', name: '문' },
-    { id: 'erase', name: '벽 지우기' },
+    { id: 'facility', name: '시설' },
+    { id: 'erase', name: '지우기' },
   ];
   for (const k of BRUSHES) {
     const b = document.createElement('button');
@@ -120,8 +141,43 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   }
   document.body.append(bar);
 
+  /**
+   * 시설 선택 — 73종이라 버튼 바에 다 못 넣는다. 존별로 묶은 select 로 둔다.
+   * 실제 게임 UI 는 K8 의 도감·건설 팔레트가 대체한다.
+   */
+  const picker = document.createElement('select');
+  picker.id = 'kairo-facility';
+  picker.style.cssText =
+    'position:fixed;left:8px;bottom:64px;z-index:9;min-height:44px;font-size:13px;' +
+    'background:#20303c;color:#dceaf4;border:1px solid #3a5566;border-radius:6px;padding:4px 6px;' +
+    'max-width:60vw';
+  const ZONE_NAME: Record<string, string> = {
+    indoor: '실내',
+    land: '야외',
+    water: '물 위',
+    pension: '펜션',
+    season: '계절',
+  };
+  for (const zone of ['indoor', 'land', 'water', 'pension', 'season']) {
+    const grp = document.createElement('optgroup');
+    grp.label = ZONE_NAME[zone] ?? zone;
+    for (const d of allFacilityDefs().filter((x) => x.layer === zone)) {
+      const o = document.createElement('option');
+      o.value = d.id;
+      o.textContent = `${d.name} ${d.size[0]}×${d.size[1]}${
+        d.placement.requiresWallAdjacent ? ' (벽)' : ''
+      }`;
+      grp.append(o);
+    }
+    picker.append(grp);
+  }
+  document.body.append(picker);
+
   // 검증 도구가 시뮬 규칙을 직접 부를 수 있게 노출한다 (브라우저에서 규칙을 재구현하지 않도록)
-  Object.assign(h, { sim: { placeWall, removeWall, WALL_SOLID, WALL_DOOR, PLACE_MESSAGES } });
+  Object.assign(h, {
+    sim: { placeWall, removeWall, WALL_SOLID, WALL_DOOR, PLACE_MESSAGES },
+    simDefs: Object.fromEntries(allFacilityDefs().map((d) => [d.id, d])),
+  });
   Object.assign(window, { __kairo: h, __kairoBrush: () => brush });
   console.log(
     `[카이로] 에셋 ${h.provider.name} (${h.provider.ids.length}장 플레이스홀더) · ` +

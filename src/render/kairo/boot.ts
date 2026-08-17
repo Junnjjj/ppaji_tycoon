@@ -4,6 +4,7 @@ import { KairoProceduralProvider } from '../../assets/kairo-procedural.js';
 import { viewport } from './upscale.js';
 import { KairoTerrain } from '../../sim/kairo/terrain.js';
 import { WallGrid } from '../../sim/kairo/walls.js';
+import { PlacementGrid } from '../../sim/kairo/placement.js';
 import { Rng } from '../../sim/rng.js';
 import { GRID_W, GRID_H } from './iso.js';
 
@@ -19,6 +20,7 @@ export interface KairoBootOptions {
   /** 없으면 시드에서 만든다 */
   terrain?: KairoTerrain;
   walls?: WallGrid;
+  placement?: PlacementGrid;
   seed?: number;
   onFrame?: (s: KairoSceneStats) => void;
   onTapTile?: (i: number, j: number) => void;
@@ -30,6 +32,7 @@ export interface KairoHandle {
   provider: KairoProceduralProvider;
   terrain: KairoTerrain;
   walls: WallGrid;
+  placement: PlacementGrid;
 }
 
 export function bootKairo(opts: KairoBootOptions): KairoHandle {
@@ -37,10 +40,12 @@ export function bootKairo(opts: KairoBootOptions): KairoHandle {
   const terrain =
     opts.terrain ?? KairoTerrain.generate(GRID_W, GRID_H, new Rng(opts.seed ?? 20260818));
   const walls = opts.walls ?? new WallGrid(GRID_W, GRID_H);
+  const placement = opts.placement ?? new PlacementGrid(GRID_W, GRID_H);
   const scene = new KairoScene({
     provider,
     terrain,
     walls,
+    placement,
     ...(opts.onFrame ? { onFrame: opts.onFrame } : {}),
     ...(opts.onTapTile ? { onTapTile: opts.onTapTile } : {}),
   });
@@ -75,5 +80,5 @@ export function bootKairo(opts: KairoBootOptions): KairoHandle {
     scene: [scene],
   });
 
-  return { game, scene, provider, terrain, walls };
+  return { game, scene, provider, terrain, walls, placement };
 }

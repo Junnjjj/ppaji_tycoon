@@ -291,7 +291,11 @@ async function main(): Promise<void> {
   if (!brushBtns) {
     record('지면 붓 팔레트', 'fail', '팔레트를 못 찾았다');
   } else {
-    record('붓 9종 (지면 6 + 벽·문·지우기)', brushBtns.count === 9 ? 'pass' : 'fail', `${brushBtns.count}개`);
+    record(
+      '붓 10종 (지면 6 + 벽·문·시설·지우기)',
+      brushBtns.count === 10 ? 'pass' : 'fail',
+      `${brushBtns.count}개`,
+    );
     record(
       '터치 타깃 44px 이상',
       brushBtns.minH >= 44 ? 'pass' : 'fail',
@@ -483,6 +487,162 @@ async function main(): Promise<void> {
   );
 
   await page.screenshot({ path: `${SHOT_DIR}/kairo-glass.png` });
+
+  // ── 7e. 시설 배치·다중칸 슬롯 ──
+  const fac = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, sc = h.scene;
+    const gate = { i: 0, j: 0 };
+    const out = { picker: 0, placed: [], rejected: [], anchors: [] };
+
+    const sel = document.getElementById('kairo-facility');
+    out.picker = sel ? sel.querySelectorAll('option').length : 0;
+
+    // 넓은 육지를 찾는다
+    let base = null;
+    for (let j = 4; j < 16 && !base; j++) {
+      for (let i = 4; i < 28; i++) {
+        let ok = true;
+        for (let di = 0; di < 9 && ok; di++)
+          for (let dj = 0; dj < 7; dj++)
+            if (!t.isWalkable(i + di, j + dj) || w.has(i + di, j + dj) || p.handleAt(i + di, j + dj)) {
+              ok = false; break;
+            }
+        if (ok) { base = [i, j]; break; }
+      }
+    }
+    if (!base) return { ok: false, reason: '9×7 빈 육지를 못 찾았다' };
+    const [bi, bj] = base;
+
+    // 비정사각 포함 4종 — 앵커 계산이 틀리면 여기서 드러난다
+    const trials = [
+      ['shop', 0, 0],            // 2×2
+      ['cafe', 3, 0],            // 2×3
+      ['pyeongsang_row', 0, 4],  // 4×1  ← 비정사각
+      ['lookout', 6, 4],         // 2×2
+    ];
+    for (const [id, di, dj] of trials) {
+      const r = p.place(t, w, gate, id, bi + di, bj + dj);
+      if (r.ok && r.placed) {
+        sc.refreshFacility(r.placed.handle);
+        out.placed.push(id);
+      } else {
+        out.rejected.push(id + ':' + r.fail);
+      }
+    }
+
+    // 벽부착 시설 — 벽 없이 거절되고 벽을 세우면 통과해야 한다
+    const wi = bi, wj = bj + 6;
+    const before = p.check(t, w, gate, 'locker_row', wi, wj);
+    for (let k = 0; k < 4; k++) h.sim.placeWall(t, w, gate, wi + k, wj - 1, 1);
+    for (let k = 0; k < 4; k++) sc.refreshWall(wi + k, wj - 1);
+    const after = p.check(t, w, gate, 'locker_row', wi, wj);
+    out.wallMountBefore = before.fail || 'ok';
+    out.wallMountAfter = after.fail || 'ok';
+    if (after.ok) {
+      const r = p.place(t, w, gate, 'locker_row', wi, wj);
+      if (r.ok && r.placed) { sc.refreshFacility(r.placed.handle); out.placed.push('locker_row'); }
+    }
+
+    out.count = p.count;
+    out.capacity = p.totalCapacity();
+    out.focus = [bi + 3, bj + 3];
+    return { ok: true, ...out };
+  })()`)) as
+    | { ok: false; reason: string }
+    | {
+        ok: true;
+        picker: number;
+        placed: string[];
+        rejected: string[];
+        wallMountBefore: string;
+        wallMountAfter: string;
+        count: number;
+        capacity: number;
+        focus: number[];
+      };
+
+  if (!fac.ok) {
+    record('시설 배치', 'fail', fac.reason);
+  } else {
+    record('시설 선택기에 73종', fac.picker === 73 ? 'pass' : 'fail', `${fac.picker}개`);
+    record(
+      '시설 4종 배치 (비정사각 4×1 포함)',
+      fac.placed.length >= 4 ? 'pass' : 'fail',
+      `놓임 ${fac.placed.join(',')}${fac.rejected.length ? ' · 거절 ' + fac.rejected.join(',') : ''}`,
+    );
+    record(
+      '벽부착 시설 — 벽 없이 거절 → 벽 세우면 통과',
+      fac.wallMountBefore === 'needs-wall' && fac.wallMountAfter === 'ok' ? 'pass' : 'fail',
+      `${fac.wallMountBefore} → ${fac.wallMountAfter}`,
+    );
+    record('총 동시 이용 칸 수 > 0', fac.capacity > 0 ? 'pass' : 'fail', `${fac.capacity}칸`);
+
+    // ★ 앵커 좌표를 수치로 검증 — 적대적 리뷰 A2 가 지목한 지점.
+    //   앵커 x 는 발자국 bbox 가로중심이고 최하단 꼭지점 x 가 아니다. 비정사각에서
+    //   두 값이 최대 24텍셀 어긋나므로, 잘못 쓰면 4×1 시설이 1.5타일 밀린다.
+    const anchors = (await page.evaluate(`(() => {
+      const h = window.__kairo, sc = h.scene, p = h.placement;
+      const out = [];
+      for (const f of p.all()) {
+        const def = h.simDefs[f.defId];
+        const w = def.size[0], d = def.size[1];
+        // 기대값: x = 16(i−j) + 16(w−d)/2 · y = 8(i+j+w+d)
+        const wantX = 16 * (f.i - f.j) + (16 * (w - d)) / 2;
+        const wantY = 8 * (f.i + f.j + w + d);
+        const img = sc.facilityImageAt(f.handle);
+        out.push({
+          id: f.defId, wh: [w, d],
+          gotX: img ? img.x : null, gotY: img ? img.y : null,
+          wantX: wantX, wantY: wantY,
+          originX: img ? img.originX : null, originY: img ? img.originY : null,
+          // 최하단 꼭지점 x (틀린 정의) — 비정사각이면 gotX 와 달라야 한다
+          frontVertexX: 16 * (f.i - f.j + w - d),
+        });
+      }
+      return out;
+    })()`)) as {
+      id: string;
+      wh: number[];
+      gotX: number | null;
+      gotY: number | null;
+      wantX: number;
+      wantY: number;
+      originX: number | null;
+      originY: number | null;
+      frontVertexX: number;
+    }[];
+
+    const wrong = anchors.filter((a) => a.gotX !== a.wantX || a.gotY !== a.wantY);
+    record(
+      '시설 앵커가 (bbox 가로중심, 최하단 꼭지점 y) 와 정확히 일치',
+      wrong.length === 0 ? 'pass' : 'fail',
+      wrong.length
+        ? wrong.map((a) => `${a.id} got(${a.gotX},${a.gotY}) want(${a.wantX},${a.wantY})`).join(' | ')
+        : `${anchors.length}종 확인`,
+    );
+    const badOrigin = anchors.filter((a) => a.originX !== 0.5 || a.originY !== 1);
+    record(
+      '앵커 원점이 bottom-center',
+      badOrigin.length === 0 ? 'pass' : 'fail',
+      badOrigin.length ? badOrigin.map((a) => a.id).join(',') : '',
+    );
+    // 비정사각 시설에서 두 정의가 실제로 어긋나는지 — 어긋나지 않으면 검사가 무의미하다
+    const nonSquare = anchors.filter((a) => a.wh[0] !== a.wh[1]);
+    const diverges = nonSquare.filter((a) => a.frontVertexX !== a.wantX);
+    record(
+      '비정사각 시설에서 두 앵커 정의가 실제로 갈린다 (검사가 유의미한가)',
+      nonSquare.length > 0 && diverges.length === nonSquare.length ? 'pass' : 'fail',
+      nonSquare.length
+        ? nonSquare
+            .map((a) => `${a.id} ${a.wh.join('×')}: 중심 ${a.wantX} vs 꼭지점 ${a.frontVertexX}`)
+            .join(' | ')
+        : '비정사각 시설이 없다',
+    );
+
+    await page.evaluate(`window.__kairo.scene.focusTile(${fac.focus[0]}, ${fac.focus[1]})`);
+    await page.waitForTimeout(250);
+    await page.screenshot({ path: `${SHOT_DIR}/kairo-facilities.png` });
+  }
 
   // ── 8. FPS ──
   await page.waitForTimeout(1200);

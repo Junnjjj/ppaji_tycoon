@@ -8,6 +8,7 @@ import {
   depthKey,
   screenToTile,
   inGrid,
+  footprintAnchor,
 } from '../kairo/iso.js';
 import { KairoCamera } from '../kairo/kairo-camera.js';
 import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
@@ -15,6 +16,7 @@ import { KairoProceduralProvider } from '../../assets/kairo-procedural.js';
 import { variantId } from '../../assets/types.js';
 import type { KairoTerrain } from '../../sim/kairo/terrain.js';
 import { WALL_DOOR, type WallGrid } from '../../sim/kairo/walls.js';
+import { facilityDef, type PlacementGrid } from '../../sim/kairo/placement.js';
 
 /**
  * 카이로 씬 — 2:1 아이소메트릭 격자.
@@ -44,6 +46,8 @@ export interface KairoSceneStats {
   tiles: number;
   /** 세워진 벽·문 수 */
   walls: number;
+  /** 놓인 시설 수 */
+  facilities: number;
   /** 도트 격자 위반 — 비어 있어야 한다 */
   dotGridViolations: readonly string[];
 }
@@ -54,6 +58,8 @@ export interface KairoSceneOptions {
   terrain: KairoTerrain;
   /** 벽·문 격자 — 역시 시뮬 소유 */
   walls: WallGrid;
+  /** 시설 점유 격자 — 역시 시뮬 소유 */
+  placement: PlacementGrid;
   onFrame?: (s: KairoSceneStats) => void;
   /** 탭한 타일 (격자 밖이면 안 부른다) */
   onTapTile?: (i: number, j: number) => void;
@@ -65,6 +71,8 @@ export class KairoScene extends Phaser.Scene {
   private tileImages: Phaser.GameObjects.Image[] = [];
   /** 벽 이미지 — 있는 칸만 만든다 (1,280개를 미리 만들면 대부분 빈 이미지가 된다) */
   private wallImages = new Map<number, Phaser.GameObjects.Image>();
+  /** 시설 이미지 — handle 로 관리한다 (발자국이 여러 칸이라 타일 키로는 못 잡는다) */
+  private facilityImages = new Map<number, Phaser.GameObjects.Image>();
   private dragging = false;
   private dragMoved = 0;
   private lastPointer = { x: 0, y: 0 };
@@ -91,6 +99,7 @@ export class KairoScene extends Phaser.Scene {
 
     this.buildGround();
     this.buildWalls();
+    this.rebuildFacilities();
     this.applyScale(this.cam.upscale);
     this.wireInput();
 
@@ -116,6 +125,57 @@ export class KairoScene extends Phaser.Scene {
         this.tileImages.push(img);
       }
     }
+  }
+
+  /**
+   * 시설 하나를 그린다.
+   *
+   * 앵커는 계약대로 **bottom-center** 이고 위치는 `footprintAnchor` 가 준다 —
+   * 발자국 최하단 꼭지점 y 와 바운딩박스 가로중심 x 다. 이 둘을 헷갈리면 비정사각
+   * 발자국에서 최대 24텍셀(1.5타일) 밀린다.
+   *
+   * 깊이는 **발자국의 가장 앞 타일** 기준이다. 시작 타일로 잡으면 큰 시설이 앞의
+   * 작은 시설보다 뒤로 밀려 겹침이 뒤집힌다.
+   */
+  private drawFacility(handle: number): void {
+    const item = this.opts.placement.all().find((f) => f.handle === handle);
+    if (!item) return;
+    const def = facilityDef(item.defId);
+    if (!def) return;
+    const [w, d] = def.size;
+    const a = footprintAnchor(item.i, item.j, w, d);
+    const existing = this.facilityImages.get(handle);
+    if (existing) {
+      existing.setPosition(a.x, a.y);
+      return;
+    }
+    const img = this.add.image(a.x, a.y, item.defId ? `facility/${item.defId}` : '');
+    img.setOrigin(0.5, 1);
+    img.setDepth(depthKey(item.i + w - 1, item.j + d - 1) + 2);
+    this.facilityImages.set(handle, img);
+  }
+
+  /** 검증 도구용 — 시설 이미지를 직접 본다 (앵커 좌표를 수치로 확인) */
+  facilityImageAt(handle: number): Phaser.GameObjects.Image | undefined {
+    return this.facilityImages.get(handle);
+  }
+
+  /** 시설 하나가 놓이거나 지워졌을 때 */
+  refreshFacility(handle: number): void {
+    const exists = this.opts.placement.all().some((f) => f.handle === handle);
+    if (!exists) {
+      this.facilityImages.get(handle)?.destroy();
+      this.facilityImages.delete(handle);
+      return;
+    }
+    this.drawFacility(handle);
+  }
+
+  /** 세이브를 불러온 뒤처럼 이미 시설이 있는 상태를 한 번에 그린다 */
+  rebuildFacilities(): void {
+    for (const img of this.facilityImages.values()) img.destroy();
+    this.facilityImages.clear();
+    for (const f of this.opts.placement.all()) this.drawFacility(f.handle);
   }
 
   /** 세이브를 불러온 뒤처럼 이미 벽이 있는 상태를 한 번에 그린다 */
@@ -275,6 +335,7 @@ export class KairoScene extends Phaser.Scene {
       scrollY: view.scrollY,
       tiles: this.tileImages.length,
       walls: this.wallImages.size,
+      facilities: this.facilityImages.size,
       dotGridViolations: this.violations,
     });
   }
