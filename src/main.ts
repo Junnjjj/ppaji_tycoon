@@ -33,6 +33,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { KairoCardView } = await import('./ui/kairo-card.js');
   const { CardStore, CARD_RNG_SALT, triggerCard } = await import('./sim/kairo/cards.js');
   const { accidentChance } = await import('./sim/kairo/risk.js');
+  const scen = await import('./sim/kairo/scenario.js');
+  const { seasonShares } = await import('./sim/kairo/groups.js');
+  const { KairoNewGame } = await import('./ui/kairo-newgame.js');
+  const { KairoTerrain: KairoTerrainCls } = await import('./sim/kairo/terrain.js');
+  const { GRID_W: GRID_W_C, GRID_H: GRID_H_C } = await import('./render/kairo/iso.js');
   const { StaffStore, STAFF_ROLES: STAFF_ROLE_LIST } = await import('./sim/kairo/staff.js');
   const { KairoStaffPanel } = await import('./ui/kairo-staff.js');
   const course = await import('./sim/kairo/course.js');
@@ -40,7 +45,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { KairoCatalog, activeComboIds } = await import('./ui/kairo-catalog.js');
   const { KairoShowcase } = await import('./ui/kairo-showcase.js');
   const { Rng: RngCls } = await import('./sim/rng.js');
-  const { loadKairoFromStorage, saveKairoToStorage } = await import('./save/kairo.js');
+  const { loadKairoFromStorage, saveKairoToStorage, clearKairoStorage } = await import(
+    './save/kairo.js'
+  );
   const { facilityDef } = await import('./sim/kairo/placement.js');
 
   /**
@@ -49,6 +56,20 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   const saved = loadKairoFromStorage();
   const KAIRO_SEED = saved?.seed ?? 20260818;
+  /**
+   * 맵 타입과 시나리오 (§4.5). 세이브에 없으면 기본값 —
+   * 새 판은 `KairoNewGame` 이 세이브를 지우고 이 값을 심는다.
+   */
+  /*
+   * 새 판은 URL 로 넘어온다 (`?map=…&scenario=…`) — 세이브를 지운 직후라 저장값이 없다.
+   * 세이브가 있으면 저장값이 이긴다: 진행 중인 판의 맵을 URL 로 바꿀 수 있으면 안 된다.
+   */
+  const q = new URLSearchParams(location.search);
+  const mapId = saved?.mapId ?? q.get('map') ?? scen.DEFAULT_MAP;
+  const scenarioId = saved?.scenarioId ?? q.get('scenario') ?? scen.DEFAULT_SCENARIO;
+  const mapDef = scen.mapType(mapId);
+  const scenario = scen.scenarioDef(scenarioId);
+  let accidentCount = saved?.accidentCount ?? 0;
   const box = document.createElement('div');
   box.id = 'kairo-debug';
   box.style.cssText =
@@ -71,6 +92,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const h = bootKairo({
     parent,
     seed: KAIRO_SEED,
+    ...(saved ? {} : { terrain: KairoTerrainCls.generate(GRID_W_C, GRID_H_C, new RngCls(KAIRO_SEED), mapDef) }),
+    // 새 판이면 맵 타입대로 지형을 만든다 (§4.5)
     ...(saved
       ? {
           terrain: saved.terrain,
@@ -369,6 +392,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       staffRngState: staffRng.state,
       courses: courses.toSnapshot(),
       accidentIdle: [...accidentIdle],
+      mapId,
+      scenarioId,
+      accidentCount,
       discovered: [...discovered],
       resortName,
       priceMult,
@@ -415,6 +441,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       playbackEvery: 6,
       reputation: gr.reputationPull,
       priceMult,
+      mapShares: scen.shiftedShares(seasonShares(season), mapDef),
+      mapSceneryBonus: mapDef.sceneryBonus,
       modifiers: mods,
       courses: {
         revenue: courseWeek.revenue,
@@ -439,7 +467,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       if (left <= 1) accidentIdle.delete(handle);
       else accidentIdle.set(handle, left - 1);
     }
-    if (rep.accident) accidentIdle.set(rep.accident.handle, rep.accident.weeks);
+    if (rep.accident) {
+      accidentIdle.set(rep.accident.handle, rep.accident.weeks);
+      accidentCount += 1;
+    }
     cards.tickWeek();
     const calcMs = performance.now() - t0;
     lastReport = rep;
@@ -604,6 +635,68 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     },
   );
 
+  /**
+   * 새 판 — 맵·시나리오를 고른다 (§4.5). 세이브를 지우고 다시 부팅한다.
+   *
+   * 다시 부팅하는 이유: 지형이 맵 타입에서 나오므로, 지금 판의 지형을 갈아끼우면
+   * 시설·벽·코스가 물 위에 떠 있거나 육지에 잠긴 상태가 된다.
+   */
+  const newGame = new KairoNewGame(document.body, {
+    grade: () => gradeFor(lastSummary?.exitSatisfaction ?? 0).grade,
+    start: (m, sc) => {
+      clearKairoStorage();
+      const url = new URL(location.href);
+      url.searchParams.set('kairo', '1');
+      url.searchParams.set('map', m);
+      url.searchParams.set('scenario', sc);
+      location.href = url.toString();
+    },
+  });
+
+  const newGameBtn = document.createElement('button');
+  newGameBtn.id = 'kairo-newgame-open';
+  newGameBtn.textContent = '새 판';
+  newGameBtn.style.cssText =
+    'position:fixed;left:8px;bottom:120px;z-index:9;min-height:44px;min-width:64px;' +
+    'border-radius:10px;border:none;background:#2a5674;color:#eaf6ff;font-size:13px';
+  newGameBtn.addEventListener('click', () => {
+    if (newGame.visible) newGame.hide();
+    else newGame.show();
+  });
+  document.body.append(newGameBtn);
+
+  /** 목표 표시 — "얼마나 남았나"가 안 보이면 시나리오가 목표가 아니다 */
+  const goalBox = document.createElement('div');
+  goalBox.id = 'kairo-goal';
+  goalBox.style.cssText =
+    'position:fixed;left:8px;bottom:172px;z-index:9;max-width:52vw;padding:6px 8px;' +
+    'border-radius:8px;background:rgba(16,34,46,.9);color:#dbeefa;' +
+    'font:11px/1.4 system-ui,sans-serif';
+  document.body.append(goalBox);
+  const refreshGoal = (): void => {
+    const st = {
+      week: week.week,
+      grade: gradeFor(lastSummary?.exitSatisfaction ?? 0).grade,
+      accidents: accidentCount,
+    };
+    const status = scen.scenarioStatus(scenario, st);
+    goalBox.textContent =
+      `${mapDef.name} · ${scenario.name}\n` +
+      (status === 'won'
+        ? '🎉 목표 달성'
+        : status === 'lost'
+          ? '실패 — 새 판으로 다시'
+          : scen.scenarioProgress(scenario, st));
+    goalBox.style.whiteSpace = 'pre';
+    goalBox.style.background =
+      status === 'won'
+        ? 'rgba(40,120,80,.92)'
+        : status === 'lost'
+          ? 'rgba(150,50,40,.92)'
+          : 'rgba(16,34,46,.9)';
+  };
+  refreshGoal();
+
   const catalogBtn = document.createElement('button');
   catalogBtn.id = 'kairo-catalog-open';
   catalogBtn.textContent = '도감';
@@ -733,6 +826,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     refreshQuests();
     refreshRisk();
     refreshStaffBtn();
+    refreshGoal();
   }, 1500);
 
   Object.assign(h, {
@@ -748,6 +842,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     courseApi: course,
     catalog,
     showcase,
+    newGame,
+    scenario,
+    mapDef,
     priceMult: () => priceMult,
     cardsApi: { triggerCard },
     progress,

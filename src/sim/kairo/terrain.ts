@@ -63,16 +63,25 @@ export class KairoTerrain {
    * 시드에서 기본 지형을 만든다 — 강이 가로로 흐르는 파노라마 (스펙 §1.6).
    * `j` 가 클수록 카메라 쪽이므로 뒤(작은 j)를 육지, 앞을 물로 둔다.
    */
-  static generate(width: number, height: number, rng: Rng): KairoTerrain {
+  static generate(
+    width: number,
+    height: number,
+    rng: Rng,
+    /**
+     * 맵 타입 (§4.5). 육지 비율과 물가 흔들림을 바꾼다 —
+     * 북한강형은 물이 넓고, 계곡형은 육지가 넓고, 호수형은 물가가 불규칙하다.
+     */
+    shape: { landRatio: number; shoreJitter: number } = { landRatio: 0.55, shoreJitter: 2 },
+  ): KairoTerrain {
     const t = new KairoTerrain(width, height);
     const lawn = groundIndex('lawn');
     const sand = groundIndex('path_sand');
     const stone = groundIndex('path_stone');
     const water = groundIndex('water_edge');
-    const base = Math.floor(height * 0.55);
+    const base = Math.max(3, Math.min(height - 4, Math.floor(height * shape.landRatio)));
     for (let i = 0; i < width; i++) {
       // 물가 선을 살짝 흔든다 — 직선이면 인공적으로 보인다
-      const shore = base + rng.intRange(0, 2);
+      const shore = base + rng.intRange(0, Math.max(0, shape.shoreJitter));
       for (let j = 0; j < height; j++) {
         let k = lawn;
         if (j > shore) k = water;

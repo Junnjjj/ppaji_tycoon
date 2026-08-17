@@ -66,13 +66,31 @@ export function groupDef(id: GroupId): GroupDef {
  * 서브시스템이 아니다. 여기를 fork 하면 손님 수가 같아도 그룹 구성이 달라져
  * "손님 하나를 더 뽑아도 다른 시퀀스가 안 밀린다"는 보장이 오히려 깨진다.
  */
-export function pickGroup(rng: Rng, season: Season): GroupDef {
+export function pickGroup(
+  rng: Rng,
+  season: Season,
+  /**
+   * 맵이 바꾼 비중 (§4.5). 없으면 계절 기본값.
+   *
+   * 계곡형은 커플·가족, 북한강형은 친구 그룹이 많이 온다 — 그게 "맵 특성이 손님 구성까지
+   * 바꾼다"는 결정이다. 시설 구성이 손님 구성을 통해 매출로 이어지므로, 맵이 다르면
+   * **최적 빌드가 달라진다.**
+   */
+  shares?: Partial<Record<GroupId, number>>,
+): GroupDef {
   let r = rng.next();
   for (const g of GROUPS) {
-    r -= g.share[season];
+    r -= shares?.[g.id] ?? g.share[season];
     if (r <= 0) return g;
   }
   return GROUPS[GROUPS.length - 1] as GroupDef;
+}
+
+/** 계절 기본 비중 — 맵 배율을 곱할 원본 */
+export function seasonShares(season: Season): Record<GroupId, number> {
+  const out = {} as Record<GroupId, number>;
+  for (const g of GROUPS) out[g.id] = g.share[season];
+  return out;
 }
 
 /** 일행 인원 */

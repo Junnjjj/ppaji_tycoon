@@ -383,11 +383,16 @@ export class GuestStore {
    * 일행 단위로 들어온다 — 대기 중인 일행이 없으면 계절 비중으로 새 일행을 뽑는다.
    * 계절을 안 주면 여름으로 본다 (기존 호출자 호환).
    */
-  spawn(rng: Rng, season: Season = 'summer'): Guest | null {
+  spawn(
+    rng: Rng,
+    season: Season = 'summer',
+    /** 맵이 바꾼 유형 비중 (§4.5). 없으면 계절 기본값 */
+    shares?: Partial<Record<GroupId, number>>,
+  ): Guest | null {
     if (this.guests.length >= this.limit) return null;
     if (!this.walkable(this.gate.i, this.gate.j)) return null;
     if (!this.pending || this.pending.remaining <= 0) {
-      const def = pickGroup(rng, season);
+      const def = pickGroup(rng, season, shares);
       this.pending = { def, remaining: groupSize(rng, def), party: this.nextParty++ };
     }
     const party = this.pending;

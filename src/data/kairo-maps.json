@@ -1,0 +1,56 @@
+{
+  "note": "맵 타입 3종 (design.md §4.5). **맵이 달라도 최적 빌드가 비슷하면 두 번째 판을 할 이유가 없다** — 그래서 지형뿐 아니라 손님 구성(groupShift)과 코스 스릴 상한(courseThrillMult)까지 바꾼다.\nlandRatio = 격자 세로 중 육지 비율. 낮을수록 물이 넓다.\ngroupShift 는 계절 비중에 곱한 뒤 다시 정규화한다 — 합이 1 이어야 한다.",
+  "maps": [
+    {
+      "id": "bukhan",
+      "name": "북한강형",
+      "desc": "강폭이 넓고 육지가 좁다. 물살이 있어 고속 장비가 산다",
+      "landRatio": 0.34,
+      "shoreJitter": 2,
+      "groupShift": {
+        "friends": 1.5,
+        "company": 1.2,
+        "family": 0.75,
+        "couple": 0.85
+      },
+      "courseThrillMult": 1.15,
+      "sceneryBonus": 0,
+      "strong": "고속 장비 · 대형 코스 · 스릴",
+      "weak": "육지가 좁아 숙박·편의가 부족하다"
+    },
+    {
+      "id": "valley",
+      "name": "계곡형",
+      "desc": "강폭이 좁고 경사와 경관이 좋다. 넓은 수역이 없다",
+      "landRatio": 0.7,
+      "shoreJitter": 1,
+      "groupShift": {
+        "couple": 1.5,
+        "family": 1.25,
+        "friends": 0.7,
+        "company": 0.8
+      },
+      "courseThrillMult": 0.85,
+      "sceneryBonus": 5,
+      "strong": "슬라이드 · 전망 · 경관/숙박",
+      "weak": "넓은 수역이 없어 대형 코스가 어렵다"
+    },
+    {
+      "id": "lake",
+      "name": "호수형",
+      "desc": "수면이 넓고 잔잔하다. 물살이 없어 스릴 상한이 낮다",
+      "landRatio": 0.48,
+      "shoreJitter": 3,
+      "groupShift": {
+        "family": 1.45,
+        "couple": 1.15,
+        "friends": 0.65,
+        "company": 0.95
+      },
+      "courseThrillMult": 0.8,
+      "sceneryBonus": 2,
+      "strong": "가족 특화 · 캠핑 · 잔잔한 수상놀이",
+      "weak": "스릴 상한이 낮아 친구 그룹 유입이 약하다"
+    }
+  ]
+}

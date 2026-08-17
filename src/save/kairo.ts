@@ -77,6 +77,14 @@ export interface KairoSaveV1 {
    * 사고로 닫힌 시설과 남은 주 (§12.1). 저장 안 하면 새로고침이 곧 사면이 된다.
    */
   accidentIdle?: [number, number][];
+  /**
+   * 맵 타입과 시나리오 (§4.5). **안 저장하면 새로고침이 곧 기본 맵으로 되돌아간다** —
+   * 계곡형으로 시작한 판이 북한강형이 되면 손님 구성이 통째로 바뀐다.
+   */
+  mapId?: string;
+  scenarioId?: string;
+  /** 누적 사고 수 — "사고 없이" 시나리오의 판정 근거 */
+  accidentCount?: number;
 }
 
 export type AnyKairoSave = KairoSaveV1;
@@ -115,6 +123,9 @@ export interface KairoSaveInput {
   resortName?: string;
   priceMult?: number;
   accidentIdle?: [number, number][];
+  mapId?: string;
+  scenarioId?: string;
+  accidentCount?: number;
 }
 
 export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave {
@@ -140,6 +151,9 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.resortName ? { resortName: input.resortName } : {}),
     ...(input.priceMult !== undefined ? { priceMult: input.priceMult } : {}),
     ...(input.accidentIdle ? { accidentIdle: input.accidentIdle } : {}),
+    ...(input.mapId ? { mapId: input.mapId } : {}),
+    ...(input.scenarioId ? { scenarioId: input.scenarioId } : {}),
+    ...(input.accidentCount !== undefined ? { accidentCount: input.accidentCount } : {}),
   };
 }
 
@@ -192,6 +206,9 @@ export interface KairoRestored {
   resortName?: string;
   priceMult?: number;
   accidentIdle?: [number, number][];
+  mapId?: string;
+  scenarioId?: string;
+  accidentCount?: number;
 }
 
 export function restoreKairo(raw: unknown): KairoRestored {
@@ -217,6 +234,9 @@ export function restoreKairo(raw: unknown): KairoRestored {
     ...(s.resortName ? { resortName: s.resortName } : {}),
     ...(s.priceMult !== undefined ? { priceMult: s.priceMult } : {}),
     ...(s.accidentIdle ? { accidentIdle: s.accidentIdle } : {}),
+    ...(s.mapId ? { mapId: s.mapId } : {}),
+    ...(s.scenarioId ? { scenarioId: s.scenarioId } : {}),
+    ...(s.accidentCount !== undefined ? { accidentCount: s.accidentCount } : {}),
   };
 }
 

@@ -4,6 +4,7 @@
  *   npm run sim:kairo                        기본 (시드 20개 × 12주)
  *   npm run sim:kairo -- --seeds 100 --weeks 24
  *   npm run sim:kairo -- --determinism       같은 시드가 같은 결과를 내는지
+ *   npm run sim:kairo -- --maps              맵마다 결과가 달라지는지 (§4.5)
  *   npm run sim:kairo -- --json
  *
  * ## 왜 헤드리스인가
@@ -26,6 +27,8 @@ import { WeekRunner, type NeedKind, type Season, type WeekReport } from '../src/
 import { evaluateCombos } from '../src/sim/kairo/combos.js';
 import { CardStore, CARD_RNG_SALT, optionCash, triggerCard } from '../src/sim/kairo/cards.js';
 import { assessRisk, accidentChance } from '../src/sim/kairo/risk.js';
+import { mapType, shiftedShares, MAP_TYPES } from '../src/sim/kairo/scenario.js';
+import { seasonShares } from '../src/sim/kairo/groups.js';
 import { StaffStore, STAFF_ROLES, neededFor } from '../src/sim/kairo/staff.js';
 import {
   CourseStore,
@@ -46,6 +49,8 @@ const SEEDS = flag('seeds', 20);
 const WEEKS = flag('weeks', 12);
 const JSON_OUT = args.includes('--json');
 const DETERMINISM = args.includes('--determinism');
+/** 맵별 비교 — 맵마다 최적 빌드가 달라지는지 (§4.5) */
+const MAPS = args.includes('--maps');
 
 const GRID_W = 40;
 const GRID_H = 32;
@@ -84,6 +89,10 @@ interface RunResult {
   accidents: number;
   /** 마지막 위험 단계 — "사고 0회"가 관리 덕인지 확률이 0이라 그런지 가른다 */
   riskLevel: string;
+  mapId: string;
+  /** 마지막 주 손님 구성 비율 — 맵이 구성을 바꾸는지 확인 */
+  familyRatio: number;
+  friendsRatio: number;
   /** 위험 단계였던 주의 비율 */
   riskyWeeks: number;
   /** 뽑힌 카드 수와 카드로 나간 돈 — 카드가 경제를 얼마나 흔드나 */
@@ -142,9 +151,10 @@ function buildOne(
   return 0;
 }
 
-function runOne(seed: number, weeks: number): RunResult {
+function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const rng = new Rng(seed);
-  const t = KairoTerrain.generate(GRID_W, GRID_H, rng.fork(1));
+  const map = mapType(mapId);
+  const t = KairoTerrain.generate(GRID_W, GRID_H, rng.fork(1), map);
   const w = new WallGrid(GRID_W, GRID_H);
   const p = new PlacementGrid(GRID_W, GRID_H);
   const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
@@ -392,6 +402,8 @@ function runOne(seed: number, weeks: number): RunResult {
       season,
       reputation: gr.reputationPull,
       priceMult,
+      mapShares: shiftedShares(seasonShares(season), map),
+      mapSceneryBonus: map.sceneryBonus,
       modifiers: mods,
       courses: {
         revenue: courseWeek.revenue,
@@ -469,6 +481,9 @@ function runOne(seed: number, weeks: number): RunResult {
     avgLevel: p.averageLevel(),
     accidents,
     riskLevel: assessRisk(p, g, { staffSafety: staff.effects(p).safetyPoints }).level,
+    mapId,
+    familyRatio: last ? last.byGroup.family / Math.max(1, last.visitors) : 0,
+    friendsRatio: last ? last.byGroup.friends / Math.max(1, last.visitors) : 0,
     riskyWeeks,
     cardsSeen,
     cardSpend,
@@ -496,6 +511,31 @@ function fmt(n: number): string {
   return String(Math.round(n));
 }
 
+/**
+ * 맵별 비교 (§4.5 검증) — **맵마다 최적 빌드가 실제로 달라지는지.**
+ * 달라지지 않으면 "맵 타입"은 지형 무늬일 뿐이고 2회차 이유가 안 된다.
+ */
+function compareMaps(seeds: number, weeks: number): void {
+  console.log(`\n맵별 비교 — 시드 ${seeds} × ${weeks}주`);
+  console.log(
+    `${'맵'.padEnd(7)} ${'손익'.padStart(8)} ${'만족'.padStart(5)} ${'시설'.padStart(5)} ` +
+      `${'가족%'.padStart(6)} ${'친구%'.padStart(6)} ${'코스'.padStart(5)}`,
+  );
+  for (const m of MAP_TYPES) {
+    const runs: RunResult[] = [];
+    for (let s = 0; s < seeds; s++) runs.push(runOne(1000 + s, weeks, m.id));
+    const med = (pick: (r: RunResult) => number): number => stats(runs.map(pick)).med;
+    console.log(
+      `${m.name.padEnd(6)} ${fmt(med((r) => r.profitByWeek[weeks - 1] ?? 0)).padStart(8)} ` +
+        `${med((r) => r.exitSat).toFixed(0).padStart(5)} ` +
+        `${med((r) => r.facilities).toString().padStart(5)} ` +
+        `${(med((r) => r.familyRatio) * 100).toFixed(0).padStart(6)} ` +
+        `${(med((r) => r.friendsRatio) * 100).toFixed(0).padStart(6)} ` +
+        `${med((r) => r.courseCount).toString().padStart(5)}`,
+    );
+  }
+}
+
 function main(): void {
   if (DETERMINISM) {
     const a = runOne(4242, 6);
@@ -503,6 +543,11 @@ function main(): void {
     const same = JSON.stringify(a) === JSON.stringify(b);
     console.log(same ? '✅ 결정론 OK — 같은 시드가 같은 결과' : '❌ 결정론 깨짐');
     process.exit(same ? 0 : 1);
+  }
+
+  if (MAPS) {
+    compareMaps(SEEDS, WEEKS);
+    return;
   }
 
   const t0 = Date.now();

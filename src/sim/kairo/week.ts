@@ -225,6 +225,14 @@ export interface WeekOptions {
    */
   priceMult?: number;
   /**
+   * 맵이 바꾼 손님 유형 비중과 경관 보너스 (§4.5).
+   *
+   * 없으면 맵 특성이 없는 것으로 본다 — 기존 호출자 호환. 맵이 손님 구성을 바꾸는 것이
+   * "맵이 달라도 최적 빌드가 비슷하다"를 막는 장치다.
+   */
+  mapShares?: Partial<Record<GroupId, number>>;
+  mapSceneryBonus?: number;
+  /**
    * 직원 효과 (§11). 없으면 직원이 없는 것으로 본다 — 기존 호출자 호환.
    *
    * ⚠ 여기도 `WeekRunner` 안에 직원 규칙을 넣지 않는다. `staff.ts` 가 해석하고
@@ -439,7 +447,7 @@ export class WeekRunner {
         while (arrivalAcc >= 1) {
           arrivalAcc -= 1;
           arrivals++;
-          const born = this.guests.spawn(rng, season);
+          const born = this.guests.spawn(rng, season, opts.mapShares);
           if (born) {
             visitors++;
             byGroup[born.group] += 1;
@@ -588,6 +596,7 @@ export class WeekRunner {
                   (mod?.satisfactionDelta ?? 0) +
                   (staff?.satisfactionDelta ?? 0) +
                   priceSatisfaction(this.priceMult) +
+                  (opts.mapSceneryBonus ?? 0) +
                   (this.placement.averageLevel() - 1) * LEVEL_SATISFACTION,
               ),
             ),

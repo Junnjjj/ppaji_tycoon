@@ -1,0 +1,77 @@
+{
+  "note": "시나리오 6종 (design.md §4.5). **맵 특성만으로는 2회차 동기가 약하다 — 목표를 바꾼다.**\ngrade = 이 시나리오가 열리는 등급 (기본은 1).\n금액은 우리 경제 축척이다 — 문서의 1,500만은 시설 최저가 10.5만 기준으로 과하다.\ngoal.kind: none | gradeByWeek. 실패 조건은 failOnAccident 와 주 수 초과.",
+  "scenarios": [
+    {
+      "id": "inherited",
+      "name": "물려받은 빠지",
+      "desc": "제한 없음. 작은 빠지를 물려받아 키운다",
+      "startCash": 5000000,
+      "grade": 1,
+      "goal": {
+        "kind": "none"
+      }
+    },
+    {
+      "id": "three_years",
+      "name": "3년 안에 ★3",
+      "desc": "156주 안에 3등급에 닿아야 한다",
+      "startCash": 5000000,
+      "grade": 3,
+      "goal": {
+        "kind": "gradeByWeek",
+        "grade": 3,
+        "week": 156
+      }
+    },
+    {
+      "id": "half_budget",
+      "name": "절반의 예산",
+      "desc": "시작 자금이 절반이다",
+      "startCash": 2500000,
+      "grade": 3,
+      "goal": {
+        "kind": "gradeByWeek",
+        "grade": 3,
+        "week": 208
+      }
+    },
+    {
+      "id": "narrow_river",
+      "name": "좁은 강",
+      "desc": "수면 허가가 20타일에서 시작한다",
+      "startCash": 5000000,
+      "grade": 4,
+      "permitStart": 20,
+      "goal": {
+        "kind": "gradeByWeek",
+        "grade": 4,
+        "week": 260
+      }
+    },
+    {
+      "id": "no_accident",
+      "name": "사고 없이",
+      "desc": "사고가 한 번이라도 나면 실패",
+      "startCash": 5000000,
+      "grade": 4,
+      "failOnAccident": true,
+      "goal": {
+        "kind": "gradeByWeek",
+        "grade": 4,
+        "week": 260
+      }
+    },
+    {
+      "id": "resort_town",
+      "name": "관광지",
+      "desc": "평판으로 승부한다 — 5등급에 닿아야 한다",
+      "startCash": 5000000,
+      "grade": 5,
+      "goal": {
+        "kind": "gradeByWeek",
+        "grade": 5,
+        "week": 312
+      }
+    }
+  ]
+}

@@ -14,6 +14,10 @@
  *
  * ## 함정 (실측)
  *
+ * - **`page.evaluate` 에 넘기는 템플릿 리터럴 안에서 백틱과 백슬래시 이스케이프를 쓰지 말 것.**
+ *   백틱은 리터럴을 끊고, `\n` 같은 이스케이프는 TS 가 **실제 줄바꿈으로 바꿔** 페이지 쪽
+ *   정규식을 깨뜨린다 (실측: `/\n/g` 가 줄바꿈이 들어간 정규식이 되어 SyntaxError).
+ *   줄바꿈이 필요하면 `String.fromCharCode(10)` 를 쓴다.
  * - **`page.evaluate` 안에서 이름 있는 함수를 쓰지 말 것.** tsx(esbuild)가 `__name`
  *   헬퍼를 주입하는데 페이지 쪽엔 없어서 ReferenceError 가 난다. 문자열로 넘기는 게 안전하다.
  * - **핀치/멀티터치는 CDP `Input.dispatchTouchEvent` 로 보낼 것.** 합성 PointerEvent 는
@@ -1502,6 +1506,79 @@ async function main(): Promise<void> {
     cashBefore?: number;
     title?: string;
   };
+
+  /*
+   * ── 8·맵 타입 · 시나리오 (§4.5) ──
+   *
+   * **2회차를 하는 이유.** 맵 3종 × 시나리오 6종을 만들어 놓고 **고를 방법이 없으면
+   * 데이터로만 존재한다** — 그래서 화면과 목표 표시를 함께 본다.
+   */
+  const scenarioUi = (await page.evaluate(`(() => {
+    const open = document.getElementById('kairo-newgame-open');
+    const goal = document.getElementById('kairo-goal');
+    if (!open) return { ok: false, why: '새 판 버튼이 없다' };
+    open.click();
+    const panel = document.getElementById('kairo-newgame');
+    if (!panel || getComputedStyle(panel).display === 'none') {
+      return { ok: false, why: '새 판 화면이 안 열린다' };
+    }
+    const maps = [...panel.querySelectorAll('button[data-map]')];
+    const scens = [...panel.querySelectorAll('button[data-scenario]')];
+    const locked = scens.filter((b) => b.disabled).length;
+    const hs = [...maps, ...scens].map((b) => Math.round(b.getBoundingClientRect().height));
+    // 맵을 바꾸면 설명이 바뀐다
+    const before = panel.textContent.slice(0, 400);
+    maps[1].click();
+    const after = panel.textContent.slice(0, 400);
+    document.getElementById('kairo-newgame-close').click();
+    return {
+      ok: true, maps: maps.length, scens: scens.length, locked: locked,
+      minH: hs.length ? Math.min.apply(null, hs) : 0,
+      detailChanged: before !== after,
+      // 이 블록 안에서는 백슬래시 이스케이프를 쓸 수 없다 (파일 머리말의 함정 참고)
+      goalText: goal ? goal.textContent.split(String.fromCharCode(10)).join(' | ') : '(없음)',
+      mapName: window.__kairo.mapDef.name,
+      scenarioName: window.__kairo.scenario.name
+    };
+  })()`)) as {
+    ok: boolean;
+    why?: string;
+    maps?: number;
+    scens?: number;
+    locked?: number;
+    minH?: number;
+    detailChanged?: boolean;
+    goalText?: string;
+    mapName?: string;
+    scenarioName?: string;
+  };
+
+  record(
+    '새 판 화면에 맵 3종 · 시나리오 6종이 있다',
+    scenarioUi.ok && scenarioUi.maps === 3 && scenarioUi.scens === 6 ? 'pass' : 'fail',
+    scenarioUi.ok
+      ? `맵 ${scenarioUi.maps} · 시나리오 ${scenarioUi.scens} (잠김 ${scenarioUi.locked})`
+      : (scenarioUi.why ?? '실패'),
+  );
+  record(
+    '아직 안 열린 시나리오가 잠겨 있다 — 처음부터 다 열리면 해금이 무의미하다',
+    (scenarioUi.locked ?? 0) > 0 ? 'pass' : 'fail',
+    `${scenarioUi.locked}개 잠김`,
+  );
+  record(
+    '맵을 바꾸면 유리·불리 설명이 바뀐다 — 고를 근거가 있어야 고르는 것이다',
+    scenarioUi.detailChanged === true ? 'pass' : 'fail',
+  );
+  record(
+    '새 판 화면 버튼이 44px 이상',
+    (scenarioUi.minH ?? 0) >= 44 ? 'pass' : 'fail',
+    `최소 ${scenarioUi.minH}px`,
+  );
+  record(
+    '목표가 화면에 상시 표시된다 — 안 보이면 시나리오가 목표가 아니다',
+    (scenarioUi.goalText ?? '').includes(scenarioUi.mapName ?? '@@') ? 'pass' : 'fail',
+    scenarioUi.goalText ?? '',
+  );
 
   /*
    * ── 8·사고 (§12.1) ──
