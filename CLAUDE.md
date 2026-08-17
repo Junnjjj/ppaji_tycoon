@@ -111,6 +111,9 @@ npm run sim -- --seed 42 --guests 200 --ticks 20000   # 헤드리스 시뮬 + �
 npm run sim -- --determinism                          # 결정론 확인
 npm run dev            # 폰에서 보려면 출력된 Network URL 사용
 npm run verify:mobile  # ← 모바일 실동작 자동 검증 (dev 서버 필요)
+npm run verify:kairo   # 카이로 씬 브라우저 80종 + 4방 이음새 QA (dev 서버 필요)
+npm run seam           # 4방 이음새 QA 단독 (--selftest 로 음성 대조군)
+npm run sim:kairo      # 카이로 헤드리스 밸런싱 (--seeds N --weeks N)
 ```
 
 `npm run sim` 이 도는 것 자체가 불변식 1 의 실증이다 (Phaser 없이 Node 에서 sim 이 돈다).

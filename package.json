@@ -16,10 +16,11 @@
     "verify": "npm run typecheck && npm run lint && npm run test && npm run gate && npm run sim:kairo -- --determinism",
     "verify:mobile": "tsx tools/verify-mobile.ts",
     "gate": "tsx tools/kairo-gate.ts",
-    "verify:kairo": "tsx tools/verify-kairo.ts",
+    "verify:kairo": "tsx tools/verify-kairo.ts && tsx tools/seam-qa.ts --selftest",
     "shot:kairo": "tsx tools/shot-kairo.ts",
     "shot:zoom": "tsx tools/shot-kairo-zoom.ts",
-    "sim:kairo": "tsx tools/kairo-sim.ts"
+    "sim:kairo": "tsx tools/kairo-sim.ts",
+    "seam": "tsx tools/seam-qa.ts"
   },
   "dependencies": {
     "phaser": "3.90.0"
