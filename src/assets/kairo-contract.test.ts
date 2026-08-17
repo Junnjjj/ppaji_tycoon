@@ -123,8 +123,14 @@ describe('슬라이드 입출구', () => {
 describe('기존 에셋 레이어로 펼쳐진다 — 새 프로바이더를 만들지 않는다', () => {
   const specs = kairoSpriteSpecs();
 
-  it('명세 수 = 시설 73 + 벽 1(마스크 16 변형) + 문 2 + 지면 6 + 다리 2 + 데코 8', () => {
-    expect(specs).toHaveLength(73 + 1 + 2 + 6 + 2 + 8);
+  it('명세 수 = 시설 73 + 벽 1(마스크 16 변형) + 문 2 + 지면 6 + 다리 2 + 배경 2 + 데코 8', () => {
+    expect(specs).toHaveLength(73 + 1 + 2 + 6 + 2 + 2 + 8);
+  });
+
+  it('배경은 2겹이고 가로 타일 폭이 계약값이다', () => {
+    const back = specs.filter((s) => s.id.startsWith("backdrop/"));
+    expect(back).toHaveLength(2);
+    for (const b of back) expect(b.size[0]).toBe(KAIRO.backdrop.tileTexels);
   });
 
   it('카이로 스프라이트 앵커는 전부 bottom-center 다', () => {
@@ -179,8 +185,8 @@ describe('지면·데코가 계약에 있다 — v1 은 길에 0장을 줬다', 
     expect(KAIRO.deco.items.filter((d) => d.kind === 'scenery')).toHaveLength(4);
   });
 
-  it('변형을 펼친 **이미지** 총계가 119장이다 = 시설 73 + 벽 18 + 지면 20 + 데코 8', () => {
-    expect(new KairoProceduralProvider().ids).toHaveLength(119);
+  it('변형을 펼친 **이미지** 총계가 121장이다 = 시설 73 + 벽 18 + 지면 20 + 배경 2 + 데코 8', () => {
+    expect(new KairoProceduralProvider().ids).toHaveLength(121);
   });
 });
 

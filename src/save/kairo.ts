@@ -64,6 +64,13 @@ export interface KairoSaveV1 {
   staffRngState?: number;
   /** 놓인 코스 — 장비값을 치르고 그린 것이라 안 저장하면 새로고침이 곧 전부 철거다 */
   courses?: CourseSnapshot;
+  /**
+   * 발견한 콤보 — **누적**이라 저장해야 한다. 시설을 지웠다고 도감이 줄면 그건 발견이
+   * 아니라 현황판이다.
+   */
+  discovered?: string[];
+  /** 리조트 이름 — 감상 화면에서 바꾼다. 내 리조트라는 감각의 절반은 이름이다 */
+  resortName?: string;
 }
 
 export type AnyKairoSave = KairoSaveV1;
@@ -98,6 +105,8 @@ export interface KairoSaveInput {
   staff?: StaffCounts;
   staffRngState?: number;
   courses?: CourseSnapshot;
+  discovered?: string[];
+  resortName?: string;
 }
 
 export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave {
@@ -119,6 +128,8 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.staff ? { staff: input.staff } : {}),
     ...(input.staffRngState !== undefined ? { staffRngState: input.staffRngState } : {}),
     ...(input.courses ? { courses: input.courses } : {}),
+    ...(input.discovered ? { discovered: input.discovered } : {}),
+    ...(input.resortName ? { resortName: input.resortName } : {}),
   };
 }
 
@@ -167,6 +178,8 @@ export interface KairoRestored {
   staff?: Partial<StaffCounts>;
   staffRngState: number;
   courses?: CourseSnapshot;
+  discovered?: string[];
+  resortName?: string;
 }
 
 export function restoreKairo(raw: unknown): KairoRestored {
@@ -188,6 +201,8 @@ export function restoreKairo(raw: unknown): KairoRestored {
     ...(s.staff ? { staff: s.staff } : {}),
     staffRngState: s.staffRngState ?? 20260818,
     ...(s.courses ? { courses: s.courses } : {}),
+    ...(s.discovered ? { discovered: s.discovered } : {}),
+    ...(s.resortName ? { resortName: s.resortName } : {}),
   };
 }
 

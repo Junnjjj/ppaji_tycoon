@@ -15,7 +15,9 @@ export type SpriteCategory =
   | 'facility'
   | 'vehicle'
   | 'prop'
-  | 'fx';
+  | 'fx'
+  /** 배경 띠 — 지면 격자에 속하지 않고 가로로만 타일링한다 */
+  | 'backdrop';
 
 /**
  * 변형 축. 하나의 논리 스프라이트가 여러 실물 이미지로 펼쳐진다.

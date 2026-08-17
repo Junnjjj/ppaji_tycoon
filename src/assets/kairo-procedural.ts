@@ -436,8 +436,74 @@ function drawerFor(baseId: string): Drawer | undefined {
     return undefined;
   }
   if (kind === 'ground') return (g, spec, id) => drawGround(g, spec, name, altOf(id, spec));
+  if (kind === 'backdrop') return (g, spec) => drawBackdrop(g, spec, name);
   if (kind === 'deco') return (g, spec) => drawDeco(g, spec, name);
   return undefined;
+}
+
+/**
+ * 배경 띠 — 능선(ridge)과 먼 강둑(farbank).
+ *
+ * ## 가로로 이어져야 한다
+ *
+ * 카메라가 옆으로 움직이면 같은 그림이 반복된다. 그래서 **왼쪽 끝과 오른쪽 끝이 이어져야**
+ * 하고, 그건 "폭의 배수 주기를 가진 함수만 쓴다"로 보장한다 — 랩 크로스페이드로 덧칠하면
+ * 그 부분만 색이 달라져 오히려 이음새가 보인다 (컨셉 배경에서 실제로 겪었다).
+ *
+ * ## 하늘도 물도 안 그린다
+ *
+ * 하늘은 배경색, 물은 지면 스프라이트가 그린다 (계약의 `sky:false`, `water:false`).
+ * 여기서 또 그리면 색이 두 곳에서 정해져 어긋난다.
+ */
+function drawBackdrop(
+  g: CanvasRenderingContext2D,
+  spec: SpriteSpec,
+  name: string,
+): void {
+  const [w, h] = spec.size;
+  const ridge = name === 'ridge';
+  // 능선은 멀고 흐리다(대기 원근), 강둑은 가깝고 진하다
+  const body = ridge ? '#5b7f96' : '#3f6b57';
+  const lit = ridge ? '#7496aa' : '#548a6c';
+  const dark = ridge ? '#48697e' : '#2f5442';
+
+  // 주기가 폭의 약수인 사인 합 — 끝과 끝이 정확히 맞는다
+  const peak = (x: number): number => {
+    const t = (x / w) * Math.PI * 2;
+    return ridge
+      ? h * 0.52 + Math.sin(t) * h * 0.18 + Math.sin(t * 3 + 1.1) * h * 0.09
+      : h * 0.72 + Math.sin(t * 2 + 0.4) * h * 0.08 + Math.sin(t * 5) * h * 0.04;
+  };
+
+  for (let x = 0; x < w; x++) {
+    const top = Math.round(h - peak(x));
+    for (let y = top; y < h; y++) {
+      // 위쪽은 밝게, 아래로 갈수록 어둡게 — 2단 명암 (플레이스홀더 규칙)
+      const d = (y - top) / Math.max(1, h - top);
+      g.fillStyle = d < 0.18 ? lit : d > 0.72 ? dark : body;
+      g.fillRect(x, y, 1, 1);
+    }
+    // 능선 위 1텍셀 아웃라인
+    g.fillStyle = OUTLINE;
+    g.fillRect(x, top, 1, 1);
+  }
+
+  if (!ridge) {
+    // 강둑에는 나무 실루엣을 얹는다 — 주기를 폭의 약수로 둬야 끝이 맞는다
+    const trees = 24;
+    for (let k = 0; k < trees; k++) {
+      const cx = Math.round((k * w) / trees) + 3;
+      const base = Math.round(h - peak(cx));
+      const th = 8 + ((k * 7) % 9);
+      for (let y = base - th; y < base; y++) {
+        const half = Math.max(1, Math.round(((base - y) / th) * 3));
+        for (let x = cx - half; x <= cx + half; x++) {
+          g.fillStyle = y < base - th * 0.7 ? lit : dark;
+          g.fillRect(((x % w) + w) % w, y, 1, 1);
+        }
+      }
+    }
+  }
 }
 
 export class KairoProceduralProvider implements AssetProvider {

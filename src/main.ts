@@ -36,6 +36,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { KairoStaffPanel } = await import('./ui/kairo-staff.js');
   const course = await import('./sim/kairo/course.js');
   const { KairoCoursePanel } = await import('./ui/kairo-course.js');
+  const { KairoCatalog, activeComboIds } = await import('./ui/kairo-catalog.js');
+  const { KairoShowcase } = await import('./ui/kairo-showcase.js');
   const { Rng: RngCls } = await import('./sim/rng.js');
   const { loadKairoFromStorage, saveKairoToStorage } = await import('./save/kairo.js');
   const { facilityDef } = await import('./sim/kairo/placement.js');
@@ -360,6 +362,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       staff: staff.toSnapshot(),
       staffRngState: staffRng.state,
       courses: courses.toSnapshot(),
+      discovered: [...discovered],
+      resortName,
     });
   };
 
@@ -421,6 +425,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       exitSatisfaction: rep.exitSatisfaction,
     };
     // 의뢰 보상은 결산 시점에 지급한다 — 배치 때마다 주면 같은 의뢰가 여러 번 판정된다
+    // 새로 터진 콤보를 도감에 기록한다 — 결산이 발견의 순간이다 (§0 재미의 축)
+    noteDiscoveries();
     const weekClaim = progress.claim(questStatuses(h.placement, lastSummary));
     if (weekClaim.cash > 0) week.earn(weekClaim.cash);
     persist();
@@ -503,6 +509,70 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       persist();
     },
   });
+
+  /**
+   * 도감과 감상 화면 (§15.8 · §15 감상).
+   *
+   * 발견한 콤보는 **누적**한다 — 지금 발동 중인 것만 보여주면 시설을 지웠을 때 도감이
+   * 줄어들고, 그건 "발견"이 아니라 현황판이다.
+   */
+  const discovered = new Set<string>(saved?.discovered ?? []);
+  const noteDiscoveries = (): string[] => {
+    const fresh: string[] = [];
+    for (const id of activeComboIds(h.placement)) {
+      if (!discovered.has(id)) {
+        discovered.add(id);
+        fresh.push(id);
+      }
+    }
+    return fresh;
+  };
+  noteDiscoveries();
+
+  const catalog = new KairoCatalog(document.body, {
+    placement: h.placement,
+    courses,
+    grade: () => gradeFor(lastSummary?.exitSatisfaction ?? 0).grade,
+    discovered: () => discovered,
+  });
+
+  let resortName = saved?.resortName ?? '가평 빠지';
+  const showcase = new KairoShowcase(
+    document.body,
+    h.scene,
+    () => ({
+      name: resortName,
+      grade: gradeFor(lastSummary?.exitSatisfaction ?? 0).grade,
+      visitors: lastSummary?.visitors ?? 0,
+      week: week.week,
+      facilities: h.placement.count,
+    }),
+    (n) => {
+      resortName = n;
+      persist();
+    },
+  );
+
+  const catalogBtn = document.createElement('button');
+  catalogBtn.id = 'kairo-catalog-open';
+  catalogBtn.textContent = '도감';
+  catalogBtn.style.cssText =
+    'position:fixed;right:8px;bottom:276px;z-index:9;min-height:44px;min-width:64px;' +
+    'border-radius:10px;border:none;background:#2a5674;color:#eaf6ff;font-size:13px';
+  catalogBtn.addEventListener('click', () => {
+    if (catalog.visible) catalog.hide();
+    else catalog.show();
+  });
+  document.body.append(catalogBtn);
+
+  const showcaseBtn = document.createElement('button');
+  showcaseBtn.id = 'kairo-showcase-open';
+  showcaseBtn.textContent = '감상';
+  showcaseBtn.style.cssText =
+    'position:fixed;right:8px;bottom:328px;z-index:9;min-height:44px;min-width:64px;' +
+    'border-radius:10px;border:none;background:#2a5674;color:#eaf6ff;font-size:13px';
+  showcaseBtn.addEventListener('click', () => showcase.show());
+  document.body.append(showcaseBtn);
 
   const courseBtn = document.createElement('button');
   courseBtn.id = 'kairo-course-open';
@@ -612,6 +682,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     courses,
     coursePanel,
     courseApi: course,
+    catalog,
+    showcase,
     progress,
     refreshQuests,
     getLastReport: () => lastReport,

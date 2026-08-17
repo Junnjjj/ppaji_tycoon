@@ -97,7 +97,14 @@ export const KAIRO = contract as unknown as {
   deco: {
     items: readonly { id: string; name: string; bodyH: number; kind: 'safety' | 'scenery' }[];
   };
-  backdrop: { layers: readonly string[]; tileTexels: number };
+  backdrop: {
+    layers: readonly string[];
+    tileTexels: number;
+    /** 띠 높이 */
+    bandTexels: number;
+    /** 랩 크로스페이드 폭 — 가로 이음새를 지운다 */
+    wrapCrossfade: number;
+  };
   facilities: readonly KairoFacilityRender[];
 };
 
@@ -200,6 +207,22 @@ export function kairoSpriteSpecs(): SpriteSpec[] {
       size: [b.canvas[0], b.canvas[1]] as const,
       anchor: 'bottom-center',
       category: 'terrain',
+      source: 'ai',
+    });
+  }
+
+  /*
+   * 배경 2겹 (§7 배경). 가로로 타일링하는 띠 — 능선과 먼 강둑.
+   *
+   * **하늘과 물은 안 넣는다** (`sky:false`, `water:false`) — 하늘은 배경색, 물은
+   * 절차적 지면이 그린다. 배경에 넣으면 색이 두 곳에서 정해져 안 맞는다.
+   */
+  for (const layer of KAIRO.backdrop.layers) {
+    out.push({
+      id: `backdrop/${layer}`,
+      size: [KAIRO.backdrop.tileTexels, KAIRO.backdrop.bandTexels] as const,
+      anchor: 'bottom-center',
+      category: 'backdrop',
       source: 'ai',
     });
   }

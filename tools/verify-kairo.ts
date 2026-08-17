@@ -1504,6 +1504,215 @@ async function main(): Promise<void> {
   };
 
   /*
+   * ── 8·도감 (§15.8 · §D) ──
+   *
+   * **발견·수집이 훅이다.** 162 항목(콤보 70 + 시설 73 + 장비 19)을 스크롤 지옥 없이
+   * 보여주는지 — 기본이 "미발견만"인지, 한 항목이 56px 인지.
+   */
+  const catalog = (await page.evaluate(`(() => {
+    const open = document.getElementById('kairo-catalog-open');
+    if (!open) return { ok: false, why: '도감 버튼이 없다' };
+    open.click();
+    const panel = document.getElementById('kairo-catalog');
+    if (!panel || getComputedStyle(panel).display === 'none') {
+      return { ok: false, why: '도감이 안 열린다' };
+    }
+    const filter = document.getElementById('kairo-catalog-filter');
+    const defaultUndiscovered = filter.textContent.indexOf('미발견만') >= 0;
+    const rows = [...panel.querySelectorAll('div[data-entry]')];
+    const heights = rows.map((r) => Math.round(r.getBoundingClientRect().height));
+    const foundCount = rows.filter((r) => r.dataset.found === '1').length;
+    const tabs = [...panel.querySelectorAll('button[data-tab]')].map((b) => b.textContent);
+    const tiers = [...panel.querySelectorAll('button[data-tier]')].length;
+    // 전체 보기로 바꾸면 발견한 것도 나온다
+    filter.click();
+    const rowsAll = panel.querySelectorAll('div[data-entry]').length;
+    return {
+      ok: true, defaultUndiscovered: defaultUndiscovered,
+      rows: rows.length, rowsAll: rowsAll, foundCount: foundCount,
+      minRow: heights.length ? Math.min.apply(null, heights) : 0,
+      tabs: tabs, tiers: tiers,
+      counts: window.__kairo.catalog.counts()
+    };
+  })()`)) as {
+    ok: boolean;
+    why?: string;
+    defaultUndiscovered?: boolean;
+    rows?: number;
+    rowsAll?: number;
+    foundCount?: number;
+    minRow?: number;
+    tabs?: string[];
+    tiers?: number;
+    counts?: Record<string, [number, number]>;
+  };
+
+  record(
+    '도감이 콤보·시설·장비 세 탭으로 열린다',
+    catalog.ok && (catalog.tabs ?? []).length === 3 ? 'pass' : 'fail',
+    catalog.ok ? (catalog.tabs ?? []).join(' · ') : (catalog.why ?? '실패'),
+  );
+  record(
+    '기본이 "미발견만"이다 — 할 일이 보여야 도감이 목표가 된다',
+    catalog.defaultUndiscovered === true && catalog.foundCount === 0 ? 'pass' : 'fail',
+    `필터 기본 ${catalog.defaultUndiscovered ? '미발견만' : '전체'} · 발견 항목 ${catalog.foundCount}개 노출`,
+  );
+  record(
+    '한 항목이 56px 이상 — 스크롤 지옥 방지',
+    (catalog.minRow ?? 0) >= 56 ? 'pass' : 'fail',
+    `최소 ${catalog.minRow ?? 0}px · ${catalog.rows}줄`,
+  );
+  record(
+    '티어 탭이 4개다 (전체·소·중·대)',
+    catalog.tiers === 4 ? 'pass' : 'fail',
+    `${catalog.tiers}개`,
+  );
+  await page.screenshot({ path: `${SHOT_DIR}/kairo-catalog.png` });
+  await page.evaluate(`document.getElementById('kairo-catalog-close').click()`);
+
+  /*
+   * ── 8·감상 화면 (§15 v4 신규) ──
+   *
+   * "10시간 뒤의 리조트가 **스크린샷 찍고 싶은 화면**이어야 한다."
+   * UI 가 걷히는지, 씬이 **안 멈추는지**(살아 있어야 한다), 공유 이미지가 실제로 나오는지.
+   */
+  const showcase = (await page.evaluate(`(() => {
+    const open = document.getElementById('kairo-showcase-open');
+    if (!open) return { ok: false, why: '감상 버튼이 없다' };
+    const before = [...document.body.children].filter(
+      (el) => el.tagName === 'BUTTON' && getComputedStyle(el).display !== 'none',
+    ).length;
+    open.click();
+    const panel = document.getElementById('kairo-showcase');
+    if (!panel || getComputedStyle(panel).display === 'none') {
+      return { ok: false, why: '감상 화면이 안 열린다' };
+    }
+    const after = [...document.body.children].filter(
+      (el) => el.tagName === 'BUTTON' && getComputedStyle(el).display !== 'none',
+    ).length;
+    const share = document.getElementById('kairo-showcase-share');
+    const name = document.getElementById('kairo-showcase-name');
+    return {
+      ok: true, buttonsBefore: before, buttonsAfter: after,
+      shareH: Math.round(share.getBoundingClientRect().height),
+      name: name.textContent,
+      upscale: window.__kairo.scene.upscale,
+      running: window.__kairo.game.loop.started
+    };
+  })()`)) as {
+    ok: boolean;
+    why?: string;
+    buttonsBefore?: number;
+    buttonsAfter?: number;
+    shareH?: number;
+    name?: string;
+    upscale?: number;
+    running?: boolean;
+  };
+
+  record(
+    '감상 화면이 UI 를 걷어낸다',
+    showcase.ok && (showcase.buttonsAfter ?? 99) < (showcase.buttonsBefore ?? 0) ? 'pass' : 'fail',
+    showcase.ok
+      ? `버튼 ${showcase.buttonsBefore} → ${showcase.buttonsAfter}개`
+      : (showcase.why ?? '실패'),
+  );
+  record(
+    '감상 중에도 씬이 돈다 — 정지 화면이면 "살아 움직이는 광경"이 아니다',
+    showcase.running === true ? 'pass' : 'fail',
+    `루프 ${showcase.running ? '진행' : '정지'} · 배율 ${showcase.upscale}`,
+  );
+  record(
+    '이름·등급이 화면에 박힌다',
+    (showcase.name ?? '').includes('★') ? 'pass' : 'fail',
+    showcase.name ?? '',
+  );
+  record(
+    '공유 버튼이 48px 이상',
+    (showcase.shareH ?? 0) >= 48 ? 'pass' : 'fail',
+    `${showcase.shareH ?? 0}px`,
+  );
+
+  const shared = (await page.evaluate(`(() => {
+    const r = window.__kairo.showcase.share();
+    const img = window.__kairo.showcase.lastShareImage;
+    return { ok: r.ok, reason: r.reason || '', len: img ? img.length : 0 };
+  })()`)) as { ok: boolean; reason: string; len: number };
+  record(
+    '공유 이미지가 실제로 만들어진다 — 검은 그림이면 실패로 돌려준다',
+    shared.ok && shared.len > 1000 ? 'pass' : 'fail',
+    shared.ok ? `${(shared.len / 1024).toFixed(0)}KB` : shared.reason,
+  );
+
+  await page.screenshot({ path: `${SHOT_DIR}/kairo-showcase.png` });
+  await page.evaluate(`document.getElementById('kairo-showcase-close').click()`);
+
+  /*
+   * ── 8·배경 2겹 (§7 배경) ──
+   *
+   * **시차가 핵심이다.** 배경이 지도와 같은 속도로 움직이면 큰 그림 한 장이고, 안 움직이면
+   * 벽지다. 그래서 "떠 있나"가 아니라 **"카메라보다 느리게 따라오나"**를 잰다.
+   */
+  const backdrop = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    const info = h.scene.backdropInfo;
+    // 카메라를 옮겨 배경이 실제로 덜 움직이는지 본다
+    const before = h.scene.tileScreenRect(10, 10);
+    h.scene.focusTile(28, 10);
+    const after = h.scene.tileScreenRect(10, 10);
+    return {
+      count: info.count, factors: info.factors, depths: info.depths,
+      tileMoved: Math.abs(after.x - before.x)
+    };
+  })()`)) as { count: number; factors: number[]; depths: number[]; tileMoved: number };
+
+  record(
+    '배경이 2겹이다',
+    backdrop.count === 2 ? 'pass' : 'fail',
+    `${backdrop.count}겹 · 시차 ${backdrop.factors.join(', ')}`,
+  );
+  record(
+    '배경이 지도보다 느리게 따라온다 — 같으면 큰 그림 한 장, 0 이면 벽지다',
+    backdrop.factors.length === 2 &&
+      backdrop.factors.every((f) => f > 0 && f < 1) &&
+      backdrop.factors[0] !== backdrop.factors[1]
+      ? 'pass'
+      : 'fail',
+    `능선 ${backdrop.factors[0]} · 강둑 ${backdrop.factors[1]} (지도는 1.0)`,
+  );
+  record(
+    '배경이 지면보다 뒤에 있다',
+    backdrop.depths.every((d) => d < 0) ? 'pass' : 'fail',
+    `깊이 ${backdrop.depths.join(', ')}`,
+  );
+
+  const backTile = (await page.evaluate(`(() => {
+    const prov = window.__kairo.provider;
+    const out = [];
+    for (const id of ['backdrop/ridge', 'backdrop/farbank']) {
+      if (!prov.has(id)) { out.push({ id: id, ok: false, why: '없다' }); continue; }
+      const c = prov.get(id);
+      const g = c.getContext('2d');
+      const d = g.getImageData(0, 0, c.width, c.height).data;
+      // 좌우 끝 열이 이어지는가 — 가로 타일링의 조건
+      let diff = 0;
+      for (let y = 0; y < c.height; y++) {
+        const a = (y * c.width) * 4;
+        const b = (y * c.width + c.width - 1) * 4;
+        for (let k = 0; k < 4; k++) diff += Math.abs(d[a + k] - d[b + k]);
+      }
+      out.push({ id: id, ok: true, w: c.width, h: c.height, edgeDiff: Math.round(diff / c.height) });
+    }
+    return out;
+  })()`)) as { id: string; ok: boolean; why?: string; w?: number; h?: number; edgeDiff?: number }[];
+
+  record(
+    '배경 좌우 끝이 이어진다 — 가로로 반복되므로 끊기면 바로 보인다',
+    backTile.every((b) => b.ok && (b.edgeDiff ?? 999) < 60) ? 'pass' : 'fail',
+    backTile.map((b) => `${b.id.split('/')[1]} ${b.w}×${b.h} 끝차 ${b.edgeDiff}`).join(' · '),
+  );
+
+  /*
    * ── 8·코스 (§7) ──
    *
    * 여섯 동사 중 "코스를 그린다". **프리셋 탭 → 핸들 → 확정**이 실제로 도는지,

@@ -128,6 +128,7 @@ export class KairoScene extends Phaser.Scene {
   private courseBad = new Set<number>();
   private courseDock: { x: number; y: number } | null = null;
   private courseGfx: Phaser.GameObjects.Graphics | null = null;
+  private backdrops: Phaser.GameObjects.TileSprite[] = [];
   private dragMoved = 0;
   private lastPointer = { x: 0, y: 0 };
   private lastTapAt = 0;
@@ -174,6 +175,7 @@ export class KairoScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('#7ab8d4');
     this.cameras.main.setRoundPixels(true);
 
+    this.buildBackdrop();
     this.buildGround();
     this.buildWalls();
     // 코스 오버레이는 전부보다 위 — 손님·시설에 가리면 못 끈다
@@ -189,6 +191,44 @@ export class KairoScene extends Phaser.Scene {
   private groundTextureId(i: number, j: number): string {
     const kind = this.opts.terrain.kindAt(i, j) ?? 'lawn';
     return variantId(`ground/${kind}`, { alt: (i * 7 + j * 13) % 3 });
+  }
+
+  /**
+   * 배경 2겹 (§7 배경). 능선은 멀고 강둑은 가깝다.
+   *
+   * ## 시차(parallax)가 핵심이다
+   *
+   * 배경이 지도와 **같은 속도로** 움직이면 그냥 큰 그림 한 장이고, **안 움직이면** 벽지가
+   * 된다. 카이로가 주는 "여기가 어디 강변인가"라는 감각은 배경이 지도보다 **느리게**
+   * 따라올 때 생긴다. `scrollFactor` 로 능선 0.15 · 강둑 0.35 을 준다.
+   *
+   * ## 왜 TileSprite 인가
+   *
+   * 가로로 무한히 이어져야 한다 — 이미지 한 장을 늘리면 늘어난 만큼 흐려지고, 여러 장을
+   * 나열하면 이음새를 우리가 관리해야 한다. `TileSprite` 는 GPU 가 wrap 으로 반복한다.
+   * 이음새가 안 보이는 근거는 **스프라이트 자체가 좌우로 이어지도록 그려졌다는 것**이다
+   * (`drawBackdrop` 의 주기 함수) — 여기서 보정하지 않는다.
+   */
+  private buildBackdrop(): void {
+    for (const img of this.backdrops) img.destroy();
+    this.backdrops = [];
+    const layers: { id: string; factor: number; y: number }[] = [
+      { id: 'backdrop/ridge', factor: 0.15, y: -70 },
+      { id: 'backdrop/farbank', factor: 0.35, y: -18 },
+    ];
+    for (const l of layers) {
+      if (!this.opts.provider.has(l.id)) continue;
+      const spec = this.opts.provider.spec(l.id);
+      if (!spec) continue;
+      const [w, h] = spec.size;
+      // 화면보다 넉넉히 넓게 — 시차 때문에 카메라보다 덜 움직이므로 여유가 필요하다
+      const ts = this.add.tileSprite(0, l.y, w * 8, h, l.id);
+      ts.setOrigin(0, 0);
+      ts.setScrollFactor(l.factor, l.factor);
+      // 지면(depthKey 최소 0)보다 뒤
+      ts.setDepth(-1000 + Math.round(l.factor * 100));
+      this.backdrops.push(ts);
+    }
   }
 
   /** 타일 이미지를 한 번 만들어 두고 이후엔 텍스처만 바꾼다 (지면은 안 움직인다) */
@@ -728,6 +768,31 @@ export class KairoScene extends Phaser.Scene {
       w: TILE_W,
       h: TILE_H,
     };
+  }
+
+  /** 현재 확대 배율 — 감상 화면·검증이 읽는다 */
+  get upscale(): Upscale {
+    return this.cam.upscale;
+  }
+
+  /** 검증용 — 배경 띠의 개수와 시차 계수 */
+  get backdropInfo(): { count: number; factors: number[]; depths: number[] } {
+    return {
+      count: this.backdrops.length,
+      factors: this.backdrops.map((b) => b.scrollFactorX),
+      depths: this.backdrops.map((b) => b.depth),
+    };
+  }
+
+  /**
+   * 격자 전체가 화면에 들어오도록 맞춘다 — 감상 화면이 쓴다.
+   *
+   * 확대 배율은 이미 1 이어야 한다 (감상 화면이 먼저 내린다). 여기서는 **중앙만** 맞춘다 —
+   * 격자가 화면보다 크면 다 안 들어오지만, 그건 축소 단계를 더 만드는 문제고 정수 배율만
+   * 쓰기로 한 결정과 부딪힌다. 지금은 리조트 중심을 잡아 주는 것이 옳다.
+   */
+  fitAll(): void {
+    this.focusTile(Math.floor(GRID_W / 2), Math.floor(GRID_H / 2));
   }
 
   /** 테스트·도구용 — 카메라를 직접 놓는다 */
