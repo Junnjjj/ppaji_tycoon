@@ -6,3 +6,9 @@ dist/
 .vite/
 coverage/
 tmp-shots/
+
+# AI 생성 산출물 — 재생성 가능하고 용량이 크다 (807M).
+# 무엇이 있고 무엇이 폐기 대상인지는 docs/asset-index.md 가 색인한다.
+assets/generated/
+# 판정용 스크린샷 (79M). 근거 샷 목록은 docs/shots-index.md.
+prototype-3d/shots/
