@@ -23,6 +23,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   );
   const { allFacilityDefs, PLACE_FAIL_MESSAGES } = await import('./sim/kairo/placement.js');
   const { WeekRunner } = await import('./sim/kairo/week.js');
+  const { previewCombos, evaluateCombos } = await import('./sim/kairo/combos.js');
+  const { questStatuses, ProgressStore, gradeFor, requiredGrade } = await import(
+    './sim/kairo/progress.js'
+  );
   const { KairoReport } = await import('./ui/kairo-report.js');
   const { Rng: RngCls } = await import('./sim/rng.js');
   const box = document.createElement('div');
@@ -86,11 +90,26 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       }
       if (brush === 'facility') {
         const defId = picker.value;
+        // 등급 해금 — 허가는 돈으로 못 산다 (퇴장 만족도로만 오른다)
+        const grade = gradeFor(lastReport?.exitSatisfaction ?? 0);
+        const need = requiredGrade(defId);
+        if (need > grade.grade) {
+          toast(`아직 못 짓습니다 — ${need}등급 필요 (현재 ${grade.grade}등급 ${grade.name})`);
+          return;
+        }
         const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j);
         if (r.ok && r.placed) {
           h.scene.refreshFacility(r.placed.handle);
           h.guests.invalidate();
-          toast('');
+          // 놓고 나서 터진 콤보를 알려준다
+          const gained = previewCombos(h.placement, defId, i, j);
+          const now = evaluateCombos(h.placement);
+          const claimed = progress.claim(questStatuses(h.placement, lastReport));
+          const msgs: string[] = [];
+          if (now.active.length > 0) msgs.push(`콤보 ${now.active.length}개 발동`);
+          if (claimed.cash > 0) msgs.push(`의뢰 완료 +${Math.round(claimed.cash / 10000)}만`);
+          toast(msgs.join(' · '), msgs.length > 0 ? 'ok' : '');
+          void gained;
         } else {
           toast(PLACE_FAIL_MESSAGES[r.fail ?? 'unknown-def']);
         }
@@ -115,9 +134,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   msg.hidden = true;
   document.body.append(msg);
   let toastTimer = 0;
-  const toast = (text: string): void => {
+  const toast = (text: string, kind: '' | 'ok' = ''): void => {
     msg.textContent = text;
     msg.hidden = text === '';
+    msg.style.background = kind === 'ok' ? 'rgba(40,140,90,.92)' : 'rgba(180,40,30,.92)';
     window.clearTimeout(toastTimer);
     if (text !== '') toastTimer = window.setTimeout(() => (msg.hidden = true), 2600);
   };
@@ -200,6 +220,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 실시간 시뮬은 "만지는 동안"만 돌고, 시간이 흐르는 건 이 버튼뿐이다 — 렌더가 프레임마다
    * tick 을 돌리면 결산이 언제 끝났는지 알 수 없다.
    */
+  const progress = new ProgressStore();
   const week = new WeekRunner(h.terrain, h.placement, h.guests);
   const report = new KairoReport(document.body);
   const weekRng = new RngCls(31337);
@@ -232,7 +253,62 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   weekBtn.addEventListener('click', runWeek);
   document.body.append(weekBtn);
 
-  Object.assign(h, { week, report, runWeek, getLastReport: () => lastReport });
+  /**
+   * 의뢰 목록 — **상시 표시**다. 선택 카드가 아니라 목록이라 플레이어가 언제든
+   * "다음에 뭘 하지"에 답을 갖는다 (v4 결정).
+   */
+  const questPanel = document.createElement('div');
+  questPanel.id = 'kairo-quests';
+  questPanel.style.cssText =
+    'position:fixed;right:8px;top:8px;z-index:9;width:190px;max-height:44vh;overflow-y:auto;' +
+    'background:rgba(0,0,0,.6);color:#e8f4ff;border-radius:8px;padding:6px 8px;' +
+    'font:11px/1.45 system-ui,sans-serif';
+  document.body.append(questPanel);
+
+  const refreshQuests = (): void => {
+    const st = questStatuses(h.placement, lastReport);
+    const open = st.filter((s) => !progress.isClaimed(s.id));
+    const rows = open.slice(0, 6);
+    questPanel.replaceChildren();
+    const title = document.createElement('div');
+    const g = gradeFor(lastReport?.exitSatisfaction ?? 0);
+    title.textContent = `의뢰 ${st.length - open.length}/${st.length} · ${g.grade}등급 ${g.name}`;
+    title.style.cssText = 'font-weight:600;margin-bottom:4px;opacity:.85';
+    questPanel.append(title);
+    for (const s of rows) {
+      const row = document.createElement('div');
+      row.style.cssText = 'margin-bottom:5px';
+      const name = document.createElement('div');
+      name.textContent = `${s.done ? '✓ ' : ''}${s.name}`;
+      name.style.cssText = s.done ? 'color:#8fe08f' : '';
+      const bar = document.createElement('div');
+      bar.style.cssText =
+        'height:3px;border-radius:2px;background:rgba(255,255,255,.15);margin:2px 0';
+      const fill = document.createElement('div');
+      fill.style.cssText =
+        `height:100%;width:${Math.round(s.progress * 100)}%;border-radius:2px;` +
+        `background:${s.done ? '#8fe08f' : '#4a9ad0'}`;
+      bar.append(fill);
+      const det = document.createElement('div');
+      det.textContent = s.detail;
+      det.style.cssText = 'opacity:.6;font-size:10px';
+      row.append(name, bar, det);
+      questPanel.append(row);
+    }
+  };
+  refreshQuests();
+  setInterval(refreshQuests, 1500);
+
+  Object.assign(h, {
+    week,
+    report,
+    runWeek,
+    progress,
+    refreshQuests,
+    getLastReport: () => lastReport,
+    combos: { previewCombos, evaluateCombos },
+    quests: { questStatuses, gradeFor, requiredGrade },
+  });
   Object.assign(window, { __kairo: h, __kairoBrush: () => brush });
   console.log(
     `[카이로] 에셋 ${h.provider.name} (${h.provider.ids.length}장 플레이스홀더) · ` +

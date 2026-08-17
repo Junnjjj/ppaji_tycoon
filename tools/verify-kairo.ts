@@ -1055,6 +1055,123 @@ async function main(): Promise<void> {
   )) as boolean;
   record('결산을 닫으면 게임으로 돌아온다', closed ? 'pass' : 'fail');
 
+  // ── 7j. 콤보·해금·의뢰 ──
+  const prog = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, sc = h.scene;
+    const out = {};
+
+    // 의뢰 패널이 상시 보인다
+    const panel = document.getElementById('kairo-quests');
+    out.panel = !!panel;
+    out.panelText = panel ? panel.textContent.slice(0, 60) : '';
+
+    const st = h.quests.questStatuses(p, h.getLastReport());
+    out.quests = st.length;
+    out.detailsFilled = st.every((s) => s.detail && s.detail.length > 0);
+    out.progressInRange = st.every((s) => s.progress >= 0 && s.progress <= 1);
+
+    // 해금 — 시작 등급에서 큰 시설은 막힌다
+    const g0 = h.quests.gradeFor(0);
+    out.startGrade = g0.grade;
+    out.needTurtle = h.quests.requiredGrade('turtle_island');
+    out.needShop = h.quests.requiredGrade('shop');
+
+    // 콤보 미리보기 — 붙여 놓으면 터질 것을 미리 안다
+    let spot = null;
+    for (let j = 3; j < 18 && !spot; j++) {
+      for (let i = 3; i < 26; i++) {
+        let ok = true;
+        for (let di = 0; di < 8 && ok; di++)
+          for (let dj = 0; dj < 6; dj++)
+            if (!t.isWalkable(i + di, j + dj) || w.has(i + di, j + dj) || p.handleAt(i + di, j + dj)) {
+              ok = false; break;
+            }
+        if (ok) { spot = [i, j]; break; }
+      }
+    }
+    if (!spot) return { ok: false, reason: '빈 육지를 못 찾았다' };
+    const [bi, bj] = spot;
+
+    const shop = p.place(t, w, h.gate, 'shop', bi, bj);
+    if (shop.ok && shop.placed) sc.refreshFacility(shop.placed.handle);
+    // 평상을 붙이면 '매점 앞 평상' 소형 콤보가 터져야 한다
+    const far = h.combos.previewCombos(p, 'pyeongsang_row', bi + 20, bj);
+    const near = h.combos.previewCombos(p, 'pyeongsang_row', bi, bj + 3);
+    out.previewFar = far.gained.length;
+    out.previewNear = near.gained.map((c) => c.id);
+    out.previewNearSat = near.satisfaction;
+
+    // 실제로 놓으면 발동한다
+    const py = p.place(t, w, h.gate, 'pyeongsang_row', bi, bj + 3);
+    if (py.ok && py.placed) sc.refreshFacility(py.placed.handle);
+    out.active = h.combos.evaluateCombos(p).active.map((c) => c.id);
+
+    // 보상은 한 번만
+    const first = h.progress.claim(h.quests.questStatuses(p, h.getLastReport()));
+    const second = h.progress.claim(h.quests.questStatuses(p, h.getLastReport()));
+    out.claimFirst = first.cash;
+    out.claimSecond = second.cash;
+
+    h.guests.invalidate();
+    h.refreshQuests();
+    out.focus = [bi + 1, bj + 2];
+    return { ok: true, ...out };
+  })()`)) as
+    | { ok: false; reason: string }
+    | {
+        ok: true;
+        panel: boolean;
+        panelText: string;
+        quests: number;
+        detailsFilled: boolean;
+        progressInRange: boolean;
+        startGrade: number;
+        needTurtle: number;
+        needShop: number;
+        previewFar: number;
+        previewNear: string[];
+        previewNearSat: number;
+        active: string[];
+        claimFirst: number;
+        claimSecond: number;
+        focus: number[];
+      };
+
+  if (!prog.ok) {
+    record('콤보·의뢰', 'fail', prog.reason);
+  } else {
+    record('의뢰 패널이 상시 보인다', prog.panel ? 'pass' : 'fail', prog.panelText.replace(/\s+/g, ' '));
+    record('의뢰 16종', prog.quests === 16 ? 'pass' : 'fail', `${prog.quests}종`);
+    record(
+      '의뢰마다 "얼마나 남았나"가 있다 — 조건 미달이 곧 다음 목표다',
+      prog.detailsFilled && prog.progressInRange ? 'pass' : 'fail',
+    );
+    record(
+      '해금 — 시작 1등급, 거북섬은 5등급',
+      prog.startGrade === 1 && prog.needTurtle === 5 && prog.needShop === 1 ? 'pass' : 'fail',
+      `시작 ${prog.startGrade}등급 · 거북섬 ${prog.needTurtle} · 매점 ${prog.needShop}`,
+    );
+    record(
+      '콤보 미리보기 — 붙이면 터지고 멀면 안 터진다',
+      prog.previewFar === 0 && prog.previewNear.length > 0 ? 'pass' : 'fail',
+      `멀리 ${prog.previewFar}개 · 가까이 ${prog.previewNear.join(',')} (+만족 ${prog.previewNearSat})`,
+    );
+    record(
+      '실제로 놓으면 미리보기대로 발동한다',
+      prog.active.includes('small_shop_pyeongsang') ? 'pass' : 'fail',
+      prog.active.join(','),
+    );
+    record(
+      '의뢰 보상은 한 번만 — 반복 지급은 무한 수입이다',
+      prog.claimSecond === 0 ? 'pass' : 'fail',
+      `1회 ${prog.claimFirst} · 2회 ${prog.claimSecond}`,
+    );
+
+    await page.evaluate(`window.__kairo.scene.focusTile(${prog.focus[0]}, ${prog.focus[1]})`);
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: `${SHOT_DIR}/kairo-combos.png` });
+  }
+
   // ── 8. FPS ──
   await page.waitForTimeout(1200);
   const dbg4 = (await page.evaluate(

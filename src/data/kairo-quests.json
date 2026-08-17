@@ -1,0 +1,208 @@
+{
+  "version": 1,
+  "note": "의뢰는 조건 충족형이다 — \"조건 미달\"이 곧 다음 목표가 된다 (v4 결정). 선택 카드가 아니라 상시 목록이라 플레이어가 언제든 다음 할 일을 안다.",
+  "quests": [
+    {
+      "id": "first_guest",
+      "name": "첫 손님",
+      "desc": "한 주에 손님 10명을 받으세요",
+      "condition": {
+        "kind": "weekVisitors",
+        "value": 10
+      },
+      "reward": {
+        "cash": 300000
+      }
+    },
+    {
+      "id": "food_stall",
+      "name": "먹거리를 갖추자",
+      "desc": "먹거리 시설 2개를 지으세요",
+      "condition": {
+        "kind": "needSupply",
+        "need": "food",
+        "value": 2
+      },
+      "reward": {
+        "cash": 500000
+      }
+    },
+    {
+      "id": "clean_start",
+      "name": "기본 위생",
+      "desc": "위생 시설 3개를 지으세요",
+      "condition": {
+        "kind": "needSupply",
+        "need": "hygiene",
+        "value": 3
+      },
+      "reward": {
+        "cash": 600000
+      }
+    },
+    {
+      "id": "first_deck",
+      "name": "물 위로",
+      "desc": "플로팅덱을 3칸 이어 뻗으세요",
+      "condition": {
+        "kind": "facilityCount",
+        "facility": "float_deck",
+        "value": 3
+      },
+      "reward": {
+        "cash": 700000
+      }
+    },
+    {
+      "id": "first_slide",
+      "name": "첫 슬라이드",
+      "desc": "워터슬라이드를 지으세요",
+      "condition": {
+        "kind": "needSupply",
+        "need": "thrill",
+        "value": 1
+      },
+      "reward": {
+        "cash": 800000
+      }
+    },
+    {
+      "id": "happy_week",
+      "name": "만족한 한 주",
+      "desc": "퇴장 만족도 70 이상으로 한 주를 마치세요",
+      "condition": {
+        "kind": "exitSatisfaction",
+        "value": 70
+      },
+      "reward": {
+        "cash": 1000000
+      }
+    },
+    {
+      "id": "no_turnaway",
+      "name": "만석 없는 주",
+      "desc": "만석으로 돌려보낸 손님 없이 한 주를 마치세요",
+      "condition": {
+        "kind": "maxTurnedAway",
+        "value": 0
+      },
+      "reward": {
+        "cash": 1200000
+      }
+    },
+    {
+      "id": "combo_hunter",
+      "name": "콤보 사냥",
+      "desc": "콤보 5개를 동시에 발동시키세요",
+      "condition": {
+        "kind": "activeCombos",
+        "value": 5
+      },
+      "reward": {
+        "cash": 1000000
+      }
+    },
+    {
+      "id": "busy_week",
+      "name": "붐비는 주",
+      "desc": "한 주에 손님 80명을 받으세요",
+      "condition": {
+        "kind": "weekVisitors",
+        "value": 80
+      },
+      "reward": {
+        "cash": 1500000
+      }
+    },
+    {
+      "id": "spa_course",
+      "name": "찜질 코스",
+      "desc": "온열 시설 3개를 지으세요",
+      "condition": {
+        "kind": "needSupply",
+        "need": "warm",
+        "value": 3
+      },
+      "reward": {
+        "cash": 1300000
+      }
+    },
+    {
+      "id": "scenic",
+      "name": "경관 가꾸기",
+      "desc": "경관 시설 3개를 지으세요",
+      "condition": {
+        "kind": "needSupply",
+        "need": "scenery",
+        "value": 3
+      },
+      "reward": {
+        "cash": 1300000
+      }
+    },
+    {
+      "id": "profit_week",
+      "name": "흑자 주간",
+      "desc": "한 주 손익 200만 이상",
+      "condition": {
+        "kind": "weekProfit",
+        "value": 2000000
+      },
+      "reward": {
+        "cash": 2000000
+      }
+    },
+    {
+      "id": "aqua_park",
+      "name": "아쿠아파크",
+      "desc": "스릴 시설 4개를 지으세요",
+      "condition": {
+        "kind": "needSupply",
+        "need": "thrill",
+        "value": 4
+      },
+      "reward": {
+        "cash": 2200000
+      }
+    },
+    {
+      "id": "stay_over",
+      "name": "숙박 시작",
+      "desc": "펜션류를 지으세요",
+      "condition": {
+        "kind": "needSupply",
+        "need": "stay",
+        "value": 1
+      },
+      "reward": {
+        "cash": 2500000
+      }
+    },
+    {
+      "id": "big_combo",
+      "name": "대형 콤보",
+      "desc": "대형 콤보를 발동시키세요",
+      "condition": {
+        "kind": "comboTier",
+        "tier": "large",
+        "value": 1
+      },
+      "reward": {
+        "cash": 3000000
+      }
+    },
+    {
+      "id": "landmark",
+      "name": "가평 명소",
+      "desc": "시설 30개와 퇴장 만족도 80 이상",
+      "condition": {
+        "kind": "facilityTotalAndSat",
+        "value": 30,
+        "sat": 80
+      },
+      "reward": {
+        "cash": 5000000
+      }
+    }
+  ]
+}

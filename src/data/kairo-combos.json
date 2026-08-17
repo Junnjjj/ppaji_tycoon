@@ -1,0 +1,1465 @@
+{
+  "version": 1,
+  "note": "콤보 정의. 티어별 체감 규칙은 src/sim/kairo/combos.ts 가 소유한다.",
+  "diminishing": {
+    "small": [
+      1.0
+    ],
+    "medium": [
+      0.3,
+      0.15,
+      0.05
+    ],
+    "large": [
+      1.0
+    ],
+    "note": "소형은 중복 허용(각각 온전히). 중형은 중복마다 체감. 대형은 리조트당 1회. 안 그러면 최적 콤보 도배가 정답이 된다 (v4 결정)"
+  },
+  "combos": [
+    {
+      "id": "small_shower_locker",
+      "name": "샤워 뒤 락커",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "shower_row"
+        },
+        {
+          "facility": "locker_row"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_changing_shower",
+      "name": "탈의 후 샤워",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "changing_row"
+        },
+        {
+          "facility": "shower_row"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_locker_pool",
+      "name": "락커 옆 유아풀",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "locker_row"
+        },
+        {
+          "facility": "pool_kids"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_sauna_sikhye",
+      "name": "사우나 후 식혜",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "sauna"
+        },
+        {
+          "facility": "sikhye"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_jjimjil_sikhye",
+      "name": "찜질방 식혜",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "jjimjilbang"
+        },
+        {
+          "facility": "sikhye"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_sauna_massage",
+      "name": "사우나 안마의자",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "sauna"
+        },
+        {
+          "facility": "massage_row"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_shop_pyeongsang",
+      "name": "매점 앞 평상",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "shop"
+        },
+        {
+          "facility": "pyeongsang_row"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_chicken_pyeongsang",
+      "name": "치킨과 평상",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "chicken"
+        },
+        {
+          "facility": "pyeongsang_row"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_snack_shade",
+      "name": "분식과 그늘막",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "snackbar"
+        },
+        {
+          "facility": "shade_net"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_cafe_lookout",
+      "name": "카페 옆 전망대",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "cafe"
+        },
+        {
+          "facility": "lookout"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_ice_parasol",
+      "name": "아이스크림 파라솔",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "icecream"
+        },
+        {
+          "facility": "parasol"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_bbq_firepit",
+      "name": "BBQ 화로대",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "bbq_zone"
+        },
+        {
+          "facility": "firepit_row"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_bbq_tent",
+      "name": "BBQ 몽골텐트",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "bbq_zone"
+        },
+        {
+          "facility": "mongol_tent"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_camp_firepit",
+      "name": "캠핑 화로대",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "camp_site"
+        },
+        {
+          "facility": "firepit_row"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_deck_trampoline",
+      "name": "덱 위 트램폴린",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "float_deck"
+        },
+        {
+          "facility": "trampoline_w"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_deck_cushion",
+      "name": "덱 점프쿠션",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "float_deck"
+        },
+        {
+          "facility": "jump_cushion"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_deck_slide",
+      "name": "덱과 슬라이드",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "float_deck"
+        },
+        {
+          "facility": "slide_small"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_dock_kayak",
+      "name": "선착장 카약",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "dock"
+        },
+        {
+          "facility": "rent_kayak"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_dock_sup",
+      "name": "선착장 SUP",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "dock"
+        },
+        {
+          "facility": "rent_sup"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_dock_duck",
+      "name": "선착장 오리배",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "dock"
+        },
+        {
+          "facility": "rent_duck"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_dock_pedal",
+      "name": "선착장 패들보트",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "dock"
+        },
+        {
+          "facility": "rent_pedal"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_slide_diving",
+      "name": "슬라이드와 다이빙대",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "slide_large"
+        },
+        {
+          "facility": "diving"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_island_junglegym",
+      "name": "거북섬 정글짐",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "turtle_island"
+        },
+        {
+          "facility": "junglegym_w"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_airbounce_tube",
+      "name": "에어바운스 튜브슬라이드",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "airbounce"
+        },
+        {
+          "facility": "slide_tube"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_pool_sunbed",
+      "name": "풀사이드 선베드",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "pool_warm"
+        },
+        {
+          "facility": "sunbed_row"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_lazy_sunbed",
+      "name": "유수풀 선베드",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "pool_lazy"
+        },
+        {
+          "facility": "sunbed_row"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_kids_nursing",
+      "name": "유아풀 수유실",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "pool_kids"
+        },
+        {
+          "facility": "nursing"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_toilet_washbasin",
+      "name": "화장실 세면대",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "toilet"
+        },
+        {
+          "facility": "washbasin_row"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_info_ticket",
+      "name": "안내소와 매표소",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "info"
+        },
+        {
+          "facility": "ticket"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_ticket_parking",
+      "name": "매표소 주차장",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "ticket"
+        },
+        {
+          "facility": "parking"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_lifering_infirmary",
+      "name": "구명함과 의무실",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "lifering"
+        },
+        {
+          "facility": "infirmary"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2,
+      "note": "감시대 발판은 데코라 배치 대상이 아니다 — 데코 콤보는 데코를 놓을 수 있게 된 뒤에"
+    },
+    {
+      "id": "small_playground_shade",
+      "name": "놀이터 그늘막",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "playground"
+        },
+        {
+          "facility": "shade_net"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_footvolley_vending",
+      "name": "족구장 자판기",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "footvolley"
+        },
+        {
+          "facility": "vending_out"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_minigolf_photo",
+      "name": "미니골프 포토존",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "minigolf"
+        },
+        {
+          "facility": "photozone"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_pavilion_flower",
+      "name": "정자와 화단",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "pavilion"
+        },
+        {
+          "facility": "flowerbed"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_fountain_photo",
+      "name": "분수 포토존",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "fountain"
+        },
+        {
+          "facility": "photozone"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_karaoke_arcade",
+      "name": "노래방 오락기",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "karaoke"
+        },
+        {
+          "facility": "arcade"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_pingpong_vending",
+      "name": "탁구대 자판기",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "pingpong"
+        },
+        {
+          "facility": "vending_in"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_bungalow_bbq",
+      "name": "방갈로 BBQ",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "bungalow"
+        },
+        {
+          "facility": "bbq_zone"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "small_pension_firepit",
+      "name": "펜션 화로대",
+      "tier": "small",
+      "kind": "adjacent",
+      "requires": [
+        {
+          "facility": "pension"
+        },
+        {
+          "facility": "firepit_row"
+        }
+      ],
+      "bonus": {
+        "satisfaction": 3,
+        "revenue": 4
+      },
+      "radius": 2
+    },
+    {
+      "id": "medium_spa_zone",
+      "name": "찜질 코스",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "warm",
+          "count": 1
+        },
+        {
+          "need": "food",
+          "count": 1
+        },
+        {
+          "need": "rest",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 4
+    },
+    {
+      "id": "medium_food_court",
+      "name": "먹거리 골목",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "food",
+          "count": 2
+        },
+        {
+          "need": "rest",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 3
+    },
+    {
+      "id": "medium_aqua_park",
+      "name": "아쿠아파크",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "thrill",
+          "count": 1
+        },
+        {
+          "need": "play",
+          "count": 1
+        },
+        {
+          "need": "service",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 5
+    },
+    {
+      "id": "medium_family_zone",
+      "name": "가족 구역",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "play",
+          "count": 1
+        },
+        {
+          "need": "hygiene",
+          "count": 1
+        },
+        {
+          "need": "rest",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 4
+    },
+    {
+      "id": "medium_marina",
+      "name": "마리나",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "service",
+          "count": 1
+        },
+        {
+          "need": "thrill",
+          "count": 1
+        },
+        {
+          "need": "scenery",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 5
+    },
+    {
+      "id": "medium_camp_zone",
+      "name": "캠핑장",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "rest",
+          "count": 1
+        },
+        {
+          "need": "food",
+          "count": 1
+        },
+        {
+          "need": "scenery",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 5
+    },
+    {
+      "id": "medium_wellness",
+      "name": "휴식 구역",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "warm",
+          "count": 1
+        },
+        {
+          "need": "rest",
+          "count": 1
+        },
+        {
+          "need": "scenery",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 4
+    },
+    {
+      "id": "medium_kids_zone",
+      "name": "아이 구역",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "play",
+          "count": 1
+        },
+        {
+          "need": "hygiene",
+          "count": 1
+        },
+        {
+          "need": "food",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 4
+    },
+    {
+      "id": "medium_sports_zone",
+      "name": "스포츠 구역",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "play",
+          "count": 2
+        },
+        {
+          "need": "food",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 4
+    },
+    {
+      "id": "medium_view_walk",
+      "name": "경관 산책",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "scenery",
+          "count": 2
+        },
+        {
+          "need": "rest",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 4
+    },
+    {
+      "id": "medium_hygiene_block",
+      "name": "위생동",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "hygiene",
+          "count": 3
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 3
+    },
+    {
+      "id": "medium_thrill_block",
+      "name": "스릴 집합",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "thrill",
+          "count": 2
+        },
+        {
+          "need": "service",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 5
+    },
+    {
+      "id": "medium_night_zone",
+      "name": "야간 구역",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "scenery",
+          "count": 1
+        },
+        {
+          "need": "food",
+          "count": 1
+        },
+        {
+          "need": "play",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 5
+    },
+    {
+      "id": "medium_pension_zone",
+      "name": "펜션 단지",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "stay",
+          "count": 1
+        },
+        {
+          "need": "food",
+          "count": 1
+        },
+        {
+          "need": "rest",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 5
+    },
+    {
+      "id": "medium_winter_zone",
+      "name": "겨울 구역",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "warm",
+          "count": 1
+        },
+        {
+          "need": "food",
+          "count": 1
+        },
+        {
+          "need": "play",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 5
+    },
+    {
+      "id": "medium_service_hub",
+      "name": "운영 허브",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "service",
+          "count": 2
+        },
+        {
+          "need": "hygiene",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 4
+    },
+    {
+      "id": "medium_shore_zone",
+      "name": "물가 구역",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "thrill",
+          "count": 1
+        },
+        {
+          "need": "rest",
+          "count": 1
+        },
+        {
+          "need": "scenery",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 5
+    },
+    {
+      "id": "medium_indoor_zone",
+      "name": "실내동",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "warm",
+          "count": 1
+        },
+        {
+          "need": "play",
+          "count": 1
+        },
+        {
+          "need": "hygiene",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 4
+    },
+    {
+      "id": "medium_picnic_zone",
+      "name": "피크닉 구역",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "food",
+          "count": 1
+        },
+        {
+          "need": "rest",
+          "count": 1
+        },
+        {
+          "need": "scenery",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 4
+    },
+    {
+      "id": "medium_rental_zone",
+      "name": "대여 구역",
+      "tier": "medium",
+      "kind": "cluster",
+      "requires": [
+        {
+          "need": "service",
+          "count": 1
+        },
+        {
+          "need": "thrill",
+          "count": 1
+        },
+        {
+          "need": "play",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 8,
+        "revenue": 10
+      },
+      "radius": 5
+    },
+    {
+      "id": "large_full_resort",
+      "name": "완성된 리조트",
+      "tier": "large",
+      "kind": "resort",
+      "requires": [
+        {
+          "need": "thrill",
+          "count": 3
+        },
+        {
+          "need": "food",
+          "count": 3
+        },
+        {
+          "need": "warm",
+          "count": 2
+        },
+        {
+          "need": "stay",
+          "count": 1
+        }
+      ],
+      "bonus": {
+        "satisfaction": 15,
+        "revenue": 18
+      }
+    },
+    {
+      "id": "large_aqua_master",
+      "name": "아쿠아 명가",
+      "tier": "large",
+      "kind": "resort",
+      "requires": [
+        {
+          "need": "thrill",
+          "count": 5
+        },
+        {
+          "need": "service",
+          "count": 3
+        }
+      ],
+      "bonus": {
+        "satisfaction": 15,
+        "revenue": 18
+      }
+    },
+    {
+      "id": "large_spa_master",
+      "name": "찜질 명가",
+      "tier": "large",
+      "kind": "resort",
+      "requires": [
+        {
+          "need": "warm",
+          "count": 4
+        },
+        {
+          "need": "food",
+          "count": 3
+        }
+      ],
+      "bonus": {
+        "satisfaction": 15,
+        "revenue": 18
+      }
+    },
+    {
+      "id": "large_family_master",
+      "name": "가족 명가",
+      "tier": "large",
+      "kind": "resort",
+      "requires": [
+        {
+          "need": "play",
+          "count": 4
+        },
+        {
+          "need": "hygiene",
+          "count": 4
+        }
+      ],
+      "bonus": {
+        "satisfaction": 15,
+        "revenue": 18
+      }
+    },
+    {
+      "id": "large_scenic_master",
+      "name": "경관 명가",
+      "tier": "large",
+      "kind": "resort",
+      "requires": [
+        {
+          "need": "scenery",
+          "count": 5
+        },
+        {
+          "need": "rest",
+          "count": 3
+        }
+      ],
+      "bonus": {
+        "satisfaction": 15,
+        "revenue": 18
+      }
+    },
+    {
+      "id": "large_stay_master",
+      "name": "숙박 명가",
+      "tier": "large",
+      "kind": "resort",
+      "requires": [
+        {
+          "need": "stay",
+          "count": 3
+        },
+        {
+          "need": "food",
+          "count": 2
+        }
+      ],
+      "bonus": {
+        "satisfaction": 15,
+        "revenue": 18
+      }
+    },
+    {
+      "id": "large_all_season",
+      "name": "사계절 운영",
+      "tier": "large",
+      "kind": "resort",
+      "requires": [
+        {
+          "need": "warm",
+          "count": 3
+        },
+        {
+          "need": "thrill",
+          "count": 3
+        },
+        {
+          "need": "play",
+          "count": 3
+        }
+      ],
+      "bonus": {
+        "satisfaction": 15,
+        "revenue": 18
+      }
+    },
+    {
+      "id": "large_clean_resort",
+      "name": "청결 리조트",
+      "tier": "large",
+      "kind": "resort",
+      "requires": [
+        {
+          "need": "hygiene",
+          "count": 6
+        }
+      ],
+      "bonus": {
+        "satisfaction": 15,
+        "revenue": 18
+      }
+    },
+    {
+      "id": "large_big_park",
+      "name": "대형 빠지",
+      "tier": "large",
+      "kind": "resort",
+      "requires": [
+        {
+          "need": "thrill",
+          "count": 6
+        },
+        {
+          "need": "play",
+          "count": 4
+        }
+      ],
+      "bonus": {
+        "satisfaction": 15,
+        "revenue": 18
+      }
+    },
+    {
+      "id": "large_gapyeong_landmark",
+      "name": "가평 명소",
+      "tier": "large",
+      "kind": "resort",
+      "requires": [
+        {
+          "need": "scenery",
+          "count": 4
+        },
+        {
+          "need": "thrill",
+          "count": 4
+        },
+        {
+          "need": "stay",
+          "count": 2
+        }
+      ],
+      "bonus": {
+        "satisfaction": 15,
+        "revenue": 18
+      }
+    }
+  ]
+}
