@@ -150,6 +150,8 @@ export interface WeekReport extends WeekSummary {
   arrivals: number;
   revenue: number;
   upkeep: number;
+  /** 인건비 — 고정비라 손님이 없어도 나간다 */
+  wages: number;
   gaveUp: number;
   /**
    * 혼잡 히트맵 — 타일별 손님 체류 tick. 결산에서 병목을 **눈으로** 보게 한다.
@@ -193,6 +195,19 @@ export interface WeekOptions {
    * 되고, 그건 등급이 돈으로 안 사진다는 결정과 같은 방향이다.
    */
   reputation?: number;
+  /**
+   * 직원 효과 (§11). 없으면 직원이 없는 것으로 본다 — 기존 호출자 호환.
+   *
+   * ⚠ 여기도 `WeekRunner` 안에 직원 규칙을 넣지 않는다. `staff.ts` 가 해석하고
+   * 여기는 **숫자 몇 개만** 받는다 (카드와 같은 규칙).
+   */
+  staff?: {
+    wages: number;
+    satisfactionDelta: number;
+    foodMult: number;
+    /** 이번 주에 선 시설 handle */
+    idle: ReadonlySet<number>;
+  };
   /**
    * 주간 의사결정 카드가 만든 수정치. 없으면 중립.
    *
@@ -268,9 +283,11 @@ export class WeekRunner {
   }
 
   /** 시설 구성이 채우는 수요 — 종류별 총 용량 */
-  supply(): Record<NeedKind, number> {
+  supply(idle?: ReadonlySet<number>): Record<NeedKind, number> {
     const out = {} as Record<NeedKind, number>;
     for (const item of this.placement.all()) {
+      // 선 시설은 공급이 아니다 — 병목 계산이 "있는데 왜 부족하지"가 되면 안 된다
+      if (idle?.has(item.handle)) continue;
       const def = facilityDef(item.defId);
       if (!def) continue;
       const need = (def as { need?: NeedKind }).need;
@@ -278,6 +295,19 @@ export class WeekRunner {
       out[need] = (out[need] ?? 0) + Math.max(1, def.capacity);
     }
     return out;
+  }
+
+  /** 전체 요금 중 식음이 차지하는 몫 — 매점직원 부족을 식음에만 물리기 위해 */
+  private foodShare(): number {
+    let food = 0;
+    let all = 0;
+    for (const item of this.placement.all()) {
+      const def = facilityDef(item.defId);
+      if (!def) continue;
+      all += def.fee;
+      if ((def as { need?: string }).need === 'food') food += def.fee;
+    }
+    return all === 0 ? 0 : food / all;
   }
 
   /**
@@ -313,7 +343,9 @@ export class WeekRunner {
     const days: DayReport[] = [];
     const playback: PlaybackFrame[] = [];
 
-    const supply = this.supply();
+    const staff = opts.staff;
+    this.guests.setIdle(staff?.idle ?? new Set());
+    const supply = this.supply(staff?.idle);
     const mod = opts.modifiers;
     const byGroup: Record<GroupId, number> = { family: 0, couple: 0, friends: 0, company: 0 };
     let weekRevenue = 0;
@@ -402,6 +434,14 @@ export class WeekRunner {
       });
       weekRevenue += dayRevenue;
     }
+    // 매점직원이 모자라면 식음 매출이 떨어진다. 전체가 아니라 **식음 몫만** 깎아야
+    // "직원을 왜 쓰나"가 종류별 판단이 된다 — 근사로 전체의 식음 비중만큼만 곱한다
+    if (staff && staff.foodMult !== 1) {
+      const foodShare = this.foodShare();
+      const factor = 1 - foodShare * (1 - staff.foodMult);
+      weekRevenue = Math.round(weekRevenue * factor);
+      for (const d of days) d.revenue = Math.round(d.revenue * factor);
+    }
     if (mod?.revenueMult !== undefined && mod.revenueMult !== 1) {
       weekRevenue = Math.round(weekRevenue * mod.revenueMult);
       // 일별 수치도 맞춰 둔다 — 결산 막대와 합계가 어긋나면 플레이어가 못 믿는다
@@ -409,7 +449,12 @@ export class WeekRunner {
     }
 
     const upkeep = this.weeklyUpkeep(season);
-    this.money += weekRevenue - upkeep;
+    /*
+     * 인건비는 **고정비**다 — 손님이 0명인 주에도 나간다. 그게 "겨울에 몇 명을 남길까"를
+     * 판단으로 만든다 (§11 의 설계 의도).
+     */
+    const wages = staff?.wages ?? 0;
+    this.money += weekRevenue - upkeep - wages;
     this.weekNo++;
 
     // 히트맵 최고점
@@ -449,7 +494,8 @@ export class WeekRunner {
       turnedAway: days.reduce((a, d) => a + d.turnedAway, 0),
       revenue: weekRevenue,
       upkeep,
-      profit: weekRevenue - upkeep,
+      wages,
+      profit: weekRevenue - upkeep - wages,
       /*
        * 만족도 델타는 **평균에 더한다**. 손님 개체마다 더하면 그 손님이 다음 주까지
        * 남아 델타가 두 번 먹는다 — 카드 효과는 그 주의 경험이지 손님의 성격이 아니다.
@@ -462,7 +508,8 @@ export class WeekRunner {
               Math.min(
                 100,
                 days.reduce((a, d) => a + d.exitSatisfaction, 0) / totalExited +
-                  (mod?.satisfactionDelta ?? 0),
+                  (mod?.satisfactionDelta ?? 0) +
+                  (staff?.satisfactionDelta ?? 0),
               ),
             ),
       gaveUp: days.reduce((a, d) => a + d.gaveUp, 0),

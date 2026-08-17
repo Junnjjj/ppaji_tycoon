@@ -57,9 +57,17 @@ const THRESHOLDS: Record<Exclude<RiskLevel, 'safe'>, number> = {
   danger: 0.8,
 };
 
-export function assessRisk(placement: PlacementGrid, guests: GuestStore): RiskReport {
+export function assessRisk(
+  placement: PlacementGrid,
+  guests: GuestStore,
+  /**
+   * 직원이 더하는 안전 점수 (§11 안전요원). 시설과 같은 축에 더한다 —
+   * "구명함을 지을까 안전요원을 쓸까" 가 같은 문제의 두 답이 되어야 한다.
+   */
+  staffSafety = 0,
+): RiskReport {
   let riskPoints = 0;
-  let safetyPoints = 0;
+  let safetyPoints = staffSafety;
 
   for (const item of placement.all()) {
     const def = facilityDef(item.defId) as

@@ -25,6 +25,7 @@ import { GuestStore, GUEST_DEFAULTS } from '../src/sim/kairo/guests.js';
 import { WeekRunner, type NeedKind, type Season, type WeekReport } from '../src/sim/kairo/week.js';
 import { evaluateCombos } from '../src/sim/kairo/combos.js';
 import { CardStore, CARD_RNG_SALT, optionCash } from '../src/sim/kairo/cards.js';
+import { StaffStore, STAFF_ROLES, neededFor } from '../src/sim/kairo/staff.js';
 import { questStatuses, ProgressStore, gradeFor, admissionLimit } from '../src/sim/kairo/progress.js';
 
 const args = process.argv.slice(2);
@@ -44,6 +45,9 @@ const GATE = { i: 2, j: 2 };
 /** 봇이 건설에 안 쓰고 남기는 예비비 — 카드 한 장의 최대 지출을 버틸 만큼 */
 const BUILD_RESERVE = 1_500_000;
 
+/** 가장 싼 시설 — 이보다 예산이 적으면 "자리"가 아니라 "돈"이 문제다 */
+const CHEAPEST_FACILITY = Math.min(...allFacilityDefs().map((d) => d.cost));
+
 interface RunResult {
   seed: number;
   weeks: number;
@@ -60,11 +64,15 @@ interface RunResult {
   profitByWeek: number[];
   /** 주차별 계절 — 성장 판정은 **같은 계절끼리** 비교해야 한다 */
   seasonByWeek: Season[];
-  /** 건설을 시도했다가 자리를 못 찾은 횟수 — 시설 상한의 원인을 가른다 */
-  buildFails: number;
+  /** 건설이 막힌 주 — 돈이 없어서 / 자리가 없어서를 **나눠서** 센다 */
+  buildPoor: number;
+  buildNoSpace: number;
   /** 뽑힌 카드 수와 카드로 나간 돈 — 카드가 경제를 얼마나 흔드나 */
   cardsSeen: number;
   cardSpend: number;
+  /** 주 평균 직원 수와 주차별 인건비 */
+  staffWeeks: number;
+  wagesByWeek: number[];
   /** 주차별 수익·유지비 — "무엇이 손익을 깎는가"를 가른다 */
   revenueByWeek: number[];
   upkeepByWeek: number[];
@@ -127,6 +135,9 @@ function runOne(seed: number, weeks: number): RunResult {
    * 바꿀 수 없다.
    */
   const cardRng = rng.fork(CARD_RNG_SALT);
+  const staff = new StaffStore();
+  /** 직원 전용 스트림 — 고장 판정이 날씨·손님을 밀면 안 된다 (불변식 2) */
+  const staffRng = rng.fork(0x57aff);
 
   // 벽부착 시설을 위해 벽 몇 줄 (플레이어가 실내동을 짓는 걸 흉내낸다)
   for (let i = 6; i < 26; i++) placeWall(t, w, GATE, i, 5);
@@ -136,9 +147,12 @@ function runOne(seed: number, weeks: number): RunResult {
   let last: WeekReport | null = null;
   const profitByWeek: number[] = [];
   const seasonByWeek: Season[] = [];
-  let buildFails = 0;
+  let buildPoor = 0;
+  let buildNoSpace = 0;
   let cardsSeen = 0;
   let cardSpend = 0;
+  let staffWeeks = 0;
+  const wagesByWeek: number[] = [];
   const revenueByWeek: number[] = [];
   const upkeepByWeek: number[] = [];
   const cashByWeek: number[] = [];
@@ -149,6 +163,24 @@ function runOne(seed: number, weeks: number): RunResult {
     // 결산의 병목을 보고 짓는다
     const want = last?.bottleneck?.need ?? null;
     let buildSpend = 0;
+    /*
+     * 이번 주 건설 예산.
+     *
+     * 두 가지를 함께 본다 — **수입**과 **쌓인 현금**.
+     *   · 매주 무조건 3채를 지으면 유지비·인건비가 붙은 뒤로 초기 자금을 태우다 후반에
+     *     아무것도 못 짓는다 (실측: 마지막 8주 건설비 0)
+     *   · ⚠ 그렇다고 **수입만** 보면 성장 교착이 생긴다. 초기 자금을 안 쓰니 시설이 12개에
+     *     머물고, 슬롯이 모자라 손님이 전부 헛걸음하고(헛걸음 106%), 만족도 0 · 등급 1 ·
+     *     수입 0 이 되어 예산이 영원히 최저에 머문다 (실측). 작아서 못 크는 상태다.
+     *
+     * 그래서 **쌓인 현금의 1/4** 도 예산에 넣는다 — 은행에 돈이 있으면 사람은 짓는다.
+     */
+    const income = last ? Math.max(0, last.profit) : 0;
+    let weekBudget = Math.max(
+      CHEAPEST_FACILITY,
+      Math.round(income * 1.5),
+      Math.floor(Math.max(0, cash - BUILD_RESERVE) * 0.25),
+    );
     for (let b = 0; b < 3; b++) {
       /*
        * 예비비를 남긴다. **이게 없으면 봇이 스스로 파산하고, 그러면 우리는 게임이 아니라
@@ -158,11 +190,20 @@ function runOne(seed: number, weeks: number): RunResult {
        * 150만은 카드 한 장의 최대 지출(160만)에 가깝게 잡았다 — 사람도 "카드가 하나 터져도
        * 버틸 만큼"은 남긴다.
        */
-      const spent = buildOne(t, w, p, Math.max(0, cash - BUILD_RESERVE), b === 0 ? want : null, rng);
+      const budget = Math.min(weekBudget, Math.max(0, cash - BUILD_RESERVE));
+      const spent = buildOne(t, w, p, budget, b === 0 ? want : null, rng);
       cash -= spent;
       buildSpend += spent;
+      weekBudget -= spent;
       if (spent === 0) {
-        buildFails++;
+        /*
+         * ⚠ "못 지었다"를 한 통으로 세면 안 된다 — 자리가 없어서인지 돈이 없어서인지
+         * 구분이 안 되고, 경보가 "토지 해금을 보라"고 엉뚱한 곳을 가리킨다 (실측:
+         * 직원 인건비로 돈이 마른 상태였는데 자리 문제로 보고했다).
+         * 가장 싼 시설도 못 살 예산이면 **돈 문제**다.
+         */
+        if (budget < CHEAPEST_FACILITY) buildPoor++;
+        else buildNoSpace++;
         break;
       }
     }
@@ -198,6 +239,24 @@ function runOne(seed: number, weeks: number): RunResult {
       if (r.cash < 0) cardSpend += -r.cash;
     }
 
+    /*
+     * 직원 정책: **필요 인원을 채우되, 비수기에는 줄이고, 낼 수 있는 만큼만.**
+     *
+     * 비수기 감원이 여기 들어가는 이유는 그게 §11 이 요구하는 판단이기 때문이다 —
+     * 인건비는 고정비라 손님이 없어도 나간다. 봇이 그 판단을 안 하면 비수기 인건비가
+     * 수익을 앞서고, 우리는 "기계가 나쁘다"로 잘못 읽는다 (실측: 겨울 손익 −50%).
+     *
+     * 사람의 최적 플레이는 아니다. 목적은 "직원이 있는 상태의 경제"를 재는 것이다.
+     */
+    const staffSeasonMult = season === 'summer' ? 1 : season === 'winter' ? 0.5 : 0.75;
+    for (const role of STAFF_ROLES) {
+      const need = Math.ceil(neededFor(role, p) * staffSeasonMult);
+      const canPay = Math.floor(Math.max(0, cash - BUILD_RESERVE) / (role.wage * 8));
+      staff.set(role.id, Math.min(need, Math.max(0, canPay)));
+    }
+    const staffEff = staff.effects(p);
+    staffWeeks += staff.total;
+
     // 카드 선택이 끝난 뒤에 상한을 정한다 — 혼잡 배율이 이번 주에 반영되어야 한다
     const mods = cards.modifiers();
     g.setMaxGuests(admissionLimit(gr, p.totalCapacity(), mods.crowdMult));
@@ -205,7 +264,14 @@ function runOne(seed: number, weeks: number): RunResult {
       season,
       reputation: gr.reputationPull,
       modifiers: mods,
+      staff: {
+        wages: staffEff.wages,
+        satisfactionDelta: staffEff.satisfactionDelta,
+        foodMult: staffEff.foodMult,
+        idle: staff.idleHandles(p, staffRng),
+      },
     });
+    wagesByWeek.push(rep.wages);
     cards.tickWeek();
     last = rep;
     cash += rep.profit;
@@ -237,9 +303,12 @@ function runOne(seed: number, weeks: number): RunResult {
     bankrupt: cash < 0,
     profitByWeek,
     seasonByWeek,
-    buildFails,
+    buildPoor,
+    buildNoSpace,
     cardsSeen,
     cardSpend,
+    staffWeeks,
+    wagesByWeek,
     revenueByWeek,
     upkeepByWeek,
     cashByWeek,
@@ -321,7 +390,10 @@ function main(): void {
     })
     .join(' · ');
   console.log(`계절별 손익 중앙값: ${seasonLine}`);
-  console.log(`건설 막힌 횟수 중앙값: ${stats(runs.map((r) => r.buildFails)).med}회/판`);
+  console.log(
+    `건설 막힘 중앙값: 돈 부족 ${stats(runs.map((r) => r.buildPoor)).med}회 · ` +
+      `자리 부족 ${stats(runs.map((r) => r.buildNoSpace)).med}회 (판당)`,
+  );
   const perWeekMed = (pick: (r: RunResult) => number[]): number[] => {
     const out: number[] = [];
     for (let k = 0; k < WEEKS; k++) out.push(stats(runs.map((r) => pick(r)[k] ?? 0)).med);
@@ -335,8 +407,12 @@ function main(): void {
     a.filter((_, k) => k % 4 === 3).map(fmt).join(' → ');
   console.log(`수익 (4주마다):   ${every4(revW)}`);
   console.log(`유지비 (4주마다): ${every4(upkW)}`);
+  console.log(`인건비 (4주마다): ${every4(perWeekMed((r) => r.wagesByWeek))}`);
   console.log(`건설비 (4주마다): ${every4(bldW)}`);
   console.log(`현금 (4주마다):   ${every4(cashW)}`);
+  console.log(
+    `직원 평균: ${(stats(runs.map((r) => r.staffWeeks)).med / WEEKS).toFixed(1)}명/주`,
+  );
   const cs = stats(runs.map((r) => r.cardsSeen));
   const csp = stats(runs.map((r) => r.cardSpend));
   console.log(
@@ -430,11 +506,16 @@ function main(): void {
   }
 
   // 시설 상한의 원인 — 자리를 못 찾는 것인지 돈이 없는 것인지
-  const fails = stats(runs.map((r) => r.buildFails));
-  if (fails.med > WEEKS * 0.3) {
+  const poor = stats(runs.map((r) => r.buildPoor));
+  const noSpace = stats(runs.map((r) => r.buildNoSpace));
+  if (noSpace.med > WEEKS * 0.3) {
     issues.push(
-      `건설이 자주 막힌다 (평균 ${fails.med}회/판) — 자리가 없는 것인지 확인할 것. ` +
-        '토지 해금으로 격자를 넓혀야 할 수도 있다',
+      `자리가 없어 건설이 막힌다 (중앙 ${noSpace.med}회/판) — 토지 해금으로 격자를 넓혀야 한다`,
+    );
+  }
+  if (poor.med > WEEKS * 0.4) {
+    issues.push(
+      `돈이 없어 건설이 막힌다 (중앙 ${poor.med}회/판) — 유지비·인건비가 수익을 앞선다`,
     );
   }
   console.log(issues.length === 0 ? '\n✅ 밸런스 경보 없음' : `\n⚠ 밸런스 경보 ${issues.length}건`);

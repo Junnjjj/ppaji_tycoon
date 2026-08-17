@@ -4,6 +4,7 @@ import { PlacementGrid, type PlacementSnapshot } from '../sim/kairo/placement.js
 import { ProgressStore, type ProgressSnapshot } from '../sim/kairo/progress.js';
 import type { WeekSnapshot, WeekSummary, Season } from '../sim/kairo/week.js';
 import type { CardSnapshot } from '../sim/kairo/cards.js';
+import type { StaffCounts } from '../sim/kairo/staff.js';
 
 /**
  * 카이로 세이브 — v1 세이브와 **완전히 분리**한다.
@@ -54,6 +55,12 @@ export interface KairoSaveV1 {
    */
   cards?: CardSnapshot;
   cardRngState?: number;
+  /**
+   * 고용 인원. 인건비는 고정비라 **다시 켰을 때 그대로여야** 한다 — 저장 안 하면
+   * 새로고침이 곧 전원 해고가 되고, 그 주 결산이 이유 없이 좋아진다.
+   */
+  staff?: Partial<StaffCounts>;
+  staffRngState?: number;
 }
 
 export type AnyKairoSave = KairoSaveV1;
@@ -85,6 +92,8 @@ export interface KairoSaveInput {
   lastSummary: WeekSummary | null;
   cards?: CardSnapshot;
   cardRngState?: number;
+  staff?: StaffCounts;
+  staffRngState?: number;
 }
 
 export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave {
@@ -103,6 +112,8 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     lastSummary: input.lastSummary,
     ...(input.cards ? { cards: input.cards } : {}),
     ...(input.cardRngState !== undefined ? { cardRngState: input.cardRngState } : {}),
+    ...(input.staff ? { staff: input.staff } : {}),
+    ...(input.staffRngState !== undefined ? { staffRngState: input.staffRngState } : {}),
   };
 }
 
@@ -148,6 +159,8 @@ export interface KairoRestored {
   cards?: CardSnapshot;
   /** 없으면(구 세이브) 호출자가 새 스트림을 만든다 */
   cardRngState: number;
+  staff?: Partial<StaffCounts>;
+  staffRngState: number;
 }
 
 export function restoreKairo(raw: unknown): KairoRestored {
@@ -166,6 +179,8 @@ export function restoreKairo(raw: unknown): KairoRestored {
     ...(s.cards ? { cards: s.cards } : {}),
     // 구 세이브(v1 초기)는 카드가 없다 — 기본 스트림 상태로 시작한다
     cardRngState: s.cardRngState ?? 31337,
+    ...(s.staff ? { staff: s.staff } : {}),
+    staffRngState: s.staffRngState ?? 20260818,
   };
 }
 

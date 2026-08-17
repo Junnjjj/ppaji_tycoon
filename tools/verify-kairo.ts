@@ -1504,6 +1504,99 @@ async function main(): Promise<void> {
   };
 
   /*
+   * ── 8·직원 (§11) ──
+   *
+   * 여섯 동사 중 "사람을 쓴다". **인건비가 실제로 나가고 부족이 결과를 바꾸는지**를 본다.
+   */
+  const staffUi = (await page.evaluate(`(() => {
+    const open = document.getElementById('kairo-staff-open');
+    if (!open) return { ok: false, why: '직원 버튼이 없다' };
+    const openH = Math.round(open.getBoundingClientRect().height);
+    open.click();
+    const panel = document.getElementById('kairo-staff');
+    if (!panel || getComputedStyle(panel).display === 'none') {
+      return { ok: false, why: '직원 시트가 안 열린다' };
+    }
+    const rows = [...panel.querySelectorAll('div[data-role]')];
+    const btns = [...panel.querySelectorAll('button[data-role]')];
+    const heights = btns.map((b) => Math.round(b.getBoundingClientRect().height));
+    const before = window.__kairo.staff.total;
+    // + 를 세 번 눌러 실제로 고용되는지
+    const plus = btns.filter((b) => b.dataset.delta === '1');
+    plus[0].click(); plus[1].click(); plus[1].click();
+    const after = window.__kairo.staff.total;
+    const wage = window.__kairo.staff.weeklyWage();
+    return {
+      ok: true, openH: openH, rows: rows.length, btns: btns.length,
+      minBtn: heights.length ? Math.min.apply(null, heights) : 0,
+      before: before, after: after, wage: wage,
+      overflow: panel.scrollWidth > panel.clientWidth,
+      text: panel.textContent.slice(0, 60)
+    };
+  })()`)) as {
+    ok: boolean;
+    why?: string;
+    openH?: number;
+    rows?: number;
+    btns?: number;
+    minBtn?: number;
+    before?: number;
+    after?: number;
+    wage?: number;
+    overflow?: boolean;
+  };
+
+  record(
+    '직원 시트가 열리고 5직종이 보인다',
+    staffUi.ok && staffUi.rows === 5 ? 'pass' : 'fail',
+    staffUi.ok ? `${staffUi.rows}직종 · 버튼 ${staffUi.btns}개` : (staffUi.why ?? '실패'),
+  );
+  record(
+    '직원 버튼·증감 버튼이 44px 이상 — 폰 터치 타깃',
+    (staffUi.openH ?? 0) >= 44 && (staffUi.minBtn ?? 0) >= 44 ? 'pass' : 'fail',
+    `열기 ${staffUi.openH ?? 0}px · 증감 최소 ${staffUi.minBtn ?? 0}px`,
+  );
+  record(
+    '고용하면 인원과 주급이 오른다',
+    (staffUi.after ?? 0) === (staffUi.before ?? 0) + 3 && (staffUi.wage ?? 0) > 0 ? 'pass' : 'fail',
+    `${staffUi.before} → ${staffUi.after}명 · 주급 ${staffUi.wage}`,
+  );
+  record(
+    '직원 시트가 가로로 안 넘친다',
+    staffUi.overflow === false ? 'pass' : 'fail',
+    staffUi.overflow ? '넘침' : 'OK',
+  );
+
+  const staffWeek = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    const eff = h.staff.effects(h.placement);
+    const withStaff = h.week.run(new h.Rng(4242), {
+      season: 'summer',
+      staff: { wages: eff.wages, satisfactionDelta: eff.satisfactionDelta,
+               foodMult: eff.foodMult, idle: new Set() },
+    });
+    const without = h.week.run(new h.Rng(4242), { season: 'summer' });
+    return {
+      wages: withStaff.wages, wagesNone: without.wages,
+      profitWith: withStaff.profit, profitWithout: without.profit,
+      identity: withStaff.profit === withStaff.revenue - withStaff.upkeep - withStaff.wages
+    };
+  })()`)) as {
+    wages: number;
+    wagesNone: number;
+    profitWith: number;
+    profitWithout: number;
+    identity: boolean;
+  };
+  record(
+    '인건비가 손익에서 빠진다 — 고정비다',
+    staffWeek.wages > 0 && staffWeek.wagesNone === 0 && staffWeek.identity ? 'pass' : 'fail',
+    `인건비 ${staffWeek.wages} · 손익 ${staffWeek.profitWith} = 수익−유지비−인건비`,
+  );
+
+  await page.evaluate(`document.getElementById('kairo-staff-close').click()`);
+
+  /*
    * ── 8a. 손님 그룹 유형 (§10.4) ──
    *
    * 유형이 **결과를 바꾸는지**를 본다. 이름표뿐이면 넣은 의미가 없다.

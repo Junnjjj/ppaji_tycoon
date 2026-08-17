@@ -1,0 +1,61 @@
+{
+  "note": "직원 5직종 (design.md §11). 여섯 동사 중 '사람을 쓴다'가 이것이다.\n주급은 문서 값(40만 등)을 **우리 경제로 축소**했다 — 주간 손익이 30~55만인데 안전요원 하나가 40만이면 한 명이 한 주 이익을 통째로 먹어 '고용한다'가 선택이 아니라 파산이 된다. 시설 60개 완전 배치 기준 약 11만/주 — 유지비와 비슷한 수익의 15% 안팎. 30% 로 뒀더니 후반에 건설이 멈추고 인건비도 못 냈다 (실측).\nper = 직원 1명이 감당하는 대상 수. covers 는 대상 집합 (risky=스릴·놀이, water=수상 레이어와 슬라이드, food=식음, all=전부).",
+  "roles": [
+    {
+      "id": "lifeguard",
+      "name": "안전요원",
+      "wage": 6000,
+      "covers": "risky",
+      "per": 5,
+      "effect": "safety",
+      "desc": "스릴·놀이 시설의 안전을 본다",
+      "short": "없으면 사고 위험이 오른다"
+    },
+    {
+      "id": "operator",
+      "name": "운영요원",
+      "wage": 5500,
+      "covers": "water",
+      "per": 4,
+      "effect": "operate",
+      "desc": "수상 시설과 슬라이드를 가동한다",
+      "short": "없으면 그만큼 시설이 멈춘다"
+    },
+    {
+      "id": "cleaner",
+      "name": "청소부",
+      "wage": 4000,
+      "covers": "all",
+      "per": 12,
+      "effect": "clean",
+      "desc": "장내를 청소한다",
+      "short": "없으면 만족도가 내려간다"
+    },
+    {
+      "id": "mechanic",
+      "name": "정비공",
+      "wage": 5000,
+      "covers": "all",
+      "per": 10,
+      "effect": "repair",
+      "desc": "고장을 고친다",
+      "short": "없으면 시설이 고장 난 채로 선다"
+    },
+    {
+      "id": "clerk",
+      "name": "매점직원",
+      "wage": 4500,
+      "covers": "food",
+      "per": 3,
+      "effect": "serve",
+      "desc": "식음 시설을 돌린다",
+      "short": "없으면 식음 매출이 떨어진다"
+    }
+  ],
+  "tuning": {
+    "cleanPenaltyMax": 10,
+    "servePenaltyMax": 0.6,
+    "breakdownPerUncovered": 0.35,
+    "safetyPerStaff": 6
+  }
+}

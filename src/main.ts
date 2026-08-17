@@ -32,6 +32,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { KairoReport } = await import('./ui/kairo-report.js');
   const { KairoCardView } = await import('./ui/kairo-card.js');
   const { CardStore, CARD_RNG_SALT } = await import('./sim/kairo/cards.js');
+  const { StaffStore, STAFF_ROLES: STAFF_ROLE_LIST } = await import('./sim/kairo/staff.js');
+  const { KairoStaffPanel } = await import('./ui/kairo-staff.js');
   const { Rng: RngCls } = await import('./sim/rng.js');
   const { loadKairoFromStorage, saveKairoToStorage } = await import('./save/kairo.js');
   const { facilityDef } = await import('./sim/kairo/placement.js');
@@ -302,6 +304,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const cardRng = saved
     ? RngCls.fromState(saved.cardRngState)
     : new RngCls(31337).fork(CARD_RNG_SALT);
+  const staff = saved?.staff ? StaffStore.fromSnapshot(saved.staff) : new StaffStore();
+  /** 고장 판정 전용 스트림 — 손님·날씨와 섞으면 시설 하나에 날씨가 밀린다 (불변식 2) */
+  const staffRng = saved
+    ? RngCls.fromState(saved.staffRngState)
+    : new RngCls(20260818).fork(0x57aff);
+  const staffPanel = new KairoStaffPanel(document.body);
   /**
    * 계절. MVP 는 여름만 돈다 (스펙 v4: "여름이 재미없으면 사계절도 소용없다").
    * 세이브에는 이미 담고 있으므로, 계절 순환을 넣을 때 포맷을 바꾸지 않아도 된다.
@@ -333,6 +341,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       lastSummary,
       cards: cards.toSnapshot(),
       cardRngState: cardRng.state,
+      staff: staff.toSnapshot(),
+      staffRngState: staffRng.state,
     });
   };
 
@@ -365,11 +375,18 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     // 카드 선택이 끝난 뒤에 상한을 정한다 — 혼잡 배율이 이번 주에 반영되어야 한다
     const mods = cards.modifiers();
     h.guests.setMaxGuests(admissionLimit(gr, h.placement.totalCapacity(), mods.crowdMult));
+    const staffEff = staff.effects(h.placement);
     const rep = week.run(weekRng, {
       season,
       playbackEvery: 6,
       reputation: gr.reputationPull,
       modifiers: mods,
+      staff: {
+        wages: staffEff.wages,
+        satisfactionDelta: staffEff.satisfactionDelta,
+        foodMult: staffEff.foodMult,
+        idle: staff.idleHandles(h.placement, staffRng),
+      },
     });
     cards.tickWeek();
     const calcMs = performance.now() - t0;
@@ -435,8 +452,37 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     danger: 'rgba(200,50,40,.94)',
   };
 
+  /**
+   * 직원 버튼 — 시트를 연다. 상시 표시하지 않는 이유는 **매주 만지는 화면이 아니기**
+   * 때문이다 (시설 구성이 바뀔 때 만진다). 상시로 두면 폰 화면을 잡아먹는다.
+   */
+  const staffBtn = document.createElement('button');
+  staffBtn.id = 'kairo-staff-open';
+  staffBtn.textContent = '직원';
+  staffBtn.style.cssText =
+    'position:fixed;right:8px;bottom:172px;z-index:9;min-height:44px;min-width:64px;' +
+    'border-radius:10px;border:none;background:#2a5674;color:#eaf6ff;font-size:13px';
+  staffBtn.addEventListener('click', () => {
+    if (staffPanel.visible) staffPanel.hide();
+    else staffPanel.show(staff, h.placement, () => {
+      refreshStaffBtn();
+      persist();
+    });
+  });
+  document.body.append(staffBtn);
+
+  /** 부족하면 버튼에 표시한다 — 시트를 열어봐야 아는 정보면 아무도 안 연다 */
+  const refreshStaffBtn = (): void => {
+    const eff = staff.effects(h.placement);
+    const short = STAFF_ROLE_LIST.filter((r) => eff.coverage[r.id] < 1).length;
+    staffBtn.textContent = short > 0 ? `직원 ${staff.total}명 ⚠${short}` : `직원 ${staff.total}명`;
+    staffBtn.style.background = short > 0 ? '#7a4a1e' : '#2a5674';
+    staffPanel.refresh();
+  };
+
   const refreshRisk = (): void => {
-    const r = assessRisk(h.placement, h.guests);
+    // 안전요원이 위험도를 내린다 — 시설과 같은 축이다
+    const r = assessRisk(h.placement, h.guests, staff.effects(h.placement).safetyPoints);
     riskBox.style.background = RISK_COLOR[r.level] ?? RISK_COLOR['safe']!;
     riskBox.textContent =
       `위험도 ${RISK_NAMES[r.level]}` +
@@ -480,9 +526,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
   refreshQuests();
   refreshRisk();
+  refreshStaffBtn();
   setInterval(() => {
     refreshQuests();
     refreshRisk();
+    refreshStaffBtn();
   }, 1500);
 
   Object.assign(h, {
@@ -491,6 +539,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     runWeek,
     cards,
     cardView,
+    staff,
+    staffPanel,
     progress,
     refreshQuests,
     getLastReport: () => lastReport,

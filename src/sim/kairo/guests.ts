@@ -171,6 +171,15 @@ export class GuestStore {
   private readonly claims = new Map<number, SlotClaim>();
   private dirty = true;
 
+  /** 이번 주에 서는 시설을 알린다 (직원 부족·고장). 매주 갱신한다 */
+  setIdle(handles: ReadonlySet<number>): void {
+    this.idle = new Set(handles);
+  }
+
+  get idleCount(): number {
+    return this.idle.size;
+  }
+
   /** 현재 동시 손님 상한 — 튜너블의 기본값에서 시작해 등급이 올린다 */
   private limit: number;
 
@@ -192,6 +201,13 @@ export class GuestStore {
    */
   private pending: { def: GroupDef; remaining: number; party: number } | null = null;
   private nextParty = 1;
+  /**
+   * 이번 주에 **선** 시설 (운영요원 부족·고장). 목적지에서 뺀다.
+   *
+   * 거리장 자체를 지우지 않는 이유: 다음 주에 다시 돌면 그대로 써야 하는데, 지우면
+   * 매주 1,280칸 거리장을 다시 만들어야 한다.
+   */
+  private idle = new Set<number>();
   private patience = new Map<number, number>();
 
   constructor(
@@ -334,6 +350,7 @@ export class GuestStore {
   private pickTarget(g: Guest, rng: Rng): number | null {
     const all: { handle: number; dist: number; need: string }[] = [];
     for (const [handle, field] of this.fields) {
+      if (this.idle.has(handle)) continue; // 선 시설엔 안 간다
       const c = this.slotsOf(handle);
       if (!c || c.slots.every((s) => s !== 0)) continue;
       const d = field.distAt(g.i, g.j);
