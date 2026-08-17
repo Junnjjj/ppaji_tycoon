@@ -4,7 +4,7 @@
 전제: `docs/kairo-pivot-decisions.md` (결정 18건) · `docs/design.md` (게임 설계 v4)
 리뷰 기록: `docs/kairo-spec-review-2026-08-17.md` — v1 에서 고친 17건의 근거
 기계 판독본 **둘**:
-- `assets/kairo-render-contract.json` — 렌더 (캔버스·앵커·슬롯·벽·배경)
+- `src/assets/kairo-render-contract.json` — 렌더 (캔버스·앵커·슬롯·벽·배경)
 - `src/data/kairo-facilities.json` — 시뮬 (발자국·용량·배치제약)
 
 ## 0. v1 에서 무엇이 바뀌었나
@@ -434,13 +434,13 @@ design.md 콤보 70종 중 최소 10종이 데코·안전 부착물을 조건으
 
 ## 9. 파일 계약 — 렌더/시뮬 분리 ★ v1 에서 고침
 
-v1 은 발자국·용량·벽부착을 `assets/kairo-asset-contract.json` 에 뒀다. **불변식 위반이다** —
+v1 은 발자국·용량·벽부착을 `src/assets/kairo-render-contract.json` 에 뒀다. **불변식 위반이다** —
 `src/sim/**` 은 `assets/` 를 import 할 수 없고(불변식 1), 시설 정의는 `src/data/*.json` 이어야
 한다(불변식 3).
 
 ```
 src/data/kairo-facilities.json        ← 시뮬 SSoT: 발자국(size) · 용량 · 배치제약 · sprite ID
-assets/kairo-render-contract.json     ← 렌더 SSoT: 캔버스 · 앵커좌표 · 슬롯 · 벽 · 배경 · 팔레트
+src/assets/kairo-render-contract.json ← 렌더 SSoT: 캔버스 · 앵커좌표 · 슬롯 · 벽 · 배경 · 팔레트
 assets/generated/kairo/<zone>/<id>/   ← 런 폴더
   final-quantized-42.png · qa-report.json
 ```

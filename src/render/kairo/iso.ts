@@ -1,0 +1,130 @@
+/**
+ * 카이로 2:1 아이소메트릭 투영 — 스펙 §1.
+ *
+ * **이 파일이 스케일의 유일한 출처다.** 화면 좌표를 직접 계산하는 코드를 다른 데
+ * 만들지 말 것 — 여기서만 나가야 한다.
+ *
+ * ## 왜 (16, 8) 인가
+ *
+ * yaw 45° · elev 30° 에서 `sin30 = 0.5` 이므로 지면축의 화면 기울기가 정확히 1:2 다.
+ * 타일 다이아몬드를 32×16 텍셀로 잡으면 격자 한 걸음의 화면 이동이
+ *
+ *     +I 한 걸음 → ( +16, +8 )
+ *     +J 한 걸음 → ( -16, +8 )
+ *
+ * **정확한 정수**가 된다. 소수 누적이 없으니 격자 좌표를 몇 번 더해도 텍셀 격자를
+ * 벗어나지 않는다 — 스프라이트가 반 픽셀 밀려 흐려지는 사고가 구조적으로 불가능하다.
+ *
+ * ## 단위
+ *
+ * 전부 **텍셀**이다. 월드 단위·CSS 픽셀 같은 중간 단위를 두지 않는다.
+ * 화면에 실제로 몇 CSS px 인지는 정수 업스케일 S 하나가 결정한다 (스펙 §1.4).
+ * 예전에 텍셀·월드·화면 세 단위를 섞어 쓰다 스프라이트가 1.9배로 커진 사고가 있었다.
+ */
+
+/** 타일 다이아몬드 — 카이로 실측 (레퍼런스 업스케일 2.5배를 나눈 값. 스펙 §1.2) */
+export const TILE_W = 32;
+export const TILE_H = 16;
+
+/** 격자 한 걸음의 화면 이동. `TILE_W/2`, `TILE_H/2` 지만 이름을 줘서 의도를 남긴다 */
+export const STEP_X = TILE_W / 2; // 16
+export const STEP_Y = TILE_H / 2; // 8
+
+/** 격자 크기 — 스펙 §1.6. 확장해도 `GRID_W + GRID_H ≤ 100` 을 넘기지 말 것 */
+export const GRID_W = 40;
+export const GRID_H = 32;
+
+/** 격자 합 상한 — 넘으면 세로도 팬해야 한다 (852 / STEP_Y = 106.5) */
+export const GRID_SUM_MAX = 100;
+
+export interface Vec2 {
+  x: number;
+  y: number;
+}
+
+/** 격자 꼭지점 (i, j) → 화면 텍셀. i·j 는 타일 경계이므로 정수면 결과도 정수다 */
+export function gridToScreen(i: number, j: number): Vec2 {
+  return { x: STEP_X * (i - j), y: STEP_Y * (i + j) };
+}
+
+/** 타일 (i, j) 의 중심 화면 텍셀 — 꼭지점이 아니라 칸 가운데 */
+export function tileCenter(i: number, j: number): Vec2 {
+  return gridToScreen(i + 0.5, j + 0.5);
+}
+
+/**
+ * 화면 텍셀 → 격자 타일 좌표 (내림). 탭 판정에 쓴다.
+ *
+ * `gridToScreen` 의 역행렬이다:
+ *   i = x / (2·STEP_X) + y / (2·STEP_Y)
+ *   j = y / (2·STEP_Y) - x / (2·STEP_X)
+ */
+export function screenToTile(x: number, y: number): { i: number; j: number } {
+  const a = x / (2 * STEP_X);
+  const b = y / (2 * STEP_Y);
+  return { i: Math.floor(a + b), j: Math.floor(b - a) };
+}
+
+/**
+ * 그리기 순서 키. 작을수록 먼저(뒤에) 그린다.
+ *
+ * 아이소메트릭에서 `i + j` 가 같은 타일들은 화면 같은 높이에 있어 겹치지 않는다.
+ * 같은 값 안에서는 `i` 로 안정 정렬해 프레임마다 순서가 뒤집히지 않게 한다
+ * (뒤집히면 겹친 스프라이트가 깜빡인다).
+ */
+export function depthKey(i: number, j: number): number {
+  return (i + j) * 4096 + i;
+}
+
+/**
+ * 발자국 w×d 가 (i, j) 에 놓였을 때의 **앵커 화면 텍셀**.
+ *
+ * ⚠ 앵커는 두 값의 조합이고, 이 둘은 **정사각 발자국에서만 같은 점**이다:
+ *   x = 발자국 바운딩박스의 가로 중심   (= 캔버스 가로 중심)
+ *   y = 발자국 최하단(카메라 쪽) 꼭지점
+ *
+ * 비정사각에서 최하단 꼭지점의 x 는 `STEP_X·(i−j) + TILE_W·(w−d)/2` 가 아니라
+ * `STEP_X·(i−j+w−d)` 라서 최대 24텍셀(1.5타일) 어긋난다. 발자국 73종 중 32종이
+ * 비정사각이다. 이 혼동으로 건물이 제 타일에서 밀려나는 버그를 두 번 겪었다.
+ */
+export function footprintAnchor(i: number, j: number, w: number, d: number): Vec2 {
+  return {
+    x: STEP_X * (i - j) + (STEP_X * (w - d)) / 2,
+    y: STEP_Y * (i + j + w + d),
+  };
+}
+
+/** 발자국 w×d 의 스프라이트 캔버스 크기 — 스펙 §4 파생 수식 */
+export function footprintCanvas(w: number, d: number, bodyH: number): Vec2 {
+  return { x: (w + d) * STEP_X, y: (w + d) * STEP_Y + bodyH };
+}
+
+/**
+ * 발자국 w×d 스프라이트의 **캔버스 내부** 앵커 위치.
+ * 항상 `bottom-center` 다 — 기존 에셋 레이어의 `Anchor` 타입이 그대로 쓰인다.
+ */
+export function canvasAnchor(w: number, d: number, bodyH: number): Vec2 {
+  const c = footprintCanvas(w, d, bodyH);
+  return { x: c.x / 2, y: c.y };
+}
+
+/** 격자 전체가 화면에서 차지하는 크기 (텍셀). 아이소 바운딩박스는 항상 2:1 가로형이다 */
+export function gridExtent(gw = GRID_W, gh = GRID_H): Vec2 {
+  return { x: (gw + gh) * STEP_X, y: (gw + gh) * STEP_Y };
+}
+
+/** 타일이 격자 안인가 */
+export function inGrid(i: number, j: number, gw = GRID_W, gh = GRID_H): boolean {
+  return i >= 0 && j >= 0 && i < gw && j < gh;
+}
+
+/**
+ * 카메라 텍셀 스냅 — 스펙 §1.5.
+ *
+ * 팬으로 카메라가 소수 좌표에 놓이면 **모든** 스프라이트가 반 픽셀 밀려 흐려진다.
+ * 그리기 직전에 정수로 반올림한다. 반올림 **전** 값을 따로 들고 있어야 관성이
+ * 끊기지 않는다 — 반올림된 값을 다시 누적하면 느린 드래그가 아예 안 먹는다.
+ */
+export function snapCamera(v: Vec2): Vec2 {
+  return { x: Math.round(v.x), y: Math.round(v.y) };
+}

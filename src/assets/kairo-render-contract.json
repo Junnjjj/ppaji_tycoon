@@ -2749,5 +2749,124 @@
       "slots": []
     }
   ],
-  "slotRule": "slot.tile 은 발자국 안의 타일 인덱스다. 렌더러가 투영으로 텍셀 위치를 계산한다 — 텍셀 좌표를 직접 적지 않는 이유는 앵커·투영이 바뀌면 185개가 전부 틀어지기 때문. 한 타일에 둘 이상이면 offsetTexel 로 나눈다."
+  "slotRule": "slot.tile 은 발자국 안의 타일 인덱스다. 렌더러가 투영으로 텍셀 위치를 계산한다 — 텍셀 좌표를 직접 적지 않는 이유는 앵커·투영이 바뀌면 185개가 전부 틀어지기 때문. 한 타일에 둘 이상이면 offsetTexel 로 나눈다.",
+  "ground": {
+    "canvas": [
+      32,
+      16
+    ],
+    "anchorTexel": [
+      16,
+      16
+    ],
+    "types": [
+      {
+        "id": "path_stone",
+        "name": "석재 보도",
+        "alts": 3,
+        "walkable": true
+      },
+      {
+        "id": "path_deck",
+        "name": "목재 데크길",
+        "alts": 3,
+        "walkable": true
+      },
+      {
+        "id": "path_sand",
+        "name": "모래길",
+        "alts": 3,
+        "walkable": true
+      },
+      {
+        "id": "lawn",
+        "name": "잔디",
+        "alts": 3,
+        "walkable": true
+      },
+      {
+        "id": "water_edge",
+        "name": "물가",
+        "alts": 3,
+        "walkable": false
+      },
+      {
+        "id": "floor_indoor",
+        "name": "실내 바닥",
+        "alts": 3,
+        "walkable": true
+      }
+    ],
+    "bridges": [
+      {
+        "id": "bridge_x",
+        "name": "다리 (X축 런)",
+        "canvas": [
+          32,
+          28
+        ]
+      },
+      {
+        "id": "bridge_z",
+        "name": "다리 (Z축 런)",
+        "canvas": [
+          32,
+          28
+        ]
+      }
+    ],
+    "tilingQA": "⚠ 4방 이음새 격자 배치 검증을 통과해야 한다 (벽과 같은 미해결 항목)"
+  },
+  "deco": {
+    "items": [
+      {
+        "id": "ring_rack",
+        "name": "구명튜브걸이",
+        "bodyH": 16,
+        "kind": "safety"
+      },
+      {
+        "id": "safety_sign",
+        "name": "안전표지",
+        "bodyH": 20,
+        "kind": "safety"
+      },
+      {
+        "id": "guard_stand",
+        "name": "감시대 발판",
+        "bodyH": 20,
+        "kind": "safety"
+      },
+      {
+        "id": "first_aid",
+        "name": "구급함",
+        "bodyH": 12,
+        "kind": "safety"
+      },
+      {
+        "id": "sculpture",
+        "name": "조형물",
+        "bodyH": 20,
+        "kind": "scenery"
+      },
+      {
+        "id": "banner",
+        "name": "현수막",
+        "bodyH": 20,
+        "kind": "scenery"
+      },
+      {
+        "id": "planter_row",
+        "name": "화분열",
+        "bodyH": 8,
+        "kind": "scenery"
+      },
+      {
+        "id": "night_light",
+        "name": "야간조명",
+        "bodyH": 20,
+        "kind": "scenery"
+      }
+    ]
+  }
 }
