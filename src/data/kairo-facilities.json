@@ -16,7 +16,7 @@
         "requiresWallAdjacent": true
       },
       "note": "칸마다 손님. 칸막이만 세운다",
-      "fee": 2400,
+      "fee": 1100,
       "upkeep": 2200,
       "cost": 312000,
       "need": "hygiene"
@@ -35,7 +35,7 @@
         "requiresWallAdjacent": true
       },
       "note": "입구 옆 고정. 수영복 전환",
-      "fee": 2050,
+      "fee": 1000,
       "upkeep": 1900,
       "cost": 252000,
       "need": "hygiene"
@@ -54,7 +54,7 @@
         "requiresWallAdjacent": true
       },
       "note": "",
-      "fee": 2400,
+      "fee": 1100,
       "upkeep": 2200,
       "cost": 312000,
       "need": "hygiene"
@@ -73,7 +73,7 @@
         "requiresWallAdjacent": true
       },
       "note": "",
-      "fee": 2050,
+      "fee": 1000,
       "upkeep": 1900,
       "cost": 252000,
       "need": "hygiene"
@@ -92,7 +92,7 @@
         "requiresWallAdjacent": true
       },
       "note": "들어가는 연출 없음 — 문 앞 사용",
-      "fee": 1700,
+      "fee": 800,
       "upkeep": 2200,
       "cost": 312000,
       "need": "hygiene"
@@ -111,7 +111,7 @@
         "requiresWallAdjacent": true
       },
       "note": "",
-      "fee": 1350,
+      "fee": 600,
       "upkeep": 1600,
       "cost": 192000,
       "need": "hygiene"
@@ -128,7 +128,7 @@
       "capacity": 6,
       "placement": {},
       "note": "bodyH 0 — 바닥에 파인 물",
-      "fee": 3100,
+      "fee": 1400,
       "upkeep": 4600,
       "cost": 792000,
       "need": "play"
@@ -145,7 +145,7 @@
       "capacity": 8,
       "placement": {},
       "note": "김 파티클은 procedural",
-      "fee": 3800,
+      "fee": 1800,
       "upkeep": 5800,
       "cost": 1032000,
       "need": "warm"
@@ -162,7 +162,7 @@
       "capacity": 8,
       "placement": {},
       "note": "최대 실내 시설 — 방 8×6 필요",
-      "fee": 3800,
+      "fee": 1800,
       "upkeep": 6400,
       "cost": 1152000,
       "need": "play"
@@ -179,7 +179,7 @@
       "capacity": 4,
       "placement": {},
       "note": "",
-      "fee": 2400,
+      "fee": 1100,
       "upkeep": 3700,
       "cost": 612000,
       "need": "warm"
@@ -196,7 +196,7 @@
       "capacity": 6,
       "placement": {},
       "note": "누운 포즈(lie) 슬롯",
-      "fee": 3100,
+      "fee": 1400,
       "upkeep": 3700,
       "cost": 612000,
       "need": "warm"
@@ -213,7 +213,7 @@
       "capacity": 2,
       "placement": {},
       "note": "",
-      "fee": 1700,
+      "fee": 800,
       "upkeep": 1600,
       "cost": 192000,
       "need": "food"
@@ -232,7 +232,7 @@
         "requiresWallAdjacent": true
       },
       "note": "",
-      "fee": 2050,
+      "fee": 1000,
       "upkeep": 1900,
       "cost": 252000,
       "need": "rest"
@@ -249,7 +249,7 @@
       "capacity": 2,
       "placement": {},
       "note": "",
-      "fee": 1700,
+      "fee": 800,
       "upkeep": 2200,
       "cost": 312000,
       "need": "food"
@@ -266,7 +266,7 @@
       "capacity": 2,
       "placement": {},
       "note": "",
-      "fee": 1700,
+      "fee": 800,
       "upkeep": 2200,
       "cost": 312000,
       "need": "food"
@@ -283,7 +283,7 @@
       "capacity": 2,
       "placement": {},
       "note": "",
-      "fee": 1700,
+      "fee": 800,
       "upkeep": 2200,
       "cost": 312000,
       "need": "food"
@@ -300,7 +300,7 @@
       "capacity": 1,
       "placement": {},
       "note": "",
-      "fee": 1350,
+      "fee": 600,
       "upkeep": 1600,
       "cost": 192000,
       "need": "food"
@@ -317,7 +317,7 @@
       "capacity": 4,
       "placement": {},
       "note": "",
-      "fee": 2400,
+      "fee": 1100,
       "upkeep": 2800,
       "cost": 432000,
       "need": "rest"
@@ -336,7 +336,7 @@
         "requiresWallAdjacent": true
       },
       "note": "",
-      "fee": 1350,
+      "fee": 600,
       "upkeep": 1300,
       "cost": 132000,
       "need": "food"
@@ -355,7 +355,7 @@
         "requiresWallAdjacent": true
       },
       "note": "",
-      "fee": 1350,
+      "fee": 600,
       "upkeep": 1300,
       "cost": 132000,
       "need": "play"
@@ -372,7 +372,7 @@
       "capacity": 2,
       "placement": {},
       "note": "",
-      "fee": 1700,
+      "fee": 800,
       "upkeep": 2200,
       "cost": 312000,
       "need": "play"
@@ -389,7 +389,7 @@
       "capacity": 2,
       "placement": {},
       "note": "양쪽 2슬롯 — 마주보는 facing",
-      "fee": 1700,
+      "fee": 800,
       "upkeep": 2200,
       "cost": 312000,
       "need": "play"
@@ -406,7 +406,7 @@
       "capacity": 4,
       "placement": {},
       "note": "lie 포즈",
-      "fee": 2400,
+      "fee": 1100,
       "upkeep": 2200,
       "cost": 312000,
       "need": "rest"
@@ -423,7 +423,7 @@
       "capacity": 1,
       "placement": {},
       "note": "",
-      "fee": 1350,
+      "fee": 600,
       "upkeep": 2200,
       "cost": 312000,
       "need": "service"
@@ -440,7 +440,7 @@
       "capacity": 1,
       "placement": {},
       "note": "",
-      "fee": 1350,
+      "fee": 600,
       "upkeep": 2200,
       "cost": 312000,
       "need": "service"
@@ -457,7 +457,7 @@
       "capacity": 1,
       "placement": {},
       "note": "",
-      "fee": 1350,
+      "fee": 600,
       "upkeep": 2200,
       "cost": 312000,
       "need": "service"
@@ -474,7 +474,7 @@
       "capacity": 0,
       "placement": {},
       "note": "손님 슬롯 없음",
-      "fee": 1350,
+      "fee": 600,
       "upkeep": 2200,
       "cost": 312000,
       "need": "service"
@@ -491,7 +491,7 @@
       "capacity": 2,
       "placement": {},
       "note": "",
-      "fee": 1360,
+      "fee": 600,
       "upkeep": 2240,
       "cost": 345600,
       "need": "service"
@@ -508,7 +508,7 @@
       "capacity": 0,
       "placement": {},
       "note": "차량은 별도 스프라이트",
-      "fee": 1080,
+      "fee": 500,
       "upkeep": 4640,
       "cost": 825600,
       "need": "service"
@@ -525,7 +525,7 @@
       "capacity": 4,
       "placement": {},
       "note": "한국 빠지 시그니처",
-      "fee": 1920,
+      "fee": 900,
       "upkeep": 1760,
       "cost": 249600,
       "need": "rest"
@@ -542,7 +542,7 @@
       "capacity": 4,
       "placement": {},
       "note": "칸마다 그룹 4명. sit 포즈",
-      "fee": 1920,
+      "fee": 900,
       "upkeep": 1760,
       "cost": 249600,
       "need": "rest"
@@ -559,7 +559,7 @@
       "capacity": 2,
       "placement": {},
       "note": "",
-      "fee": 1360,
+      "fee": 600,
       "upkeep": 1280,
       "cost": 153600,
       "need": "rest"
@@ -576,7 +576,7 @@
       "capacity": 2,
       "placement": {},
       "note": "2변형",
-      "fee": 1360,
+      "fee": 600,
       "upkeep": 1040,
       "cost": 105600,
       "need": "rest"
@@ -593,7 +593,7 @@
       "capacity": 6,
       "placement": {},
       "note": "",
-      "fee": 2480,
+      "fee": 1200,
       "upkeep": 2960,
       "cost": 489600,
       "need": "food"
@@ -610,7 +610,7 @@
       "capacity": 3,
       "placement": {},
       "note": "",
-      "fee": 1640,
+      "fee": 800,
       "upkeep": 1520,
       "cost": 201600,
       "need": "food"
@@ -627,7 +627,7 @@
       "capacity": 4,
       "placement": {},
       "note": "",
-      "fee": 1920,
+      "fee": 900,
       "upkeep": 2960,
       "cost": 489600,
       "need": "rest"
@@ -644,7 +644,7 @@
       "capacity": 4,
       "placement": {},
       "note": "지붕 있음(야외)",
-      "fee": 1920,
+      "fee": 900,
       "upkeep": 2960,
       "cost": 489600,
       "need": "rest"
@@ -661,7 +661,7 @@
       "capacity": 2,
       "placement": {},
       "note": "경관 지표 기여",
-      "fee": 1360,
+      "fee": 600,
       "upkeep": 1760,
       "cost": 249600,
       "need": "scenery"
@@ -678,7 +678,7 @@
       "capacity": 4,
       "placement": {},
       "note": "",
-      "fee": 1920,
+      "fee": 900,
       "upkeep": 2960,
       "cost": 489600,
       "need": "play"
@@ -695,7 +695,7 @@
       "capacity": 4,
       "placement": {},
       "note": "",
-      "fee": 1920,
+      "fee": 900,
       "upkeep": 3680,
       "cost": 633600,
       "need": "play"
@@ -712,7 +712,7 @@
       "capacity": 3,
       "placement": {},
       "note": "",
-      "fee": 1640,
+      "fee": 800,
       "upkeep": 2720,
       "cost": 441600,
       "need": "play"
@@ -729,7 +729,7 @@
       "capacity": 2,
       "placement": {},
       "note": "경관 지표",
-      "fee": 1360,
+      "fee": 600,
       "upkeep": 1760,
       "cost": 249600,
       "need": "scenery"
@@ -746,7 +746,7 @@
       "capacity": 0,
       "placement": {},
       "note": "물줄기는 procedural",
-      "fee": 1080,
+      "fee": 500,
       "upkeep": 1760,
       "cost": 249600,
       "need": "scenery"
@@ -763,7 +763,7 @@
       "capacity": 0,
       "placement": {},
       "note": "경관 지표",
-      "fee": 1080,
+      "fee": 500,
       "upkeep": 1040,
       "cost": 105600,
       "need": "scenery"
@@ -780,7 +780,7 @@
       "capacity": 1,
       "placement": {},
       "note": "",
-      "fee": 1080,
+      "fee": 500,
       "upkeep": 1040,
       "cost": 105600,
       "need": "food"
@@ -797,7 +797,7 @@
       "capacity": 0,
       "placement": {},
       "note": "안전 지표",
-      "fee": 1080,
+      "fee": 500,
       "upkeep": 1040,
       "cost": 105600,
       "need": "service"
@@ -827,7 +827,7 @@
         ],
         "traverseTicks": 20
       },
-      "fee": 2870,
+      "fee": 1300,
       "upkeep": 5180,
       "cost": 856800,
       "need": "thrill"
@@ -857,7 +857,7 @@
         ],
         "traverseTicks": 30
       },
-      "fee": 3360,
+      "fee": 1600,
       "upkeep": 9800,
       "cost": 1780800,
       "need": "thrill"
@@ -887,7 +887,7 @@
         ],
         "traverseTicks": 26
       },
-      "fee": 2870,
+      "fee": 1300,
       "upkeep": 8120,
       "cost": 1444800,
       "need": "thrill"
@@ -906,7 +906,7 @@
         "requiresDeck": true
       },
       "note": "인플레이터블 초록·노랑",
-      "fee": 2870,
+      "fee": 1300,
       "upkeep": 6440,
       "cost": 1108800,
       "need": "thrill"
@@ -925,7 +925,7 @@
         "requiresDeck": true
       },
       "note": "",
-      "fee": 2870,
+      "fee": 1300,
       "upkeep": 5180,
       "cost": 856800,
       "need": "thrill"
@@ -944,7 +944,7 @@
         "requiresDeck": true
       },
       "note": "최대 물 위 시설",
-      "fee": 5320,
+      "fee": 2500,
       "upkeep": 14000,
       "cost": 2620800,
       "need": "thrill"
@@ -963,7 +963,7 @@
         "requiresDeck": true
       },
       "note": "A트랙 실증 완료(88px)",
-      "fee": 5320,
+      "fee": 2500,
       "upkeep": 21560,
       "cost": 4132800,
       "need": "play"
@@ -982,7 +982,7 @@
         "requiresDeck": true
       },
       "note": "프레임형 — 윤곽 게이트 완화",
-      "fee": 3360,
+      "fee": 1600,
       "upkeep": 8120,
       "cost": 1444800,
       "need": "play"
@@ -1001,7 +1001,7 @@
         "requiresDeck": true
       },
       "note": "데크 부착물",
-      "fee": 2380,
+      "fee": 1100,
       "upkeep": 3080,
       "cost": 436800,
       "need": "thrill"
@@ -1020,7 +1020,7 @@
         "requiresDeck": true
       },
       "note": "",
-      "fee": 2380,
+      "fee": 1100,
       "upkeep": 3080,
       "cost": 436800,
       "need": "play"
@@ -1040,7 +1040,7 @@
       },
       "note": "★물 위 유일 기반. 부착 앵커 4방",
       "walkOn": true,
-      "fee": 1890,
+      "fee": 900,
       "upkeep": 1820,
       "cost": 184800,
       "need": "service"
@@ -1060,7 +1060,7 @@
       },
       "note": "견인 프리셋 루프 시작점",
       "walkOn": true,
-      "fee": 2380,
+      "fee": 1100,
       "upkeep": 4760,
       "cost": 772800,
       "need": "service"
@@ -1079,7 +1079,7 @@
         "requiresDeck": true
       },
       "note": "",
-      "fee": 1890,
+      "fee": 900,
       "upkeep": 3080,
       "cost": 436800,
       "need": "thrill"
@@ -1098,7 +1098,7 @@
         "requiresDeck": true
       },
       "note": "",
-      "fee": 1890,
+      "fee": 900,
       "upkeep": 3080,
       "cost": 436800,
       "need": "thrill"
@@ -1117,7 +1117,7 @@
         "requiresDeck": true
       },
       "note": "",
-      "fee": 1890,
+      "fee": 900,
       "upkeep": 3080,
       "cost": 436800,
       "need": "play"
@@ -1136,7 +1136,7 @@
         "requiresDeck": true
       },
       "note": "",
-      "fee": 1890,
+      "fee": 900,
       "upkeep": 3080,
       "cost": 436800,
       "need": "thrill"
@@ -1153,7 +1153,7 @@
       "capacity": 0,
       "placement": {},
       "note": "프리셋 벽 발자국 + 지붕",
-      "fee": 4050,
+      "fee": 1900,
       "upkeep": 11100,
       "cost": 1836000,
       "need": "stay"
@@ -1170,7 +1170,7 @@
       "capacity": 0,
       "placement": {},
       "note": "",
-      "fee": 4050,
+      "fee": 1900,
       "upkeep": 13800,
       "cost": 2376000,
       "need": "stay"
@@ -1187,7 +1187,7 @@
       "capacity": 0,
       "placement": {},
       "note": "",
-      "fee": 4050,
+      "fee": 1900,
       "upkeep": 10200,
       "cost": 1656000,
       "need": "stay"
@@ -1204,7 +1204,7 @@
       "capacity": 0,
       "placement": {},
       "note": "층 20텍셀 × 3 + 지붕",
-      "fee": 4050,
+      "fee": 1900,
       "upkeep": 21000,
       "cost": 3816000,
       "need": "stay"
@@ -1221,7 +1221,7 @@
       "capacity": 0,
       "placement": {},
       "note": "",
-      "fee": 4050,
+      "fee": 1900,
       "upkeep": 30000,
       "cost": 5616000,
       "need": "stay"
@@ -1238,7 +1238,7 @@
       "capacity": 4,
       "placement": {},
       "note": "겨울",
-      "fee": 2640,
+      "fee": 1200,
       "upkeep": 6380,
       "cost": 1135200,
       "need": "play"
@@ -1266,7 +1266,7 @@
         ],
         "traverseTicks": 24
       },
-      "fee": 2255,
+      "fee": 1000,
       "upkeep": 7700,
       "cost": 1399200,
       "need": "thrill"
@@ -1283,7 +1283,7 @@
       "capacity": 1,
       "placement": {},
       "note": "겨울",
-      "fee": 1485,
+      "fee": 700,
       "upkeep": 1760,
       "cost": 211200,
       "need": "food"
@@ -1300,7 +1300,7 @@
       "capacity": 3,
       "placement": {},
       "note": "봄·가을",
-      "fee": 2255,
+      "fee": 1000,
       "upkeep": 2090,
       "cost": 277200,
       "need": "warm"
@@ -1317,7 +1317,7 @@
       "capacity": 3,
       "placement": {},
       "note": "봄·가을",
-      "fee": 2255,
+      "fee": 1000,
       "upkeep": 3740,
       "cost": 607200,
       "need": "play"
@@ -1334,7 +1334,7 @@
       "capacity": 0,
       "placement": {},
       "note": "가을. 경관 지표",
-      "fee": 1485,
+      "fee": 700,
       "upkeep": 2420,
       "cost": 343200,
       "need": "scenery"

@@ -1112,7 +1112,22 @@ async function main(): Promise<void> {
   await page.evaluate(`(() => {
     const cv = window.__kairoCards;
     let guard = 0;
-    while (cv && cv.visible && guard++ < 5) cv.pickForTest(0);
+    /*
+     * ⚠ 0번을 무조건 고르면 안 된다. 방송 촬영 카드의 0번은 **그 주 폐쇄**라
+     * 손님 0명인 주가 되고, 뒤따르는 결산 검사가 "구성이 안 보인다"로 실패한다
+     * (실측). 폐쇄가 없는 선택지를 고른다.
+     */
+    while (cv && cv.visible && guard++ < 5) {
+      const card = cv.currentCard;
+      let pick = 0;
+      if (card) {
+        for (let oi = 0; oi < card.options.length; oi++) {
+          const closes = card.options[oi].effects.some((e) => e.closed);
+          if (!closes) { pick = oi; break; }
+        }
+      }
+      cv.pickForTest(pick);
+    }
   })()`);
   await page.waitForTimeout(600);
   const playing = (await page.evaluate(`window.__kairo.scene.isPlaying`)) as boolean;
@@ -1127,10 +1142,67 @@ async function main(): Promise<void> {
   // waitForFunction 이 시간 초과로 던지므로 여기 도달했다는 것 자체가 통과다
   record('연출이 끝나면 결산이 뜬다', 'pass');
 
+  /*
+   * ⚠ 두 가지를 조심해야 한다.
+   *
+   * ① "막대가 있나"만 보면 안 된다 — 그 주 입장이 0명이면 막대는 정상적으로 "손님 없음"
+   *    을 띄우고 검사는 그 분기로 통과한다. **결산의 실제 숫자와 맞춘다**:
+   *    유형 합 = 입장 수가 진짜 불변식이다.
+   * ② 이 시점의 공원은 앞 검사들이 주를 여러 번 돌려 **상한까지 차 있다.** 그리고
+   *    `runWeek()` 은 내부에서 등급 기준으로 상한을 다시 정하므로 밖에서 올려도 덮인다.
+   *    그래서 이 검사는 **자기 결산을 직접 만든다** — 상한을 올리고 한 주를 돌려
+   *    게임과 같은 `report.show` 로 띄운다.
+   */
+  const compo = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    h.guests.setMaxGuests(240);
+    const rep = h.week.run(new h.Rng(4242), { season: 'summer', playbackEvery: 0 });
+    h.report.show(rep, { onClose: function () { return undefined; } });
+    const r = document.getElementById('kairo-report');
+    if (!r) return { found: false };
+    const segs = [...r.querySelectorAll('div[data-group]')];
+    const sum = ['family', 'couple', 'friends', 'company'].reduce(
+      (a, k) => a + (rep.byGroup[k] || 0), 0,
+    );
+    return {
+      found: true,
+      segs: segs.length,
+      titles: segs.map((d) => d.title),
+      label: r.textContent.indexOf('손님 구성') >= 0,
+      visitors: rep.visitors,
+      sum: sum,
+    };
+  })()`)) as {
+    found: boolean;
+    segs?: number;
+    titles?: string[];
+    label?: boolean;
+    visitors?: number;
+    sum?: number;
+  };
+
+  const visitors = compo.visitors ?? 0;
+  const compoOk =
+    compo.found === true &&
+    compo.label === true &&
+    compo.sum === visitors &&
+    visitors > 0 &&
+    (compo.segs ?? 0) >= 2;
+
+  record(
+    '결산에 손님 구성이 보인다 — 유형 합이 입장 수와 같아야 한다',
+    compoOk ? 'pass' : 'fail',
+    visitors === 0
+      ? '입장 0명 — 상한을 올렸는데도 안 들어왔다면 배치·도달을 볼 것'
+      : `${(compo.titles ?? []).join(' · ')} · 합 ${compo.sum} = 입장 ${visitors}`,
+  );
+
   const rep = (await page.evaluate(`(() => {
     const r = document.getElementById('kairo-report');
     const canvas = r.querySelector('canvas');
-    const bars = r.querySelectorAll('div[title]');
+    // ★ title 로 세면 손님 구성 막대까지 섞인다 — 요일 막대만 data-day 로 고른다
+    //   (이 블록은 템플릿 리터럴 안이라 백틱을 쓸 수 없다)
+    const bars = r.querySelectorAll('div[data-day]');
     return {
       hasHeat: !!canvas, heatW: canvas ? canvas.width : 0,
       bars: bars.length,
@@ -1431,6 +1503,65 @@ async function main(): Promise<void> {
     title?: string;
   };
 
+  /*
+   * ── 8a. 손님 그룹 유형 (§10.4) ──
+   *
+   * 유형이 **결과를 바꾸는지**를 본다. 이름표뿐이면 넣은 의미가 없다.
+   */
+  const groups = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    const st = h.guests.stats();
+    const parties = {};
+    const kinds = {};
+    for (const g of h.guests.all) {
+      parties[g.party] = (parties[g.party] || 0) + 1;
+      kinds[g.group] = (kinds[g.group] || 0) + 1;
+      if (parties[g.party] > 1 && !kinds.__mixed) {
+        // 같은 일행이 같은 유형인지 확인
+      }
+    }
+    let sameKind = true;
+    const partyKind = {};
+    for (const g of h.guests.all) {
+      if (partyKind[g.party] === undefined) partyKind[g.party] = g.group;
+      else if (partyKind[g.party] !== g.group) sameKind = false;
+    }
+    const sizes = Object.keys(parties).map((k) => parties[k]);
+    return {
+      alive: st.alive,
+      byGroup: st.byGroup,
+      kinds: Object.keys(kinds).length,
+      maxParty: sizes.length ? Math.max.apply(null, sizes) : 0,
+      sameKind: sameKind,
+      wallets: [...new Set(h.guests.all.map((g) => g.wallet))].sort()
+    };
+  })()`)) as {
+    alive: number;
+    byGroup: Record<string, number>;
+    kinds: number;
+    maxParty: number;
+    sameKind: boolean;
+    wallets: number[];
+  };
+
+  record(
+    '손님이 여러 유형으로 들어온다 — 한 유형뿐이면 구성이 판단이 안 된다',
+    groups.kinds >= 2 ? 'pass' : 'fail',
+    Object.entries(groups.byGroup)
+      .map(([k, v]) => `${k} ${v}`)
+      .join(' · ') + ` (총 ${groups.alive}명)`,
+  );
+  record(
+    '일행 단위로 들어온다 — 한 명씩 흩어지면 무리가 안 보인다',
+    groups.maxParty >= 2 && groups.sameKind ? 'pass' : 'fail',
+    `최대 일행 ${groups.maxParty}명 · 일행 내 유형 ${groups.sameKind ? '일치' : '불일치'}`,
+  );
+  record(
+    '유형마다 지갑이 다르다 — 같으면 이름표일 뿐이다',
+    groups.wallets.length >= 2 ? 'pass' : 'fail',
+    `지갑 ${groups.wallets.join(', ')}`,
+  );
+
   record(
     '한 주 진행을 누르면 의사결정 카드가 뜬다 — 없으면 그 버튼은 스킵 버튼이다',
     cardFlow.ok && cardFlow.shown === true ? 'pass' : 'fail',
@@ -1455,7 +1586,16 @@ async function main(): Promise<void> {
   const afterPick = (await page.evaluate(`(() => {
     const cv = window.__kairoCards;
     let guard = 0;
-    while (cv.visible && guard++ < 5) cv.pickForTest(0);
+    while (cv.visible && guard++ < 5) {
+      const card = cv.currentCard;
+      let pick = 0;
+      if (card) {
+        for (let oi = 0; oi < card.options.length; oi++) {
+          if (!card.options[oi].effects.some((e) => e.closed)) { pick = oi; break; }
+        }
+      }
+      cv.pickForTest(pick);
+    }
     return { visible: cv.visible, cash: window.__kairo.week.cash, playing: window.__kairo.scene.isPlaying };
   })()`)) as { visible: boolean; cash: number; playing: boolean };
 

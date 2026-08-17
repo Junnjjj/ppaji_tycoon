@@ -81,6 +81,16 @@ export class KairoCardView {
     return Math.max(0, this.queue.length - this.index);
   }
 
+  /**
+   * 지금 보여주는 카드 — 검증 도구가 **무엇을 고를지 판단**할 수 있어야 한다.
+   *
+   * 없으면 도구가 "0번을 고른다"밖에 못 하는데, 방송 촬영 카드의 0번은 그 주 폐쇄라
+   * 그 뒤 검사들이 손님 0명인 주를 보게 된다 (실측으로 겪었다).
+   */
+  get currentCard(): CardDef | null {
+    return this.queue[this.index] ?? null;
+  }
+
   show(cards: CardDef[], cash: number, onDone: (choices: CardChoice[]) => void): void {
     if (cards.length === 0) {
       onDone([]);

@@ -1,6 +1,7 @@
 import { Rng } from '../rng.js';
 import type { KairoTerrain } from './terrain.js';
 import { PlacementGrid, facilityDef } from './placement.js';
+import type { GroupId } from './groups.js';
 import type { GuestStore } from './guests.js';
 
 /**
@@ -163,6 +164,13 @@ export interface WeekReport extends WeekSummary {
   bottleneck: { need: NeedKind; demand: number; supply: number } | null;
   /** 압축 연출용 기록 — tick 마다 손님 위치 요약 */
   playback: PlaybackFrame[];
+  /**
+   * 이번 주에 들어온 손님의 **유형 구성** (§10.4).
+   *
+   * 결산에 이게 없으면 "가족이 많이 왔는데 놀이 시설이 없다" 같은 판단을 할 수 없고,
+   * 그러면 유형은 내부 숫자로만 남는다.
+   */
+  byGroup: Record<GroupId, number>;
 }
 
 /** 압축 재생 프레임 — 위치만 남긴다 (스프라이트는 렌더가 정한다) */
@@ -307,6 +315,7 @@ export class WeekRunner {
 
     const supply = this.supply();
     const mod = opts.modifiers;
+    const byGroup: Record<GroupId, number> = { family: 0, couple: 0, friends: 0, company: 0 };
     let weekRevenue = 0;
     let tick = 0;
 
@@ -340,13 +349,15 @@ export class WeekRunner {
         while (arrivalAcc >= 1) {
           arrivalAcc -= 1;
           arrivals++;
-          if (this.guests.spawn(rng)) visitors++;
-          else turnedAway++;
+          const born = this.guests.spawn(rng, season);
+          if (born) {
+            visitors++;
+            byGroup[born.group] += 1;
+          } else turnedAway++;
         }
-        const usingBefore = this.countUsing();
         this.guests.tick(rng);
         // 이용이 끝난 손님만큼 요금을 받는다 (이용 시작이 아니라 완료 기준)
-        dayRevenue += this.collectFees(usingBefore, weather);
+        dayRevenue += this.collectFees(weather);
 
         for (const g of this.guests.all) {
           const k = g.j * w + g.i;
@@ -461,23 +472,23 @@ export class WeekRunner {
       hotspot,
       bottleneck,
       playback,
+      byGroup,
     };
-  }
-
-  private countUsing(): number {
-    let n = 0;
-    for (const g of this.guests.all) if (g.state === 'using') n++;
-    return n;
   }
 
   /**
    * 요금 징수 — 이용이 **끝난** 손님 수만큼. 날씨가 수요 구성을 바꾸므로 그 종류의
    * 시설은 요금을 더 받는다 (비 오는 날 카페가 붐빈다).
    */
-  private collectFees(usingBefore: number, weather: Weather): number {
-    const usingNow = this.countUsing();
-    const finished = Math.max(0, usingBefore - usingNow);
-    if (finished === 0) return 0;
+  private collectFees(weather: Weather): number {
+    /*
+     * ⚠ 예전에는 `usingBefore - usingNow` 로 "끝난 수"를 셌는데, 같은 tick 에 시작과
+     * 종료가 겹치면 어긋난다. 손님 쪽이 완료를 직접 세고 **지갑 배율 합**을 준다 —
+     * 그래야 친구·단체가 더 쓴다는 설정(§10.4)이 매출에 나타난다.
+     */
+    const fin = this.guests.takeFinished();
+    const finished = fin.walletSum;
+    if (fin.count === 0) return 0;
     // 어떤 시설이 끝났는지는 추적하지 않고 평균 요금을 쓴다 — K9 밸런싱에서 정밀화한다
     let feeSum = 0;
     let n = 0;

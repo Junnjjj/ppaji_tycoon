@@ -27,6 +27,21 @@ const NEED_NAME: Record<NeedKind, string> = {
   stay: '숙박',
 };
 
+/** 손님 유형 — 표시 순서·이름·색. 색은 팔레트 계열에서 골라 히트맵과 안 부딪히게 */
+const GROUP_ORDER = ['family', 'couple', 'friends', 'company'] as const;
+const GROUP_LABEL: Record<(typeof GROUP_ORDER)[number], string> = {
+  family: '가족',
+  couple: '커플',
+  friends: '친구',
+  company: '단체',
+};
+const GROUP_COLOR: Record<(typeof GROUP_ORDER)[number], string> = {
+  family: '#7fd0a8',
+  couple: '#f0a6c0',
+  friends: '#f2c96b',
+  company: '#8fb8e8',
+};
+
 const WEATHER_ICON: Record<string, string> = {
   clear: '☀',
   cloudy: '☁',
@@ -141,6 +156,9 @@ export class KairoReport {
       const inner = document.createElement('div');
       inner.style.cssText = `width:100%;height:${hIn}px;background:${inColor};border-radius:0 0 3px 3px`;
       bar.append(inner);
+      // 검증이 요일 막대만 골라 셀 수 있게 표시한다 — `div[title]` 로 세면 손님 구성
+      // 막대까지 섞여 개수가 어긋난다 (실측)
+      bar.dataset['day'] = String(d.day);
       bar.title =
         `${d.name} 수요 ${d.arrivals}명 · 입장 ${d.visitors}명` +
         (d.turnedAway ? ` · 만석 ${d.turnedAway}명` : '') +
@@ -155,6 +173,49 @@ export class KairoReport {
       box.append(col);
     }
     return box;
+  }
+
+  /**
+   * 손님 유형 구성 막대 (§10.4).
+   *
+   * 숫자 표가 아니라 **비율 막대**다 — "가족 절반"이 한눈에 들어와야 "놀이 시설이
+   * 모자란가"로 이어진다. 표로 두면 결산이 다시 엑셀이 된다 (히트맵을 넣은 이유와 같다).
+   */
+  private groupBar(rep: WeekReport): HTMLElement {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'margin-top:8px';
+    const label = document.createElement('div');
+    label.textContent = '손님 구성';
+    label.style.cssText = 'opacity:.7;font-size:12px;margin-bottom:4px';
+
+    const bar = document.createElement('div');
+    bar.style.cssText =
+      'display:flex;height:22px;border-radius:6px;overflow:hidden;background:#1a2b36';
+    const total = GROUP_ORDER.reduce((a, k) => a + (rep.byGroup[k] ?? 0), 0);
+    if (total === 0) {
+      const empty = document.createElement('div');
+      empty.textContent = '손님 없음';
+      empty.style.cssText =
+        'flex:1;display:flex;align-items:center;justify-content:center;font-size:11px;opacity:.6';
+      bar.append(empty);
+    } else {
+      for (const k of GROUP_ORDER) {
+        const n = rep.byGroup[k] ?? 0;
+        if (n === 0) continue;
+        const seg = document.createElement('div');
+        const pct = Math.round((n / total) * 100);
+        seg.style.cssText =
+          `flex:${n} 0 0;background:${GROUP_COLOR[k]};display:flex;align-items:center;` +
+          'justify-content:center;font-size:10px;color:#08131a;font-weight:700';
+        seg.dataset['group'] = k;
+        seg.title = `${GROUP_LABEL[k]} ${n}명 (${pct}%)`;
+        // 좁은 칸에 글자를 우겨넣으면 오히려 안 읽힌다 — 12% 이상일 때만
+        seg.textContent = pct >= 12 ? `${GROUP_LABEL[k]} ${pct}%` : '';
+        bar.append(seg);
+      }
+    }
+    wrap.append(label, bar);
+    return wrap;
   }
 
   private numbers(rep: WeekReport): HTMLElement {
@@ -211,7 +272,10 @@ export class KairoReport {
     barLabel.style.cssText = 'opacity:.7;font-size:12px;margin-top:4px';
     this.root.append(barLabel, this.dayBars(rep));
 
-    // ③ 숫자
+    // ③ 손님 구성 — "누가 왔나"가 "무엇을 지을까"의 근거다
+    this.root.append(this.groupBar(rep));
+
+    // ④ 숫자
     this.root.append(this.numbers(rep));
 
     // 병목 — 다음에 무엇을 지을까

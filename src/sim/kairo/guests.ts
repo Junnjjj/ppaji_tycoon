@@ -3,6 +3,15 @@ import { FlowField } from '../pathfield.js';
 import type { KairoTerrain } from './terrain.js';
 import { type WallGrid } from './walls.js';
 import { PlacementGrid, facilityDef } from './placement.js';
+import {
+  pickGroup,
+  groupSize,
+  groupDef,
+  needWeight,
+  type GroupDef,
+  type GroupId,
+} from './groups.js';
+import type { Season } from './week.js';
 
 /**
  * 손님 에이전트 — **시뮬 소유**. 스펙 §2.
@@ -38,6 +47,14 @@ export type GuestEmote = 'happy' | 'love' | 'neutral' | 'annoyed' | 'hot' | 'ale
 
 export interface Guest {
   id: number;
+  /** 일행 유형 (§10.4) — 지갑·인내·수요 편향이 여기서 온다 */
+  group: GroupId;
+  /** 같은 일행 식별자 — 렌더가 무리를 묶어 보여줄 수 있다 */
+  party: number;
+  /** 객단가 배율 */
+  wallet: number;
+  /** 스릴 선호 0..1 */
+  thrill: number;
   /** 현재 타일 */
   i: number;
   j: number;
@@ -128,6 +145,8 @@ export const GUEST_DEFAULTS: GuestTunables = {
 
 export interface GuestStats {
   alive: number;
+  /** 유형별 현재 인원 — 결산에서 "누가 왔나"를 보여준다 */
+  byGroup: Record<GroupId, number>;
   walking: number;
   using: number;
   leaving: number;
@@ -158,6 +177,21 @@ export class GuestStore {
   private exited = 0;
   private satSum = 0;
   private gaveUp = 0;
+  /**
+   * 이용을 마친 손님의 **지갑 배율 합**. 요금은 이 합에 평균 요금을 곱해 받는다 —
+   * 인원수만 세면 친구·단체가 더 쓴다는 설정이 매출에 안 나타난다.
+   */
+  private finishedWallet = 0;
+  private finishedCount = 0;
+  /**
+   * 아직 다 들어오지 않은 일행. 도착 1건마다 한 명씩 들어온다.
+   *
+   * ⚠ 일행 전체를 한 번에 넣으면 도착률 계산이 무너진다 — 주간 도착 수는 누적기가
+   * 정하는데 한 번에 5명이 들어오면 그 주 입장이 5배가 된다. 한 명씩 넣되 **연속으로**
+   * 넣어서, 같은 일행이 몇 tick 안에 줄줄이 들어오게 한다.
+   */
+  private pending: { def: GroupDef; remaining: number; party: number } | null = null;
+  private nextParty = 1;
   private patience = new Map<number, number>();
 
   constructor(
@@ -314,17 +348,40 @@ export class GuestStore {
 
     const fresh = all.filter((c) => c.need !== '' && !g.usedNeeds.includes(c.need));
     const pool = fresh.length > 0 ? fresh : all;
+    /*
+     * 거리에 **유형별 수요 편향**을 곱한다 (§10.4). 1.0 미만이면 "멀어도 간다" —
+     * 가족은 놀이·위생을, 친구는 스릴을 찾아간다. 그래서 시설 구성이 손님 구성을 통해
+     * 매출로 이어진다: 스릴만 지으면 가족이 심심하고, 경관만 지으면 친구가 심심하다.
+     */
+    const gdef = groupDef(g.group);
+    for (const c of pool) c.dist *= needWeight(gdef, c.need);
     pool.sort((a, b) => a.dist - b.dist || a.handle - b.handle);
     const top = pool.slice(0, Math.min(3, pool.length));
     return (top[rng.int(top.length)] as { handle: number }).handle;
   }
 
-  /** 손님 한 명 입장. 게이트가 못 걷는 칸이면 실패 */
-  spawn(rng: Rng): Guest | null {
+  /**
+   * 손님 한 명 입장. 게이트가 못 걷는 칸이면 실패.
+   *
+   * 일행 단위로 들어온다 — 대기 중인 일행이 없으면 계절 비중으로 새 일행을 뽑는다.
+   * 계절을 안 주면 여름으로 본다 (기존 호출자 호환).
+   */
+  spawn(rng: Rng, season: Season = 'summer'): Guest | null {
     if (this.guests.length >= this.limit) return null;
     if (!this.walkable(this.gate.i, this.gate.j)) return null;
+    if (!this.pending || this.pending.remaining <= 0) {
+      const def = pickGroup(rng, season);
+      this.pending = { def, remaining: groupSize(rng, def), party: this.nextParty++ };
+    }
+    const party = this.pending;
+    party.remaining -= 1;
+    const def = party.def;
     const g: Guest = {
       id: this.nextId++,
+      group: def.id,
+      party: party.party,
+      wallet: def.wallet,
+      thrill: def.thrill[0] + rng.next() * (def.thrill[1] - def.thrill[0]),
       i: this.gate.i,
       j: this.gate.j,
       fromI: this.gate.i,
@@ -402,6 +459,8 @@ export class GuestStore {
             : '';
           if (usedNeed !== '' && !g.usedNeeds.includes(usedNeed)) g.usedNeeds.push(usedNeed);
           g.satisfaction = Math.min(100, g.satisfaction + gain);
+          this.finishedWallet += g.wallet;
+          this.finishedCount += 1;
           this.setEmote(g, g.satisfaction >= 80 ? 'love' : 'happy');
           this.syncFace(g);
           g.state = g.used >= this.tunables.wantUses ? 'leaving' : 'walking';
@@ -424,7 +483,8 @@ export class GuestStore {
             const p = (this.patience.get(g.id) ?? 0) + 1;
             this.patience.set(g.id, p);
             g.satisfaction = Math.max(0, g.satisfaction - this.tunables.waitPenalty);
-            if (p > this.tunables.patienceTicks) {
+            // 인내는 유형이 정한다 — 커플·단체는 빨리 지친다 (§10.4)
+            if (p > this.tunables.patienceTicks * groupDef(g.group).patience) {
               g.satisfaction = Math.max(0, g.satisfaction - 30);
               this.setEmote(g, 'annoyed');
               this.syncFace(g);
@@ -537,13 +597,16 @@ export class GuestStore {
     let walking = 0;
     let using = 0;
     let leaving = 0;
+    const byGroup: Record<GroupId, number> = { family: 0, couple: 0, friends: 0, company: 0 };
     for (const g of this.guests) {
       if (g.state === 'walking') walking++;
       else if (g.state === 'using') using++;
       else if (g.state === 'leaving') leaving++;
+      byGroup[g.group] += 1;
     }
     return {
       alive: this.guests.length,
+      byGroup,
       walking,
       using,
       leaving,
@@ -551,6 +614,19 @@ export class GuestStore {
       exitSatisfaction: this.exited === 0 ? 0 : this.satSum / this.exited,
       gaveUp: this.gaveUp,
     };
+  }
+
+  /**
+   * 이용을 마친 손님들의 지갑 배율 합을 가져가고 **비운다**.
+   *
+   * 요금 계산이 인원수 대신 이걸 쓰면, 친구·단체가 더 쓴다는 설정이 실제 매출에 나타난다.
+   * `usingBefore - usingNow` 로 세던 방식은 같은 tick 에 시작·종료가 겹치면 어긋났다.
+   */
+  takeFinished(): { count: number; walletSum: number } {
+    const out = { count: this.finishedCount, walletSum: this.finishedWallet };
+    this.finishedCount = 0;
+    this.finishedWallet = 0;
+    return out;
   }
 
   /**
