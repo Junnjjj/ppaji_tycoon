@@ -1,0 +1,973 @@
+{
+  "version": 1,
+  "note": "카이로 전환 시설 73종의 시뮬 정보. 렌더 정보는 assets/kairo-render-contract.json.",
+  "facilities": {
+    "shower_row": {
+      "id": "shower_row",
+      "name": "샤워실 연립",
+      "layer": "indoor",
+      "size": [
+        4,
+        1
+      ],
+      "sprite": "facility/shower_row",
+      "capacity": 4,
+      "placement": {
+        "requiresWallAdjacent": true
+      },
+      "note": "칸마다 손님. 칸막이만 세운다"
+    },
+    "changing_row": {
+      "id": "changing_row",
+      "name": "탈의실 연립",
+      "layer": "indoor",
+      "size": [
+        3,
+        1
+      ],
+      "sprite": "facility/changing_row",
+      "capacity": 3,
+      "placement": {
+        "requiresWallAdjacent": true
+      },
+      "note": "입구 옆 고정. 수영복 전환"
+    },
+    "locker_row": {
+      "id": "locker_row",
+      "name": "코인락커 열",
+      "layer": "indoor",
+      "size": [
+        4,
+        1
+      ],
+      "sprite": "facility/locker_row",
+      "capacity": 4,
+      "placement": {
+        "requiresWallAdjacent": true
+      },
+      "note": ""
+    },
+    "washbasin_row": {
+      "id": "washbasin_row",
+      "name": "세면대 열",
+      "layer": "indoor",
+      "size": [
+        3,
+        1
+      ],
+      "sprite": "facility/washbasin_row",
+      "capacity": 3,
+      "placement": {
+        "requiresWallAdjacent": true
+      },
+      "note": ""
+    },
+    "toilet": {
+      "id": "toilet",
+      "name": "화장실",
+      "layer": "indoor",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/toilet",
+      "capacity": 2,
+      "placement": {
+        "requiresWallAdjacent": true
+      },
+      "note": "들어가는 연출 없음 — 문 앞 사용"
+    },
+    "nursing": {
+      "id": "nursing",
+      "name": "수유실",
+      "layer": "indoor",
+      "size": [
+        2,
+        1
+      ],
+      "sprite": "facility/nursing",
+      "capacity": 1,
+      "placement": {
+        "requiresWallAdjacent": true
+      },
+      "note": ""
+    },
+    "pool_kids": {
+      "id": "pool_kids",
+      "name": "실내 유아풀",
+      "layer": "indoor",
+      "size": [
+        4,
+        3
+      ],
+      "sprite": "facility/pool_kids",
+      "capacity": 6,
+      "placement": {},
+      "note": "bodyH 0 — 바닥에 파인 물"
+    },
+    "pool_warm": {
+      "id": "pool_warm",
+      "name": "실내 온수풀",
+      "layer": "indoor",
+      "size": [
+        4,
+        4
+      ],
+      "sprite": "facility/pool_warm",
+      "capacity": 8,
+      "placement": {},
+      "note": "김 파티클은 procedural"
+    },
+    "pool_lazy": {
+      "id": "pool_lazy",
+      "name": "실내 유수풀",
+      "layer": "indoor",
+      "size": [
+        6,
+        3
+      ],
+      "sprite": "facility/pool_lazy",
+      "capacity": 8,
+      "placement": {},
+      "note": "최대 실내 시설 — 방 8×6 필요"
+    },
+    "sauna": {
+      "id": "sauna",
+      "name": "사우나",
+      "layer": "indoor",
+      "size": [
+        3,
+        3
+      ],
+      "sprite": "facility/sauna",
+      "capacity": 4,
+      "placement": {},
+      "note": ""
+    },
+    "jjimjilbang": {
+      "id": "jjimjilbang",
+      "name": "찜질방",
+      "layer": "indoor",
+      "size": [
+        3,
+        3
+      ],
+      "sprite": "facility/jjimjilbang",
+      "capacity": 6,
+      "placement": {},
+      "note": "누운 포즈(lie) 슬롯"
+    },
+    "sikhye": {
+      "id": "sikhye",
+      "name": "식혜·계란 코너",
+      "layer": "indoor",
+      "size": [
+        2,
+        1
+      ],
+      "sprite": "facility/sikhye",
+      "capacity": 2,
+      "placement": {},
+      "note": ""
+    },
+    "massage_row": {
+      "id": "massage_row",
+      "name": "안마의자 열",
+      "layer": "indoor",
+      "size": [
+        3,
+        1
+      ],
+      "sprite": "facility/massage_row",
+      "capacity": 3,
+      "placement": {
+        "requiresWallAdjacent": true
+      },
+      "note": ""
+    },
+    "shop": {
+      "id": "shop",
+      "name": "매점",
+      "layer": "indoor",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/shop",
+      "capacity": 2,
+      "placement": {},
+      "note": ""
+    },
+    "snackbar": {
+      "id": "snackbar",
+      "name": "분식",
+      "layer": "indoor",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/snackbar",
+      "capacity": 2,
+      "placement": {},
+      "note": ""
+    },
+    "chicken": {
+      "id": "chicken",
+      "name": "치킨",
+      "layer": "indoor",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/chicken",
+      "capacity": 2,
+      "placement": {},
+      "note": ""
+    },
+    "icecream": {
+      "id": "icecream",
+      "name": "아이스크림",
+      "layer": "indoor",
+      "size": [
+        1,
+        2
+      ],
+      "sprite": "facility/icecream",
+      "capacity": 1,
+      "placement": {},
+      "note": ""
+    },
+    "cafe": {
+      "id": "cafe",
+      "name": "카페",
+      "layer": "indoor",
+      "size": [
+        2,
+        3
+      ],
+      "sprite": "facility/cafe",
+      "capacity": 4,
+      "placement": {},
+      "note": ""
+    },
+    "vending_in": {
+      "id": "vending_in",
+      "name": "자판기(실내)",
+      "layer": "indoor",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/vending_in",
+      "capacity": 1,
+      "placement": {
+        "requiresWallAdjacent": true
+      },
+      "note": ""
+    },
+    "arcade": {
+      "id": "arcade",
+      "name": "오락기",
+      "layer": "indoor",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/arcade",
+      "capacity": 1,
+      "placement": {
+        "requiresWallAdjacent": true
+      },
+      "note": ""
+    },
+    "karaoke": {
+      "id": "karaoke",
+      "name": "노래방",
+      "layer": "indoor",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/karaoke",
+      "capacity": 2,
+      "placement": {},
+      "note": ""
+    },
+    "pingpong": {
+      "id": "pingpong",
+      "name": "탁구대",
+      "layer": "indoor",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/pingpong",
+      "capacity": 2,
+      "placement": {},
+      "note": "양쪽 2슬롯 — 마주보는 facing"
+    },
+    "sunbed_row": {
+      "id": "sunbed_row",
+      "name": "선베드 열",
+      "layer": "indoor",
+      "size": [
+        4,
+        1
+      ],
+      "sprite": "facility/sunbed_row",
+      "capacity": 4,
+      "placement": {},
+      "note": "lie 포즈"
+    },
+    "info": {
+      "id": "info",
+      "name": "안내소",
+      "layer": "indoor",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/info",
+      "capacity": 1,
+      "placement": {},
+      "note": ""
+    },
+    "infirmary": {
+      "id": "infirmary",
+      "name": "의무실",
+      "layer": "indoor",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/infirmary",
+      "capacity": 1,
+      "placement": {},
+      "note": ""
+    },
+    "office": {
+      "id": "office",
+      "name": "사무실",
+      "layer": "indoor",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/office",
+      "capacity": 1,
+      "placement": {},
+      "note": ""
+    },
+    "storage": {
+      "id": "storage",
+      "name": "창고",
+      "layer": "indoor",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/storage",
+      "capacity": 0,
+      "placement": {},
+      "note": "손님 슬롯 없음"
+    },
+    "ticket": {
+      "id": "ticket",
+      "name": "매표소",
+      "layer": "land",
+      "size": [
+        3,
+        2
+      ],
+      "sprite": "facility/ticket",
+      "capacity": 2,
+      "placement": {},
+      "note": ""
+    },
+    "parking": {
+      "id": "parking",
+      "name": "주차장",
+      "layer": "land",
+      "size": [
+        4,
+        4
+      ],
+      "sprite": "facility/parking",
+      "capacity": 0,
+      "placement": {},
+      "note": "차량은 별도 스프라이트"
+    },
+    "mongol_tent": {
+      "id": "mongol_tent",
+      "name": "몽골텐트",
+      "layer": "land",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/mongol_tent",
+      "capacity": 4,
+      "placement": {},
+      "note": "한국 빠지 시그니처"
+    },
+    "pyeongsang_row": {
+      "id": "pyeongsang_row",
+      "name": "평상 연립",
+      "layer": "land",
+      "size": [
+        4,
+        1
+      ],
+      "sprite": "facility/pyeongsang_row",
+      "capacity": 4,
+      "placement": {},
+      "note": "칸마다 그룹 4명. sit 포즈"
+    },
+    "shade_net": {
+      "id": "shade_net",
+      "name": "그늘막",
+      "layer": "land",
+      "size": [
+        2,
+        1
+      ],
+      "sprite": "facility/shade_net",
+      "capacity": 2,
+      "placement": {},
+      "note": ""
+    },
+    "parasol": {
+      "id": "parasol",
+      "name": "파라솔",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/parasol",
+      "capacity": 2,
+      "placement": {},
+      "note": "2변형"
+    },
+    "bbq_zone": {
+      "id": "bbq_zone",
+      "name": "BBQ존",
+      "layer": "land",
+      "size": [
+        3,
+        3
+      ],
+      "sprite": "facility/bbq_zone",
+      "capacity": 6,
+      "placement": {},
+      "note": ""
+    },
+    "firepit_row": {
+      "id": "firepit_row",
+      "name": "화로대 열",
+      "layer": "land",
+      "size": [
+        3,
+        1
+      ],
+      "sprite": "facility/firepit_row",
+      "capacity": 3,
+      "placement": {},
+      "note": ""
+    },
+    "camp_site": {
+      "id": "camp_site",
+      "name": "캠핑 사이트",
+      "layer": "land",
+      "size": [
+        3,
+        3
+      ],
+      "sprite": "facility/camp_site",
+      "capacity": 4,
+      "placement": {},
+      "note": ""
+    },
+    "pavilion": {
+      "id": "pavilion",
+      "name": "정자",
+      "layer": "land",
+      "size": [
+        3,
+        3
+      ],
+      "sprite": "facility/pavilion",
+      "capacity": 4,
+      "placement": {},
+      "note": "지붕 있음(야외)"
+    },
+    "lookout": {
+      "id": "lookout",
+      "name": "전망대",
+      "layer": "land",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/lookout",
+      "capacity": 2,
+      "placement": {},
+      "note": "경관 지표 기여"
+    },
+    "playground": {
+      "id": "playground",
+      "name": "놀이터",
+      "layer": "land",
+      "size": [
+        3,
+        3
+      ],
+      "sprite": "facility/playground",
+      "capacity": 4,
+      "placement": {},
+      "note": ""
+    },
+    "footvolley": {
+      "id": "footvolley",
+      "name": "족구장",
+      "layer": "land",
+      "size": [
+        4,
+        3
+      ],
+      "sprite": "facility/footvolley",
+      "capacity": 4,
+      "placement": {},
+      "note": ""
+    },
+    "minigolf": {
+      "id": "minigolf",
+      "name": "미니 골프",
+      "layer": "land",
+      "size": [
+        4,
+        2
+      ],
+      "sprite": "facility/minigolf",
+      "capacity": 3,
+      "placement": {},
+      "note": ""
+    },
+    "photozone": {
+      "id": "photozone",
+      "name": "포토존",
+      "layer": "land",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/photozone",
+      "capacity": 2,
+      "placement": {},
+      "note": "경관 지표"
+    },
+    "fountain": {
+      "id": "fountain",
+      "name": "분수",
+      "layer": "land",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/fountain",
+      "capacity": 0,
+      "placement": {},
+      "note": "물줄기는 procedural"
+    },
+    "flowerbed": {
+      "id": "flowerbed",
+      "name": "화단",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/flowerbed",
+      "capacity": 0,
+      "placement": {},
+      "note": "경관 지표"
+    },
+    "vending_out": {
+      "id": "vending_out",
+      "name": "자판기(야외)",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/vending_out",
+      "capacity": 1,
+      "placement": {},
+      "note": ""
+    },
+    "lifering": {
+      "id": "lifering",
+      "name": "구명함",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/lifering",
+      "capacity": 0,
+      "placement": {},
+      "note": "안전 지표"
+    },
+    "slide_small": {
+      "id": "slide_small",
+      "name": "워터슬라이드(소)",
+      "layer": "water",
+      "size": [
+        3,
+        3
+      ],
+      "sprite": "facility/slide_small",
+      "capacity": 3,
+      "placement": {},
+      "note": "entry/exit + path"
+    },
+    "slide_large": {
+      "id": "slide_large",
+      "name": "워터슬라이드(대)",
+      "layer": "water",
+      "size": [
+        4,
+        5
+      ],
+      "sprite": "facility/slide_large",
+      "capacity": 4,
+      "placement": {},
+      "note": "최고 높이 — 오클루전 주의"
+    },
+    "slide_tube": {
+      "id": "slide_tube",
+      "name": "튜브 슬라이드",
+      "layer": "water",
+      "size": [
+        4,
+        4
+      ],
+      "sprite": "facility/slide_tube",
+      "capacity": 3,
+      "placement": {},
+      "note": "float 포즈로 탑승"
+    },
+    "jump_cushion": {
+      "id": "jump_cushion",
+      "name": "점프쿠션",
+      "layer": "water",
+      "size": [
+        4,
+        3
+      ],
+      "sprite": "facility/jump_cushion",
+      "capacity": 3,
+      "placement": {},
+      "note": "인플레이터블 초록·노랑"
+    },
+    "trampoline_w": {
+      "id": "trampoline_w",
+      "name": "수상 트램폴린",
+      "layer": "water",
+      "size": [
+        3,
+        3
+      ],
+      "sprite": "facility/trampoline_w",
+      "capacity": 3,
+      "placement": {},
+      "note": ""
+    },
+    "airbounce": {
+      "id": "airbounce",
+      "name": "에어바운스 파크",
+      "layer": "water",
+      "size": [
+        6,
+        5
+      ],
+      "sprite": "facility/airbounce",
+      "capacity": 8,
+      "placement": {},
+      "note": "최대 물 위 시설"
+    },
+    "turtle_island": {
+      "id": "turtle_island",
+      "name": "거북섬",
+      "layer": "water",
+      "size": [
+        8,
+        6
+      ],
+      "sprite": "facility/turtle_island",
+      "capacity": 8,
+      "placement": {},
+      "note": "A트랙 실증 완료(88px)"
+    },
+    "junglegym_w": {
+      "id": "junglegym_w",
+      "name": "정글짐",
+      "layer": "water",
+      "size": [
+        4,
+        4
+      ],
+      "sprite": "facility/junglegym_w",
+      "capacity": 4,
+      "placement": {},
+      "note": "프레임형 — 윤곽 게이트 완화"
+    },
+    "diving": {
+      "id": "diving",
+      "name": "다이빙대",
+      "layer": "water",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/diving",
+      "capacity": 2,
+      "placement": {},
+      "note": "데크 부착물"
+    },
+    "waterwalk": {
+      "id": "waterwalk",
+      "name": "워터워크볼",
+      "layer": "water",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/waterwalk",
+      "capacity": 2,
+      "placement": {},
+      "note": ""
+    },
+    "float_deck": {
+      "id": "float_deck",
+      "name": "플로팅덱",
+      "layer": "water",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/float_deck",
+      "capacity": 0,
+      "placement": {},
+      "note": "★물 위 유일 기반. 부착 앵커 4방"
+    },
+    "dock": {
+      "id": "dock",
+      "name": "선착장",
+      "layer": "water",
+      "size": [
+        2,
+        4
+      ],
+      "sprite": "facility/dock",
+      "capacity": 2,
+      "placement": {},
+      "note": "견인 프리셋 루프 시작점"
+    },
+    "rent_kayak": {
+      "id": "rent_kayak",
+      "name": "카약 대여소",
+      "layer": "water",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/rent_kayak",
+      "capacity": 1,
+      "placement": {},
+      "note": ""
+    },
+    "rent_pedal": {
+      "id": "rent_pedal",
+      "name": "패들보트 대여소",
+      "layer": "water",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/rent_pedal",
+      "capacity": 1,
+      "placement": {},
+      "note": ""
+    },
+    "rent_duck": {
+      "id": "rent_duck",
+      "name": "오리배 선착장",
+      "layer": "water",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/rent_duck",
+      "capacity": 1,
+      "placement": {},
+      "note": ""
+    },
+    "rent_sup": {
+      "id": "rent_sup",
+      "name": "SUP 대여소",
+      "layer": "water",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/rent_sup",
+      "capacity": 1,
+      "placement": {},
+      "note": ""
+    },
+    "bungalow": {
+      "id": "bungalow",
+      "name": "방갈로",
+      "layer": "pension",
+      "size": [
+        3,
+        3
+      ],
+      "sprite": "facility/bungalow",
+      "capacity": 0,
+      "placement": {},
+      "note": "프리셋 벽 발자국 + 지붕"
+    },
+    "glamping": {
+      "id": "glamping",
+      "name": "글램핑",
+      "layer": "pension",
+      "size": [
+        4,
+        3
+      ],
+      "sprite": "facility/glamping",
+      "capacity": 0,
+      "placement": {},
+      "note": ""
+    },
+    "caravan": {
+      "id": "caravan",
+      "name": "카라반",
+      "layer": "pension",
+      "size": [
+        4,
+        2
+      ],
+      "sprite": "facility/caravan",
+      "capacity": 0,
+      "placement": {},
+      "note": ""
+    },
+    "pension": {
+      "id": "pension",
+      "name": "펜션 3층",
+      "layer": "pension",
+      "size": [
+        5,
+        4
+      ],
+      "sprite": "facility/pension",
+      "capacity": 0,
+      "placement": {},
+      "note": "층 20텍셀 × 3 + 지붕"
+    },
+    "pension_duplex": {
+      "id": "pension_duplex",
+      "name": "복층 펜션",
+      "layer": "pension",
+      "size": [
+        6,
+        5
+      ],
+      "sprite": "facility/pension_duplex",
+      "capacity": 0,
+      "placement": {},
+      "note": ""
+    },
+    "ice_fishing": {
+      "id": "ice_fishing",
+      "name": "빙어낚시터",
+      "layer": "season",
+      "size": [
+        4,
+        4
+      ],
+      "sprite": "facility/ice_fishing",
+      "capacity": 4,
+      "placement": {},
+      "note": "겨울"
+    },
+    "snow_sled": {
+      "id": "snow_sled",
+      "name": "눈썰매장",
+      "layer": "season",
+      "size": [
+        4,
+        5
+      ],
+      "sprite": "facility/snow_sled",
+      "capacity": 3,
+      "placement": {},
+      "note": "겨울"
+    },
+    "bungeoppang": {
+      "id": "bungeoppang",
+      "name": "붕어빵",
+      "layer": "season",
+      "size": [
+        2,
+        1
+      ],
+      "sprite": "facility/bungeoppang",
+      "capacity": 1,
+      "placement": {},
+      "note": "겨울"
+    },
+    "footbath": {
+      "id": "footbath",
+      "name": "온수 족욕",
+      "layer": "season",
+      "size": [
+        3,
+        1
+      ],
+      "sprite": "facility/footbath",
+      "capacity": 3,
+      "placement": {},
+      "note": "봄·가을"
+    },
+    "fishing": {
+      "id": "fishing",
+      "name": "낚시터",
+      "layer": "season",
+      "size": [
+        4,
+        2
+      ],
+      "sprite": "facility/fishing",
+      "capacity": 3,
+      "placement": {},
+      "note": "봄·가을"
+    },
+    "maple_walk": {
+      "id": "maple_walk",
+      "name": "단풍 산책로",
+      "layer": "season",
+      "size": [
+        4,
+        1
+      ],
+      "sprite": "facility/maple_walk",
+      "capacity": 0,
+      "placement": {},
+      "note": "가을. 경관 지표"
+    }
+  }
+}

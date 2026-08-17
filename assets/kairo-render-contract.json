@@ -1,0 +1,2753 @@
+{
+  "version": 2,
+  "note": "렌더 전용 계약. 시뮬 정보(발자국·용량·배치제약)는 src/data/kairo-facilities.json 이 소유한다 (불변식 1·3).",
+  "projection": {
+    "yaw_deg": 45,
+    "elev_deg": 30,
+    "tileWorld": 22.627417,
+    "tileTexels": [
+      32,
+      16
+    ],
+    "stepScreenTexels": [
+      16,
+      8
+    ],
+    "worldPerTexelHoriz": 1.0,
+    "quadHeightScale": 1.1547005,
+    "quadHeightScaleWhy": "수직 쿼드는 화면에서 cos(elev) 만큼 눌린다. 이 상수는 소멸하지 않는다"
+  },
+  "presentation": {
+    "upscaleSteps": [
+      1,
+      2
+    ],
+    "cameraZoom": 1.0,
+    "bufferTexels": "ceil(cssPx / S)",
+    "canvasBackingPx": "bufferTexels × S × round(DPR)",
+    "canvasCssPx": "bufferTexels × S  (화면보다 최대 S−1 px 넘칠 수 있음 → overflow:hidden)",
+    "dprRule": "DPR 은 정수로 반올림한다 (2.625·2.75 같은 값 금지)",
+    "cameraSnap": "카메라 target 을 매 프레임 텍셀 격자(1월드)로 반올림한다. 안 하면 팬 중 반 픽셀 밀림",
+    "grid": [
+      40,
+      32
+    ],
+    "mapTexels": [
+      1152,
+      576
+    ]
+  },
+  "guest": {
+    "cellTexels": [
+      14,
+      24
+    ],
+    "measured": "레퍼런스 실측 22.8텍셀 (57 이미지px ÷ 업스케일 2.5). 타일 높이의 1.43배",
+    "poses": [
+      "idle",
+      "walk",
+      "swim",
+      "float",
+      "sit",
+      "lie",
+      "ride"
+    ],
+    "emotes": [
+      "happy",
+      "love",
+      "neutral",
+      "annoyed",
+      "hot",
+      "alert"
+    ],
+    "face": {
+      "draw": true,
+      "eyeTexels": 1,
+      "mouthTexels": 1,
+      "headTexels": 11,
+      "why": "레퍼런스는 머리 11텍셀에 눈·입 1텍셀로 표정을 그린다. 이게 카이로의 핵심"
+    },
+    "facings": 4,
+    "facingNames": [
+      "+X",
+      "+Z",
+      "-X",
+      "-Z"
+    ],
+    "palettes": 8,
+    "outline": {
+      "baked": true,
+      "color": "#2b1d12",
+      "widthTexels": 1
+    }
+  },
+  "wall": {
+    "masks": 16,
+    "doors": 2,
+    "doorOrientations": [
+      "x-run",
+      "z-run"
+    ],
+    "heightTexels": 24,
+    "canvas": [
+      32,
+      40
+    ],
+    "anchorTexel": [
+      16,
+      40
+    ],
+    "material": "glass-stipple",
+    "glass": {
+      "panes": "stipple 50% 체커 알파",
+      "frame": "불투명",
+      "plinth": "불투명",
+      "why": "레퍼런스는 알파 블렌딩이지만 그건 39색 팔레트에 없는 중간색을 만든다. 스티플은 새 색을 만들지 않아 팔레트·재질 계약을 둘 다 지킨다",
+      "outline": "베이크 필수 (손님과 같은 이유)"
+    },
+    "tilingQA": "⚠ 미해결 — 4방 이음새 격자 배치 검증 절차를 먼저 만들 것"
+  },
+  "backdrop": {
+    "layers": [
+      "ridge",
+      "farbank"
+    ],
+    "tileTexels": 512,
+    "bandTexels": 200,
+    "wrapCrossfade": 12,
+    "alpha": true,
+    "sky": false,
+    "water": false,
+    "shrink": 3,
+    "shrinkWhy": "SHRINK=8 이면 raw 1774×887 이 512폭에 부족하다"
+  },
+  "palette": {
+    "file": "art-reference/palette-proposed-39.json",
+    "mustAdd": [
+      "#2b1d12 (손님 아웃라인)",
+      "눈·얼음 계열 (겨울 4종)"
+    ]
+  },
+  "facilities": [
+    {
+      "sprite": "facility/shower_row",
+      "canvas": [
+        80,
+        60
+      ],
+      "anchorTexel": [
+        40,
+        60
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/changing_row",
+      "canvas": [
+        64,
+        52
+      ],
+      "anchorTexel": [
+        32,
+        52
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/locker_row",
+      "canvas": [
+        80,
+        60
+      ],
+      "anchorTexel": [
+        40,
+        60
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/washbasin_row",
+      "canvas": [
+        64,
+        44
+      ],
+      "anchorTexel": [
+        32,
+        44
+      ],
+      "bodyH": 12,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/toilet",
+      "canvas": [
+        64,
+        52
+      ],
+      "anchorTexel": [
+        32,
+        52
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/nursing",
+      "canvas": [
+        48,
+        44
+      ],
+      "anchorTexel": [
+        24,
+        44
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/pool_kids",
+      "canvas": [
+        112,
+        56
+      ],
+      "anchorTexel": [
+        56,
+        56
+      ],
+      "bodyH": 0,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/pool_warm",
+      "canvas": [
+        128,
+        64
+      ],
+      "anchorTexel": [
+        64,
+        64
+      ],
+      "bodyH": 0,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            2
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/pool_lazy",
+      "canvas": [
+        144,
+        72
+      ],
+      "anchorTexel": [
+        72,
+        72
+      ],
+      "bodyH": 0,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            4,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/sauna",
+      "canvas": [
+        96,
+        68
+      ],
+      "anchorTexel": [
+        48,
+        68
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/jjimjilbang",
+      "canvas": [
+        96,
+        68
+      ],
+      "anchorTexel": [
+        48,
+        68
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            1
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/sikhye",
+      "canvas": [
+        48,
+        40
+      ],
+      "anchorTexel": [
+        24,
+        40
+      ],
+      "bodyH": 16,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/massage_row",
+      "canvas": [
+        64,
+        48
+      ],
+      "anchorTexel": [
+        32,
+        48
+      ],
+      "bodyH": 16,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/shop",
+      "canvas": [
+        64,
+        52
+      ],
+      "anchorTexel": [
+        32,
+        52
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/snackbar",
+      "canvas": [
+        64,
+        52
+      ],
+      "anchorTexel": [
+        32,
+        52
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/chicken",
+      "canvas": [
+        64,
+        52
+      ],
+      "anchorTexel": [
+        32,
+        52
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/icecream",
+      "canvas": [
+        48,
+        44
+      ],
+      "anchorTexel": [
+        24,
+        44
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/cafe",
+      "canvas": [
+        80,
+        60
+      ],
+      "anchorTexel": [
+        40,
+        60
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/vending_in",
+      "canvas": [
+        32,
+        36
+      ],
+      "anchorTexel": [
+        16,
+        36
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/arcade",
+      "canvas": [
+        32,
+        36
+      ],
+      "anchorTexel": [
+        16,
+        36
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/karaoke",
+      "canvas": [
+        64,
+        52
+      ],
+      "anchorTexel": [
+        32,
+        52
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/pingpong",
+      "canvas": [
+        64,
+        44
+      ],
+      "anchorTexel": [
+        32,
+        44
+      ],
+      "bodyH": 12,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/sunbed_row",
+      "canvas": [
+        80,
+        48
+      ],
+      "anchorTexel": [
+        40,
+        48
+      ],
+      "bodyH": 8,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            0
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/info",
+      "canvas": [
+        64,
+        52
+      ],
+      "anchorTexel": [
+        32,
+        52
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/infirmary",
+      "canvas": [
+        64,
+        52
+      ],
+      "anchorTexel": [
+        32,
+        52
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/office",
+      "canvas": [
+        64,
+        52
+      ],
+      "anchorTexel": [
+        32,
+        52
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/storage",
+      "canvas": [
+        64,
+        52
+      ],
+      "anchorTexel": [
+        32,
+        52
+      ],
+      "bodyH": 20,
+      "openTop": true,
+      "slots": []
+    },
+    {
+      "sprite": "facility/ticket",
+      "canvas": [
+        80,
+        64
+      ],
+      "anchorTexel": [
+        40,
+        64
+      ],
+      "bodyH": 24,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/parking",
+      "canvas": [
+        128,
+        68
+      ],
+      "anchorTexel": [
+        64,
+        68
+      ],
+      "bodyH": 4,
+      "openTop": false,
+      "slots": []
+    },
+    {
+      "sprite": "facility/mongol_tent",
+      "canvas": [
+        64,
+        56
+      ],
+      "anchorTexel": [
+        32,
+        56
+      ],
+      "bodyH": 24,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/pyeongsang_row",
+      "canvas": [
+        80,
+        48
+      ],
+      "anchorTexel": [
+        40,
+        48
+      ],
+      "bodyH": 8,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/shade_net",
+      "canvas": [
+        48,
+        44
+      ],
+      "anchorTexel": [
+        24,
+        44
+      ],
+      "bodyH": 20,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/parasol",
+      "canvas": [
+        32,
+        36
+      ],
+      "anchorTexel": [
+        16,
+        36
+      ],
+      "bodyH": 20,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z",
+          "offsetTexel": [
+            -5,
+            0
+          ]
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z",
+          "offsetTexel": [
+            5,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "sprite": "facility/bbq_zone",
+      "canvas": [
+        96,
+        64
+      ],
+      "anchorTexel": [
+        48,
+        64
+      ],
+      "bodyH": 16,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/firepit_row",
+      "canvas": [
+        64,
+        40
+      ],
+      "anchorTexel": [
+        32,
+        40
+      ],
+      "bodyH": 8,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/camp_site",
+      "canvas": [
+        96,
+        68
+      ],
+      "anchorTexel": [
+        48,
+        68
+      ],
+      "bodyH": 20,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/pavilion",
+      "canvas": [
+        96,
+        76
+      ],
+      "anchorTexel": [
+        48,
+        76
+      ],
+      "bodyH": 28,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/lookout",
+      "canvas": [
+        64,
+        72
+      ],
+      "anchorTexel": [
+        32,
+        72
+      ],
+      "bodyH": 40,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/playground",
+      "canvas": [
+        96,
+        68
+      ],
+      "anchorTexel": [
+        48,
+        68
+      ],
+      "bodyH": 20,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/footvolley",
+      "canvas": [
+        112,
+        60
+      ],
+      "anchorTexel": [
+        56,
+        60
+      ],
+      "bodyH": 4,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/minigolf",
+      "canvas": [
+        96,
+        56
+      ],
+      "anchorTexel": [
+        48,
+        56
+      ],
+      "bodyH": 8,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/photozone",
+      "canvas": [
+        64,
+        56
+      ],
+      "anchorTexel": [
+        32,
+        56
+      ],
+      "bodyH": 24,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/fountain",
+      "canvas": [
+        64,
+        44
+      ],
+      "anchorTexel": [
+        32,
+        44
+      ],
+      "bodyH": 12,
+      "openTop": false,
+      "slots": []
+    },
+    {
+      "sprite": "facility/flowerbed",
+      "canvas": [
+        32,
+        24
+      ],
+      "anchorTexel": [
+        16,
+        24
+      ],
+      "bodyH": 8,
+      "openTop": false,
+      "slots": []
+    },
+    {
+      "sprite": "facility/vending_out",
+      "canvas": [
+        32,
+        36
+      ],
+      "anchorTexel": [
+        16,
+        36
+      ],
+      "bodyH": 20,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/lifering",
+      "canvas": [
+        32,
+        28
+      ],
+      "anchorTexel": [
+        16,
+        28
+      ],
+      "bodyH": 12,
+      "openTop": false,
+      "slots": []
+    },
+    {
+      "sprite": "facility/slide_small",
+      "canvas": [
+        96,
+        96
+      ],
+      "anchorTexel": [
+        48,
+        96
+      ],
+      "bodyH": 48,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
+      "ride": {
+        "entryTile": [
+          2,
+          2
+        ],
+        "exitTile": [
+          0,
+          0
+        ],
+        "ridePose": "ride",
+        "pathNote": "구현 시 스프라이트 위 텍셀 폴리라인으로 확정"
+      }
+    },
+    {
+      "sprite": "facility/slide_large",
+      "canvas": [
+        144,
+        144
+      ],
+      "anchorTexel": [
+        72,
+        144
+      ],
+      "bodyH": 72,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
+      "ride": {
+        "entryTile": [
+          3,
+          4
+        ],
+        "exitTile": [
+          0,
+          0
+        ],
+        "ridePose": "ride",
+        "pathNote": "구현 시 스프라이트 위 텍셀 폴리라인으로 확정"
+      }
+    },
+    {
+      "sprite": "facility/slide_tube",
+      "canvas": [
+        128,
+        124
+      ],
+      "anchorTexel": [
+        64,
+        124
+      ],
+      "bodyH": 60,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
+      "ride": {
+        "entryTile": [
+          3,
+          3
+        ],
+        "exitTile": [
+          0,
+          0
+        ],
+        "ridePose": "ride",
+        "pathNote": "구현 시 스프라이트 위 텍셀 폴리라인으로 확정"
+      }
+    },
+    {
+      "sprite": "facility/jump_cushion",
+      "canvas": [
+        112,
+        76
+      ],
+      "anchorTexel": [
+        56,
+        76
+      ],
+      "bodyH": 20,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/trampoline_w",
+      "canvas": [
+        96,
+        64
+      ],
+      "anchorTexel": [
+        48,
+        64
+      ],
+      "bodyH": 16,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/airbounce",
+      "canvas": [
+        176,
+        112
+      ],
+      "anchorTexel": [
+        88,
+        112
+      ],
+      "bodyH": 24,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            4,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            4,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/turtle_island",
+      "canvas": [
+        224,
+        140
+      ],
+      "anchorTexel": [
+        112,
+        140
+      ],
+      "bodyH": 28,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            4,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            5,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            6,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/junglegym_w",
+      "canvas": [
+        128,
+        96
+      ],
+      "anchorTexel": [
+        64,
+        96
+      ],
+      "bodyH": 32,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/diving",
+      "canvas": [
+        64,
+        68
+      ],
+      "anchorTexel": [
+        32,
+        68
+      ],
+      "bodyH": 36,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/waterwalk",
+      "canvas": [
+        64,
+        48
+      ],
+      "anchorTexel": [
+        32,
+        48
+      ],
+      "bodyH": 16,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/float_deck",
+      "canvas": [
+        32,
+        20
+      ],
+      "anchorTexel": [
+        16,
+        20
+      ],
+      "bodyH": 4,
+      "openTop": false,
+      "slots": []
+    },
+    {
+      "sprite": "facility/dock",
+      "canvas": [
+        96,
+        60
+      ],
+      "anchorTexel": [
+        48,
+        60
+      ],
+      "bodyH": 12,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/rent_kayak",
+      "canvas": [
+        64,
+        52
+      ],
+      "anchorTexel": [
+        32,
+        52
+      ],
+      "bodyH": 20,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/rent_pedal",
+      "canvas": [
+        64,
+        52
+      ],
+      "anchorTexel": [
+        32,
+        52
+      ],
+      "bodyH": 20,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/rent_duck",
+      "canvas": [
+        64,
+        52
+      ],
+      "anchorTexel": [
+        32,
+        52
+      ],
+      "bodyH": 20,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/rent_sup",
+      "canvas": [
+        64,
+        52
+      ],
+      "anchorTexel": [
+        32,
+        52
+      ],
+      "bodyH": 20,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/bungalow",
+      "canvas": [
+        96,
+        80
+      ],
+      "anchorTexel": [
+        48,
+        80
+      ],
+      "bodyH": 32,
+      "openTop": false,
+      "slots": []
+    },
+    {
+      "sprite": "facility/glamping",
+      "canvas": [
+        112,
+        88
+      ],
+      "anchorTexel": [
+        56,
+        88
+      ],
+      "bodyH": 32,
+      "openTop": false,
+      "slots": []
+    },
+    {
+      "sprite": "facility/caravan",
+      "canvas": [
+        96,
+        76
+      ],
+      "anchorTexel": [
+        48,
+        76
+      ],
+      "bodyH": 28,
+      "openTop": false,
+      "slots": []
+    },
+    {
+      "sprite": "facility/pension",
+      "canvas": [
+        144,
+        136
+      ],
+      "anchorTexel": [
+        72,
+        136
+      ],
+      "bodyH": 64,
+      "openTop": false,
+      "slots": []
+    },
+    {
+      "sprite": "facility/pension_duplex",
+      "canvas": [
+        176,
+        152
+      ],
+      "anchorTexel": [
+        88,
+        152
+      ],
+      "bodyH": 64,
+      "openTop": false,
+      "slots": []
+    },
+    {
+      "sprite": "facility/ice_fishing",
+      "canvas": [
+        128,
+        72
+      ],
+      "anchorTexel": [
+        64,
+        72
+      ],
+      "bodyH": 8,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            2
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/snow_sled",
+      "canvas": [
+        144,
+        104
+      ],
+      "anchorTexel": [
+        72,
+        104
+      ],
+      "bodyH": 32,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
+      "ride": {
+        "entryTile": [
+          3,
+          4
+        ],
+        "exitTile": [
+          0,
+          0
+        ],
+        "ridePose": "ride",
+        "pathNote": "구현 시 스프라이트 위 텍셀 폴리라인으로 확정"
+      }
+    },
+    {
+      "sprite": "facility/bungeoppang",
+      "canvas": [
+        48,
+        44
+      ],
+      "anchorTexel": [
+        24,
+        44
+      ],
+      "bodyH": 20,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/footbath",
+      "canvas": [
+        64,
+        40
+      ],
+      "anchorTexel": [
+        32,
+        40
+      ],
+      "bodyH": 8,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/fishing",
+      "canvas": [
+        96,
+        56
+      ],
+      "anchorTexel": [
+        48,
+        56
+      ],
+      "bodyH": 8,
+      "openTop": false,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ]
+    },
+    {
+      "sprite": "facility/maple_walk",
+      "canvas": [
+        80,
+        60
+      ],
+      "anchorTexel": [
+        40,
+        60
+      ],
+      "bodyH": 20,
+      "openTop": false,
+      "slots": []
+    }
+  ],
+  "slotRule": "slot.tile 은 발자국 안의 타일 인덱스다. 렌더러가 투영으로 텍셀 위치를 계산한다 — 텍셀 좌표를 직접 적지 않는 이유는 앵커·투영이 바뀌면 185개가 전부 틀어지기 때문. 한 타일에 둘 이상이면 offsetTexel 로 나눈다."
+}
