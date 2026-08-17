@@ -291,7 +291,7 @@ async function main(): Promise<void> {
   if (!brushBtns) {
     record('지면 붓 팔레트', 'fail', '팔레트를 못 찾았다');
   } else {
-    record('지면 붓 6종', brushBtns.count === 6 ? 'pass' : 'fail', `${brushBtns.count}개`);
+    record('붓 9종 (지면 6 + 벽·문·지우기)', brushBtns.count === 9 ? 'pass' : 'fail', `${brushBtns.count}개`);
     record(
       '터치 타깃 44px 이상',
       brushBtns.minH >= 44 ? 'pass' : 'fail',
@@ -328,6 +328,161 @@ async function main(): Promise<void> {
       `(${painted.tile.join(',')}) ${painted.before}→${painted.after} · 통행 ${painted.walkBefore}→${painted.walkAfter}`,
     );
   }
+
+  // ── 7c. 벽·문·밀폐 차단 ──
+  const wallCheck = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    const t = h.terrain, w = h.walls, sc = h.scene;
+    const out = {};
+    // 걸을 수 있는 넓은 자리를 찾는다 (뒤쪽 육지)
+    let base = null;
+    for (let j = 1; j < 20 && !base; j++) {
+      for (let i = 1; i < 34; i++) {
+        let ok = true;
+        for (let di = 0; di < 4 && ok; di++)
+          for (let dj = 0; dj < 4; dj++) if (!t.isWalkable(i + di, j + dj)) { ok = false; break; }
+        if (ok) { base = [i, j]; break; }
+      }
+    }
+    if (!base) return { ok: false, reason: '4×4 육지를 못 찾았다' };
+    const [bi, bj] = base;
+    const gate = { i: 0, j: 0 };
+
+    // (bi+1, bj+1) 을 네 벽으로 둘러싼다 — 마지막 하나가 거절되어야 한다
+    const ci = bi + 1, cj = bj + 1;
+    const three = [[ci-1,cj],[ci+1,cj],[ci,cj-1]];
+    let placed = 0;
+    for (const [i, j] of three) {
+      const r = h.sim.placeWall(t, w, gate, i, j, 1);
+      if (r.ok) { sc.refreshWall(i, j); placed++; }
+    }
+    out.placedThree = placed;
+    const sealAttempt = h.sim.placeWall(t, w, gate, ci, cj + 1, 1);
+    out.sealRejected = !sealAttempt.ok && sealAttempt.reason === 'would-seal';
+    out.sealedCount = sealAttempt.sealed || 0;
+
+    // 같은 자리를 문으로는 놓을 수 있다
+    const doorAttempt = h.sim.placeWall(t, w, gate, ci, cj + 1, 2);
+    if (doorAttempt.ok) sc.refreshWall(ci, cj + 1);
+    out.doorAccepted = doorAttempt.ok;
+
+    // 마스크가 이웃을 반영하나 — 가운데를 둘러싼 벽 중 하나는 이웃이 있어야 한다
+    out.maskOfLeft = w.mask(ci - 1, cj);
+
+    // 이어 붙인 벽 한 줄 — 마스크가 이웃을 반영하는지, 화면에서 벽으로 읽히는지
+    const ri = bi, rj = bj + 3;
+    const runMasks = [];
+    for (let k = 0; k < 6; k++) {
+      const r = h.sim.placeWall(t, w, gate, ri + k, rj, 1);
+      if (r.ok) sc.refreshWall(ri + k, rj);
+    }
+    for (let k = 0; k < 6; k++) runMasks.push(w.mask(ri + k, rj));
+    out.runMasks = runMasks;
+    out.runOrigin = [ri, rj];
+
+    out.wallCount = w.count(1) + w.count(2);
+    return { ok: true, ...out };
+  })()`)) as
+    | { ok: false; reason: string }
+    | {
+        ok: true;
+        placedThree: number;
+        sealRejected: boolean;
+        sealedCount: number;
+        doorAccepted: boolean;
+        maskOfLeft: number;
+        runMasks: number[];
+        runOrigin: number[];
+        wallCount: number;
+      };
+
+  if (!wallCheck.ok) {
+    record('벽 배치', 'fail', wallCheck.reason);
+  } else {
+    record('벽 3장 배치', wallCheck.placedThree === 3 ? 'pass' : 'fail', `${wallCheck.placedThree}/3`);
+    record(
+      '밀폐 차단 — 가두는 마지막 벽은 거절된다',
+      wallCheck.sealRejected ? 'pass' : 'fail',
+      `갇히는 칸 ${wallCheck.sealedCount}`,
+    );
+    record('같은 자리를 문으로는 놓을 수 있다', wallCheck.doorAccepted ? 'pass' : 'fail');
+    record('벽 그림이 화면에 올라간다', wallCheck.wallCount >= 4 ? 'pass' : 'fail', `${wallCheck.wallCount}장`);
+    record(
+      '이어 붙인 벽의 마스크가 0 이 아니다 — 0 이면 끝단 모양으로 끊겨 보인다',
+      wallCheck.runMasks.some((m) => m !== 0) ? 'pass' : 'fail',
+      `런 마스크 ${wallCheck.runMasks.join(',')}`,
+    );
+  }
+
+  // 카메라를 벽 쪽으로 옮겨 눈으로 볼 수 있게 찍는다
+  // 벽 런이 있는 곳으로 카메라를 옮겨 눈으로 볼 수 있게 한다
+  if (wallCheck.ok) {
+    const [ri, rj] = wallCheck.runOrigin;
+    await page.evaluate(`window.__kairo.scene.focusTile(${ri ?? 0}, ${rj ?? 0})`);
+    await page.waitForTimeout(200);
+  }
+  await page.screenshot({ path: `${SHOT_DIR}/kairo-walls.png` });
+
+  // ── 7d. 스티플 유리가 실제로 구멍을 남기나 — 결정 19 의 근거 ──
+  //
+  // 불투명 벽은 한 타일 뒤 손님을 100% 가린다(벽 40텍셀 vs 한 걸음 8텍셀). 그래서 벽을
+  // 전부 유리로 만들었다. 검사는 **합성된 화면이 아니라 스프라이트 알파**를 직접 본다 —
+  // 화면에서 재려 했더니 옆 벽의 뚜껑이 그 자리를 덮어 엉뚱한 색이 나왔다.
+  const stipple = (await page.evaluate(`(() => {
+    const prov = window.__kairo.provider;
+    const src = prov.get('wall/glass:a5'); // 직선 벽 (I 축 양쪽 이웃)
+    const cv = document.createElement('canvas');
+    cv.width = src.width; cv.height = src.height;
+    const g = cv.getContext('2d');
+    g.drawImage(src, 0, 0);
+    const d = g.getImageData(0, 0, cv.width, cv.height).data;
+    const alphaAt = (x, y) => d[(y * cv.width + x) * 4 + 3];
+    const H = cv.height, W = cv.width;
+    // 스프라이트 32×40: 뚜껑 0..15 · 압출 16..39 (그 중 아래 6px 은 기단)
+    let paneOpaque = 0, paneClear = 0;
+    for (let y = 18; y < H - 8; y++) {
+      for (let x = 10; x < W - 10; x++) {
+        if (x >= W / 2 - 1 && x <= W / 2) continue; // 멀리온은 불투명이 정상
+        if (alphaAt(x, y) > 8) paneOpaque++; else paneClear++;
+      }
+    }
+    // 기단은 전부 불투명이어야 한다 (밑동이 뚫리면 접지가 이상해진다)
+    let plinthClear = 0, plinthTotal = 0;
+    for (let y = H - 6; y < H - 1; y++) {
+      for (let x = 12; x < W - 12; x++) {
+        plinthTotal++;
+        if (alphaAt(x, y) <= 8) plinthClear++;
+      }
+    }
+    return { W: W, H: H, paneOpaque: paneOpaque, paneClear: paneClear,
+             plinthClear: plinthClear, plinthTotal: plinthTotal };
+  })()`)) as {
+    W: number;
+    H: number;
+    paneOpaque: number;
+    paneClear: number;
+    plinthClear: number;
+    plinthTotal: number;
+  };
+
+  const clearRatio = stipple.paneClear / (stipple.paneClear + stipple.paneOpaque);
+  record(
+    '벽 캔버스가 32×40 이다',
+    stipple.W === 32 && stipple.H === 40 ? 'pass' : 'fail',
+    `${stipple.W}×${stipple.H}`,
+  );
+  record(
+    '유리 패널이 스티플로 뚫려 있다 (투과율 30~70%)',
+    clearRatio > 0.3 && clearRatio < 0.7 ? 'pass' : 'fail',
+    `투과 ${(clearRatio * 100).toFixed(0)}% (뚫림 ${stipple.paneClear} / 불투명 ${stipple.paneOpaque})`,
+  );
+  record(
+    '기단은 불투명하다 — 밑동이 뚫리면 접지가 이상해진다',
+    stipple.plinthClear === 0 ? 'pass' : 'fail',
+    `뚫린 픽셀 ${stipple.plinthClear}/${stipple.plinthTotal}`,
+  );
+
+  await page.screenshot({ path: `${SHOT_DIR}/kairo-glass.png` });
 
   // ── 8. FPS ──
   await page.waitForTimeout(1200);

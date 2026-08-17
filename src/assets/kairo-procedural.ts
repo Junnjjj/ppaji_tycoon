@@ -132,6 +132,33 @@ function bakeOutline(g: CanvasRenderingContext2D, w: number, h: number): void {
   for (const [x, y] of out) g.fillRect(x, y, 1, 1);
 }
 
+/**
+ * 스티플(체커) 구멍을 뚫는다. **아웃라인을 구운 뒤에** 불러야 한다.
+ *
+ * ⚠ 순서를 바꾸면 스티플이 사라진다. `bakeOutline` 은 "실체에 인접한 투명 픽셀"에
+ * 윤곽색을 칠하는데, 50% 체커에서는 뚫린 픽셀 전부가 실체에 인접해 있어 구멍이 통째로
+ * 메워진다 (실측: 투과율 0%). 그래서 **불투명하게 그리고 → 아웃라인 → 구멍 뚫기** 다.
+ */
+function punchStipple(
+  g: CanvasRenderingContext2D,
+  x0: number,
+  y0: number,
+  x1: number,
+  y1: number,
+  keepSolid: (x: number, y: number) => boolean,
+): void {
+  g.save();
+  g.globalCompositeOperation = 'destination-out';
+  g.fillStyle = '#000';
+  for (let y = y0; y < y1; y++) {
+    for (let x = x0; x < x1; x++) {
+      if (keepSolid(x, y)) continue;
+      if (((x + y) & 1) !== 0) g.fillRect(x, y, 1, 1);
+    }
+  }
+  g.restore();
+}
+
 // ─────────────────────────────── 드로어 ───────────────────────────────
 
 /** 시설 — 바닥 다이아몬드 + 아이소 박스 몸통 */
@@ -181,82 +208,87 @@ function drawFacility(g: CanvasRenderingContext2D, spec: SpriteSpec, simId: stri
 }
 
 /**
- * 벽 — 스티플 유리. 스펙 §3.3.
+ * 벽 — 스티플 유리. 스펙 §3.2~3.3.
  *
- * 알파 블렌딩이 아니라 **50% 체커**로 뚫는다. 블렌딩은 팔레트에 없는 중간색을 만들어
- * 양자화가 비치는 형체를 지운다. 스티플은 새 색을 0개 만든다.
+ * 타일 다이아몬드를 위쪽 뚜껑으로 두고 **아래로 H 만큼 정수 압출**한다. 열마다
+ * 뚜껑의 최하단 y 를 찾아 그 아래를 채우므로 이웃 벽과 정확히 이어지고 이음새가 없다.
+ *
+ * 유리는 **알파 블렌딩이 아니라 50% 체커(스티플)** 다. 블렌딩은 팔레트에 없는 중간색을
+ * 만들어 양자화가 비치는 형체를 지운다. 스티플은 새 색을 0개 만든다.
+ *
+ * 마스크가 0(독립 기둥)이면 좌우를 좁혀 기둥처럼 그린다 — 전부 같은 그림이면
+ * 마스크 버그가 눈에 안 보인다.
  */
 function drawWall(g: CanvasRenderingContext2D, spec: SpriteSpec, mask: number, door: boolean): void {
   const [cw, ch] = spec.size;
-  const H = KAIRO.wall.heightTexels;
-  const FRAME = '#b9c4c9';
+  const H = ch - TILE_H; // 압출 높이 (= KAIRO.wall.heightTexels)
+  const FRAME = '#c3ced3';
   const PLINTH = '#8d979b';
-  const GLASS = '#dbe8ee';
+  const GLASS_L = '#c9dae2';
+  const GLASS_R = '#e2eef3';
+  const PLINTH_H = 6;
+  const inset = mask === 0 ? 6 : 0;
 
-  // 이웃 방향 비트: 1=+I, 2=+J, 4=−I, 8=−J
-  const dirs: [number, number, number][] = [
-    [1, STEP_X, STEP_Y],
-    [2, -STEP_X, STEP_Y],
-    [4, -STEP_X, -STEP_Y],
-    [8, STEP_X, -STEP_Y],
-  ];
-  const cx = cw / 2;
-  const cy = ch - TILE_H / 2; // 타일 중심
+  // 열마다 뚜껑의 최하단 y — 여기서부터 아래로 압출한다
+  const bottomOf = new Int16Array(cw).fill(-1);
+  for (let y = 0; y < TILE_H; y++) {
+    const sp = tileRowSpan(y);
+    for (let x = sp.x0; x < sp.x1; x++) if (y > bottomOf[x]!) bottomOf[x] = y;
+  }
 
-  const seg = (dx: number, dy: number): void => {
-    // 중심 → 이웃 방향 절반 구간의 벽 널
-    const x0 = cx;
-    const y0 = cy;
-    const x1 = cx + dx / 2;
-    const y1 = cy + dy / 2;
-    // 기단 (불투명)
-    g.beginPath();
-    g.moveTo(x0, y0 - 6);
-    g.lineTo(x1, y1 - 6);
-    g.lineTo(x1, y1);
-    g.lineTo(x0, y0);
-    g.closePath();
-    g.fillStyle = PLINTH;
-    g.fill();
-    // 유리 패널 (스티플)
-    const yTop0 = y0 - H;
-    const yTop1 = y1 - H;
-    g.beginPath();
-    g.moveTo(x0, yTop0);
-    g.lineTo(x1, yTop1);
-    g.lineTo(x1, y1 - 6);
-    g.lineTo(x0, y0 - 6);
-    g.closePath();
-    g.save();
-    g.clip();
-    g.fillStyle = GLASS;
-    for (let y = Math.floor(Math.min(yTop0, yTop1)); y < ch; y++) {
-      for (let x = Math.floor(Math.min(x0, x1)); x <= Math.ceil(Math.max(x0, x1)); x++) {
-        if (((x + y) & 1) === 0) g.fillRect(x, y, 1, 1); // 50% 체커
+  // ① 뚜껑 (벽의 윗면 — 불투명이 정상이다)
+  for (let y = 0; y < TILE_H; y++) {
+    const sp = tileRowSpan(y);
+    const x0 = Math.max(sp.x0, inset);
+    const x1 = Math.min(sp.x1, cw - inset);
+    if (x1 <= x0) continue;
+    g.fillStyle = FRAME;
+    g.fillRect(x0, y, x1 - x0, 1);
+  }
+
+  // ② 앞쪽 두 면을 아래로 압출 — 일단 **전부 불투명**으로 그린다
+  let paneTop = ch;
+  let paneBottom = 0;
+  for (let x = inset; x < cw - inset; x++) {
+    const top = bottomOf[x]!;
+    if (top < 0) continue;
+    const left = x < cw / 2;
+    for (let y = top + 1; y <= top + H; y++) {
+      const fromBase = top + H - y;
+      g.fillStyle = fromBase < PLINTH_H ? PLINTH : left ? GLASS_L : GLASS_R;
+      g.fillRect(x, y, 1, 1);
+      if (fromBase >= PLINTH_H) {
+        if (y < paneTop) paneTop = y;
+        if (y + 1 > paneBottom) paneBottom = y + 1;
       }
     }
-    g.restore();
-  };
-
-  if (mask === 0) {
-    // 독립 기둥
-    g.fillStyle = FRAME;
-    g.fillRect(cx - 2, cy - H, 4, H);
-  } else {
-    for (const [bit, dx, dy] of dirs) if (mask & bit) seg(dx, dy);
-    // 멀리온 (중심 기둥, 불투명)
-    g.fillStyle = FRAME;
-    g.fillRect(cx - 1, cy - H, 2, H);
   }
+
+  // ③ 멀리온 — 중심 기둥은 불투명하게 세워 벽선을 읽히게 한다
+  g.fillStyle = FRAME;
+  g.fillRect(cw / 2 - 1, TILE_H / 2, 2, H);
 
   if (door) {
     // 문 — 아래 절반을 비워 통행 가능함을 보인다
     g.save();
     g.globalCompositeOperation = 'destination-out';
-    g.fillRect(cx - 5, cy - H / 2, 10, H / 2);
+    g.fillRect(cw / 2 - 5, ch - H / 2 - PLINTH_H, 10, H / 2);
     g.restore();
   }
+
+  // ④ 아웃라인 — 실루엣이 아직 꽉 찬 상태에서 굽는다
   bakeOutline(g, cw, ch);
+
+  // ⑤ 마지막에 유리 패널을 스티플로 뚫는다 (§3.3)
+  punchStipple(g, inset, paneTop, cw - inset, paneBottom, (x, y) => {
+    // 멀리온과 실루엣 가장자리는 남긴다 — 가장자리를 뚫으면 윤곽선이 끊긴다
+    if (x >= cw / 2 - 1 && x <= cw / 2) return true;
+    const top = bottomOf[x] ?? -1;
+    if (top < 0) return true;
+    if (y <= top + 1) return true; // 뚜껑과 붙은 첫 줄
+    if (x <= inset + 1 || x >= cw - inset - 2) return true; // 좌우 가장자리
+    return false;
+  });
 }
 
 /** 지면 타일 — 다이아몬드를 채우고 얼룩을 넣는다. 아웃라인 없음(이음새가 생긴다) */

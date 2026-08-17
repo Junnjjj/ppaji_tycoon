@@ -14,6 +14,7 @@ import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
 import { KairoProceduralProvider } from '../../assets/kairo-procedural.js';
 import { variantId } from '../../assets/types.js';
 import type { KairoTerrain } from '../../sim/kairo/terrain.js';
+import { WALL_DOOR, type WallGrid } from '../../sim/kairo/walls.js';
 
 /**
  * 카이로 씬 — 2:1 아이소메트릭 격자.
@@ -41,6 +42,8 @@ export interface KairoSceneStats {
   scrollX: number;
   scrollY: number;
   tiles: number;
+  /** 세워진 벽·문 수 */
+  walls: number;
   /** 도트 격자 위반 — 비어 있어야 한다 */
   dotGridViolations: readonly string[];
 }
@@ -49,6 +52,8 @@ export interface KairoSceneOptions {
   provider: KairoProceduralProvider;
   /** 지면 격자 — **시뮬 소유**. 씬은 읽기만 한다 (불변식 1: 의존 방향은 바깥 → sim) */
   terrain: KairoTerrain;
+  /** 벽·문 격자 — 역시 시뮬 소유 */
+  walls: WallGrid;
   onFrame?: (s: KairoSceneStats) => void;
   /** 탭한 타일 (격자 밖이면 안 부른다) */
   onTapTile?: (i: number, j: number) => void;
@@ -58,6 +63,8 @@ export class KairoScene extends Phaser.Scene {
   private readonly opts: KairoSceneOptions;
   private readonly cam = new KairoCamera();
   private tileImages: Phaser.GameObjects.Image[] = [];
+  /** 벽 이미지 — 있는 칸만 만든다 (1,280개를 미리 만들면 대부분 빈 이미지가 된다) */
+  private wallImages = new Map<number, Phaser.GameObjects.Image>();
   private dragging = false;
   private dragMoved = 0;
   private lastPointer = { x: 0, y: 0 };
@@ -83,6 +90,7 @@ export class KairoScene extends Phaser.Scene {
     this.cameras.main.setRoundPixels(true);
 
     this.buildGround();
+    this.buildWalls();
     this.applyScale(this.cam.upscale);
     this.wireInput();
 
@@ -108,6 +116,61 @@ export class KairoScene extends Phaser.Scene {
         this.tileImages.push(img);
       }
     }
+  }
+
+  /** 세이브를 불러온 뒤처럼 이미 벽이 있는 상태를 한 번에 그린다 */
+  private buildWalls(): void {
+    for (const img of this.wallImages.values()) img.destroy();
+    this.wallImages.clear();
+    for (let j = 0; j < GRID_H; j++) {
+      for (let i = 0; i < GRID_W; i++) this.drawWallCell(i, j);
+    }
+  }
+
+  /** 벽 텍스처 ID — 문은 런 방향, 벽은 4방 마스크 */
+  private wallTextureId(i: number, j: number): string | null {
+    const w = this.opts.walls;
+    if (!w.has(i, j)) return null;
+    if (w.at(i, j) === WALL_DOOR) return `wall/door-${w.doorRun(i, j)}`;
+    return variantId('wall/glass', { alt: w.mask(i, j) });
+  }
+
+  /**
+   * 벽 한 칸의 그림을 갱신하고 **네 이웃도 함께** 갱신한다.
+   * 이웃을 빼먹으면 벽을 이어 놓아도 앞 칸이 끝단 모양으로 남아 선이 끊겨 보인다.
+   */
+  refreshWall(i: number, j: number): void {
+    for (const [di, dj] of [
+      [0, 0],
+      [1, 0],
+      [-1, 0],
+      [0, 1],
+      [0, -1],
+    ] as const) {
+      this.drawWallCell(i + di, j + dj);
+    }
+  }
+
+  private drawWallCell(i: number, j: number): void {
+    if (!inGrid(i, j)) return;
+    const key = j * GRID_W + i;
+    const id = this.wallTextureId(i, j);
+    const existing = this.wallImages.get(key);
+    if (!id) {
+      existing?.destroy();
+      this.wallImages.delete(key);
+      return;
+    }
+    if (existing) {
+      existing.setTexture(id);
+      return;
+    }
+    const c = tileCenter(i, j);
+    const img = this.add.image(c.x, c.y + TILE_H / 2, id);
+    img.setOrigin(0.5, 1);
+    // 지면보다 앞, 같은 칸 시설보다 뒤. depthKey 사이 여유(4096)를 쓴다
+    img.setDepth(depthKey(i, j) + 1);
+    this.wallImages.set(key, img);
   }
 
   /**
@@ -211,6 +274,7 @@ export class KairoScene extends Phaser.Scene {
       scrollX: view.scrollX,
       scrollY: view.scrollY,
       tiles: this.tileImages.length,
+      walls: this.wallImages.size,
       dotGridViolations: this.violations,
     });
   }

@@ -18,6 +18,9 @@ const AUTOSAVE_INTERVAL_MS = 30_000;
 async function mainKairo(parent: HTMLElement): Promise<void> {
   const { bootKairo } = await import('./render/kairo/boot.js');
   const { GROUND_KINDS } = await import('./sim/kairo/terrain.js');
+  const { placeWall, removeWall, WALL_SOLID, WALL_DOOR, PLACE_MESSAGES } = await import(
+    './sim/kairo/walls.js'
+  );
   const box = document.createElement('div');
   box.id = 'kairo-debug';
   box.style.cssText =
@@ -31,7 +34,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     onFrame: (s) => {
       box.textContent =
         `FPS ${s.fps}  S=${s.upscale}  버퍼 ${s.bufferW}×${s.bufferH}\n` +
-        `스크롤 ${s.scrollX},${s.scrollY}  타일 ${s.tiles}\n` +
+        `스크롤 ${s.scrollX},${s.scrollY}  타일 ${s.tiles}  벽 ${s.walls}\n` +
         (s.dotGridViolations.length === 0
           ? '도트격자 OK'
           : `도트격자 위반: ${s.dotGridViolations.join(' / ')}`);
@@ -41,9 +44,50 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         console.log(`[카이로] 탭 타일 (${i}, ${j}) — ${h.terrain.kindAt(i, j) ?? '?'}`);
         return;
       }
+      if (brush === 'wall' || brush === 'door') {
+        const r = placeWall(
+          h.terrain,
+          h.walls,
+          GATE,
+          i,
+          j,
+          brush === 'wall' ? WALL_SOLID : WALL_DOOR,
+        );
+        if (r.ok) {
+          h.scene.refreshWall(i, j);
+          toast('');
+        } else {
+          // 밀폐 차단이면 몇 칸이 갇히는지 함께 보여준다
+          toast(PLACE_MESSAGES[r.reason] + (r.sealed ? ` (${r.sealed}칸)` : ''));
+        }
+        return;
+      }
+      if (brush === 'erase') {
+        if (removeWall(h.walls, i, j)) h.scene.refreshWall(i, j);
+        return;
+      }
       if (h.terrain.paint(i, j, brush)) h.scene.refreshTile(i, j);
     },
   });
+
+  /** 게이트 — K4 에서 매표소 배치로 대체한다. 지금은 좌상단 고정 */
+  const GATE = { i: 0, j: 0 };
+
+  const msg = document.createElement('div');
+  msg.id = 'kairo-toast';
+  msg.style.cssText =
+    'position:fixed;left:50%;transform:translateX(-50%);bottom:64px;z-index:10;' +
+    'font:12px/1.4 system-ui;background:rgba(180,40,30,.92);color:#fff;padding:8px 12px;' +
+    'border-radius:8px;pointer-events:none;max-width:86vw;text-align:center';
+  msg.hidden = true;
+  document.body.append(msg);
+  let toastTimer = 0;
+  const toast = (text: string): void => {
+    msg.textContent = text;
+    msg.hidden = text === '';
+    window.clearTimeout(toastTimer);
+    if (text !== '') toastTimer = window.setTimeout(() => (msg.hidden = true), 2600);
+  };
 
   // 지면 붓 — 터치 타깃 44px 이상 (모바일 검증 기준)
   let brush: string | null = null;
@@ -52,7 +96,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   bar.style.cssText =
     'position:fixed;left:0;right:0;bottom:0;z-index:9;display:flex;gap:4px;padding:6px;' +
     'background:rgba(0,0,0,.6);overflow-x:auto';
-  for (const k of GROUND_KINDS) {
+  const BRUSHES: { id: string; name: string }[] = [
+    ...GROUND_KINDS.map((k) => ({ id: k.id, name: k.name })),
+    { id: 'wall', name: '벽' },
+    { id: 'door', name: '문' },
+    { id: 'erase', name: '벽 지우기' },
+  ];
+  for (const k of BRUSHES) {
     const b = document.createElement('button');
     b.textContent = k.name;
     b.dataset['kind'] = k.id;
@@ -70,6 +120,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   }
   document.body.append(bar);
 
+  // 검증 도구가 시뮬 규칙을 직접 부를 수 있게 노출한다 (브라우저에서 규칙을 재구현하지 않도록)
+  Object.assign(h, { sim: { placeWall, removeWall, WALL_SOLID, WALL_DOOR, PLACE_MESSAGES } });
   Object.assign(window, { __kairo: h, __kairoBrush: () => brush });
   console.log(
     `[카이로] 에셋 ${h.provider.name} (${h.provider.ids.length}장 플레이스홀더) · ` +
