@@ -231,6 +231,22 @@ function main(): void {
     issues.push('만석 비율이 80% 넘는다 — 동시 손님 상한이 수요에 비해 낮다');
   }
   if (stats(runs.map((r) => r.facilities)).med < 8) issues.push('시설이 거의 안 늘어난다');
+  /**
+   * 후반 성장 정지 — 주차별 손익이 정점 대비 15% 이상 떨어지면 경보.
+   *
+   * 시설 수가 상한에 붙는데 유지비는 계속 늘어 손익이 꺾이는 패턴이다. 플레이어 입장에서
+   * "더 지을 게 없는데 수입이 줄어든다"가 되면 그때부터 할 일이 없어진다.
+   */
+  if (byWeek.length >= 8) {
+    const peak = Math.max(...byWeek);
+    const tail = byWeek[byWeek.length - 1] as number;
+    if (peak > 0 && tail < peak * 0.85) {
+      issues.push(
+        `후반에 손익이 꺾인다 — 정점 ${fmt(peak)} → 마지막 ${fmt(tail)} ` +
+          `(${Math.round((1 - tail / peak) * 100)}% 하락). 시설 상한·유지비 곡선을 볼 것`,
+      );
+    }
+  }
   console.log(issues.length === 0 ? '\n✅ 밸런스 경보 없음' : `\n⚠ 밸런스 경보 ${issues.length}건`);
   for (const s of issues) console.log(`   · ${s}`);
 }
