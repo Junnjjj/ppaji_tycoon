@@ -6,7 +6,7 @@
   "description": "빠지 타이쿤 — 강변 수상레저 경영 시뮬레이션",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && tsx tools/gen-precache.ts",
     "preview": "vite preview",
     "sim": "tsx tools/sim-runner.ts",
     "test": "vitest run",
@@ -20,7 +20,9 @@
     "shot:kairo": "tsx tools/shot-kairo.ts",
     "shot:zoom": "tsx tools/shot-kairo-zoom.ts",
     "sim:kairo": "tsx tools/kairo-sim.ts",
-    "seam": "tsx tools/seam-qa.ts"
+    "seam": "tsx tools/seam-qa.ts",
+    "icons": "tsx tools/make-icons.ts",
+    "verify:pwa": "npm run build && tsx tools/verify-pwa.ts"
   },
   "dependencies": {
     "phaser": "3.90.0"

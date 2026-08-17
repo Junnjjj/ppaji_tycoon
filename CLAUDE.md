@@ -114,6 +114,8 @@ npm run verify:mobile  # v1 씬(?v1=1) 모바일 검증 — 폐기된 씬이라 
 npm run verify:kairo   # 카이로 씬 브라우저 86종 + 4방 이음새 QA (dev 서버 필요) ← 기본 씬 게이트
 npm run seam           # 4방 이음새 QA 단독 (--selftest 로 음성 대조군)
 npm run sim:kairo      # 카이로 헤드리스 밸런싱 (--seeds N --weeks N)
+npm run verify:pwa     # 빌드 → preview → 오프라인 부팅까지 확인 (홈 화면 앱)
+npm run icons          # 앱 아이콘을 코드로 굽는다 (AI 아트 아님 — 포장이다)
 ```
 
 `npm run sim` 이 도는 것 자체가 불변식 1 의 실증이다 (Phaser 없이 Node 에서 sim 이 돈다).

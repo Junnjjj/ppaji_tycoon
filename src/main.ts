@@ -789,6 +789,26 @@ async function main(): Promise<void> {
   );
 }
 
+/**
+ * 서비스 워커 등록 — **배포 빌드에서만.**
+ *
+ * 개발 중에 켜면 낡은 번들이 캐시에 남아 "고쳤는데 안 바뀐다"가 된다. 이 프로젝트에서
+ * 낡은 vite 번들로 검증이 가짜 실패한 적이 있어서, 그 함정을 스스로 만들지 않는다.
+ *
+ * 실패해도 게임은 돈다 — 오프라인은 부가 기능이지 전제가 아니다.
+ */
+function registerServiceWorker(): void {
+  if (!import.meta.env.PROD) return;
+  if (!('serviceWorker' in navigator)) return;
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch((e: unknown) => {
+      console.warn('[빠지] 서비스 워커 등록 실패 — 오프라인은 안 되지만 게임은 돕니다', e);
+    });
+  });
+}
+
+registerServiceWorker();
+
 main().catch((err: unknown) => {
   console.error(err);
   const box = document.createElement('div');

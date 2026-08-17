@@ -90,4 +90,23 @@ export default tseslint.config(
       globals: { process: 'readonly', console: 'readonly' },
     },
   },
+
+  /*
+   * 서비스 워커는 **워커 전역**에서 돈다 (`self`·`caches`·`fetch`). 브라우저 전역만
+   * 아는 설정으로 보면 전부 undefined 로 잡힌다. 타입 검사 대상도 아니다 —
+   * `public/` 은 그대로 복사되는 정적 파일이라 번들러를 안 거친다.
+   */
+  {
+    files: ['public/sw.js'],
+    languageOptions: {
+      globals: {
+        self: 'readonly',
+        caches: 'readonly',
+        fetch: 'readonly',
+        Response: 'readonly',
+        URL: 'readonly',
+        console: 'readonly',
+      },
+    },
+  },
 );
