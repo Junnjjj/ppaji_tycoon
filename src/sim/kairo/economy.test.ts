@@ -68,25 +68,32 @@ describe('값을 매긴다 (§15.9)', () => {
 });
 
 describe('시설 개선 (§15.9 업그레이드)', () => {
-  it('단계는 1에서 시작해 3까지', () => {
+  it('단계는 1에서 시작해 최고 단계까지', () => {
     const { p } = park(1);
     const h = p.all()[0]!.handle;
     expect(p.levelOf(h)).toBe(1);
-    expect(p.upgrade(h)).toBe(true);
-    expect(p.upgrade(h)).toBe(true);
+    for (let k = 1; k < MAX_LEVEL; k++) expect(p.upgrade(h)).toBe(true);
     expect(p.levelOf(h)).toBe(MAX_LEVEL);
     expect(p.upgrade(h)).toBe(false); // 최고에서 더 안 올라간다
   });
 
-  it('비용이 단계마다 가팔라진다 — 평평하면 "전부 3단계"가 절차가 된다', () => {
+  it('비용이 단계마다 가팔라진다 — 평평하면 "전부 최고"가 절차가 된다', () => {
     const { p } = park(1);
     const h = p.all()[0]!.handle;
-    const c1 = p.upgradeCost(h);
-    p.upgrade(h);
-    const c2 = p.upgradeCost(h);
-    expect(c2).toBeGreaterThan(c1);
-    p.upgrade(h);
+    const costs: number[] = [];
+    for (let k = 1; k < MAX_LEVEL; k++) {
+      costs.push(p.upgradeCost(h));
+      p.upgrade(h);
+    }
+    for (let k = 1; k < costs.length; k++) {
+      expect(costs[k]!).toBeGreaterThan(costs[k - 1]!);
+    }
     expect(p.upgradeCost(h)).toBe(0); // 최고 단계는 비용이 없다
+  });
+
+  it('최고 단계가 3보다 크다 — 3 이면 후반에 돈 쓸 곳이 40주에 떨어진다', () => {
+    // 실측: MAX_LEVEL 3 에서 312주 중 281주가 "지을 게 없다"이고 현금이 1.5억 쌓였다
+    expect(MAX_LEVEL).toBeGreaterThan(3);
   });
 
   it('요금이 단계만큼 오른다', () => {
@@ -102,8 +109,7 @@ describe('시설 개선 (§15.9 업그레이드)', () => {
     const { p } = park(4);
     const before = p.totalCapacity();
     for (const it of p.all()) {
-      p.upgrade(it.handle);
-      p.upgrade(it.handle);
+      for (let k = 1; k < MAX_LEVEL; k++) p.upgrade(it.handle);
     }
     expect(p.totalCapacity()).toBe(before);
   });
@@ -112,8 +118,7 @@ describe('시설 개선 (§15.9 업그레이드)', () => {
     const plain = park();
     const better = park();
     for (const it of better.p.all()) {
-      better.p.upgrade(it.handle);
-      better.p.upgrade(it.handle);
+      for (let k = 1; k < MAX_LEVEL; k++) better.p.upgrade(it.handle);
     }
     const a = runWeek(plain);
     const b = runWeek(better);

@@ -103,6 +103,53 @@ export function admissionLimit(
   return Math.max(8, Math.round(Math.min(grade.maxGuests, bySupply) * crowdMult));
 }
 
+/**
+ * 평판 — **퇴장 만족도의 이동평균** (§9.2).
+ *
+ * ## 왜 이동평균인가 (실측)
+ *
+ * 지난주 값 하나로 등급을 정하면 **진동한다.** 등급이 오르면 수요가 늘고, 수요가 늘면
+ * 혼잡해지고, 혼잡하면 만족도가 떨어져 등급이 내려간다 — 그러면 수요가 줄어 만족도가
+ * 회복되고 다시 등급이 오른다. 실측으로 만족도 53↔75, 등급 2↔3 을 40주 동안 왕복했다.
+ * 문턱을 못 넘어서가 아니라 **문턱에서 진동해서** 못 올라간다.
+ *
+ * 이동평균은 그 진동을 눌러 "잘 운영한 판이 등급을 유지한다"를 만든다. 스펙이 처음부터
+ * 이동평균이라고 적어둔 이유가 이것이다 — 나는 지난주 값 하나를 썼다.
+ *
+ * α=0.25 는 약 4주 기억이다. 더 크면 진동이 남고, 더 작으면 개선의 효과가 몇 달 뒤에 온다.
+ */
+export const REPUTATION_ALPHA = 0.25;
+
+export class Reputation {
+  private ema: number;
+
+  constructor(initial = 0) {
+    this.ema = initial;
+  }
+
+  get value(): number {
+    return this.ema;
+  }
+
+  /** 한 주가 끝났다 */
+  push(exitSatisfaction: number): number {
+    // 첫 주는 그대로 받는다 — 0 에서 천천히 올라오면 첫 등급이 늦게 열린다
+    this.ema =
+      this.ema === 0
+        ? exitSatisfaction
+        : this.ema + (exitSatisfaction - this.ema) * REPUTATION_ALPHA;
+    return this.ema;
+  }
+
+  toSnapshot(): number {
+    return this.ema;
+  }
+
+  static fromSnapshot(v: number): Reputation {
+    return new Reputation(v);
+  }
+}
+
 /** 퇴장 만족도로 정해지는 등급 — 돈으로는 못 올린다 */
 export function gradeFor(exitSatisfaction: number): GradeDef {
   let best = GRADES[0] as GradeDef;
@@ -110,6 +157,39 @@ export function gradeFor(exitSatisfaction: number): GradeDef {
     if (exitSatisfaction >= g.reqExitSatisfaction) best = g;
   }
   return best;
+}
+
+/**
+ * 등급을 내리는 데 필요한 여유 (이력, hysteresis).
+ *
+ * ## 왜 필요한가 (실측)
+ *
+ * 문턱이 10점 간격(0/55/65/75/85)인데 이동평균이 문턱 근처에서 ±3 흔들린다. 그러면
+ * **평균을 써도 등급이 매주 펄럭인다** — 40주에 35번 바뀌었다. 오를 때는 문턱에서,
+ * 내릴 때는 4점 더 떨어져야 내려가게 하면 한 번 오른 등급이 유지된다.
+ *
+ * 이건 "잘 운영하면 등급을 유지한다"는 감각의 문제다. 매주 바뀌면 등급이 상태가 아니라
+ * 소음이 되고, 등급에 걸린 해금·상한이 전부 소음이 된다.
+ */
+export const GRADE_HYSTERESIS = 4;
+
+/**
+ * 지금 등급에서 다음 등급. **오를 때는 문턱, 내릴 때는 문턱 −4.**
+ * 처음 판정(현재 등급이 없을 때)은 `gradeFor` 를 쓴다.
+ */
+export function nextGrade(currentGrade: number, reputation: number): GradeDef {
+  const cur = GRADES.find((g) => g.grade === currentGrade) ?? (GRADES[0] as GradeDef);
+  const up = gradeFor(reputation);
+  if (up.grade > cur.grade) return up;
+  // 내려가려면 현재 등급 문턱보다 여유만큼 더 떨어져야 한다
+  if (reputation < cur.reqExitSatisfaction - GRADE_HYSTERESIS) {
+    let best = GRADES[0] as GradeDef;
+    for (const g of GRADES) {
+      if (reputation >= g.reqExitSatisfaction - GRADE_HYSTERESIS) best = g;
+    }
+    return best;
+  }
+  return cur;
 }
 
 export interface QuestStatus {

@@ -139,7 +139,13 @@ export const GUEST_DEFAULTS: GuestTunables = {
   emoteTicks: 30,
   startSatisfaction: 52,
   useGains: [14, 10, 7, 4],
-  walkPenalty: 0.35,
+  /*
+   * 걷기 페널티. **0.35 에서 0.22 로 낮췄다** — "채운 수요 기록"이 살아나면서 손님이
+   * 다른 종류를 찾아 훨씬 멀리 걷게 됐고, 같은 페널티면 총량이 두 배가 된다
+   * (실측: 80주 등급 4→2 · 만족도 76→64). 의도는 "가깝게 놓는 것이 의미를 갖는다"이지
+   * "펼치면 등급이 안 오른다"가 아니다.
+   */
+  walkPenalty: 0.22,
   waitPenalty: 0.12,
 };
 
@@ -192,6 +198,15 @@ export class GuestStore {
    */
   private finishedWallet = 0;
   private finishedCount = 0;
+  /**
+   * 완료된 이용의 **실제 요금 합** — 수요 종류별로 나눠 담는다.
+   *
+   * ⚠ 예전에는 러너가 "전체 시설의 평균 요금 × 완료 수"로 계산했다. 그러면 **닫힌 시설도
+   * 평균에 들어가고**, 싼 시설이 닫히면 평균이 올라 매출이 **늘어난다** (실측: 사고로
+   * 구명함이 닫혔는데 매출이 43.9만 → 46.7만). 종류별로 나누는 이유는 날씨 보정이
+   * 종류 단위이기 때문이다.
+   */
+  private finishedFeeByNeed = new Map<string, number>();
   /**
    * 아직 다 들어오지 않은 일행. 도착 1건마다 한 명씩 들어온다.
    *
@@ -470,12 +485,19 @@ export class GuestStore {
         }
         if (--g.useTicks <= 0) {
           g.rideTotal = 0;
+          /*
+           * ⚠ **`releaseSlot` 이 `usingHandle` 을 0 으로 지운다.** 그 뒤에 읽으면 항상
+           * 0 이고, `find` 는 undefined 를 돌려준다 — 그래서 아래 "채운 수요 기록"이
+           * K9 에서 넣은 뒤로 **한 번도 동작하지 않았다.** `usedNeeds` 가 늘 비어 있어
+           * 손님이 같은 종류를 반복해 이용했다. 지우기 전에 잡는다.
+           */
+          const usedHandle = g.usingHandle;
           this.releaseSlot(g);
           const gains = this.tunables.useGains;
           const gain = (gains[Math.min(g.used, gains.length - 1)] ?? 0) as number;
           g.used++;
           // 채운 수요를 기록해 다음엔 다른 종류로 간다
-          const usedItem = this.placement.all().find((f) => f.handle === g.usingHandle);
+          const usedItem = this.placement.all().find((f) => f.handle === usedHandle);
           const usedNeed = usedItem
             ? ((facilityDef(usedItem.defId) as { need?: string } | undefined)?.need ?? '')
             : '';
@@ -483,6 +505,10 @@ export class GuestStore {
           g.satisfaction = Math.min(100, g.satisfaction + gain);
           this.finishedWallet += g.wallet;
           this.finishedCount += 1;
+          // 실제로 이용한 시설의 요금(개선 단계 반영) × 지갑
+          const fee = this.placement.feeOf(usedHandle) * g.wallet;
+          const key = usedNeed === '' ? '-' : usedNeed;
+          this.finishedFeeByNeed.set(key, (this.finishedFeeByNeed.get(key) ?? 0) + fee);
           this.setEmote(g, g.satisfaction >= 80 ? 'love' : 'happy');
           this.syncFace(g);
           g.state = g.used >= this.tunables.wantUses ? 'leaving' : 'walking';
@@ -644,10 +670,20 @@ export class GuestStore {
    * 요금 계산이 인원수 대신 이걸 쓰면, 친구·단체가 더 쓴다는 설정이 실제 매출에 나타난다.
    * `usingBefore - usingNow` 로 세던 방식은 같은 tick 에 시작·종료가 겹치면 어긋났다.
    */
-  takeFinished(): { count: number; walletSum: number } {
-    const out = { count: this.finishedCount, walletSum: this.finishedWallet };
+  takeFinished(): {
+    count: number;
+    walletSum: number;
+    /** 수요 종류별 요금 합 (지갑·개선 반영). 날씨 보정은 러너가 종류별로 곱한다 */
+    feeByNeed: Map<string, number>;
+  } {
+    const out = {
+      count: this.finishedCount,
+      walletSum: this.finishedWallet,
+      feeByNeed: new Map(this.finishedFeeByNeed),
+    };
     this.finishedCount = 0;
     this.finishedWallet = 0;
+    this.finishedFeeByNeed.clear();
     return out;
   }
 

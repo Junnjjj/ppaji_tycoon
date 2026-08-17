@@ -84,6 +84,14 @@ export interface KairoSaveV1 {
   mapId?: string;
   scenarioId?: string;
   /** 누적 사고 수 — "사고 없이" 시나리오의 판정 근거 */
+  /**
+   * 평판(이동평균)과 지금 등급 (§9.2).
+   *
+   * ⚠ 이걸 저장하지 않으면 **새로고침이 곧 등급 재심사**가 된다 — 이동평균 기억이 사라져
+   * 지난주 값 하나로 등급이 다시 정해지고, 이력도 초기화돼 등급이 뚝 떨어질 수 있다.
+   */
+  reputation?: number;
+  gradeNo?: number;
   accidentCount?: number;
 }
 
@@ -126,6 +134,8 @@ export interface KairoSaveInput {
   mapId?: string;
   scenarioId?: string;
   accidentCount?: number;
+  reputation?: number;
+  gradeNo?: number;
 }
 
 export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave {
@@ -154,6 +164,8 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.mapId ? { mapId: input.mapId } : {}),
     ...(input.scenarioId ? { scenarioId: input.scenarioId } : {}),
     ...(input.accidentCount !== undefined ? { accidentCount: input.accidentCount } : {}),
+    ...(input.reputation !== undefined ? { reputation: input.reputation } : {}),
+    ...(input.gradeNo !== undefined ? { gradeNo: input.gradeNo } : {}),
   };
 }
 
@@ -209,6 +221,8 @@ export interface KairoRestored {
   mapId?: string;
   scenarioId?: string;
   accidentCount?: number;
+  reputation?: number;
+  gradeNo?: number;
 }
 
 export function restoreKairo(raw: unknown): KairoRestored {
@@ -237,6 +251,8 @@ export function restoreKairo(raw: unknown): KairoRestored {
     ...(s.mapId ? { mapId: s.mapId } : {}),
     ...(s.scenarioId ? { scenarioId: s.scenarioId } : {}),
     ...(s.accidentCount !== undefined ? { accidentCount: s.accidentCount } : {}),
+    ...(s.reputation !== undefined ? { reputation: s.reputation } : {}),
+    ...(s.gradeNo !== undefined ? { gradeNo: s.gradeNo } : {}),
   };
 }
 

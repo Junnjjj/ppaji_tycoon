@@ -1087,7 +1087,12 @@ async function main(): Promise<void> {
     `${calc.ms.toFixed(0)}ms`,
   );
   record('요일 7일', calc.days === 7 ? 'pass' : 'fail', calc.weathers.join(','));
-  record('방문객·매출이 생긴다', calc.visitors > 0 && calc.revenue > 0 ? 'pass' : 'fail',
+  /*
+   * ⚠ `visitors > 0` 을 요구하면 안 된다. 이 하네스는 앞서 주를 여러 번 돌려 공원이
+   * 입장 상한까지 차 있고, 그러면 **입장 0 · 만석 100% 가 정상**이다 (안에 있는 손님이
+   * 이용을 마치며 매출은 계속 난다). 수요와 매출이 도는지를 본다.
+   */
+  record('방문객·매출이 생긴다', calc.arrivals > 0 && calc.revenue > 0 ? 'pass' : 'fail',
     `수요 ${calc.arrivals} · 입장 ${calc.visitors} · 만석 ${calc.turnedAway} · 매출 ${calc.revenue} · 손익 ${calc.profit}`);
   record(
     '수요 = 입장 + 만석 — 실패한 입장이 어디에도 안 남으면 주말이 한가해 보인다',
@@ -1592,29 +1597,39 @@ async function main(): Promise<void> {
     const hit = h.week.run(new h.Rng(31), { season: 'summer', accidentChance: 1 });
     return {
       safeAccident: safe.accident, hitAccident: hit.accident,
-      safeRevenue: safe.revenue, hitRevenue: hit.revenue
+      safeRevenue: safe.revenue, hitRevenue: hit.revenue,
+      idleAfter: h.guests.idleCount
     };
   })()`)) as {
     safeAccident: unknown;
     hitAccident: { handle: number; defId: string; weeks: number } | null;
     safeRevenue: number;
     hitRevenue: number;
+    idleAfter: number;
   };
   record(
     '확률이 0 이면 사고가 안 난다 — 안전한데 사고가 나면 RNG 세금이다',
     accident.safeAccident === null ? 'pass' : 'fail',
   );
+  /*
+   * ⚠ "매출이 준다"를 요구하면 안 된다. 요금을 **실제 이용 시설**에서 받게 된 뒤로는,
+   * 싼 시설이 닫히면 손님이 비싼 시설로 옮겨가 **매출이 오를 수도 있다** (실측: 구명함이
+   * 닫혔는데 51.5만 → 52.0만). 그건 버그가 아니라 대체 효과다.
+   *
+   * 성립하는 성질은 이것이다: **사고가 기록되고, 1~3주이고, 그 시설이 실제로 선다.**
+   * 경제적 결과는 포화되지 않은 공원에서 단위 테스트가 본다.
+   */
   record(
-    '사고가 나면 시설이 1~3주 닫히고 매출이 준다',
+    '사고가 나면 시설이 1~3주 닫힌다 — 그 시설은 목적지에서 빠진다',
     accident.hitAccident !== null &&
       accident.hitAccident.weeks >= 1 &&
       accident.hitAccident.weeks <= 3 &&
-      accident.hitRevenue < accident.safeRevenue
+      accident.idleAfter > 0
       ? 'pass'
       : 'fail',
     accident.hitAccident
       ? `${accident.hitAccident.defId} ${accident.hitAccident.weeks}주 · ` +
-        `매출 ${accident.safeRevenue} → ${accident.hitRevenue}`
+        `선 시설 ${accident.idleAfter}개 · 매출 ${accident.safeRevenue} → ${accident.hitRevenue}`
       : '사고가 안 났다',
   );
 

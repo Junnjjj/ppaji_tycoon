@@ -6,7 +6,15 @@ import { PlacementGrid } from './placement.js';
 import { GuestStore, GUEST_DEFAULTS } from './guests.js';
 import { WeekRunner, type Season } from './week.js';
 import { evaluateCombos } from './combos.js';
-import { questStatuses, ProgressStore, gradeFor, GRADES, admissionLimit } from './progress.js';
+import {
+  questStatuses,
+  ProgressStore,
+  gradeFor,
+  nextGrade,
+  Reputation,
+  GRADES,
+  admissionLimit,
+} from './progress.js';
 import { assessRisk } from './risk.js';
 import { CardStore, CARD_RNG_SALT } from './cards.js';
 import { StaffStore, STAFF_ROLES, neededFor } from './staff.js';
@@ -106,8 +114,16 @@ function playGolden(weeks: number): Golden {
    * 매주 등급을 반영한다 — 등급이 동시 손님 상한과 방문 수요를 올린다.
    * 이게 없으면 시설만 늘고 수요·입장이 막혀 후반에 손익이 꺾인다.
    */
+  /*
+   * 평판은 **이동평균**이고 등급에는 이력이 걸린다 (§9.2). 골든이 지난주 값 하나를 쓰면
+   * 게임과 다른 경로를 재게 된다 — 진동을 없앤 변경이 골든에 안 잡힌다.
+   */
+  const reputation = new Reputation();
+  let gradeNo = 1;
   const applyGrade = (sat: number): number => {
-    const gr = gradeFor(sat);
+    reputation.push(sat);
+    const gr = nextGrade(gradeNo, reputation.value);
+    gradeNo = gr.grade;
     // 등급 상한과 공급 중 작은 쪽 — 슬롯보다 많이 받으면 줄만 길어진다
     g.setMaxGuests(admissionLimit(gr, p.totalCapacity()));
     return gr.reputationPull;
@@ -158,7 +174,7 @@ function playGolden(weeks: number): Golden {
     courseRevenue: last.courseRevenue,
     avgLevel: Math.round(p.averageLevel() * 100) / 100,
     combos: evaluateCombos(p).active.length,
-    grade: gradeFor(last.exitSatisfaction).grade,
+    grade: gradeNo,
     exitSat: Math.round(last.exitSatisfaction),
     visitors: last.visitors,
     turnedAway: last.turnedAway,
@@ -218,12 +234,12 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
       facilities: 15,
       combos: 7,
       grade: 3,
-      exitSat: 71,
-      visitors: 97,
-      turnedAway: 1,
+      exitSat: 63,
+      visitors: 109,
+      turnedAway: 14,
       profitSign: 1,
-      questsDone: 6,
-      riskLevel: 'watch',
+      questsDone: 5,
+      riskLevel: 'caution',
       cards: 12,
       staffWages: 22_500,
       courseRevenue: 0,

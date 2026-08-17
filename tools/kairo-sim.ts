@@ -21,7 +21,7 @@
 import { Rng } from '../src/sim/rng.js';
 import { KairoTerrain } from '../src/sim/kairo/terrain.js';
 import { WallGrid, placeWall } from '../src/sim/kairo/walls.js';
-import { PlacementGrid, allFacilityDefs } from '../src/sim/kairo/placement.js';
+import { PlacementGrid, allFacilityDefs, MAX_LEVEL } from '../src/sim/kairo/placement.js';
 import { GuestStore, GUEST_DEFAULTS } from '../src/sim/kairo/guests.js';
 import { WeekRunner, type NeedKind, type Season, type WeekReport } from '../src/sim/kairo/week.js';
 import { evaluateCombos } from '../src/sim/kairo/combos.js';
@@ -38,7 +38,14 @@ import {
   validateCourse,
   fitOf,
 } from '../src/sim/kairo/course.js';
-import { questStatuses, ProgressStore, gradeFor, admissionLimit } from '../src/sim/kairo/progress.js';
+import {
+  questStatuses,
+  ProgressStore,
+  gradeFor,
+  nextGrade,
+  admissionLimit,
+  Reputation,
+} from '../src/sim/kairo/progress.js';
 
 const args = process.argv.slice(2);
 const flag = (name: string, dflt: number): number => {
@@ -160,6 +167,12 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
   const week = new WeekRunner(t, p, g);
   const progress = new ProgressStore();
+  /**
+   * 평판 — 퇴장 만족도의 이동평균 (§9.2). 지난주 값 하나로 등급을 정하면 진동한다
+   * (실측: 40주에 등급이 35번 바뀌었다).
+   */
+  const reputation = new Reputation();
+  let gradeNo = 1;
   const cards = new CardStore();
   /**
    * 카드는 **전용 RNG 스트림**을 쓴다 (불변식 2). 손님·날씨와 같은 스트림을 쓰면
@@ -235,7 +248,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
      * 우리는 **게임이 무너졌다고 잘못 읽는다** — 무너진 건 봇의 정책이다.
      * (게임 쪽에도 이 사실을 알리는 표시가 필요하다 — 결산 병목 줄에 넣었다.)
      */
-    const gradeNow = gradeFor(last?.exitSatisfaction ?? 0);
+    const gradeNow = nextGrade(gradeNo, reputation.value);
     const capped = p.totalCapacity() * 1.5 > gradeNow.maxGuests * 1.3;
     if (capped) weekBudget = 0;
 
@@ -249,7 +262,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       for (let k = 0; k < 3; k++) {
         const targets = p
           .all()
-          .filter((it) => p.levelOf(it.handle) < 3)
+          .filter((it) => p.levelOf(it.handle) < MAX_LEVEL)
           .sort((a, b) => p.levelOf(a.handle) - p.levelOf(b.handle) || a.handle - b.handle);
         const t0 = targets[0];
         if (!t0) break;
@@ -295,7 +308,8 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     g.invalidate();
 
     // 등급을 반영한다 — 동시 손님 상한과 방문 수요가 등급에서 온다
-    const gr = gradeFor(last?.exitSatisfaction ?? 0);
+    const gr = nextGrade(gradeNo, reputation.value);
+    gradeNo = gr.grade;
     const season = seasons[Math.floor(k / 4) % seasons.length] as Season;
 
     /*
@@ -395,8 +409,19 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
      * 요금 정책: 만족도가 여유 있으면 올리고, 빠듯하면 내린다.
      * 사람이 슬라이더로 하는 판단을 흉내낸다 — 안 하면 "값을 매긴다"가 경제에 안 나타난다.
      */
-    const sat = last?.exitSatisfaction ?? 60;
-    const priceMult = sat > 78 ? 1.2 : sat < 62 ? 0.85 : 1;
+    const sat = reputation.value === 0 ? 60 : reputation.value;
+    /*
+     * 요금 정책. **5등급을 못 찍었고 돈이 남으면 값을 내려 만족도를 산다** —
+     * 값을 올리면 만족도가 깎여 등급이 막히고, 등급이 막히면 확장이 막혀 돈이 쌓인다.
+     * 남는 돈으로 진행을 사는 것이 사람의 판단이다.
+     */
+    /*
+     * ⚠ 0.7 로 크게 내렸더니 매출이 무너져 인건비를 못 내고, 청소부 부족으로 만족도가
+     * 오히려 **떨어졌다** (등급 1 사분위가 생겼다). 값 내리기는 만족도를 사는 수단이지만
+     * 그 돈이 인건비를 깎으면 역효과다. 0.9 로만 내린다.
+     */
+    const wantGrade5 = gradeNo === 4 && cash > 20_000_000;
+    const priceMult = wantGrade5 ? 0.9 : sat > 78 ? 1.2 : sat < 62 ? 0.85 : 1;
 
     const rep = week.run(rng, {
       season,
@@ -445,6 +470,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     courseRevByWeek.push(rep.courseRevenue);
     cards.tickWeek();
     last = rep;
+    reputation.push(rep.exitSatisfaction);
     cash += rep.profit;
     profitByWeek.push(rep.profit);
     seasonByWeek.push(season);

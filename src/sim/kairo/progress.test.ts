@@ -12,6 +12,9 @@ import {
   gradeFor,
   questStatuses,
   ProgressStore,
+  Reputation,
+  nextGrade,
+  GRADE_HYSTERESIS,
 } from './progress.js';
 
 const GATE = { i: 0, j: 0 };
@@ -165,5 +168,83 @@ describe('보상은 한 번만', () => {
     const back = ProgressStore.fromSnapshot(store.toSnapshot());
     expect(back.claimedCount).toBe(store.claimedCount);
     expect(back.claim(questStatuses(p, null)).cash).toBe(0);
+  });
+});
+
+describe('평판 이동평균 (§9.2) — 진동을 누른다', () => {
+  it('첫 주는 그대로 받는다 — 0 에서 올라오면 첫 등급이 늦게 열린다', () => {
+    const r = new Reputation();
+    expect(r.push(70)).toBe(70);
+  });
+
+  it('평범하게 나쁜 한 주에는 등급이 안 흔들린다 (이동평균 + 이력)', () => {
+    const r = new Reputation();
+    for (let k = 0; k < 8; k++) r.push(78);
+    const before = gradeFor(r.value).grade;
+    r.push(62); // 나쁘지만 재난은 아닌 한 주
+    expect(nextGrade(before, r.value).grade).toBe(before);
+  });
+
+  it('재난급 한 주는 등급을 떨어뜨린다 — 아무것도 안 움직이면 관리가 무의미하다', () => {
+    /*
+     * 78 → 40 은 −38 이다 (시설이 전부 서는 정도). 이건 떨어져야 한다.
+     * 이력의 목적은 **소음을 죽이는 것**이고 사건을 지우는 게 아니다.
+     */
+    const r = new Reputation();
+    for (let k = 0; k < 8; k++) r.push(78);
+    const before = gradeFor(r.value).grade;
+    r.push(40);
+    expect(nextGrade(before, r.value).grade).toBeLessThan(before);
+  });
+
+  it('⚠ 지난주 값 하나를 쓰면 진동한다 — 이동평균은 그걸 누른다', () => {
+    /*
+     * 실측: 등급 오름 → 수요 증가 → 혼잡 → 만족도 하락 → 등급 내림 → 수요 감소 →
+     * 만족도 회복 → … 40주 동안 만족도 53↔75, 등급 2↔3 을 왕복했다.
+     * 여기서는 그 패턴을 그대로 흉내내 **등급 변동 횟수**를 비교한다.
+     */
+    const wave = Array.from({ length: 40 }, (_, k) => (k % 2 === 0 ? 55 : 78));
+    let rawFlips = 0;
+    let prevRaw = gradeFor(wave[0] as number).grade;
+    for (const v of wave) {
+      const g = gradeFor(v).grade;
+      if (g !== prevRaw) rawFlips++;
+      prevRaw = g;
+    }
+    const r = new Reputation();
+    let emaFlips = 0;
+    let cur = 1;
+    for (const v of wave) {
+      const g = nextGrade(cur, r.push(v)).grade;
+      if (g !== cur) emaFlips++;
+      cur = g;
+    }
+    expect(rawFlips).toBeGreaterThan(10);
+    // 이동평균 + 이력이면 한 번 올라간 뒤 유지된다
+    expect(emaFlips).toBeLessThan(4);
+  });
+
+  it('꾸준히 좋으면 결국 그 값에 수렴한다 — 영원히 못 올라가면 안 된다', () => {
+    const r = new Reputation();
+    for (let k = 0; k < 60; k++) r.push(88);
+    expect(r.value).toBeGreaterThan(87);
+    expect(gradeFor(r.value).grade).toBe(5);
+  });
+
+  it('이력이 오르는 쪽은 막지 않는다 — 올라갈 길이 있어야 한다', () => {
+    expect(nextGrade(2, 65).grade).toBe(3);
+    expect(nextGrade(3, 75).grade).toBe(4);
+    expect(GRADE_HYSTERESIS).toBeGreaterThan(0);
+  });
+
+  it('정말 나빠지면 내려간다 — 영원히 유지되면 관리할 이유가 없다', () => {
+    expect(nextGrade(4, 40).grade).toBeLessThan(4);
+  });
+
+  it('스냅샷을 왕복해도 기억이 남는다', () => {
+    const r = new Reputation();
+    for (let k = 0; k < 5; k++) r.push(72);
+    const back = Reputation.fromSnapshot(r.toSnapshot());
+    expect(back.value).toBeCloseTo(r.value, 9);
   });
 });

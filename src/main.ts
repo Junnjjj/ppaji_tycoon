@@ -25,9 +25,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { allFacilityDefs, PLACE_FAIL_MESSAGES } = await import('./sim/kairo/placement.js');
   const { WeekRunner } = await import('./sim/kairo/week.js');
   const { previewCombos, evaluateCombos } = await import('./sim/kairo/combos.js');
-  const { questStatuses, ProgressStore, gradeFor, requiredGrade, admissionLimit } = await import(
-    './sim/kairo/progress.js'
-  );
+  const { questStatuses, ProgressStore, gradeFor, requiredGrade, admissionLimit, Reputation, nextGrade } =
+    await import('./sim/kairo/progress.js');
   const { assessRisk, RISK_NAMES } = await import('./sim/kairo/risk.js');
   const { KairoReport } = await import('./ui/kairo-report.js');
   const { KairoCardView } = await import('./ui/kairo-card.js');
@@ -168,7 +167,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       if (brush === 'facility') {
         const defId = picker.value;
         // 등급 해금 — 허가는 돈으로 못 산다 (퇴장 만족도로만 오른다)
-        const grade = gradeFor(lastSummary?.exitSatisfaction ?? 0);
+        const grade = currentGrade();
         const need = requiredGrade(defId);
         if (need > grade.grade) {
           toast(`아직 못 짓습니다 — ${need}등급 필요 (현재 ${grade.grade}등급 ${grade.name})`);
@@ -372,6 +371,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   let lastReport: ReturnType<typeof week.run> | null = null;
   let lastSummary = saved?.lastSummary ?? null;
+  /**
+   * 평판 — 퇴장 만족도의 **이동평균** (§9.2). 지난주 값 하나로 등급을 정하면 진동한다:
+   * 등급↑ → 수요↑ → 혼잡 → 만족도↓ → 등급↓ → 수요↓ → 만족도↑ → … (실측 40주에 35번).
+   * 등급에 이력(hysteresis)도 걸어 한 번 오른 등급이 유지되게 한다.
+   */
+  const reputation = Reputation.fromSnapshot(
+    saved?.reputation ?? lastSummary?.exitSatisfaction ?? 0,
+  );
+  let gradeNo = saved?.gradeNo ?? gradeFor(reputation.value).grade;
+  /** 지금 등급 — 이력이 걸린 값이다. 화면·판정이 전부 이걸 쓴다 */
+  const currentGrade = (): ReturnType<typeof gradeFor> => nextGrade(gradeNo, reputation.value);
 
   /** 세이브 — 배치·주 진행처럼 상태가 실제로 바뀐 뒤에만 부른다 */
   const persist = (): void => {
@@ -395,6 +405,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       mapId,
       scenarioId,
       accidentCount,
+      reputation: reputation.toSnapshot(),
+      gradeNo,
       discovered: [...discovered],
       resortName,
       priceMult,
@@ -407,7 +419,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   const runWeek = (): void => {
     if (h.scene.isPlaying || report.visible || cardView.visible) return;
-    const gr0 = gradeFor(lastSummary?.exitSatisfaction ?? 0);
+    const gr0 = currentGrade();
     const drawn = cards.draw(cardRng, {
       season,
       week: week.week + 1,
@@ -426,7 +438,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const runWeekAfterCards = (): void => {
     const t0 = performance.now();
     // 등급이 동시 손님 상한과 방문 수요를 올린다 — 만족도를 관리해야 성장한다
-    const gr = gradeFor(lastSummary?.exitSatisfaction ?? 0);
+    const gr = currentGrade();
     // 카드 선택이 끝난 뒤에 상한을 정한다 — 혼잡 배율이 이번 주에 반영되어야 한다
     const mods = cards.modifiers();
     h.guests.setMaxGuests(admissionLimit(gr, h.placement.totalCapacity(), mods.crowdMult));
@@ -474,6 +486,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     cards.tickWeek();
     const calcMs = performance.now() - t0;
     lastReport = rep;
+    reputation.push(rep.exitSatisfaction);
+    gradeNo = nextGrade(gradeNo, reputation.value).grade;
     lastSummary = {
       visitors: rep.visitors,
       turnedAway: rep.turnedAway,
@@ -580,7 +594,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       });
       return pier ? { x: pier.i, y: pier.j } : { x: GATE.i, y: GATE.j + 8 };
     },
-    grade: () => gradeFor(lastSummary?.exitSatisfaction ?? 0).grade,
+    grade: () => currentGrade().grade,
     cash: () => week.cash,
     spend: (n) => week.spend(n),
     onChange: () => {
@@ -612,7 +626,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const catalog = new KairoCatalog(document.body, {
     placement: h.placement,
     courses,
-    grade: () => gradeFor(lastSummary?.exitSatisfaction ?? 0).grade,
+    grade: () => currentGrade().grade,
     discovered: () => discovered,
   });
 
@@ -624,7 +638,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     h.scene,
     () => ({
       name: resortName,
-      grade: gradeFor(lastSummary?.exitSatisfaction ?? 0).grade,
+      grade: currentGrade().grade,
       visitors: lastSummary?.visitors ?? 0,
       week: week.week,
       facilities: h.placement.count,
@@ -642,7 +656,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 시설·벽·코스가 물 위에 떠 있거나 육지에 잠긴 상태가 된다.
    */
   const newGame = new KairoNewGame(document.body, {
-    grade: () => gradeFor(lastSummary?.exitSatisfaction ?? 0).grade,
+    grade: () => currentGrade().grade,
     start: (m, sc) => {
       clearKairoStorage();
       const url = new URL(location.href);
@@ -676,7 +690,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const refreshGoal = (): void => {
     const st = {
       week: week.week,
-      grade: gradeFor(lastSummary?.exitSatisfaction ?? 0).grade,
+      grade: currentGrade().grade,
       accidents: accidentCount,
     };
     const status = scen.scenarioStatus(scenario, st);
@@ -791,7 +805,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const rows = open.slice(0, 6);
     questPanel.replaceChildren();
     const title = document.createElement('div');
-    const g = gradeFor(lastSummary?.exitSatisfaction ?? 0);
+    const g = currentGrade();
     title.textContent =
       `의뢰 ${st.length - open.length}/${st.length} · ${g.grade}등급 ${g.name}\n` +
       `동시 ${g.maxGuests}명 · 수요 ×${g.reputationPull}`;

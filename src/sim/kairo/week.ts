@@ -618,27 +618,23 @@ export class WeekRunner {
    */
   private collectFees(weather: Weather): number {
     /*
-     * ⚠ 예전에는 `usingBefore - usingNow` 로 "끝난 수"를 셌는데, 같은 tick 에 시작과
-     * 종료가 겹치면 어긋난다. 손님 쪽이 완료를 직접 세고 **지갑 배율 합**을 준다 —
-     * 그래야 친구·단체가 더 쓴다는 설정(§10.4)이 매출에 나타난다.
+     * ⚠ 두 번 고친 자리다.
+     *
+     * ① 예전에는 `usingBefore - usingNow` 로 "끝난 수"를 셌는데, 같은 tick 에 시작과
+     *    종료가 겹치면 어긋난다 → 손님 쪽이 완료를 직접 센다.
+     * ② 그 다음에는 **전체 시설의 평균 요금**을 썼다. 그러면 닫힌 시설도 평균에 들어가고,
+     *    싼 시설이 닫히면 평균이 올라 매출이 **늘어난다** (실측: 사고로 구명함이 닫혔는데
+     *    매출이 43.9만 → 46.7만). 이제 손님이 **실제로 이용한 시설의 요금**을 담아 온다.
+     *
+     * 날씨는 수요 종류 단위로 보정한다 (비 오는 날 카페가 붐빈다).
      */
     const fin = this.guests.takeFinished();
-    const finished = fin.walletSum;
     if (fin.count === 0) return 0;
-    // 어떤 시설이 끝났는지는 추적하지 않고 평균 요금을 쓴다 — K9 밸런싱에서 정밀화한다
-    let feeSum = 0;
-    let n = 0;
     const mods = WEATHER_DEMAND[weather];
-    for (const item of this.placement.all()) {
-      const def = facilityDef(item.defId) as
-        | { fee?: number; need?: NeedKind }
-        | undefined;
-      if (!def?.fee) continue;
-      // 개선 단계가 반영된 요금 — 후반에 확장이 막히면 이게 유일한 매출 성장 축이다
-      feeSum += this.placement.feeOf(item.handle) * (mods[def.need as NeedKind] ?? 1);
-      n++;
+    let total = 0;
+    for (const [need, sum] of fin.feeByNeed) {
+      total += sum * (mods[need as NeedKind] ?? 1);
     }
-    if (n === 0) return 0;
-    return Math.round((feeSum / n) * finished * this.priceMult);
+    return Math.round(total * this.priceMult);
   }
 }
