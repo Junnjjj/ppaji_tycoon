@@ -128,3 +128,44 @@ export function inGrid(i: number, j: number, gw = GRID_W, gh = GRID_H): boolean 
 export function snapCamera(v: Vec2): Vec2 {
   return { x: Math.round(v.x), y: Math.round(v.y) };
 }
+
+/**
+ * 타일 다이아몬드의 **정수 스캔라인 마스크**.
+ *
+ * 다이아몬드를 캔버스 `fill()` 로 그리면 경계가 안티에일리어싱되어 **타일 사이에
+ * 1px 이음새**가 보인다 (K1 스크린샷에서 격자 무늬로 드러났다). 픽셀아트에서는 경계를
+ * 정수로 딱 끊어야 한다.
+ *
+ * 행 `y` 의 채우는 구간은 `[TILE_W/2 − hw, TILE_W/2 + hw)`, `hw = 1 + 2·min(y, H−1−y)`.
+ *
+ * 이 마스크는 격자 `(16,8)`·`(−16,8)` 로 평면을 **겹침 0 · 틈 0** 으로 덮는다.
+ * 근거: 그 격자의 기본 영역 면적이 `|16·8 − 8·(−16)| = 256` 이고 마스크가 정확히
+ * 256 픽셀이다. 검증은 `iso.test.ts` 가 격자 산술로 직접 한다.
+ */
+export function tileRowSpan(y: number): { x0: number; x1: number } {
+  const hw = 1 + 2 * Math.min(y, TILE_H - 1 - y);
+  return { x0: TILE_W / 2 - hw, x1: TILE_W / 2 + hw };
+}
+
+/** 마스크의 픽셀 수 — 기본 영역 면적과 같아야 한다 */
+export function tileMaskArea(): number {
+  let n = 0;
+  for (let y = 0; y < TILE_H; y++) {
+    const s = tileRowSpan(y);
+    n += s.x1 - s.x0;
+  }
+  return n;
+}
+
+/**
+ * 발자국 안의 타일 (i, j) 의 **캔버스 좌상단 오프셋**.
+ *
+ * 캔버스 왼쪽 끝은 발자국 bbox 의 최소 x(= −STEP_X·d)이므로 `d` 만 필요하고 `w` 는
+ * 쓰이지 않는다. `bodyH` 는 다이아몬드가 캔버스 하단에 앉게 아래로 미는 양이다.
+ */
+export function tileOffsetInCanvas(i: number, j: number, d: number, bodyH = 0): Vec2 {
+  return {
+    x: STEP_X * (i - j) + STEP_X * d - STEP_X,
+    y: STEP_Y * (i + j) + bodyH,
+  };
+}

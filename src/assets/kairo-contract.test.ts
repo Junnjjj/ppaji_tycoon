@@ -11,6 +11,7 @@ import {
 } from './kairo-contract.js';
 import { TILE_W, TILE_H, STEP_X, STEP_Y, GRID_W, GRID_H } from '../render/kairo/iso.js';
 import { KairoProceduralProvider } from './kairo-procedural.js';
+import { GROUND_KINDS, BRIDGE_KINDS } from '../sim/kairo/terrain.js';
 
 describe('계약 정합 — 이게 깨지면 에셋을 뽑아도 못 쓴다', () => {
   it('위반이 하나도 없다', () => {
@@ -207,5 +208,24 @@ describe('플레이스홀더 드로어 — 계약에 추가하고 드로어를 �
     for (const f of KAIRO.facilities) {
       expect(p.spec(f.sprite)!.size, f.sprite).toEqual([f.canvas[0], f.canvas[1]]);
     }
+  });
+});
+
+describe('지면 — 렌더/시뮬 목록이 일치한다', () => {
+  it('종류 목록이 같다 — 한쪽만 늘리면 칠할 수 있는데 그림이 없는 종류가 생긴다', () => {
+    const r = KAIRO.ground.types.map((t) => t.id).sort();
+    const s = GROUND_KINDS.map((k) => k.id).sort();
+    expect(r).toEqual(s);
+  });
+
+  it('다리 목록이 같다', () => {
+    expect(KAIRO.ground.bridges.map((b) => b.id).sort()).toEqual(
+      BRIDGE_KINDS.map((b) => b.id).sort(),
+    );
+  });
+
+  it('walkable 은 시뮬 데이터에만 있다 — 렌더 계약에 있으면 SSoT 가 둘이 된다', () => {
+    for (const t of KAIRO.ground.types) expect(t).not.toHaveProperty('walkable');
+    for (const k of GROUND_KINDS) expect(typeof k.walkable).toBe('boolean');
   });
 });

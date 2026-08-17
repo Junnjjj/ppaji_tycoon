@@ -22,7 +22,7 @@
 import { chromium, type ConsoleMessage } from 'playwright';
 
 const BASE = process.env['PPAJI_URL'] ?? 'http://localhost:5173';
-const URL = `${BASE}/?kairo=1`;
+const URL = `${BASE}/?kairo=1&px=1`; // px=1 = 프레임버퍼 보존 (이음새 픽셀 검사용)
 const HEADED = process.argv.includes('--headed');
 const SHOT_DIR = 'tmp-shots';
 
@@ -147,6 +147,76 @@ async function main(): Promise<void> {
   const tiles = Number(/타일 (\d+)/.exec(dbg)?.[1] ?? 0);
   record('격자 40×32 = 1280 타일', tiles === 1280 ? 'pass' : 'fail', `${tiles}`);
 
+  // ── 5b. 타일링 이음새 — 지면 안쪽에 배경색이 새는지 (스킬 문서 미결 항목) ──
+  //
+  // 다이아몬드를 AA fill 로 그리면 타일 사이에 1px 틈이 생겨 배경(하늘색)이 비친다.
+  // K1 스크린샷에서 격자 무늬로 드러났던 그 문제를 **실제 렌더 픽셀로** 검사한다.
+  //
+  // 표본 위치는 씬에 물어본다 — 하네스가 투영을 다시 구현하면 좌표가 바뀔 때 조용히
+  // 엉뚱한 곳(배경 대역)을 재고, 그게 처음에 실제로 일어났다.
+  const seam = (await page.evaluate(`(() => {
+    const sc = window.__kairo.scene;
+    const c = document.querySelector('canvas');
+    const g = c.getContext('webgl2') || c.getContext('webgl');
+    const H = c.height, W = c.width;
+    // 화면에 보이는 잔디 타일 4개가 이어진 블록을 찾는다
+    let found = null;
+    for (let j = 0; j < 32 && !found; j++) {
+      for (let i = 0; i < 40; i++) {
+        if (sc.groundAt(i, j) !== 'lawn') continue;
+        if (sc.groundAt(i + 1, j) !== 'lawn' || sc.groundAt(i, j + 1) !== 'lawn') continue;
+        if (sc.groundAt(i + 1, j + 1) !== 'lawn') continue;
+        const r = sc.tileScreenRect(i, j);
+        // 네 타일이 모두 화면 안쪽에 여유 있게 들어와야 한다
+        if (r.x > 8 && r.y > 8 && r.x + 3 * 16 < W - 8 && r.y + 3 * 8 < H - 8) {
+          found = { i: i, j: j, r: r };
+          break;
+        }
+      }
+    }
+    if (!found) return { ok: false, reason: '화면 안의 잔디 2×2 블록을 못 찾았다' };
+    // 네 타일이 만나는 중심부를 샘플 — 이음새가 있으면 여기에 배경색이 뜬다
+    const cx = found.r.x + 16, cy = found.r.y + 16;
+    const w = 20, h = 10;
+    const x0 = cx - w / 2, y0 = cy - h / 2;
+    const buf = new Uint8Array(w * h * 4);
+    g.readPixels(x0, H - (y0 + h), w, h, g.RGBA, g.UNSIGNED_BYTE, buf);
+    let bg = 0, total = 0;
+    const hist = {};
+    for (let k = 0; k < buf.length; k += 4) {
+      const r = buf[k], gg = buf[k + 1], b = buf[k + 2];
+      total++;
+      if (Math.abs(r - 122) < 12 && Math.abs(gg - 184) < 12 && Math.abs(b - 212) < 12) bg++;
+      const key = r + ',' + gg + ',' + b;
+      hist[key] = (hist[key] || 0) + 1;
+    }
+    const top = Object.entries(hist).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    return { ok: true, tile: [found.i, found.j], bg: bg, total: total, top: top };
+  })()`)) as
+    | { ok: false; reason: string }
+    | { ok: true; tile: [number, number]; bg: number; total: number; top: [string, number][] };
+
+  if (!seam.ok) {
+    record('타일링 이음새', 'fail', seam.reason);
+  } else {
+    // ⚠ 먼저 **검사가 유효한지** 본다. 프레임버퍼가 안 보존되면 검은색이 돌아와
+    //   "배경색 0" 으로 조용히 통과한다 (실측). 무효한 검사는 실패로 취급한다.
+    const topColor = seam.top[0]?.[0] ?? '';
+    const readValid = seam.total > 100 && topColor !== '0,0,0';
+    record(
+      '이음새 검사가 유효하다 (잔디 위를 읽었나)',
+      readValid ? 'pass' : 'fail',
+      `타일 ${seam.tile.join(',')} · 표본 ${seam.total} · 최빈색 ${seam.top
+        .map((t) => `${t[0]}×${t[1]}`)
+        .join(' / ')}`,
+    );
+    record(
+      '타일링 이음새 — 네 타일이 만나는 곳에 배경색 0',
+      readValid && seam.bg === 0 ? 'pass' : 'fail',
+      `배경색 픽셀 ${seam.bg}/${seam.total}`,
+    );
+  }
+
   // ── 6. 팬 — 손가락 드래그로 스크롤이 변한다 ──
   const before = /스크롤 (-?\d+),(-?\d+)/.exec(dbg);
   await page.locator('canvas').first().hover();
@@ -205,6 +275,59 @@ async function main(): Promise<void> {
   await touch('touchEnd', 0, 0);
   await page.waitForTimeout(400);
   await page.screenshot({ path: `${SHOT_DIR}/kairo-s1.png` });
+
+  // ── 7b. 지면 붓 — 폰에서 실제로 길을 낼 수 있나 ──
+  const brushBtns = (await page.evaluate(`(() => {
+    const bar = document.getElementById('kairo-brush');
+    if (!bar) return null;
+    const bs = [...bar.querySelectorAll('button')].map((b) => {
+      const r = b.getBoundingClientRect();
+      return { kind: b.dataset.kind, w: Math.round(r.width), h: Math.round(r.height) };
+    });
+    return { count: bs.length, minH: Math.min(...bs.map((b) => b.h)),
+             minW: Math.min(...bs.map((b) => b.w)), overflow: bar.scrollWidth > bar.clientWidth };
+  })()`)) as { count: number; minH: number; minW: number; overflow: boolean } | null;
+
+  if (!brushBtns) {
+    record('지면 붓 팔레트', 'fail', '팔레트를 못 찾았다');
+  } else {
+    record('지면 붓 6종', brushBtns.count === 6 ? 'pass' : 'fail', `${brushBtns.count}개`);
+    record(
+      '터치 타깃 44px 이상',
+      brushBtns.minH >= 44 ? 'pass' : 'fail',
+      `최소 ${brushBtns.minW}×${brushBtns.minH}`,
+    );
+  }
+
+  // 목재 데크길을 골라 물 위 칸을 칠한다 → 걸을 수 있게 바뀌어야 한다
+  const painted = (await page.evaluate(`(() => {
+    const t = window.__kairo.terrain;
+    const sc = window.__kairo.scene;
+    // 물인 칸을 찾는다
+    let wet = null;
+    for (let j = 31; j >= 0 && !wet; j--) {
+      for (let i = 0; i < 40; i++) if (!t.isWalkable(i, j)) { wet = [i, j]; break; }
+    }
+    if (!wet) return { ok: false, reason: '물 칸이 없다' };
+    const before = t.kindAt(wet[0], wet[1]);
+    const walkBefore = t.isWalkable(wet[0], wet[1]);
+    t.paint(wet[0], wet[1], 'path_deck');
+    sc.refreshTile(wet[0], wet[1]);
+    return { ok: true, tile: wet, before: before, after: t.kindAt(wet[0], wet[1]),
+             walkBefore: walkBefore, walkAfter: t.isWalkable(wet[0], wet[1]) };
+  })()`)) as
+    | { ok: false; reason: string }
+    | { ok: true; tile: number[]; before: string; after: string; walkBefore: boolean; walkAfter: boolean };
+
+  if (!painted.ok) {
+    record('지면 칠하기', 'fail', painted.reason);
+  } else {
+    record(
+      '칠하면 지면 종류와 통행 가능성이 바뀐다',
+      painted.after === 'path_deck' && !painted.walkBefore && painted.walkAfter ? 'pass' : 'fail',
+      `(${painted.tile.join(',')}) ${painted.before}→${painted.after} · 통행 ${painted.walkBefore}→${painted.walkAfter}`,
+    );
+  }
 
   // ── 8. FPS ──
   await page.waitForTimeout(1200);

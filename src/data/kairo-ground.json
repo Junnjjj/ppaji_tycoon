@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "note": "지면 종류의 시뮬 정보. 캔버스·변형 수 같은 렌더 정보는 src/assets/kairo-render-contract.json.",
+  "kinds": [
+    {
+      "id": "lawn",
+      "name": "잔디",
+      "walkable": true,
+      "default": true
+    },
+    {
+      "id": "path_stone",
+      "name": "석재 보도",
+      "walkable": true,
+      "default": false
+    },
+    {
+      "id": "path_deck",
+      "name": "목재 데크길",
+      "walkable": true,
+      "default": false
+    },
+    {
+      "id": "path_sand",
+      "name": "모래길",
+      "walkable": true,
+      "default": false
+    },
+    {
+      "id": "floor_indoor",
+      "name": "실내 바닥",
+      "walkable": true,
+      "default": false
+    },
+    {
+      "id": "water_edge",
+      "name": "물가",
+      "walkable": false,
+      "default": false
+    }
+  ],
+  "bridges": [
+    {
+      "id": "bridge_x",
+      "name": "다리 (X축 런)",
+      "walkable": true
+    },
+    {
+      "id": "bridge_z",
+      "name": "다리 (Z축 런)",
+      "walkable": true
+    }
+  ]
+}

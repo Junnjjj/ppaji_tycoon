@@ -13,6 +13,7 @@ import { KairoCamera } from '../kairo/kairo-camera.js';
 import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
 import { KairoProceduralProvider } from '../../assets/kairo-procedural.js';
 import { variantId } from '../../assets/types.js';
+import type { KairoTerrain } from '../../sim/kairo/terrain.js';
 
 /**
  * 카이로 씬 — 2:1 아이소메트릭 격자.
@@ -32,15 +33,6 @@ import { variantId } from '../../assets/types.js';
  * 타일맵 레이어로 지면을 따로 그리면 그 축이 끊긴다.
  */
 
-/** 지면 종류 — K2 에서 배치 도구가 이걸 칠한다. K1 은 기본 지형만 깐다 */
-export type GroundKind =
-  | 'path_stone'
-  | 'path_deck'
-  | 'path_sand'
-  | 'lawn'
-  | 'water_edge'
-  | 'floor_indoor';
-
 export interface KairoSceneStats {
   fps: number;
   upscale: Upscale;
@@ -55,6 +47,8 @@ export interface KairoSceneStats {
 
 export interface KairoSceneOptions {
   provider: KairoProceduralProvider;
+  /** 지면 격자 — **시뮬 소유**. 씬은 읽기만 한다 (불변식 1: 의존 방향은 바깥 → sim) */
+  terrain: KairoTerrain;
   onFrame?: (s: KairoSceneStats) => void;
   /** 탭한 타일 (격자 밖이면 안 부른다) */
   onTapTile?: (i: number, j: number) => void;
@@ -63,8 +57,6 @@ export interface KairoSceneOptions {
 export class KairoScene extends Phaser.Scene {
   private readonly opts: KairoSceneOptions;
   private readonly cam = new KairoCamera();
-  /** 타일 지면 종류 — 결정론적으로 채운다 (K2 가 편집 기능을 붙인다) */
-  private readonly ground: GroundKind[] = [];
   private tileImages: Phaser.GameObjects.Image[] = [];
   private dragging = false;
   private dragMoved = 0;
@@ -75,9 +67,6 @@ export class KairoScene extends Phaser.Scene {
   constructor(opts: KairoSceneOptions) {
     super({ key: 'kairo' });
     this.opts = opts;
-    for (let j = 0; j < GRID_H; j++) {
-      for (let i = 0; i < GRID_W; i++) this.ground.push(defaultGround(i, j));
-    }
   }
 
   preload(): void {
@@ -100,23 +89,35 @@ export class KairoScene extends Phaser.Scene {
     this.scale.on('resize', () => this.applyScale(this.cam.upscale));
   }
 
-  /** 타일 이미지를 한 번 만들어 두고 이후엔 위치만 갱신하지 않는다 (지면은 안 움직인다) */
+  /** 지면 타일 텍스처 ID — 변형은 좌표로 결정한다 (같은 칸은 항상 같은 그림) */
+  private groundTextureId(i: number, j: number): string {
+    const kind = this.opts.terrain.kindAt(i, j) ?? 'lawn';
+    return variantId(`ground/${kind}`, { alt: (i * 7 + j * 13) % 3 });
+  }
+
+  /** 타일 이미지를 한 번 만들어 두고 이후엔 텍스처만 바꾼다 (지면은 안 움직인다) */
   private buildGround(): void {
     for (const img of this.tileImages) img.destroy();
     this.tileImages = [];
     for (let j = 0; j < GRID_H; j++) {
       for (let i = 0; i < GRID_W; i++) {
-        const kind = this.ground[j * GRID_W + i]!;
-        // 변형은 좌표로 결정 — 같은 타일은 항상 같은 그림 (결정론)
-        const alt = (i * 7 + j * 13) % 3;
-        const id = variantId(`ground/${kind}`, { alt });
         const c = tileCenter(i, j);
-        const img = this.add.image(c.x, c.y + TILE_H / 2, id);
+        const img = this.add.image(c.x, c.y + TILE_H / 2, this.groundTextureId(i, j));
         img.setOrigin(0.5, 1); // bottom-center — 계약 앵커
         img.setDepth(depthKey(i, j));
         this.tileImages.push(img);
       }
     }
+  }
+
+  /**
+   * 시뮬 지형이 바뀐 칸의 그림만 갱신한다.
+   * 1,280개를 다시 만들지 않는 이유: 칠할 때마다 전부 재생성하면 드래그 중 프레임이 튄다.
+   */
+  refreshTile(i: number, j: number): void {
+    if (!inGrid(i, j)) return;
+    const img = this.tileImages[j * GRID_W + i];
+    img?.setTexture(this.groundTextureId(i, j));
   }
 
   /**
@@ -214,6 +215,27 @@ export class KairoScene extends Phaser.Scene {
     });
   }
 
+  /** 타일의 지면 종류 — 검증 도구가 "여기는 잔디"임을 확인하는 데 쓴다 */
+  groundAt(i: number, j: number): string | null {
+    return this.opts.terrain.kindAt(i, j);
+  }
+
+  /**
+   * 타일 다이아몬드의 **캔버스 픽셀 사각형** (내부 해상도 기준).
+   * 검증 도구가 `readPixels` 로 그 자리를 정확히 읽으려면 필요하다 — 좌표를 하네스에
+   * 다시 구현하면 투영이 바뀔 때 조용히 엉뚱한 곳을 재게 된다.
+   */
+  tileScreenRect(i: number, j: number): { x: number; y: number; w: number; h: number } {
+    const c = tileCenter(i, j);
+    const view = this.cam.view();
+    return {
+      x: Math.round(c.x - TILE_W / 2 - view.scrollX),
+      y: Math.round(c.y - TILE_H / 2 - view.scrollY),
+      w: TILE_W,
+      h: TILE_H,
+    };
+  }
+
   /** 테스트·도구용 — 카메라를 직접 놓는다 */
   focusTile(i: number, j: number): void {
     const c = tileCenter(i, j);
@@ -227,18 +249,6 @@ export class KairoScene extends Phaser.Scene {
     this.cam.release();
     this.syncCamera();
   }
-}
-
-/**
- * 기본 지형 — 강이 가로로 흐르는 파노라마 (스펙 §1.6).
- * `j` 가 클수록 카메라 쪽이므로, 뒤(작은 j)를 육지, 앞을 물로 둔다.
- */
-function defaultGround(i: number, j: number): GroundKind {
-  const shore = Math.floor(GRID_H * 0.55) + ((i * 5) % 3); // 물가 라인을 살짝 흔든다
-  if (j > shore) return 'water_edge';
-  if (j === shore) return 'path_sand';
-  if (j > shore - 3) return 'path_stone';
-  return 'lawn';
 }
 
 /** 타일 다이아몬드 크기를 밖에서도 쓸 수 있게 */

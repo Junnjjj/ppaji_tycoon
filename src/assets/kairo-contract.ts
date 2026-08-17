@@ -24,6 +24,7 @@ import {
   TILE_W,
   TILE_H,
 } from '../render/kairo/iso.js';
+import { GROUND_KINDS, BRIDGE_KINDS } from '../sim/kairo/terrain.js';
 import type { SpriteSpec } from './types.js';
 
 export interface KairoSlot {
@@ -84,7 +85,7 @@ export const KAIRO = contract as unknown as {
   ground: {
     canvas: readonly [number, number];
     anchorTexel: readonly [number, number];
-    types: readonly { id: string; name: string; alts: number; walkable: boolean }[];
+    types: readonly { id: string; name: string; alts: number }[];
     bridges: readonly { id: string; name: string; canvas: readonly [number, number] }[];
   };
   deco: {
@@ -272,6 +273,19 @@ export function validateContracts(): string[] {
         }
       }
     }
+  }
+
+  // 지면 — 렌더 계약(그림)과 시뮬 데이터(통행)가 같은 목록이어야 한다.
+  // 한쪽만 늘리면 "칠할 수는 있는데 그림이 없는" 종류가 생긴다.
+  const renderKinds = KAIRO.ground.types.map((t) => t.id).sort();
+  const simKinds = GROUND_KINDS.map((k) => k.id).sort();
+  if (renderKinds.join(',') !== simKinds.join(',')) {
+    bad.push(`지면 목록 불일치: 렌더 [${renderKinds.join(',')}] vs 시뮬 [${simKinds.join(',')}]`);
+  }
+  const renderBridges = KAIRO.ground.bridges.map((b) => b.id).sort();
+  const simBridges = BRIDGE_KINDS.map((b) => b.id).sort();
+  if (renderBridges.join(',') !== simBridges.join(',')) {
+    bad.push(`다리 목록 불일치: 렌더 [${renderBridges.join(',')}] vs 시뮬 [${simBridges.join(',')}]`);
   }
 
   return bad;

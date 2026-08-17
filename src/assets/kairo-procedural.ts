@@ -15,7 +15,13 @@
  */
 
 import { KAIRO, KAIRO_SIM, kairoSpriteSpecs } from './kairo-contract.js';
-import { TILE_H, STEP_X, STEP_Y } from '../render/kairo/iso.js';
+import {
+  TILE_H,
+  STEP_X,
+  STEP_Y,
+  tileRowSpan,
+  tileOffsetInCanvas,
+} from '../render/kairo/iso.js';
 import { parseId, variantId } from './types.js';
 import type { AssetProvider, SpriteSpec } from './types.js';
 
@@ -75,17 +81,38 @@ function darken(hex: string, f: number): string {
   return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
 }
 
-/** 발자국 w×d 의 바닥 다이아몬드 경로. 캔버스 하단에 정확히 앉는다 */
-function footprintPath(g: CanvasRenderingContext2D, w: number, d: number, canvasH: number): void {
-  const topY = canvasH - (w + d) * STEP_Y;
-  const leftX = 0;
-  // 꼭지점 4개: 위(i0,j0) · 오른(w,0) · 아래(w,d) · 왼(0,d)
-  g.beginPath();
-  g.moveTo(leftX + d * STEP_X, topY); // 위
-  g.lineTo(leftX + (d + w) * STEP_X, topY + w * STEP_Y); // 오른
-  g.lineTo(leftX + w * STEP_X, canvasH); // 아래
-  g.lineTo(leftX, topY + d * STEP_Y); // 왼
-  g.closePath();
+/**
+ * 타일 하나를 **정수 스캔라인**으로 채운다.
+ *
+ * ⚠ `beginPath`+`fill()` 로 다이아몬드를 그리면 경계가 안티에일리어싱돼 타일 사이에
+ * 1px 이음새가 보인다 (K1 에서 실제로 격자 무늬가 드러났다). 픽셀아트는 정수로 끊어야 한다.
+ */
+function fillTile(g: CanvasRenderingContext2D, ox: number, oy: number, color: string): void {
+  g.fillStyle = color;
+  for (let y = 0; y < TILE_H; y++) {
+    const s = tileRowSpan(y);
+    g.fillRect(ox + s.x0, oy + y, s.x1 - s.x0, 1);
+  }
+}
+
+/**
+ * 발자국 w×d 의 바닥면을 채운다 — 구성 타일을 하나씩 마스크로 깔기만 한다.
+ * 다각형을 새로 계산하지 않는 이유: 타일 마스크가 이미 겹침·틈 0 을 보장하므로
+ * 그걸 그대로 재사용하면 큰 발자국에서도 자동으로 이음새가 없다.
+ */
+function fillFootprint(
+  g: CanvasRenderingContext2D,
+  w: number,
+  d: number,
+  bodyH: number,
+  color: string,
+): void {
+  for (let i = 0; i < w; i++) {
+    for (let j = 0; j < d; j++) {
+      const o = tileOffsetInCanvas(i, j, d, bodyH);
+      fillTile(g, o.x, o.y, color);
+    }
+  }
 }
 
 /** 1텍셀 아웃라인을 구워 넣는다 — 런타임 외곽선 패스가 없다 */
@@ -115,19 +142,12 @@ function drawFacility(g: CanvasRenderingContext2D, spec: SpriteSpec, simId: stri
   const [body, top, side] = ZONE_COLOR[sim?.layer ?? 'land'] ?? ZONE_COLOR['land']!;
   const bodyH = ch - (w + d) * STEP_Y;
 
-  // 바닥 (그림자 겸 발자국 표시)
-  footprintPath(g, w, d, ch);
-  g.fillStyle = darken(body, 0.72);
-  g.fill();
+  // 바닥 (그림자 겸 발자국 표시) — 정수 마스크
+  fillFootprint(g, w, d, bodyH, darken(body, 0.72));
 
   if (bodyH > 0) {
-    // 몸통을 다이아몬드 위로 밀어 올린 아이소 박스
-    g.save();
-    g.translate(0, -bodyH);
-    footprintPath(g, w, d, ch);
-    g.fillStyle = top;
-    g.fill();
-    g.restore();
+    // 윗면 — 같은 마스크를 bodyH 만큼 올려 깐다
+    fillFootprint(g, w, d, 0, top);
 
     // 앞쪽 두 측면 (왼 꼭지점 → 아래 → 오른)
     const topY = ch - (w + d) * STEP_Y;
@@ -245,9 +265,7 @@ function drawGround(g: CanvasRenderingContext2D, spec: SpriteSpec, kind: string,
   const pair = GROUND_COLOR[kind];
   if (!pair) {
     // 다리 — 널 + 난간
-    g.fillStyle = '#a67c4a';
-    footprintPath(g, 1, 1, ch);
-    g.fill();
+    fillTile(g, 0, ch - TILE_H, '#a67c4a');
     g.fillStyle = '#8a6238';
     for (let k = 0; k < 4; k++) g.fillRect(4 + k * 7, ch - TILE_H, 2, TILE_H);
     g.fillStyle = '#c9a06a';
@@ -256,18 +274,17 @@ function drawGround(g: CanvasRenderingContext2D, spec: SpriteSpec, kind: string,
     return;
   }
   const [base, spot] = pair;
-  footprintPath(g, 1, 1, ch);
-  g.save();
-  g.clip();
-  g.fillStyle = base;
-  g.fillRect(0, 0, cw, ch);
+  const oy = ch - TILE_H;
+  fillTile(g, 0, oy, base);
+  // 얼룩도 마스크 안에서만 — 밖에 찍으면 이웃 타일과 겹쳐 이음새가 된다
   g.fillStyle = spot;
-  for (let y = 0; y < ch; y++) {
-    for (let x = 0; x < cw; x++) {
-      if (hash2(x, y, alt * 977 + kind.length) > 0.82) g.fillRect(x, y, 1, 1);
+  for (let y = 0; y < TILE_H; y++) {
+    const sp = tileRowSpan(y);
+    for (let x = sp.x0; x < sp.x1; x++) {
+      if (hash2(x, y, alt * 977 + kind.length) > 0.82) g.fillRect(x, oy + y, 1, 1);
     }
   }
-  g.restore();
+  void cw;
 }
 
 /** 콤보 데코 — 작은 기둥 + 머리 */
@@ -275,9 +292,7 @@ function drawDeco(g: CanvasRenderingContext2D, spec: SpriteSpec, id: string): vo
   const [cw, ch] = spec.size;
   const item = KAIRO.deco.items.find((d) => d.id === id);
   const col = DECO_COLOR[item?.kind ?? 'scenery']!;
-  footprintPath(g, 1, 1, ch);
-  g.fillStyle = darken(col, 0.6);
-  g.fill();
+  fillTile(g, 0, ch - TILE_H, darken(col, 0.6));
   const bodyH = ch - TILE_H;
   g.fillStyle = '#8f8478';
   g.fillRect(cw / 2 - 2, ch - TILE_H / 2 - bodyH, 4, bodyH);

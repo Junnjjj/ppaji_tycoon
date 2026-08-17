@@ -17,6 +17,9 @@ import {
   gridExtent,
   inGrid,
   snapCamera,
+  tileRowSpan,
+  tileMaskArea,
+  tileOffsetInCanvas,
 } from './iso.js';
 
 describe('투영이 정수로 떨어진다 — 스케일 계약의 근거', () => {
@@ -200,5 +203,73 @@ describe('카메라 스냅', () => {
 
   it('이미 정수면 그대로다', () => {
     expect(snapCamera({ x: 16, y: 8 })).toEqual({ x: 16, y: 8 });
+  });
+});
+
+describe('타일 마스크 — 이음새 0 의 근거', () => {
+  it('마스크 픽셀 수가 격자 기본 영역 면적(256)과 같다', () => {
+    // 격자 (16,8)·(−16,8) 의 행렬식 = |16·8 − 8·(−16)| = 256
+    expect(Math.abs(STEP_X * STEP_Y - STEP_Y * -STEP_X)).toBe(256);
+    expect(tileMaskArea()).toBe(256);
+  });
+
+  it('행 구간이 위아래 대칭이고 가운데 두 행이 가장 넓다', () => {
+    for (let y = 0; y < TILE_H; y++) {
+      const a = tileRowSpan(y);
+      const b = tileRowSpan(TILE_H - 1 - y);
+      expect(a).toEqual(b);
+    }
+    expect(tileRowSpan(0)).toEqual({ x0: 15, x1: 17 });
+    expect(tileRowSpan(7)).toEqual({ x0: 1, x1: 31 });
+    expect(tileRowSpan(8)).toEqual({ x0: 1, x1: 31 });
+  });
+
+  it('격자로 깔면 겹침 0 · 틈 0 이다 — 1px 이음새의 직접적 반증', () => {
+    const cov = new Map<string, number>();
+    // 중앙을 충분히 둘러싸도록 이웃까지 깐다
+    for (let di = -2; di <= 2; di++) {
+      for (let dj = -2; dj <= 2; dj++) {
+        const ox = STEP_X * (di - dj) - STEP_X;
+        const oy = STEP_Y * (di + dj);
+        for (let y = 0; y < TILE_H; y++) {
+          const s = tileRowSpan(y);
+          for (let x = s.x0; x < s.x1; x++) {
+            const k = `${ox + x},${oy + y}`;
+            cov.set(k, (cov.get(k) ?? 0) + 1);
+          }
+        }
+      }
+    }
+    // 중앙 영역은 정확히 1번씩 덮여야 한다 (가장자리는 이웃이 없어 제외)
+    let checked = 0;
+    for (let y = 8; y < 24; y++) {
+      for (let x = 0; x < 32; x++) {
+        expect(cov.get(`${x},${y}`) ?? 0, `(${x},${y})`).toBe(1);
+        checked++;
+      }
+    }
+    expect(checked).toBe(32 * 16);
+  });
+
+  it('발자국 안 타일 오프셋이 정수이고 캔버스 안에 들어간다', () => {
+    for (const [w, d, h] of [
+      [1, 1, 0],
+      [4, 1, 20],
+      [6, 3, 0],
+      [8, 6, 28],
+    ] as const) {
+      const c = footprintCanvas(w, d, h);
+      for (let i = 0; i < w; i++) {
+        for (let j = 0; j < d; j++) {
+          const o = tileOffsetInCanvas(i, j, d, h);
+          expect(Number.isInteger(o.x)).toBe(true);
+          expect(Number.isInteger(o.y)).toBe(true);
+          expect(o.x).toBeGreaterThanOrEqual(0);
+          expect(o.y).toBeGreaterThanOrEqual(0);
+          expect(o.x + TILE_W).toBeLessThanOrEqual(c.x);
+          expect(o.y + TILE_H).toBeLessThanOrEqual(c.y);
+        }
+      }
+    }
   });
 });

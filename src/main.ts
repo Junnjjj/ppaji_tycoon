@@ -17,6 +17,7 @@ const AUTOSAVE_INTERVAL_MS = 30_000;
  */
 async function mainKairo(parent: HTMLElement): Promise<void> {
   const { bootKairo } = await import('./render/kairo/boot.js');
+  const { GROUND_KINDS } = await import('./sim/kairo/terrain.js');
   const box = document.createElement('div');
   box.id = 'kairo-debug';
   box.style.cssText =
@@ -36,11 +37,40 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           : `도트격자 위반: ${s.dotGridViolations.join(' / ')}`);
     },
     onTapTile: (i, j) => {
-      console.log(`[카이로] 탭 타일 (${i}, ${j})`);
+      if (!brush) {
+        console.log(`[카이로] 탭 타일 (${i}, ${j}) — ${h.terrain.kindAt(i, j) ?? '?'}`);
+        return;
+      }
+      if (h.terrain.paint(i, j, brush)) h.scene.refreshTile(i, j);
     },
   });
 
-  Object.assign(window, { __kairo: h });
+  // 지면 붓 — 터치 타깃 44px 이상 (모바일 검증 기준)
+  let brush: string | null = null;
+  const bar = document.createElement('div');
+  bar.id = 'kairo-brush';
+  bar.style.cssText =
+    'position:fixed;left:0;right:0;bottom:0;z-index:9;display:flex;gap:4px;padding:6px;' +
+    'background:rgba(0,0,0,.6);overflow-x:auto';
+  for (const k of GROUND_KINDS) {
+    const b = document.createElement('button');
+    b.textContent = k.name;
+    b.dataset['kind'] = k.id;
+    b.style.cssText =
+      'min-width:64px;min-height:44px;border:2px solid transparent;border-radius:6px;' +
+      'background:#20303c;color:#dceaf4;font-size:12px';
+    b.addEventListener('click', () => {
+      brush = brush === k.id ? null : k.id;
+      for (const el of bar.querySelectorAll('button')) {
+        (el as HTMLElement).style.borderColor =
+          (el as HTMLElement).dataset['kind'] === brush ? '#7ad0ff' : 'transparent';
+      }
+    });
+    bar.append(b);
+  }
+  document.body.append(bar);
+
+  Object.assign(window, { __kairo: h, __kairoBrush: () => brush });
   console.log(
     `[카이로] 에셋 ${h.provider.name} (${h.provider.ids.length}장 플레이스홀더) · ` +
       '카메라 줌 1 고정 · 확대는 캔버스 정수 배율',
