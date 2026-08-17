@@ -37,10 +37,11 @@ export class Navigation {
    * 지형이 걸을 수 있어야 하고, 시설이 막고 있지 않아야 한다 (길은 예외).
    */
   walkable = (x: number, y: number): boolean => {
-    if (!isWalkable(this.world.at(x, y))) return false;
     const f = this.facilities.facilityAt(x, y);
-    if (!f) return true;
-    return requireFacilityDef(f.defId).layer === 'path';
+    // 길·데크(layer 'path')는 **지형을 덮는 구조물**이다 — 물 위 데크로 걸어 나갈 수 있어야
+    // "물 위로 뻗어나가는 연결식 건설"(v5 의 심장)이 성립한다. 그 외 시설은 통행을 막는다.
+    if (f) return requireFacilityDef(f.defId).layer === 'path';
+    return isWalkable(this.world.at(x, y));
   };
 
   /**

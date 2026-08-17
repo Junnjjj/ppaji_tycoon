@@ -246,6 +246,16 @@ async function main(): Promise<void> {
   // ── 5. 손님이 실제로 들어오고 움직이는가 ──
   console.log('\n[5] 손님 시뮬레이션');
   await page.locator('.speed-btn', { hasText: '▶▶▶' }).click();
+  // 이동 측정의 기준 스냅샷은 배속 구간 시작 시점에 찍는다 — v5 스트립 맵에서는 시설 간
+  // 거리가 짧아 6초 뒤엔 전원이 대기열(정지)에 들어갈 수 있다. 관찰 창이 늦으면
+  // "걸어서 도착했다"는 사실 자체를 놓친다.
+  await page.evaluate(`(() => {
+    var sim = window.__ppaji && window.__ppaji.sim;
+    if (!sim) return;
+    var m = {};
+    for (var g of sim.guests.all) m[g.id] = g.cx + ',' + g.cy;
+    window.__moveProbeBefore = m;
+  })()`);
   await page.waitForTimeout(6000);
 
   const busy = await simStats(page);
@@ -259,14 +269,24 @@ async function main(): Promise<void> {
     new Promise(function (resolve) {
       var sim = window.__ppaji && window.__ppaji.sim;
       if (!sim) return resolve(false);
-      var before = new Map();
-      for (var g of sim.guests.all) before.set(g.id, g.cx + ',' + g.cy);
-      setTimeout(function () {
+      // 배속 구간 시작 시점의 스냅샷과 비교한다 (없으면 지금부터 1.5초 창으로 폴백).
+      var before = window.__moveProbeBefore || null;
+      if (before) {
         var n = 0;
-        for (var g2 of sim.guests.all) {
-          if (before.has(g2.id) && before.get(g2.id) !== g2.cx + ',' + g2.cy) n++;
+        for (var g of sim.guests.all) {
+          if (before[g.id] !== undefined && before[g.id] !== g.cx + ',' + g.cy) n++;
+          if (before[g.id] === undefined) n++; // 새로 걸어 들어온 손님도 이동의 증거다
         }
-        resolve(n > 0);
+        return resolve(n > 0);
+      }
+      var snap = new Map();
+      for (var g1 of sim.guests.all) snap.set(g1.id, g1.cx + ',' + g1.cy);
+      setTimeout(function () {
+        var n2 = 0;
+        for (var g2 of sim.guests.all) {
+          if (snap.has(g2.id) && snap.get(g2.id) !== g2.cx + ',' + g2.cy) n2++;
+        }
+        resolve(n2 > 0);
       }, 1500);
     })
   `);

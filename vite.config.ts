@@ -9,6 +9,8 @@ export default defineConfig({
   server: {
     host: true, // 같은 네트워크의 폰에서 접속 가능하게
     port: 5173,
+    // Cloudflare 터널 등 외부 호스트 접속 허용 (기본값은 localhost 만 허용한다)
+    allowedHosts: ['.trycloudflare.com', '.ngrok-free.app', '.loca.lt'],
   },
   build: {
     // iOS Safari 16 대까지 안전하게 내려간다 (모바일이 최우선 목표)

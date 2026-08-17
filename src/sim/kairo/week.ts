@@ -130,8 +130,16 @@ export interface WeekOptions {
   season?: Season;
   /** 압축 연출용 기록을 남길 간격 (0 이면 기록 안 함) */
   playbackEvery?: number;
-  /** 손님 입장 간격의 기준 tick — 계절·요일·시설 수로 조정된다 */
+  /** 손님 입장 간격의 기준 tick — 계절·요일·평판으로 조정된다 */
   arrivalBaseTicks?: number;
+  /**
+   * 평판 배율 (등급에서 온다). 1.0 이 기본.
+   *
+   * 시설 수만으로 수요를 올리면 배율이 곧 상한에 붙어 후반에 수요가 고정된다
+   * (실측: 11주차부터 320 고정). 평판을 축으로 두면 "만족도를 관리하면 손님이 더 온다"가
+   * 되고, 그건 등급이 돈으로 안 사진다는 결정과 같은 방향이다.
+   */
+  reputation?: number;
 }
 
 export class WeekRunner {
@@ -200,11 +208,16 @@ export class WeekRunner {
     for (let day = 0; day < DAYS_PER_WEEK; day++) {
       const weather = rng.pick(profile.weather);
       const weekendBoost = WEEKEND.includes(day) ? 1.6 : 1.0;
-      // 시설이 많을수록 소문이 나 손님이 늘어난다 (상한은 GuestStore 가 걸어 준다)
-      const facilityPull = 1 + Math.min(2, this.placement.count * 0.06);
-      const arrivalRate = profile.arrivalBase * weekendBoost * facilityPull;
+      // 시설이 조금 끌어당기고, 나머지는 평판이 결정한다
+      const facilityPull = 1 + Math.min(0.6, this.placement.count * 0.015);
+      const reputation = opts.reputation ?? 1;
+      const arrivalRate = profile.arrivalBase * weekendBoost * facilityPull * reputation;
       const baseTicks = opts.arrivalBaseTicks ?? 10;
-      const everyTicks = Math.max(1, Math.round(baseTicks / Math.max(0.05, arrivalRate)));
+      /**
+       * ⚠ 간격을 정수 tick 으로 반올림하면 **1 에서 바닥을 친다** — 그 위로는 수요를
+       * 아무리 올려도 하루 120명이 상한이 된다 (실측). 누적기로 소수 비율을 그대로 쓴다.
+       */
+      const perTick = arrivalRate / baseTicks;
 
       const before = this.guests.stats();
       let arrivals = 0;
@@ -213,8 +226,11 @@ export class WeekRunner {
       let peak = 0;
       let dayRevenue = 0;
 
+      let arrivalAcc = 0;
       for (let t = 0; t < TICKS_PER_DAY; t++, tick++) {
-        if (tick % everyTicks === 0) {
+        arrivalAcc += perTick;
+        while (arrivalAcc >= 1) {
+          arrivalAcc -= 1;
           arrivals++;
           if (this.guests.spawn(rng)) visitors++;
           else turnedAway++;

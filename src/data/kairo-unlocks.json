@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "해금. 시설은 등급으로, 수면 사용 면적은 허가 등급으로, 격자는 토지로 열린다. 허가는 돈으로 못 사고 평판으로만 오른다 (v2 결정).",
+  "note": "해금. 시설은 등급으로, 수면 사용 면적은 허가 등급으로, 격자는 토지로 열린다. 허가는 돈으로 못 사고 평판으로만 오른다 (v2 결정). 등급은 **동시 손님 상한과 방문 수요**도 함께 올린다 — 이게 성장의 유일한 축이다. 없으면 시설만 늘고 수요·입장이 막혀 후반에 손익이 꺾인다 (실측 25% 하락).",
   "grades": [
     {
       "grade": 1,
@@ -8,7 +8,9 @@
       "reqExitSatisfaction": 0,
       "permitArea": 40,
       "landW": 14,
-      "landH": 12
+      "landH": 12,
+      "maxGuests": 30,
+      "reputationPull": 1.0
     },
     {
       "grade": 2,
@@ -16,7 +18,9 @@
       "reqExitSatisfaction": 55,
       "permitArea": 90,
       "landW": 20,
-      "landH": 16
+      "landH": 16,
+      "maxGuests": 50,
+      "reputationPull": 1.35
     },
     {
       "grade": 3,
@@ -24,7 +28,9 @@
       "reqExitSatisfaction": 65,
       "permitArea": 180,
       "landW": 28,
-      "landH": 22
+      "landH": 22,
+      "maxGuests": 75,
+      "reputationPull": 1.7
     },
     {
       "grade": 4,
@@ -32,7 +38,9 @@
       "reqExitSatisfaction": 75,
       "permitArea": 320,
       "landW": 34,
-      "landH": 28
+      "landH": 28,
+      "maxGuests": 105,
+      "reputationPull": 2.1
     },
     {
       "grade": 5,
@@ -40,7 +48,9 @@
       "reqExitSatisfaction": 85,
       "permitArea": 500,
       "landW": 40,
-      "landH": 32
+      "landH": 32,
+      "maxGuests": 150,
+      "reputationPull": 2.5
     }
   ],
   "facilityGrade": {

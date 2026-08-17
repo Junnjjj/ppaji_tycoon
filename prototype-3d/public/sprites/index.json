@@ -1,0 +1,146 @@
+{
+ "shop": {
+  "run": "y20-shop",
+  "px": [
+   41,
+   58
+  ],
+  "footprint": [
+   2,
+   2
+  ],
+  "tilesWide": 2.56
+ },
+ "cafe": {
+  "run": "y20-cafe",
+  "px": [
+   46,
+   69
+  ],
+  "footprint": [
+   2,
+   3
+  ],
+  "tilesWide": 2.88
+ },
+ "restroom": {
+  "run": "y20-restroom",
+  "px": [
+   41,
+   63
+  ],
+  "footprint": [
+   2,
+   2
+  ],
+  "tilesWide": 2.56
+ },
+ "shower": {
+  "run": "y20-shower",
+  "px": [
+   41,
+   59
+  ],
+  "footprint": [
+   2,
+   2
+  ],
+  "tilesWide": 2.56
+ },
+ "changing": {
+  "run": "y20-changing",
+  "px": [
+   41,
+   59
+  ],
+  "footprint": [
+   2,
+   2
+  ],
+  "tilesWide": 2.56
+ },
+ "shade": {
+  "run": "y20-shade",
+  "px": [
+   36,
+   28
+  ],
+  "footprint": [
+   2,
+   1
+  ],
+  "tilesWide": 2.25
+ },
+ "slide": {
+  "run": "y20-slide",
+  "px": [
+   62,
+   83
+  ],
+  "footprint": [
+   3,
+   3
+  ],
+  "tilesWide": 3.88
+ },
+ "trampoline": {
+  "run": "y20-trampoline",
+  "px": [
+   62,
+   72
+  ],
+  "footprint": [
+   3,
+   3
+  ],
+  "tilesWide": 3.88
+ },
+ "pool": {
+  "run": "y20-pool",
+  "px": [
+   76,
+   86
+  ],
+  "footprint": [
+   4,
+   3
+  ],
+  "tilesWide": 4.75
+ },
+ "lodge": {
+  "run": "lodge-iso-176",
+  "px": [
+   176,
+   158
+  ],
+  "footprint": [
+   0,
+   0
+  ],
+  "tilesWide": 11.0
+ },
+ "tent": {
+  "run": "y20-tent",
+  "px": [
+   41,
+   49
+  ],
+  "footprint": [
+   2,
+   2
+  ],
+  "tilesWide": 2.56
+ },
+ "gate": {
+  "run": "y20-gate",
+  "px": [
+   56,
+   62
+  ],
+  "footprint": [
+   3,
+   2
+  ],
+  "tilesWide": 3.5
+ }
+}

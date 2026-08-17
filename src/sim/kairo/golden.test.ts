@@ -6,7 +6,7 @@ import { PlacementGrid } from './placement.js';
 import { GuestStore, GUEST_DEFAULTS } from './guests.js';
 import { WeekRunner, type Season } from './week.js';
 import { evaluateCombos } from './combos.js';
-import { questStatuses, ProgressStore, gradeFor } from './progress.js';
+import { questStatuses, ProgressStore, gradeFor, GRADES, admissionLimit } from './progress.js';
 import { assessRisk } from './risk.js';
 
 /**
@@ -83,9 +83,21 @@ function playGolden(weeks: number): Golden {
   g.invalidate();
 
   const seasons: Season[] = ['summer', 'summer', 'summer', 'autumn'];
-  let last = week.run(rng, { season: 'summer' });
+  /**
+   * 매주 등급을 반영한다 — 등급이 동시 손님 상한과 방문 수요를 올린다.
+   * 이게 없으면 시설만 늘고 수요·입장이 막혀 후반에 손익이 꺾인다.
+   */
+  const applyGrade = (sat: number): number => {
+    const gr = gradeFor(sat);
+    // 등급 상한과 공급 중 작은 쪽 — 슬롯보다 많이 받으면 줄만 길어진다
+    g.setMaxGuests(admissionLimit(gr, p.totalCapacity()));
+    return gr.reputationPull;
+  };
+  let pull = applyGrade(0);
+  let last = week.run(rng, { season: 'summer', reputation: pull });
   for (let k = 1; k < weeks; k++) {
-    last = week.run(rng, { season: seasons[k % seasons.length] as Season });
+    pull = applyGrade(last.exitSatisfaction);
+    last = week.run(rng, { season: seasons[k % seasons.length] as Season, reputation: pull });
     progress.claim(questStatuses(p, last));
   }
 
@@ -117,17 +129,28 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
      *
      * 2026-08-18 기준값. 이 시점의 튜닝:
      *   useTicks 12 · wantUses 4 · useGains [14,10,7,4] · walkPenalty 0.35 · waitPenalty 0.12
+     *   등급 상한 30/50/75/105/150 · 수요 배율 1.0/1.35/1.7/2.1/2.5 · admissionLimit(공급×1.5)
+     *
+     * ### 갱신 이력 — 왜 바뀌었나
+     *
+     * **2026-08-18 후반 정체 수정** (visitors 113→89 · exitSat 63→68 · grade 2→3):
+     * 입장 상한이 정원 60 고정에서 `min(등급 상한, 공급×1.5)` 로 바뀌었다. 이 구성은
+     * 시설 15개라 공급이 얇아 상한이 60 → 50 으로 내려간다. **방문객이 줄고 만족도가
+     * 오른 것이 이 변경의 의도다** — 슬롯보다 많이 받으면 줄만 길어져 만족도가 붕괴하고,
+     * 등급이 떨어져 수요가 줄고 다시 만족도가 떨어지는 죽음의 나선이 생겼다
+     * (36주 실측: 만석 100% · 만족도 0 · 손익 37% 하락). 만족도가 올라 등급이 3이 되고,
+     * 위험도가 경계→주의로 내려간 것도 동시 손님이 줄어든 결과다 (혼잡이 위험 요인).
      */
     expect(g).toEqual({
       facilities: 15,
       combos: 7,
-      grade: 2,
-      exitSat: 63,
-      visitors: 113,
-      turnedAway: 2,
+      grade: 3,
+      exitSat: 68,
+      visitors: 89,
+      turnedAway: 4,
       profitSign: 1,
-      questsDone: 5,
-      riskLevel: 'caution',
+      questsDone: 6,
+      riskLevel: 'watch',
     });
   });
 
@@ -140,6 +163,17 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
   it('만족도가 중간 범위다 — 만점이면 배치가 결과를 안 바꾼다', () => {
     expect(g.exitSat).toBeGreaterThan(45);
     expect(g.exitSat).toBeLessThan(85);
+  });
+
+  it('등급이 동시 손님 상한과 수요를 올린다 — 성장의 유일한 축', () => {
+    const g1 = gradeFor(0);
+    const g5 = gradeFor(100);
+    expect(g5.maxGuests).toBeGreaterThan(g1.maxGuests);
+    expect(g5.reputationPull).toBeGreaterThan(g1.reputationPull);
+    for (let k = 1; k < 5; k++) {
+      expect(GRADES[k]!.maxGuests).toBeGreaterThan(GRADES[k - 1]!.maxGuests);
+      expect(GRADES[k]!.reputationPull).toBeGreaterThan(GRADES[k - 1]!.reputationPull);
+    }
   });
 
   it('한 방문이 하루 안에 끝난다 — 넘으면 공원이 영구히 포화된다', () => {

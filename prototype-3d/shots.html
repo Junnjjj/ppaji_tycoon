@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>빠지 프로토 — 스크린샷</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin:0; background:#161c24; color:#e8f0f4;
+         font:15px/1.5 -apple-system,system-ui,sans-serif;
+         padding: env(safe-area-inset-top) 12px calc(24px + env(safe-area-inset-bottom)); }
+  h1 { font-size:19px; margin:14px 0 4px }
+  h2 { font-size:16px; margin:22px 0 6px; color:#ffd98a; border-top:1px solid #2b3a4a; padding-top:14px }
+  p  { margin:4px 0 10px; color:#a8bccc; font-size:13px }
+  img { width:100%; height:auto; display:block; border-radius:10px; border:1px solid #2b3a4a;
+        image-rendering: pixelated; background:#0f1620 }
+  .row { display:grid; gap:10px; grid-template-columns:1fr 1fr }
+  .row img { border-radius:8px }
+  .note { background:#20303f; border-left:3px solid #ffd98a; padding:8px 10px; border-radius:0 8px 8px 0;
+          font-size:13px; color:#cfe0ec; margin:8px 0 12px }
+  a { color:#7fd0e6 }
+</style>
+</head>
+<body>
+<h1>빠지 프로토 — 스크린샷 갤러리</h1>
+<p>모바일에서 보라고 만든 페이지. 이미지가 큰 것은 눌러서 확대하세요.</p>
+
+<h2>강 건너편 — 월드 지오메트리로 ★★★★★★★★★★★</h2>
+<div class="note">화면 부착 배경막을 폐기했다 — 수평 배경막은 월드 대각(30°) 땅끝과
+구조적으로 못 만난다 (칼로 자른 실루엣 + 이중 하늘 띠). 대신 <b>땅끝 → 뒷강 띠 →
+건너편 마을 벽 → 산 벽</b>을 전부 월드에 세웠다. 흙마당 가장자리도 잔디·젖은 흙으로
+디더 전이. 팬 올리면 건너편 펜션·다리가 보인다.</div>
+<p>지평선 — 숲 → 뒷강 → 건너편 마을 → 산</p>
+<img src="/shots/horizon-out.png" />
+
+<h2>한국 강변 전환 ★★★★★★★★★★</h2>
+<div class="note">"전혀 한국같지 않다"의 주범 둘을 갈아치웠다:
+<b>열대 파랑 물 → 북한강 녹청</b> (팔레트에 강물 9색을 먼저 넣어야 양자화가 안 튕긴다),
+<b>모래사장 → 잔디·흙길·자갈 강변</b>. 잔교도 나무 보드워크에서
+<b>인조잔디 데크 + 파란 드럼통</b>(실물 빠지의 색 코드)으로. 몽골텐트·오리배 배치,
+강 건너편 배경막(펜션·다리)을 가리던 숲 트리라인 제거.</div>
+<p>전환 후 — 세로</p>
+<img src="/shots/stage-portrait.png" />
+<p>전환 후 — 가로 (지형 수정 시 필수 확인)</p>
+<img src="/shots/wide-check.png" />
+
+<h2>무대 구조 전환 ★★★★★★★★★</h2>
+<div class="note">기울어진 해안 실험을 폐기하고 <b>레퍼런스의 실제 구조</b>로 다시 지었다:
+뒤는 그림 배경(산·숲·본관), 가운데는 물 위 잔교(육상 시설 줄), 앞은 <b>폰툰 링으로
+두른 수면 허가 구역</b>(수상 플레이 영역). 지형 판정은 해안 함수가 아니라 행 번호 하나다.<br>
+테스트용 잔재(경로 하네스·옛 장식 파크·앰비언트 군중)도 삭제했다.</div>
+<p>무대 구도 — 본관·잔교·링·계류가 레퍼런스 배열</p>
+<img src="/shots/stage-portrait.png" />
+
+<h2>가로 화면 버그 수정 ★★★★★★★★</h2>
+<div class="note">세로 폰으로만 확인해서 놓쳤다. 가로에서는 <b>땅이 리본처럼 잘리고
+양쪽에 물이 보였다</b> — 해안선만 기울이고 지형·물은 <b>축 정렬 유한 평면</b>으로 뒀기
+때문. 물·모래·잔디·언덕을 전부 해안을 따라가는 띠(<code>shoreStrip</code>)로 바꾸고
+가로 화면까지 덮게 넓혔다. 앞으로 지형을 건드리면 <code>tools/shot-wide.mjs</code> 로
+가로도 반드시 찍는다.</div>
+<p>수정 후 (1280×720) — 해안선 하나, 위는 뭍 아래는 물</p>
+<img src="/shots/wide-check.png" />
+
+<h2>맵 구조 개편 — 사선 문제 ★★★★★★★</h2>
+<div class="note"><b>측정이 먼저였다.</b> 레퍼런스 해안선은 8~12°인데
+우리 격자축은 최소 18.5°(yaw30) · 24~30°(yaw45) 다 — <b>어떤 격자축으로도 안 나온다</b>.
+레퍼런스의 완만한 해안선은 격자축이 아니라 <b>타일 공간의 대각선</b>이었다
+(yaw45 에서 dz/dx=1 이면 정확히 수평, 1.5 면 −6.6°).<br>
+그래서 ① 카메라 yaw 45(정아이소) ② 해안선 기울기 1.5 ③ 지형·숲·모래·수심을 전부
+<b>해안 거리 기준</b>으로 재작성 ④ 격자를 44×70 으로 (기울어진 땅을 담으려면 필요)
+⑤ 허가 구역을 물·뭍 둘 다 경계선으로 표시.</div>
+<p>개편 후 — 산→숲→잔디→모래→물이 해안과 나란히 쌓인다</p>
+<img src="/shots/map-zones.png" />
+<p>yaw 30(비대칭) vs yaw 45(정아이소) — 개편 전 비교</p>
+<img src="/shots/map-compare.png" />
+
+<h2>배경막도 스프라이트로 ★★★★★★</h2>
+<div class="note">그동안 배경(하늘·산)은 <b>안 바뀌어 있었다</b> — 절차적 3D 그대로였다.
+2026-08-14 에 뽑아두고 한 번도 안 붙인 <code>bg-far</code>·<code>bg-near</code> 를 붙였다.<br>
+배경막은 월드 오브젝트가 아니라 <b>화면 레이어</b>다 — 월드에 놨더니 카메라가 조금만
+움직여도 언덕 뒤로 묻혔다. <code>camera.add()</code> 로 화면에 고정하고 시차는 텍스처
+오프셋으로 준다. 기본 켜짐, <code>?bg=procedural</code> 로 되돌린다.</div>
+<p>왼쪽 절차적(옛) · 오른쪽 스프라이트 배경막(현재)</p>
+<img src="/shots/bg-compare.png" />
+
+<h2>잘림 수정 — 기단 제거 + 손님 윤곽 굽기 ★★★★★</h2>
+<div class="note"><b>건물</b>: 빌보드 밑에 깔았던 3D 기단 상자가 범인. 입체라 앞면이
+스프라이트 밑단을 덮었다. 애초에 필요 없었다 — 카메라 정면 쿼드는 전체가 같은 깊이라
+앵커만 접지점에 두면 뜨지 않는다.<br>
+<b>손님</b>: 픽셀화 외곽선은 깊이 불연속에만 그려져서, 대기줄처럼 촘촘히 겹치면
+선이 안 생기고 갈색 덩어리가 됐다. 스프라이트에 <b>1px 윤곽을 구워</b> 해결.</div>
+<p>수정 후 — 대기줄에서도 사람이 한 명씩 세어진다</p>
+<img src="/shots/stage2-sprite.png" />
+<p>손님 4배 확대</p>
+<img src="/shots/guests-zoom.png" />
+
+<h2>Stage 2 — 화면 전체가 픽셀로 ★★★★</h2>
+<div class="note">건물·<b>손님</b>·<b>숲</b>·<b>계류 보트</b>가 전부 픽셀 스프라이트가 됐다.
+3D 로 남은 것: 지형·물·데크·잔교·항적.<br>
+도트 경계율 <b>44.6% → 48.5%</b>, 최장 평탄런 <b>22 → 18</b> (레퍼런스 66% / 1).
+손님은 AI 생성이 아니라 <b>코드로 굽는다</b> — design.md §19.3 이 손님을 procedural 로
+규정했고, 12×17px 은 sprite-gen 캡이 미검증인 크기다.</div>
+<p>전체 화면 — 시설 18종 + 길·데크 84타일 + 계류 보트 56척 (배경막 적용)</p>
+<img src="/shots/stage2-wide.png" />
+
+<h2>Stage 2 — 시설 스프라이트 vs 파라메트릭</h2>
+<div class="note">시설 9종 + 본관을 한 화면에 깔고 <b>같은 배치</b>로 두 번 찍었다.
+스프라이트는 새로 안 뽑았다 — <code>assets/generated/</code> 에 이미 있던 123장 중
+10장을 로지컬 PNG 로 내보내 빌보드로 세운 것.<br>
+크기 계약: <b>스프라이트 1텍셀 = 타일의 1/16</b>. 화면이 아니라 타일에 묶는다 —
+처음에 화면 기준으로 잡았더니 본관만 1.9배 커서 세트로 안 보였다.</div>
+<p>왼쪽 파라메트릭 3D · 오른쪽 픽셀 스프라이트 (지형·물·손님·데크·보트는 양쪽 다 3D)</p>
+<img src="/shots/stage2-compare.png" />
+<div class="note"><b>남은 이음새</b>: 손님·나무·잔교·보트는 아직 3D 라 스프라이트 건물 옆에서
+매끈하게 보인다. 이것들도 스프라이트가 이미 있다 (prop-tree · deck-* · veh-*).</div>
+<p>스프라이트판 확대</p>
+<img src="/shots/stage2-sprite.png" />
+
+<h2>카메라 각도 — 3D 는 돌아가고, 스프라이트는 안 돌아간다 ★★</h2>
+<div class="note">세 컷에서 <b>건물은 픽셀 단위로 똑같다</b>. 나무·잔디·해안선만 각도가 바뀐다.
+빌보드는 카메라를 정면으로 보게 돼 있어서 카메라를 돌려도 그림이 바뀌지 않는다 —
+스프라이트의 각도는 <b>생성 시점에 구워진다</b>.<br>
+그리고 실측: 현재 카메라는 <b>아이소메트릭이 아니다</b>. yaw 30° 라 지면 축이
++X 18.3° / +Z 45.3° 로 비대칭이다. 고도각 35.31° 는 이미 arcsin(1/√3)=35.26°,
+즉 정아이소 고도각이라 <b>yaw 만 45° 로 바꾸면 정아이소</b>가 된다.</div>
+<p>왼쪽: 현재(비아이소) · 가운데: 2:1 아이소 · 오른쪽: 정아이소 — <code>?yaw=45&amp;elev=26.57</code></p>
+<img src="/shots/angle-compare.png" />
+
+<h2>경로 판정 — 본관 한 채, 네 가지 제작 방식 ★★</h2>
+<div class="note">같은 씬·같은 카메라·같은 광원·같은 픽셀 파이프라인에서 <b>본관만</b>
+갈아끼웠다 (<code>?route=A|B|D</code>). 프레이밍은 경로마다 자기 바운딩박스에서
+자동 계산 — 줌을 손으로 맞추면 비교가 성립하지 않는다.</div>
+<p>왼쪽부터 레퍼런스(정답지) · A 현행 3D · B 부품 확장 3D · D 픽셀 스프라이트 빌보드</p>
+<img src="/shots/route-compare.png" />
+<div class="note">지표는 <b>판정을 못 한다</b>: 도트 경계율이 A 51.4% · B 49.1% · D 50.6%
+로 사실상 같다. 차이는 밀도가 아니라 <b>윤곽·이단 명암·반복 모티프</b>다.
+숫자는 잔디가 단색이던 문제를 잡을 땐 유용했지만 여기선 눈이 판정한다.</div>
+<p>D 확대 — 3D 씬 안에 빌보드로 서 있다 (지형·물·손님·나무는 그대로 3D)</p>
+<img src="/shots/route-D.png" />
+<p>B 확대 — detail.ts 부품(적층 테라스·외부 계단·아케이드·파라솔·소탑)으로 조립</p>
+<img src="/shots/route-B.png" />
+
+<h2>레퍼런스 한 장 = 에셋 참조 9종</h2>
+<div class="note">건물 참조 이미지를 <b>새로 생성할 필요가 없다</b>. 지금 레퍼런스 한 장에
+이미 9종이 들어 있고, 같은 이미지에서 나왔으니 스타일이 자동으로 일관된다.
+img2threejs 는 <b>개당 8만~18만 토큰</b>이라 81종을 하나씩 돌리는 건 산수가 안 맞는다
+(≈1,000만 토큰). 히어로 1~3채만 돌리고 결과에서 <b>부품을 뽑아 detail.ts 에 흡수</b>한다.</div>
+<p>본관 — 3단 테라스 적층. 우리 <code>hut()</code> 은 상자 하나라서 구조가 다르다</p>
+<img src="/shots/ref/lodge.png" />
+<div class="row">
+  <div><p>천막열</p><img src="/shots/ref/tentrow.png" /></div>
+  <div><p>안전요원 타워</p><img src="/shots/ref/guardtower.png" /></div>
+  <div><p>공구점</p><img src="/shots/ref/kiosk.png" /></div>
+  <div><p>잔교·보트</p><img src="/shots/ref/dockboats.png" /></div>
+  <div><p>슬라이드</p><img src="/shots/ref/slide.png" /></div>
+  <div><p>클라이밍 빙산</p><img src="/shots/ref/iceberg.png" /></div>
+  <div><p>아치</p><img src="/shots/ref/archway.png" /></div>
+  <div><p>트램펄린</p><img src="/shots/ref/trampoline.png" /></div>
+</div>
+
+<h2>레퍼런스와 뭐가 다른가 — 측정 ★</h2>
+<div class="note">같은 도트 격자로 내려서 잰 값.<br>
+레퍼런스 — 도트 경계율 <b>66%</b> · 최장 평탄 런 <b>1도트</b> · 고유색 341,768<br>
+우리 — <b>39.5%</b> · <b>28도트</b> · 고유색 88 → 질감 추가 후 <b>46%</b> · <b>17도트</b><br>
+레퍼런스가 빽빽한 건 지오메트리가 많아서가 아니라 <b>단색 면이 아예 없어서</b>다.
+그리고 레퍼런스는 고유색 34만 — <b>진짜 픽셀아트가 아니라 픽셀풍 AI 이미지</b>다.</div>
+<p>잔디·모래에 도트 질감을 깔고 난 뒤</p>
+<img src="/shots/scene-tex.png" />
+<p>기준 이미지 (다시)</p>
+<img src="/shots/ref-quality-bar.png" />
+
+<h2>정수 배율 도트 ★</h2>
+<div class="note">도트감이 안 났던 진짜 원인은 해상도가 아니라 <b>배율이 소수</b>였다는 것.
+논리 320 → 캔버스 393 = ×1.228 이라 논리픽셀이 1px/2px 로 들쭉날쭉 찍혔다.
+이제 <b>도트 크기(CSS 2px)를 먼저 고정</b>하고 논리 해상도를 거기서 계산한다.
+디더도 랜덤 해시 → <b>Bayer 4×4 정렬 디더</b>로 바꿨다.</div>
+<p>DOT 2 (기본) — 논리폭 197</p>
+<img src="/shots/dot2.png" />
+<p>DOT 3 — 더 굵다. 대신 창·문이 뭉개진다</p>
+<img src="/shots/dot3.png" />
+<p>전체 화면 DOT 2</p>
+<img src="/shots/scene-dot2.png" />
+
+<h2>공용 부품 라이브러리</h2>
+<div class="note">건물마다 손으로 디테일을 그리지 않는다. <b>src/detail.ts</b> 의 부품
+(창줄·난간·박공지붕·코니스·문·화분·차양·간판·굴뚝·기단)을 조합한다.
+부품 하나를 고치면 <b>전 건물이 같이 좋아진다</b>.</div>
+<p>게이트·매점·카페·화장실 — 네 채 전부 같은 부품으로 조립 (소수 배율 시절 샷)</p>
+<img src="/shots/parts-after-320.png" />
+
+<h2>해상도 실험 (옛 방식 · 소수 배율)</h2>
+<div class="note">전부 <b>60fps</b> — 성능은 제약이 아니다. 다만 이 넷은 전부 배율이
+소수라 도트 격자가 없다. 위의 DOT 방식과 비교용으로만 남긴다.</div>
+<div class="row">
+  <div><p>216 (현재)</p><img src="/shots/res-216-zoom.png" /></div>
+  <div><p>320</p><img src="/shots/res-320-zoom.png" /></div>
+  <div><p>432</p><img src="/shots/res-432-zoom.png" /></div>
+  <div><p>640</p><img src="/shots/res-640-zoom.png" /></div>
+</div>
+
+<h2>기준 이미지</h2>
+<img src="/shots/ref-quality-bar.png" />
+
+<h2>현재 게임 화면</h2>
+<p>장비 4종(바나나·웨이크보드·제트스키·플라이피쉬) 개설 상태</p>
+<img src="/shots/eq-all.png" />
+<p>확대 — 제트스키·부표 코스 라인·데크 끝 선착장</p>
+<img src="/shots/eq-boat-zoom.png" />
+
+<h2>기능별</h2>
+<p>손님 욕구 말풍선 (색 = 욕구)</p>
+<img src="/shots/r2-bubbles.png" />
+<p>시설 정보 시트</p>
+<img src="/shots/r2-sheet.png" />
+<p>데크로 물 위 진출</p>
+<img src="/shots/r3-diag.png" />
+<p>건설 팔레트</p>
+<img src="/shots/ux-palette.png" />
+
+<h2>라이브</h2>
+<p><a href="/">→ 3D 프로토 실행</a> (건설 → 동선/수상/코스)</p>
+</body>
+</html>

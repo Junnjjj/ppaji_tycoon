@@ -4,7 +4,7 @@ import { World } from './world.js';
 import { generateWorld } from './worldgen.js';
 import { FacilityStore, type PlacedFacility, type Rotation } from './facility-store.js';
 import { Navigation } from './navigation.js';
-import { GuestStore, NEED_COUNT, type Guest } from './guest.js';
+import { GuestStore, NEED_COUNT, type Guest, type GuestEvents } from './guest.js';
 import { CourseStore, type Course } from './course-store.js';
 import type { Vec2 } from './spline.js';
 
@@ -26,6 +26,13 @@ export interface GameOptions {
   seed: number;
   width?: number;
   height?: number;
+  /**
+   * 손님 지출 알림. 경제 계층(Phase 3)과 프로토의 자금 표시가 이걸 받아간다.
+   * sim 은 여전히 바깥을 모른다 — 평문 콜백일 뿐이다 (불변식 1).
+   */
+  onSpend?: GuestEvents['onSpend'];
+  /** 코스 탑승 요금 알림. 시설(onSpend)과 별개 경로라 따로 받는다 — 빠뜨리면 코스 매출이 샌다. */
+  onRideSpend?: GuestEvents['onRideSpend'];
 }
 
 export interface GameStats {
@@ -109,9 +116,11 @@ export class Game {
     this.courses = new CourseStore(this.world, this.facilities);
     this.guests = new GuestStore(this.facilities, this.nav, this.guestRng, undefined, {
       // 코스 매출 집계. Phase 3 의 경제 모듈이 이걸 받아간다.
-      onRideSpend: (_g, course, amount) => {
+      onRideSpend: (g, course, amount) => {
         course.revenue += amount;
+        opts.onRideSpend?.(g, course, amount);
       },
+      ...(opts.onSpend ? { onSpend: opts.onSpend } : {}),
     });
     this.guests.setCourses(this.courses);
   }

@@ -24,7 +24,7 @@ import { PlacementGrid, allFacilityDefs } from '../src/sim/kairo/placement.js';
 import { GuestStore, GUEST_DEFAULTS } from '../src/sim/kairo/guests.js';
 import { WeekRunner, type NeedKind, type Season, type WeekReport } from '../src/sim/kairo/week.js';
 import { evaluateCombos } from '../src/sim/kairo/combos.js';
-import { questStatuses, ProgressStore, gradeFor } from '../src/sim/kairo/progress.js';
+import { questStatuses, ProgressStore, gradeFor, admissionLimit } from '../src/sim/kairo/progress.js';
 
 const args = process.argv.slice(2);
 const flag = (name: string, dflt: number): number => {
@@ -54,6 +54,10 @@ interface RunResult {
   bankrupt: boolean;
   /** 주차별 손익 — 성장 곡선을 본다 */
   profitByWeek: number[];
+  /** 주차별 계절 — 성장 판정은 **같은 계절끼리** 비교해야 한다 */
+  seasonByWeek: Season[];
+  /** 건설을 시도했다가 자리를 못 찾은 횟수 — 시설 상한의 원인을 가른다 */
+  buildFails: number;
 }
 
 /** 병목을 보고 그 종류를 짓는 봇 */
@@ -112,6 +116,8 @@ function runOne(seed: number, weeks: number): RunResult {
   let cash = 5_000_000;
   let last: WeekReport | null = null;
   const profitByWeek: number[] = [];
+  const seasonByWeek: Season[] = [];
+  let buildFails = 0;
   const seasons: Season[] = ['summer', 'summer', 'autumn', 'winter', 'spring'];
 
   for (let k = 0; k < weeks; k++) {
@@ -120,15 +126,22 @@ function runOne(seed: number, weeks: number): RunResult {
     for (let b = 0; b < 3; b++) {
       const spent = buildOne(t, w, p, cash, b === 0 ? want : null, rng);
       cash -= spent;
-      if (spent === 0) break;
+      if (spent === 0) {
+        buildFails++;
+        break;
+      }
     }
     g.invalidate();
 
+    // 등급을 반영한다 — 동시 손님 상한과 방문 수요가 등급에서 온다
+    const gr = gradeFor(last?.exitSatisfaction ?? 0);
+    g.setMaxGuests(admissionLimit(gr, p.totalCapacity()));
     const season = seasons[Math.floor(k / 4) % seasons.length] as Season;
-    const rep = week.run(rng, { season });
+    const rep = week.run(rng, { season, reputation: gr.reputationPull });
     last = rep;
     cash += rep.profit;
     profitByWeek.push(rep.profit);
+    seasonByWeek.push(season);
 
     const claimed = progress.claim(questStatuses(p, rep));
     cash += claimed.cash;
@@ -150,6 +163,8 @@ function runOne(seed: number, weeks: number): RunResult {
     questsDone: progress.claimedCount,
     bankrupt: cash < 0,
     profitByWeek,
+    seasonByWeek,
+    buildFails,
   };
 }
 
@@ -218,6 +233,16 @@ function main(): void {
     byWeek.push(stats(runs.map((r) => r.profitByWeek[k] ?? 0)).med);
   }
   console.log(`주차별 손익 중앙값: ${byWeek.map(fmt).join(' → ')}`);
+  const seasonLine = [...new Set(runs[0]?.seasonByWeek ?? [])]
+    .map((se) => {
+      const xs = runs.flatMap((r) =>
+        r.profitByWeek.filter((_, k) => r.seasonByWeek[k] === se),
+      );
+      return `${se} ${fmt(stats(xs).med)}`;
+    })
+    .join(' · ');
+  console.log(`계절별 손익 중앙값: ${seasonLine}`);
+  console.log(`건설 막힌 횟수 중앙값: ${stats(runs.map((r) => r.buildFails)).med}회/판`);
 
   // 밸런스 판정 — 여기서 걸리면 숫자를 손봐야 한다
   const issues: string[] = [];
@@ -232,20 +257,44 @@ function main(): void {
   }
   if (stats(runs.map((r) => r.facilities)).med < 8) issues.push('시설이 거의 안 늘어난다');
   /**
-   * 후반 성장 정지 — 주차별 손익이 정점 대비 15% 이상 떨어지면 경보.
+   * 후반 성장 정지 — **같은 계절끼리** 비교한다.
    *
-   * 시설 수가 상한에 붙는데 유지비는 계속 늘어 손익이 꺾이는 패턴이다. 플레이어 입장에서
-   * "더 지을 게 없는데 수입이 줄어든다"가 되면 그때부터 할 일이 없어진다.
+   * ⚠ 정점과 마지막 주를 그냥 비교하면 안 된다. 계절이 순환하므로 마지막이 겨울이면
+   * 무조건 "꺾였다"가 나온다 (실측: 33~36주가 겨울이라 37% 하락으로 잡혔는데 실제로는
+   * 정상 계절 변동이었다).
    */
-  if (byWeek.length >= 8) {
-    const peak = Math.max(...byWeek);
-    const tail = byWeek[byWeek.length - 1] as number;
-    if (peak > 0 && tail < peak * 0.85) {
-      issues.push(
-        `후반에 손익이 꺾인다 — 정점 ${fmt(peak)} → 마지막 ${fmt(tail)} ` +
-          `(${Math.round((1 - tail / peak) * 100)}% 하락). 시설 상한·유지비 곡선을 볼 것`,
-      );
+  const bySeason = new Map<Season, number[]>();
+  for (const r of runs) {
+    for (let k = 0; k < r.profitByWeek.length; k++) {
+      const se = r.seasonByWeek[k] as Season;
+      if (!bySeason.has(se)) bySeason.set(se, []);
+      (bySeason.get(se) as number[]).push(r.profitByWeek[k] as number);
     }
+  }
+  const declines: string[] = [];
+  for (const [se, xs] of bySeason) {
+    if (xs.length < 8) continue;
+    const half = Math.floor(xs.length / 2);
+    const mean = (a: number[]): number => a.reduce((x, y) => x + y, 0) / Math.max(1, a.length);
+    const early = mean(xs.slice(0, half));
+    const late = mean(xs.slice(half));
+    if (early > 0 && late < early * 0.85) {
+      declines.push(`${se} ${fmt(early)}→${fmt(late)}`);
+    }
+  }
+  if (declines.length > 0) {
+    issues.push(
+      `같은 계절인데 후반 손익이 낮다 — ${declines.join(' · ')}. 시설 상한·유지비 곡선을 볼 것`,
+    );
+  }
+
+  // 시설 상한의 원인 — 자리를 못 찾는 것인지 돈이 없는 것인지
+  const fails = stats(runs.map((r) => r.buildFails));
+  if (fails.med > WEEKS * 0.3) {
+    issues.push(
+      `건설이 자주 막힌다 (평균 ${fails.med}회/판) — 자리가 없는 것인지 확인할 것. ` +
+        '토지 해금으로 격자를 넓혀야 할 수도 있다',
+    );
   }
   console.log(issues.length === 0 ? '\n✅ 밸런스 경보 없음' : `\n⚠ 밸런스 경보 ${issues.length}건`);
   for (const s of issues) console.log(`   · ${s}`);

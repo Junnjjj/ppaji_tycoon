@@ -152,6 +152,9 @@ export class GuestStore {
   private readonly claims = new Map<number, SlotClaim>();
   private dirty = true;
 
+  /** 현재 동시 손님 상한 — 튜너블의 기본값에서 시작해 등급이 올린다 */
+  private limit: number;
+
   private exited = 0;
   private satSum = 0;
   private gaveUp = 0;
@@ -163,7 +166,9 @@ export class GuestStore {
     private readonly placement: PlacementGrid,
     private readonly gate: { i: number; j: number },
     readonly tunables: GuestTunables = GUEST_DEFAULTS,
-  ) {}
+  ) {
+    this.limit = tunables.maxGuests;
+  }
 
   get all(): readonly Guest[] {
     return this.guests;
@@ -176,6 +181,18 @@ export class GuestStore {
   /** 지형·벽·시설이 바뀌면 거리장을 버린다. 다음 tick 에 다시 만든다 */
   invalidate(): void {
     this.dirty = true;
+  }
+
+  /**
+   * 동시 손님 상한을 바꾼다 — 등급이 오르면 올라간다.
+   * 상한이 고정이면 시설을 늘려도 입장이 안 늘어 후반 성장이 멈춘다.
+   */
+  setMaxGuests(n: number): void {
+    this.limit = Math.max(1, Math.round(n));
+  }
+
+  get maxGuests(): number {
+    return this.limit;
   }
 
   /**
@@ -304,7 +321,7 @@ export class GuestStore {
 
   /** 손님 한 명 입장. 게이트가 못 걷는 칸이면 실패 */
   spawn(rng: Rng): Guest | null {
-    if (this.guests.length >= this.tunables.maxGuests) return null;
+    if (this.guests.length >= this.limit) return null;
     if (!this.walkable(this.gate.i, this.gate.j)) return null;
     const g: Guest = {
       id: this.nextId++,

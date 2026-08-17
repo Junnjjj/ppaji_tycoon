@@ -18,7 +18,7 @@
       "note": "칸마다 손님. 칸막이만 세운다",
       "fee": 2400,
       "upkeep": 2200,
-      "cost": 78000,
+      "cost": 312000,
       "need": "hygiene"
     },
     "changing_row": {
@@ -37,7 +37,7 @@
       "note": "입구 옆 고정. 수영복 전환",
       "fee": 2050,
       "upkeep": 1900,
-      "cost": 63000,
+      "cost": 252000,
       "need": "hygiene"
     },
     "locker_row": {
@@ -56,7 +56,7 @@
       "note": "",
       "fee": 2400,
       "upkeep": 2200,
-      "cost": 78000,
+      "cost": 312000,
       "need": "hygiene"
     },
     "washbasin_row": {
@@ -75,7 +75,7 @@
       "note": "",
       "fee": 2050,
       "upkeep": 1900,
-      "cost": 63000,
+      "cost": 252000,
       "need": "hygiene"
     },
     "toilet": {
@@ -94,7 +94,7 @@
       "note": "들어가는 연출 없음 — 문 앞 사용",
       "fee": 1700,
       "upkeep": 2200,
-      "cost": 78000,
+      "cost": 312000,
       "need": "hygiene"
     },
     "nursing": {
@@ -113,7 +113,7 @@
       "note": "",
       "fee": 1350,
       "upkeep": 1600,
-      "cost": 48000,
+      "cost": 192000,
       "need": "hygiene"
     },
     "pool_kids": {
@@ -130,7 +130,7 @@
       "note": "bodyH 0 — 바닥에 파인 물",
       "fee": 3100,
       "upkeep": 4600,
-      "cost": 198000,
+      "cost": 792000,
       "need": "play"
     },
     "pool_warm": {
@@ -147,7 +147,7 @@
       "note": "김 파티클은 procedural",
       "fee": 3800,
       "upkeep": 5800,
-      "cost": 258000,
+      "cost": 1032000,
       "need": "warm"
     },
     "pool_lazy": {
@@ -164,7 +164,7 @@
       "note": "최대 실내 시설 — 방 8×6 필요",
       "fee": 3800,
       "upkeep": 6400,
-      "cost": 288000,
+      "cost": 1152000,
       "need": "play"
     },
     "sauna": {
@@ -181,7 +181,7 @@
       "note": "",
       "fee": 2400,
       "upkeep": 3700,
-      "cost": 153000,
+      "cost": 612000,
       "need": "warm"
     },
     "jjimjilbang": {
@@ -198,7 +198,7 @@
       "note": "누운 포즈(lie) 슬롯",
       "fee": 3100,
       "upkeep": 3700,
-      "cost": 153000,
+      "cost": 612000,
       "need": "warm"
     },
     "sikhye": {
@@ -215,7 +215,7 @@
       "note": "",
       "fee": 1700,
       "upkeep": 1600,
-      "cost": 48000,
+      "cost": 192000,
       "need": "food"
     },
     "massage_row": {
@@ -234,7 +234,7 @@
       "note": "",
       "fee": 2050,
       "upkeep": 1900,
-      "cost": 63000,
+      "cost": 252000,
       "need": "rest"
     },
     "shop": {
@@ -251,7 +251,7 @@
       "note": "",
       "fee": 1700,
       "upkeep": 2200,
-      "cost": 78000,
+      "cost": 312000,
       "need": "food"
     },
     "snackbar": {
@@ -268,7 +268,7 @@
       "note": "",
       "fee": 1700,
       "upkeep": 2200,
-      "cost": 78000,
+      "cost": 312000,
       "need": "food"
     },
     "chicken": {
@@ -285,7 +285,7 @@
       "note": "",
       "fee": 1700,
       "upkeep": 2200,
-      "cost": 78000,
+      "cost": 312000,
       "need": "food"
     },
     "icecream": {
@@ -302,7 +302,7 @@
       "note": "",
       "fee": 1350,
       "upkeep": 1600,
-      "cost": 48000,
+      "cost": 192000,
       "need": "food"
     },
     "cafe": {
@@ -319,7 +319,7 @@
       "note": "",
       "fee": 2400,
       "upkeep": 2800,
-      "cost": 108000,
+      "cost": 432000,
       "need": "rest"
     },
     "vending_in": {
@@ -338,7 +338,7 @@
       "note": "",
       "fee": 1350,
       "upkeep": 1300,
-      "cost": 33000,
+      "cost": 132000,
       "need": "food"
     },
     "arcade": {
@@ -357,7 +357,7 @@
       "note": "",
       "fee": 1350,
       "upkeep": 1300,
-      "cost": 33000,
+      "cost": 132000,
       "need": "play"
     },
     "karaoke": {
@@ -374,7 +374,7 @@
       "note": "",
       "fee": 1700,
       "upkeep": 2200,
-      "cost": 78000,
+      "cost": 312000,
       "need": "play"
     },
     "pingpong": {
@@ -391,7 +391,7 @@
       "note": "양쪽 2슬롯 — 마주보는 facing",
       "fee": 1700,
       "upkeep": 2200,
-      "cost": 78000,
+      "cost": 312000,
       "need": "play"
     },
     "sunbed_row": {
@@ -408,7 +408,7 @@
       "note": "lie 포즈",
       "fee": 2400,
       "upkeep": 2200,
-      "cost": 78000,
+      "cost": 312000,
       "need": "rest"
     },
     "info": {
@@ -425,7 +425,7 @@
       "note": "",
       "fee": 1350,
       "upkeep": 2200,
-      "cost": 78000,
+      "cost": 312000,
       "need": "service"
     },
     "infirmary": {
@@ -442,7 +442,7 @@
       "note": "",
       "fee": 1350,
       "upkeep": 2200,
-      "cost": 78000,
+      "cost": 312000,
       "need": "service"
     },
     "office": {
@@ -459,7 +459,7 @@
       "note": "",
       "fee": 1350,
       "upkeep": 2200,
-      "cost": 78000,
+      "cost": 312000,
       "need": "service"
     },
     "storage": {
@@ -476,7 +476,7 @@
       "note": "손님 슬롯 없음",
       "fee": 1350,
       "upkeep": 2200,
-      "cost": 78000,
+      "cost": 312000,
       "need": "service"
     },
     "ticket": {
@@ -493,7 +493,7 @@
       "note": "",
       "fee": 1360,
       "upkeep": 2240,
-      "cost": 86400,
+      "cost": 345600,
       "need": "service"
     },
     "parking": {
@@ -510,7 +510,7 @@
       "note": "차량은 별도 스프라이트",
       "fee": 1080,
       "upkeep": 4640,
-      "cost": 206400,
+      "cost": 825600,
       "need": "service"
     },
     "mongol_tent": {
@@ -527,7 +527,7 @@
       "note": "한국 빠지 시그니처",
       "fee": 1920,
       "upkeep": 1760,
-      "cost": 62400,
+      "cost": 249600,
       "need": "rest"
     },
     "pyeongsang_row": {
@@ -544,7 +544,7 @@
       "note": "칸마다 그룹 4명. sit 포즈",
       "fee": 1920,
       "upkeep": 1760,
-      "cost": 62400,
+      "cost": 249600,
       "need": "rest"
     },
     "shade_net": {
@@ -561,7 +561,7 @@
       "note": "",
       "fee": 1360,
       "upkeep": 1280,
-      "cost": 38400,
+      "cost": 153600,
       "need": "rest"
     },
     "parasol": {
@@ -578,7 +578,7 @@
       "note": "2변형",
       "fee": 1360,
       "upkeep": 1040,
-      "cost": 26400,
+      "cost": 105600,
       "need": "rest"
     },
     "bbq_zone": {
@@ -595,7 +595,7 @@
       "note": "",
       "fee": 2480,
       "upkeep": 2960,
-      "cost": 122400,
+      "cost": 489600,
       "need": "food"
     },
     "firepit_row": {
@@ -612,7 +612,7 @@
       "note": "",
       "fee": 1640,
       "upkeep": 1520,
-      "cost": 50400,
+      "cost": 201600,
       "need": "food"
     },
     "camp_site": {
@@ -629,7 +629,7 @@
       "note": "",
       "fee": 1920,
       "upkeep": 2960,
-      "cost": 122400,
+      "cost": 489600,
       "need": "rest"
     },
     "pavilion": {
@@ -646,7 +646,7 @@
       "note": "지붕 있음(야외)",
       "fee": 1920,
       "upkeep": 2960,
-      "cost": 122400,
+      "cost": 489600,
       "need": "rest"
     },
     "lookout": {
@@ -663,7 +663,7 @@
       "note": "경관 지표 기여",
       "fee": 1360,
       "upkeep": 1760,
-      "cost": 62400,
+      "cost": 249600,
       "need": "scenery"
     },
     "playground": {
@@ -680,7 +680,7 @@
       "note": "",
       "fee": 1920,
       "upkeep": 2960,
-      "cost": 122400,
+      "cost": 489600,
       "need": "play"
     },
     "footvolley": {
@@ -697,7 +697,7 @@
       "note": "",
       "fee": 1920,
       "upkeep": 3680,
-      "cost": 158400,
+      "cost": 633600,
       "need": "play"
     },
     "minigolf": {
@@ -714,7 +714,7 @@
       "note": "",
       "fee": 1640,
       "upkeep": 2720,
-      "cost": 110400,
+      "cost": 441600,
       "need": "play"
     },
     "photozone": {
@@ -731,7 +731,7 @@
       "note": "경관 지표",
       "fee": 1360,
       "upkeep": 1760,
-      "cost": 62400,
+      "cost": 249600,
       "need": "scenery"
     },
     "fountain": {
@@ -748,7 +748,7 @@
       "note": "물줄기는 procedural",
       "fee": 1080,
       "upkeep": 1760,
-      "cost": 62400,
+      "cost": 249600,
       "need": "scenery"
     },
     "flowerbed": {
@@ -765,7 +765,7 @@
       "note": "경관 지표",
       "fee": 1080,
       "upkeep": 1040,
-      "cost": 26400,
+      "cost": 105600,
       "need": "scenery"
     },
     "vending_out": {
@@ -782,7 +782,7 @@
       "note": "",
       "fee": 1080,
       "upkeep": 1040,
-      "cost": 26400,
+      "cost": 105600,
       "need": "food"
     },
     "lifering": {
@@ -799,7 +799,7 @@
       "note": "안전 지표",
       "fee": 1080,
       "upkeep": 1040,
-      "cost": 26400,
+      "cost": 105600,
       "need": "service"
     },
     "slide_small": {
@@ -829,7 +829,7 @@
       },
       "fee": 2870,
       "upkeep": 5180,
-      "cost": 214200,
+      "cost": 856800,
       "need": "thrill"
     },
     "slide_large": {
@@ -859,7 +859,7 @@
       },
       "fee": 3360,
       "upkeep": 9800,
-      "cost": 445200,
+      "cost": 1780800,
       "need": "thrill"
     },
     "slide_tube": {
@@ -889,7 +889,7 @@
       },
       "fee": 2870,
       "upkeep": 8120,
-      "cost": 361200,
+      "cost": 1444800,
       "need": "thrill"
     },
     "jump_cushion": {
@@ -908,7 +908,7 @@
       "note": "인플레이터블 초록·노랑",
       "fee": 2870,
       "upkeep": 6440,
-      "cost": 277200,
+      "cost": 1108800,
       "need": "thrill"
     },
     "trampoline_w": {
@@ -927,7 +927,7 @@
       "note": "",
       "fee": 2870,
       "upkeep": 5180,
-      "cost": 214200,
+      "cost": 856800,
       "need": "thrill"
     },
     "airbounce": {
@@ -946,7 +946,7 @@
       "note": "최대 물 위 시설",
       "fee": 5320,
       "upkeep": 14000,
-      "cost": 655200,
+      "cost": 2620800,
       "need": "thrill"
     },
     "turtle_island": {
@@ -965,7 +965,7 @@
       "note": "A트랙 실증 완료(88px)",
       "fee": 5320,
       "upkeep": 21560,
-      "cost": 1033200,
+      "cost": 4132800,
       "need": "play"
     },
     "junglegym_w": {
@@ -984,7 +984,7 @@
       "note": "프레임형 — 윤곽 게이트 완화",
       "fee": 3360,
       "upkeep": 8120,
-      "cost": 361200,
+      "cost": 1444800,
       "need": "play"
     },
     "diving": {
@@ -1003,7 +1003,7 @@
       "note": "데크 부착물",
       "fee": 2380,
       "upkeep": 3080,
-      "cost": 109200,
+      "cost": 436800,
       "need": "thrill"
     },
     "waterwalk": {
@@ -1022,7 +1022,7 @@
       "note": "",
       "fee": 2380,
       "upkeep": 3080,
-      "cost": 109200,
+      "cost": 436800,
       "need": "play"
     },
     "float_deck": {
@@ -1042,7 +1042,7 @@
       "walkOn": true,
       "fee": 1890,
       "upkeep": 1820,
-      "cost": 46200,
+      "cost": 184800,
       "need": "service"
     },
     "dock": {
@@ -1062,7 +1062,7 @@
       "walkOn": true,
       "fee": 2380,
       "upkeep": 4760,
-      "cost": 193200,
+      "cost": 772800,
       "need": "service"
     },
     "rent_kayak": {
@@ -1081,7 +1081,7 @@
       "note": "",
       "fee": 1890,
       "upkeep": 3080,
-      "cost": 109200,
+      "cost": 436800,
       "need": "thrill"
     },
     "rent_pedal": {
@@ -1100,7 +1100,7 @@
       "note": "",
       "fee": 1890,
       "upkeep": 3080,
-      "cost": 109200,
+      "cost": 436800,
       "need": "thrill"
     },
     "rent_duck": {
@@ -1119,7 +1119,7 @@
       "note": "",
       "fee": 1890,
       "upkeep": 3080,
-      "cost": 109200,
+      "cost": 436800,
       "need": "play"
     },
     "rent_sup": {
@@ -1138,7 +1138,7 @@
       "note": "",
       "fee": 1890,
       "upkeep": 3080,
-      "cost": 109200,
+      "cost": 436800,
       "need": "thrill"
     },
     "bungalow": {
@@ -1155,7 +1155,7 @@
       "note": "프리셋 벽 발자국 + 지붕",
       "fee": 4050,
       "upkeep": 11100,
-      "cost": 459000,
+      "cost": 1836000,
       "need": "stay"
     },
     "glamping": {
@@ -1172,7 +1172,7 @@
       "note": "",
       "fee": 4050,
       "upkeep": 13800,
-      "cost": 594000,
+      "cost": 2376000,
       "need": "stay"
     },
     "caravan": {
@@ -1189,7 +1189,7 @@
       "note": "",
       "fee": 4050,
       "upkeep": 10200,
-      "cost": 414000,
+      "cost": 1656000,
       "need": "stay"
     },
     "pension": {
@@ -1206,7 +1206,7 @@
       "note": "층 20텍셀 × 3 + 지붕",
       "fee": 4050,
       "upkeep": 21000,
-      "cost": 954000,
+      "cost": 3816000,
       "need": "stay"
     },
     "pension_duplex": {
@@ -1223,7 +1223,7 @@
       "note": "",
       "fee": 4050,
       "upkeep": 30000,
-      "cost": 1404000,
+      "cost": 5616000,
       "need": "stay"
     },
     "ice_fishing": {
@@ -1240,7 +1240,7 @@
       "note": "겨울",
       "fee": 2640,
       "upkeep": 6380,
-      "cost": 283800,
+      "cost": 1135200,
       "need": "play"
     },
     "snow_sled": {
@@ -1268,7 +1268,7 @@
       },
       "fee": 2255,
       "upkeep": 7700,
-      "cost": 349800,
+      "cost": 1399200,
       "need": "thrill"
     },
     "bungeoppang": {
@@ -1285,7 +1285,7 @@
       "note": "겨울",
       "fee": 1485,
       "upkeep": 1760,
-      "cost": 52800,
+      "cost": 211200,
       "need": "food"
     },
     "footbath": {
@@ -1302,7 +1302,7 @@
       "note": "봄·가을",
       "fee": 2255,
       "upkeep": 2090,
-      "cost": 69300,
+      "cost": 277200,
       "need": "warm"
     },
     "fishing": {
@@ -1319,7 +1319,7 @@
       "note": "봄·가을",
       "fee": 2255,
       "upkeep": 3740,
-      "cost": 151800,
+      "cost": 607200,
       "need": "play"
     },
     "maple_walk": {
@@ -1336,7 +1336,7 @@
       "note": "가을. 경관 지표",
       "fee": 1485,
       "upkeep": 2420,
-      "cost": 85800,
+      "cost": 343200,
       "need": "scenery"
     }
   }

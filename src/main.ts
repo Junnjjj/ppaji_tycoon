@@ -24,7 +24,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { allFacilityDefs, PLACE_FAIL_MESSAGES } = await import('./sim/kairo/placement.js');
   const { WeekRunner } = await import('./sim/kairo/week.js');
   const { previewCombos, evaluateCombos } = await import('./sim/kairo/combos.js');
-  const { questStatuses, ProgressStore, gradeFor, requiredGrade } = await import(
+  const { questStatuses, ProgressStore, gradeFor, requiredGrade, admissionLimit } = await import(
     './sim/kairo/progress.js'
   );
   const { assessRisk, RISK_NAMES } = await import('./sim/kairo/risk.js');
@@ -230,7 +230,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const runWeek = (): void => {
     if (h.scene.isPlaying || report.visible) return;
     const t0 = performance.now();
-    const rep = week.run(weekRng, { season: 'summer', playbackEvery: 6 });
+    // 등급이 동시 손님 상한과 방문 수요를 올린다 — 만족도를 관리해야 성장한다
+    const gr = gradeFor(lastReport?.exitSatisfaction ?? 0);
+    h.guests.setMaxGuests(admissionLimit(gr, h.placement.totalCapacity()));
+    const rep = week.run(weekRng, {
+      season: 'summer',
+      playbackEvery: 6,
+      reputation: gr.reputationPull,
+    });
     const calcMs = performance.now() - t0;
     lastReport = rep;
     console.log(
@@ -300,7 +307,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     questPanel.replaceChildren();
     const title = document.createElement('div');
     const g = gradeFor(lastReport?.exitSatisfaction ?? 0);
-    title.textContent = `의뢰 ${st.length - open.length}/${st.length} · ${g.grade}등급 ${g.name}`;
+    title.textContent =
+      `의뢰 ${st.length - open.length}/${st.length} · ${g.grade}등급 ${g.name}\n` +
+      `동시 ${g.maxGuests}명 · 수요 ×${g.reputationPull}`;
+    title.style.whiteSpace = 'pre';
     title.style.cssText = 'font-weight:600;margin-bottom:4px;opacity:.85';
     questPanel.append(title);
     for (const s of rows) {

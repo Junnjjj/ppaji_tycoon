@@ -32,7 +32,11 @@ export class AtlasProvider implements AssetProvider {
     this.ids = Object.keys(index);
   }
 
-  static async load(imageUrl: string, indexUrl: string): Promise<AtlasProvider> {
+  static async load(
+    imageUrl: string,
+    indexUrl: string,
+    opts: { partial?: boolean } = {},
+  ): Promise<AtlasProvider> {
     const [image, index] = await Promise.all([
       loadImage(imageUrl),
       fetch(indexUrl).then((r) => {
@@ -42,8 +46,9 @@ export class AtlasProvider implements AssetProvider {
     ]);
 
     // 매니페스트와 아틀라스가 어긋나면 조용히 깨지는 대신 즉시 알린다.
+    // partial 아틀라스(A트랙 점진 반입)는 빠진 ID 를 하이브리드 폴백이 담당하므로 허용한다.
     const missing = ALL_SPRITE_IDS.filter((id) => index[id] === undefined);
-    if (missing.length > 0) {
+    if (missing.length > 0 && !opts.partial) {
       throw new Error(
         `아틀라스에 없는 스프라이트 ${missing.length}개: ${missing.slice(0, 5).join(', ')}` +
           (missing.length > 5 ? ' …' : ''),

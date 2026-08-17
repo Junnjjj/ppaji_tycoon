@@ -1,209 +1,409 @@
 {
-  "$comment": "시설 정의. 아키텍처 불변식 3 — 시설은 코드가 아니라 데이터다. 시설 추가 = 여기 항목 하나 + 스프라이트 ID.",
-  "facilities": [
-    {
-      "id": "gate",
-      "name": "입장 게이트",
-      "layer": "land",
-      "size": [3, 2],
-      "sprite": "facility/gate",
-      "cost": 0,
-      "upkeep": 20000,
-      "capacity": 8,
-      "serviceTicks": 5,
-      "fee": 15000,
-      "thrill": 0,
-      "satisfaction": 0,
-      "staff": 1,
-      "needs": [],
-      "placement": { "terrain": ["plain", "sand", "roadside"] },
-      "unique": true,
-      "desc": "손님이 들어오는 곳. 빠지에 하나만 둘 수 있다."
-    },
-    {
-      "id": "shop",
-      "name": "매점",
-      "layer": "land",
-      "size": [2, 2],
-      "sprite": "facility/shop",
-      "cost": 900000,
-      "upkeep": 45000,
-      "capacity": 4,
-      "serviceTicks": 30,
-      "fee": 8000,
-      "thrill": 0,
-      "satisfaction": 8,
-      "staff": 1,
-      "needs": ["hunger", "thirst"],
-      "placement": { "terrain": ["plain", "sand", "roadside"] },
-      "desc": "허기와 갈증을 해소한다. 매출의 주력."
-    },
-    {
-      "id": "restroom",
-      "name": "화장실",
-      "layer": "land",
-      "size": [2, 2],
-      "sprite": "facility/restroom",
-      "cost": 600000,
-      "upkeep": 30000,
-      "capacity": 6,
-      "serviceTicks": 20,
-      "fee": 0,
-      "thrill": 0,
-      "satisfaction": 5,
-      "staff": 0,
-      "needs": ["toilet"],
-      "placement": { "terrain": ["plain", "sand", "roadside"] },
-      "desc": "없으면 만족도가 급격히 떨어진다."
-    },
-    {
-      "id": "shower",
-      "name": "샤워실",
-      "layer": "land",
-      "size": [2, 2],
-      "sprite": "facility/shower",
-      "cost": 1100000,
-      "upkeep": 55000,
-      "capacity": 4,
-      "serviceTicks": 40,
-      "fee": 2000,
-      "thrill": 0,
-      "satisfaction": 12,
-      "staff": 0,
-      "needs": ["heat"],
-      "placement": { "terrain": ["plain", "sand"] },
-      "desc": "물놀이 후 필수. 없으면 재방문율이 낮다."
-    },
-    {
-      "id": "changing",
-      "name": "탈의실",
-      "layer": "land",
-      "size": [2, 2],
-      "sprite": "facility/changing",
-      "cost": 800000,
-      "upkeep": 35000,
-      "capacity": 4,
-      "serviceTicks": 30,
-      "fee": 0,
-      "thrill": 0,
-      "satisfaction": 6,
-      "staff": 0,
-      "needs": [],
-      "placement": { "terrain": ["plain", "sand", "roadside"] },
-      "desc": "입장 직후 대부분의 손님이 들른다."
-    },
-    {
-      "id": "shade",
-      "name": "그늘막 평상",
-      "layer": "land",
-      "size": [2, 1],
-      "sprite": "facility/shade",
-      "cost": 300000,
-      "upkeep": 12000,
-      "capacity": 6,
-      "serviceTicks": 120,
-      "fee": 30000,
-      "thrill": 0,
-      "satisfaction": 15,
-      "staff": 0,
-      "needs": ["heat", "rest"],
-      "placement": { "terrain": ["plain", "sand"] },
-      "desc": "폭염일수록 수요가 폭증한다. 임대료가 쏠쏠하다."
-    },
-    {
-      "id": "path",
-      "name": "길",
-      "layer": "path",
-      "size": [1, 1],
-      "sprite": "facility/dock",
-      "cost": 12000,
-      "upkeep": 100,
-      "capacity": 0,
-      "serviceTicks": 0,
-      "fee": 0,
-      "thrill": 0,
-      "satisfaction": 1,
-      "staff": 0,
-      "needs": [],
-      "placement": { "terrain": ["plain", "sand", "roadside"] },
-      "drawable": true,
-      "desc": "손님의 동선. 드래그로 이어 그린다."
-    },
-    {
-      "id": "dock",
-      "name": "선착장",
-      "layer": "waterfront",
-      "size": [2, 4],
-      "sprite": "facility/dock",
-      "cost": 1400000,
-      "upkeep": 60000,
-      "capacity": 12,
-      "serviceTicks": 0,
-      "fee": 0,
-      "thrill": 0,
-      "satisfaction": 2,
-      "staff": 1,
-      "needs": [],
-      "placement": {
-        "terrain": ["shore", "shallow", "deep", "openwater"],
-        "requiresLandAdjacent": true
-      },
-      "desc": "수상 코스의 출발점. 코스는 반드시 선착장에 연결되어야 한다. 물가에서 깊은 물까지 뻗는다."
-    },
-    {
-      "id": "slide",
-      "name": "워터슬라이드",
-      "layer": "waterfront",
-      "size": [3, 3],
-      "sprite": "facility/slide",
-      "cost": 2500000,
-      "upkeep": 120000,
-      "capacity": 2,
-      "serviceTicks": 25,
-      "fee": 8000,
-      "thrill": 45,
-      "satisfaction": 20,
-      "staff": 1,
-      "needs": ["fun"],
-      "placement": { "terrain": ["shore", "shallow"], "requiresLandAdjacent": true },
-      "terrainBonus": { "slope": 0.2 },
-      "desc": "육지와 수변을 동시에 쓴다. 경사지 옆이면 처리량 +20%."
-    },
-    {
-      "id": "trampoline",
-      "name": "수상 트램폴린",
-      "layer": "water",
-      "size": [3, 3],
-      "sprite": "facility/trampoline",
-      "cost": 1800000,
-      "upkeep": 70000,
-      "capacity": 4,
-      "serviceTicks": 60,
-      "fee": 6000,
-      "thrill": 30,
-      "satisfaction": 16,
-      "staff": 1,
-      "needs": ["fun"],
-      "placement": { "terrain": ["shallow", "deep"] },
-      "desc": "얕은 물 이상에 띄운다."
-    },
-    {
-      "id": "pool",
-      "name": "수상 놀이터",
-      "layer": "water",
-      "size": [4, 3],
-      "sprite": "facility/pool",
-      "cost": 2200000,
-      "upkeep": 90000,
-      "capacity": 12,
-      "serviceTicks": 90,
-      "fee": 5000,
-      "thrill": 18,
-      "satisfaction": 18,
-      "staff": 1,
-      "needs": ["fun", "heat"],
-      "placement": { "terrain": ["shallow"] },
-      "desc": "아이 동반 가족의 핵심 시설. 얕은 물 전용."
-    }
-  ]
+ "$comment": "시설 정의. 아키텍처 불변식 3 — 시설은 코드가 아니라 데이터다. 시설 추가 = 여기 항목 하나 + 스프라이트 ID.",
+ "facilities": [
+  {
+   "id": "gate",
+   "name": "입장 게이트",
+   "layer": "land",
+   "size": [
+    3,
+    2
+   ],
+   "sprite": "facility/gate",
+   "cost": 0,
+   "upkeep": 20000,
+   "capacity": 8,
+   "serviceTicks": 5,
+   "fee": 15000,
+   "thrill": 0,
+   "satisfaction": 0,
+   "staff": 1,
+   "needs": [],
+   "placement": {
+    "terrain": [
+     "plain",
+     "sand",
+     "roadside"
+    ]
+   },
+   "unique": true,
+   "desc": "손님이 들어오는 곳. 빠지에 하나만 둘 수 있다."
+  },
+  {
+   "id": "shop",
+   "name": "매점",
+   "layer": "land",
+   "size": [
+    2,
+    2
+   ],
+   "sprite": "facility/shop",
+   "cost": 900000,
+   "upkeep": 45000,
+   "capacity": 4,
+   "serviceTicks": 30,
+   "fee": 8000,
+   "thrill": 0,
+   "satisfaction": 8,
+   "staff": 1,
+   "needs": [
+    "hunger",
+    "thirst"
+   ],
+   "placement": {
+    "terrain": [
+     "plain",
+     "sand",
+     "roadside"
+    ]
+   },
+   "desc": "허기와 갈증을 해소한다. 매출의 주력."
+  },
+  {
+   "id": "cafe",
+   "name": "카페",
+   "layer": "land",
+   "size": [
+    2,
+    3
+   ],
+   "sprite": "facility/cafe",
+   "cost": 1400000,
+   "upkeep": 60000,
+   "capacity": 6,
+   "serviceTicks": 40,
+   "fee": 9000,
+   "thrill": 0,
+   "satisfaction": 10,
+   "staff": 1,
+   "needs": [
+    "thirst",
+    "rest"
+   ],
+   "placement": {
+    "terrain": [
+     "plain",
+     "sand"
+    ]
+   },
+   "desc": "그늘에서 쉬며 마신다. 갈증과 휴식을 함께 해소한다."
+  },
+  {
+   "id": "restroom",
+   "name": "화장실",
+   "layer": "land",
+   "size": [
+    2,
+    2
+   ],
+   "sprite": "facility/restroom",
+   "cost": 600000,
+   "upkeep": 30000,
+   "capacity": 6,
+   "serviceTicks": 20,
+   "fee": 0,
+   "thrill": 0,
+   "satisfaction": 5,
+   "staff": 0,
+   "needs": [
+    "toilet"
+   ],
+   "placement": {
+    "terrain": [
+     "plain",
+     "sand",
+     "roadside"
+    ]
+   },
+   "desc": "없으면 만족도가 급격히 떨어진다."
+  },
+  {
+   "id": "shower",
+   "name": "샤워실",
+   "layer": "land",
+   "size": [
+    2,
+    2
+   ],
+   "sprite": "facility/shower",
+   "cost": 1100000,
+   "upkeep": 55000,
+   "capacity": 4,
+   "serviceTicks": 40,
+   "fee": 2000,
+   "thrill": 0,
+   "satisfaction": 12,
+   "staff": 0,
+   "needs": [
+    "heat"
+   ],
+   "placement": {
+    "terrain": [
+     "plain",
+     "sand"
+    ]
+   },
+   "desc": "물놀이 후 필수. 없으면 재방문율이 낮다."
+  },
+  {
+   "id": "changing",
+   "name": "탈의실",
+   "layer": "land",
+   "size": [
+    2,
+    2
+   ],
+   "sprite": "facility/changing",
+   "cost": 800000,
+   "upkeep": 35000,
+   "capacity": 4,
+   "serviceTicks": 30,
+   "fee": 0,
+   "thrill": 0,
+   "satisfaction": 6,
+   "staff": 0,
+   "needs": [],
+   "placement": {
+    "terrain": [
+     "plain",
+     "sand",
+     "roadside"
+    ]
+   },
+   "desc": "입장 직후 대부분의 손님이 들른다."
+  },
+  {
+   "id": "shade",
+   "name": "그늘막 평상",
+   "layer": "land",
+   "size": [
+    2,
+    1
+   ],
+   "sprite": "facility/shade",
+   "cost": 300000,
+   "upkeep": 12000,
+   "capacity": 6,
+   "serviceTicks": 120,
+   "fee": 30000,
+   "thrill": 0,
+   "satisfaction": 15,
+   "staff": 0,
+   "needs": [
+    "heat",
+    "rest"
+   ],
+   "placement": {
+    "terrain": [
+     "plain",
+     "sand"
+    ]
+   },
+   "desc": "폭염일수록 수요가 폭증한다. 임대료가 쏠쏠하다."
+  },
+  {
+   "id": "tent",
+   "name": "몽골텐트",
+   "layer": "land",
+   "size": [
+    2,
+    2
+   ],
+   "sprite": "facility/tent",
+   "cost": 800000,
+   "upkeep": 25000,
+   "capacity": 8,
+   "serviceTicks": 100,
+   "fee": 40000,
+   "thrill": 0,
+   "satisfaction": 14,
+   "staff": 0,
+   "needs": [
+    "heat",
+    "rest"
+   ],
+   "placement": {
+    "terrain": [
+     "plain",
+     "sand",
+     "roadside"
+    ]
+   },
+   "desc": "한국 빠지의 상징. 단체 손님이 자리 잡고 하루 종일 머문다."
+  },
+  {
+   "id": "path",
+   "name": "길",
+   "layer": "path",
+   "size": [
+    1,
+    1
+   ],
+   "sprite": "facility/dock",
+   "cost": 12000,
+   "upkeep": 100,
+   "capacity": 0,
+   "serviceTicks": 0,
+   "fee": 0,
+   "thrill": 0,
+   "satisfaction": 1,
+   "staff": 0,
+   "needs": [],
+   "placement": {
+    "terrain": [
+     "plain",
+     "sand",
+     "roadside"
+    ]
+   },
+   "drawable": true,
+   "desc": "손님의 동선. 드래그로 이어 그린다."
+  },
+  {
+   "id": "deck",
+   "name": "데크",
+   "layer": "path",
+   "size": [
+    1,
+    1
+   ],
+   "sprite": "facility/dock",
+   "cost": 60000,
+   "upkeep": 2000,
+   "capacity": 0,
+   "serviceTicks": 0,
+   "fee": 0,
+   "thrill": 0,
+   "satisfaction": 0,
+   "staff": 0,
+   "needs": [],
+   "placement": {
+    "terrain": [
+     "shore",
+     "shallow",
+     "deep",
+     "openwater"
+    ],
+    "requiresLandAdjacent": true
+   },
+   "desc": "물 위로 뻗는 부유 데크. 육지나 다른 데크에 붙여야 놓인다. 깊은 물까지 나가 선착장을 뺄 수 있다."
+  },
+  {
+   "id": "dock",
+   "name": "선착장",
+   "layer": "waterfront",
+   "size": [
+    2,
+    4
+   ],
+   "sprite": "facility/dock",
+   "cost": 1400000,
+   "upkeep": 60000,
+   "capacity": 12,
+   "serviceTicks": 0,
+   "fee": 0,
+   "thrill": 0,
+   "satisfaction": 2,
+   "staff": 1,
+   "needs": [],
+   "placement": {
+    "terrain": [
+     "shore",
+     "shallow",
+     "deep",
+     "openwater"
+    ],
+    "requiresLandAdjacent": true
+   },
+   "desc": "수상 코스의 출발점. 코스는 반드시 선착장에 연결되어야 한다. 물가에서 깊은 물까지 뻗는다."
+  },
+  {
+   "id": "slide",
+   "name": "워터슬라이드",
+   "layer": "waterfront",
+   "size": [
+    3,
+    3
+   ],
+   "sprite": "facility/slide",
+   "cost": 2500000,
+   "upkeep": 120000,
+   "capacity": 2,
+   "serviceTicks": 25,
+   "fee": 8000,
+   "thrill": 45,
+   "satisfaction": 20,
+   "staff": 1,
+   "needs": [
+    "fun"
+   ],
+   "placement": {
+    "terrain": [
+     "shore",
+     "shallow"
+    ],
+    "requiresLandAdjacent": true
+   },
+   "terrainBonus": {
+    "slope": 0.2
+   },
+   "desc": "육지와 수변을 동시에 쓴다. 경사지 옆이면 처리량 +20%."
+  },
+  {
+   "id": "trampoline",
+   "name": "수상 트램폴린",
+   "layer": "water",
+   "size": [
+    3,
+    3
+   ],
+   "sprite": "facility/trampoline",
+   "cost": 1800000,
+   "upkeep": 70000,
+   "capacity": 4,
+   "serviceTicks": 60,
+   "fee": 6000,
+   "thrill": 30,
+   "satisfaction": 16,
+   "staff": 1,
+   "needs": [
+    "fun"
+   ],
+   "placement": {
+    "terrain": [
+     "shallow",
+     "deep"
+    ]
+   },
+   "desc": "얕은 물 이상에 띄운다."
+  },
+  {
+   "id": "pool",
+   "name": "수상 놀이터",
+   "layer": "water",
+   "size": [
+    4,
+    3
+   ],
+   "sprite": "facility/pool",
+   "cost": 2200000,
+   "upkeep": 90000,
+   "capacity": 12,
+   "serviceTicks": 90,
+   "fee": 5000,
+   "thrill": 18,
+   "satisfaction": 18,
+   "staff": 1,
+   "needs": [
+    "fun",
+    "heat"
+   ],
+   "placement": {
+    "terrain": [
+     "shallow"
+    ]
+   },
+   "desc": "아이 동반 가족의 핵심 시설. 얕은 물 전용."
+  }
+ ]
 }

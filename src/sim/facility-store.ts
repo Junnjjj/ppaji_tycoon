@@ -122,15 +122,25 @@ export class FacilityStore {
     return { ok: true };
   }
 
-  /** 점유 영역이 육지와 맞닿아 있는가 (수변 시설 판정) */
+  /**
+   * 점유 영역이 육지 **또는 통행 구조물(길·데크)** 과 맞닿아 있는가.
+   *
+   * 데크가 데크에 붙을 수 있어야 물 위로 뻗어나가는 연결식 건설이 성립한다 —
+   * 육지만 인정하면 데크는 물가 한 줄에서 멈춘다. 떨어진 섬은 여전히 못 짓는다.
+   */
   private touchesLand(x: number, y: number, w: number, h: number): boolean {
+    const anchored = (tx: number, ty: number): boolean => {
+      if (isLand(this.world.at(tx, ty))) return true;
+      const f = this.facilityAt(tx, ty);
+      return !!f && requireFacilityDef(f.defId).layer === 'path';
+    };
     for (let tx = x; tx < x + w; tx++) {
-      if (isLand(this.world.at(tx, y - 1))) return true;
-      if (isLand(this.world.at(tx, y + h))) return true;
+      if (anchored(tx, y - 1)) return true;
+      if (anchored(tx, y + h)) return true;
     }
     for (let ty = y; ty < y + h; ty++) {
-      if (isLand(this.world.at(x - 1, ty))) return true;
-      if (isLand(this.world.at(x + w, ty))) return true;
+      if (anchored(x - 1, ty)) return true;
+      if (anchored(x + w, ty)) return true;
     }
     return false;
   }

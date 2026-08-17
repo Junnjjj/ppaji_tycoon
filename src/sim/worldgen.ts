@@ -67,19 +67,18 @@ export function generateWorld(opts: WorldGenOptions): World {
   const rng = new Rng(opts.seed).fork(0x7e44a1);
   const noiseSeed = rng.int(0x7fffffff);
 
-  // 세로 경계선 (height 비율)
-  const roadY = height * 0.05;
-  const mountainY = height * 0.17;
-  const plainY = height * 0.44;
-  const sandY = height * 0.52;
-  const shoreY = height * 0.56;
-  const shallowY = height * 0.66;
-  const deepY = height * 0.8;
+  // 세로 경계선 (height 비율) — v5: 물이 주인공. 육지 띠를 좁히고 수역을 맵의 절반 이상으로.
+  // 상단 숲 띠는 배경(backdrop) 레이어와 이어지는 완충 지대다 (design-v5-draft §공간 문법).
+  const roadY = height * 0.04;
+  const mountainY = height * 0.2;
+  const plainY = height * 0.36;
+  const sandY = height * 0.44;
+  const shallowY = height * 0.58;
+  const deepY = height * 0.74;
 
   const wMountain = makeWave(rng, width, height * 0.035);
   const wPlain = makeWave(rng, width, height * 0.03);
   const wSand = makeWave(rng, width, height * 0.02);
-  const wShore = makeWave(rng, width, height * 0.018);
   const wShallow = makeWave(rng, width, height * 0.035);
   const wDeep = makeWave(rng, width, height * 0.04);
 
@@ -87,7 +86,7 @@ export function generateWorld(opts: WorldGenOptions): World {
     const mY = mountainY + wMountain(x);
     const pY = plainY + wPlain(x);
     const saY = sandY + wSand(x);
-    const shY = shoreY + wShore(x);
+    const shY = saY + 1; // 거품선(Shore)은 모래 경계를 따라 정확히 한 줄
     const slY = shallowY + wShallow(x);
     const dY = deepY + wDeep(x);
 

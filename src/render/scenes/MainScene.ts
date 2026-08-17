@@ -14,6 +14,7 @@ import { PlacementController, type PlacementState } from '../placement.js';
 import { CourseLayer } from '../course-layer.js';
 import { CourseEditor, type CourseEditState } from '../course-editor.js';
 import { CameraController } from '../camera.js';
+import { scatterDeco } from '../deco-layer.js';
 import { TILE_SIZE, ZOOM_DEFAULT, lodForZoom, type Lod } from '../constants.js';
 
 const TERRAIN_TEXTURE_KEY = 'terrain';
@@ -59,8 +60,45 @@ export class MainScene extends Phaser.Scene {
     this.onCourseEditChange = deps.onCourseEditChange;
   }
 
+  preload(): void {
+    // v5 배경 레이어 — 파일이 없으면 로드 실패 후 create 가 조용히 생략한다.
+    this.load.image('bg-far', 'assets/backdrop/bg-far.png');
+    this.load.image('bg-near', 'assets/backdrop/bg-near.png');
+  }
+
   create(): void {
     const world = this.sim.world;
+
+    // ── v5 배경: 맵 위쪽에 산·숲 원경 (가로 타일링, 지형 위 트리라인 오버행) ──
+    // 서빙본은 4× NEAREST 로 미리 확대돼 있다 (선형 샘플링이 걸려도 도트가 유지되게).
+    let bgTop = 0;
+    const BG_SCALE = 0.5;
+    if (this.textures.exists('bg-far') && this.textures.exists('bg-near')) {
+      const mapW = world.width * TILE_SIZE;
+      const far = this.textures.get('bg-far').getSourceImage();
+      const near = this.textures.get('bg-near').getSourceImage();
+      // TileSprite 는 WebGL 에서 자체 샘플링을 하므로 pixelArt 전역 설정과 별개로 NEAREST 를 명시한다.
+      this.textures.get('bg-far').setFilter(Phaser.Textures.FilterMode.NEAREST);
+      this.textures.get('bg-near').setFilter(Phaser.Textures.FilterMode.NEAREST);
+      const nearH = near.height * BG_SCALE;
+      const farH = far.height * BG_SCALE;
+      // 트리라인이 맵 상단 숲 띠 위로 살짝 겹치고, 원경은 트리라인의 투명 상단 뒤까지 내려와
+      // 하늘색 틈이 생기지 않게 한다 (트리라인 수관은 자기 높이의 ~40% 지점에서 시작).
+      const nearY = -nearH + TILE_SIZE * 2.5;
+      const farY = nearY - farH + nearH * 0.6;
+      bgTop = farY;
+      this.add
+        .tileSprite(0, farY, mapW / BG_SCALE, far.height, 'bg-far')
+        .setOrigin(0, 0)
+        .setScale(BG_SCALE)
+        .setDepth(-1_000_002);
+      this.add
+        .tileSprite(0, nearY, mapW / BG_SCALE, near.height, 'bg-near')
+        .setOrigin(0, 0)
+        .setScale(BG_SCALE)
+        .setDepth(-999_999);
+      this.cameras.main.setBackgroundColor(0x5fb4dc);
+    }
 
     // ── 지형: 통짜 텍스처로 한 번만 굽는다 ──
     this.terrain = buildTerrainTexture(world, this.provider);
@@ -77,15 +115,23 @@ export class MainScene extends Phaser.Scene {
       ...FACILITY_DEFS.map((d) => d.sprite),
       ...EQUIPMENT_DEFS.map((d) => d.sprite),
     ]);
+    // v5 데코 소품 (나무·파라솔) — 절차 산포 레이어가 쓴다
+    for (const base of ['prop/tree', 'prop/parasol']) {
+      const spec = specForBase(base);
+      if (spec) registerTextures(this, this.provider, expandSpec(spec));
+    }
 
-    // ── 카메라 ──
+    // ── 카메라 ── (배경 레이어가 있으면 위쪽 경계를 그만큼 연다)
     const cam = this.cameras.main;
-    cam.setBounds(0, 0, this.terrain.widthPx, this.terrain.heightPx);
+    cam.setBounds(0, bgTop, this.terrain.widthPx, this.terrain.heightPx - bgTop);
     cam.setZoom(ZOOM_DEFAULT);
     cam.setRoundPixels(true);
     cam.centerOn(this.terrain.widthPx / 2, world.height * 0.42 * TILE_SIZE);
 
     this.camCtl = new CameraController(this, cam);
+
+    // ── 데코 산포 (정적, 1회) ──
+    scatterDeco(this, this.sim);
 
     // ── 엔티티 ──
     this.entities = new EntityLayer(this, this.sim);

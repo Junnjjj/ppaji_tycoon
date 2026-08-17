@@ -54,6 +54,15 @@ export interface GradeDef {
   permitArea: number;
   landW: number;
   landH: number;
+  /**
+   * 동시 손님 상한과 방문 수요 배율.
+   *
+   * 등급이 이걸 올리지 않으면 시설만 늘고 수요·입장이 막혀 **후반에 손익이 꺾인다**
+   * (실측 25% 하락). 등급은 퇴장 만족도로만 오르므로, 성장의 유일한 축이 "만족도를
+   * 관리한다"가 된다 — 돈으로 사는 성장이 없다는 v2 결정과 같은 방향이다.
+   */
+  maxGuests: number;
+  reputationPull: number;
 }
 
 export const QUESTS: readonly QuestDef[] = (rawQuests as unknown as { quests: QuestDef[] }).quests;
@@ -68,6 +77,21 @@ export const GRADES: readonly GradeDef[] = UNLOCKS.grades;
 /** 시설이 열리는 등급 */
 export function requiredGrade(defId: string): number {
   return UNLOCKS.facilityGrade[defId] ?? 1;
+}
+
+/**
+ * 실제 입장 상한 — **등급 상한과 공급 중 작은 쪽**.
+ *
+ * 등급만 보면 슬롯보다 많이 받아 줄만 길어지고, 대기 페널티로 만족도가 붕괴한다.
+ * 그러면 등급이 떨어져 수요가 줄고 다시 만족도가... 하는 죽음의 나선이 생긴다
+ * (실측: 36주에서 만석 100% · 만족도 0 · 손익 37% 하락).
+ *
+ * 공급의 1.5배까지 받는다 — 약간의 줄은 있어야 "붐빈다"가 보이고, 그 이상은 손해다.
+ * 늘리는 방법은 하나뿐이다: **시설을 더 짓는다.** 그게 성장 루프다.
+ */
+export function admissionLimit(grade: GradeDef, totalCapacity: number): number {
+  const bySupply = Math.ceil(Math.max(1, totalCapacity) * 1.5);
+  return Math.max(8, Math.min(grade.maxGuests, bySupply));
 }
 
 /** 퇴장 만족도로 정해지는 등급 — 돈으로는 못 올린다 */

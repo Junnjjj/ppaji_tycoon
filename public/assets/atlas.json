@@ -1,0 +1,308 @@
+{
+ "facility/slide": {
+  "x": 1,
+  "y": 1,
+  "w": 74,
+  "h": 69
+ },
+ "facility/pool": {
+  "x": 76,
+  "y": 1,
+  "w": 56,
+  "h": 54
+ },
+ "vehicle/passing-boat": {
+  "x": 133,
+  "y": 1,
+  "w": 64,
+  "h": 40
+ },
+ "facility/shop": {
+  "x": 198,
+  "y": 1,
+  "w": 38,
+  "h": 38
+ },
+ "facility/restroom": {
+  "x": 237,
+  "y": 1,
+  "w": 39,
+  "h": 38
+ },
+ "facility/shower": {
+  "x": 277,
+  "y": 1,
+  "w": 42,
+  "h": 36
+ },
+ "facility/changing": {
+  "x": 320,
+  "y": 1,
+  "w": 42,
+  "h": 36
+ },
+ "facility/shade": {
+  "x": 363,
+  "y": 1,
+  "w": 29,
+  "h": 27
+ },
+ "facility/trampoline": {
+  "x": 393,
+  "y": 1,
+  "w": 40,
+  "h": 24
+ },
+ "prop/tree:a1": {
+  "x": 434,
+  "y": 1,
+  "w": 15,
+  "h": 20
+ },
+ "prop/parasol:a0": {
+  "x": 450,
+  "y": 1,
+  "w": 18,
+  "h": 20
+ },
+ "prop/parasol:a1": {
+  "x": 469,
+  "y": 1,
+  "w": 16,
+  "h": 20
+ },
+ "prop/tree:a0": {
+  "x": 486,
+  "y": 1,
+  "w": 17,
+  "h": 19
+ },
+ "prop/tree:a2": {
+  "x": 1,
+  "y": 71,
+  "w": 22,
+  "h": 19
+ },
+ "vehicle/flyfish": {
+  "x": 24,
+  "y": 71,
+  "w": 30,
+  "h": 17
+ },
+ "terrain/plain:a0": {
+  "x": 55,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/plain:a1": {
+  "x": 72,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/plain:a2": {
+  "x": 89,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/forest:a0": {
+  "x": 106,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/forest:a1": {
+  "x": 123,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/forest:a2": {
+  "x": 140,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/slope:a0": {
+  "x": 157,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/slope:a1": {
+  "x": 174,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/slope:a2": {
+  "x": 191,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/rock:a0": {
+  "x": 208,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/rock:a1": {
+  "x": 225,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/rock:a2": {
+  "x": 242,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/roadside:a0": {
+  "x": 259,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/roadside:a1": {
+  "x": 276,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/roadside:a2": {
+  "x": 293,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/sand:a0": {
+  "x": 310,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/sand:a1": {
+  "x": 327,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/sand:a2": {
+  "x": 344,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/shore:a0": {
+  "x": 361,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/shore:a1": {
+  "x": 378,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/shore:a2": {
+  "x": 395,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/shallow:a0": {
+  "x": 412,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/shallow:a1": {
+  "x": 429,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/shallow:a2": {
+  "x": 446,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/deep:a0": {
+  "x": 463,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/deep:a1": {
+  "x": 480,
+  "y": 71,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/deep:a2": {
+  "x": 1,
+  "y": 91,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/openwater:a0": {
+  "x": 18,
+  "y": 91,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/openwater:a1": {
+  "x": 35,
+  "y": 91,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/openwater:a2": {
+  "x": 52,
+  "y": 91,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/current:a0": {
+  "x": 69,
+  "y": 91,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/current:a1": {
+  "x": 86,
+  "y": 91,
+  "w": 16,
+  "h": 16
+ },
+ "terrain/current:a2": {
+  "x": 103,
+  "y": 91,
+  "w": 16,
+  "h": 16
+ },
+ "vehicle/banana": {
+  "x": 120,
+  "y": 91,
+  "w": 35,
+  "h": 15
+ },
+ "vehicle/jetski": {
+  "x": 156,
+  "y": 91,
+  "w": 22,
+  "h": 11
+ },
+ "vehicle/wakeboard": {
+  "x": 179,
+  "y": 91,
+  "w": 18,
+  "h": 9
+ }
+}

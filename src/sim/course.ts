@@ -185,7 +185,13 @@ export interface CourseValidation {
  * 너무 좁으면 물가의 짧은 선착장에서 코스를 낼 수가 없다 —
  * 선착장은 4타일밖에 뻗지 않는데 손님을 태우려면 배가 그 근처에 서면 된다.
  */
-export const DOCK_REACH = 3;
+/**
+ * 코스가 선착장에 "연결됐다" 고 보는 거리(타일).
+ * 3 은 손가락으로 그린 코스에는 너무 빡빡했다 — 스플라인이 제어점 밖으로 부풀기까지 해서
+ * 물리적으로는 붙어 있는데 계속 '선착장 미연결' 이 떴다. 견인 보트가 선착장에서 몇 칸
+ * 나가서 손님을 태우는 것도 자연스럽다. (실측 2026-08-15)
+ */
+export const DOCK_REACH = 6;
 
 function dockTiles(f: PlacedFacility): Vec2[] {
   const def = requireFacilityDef(f.defId);
