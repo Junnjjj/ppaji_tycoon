@@ -73,6 +73,10 @@ export interface KairoSaveV1 {
   resortName?: string;
   /** 요금 배율 (§15.9) — 안 저장하면 새로고침이 곧 정가 복귀다 */
   priceMult?: number;
+  /**
+   * 사고로 닫힌 시설과 남은 주 (§12.1). 저장 안 하면 새로고침이 곧 사면이 된다.
+   */
+  accidentIdle?: [number, number][];
 }
 
 export type AnyKairoSave = KairoSaveV1;
@@ -110,6 +114,7 @@ export interface KairoSaveInput {
   discovered?: string[];
   resortName?: string;
   priceMult?: number;
+  accidentIdle?: [number, number][];
 }
 
 export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave {
@@ -134,6 +139,7 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.discovered ? { discovered: input.discovered } : {}),
     ...(input.resortName ? { resortName: input.resortName } : {}),
     ...(input.priceMult !== undefined ? { priceMult: input.priceMult } : {}),
+    ...(input.accidentIdle ? { accidentIdle: input.accidentIdle } : {}),
   };
 }
 
@@ -185,6 +191,7 @@ export interface KairoRestored {
   discovered?: string[];
   resortName?: string;
   priceMult?: number;
+  accidentIdle?: [number, number][];
 }
 
 export function restoreKairo(raw: unknown): KairoRestored {
@@ -209,6 +216,7 @@ export function restoreKairo(raw: unknown): KairoRestored {
     ...(s.discovered ? { discovered: s.discovered } : {}),
     ...(s.resortName ? { resortName: s.resortName } : {}),
     ...(s.priceMult !== undefined ? { priceMult: s.priceMult } : {}),
+    ...(s.accidentIdle ? { accidentIdle: s.accidentIdle } : {}),
   };
 }
 

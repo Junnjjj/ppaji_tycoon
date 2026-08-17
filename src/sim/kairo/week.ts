@@ -179,6 +179,12 @@ export interface WeekReport extends WeekSummary {
   hotspot: { i: number; j: number; value: number } | null;
   /** 수요 대비 공급이 가장 부족한 종류 — "다음에 무엇을 지을까" 의 근거 */
   bottleneck: { need: NeedKind; demand: number; supply: number } | null;
+  /**
+   * 이번 주 사고 (§12.1). 없으면 null.
+   *
+   * 위험 단계에서만 일어난다 — 안전도가 78인데 RNG 로 폐쇄되면 억울하다는 v4 결정.
+   */
+  accident: { handle: number; defId: string; weeks: number } | null;
   /** 압축 연출용 기록 — tick 마다 손님 위치 요약 */
   playback: PlaybackFrame[];
   /**
@@ -224,6 +230,13 @@ export interface WeekOptions {
    * ⚠ 여기도 `WeekRunner` 안에 직원 규칙을 넣지 않는다. `staff.ts` 가 해석하고
    * 여기는 **숫자 몇 개만** 받는다 (카드와 같은 규칙).
    */
+  /**
+   * 이번 주 사고 확률 (§12.1). `risk.accidentChance()` 가 준다.
+   *
+   * ⚠ **위험 단계가 아니면 0 이어야 한다** — 안전한데 사고가 나면 v4 가 없애기로 한
+   * "RNG 세금"이다. 그 판정은 `risk.ts` 가 하고 여기는 숫자만 받는다.
+   */
+  accidentChance?: number;
   /** 코스 합계 (§7). 없으면 코스가 없는 것으로 본다 */
   courses?: { revenue: number; upkeep: number; riders: number };
   staff?: {
@@ -372,8 +385,25 @@ export class WeekRunner {
 
     this.priceMult = opts.priceMult ?? 1;
     const staff = opts.staff;
-    this.guests.setIdle(staff?.idle ?? new Set());
-    const supply = this.supply(staff?.idle);
+    /*
+     * 사고 판정 — **주 시작에 한 번**. 사고가 나면 시설 하나가 1~3주 닫힌다.
+     *
+     * 손님 시뮬 도중이 아니라 주 시작에 굴리는 이유는 결산에서 "이번 주에 사고가 났다"를
+     * 한 덩어리로 보여주기 위해서다. tick 중간에 나면 그 주 결과가 반쯤 섞인다.
+     */
+    let accident: WeekReport['accident'] = null;
+    const chance = opts.accidentChance ?? 0;
+    if (chance > 0 && rng.next() < chance) {
+      const pool = this.placement.all();
+      if (pool.length > 0) {
+        const hit = pool[rng.int(pool.length)] as { handle: number; defId: string };
+        accident = { handle: hit.handle, defId: hit.defId, weeks: 1 + rng.int(3) };
+      }
+    }
+    const idle = new Set(staff?.idle ?? []);
+    if (accident) idle.add(accident.handle);
+    this.guests.setIdle(idle);
+    const supply = this.supply(idle);
     const mod = opts.modifiers;
     const byGroup: Record<GroupId, number> = { family: 0, couple: 0, friends: 0, company: 0 };
     let weekRevenue = 0;
@@ -569,6 +599,7 @@ export class WeekRunner {
       bottleneck,
       playback,
       byGroup,
+      accident,
     };
   }
 

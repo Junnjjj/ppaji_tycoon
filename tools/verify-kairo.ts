@@ -1504,6 +1504,79 @@ async function main(): Promise<void> {
   };
 
   /*
+   * ── 8·사고 (§12.1) ──
+   *
+   * v4 결정: **실패는 내 선택 때문이어야 한다.** 위험 단계에서만 사고가 나고, 사고 뒤에도
+   * 선택이 있다. 확률이 0 일 때 안 나는 것과, 대응 카드가 실제로 뜨는 것을 함께 본다.
+   */
+  const accident = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    const safe = h.week.run(new h.Rng(31), { season: 'summer', accidentChance: 0 });
+    const hit = h.week.run(new h.Rng(31), { season: 'summer', accidentChance: 1 });
+    return {
+      safeAccident: safe.accident, hitAccident: hit.accident,
+      safeRevenue: safe.revenue, hitRevenue: hit.revenue
+    };
+  })()`)) as {
+    safeAccident: unknown;
+    hitAccident: { handle: number; defId: string; weeks: number } | null;
+    safeRevenue: number;
+    hitRevenue: number;
+  };
+  record(
+    '확률이 0 이면 사고가 안 난다 — 안전한데 사고가 나면 RNG 세금이다',
+    accident.safeAccident === null ? 'pass' : 'fail',
+  );
+  record(
+    '사고가 나면 시설이 1~3주 닫히고 매출이 준다',
+    accident.hitAccident !== null &&
+      accident.hitAccident.weeks >= 1 &&
+      accident.hitAccident.weeks <= 3 &&
+      accident.hitRevenue < accident.safeRevenue
+      ? 'pass'
+      : 'fail',
+    accident.hitAccident
+      ? `${accident.hitAccident.defId} ${accident.hitAccident.weeks}주 · ` +
+        `매출 ${accident.safeRevenue} → ${accident.hitRevenue}`
+      : '사고가 안 났다',
+  );
+
+  const accidentUi = (await page.evaluate(`(() => {
+    const card = window.__kairo.cardsApi.triggerCard('accident_response');
+    if (!card) return { ok: false, why: '사고 카드가 없다' };
+    window.__kairoCards.show([card], window.__kairo.week.cash, function () { return undefined; });
+    const root = document.getElementById('kairo-card');
+    const btns = [...root.querySelectorAll('button')];
+    const heights = btns.map((b) => Math.round(b.getBoundingClientRect().height));
+    const labels = btns.map((b) => b.textContent.slice(0, 12));
+    const cashBefore = window.__kairo.week.cash;
+    // 사람이 쓰는 경로와 같은 pick — 첫 번째(보상 합의)
+    window.__kairoCards.pickForTest(0);
+    return {
+      ok: true, options: btns.length,
+      minH: heights.length ? Math.min.apply(null, heights) : 0,
+      labels: labels, cashBefore: cashBefore, cashAfter: window.__kairo.week.cash,
+      closed: !window.__kairoCards.visible
+    };
+  })()`)) as {
+    ok: boolean;
+    why?: string;
+    options?: number;
+    minH?: number;
+    labels?: string[];
+    cashBefore?: number;
+    cashAfter?: number;
+    closed?: boolean;
+  };
+  record(
+    '사고 대응 카드가 선택지 3개로 뜬다 — 순수 처벌은 기억에 안 남는다',
+    accidentUi.ok && accidentUi.options === 3 && (accidentUi.minH ?? 0) >= 56 ? 'pass' : 'fail',
+    accidentUi.ok
+      ? `${(accidentUi.labels ?? []).join(' / ')} · 최소 ${accidentUi.minH}px`
+      : (accidentUi.why ?? '실패'),
+  );
+
+  /*
    * ── 8·도감 (§15.8 · §D) ──
    *
    * **발견·수집이 훅이다.** 162 항목(콤보 70 + 시설 73 + 장비 19)을 스크롤 지옥 없이

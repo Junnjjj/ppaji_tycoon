@@ -31,7 +31,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { assessRisk, RISK_NAMES } = await import('./sim/kairo/risk.js');
   const { KairoReport } = await import('./ui/kairo-report.js');
   const { KairoCardView } = await import('./ui/kairo-card.js');
-  const { CardStore, CARD_RNG_SALT } = await import('./sim/kairo/cards.js');
+  const { CardStore, CARD_RNG_SALT, triggerCard } = await import('./sim/kairo/cards.js');
+  const { accidentChance } = await import('./sim/kairo/risk.js');
   const { StaffStore, STAFF_ROLES: STAFF_ROLE_LIST } = await import('./sim/kairo/staff.js');
   const { KairoStaffPanel } = await import('./ui/kairo-staff.js');
   const course = await import('./sim/kairo/course.js');
@@ -314,6 +315,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     ? RngCls.fromState(saved.staffRngState)
     : new RngCls(20260818).fork(0x57aff);
   const staffPanel = new KairoStaffPanel(document.body);
+  /**
+   * 사고로 닫힌 시설과 남은 주 수 (§12.1). 주마다 하나씩 깎는다.
+   * 직원 부족으로 서는 것과 **합쳐서** 손님에게 넘긴다 — 손님은 이유를 구분하지 않는다.
+   */
+  const accidentIdle = new Map<number, number>(saved?.accidentIdle ?? []);
   const courses = saved?.courses
     ? course.CourseStore.fromSnapshot(saved.courses)
     : new course.CourseStore();
@@ -362,6 +368,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       staff: staff.toSnapshot(),
       staffRngState: staffRng.state,
       courses: courses.toSnapshot(),
+      accidentIdle: [...accidentIdle],
       discovered: [...discovered],
       resortName,
       priceMult,
@@ -399,6 +406,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     h.guests.setMaxGuests(admissionLimit(gr, h.placement.totalCapacity(), mods.crowdMult));
     const staffEff = staff.effects(h.placement);
     const courseWeek = courses.weekly();
+    const risk = assessRisk(h.placement, h.guests, {
+      staffSafety: staffEff.safetyPoints,
+      courseRisk: courseRiskPoints(),
+    });
     const rep = week.run(weekRng, {
       season,
       playbackEvery: 6,
@@ -410,13 +421,25 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         upkeep: courseWeek.upkeep,
         riders: courseWeek.riders,
       },
+      // 위험 단계가 아니면 0 — 안전한데 사고가 나면 억울하다 (v4 결정)
+      accidentChance: accidentChance(risk, mods.accidentMult),
       staff: {
         wages: staffEff.wages,
         satisfactionDelta: staffEff.satisfactionDelta,
         foodMult: staffEff.foodMult,
-        idle: staff.idleHandles(h.placement, staffRng),
+        idle: new Set([
+          ...staff.idleHandles(h.placement, staffRng),
+          ...accidentIdle.keys(),
+        ]),
       },
     });
+
+    // 사고로 닫힌 시설의 남은 주를 깎는다
+    for (const [handle, left] of [...accidentIdle]) {
+      if (left <= 1) accidentIdle.delete(handle);
+      else accidentIdle.set(handle, left - 1);
+    }
+    if (rep.accident) accidentIdle.set(rep.accident.handle, rep.accident.weeks);
     cards.tickWeek();
     const calcMs = performance.now() - t0;
     lastReport = rep;
@@ -436,11 +459,35 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       `[카이로] ${rep.week}주차 계산 ${calcMs.toFixed(0)}ms · 방문 ${rep.visitors} · ` +
         `손익 ${rep.profit} · 프레임 ${rep.playback.length}`,
     );
-    h.scene.playWeek(rep.playback, 3500, () => {
+    /*
+     * 사고가 났으면 결산 **전에** 대응 카드를 띄운다 (§12.1). 결산 뒤에 띄우면 이미
+     * 숫자를 본 뒤라 "내 선택으로 끝난다"는 감각이 안 생긴다.
+     */
+    const showReport = (): void => {
       report.show(rep, {
         onClose: () => undefined,
-        onReplay: () => h.scene.playWeek(rep.playback, 3500, () => report.show(rep, { onClose: () => undefined })),
+        onReplay: () =>
+          h.scene.playWeek(rep.playback, 3500, () =>
+            report.show(rep, { onClose: () => undefined }),
+          ),
       });
+    };
+    const accidentCard = rep.accident ? triggerCard('accident_response') : undefined;
+
+    h.scene.playWeek(rep.playback, 3500, () => {
+      if (accidentCard) {
+        cardView.show([accidentCard], week.cash, (choices) => {
+          for (const ch of choices) {
+            const r = cards.choose(cardRng, ch.card, ch.optionIndex);
+            if (r.cash > 0) week.earn(r.cash);
+            else if (r.cash < 0) week.spend(-r.cash);
+          }
+          persist();
+          showReport();
+        });
+        return;
+      }
+      showReport();
     });
   };
 
@@ -702,6 +749,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     catalog,
     showcase,
     priceMult: () => priceMult,
+    cardsApi: { triggerCard },
     progress,
     refreshQuests,
     getLastReport: () => lastReport,

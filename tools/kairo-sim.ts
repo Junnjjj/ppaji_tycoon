@@ -24,7 +24,8 @@ import { PlacementGrid, allFacilityDefs } from '../src/sim/kairo/placement.js';
 import { GuestStore, GUEST_DEFAULTS } from '../src/sim/kairo/guests.js';
 import { WeekRunner, type NeedKind, type Season, type WeekReport } from '../src/sim/kairo/week.js';
 import { evaluateCombos } from '../src/sim/kairo/combos.js';
-import { CardStore, CARD_RNG_SALT, optionCash } from '../src/sim/kairo/cards.js';
+import { CardStore, CARD_RNG_SALT, optionCash, triggerCard } from '../src/sim/kairo/cards.js';
+import { assessRisk, accidentChance } from '../src/sim/kairo/risk.js';
 import { StaffStore, STAFF_ROLES, neededFor } from '../src/sim/kairo/staff.js';
 import {
   CourseStore,
@@ -79,6 +80,12 @@ interface RunResult {
   /** 개선에 쓴 돈과 평균 단계 — 후반 공백이 메워졌는지 본다 */
   upgradeSpend: number;
   avgLevel: number;
+  /** 사고 횟수 — 위험도 관리가 계측에 나타나는지 */
+  accidents: number;
+  /** 마지막 위험 단계 — "사고 0회"가 관리 덕인지 확률이 0이라 그런지 가른다 */
+  riskLevel: string;
+  /** 위험 단계였던 주의 비율 */
+  riskyWeeks: number;
   /** 뽑힌 카드 수와 카드로 나간 돈 — 카드가 경제를 얼마나 흔드나 */
   cardsSeen: number;
   cardSpend: number;
@@ -169,6 +176,9 @@ function runOne(seed: number, weeks: number): RunResult {
   let buildNoSpace = 0;
   let buildCapped = 0;
   let upgradeSpend = 0;
+  let accidents = 0;
+  let riskyWeeks = 0;
+  const accidentIdle = new Map<number, number>();
   let courseFail = '';
   let cardsSeen = 0;
   let cardSpend = 0;
@@ -388,13 +398,37 @@ function runOne(seed: number, weeks: number): RunResult {
         upkeep: courseWeek.upkeep,
         riders: courseWeek.riders,
       },
+      // 사고 — 위험 단계에서만 (§12.1). 안 넣으면 안전 시설을 지을 이유가 계측에 안 나온다
+      accidentChance: (() => {
+        const r = assessRisk(p, g, { staffSafety: staffEff.safetyPoints });
+        if (r.accidentPossible) riskyWeeks++;
+        return accidentChance(r, mods.accidentMult);
+      })(),
       staff: {
         wages: staffEff.wages,
         satisfactionDelta: staffEff.satisfactionDelta,
         foodMult: staffEff.foodMult,
-        idle: staff.idleHandles(p, staffRng),
+        idle: new Set([...staff.idleHandles(p, staffRng), ...accidentIdle.keys()]),
       },
     });
+
+    // 사고로 닫힌 시설의 남은 주를 깎고, 새 사고를 기록한다
+    for (const [handle, left] of [...accidentIdle]) {
+      if (left <= 1) accidentIdle.delete(handle);
+      else accidentIdle.set(handle, left - 1);
+    }
+    if (rep.accident) {
+      accidentIdle.set(rep.accident.handle, rep.accident.weeks);
+      accidents++;
+      // 봇 정책: 낼 수 있으면 전면 점검, 아니면 법적 대응 (가장 싼 쪽)
+      const card = triggerCard('accident_response');
+      if (card) {
+        const audit = card.options.findIndex((o) => o.effects.some((e) => (e.accidentMult ?? 1) < 1));
+        const pickIdx = audit >= 0 && optionCash(card.options[audit]!) * -1 <= cash ? audit : 1;
+        const r = cards.choose(cardRng, card, pickIdx);
+        cash += r.cash;
+      }
+    }
     wagesByWeek.push(rep.wages);
     courseRevByWeek.push(rep.courseRevenue);
     cards.tickWeek();
@@ -433,6 +467,9 @@ function runOne(seed: number, weeks: number): RunResult {
     buildCapped,
     upgradeSpend,
     avgLevel: p.averageLevel(),
+    accidents,
+    riskLevel: assessRisk(p, g, { staffSafety: staff.effects(p).safetyPoints }).level,
+    riskyWeeks,
     cardsSeen,
     cardSpend,
     staffWeeks,
@@ -545,6 +582,13 @@ function main(): void {
   console.log(`현금 (4주마다):   ${every4(cashW)}`);
   console.log(
     `직원 평균: ${(stats(runs.map((r) => r.staffWeeks)).med / WEEKS).toFixed(1)}명/주`,
+  );
+  const levels = new Map<string, number>();
+  for (const r of runs) levels.set(r.riskLevel, (levels.get(r.riskLevel) ?? 0) + 1);
+  console.log(
+    `사고 중앙값: ${stats(runs.map((r) => r.accidents)).med}회/판 · ` +
+      `사고 가능 주 ${stats(runs.map((r) => r.riskyWeeks)).med}회 · ` +
+      `마지막 위험 단계 ${[...levels].map(([k, v]) => `${k} ${v}판`).join(' · ')}`,
   );
   console.log(`코스 수 중앙값: ${stats(runs.map((r) => r.courseCount)).med}개` +
     (runs[0]?.courseFail ? ` (막힌 사유: ${runs[0].courseFail})` : ''));

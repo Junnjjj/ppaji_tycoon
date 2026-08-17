@@ -85,6 +85,13 @@ export interface CardDef {
   options: CardOption[];
   weight: number;
   condition?: CardCondition;
+  /**
+   * 사건으로만 뜨는 카드. **무작위 뽑기에서 제외된다.**
+   *
+   * 사고 대응 같은 것은 "이번 주 카드"로 나오면 안 된다 — 사고가 안 났는데 사고 대응을
+   * 고르는 화면이 뜬다.
+   */
+  trigger?: 'accident';
 }
 
 /**
@@ -139,7 +146,13 @@ export function isEligible(card: CardDef, ctx: CardContext): boolean {
 }
 
 export function eligibleCards(ctx: CardContext, exclude: ReadonlySet<string>): CardDef[] {
-  return CARDS.filter((c) => isEligible(c, ctx) && !exclude.has(c.id));
+  // trigger 가 있는 카드는 사건이 부를 때만 나온다
+  return CARDS.filter((c) => !c.trigger && isEligible(c, ctx) && !exclude.has(c.id));
+}
+
+/** 사건 카드를 이름으로 가져온다 (사고 대응 등) */
+export function triggerCard(id: string): CardDef | undefined {
+  return CARDS.find((c) => c.id === id);
 }
 
 /** 적용 중인 지속 효과 하나 */
@@ -359,6 +372,7 @@ export function validateCards(): string[] {
     if (ids.has(c.id)) problems.push(`중복 ID: ${c.id}`);
     ids.add(c.id);
     if (c.options.length < 2) problems.push(`${c.id} — 선택지가 2개 미만이면 선택이 아니다`);
+    if (c.trigger && c.trigger !== 'accident') problems.push(`${c.id} — 모르는 trigger`);
     if (c.options.length > 3) problems.push(`${c.id} — 선택지 3개 초과는 폰에서 5초에 못 읽는다`);
     for (const o of c.options) {
       if (!Array.isArray(o.effects)) {

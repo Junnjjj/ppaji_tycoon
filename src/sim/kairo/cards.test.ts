@@ -9,6 +9,7 @@ import {
   NEUTRAL_MODIFIERS,
   CARDS_PER_WEEK,
   CARD_RNG_SALT,
+  triggerCard,
   MOD_CAPS,
   optionCash,
   optionEffect,
@@ -29,8 +30,16 @@ import { accidentChance } from './risk.js';
 const CTX: CardContext = { season: 'summer', week: 12, grade: 3 };
 
 describe('카드 데이터', () => {
-  it('24종이다 — 스펙 §3.5', () => {
-    expect(CARDS.length).toBe(24);
+  it('주간 카드 24종 + 사건 카드 (스펙 §3.5 · §12.1)', () => {
+    // 사건 카드(사고 대응)는 무작위로 안 뽑히므로 24 에 안 센다
+    expect(CARDS.filter((c) => !c.trigger).length).toBe(24);
+    expect(CARDS.filter((c) => c.trigger === 'accident').length).toBe(1);
+  });
+
+  it('사건 카드는 무작위 뽑기에서 빠진다 — 사고가 안 났는데 사고 대응이 뜨면 안 된다', () => {
+    const pool = eligibleCards({ season: 'summer', week: 40, grade: 5 }, new Set());
+    expect(pool.some((c) => c.trigger)).toBe(false);
+    expect(triggerCard('accident_response')).toBeDefined();
   });
 
   it('데이터 규칙을 지킨다', () => {
