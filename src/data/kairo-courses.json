@@ -1,0 +1,234 @@
+{
+  "note": "형태 프리셋 6종 (§7.2) 과 장비×프리셋 적합도 (§7.8).\n적합도가 코스 깊이의 실체다 — 프리셋 6종만으로는 '왕복=처리량, 급선회=스릴'을 파악하면 30분이면 소진된다. 19×6 = 114 조합이 되면 '이 장비엔 이 형태'라는 학습이 생긴다.\n동력 4종은 문서 표에 없어 단독 주행이라는 성격대로 형태 제약을 느슨하게 뒀다.\nwaterNeed = 프리셋이 요구하는 물 타일 수 (좁은 강에서는 8자·지그재그가 회색).",
+  "effects": {
+    "best": {
+      "thrill": 1.15,
+      "satisfaction": 1.2
+    },
+    "ok": {
+      "thrill": 1.0,
+      "satisfaction": 1.0
+    },
+    "poor": {
+      "thrill": 0.8,
+      "satisfaction": 0.85
+    },
+    "no": null
+  },
+  "presets": [
+    {
+      "id": "shuttle",
+      "name": "왕복",
+      "handles": 2,
+      "thrillBase": 18,
+      "waterNeed": 30,
+      "grade": 1,
+      "shape": "out-and-back",
+      "desc": "나갔다 돌아온다. 가장 짧고 안전. 처리량 최고"
+    },
+    {
+      "id": "circle",
+      "name": "원형",
+      "handles": 3,
+      "thrillBase": 26,
+      "waterNeed": 55,
+      "grade": 1,
+      "shape": "loop",
+      "desc": "크게 한 바퀴. 무난"
+    },
+    {
+      "id": "ellipse",
+      "name": "타원 롱런",
+      "handles": 3,
+      "thrillBase": 22,
+      "waterNeed": 90,
+      "grade": 2,
+      "shape": "loop",
+      "desc": "길게 도는 코스. 스릴 낮고 체감 시간 김"
+    },
+    {
+      "id": "figure8",
+      "name": "8자",
+      "handles": 4,
+      "thrillBase": 38,
+      "waterNeed": 70,
+      "grade": 2,
+      "shape": "cross",
+      "desc": "교차 지점에서 스릴 급증. 위험"
+    },
+    {
+      "id": "zigzag",
+      "name": "지그재그",
+      "handles": 4,
+      "thrillBase": 44,
+      "waterNeed": 85,
+      "grade": 3,
+      "shape": "zigzag",
+      "desc": "좌우로 크게 흔들린다. 스릴 높음"
+    },
+    {
+      "id": "hairpin",
+      "name": "급선회 콤보",
+      "handles": 4,
+      "thrillBase": 52,
+      "waterNeed": 40,
+      "grade": 3,
+      "shape": "hairpin",
+      "desc": "짧은 구간에 급회전 연속. 최고 스릴, 최저 안전"
+    }
+  ],
+  "fit": {
+    "peanut": {
+      "shuttle": "best",
+      "circle": "ok",
+      "ellipse": "ok",
+      "figure8": "poor",
+      "zigzag": "poor",
+      "hairpin": "no"
+    },
+    "jjinppang": {
+      "shuttle": "best",
+      "circle": "ok",
+      "ellipse": "ok",
+      "figure8": "poor",
+      "zigzag": "poor",
+      "hairpin": "no"
+    },
+    "banana": {
+      "shuttle": "ok",
+      "circle": "best",
+      "ellipse": "best",
+      "figure8": "ok",
+      "zigzag": "poor",
+      "hairpin": "no"
+    },
+    "honeycomb": {
+      "shuttle": "ok",
+      "circle": "best",
+      "ellipse": "best",
+      "figure8": "ok",
+      "zigzag": "poor",
+      "hairpin": "no"
+    },
+    "flyduck": {
+      "shuttle": "best",
+      "circle": "ok",
+      "ellipse": "best",
+      "figure8": "poor",
+      "zigzag": "no",
+      "hairpin": "no"
+    },
+    "wagon": {
+      "shuttle": "ok",
+      "circle": "best",
+      "ellipse": "best",
+      "figure8": "no",
+      "zigzag": "no",
+      "hairpin": "no"
+    },
+    "hexa": {
+      "shuttle": "ok",
+      "circle": "ok",
+      "ellipse": "ok",
+      "figure8": "best",
+      "zigzag": "ok",
+      "hairpin": "poor"
+    },
+    "turbo_turtle": {
+      "shuttle": "ok",
+      "circle": "ok",
+      "ellipse": "ok",
+      "figure8": "best",
+      "zigzag": "ok",
+      "hairpin": "poor"
+    },
+    "lotus": {
+      "shuttle": "poor",
+      "circle": "best",
+      "ellipse": "ok",
+      "figure8": "ok",
+      "zigzag": "ok",
+      "hairpin": "poor"
+    },
+    "swing": {
+      "shuttle": "no",
+      "circle": "poor",
+      "ellipse": "poor",
+      "figure8": "ok",
+      "zigzag": "best",
+      "hairpin": "best"
+    },
+    "spinpang": {
+      "shuttle": "poor",
+      "circle": "ok",
+      "ellipse": "poor",
+      "figure8": "best",
+      "zigzag": "best",
+      "hairpin": "ok"
+    },
+    "twinpang": {
+      "shuttle": "poor",
+      "circle": "ok",
+      "ellipse": "poor",
+      "figure8": "best",
+      "zigzag": "best",
+      "hairpin": "ok"
+    },
+    "dancing": {
+      "shuttle": "poor",
+      "circle": "ok",
+      "ellipse": "poor",
+      "figure8": "best",
+      "zigzag": "best",
+      "hairpin": "best"
+    },
+    "flyfish": {
+      "shuttle": "no",
+      "circle": "poor",
+      "ellipse": "ok",
+      "figure8": "ok",
+      "zigzag": "best",
+      "hairpin": "best"
+    },
+    "skyfly": {
+      "shuttle": "no",
+      "circle": "poor",
+      "ellipse": "ok",
+      "figure8": "ok",
+      "zigzag": "best",
+      "hairpin": "best"
+    },
+    "jetski": {
+      "shuttle": "ok",
+      "circle": "ok",
+      "ellipse": "ok",
+      "figure8": "best",
+      "zigzag": "best",
+      "hairpin": "best"
+    },
+    "jetboat": {
+      "shuttle": "ok",
+      "circle": "best",
+      "ellipse": "best",
+      "figure8": "ok",
+      "zigzag": "ok",
+      "hairpin": "poor"
+    },
+    "wakeboard": {
+      "shuttle": "ok",
+      "circle": "ok",
+      "ellipse": "best",
+      "figure8": "best",
+      "zigzag": "best",
+      "hairpin": "best"
+    },
+    "waterski": {
+      "shuttle": "ok",
+      "circle": "ok",
+      "ellipse": "best",
+      "figure8": "best",
+      "zigzag": "best",
+      "hairpin": "best"
+    }
+  }
+}

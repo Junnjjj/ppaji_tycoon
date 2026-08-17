@@ -57,17 +57,27 @@ const THRESHOLDS: Record<Exclude<RiskLevel, 'safe'>, number> = {
   danger: 0.8,
 };
 
-export function assessRisk(
-  placement: PlacementGrid,
-  guests: GuestStore,
+export interface RiskExtras {
   /**
    * 직원이 더하는 안전 점수 (§11 안전요원). 시설과 같은 축에 더한다 —
    * "구명함을 지을까 안전요원을 쓸까" 가 같은 문제의 두 답이 되어야 한다.
    */
-  staffSafety = 0,
+  staffSafety?: number;
+  /**
+   * 코스가 더하는 위험 점수 (§7.6 안전도). 안전도가 낮은 코스는 스릴 시설과 같은 축의
+   * 위험이다 — 안 넣으면 "험한 코스를 그려도 위험도가 안 오른다"가 되어 안전도 지표가
+   * 코스 화면 안에서만 도는 숫자가 된다.
+   */
+  courseRisk?: number;
+}
+
+export function assessRisk(
+  placement: PlacementGrid,
+  guests: GuestStore,
+  extra: RiskExtras = {},
 ): RiskReport {
-  let riskPoints = 0;
-  let safetyPoints = staffSafety;
+  let riskPoints = extra.courseRisk ?? 0;
+  let safetyPoints = extra.staffSafety ?? 0;
 
   for (const item of placement.all()) {
     const def = facilityDef(item.defId) as

@@ -112,7 +112,7 @@ describe('효과', () => {
     const before = assessRisk(p, g);
     const st = new StaffStore();
     st.set('lifeguard', 4);
-    const after = assessRisk(p, g, st.effects(p).safetyPoints);
+    const after = assessRisk(p, g, { staffSafety: st.effects(p).safetyPoints });
     expect(after.safetyPoints).toBeGreaterThan(before.safetyPoints);
     expect(after.ratio).toBeLessThanOrEqual(before.ratio);
   });

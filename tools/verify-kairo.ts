@@ -1504,6 +1504,129 @@ async function main(): Promise<void> {
   };
 
   /*
+   * ── 8·코스 (§7) ──
+   *
+   * 여섯 동사 중 "코스를 그린다". **프리셋 탭 → 핸들 → 확정**이 실제로 도는지,
+   * 그리고 **적합도 배지가 붙는지**를 본다 (19×6 표를 읽히지 않는 것이 §B 의 요지다).
+   */
+  const courseUi = (await page.evaluate(`(() => {
+    const open = document.getElementById('kairo-course-open');
+    if (!open) return { ok: false, why: '코스 버튼이 없다' };
+    open.click();
+    const panel = document.getElementById('kairo-course');
+    if (!panel || getComputedStyle(panel).display === 'none') {
+      return { ok: false, why: '코스 패널이 안 열린다' };
+    }
+    const tabs = [...panel.querySelectorAll('button[data-preset]')];
+    const heights = tabs.map((b) => Math.round(b.getBoundingClientRect().height));
+    const badges = tabs.map((b) => b.dataset.fit);
+    return {
+      ok: true, tabs: tabs.length,
+      minTab: heights.length ? Math.min.apply(null, heights) : 0,
+      badges: badges,
+      distinct: [...new Set(badges)].length,
+      overflow: panel.scrollWidth > panel.clientWidth
+    };
+  })()`)) as {
+    ok: boolean;
+    why?: string;
+    tabs?: number;
+    minTab?: number;
+    badges?: string[];
+    distinct?: number;
+    overflow?: boolean;
+  };
+
+  record(
+    '코스 패널에 프리셋 6종이 있다',
+    courseUi.ok && courseUi.tabs === 6 ? 'pass' : 'fail',
+    courseUi.ok ? `${courseUi.tabs}종` : (courseUi.why ?? '실패'),
+  );
+  record(
+    '프리셋 탭이 44px 이상 — 폰 터치 타깃',
+    (courseUi.minTab ?? 0) >= 44 ? 'pass' : 'fail',
+    `최소 ${courseUi.minTab ?? 0}px`,
+  );
+  record(
+    '적합도 배지가 형태마다 다르다 — 19×6 표를 읽히지 않는다는 것이 요지다',
+    (courseUi.distinct ?? 0) >= 2 ? 'pass' : 'fail',
+    (courseUi.badges ?? []).join(' '),
+  );
+
+  const coursePlace = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    const panel = h.coursePanel;
+    const api = h.courseApi;
+    // 물 타일을 찾아 선착장 앞에 핸들을 놓는다 — 화면 드래그와 같은 경로(refresh)를 탄다
+    const water = [];
+    for (let j = 0; j < 32 && water.length < 60; j++) {
+      for (let i = 0; i < 40 && water.length < 60; i++) {
+        if (h.terrain.isWater(i, j)) water.push({ i: i, j: j });
+      }
+    }
+    if (water.length < 4) return { ok: false, why: '물 타일이 부족하다' };
+    panel.select('shuttle', 'banana');
+    const st0 = panel.state;
+    for (let k = 0; k < st0.handles.length; k++) {
+      const w = water[Math.min(water.length - 1, 8 + k * 3)];
+      panel.moveHandleForTest(k, w.i, w.j);
+    }
+    const before = h.courses.count;
+    const cashBefore = h.week.cash;
+    const added = panel.confirmForTest();
+    const weekly = h.courses.weekly();
+    return {
+      ok: true, before: before, added: added, count: h.courses.count,
+      cashBefore: cashBefore, cashAfter: h.week.cash,
+      revenue: weekly.revenue, upkeep: weekly.upkeep,
+      thrill: Math.round(weekly.thrill), safety: Math.round(weekly.safety),
+      presets: api.PRESETS.length, equipment: api.COURSE_EQUIPMENT.length
+    };
+  })()`)) as {
+    ok: boolean;
+    why?: string;
+    before?: number;
+    added?: number;
+    count?: number;
+    cashBefore?: number;
+    cashAfter?: number;
+    revenue?: number;
+    upkeep?: number;
+    thrill?: number;
+    safety?: number;
+    presets?: number;
+    equipment?: number;
+  };
+
+  record(
+    '핸들을 물 위로 옮기고 확정하면 코스가 생긴다',
+    coursePlace.ok && (coursePlace.added ?? 0) === 1 ? 'pass' : 'fail',
+    coursePlace.ok
+      ? `코스 ${coursePlace.before} → ${coursePlace.count}`
+      : (coursePlace.why ?? '실패'),
+  );
+  record(
+    '코스 장비값이 실제로 나간다',
+    (coursePlace.cashAfter ?? 0) < (coursePlace.cashBefore ?? 0) ? 'pass' : 'fail',
+    `현금 ${Math.round((coursePlace.cashBefore ?? 0) / 10000)}만 → ` +
+      `${Math.round((coursePlace.cashAfter ?? 0) / 10000)}만`,
+  );
+  record(
+    '코스가 매출·스릴·안전을 낸다',
+    (coursePlace.revenue ?? 0) > 0 && (coursePlace.thrill ?? 0) > 0 ? 'pass' : 'fail',
+    `주매출 ${coursePlace.revenue} · 유지 ${coursePlace.upkeep} · ` +
+      `스릴 ${coursePlace.thrill} · 안전 ${coursePlace.safety}`,
+  );
+  record(
+    '장비 19종 · 프리셋 6종이 계약대로다',
+    coursePlace.presets === 6 && coursePlace.equipment === 19 ? 'pass' : 'fail',
+    `${coursePlace.presets} × ${coursePlace.equipment}`,
+  );
+
+  await page.screenshot({ path: `${SHOT_DIR}/kairo-course.png` });
+  await page.evaluate(`document.getElementById('kairo-course-close').click()`);
+
+  /*
    * ── 8·직원 (§11) ──
    *
    * 여섯 동사 중 "사람을 쓴다". **인건비가 실제로 나가고 부족이 결과를 바꾸는지**를 본다.

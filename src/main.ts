@@ -34,6 +34,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { CardStore, CARD_RNG_SALT } = await import('./sim/kairo/cards.js');
   const { StaffStore, STAFF_ROLES: STAFF_ROLE_LIST } = await import('./sim/kairo/staff.js');
   const { KairoStaffPanel } = await import('./ui/kairo-staff.js');
+  const course = await import('./sim/kairo/course.js');
+  const { KairoCoursePanel } = await import('./ui/kairo-course.js');
   const { Rng: RngCls } = await import('./sim/rng.js');
   const { loadKairoFromStorage, saveKairoToStorage } = await import('./save/kairo.js');
   const { facilityDef } = await import('./sim/kairo/placement.js');
@@ -310,6 +312,20 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     ? RngCls.fromState(saved.staffRngState)
     : new RngCls(20260818).fork(0x57aff);
   const staffPanel = new KairoStaffPanel(document.body);
+  const courses = saved?.courses
+    ? course.CourseStore.fromSnapshot(saved.courses)
+    : new course.CourseStore();
+
+  /**
+   * 코스가 더하는 위험 (§7.6 안전도). 안전도가 낮을수록 위험 점수가 크다 —
+   * 안 넣으면 험한 코스를 그려도 위험도 게이지가 안 움직여, 안전도가 코스 화면 안에서만
+   * 도는 숫자가 된다.
+   */
+  const courseRiskPoints = (): number => {
+    if (courses.count === 0) return 0;
+    const w = courses.weekly();
+    return Math.round(((100 - w.safety) / 100) * 8 * courses.count);
+  };
   /**
    * 계절. MVP 는 여름만 돈다 (스펙 v4: "여름이 재미없으면 사계절도 소용없다").
    * 세이브에는 이미 담고 있으므로, 계절 순환을 넣을 때 포맷을 바꾸지 않아도 된다.
@@ -343,6 +359,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       cardRngState: cardRng.state,
       staff: staff.toSnapshot(),
       staffRngState: staffRng.state,
+      courses: courses.toSnapshot(),
     });
   };
 
@@ -376,11 +393,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const mods = cards.modifiers();
     h.guests.setMaxGuests(admissionLimit(gr, h.placement.totalCapacity(), mods.crowdMult));
     const staffEff = staff.effects(h.placement);
+    const courseWeek = courses.weekly();
     const rep = week.run(weekRng, {
       season,
       playbackEvery: 6,
       reputation: gr.reputationPull,
       modifiers: mods,
+      courses: {
+        revenue: courseWeek.revenue,
+        upkeep: courseWeek.upkeep,
+        riders: courseWeek.riders,
+      },
       staff: {
         wages: staffEff.wages,
         satisfactionDelta: staffEff.satisfactionDelta,
@@ -456,6 +479,48 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 직원 버튼 — 시트를 연다. 상시 표시하지 않는 이유는 **매주 만지는 화면이 아니기**
    * 때문이다 (시설 구성이 바뀔 때 만진다). 상시로 두면 폰 화면을 잡아먹는다.
    */
+  /**
+   * 코스 패널 — 프리셋 탭 + 장비 + 대수. 핸들은 **화면에서 직접 끈다** (§7.3).
+   * 선착장은 지금 게이트로 대신한다 (선착장 시설 배치는 K6 아쿠아파크가 소유).
+   */
+  const coursePanel = new KairoCoursePanel(document.body, {
+    terrain: h.terrain,
+    scene: h.scene,
+    courses,
+    dock: () => {
+      const pier = h.placement.all().find((it) => {
+        const def = allFacilityDefs().find((d) => d.id === it.defId);
+        return def?.layer === 'water' || def?.walkOn === true;
+      });
+      return pier ? { x: pier.i, y: pier.j } : { x: GATE.i, y: GATE.j + 8 };
+    },
+    grade: () => gradeFor(lastSummary?.exitSatisfaction ?? 0).grade,
+    cash: () => week.cash,
+    spend: (n) => week.spend(n),
+    onChange: () => {
+      refreshCourseBtn();
+      refreshRisk();
+      persist();
+    },
+  });
+
+  const courseBtn = document.createElement('button');
+  courseBtn.id = 'kairo-course-open';
+  courseBtn.textContent = '코스';
+  courseBtn.style.cssText =
+    'position:fixed;right:8px;bottom:224px;z-index:9;min-height:44px;min-width:64px;' +
+    'border-radius:10px;border:none;background:#2a5674;color:#eaf6ff;font-size:13px';
+  courseBtn.addEventListener('click', () => {
+    if (coursePanel.visible) coursePanel.hide();
+    else coursePanel.show();
+  });
+  document.body.append(courseBtn);
+
+  const refreshCourseBtn = (): void => {
+    courseBtn.textContent = courses.count > 0 ? `코스 ${courses.count}` : '코스';
+  };
+  refreshCourseBtn();
+
   const staffBtn = document.createElement('button');
   staffBtn.id = 'kairo-staff-open';
   staffBtn.textContent = '직원';
@@ -482,7 +547,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
 
   const refreshRisk = (): void => {
     // 안전요원이 위험도를 내린다 — 시설과 같은 축이다
-    const r = assessRisk(h.placement, h.guests, staff.effects(h.placement).safetyPoints);
+    const r = assessRisk(h.placement, h.guests, {
+      staffSafety: staff.effects(h.placement).safetyPoints,
+      courseRisk: courseRiskPoints(),
+    });
     riskBox.style.background = RISK_COLOR[r.level] ?? RISK_COLOR['safe']!;
     riskBox.textContent =
       `위험도 ${RISK_NAMES[r.level]}` +
@@ -541,6 +609,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     cardView,
     staff,
     staffPanel,
+    courses,
+    coursePanel,
+    courseApi: course,
     progress,
     refreshQuests,
     getLastReport: () => lastReport,

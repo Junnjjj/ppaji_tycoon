@@ -122,6 +122,12 @@ export class KairoScene extends Phaser.Scene {
   /** 손님 시뮬용 RNG — 씬이 들고 있지만 시드는 주입된다 (결정론) */
   private rng: Rng;
   private dragging = false;
+  /** 끌고 있는 코스 핸들 번호 (−1 = 없음) */
+  private draggingHandle = -1;
+  private courseHandles: { x: number; y: number }[] = [];
+  private courseBad = new Set<number>();
+  private courseDock: { x: number; y: number } | null = null;
+  private courseGfx: Phaser.GameObjects.Graphics | null = null;
   private dragMoved = 0;
   private lastPointer = { x: 0, y: 0 };
   private lastTapAt = 0;
@@ -170,6 +176,8 @@ export class KairoScene extends Phaser.Scene {
 
     this.buildGround();
     this.buildWalls();
+    // 코스 오버레이는 전부보다 위 — 손님·시설에 가리면 못 끈다
+    this.courseGfx = this.add.graphics().setDepth(1_000_000).setVisible(false);
     this.rebuildFacilities();
     this.applyScale(this.cam.upscale);
     this.wireInput();
@@ -350,14 +358,113 @@ export class KairoScene extends Phaser.Scene {
     this.cameras.main.setScroll(view.scrollX, view.scrollY);
   }
 
+  /**
+   * 코스 핸들 오버레이 (§7.3). 점을 주면 그리고, 빈 배열이면 지운다.
+   *
+   * 핸들은 **화면상 지름 36px** 이어야 손가락으로 정확하다 (스펙). 확대 배율 S 를 나눠
+   * 씬 좌표로 환산한다 — 안 하면 S=2 에서 실제 크기가 두 배로 보인다.
+   */
+  setCourseOverlay(
+    handles: readonly { x: number; y: number }[],
+    bad: readonly number[],
+    dock: { x: number; y: number } | null,
+  ): void {
+    this.courseHandles = handles.map((h) => ({ ...h }));
+    this.courseBad = new Set(bad);
+    this.courseDock = dock ? { ...dock } : null;
+    this.drawCourseOverlay();
+  }
+
+  /** 핸들을 끌 때마다 부른다 — 지표를 실시간으로 갱신하라는 신호 */
+  onCourseHandleMove?: (index: number, i: number, j: number) => void;
+
+  private drawCourseOverlay(): void {
+    if (!this.courseGfx) return;
+    const g = this.courseGfx;
+    g.clear();
+    if (this.courseHandles.length === 0) {
+      g.setVisible(false);
+      return;
+    }
+    g.setVisible(true);
+    const pt = (p: { x: number; y: number }): { x: number; y: number } => {
+      const c = tileCenter(Math.round(p.x), Math.round(p.y));
+      return { x: c.x, y: c.y };
+    };
+    // 경로 — 선착장 → 핸들 순서
+    const path = (this.courseDock ? [this.courseDock] : []).concat(this.courseHandles).map(pt);
+    if (path.length >= 2) {
+      g.lineStyle(2, 0x7ad0ff, 0.85);
+      g.beginPath();
+      g.moveTo((path[0] as { x: number }).x, (path[0] as { y: number }).y);
+      for (let k = 1; k < path.length; k++) {
+        g.lineTo((path[k] as { x: number }).x, (path[k] as { y: number }).y);
+      }
+      // 닫는다 — 코스는 돌아온다
+      g.lineTo((path[0] as { x: number }).x, (path[0] as { y: number }).y);
+      g.strokePath();
+    }
+    // 핸들 — 화면 36px 을 씬 좌표로
+    const r = 18 / this.cam.upscale;
+    for (let k = 0; k < this.courseHandles.length; k++) {
+      const c = pt(this.courseHandles[k] as { x: number; y: number });
+      const bad = this.courseBad.has(k);
+      g.fillStyle(bad ? 0xd8503c : 0x2f9fd0, 0.85);
+      g.fillCircle(c.x, c.y, r);
+      g.lineStyle(2, 0xffffff, 0.9);
+      g.strokeCircle(c.x, c.y, r);
+    }
+  }
+
+  /** 화면 좌표에서 가장 가까운 핸들 — 없으면 −1 */
+  private handleAtPointer(px: number, py: number): number {
+    const grab = 22 / this.cam.upscale;
+    const view = this.cam.view();
+    let best = -1;
+    let bestD = grab;
+    for (let k = 0; k < this.courseHandles.length; k++) {
+      const h = this.courseHandles[k] as { x: number; y: number };
+      const c = tileCenter(Math.round(h.x), Math.round(h.y));
+      const d = Math.hypot(c.x - view.scrollX - px, c.y - view.scrollY - py);
+      if (d < bestD) {
+        bestD = d;
+        best = k;
+      }
+    }
+    return best;
+  }
+
   private wireInput(): void {
     this.input.on('pointerdown', (p: Phaser.Input.Pointer) => {
+      /*
+       * 핸들 위에서 시작한 드래그는 **카메라가 아니라 핸들**을 옮긴다.
+       * 이 분기가 없으면 코스를 조정하려다 화면만 움직여서, 스펙이 말한
+       * "손가락으로 끈다"가 성립하지 않는다.
+       */
+      const hit = this.handleAtPointer(p.x, p.y);
+      if (hit >= 0) {
+        this.draggingHandle = hit;
+        this.dragging = false;
+        return;
+      }
       this.dragging = true;
       this.dragMoved = 0;
       this.lastPointer = { x: p.x, y: p.y };
     });
 
     this.input.on('pointermove', (p: Phaser.Input.Pointer) => {
+      if (this.draggingHandle >= 0) {
+        const view = this.cam.view();
+        const t = screenToTile(p.x + view.scrollX, p.y + view.scrollY);
+        const h = this.courseHandles[this.draggingHandle];
+        if (h && (h.x !== t.i || h.y !== t.j) && inGrid(t.i, t.j)) {
+          h.x = t.i;
+          h.y = t.j;
+          this.drawCourseOverlay();
+          this.onCourseHandleMove?.(this.draggingHandle, t.i, t.j);
+        }
+        return;
+      }
       if (!this.dragging) return;
       // p.x 는 **씬 좌표(텍셀)** 다. 팬은 화면 픽셀 기준이라 S 를 곱해 되돌린다
       const dx = (p.x - this.lastPointer.x) * this.cam.upscale;
@@ -369,6 +476,10 @@ export class KairoScene extends Phaser.Scene {
     });
 
     const end = (p: Phaser.Input.Pointer): void => {
+      if (this.draggingHandle >= 0) {
+        this.draggingHandle = -1;
+        return;
+      }
       if (!this.dragging) return;
       this.dragging = false;
       this.cam.release();

@@ -98,6 +98,17 @@ export class KairoTerrain {
     return k < 0 ? null : groundDef(k).id;
   }
 
+  /**
+   * 물인가.
+   *
+   * 카이로 전환에서 **수심을 없앴다** — 물은 하나고 `water_edge` 가 그것이다
+   * (`docs/kairo-pivot-decisions.md`). 코스·수상 시설이 "물 위인가"를 물을 때 종류 문자열을
+   * 직접 비교하면, 나중에 물 종류가 늘 때 부르는 쪽을 전부 고쳐야 한다.
+   */
+  isWater(i: number, j: number): boolean {
+    return this.kindAt(i, j) === 'water_edge';
+  }
+
   /** 지면만 보고 걸을 수 있는가. 벽·시설 점유는 K3·K4 가 따로 얹는다 */
   isWalkable(i: number, j: number): boolean {
     const k = this.at(i, j);

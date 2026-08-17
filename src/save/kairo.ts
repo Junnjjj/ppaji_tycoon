@@ -5,6 +5,7 @@ import { ProgressStore, type ProgressSnapshot } from '../sim/kairo/progress.js';
 import type { WeekSnapshot, WeekSummary, Season } from '../sim/kairo/week.js';
 import type { CardSnapshot } from '../sim/kairo/cards.js';
 import type { StaffCounts } from '../sim/kairo/staff.js';
+import type { CourseSnapshot } from '../sim/kairo/course.js';
 
 /**
  * 카이로 세이브 — v1 세이브와 **완전히 분리**한다.
@@ -61,6 +62,8 @@ export interface KairoSaveV1 {
    */
   staff?: Partial<StaffCounts>;
   staffRngState?: number;
+  /** 놓인 코스 — 장비값을 치르고 그린 것이라 안 저장하면 새로고침이 곧 전부 철거다 */
+  courses?: CourseSnapshot;
 }
 
 export type AnyKairoSave = KairoSaveV1;
@@ -94,6 +97,7 @@ export interface KairoSaveInput {
   cardRngState?: number;
   staff?: StaffCounts;
   staffRngState?: number;
+  courses?: CourseSnapshot;
 }
 
 export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave {
@@ -114,6 +118,7 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.cardRngState !== undefined ? { cardRngState: input.cardRngState } : {}),
     ...(input.staff ? { staff: input.staff } : {}),
     ...(input.staffRngState !== undefined ? { staffRngState: input.staffRngState } : {}),
+    ...(input.courses ? { courses: input.courses } : {}),
   };
 }
 
@@ -161,6 +166,7 @@ export interface KairoRestored {
   cardRngState: number;
   staff?: Partial<StaffCounts>;
   staffRngState: number;
+  courses?: CourseSnapshot;
 }
 
 export function restoreKairo(raw: unknown): KairoRestored {
@@ -181,6 +187,7 @@ export function restoreKairo(raw: unknown): KairoRestored {
     cardRngState: s.cardRngState ?? 31337,
     ...(s.staff ? { staff: s.staff } : {}),
     staffRngState: s.staffRngState ?? 20260818,
+    ...(s.courses ? { courses: s.courses } : {}),
   };
 }
 

@@ -152,6 +152,9 @@ export interface WeekReport extends WeekSummary {
   upkeep: number;
   /** 인건비 — 고정비라 손님이 없어도 나간다 */
   wages: number;
+  /** 코스 매출과 탑승객 — 시설 매출과 나눠 보여줘야 "코스를 왜 그리나"가 보인다 */
+  courseRevenue: number;
+  courseRiders: number;
   gaveUp: number;
   /**
    * 혼잡 히트맵 — 타일별 손님 체류 tick. 결산에서 병목을 **눈으로** 보게 한다.
@@ -201,6 +204,8 @@ export interface WeekOptions {
    * ⚠ 여기도 `WeekRunner` 안에 직원 규칙을 넣지 않는다. `staff.ts` 가 해석하고
    * 여기는 **숫자 몇 개만** 받는다 (카드와 같은 규칙).
    */
+  /** 코스 합계 (§7). 없으면 코스가 없는 것으로 본다 */
+  courses?: { revenue: number; upkeep: number; riders: number };
   staff?: {
     wages: number;
     satisfactionDelta: number;
@@ -448,7 +453,24 @@ export class WeekRunner {
       for (const d of days) d.revenue = Math.round(d.revenue * mod.revenueMult);
     }
 
-    const upkeep = this.weeklyUpkeep(season);
+    /*
+     * 코스 매출은 **손님 시뮬과 별도로** 더한다. 코스 탑승은 선착장에서 일어나고 손님은
+     * 개체로 물 위를 돌지 않는다 — 돌게 하면 1,200명 × 스플라인 추적이 되고, 그 비용은
+     * "손님이 노는 광경"이 주는 값보다 크다 (배는 스프라이트로 돈다).
+     */
+    /*
+     * 코스 매출은 **계절을 탄다** — 손님이 안 오는데 배만 도는 것은 이상하고, 그대로 두면
+     * 코스가 비수기 손익을 통째로 떠받쳐 "겨울에는 무엇을 할까"가 사라진다 (실측: 코스를
+     * 넣자 겨울 손익이 +2% 로 평평해졌다). 유지비는 계절과 무관하다 — 장비는 세워둬도 돈이 든다.
+     */
+    const courseSeason = profile.arrivalBase;
+    const courseRevenue = mod?.closed
+      ? 0
+      : Math.round((opts.courses?.revenue ?? 0) * courseSeason);
+    const courseUpkeep = opts.courses?.upkeep ?? 0;
+    weekRevenue += courseRevenue;
+
+    const upkeep = this.weeklyUpkeep(season) + courseUpkeep;
     /*
      * 인건비는 **고정비**다 — 손님이 0명인 주에도 나간다. 그게 "겨울에 몇 명을 남길까"를
      * 판단으로 만든다 (§11 의 설계 의도).
@@ -495,6 +517,8 @@ export class WeekRunner {
       revenue: weekRevenue,
       upkeep,
       wages,
+      courseRevenue,
+      courseRiders: mod?.closed ? 0 : Math.round((opts.courses?.riders ?? 0) * courseSeason),
       profit: weekRevenue - upkeep - wages,
       /*
        * 만족도 델타는 **평균에 더한다**. 손님 개체마다 더하면 그 손님이 다음 주까지

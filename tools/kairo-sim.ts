@@ -26,6 +26,14 @@ import { WeekRunner, type NeedKind, type Season, type WeekReport } from '../src/
 import { evaluateCombos } from '../src/sim/kairo/combos.js';
 import { CardStore, CARD_RNG_SALT, optionCash } from '../src/sim/kairo/cards.js';
 import { StaffStore, STAFF_ROLES, neededFor } from '../src/sim/kairo/staff.js';
+import {
+  CourseStore,
+  PRESETS,
+  COURSE_EQUIPMENT,
+  defaultHandles,
+  validateCourse,
+  fitOf,
+} from '../src/sim/kairo/course.js';
 import { questStatuses, ProgressStore, gradeFor, admissionLimit } from '../src/sim/kairo/progress.js';
 
 const args = process.argv.slice(2);
@@ -73,6 +81,9 @@ interface RunResult {
   /** 주 평균 직원 수와 주차별 인건비 */
   staffWeeks: number;
   wagesByWeek: number[];
+  courseCount: number;
+  courseFail: string;
+  courseRevByWeek: number[];
   /** 주차별 수익·유지비 — "무엇이 손익을 깎는가"를 가른다 */
   revenueByWeek: number[];
   upkeepByWeek: number[];
@@ -138,6 +149,9 @@ function runOne(seed: number, weeks: number): RunResult {
   const staff = new StaffStore();
   /** 직원 전용 스트림 — 고장 판정이 날씨·손님을 밀면 안 된다 (불변식 2) */
   const staffRng = rng.fork(0x57aff);
+  const courses = new CourseStore();
+  /** 코스 전용 스트림 — 장비 선택이 날씨·손님을 밀면 안 된다 (불변식 2) */
+  const courseRng = rng.fork(0xc0125);
 
   // 벽부착 시설을 위해 벽 몇 줄 (플레이어가 실내동을 짓는 걸 흉내낸다)
   for (let i = 6; i < 26; i++) placeWall(t, w, GATE, i, 5);
@@ -149,10 +163,12 @@ function runOne(seed: number, weeks: number): RunResult {
   const seasonByWeek: Season[] = [];
   let buildPoor = 0;
   let buildNoSpace = 0;
+  let courseFail = '';
   let cardsSeen = 0;
   let cardSpend = 0;
   let staffWeeks = 0;
   const wagesByWeek: number[] = [];
+  const courseRevByWeek: number[] = [];
   const revenueByWeek: number[] = [];
   const upkeepByWeek: number[] = [];
   const cashByWeek: number[] = [];
@@ -248,6 +264,52 @@ function runOne(seed: number, weeks: number): RunResult {
      *
      * 사람의 최적 플레이는 아니다. 목적은 "직원이 있는 상태의 경제"를 재는 것이다.
      */
+    /*
+     * 코스 정책: **여유가 있으면 한 판에 서너 개까지.** 형태는 그 장비에 ◎ 인 것을 고른다
+     * (§7.8 이 요구하는 학습을 봇도 흉내낸다 — 아무 형태나 고르면 적합도가 경제에
+     * 반영되지 않아 "적합도가 있어도 없어도 같다"는 잘못된 결론이 나온다).
+     */
+    if (courses.count < 4 && cash - BUILD_RESERVE > 800_000) {
+      const affordable = COURSE_EQUIPMENT.filter(
+        (e) => e.vehicleCost * 2 <= cash - BUILD_RESERVE,
+      );
+      if (affordable.length > 0) {
+        const eq = affordable[Math.floor(courseRng.next() * affordable.length)] as
+          (typeof COURSE_EQUIPMENT)[number];
+        const best = PRESETS.filter((pr) => fitOf(eq.id, pr.id) === 'best' && pr.grade <= gr.grade);
+        const pick = (best.length > 0 ? best : PRESETS.filter((pr) => pr.grade <= gr.grade))[0];
+        if (pick) {
+          // 물가를 찾아 선착장으로 삼는다
+          let dock: { x: number; y: number } | null = null;
+          // 가장자리는 피한다 — 판정이 격자 밖을 물로 안 세므로 억울하게 좁아진다
+          for (let j = 0; j < GRID_H && !dock; j++) {
+            for (let i = 6; i < GRID_W - 6; i++) {
+              if (t.isWater(i, j)) {
+                dock = { x: i, y: j };
+                break;
+              }
+            }
+          }
+          if (dock) {
+            const handles = defaultHandles(pick, dock, { x: 0, y: 1 }, 6);
+            const v = validateCourse(t, handles, dock, pick, eq.id, gr.grade);
+            if (!v.ok && courseFail === '') courseFail = v.issues.join(',') + ' @' + dock.x + ',' + dock.y;
+            if (v.ok) {
+              cash -= eq.vehicleCost * 2;
+              courses.add({
+                presetId: pick.id,
+                equipId: eq.id,
+                vehicles: 2,
+                dock,
+                handles,
+              });
+            }
+          }
+        }
+      }
+    }
+    const courseWeek = courses.weekly();
+
     const staffSeasonMult = season === 'summer' ? 1 : season === 'winter' ? 0.5 : 0.75;
     for (const role of STAFF_ROLES) {
       const need = Math.ceil(neededFor(role, p) * staffSeasonMult);
@@ -264,6 +326,11 @@ function runOne(seed: number, weeks: number): RunResult {
       season,
       reputation: gr.reputationPull,
       modifiers: mods,
+      courses: {
+        revenue: courseWeek.revenue,
+        upkeep: courseWeek.upkeep,
+        riders: courseWeek.riders,
+      },
       staff: {
         wages: staffEff.wages,
         satisfactionDelta: staffEff.satisfactionDelta,
@@ -272,6 +339,7 @@ function runOne(seed: number, weeks: number): RunResult {
       },
     });
     wagesByWeek.push(rep.wages);
+    courseRevByWeek.push(rep.courseRevenue);
     cards.tickWeek();
     last = rep;
     cash += rep.profit;
@@ -309,6 +377,9 @@ function runOne(seed: number, weeks: number): RunResult {
     cardSpend,
     staffWeeks,
     wagesByWeek,
+    courseCount: courses.count,
+    courseFail,
+    courseRevByWeek,
     revenueByWeek,
     upkeepByWeek,
     cashByWeek,
@@ -408,11 +479,14 @@ function main(): void {
   console.log(`수익 (4주마다):   ${every4(revW)}`);
   console.log(`유지비 (4주마다): ${every4(upkW)}`);
   console.log(`인건비 (4주마다): ${every4(perWeekMed((r) => r.wagesByWeek))}`);
+  console.log(`코스매출 (4주마다): ${every4(perWeekMed((r) => r.courseRevByWeek))}`);
   console.log(`건설비 (4주마다): ${every4(bldW)}`);
   console.log(`현금 (4주마다):   ${every4(cashW)}`);
   console.log(
     `직원 평균: ${(stats(runs.map((r) => r.staffWeeks)).med / WEEKS).toFixed(1)}명/주`,
   );
+  console.log(`코스 수 중앙값: ${stats(runs.map((r) => r.courseCount)).med}개` +
+    (runs[0]?.courseFail ? ` (막힌 사유: ${runs[0].courseFail})` : ''));
   const cs = stats(runs.map((r) => r.cardsSeen));
   const csp = stats(runs.map((r) => r.cardSpend));
   console.log(
