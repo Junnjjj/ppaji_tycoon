@@ -1,0 +1,254 @@
+/**
+ * 카이로 씬 브라우저 검증 — 페이즈마다 이걸로 통과를 확인한다.
+ *
+ *   npm run verify:kairo
+ *   npm run verify:kairo -- --headed
+ *
+ * 개발 서버(npm run dev)가 떠 있어야 한다.
+ *
+ * ## 왜 별도 하네스인가
+ *
+ * `verify:mobile` 은 v1 씬(자유 배치·실시간 배속)을 검사한다. 카이로는 스케일 모드부터
+ * 다르고 조작도 다르므로 같은 파일에 섞으면 둘 다 못 읽는다. 카이로가 기본 씬이 되면
+ * 이쪽으로 합친다.
+ *
+ * ## 함정 (실측)
+ *
+ * - **`page.evaluate` 안에서 이름 있는 함수를 쓰지 말 것.** tsx(esbuild)가 `__name`
+ *   헬퍼를 주입하는데 페이지 쪽엔 없어서 ReferenceError 가 난다. 문자열로 넘기는 게 안전하다.
+ * - **핀치/멀티터치는 CDP `Input.dispatchTouchEvent` 로 보낼 것.** 합성 PointerEvent 는
+ *   Phaser 가 무시해서 멀쩡한 코드가 실패로 나온다.
+ */
+import { chromium, type ConsoleMessage } from 'playwright';
+
+const BASE = process.env['PPAJI_URL'] ?? 'http://localhost:5173';
+const URL = `${BASE}/?kairo=1`;
+const HEADED = process.argv.includes('--headed');
+const SHOT_DIR = 'tmp-shots';
+
+/** iPhone 14 Pro 급 — DPR 3 이 정수라 도트 격자에 유리한 쪽. 안드로이드는 아래에서 따로 본다 */
+const DEVICE = {
+  viewport: { width: 393, height: 852 },
+  deviceScaleFactor: 3,
+  isMobile: true,
+  hasTouch: true,
+  userAgent:
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 ' +
+    '(KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
+};
+
+type Verdict = 'pass' | 'fail' | 'info';
+const results: Array<{ name: string; verdict: Verdict; detail: string }> = [];
+const record = (name: string, verdict: Verdict, detail = ''): void => {
+  results.push({ name, verdict, detail });
+  const icon = verdict === 'pass' ? '✓' : verdict === 'fail' ? '✕' : 'ℹ';
+  console.log(`  ${icon} ${name}${detail ? ` — ${detail}` : ''}`);
+};
+
+async function main(): Promise<void> {
+  console.log(`카이로 검증 — ${URL}`);
+  const browser = await chromium.launch({ channel: 'chrome', headless: !HEADED });
+  const ctx = await browser.newContext(DEVICE);
+  const page = await ctx.newPage();
+
+  /**
+   * 알려진 무해한 요청 실패. **URL 로 허용한다** — "Failed to load resource" 라는
+   * 문구만 보고 통째로 무시하면 진짜 에러를 놓친다.
+   *   · assets/atlas.json — 아틀라스 유무 탐색. 없으면 절차적 생성으로 내려간다 (설계대로)
+   *   · favicon.ico — 파비콘 없음
+   */
+  const BENIGN = [/assets\/atlas\.json$/, /favicon\.ico$/];
+  const errors: string[] = [];
+  const httpFails: string[] = [];
+  page.on('console', (m: ConsoleMessage) => {
+    if (m.type() !== 'error') return;
+    // 리소스 로드 실패는 아래 httpFails 로 URL 까지 보고 판단한다
+    if (m.text().includes('Failed to load resource')) return;
+    errors.push(m.text());
+  });
+  page.on('response', (r) => {
+    if (r.status() >= 400 && !BENIGN.some((re) => re.test(r.url()))) {
+      httpFails.push(`${r.status()} ${r.url()}`);
+    }
+  });
+  page.on('requestfailed', (r) => {
+    if (!BENIGN.some((re) => re.test(r.url()))) httpFails.push(`FAILED ${r.url()}`);
+  });
+  page.on('pageerror', (e) => errors.push(String(e)));
+
+  // 씬 통계를 window 에 흘려 받는다
+  await page.addInitScript(`
+    window.__kairoStats = null;
+    const orig = Object.getOwnPropertyDescriptor(window, '__kairo');
+    void orig;
+  `);
+
+  await page.goto(URL, { waitUntil: 'load' });
+  // 디버그 박스가 텍스트를 채우면 씬이 돈다는 뜻
+  await page.waitForFunction(
+    `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+    undefined,
+    { timeout: 15000 },
+  );
+
+  // ── 1. 부팅 ──
+  const hasCanvas = await page.evaluate(`document.querySelectorAll('canvas').length`);
+  record('부팅 — 캔버스 생성', hasCanvas ? 'pass' : 'fail', `캔버스 ${String(hasCanvas)}개`);
+
+  // ── 2. 콘솔 에러 / 요청 실패 ──
+  record(
+    '콘솔 에러 0',
+    errors.length === 0 ? 'pass' : 'fail',
+    errors.length ? errors.slice(0, 3).join(' | ') : '',
+  );
+  record(
+    '요청 실패 0 (무해 허용 목록 제외)',
+    httpFails.length === 0 ? 'pass' : 'fail',
+    httpFails.slice(0, 3).join(' | '),
+  );
+
+  // ── 3. 내부 해상도 = 버퍼, CSS = 버퍼 × S ──
+  const geo = (await page.evaluate(`(() => {
+    const c = document.querySelector('canvas');
+    if (!c) return null;
+    const r = c.getBoundingClientRect();
+    return { w: c.width, h: c.height, cssW: Math.round(r.width), cssH: Math.round(r.height),
+             dpr: window.devicePixelRatio };
+  })()`)) as { w: number; h: number; cssW: number; cssH: number; dpr: number } | null;
+
+  if (!geo) {
+    record('캔버스 기하', 'fail', '캔버스를 못 찾았다');
+  } else {
+    const s = Math.round(geo.cssW / geo.w);
+    const ok = geo.cssW === geo.w * s && geo.cssH === geo.h * s && Number.isInteger(s);
+    record(
+      '도트 격자 — CSS = 내부해상도 × 정수 S',
+      ok ? 'pass' : 'fail',
+      `내부 ${geo.w}×${geo.h} · CSS ${geo.cssW}×${geo.cssH} · S=${s} · DPR ${geo.dpr}`,
+    );
+    const deviceScale = s * Math.round(geo.dpr);
+    record(
+      '텍셀당 디바이스픽셀이 정수',
+      Number.isInteger(deviceScale) ? 'pass' : 'fail',
+      `${deviceScale}`,
+    );
+    // 화면을 넘치는 양이 S−1 이하
+    const over = geo.cssW - 393;
+    record('가로 넘침 ≤ S−1', over >= 0 && over <= s - 1 ? 'pass' : 'fail', `${over}px`);
+  }
+
+  // ── 4. 디버그 박스에서 위반 확인 ──
+  const dbg = (await page.evaluate(
+    `document.getElementById('kairo-debug').textContent`,
+  )) as string;
+  record('도트격자 위반 0', dbg.includes('도트격자 OK') ? 'pass' : 'fail', dbg.replace(/\n/g, ' | '));
+
+  // ── 5. 타일 수 ──
+  const tiles = Number(/타일 (\d+)/.exec(dbg)?.[1] ?? 0);
+  record('격자 40×32 = 1280 타일', tiles === 1280 ? 'pass' : 'fail', `${tiles}`);
+
+  // ── 6. 팬 — 손가락 드래그로 스크롤이 변한다 ──
+  const before = /스크롤 (-?\d+),(-?\d+)/.exec(dbg);
+  await page.locator('canvas').first().hover();
+  const cdp = await ctx.newCDPSession(page);
+  type TouchType = 'touchStart' | 'touchMove' | 'touchEnd' | 'touchCancel';
+  const touch = async (type: TouchType, x: number, y: number): Promise<void> => {
+    await cdp.send('Input.dispatchTouchEvent', {
+      type,
+      touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }],
+    });
+  };
+  await touch('touchStart', 200, 500);
+  for (let k = 1; k <= 8; k++) await touch('touchMove', 200 - k * 15, 500 - k * 8);
+  await touch('touchEnd', 0, 0);
+  await page.waitForTimeout(300);
+  const dbg2 = (await page.evaluate(
+    `document.getElementById('kairo-debug').textContent`,
+  )) as string;
+  const after = /스크롤 (-?\d+),(-?\d+)/.exec(dbg2);
+  const moved = before && after && (before[1] !== after[1] || before[2] !== after[2]);
+  record(
+    '팬 — 손가락 드래그로 스크롤 변화',
+    moved ? 'pass' : 'fail',
+    `${before?.[0] ?? '?'} → ${after?.[0] ?? '?'}`,
+  );
+
+  // 스크롤이 정수인지
+  const intScroll = after && Number.isInteger(Number(after[1])) && Number.isInteger(Number(after[2]));
+  record('스크롤이 정수', intScroll ? 'pass' : 'fail', after?.[0] ?? '');
+
+  // ── 7. 더블탭 확대 ──
+  await touch('touchStart', 200, 500);
+  await touch('touchEnd', 0, 0);
+  await page.waitForTimeout(60);
+  await touch('touchStart', 200, 500);
+  await touch('touchEnd', 0, 0);
+  await page.waitForTimeout(400);
+  const dbg3 = (await page.evaluate(
+    `document.getElementById('kairo-debug').textContent`,
+  )) as string;
+  const s2 = /S=(\d)/.exec(dbg3)?.[1];
+  record('더블탭 확대 → S=2', s2 === '2' ? 'pass' : 'fail', `S=${s2 ?? '?'}`);
+  record(
+    'S=2 에서도 도트격자 OK',
+    dbg3.includes('도트격자 OK') ? 'pass' : 'fail',
+    dbg3.replace(/\n/g, ' | '),
+  );
+
+  await page.screenshot({ path: `${SHOT_DIR}/kairo-s2.png` });
+
+  // 되돌리기
+  await touch('touchStart', 200, 500);
+  await touch('touchEnd', 0, 0);
+  await page.waitForTimeout(60);
+  await touch('touchStart', 200, 500);
+  await touch('touchEnd', 0, 0);
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${SHOT_DIR}/kairo-s1.png` });
+
+  // ── 8. FPS ──
+  await page.waitForTimeout(1200);
+  const dbg4 = (await page.evaluate(
+    `document.getElementById('kairo-debug').textContent`,
+  )) as string;
+  const fps = Number(/FPS (\d+)/.exec(dbg4)?.[1] ?? 0);
+  record('FPS ≥ 30', fps >= 30 ? 'pass' : 'fail', `${fps}`);
+
+  // ── 9. 안드로이드 비정수 DPR ──
+  const ctx2 = await browser.newContext({
+    viewport: { width: 360, height: 800 },
+    deviceScaleFactor: 2.625,
+    isMobile: true,
+    hasTouch: true,
+  });
+  const p2 = await ctx2.newPage();
+  await p2.goto(URL, { waitUntil: 'load' });
+  await p2.waitForFunction(
+    `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+    undefined,
+    { timeout: 15000 },
+  );
+  const dbgA = (await p2.evaluate(
+    `document.getElementById('kairo-debug').textContent`,
+  )) as string;
+  record(
+    '안드로이드 DPR 2.625 에서도 도트격자 OK',
+    dbgA.includes('도트격자 OK') ? 'pass' : 'fail',
+    dbgA.replace(/\n/g, ' | '),
+  );
+  await p2.screenshot({ path: `${SHOT_DIR}/kairo-android.png` });
+
+  await browser.close();
+
+  const failed = results.filter((r) => r.verdict === 'fail');
+  console.log(
+    `\n${failed.length === 0 ? '✅' : '❌'} ${results.length - failed.length}/${results.length} 통과` +
+      (failed.length ? ` — 실패: ${failed.map((f) => f.name).join(', ')}` : ''),
+  );
+  process.exit(failed.length === 0 ? 0 : 1);
+}
+
+main().catch((e: unknown) => {
+  console.error(e);
+  process.exit(1);
+});

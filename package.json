@@ -15,7 +15,8 @@
     "typecheck": "tsc --noEmit",
     "verify": "npm run typecheck && npm run lint && npm run test && npm run gate",
     "verify:mobile": "tsx tools/verify-mobile.ts",
-    "gate": "tsx tools/kairo-gate.ts"
+    "gate": "tsx tools/kairo-gate.ts",
+    "verify:kairo": "tsx tools/verify-kairo.ts"
   },
   "dependencies": {
     "phaser": "3.90.0"
