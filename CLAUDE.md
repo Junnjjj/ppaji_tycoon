@@ -110,8 +110,8 @@ npm run verify         # typecheck + lint + test  ← 커밋 전 이걸 돌릴 �
 npm run sim -- --seed 42 --guests 200 --ticks 20000   # 헤드리스 시뮬 + 성능
 npm run sim -- --determinism                          # 결정론 확인
 npm run dev            # 폰에서 보려면 출력된 Network URL 사용
-npm run verify:mobile  # ← 모바일 실동작 자동 검증 (dev 서버 필요)
-npm run verify:kairo   # 카이로 씬 브라우저 80종 + 4방 이음새 QA (dev 서버 필요)
+npm run verify:mobile  # v1 씬(?v1=1) 모바일 검증 — 폐기된 씬이라 참고용
+npm run verify:kairo   # 카이로 씬 브라우저 86종 + 4방 이음새 QA (dev 서버 필요) ← 기본 씬 게이트
 npm run seam           # 4방 이음새 QA 단독 (--selftest 로 음성 대조군)
 npm run sim:kairo      # 카이로 헤드리스 밸런싱 (--seeds N --weeks N)
 ```

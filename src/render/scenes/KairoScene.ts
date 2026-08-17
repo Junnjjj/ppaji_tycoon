@@ -386,7 +386,16 @@ export class KairoScene extends Phaser.Scene {
         return;
       }
       this.lastTapAt = now;
-      const t = screenToTile(world.x, world.y - TILE_H / 2);
+      /*
+       * ⚠ 여기서 `world.y - TILE_H / 2` 를 빼면 안 된다. 그러면 타일 **중심**을 탭했을 때
+       * 격자 꼭지점(네 타일이 만나는 점)으로 옮겨져, 반올림 하나로 타일이 뒤집힌다
+       * (실측: (10,10) 중심을 탭했는데 (9,10) 이 나왔다). 지면 칠하기로는 이웃 칸이
+       * 칠해져도 티가 안 나서 오래 안 잡혔지만, 2×2 시설 배치에서는 곧바로 거절된다.
+       *
+       * `screenToTile` 은 `gridToScreen` 의 역이고 타일 (i,j) 의 셀 중심이 곧
+       * `tileCenter(i,j)` 다 — 그래서 보정 없이 넣는 것이 경계에서 가장 안전하다.
+       */
+      const t = screenToTile(world.x, world.y);
       if (inGrid(t.i, t.j)) this.opts.onTapTile?.(t.i, t.j);
     };
     this.input.on('pointerup', end);

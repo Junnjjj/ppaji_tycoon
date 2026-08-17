@@ -12,6 +12,15 @@
 import { chromium, type ConsoleMessage, type Page } from 'playwright';
 
 const BASE = process.env['PPAJI_URL'] ?? 'http://localhost:5173';
+/**
+ * ⚠ 이 하네스는 **v1 씬**(자유 배치·실시간 배속)을 검사한다. K13 에서 기본 씬이
+ * 카이로로 바뀌었으므로 `?v1=1` 을 명시해야 한다. 안 붙이면 카이로가 떠서
+ * "시설 팔레트가 없다"는 식으로 전부 실패한다.
+ *
+ * 카이로의 모바일 검증은 `npm run verify:kairo` 다 — 같은 아이폰 프로파일·터치·
+ * CDP 멀티터치 핀치로 80종을 본다. 여기를 카이로용으로 다시 쓰면 그것과 중복된다.
+ */
+const V1_URL = `${BASE}/?v1=1`;
 const HEADED = process.argv.includes('--headed');
 const SHOT_DIR = 'tmp-shots';
 
@@ -172,7 +181,7 @@ async function main(): Promise<void> {
   // ── 2. 게임 부팅 ──
   console.log('\n[2] 게임 부팅');
   errors.length = 0;
-  await page.goto(BASE, { waitUntil: 'networkidle' });
+  await page.goto(V1_URL, { waitUntil: 'networkidle' });
   // 새 게임으로 시작 (이전 세이브 영향 제거)
   await page.evaluate(() => localStorage.clear());
   await page.reload({ waitUntil: 'networkidle' });

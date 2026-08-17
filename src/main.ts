@@ -10,10 +10,11 @@ const DEFAULT_SEED = 20260811;
 const AUTOSAVE_INTERVAL_MS = 30_000;
 
 /**
- * 카이로 씬 — `?kairo=1` 로 띄운다.
+ * 카이로 씬 — **기본**이다 (K13). v1 씬은 `?v1=1` 로만 열린다.
  *
- * v1 씬(Phase 0~1 산출물)을 아직 기본으로 둔다. 카이로가 페이즈를 다 통과하면
- * 기본을 바꾸고 `verify:mobile` 도 그때 옮긴다 — 지금 바꾸면 기존 검증이 통째로 깨진다.
+ * K12 에서 세이브가 생긴 뒤에 바꿨다. 순서가 중요했다 — 세이브 없이 기본으로 올리면
+ * 폰에서 새로고침 한 번에 판이 전부 날아가고, 그건 이 프로젝트 1순위 목표
+ * ("폰에서 돌아가는 것")에 정면으로 어긋난다.
  */
 async function mainKairo(parent: HTMLElement): Promise<void> {
   const { bootKairo } = await import('./render/kairo/boot.js');
@@ -30,6 +31,15 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { assessRisk, RISK_NAMES } = await import('./sim/kairo/risk.js');
   const { KairoReport } = await import('./ui/kairo-report.js');
   const { Rng: RngCls } = await import('./sim/rng.js');
+  const { loadKairoFromStorage, saveKairoToStorage } = await import('./save/kairo.js');
+  const { facilityDef } = await import('./sim/kairo/placement.js');
+
+  /**
+   * 세이브를 먼저 읽는다 — 지형·벽·시설을 씬에 넘겨야 하므로 부팅보다 앞이어야 한다.
+   * 없으면 시드에서 새로 만든다 (`bootKairo` 기본 동작).
+   */
+  const saved = loadKairoFromStorage();
+  const KAIRO_SEED = saved?.seed ?? 20260818;
   const box = document.createElement('div');
   box.id = 'kairo-debug';
   box.style.cssText =
@@ -38,14 +48,35 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     'pointer-events:none;white-space:pre';
   document.body.append(box);
 
+  /**
+   * ⚠ `onFrame` 은 `bootKairo` 가 돌아오기 **전에** 이미 불릴 수 있다 (Phaser 가 첫 프레임을
+   * 잡는 시점은 우리가 정하지 않는다). 아래에서 `const` 로 선언된 것을 `onFrame` 이
+   * 직접 참조하면 TDZ ReferenceError 가 나고, 그 예외가 루프를 frame 0 에서 죽인다 —
+   * 화면은 그려진 채로 멈추므로 "부팅 성공" 처럼 보인다 (실측: started:true, frame:0).
+   *
+   * 그래서 프레임이 읽는 상태는 **미리 선언한 널 가능 참조**로만 만진다. 주석으로
+   * "boot 뒤에 await 를 두지 말 것"이라고 적는 것만으로는 재발을 못 막는다.
+   */
+  let runner: InstanceType<typeof WeekRunner> | null = null;
+
   const h = bootKairo({
     parent,
+    seed: KAIRO_SEED,
+    ...(saved
+      ? {
+          terrain: saved.terrain,
+          walls: saved.walls,
+          placement: saved.placement,
+          gate: saved.gate,
+        }
+      : {}),
     onFrame: (s) => {
       box.textContent =
         `FPS ${s.fps}  S=${s.upscale}  버퍼 ${s.bufferW}×${s.bufferH}\n` +
         `스크롤 ${s.scrollX},${s.scrollY}  타일 ${s.tiles}\n` +
         `벽 ${s.walls}  시설 ${s.facilities}  손님 ${s.guests}\n` +
-        `퇴장만족 ${s.exitSat.toFixed(0)}  주차 ${week.week}  현금 ${Math.round(week.cash / 10000)}만\n` +
+        `퇴장만족 ${s.exitSat.toFixed(0)}  주차 ${runner?.week ?? 0}  ` +
+        `현금 ${Math.round((runner?.cash ?? 0) / 10000)}만\n` +
         (s.dotGridViolations.length === 0
           ? '도트격자 OK'
           : `도트격자 위반: ${s.dotGridViolations.join(' / ')}`);
@@ -68,6 +99,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           h.scene.refreshWall(i, j);
           h.guests.invalidate(); // 벽이 바뀌면 거리장을 다시 만든다
           toast('');
+          persist();
         } else {
           // 밀폐 차단이면 몇 칸이 갇히는지 함께 보여준다
           toast(PLACE_MESSAGES[r.reason] + (r.sealed ? ` (${r.sealed}칸)` : ''));
@@ -78,39 +110,67 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         // 시설이 먼저 — 시설 위를 탭했으면 그걸 지운다
         const hit = h.placement.at(i, j);
         if (hit) {
+          const def = facilityDef(hit.defId);
           h.placement.remove(hit.handle);
           h.scene.refreshFacility(hit.handle);
           h.guests.invalidate();
+          /*
+           * 절반만 돌려준다. 전액이면 "놓아보고 안 맞으면 지운다"가 공짜라 배치가
+           * 판단이 아니게 되고, 0원이면 오조작 한 번이 판을 망친다.
+           */
+          const back = def ? Math.floor(def.cost * 0.5) : 0;
+          if (back > 0) {
+            week.earn(back);
+            toast(`철거 — ${Math.round(back / 10000)}만 환급`, 'ok');
+          }
+          persist();
           return;
         }
         if (removeWall(h.walls, i, j)) {
           h.scene.refreshWall(i, j);
           h.guests.invalidate();
+          persist();
         }
         return;
       }
       if (brush === 'facility') {
         const defId = picker.value;
         // 등급 해금 — 허가는 돈으로 못 산다 (퇴장 만족도로만 오른다)
-        const grade = gradeFor(lastReport?.exitSatisfaction ?? 0);
+        const grade = gradeFor(lastSummary?.exitSatisfaction ?? 0);
         const need = requiredGrade(defId);
         if (need > grade.grade) {
           toast(`아직 못 짓습니다 — ${need}등급 필요 (현재 ${grade.grade}등급 ${grade.name})`);
           return;
         }
+        /*
+         * 건설비를 **놓기 전에** 확인한다. 놓고 나서 차감하면 잔액 부족일 때 되돌려야 하고,
+         * 그 되돌리기가 점유 격자·거리장까지 건드려 실패 경로가 두 배로 늘어난다.
+         *
+         * ⚠ K12 까지 UI 는 시설을 공짜로 지었다 — 헤드리스 봇만 돈을 써서,
+         * 밸런싱한 건설비 곡선이 실제 플레이에는 없었다.
+         */
+        const def = facilityDef(defId);
+        const cost = def?.cost ?? 0;
+        if (cost > week.cash) {
+          toast(
+            `돈이 부족합니다 — ${Math.round(cost / 10000)}만 필요 ` +
+              `(현재 ${Math.round(week.cash / 10000)}만)`,
+          );
+          return;
+        }
         const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j);
         if (r.ok && r.placed) {
+          week.spend(cost);
           h.scene.refreshFacility(r.placed.handle);
           h.guests.invalidate();
           // 놓고 나서 터진 콤보를 알려준다
           const gained = previewCombos(h.placement, defId, i, j);
           const now = evaluateCombos(h.placement);
-          const claimed = progress.claim(questStatuses(h.placement, lastReport));
-          const msgs: string[] = [];
+          const msgs: string[] = [`−${Math.round(cost / 10000)}만`];
           if (now.active.length > 0) msgs.push(`콤보 ${now.active.length}개 발동`);
-          if (claimed.cash > 0) msgs.push(`의뢰 완료 +${Math.round(claimed.cash / 10000)}만`);
-          toast(msgs.join(' · '), msgs.length > 0 ? 'ok' : '');
+          toast(msgs.join(' · '), 'ok');
           void gained;
+          persist();
         } else {
           toast(PLACE_FAIL_MESSAGES[r.fail ?? 'unknown-def']);
         }
@@ -119,12 +179,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       if (h.terrain.paint(i, j, brush)) {
         h.scene.refreshTile(i, j);
         h.guests.invalidate(); // 통행 가능성이 바뀐다
+        persist();
       }
     },
   });
 
   /** 게이트 — K4 에서 매표소 배치로 대체한다. 지금은 좌상단 고정 */
-  const GATE = { i: 0, j: 0 };
+  const GATE = saved?.gate ?? { i: 0, j: 0 };
 
   const msg = document.createElement('div');
   msg.id = 'kairo-toast';
@@ -207,10 +268,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   }
   document.body.append(picker);
 
-  // 검증 도구가 시뮬 규칙을 직접 부를 수 있게 노출한다 (브라우저에서 규칙을 재구현하지 않도록)
-  const { Rng } = await import('./sim/rng.js');
+  /*
+   * 검증 도구가 시뮬 규칙을 직접 부를 수 있게 노출한다 (브라우저에서 규칙을 재구현하지 않도록).
+   *
+   * ⚠ 여기서 `await import` 를 다시 하면 안 된다. `bootKairo` 뒤에 await 가 하나라도 있으면
+   * 그 지점에서 양보한 사이 **첫 프레임이 먼저 돌아** `onFrame` 이 아직 초기화되지 않은
+   * `week` 를 건드리고, ReferenceError 로 루프가 frame 0 에서 죽는다 (K1 과 같은 서명:
+   * `started:true, frame:0, children:1282`). 실측으로 겪었다 — 화면이 그려진 채 멈춘다.
+   * 동적 import 는 전부 boot 앞에 모아 둔다.
+   */
   Object.assign(h, {
-    Rng,
+    Rng: RngCls,
     sim: { placeWall, removeWall, WALL_SOLID, WALL_DOOR, PLACE_MESSAGES },
     simDefs: Object.fromEntries(allFacilityDefs().map((d) => [d.id, d])),
   });
@@ -221,25 +289,66 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 실시간 시뮬은 "만지는 동안"만 돌고, 시간이 흐르는 건 이 버튼뿐이다 — 렌더가 프레임마다
    * tick 을 돌리면 결산이 언제 끝났는지 알 수 없다.
    */
-  const progress = new ProgressStore();
+  const progress = saved ? saved.progress : new ProgressStore();
   const week = new WeekRunner(h.terrain, h.placement, h.guests);
+  runner = week; // 프레임이 이제부터 주차·현금을 읽을 수 있다
   const report = new KairoReport(document.body);
   const weekRng = new RngCls(31337);
+  /**
+   * 계절. MVP 는 여름만 돈다 (스펙 v4: "여름이 재미없으면 사계절도 소용없다").
+   * 세이브에는 이미 담고 있으므로, 계절 순환을 넣을 때 포맷을 바꾸지 않아도 된다.
+   */
+  const season = saved?.season ?? 'summer';
+  if (saved) {
+    week.restore(saved.week);
+    weekRng.setState(saved.weekRngState);
+  }
+  /**
+   * 전체 결산(히트맵·재생 프레임)은 세이브에 안 들어간다 — 재생은 그 주에만 의미가 있고
+   * 히트맵 1,280칸은 localStorage 를 넘긴다. 등급·의뢰가 읽는 요약만 복원한다.
+   */
   let lastReport: ReturnType<typeof week.run> | null = null;
+  let lastSummary = saved?.lastSummary ?? null;
+
+  /** 세이브 — 배치·주 진행처럼 상태가 실제로 바뀐 뒤에만 부른다 */
+  const persist = (): void => {
+    saveKairoToStorage({
+      seed: KAIRO_SEED,
+      gate: GATE,
+      terrain: h.terrain,
+      walls: h.walls,
+      placement: h.placement,
+      progress,
+      week: week.toSnapshot(),
+      weekRngState: weekRng.state,
+      season,
+      lastSummary,
+    });
+  };
 
   const runWeek = (): void => {
     if (h.scene.isPlaying || report.visible) return;
     const t0 = performance.now();
     // 등급이 동시 손님 상한과 방문 수요를 올린다 — 만족도를 관리해야 성장한다
-    const gr = gradeFor(lastReport?.exitSatisfaction ?? 0);
+    const gr = gradeFor(lastSummary?.exitSatisfaction ?? 0);
     h.guests.setMaxGuests(admissionLimit(gr, h.placement.totalCapacity()));
     const rep = week.run(weekRng, {
-      season: 'summer',
+      season,
       playbackEvery: 6,
       reputation: gr.reputationPull,
     });
     const calcMs = performance.now() - t0;
     lastReport = rep;
+    lastSummary = {
+      visitors: rep.visitors,
+      turnedAway: rep.turnedAway,
+      profit: rep.profit,
+      exitSatisfaction: rep.exitSatisfaction,
+    };
+    // 의뢰 보상은 결산 시점에 지급한다 — 배치 때마다 주면 같은 의뢰가 여러 번 판정된다
+    const weekClaim = progress.claim(questStatuses(h.placement, lastSummary));
+    if (weekClaim.cash > 0) week.earn(weekClaim.cash);
+    persist();
     console.log(
       `[카이로] ${rep.week}주차 계산 ${calcMs.toFixed(0)}ms · 방문 ${rep.visitors} · ` +
         `손익 ${rep.profit} · 프레임 ${rep.playback.length}`,
@@ -301,12 +410,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
 
   const refreshQuests = (): void => {
-    const st = questStatuses(h.placement, lastReport);
+    const st = questStatuses(h.placement, lastSummary);
     const open = st.filter((s) => !progress.isClaimed(s.id));
     const rows = open.slice(0, 6);
     questPanel.replaceChildren();
     const title = document.createElement('div');
-    const g = gradeFor(lastReport?.exitSatisfaction ?? 0);
+    const g = gradeFor(lastSummary?.exitSatisfaction ?? 0);
     title.textContent =
       `의뢰 ${st.length - open.length}/${st.length} · ${g.grade}등급 ${g.name}\n` +
       `동시 ${g.maxGuests}명 · 수요 ×${g.reputationPull}`;
@@ -364,7 +473,11 @@ async function main(): Promise<void> {
   const parent = document.getElementById('game');
   if (!parent) throw new Error('#game 컨테이너를 찾지 못했습니다');
 
-  if (new URLSearchParams(location.search).get('kairo') === '1') {
+  /*
+   * 기본은 카이로다. v1(자유 배치·실시간)은 폐기됐지만 `?v1=1` 로 남겨 둔다 —
+   * `verify:mobile` 이 아직 그쪽을 검사하고, 지우는 것은 별도 결정이다.
+   */
+  if (new URLSearchParams(location.search).get('v1') !== '1') {
     await mainKairo(parent);
     return;
   }

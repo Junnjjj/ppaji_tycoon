@@ -58,9 +58,13 @@ async function main(): Promise<void> {
    *   · favicon.ico — 파비콘 없음
    */
   const BENIGN = [/assets\/atlas\.json$/, /favicon\.ico$/];
+
+  /** 탭 → 타일 해석 회귀 검사용. 붓이 없을 때 씬이 해석한 타일을 콘솔에 찍는다 */
+  const tapLog: string[] = [];
   const errors: string[] = [];
   const httpFails: string[] = [];
   page.on('console', (m: ConsoleMessage) => {
+    if (m.text().includes('탭 타일')) tapLog.push(m.text());
     if (m.type() !== 'error') return;
     // 리소스 로드 실패는 아래 httpFails 로 URL 까지 보고 판단한다
     if (m.text().includes('Failed to load resource')) return;
@@ -1359,7 +1363,206 @@ async function main(): Promise<void> {
   const fps = Number(/FPS (\d+)/.exec(dbg4)?.[1] ?? 0);
   record('FPS ≥ 30', fps >= 30 ? 'pass' : 'fail', `${fps}`);
 
-  // ── 9. 안드로이드 비정수 DPR ──
+  /*
+   * ── 9. 세이브·건설비 ──
+   *
+   * K12/K13 에서 들어온 것. **새로고침을 넘는지**를 브라우저에서 직접 본다 —
+   * 단위 테스트는 왕복만 보고, localStorage 가 실제로 써지는지는 못 본다.
+   *
+   * ⚠ 현금은 디버그 박스에서 읽는다 (만 단위 반올림). 배치가 실제로 돈을 쓰는지만
+   * 보면 되므로 정밀도는 충분하고, 내부 상태를 창에 새로 노출하지 않는다.
+   */
+  const cashOf = async (): Promise<number> => {
+    const t = (await page.evaluate(
+      `document.getElementById('kairo-debug').textContent`,
+    )) as string;
+    return Number(/현금 (\d+)만/.exec(t)?.[1] ?? -1);
+  };
+
+  /*
+   * 탭 → 타일 해석 회귀. **반드시 여러 타일로 본다** — 한 칸만 맞으면 우연이다.
+   *
+   * 실측 버그: 핸들러가 `world.y − TILE_H/2` 를 빼서 탭 지점이 격자 꼭지점(네 타일이
+   * 만나는 점)으로 옮겨졌고, 반올림 하나로 타일이 뒤집혔다. 지면 칠하기로는 이웃 칸이
+   * 칠해져도 티가 안 나서 오래 안 잡혔지만 2×2 시설은 곧바로 거절된다.
+   *
+   * ⚠ 탭 간격을 700ms 이상 둔다 — 300ms 안에 두 번이면 **더블탭 확대**가 발동해
+   * 배율이 2 로 바뀌고, 그 뒤 좌표 환산이 전부 어긋난다 (실측으로 겪었다).
+   */
+  const TAP_CASES: [number, number][] = [
+    [10, 10],
+    [11, 9],
+    [9, 11],
+    [13, 13],
+    [8, 14],
+  ];
+  const tapResults: string[] = [];
+  await page.evaluate(`(() => {
+    // 붓을 끄면 onTapTile 이 해석한 타일을 콘솔에 찍는다
+    const bar = document.getElementById('kairo-brush');
+    const cur = window.__kairoBrush ? window.__kairoBrush() : null;
+    if (cur && bar) {
+      const b = bar.querySelector('[data-kind="' + cur + '"]');
+      if (b) b.click();
+    }
+  })()`);
+  for (const [ti, tj] of TAP_CASES) {
+    /*
+     * 카메라를 그 타일에 맞춘다 — 안 맞추면 대부분이 화면 밖이라 검사가 한두 칸만 보고
+     * 통과한다 (실측: 5칸 중 1칸만 화면 안). `focusTile` 은 도구용으로 열려 있다.
+     */
+    await page.evaluate(`window.__kairo.scene.focusTile(${ti}, ${tj})`);
+    await page.waitForTimeout(120);
+    const pt = (await page.evaluate(`(() => {
+      const h = window.__kairo, cv = document.querySelector('canvas');
+      const cr = cv.getBoundingClientRect();
+      const sx = cr.width / cv.width, sy = cr.height / cv.height;
+      const r = h.scene.tileScreenRect(${ti}, ${tj});
+      const x = cr.left + (r.x + 16) * sx, y = cr.top + (r.y + 8) * sy;
+      return { x: Math.round(x), y: Math.round(y),
+               inView: x > 30 && y > 130 && x < cr.width - 30 && y < cr.height - 170 };
+    })()`)) as { x: number; y: number; inView: boolean };
+    if (!pt.inView) {
+      tapResults.push(`(${ti},${tj})화면밖`);
+      continue;
+    }
+    tapLog.length = 0;
+    await page.touchscreen.tap(pt.x, pt.y);
+    await page.waitForTimeout(700);
+    const got = /\((\d+), (\d+)\)/.exec(tapLog.join(' '));
+    const ok = got && Number(got[1]) === ti && Number(got[2]) === tj;
+    tapResults.push(`(${ti},${tj})${ok ? '✓' : `→${got ? got[0] : '?'}`}`);
+  }
+  record(
+    '탭한 타일이 정확히 해석된다 — 반 타일 밀리면 2×2 배치가 거절된다',
+    tapResults.length === TAP_CASES.length && tapResults.every((r) => r.endsWith('✓'))
+      ? 'pass'
+      : 'fail',
+    tapResults.join(' '),
+  );
+
+  const cashBefore = await cashOf();
+
+  /*
+   * 배치는 **화면 탭**으로 한다 — 시뮬을 직접 부르면 건설비 경로를 안 타서
+   * "공짜로 짓는다" 버그를 그대로 통과시킨다. 그게 K12 까지 실제로 있던 상태다.
+   *
+   * ⚠ 후보 타일마다 **카메라를 맞추고 탭 지점이 캔버스 위인지 확인**한다. 안 하면
+   * 토스트·붓 바·의뢰 패널 같은 DIV 가 탭을 먹고 "배치가 안 된다"로 나온다 (실측).
+   */
+  const candidates = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    const bar = document.getElementById('kairo-brush');
+    const sel = document.getElementById('kairo-facility');
+    const btn = bar ? bar.querySelector('[data-kind="facility"]') : null;
+    if (!btn || !sel) return { ok: false, why: '시설 붓 또는 선택기를 못 찾았다', tiles: [] };
+    sel.value = 'shop';
+    sel.dispatchEvent(new Event('change', { bubbles: true }));
+    if (!window.__kairoBrush || window.__kairoBrush() !== 'facility') btn.click();
+    // shop 은 2×2 다 — **발자국 전체**가 비고 걸을 수 있어야 한다.
+    // 앵커 칸만 보면 "다른 시설이 있습니다" 로 거절된다 (실측)
+    const fits = (i, j) => {
+      for (let dj = 0; dj < 2; dj++) {
+        for (let di = 0; di < 2; di++) {
+          if (h.placement.at(i + di, j + dj)) return false;
+          if (!h.terrain.isWalkable(i + di, j + dj)) return false;
+        }
+      }
+      return true;
+    };
+    const tiles = [];
+    for (let j = 2; j < 30 && tiles.length < 8; j++) {
+      for (let i = 2; i < 38 && tiles.length < 8; i++) {
+        if (fits(i, j)) tiles.push([i, j]);
+      }
+    }
+    return { ok: true, tiles: tiles, count: h.placement.count, brush: window.__kairoBrush ? window.__kairoBrush() : null };
+  })()`)) as { ok: boolean; why?: string; tiles: [number, number][]; count?: number; brush?: string | null };
+
+  let placedAt: [number, number] | null = null;
+  let tapDetail = candidates.ok ? `붓 ${String(candidates.brush)}` : (candidates.why ?? '실패');
+  const countBefore = candidates.count ?? 0;
+  for (const [ti, tj] of candidates.tiles) {
+    await page.evaluate(`window.__kairo.scene.focusTile(${ti}, ${tj})`);
+    await page.waitForTimeout(120);
+    const pt = (await page.evaluate(`(() => {
+      const h = window.__kairo, cv = document.querySelector('canvas');
+      const cr = cv.getBoundingClientRect();
+      const sx = cr.width / cv.width, sy = cr.height / cv.height;
+      const r = h.scene.tileScreenRect(${ti}, ${tj});
+      const x = Math.round(cr.left + (r.x + 16) * sx), y = Math.round(cr.top + (r.y + 8) * sy);
+      const el = document.elementFromPoint(x, y);
+      return { x: x, y: y, tag: el ? el.tagName : '(없음)' };
+    })()`)) as { x: number; y: number; tag: string };
+    if (pt.tag !== 'CANVAS') continue;
+    await page.touchscreen.tap(pt.x, pt.y);
+    await page.waitForTimeout(700); // 더블탭 확대를 피한다
+    const now = (await page.evaluate(`window.__kairo.placement.count`)) as number;
+    if (now > countBefore) {
+      placedAt = [ti, tj];
+      break;
+    }
+    const toast = (await page.evaluate(
+      `(() => { const m = document.getElementById('kairo-toast'); return m && !m.hidden ? m.textContent : ''; })()`,
+    )) as string;
+    tapDetail += ` · (${ti},${tj}) 거절 "${toast}"`;
+  }
+  const cashAfter = await cashOf();
+  const countAfter = (await page.evaluate(`window.__kairo.placement.count`)) as number;
+  record(
+    '화면을 탭해 시설을 놓는다',
+    placedAt !== null ? 'pass' : 'fail',
+    placedAt
+      ? `(${placedAt[0]}, ${placedAt[1]}) 탭 → 시설 ${countBefore} → ${countAfter}`
+      : tapDetail,
+  );
+  record(
+    '시설을 놓으면 건설비가 실제로 나간다 — 봇만 돈을 쓰던 상태를 막는다',
+    cashAfter < cashBefore ? 'pass' : 'fail',
+    `현금 ${cashBefore}만 → ${cashAfter}만`,
+  );
+
+  const savedInfo = (await page.evaluate(`(() => {
+    const raw = localStorage.getItem('ppaji.kairo.save.v1');
+    if (!raw) return { bytes: 0, facilities: -1 };
+    const s = JSON.parse(raw);
+    const p = s.placement;
+    const n = Array.isArray(p) ? p.length : Array.isArray(p.items) ? p.items.length : -1;
+    return { bytes: raw.length, facilities: n, cash: s.week ? s.week.cash : -1 };
+  })()`)) as { bytes: number; facilities: number; cash?: number };
+  record(
+    '세이브가 localStorage 에 써진다',
+    savedInfo.bytes > 100 ? 'pass' : 'fail',
+    `${(savedInfo.bytes / 1024).toFixed(1)}KB · 시설 ${savedInfo.facilities}개`,
+  );
+
+  // 새로고침 — 여기가 진짜 검사다. 왕복 단위 테스트로는 이걸 못 본다
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForFunction(
+    `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+    undefined,
+    { timeout: 15000 },
+  );
+  const afterReload = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    return { facilities: h.placement.count, view: h.scene.guestViewCount };
+  })()`)) as { facilities: number };
+  const cashReload = await cashOf();
+  record(
+    '새로고침 후에도 시설이 남아 있다 — 폰에서 다시 켜도 판이 이어진다',
+    afterReload.facilities === savedInfo.facilities && savedInfo.facilities > 0 ? 'pass' : 'fail',
+    `세이브 ${savedInfo.facilities}개 → 복원 ${afterReload.facilities}개 (화면 ${countAfter}개)`,
+  );
+  record(
+    '새로고침 후에도 현금이 이어진다',
+    savedInfo.cash !== undefined && cashReload === Math.round(savedInfo.cash / 10000)
+      ? 'pass'
+      : 'fail',
+    `세이브 ${Math.round((savedInfo.cash ?? 0) / 10000)}만 → 복원 ${cashReload}만`,
+  );
+  await page.screenshot({ path: `${SHOT_DIR}/kairo-save.png` });
+
+  // ── 10. 안드로이드 비정수 DPR ──
   const ctx2 = await browser.newContext({
     viewport: { width: 360, height: 800 },
     deviceScaleFactor: 2.625,

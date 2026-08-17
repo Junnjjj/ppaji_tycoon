@@ -2,7 +2,7 @@ import rawQuests from '../../data/kairo-quests.json' with { type: 'json' };
 import rawUnlocks from '../../data/kairo-unlocks.json' with { type: 'json' };
 import { PlacementGrid, facilityDef } from './placement.js';
 import { evaluateCombos, type ComboTier } from './combos.js';
-import type { NeedKind, WeekReport } from './week.js';
+import type { NeedKind, WeekSummary } from './week.js';
 
 /**
  * 진행 — 의뢰와 해금. 스펙 v2/v4.
@@ -128,10 +128,13 @@ function supplyOf(placement: PlacementGrid): Record<string, number> {
 /**
  * 의뢰 진행도. `report` 가 없으면 주간 조건은 0 으로 둔다 —
  * 첫 주를 돌리기 전에도 목록을 볼 수 있어야 "다음 목표"가 보인다.
+ *
+ * 전체 `WeekReport` 가 아니라 `WeekSummary` 를 받는다 — 여기서 읽는 필드가 넷뿐이고,
+ * 그래야 세이브에서 복원한 요약으로도 판정이 된다 (히트맵은 저장하지 않는다).
  */
 export function questStatuses(
   placement: PlacementGrid,
-  report: WeekReport | null,
+  report: WeekSummary | null,
 ): QuestStatus[] {
   const supply = supplyOf(placement);
   const combos = evaluateCombos(placement);

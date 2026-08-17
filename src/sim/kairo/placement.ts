@@ -22,6 +22,14 @@ export interface KairoFacilityDef {
   size: readonly [number, number];
   sprite: string;
   capacity: number;
+  /**
+   * 경제 3항. 인터페이스에 **없어서** UI 가 건설비를 몰랐다 — week.ts 는 인라인 캐스트로
+   * upkeep 만 읽고 있었고, 그래서 봇만 돈을 쓰고 플레이어는 공짜로 지었다.
+   */
+  cost: number;
+  upkeep: number;
+  /** 1회 이용 요금 */
+  fee: number;
   /** 손님이 위로 걸어 올라갈 수 있나 — 플로팅덱·선착장만 true */
   walkOn?: boolean;
   placement: {

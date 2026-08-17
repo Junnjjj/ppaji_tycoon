@@ -93,17 +93,26 @@ export interface DayReport {
   gaveUp: number;
 }
 
-export interface WeekReport {
+/**
+ * 결산의 **요약 부분**. 히트맵·재생 프레임을 뺀 숫자만이라 세이브에 넣을 수 있다.
+ *
+ * 의뢰 판정이 읽는 필드가 정확히 이 넷이다. 전체 `WeekReport` 를 저장하면 히트맵
+ * 1,280칸 + 재생 프레임까지 들어가 localStorage 를 넘긴다.
+ */
+export interface WeekSummary {
+  visitors: number;
+  turnedAway: number;
+  profit: number;
+  exitSatisfaction: number;
+}
+
+export interface WeekReport extends WeekSummary {
   week: number;
   season: Season;
   days: DayReport[];
   arrivals: number;
-  visitors: number;
-  turnedAway: number;
   revenue: number;
   upkeep: number;
-  profit: number;
-  exitSatisfaction: number;
   gaveUp: number;
   /**
    * 혼잡 히트맵 — 타일별 손님 체류 tick. 결산에서 병목을 **눈으로** 보게 한다.
@@ -142,6 +151,11 @@ export interface WeekOptions {
   reputation?: number;
 }
 
+export interface WeekSnapshot {
+  week: number;
+  cash: number;
+}
+
 export class WeekRunner {
   private weekNo = 0;
   private money = 5_000_000;
@@ -165,6 +179,34 @@ export class WeekRunner {
     return this.money;
   }
 
+  /**
+   * 건설비를 낸다. 돈이 부족하면 **아무것도 하지 않고** false —
+   * 잔액을 마이너스로 두면 "빚"이라는 규칙이 생기고, 그건 넣지 않기로 한 시스템이다.
+   *
+   * ⚠ 이게 없던 동안 헤드리스 봇만 돈을 쓰고 **UI 는 시설을 공짜로 지었다.**
+   * 밸런싱한 건설비 곡선이 실제 플레이에는 없었다는 뜻이다.
+   */
+  spend(amount: number): boolean {
+    if (amount > this.money) return false;
+    this.money -= amount;
+    return true;
+  }
+
+  /** 철거 환급·의뢰 보상 등 */
+  earn(amount: number): void {
+    this.money += amount;
+  }
+
+  toSnapshot(): WeekSnapshot {
+    return { week: this.weekNo, cash: this.money };
+  }
+
+  /** 세이브에서 복원 — 지형·시설은 호출자가 이미 복원해 넣는다 */
+  restore(s: WeekSnapshot): void {
+    this.weekNo = s.week;
+    this.money = s.cash;
+  }
+
   /** 시설 구성이 채우는 수요 — 종류별 총 용량 */
   supply(): Record<NeedKind, number> {
     const out = {} as Record<NeedKind, number>;
@@ -182,7 +224,7 @@ export class WeekRunner {
   weeklyUpkeep(): number {
     let n = 0;
     for (const item of this.placement.all()) {
-      n += (facilityDef(item.defId) as { upkeep?: number } | undefined)?.upkeep ?? 0;
+      n += facilityDef(item.defId)?.upkeep ?? 0;
     }
     return n;
   }
