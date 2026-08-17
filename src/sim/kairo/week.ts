@@ -67,6 +67,42 @@ export const SEASON_PROFILE: Record<
   winter: { arrivalBase: 0.3, weather: ['cold', 'cold', 'cloudy', 'clear'] },
 };
 
+/**
+ * 비수기 유지비 배율 — **여름에만 수요가 있는 시설은 겨울에 세워둔다.**
+ *
+ * ## 왜 필요한가 (실측)
+ *
+ * 이게 없으면 비수기 수익은 제자리인데(수요 제한) 유지비만 시설 수를 따라 자란다.
+ * 40주 실측: 비수기 수익 41만 고정, 유지비 9만 → 21만. 같은 계절인데 후반 손익이
+ * 25% 낮아지고, 플레이어 입장에서는 **"지을수록 겨울이 나빠진다"** 가 된다.
+ * 그러면 후반에 확장할 이유가 사라진다.
+ *
+ * 현실에서도 겨울에 워터슬라이드에 인력을 붙이지 않는다. 실내·숙박·식음은 사계절 돌므로
+ * 배율을 안 받는다 — 그래서 **비수기에 강한 시설 구성**이라는 판단이 생긴다.
+ */
+export const OFFSEASON_UPKEEP: Record<Season, number> = {
+  summer: 1.0,
+  spring: 0.7,
+  autumn: 0.7,
+  winter: 0.4,
+};
+
+/**
+ * 계절마다 **실제로 도는** 수요 종류. 여기 없는 종류의 시설은 세워두므로
+ * `OFFSEASON_UPKEEP` 배율을 받는다.
+ *
+ * 겨울에 스릴·놀이만 할인해서는 부족했다 (실측: 겨울 유지비 8만 → 17만, 수익은 41만 고정).
+ * 겨울에 실제로 도는 것은 사우나·식음·숙박·안내·위생이고, 나머지는 문을 닫는다.
+ * 그래서 **비수기에 강한 구성**(사우나·펜션·카페)이라는 판단이 생긴다 — 겨울이 그냥
+ * 참는 구간이 아니라 다른 답을 요구하는 구간이 된다.
+ */
+const ACTIVE_NEEDS: Record<Season, ReadonlySet<NeedKind> | null> = {
+  summer: null, // null = 전부 돈다
+  spring: new Set<NeedKind>(['food', 'rest', 'stay', 'service', 'hygiene', 'scenery', 'warm']),
+  autumn: new Set<NeedKind>(['food', 'rest', 'stay', 'service', 'hygiene', 'scenery', 'warm']),
+  winter: new Set<NeedKind>(['food', 'stay', 'service', 'hygiene', 'warm']),
+};
+
 export interface DayReport {
   day: number;
   name: string;
@@ -149,6 +185,22 @@ export interface WeekOptions {
    * 되고, 그건 등급이 돈으로 안 사진다는 결정과 같은 방향이다.
    */
   reputation?: number;
+  /**
+   * 주간 의사결정 카드가 만든 수정치. 없으면 중립.
+   *
+   * ⚠ 카드 효과를 `WeekRunner` 안에 넣지 않는다 — 카드는 데이터고 그 해석은
+   * `cards.ts` 가 소유한다. 여기는 **숫자 몇 개만** 받는다. 안 그러면 카드를 추가할 때
+   * 시뮬을 고쳐야 하고, 그게 불변식 3 이 막으려던 상태다.
+   */
+  modifiers?: {
+    arrivalMult: number;
+    revenueMult: number;
+    crowdMult: number;
+    satisfactionDelta: number;
+    reputationDelta: number;
+    accidentMult: number;
+    closed: boolean;
+  };
 }
 
 export interface WeekSnapshot {
@@ -220,13 +272,23 @@ export class WeekRunner {
     return out;
   }
 
-  /** 이번 주 유지비 (주 단위) */
-  weeklyUpkeep(): number {
+  /**
+   * 이번 주 유지비 (주 단위). 비수기에는 **여름 전용 시설**의 유지비가 줄어든다 —
+   * 세워두기 때문이다 (`OFFSEASON_UPKEEP`).
+   */
+  weeklyUpkeep(season: Season = 'summer'): number {
+    const off = OFFSEASON_UPKEEP[season];
+    const active = ACTIVE_NEEDS[season];
     let n = 0;
     for (const item of this.placement.all()) {
-      n += facilityDef(item.defId)?.upkeep ?? 0;
+      const def = facilityDef(item.defId);
+      if (!def) continue;
+      const need = (def as { need?: NeedKind }).need;
+      // 수요가 없는 시설(장식 등)은 계절과 무관하게 전액 — 세워둘 것도 없다
+      const mothballed = active !== null && need !== undefined && !active.has(need);
+      n += def.upkeep * (mothballed ? off : 1);
     }
-    return n;
+    return Math.round(n);
   }
 
   /**
@@ -244,6 +306,7 @@ export class WeekRunner {
     const playback: PlaybackFrame[] = [];
 
     const supply = this.supply();
+    const mod = opts.modifiers;
     let weekRevenue = 0;
     let tick = 0;
 
@@ -252,8 +315,11 @@ export class WeekRunner {
       const weekendBoost = WEEKEND.includes(day) ? 1.6 : 1.0;
       // 시설이 조금 끌어당기고, 나머지는 평판이 결정한다
       const facilityPull = 1 + Math.min(0.6, this.placement.count * 0.015);
-      const reputation = opts.reputation ?? 1;
-      const arrivalRate = profile.arrivalBase * weekendBoost * facilityPull * reputation;
+      // 평판 델타는 **더한다** — 배수로 곱하면 등급 배율과 섞여 어느 쪽이 움직였는지 못 본다
+      const reputation = Math.max(0.1, (opts.reputation ?? 1) + (mod?.reputationDelta ?? 0));
+      const arrivalMult = mod?.closed ? 0 : (mod?.arrivalMult ?? 1);
+      const arrivalRate =
+        profile.arrivalBase * weekendBoost * facilityPull * reputation * arrivalMult;
       const baseTicks = opts.arrivalBaseTicks ?? 10;
       /**
        * ⚠ 간격을 정수 tick 으로 반올림하면 **1 에서 바닥을 친다** — 그 위로는 수요를
@@ -309,7 +375,7 @@ export class WeekRunner {
           ? (after.exitSatisfaction * after.exited - before.exitSatisfaction * before.exited) /
             dayExited
           : 0;
-      const dayUpkeep = Math.round(this.weeklyUpkeep() / DAYS_PER_WEEK);
+      const dayUpkeep = Math.round(this.weeklyUpkeep(season) / DAYS_PER_WEEK);
       days.push({
         day,
         name: DAY_NAMES[day] as string,
@@ -325,8 +391,13 @@ export class WeekRunner {
       });
       weekRevenue += dayRevenue;
     }
+    if (mod?.revenueMult !== undefined && mod.revenueMult !== 1) {
+      weekRevenue = Math.round(weekRevenue * mod.revenueMult);
+      // 일별 수치도 맞춰 둔다 — 결산 막대와 합계가 어긋나면 플레이어가 못 믿는다
+      for (const d of days) d.revenue = Math.round(d.revenue * mod.revenueMult);
+    }
 
-    const upkeep = this.weeklyUpkeep();
+    const upkeep = this.weeklyUpkeep(season);
     this.money += weekRevenue - upkeep;
     this.weekNo++;
 
@@ -368,10 +439,21 @@ export class WeekRunner {
       revenue: weekRevenue,
       upkeep,
       profit: weekRevenue - upkeep,
+      /*
+       * 만족도 델타는 **평균에 더한다**. 손님 개체마다 더하면 그 손님이 다음 주까지
+       * 남아 델타가 두 번 먹는다 — 카드 효과는 그 주의 경험이지 손님의 성격이 아니다.
+       */
       exitSatisfaction:
         totalExited === 0
           ? 0
-          : days.reduce((a, d) => a + d.exitSatisfaction, 0) / totalExited,
+          : Math.max(
+              0,
+              Math.min(
+                100,
+                days.reduce((a, d) => a + d.exitSatisfaction, 0) / totalExited +
+                  (mod?.satisfactionDelta ?? 0),
+              ),
+            ),
       gaveUp: days.reduce((a, d) => a + d.gaveUp, 0),
       heat,
       heatW: w,

@@ -30,6 +30,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   );
   const { assessRisk, RISK_NAMES } = await import('./sim/kairo/risk.js');
   const { KairoReport } = await import('./ui/kairo-report.js');
+  const { KairoCardView } = await import('./ui/kairo-card.js');
+  const { CardStore, CARD_RNG_SALT } = await import('./sim/kairo/cards.js');
   const { Rng: RngCls } = await import('./sim/rng.js');
   const { loadKairoFromStorage, saveKairoToStorage } = await import('./save/kairo.js');
   const { facilityDef } = await import('./sim/kairo/placement.js');
@@ -293,7 +295,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const week = new WeekRunner(h.terrain, h.placement, h.guests);
   runner = week; // 프레임이 이제부터 주차·현금을 읽을 수 있다
   const report = new KairoReport(document.body);
+  const cardView = new KairoCardView(document.body);
   const weekRng = new RngCls(31337);
+  const cards = saved?.cards ? CardStore.fromSnapshot(saved.cards) : new CardStore();
+  /** 카드는 전용 RNG 스트림 — 손님·날씨와 섞으면 카드 한 장에 날씨가 밀린다 (불변식 2) */
+  const cardRng = saved
+    ? RngCls.fromState(saved.cardRngState)
+    : new RngCls(31337).fork(CARD_RNG_SALT);
   /**
    * 계절. MVP 는 여름만 돈다 (스펙 v4: "여름이 재미없으면 사계절도 소용없다").
    * 세이브에는 이미 담고 있으므로, 계절 순환을 넣을 때 포맷을 바꾸지 않아도 된다.
@@ -323,20 +331,47 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       weekRngState: weekRng.state,
       season,
       lastSummary,
+      cards: cards.toSnapshot(),
+      cardRngState: cardRng.state,
     });
   };
 
+  /**
+   * 한 주 진행. **카드가 먼저다** — 결산 직전에 선택을 강제하는 것이 스펙 §3.5 의 요지고,
+   * 결산 뒤에 띄우면 이미 끝난 주에 대한 선택이 되어 아무 의미가 없다.
+   */
   const runWeek = (): void => {
-    if (h.scene.isPlaying || report.visible) return;
+    if (h.scene.isPlaying || report.visible || cardView.visible) return;
+    const gr0 = gradeFor(lastSummary?.exitSatisfaction ?? 0);
+    const drawn = cards.draw(cardRng, {
+      season,
+      week: week.week + 1,
+      grade: gr0.grade,
+    });
+    cardView.show(drawn, week.cash, (choices) => {
+      for (const ch of choices) {
+        const r = cards.choose(cardRng, ch.card, ch.optionIndex);
+        if (r.cash > 0) week.earn(r.cash);
+        else if (r.cash < 0) week.spend(-r.cash);
+      }
+      runWeekAfterCards();
+    });
+  };
+
+  const runWeekAfterCards = (): void => {
     const t0 = performance.now();
     // 등급이 동시 손님 상한과 방문 수요를 올린다 — 만족도를 관리해야 성장한다
     const gr = gradeFor(lastSummary?.exitSatisfaction ?? 0);
-    h.guests.setMaxGuests(admissionLimit(gr, h.placement.totalCapacity()));
+    // 카드 선택이 끝난 뒤에 상한을 정한다 — 혼잡 배율이 이번 주에 반영되어야 한다
+    const mods = cards.modifiers();
+    h.guests.setMaxGuests(admissionLimit(gr, h.placement.totalCapacity(), mods.crowdMult));
     const rep = week.run(weekRng, {
       season,
       playbackEvery: 6,
       reputation: gr.reputationPull,
+      modifiers: mods,
     });
+    cards.tickWeek();
     const calcMs = performance.now() - t0;
     lastReport = rep;
     lastSummary = {
@@ -454,6 +489,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     week,
     report,
     runWeek,
+    cards,
+    cardView,
     progress,
     refreshQuests,
     getLastReport: () => lastReport,
@@ -462,7 +499,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     risk: { assessRisk, RISK_NAMES },
     refreshRisk,
   });
-  Object.assign(window, { __kairo: h, __kairoBrush: () => brush });
+  Object.assign(window, { __kairo: h, __kairoBrush: () => brush, __kairoCards: cardView });
   console.log(
     `[카이로] 에셋 ${h.provider.name} (${h.provider.ids.length}장 플레이스홀더) · ` +
       '카메라 줌 1 고정 · 확대는 캔버스 정수 배율',

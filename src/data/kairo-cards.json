@@ -1,0 +1,788 @@
+{
+  "note": "주간 의사결정 카드 24종 (design.md §3.5). 선택지는 **효과 목록**을 갖는다 — 한 객체에 몰면 서로 다른 기간의 효과를 못 담는다 (실측: 폐쇄와 평판 +4주를 한 객체에 넣어 4주 연속 폐쇄가 됐고, 후반 수익이 0 이 되어 판이 파산했다). 폐쇄는 언제나 1주다. 확률은 선택지 단위 — 한 선택지에 한 번만 굴린다. 금액은 문서 값을 우리 경제로 축소했다 (주간 손익 30~55만 · 최저 시설 10.5만).",
+  "cards": [
+    {
+      "id": "group_booking",
+      "name": "단체 예약 문의 (40인)",
+      "desc": "주말에 40명이 한꺼번에 오겠다고 합니다.",
+      "options": [
+        {
+          "label": "받는다",
+          "detail": "매출 크게 늘지만 그 주가 붐빈다",
+          "effects": [
+            {
+              "cash": 900000
+            },
+            {
+              "crowdMult": 1.35,
+              "weeks": 1
+            }
+          ]
+        },
+        {
+          "label": "거절한다",
+          "detail": "만족도는 지키지만 평판이 깎인다",
+          "effects": [
+            {
+              "reputationDelta": -0.15,
+              "weeks": 2
+            }
+          ]
+        }
+      ],
+      "weight": 3,
+      "condition": {
+        "seasons": [
+          "summer"
+        ],
+        "minWeek": 2
+      }
+    },
+    {
+      "id": "heatwave",
+      "name": "폭염 예보",
+      "desc": "다음 주 낮 최고 35도. 그늘이 부족하면 손님이 지칩니다.",
+      "options": [
+        {
+          "label": "그늘막 임시 설치",
+          "detail": "80만원",
+          "effects": [
+            {
+              "cash": -800000
+            },
+            {
+              "satisfactionDelta": 4,
+              "weeks": 1
+            }
+          ]
+        },
+        {
+          "label": "그대로 간다",
+          "detail": "만족도가 떨어질 수 있다",
+          "effects": [
+            {
+              "satisfactionDelta": -10,
+              "weeks": 1
+            }
+          ]
+        }
+      ],
+      "weight": 3,
+      "condition": {
+        "seasons": [
+          "summer"
+        ]
+      }
+    },
+    {
+      "id": "festival",
+      "name": "지역 축제 협찬",
+      "desc": "읍 축제에 협찬하면 현수막에 리조트 이름이 걸립니다.",
+      "options": [
+        {
+          "label": "협찬한다",
+          "detail": "60만원 — 다음 주 방문객 증가",
+          "effects": [
+            {
+              "cash": -600000
+            },
+            {
+              "arrivalMult": 1.5,
+              "weeks": 1
+            }
+          ]
+        },
+        {
+          "label": "불참한다",
+          "detail": "변화 없다",
+          "effects": []
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "seasons": [
+          "summer",
+          "spring"
+        ],
+        "minWeek": 3
+      }
+    },
+    {
+      "id": "broadcast",
+      "name": "방송 촬영 요청",
+      "desc": "예능 촬영을 하겠다고 합니다. 그 주는 문을 닫아야 합니다.",
+      "options": [
+        {
+          "label": "수락한다",
+          "detail": "한 주 폐쇄 — 대신 평판이 크게 오른다",
+          "effects": [
+            {
+              "closed": true,
+              "weeks": 1
+            },
+            {
+              "reputationDelta": 0.5,
+              "weeks": 4
+            }
+          ]
+        },
+        {
+          "label": "거절한다",
+          "detail": "평소대로 영업",
+          "effects": []
+        }
+      ],
+      "weight": 1,
+      "condition": {
+        "minGrade": 3,
+        "minWeek": 8
+      }
+    },
+    {
+      "id": "influencer",
+      "name": "인플루언서 방문 제안",
+      "desc": "팔로워 12만 계정이 무료 이용을 요청합니다.",
+      "options": [
+        {
+          "label": "초대한다",
+          "detail": "이용료 손실 — 다음 2주 방문객 증가",
+          "effects": [
+            {
+              "cash": -150000
+            },
+            {
+              "arrivalMult": 1.25,
+              "weeks": 2
+            }
+          ]
+        },
+        {
+          "label": "정가를 받는다",
+          "detail": "그대로. 리뷰가 미지근할 수 있다",
+          "effects": [
+            {
+              "reputationDelta": -0.05,
+              "weeks": 1
+            }
+          ]
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "minWeek": 4
+      }
+    },
+    {
+      "id": "safety_check",
+      "name": "안전 점검 통보",
+      "desc": "군에서 수상시설 점검을 예고했습니다.",
+      "options": [
+        {
+          "label": "자진 점검한다",
+          "detail": "40만원 — 사고 위험이 크게 내려간다",
+          "effects": [
+            {
+              "cash": -400000
+            },
+            {
+              "accidentMult": 0.4,
+              "weeks": 3
+            }
+          ]
+        },
+        {
+          "label": "무시한다",
+          "detail": "적발되면 과태료",
+          "effects": [
+            {
+              "cash": -1200000
+            },
+            {
+              "accidentMult": 1.2,
+              "weeks": 2
+            }
+          ],
+          "chance": 0.35
+        }
+      ],
+      "weight": 1
+    },
+    {
+      "id": "equipment_aging",
+      "name": "장비 노후 경고",
+      "desc": "구명조끼와 튜브 상당수가 사용 연한을 넘겼습니다.",
+      "options": [
+        {
+          "label": "지금 교체한다",
+          "detail": "90만원",
+          "effects": [
+            {
+              "cash": -900000
+            },
+            {
+              "accidentMult": 0.6,
+              "weeks": 4
+            }
+          ]
+        },
+        {
+          "label": "한 철 더 쓴다",
+          "detail": "사고 위험이 오른다",
+          "effects": [
+            {
+              "accidentMult": 1.6,
+              "weeks": 4
+            }
+          ]
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "minWeek": 6
+      }
+    },
+    {
+      "id": "lifeguard_shortage",
+      "name": "안전요원 결원",
+      "desc": "안전요원 한 명이 갑자기 그만뒀습니다.",
+      "options": [
+        {
+          "label": "급하게 채운다",
+          "detail": "주급 선지급 30만원",
+          "effects": [
+            {
+              "cash": -300000
+            }
+          ]
+        },
+        {
+          "label": "이번 주는 버틴다",
+          "detail": "사고 위험이 오른다",
+          "effects": [
+            {
+              "accidentMult": 1.8,
+              "weeks": 1
+            }
+          ]
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "minWeek": 3
+      }
+    },
+    {
+      "id": "accident_rumor",
+      "name": "사고 소문",
+      "desc": "인근 다른 업장 사고가 우리 이야기로 퍼졌습니다.",
+      "options": [
+        {
+          "label": "해명 공지를 낸다",
+          "detail": "20만원 — 평판 회복",
+          "effects": [
+            {
+              "cash": -200000
+            }
+          ]
+        },
+        {
+          "label": "가만히 둔다",
+          "detail": "평판이 잠시 내려간다",
+          "effects": [
+            {
+              "reputationDelta": -0.2,
+              "weeks": 2
+            }
+          ]
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "minWeek": 5
+      }
+    },
+    {
+      "id": "typhoon",
+      "name": "태풍 경보",
+      "desc": "다음 주 태풍이 서해로 붙습니다. 수상 시설이 위험합니다.",
+      "options": [
+        {
+          "label": "시설을 결박한다",
+          "detail": "70만원 — 손상 막는다",
+          "effects": [
+            {
+              "cash": -700000
+            }
+          ]
+        },
+        {
+          "label": "그대로 둔다",
+          "detail": "손상 복구비가 나올 수 있다",
+          "effects": [
+            {
+              "cash": -1500000
+            }
+          ],
+          "chance": 0.45
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "seasons": [
+          "summer",
+          "autumn"
+        ],
+        "minWeek": 4
+      }
+    },
+    {
+      "id": "water_quality",
+      "name": "상류 수질 악화",
+      "desc": "상류 공사로 물이 탁해졌습니다.",
+      "options": [
+        {
+          "label": "정화 설비를 넣는다",
+          "detail": "130만원",
+          "effects": [
+            {
+              "cash": -1300000
+            }
+          ]
+        },
+        {
+          "label": "방치한다",
+          "detail": "수상 만족도가 3주간 내려간다",
+          "effects": [
+            {
+              "satisfactionDelta": -8,
+              "weeks": 3
+            }
+          ]
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "minWeek": 6
+      }
+    },
+    {
+      "id": "rainy_week",
+      "name": "장마 예보",
+      "desc": "다음 주 내내 비. 실내 수요가 몰립니다.",
+      "options": [
+        {
+          "label": "실내 좌석을 늘린다",
+          "detail": "35만원 — 만족도 유지",
+          "effects": [
+            {
+              "cash": -350000
+            },
+            {
+              "satisfactionDelta": 3,
+              "weeks": 1
+            }
+          ]
+        },
+        {
+          "label": "그대로 간다",
+          "detail": "방문객이 줄어든다",
+          "effects": [
+            {
+              "arrivalMult": 0.7,
+              "weeks": 1
+            }
+          ]
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "seasons": [
+          "summer"
+        ]
+      }
+    },
+    {
+      "id": "cold_snap",
+      "name": "이른 한파",
+      "desc": "물이 차서 수상 이용이 어렵습니다.",
+      "options": [
+        {
+          "label": "온수 샤워를 늘린다",
+          "detail": "45만원",
+          "effects": [
+            {
+              "cash": -450000
+            },
+            {
+              "satisfactionDelta": 5,
+              "weeks": 2
+            }
+          ]
+        },
+        {
+          "label": "수상 운영을 줄인다",
+          "detail": "방문객이 줄지만 유지비를 아낀다",
+          "effects": [
+            {
+              "cash": 250000
+            },
+            {
+              "arrivalMult": 0.75,
+              "weeks": 1
+            }
+          ]
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "seasons": [
+          "autumn",
+          "winter"
+        ]
+      }
+    },
+    {
+      "id": "rival_opens",
+      "name": "인근 업체 개업",
+      "desc": "2km 상류에 새 빠지가 열었습니다.",
+      "options": [
+        {
+          "label": "가격을 내린다",
+          "detail": "이용료 20% 인하 — 손님은 유지",
+          "effects": [
+            {
+              "revenueMult": 0.8,
+              "arrivalMult": 1.15,
+              "weeks": 3
+            }
+          ]
+        },
+        {
+          "label": "시설로 승부한다",
+          "detail": "60만원 투자 — 평판이 오른다",
+          "effects": [
+            {
+              "cash": -600000
+            },
+            {
+              "reputationDelta": 0.2,
+              "weeks": 4
+            }
+          ]
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "minWeek": 7
+      }
+    },
+    {
+      "id": "price_pressure",
+      "name": "요금 인상 검토",
+      "desc": "물가가 올라 유지비 부담이 커졌습니다.",
+      "options": [
+        {
+          "label": "요금을 올린다",
+          "detail": "매출 +15%, 방문객 -10%",
+          "effects": [
+            {
+              "revenueMult": 1.15,
+              "arrivalMult": 0.9,
+              "weeks": 4
+            }
+          ]
+        },
+        {
+          "label": "동결한다",
+          "detail": "그대로",
+          "effects": []
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "minWeek": 5
+      }
+    },
+    {
+      "id": "ota_commission",
+      "name": "예약 플랫폼 제안",
+      "desc": "숙박 예약 플랫폼이 입점을 권합니다. 수수료 12%.",
+      "options": [
+        {
+          "label": "입점한다",
+          "detail": "방문객 +25%, 매출 -12%",
+          "effects": [
+            {
+              "arrivalMult": 1.25,
+              "revenueMult": 0.88,
+              "weeks": 6
+            }
+          ]
+        },
+        {
+          "label": "직접 받는다",
+          "detail": "그대로",
+          "effects": []
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "minWeek": 6
+      }
+    },
+    {
+      "id": "parttimer",
+      "name": "아르바이트 지원자",
+      "desc": "대학생 두 명이 여름 알바를 지원했습니다.",
+      "options": [
+        {
+          "label": "바로 채용한다",
+          "detail": "주급 25만원 — 만족도 오른다",
+          "effects": [
+            {
+              "cash": -250000
+            },
+            {
+              "satisfactionDelta": 4,
+              "weeks": 3
+            }
+          ]
+        },
+        {
+          "label": "경력직을 기다린다",
+          "detail": "다음 주에 더 나은 지원자",
+          "effects": [
+            {
+              "satisfactionDelta": -2,
+              "weeks": 1
+            }
+          ]
+        }
+      ],
+      "weight": 3,
+      "condition": {
+        "seasons": [
+          "summer"
+        ],
+        "minWeek": 2
+      }
+    },
+    {
+      "id": "staff_training",
+      "name": "직원 교육 과정",
+      "desc": "군에서 수상안전 교육을 무료로 열지만 이틀을 비워야 합니다.",
+      "options": [
+        {
+          "label": "보낸다",
+          "detail": "이틀 인력 공백 — 사고 위험 감소",
+          "effects": [
+            {
+              "satisfactionDelta": -3,
+              "accidentMult": 0.55,
+              "weeks": 3
+            }
+          ]
+        },
+        {
+          "label": "안 보낸다",
+          "detail": "그대로",
+          "effects": []
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "minWeek": 5
+      }
+    },
+    {
+      "id": "wage_demand",
+      "name": "임금 인상 요구",
+      "desc": "성수기 인력이 임금 인상을 요구합니다.",
+      "options": [
+        {
+          "label": "올려준다",
+          "detail": "주 20만원 — 만족도 유지",
+          "effects": [
+            {
+              "cash": -200000
+            },
+            {
+              "satisfactionDelta": 3,
+              "weeks": 4
+            }
+          ]
+        },
+        {
+          "label": "거절한다",
+          "detail": "서비스 품질이 떨어진다",
+          "effects": [
+            {
+              "satisfactionDelta": -6,
+              "weeks": 3
+            }
+          ]
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "seasons": [
+          "summer"
+        ],
+        "minWeek": 8
+      }
+    },
+    {
+      "id": "deck_repair",
+      "name": "데크 부식 발견",
+      "desc": "플로팅덱 연결부가 삭았습니다.",
+      "options": [
+        {
+          "label": "보수한다",
+          "detail": "55만원",
+          "effects": [
+            {
+              "cash": -550000
+            }
+          ]
+        },
+        {
+          "label": "미룬다",
+          "detail": "사고 위험이 오른다",
+          "effects": [
+            {
+              "accidentMult": 1.5,
+              "weeks": 5
+            }
+          ]
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "minWeek": 6
+      }
+    },
+    {
+      "id": "solar_offer",
+      "name": "태양광 설치 제안",
+      "desc": "지붕에 태양광을 깔면 전기료가 줄어듭니다.",
+      "options": [
+        {
+          "label": "설치한다",
+          "detail": "160만원 — 이후 유지비 절감",
+          "effects": [
+            {
+              "cash": -1600000
+            },
+            {
+              "revenueMult": 1.08,
+              "weeks": 12
+            }
+          ]
+        },
+        {
+          "label": "보류한다",
+          "detail": "그대로",
+          "effects": []
+        }
+      ],
+      "weight": 1,
+      "condition": {
+        "minWeek": 10,
+        "minGrade": 3
+      }
+    },
+    {
+      "id": "parking_complaint",
+      "name": "주차 민원",
+      "desc": "마을 길에 손님 차가 늘어 민원이 들어왔습니다.",
+      "options": [
+        {
+          "label": "임시 주차장을 빌린다",
+          "detail": "40만원",
+          "effects": [
+            {
+              "cash": -400000
+            },
+            {
+              "satisfactionDelta": 3,
+              "weeks": 3
+            }
+          ]
+        },
+        {
+          "label": "안내만 한다",
+          "detail": "만족도가 내려간다",
+          "effects": [
+            {
+              "satisfactionDelta": -5,
+              "weeks": 2
+            }
+          ]
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "minWeek": 4
+      }
+    },
+    {
+      "id": "research_grant",
+      "name": "관광 개선 지원금",
+      "desc": "군 관광과에서 시설 개선 지원금을 공고했습니다.",
+      "options": [
+        {
+          "label": "신청한다",
+          "detail": "서류에 시간이 들지만 지원금",
+          "effects": [
+            {
+              "cash": 700000
+            },
+            {
+              "satisfactionDelta": -2,
+              "weeks": 1
+            }
+          ]
+        },
+        {
+          "label": "안 한다",
+          "detail": "그대로",
+          "effects": []
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "minWeek": 5
+      }
+    },
+    {
+      "id": "waste_fee",
+      "name": "폐기물 처리비 인상",
+      "desc": "쓰레기 처리 단가가 올랐습니다.",
+      "options": [
+        {
+          "label": "분리 배출을 강화한다",
+          "detail": "직원 부담 — 비용은 막는다",
+          "effects": [
+            {
+              "satisfactionDelta": -2,
+              "weeks": 2
+            }
+          ]
+        },
+        {
+          "label": "그냥 낸다",
+          "detail": "매주 비용이 늘어난다",
+          "effects": [
+            {
+              "cash": -300000
+            }
+          ]
+        }
+      ],
+      "weight": 2,
+      "condition": {
+        "minWeek": 7
+      }
+    }
+  ]
+}

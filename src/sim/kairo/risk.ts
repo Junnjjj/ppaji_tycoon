@@ -115,9 +115,19 @@ export function assessRisk(placement: PlacementGrid, guests: GuestStore): RiskRe
  * 사고 판정. **위험 단계에서만** 일어나고, 그 전에 단계가 상시 표시돼 있었다.
  * 안전 단계에서는 확률이 0 이다 — 안전한데 사고가 나면 억울하다.
  */
-export function accidentChance(risk: RiskReport): number {
+export function accidentChance(
+  risk: RiskReport,
+  /**
+   * 카드가 만든 사고 배율 (장비 노후를 미루면 오르고, 자진 점검하면 내려간다).
+   *
+   * ⚠ **안전 단계에서는 배율을 곱해도 0 이다.** 카드로 위험을 만들 수 있게 하면
+   * "안전도 관리를 했는데 카드 때문에 사고"가 되고, 그건 v4 에서 없애기로 한
+   * "RNG 세금"이다. 카드는 위험 단계의 확률을 조절할 뿐 단계를 만들지 않는다.
+   */
+  mult = 1,
+): number {
   if (!risk.accidentPossible) return 0;
   // 경계 0.5%/주, 위험은 비율에 비례해 최대 4%/주
-  if (risk.level === 'caution') return 0.005;
-  return 0.01 + (risk.ratio - THRESHOLDS.danger) * 0.15;
+  const base = risk.level === 'caution' ? 0.005 : 0.01 + (risk.ratio - THRESHOLDS.danger) * 0.15;
+  return Math.max(0, Math.min(0.2, base * mult));
 }

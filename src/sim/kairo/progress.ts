@@ -89,9 +89,18 @@ export function requiredGrade(defId: string): number {
  * 공급의 1.5배까지 받는다 — 약간의 줄은 있어야 "붐빈다"가 보이고, 그 이상은 손해다.
  * 늘리는 방법은 하나뿐이다: **시설을 더 짓는다.** 그게 성장 루프다.
  */
-export function admissionLimit(grade: GradeDef, totalCapacity: number): number {
+export function admissionLimit(
+  grade: GradeDef,
+  totalCapacity: number,
+  /**
+   * 카드가 만든 혼잡 배율 (단체 예약 등). 등급 상한을 **넘어설 수 있다** —
+   * "받는다"를 골랐으면 실제로 붐벼야 선택에 무게가 생긴다. 안 그러면 카드 문구가
+   * 거짓말이 된다 (실측: 이 인자가 없어서 혼잡 +35% 가 아무 일도 안 했다).
+   */
+  crowdMult = 1,
+): number {
   const bySupply = Math.ceil(Math.max(1, totalCapacity) * 1.5);
-  return Math.max(8, Math.min(grade.maxGuests, bySupply));
+  return Math.max(8, Math.round(Math.min(grade.maxGuests, bySupply) * crowdMult));
 }
 
 /** 퇴장 만족도로 정해지는 등급 — 돈으로는 못 올린다 */

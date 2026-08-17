@@ -1100,8 +1100,20 @@ async function main(): Promise<void> {
     `${calc.frames} 프레임`,
   );
 
-  // 압축 연출 → 결산 화면
+  /*
+   * 압축 연출 → 결산 화면.
+   *
+   * ⚠ `runWeek()` 은 이제 **카드를 먼저 띄운다** (§3.5). 카드를 안 고르고 재생을 기다리면
+   * 영원히 안 온다 — 실제로 이 검사가 그렇게 멈췄다. 사람이 쓰는 경로와 같은 `pickForTest`
+   * 로 카드를 넘긴다.
+   */
   await page.evaluate(`window.__kairo.runWeek()`);
+  await page.waitForTimeout(200);
+  await page.evaluate(`(() => {
+    const cv = window.__kairoCards;
+    let guard = 0;
+    while (cv && cv.visible && guard++ < 5) cv.pickForTest(0);
+  })()`);
   await page.waitForTimeout(600);
   const playing = (await page.evaluate(`window.__kairo.scene.isPlaying`)) as boolean;
   record('연출이 재생된다 (3.5초)', playing ? 'pass' : 'fail');
@@ -1380,6 +1392,93 @@ async function main(): Promise<void> {
   };
 
   /*
+   * ── 8b. 주간 의사결정 카드 ──
+   *
+   * 카드는 **루프를 지탱하는 장치**다 (§3.5) — 시설을 20개쯤 지으면 할 게 없어지고
+   * `한 주 진행` 이 스킵 버튼이 되는 것을 막는다. 그래서 "sim 에 있다"로는 부족하고,
+   * **버튼을 눌렀을 때 실제로 화면에 뜨는지**를 봐야 한다.
+   */
+  const cardFlow = (await page.evaluate(`(() => {
+    const cv = window.__kairoCards;
+    const btn = document.getElementById('kairo-week');
+    if (!cv || !btn) return { ok: false, why: '카드 뷰 또는 주 진행 버튼이 없다' };
+    const cashBefore = window.__kairo.week.cash;
+    btn.click();
+    const root = document.getElementById('kairo-card');
+    const shown = !!root && getComputedStyle(root).display !== 'none';
+    if (!shown) {
+      // 그 주에 카드가 0장일 수 있다 (봄·가을·겨울). 여름 기본이라 보통은 뜬다
+      return { ok: true, shown: false, cashBefore: cashBefore, remaining: cv.remaining };
+    }
+    const btns = [...root.querySelectorAll('button')];
+    const heights = btns.map((b) => Math.round(b.getBoundingClientRect().height));
+    const labels = btns.map((b) => b.textContent.slice(0, 24));
+    return {
+      ok: true, shown: true, cashBefore: cashBefore,
+      options: btns.length, minHeight: Math.min.apply(null, heights),
+      labels: labels, remaining: cv.remaining,
+      title: (root.querySelector('div > div:nth-child(2)') || {}).textContent || ''
+    };
+  })()`)) as {
+    ok: boolean;
+    why?: string;
+    shown?: boolean;
+    options?: number;
+    minHeight?: number;
+    labels?: string[];
+    remaining?: number;
+    cashBefore?: number;
+    title?: string;
+  };
+
+  record(
+    '한 주 진행을 누르면 의사결정 카드가 뜬다 — 없으면 그 버튼은 스킵 버튼이다',
+    cardFlow.ok && cardFlow.shown === true ? 'pass' : 'fail',
+    cardFlow.ok
+      ? cardFlow.shown
+        ? `"${cardFlow.title}" · 선택지 ${cardFlow.options}개 · 남은 ${cardFlow.remaining}장`
+        : '이번 주 카드 0장 (계절에 따라 가능하지만 여름은 1~2장이어야 한다)'
+      : (cardFlow.why ?? '실패'),
+  );
+  record(
+    '선택지 버튼이 56px 이상 — 스펙이 정한 최소 터치 타깃',
+    (cardFlow.minHeight ?? 0) >= 56 ? 'pass' : 'fail',
+    `최소 ${cardFlow.minHeight ?? 0}px`,
+  );
+  record(
+    '선택지가 2~3개다',
+    (cardFlow.options ?? 0) >= 2 && (cardFlow.options ?? 0) <= 3 ? 'pass' : 'fail',
+    `${cardFlow.options ?? 0}개`,
+  );
+
+  // 카드를 실제로 골라 흐름을 끝까지 태운다 — 사람이 쓰는 pick 과 같은 경로다
+  const afterPick = (await page.evaluate(`(() => {
+    const cv = window.__kairoCards;
+    let guard = 0;
+    while (cv.visible && guard++ < 5) cv.pickForTest(0);
+    return { visible: cv.visible, cash: window.__kairo.week.cash, playing: window.__kairo.scene.isPlaying };
+  })()`)) as { visible: boolean; cash: number; playing: boolean };
+
+  record(
+    '카드를 고르면 화면이 닫히고 그 주가 진행된다',
+    !afterPick.visible ? 'pass' : 'fail',
+    `현금 ${Math.round((cardFlow.cashBefore ?? 0) / 10000)}만 → ${Math.round(afterPick.cash / 10000)}만` +
+      ` · 연출 ${afterPick.playing ? '재생 중' : '대기'}`,
+  );
+
+  // 연출이 끝날 때까지 기다렸다가 결산을 닫는다 (뒤 검사가 오버레이에 막히지 않게)
+  await page.waitForTimeout(4200);
+  await page.evaluate(`(() => {
+    const r = document.getElementById('kairo-report');
+    if (r) {
+      const close = [...r.querySelectorAll('button')].find((b) => b.textContent.indexOf('닫') >= 0);
+      if (close) close.click();
+      else r.style.display = 'none';
+    }
+  })()`);
+  await page.waitForTimeout(200);
+
+  /*
    * 탭 → 타일 해석 회귀. **반드시 여러 타일로 본다** — 한 칸만 맞으면 우연이다.
    *
    * 실측 버그: 핸들러가 `world.y − TILE_H/2` 를 빼서 탭 지점이 격자 꼭지점(네 타일이
@@ -1553,6 +1652,20 @@ async function main(): Promise<void> {
     afterReload.facilities === savedInfo.facilities && savedInfo.facilities > 0 ? 'pass' : 'fail',
     `세이브 ${savedInfo.facilities}개 → 복원 ${afterReload.facilities}개 (화면 ${countAfter}개)`,
   );
+  /*
+   * 카드의 **지속 효과**가 재부팅을 넘는가. 안 넘으면 "3주간 만족 −8" 을 감수하고 고른
+   * 선택이 새로고침으로 지워지고, 그러면 선택에 무게가 없어진다.
+   */
+  const cardsAfter = (await page.evaluate(`(() => {
+    const c = window.__kairo.cards;
+    return { active: c ? c.active.length : -1, seen: c ? c.seenCount : -1 };
+  })()`)) as { active: number; seen: number };
+  record(
+    '카드 상태가 새로고침을 넘는다 — 안 넘으면 선택에 무게가 없다',
+    cardsAfter.seen > 0 ? 'pass' : 'fail',
+    `본 카드 ${cardsAfter.seen}종 · 적용 중 ${cardsAfter.active}건`,
+  );
+
   record(
     '새로고침 후에도 현금이 이어진다',
     savedInfo.cash !== undefined && cashReload === Math.round(savedInfo.cash / 10000)

@@ -3,6 +3,7 @@ import { WallGrid, type WallSnapshot } from '../sim/kairo/walls.js';
 import { PlacementGrid, type PlacementSnapshot } from '../sim/kairo/placement.js';
 import { ProgressStore, type ProgressSnapshot } from '../sim/kairo/progress.js';
 import type { WeekSnapshot, WeekSummary, Season } from '../sim/kairo/week.js';
+import type { CardSnapshot } from '../sim/kairo/cards.js';
 
 /**
  * 카이로 세이브 — v1 세이브와 **완전히 분리**한다.
@@ -44,6 +45,15 @@ export interface KairoSaveV1 {
   season: Season;
   /** 지난주 요약. 없으면 아직 한 주도 안 돌렸다 */
   lastSummary: WeekSummary | null;
+  /**
+   * 카드 상태 — 적용 중인 지속 효과와 이미 본 카드.
+   *
+   * ⚠ 이걸 저장하지 않으면 새로 켰을 때 **적용 중이던 카드 효과가 사라지고** 방금 본
+   * 카드가 다시 나온다. "3주간 만족 −8" 을 감수하고 고른 선택이 재부팅으로 지워지면
+   * 선택에 무게가 없어진다.
+   */
+  cards?: CardSnapshot;
+  cardRngState?: number;
 }
 
 export type AnyKairoSave = KairoSaveV1;
@@ -73,6 +83,8 @@ export interface KairoSaveInput {
   weekRngState: number;
   season: Season;
   lastSummary: WeekSummary | null;
+  cards?: CardSnapshot;
+  cardRngState?: number;
 }
 
 export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave {
@@ -89,6 +101,8 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     weekRngState: input.weekRngState,
     season: input.season,
     lastSummary: input.lastSummary,
+    ...(input.cards ? { cards: input.cards } : {}),
+    ...(input.cardRngState !== undefined ? { cardRngState: input.cardRngState } : {}),
   };
 }
 
@@ -131,6 +145,9 @@ export interface KairoRestored {
   weekRngState: number;
   season: Season;
   lastSummary: WeekSummary | null;
+  cards?: CardSnapshot;
+  /** 없으면(구 세이브) 호출자가 새 스트림을 만든다 */
+  cardRngState: number;
 }
 
 export function restoreKairo(raw: unknown): KairoRestored {
@@ -146,6 +163,9 @@ export function restoreKairo(raw: unknown): KairoRestored {
     weekRngState: s.weekRngState,
     season: s.season,
     lastSummary: s.lastSummary,
+    ...(s.cards ? { cards: s.cards } : {}),
+    // 구 세이브(v1 초기)는 카드가 없다 — 기본 스트림 상태로 시작한다
+    cardRngState: s.cardRngState ?? 31337,
   };
 }
 
