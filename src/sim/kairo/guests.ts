@@ -84,6 +84,16 @@ export interface Guest {
   /** 걷기 tick 누적 (속도 제어) */
   stepAcc: number;
   /**
+   * 제자리에 머문 tick.
+   *
+   * ⚠ **없으면 손님이 영원히 갇힌다.** 나중에 지은 시설이 손님을 둘러싸면 게이트로 갈
+   * 길이 사라지고, 거리장이 −1 이라 한 걸음도 못 뗀다. 그런 손님은 퇴장도 안 하므로
+   * 정원이 영원히 차 있고, 새 손님이 못 들어와 **주간 입장이 0** 이 된다. 그러면 퇴장
+   * 만족도가 0(퇴장이 없음)이고 등급이 1로 떨어져 상한이 30 이 되고, 그 상한이 다시
+   * 갇힌 손님으로 차 있어 **돌아올 길이 없다** (312주 실측: 12판 중 4판이 이 상태).
+   */
+  stuckTicks: number;
+  /**
    * 이미 채운 수요 종류.
    *
    * 없으면 손님이 **항상 가장 가까운 시설**만 가고, 가까운 곳이 빨리 비면 먼 시설은
@@ -124,6 +134,14 @@ export interface GuestTunables {
   /** 갈 곳을 못 찾은 tick 마다 깎이는 양 */
   waitPenalty: number;
 }
+
+/**
+ * 제자리에 머문 tick 의 한계 — 이걸 넘으면 갇힌 것으로 보고 정리한다.
+ *
+ * 200 tick ≈ 하루 반. 인내(`patienceTicks` 300)보다 짧게 둔다 — 인내는 "갈 곳이 없다"이고
+ * 이건 "길이 없다"라서 더 빨리 판정해야 판이 안 얼어붙는다.
+ */
+export const STUCK_LIMIT = 200;
 
 export const GUEST_DEFAULTS: GuestTunables = {
   maxGuests: 60,
@@ -437,6 +455,7 @@ export class GuestStore {
       satisfaction: this.tunables.startSatisfaction,
       used: 0,
       stepAcc: 0,
+      stuckTicks: 0,
       usedNeeds: [],
       rideTicks: 0,
       rideTotal: 0,
@@ -593,11 +612,34 @@ export class GuestStore {
 
       const step = field.next(g.i, g.j, g.id & 3);
       if (!step) {
-        // 길이 막혔다 — 목적지를 놓고 다시 고른다
+        /*
+         * 길이 막혔다. 목적지를 놓고 다시 고르되, **영원히 갇히지 않게 센다.**
+         *
+         * ⚠ 이 안전 밸브가 없으면: 나중에 지은 시설이 손님을 둘러싸면 게이트로 갈 길이
+         * 사라지고 `leaving` 손님이 매 tick `continue` 로 제자리에 선다. 퇴장이 없으니
+         * 정원이 영원히 차 있고, 새 손님이 못 들어와 주간 입장이 0 이 된다. 퇴장 만족도가
+         * 0(퇴장 없음)이라 등급이 1로 떨어지고 상한이 30 이 되는데 그 30 이 갇힌 손님으로
+         * 차 있어 **돌아올 길이 없다** (312주 실측: 12판 중 4판이 이 상태로 끝났다).
+         */
         if (g.state !== 'leaving') this.releaseSlot(g);
         g.pose = 'idle';
+        g.stuckTicks += 1;
+        if (g.stuckTicks > STUCK_LIMIT) {
+          if (g.state === 'leaving') {
+            // 갇힌 채로 사라진다 — 못 나간 손님을 정원에 계속 두면 판이 얼어붙는다
+            this.exited++;
+            this.satSum += g.satisfaction;
+            if (g.used === 0) this.gaveUp++;
+            g.state = 'gone';
+          } else {
+            // 갈 곳이 없으면 나가기로 한다 — 그래도 못 나가면 위 분기가 정리한다
+            g.state = 'leaving';
+            g.stuckTicks = 0;
+          }
+        }
         continue;
       }
+      g.stuckTicks = 0;
       g.fromI = g.i;
       g.fromJ = g.j;
       g.i = step[0];

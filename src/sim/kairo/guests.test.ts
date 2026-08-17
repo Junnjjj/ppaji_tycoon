@@ -3,7 +3,7 @@ import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid, placeWall, WALL_SOLID } from './walls.js';
 import { PlacementGrid } from './placement.js';
-import { GuestStore, GUEST_DEFAULTS, type GuestTunables } from './guests.js';
+import { GuestStore, GUEST_DEFAULTS, STUCK_LIMIT, type GuestTunables } from './guests.js';
 
 const GATE = { i: 0, j: 0 };
 
@@ -330,5 +330,61 @@ describe('렌더 보간 — 시뮬 상태를 바꾸지 않는다', () => {
     const before = g.all.map((x) => [x.i, x.j]);
     g.advanceRenderProgress(1);
     expect(g.all.map((x) => [x.i, x.j])).toEqual(before);
+  });
+});
+
+describe('갇힌 손님 — 판이 얼어붙지 않는다', () => {
+  /**
+   * ⚠ 배치 검사는 **지형과 벽만** 본다 (`reachable(terrain, walls, gate)`) — 다른 시설은
+   * 보지 않으므로 시설로 걸을 수 있는 구역이 막힐 수 있다. 그러면 그 안의 손님은 게이트로
+   * 갈 길이 없고, 거리장이 −1 이라 한 걸음도 못 뗀다.
+   *
+   * 안전 밸브가 없으면: 퇴장이 없으니 정원이 영원히 차 있고 → 주간 입장 0 →
+   * 퇴장 만족도 0(퇴장 없음) → 등급 1 → 상한 30 → 그 30 이 갇힌 손님으로 차 있어
+   * **돌아올 길이 없다.** 312주 실측에서 12판 중 4판이 이 상태로 끝났다
+   * (현금 5,569만 · 직원 15.4명 · 개선 5.00 인데 만족도 0 — 돈 문제가 아니었다).
+   */
+  it('길이 없으면 결국 사라진다 — 안 그러면 정원이 영원히 찬다', () => {
+    const t = new KairoTerrain(20, 20);
+    // 물 바다에 잔디 두 조각: 게이트 쪽과 고립된 쪽
+    for (let i = 0; i < 20; i++) for (let j = 0; j < 20; j++) t.paint(i, j, 'water_edge');
+    t.paint(1, 1, 'lawn');
+    t.paint(15, 15, 'lawn'); // 고립된 칸
+    const w = new WallGrid(20, 20);
+    const p = new PlacementGrid(20, 20);
+    const g = new GuestStore(t, w, p, { i: 1, j: 1 }, GUEST_DEFAULTS);
+    g.invalidate();
+
+    const guest = g.spawn(new Rng(1), 'summer');
+    expect(guest).not.toBeNull();
+    // 고립된 칸으로 옮긴다 — 시설이 구역을 끊은 상황을 흉내낸다
+    const target = guest as NonNullable<typeof guest>;
+    target.i = 15;
+    target.j = 15;
+    target.fromI = 15;
+    target.fromJ = 15;
+    target.state = 'leaving';
+
+    const rng = new Rng(2);
+    for (let tick = 0; tick < STUCK_LIMIT * 6; tick++) g.tick(rng);
+
+    expect(g.count).toBe(0); // 정원이 비었다
+    expect(g.stats().exited).toBe(1);
+  });
+
+  it('길이 있으면 갇힘 판정이 안 걸린다 — 멀쩡한 손님을 내보내면 안 된다', () => {
+    const t = new KairoTerrain(20, 20);
+    for (let i = 0; i < 20; i++) for (let j = 0; j < 20; j++) t.paint(i, j, 'lawn');
+    const w = new WallGrid(20, 20);
+    const p = new PlacementGrid(20, 20);
+    p.place(t, w, { i: 1, j: 1 }, 'shop', 8, 8);
+    const g = new GuestStore(t, w, p, { i: 1, j: 1 }, GUEST_DEFAULTS);
+    g.invalidate();
+    const rng = new Rng(3);
+    for (let k = 0; k < 6; k++) g.spawn(rng, 'summer');
+    // 몇 tick 만 돌린다 — 아직 아무도 나갈 이유가 없다
+    for (let tick = 0; tick < 40; tick++) g.tick(rng);
+    expect(g.count).toBe(6);
+    expect(g.stats().exited).toBe(0);
   });
 });

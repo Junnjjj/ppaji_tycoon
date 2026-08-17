@@ -59,6 +59,8 @@ interface StaffTuning {
   breakdownPerUncovered: number;
   /** 안전요원 1명이 더하는 안전 점수 */
   safetyPerStaff: number;
+  /** 한 번에 설 수 있는 시설의 비율 상한 — 회복 불가 나선을 막는다 */
+  maxIdleRatio: number;
 }
 
 const DATA = rawStaff as unknown as { roles: StaffRole[]; tuning: StaffTuning };
@@ -201,6 +203,20 @@ export class StaffStore {
     const out = new Set<number>();
     const eff = this.effects(placement);
 
+    /*
+     * ⚠ **한 번에 설 수 있는 시설에 상한이 있다.**
+     *
+     * 상한이 없으면 돈이 마른 판에서 운영요원 0 → 수상 시설 전멸, 정비공 0 → 고장 다발로
+     * 손님이 갈 곳을 잃고 만족도가 0 이 된다. 그러면 매출이 0 이라 직원을 다시 쓸 수도
+     * 없어 **돌아올 길이 없다** (312주 실측: 12판 중 7판이 현금 16만~160만 · 직원 1.7~6.9명
+     * · 만족도 0 · 만석 100% 로 끝났다).
+     *
+     * 이 파일 머리말에 "부족은 절벽이 아니라 비율"이라고 적어놓고 **합계에는 상한이
+     * 없었다** — 개별 효과는 비율인데 합치면 전멸이었다.
+     */
+    const cap = Math.max(1, Math.floor(placement.count * STAFF_TUNING.maxIdleRatio));
+
+
     // 운영요원 부족 — 수상·라이드 시설이 선다. handle 순으로 결정론적으로 고른다
     if (eff.idleWater > 0) {
       const water = placement
@@ -210,18 +226,18 @@ export class StaffStore {
           return !!def && (def.layer === 'water' || !!def.ride);
         })
         .sort((a, b) => a.handle - b.handle);
-      for (let k = 0; k < eff.idleWater && k < water.length; k++) {
+      for (let k = 0; k < eff.idleWater && k < water.length && out.size < cap; k++) {
         out.add((water[k] as { handle: number }).handle);
       }
     }
 
     // 정비공 부족 — 못 덮은 수만큼 고장 확률을 굴린다
-    if (eff.unmaintained > 0) {
+    if (eff.unmaintained > 0 && out.size < cap) {
       const rest = placement
         .all()
         .filter((it) => !out.has(it.handle))
         .sort((a, b) => a.handle - b.handle);
-      for (let k = 0; k < eff.unmaintained && k < rest.length; k++) {
+      for (let k = 0; k < eff.unmaintained && k < rest.length && out.size < cap; k++) {
         if (rng.next() < STAFF_TUNING.breakdownPerUncovered) {
           out.add((rest[k] as { handle: number }).handle);
         }
@@ -261,6 +277,9 @@ export function validateStaff(): string[] {
   }
   if (t.breakdownPerUncovered < 0 || t.breakdownPerUncovered > 1) {
     problems.push('고장 확률이 0~1 밖이다');
+  }
+  if (t.maxIdleRatio <= 0 || t.maxIdleRatio >= 1) {
+    problems.push('설 수 있는 비율 상한이 0~1 밖이다 — 1 이면 전멸이 가능해진다');
   }
   return problems;
 }

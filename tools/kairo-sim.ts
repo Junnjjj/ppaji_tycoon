@@ -58,6 +58,13 @@ const JSON_OUT = args.includes('--json');
 const DETERMINISM = args.includes('--determinism');
 /** 맵별 비교 — 맵마다 최적 빌드가 달라지는지 (§4.5) */
 const MAPS = args.includes('--maps');
+/**
+ * 판별 결과를 **판마다** 찍는다.
+ *
+ * 중앙값만 보면 "절반은 5등급, 절반은 1등급" 같은 **양극화를 못 본다** — 중앙값은 그
+ * 가운데 어딘가를 가리킬 뿐이다. 원인을 찾으려면 갈린 판을 각각 봐야 한다.
+ */
+const EACH = args.includes('--each');
 
 const GRID_W = 40;
 const GRID_H = 32;
@@ -97,6 +104,14 @@ interface RunResult {
   /** 마지막 위험 단계 — "사고 0회"가 관리 덕인지 확률이 0이라 그런지 가른다 */
   riskLevel: string;
   mapId: string;
+  /**
+   * 마지막 주의 손님 상태. **만족도 0 이 "나쁜 경험"인지 "아무도 퇴장하지 않음"인지**
+   * 가른다 — 둘은 원인이 완전히 다르다.
+   */
+  lastAlive: number;
+  lastGaveUp: number;
+  lastIdle: number;
+  lastVisitors: number;
   /** 마지막 주 손님 구성 비율 — 맵이 구성을 바꾸는지 확인 */
   familyRatio: number;
   friendsRatio: number;
@@ -508,6 +523,10 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     accidents,
     riskLevel: assessRisk(p, g, { staffSafety: staff.effects(p).safetyPoints }).level,
     mapId,
+    lastAlive: g.stats().alive,
+    lastGaveUp: last ? last.gaveUp : 0,
+    lastIdle: g.idleCount,
+    lastVisitors: last ? last.visitors : 0,
     familyRatio: last ? last.byGroup.family / Math.max(1, last.visitors) : 0,
     friendsRatio: last ? last.byGroup.friends / Math.max(1, last.visitors) : 0,
     riskyWeeks,
@@ -654,6 +673,25 @@ function main(): void {
   console.log(
     `직원 평균: ${(stats(runs.map((r) => r.staffWeeks)).med / WEEKS).toFixed(1)}명/주`,
   );
+  if (EACH) {
+    console.log(
+      `\n판별 결과 — ${'시드'.padStart(5)} ${'등급'.padStart(4)} ${'만족'.padStart(5)} ` +
+        `${'시설'.padStart(5)} ${'현금'.padStart(9)} ${'만석%'.padStart(6)} ` +
+        `${'직원'.padStart(5)} ${'개선'.padStart(5)} ${'사고'.padStart(5)}`,
+    );
+    for (const r of runs) {
+      console.log(
+        `      ${String(r.seed).padStart(5)} ${String(r.grade).padStart(4)} ` +
+          `${r.exitSat.toFixed(0).padStart(5)} ${String(r.facilities).padStart(5)} ` +
+          `${fmt(r.cash).padStart(9)} ${(r.turnedAwayRatio * 100).toFixed(0).padStart(6)} ` +
+          `${(r.staffWeeks / WEEKS).toFixed(1).padStart(5)} ${r.avgLevel.toFixed(2).padStart(5)} ` +
+          `${String(r.accidents).padStart(5)} ` +
+          `| 살아 ${String(r.lastAlive).padStart(3)} 입장 ${String(r.lastVisitors).padStart(3)} ` +
+          `헛걸음 ${String(r.lastGaveUp).padStart(3)} 선시설 ${String(r.lastIdle).padStart(3)}`,
+      );
+    }
+  }
+
   const levels = new Map<string, number>();
   for (const r of runs) levels.set(r.riskLevel, (levels.get(r.riskLevel) ?? 0) + 1);
   console.log(
