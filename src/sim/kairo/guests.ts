@@ -66,6 +66,14 @@ export interface Guest {
   used: number;
   /** 걷기 tick 누적 (속도 제어) */
   stepAcc: number;
+  /**
+   * 이미 채운 수요 종류.
+   *
+   * 없으면 손님이 **항상 가장 가까운 시설**만 가고, 가까운 곳이 빨리 비면 먼 시설은
+   * 아무도 안 간다 (실측: 잔교 끝 트램폴린 방문 0). 그러면 "무엇을 짓나"보다
+   * "게이트에 붙이나"만 남는다.
+   */
+  usedNeeds: string[];
   /** 슬라이드 탑승 — 남은 tick 과 전체 tick (0 이면 탑승 아님) */
   rideTicks: number;
   rideTotal: number;
@@ -87,15 +95,35 @@ export interface GuestTunables {
   patienceTicks: number;
   /** 이모트 표시 tick */
   emoteTicks: number;
+  /** 시작 만족도 */
+  startSatisfaction: number;
+  /**
+   * 이용 1·2·3·4회차의 만족도 상승. **체감시킨다** — 같은 값을 계속 주면 만족도가
+   * 상한에 붙어 배치 차이가 결과에 안 나타난다 (헤드리스에서 전 판 98 이 나왔다).
+   */
+  useGains: readonly number[];
+  /** 한 칸 걸을 때마다 깎이는 양 — 이게 있어야 "가깝게 놓는다"가 의미를 갖는다 */
+  walkPenalty: number;
+  /** 갈 곳을 못 찾은 tick 마다 깎이는 양 */
+  waitPenalty: number;
 }
 
 export const GUEST_DEFAULTS: GuestTunables = {
   maxGuests: 60,
   ticksPerStep: 4,
-  useTicks: 40,
+  /**
+   * 이용 시간. **한 방문이 하루(120 tick) 안에 끝나야 한다** — 40 tick × 4회 + 이동이면
+   * 160 tick 이라 손님이 2.5일을 머물고 공원이 영구히 포화된다 (헤드리스에서 만석 63%).
+   * 12 tick × 4회 + 이동 40 = 88 tick 으로 하루 안에 들어온다.
+   */
+  useTicks: 12,
   wantUses: 4,
   patienceTicks: 300,
   emoteTicks: 30,
+  startSatisfaction: 52,
+  useGains: [14, 10, 7, 4],
+  walkPenalty: 0.35,
+  waitPenalty: 0.12,
 };
 
 export interface GuestStats {
@@ -242,21 +270,35 @@ export class GuestStore {
     g.usingSlot = -1;
   }
 
-  /** 슬롯이 남은 시설 중 가까운 곳. 없으면 null */
+  /**
+   * 다음에 갈 시설. **아직 안 채운 수요를 우선**하고, 그 안에서 가까운 셋 중 하나를 뽑는다.
+   *
+   * 거리만 보면 가까운 시설이 빨리 비는 순간 먼 시설을 아무도 안 간다 (실측). 그러면
+   * "무엇을 짓나"가 사라지고 "게이트에 붙이나"만 남는다. 수요를 우선하면 손님이 먹고 →
+   * 놀고 → 쉬는 식으로 돌아 시설 종류 구성이 의미를 갖는다.
+   *
+   * 가까운 셋 중 무작위로 뽑는 이유: 전부 최단거리로 몰리면 한 시설에만 줄이 서고
+   * 나머지가 빈다.
+   */
   private pickTarget(g: Guest, rng: Rng): number | null {
-    const cands: { handle: number; dist: number }[] = [];
+    const all: { handle: number; dist: number; need: string }[] = [];
     for (const [handle, field] of this.fields) {
       const c = this.slotsOf(handle);
       if (!c || c.slots.every((s) => s !== 0)) continue;
       const d = field.distAt(g.i, g.j);
       if (d < 0) continue;
-      cands.push({ handle, dist: d });
+      const item = this.placement.all().find((f) => f.handle === handle);
+      const need = item
+        ? ((facilityDef(item.defId) as { need?: string } | undefined)?.need ?? '')
+        : '';
+      all.push({ handle, dist: d, need });
     }
-    if (cands.length === 0) return null;
-    // 가까운 순으로 정렬하고 상위 3개 중 하나를 뽑는다 — 전부 최단거리로 몰리면
-    // 한 시설에만 줄이 서고 나머지가 비어 "배치가 결과를 바꾼다"가 흐려진다
-    cands.sort((a, b) => a.dist - b.dist || a.handle - b.handle);
-    const top = cands.slice(0, Math.min(3, cands.length));
+    if (all.length === 0) return null;
+
+    const fresh = all.filter((c) => c.need !== '' && !g.usedNeeds.includes(c.need));
+    const pool = fresh.length > 0 ? fresh : all;
+    pool.sort((a, b) => a.dist - b.dist || a.handle - b.handle);
+    const top = pool.slice(0, Math.min(3, pool.length));
     return (top[rng.int(top.length)] as { handle: number }).handle;
   }
 
@@ -281,9 +323,10 @@ export class GuestStore {
       usingHandle: 0,
       usingSlot: -1,
       useTicks: 0,
-      satisfaction: 50,
+      satisfaction: this.tunables.startSatisfaction,
       used: 0,
       stepAcc: 0,
+      usedNeeds: [],
       rideTicks: 0,
       rideTotal: 0,
       rideFrom: [0, 0],
@@ -332,8 +375,16 @@ export class GuestStore {
         if (--g.useTicks <= 0) {
           g.rideTotal = 0;
           this.releaseSlot(g);
+          const gains = this.tunables.useGains;
+          const gain = (gains[Math.min(g.used, gains.length - 1)] ?? 0) as number;
           g.used++;
-          g.satisfaction = Math.min(100, g.satisfaction + 12);
+          // 채운 수요를 기록해 다음엔 다른 종류로 간다
+          const usedItem = this.placement.all().find((f) => f.handle === g.usingHandle);
+          const usedNeed = usedItem
+            ? ((facilityDef(usedItem.defId) as { need?: string } | undefined)?.need ?? '')
+            : '';
+          if (usedNeed !== '' && !g.usedNeeds.includes(usedNeed)) g.usedNeeds.push(usedNeed);
+          g.satisfaction = Math.min(100, g.satisfaction + gain);
           this.setEmote(g, g.satisfaction >= 80 ? 'love' : 'happy');
           this.syncFace(g);
           g.state = g.used >= this.tunables.wantUses ? 'leaving' : 'walking';
@@ -355,6 +406,7 @@ export class GuestStore {
             // 갈 곳이 없다 — 참다가 나간다
             const p = (this.patience.get(g.id) ?? 0) + 1;
             this.patience.set(g.id, p);
+            g.satisfaction = Math.max(0, g.satisfaction - this.tunables.waitPenalty);
             if (p > this.tunables.patienceTicks) {
               g.satisfaction = Math.max(0, g.satisfaction - 30);
               this.setEmote(g, 'annoyed');
@@ -427,6 +479,8 @@ export class GuestStore {
       g.j = step[1];
       g.progress = 0;
       g.pose = 'walk';
+      // 걷는 만큼 깎인다 — 멀리 놓으면 만족도가 떨어져야 "가깝게"가 판단이 된다
+      g.satisfaction = Math.max(0, g.satisfaction - this.tunables.walkPenalty);
       g.facing =
         step[0] > g.fromI ? '+X' : step[0] < g.fromI ? '-X' : step[1] > g.fromJ ? '+Z' : '-Z';
     }
@@ -480,6 +534,17 @@ export class GuestStore {
       exitSatisfaction: this.exited === 0 ? 0 : this.satSum / this.exited,
       gaveUp: this.gaveUp,
     };
+  }
+
+  /**
+   * 어떤 칸에서 그 시설까지 몇 걸음인가. 못 가면 −1.
+   *
+   * 진단·검증용이다 — "덱을 놓으면 물 위 시설에 갈 수 있게 된다"를 손님 60명의 선택에
+   * 의존하지 않고 직접 확인할 수 있다. 거리장을 아직 안 만들었으면 만든다.
+   */
+  distanceTo(handle: number, i: number, j: number): number {
+    if (this.dirty) this.rebuildFields();
+    return this.fields.get(handle)?.distAt(i, j) ?? -1;
   }
 
   /** 시설별 점유 슬롯 — 렌더가 "칸마다 손님"을 그리는 근거 */

@@ -27,6 +27,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { questStatuses, ProgressStore, gradeFor, requiredGrade } = await import(
     './sim/kairo/progress.js'
   );
+  const { assessRisk, RISK_NAMES } = await import('./sim/kairo/risk.js');
   const { KairoReport } = await import('./ui/kairo-report.js');
   const { Rng: RngCls } = await import('./sim/rng.js');
   const box = document.createElement('div');
@@ -265,6 +266,33 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     'font:11px/1.45 system-ui,sans-serif';
   document.body.append(questPanel);
 
+  /**
+   * 위험도 — **상시 표시**. 사고를 순수 확률로 두면 "안전도 78인데 RNG 로 폐쇄"가 되어
+   * 억울하다. 단계를 항상 보여주고 사고는 경계·위험 단계에서만 난다 (v4 결정).
+   */
+  const riskBox = document.createElement('div');
+  riskBox.id = 'kairo-risk';
+  riskBox.style.cssText =
+    'position:fixed;right:8px;bottom:120px;z-index:9;min-width:120px;padding:6px 8px;' +
+    'border-radius:8px;font:11px/1.4 system-ui,sans-serif;color:#fff;text-align:center';
+  document.body.append(riskBox);
+
+  const RISK_COLOR: Record<string, string> = {
+    safe: 'rgba(40,140,90,.9)',
+    watch: 'rgba(190,160,40,.9)',
+    caution: 'rgba(210,120,40,.92)',
+    danger: 'rgba(200,50,40,.94)',
+  };
+
+  const refreshRisk = (): void => {
+    const r = assessRisk(h.placement, h.guests);
+    riskBox.style.background = RISK_COLOR[r.level] ?? RISK_COLOR['safe']!;
+    riskBox.textContent =
+      `위험도 ${RISK_NAMES[r.level]}` +
+      (r.safetyNeeded > 0 ? `\n안전 시설 ${r.safetyNeeded}개 더` : '\n사고 없음');
+    riskBox.style.whiteSpace = 'pre';
+  };
+
   const refreshQuests = (): void => {
     const st = questStatuses(h.placement, lastReport);
     const open = st.filter((s) => !progress.isClaimed(s.id));
@@ -297,7 +325,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     }
   };
   refreshQuests();
-  setInterval(refreshQuests, 1500);
+  refreshRisk();
+  setInterval(() => {
+    refreshQuests();
+    refreshRisk();
+  }, 1500);
 
   Object.assign(h, {
     week,
@@ -308,6 +340,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     getLastReport: () => lastReport,
     combos: { previewCombos, evaluateCombos },
     quests: { questStatuses, gradeFor, requiredGrade },
+    risk: { assessRisk, RISK_NAMES },
+    refreshRisk,
   });
   Object.assign(window, { __kairo: h, __kairoBrush: () => brush });
   console.log(

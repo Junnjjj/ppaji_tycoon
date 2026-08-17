@@ -175,3 +175,43 @@ describe('슬라이드 입출구 — 미끄럼틀 로직이 자연스러워야 �
     expect(seen.size).toBeGreaterThan(1);
   });
 });
+
+describe('덱이 유일한 길이라는 것 — 끊으면 못 간다', () => {
+  it('덱을 끊으면 물 위 시설로 가는 길이 사라진다', () => {
+    const t = shore(20, 20, 8);
+    const w = new WallGrid(20, 20);
+    const p = new PlacementGrid(20, 20);
+    // 물 안쪽으로 잔교를 5칸 뻗는다 (육지에서 멀어져야 덱이 유일한 길이 된다)
+    const deckHandles: number[] = [];
+    for (let j = 8; j <= 12; j++) {
+      const r = p.place(t, w, GATE, 'float_deck', 5, j);
+      expect(r.ok, `덱 (5,${j})`).toBe(true);
+      deckHandles.push(r.placed!.handle);
+    }
+    // 잔교 끝 옆에 트램폴린
+    const tr = p.place(t, w, GATE, 'trampoline_w', 6, 11);
+    expect(tr.ok).toBe(true);
+
+    const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
+    g.invalidate();
+    const withDeck = g.distanceTo(tr.placed!.handle, GATE.i, GATE.j);
+    expect(withDeck).toBeGreaterThan(0);
+
+    // 육지에 붙은 첫 칸을 지우면 뒤가 전부 고립된다
+    p.remove(deckHandles[0] as number);
+    g.invalidate();
+    expect(g.distanceTo(tr.placed!.handle, GATE.i, GATE.j)).toBe(-1);
+
+    // 되돌리면 다시 길이 생긴다
+    expect(p.place(t, w, GATE, 'float_deck', 5, 8).ok).toBe(true);
+    g.invalidate();
+    expect(g.distanceTo(tr.placed!.handle, GATE.i, GATE.j)).toBeGreaterThan(0);
+  });
+
+  it('덱 없이 물 한가운데 시설은 애초에 놓을 수 없다', () => {
+    const t = shore(20, 20, 8);
+    const w = new WallGrid(20, 20);
+    const p = new PlacementGrid(20, 20);
+    expect(p.check(t, w, GATE, 'trampoline_w', 8, 14).fail).toBe('needs-deck');
+  });
+});

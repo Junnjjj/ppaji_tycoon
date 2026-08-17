@@ -13,12 +13,13 @@
     "test:watch": "vitest",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "verify": "npm run typecheck && npm run lint && npm run test && npm run gate",
+    "verify": "npm run typecheck && npm run lint && npm run test && npm run gate && npm run sim:kairo -- --determinism",
     "verify:mobile": "tsx tools/verify-mobile.ts",
     "gate": "tsx tools/kairo-gate.ts",
     "verify:kairo": "tsx tools/verify-kairo.ts",
     "shot:kairo": "tsx tools/shot-kairo.ts",
-    "shot:zoom": "tsx tools/shot-kairo-zoom.ts"
+    "shot:zoom": "tsx tools/shot-kairo-zoom.ts",
+    "sim:kairo": "tsx tools/kairo-sim.ts"
   },
   "dependencies": {
     "phaser": "3.90.0"

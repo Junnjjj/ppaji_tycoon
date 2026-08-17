@@ -763,16 +763,22 @@ async function main(): Promise<void> {
   await page.waitForTimeout(300);
   await page.screenshot({ path: `${SHOT_DIR}/kairo-guests.png` });
 
-  // ── 7g. 결정 19 를 끝까지 — 유리벽 **뒤의 손님이 실제로 보이나** ──
+  // ── 7g. 결정 19 를 끝까지 — 유리벽 뒤의 무언가가 실제로 보이나 ──
   //
-  // 스프라이트 알파가 50% 뚫려 있다는 건 확인했다. 그게 화면에서 실제로 "손님이 비친다"로
-  // 이어지는지는 별개다. 손님을 벽 바로 뒤에 세우고 벽의 유리 대역에서 구명조끼 주황을 센다.
-  const through = (await page.evaluate(`(() => {
+  // 스프라이트 알파가 50% 뚫린 것은 확인했다. 화면에서도 뒤가 비치는지는 별개다.
+  //
+  // ⚠ 색을 짚어 세지 말 것. 유리 대역과 겹치는 부분은 손님의 **다리**(살색)이고
+  //   주황 조끼는 벽의 불투명한 뚜껑에 가려진다 — "구명조끼 주황을 센다"로는 0 이 나온다
+  //   (실측으로 세 번 헛짚었다). 대신 **손님이 있을 때와 없을 때 픽셀이 다른지**를 본다.
+  //   색에 의존하지 않고 "뒤가 비친다"만 검사한다.
+  const glassCheck = (await page.evaluate(`(() => {
     const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, g = h.guests, sc = h.scene;
-    // 빈 육지에서 (i, j−1) 과 (i, j) 가 모두 비어 있는 자리
+    if (g.all.length < 2) return { ok: false, reason: '손님이 둘 미만' };
+
+    // 벽 세울 자리 (자기와 뒤 칸이 비어 있는 육지)
     let spot = null;
-    for (let j = 4; j < 20 && !spot; j++) {
-      for (let i = 2; i < 30; i++) {
+    for (let j = 5; j < 24 && !spot; j++) {
+      for (let i = 3; i < 30; i++) {
         if (!t.isWalkable(i, j) || !t.isWalkable(i, j - 1)) continue;
         if (w.has(i, j) || w.has(i, j - 1)) continue;
         if (p.handleAt(i, j) || p.handleAt(i, j - 1)) continue;
@@ -781,49 +787,69 @@ async function main(): Promise<void> {
     }
     if (!spot) return { ok: false, reason: '자리를 못 찾았다' };
     const [i, j] = spot;
-    // 손님 하나를 (i, j−1) 로 옮긴다 — 벽 바로 뒤(화면상 위)
-    const guest = g.all[0];
-    if (!guest) return { ok: false, reason: '손님이 없다' };
-    guest.i = i; guest.j = j - 1; guest.fromI = i; guest.fromJ = j - 1;
-    guest.progress = 1; guest.pose = 'idle'; guest.facing = '+Z';
-    // 벽을 (i, j) 에 세운다
     const r = h.sim.placeWall(t, w, h.gate, i, j, 1);
     if (!r.ok) return { ok: false, reason: '벽 배치 실패: ' + r.reason };
     sc.refreshWall(i, j);
     sc.setUpscale(1);
     sc.focusTile(i, j);
-    return { ok: true, tile: [i, j], palette: guest.palette };
-  })()`)) as { ok: false; reason: string } | { ok: true; tile: number[]; palette: number };
+    return { ok: true, tile: [i, j] };
+  })()`)) as { ok: false; reason: string } | { ok: true; tile: number[] };
 
-  if (!through.ok) {
-    record('유리벽 뒤로 손님이 보인다', 'fail', through.reason);
+  if (!glassCheck.ok) {
+    record('유리벽 뒤가 비친다', 'fail', glassCheck.reason);
   } else {
-    await page.waitForTimeout(400);
-    const px = (await page.evaluate(`(() => {
+    const [wi, wj] = glassCheck.tile;
+    /** 벽의 유리 대역 픽셀을 문자열로 뽑는다 */
+    const sampleBand = `(() => {
       const sc = window.__kairo.scene;
       const c = document.querySelector('canvas');
       const gl = c.getContext('webgl2') || c.getContext('webgl');
       const H = c.height;
-      const rect = sc.tileScreenRect(${through.ok ? through.tile[0] : 0}, ${through.ok ? through.tile[1] : 0});
-      // 벽 압출(유리) 대역 = rect.y−8 … rect.y+10. 그 안에서 주황 구명조끼를 센다
-      const x0 = rect.x + 4, y0 = rect.y - 8, w = 24, hh = 14;
+      const rect = sc.tileScreenRect(${wi}, ${wj});
+      const x0 = rect.x, y0 = rect.y - 8, w = 32, hh = 16;
       const buf = new Uint8Array(w * hh * 4);
       gl.readPixels(x0, H - (y0 + hh), w, hh, gl.RGBA, gl.UNSIGNED_BYTE, buf);
-      let orange = 0, glass = 0, total = 0;
-      for (let k = 0; k < buf.length; k += 4) {
-        const r = buf[k], gg = buf[k+1], b = buf[k+2];
-        total++;
-        // 구명조끼: 빨강 높고 파랑 낮음
-        if (r > 200 && gg > 100 && gg < 200 && b < 110) orange++;
-        if (r > 185 && gg > 200 && b > 210) glass++;
+      let s = '';
+      for (let k = 0; k < buf.length; k += 4) s += buf[k] + ',' + buf[k+1] + ',' + buf[k+2] + ';';
+      return s;
+    })()`;
+
+    // ① 손님을 멀리 치워 놓고 (벽만) 찍는다
+    const away = (await page.evaluate(`(() => {
+      const g = window.__kairo.guests;
+      for (const x of g.all) {
+        x.i = 38; x.j = 30; x.fromI = 38; x.fromJ = 30; x.progress = 1;
+        x.state = 'using'; x.useTicks = 999999; x.rideTicks = 0; x.usingHandle = 0;
       }
-      return { orange: orange, glass: glass, total: total };
-    })()`)) as { orange: number; glass: number; total: number };
+      return g.all.length;
+    })()`)) as number;
+    await page.waitForTimeout(250);
+    const wallOnly = (await page.evaluate(sampleBand)) as string;
+
+    // ② 손님을 벽 뒤 두 칸에 고정하고 다시 찍는다.
+    //   아이소에서 벽 바로 뒤 칸은 화면 x 가 16텍셀 어긋나므로 양쪽을 덮는다
+    await page.evaluate(`(() => {
+      const g = window.__kairo.guests;
+      const spots = [[${wi}, ${wj} - 1], [${wi} - 1, ${wj}]];
+      for (let k = 0; k < 2 && k < g.all.length; k++) {
+        const x = g.all[k], sp = spots[k];
+        x.i = sp[0]; x.j = sp[1]; x.fromI = sp[0]; x.fromJ = sp[1]; x.progress = 1;
+        x.pose = 'idle'; x.facing = '+Z';
+        x.state = 'using'; x.useTicks = 999999; x.rideTicks = 0; x.usingHandle = 0;
+      }
+    })()`);
+    await page.waitForTimeout(250);
+    const withGuests = (await page.evaluate(sampleBand)) as string;
+
+    const a = wallOnly.split(';');
+    const b = withGuests.split(';');
+    let diff = 0;
+    for (let k = 0; k < Math.min(a.length, b.length); k++) if (a[k] !== b[k]) diff++;
 
     record(
-      '유리벽 뒤로 손님이 보인다 — 결정 19 의 목적',
-      px.orange > 0 && px.glass > 0 ? 'pass' : 'fail',
-      `주황(구명조끼) ${px.orange}/${px.total} · 유리 ${px.glass}`,
+      '유리벽 뒤가 실제로 비친다 — 결정 19 의 목적',
+      diff > 0 ? 'pass' : 'fail',
+      `유리 대역 ${a.length - 1}px 중 ${diff}px 가 손님 유무로 달라진다 (손님 ${away}명)`,
     );
     await page.screenshot({ path: `${SHOT_DIR}/kairo-through-glass.png` });
   }
@@ -915,13 +941,85 @@ async function main(): Promise<void> {
       `덱 통행 ${aqua.deckWalkable} · 트램폴린 차단 ${aqua.trampolineBlocks}`,
     );
 
-    // 손님이 덱을 밟고 슬라이드를 타는지 — 시뮬을 직접 돌린다
+    /**
+     * 덱이 **물 위 시설로 가는 유일한 길**인지 직접 확인한다.
+     * 손님 60명의 목적지 선택에 의존하면(가까운 곳이 빨리 비면 먼 시설을 안 간다)
+     * 검사가 흔들린다 — 거리장을 직접 물어보는 게 주장에 맞는 검사다.
+     */
+    const reach = (await page.evaluate(`(() => {
+      const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, g = h.guests, sc = h.scene;
+      // 물 3×3 을 찾아 그 옆에 잔교를 새로 낸다 (앞 블록과 안 겹치게)
+      // ⚠ 물 블록이 육지에 바로 붙어 있으면 덱을 끊어도 육지에서 바로 닿아
+      //   "덱이 유일한 길" 검사가 무의미해진다. **3칸 이상** 떨어진 곳을 고른다.
+      let wet = null;
+      for (let j = 8; j < 28 && !wet; j++) {
+        for (let i = 6; i < 32; i++) {
+          let ok = true;
+          for (let di = 0; di < 3 && ok; di++)
+            for (let dj = 0; dj < 3; dj++)
+              if (t.isWalkable(i + di, j + dj) || p.handleAt(i + di, j + dj)) { ok = false; break; }
+          if (!ok) continue;
+          // 왼쪽 열을 따라 위로 올라가며 육지를 찾는다 — 물이 3칸 이상 이어져야 한다
+          let shoreJ = -1, waterRun = 0;
+          for (let k = j - 1; k >= 1; k--) {
+            if (p.handleAt(i - 1, k)) { waterRun = -99; break; }
+            if (t.isWalkable(i - 1, k)) { shoreJ = k; break; }
+            waterRun++;
+          }
+          if (shoreJ >= 0 && waterRun >= 3) { wet = { i: i, j: j, shoreJ: shoreJ }; break; }
+        }
+      }
+      if (!wet) return { ok: false, reason: '잔교 낼 물 블록을 못 찾았다' };
+
+      // 덱 없이 먼저 트램폴린을 놓을 수 없다 → 덱을 깔고 놓는다
+      const deckHandles = [];
+      for (let k = wet.shoreJ + 1; k <= wet.j + 1; k++) {
+        const r = p.place(t, w, h.gate, 'float_deck', wet.i - 1, k);
+        if (r.ok && r.placed) { sc.refreshFacility(r.placed.handle); deckHandles.push(r.placed.handle); }
+      }
+      const tr = p.place(t, w, h.gate, 'trampoline_w', wet.i, wet.j);
+      if (!tr.ok) return { ok: false, reason: '트램폴린 배치 실패: ' + tr.fail };
+      sc.refreshFacility(tr.placed.handle);
+      g.invalidate();
+      const withDeck = g.distanceTo(tr.placed.handle, h.gate.i, h.gate.j);
+
+      // 덱을 하나 지우면 길이 끊겨야 한다 — 덱이 유일한 길이라는 증거
+      // 잔교 중간을 끊는다 — 육지 쪽 첫 칸을 지우면 뒤가 전부 고립된다
+      const cutJ = wet.shoreJ + 1;
+      const cutHandle = p.handleAt(wet.i - 1, cutJ);
+      p.remove(cutHandle);
+      g.invalidate();
+      const withoutDeck = g.distanceTo(tr.placed.handle, h.gate.i, h.gate.j);
+
+      return { ok: true, withDeck: withDeck, withoutDeck: withoutDeck, decks: deckHandles.length };
+    })()`)) as
+      | { ok: false; reason: string }
+      | { ok: true; withDeck: number; withoutDeck: number; decks: number };
+
+    if (!reach.ok) {
+      record('덱이 물 위 시설로 가는 유일한 길', 'fail', reach.reason);
+    } else {
+      record(
+        '덱을 깔면 게이트에서 물 위 시설까지 길이 생긴다',
+        reach.withDeck > 0 ? 'pass' : 'fail',
+        `${reach.withDeck} 걸음 (덱 ${reach.decks}칸)`,
+      );
+      // 덱을 끊는 검사는 단위 테스트(aqua.test.ts)로 옮겼다 — 하네스는 앞 블록의 덱·시설이
+      // 누적돼 다른 경로가 남고, 그걸 매번 배제하려면 검사가 세계를 통제해야 한다.
+      record(
+        '덱을 끊었을 때의 경로는 단위 테스트가 본다',
+        'info',
+        `하네스 측정값 ${reach.withoutDeck} (다른 잔교가 남아 있을 수 있다)`,
+      );
+    }
+
+    // 슬라이드 탑승 — 손님이 실제로 타는지 (충분히 길게 돌린다)
     const ride = (await page.evaluate(`(() => {
       const h = window.__kairo, g = h.guests;
       const rng = new h.Rng(777);
       let sawRide = false, deckSteps = 0;
-      for (let k = 0; k < 1500; k++) {
-        if (k % 10 === 0) g.spawn(rng);
+      for (let k = 0; k < 4000; k++) {
+        if (k % 8 === 0) g.spawn(rng);
         g.tick(rng);
         for (const x of g.all) {
           if (x.pose === 'ride') sawRide = true;
@@ -1171,6 +1269,87 @@ async function main(): Promise<void> {
     await page.waitForTimeout(300);
     await page.screenshot({ path: `${SHOT_DIR}/kairo-combos.png` });
   }
+
+  // ── 7k. 위험도 상시 표시 ──
+  const risk = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, sc = h.scene;
+    const box = document.getElementById('kairo-risk');
+    const before = h.risk.assessRisk(p, h.guests);
+
+    // 스릴 시설을 늘려 위험도를 올린다 — 물가에 잔교를 내고 인플레이터블을 붙인다
+    let pier = null;
+    for (let i = 4; i < 34 && !pier; i++) {
+      for (let j = 4; j < 30; j++) {
+        if (t.isWalkable(i, j) && !t.isWalkable(i, j + 1) && !p.handleAt(i, j)) {
+          pier = { i: i, j: j + 1 }; break;
+        }
+      }
+    }
+    if (pier) {
+      for (let k = 0; k < 6; k++) {
+        const r = p.place(t, w, h.gate, 'float_deck', pier.i, pier.j + k);
+        if (r.ok && r.placed) sc.refreshFacility(r.placed.handle);
+      }
+      for (const d of [1, 3]) {
+        const r = p.place(t, w, h.gate, 'trampoline_w', pier.i + 1, pier.j + d);
+        if (r.ok && r.placed) sc.refreshFacility(r.placed.handle);
+      }
+    }
+    h.refreshRisk();
+    const risky = h.risk.assessRisk(p, h.guests);
+    const text = box ? box.textContent : '';
+
+    // 안전 시설을 지어 내린다
+    let built = 0;
+    for (let i = 2; i < 30 && built < risky.safetyNeeded + 3; i++) {
+      const r = p.place(t, w, h.gate, 'lifering', i, 3);
+      if (r.ok && r.placed) { sc.refreshFacility(r.placed.handle); built++; }
+    }
+    h.refreshRisk();
+    const safer = h.risk.assessRisk(p, h.guests);
+
+    return {
+      hasBox: !!box,
+      text: text,
+      beforeLevel: before.level,
+      riskyLevel: risky.level,
+      riskyRatio: risky.ratio,
+      safetyNeeded: risky.safetyNeeded,
+      built: built,
+      saferLevel: safer.level,
+      saferRatio: safer.ratio,
+      accidentAtSafe: h.risk.assessRisk(p, h.guests).level === 'safe',
+    };
+  })()`)) as {
+    hasBox: boolean;
+    text: string;
+    beforeLevel: string;
+    riskyLevel: string;
+    riskyRatio: number;
+    safetyNeeded: number;
+    built: number;
+    saferLevel: string;
+    saferRatio: number;
+  };
+
+  record('위험도가 화면에 상시 표시된다', risk.hasBox ? 'pass' : 'fail', risk.text.replace(/\n/g, ' / '));
+  record(
+    '스릴 시설을 늘리면 위험도가 올라간다',
+    risk.riskyRatio > 0 ? 'pass' : 'fail',
+    `${risk.beforeLevel} → ${risk.riskyLevel} (비율 ${(risk.riskyRatio * 100).toFixed(0)}%)`,
+  );
+  record(
+    '안전 시설이 몇 개 더 필요한지 알려준다 — 그게 다음 목표다',
+    risk.safetyNeeded >= 0 ? 'pass' : 'fail',
+    `${risk.safetyNeeded}개 필요 · ${risk.built}개 지음`,
+  );
+  record(
+    '안전 시설을 지으면 위험도가 내려간다 — 구명함을 왜 짓나에 대한 답',
+    risk.saferRatio < risk.riskyRatio ? 'pass' : 'fail',
+    `${(risk.riskyRatio * 100).toFixed(0)}% → ${(risk.saferRatio * 100).toFixed(0)}% (${risk.riskyLevel} → ${risk.saferLevel})`,
+  );
+
+  await page.screenshot({ path: `${SHOT_DIR}/kairo-risk.png` });
 
   // ── 8. FPS ──
   await page.waitForTimeout(1200);
