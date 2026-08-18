@@ -46,6 +46,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { seasonShares } = await import('./sim/kairo/groups.js');
   const { KairoNewGame } = await import('./ui/kairo-newgame.js');
   const { KairoHud } = await import('./ui/kairo-hud.js');
+  const { applyStartKit } = await import('./sim/kairo/startkit.js');
+  const { WallGrid: WallGridCls } = await import('./sim/kairo/walls.js');
+  const { PlacementGrid: PlacementGridCls } = await import('./sim/kairo/placement.js');
   type HudItem = import('./ui/kairo-hud.js').BuildItem;
   const { KairoTerrain: KairoTerrainCls } = await import('./sim/kairo/terrain.js');
   const { GRID_W: GRID_W_C, GRID_H: GRID_H_C } = await import('./render/kairo/iso.js');
@@ -127,6 +130,35 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   }
 
   /**
+   * 새 판 — **물려받은 빠지**를 먼저 놓는다 (K30).
+   *
+   * 빈 땅에서 시작하면 위생 시설 9종이 전부 `needs-indoor` 로 막히는데 첫 의뢰가
+   * "기본 위생 3개"였다. 실내동을 미리 주면 그 벽이 사라진다.
+   *
+   * ⚠ `bootKairo` **앞**이다. 뒤에서 놓고 `scene.refreshAllWalls()` 를 부르면 씬의
+   * `create()` 가 아직 안 돌아 `this.add` 가 없다 (K27 에서 겪었다). 그래서 지형·벽·점유를
+   * 여기서 만들어 넘긴다 — 세이브 경로가 이미 그렇게 한다.
+   */
+  const fresh = saved
+    ? null
+    : (() => {
+        const terrain = KairoTerrainCls.generate(GRID_W_C, GRID_H_C, new RngCls(KAIRO_SEED), mapDef);
+        const walls = new WallGridCls(GRID_W_C, GRID_H_C);
+        const placement = new PlacementGridCls(GRID_W_C, GRID_H_C);
+        const kitCourses = new course.CourseStore();
+        const r = applyStartKit({
+          terrain,
+          walls,
+          placement,
+          gate: { i: 0, j: 0 },
+          map: mapDef,
+          courses: kitCourses,
+        });
+        if (r.skipped.length > 0) console.warn('[카이로] 시작 배치 일부 생략', r.skipped);
+        return { terrain, walls, placement, courses: kitCourses, kit: r };
+      })();
+
+  /**
    * 배치 검사에 넘길 바깥 사정 — 이제 **토지뿐**이다.
    * 실내는 지형이 안다 (K27). `h` 는 boot 뒤에 생기므로 함수로 감싼다.
    */
@@ -137,8 +169,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const h = bootKairo({
     parent,
     seed: KAIRO_SEED,
-    ...(saved ? {} : { terrain: KairoTerrainCls.generate(GRID_W_C, GRID_H_C, new RngCls(KAIRO_SEED), mapDef) }),
-    // 새 판이면 맵 타입대로 지형을 만든다 (§4.5)
+    // 세이브가 있으면 그것, 없으면 위에서 만든 **물려받은 빠지** (§4.5 · K30)
     ...(saved
       ? {
           terrain: saved.terrain,
@@ -146,7 +177,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           placement: saved.placement,
           gate: saved.gate,
         }
-      : {}),
+      : {
+          terrain: fresh!.terrain,
+          walls: fresh!.walls,
+          placement: fresh!.placement,
+        }),
     onFrame: (s) => {
       box.textContent =
         `FPS ${s.fps}  S=${s.upscale}  버퍼 ${s.bufferW}×${s.bufferH}\n` +
@@ -391,9 +426,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 직원 부족으로 서는 것과 **합쳐서** 손님에게 넘긴다 — 손님은 이유를 구분하지 않는다.
    */
   const accidentIdle = new Map<number, number>(saved?.accidentIdle ?? []);
+  /*
+   * 코스 — 새 판이면 **물려받은 코스**가 이미 들어 있다 (K30). 시작 배치가 만든
+   * 저장소를 그대로 쓴다. 새로 만들면 물려받은 코스가 조용히 사라진다.
+   */
   const courses = saved?.courses
     ? course.CourseStore.fromSnapshot(saved.courses)
-    : new course.CourseStore();
+    : (fresh?.courses ?? new course.CourseStore());
 
   /**
    * 코스가 더하는 위험 (§7.6 안전도). 안전도가 낮을수록 위험 점수가 크다 —

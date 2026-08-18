@@ -33,6 +33,24 @@ export interface MapType {
   sceneryBonus: number;
   strong: string;
   weak: string;
+  /**
+   * 물려받은 빠지 (K30) — 새 판에 미리 놓이는 것. 맵마다 다르다.
+   *
+   * 같은 배치를 세 맵에 쓰면 안 맞는다 — 북한강형은 육지가 좁고(0.34) 계곡형은
+   * 넓다(0.7). 넓은 수역이 없는 계곡형에 코스를 주면 맵 설명과 게임이 어긋난다.
+   */
+  start: MapStart;
+}
+
+export interface MapStart {
+  /** 포장한 마당 [가로, 세로] */
+  yard: readonly [number, number];
+  /** 실내동 [가로, 세로] — **비워서** 준다 (화장실을 어디 둘지는 플레이어 결정) */
+  indoor: readonly [number, number];
+  /** 물 위 플로팅덱 칸 수 */
+  deck: number;
+  /** 코스를 하나 물려주나 */
+  course: boolean;
 }
 
 export type GoalKind = 'none' | 'gradeByWeek';
@@ -137,6 +155,29 @@ export function validateScenarioData(): string[] {
       problems.push(`${m.id} — 육지 비율이 극단적이다 (${m.landRatio})`);
     }
     if (m.courseThrillMult <= 0) problems.push(`${m.id} — 스릴 배율이 0 이하`);
+
+    /*
+     * 시작 배치 (K30). 실내동이 없으면 **위생 시설 9종을 하나도 못 놓는다** —
+     * 첫 의뢰가 "기본 위생 3개"인데 뚫을 방법이 화면에 안 보인다. 그게 이 데이터의 이유다.
+     */
+    const st = m.start;
+    if (!st) {
+      problems.push(`${m.id} — 시작 배치가 없다`);
+      continue;
+    }
+    if (st.indoor[0] < 2 || st.indoor[1] < 2) {
+      problems.push(`${m.id} — 실내동이 너무 작다 (${st.indoor.join('×')})`);
+    }
+    if (st.yard[0] < st.indoor[0] + 2 || st.yard[1] < st.indoor[1] + 2) {
+      problems.push(`${m.id} — 마당이 실내동을 못 담는다`);
+    }
+    if (st.deck < 0) problems.push(`${m.id} — 데크 수가 음수`);
+  }
+
+  // 맵마다 시작 배치가 실제로 달라야 한다 — 같으면 "맵마다"가 이름표다
+  const startSigs = MAP_TYPES.map((m) => JSON.stringify(m.start));
+  if (new Set(startSigs).size !== MAP_TYPES.length) {
+    problems.push('맵의 시작 배치가 서로 같다');
   }
   // 맵마다 손님 구성이 실제로 달라야 한다 — 같으면 "맵 특성"이 이름표다
   const sigs = MAP_TYPES.map((m) => JSON.stringify(m.groupShift));

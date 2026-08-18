@@ -416,16 +416,28 @@ async function main(): Promise<void> {
     const h = window.__kairo;
     const t = h.terrain, w = h.walls, p = h.placement, sc = h.scene;
     const out = {};
+    /*
+     * K30 부터 새 판에 **물려받은 빠지**가 있다. 그 위에서 재면 절대값이 안 맞으므로
+     * 킷과 안 겹치는 빈 자리를 찾고, 아래 숫자는 전부 **증분**으로 본다.
+     */
     let base = null;
-    for (let j = 1; j < 20 && !base; j++) {
-      for (let i = 1; i < 34; i++) {
+    for (let j = 1; j < 24 && !base; j++) {
+      for (let i = 12; i < 34; i++) {
         let ok = true;
-        for (let di = 0; di < 9 && ok; di++)
-          for (let dj = 0; dj < 6; dj++) if (!t.isWalkable(i + di, j + dj)) { ok = false; break; }
+        for (let di = -1; di < 10 && ok; di++) {
+          for (let dj = -1; dj < 7; dj++) {
+            const ti = i + di, tj = j + dj;
+            if (!t.isWalkable(ti, tj) || t.isIndoor(ti, tj) || p.handleAt(ti, tj) !== 0) { ok = false; break; }
+          }
+        }
         if (ok) { base = [i, j]; break; }
       }
     }
-    if (!base) return { ok: false, reason: '9×6 육지를 못 찾았다' };
+    if (!base) return { ok: false, reason: '킷과 겹치지 않는 9×6 빈 육지를 못 찾았다' };
+    const edges0 = w.count(1) + w.count(2);
+    const doors0 = w.count(2);
+    // gate 는 아래에서 선언된다 — 여기서는 고정 좌표를 쓴다 (TDZ · 백틱 금지)
+    const areas0 = h.sim.bakeIndoorWalls(t, w, { i: 0, j: 0 }, h.sim.guestWalkable(t, p)).areas;
     const [bi, bj] = base;
     const gate = { i: 0, j: 0 };
     const stand = h.sim.guestWalkable(t, p);
@@ -437,38 +449,38 @@ async function main(): Promise<void> {
     paint(bi, bj, 3, 3, 'floor_indoor');
     const r1 = h.sim.bakeIndoorWalls(t, w, gate, stand);
     out.firstOk = r1.ok;
-    out.firstAreas = r1.areas;
-    out.firstEdges = w.count(1) + w.count(2);
-    out.firstDoors = w.count(2);
+    out.firstAreas = r1.areas - areas0;
+    out.firstEdges = w.count(1) + w.count(2) - edges0;
+    out.firstDoors = w.count(2) - doors0;
     out.innerEmpty = w.edgeAt(bi, bj, 0) === 0;
 
     // ② 붙여 깔면 **한 덩어리 · 문 하나** (사각형 모델일 땐 문이 둘이었다)
     paint(bi + 3, bj, 3, 3, 'floor_indoor');
     const r2 = h.sim.bakeIndoorWalls(t, w, gate, stand);
-    out.joinedAreas = r2.areas;
-    out.joinedDoors = r2.doors;
-    out.joinedEdges = w.count(1) + w.count(2);
+    out.joinedAreas = r2.areas - areas0;
+    out.joinedDoors = r2.doors - areas0;
+    out.joinedEdges = w.count(1) + w.count(2) - edges0;
     out.betweenGone = w.edgeAt(bi + 2, bj, 0) === 0;
 
     // ③ 한 칸만 더 깔아도 넓어진다 — 절차가 없다
-    const before = w.count(1) + w.count(2);
+    const before = w.count(1) + w.count(2) - edges0;
     const grew = h.sim.paintFloor(t, w, gate, bi + 6, bj, 'floor_indoor', stand);
     out.growOk = grew.ok && grew.changed;
-    out.grownEdges = w.count(1) + w.count(2);
+    out.grownEdges = w.count(1) + w.count(2) - edges0;
     out.grewBy = out.grownEdges - before;
 
     // ④ 바닥을 지우면 벽도 사라진다
     paint(bi, bj, 7, 3, 'lawn');
     const r4 = h.sim.bakeIndoorWalls(t, w, gate, stand);
-    out.clearedEdges = w.count(1) + w.count(2);
-    out.clearedAreas = r4.areas;
+    out.clearedEdges = w.count(1) + w.count(2) - edges0;
+    out.clearedAreas = r4.areas - areas0;
 
     // 화면용으로 다시 깔아 둔다
     paint(bi, bj, 6, 4, 'floor_indoor');
     h.sim.bakeIndoorWalls(t, w, gate, stand);
     for (let j = bj; j < bj + 4; j++) for (let i = bi; i < bi + 6; i++) sc.refreshTile(i, j);
     sc.refreshAllWalls();
-    out.wallCount = w.count(1) + w.count(2);
+    out.wallCount = w.count(1) + w.count(2) - edges0;
     out.origin = [bi, bj];
     return { ok: true, ...out };
   })()`)) as
@@ -661,12 +673,13 @@ async function main(): Promise<void> {
     h.sim.bakeIndoorWalls(t, w, gate, stand);
     for (let j = wj; j < wj + 3; j++) for (let i = wi; i < wi + 6; i++) sc.refreshTile(i, j);
     sc.refreshAllWalls();
-    out.wallMountAfter = p.check(t, w, gate, 'locker_row', wi, wj).fail || 'ok';
+    // 문이 난 줄을 피해 맨 아랫줄에 놓는다 (K30: 문 앞은 비운다)
+    out.wallMountAfter = p.check(t, w, gate, 'locker_row', wi, wj + 2).fail || 'ok';
     // 방 오른쪽 바깥 칸 — 벽에 접해 있지만 실내 바닥이 아니다
     out.wallMountOutside = p.check(t, w, gate, 'locker_row', wi + 6, wj).fail || 'ok';
     out.outsideTouchesWall = w.hasAnyEdge(wi + 6, wj);
     if (out.wallMountAfter === 'ok') {
-      const r = p.place(t, w, gate, 'locker_row', wi, wj);
+      const r = p.place(t, w, gate, 'locker_row', wi, wj + 2);
       if (r.ok && r.placed) { sc.refreshFacility(r.placed.handle); out.placed.push('locker_row'); }
     }
 
@@ -777,6 +790,22 @@ async function main(): Promise<void> {
     await page.screenshot({ path: `${SHOT_DIR}/kairo-facilities.png` });
   }
 
+  /*
+   * ⚠ 손님 구간 전에 **판을 새로 띄운다.**
+   *
+   * 여기까지 열네 개 검사가 지형을 칠하고 방을 만들고 지우고 시설을 놓았다. 그 잔해 위에서
+   * 손님을 재면 무엇 때문에 실패했는지 알 수 없다 — K30 에서 실제로 그랬다 (같은 코드가
+   * 새 판에서는 손님이 시설을 쓰는데 하네스 안에서는 25초를 기다려도 0 이었다).
+   * 손님·아쿠아파크·주 루프는 **깨끗한 새 판**에서 본다.
+   */
+  await page.evaluate(`try { localStorage.clear(); } catch {}`);
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForFunction(
+    `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+    undefined,
+    { timeout: 15000 },
+  );
+
   // ── 7f. 손님 — 걷고, 칸을 채우고, 표정·이모트가 뜬다 ──
   const guests = (await page.evaluate(`(() => {
     const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, g = h.guests, sc = h.scene;
@@ -800,8 +829,21 @@ async function main(): Promise<void> {
     `새로 ${guests.placed}개 · 총 ${guests.total}개`,
   );
 
-  // 시뮬이 돌 시간을 준다 (10Hz · 12tick 마다 입장 · 걸어가서 이용까지)
-  await page.waitForTimeout(9000);
+  /*
+   * 손님이 시설을 쓸 때까지 **기다린다** (고정 9초가 아니라 조건).
+   *
+   * ⚠ 고정 대기는 판이 달라지면 조용히 깨진다 — K30 에서 새 판에 물려받은 빠지가 생기자
+   * 걸어야 할 거리가 달라져 9초로는 모자랐다. 조건 대기는 그 변화에 안 흔들리고,
+   * 정말 안 되면 시간 초과로 정직하게 실패한다.
+   */
+  await page
+    .waitForFunction(
+      `(() => { const g = window.__kairo.guests; return g.all.some((x) => x.state === 'using'); })()`,
+      undefined,
+      { timeout: 25000 },
+    )
+    .catch(() => undefined);
+  await page.waitForTimeout(1500);
 
   const gstat = (await page.evaluate(`(() => {
     const h = window.__kairo, g = h.guests, sc = h.scene;
@@ -993,14 +1035,24 @@ async function main(): Promise<void> {
     const out = {};
     // 물가를 찾아 잔교를 낸다
     let pier = null;
-    for (let i = 4; i < 34 && !pier; i++) {
+    for (let i = 6; i < 34 && !pier; i++) {
       for (let j = 4; j < 30; j++) {
-        if (t.isWalkable(i, j) && !t.isWalkable(i, j + 1) && !p.handleAt(i, j)) {
-          pier = { i: i, j: j + 1 }; break;
+        if (!(t.isWalkable(i, j) && !t.isWalkable(i, j + 1) && !p.handleAt(i, j))) continue;
+        /*
+         * ⚠ 양옆이 비어 있어야 한다. K30 부터 새 판에 **물려받은 데크**가 물가에 이미
+         * 있어서, 그 옆을 잡으면 슬라이드가 occupied 로 거절된다. 검사가 쓰려는 폭
+         * (슬라이드 −3 ~ 덱 +1) 이 전부 빈 곳만 고른다.
+         */
+        let clear = true;
+        for (let k = -3; k <= 2 && clear; k++) {
+          for (let m = 1; m <= 6; m++) if (p.handleAt(i + k, j + m) !== 0) { clear = false; break; }
         }
+        if (!clear) continue;
+        pier = { i: i, j: j + 1 };
+        break;
       }
     }
-    if (!pier) return { ok: false, reason: '물가를 못 찾았다' };
+    if (!pier) return { ok: false, reason: '양옆이 빈 물가를 못 찾았다' };
 
     // 덱 없이 트램폴린 → 거절되어야 한다.
     // ⚠ 발자국 3×3 이 전부 물이어야 한다 — 육지에 걸치면 wrong-terrain 이 먼저 잡혀
@@ -2708,6 +2760,57 @@ async function main(): Promise<void> {
       `최소 ${opened.minTap}px`,
     );
     await pg.screenshot({ path: `${SHOT_DIR}/kairo-hud-${tag}.png` });
+    await cx.close();
+  }
+
+  /*
+   * ── 9f. 새 판이 빈 땅이 아니다 (K30) ──
+   *
+   * 빈 땅에서 시작하면 위생 시설 9종이 전부 `needs-indoor` 로 막히는데 첫 의뢰가
+   * "기본 위생 3개"였다. 물려받은 빠지가 그 벽을 없앤다.
+   */
+  {
+    const cx = await browser.newContext({
+      viewport: { width: 393, height: 852 },
+      deviceScaleFactor: 3,
+      isMobile: true,
+      hasTouch: true,
+    });
+    const pg = await cx.newPage();
+    // 세이브를 지우고 새 판으로 들어간다 — 저장된 판이 있으면 킷이 안 돈다
+    await pg.addInitScript(`try { localStorage.clear(); } catch {}`);
+    await pg.goto(`${URL}&map=bukhan&scenario=inherited`, { waitUntil: 'load' });
+    await pg.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+    const start = (await pg.evaluate(`(() => {
+      const h = window.__kairo, t = h.terrain, p = h.placement;
+      let indoor = 0;
+      for (let j = 0; j < t.height; j++) for (let i = 0; i < t.width; i++) if (t.isIndoor(i, j)) indoor++;
+      // 화장실을 놓을 수 있나 — 이게 이 킷의 존재 이유다
+      let canToilet = false;
+      for (let j = 0; j < 20 && !canToilet; j++) {
+        for (let i = 0; i < 20; i++) {
+          if (p.check(t, h.walls, h.gate, 'toilet', i, j).ok) { canToilet = true; break; }
+        }
+      }
+      return { facilities: p.count, indoor: indoor, canToilet: canToilet,
+               courses: h.courses ? h.courses.count : -1 };
+    })()`)) as { facilities: number; indoor: number; canToilet: boolean; courses: number };
+
+    record(
+      '새 판이 빈 땅이 아니다 — 물려받은 빠지 (K30)',
+      start.facilities > 0 && start.indoor > 0 ? 'pass' : 'fail',
+      `시설 ${start.facilities}개 · 실내 ${start.indoor}칸 · 코스 ${start.courses}개`,
+    );
+    record(
+      '★ 첫 화면에서 화장실을 놓을 수 있다 — 빈 땅이면 위생 9종이 전부 막힌다',
+      start.canToilet ? 'pass' : 'fail',
+      `${start.canToilet}`,
+    );
+    await pg.screenshot({ path: `${SHOT_DIR}/kairo-newgame-start.png` });
     await cx.close();
   }
 

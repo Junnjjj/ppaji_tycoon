@@ -164,7 +164,11 @@ describe('① 실내 시설은 실내 바닥 위에만', () => {
     room(t, 6, 6, 4, 4);
     bakeIndoorWalls(t, w, GATE, guestWalkable(t, p));
 
-    expect(p.check(t, w, GATE, 'shower_row', 6, 7).ok).toBe(true); // 방 안 (6..9)
+    /*
+     * 맨 아랫줄에 놓는다. 가운데 줄을 가로지르면 방이 갈려 `would-strand` 로 거절된다
+     * (K30) — 4칸 방을 4칸 시설이 가로막으면 위아래가 끊긴다.
+     */
+    expect(p.check(t, w, GATE, 'shower_row', 6, 9).ok).toBe(true); // 방 안 (6..9)
     expect(w.hasAnyEdge(10, 7)).toBe(true); // 바깥칸도 벽에 접해 있다
     expect(t.isIndoor(10, 7)).toBe(false);
     expect(p.check(t, w, GATE, 'shower_row', 10, 7).fail).toBe('needs-indoor');
@@ -215,15 +219,42 @@ describe('② 문은 손님이 실제로 설 수 있는 칸에만', () => {
   it('시설이 든 방도 넓힐 수 있다 — 시설 칸은 막힌 게 아니라 쓰이는 중이다', () => {
     const { t, w } = setup(20, 20);
     const p = new PlacementGrid(20, 20);
-    room(t, 4, 4, 5, 2);
+    /*
+     * 방을 3줄로 잡는다. **문이 난 줄은 비워 둬야 한다** — K30 에서 "문 앞은 비운다"가
+     * 규칙이 됐다 (문 앞칸을 시설이 덮으면 방이 조용히 죽는다).
+     */
+    room(t, 4, 4, 5, 3);
     expect(bakeIndoorWalls(t, w, GATE, guestWalkable(t, p)).ok).toBe(true);
-    expect(p.place(t, w, GATE, 'shower_row', 4, 4).ok).toBe(true);
-    expect(p.place(t, w, GATE, 'locker_row', 4, 5).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'shower_row', 4, 5).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'locker_row', 4, 6).ok).toBe(true);
 
-    room(t, 4, 6, 5, 3); // 아래로 이어 깐다
+    room(t, 4, 7, 5, 3); // 아래로 이어 깐다
     const r = bakeIndoorWalls(t, w, GATE, guestWalkable(t, p));
     expect(r.ok, r.fail).toBe(true);
     expect(r.areas).toBe(1);
+  });
+
+  it('문 앞을 시설로 막을 수 없다 — 막으면 방이 조용히 죽는다 (K30)', () => {
+    const { t, w } = setup(20, 20);
+    const p = new PlacementGrid(20, 20);
+    room(t, 5, 5, 4, 3);
+    expect(bakeIndoorWalls(t, w, GATE, guestWalkable(t, p)).ok).toBe(true);
+
+    // 문이 난 경계를 찾아 그 양쪽 칸에 시설을 놓아 본다
+    let inside: { i: number; j: number } | null = null;
+    for (let j = 5; j < 8 && !inside; j++) {
+      for (let i = 5; i < 9; i++) {
+        for (const d of [DIR_I_PLUS, DIR_J_PLUS, DIR_I_MINUS, DIR_J_MINUS] as const) {
+          if (w.edgeAt(i, j, d) === EDGE_DOOR) {
+            inside = { i, j };
+            break;
+          }
+        }
+        if (inside) break;
+      }
+    }
+    expect(inside).not.toBeNull();
+    expect(p.check(t, w, GATE, 'vending_in', inside!.i, inside!.j).fail).toBe('blocks-door');
   });
 });
 

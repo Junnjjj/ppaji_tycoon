@@ -1,6 +1,6 @@
 import rawFacilities from '../../data/kairo-facilities.json' with { type: 'json' };
 import type { KairoTerrain } from './terrain.js';
-import { WallGrid, reachable } from './walls.js';
+import { WallGrid, reachable, EDGE_DOOR } from './walls.js';
 
 /**
  * 시설 배치 — **시뮬 소유**. 스펙 §4.
@@ -77,6 +77,8 @@ export interface PlacedFacility {
 export type PlaceFail =
   | 'outside'
   | 'outside-land'
+  | 'blocks-door'
+  | 'would-strand'
   | 'wrong-terrain'
   | 'occupied'
   | 'blocked-by-wall'
@@ -124,6 +126,8 @@ export function guestWalkable(
 export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
   outside: '격자 밖입니다',
   'outside-land': '아직 내 땅이 아닙니다 — 등급을 올리면 넓어집니다',
+  'blocks-door': '문 앞은 비워야 합니다',
+  'would-strand': '이 자리에 놓으면 실내 일부에 못 가게 됩니다',
   'wrong-terrain': '이 지형에는 놓을 수 없습니다',
   occupied: '다른 시설이 있습니다',
   'blocked-by-wall': '벽이 지나갑니다',
@@ -309,6 +313,52 @@ export class PlacementGrid {
        */
       const allIndoor = tiles.every(([ti, tj]) => terrain.isIndoor(ti, tj));
       if (!allIndoor) return { ok: false, fail: 'needs-indoor' };
+    }
+
+    /*
+     * 문을 막지 않는다 (K30).
+     *
+     * ⚠ 실측으로 잡은 구멍이다: 방을 만든 뒤 **나중에 놓은 시설이 문 앞칸을 덮으면**
+     * 그 방은 손님이 못 들어가는 죽은 공간이 된다. 벽에는 문이 그대로 남아 있어서
+     * 화면상으로는 멀쩡해 보이고, 안의 실내 시설이 조용히 매출 0 이 된다.
+     *
+     * 문은 양쪽 다 설 수 있어야 하므로(K26 ②) **문이 있는 경계에 접한 칸**은 안팎
+     * 가리지 않고 비워 둔다. 밟고 지나갈 수 있는 시설(덱)은 예외다.
+     */
+    if (!def.walkOn) {
+      for (const [ti, tj] of tiles) {
+        for (const d of [0, 1, 2, 3] as const) {
+          if (walls.edgeAt(ti, tj, d) === EDGE_DOOR) return { ok: false, fail: 'blocks-door' };
+        }
+      }
+    }
+
+    /*
+     * 실내를 조각내지 않는다 (K30).
+     *
+     * ⚠ 벽에는 밀폐 차단이 있는데(`canPlaceEdge` 의 `would-seal`) **시설에는 없었다.**
+     * 방 안에 시설을 놓아 안쪽 구석을 갈라 놓으면 그 칸들은 영영 못 쓰고, 방은 그 뒤로
+     * 넓히지도 못한다 (`bakeIndoorWalls` 가 `unreachable` 로 거절한다). 화면상으로는
+     * 멀쩡해 보여서 왜 안 되는지 알 수 없다 — 헤드리스에서 실제로 이 상태를 만들었다.
+     *
+     * 실내에 놓을 때만 검사한다. 바깥은 열려 있어 조각날 일이 없고, 검사가 공짜가 아니다.
+     */
+    const touchesIndoor = tiles.some(([ti, tj]) => terrain.isIndoor(ti, tj));
+    if (touchesIndoor && !def.walkOn) {
+      const stand = guestWalkable(terrain, this);
+      const inFoot = (i: number, j: number): boolean =>
+        tiles.some(([ti, tj]) => ti === i && tj === j);
+      const before = reachable(terrain, walls, gate, stand);
+      const after = reachable(terrain, walls, gate, (i, j) => !inFoot(i, j) && stand(i, j));
+      const wIdx = terrain.width;
+      for (let j = 0; j < terrain.height; j++) {
+        for (let i = 0; i < wIdx; i++) {
+          if (inFoot(i, j)) continue;
+          if (before[j * wIdx + i] === 1 && after[j * wIdx + i] !== 1) {
+            return { ok: false, fail: 'would-strand' };
+          }
+        }
+      }
     }
 
     // 도달 — 발자국에 인접한 칸 중 하나라도 게이트에서 걸어올 수 있어야 한다.

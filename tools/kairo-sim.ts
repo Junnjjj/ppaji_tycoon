@@ -22,6 +22,7 @@ import { Rng } from '../src/sim/rng.js';
 import { KairoTerrain } from '../src/sim/kairo/terrain.js';
 import { WallGrid } from '../src/sim/kairo/walls.js';
 import { bakeIndoorWalls } from '../src/sim/kairo/indoor.js';
+import { applyStartKit } from '../src/sim/kairo/startkit.js';
 import { GROUND_KINDS } from '../src/sim/kairo/terrain.js';
 import {
   PlacementGrid,
@@ -212,7 +213,30 @@ function ensureRoom(
     }
   }
 
-  // ② 이어 깔 수 없으면 새 자리에 한 덩어리
+  /*
+   * ② **한 칸씩 넓힌다.** ①의 덩어리 확장은 외곽선이 크게 바뀌어 문 낼 자리가 사라지는
+   * 일이 잦다 (실측: 실패 623건 중 대부분이 `bake-fail`). 봇이 방 둘레를 시설로 둘러싸면
+   * 큰 사각형은 어디로도 못 자란다.
+   *
+   * 사람은 그럴 때 **옆 칸에 한 칸만 더 깐다.** 외곽선이 조금만 바뀌니 문이 살아남는다.
+   * 한 번에 시설이 들어갈 만큼은 아니지만 몇 주에 걸쳐 방이 자란다.
+   */
+  for (let j = 0; j < land.h; j++) {
+    for (let i = 0; i < land.w; i++) {
+      if (!t.isIndoor(i, j)) continue;
+      for (const [di, dj] of [
+        [1, 0],
+        [0, 1],
+        [-1, 0],
+        [0, -1],
+      ] as const) {
+        const spent = tryPatch(i + di, j + dj, 1, 1);
+        if (spent > 0) return spent;
+      }
+    }
+  }
+
+  // ③ 이어 깔 수 없으면 새 자리에 한 덩어리
   for (let attempt = 0; attempt < 60; attempt++) {
     const pw = need.w + 2;
     const ph = Math.max(3, need.h + 2);
@@ -331,11 +355,14 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const courseRng = rng.fork(0xc0125);
 
   /*
-   * 시작 실내동 — 플레이어가 처음에 바닥을 까는 것과 같다. 부족하면 `ensureRoom` 이 더 깐다.
-   * 물려받은 빠지라는 설정이라 이 첫 덩어리만 값을 안 받는다.
+   * 물려받은 빠지 (K30) — **게임과 같은 함수**를 쓴다.
+   *
+   * 예전에는 여기서 8×4 실내 바닥을 즉석으로 칠했다. 그러면 헤드리스가 실제 판과 다른
+   * 시작에서 출발하고, 밸런스 숫자가 실제 플레이를 안 나타낸다 — 이 프로젝트에서 반복해서
+   * 겪은 실패다 (토지 해금·건물값이 같은 이유로 봇에 들어왔다).
    */
-  for (let j = 2; j < 6; j++) for (let i = 2; i < 10; i++) t.paint(i, j, 'floor_indoor');
-  bakeIndoorWalls(t, w, GATE, guestWalkable(t, p));
+  const kit = applyStartKit({ terrain: t, walls: w, placement: p, gate: GATE, map, courses });
+  if (kit.skipped.length > 0) console.warn(`[봇] 시드 ${seed} 시작 배치 생략:`, kit.skipped);
 
   let cash = 5_000_000;
   let last: WeekReport | null = null;
@@ -363,6 +390,24 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const seasons: Season[] = ['summer', 'summer', 'autumn', 'winter', 'spring'];
 
   for (let k = 0; k < weeks; k++) {
+    /*
+     * 방을 **미리** 넓힌다.
+     *
+     * ⚠ 다 찬 뒤에 넓히려 하면 이미 늦다 — 그때는 둘레가 실외 시설로 막혀 있어서 어디로도
+     * 못 자란다 (실측: 확장 실패가 판당 100건을 넘었고 경보가 "토지를 넓혀야 한다"고
+     * 엉뚱한 곳을 가리켰다). 사람은 방이 차기 전에 미리 늘린다.
+     */
+    let freeIndoor = 0;
+    for (let j = 0; j < GRID_H; j++) {
+      for (let i = 0; i < GRID_W; i++) {
+        if (t.isIndoor(i, j) && p.handleAt(i, j) === 0) freeIndoor++;
+      }
+    }
+    if (freeIndoor < 8) {
+      const grade0 = GRADES[gradeNo - 1] ?? GRADES[0]!;
+      cash -= ensureRoom(t, w, p, landRect(grade0), rng, { w: 4, h: 1 });
+    }
+
     // 결산의 병목을 보고 짓는다
     const want = last?.bottleneck?.need ?? null;
     let buildSpend = 0;
