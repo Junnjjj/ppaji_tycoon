@@ -69,19 +69,68 @@ describe('사고는 위험할 때만 난다', () => {
     expect(Math.max(...weeks)).toBeLessThanOrEqual(3);
   });
 
-  it('사고가 난 주는 그 시설이 서서 매출이 줄어든다', () => {
-    const f1 = park('shop', 6);
-    const f2 = park('shop', 6);
-    const clean = new WeekRunner(f1.t, f1.p, f1.g).run(new Rng(7), {
+  /*
+   * **시드 하나로 재면 안 된다** (2026-08-19).
+   *
+   * 원래 이 검사는 시드 7 한 판을 사고 유무로 비교했다. 두 가지가 틀렸다:
+   *
+   * ① 사고 판정이 **공유 rng** 에서 뽑고 있어서, 사고가 나면 뽑기 3회만큼 그 뒤의
+   *    날씨 시퀀스가 통째로 밀렸다 — 비교 대상이 애초에 같은 주가 아니었다.
+   *    불변식 2 가 `fork` 를 요구하는 이유가 정확히 이것이고, `week.ts` 에서 고쳤다.
+   * ② 스트림을 맞춘 뒤에도 **한 시드로는 방향이 뒤집힌다**: 매점 하나가 서면 손님이
+   *    남은 매점으로 몰리는데, 줄이 짧던 판에서는 그 재분배가 오히려 회전을 올린다.
+   *    실측 12시드 중 2시드가 그랬다 (시드 7 이 그중 하나였다 — 우연히 통과하던 것이
+   *    버스 위상이 한 tick 바뀌자 드러났다, K36-B③).
+   *
+   * 그래서 원래 주장 그대로 **합계로** 잰다. 실측 12시드 합계 2,426,680 → 2,122,368
+   * (−12.5%). 방향이 뒤집히거나 차이가 사라지면 사고가 무해해진 것이다.
+   */
+  it('사고가 난 주들은 그 시설이 서서 매출이 줄어든다 — 12시드 합계', () => {
+    let clean = 0;
+    let hurt = 0;
+    let lower = 0;
+    for (let seed = 1; seed <= 12; seed++) {
+      const f1 = park('shop', 6);
+      const f2 = park('shop', 6);
+      const c = new WeekRunner(f1.t, f1.p, f1.g).run(new Rng(seed), {
+        season: 'summer',
+        accidentChance: 0,
+      });
+      const h = new WeekRunner(f2.t, f2.p, f2.g).run(new Rng(seed), {
+        season: 'summer',
+        accidentChance: 1,
+      });
+      expect(h.accident).not.toBeNull();
+      expect(c.accident).toBeNull();
+      clean += c.revenue;
+      hurt += h.revenue;
+      if (h.revenue < c.revenue) lower++;
+    }
+    expect(hurt).toBeLessThan(clean);
+    // 다수에서 낮아야 한다 — 합계만 보면 한 시드의 큰 차이로도 통과한다
+    expect(lower).toBeGreaterThanOrEqual(8);
+  });
+
+  it('사고 판정은 독립 스트림이다 — 사고 유무가 그 주의 나머지를 밀지 않는다', () => {
+    /*
+     * **음성 대조군이 곧 이 검사다.** `accidentChance: 0` 인 판은 사고 확률을 켠 판이
+     * 뽑기를 몇 번 하든 **한 글자도 달라지면 안 된다**. 공유 rng 에서 뽑던 시절에는
+     * 여기가 어긋났고, 그 어긋남이 위 검사를 조용히 무의미하게 만들고 있었다.
+     */
+    const a = park('shop', 6);
+    const b = park('shop', 6);
+    const base = new WeekRunner(a.t, a.p, a.g).run(new Rng(7), {
       season: 'summer',
       accidentChance: 0,
     });
-    const hurt = new WeekRunner(f2.t, f2.p, f2.g).run(new Rng(7), {
+    const same = new WeekRunner(b.t, b.p, b.g).run(new Rng(7), {
       season: 'summer',
-      accidentChance: 1,
+      // 확률은 켰지만 0 이라 사고는 안 난다 — 뽑기만 일어난다
+      accidentChance: 0.0000001,
     });
-    expect(hurt.accident).not.toBeNull();
-    expect(hurt.revenue).toBeLessThan(clean.revenue);
+    expect(same.accident).toBeNull();
+    expect(same.revenue).toBe(base.revenue);
+    expect(same.visitors).toBe(base.visitors);
   });
 
   it('같은 시드는 같은 사고 — 결정론', () => {

@@ -230,3 +230,44 @@ describe('시간표를 주입할 수 있다 — RNG 는 부르는 쪽에 둔다'
     expect(busStateAt(-1)).toEqual(busStateAt(P - 1));
   });
 });
+
+/**
+ * 연출과 버스가 **같은 시각을 산다** (K36-B③).
+ *
+ * `BusRunner` 의 tick 은 주 계산(0.6초) 안에서만 흐르고 거기서 멈춘다. 압축 연출은 그
+ * 뒤 3.5초 동안 기록을 되감는 것이라, 러너를 읽으면 **버스는 주가 끝난 자리에 붙박여
+ * 있고 손님만 걷는다** — 내려서 걸어 들어오는 장면이 이 연출의 요점인데 태워 온 버스가
+ * 안 움직이는 셈이다.
+ *
+ * 그래서 씬은 재생 프레임의 `tick` 으로 `busStateAt` 을 다시 부른다. 그러려면 두 시계가
+ * 같아야 하고(`week.ts` 의 `setElapsed(tick)`), 프레임 간격으로 샘플했을 때 실제로
+ * 위상이 돌아야 한다. 아래가 그 둘을 잰다.
+ */
+describe('재생 프레임 tick 으로 버스를 다시 세울 수 있다', () => {
+  const EVERY = 6; // main.ts 의 playbackEvery
+
+  it('프레임 간격으로 샘플해도 위상이 돈다 — 정차·주행이 모두 잡힌다', () => {
+    const seen = new Set<string>();
+    let atStop = 0;
+    let moving = 0;
+    for (let tick = 0; tick < 840; tick += EVERY) {
+      const s = busStateAt(tick);
+      seen.add(`${s.pos.x.toFixed(2)},${s.pos.y}`);
+      if (s.atStop) atStop++;
+      else if (s.visible) moving++;
+    }
+    // 붙박여 있으면 위치가 한 개다 — 그 상태를 잡는 것이 이 검사의 목적이다
+    expect(seen.size).toBeGreaterThan(5);
+    expect(atStop).toBeGreaterThan(0);
+    expect(moving).toBeGreaterThan(0);
+  });
+
+  it('러너를 주 루프 tick 에 묶으면 재생과 어긋나지 않는다', () => {
+    const b = new BusRunner();
+    for (let tick = 0; tick < 200; tick++) {
+      b.setElapsed(tick);
+      // 씬이 하는 계산과 글자 그대로 같아야 한다
+      expect(b.state).toEqual(busStateAt(tick));
+    }
+  });
+});

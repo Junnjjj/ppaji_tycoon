@@ -1,4 +1,5 @@
 import { Rng } from '../rng.js';
+import { BusRunner } from './bus.js';
 import type { KairoTerrain } from './terrain.js';
 import { PlacementGrid, facilityDef, LEVEL_SATISFACTION } from './placement.js';
 import type { GroupId } from './groups.js';
@@ -298,6 +299,12 @@ export class WeekRunner {
   private weekNo = 0;
   /** 이번 주 요금 배율 — `run` 이 매주 설정한다 */
   private priceMult = 1;
+  /**
+   * 정류장 버스 (K36-B③). **주 루프가 소유한다** — 버스는 손님을 만들지 않고
+   * "지금 태울 수 있나"만 답하므로, 스폰과 같은 시계를 쓰려면 여기 있어야 한다.
+   * 렌더가 자기 시계로 굴리면 버스가 떠난 뒤에 손님이 나타난다.
+   */
+  readonly bus = new BusRunner();
   private money = 5_000_000;
 
   /**
@@ -416,13 +423,21 @@ export class WeekRunner {
      * 손님 시뮬 도중이 아니라 주 시작에 굴리는 이유는 결산에서 "이번 주에 사고가 났다"를
      * 한 덩어리로 보여주기 위해서다. tick 중간에 나면 그 주 결과가 반쯤 섞인다.
      */
+    /*
+     * ⚠ **독립 스트림에서 굴린다** (불변식 2). 공유 `rng` 에서 뽑으면 사고가 났느냐에 따라
+     * 뽑기 3회가 있고 없고가 갈려서, 그 뒤의 **날씨 시퀀스가 통째로 밀린다.** 그러면
+     * "사고만 다른 두 판"을 만들 수 없다 — 실제로 사고 대조 테스트가 서로 다른 주를
+     * 비교하고 있었고, 사고 난 쪽 매출이 더 높게 나왔다 (202,360 vs 191,680).
+     * 우연히 통과하다 버스 위상이 한 tick 바뀌자 드러났다 (K36-B③).
+     */
     let accident: WeekReport['accident'] = null;
     const chance = opts.accidentChance ?? 0;
-    if (chance > 0 && rng.next() < chance) {
+    const arng = rng.fork(0xacc1);
+    if (chance > 0 && arng.next() < chance) {
       const pool = this.placement.all();
       if (pool.length > 0) {
-        const hit = pool[rng.int(pool.length)] as { handle: number; defId: string };
-        accident = { handle: hit.handle, defId: hit.defId, weeks: 1 + rng.int(3) };
+        const hit = pool[arng.int(pool.length)] as { handle: number; defId: string };
+        accident = { handle: hit.handle, defId: hit.defId, weeks: 1 + arng.int(3) };
       }
     }
     const idle = new Set(staff?.idle ?? []);
@@ -462,10 +477,25 @@ export class WeekRunner {
       let dayRevenue = 0;
       let dayAdmission = 0;
 
+      /*
+       * ⚠ **버스가 서 있을 때만 손님이 내린다** (K36-B③).
+       *
+       * 수요는 예전처럼 매 tick 쌓이지만(`arrivalAcc`), 실제로 내리는 것은 정차 중에
+       * 몰아서 한다. 그래야 "손님이 어디서 오는가"가 화면에 남는다 — 허공에서 솟으면
+       * 정류장은 그냥 회색 칸이다.
+       *
+       * ⚠ **주간 총 도착 수는 그대로 두고 분포만 바꾼다.** 하루 끝에 남은 수요는
+       * 그날 안에 털어 낸다 (`t === TICKS_PER_DAY - 1`) — 안 그러면 버스 시간표가
+       * 조용히 수요를 깎아, 밸런스가 왜 움직였는지 못 가린다.
+       */
       let arrivalAcc = 0;
       for (let t = 0; t < TICKS_PER_DAY; t++, tick++) {
         arrivalAcc += perTick;
-        while (arrivalAcc >= 1) {
+        // 버스 시계 = 주 루프 시계. 재생 프레임이 담는 tick 과 같아야 연출이 안 어긋난다
+        this.bus.setElapsed(tick);
+        const lastTick = t === TICKS_PER_DAY - 1;
+        const dropping = this.bus.state.atStop || lastTick;
+        while (dropping && arrivalAcc >= 1) {
           arrivalAcc -= 1;
           arrivals++;
           /*

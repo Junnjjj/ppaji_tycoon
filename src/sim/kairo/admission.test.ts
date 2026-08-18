@@ -295,3 +295,54 @@ describe('정원은 공원 안 인원이다', () => {
     expect(g.count).toBe(3);
   });
 });
+
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+ * 수요는 조용히 사라지지 않는다 — **보존**.
+ *
+ * 예전엔 `spawn` 성공이 곧 입장이라 브라우저 검사가 `수요 = 입장 + 만석` 을 주 단위로
+ * 못박고 있었다. 이제 손님은 정류장에 내려 **매표소까지 걸어가야** 입장이라, 주 경계에
+ * 걸친 손님 때문에 주 단위로는 안 맞는다 (실측: 123 = 138 + 107).
+ *
+ * 그 검사가 지키려던 것 — **실패한 입장이 어디에도 안 남으면 주말이 한가해 보인다** —
+ * 는 여전히 지켜야 한다. 주 경계가 없는 여기서 정확히 잰다.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+describe('★ 수요 보존 — 내린 손님은 입장·만석·매표소못감 중 하나로 반드시 잡힌다', () => {
+  it('여러 주를 돌려도 수요 누계가 입장+만석+매표소못감+아직오는중 과 같다', () => {
+    const { g, r } = world(OPEN_PARK);
+    const rng = new Rng(31337);
+    let arrivals = 0;
+    let visitors = 0;
+    let turnedAway = 0;
+    let noTicket = 0;
+    for (let week = 0; week < 4; week++) {
+      const rep = r.run(rng, { season: 'summer' });
+      arrivals += rep.arrivals;
+      visitors += rep.visitors;
+      turnedAway += rep.turnedAway;
+      noTicket += rep.noTicket;
+    }
+    expect(arrivals).toBeGreaterThan(0);
+    /*
+     * 아직 판 안에 있는 손님(입장했든 매표소로 걸어가는 중이든)이 잔여다. 누계가
+     * 이것보다 커도, 작아도 안 된다 — 크면 사라진 것이고 작으면 없던 손님이 생긴 것이다.
+     */
+    const inPark = g.all.length;
+    expect(visitors + turnedAway + noTicket).toBeLessThanOrEqual(arrivals);
+    expect(visitors + turnedAway + noTicket + inPark).toBeGreaterThanOrEqual(arrivals);
+  });
+
+  it('⚠ 음성 대조군 — 매표소가 없으면 그 수요가 `noTicket` 에 **전부** 남는다', () => {
+    /*
+     * 이걸 안 넣으면 "원래 0 이던 것"과 구분이 안 된다. 매표소가 없는 판에서는
+     * 입장이 0 이고, 내린 손님이 조용히 사라지는 게 아니라 매표소못감으로 잡혀야 한다.
+     */
+    const { r } = world(CLOSED_PARK);
+    const rep = r.run(new Rng(31337), { season: 'summer' });
+    expect(rep.arrivals).toBeGreaterThan(0);
+    expect(rep.visitors).toBe(0);
+    expect(rep.noTicket).toBeGreaterThan(0);
+    expect(rep.admission).toBe(0);
+  });
+});

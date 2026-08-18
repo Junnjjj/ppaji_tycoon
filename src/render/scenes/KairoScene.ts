@@ -32,6 +32,7 @@ import {
 import { facilityDef, type PlacementGrid } from '../../sim/kairo/placement.js';
 import type { GuestStore, Guest } from '../../sim/kairo/guests.js';
 import type { PlaybackFrame } from '../../sim/kairo/week.js';
+import { busStateAt, BUS_DEFAULT } from '../../sim/kairo/bus.js';
 import {
   bakeGuestAtlas,
   bakeEmoteAtlas,
@@ -149,6 +150,14 @@ export class KairoScene extends Phaser.Scene {
   private courseBad = new Set<number>();
   private courseDock: { x: number; y: number } | null = null;
   private courseGfx: Phaser.GameObjects.Graphics | null = null;
+  /**
+   * 정류장 버스 (K36-B③) — **위치는 sim 이 준다.**
+   *
+   * 여기서 자기 시계로 굴리면 스폰 시점과 화면이 갈라져 버스가 떠난 뒤에 손님이 나타난다.
+   * 에셋이 아직 없어 임시 사각형이다 (사용자 확인).
+   */
+  private busGfx: Phaser.GameObjects.Graphics | null = null;
+
   /** 선착장 후보 (K33) — 편집 중에만 채워진다 */
   private dockTips: { x: number; y: number }[] = [];
   private dockSelected = -1;
@@ -241,6 +250,8 @@ export class KairoScene extends Phaser.Scene {
     this.anchorGfx = this.add.graphics().setDepth(1_000_001).setVisible(false);
     this.landGfx = this.add.graphics().setDepth(999_999).setVisible(false);
     this.doorGfx = this.add.graphics().setDepth(999_998);
+    // 버스는 차도 위 물체다 — 그 칸의 지면 위, 그 앞줄보다 뒤
+    this.busGfx = this.add.graphics();
     this.refreshDoorMarks();
     this.rebuildFacilities();
     this.applyScale(this.cam.upscale);
@@ -553,6 +564,40 @@ export class KairoScene extends Phaser.Scene {
     g.lineTo(c.x - TILE_W / 2, c.y);
     g.closePath();
     g.strokePath();
+    g.setVisible(true);
+  }
+
+  /**
+   * 버스를 그린다 (K36-B③). `null` 이면 지운다.
+   *
+   * 좌표는 소수다 — 버스는 칸 사이를 미끄러진다. 깊이는 **그 칸 기준**으로 잡아야
+   * 도로 앞 가로수보다 뒤에 선다.
+   */
+  setBus(pos: { x: number; y: number } | null): void {
+    const g = this.busGfx;
+    if (!g) return;
+    g.clear();
+    if (!pos) {
+      g.setVisible(false);
+      return;
+    }
+    const c = gridToScreen(pos.x + 0.5, pos.y + 0.5);
+    g.setDepth(depthKey(Math.round(pos.x), Math.round(pos.y)) + 2);
+    // 임시 도형 — 아이소 상자 하나. 지붕·앞면·옆면 세 면이면 방향이 읽힌다
+    const w = TILE_W * 0.9;
+    const h = 16;
+    g.fillStyle(0xdc5a3c, 1);
+    g.beginPath();
+    g.moveTo(c.x, c.y - h);
+    g.lineTo(c.x + w / 2, c.y - h + TILE_H / 2);
+    g.lineTo(c.x, c.y - h + TILE_H);
+    g.lineTo(c.x - w / 2, c.y - h + TILE_H / 2);
+    g.closePath();
+    g.fillPath();
+    g.fillStyle(0xa63f28, 1);
+    g.fillRect(c.x - w / 2, c.y - h + TILE_H / 2, w / 2, h);
+    g.fillStyle(0xc44e33, 1);
+    g.fillRect(c.x, c.y - h + TILE_H / 2, w / 2, h);
     g.setVisible(true);
   }
 
@@ -1050,6 +1095,19 @@ export class KairoScene extends Phaser.Scene {
 
   private drawPlaybackFrame(frame: PlaybackFrame | undefined): void {
     if (!frame) return;
+    /*
+     * 버스는 **프레임의 tick** 으로 다시 센다 (K36-B③).
+     *
+     * `BusRunner` 의 tick 은 주 계산 안에서만 흐른다 — 0.6초에 다 흐르고 멈춘다.
+     * 연출은 그 뒤 3.5초 동안 기록을 되감는 것이라, 러너를 읽으면 버스는 **주가 끝난
+     * 자리에 붙박여** 있고 손님만 움직인다. 내려서 걸어 들어오는 장면이 이 연출의
+     * 요점인데 정작 태워 온 버스가 안 움직이면 앞뒤가 안 맞는다.
+     *
+     * `busStateAt` 은 순수 함수라 기록에 버스 위치를 같이 담을 필요가 없다 —
+     * tick 하나면 같은 답이 나온다 (세이브도 안 커진다).
+     */
+    const bs = busStateAt(frame.tick, BUS_DEFAULT);
+    this.setBus(bs.visible ? bs.pos : null);
     // 필요한 만큼만 이미지를 늘린다 (프레임마다 만들면 GC 가 튄다)
     while (this.playbackViews.length < frame.guests.length) {
       const img = this.add.image(0, 0, 'guest', bodyFrame(0, 'idle', '+Z', 0));

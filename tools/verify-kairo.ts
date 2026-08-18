@@ -1354,6 +1354,7 @@ async function main(): Promise<void> {
     visitors: number;
     arrivals: number;
     turnedAway: number;
+    noTicket?: number;
     revenue: number;
     upkeep: number;
     profit: number;
@@ -1379,10 +1380,24 @@ async function main(): Promise<void> {
    */
   record('방문객·매출이 생긴다', calc.arrivals > 0 && calc.revenue > 0 ? 'pass' : 'fail',
     `수요 ${calc.arrivals} · 입장 ${calc.visitors} · 만석 ${calc.turnedAway} · 매출 ${calc.revenue} · 손익 ${calc.profit}`);
+  /*
+   * ⚠ **항등식이 깨진 게 아니라 뜻이 바뀌었다** (K36-B②).
+   *
+   * 예전엔 `spawn` 성공이 곧 입장이라 `수요 = 입장 + 만석` 이 그 주 안에서 딱 맞았다.
+   * 이제 손님은 정류장에 내려서 **매표소까지 걸어가 표를 사야** 입장이다. 그 사이에
+   * 주 경계가 끼면 지난주에 내린 손님이 이번 주 입장으로 잡힌다 — 실측으로
+   * `123 = 138 + 107` 이 나왔다. 주 단위로 딱 맞을 수가 없다.
+   *
+   * 그래도 지키려던 것은 남는다: **실패한 입장이 어디에도 안 남으면 주말이 한가해 보인다.**
+   * 그래서 "수요가 있으면 그 수요가 입장·만석·매표소못감 중 어딘가에는 잡힌다"를 본다.
+   * 정확한 보존은 주 경계가 없는 sim 단위 검사(`admission.test.ts`)가 맡는다.
+   */
   record(
-    '수요 = 입장 + 만석 — 실패한 입장이 어디에도 안 남으면 주말이 한가해 보인다',
-    calc.arrivals === calc.visitors + calc.turnedAway ? 'pass' : 'fail',
-    `${calc.arrivals} = ${calc.visitors} + ${calc.turnedAway}`,
+    '실패한 입장이 어디엔가 남는다 — 수요가 조용히 사라지지 않는다',
+    calc.arrivals > 0 && calc.visitors + calc.turnedAway + (calc.noTicket ?? 0) > 0
+      ? 'pass'
+      : 'fail',
+    `수요 ${calc.arrivals} → 입장 ${calc.visitors} + 만석 ${calc.turnedAway} + 매표소못감 ${calc.noTicket ?? 0}`,
   );
   record('혼잡 히트맵이 쌓인다', calc.heatSum > 0 && calc.hotspot !== null ? 'pass' : 'fail',
     `합 ${calc.heatSum} · 최고점 (${calc.hotspot?.i},${calc.hotspot?.j})=${calc.hotspot?.value}`);

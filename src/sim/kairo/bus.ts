@@ -162,6 +162,17 @@ export class BusRunner {
     this.t++;
   }
 
+  /**
+   * 주 루프의 tick 에 **맞춘다** — 시계를 하나로 묶는 쪽이 안전하다.
+   *
+   * 따로 세면 어긋난다: 재생 프레임은 주 루프의 `tick` 을 담는데, 러너가 자기 `t` 를
+   * 따로 올리면 둘의 위상이 갈라져 연출의 버스가 손님과 다른 시각을 산다.
+   * 주는 840tick 이고 주기는 40 이라 리셋해도 위상은 같다 (840 ≡ 0 mod 40).
+   */
+  setElapsed(t: number): void {
+    this.t = t;
+  }
+
   get state(): BusState {
     return busStateAt(this.t, this.cfg);
   }

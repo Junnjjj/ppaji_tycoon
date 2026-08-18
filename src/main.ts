@@ -186,6 +186,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           gate: KairoTerrainCls.parkGate(),
         }),
     onFrame: (s) => {
+      /*
+       * 버스 — sim 이 위치를 갖고 렌더는 따라 그린다 (K36-B③).
+       *
+       * ⚠ 연출 중에는 **손대지 않는다.** 그때는 씬이 재생 프레임의 tick 으로 버스를
+       * 다시 세고 있고, 여기서 러너의 (이미 주가 끝나 멈춘) 위치를 덮으면 버스가
+       * 도착 지점에 붙박인다. 매 프레임 덮어쓰기라 조용히 이긴다.
+       */
+      if (!h.scene.isPlaying) {
+        const bs = runner?.bus.state;
+        h.scene.setBus(bs && bs.visible ? bs.pos : null);
+      }
       box.textContent =
         `FPS ${s.fps}  S=${s.upscale}  버퍼 ${s.bufferW}×${s.bufferH}\n` +
         `스크롤 ${s.scrollX},${s.scrollY}  타일 ${s.tiles}\n` +
