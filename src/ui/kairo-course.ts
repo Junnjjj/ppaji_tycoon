@@ -15,6 +15,7 @@ import {
 } from '../sim/kairo/course.js';
 import type { KairoTerrain } from '../sim/kairo/terrain.js';
 import type { KairoScene } from '../render/scenes/KairoScene.js';
+import { el } from './dom.js';
 
 /**
  * 코스 편집 — 스펙 §7.3, §A(S11) UI.
@@ -54,17 +55,6 @@ const FIT_BADGE: Record<string, string> = { best: '◎', ok: '○', poor: '△',
 function won(n: number): string {
   if (n >= 10000) return `${Math.round(n / 1000) / 10}만`;
   return n.toLocaleString('ko-KR');
-}
-
-function el<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
-  cls?: string,
-  text?: string,
-): HTMLElementTagNameMap[K] {
-  const e = document.createElement(tag);
-  if (cls) e.className = cls;
-  if (text !== undefined) e.textContent = text;
-  return e;
 }
 
 export interface CoursePanelDeps {
@@ -181,7 +171,7 @@ export class KairoCoursePanel {
       else vehRow.append(b);
     }
 
-    this.metricsEl = el('div', 'kcourse-metrics');
+    this.metricsEl = el('div', 'kstats');
     this.metricsEl.id = 'kairo-course-metrics';
 
     this.listEl = el('div', 'kcourse-list');
@@ -354,8 +344,8 @@ export class KairoCoursePanel {
     );
 
     const cell = (label: string, value: string, cls = ''): HTMLElement => {
-      const d = el('div', 'kcourse-metric');
-      d.append(el('div', 'kcourse-metric-label', label), el('div', `kcourse-metric-value ${cls}`, value));
+      const d = el('div', 'kstat');
+      d.append(el('div', 'kstat-label', label), el('div', `kstat-value ${cls}`, value));
       return d;
     };
     this.metricsEl.replaceChildren(

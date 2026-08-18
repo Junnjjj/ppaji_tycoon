@@ -1,3 +1,5 @@
+import { el, button } from './dom.js';
+import { cssVar, rgba } from './tokens.js';
 import type { KairoScene } from '../render/scenes/KairoScene.js';
 
 /**
@@ -45,23 +47,15 @@ export class KairoShowcase {
     private readonly info: () => ShowcaseInfo,
     private readonly onRename: (name: string) => void,
   ) {
-    this.root = document.createElement('div');
+    // 화면을 덮지 않는다 — 지도가 보여야 감상이다. 위아래 띠만 얹는다 (`.kover.frame`)
+    this.root = el('div', 'kover frame');
     this.root.id = 'kairo-showcase';
-    // 화면을 덮지 않는다 — 지도가 보여야 감상이다. 위아래 띠만 얹는다
-    this.root.style.cssText =
-      'position:fixed;inset:0;z-index:26;display:none;flex-direction:column;' +
-      'justify-content:space-between;pointer-events:none;' +
-      'font:13px/1.4 system-ui,sans-serif;color:#fff';
+    this.root.hidden = true;
 
-    const top = document.createElement('div');
-    top.style.cssText =
-      'pointer-events:auto;padding:14px 14px 18px;' +
-      'background:linear-gradient(rgba(4,12,18,.82),rgba(4,12,18,0))';
-    this.titleEl = document.createElement('div');
+    const top = el('div', 'kband');
+    this.titleEl = el('div', 'kband-title');
     this.titleEl.id = 'kairo-showcase-name';
-    this.titleEl.style.cssText = 'font-size:19px;font-weight:800;letter-spacing:-.2px';
-    this.subEl = document.createElement('div');
-    this.subEl.style.cssText = 'font-size:12px;opacity:.85;margin-top:2px';
+    this.subEl = el('div', 'kband-sub');
     top.append(this.titleEl, this.subEl);
     // 이름을 탭하면 바꾼다 — 내 리조트라는 감각의 절반은 이름이다
     top.addEventListener('click', () => {
@@ -73,24 +67,11 @@ export class KairoShowcase {
       }
     });
 
-    const bottom = document.createElement('div');
-    bottom.style.cssText =
-      'pointer-events:auto;display:flex;gap:8px;justify-content:flex-end;padding:18px 14px 16px;' +
-      'background:linear-gradient(rgba(4,12,18,0),rgba(4,12,18,.82))';
-    const share = document.createElement('button');
+    const bottom = el('div', 'kband bottom');
+    const share = button('kbtn primary big', '📷 공유', () => this.share());
     share.id = 'kairo-showcase-share';
-    share.textContent = '📷 공유';
-    share.style.cssText =
-      'min-height:48px;min-width:96px;border-radius:12px;border:none;background:#2f7fc0;' +
-      'color:#fff;font-size:15px;font-weight:600';
-    share.addEventListener('click', () => this.share());
-    const close = document.createElement('button');
+    const close = button('kbtn big', '닫기', () => this.hide());
     close.id = 'kairo-showcase-close';
-    close.textContent = '닫기';
-    close.style.cssText =
-      'min-height:48px;min-width:80px;border-radius:12px;border:none;background:rgba(20,40,54,.9);' +
-      'color:#eaf6ff;font-size:15px';
-    close.addEventListener('click', () => this.hide());
     bottom.append(share, close);
 
     this.root.append(top, bottom);
@@ -98,7 +79,7 @@ export class KairoShowcase {
   }
 
   get visible(): boolean {
-    return this.root.style.display === 'flex';
+    return !this.root.hidden;
   }
 
   /** 마지막으로 만든 공유 이미지 (data URL) — 검증이 읽는다 */
@@ -122,7 +103,7 @@ export class KairoShowcase {
     }
     this.scene.setUpscale(1); // 최대 축소 — 전체가 한 화면에
     this.scene.fitAll();
-    this.root.style.display = 'flex';
+    this.root.hidden = false;
     this.refresh();
   }
 
@@ -132,7 +113,7 @@ export class KairoShowcase {
       delete el.dataset['showcaseHidden'];
     }
     this.hidden = [];
-    this.root.style.display = 'none';
+    this.root.hidden = true;
   }
 
   refresh(): void {
@@ -166,13 +147,14 @@ export class KairoShowcase {
 
     const i = this.info();
     const pad = Math.round(out.width * 0.03);
-    g.fillStyle = 'rgba(4,12,18,.72)';
+    // 화면의 띠와 **같은 색**이어야 한다 — 그래서 토큰에서 읽는다 (K34)
+    g.fillStyle = rgba('--band-scrim', 72);
     g.fillRect(0, 0, out.width, Math.round(out.height * 0.11));
-    g.fillStyle = '#ffffff';
+    g.fillStyle = cssVar('--text-on-solid');
     g.font = `700 ${Math.round(out.height * 0.035)}px system-ui, sans-serif`;
     g.fillText(`${'★'.repeat(Math.max(1, i.grade))} ${i.name}`, pad, Math.round(out.height * 0.05));
     g.font = `${Math.round(out.height * 0.022)}px system-ui, sans-serif`;
-    g.fillStyle = '#cfe6f4';
+    g.fillStyle = cssVar('--text-dim');
     g.fillText(
       `방문객 ${i.visitors}명 · ${i.week}주차 · 시설 ${i.facilities}개`,
       pad,

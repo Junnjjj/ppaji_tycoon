@@ -24,6 +24,8 @@
  * 두 벌 만들면 검증도 두 배가 되고, 어긋나는 쪽은 언제나 안 본 쪽이다.
  */
 
+import { el } from './dom.js';
+
 export type BuildKind = 'ground' | 'facility' | 'erase';
 
 /**
@@ -56,18 +58,6 @@ export interface HudOptions {
    * 메뉴 시트 안에 있을 때는 버튼이 안 보여서 "코스 기능이 없다"로 읽혔다.
    */
   onCourse: () => void;
-}
-
-/** `<div class="x">텍스트</div>` 한 줄짜리 헬퍼 — 이 파일에서만 쓴다 */
-function el<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
-  cls: string,
-  text?: string,
-): HTMLElementTagNameMap[K] {
-  const n = document.createElement(tag);
-  n.className = cls;
-  if (text !== undefined) n.textContent = text;
-  return n;
 }
 
 export class KairoHud {

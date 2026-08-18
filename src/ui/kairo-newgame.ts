@@ -1,4 +1,5 @@
 import { MAP_TYPES, unlockedScenarios, type MapType, type ScenarioDef } from '../sim/kairo/scenario.js';
+import { el, button } from './dom.js';
 
 /**
  * 새 판 — 맵 타입과 시나리오를 고른다 (§4.5).
@@ -12,6 +13,12 @@ import { MAP_TYPES, unlockedScenarios, type MapType, type ScenarioDef } from '..
  *
  * 새 판은 세이브를 버린다 — 그래서 **한 번 더 묻는다.** 되돌릴 수 없는 조작 앞에서
  * 확인 없이 진행하면, 실수 한 번이 몇 시간을 지운다.
+ *
+ * ## 표면은 `style.css` 가 소유한다 (K34)
+ *
+ * 예전엔 인라인 14곳 · 하드코딩 색 18개였고, 닫기 버튼 문자열이 도감·경영과 **글자
+ * 단위로 똑같았다.** 지금은 공용 `.kover` · `.ksheet-head` · `.kbtn` · `.kitem.wide` 를 쓴다.
+ * 선택 표시도 `.kbtn.on`/`.kitem.on` 의 노랑으로 합쳤다 — 예전엔 여기만 청록이었다.
  */
 
 export interface NewGameDeps {
@@ -34,86 +41,59 @@ export class KairoNewGame {
     parent: HTMLElement,
     private readonly deps: NewGameDeps,
   ) {
-    this.root = document.createElement('div');
+    this.root = el('div', 'kover');
     this.root.id = 'kairo-newgame';
-    this.root.style.cssText =
-      'position:fixed;inset:0;z-index:27;display:none;flex-direction:column;gap:10px;' +
-      'background:#0d1a23;padding:14px;font:13px/1.45 system-ui,sans-serif;color:#e8f4ff;' +
-      'overflow-y:auto';
+    this.root.hidden = true;
 
-    const head = document.createElement('div');
-    head.style.cssText = 'display:flex;align-items:center;justify-content:space-between';
-    const title = document.createElement('div');
-    title.textContent = '새 판';
-    title.style.cssText = 'font-size:17px;font-weight:700';
-    const close = document.createElement('button');
+    const head = el('div', 'ksheet-head');
+    head.append(el('div', 'ksheet-title', '새 판'));
+    const close = button('kbtn', '닫기', () => this.hide());
     close.id = 'kairo-newgame-close';
-    close.textContent = '닫기';
-    close.style.cssText =
-      'min-height:44px;min-width:64px;border-radius:8px;border:none;background:#24445a;color:#eaf6ff';
-    close.addEventListener('click', () => this.hide());
-    head.append(title, close);
+    head.append(close);
 
-    const mapLabel = document.createElement('div');
-    mapLabel.textContent = '맵 타입 — 지형뿐 아니라 오는 손님이 달라집니다';
-    mapLabel.style.cssText = 'font-size:12px;color:#9dbdd2';
-    this.mapBar = document.createElement('div');
-    this.mapBar.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap';
+    const mapLabel = el('div', 'kcaption', '맵 타입 — 지형뿐 아니라 오는 손님이 달라집니다');
+    this.mapBar = el('div', 'kchips wrap');
 
-    const scenLabel = document.createElement('div');
-    scenLabel.textContent = '시나리오 — 목표가 달라집니다';
-    scenLabel.style.cssText = 'font-size:12px;color:#9dbdd2;margin-top:4px';
-    this.scenBar = document.createElement('div');
-    this.scenBar.style.cssText = 'display:flex;flex-direction:column;gap:4px';
+    const scenLabel = el('div', 'kcaption', '시나리오 — 목표가 달라집니다');
+    this.scenBar = el('div', 'kstack');
+    this.scenBar.style.setProperty('--stack-gap', '4px');
 
-    this.detail = document.createElement('div');
-    this.detail.style.cssText =
-      'font-size:12px;background:#182b38;border-radius:8px;padding:8px 10px;min-height:56px';
+    this.detail = el('div', 'krow kstack');
+    this.detail.style.setProperty('--stack-gap', '2px');
 
-    this.startBtn = document.createElement('button');
-    this.startBtn.id = 'kairo-newgame-start';
-    this.startBtn.textContent = '이 판으로 시작 (지금 판은 지워집니다)';
-    this.startBtn.style.cssText =
-      'min-height:56px;border-radius:10px;border:none;background:#2f7fc0;color:#fff;' +
-      'font-size:15px;font-weight:600;margin-top:4px';
-    this.startBtn.addEventListener('click', () => {
+    this.startBtn = button('kbtn primary', '이 판으로 시작 (지금 판은 지워집니다)', () => {
       // 되돌릴 수 없는 조작 — 한 번 더 묻는다
       if (!window.confirm('지금 판을 지우고 새로 시작합니다. 계속할까요?')) return;
       this.deps.start(this.mapId, this.scenarioId);
     });
+    this.startBtn.id = 'kairo-newgame-start';
 
     this.root.append(head, mapLabel, this.mapBar, scenLabel, this.scenBar, this.detail, this.startBtn);
     parent.append(this.root);
   }
 
   get visible(): boolean {
-    return this.root.style.display === 'flex';
+    return !this.root.hidden;
   }
 
   show(): void {
-    this.root.style.display = 'flex';
+    this.root.hidden = false;
     this.render();
   }
 
   hide(): void {
-    this.root.style.display = 'none';
+    this.root.hidden = true;
   }
 
   private render(): void {
     this.mapBar.replaceChildren();
     for (const m of MAP_TYPES) {
-      const b = document.createElement('button');
-      b.dataset['map'] = m.id;
-      b.textContent = m.name;
-      // ★ 44px — 폰 터치 타깃
-      b.style.cssText =
-        'flex:1;min-width:96px;min-height:52px;border-radius:8px;font-size:13px;' +
-        `border:2px solid ${this.mapId === m.id ? '#7ad0ff' : 'transparent'};` +
-        'background:#1d3b4e;color:#eaf6ff';
-      b.addEventListener('click', () => {
+      // 터치 타깃은 `.kbtn` 이 `min-height: var(--tap)` 로 지킨다
+      const b = button(`kbtn${this.mapId === m.id ? ' on' : ''}`, m.name, () => {
         this.mapId = m.id;
         this.render();
       });
+      b.dataset['map'] = m.id;
       this.mapBar.append(b);
     }
 
@@ -122,21 +102,17 @@ export class KairoNewGame {
     const open = new Set(unlockedScenarios(grade).map((s) => s.id));
     for (const s of unlockedScenarios(5)) {
       const locked = !open.has(s.id);
-      const b = document.createElement('button');
+      // ★ 56px — `.kitem.wide` 가 지킨다. 도감·카드 선택지와 같은 모양이다
+      const b = el(
+        'button',
+        `kitem wide${this.scenarioId === s.id ? ' on' : ''}`,
+      );
       b.dataset['scenario'] = s.id;
       b.disabled = locked;
-      // ★ 56px — 도감과 같은 규칙
-      b.style.cssText =
-        'min-height:56px;border-radius:8px;text-align:left;padding:6px 10px;font-size:13px;' +
-        `border:2px solid ${this.scenarioId === s.id ? '#7ad0ff' : 'transparent'};` +
-        `background:${locked ? '#141f28' : '#1d3b4e'};color:${locked ? '#6b8296' : '#eaf6ff'}`;
-      const nm = document.createElement('div');
-      nm.textContent = locked ? `🔒 ${s.name}` : s.name;
-      nm.style.cssText = 'font-weight:600';
-      const de = document.createElement('div');
-      de.textContent = locked ? `${s.grade}등급에 열립니다` : s.desc;
-      de.style.cssText = 'font-size:11px;color:#9dbdd2';
-      b.append(nm, de);
+      b.append(
+        el('div', 'kitem-name', locked ? `🔒 ${s.name}` : s.name),
+        el('div', 'kitem-sub', locked ? `${s.grade}등급에 열립니다` : s.desc),
+      );
       if (!locked) {
         b.addEventListener('click', () => {
           this.scenarioId = s.id;
@@ -159,11 +135,7 @@ export class KairoNewGame {
       `불리: ${m.weak}`,
       `${s.name} — 시작 자금 ${Math.round(s.startCash / 10000)}만`,
     ];
-    for (const t of rows) {
-      const d = document.createElement('div');
-      d.textContent = t;
-      this.detail.append(d);
-    }
+    for (const t of rows) this.detail.append(el('div', undefined, t));
   }
 
   /** 도구용 — 화면을 거치지 않고 고른다 */

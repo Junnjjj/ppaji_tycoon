@@ -49,6 +49,34 @@
   /* 코스 오버레이 강조 — 씬의 선착장 마커(0xffe08a)와 같은 색이어야 짝이 보인다 */
   --course-mark: #ffe08a;
 
+  /*
+   * 패널 표면 (K34) — 여섯 패널이 각자 하드코딩하던 값들을 여기로 모았다.
+   *
+   * ⚠ 밝은 팔레트로 갈 때 **여기만** 바꾸면 되게 두는 것이 이 블록의 존재 이유다.
+   * `src/ui/tokens.ts` 를 통해 캔버스도 이 값을 읽는다.
+   */
+  --overlay-bg: #0d1a23; /* 불투명 전면 (새 판·도감) */
+  --scrim: rgb(12 20 28 / 94%); /* 반투명 전면 (결산) */
+  --scrim-deep: rgb(6 14 20 / 86%); /* 모달 스크림 (카드) */
+  --band-scrim: 4 12 18; /* 감상 화면 띠 — 캔버스와 공유하므로 삼원색 */
+  --on-light: #08131a; /* 밝은 칠 위의 글씨 */
+  --sk-modal: 0 12px 40px rgb(0 0 0 / 50%);
+
+  /*
+   * 부족·주말 주황 — 알파를 16·18·40·100% 네 단계로 쓴다. hex 로 두면 단계마다 다른
+   * 상수가 생긴다 (실제로 네 벌이 흩어져 있었다). 그래서 **삼원색으로** 둔다.
+   */
+  --shortage: 240 160 60;
+
+  /* 결산 차트 — 히트맵과 안 부딪히게 고른 자체 계열이다 (kairo-report.ts 주석) */
+  --group-family: #7fd0a8;
+  --group-couple: #f0a6c0;
+  --group-friends: #f2c96b;
+  --group-company: #8fb8e8;
+  --bar-weekday: #4a9ad0;
+  --bar-turned: 224 80 60;
+  --heat-empty: #0e1a24;
+
   /* 모션 — animation-systems 기본값 (마이크로 120~200, 상태 변화 180~260) */
   --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
   --dur-micro: 160ms;
@@ -926,11 +954,14 @@ body {
  */
 @media (prefers-reduced-motion: reduce) {
   .kbtn,
-  .kitem {
+  .kitem,
+  .kcourse-item {
     transition: none;
   }
 
-  .ksheet {
+  .ksheet,
+  .kcourse,
+  .kover {
     animation: none;
   }
 }
@@ -1270,4 +1301,549 @@ body {
 .kcourse-hint {
   font-size: 11px;
   color: var(--text-dim);
+}
+
+/* ── 패널 공용 (K34) ─────────────────────────────────────────────────────
+ *
+ * 여섯 패널이 인라인으로 각자 만들던 것을 한 벌로 모았다. 조사에서 나온 실물:
+ * 닫기 버튼 문자열이 세 파일에 **글자 단위로 똑같았고**, "흐린 글씨"의 철자가
+ * 다섯 가지였고, "선택됨"이 청록(#7ad0ff)과 노랑(--accent) 두 색이었다.
+ *
+ * 표면은 셋이다 — 하단 시트(`.ksheet`, 이미 있다) · 불투명 전면(`.kover`) ·
+ * 떠 있는 것(`.kover.scrim` / `.dialog` / `.frame`). 속은 한 벌이다.
+ * 버튼은 새로 만들지 않고 `.kbtn`/`.on`/`.primary` 를 그대로 쓴다.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/* 전면 화면 — 하단 바를 덮는 것이 **의도**다 (시트와 다른 점) */
+.kover {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  padding-bottom: calc(14px + var(--safe-b));
+  padding-top: calc(14px + var(--safe-t));
+  overflow-y: auto;
+  background: var(--overlay-bg);
+  color: var(--text);
+  font: 13px/1.45 system-ui, -apple-system, sans-serif;
+  animation: ksheet-in var(--dur-ui) var(--ease);
+  -webkit-overflow-scrolling: touch;
+}
+
+.kover[hidden] {
+  display: none;
+}
+
+/*
+ * ⚠ **자식이 줄어들면 안 된다.** 세로 flex + `overflow-y:auto` 에서는 자식이 기본으로
+ * 눌린다 — 도감의 티어 칩 줄이 절반만 보였다 (실측). 스크롤은 루트가 한다.
+ */
+.kover > * {
+  flex: 0 0 auto;
+}
+
+/* 결산 — 지도가 살짝 비쳐야 "내 리조트의 한 주"라는 게 남는다 */
+.kover.scrim {
+  background: var(--scrim);
+}
+
+/* 카드 — 스크림 위에 가운데 상자 하나. 화면을 통째로 채우지 않는다 */
+.kover.dialog {
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: var(--scrim-deep);
+  overflow: hidden;
+}
+
+.kdialog-box {
+  width: 100%;
+  max-width: 420px;
+  max-height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background:
+    var(--panel) padding-box,
+    linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
+  box-shadow: var(--sk-modal);
+  padding: 18px 16px;
+}
+
+/*
+ * 감상 화면 — **화면을 덮지 않는다.** 지도가 보여야 감상이다. 위아래 띠만 얹고
+ * 띠에서만 터치를 받는다.
+ */
+.kover.frame {
+  justify-content: space-between;
+  padding: 0;
+  gap: 0;
+  background: none;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.kband {
+  pointer-events: auto;
+  padding: calc(14px + var(--safe-t)) 14px 18px;
+  background: linear-gradient(rgb(var(--band-scrim) / 82%), rgb(var(--band-scrim) / 0%));
+}
+
+.kband.bottom {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 18px 14px calc(16px + var(--safe-b));
+  background: linear-gradient(rgb(var(--band-scrim) / 0%), rgb(var(--band-scrim) / 82%));
+}
+
+.kband-title {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  text-shadow: var(--sk-emboss);
+}
+
+.kband-sub {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+/* 감상 화면 버튼 — 한 손으로 누르는 큰 표적 */
+.kbtn.big {
+  min-height: 48px;
+  min-width: 88px;
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+/* 세로 스택 — gap 만 다른 컨테이너가 일곱 군데 있었다 */
+.kstack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap, 8px);
+}
+
+/* 흐린 글씨 — 다섯 철자를 하나로 */
+.kcaption {
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+/* 여러 줄을 담은 상자로도 쓴다 — 그때는 가운데 정렬이 아니라 왼쪽으로 편다 */
+.krow.kstack {
+  align-items: stretch;
+  padding: 8px 10px;
+}
+
+/* 한 줄 항목 — 왼쪽 글, 오른쪽 버튼 */
+.krow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 10px;
+  border-radius: 10px;
+  background: var(--panel-sunk);
+  box-shadow: var(--sk-press);
+}
+
+.krow > .krow-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 부족하면 그 줄이 주황으로 뜬다 — 결산의 병목 표시와 같은 규칙 */
+.krow.warn {
+  background: rgb(var(--shortage) / 18%);
+}
+
+/* ± 스테퍼 — 정사각. 숫자는 자릿수가 변해도 안 흔들리게 고정폭 */
+.kbtn.step {
+  min-width: var(--tap);
+  padding: 0;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.kcount {
+  min-width: 56px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.kcount.warn,
+.kcaption.warn {
+  color: var(--warn);
+}
+
+/* 슬라이더도 터치 타깃이다 — 44px */
+.kslider {
+  width: 100%;
+  height: var(--tap);
+  accent-color: var(--primary-edge);
+}
+
+.kstack[hidden] {
+  display: none;
+}
+
+/* 칩 줄 — 가로로 넘치면 스크롤한다 (탭·티어·맵) */
+.kchips {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.kchips[hidden] {
+  display: none;
+}
+
+.kchips.wrap {
+  flex-wrap: wrap;
+  overflow-x: visible;
+}
+
+.kchips > .kbtn {
+  flex: 0 0 auto;
+  padding: 0 14px;
+}
+
+/* 고른 것 — `.kbtn.on` 과 **같은 색**이어야 한다 (K34 의 요지다) */
+.kitem.on {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* 전면 화면의 머리는 시트보다 크다 — 화면 전체를 차지하니 제목도 그만큼 */
+.kover > .ksheet-head {
+  padding: 0 0 2px;
+}
+
+.kover > .ksheet-head .ksheet-title {
+  font-size: 17px;
+}
+
+/*
+ * 넓은 선택 행 — 이름 줄 + 설명 줄. `.kitem` 과 같은 재질이되 가로로 꽉 차고
+ * 왼쪽 정렬이다 (새 판 시나리오 · 도감 항목 · 카드 선택지가 같은 모양이었다).
+ */
+.kitem.wide {
+  width: 100%;
+  min-height: 56px;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+  padding: 8px 12px;
+}
+
+.kitem.wide .kitem-name {
+  font-size: 13px;
+}
+
+.kitem.wide .kitem-sub {
+  font-size: 11px;
+}
+
+/* 카드 — 제목과 설명. 대화상자 안에서만 쓴다 */
+.kcard-title {
+  font-size: 19px;
+  font-weight: 700;
+  text-shadow: var(--sk-emboss);
+}
+
+.kcard-desc {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+/* 지표 칸 — 코스 패널이 쓰던 것을 공용 이름으로 올렸다 */
+.kstats {
+  display: grid;
+  grid-template-columns: repeat(var(--stat-cols, 4), 1fr);
+  gap: 6px;
+}
+
+.kstat {
+  background: var(--panel-sunk);
+  border-radius: 8px;
+  padding: 4px 6px;
+  box-shadow: var(--sk-press);
+}
+
+.kstat-label {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.kstat-value {
+  font-weight: 700;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.kstat-value.good {
+  color: var(--good);
+}
+
+.kstat-value.warn {
+  color: var(--warn);
+}
+
+.kstat-value.bad {
+  color: var(--bad);
+}
+
+/* 알림 상자 — 결산의 병목처럼 "이걸 보라"는 한 덩어리 */
+.kcallout {
+  border: 1px solid rgb(var(--shortage) / 40%);
+  border-radius: 10px;
+  background: rgb(var(--shortage) / 16%);
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
+/* ── 결산 (K34) ─────────────────────────────────────────────────────────
+ * 히트맵 → 요일 막대 → 숫자 순서는 설계가 정한 것이다 (숫자만이면 엑셀 게임).
+ * 여기서는 그 셋의 **표면**만 정한다. 높이·비율 같은 데이터는 인라인으로 남는다.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+.kheat {
+  width: 100%;
+  image-rendering: pixelated;
+  border-radius: 6px;
+}
+
+.kdays {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+  height: 110px;
+}
+
+.kday {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  height: 100%;
+}
+
+/* 막대 바탕 = 만석으로 돌려보낸 몫 (빗금). 그 위에 들어온 몫을 덮는다 */
+.kday-bar {
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(var(--bar-turned) / 85%) 0 3px,
+    rgb(var(--bar-turned) / 55%) 3px 6px
+  );
+}
+
+.kday-in {
+  width: 100%;
+  border-radius: 0 0 3px 3px;
+  background: var(--bar-weekday);
+}
+
+.kday-in.weekend {
+  background: rgb(var(--shortage) / 100%);
+}
+
+.kday-num {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.kday-label {
+  font-size: 11px;
+  white-space: pre;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.kgroups {
+  display: flex;
+  height: 22px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--panel-sunk);
+}
+
+.kgroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--on-light);
+}
+
+.kgroup.family {
+  background: var(--group-family);
+}
+
+.kgroup.couple {
+  background: var(--group-couple);
+}
+
+.kgroup.friends {
+  background: var(--group-friends);
+}
+
+.kgroup.company {
+  background: var(--group-company);
+}
+
+.kgroup-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.knums {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px 12px;
+  font-size: 13px;
+}
+
+.knum-key {
+  color: var(--text-dim);
+}
+
+.knum-val {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.knum-val.good {
+  color: var(--good);
+}
+
+.knum-val.warn {
+  color: var(--warn);
+}
+
+.knum-val.bad {
+  color: var(--bad);
+}
+
+/* 아래 버튼 줄 — 주 동작이 넓다 */
+.kacts {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.kacts > .kbtn {
+  flex: 1;
+  min-height: 48px;
+}
+
+.kacts > .kbtn.grow {
+  flex: 2;
+}
+
+/*
+ * 디버그 오버레이 — `?debug=1` 뒤. ⚠ DOM 에서 **지우지 말 것**: 두 하네스가 이 요소의
+ * `textContent` 로 부팅 완료를 판정한다. 숨길 땐 `visibility` 로만 (그래야 하네스가 읽는다).
+ */
+.kdebug {
+  position: fixed;
+  left: 8px;
+  top: calc(96px + var(--safe-t));
+  z-index: 11;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: rgb(0 0 0 / 55%);
+  color: var(--text);
+  font: 11px/1.5 ui-monospace, monospace;
+  white-space: pre;
+  pointer-events: none;
+}
+
+/* 토스트 — 거절 사유가 뜨는 곳. 처방까지 말하므로 두 줄이 될 수 있다 */
+.ktoast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(64px + var(--safe-b));
+  transform: translateX(-50%);
+  z-index: 12;
+  max-width: 86vw;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--panel-primary);
+  border: 1px solid transparent;
+  box-shadow: var(--sk-lift);
+  color: var(--text-on-solid);
+  font: 12px/1.4 system-ui, sans-serif;
+  text-align: center;
+  text-shadow: var(--sk-emboss);
+  pointer-events: none;
+}
+
+.ktoast[hidden] {
+  display: none;
+}
+
+.ktoast.bad {
+  background: var(--bad);
+}
+
+.kquest-head {
+  font-weight: 600;
+  margin-bottom: 4px;
+  white-space: pre;
+  color: var(--text);
+}
+
+.kquest {
+  margin-bottom: 5px;
+}
+
+.kquest > .done {
+  color: var(--good);
+}
+
+.kquest-detail {
+  font-size: 10px;
+  color: var(--text-mute);
+}
+
+/* 의뢰 진행바 — 폭은 데이터라 인라인으로 남는다. 색만 여기서 정한다 */
+.kprog {
+  height: 3px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 15%);
+  margin: 2px 0;
+  overflow: hidden;
+}
+
+.kprog > i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--bar-weekday);
+}
+
+.kprog.done > i {
+  background: var(--good);
 }

@@ -92,11 +92,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   const box = document.createElement('div');
   box.id = 'kairo-debug';
-  box.style.cssText =
-    // 상단 캡슐·목표 아래에 둔다 — 켰을 때 그것들을 덮으면 켠 의미가 반감된다
-    'position:fixed;left:8px;top:96px;z-index:11;font:11px/1.5 ui-monospace,monospace;' +
-    'background:rgba(0,0,0,.55);color:#e8f4ff;padding:6px 8px;border-radius:6px;' +
-    'pointer-events:none;white-space:pre';
+  // 상단 캡슐·목표 아래에 둔다 — 켰을 때 그것들을 덮으면 켠 의미가 반감된다
+  box.className = 'kdebug';
   if (new URLSearchParams(location.search).get('debug') !== '1') {
     box.style.visibility = 'hidden';
   }
@@ -387,17 +384,15 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
 
   const msg = document.createElement('div');
   msg.id = 'kairo-toast';
-  msg.style.cssText =
-    'position:fixed;left:50%;transform:translateX(-50%);bottom:64px;z-index:10;' +
-    'font:12px/1.4 system-ui;background:rgba(180,40,30,.92);color:#fff;padding:8px 12px;' +
-    'border-radius:8px;pointer-events:none;max-width:86vw;text-align:center';
+  msg.className = 'ktoast bad';
   msg.hidden = true;
   document.body.append(msg);
   let toastTimer = 0;
   const toast = (text: string, kind: '' | 'ok' = ''): void => {
     msg.textContent = text;
     msg.hidden = text === '';
-    msg.style.background = kind === 'ok' ? 'rgba(40,140,90,.92)' : 'rgba(180,40,30,.92)';
+    // 성공은 주 색, 거절은 경고색 — 색은 `style.css` 가 소유한다 (K34)
+    msg.classList.toggle('bad', kind !== 'ok');
     window.clearTimeout(toastTimer);
     if (text !== '') toastTimer = window.setTimeout(() => (msg.hidden = true), 2600);
   };
@@ -1019,26 +1014,23 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     title.textContent =
       `의뢰 ${st.length - open.length}/${st.length} · ${g.grade}등급 ${g.name}\n` +
       `동시 ${g.maxGuests}명 · 수요 ×${g.reputationPull}`;
-    title.style.whiteSpace = 'pre';
-    title.style.cssText = 'font-weight:600;margin-bottom:4px;opacity:.85';
+    title.className = 'kquest-head';
     questPanel.append(title);
     for (const s of rows) {
       const row = document.createElement('div');
-      row.style.cssText = 'margin-bottom:5px';
+      row.className = 'kquest';
       const name = document.createElement('div');
       name.textContent = `${s.done ? '✓ ' : ''}${s.name}`;
-      name.style.cssText = s.done ? 'color:#8fe08f' : '';
+      if (s.done) name.className = 'done';
       const bar = document.createElement('div');
-      bar.style.cssText =
-        'height:3px;border-radius:2px;background:rgba(255,255,255,.15);margin:2px 0';
-      const fill = document.createElement('div');
-      fill.style.cssText =
-        `height:100%;width:${Math.round(s.progress * 100)}%;border-radius:2px;` +
-        `background:${s.done ? '#8fe08f' : '#4a9ad0'}`;
+      bar.className = s.done ? 'kprog done' : 'kprog';
+      const fill = document.createElement('i');
+      // 폭은 **데이터**다 — 색은 클래스가 갖는다 (K34)
+      fill.style.width = `${Math.round(s.progress * 100)}%`;
       bar.append(fill);
       const det = document.createElement('div');
       det.textContent = s.detail;
-      det.style.cssText = 'opacity:.6;font-size:10px';
+      det.className = 'kquest-detail';
       row.append(name, bar, det);
       questPanel.append(row);
     }

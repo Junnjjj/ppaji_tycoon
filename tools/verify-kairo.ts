@@ -1928,14 +1928,15 @@ async function main(): Promise<void> {
     }
     const filter = document.getElementById('kairo-catalog-filter');
     const defaultUndiscovered = filter.textContent.indexOf('미발견만') >= 0;
-    const rows = [...panel.querySelectorAll('div[data-entry]')];
+    // K34: 항목이 div → button 이 됐다 (kitem wide). 태그를 안 박고 속성으로만 찾는다
+    const rows = [...panel.querySelectorAll('[data-entry]')];
     const heights = rows.map((r) => Math.round(r.getBoundingClientRect().height));
     const foundCount = rows.filter((r) => r.dataset.found === '1').length;
     const tabs = [...panel.querySelectorAll('button[data-tab]')].map((b) => b.textContent);
     const tiers = [...panel.querySelectorAll('button[data-tier]')].length;
     // 전체 보기로 바꾸면 발견한 것도 나온다
     filter.click();
-    const rowsAll = panel.querySelectorAll('div[data-entry]').length;
+    const rowsAll = panel.querySelectorAll('[data-entry]').length;
     return {
       ok: true, defaultUndiscovered: defaultUndiscovered,
       rows: rows.length, rowsAll: rowsAll, foundCount: foundCount,
@@ -3659,6 +3660,116 @@ async function main(): Promise<void> {
       ? 'pass'
       : 'fail',
     `발판 ${markControl.before} → 방 삭제 ${markControl.after} → 복구 ${markControl.restored}`,
+  );
+
+  // ── 9d. 패널 6종이 한 가족인가 (K34) ──
+  //
+  // 인라인 스타일을 걷어낸 이유가 "한 게임으로 보이게"였다. 그러면 **숫자로 물어야 한다** —
+  // 머리 높이·닫기 버튼·선택 색이 패널마다 같은가. 색만 토큰으로 바꾸고 구조가 제각각이면
+  // 이 작업은 반쪽이다.
+  const family = (await page.evaluate(`(() => {
+    const ids = ['kairo-staff', 'kairo-catalog', 'kairo-newgame', 'kairo-course'];
+    const openers = {
+      'kairo-staff': 'kairo-staff-open',
+      'kairo-catalog': 'kairo-catalog-open',
+      'kairo-newgame': 'kairo-newgame-open',
+    };
+    const out = [];
+    for (const id of ids) {
+      if (id === 'kairo-course') {
+        document.getElementById('kairo-build-open').click();
+        document.querySelector('#kairo-sheet [data-tab="course"]').click();
+      } else {
+        document.getElementById('kairo-menu-open').click();
+        const o = document.getElementById(openers[id]);
+        if (!o) continue;
+        o.click();
+      }
+      const p = document.getElementById(id);
+      if (!p || p.hidden) continue;
+      const head = p.querySelector('.ksheet-head, .kcourse-bar');
+      const close = p.querySelector('button[id$="-close"], #kairo-course-close');
+      out.push({
+        id: id,
+        head: head ? Math.round(head.getBoundingClientRect().height) : 0,
+        close: close ? Math.round(close.getBoundingClientRect().height) : 0,
+        font: getComputedStyle(p).fontFamily.indexOf('system-ui') >= 0
+      });
+      const c = document.getElementById(id.replace('kairo-', 'kairo-') + '-close');
+      if (c) c.click();
+      else document.getElementById('kairo-course-close')?.click();
+    }
+    return out;
+  })()`)) as { id: string; head: number; close: number; font: boolean }[];
+
+  const closeH = family.map((f) => f.close);
+  record(
+    '★ 패널들의 닫기 버튼이 같은 크기다 — 한 가족으로 보이려면 (K34)',
+    family.length >= 3 && Math.max(...closeH) - Math.min(...closeH) <= 2 ? 'pass' : 'fail',
+    family.map((f) => `${f.id.replace('kairo-', '')} ${f.close}px`).join(' · '),
+  );
+  record(
+    '패널 글꼴이 한 벌이다',
+    family.length >= 3 && family.every((f) => f.font) ? 'pass' : 'fail',
+    `${family.filter((f) => f.font).length}/${family.length}`,
+  );
+
+  /*
+   * ★ 선택 표시가 **한 색**이어야 한다.
+   *
+   * 예전엔 경영 탭·새 판 맵·도감 탭이 청록(#7ad0ff)이고 하단 바·코스는 노랑(--accent)
+   * 이었다 — 같은 게임 안에서 "고름"이 두 색이었다. 실제 화면에서 색을 읽어 확인한다.
+   */
+  const selColors = (await page.evaluate(`(() => {
+    const seen = {};
+    const grab = (id, sel) => {
+      const p = document.getElementById(id);
+      if (!p || p.hidden) return;
+      const on = p.querySelector(sel);
+      if (on) seen[id] = getComputedStyle(on).borderTopColor;
+    };
+    document.getElementById('kairo-menu-open').click();
+    document.getElementById('kairo-catalog-open').click();
+    grab('kairo-catalog', 'button[data-tab].on');
+    document.getElementById('kairo-catalog-close').click();
+    document.getElementById('kairo-menu-open').click();
+    document.getElementById('kairo-newgame-open').click();
+    grab('kairo-newgame', 'button[data-map].on');
+    document.getElementById('kairo-newgame-close').click();
+    document.getElementById('kairo-menu-open').click();
+    document.getElementById('kairo-staff-open').click();
+    grab('kairo-staff', 'button[data-manage].on');
+    document.getElementById('kairo-staff-close').click();
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+    return { seen: seen, accent: accent };
+  })()`)) as { seen: Record<string, string>; accent: string };
+  const sel = Object.values(selColors.seen);
+  record(
+    '★ 선택 표시가 패널 전체에서 한 색이다 (K34)',
+    sel.length >= 3 && new Set(sel).size === 1 ? 'pass' : 'fail',
+    Object.entries(selColors.seen)
+      .map(([k, v]) => `${k.replace('kairo-', '')} ${v}`)
+      .join(' · ') + ` (토큰 ${selColors.accent})`,
+  );
+
+  /* 감상 화면을 닫으면 HUD 가 돌아온다 — 형제의 display 를 직접 만지는 유일한 패널이다 */
+  const showcaseRestore = (await page.evaluate(`(() => {
+    const count = () => [...document.querySelectorAll('button')]
+      .filter((b) => b.getBoundingClientRect().width > 2).length;
+    const before = count();
+    document.getElementById('kairo-menu-open').click();
+    document.getElementById('kairo-showcase-open').click();
+    const during = count();
+    document.getElementById('kairo-showcase-close').click();
+    return { before: before, during: during, after: count() };
+  })()`)) as { before: number; during: number; after: number };
+  record(
+    '★ 감상 화면을 닫으면 HUD 가 그대로 돌아온다 (K34)',
+    showcaseRestore.during < showcaseRestore.before &&
+      showcaseRestore.after === showcaseRestore.before
+      ? 'pass'
+      : 'fail',
+    `버튼 ${showcaseRestore.before} → ${showcaseRestore.during} → ${showcaseRestore.after}`,
   );
 
   // ── 10. 안드로이드 비정수 DPR ──

@@ -1,3 +1,4 @@
+import { el, button } from './dom.js';
 import {
   STAFF_ROLES,
   type StaffRole,
@@ -61,118 +62,91 @@ export class KairoStaffPanel {
   private onChange: (() => void) | null = null;
 
   constructor(parent: HTMLElement) {
-    this.root = document.createElement('div');
+    /*
+     * ⚠ 예전엔 `bottom:0; z-index:20` 이라 **하단 바를 통째로 덮었다** (K33 에서 코스
+     * 패널이 같은 버그로 고쳐졌다). `.ksheet` 로 가면 바 위에 얹히고 세이프에어리어도
+     * 자동으로 맞는다 — 시트 하나가 세 가지를 한꺼번에 해결한다.
+     */
+    this.root = el('div', 'ksheet');
     this.root.id = 'kairo-staff';
-    this.root.style.cssText =
-      'position:fixed;left:0;right:0;bottom:0;z-index:20;display:none;flex-direction:column;' +
-      'gap:6px;background:#12212c;border-top:1px solid #2b4658;padding:12px 12px 16px;' +
-      'font:13px/1.4 system-ui,sans-serif;color:#e8f4ff;max-height:70vh;overflow-y:auto';
+    this.root.hidden = true;
 
-    const head = document.createElement('div');
-    head.style.cssText = 'display:flex;align-items:center;justify-content:space-between';
-    const title = document.createElement('div');
-    title.textContent = '경영';
-    title.style.cssText = 'font-size:16px;font-weight:700';
-    const close = document.createElement('button');
+    const head = el('div', 'ksheet-head');
+    head.append(el('div', 'ksheet-title', '경영'));
+    const close = button('kbtn', '닫기', () => this.hide());
     close.id = 'kairo-staff-close';
-    close.textContent = '닫기';
-    close.style.cssText =
-      'min-height:44px;min-width:64px;border-radius:8px;border:none;background:#24445a;color:#eaf6ff';
-    close.addEventListener('click', () => this.hide());
-    head.append(title, close);
 
-    this.totalEl = document.createElement('div');
-    this.totalEl.style.cssText = 'font-size:12px;color:#9dbdd2';
-
-    this.tabBar = document.createElement('div');
-    this.tabBar.style.cssText = 'display:flex;gap:6px';
+    this.tabBar = el('div', 'kchips');
     for (const [id, name] of [
       ['price', '가격'],
       ['staff', '직원'],
       ['upgrade', '개선'],
     ] as const) {
-      const b = document.createElement('button');
-      b.dataset['manage'] = id;
-      b.textContent = name;
-      b.style.cssText =
-        'flex:1;min-height:44px;border-radius:8px;font-size:13px;background:#1d3b4e;color:#eaf6ff;' +
-        'border:2px solid transparent';
-      b.addEventListener('click', () => {
+      const b = button('kbtn', name, () => {
         this.tab = id;
         this.refresh();
       });
+      b.dataset['manage'] = id;
       this.tabBar.append(b);
     }
+    // 닫기는 **맨 오른쪽**이다 — 탭 사이에 끼면 탭처럼 읽힌다 (스크린샷에서 잡았다)
+    head.append(this.tabBar, close);
 
-    this.priceBox = document.createElement('div');
-    this.priceBox.style.cssText = 'display:flex;flex-direction:column;gap:6px';
-    this.priceSlider = document.createElement('input');
+    const body = el('div', 'ksheet-body kstack');
+    this.totalEl = el('div', 'kcaption');
+
+    this.priceBox = el('div', 'kstack');
+    this.priceSlider = el('input', 'kslider');
     this.priceSlider.id = 'kairo-price';
     this.priceSlider.type = 'range';
     this.priceSlider.min = '70';
     this.priceSlider.max = '140';
     this.priceSlider.step = '5';
     this.priceSlider.value = '100';
-    // ★ 44px — 슬라이더도 터치 타깃이다
-    this.priceSlider.style.cssText = 'width:100%;height:44px';
     this.priceSlider.addEventListener('input', () => {
       this.manage?.setPrice(Number(this.priceSlider.value) / 100);
       this.refresh();
       this.onChange?.();
     });
-    this.priceLabel = document.createElement('div');
-    this.priceLabel.style.cssText = 'font-size:13px';
-    this.priceHint = document.createElement('div');
-    this.priceHint.style.cssText = 'font-size:11px;color:#9dbdd2';
+    this.priceLabel = el('div');
+    this.priceHint = el('div', 'kcaption');
     this.priceBox.append(this.priceLabel, this.priceSlider, this.priceHint);
 
-    this.staffBox = document.createElement('div');
-    this.staffBox.style.cssText = 'display:flex;flex-direction:column;gap:6px';
+    this.staffBox = el('div', 'kstack');
     for (const role of STAFF_ROLES) this.staffBox.append(this.roleRow(role));
 
-    this.upgradeBox = document.createElement('div');
-    this.upgradeBox.style.cssText = 'display:flex;flex-direction:column;gap:4px';
+    this.upgradeBox = el('div', 'kstack');
+    this.upgradeBox.style.setProperty('--stack-gap', '4px');
 
-    this.root.append(head, this.tabBar, this.totalEl, this.priceBox, this.staffBox, this.upgradeBox);
+    body.append(this.totalEl, this.priceBox, this.staffBox, this.upgradeBox);
+    this.root.append(head, body);
     parent.append(this.root);
   }
 
   get visible(): boolean {
-    return this.root.style.display === 'flex';
+    return !this.root.hidden;
   }
 
   private roleRow(role: StaffRole): HTMLElement {
-    const row = document.createElement('div');
+    const row = el('div', 'krow');
     row.dataset['role'] = role.id;
-    row.style.cssText =
-      'display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;background:#182b38';
 
-    const info = document.createElement('div');
-    info.style.cssText = 'flex:1;min-width:0';
-    const name = document.createElement('div');
-    name.textContent = `${role.name} · 주급 ${won(role.wage)}`;
-    name.style.cssText = 'font-weight:600';
-    const desc = document.createElement('div');
-    desc.textContent = role.short;
-    desc.style.cssText = 'font-size:11px;color:#9dbdd2';
-    info.append(name, desc);
+    const info = el('div', 'krow-main');
+    info.append(
+      el('div', 'kitem-name', `${role.name} · 주급 ${won(role.wage)}`),
+      el('div', 'kitem-sub', role.short),
+    );
 
-    const minus = document.createElement('button');
-    minus.textContent = '−';
+    const minus = el('button', 'kbtn step', '−');
     minus.dataset['role'] = role.id;
     minus.dataset['delta'] = '-1';
-    const count = document.createElement('div');
+    const count = el('div', 'kcount');
     count.dataset['count'] = role.id;
-    count.style.cssText = 'min-width:56px;text-align:center;font-variant-numeric:tabular-nums';
-    const plus = document.createElement('button');
-    plus.textContent = '+';
+    const plus = el('button', 'kbtn step', '+');
     plus.dataset['role'] = role.id;
     plus.dataset['delta'] = '1';
-    // ★ 44px — 폰 터치 타깃 하한 (CLAUDE.md 의 모바일 검증 항목)
+    // ★ 44px — `.kbtn` 이 지킨다 (CLAUDE.md 의 모바일 검증 항목)
     for (const b of [minus, plus]) {
-      b.style.cssText =
-        'min-width:44px;min-height:44px;border-radius:8px;border:none;background:#2a5674;' +
-        'color:#eaf6ff;font-size:20px;line-height:1';
       b.addEventListener('click', () => {
         this.staff?.hire(role.id, Number(b.dataset['delta']));
         this.refresh();
@@ -195,12 +169,12 @@ export class KairoStaffPanel {
     this.placement = placement;
     this.manage = manage ?? null;
     this.onChange = onChange;
-    this.root.style.display = 'flex';
+    this.root.hidden = false;
     this.refresh();
   }
 
   hide(): void {
-    this.root.style.display = 'none';
+    this.root.hidden = true;
   }
 
   refresh(): void {
@@ -209,12 +183,11 @@ export class KairoStaffPanel {
     if (!staff || !placement) return;
 
     for (const b of Array.from(this.tabBar.querySelectorAll('button'))) {
-      const on = (b as HTMLElement).dataset['manage'] === this.tab;
-      (b as HTMLElement).style.borderColor = on ? '#7ad0ff' : 'transparent';
+      b.classList.toggle('on', b.dataset['manage'] === this.tab);
     }
-    this.priceBox.style.display = this.tab === 'price' ? 'flex' : 'none';
-    this.staffBox.style.display = this.tab === 'staff' ? 'flex' : 'none';
-    this.upgradeBox.style.display = this.tab === 'upgrade' ? 'flex' : 'none';
+    this.priceBox.hidden = this.tab !== 'price';
+    this.staffBox.hidden = this.tab !== 'staff';
+    this.upgradeBox.hidden = this.tab !== 'upgrade';
 
     if (this.tab === 'price' && this.manage) {
       const mult = this.manage.price();
@@ -231,7 +204,7 @@ export class KairoStaffPanel {
           : delta > 0
             ? `만족도 +${delta} (싸게 받아 호감을 산다)`
             : `만족도 ${delta} (비싸면 불만이 는다 — 내리는 쪽보다 영향이 크다)`;
-      this.priceHint.style.color = delta < -6 ? '#ffcf8a' : '#9dbdd2';
+      this.priceHint.classList.toggle('warn', delta < -6);
     }
 
     if (this.tab === 'upgrade') this.renderUpgrades();
@@ -242,8 +215,8 @@ export class KairoStaffPanel {
       const need = neededFor(role, placement);
       cell.count.textContent = `${have} / ${need}`;
       // 부족하면 주황 — 결산의 병목 표시와 같은 규칙
-      cell.row.style.background = have < need ? 'rgba(240,160,60,.18)' : '#182b38';
-      cell.count.style.color = have < need ? '#ffcf8a' : '#e8f4ff';
+      cell.row.classList.toggle('warn', have < need);
+      cell.count.classList.toggle('warn', have < need);
     }
     this.totalEl.textContent =
       `${staff.total}명 · 주급 합계 ${won(staff.weeklyWage())} ` +
@@ -265,31 +238,23 @@ export class KairoStaffPanel {
       .sort((a, b) => placement.levelOf(a.handle) - placement.levelOf(b.handle) || a.handle - b.handle)
       .slice(0, 12);
     if (items.length === 0) {
-      const d = document.createElement('div');
-      d.textContent = '전부 최고 단계입니다';
-      d.style.cssText = 'padding:10px;color:#9dbdd2';
-      this.upgradeBox.append(d);
+      this.upgradeBox.append(el('div', 'kcaption', '전부 최고 단계입니다'));
       return;
     }
     for (const it of items) {
       const def = facilityDef(it.defId);
       const cost = placement.upgradeCost(it.handle);
-      const row = document.createElement('div');
+      const row = el('div', 'krow');
       row.dataset['upgrade'] = String(it.handle);
-      row.style.cssText =
-        'display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;background:#182b38';
-      const t = document.createElement('div');
-      t.style.cssText = 'flex:1;min-width:0';
-      t.textContent =
+      const t = el(
+        'div',
+        'krow-main',
         `${def?.name ?? it.defId} · ${placement.levelOf(it.handle)}단계 → ` +
-        `${placement.levelOf(it.handle) + 1}단계`;
-      const b = document.createElement('button');
-      b.textContent = won(cost);
+          `${placement.levelOf(it.handle) + 1}단계`,
+      );
+      const b = el('button', 'kbtn', won(cost));
       const poor = !manage || cost > manage.cash();
       b.disabled = poor;
-      b.style.cssText =
-        'min-height:44px;min-width:80px;border-radius:8px;border:none;font-size:13px;' +
-        `background:${poor ? '#1a2731' : '#2a5674'};color:${poor ? '#6b8296' : '#eaf6ff'}`;
       b.addEventListener('click', () => {
         if (!manage || !manage.spend(cost)) return;
         placement.upgrade(it.handle);

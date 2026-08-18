@@ -14,7 +14,7 @@
  *   · **HUD 블록에 하드코딩 hex 가 없다** — 인라인·하드코딩으로 다시 새는 걸 막는다
  *     (K28 에서 스타일 체계가 둘로 갈라져 있던 것이 "투박하다"의 근본 원인이었다)
  */
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 
 const CSS = 'src/ui/style.css';
 const MARK = '카이로 HUD (K28)';
@@ -27,6 +27,14 @@ if (at < 0) {
 }
 const hud = css.slice(at);
 
+/*
+ * ⚠ **주석은 뺀다.** 주석 안의 색은 화면에 아무 영향이 없는데, 안 빼면 "예전엔
+ * 청록이었다" 같은 설명을 못 쓴다 — 그러면 왜 바꿨는지가 코드에서 사라진다.
+ * 규칙 안의 색은 그대로 잡힌다 (음성 대조군이 그걸 확인한다).
+ */
+const stripComments = (t) => t.replace(/\/\*[\s\S]*?\*\//g, '');
+
+
 const fails = [];
 const pass = [];
 const check = (ok, label, detail = '') => {
@@ -34,9 +42,17 @@ const check = (ok, label, detail = '') => {
 };
 
 /** 클래스 규칙 본문을 꺼낸다 (첫 번째 매칭만) */
+/*
+ * ⚠ **미디어 블록은 뺀다.** 모션 가드가 `.kbtn, .kitem, .kcourse-item { transition: none }`
+ * 처럼 여러 클래스를 묶어 쓰는데, 그 블록이 파일 위쪽에 있어서 `rule('kcourse-item')`
+ * 이 재질 규칙 대신 가드를 집었다 (실측 — 재질 검사 3건이 한꺼번에 빨개졌다).
+ * 재질은 미디어 밖의 본 규칙에만 있다.
+ */
+const base = stripComments(hud).replace(/@media[^{]*\{[\s\S]*?\n\}/g, '');
+
 function rule(name) {
   const re = new RegExp(`\\.${name}\\s*\\{([^}]*)\\}`);
-  const m = re.exec(hud);
+  const m = re.exec(base);
   return m ? m[1] : null;
 }
 
@@ -87,8 +103,25 @@ check(
   'prefers-reduced-motion 가드가 있다',
 );
 
+/*
+ * ⚠ **가드가 존재하는지만 보면 안 된다.** K33 에서 `.kcourse`(animation)와
+ * `.kcourse-item`(transition)을 더하면서 가드에 안 넣었는데, 위 검사는 미디어 쿼리가
+ * 있다는 이유로 통과했다. 움직임을 선언한 클래스가 **전부** 가드에 있는지 본다.
+ */
+const guard = /@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{([\s\S]*?)\n\}/.exec(hud);
+const moving = new Set();
+for (const m of stripComments(hud).matchAll(/\.([a-z][a-z0-9-]*)[^{}]*\{([^}]*)\}/g)) {
+  if (/\b(transition|animation):\s*(?!none)/.test(m[2])) moving.add(m[1]);
+}
+const unguarded = [...moving].filter((c) => !(guard?.[1] ?? '').includes(`.${c}`));
+check(
+  moving.size > 0 && unguarded.length === 0,
+  '움직이는 클래스가 전부 모션 가드에 있다',
+  unguarded.length ? `빠진 것: ${unguarded.join(' ')}` : `${moving.size}개 전부`,
+);
+
 // ── 하드코딩 색 ─────────────────────────────────────────────────────────
-const hexes = [...hud.matchAll(/#[0-9a-fA-F]{3,8}\b/g)].map((m) => m[0]);
+const hexes = [...stripComments(hud).matchAll(/#[0-9a-fA-F]{3,8}\b/g)].map((m) => m[0]);
 check(
   hexes.length === 0,
   'HUD 블록에 하드코딩 hex 가 없다 (토큰만)',
@@ -100,6 +133,41 @@ const root = css.slice(0, css.indexOf('}'));
 const used = new Set([...hud.matchAll(/var\((--[a-z0-9-]+)\)/g)].map((m) => m[1]));
 const missing = [...used].filter((v) => !root.includes(`${v}:`));
 check(missing.length === 0, '쓰는 토큰이 전부 :root 에 선언돼 있다', missing.join(' '));
+
+/*
+ * ── TS 안의 색 (K34) ────────────────────────────────────────────────────
+ *
+ * 여기까지의 검사는 전부 `style.css` 만 봤다. 그래서 패널 6종의 TS 안에 하드코딩 색이
+ * **103개** 쌓이는 동안 게이트는 초록이었다 — 이 프로젝트의 아홉 번째 "조용히 통과"다.
+ *
+ * 규칙은 "인라인 스타일 금지"가 아니라 **"하드코딩 색 금지"**다. 진행바 폭이나 캔버스
+ * 크기 같은 **데이터**는 인라인으로 남아야 한다. 색만 `style.css` 가 소유한다.
+ * 캔버스는 `src/ui/tokens.ts` 의 `cssVar()` 로 토큰을 읽는다.
+ */
+const TS_EXEMPT = new Map([
+  ['src/ui/hud.ts', '폐기된 v1 씬 전속 — 마커 위 CSS 에 묶여 있다'],
+  ['src/ui/tokens.ts', '토큰을 못 읽었을 때의 대비값 — 이 파일이 그 규칙의 출구다'],
+]);
+
+const uiFiles = (await readdir('src/ui'))
+  .filter((f) => f.endsWith('.ts') && !f.endsWith('.test.ts'))
+  .map((f) => `src/ui/${f}`)
+  .concat(['src/main.ts']);
+
+const leaks = [];
+for (const f of uiFiles) {
+  if (TS_EXEMPT.has(f)) continue;
+  const src = await readFile(f, 'utf8');
+  // 주석은 뺀다 (CSS 쪽과 같은 이유 — 왜 바꿨는지를 코드에 남길 수 있어야 한다)
+  const body = src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');
+  const hits = [...body.matchAll(/#[0-9a-fA-F]{3,8}\b/g)].map((m) => m[0]);
+  if (hits.length > 0) leaks.push(`${f.replace('src/ui/', '')} ${hits.length}개`);
+}
+check(
+  leaks.length === 0,
+  'TS 에 하드코딩 색이 없다 — 색은 style.css 가 소유한다',
+  leaks.length ? leaks.join(' · ') : `${uiFiles.length - TS_EXEMPT.size}개 파일 전부 0`,
+);
 
 // ── 보고 ────────────────────────────────────────────────────────────────
 console.log('HUD 표면 정적 검사');

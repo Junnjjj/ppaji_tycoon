@@ -1,3 +1,5 @@
+import { el, button } from './dom.js';
+import { cssVar } from './tokens.js';
 import type { WeekReport, NeedKind } from '../sim/kairo/week.js';
 
 /**
@@ -35,11 +37,15 @@ const GROUP_LABEL: Record<(typeof GROUP_ORDER)[number], string> = {
   friends: '친구',
   company: '단체',
 };
-const GROUP_COLOR: Record<(typeof GROUP_ORDER)[number], string> = {
-  family: '#7fd0a8',
-  couple: '#f0a6c0',
-  friends: '#f2c96b',
-  company: '#8fb8e8',
+/*
+ * 색은 `style.css` 의 `--group-*` 이 정본이다 (K34). 여기서는 클래스 이름만 고른다 —
+ * 캔버스가 아니라 DOM 이라 CSS 로 칠할 수 있다.
+ */
+const GROUP_CLASS: Record<(typeof GROUP_ORDER)[number], string> = {
+  family: 'family',
+  couple: 'couple',
+  friends: 'friends',
+  company: 'company',
 };
 
 const WEATHER_ICON: Record<string, string> = {
@@ -69,18 +75,15 @@ export class KairoReport {
   private handlers: ReportHandlers | null = null;
 
   constructor(parent: HTMLElement) {
-    this.root = document.createElement('div');
-    this.root.id = 'kairo-report';
-    /**
-     * ⚠ `display` 를 인라인으로 박아 두면 **`hidden` 속성을 이긴다** — 화면에 안 보이는
-     * 전면 오버레이가 모든 터치를 가로막는다 (검증에서 캔버스를 못 눌러 잡혔다).
-     * 그래서 `display` 는 `show()`/`hide()` 에서만 바꾼다.
+    /*
+     * ⚠ 예전엔 인라인 `display:none` 과 `hidden` 을 **둘 다** 들고 있었다 — 인라인
+     * `display` 가 `hidden` 을 이기기 때문에 한쪽만 풀면 안 보이는 전면 오버레이가
+     * 모든 터치를 가로막았다 (검증에서 캔버스를 못 눌러 잡혔다).
+     * 이제 `.kover[hidden]` 이 CSS 로 처리하므로 **`hidden` 하나**만 본다.
      */
+    this.root = el('div', 'kover scrim');
+    this.root.id = 'kairo-report';
     this.root.hidden = true;
-    this.root.style.cssText =
-      'position:fixed;inset:0;z-index:20;display:none;flex-direction:column;gap:10px;' +
-      'padding:14px;overflow-y:auto;background:rgba(12,20,28,.94);color:#e8f4ff;' +
-      'font:13px/1.5 system-ui,-apple-system,sans-serif';
     parent.append(this.root);
   }
 
@@ -90,7 +93,6 @@ export class KairoReport {
 
   hide(): void {
     this.root.hidden = true;
-    this.root.style.display = 'none';
   }
 
   /**
@@ -99,10 +101,11 @@ export class KairoReport {
    */
   private heatCanvas(rep: WeekReport): HTMLCanvasElement {
     const cell = 6;
-    const c = document.createElement('canvas');
+    const c = el('canvas', 'kheat');
     c.width = rep.heatW * cell;
     c.height = rep.heatH * cell;
-    c.style.cssText = `width:100%;max-width:${rep.heatW * cell}px;image-rendering:pixelated;border-radius:6px`;
+    // 폭은 **데이터**다 (격자 크기에 딸린 값) — 색·질감만 클래스가 갖는다
+    c.style.maxWidth = `${rep.heatW * cell}px`;
     const g = c.getContext('2d');
     if (!g) return c;
     /**
@@ -120,12 +123,13 @@ export class KairoReport {
         const r = Math.round(30 + 225 * Math.min(1, v * 1.15));
         const gg = Math.round(45 + 190 * Math.min(1, v));
         const b = Math.round(110 - 70 * v);
-        g.fillStyle = v === 0 ? '#0e1a24' : `rgb(${r},${gg},${b})`;
+        // 빈 칸 색은 토큰에서 읽는다 — 팔레트를 바꾸면 히트맵도 같이 바뀐다 (K34)
+        g.fillStyle = v === 0 ? cssVar('--heat-empty') : `rgb(${r},${gg},${b})`;
         g.fillRect(i * cell, j * cell, cell, cell);
       }
     }
     if (rep.hotspot) {
-      g.strokeStyle = '#fff';
+      g.strokeStyle = cssVar('--text-on-solid')  /* 대비값을 여기 안 적는다 — 토큰이 없으면 tokens.ts 가 경고한다 */;
       g.lineWidth = 1;
       g.strokeRect(rep.hotspot.i * cell - 1, rep.hotspot.j * cell - 1, cell + 2, cell + 2);
     }
@@ -133,28 +137,19 @@ export class KairoReport {
   }
 
   private dayBars(rep: WeekReport): HTMLElement {
-    const box = document.createElement('div');
-    box.style.cssText = 'display:flex;gap:6px;align-items:flex-end;height:110px';
+    const box = el('div', 'kdays');
     // 막대는 **오려는 손님**(수요) 기준이고, 만석으로 돌려보낸 만큼을 위에 빗금으로 얹는다.
     // 들어온 손님만 그리면 정원이 찬 날이 "인기 없는 날"처럼 보인다 (실제로 그렇게 보였다).
     const max = Math.max(1, ...rep.days.map((d) => d.arrivals));
     for (const d of rep.days) {
-      const col = document.createElement('div');
-      col.style.cssText =
-        'flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;' +
-        'justify-content:flex-end';
-      const bar = document.createElement('div');
+      const col = el('div', 'kday');
+      const bar = el('div', 'kday-bar');
       const hAll = Math.max(3, Math.round((d.arrivals / max) * 74));
       const hIn = Math.max(0, Math.round((d.visitors / max) * 74));
-      const weekend = d.day >= 5;
-      const inColor = weekend ? '#f0a03c' : '#4a9ad0';
-      bar.style.cssText =
-        `width:100%;height:${hAll}px;border-radius:3px 3px 0 0;display:flex;` +
-        'flex-direction:column;justify-content:flex-end;' +
-        // 위쪽 = 돌려보낸 손님 (빨강 반투명), 아래 = 들어온 손님
-        `background:repeating-linear-gradient(45deg,rgba(224,80,60,.85) 0 3px,rgba(150,40,30,.85) 3px 6px)`;
-      const inner = document.createElement('div');
-      inner.style.cssText = `width:100%;height:${hIn}px;background:${inColor};border-radius:0 0 3px 3px`;
+      // 높이는 **데이터**다. 색(빗금 = 돌려보냄, 채움 = 들어옴)은 클래스가 갖는다
+      bar.style.height = `${hAll}px`;
+      const inner = el('div', `kday-in${d.day >= 5 ? ' weekend' : ''}`);
+      inner.style.height = `${hIn}px`;
       bar.append(inner);
       // 검증이 요일 막대만 골라 셀 수 있게 표시한다 — `div[title]` 로 세면 손님 구성
       // 막대까지 섞여 개수가 어긋난다 (실측)
@@ -163,12 +158,12 @@ export class KairoReport {
         `${d.name} 수요 ${d.arrivals}명 · 입장 ${d.visitors}명` +
         (d.turnedAway ? ` · 만석 ${d.turnedAway}명` : '') +
         ` · ${won(d.revenue)}`;
-      const num = document.createElement('div');
-      num.textContent = d.turnedAway > 0 ? `${d.visitors}/${d.arrivals}` : String(d.visitors);
-      num.style.cssText = 'font-size:10px;opacity:.75';
-      const label = document.createElement('div');
-      label.textContent = `${d.name}\n${WEATHER_ICON[d.weather] ?? '?'}`;
-      label.style.cssText = 'font-size:11px;white-space:pre;text-align:center;line-height:1.2';
+      const num = el(
+        'div',
+        'kday-num',
+        d.turnedAway > 0 ? `${d.visitors}/${d.arrivals}` : String(d.visitors),
+      );
+      const label = el('div', 'kday-label', `${d.name}\n${WEATHER_ICON[d.weather] ?? '?'}`);
       col.append(num, bar, label);
       box.append(col);
     }
@@ -182,31 +177,21 @@ export class KairoReport {
    * 모자란가"로 이어진다. 표로 두면 결산이 다시 엑셀이 된다 (히트맵을 넣은 이유와 같다).
    */
   private groupBar(rep: WeekReport): HTMLElement {
-    const wrap = document.createElement('div');
-    wrap.style.cssText = 'margin-top:8px';
-    const label = document.createElement('div');
-    label.textContent = '손님 구성';
-    label.style.cssText = 'opacity:.7;font-size:12px;margin-bottom:4px';
-
-    const bar = document.createElement('div');
-    bar.style.cssText =
-      'display:flex;height:22px;border-radius:6px;overflow:hidden;background:#1a2b36';
+    const wrap = el('div', 'kstack');
+    wrap.style.setProperty('--stack-gap', '4px');
+    const label = el('div', 'kcaption', '손님 구성');
+    const bar = el('div', 'kgroups');
     const total = GROUP_ORDER.reduce((a, k) => a + (rep.byGroup[k] ?? 0), 0);
     if (total === 0) {
-      const empty = document.createElement('div');
-      empty.textContent = '손님 없음';
-      empty.style.cssText =
-        'flex:1;display:flex;align-items:center;justify-content:center;font-size:11px;opacity:.6';
-      bar.append(empty);
+      bar.append(el('div', 'kgroup-empty', '손님 없음'));
     } else {
       for (const k of GROUP_ORDER) {
         const n = rep.byGroup[k] ?? 0;
         if (n === 0) continue;
-        const seg = document.createElement('div');
+        const seg = el('div', `kgroup ${GROUP_CLASS[k]}`);
         const pct = Math.round((n / total) * 100);
-        seg.style.cssText =
-          `flex:${n} 0 0;background:${GROUP_COLOR[k]};display:flex;align-items:center;` +
-          'justify-content:center;font-size:10px;color:#08131a;font-weight:700';
+        // 비율은 **데이터**다
+        seg.style.flex = `${n} 0 0`;
         seg.dataset['group'] = k;
         seg.title = `${GROUP_LABEL[k]} ${n}명 (${pct}%)`;
         // 좁은 칸에 글자를 우겨넣으면 오히려 안 읽힌다 — 12% 이상일 때만
@@ -219,32 +204,18 @@ export class KairoReport {
   }
 
   private numbers(rep: WeekReport): HTMLElement {
-    const box = document.createElement('div');
-    box.style.cssText =
-      'display:grid;grid-template-columns:repeat(2,1fr);gap:6px 12px;font-size:13px';
-    const rows: [string, string, string | undefined][] = [
-      ['입장', `${rep.visitors}명`, undefined],
-      [
-        '만석으로 돌려보냄',
-        `${rep.turnedAway}명`,
-        rep.turnedAway > 0 ? '#f08a8a' : undefined,
-      ],
-      ['매출', won(rep.revenue), undefined],
-      ['유지비', won(-rep.upkeep), undefined],
-      ['손익', won(rep.profit), rep.profit >= 0 ? '#8fe08f' : '#f08a8a'],
-      ['퇴장 만족도', rep.exitSatisfaction.toFixed(0), undefined],
-      ['헛걸음', `${rep.gaveUp}명`, rep.gaveUp > 0 ? '#f0c060' : undefined],
+    const box = el('div', 'knums');
+    const rows: [string, string, string][] = [
+      ['입장', `${rep.visitors}명`, ''],
+      ['만석으로 돌려보냄', `${rep.turnedAway}명`, rep.turnedAway > 0 ? 'bad' : ''],
+      ['매출', won(rep.revenue), ''],
+      ['유지비', won(-rep.upkeep), ''],
+      ['손익', won(rep.profit), rep.profit >= 0 ? 'good' : 'bad'],
+      ['퇴장 만족도', rep.exitSatisfaction.toFixed(0), ''],
+      ['헛걸음', `${rep.gaveUp}명`, rep.gaveUp > 0 ? 'warn' : ''],
     ];
-    for (const [k, v, color] of rows) {
-      const key = document.createElement('div');
-      key.textContent = k;
-      key.style.cssText = 'opacity:.65';
-      const val = document.createElement('div');
-      val.textContent = v;
-      val.style.cssText = `text-align:right;font-variant-numeric:tabular-nums${
-        color ? `;color:${color}` : ''
-      }`;
-      box.append(key, val);
+    for (const [k, v, cls] of rows) {
+      box.append(el('div', 'knum-key', k), el('div', `knum-val ${cls}`, v));
     }
     return box;
   }
@@ -253,24 +224,23 @@ export class KairoReport {
     this.handlers = handlers;
     this.root.replaceChildren();
 
-    const h1 = document.createElement('div');
-    h1.textContent = `${rep.week}주차 결산`;
-    h1.style.cssText = 'font-size:18px;font-weight:700';
-    this.root.append(h1);
+    this.root.append(el('div', 'ksheet-title', `${rep.week}주차 결산`));
 
     // ① 혼잡 히트맵 — 병목을 먼저 눈으로
-    const heatLabel = document.createElement('div');
-    heatLabel.textContent = rep.hotspot
-      ? `혼잡 — 가장 붐빈 곳 (${rep.hotspot.i}, ${rep.hotspot.j})`
-      : '혼잡 — 손님이 없었다';
-    heatLabel.style.cssText = 'opacity:.7;font-size:12px';
+    const heatLabel = el(
+      'div',
+      'kcaption',
+      rep.hotspot
+        ? `혼잡 — 가장 붐빈 곳 (${rep.hotspot.i}, ${rep.hotspot.j})`
+        : '혼잡 — 손님이 없었다',
+    );
     this.root.append(heatLabel, this.heatCanvas(rep));
 
     // ② 요일 막대
-    const barLabel = document.createElement('div');
-    barLabel.textContent = '요일별 수요 (주말 주황 · 빗금 = 만석으로 돌려보냄)';
-    barLabel.style.cssText = 'opacity:.7;font-size:12px;margin-top:4px';
-    this.root.append(barLabel, this.dayBars(rep));
+    this.root.append(
+      el('div', 'kcaption', '요일별 수요 (주말 주황 · 빗금 = 만석으로 돌려보냄)'),
+      this.dayBars(rep),
+    );
 
     // ③ 손님 구성 — "누가 왔나"가 "무엇을 지을까"의 근거다
     this.root.append(this.groupBar(rep));
@@ -280,40 +250,24 @@ export class KairoReport {
 
     // 병목 — 다음에 무엇을 지을까
     if (rep.bottleneck) {
-      const b = document.createElement('div');
       const name = NEED_NAME[rep.bottleneck.need] ?? rep.bottleneck.need;
-      b.textContent = `부족한 것: ${name} (공급 ${rep.bottleneck.supply})`;
-      b.style.cssText =
-        'margin-top:6px;padding:8px 10px;border-radius:8px;background:rgba(240,160,60,.16);' +
-        'border:1px solid rgba(240,160,60,.4)';
-      this.root.append(b);
+      this.root.append(
+        el('div', 'kcallout', `부족한 것: ${name} (공급 ${rep.bottleneck.supply})`),
+      );
     }
 
-    const btns = document.createElement('div');
-    btns.style.cssText = 'display:flex;gap:8px;margin-top:8px';
+    const btns = el('div', 'kacts');
     if (handlers.onReplay) {
-      const replay = document.createElement('button');
-      replay.textContent = '다시 보기';
-      replay.style.cssText =
-        'flex:1;min-height:48px;border-radius:8px;border:1px solid #3a5566;' +
-        'background:#20303c;color:#dceaf4;font-size:14px';
-      replay.addEventListener('click', () => this.handlers?.onReplay?.());
-      btns.append(replay);
+      btns.append(button('kbtn', '다시 보기', () => this.handlers?.onReplay?.()));
     }
-    const close = document.createElement('button');
-    close.id = 'kairo-report-close';
-    close.textContent = '계속';
-    close.style.cssText =
-      'flex:2;min-height:48px;border-radius:8px;border:none;background:#2f7fc0;' +
-      'color:#fff;font-size:15px;font-weight:600';
-    close.addEventListener('click', () => {
+    const close = button('kbtn primary grow', '계속', () => {
       this.hide();
       this.handlers?.onClose();
     });
+    close.id = 'kairo-report-close';
     btns.append(close);
     this.root.append(btns);
 
     this.root.hidden = false;
-    this.root.style.display = 'flex';
   }
 }

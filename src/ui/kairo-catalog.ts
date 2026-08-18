@@ -4,6 +4,7 @@ import { COURSE_EQUIPMENT } from '../sim/kairo/course.js';
 import type { PlacementGrid } from '../sim/kairo/placement.js';
 import type { CourseStore } from '../sim/kairo/course.js';
 import { requiredGrade } from '../sim/kairo/progress.js';
+import { el, button } from './dom.js';
 
 /**
  * 도감 — 스펙 §15.8, §D. **발견·수집이 이 게임의 훅이다** (§0 재미의 축).
@@ -49,59 +50,43 @@ export class KairoCatalog {
     parent: HTMLElement,
     private readonly deps: CatalogDeps,
   ) {
-    this.root = document.createElement('div');
+    this.root = el('div', 'kover');
     this.root.id = 'kairo-catalog';
-    this.root.style.cssText =
-      'position:fixed;inset:0;z-index:25;display:none;flex-direction:column;gap:8px;' +
-      'background:#0d1a23;padding:12px 12px 16px;font:13px/1.4 system-ui,sans-serif;' +
-      'color:#e8f4ff;overflow-y:auto';
+    this.root.hidden = true;
 
-    const head = document.createElement('div');
-    head.style.cssText = 'display:flex;align-items:center;justify-content:space-between';
-    const title = document.createElement('div');
-    title.textContent = '도감';
-    title.style.cssText = 'font-size:17px;font-weight:700';
-    const close = document.createElement('button');
+    const head = el('div', 'ksheet-head');
+    head.append(el('div', 'ksheet-title', '도감'));
+    const close = button('kbtn', '닫기', () => this.hide());
     close.id = 'kairo-catalog-close';
-    close.textContent = '닫기';
-    close.style.cssText =
-      'min-height:44px;min-width:64px;border-radius:8px;border:none;background:#24445a;color:#eaf6ff';
-    close.addEventListener('click', () => this.hide());
-    head.append(title, close);
+    head.append(close);
 
-    this.countEl = document.createElement('div');
-    this.countEl.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;font-size:12px';
+    this.countEl = el('div', 'kchips wrap');
+    this.tabBar = el('div', 'kchips');
 
-    this.tabBar = document.createElement('div');
-    this.tabBar.style.cssText = 'display:flex;gap:6px;overflow-x:auto';
-
-    this.filterBtn = document.createElement('button');
-    this.filterBtn.id = 'kairo-catalog-filter';
-    this.filterBtn.style.cssText =
-      'min-height:44px;border-radius:8px;border:1px solid #35617e;background:#1d3b4e;color:#eaf6ff';
-    this.filterBtn.addEventListener('click', () => {
+    this.filterBtn = button('kbtn', '', () => {
       this.undiscoveredOnly = !this.undiscoveredOnly;
       this.render();
     });
+    this.filterBtn.id = 'kairo-catalog-filter';
 
-    this.listEl = document.createElement('div');
-    this.listEl.style.cssText = 'display:flex;flex-direction:column;gap:4px';
+    this.listEl = el('div', 'kstack');
+    this.listEl.style.setProperty('--stack-gap', '4px');
 
     this.root.append(head, this.countEl, this.tabBar, this.filterBtn, this.listEl);
     parent.append(this.root);
   }
 
   get visible(): boolean {
-    return this.root.style.display === 'flex';
+    return !this.root.hidden;
   }
 
   show(): void {
-    this.root.style.display = 'flex';
+    this.root.hidden = false;
     this.render();
   }
 
   hide(): void {
-    this.root.style.display = 'none';
+    this.root.hidden = true;
   }
 
   /** 발견 수 — 검증·요약이 읽는다 */
@@ -122,20 +107,19 @@ export class KairoCatalog {
     detail: string,
     key: string,
   ): HTMLElement {
-    const d = document.createElement('div');
+    /*
+     * ★ 56px — 스펙이 정한 한 항목 높이. `.kitem.wide` 가 지킨다.
+     * 미발견은 `disabled` 로 둔다 — 색을 따로 칠하지 않아도 `.kitem[disabled]` 가
+     * 가라앉은 표면·흐린 글씨를 준다 (새 판의 잠긴 시나리오와 같은 모양).
+     */
+    const d = el('button', 'kitem wide');
     d.dataset['entry'] = key;
     d.dataset['found'] = found ? '1' : '0';
-    // ★ 56px — 스펙이 정한 한 항목 높이. 스크롤이 빨리 지나간다
-    d.style.cssText =
-      'min-height:56px;display:flex;flex-direction:column;justify-content:center;' +
-      `padding:6px 10px;border-radius:8px;background:${found ? '#182b38' : '#141f28'}`;
-    const t = document.createElement('div');
-    t.textContent = `${found ? '✅' : '🔒'} ${title}`;
-    t.style.cssText = `font-weight:600;color:${found ? '#e8f4ff' : '#7fa0b4'}`;
-    const s = document.createElement('div');
-    s.textContent = detail;
-    s.style.cssText = 'font-size:11px;color:#9dbdd2';
-    d.append(t, s);
+    d.disabled = !found;
+    d.append(
+      el('div', 'kitem-name', `${found ? '✅' : '🔒'} ${title}`),
+      el('div', 'kitem-sub', detail),
+    );
     return d;
   }
 
@@ -148,39 +132,31 @@ export class KairoCatalog {
       ['equipment', '장비', c.equipment],
     ];
     for (const [id, name, [got, all]] of chips) {
-      const b = document.createElement('button');
-      b.dataset['tab'] = id;
-      b.textContent = `${name} ${got}/${all}`;
-      b.style.cssText =
-        'min-height:44px;padding:0 10px;border-radius:8px;font-size:12px;' +
-        `border:2px solid ${this.tab === id ? '#7ad0ff' : 'transparent'};` +
-        'background:#1d3b4e;color:#eaf6ff';
-      b.addEventListener('click', () => {
+      const b = button(`kbtn${this.tab === id ? ' on' : ''}`, `${name} ${got}/${all}`, () => {
         this.tab = id;
         this.render();
       });
+      b.dataset['tab'] = id;
       this.countEl.append(b);
     }
 
     // 티어 탭은 콤보에만 의미가 있다
     this.tabBar.replaceChildren();
-    this.tabBar.style.display = this.tab === 'combo' ? 'flex' : 'none';
+    this.tabBar.hidden = this.tab !== 'combo';
     if (this.tab === 'combo') {
       const disc = this.deps.discovered();
       for (const t of ['all', ...TIERS] as const) {
         const inTier = t === 'all' ? COMBOS : COMBOS.filter((x) => x.tier === t);
         const got = inTier.filter((x) => disc.has(x.id)).length;
-        const b = document.createElement('button');
+        const b = button(
+          `kbtn${this.tier === t ? ' on' : ''}`,
+          t === 'all' ? `전체 ${got}/${inTier.length}` : `${TIER_NAME[t]} ${got}/${inTier.length}`,
+          () => {
+            this.tier = t;
+            this.render();
+          },
+        );
         b.dataset['tier'] = t;
-        b.textContent = t === 'all' ? `전체 ${got}/${inTier.length}` : `${TIER_NAME[t]} ${got}/${inTier.length}`;
-        b.style.cssText =
-          'min-height:44px;padding:0 10px;border-radius:8px;font-size:12px;white-space:nowrap;' +
-          `border:2px solid ${this.tier === t ? '#7ad0ff' : 'transparent'};` +
-          'background:#182b38;color:#eaf6ff';
-        b.addEventListener('click', () => {
-          this.tier = t;
-          this.render();
-        });
         this.tabBar.append(b);
       }
     }

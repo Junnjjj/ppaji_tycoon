@@ -1,3 +1,4 @@
+import { el } from './dom.js';
 import type { CardDef, CardOption } from '../sim/kairo/cards.js';
 import { optionCash } from '../sim/kairo/cards.js';
 
@@ -44,36 +45,29 @@ export class KairoCardView {
   private cash = 0;
 
   constructor(parent: HTMLElement) {
-    this.root = document.createElement('div');
+    this.root = el('div', 'kover dialog');
     this.root.id = 'kairo-card';
-    this.root.style.cssText =
-      'position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;' +
-      'background:rgba(6,14,20,.86);padding:16px;font:14px/1.5 system-ui,sans-serif;color:#e8f4ff';
+    this.root.hidden = true;
 
-    const box = document.createElement('div');
-    box.style.cssText =
-      'width:100%;max-width:420px;background:#12212c;border:1px solid #2b4658;border-radius:14px;' +
-      'padding:18px 16px;box-shadow:0 12px 40px rgba(0,0,0,.5)';
-
-    this.countEl = document.createElement('div');
-    this.countEl.style.cssText = 'font-size:11px;color:#7fa8c4;margin-bottom:6px';
-
-    this.titleEl = document.createElement('div');
-    this.titleEl.style.cssText = 'font-size:19px;font-weight:700;margin-bottom:8px';
-
-    this.descEl = document.createElement('div');
-    this.descEl.style.cssText = 'font-size:14px;color:#c2d8e6;margin-bottom:16px';
-
-    this.optionsEl = document.createElement('div');
-    this.optionsEl.style.cssText = 'display:flex;flex-direction:column;gap:10px';
+    const box = el('div', 'kdialog-box');
+    this.countEl = el('div', 'kcaption');
+    this.titleEl = el('div', 'kcard-title');
+    this.descEl = el('div', 'kcard-desc');
+    this.optionsEl = el('div', 'kstack');
+    this.optionsEl.style.setProperty('--stack-gap', '10px');
 
     box.append(this.countEl, this.titleEl, this.descEl, this.optionsEl);
     this.root.append(box);
     parent.append(this.root);
   }
 
+  /*
+   * ⚠ **`hidden` 을 읽어야 한다.** 예전엔 인라인 `display` 를 읽었는데, 표면을 클래스로
+   * 옮기면서 그대로 뒀으면 `pickForTest()` 가 조용히 `false` 를 돌려줬을 것이다 —
+   * 카드 검사가 통과한 채 아무것도 안 고르는 상태가 된다 (K34 조사에서 미리 잡았다).
+   */
   get visible(): boolean {
-    return this.root.style.display === 'flex';
+    return !this.root.hidden;
   }
 
   /** 남은 카드 수 — 검증 도구가 진행 상태를 본다 */
@@ -101,12 +95,12 @@ export class KairoCardView {
     this.cash = cash;
     this.choices = [];
     this.onDone = onDone;
-    this.root.style.display = 'flex';
+    this.root.hidden = false;
     this.render();
   }
 
   hide(): void {
-    this.root.style.display = 'none';
+    this.root.hidden = true;
   }
 
   private render(): void {
@@ -121,25 +115,18 @@ export class KairoCardView {
     card.options.forEach((opt, oi) => {
       const cash = optionCash(opt);
       const tooPoor = cash < 0 && -cash > this.cash;
-      const btn = document.createElement('button');
-      // ★ 56px — 스펙이 정한 최소 터치 타깃. 이보다 작으면 폰에서 오독이 난다
-      btn.style.cssText =
-        'min-height:56px;width:100%;border-radius:10px;border:1px solid #35617e;text-align:left;' +
-        `padding:9px 12px;background:${tooPoor ? '#1a2731' : '#1d3b4e'};` +
-        `color:${tooPoor ? '#6b8296' : '#eaf6ff'};font:inherit;` +
-        (tooPoor ? 'cursor:not-allowed' : 'cursor:pointer');
+      // ★ 56px — `.kitem.wide` 가 지킨다. 새 판 시나리오·도감 항목과 같은 모양이다
+      const btn = el('button', 'kitem wide');
       btn.disabled = tooPoor;
       btn.dataset['option'] = String(oi);
-
-      const label = document.createElement('div');
-      label.style.cssText = 'font-size:15px;font-weight:600';
-      label.textContent = opt.label + (cash !== 0 ? ` (${won(cash)})` : '');
-
-      const detail = document.createElement('div');
-      detail.style.cssText = 'font-size:12px;color:#9dbdd2;margin-top:2px';
-      detail.textContent = tooPoor ? `${opt.detail} — 현금이 부족합니다` : opt.detail;
-
-      btn.append(label, detail);
+      btn.append(
+        el('div', 'kitem-name', opt.label + (cash !== 0 ? ` (${won(cash)})` : '')),
+        el(
+          'div',
+          'kitem-sub',
+          tooPoor ? `${opt.detail} — 현금이 부족합니다` : opt.detail,
+        ),
+      );
       btn.addEventListener('click', () => this.pick(card, oi));
       this.optionsEl.append(btn);
     });
