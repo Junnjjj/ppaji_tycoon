@@ -1,6 +1,7 @@
 import { el, button } from './dom.js';
 import { cssVar } from './tokens.js';
 import type { WeekReport, NeedKind } from '../sim/kairo/week.js';
+import { panelHost } from './panels.js';
 
 /**
  * 주간 결산 화면 — 스펙 v4.
@@ -93,6 +94,7 @@ export class KairoReport {
 
   hide(): void {
     this.root.hidden = true;
+    panelHost.closed(this);
   }
 
   /**
@@ -297,6 +299,8 @@ export class KairoReport {
     btns.append(close);
     this.root.append(btns);
 
+    // 한 번에 하나 (K37)
+    if (!panelHost.open(this)) return;
     this.root.hidden = false;
   }
 }

@@ -9,6 +9,7 @@ import type { PlacementGrid } from '../sim/kairo/placement.js';
 import { neededFor } from '../sim/kairo/staff.js';
 import { facilityDef, MAX_LEVEL } from '../sim/kairo/placement.js';
 import { priceSatisfaction } from '../sim/kairo/week.js';
+import { panelHost } from './panels.js';
 
 /**
  * 경영 패널 — 스펙 §15.9. **탭 3개: 가격 · 직원 · 개선.**
@@ -169,12 +170,15 @@ export class KairoStaffPanel {
     this.placement = placement;
     this.manage = manage ?? null;
     this.onChange = onChange;
+    // 한 번에 하나 (K37)
+    if (!panelHost.open(this)) return;
     this.root.hidden = false;
     this.refresh();
   }
 
   hide(): void {
     this.root.hidden = true;
+    panelHost.closed(this);
   }
 
   refresh(): void {

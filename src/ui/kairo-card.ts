@@ -1,6 +1,7 @@
 import { el } from './dom.js';
 import type { CardDef, CardOption } from '../sim/kairo/cards.js';
 import { optionCash } from '../sim/kairo/cards.js';
+import { panelHost } from './panels.js';
 
 /**
  * 주간 의사결정 카드 화면 — 스펙 §A (S11).
@@ -95,12 +96,15 @@ export class KairoCardView {
     this.cash = cash;
     this.choices = [];
     this.onDone = onDone;
+    // 카드는 모달이다 (K37) — 다른 패널이 못 밀어낸다. 열려는 쪽이 없으니 항상 열린다
+    panelHost.open(this);
     this.root.hidden = false;
     this.render();
   }
 
   hide(): void {
     this.root.hidden = true;
+    panelHost.closed(this);
   }
 
   private render(): void {

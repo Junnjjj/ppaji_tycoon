@@ -25,6 +25,7 @@
  */
 
 import { el } from './dom.js';
+import { panelHost, type Panel } from './panels.js';
 
 export type BuildKind = 'ground' | 'facility' | 'erase' | 'door';
 
@@ -75,6 +76,8 @@ export class KairoHud {
   private readonly menuBtn: HTMLButtonElement;
   private readonly buildBtn: HTMLButtonElement;
   private readonly sheet: HTMLDivElement;
+  /** 시트의 패널 얼굴 — `panelHost` 가 이걸 안다 */
+  readonly sheetPanel: Panel;
   private readonly sheetTitle: HTMLDivElement;
   private readonly tabs: HTMLDivElement;
   private readonly buildBody: HTMLDivElement;
@@ -167,6 +170,16 @@ export class KairoHud {
 
     this.sheet.append(head, body);
     parent.append(this.sheet);
+
+    /*
+     * 시트를 **패널로 등록한다** (K37). 호스트는 `hide()` 만 본다.
+     *
+     * `KairoHud` 자체를 `Panel` 로 만들지 않은 이유: HUD 는 시트만이 아니라 상단 캡슐과
+     * 하단 바까지 소유한다. HUD 를 패널로 읽히게 두면 "패널을 닫았다"가 "바를
+     * 지웠다"로 오해된다.
+     */
+    this.sheetPanel = { hide: () => this.hide() };
+    panelHost.register(this.sheetPanel);
 
     /*
      * ── 확정 바 (K32) ──
@@ -263,6 +276,7 @@ export class KairoHud {
     this.sheet.hidden = true;
     this.menuBtn.classList.remove('on');
     this.buildBtn.classList.remove('on');
+    panelHost.closed(this.sheetPanel);
   }
 
   get visible(): boolean {
@@ -274,6 +288,8 @@ export class KairoHud {
       this.hide();
       return;
     }
+    // 한 번에 하나 (K37) — 도감·경영 같은 패널이 열려 있으면 그쪽이 닫힌다
+    if (!panelHost.open(this.sheetPanel)) return;
     this.open = which;
     this.sheet.hidden = false;
     this.buildBody.hidden = which !== 'build';

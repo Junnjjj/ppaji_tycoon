@@ -5,6 +5,7 @@ import type { PlacementGrid } from '../sim/kairo/placement.js';
 import type { CourseStore } from '../sim/kairo/course.js';
 import { requiredGrade } from '../sim/kairo/progress.js';
 import { el, button } from './dom.js';
+import { panelHost } from './panels.js';
 
 /**
  * 도감 — 스펙 §15.8, §D. **발견·수집이 이 게임의 훅이다** (§0 재미의 축).
@@ -81,12 +82,15 @@ export class KairoCatalog {
   }
 
   show(): void {
+    // 한 번에 하나 (K37) — 모달이 떠 있으면 열지 않는다
+    if (!panelHost.open(this)) return;
     this.root.hidden = false;
     this.render();
   }
 
   hide(): void {
     this.root.hidden = true;
+    panelHost.closed(this);
   }
 
   /** 발견 수 — 검증·요약이 읽는다 */

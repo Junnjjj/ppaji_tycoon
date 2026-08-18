@@ -1,5 +1,6 @@
 import { MAP_TYPES, unlockedScenarios, type MapType, type ScenarioDef } from '../sim/kairo/scenario.js';
 import { el, button } from './dom.js';
+import { panelHost } from './panels.js';
 
 /**
  * 새 판 — 맵 타입과 시나리오를 고른다 (§4.5).
@@ -77,12 +78,15 @@ export class KairoNewGame {
   }
 
   show(): void {
+    // 한 번에 하나 (K37) — 모달이 떠 있으면 열지 않는다
+    if (!panelHost.open(this)) return;
     this.root.hidden = false;
     this.render();
   }
 
   hide(): void {
     this.root.hidden = true;
+    panelHost.closed(this);
   }
 
   private render(): void {

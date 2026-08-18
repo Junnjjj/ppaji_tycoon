@@ -59,6 +59,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { KairoCoursePanel } = await import('./ui/kairo-course.js');
   const { KairoCatalog, activeComboIds } = await import('./ui/kairo-catalog.js');
   const { KairoShowcase } = await import('./ui/kairo-showcase.js');
+  const { panelHost } = await import('./ui/panels.js');
   const { Rng: RngCls } = await import('./sim/rng.js');
   const { loadKairoFromStorage, saveKairoToStorage, clearKairoStorage } = await import(
     './save/kairo.js'
@@ -642,6 +643,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   runner = week; // 프레임이 이제부터 주차·현금을 읽을 수 있다
   const report = new KairoReport(document.body);
   const cardView = new KairoCardView(document.body);
+  /*
+   * 주간 카드는 **모달**이다 (K37). 선택하지 않으면 주가 안 넘어가는 것이 카드의 존재
+   * 이유인데, 다른 패널이 밀어내면 선택을 조용히 건너뛴다.
+   */
+  panelHost.register(cardView, { modal: true });
   const weekRng = new RngCls(31337);
   const cards = saved?.cards ? CardStore.fromSnapshot(saved.cards) : new CardStore();
   /** 카드는 전용 RNG 스트림 — 손님·날씨와 섞으면 카드 한 장에 날씨가 밀린다 (불변식 2) */
@@ -967,6 +973,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       persist();
     },
   );
+  /*
+   * 감상은 **배타가 아니다** (K37). 화면을 덮지 않고 위아래 띠만 얹는 것이 목적이라
+   * (지도가 보여야 감상이다) 배타로 두면 자기가 자기를 닫는다. 다른 패널은
+   * `display:none` 으로 감췄다가 되돌린다 — `hide()` 로 닫으면 나올 때 복원이 안 된다.
+   */
+  panelHost.register(showcase, { exclusive: false });
 
   /**
    * 새 판 — 맵·시나리오를 고른다 (§4.5). 세이브를 지우고 다시 부팅한다.

@@ -16,6 +16,7 @@ import {
 import type { KairoTerrain } from '../sim/kairo/terrain.js';
 import type { KairoScene } from '../render/scenes/KairoScene.js';
 import { el } from './dom.js';
+import { panelHost } from './panels.js';
 
 /**
  * 코스 편집 — 스펙 §7.3, §A(S11) UI.
@@ -203,6 +204,8 @@ export class KairoCoursePanel {
   }
 
   show(): void {
+    // 한 번에 하나 (K37)
+    if (!panelHost.open(this)) return;
     this.root.hidden = false;
     this.setExpanded(false);
     // 후보가 줄었을 수 있다 (잔교를 철거하면) — 범위 밖이면 첫 번째로
@@ -215,6 +218,7 @@ export class KairoCoursePanel {
 
   hide(): void {
     this.root.hidden = true;
+    panelHost.closed(this);
     this.deps.scene.setCourseOverlay([], [], null);
     this.deps.scene.setDockChoices([], -1);
   }

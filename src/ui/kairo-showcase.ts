@@ -1,6 +1,7 @@
 import { el, button } from './dom.js';
 import { cssVar, rgba } from './tokens.js';
 import type { KairoScene } from '../render/scenes/KairoScene.js';
+import { panelHost } from './panels.js';
 
 /**
  * 감상 화면 — 스펙 §15 "최대 축소 = 감상 화면" (v4 신규).
@@ -103,6 +104,12 @@ export class KairoShowcase {
     }
     this.scene.setUpscale(1); // 최대 축소 — 전체가 한 화면에
     this.scene.fitAll();
+    /*
+     * 감상은 **배타가 아니다** (K37) — 다른 패널을 `hide()` 로 닫지 않고 위에서
+     * `display:none` 으로 감췄다가 되돌린다. 닫아 버리면 감상을 나올 때 원래 화면이
+     * 복원되지 않는다. 등록만 해 두면 `openPanel` 이 정확해진다.
+     */
+    panelHost.open(this);
     this.root.hidden = false;
     this.refresh();
   }
@@ -114,6 +121,7 @@ export class KairoShowcase {
     }
     this.hidden = [];
     this.root.hidden = true;
+    panelHost.closed(this);
   }
 
   refresh(): void {

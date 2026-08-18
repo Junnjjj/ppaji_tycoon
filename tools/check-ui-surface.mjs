@@ -170,6 +170,48 @@ check(
 );
 
 /*
+ * ── 패널은 한 번에 하나 (K37) ────────────────────────────────────────────
+ *
+ * 패널 8종이 각자 `this.root.hidden = false` 를 하고 "다른 걸 닫는다"를 아는 곳이 없었다.
+ * 그래서 건설 시트를 열어 둔 채 도감을 열면 둘이 겹친 채로 남았다 (사용자 보고).
+ *
+ * `PanelHost` 하나로 모았는데, **아홉 번째 패널이 등록을 잊는 것**이 이 버그의 재발 경로다.
+ * 그래서 규칙을 기계로 만든다: 자기 루트를 보이게 하는 파일은 `panelHost.open()` 을,
+ * 감추는 파일은 `panelHost.closed()` 를 반드시 부른다.
+ *
+ * ⚠ "hidden 대입은 panels.ts 만"으로 만들지 않은 이유: 등장 처리(내용 다시 그리기·카메라
+ * 잡기)가 패널마다 달라서 DOM 을 호스트가 만지면 그걸 뺏는다. 호스트는 **순서**만 정한다.
+ */
+const panelGaps = [];
+for (const f of uiFiles) {
+  const src = await readFile(f, 'utf8');
+  const body = src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');
+  // 자기 루트를 직접 여는/닫는 파일만 대상이다 (`this.root.hidden = …`)
+  const opens = /this\.root\.hidden\s*=\s*false/.test(body);
+  const closes = /this\.root\.hidden\s*=\s*true/.test(body);
+  if (!opens && !closes) continue;
+  const name = f.replace('src/ui/', '');
+  if (opens && !/panelHost\.open\s*\(/.test(body)) panelGaps.push(`${name}: open 누락`);
+  if (closes && !/panelHost\.closed\s*\(/.test(body)) panelGaps.push(`${name}: closed 누락`);
+}
+/*
+ * 시트는 `this.root` 가 아니라 `this.sheet` 를 쓴다 (HUD 는 바까지 소유하므로 루트가
+ * 시트가 아니다) — 별도로 확인한다. 안 보면 시트만 규칙 밖으로 빠진다.
+ */
+{
+  const hud = (await readFile('src/ui/kairo-hud.ts', 'utf8'))
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\/\/[^\n]*/g, '');
+  if (!/panelHost\.open\s*\(/.test(hud)) panelGaps.push('kairo-hud.ts: open 누락 (시트)');
+  if (!/panelHost\.closed\s*\(/.test(hud)) panelGaps.push('kairo-hud.ts: closed 누락 (시트)');
+}
+check(
+  panelGaps.length === 0,
+  '패널이 전부 PanelHost 를 거친다 — 한 번에 하나가 지켜진다',
+  panelGaps.length ? panelGaps.join(' · ') : '루트를 여닫는 파일 전부 등록됨',
+);
+
+/*
  * ── 글씨가 읽히나 (K35) ─────────────────────────────────────────────────
  *
  * 밝은 팔레트로 바꾸면서 새로 생긴 실패 방식은 "예쁘지만 안 읽힘"이다. 어두운 팔레트에서
