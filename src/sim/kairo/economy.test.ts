@@ -3,7 +3,7 @@ import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
 import { PlacementGrid, MAX_LEVEL, LEVEL_FEE_STEP, facilityDef } from './placement.js';
-import { GuestStore, GUEST_DEFAULTS } from './guests.js';
+import { GuestStore, OPEN_GATE_DEFAULTS } from './guests.js';
 import { WeekRunner, priceSatisfaction } from './week.js';
 
 /**
@@ -24,7 +24,8 @@ function park(n = 10): { t: KairoTerrain; w: WallGrid; p: PlacementGrid; g: Gues
   for (let k = 0; k < n; k++) {
     p.place(t, w, GATE, 'shop', 6 + (k % 8) * 3, 8 + Math.floor(k / 8) * 3);
   }
-  const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
+  // 요금·개선만 변수로 두려면 입장 수속은 빼야 한다 (매표소가 공급·콤보를 바꾼다)
+  const g = new GuestStore(t, w, p, GATE, OPEN_GATE_DEFAULTS);
   g.invalidate();
   return { t, w, p, g };
 }

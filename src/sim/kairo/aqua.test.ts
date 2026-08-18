@@ -3,7 +3,7 @@ import { Rng } from '../rng.js';
 import { KairoTerrain, GROUND_KINDS } from './terrain.js';
 import { WallGrid } from './walls.js';
 import { PlacementGrid, facilityDef, allFacilityDefs } from './placement.js';
-import { GuestStore, GUEST_DEFAULTS } from './guests.js';
+import { GuestStore, OPEN_GATE_DEFAULTS } from './guests.js';
 
 const GATE = { i: 0, j: 0 };
 
@@ -83,7 +83,7 @@ describe('플로팅덱이 물 위 유일 기반 — 결정 11', () => {
     expect(ride.ok).toBe(true);
 
     const g = new GuestStore(t, w, p, GATE, {
-      ...GUEST_DEFAULTS,
+      ...OPEN_GATE_DEFAULTS,
       wantUses: 1,
       useTicks: 5,
       patienceTicks: 900,
@@ -129,7 +129,7 @@ describe('슬라이드 입출구 — 미끄럼틀 로직이 자연스러워야 �
     const exit = [5 + def.ride!.exitTile[0], 11 + def.ride!.exitTile[1]];
 
     const g = new GuestStore(t, w, p, GATE, {
-      ...GUEST_DEFAULTS,
+      ...OPEN_GATE_DEFAULTS,
       wantUses: 1,
       useTicks: 3,
       patienceTicks: 900,
@@ -159,7 +159,7 @@ describe('슬라이드 입출구 — 미끄럼틀 로직이 자연스러워야 �
     for (let j = 10; j < 16; j++) p.place(t, w, GATE, 'float_deck', 4, j);
     p.place(t, w, GATE, 'slide_large', 5, 11); // 4×5
     const g = new GuestStore(t, w, p, GATE, {
-      ...GUEST_DEFAULTS,
+      ...OPEN_GATE_DEFAULTS,
       wantUses: 1,
       useTicks: 3,
       patienceTicks: 900,
@@ -192,7 +192,7 @@ describe('덱이 유일한 길이라는 것 — 끊으면 못 간다', () => {
     const tr = p.place(t, w, GATE, 'trampoline_w', 6, 11);
     expect(tr.ok).toBe(true);
 
-    const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
+    const g = new GuestStore(t, w, p, GATE, OPEN_GATE_DEFAULTS);
     g.invalidate();
     const withDeck = g.distanceTo(tr.placed!.handle, GATE.i, GATE.j);
     expect(withDeck).toBeGreaterThan(0);

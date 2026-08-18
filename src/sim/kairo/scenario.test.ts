@@ -3,7 +3,7 @@ import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
 import { PlacementGrid } from './placement.js';
-import { GuestStore, GUEST_DEFAULTS } from './guests.js';
+import { GuestStore, OPEN_GATE_DEFAULTS } from './guests.js';
 import { WeekRunner } from './week.js';
 import { seasonShares } from './groups.js';
 import {
@@ -122,7 +122,7 @@ describe('맵이 결과를 바꾼다', () => {
         if (p.place(t, w, { i: 0, j: 0 }, 'shop', i, j).ok) placed++;
       }
     }
-    const g = new GuestStore(t, w, p, { i: 0, j: 0 }, GUEST_DEFAULTS);
+    const g = new GuestStore(t, w, p, { i: 0, j: 0 }, OPEN_GATE_DEFAULTS);
     g.invalidate();
     return new WeekRunner(t, p, g).run(new Rng(777), {
       season: 'summer',

@@ -132,7 +132,11 @@ export interface DayReport {
    * "시설을 늘려야 한다"는 가장 직접적인 신호다.
    */
   turnedAway: number;
+  /** 매표소를 못 지나 돌아간 손님 (K36-B②) */
+  noTicket: number;
   revenue: number;
+  /** 그 날 걷힌 입장료 — `revenue` 에 포함돼 있다 */
+  admission: number;
   upkeep: number;
   /** 그 날 동시 최대 손님 */
   peak: number;
@@ -161,6 +165,19 @@ export interface WeekReport extends WeekSummary {
   days: DayReport[];
   arrivals: number;
   revenue: number;
+  /**
+   * 입장료 수입 (설계 §13.1). `revenue` 에 **이미 들어 있다** — 여기 따로 두는 것은
+   * 결산이 "얼마가 표에서 왔나"를 보여주기 위해서다.
+   */
+  admission: number;
+  /**
+   * 매표소를 못 지나 돌아간 손님 (K36-B②).
+   *
+   * 0 이 아니면 원인은 하나다 — 매표소가 없거나, 있어도 길이 안 닿는다. 만석
+   * (`turnedAway`)과 갈라 두어야 처방이 갈린다: 만석은 "시설을 늘려라", 이건
+   * "매표소를 지어라·길을 이어라"다.
+   */
+  noTicket: number;
   upkeep: number;
   /** 인건비 — 고정비라 손님이 없어도 나간다 */
   wages: number;
@@ -415,6 +432,8 @@ export class WeekRunner {
     const mod = opts.modifiers;
     const byGroup: Record<GroupId, number> = { family: 0, couple: 0, friends: 0, company: 0 };
     let weekRevenue = 0;
+    /** 이번 주 입장료 — `weekRevenue` 에도 들어간다. 따로 세는 것은 결산 표시용 */
+    let weekAdmission = 0;
     let tick = 0;
 
     for (let day = 0; day < DAYS_PER_WEEK; day++) {
@@ -438,8 +457,10 @@ export class WeekRunner {
       let arrivals = 0;
       let visitors = 0;
       let turnedAway = 0;
+      let noTicket = 0;
       let peak = 0;
       let dayRevenue = 0;
+      let dayAdmission = 0;
 
       let arrivalAcc = 0;
       for (let t = 0; t < TICKS_PER_DAY; t++, tick++) {
@@ -447,15 +468,24 @@ export class WeekRunner {
         while (arrivalAcc >= 1) {
           arrivalAcc -= 1;
           arrivals++;
-          const born = this.guests.spawn(rng, season, opts.mapShares);
-          if (born) {
-            visitors++;
-            byGroup[born.group] += 1;
-          } else turnedAway++;
+          /*
+           * ⚠ **`spawn` 성공은 입장이 아니다** (K36-B②). 손님은 정류장에 내릴 뿐이고,
+           * 매표소를 지나야 입장이다. 그래서 `visitors`·`byGroup` 은 아래 `takeAdmitted`
+           * 가 센다. 여기서 세면 매표소가 없는 판이 "입장 129명 · 매출 0" 으로 보인다.
+           */
+          if (!this.guests.spawn(rng, season, opts.mapShares)) turnedAway++;
         }
         this.guests.tick(rng);
         // 이용이 끝난 손님만큼 요금을 받는다 (이용 시작이 아니라 완료 기준)
         dayRevenue += this.collectFees(weather);
+        // 표를 산 손님만큼 입장료를 받는다 — 요금 슬라이더가 같이 민다
+        const adm = this.guests.takeAdmitted();
+        visitors += adm.count;
+        noTicket += adm.noTicket;
+        for (const k of Object.keys(byGroup) as GroupId[]) byGroup[k] += adm.byGroup[k];
+        const admIn = Math.round(adm.fee * this.priceMult);
+        dayAdmission += admIn;
+        dayRevenue += admIn;
 
         for (const g of this.guests.all) {
           const k = g.j * w + g.i;
@@ -492,26 +522,41 @@ export class WeekRunner {
         arrivals,
         visitors,
         turnedAway,
+        noTicket,
         revenue: dayRevenue,
+        admission: dayAdmission,
         upkeep: dayUpkeep,
         peak,
         exitSatisfaction: daySat,
         gaveUp: after.gaveUp - before.gaveUp,
       });
       weekRevenue += dayRevenue;
+      weekAdmission += dayAdmission;
     }
     // 매점직원이 모자라면 식음 매출이 떨어진다. 전체가 아니라 **식음 몫만** 깎아야
     // "직원을 왜 쓰나"가 종류별 판단이 된다 — 근사로 전체의 식음 비중만큼만 곱한다
     if (staff && staff.foodMult !== 1) {
       const foodShare = this.foodShare();
       const factor = 1 - foodShare * (1 - staff.foodMult);
-      weekRevenue = Math.round(weekRevenue * factor);
-      for (const d of days) d.revenue = Math.round(d.revenue * factor);
+      /*
+       * ⚠ **입장료는 빼고 곱한다.** 매점직원이 모자라면 매점 매출이 떨어지지, 표가 덜
+       * 팔리지는 않는다. 섞으면 `admission = 입장객 × 정가 × 요금배율` 이라는 검사 가능한
+       * 성질이 깨지고, 결산의 입장료 줄이 "왜 이 숫자인지" 설명할 수 없는 값이 된다.
+       */
+      weekRevenue = Math.round((weekRevenue - weekAdmission) * factor) + weekAdmission;
+      for (const d of days) {
+        d.revenue = Math.round((d.revenue - d.admission) * factor) + d.admission;
+      }
     }
     if (mod?.revenueMult !== undefined && mod.revenueMult !== 1) {
-      weekRevenue = Math.round(weekRevenue * mod.revenueMult);
-      // 일별 수치도 맞춰 둔다 — 결산 막대와 합계가 어긋나면 플레이어가 못 믿는다
-      for (const d of days) d.revenue = Math.round(d.revenue * mod.revenueMult);
+      /*
+       * 카드의 매출 배율도 **공원 안에서 쓴 돈**에만 붙는다 (위 식음 배율과 같은 이유).
+       * 표값은 플레이어가 슬라이더로 정하는 값이지 카드가 흔드는 값이 아니다.
+       */
+      weekRevenue = Math.round((weekRevenue - weekAdmission) * mod.revenueMult) + weekAdmission;
+      for (const d of days) {
+        d.revenue = Math.round((d.revenue - d.admission) * mod.revenueMult) + d.admission;
+      }
     }
 
     /*
@@ -575,7 +620,9 @@ export class WeekRunner {
       arrivals: days.reduce((a, d) => a + d.arrivals, 0),
       visitors: days.reduce((a, d) => a + d.visitors, 0),
       turnedAway: days.reduce((a, d) => a + d.turnedAway, 0),
+      noTicket: days.reduce((a, d) => a + d.noTicket, 0),
       revenue: weekRevenue,
+      admission: weekAdmission,
       upkeep,
       wages,
       courseRevenue,

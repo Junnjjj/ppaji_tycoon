@@ -3,7 +3,7 @@ import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
 import { PlacementGrid } from './placement.js';
-import { GuestStore, GUEST_DEFAULTS } from './guests.js';
+import { GuestStore, OPEN_GATE_DEFAULTS } from './guests.js';
 import { WeekRunner } from './week.js';
 import { assessRisk, accidentChance } from './risk.js';
 import { triggerCard, CardStore } from './cards.js';
@@ -27,7 +27,7 @@ function park(defId: string, n: number): {
   const w = new WallGrid(40, 32);
   const p = new PlacementGrid(40, 32);
   for (let k = 0; k < n; k++) p.place(t, w, GATE, defId, 6 + (k % 8) * 3, 8 + Math.floor(k / 8) * 3);
-  const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
+  const g = new GuestStore(t, w, p, GATE, OPEN_GATE_DEFAULTS);
   g.invalidate();
   return { t, p, g };
 }

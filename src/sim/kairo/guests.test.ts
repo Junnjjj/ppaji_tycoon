@@ -10,7 +10,13 @@ import {
 } from './walls.js';
 import { bakeIndoorWalls } from './indoor.js';
 import { PlacementGrid, guestWalkable } from './placement.js';
-import { GuestStore, GUEST_DEFAULTS, STUCK_LIMIT, type GuestTunables } from './guests.js';
+import {
+  GuestStore,
+  GUEST_DEFAULTS,
+  OPEN_GATE_DEFAULTS,
+  STUCK_LIMIT,
+  type GuestTunables,
+} from './guests.js';
 
 const GATE = { i: 0, j: 0 };
 
@@ -31,7 +37,12 @@ function world(tun: Partial<GuestTunables> = {}, size = 16): World {
   const t = flat(size, size);
   const w = new WallGrid(size, size);
   const p = new PlacementGrid(size, size);
-  const g = new GuestStore(t, w, p, GATE, { ...GUEST_DEFAULTS, ...tun });
+  /*
+   * 이 파일이 재는 것은 길찾기·슬롯·만족도이지 **입장 수속이 아니다.**
+   * 도시 띠가 없는 16×16 세계라 정류장도 없다 — `OPEN_GATE_DEFAULTS` 로 예전 동작
+   * (게이트에 툭 나타남)을 유지한다. 입장 수속은 아래 전용 describe 가 켠 채로 본다.
+   */
+  const g = new GuestStore(t, w, p, GATE, { ...OPEN_GATE_DEFAULTS, ...tun });
   return { t, w, p, g };
 }
 
@@ -363,7 +374,7 @@ describe('갇힌 손님 — 판이 얼어붙지 않는다', () => {
     t.paint(15, 15, 'path_stone'); // 고립된 칸
     const w = new WallGrid(20, 20);
     const p = new PlacementGrid(20, 20);
-    const g = new GuestStore(t, w, p, { i: 1, j: 1 }, GUEST_DEFAULTS);
+    const g = new GuestStore(t, w, p, { i: 1, j: 1 }, OPEN_GATE_DEFAULTS);
     g.invalidate();
 
     const guest = g.spawn(new Rng(1), 'summer');
@@ -389,7 +400,7 @@ describe('갇힌 손님 — 판이 얼어붙지 않는다', () => {
     const w = new WallGrid(20, 20);
     const p = new PlacementGrid(20, 20);
     p.place(t, w, { i: 1, j: 1 }, 'shop', 8, 8);
-    const g = new GuestStore(t, w, p, { i: 1, j: 1 }, GUEST_DEFAULTS);
+    const g = new GuestStore(t, w, p, { i: 1, j: 1 }, OPEN_GATE_DEFAULTS);
     g.invalidate();
     const rng = new Rng(3);
     for (let k = 0; k < 6; k++) g.spawn(rng, 'summer');

@@ -154,9 +154,16 @@ export class KairoReport {
       // 검증이 요일 막대만 골라 셀 수 있게 표시한다 — `div[title]` 로 세면 손님 구성
       // 막대까지 섞여 개수가 어긋난다 (실측)
       bar.dataset['day'] = String(d.day);
+      /*
+       * ⚠ 수요 = 입장 + 만석 + 매표소못지남 이 **딱 안 맞을 수 있다** (K36-B②).
+       * 손님이 정류장에서 매표소까지 걸어오는 동안 날짜가 넘어가기 때문이다 —
+       * 주 단위로는 맞는다. 그래서 셋을 다 적어 둔다: 안 적으면 막대와 숫자가
+       * 어긋나 보이는데 이유를 알 길이 없다.
+       */
       bar.title =
         `${d.name} 수요 ${d.arrivals}명 · 입장 ${d.visitors}명` +
         (d.turnedAway ? ` · 만석 ${d.turnedAway}명` : '') +
+        (d.noTicket ? ` · 매표소 못 지남 ${d.noTicket}명` : '') +
         ` · ${won(d.revenue)}`;
       const num = el(
         'div',
@@ -208,7 +215,15 @@ export class KairoReport {
     const rows: [string, string, string][] = [
       ['입장', `${rep.visitors}명`, ''],
       ['만석으로 돌려보냄', `${rep.turnedAway}명`, rep.turnedAway > 0 ? 'bad' : ''],
+      /*
+       * 매표소를 못 지나 돌아간 손님 (K36-B②) — **만석과 갈라서** 보여준다.
+       * 둘을 합치면 "시설을 늘려라"와 "매표소를 지어라"가 한 줄에 섞여, 정작 못 들어오는
+       * 이유를 못 읽는다.
+       */
+      ['매표소를 못 지나감', `${rep.noTicket}명`, rep.noTicket > 0 ? 'bad' : ''],
       ['매출', won(rep.revenue), ''],
+      // 입장료는 매출 **안에** 들어 있다. 따로 보여야 "표를 올릴까 시설을 늘릴까"가 판단이 된다
+      ['ㄴ 입장료', won(rep.admission), ''],
       ['유지비', won(-rep.upkeep), ''],
       ['손익', won(rep.profit), rep.profit >= 0 ? 'good' : 'bad'],
       ['퇴장 만족도', rep.exitSatisfaction.toFixed(0), ''],
@@ -247,6 +262,20 @@ export class KairoReport {
 
     // ④ 숫자
     this.root.append(this.numbers(rep));
+
+    /*
+     * 매표소 경보 — 병목보다 **먼저** 띄운다. 손님이 아예 안 들어오는 판에서
+     * "부족한 것: 놀이" 를 먼저 보여주면 엉뚱한 곳을 고치게 된다.
+     */
+    if (rep.noTicket > 0) {
+      this.root.append(
+        el(
+          'div',
+          'kcallout',
+          `${rep.noTicket}명이 표를 못 사고 돌아갔습니다 — 입구 근처에 매표소를 짓고 길을 이으세요`,
+        ),
+      );
+    }
 
     // 병목 — 다음에 무엇을 지을까
     if (rep.bottleneck) {

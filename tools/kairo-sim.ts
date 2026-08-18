@@ -30,7 +30,7 @@ import {
   MAX_LEVEL,
   guestWalkable,
 } from '../src/sim/kairo/placement.js';
-import { GuestStore, GUEST_DEFAULTS } from '../src/sim/kairo/guests.js';
+import { GuestStore, GUEST_DEFAULTS, TICKET_DEF_ID } from '../src/sim/kairo/guests.js';
 import { WeekRunner, type NeedKind, type Season, type WeekReport } from '../src/sim/kairo/week.js';
 import { evaluateCombos } from '../src/sim/kairo/combos.js';
 import { CardStore, CARD_RNG_SALT, optionCash, triggerCard } from '../src/sim/kairo/cards.js';
@@ -133,6 +133,10 @@ interface RunResult {
   lastGaveUp: number;
   lastIdle: number;
   lastVisitors: number;
+  /** 마지막 주에 매표소를 못 지나 돌아간 손님 — 0 이 아니면 입장 자체가 막힌 것이다 */
+  lastNoTicket: number;
+  /** 매표소를 다시 지은 횟수 (가둬져서) */
+  ticketRebuilds: number;
   /** 마지막 주 손님 구성 비율 — 맵이 구성을 바꾸는지 확인 */
   familyRatio: number;
   friendsRatio: number;
@@ -354,6 +358,68 @@ function ensurePath(
   return paved * stoneCost;
 }
 
+/**
+ * 매표소를 **먼저** 세운다 (K36-B②).
+ *
+ * ⚠ 매표소가 없으면 손님이 한 명도 못 들어와 판이 통째로 죽는다 — 수입 0 · 등급 1 ·
+ * 예산 0 이라 다시 지을 수도 없다. 물려받은 빠지(`applyStartKit`)가 보통 하나를 주지만,
+ * 지형에 따라 `skipped` 로 빠질 수 있다. 사람이라면 그때 제일 먼저 매표소를 짓는다 —
+ * 봇의 정책도 그래야 헤드리스가 재는 것이 "게임"이지 "봇의 실수"가 아니다.
+ *
+ * 게이트에서 가까운 순으로 훑는다 — 무작위로 뽑으면 판마다 매표소가 딴 데 서서
+ * 정류장→매표소 거리가 시드 잡음이 된다. 결정론 (불변식 2).
+ */
+function ensureTicket(
+  t: KairoTerrain,
+  w: WallGrid,
+  p: PlacementGrid,
+  g: GuestStore,
+  land: ReturnType<typeof landRect>,
+  cash: number,
+): number {
+  /*
+   * ⚠ **"있다"가 아니라 "닿는다"를 본다.**
+   *
+   * 배치 검사(`p.check`)의 도달 판정은 **놓는 시설**만 본다 — 새 시설이 이미 있던 시설을
+   * 가둬도 아무도 막지 않는다 (실내만 `would-strand` 가 지킨다). 예전엔 그래 봐야 시설
+   * 하나가 놀았지만, 매표소가 갇히면 **입장이 0** 이 되어 판이 통째로 죽는다
+   * (실측: 12판 중 7판이 3~9주차에 이 상태로 들어가 만족도 0 · 등급 1 로 끝났다).
+   * 사람이라면 "손님이 안 들어온다"를 보고 입구 옆에 하나 더 짓는다.
+   */
+  const stop = KairoTerrain.busStop();
+  if (p.all().some((it) => it.defId === TICKET_DEF_ID && g.distanceTo(it.handle, stop.i, stop.j) >= 0)) {
+    return 0;
+  }
+  const def = allFacilityDefs().find((d) => d.id === TICKET_DEF_ID);
+  if (!def || def.cost > cash) return 0;
+  const opts = { land };
+  for (let r = 1; r <= 12; r++) {
+    for (let dj = 0; dj <= r; dj++) {
+      for (const di of [-r, r, ...Array.from({ length: 2 * r - 1 }, (_, k) => k - r + 1)]) {
+        const i = GATE.i + di;
+        const j = GATE.j + dj;
+        if (Math.max(Math.abs(di), dj) !== r) continue;
+        if (!p.check(t, w, GATE, TICKET_DEF_ID, i, j, opts).ok) {
+          // 길만 없으면 깔고 다시 본다 (다른 시설과 같은 정책)
+          const paved = ensurePath(t, w, p, land, {
+            i,
+            j,
+            w: def.size[0] as number,
+            h: def.size[1] as number,
+          });
+          if (paved === 0) continue;
+          if (!p.check(t, w, GATE, TICKET_DEF_ID, i, j, opts).ok) continue;
+          p.place(t, w, GATE, TICKET_DEF_ID, i, j, opts);
+          return (def as unknown as { cost: number }).cost + paved;
+        }
+        p.place(t, w, GATE, TICKET_DEF_ID, i, j, opts);
+        return (def as unknown as { cost: number }).cost;
+      }
+    }
+  }
+  return 0;
+}
+
 function buildOne(
   t: KairoTerrain,
   w: WallGrid,
@@ -505,6 +571,8 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const seasonByWeek: Season[] = [];
   let buildPoor = 0;
   let buildNoSpace = 0;
+  /** 매표소를 다시 지은 횟수 — 0 이 아니면 앞선 건설이 매표소를 가뒀다는 뜻이다 */
+  let ticketRebuilds = 0;
   /** 못 지은 이유별 횟수 — 경보가 엉뚱한 처방을 내지 않게 */
   const buildFailWhy = new Map<string, number>();
   let buildCapped = 0;
@@ -547,6 +615,18 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     const want = last?.bottleneck?.need ?? null;
     let buildSpend = 0;
     /*
+     * ⚠ **매표소가 제일 먼저다.** 없으면 입장이 0 이라 나머지 정책이 아무 의미가 없다.
+     * 예비비도 안 본다 — 문을 못 여는 판에 예비비를 남기는 것은 판단이 아니다.
+     */
+    {
+      // 거리장을 먼저 최신으로 — 지난주 건설이 매표소를 가뒀는지 여기서 드러난다
+      g.invalidate();
+      const spent = ensureTicket(t, w, p, g, landRect(GRADES[gradeNo - 1] ?? GRADES[0]!), cash);
+      if (spent > 0) ticketRebuilds++;
+      cash -= spent;
+      buildSpend += spent;
+    }
+    /*
      * 이번 주 건설 예산.
      *
      * 두 가지를 함께 본다 — **수입**과 **쌓인 현금**.
@@ -587,7 +667,19 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
      * 이게 없으면 80주 중 58주가 "지을 게 없다"가 되고 현금이 2,220만까지 쌓인다 (실측).
      */
     if (capped) {
-      for (let k = 0; k < 3; k++) {
+      /*
+       * ⚠ 개선 횟수를 **쌓인 현금에 맞춘다** (K36-B②).
+       *
+       * 3회 고정이면 수입이 늘어도 지출이 안 늘어 현금만 쌓인다. 입장료가 들어오자
+       * 52주 현금이 5,335만이 됐는데 **평균 개선 단계는 2.4/5** 였다 — 쓸 곳이 없던 게
+       * 아니라 봇이 **안 쓴 것**이다. 그 상태로 "후반이 빈다" 경보를 믿으면 게임이
+       * 무너졌다고 잘못 읽는다 (이 파일이 상한 도달·예비비에서 이미 겪은 실패다).
+       *
+       * 사람은 지을 게 없으면 있는 것을 고친다. 돈이 많을수록 더 고친다.
+       * 현금이 예비비 수준이면 3회 — 예전과 같다.
+       */
+      const rounds = Math.max(3, Math.min(24, Math.floor((cash - BUILD_RESERVE) / 2_000_000)));
+      for (let k = 0; k < rounds; k++) {
         const targets = p
           .all()
           .filter((it) => p.levelOf(it.handle) < MAX_LEVEL)
@@ -850,6 +942,8 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     lastGaveUp: last ? last.gaveUp : 0,
     lastIdle: g.idleCount,
     lastVisitors: last ? last.visitors : 0,
+    lastNoTicket: last ? last.noTicket : 0,
+    ticketRebuilds,
     familyRatio: last ? last.byGroup.family / Math.max(1, last.visitors) : 0,
     friendsRatio: last ? last.byGroup.friends / Math.max(1, last.visitors) : 0,
     riskyWeeks,
@@ -1016,7 +1110,8 @@ function main(): void {
           `${(r.staffWeeks / WEEKS).toFixed(1).padStart(5)} ${r.avgLevel.toFixed(2).padStart(5)} ` +
           `${String(r.accidents).padStart(5)} ` +
           `| 살아 ${String(r.lastAlive).padStart(3)} 입장 ${String(r.lastVisitors).padStart(3)} ` +
-          `헛걸음 ${String(r.lastGaveUp).padStart(3)} 선시설 ${String(r.lastIdle).padStart(3)}`,
+          `헛걸음 ${String(r.lastGaveUp).padStart(3)} 선시설 ${String(r.lastIdle).padStart(3)} ` +
+          `못들어감 ${String(r.lastNoTicket).padStart(4)} 매표소재건 ${String(r.ticketRebuilds).padStart(2)}`,
       );
     }
   }
@@ -1027,6 +1122,10 @@ function main(): void {
     `사고 중앙값: ${stats(runs.map((r) => r.accidents)).med}회/판 · ` +
       `사고 가능 주 ${stats(runs.map((r) => r.riskyWeeks)).med}회 · ` +
       `마지막 위험 단계 ${[...levels].map(([k, v]) => `${k} ${v}판`).join(' · ')}`,
+  );
+  console.log(
+    `매표소: 못 지나간 손님 중앙 ${stats(runs.map((r) => r.lastNoTicket)).med}명/마지막 주 · ` +
+      `가둬져 다시 지은 횟수 중앙 ${stats(runs.map((r) => r.ticketRebuilds)).med}회/판`,
   );
   console.log(`코스 수 중앙값: ${stats(runs.map((r) => r.courseCount)).med}개` +
     (runs[0]?.courseFail ? ` (막힌 사유: ${runs[0].courseFail})` : ''));
@@ -1048,6 +1147,17 @@ function main(): void {
     issues.push('만석 비율이 80% 넘는다 — 동시 손님 상한이 수요에 비해 낮다');
   }
   if (stats(runs.map((r) => r.facilities)).med < 8) issues.push('시설이 거의 안 늘어난다');
+  /*
+   * 매표소를 못 지나는 손님 (K36-B②). 밸런스가 아니라 **판이 안 도는 것**이라 따로 잡는다 —
+   * 만석과 처방이 다르다 (만석은 "시설을 늘려라", 이건 "매표소를 지어라·길을 이어라").
+   */
+  const noTicketMed = stats(runs.map((r) => r.lastNoTicket)).med;
+  if (noTicketMed > 0) {
+    issues.push(
+      `매표소를 못 지나는 손님이 있다 (마지막 주 중앙 ${noTicketMed}명) — ` +
+        '매표소가 없거나 길이 안 닿는다',
+    );
+  }
   /**
    * 후반 성장 정지 — **같은 계절끼리** 비교한다.
    *

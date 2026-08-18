@@ -4,7 +4,7 @@ import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
 import { bakeIndoorWalls } from './indoor.js';
 import { PlacementGrid, guestWalkable } from './placement.js';
-import { GuestStore, GUEST_DEFAULTS } from './guests.js';
+import { GuestStore, GUEST_DEFAULTS, OPEN_GATE_DEFAULTS } from './guests.js';
 import { WeekRunner, type Season } from './week.js';
 import { evaluateCombos } from './combos.js';
 import {
@@ -84,6 +84,9 @@ interface Golden {
   exitSat: number;
   visitors: number;
   turnedAway: number;
+  /** 입장료 수입과 매표소를 못 지난 손님 (K36-B②) — 입장 경로도 못박아야 회귀가 잡힌다 */
+  admission: number;
+  noTicket: number;
   profitSign: number;
   questsDone: number;
   riskLevel: string;
@@ -202,6 +205,8 @@ function playGolden(weeks: number): Golden {
     exitSat: Math.round(last.exitSatisfaction),
     visitors: last.visitors,
     turnedAway: last.turnedAway,
+    admission: last.admission,
+    noTicket: last.noTicket,
     profitSign: Math.sign(last.profit),
     questsDone: progress.claimedCount,
     riskLevel: assessRisk(p, g).level,
@@ -281,14 +286,37 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
      * 등급 상한이 30/50/75/105/150 → 40/70/110/160/230 으로 올라 더 받고, 그만큼
      * 공급(시설 15개)이 못 따라가 만석이 는다. **상한을 올린 직접 결과다** —
      * 넓힌 땅을 쓰려면 상한도 같이 올라야 하고, 그러면 시설을 더 지어야 한다.
+     *
+     * **2026-08-19 매표소를 거쳐야 입장한다 (K36-B②)** (visitors 129→114 ·
+     * turnedAway 26→23 · exitSat 74→68 · grade 4→3, 그리고 `admission`·`noTicket` 추가):
+     * 손님이 게이트가 아니라 **정류장**(48,3)에 내려 매표소(37,10)를 지나야 들어온다.
+     * 세 가지가 함께 움직였다.
+     *
+     *   ① **입장이 늦다.** 정류장→매표소가 18칸(≈72 tick)이라, 주 마지막 날에 도착한
+     *      손님 일부가 그 주 안에 입장을 못 끝낸다. 그게 방문객 −15 의 대부분이다.
+     *      정원은 안 먹으므로(밖에 있다) 만석은 오히려 줄었다.
+     *   ② **매표소가 놀거리에서 빠졌다.** "표는 놀이가 아니다" 라서 목적지 후보가
+     *      15 → 14 로 줄었고, 그만큼 손님이 더 멀리 걷는다 (걷기 감점 ↑). 만족도 −6 의
+     *      대부분이 여기서 나오고, 등급이 4→3 으로 내려간 것도 그 결과다.
+     *   ③ 정류장→매표소 구간은 **걷기 감점을 안 받는다** — 안 그러면 플레이어가 못 줄이는
+     *      18칸이 그대로 벌점이 되어 ②보다 훨씬 크게 깎였을 것이다 (그 상태 실측 없음,
+     *      설계상 −4 안팎).
+     *
+     * `admission` 1,140,000 = 입장객 114명 × ₩10,000 × 요금배율 1.0 **정확히**다.
+     * 식음 직원 배율·카드 매출 배율은 표값에 안 붙는다 (표는 매점이 안 판다) — 이 값이
+     * 인원×정가와 어긋나면 어딘가에서 배율이 새고 있다는 뜻이다.
+     * `noTicket` 0 은 이 구성에서 매표소가 닿는다는 뜻이고, **0 이 아니게 되면 그건
+     * 배치 규칙이나 길이 바뀌어 입장이 막혔다는 뜻**이다.
      */
     expect(g).toEqual({
       facilities: 15,
       combos: 7,
-      grade: 4,
-      exitSat: 74,
-      visitors: 129,
-      turnedAway: 26,
+      grade: 3,
+      exitSat: 68,
+      visitors: 114,
+      turnedAway: 23,
+      admission: 1_140_000,
+      noTicket: 0,
       profitSign: 1,
       questsDone: 6,
       riskLevel: 'caution',
@@ -382,7 +410,8 @@ describe('밸런스 성질 — 값이 아니라 관계를 못박는다', () => {
       const w = new WallGrid(GRID_W, GRID_H);
       const p = new PlacementGrid(GRID_W, GRID_H);
       for (let k = 0; k < 4; k++) p.place(t, w, GATE, 'shop', GATE.i + dist, GATE.j + 1 + k * 3);
-      const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
+      // 거리만 변수로 둔다 — 매표소를 넣으면 그 위치가 두 번째 변수가 된다 (K36-B②)
+      const g = new GuestStore(t, w, p, GATE, OPEN_GATE_DEFAULTS);
       g.invalidate();
       return new WeekRunner(t, p, g).run(rng, { season: 'summer' }).exitSatisfaction;
     };
