@@ -82,6 +82,16 @@ interface Golden {
 function playGolden(weeks: number): Golden {
   const rng = new Rng(SEED);
   const t = KairoTerrain.generate(GRID_W, GRID_H, rng.fork(1));
+  /*
+   * 육지를 통째로 포장한다 — K32-B 부터 잔디는 손님이 못 지나간다.
+   *
+   * 골든이 못박는 것은 경제·성장 곡선이지 길 설계가 아니다. 전부 포장하면 K32-B 이전과
+   * 보행 조건이 같아지므로 **아래 숫자가 그대로 남는 것이 이 변경이 경제에 중립이라는 증거**다.
+   * 길 규칙 자체는 `walls.test.ts` 의 잔디/포장 대조가 본다.
+   */
+  for (let j = 0; j < GRID_H; j++) {
+    for (let i = 0; i < GRID_W; i++) if (t.isWalkable(i, j)) t.paint(i, j, 'path_stone');
+  }
   const w = new WallGrid(GRID_W, GRID_H);
   const p = new PlacementGrid(GRID_W, GRID_H);
   const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
@@ -323,6 +333,10 @@ describe('밸런스 성질 — 값이 아니라 관계를 못박는다', () => {
     const build = (n: number): number => {
       const rng = new Rng(777);
       const t = KairoTerrain.generate(GRID_W, GRID_H, rng.fork(1));
+      /* 육지 포장 — 시설 수만 변수로 두려면 길은 상수여야 한다 (K32-B) */
+      for (let j = 0; j < GRID_H; j++) {
+        for (let i = 0; i < GRID_W; i++) if (t.isWalkable(i, j)) t.paint(i, j, 'path_stone');
+      }
       const w = new WallGrid(GRID_W, GRID_H);
       const p = new PlacementGrid(GRID_W, GRID_H);
       for (let k = 0; k < n; k++) {
@@ -339,7 +353,7 @@ describe('밸런스 성질 — 값이 아니라 관계를 못박는다', () => {
     const sat = (dist: number): number => {
       const rng = new Rng(555);
       const t = new KairoTerrain(GRID_W, GRID_H);
-      for (let i = 0; i < GRID_W; i++) for (let j = 0; j < GRID_H; j++) t.paint(i, j, 'lawn');
+      for (let i = 0; i < GRID_W; i++) for (let j = 0; j < GRID_H; j++) t.paint(i, j, 'path_stone');
       const w = new WallGrid(GRID_W, GRID_H);
       const p = new PlacementGrid(GRID_W, GRID_H);
       for (let k = 0; k < 4; k++) p.place(t, w, GATE, 'shop', 4 + dist, 4 + k * 3);
@@ -353,7 +367,7 @@ describe('밸런스 성질 — 값이 아니라 관계를 못박는다', () => {
   it('겨울이 여름보다 손님이 적다 — 여름이 주력이다', () => {
     const visitors = (season: Season): number => {
       const t = new KairoTerrain(GRID_W, GRID_H);
-      for (let i = 0; i < GRID_W; i++) for (let j = 0; j < GRID_H; j++) t.paint(i, j, 'lawn');
+      for (let i = 0; i < GRID_W; i++) for (let j = 0; j < GRID_H; j++) t.paint(i, j, 'path_stone');
       const w = new WallGrid(GRID_W, GRID_H);
       const p = new PlacementGrid(GRID_W, GRID_H);
       p.place(t, w, GATE, 'shop', 6, 6);

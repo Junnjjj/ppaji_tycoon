@@ -101,9 +101,16 @@ export function applyStartKit(input: StartKitInput): StartKitResult {
     skipped.push(`실내동(${baked.fail ?? '?'})`);
   }
 
-  // ── 4. 매표소 — 최소한의 영업이 이미 돌아간다 ──
+  /*
+   * ── 4. 매표소 — 최소한의 영업이 이미 돌아간다 ──
+   *
+   * ⚠ 매표소는 마당 **밖**에 있다. K32-B 부터 잔디는 손님이 못 지나가므로 마당에서
+   * 내려가는 길을 먼저 깐다. 안 깔면 `unreachable` 로 조용히 빠진다 — 물려받은 빠지에
+   * 매표소가 없는 판이 나온다.
+   */
   let facilities = 0;
   const ticketAt = { i: yard.i + 1, j: yard.j + room.h + 2 };
+  for (let j = yard.j + yard.h; j < ticketAt.j; j++) paintIfLand(terrain, ticketAt.i, j, 'path_stone');
   if (place(placement, terrain, walls, gate, 'ticket', ticketAt.i, ticketAt.j)) facilities++;
   else skipped.push('매표소');
 
@@ -113,6 +120,11 @@ export function applyStartKit(input: StartKitInput): StartKitResult {
   if (!shore) {
     skipped.push('물가를 못 찾음');
   } else {
+    /*
+     * 마당에서 물가까지 길을 깐다 — 데크를 밟으려면 물가 칸에 **걸어서** 닿아야 한다.
+     * `findShore` 가 마당 가로 범위 안에서만 찾으므로 세로 한 줄이면 이어진다.
+     */
+    for (let j = yard.j; j < shore.j; j++) paintIfLand(terrain, shore.i, j, 'path_stone');
     let laid = 0;
     for (let k = 0; k < st.deck; k++) {
       if (place(placement, terrain, walls, gate, 'float_deck', shore.i, shore.j + k)) laid++;

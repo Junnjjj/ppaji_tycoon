@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "지면 종류의 시뮬 정보. 캔버스·변형 수 같은 렌더 정보는 src/assets/kairo-render-contract.json. K27: 바닥은 사는 것이다 (카이로 Tiling) — cost 는 1칸 값, indoor 는 실내 판정. 실내 바닥을 깐 자리가 곧 방이고 벽은 그 외곽선으로 자동으로 생긴다.",
+  "note": "지면 종류의 시뮬 정보. 캔버스·변형 수 같은 렌더 정보는 src/assets/kairo-render-contract.json. K27: 바닥은 사는 것이다 (카이로 Tiling) — cost 는 1칸 값, indoor 는 실내 판정. 실내 바닥을 깐 자리가 곧 방이고 벽은 그 외곽선으로 자동으로 생긴다. K32-B: walkable(육지인가)과 guestWalk(손님이 지나가나)를 나눴다 — 잔디에는 지을 수 있지만 손님은 못 지나간다. 길을 까는 것이 곧 동선 설계이고, 건물 입구도 길이 닿은 쪽에 난다.",
   "kinds": [
     {
       "id": "lawn",
@@ -8,7 +8,8 @@
       "walkable": true,
       "default": true,
       "cost": 0,
-      "indoor": false
+      "indoor": false,
+      "guestWalk": false
     },
     {
       "id": "path_stone",
@@ -16,7 +17,8 @@
       "walkable": true,
       "default": false,
       "cost": 12000,
-      "indoor": false
+      "indoor": false,
+      "guestWalk": true
     },
     {
       "id": "path_deck",
@@ -24,7 +26,8 @@
       "walkable": true,
       "default": false,
       "cost": 18000,
-      "indoor": false
+      "indoor": false,
+      "guestWalk": true
     },
     {
       "id": "path_sand",
@@ -32,7 +35,8 @@
       "walkable": true,
       "default": false,
       "cost": 8000,
-      "indoor": false
+      "indoor": false,
+      "guestWalk": true
     },
     {
       "id": "floor_indoor",
@@ -40,7 +44,8 @@
       "walkable": true,
       "default": false,
       "cost": 30000,
-      "indoor": true
+      "indoor": true,
+      "guestWalk": true
     },
     {
       "id": "water_edge",
@@ -48,7 +53,8 @@
       "walkable": false,
       "default": false,
       "cost": 0,
-      "indoor": false
+      "indoor": false,
+      "guestWalk": false
     }
   ],
   "bridges": [

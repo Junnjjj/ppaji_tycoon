@@ -36,7 +36,7 @@ const GATE = { i: 0, j: 0 };
 
 function flat(w = 8, h = 8): KairoTerrain {
   const t = new KairoTerrain(w, h);
-  for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) t.paint(i, j, 'lawn');
+  for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) t.paint(i, j, 'path_stone');
   return t;
 }
 

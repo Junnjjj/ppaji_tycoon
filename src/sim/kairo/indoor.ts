@@ -1,4 +1,5 @@
 import type { KairoTerrain } from './terrain.js';
+import { facilityDef, type PlacementGrid } from './placement.js';
 import {
   WallGrid,
   EDGE_SOLID,
@@ -34,11 +35,21 @@ import {
  * 어긋날 수 있다. 여기서는 **읽어서 벽을 굽기만** 한다.
  */
 
-export type IndoorFail = 'no-door' | 'unreachable';
+export type IndoorFail = 'no-door' | 'unreachable' | 'would-strand';
 
 export const INDOOR_FAIL_MESSAGES: Record<IndoorFail, string> = {
-  'no-door': '문을 낼 자리가 없습니다 — 실내 한쪽이 바깥과 닿아야 합니다',
+  /*
+   * K32-B: 포장한 바닥만 걷게 되면서 이 메시지가 거짓말이 됐다. "바깥과 닿아 있는데"
+   * 거절당하기 때문이다 — 닿은 바깥이 잔디면 문이 못 난다. 무엇을 하면 되는지 말한다.
+   */
+  'no-door': '입구를 낼 수 없습니다 — 건물에 길을 붙이세요',
   unreachable: '손님이 걸어올 수 없는 실내가 생깁니다',
+  /*
+   * K32-B: 포장한 바닥만 걷게 되면서 **길 한 칸을 지우면 리조트가 죽는** 일이 생겼다.
+   * 시설 배치의 `would-strand`, 벽의 `would-seal` 과 같은 방식 — 이미 있는 기계
+   * (`reachable` 전후 비교)를 쓴다. 되돌릴 수 있는 실수는 막는 것이 낫다.
+   */
+  'would-strand': '길이 끊겨 손님이 못 가는 시설이 생깁니다',
 };
 
 export interface BakeResult {
@@ -194,6 +205,44 @@ export function bakeIndoorWalls(
 }
 
 /**
+ * 게이트에서 걸어 닿는 시설의 수 — **바닥을 지우기 전후로 비교**한다.
+ *
+ * 시설 칸 자체는 손님이 못 서는 칸이므로(점유), 발자국에 **인접한** 칸 중 하나라도
+ * 닿으면 그 시설은 살아 있다. `placement.check` 의 `unreachable` 과 같은 기준이다.
+ */
+export function servedFacilities(
+  terrain: KairoTerrain,
+  walls: WallGrid,
+  gate: { i: number; j: number },
+  placement: PlacementGrid,
+  walkable?: (i: number, j: number) => boolean,
+): number {
+  const reach = reachable(terrain, walls, gate, walkable);
+  const w = terrain.width;
+  let n = 0;
+  for (const f of placement.all()) {
+    const size = facilityDef(f.defId)?.size ?? [1, 1];
+    const sw = size[0] as number;
+    const sh = size[1] as number;
+    let ok = false;
+    for (let dj = -1; dj <= sh && !ok; dj++) {
+      for (let di = -1; di <= sw && !ok; di++) {
+        const inI = di >= 0 && di < sw;
+        const inJ = dj >= 0 && dj < sh;
+        if (inI && inJ) continue; // 발자국 자신
+        if (!inI && !inJ) continue; // 대각선
+        const ni = f.i + di;
+        const nj = f.j + dj;
+        if (!terrain.inside(ni, nj)) continue;
+        if (reach[nj * w + ni] === 1) ok = true;
+      }
+    }
+    if (ok) n++;
+  }
+  return n;
+}
+
+/**
  * 한 칸을 칠하고 벽을 다시 굽는다. 실패하면 **지형까지 되돌린다.**
  *
  * 되돌리기가 여기 있어야 "칠했더니 손님이 못 들어오는데 취소도 안 된다"가 안 생긴다.
@@ -206,17 +255,26 @@ export function paintFloor(
   j: number,
   kind: string,
   walkable?: (i: number, j: number) => boolean,
+  /** 넘기면 **끊기는 시설이 생기는 칠을 거절**한다 (K32-B) */
+  placement?: PlacementGrid,
 ): { ok: boolean; fail?: IndoorFail; changed: boolean } {
   const before = terrain.kindAt(i, j);
   if (before === null) return { ok: false, changed: false };
   if (before === kind) return { ok: true, changed: false };
+  const servedBefore =
+    placement === undefined ? 0 : servedFacilities(terrain, walls, gate, placement, walkable);
   if (!terrain.paint(i, j, kind)) return { ok: false, changed: false };
 
   const r = bakeIndoorWalls(terrain, walls, gate, walkable);
-  if (!r.ok) {
+  const strands =
+    r.ok &&
+    placement !== undefined &&
+    servedFacilities(terrain, walls, gate, placement, walkable) < servedBefore;
+  if (!r.ok || strands) {
     terrain.paint(i, j, before);
     bakeIndoorWalls(terrain, walls, gate, walkable);
-    return { ok: false, ...(r.fail ? { fail: r.fail } : {}), changed: false };
+    const fail: IndoorFail = strands ? 'would-strand' : (r.fail as IndoorFail);
+    return { ok: false, fail, changed: false };
   }
   return { ok: true, changed: true };
 }
@@ -240,6 +298,8 @@ export function paintFloorBlock(
   bh: number,
   kind: string,
   walkable?: (i: number, j: number) => boolean,
+  /** 넘기면 **끊기는 시설이 생기는 칠을 거절**한다 (K32-B) */
+  placement?: PlacementGrid,
 ): { ok: boolean; fail?: IndoorFail; changed: number } {
   const before: [number, number, string][] = [];
   for (let j = j0; j < j0 + bh; j++) {
@@ -252,12 +312,19 @@ export function paintFloorBlock(
   }
   if (before.length === 0) return { ok: true, changed: 0 };
 
+  const servedBefore =
+    placement === undefined ? 0 : servedFacilities(terrain, walls, gate, placement, walkable);
   for (const [i, j] of before) terrain.paint(i, j, kind);
   const r = bakeIndoorWalls(terrain, walls, gate, walkable);
-  if (!r.ok) {
+  const strands =
+    r.ok &&
+    placement !== undefined &&
+    servedFacilities(terrain, walls, gate, placement, walkable) < servedBefore;
+  if (!r.ok || strands) {
     for (const [i, j, k] of before) terrain.paint(i, j, k);
     bakeIndoorWalls(terrain, walls, gate, walkable);
-    return { ok: false, ...(r.fail ? { fail: r.fail } : {}), changed: 0 };
+    const fail: IndoorFail = strands ? 'would-strand' : (r.fail as IndoorFail);
+    return { ok: false, fail, changed: 0 };
   }
   return { ok: true, changed: before.length };
 }

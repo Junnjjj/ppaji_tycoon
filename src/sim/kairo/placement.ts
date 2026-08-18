@@ -119,7 +119,11 @@ export function guestWalkable(
 ): (i: number, j: number) => boolean {
   return (i, j) => {
     if (placement.blocksWalk(i, j)) return false;
-    return terrain.isWalkable(i, j) || placement.isWalkOn(i, j);
+    /*
+     * ⚠ `isWalkable`(육지인가)이 아니라 `isGuestWalkable`(손님이 다니나)이다 (K32-B).
+     * 잔디는 지을 수는 있어도 못 지나간다 — 길을 까는 것이 동선 설계다.
+     */
+    return terrain.isGuestWalkable(i, j) || placement.isWalkOn(i, j);
   };
 }
 
@@ -134,7 +138,11 @@ export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
   'needs-indoor': '건물 안에만 지을 수 있습니다 — 건설 ▸ 건물 에서 넓히세요',
   'needs-deck': '플로팅덱에 붙여야 합니다',
   'deck-not-connected': '덱이 육지나 다른 덱과 이어져야 합니다',
-  unreachable: '손님이 닿을 수 없는 자리입니다',
+  /*
+   * K32-B: 이 실패의 원인이 거의 항상 "길이 없다"로 바뀌었다 (잔디는 못 지나간다).
+   * 예전 문구는 무엇을 하면 되는지 안 알려줬다 — 처방을 담는다.
+   */
+  unreachable: '손님이 못 옵니다 — 여기까지 길을 까세요',
   'unknown-def': '알 수 없는 시설입니다',
 };
 
@@ -364,7 +372,12 @@ export class PlacementGrid {
     // 도달 — 발자국에 인접한 칸 중 하나라도 게이트에서 걸어올 수 있어야 한다.
     // 물 위 시설은 이 검사를 건너뛴다 (K6 의 플로팅덱 연결이 담당한다)
     if (!needWater) {
-      const reach = reachable(terrain, walls, gate);
+      /*
+       * ⚠ **손님 판정**으로 잰다 (K32-B). 지형만 보면 잔디 위 외딴 자리가 통과하고,
+       * 손님은 못 오는데 검사는 통과하는 상태가 된다 — K26 ② 와 같은 구멍이다.
+       * 놓으려는 시설 자신은 아직 격자에 없으므로 그대로 넘겨도 된다.
+       */
+      const reach = reachable(terrain, walls, gate, guestWalkable(terrain, this));
       const ok = tiles.some(([ti, tj]) =>
         [
           [1, 0],

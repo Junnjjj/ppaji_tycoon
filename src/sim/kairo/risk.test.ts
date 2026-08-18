@@ -16,7 +16,7 @@ function world(size = 30): {
 } {
   const t = new KairoTerrain(size, size);
   for (let i = 0; i < size; i++) {
-    for (let j = 0; j < size; j++) t.paint(i, j, j >= size - 10 ? 'water_edge' : 'lawn');
+    for (let j = 0; j < size; j++) t.paint(i, j, j >= size - 10 ? 'water_edge' : 'path_stone');
   }
   const w = new WallGrid(size, size);
   const p = new PlacementGrid(size, size);

@@ -65,6 +65,14 @@ import {
 /** 경계 네 방향 — 그리기 순서는 뒤(−) → 앞(+) 이라 앞 벽이 뒤 벽을 가린다 */
 const WALL_DIRS = [DIR_I_MINUS, DIR_J_MINUS, DIR_I_PLUS, DIR_J_PLUS] as const;
 
+/** 방향 → 이웃 칸 오프셋. 순서는 `walls.ts` 의 상수값(+I,+J,−I,−J)과 같아야 한다 */
+const DIR_STEP: readonly (readonly [number, number])[] = [
+  [1, 0],
+  [0, 1],
+  [-1, 0],
+  [0, -1],
+];
+
 export interface KairoSceneStats {
   fps: number;
   upscale: Upscale;
@@ -145,6 +153,24 @@ export class KairoScene extends Phaser.Scene {
   private anchorGfx: Phaser.GameObjects.Graphics | null = null;
   /** 해금된 토지 경계선 (K25) */
   private landGfx: Phaser.GameObjects.Graphics | null = null;
+  /**
+   * 문 앞 발판 (K32-B) — **입구가 어디고 어느 쪽으로 드나드는지**를 보여준다.
+   *
+   * 문은 벽 스프라이트의 틈이라 화면에서 눈에 안 띈다. 그런데 K32-B 부터 문 위치는
+   * 플레이어가 길을 어디로 냈는지의 **결과**다. 결과가 안 보이면 원인을 못 배운다.
+   */
+  /*
+   * ⚠ 깊이를 두 번 틀렸다. ① 깊이 1 → 지면(칸마다 `depthKey`)이 위로 와서 아무것도
+   * 안 보였다. ② 칸 깊이 +1 → 이번엔 **건물 자기 뒷벽**에 가렸다. 게이트가 (0,0)
+   * 이라 문은 대개 카메라 반대쪽(−I·−J)에 나고, 그쪽 발판은 벽 뒤가 된다.
+   *
+   * 그래서 이건 세계 물체가 아니라 **힌트 층**으로 둔다 — 토지 표시(999_999)와 같은
+   * 자리다. 반투명이라 밑에 선 손님이 비쳐 보인다. 입구가 어디인지 못 찾는 것보다
+   * 살짝 겹쳐 보이는 편이 낫다.
+   */
+  private doorGfx: Phaser.GameObjects.Graphics | null = null;
+  /** 그린 발판의 칸 목록 — 검증이 "보인다"를 실제로 물어볼 수 있어야 한다 */
+  private doorMarkTiles: { i: number; j: number }[] = [];
   /** 배치 미리보기 (K32) — 확정하기 전의 시설 */
   private ghost: Phaser.GameObjects.Image | null = null;
   /**
@@ -211,6 +237,8 @@ export class KairoScene extends Phaser.Scene {
     this.courseGfx = this.add.graphics().setDepth(1_000_000).setVisible(false);
     this.anchorGfx = this.add.graphics().setDepth(1_000_001).setVisible(false);
     this.landGfx = this.add.graphics().setDepth(999_999).setVisible(false);
+    this.doorGfx = this.add.graphics().setDepth(999_998);
+    this.refreshDoorMarks();
     this.rebuildFacilities();
     this.applyScale(this.cam.upscale);
     this.wireInput();
@@ -509,9 +537,91 @@ export class KairoScene extends Phaser.Scene {
     g.setVisible(true);
   }
 
+  /** 문 앞 발판이 그려진 칸들 — 검증용 */
+  get doorMarks(): { i: number; j: number }[] {
+    return [...this.doorMarkTiles];
+  }
+
   /** 벽이 통째로 바뀌었을 때 (건물 영역 확정 등) — 전부 다시 굽는다 */
   refreshAllWalls(): void {
     this.buildWalls();
+    this.refreshDoorMarks();
+  }
+
+  /**
+   * 문 앞 발판을 전부 다시 그린다 (K32-B).
+   *
+   * 부분 갱신을 안 하는 이유는 벽 굽기와 같다 — 문은 `bakeIndoorWalls` 가 **매번 전부**
+   * 다시 고르므로, 한 칸만 지우면 옛 발판이 남는다. 격자 전체 순회라 해도 셀 3천 개다.
+   */
+  refreshDoorMarks(): void {
+    const g0 = this.doorGfx;
+    if (!g0) return;
+    g0.clear();
+    this.doorMarkTiles = [];
+    /*
+     * ⚠ **한 경계가 두 번 잡힌다.** (2,3)의 +I 와 (3,3)의 −I 는 같은 경계다 (K25 —
+     * −I·−J 는 이웃이 소유하고 `edgeAt` 은 그걸 되비춰 준다). 순회하며 그대로 그리면
+     * 발판이 문 안쪽에도 깔린다 — 실측으로 새 판에서 2칸이 나왔다.
+     *
+     * 그래서 **바깥 칸에만** 한 장 그린다. 바깥은 실내가 아닌 쪽이다.
+     */
+    const seen = new Set<number>();
+    for (let j = 0; j < GRID_H; j++) {
+      for (let i = 0; i < GRID_W; i++) {
+        for (const dir of WALL_DIRS) {
+          if (this.opts.walls.edgeAt(i, j, dir) !== EDGE_DOOR) continue;
+          const d = DIR_STEP[dir];
+          if (!d) continue;
+          const ni = i + d[0];
+          const nj = j + d[1];
+          // 두 칸 중 실내가 아닌 쪽이 바깥이다. 둘 다 실내면 문이 아니다 (있을 수 없다)
+          const outsideHere = !this.opts.terrain.isIndoor(i, j);
+          const oi = outsideHere ? i : ni;
+          const oj = outsideHere ? j : nj;
+          const ti = outsideHere ? d[0] : -d[0];
+          const tj = outsideHere ? d[1] : -d[1];
+          const key = oj * GRID_W + oi;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          this.drawDoorMark(oi, oj, ti, tj);
+        }
+      }
+    }
+  }
+
+  /** 발판 한 장 — 마름모를 채우고, 문 쪽으로 향하는 화살표를 얹는다 */
+  private drawDoorMark(i: number, j: number, ti: number, tj: number): void {
+    const g = this.doorGfx;
+    if (!g || !inGrid(i, j)) return;
+    this.doorMarkTiles.push({ i, j });
+    const c = tileCenter(i, j);
+    g.fillStyle(0xffe08a, 0.28);
+    g.beginPath();
+    g.moveTo(c.x, c.y - TILE_H / 2);
+    g.lineTo(c.x + TILE_W / 2, c.y);
+    g.lineTo(c.x, c.y + TILE_H / 2);
+    g.lineTo(c.x - TILE_W / 2, c.y);
+    g.closePath();
+    g.fillPath();
+    g.lineStyle(1, 0xffe08a, 0.85);
+    g.strokePath();
+
+    /*
+     * 화살표 — 격자 방향을 화면 방향으로 옮긴다. 아이소라 (i,j) 증가가 화면에서
+     * 대각선이므로, 타일 반칸을 그대로 쓰면 마름모 안에 딱 맞는다.
+     */
+    const ax = ((ti + tj) * TILE_W) / 4;
+    const ay = ((tj - ti) * TILE_H) / 4;
+    const nx = -ay;
+    const ny = ax;
+    g.beginPath();
+    g.moveTo(c.x + ax, c.y + ay);
+    g.lineTo(c.x - ax * 0.4 + nx * 0.45, c.y - ay * 0.4 + ny * 0.45);
+    g.lineTo(c.x - ax * 0.4 - nx * 0.45, c.y - ay * 0.4 - ny * 0.45);
+    g.closePath();
+    g.fillStyle(0xffe08a, 0.9);
+    g.fillPath();
   }
 
   /**

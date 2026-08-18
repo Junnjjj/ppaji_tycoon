@@ -18,7 +18,7 @@ const GATE = { i: 2, j: 2 };
 
 function lawn(w = 40, h = 32): KairoTerrain {
   const t = new KairoTerrain(w, h);
-  for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) t.paint(i, j, 'lawn');
+  for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) t.paint(i, j, 'path_stone');
   return t;
 }
 

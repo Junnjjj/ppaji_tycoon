@@ -28,7 +28,7 @@ interface World {
 
 function world(size = 24, facilities: [string, number, number][] = []): World {
   const t = new KairoTerrain(size, size);
-  for (let i = 0; i < size; i++) for (let j = 0; j < size; j++) t.paint(i, j, 'lawn');
+  for (let i = 0; i < size; i++) for (let j = 0; j < size; j++) t.paint(i, j, 'path_stone');
   const w = new WallGrid(size, size);
   const p = new PlacementGrid(size, size);
   for (const [id, i, j] of facilities) p.place(t, w, GATE, id, i, j);
@@ -276,7 +276,7 @@ describe('주말이 성수기다', () => {
   it('정원이 차면 돌려보낸 손님이 기록된다 — 시설을 늘려야 한다는 신호', () => {
     // 정원을 아주 작게 두면 곧바로 만석이 된다
     const t = new KairoTerrain(20, 20);
-    for (let i = 0; i < 20; i++) for (let j = 0; j < 20; j++) t.paint(i, j, 'lawn');
+    for (let i = 0; i < 20; i++) for (let j = 0; j < 20; j++) t.paint(i, j, 'path_stone');
     const w = new WallGrid(20, 20);
     const p = new PlacementGrid(20, 20);
     p.place(t, w, GATE, 'shop', 5, 5);

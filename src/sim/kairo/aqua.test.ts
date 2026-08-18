@@ -11,7 +11,7 @@ const GATE = { i: 0, j: 0 };
 function shore(w: number, h: number, waterFrom: number): KairoTerrain {
   const t = new KairoTerrain(w, h);
   for (let i = 0; i < w; i++) {
-    for (let j = 0; j < h; j++) t.paint(i, j, j >= waterFrom ? 'water_edge' : 'lawn');
+    for (let j = 0; j < h; j++) t.paint(i, j, j >= waterFrom ? 'water_edge' : 'path_stone');
   }
   return t;
 }

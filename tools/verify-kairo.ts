@@ -33,6 +33,30 @@ const BASE = process.env['PPAJI_URL'] ?? 'http://localhost:5173';
  */
 const URL = `${BASE}/?kairo=1&px=1&debug=1`;
 const HEADED = process.argv.includes('--headed');
+/**
+ * 판의 육지를 통째로 포장한다 — K32-B 부터 **잔디는 손님이 못 지나간다.**
+ *
+ * 하네스는 "빈 육지를 찾아 시설을 놓는다"로 여러 절을 짠다. 그 육지가 잔디면 이제
+ * 전부 `unreachable` 이다 (실측 13절 실패). 길 규칙 자체를 보는 것은 새 절과
+ * `paths.test.ts` 이고, 나머지 절이 보려는 것은 배치·손님·콤보·위험도다 —
+ * 그 절들에서는 **길을 상수로 만든다.**
+ *
+ * 실내 바닥은 건드리지 않는다 (방을 지우면 벽이 사라진다).
+ */
+const PAVE_ALL = `
+    (() => {
+      const _t = window.__kairo.terrain, _sc = window.__kairo.scene;
+      for (let j = 0; j < _t.height; j++) {
+        for (let i = 0; i < _t.width; i++) {
+          if (!_t.isWalkable(i, j) || _t.isIndoor(i, j)) continue;
+          if (_t.kindAt(i, j) === 'path_stone') continue;
+          if (_t.paint(i, j, 'path_stone')) _sc.refreshTile(i, j);
+        }
+      }
+      window.__kairo.guests.invalidate();
+    })();
+`;
+
 const SHOT_DIR = 'tmp-shots';
 
 /** iPhone 14 Pro 급 — DPR 3 이 정수라 도트 격자에 유리한 쪽. 안드로이드는 아래에서 따로 본다 */
@@ -393,10 +417,15 @@ async function main(): Promise<void> {
       b2 !== undefined && b4 !== undefined && /넓어/.test(b4.sub) ? 'pass' : 'fail',
       b4 ? `${tabs.building.length}개 · ${b4.sub}` : '없음',
     );
+    /*
+     * K32-B: 길 붓이 1·2·3 세 크기가 됐다 (통행 가능한 3종 × 3 + 통행 불가 2종 + 철거 = 12).
+     * 길이 놀이의 축이 됐는데 한 칸씩 찍게 두면 폰에서 못 깐다.
+     */
     record(
-      '바닥 탭은 실외 포장만 (5종 + 철거)',
-      tabs.ground.length === 6 &&
+      '바닥 탭은 실외 포장만 · 길 붓은 1·2·3 세 크기 (K32-B)',
+      tabs.ground.length === 12 &&
         !tabs.ground.some((x) => x.pick === 'ground:floor_indoor') &&
+        tabs.ground.some((x) => x.pick === 'ground:path_stone@3') &&
         tabs.ground.filter((x) => /만/.test(x.sub)).length >= 3
         ? 'pass'
         : 'fail',
@@ -651,6 +680,7 @@ async function main(): Promise<void> {
   // ── 7e. 시설 배치·다중칸 슬롯 ──
   const fac = (await page.evaluate(`(() => {
     const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, sc = h.scene;
+    ${PAVE_ALL}
     const gate = { i: 0, j: 0 };
     const out = { picker: 0, placed: [], rejected: [], anchors: [] };
 
@@ -837,6 +867,7 @@ async function main(): Promise<void> {
   // ── 7f. 손님 — 걷고, 칸을 채우고, 표정·이모트가 뜬다 ──
   const guests = (await page.evaluate(`(() => {
     const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, g = h.guests, sc = h.scene;
+    ${PAVE_ALL}
     // 게이트 근처 육지에 시설 몇 개를 놓아 손님이 갈 곳을 만든다
     const gate = h.gate;
     // 게이트 근처 빈 자리를 실제로 찾아 놓는다 — 앞 블록이 이미 놓은 시설과 겹치면 안 된다
@@ -976,6 +1007,7 @@ async function main(): Promise<void> {
   //   색에 의존하지 않고 "뒤가 비친다"만 검사한다.
   const glassCheck = (await page.evaluate(`(() => {
     const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, g = h.guests, sc = h.scene;
+    ${PAVE_ALL}
     if (g.all.length < 2) return { ok: false, reason: '손님이 둘 미만' };
 
     // 벽 세울 자리 (자기와 뒤 칸이 비어 있는 육지)
@@ -1161,7 +1193,8 @@ async function main(): Promise<void> {
      */
     const reach = (await page.evaluate(`(() => {
       const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, g = h.guests, sc = h.scene;
-      // 물 3×3 을 찾아 그 옆에 잔교를 새로 낸다 (앞 블록과 안 겹치게)
+    ${PAVE_ALL}
+    // 물 3×3 을 찾아 그 옆에 잔교를 새로 낸다 (앞 블록과 안 겹치게)
       // ⚠ 물 블록이 육지에 바로 붙어 있으면 덱을 끊어도 육지에서 바로 닿아
       //   "덱이 유일한 길" 검사가 무의미해진다. **3칸 이상** 떨어진 곳을 고른다.
       let wet = null;
@@ -1458,6 +1491,7 @@ async function main(): Promise<void> {
   // ── 7j. 콤보·해금·의뢰 ──
   const prog = (await page.evaluate(`(() => {
     const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, sc = h.scene;
+    ${PAVE_ALL}
     const out = {};
 
     // 의뢰 패널이 상시 보인다
@@ -1575,6 +1609,7 @@ async function main(): Promise<void> {
   // ── 7k. 위험도 상시 표시 ──
   const risk = (await page.evaluate(`(() => {
     const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, sc = h.scene;
+    ${PAVE_ALL}
     const box = document.getElementById('kairo-risk');
     const before = h.risk.assessRisk(p, h.guests);
 
@@ -2591,6 +2626,8 @@ async function main(): Promise<void> {
     return { ok: true, tiles: tiles, count: h.placement.count, brush: window.__kairoBrush ? window.__kairoBrush() : null };
   })()`)) as { ok: boolean; why?: string; tiles: [number, number][]; count?: number; brush?: string | null };
 
+  // 길을 깔아 둔다 — 탭으로 놓는 것을 보려는 절이지 길을 보려는 절이 아니다 (K32-B)
+  await page.evaluate(PAVE_ALL);
   let placedAt: [number, number] | null = null;
   let tapDetail = candidates.ok ? `붓 ${String(candidates.brush)}` : (candidates.why ?? '실패');
   const countBefore = candidates.count ?? 0;
@@ -3195,6 +3232,187 @@ async function main(): Promise<void> {
     );
     await cx.close();
   }
+
+  // ── 9c. 포장한 바닥만 걷는다 · 입구가 보인다 (K32-B) ──
+  //
+  // 길을 어디로 내느냐가 곧 입구의 위치와 방향을 정한다. 새 저장 상태 없이 동사 하나가
+  // 둘을 한다 — 그래서 검사도 "잔디는 막히고 포장은 통하는가"와 "문 앞이 보이는가" 둘이다.
+  const pathUi = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain, p = h.placement, sc = h.scene;
+    const out = {};
+
+    // ① 물려받은 빠지에는 문이 있고, 그 앞에 발판이 그려져 있다
+    out.marks = sc.doorMarks.length;
+    out.marksPaved = sc.doorMarks.every((m) => t.isGuestWalkable(m.i, m.j));
+    /*
+     * ⚠ 한 경계가 두 방향으로 보인다 (K25 — −I 는 이웃의 +I 다). 그대로 그리면 발판이
+     * 실내에도 깔린다. 실측으로 새 판에서 2칸이 나왔고, 그중 하나가 방 안이었다.
+     */
+    out.marksOutside = sc.doorMarks.every((m) => !t.isIndoor(m.i, m.j));
+
+    /*
+     * ② 잔디 자리를 **만든다.** 앞 절들이 판을 통째로 포장해 뒀으므로 (PAVE_ALL) 그냥
+     *    찾으면 없다. 6×6 육지를 잔디로 되돌리고 그 한복판 2×2 를 쓴다 — 가장자리 한 겹이
+     *    해자가 되어 "옆 포장으로 닿아서 통과"가 안 생긴다.
+     */
+    let area = null;
+    for (let j = 6; j < 30 && !area; j++) {
+      for (let i = 20; i < 44; i++) {
+        let ok = true;
+        for (let dj = 0; dj < 6 && ok; dj++) {
+          for (let di = 0; di < 6; di++) {
+            const ti = i + di, tj = j + dj;
+            if (!t.isWalkable(ti, tj) || t.isIndoor(ti, tj) || p.handleAt(ti, tj) !== 0) { ok = false; break; }
+          }
+        }
+        if (ok) { area = [i, j]; break; }
+      }
+    }
+    if (!area) return { ok: false, reason: '6×6 빈 육지를 못 찾았다' };
+    for (let dj = 0; dj < 6; dj++) {
+      for (let di = 0; di < 6; di++) {
+        t.paint(area[0] + di, area[1] + dj, 'lawn');
+        sc.refreshTile(area[0] + di, area[1] + dj);
+      }
+    }
+    const spot = [area[0] + 2, area[1] + 2];
+    out.spot = spot;
+    const c0 = p.check(t, h.walls, h.gate, 'shop', spot[0], spot[1]);
+    out.lawnFail = c0.fail || '(통과)';
+
+    // ③ 게이트에서 그 자리까지 길을 깐다 — 최단이 아니어도 이어지기만 하면 된다
+    for (let i = 0; i <= spot[0]; i++) if (t.isWalkable(i, 0)) t.paint(i, 0, 'path_stone');
+    for (let j = 0; j <= spot[1]; j++) if (t.isWalkable(spot[0], j)) t.paint(spot[0], j, 'path_stone');
+    const c1 = p.check(t, h.walls, h.gate, 'shop', spot[0], spot[1]);
+    out.pavedOk = c1.ok;
+    out.pavedFail = c1.fail || '';
+    return { ok: true, ...out };
+  })()`)) as
+    | { ok: false; reason: string }
+    | {
+        ok: true;
+        marks: number;
+        marksPaved: boolean;
+        marksOutside: boolean;
+        spot: number[];
+        lawnFail: string;
+        pavedOk: boolean;
+        pavedFail: string;
+      };
+
+  if (!pathUi.ok) {
+    record('포장한 바닥만 걷는다 (K32-B)', 'fail', pathUi.reason);
+  } else {
+    record(
+      '★ 잔디에는 못 놓고, 길을 깔면 놓인다 — 길이 곧 동선이다 (K32-B)',
+      pathUi.lawnFail === 'unreachable' && pathUi.pavedOk ? 'pass' : 'fail',
+      `잔디 (${pathUi.spot.join(',')}) "${pathUi.lawnFail}" → 포장 후 ${
+        pathUi.pavedOk ? '통과' : `"${pathUi.pavedFail}"`
+      }`,
+    );
+    record(
+      '문 앞 발판이 문 **바깥**에만 깔린다 (K32-B)',
+      pathUi.marks > 0 && pathUi.marksPaved && pathUi.marksOutside ? 'pass' : 'fail',
+      `발판 ${pathUi.marks}칸 · 포장 위 ${pathUi.marksPaved} · 전부 실외 ${pathUi.marksOutside}`,
+    );
+  }
+
+  // 길 붓 — 한 칸씩 찍어서는 폰에서 길을 못 깐다 (K32-B)
+  const roadBrush = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain;
+    document.getElementById('kairo-build-open').click();
+    document.querySelector('#kairo-sheet [data-tab="ground"]').click();
+    const items = [...document.querySelectorAll('#kairo-sheet [data-pick]')];
+    const labels = items.map((el) => el.textContent);
+    const block = document.querySelector('[data-pick="ground:path_stone@3"]');
+    if (!block) return { ok: false, reason: '석재 보도 3×3 붓이 없다', labels: labels.slice(0, 8) };
+    block.click();
+    /*
+     * 잔디 3×3 을 **해금된 토지 안에** 만든다. 앞 절의 자리는 i=20 대라 1등급 토지 밖이라
+     * tapTile 이 조용히 거절했다 (실측 — 검사가 0칸으로 나왔다). 게이트 가까이서 찾는다.
+     */
+    let spot = null;
+    for (let j = 4; j < 16 && !spot; j++) {
+      for (let i = 4; i < 18; i++) {
+        let ok = true;
+        for (let dj = -1; dj <= 1 && ok; dj++) {
+          for (let di = -1; di <= 1; di++) {
+            const ti = i + di, tj = j + dj;
+            if (!t.isWalkable(ti, tj) || t.isIndoor(ti, tj) || h.placement.handleAt(ti, tj) !== 0) { ok = false; break; }
+          }
+        }
+        if (ok) { spot = [i, j]; break; }
+      }
+    }
+    if (!spot) return { ok: false, reason: '토지 안에서 3×3 빈 육지를 못 찾았다', labels: [] };
+    for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
+      t.paint(spot[0] + di, spot[1] + dj, 'lawn');
+      h.scene.refreshTile(spot[0] + di, spot[1] + dj);
+    }
+    const before = h.week.cash;
+    let paved0 = 0;
+    for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
+      if (t.kindAt(spot[0] + di, spot[1] + dj) === 'path_stone') paved0++;
+    }
+    h.tapTile(spot[0], spot[1]);
+    let paved1 = 0;
+    for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
+      if (t.kindAt(spot[0] + di, spot[1] + dj) === 'path_stone') paved1++;
+    }
+    const walkSub = labels.filter((x) => x.includes('손님 통행')).length;
+    const noWalkSub = labels.filter((x) => x.includes('못 지나감')).length;
+    const toastEl = document.getElementById('kairo-toast');
+    return { ok: true, paved: paved1 - paved0, spent: before - h.week.cash, walkSub: walkSub,
+      noWalkSub: noWalkSub,
+      dbg: JSON.stringify({ spot: spot, brush: window.__kairoBrush ? window.__kairoBrush() : null,
+        kind: t.kindAt(spot[0], spot[1]), cash: h.week.cash,
+        toast: toastEl && !toastEl.hidden ? toastEl.textContent : '' }) };
+  })()`)) as
+    | { ok: false; reason: string; labels: string[] }
+    | { ok: true; paved: number; spent: number; walkSub: number; noWalkSub: number; dbg: string };
+
+  if (!roadBrush.ok) {
+    record('길 붓이 블록으로 깐다 (K32-B)', 'fail', `${roadBrush.reason} · ${roadBrush.labels.join(' / ')}`);
+  } else {
+    record(
+      '길 붓 3×3 이 아홉 칸을 한 번에 깐다 — 한 칸씩은 폰에서 못 깐다 (K32-B)',
+      roadBrush.paved === 9 && roadBrush.spent > 0 ? 'pass' : 'fail',
+      `포장 +${roadBrush.paved}칸 · ${Math.round(roadBrush.spent / 10000)}만 지출`,
+    );
+    record(
+      '바닥 목록이 통행 여부를 말해 준다 — 규칙을 바꿨으면 알려줘야 한다',
+      roadBrush.walkSub > 0 && roadBrush.noWalkSub > 0 ? 'pass' : 'fail',
+      `"손님 통행" ${roadBrush.walkSub}개 · "못 지나감" ${roadBrush.noWalkSub}개`,
+    );
+  }
+  await page.evaluate(`(() => { const s = document.getElementById('kairo-sheet'); if (s) s.hidden = true; })()`);
+
+  // ⚠ 음성 대조군 — 방을 지우면 문도 발판도 사라진다 (그리는 것이 문을 따라오는가)
+  const markControl = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain, sc = h.scene;
+    const before = sc.doorMarks.length;
+    const undo = [];
+    for (let j = 0; j < t.height; j++) {
+      for (let i = 0; i < t.width; i++) {
+        if (t.isIndoor(i, j)) { undo.push([i, j]); t.paint(i, j, 'path_stone'); }
+      }
+    }
+    h.sim.bakeIndoorWalls(t, h.walls, h.gate, h.sim.guestWalkable(t, h.placement));
+    sc.refreshAllWalls();
+    const after = sc.doorMarks.length;
+    // 되돌린다 — 뒤 절이 물려받은 방을 본다
+    for (const [i, j] of undo) t.paint(i, j, 'floor_indoor');
+    h.sim.bakeIndoorWalls(t, h.walls, h.gate, h.sim.guestWalkable(t, h.placement));
+    sc.refreshAllWalls();
+    return { before: before, after: after, restored: sc.doorMarks.length };
+  })()`)) as { before: number; after: number; restored: number };
+  record(
+    '⚠ 음성 대조군 — 방을 지우면 발판도 사라진다 (검사가 유의미한가)',
+    markControl.before > 0 && markControl.after === 0 && markControl.restored > 0
+      ? 'pass'
+      : 'fail',
+    `발판 ${markControl.before} → 방 삭제 ${markControl.after} → 복구 ${markControl.restored}`,
+  );
 
   // ── 10. 안드로이드 비정수 DPR ──
   const ctx2 = await browser.newContext({

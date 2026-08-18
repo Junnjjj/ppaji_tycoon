@@ -166,7 +166,7 @@ describe('판정', () => {
 
   it('좁은 강에서는 넓은 형태가 막힌다 (§7.7)', () => {
     const t = new KairoTerrain(40, 32);
-    for (let i = 0; i < 40; i++) for (let j = 0; j < 32; j++) t.paint(i, j, 'lawn');
+    for (let i = 0; i < 40; i++) for (let j = 0; j < 32; j++) t.paint(i, j, 'path_stone');
     for (let i = 0; i < 40; i++) for (let j = 15; j < 18; j++) t.paint(i, j, 'water_edge'); // 3칸 폭
     const narrowDock = { x: 6, y: 16 };
     const wide = presetDef('ellipse')!; // 필요 수면 90

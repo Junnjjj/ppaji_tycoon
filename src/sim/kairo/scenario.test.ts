@@ -110,6 +110,10 @@ describe('맵이 결과를 바꾼다', () => {
   const runOn = (mapId: string): ReturnType<WeekRunner['run']> => {
     const m = mapType(mapId);
     const t = KairoTerrain.generate(40, 32, new Rng(555), m);
+    /* 육지를 포장한다 — K32-B 부터 잔디는 손님이 못 지나간다. 맵별 수역 배치는 그대로 남는다 */
+    for (let j = 0; j < 32; j++) {
+      for (let i = 0; i < 40; i++) if (t.isWalkable(i, j)) t.paint(i, j, 'path_stone');
+    }
     const w = new WallGrid(40, 32);
     const p = new PlacementGrid(40, 32);
     let placed = 0;

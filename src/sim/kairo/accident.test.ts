@@ -23,7 +23,7 @@ function park(defId: string, n: number): {
   g: GuestStore;
 } {
   const t = new KairoTerrain(40, 32);
-  for (let i = 0; i < 40; i++) for (let j = 0; j < 32; j++) t.paint(i, j, 'lawn');
+  for (let i = 0; i < 40; i++) for (let j = 0; j < 32; j++) t.paint(i, j, 'path_stone');
   const w = new WallGrid(40, 32);
   const p = new PlacementGrid(40, 32);
   for (let k = 0; k < n; k++) p.place(t, w, GATE, defId, 6 + (k % 8) * 3, 8 + Math.floor(k / 8) * 3);

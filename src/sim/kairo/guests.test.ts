@@ -16,7 +16,7 @@ const GATE = { i: 0, j: 0 };
 
 function flat(w: number, h: number): KairoTerrain {
   const t = new KairoTerrain(w, h);
-  for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) t.paint(i, j, 'lawn');
+  for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) t.paint(i, j, 'path_stone');
   return t;
 }
 
@@ -359,8 +359,8 @@ describe('갇힌 손님 — 판이 얼어붙지 않는다', () => {
     const t = new KairoTerrain(20, 20);
     // 물 바다에 잔디 두 조각: 게이트 쪽과 고립된 쪽
     for (let i = 0; i < 20; i++) for (let j = 0; j < 20; j++) t.paint(i, j, 'water_edge');
-    t.paint(1, 1, 'lawn');
-    t.paint(15, 15, 'lawn'); // 고립된 칸
+    t.paint(1, 1, 'path_stone');
+    t.paint(15, 15, 'path_stone'); // 고립된 칸
     const w = new WallGrid(20, 20);
     const p = new PlacementGrid(20, 20);
     const g = new GuestStore(t, w, p, { i: 1, j: 1 }, GUEST_DEFAULTS);
@@ -385,7 +385,7 @@ describe('갇힌 손님 — 판이 얼어붙지 않는다', () => {
 
   it('길이 있으면 갇힘 판정이 안 걸린다 — 멀쩡한 손님을 내보내면 안 된다', () => {
     const t = new KairoTerrain(20, 20);
-    for (let i = 0; i < 20; i++) for (let j = 0; j < 20; j++) t.paint(i, j, 'lawn');
+    for (let i = 0; i < 20; i++) for (let j = 0; j < 20; j++) t.paint(i, j, 'path_stone');
     const w = new WallGrid(20, 20);
     const p = new PlacementGrid(20, 20);
     p.place(t, w, { i: 1, j: 1 }, 'shop', 8, 8);

@@ -35,7 +35,7 @@ const GATE = { i: 0, j: 0 };
 
 function flat(w = 14, h = 14): KairoTerrain {
   const t = new KairoTerrain(w, h);
-  for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) t.paint(i, j, 'lawn');
+  for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) t.paint(i, j, 'path_stone');
   return t;
 }
 
@@ -76,7 +76,7 @@ describe('바닥이 곧 방이다', () => {
     room(t, 4, 4, 3, 3);
     bakeIndoorWalls(t, w, GATE);
     room(t, 4, 4, 3, 3); // 같은 자리를…
-    for (let j = 4; j < 7; j++) for (let i = 4; i < 7; i++) t.paint(i, j, 'lawn');
+    for (let j = 4; j < 7; j++) for (let i = 4; i < 7; i++) t.paint(i, j, 'path_stone');
     const r = bakeIndoorWalls(t, w, GATE);
     expect(r.areas).toBe(0);
     expect(w.count(EDGE_SOLID) + w.count(EDGE_DOOR)).toBe(0);
@@ -136,12 +136,12 @@ describe('거절과 되돌리기', () => {
     for (let i = 0; i < 14; i++) t.paint(i, 1, 'water_edge');
     const r = paintFloor(t, w, GATE, 5, 5, 'floor_indoor');
     expect(r.ok).toBe(false);
-    expect(t.kindAt(5, 5)).toBe('lawn'); // 되돌아갔다
+    expect(t.kindAt(5, 5)).toBe('path_stone'); // 되돌아갔다
   });
 
   it('같은 바닥을 다시 칠하면 아무 일도 안 한다 — 값을 두 번 받지 않게', () => {
     const { t, w } = setup();
-    expect(paintFloor(t, w, GATE, 5, 5, 'lawn')).toEqual({ ok: true, changed: false });
+    expect(paintFloor(t, w, GATE, 5, 5, 'path_stone')).toEqual({ ok: true, changed: false });
   });
 
   it('모든 실패 이유에 사람이 읽을 메시지가 있다', () => {

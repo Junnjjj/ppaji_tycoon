@@ -25,7 +25,7 @@ function flat(size = 30): { t: KairoTerrain; w: WallGrid; p: PlacementGrid } {
   const t = new KairoTerrain(size, size);
   for (let i = 0; i < size; i++) {
     for (let j = 0; j < size; j++) {
-      t.paint(i, j, i > 0 && j > 0 && i < size - 1 && j < size - 1 ? 'floor_indoor' : 'lawn');
+      t.paint(i, j, i > 0 && j > 0 && i < size - 1 && j < size - 1 ? 'floor_indoor' : 'path_stone');
     }
   }
   return { t, w: new WallGrid(size, size), p: new PlacementGrid(size, size) };

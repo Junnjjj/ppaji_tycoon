@@ -31,6 +31,10 @@ const GATE = { i: 2, j: 2 };
 function build(): KairoSaveInput {
   const rng = new Rng(4242);
   const terrain = KairoTerrain.generate(GRID_W, GRID_H, rng.fork(1));
+  /* 육지를 포장한다 — K32-B 부터 잔디는 손님이 못 지나간다 (길 규칙은 별도 테스트가 본다) */
+  for (let j = 0; j < GRID_H; j++) {
+    for (let i = 0; i < GRID_W; i++) if (terrain.isWalkable(i, j)) terrain.paint(i, j, 'path_stone');
+  }
   const walls = new WallGrid(GRID_W, GRID_H);
   const placement = new PlacementGrid(GRID_W, GRID_H);
   // 벽부착 시설을 놓을 수 있게 경계를 준다 (K25: 벽은 타일이 아니라 경계에 있다)

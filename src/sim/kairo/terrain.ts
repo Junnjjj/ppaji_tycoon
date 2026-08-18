@@ -20,6 +20,14 @@ export interface GroundKindDef {
   default: boolean;
   /** 1칸을 까는 값 (K27). 카이로의 `Tiling` — 바닥은 편집기 도구가 아니라 **사는 것**이다 */
   cost: number;
+  /**
+   * 손님이 **지나갈 수 있나** (K32-B). `walkable` 과 다르다.
+   *
+   * `walkable` 은 "육지인가" — 잔디에도 시설을 **지을 수는** 있다.
+   * `guestWalk` 는 "손님이 다니나" — 잔디는 못 다닌다. 길을 까는 것이 곧 동선 설계이고,
+   * 건물 입구도 **길이 닿은 쪽**에 난다.
+   */
+  guestWalk: boolean;
   /** 실내 바닥인가. **이 칸들이 곧 방이다** — 벽은 그 외곽선으로 자동 생성된다 */
   indoor: boolean;
 }
@@ -135,6 +143,18 @@ export class KairoTerrain {
   isIndoor(i: number, j: number): boolean {
     const k = this.at(i, j);
     return k < 0 ? false : groundDef(k).indoor;
+  }
+
+  /**
+   * 손님이 지나갈 수 있는 지면인가 (K32-B) — **잔디는 아니다.**
+   *
+   * `isWalkable`(육지인가)과 갈라 둔 이유: 잔디에도 지을 수는 있어야 하는데 손님이
+   * 잔디를 가로지르면 길을 깔 이유가 없어진다. 카이로에서 길을 내는 것은 플레이의 한 축이다.
+   * 시설 점유는 `guestWalkable`(placement.ts)이 얹는다 — 정의는 거기 하나다.
+   */
+  isGuestWalkable(i: number, j: number): boolean {
+    const k = this.at(i, j);
+    return k < 0 ? false : groundDef(k).guestWalk;
   }
 
   /** 지면만 보고 걸을 수 있는가. 벽·시설 점유는 K3·K4 가 따로 얹는다 */

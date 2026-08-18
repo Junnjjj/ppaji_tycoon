@@ -252,6 +252,98 @@ function ensureRoom(
 }
 
 /** 병목을 보고 그 종류를 짓는 봇 */
+/**
+ * 시설 자리까지 **길을 깐다** (K32-B).
+ *
+ * ⚠ 봇에도 넣어야 한다. 잔디를 못 걷게 되면서 봇이 뽑은 자리는 대부분 `unreachable` 이
+ * 된다 — 안 넣으면 헤드리스 숫자가 "아무것도 못 짓는 판"이 되어 실제 게임과 갈라진다.
+ * 토지 해금을 봇에 안 넣었을 때와 같은 종류의 사고다.
+ *
+ * 0-1 BFS 로 **새로 깔 칸이 가장 적은** 경로를 찾는다. 이미 포장된 칸은 값이 0,
+ * 잔디는 1. 물·시설이 막은 칸은 못 지난다. 실제로 깐 칸 수 × 석재값을 돌려준다.
+ */
+function ensurePath(
+  t: KairoTerrain,
+  w: WallGrid,
+  p: PlacementGrid,
+  land: { w: number; h: number },
+  target: { i: number; j: number; w: number; h: number },
+): number {
+  const stand = guestWalkable(t, p);
+  const stoneCost = GROUND_KINDS.find((k) => k.id === 'path_stone')?.cost ?? 0;
+  const W = t.width;
+  const H = t.height;
+
+  /** 목표 발자국에 인접한 칸들 — 손님은 시설 옆에 서서 쓴다 */
+  const goals: number[] = [];
+  for (let dj = -1; dj <= target.h; dj++) {
+    for (let di = -1; di <= target.w; di++) {
+      const inI = di >= 0 && di < target.w;
+      const inJ = dj >= 0 && dj < target.h;
+      if (inI === inJ) continue; // 발자국 자신과 대각선은 뺀다
+      const ni = target.i + di;
+      const nj = target.j + dj;
+      if (!t.inside(ni, nj) || ni >= land.w || nj >= land.h) continue;
+      goals.push(nj * W + ni);
+    }
+  }
+  if (goals.length === 0) return 0;
+
+  const INF = 1 << 20;
+  const dist = new Int32Array(W * H).fill(INF);
+  const prev = new Int32Array(W * H).fill(-1);
+  const start = GATE.j * W + GATE.i;
+  dist[start] = 0;
+  /* 0-1 BFS — 덱 대신 배열 두 개(현재 값 / 다음 값)를 번갈아 쓴다 */
+  let cur: number[] = [start];
+  let next: number[] = [];
+  let d = 0;
+  while (cur.length > 0 || next.length > 0) {
+    if (cur.length === 0) {
+      cur = next;
+      next = [];
+      d++;
+      continue;
+    }
+    const k = cur.pop() as number;
+    if ((dist[k] as number) < d) continue;
+    const i = k % W;
+    const j = (k - i) / W;
+    for (const [di, dj] of [
+      [1, 0],
+      [-1, 0],
+      [0, 1],
+      [0, -1],
+    ] as const) {
+      const ni = i + di;
+      const nj = j + dj;
+      if (!t.inside(ni, nj) || ni >= land.w || nj >= land.h) continue;
+      if (w.blocksMove(i, j, ni, nj)) continue;
+      if (!t.isWalkable(ni, nj)) continue; // 물은 못 지난다
+      if (p.blocksWalk(ni, nj)) continue; // 시설이 막은 칸
+      const step = stand(ni, nj) ? 0 : 1;
+      const nk = nj * W + ni;
+      if ((dist[k] as number) + step >= (dist[nk] as number)) continue;
+      dist[nk] = (dist[k] as number) + step;
+      prev[nk] = k;
+      (step === 0 ? cur : next).push(nk);
+    }
+  }
+
+  let best = -1;
+  for (const g of goals) if (best < 0 || (dist[g] as number) < (dist[best] as number)) best = g;
+  if (best < 0 || (dist[best] as number) >= INF) return 0;
+  if ((dist[best] as number) === 0) return 0; // 이미 이어져 있다
+
+  let paved = 0;
+  for (let k = best; k >= 0; k = prev[k] as number) {
+    const i = k % W;
+    const j = (k - i) / W;
+    if (!stand(i, j) && t.paint(i, j, 'path_stone')) paved++;
+  }
+  return paved * stoneCost;
+}
+
 function buildOne(
   t: KairoTerrain,
   w: WallGrid,
@@ -303,6 +395,25 @@ function buildOne(
       if (c.ok) {
         p.place(t, w, GATE, pick.id, i, j, opts);
         return (pick as unknown as { cost: number }).cost + roomSpend;
+      }
+      /*
+       * 길만 없는 자리면 깔고 다시 본다 (K32-B). 다른 이유(점유·지형)면 그냥 다음 자리로 —
+       * 아무 데나 포장하면 봇이 판 전체를 깔아 값이 왜곡된다.
+       */
+      if (c.fail === 'unreachable') {
+        const pathSpend = ensurePath(t, w, p, land, {
+          i,
+          j,
+          w: pick.size[0] as number,
+          h: pick.size[1] as number,
+        });
+        if (pathSpend > 0) {
+          roomSpend += pathSpend;
+          if (p.check(t, w, GATE, pick.id, i, j, opts).ok) {
+            p.place(t, w, GATE, pick.id, i, j, opts);
+            return (pick as unknown as { cost: number }).cost + roomSpend;
+          }
+        }
       }
       lastFail = c.fail ?? 'unknown';
     }

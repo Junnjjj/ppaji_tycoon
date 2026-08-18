@@ -228,7 +228,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         }
         // 벽은 개별로 못 지운다 — **바닥을 잔디로 되돌리면** 그 벽이 같이 사라진다 (K27)
         if (h.terrain.kindAt(i, j) !== 'lawn' && !h.terrain.isWater(i, j)) {
-          const r = paintFloor(h.terrain, h.walls, GATE, i, j, 'lawn', walkableNow);
+          /* placement 를 넘긴다 — 길을 지워 시설이 끊기면 거절된다 (K32-B) */
+          const r = paintFloor(h.terrain, h.walls, GATE, i, j, 'lawn', walkableNow, h.placement);
           if (!r.ok) {
             toast(INDOOR_FAIL_MESSAGES[r.fail ?? 'no-door']);
             return;
@@ -362,6 +363,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         n,
         kindId as string,
         walkableNow,
+        h.placement,
       );
       if (!painted.ok) {
         toast(INDOOR_FAIL_MESSAGES[painted.fail ?? 'no-door']);
@@ -477,12 +479,29 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         sub: `칸당 ${Math.round(FLOOR_COST / 10000)}만 · 넓어짐`,
       })),
       { kind: 'erase' as const, tab: 'building' as const, id: 'erase', name: '철거', sub: '잔디로' },
-      ...GROUND_KINDS.filter((k) => k.id !== 'floor_indoor').map((k) => ({
+      /*
+       * 길 — K32-B 부터 **손님은 포장한 바닥만 지나간다.** 그래서 길을 까는 것이
+       * 가장 자주 하는 동작이 됐는데, 한 칸씩 찍어서는 폰에서 못 깐다. 건물 바닥에
+       * 쓰던 블록 붓(K32-A)을 그대로 붙인다 — 1칸은 손보기, 2·3칸은 실제로 길 내기.
+       *
+       * `sub` 에 통행 여부를 적는다. 안 적으면 "잔디는 왜 안 되지"를 화면 어디에서도
+       * 알 수 없다 — 규칙을 바꿔 놓고 알려주지 않는 것이 이 게임의 반복된 실수였다.
+       */
+      ...GROUND_KINDS.filter((k) => k.id !== 'floor_indoor' && k.guestWalk).flatMap((k) =>
+        [1, 2, 3].map((n) => ({
+          kind: 'ground' as const,
+          tab: 'ground' as const,
+          id: n === 1 ? k.id : `${k.id}@${n}`,
+          name: n === 1 ? k.name : `${k.name} ${n}×${n}`,
+          sub: `칸당 ${Math.round(k.cost / 10000)}만 · 손님 통행`,
+        })),
+      ),
+      ...GROUND_KINDS.filter((k) => k.id !== 'floor_indoor' && !k.guestWalk).map((k) => ({
         kind: 'ground' as const,
         tab: 'ground' as const,
         id: k.id,
         name: k.name,
-        sub: k.cost > 0 ? `${Math.round(k.cost / 10000)}만` : '무료',
+        sub: '무료 · 손님이 못 지나감',
       })),
       { kind: 'erase' as const, tab: 'ground' as const, id: 'erase', name: '철거', sub: '잔디로' },
       ...allFacilityDefs().map((d) => {

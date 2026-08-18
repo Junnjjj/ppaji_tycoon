@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
-import { WallGrid, reachable } from './walls.js';
+import { WallGrid, reachable, EDGE_DOOR } from './walls.js';
 import { PlacementGrid, guestWalkable } from './placement.js';
 import { CourseStore } from './course.js';
 import { MAP_TYPES, mapType } from './scenario.js';
@@ -243,5 +243,83 @@ describe('★ 시작 방에 처음 세 개가 연달아 들어간다', () => {
     }
     expect(grown, '방을 넓히지 못하면 확장 루프가 성립하지 않는다').toBeGreaterThan(0);
     expect(placeIndoor(k, 'washbasin_row')).toBe(true);
+  });
+});
+
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+ * K32-B — **포장한 길로 이어져야 한다.**
+ *
+ * 잔디를 못 걷게 되면서 킷이 조용히 반쪽이 될 수 있다: 매표소는 마당 밖에 있고
+ * 데크는 물가에 있다. 길이 안 깔리면 `unreachable` 로 거절되어 "물려받았는데 매표소가
+ * 없는 판"이 나온다. 킷이 온전한지(`skipped` 가 비었는지)만 봐서는 못 잡는다 —
+ * 실제로 **게이트에서 걸어 닿는지** 본다.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+describe('★ 물려받은 것들이 포장으로 이어진다', () => {
+  it('맵 3종 × 시드 8개에서 모든 시설에 게이트에서 걸어 닿는다', () => {
+    const bad: string[] = [];
+    for (const m of MAP_TYPES) {
+      for (const seed of SEEDS) {
+        const k = kit(m.id, seed);
+        const seen = reachable(k.t, k.w, GATE, guestWalkable(k.t, k.p));
+        for (const f of k.p.all()) {
+          let ok = false;
+          for (const [di, dj] of [
+            [-1, 0],
+            [1, 0],
+            [0, -1],
+            [0, 1],
+          ] as const) {
+            const ni = f.i + di;
+            const nj = f.j + dj;
+            if (!k.t.inside(ni, nj)) continue;
+            if (seen[nj * GRID_W + ni] === 1) ok = true;
+          }
+          // 덱 자신은 밟고 지나가는 것이라 자기 칸이 닿아도 된다
+          if (!ok && seen[f.j * GRID_W + f.i] === 1) ok = true;
+          if (!ok) bad.push(`${m.id}/${seed} ${f.defId}(${f.i},${f.j})`);
+        }
+      }
+    }
+    expect(bad).toEqual([]);
+  });
+
+  it('★ 실내동 문 앞이 포장이다 — 입구는 길이 닿은 곳에만 난다', () => {
+    for (const m of MAP_TYPES) {
+      const k = kit(m.id, 42);
+      let doors = 0;
+      for (let j = 0; j < GRID_H; j++) {
+        for (let i = 0; i < GRID_W; i++) {
+          for (const [d, di, dj] of [
+            [0, 1, 0],
+            [1, 0, 1],
+            [2, -1, 0],
+            [3, 0, -1],
+          ] as const) {
+            if (k.w.edgeAt(i, j, d) !== EDGE_DOOR) continue;
+            doors++;
+            /*
+             * ⚠ **바깥칸을 정확히 골라야 한다.** 처음엔 두 칸 중 하나만 통행 가능하면
+             * 통과시켰는데, 안쪽은 실내 바닥이라 **언제나** 통과했다 — 검사가 아무것도
+             * 안 보고 있었다. 실내가 아닌 쪽이 바깥이다.
+             */
+            const inside = k.t.isIndoor(i, j);
+            const oi = inside ? i + di : i;
+            const oj = inside ? j + dj : j;
+            expect(k.t.isIndoor(oi, oj), `${m.id} 문(${i},${j}) 양쪽이 실내다`).toBe(false);
+            expect(
+              k.t.isGuestWalkable(oi, oj),
+              `${m.id} 문(${i},${j}) 바깥(${oi},${oj})이 포장이 아니다`,
+            ).toBe(true);
+          }
+        }
+      }
+      /*
+       * `doors` 는 한 경계를 두 번 센다 — (2,3)의 +I 와 (3,3)의 −I 는 같은 경계다 (K25).
+       * 렌더러에서 발판이 안팎 양쪽에 깔려 실측으로 드러났다. 여기서는 존재만 본다.
+       */
+      expect(doors, `${m.id} 문이 하나는 있어야 한다`).toBeGreaterThan(0);
+    }
   });
 });

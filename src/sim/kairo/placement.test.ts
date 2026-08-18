@@ -18,10 +18,15 @@ function room(t: KairoTerrain, i0: number, j0: number, w: number, h: number): vo
   for (let j = j0; j < j0 + h; j++) for (let i = i0; i < i0 + w; i++) t.paint(i, j, 'floor_indoor');
 }
 
-/** 전부 걸을 수 있는 평지 — 배치 규칙만 보게 지형 변수를 없앤다 */
+/**
+ * 전부 걸을 수 있는 평지 — 배치 규칙만 보게 지형 변수를 없앤다.
+ *
+ * ⚠ 잔디가 아니라 **석재 보도**다. K32-B 부터 잔디는 손님이 못 지나간다 —
+ * 이 헬퍼의 의도는 "통행 가능한 평지"이지 "잔디"가 아니었다.
+ */
 function flat(w: number, h: number): KairoTerrain {
   const t = new KairoTerrain(w, h);
-  for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) t.paint(i, j, 'lawn');
+  for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) t.paint(i, j, 'path_stone');
   return t;
 }
 
@@ -301,6 +306,14 @@ describe('제거·용량·스냅샷', () => {
 describe('실제 지형에서 73종을 다 놓아본다', () => {
   it('각 시설이 적어도 한 자리에는 놓인다 — 못 놓는 시설이 있으면 데이터 오류다', () => {
     const t = KairoTerrain.generate(40, 32, new Rng(9));
+    /*
+     * 육지를 통째로 포장한다 — K32-B 부터 잔디는 손님이 못 지나가고,
+     * `unreachable` 이 손님 판정을 쓴다. 이 테스트가 보려는 것은 "73종이 데이터상 놓이는가"
+     * 이지 "길이 깔렸는가"가 아니다. 길 규칙 자체는 walls/guests 테스트가 본다.
+     */
+    for (let j = 0; j < 32; j++) {
+      for (let i = 0; i < 40; i++) if (t.isWalkable(i, j)) t.paint(i, j, 'path_stone');
+    }
     const walls = new WallGrid(40, 32);
     // 실내 시설을 위해 실내 바닥 한 덩어리 (지형이 육지인 위쪽 띠에)
     room(t, 2, 2, 28, 4);

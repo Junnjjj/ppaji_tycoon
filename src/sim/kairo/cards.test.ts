@@ -241,7 +241,7 @@ describe('효과', () => {
 describe('주 진행에 실제로 영향을 준다', () => {
   const run = (mods: Partial<ReturnType<CardStore['modifiers']>>): ReturnType<WeekRunner['run']> => {
     const t = new KairoTerrain(40, 32);
-    for (let i = 0; i < 40; i++) for (let j = 0; j < 32; j++) t.paint(i, j, 'lawn');
+    for (let i = 0; i < 40; i++) for (let j = 0; j < 32; j++) t.paint(i, j, 'path_stone');
     const w = new WallGrid(40, 32);
     const p = new PlacementGrid(40, 32);
     for (let k = 0; k < 6; k++) p.place(t, w, { i: 2, j: 2 }, 'shop', 6 + k * 3, 8);
