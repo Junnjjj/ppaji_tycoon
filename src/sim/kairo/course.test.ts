@@ -10,8 +10,16 @@ import {
   fitEffect,
   defaultHandles,
   validateCourse,
+  courseGap,
+  suggestCourse,
+  firstFreeDock,
+  dockTaken,
+  COURSE_CLEAR_TILES,
+  type DockChoice,
+  type PlacedCourse,
   evaluateCourse,
   validateCourseData,
+  COURSE_ISSUE_TEXT,
   CourseStore,
   DOCK_REACH_TILES,
   dockCandidates,
@@ -204,6 +212,179 @@ describe('판정', () => {
     const far = defaultHandles(p, DOCK, DIR).map((h) => ({ x: h.x + 30, y: h.y }));
     expect(validateCourse(t, far, DOCK, p, 'banana', 3).issues).toContain('far-from-dock');
     expect(DOCK_REACH_TILES).toBeGreaterThan(0);
+  });
+});
+
+/**
+ * 코스는 겹치지 않는다 (K37).
+ *
+ * 실측: 현금을 채우고 장비 셋을 연달아 확정했더니 **잔교 43,32 에 넷**이 완전히 같은
+ * 좌표로 쌓였다. 판정이 자기 자신만 봤고(물·선착장·수면), 기본 제안이 기존 코스를 몰랐다.
+ */
+describe('겹침 판정 — 같은 자리에 쌓이지 않는다 (K37)', () => {
+  const shuttle = presetDef('shuttle')!;
+
+  /** 기존 코스 하나 만들기 — 판정에 넘기는 `others` 는 평문 데이터다 */
+  const placed = (dock: Vec2, handles: Vec2[], handle = 1): PlacedCourse => ({
+    handle,
+    presetId: 'shuttle',
+    equipId: 'banana',
+    vehicles: 1,
+    dock,
+    handles,
+  });
+
+  /** 잔교에서 +x 로 곧게 뻗는 왕복 코스 — 표본이 `y` 한 줄에 놓여 거리 계산이 눈에 보인다 */
+  const straight = (dock: Vec2): Vec2[] => [
+    { x: dock.x + 6, y: dock.y },
+    { x: dock.x + 14, y: dock.y },
+  ];
+
+  it('★ 같은 잔교에는 두 번째를 못 놓는다 — 처방까지 말한다', () => {
+    const t = lake(60, 40);
+    const others = [placed(DOCK, straight(DOCK))];
+    const v = validateCourse(t, straight(DOCK), DOCK, shuttle, 'banana', 3, others);
+    expect(v.ok).toBe(false);
+    expect(v.issues).toContain('dock-taken');
+    expect(COURSE_ISSUE_TEXT['dock-taken']).toContain('다른 잔교');
+  });
+
+  it('⚠ 음성 대조군 — 다른 잔교면 통과한다', () => {
+    const t = lake(60, 40);
+    const others = [placed(DOCK, straight(DOCK))];
+    const far: Vec2 = { x: DOCK.x, y: DOCK.y + 10 };
+    const v = validateCourse(t, straight(far), far, shuttle, 'banana', 3, others);
+    expect(v.ok, v.issues.join(',')).toBe(true);
+  });
+
+  it('★ 다른 잔교라도 물이 겹치면 막힌다', () => {
+    const t = lake(60, 40);
+    const others = [placed(DOCK, straight(DOCK))];
+    const near: Vec2 = { x: DOCK.x, y: DOCK.y + 2 }; // 2칸 — 여유 3칸 안
+    const v = validateCourse(t, straight(near), near, shuttle, 'banana', 3, others);
+    expect(v.issues).toContain('overlap');
+    expect(v.badHandles.length).toBeGreaterThan(0); // 어느 핸들을 옮길지도 말한다
+    expect(COURSE_ISSUE_TEXT.overlap).toContain('핸들을 옮겨');
+  });
+
+  it('경계값을 양쪽에서 잰다 — 3칸은 통과, 2칸은 거절', () => {
+    const t = lake(60, 40);
+    const others = [placed(DOCK, straight(DOCK))];
+    const gapAt = (d: number): number =>
+      courseGap({ x: DOCK.x, y: DOCK.y + d }, straight({ x: DOCK.x, y: DOCK.y + d }), others).gap;
+    // 표본이 한 줄에 놓이므로 거리는 곧 `d` 다 — 자가 흔들리지 않는 것을 먼저 본다
+    expect(gapAt(2)).toBeCloseTo(2, 3);
+    expect(gapAt(COURSE_CLEAR_TILES)).toBeCloseTo(COURSE_CLEAR_TILES, 3);
+
+    const at = (d: number): string[] => {
+      const dock = { x: DOCK.x, y: DOCK.y + d };
+      return validateCourse(t, straight(dock), dock, shuttle, 'banana', 3, others).issues;
+    };
+    expect(at(2)).toContain('overlap');
+    expect(at(COURSE_CLEAR_TILES)).not.toContain('overlap');
+  });
+
+  it('`others` 를 안 넘기면 예전과 똑같다 — 하위호환', () => {
+    const t = lake(60, 40);
+    const same = validateCourse(t, straight(DOCK), DOCK, shuttle, 'banana', 3);
+    expect(same.ok, same.issues.join(',')).toBe(true);
+    // 빈 배열도 같다
+    expect(validateCourse(t, straight(DOCK), DOCK, shuttle, 'banana', 3, []).ok).toBe(true);
+  });
+
+  it('판정 순서 — 자기 자신의 문제가 먼저다 (물이 아닌데 "다른 잔교를 고르세요"는 헛말이다)', () => {
+    const t = lake(60, 40);
+    for (let i = 0; i < 60; i++) for (let j = 0; j < 40; j++) t.paint(i, j, 'lawn');
+    const others = [placed(DOCK, straight(DOCK))];
+    const v = validateCourse(t, straight(DOCK), DOCK, shuttle, 'banana', 3, others);
+    expect(v.issues[0]).toBe('not-water');
+    expect(v.issues.indexOf('not-water')).toBeLessThan(v.issues.indexOf('dock-taken'));
+  });
+
+  it('같은 잔교면 `overlap` 을 겹쳐 말하지 않는다 — 옮길 것은 핸들이 아니라 잔교다', () => {
+    const t = lake(60, 40);
+    const others = [placed(DOCK, straight(DOCK))];
+    const v = validateCourse(t, straight(DOCK), DOCK, shuttle, 'banana', 3, others);
+    expect(v.issues).not.toContain('overlap');
+  });
+});
+
+describe('기본 제안 — 빈 잔교를 고른다 (K37)', () => {
+  const shuttle = presetDef('shuttle')!;
+  const dockA: DockChoice = { tip: { x: 6, y: 16 }, dir: { x: 1, y: 0 }, tiles: 2 };
+  const dockB: DockChoice = { tip: { x: 6, y: 28 }, dir: { x: 1, y: 0 }, tiles: 2 };
+  const placedAt = (dock: Vec2, handles: Vec2[]): PlacedCourse => ({
+    handle: 1,
+    presetId: 'shuttle',
+    equipId: 'banana',
+    vehicles: 1,
+    dock,
+    handles,
+  });
+
+  it('★ 잔교 2개 중 하나가 차면 다음을 제안한다', () => {
+    const others = [placedAt(dockA.tip, defaultHandles(shuttle, dockA.tip, dockA.dir, 8))];
+    expect(firstFreeDock([dockA, dockB], others)).toBe(1);
+    expect(suggestCourse(shuttle, [dockA, dockB], others).dockIndex).toBe(1);
+    expect(dockTaken(dockA.tip, others)).toBe(true);
+    expect(dockTaken(dockB.tip, others)).toBe(false);
+  });
+
+  it('⚠ 음성 대조군 — 코스가 없으면 첫 잔교 그대로다 (게이트에서 가까운 순)', () => {
+    expect(firstFreeDock([dockA, dockB], [])).toBe(0);
+    const s = suggestCourse(shuttle, [dockA, dockB], []);
+    expect(s.dockIndex).toBe(0);
+    expect(s.shift).toBe(0);
+    expect(s.handles).toEqual(defaultHandles(shuttle, dockA.tip, dockA.dir, 8));
+  });
+
+  it('플레이어가 지도에서 고른 잔교는 찼어도 그대로 쓴다 — 탭이 무시되면 안 된다', () => {
+    const others = [placedAt(dockA.tip, defaultHandles(shuttle, dockA.tip, dockA.dir, 8))];
+    const s = suggestCourse(shuttle, [dockA, dockB], others, { dockIndex: 0, pinned: true });
+    expect(s.dockIndex).toBe(0);
+  });
+
+  it('전부 차면 현재 잔교를 쓰되 **옆으로 밀어** 제안한다 — 막는 것은 판정이 한다', () => {
+    const t = lake(60, 40);
+    const others = [
+      placedAt(dockA.tip, defaultHandles(shuttle, dockA.tip, dockA.dir, 8)),
+      { ...placedAt(dockB.tip, defaultHandles(shuttle, dockB.tip, dockB.dir, 8)), handle: 2 },
+    ];
+    const s = suggestCourse(shuttle, [dockA, dockB], others);
+    expect(s.dockIndex).toBe(0);
+    expect(s.shift).not.toBe(0);
+    expect(s.handles).not.toEqual(defaultHandles(shuttle, dockA.tip, dockA.dir, 8));
+    // 제안은 나오되 확정은 막힌다 (프리셋이 통째로 사라지면 이유를 모른다)
+    const v = validateCourse(t, s.handles, dockA.tip, shuttle, 'banana', 3, others);
+    expect(v.issues).toContain('dock-taken');
+  });
+
+  it('★ 빈 잔교라도 기존 코스와 겹치면 옆으로 밀어 피한다', () => {
+    const t = lake(60, 40);
+    // 멀리 있는 잔교에서 시작해 이 잔교 앞을 가로지르는 코스
+    const across = placedAt({ x: 30, y: 16 }, [
+      { x: 24, y: 16 },
+      { x: 16, y: 16 },
+    ]);
+    const plain = defaultHandles(shuttle, dockA.tip, dockA.dir, 8);
+    // 대조군: 밀지 않으면 실제로 막힌다
+    expect(
+      validateCourse(t, plain, dockA.tip, shuttle, 'banana', 3, [across]).issues,
+    ).toContain('overlap');
+
+    const s = suggestCourse(shuttle, [dockA], [across]);
+    expect(s.dockIndex).toBe(0);
+    expect(s.shift).not.toBe(0);
+    expect(courseGap(dockA.tip, s.handles, [across]).gap).toBeGreaterThanOrEqual(
+      COURSE_CLEAR_TILES,
+    );
+    expect(validateCourse(t, s.handles, dockA.tip, shuttle, 'banana', 3, [across]).ok).toBe(true);
+  });
+
+  it('잔교가 없으면 −1 을 준다 — 코스를 만들 수 없다', () => {
+    const s = suggestCourse(shuttle, [], []);
+    expect(s.dockIndex).toBe(-1);
+    expect(s.handles).toEqual([]);
   });
 });
 

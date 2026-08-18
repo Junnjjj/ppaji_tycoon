@@ -5,12 +5,13 @@ import {
   courseEquipment,
   fitOf,
   fitBlocked,
-  defaultHandles,
+  suggestCourse,
   validateCourse,
   evaluateCourse,
   COURSE_ISSUE_TEXT,
   type CourseStore,
   type DockChoice,
+  type PlacedCourse,
   type Vec2,
 } from '../sim/kairo/course.js';
 import type { KairoTerrain } from '../sim/kairo/terrain.js';
@@ -96,6 +97,13 @@ export class KairoCoursePanel {
   private handles: Vec2[] = [];
   /** 고른 선착장 후보 번호. 후보가 없으면 −1 */
   private dockIndex = 0;
+  /**
+   * 플레이어가 **지도에서 직접 고른** 잔교인가 (K37).
+   *
+   * 안 고정하면 기본 제안(빈 잔교 우선)이 탭을 덮어써서 "탭했는데 안 옮겨진다"가 된다.
+   * 열 때와 확정한 뒤에는 풀린다 — 방금 코스를 놓은 잔교에 계속 붙어 있을 이유가 없다.
+   */
+  private dockPinned = false;
 
   constructor(
     parent: HTMLElement,
@@ -193,6 +201,7 @@ export class KairoCoursePanel {
     this.deps.scene.onCourseDockPick = (index) => {
       if (!this.visible || index === this.dockIndex) return;
       this.dockIndex = index;
+      this.dockPinned = true; // 탭한 잔교는 찼더라도 그대로 쓴다 — 판정이 사유를 말한다
       this.resetHandles();
       this.refresh();
       this.frame();
@@ -211,6 +220,8 @@ export class KairoCoursePanel {
     // 후보가 줄었을 수 있다 (잔교를 철거하면) — 범위 밖이면 첫 번째로
     const n = this.deps.docks().length;
     if (this.dockIndex >= n) this.dockIndex = n > 0 ? 0 : -1;
+    // 열 때는 늘 **빈 잔교**부터 제안한다 (K37) — 지난번에 고른 것을 붙들지 않는다
+    this.dockPinned = false;
     this.resetHandles();
     this.refresh();
     this.frame();
@@ -256,17 +267,38 @@ export class KairoCoursePanel {
     return c ? c.tip : null;
   }
 
-  /** 프리셋을 고르면 핸들이 자동 배치된다 — 그게 탭 1번의 내용이다 */
+  /**
+   * 이미 놓인 코스 — 판정과 제안이 이걸 본다 (K37).
+   *
+   * 편집 모드는 아직 없다. 확정은 언제나 **새 코스**다 — 편집이 생기면 여기서
+   * 자기 자신을 빼야 한다 (안 빼면 자기 자신과 겹쳤다고 자기를 막는다).
+   */
+  private others(): readonly PlacedCourse[] {
+    return this.deps.courses.all;
+  }
+
+  /**
+   * 프리셋을 고르면 핸들이 자동 배치된다 — 그게 탭 1번의 내용이다.
+   *
+   * K37: **기존 코스를 본다.** 예전엔 `defaultHandles` 하나라 이미 코스가 있는 잔교를
+   * 다시 고르고 같은 물을 다시 제안했다 — 그래서 장비를 19종 바꿔도 좌표가 안 변했고,
+   * 확정하면 앞의 것 위에 겹쳤다 (실측: 한 잔교에 넷).
+   */
   private resetHandles(): void {
     const preset = presetDef(this.presetId);
     const list = this.deps.docks();
-    const choice = list[this.dockIndex] ?? list[0];
-    if (!preset || !choice) {
+    if (!preset || list.length === 0) {
       this.handles = [];
       return;
     }
     // 방향은 **잔교가 뻗은 쪽**이다 — 예전 `{x:0,y:1}` 하드코딩은 맵을 하나만 가정했다
-    this.handles = defaultHandles(preset, choice.tip, choice.dir, 8);
+    const s = suggestCourse(preset, list, this.others(), {
+      span: 8,
+      dockIndex: this.dockIndex,
+      pinned: this.dockPinned,
+    });
+    if (s.dockIndex >= 0) this.dockIndex = s.dockIndex;
+    this.handles = s.handles;
   }
 
   private renderPresets(): void {
@@ -332,6 +364,7 @@ export class KairoCoursePanel {
       preset,
       this.equipId,
       this.deps.grade(),
+      this.others(),
     );
     this.deps.scene.setCourseOverlay(this.handles, v.badHandles, dock);
 
@@ -407,6 +440,7 @@ export class KairoCoursePanel {
       preset,
       this.equipId,
       this.deps.grade(),
+      this.others(),
     );
     if (!v.ok) return;
     const cost = equip.vehicleCost * this.vehicles;
@@ -419,6 +453,8 @@ export class KairoCoursePanel {
       handles: this.handles.map((h) => ({ ...h })),
     });
     this.deps.onChange();
+    // 방금 이 잔교를 썼다 — 다음 제안은 **빈 잔교**로 옮겨 간다 (K37)
+    this.dockPinned = false;
     this.resetHandles();
     this.refresh();
   }

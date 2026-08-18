@@ -793,29 +793,35 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         if (pick) {
           // 물가를 찾아 선착장으로 삼는다
           let dock: { x: number; y: number } | null = null;
-          // 가장자리는 피한다 — 판정이 격자 밖을 물로 안 세므로 억울하게 좁아진다
-          for (let j = 0; j < GRID_H && !dock; j++) {
-            for (let i = 6; i < GRID_W - 6; i++) {
-              if (t.isWater(i, j)) {
-                dock = { x: i, y: j };
-                break;
+          let handles: { x: number; y: number }[] = [];
+          /*
+           * ⚠ **코스마다 다른 물자리를 쓴다** (K37). 예전엔 "첫 물 타일" 하나만 봤고,
+           * 판정도 기존 코스를 안 봐서 넷이 같은 좌표에 쌓였다. 겹침을 막은 지금
+           * 봇이 한 자리만 보면 두 번째부터 전부 거절되어 헤드리스가 실제 판과 갈라진다.
+           *
+           * 가장자리는 피한다 — 판정이 격자 밖을 물로 안 세므로 억울하게 좁아진다.
+           * 성큼성큼(`STRIDE`) 훑는 이유는 비용이다: 후보마다 판정이 수면을 세고 기존
+           * 코스를 샘플링하므로 칸마다 부르면 주당 수백만 번이 된다.
+           */
+          const STRIDE = 4;
+          for (let j = 0; j < GRID_H && !dock; j += STRIDE) {
+            for (let i = 6; i < GRID_W - 6; i += STRIDE) {
+              if (!t.isWater(i, j)) continue;
+              const at = { x: i, y: j };
+              const hs = defaultHandles(pick, at, { x: 0, y: 1 }, 6);
+              const v = validateCourse(t, hs, at, pick, eq.id, gr.grade, courses.all);
+              if (!v.ok) {
+                if (courseFail === '') courseFail = v.issues.join(',') + ' @' + i + ',' + j;
+                continue;
               }
+              dock = at;
+              handles = hs;
+              break;
             }
           }
           if (dock) {
-            const handles = defaultHandles(pick, dock, { x: 0, y: 1 }, 6);
-            const v = validateCourse(t, handles, dock, pick, eq.id, gr.grade);
-            if (!v.ok && courseFail === '') courseFail = v.issues.join(',') + ' @' + dock.x + ',' + dock.y;
-            if (v.ok) {
-              cash -= eq.vehicleCost * 2;
-              courses.add({
-                presetId: pick.id,
-                equipId: eq.id,
-                vehicles: 2,
-                dock,
-                handles,
-              });
-            }
+            cash -= eq.vehicleCost * 2;
+            courses.add({ presetId: pick.id, equipId: eq.id, vehicles: 2, dock, handles });
           }
         }
       }
