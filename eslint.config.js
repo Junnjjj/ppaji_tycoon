@@ -85,7 +85,7 @@ export default tseslint.config(
 
   // 헤드리스 러너와 테스트는 Node 전역을 쓴다
   {
-    files: ['tools/**/*.ts', '**/*.test.ts'],
+    files: ['tools/**/*.ts', 'tools/**/*.mjs', '**/*.test.ts'],
     languageOptions: {
       globals: { process: 'readonly', console: 'readonly' },
     },

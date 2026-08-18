@@ -29,7 +29,16 @@ export const GUEST_H = 24;
 /** 머리 오버레이 크기 — 눈·입만 */
 export const FACE_W = 8;
 export const FACE_H = 5;
-export const EMOTE_SIZE = 12;
+/**
+ * 말풍선 크기 (K29).
+ *
+ * 12 였을 때 **손님 키(24텍셀)의 절반**이라 화면에서 거의 안 보였다. 카이로는 말풍선이
+ * 손님만큼 크고 늘 떠 있어서 화면이 살아 보인다. 20 으로 키운다.
+ *
+ * 글자는 안 넣는다 — 카이로는 "Nom nom!" 같은 짧은 영어를 쓰는데 20텍셀에 한글은
+ * 물리적으로 안 들어간다. 이 스케일에서는 기호를 크고 또렷하게 하는 것이 맞다.
+ */
+export const EMOTE_SIZE = 20;
 
 const OUTLINE = '#2b1d12';
 
@@ -364,33 +373,61 @@ export function bakeEmoteAtlas(): { canvas: HTMLCanvasElement; frames: Map<strin
 
   list.forEach((name, k) => {
     const ox = k * EMOTE_SIZE;
-    // 말풍선 — 흰 바탕 + 색 기호 + 꼬리
+    const W = EMOTE_SIZE;
+    const BODY_H = 15; // 풍선 본체. 아래 5텍셀은 꼬리 자리
+    // 풍선 — 흰 바탕 + 꼬리
     g.fillStyle = '#f4f8fa';
-    g.fillRect(ox + 1, 0, EMOTE_SIZE - 2, 9);
-    g.fillRect(ox + 5, 9, 3, 2);
+    g.fillRect(ox + 1, 1, W - 2, BODY_H - 1);
+    g.fillRect(ox + 2, 0, W - 4, 1); // 위쪽 둥근 맛
+    g.fillRect(ox + W / 2 - 2, BODY_H, 4, 3);
+    g.fillRect(ox + W / 2 - 1, BODY_H + 3, 2, 1);
+
+    // 기호 — 풍선 안 가운데 (cx, cy 기준으로 크게)
+    const cx = ox + W / 2;
+    const cy = 8;
     g.fillStyle = COLOR[name] ?? '#888';
-    // 기호는 3×3 블록 조합으로 구분만 되게
-    if (name === 'happy') g.fillRect(ox + 4, 3, 4, 3);
-    else if (name === 'love') {
-      g.fillRect(ox + 3, 3, 2, 3);
-      g.fillRect(ox + 7, 3, 2, 3);
-      g.fillRect(ox + 5, 5, 2, 2);
-    } else if (name === 'neutral') g.fillRect(ox + 3, 4, 6, 2);
-    else if (name === 'annoyed') {
-      g.fillRect(ox + 3, 3, 2, 2);
-      g.fillRect(ox + 7, 3, 2, 2);
-      g.fillRect(ox + 4, 6, 4, 1);
+    if (name === 'happy') {
+      // 웃는 입
+      g.fillRect(cx - 4, cy - 3, 2, 2);
+      g.fillRect(cx + 2, cy - 3, 2, 2);
+      g.fillRect(cx - 4, cy + 2, 8, 2);
+      g.fillRect(cx - 5, cy, 1, 2);
+      g.fillRect(cx + 4, cy, 1, 2);
+    } else if (name === 'love') {
+      // 하트
+      g.fillRect(cx - 4, cy - 3, 3, 4);
+      g.fillRect(cx + 1, cy - 3, 3, 4);
+      g.fillRect(cx - 3, cy + 1, 6, 2);
+      g.fillRect(cx - 2, cy + 3, 4, 2);
+      g.fillRect(cx - 1, cy + 5, 2, 1);
+    } else if (name === 'neutral') {
+      g.fillRect(cx - 4, cy - 3, 2, 2);
+      g.fillRect(cx + 2, cy - 3, 2, 2);
+      g.fillRect(cx - 4, cy + 2, 8, 2);
+    } else if (name === 'annoyed') {
+      // 찡그림 + 화 표시
+      g.fillRect(cx - 5, cy - 4, 3, 2);
+      g.fillRect(cx + 2, cy - 4, 3, 2);
+      g.fillRect(cx - 4, cy - 1, 2, 2);
+      g.fillRect(cx + 2, cy - 1, 2, 2);
+      g.fillRect(cx - 3, cy + 3, 6, 2);
     } else if (name === 'hot') {
-      g.fillRect(ox + 5, 2, 2, 5);
-      g.fillRect(ox + 4, 5, 4, 2);
+      // 땀방울 셋
+      g.fillRect(cx - 5, cy - 3, 2, 4);
+      g.fillRect(cx - 6, cy + 1, 4, 2);
+      g.fillRect(cx, cy - 4, 2, 4);
+      g.fillRect(cx - 1, cy, 4, 2);
+      g.fillRect(cx + 4, cy - 2, 2, 3);
     } else {
-      g.fillRect(ox + 5, 2, 2, 4);
-      g.fillRect(ox + 5, 7, 2, 1);
+      // 느낌표
+      g.fillRect(cx - 1, cy - 5, 3, 7);
+      g.fillRect(cx - 1, cy + 4, 3, 3);
     }
-    // 테두리
+
+    // 테두리 — 풍선 실루엣을 또렷하게
     g.strokeStyle = OUTLINE;
     g.lineWidth = 1;
-    g.strokeRect(ox + 1.5, 0.5, EMOTE_SIZE - 3, 8);
+    g.strokeRect(ox + 1.5, 0.5, W - 3, BODY_H);
     frames.set(`e_${name}`, { x: ox, y: 0, w: EMOTE_SIZE, h: EMOTE_SIZE });
   });
 

@@ -154,7 +154,13 @@ export const GUEST_DEFAULTS: GuestTunables = {
   useTicks: 12,
   wantUses: 4,
   patienceTicks: 300,
-  emoteTicks: 30,
+  /*
+   * 말풍선이 떠 있는 시간 (K29). 30(3초)이면 **거의 모든 손님에게 늘 붙어** 화면을
+   * 덮는다 — 말풍선을 키우고 나서 눈에 띄었다. 레퍼런스는 많은 손님 중 몇에게만 떠 있다.
+   *
+   * 표시 전용 값이라 RNG·결정론·밸런스와 무관하다 (`g.emote` 는 렌더만 읽는다).
+   */
+  emoteTicks: 12,
   startSatisfaction: 52,
   useGains: [14, 10, 7, 4],
   /*

@@ -15,7 +15,7 @@
     "typecheck": "tsc --noEmit",
     "verify": "npm run typecheck && npm run lint && npm run test && npm run gate && npm run sim:kairo -- --determinism",
     "verify:mobile": "tsx tools/verify-mobile.ts",
-    "gate": "tsx tools/kairo-gate.ts",
+    "gate": "tsx tools/kairo-gate.ts && node tools/check-ui-surface.mjs",
     "verify:kairo": "tsx tools/verify-kairo.ts && tsx tools/seam-qa.ts --selftest",
     "shot:kairo": "tsx tools/shot-kairo.ts",
     "shot:zoom": "tsx tools/shot-kairo-zoom.ts",

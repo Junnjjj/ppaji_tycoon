@@ -2712,6 +2712,119 @@ async function main(): Promise<void> {
   }
 
   /*
+   * ── 9d. 표면이 실제로 입체인가 (K29) ──
+   *
+   * CSS 에 그라디언트를 적었다고 화면에 보인다는 보장이 없다. **렌더된 픽셀**을 잘라
+   * 위·아래 밝기를 비교한다. 평면이면 차이가 0 이다 (K29 이전 상태).
+   */
+  {
+    const cx = await browser.newContext({
+      viewport: { width: 393, height: 852 },
+      deviceScaleFactor: 3,
+      isMobile: true,
+      hasTouch: true,
+    });
+    const pg = await cx.newPage();
+    await pg.goto(URL, { waitUntil: 'load' });
+    await pg.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+    const box = (await pg.evaluate(`(() => {
+      const b = document.getElementById('kairo-week').getBoundingClientRect();
+      return { x: Math.round(b.x), y: Math.round(b.y),
+               width: Math.round(b.width), height: Math.round(b.height) };
+    })()`)) as { x: number; y: number; width: number; height: number };
+    const shot = await pg.screenshot({ clip: box });
+    /*
+     * PNG 를 직접 뜯지 않고 캔버스에 그려 읽는다 — 브라우저가 이미 디코더를 갖고 있다.
+     * (Node 쪽에 이미지 라이브러리를 새로 들이지 않으려는 이유이기도 하다.)
+     */
+    const b64 = shot.toString('base64');
+    const surf = (await pg.evaluate(
+      `(async (data) => {
+        const img = new Image();
+        img.src = 'data:image/png;base64,' + data;
+        await img.decode();
+        const cv = document.createElement('canvas');
+        cv.width = img.width; cv.height = img.height;
+        const g = cv.getContext('2d');
+        g.drawImage(img, 0, 0);
+        const px = g.getImageData(0, 0, cv.width, cv.height).data;
+        const lum = (x, y) => {
+          const k = (y * cv.width + x) * 4;
+          return 0.299 * px[k] + 0.587 * px[k + 1] + 0.114 * px[k + 2];
+        };
+        const rowMean = (y) => {
+          let s = 0, n = 0;
+          for (let x = 6; x < cv.width - 6; x++) { s += lum(x, y); n++; }
+          return s / n;
+        };
+        const h = cv.height;
+        return {
+          w: cv.width, h: h,
+          edge: rowMean(1),          // 최상단 — 반사 하이라이트
+          top: rowMean(Math.round(h * 0.25)),
+          bottom: rowMean(Math.round(h * 0.85)),
+        };
+      })(${JSON.stringify(b64)})`,
+    )) as { w: number; h: number; edge: number; top: number; bottom: number };
+
+    const grad = surf.top - surf.bottom;
+    record(
+      '버튼이 평면이 아니다 — 위아래 밝기 차 (K29)',
+      grad >= 8 ? 'pass' : 'fail',
+      `위 ${surf.top.toFixed(0)} · 아래 ${surf.bottom.toFixed(0)} · 차 ${grad.toFixed(0)}`,
+    );
+    record(
+      '상단에 반사 하이라이트가 있다',
+      surf.edge > surf.bottom + 4 ? 'pass' : 'fail',
+      `최상단 ${surf.edge.toFixed(0)} vs 아래 ${surf.bottom.toFixed(0)}`,
+    );
+    await cx.close();
+  }
+
+  /*
+   * ── 9e. 모션이 있고, 끄면 꺼진다 (K29) ──
+   *
+   * 기기 설정을 존중하는지는 **켠 상태와 끈 상태를 둘 다** 봐야 안다.
+   * 한쪽만 보면 "애니메이션이 원래 없다"와 구분이 안 된다.
+   */
+  for (const [reduce, tag] of [
+    [false, '모션 켬'],
+    [true, '모션 줄임'],
+  ] as const) {
+    const cx = await browser.newContext({
+      viewport: { width: 393, height: 852 },
+      deviceScaleFactor: 3,
+      isMobile: true,
+      hasTouch: true,
+      reducedMotion: reduce ? 'reduce' : 'no-preference',
+    });
+    const pg = await cx.newPage();
+    await pg.goto(URL, { waitUntil: 'load' });
+    await pg.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+    const anim = (await pg.evaluate(`(() => {
+      document.getElementById('kairo-build-open').click();
+      const sh = document.getElementById('kairo-sheet');
+      const st = getComputedStyle(sh);
+      return { name: st.animationName, dur: st.animationDuration };
+    })()`)) as { name: string; dur: string };
+    const on = anim.name !== 'none' && anim.dur !== '0s';
+    record(
+      `${tag} — 시트 등장 애니메이션 ${reduce ? '없음' : '있음'}`,
+      on === !reduce ? 'pass' : 'fail',
+      `${anim.name} ${anim.dur}`,
+    );
+    await cx.close();
+  }
+
+  /*
    * ── 9c. 방향을 바꿔도 판이 살아 있나 (K28) ──
    *
    * 회전은 폰에서 언제든 일어난다. 레이아웃만 다시 잡히면 되고 **게임 상태는 그대로**
