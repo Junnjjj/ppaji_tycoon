@@ -351,28 +351,54 @@ async function main(): Promise<void> {
     record('시트를 열어도 가로 넘침 0', sheet.overflowX <= 0 ? 'pass' : 'fail', `${sheet.overflowX}px`);
   }
 
-  // 바닥 탭 — 값이 붙어 있어야 "편집기 도구"가 아니라 "사는 것"으로 읽힌다 (K27)
-  const groundTab = (await page.evaluate(`(() => {
+  /*
+   * 탭 셋 — 시설 / **건물** / 바닥 (K31).
+   *
+   * 건물이 자기 탭을 갖는 이유: 확장이 카이로의 핵심 동사인데 바닥 탭에 섞여 있을 때는
+   * "이게 건물을 넓히는 것"임을 아무도 몰랐다 (직접 플레이하다 막혔다).
+   */
+  const tabs = (await page.evaluate(`(() => {
     const sh = document.getElementById('kairo-sheet');
     if (!sh) return null;
-    const tab = [...sh.querySelectorAll('.tab-btn')].find((b) => b.dataset.tab === 'ground');
-    if (!tab) return null;
-    tab.click();
-    const items = [...sh.querySelectorAll('.ksheet-build .kitem')].map((b) => ({
-      pick: b.dataset.pick,
-      sub: (b.querySelector('.kitem-sub') || {}).textContent || '',
-    }));
-    return { count: items.length, priced: items.filter((x) => /만/.test(x.sub)).length,
-             hasErase: items.some((x) => x.pick === 'erase:erase') };
-  })()`)) as null | { count: number; priced: number; hasErase: boolean };
+    const names = [...sh.querySelectorAll('.tab-btn')].map((b) => b.dataset.tab);
+    const read = (key) => {
+      const tab = [...sh.querySelectorAll('.tab-btn')].find((b) => b.dataset.tab === key);
+      if (!tab) return null;
+      tab.click();
+      return [...sh.querySelectorAll('.ksheet-build .kitem')].map((b) => ({
+        pick: b.dataset.pick,
+        sub: (b.querySelector('.kitem-sub') || {}).textContent || '',
+      }));
+    };
+    return { names: names, building: read('building'), ground: read('ground') };
+  })()`)) as null | {
+    names: string[];
+    building: { pick: string; sub: string }[] | null;
+    ground: { pick: string; sub: string }[] | null;
+  };
 
-  if (!groundTab) {
-    record('바닥 탭', 'fail', '탭을 못 찾았다');
+  if (!tabs || !tabs.building || !tabs.ground) {
+    record('건설 시트 탭', 'fail', '탭을 못 찾았다');
   } else {
     record(
-      '바닥 탭에 6종 + 철거가 있고 값이 붙어 있다',
-      groundTab.count === 7 && groundTab.priced >= 4 && groundTab.hasErase ? 'pass' : 'fail',
-      `${groundTab.count}개 · 값 표시 ${groundTab.priced}개 · 철거 ${groundTab.hasErase}`,
+      '탭이 셋이다 — 시설 · 건물 · 바닥',
+      tabs.names.join(',') === 'facility,building,ground' ? 'pass' : 'fail',
+      tabs.names.join(','),
+    );
+    const floor = tabs.building.find((x) => x.pick === 'ground:floor_indoor');
+    record(
+      '건물 탭에 건물 바닥이 있고 "넓어짐"이라고 알려준다',
+      floor !== undefined && /넓어/.test(floor.sub) ? 'pass' : 'fail',
+      floor ? `${tabs.building.length}개 · ${floor.sub}` : '없음',
+    );
+    record(
+      '바닥 탭은 실외 포장만 (5종 + 철거)',
+      tabs.ground.length === 6 &&
+        !tabs.ground.some((x) => x.pick === 'ground:floor_indoor') &&
+        tabs.ground.filter((x) => /만/.test(x.sub)).length >= 3
+        ? 'pass'
+        : 'fail',
+      `${tabs.ground.length}개`,
     );
   }
   await page.evaluate(`document.getElementById('kairo-sheet-close').click()`);

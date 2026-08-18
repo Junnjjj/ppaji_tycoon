@@ -26,8 +26,16 @@
 
 export type BuildKind = 'ground' | 'facility' | 'erase';
 
+/**
+ * 시트 탭 (K31). `kind` 와 따로 두는 이유: **건물 바닥은 지형(`ground`)이지만 탭은
+ * `building`** 이다. 확장이 카이로의 핵심 동사라 자기 탭을 줘야 보인다 — 바닥 탭에
+ * 섞여 있을 때는 "이게 건물을 넓히는 것"임을 아무도 몰랐다 (직접 플레이하다 막혔다).
+ */
+export type BuildTab = 'facility' | 'building' | 'ground';
+
 export interface BuildItem {
   kind: BuildKind;
+  tab: BuildTab;
   id: string;
   name: string;
   /** 둘째 줄 — 값·크기 같은 것 */
@@ -79,7 +87,7 @@ export class KairoHud {
 
   private readonly opts: HudOptions;
   private items: BuildItem[] = [];
-  private tab: 'ground' | 'facility' = 'facility';
+  private tab: BuildTab = 'facility';
   private open: '' | 'build' | 'menu' = '';
 
   constructor(parent: HTMLElement, opts: HudOptions) {
@@ -222,6 +230,7 @@ export class KairoHud {
     this.tabs.replaceChildren();
     for (const [key, name] of [
       ['facility', '시설'],
+      ['building', '건물'],
       ['ground', '바닥'],
     ] as const) {
       const b = el('button', `tab-btn${this.tab === key ? ' on' : ''}`, name);
@@ -234,9 +243,7 @@ export class KairoHud {
     }
 
     this.buildBody.replaceChildren();
-    const mine = this.items.filter((x) =>
-      this.tab === 'ground' ? x.kind !== 'facility' : x.kind === 'facility',
-    );
+    const mine = this.items.filter((x) => x.tab === this.tab);
     const groups = new Map<string, BuildItem[]>();
     for (const it of mine) {
       const g = it.group ?? '';

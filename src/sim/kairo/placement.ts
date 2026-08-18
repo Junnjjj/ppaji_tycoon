@@ -131,7 +131,7 @@ export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
   'wrong-terrain': '이 지형에는 놓을 수 없습니다',
   occupied: '다른 시설이 있습니다',
   'blocked-by-wall': '벽이 지나갑니다',
-  'needs-indoor': '건물 안에만 지을 수 있는 시설입니다',
+  'needs-indoor': '건물 안에만 지을 수 있습니다 — 건설 ▸ 건물 에서 넓히세요',
   'needs-deck': '플로팅덱에 붙여야 합니다',
   'deck-not-connected': '덱이 육지나 다른 덱과 이어져야 합니다',
   unreachable: '손님이 닿을 수 없는 자리입니다',

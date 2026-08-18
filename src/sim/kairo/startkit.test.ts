@@ -6,6 +6,7 @@ import { PlacementGrid, guestWalkable } from './placement.js';
 import { CourseStore } from './course.js';
 import { MAP_TYPES, mapType } from './scenario.js';
 import { applyStartKit } from './startkit.js';
+import { paintFloor } from './indoor.js';
 import { GRADES, landRect } from './progress.js';
 
 /**
@@ -158,5 +159,89 @@ describe('결정론 — 같은 맵·같은 시드는 같은 배치', () => {
   it('맵마다 배치가 실제로 다르다 — 같으면 "맵마다"가 이름표다', () => {
     const sigs = MAP_TYPES.map((m) => JSON.stringify(kit(m.id, 2026).p.toSnapshot()));
     expect(new Set(sigs).size).toBe(MAP_TYPES.length);
+  });
+});
+
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+ * K31 — **처음 세 개를 연달아 놓을 수 있어야 한다.**
+ *
+ * 직접 플레이하다 막혔다: 화장실을 놓으면 샤워실 자리가 없었다. 5×3 방에서는 화장실
+ * 하나 뒤 실내 시설 9종 중 **4종만** 남았고, 4칸짜리(샤워·락커)는 즉시 사라졌다.
+ * 넓히는 것이 게임이지, 못 놓는 것이 게임은 아니다.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+
+/** 방 안에서 놓을 수 있는 첫 자리에 놓는다 */
+function placeIndoor(
+  k: { t: KairoTerrain; w: WallGrid; p: PlacementGrid },
+  defId: string,
+): boolean {
+  for (let j = 0; j < GRID_H; j++) {
+    for (let i = 0; i < GRID_W; i++) {
+      if (!k.t.isIndoor(i, j)) continue;
+      if (k.p.place(k.t, k.w, GATE, defId, i, j).ok) return true;
+    }
+  }
+  return false;
+}
+
+describe('★ 시작 방에 처음 세 개가 연달아 들어간다', () => {
+  const FIRST_THREE = ['toilet', 'shower_row', 'locker_row'];
+
+  it('맵 3종 × 시드 8개에서 화장실 → 샤워실 → 락커가 이어진다', () => {
+    const bad: string[] = [];
+    for (const m of MAP_TYPES) {
+      for (const seed of SEEDS) {
+        const k = kit(m.id, seed);
+        const placed = FIRST_THREE.filter((id) => placeIndoor(k, id));
+        if (placed.length < FIRST_THREE.length) {
+          bad.push(`${m.id}/${seed}: ${placed.join('→') || '없음'}`);
+        }
+      }
+    }
+    expect(bad).toEqual([]);
+  });
+
+  it('⚠ 음성 대조군 — 방이 5×3 이면 둘째부터 막힌다 (검사가 유의미한가)', () => {
+    /*
+     * 안 넣으면 "원래 되는 것"과 구분이 안 된다. 5×3 은 K31 이전 값이고, 실측으로
+     * 화장실 하나 뒤 9종 중 4종만 남았다.
+     */
+    const { t, w, p, map } = world('bukhan', 42);
+    const small = { ...map, start: { ...map.start, indoor: [5, 3] as const } };
+    applyStartKit({ terrain: t, walls: w, placement: p, gate: GATE, map: small });
+    const k = { t, w, p };
+    expect(placeIndoor(k, 'toilet')).toBe(true);
+    expect(placeIndoor(k, 'shower_row'), '5×3 인데 샤워실이 들어가면 이 검사는 무의미하다').toBe(
+      false,
+    );
+  });
+
+  it('방이 차면 못 놓고, 바닥을 더 깔면 다시 놓인다 — 이게 확장 루프다', () => {
+    const k = kit('bukhan', 42);
+    // 들어갈 때까지 계속 놓아 방을 채운다
+    let n = 0;
+    while (n < 20 && placeIndoor(k, 'washbasin_row')) n++;
+    expect(n).toBeGreaterThan(0);
+    expect(placeIndoor(k, 'washbasin_row')).toBe(false); // 이제 자리가 없다
+
+    /*
+     * 방을 넓힌다 — 아래쪽 가장자리 **바깥**에 한 줄 더 깐다.
+     * (첫 실내 칸 아래는 아직 방 안이라 아무 일도 안 일어난다 — 처음에 그렇게 짜서 0 이 나왔다)
+     */
+    let grown = 0;
+    for (let i = 0; i < GRID_W && grown < 6; i++) {
+      let bottom = -1;
+      for (let j = 0; j < GRID_H; j++) if (k.t.isIndoor(i, j)) bottom = j;
+      if (bottom < 0) continue;
+      if (
+        paintFloor(k.t, k.w, GATE, i, bottom + 1, 'floor_indoor', guestWalkable(k.t, k.p)).changed
+      ) {
+        grown++;
+      }
+    }
+    expect(grown, '방을 넓히지 못하면 확장 루프가 성립하지 않는다').toBeGreaterThan(0);
+    expect(placeIndoor(k, 'washbasin_row')).toBe(true);
   });
 });

@@ -206,6 +206,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           h.placement.remove(hit.handle);
           h.scene.refreshFacility(hit.handle);
           h.guests.invalidate();
+          refreshBuildList(); // 자리가 비었으면 잠금이 풀려야 한다 (K31)
           /*
            * 절반만 돌려준다. 전액이면 "놓아보고 안 맞으면 지운다"가 공짜라 배치가
            * 판단이 아니게 되고, 0원이면 오조작 한 번이 판을 망친다.
@@ -265,6 +266,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           // 놓고 나서 터진 콤보를 알려준다
           const gained = previewCombos(h.placement, defId, i, j);
           const now = evaluateCombos(h.placement);
+          refreshBuildList(); // 방이 찼으면 다음 시설이 잠겨야 한다 (K31)
           const msgs: string[] = [`−${Math.round(cost / 10000)}만`];
           if (now.active.length > 0) msgs.push(`콤보 ${now.active.length}개 발동`);
           toast(msgs.join(' · '), 'ok');
@@ -299,6 +301,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         h.scene.refreshTile(i, j);
         h.scene.refreshAllWalls();
         h.guests.invalidate(); // 통행 가능성과 실내가 바뀐다
+        // 방이 넓어졌으면 "자리 없음" 잠금이 풀려야 한다 (K31)
+        refreshBuildList();
         persist();
       }
     },
@@ -352,25 +356,59 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   });
 
   /** 건설 목록 — 등급이 오르면 잠금이 풀리므로 결산 뒤에 다시 만든다 */
+  /**
+   * 실내 시설이 **지금 방에 들어갈 자리가 있나**. 실내 칸만 훑으므로 싸다 (보통 수십 칸).
+   *
+   * 등급 잠금과 같은 방식이다 — "열어봐야 아는 정보면 아무도 안 연다". 자리가 없으면
+   * 시트에서 미리 잠겨 보이고, 왜 잠겼는지(건물을 넓히라고) 같이 알려준다.
+   */
+  const indoorFits = (defId: string): boolean => {
+    const t = h.terrain;
+    for (let j = 0; j < GRID_H_C; j++) {
+      for (let i = 0; i < GRID_W_C; i++) {
+        if (!t.isIndoor(i, j)) continue;
+        if (h.placement.check(t, h.walls, GATE, defId, i, j, placeOpts()).ok) return true;
+      }
+    }
+    return false;
+  };
+
   const refreshBuildList = (): void => {
     const grade = currentGrade().grade;
     const items: HudItem[] = [
-      ...GROUND_KINDS.map((k) => ({
+      // 건물 — 확장이 카이로의 핵심 동사라 자기 탭을 준다 (K31)
+      {
         kind: 'ground' as const,
+        tab: 'building' as const,
+        id: 'floor_indoor',
+        name: '건물 바닥',
+        sub: `${Math.round((GROUND_KINDS.find((k) => k.id === 'floor_indoor')?.cost ?? 0) / 10000)}만 · 칠하면 넓어짐`,
+      },
+      { kind: 'erase' as const, tab: 'building' as const, id: 'erase', name: '철거', sub: '잔디로' },
+      ...GROUND_KINDS.filter((k) => k.id !== 'floor_indoor').map((k) => ({
+        kind: 'ground' as const,
+        tab: 'ground' as const,
         id: k.id,
         name: k.name,
         sub: k.cost > 0 ? `${Math.round(k.cost / 10000)}만` : '무료',
       })),
-      { kind: 'erase' as const, id: 'erase', name: '철거', sub: '잔디로' },
+      { kind: 'erase' as const, tab: 'ground' as const, id: 'erase', name: '철거', sub: '잔디로' },
       ...allFacilityDefs().map((d) => {
         const need = requiredGrade(d.id);
+        const locked =
+          need > grade
+            ? `${need}등급`
+            : d.placement.requiresIndoor && !indoorFits(d.id)
+              ? '자리 없음 · 건물을 넓히세요'
+              : null;
         return {
           kind: 'facility' as const,
+          tab: 'facility' as const,
           id: d.id,
           name: d.name,
           sub: `${d.size[0]}×${d.size[1]} · ${Math.round((d.cost ?? 0) / 10000)}만`,
           group: ZONE_NAME[d.layer] ?? d.layer,
-          ...(need > grade ? { locked: `${need}등급` } : {}),
+          ...(locked ? { locked } : {}),
         };
       }),
     ];
