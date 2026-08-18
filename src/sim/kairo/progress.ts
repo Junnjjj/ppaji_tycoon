@@ -1,4 +1,5 @@
 import rawQuests from '../../data/kairo-quests.json' with { type: 'json' };
+import { KairoTerrain } from './terrain.js';
 import rawUnlocks from '../../data/kairo-unlocks.json' with { type: 'json' };
 import { PlacementGrid, facilityDef } from './placement.js';
 import { evaluateCombos, type ComboTier } from './combos.js';
@@ -112,6 +113,10 @@ export function admissionLimit(
  * 한눈에 읽히고, 넓어지는 순간이 눈에 보인다. 게이트 쪽에서 자라는 이유는 손님이
  * 게이트로 들어오기 때문이다 — 반대쪽부터 열리면 걷는 거리가 먼저 늘어난다.
  *
+ * ⚠ **K36 부터 입구를 중심으로 좌우로 자란다.** 예전엔 `(0,0)` 에 붙은 사각형이라
+ * 오른쪽으로만 넓어졌다. 입구가 맵 가운데로 오면서 한쪽 성장은 뜻이 없어졌다 —
+ * 리조트는 정문을 중심으로 양옆으로 자란다.
+ *
  * ## 왜 세로가 처음부터 넓은가
  *
  * 물가는 격자 아래쪽 (`j ≈ height·0.55`) 에 있다. 세로를 등급마다 조금씩 늘리면
@@ -119,13 +124,14 @@ export function admissionLimit(
  * 다른 게임이다. 그래서 세로는 1등급부터 물가를 넘고, 넓어지는 축은 주로 가로다
  * (강변을 따라 옆으로 넓히는 것 — 실제 리조트 확장의 모습이기도 하다).
  */
-export function landRect(grade: GradeDef): { w: number; h: number } {
-  return { w: grade.landW, h: grade.landH };
+export function landRect(grade: GradeDef): { i0: number; j0: number; w: number; h: number } {
+  return KairoTerrain.landRectAt(grade.landW, grade.landH);
 }
 
 /** 그 칸이 해금된 토지 안인가 */
 export function withinLand(i: number, j: number, grade: GradeDef): boolean {
-  return i >= 0 && j >= 0 && i < grade.landW && j < grade.landH;
+  const r = landRect(grade);
+  return i >= r.i0 && j >= r.j0 && i < r.i0 + r.w && j < r.j0 + r.h;
 }
 
 /**

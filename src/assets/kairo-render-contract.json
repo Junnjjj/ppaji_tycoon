@@ -29,12 +29,12 @@
     "dprRule": "DPR 은 정수로 반올림한다 (2.625·2.75 같은 값 금지)",
     "cameraSnap": "카메라 target 을 매 프레임 텍셀 격자(1월드)로 반올림한다. 안 하면 팬 중 반 픽셀 밀림",
     "grid": [
-      64,
-      48
+      96,
+      72
     ],
     "mapTexels": [
-      1792,
-      896
+      2688,
+      1344
     ]
   },
   "guest": {
@@ -2792,6 +2792,21 @@
         "id": "floor_indoor",
         "name": "실내 바닥",
         "alts": 3
+      },
+      {
+        "id": "road",
+        "name": "차도",
+        "alts": 3
+      },
+      {
+        "id": "sidewalk",
+        "name": "보도",
+        "alts": 3
+      },
+      {
+        "id": "verge",
+        "name": "가로수",
+        "alts": 3
       }
     ],
     "bridges": [
@@ -2813,7 +2828,7 @@
       }
     ],
     "tilingQA": "⚠ 4방 이음새 격자 배치 검증을 통과해야 한다 (벽과 같은 미해결 항목)",
-    "note": "걸을 수 있는지(walkable)는 src/data/kairo-ground.json 이 소유한다 — 시뮬 정보다"
+    "note": "걸을 수 있는지(walkable)는 src/data/kairo-ground.json 이 소유한다 — 시뮬 정보다 K36: 도로·보도·가로수는 공원 밖 도시 띠다 — 걸을 수는 있어도 못 짓는다 (buildable=false). 여기서 버스가 서고 손님이 내린다."
   },
   "deco": {
     "items": [

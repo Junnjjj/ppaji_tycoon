@@ -46,7 +46,8 @@ export function bootKairo(opts: KairoBootOptions): KairoHandle {
     opts.terrain ?? KairoTerrain.generate(GRID_W, GRID_H, new Rng(opts.seed ?? 20260818));
   const walls = opts.walls ?? new WallGrid(GRID_W, GRID_H);
   const placement = opts.placement ?? new PlacementGrid(GRID_W, GRID_H);
-  const gate = opts.gate ?? { i: 0, j: 0 };
+  // 기본값도 **공원 입구**다 (K36). (0,0) 은 도시 띠의 차도라 손님이 설 수 없다
+  const gate = opts.gate ?? KairoTerrain.parkGate();
   const guests = new GuestStore(terrain, walls, placement, gate);
   const scene = new KairoScene({
     provider,

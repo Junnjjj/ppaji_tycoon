@@ -35,7 +35,7 @@ import {
  * 어긋날 수 있다. 여기서는 **읽어서 벽을 굽기만** 한다.
  */
 
-export type IndoorFail = 'no-door' | 'unreachable' | 'would-strand';
+export type IndoorFail = 'no-door' | 'unreachable' | 'would-strand' | 'not-buildable';
 
 export const INDOOR_FAIL_MESSAGES: Record<IndoorFail, string> = {
   /*
@@ -50,6 +50,7 @@ export const INDOOR_FAIL_MESSAGES: Record<IndoorFail, string> = {
    * (`reachable` 전후 비교)를 쓴다. 되돌릴 수 있는 실수는 막는 것이 낫다.
    */
   'would-strand': '길이 끊겨 손님이 못 가는 시설이 생깁니다',
+  'not-buildable': '공원 밖입니다 — 도로·보도에는 깔 수 없습니다',
 };
 
 export interface BakeResult {
@@ -261,6 +262,8 @@ export function paintFloor(
   const before = terrain.kindAt(i, j);
   if (before === null) return { ok: false, changed: false };
   if (before === kind) return { ok: true, changed: false };
+  // 도시 띠는 못 칠한다 (K36) — sim 에서 막아야 봇·테스트도 같이 지킨다
+  if (!terrain.isBuildable(i, j)) return { ok: false, fail: 'not-buildable', changed: false };
   const servedBefore =
     placement === undefined ? 0 : servedFacilities(terrain, walls, gate, placement, walkable);
   if (!terrain.paint(i, j, kind)) return { ok: false, changed: false };
@@ -304,7 +307,8 @@ export function paintFloorBlock(
   const before: [number, number, string][] = [];
   for (let j = j0; j < j0 + bh; j++) {
     for (let i = i0; i < i0 + bw; i++) {
-      if (!terrain.inside(i, j) || terrain.isWater(i, j)) continue;
+      // 물·도시 띠는 건너뛴다 — 그래서 4×4 라고 늘 16칸이 아니다
+      if (!terrain.inside(i, j) || terrain.isWater(i, j) || !terrain.isBuildable(i, j)) continue;
       const k = terrain.kindAt(i, j);
       if (k === null || k === kind) continue;
       before.push([i, j, k]);

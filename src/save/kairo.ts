@@ -29,11 +29,11 @@ import type { CourseSnapshot } from '../sim/kairo/course.js';
  * (`WeekSummary`) — 그래서 복원 후에도 의뢰 진행도와 등급이 그대로 보인다.
  */
 
-export const KAIRO_SAVE_VERSION = 3;
+export const KAIRO_SAVE_VERSION = 4;
 export const KAIRO_SAVE_KEY = 'ppaji.kairo.save.v1';
 
-export interface KairoSaveV3 {
-  version: 3;
+export interface KairoSaveV4 {
+  version: 4;
   savedAtMs: number;
   seed: number;
   gate: { i: number; j: number };
@@ -99,8 +99,8 @@ export interface KairoSaveV3 {
   accidentCount?: number;
 }
 
-export type AnyKairoSave = KairoSaveV3;
-export type LatestKairoSave = KairoSaveV3;
+export type AnyKairoSave = KairoSaveV4;
+export type LatestKairoSave = KairoSaveV4;
 
 /**
  * v(n) → v(n+1) 변환기. 새 버전마다 한 칸 추가한다.
@@ -151,6 +151,97 @@ const MIGRATIONS: Record<number, (s: Record<string, unknown>) => Record<string, 
       }
       rest['terrain'] = { ...t, cells };
     }
+    return rest;
+  },
+
+  /*
+   * v3 → v4 (K36): 격자가 **64×48 → 96×72** 로 넓어지고 위에 **도시 띠 3줄**이 생겼다.
+   *
+   * ⚠ 이게 없으면 상수만 커진 화면에 **잔디처럼 보이지만 영원히 죽은 칸**이 생긴다 —
+   * `fromSnapshot` 셋이 전부 저장된 크기를 그대로 쓰므로 새 영역은 `paint` 실패 ·
+   * `outside` · 플로우필드 밖이 된다. 렌더는 그것도 그려 준다.
+   *
+   * 옮기는 방법:
+   *   · 지형을 새 크기로 다시 짜고 옛 칸을 **`+CITY_BAND` 만큼 아래로** 옮긴다
+   *   · 격자 밖 새 영역은 **가장자리 줄을 잇는다** — 아래로는 물이 이어지고 오른쪽으로는
+   *     같은 물가 모양이 이어진다. 잔디로 채우면 강이 끊긴 이상한 지형이 된다
+   *   · 위 세 줄은 도로·보도·가로수로 덮고 입구 한 열을 뚫는다
+   *   · 시설·코스도 같이 내리고, 격자 밖으로 나간 것은 **버리고 개수를 남긴다**
+   *   · 벽은 비운다 — 실내 바닥이 정본이라 불러올 때 다시 굽는다 (K27)
+   */
+  3: (s) => {
+    const BAND = KairoTerrain.CITY_BAND;
+    const NW = KairoTerrain.WIDTH;
+    const NH = KairoTerrain.HEIGHT;
+    const t = s['terrain'] as { w?: number; h?: number; kinds?: number[] } | undefined;
+    const rest: Record<string, unknown> = { ...s, version: 4 };
+
+    if (t?.kinds && typeof t.w === 'number' && typeof t.h === 'number') {
+      const ow = t.w;
+      const oh = t.h;
+      const old = t.kinds;
+      const kinds = new Array<number>(NW * NH).fill(groundIndex('lawn'));
+      const road = groundIndex('road');
+      const walk = groundIndex('sidewalk');
+      const verge = groundIndex('verge');
+      for (let j = 0; j < NH; j++) {
+        for (let i = 0; i < NW; i++) {
+          if (j < BAND) {
+            let k = KairoTerrain.ROAD_ROWS.includes(j)
+              ? road
+              : j === KairoTerrain.STOP_ROW
+                ? walk
+                : verge;
+            if (j > KairoTerrain.STOP_ROW && i === KairoTerrain.ENTRY_I) k = walk;
+            kinds[j * NW + i] = k;
+            continue;
+          }
+          // 가장자리 줄을 이어 붙인다 — 강이 끊기지 않게
+          const oi = Math.min(ow - 1, i);
+          const oj = Math.min(oh - 1, j - BAND);
+          kinds[j * NW + i] = old[oj * ow + oi] ?? kinds[j * NW + i] ?? 0;
+        }
+      }
+      rest['terrain'] = { w: NW, h: NH, kinds };
+    }
+
+    const pl = s['placement'] as
+      | { w?: number; h?: number; next?: number; items?: { i: number; j: number }[] }
+      | undefined;
+    let dropped = 0;
+    if (pl?.items) {
+      const kept = pl.items.filter((it) => {
+        const nj = it.j + BAND;
+        const ok = it.i >= 0 && it.i < NW && nj >= 0 && nj < NH;
+        if (!ok) dropped += 1;
+        return ok;
+      });
+      rest['placement'] = {
+        w: NW,
+        h: NH,
+        next: pl.next ?? 1,
+        items: kept.map((it) => ({ ...it, j: it.j + BAND })),
+      };
+    }
+
+    const co = s['courses'] as
+      | { courses?: { dock: { x: number; y: number }; handles: { x: number; y: number }[] }[] }
+      | undefined;
+    if (co?.courses) {
+      rest['courses'] = {
+        ...co,
+        courses: co.courses.map((c) => ({
+          ...c,
+          dock: { x: c.dock.x, y: c.dock.y + BAND },
+          handles: c.handles.map((h) => ({ x: h.x, y: h.y + BAND })),
+        })),
+      };
+    }
+
+    // 벽은 버린다 — 실내 바닥에서 다시 굽는다 (K27: 지형이 정본)
+    rest['walls'] = { w: NW, h: NH, ei: [], ej: [] };
+    rest['gate'] = KairoTerrain.parkGate();
+    if (dropped > 0) rest['migrationDropped'] = dropped;
     return rest;
   },
 };

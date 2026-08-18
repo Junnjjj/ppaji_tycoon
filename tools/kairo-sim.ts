@@ -76,9 +76,19 @@ const MAPS = args.includes('--maps');
  */
 const EACH = args.includes('--each');
 
-const GRID_W = 40;
-const GRID_H = 32;
-const GATE = { i: 2, j: 2 };
+/*
+ * ⚠ **실제 판과 같은 격자여야 한다** (K36).
+ *
+ * K9 부터 여기는 40×32 · 게이트 (2,2) 였다. K25 에서 게임이 64×48 이 된 뒤로 헤드리스
+ * 밸런싱은 **실제 판과 다른 세계**를 재고 있었다 — 등급 4~5 토지(당시 54×46)를 봇은
+ * 격자 밖이라 아예 못 썼다. "후반이 빈다" 경보의 일부가 그 때문일 수 있었다.
+ *
+ * 렌더 상수를 sim 도구가 import 하면 불변식 1(sim 은 렌더를 모른다)에 걸리므로,
+ * 값을 여기 적되 **테스트가 iso.ts 와 같은지 확인**한다.
+ */
+const GRID_W = 96;
+const GRID_H = 72;
+const GATE = KairoTerrain.parkGate();
 
 /** 봇이 건설에 안 쓰고 남기는 예비비 — 카드 한 장의 최대 지출을 버틸 만큼 */
 const BUILD_RESERVE = 1_500_000;
@@ -158,7 +168,7 @@ function ensureRoom(
   t: KairoTerrain,
   w: WallGrid,
   p: PlacementGrid,
-  land: { w: number; h: number },
+  land: ReturnType<typeof landRect>,
   rng: Rng,
   need: { w: number; h: number },
 ): number {
@@ -266,7 +276,7 @@ function ensurePath(
   t: KairoTerrain,
   w: WallGrid,
   p: PlacementGrid,
-  land: { w: number; h: number },
+  land: ReturnType<typeof landRect>,
   target: { i: number; j: number; w: number; h: number },
 ): number {
   const stand = guestWalkable(t, p);
@@ -355,7 +365,7 @@ function buildOne(
    * 해금된 토지 (K25). 봇이 이걸 무시하면 밸런싱이 **실제로 못 쓰는 땅**까지 쓰게 되어,
    * 헤드리스 숫자와 손으로 하는 판이 갈라진다. 검증이 조용히 통과하는 전형적인 모양이다.
    */
-  land: { w: number; h: number },
+  land: ReturnType<typeof landRect>,
   /** 실내 판정 — 실내 시설 9종은 **실제 건물 안**에만 놓인다 (K25 검토) */
   /**
    * 왜 못 놓았는지 — **한 통으로 세면 엉뚱한 곳을 가리킨다** (K23 의 교훈 그대로).
@@ -389,8 +399,22 @@ function buildOne(
   let roomSpend = 0;
   for (let round = 0; round < 2; round++) {
     for (let attempt = 0; attempt < 200; attempt++) {
-      const i = rng.int(Math.max(1, land.w - pick.size[0]));
-      const j = rng.int(Math.max(1, land.h - pick.size[1]));
+      /*
+       * ⚠ **게이트 근처부터 짓는다** (K36).
+       *
+       * 예전엔 해금된 토지 전체에 균일 난수로 뽑았다. 40×32 시절엔 그래도 됐지만
+       * 96×72 에서는 봇이 판 전체에 흩뿌려서 손님 걷는 거리가 폭발하고, 길값도
+       * 같이 폭발한다 (실측: 26주 현금 204만 · "돈이 없어 건설이 막힌다").
+       * 사람은 입구 근처부터 채운다 — 그게 봇의 모델이어야 한다.
+       *
+       * 반경은 **시설 수와 함께 자란다.** 고정하면 다 차고도 밖으로 못 나간다.
+       */
+      const reach = 8 + p.count * 2;
+      const lo = Math.max(land.i0, GATE.i - reach);
+      const hi = Math.min(land.i0 + land.w - pick.size[0], GATE.i + reach);
+      const jHi = Math.min(land.j0 + land.h - pick.size[1], GATE.j + reach);
+      const i = lo + rng.int(Math.max(1, hi - lo + 1));
+      const j = land.j0 + rng.int(Math.max(1, jHi - land.j0 + 1));
       const c = p.check(t, w, GATE, pick.id, i, j, opts);
       if (c.ok) {
         p.place(t, w, GATE, pick.id, i, j, opts);

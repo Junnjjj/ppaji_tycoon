@@ -16,9 +16,9 @@ import { GRADES, landRect } from './progress.js';
  * 막히는데 첫 의뢰가 "기본 위생 3개"였다. 실측으로 확인한 버그다.
  */
 
-const GRID_W = 64;
-const GRID_H = 48;
-const GATE = { i: 0, j: 0 };
+const GRID_W = KairoTerrain.WIDTH;
+const GRID_H = KairoTerrain.HEIGHT;
+const GATE = KairoTerrain.parkGate();
 const SEEDS = [1, 7, 42, 100, 2026, 31337, 777, 5];
 
 function world(mapId: string, seed: number): {
@@ -53,8 +53,9 @@ describe('★ 위생 시설을 놓을 수 있다 — 이게 이 킷의 이유다
         const land = landRect(GRADES[0]!);
         let toilet = false;
         let shower = false;
-        for (let j = 0; j < land.h && !(toilet && shower); j++) {
-          for (let i = 0; i < land.w; i++) {
+        // K36: 토지는 오프셋 사각형이다 — (0,0) 부터 훑으면 도시 띠부터 본다
+        for (let j = land.j0; j < land.j0 + land.h && !(toilet && shower); j++) {
+          for (let i = land.i0; i < land.i0 + land.w; i++) {
             if (!toilet && k.p.check(k.t, k.w, GATE, 'toilet', i, j, { land }).ok) toilet = true;
             if (!shower && k.p.check(k.t, k.w, GATE, 'shower_row', i, j, { land }).ok) shower = true;
           }
@@ -74,8 +75,8 @@ describe('★ 위생 시설을 놓을 수 있다 — 이게 이 킷의 이유다
       const { t, w, p } = world(m.id, 42);
       const land = landRect(GRADES[0]!);
       let any = false;
-      for (let j = 0; j < land.h && !any; j++) {
-        for (let i = 0; i < land.w; i++) {
+      for (let j = land.j0; j < land.j0 + land.h && !any; j++) {
+        for (let i = land.i0; i < land.i0 + land.w; i++) {
           if (p.check(t, w, GATE, 'toilet', i, j, { land }).ok) {
             any = true;
             break;
@@ -83,7 +84,8 @@ describe('★ 위생 시설을 놓을 수 있다 — 이게 이 킷의 이유다
         }
       }
       expect(any, `${m.id} — 킷 없이도 놓인다면 이 킷은 필요 없다`).toBe(false);
-      expect(p.check(t, w, GATE, 'toilet', 3, 3, { land }).fail).toBe('needs-indoor');
+      // 표본은 **공원 안**이어야 한다 — 도시 띠는 `not-buildable` 로 먼저 걸린다 (K36)
+      expect(p.check(t, w, GATE, 'toilet', GATE.i, GATE.j + 2, { land }).fail).toBe('needs-indoor');
     }
   });
 });
@@ -203,17 +205,20 @@ describe('★ 시작 방에 처음 세 개가 연달아 들어간다', () => {
     expect(bad).toEqual([]);
   });
 
-  it('⚠ 음성 대조군 — 방이 5×3 이면 둘째부터 막힌다 (검사가 유의미한가)', () => {
+  it('⚠ 음성 대조군 — 방이 3×3 이면 둘째부터 막힌다 (검사가 유의미한가)', () => {
     /*
-     * 안 넣으면 "원래 되는 것"과 구분이 안 된다. 5×3 은 K31 이전 값이고, 실측으로
-     * 화장실 하나 뒤 9종 중 4종만 남았다.
+     * 안 넣으면 "원래 되는 것"과 구분이 안 된다.
+     *
+     * ⚠ 예전엔 5×3 을 썼는데 K36 에서 문 위치가 바뀌면서 5×3 에도 샤워실이 들어가
+     * **대조군이 조용히 무의미해졌다.** 폭으로 확실히 막는 3×3 으로 바꾼다 —
+     * 샤워실은 4×1 이라 3폭 방에는 어떤 배치로도 안 들어간다.
      */
     const { t, w, p, map } = world('bukhan', 42);
-    const small = { ...map, start: { ...map.start, indoor: [5, 3] as const } };
+    const small = { ...map, start: { ...map.start, indoor: [3, 3] as const } };
     applyStartKit({ terrain: t, walls: w, placement: p, gate: GATE, map: small });
     const k = { t, w, p };
     expect(placeIndoor(k, 'toilet')).toBe(true);
-    expect(placeIndoor(k, 'shower_row'), '5×3 인데 샤워실이 들어가면 이 검사는 무의미하다').toBe(
+    expect(placeIndoor(k, 'shower_row'), '3×3 인데 샤워실이 들어가면 이 검사는 무의미하다').toBe(
       false,
     );
   });

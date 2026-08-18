@@ -95,21 +95,21 @@ describe('월드 경계 — 배경 여백을 포함한다', () => {
     expect(b.maxY).toBe((GRID_W + GRID_H) * STEP_Y + BACKDROP_BELOW);
   });
 
-  it('맵 가로 폭이 1792 텍셀 — 폰 393 의 4.6 화면 (K25 확대)', () => {
+  it('맵 가로 폭이 2688 텍셀 — 폰 393 의 6.8 화면 (K36 확대)', () => {
     const b = worldBounds();
-    expect(b.maxX - b.minX).toBe(1792);
-    expect((b.maxX - b.minX) / 393).toBeCloseTo(4.56, 1);
+    expect(b.maxX - b.minX).toBe(2688);
+    expect((b.maxX - b.minX) / 393).toBeCloseTo(6.84, 1);
   });
 
   it('⚠ 맵 세로가 폰 852 를 넘는다 — K25 부터 세로도 팬한다', () => {
     /*
-     * 40×32 시절엔 세로가 정확히 852 라 세로 팬이 필요 없었다. 64×48 은 1172 이라
+     * 40×32 시절엔 세로가 정확히 852 라 세로 팬이 필요 없었다. 96×72 는 1620 이라
      * 넘는다 — **의도한 변경**이다 (`GRID_SUM_MAX` 주석 참고). 카메라의 `tallEnough`
      * 분기가 이 경우를 이미 처리한다. 이 테스트는 "넘는다"를 못박아, 세로 팬이 조용히
      * 사라지면(=다시 화면에 들어오면) 알아채게 한다.
      */
     const b = worldBounds();
-    expect(b.maxY - b.minY).toBe(896 + BACKDROP_ABOVE + BACKDROP_BELOW);
+    expect(b.maxY - b.minY).toBe((96 + 72) * 8 + BACKDROP_ABOVE + BACKDROP_BELOW);
     expect(b.maxY - b.minY).toBeGreaterThan(852);
   });
 });

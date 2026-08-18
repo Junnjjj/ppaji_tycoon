@@ -1,4 +1,4 @@
-import type { KairoTerrain } from './terrain.js';
+import { KairoTerrain } from './terrain.js';
 import type { WallGrid } from './walls.js';
 import { bakeIndoorWalls } from './indoor.js';
 import { PlacementGrid, guestWalkable } from './placement.js';
@@ -65,24 +65,33 @@ export interface StartKitInput {
 }
 
 /** 마당의 왼쪽 위 모서리 — 게이트 바로 안쪽 */
-const YARD_ORIGIN = { i: 2, j: 2 };
+/**
+ * 마당의 왼쪽 위 모서리 — **입구를 중심으로** 잡는다 (K36).
+ *
+ * ⚠ 예전엔 `(2,2)` 고정이었다. 거긴 이제 차도이고, 입구도 맵 가운데로 옮겨 갔다.
+ * 마당이 입구 아래에 오지 않으면 손님이 들어오자마자 옆으로 한참 걸어야 한다.
+ */
+function yardOrigin(yardW: number): { i: number; j: number } {
+  const gate = KairoTerrain.parkGate();
+  return {
+    i: Math.max(0, gate.i - Math.floor(yardW / 2)),
+    j: KairoTerrain.CITY_BAND,
+  };
+}
 
 export function applyStartKit(input: StartKitInput): StartKitResult {
   const { terrain, walls, placement, gate, map, courses } = input;
   const st = map.start;
   const skipped: string[] = [];
 
-  // ── 1. 진입로 — 게이트에서 마당까지. 손님이 어디서 오는지 보여야 한다 ──
-  for (let k = 0; k <= YARD_ORIGIN.i; k++) paintIfLand(terrain, gate.i + k, gate.j, 'path_stone');
-  for (let k = 0; k <= YARD_ORIGIN.j; k++) paintIfLand(terrain, YARD_ORIGIN.i, gate.j + k, 'path_stone');
-
-  // ── 2. 마당 — 포장. 잔디 위에 시설이 덩그러니 뜨지 않게 ──
-  const yard = { i: YARD_ORIGIN.i, j: YARD_ORIGIN.j, w: st.yard[0], h: st.yard[1] };
+  // ── 1. 마당 — 입구 바로 아래. 포장. 잔디 위에 시설이 덩그러니 뜨지 않게 ──
+  const origin = yardOrigin(st.yard[0]);
+  const yard = { i: origin.i, j: origin.j, w: st.yard[0], h: st.yard[1] };
   for (let j = yard.j; j < yard.j + yard.h; j++) {
     for (let i = yard.i; i < yard.i + yard.w; i++) paintIfLand(terrain, i, j, 'path_stone');
   }
 
-  // ── 3. 실내동 — ★ 이 킷의 핵심. 빈 방을 준다 ──
+  // ── 2. 실내동 — ★ 이 킷의 핵심. 빈 방을 준다 ──
   const room = { i: yard.i + 1, j: yard.j + 1, w: st.indoor[0], h: st.indoor[1] };
   let indoorTiles = 0;
   for (let j = room.j; j < room.j + room.h; j++) {
@@ -114,7 +123,7 @@ export function applyStartKit(input: StartKitInput): StartKitResult {
   if (place(placement, terrain, walls, gate, 'ticket', ticketAt.i, ticketAt.j)) facilities++;
   else skipped.push('매표소');
 
-  // ── 5. 데크 + 선착장 — 시그니처(코스)를 5분 안에 만나게 하려고 ──
+  // ── 4. 데크 + 선착장 — 시그니처(코스)를 5분 안에 만나게 하려고 ──
   const shore = findShore(terrain, yard.i, yard.i + yard.w);
   let dockAt: { x: number; y: number } | null = null;
   if (!shore) {
@@ -135,7 +144,7 @@ export function applyStartKit(input: StartKitInput): StartKitResult {
     if (laid > 0) dockAt = { x: shore.i, y: shore.j + laid - 1 };
   }
 
-  // ── 6. 코스 — 물려받은 왕복(shuttle) 코스 하나 ──
+  // ── 5. 코스 — 물려받은 왕복(shuttle) 코스 하나 ──
   let course = false;
   if (st.course && courses && dockAt) {
     const preset = PRESETS.find((x) => x.id === 'shuttle') ?? PRESETS[0];
@@ -162,7 +171,8 @@ export function applyStartKit(input: StartKitInput): StartKitResult {
 
 /** 육지일 때만 칠한다 — 물을 덮으면 지형이 통째로 달라진다 */
 function paintIfLand(t: KairoTerrain, i: number, j: number, kind: string): boolean {
-  if (!t.inside(i, j) || t.isWater(i, j)) return false;
+  // ⚠ 도시 띠(도로·보도·가로수)는 덮지 않는다 — 플레이어가 못 짓는 곳을 킷도 못 짓는다
+  if (!t.inside(i, j) || t.isWater(i, j) || !t.isBuildable(i, j)) return false;
   return t.paint(i, j, kind);
 }
 

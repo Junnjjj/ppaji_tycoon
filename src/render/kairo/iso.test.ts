@@ -179,13 +179,13 @@ describe('격자', () => {
     }
   });
 
-  it('64×48 격자는 1792×896 텍셀이다 (K25 확대)', () => {
-    expect(gridExtent()).toEqual({ x: 1792, y: 896 });
+  it('96×72 격자는 2688×1344 텍셀이다 (K36 확대)', () => {
+    expect(gridExtent()).toEqual({ x: 2688, y: 1344 });
   });
 
   it('⚠ 격자 합이 상한을 넘는다 — K25 부터 세로도 팬한다', () => {
     // 상한은 "세로 팬이 필요없다"는 편의였다. 넘은 것을 못박아 두어야 되돌림이 보인다
-    expect(GRID_W + GRID_H).toBe(112);
+    expect(GRID_W + GRID_H).toBe(168);
     expect(GRID_W + GRID_H).toBeGreaterThan(GRID_SUM_MAX);
   });
 

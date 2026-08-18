@@ -77,6 +77,7 @@ export interface PlacedFacility {
 export type PlaceFail =
   | 'outside'
   | 'outside-land'
+  | 'not-buildable'
   | 'blocks-door'
   | 'would-strand'
   | 'wrong-terrain'
@@ -95,8 +96,13 @@ export type PlaceFail =
  * `terrain.isIndoor` 가 답을 안다. 넘겨야 할 것이 줄면 넘기는 걸 잊을 일도 준다.
  */
 export interface PlaceOptions {
-  /** 해금된 토지 (K25). 없으면 격자 전체 */
-  land?: { w: number; h: number };
+  /**
+   * 해금된 토지 (K25). 없으면 격자 전체.
+   *
+   * ⚠ K36 부터 **오프셋 사각형**이다 — 입구가 맵 가운데라 토지가 좌우로 자란다.
+   * `{w,h}` 만 보면 왼쪽 경계를 안 봐서 입구 왼쪽 땅이 통째로 열린다.
+   */
+  land?: { i0: number; j0: number; w: number; h: number };
 }
 
 export interface PlaceOutcome {
@@ -130,6 +136,11 @@ export function guestWalkable(
 export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
   outside: '격자 밖입니다',
   'outside-land': '아직 내 땅이 아닙니다 — 등급을 올리면 넓어집니다',
+  /*
+   * K36: 도시 띠는 **영원히** 못 짓는다 (등급을 올려도 안 열린다). 그래서 문구가
+   * `outside-land` 와 달라야 한다 — "기다리면 열린다"로 읽히면 안 된다.
+   */
+  'not-buildable': '공원 밖입니다 — 도로·보도에는 지을 수 없습니다',
   'blocks-door': '문 앞은 비워야 합니다',
   'would-strand': '이 자리에 놓으면 실내 일부에 못 가게 됩니다',
   'wrong-terrain': '이 지형에는 놓을 수 없습니다',
@@ -258,10 +269,20 @@ export class PlacementGrid {
     }
 
     if (opts?.land) {
-      const land = opts.land;
+      const L = opts.land;
       for (const [ti, tj] of tiles) {
-        if (ti >= land.w || tj >= land.h) return { ok: false, fail: 'outside-land' };
+        if (ti < L.i0 || tj < L.j0 || ti >= L.i0 + L.w || tj >= L.j0 + L.h) {
+          return { ok: false, fail: 'outside-land' };
+        }
       }
+    }
+
+    /*
+     * 도시 띠(도로·보도·가로수)에는 못 짓는다 (K36). **토지 검사 다음, 지형 검사 앞**이다 —
+     * "내 땅 밖"과 "내 땅 안이지만 도로"는 처방이 다르므로 사유를 갈라야 한다.
+     */
+    for (const [ti, tj] of tiles) {
+      if (!terrain.isBuildable(ti, tj)) return { ok: false, fail: 'not-buildable' };
     }
 
     const needWater = wantsWater(def.layer);

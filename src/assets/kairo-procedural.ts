@@ -70,6 +70,13 @@ const GROUND_BASE: Record<string, string> = {
   lawn: '#79a94f',
   water_edge: '#57a4c2',
   floor_indoor: '#dbe3e8',
+  /*
+   * 도시 띠 (K36) — 공원 밖이라 **채도를 낮춘다.** 공원과 같은 채도로 두면 눈이
+   * 어디까지가 내 땅인지 못 가른다. 회색 아스팔트 · 밝은 보도 · 짙은 가로수.
+   */
+  road: '#5f6570',
+  sidewalk: '#b9bcc0',
+  verge: '#4f7742',
 };
 
 /** 기본색에서 밝음·어두움을 만드는 배율. 표준편차 9~11 을 목표로 맞춘 값 */
@@ -81,8 +88,14 @@ function groundTones(kind: string): [string, string, string] | null {
   return [scaleHex(base, GROUND_SPREAD.light), base, scaleHex(base, GROUND_SPREAD.dark)];
 }
 
-/** 포장류는 타일 이음선을 보인다 — 레퍼런스의 포장이 그렇고, 격자가 읽혀야 각도가 보인다 */
-const PAVED = new Set(['path_stone', 'path_deck', 'floor_indoor']);
+/**
+ * 포장류는 타일 이음선을 보인다 — 레퍼런스의 포장이 그렇고, 격자가 읽혀야 각도가 보인다.
+ *
+ * ⚠ 가로수(`verge`)도 여기 넣는다 (K36). 유기적으로 그리면 이음새 대비가 2.9배로
+ * 튀어 4방 이음새 QA 를 넘는다 (문턱 ~2.5). 도시의 가로 화단은 **칸으로 나뉜 화단**이라
+ * 타일 이음선이 오히려 맞다.
+ */
+const PAVED = new Set(['path_stone', 'path_deck', 'floor_indoor', 'road', 'sidewalk', 'verge']);
 
 const DECO_COLOR: Record<string, string> = { safety: '#d9694f', scenery: '#7ea9c9' };
 

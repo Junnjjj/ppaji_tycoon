@@ -22,6 +22,8 @@
  * 예전에 텍셀·월드·화면 세 단위를 섞어 쓰다 스프라이트가 1.9배로 커진 사고가 있었다.
  */
 
+import { KairoTerrain } from '../../sim/kairo/terrain.js';
+
 /** 타일 다이아몬드 — 카이로 실측 (레퍼런스 업스케일 2.5배를 나눈 값. 스펙 §1.2) */
 export const TILE_W = 32;
 export const TILE_H = 16;
@@ -31,14 +33,20 @@ export const STEP_X = TILE_W / 2; // 16
 export const STEP_Y = TILE_H / 2; // 8
 
 /**
- * 격자 크기 — 스펙 §1.6, **K25 에서 40×32 → 64×48 로 넓혔다**.
+ * 격자 크기 — 스펙 §1.6. **K25 에서 40×32 → 64×48, K36 에서 96×72.**
  *
  * 40×32 는 한 화면에 거의 다 들어와서 "지도를 넓힌다"는 감각이 없었다. 이제 전체는
  * 세로로도 팬해야 보이고, 처음부터 다 쓸 수 있는 것도 아니다 — 등급마다 게이트 쪽
  * 사각형이 넓어진다 (`landRect`). 넓힌 땅이 곧 다음 목표가 된다.
+ *
+ * ⚠ 위 세 줄(`KairoTerrain.CITY_BAND`)은 **공원이 아니라 도시 띠**다 (K36).
+ * 도로·보도·가로수이고 못 짓는다. 그래서 실제 공원은 96×69 다.
+ *
+ * ⚠ 타일 하나에 Phaser 이미지 하나라 부팅 스프라이트가 3,072 → **6,912** 다.
+ * 컬링은 없다 — 깊이 정렬이 i+j 한 축에 묶여 있어 함부로 빼면 순서가 깨진다.
  */
-export const GRID_W = 64;
-export const GRID_H = 48;
+export const GRID_W = KairoTerrain.WIDTH;
+export const GRID_H = KairoTerrain.HEIGHT;
 
 /**
  * 격자 합 상한. 넘으면 세로로도 팬해야 한다 (852 / STEP_Y = 106.5).

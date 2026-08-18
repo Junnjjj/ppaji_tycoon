@@ -18,7 +18,7 @@ import { KairoCamera } from '../kairo/kairo-camera.js';
 import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
 import { KairoProceduralProvider } from '../../assets/kairo-procedural.js';
 import { variantId } from '../../assets/types.js';
-import type { KairoTerrain } from '../../sim/kairo/terrain.js';
+import { KairoTerrain } from '../../sim/kairo/terrain.js';
 import {
   EDGE_NONE,
   EDGE_DOOR,
@@ -184,7 +184,7 @@ export class KairoScene extends Phaser.Scene {
    * K25 부터 토지 표시가 그렇게 죽어 있었고, 아무도 tint 를 안 봐서 못 잡았다.
    * 호출 순서에 기대지 않도록 씬이 값을 들고 있는다.
    */
-  private land: { w: number; h: number } | null = null;
+  private land: { i0: number; j0: number; w: number; h: number } | null = null;
   private backdrops: Phaser.GameObjects.TileSprite[] = [];
   private dragMoved = 0;
   private lastPointer = { x: 0, y: 0 };
@@ -476,8 +476,8 @@ export class KairoScene extends Phaser.Scene {
    *
    * 등급이 바뀔 때만 부른다 — 타일 3,072장을 매 프레임 만지면 안 된다.
    */
-  setLand(lw: number, lh: number): void {
-    this.land = { w: lw, h: lh };
+  setLand(rect: { i0: number; j0: number; w: number; h: number }): void {
+    this.land = { ...rect };
     this.applyLand();
   }
 
@@ -485,13 +485,19 @@ export class KairoScene extends Phaser.Scene {
   private applyLand(): void {
     const land = this.land;
     if (!land || this.tileImages.length === 0) return;
-    const lw = land.w;
-    const lh = land.h;
+    const { i0, j0 } = land;
+    const i1 = i0 + land.w;
+    const j1 = j0 + land.h;
     for (let j = 0; j < GRID_H; j++) {
       for (let i = 0; i < GRID_W; i++) {
         const img = this.tileImages[j * GRID_W + i];
         if (!img) continue;
-        if (i < lw && j < lh) img.clearTint();
+        /*
+         * 도시 띠(위 8줄)는 **어둡게 하지 않는다** — 영원히 못 사는 땅이지 아직 못 산
+         * 땅이 아니다. 어둡게 두면 "등급을 올리면 열린다"로 읽힌다.
+         */
+        if (j < KairoTerrain.CITY_BAND) img.clearTint();
+        else if (i >= i0 && i < i1 && j >= j0 && j < j1) img.clearTint();
         else img.setTint(0x5c6470);
       }
     }
@@ -500,10 +506,10 @@ export class KairoScene extends Phaser.Scene {
     g.clear();
     g.lineStyle(1, 0xffe08a, 0.9);
     // 사각형 네 꼭지점을 아이소로 옮기면 화면에서는 마름모가 된다
-    const p0 = gridToScreen(0, 0);
-    const p1 = gridToScreen(lw, 0);
-    const p2 = gridToScreen(lw, lh);
-    const p3 = gridToScreen(0, lh);
+    const p0 = gridToScreen(i0, j0);
+    const p1 = gridToScreen(i1, j0);
+    const p2 = gridToScreen(i1, j1);
+    const p3 = gridToScreen(i0, j1);
     g.beginPath();
     g.moveTo(p0.x, p0.y);
     g.lineTo(p1.x, p1.y);

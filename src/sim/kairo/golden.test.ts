@@ -38,28 +38,38 @@ import { StaffStore, STAFF_ROLES, neededFor } from './staff.js';
  * 정확한 값이면 어떤 변경이 결과를 건드렸는지 즉시 안다.
  */
 
-const GRID_W = 40;
-const GRID_H = 32;
-const GATE = { i: 2, j: 2 };
+/*
+ * ⚠ **실제 판과 같은 격자여야 한다** (K36). 예전엔 40×32 였다 — K25 에서 게임이
+ * 64×48 이 되고 K36 에서 96×72 가 되는 동안 골든은 **아무도 안 쓰는 크기**를 지키고
+ * 있었다. 그러면 회귀 테스트가 실제 회귀를 못 잡는다.
+ *
+ * 좌표는 **입구를 따라 옮겼다.** 도시 띠(위 8줄) 아래로 8칸 내리고, 가로로는 +33 —
+ * 입구가 맵 가운데(i=48)로 갔기 때문이다. 옮기지 않으면 손님이 20칸을 걸어야 해서
+ * 골든이 "먼 데 지은 판"을 재게 된다 (실측: 만족도 71→58 · 방문객 115→79).
+ */
+const GRID_W = 96;
+const GRID_H = 72;
+const GATE = KairoTerrain.parkGate();
+const BAND = KairoTerrain.CITY_BAND;
 const SEED = 20260818;
 
 /** 고정 건설 순서 — 사람이 초반에 실제로 지을 순서를 흉내낸다 */
 const BUILD_ORDER: readonly [string, number, number][] = [
-  ['ticket', 4, 2],
-  ['shop', 8, 3],
-  ['pyeongsang_row', 8, 6],
-  ['toilet', 12, 8], // 2×2 라 벽 사이 1칸 띠(j=6)에는 안 들어간다 — 벽 j=7 아래에 붙인다
-  ['washbasin_row', 15, 6],
-  ['shower_row', 18, 6],
-  ['locker_row', 22, 6],
-  ['snackbar', 8, 10],
-  ['cafe', 12, 10],
-  ['sunbed_row', 16, 10],
-  ['lifering', 20, 10],
-  ['infirmary', 22, 10],
-  ['parasol', 25, 10],
-  ['flowerbed', 26, 10],
-  ['photozone', 27, 11],
+  ['ticket', 37, 10],
+  ['shop', 41, 11],
+  ['pyeongsang_row', 41, 14],
+  ['toilet', 45, 16], // 2×2 라 벽 사이 1칸 띠(j=6)에는 안 들어간다 — 벽 j=7 아래에 붙인다
+  ['washbasin_row', 48, 14],
+  ['shower_row', 51, 14],
+  ['locker_row', 55, 14],
+  ['snackbar', 41, 18],
+  ['cafe', 45, 18],
+  ['sunbed_row', 49, 18],
+  ['lifering', 53, 18],
+  ['infirmary', 55, 18],
+  ['parasol', 58, 18],
+  ['flowerbed', 59, 18],
+  ['photozone', 60, 19],
 ];
 
 interface Golden {
@@ -102,7 +112,7 @@ function playGolden(weeks: number): Golden {
    * 실내동 — 위생 시설 4종이 들어갈 방이다. **바닥을 깔면 그게 방이다** (K27).
    * 벽은 그 외곽선으로 자동 생성된다.
    */
-  for (let j = 5; j < 10; j++) for (let i = 10; i < 26; i++) t.paint(i, j, 'floor_indoor');
+  for (let j = 5 + BAND; j < 10 + BAND; j++) for (let i = 10 + 33; i < 26 + 33; i++) t.paint(i, j, 'floor_indoor');
   bakeIndoorWalls(t, w, GATE, guestWalkable(t, p));
 
   let placed = 0;
@@ -256,14 +266,29 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
      * (K25 검토 ①) 골든도 경계 두 줄 대신 16×5 방 하나를 짓는다. 방에는 문이 하나뿐이라
      * 동선이 조금 달라졌다. 변화가 1 안팎인 것이 오히려 확인 — 벽 두 줄과 방 하나가
      * 손님에게 비슷한 장애물이었다는 뜻이다.
+     *
+     * **2026-08-18 골든이 드디어 실제 격자를 본다** (exitSat 73→71 · visitors 119→115 ·
+     * turnedAway 4→8): 이 파일은 K9 부터 **40×32** 였다. 게임은 K25 에 64×48, K36 에
+     * 96×72 가 됐는데 골든은 아무도 안 쓰는 크기를 지키고 있었다 — 회귀 테스트가
+     * 실제 회귀를 못 잡는 상태였다. 이제 96×72 · 게이트 (4,3) 이고 건설 순서는
+     * 도시 띠 아래로 3칸 내렸다.
+     *
+     * 숫자가 바뀐 것이 아니라 **재는 대상이 바뀌었다.** 맵이 96×72 가 되고 입구가
+     * 가운데(i=48)로 갔다. 건설 순서를 입구 쪽으로 옮기지 않으면 손님이 20칸을 걸어야 해서
+     * 골든이 "먼 데 지은 판"을 잰다 (그 상태 실측: 만족도 58 · 방문객 79 · 등급 2).
+     *
+     * 옮긴 뒤: exitSat 73→74 · visitors 119→129 · turnedAway 4→26 · grade 3→4.
+     * 등급 상한이 30/50/75/105/150 → 40/70/110/160/230 으로 올라 더 받고, 그만큼
+     * 공급(시설 15개)이 못 따라가 만석이 는다. **상한을 올린 직접 결과다** —
+     * 넓힌 땅을 쓰려면 상한도 같이 올라야 하고, 그러면 시설을 더 지어야 한다.
      */
     expect(g).toEqual({
       facilities: 15,
       combos: 7,
-      grade: 3,
-      exitSat: 73,
-      visitors: 119,
-      turnedAway: 4,
+      grade: 4,
+      exitSat: 74,
+      visitors: 129,
+      turnedAway: 26,
       profitSign: 1,
       questsDone: 6,
       riskLevel: 'caution',
@@ -356,7 +381,7 @@ describe('밸런스 성질 — 값이 아니라 관계를 못박는다', () => {
       for (let i = 0; i < GRID_W; i++) for (let j = 0; j < GRID_H; j++) t.paint(i, j, 'path_stone');
       const w = new WallGrid(GRID_W, GRID_H);
       const p = new PlacementGrid(GRID_W, GRID_H);
-      for (let k = 0; k < 4; k++) p.place(t, w, GATE, 'shop', 4 + dist, 4 + k * 3);
+      for (let k = 0; k < 4; k++) p.place(t, w, GATE, 'shop', GATE.i + dist, GATE.j + 1 + k * 3);
       const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
       g.invalidate();
       return new WeekRunner(t, p, g).run(rng, { season: 'summer' }).exitSatisfaction;

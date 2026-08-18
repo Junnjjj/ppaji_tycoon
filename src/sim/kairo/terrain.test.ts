@@ -12,8 +12,8 @@ const GW = 40;
 const GH = 32;
 
 describe('지면 데이터 — 시뮬이 소유한다', () => {
-  it('종류 6종 + 다리 2종', () => {
-    expect(GROUND_KINDS).toHaveLength(6);
+  it('종류 9종 + 다리 2종', () => {
+    expect(GROUND_KINDS).toHaveLength(9);
     expect(BRIDGE_KINDS).toHaveLength(2);
   });
 

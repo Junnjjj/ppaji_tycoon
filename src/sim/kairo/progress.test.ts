@@ -71,9 +71,10 @@ describe('해금 — 허가는 돈으로 못 산다', () => {
     }
   });
 
-  it('최종 등급이 격자 64×48 을 다 연다', () => {
+  it('최종 등급이 공원 전체(96 × 도시 띠 아래 64)를 다 연다', () => {
     const top = GRADES[GRADES.length - 1]!;
-    expect([top.landW, top.landH]).toEqual([64, 48]);
+    // K36: landH 는 **도시 띠 아래**에서 재는 높이다 — 띠는 어차피 못 짓는다
+    expect([top.landW, top.landH]).toEqual([96, KairoTerrain.HEIGHT - KairoTerrain.CITY_BAND]);
   });
 
   it('만족도로만 등급이 정해진다', () => {

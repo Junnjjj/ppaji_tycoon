@@ -43,6 +43,24 @@ const HEADED = process.argv.includes('--headed');
  *
  * 실내 바닥은 건드리지 않는다 (방을 지우면 벽이 사라진다).
  */
+/**
+ * 훑을 범위를 **해금된 토지에서** 가져온다 (K36).
+ *
+ * ⚠ 하네스 곳곳이 `for (let i = 4; i < 28; ...)` 처럼 좌표를 박아 뒀다. 격자가 96×72 가
+ * 되고 입구가 가운데(i=48)로 가면서 그 창들이 전부 **도시 띠나 내 땅 밖**을 가리켰다
+ * (실측: 12절이 "아직 내 땅이 아닙니다"로 실패). 좌표를 박지 말고 물어본다.
+ */
+const LAND_BOX = `
+    const _L = window.__kairo.land();
+    const I0 = _L.i0 + 1;
+    const I1 = _L.i0 + _L.w - 1;
+    const J0 = _L.j0 + 1;
+    const J1 = _L.j0 + _L.h - 1;
+`;
+
+/** 도시 띠 높이 — 하네스가 좌표를 박지 않게 (K36) */
+const KAIRO_BAND = 8;
+
 const PAVE_ALL = `
     (() => {
       const _t = window.__kairo.terrain, _sc = window.__kairo.scene;
@@ -182,7 +200,7 @@ async function main(): Promise<void> {
 
   // ── 5. 타일 수 ──
   const tiles = Number(/타일 (\d+)/.exec(dbg)?.[1] ?? 0);
-  record('격자 64×48 = 3072 타일 (K25 확대)', tiles === 3072 ? 'pass' : 'fail', `${tiles}`);
+  record('격자 96×72 = 6912 타일 (K36 확대)', tiles === 6912 ? 'pass' : 'fail', `${tiles}`);
 
   // ── 5b. 타일링 이음새 — 지면 안쪽에 배경색이 새는지 (스킬 문서 미결 항목) ──
   //
@@ -471,6 +489,7 @@ async function main(): Promise<void> {
   // 바닥을 지우면 벽이 사라지는가"로 본다.
   const wallCheck = (await page.evaluate(`(() => {
     const h = window.__kairo;
+    ${LAND_BOX}
     const t = h.terrain, w = h.walls, p = h.placement, sc = h.scene;
     const out = {};
     /*
@@ -478,12 +497,17 @@ async function main(): Promise<void> {
      * 킷과 안 겹치는 빈 자리를 찾고, 아래 숫자는 전부 **증분**으로 본다.
      */
     let base = null;
-    for (let j = 1; j < 24 && !base; j++) {
-      for (let i = 12; i < 34; i++) {
+    for (let j = J0; j < Math.min(J1, J0 + 30) && !base; j++) {
+      for (let i = I0; i < I1; i++) {
         let ok = true;
         for (let di = -1; di < 10 && ok; di++) {
           for (let dj = -1; dj < 7; dj++) {
             const ti = i + di, tj = j + dj;
+            /*
+             * ⚠ **손 안 댄 잔디**만 고른다. 걸을 수 있는 칸으로만 고르면 물려받은 빠지의
+             * 포장 마당이 후보가 되고, 뒤에서 잔디로 되돌릴 때 킷의 방문이 사라져
+             * 벽 개수가 음수로 나온다 (실측: 경계 −28).
+             */
             if (!t.isWalkable(ti, tj) || t.isIndoor(ti, tj) || p.handleAt(ti, tj) !== 0) { ok = false; break; }
           }
         }
@@ -491,12 +515,28 @@ async function main(): Promise<void> {
       }
     }
     if (!base) return { ok: false, reason: '킷과 겹치지 않는 9×6 빈 육지를 못 찾았다' };
+    /*
+     * ⚠ **길을 먼저 붙인다** (K32-B 이후). 잔디 섬에 방을 지으면 문이 안 나고,
+     * bakeIndoorWalls 는 실패하면 **벽을 통째로 지운다** — 물려받은 빠지의 벽까지
+     * 사라져 경계가 음수로 나온다 (실측: −28).
+     */
+    const gate0 = window.__kairo.gate;
+    for (let k = Math.min(gate0.i, base[0] - 1); k <= Math.max(gate0.i, base[0] - 1); k++) {
+      if (t.isWalkable(k, gate0.j)) t.paint(k, gate0.j, 'path_stone');
+    }
+    for (let k = gate0.j; k <= base[1] + 6; k++) {
+      if (t.isWalkable(base[0] - 1, k)) t.paint(base[0] - 1, k, 'path_stone');
+    }
     const edges0 = w.count(1) + w.count(2);
     const doors0 = w.count(2);
-    // gate 는 아래에서 선언된다 — 여기서는 고정 좌표를 쓴다 (TDZ · 백틱 금지)
-    const areas0 = h.sim.bakeIndoorWalls(t, w, { i: 0, j: 0 }, h.sim.guestWalkable(t, p)).areas;
+    /*
+     * ⚠ **게이트를 박지 않는다** (K36). 여기가 (0,0) 고정이었는데 그 자리는 이제
+     * 차도다. 게이트가 못 서는 칸이면 bakeIndoorWalls 가 문을 못 내고, 실패하면 벽을
+     * 통째로 지운다 — 물려받은 빠지의 벽까지 사라져 경계가 −28 로 나왔다.
+     */
+    const areas0 = h.sim.bakeIndoorWalls(t, w, gate0, h.sim.guestWalkable(t, p)).areas;
     const [bi, bj] = base;
-    const gate = { i: 0, j: 0 };
+    const gate = gate0;
     const stand = h.sim.guestWalkable(t, p);
     const paint = (i0, j0, pw, ph, kind) => {
       for (let j = j0; j < j0 + ph; j++) for (let i = i0; i < i0 + pw; i++) t.paint(i, j, kind);
@@ -680,6 +720,7 @@ async function main(): Promise<void> {
   // ── 7e. 시설 배치·다중칸 슬롯 ──
   const fac = (await page.evaluate(`(() => {
     const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, sc = h.scene;
+    ${LAND_BOX}
     ${PAVE_ALL}
     const gate = { i: 0, j: 0 };
     const out = { picker: 0, placed: [], rejected: [], anchors: [] };
@@ -688,8 +729,8 @@ async function main(): Promise<void> {
 
     // 넓은 육지를 찾는다
     let base = null;
-    for (let j = 4; j < 16 && !base; j++) {
-      for (let i = 4; i < 28; i++) {
+    for (let j = J0; j < Math.min(J1, J0 + 20) && !base; j++) {
+      for (let i = I0; i < I1; i++) {
         let ok = true;
         for (let di = 0; di < 9 && ok; di++)
           for (let dj = 0; dj < 7; dj++)
@@ -871,9 +912,10 @@ async function main(): Promise<void> {
     // 게이트 근처 육지에 시설 몇 개를 놓아 손님이 갈 곳을 만든다
     const gate = h.gate;
     // 게이트 근처 빈 자리를 실제로 찾아 놓는다 — 앞 블록이 이미 놓은 시설과 겹치면 안 된다
+    // K36: 좌표를 박지 않는다 — 게이트가 맵 가운데(48,8)로 갔다. 게이트 **주변**에 놓는다
     let placed = 0;
-    for (let j = 1; j < 12 && placed < 3; j++) {
-      for (let i = 1; i < 12 && placed < 3; i++) {
+    for (let j = gate.j + 1; j < gate.j + 12 && placed < 3; j++) {
+      for (let i = gate.i - 5; i < gate.i + 6 && placed < 3; i++) {
         const r = p.place(t, w, gate, 'shop', i, j);
         if (r.ok && r.placed) { sc.refreshFacility(r.placed.handle); placed++; }
       }
@@ -1095,8 +1137,9 @@ async function main(): Promise<void> {
     const out = {};
     // 물가를 찾아 잔교를 낸다
     let pier = null;
-    for (let i = 6; i < 34 && !pier; i++) {
-      for (let j = 4; j < 30; j++) {
+    // K36: 창을 격자에서 가져온다 (도시 띠 아래부터)
+    for (let i = 6; i < t.width - 6 && !pier; i++) {
+      for (let j = ${KAIRO_BAND}; j < t.height - 8; j++) {
         if (!(t.isWalkable(i, j) && !t.isWalkable(i, j + 1) && !p.handleAt(i, j))) continue;
         /*
          * ⚠ 양옆이 비어 있어야 한다. K30 부터 새 판에 **물려받은 데크**가 물가에 이미
@@ -1118,8 +1161,9 @@ async function main(): Promise<void> {
     // ⚠ 발자국 3×3 이 전부 물이어야 한다 — 육지에 걸치면 wrong-terrain 이 먼저 잡혀
     //   needs-deck 검사가 무의미해진다 (실측으로 겪었다)
     let wet = null;
-    for (let j = pier.j; j < 28 && !wet; j++) {
-      for (let i = 3; i < 34; i++) {
+    // K36: 격자가 96×72 다 — 창을 격자에서 가져온다
+    for (let j = pier.j; j < t.height - 3 && !wet; j++) {
+      for (let i = 3; i < t.width - 3; i++) {
         let allWater = true;
         for (let di = 0; di < 3 && allWater; di++)
           for (let dj = 0; dj < 3; dj++)
@@ -1198,8 +1242,9 @@ async function main(): Promise<void> {
       // ⚠ 물 블록이 육지에 바로 붙어 있으면 덱을 끊어도 육지에서 바로 닿아
       //   "덱이 유일한 길" 검사가 무의미해진다. **3칸 이상** 떨어진 곳을 고른다.
       let wet = null;
-      for (let j = 8; j < 28 && !wet; j++) {
-        for (let i = 6; i < 32; i++) {
+      // K36: 물가가 아래로 내려갔다 (도시 띠 + 넓어진 격자) — 창을 격자에서 가져온다
+      for (let j = ${KAIRO_BAND} + 4; j < t.height - 4 && !wet; j++) {
+        for (let i = 6; i < t.width - 6; i++) {
           let ok = true;
           for (let di = 0; di < 3 && ok; di++)
             for (let dj = 0; dj < 3; dj++)
@@ -2204,18 +2249,28 @@ async function main(): Promise<void> {
     const h = window.__kairo;
     const panel = h.coursePanel;
     const api = h.courseApi;
-    // 물 타일을 찾아 선착장 앞에 핸들을 놓는다 — 화면 드래그와 같은 경로(refresh)를 탄다
+    /*
+     * 선착장 **주변**의 물 타일을 모은다 (K36). 예전엔 (0,0)~(40,32) 창을 훑었는데
+     * 격자가 96×72 가 되고 선착장이 맵 가운데로 가면서 그 창이 선착장에서 멀어졌다 —
+     * 코스는 선착장에서 DOCK_REACH_TILES 안에서 시작해야 한다.
+     */
+    panel.select('shuttle', 'banana');
+    const dock = panel.state.dock;
+    if (!dock) return { ok: false, why: '선착장이 없다' };
     const water = [];
-    for (let j = 0; j < 32 && water.length < 60; j++) {
-      for (let i = 0; i < 40 && water.length < 60; i++) {
-        if (h.terrain.isWater(i, j)) water.push({ i: i, j: j });
+    for (let r = 2; r <= 10 && water.length < 60; r++) {
+      for (let dj = -r; dj <= r && water.length < 60; dj++) {
+        for (let di = -r; di <= r; di++) {
+          if (Math.max(Math.abs(di), Math.abs(dj)) !== r) continue;
+          const i = dock.x + di, j = dock.y + dj;
+          if (h.terrain.inside(i, j) && h.terrain.isWater(i, j)) water.push({ i: i, j: j });
+        }
       }
     }
-    if (water.length < 4) return { ok: false, why: '물 타일이 부족하다' };
-    panel.select('shuttle', 'banana');
+    if (water.length < 4) return { ok: false, why: '선착장 주변에 물이 부족하다' };
     const st0 = panel.state;
     for (let k = 0; k < st0.handles.length; k++) {
-      const w = water[Math.min(water.length - 1, 8 + k * 3)];
+      const w = water[Math.min(water.length - 1, 3 + k * 4)];
       panel.moveHandleForTest(k, w.i, w.j);
     }
     const before = h.courses.count;
@@ -2865,9 +2920,10 @@ async function main(): Promise<void> {
       }
       return true;
     };
+    ${LAND_BOX}
     const tiles = [];
-    for (let j = 2; j < 30 && tiles.length < 8; j++) {
-      for (let i = 2; i < 38 && tiles.length < 8; i++) {
+    for (let j = J0; j < J1 && tiles.length < 8; j++) {
+      for (let i = I0; i < I1 && tiles.length < 8; i++) {
         if (fits(i, j)) tiles.push([i, j]);
       }
     }
@@ -3130,10 +3186,43 @@ async function main(): Promise<void> {
       // ① 건물 블록 4×4 — 빈 잔디에 칠하면 실내가 16 늘고 값이 그만큼 나간다
       out.indoor0 = countIndoor();
       out.cash0 = h.week.cash;
+      /*
+       * ⚠ 탭 좌표를 박지 않는다 (K36). 격자가 96×72 가 되고 입구가 가운데로 가면서
+       * (13,6) 은 도시 띠·내 땅 밖이 됐다. **토지 안 빈 잔디**를 찾아 쓴다.
+       */
+      const _L = h.land();
+      let TI = -1, TJ = -1;
+      for (let j = _L.j0 + 1; j < _L.j0 + _L.h - 5 && TI < 0; j++) {
+        for (let i = _L.i0 + 1; i < _L.i0 + _L.w - 5; i++) {
+          let free = true;
+          /*
+           * ⚠ 잔디만 찾으면 안 된다 — 앞 절들이 판을 통째로 포장해 뒀다 (PAVE_ALL).
+           * 실내 바닥은 포장 위에도 깔린다. 조건은 "지을 수 있고 · 실내가 아니고 · 비었다".
+           */
+          for (let dj = 0; dj < 5 && free; dj++)
+            for (let di = 0; di < 5; di++)
+              if (!h.terrain.isBuildable(i + di, j + dj) || h.terrain.isWater(i + di, j + dj) ||
+                  h.terrain.isIndoor(i + di, j + dj) || h.placement.handleAt(i + di, j + dj)) { free = false; break; }
+          if (free) { TI = i; TJ = j; break; }
+        }
+      }
+      out.TI = TI; out.TJ = TJ; out.landBox = _L;
+      /*
+       * ⚠ **길을 먼저 붙인다** (K32-B 이후). 잔디 섬에 방을 지으면 문이 안 나고,
+       * paintFloorBlock 이 no-door 로 통째로 되돌려 "실내 +0" 이 된다.
+       */
+      const _g = h.gate;
+      for (let k = Math.min(_g.i, TI - 1); k <= Math.max(_g.i, TI - 1); k++) {
+        if (h.terrain.isWalkable(k, _g.j) && h.terrain.isBuildable(k, _g.j)) h.terrain.paint(k, _g.j, 'path_stone');
+      }
+      for (let k = _g.j; k <= TJ + 4; k++) {
+        if (h.terrain.isWalkable(TI - 1, k) && h.terrain.isBuildable(TI - 1, k)) h.terrain.paint(TI - 1, k, 'path_stone');
+      }
+      h.guests.invalidate();
       document.getElementById('kairo-build-open').click();
       document.querySelector('#kairo-sheet [data-tab="building"]').click();
       document.querySelector('[data-pick="ground:floor_indoor@4"]').click();
-      h.tapTile(13, 6);
+      h.tapTile(TI, TJ);
       out.indoor1 = countIndoor();
       out.cash1 = h.week.cash;
 
@@ -3142,7 +3231,7 @@ async function main(): Promise<void> {
       document.getElementById('kairo-build-open').click();
       document.querySelector('#kairo-sheet [data-tab="facility"]').click();
       document.querySelector('[data-pick="facility:toilet"]').click();
-      h.tapTile(13, 6);
+      h.tapTile(TI, TJ);
       const c = document.getElementById('kairo-confirm');
       out.bar = !!c && !c.hidden;
       out.ghost = !!sc.ghost;
@@ -3155,7 +3244,7 @@ async function main(): Promise<void> {
       out.ghostAfterCancel = !!sc.ghost;
 
       // 다시 탭하고 확정하면 놓인다
-      h.tapTile(13, 6);
+      h.tapTile(TI, TJ);
       const cf = document.getElementById('kairo-place-confirm');
       out.barBefore = !document.getElementById('kairo-confirm').hidden;
       out.confirmDisabled = cf.disabled;
@@ -3171,7 +3260,7 @@ async function main(): Promise<void> {
         (r.cash0 as number) - (r.cash1 as number) === 16 * 30000
         ? 'pass'
         : 'fail',
-      `실내 +${(r.indoor1 as number) - (r.indoor0 as number)} · 현금 −${Math.round(
+      `실내 +${(r.indoor1 as number) - (r.indoor0 as number)} · TI ${String(r.TI)},${String(r.TJ)} · 토지 ${JSON.stringify(r.landBox)} · 현금 −${Math.round(
         ((r.cash0 as number) - (r.cash1 as number)) / 10000,
       )}만`,
     );
@@ -3221,16 +3310,24 @@ async function main(): Promise<void> {
       { timeout: 15000 },
     );
     const tint = (await pg.evaluate(`(() => {
-      const sc = window.__kairo.scene;
+      const sc = window.__kairo.scene, h = window.__kairo;
+      const W = h.terrain.width, H = h.terrain.height;
       const at = (i, j) => {
-        const t = sc.tileImages[j * 64 + i];
+        const t = sc.tileImages[j * W + i];
         return t ? (t.tintTopLeft >>> 0).toString(16) : 'none';
       };
-      // 1등급 토지는 18×34 — (5,5) 는 안, (40,5)·(5,40) 은 밖
-      const before = { inside: at(5, 5), outX: at(40, 5), outY: at(5, 40) };
+      /*
+       * K36: 토지는 입구를 중심으로 **좌우로** 자라는 오프셋 사각형이다. 표본을 실제
+       * 사각형에서 뽑는다 — 좌표를 박으면 등급 값이 바뀔 때마다 검사가 거짓말을 한다.
+       */
+      const L = h.land();
+      const inside = [L.i0 + 1, L.j0 + 1];
+      const outX = [Math.min(W - 1, L.i0 + L.w + 1), L.j0 + 1];
+      const outY = [L.i0 + 1, Math.min(H - 1, L.j0 + L.h + 1)];
+      const before = { inside: at(inside[0], inside[1]), outX: at(outX[0], outX[1]), outY: at(outY[0], outY[1]) };
       // 음성 대조군 — 토지를 격자 전체로 넓히면 밖이 사라져 전부 같아야 한다
-      sc.setLand(64, 48);
-      const all = { inside: at(5, 5), outX: at(40, 5), outY: at(5, 40) };
+      sc.setLand({ i0: 0, j0: 0, w: W, h: H });
+      const all = { inside: at(inside[0], inside[1]), outX: at(outX[0], outX[1]), outY: at(outY[0], outY[1]) };
       return { before: before, all: all };
     })()`)) as {
       before: { inside: string; outX: string; outY: string };
@@ -3281,8 +3378,10 @@ async function main(): Promise<void> {
       for (let j = 0; j < t.height; j++) for (let i = 0; i < t.width; i++) if (t.isIndoor(i, j)) indoor++;
       // 화장실을 놓을 수 있나 — 이게 이 킷의 존재 이유다
       let canToilet = false;
-      for (let j = 0; j < 20 && !canToilet; j++) {
-        for (let i = 0; i < 20; i++) {
+      // K36: 좌표 창을 박지 않는다 — 실내 칸을 직접 훑는다 (킷 방이 맵 가운데로 갔다)
+      for (let j = 0; j < t.height && !canToilet; j++) {
+        for (let i = 0; i < t.width; i++) {
+          if (!t.isIndoor(i, j)) continue;
           if (p.check(t, h.walls, h.gate, 'toilet', i, j).ok) { canToilet = true; break; }
         }
       }
@@ -3503,13 +3602,19 @@ async function main(): Promise<void> {
      *    찾으면 없다. 6×6 육지를 잔디로 되돌리고 그 한복판 2×2 를 쓴다 — 가장자리 한 겹이
      *    해자가 되어 "옆 포장으로 닿아서 통과"가 안 생긴다.
      */
+    ${LAND_BOX}
     let area = null;
-    for (let j = 6; j < 30 && !area; j++) {
-      for (let i = 20; i < 44; i++) {
+    for (let j = J0 + 4; j < Math.min(J1, J0 + 30) && !area; j++) {
+      for (let i = I0; i < I1 - 6; i++) {
         let ok = true;
         for (let dj = 0; dj < 6 && ok; dj++) {
           for (let di = 0; di < 6; di++) {
             const ti = i + di, tj = j + dj;
+            /*
+             * ⚠ **손 안 댄 잔디**만 고른다. 걸을 수 있는 칸으로만 고르면 물려받은 빠지의
+             * 포장 마당이 후보가 되고, 뒤에서 잔디로 되돌릴 때 킷의 방문이 사라져
+             * 벽 개수가 음수로 나온다 (실측: 경계 −28).
+             */
             if (!t.isWalkable(ti, tj) || t.isIndoor(ti, tj) || p.handleAt(ti, tj) !== 0) { ok = false; break; }
           }
         }
@@ -3579,9 +3684,10 @@ async function main(): Promise<void> {
      * 잔디 3×3 을 **해금된 토지 안에** 만든다. 앞 절의 자리는 i=20 대라 1등급 토지 밖이라
      * tapTile 이 조용히 거절했다 (실측 — 검사가 0칸으로 나왔다). 게이트 가까이서 찾는다.
      */
+    ${LAND_BOX}
     let spot = null;
-    for (let j = 4; j < 16 && !spot; j++) {
-      for (let i = 4; i < 18; i++) {
+    for (let j = J0; j < Math.min(J1, J0 + 16) && !spot; j++) {
+      for (let i = I0; i < Math.min(I1, I0 + 16); i++) {
         let ok = true;
         for (let dj = -1; dj <= 1 && ok; dj++) {
           for (let di = -1; di <= 1; di++) {

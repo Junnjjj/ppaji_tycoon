@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "지면 종류의 시뮬 정보. 캔버스·변형 수 같은 렌더 정보는 src/assets/kairo-render-contract.json. K27: 바닥은 사는 것이다 (카이로 Tiling) — cost 는 1칸 값, indoor 는 실내 판정. 실내 바닥을 깐 자리가 곧 방이고 벽은 그 외곽선으로 자동으로 생긴다. K32-B: walkable(육지인가)과 guestWalk(손님이 지나가나)를 나눴다 — 잔디에는 지을 수 있지만 손님은 못 지나간다. 길을 까는 것이 곧 동선 설계이고, 건물 입구도 길이 닿은 쪽에 난다.",
+  "note": "지면 종류의 시뮬 정보. 캔버스·변형 수 같은 렌더 정보는 src/assets/kairo-render-contract.json. K27: 바닥은 사는 것이다 (카이로 Tiling) — cost 는 1칸 값, indoor 는 실내 판정. 실내 바닥을 깐 자리가 곧 방이고 벽은 그 외곽선으로 자동으로 생긴다. K32-B: walkable(육지인가)과 guestWalk(손님이 지나가나)를 나눴다 — 잔디에는 지을 수 있지만 손님은 못 지나간다. 길을 까는 것이 곧 동선 설계이고, 건물 입구도 길이 닿은 쪽에 난다. K36: buildable 을 더했다 — walkable(육지인가)·guestWalk(손님이 지나가나)와 또 다르다. 도로·보도·가로수는 걸을 수는 있어도 **못 짓는다**. 공원 바깥이 도시라는 것을 보여주는 띠이고, 플레이어가 덮을 수 없어야 \"여기까지가 내 땅\"이 성립한다. 버스는 road 위를 다니고 손님은 sidewalk 로 내린다. K36: 맵이 96×72 로 넓어지면서 길값을 내렸다 (석재 12000→7000). 실측으로 길값이 봇 건설 지출의 30%(79만/판)를 먹었다 — 2.25배 넓은 맵에서 같은 단가면 \"길을 까는 것\"이 설계가 아니라 세금이 된다.",
   "kinds": [
     {
       "id": "lawn",
@@ -9,34 +9,38 @@
       "default": true,
       "cost": 0,
       "indoor": false,
-      "guestWalk": false
+      "guestWalk": false,
+      "buildable": true
     },
     {
       "id": "path_stone",
       "name": "석재 보도",
       "walkable": true,
       "default": false,
-      "cost": 12000,
+      "cost": 7000,
       "indoor": false,
-      "guestWalk": true
+      "guestWalk": true,
+      "buildable": true
     },
     {
       "id": "path_deck",
       "name": "목재 데크길",
       "walkable": true,
       "default": false,
-      "cost": 18000,
+      "cost": 11000,
       "indoor": false,
-      "guestWalk": true
+      "guestWalk": true,
+      "buildable": true
     },
     {
       "id": "path_sand",
       "name": "모래길",
       "walkable": true,
       "default": false,
-      "cost": 8000,
+      "cost": 4500,
       "indoor": false,
-      "guestWalk": true
+      "guestWalk": true,
+      "buildable": true
     },
     {
       "id": "floor_indoor",
@@ -45,7 +49,8 @@
       "default": false,
       "cost": 30000,
       "indoor": true,
-      "guestWalk": true
+      "guestWalk": true,
+      "buildable": true
     },
     {
       "id": "water_edge",
@@ -54,7 +59,38 @@
       "default": false,
       "cost": 0,
       "indoor": false,
-      "guestWalk": false
+      "guestWalk": false,
+      "buildable": true
+    },
+    {
+      "id": "road",
+      "name": "차도",
+      "walkable": true,
+      "default": false,
+      "cost": 0,
+      "indoor": false,
+      "guestWalk": false,
+      "buildable": false
+    },
+    {
+      "id": "sidewalk",
+      "name": "보도",
+      "walkable": true,
+      "default": false,
+      "cost": 0,
+      "indoor": false,
+      "guestWalk": true,
+      "buildable": false
+    },
+    {
+      "id": "verge",
+      "name": "가로수",
+      "walkable": true,
+      "default": false,
+      "cost": 0,
+      "indoor": false,
+      "guestWalk": false,
+      "buildable": false
     }
   ],
   "bridges": [

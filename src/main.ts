@@ -147,7 +147,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           terrain,
           walls,
           placement,
-          gate: { i: 0, j: 0 },
+          // ⚠ 아래에서 정하는 GATE 와 **같아야 한다** — 다르면 킷이 엉뚱한 곳에 깔린다 (K36)
+          gate: KairoTerrainCls.parkGate(),
           map: mapDef,
           courses: kitCourses,
         });
@@ -159,7 +160,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 배치 검사에 넘길 바깥 사정 — 이제 **토지뿐**이다.
    * 실내는 지형이 안다 (K27). `h` 는 boot 뒤에 생기므로 함수로 감싼다.
    */
-  const placeOpts = (): { land: { w: number; h: number } } => ({ land: landRect(currentGrade()) });
+  const placeOpts = (): { land: ReturnType<typeof landRect> } => ({ land: landRect(currentGrade()) });
   /** 손님과 **같은** 걷기 판정 — 문 자리를 고를 때 쓴다 */
   const walkableNow = (i: number, j: number): boolean => guestWalkable(h.terrain, h.placement)(i, j);
 
@@ -178,6 +179,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           terrain: fresh!.terrain,
           walls: fresh!.walls,
           placement: fresh!.placement,
+          // ⚠ 안 넘기면 boot 의 기본값 (0,0) 이 쓰인다 — 거긴 이제 차도다 (K36)
+          gate: KairoTerrainCls.parkGate(),
         }),
     onFrame: (s) => {
       box.textContent =
@@ -326,9 +329,22 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        * 포장하고 건물까지 지을 수 있었다. 등급으로 땅이 열린다는 규칙이 절반만 걸려 있었다.
        */
       const land = landRect(currentGrade());
-      if (oi < 0 || oj < 0 || oi + n > land.w || oj + n > land.h) {
+      if (oi < land.i0 || oj < land.j0 || oi + n > land.i0 + land.w || oj + n > land.j0 + land.h) {
         toast(PLACE_FAIL_MESSAGES['outside-land']);
         return;
+      }
+      /*
+       * ⚠ 바닥 붓도 막아야 한다 (K36). 시설만 막고 바닥을 열어 두면 플레이어가 도로를
+       * 석재로 덮어 버린다 — K32 에서 토지 제한을 시설에만 걸어 두고 바닥을 빼먹었던
+       * 것과 **정확히 같은 구멍**이다.
+       */
+      for (let dj = 0; dj < n; dj++) {
+        for (let di = 0; di < n; di++) {
+          if (h.terrain.inside(oi + di, oj + dj) && !h.terrain.isBuildable(oi + di, oj + dj)) {
+            toast(PLACE_FAIL_MESSAGES['not-buildable']);
+            return;
+          }
+        }
       }
 
       // 실제로 바뀔 칸 수를 먼저 세어 값을 확인한다 — 물에 걸치면 그만큼 덜 낸다
@@ -380,7 +396,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
 
   /** 게이트 — K4 에서 매표소 배치로 대체한다. 지금은 좌상단 고정 */
-  const GATE = saved?.gate ?? { i: 0, j: 0 };
+  /*
+   * 게이트 — 도시 띠 아래 **공원 입구 칸**이다 (K36). 예전엔 (0,0) 좌상단 고정이었는데,
+   * 그 자리는 이제 차도다. 손님은 보도(정류장)에서 내려 뚫린 입구 열로 들어온다.
+   */
+  const GATE = saved?.gate ?? KairoTerrainCls.parkGate();
 
   const msg = document.createElement('div');
   msg.id = 'kairo-toast';
@@ -482,7 +502,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        * `sub` 에 통행 여부를 적는다. 안 적으면 "잔디는 왜 안 되지"를 화면 어디에서도
        * 알 수 없다 — 규칙을 바꿔 놓고 알려주지 않는 것이 이 게임의 반복된 실수였다.
        */
-      ...GROUND_KINDS.filter((k) => k.id !== 'floor_indoor' && k.guestWalk).flatMap((k) =>
+      ...GROUND_KINDS.filter((k) => k.id !== 'floor_indoor' && k.buildable && k.guestWalk).flatMap((k) =>
         [1, 2, 3].map((n) => ({
           kind: 'ground' as const,
           tab: 'ground' as const,
@@ -491,7 +511,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           sub: `칸당 ${Math.round(k.cost / 10000)}만 · 손님 통행`,
         })),
       ),
-      ...GROUND_KINDS.filter((k) => k.id !== 'floor_indoor' && !k.guestWalk).map((k) => ({
+      /*
+       * ⚠ `buildable` 이 아닌 종류(도로·보도·가로수)는 **팔레트에 넣지 않는다** (K36).
+       * 플레이어가 깔 수 없는 것을 목록에 두면 눌러 보고 거절당한다.
+       */
+      ...GROUND_KINDS.filter((k) => k.id !== 'floor_indoor' && k.buildable && !k.guestWalk).map((k) => ({
         kind: 'ground' as const,
         tab: 'ground' as const,
         id: k.id,
@@ -621,8 +645,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   /** 세이브 — 배치·주 진행처럼 상태가 실제로 바뀐 뒤에만 부른다 */
   // 부팅 시점의 토지 — 세이브에서 복원된 등급이 그대로 화면에 반영돼야 한다
   {
-    const l0 = landRect(currentGrade());
-    h.scene.setLand(l0.w, l0.h);
+    h.scene.setLand(landRect(currentGrade()));
   }
 
   const persist = (): void => {
@@ -733,7 +756,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     if (gradeNo !== gradeBefore) {
       // 등급이 바뀌면 땅이 넓어지거나 좁아진다 — 화면이 바로 그걸 보여줘야 한다
       const nl = landRect(currentGrade());
-      h.scene.setLand(nl.w, nl.h);
+      h.scene.setLand(nl);
       if (gradeNo > gradeBefore) toast(`토지가 ${nl.w}×${nl.h} 로 넓어졌습니다`, 'ok');
     }
     lastSummary = {
@@ -1093,6 +1116,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     quests: { questStatuses, gradeFor, requiredGrade },
     risk: { assessRisk, RISK_NAMES },
     refreshRisk,
+    /** 지금 해금된 토지 — 검증이 좌표를 박지 않게 (K36) */
+    land: () => landRect(currentGrade()),
   });
   Object.assign(window, {
     __kairo: h,
