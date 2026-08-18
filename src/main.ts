@@ -19,8 +19,8 @@ const AUTOSAVE_INTERVAL_MS = 30_000;
 async function mainKairo(parent: HTMLElement): Promise<void> {
   const { bootKairo } = await import('./render/kairo/boot.js');
   const { GROUND_KINDS } = await import('./sim/kairo/terrain.js');
-  const { BuildingStore, BUILDING_FAIL_MESSAGES } = await import(
-    './sim/kairo/building.js'
+  const { bakeIndoorWalls, paintFloor, INDOOR_FAIL_MESSAGES } = await import(
+    './sim/kairo/indoor.js'
   );
   const { allFacilityDefs, PLACE_FAIL_MESSAGES, guestWalkable } = await import(
     './sim/kairo/placement.js'
@@ -98,21 +98,27 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   let runner: InstanceType<typeof WeekRunner> | null = null;
 
-  /**
-   * 건물 영역 — 벽의 **소유자**다. 세이브에 벽 스냅샷도 있지만 정본은 이쪽이라,
-   * 확장·철거는 항상 여기를 거쳐 벽을 다시 굽는다.
+  /*
+   * 세이브의 벽을 **지형에서 다시 굽는다** (K27) — 정본은 실내 바닥이지 벽 스냅샷이 아니다.
+   *
+   * ⚠ 반드시 `bootKairo` **앞**이다. 뒤에서 굽고 `scene.refreshAllWalls()` 를 부르면
+   * 씬의 `create()` 가 아직 안 돌아 `this.add` 가 없다 — 새 판(벽 0장)에서는 조용히
+   * 지나가고 **세이브를 불러올 때만** 터진다 (실측: 새로고침 후 판이 통째로 안 뜬다).
    */
-  const buildings = saved?.buildings ?? new BuildingStore();
-  /** 건물 한 칸의 값 — 시설보다 싸다. 벽은 목표가 아니라 준비물이다 */
-  const BUILD_COST_PER_TILE = 40_000;
+  if (saved) {
+    bakeIndoorWalls(
+      saved.terrain,
+      saved.walls,
+      saved.gate,
+      guestWalkable(saved.terrain, saved.placement),
+    );
+  }
+
   /**
-   * 배치 검사에 넘길 바깥 사정 — 토지와 **실내 여부**.
-   * `h` 는 boot 뒤에 생기므로 함수로 감싼다 (TDZ 사고를 여러 번 겪었다).
+   * 배치 검사에 넘길 바깥 사정 — 이제 **토지뿐**이다.
+   * 실내는 지형이 안다 (K27). `h` 는 boot 뒤에 생기므로 함수로 감싼다.
    */
-  const placeOpts = (): { land: { w: number; h: number }; indoor: (i: number, j: number) => boolean } => ({
-    land: landRect(currentGrade()),
-    indoor: (i, j) => buildings.isIndoor(i, j),
-  });
+  const placeOpts = (): { land: { w: number; h: number } } => ({ land: landRect(currentGrade()) });
   /** 손님과 **같은** 걷기 판정 — 문 자리를 고를 때 쓴다 */
   const walkableNow = (i: number, j: number): boolean => guestWalkable(h.terrain, h.placement)(i, j);
 
@@ -145,73 +151,6 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         console.log(`[카이로] 탭 타일 (${i}, ${j}) — ${h.terrain.kindAt(i, j) ?? '?'}`);
         return;
       }
-      if (brush === 'building') {
-        /*
-         * 건물 영역 — **모서리 두 번 탭**. 드래그가 아니라 탭 두 번인 이유는 폰에서
-         * 드래그가 이미 카메라 팬이기 때문이다 (핀치·팬을 뺏으면 지도를 못 본다).
-         *
-         * 첫 탭은 기준점만 기억한다. 두 번째 탭에서 사각형이 정해지고, 그 순간
-         * 벽은 **결과로** 생긴다 — 플레이어가 벽을 한 장씩 찍지 않는다.
-         */
-        if (!buildAnchor) {
-          buildAnchor = { i, j };
-          h.scene.setBuildAnchor(i, j);
-          toast('반대편 모서리를 탭하세요', 'ok');
-          return;
-        }
-        const rect = {
-          i: Math.min(buildAnchor.i, i),
-          j: Math.min(buildAnchor.j, j),
-          w: Math.abs(i - buildAnchor.i) + 1,
-          h: Math.abs(j - buildAnchor.j) + 1,
-        };
-        buildAnchor = null;
-        h.scene.setBuildAnchor(null);
-
-        // 토지 해금 — 건물도 내 땅 안에서만 (K25)
-        const land = landRect(currentGrade());
-        if (rect.i + rect.w > land.w || rect.j + rect.h > land.h) {
-          toast(`아직 내 땅이 아닙니다 — 지금은 ${land.w}×${land.h} 까지입니다`);
-          return;
-        }
-        const pre = buildings.check(h.terrain, GATE, rect);
-        if (!pre.ok) {
-          toast(BUILDING_FAIL_MESSAGES[pre.fail ?? 'outside']);
-          return;
-        }
-        /*
-         * 값은 **새로 덮이는 칸만** 센다. 넓힐 때 이미 지은 부분까지 다시 받으면
-         * "조금씩 여러 번 넓히기"가 손해라서 플레이어가 처음부터 크게 짓게 된다 —
-         * 그건 이 기능이 없애려던 바로 그 부담이다.
-         */
-        let fresh = 0;
-        for (let jj = rect.j; jj < rect.j + rect.h; jj++) {
-          for (let ii = rect.i; ii < rect.i + rect.w; ii++) if (!buildings.isIndoor(ii, jj)) fresh++;
-        }
-        const cost = fresh * BUILD_COST_PER_TILE;
-        if (cost > week.cash) {
-          toast(
-            `돈이 부족합니다 — ${Math.round(cost / 10000)}만 필요 ` +
-              `(현재 ${Math.round(week.cash / 10000)}만)`,
-          );
-          return;
-        }
-        const r = buildings.place(h.terrain, h.walls, GATE, rect, walkableNow);
-        if (!r.ok) {
-          toast(BUILDING_FAIL_MESSAGES[r.fail ?? 'outside']);
-          return;
-        }
-        if (cost > 0) week.spend(cost);
-        h.scene.refreshAllWalls();
-        h.guests.invalidate(); // 벽이 바뀌면 거리장을 다시 만든다
-        toast(
-          `${rect.w}×${rect.h} 건물${pre.replaces?.length ? ' 확장' : ''}` +
-            (cost > 0 ? ` · −${Math.round(cost / 10000)}만` : ''),
-          'ok',
-        );
-        persist();
-        return;
-      }
       if (brush === 'erase') {
         // 시설이 먼저 — 시설 위를 탭했으면 그걸 지운다
         const hit = h.placement.at(i, j);
@@ -232,12 +171,16 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           persist();
           return;
         }
-        // 벽은 개별로 못 지운다 — 건물을 없애면 그 벽이 같이 사라진다
-        const b = buildings.at(i, j);
-        if (b && buildings.remove(h.terrain, h.walls, GATE, b.handle, walkableNow)) {
+        // 벽은 개별로 못 지운다 — **바닥을 잔디로 되돌리면** 그 벽이 같이 사라진다 (K27)
+        if (h.terrain.kindAt(i, j) !== 'lawn' && !h.terrain.isWater(i, j)) {
+          const r = paintFloor(h.terrain, h.walls, GATE, i, j, 'lawn', walkableNow);
+          if (!r.ok) {
+            toast(INDOOR_FAIL_MESSAGES[r.fail ?? 'no-door']);
+            return;
+          }
+          h.scene.refreshTile(i, j);
           h.scene.refreshAllWalls();
           h.guests.invalidate();
-          toast(`${b.rect.w}×${b.rect.h} 건물 철거`, 'ok');
           persist();
         }
         return;
@@ -285,9 +228,30 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         }
         return;
       }
-      if (h.terrain.paint(i, j, brush)) {
+      /*
+       * 바닥 — 카이로의 `Tiling` 이다 (K27). **편집기 도구가 아니라 사는 것**이고,
+       * 실내 바닥을 깐 자리는 그대로 방이 되어 벽이 자동으로 생긴다.
+       */
+      const kind = GROUND_KINDS.find((k) => k.id === brush);
+      if (!kind) return;
+      if (h.terrain.kindAt(i, j) === brush) return;
+      if (kind.cost > week.cash) {
+        toast(
+          `돈이 부족합니다 — ${Math.round(kind.cost / 10000)}만 필요 ` +
+            `(현재 ${Math.round(week.cash / 10000)}만)`,
+        );
+        return;
+      }
+      const painted = paintFloor(h.terrain, h.walls, GATE, i, j, brush, walkableNow);
+      if (!painted.ok) {
+        toast(INDOOR_FAIL_MESSAGES[painted.fail ?? 'no-door']);
+        return;
+      }
+      if (painted.changed) {
+        if (kind.cost > 0) week.spend(kind.cost);
         h.scene.refreshTile(i, j);
-        h.guests.invalidate(); // 통행 가능성이 바뀐다
+        h.scene.refreshAllWalls();
+        h.guests.invalidate(); // 통행 가능성과 실내가 바뀐다
         persist();
       }
     },
@@ -315,16 +279,21 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
 
   // 지면 붓 — 터치 타깃 44px 이상 (모바일 검증 기준)
   let brush: string | null = null;
-  /** 건물 영역의 첫 모서리. null 이면 아직 안 찍었다 */
-  let buildAnchor: { i: number; j: number } | null = null;
   const bar = document.createElement('div');
   bar.id = 'kairo-brush';
   bar.style.cssText =
     'position:fixed;left:0;right:0;bottom:0;z-index:9;display:flex;gap:4px;padding:6px;' +
     'background:rgba(0,0,0,.6);overflow-x:auto';
+  /*
+   * 바닥에 값을 붙여 보여준다 — 카이로의 `Tiling` 은 **사는 것**이다 (K27).
+   * 값이 안 보이면 편집기 도구로 읽히고, 그러면 "내 리조트를 짓는다"가 아니라
+   * "맵을 칠한다"가 된다.
+   */
   const BRUSHES: { id: string; name: string }[] = [
-    ...GROUND_KINDS.map((k) => ({ id: k.id, name: k.name })),
-    { id: 'building', name: '건물' },
+    ...GROUND_KINDS.map((k) => ({
+      id: k.id,
+      name: k.cost > 0 ? `${k.name}\n${Math.round(k.cost / 10000)}만` : k.name,
+    })),
     { id: 'facility', name: '시설' },
     { id: 'erase', name: '지우기' },
   ];
@@ -334,13 +303,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     b.dataset['kind'] = k.id;
     b.style.cssText =
       'min-width:64px;min-height:44px;border:2px solid transparent;border-radius:6px;' +
-      'background:#20303c;color:#dceaf4;font-size:12px';
+      'background:#20303c;color:#dceaf4;font-size:12px;white-space:pre-line;line-height:1.25';
     b.addEventListener('click', () => {
       brush = brush === k.id ? null : k.id;
-      if (brush !== 'building' && buildAnchor) {
-        buildAnchor = null;
-        h.scene.setBuildAnchor(null);
-      }
       for (const el of bar.querySelectorAll('button')) {
         (el as HTMLElement).style.borderColor =
           (el as HTMLElement).dataset['kind'] === brush ? '#7ad0ff' : 'transparent';
@@ -393,7 +358,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   Object.assign(h, {
     Rng: RngCls,
-    sim: { BuildingStore, BUILDING_FAIL_MESSAGES, guestWalkable },
+    sim: { bakeIndoorWalls, paintFloor, INDOOR_FAIL_MESSAGES, guestWalkable },
     simDefs: Object.fromEntries(allFacilityDefs().map((d) => [d.id, d])),
   });
   /**
@@ -479,7 +444,6 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       gate: GATE,
       terrain: h.terrain,
       walls: h.walls,
-      buildings,
       placement: h.placement,
       progress,
       week: week.toSnapshot(),

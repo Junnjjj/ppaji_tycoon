@@ -1,42 +1,54 @@
 {
   "version": 1,
-  "note": "지면 종류의 시뮬 정보. 캔버스·변형 수 같은 렌더 정보는 src/assets/kairo-render-contract.json.",
+  "note": "지면 종류의 시뮬 정보. 캔버스·변형 수 같은 렌더 정보는 src/assets/kairo-render-contract.json. K27: 바닥은 사는 것이다 (카이로 Tiling) — cost 는 1칸 값, indoor 는 실내 판정. 실내 바닥을 깐 자리가 곧 방이고 벽은 그 외곽선으로 자동으로 생긴다.",
   "kinds": [
     {
       "id": "lawn",
       "name": "잔디",
       "walkable": true,
-      "default": true
+      "default": true,
+      "cost": 0,
+      "indoor": false
     },
     {
       "id": "path_stone",
       "name": "석재 보도",
       "walkable": true,
-      "default": false
+      "default": false,
+      "cost": 12000,
+      "indoor": false
     },
     {
       "id": "path_deck",
       "name": "목재 데크길",
       "walkable": true,
-      "default": false
+      "default": false,
+      "cost": 18000,
+      "indoor": false
     },
     {
       "id": "path_sand",
       "name": "모래길",
       "walkable": true,
-      "default": false
+      "default": false,
+      "cost": 8000,
+      "indoor": false
     },
     {
       "id": "floor_indoor",
       "name": "실내 바닥",
       "walkable": true,
-      "default": false
+      "default": false,
+      "cost": 30000,
+      "indoor": true
     },
     {
       "id": "water_edge",
       "name": "물가",
       "walkable": false,
-      "default": false
+      "default": false,
+      "cost": 0,
+      "indoor": false
     }
   ],
   "bridges": [

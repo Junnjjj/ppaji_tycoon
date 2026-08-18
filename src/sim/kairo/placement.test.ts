@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid, EDGE_SOLID, DIR_I_PLUS, DIR_J_MINUS } from './walls.js';
-import { BuildingStore } from './building.js';
+import { bakeIndoorWalls } from './indoor.js';
 import {
   PlacementGrid,
   facilityDef,
@@ -13,10 +13,10 @@ import {
 
 const GATE = { i: 0, j: 0 };
 
-/** 실내 판정을 배치 검사에 넘기는 짧은 이름 */
-const indoorOf = (b: BuildingStore): { indoor: (i: number, j: number) => boolean } => ({
-  indoor: (i, j) => b.isIndoor(i, j),
-});
+/** 실내 바닥을 사각형만큼 깐다 — **바닥이 곧 방**이다 (K27) */
+function room(t: KairoTerrain, i0: number, j0: number, w: number, h: number): void {
+  for (let j = j0; j < j0 + h; j++) for (let i = i0; i < i0 + w; i++) t.paint(i, j, 'floor_indoor');
+}
 
 /** 전부 걸을 수 있는 평지 — 배치 규칙만 보게 지형 변수를 없앤다 */
 function flat(w: number, h: number): KairoTerrain {
@@ -171,10 +171,10 @@ describe('배치 거절 이유 — 전부 플레이어가 고칠 수 있어야 �
      */
     const t = flat(14, 14);
     const w = new WallGrid(14, 14);
-    const b = new BuildingStore();
-    b.place(t, w, GATE, { i: 4, j: 4, w: 4, h: 4 });
+    room(t, 4, 4, 4, 4);
+    bakeIndoorWalls(t, w, GATE);
     const g = new PlacementGrid(14, 14);
-    expect(g.check(t, w, GATE, 'toilet', 5, 5, indoorOf(b)).ok).toBe(true);
+    expect(g.check(t, w, GATE, 'toilet', 5, 5).ok).toBe(true);
   });
 
   it('게이트 위는 거절', () => {
@@ -183,23 +183,24 @@ describe('배치 거절 이유 — 전부 플레이어가 고칠 수 있어야 �
     expect(g.check(t, new WallGrid(14, 14), GATE, 'toilet', 0, 0).fail).toBe('occupied');
   });
 
-  it('실내 시설은 건물 안에만 놓인다 — 벽에 접했다고 되는 게 아니다', () => {
+  it('실내 시설은 실내 바닥 위에만 — 벽에 접했다고 되는 게 아니다', () => {
     const t = flat(16, 16);
     const w = new WallGrid(16, 16);
-    const b = new BuildingStore();
     const g = new PlacementGrid(16, 16);
     expect(facilityDef('shower_row')!.placement.requiresIndoor).toBe(true);
-    expect(g.check(t, w, GATE, 'shower_row', 5, 5, indoorOf(b)).fail).toBe('needs-indoor');
+    expect(g.check(t, w, GATE, 'shower_row', 5, 5).fail).toBe('needs-indoor');
 
-    b.place(t, w, GATE, { i: 4, j: 4, w: 6, h: 3 });
-    expect(g.check(t, w, GATE, 'shower_row', 5, 5, indoorOf(b)).ok).toBe(true);
+    room(t, 4, 4, 6, 3);
+    bakeIndoorWalls(t, w, GATE);
+    expect(g.check(t, w, GATE, 'shower_row', 5, 5).ok).toBe(true);
 
     /*
-     * ⚠ 여기가 K25 검토 ① 이 잡은 자리다. 경계는 **두 칸이 공유**하므로 건물 바깥에서
-     * 벽에 접한 칸도 `hasAnyEdge` 로는 통과했다 — 샤워실이 야외 잔디에 놓였다.
+     * ⚠ 여기가 K26 ① 이 잡은 자리다. 경계는 **두 칸이 공유**하므로 방 바깥에서 벽에
+     * 접한 칸도 `hasAnyEdge` 로는 통과했다 — 샤워실이 야외 잔디에 놓였다.
      */
-    expect(w.hasAnyEdge(10, 5)).toBe(true); // 건물 오른쪽 바깥, 벽에 접함
-    expect(g.check(t, w, GATE, 'shower_row', 10, 5, indoorOf(b)).fail).toBe('needs-indoor');
+    expect(w.hasAnyEdge(10, 5)).toBe(true); // 방 오른쪽 바깥, 벽에 접함
+    expect(t.isIndoor(10, 5)).toBe(false);
+    expect(g.check(t, w, GATE, 'shower_row', 10, 5).fail).toBe('needs-indoor');
   });
 
   it('손님이 닿을 수 없는 자리는 거절 — 놓고 나서 매출 0 을 발견하는 것보다 낫다', () => {
@@ -277,10 +278,10 @@ describe('제거·용량·스냅샷', () => {
     const t = flat(20, 20);
     const w = new WallGrid(20, 20);
     const g = new PlacementGrid(20, 20);
-    // shower_row 는 실내 시설이라 방을 먼저 짓는다
-    const b = new BuildingStore();
-    b.place(t, w, GATE, { i: 2, j: 2, w: 7, h: 3 });
-    expect(g.place(t, w, GATE, 'shower_row', 3, 3, indoorOf(b)).ok).toBe(true);
+    // shower_row 는 실내 시설이라 바닥을 먼저 깐다
+    room(t, 2, 2, 7, 3);
+    bakeIndoorWalls(t, w, GATE);
+    expect(g.place(t, w, GATE, 'shower_row', 3, 3).ok).toBe(true);
     expect(g.place(t, w, GATE, 'cafe', 8, 8).ok).toBe(true);
     const s = g.toSnapshot();
     const back = PlacementGrid.fromSnapshot(s);
@@ -301,9 +302,9 @@ describe('실제 지형에서 73종을 다 놓아본다', () => {
   it('각 시설이 적어도 한 자리에는 놓인다 — 못 놓는 시설이 있으면 데이터 오류다', () => {
     const t = KairoTerrain.generate(40, 32, new Rng(9));
     const walls = new WallGrid(40, 32);
-    // 실내 시설을 위해 방 하나 (지형이 육지인 위쪽 띠에)
-    const b = new BuildingStore();
-    b.place(t, walls, GATE, { i: 2, j: 2, w: 28, h: 4 });
+    // 실내 시설을 위해 실내 바닥 한 덩어리 (지형이 육지인 위쪽 띠에)
+    room(t, 2, 2, 28, 4);
+    bakeIndoorWalls(t, walls, GATE);
 
     // 물 위 시설을 위해 **잔교 한 줄**을 낸다 — 물 전체에 덱을 깔면 자리가 없어진다
     let pier: { i: number; j: number } | null = null;
@@ -330,7 +331,7 @@ describe('실제 지형에서 73종을 다 놓아본다', () => {
       let ok = false;
       for (let j = 0; j < 32 - def.size[1] && !ok; j++) {
         for (let i = 0; i < 40 - def.size[0]; i++) {
-          if (g.check(t, walls, GATE, def.id, i, j, indoorOf(b)).ok) {
+          if (g.check(t, walls, GATE, def.id, i, j).ok) {
             ok = true;
             break;
           }

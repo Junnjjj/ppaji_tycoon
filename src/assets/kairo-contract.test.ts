@@ -144,10 +144,20 @@ describe('기존 에셋 레이어로 펼쳐진다 — 새 프로바이더를 만
     expect(new Set(specs.map((s) => s.id)).size).toBe(specs.length);
   });
 
-  it('벽 캔버스는 32×40 — 1×1 발자국 다이아몬드 16 + 높이 24', () => {
+  it('벽 캔버스는 32×26 — 다이아몬드 16 + 높이 10 (K27 에서 낮췄다)', () => {
     const w = specs.find((s) => s.id === 'wall/edge')!;
     expect(w.size).toEqual([TILE_W, TILE_H + KAIRO.wall.heightTexels]);
-    expect(w.size).toEqual([32, 40]);
+    expect(w.size).toEqual([32, 26]);
+  });
+
+  it('⚠ 벽은 손님보다 낮다 — 이게 진짜 지켜야 할 계약이다 (K27)', () => {
+    /*
+     * 예전 계약은 거꾸로였다: "실내 시설은 벽보다 낮아야 한다". 벽이 24텍셀(타일 1.5개)
+     * 이던 시절의 규칙인데, 그러면 앞쪽 벽이 시설과 손님을 **완전히 가린다** — 벽을
+     * 유리 스티플로 만든 이유도 그 가림이었다. 벽을 낮추면 가림 자체가 사라진다.
+     */
+    expect(KAIRO.wall.heightTexels).toBeLessThan(KAIRO.guest.cellTexels[1]);
+    expect(KAIRO.wall.heightTexels).toBeLessThan(TILE_H);
   });
 
   it('벽은 경계 4방 × (벽·문) = 8장뿐이다 — 마스크 16장 시절보다 10장 적다 (K25)', () => {

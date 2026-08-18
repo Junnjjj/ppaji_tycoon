@@ -1,7 +1,6 @@
-import { KairoTerrain, type TerrainSnapshot } from '../sim/kairo/terrain.js';
+import { KairoTerrain, groundIndex, type TerrainSnapshot } from '../sim/kairo/terrain.js';
 import { WallGrid, type WallSnapshot } from '../sim/kairo/walls.js';
 import { PlacementGrid, type PlacementSnapshot } from '../sim/kairo/placement.js';
-import { BuildingStore, type BuildingSnapshot } from '../sim/kairo/building.js';
 import { ProgressStore, type ProgressSnapshot } from '../sim/kairo/progress.js';
 import type { WeekSnapshot, WeekSummary, Season } from '../sim/kairo/week.js';
 import type { CardSnapshot } from '../sim/kairo/cards.js';
@@ -30,22 +29,20 @@ import type { CourseSnapshot } from '../sim/kairo/course.js';
  * (`WeekSummary`) — 그래서 복원 후에도 의뢰 진행도와 등급이 그대로 보인다.
  */
 
-export const KAIRO_SAVE_VERSION = 2;
+export const KAIRO_SAVE_VERSION = 3;
 export const KAIRO_SAVE_KEY = 'ppaji.kairo.save.v1';
 
-export interface KairoSaveV2 {
-  version: 2;
+export interface KairoSaveV3 {
+  version: 3;
   savedAtMs: number;
   seed: number;
   gate: { i: number; j: number };
   terrain: TerrainSnapshot;
-  walls: WallSnapshot;
   /**
-   * 건물 영역 (K25). 벽은 여기서 **파생**되지만 벽 스냅샷도 같이 담는다 —
-   * 불러올 때 다시 굽지 않아도 되고, 지형이 미묘하게 달라져 재굽기가 실패하는
-   * 경우에도 옛 화면이 그대로 복원된다.
+   * 벽. **정본이 아니다** — 실내 바닥(지형)에서 파생된다 (K27). 불러올 때 다시 굽지만,
+   * 재굽기가 실패해도 화면이 비지 않도록 스냅샷도 같이 담는다.
    */
-  buildings?: BuildingSnapshot;
+  walls: WallSnapshot;
   placement: PlacementSnapshot;
   progress: ProgressSnapshot;
   week: WeekSnapshot;
@@ -102,8 +99,8 @@ export interface KairoSaveV2 {
   accidentCount?: number;
 }
 
-export type AnyKairoSave = KairoSaveV2;
-export type LatestKairoSave = KairoSaveV2;
+export type AnyKairoSave = KairoSaveV3;
+export type LatestKairoSave = KairoSaveV3;
 
 /**
  * v(n) → v(n+1) 변환기. 새 버전마다 한 칸 추가한다.
@@ -127,6 +124,35 @@ const MIGRATIONS: Record<number, (s: Record<string, unknown>) => Record<string, 
       buildings: { items: [], next: 1 },
     };
   },
+
+  /*
+   * v2 → v3 (K27): 사각형 건물이 사라지고 **실내 바닥이 곧 방**이 됐다.
+   *
+   * 버리지 않고 옮긴다 — 건물 사각형이 덮던 칸을 지형에서 `floor_indoor` 로 칠하면
+   * 같은 방이 그대로 복원된다. 벽은 불러올 때 지형에서 다시 굽는다.
+   */
+  2: (s) => {
+    const t = s['terrain'] as { w?: number; cells?: number[] } | undefined;
+    const b = s['buildings'] as
+      | { items?: { rect: { i: number; j: number; w: number; h: number } }[] }
+      | undefined;
+    const rest: Record<string, unknown> = { ...s, version: 3 };
+    delete rest['buildings'];
+    if (t?.cells && typeof t.w === 'number' && b?.items?.length) {
+      const floor = groundIndex('floor_indoor');
+      const cells = [...t.cells];
+      for (const it of b.items) {
+        for (let j = it.rect.j; j < it.rect.j + it.rect.h; j++) {
+          for (let i = it.rect.i; i < it.rect.i + it.rect.w; i++) {
+            const k = j * t.w + i;
+            if (k >= 0 && k < cells.length) cells[k] = floor;
+          }
+        }
+      }
+      rest['terrain'] = { ...t, cells };
+    }
+    return rest;
+  },
 };
 
 export class KairoSaveError extends Error {
@@ -141,7 +167,6 @@ export interface KairoSaveInput {
   gate: { i: number; j: number };
   terrain: KairoTerrain;
   walls: WallGrid;
-  buildings?: BuildingStore;
   placement: PlacementGrid;
   progress: ProgressStore;
   week: WeekSnapshot;
@@ -172,7 +197,6 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     gate: { i: input.gate.i, j: input.gate.j },
     terrain: input.terrain.toSnapshot(),
     walls: input.walls.toSnapshot(),
-    ...(input.buildings ? { buildings: input.buildings.toSnapshot() } : {}),
     placement: input.placement.toSnapshot(),
     progress: input.progress.toSnapshot(),
     week: input.week,
@@ -229,7 +253,6 @@ export interface KairoRestored {
   gate: { i: number; j: number };
   terrain: KairoTerrain;
   walls: WallGrid;
-  buildings: BuildingStore;
   placement: PlacementGrid;
   progress: ProgressStore;
   week: WeekSnapshot;
@@ -260,7 +283,6 @@ export function restoreKairo(raw: unknown): KairoRestored {
     gate: s.gate,
     terrain: KairoTerrain.fromSnapshot(s.terrain),
     walls: WallGrid.fromSnapshot(s.walls),
-    buildings: BuildingStore.fromSnapshot(s.buildings ?? { items: [], next: 1 }),
     placement: PlacementGrid.fromSnapshot(s.placement),
     progress: ProgressStore.fromSnapshot(s.progress),
     week: s.week,

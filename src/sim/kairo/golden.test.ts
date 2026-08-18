@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
-import { BuildingStore } from './building.js';
+import { bakeIndoorWalls } from './indoor.js';
 import { PlacementGrid, guestWalkable } from './placement.js';
 import { GuestStore, GUEST_DEFAULTS } from './guests.js';
 import { WeekRunner, type Season } from './week.js';
@@ -89,17 +89,15 @@ function playGolden(weeks: number): Golden {
   const progress = new ProgressStore();
 
   /*
-   * 실내동 — 위생 시설 4종이 들어갈 **진짜 방**이다 (K25 검토 ①).
-   * 예전에는 경계 두 줄만 세웠는데, 실내 판정이 "벽에 접함"에서 "건물 안"으로 바뀌어
-   * 그 방식으로는 하나도 못 놓는다.
+   * 실내동 — 위생 시설 4종이 들어갈 방이다. **바닥을 깔면 그게 방이다** (K27).
+   * 벽은 그 외곽선으로 자동 생성된다.
    */
-  const buildings = new BuildingStore();
-  buildings.place(t, w, GATE, { i: 10, j: 5, w: 16, h: 5 }, guestWalkable(t, p));
-  const opts = { indoor: (i: number, j: number) => buildings.isIndoor(i, j) };
+  for (let j = 5; j < 10; j++) for (let i = 10; i < 26; i++) t.paint(i, j, 'floor_indoor');
+  bakeIndoorWalls(t, w, GATE, guestWalkable(t, p));
 
   let placed = 0;
   for (const [id, i, j] of BUILD_ORDER) {
-    if (p.place(t, w, GATE, id, i, j, opts).ok) placed++;
+    if (p.place(t, w, GATE, id, i, j).ok) placed++;
   }
   g.invalidate();
 

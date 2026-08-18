@@ -8,8 +8,8 @@ import {
   DIR_I_PLUS,
   DIR_J_MINUS,
 } from './walls.js';
-import { BuildingStore } from './building.js';
-import { PlacementGrid } from './placement.js';
+import { bakeIndoorWalls } from './indoor.js';
+import { PlacementGrid, guestWalkable } from './placement.js';
 import { GuestStore, GUEST_DEFAULTS, STUCK_LIMIT, type GuestTunables } from './guests.js';
 
 const GATE = { i: 0, j: 0 };
@@ -116,13 +116,10 @@ describe('시설로 걸어가 이용한다', () => {
 
   it('다중칸 시설은 칸 수만큼 동시에 찬다 — 카이로의 영리한 설계', () => {
     const { t, w, p, g } = world({ maxGuests: 30, useTicks: 300, wantUses: 9 }, 20);
-    /*
-     * 코인락커 열 4×1 은 **실내 시설**이다 (K25 검토 ①) — 방을 먼저 짓는다.
-     * 벽에 접하기만 해서는 안 된다.
-     */
-    const b = new BuildingStore();
-    expect(b.place(t, w, GATE, { i: 4, j: 5, w: 7, h: 3 }).ok).toBe(true);
-    const r = p.place(t, w, GATE, 'locker_row', 5, 6, { indoor: (i, j) => b.isIndoor(i, j) });
+    // 코인락커 열 4×1 은 **실내 시설**이다 — 바닥을 깔면 그게 방이다 (K27)
+    for (let j = 5; j < 8; j++) for (let i = 4; i < 11; i++) t.paint(i, j, 'floor_indoor');
+    expect(bakeIndoorWalls(t, w, GATE, guestWalkable(t, p)).ok).toBe(true);
+    const r = p.place(t, w, GATE, 'locker_row', 5, 6);
     expect(r.ok).toBe(true);
     g.invalidate();
     const rng = new Rng(5);

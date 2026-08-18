@@ -300,8 +300,8 @@ async function main(): Promise<void> {
     record('지면 붓 팔레트', 'fail', '팔레트를 못 찾았다');
   } else {
     record(
-      '붓 9종 (지면 6 + 건물·시설·지우기)',
-      brushBtns.count === 9 ? 'pass' : 'fail',
+      '붓 8종 (바닥 6 + 시설·지우기) — 건물 붓은 사라졌다 (K27)',
+      brushBtns.count === 8 ? 'pass' : 'fail',
       `${brushBtns.count}개`,
     );
     record(
@@ -341,16 +341,15 @@ async function main(): Promise<void> {
     );
   }
 
-  // ── 7c. 건물 영역 → 외곽 벽 (K25) ──
+  // ── 7c. 실내 바닥 → 외곽 벽 (K27) ──
   //
-  // 예전에는 벽을 한 장씩 놓고 밀폐 차단을 확인했다. 이제 플레이어는 **영역**만 정하고
-  // 벽은 결과로 생긴다. 그래서 검사도 "영역을 넣으면 외곽선이 생기고, 붙이면 사이 벽이
-  // 사라지고, 넓히면 옛 외곽선이 사라지는가"로 바뀐다.
+  // 플레이어는 사각형을 그리지 않는다. **바닥을 깔면 그게 방**이고 벽은 결과다.
+  // 그래서 검사도 "바닥을 깔면 외곽선이 생기고, 붙여 깔면 한 덩어리·문 하나가 되고,
+  // 바닥을 지우면 벽이 사라지는가"로 본다.
   const wallCheck = (await page.evaluate(`(() => {
     const h = window.__kairo;
-    const t = h.terrain, w = h.walls, sc = h.scene;
+    const t = h.terrain, w = h.walls, p = h.placement, sc = h.scene;
     const out = {};
-    // 걸을 수 있는 넓은 자리를 찾는다 (뒤쪽 육지)
     let base = null;
     for (let j = 1; j < 20 && !base; j++) {
       for (let i = 1; i < 34; i++) {
@@ -363,34 +362,45 @@ async function main(): Promise<void> {
     if (!base) return { ok: false, reason: '9×6 육지를 못 찾았다' };
     const [bi, bj] = base;
     const gate = { i: 0, j: 0 };
-    const store = new h.sim.BuildingStore();
+    const stand = h.sim.guestWalkable(t, p);
+    const paint = (i0, j0, pw, ph, kind) => {
+      for (let j = j0; j < j0 + ph; j++) for (let i = i0; i < i0 + pw; i++) t.paint(i, j, kind);
+    };
 
-    // ① 3×3 을 지으면 외곽 12 경계 (벽 11 + 문 1)
-    const a = store.place(t, w, gate, { i: bi, j: bj, w: 3, h: 3 });
-    out.firstOk = a.ok;
+    // ① 3×3 실내 바닥 → 외곽 12 (벽 11 + 문 1)
+    paint(bi, bj, 3, 3, 'floor_indoor');
+    const r1 = h.sim.bakeIndoorWalls(t, w, gate, stand);
+    out.firstOk = r1.ok;
+    out.firstAreas = r1.areas;
     out.firstEdges = w.count(1) + w.count(2);
     out.firstDoors = w.count(2);
-    // 안쪽 경계는 비어 있어야 한다 (다이아 안을 가로지르는 벽이 없다)
     out.innerEmpty = w.edgeAt(bi, bj, 0) === 0;
 
-    // ② 바로 옆에 붙이면 맞닿은 면이 사라진다 — 둘레 (6+3)*2 = 18
-    const b = store.place(t, w, gate, { i: bi + 3, j: bj, w: 3, h: 3 });
-    out.secondOk = b.ok;
+    // ② 붙여 깔면 **한 덩어리 · 문 하나** (사각형 모델일 땐 문이 둘이었다)
+    paint(bi + 3, bj, 3, 3, 'floor_indoor');
+    const r2 = h.sim.bakeIndoorWalls(t, w, gate, stand);
+    out.joinedAreas = r2.areas;
+    out.joinedDoors = r2.doors;
     out.joinedEdges = w.count(1) + w.count(2);
     out.betweenGone = w.edgeAt(bi + 2, bj, 0) === 0;
 
-    // ③ 겹치게 다시 지정하면 흡수해서 넓어진다 — 건물 수는 안 늘어난다
-    const before = store.count;
-    const c = store.place(t, w, gate, { i: bi, j: bj, w: 6, h: 5 });
-    out.growOk = c.ok;
-    out.countBefore = before;
-    out.countAfter = store.count;
+    // ③ 한 칸만 더 깔아도 넓어진다 — 절차가 없다
+    const before = w.count(1) + w.count(2);
+    const grew = h.sim.paintFloor(t, w, gate, bi + 6, bj, 'floor_indoor', stand);
+    out.growOk = grew.ok && grew.changed;
     out.grownEdges = w.count(1) + w.count(2);
+    out.grewBy = out.grownEdges - before;
 
-    // ④ 1×1 은 거절 — 벽 넷이 한 칸을 감싸면 안이 없다
-    const tiny = store.check(t, gate, { i: bi, j: bj + 5, w: 1, h: 1 });
-    out.tinyRejected = !tiny.ok && tiny.fail === 'too-small';
+    // ④ 바닥을 지우면 벽도 사라진다
+    paint(bi, bj, 7, 3, 'lawn');
+    const r4 = h.sim.bakeIndoorWalls(t, w, gate, stand);
+    out.clearedEdges = w.count(1) + w.count(2);
+    out.clearedAreas = r4.areas;
 
+    // 화면용으로 다시 깔아 둔다
+    paint(bi, bj, 6, 4, 'floor_indoor');
+    h.sim.bakeIndoorWalls(t, w, gate, stand);
+    for (let j = bj; j < bj + 4; j++) for (let i = bi; i < bi + 6; i++) sc.refreshTile(i, j);
     sc.refreshAllWalls();
     out.wallCount = w.count(1) + w.count(2);
     out.origin = [bi, bj];
@@ -400,48 +410,54 @@ async function main(): Promise<void> {
     | {
         ok: true;
         firstOk: boolean;
+        firstAreas: number;
         firstEdges: number;
         firstDoors: number;
         innerEmpty: boolean;
-        secondOk: boolean;
+        joinedAreas: number;
+        joinedDoors: number;
         joinedEdges: number;
         betweenGone: boolean;
         growOk: boolean;
-        countBefore: number;
-        countAfter: number;
         grownEdges: number;
-        tinyRejected: boolean;
+        grewBy: number;
+        clearedEdges: number;
+        clearedAreas: number;
         wallCount: number;
         origin: number[];
       };
 
   if (!wallCheck.ok) {
-    record('건물 영역', 'fail', wallCheck.reason);
+    record('실내 바닥 → 벽', 'fail', wallCheck.reason);
   } else {
     record(
-      '3×3 영역 → 외곽 12 경계 (벽 11 + 문 1)',
+      '3×3 실내 바닥 → 외곽 12 경계 (벽 11 + 문 1)',
       wallCheck.firstOk && wallCheck.firstEdges === 12 && wallCheck.firstDoors === 1
         ? 'pass'
         : 'fail',
-      `경계 ${wallCheck.firstEdges} · 문 ${wallCheck.firstDoors}`,
+      `경계 ${wallCheck.firstEdges} · 문 ${wallCheck.firstDoors} · 덩어리 ${wallCheck.firstAreas}`,
     );
+    record('안쪽 경계는 비어 있다 — 벽이 칸을 안 막는다', wallCheck.innerEmpty ? 'pass' : 'fail');
     record(
-      '안쪽 경계는 비어 있다 — 벽이 칸을 안 막는다',
-      wallCheck.innerEmpty ? 'pass' : 'fail',
-    );
-    record(
-      '붙여 지으면 맞닿은 벽이 사라진다 — 둘레 18',
-      wallCheck.secondOk && wallCheck.joinedEdges === 18 && wallCheck.betweenGone
+      '붙여 깔면 한 덩어리 · 문 하나 — 둘레 18 (K27)',
+      wallCheck.joinedAreas === 1 &&
+        wallCheck.joinedDoors === 1 &&
+        wallCheck.joinedEdges === 18 &&
+        wallCheck.betweenGone
         ? 'pass'
         : 'fail',
-      `경계 ${wallCheck.joinedEdges} · 사이 비었나 ${wallCheck.betweenGone}`,
+      `덩어리 ${wallCheck.joinedAreas} · 문 ${wallCheck.joinedDoors} · 경계 ${wallCheck.joinedEdges}`,
     );
     record(
-      '겹쳐 지정하면 넓히기다 — 건물 수가 안 는다',
-      wallCheck.growOk && wallCheck.countAfter < wallCheck.countBefore + 1 ? 'pass' : 'fail',
-      `${wallCheck.countBefore}채 → ${wallCheck.countAfter}채 · 경계 ${wallCheck.grownEdges}`,
+      '한 칸만 더 깔아도 넓어진다 — 둘레가 2 는다',
+      wallCheck.growOk && wallCheck.grewBy === 2 ? 'pass' : 'fail',
+      `경계 ${wallCheck.grownEdges} (+${wallCheck.grewBy})`,
     );
-    record('1×1 건물은 거절된다', wallCheck.tinyRejected ? 'pass' : 'fail');
+    record(
+      '바닥을 지우면 벽도 사라진다',
+      wallCheck.clearedEdges === 0 && wallCheck.clearedAreas === 0 ? 'pass' : 'fail',
+      `경계 ${wallCheck.clearedEdges} · 덩어리 ${wallCheck.clearedAreas}`,
+    );
     record(
       '벽 그림이 화면에 올라간다',
       wallCheck.wallCount >= 4 ? 'pass' : 'fail',
@@ -449,7 +465,6 @@ async function main(): Promise<void> {
     );
   }
 
-  // 건물이 있는 곳으로 카메라를 옮겨 눈으로 볼 수 있게 한다
   if (wallCheck.ok) {
     const [ri, rj] = wallCheck.origin;
     await page.evaluate(`window.__kairo.scene.focusTile(${ri ?? 0}, ${rj ?? 0})`);
@@ -510,8 +525,8 @@ async function main(): Promise<void> {
 
   const clearRatio = stipple.paneClear / (stipple.paneClear + stipple.paneOpaque);
   record(
-    '벽 캔버스가 32×40 이다',
-    stipple.W === 32 && stipple.H === 40 ? 'pass' : 'fail',
+    '벽 캔버스가 32×26 이다 — K27 에서 높이를 24→10 으로 낮췄다',
+    stipple.W === 32 && stipple.H === 26 ? 'pass' : 'fail',
     `${stipple.W}×${stipple.H}`,
   );
   record(
@@ -574,20 +589,19 @@ async function main(): Promise<void> {
      * 칸은 여전히 거절**이어야 한다 (K25 검토 ①: 경계는 두 칸이 공유한다).
      */
     const wi = bi, wj = bj + 6;
-    const store = new h.sim.BuildingStore();
     const stand = h.sim.guestWalkable(t, p);
-    const opts = { indoor: (a, b2) => store.isIndoor(a, b2) };
-    out.wallMountBefore = p.check(t, w, gate, 'locker_row', wi, wj, opts).fail || 'ok';
+    out.wallMountBefore = p.check(t, w, gate, 'locker_row', wi, wj).fail || 'ok';
 
-    store.place(t, w, gate, { i: wi, j: wj, w: 6, h: 3 }, stand);
+    for (let j = wj; j < wj + 3; j++) for (let i = wi; i < wi + 6; i++) t.paint(i, j, 'floor_indoor');
+    h.sim.bakeIndoorWalls(t, w, gate, stand);
+    for (let j = wj; j < wj + 3; j++) for (let i = wi; i < wi + 6; i++) sc.refreshTile(i, j);
     sc.refreshAllWalls();
-    out.wallMountAfter = p.check(t, w, gate, 'locker_row', wi, wj, opts).fail || 'ok';
-    // 방 오른쪽 바깥 칸 — 벽에 접해 있지만 실내가 아니다
-    out.wallMountOutside =
-      p.check(t, w, gate, 'locker_row', wi + 6, wj, opts).fail || 'ok';
+    out.wallMountAfter = p.check(t, w, gate, 'locker_row', wi, wj).fail || 'ok';
+    // 방 오른쪽 바깥 칸 — 벽에 접해 있지만 실내 바닥이 아니다
+    out.wallMountOutside = p.check(t, w, gate, 'locker_row', wi + 6, wj).fail || 'ok';
     out.outsideTouchesWall = w.hasAnyEdge(wi + 6, wj);
     if (out.wallMountAfter === 'ok') {
-      const r = p.place(t, w, gate, 'locker_row', wi, wj, opts);
+      const r = p.place(t, w, gate, 'locker_row', wi, wj);
       if (r.ok && r.placed) { sc.refreshFacility(r.placed.handle); out.placed.push('locker_row'); }
     }
 
@@ -621,12 +635,12 @@ async function main(): Promise<void> {
       `놓임 ${fac.placed.join(',')}${fac.rejected.length ? ' · 거절 ' + fac.rejected.join(',') : ''}`,
     );
     record(
-      '실내 시설 — 방 없이 거절 → 방을 지으면 통과',
+      '실내 시설 — 바닥 없이 거절 → 실내 바닥을 깔면 통과',
       fac.wallMountBefore === 'needs-indoor' && fac.wallMountAfter === 'ok' ? 'pass' : 'fail',
       `${fac.wallMountBefore} → ${fac.wallMountAfter}`,
     );
     record(
-      '건물 바깥에서 벽에 접한 칸은 여전히 거절 (K25 검토 ①)',
+      '방 바깥에서 벽에 접한 칸은 여전히 거절 (K26 ①)',
       fac.outsideTouchesWall && fac.wallMountOutside === 'needs-indoor' ? 'pass' : 'fail',
       `벽에 접했나 ${fac.outsideTouchesWall} · 판정 ${fac.wallMountOutside}`,
     );

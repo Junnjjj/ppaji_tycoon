@@ -90,15 +90,15 @@
       "j-"
     ],
     "doors": 4,
-    "heightTexels": 24,
+    "heightTexels": 10,
     "thicknessTexels": 3,
     "canvas": [
       32,
-      40
+      26
     ],
     "anchorTexel": [
       16,
-      40
+      26
     ],
     "material": "glass-stipple",
     "glass": {

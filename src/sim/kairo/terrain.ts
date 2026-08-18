@@ -18,6 +18,10 @@ export interface GroundKindDef {
   name: string;
   walkable: boolean;
   default: boolean;
+  /** 1칸을 까는 값 (K27). 카이로의 `Tiling` — 바닥은 편집기 도구가 아니라 **사는 것**이다 */
+  cost: number;
+  /** 실내 바닥인가. **이 칸들이 곧 방이다** — 벽은 그 외곽선으로 자동 생성된다 */
+  indoor: boolean;
 }
 
 const DATA = rawGround as unknown as {
@@ -116,6 +120,21 @@ export class KairoTerrain {
    */
   isWater(i: number, j: number): boolean {
     return this.kindAt(i, j) === 'water_edge';
+  }
+
+  /**
+   * 실내인가 — **바닥이 곧 방이다** (K27, 카이로 방식).
+   *
+   * Pool Slide Story 의 규칙 그대로다: "Any indoor tile created will make an indoor area,
+   * which requires an Entrance for customers to access." 플레이어는 사각형을 그리지 않는다.
+   * 실내 바닥을 깔면 그 자리가 실내가 되고, 벽은 그 결과로 그려진다.
+   *
+   * 그래서 "실내"를 따로 저장하지 않는다 — 지형이 이미 답이다. 별도 저장소를 두면
+   * 지형과 어긋날 수 있고, 실제로 사각형 모델일 때 그 어긋남이 문제를 여섯 개 만들었다.
+   */
+  isIndoor(i: number, j: number): boolean {
+    const k = this.at(i, j);
+    return k < 0 ? false : groundDef(k).indoor;
   }
 
   /** 지면만 보고 걸을 수 있는가. 벽·시설 점유는 K3·K4 가 따로 얹는다 */

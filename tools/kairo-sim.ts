@@ -21,7 +21,8 @@
 import { Rng } from '../src/sim/rng.js';
 import { KairoTerrain } from '../src/sim/kairo/terrain.js';
 import { WallGrid } from '../src/sim/kairo/walls.js';
-import { BuildingStore } from '../src/sim/kairo/building.js';
+import { bakeIndoorWalls } from '../src/sim/kairo/indoor.js';
+import { GROUND_KINDS } from '../src/sim/kairo/terrain.js';
 import {
   PlacementGrid,
   allFacilityDefs,
@@ -156,54 +157,74 @@ function ensureRoom(
   t: KairoTerrain,
   w: WallGrid,
   p: PlacementGrid,
-  b: BuildingStore,
   land: { w: number; h: number },
   rng: Rng,
   need: { w: number; h: number },
-): boolean {
+): number {
   const stand = guestWalkable(t, p);
+  const floorCost = GROUND_KINDS.find((k) => k.id === 'floor_indoor')?.cost ?? 0;
 
-  /** 이 사각형에 방을 지을 수 있나 — 실외 시설을 삼키지 않는 게 핵심이다 */
-  const fits = (r: { i: number; j: number; w: number; h: number }): boolean => {
-    if (r.i < 0 || r.j < 0 || r.i + r.w > land.w || r.j + r.h > land.h) return false;
-    for (let j = r.j; j < r.j + r.h; j++) {
-      for (let i = r.i; i < r.i + r.w; i++) {
-        if (!t.inside(i, j) || !t.isWalkable(i, j)) return false;
-        // 이미 실내인 시설은 그대로 실내로 남는다 — 흡수해도 된다
-        if (p.handleAt(i, j) !== 0 && !b.isIndoor(i, j)) return false;
+  /** 이 칸에 실내 바닥을 깔아도 되나 — 실외 시설을 삼키지 않는 게 핵심이다 */
+  const paintable = (i: number, j: number): boolean =>
+    t.inside(i, j) &&
+    i < land.w &&
+    j < land.h &&
+    t.isWalkable(i, j) &&
+    !(i === GATE.i && j === GATE.j) &&
+    (p.handleAt(i, j) === 0 || t.isIndoor(i, j));
+
+  /** 사각형만큼 깔아 본다. 벽 굽기가 실패하면 통째로 되돌린다 */
+  const tryPatch = (i0: number, j0: number, pw: number, ph: number): number => {
+    const before: [number, number, string][] = [];
+    for (let j = j0; j < j0 + ph; j++) {
+      for (let i = i0; i < i0 + pw; i++) {
+        if (!paintable(i, j)) return 0;
+        const k = t.kindAt(i, j);
+        if (k === null) return 0;
+        if (k !== 'floor_indoor') before.push([i, j, k]);
       }
     }
-    return true;
+    if (before.length === 0) return 0; // 이미 전부 실내다
+    for (const [i, j] of before) t.paint(i, j, 'floor_indoor');
+    if (bakeIndoorWalls(t, w, GATE, stand).ok) return before.length * floorCost;
+    for (const [i, j, k] of before) t.paint(i, j, k);
+    bakeIndoorWalls(t, w, GATE, stand);
+    return 0;
   };
 
   /*
-   * ① **기존 방을 넓힌다.** 이걸 안 하면 방이 한 번 차는 순간 실내 시설을 영영 못 짓는다 —
-   * 실측으로 "자리 부족" 경보가 떴고, 이유별로 세어 보니 106건 전부 `no-room` 이었다.
-   * 사람도 방이 좁으면 옆에 새 방을 짓기보다 **그 방을 넓힌다.**
+   * ① **기존 방 옆에 이어 깐다.** 카이로에서 방을 넓히는 건 옆 칸에 바닥을 한 줄 더
+   * 까는 것뿐이다 — 사각형을 다시 그리는 절차가 없다.
    */
-  for (const bl of [...b.all]) {
-    for (const [dw, dh] of [
-      [need.w + 1, 0],
-      [0, need.h + 1],
-      [need.w + 1, need.h + 1],
-    ] as const) {
-      const rect = { i: bl.rect.i, j: bl.rect.j, w: bl.rect.w + dw, h: bl.rect.h + dh };
-      if (!fits(rect)) continue;
-      if (b.place(t, w, GATE, rect, stand).ok) return true;
+  const strip = Math.max(2, need.h + 1);
+  for (let j = 0; j < land.h; j++) {
+    for (let i = 0; i < land.w; i++) {
+      if (!t.isIndoor(i, j)) continue;
+      for (const [di, dj] of [
+        [1, 0],
+        [0, 1],
+        [-need.w, 0],
+        [0, -strip],
+      ] as const) {
+        const spent = tryPatch(i + di, j + dj, need.w + 1, strip);
+        if (spent > 0) return spent;
+      }
     }
   }
 
-  // ② 넓힐 수 없으면 새 방을 낸다
-  const rw = Math.max(3, need.w + 2);
-  const rh = Math.max(3, need.h + 2);
+  // ② 이어 깔 수 없으면 새 자리에 한 덩어리
   for (let attempt = 0; attempt < 60; attempt++) {
-    const i = rng.int(Math.max(1, land.w - rw));
-    const j = rng.int(Math.max(1, land.h - rh));
-    const rect = { i, j, w: rw, h: rh };
-    if (!fits(rect)) continue;
-    if (b.place(t, w, GATE, rect, stand).ok) return true;
+    const pw = need.w + 2;
+    const ph = Math.max(3, need.h + 2);
+    const spent = tryPatch(
+      rng.int(Math.max(1, land.w - pw)),
+      rng.int(Math.max(1, land.h - ph)),
+      pw,
+      ph,
+    );
+    if (spent > 0) return spent;
   }
-  return false;
+  return 0;
 }
 
 /** 병목을 보고 그 종류를 짓는 봇 */
@@ -211,7 +232,6 @@ function buildOne(
   t: KairoTerrain,
   w: WallGrid,
   p: PlacementGrid,
-  b: BuildingStore,
   cash: number,
   want: NeedKind | null,
   rng: Rng,
@@ -227,7 +247,7 @@ function buildOne(
    */
   why?: Map<string, number>,
 ): number {
-  const opts = { land, indoor: (i: number, j: number) => b.isIndoor(i, j) };
+  const opts = { land };
   const grade = gradeFor(0).grade; // 등급 제한은 아래에서 따로 본다
   void grade;
   const cands = allFacilityDefs()
@@ -249,6 +269,8 @@ function buildOne(
   if (!pick) return 0;
 
   let lastFail = 'unknown';
+  /** 이번에 깐 바닥값 — 시설을 못 놓아도 바닥은 남으므로 값은 치른다 */
+  let roomSpend = 0;
   for (let round = 0; round < 2; round++) {
     for (let attempt = 0; attempt < 200; attempt++) {
       const i = rng.int(Math.max(1, land.w - pick.size[0]));
@@ -256,7 +278,7 @@ function buildOne(
       const c = p.check(t, w, GATE, pick.id, i, j, opts);
       if (c.ok) {
         p.place(t, w, GATE, pick.id, i, j, opts);
-        return (pick as unknown as { cost: number }).cost;
+        return (pick as unknown as { cost: number }).cost + roomSpend;
       }
       lastFail = c.fail ?? 'unknown';
     }
@@ -264,13 +286,19 @@ function buildOne(
     const needsRoom = (pick as unknown as { placement?: { requiresIndoor?: boolean } }).placement
       ?.requiresIndoor;
     if (!needsRoom || round === 1) break;
-    if (!ensureRoom(t, w, p, b, land, rng, { w: pick.size[0], h: pick.size[1] })) {
+    /*
+     * 실내 바닥값을 **봇도 낸다** (K27). 플레이어만 내면 밸런싱이 실제보다 부유한 판을
+     * 돌게 된다 — 사각형 건물 시절에 실제로 그랬다 (검토 ⑥).
+     */
+    const floorSpent = ensureRoom(t, w, p, land, rng, { w: pick.size[0], h: pick.size[1] });
+    if (floorSpent === 0) {
       lastFail = 'no-room';
       break;
     }
+    roomSpend += floorSpent;
   }
   if (why) why.set(lastFail, (why.get(lastFail) ?? 0) + 1);
-  return 0;
+  return roomSpend;
 }
 
 function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
@@ -279,7 +307,6 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const t = KairoTerrain.generate(GRID_W, GRID_H, rng.fork(1), map);
   const w = new WallGrid(GRID_W, GRID_H);
   const p = new PlacementGrid(GRID_W, GRID_H);
-  const buildings = new BuildingStore();
   const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
   const week = new WeekRunner(t, p, g);
   const progress = new ProgressStore();
@@ -304,10 +331,11 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const courseRng = rng.fork(0xc0125);
 
   /*
-   * 시작 실내동 — 플레이어가 처음에 방 하나를 짓는 것과 같다 (건물 값은 아직 안 낸다).
-   * 부족하면 `ensureRoom` 이 더 짓는다.
+   * 시작 실내동 — 플레이어가 처음에 바닥을 까는 것과 같다. 부족하면 `ensureRoom` 이 더 깐다.
+   * 물려받은 빠지라는 설정이라 이 첫 덩어리만 값을 안 받는다.
    */
-  buildings.place(t, w, GATE, { i: 2, j: 2, w: 8, h: 4 }, guestWalkable(t, p));
+  for (let j = 2; j < 6; j++) for (let i = 2; i < 10; i++) t.paint(i, j, 'floor_indoor');
+  bakeIndoorWalls(t, w, GATE, guestWalkable(t, p));
 
   let cash = 5_000_000;
   let last: WeekReport | null = null;
@@ -407,7 +435,6 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         t,
         w,
         p,
-        buildings,
         budget,
         b === 0 ? want : null,
         rng,

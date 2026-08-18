@@ -87,17 +87,14 @@ export type PlaceFail =
   | 'unknown-def';
 
 /**
- * 배치 검사의 **바깥 사정** — 격자·지형만으로는 알 수 없는 것들.
+ * 배치 검사의 **바깥 사정** — 지형만으로는 알 수 없는 것.
  *
- * 인자를 계속 늘리는 대신 가방으로 받는다. 안 넘기면 그 규칙을 안 보는 게 아니라
- * **가장 엄한 쪽**으로 판정한다 (실내 판정이 없으면 실내 시설은 못 놓는다) —
- * 넘기는 걸 잊었을 때 조용히 느슨해지면 안 된다.
+ * 한때 실내 판정도 여기로 받았다. 실내가 **지형 그 자체**가 된 뒤로(K27) 필요 없어졌다 —
+ * `terrain.isIndoor` 가 답을 안다. 넘겨야 할 것이 줄면 넘기는 걸 잊을 일도 준다.
  */
 export interface PlaceOptions {
   /** 해금된 토지 (K25). 없으면 격자 전체 */
   land?: { w: number; h: number };
-  /** 그 칸이 건물 안인가 (`BuildingStore.isIndoor`) */
-  indoor?: (i: number, j: number) => boolean;
 }
 
 export interface PlaceOutcome {
@@ -307,9 +304,10 @@ export class PlacementGrid {
        *
        * ⚠ 한때 "벽 경계에 접했나"(`hasAnyEdge`)로 봤는데 **경계는 두 칸이 공유한다.**
        * 그래서 건물 **바깥**에서 벽에 접한 칸도 통과했고, 샤워실·탈의실이 야외 잔디에
-       * 놓였다 (K25 검토에서 실측). 붙는 대상은 벽이 아니라 **방**이다.
+       * 놓였다 (K26 ① 에서 실측). 붙는 대상은 벽이 아니라 **방**이고,
+       * 방은 곧 **실내 바닥을 깐 자리**다 (K27).
        */
-      const allIndoor = tiles.every(([ti, tj]) => opts?.indoor?.(ti, tj) === true);
+      const allIndoor = tiles.every(([ti, tj]) => terrain.isIndoor(ti, tj));
       if (!allIndoor) return { ok: false, fail: 'needs-indoor' };
     }
 
