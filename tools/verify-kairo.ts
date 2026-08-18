@@ -1796,12 +1796,24 @@ async function main(): Promise<void> {
     const btns = [...root.querySelectorAll('button')];
     const heights = btns.map((b) => Math.round(b.getBoundingClientRect().height));
     const labels = btns.map((b) => b.textContent.slice(0, 24));
-    return {
+    const enabled = btns.filter((b) => !b.disabled).length;
+    const out = {
       ok: true, shown: true, cashBefore: cashBefore,
       options: btns.length, minHeight: Math.min.apply(null, heights),
-      labels: labels, remaining: cv.remaining,
+      labels: labels, remaining: cv.remaining, enabled: enabled,
       title: (root.querySelector('div > div:nth-child(2)') || {}).textContent || ''
     };
+    /*
+     * ⚠ **카드를 닫고 넘어간다** (K37). 예전엔 열어 둔 채 다음 절로 갔다. 카드는 모달이라
+     * (선택 전에 다른 패널이 밀어내면 주가 조용히 넘어간다) 열려 있으면 뒤따르는
+     * "새 판" 절 5건이 전부 실패한다 — 실제로 그렇게 잡혔다.
+     *
+     * 앞선 검사의 잔해 위에서 재면 원인을 알 수 없다. 이 저장소가 손님 검사에서
+     * 이미 배운 규칙이다.
+     */
+    const first = btns.filter((b) => !b.disabled)[0];
+    if (first) first.click();
+    return out;
   })()`)) as {
     ok: boolean;
     why?: string;
@@ -1811,6 +1823,7 @@ async function main(): Promise<void> {
     labels?: string[];
     remaining?: number;
     cashBefore?: number;
+    enabled?: number;
     title?: string;
   };
 
@@ -1868,6 +1881,13 @@ async function main(): Promise<void> {
     scenarioUi.ok
       ? `맵 ${scenarioUi.maps} · 시나리오 ${scenarioUi.scens} (잠김 ${scenarioUi.locked})`
       : (scenarioUi.why ?? '실패'),
+  );
+  record(
+    '★ 카드는 언제나 고를 수 있는 선택지가 있다 — 판이 잠기지 않는다 (K37)',
+    !cardFlow.shown || (cardFlow.enabled ?? 0) > 0 ? 'pass' : 'fail',
+    cardFlow.shown
+      ? `선택지 ${cardFlow.options} · 고를 수 있는 것 ${cardFlow.enabled}`
+      : '이번 주 카드 0장',
   );
   record(
     '아직 안 열린 시나리오가 잠겨 있다 — 처음부터 다 열리면 해금이 무의미하다',
@@ -2539,7 +2559,8 @@ async function main(): Promise<void> {
       const cur = h.coursePanel.state.dock;
       /*
        * K37: **코스가 없는** 후보를 고른다. 이 절은 탭 뒤에 곧바로 확정까지 하는데,
-       * 코스가 이미 있는 잔교로 옮기면 `dock-taken` 으로 확정이 잠긴다 (그게 맞는 동작이다).
+       * 코스가 이미 있는 잔교로 옮기면 dock-taken 으로 확정이 잠긴다 (그게 맞는 동작이다).
+       * ⚠ 이 주석에 백틱을 쓰지 말 것 — 이건 page.evaluate 로 넘기는 템플릿 문자열 안이다.
        */
       const used = {};
       for (const c of h.courses.all) used[c.dock.x + ',' + c.dock.y] = 1;
@@ -4131,6 +4152,119 @@ async function main(): Promise<void> {
     '★ 출입구가 새로고침을 넘는다 (K36-B)',
     doorsKept.wanted === 2 && doorsKept.doors === 2 ? 'pass' : 'fail',
     `희망 ${doorsKept.wanted} · 문 ${doorsKept.doors}`,
+  );
+
+  /*
+   * ── 9b. 패널은 한 번에 하나 (K37 버그 ①) ──────────────────────────────
+   *
+   * 사용자 보고: "건설 등 눌렀을때 나오는 설명 부분이 다른 설명 눌렀을때 안꺼져서".
+   * 패널 8종이 각자 hidden 을 만지고 "다른 걸 닫는다"를 아는 곳이 없었다.
+   *
+   * ⚠ 단위 테스트(panels.test.ts)는 호스트의 규칙만 잰다. 여기서는 **실제로 화면에서
+   * 사라지는지**를 본다 — 규칙은 맞는데 hidden 이 안 내려가는 경우를 놓치면 안 된다.
+   * 판정은 반드시 !root.hidden 으로 읽는다 (인라인 display 를 읽으면 표면을 클래스로
+   * 옮기는 순간 조용히 거짓이 된다).
+   */
+  const excl = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    const vis = () => ({
+      sheet: !document.getElementById('kairo-sheet').hidden,
+      catalog: h.catalog.visible,
+      staff: h.staffPanel.visible,
+      course: h.coursePanel.visible,
+      showcase: h.showcase.visible,
+    });
+    const noop = function () {};
+    const out = [];
+    const build = () => document.getElementById('kairo-build-open').click();
+    const closeSheet = () => document.getElementById('kairo-sheet-close').click();
+
+    build();
+    const a1 = vis(); h.catalog.show(); const a2 = vis();
+    out.push({ pair: '건설→도감', ok: a1.sheet && !a2.sheet && a2.catalog });
+    h.catalog.hide();
+
+    h.catalog.show(); const b1 = vis();
+    h.staffPanel.show(h.staff, h.placement, noop, undefined); const b2 = vis();
+    out.push({ pair: '도감→경영', ok: b1.catalog && !b2.catalog && b2.staff });
+    h.staffPanel.hide();
+
+    h.staffPanel.show(h.staff, h.placement, noop, undefined); const c1 = vis();
+    h.coursePanel.show(); const c2 = vis();
+    out.push({ pair: '경영→코스', ok: c1.staff && !c2.staff && c2.course });
+    h.coursePanel.hide();
+
+    h.coursePanel.show(); const d1 = vis();
+    build(); const d2 = vis();
+    out.push({ pair: '코스→건설', ok: d1.course && !d2.course && d2.sheet });
+    closeSheet();
+
+    /* 감상은 예외 — 지도가 보여야 감상이므로 다른 패널을 닫지 않는다 */
+    build(); const e1 = vis();
+    h.showcase.show(); const e2 = vis();
+    h.showcase.hide();
+    out.push({ pair: '감상은 예외', ok: e1.sheet && e2.showcase && e2.sheet });
+    closeSheet();
+
+    /* 카드는 모달 — 선택 전에 다른 패널이 밀어내면 주가 조용히 넘어간다 */
+    h.cardView.show(
+      [{ id: 'k37', name: '검사', desc: '검사', options: [{ label: 'a', detail: 'a', effects: [] }] }],
+      99999999,
+      noop,
+    );
+    build(); const f2 = vis();
+    out.push({ pair: '카드 모달이 막는다', ok: !f2.sheet });
+    h.cardView.hide();
+    closeSheet();
+    return out;
+  })()`)) as { pair: string; ok: boolean }[];
+  const exclBad = excl.filter((x) => !x.ok).map((x) => x.pair);
+  record(
+    '★ 패널은 한 번에 하나만 열린다 (K37 버그 ①)',
+    exclBad.length === 0 && excl.length >= 6 ? 'pass' : 'fail',
+    exclBad.length === 0 ? `${excl.length}쌍 전부 통과` : `실패: ${exclBad.join(', ')}`,
+  );
+
+  /*
+   * ── 9c. 코스가 같은 자리에 겹치지 않는다 (K37 버그 ④) ──────────────────
+   *
+   * 실측(고치기 전): banana·peanut·jetski 를 연달아 확정했더니 셋이 전부
+   * dock 43,32 / handles 43,37 43,43 로 **완전히 같은 자리**에 쌓였다.
+   * 사용자 보고 "수상기구에 모든 견인 기구 위치 설정은 버그같아" 가 이것이다.
+   */
+  const overlap = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    const panel = h.coursePanel;
+    h.week.cash = 500000000;
+    const before = h.courses.count;
+    document.getElementById('kairo-course-open').click();
+    const tries = [];
+    for (const eq of ['banana', 'peanut', 'jetski']) {
+      panel.select('shuttle', eq);
+      tries.push(panel.confirmForTest());
+    }
+    const spots = h.courses.all.map((c) => c.dock.x + ',' + c.dock.y + '|' + c.handles.map((p) => Math.round(p.x) + ',' + Math.round(p.y)).join(' '));
+    const why = document.querySelector('#kairo-course .kcourse-why');
+    const msg = why ? why.textContent : '';
+    document.getElementById('kairo-course-close').click();
+    return { before: before, added: tries, count: h.courses.count, uniq: new Set(spots).size, spots: spots.length, msg: msg };
+  })()`)) as {
+    before: number;
+    added: number[];
+    count: number;
+    uniq: number;
+    spots: number;
+    msg: string;
+  };
+  record(
+    '★ 코스가 같은 자리에 겹치지 않는다 (K37 버그 ④)',
+    overlap.uniq === overlap.spots ? 'pass' : 'fail',
+    `놓인 코스 ${overlap.spots}개 · 서로 다른 자리 ${overlap.uniq}개 · 확정 결과 ${overlap.added.join(',')}`,
+  );
+  record(
+    '막힐 때 처방이 화면에 있다 — 방법까지 말한다',
+    /잔교|선착장|핸들/.test(overlap.msg) ? 'pass' : 'fail',
+    overlap.msg.slice(0, 80) || '(비어 있다)',
   );
 
   // ── 10. 안드로이드 비정수 DPR ──

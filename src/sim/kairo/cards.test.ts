@@ -12,6 +12,7 @@ import {
   triggerCard,
   MOD_CAPS,
   optionCash,
+  optionCertainCash,
   optionEffect,
   type CardContext,
 } from './cards.js';
@@ -349,5 +350,47 @@ describe('누적 상한 — 카드가 게임을 나선으로 밀 수 없다', ()
     expect(st.modifiers().satisfactionDelta).toBe(-8);
     for (let k = 0; k < 3; k++) st.tickWeek();
     expect(st.modifiers().satisfactionDelta).toBe(0);
+  });
+});
+
+/**
+ * 카드는 **모달**이다 (K37) — 열려 있으면 다른 패널이 안 열린다. 선택하지 않으면 주가
+ * 안 넘어가는 것이 카드의 존재 이유인데, 다른 패널이 밀어내면 선택을 조용히 건너뛴다.
+ *
+ * ⚠ 그 규칙은 **"항상 고를 수 있는 선택지가 있다"에 기대고 있다.** UI 는 현금이 모자란
+ * 선택지를 비활성으로 만드는데(`kairo-card.ts` 의 `tooPoor`), 어떤 카드의 선택지가 **전부**
+ * 돈이 드는데 현금이 0 이면 **아무것도 고를 수 없고 메뉴도 안 열린다** — 판이 잠긴다.
+ *
+ * 그래서 그 성질을 데이터에서 못 박는다. 새 카드를 추가할 때 이 검사가 잠금을 막는다.
+ */
+describe('카드는 판을 잠그지 않는다 — 모달의 전제', () => {
+  it('★ 어떤 현금 상태에서도 고를 수 있는 선택지가 있다', () => {
+    /*
+     * UI 는 `optionCertainCash` 로 "살 수 있나"를 판정한다 (K37). 확률에 걸린 선택지는
+     * 확정 지출이 0 이므로 언제나 고를 수 있다 — 현금 0 으로 재는 것이 최악의 경우다.
+     */
+    const locked = CARDS.filter((c) =>
+      c.options.every((o) => optionCertainCash(o) < 0),
+    ).map((c) => c.id);
+    expect(locked).toEqual([]);
+  });
+
+  it('★ 음성 대조군 — 확정 지출로만 재면 두 카드가 잠긴다', () => {
+    /*
+     * 이것이 고치기 전 상태다. `optionCash` 로 재면 `safety_check`("무시한다"는 35% 로
+     * 과태료 120만)와 `typhoon`("그대로 둔다"는 45% 로 복구비 150만)이 현금 부족일 때
+     * **두 선택지 모두 비활성**이 되고, 카드는 모달이라 메뉴도 안 열려 판이 잠긴다.
+     *
+     * 이 검사가 실패로 바뀌면 그 카드들이 고쳐졌다는 뜻이니 이 대조군을 지워도 된다.
+     */
+    const byRaw = CARDS.filter((c) => c.options.every((o) => optionCash(o) < 0)).map((c) => c.id);
+    expect(byRaw).toEqual(['safety_check', 'typhoon']);
+  });
+
+  it('확률에 걸린 선택지는 확정 지출이 0 이다 — 도박은 언제나 가능하다', () => {
+    const card = CARDS.find((c) => c.id === 'safety_check')!;
+    const gamble = card.options.find((o) => o.chance !== undefined)!;
+    expect(optionCash(gamble)).toBeLessThan(0); // 액수는 그대로 표시한다
+    expect(optionCertainCash(gamble)).toBe(0); // 하지만 지금 내는 돈은 아니다
   });
 });

@@ -1,6 +1,6 @@
 import { el } from './dom.js';
 import type { CardDef, CardOption } from '../sim/kairo/cards.js';
-import { optionCash } from '../sim/kairo/cards.js';
+import { optionCash, optionCertainCash } from '../sim/kairo/cards.js';
 import { panelHost } from './panels.js';
 
 /**
@@ -118,7 +118,13 @@ export class KairoCardView {
 
     card.options.forEach((opt, oi) => {
       const cash = optionCash(opt);
-      const tooPoor = cash < 0 && -cash > this.cash;
+      /*
+       * 살 수 있나는 **확정 지출**로 본다 (K37). 확률에 걸린 선택지(예: "무시한다" —
+       * 35% 로 과태료)는 지금 내는 돈이 아니다. `optionCash` 로 재면 도박을 못 하게
+       * 막는데, `safety_check`·`typhoon` 은 선택지가 둘 다 돈이 들어서 현금이 마르면
+       * **아무것도 못 고르고** 카드는 모달이라 메뉴도 안 열린다 — 판이 잠긴다.
+       */
+      const tooPoor = optionCertainCash(opt) < 0 && -optionCertainCash(opt) > this.cash;
       // ★ 56px — `.kitem.wide` 가 지킨다. 새 판 시나리오·도감 항목과 같은 모양이다
       const btn = el('button', 'kitem wide');
       btn.disabled = tooPoor;

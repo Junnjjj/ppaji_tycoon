@@ -393,7 +393,21 @@ export class KairoCoursePanel {
       cell('주매출', won(r.weeklyRevenue)),
     );
 
-    const issues = v.issues.map((i) => COURSE_ISSUE_TEXT[i]);
+    /*
+     * 처방은 **가능한 것**을 말해야 한다 (K37).
+     *
+     * `dock-taken` 의 기본 문구는 "다른 잔교를 고르세요"인데, 잔교가 하나뿐인 새 판에서는
+     * 그게 **막다른 길**이다 (실측: 시작 킷이 유일한 잔교에 코스를 하나 놓고 시작하므로
+     * 새 판의 두 번째 코스는 언제나 이 상태다). 고를 잔교가 없으면 지으라고 말한다.
+     */
+    const docksAll = this.deps.docks();
+    const used = new Set(this.others().map((c) => `${c.dock.x},${c.dock.y}`));
+    const freeDocks = docksAll.filter((d) => !used.has(`${d.tip.x},${d.tip.y}`)).length;
+    const issues = v.issues.map((i) =>
+      i === 'dock-taken' && freeDocks === 0
+        ? '이 잔교에 이미 코스가 있습니다 — 선착장을 더 지으세요'
+        : COURSE_ISSUE_TEXT[i],
+    );
     if (cost > this.deps.cash()) issues.push(`장비값 ${won(cost)} — 현금이 부족합니다`);
     this.whyEl.textContent = issues.join(' · ');
     const canPlace = v.ok && cost <= this.deps.cash();

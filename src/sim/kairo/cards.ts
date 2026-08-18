@@ -122,6 +122,24 @@ export function optionCash(opt: CardOption): number {
   return opt.effects.reduce((a, e) => a + (e.cash ?? 0), 0);
 }
 
+/**
+ * **확정** 지출만 센다 — 확률에 걸린 선택지는 0 이다 (K37).
+ *
+ * `optionCash` 는 `chance` 를 무시하고 액수를 그대로 더한다. 그 값으로 "살 수 있나"를
+ * 판정하면 **도박을 못 하게 막는다**: `safety_check` 의 "무시한다"는 35% 확률로
+ * 과태료 ₩1,200,000 이 나오는 선택인데, 현금이 그보다 적으면 비활성이 됐다.
+ * 아무것도 안 하겠다는 선택이 돈 때문에 막히는 것은 앞뒤가 안 맞는다.
+ *
+ * ⚠ 그리고 그게 **판을 잠갔다.** `safety_check`·`typhoon` 은 선택지가 **둘 다** 돈이 든다.
+ * 현금이 마르면 두 버튼이 모두 비활성이 되고, 카드는 모달이라(K37) 메뉴도 안 열린다 —
+ * 돌아올 길이 없다. 이 게임의 규칙은 "실패는 내 선택 때문이어야 하지, 회복 불가여야
+ * 하는 건 아니다"(v4)다.
+ */
+export function optionCertainCash(opt: CardOption): number {
+  if (opt.chance !== undefined) return 0;
+  return optionCash(opt);
+}
+
 /** 선택지가 만드는 특정 효과의 합 — 델타는 더하고 배율은 곱한다 */
 export function optionEffect(opt: CardOption, key: keyof CardEffects): number | undefined {
   let found = false;
