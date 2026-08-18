@@ -78,6 +78,7 @@ export type PlaceFail =
   | 'outside'
   | 'outside-land'
   | 'not-buildable'
+  | 'level-mixed'
   | 'blocks-door'
   | 'would-strand'
   | 'wrong-terrain'
@@ -141,6 +142,11 @@ export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
    * `outside-land` 와 달라야 한다 — "기다리면 열린다"로 읽히면 안 된다.
    */
   'not-buildable': '공원 밖입니다 — 도로·보도에는 지을 수 없습니다',
+  /*
+   * K37: 단이 섞인 발자국. **처방이 "평지"** 여야 한다 — "지형이 안 맞습니다"로 뭉치면
+   * 물가인지 경사인지 구분이 안 된다. 이것이 "산 중턱 평지"가 게임이 되는 지점이다.
+   */
+  'level-mixed': '경사입니다 — 단이 고른 평지에 놓으세요',
   'blocks-door': '문 앞은 비워야 합니다',
   'would-strand': '이 자리에 놓으면 실내 일부에 못 가게 됩니다',
   'wrong-terrain': '이 지형에는 놓을 수 없습니다',
@@ -283,6 +289,20 @@ export class PlacementGrid {
      */
     for (const [ti, tj] of tiles) {
       if (!terrain.isBuildable(ti, tj)) return { ok: false, fail: 'not-buildable' };
+    }
+
+    /*
+     * 단이 섞인 발자국에는 못 놓는다 (K37). **`not-buildable` 다음, 지형 검사 앞**이다 —
+     * 못 놓는 이유는 가장 바깥 제약부터 말해야 처방이 맞는다 (도로 > 경사 > 지형).
+     *
+     * 물 위 시설은 건너뛴다: 물은 영구히 단 0 이라 언제나 균일하고, 잔교가 물가(단 0)와
+     * 물을 걸쳐도 둘 다 0 이므로 통과한다.
+     */
+    if (!wantsWater(def.layer)) {
+      const z0 = terrain.levelAt(i, j);
+      for (const [ti, tj] of tiles) {
+        if (terrain.levelAt(ti, tj) !== z0) return { ok: false, fail: 'level-mixed' };
+      }
     }
 
     const needWater = wantsWater(def.layer);

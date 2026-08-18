@@ -149,6 +149,9 @@ interface RunResult {
   staffWeeks: number;
   wagesByWeek: number[];
   courseCount: number;
+  /** 산(단≥1) 위에 놓인 시설 수와 전체 — 높이가 헤드리스에서도 쓰이는지 (K37) */
+  onSlope: number;
+  builtTotal: number;
   courseFail: string;
   courseRevByWeek: number[];
   /** 주차별 수익·유지비 — "무엇이 손익을 깎는가"를 가른다 */
@@ -958,6 +961,13 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     staffWeeks,
     wagesByWeek,
     courseCount: courses.count,
+    /*
+     * ⚠ 산 위에 몇 개 놓였나 (K37). 0 이면 **높이가 헤드리스에서 죽은 것**이다 —
+     * 실제 판에는 테라스가 있는데 봇이 안 쓰면 밸런싱이 다른 세계를 잰다. K36 에서
+     * 격자 크기로 정확히 같은 사고를 열 페이즈 동안 겪었다.
+     */
+    onSlope: p.all().filter((f) => t.levelAt(f.i, f.j) >= 1).length,
+    builtTotal: p.all().length,
     courseFail,
     courseRevByWeek,
     revenueByWeek,
@@ -1133,6 +1143,14 @@ function main(): void {
     `매표소: 못 지나간 손님 중앙 ${stats(runs.map((r) => r.lastNoTicket)).med}명/마지막 주 · ` +
       `가둬져 다시 지은 횟수 중앙 ${stats(runs.map((r) => r.ticketRebuilds)).med}회/판`,
   );
+  {
+    const slope = stats(runs.map((r) => r.onSlope));
+    const total = stats(runs.map((r) => r.builtTotal));
+    console.log(
+      `산 위 시설: 중앙 ${slope.med}개 / 전체 ${total.med}개 · 최대 ${slope.max}개` +
+        (slope.max === 0 ? '  ⚠ 높이가 헤드리스에서 안 쓰인다 — 실제 판과 갈라진다' : ''),
+    );
+  }
   console.log(`코스 수 중앙값: ${stats(runs.map((r) => r.courseCount)).med}개` +
     (runs[0]?.courseFail ? ` (막힌 사유: ${runs[0].courseFail})` : ''));
   const cs = stats(runs.map((r) => r.cardsSeen));

@@ -30,11 +30,11 @@ import type { DoorSnapshot } from '../sim/kairo/doors.js';
  * (`WeekSummary`) — 그래서 복원 후에도 의뢰 진행도와 등급이 그대로 보인다.
  */
 
-export const KAIRO_SAVE_VERSION = 5;
+export const KAIRO_SAVE_VERSION = 6;
 export const KAIRO_SAVE_KEY = 'ppaji.kairo.save.v1';
 
 export interface KairoSaveV5 {
-  version: 5;
+  version: 6;
   savedAtMs: number;
   seed: number;
   gate: { i: number; j: number };
@@ -255,6 +255,17 @@ const MIGRATIONS: Record<number, (s: Record<string, unknown>) => Record<string, 
    * 가 예전처럼 덩어리마다 자동으로 하나씩 낸다. **판이 그대로 열린다.**
    */
   4: (s) => ({ ...s, version: 5, doors: { keys: [] } }),
+  /*
+   * v5 → v6 (K37): 지형에 **단(높이)** 이 생겼다.
+   *
+   * 옮길 것이 없다 — `TerrainSnapshot.levels` 는 optional 이고, 없으면
+   * `KairoTerrain.fromSnapshot` 이 전부 0 으로 채운다. 즉 **옛 판은 평지로 열린다.**
+   *
+   * ⚠ 산을 소급해서 세우지 **않는다.** 이미 놓인 시설이 경사에 걸터앉게 되고
+   * (`level-mixed` 는 놓을 때만 보므로 조용히 남는다) 손님이 못 가는 칸이 생긴다 —
+   * 플레이어가 산 것을 마이그레이션이 망가뜨리는 쪽이 훨씬 나쁘다. 새 판부터 산이 있다.
+   */
+  5: (s) => ({ ...s, version: 6 }),
 };
 
 export class KairoSaveError extends Error {

@@ -268,6 +268,7 @@ export class GuestStore {
   private nextId = 1;
   private readonly fields = new Map<number, FlowField>();
   private gateField: FlowField | null = null;
+
   private readonly claims = new Map<number, SlotClaim>();
   private dirty = true;
 
@@ -429,18 +430,36 @@ export class GuestStore {
     (this.standable ??= guestWalkable(this.terrain, this.placement))(i, j);
 
   /**
-   * 두 칸 사이를 지나갈 수 있는가 — **경계 벽** 판정 (K25).
+   * 두 칸 사이를 지나갈 수 있는가 — **경계 벽**(K25) + **단차**(K37) 판정.
    *
    * 칸 판정(`walkable`)과 따로인 이유: 벽은 칸을 막지 않고 이동을 막는다. 거리장과
    * 걸음 선택이 **둘 다** 이걸 통과해야 손님이 벽을 뚫고 지나가지 않는다.
+   *
+   * K37: 단차가 2 이상이면 절벽이라 못 넘는다. `FlowField.build` 가 이 함수를 저장해
+   * `next()` 도 같은 판정을 쓰므로 여기 한 곳이면 거리장과 걸음이 같이 지켜진다 —
+   * 하나만 넣으면 "거리장은 맞는데 손님이 절벽을 타고 오른다"가 된다.
    */
   private readonly canCross = (i: number, j: number, ni: number, nj: number): boolean =>
-    !this.walls.blocksMove(i, j, ni, nj);
+    !this.walls.blocksMove(i, j, ni, nj) && this.terrain.levelPassable(i, j, ni, nj);
 
   /**
    * 거리장 재구축. 시설마다 **발자국에 인접한 걸을 수 있는 칸**을 목적지로 둔다 —
    * 발자국 자체는 시설이 점유해 못 걷는다.
    */
+  /**
+   * 게이트에서 이 칸까지의 걸음 수. 못 닿으면 −1 (K37 검사용).
+   *
+   * 단차 규칙(`canCross`)이 **거리장에** 실제로 반영됐는지 재려면 거리장을 읽어야 한다.
+   * 손님을 굴려서 재면 "아직 안 갔다"와 "못 간다"가 구분되지 않는다 — 그 둘이 섞이면
+   * 이 페이즈에서 가장 중요한 검사(테라스가 닿나)가 조용히 통과한다.
+   */
+  gateDistanceForTest(i: number, j: number): number {
+    if (this.dirty) this.rebuildFields();
+    const f = this.gateField;
+    if (!f) return -1;
+    return f.reachable(i, j) ? f.distAt(i, j) : -1;
+  }
+
   private rebuildFields(): void {
     this.fields.clear();
     this.tickets.clear();
