@@ -10,7 +10,7 @@ import {
   validateContracts,
 } from './kairo-contract.js';
 import { TILE_W, TILE_H, STEP_X, STEP_Y, GRID_W, GRID_H, gridExtent } from '../render/kairo/iso.js';
-import { KairoProceduralProvider } from './kairo-procedural.js';
+import { KairoProceduralProvider, drawBackdrop } from './kairo-procedural.js';
 import { GROUND_KINDS, BRIDGE_KINDS } from '../sim/kairo/terrain.js';
 
 describe('계약 정합 — 이게 깨지면 에셋을 뽑아도 못 쓴다', () => {
@@ -126,13 +126,18 @@ describe('슬라이드 입출구', () => {
 describe('기존 에셋 레이어로 펼쳐진다 — 새 프로바이더를 만들지 않는다', () => {
   const specs = kairoSpriteSpecs();
 
-  it('명세 수 = 시설 73 + 벽 1(경계 4변형) + 문 1(4변형) + 지면 9 + 다리 2 + 배경 2 + 데코 8', () => {
-    expect(specs).toHaveLength(73 + 1 + 1 + 9 + 2 + 2 + 8);
+  it('명세 수 = 시설 73 + 벽 1(경계 4변형) + 문 1(4변형) + 지면 9 + 다리 2 + 배경 3 + 데코 8', () => {
+    expect(specs).toHaveLength(73 + 1 + 1 + 9 + 2 + 3 + 8);
   });
 
-  it('배경은 2겹이고 가로 타일 폭이 계약값이다', () => {
+  it('배경은 3겹이고 가로 타일 폭이 계약값이다 — 산·능선·강둑 (K36-B)', () => {
     const back = specs.filter((s) => s.id.startsWith("backdrop/"));
-    expect(back).toHaveLength(2);
+    expect(back).toHaveLength(3);
+    expect(back.map((b) => b.id)).toEqual([
+      'backdrop/mountain',
+      'backdrop/ridge',
+      'backdrop/farbank',
+    ]);
     for (const b of back) expect(b.size[0]).toBe(KAIRO.backdrop.tileTexels);
   });
 
@@ -205,8 +210,8 @@ describe('지면·데코가 계약에 있다 — v1 은 길에 0장을 줬다', 
     expect(KAIRO.deco.items.filter((d) => d.kind === 'scenery')).toHaveLength(4);
   });
 
-  it('변형을 펼친 **이미지** 총계가 120장이다 = 시설 73 + 벽 8 + 지면 29 + 배경 2 + 데코 8', () => {
-    expect(new KairoProceduralProvider().ids).toHaveLength(120);
+  it('변형을 펼친 **이미지** 총계가 121장이다 = 시설 73 + 벽 8 + 지면 29 + 배경 3 + 데코 8', () => {
+    expect(new KairoProceduralProvider().ids).toHaveLength(121);
   });
 });
 
@@ -253,5 +258,150 @@ describe('지면 — 렌더/시뮬 목록이 일치한다', () => {
   it('walkable 은 시뮬 데이터에만 있다 — 렌더 계약에 있으면 SSoT 가 둘이 된다', () => {
     for (const t of KAIRO.ground.types) expect(t).not.toHaveProperty('walkable');
     for (const k of GROUND_KINDS) expect(typeof k.walkable).toBe('boolean');
+  });
+});
+
+/**
+ * 배경 띠의 **가로 이음새** — 노드에서 잰다.
+ *
+ * `npm run seam` 은 지면 타일과 방향 런만 본다 (배경은 격자가 아니라 `TileSprite` 라
+ * 4방 이음새 개념이 없다). 그런데 배경은 GPU wrap 으로 **좌우가 맞닿으므로**, 끝이
+ * 안 맞으면 카메라를 미는 순간 세로 줄이 보인다. 브라우저 검사(`verify:kairo`)가
+ * 이걸 재지만, 겹을 더할 때마다 브라우저를 띄워야 알게 되면 늦다.
+ *
+ * 노드에는 캔버스가 없으므로 `fillRect` 만 받아 적는 최소 컨텍스트를 태운다 —
+ * `drawBackdrop` 이 쓰는 API 가 `fillStyle` 과 `fillRect` 뿐이라 성립한다.
+ */
+describe('배경 띠가 가로로 이어진다', () => {
+  const LAYERS = ['backdrop/mountain', 'backdrop/ridge', 'backdrop/farbank'];
+
+  /** 색 이름만 기록하는 격자 — 실제 캔버스가 아니어도 이음새는 잴 수 있다 */
+  function bake(id: string): { px: (string | null)[]; w: number; h: number } {
+    const spec = kairoSpriteSpecs().find((s) => s.id === id);
+    if (!spec) throw new Error(`명세 없음: ${id}`);
+    const [w, h] = spec.size;
+    const px: (string | null)[] = new Array(w * h).fill(null);
+    const g = {
+      fillStyle: '',
+      fillRect(x: number, y: number, rw: number, rh: number) {
+        for (let j = Math.round(y); j < Math.round(y + rh); j++) {
+          for (let i = Math.round(x); i < Math.round(x + rw); i++) {
+            if (i < 0 || j < 0 || i >= w || j >= h) continue;
+            px[j * w + i] = g.fillStyle;
+          }
+        }
+      },
+    };
+    drawBackdrop(g as unknown as CanvasRenderingContext2D, spec, id.split('/')[1] as string);
+    return { px, w, h };
+  }
+
+  /** 두 열이 몇 행에서 다른가 */
+  function colDiff(b: { px: (string | null)[]; w: number; h: number }, a: number, c: number): number {
+    let n = 0;
+    for (let y = 0; y < b.h; y++) if (b.px[y * b.w + a] !== b.px[y * b.w + c]) n++;
+    return n;
+  }
+
+  /**
+   * 이음새 판정 — **고정 임계값을 쓰지 않는다.**
+   *
+   * "몇 행까지 달라도 되나"는 그림마다 다르다 (강둑에는 나무 실루엣이 있다). 그래서
+   * 이웃 열끼리의 최대 차이를 자로 삼는다 — 좌우 끝이 그 자를 넘지 않으면, 이음새는
+   * 그림 안의 아무 자리와 구별되지 않는다는 뜻이다.
+   */
+  function verdict(b: { px: (string | null)[]; w: number; h: number }): {
+    seam: number;
+    interiorMax: number;
+  } {
+    let interiorMax = 0;
+    for (let x = 0; x + 1 < b.w; x++) interiorMax = Math.max(interiorMax, colDiff(b, x, x + 1));
+    return { seam: colDiff(b, b.w - 1, 0), interiorMax };
+  }
+
+  it('세 겹 모두 좌우 끝이 그림 안쪽만큼만 다르다', () => {
+    for (const id of LAYERS) {
+      const v = verdict(bake(id));
+      expect({ id, ...v, ok: v.seam <= v.interiorMax }).toEqual({ ...v, id, ok: true });
+    }
+  });
+
+  it('음성 대조군 — 주기가 폭에 안 맞는 그림을 주입하면 판정이 뒤집힌다', () => {
+    const b = bake('backdrop/mountain');
+    const clean = verdict(b);
+    expect(clean.seam).toBeLessThanOrEqual(clean.interiorMax);
+    /*
+     * 왼쪽에서 오른쪽으로 12텍셀 **기울인다.** 이게 "주기가 폭의 약수가 아니다"의 축소판이다 —
+     * 이웃 열끼리는 최대 1텍셀만 어긋나 그림 안쪽은 멀쩡해 보이는데, 좌우 끝만 12텍셀
+     * 벌어진다. 끝 열 하나를 갈아 끼우는 식으로 주입하면 그 열의 **이웃도** 같이 망가져서
+     * 자(interiorMax)가 같이 올라가 버려 아무것도 안 잡힌다 (실제로 겪었다).
+     */
+    const src = b.px.slice();
+    for (let x = 0; x < b.w; x++) {
+      const shift = Math.round((x * 12) / (b.w - 1));
+      for (let y = 0; y < b.h; y++) {
+        const from = y - shift;
+        b.px[y * b.w + x] = from >= 0 ? (src[from * b.w + x] as string | null) : null;
+      }
+    }
+    const broken = verdict(b);
+    expect(broken.seam).toBeGreaterThan(broken.interiorMax);
+  });
+
+  it('빈 열이 없다 — 한 열이라도 비면 반복할 때 세로 틈이 보인다', () => {
+    for (const id of LAYERS) {
+      const b = bake(id);
+      for (let x = 0; x < b.w; x++) {
+        let any = false;
+        for (let y = 0; y < b.h; y++) if (b.px[y * b.w + x]) { any = true; break; }
+        expect({ id, x, any }).toEqual({ id, x, any: true });
+      }
+    }
+  });
+});
+
+/**
+ * 대기 원근 — **먼 겹일수록 흐리다.** 이게 안 지켜지면 겹을 더해도 거리로 안 읽힌다.
+ */
+describe('산 겹이 능선보다 멀어 보인다 (K36-B)', () => {
+  function tones(id: string): { lum: number; hasOutline: boolean } {
+    const spec = kairoSpriteSpecs().find((s) => s.id === id);
+    if (!spec) throw new Error(`명세 없음: ${id}`);
+    const seen = new Map<string, number>();
+    const g = {
+      fillStyle: '',
+      fillRect(_x: number, _y: number, w: number, h: number) {
+        seen.set(g.fillStyle, (seen.get(g.fillStyle) ?? 0) + Math.max(1, w) * Math.max(1, h));
+      },
+    };
+    drawBackdrop(g as unknown as CanvasRenderingContext2D, spec, id.split('/')[1] as string);
+    let sum = 0;
+    let n = 0;
+    let hasOutline = false;
+    for (const [hex, count] of seen) {
+      if (!/^#[0-9a-f]{6}$/i.test(hex)) continue;
+      if (hex.toLowerCase() === '#2b1d12') hasOutline = true;
+      const r = parseInt(hex.slice(1, 3), 16);
+      const gg = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      sum += (0.2126 * r + 0.7152 * gg + 0.0722 * b) * count;
+      n += count;
+    }
+    return { lum: sum / Math.max(1, n), hasOutline };
+  }
+
+  it('산 > 능선 > 강둑 순으로 밝다 — 멀수록 하늘에 녹는다', () => {
+    const m = tones('backdrop/mountain').lum;
+    const r = tones('backdrop/ridge').lum;
+    const f = tones('backdrop/farbank').lum;
+    expect(m).toBeGreaterThan(r);
+    expect(r).toBeGreaterThan(f);
+  });
+
+  it('산에는 검은 아웃라인이 없다 — 가장 먼 겹에 진한 선을 두르면 앞으로 튀어나온다', () => {
+    expect(tones('backdrop/mountain').hasOutline).toBe(false);
+    // 음성 대조군: 가까운 겹들은 실제로 아웃라인을 두른다 (검사가 상수만 보는 게 아니다)
+    expect(tones('backdrop/ridge').hasOutline).toBe(true);
+    expect(tones('backdrop/farbank').hasOutline).toBe(true);
   });
 });

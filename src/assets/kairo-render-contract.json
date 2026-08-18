@@ -112,9 +112,11 @@
   },
   "backdrop": {
     "layers": [
+      "mountain",
       "ridge",
       "farbank"
     ],
+    "layersWhy": "먼 겹부터. 산(mountain)은 K36-B 에 더했다 — 능선 둘만으로는 강 건너가 바로 하늘이라 '가평 산자락'이 안 읽혔다",
     "tileTexels": 512,
     "bandTexels": 200,
     "wrapCrossfade": 12,
