@@ -907,6 +907,175 @@ async function main(): Promise<void> {
     { timeout: 15000 },
   );
 
+  /*
+   * ── 7e-2. ★ 실내 시설이 벽 **안**에 있다 (K37 버그 ①) ──
+   *
+   * 시설과 앞쪽 벽(+I·+J)이 둘 다 `depthKey + 2` 라 깊이가 **동률**이었다. Phaser 는
+   * 동률이면 삽입 순서로 그리고 벽은 부팅 때 먼저 만들어지므로 시설이 늘 벽을 덮었다 —
+   * 실내에 놓은 시설이 벽 선을 지워 건물 밖으로 삐져나온 것처럼 보였다.
+   *
+   * 색을 짚지 않는다 (유리벽 검사에서 세 번 헛짚었다). 같은 자리를 **네 번** 찍는다:
+   *   B 벽만 · A 아무것도 없음 · C 벽+시설 · D 시설만
+   * `A ≠ B` 가 벽이 그린 픽셀, `A ≠ D` 가 시설이 그린 픽셀이다. 그 **교집합**이
+   * 둘이 다투는 자리이고, 거기서 `C == B` 면 벽이 이겼다 (= 시설이 벽 안에 있다).
+   * 교집합으로 좁히지 않으면 벽 픽셀 대부분이 애초에 안 다투는 자리라 **버그를 넣어도
+   * 93% 가 유지되어 조용히 통과한다** (실측 — 그래서 이렇게 바꿨다).
+   *
+   * ⚠ 벽 이미지는 **시설보다 먼저** 만들어져 있어야 한다. 실제 부팅 순서가 그렇고,
+   * 동률일 때 진짜 순서가 그때 정해지기 때문이다. 그래서 벽을 되돌린 **뒤에** 시설을 놓는다.
+   * 좌표·시설은 씬에 물어본다 (격자가 또 바뀐다).
+   */
+  const inWall = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, g = h.guests, sc = h.scene;
+    // 픽셀을 네 번 찍는 동안 손님이 걸어 들어오면 A/B/C/D 가 어긋난다
+    sc.setAutoTick(false);
+    for (const x of g.all) {
+      x.i = 2; x.j = t.height - 2; x.fromI = x.i; x.fromJ = x.j; x.progress = 1;
+      x.state = 'using'; x.useTicks = 999999; x.rideTicks = 0; x.usingHandle = 0;
+    }
+    /*
+     * 시설의 **가장 앞 타일**이 벽 있는 칸이어야 한다 — 시설 깊이가 그 타일 기준이라,
+     * 거기서만 시설과 앞쪽 벽이 같은 칸을 두고 다툰다. 큰 시설일수록 겹치는 픽셀이 많아
+     * 검사가 예민해지므로 4×1 → 3×1 → 1×1 순으로 시도한다.
+     */
+    const cands = [['shower_row', 4], ['changing_row', 3], ['arcade', 1]];
+    let spot = null;
+    for (let j = 0; j < t.height && !spot; j++) {
+      for (let i = 0; i < t.width && !spot; i++) {
+        if (!t.isIndoor(i, j)) continue;
+        const kind = w.edgeAt(i, j, 1); // 1 = DIR_J_PLUS
+        if (kind === 0) continue;
+        for (const c of cands) {
+          const oi = i - (c[1] - 1); // 가장 앞 타일이 (i, j) 가 되게 왼쪽으로 민다
+          if (!p.check(t, w, h.gate, c[0], oi, j).ok) continue;
+          spot = { i: i, j: j, kind: kind, def: c[0], oi: oi };
+          break;
+        }
+      }
+    }
+    if (!spot) { sc.setAutoTick(true); return { ok: false, reason: '앞쪽 벽이 있는 빈 실내 칸을 못 찾았다' }; }
+    sc.setUpscale(1);
+    sc.focusTile(spot.i, spot.j);
+    return { ok: true, i: spot.i, j: spot.j, kind: spot.kind, def: spot.def, oi: spot.oi };
+  })()`)) as
+    | { ok: false; reason: string }
+    | { ok: true; i: number; j: number; kind: number; def: string; oi: number };
+
+  if (!inWall.ok) {
+    record('★ 실내 시설이 벽 안에 있다 (K37)', 'fail', inWall.reason);
+  } else {
+    const wi = inWall.i, wj = inWall.j;
+    /*
+     * 벽 스프라이트는 32 × (16 + 10) 이고 앵커가 타일 하단 꼭지점이다.
+     * 그래서 표본은 타일 사각형에서 위로 10텍셀 넓힌 32×26 이다 (계약에서 온 수치).
+     */
+    const sampleWall = `(() => {
+      const sc = window.__kairo.scene;
+      const c = document.querySelector('canvas');
+      const gl = c.getContext('webgl2') || c.getContext('webgl');
+      const H = c.height;
+      const r = sc.tileScreenRect(${wi}, ${wj});
+      const x0 = r.x, y0 = r.y - 10, w = 32, hh = 26;
+      const buf = new Uint8Array(w * hh * 4);
+      gl.readPixels(x0, H - (y0 + hh), w, hh, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+      let s = '';
+      for (let k = 0; k < buf.length; k += 4) s += buf[k] + ',' + buf[k+1] + ',' + buf[k+2] + ';';
+      return s;
+    })()`;
+    const setWall = (kind: number): string =>
+      `(() => { const h = window.__kairo; h.walls.setEdge(${wi}, ${wj}, 1, ${kind}); h.scene.refreshWall(${wi}, ${wj}); })()`;
+
+    // B — 벽만 (부팅 때 만들어진 그대로)
+    await page.waitForTimeout(220);
+    const wallOnlyPx = (await page.evaluate(sampleWall)) as string;
+    // A — 벽을 잠시 걷는다
+    await page.evaluate(setWall(0));
+    await page.waitForTimeout(220);
+    const noWall = (await page.evaluate(sampleWall)) as string;
+    // 벽을 되돌린다 — 이 이미지가 시설보다 **먼저** 존재해야 한다
+    await page.evaluate(setWall(inWall.kind));
+    await page.waitForTimeout(220);
+
+    // C — 벽 + 시설
+    const placedIn = (await page.evaluate(`(() => {
+      const h = window.__kairo, sc = h.scene;
+      const r = h.placement.place(h.terrain, h.walls, h.gate, '${inWall.def}', ${inWall.oi}, ${wj});
+      if (!r.ok || !r.placed) return { ok: false, why: String(r.fail) };
+      sc.refreshFacility(r.placed.handle);
+      return {
+        ok: true,
+        handle: r.placed.handle,
+        facDepth: sc.facilityImageAt(r.placed.handle).depth,
+        wallDepth: sc.wallDepthAt(${wi}, ${wj}, 1),
+      };
+    })()`)) as
+      | { ok: false; why: string }
+      | { ok: true; handle: number; facDepth: number; wallDepth: number };
+
+    if (!placedIn.ok) {
+      record('★ 실내 시설이 벽 안에 있다 (K37)', 'fail', `시설을 못 놓았다: ${placedIn.why}`);
+    } else {
+      await page.waitForTimeout(220);
+      const withFac = (await page.evaluate(sampleWall)) as string;
+      // D — 시설만 (벽을 걷는다)
+      await page.evaluate(setWall(0));
+      await page.waitForTimeout(220);
+      const facOnly = (await page.evaluate(sampleWall)) as string;
+
+      const A = noWall.split(';');
+      const B = wallOnlyPx.split(';');
+      const C = withFac.split(';');
+      const D = facOnly.split(';');
+      let overlap = 0;
+      let wallWins = 0;
+      let facWins = 0;
+      const n = Math.min(A.length, B.length, C.length, D.length);
+      for (let k = 0; k < n; k++) {
+        // 벽도 그리고 시설도 그리는 자리 = 둘이 다투는 자리
+        if (A[k] === B[k] || A[k] === D[k]) continue;
+        if (B[k] === D[k]) continue; // 결과가 같으면 누가 이겼는지 못 가른다
+        overlap++;
+        if (C[k] === B[k]) wallWins++;
+        else if (C[k] === D[k]) facWins++;
+      }
+
+      // ① 검사가 유효한가 — 다투는 픽셀이 충분히 있나
+      record(
+        '깊이 검사가 유효하다 (벽과 시설이 실제로 같은 픽셀을 다투나)',
+        overlap >= 15 ? 'pass' : 'fail',
+        `타일 ${wi},${wj} · ${inWall.def} · 다투는 픽셀 ${overlap}/${n}`,
+      );
+      // ② 그 자리에서 벽이 이긴다
+      /*
+       * 기준은 **비율이 아니라 `facWins === 0`** 이다. 다투는 자리에서 시설이 한 픽셀이라도
+       * 이기면 그건 깊이가 뒤집혔다는 뜻이지 "조금 덮었다"가 아니다. 비율(95%)로 뒀더니
+       * 동률을 주입해도 93% 가 나와 **간신히** 걸렸다 — 임계값 하나 차이로 조용히 통과할
+       * 자리였다. 0 이냐 아니냐는 그 여지가 없다 (주입 시 실측 3).
+       */
+      record(
+        '★ 실내 시설이 벽을 안 덮는다 — 앞쪽 벽이 시설보다 앞 (K37 버그 ①)',
+        wallWins >= 15 && facWins === 0 ? 'pass' : 'fail',
+        `벽이 이긴 픽셀 ${wallWins} · 시설이 이긴 픽셀 ${facWins} (0 이어야 한다)`,
+      );
+      // ③ 원인을 수치로 — 깊이가 동률이면 삽입 순서에 맡겨진다
+      record(
+        '★ 앞쪽 벽 깊이 > 시설 깊이 (동률 아님)',
+        placedIn.wallDepth > placedIn.facDepth ? 'pass' : 'fail',
+        `벽 ${placedIn.wallDepth} vs 시설 ${placedIn.facDepth}`,
+      );
+      await page.screenshot({ path: `${SHOT_DIR}/kairo-depth-wall.png` });
+      // 뒷정리 — 이 절이 놓은 시설을 치우고 벽·시뮬을 되돌린다
+      await page.evaluate(`(() => {
+        const h = window.__kairo;
+        h.placement.remove(${placedIn.handle});
+        h.scene.refreshFacility(${placedIn.handle});
+        h.walls.setEdge(${wi}, ${wj}, 1, ${inWall.kind});
+        h.scene.refreshWall(${wi}, ${wj});
+        h.scene.setAutoTick(true);
+      })()`);
+    }
+  }
+
   // ── 7f. 손님 — 걷고, 칸을 채우고, 표정·이모트가 뜬다 ──
   const guests = (await page.evaluate(`(() => {
     const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, g = h.guests, sc = h.scene;
@@ -1040,6 +1209,190 @@ async function main(): Promise<void> {
   await page.evaluate(`window.__kairo.scene.focusTile(5, 5)`);
   await page.waitForTimeout(300);
   await page.screenshot({ path: `${SHOT_DIR}/kairo-guests.png` });
+
+  /*
+   * ── 7f-2. ★ 위로 걷는 손님이 안 파묻힌다 (K37 버그 ②) ──
+   *
+   * `placeGuest` 는 **위치는 보간**하고 **깊이는 목적 타일**로 줬다. 목적지가 위쪽
+   * (= `i+j` 가 작은 = 먼 칸)이면 이동이 시작되는 순간 깊이가 먼 칸 값으로 뚝 떨어지는데
+   * 그림은 아직 출발 칸 위에 있다 → **출발 칸에 있는 것들이 손님을 덮는다**.
+   * 아래로 갈 때는 반대라 안 보였다 — 사용자가 본 그대로다.
+   *
+   * ## 왜 출발 칸에 **시설**을 놓고 재나
+   *
+   * 빈 길 위에서는 덮이는 것이 밑동 몇 픽셀뿐이라 픽셀로 안 걸린다 (실측: 깊이를
+   * 되돌려도 보이는 픽셀이 194 → 193). 실제로 아프게 덮는 것은 **출발 칸의 시설**이다 —
+   * 깊이가 한 칸치(4096) 뒤로 밀리면 손님이 그 시설 뒤로 통째로 들어간다.
+   * 그래서 출발 칸에 시설을 하나 놓고, **시설이 있을 때와 없을 때 보이는 손님 픽셀 수**를
+   * 비교한다. 앞에 서 있어야 할 손님이 뒤로 가면 이 수가 무너진다.
+   *
+   * 재현이 순간적이라 `requestAnimationFrame` 으로 이동을 **정지 화면처럼 고정**한다.
+   * 손님 검사는 **새 판**에서 돈다 (7f 가 띄운 그 판이다).
+   */
+  const upward = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain, p = h.placement, g = h.guests, sc = h.scene;
+    if (g.all.length < 1) return { ok: false, reason: '손님이 없다' };
+    sc.setAutoTick(false);
+    const L = h.land();
+    /*
+     * (i, j) → (i, j-1) 로 가면 i+j 가 준다 (= 위로 간다). 출발 칸 (i, j) 에는 시설이
+     * 들어가야 하고, 목적 칸 (i, j-1) 은 손님이 설 수 있어야 한다.
+     */
+    let cell = null;
+    for (let j = L.j0 + 3; j < L.j0 + L.h - 2 && !cell; j++) {
+      for (let i = L.i0 + 2; i < L.i0 + L.w - 2; i++) {
+        if (!t.isGuestWalkable(i, j) || !t.isGuestWalkable(i, j - 1)) continue;
+        if (t.isIndoor(i, j) || t.isIndoor(i, j - 1)) continue;
+        if (p.handleAt(i, j) || p.handleAt(i, j - 1)) continue;
+        if (!p.check(t, h.walls, h.gate, 'vending_out', i, j).ok) continue;
+        cell = { i: i, j: j };
+        break;
+      }
+    }
+    if (!cell) { sc.setAutoTick(true); return { ok: false, reason: '시설을 놓을 수 있는 세로 이웃 두 칸을 못 찾았다' }; }
+    const subject = g.all[0];
+    // 나머지 손님은 멀리 — 겹치면 달라진 픽셀이 누구 때문인지 모른다
+    for (const x of g.all) {
+      if (x === subject) continue;
+      x.i = 2; x.j = t.height - 2; x.fromI = x.i; x.fromJ = x.j; x.progress = 1;
+      x.state = 'using'; x.useTicks = 999999; x.rideTicks = 0; x.usingHandle = 0;
+    }
+    /*
+     * 이동 한가운데를 **매 프레임 되박아** 정지 화면으로 만든다. progress 는 실시간으로
+     * 흐르므로 한 번만 넣으면 다음 프레임에 1 이 된다. 걸음 길이를 크게 잡아 프레임당
+     * 증가를 0 에 수렴시킨다 — 검사 끝에 되돌린다.
+     * 포즈는 프레임이 하나뿐인 sit 이다 (walk 은 4프레임이라 두 장을 못 비교한다).
+     */
+    window.__k37 = { i: cell.i, j: cell.j, id: subject.id, on: true, perOld: g.tunables.ticksPerStep };
+    g.tunables.ticksPerStep = 1000000;
+    window.__k37pin = () => {
+      const st = window.__k37;
+      const s = window.__kairo.guests.all.find((x) => x.id === st.id);
+      if (s) {
+        if (st.on) {
+          s.fromI = st.i; s.fromJ = st.j; s.i = st.i; s.j = st.j - 1;
+          s.progress = 0.5; s.state = 'walking';
+          s.pose = 'sit'; s.facing = '+Z'; s.face = 'calm'; s.emote = null;
+        } else {
+          const t2 = window.__kairo.terrain;
+          s.i = 2; s.j = t2.height - 2; s.fromI = s.i; s.fromJ = s.j; s.progress = 1;
+          s.state = 'using'; s.useTicks = 999999; s.rideTicks = 0; s.usingHandle = 0;
+        }
+      }
+      requestAnimationFrame(window.__k37pin);
+    };
+    window.__k37pin();
+    sc.setUpscale(1);
+    sc.focusTile(cell.i, cell.j);
+    return { ok: true, i: cell.i, j: cell.j, id: subject.id };
+  })()`)) as { ok: false; reason: string } | { ok: true; i: number; j: number; id: number };
+
+  if (!upward.ok) {
+    record('★ 위로 걷는 손님이 안 파묻힌다 (K37 버그 ②)', 'fail', upward.reason);
+  } else {
+    const gi = upward.i, gj = upward.j, gid = upward.id;
+    await page.waitForTimeout(400);
+
+    // ① 깊이 수치 — 출발 칸(가까운 쪽) 기준인가
+    const depths = (await page.evaluate(`(() => {
+      const sc = window.__kairo.scene;
+      const dk = (i, j) => (i + j) * 4096 + i;
+      return {
+        guest: sc.guestDepthAt(${gid}),
+        fromGround: dk(${gi}, ${gj}),
+        toGuestWouldBe: dk(${gi}, ${gj} - 1) + 4,
+        rect: sc.guestScreenRect(${gid}),
+      };
+    })()`)) as {
+      guest: number | null;
+      fromGround: number;
+      toGuestWouldBe: number;
+      rect: { x: number; y: number; w: number; h: number } | null;
+    };
+
+    record(
+      '★ 손님 깊이가 출발 칸 기준이다 (두 칸 중 가까운 쪽)',
+      depths.guest !== null && depths.guest === depths.fromGround + 4 ? 'pass' : 'fail',
+      `손님 ${depths.guest} = 출발 칸 ${depths.fromGround} + 손님 띠 4`,
+    );
+    record(
+      '음성 대조군 — 목적 칸 깊이였다면 출발 칸의 것들보다 뒤였다',
+      depths.toGuestWouldBe < depths.fromGround ? 'pass' : 'fail',
+      `목적 칸 기준 ${depths.toGuestWouldBe} < 출발 칸 지면 ${depths.fromGround} (한 칸치 ${depths.fromGround - depths.toGuestWouldBe})`,
+    );
+
+    if (!depths.rect) {
+      record('★ 위로 걷는 손님이 안 파묻힌다 (K37 버그 ②)', 'fail', '손님 그림이 없다');
+    } else {
+      const r = depths.rect;
+      const sampleGuest = `(() => {
+        const c = document.querySelector('canvas');
+        const gl = c.getContext('webgl2') || c.getContext('webgl');
+        const H = c.height;
+        const buf = new Uint8Array(${r.w} * (${r.h} + 4) * 4);
+        gl.readPixels(${r.x}, H - (${r.y} + ${r.h} + 4), ${r.w}, ${r.h} + 4, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+        let s = '';
+        for (let k = 0; k < buf.length; k += 4) s += buf[k] + ',' + buf[k+1] + ',' + buf[k+2] + ';';
+        return s;
+      })()`;
+      const setOn = (on: boolean): string => `(() => { window.__k37.on = ${on}; })()`;
+      const diff = (a: string, b: string): number => {
+        const x = a.split(';'), y = b.split(';');
+        let d = 0;
+        for (let k = 0; k < Math.min(x.length, y.length); k++) if (x[k] !== y[k]) d++;
+        return d;
+      };
+
+      // ② 시설이 없을 때 보이는 손님 픽셀 — 기준값
+      const bareGuest = (await page.evaluate(sampleGuest)) as string;
+      await page.evaluate(setOn(false));
+      await page.waitForTimeout(320);
+      const bareNone = (await page.evaluate(sampleGuest)) as string;
+      const vis0 = diff(bareGuest, bareNone);
+
+      // ③ 출발 칸에 시설을 놓고 다시 — 손님은 그 앞에 서 있어야 한다
+      const facOk = (await page.evaluate(`(() => {
+        const h = window.__kairo, sc = h.scene;
+        const r = h.placement.place(h.terrain, h.walls, h.gate, 'vending_out', ${gi}, ${gj});
+        if (!r.ok || !r.placed) return { ok: false, why: String(r.fail) };
+        sc.refreshFacility(r.placed.handle);
+        return { ok: true, handle: r.placed.handle, depth: sc.facilityImageAt(r.placed.handle).depth };
+      })()`)) as { ok: false; why: string } | { ok: true; handle: number; depth: number };
+
+      if (!facOk.ok) {
+        record('★ 위로 걷는 손님이 안 파묻힌다 (K37 버그 ②)', 'fail', `출발 칸에 시설을 못 놓았다: ${facOk.why}`);
+      } else {
+        await page.waitForTimeout(320);
+        const facNone = (await page.evaluate(sampleGuest)) as string;
+        await page.evaluate(setOn(true));
+        await page.waitForTimeout(320);
+        const facGuest = (await page.evaluate(sampleGuest)) as string;
+        const vis1 = diff(facGuest, facNone);
+
+        record(
+          '손님 검사가 유효하다 (손님이 실제로 그려졌고 시설이 앞을 막고 있나)',
+          vis0 > 100 && diff(bareNone, facNone) > 100 ? 'pass' : 'fail',
+          `빈 길에서 손님 ${vis0}px · 시설이 바꾼 배경 ${diff(bareNone, facNone)}px`,
+        );
+        record(
+          '★ 위로 걷는 손님이 출발 칸 시설에 안 파묻힌다 (K37 버그 ②)',
+          vis0 > 100 && vis1 >= vis0 * 0.9 ? 'pass' : 'fail',
+          `보이는 손님 픽셀 ${vis1}/${vis0} (${Math.round((vis1 / Math.max(1, vis0)) * 100)}%) · 손님 ${depths.guest} vs 시설 ${facOk.depth}`,
+        );
+        await page.screenshot({ path: `${SHOT_DIR}/kairo-depth-guest.png` });
+
+        // 뒷정리 — 시설·고정 루프·걸음 길이·시뮬을 되돌린다
+        await page.evaluate(`(() => {
+          const h = window.__kairo;
+          h.placement.remove(${facOk.handle});
+          h.scene.refreshFacility(${facOk.handle});
+          window.__k37.on = false;
+          h.guests.tunables.ticksPerStep = window.__k37.perOld;
+          h.scene.setAutoTick(true);
+        })()`);
+      }
+    }
+  }
 
   // ── 7g. 결정 19 를 끝까지 — 유리벽 뒤의 무언가가 실제로 보이나 ──
   //

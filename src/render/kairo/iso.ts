@@ -97,6 +97,51 @@ export function depthKey(i: number, j: number): number {
 }
 
 /**
+ * ## 칸 하나 안의 **하위 깊이 띠** (K37)
+ *
+ * `depthKey` 는 칸 사이에 4096 의 여유를 둔다. 그 여유를 이름 붙은 띠로 나눠 쓴다 —
+ * 예전엔 `+1`·`+2`·`+3` 같은 매직 넘버가 다섯 파일에 흩어져 있었고, **시설과 앞쪽 벽이
+ * 둘 다 `+2`** 였다. Phaser 는 깊이가 동률이면 삽입 순서로 그리고 벽은 부팅 때 먼저
+ * 만들어지므로, 실내에 놓은 시설이 늘 벽 선을 덮어 **건물 밖으로 삐져나온 것처럼**
+ * 보였다 (실측).
+ *
+ * 순서의 근거:
+ * - `Z_WALL_BACK`(−I·−J) 은 그 칸의 지면보다 앞, 시설보다 뒤 — 뒷벽은 시설에 가려야 한다
+ * - `Z_WALL_FRONT`(+I·+J) 는 **시설보다 앞** — 벽 선이 안 끊겨야 "안에 있다"가 읽힌다.
+ *   벽은 유리라 시설은 그대로 비친다 (K29 결정 19)
+ * - 손님은 앞쪽 벽보다도 앞이다. **"벽은 손님보다 낮다"는 K29 계약**이고, 유리로 만든
+ *   이유가 그 가림이었다 — 이 순서를 뒤집지 말 것
+ *
+ * ⚠ 전부 4096 미만이어야 한다. 넘으면 다음 칸을 침범해 아이소 정렬이 통째로 뒤집힌다.
+ */
+export const Z_GROUND = 0;
+export const Z_WALL_BACK = 1; // −I·−J 경계
+export const Z_FACILITY = 2;
+export const Z_WALL_FRONT = 3; // +I·+J 경계 — 시설보다 앞
+export const Z_GUEST = 4;
+export const Z_FACE = 5;
+export const Z_EMOTE = 6;
+export const Z_GHOST = 7;
+
+/** 띠 폭 — 하위 깊이는 전부 이 값 미만이어야 한다 (`depthKey` 의 칸 간격) */
+export const Z_BAND = 4096;
+
+/**
+ * 두 칸에 걸쳐 있는 것(= 걷는 손님)의 깊이 기준 칸.
+ *
+ * 손님 그림은 출발 칸과 목적 칸 **사이**에 있다. 목적 칸 깊이만 쓰면, 위로(= `i+j` 가
+ * 줄어드는 쪽으로) 걸을 때 이동이 시작되는 순간 깊이가 먼 칸 값으로 뚝 떨어지는데
+ * 그림은 아직 출발 칸 위에 있어 **출발 칸의 지면이 손님을 덮는다** (실측: 아래로 갈
+ * 때는 반대라 안 보였다).
+ *
+ * 두 칸 중 **가까운 쪽**(= `depthKey` 가 큰 쪽)을 쓰면 어느 쪽 지면에도 안 파묻힌다.
+ * 분수 깊이(`(fi+fj)*4096+fi`)는 답이 아니다 — 떠나는 칸의 지면이 여전히 덮는다.
+ */
+export function spanDepthKey(fromI: number, fromJ: number, toI: number, toJ: number): number {
+  return Math.max(depthKey(fromI, fromJ), depthKey(toI, toJ));
+}
+
+/**
  * 발자국 w×d 가 (i, j) 에 놓였을 때의 **앵커 화면 텍셀**.
  *
  * ⚠ 앵커는 두 값의 조합이고, 이 둘은 **정사각 발자국에서만 같은 점**이다:
