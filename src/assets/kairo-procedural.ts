@@ -487,7 +487,12 @@ function drawerFor(baseId: string): Drawer | undefined {
 }
 
 /**
- * 배경 띠 — 능선(ridge)과 먼 강둑(farbank).
+ * 배경 띠 — 산(mountain) · 능선(ridge) · 먼 강둑(farbank). 먼 겹부터다.
+ *
+ * ## 왜 산을 더했나 (K36-B)
+ *
+ * 능선 둘만 있으면 강 건너 바로 위가 하늘이라 "가평 산자락에 있는 리조트"가 안 읽혔다.
+ * 겹이 셋이 되면 시차가 **세 단계**가 되고, 그때부터 배경이 그림이 아니라 거리로 보인다.
  *
  * ## 가로로 이어져야 한다
  *
@@ -500,21 +505,42 @@ function drawerFor(baseId: string): Drawer | undefined {
  * 하늘은 배경색, 물은 지면 스프라이트가 그린다 (계약의 `sky:false`, `water:false`).
  * 여기서 또 그리면 색이 두 곳에서 정해져 어긋난다.
  */
-function drawBackdrop(
+export function drawBackdrop(
   g: CanvasRenderingContext2D,
   spec: SpriteSpec,
   name: string,
 ): void {
   const [w, h] = spec.size;
+  const mountain = name === 'mountain';
   const ridge = name === 'ridge';
-  // 능선은 멀고 흐리다(대기 원근), 강둑은 가깝고 진하다
-  const body = ridge ? '#5b7f96' : '#3f6b57';
-  const lit = ridge ? '#7496aa' : '#548a6c';
-  const dark = ridge ? '#48697e' : '#2f5442';
+
+  /*
+   * 대기 원근 — 멀수록 흐리고 밝고 푸르다.
+   *
+   * 산은 하늘(`#7ab8d4`)에 거의 녹는 회청색이다. 능선 `#5b7f96` 보다 더 흐리게 두는
+   * 것이 이 겹의 존재 이유다 — 같은 톤이면 겹이 셋이어도 둘로 보인다.
+   */
+  const body = mountain ? '#93aec2' : ridge ? '#5b7f96' : '#3f6b57';
+  const lit = mountain ? '#aac3d3' : ridge ? '#7496aa' : '#548a6c';
+  const dark = mountain ? '#7f9ab1' : ridge ? '#48697e' : '#2f5442';
 
   // 주기가 폭의 약수인 사인 합 — 끝과 끝이 정확히 맞는다
   const peak = (x: number): number => {
     const t = (x / w) * Math.PI * 2;
+    if (mountain) {
+      /*
+       * 능선보다 **높고 뾰족하게**. 주기 1·2·5 를 겹쳐 봉우리 몇 개가 서로 다른 높이로
+       * 서게 한다. 산은 띠 위쪽까지 차야 능선 뒤로 솟은 것으로 읽힌다.
+       */
+      // 진폭 합(0.21)을 밑값(0.74)에 더해도 1 을 안 넘긴다 — 넘기면 봉우리가 띠 위로
+      // 잘려 나가 산머리가 평평해진다
+      return (
+        h * 0.74 +
+        Math.sin(t + 0.6) * h * 0.12 +
+        Math.sin(t * 2 + 2.2) * h * 0.06 +
+        Math.sin(t * 5 + 1.4) * h * 0.03
+      );
+    }
     return ridge
       ? h * 0.52 + Math.sin(t) * h * 0.18 + Math.sin(t * 3 + 1.1) * h * 0.09
       : h * 0.72 + Math.sin(t * 2 + 0.4) * h * 0.08 + Math.sin(t * 5) * h * 0.04;
@@ -528,12 +554,17 @@ function drawBackdrop(
       g.fillStyle = d < 0.18 ? lit : d > 0.72 ? dark : body;
       g.fillRect(x, y, 1, 1);
     }
-    // 능선 위 1텍셀 아웃라인
-    g.fillStyle = OUTLINE;
+    /*
+     * 능선 위 1텍셀 아웃라인.
+     *
+     * ⚠ 산에는 **검은 아웃라인을 쓰지 않는다.** 가장 먼 겹에 진한 선을 두르면 대기 원근을
+     * 스스로 부수고 산이 앞으로 튀어나온다. 자기 어두운 톤으로만 긋는다.
+     */
+    g.fillStyle = mountain ? dark : OUTLINE;
     g.fillRect(x, top, 1, 1);
   }
 
-  if (!ridge) {
+  if (!ridge && !mountain) {
     // 강둑에는 나무 실루엣을 얹는다 — 주기를 폭의 약수로 둬야 끝이 맞는다
     const trees = 24;
     for (let k = 0; k < trees; k++) {

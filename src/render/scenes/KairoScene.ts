@@ -256,13 +256,22 @@ export class KairoScene extends Phaser.Scene {
   }
 
   /**
-   * 배경 2겹 (§7 배경). 능선은 멀고 강둑은 가깝다.
+   * 배경 3겹 (§7 배경). 산이 제일 멀고, 능선, 강둑 순으로 가까워진다.
    *
    * ## 시차(parallax)가 핵심이다
    *
    * 배경이 지도와 **같은 속도로** 움직이면 그냥 큰 그림 한 장이고, **안 움직이면** 벽지가
    * 된다. 카이로가 주는 "여기가 어디 강변인가"라는 감각은 배경이 지도보다 **느리게**
-   * 따라올 때 생긴다. `scrollFactor` 로 능선 0.15 · 강둑 0.35 을 준다.
+   * 따라올 때 생긴다. `scrollFactor` 로 산 0.06 · 능선 0.15 · 강둑 0.35 을 준다.
+   *
+   * ## 왜 셋인가 (K36-B)
+   *
+   * 둘이면 "가깝다/멀다"뿐이라 거리로 안 읽힌다. 겹이 셋이 되어야 시차가 **단계**가 되고,
+   * 그때부터 강 건너가 하늘이 아니라 산자락이 된다. 가장 먼 겹은 시차를 확실히 작게
+   * 줘야 한다 — 0.06 은 능선의 절반도 안 되므로 카메라를 크게 밀어도 거의 안 움직인다.
+   *
+   * `y` 는 겹마다 위로 올린다. 산 −118 은 능선 −70 보다 48px 위라, 능선 실루엣 뒤로
+   * 산머리만 솟는다. 같은 y 에 두면 능선이 산을 통째로 가려서 겹을 더한 뜻이 없다.
    *
    * ## 왜 TileSprite 인가
    *
@@ -275,6 +284,7 @@ export class KairoScene extends Phaser.Scene {
     for (const img of this.backdrops) img.destroy();
     this.backdrops = [];
     const layers: { id: string; factor: number; y: number }[] = [
+      { id: 'backdrop/mountain', factor: 0.06, y: -118 },
       { id: 'backdrop/ridge', factor: 0.15, y: -70 },
       { id: 'backdrop/farbank', factor: 0.35, y: -18 },
     ];

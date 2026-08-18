@@ -24,6 +24,8 @@
  *   Phaser 가 무시해서 멀쩡한 코드가 실패로 나온다.
  */
 import { chromium, type ConsoleMessage } from 'playwright';
+// 배경 겹 수·id 의 정본. 검사에 상수를 박으면 겹을 더할 때마다 검사가 깨진다 (K36-B)
+import { KAIRO } from '../src/assets/kairo-contract.js';
 
 const BASE = process.env['PPAJI_URL'] ?? 'http://localhost:5173';
 /*
@@ -2105,11 +2107,20 @@ async function main(): Promise<void> {
   await page.evaluate(`document.getElementById('kairo-showcase-close').click()`);
 
   /*
-   * ── 8·배경 2겹 (§7 배경) ──
+   * ── 8·배경 겹 (§7 배경) ──
    *
    * **시차가 핵심이다.** 배경이 지도와 같은 속도로 움직이면 큰 그림 한 장이고, 안 움직이면
    * 벽지다. 그래서 "떠 있나"가 아니라 **"카메라보다 느리게 따라오나"**를 잰다.
+   *
+   * ⚠ 개수와 id 를 **여기 박지 않는다** (K36-B). 예전엔 `count === 2` 와
+   * `['backdrop/ridge','backdrop/farbank']` 가 박혀 있어서, 겹을 하나 더하는 순간
+   * 검사 세 개가 같이 깨졌다 — 검사가 계약을 지킨 게 아니라 **자기 상수를 지키고 있었다.**
+   * 정본은 `KAIRO.backdrop.layers` 이므로 거기서 읽는다. 그러면 겹을 더해도 안 깨지고,
+   * 계약과 화면이 갈라지면 그때는 정직하게 잡힌다.
    */
+  const backLayers = KAIRO.backdrop.layers;
+  const backIds = backLayers.map((l) => `backdrop/${l}`);
+
   const backdrop = (await page.evaluate(`(() => {
     const h = window.__kairo;
     const info = h.scene.backdropInfo;
@@ -2124,29 +2135,47 @@ async function main(): Promise<void> {
   })()`)) as { count: number; factors: number[]; depths: number[]; tileMoved: number };
 
   record(
-    '배경이 2겹이다',
-    backdrop.count === 2 ? 'pass' : 'fail',
-    `${backdrop.count}겹 · 시차 ${backdrop.factors.join(', ')}`,
+    `배경 겹 수가 계약과 같다 (${backLayers.length}겹)`,
+    backdrop.count === backLayers.length ? 'pass' : 'fail',
+    `${backdrop.count}겹 · 시차 ${backdrop.factors.join(', ')} (계약 ${backLayers.join('·')})`,
   );
+  /*
+   * 겹마다 시차가 **달라야** 한다. 같은 값이 둘이면 그 둘은 겹쳐 움직이므로 한 장과 같다 —
+   * 겹을 더한 뜻이 사라진다. 그래서 개수뿐 아니라 **서로 다름**을 본다.
+   */
+  const uniqueFactors = new Set(backdrop.factors).size;
   record(
     '배경이 지도보다 느리게 따라온다 — 같으면 큰 그림 한 장, 0 이면 벽지다',
-    backdrop.factors.length === 2 &&
+    backdrop.factors.length === backLayers.length &&
       backdrop.factors.every((f) => f > 0 && f < 1) &&
-      backdrop.factors[0] !== backdrop.factors[1]
+      uniqueFactors === backdrop.factors.length
       ? 'pass'
       : 'fail',
-    `능선 ${backdrop.factors[0]} · 강둑 ${backdrop.factors[1]} (지도는 1.0)`,
+    backLayers.map((l, k) => `${l} ${backdrop.factors[k]}`).join(' · ') + ' (지도는 1.0)',
+  );
+  /*
+   * 계약의 `layers` 는 **먼 겹부터**다. 먼 겹일수록 시차가 작아야 원근이 뒤집히지 않는다 —
+   * 순서만 맞고 값이 뒤집히면 산이 강둑보다 빨리 움직여 앞에 있는 것처럼 보인다.
+   */
+  record(
+    '먼 겹일수록 시차가 작다 — 뒤집히면 산이 앞으로 나온다',
+    backdrop.factors.every((f, k) => k === 0 || f > (backdrop.factors[k - 1] as number))
+      ? 'pass'
+      : 'fail',
+    backdrop.factors.join(' < '),
   );
   record(
     '배경이 지면보다 뒤에 있다',
-    backdrop.depths.every((d) => d < 0) ? 'pass' : 'fail',
+    backdrop.depths.length === backLayers.length && backdrop.depths.every((d) => d < 0)
+      ? 'pass'
+      : 'fail',
     `깊이 ${backdrop.depths.join(', ')}`,
   );
 
   const backTile = (await page.evaluate(`(() => {
     const prov = window.__kairo.provider;
     const out = [];
-    for (const id of ['backdrop/ridge', 'backdrop/farbank']) {
+    for (const id of ${JSON.stringify(backIds)}) {
       if (!prov.has(id)) { out.push({ id: id, ok: false, why: '없다' }); continue; }
       const c = prov.get(id);
       const g = c.getContext('2d');
