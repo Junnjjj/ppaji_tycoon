@@ -77,6 +77,19 @@ const GROUND_BASE: Record<string, string> = {
   road: '#5f6570',
   sidewalk: '#b9bcc0',
   verge: '#4f7742',
+  /*
+   * 산의 암반 (K37). 계단만으로는 "잔디 계단"으로 읽혀서 사용자가 "산처럼 표현되는
+   * 부분이 있다던지"를 요청했다. 절벽 테두리를 암반으로 깔면 계단이 산이 된다.
+   *
+   * 따뜻한 회색 — 도시 아스팔트(`road`, 차가운 회색)와 구분돼야 한다. 둘이 비슷하면
+   * 산이 "공원 밖 포장"처럼 보인다.
+   *
+   * ⚠ **PAVED 에 넣지 않는다.** 가로수(`verge`)는 유기적으로 그렸을 때 이음새 대비가
+   * 2.9배로 튀어서 PAVED 로 옮겼지만, 암반은 반대였다: PAVED 로 두면 내부가 너무 균일해
+   * 테두리가 2.66배로 튀고(내부 편차 5.91), 유기적으로 그리면 **0건**이다. 자연 재질은
+   * 결이 있어야 이음선이 묻힌다 — 같은 규칙을 반대로 적용하면 안 된다.
+   */
+  mountain_rock: '#8d8474',
 };
 
 /** 기본색에서 밝음·어두움을 만드는 배율. 표준편차 9~11 을 목표로 맞춘 값 */
@@ -95,7 +108,14 @@ function groundTones(kind: string): [string, string, string] | null {
  * 튀어 4방 이음새 QA 를 넘는다 (문턱 ~2.5). 도시의 가로 화단은 **칸으로 나뉜 화단**이라
  * 타일 이음선이 오히려 맞다.
  */
-const PAVED = new Set(['path_stone', 'path_deck', 'floor_indoor', 'road', 'sidewalk', 'verge']);
+const PAVED = new Set([
+  'path_stone',
+  'path_deck',
+  'floor_indoor',
+  'road',
+  'sidewalk',
+  'verge',
+]);
 
 const DECO_COLOR: Record<string, string> = { safety: '#d9694f', scenery: '#7ea9c9' };
 

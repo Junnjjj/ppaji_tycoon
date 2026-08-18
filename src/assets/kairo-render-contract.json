@@ -2809,6 +2809,11 @@
         "id": "verge",
         "name": "가로수",
         "alts": 3
+      },
+      {
+        "id": "mountain_rock",
+        "name": "암반",
+        "alts": 3
       }
     ],
     "bridges": [

@@ -22,6 +22,8 @@ import {
   Z_FACE,
   Z_EMOTE,
   Z_GHOST,
+  LEVEL_H,
+  lift,
 } from '../kairo/iso.js';
 import { KairoCamera } from '../kairo/kairo-camera.js';
 import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
@@ -190,6 +192,8 @@ export class KairoScene extends Phaser.Scene {
    * 살짝 겹쳐 보이는 편이 낫다.
    */
   private doorGfx: Phaser.GameObjects.Graphics | null = null;
+  /** 암석 대표색 캐시 — 타일마다 스프라이트를 훑으면 부팅이 느려진다 */
+  private rockToneCache: [number, number, number] | null = null;
   /** 그린 발판의 칸 목록 — 검증이 "보인다"를 실제로 물어볼 수 있어야 한다 */
   private doorMarkTiles: { i: number; j: number }[] = [];
   /** 배치 미리보기 (K32) — 확정하기 전의 시설 */
@@ -276,6 +280,203 @@ export class KairoScene extends Phaser.Scene {
   }
 
   /**
+   * 이 칸 위에 놓이는 것들의 화면 y 보정 (K37).
+   *
+   * ⚠ **칸 위의 모든 것**이 이걸 타야 한다 — 지면·벽·문·시설·손님·고스트·버스·코스 표식.
+   * 하나만 빠뜨리면 그것만 땅에 파묻힌다.
+   */
+  private liftAt(i: number, j: number): number {
+    return lift(this.opts.terrain.levelAt(i, j));
+  }
+
+  /**
+   * 걷는 손님용 — **두 칸 사이를 보간**한 리프트.
+   *
+   * 정수 칸으로 잡으면 단을 오르는 손님이 한 프레임에 8px 순간이동한다. 깊이는 가까운
+   * 칸으로 스냅하지만(`spanDepthKey`) 화면 y 는 이어져야 한다 — 그 둘은 다른 문제다.
+   */
+  private liftSpan(fi: number, fj: number, i: number, j: number, t: number): number {
+    const a = lift(this.opts.terrain.levelAt(Math.round(fi), Math.round(fj)));
+    const b = lift(this.opts.terrain.levelAt(i, j));
+    return a + (b - a) * Math.min(1, Math.max(0, t));
+  }
+
+  /** 이 칸의 +I·+J 쪽으로 떨어지는 단 수 (0 이면 치마가 없다) */
+  private dropsAt(i: number, j: number): { di: number; dj: number } {
+    const t = this.opts.terrain;
+    const z = t.levelAt(i, j);
+    // 격자 밖은 기준면(0)으로 본다 — 가장자리의 높은 칸도 치마가 있어야 떠 보이지 않는다
+    const nz = (ni: number, nj: number): number => (t.inside(ni, nj) ? t.levelAt(ni, nj) : 0);
+    return {
+      di: Math.max(0, z - nz(i + 1, j)),
+      dj: Math.max(0, z - nz(i, j + 1)),
+    };
+  }
+
+  /**
+   * 지면 텍스처 — 치마가 필요하면 **윗면과 함께 구운 기둥**을 돌려준다 (K37).
+   *
+   * ## 왜 한 장으로 굽나
+   *
+   * 치마를 별도 오브젝트로 두면 그 칸 안에서 윗면과 **깊이가 동률**이 된다. 그게 정확히
+   * 버그 ①(시설 vs 앞쪽 벽)의 형태다. 한 장이면 깊이 정렬을 아예 안 건드린다 —
+   * 칸을 "밑면에 앵커된 기둥"으로 그리면 `(i+j, i)` 순서가 그대로 맞다.
+   *
+   * ## 색은 지면에서 뽑는다
+   *
+   * 절벽면 색을 상수로 두면 지면 종류마다 안 맞는다 (잔디 절벽과 모래 절벽이 같은 색).
+   * 윗면 텍스처의 가운데 픽셀을 읽어 어둡게 쓴다 — 지면이 바뀌면 절벽도 같이 바뀐다.
+   * 좌상단 광원이라 **+J 면(왼쪽 아래)이 밝고 +I 면(오른쪽 아래)이 어둡다** — 두 면이
+   * 같은 밝기면 단이 안 읽힌다.
+   *
+   * ## 정수 스캔라인
+   *
+   * `fill()` 로 사각형을 그리면 AA 가 1px 이음새와 가짜 아웃라인을 만든다 (K1 계약).
+   * 열마다 `fillRect(x, y, 1, h)` 로 채운다 — 2:1 이라 2px 마다 한 칸 내려가는 계단이 된다.
+   */
+  private columnTextureId(i: number, j: number): string {
+    const top = this.groundTextureId(i, j);
+    const { di, dj } = this.dropsAt(i, j);
+    const z = this.opts.terrain.levelAt(i, j);
+    if (di === 0 && dj === 0 && z === 0) return top;
+    const id = `__col/${top}/${z}/${di}/${dj}`;
+    if (this.textures.exists(id)) return id;
+
+    const hi = di * LEVEL_H;
+    const hj = dj * LEVEL_H;
+    const H = TILE_H + Math.max(hi, hj);
+    const tex = this.textures.createCanvas(id, TILE_W, H);
+    if (!tex) return top;
+    const ctx = tex.getContext();
+    ctx.imageSmoothingEnabled = false;
+    const src = this.textures.get(top).getSourceImage() as HTMLCanvasElement;
+    ctx.drawImage(src, 0, 0);
+
+    // 윗면 가운데 픽셀 = 이 지면의 대표색
+    const px = ctx.getImageData(TILE_W / 2, TILE_H / 2, 1, 1).data;
+    const base: [number, number, number] = [px[0] as number, px[1] as number, px[2] as number];
+
+    /*
+     * ## 높이가 올라가면 **암반**이 된다
+     *
+     * 절벽면을 지면색만 어둡게 쓰면 "잔디 계단"으로 읽힌다 — 사용자 지적("산처럼
+     * 표현되는 부분이 있다던지"). 산은 위로 갈수록 흙·바위가 드러난다.
+     *
+     * 그래서 단이 높을수록 `terrain/rock` 의 색으로 섞는다. 색을 상수로 박지 않고
+     * **이미 있는 암석 스프라이트에서 뽑는다** — 팔레트를 바꾸면 절벽도 같이 바뀐다
+     * (`src/ui/tokens.ts` 가 캔버스에서 토큰을 읽는 것과 같은 판단이다).
+     */
+    const rock = this.rockTone();
+    const mixT = Math.min(0.75, z * 0.25);
+    const mix = (c: [number, number, number], f: number): string => {
+      const m = (k: 0 | 1 | 2): number => Math.round((c[k] * (1 - mixT) + rock[k] * mixT) * f);
+      return `rgb(${m(0)} ${m(1)} ${m(2)})`;
+    };
+
+    /*
+     * 마름모 꼭지점 (텍스처 좌표): 위 (16,0) · 오른 (32,8) · 아래 (16,16) · 왼 (0,8).
+     * +I 면은 오른→아래 변, +J 면은 왼→아래 변이다 — 둘 다 카메라 쪽(아래쪽) 절반이다.
+     *
+     * 좌상단 광원이라 **+J 면(왼쪽 아래)이 밝고 +I 면(오른쪽 아래)이 어둡다.**
+     * 두 면이 같은 밝기면 단이 안 읽힌다.
+     */
+    if (hj > 0) {
+      for (let x = 0; x < TILE_W / 2; x++) {
+        const yTop = TILE_H / 2 + Math.floor(x / 2) + 1;
+        /*
+         * 세로로 **아래가 더 어둡다** — 바닥에 가까울수록 그림자가 진다.
+         * 단색 면은 종이처럼 평평해 보인다.
+         */
+        for (let y = 0; y < hj; y++) {
+          ctx.fillStyle = mix(base, 0.92 - (y / Math.max(1, hj)) * 0.14);
+          ctx.fillRect(x, yTop + y, 1, 1);
+        }
+      }
+    }
+    if (hi > 0) {
+      for (let x = TILE_W / 2; x < TILE_W; x++) {
+        const yTop = TILE_H - Math.floor((x - TILE_W / 2) / 2);
+        for (let y = 0; y < hi; y++) {
+          ctx.fillStyle = mix(base, 0.74 - (y / Math.max(1, hi)) * 0.12);
+          ctx.fillRect(x, yTop + y, 1, 1);
+        }
+      }
+    }
+
+    /*
+     * 윗면도 높이를 따라 **살짝 암반 쪽으로** 밀고 어둡게 한다. 이게 없으면 3단 정상이
+     * 물가 잔디와 똑같은 색이라 위아래가 안 읽힌다 — 등고선 색띠가 "산"의 절반이다.
+     * 아주 약하게만 (0.06/단) — 세게 하면 정상이 회색 사막이 된다.
+     */
+    if (z > 0) {
+      const d = ctx.getImageData(0, 0, TILE_W, TILE_H);
+      const t2 = Math.min(0.3, z * 0.1);
+      const dim = 1 - z * 0.04;
+      for (let k = 0; k < d.data.length; k += 4) {
+        if ((d.data[k + 3] as number) < 8) continue;
+        for (let c = 0 as 0 | 1 | 2; c < 3; c++) {
+          const v = d.data[k + c] as number;
+          d.data[k + c] = Math.round((v * (1 - t2) + rock[c] * t2) * dim);
+        }
+      }
+      ctx.putImageData(d, 0, 0);
+    }
+
+    tex.refresh();
+    return id;
+  }
+
+  /**
+   * 암석의 대표색 — `terrain/rock` 스프라이트에서 한 번 뽑아 캐시한다.
+   *
+   * 스프라이트가 없으면 지면색을 탈색해 쓰는 쪽으로 물러난다 (하드코딩 색을 안 만든다).
+   */
+  /** 검증용 */
+  rockToneForTest(): [number, number, number] {
+    return this.rockTone();
+  }
+
+  private rockTone(): [number, number, number] {
+    if (this.rockToneCache) return this.rockToneCache;
+    let tone: [number, number, number] = [122, 118, 110];
+    if (this.textures.exists('terrain/rock')) {
+      const src = this.textures.get('terrain/rock').getSourceImage() as HTMLCanvasElement;
+      const cv = document.createElement('canvas');
+      cv.width = src.width;
+      cv.height = src.height;
+      const c2 = cv.getContext('2d');
+      if (c2) {
+        c2.drawImage(src, 0, 0);
+        const d = c2.getImageData(0, 0, cv.width, cv.height).data;
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        let n = 0;
+        for (let k = 0; k < d.length; k += 4) {
+          if ((d[k + 3] as number) < 128) continue;
+          r += d[k] as number;
+          g += d[k + 1] as number;
+          b += d[k + 2] as number;
+          n++;
+        }
+        if (n > 0) tone = [Math.round(r / n), Math.round(g / n), Math.round(b / n)];
+      }
+    }
+    this.rockToneCache = tone;
+    return tone;
+  }
+
+  /**
+   * 지면 타일 하나의 화면 위치. 기둥은 **아래로** 자라므로 앵커를 그만큼 내린다 —
+   * 그러면 윗면이 정확히 `lift` 만큼 올라간 자리에 온다.
+   */
+  private tileAnchorY(i: number, j: number): number {
+    const c = tileCenter(i, j);
+    const { di, dj } = this.dropsAt(i, j);
+    return c.y + TILE_H / 2 + Math.max(di, dj) * LEVEL_H + this.liftAt(i, j);
+  }
+
+  /**
    * 배경 3겹 (§7 배경). 산이 제일 멀고, 능선, 강둑 순으로 가까워진다.
    *
    * ## 시차(parallax)가 핵심이다
@@ -330,7 +531,7 @@ export class KairoScene extends Phaser.Scene {
     for (let j = 0; j < GRID_H; j++) {
       for (let i = 0; i < GRID_W; i++) {
         const c = tileCenter(i, j);
-        const img = this.add.image(c.x, c.y + TILE_H / 2, this.groundTextureId(i, j));
+        const img = this.add.image(c.x, this.tileAnchorY(i, j), this.columnTextureId(i, j));
         img.setOrigin(0.5, 1); // bottom-center — 계약 앵커
         img.setDepth(depthKey(i, j) + Z_GROUND);
         this.tileImages.push(img);
@@ -355,12 +556,14 @@ export class KairoScene extends Phaser.Scene {
     if (!def) return;
     const [w, d] = def.size;
     const a = footprintAnchor(item.i, item.j, w, d);
+    // 단 위의 시설은 같이 올라간다 (K37). 발자국은 단이 균일하므로 시작 칸 하나로 충분하다
+    const ay = a.y + this.liftAt(item.i, item.j);
     const existing = this.facilityImages.get(handle);
     if (existing) {
-      existing.setPosition(a.x, a.y);
+      existing.setPosition(a.x, ay);
       return;
     }
-    const img = this.add.image(a.x, a.y, item.defId ? `facility/${item.defId}` : '');
+    const img = this.add.image(a.x, ay, item.defId ? `facility/${item.defId}` : '');
     img.setOrigin(0.5, 1);
     img.setDepth(depthKey(item.i + w - 1, item.j + d - 1) + Z_FACILITY);
     this.facilityImages.set(handle, img);
@@ -388,6 +591,17 @@ export class KairoScene extends Phaser.Scene {
   }
 
   /** 검증 도구용 — 시설 이미지를 직접 본다 (앵커 좌표를 수치로 확인) */
+  /**
+   * 검증 도구용 — 지면 타일 그림 하나. **리프트가 실제로 걸렸는지**를 화면 y 로 잰다 (K37).
+   *
+   * 단을 세워도 그림이 안 올라가면 화면상 평지와 구분이 안 된다. 종류별로(지면·벽·시설·
+   * 손님) 재야 하나만 빠뜨린 경우를 잡는다.
+   */
+  tileImageForTest(i: number, j: number): Phaser.GameObjects.Image | undefined {
+    if (!inGrid(i, j)) return undefined;
+    return this.tileImages[j * GRID_W + i];
+  }
+
   facilityImageAt(handle: number): Phaser.GameObjects.Image | undefined {
     return this.facilityImages.get(handle);
   }
@@ -453,10 +667,12 @@ export class KairoScene extends Phaser.Scene {
     const id = variantId(kind === EDGE_DOOR ? 'wall/door' : 'wall/edge', { alt: dir });
     if (existing) {
       existing.setTexture(id);
+      // 지형이 바뀌어 단이 달라졌을 수 있다 — 위치도 같이 맞춘다 (K37)
+      existing.setY(tileCenter(i, j).y + TILE_H / 2 + this.liftAt(i, j));
       return;
     }
     const c = tileCenter(i, j);
-    const img = this.add.image(c.x, c.y + TILE_H / 2, id);
+    const img = this.add.image(c.x, c.y + TILE_H / 2 + this.liftAt(i, j), id);
     img.setOrigin(0.5, 1);
     /*
      * 깊이는 **띠 상수**로만 준다 (`iso.ts` 의 `Z_*`). 뒤쪽 경계(−I·−J)는 그 칸의
@@ -508,12 +724,14 @@ export class KairoScene extends Phaser.Scene {
     if (!def) return;
     const [w, d] = def.size;
     const a = footprintAnchor(i, j, w, d);
+    // 고스트도 단을 탄다 (K37) — 안 태우면 산 위에서 미리보기가 땅에 파묻힌다
+    const ay = a.y + this.liftAt(i, j);
     if (!this.ghost) {
-      this.ghost = this.add.image(a.x, a.y, `facility/${defId}`);
+      this.ghost = this.add.image(a.x, ay, `facility/${defId}`);
       this.ghost.setOrigin(0.5, 1);
     } else {
       this.ghost.setTexture(`facility/${defId}`);
-      this.ghost.setPosition(a.x, a.y);
+      this.ghost.setPosition(a.x, ay);
     }
     this.ghost.setAlpha(0.62);
     // 못 놓는 자리는 붉게 — 확정 바의 경고색과 짝이다
@@ -615,7 +833,12 @@ export class KairoScene extends Phaser.Scene {
       g.setVisible(false);
       return;
     }
-    const c = gridToScreen(pos.x + 0.5, pos.y + 0.5);
+    const c0 = gridToScreen(pos.x + 0.5, pos.y + 0.5);
+    /*
+     * 버스도 단을 탄다 (K37). 지금 도시 띠는 전부 단 0 이라 값이 0 이지만, **같은 헬퍼를
+     * 태워 둔다** — 나중에 경사 도로가 오면 여기만 바뀌면 된다.
+     */
+    const c = { x: c0.x, y: c0.y + lift(this.opts.terrain.levelAt(Math.round(pos.x), Math.round(pos.y))) };
     /*
      * 버스는 시설이 아니지만 **시설 띠**를 쓴다 — 버스가 다니는 도시 띠(공원 밖)는
      * 못 짓는 지형이라 같은 칸에 시설이 놓일 수 없고, 그래서 동률이 날 수가 없다.
@@ -698,7 +921,8 @@ export class KairoScene extends Phaser.Scene {
     const g = this.doorGfx;
     if (!g || !inGrid(i, j)) return;
     this.doorMarkTiles.push({ i, j });
-    const c = tileCenter(i, j);
+    const c0 = tileCenter(i, j);
+    const c = { x: c0.x, y: c0.y + this.liftAt(i, j) };
     g.fillStyle(0xffe08a, 0.28);
     g.beginPath();
     g.moveTo(c.x, c.y - TILE_H / 2);
@@ -733,8 +957,24 @@ export class KairoScene extends Phaser.Scene {
    */
   refreshTile(i: number, j: number): void {
     if (!inGrid(i, j)) return;
-    const img = this.tileImages[j * GRID_W + i];
-    img?.setTexture(this.groundTextureId(i, j));
+    /*
+     * ⚠ **−I·−J 이웃까지 갱신한다** (K37). 치마는 자기 칸이 그리지만 그 높이는 이웃의
+     * 단으로 정해진다 — 이 칸이 바뀌면 이웃의 치마도 틀려진다. 벽이 경계를 공유해
+     * 네 이웃을 갱신하는 것(`refreshWall`)과 같은 종류의 사고다.
+     */
+    for (const [di, dj] of [
+      [0, 0],
+      [-1, 0],
+      [0, -1],
+    ] as const) {
+      const ti = i + di;
+      const tj = j + dj;
+      if (!inGrid(ti, tj)) continue;
+      const img = this.tileImages[tj * GRID_W + ti];
+      if (!img) continue;
+      img.setTexture(this.columnTextureId(ti, tj));
+      img.setY(this.tileAnchorY(ti, tj));
+    }
   }
 
   /**
@@ -1037,7 +1277,8 @@ export class KairoScene extends Phaser.Scene {
     const fi = g.fromI + (g.i - g.fromI) * t;
     const fj = g.fromJ + (g.j - g.fromJ) * t;
     const cx = STEP_X * (fi - fj);
-    const cy = STEP_Y * (fi + fj + 1);
+    // 손님도 단을 탄다 (K37). 리프트는 **보간**한다 — 정수 칸으로 잡으면 8px 순간이동한다
+    const cy = STEP_Y * (fi + fj + 1) + this.liftSpan(g.fromI, g.fromJ, g.i, g.j, t);
 
     const pose = g.pose as Pose;
     const sheet = POSE_SHEET[pose];
@@ -1175,7 +1416,11 @@ export class KairoScene extends Phaser.Scene {
         : (sheet.facings[0] as Facing);
       const fr = sheet.frames <= 1 ? 0 : Math.floor(this.animTick / 6) % sheet.frames;
       img.setTexture('guest', bodyFrame(g.palette, pose, facing, fr));
-      img.setPosition(STEP_X * (g.i - g.j), STEP_Y * (g.i + g.j + 1));
+      // 재생 프레임은 tick 스냅이라 보간이 없다 — 도착 칸의 단을 쓴다 (K37)
+      img.setPosition(
+        STEP_X * (g.i - g.j),
+        STEP_Y * (g.i + g.j + 1) + lift(this.opts.terrain.levelAt(g.i, g.j)),
+      );
       // 실시간과 **같은 규칙** — 두 칸 중 가까운 쪽 (K37). 재생 프레임에 출발 칸을
       // 같이 담는 이유가 이것이다 (`PlaybackFrame`). 세이브에는 안 들어간다
       img.setDepth(spanDepthKey(g.fromI, g.fromJ, g.i, g.j) + Z_GUEST);

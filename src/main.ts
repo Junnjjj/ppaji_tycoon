@@ -565,7 +565,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        * `sub` 에 통행 여부를 적는다. 안 적으면 "잔디는 왜 안 되지"를 화면 어디에서도
        * 알 수 없다 — 규칙을 바꿔 놓고 알려주지 않는 것이 이 게임의 반복된 실수였다.
        */
-      ...GROUND_KINDS.filter((k) => k.id !== 'floor_indoor' && k.buildable && k.guestWalk).flatMap((k) =>
+      ...GROUND_KINDS.filter(
+        (k) => k.id !== 'floor_indoor' && k.buildable && k.guestWalk && k.paintable !== false,
+      ).flatMap((k) =>
         [1, 2, 3].map((n) => ({
           kind: 'ground' as const,
           tab: 'ground' as const,
@@ -577,8 +579,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       /*
        * ⚠ `buildable` 이 아닌 종류(도로·보도·가로수)는 **팔레트에 넣지 않는다** (K36).
        * 플레이어가 깔 수 없는 것을 목록에 두면 눌러 보고 거절당한다.
+       *
+       * ⚠ `paintable === false` 도 뺀다 (K37 — 산의 암반). 지을 수는 있지만 칠할 수는
+       * 없는 종류다. 이 조건이 없어서 암반이 조용히 새어 들어갔다 (12개 → 13개).
        */
-      ...GROUND_KINDS.filter((k) => k.id !== 'floor_indoor' && k.buildable && !k.guestWalk).map((k) => ({
+      ...GROUND_KINDS.filter(
+        (k) => k.id !== 'floor_indoor' && k.buildable && !k.guestWalk && k.paintable !== false,
+      ).map((k) => ({
         kind: 'ground' as const,
         tab: 'ground' as const,
         id: k.id,

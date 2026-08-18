@@ -39,6 +39,17 @@ export interface GroundKindDef {
    * (`placement.check` · 바닥 붓).
    */
   buildable: boolean;
+  /**
+   * 플레이어가 **이 종류를 칠할 수 있나** (K37). 없으면 `true` 다.
+   *
+   * `buildable` 과 또 다른 축이다: 암반은 시설을 **지을 수는 있지만**(테라스 테두리를
+   * 못 짓게 하면 높이가 보상이 아니라 벌점이 된다) **칠할 수는 없다** — 맵이 갖고 태어난
+   * 지형이고, 플레이어가 지형을 깎지 않는다는 설계 불변식과 같은 방향이다.
+   *
+   * ⚠ 이 플래그가 없어서 암반이 바닥 붓 팔레트에 조용히 새어 들어갔다 (실측: 12개 → 13개).
+   * 플레이어가 깔 수 없는 것을 목록에 두면 눌러 보고 거절당한다.
+   */
+  paintable?: boolean;
   /** 실내 바닥인가. **이 칸들이 곧 방이다** — 벽은 그 외곽선으로 자동 생성된다 */
   indoor: boolean;
 }
@@ -153,10 +164,11 @@ export class KairoTerrain {
    * 사용자 요청: "스타팅 포인트 양옆에". 공원 가운데(입구 → 물 축)는 단 0 으로 두어야
    * 초반 플레이가 안 바뀐다 — 물려받은 빠지와 첫 의뢰가 그 평지 위에 있다.
    *
-   * ⚠ 이 값이 1등급 토지(가로 26칸, 즉 입구에서 좌우 13칸)보다 넓어야 새 판이 평지다.
-   * 좁히면 첫 판부터 절벽이 나와 시작 킷이 `level-mixed` 로 막힌다.
+   * ⚠ 이 값이 1등급 토지(가로 26칸, 즉 입구에서 좌우 **13칸**)보다 넓어야 새 판이 평지다.
+   * 좁히면 첫 판부터 절벽이 나와 시작 킷이 `level-mixed` 로 막힌다. 15 는 그 13 에
+   * 두 칸 여유다 — 더 넓히면 산이 맵 가장자리로 밀려 테라스가 좁아진다.
    */
-  static readonly MOUNTAIN_START = 18;
+  static readonly MOUNTAIN_START = 15;
 
   /** 한 단이 몇 칸마다 오르나 — 크면 완만하고 테라스가 넓다 */
   static readonly TERRACE_WIDTH = 7;
@@ -168,6 +180,14 @@ export class KairoTerrain {
    * 테라스가 세로로도 안 쪼개진다 (넓은 시설은 5×4 까지 있다).
    */
   static readonly TERRACE_DEPTH = 6;
+
+  /**
+   * 등고선이 굽기 전에 **몇 줄을 유지하나** (K37).
+   *
+   * 1 이면 매 줄 한 칸씩 밀려 테라스가 톱니가 된다 (실측: 산이 계단 블록 덩어리로 보였다).
+   * 4 면 등고선이 자연스럽게 굽으면서도 평지가 남는다.
+   */
+  static readonly CONTOUR_RUN = 4;
 
   /**
    * 입구가 뚫린 열 (K36). 가로수 줄에 이 열만 보도로 뚫어 공원과 이어 준다.
@@ -282,12 +302,15 @@ export class KairoTerrain {
     const jr = rng.fork(0x4237);
     const band = KairoTerrain.CITY_BAND;
     const entry = KairoTerrain.ENTRY_I;
+    const W = t.width;
+    const MAX = KairoTerrain.MAX_LEVEL;
+
     /*
-     * 물가 최북단을 찾는다 — 산은 여기서 **두 칸 위**까지만 내려온다.
-     * 물가에 바로 붙으면 절벽이 물에 잠긴 것처럼 보이고, 잔교를 놓을 자리가 사라진다.
+     * 물가 최북단 — 산은 여기서 **두 칸 위**까지만 내려온다. 물가에 바로 붙으면 절벽이
+     * 물에 잠긴 것처럼 보이고, 잔교를 놓을 자리가 사라진다.
      */
     let shoreTop = t.height;
-    for (let i = 0; i < t.width; i++) {
+    for (let i = 0; i < W; i++) {
       for (let j = band; j < t.height; j++) {
         if (t.isWater(i, j) || t.kindAt(i, j) === 'path_sand') {
           if (j < shoreTop) shoreTop = j;
@@ -296,62 +319,175 @@ export class KairoTerrain {
       }
     }
     const maxJ = Math.max(band, shoreTop - 2);
-    /*
-     * 세로 계단 깊이를 **쓸 수 있는 깊이에 맞춘다.**
-     *
-     * 고정 6 으로 뒀더니 물이 넓은 맵(북한강형)은 육지가 얕아서 능선이 단 1 에서 멈췄다
-     * (실측: 단 분포가 {0,1} 뿐). "산 중턱중턱"이라면 층이 둘 이상이어야 뜻이 산다.
-     * 최소 3 은 유지한다 — 그보다 얕으면 테라스가 세로로 쪼개져 넓은 시설이 못 들어간다.
-     */
-    const depthStep = Math.max(3, Math.min(KairoTerrain.TERRACE_DEPTH, Math.floor((maxJ - band) / (2 * KairoTerrain.MAX_LEVEL))));
+    if (maxJ - band < 4) return; // 육지가 너무 얕으면 산을 안 세운다
 
     /*
-     * 단의 **경계 거리**를 뽑는다 — 흔들림을 단마다 한 번만 준다.
+     * ## 봉우리 둘 — 입구 좌우
      *
-     * ⚠ 칸마다 흔들면 1칸 폭 골이 생겨 테라스가 쪼개진다 (실측: 프로필이 3 2 3 처럼
-     * 나왔다). 테라스는 **연속된 같은 단 덩어리**여야 넓은 시설이 들어간다 —
-     * 그게 사용자가 말한 "산 중턱중턱 평지"의 조건이다.
+     * 사용자 요청: "스타팅 포인트 양옆에". 예전엔 단을 **열까지의 거리**로만 정해서
+     * 등고선이 세로 직선이 됐다 — 계단식 논처럼 보였다 (실측 스크린샷). 봉우리에서의
+     * **타원 거리**로 정하면 등고선이 둥글게 감겨 산으로 읽힌다.
      *
-     * 좌우를 따로 뽑아 산 모양이 대칭이 아니게 한다. 대칭이면 인공적으로 보인다.
+     * `j` 를 늘려 재는 이유: 쓸 수 있는 깊이(육지 폭)가 가로보다 훨씬 좁다. 같은 배율로
+     * 재면 산이 세로로 눌린 타원이 되어 물가까지 내려온다.
      */
-    const bounds = (side: -1 | 1): number[] => {
-      const out: number[] = [];
-      for (let lv = 1; lv <= KairoTerrain.MAX_LEVEL; lv++) {
-        out.push(
-          KairoTerrain.MOUNTAIN_START + lv * KairoTerrain.TERRACE_WIDTH + jr.intRange(0, 4) - 2,
-        );
-      }
-      // 단조 증가를 강제한다 — 흔들림이 순서를 뒤집으면 한 단이 사라진다
-      for (let k = 1; k < out.length; k++) {
-        out[k] = Math.max((out[k] as number), (out[k - 1] as number) + 2);
-      }
-      void side;
-      return out;
-    };
-    const left = bounds(-1);
-    const right = bounds(1);
+    const midJ = (band + maxJ) / 2;
+    const jStretch = Math.max(1.4, (W * 0.25) / Math.max(4, maxJ - band));
+    /*
+     * 봉우리는 **맵 밖 조금**이다. 안쪽(입구 쪽)에 두면 최고 단이 공원 절반을 덮어
+     * "왼쪽 1/3 이 전부 3단"이 된다 (실측). 가장자리보다 살짝 밖에 두면 최고 단이
+     * 잘려 나가 **정상이 화면 밖으로 이어지는 산맥**이 되고 — 배경 산 3겹과 이어져
+     * 읽힌다 — 공원 쪽에는 테라스만 남는다.
+     */
+    const peaks = [
+      { i: -4, j: midJ },
+      { i: W + 3, j: midJ },
+    ];
+    /** 정상 평지의 반지름 — 0 이면 정상이 한 점이라 최고 단 테라스가 안 생긴다 */
+    const R0 = 5;
+    /*
+     * 한 단의 두께. 산이 쓸 수 있는 가로 폭(입구 제한선 ~ 맵 가장자리)을 단 수로 나눈다 —
+     * 고정값이면 격자 크기를 바꿀 때 산이 공원을 먹거나 사라진다.
+     */
+    const span = Math.max(8, W / 2 - KairoTerrain.MOUNTAIN_START);
+    const STEP = Math.max(2, Math.floor((span - R0) / MAX));
 
-    for (let i = 0; i < t.width; i++) {
-      const dist = Math.abs(i - entry);
-      const b = i < entry ? left : right;
-      let level = 0;
-      for (let k = 0; k < b.length; k++) if (dist >= (b[k] as number)) level = k + 1;
-      if (level <= 0) continue;
-      for (let j = band; j < maxJ; j++) {
-        /*
-         * 세로로도 **양쪽에서 내려온다** — 능선이 깊이의 가운데를 지난다.
-         *
-         * ① 물가 쪽(`nearShore`): 산이 강까지 벽처럼 서 있으면 물가에 잔교·데크를 놓을
-         *    자리가 없고, 레퍼런스의 "뒤로 산, 앞으로 강" 구도가 안 나온다
-         * ② 도시 쪽(`nearCity`): 안 낮추면 도시 띠(단 0)와 공원 첫 줄 사이에 **3단 절벽**이
-         *    생긴다 (실측 32곳). 도시가 공원보다 낮은 평지에 있는 것처럼 읽혀 앞뒤가 안 맞고,
-         *    진입 광장이 절벽에 갇힌다
-         *
-         * 계단 깊이(`TERRACE_DEPTH`)가 4 이상이라 테라스가 세로로도 안 쪼개진다.
-         */
-        const nearShore = Math.floor((maxJ - j) / depthStep);
-        const nearCity = Math.floor((j - band) / depthStep);
-        t.setLevel(i, j, Math.min(level, nearShore, nearCity));
+    /*
+     * 등고선 흔들림 — **몇 줄마다** 한 칸씩. 줄마다 바꾸면 경계가 매 줄 밀려 테라스가
+     * 톱니가 된다 (실측). 여기서는 거리에 더하는 오프셋이라 등고선 전체가 굽는다.
+     */
+    const walk: number[] = [];
+    {
+      let off = 0;
+      for (let j = 0; j < t.height; j++) {
+        if (j % KairoTerrain.CONTOUR_RUN === 0) {
+          off += jr.intRange(0, 2) - 1;
+          off = Math.max(-2, Math.min(2, off));
+        }
+        walk.push(off);
+      }
+    }
+
+    /*
+     * ## 1단계 — 원시 높이
+     *
+     * 봉우리에서 멀어질수록 낮다. `STEP ≥ 2` 이고 한 걸음이 거리를 최대 `jStretch`(< 2)
+     * 만큼 바꾸므로, `floor(d / STEP)` 은 이웃 사이에서 **최대 1** 만 바뀐다 — 그래서
+     * 이 자체로 이미 통행 가능하다.
+     */
+    const raw = new Int16Array(W * t.height);
+    for (let j = band; j < maxJ; j++) {
+      for (let i = 0; i < W; i++) {
+        let best = 0;
+        for (const p of peaks) {
+          const dx = i - p.i;
+          const dy = (j - p.j) * jStretch;
+          const d = Math.hypot(dx, dy) + (walk[j] as number);
+          const lv = MAX - Math.floor(Math.max(0, d - R0) / STEP);
+          if (lv > best) best = lv;
+        }
+        raw[j * W + i] = Math.max(0, Math.min(MAX, best));
+      }
+    }
+
+    /*
+     * ## 2단계 — **0 이어야 하는 칸**을 못 박는다
+     *
+     * ① 공원 가운데(입구 좌우 `MOUNTAIN_START` 칸) — 초반 플레이가 안 바뀌어야 한다
+     * ② 도시 띠 · 물가 아래 — 경사 도로는 에셋 단계고, 물은 사용자가 명시적으로 뺐다
+     * ③ 물·물가 칸 — `setLevel` 이 거부하지만 **0 집합에는 넣어야** 아래 3단계가 산다
+     */
+    const zero: number[] = [];
+    for (let j = 0; j < t.height; j++) {
+      for (let i = 0; i < W; i++) {
+        const k = j * W + i;
+        const outOfPark = j < band || j >= maxJ;
+        const nearEntry = Math.abs(i - entry) < KairoTerrain.MOUNTAIN_START;
+        const wet = t.isWater(i, j) || t.kindAt(i, j) === 'path_sand';
+        if (outOfPark || nearEntry || wet) {
+          raw[k] = 0;
+          zero.push(k);
+        }
+      }
+    }
+
+    /*
+     * ## 3단계 — 통행을 **증명한다**
+     *
+     * 2단계가 특정 칸을 0 으로 눌렀으므로 그 경계에서 단차가 2 이상 날 수 있다. 그러면
+     * 테라스가 **닿지 않는 죽은 땅**이 되고 시설이 `unreachable` 로 거절된다 (실측으로
+     * 도시 띠 경계에 3단 절벽이 32곳 생겼다).
+     *
+     * 0 집합에서 BFS 거리를 재서 그 값으로 상한을 둔다. BFS 거리는 이웃 사이에서 정확히
+     * 1 만 바뀌고, **1-Lipschitz 함수 둘의 min 도 1-Lipschitz** 이므로 결과 전체가
+     * 단차 1 이하다 — 손으로 맞추는 것이 아니라 성질로 보장된다.
+     */
+    const dist = new Int16Array(W * t.height).fill(-1);
+    const queue: number[] = [];
+    for (const k of zero) {
+      if (dist[k] === -1) {
+        dist[k] = 0;
+        queue.push(k);
+      }
+    }
+    for (let head = 0; head < queue.length; head++) {
+      const k = queue[head] as number;
+      const j = Math.floor(k / W);
+      const i = k - j * W;
+      const d = (dist[k] as number) + 1;
+      for (const [di, dj] of [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ] as const) {
+        const ni = i + di;
+        const nj = j + dj;
+        if (ni < 0 || nj < 0 || ni >= W || nj >= t.height) continue;
+        const nk = nj * W + ni;
+        if (dist[nk] !== -1) continue;
+        dist[nk] = d;
+        queue.push(nk);
+      }
+    }
+
+    for (let j = band; j < maxJ; j++) {
+      for (let i = 0; i < W; i++) {
+        const k = j * W + i;
+        const cap = dist[k] as number;
+        t.setLevel(i, j, Math.min(raw[k] as number, cap < 0 ? 0 : cap));
+      }
+    }
+    KairoTerrain.dressMountains(t);
+  }
+
+  /**
+   * 산에 **암반**을 입힌다 (K37).
+   *
+   * 계단만으로는 "잔디 계단"으로 읽혔다 (사용자: "산처럼 표현되는 부분이 있다던지").
+   * 산이 산으로 읽히는 것은 **테두리와 정상이 바위**이기 때문이다:
+   *
+   * - **절벽 테두리** — 단이 이웃과 다른 칸. 여기가 실제로 깎여 있는 자리다
+   *
+   * ⚠ 처음엔 **최고 단 전체**도 암반으로 덮었는데, 정상 평지가 17칸 폭이라 회색 덩어리가
+   * 됐다 (실측). 테두리만 칠하면 계단 윤곽이 또렷해지면서 평지는 초원으로 남는다.
+   *
+   * ⚠ 테라스 **안쪽은 잔디로 남긴다.** 전부 바위로 덮으면 "펜션을 놓고 싶은 초원"이
+   * 사라지고, 사용자가 원한 것은 중턱의 **평지**였다.
+   *
+   * ⚠ 암반은 잔디와 **플래그가 같다** (`buildable: true`). 짓는 자리를 줄이면 높이가
+   * 보상이 아니라 벌점이 된다 — 이 게임에서 실패는 내 선택 때문이어야 한다.
+   *
+   * ⚠ 잔디만 덮는다. 물·물가·포장·도시 띠를 덮으면 물가가 바위가 되고 진입 광장이
+   * 끊긴다 (도시 띠는 애초에 단 0 이라 여기 안 걸리지만, 명시해 둔다).
+   */
+  private static dressMountains(t: KairoTerrain): void {
+    for (let j = KairoTerrain.CITY_BAND; j < t.height; j++) {
+      for (let i = 0; i < t.width; i++) {
+        const z = t.levelAt(i, j);
+        if (z === 0) continue;
+        if (t.kindAt(i, j) !== 'lawn') continue;
+        if (t.isCliff(i, j)) t.paint(i, j, 'mountain_rock');
       }
     }
   }

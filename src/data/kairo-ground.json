@@ -91,6 +91,18 @@
       "indoor": false,
       "guestWalk": false,
       "buildable": false
+    },
+    {
+      "id": "mountain_rock",
+      "name": "암반",
+      "walkable": true,
+      "default": false,
+      "cost": 0,
+      "indoor": false,
+      "guestWalk": false,
+      "buildable": true,
+      "note": "산의 절벽 테두리와 정상 (K37). 잔디와 **플래그가 같다** — 순수하게 보이는 것만 다르다. 짓는 자리를 줄이면 높이가 벌점이 되므로 buildable 을 유지한다",
+      "paintable": false
     }
   ],
   "bridges": [

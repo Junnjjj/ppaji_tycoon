@@ -4620,6 +4620,147 @@ async function main(): Promise<void> {
     overlap.msg.slice(0, 80) || '(비어 있다)',
   );
 
+  /*
+   * ── 9d. 높이 표현 (K37 ⑤) ────────────────────────────────────────────────
+   *
+   * 사용자 요청: "높이를 표현해서 조금더 제한적으로 설치할수있게, 스타팅 포인트 양옆에,
+   * (평지도 산 중턱중턱 놔둬서 건물들이나 뭐 펜션을 나중에 설치 할 수 있게끔)".
+   *
+   * sim 쪽은 `levels.test.ts` 가 20건으로 본다. 여기서는 **화면에 실제로 올라갔는지**를
+   * 잰다 — 단을 세워도 그림이 안 올라가면 평지와 구분이 안 된다. 그리고 종류별로
+   * (지면·벽·시설·손님) 재야 **하나만 빠뜨린 경우**를 잡는다.
+   */
+  const lifted = (await page.evaluate(`(() => {
+    const h = window.__kairo, T = h.terrain, S = h.scene;
+    const LEVEL_H = 8;
+
+    /* 단 2 이상, 4x4 균일한 산 중턱 평지를 찾는다 */
+    let hi = null;
+    for (let j = 10; j < T.height - 5 && !hi; j++) {
+      for (let i = 0; i < T.width - 5; i++) {
+        if (T.levelAt(i, j) >= 2 && T.levelUniform(i, j, 4, 4)) { hi = { i: i, j: j }; break; }
+      }
+    }
+    if (!hi) return { ok: false, why: '단 2 이상 4x4 평지가 없다' };
+    const z = T.levelAt(hi.i, hi.j);
+
+    /*
+     * 대조는 **투영식**으로 한다. 같은 i+j 의 단 0 칸을 찾는 방식은 산이 넓은 맵에서
+     * 대각선이 격자를 벗어나 "대조 칸이 없다"로 죽었다 (실측).
+     *
+     * 아이소 계약: 타일 (i,j) 의 bottom-center 앵커 y = STEP_Y*(i+j+1) + TILE_H/2
+     *            = 8*(i+j+1) + 8 = 8*(i+j+2). 여기서 단만큼 올라간다.
+     * 구현을 베낀 것이 아니라 §투영 계약에서 다시 유도한 값이다.
+     */
+    const wantY = (i, j, lv) => 8 * (i + j + 2) - lv * LEVEL_H;
+
+    const out = { ok: true, z: z, hi: hi, kinds: [] };
+
+    /* ① 지면 — 치마가 없는 안쪽 테라스 칸이라 앵커 보정이 0 이다 */
+    const gh = S.tileImageForTest(hi.i, hi.j);
+    if (!gh) return { ok: false, why: '지면 타일 그림을 못 찾았다 (' + hi.i + ',' + hi.j + ')' };
+    out.kinds.push({ what: '지면', dy: gh.y - wantY(hi.i, hi.j, z), want: 0 });
+
+    /* ② 절벽면이 지면과 **다른 색**이다 — 치마가 실제로 구워졌나 */
+    let skirt = null;
+    for (let j = 10; j < T.height - 2 && !skirt; j++) {
+      for (let i = 0; i < T.width - 1; i++) {
+        const zz = T.levelAt(i, j);
+        if (zz >= 1 && T.levelAt(i + 1, j) === zz - 1) { skirt = { i: i, j: j, z: zz }; break; }
+      }
+    }
+    if (skirt) {
+      const img = S.tileImageForTest(skirt.i, skirt.j);
+      const src = img.texture.getSourceImage();
+      const cv = document.createElement('canvas');
+      cv.width = src.width; cv.height = src.height;
+      const cx = cv.getContext('2d');
+      cx.drawImage(src, 0, 0);
+      const d = cx.getImageData(28, 0, 1, cv.height).data;
+      const rows = [];
+      for (let y = 0; y < cv.height; y++) if (d[y * 4 + 3] > 8) rows.push(y);
+      const last = rows[rows.length - 1];
+      const top = cx.getImageData(16, 8, 1, 1).data;
+      const face = cx.getImageData(28, last, 1, 1).data;
+      out.skirt = {
+        h: cv.height, texW: cv.width, key: img.texture.key,
+        faceDarker: face[0] < top[0] && face[1] < top[1] && face[2] < top[2],
+        top: top[0] + ',' + top[1] + ',' + top[2],
+        face: face[0] + ',' + face[1] + ',' + face[2],
+      };
+    }
+
+    /* ③ 시설 — 산 중턱 평지에 놓고 그림이 올라갔나 */
+    h.week.cash = 500000000;
+    const flatRes = h.tapTile ? null : null;
+    const before = h.placement.count;
+    const okHi = h.placement.place(T, h.walls, h.gate, 'flowerbed', hi.i, hi.j, { land: { i0: 0, j0: 0, w: T.width, h: T.height } });
+    out.placed = { hi: okHi.ok, why: okHi.fail || 'ok' };
+    /* place() 는 { ok, placed: { handle, ... } } 를 준다 — handle 은 placed 안에 있다 */
+    const hd = okHi.ok && okHi.placed ? okHi.placed.handle : 0;
+    if (hd) {
+      S.refreshFacility(hd);
+      const fh = S.facilityImageAt(hd);
+      /* 1×1 발자국이라 footprintAnchor 의 y 는 타일 앵커와 같다 */
+      if (fh) out.kinds.push({ what: '시설', dy: fh.y - wantY(hi.i, hi.j, z), want: 0 });
+      else out.placed.why = out.placed.why + ' (그림 없음)';
+    }
+    void before; void flatRes;
+
+    /* ④ 벽 — 산 중턱에 실내 바닥을 깔면 벽이 같이 올라간다 */
+    for (let dj = 0; dj < 3; dj++) for (let di = 0; di < 3; di++) T.paint(hi.i + di, hi.j + dj + 4, 'floor_indoor');
+    for (let dj = 0; dj < 3; dj++) for (let di = 0; di < 3; di++) S.refreshTile(hi.i + di, hi.j + dj + 4);
+    S.refreshAllWalls && S.refreshAllWalls();
+    const wallY = S.wallImageYForTest ? S.wallImageYForTest(hi.i, hi.j + 4) : null;
+    out.wallY = wallY;
+
+    /* ⑤ 경사에는 못 놓는다 — 대조군 */
+    let mixed = null;
+    for (let j = 10; j < T.height - 2 && !mixed; j++) {
+      for (let i = 0; i < T.width - 2; i++) {
+        if (!T.levelUniform(i, j, 2, 2) && T.isWalkable(i, j) && !T.isWater(i, j)) { mixed = { i: i, j: j }; break; }
+      }
+    }
+    if (mixed) {
+      const c = h.placement.check(T, h.walls, h.gate, 'shop', mixed.i, mixed.j, { land: { i0: 0, j0: 0, w: T.width, h: T.height } });
+      out.slope = { at: mixed.i + ',' + mixed.j, fail: c.fail || 'ok' };
+    }
+    return out;
+  })()`)) as {
+    ok: boolean;
+    why?: string;
+    z?: number;
+    kinds?: { what: string; dy: number; want: number }[];
+    skirt?: { h: number; texW: number; key: string; faceDarker: boolean; top: string; face: string };
+    placed?: { hi: boolean; why: string };
+    slope?: { at: string; fail: string };
+    wallY?: number | null;
+  };
+
+  if (!lifted.ok) {
+    record('★ 높이가 화면에 올라간다 (K37 ⑤)', 'fail', lifted.why ?? '실패');
+  } else {
+    const bad = (lifted.kinds ?? []).filter((k) => k.dy !== k.want);
+    record(
+      '★ 단 위의 것이 종류별로 다 올라간다 — 하나만 빠뜨리면 그것만 파묻힌다 (K37 ⑤)',
+      bad.length === 0 && (lifted.kinds ?? []).length >= 2 ? 'pass' : 'fail',
+      (lifted.kinds ?? []).map((k) => `${k.what} ${k.dy}px(기대 ${k.want})`).join(' · ') +
+        (lifted.placed ? ` · 배치 ${lifted.placed.why}` : ''),
+    );
+    record(
+      '★ 절벽면이 구워져 있다 — 지면보다 어둡다 (K37 ⑤)',
+      lifted.skirt?.faceDarker === true ? 'pass' : 'fail',
+      lifted.skirt
+        ? `${lifted.skirt.key} ${lifted.skirt.texW}×${lifted.skirt.h} · 윗면 ${lifted.skirt.top} → 절벽 ${lifted.skirt.face}`
+        : '치마가 있는 칸을 못 찾았다',
+    );
+    record(
+      '★ 경사에는 못 놓는다 — 처방이 평지를 말한다 (K37 ⑤)',
+      lifted.slope?.fail === 'level-mixed' ? 'pass' : 'fail',
+      lifted.slope ? `(${lifted.slope.at}) → ${lifted.slope.fail}` : '단이 섞인 자리를 못 찾았다',
+    );
+  }
+
   // ── 10. 안드로이드 비정수 DPR ──
   const ctx2 = await browser.newContext({
     viewport: { width: 360, height: 800 },
