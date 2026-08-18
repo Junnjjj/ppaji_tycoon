@@ -3,7 +3,7 @@ import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
 import { PlacementGrid } from './placement.js';
-import { GuestStore, GUEST_DEFAULTS } from './guests.js';
+import { GuestStore, OPEN_GATE_DEFAULTS } from './guests.js';
 import { WeekRunner } from './week.js';
 import { assessRisk } from './risk.js';
 import {
@@ -35,7 +35,7 @@ function park(n = 8): {
   const w = new WallGrid(40, 32);
   const p = new PlacementGrid(40, 32);
   for (let k = 0; k < n; k++) p.place(t, w, GATE, 'shop', 6 + (k % 8) * 3, 8 + Math.floor(k / 8) * 3);
-  const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
+  const g = new GuestStore(t, w, p, GATE, OPEN_GATE_DEFAULTS);
   g.invalidate();
   return { t, w, p, g };
 }
@@ -189,7 +189,7 @@ describe('주 진행에 실제로 영향을 준다', () => {
 
   it('손님이 선 시설로 가지 않는다', () => {
     const { t, w, p } = park(6);
-    const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
+    const g = new GuestStore(t, w, p, GATE, OPEN_GATE_DEFAULTS);
     g.invalidate();
     const idle = new Set(p.all().map((x) => x.handle));
     g.setIdle(idle);

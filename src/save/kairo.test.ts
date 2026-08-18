@@ -47,7 +47,12 @@ function build(): KairoSaveInput {
   const week = new WeekRunner(terrain, placement, guests);
   const weekRng = new Rng(31337);
   const rep = week.run(weekRng, { season: 'summer' });
-  week.spend(1_000_000);
+  /*
+   * ⚠ 한 주 수입보다 **큰** 금액을 쓴다. 100만이면 입장료(K36-B②)가 들어온 뒤로
+   * 그 주 손익이 그걸 넘어서서, 아래 "잔액이 줄었다" 검사가 통과할 수 없다 —
+   * 검사의 뜻은 "건설비가 반영됐다"이지 "매출이 적다"가 아니다.
+   */
+  week.spend(3_000_000);
 
   const progress = new ProgressStore();
   const summary = {

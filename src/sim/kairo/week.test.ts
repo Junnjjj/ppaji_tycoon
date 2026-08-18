@@ -3,7 +3,7 @@ import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid, EDGE_SOLID, DIR_I_PLUS, DIR_I_MINUS, DIR_J_PLUS, DIR_J_MINUS } from './walls.js';
 import { PlacementGrid, allFacilityDefs, facilityDef } from './placement.js';
-import { GuestStore, GUEST_DEFAULTS } from './guests.js';
+import { GuestStore, OPEN_GATE_DEFAULTS } from './guests.js';
 import {
   WeekRunner,
   DAYS_PER_WEEK,
@@ -32,8 +32,9 @@ function world(size = 24, facilities: [string, number, number][] = []): World {
   const w = new WallGrid(size, size);
   const p = new PlacementGrid(size, size);
   for (const [id, i, j] of facilities) p.place(t, w, GATE, id, i, j);
+  // 입장 수속은 `admission.test.ts` 가 본다 — 여기서는 주 루프의 숫자만 잰다
   const g = new GuestStore(t, w, p, GATE, {
-    ...GUEST_DEFAULTS,
+    ...OPEN_GATE_DEFAULTS,
     wantUses: 2,
     useTicks: 8,
     patienceTicks: 200,
@@ -281,7 +282,7 @@ describe('주말이 성수기다', () => {
     const p = new PlacementGrid(20, 20);
     p.place(t, w, GATE, 'shop', 5, 5);
     const g = new GuestStore(t, w, p, GATE, {
-      ...GUEST_DEFAULTS,
+      ...OPEN_GATE_DEFAULTS,
       maxGuests: 3,
       useTicks: 60,
       wantUses: 9,

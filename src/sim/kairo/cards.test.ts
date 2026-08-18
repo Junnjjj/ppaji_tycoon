@@ -18,7 +18,7 @@ import {
 import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
 import { PlacementGrid } from './placement.js';
-import { GuestStore } from './guests.js';
+import { GuestStore, OPEN_GATE_DEFAULTS } from './guests.js';
 import { WeekRunner } from './week.js';
 import { admissionLimit, GRADES } from './progress.js';
 import { accidentChance } from './risk.js';
@@ -245,7 +245,8 @@ describe('주 진행에 실제로 영향을 준다', () => {
     const w = new WallGrid(40, 32);
     const p = new PlacementGrid(40, 32);
     for (let k = 0; k < 6; k++) p.place(t, w, { i: 2, j: 2 }, 'shop', 6 + k * 3, 8);
-    const g = new GuestStore(t, w, p, { i: 2, j: 2 });
+    // 카드 효과만 변수로 둔다 — 입장 수속은 `admission.test.ts` 가 본다
+    const g = new GuestStore(t, w, p, { i: 2, j: 2 }, OPEN_GATE_DEFAULTS);
     g.invalidate();
     return new WeekRunner(t, p, g).run(new Rng(808), {
       season: 'summer',

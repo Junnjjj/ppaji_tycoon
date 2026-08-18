@@ -4,7 +4,7 @@ import { GROUPS, groupDef, pickGroup, groupSize, needWeight, validateGroups } fr
 import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
 import { PlacementGrid } from './placement.js';
-import { GuestStore, GUEST_DEFAULTS } from './guests.js';
+import { GuestStore, OPEN_GATE_DEFAULTS } from './guests.js';
 import { WeekRunner, type Season } from './week.js';
 
 /**
@@ -98,7 +98,7 @@ describe('손님이 일행으로 들어온다', () => {
   const store = (): GuestStore => {
     const t = lawn();
     const p = new PlacementGrid(40, 32);
-    const g = new GuestStore(t, new WallGrid(40, 32), p, GATE, GUEST_DEFAULTS);
+    const g = new GuestStore(t, new WallGrid(40, 32), p, GATE, OPEN_GATE_DEFAULTS);
     g.invalidate();
     return g;
   };
@@ -161,7 +161,7 @@ describe('유형이 결과를 바꾼다 — 이름표가 아니어야 한다', (
     const w = new WallGrid(40, 32);
     const p = new PlacementGrid(40, 32);
     for (let k = 0; k < 6; k++) p.place(t, w, GATE, defId, 6 + k * 3, 8);
-    const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
+    const g = new GuestStore(t, w, p, GATE, OPEN_GATE_DEFAULTS);
     g.invalidate();
     return new WeekRunner(t, p, g).run(new Rng(seed), { season });
   };
@@ -179,7 +179,7 @@ describe('유형이 결과를 바꾼다 — 이름표가 아니어야 한다', (
     const w = new WallGrid(40, 32);
     const p = new PlacementGrid(40, 32);
     for (let k = 0; k < 6; k++) p.place(t, w, GATE, 'shop', 6 + k * 3, 8);
-    const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
+    const g = new GuestStore(t, w, p, GATE, OPEN_GATE_DEFAULTS);
     g.invalidate();
     const rng = new Rng(515);
     for (let k = 0; k < 40; k++) g.spawn(rng, 'summer');

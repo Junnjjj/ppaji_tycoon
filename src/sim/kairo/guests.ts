@@ -1,6 +1,6 @@
 import { Rng } from '../rng.js';
 import { FlowField } from '../pathfield.js';
-import type { KairoTerrain } from './terrain.js';
+import { KairoTerrain } from './terrain.js';
 import { type WallGrid } from './walls.js';
 import { PlacementGrid, facilityDef, guestWalkable } from './placement.js';
 import {
@@ -34,7 +34,16 @@ import type { Season } from './week.js';
  * 만족도만 집계한다.
  */
 
-export type GuestState = 'walking' | 'using' | 'leaving' | 'gone';
+/**
+ * 손님의 상태.
+ *
+ * `'arriving'` 은 **아직 공원 밖**이다 (K36-B②) — 정류장에 내려 매표소로 걸어가는 중.
+ * 이 구간을 따로 두는 이유는 두 가지다:
+ *   · 정원(`maxGuests`)은 **공원 안** 인원이다. 밖에서 걸어오는 사람까지 세면 정류장~매표소
+ *     거리가 그대로 정원을 깎아, 플레이어가 못 바꾸는 것이 상한을 정하게 된다
+ *   · 걷기 감점도 입장 뒤부터다 (아래 `walkPenalty` 주석)
+ */
+export type GuestState = 'arriving' | 'walking' | 'using' | 'leaving' | 'gone';
 
 /** 포즈 — 렌더 계약의 7종과 같은 이름. 시뮬이 정하고 렌더가 그린다 */
 export type GuestPose = 'idle' | 'walk' | 'swim' | 'float' | 'sit' | 'lie' | 'ride';
@@ -75,6 +84,14 @@ export interface Guest {
   /** 이용 중인 시설 handle 과 슬롯 번호 */
   usingHandle: number;
   usingSlot: number;
+  /**
+   * 지금 하는 이용이 **입장 수속**인가 (K36-B②).
+   *
+   * 표는 놀이가 아니다 — 이 이용은 `used`(→`wantUses`)·`usedNeeds`·시설 요금 어디에도
+   * 안 센다. 상태만으로는 구분이 안 되는데, 매표소에 선 순간 상태가 `'using'` 이라
+   * 다른 시설과 같아지기 때문이다.
+   */
+  admitting: boolean;
   /** 남은 이용 tick */
   useTicks: number;
   /** 만족도 0..100 — 퇴장 시점 값만 집계한다 */
@@ -133,6 +150,20 @@ export interface GuestTunables {
   walkPenalty: number;
   /** 갈 곳을 못 찾은 tick 마다 깎이는 양 */
   waitPenalty: number;
+  /**
+   * 입장료 (원). 매표소를 지날 때 **한 번** 받는다 (설계 §13.1 의 첫 줄).
+   *
+   * 시설 요금과 달리 지갑 배율을 안 탄다 — 정찰가라서다. 요금 슬라이더(`priceMult`)는
+   * 같이 민다 (`week.ts` 가 곱한다).
+   */
+  admissionFee: number;
+  /**
+   * 매표소를 거쳐야 들어오나 (K36-B②).
+   *
+   * 끄면 손님이 게이트에 툭 나타나던 예전 동작이 된다 — **대조군 전용**이다.
+   * 새 검사가 실제로 무언가를 막는지 보이려면 끈 쪽이 통과해야 한다.
+   */
+  requireTicket: boolean;
 }
 
 /**
@@ -171,10 +202,37 @@ export const GUEST_DEFAULTS: GuestTunables = {
    */
   walkPenalty: 0.22,
   waitPenalty: 0.12,
+  admissionFee: 10_000,
+  requireTicket: true,
 };
+
+/**
+ * 매표소를 안 거치는 튜너블 — **대조군과 구세계 전용**.
+ *
+ * 두 군데서 쓴다:
+ *   ① 음성 대조군 — "경유를 끄면 매표소 없이 들어온다"를 보여야 새 규칙이 실제로
+ *      무언가를 막는다는 게 증명된다
+ *   ② 도시 띠가 없는 작은 세계 — 단위 검사들이 재는 것은 길찾기·슬롯·만족도이지
+ *      입장 수속이 아니다. 거기에 매표소를 하나 끼워 넣으면 공급·콤보·위험도가 같이
+ *      움직여 **재던 것이 달라진다**
+ *
+ * 입장 수속 자체는 골든 시나리오(96×72 · 매표소 포함)와 아래 전용 검사, 헤드리스 봇,
+ * 브라우저 하네스가 켠 채로 돈다.
+ */
+export const OPEN_GATE_DEFAULTS: GuestTunables = { ...GUEST_DEFAULTS, requireTicket: false };
+
+/**
+ * 매표소의 시설 ID — 이건 **게이트**지 놀거리가 아니다.
+ *
+ * 그래서 `pickTarget`(놀러 갈 곳 고르기)에서 빼고, 입장 수속 전용 목적지로만 쓴다.
+ * 빼지 않으면 방금 표를 산 손님이 곧바로 매표소를 "운영 수요"로 다시 이용한다.
+ */
+export const TICKET_DEF_ID = 'ticket';
 
 export interface GuestStats {
   alive: number;
+  /** 아직 공원 밖 — 정류장에서 매표소로 걸어오는 중 */
+  arriving: number;
   /** 유형별 현재 인원 — 결산에서 "누가 왔나"를 보여준다 */
   byGroup: Record<GroupId, number>;
   walking: number;
@@ -186,6 +244,8 @@ export interface GuestStats {
   exitSatisfaction: number;
   /** 목적지를 못 찾아 나간 손님 수 */
   gaveUp: number;
+  /** 매표소를 못 지나 돌아간 손님 수 (누적) */
+  noTicket: number;
 }
 
 interface SlotClaim {
@@ -232,6 +292,24 @@ export class GuestStore {
    */
   private finishedFeeByNeed = new Map<string, number>();
   /**
+   * **입장한** 손님 누계 — 주간 결산의 `visitors` 가 이걸 센다 (K36-B②).
+   *
+   * ⚠ 예전에는 `spawn` 이 성공한 수를 입장으로 셌다. 매표소를 거치게 된 뒤로 그 둘은
+   * 다른 값이다 — 정류장에 내린 것과 표를 사고 들어온 것은 같지 않다. 결산의 "입장"이
+   * 전자를 가리키면, 매표소가 없는 판이 "입장 129명 · 매출 0" 으로 보인다.
+   */
+  private admittedCount = 0;
+  private admittedByGroup: Record<GroupId, number> = {
+    family: 0,
+    couple: 0,
+    friends: 0,
+    company: 0,
+  };
+  /** 걷힌 입장료 합 (요금 배율 전). 배율은 `week.ts` 가 곱한다 — 요금 정책은 거기 산다 */
+  private admissionSum = 0;
+  /** 매표소를 못 지나 돌아간 손님 (누적) */
+  private noTicketCount = 0;
+  /**
    * 아직 다 들어오지 않은 일행. 도착 1건마다 한 명씩 들어온다.
    *
    * ⚠ 일행 전체를 한 번에 넣으면 도착률 계산이 무너진다 — 주간 도착 수는 누적기가
@@ -257,7 +335,46 @@ export class GuestStore {
     readonly tunables: GuestTunables = GUEST_DEFAULTS,
   ) {
     this.limit = tunables.maxGuests;
+    this.stop = GuestStore.stopFor(terrain, gate);
   }
+
+  /**
+   * 손님이 내리는 칸 — **정류장**이다 (K36-B②). 게이트가 아니다.
+   *
+   * 정류장에서 게이트까지 다섯 칸을 걸어야 "밖에서 안으로 들어온다"가 읽힌다 (K36 이
+   * 도시 띠를 8줄로 벌린 이유와 같다). 그 다섯 칸은 플레이어가 못 바꾸므로 걷기 감점도
+   * 정원도 여기서는 세지 않는다.
+   *
+   * ⚠ 도시 띠가 없는 격자에서는 정류장 칸이 격자 밖이거나 잔디다 — 단위 테스트가
+   * 쓰는 작은 세계가 그렇다. 그때는 **게이트에서 시작한다.** 조용한 대체가 아니라
+   * `stopIsGate` 로 밖에서 확인할 수 있게 남긴다.
+   */
+  private static stopFor(
+    terrain: KairoTerrain,
+    gate: { i: number; j: number },
+  ): { i: number; j: number } {
+    const s = KairoTerrain.busStop();
+    return terrain.inside(s.i, s.j) && terrain.isGuestWalkable(s.i, s.j) ? s : gate;
+  }
+
+  /** 정류장을 못 찾아 게이트에서 시작하는가 — 검사가 이걸 본다 */
+  get stopIsGate(): boolean {
+    return this.stop.i === this.gate.i && this.stop.j === this.gate.j;
+  }
+
+  /** 손님이 내리는 칸 */
+  get busStop(): { i: number; j: number } {
+    return this.stop;
+  }
+
+  private readonly stop: { i: number; j: number };
+
+  /**
+   * 매표소 handle 들 — 거리장을 다시 만들 때 같이 갱신한다.
+   *
+   * 매 tick `placement.all().find(...)` 로 찾으면 손님×시설 이라 금방 비싸진다.
+   */
+  private readonly tickets = new Set<number>();
 
   get all(): readonly Guest[] {
     return this.guests;
@@ -316,6 +433,7 @@ export class GuestStore {
    */
   private rebuildFields(): void {
     this.fields.clear();
+    this.tickets.clear();
     const w = this.terrain.width;
     const h = this.terrain.height;
 
@@ -342,6 +460,7 @@ export class GuestStore {
       const f = new FlowField(w, h);
       f.build(this.walkable, targets, this.canCross);
       this.fields.set(item.handle, f);
+      if (item.defId === TICKET_DEF_ID) this.tickets.add(item.handle);
     }
 
     this.gateField = new FlowField(w, h);
@@ -403,6 +522,7 @@ export class GuestStore {
     const all: { handle: number; dist: number; need: string }[] = [];
     for (const [handle, field] of this.fields) {
       if (this.idle.has(handle)) continue; // 선 시설엔 안 간다
+      if (this.tickets.has(handle)) continue; // 매표소는 게이트다 — 놀러 가는 곳이 아니다
       const c = this.slotsOf(handle);
       if (!c || c.slots.every((s) => s !== 0)) continue;
       const d = field.distAt(g.i, g.j);
@@ -430,6 +550,67 @@ export class GuestStore {
   }
 
   /**
+   * 이 칸에서 **닿는** 매표소 중 가장 가까운 것. 하나도 못 닿으면 null.
+   *
+   * 슬롯을 안 본다 — 매표소는 줄을 세우는 곳이 아니라 지나가는 곳이다. 슬롯을 잡게 하면
+   * 정류장에서 걸어오는 내내 슬롯이 묶여, 정원 2인 매표소 하나가 **하루 5명**으로
+   * 입장을 조인다 (계산: 걸어오는 40~70 tick 동안 점유). 그건 이 변경의 의도가 아니다.
+   *
+   * 거리는 **손님이 선 칸** 기준이다. 정류장에서 공원으로 들어오는 길이 입구 한 열뿐이라
+   * (K36) 여기서 닿는다는 것은 게이트를 지나 닿는다는 뜻과 같다.
+   */
+  private pickTicket(i: number, j: number): number | null {
+    let bestHandle: number | null = null;
+    let bestDist = Infinity;
+    for (const handle of this.tickets) {
+      const field = this.fields.get(handle);
+      if (!field) continue;
+      const d = field.distAt(i, j);
+      if (d < 0) continue;
+      // handle 로 동점을 가른다 — 결정론 (불변식 2)
+      if (d < bestDist || (d === bestDist && bestHandle !== null && handle < bestHandle)) {
+        bestDist = d;
+        bestHandle = handle;
+      }
+    }
+    return bestHandle;
+  }
+
+  /**
+   * 공원 **안**에 있는 손님 수. 정원(`maxGuests`)은 이 값을 본다.
+   *
+   * 정류장에서 걸어오는 손님까지 세면, 플레이어가 못 바꾸는 다섯 칸이 정원을 깎는다.
+   */
+  private insideCount(): number {
+    let n = 0;
+    for (const g of this.guests) if (g.state !== 'arriving') n++;
+    return n;
+  }
+
+  /** 입장 확정 — 여기서만 `visitors` 가 는다 */
+  private admit(g: Guest, fee: number): void {
+    this.admittedCount++;
+    this.admittedByGroup[g.group] += 1;
+    this.admissionSum += fee;
+    g.state = 'walking';
+    g.pose = 'walk';
+  }
+
+  /**
+   * 입장하지 못하고 돌아간다.
+   *
+   * ⚠ **퇴장 집계(`exited`·`satSum`)에 넣지 않는다.** 들어온 적 없는 손님의 만족도를
+   * 평판에 섞으면 "매표소가 없다"가 "손님이 불만이다"로 번역되어 원인이 흐려진다 —
+   * 평판의 기반은 **퇴장** 만족도라는 결정과도 어긋난다.
+   */
+  private turnBack(g: Guest): void {
+    this.releaseSlot(g);
+    this.noTicketCount++;
+    this.noTicketTaken++;
+    g.state = 'gone';
+  }
+
+  /**
    * 손님 한 명 입장. 게이트가 못 걷는 칸이면 실패.
    *
    * 일행 단위로 들어온다 — 대기 중인 일행이 없으면 계절 비중으로 새 일행을 뽑는다.
@@ -441,8 +622,9 @@ export class GuestStore {
     /** 맵이 바꾼 유형 비중 (§4.5). 없으면 계절 기본값 */
     shares?: Partial<Record<GroupId, number>>,
   ): Guest | null {
-    if (this.guests.length >= this.limit) return null;
-    if (!this.walkable(this.gate.i, this.gate.j)) return null;
+    if (this.insideCount() >= this.limit) return null;
+    if (!this.walkable(this.stop.i, this.stop.j)) return null;
+    if (this.dirty) this.rebuildFields();
     if (!this.pending || this.pending.remaining <= 0) {
       const def = pickGroup(rng, season, shares);
       this.pending = { def, remaining: groupSize(rng, def), party: this.nextParty++ };
@@ -456,12 +638,13 @@ export class GuestStore {
       party: party.party,
       wallet: def.wallet,
       thrill: def.thrill[0] + rng.next() * (def.thrill[1] - def.thrill[0]),
-      i: this.gate.i,
-      j: this.gate.j,
-      fromI: this.gate.i,
-      fromJ: this.gate.j,
+      i: this.stop.i,
+      j: this.stop.j,
+      fromI: this.stop.i,
+      fromJ: this.stop.j,
       progress: 1,
-      state: 'walking',
+      // 정류장에 내린 상태 — 매표소를 지나야 손님이 된다 (K36-B②)
+      state: this.tunables.requireTicket ? 'arriving' : 'walking',
       pose: 'walk',
       facing: '+Z',
       palette: rng.int(8),
@@ -470,6 +653,7 @@ export class GuestStore {
       emoteTicks: 0,
       usingHandle: 0,
       usingSlot: -1,
+      admitting: false,
       useTicks: 0,
       satisfaction: this.tunables.startSatisfaction,
       used: 0,
@@ -482,6 +666,8 @@ export class GuestStore {
       rideTo: [0, 0],
     };
     this.guests.push(g);
+    // 경유를 끈 판(대조군·구형 하네스)은 그 자리에서 입장이다. 입장료는 안 받는다
+    if (!this.tunables.requireTicket) this.admit(g, 0);
     return g;
   }
 
@@ -531,6 +717,17 @@ export class GuestStore {
            */
           const usedHandle = g.usingHandle;
           this.releaseSlot(g);
+          if (g.admitting) {
+            /*
+             * 입장 수속이 끝났다 — **표는 놀이가 아니다.** `used`(→`wantUses`)도,
+             * `usedNeeds` 도, 시설 요금(`finishedFeeByNeed`)도 건드리지 않는다.
+             * 표를 이용 1회로 세면 손님이 시설 셋만 쓰고 나가고, 매표소가 "운영 수요"를
+             * 채워 버려 안내소·사무실을 지을 이유가 사라진다.
+             */
+            g.admitting = false;
+            this.admit(g, this.tunables.admissionFee);
+            continue;
+          }
           const gains = this.tunables.useGains;
           const gain = (gains[Math.min(g.used, gains.length - 1)] ?? 0) as number;
           g.used++;
@@ -561,6 +758,28 @@ export class GuestStore {
       let field: FlowField | null = null;
       if (g.state === 'leaving') {
         field = this.gateField;
+      } else if (g.state === 'arriving') {
+        /*
+         * 입장 수속 — 닿는 매표소로 간다. 하나도 못 닿으면 **입장이 안 된다.**
+         *
+         * 기다리게 하지 않는다: 매표소가 없는 판에서 손님이 정류장에 쌓이면 그게 곧
+         * 판이 얼어붙는 모양이다 (STUCK_LIMIT 주석의 죽음의 나선과 같은 구조).
+         * 돌려보내고 `noTicket` 으로 결산이 지목한다.
+         */
+        if (g.usingHandle === 0) {
+          const ticket = this.pickTicket(g.i, g.j);
+          if (ticket === null) {
+            this.turnBack(g);
+            continue;
+          }
+          // 슬롯은 안 잡는다 — 이유는 `pickTicket` 주석
+          g.usingHandle = ticket;
+        }
+        field = this.fields.get(g.usingHandle) ?? null;
+        if (!field) {
+          g.usingHandle = 0;
+          continue;
+        }
       } else {
         if (g.usingHandle === 0) {
           const target = this.pickTarget(g, rng);
@@ -605,6 +824,8 @@ export class GuestStore {
           if (g.used === 0) this.gaveUp++;
           g.state = 'gone';
         } else {
+          // 매표소에 닿았으면 이 이용은 입장 수속이다 — 상태를 덮기 전에 잡는다
+          g.admitting = g.state === 'arriving';
           g.state = 'using';
           const item = this.placement.all().find((f) => f.handle === g.usingHandle);
           const def = item ? facilityDef(item.defId) : undefined;
@@ -650,6 +871,9 @@ export class GuestStore {
             this.satSum += g.satisfaction;
             if (g.used === 0) this.gaveUp++;
             g.state = 'gone';
+          } else if (g.state === 'arriving') {
+            // 아직 입장 전이다 — 퇴장이 아니라 **못 들어간 것**이다
+            this.turnBack(g);
           } else {
             // 갈 곳이 없으면 나가기로 한다 — 그래도 못 나가면 위 분기가 정리한다
             g.state = 'leaving';
@@ -665,8 +889,16 @@ export class GuestStore {
       g.j = step[1];
       g.progress = 0;
       g.pose = 'walk';
-      // 걷는 만큼 깎인다 — 멀리 놓으면 만족도가 떨어져야 "가깝게"가 판단이 된다
-      g.satisfaction = Math.max(0, g.satisfaction - this.tunables.walkPenalty);
+      /*
+       * 걷는 만큼 깎인다 — 멀리 놓으면 만족도가 떨어져야 "가깝게"가 판단이 된다.
+       *
+       * ⚠ **입장 뒤부터** 센다 (K36-B②). 정류장→매표소는 도시 띠 폭이 정하는 고정
+       * 거리라 플레이어가 줄일 수 없다. 거기서 깎으면 **못 고치는 벌점**이 되고,
+       * "가깝게 놓는다"가 판단이 아니라 세금이 된다.
+       */
+      if (g.state !== 'arriving') {
+        g.satisfaction = Math.max(0, g.satisfaction - this.tunables.walkPenalty);
+      }
       g.facing =
         step[0] > g.fromI ? '+X' : step[0] < g.fromI ? '-X' : step[1] > g.fromJ ? '+Z' : '-Z';
     }
@@ -706,15 +938,18 @@ export class GuestStore {
     let walking = 0;
     let using = 0;
     let leaving = 0;
+    let arriving = 0;
     const byGroup: Record<GroupId, number> = { family: 0, couple: 0, friends: 0, company: 0 };
     for (const g of this.guests) {
       if (g.state === 'walking') walking++;
       else if (g.state === 'using') using++;
       else if (g.state === 'leaving') leaving++;
+      else if (g.state === 'arriving') arriving++;
       byGroup[g.group] += 1;
     }
     return {
       alive: this.guests.length,
+      arriving,
       byGroup,
       walking,
       using,
@@ -722,8 +957,40 @@ export class GuestStore {
       exited: this.exited,
       exitSatisfaction: this.exited === 0 ? 0 : this.satSum / this.exited,
       gaveUp: this.gaveUp,
+      noTicket: this.noTicketCount,
     };
   }
+
+  /**
+   * 이번 구간에 **입장한** 손님을 가져가고 비운다 — `takeFinished` 와 같은 모양이다.
+   *
+   * 주간 결산이 `spawn` 성공 수 대신 이걸 세야 "입장"이 실제 입장을 뜻한다. 전후 차이
+   * (`after.x − before.x`)로 재지 않는 이유도 같다 — 그 방식은 같은 tick 에 걸친 사건을
+   * 놓친다 (요금 징수에서 이미 겪은 실패다).
+   */
+  takeAdmitted(): {
+    count: number;
+    byGroup: Record<GroupId, number>;
+    /** 걷힌 입장료 합 (요금 배율 전) */
+    fee: number;
+    /** 매표소를 못 지나 돌아간 손님 */
+    noTicket: number;
+  } {
+    const out = {
+      count: this.admittedCount,
+      byGroup: { ...this.admittedByGroup },
+      fee: this.admissionSum,
+      noTicket: this.noTicketTaken,
+    };
+    this.admittedCount = 0;
+    this.admittedByGroup = { family: 0, couple: 0, friends: 0, company: 0 };
+    this.admissionSum = 0;
+    this.noTicketTaken = 0;
+    return out;
+  }
+
+  /** 아직 결산이 안 가져간 "못 들어간 손님" — 누계(`noTicketCount`)와 따로 둔다 */
+  private noTicketTaken = 0;
 
   /**
    * 이용을 마친 손님들의 지갑 배율 합을 가져가고 **비운다**.
