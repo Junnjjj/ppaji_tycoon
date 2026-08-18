@@ -19,7 +19,7 @@ const AUTOSAVE_INTERVAL_MS = 30_000;
 async function mainKairo(parent: HTMLElement): Promise<void> {
   const { bootKairo } = await import('./render/kairo/boot.js');
   const { GROUND_KINDS } = await import('./sim/kairo/terrain.js');
-  const { bakeIndoorWalls, paintFloor, INDOOR_FAIL_MESSAGES } = await import(
+  const { bakeIndoorWalls, paintFloor, paintFloorBlock, INDOOR_FAIL_MESSAGES } = await import(
     './sim/kairo/indoor.js'
   );
   const { allFacilityDefs, PLACE_FAIL_MESSAGES, guestWalkable } = await import(
@@ -193,7 +193,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           ? '도트격자 OK'
           : `도트격자 위반: ${s.dotGridViolations.join(' / ')}`);
     },
-    onTapTile: (i, j) => {
+    onTapTile: (i, j) => tapTile(i, j),
+  });
+
+  /**
+   * 화면 탭 한 번. **도구용으로도 열어 둔다** (`__kairo.tapTile`) — 하네스가 실제
+   * 좌표 계산 없이 이 경로를 그대로 밟을 수 있어야 검사가 UI 와 안 갈라진다.
+   */
+  const tapTile = (i: number, j: number): void => {
       if (!brush) {
         console.log(`[카이로] 탭 타일 (${i}, ${j}) — ${h.terrain.kindAt(i, j) ?? '?'}`);
         return;
@@ -258,55 +265,120 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           );
           return;
         }
-        const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j, placeOpts());
-        if (r.ok && r.placed) {
-          week.spend(cost);
-          h.scene.refreshFacility(r.placed.handle);
-          h.guests.invalidate();
-          // 놓고 나서 터진 콤보를 알려준다
-          const gained = previewCombos(h.placement, defId, i, j);
-          const now = evaluateCombos(h.placement);
-          refreshBuildList(); // 방이 찼으면 다음 시설이 잠겨야 한다 (K31)
-          const msgs: string[] = [`−${Math.round(cost / 10000)}만`];
-          if (now.active.length > 0) msgs.push(`콤보 ${now.active.length}개 발동`);
-          toast(msgs.join(' · '), 'ok');
-          void gained;
-          persist();
-        } else {
-          toast(PLACE_FAIL_MESSAGES[r.fail ?? 'unknown-def']);
-        }
+        /*
+         * ── 고스트 → 확정 (K32) ──
+         *
+         * 탭하면 **바로 안 놓는다.** 실제 스프라이트를 그 자리에 반투명으로 보여주고,
+         * 확정을 눌러야 놓인다. 회전과 "장비 탄 손님" 그림이 나중에 들어오므로 놓기 전에
+         * 만질 수 있는 상태가 필요하다.
+         *
+         * 못 놓는 자리도 고스트를 띄운다 — 왜 안 되는지 라벨로 알려주는 편이
+         * 토스트만 스치는 것보다 낫다.
+         */
+        const chk = h.placement.check(h.terrain, h.walls, GATE, defId, i, j, placeOpts());
+        h.scene.setGhost(defId, i, j, chk.ok);
+        hud.showConfirm(
+          chk.ok
+            ? `${def?.name ?? defId} · ${Math.round(cost / 10000)}만`
+            : PLACE_FAIL_MESSAGES[chk.fail ?? 'unknown-def'],
+          chk.ok,
+          {
+            cancel: () => h.scene.setGhost(null),
+            confirm: () => {
+              h.scene.setGhost(null);
+              const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j, placeOpts());
+              if (!r.ok || !r.placed) {
+                toast(PLACE_FAIL_MESSAGES[r.fail ?? 'unknown-def']);
+                return;
+              }
+              week.spend(cost);
+              h.scene.refreshFacility(r.placed.handle);
+              h.guests.invalidate();
+              const now = evaluateCombos(h.placement);
+              refreshBuildList(); // 방이 찼으면 다음 시설이 잠겨야 한다 (K31)
+              const msgs: string[] = [`−${Math.round(cost / 10000)}만`];
+              if (now.active.length > 0) msgs.push(`콤보 ${now.active.length}개 발동`);
+              toast(msgs.join(' · '), 'ok');
+              persist();
+            },
+          },
+        );
         return;
       }
       /*
        * 바닥 — 카이로의 `Tiling` 이다 (K27). **편집기 도구가 아니라 사는 것**이고,
        * 실내 바닥을 깐 자리는 그대로 방이 되어 벽이 자동으로 생긴다.
        */
-      const kind = GROUND_KINDS.find((k) => k.id === brush);
+      /*
+       * 붓 ID 는 `path_stone` 또는 `floor_indoor@4` 형태다 — 뒤의 숫자가 블록 크기다 (K32).
+       * 탭한 칸을 **블록의 좌상단**이 아니라 가운데에 가깝게 두어야 손가락이 가리킨 곳에
+       * 깔린다.
+       */
+      const [kindId, sizeStr] = brush.split('@');
+      const n = sizeStr ? Number(sizeStr) : 1;
+      const kind = GROUND_KINDS.find((k) => k.id === kindId);
       if (!kind) return;
-      if (h.terrain.kindAt(i, j) === brush) return;
-      if (kind.cost > week.cash) {
+      const oi = i - Math.floor((n - 1) / 2);
+      const oj = j - Math.floor((n - 1) / 2);
+
+      /*
+       * 토지 밖에는 못 깐다 (K32).
+       *
+       * ⚠ 시설은 `outside-land` 로 막는데 **바닥은 안 막고 있었다** — 아직 안 산 땅을
+       * 포장하고 건물까지 지을 수 있었다. 등급으로 땅이 열린다는 규칙이 절반만 걸려 있었다.
+       */
+      const land = landRect(currentGrade());
+      if (oi < 0 || oj < 0 || oi + n > land.w || oj + n > land.h) {
+        toast(PLACE_FAIL_MESSAGES['outside-land']);
+        return;
+      }
+
+      // 실제로 바뀔 칸 수를 먼저 세어 값을 확인한다 — 물에 걸치면 그만큼 덜 낸다
+      let willChange = 0;
+      for (let dj = 0; dj < n; dj++) {
+        for (let di = 0; di < n; di++) {
+          const ti = oi + di;
+          const tj = oj + dj;
+          if (!h.terrain.inside(ti, tj) || h.terrain.isWater(ti, tj)) continue;
+          if (h.terrain.kindAt(ti, tj) !== kindId) willChange++;
+        }
+      }
+      if (willChange === 0) return;
+      const cost = kind.cost * willChange;
+      if (cost > week.cash) {
         toast(
-          `돈이 부족합니다 — ${Math.round(kind.cost / 10000)}만 필요 ` +
+          `돈이 부족합니다 — ${Math.round(cost / 10000)}만 필요 ` +
             `(현재 ${Math.round(week.cash / 10000)}만)`,
         );
         return;
       }
-      const painted = paintFloor(h.terrain, h.walls, GATE, i, j, brush, walkableNow);
+      const painted = paintFloorBlock(
+        h.terrain,
+        h.walls,
+        GATE,
+        oi,
+        oj,
+        n,
+        n,
+        kindId as string,
+        walkableNow,
+      );
       if (!painted.ok) {
         toast(INDOOR_FAIL_MESSAGES[painted.fail ?? 'no-door']);
         return;
       }
-      if (painted.changed) {
-        if (kind.cost > 0) week.spend(kind.cost);
-        h.scene.refreshTile(i, j);
+      if (painted.changed > 0) {
+        if (kind.cost > 0) week.spend(kind.cost * painted.changed);
+        for (let dj = 0; dj < n; dj++) {
+          for (let di = 0; di < n; di++) h.scene.refreshTile(oi + di, oj + dj);
+        }
         h.scene.refreshAllWalls();
         h.guests.invalidate(); // 통행 가능성과 실내가 바뀐다
         // 방이 넓어졌으면 "자리 없음" 잠금이 풀려야 한다 (K31)
         refreshBuildList();
         persist();
       }
-    },
-  });
+  };
 
   /** 게이트 — K4 에서 매표소 배치로 대체한다. 지금은 좌상단 고정 */
   const GATE = saved?.gate ?? { i: 0, j: 0 };
@@ -345,6 +417,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
 
   const hud = new KairoHud(document.body, {
     onPick: (it: HudItem) => {
+      // 붓을 바꾸면 진행 중이던 배치는 취소한다 — 안 그러면 확정 바가 옛 시설을 가리킨다
+      hud.hideConfirm();
+      h.scene.setGhost(null);
       if (it.kind === 'facility') {
         brush = 'facility';
         brushFacility = it.id;
@@ -353,7 +428,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       }
     },
     onWeek: () => runWeek(),
+    /*
+     * 코스 탭 — 패널은 `coursePanel` 이 소유한다. `h` 와 마찬가지로 아래에서 만들어지므로
+     * 함수로 감싸 지연 참조한다 (TDZ 사고를 여러 번 겪었다).
+     */
+    onCourse: () => openCourse(),
   });
+
+  /** 코스 편집 열기 — 아래에서 패널이 만들어진 뒤에 실제로 불린다 */
+  let openCourse = (): void => {
+    /* 패널이 아직 없다 — 시트를 눌러도 아무 일도 안 일어나는 편이 낫다 */
+  };
 
   /** 건설 목록 — 등급이 오르면 잠금이 풀리므로 결산 뒤에 다시 만든다 */
   /**
@@ -373,17 +458,24 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     return false;
   };
 
+  /** 실내 바닥 한 칸 값 — 여러 곳에서 쓴다 */
+  const FLOOR_COST = GROUND_KINDS.find((k) => k.id === 'floor_indoor')?.cost ?? 0;
+
   const refreshBuildList = (): void => {
     const grade = currentGrade().grade;
     const items: HudItem[] = [
-      // 건물 — 확장이 카이로의 핵심 동사라 자기 탭을 준다 (K31)
-      {
+      /*
+       * 건물 — 확장이 카이로의 핵심 동사라 자기 탭을 준다 (K31).
+       * 2×2 · 4×4 두 크기 (K32) — 처음엔 크게 잡고 모서리는 작게 다듬는다.
+       * 값은 칸 수대로라 **크기가 값을 정하지 않는다** (물에 걸치면 그만큼 덜 낸다).
+       */
+      ...([2, 4] as const).map((n) => ({
         kind: 'ground' as const,
         tab: 'building' as const,
-        id: 'floor_indoor',
-        name: '건물 바닥',
-        sub: `${Math.round((GROUND_KINDS.find((k) => k.id === 'floor_indoor')?.cost ?? 0) / 10000)}만 · 칠하면 넓어짐`,
-      },
+        id: `floor_indoor@${n}`,
+        name: `건물 바닥 ${n}×${n}`,
+        sub: `칸당 ${Math.round(FLOOR_COST / 10000)}만 · 넓어짐`,
+      })),
       { kind: 'erase' as const, tab: 'building' as const, id: 'erase', name: '철거', sub: '잔디로' },
       ...GROUND_KINDS.filter((k) => k.id !== 'floor_indoor').map((k) => ({
         kind: 'ground' as const,
@@ -419,6 +511,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const clearBrush = (): void => {
     brush = null;
     hud.setBrush(null);
+    hud.hideConfirm();
+    h.scene.setGhost(null);
   };
 
   /*
@@ -432,6 +526,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   Object.assign(h, {
     Rng: RngCls,
+    tapTile, // 도구용 — 하네스가 UI 경로를 그대로 밟는다 (K32)
     sim: { bakeIndoorWalls, paintFloor, INDOOR_FAIL_MESSAGES, guestWalkable },
     simDefs: Object.fromEntries(allFacilityDefs().map((d) => [d.id, d])),
   });
@@ -826,6 +921,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     else coursePanel.show();
   });
   hud.menuSlot.append(courseBtn);
+
+  // 건설 시트의 코스 탭이 여는 곳 — 메뉴의 버튼과 같은 동작이다 (K32)
+  openCourse = (): void => {
+    if (!coursePanel.visible) coursePanel.show();
+  };
 
   const refreshCourseBtn = (): void => {
     courseBtn.textContent = courses.count > 0 ? `코스 ${courses.count}` : '코스';

@@ -381,15 +381,17 @@ async function main(): Promise<void> {
     record('건설 시트 탭', 'fail', '탭을 못 찾았다');
   } else {
     record(
-      '탭이 셋이다 — 시설 · 건물 · 바닥',
-      tabs.names.join(',') === 'facility,building,ground' ? 'pass' : 'fail',
+      '탭이 넷이다 — 시설 · 건물 · 바닥 · 코스 (K32)',
+      tabs.names.join(',') === 'facility,building,ground,course' ? 'pass' : 'fail',
       tabs.names.join(','),
     );
-    const floor = tabs.building.find((x) => x.pick === 'ground:floor_indoor');
+    // K32: 건물 바닥이 2×2 · 4×4 두 크기다
+    const b2 = tabs.building.find((x) => x.pick === 'ground:floor_indoor@2');
+    const b4 = tabs.building.find((x) => x.pick === 'ground:floor_indoor@4');
     record(
-      '건물 탭에 건물 바닥이 있고 "넓어짐"이라고 알려준다',
-      floor !== undefined && /넓어/.test(floor.sub) ? 'pass' : 'fail',
-      floor ? `${tabs.building.length}개 · ${floor.sub}` : '없음',
+      '건물 탭에 2×2 · 4×4 가 있고 "넓어짐"이라고 알려준다 (K32)',
+      b2 !== undefined && b4 !== undefined && /넓어/.test(b4.sub) ? 'pass' : 'fail',
+      b4 ? `${tabs.building.length}개 · ${b4.sub}` : '없음',
     );
     record(
       '바닥 탭은 실외 포장만 (5종 + 철거)',
@@ -2607,6 +2609,28 @@ async function main(): Promise<void> {
     if (pt.tag !== 'CANVAS') continue;
     await page.touchscreen.tap(pt.x, pt.y);
     await page.waitForTimeout(700); // 더블탭 확대를 피한다
+    /*
+     * K32: 탭하면 **고스트 + 확정 바**가 뜬다. 바로 안 놓인다 — 회전과 "장비 탄 손님"이
+     * 나중에 들어오므로 놓기 전에 만질 수 있는 상태를 뒀다. 확정을 눌러야 놓인다.
+     */
+    const ghost = (await page.evaluate(`(() => {
+      const c = document.getElementById('kairo-confirm');
+      const btn = document.getElementById('kairo-place-confirm');
+      return { bar: !!c && !c.hidden, ok: !!btn && !btn.disabled,
+               label: c ? (c.querySelector('.place-label') || {}).textContent : '',
+               ghost: !!window.__kairo.scene.ghost };
+    })()`)) as { bar: boolean; ok: boolean; label: string; ghost: boolean };
+    if (ghost.bar && ghost.ok) {
+      const before = (await page.evaluate(`window.__kairo.placement.count`)) as number;
+      if (before !== countBefore) tapDetail += ` · ⚠ 확정 전에 이미 놓였다`;
+      await page.click('#kairo-place-confirm');
+      await page.waitForTimeout(400);
+    } else if (ghost.bar) {
+      tapDetail += ` · (${ti},${tj}) 거절 "${ghost.label}"`;
+      await page.click('#kairo-place-cancel');
+      await page.waitForTimeout(200);
+      continue;
+    }
     const now = (await page.evaluate(`window.__kairo.placement.count`)) as number;
     if (now > countBefore) {
       placedAt = [ti, tj];
@@ -2786,6 +2810,161 @@ async function main(): Promise<void> {
       `최소 ${opened.minTap}px`,
     );
     await pg.screenshot({ path: `${SHOT_DIR}/kairo-hud-${tag}.png` });
+    await cx.close();
+  }
+
+  /*
+   * ── 9h. 고스트·블록 붓·코스 탭 (K32) ──
+   *
+   * 탭하면 바로 놓던 것을 **고스트 → 확정**으로 바꿨다. 회전과 "장비 탄 손님" 그림이
+   * 나중에 들어오므로 놓기 전에 만질 수 있는 상태가 필요하다.
+   */
+  {
+    const cx = await browser.newContext({
+      viewport: { width: 393, height: 852 },
+      deviceScaleFactor: 3,
+      isMobile: true,
+      hasTouch: true,
+    });
+    const pg = await cx.newPage();
+    await pg.addInitScript(`try { localStorage.clear(); } catch {}`);
+    await pg.goto(URL, { waitUntil: 'load' });
+    await pg.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+
+    const r = (await pg.evaluate(`(() => {
+      const h = window.__kairo, t = h.terrain, sc = h.scene;
+      const countIndoor = () => { let n = 0;
+        for (let j = 0; j < t.height; j++) for (let i = 0; i < t.width; i++) if (t.isIndoor(i, j)) n++;
+        return n; };
+      const out = {};
+
+      // ① 건물 블록 4×4 — 빈 잔디에 칠하면 실내가 16 늘고 값이 그만큼 나간다
+      out.indoor0 = countIndoor();
+      out.cash0 = h.week.cash;
+      document.getElementById('kairo-build-open').click();
+      document.querySelector('#kairo-sheet [data-tab="building"]').click();
+      document.querySelector('[data-pick="ground:floor_indoor@4"]').click();
+      h.tapTile(13, 6);
+      out.indoor1 = countIndoor();
+      out.cash1 = h.week.cash;
+
+      // ② 고스트 — 시설을 고르고 탭하면 아직 안 놓인다
+      out.count0 = h.placement.count;
+      document.getElementById('kairo-build-open').click();
+      document.querySelector('#kairo-sheet [data-tab="facility"]').click();
+      document.querySelector('[data-pick="facility:toilet"]').click();
+      h.tapTile(13, 6);
+      const c = document.getElementById('kairo-confirm');
+      out.bar = !!c && !c.hidden;
+      out.ghost = !!sc.ghost;
+      out.countAfterTap = h.placement.count;
+      out.rotateDisabled = document.getElementById('kairo-place-rotate').disabled;
+
+      // 취소하면 안 놓인다
+      document.getElementById('kairo-place-cancel').click();
+      out.countAfterCancel = h.placement.count;
+      out.ghostAfterCancel = !!sc.ghost;
+
+      // 다시 탭하고 확정하면 놓인다
+      h.tapTile(13, 6);
+      const cf = document.getElementById('kairo-place-confirm');
+      out.barBefore = !document.getElementById('kairo-confirm').hidden;
+      out.confirmDisabled = cf.disabled;
+      out.label2 = (document.getElementById('kairo-confirm').querySelector('.place-label') || {}).textContent;
+      cf.click();
+      out.countAfterConfirm = h.placement.count;
+      return out;
+    })()`)) as Record<string, number | boolean>;
+
+    record(
+      '건물 4×4 블록이 실내를 16칸 늘리고 값이 그만큼 나간다 (K32)',
+      (r.indoor1 as number) - (r.indoor0 as number) === 16 &&
+        (r.cash0 as number) - (r.cash1 as number) === 16 * 30000
+        ? 'pass'
+        : 'fail',
+      `실내 +${(r.indoor1 as number) - (r.indoor0 as number)} · 현금 −${Math.round(
+        ((r.cash0 as number) - (r.cash1 as number)) / 10000,
+      )}만`,
+    );
+    record(
+      '시설을 탭하면 고스트가 뜨고 **아직 안 놓인다**',
+      r.bar === true && r.ghost === true && r.countAfterTap === r.count0 ? 'pass' : 'fail',
+      `바 ${String(r.bar)} · 고스트 ${String(r.ghost)} · 시설 ${String(r.countAfterTap)}`,
+    );
+    record(
+      '취소하면 안 놓이고 고스트가 사라진다',
+      r.countAfterCancel === r.count0 && r.ghostAfterCancel === false ? 'pass' : 'fail',
+      `시설 ${String(r.countAfterCancel)} · 고스트 ${String(r.ghostAfterCancel)}`,
+    );
+    record(
+      '확정하면 놓인다',
+      (r.countAfterConfirm as number) === (r.count0 as number) + 1 ? 'pass' : 'fail',
+      `${String(r.count0)} → ${String(r.countAfterConfirm)} · 바 ${String(r.barBefore)} · disabled ${String(r.confirmDisabled)} · "${String(r.label2)}"`,
+    );
+    record(
+      '회전 버튼은 자리만 잡혀 있다 (방향 스프라이트가 생기면 켠다)',
+      r.rotateDisabled === true ? 'pass' : 'fail',
+      `disabled ${String(r.rotateDisabled)}`,
+    );
+    await cx.close();
+  }
+
+  /*
+   * ── 9g. 해금된 토지가 화면에 보인다 (K32) ──
+   *
+   * ⚠ K25 에 넣은 기능인데 **K32 까지 죽어 있었다.** `setLand` 가 씬 타일이 생기기 전에
+   * 불려 조용히 아무것도 안 했고, **아무도 tint 를 안 봐서** 검사 155개가 전부 통과했다.
+   * 그래서 이 검사를 넣는다 — 음성 대조군까지 같이.
+   */
+  {
+    const cx = await browser.newContext({
+      viewport: { width: 393, height: 852 },
+      deviceScaleFactor: 3,
+      isMobile: true,
+      hasTouch: true,
+    });
+    const pg = await cx.newPage();
+    await pg.addInitScript(`try { localStorage.clear(); } catch {}`);
+    await pg.goto(URL, { waitUntil: 'load' });
+    await pg.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+    const tint = (await pg.evaluate(`(() => {
+      const sc = window.__kairo.scene;
+      const at = (i, j) => {
+        const t = sc.tileImages[j * 64 + i];
+        return t ? (t.tintTopLeft >>> 0).toString(16) : 'none';
+      };
+      // 1등급 토지는 18×34 — (5,5) 는 안, (40,5)·(5,40) 은 밖
+      const before = { inside: at(5, 5), outX: at(40, 5), outY: at(5, 40) };
+      // 음성 대조군 — 토지를 격자 전체로 넓히면 밖이 사라져 전부 같아야 한다
+      sc.setLand(64, 48);
+      const all = { inside: at(5, 5), outX: at(40, 5), outY: at(5, 40) };
+      return { before: before, all: all };
+    })()`)) as {
+      before: { inside: string; outX: string; outY: string };
+      all: { inside: string; outX: string; outY: string };
+    };
+
+    record(
+      '해금된 토지 밖이 어둡게 표시된다 (K32)',
+      tint.before.inside !== tint.before.outX && tint.before.inside !== tint.before.outY
+        ? 'pass'
+        : 'fail',
+      `안 ${tint.before.inside} · 밖 ${tint.before.outX}/${tint.before.outY}`,
+    );
+    record(
+      '⚠ 음성 대조군 — 토지를 다 열면 구분이 사라진다 (검사가 유의미한가)',
+      tint.all.inside === tint.all.outX && tint.all.inside === tint.all.outY ? 'pass' : 'fail',
+      `안 ${tint.all.inside} · 밖 ${tint.all.outX}/${tint.all.outY}`,
+    );
+    await pg.screenshot({ path: `${SHOT_DIR}/kairo-land.png` });
     await cx.close();
   }
 

@@ -220,3 +220,44 @@ export function paintFloor(
   }
   return { ok: true, changed: true };
 }
+
+/**
+ * 사각 블록을 한 번에 칠한다 (K32) — 건물 바닥 2×2 · 4×4 붓.
+ *
+ * ⚠ 칸마다 `paintFloor` 를 부르면 안 된다. 중간 상태에서 문이 잠깐 사라져 `no-door` 로
+ * 되돌아가는 일이 생긴다. **전부 칠한 뒤 한 번 굽고, 실패하면 통째로 되돌린다.**
+ *
+ * 물·격자 밖·이미 같은 바닥인 칸은 건너뛴다 — 그래서 4×4 라고 늘 16칸이 아니다.
+ * 값은 **실제로 바뀐 칸 수**(`changed`)대로 받아야 한다.
+ */
+export function paintFloorBlock(
+  terrain: KairoTerrain,
+  walls: WallGrid,
+  gate: { i: number; j: number },
+  i0: number,
+  j0: number,
+  bw: number,
+  bh: number,
+  kind: string,
+  walkable?: (i: number, j: number) => boolean,
+): { ok: boolean; fail?: IndoorFail; changed: number } {
+  const before: [number, number, string][] = [];
+  for (let j = j0; j < j0 + bh; j++) {
+    for (let i = i0; i < i0 + bw; i++) {
+      if (!terrain.inside(i, j) || terrain.isWater(i, j)) continue;
+      const k = terrain.kindAt(i, j);
+      if (k === null || k === kind) continue;
+      before.push([i, j, k]);
+    }
+  }
+  if (before.length === 0) return { ok: true, changed: 0 };
+
+  for (const [i, j] of before) terrain.paint(i, j, kind);
+  const r = bakeIndoorWalls(terrain, walls, gate, walkable);
+  if (!r.ok) {
+    for (const [i, j, k] of before) terrain.paint(i, j, k);
+    bakeIndoorWalls(terrain, walls, gate, walkable);
+    return { ok: false, ...(r.fail ? { fail: r.fail } : {}), changed: 0 };
+  }
+  return { ok: true, changed: before.length };
+}

@@ -31,7 +31,7 @@ export type BuildKind = 'ground' | 'facility' | 'erase';
  * `building`** 이다. 확장이 카이로의 핵심 동사라 자기 탭을 줘야 보인다 — 바닥 탭에
  * 섞여 있을 때는 "이게 건물을 넓히는 것"임을 아무도 몰랐다 (직접 플레이하다 막혔다).
  */
-export type BuildTab = 'facility' | 'building' | 'ground';
+export type BuildTab = 'facility' | 'building' | 'ground' | 'course';
 
 export interface BuildItem {
   kind: BuildKind;
@@ -51,6 +51,11 @@ export type RiskTone = 'safe' | 'watch' | 'caution' | 'danger';
 export interface HudOptions {
   onPick: (item: BuildItem) => void;
   onWeek: () => void;
+  /**
+   * 코스 탭 — 견인기구 루트는 **짓는 것**이지 관리 메뉴가 아니다 (K32).
+   * 메뉴 시트 안에 있을 때는 버튼이 안 보여서 "코스 기능이 없다"로 읽혔다.
+   */
+  onCourse: () => void;
 }
 
 /** `<div class="x">텍스트</div>` 한 줄짜리 헬퍼 — 이 파일에서만 쓴다 */
@@ -84,6 +89,13 @@ export class KairoHud {
   private readonly tabs: HTMLDivElement;
   private readonly buildBody: HTMLDivElement;
   private readonly menuBody: HTMLDivElement;
+
+  private readonly confirmBar: HTMLDivElement;
+  private readonly confirmLabel: HTMLDivElement;
+  private readonly confirmBtn: HTMLButtonElement;
+  private readonly rotateBtn: HTMLButtonElement;
+  private onConfirm: (() => void) | null = null;
+  private onCancel: (() => void) | null = null;
 
   private readonly opts: HudOptions;
   private items: BuildItem[] = [];
@@ -166,7 +178,64 @@ export class KairoHud {
     this.sheet.append(head, body);
     parent.append(this.sheet);
 
+    /*
+     * ── 확정 바 (K32) ──
+     *
+     * 시설은 탭하면 바로 안 놓인다. 고스트를 보고 확정한다 — 회전과 "장비 탄 손님"이
+     * 나중에 들어오므로 **놓기 전에 만질 수 있는 상태**가 필요하다.
+     */
+    this.confirmBar = el('div', 'kconfirm');
+    this.confirmBar.id = 'kairo-confirm';
+    this.confirmBar.hidden = true;
+    this.confirmLabel = el('div', 'place-label');
+    const btns = el('div', 'place-buttons');
+    const cancel = el('button', 'place-btn cancel', '취소');
+    cancel.id = 'kairo-place-cancel';
+    cancel.addEventListener('click', () => {
+      const cb = this.onCancel;
+      this.hideConfirm();
+      cb?.();
+    });
+    // 회전 — 방향 스프라이트가 생기면 켠다. 자리를 지금 잡아 둬야 나중에 배치가 안 흔들린다
+    this.rotateBtn = el('button', 'place-btn rotate', '↻');
+    this.rotateBtn.id = 'kairo-place-rotate';
+    this.rotateBtn.disabled = true;
+    this.rotateBtn.title = '회전 — 방향 스프라이트가 생기면 켜집니다';
+    this.confirmBtn = el('button', 'place-btn confirm', '확정');
+    this.confirmBtn.id = 'kairo-place-confirm';
+    this.confirmBtn.addEventListener('click', () => {
+      const cb = this.onConfirm;
+      this.hideConfirm();
+      cb?.();
+    });
+    btns.append(cancel, this.rotateBtn, this.confirmBtn);
+    this.confirmBar.append(this.confirmLabel, btns);
+    parent.append(this.confirmBar);
+
     this.setBrush(null);
+  }
+
+  /**
+   * 배치 확정 바를 띄운다. `ok` 가 false 면 확정을 막고 라벨을 경고색으로 —
+   * 왜 안 되는지(`label`)를 같이 보여준다.
+   */
+  showConfirm(label: string, ok: boolean, on: { confirm: () => void; cancel: () => void }): void {
+    this.confirmLabel.className = ok ? 'place-label' : 'place-label bad';
+    this.confirmLabel.textContent = label;
+    this.confirmBtn.disabled = !ok;
+    this.onConfirm = on.confirm;
+    this.onCancel = on.cancel;
+    this.confirmBar.hidden = false;
+  }
+
+  hideConfirm(): void {
+    this.confirmBar.hidden = true;
+    this.onConfirm = null;
+    this.onCancel = null;
+  }
+
+  get confirming(): boolean {
+    return !this.confirmBar.hidden;
   }
 
   setStatus(text: string): void {
@@ -232,10 +301,17 @@ export class KairoHud {
       ['facility', '시설'],
       ['building', '건물'],
       ['ground', '바닥'],
+      ['course', '코스'],
     ] as const) {
       const b = el('button', `tab-btn${this.tab === key ? ' on' : ''}`, name);
       b.dataset['tab'] = key;
       b.addEventListener('click', () => {
+        if (key === 'course') {
+          // 코스는 목록이 아니라 전용 편집 화면이다 — 시트를 닫고 넘긴다
+          this.hide();
+          this.opts.onCourse();
+          return;
+        }
         this.tab = key;
         this.renderBuild();
       });

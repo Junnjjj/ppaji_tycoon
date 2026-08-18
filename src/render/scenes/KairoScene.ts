@@ -145,6 +145,17 @@ export class KairoScene extends Phaser.Scene {
   private anchorGfx: Phaser.GameObjects.Graphics | null = null;
   /** 해금된 토지 경계선 (K25) */
   private landGfx: Phaser.GameObjects.Graphics | null = null;
+  /** 배치 미리보기 (K32) — 확정하기 전의 시설 */
+  private ghost: Phaser.GameObjects.Image | null = null;
+  /**
+   * 해금된 토지 크기 — **기억해 뒀다가 타일이 생기면 적용한다** (K32).
+   *
+   * ⚠ `setLand` 는 `create()` 보다 먼저 불릴 수 있다 (`bootKairo` 가 씬 생성 전에
+   * 돌아온다). 그때 바로 칠하면 타일 배열이 비어 있어 **조용히 아무 일도 안 한다** —
+   * K25 부터 토지 표시가 그렇게 죽어 있었고, 아무도 tint 를 안 봐서 못 잡았다.
+   * 호출 순서에 기대지 않도록 씬이 값을 들고 있는다.
+   */
+  private land: { w: number; h: number } | null = null;
   private backdrops: Phaser.GameObjects.TileSprite[] = [];
   private dragMoved = 0;
   private lastPointer = { x: 0, y: 0 };
@@ -194,6 +205,7 @@ export class KairoScene extends Phaser.Scene {
 
     this.buildBackdrop();
     this.buildGround();
+    this.applyLand(); // 부팅보다 먼저 정해진 토지를 여기서 반영한다
     this.buildWalls();
     // 코스 오버레이는 전부보다 위 — 손님·시설에 가리면 못 끈다
     this.courseGfx = this.add.graphics().setDepth(1_000_000).setVisible(false);
@@ -391,6 +403,39 @@ export class KairoScene extends Phaser.Scene {
   }
 
   /**
+   * 배치 미리보기 (K32) — 확정하기 전에 **실제 스프라이트**를 그 자리에 보여준다.
+   *
+   * 탭하면 바로 놓던 것을 고스트 + 확정으로 바꾼 이유: 회전과 "장비를 타고 있는 손님"
+   * 그림이 나중에 들어온다. 놓기 전에 만질 수 있는 상태가 있어야 그걸 받을 수 있다.
+   *
+   * `facing` 은 지금 안 쓰지만 **인자를 열어 둔다** — 나중에 방향 스프라이트가 생기면
+   * 여기만 바뀌고 부르는 쪽은 그대로다.
+   */
+  setGhost(defId: string | null, i = 0, j = 0, ok = true, facing = 0): void {
+    void facing;
+    if (defId === null) {
+      this.ghost?.destroy();
+      this.ghost = null;
+      return;
+    }
+    const def = facilityDef(defId);
+    if (!def) return;
+    const [w, d] = def.size;
+    const a = footprintAnchor(i, j, w, d);
+    if (!this.ghost) {
+      this.ghost = this.add.image(a.x, a.y, `facility/${defId}`);
+      this.ghost.setOrigin(0.5, 1);
+    } else {
+      this.ghost.setTexture(`facility/${defId}`);
+      this.ghost.setPosition(a.x, a.y);
+    }
+    this.ghost.setAlpha(0.62);
+    // 못 놓는 자리는 붉게 — 확정 바의 경고색과 짝이다
+    this.ghost.setTint(ok ? 0x8fe0ff : 0xff6a5a);
+    this.ghost.setDepth(depthKey(i + w - 1, j + d - 1) + 3);
+  }
+
+  /**
    * 해금된 토지를 표시한다 (K25) — 경계선 + 바깥 칸 어둡게.
    *
    * ## 왜 어둡게까지 하나
@@ -401,6 +446,16 @@ export class KairoScene extends Phaser.Scene {
    * 등급이 바뀔 때만 부른다 — 타일 3,072장을 매 프레임 만지면 안 된다.
    */
   setLand(lw: number, lh: number): void {
+    this.land = { w: lw, h: lh };
+    this.applyLand();
+  }
+
+  /** 기억한 토지를 실제 타일에 칠한다. 타일이 아직 없으면 아무것도 안 하고, `create()` 가 다시 부른다 */
+  private applyLand(): void {
+    const land = this.land;
+    if (!land || this.tileImages.length === 0) return;
+    const lw = land.w;
+    const lh = land.h;
     for (let j = 0; j < GRID_H; j++) {
       for (let i = 0; i < GRID_W; i++) {
         const img = this.tileImages[j * GRID_W + i];

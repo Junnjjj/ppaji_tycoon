@@ -30,6 +30,7 @@
   --text-mute: #63808f;
   --text-locked: #8a6a6a;
   --text-on-solid: #fff;
+  --primary-edge: #4ea6e0;
   --bar-bg: linear-gradient(rgb(20 44 60 / 88%), rgb(10 26 36 / 96%));
   --sheet-bg: rgb(10 26 36 / 97%);
   --goal-bg: rgb(16 34 46 / 82%);
@@ -924,4 +925,62 @@ body {
   .ksheet {
     animation: none;
   }
+}
+
+/* ── 배치 확정 바 (K32) ──────────────────────────────────────────────────
+ *
+ * 시설은 탭하면 **바로 안 놓인다** — 고스트가 뜨고 확정을 눌러야 놓인다.
+ * 회전과 "장비 탄 손님"이 나중에 들어오므로, 놓기 전에 만질 수 있는 상태가 필요하다.
+ *
+ * 시각은 v1 의 `.place-label` / `.place-btn` 을 그대로 쓴다 (K28 의 인라인 금지 원칙).
+ * v1 의 `.place-bar` 는 `.hud` flex 안에 있다는 전제라 위치만 여기서 다시 잡는다.
+ */
+
+.kconfirm {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(56px + var(--safe-b));
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 8px;
+  background: linear-gradient(rgb(10 26 36 / 0%), rgb(10 26 36 / 92%) 40%);
+  pointer-events: none;
+}
+
+.kconfirm[hidden] {
+  display: none;
+}
+
+.kconfirm .place-label,
+.kconfirm .place-buttons {
+  pointer-events: auto;
+}
+
+/* 못 놓는 자리면 라벨이 경고색이 된다 — 고스트의 붉은색과 짝을 이룬다 */
+.kconfirm .place-label.bad {
+  color: var(--bad);
+}
+
+.kconfirm .place-btn.confirm {
+  background: var(--panel-primary);
+  border-color: var(--primary-edge);
+}
+
+.kconfirm .place-btn.cancel {
+  flex: 0 0 auto;
+  min-width: 84px;
+}
+
+/* 회전 — 자리만 잡아 둔다. 방향 스프라이트가 생기면 켠다 (K32) */
+.kconfirm .place-btn.rotate {
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+
+.kconfirm .place-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
 }
