@@ -154,7 +154,8 @@ export function applyStartKit(input: StartKitInput): StartKitResult {
       .sort((a, b) => a.vehicleCost - b.vehicleCost)[0];
     if (preset && equip) {
       const handles = defaultHandles(preset, dockAt, { x: 0, y: 1 });
-      const v = validateCourse(terrain, handles, dockAt, preset, equip.id, 1);
+      // 물려받은 코스는 첫 코스지만, 겹침 판정에 같은 목록을 넘긴다 (K37 — 규칙이 하나다)
+      const v = validateCourse(terrain, handles, dockAt, preset, equip.id, 1, courses.all);
       if (v.ok) {
         courses.add({ presetId: preset.id, equipId: equip.id, vehicles: 1, dock: dockAt, handles });
         course = true;

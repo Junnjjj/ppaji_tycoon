@@ -2537,7 +2537,14 @@ async function main(): Promise<void> {
       const cr = cv.getBoundingClientRect();
       const sx = cr.width / cv.width, sy = cr.height / cv.height;
       const cur = h.coursePanel.state.dock;
-      const pick = h.scene.dockMarks.find((c) => c.x !== cur.x || c.y !== cur.y);
+      /*
+       * K37: **코스가 없는** 후보를 고른다. 이 절은 탭 뒤에 곧바로 확정까지 하는데,
+       * 코스가 이미 있는 잔교로 옮기면 `dock-taken` 으로 확정이 잠긴다 (그게 맞는 동작이다).
+       */
+      const used = {};
+      for (const c of h.courses.all) used[c.dock.x + ',' + c.dock.y] = 1;
+      const rest = h.scene.dockMarks.filter((c) => c.x !== cur.x || c.y !== cur.y);
+      const pick = rest.find((c) => !used[c.x + ',' + c.y]) || rest[0];
       if (!pick) return null;
       h.scene.focusTile(pick.x, pick.y, 160);
       const r = h.scene.tileScreenRect(pick.x, pick.y);
@@ -2592,6 +2599,118 @@ async function main(): Promise<void> {
       `현금 ${Math.round(byButton.cash / 10000)}만 → ${Math.round(afterBtn.cash / 10000)}만` +
       (byButton.disabled ? ' · ⚠ 확정 버튼이 잠겨 있었다' : ''),
   );
+
+  /*
+   * ── 8c·코스는 같은 자리에 겹쳐 놓이지 않는다 (K37) ──
+   *
+   * 실측 버그: 현금을 채우고 장비 셋을 연달아 확정했더니 **한 잔교(43,32)에 넷**이
+   * 완전히 같은 좌표로 쌓였다. 판정이 자기 자신만 봤고(물·선착장·수면), 기본 제안이
+   * 기존 코스를 몰랐다. 사용자에게는 "장비를 19종 바꿔도 위치가 안 변한다"로 보였다.
+   */
+  const overlapUi = (await page.evaluate(`(() => {
+    const h = window.__kairo, panel = h.coursePanel;
+    const taken = h.courses.all.map((c) => ({ x: c.dock.x, y: c.dock.y }));
+    if (taken.length < 2) return { ok: false, why: '코스가 둘이 안 놓였다 — 앞 절부터 본다' };
+    // (1) 다시 열면 **코스가 없는 잔교**를 제안한다
+    panel.hide();
+    panel.show();
+    const suggested = panel.state.dock;
+    const onTaken = taken.some((d) => d.x === suggested.x && d.y === suggested.y);
+    // (2) 놓인 코스들의 자리가 서로 다르다
+    const keys = h.courses.all.map((c) => c.dock.x + ',' + c.dock.y);
+    return {
+      ok: true,
+      taken: taken, suggested: suggested, onTaken: onTaken,
+      courses: keys.length, distinct: [...new Set(keys)].length,
+      marks: h.scene.dockMarks.length
+    };
+  })()`)) as {
+    ok: boolean;
+    why?: string;
+    taken?: { x: number; y: number }[];
+    suggested?: { x: number; y: number };
+    onTaken?: boolean;
+    courses?: number;
+    distinct?: number;
+    marks?: number;
+  };
+
+  record(
+    '★ 코스가 있는 잔교를 다시 제안하지 않는다 (K37)',
+    overlapUi.ok && overlapUi.onTaken === false && (overlapUi.marks ?? 0) > (overlapUi.taken?.length ?? 0)
+      ? 'pass'
+      : 'fail',
+    overlapUi.ok
+      ? `제안 (${overlapUi.suggested?.x},${overlapUi.suggested?.y}) · ` +
+        `찬 잔교 ${(overlapUi.taken ?? []).map((d) => `(${d.x},${d.y})`).join(' ')} · ` +
+        `후보 ${overlapUi.marks}개`
+      : (overlapUi.why ?? '실패'),
+  );
+  record(
+    '★ 확정한 코스들의 자리가 서로 다르다 — 겹쳐 쌓이지 않는다 (K37)',
+    (overlapUi.distinct ?? 0) === (overlapUi.courses ?? -1) && (overlapUi.courses ?? 0) >= 2
+      ? 'pass'
+      : 'fail',
+    `코스 ${overlapUi.courses ?? 0}개 · 서로 다른 잔교 ${overlapUi.distinct ?? 0}곳`,
+  );
+
+  /*
+   * 막힐 때 **이유가 화면에 보이는가.** 코스가 있는 잔교를 진짜 손가락으로 탭한다 —
+   * 탭은 존중하되(무시하면 "안 눌린다"가 된다) 확정은 잠기고 처방이 뜬다.
+   */
+  const takenTap = (await page.evaluate(`(() => {
+    const h = window.__kairo, cv = document.querySelector('canvas');
+    const cr = cv.getBoundingClientRect();
+    const sx = cr.width / cv.width, sy = cr.height / cv.height;
+    const used = {};
+    for (const c of h.courses.all) used[c.dock.x + ',' + c.dock.y] = 1;
+    const pick = h.scene.dockMarks.find((m) => used[m.x + ',' + m.y]);
+    if (!pick) return null;
+    h.scene.focusTile(pick.x, pick.y, 160);
+    const r = h.scene.tileScreenRect(pick.x, pick.y);
+    return { x: Math.round(cr.left + (r.x + 16) * sx), y: Math.round(cr.top + (r.y + 8) * sy), tile: pick };
+  })()`)) as { x: number; y: number; tile: { x: number; y: number } } | null;
+  if (takenTap === null) {
+    record('★ 코스가 있는 잔교를 고르면 이유가 보인다 (K37)', 'fail', '찬 잔교가 후보에 없다');
+  } else {
+    await page.touchscreen.tap(takenTap.x, takenTap.y);
+    await page.waitForTimeout(400);
+    const blocked = (await page.evaluate(`(() => {
+      const h = window.__kairo;
+      const why = document.querySelector('#kairo-course .kcourse-why');
+      const btn = document.getElementById('kairo-course-confirm');
+      const before = h.courses.count;
+      btn.click(); // 잠긴 버튼을 눌러도 안 늘어야 한다
+      return {
+        dock: h.coursePanel.state.dock,
+        why: (why && why.textContent) || '',
+        visible: !!why && why.getBoundingClientRect().height > 0,
+        disabled: btn.disabled,
+        before: before, after: h.courses.count
+      };
+    })()`)) as {
+      dock: { x: number; y: number };
+      why: string;
+      visible: boolean;
+      disabled: boolean;
+      before: number;
+      after: number;
+    };
+    const moved = blocked.dock.x === takenTap.tile.x && blocked.dock.y === takenTap.tile.y;
+    record(
+      '★ 코스가 있는 잔교를 고르면 **이유가 화면에** 보인다 — 처방까지 (K37)',
+      moved && blocked.disabled && blocked.visible && blocked.why.includes('다른 잔교')
+        ? 'pass'
+        : 'fail',
+      `탭 (${takenTap.tile.x},${takenTap.tile.y}) → 잔교 (${blocked.dock.x},${blocked.dock.y}) · ` +
+        `확정 ${blocked.disabled ? '잠김' : '⚠ 열림'} · "${blocked.why}"`,
+    );
+    record(
+      '⚠ 음성 대조군 — 잠긴 확정을 눌러도 코스가 안 늘어난다',
+      blocked.after === blocked.before ? 'pass' : 'fail',
+      `코스 ${blocked.before} → ${blocked.after}`,
+    );
+  }
 
   await page.evaluate(`document.getElementById('kairo-course-close').click()`);
 

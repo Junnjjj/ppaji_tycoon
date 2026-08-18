@@ -243,8 +243,14 @@ export type CourseIssueKind =
   | 'far-from-dock'
   | 'blocked-combo'
   | 'locked-preset'
-  | 'no-equipment';
+  | 'no-equipment'
+  | 'dock-taken'
+  | 'overlap';
 
+/**
+ * 거절 메시지는 **방법까지** 말한다 (저장소 규칙 — "자리 없음 · 건물을 넓히세요").
+ * "안 됩니다"만 주면 플레이어는 무엇을 고쳐야 하는지 모른다.
+ */
 export const COURSE_ISSUE_TEXT: Record<CourseIssueKind, string> = {
   'not-water': '물 위가 아닙니다',
   'too-narrow': '이 형태를 놓기엔 수면이 좁습니다',
@@ -252,6 +258,8 @@ export const COURSE_ISSUE_TEXT: Record<CourseIssueKind, string> = {
   'blocked-combo': '이 장비로는 이 형태를 못 탑니다',
   'locked-preset': '아직 안 열린 형태입니다',
   'no-equipment': '장비를 고르세요',
+  'dock-taken': '이 잔교에 이미 코스가 있습니다 — 다른 잔교를 고르세요',
+  overlap: '기존 코스와 너무 가깝습니다 — 핸들을 옮겨 떨어뜨리세요',
 };
 
 /** 선착장에서 코스 시작점까지 허용 거리 (§7.7 "3타일 이내"를 격자 단위로) */
@@ -259,6 +267,89 @@ export const DOCK_REACH_TILES = 4;
 
 /** 필요 수면을 잴 때 코스 경계 상자에 두는 여유 (타일) */
 export const WATER_MARGIN = 3;
+
+/**
+ * 코스끼리 떨어져 있어야 하는 거리 (타일).
+ *
+ * ## 왜 필요했나 (실측)
+ *
+ * 판정이 **자기 자신만** 봤다 — 물인가, 선착장에서 가까운가, 수면이 넓은가. "이미 코스가
+ * 있는 물"은 안 봤다. 그래서 현금만 있으면 같은 잔교·같은 좌표에 코스가 무한히 쌓였고
+ * (실측: 잔교 43,32 에 넷), 플레이어에게는 "장비를 19종 바꿔도 위치가 안 변한다"로 보였다.
+ *
+ * 3칸인 이유: 견인 장비의 항적과 손님이 오가는 폭이 대략 그만큼이다. 더 크게 잡으면
+ * 좁은 강에서 코스를 둘 놓을 수 없다.
+ */
+export const COURSE_CLEAR_TILES = 3;
+
+/** 같은 칸인가 — 핸들은 소수 좌표를 갖지만 잔교는 칸이다 */
+function sameTile(a: Vec2, b: Vec2): boolean {
+  return Math.round(a.x) === Math.round(b.x) && Math.round(a.y) === Math.round(b.y);
+}
+
+/** 그 잔교에서 시작하는 코스가 이미 있는가 */
+export function dockTaken(tip: Vec2, others: readonly PlacedCourse[]): boolean {
+  return others.some((o) => sameTile(o.dock, tip));
+}
+
+/** 코스가 없는 첫 잔교. 전부 찼으면 −1. `docks()` 는 게이트에서 가까운 순이다 */
+export function firstFreeDock(
+  docks: readonly DockChoice[],
+  others: readonly PlacedCourse[],
+): number {
+  for (let k = 0; k < docks.length; k++) {
+    const d = docks[k] as DockChoice;
+    if (!dockTaken(d.tip, others)) return k;
+  }
+  return -1;
+}
+
+export interface CourseGap {
+  /** 기존 코스까지의 최소 거리 (타일). 기존 코스가 없으면 `Infinity` */
+  gap: number;
+  /** 기존 코스와 가까운 핸들 번호 — UI 가 빨갛게 칠한다 */
+  nearHandles: number[];
+}
+
+/**
+ * 이 코스와 기존 코스들 사이의 거리. **판정과 기본 제안이 같은 자를 쓴다** —
+ * 다른 자를 쓰면 "제안한 자리가 곧바로 판정에 막힌다"가 된다.
+ *
+ * 순수 함수다. 기존 코스 목록은 부르는 쪽이 넘긴다 (`CourseStore` 를 여기서 읽으면
+ * 테스트가 상태를 세워야 한다).
+ */
+export function courseGap(
+  dock: Vec2,
+  handles: readonly Vec2[],
+  others: readonly PlacedCourse[],
+): CourseGap {
+  const mine = sampleCourse(dock, handles);
+  if (mine.length === 0 || others.length === 0) return { gap: Infinity, nearHandles: [] };
+
+  let gap = Infinity;
+  const near = new Set<number>();
+  for (const o of others) {
+    const theirs = sampleCourse(o.dock, o.handles);
+    if (theirs.length === 0) continue;
+    for (const a of mine) {
+      for (const b of theirs) {
+        const d = Math.hypot(a.pos.x - b.pos.x, a.pos.y - b.pos.y);
+        if (d < gap) gap = d;
+      }
+    }
+    // 어느 핸들을 옮기면 되는지까지 말한다 (§7.3 "핸들이 빨개지고 지표에 사유 표시")
+    for (let k = 0; k < handles.length; k++) {
+      const h = handles[k] as Vec2;
+      for (const b of theirs) {
+        if (Math.hypot(h.x - b.pos.x, h.y - b.pos.y) < COURSE_CLEAR_TILES) {
+          near.add(k);
+          break;
+        }
+      }
+    }
+  }
+  return { gap, nearHandles: [...near].sort((a, b) => a - b) };
+}
 
 export interface CourseValidation {
   ok: boolean;
@@ -272,6 +363,10 @@ export interface CourseValidation {
 /**
  * 코스 판정. **핸들별로** 무엇이 잘못됐는지 돌려준다 — "안 됩니다"만 주면 플레이어가
  * 어느 핸들을 옮겨야 하는지 모른다 (§7.3 "핸들이 빨개지고 지표에 사유 표시").
+ *
+ * `others` 는 **이미 놓인 코스**다. 안 넘기면 예전과 똑같이 동작한다 (하위호환) —
+ * 넘기는 쪽이 정한다. 여기서 `CourseStore` 를 읽지 않는 이유는 판정을 순수하게 두기
+ * 위해서다. 편집 중이라면 부르는 쪽이 **자기 자신을 빼서** 넘긴다.
  */
 export function validateCourse(
   terrain: KairoTerrain,
@@ -280,6 +375,7 @@ export function validateCourse(
   preset: PresetDef,
   equipId: string | null,
   grade: number,
+  others: readonly PlacedCourse[] = [],
 ): CourseValidation {
   const issues: CourseIssueKind[] = [];
   const badHandles: number[] = [];
@@ -322,12 +418,100 @@ export function validateCourse(
   }
   if (waterTiles < preset.waterNeed) issues.push('too-narrow');
 
+  /*
+   * ── 겹침 (K37) ──
+   *
+   * ⚠ **자기 자신의 문제를 먼저 본다.** 물이 아닌 코스에 "다른 잔교를 고르세요"라고
+   * 말하면 플레이어는 엉뚱한 데를 고친다. 위 판정들이 먼저 `issues` 에 들어간다.
+   *
+   * ⚠ 같은 잔교면 겹침은 **반드시** 난다 (시작점이 같은 점이다). 둘을 같이 말하면
+   * 처방이 흐려지므로 `dock-taken` 하나만 말한다 — 옮겨야 하는 것은 핸들이 아니라 잔교다.
+   */
+  if (others.length > 0) {
+    if (dockTaken(dock, others)) issues.push('dock-taken');
+    else {
+      const near = courseGap(dock, handles, others);
+      if (near.gap < COURSE_CLEAR_TILES) {
+        issues.push('overlap');
+        for (const k of near.nearHandles) if (!badHandles.includes(k)) badHandles.push(k);
+        badHandles.sort((a, b) => a - b);
+      }
+    }
+  }
+
   return { ok: issues.length === 0, issues, badHandles, waterTiles };
 }
 
 /** 스플라인 표본. 선착장을 시작점으로 넣어 "선착장에서 출발한다"가 형태에 반영된다 */
 export function sampleCourse(dock: Vec2, handles: readonly Vec2[]): SplineSample[] {
   return sampleSpline([dock, ...handles], 12);
+}
+
+/** 핸들 전체를 잔교의 **옆 방향**으로 민다 — 앞뒤로 밀면 코스가 잔교에서 멀어진다 */
+function shiftHandles(handles: readonly Vec2[], dir: Vec2, amount: number): Vec2[] {
+  if (amount === 0) return handles.map((h) => ({ ...h }));
+  const len = Math.hypot(dir.x, dir.y) || 1;
+  const r = { x: -dir.y / len, y: dir.x / len };
+  return handles.map((h) => ({ x: h.x + r.x * amount, y: h.y + r.y * amount }));
+}
+
+export interface CourseSuggestion {
+  /** 고른 잔교 번호. 후보가 없으면 −1 */
+  dockIndex: number;
+  handles: Vec2[];
+  /** 옆으로 민 칸 수 — 0 이면 기본 자리 그대로 */
+  shift: number;
+}
+
+/** 옆으로 밀어 보는 순서 — 좌우 번갈아 (한쪽만 보면 강가에서 늘 뭍으로 민다) */
+const SHIFT_STEPS = [0, 1, -1, 2, -2, 3, -3];
+
+/**
+ * 기본 제안 — **빈 잔교를 먼저 고르고**, 필요하면 옆으로 밀어 본다.
+ *
+ * ## 왜 (실측)
+ *
+ * 예전 `resetHandles()` 는 `defaultHandles(preset, tip, dir, 8)` 하나였다. 기존 코스를
+ * 모르니 이미 코스가 있는 잔교를 다시 고르고, 이미 쓰는 물을 다시 제안했다. 프리셋·장비를
+ * 아무리 바꿔도 좌표가 같았고, 확정하면 앞의 것 위에 겹쳤다.
+ *
+ * ⚠ **처음부터 유효한 자리만 주려고 하지 않는다** (`defaultHandles` 의 원칙 그대로).
+ * 몇 번 밀어 보고 못 찾으면 그냥 제안하고 판정이 막게 둔다 — 좁은 강에서 프리셋이 통째로
+ * 안 나오면 플레이어는 이유를 모른다. 대신 밀어는 둔다: 겹친 채로 겹쳐 보이면 화면에서
+ * 무엇이 문제인지 안 읽힌다.
+ *
+ * `pinned` 는 **플레이어가 지도에서 직접 고른 잔교**다 — 그때는 찼더라도 그 잔교를 쓴다
+ * (판정이 "다른 잔교를 고르세요"라고 말해 준다). 안 그러면 탭이 무시된 것처럼 보인다.
+ */
+export function suggestCourse(
+  preset: PresetDef,
+  docks: readonly DockChoice[],
+  others: readonly PlacedCourse[],
+  opts: { span?: number; dockIndex?: number; pinned?: boolean } = {},
+): CourseSuggestion {
+  if (docks.length === 0) return { dockIndex: -1, handles: [], shift: 0 };
+  const span = opts.span ?? 8;
+  const cur = Math.max(0, Math.min(docks.length - 1, opts.dockIndex ?? 0));
+  const free = firstFreeDock(docks, others);
+  const pick = opts.pinned === true ? cur : free >= 0 ? free : cur;
+  const choice = docks[pick] as DockChoice;
+  const base = defaultHandles(preset, choice.tip, choice.dir, span);
+  if (others.length === 0) return { dockIndex: pick, handles: base, shift: 0 };
+
+  const step = COURSE_CLEAR_TILES + 1;
+  for (const k of SHIFT_STEPS) {
+    const moved = shiftHandles(base, choice.dir, k * step);
+    if (courseGap(choice.tip, moved, others).gap >= COURSE_CLEAR_TILES) {
+      return { dockIndex: pick, handles: moved, shift: k };
+    }
+  }
+  // 못 찾았다 — 기존 코스 수만큼 옆으로 밀어 제안하고, 막는 것은 판정에 맡긴다
+  const stacked = others.filter((o) => sameTile(o.dock, choice.tip)).length || 1;
+  return {
+    dockIndex: pick,
+    handles: shiftHandles(base, choice.dir, stacked * step),
+    shift: stacked,
+  };
 }
 
 export interface CourseResult extends CourseMetrics {
