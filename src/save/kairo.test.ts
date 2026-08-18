@@ -156,7 +156,7 @@ describe('카이로 세이브', () => {
  * 된다 — `paint` 실패 · `outside` · 플로우필드 밖. 렌더는 그것도 그려 준다.
  * ─────────────────────────────────────────────────────────────────────────
  */
-describe('★ 세이브 v3 → v4 — 격자가 넓어져도 판이 살아남는다', () => {
+describe('★ 세이브 v3 → 최신 — 격자가 넓어져도 판이 살아남는다', () => {
   const BAND = KairoTerrain.CITY_BAND;
 
   /** 옛 64×48 세이브를 손으로 짓는다 — 실제로 나갔던 모양 */
@@ -214,7 +214,7 @@ describe('★ 세이브 v3 → v4 — 격자가 넓어져도 판이 살아남는
       version: number;
       placement: { w: number; h: number; items: { defId: string; i: number; j: number }[] };
     };
-    expect(m.version).toBe(4);
+    expect(m.version).toBe(KAIRO_SAVE_VERSION);
     expect(m.placement.items).toHaveLength(3);
     expect(m.placement.w).toBe(KairoTerrain.WIDTH);
     expect(m.placement.h).toBe(KairoTerrain.HEIGHT);

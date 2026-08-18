@@ -19,7 +19,8 @@ const AUTOSAVE_INTERVAL_MS = 30_000;
 async function mainKairo(parent: HTMLElement): Promise<void> {
   const { bootKairo } = await import('./render/kairo/boot.js');
   const { GROUND_KINDS } = await import('./sim/kairo/terrain.js');
-  const { bakeIndoorWalls, paintFloor, paintFloorBlock, INDOOR_FAIL_MESSAGES } = await import(
+  const { DoorSet: DoorSetCls } = await import('./sim/kairo/doors.js');
+  const { bakeIndoorWalls, paintFloor, paintFloorBlock, doorCandidates, INDOOR_FAIL_MESSAGES } = await import(
     './sim/kairo/indoor.js'
   );
   const { allFacilityDefs, PLACE_FAIL_MESSAGES, guestWalkable } = await import(
@@ -118,11 +119,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 지나가고 **세이브를 불러올 때만** 터진다 (실측: 새로고침 후 판이 통째로 안 뜬다).
    */
   if (saved) {
+    // ⚠ 놓아 둔 출입구를 같이 넘긴다 — 안 넘기면 불러올 때마다 문이 자동 하나로 되돌아간다
     bakeIndoorWalls(
       saved.terrain,
       saved.walls,
       saved.gate,
       guestWalkable(saved.terrain, saved.placement),
+      DoorSetCls.fromSnapshot(saved.doors),
     );
   }
 
@@ -205,6 +208,42 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         console.log(`[카이로] 탭 타일 (${i}, ${j}) — ${h.terrain.kindAt(i, j) ?? '?'}`);
         return;
       }
+      /*
+       * 출입구 (K36-B) — **칸을 탭한다.** 경계를 폰에서 정확히 찍는 것은 무리다.
+       * 그 칸의 쓸 수 있는 면 중 하나에 문이 나고, 다시 탭하면 다음 면으로 돌아간다.
+       * 한 바퀴 돌면 없앤다. 후보 판정은 `doorCandidates` 하나를 sim 과 공유한다 —
+       * 갈라지면 UI 가 놓으라고 해 놓고 굽기가 무시하는 상태가 된다.
+       */
+      if (brush === 'door') {
+        const cand = doorCandidates(h.terrain, GATE, i, j, walkableNow);
+        if (cand.length === 0) {
+          toast(
+            h.terrain.isIndoor(i, j)
+              ? '길이 닿은 쪽이 없습니다 — 건물 옆에 길을 까세요'
+              : '건물 안을 탭하세요 — 출입구는 건물에 냅니다',
+          );
+          return;
+        }
+        const cur = cand.findIndex((d) => doors.has(i, j, d));
+        for (const d of cand) doors.remove(i, j, d);
+        // 마지막 후보에서 또 탭하면 없앤다 — 되돌릴 방법이 있어야 한다
+        const next = cur + 1;
+        if (next < cand.length) doors.add(i, j, cand[next]!);
+        const baked = bakeIndoorWalls(h.terrain, h.walls, GATE, walkableNow, doors);
+        if (!baked.ok) {
+          // 되돌린다 — 반쯤 적용된 벽이 남는 것이 최악이다
+          for (const d of cand) doors.remove(i, j, d);
+          if (cur >= 0) doors.add(i, j, cand[cur]!);
+          bakeIndoorWalls(h.terrain, h.walls, GATE, walkableNow, doors);
+          toast(INDOOR_FAIL_MESSAGES[baked.fail ?? 'no-door']);
+          return;
+        }
+        h.scene.refreshAllWalls();
+        h.guests.invalidate();
+        persist();
+        toast(next < cand.length ? '출입구를 냈습니다' : '출입구를 없앴습니다', 'ok');
+        return;
+      }
       if (brush === 'erase') {
         // 시설이 먼저 — 시설 위를 탭했으면 그걸 지운다
         const hit = h.placement.at(i, j);
@@ -229,7 +268,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         // 벽은 개별로 못 지운다 — **바닥을 잔디로 되돌리면** 그 벽이 같이 사라진다 (K27)
         if (h.terrain.kindAt(i, j) !== 'lawn' && !h.terrain.isWater(i, j)) {
           /* placement 를 넘긴다 — 길을 지워 시설이 끊기면 거절된다 (K32-B) */
-          const r = paintFloor(h.terrain, h.walls, GATE, i, j, 'lawn', walkableNow, h.placement);
+          const r = paintFloor(h.terrain, h.walls, GATE, i, j, 'lawn', walkableNow, h.placement, doors);
           if (!r.ok) {
             toast(INDOOR_FAIL_MESSAGES[r.fail ?? 'no-door']);
             return;
@@ -377,6 +416,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         kindId as string,
         walkableNow,
         h.placement,
+        doors,
       );
       if (!painted.ok) {
         toast(INDOOR_FAIL_MESSAGES[painted.fail ?? 'no-door']);
@@ -493,6 +533,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         name: `건물 바닥 ${n}×${n}`,
         sub: `칸당 ${Math.round(FLOOR_COST / 10000)}만 · 넓어짐`,
       })),
+      /*
+       * 출입구 (K36-B) — 카이로에서 건물은 **지나가는 곳**이기도 하다. 문이 하나면
+       * 건물이 막다른 곳이라 손님이 빙 돌아간다. 문을 더 내면 건물 자체가 통로가 된다.
+       */
+      {
+        kind: 'door' as const,
+        tab: 'building' as const,
+        id: 'door',
+        name: '출입구',
+        sub: '실내 칸을 탭 · 다시 탭하면 옮김',
+      },
       { kind: 'erase' as const, tab: 'building' as const, id: 'erase', name: '철거', sub: '잔디로' },
       /*
        * 길 — K32-B 부터 **손님은 포장한 바닥만 지나간다.** 그래서 길을 까는 것이
@@ -601,6 +652,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 코스 — 새 판이면 **물려받은 코스**가 이미 들어 있다 (K30). 시작 배치가 만든
    * 저장소를 그대로 쓴다. 새로 만들면 물려받은 코스가 조용히 사라진다.
    */
+  /**
+   * 플레이어가 놓은 출입구 (K36-B). **희망이지 상태가 아니다** — 벽은 여전히 실내
+   * 바닥에서 파생된다 (K27). 세이브에 담기지만 없으면 빈 집합이라 예전과 똑같이 돈다.
+   */
+  const doors = DoorSetCls.fromSnapshot(saved?.doors);
+
   const courses = saved?.courses
     ? course.CourseStore.fromSnapshot(saved.courses)
     : (fresh?.courses ?? new course.CourseStore());
@@ -665,6 +722,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       staff: staff.toSnapshot(),
       staffRngState: staffRng.state,
       courses: courses.toSnapshot(),
+      doors: doors.toSnapshot(),
       accidentIdle: [...accidentIdle],
       mapId,
       scenarioId,
@@ -1118,6 +1176,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     refreshRisk,
     /** 지금 해금된 토지 — 검증이 좌표를 박지 않게 (K36) */
     land: () => landRect(currentGrade()),
+    /** 놓아 둔 출입구 (K36-B) — 검증이 읽는다 */
+    doors,
+    persist,
   });
   Object.assign(window, {
     __kairo: h,

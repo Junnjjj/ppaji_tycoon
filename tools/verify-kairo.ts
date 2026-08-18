@@ -3878,6 +3878,98 @@ async function main(): Promise<void> {
     `버튼 ${showcaseRestore.before} → ${showcaseRestore.during} → ${showcaseRestore.after}`,
   );
 
+  // ── 9e. 출입구를 놓아 건물을 통로로 (K36-B) ──
+  //
+  // 카이로에서 건물은 **지나가는 곳**이기도 하다. 문이 하나면 막다른 곳이라 손님이 빙
+  // 돌아간다. 사용자 요청: "입구 말고도 설치할 수 있는 입출구를 둬서 통과할 수 있게".
+  const doorUi = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain, w = h.walls;
+    const out = { before: w.count(2) };
+    document.getElementById('kairo-build-open').click();
+    document.querySelector('#kairo-sheet [data-tab="building"]').click();
+    const pick = document.querySelector('[data-pick="door:door"]');
+    if (!pick) return { ok: false, why: '출입구 붓이 건물 탭에 없다' };
+    pick.click();
+    out.brush = window.__kairoBrush ? window.__kairoBrush() : null;
+
+    // 실내 칸 목록 — 서로 먼 두 칸을 골라 탭한다
+    const cells = [];
+    /*
+     * ⚠ **시설이 없는** 실내 칸만 고른다. 시설이 놓인 칸은 손님이 못 서므로 문 후보가
+     * 없다 ( 가 안쪽도 설 수 있어야 한다고 본다). 앞 절들이 시작 방에
+     * 화장실을 놓아 뒀다 — 그 칸을 탭하면 정직하게 거절당한다.
+     */
+    for (let j = 0; j < t.height; j++) for (let i = 0; i < t.width; i++)
+      if (t.isIndoor(i, j) && h.placement.handleAt(i, j) === 0) cells.push([i, j]);
+    if (cells.length < 4) return { ok: false, why: '실내 칸이 부족하다' };
+    const msg0 = () => { const m = document.getElementById('kairo-toast'); return m && !m.hidden ? m.textContent : ''; };
+    const a = cells[0], b = cells[cells.length - 1];
+    out.a = a; out.b = b;
+    h.tapTile(a[0], a[1]);
+    out.afterOne = w.count(2); out.msgA = msg0();
+    h.tapTile(b[0], b[1]);
+    out.afterTwo = w.count(2); out.msgB = msg0();
+    out.wanted = h.doors.count;
+
+    // 실내가 아닌 칸을 탭하면 이유를 말한다
+    const msg = () => { const m = document.getElementById('kairo-toast'); return m && !m.hidden ? m.textContent : ''; };
+    h.tapTile(h.gate.i, h.gate.j);
+    out.outsideMsg = msg();
+    return { ok: true, ...out };
+  })()`)) as
+    | { ok: false; why: string }
+    | {
+        ok: true;
+        before: number;
+        afterOne: number;
+        afterTwo: number;
+        wanted: number;
+        brush: string | null;
+        outsideMsg: string;
+        a: number[];
+        b: number[];
+        msgA: string;
+        msgB: string;
+      };
+
+  if (!doorUi.ok) {
+    record('★ 출입구 붓으로 문을 놓는다 (K36-B)', 'fail', doorUi.why);
+  } else {
+    record(
+      '★ 출입구를 두 곳에 내면 문이 둘이 된다 — 건물이 통로가 된다 (K36-B)',
+      doorUi.afterTwo === 2 && doorUi.wanted === 2 ? 'pass' : 'fail',
+      `자동 ${doorUi.before} → 하나 ${doorUi.afterOne} → 둘 ${doorUi.afterTwo} · 희망 ${doorUi.wanted} · ` +
+        `A(${doorUi.a.join(',')})"${doorUi.msgA}" B(${doorUi.b.join(',')})"${doorUi.msgB}"`,
+    );
+    record(
+      '첫 문은 자동 문을 **대신한다** — 방마다 문이 둘씩 늘면 안 된다',
+      doorUi.afterOne === 1 ? 'pass' : 'fail',
+      `${doorUi.before} → ${doorUi.afterOne}`,
+    );
+    record(
+      '건물 밖을 탭하면 이유를 말한다 — 거절은 처방까지 한다',
+      doorUi.outsideMsg.includes('건물') ? 'pass' : 'fail',
+      doorUi.outsideMsg || '(조용함)',
+    );
+  }
+
+  /* 새로고침을 넘는다 — 희망이 세이브에 담기는가 */
+  await page.evaluate(`window.__kairo.persist?.()`);
+  await page.reload();
+  await page.waitForFunction(
+    `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+    undefined,
+    { timeout: 15000 },
+  );
+  const doorsKept = (await page.evaluate(
+    `(() => { const h = window.__kairo; return { wanted: h.doors.count, doors: h.walls.count(2) }; })()`,
+  )) as { wanted: number; doors: number };
+  record(
+    '★ 출입구가 새로고침을 넘는다 (K36-B)',
+    doorsKept.wanted === 2 && doorsKept.doors === 2 ? 'pass' : 'fail',
+    `희망 ${doorsKept.wanted} · 문 ${doorsKept.doors}`,
+  );
+
   // ── 10. 안드로이드 비정수 DPR ──
   const ctx2 = await browser.newContext({
     viewport: { width: 360, height: 800 },

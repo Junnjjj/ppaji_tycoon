@@ -26,7 +26,7 @@
 
 import { el } from './dom.js';
 
-export type BuildKind = 'ground' | 'facility' | 'erase';
+export type BuildKind = 'ground' | 'facility' | 'erase' | 'door';
 
 /**
  * 시트 탭 (K31). `kind` 와 따로 두는 이유: **건물 바닥은 지형(`ground`)이지만 탭은

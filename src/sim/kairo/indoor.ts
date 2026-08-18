@@ -1,5 +1,6 @@
 import type { KairoTerrain } from './terrain.js';
 import { facilityDef, type PlacementGrid } from './placement.js';
+import type { DoorSet } from './doors.js';
 import {
   WallGrid,
   EDGE_SOLID,
@@ -124,6 +125,11 @@ export function bakeIndoorWalls(
   gate: { i: number; j: number },
   /** 손님이 설 수 있는 칸 (`guestWalkable`). 안 넘기면 지형만 본다 */
   walkable?: (i: number, j: number) => boolean,
+  /**
+   * 플레이어가 놓은 출입구 (K36-B). **희망이지 상태가 아니다** — 여기 담긴 경계가
+   * 실제로 외곽선이고 쓸 수 있을 때만 문이 된다.
+   */
+  doors?: DoorSet,
 ): BakeResult {
   const canStand = walkable ?? ((i: number, j: number): boolean => terrain.isWalkable(i, j));
   walls.clear();
@@ -154,26 +160,47 @@ export function bakeIndoorWalls(
   for (const e of outline) walls.setEdge(e.i, e.j, e.dir, EDGE_SOLID);
 
   /*
-   * 문 — 덩어리마다 하나, **게이트에서 가장 가까운** 외곽 경계에.
+   * 문 — **플레이어가 놓은 것이 먼저, 없으면 자동으로 하나** (K36-B).
+   *
+   * 자동을 없애지 않는 이유: 문이 없으면 방이 죽고, 이 함수는 실패하면 벽을 통째로
+   * 지운다. 플레이어가 아직 문을 안 놓은 새 방이 조용히 죽으면 안 된다. 자동은 **보험**이다.
    *
    * 양쪽 다 설 수 있어야 한다. 바깥칸만 보면 문이 시설로 꽉 찬 실내 칸으로 열려
    * 손님이 들어오자마자 갈 곳이 없다 (K26 에서 실측).
    */
   const reach = reachable(terrain, walls, gate, canStand);
-  let doors = 0;
+  let doorCount = 0;
   for (let a = 0; a < areas; a++) {
-    const usable = outline.filter(
+    /*
+     * ⚠ **자동 문과 플레이어 문의 조건이 다르다.**
+     *
+     * 자동 문은 "이미 게이트에서 닿는 바깥"으로 나야 한다 — 아무 데나 뚫으면 방이
+     * 닿지 않는 주머니로 열려 손님이 못 온다.
+     *
+     * 플레이어 문은 그 조건을 **빼야 한다.** 문의 목적이 새 길을 여는 것이기 때문이다:
+     * 건물이 통로를 가로막고 있을 때 반대편은 아직 안 닿으므로, `reach` 를 요구하면
+     * **통과용 문을 영원히 못 고른다** (실측: 두 번째 문이 조용히 무시됐다).
+     */
+    const onOutline = outline.filter(
       (e) =>
         e.area === a &&
         terrain.inside(e.oi, e.oj) &&
         canStand(e.oi, e.oj) &&
         canStand(e.i, e.j) &&
-        !terrain.isIndoor(e.oi, e.oj) &&
-        reach[e.oj * w + e.oi] === 1,
+        !terrain.isIndoor(e.oi, e.oj),
     );
-    if (usable.length === 0) {
+    const usable = onOutline.filter((e) => reach[e.oj * w + e.oi] === 1);
+    const wanted = doors ? onOutline.filter((e) => doors.has(e.i, e.j, e.dir)) : [];
+    if (usable.length === 0 && wanted.length === 0) {
       walls.clear();
-      return { ok: false, fail: 'no-door', areas, doors };
+      return { ok: false, fail: 'no-door', areas, doors: doorCount };
+    }
+    if (wanted.length > 0) {
+      for (const e of wanted) {
+        walls.setEdge(e.i, e.j, e.dir, EDGE_DOOR);
+        doorCount++;
+      }
+      continue;
     }
     usable.sort(
       (x, y) =>
@@ -183,7 +210,7 @@ export function bakeIndoorWalls(
     );
     const door = usable[0] as { i: number; j: number; dir: Dir };
     walls.setEdge(door.i, door.j, door.dir, EDGE_DOOR);
-    doors++;
+    doorCount++;
   }
 
   /*
@@ -198,11 +225,11 @@ export function bakeIndoorWalls(
       if (!terrain.isIndoor(i, j) || !canStand(i, j)) continue;
       if (after[j * w + i] !== 1) {
         walls.clear();
-        return { ok: false, fail: 'unreachable', areas, doors };
+        return { ok: false, fail: 'unreachable', areas, doors: doorCount };
       }
     }
   }
-  return { ok: true, areas, doors };
+  return { ok: true, areas, doors: doorCount };
 }
 
 /**
@@ -244,6 +271,46 @@ export function servedFacilities(
 }
 
 /**
+ * 이 실내 칸에 **문을 낼 수 있는 방향들** (K36-B). 앞쪽이 더 좋은 자리다.
+ *
+ * "쓸 수 있는"의 기준은 `bakeIndoorWalls` 와 **같아야 한다** — 다르면 UI 가 놓으라고
+ * 해 놓고 굽기가 무시하는 상태가 된다 (K26 ② 의 `guestWalkable` 과 같은 종류의 사고).
+ * 그래서 판정을 여기 한 곳에 두고 양쪽이 부른다.
+ *
+ * 정렬: **포장이 닿은 쪽**이 먼저다. 길이 곧 입구라는 K32-B 의 규칙과 같은 방향이고,
+ * 그다음은 게이트에서 가까운 쪽이다.
+ */
+export function doorCandidates(
+  terrain: KairoTerrain,
+  gate: { i: number; j: number },
+  i: number,
+  j: number,
+  walkable?: (i: number, j: number) => boolean,
+): Dir[] {
+  if (!terrain.isIndoor(i, j)) return [];
+  const canStand = walkable ?? ((x: number, y: number): boolean => terrain.isWalkable(x, y));
+  const out: { dir: Dir; paved: boolean; dist: number }[] = [];
+  for (let d = 0; d < 4; d++) {
+    const oi = i + (DI[d] as number);
+    const oj = j + (DJ[d] as number);
+    if (!terrain.inside(oi, oj)) continue;
+    if (terrain.isIndoor(oi, oj)) continue; // 실내끼리 맞닿은 면은 외곽선이 아니다
+    if (!canStand(oi, oj) || !canStand(i, j)) continue;
+    /*
+     * ⚠ 여기서 `reach` 를 보지 않는다 — `bakeIndoorWalls` 의 **플레이어 문** 조건과
+     * 같아야 한다. 통과용 문은 아직 안 닿는 쪽으로 나는 것이 목적이다.
+     */
+    out.push({
+      dir: DIRS[d] as Dir,
+      paved: terrain.isGuestWalkable(oi, oj),
+      dist: Math.abs(oi - gate.i) + Math.abs(oj - gate.j),
+    });
+  }
+  out.sort((a, b) => Number(b.paved) - Number(a.paved) || a.dist - b.dist);
+  return out.map((x) => x.dir);
+}
+
+/**
  * 한 칸을 칠하고 벽을 다시 굽는다. 실패하면 **지형까지 되돌린다.**
  *
  * 되돌리기가 여기 있어야 "칠했더니 손님이 못 들어오는데 취소도 안 된다"가 안 생긴다.
@@ -258,6 +325,8 @@ export function paintFloor(
   walkable?: (i: number, j: number) => boolean,
   /** 넘기면 **끊기는 시설이 생기는 칠을 거절**한다 (K32-B) */
   placement?: PlacementGrid,
+  /** 놓아 둔 출입구 (K36-B) — 안 넘기면 다시 구울 때 자동 하나로 되돌아간다 */
+  doors?: DoorSet,
 ): { ok: boolean; fail?: IndoorFail; changed: boolean } {
   const before = terrain.kindAt(i, j);
   if (before === null) return { ok: false, changed: false };
@@ -268,14 +337,14 @@ export function paintFloor(
     placement === undefined ? 0 : servedFacilities(terrain, walls, gate, placement, walkable);
   if (!terrain.paint(i, j, kind)) return { ok: false, changed: false };
 
-  const r = bakeIndoorWalls(terrain, walls, gate, walkable);
+  const r = bakeIndoorWalls(terrain, walls, gate, walkable, doors);
   const strands =
     r.ok &&
     placement !== undefined &&
     servedFacilities(terrain, walls, gate, placement, walkable) < servedBefore;
   if (!r.ok || strands) {
     terrain.paint(i, j, before);
-    bakeIndoorWalls(terrain, walls, gate, walkable);
+    bakeIndoorWalls(terrain, walls, gate, walkable, doors);
     const fail: IndoorFail = strands ? 'would-strand' : (r.fail as IndoorFail);
     return { ok: false, fail, changed: false };
   }
@@ -303,6 +372,8 @@ export function paintFloorBlock(
   walkable?: (i: number, j: number) => boolean,
   /** 넘기면 **끊기는 시설이 생기는 칠을 거절**한다 (K32-B) */
   placement?: PlacementGrid,
+  /** 놓아 둔 출입구 (K36-B) — 안 넘기면 다시 구울 때 자동 하나로 되돌아간다 */
+  doors?: DoorSet,
 ): { ok: boolean; fail?: IndoorFail; changed: number } {
   const before: [number, number, string][] = [];
   for (let j = j0; j < j0 + bh; j++) {
@@ -319,14 +390,14 @@ export function paintFloorBlock(
   const servedBefore =
     placement === undefined ? 0 : servedFacilities(terrain, walls, gate, placement, walkable);
   for (const [i, j] of before) terrain.paint(i, j, kind);
-  const r = bakeIndoorWalls(terrain, walls, gate, walkable);
+  const r = bakeIndoorWalls(terrain, walls, gate, walkable, doors);
   const strands =
     r.ok &&
     placement !== undefined &&
     servedFacilities(terrain, walls, gate, placement, walkable) < servedBefore;
   if (!r.ok || strands) {
     for (const [i, j, k] of before) terrain.paint(i, j, k);
-    bakeIndoorWalls(terrain, walls, gate, walkable);
+    bakeIndoorWalls(terrain, walls, gate, walkable, doors);
     const fail: IndoorFail = strands ? 'would-strand' : (r.fail as IndoorFail);
     return { ok: false, fail, changed: 0 };
   }

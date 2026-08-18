@@ -6,6 +6,7 @@ import type { WeekSnapshot, WeekSummary, Season } from '../sim/kairo/week.js';
 import type { CardSnapshot } from '../sim/kairo/cards.js';
 import type { StaffCounts } from '../sim/kairo/staff.js';
 import type { CourseSnapshot } from '../sim/kairo/course.js';
+import type { DoorSnapshot } from '../sim/kairo/doors.js';
 
 /**
  * 카이로 세이브 — v1 세이브와 **완전히 분리**한다.
@@ -29,11 +30,11 @@ import type { CourseSnapshot } from '../sim/kairo/course.js';
  * (`WeekSummary`) — 그래서 복원 후에도 의뢰 진행도와 등급이 그대로 보인다.
  */
 
-export const KAIRO_SAVE_VERSION = 4;
+export const KAIRO_SAVE_VERSION = 5;
 export const KAIRO_SAVE_KEY = 'ppaji.kairo.save.v1';
 
-export interface KairoSaveV4 {
-  version: 4;
+export interface KairoSaveV5 {
+  version: 5;
   savedAtMs: number;
   seed: number;
   gate: { i: number; j: number };
@@ -68,6 +69,8 @@ export interface KairoSaveV4 {
   staffRngState?: number;
   /** 놓인 코스 — 장비값을 치르고 그린 것이라 안 저장하면 새로고침이 곧 전부 철거다 */
   courses?: CourseSnapshot;
+  /** 플레이어가 놓은 출입구 (K36-B). 없으면 빈 집합 — 예전 세이브가 그대로 열린다 */
+  doors?: DoorSnapshot;
   /**
    * 발견한 콤보 — **누적**이라 저장해야 한다. 시설을 지웠다고 도감이 줄면 그건 발견이
    * 아니라 현황판이다.
@@ -99,8 +102,8 @@ export interface KairoSaveV4 {
   accidentCount?: number;
 }
 
-export type AnyKairoSave = KairoSaveV4;
-export type LatestKairoSave = KairoSaveV4;
+export type AnyKairoSave = KairoSaveV5;
+export type LatestKairoSave = KairoSaveV5;
 
 /**
  * v(n) → v(n+1) 변환기. 새 버전마다 한 칸 추가한다.
@@ -244,6 +247,14 @@ const MIGRATIONS: Record<number, (s: Record<string, unknown>) => Record<string, 
     if (dropped > 0) rest['migrationDropped'] = dropped;
     return rest;
   },
+
+  /*
+   * v4 → v5 (K36-B): 플레이어가 놓은 **출입구**가 생겼다.
+   *
+   * 옮길 것이 없다 — 옛 세이브에는 희망이 없으니 빈 집합이고, 그러면 `bakeIndoorWalls`
+   * 가 예전처럼 덩어리마다 자동으로 하나씩 낸다. **판이 그대로 열린다.**
+   */
+  4: (s) => ({ ...s, version: 5, doors: { keys: [] } }),
 };
 
 export class KairoSaveError extends Error {
@@ -269,6 +280,7 @@ export interface KairoSaveInput {
   staff?: StaffCounts;
   staffRngState?: number;
   courses?: CourseSnapshot;
+  doors?: DoorSnapshot;
   discovered?: string[];
   resortName?: string;
   priceMult?: number;
@@ -299,6 +311,7 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.staff ? { staff: input.staff } : {}),
     ...(input.staffRngState !== undefined ? { staffRngState: input.staffRngState } : {}),
     ...(input.courses ? { courses: input.courses } : {}),
+    ...(input.doors ? { doors: input.doors } : {}),
     ...(input.discovered ? { discovered: input.discovered } : {}),
     ...(input.resortName ? { resortName: input.resortName } : {}),
     ...(input.priceMult !== undefined ? { priceMult: input.priceMult } : {}),
@@ -356,6 +369,7 @@ export interface KairoRestored {
   staff?: Partial<StaffCounts>;
   staffRngState: number;
   courses?: CourseSnapshot;
+  doors?: DoorSnapshot;
   discovered?: string[];
   resortName?: string;
   priceMult?: number;
@@ -386,6 +400,7 @@ export function restoreKairo(raw: unknown): KairoRestored {
     ...(s.staff ? { staff: s.staff } : {}),
     staffRngState: s.staffRngState ?? 20260818,
     ...(s.courses ? { courses: s.courses } : {}),
+    ...(s.doors ? { doors: s.doors } : {}),
     ...(s.discovered ? { discovered: s.discovered } : {}),
     ...(s.resortName ? { resortName: s.resortName } : {}),
     ...(s.priceMult !== undefined ? { priceMult: s.priceMult } : {}),
