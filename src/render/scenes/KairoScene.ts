@@ -6,6 +6,7 @@ import {
   TILE_W,
   TILE_H,
   tileCenter,
+  gridToScreen,
   depthKey,
   screenToTile,
   inGrid,
@@ -18,7 +19,16 @@ import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
 import { KairoProceduralProvider } from '../../assets/kairo-procedural.js';
 import { variantId } from '../../assets/types.js';
 import type { KairoTerrain } from '../../sim/kairo/terrain.js';
-import { WALL_DOOR, type WallGrid } from '../../sim/kairo/walls.js';
+import {
+  EDGE_NONE,
+  EDGE_DOOR,
+  DIR_I_PLUS,
+  DIR_J_PLUS,
+  DIR_I_MINUS,
+  DIR_J_MINUS,
+  type Dir,
+  type WallGrid,
+} from '../../sim/kairo/walls.js';
 import { facilityDef, type PlacementGrid } from '../../sim/kairo/placement.js';
 import type { GuestStore, Guest } from '../../sim/kairo/guests.js';
 import type { PlaybackFrame } from '../../sim/kairo/week.js';
@@ -51,6 +61,9 @@ import {
  * 쓰는 이유는 **깊이 정렬**이다 — 시설·손님·벽이 지면과 같은 정렬 축(i+j)에 섞여야 한다.
  * 타일맵 레이어로 지면을 따로 그리면 그 축이 끊긴다.
  */
+
+/** 경계 네 방향 — 그리기 순서는 뒤(−) → 앞(+) 이라 앞 벽이 뒤 벽을 가린다 */
+const WALL_DIRS = [DIR_I_MINUS, DIR_J_MINUS, DIR_I_PLUS, DIR_J_PLUS] as const;
 
 export interface KairoSceneStats {
   fps: number;
@@ -128,6 +141,10 @@ export class KairoScene extends Phaser.Scene {
   private courseBad = new Set<number>();
   private courseDock: { x: number; y: number } | null = null;
   private courseGfx: Phaser.GameObjects.Graphics | null = null;
+  /** 건물 영역의 첫 모서리 표시 — 두 번째 탭을 기다리는 동안 어디를 찍었는지 보여준다 */
+  private anchorGfx: Phaser.GameObjects.Graphics | null = null;
+  /** 해금된 토지 경계선 (K25) */
+  private landGfx: Phaser.GameObjects.Graphics | null = null;
   private backdrops: Phaser.GameObjects.TileSprite[] = [];
   private dragMoved = 0;
   private lastPointer = { x: 0, y: 0 };
@@ -180,6 +197,8 @@ export class KairoScene extends Phaser.Scene {
     this.buildWalls();
     // 코스 오버레이는 전부보다 위 — 손님·시설에 가리면 못 끈다
     this.courseGfx = this.add.graphics().setDepth(1_000_000).setVisible(false);
+    this.anchorGfx = this.add.graphics().setDepth(1_000_001).setVisible(false);
+    this.landGfx = this.add.graphics().setDepth(999_999).setVisible(false);
     this.rebuildFacilities();
     this.applyScale(this.cam.upscale);
     this.wireInput();
@@ -317,17 +336,47 @@ export class KairoScene extends Phaser.Scene {
     }
   }
 
-  /** 벽 텍스처 ID — 문은 런 방향, 벽은 4방 마스크 */
-  private wallTextureId(i: number, j: number): string | null {
-    const w = this.opts.walls;
-    if (!w.has(i, j)) return null;
-    if (w.at(i, j) === WALL_DOOR) return `wall/door-${w.doorRun(i, j)}`;
-    return variantId('wall/glass', { alt: w.mask(i, j) });
+  /**
+   * 벽 한 칸을 갱신한다 — **그 칸이 소유한 네 경계**를 각각 그린다 (K25).
+   *
+   * 예전엔 칸 하나에 이미지 하나였다. 이제 경계 하나에 이미지 하나라 최대 4장이다.
+   * 키는 `(칸 인덱스) * 4 + 방향` — 방향까지 키에 넣지 않으면 서로 덮어쓴다.
+   */
+  private drawWallCell(i: number, j: number): void {
+    if (!inGrid(i, j)) return;
+    for (const dir of WALL_DIRS) this.drawWallEdge(i, j, dir);
+  }
+
+  private drawWallEdge(i: number, j: number, dir: Dir): void {
+    const key = (j * GRID_W + i) * 4 + dir;
+    const kind = this.opts.walls.edgeAt(i, j, dir);
+    const existing = this.wallImages.get(key);
+    if (kind === EDGE_NONE) {
+      existing?.destroy();
+      this.wallImages.delete(key);
+      return;
+    }
+    const id = variantId(kind === EDGE_DOOR ? 'wall/door' : 'wall/edge', { alt: dir });
+    if (existing) {
+      existing.setTexture(id);
+      return;
+    }
+    const c = tileCenter(i, j);
+    const img = this.add.image(c.x, c.y + TILE_H / 2, id);
+    img.setOrigin(0.5, 1);
+    /*
+     * 깊이 — 뒤쪽 경계(−I·−J)는 그 칸의 지면보다 앞, 시설보다 뒤에 둔다. 앞쪽
+     * 경계(+I·+J)는 **다음 칸의 지면보다도 앞**이어야 밑동이 안 잘린다. depthKey
+     * 사이 여유(4096)를 쓴다.
+     */
+    const back = dir === DIR_I_MINUS || dir === DIR_J_MINUS;
+    img.setDepth(depthKey(i, j) + (back ? 1 : 2));
+    this.wallImages.set(key, img);
   }
 
   /**
-   * 벽 한 칸의 그림을 갱신하고 **네 이웃도 함께** 갱신한다.
-   * 이웃을 빼먹으면 벽을 이어 놓아도 앞 칸이 끝단 모양으로 남아 선이 끊겨 보인다.
+   * 경계 벽이 바뀐 뒤 다시 그린다. 경계는 이웃과 공유하므로 **네 이웃까지** 갱신한다.
+   * 이웃을 빼먹으면 (i,j) 의 −I 경계가 실제로는 (i−1,j) 의 +I 경계라 갱신이 새어 나간다.
    */
   refreshWall(i: number, j: number): void {
     for (const [di, dj] of [
@@ -341,26 +390,73 @@ export class KairoScene extends Phaser.Scene {
     }
   }
 
-  private drawWallCell(i: number, j: number): void {
-    if (!inGrid(i, j)) return;
-    const key = j * GRID_W + i;
-    const id = this.wallTextureId(i, j);
-    const existing = this.wallImages.get(key);
-    if (!id) {
-      existing?.destroy();
-      this.wallImages.delete(key);
-      return;
+  /**
+   * 해금된 토지를 표시한다 (K25) — 경계선 + 바깥 칸 어둡게.
+   *
+   * ## 왜 어둡게까지 하나
+   *
+   * 선만 그으면 "저 밖에도 지을 수 있는데 선이 왜 있지"로 읽힌다. 바깥이 어두우면
+   * **아직 내 것이 아니다**가 설명 없이 읽히고, 등급이 올라 밝아지는 순간이 보상이 된다.
+   *
+   * 등급이 바뀔 때만 부른다 — 타일 3,072장을 매 프레임 만지면 안 된다.
+   */
+  setLand(lw: number, lh: number): void {
+    for (let j = 0; j < GRID_H; j++) {
+      for (let i = 0; i < GRID_W; i++) {
+        const img = this.tileImages[j * GRID_W + i];
+        if (!img) continue;
+        if (i < lw && j < lh) img.clearTint();
+        else img.setTint(0x5c6470);
+      }
     }
-    if (existing) {
-      existing.setTexture(id);
+    const g = this.landGfx;
+    if (!g) return;
+    g.clear();
+    g.lineStyle(1, 0xffe08a, 0.9);
+    // 사각형 네 꼭지점을 아이소로 옮기면 화면에서는 마름모가 된다
+    const p0 = gridToScreen(0, 0);
+    const p1 = gridToScreen(lw, 0);
+    const p2 = gridToScreen(lw, lh);
+    const p3 = gridToScreen(0, lh);
+    g.beginPath();
+    g.moveTo(p0.x, p0.y);
+    g.lineTo(p1.x, p1.y);
+    g.lineTo(p2.x, p2.y);
+    g.lineTo(p3.x, p3.y);
+    g.closePath();
+    g.strokePath();
+    g.setVisible(true);
+  }
+
+  /**
+   * 건물 영역의 첫 모서리를 표시한다 (null 이면 지운다).
+   *
+   * 표시가 없으면 "한 번 탭했는데 아무 일도 안 일어났다"로 읽혀 같은 칸을 또 찍는다 —
+   * 그러면 1×1 이 되어 거절당하고, 왜 거절인지도 모른다.
+   */
+  setBuildAnchor(i: number | null, j = 0): void {
+    const g = this.anchorGfx;
+    if (!g) return;
+    g.clear();
+    if (i === null) {
+      g.setVisible(false);
       return;
     }
     const c = tileCenter(i, j);
-    const img = this.add.image(c.x, c.y + TILE_H / 2, id);
-    img.setOrigin(0.5, 1);
-    // 지면보다 앞, 같은 칸 시설보다 뒤. depthKey 사이 여유(4096)를 쓴다
-    img.setDepth(depthKey(i, j) + 1);
-    this.wallImages.set(key, img);
+    g.lineStyle(1, 0x7ad0ff, 1);
+    g.beginPath();
+    g.moveTo(c.x, c.y - TILE_H / 2);
+    g.lineTo(c.x + TILE_W / 2, c.y);
+    g.lineTo(c.x, c.y + TILE_H / 2);
+    g.lineTo(c.x - TILE_W / 2, c.y);
+    g.closePath();
+    g.strokePath();
+    g.setVisible(true);
+  }
+
+  /** 벽이 통째로 바뀌었을 때 (건물 영역 확정 등) — 전부 다시 굽는다 */
+  refreshAllWalls(): void {
+    this.buildWalls();
   }
 
   /**

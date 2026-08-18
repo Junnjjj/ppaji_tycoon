@@ -3,271 +3,269 @@ import { Rng } from '../rng.js';
 import { KairoTerrain, groundIndex } from './terrain.js';
 import {
   WallGrid,
-  WALL_NONE,
-  WALL_SOLID,
-  WALL_DOOR,
+  EDGE_NONE,
+  EDGE_SOLID,
+  EDGE_DOOR,
+  DIR_I_PLUS,
+  DIR_J_PLUS,
+  DIR_I_MINUS,
+  DIR_J_MINUS,
   BIT_I_PLUS,
   BIT_J_PLUS,
   BIT_I_MINUS,
   BIT_J_MINUS,
   reachable,
   passableCount,
-  canPlaceWall,
-  placeWall,
-  removeWall,
+  canPlaceEdge,
+  placeEdge,
+  removeEdge,
   PLACE_MESSAGES,
+  type PlaceReason,
 } from './walls.js';
 
-/** 전부 걸을 수 있는 평지 — 벽 규칙만 보게 지형 변수를 없앤다 */
-function flat(w: number, h: number): KairoTerrain {
+/**
+ * 벽 — **타일 경계에 선다** (K25). 스펙 §3.
+ *
+ * 예전에는 벽이 타일을 점유했다. 지키려는 성질이 통째로 바뀌었다:
+ *   · 벽은 **칸을 막지 않는다** — 이동을 막는다
+ *   · 경계는 **한쪽이 소유한다** — (i,j)와 (i−1,j) 사이는 (i−1,j) 의 +I 경계
+ *   · 밀폐 차단은 그대로 — 손님이 못 들어가는 공간이 생기면 안 된다
+ */
+
+const GATE = { i: 0, j: 0 };
+
+function flat(w = 8, h = 8): KairoTerrain {
   const t = new KairoTerrain(w, h);
   for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) t.paint(i, j, 'lawn');
   return t;
 }
 
-const GATE = { i: 0, j: 0 };
-
-describe('비트마스크', () => {
-  it('이웃 없으면 0 (독립 기둥)', () => {
+describe('경계 소유 — 한 경계는 한 곳에만 저장된다', () => {
+  it('(i,j) 의 −I 경계는 (i−1,j) 의 +I 경계와 같은 것이다', () => {
     const g = new WallGrid(8, 8);
-    g.setRaw(3, 3, WALL_SOLID);
-    expect(g.mask(3, 3)).toBe(0);
+    g.setEdge(3, 3, DIR_I_PLUS, EDGE_SOLID);
+    expect(g.edgeAt(4, 3, DIR_I_MINUS)).toBe(EDGE_SOLID);
+    // 반대로 써도 같은 자리
+    g.setEdge(5, 3, DIR_I_MINUS, EDGE_DOOR);
+    expect(g.edgeAt(4, 3, DIR_I_PLUS)).toBe(EDGE_DOOR);
+  });
+
+  it('J 축도 마찬가지다', () => {
+    const g = new WallGrid(8, 8);
+    g.setEdge(2, 2, DIR_J_PLUS, EDGE_SOLID);
+    expect(g.edgeAt(2, 3, DIR_J_MINUS)).toBe(EDGE_SOLID);
+  });
+
+  it('between 은 이웃이 아니면 없음을 돌려준다', () => {
+    const g = new WallGrid(8, 8);
+    g.setEdge(2, 2, DIR_I_PLUS, EDGE_SOLID);
+    expect(g.between(2, 2, 3, 2)).toBe(EDGE_SOLID);
+    expect(g.between(2, 2, 4, 2)).toBe(EDGE_NONE); // 두 칸 떨어짐
+    expect(g.between(2, 2, 3, 3)).toBe(EDGE_NONE); // 대각선
+  });
+});
+
+describe('벽은 칸이 아니라 이동을 막는다', () => {
+  it('벽이 있어도 두 칸 모두 설 수 있다 — 바닥을 안 먹는다', () => {
+    const t = flat();
+    const g = new WallGrid(8, 8);
+    g.setEdge(3, 3, DIR_I_PLUS, EDGE_SOLID);
+    expect(t.isWalkable(3, 3)).toBe(true);
+    expect(t.isWalkable(4, 3)).toBe(true);
+    // 바닥 총량이 벽 때문에 줄지 않는다
+    expect(passableCount(t, g)).toBe(64);
+  });
+
+  it('벽은 그 경계를 못 지나게 하고, 문은 지나게 한다', () => {
+    const g = new WallGrid(8, 8);
+    g.setEdge(3, 3, DIR_I_PLUS, EDGE_SOLID);
+    expect(g.blocksMove(3, 3, 4, 3)).toBe(true);
+    expect(g.blocksMove(4, 3, 3, 3)).toBe(true); // 양방향
+    expect(g.blocksMove(3, 3, 3, 4)).toBe(false); // 다른 방향은 열려 있다
+    g.setEdge(3, 3, DIR_I_PLUS, EDGE_DOOR);
+    expect(g.blocksMove(3, 3, 4, 3)).toBe(false);
+  });
+});
+
+describe('마스크 — 렌더가 어느 면을 그릴지', () => {
+  it('경계가 없으면 0', () => {
+    expect(new WallGrid(8, 8).mask(3, 3)).toBe(0);
   });
 
   it('네 방향 비트가 각각 맞다', () => {
     const g = new WallGrid(8, 8);
-    g.setRaw(3, 3, WALL_SOLID);
-    g.setRaw(4, 3, WALL_SOLID);
+    g.setEdge(3, 3, DIR_I_PLUS, EDGE_SOLID);
     expect(g.mask(3, 3)).toBe(BIT_I_PLUS);
-    g.setRaw(3, 4, WALL_SOLID);
+    g.setEdge(3, 3, DIR_J_PLUS, EDGE_SOLID);
     expect(g.mask(3, 3)).toBe(BIT_I_PLUS | BIT_J_PLUS);
-    g.setRaw(2, 3, WALL_SOLID);
-    g.setRaw(3, 2, WALL_SOLID);
+    g.setEdge(3, 3, DIR_I_MINUS, EDGE_SOLID);
+    g.setEdge(3, 3, DIR_J_MINUS, EDGE_SOLID);
     expect(g.mask(3, 3)).toBe(BIT_I_PLUS | BIT_J_PLUS | BIT_I_MINUS | BIT_J_MINUS);
   });
 
-  it('문도 이웃으로 센다 — 안 그러면 문 옆 벽선이 끊겨 보인다', () => {
+  it('문도 마스크에 센다 — 안 그러면 문 옆 벽선이 끊겨 보인다', () => {
     const g = new WallGrid(8, 8);
-    g.setRaw(3, 3, WALL_SOLID);
-    g.setRaw(4, 3, WALL_DOOR);
+    g.setEdge(3, 3, DIR_I_PLUS, EDGE_DOOR);
     expect(g.mask(3, 3)).toBe(BIT_I_PLUS);
+    expect(g.hasAnyEdge(3, 3)).toBe(true);
   });
 
-  it('마스크가 0..15 안이다 — 스프라이트 16장과 대응', () => {
+  it('마스크가 0..15 안이다', () => {
     const g = new WallGrid(6, 6);
-    for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) g.setRaw(i, j, WALL_SOLID);
-    for (let i = 0; i < 6; i++) {
-      for (let j = 0; j < 6; j++) {
+    const rng = new Rng(9);
+    for (let k = 0; k < 60; k++) {
+      g.setEdge(rng.int(6), rng.int(6), rng.int(4) as 0 | 1 | 2 | 3, EDGE_SOLID);
+    }
+    for (let j = 0; j < 6; j++) {
+      for (let i = 0; i < 6; i++) {
         const m = g.mask(i, j);
         expect(m).toBeGreaterThanOrEqual(0);
         expect(m).toBeLessThanOrEqual(15);
       }
     }
   });
-
-  it('문 런 방향 — I 축으로 이어지면 x, 아니면 z', () => {
-    const g = new WallGrid(8, 8);
-    g.setRaw(3, 3, WALL_DOOR);
-    g.setRaw(2, 3, WALL_SOLID);
-    g.setRaw(4, 3, WALL_SOLID);
-    expect(g.doorRun(3, 3)).toBe('x');
-    const h = new WallGrid(8, 8);
-    h.setRaw(3, 3, WALL_DOOR);
-    h.setRaw(3, 2, WALL_SOLID);
-    h.setRaw(3, 4, WALL_SOLID);
-    expect(h.doorRun(3, 3)).toBe('z');
-  });
 });
 
-describe('통행', () => {
-  it('벽은 막고 문은 통과한다', () => {
-    const g = new WallGrid(8, 8);
-    g.setRaw(1, 1, WALL_SOLID);
-    g.setRaw(2, 2, WALL_DOOR);
-    expect(g.blocks(1, 1)).toBe(true);
-    expect(g.blocks(2, 2)).toBe(false);
-    expect(g.has(2, 2)).toBe(true);
-  });
-});
-
-describe('도달 검사 — flood fill', () => {
+describe('도달 검사', () => {
   it('벽이 없으면 전부 닿는다', () => {
-    const t = flat(6, 6);
-    const g = new WallGrid(6, 6);
-    const r = reachable(t, g, GATE);
-    expect(r.reduce((a, b) => a + b, 0)).toBe(36);
-    expect(passableCount(t, g)).toBe(36);
+    const t = flat();
+    const seen = reachable(t, new WallGrid(8, 8), GATE);
+    expect([...seen].filter((x) => x === 1)).toHaveLength(64);
   });
 
   it('물은 못 걷는다', () => {
-    const t = flat(6, 6);
-    t.paint(3, 3, 'water_edge');
-    const g = new WallGrid(6, 6);
-    expect(reachable(t, g, GATE)[3 * 6 + 3]).toBe(0);
+    const t = flat();
+    for (let i = 0; i < 8; i++) t.paint(i, 7, 'water_edge');
+    const seen = reachable(t, new WallGrid(8, 8), GATE);
+    expect([...seen].filter((x) => x === 1)).toHaveLength(56);
   });
 
   it('게이트가 물 위면 아무 곳도 못 닿는다', () => {
-    const t = flat(6, 6);
+    const t = flat();
     t.paint(0, 0, 'water_edge');
-    const r = reachable(t, new WallGrid(6, 6), GATE);
-    expect(r.reduce((a, b) => a + b, 0)).toBe(0);
+    expect([...reachable(t, new WallGrid(8, 8), GATE)].filter((x) => x === 1)).toHaveLength(0);
   });
 
-  it('대각선으로는 못 지난다 — X 교차 벽을 비집고 새면 "닫았는데 새는" 상태가 된다', () => {
-    const t = flat(5, 5);
-    const g = new WallGrid(5, 5);
-    // (1,0),(0,1) 을 막아 (0,0) 을 코너에 가둔다. 대각선 허용이면 (1,1) 로 새어나간다
-    g.setRaw(1, 0, WALL_SOLID);
-    g.setRaw(0, 1, WALL_SOLID);
-    const r = reachable(t, g, GATE);
-    expect(r[0]).toBe(1);
-    expect(r[1 * 5 + 1]).toBe(0);
-    expect(r.reduce((a, b) => a + b, 0)).toBe(1);
+  it('경계를 둘러싸면 안이 끊긴다', () => {
+    const t = flat();
+    const g = new WallGrid(8, 8);
+    // (4,4) 를 네 경계로 완전히 감싼다
+    g.setEdge(4, 4, DIR_I_PLUS, EDGE_SOLID);
+    g.setEdge(4, 4, DIR_J_PLUS, EDGE_SOLID);
+    g.setEdge(4, 4, DIR_I_MINUS, EDGE_SOLID);
+    g.setEdge(4, 4, DIR_J_MINUS, EDGE_SOLID);
+    const seen = reachable(t, g, GATE);
+    expect(seen[4 * 8 + 4]).toBe(0);
+    expect([...seen].filter((x) => x === 1)).toHaveLength(63);
+  });
+
+  it('대각선으로는 못 지난다 — X 교차를 비집고 새면 "닫았는데 새는" 상태가 된다', () => {
+    const t = flat(4, 4);
+    const g = new WallGrid(4, 4);
+    // (0,0) 만 남기고 나머지에서 끊는다
+    g.setEdge(0, 0, DIR_I_PLUS, EDGE_SOLID);
+    g.setEdge(0, 0, DIR_J_PLUS, EDGE_SOLID);
+    const seen = reachable(t, g, GATE);
+    expect([...seen].filter((x) => x === 1)).toHaveLength(1);
   });
 });
 
-describe('밀폐 차단 — 이 게임에서 벽의 유일한 규칙', () => {
-  it('한 칸을 완전히 둘러싸는 마지막 벽은 거절된다', () => {
-    const t = flat(7, 7);
-    const g = new WallGrid(7, 7);
-    // (3,3) 을 둘러싸는 네 벽 중 세 개는 놓인다
-    expect(placeWall(t, g, GATE, 2, 3).ok).toBe(true);
-    expect(placeWall(t, g, GATE, 4, 3).ok).toBe(true);
-    expect(placeWall(t, g, GATE, 3, 2).ok).toBe(true);
-    // 마지막 하나가 (3,3) 을 가둔다
-    const r = placeWall(t, g, GATE, 3, 4);
-    expect(r.ok).toBe(false);
-    expect(r.reason).toBe('would-seal');
-    expect(r.sealed).toBe(1);
-    expect(g.at(3, 4)).toBe(WALL_NONE); // 실패하면 놓이지 않는다
+describe('밀폐 차단 — 손님이 못 들어가는 공간을 못 만든다', () => {
+  it('한 칸을 완전히 둘러싸는 마지막 경계는 거절된다', () => {
+    const t = flat();
+    const g = new WallGrid(8, 8);
+    expect(placeEdge(t, g, GATE, 4, 4, DIR_I_PLUS).ok).toBe(true);
+    expect(placeEdge(t, g, GATE, 4, 4, DIR_J_PLUS).ok).toBe(true);
+    expect(placeEdge(t, g, GATE, 4, 4, DIR_I_MINUS).ok).toBe(true);
+    const last = placeEdge(t, g, GATE, 4, 4, DIR_J_MINUS);
+    expect(last.ok).toBe(false);
+    expect(last.reason).toBe('would-seal');
+    expect(last.sealed).toBe(1);
   });
 
   it('문으로 열어 두면 같은 자리에 놓을 수 있다', () => {
-    const t = flat(7, 7);
-    const g = new WallGrid(7, 7);
-    g.setRaw(2, 3, WALL_SOLID);
-    g.setRaw(4, 3, WALL_SOLID);
-    g.setRaw(3, 2, WALL_SOLID);
-    // 문은 걸을 수 있으니 가두지 않는다
-    const r = placeWall(t, g, GATE, 3, 4, WALL_DOOR);
-    expect(r.ok).toBe(true);
-    expect(g.at(3, 4)).toBe(WALL_DOOR);
-    expect(reachable(t, g, GATE)[3 * 7 + 3]).toBe(1);
-  });
-
-  it('방을 만들고 문을 남기면 안이 닿는다', () => {
-    const t = flat(9, 9);
-    const g = new WallGrid(9, 9);
-    // 4×4 방 둘레를 세운다 (한 칸은 문으로)
-    const ring: [number, number][] = [];
-    for (let i = 2; i <= 6; i++) {
-      ring.push([i, 2], [i, 6]);
-    }
-    for (let j = 3; j <= 5; j++) {
-      ring.push([2, j], [6, j]);
-    }
-    let ok = 0;
-    for (const [i, j] of ring) {
-      // 마지막을 닫는 벽만 문으로
-      const r = placeWall(t, g, GATE, i, j);
-      if (r.ok) ok++;
-      else {
-        const d = placeWall(t, g, GATE, i, j, WALL_DOOR);
-        expect(d.ok).toBe(true);
-      }
-    }
-    expect(ok).toBeGreaterThan(10);
-    // 방 안이 여전히 닿는다
-    const r = reachable(t, g, GATE);
-    for (let i = 3; i <= 5; i++) {
-      for (let j = 3; j <= 5; j++) expect(r[j * 9 + i], `방 안 (${i},${j})`).toBe(1);
-    }
+    const t = flat();
+    const g = new WallGrid(8, 8);
+    g.setEdge(4, 4, DIR_I_PLUS, EDGE_SOLID);
+    g.setEdge(4, 4, DIR_J_PLUS, EDGE_SOLID);
+    g.setEdge(4, 4, DIR_I_MINUS, EDGE_SOLID);
+    expect(placeEdge(t, g, GATE, 4, 4, DIR_J_MINUS, EDGE_DOOR).ok).toBe(true);
+    expect(reachable(t, g, GATE)[4 * 8 + 4]).toBe(1);
   });
 
   it('여러 칸이 갇히면 개수를 알려준다 — UI 가 "N칸이 갇힙니다" 로 보여준다', () => {
-    const t = flat(8, 8);
+    const t = flat();
     const g = new WallGrid(8, 8);
-    // 오른쪽 아래 2×2 를 막는 ㄱ자 벽. 마지막 한 칸이 4칸을 가둔다
-    for (let i = 5; i <= 7; i++) g.setRaw(i, 5, WALL_SOLID);
-    for (let j = 6; j <= 7; j++) g.setRaw(5, j, WALL_SOLID);
-    // 지금은 (6..7, 6..7) 4칸이 갇혀 있다 → 이미 갇힌 상태이므로 새 벽을 세워도 sealed 0
-    // 대신 처음부터 검사로 놓아 본다
-    const g2 = new WallGrid(8, 8);
-    for (let i = 5; i <= 7; i++) {
-      const r = placeWall(t, g2, GATE, i, 5);
-      expect(r.ok).toBe(true);
-    }
-    const r1 = placeWall(t, g2, GATE, 5, 6);
-    expect(r1.ok).toBe(true);
-    const r2 = placeWall(t, g2, GATE, 5, 7);
-    expect(r2.ok).toBe(false);
-    expect(r2.sealed).toBe(4); // (6,6),(7,6),(6,7),(7,7)
+    // 오른쪽 아래 2×2 를 잘라내기 직전까지 두른다
+    for (let j = 6; j < 8; j++) g.setEdge(5, j, DIR_I_PLUS, EDGE_SOLID);
+    g.setEdge(6, 6, DIR_J_MINUS, EDGE_SOLID);
+    const last = canPlaceEdge(t, g, GATE, 7, 6, DIR_J_MINUS);
+    expect(last.ok).toBe(false);
+    expect(last.sealed).toBe(4);
   });
 
-  it('게이트 위에는 못 놓는다', () => {
-    const t = flat(6, 6);
-    const g = new WallGrid(6, 6);
-    expect(canPlaceWall(t, g, GATE, GATE.i, GATE.j).reason).toBe('occupied');
+  it('격자 밖 경계는 거절 — 어차피 못 지나간다', () => {
+    const t = flat();
+    const g = new WallGrid(8, 8);
+    expect(placeEdge(t, g, GATE, 7, 3, DIR_I_PLUS).reason).toBe('outside');
+    expect(placeEdge(t, g, GATE, 9, 3, DIR_I_PLUS).reason).toBe('outside');
   });
 
-  it('물 위에는 못 세운다', () => {
-    const t = flat(6, 6);
-    t.paint(3, 3, 'water_edge');
-    expect(canPlaceWall(t, new WallGrid(6, 6), GATE, 3, 3).reason).toBe('not-walkable');
-  });
-
-  it('격자 밖은 거절', () => {
-    const t = flat(6, 6);
-    expect(canPlaceWall(t, new WallGrid(6, 6), GATE, -1, 0).reason).toBe('outside');
-  });
-
-  it('이미 있는 자리는 거절', () => {
-    const t = flat(6, 6);
-    const g = new WallGrid(6, 6);
-    g.setRaw(2, 2, WALL_SOLID);
-    expect(canPlaceWall(t, g, GATE, 2, 2).reason).toBe('occupied');
+  it('이미 있는 경계는 거절', () => {
+    const t = flat();
+    const g = new WallGrid(8, 8);
+    expect(placeEdge(t, g, GATE, 3, 3, DIR_I_PLUS).ok).toBe(true);
+    expect(placeEdge(t, g, GATE, 3, 3, DIR_I_PLUS).reason).toBe('occupied');
   });
 
   it('지우는 건 항상 된다 — 도달성을 늘리기만 한다', () => {
-    const g = new WallGrid(6, 6);
-    g.setRaw(2, 2, WALL_SOLID);
-    expect(removeWall(g, 2, 2)).toBe(true);
-    expect(removeWall(g, 2, 2)).toBe(false);
-    expect(g.at(2, 2)).toBe(WALL_NONE);
+    const t = flat();
+    const g = new WallGrid(8, 8);
+    placeEdge(t, g, GATE, 3, 3, DIR_I_PLUS);
+    expect(removeEdge(g, 3, 3, DIR_I_PLUS)).toBe(true);
+    expect(removeEdge(g, 3, 3, DIR_I_PLUS)).toBe(false);
+    expect(g.edgeAt(3, 3, DIR_I_PLUS)).toBe(EDGE_NONE);
   });
 
   it('모든 실패 이유에 사람이 읽을 메시지가 있다', () => {
-    for (const k of ['outside', 'not-walkable', 'occupied', 'would-seal'] as const) {
-      expect(PLACE_MESSAGES[k].length).toBeGreaterThan(0);
+    const reasons: PlaceReason[] = [
+      'ok',
+      'outside',
+      'not-walkable',
+      'occupied',
+      'would-seal',
+      'no-door',
+    ];
+    for (const r of reasons) expect(typeof PLACE_MESSAGES[r]).toBe('string');
+    for (const r of reasons.filter((x) => x !== 'ok')) {
+      expect(PLACE_MESSAGES[r].length).toBeGreaterThan(0);
     }
   });
 });
 
-describe('실제 지형에서', () => {
-  it('생성된 지형에 벽을 두르고 문을 남기면 통과한다', () => {
-    const t = KairoTerrain.generate(40, 32, new Rng(5));
-    const g = new WallGrid(40, 32);
-    const gate = { i: 0, j: 0 };
-    expect(t.isWalkable(gate.i, gate.j)).toBe(true);
-    let placed = 0;
-    for (let i = 5; i <= 12; i++) {
-      if (placeWall(t, g, gate, i, 5).ok) placed++;
-    }
-    expect(placed).toBe(8);
-    expect(g.count(WALL_SOLID)).toBe(8);
+describe('스냅샷', () => {
+  it('두 축의 경계가 모두 왕복한다', () => {
+    const g = new WallGrid(6, 6);
+    g.setEdge(1, 1, DIR_I_PLUS, EDGE_SOLID);
+    g.setEdge(2, 2, DIR_J_PLUS, EDGE_DOOR);
+    const back = WallGrid.fromSnapshot(JSON.parse(JSON.stringify(g.toSnapshot())));
+    expect(back.edgeAt(1, 1, DIR_I_PLUS)).toBe(EDGE_SOLID);
+    expect(back.edgeAt(2, 2, DIR_J_PLUS)).toBe(EDGE_DOOR);
+    expect(back.count(EDGE_SOLID)).toBe(1);
+    expect(back.count(EDGE_DOOR)).toBe(1);
   });
 
-  it('스냅샷 왕복', () => {
-    const g = new WallGrid(10, 10);
-    g.setRaw(1, 1, WALL_SOLID);
-    g.setRaw(2, 1, WALL_DOOR);
-    const s = g.toSnapshot();
-    const back = WallGrid.fromSnapshot(s);
-    expect(back.toSnapshot()).toEqual(s);
-    expect(back.at(2, 1)).toBe(WALL_DOOR);
+  it('전부 지우기', () => {
+    const g = new WallGrid(6, 6);
+    g.setEdge(1, 1, DIR_I_PLUS, EDGE_SOLID);
+    g.clear();
+    expect(g.count(EDGE_SOLID)).toBe(0);
   });
+});
 
+describe('지형 계약', () => {
   it('지면 인덱스는 여전히 유효하다 — 지형 계약이 깨지면 벽도 못 놓는다', () => {
     expect(groundIndex('lawn')).toBeGreaterThanOrEqual(0);
+    expect(groundIndex('water_edge')).toBeGreaterThanOrEqual(0);
   });
 });

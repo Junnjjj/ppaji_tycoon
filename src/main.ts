@@ -19,14 +19,22 @@ const AUTOSAVE_INTERVAL_MS = 30_000;
 async function mainKairo(parent: HTMLElement): Promise<void> {
   const { bootKairo } = await import('./render/kairo/boot.js');
   const { GROUND_KINDS } = await import('./sim/kairo/terrain.js');
-  const { placeWall, removeWall, WALL_SOLID, WALL_DOOR, PLACE_MESSAGES } = await import(
-    './sim/kairo/walls.js'
+  const { BuildingStore, BUILDING_FAIL_MESSAGES } = await import(
+    './sim/kairo/building.js'
   );
   const { allFacilityDefs, PLACE_FAIL_MESSAGES } = await import('./sim/kairo/placement.js');
   const { WeekRunner } = await import('./sim/kairo/week.js');
   const { previewCombos, evaluateCombos } = await import('./sim/kairo/combos.js');
-  const { questStatuses, ProgressStore, gradeFor, requiredGrade, admissionLimit, Reputation, nextGrade } =
-    await import('./sim/kairo/progress.js');
+  const {
+    questStatuses,
+    ProgressStore,
+    gradeFor,
+    requiredGrade,
+    admissionLimit,
+    Reputation,
+    nextGrade,
+    landRect,
+  } = await import('./sim/kairo/progress.js');
   const { assessRisk, RISK_NAMES } = await import('./sim/kairo/risk.js');
   const { KairoReport } = await import('./ui/kairo-report.js');
   const { KairoCardView } = await import('./ui/kairo-card.js');
@@ -88,6 +96,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   let runner: InstanceType<typeof WeekRunner> | null = null;
 
+  /**
+   * 건물 영역 — 벽의 **소유자**다. 세이브에 벽 스냅샷도 있지만 정본은 이쪽이라,
+   * 확장·철거는 항상 여기를 거쳐 벽을 다시 굽는다.
+   */
+  const buildings = saved?.buildings ?? new BuildingStore();
+  /** 건물 한 칸의 값 — 시설보다 싸다. 벽은 목표가 아니라 준비물이다 */
+  const BUILD_COST_PER_TILE = 40_000;
+
   const h = bootKairo({
     parent,
     seed: KAIRO_SEED,
@@ -117,24 +133,71 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         console.log(`[카이로] 탭 타일 (${i}, ${j}) — ${h.terrain.kindAt(i, j) ?? '?'}`);
         return;
       }
-      if (brush === 'wall' || brush === 'door') {
-        const r = placeWall(
-          h.terrain,
-          h.walls,
-          GATE,
-          i,
-          j,
-          brush === 'wall' ? WALL_SOLID : WALL_DOOR,
-        );
-        if (r.ok) {
-          h.scene.refreshWall(i, j);
-          h.guests.invalidate(); // 벽이 바뀌면 거리장을 다시 만든다
-          toast('');
-          persist();
-        } else {
-          // 밀폐 차단이면 몇 칸이 갇히는지 함께 보여준다
-          toast(PLACE_MESSAGES[r.reason] + (r.sealed ? ` (${r.sealed}칸)` : ''));
+      if (brush === 'building') {
+        /*
+         * 건물 영역 — **모서리 두 번 탭**. 드래그가 아니라 탭 두 번인 이유는 폰에서
+         * 드래그가 이미 카메라 팬이기 때문이다 (핀치·팬을 뺏으면 지도를 못 본다).
+         *
+         * 첫 탭은 기준점만 기억한다. 두 번째 탭에서 사각형이 정해지고, 그 순간
+         * 벽은 **결과로** 생긴다 — 플레이어가 벽을 한 장씩 찍지 않는다.
+         */
+        if (!buildAnchor) {
+          buildAnchor = { i, j };
+          h.scene.setBuildAnchor(i, j);
+          toast('반대편 모서리를 탭하세요', 'ok');
+          return;
         }
+        const rect = {
+          i: Math.min(buildAnchor.i, i),
+          j: Math.min(buildAnchor.j, j),
+          w: Math.abs(i - buildAnchor.i) + 1,
+          h: Math.abs(j - buildAnchor.j) + 1,
+        };
+        buildAnchor = null;
+        h.scene.setBuildAnchor(null);
+
+        // 토지 해금 — 건물도 내 땅 안에서만 (K25)
+        const land = landRect(currentGrade());
+        if (rect.i + rect.w > land.w || rect.j + rect.h > land.h) {
+          toast(`아직 내 땅이 아닙니다 — 지금은 ${land.w}×${land.h} 까지입니다`);
+          return;
+        }
+        const pre = buildings.check(h.terrain, GATE, rect);
+        if (!pre.ok) {
+          toast(BUILDING_FAIL_MESSAGES[pre.fail ?? 'outside']);
+          return;
+        }
+        /*
+         * 값은 **새로 덮이는 칸만** 센다. 넓힐 때 이미 지은 부분까지 다시 받으면
+         * "조금씩 여러 번 넓히기"가 손해라서 플레이어가 처음부터 크게 짓게 된다 —
+         * 그건 이 기능이 없애려던 바로 그 부담이다.
+         */
+        let fresh = 0;
+        for (let jj = rect.j; jj < rect.j + rect.h; jj++) {
+          for (let ii = rect.i; ii < rect.i + rect.w; ii++) if (!buildings.isIndoor(ii, jj)) fresh++;
+        }
+        const cost = fresh * BUILD_COST_PER_TILE;
+        if (cost > week.cash) {
+          toast(
+            `돈이 부족합니다 — ${Math.round(cost / 10000)}만 필요 ` +
+              `(현재 ${Math.round(week.cash / 10000)}만)`,
+          );
+          return;
+        }
+        const r = buildings.place(h.terrain, h.walls, GATE, rect);
+        if (!r.ok) {
+          toast(BUILDING_FAIL_MESSAGES[r.fail ?? 'outside']);
+          return;
+        }
+        if (cost > 0) week.spend(cost);
+        h.scene.refreshAllWalls();
+        h.guests.invalidate(); // 벽이 바뀌면 거리장을 다시 만든다
+        toast(
+          `${rect.w}×${rect.h} 건물${pre.replaces?.length ? ' 확장' : ''}` +
+            (cost > 0 ? ` · −${Math.round(cost / 10000)}만` : ''),
+          'ok',
+        );
+        persist();
         return;
       }
       if (brush === 'erase') {
@@ -157,9 +220,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           persist();
           return;
         }
-        if (removeWall(h.walls, i, j)) {
-          h.scene.refreshWall(i, j);
+        // 벽은 개별로 못 지운다 — 건물을 없애면 그 벽이 같이 사라진다
+        const b = buildings.at(i, j);
+        if (b && buildings.remove(h.terrain, h.walls, GATE, b.handle)) {
+          h.scene.refreshAllWalls();
           h.guests.invalidate();
+          toast(`${b.rect.w}×${b.rect.h} 건물 철거`, 'ok');
           persist();
         }
         return;
@@ -189,7 +255,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           );
           return;
         }
-        const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j);
+        const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j, landRect(grade));
         if (r.ok && r.placed) {
           week.spend(cost);
           h.scene.refreshFacility(r.placed.handle);
@@ -237,6 +303,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
 
   // 지면 붓 — 터치 타깃 44px 이상 (모바일 검증 기준)
   let brush: string | null = null;
+  /** 건물 영역의 첫 모서리. null 이면 아직 안 찍었다 */
+  let buildAnchor: { i: number; j: number } | null = null;
   const bar = document.createElement('div');
   bar.id = 'kairo-brush';
   bar.style.cssText =
@@ -244,8 +312,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     'background:rgba(0,0,0,.6);overflow-x:auto';
   const BRUSHES: { id: string; name: string }[] = [
     ...GROUND_KINDS.map((k) => ({ id: k.id, name: k.name })),
-    { id: 'wall', name: '벽' },
-    { id: 'door', name: '문' },
+    { id: 'building', name: '건물' },
     { id: 'facility', name: '시설' },
     { id: 'erase', name: '지우기' },
   ];
@@ -258,6 +325,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       'background:#20303c;color:#dceaf4;font-size:12px';
     b.addEventListener('click', () => {
       brush = brush === k.id ? null : k.id;
+      if (brush !== 'building' && buildAnchor) {
+        buildAnchor = null;
+        h.scene.setBuildAnchor(null);
+      }
       for (const el of bar.querySelectorAll('button')) {
         (el as HTMLElement).style.borderColor =
           (el as HTMLElement).dataset['kind'] === brush ? '#7ad0ff' : 'transparent';
@@ -310,7 +381,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   Object.assign(h, {
     Rng: RngCls,
-    sim: { placeWall, removeWall, WALL_SOLID, WALL_DOOR, PLACE_MESSAGES },
+    sim: { BuildingStore, BUILDING_FAIL_MESSAGES },
     simDefs: Object.fromEntries(allFacilityDefs().map((d) => [d.id, d])),
   });
   /**
@@ -384,12 +455,19 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const currentGrade = (): ReturnType<typeof gradeFor> => nextGrade(gradeNo, reputation.value);
 
   /** 세이브 — 배치·주 진행처럼 상태가 실제로 바뀐 뒤에만 부른다 */
+  // 부팅 시점의 토지 — 세이브에서 복원된 등급이 그대로 화면에 반영돼야 한다
+  {
+    const l0 = landRect(currentGrade());
+    h.scene.setLand(l0.w, l0.h);
+  }
+
   const persist = (): void => {
     saveKairoToStorage({
       seed: KAIRO_SEED,
       gate: GATE,
       terrain: h.terrain,
       walls: h.walls,
+      buildings,
       placement: h.placement,
       progress,
       week: week.toSnapshot(),
@@ -487,7 +565,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const calcMs = performance.now() - t0;
     lastReport = rep;
     reputation.push(rep.exitSatisfaction);
+    const gradeBefore = gradeNo;
     gradeNo = nextGrade(gradeNo, reputation.value).grade;
+    if (gradeNo !== gradeBefore) {
+      // 등급이 바뀌면 땅이 넓어지거나 좁아진다 — 화면이 바로 그걸 보여줘야 한다
+      const nl = landRect(currentGrade());
+      h.scene.setLand(nl.w, nl.h);
+      if (gradeNo > gradeBefore) toast(`토지가 ${nl.w}×${nl.h} 로 넓어졌습니다`, 'ok');
+    }
     lastSummary = {
       visitors: rep.visitors,
       turnedAway: rep.turnedAway,

@@ -19,6 +19,8 @@ export class FlowField {
   readonly height: number;
   private readonly dist: Int32Array;
   private readonly queue: Int32Array;
+  /** 경계 통과 판정 — `build` 가 받아 두고 `next` 도 같은 것을 쓴다 */
+  private canCross?: ((x: number, y: number, nx: number, ny: number) => boolean) | undefined;
 
   constructor(width: number, height: number) {
     this.width = width;
@@ -30,13 +32,23 @@ export class FlowField {
   /**
    * 거리장을 다시 만든다. 시설이 바뀔 때만 호출한다.
    *
-   * @param walkable 그 타일을 지나갈 수 있는가
+   * @param walkable 그 타일에 **설 수** 있는가
    * @param targets  거리 0 이 되는 목적지 타일들
+   * @param canCross 두 이웃 칸 **사이를 지나갈** 수 있는가 (경계 벽). 없으면 항상 가능
+   *
+   * ⚠ 칸 판정과 경계 판정은 다르다. 경계 벽(K25)은 칸을 막지 않고 **이동**을 막는다 —
+   * `walkable` 만으로는 표현할 수 없어서 별도 인자가 필요하다.
    */
   build(
     walkable: (x: number, y: number) => boolean,
     targets: Iterable<readonly [number, number]>,
+    canCross?: (x: number, y: number, nx: number, ny: number) => boolean,
   ): void {
+    /*
+     * `next()` 도 같은 판정을 써야 한다. 안 그러면 벽 바로 건너편이 거리가 더 낮을 때
+     * 손님이 **벽을 통과해** 한 걸음 내딛는다 — 거리장은 맞는데 걸음이 틀리는 상태다.
+     */
+    this.canCross = canCross;
     this.dist.fill(UNREACHABLE);
 
     let head = 0;
@@ -64,6 +76,7 @@ export class FlowField {
         const ni = ny * this.width + nx;
         if (this.dist[ni] !== UNREACHABLE) continue;
         if (!walkable(nx, ny)) continue;
+        if (canCross && !canCross(x, y, nx, ny)) continue;
 
         this.dist[ni] = d;
         this.queue[tail++] = ni;
@@ -104,6 +117,7 @@ export class FlowField {
       const ny = y + (DY[dir] as number);
       const d = this.distAt(nx, ny);
       if (d === UNREACHABLE) continue;
+      if (this.canCross && !this.canCross(x, y, nx, ny)) continue;
       if (d < bestDist) {
         bestDist = d;
         best = [nx, ny];

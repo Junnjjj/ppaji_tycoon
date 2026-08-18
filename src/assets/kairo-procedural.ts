@@ -27,6 +27,15 @@ import type { AssetProvider, SpriteSpec } from './types.js';
 
 const OUTLINE = '#2b1d12';
 
+/*
+ * 경계 방향 — `KAIRO.wall.edgeNames` 의 순서와 같다. sim 의 `DIR_*` 와 값이 같지만
+ * **여기서 다시 선언한다**: assets 가 sim 을 import 하면 의존 방향이 뒤집힌다.
+ * 계약 테스트가 두 값이 어긋나지 않는지 지킨다.
+ */
+const DIR_I_PLUS_IDX = 0;
+const DIR_J_PLUS_IDX = 1;
+const DIR_J_MINUS_IDX = 3;
+
 /** 최종 ID → 기본 ID. `:` 앞이 기본 ID 다 (spec 없이도 구한다) */
 function baseOf(id: string): string {
   const i = id.indexOf(':');
@@ -264,87 +273,111 @@ function drawFacility(g: CanvasRenderingContext2D, spec: SpriteSpec, simId: stri
 }
 
 /**
- * 벽 — 스티플 유리. 스펙 §3.2~3.3.
+ * 벽 — **타일 경계에 선 얇은 유리 패널** (K25). 스펙 §3.2~3.3.
  *
- * 타일 다이아몬드를 위쪽 뚜껑으로 두고 **아래로 H 만큼 정수 압출**한다. 열마다
- * 뚜껑의 최하단 y 를 찾아 그 아래를 채우므로 이웃 벽과 정확히 이어지고 이음새가 없다.
+ * ## 왜 다이아몬드 한 칸을 통째로 칠하지 않나
+ *
+ * 예전에는 벽이 칸을 통째로 먹어서 두꺼운 상자로 보였다 — 32텍셀 두께의 벽이다.
+ * 실제 카이로 게임의 벽은 **칸과 칸 사이**에 서 있고, 바닥은 벽 밑까지 이어진다.
+ * 이제 벽은 다이아몬드의 **한 변**만 따라간다 (길이 16텍셀, 두께 3).
+ *
+ * ## 네 변의 기하
+ *
+ * 화면에서 다이아몬드의 네 변은 각각 한 방향의 이웃과 맞닿는다:
+ *   +I 오른쪽아래 · +J 왼쪽아래 · −I 왼쪽위 · −J 오른쪽위
+ *
+ * 변을 따라가는 열마다 밑변 y 를 구한 뒤 위로 H 만큼 정수 압출한다. 열 단위 정수라
+ * 이웃 벽과 텍셀이 정확히 맞물린다 — AA `fill()` 로 사변형을 그리면 이음새가 생긴다.
  *
  * 유리는 **알파 블렌딩이 아니라 50% 체커(스티플)** 다. 블렌딩은 팔레트에 없는 중간색을
  * 만들어 양자화가 비치는 형체를 지운다. 스티플은 새 색을 0개 만든다.
- *
- * 마스크가 0(독립 기둥)이면 좌우를 좁혀 기둥처럼 그린다 — 전부 같은 그림이면
- * 마스크 버그가 눈에 안 보인다.
  */
-function drawWall(g: CanvasRenderingContext2D, spec: SpriteSpec, mask: number, door: boolean): void {
+function drawWall(g: CanvasRenderingContext2D, spec: SpriteSpec, dir: number, door: boolean): void {
   const [cw, ch] = spec.size;
-  const H = ch - TILE_H; // 압출 높이 (= KAIRO.wall.heightTexels)
-  const FRAME = '#c3ced3';
+  const H = KAIRO.wall.heightTexels;
+  const T = KAIRO.wall.thicknessTexels;
+  const CAP = '#c3ced3';
   const PLINTH = '#8d979b';
   const GLASS_L = '#c9dae2';
   const GLASS_R = '#e2eef3';
-  const PLINTH_H = 6;
-  const inset = mask === 0 ? 6 : 0;
+  const PLINTH_H = 5;
 
-  // 열마다 뚜껑의 최하단 y — 여기서부터 아래로 압출한다
-  const bottomOf = new Int16Array(cw).fill(-1);
-  for (let y = 0; y < TILE_H; y++) {
-    const sp = tileRowSpan(y);
-    for (let x = sp.x0; x < sp.x1; x++) if (y > bottomOf[x]!) bottomOf[x] = y;
-  }
+  const baseY = ch - TILE_H; // 다이아몬드 위 꼭지점의 y
+  const right = dir === DIR_I_PLUS_IDX || dir === DIR_J_MINUS_IDX; // 화면 오른쪽 변인가
+  const lower = dir === DIR_I_PLUS_IDX || dir === DIR_J_PLUS_IDX; // 아래쪽 변인가
 
-  // ① 뚜껑 (벽의 윗면 — 불투명이 정상이다)
-  for (let y = 0; y < TILE_H; y++) {
-    const sp = tileRowSpan(y);
-    const x0 = Math.max(sp.x0, inset);
-    const x1 = Math.min(sp.x1, cw - inset);
-    if (x1 <= x0) continue;
-    g.fillStyle = FRAME;
-    g.fillRect(x0, y, x1 - x0, 1);
-  }
+  /** 그 열에서 변의 y (없으면 −1) */
+  const edgeY = (x: number): number => {
+    if (right && x < TILE_W / 2) return -1;
+    if (!right && x >= TILE_W / 2) return -1;
+    // 중심에서 밖으로 갈수록 위/아래 꼭지점에서 좌우 꼭지점으로 반 칸씩 이동한다
+    const k = right ? x - TILE_W / 2 : TILE_W / 2 - 1 - x;
+    return lower ? baseY + TILE_H - 1 - (k >> 1) : baseY + (k >> 1);
+  };
 
-  // ② 앞쪽 두 면을 아래로 압출 — 일단 **전부 불투명**으로 그린다
+  // ① 패널 — 변을 따라 두께 T 로 위로 압출
   let paneTop = ch;
   let paneBottom = 0;
-  for (let x = inset; x < cw - inset; x++) {
-    const top = bottomOf[x]!;
-    if (top < 0) continue;
-    const left = x < cw / 2;
-    for (let y = top + 1; y <= top + H; y++) {
-      const fromBase = top + H - y;
-      g.fillStyle = fromBase < PLINTH_H ? PLINTH : left ? GLASS_L : GLASS_R;
-      g.fillRect(x, y, 1, 1);
-      if (fromBase >= PLINTH_H) {
-        if (y < paneTop) paneTop = y;
-        if (y + 1 > paneBottom) paneBottom = y + 1;
+  for (let x = 0; x < cw; x++) {
+    const y0 = edgeY(x);
+    if (y0 < 0) continue;
+    for (let t = 0; t < T; t++) {
+      const yb = y0 - t; // 두께는 화면 위쪽으로 쌓는다 (바닥 두께감)
+      for (let y = yb - H + 1; y <= yb; y++) {
+        if (y < 0 || y >= ch) continue;
+        const fromBase = yb - y;
+        if (fromBase >= H - 2) {
+          g.fillStyle = CAP; // 맨 위 두 줄은 갓
+        } else if (fromBase < PLINTH_H) {
+          g.fillStyle = PLINTH;
+        } else {
+          g.fillStyle = right ? GLASS_R : GLASS_L;
+          if (y < paneTop) paneTop = y;
+          if (y + 1 > paneBottom) paneBottom = y + 1;
+        }
+        g.fillRect(x, y, 1, 1);
       }
     }
   }
 
-  // ③ 멀리온 — 중심 기둥은 불투명하게 세워 벽선을 읽히게 한다
-  g.fillStyle = FRAME;
-  g.fillRect(cw / 2 - 1, TILE_H / 2, 2, H);
+  // ② 멀리온 — 4텍셀마다 불투명 기둥. 없으면 스티플이 전부를 먹어 벽선이 안 읽힌다
+  for (let x = 0; x < cw; x++) {
+    if (x % 4 !== (right ? 2 : 1)) continue;
+    const y0 = edgeY(x);
+    if (y0 < 0) continue;
+    g.fillStyle = CAP;
+    for (let y = y0 - H + 1; y <= y0; y++) if (y >= 0 && y < ch) g.fillRect(x, y, 1, 1);
+  }
 
   if (door) {
-    // 문 — 아래 절반을 비워 통행 가능함을 보인다
+    // 문 — 패널 가운데를 뚫어 통행 가능함을 보인다
+    const mid = right ? TILE_W * 0.75 : TILE_W * 0.25;
     g.save();
     g.globalCompositeOperation = 'destination-out';
-    g.fillRect(cw / 2 - 5, ch - H / 2 - PLINTH_H, 10, H / 2);
+    for (let x = Math.round(mid - 5); x <= Math.round(mid + 5); x++) {
+      const y0 = edgeY(x);
+      if (y0 < 0) continue;
+      for (let t = 0; t < T; t++) {
+        g.fillRect(x, y0 - t - H + 2, 1, H - PLINTH_H - 2);
+      }
+    }
     g.restore();
   }
 
-  // ④ 아웃라인 — 실루엣이 아직 꽉 찬 상태에서 굽는다
+  // ③ 아웃라인 — 실루엣이 아직 꽉 찬 상태에서 굽는다
   bakeOutline(g, cw, ch);
 
-  // ⑤ 마지막에 유리 패널을 스티플로 뚫는다 (§3.3)
-  punchStipple(g, inset, paneTop, cw - inset, paneBottom, (x, y) => {
-    // 멀리온과 실루엣 가장자리는 남긴다 — 가장자리를 뚫으면 윤곽선이 끊긴다
-    if (x >= cw / 2 - 1 && x <= cw / 2) return true;
-    const top = bottomOf[x] ?? -1;
-    if (top < 0) return true;
-    if (y <= top + 1) return true; // 뚜껑과 붙은 첫 줄
-    if (x <= inset + 1 || x >= cw - inset - 2) return true; // 좌우 가장자리
-    return false;
-  });
+  // ④ 마지막에 유리 패널을 스티플로 뚫는다 (§3.3)
+  if (paneBottom > paneTop) {
+    punchStipple(g, 0, paneTop, cw, paneBottom, (x, y) => {
+      if (x % 4 === (right ? 2 : 1)) return true; // 멀리온
+      const y0 = edgeY(x);
+      if (y0 < 0) return true;
+      if (y >= y0 - PLINTH_H) return true; // 굽
+      if (y <= y0 - H + 3) return true; // 갓 아래 첫 줄
+      return false;
+    });
+  }
 }
 
 /**
@@ -429,10 +462,9 @@ function drawerFor(baseId: string): Drawer | undefined {
   const [kind, name] = baseId.split('/') as [string, string];
   if (kind === 'facility') return (g, spec) => drawFacility(g, spec, name);
   if (kind === 'wall') {
-    // 마스크는 alt 변형으로 들어온다 (`wall/glass:a5`)
-    if (name === 'glass') return (g, spec, id) => drawWall(g, spec, altOf(id, spec), false);
-    if (name.startsWith('door-'))
-      return (g, spec) => drawWall(g, spec, name === 'door-x' ? 5 : 10, true);
+    // 방향은 alt 변형으로 들어온다 (`wall/edge:a2` = −I 면)
+    if (name === 'edge') return (g, spec, id) => drawWall(g, spec, altOf(id, spec), false);
+    if (name === 'door') return (g, spec, id) => drawWall(g, spec, altOf(id, spec), true);
     return undefined;
   }
   if (kind === 'ground') return (g, spec, id) => drawGround(g, spec, name, altOf(id, spec));

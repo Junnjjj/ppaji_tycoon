@@ -104,6 +104,31 @@ export function admissionLimit(
 }
 
 /**
+ * 해금된 토지 — 게이트 쪽 모서리에서 시작하는 사각형 (K25).
+ *
+ * ## 왜 사각형이고, 왜 게이트 쪽인가
+ *
+ * 흩어진 구역을 여러 개 열면 "어디가 내 땅인지"를 매번 확인해야 한다. 한 덩어리라야
+ * 한눈에 읽히고, 넓어지는 순간이 눈에 보인다. 게이트 쪽에서 자라는 이유는 손님이
+ * 게이트로 들어오기 때문이다 — 반대쪽부터 열리면 걷는 거리가 먼저 늘어난다.
+ *
+ * ## 왜 세로가 처음부터 넓은가
+ *
+ * 물가는 격자 아래쪽 (`j ≈ height·0.55`) 에 있다. 세로를 등급마다 조금씩 늘리면
+ * **3등급이 되기 전에는 물에 닿지 못한다** — 빠지 게임에서 물이 잠겨 있으면 그건
+ * 다른 게임이다. 그래서 세로는 1등급부터 물가를 넘고, 넓어지는 축은 주로 가로다
+ * (강변을 따라 옆으로 넓히는 것 — 실제 리조트 확장의 모습이기도 하다).
+ */
+export function landRect(grade: GradeDef): { w: number; h: number } {
+  return { w: grade.landW, h: grade.landH };
+}
+
+/** 그 칸이 해금된 토지 안인가 */
+export function withinLand(i: number, j: number, grade: GradeDef): boolean {
+  return i >= 0 && j >= 0 && i < grade.landW && j < grade.landH;
+}
+
+/**
  * 평판 — **퇴장 만족도의 이동평균** (§9.2).
  *
  * ## 왜 이동평균인가 (실측)

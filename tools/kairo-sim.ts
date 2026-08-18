@@ -20,7 +20,7 @@
  */
 import { Rng } from '../src/sim/rng.js';
 import { KairoTerrain } from '../src/sim/kairo/terrain.js';
-import { WallGrid, placeWall } from '../src/sim/kairo/walls.js';
+import { WallGrid, EDGE_SOLID, DIR_J_MINUS } from '../src/sim/kairo/walls.js';
 import { PlacementGrid, allFacilityDefs, MAX_LEVEL } from '../src/sim/kairo/placement.js';
 import { GuestStore, GUEST_DEFAULTS } from '../src/sim/kairo/guests.js';
 import { WeekRunner, type NeedKind, type Season, type WeekReport } from '../src/sim/kairo/week.js';
@@ -45,6 +45,8 @@ import {
   nextGrade,
   admissionLimit,
   Reputation,
+  landRect,
+  GRADES,
 } from '../src/sim/kairo/progress.js';
 
 const args = process.argv.slice(2);
@@ -141,6 +143,11 @@ function buildOne(
   cash: number,
   want: NeedKind | null,
   rng: Rng,
+  /**
+   * 해금된 토지 (K25). 봇이 이걸 무시하면 밸런싱이 **실제로 못 쓰는 땅**까지 쓰게 되어,
+   * 헤드리스 숫자와 손으로 하는 판이 갈라진다. 검증이 조용히 통과하는 전형적인 모양이다.
+   */
+  land: { w: number; h: number },
 ): number {
   const grade = gradeFor(0).grade; // 등급 제한은 아래에서 따로 본다
   void grade;
@@ -163,10 +170,10 @@ function buildOne(
   if (!pick) return 0;
 
   for (let attempt = 0; attempt < 200; attempt++) {
-    const i = rng.int(GRID_W - pick.size[0]);
-    const j = rng.int(GRID_H - pick.size[1]);
-    if (p.check(t, w, GATE, pick.id, i, j).ok) {
-      p.place(t, w, GATE, pick.id, i, j);
+    const i = rng.int(Math.max(1, land.w - pick.size[0]));
+    const j = rng.int(Math.max(1, land.h - pick.size[1]));
+    if (p.check(t, w, GATE, pick.id, i, j, land).ok) {
+      p.place(t, w, GATE, pick.id, i, j, land);
       return (pick as unknown as { cost: number }).cost;
     }
   }
@@ -203,8 +210,9 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const courseRng = rng.fork(0xc0125);
 
   // 벽부착 시설을 위해 벽 몇 줄 (플레이어가 실내동을 짓는 걸 흉내낸다)
-  for (let i = 6; i < 26; i++) placeWall(t, w, GATE, i, 5);
-  for (let i = 6; i < 26; i++) placeWall(t, w, GATE, i, 9);
+  // 벽부착 시설이 붙을 경계 두 줄 (플레이어가 실내동을 짓는 걸 흉내낸다)
+  for (let i = 6; i < 26; i++) w.setEdge(i, 6, DIR_J_MINUS, EDGE_SOLID);
+  for (let i = 6; i < 26; i++) w.setEdge(i, 10, DIR_J_MINUS, EDGE_SOLID);
 
   let cash = 5_000_000;
   let last: WeekReport | null = null;
@@ -298,7 +306,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
        * 버틸 만큼"은 남긴다.
        */
       const budget = Math.min(weekBudget, Math.max(0, cash - BUILD_RESERVE));
-      const spent = buildOne(t, w, p, budget, b === 0 ? want : null, rng);
+      const spent = buildOne(t, w, p, budget, b === 0 ? want : null, rng, landRect(GRADES[gradeNo - 1] ?? GRADES[0]!));
       cash -= spent;
       buildSpend += spent;
       weekBudget -= spent;

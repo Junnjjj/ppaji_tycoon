@@ -153,7 +153,7 @@ async function main(): Promise<void> {
 
   // ── 5. 타일 수 ──
   const tiles = Number(/타일 (\d+)/.exec(dbg)?.[1] ?? 0);
-  record('격자 40×32 = 1280 타일', tiles === 1280 ? 'pass' : 'fail', `${tiles}`);
+  record('격자 64×48 = 3072 타일 (K25 확대)', tiles === 3072 ? 'pass' : 'fail', `${tiles}`);
 
   // ── 5b. 타일링 이음새 — 지면 안쪽에 배경색이 새는지 (스킬 문서 미결 항목) ──
   //
@@ -300,8 +300,8 @@ async function main(): Promise<void> {
     record('지면 붓 팔레트', 'fail', '팔레트를 못 찾았다');
   } else {
     record(
-      '붓 10종 (지면 6 + 벽·문·시설·지우기)',
-      brushBtns.count === 10 ? 'pass' : 'fail',
+      '붓 9종 (지면 6 + 건물·시설·지우기)',
+      brushBtns.count === 9 ? 'pass' : 'fail',
       `${brushBtns.count}개`,
     );
     record(
@@ -341,7 +341,11 @@ async function main(): Promise<void> {
     );
   }
 
-  // ── 7c. 벽·문·밀폐 차단 ──
+  // ── 7c. 건물 영역 → 외곽 벽 (K25) ──
+  //
+  // 예전에는 벽을 한 장씩 놓고 밀폐 차단을 확인했다. 이제 플레이어는 **영역**만 정하고
+  // 벽은 결과로 생긴다. 그래서 검사도 "영역을 넣으면 외곽선이 생기고, 붙이면 사이 벽이
+  // 사라지고, 넓히면 옛 외곽선이 사라지는가"로 바뀐다.
   const wallCheck = (await page.evaluate(`(() => {
     const h = window.__kairo;
     const t = h.terrain, w = h.walls, sc = h.scene;
@@ -351,85 +355,103 @@ async function main(): Promise<void> {
     for (let j = 1; j < 20 && !base; j++) {
       for (let i = 1; i < 34; i++) {
         let ok = true;
-        for (let di = 0; di < 4 && ok; di++)
-          for (let dj = 0; dj < 4; dj++) if (!t.isWalkable(i + di, j + dj)) { ok = false; break; }
+        for (let di = 0; di < 9 && ok; di++)
+          for (let dj = 0; dj < 6; dj++) if (!t.isWalkable(i + di, j + dj)) { ok = false; break; }
         if (ok) { base = [i, j]; break; }
       }
     }
-    if (!base) return { ok: false, reason: '4×4 육지를 못 찾았다' };
+    if (!base) return { ok: false, reason: '9×6 육지를 못 찾았다' };
     const [bi, bj] = base;
     const gate = { i: 0, j: 0 };
+    const store = new h.sim.BuildingStore();
 
-    // (bi+1, bj+1) 을 네 벽으로 둘러싼다 — 마지막 하나가 거절되어야 한다
-    const ci = bi + 1, cj = bj + 1;
-    const three = [[ci-1,cj],[ci+1,cj],[ci,cj-1]];
-    let placed = 0;
-    for (const [i, j] of three) {
-      const r = h.sim.placeWall(t, w, gate, i, j, 1);
-      if (r.ok) { sc.refreshWall(i, j); placed++; }
-    }
-    out.placedThree = placed;
-    const sealAttempt = h.sim.placeWall(t, w, gate, ci, cj + 1, 1);
-    out.sealRejected = !sealAttempt.ok && sealAttempt.reason === 'would-seal';
-    out.sealedCount = sealAttempt.sealed || 0;
+    // ① 3×3 을 지으면 외곽 12 경계 (벽 11 + 문 1)
+    const a = store.place(t, w, gate, { i: bi, j: bj, w: 3, h: 3 });
+    out.firstOk = a.ok;
+    out.firstEdges = w.count(1) + w.count(2);
+    out.firstDoors = w.count(2);
+    // 안쪽 경계는 비어 있어야 한다 (다이아 안을 가로지르는 벽이 없다)
+    out.innerEmpty = w.edgeAt(bi, bj, 0) === 0;
 
-    // 같은 자리를 문으로는 놓을 수 있다
-    const doorAttempt = h.sim.placeWall(t, w, gate, ci, cj + 1, 2);
-    if (doorAttempt.ok) sc.refreshWall(ci, cj + 1);
-    out.doorAccepted = doorAttempt.ok;
+    // ② 바로 옆에 붙이면 맞닿은 면이 사라진다 — 둘레 (6+3)*2 = 18
+    const b = store.place(t, w, gate, { i: bi + 3, j: bj, w: 3, h: 3 });
+    out.secondOk = b.ok;
+    out.joinedEdges = w.count(1) + w.count(2);
+    out.betweenGone = w.edgeAt(bi + 2, bj, 0) === 0;
 
-    // 마스크가 이웃을 반영하나 — 가운데를 둘러싼 벽 중 하나는 이웃이 있어야 한다
-    out.maskOfLeft = w.mask(ci - 1, cj);
+    // ③ 겹치게 다시 지정하면 흡수해서 넓어진다 — 건물 수는 안 늘어난다
+    const before = store.count;
+    const c = store.place(t, w, gate, { i: bi, j: bj, w: 6, h: 5 });
+    out.growOk = c.ok;
+    out.countBefore = before;
+    out.countAfter = store.count;
+    out.grownEdges = w.count(1) + w.count(2);
 
-    // 이어 붙인 벽 한 줄 — 마스크가 이웃을 반영하는지, 화면에서 벽으로 읽히는지
-    const ri = bi, rj = bj + 3;
-    const runMasks = [];
-    for (let k = 0; k < 6; k++) {
-      const r = h.sim.placeWall(t, w, gate, ri + k, rj, 1);
-      if (r.ok) sc.refreshWall(ri + k, rj);
-    }
-    for (let k = 0; k < 6; k++) runMasks.push(w.mask(ri + k, rj));
-    out.runMasks = runMasks;
-    out.runOrigin = [ri, rj];
+    // ④ 1×1 은 거절 — 벽 넷이 한 칸을 감싸면 안이 없다
+    const tiny = store.check(t, gate, { i: bi, j: bj + 5, w: 1, h: 1 });
+    out.tinyRejected = !tiny.ok && tiny.fail === 'too-small';
 
+    sc.refreshAllWalls();
     out.wallCount = w.count(1) + w.count(2);
+    out.origin = [bi, bj];
     return { ok: true, ...out };
   })()`)) as
     | { ok: false; reason: string }
     | {
         ok: true;
-        placedThree: number;
-        sealRejected: boolean;
-        sealedCount: number;
-        doorAccepted: boolean;
-        maskOfLeft: number;
-        runMasks: number[];
-        runOrigin: number[];
+        firstOk: boolean;
+        firstEdges: number;
+        firstDoors: number;
+        innerEmpty: boolean;
+        secondOk: boolean;
+        joinedEdges: number;
+        betweenGone: boolean;
+        growOk: boolean;
+        countBefore: number;
+        countAfter: number;
+        grownEdges: number;
+        tinyRejected: boolean;
         wallCount: number;
+        origin: number[];
       };
 
   if (!wallCheck.ok) {
-    record('벽 배치', 'fail', wallCheck.reason);
+    record('건물 영역', 'fail', wallCheck.reason);
   } else {
-    record('벽 3장 배치', wallCheck.placedThree === 3 ? 'pass' : 'fail', `${wallCheck.placedThree}/3`);
     record(
-      '밀폐 차단 — 가두는 마지막 벽은 거절된다',
-      wallCheck.sealRejected ? 'pass' : 'fail',
-      `갇히는 칸 ${wallCheck.sealedCount}`,
+      '3×3 영역 → 외곽 12 경계 (벽 11 + 문 1)',
+      wallCheck.firstOk && wallCheck.firstEdges === 12 && wallCheck.firstDoors === 1
+        ? 'pass'
+        : 'fail',
+      `경계 ${wallCheck.firstEdges} · 문 ${wallCheck.firstDoors}`,
     );
-    record('같은 자리를 문으로는 놓을 수 있다', wallCheck.doorAccepted ? 'pass' : 'fail');
-    record('벽 그림이 화면에 올라간다', wallCheck.wallCount >= 4 ? 'pass' : 'fail', `${wallCheck.wallCount}장`);
     record(
-      '이어 붙인 벽의 마스크가 0 이 아니다 — 0 이면 끝단 모양으로 끊겨 보인다',
-      wallCheck.runMasks.some((m) => m !== 0) ? 'pass' : 'fail',
-      `런 마스크 ${wallCheck.runMasks.join(',')}`,
+      '안쪽 경계는 비어 있다 — 벽이 칸을 안 막는다',
+      wallCheck.innerEmpty ? 'pass' : 'fail',
+    );
+    record(
+      '붙여 지으면 맞닿은 벽이 사라진다 — 둘레 18',
+      wallCheck.secondOk && wallCheck.joinedEdges === 18 && wallCheck.betweenGone
+        ? 'pass'
+        : 'fail',
+      `경계 ${wallCheck.joinedEdges} · 사이 비었나 ${wallCheck.betweenGone}`,
+    );
+    record(
+      '겹쳐 지정하면 넓히기다 — 건물 수가 안 는다',
+      wallCheck.growOk && wallCheck.countAfter < wallCheck.countBefore + 1 ? 'pass' : 'fail',
+      `${wallCheck.countBefore}채 → ${wallCheck.countAfter}채 · 경계 ${wallCheck.grownEdges}`,
+    );
+    record('1×1 건물은 거절된다', wallCheck.tinyRejected ? 'pass' : 'fail');
+    record(
+      '벽 그림이 화면에 올라간다',
+      wallCheck.wallCount >= 4 ? 'pass' : 'fail',
+      `${wallCheck.wallCount}장`,
     );
   }
 
-  // 카메라를 벽 쪽으로 옮겨 눈으로 볼 수 있게 찍는다
-  // 벽 런이 있는 곳으로 카메라를 옮겨 눈으로 볼 수 있게 한다
+  // 건물이 있는 곳으로 카메라를 옮겨 눈으로 볼 수 있게 한다
   if (wallCheck.ok) {
-    const [ri, rj] = wallCheck.runOrigin;
+    const [ri, rj] = wallCheck.origin;
     await page.evaluate(`window.__kairo.scene.focusTile(${ri ?? 0}, ${rj ?? 0})`);
     await page.waitForTimeout(200);
   }
@@ -442,26 +464,35 @@ async function main(): Promise<void> {
   // 화면에서 재려 했더니 옆 벽의 뚜껑이 그 자리를 덮어 엉뚱한 색이 나왔다.
   const stipple = (await page.evaluate(`(() => {
     const prov = window.__kairo.provider;
-    const src = prov.get('wall/glass:a5'); // 직선 벽 (I 축 양쪽 이웃)
+    const src = prov.get('wall/edge:a1'); // J+ 경계 (화면 왼쪽아래 변)
     const cv = document.createElement('canvas');
     cv.width = src.width; cv.height = src.height;
     const g = cv.getContext('2d');
     g.drawImage(src, 0, 0);
     const d = g.getImageData(0, 0, cv.width, cv.height).data;
-    const alphaAt = (x, y) => d[(y * cv.width + x) * 4 + 3];
     const H = cv.height, W = cv.width;
-    // 스프라이트 32×40: 뚜껑 0..15 · 압출 16..39 (그 중 아래 6px 은 기단)
+    const alphaAt = (x, y) => d[(y * W + x) * 4 + 3];
+
+    /*
+     * ⚠ 벽이 **경계로 옮겨간 뒤로** 고정 좌표로는 못 잰다 (K25) — 패널이 캔버스의
+     * 한쪽 절반에만, 그것도 기울어진 띠로 들어간다. 그래서 기하를 다시 적지 않고
+     * **열마다 실제 실루엣을 찾아** 그 안에서 잰다.
+     */
     let paneOpaque = 0, paneClear = 0;
-    for (let y = 18; y < H - 8; y++) {
-      for (let x = 10; x < W - 10; x++) {
-        if (x >= W / 2 - 1 && x <= W / 2) continue; // 멀리온은 불투명이 정상
-        if (alphaAt(x, y) > 8) paneOpaque++; else paneClear++;
-      }
-    }
-    // 기단은 전부 불투명이어야 한다 (밑동이 뚫리면 접지가 이상해진다)
     let plinthClear = 0, plinthTotal = 0;
-    for (let y = H - 6; y < H - 1; y++) {
-      for (let x = 12; x < W - 12; x++) {
+    for (let x = 0; x < W; x++) {
+      let top = -1, bot = -1;
+      for (let y = 0; y < H; y++) if (alphaAt(x, y) > 8) { if (top < 0) top = y; bot = y; }
+      if (top < 0 || bot - top < 12) continue;
+      // 갓 아래 3줄 ~ 굽 위 6줄이 유리 대역이다
+      let colOpaque = 0, colClear = 0;
+      for (let y = top + 4; y < bot - 6; y++) {
+        if (alphaAt(x, y) > 8) colOpaque++; else colClear++;
+      }
+      // 멀리온 열은 전부 불투명한 것이 정상 — 세면 투과율이 낮게 나온다
+      if (colClear > 0) { paneOpaque += colOpaque; paneClear += colClear; }
+      // 굽(밑동)은 뚫리면 안 된다 — 접지가 끊겨 보인다
+      for (let y = bot - 4; y <= bot; y++) {
         plinthTotal++;
         if (alphaAt(x, y) <= 8) plinthClear++;
       }
@@ -512,7 +543,7 @@ async function main(): Promise<void> {
         let ok = true;
         for (let di = 0; di < 9 && ok; di++)
           for (let dj = 0; dj < 7; dj++)
-            if (!t.isWalkable(i + di, j + dj) || w.has(i + di, j + dj) || p.handleAt(i + di, j + dj)) {
+            if (!t.isWalkable(i + di, j + dj) || w.hasAnyEdge(i + di, j + dj) || p.handleAt(i + di, j + dj)) {
               ok = false; break;
             }
         if (ok) { base = [i, j]; break; }
@@ -538,11 +569,11 @@ async function main(): Promise<void> {
       }
     }
 
-    // 벽부착 시설 — 벽 없이 거절되고 벽을 세우면 통과해야 한다
+    // 벽부착 시설 — 벽 없이 거절되고, 그 칸의 경계에 벽이 생기면 통과해야 한다
     const wi = bi, wj = bj + 6;
     const before = p.check(t, w, gate, 'locker_row', wi, wj);
-    for (let k = 0; k < 4; k++) h.sim.placeWall(t, w, gate, wi + k, wj - 1, 1);
-    for (let k = 0; k < 4; k++) sc.refreshWall(wi + k, wj - 1);
+    for (let k = 0; k < 4; k++) w.setEdge(wi + k, wj, 3, 1); // 3 = DIR_J_MINUS
+    for (let k = 0; k < 4; k++) sc.refreshWall(wi + k, wj);
     const after = p.check(t, w, gate, 'locker_row', wi, wj);
     out.wallMountBefore = before.fail || 'ok';
     out.wallMountAfter = after.fail || 'ok';
@@ -788,15 +819,15 @@ async function main(): Promise<void> {
     for (let j = 5; j < 24 && !spot; j++) {
       for (let i = 3; i < 30; i++) {
         if (!t.isWalkable(i, j) || !t.isWalkable(i, j - 1)) continue;
-        if (w.has(i, j) || w.has(i, j - 1)) continue;
+        if (w.hasAnyEdge(i, j) || w.hasAnyEdge(i, j - 1)) continue;
         if (p.handleAt(i, j) || p.handleAt(i, j - 1)) continue;
         spot = [i, j]; break;
       }
     }
     if (!spot) return { ok: false, reason: '자리를 못 찾았다' };
     const [i, j] = spot;
-    const r = h.sim.placeWall(t, w, h.gate, i, j, 1);
-    if (!r.ok) return { ok: false, reason: '벽 배치 실패: ' + r.reason };
+    // 손님과 카메라 사이에 서도록 이 칸의 **앞쪽(+J) 경계**에 벽을 세운다
+    w.setEdge(i, j, 1, 1); // 1 = DIR_J_PLUS
     sc.refreshWall(i, j);
     sc.setUpscale(1);
     sc.focusTile(i, j);
@@ -1278,7 +1309,7 @@ async function main(): Promise<void> {
         let ok = true;
         for (let di = 0; di < 8 && ok; di++)
           for (let dj = 0; dj < 6; dj++)
-            if (!t.isWalkable(i + di, j + dj) || w.has(i + di, j + dj) || p.handleAt(i + di, j + dj)) {
+            if (!t.isWalkable(i + di, j + dj) || w.hasAnyEdge(i + di, j + dj) || p.handleAt(i + di, j + dj)) {
               ok = false; break;
             }
         if (ok) { spot = [i, j]; break; }

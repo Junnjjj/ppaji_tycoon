@@ -1,7 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
-import { WallGrid, placeWall, WALL_SOLID } from './walls.js';
+import {
+  WallGrid,
+  EDGE_SOLID,
+  EDGE_DOOR,
+  DIR_I_PLUS,
+  DIR_J_MINUS,
+} from './walls.js';
 import { PlacementGrid } from './placement.js';
 import { GuestStore, GUEST_DEFAULTS, STUCK_LIMIT, type GuestTunables } from './guests.js';
 
@@ -109,8 +115,11 @@ describe('시설로 걸어가 이용한다', () => {
 
   it('다중칸 시설은 칸 수만큼 동시에 찬다 — 카이로의 영리한 설계', () => {
     const { t, w, p, g } = world({ maxGuests: 30, useTicks: 300, wantUses: 9 }, 20);
-    // 코인락커 열 4×1 (4칸, 벽부착)
-    for (let i = 5; i <= 9; i++) placeWall(t, w, GATE, i, 5);
+    /*
+     * 코인락커 열 4×1 은 벽부착이다. 벽은 이제 **경계**에 있으므로 (K25) 그 칸의
+     * 위쪽 경계에 벽을 세우면 붙일 수 있다.
+     */
+    for (let i = 5; i <= 9; i++) w.setEdge(i, 6, DIR_J_MINUS, EDGE_SOLID);
     const r = p.place(t, w, GATE, 'locker_row', 5, 6);
     expect(r.ok).toBe(true);
     g.invalidate();
@@ -143,11 +152,14 @@ describe('시설로 걸어가 이용한다', () => {
 describe('길찾기', () => {
   it('벽으로 막힌 시설로는 못 간다 — 참다가 나간다', () => {
     const { t, w, p, g } = world({ patienceTicks: 30 }, 14);
-    // 시설을 구석에 놓고 그 구석을 벽으로 봉한다 (배치 후 봉해야 unreachable 검사를 통과)
+    /*
+     * 시설을 구석에 놓고 그 구석을 벽으로 봉한다 (배치 후 봉해야 unreachable 검사를 통과).
+     * 경계 벽이므로 칸이 아니라 **칸과 칸 사이**를 막는다.
+     */
     const r = p.place(t, w, GATE, 'shop', 11, 11);
     expect(r.ok).toBe(true);
-    for (let i = 9; i < 14; i++) w.setRaw(i, 9, WALL_SOLID);
-    for (let j = 10; j < 14; j++) w.setRaw(9, j, WALL_SOLID);
+    for (let i = 9; i < 14; i++) w.setEdge(i, 10, DIR_J_MINUS, EDGE_SOLID);
+    for (let j = 10; j < 14; j++) w.setEdge(9, j, DIR_I_PLUS, EDGE_SOLID);
     g.invalidate();
     const rng = new Rng(7);
     g.spawn(rng);
@@ -159,9 +171,9 @@ describe('길찾기', () => {
     const { t, w, p, g } = world({ patienceTicks: 400, wantUses: 1, useTicks: 5 }, 14);
     const r = p.place(t, w, GATE, 'shop', 11, 11);
     expect(r.ok).toBe(true);
-    for (let i = 9; i < 14; i++) w.setRaw(i, 9, WALL_SOLID);
-    for (let j = 10; j < 14; j++) w.setRaw(9, j, WALL_SOLID);
-    w.setRaw(10, 9, 2); // 문
+    for (let i = 9; i < 14; i++) w.setEdge(i, 10, DIR_J_MINUS, EDGE_SOLID);
+    for (let j = 10; j < 14; j++) w.setEdge(9, j, DIR_I_PLUS, EDGE_SOLID);
+    w.setEdge(10, 10, DIR_J_MINUS, EDGE_DOOR); // 문
     g.invalidate();
     const rng = new Rng(8);
     g.spawn(rng);

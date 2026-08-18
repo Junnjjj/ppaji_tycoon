@@ -277,12 +277,18 @@ const LIB_JS = `(() => {
   return true;
 })()`;
 
-/** 방향 런 케이스. 마스크 비트는 sim 과 같다: I+=1 · J+=2 · I−=4 · J−=8 */
+/*
+ * 방향 런 케이스. 벽 변형은 **경계 방향**이다 (K25): a0=I+ · a1=J+ · a2=I− · a3=J−.
+ *
+ * ⚠ 경계 방향과 런 방향은 **어긋난다.** `I+` 경계는 (i,j)|(i+1,j) 사이라 이어 붙이려면
+ * **j** 를 늘려야 한다 (같은 열의 오른쪽 면이 아래로 이어진다). 반대도 마찬가지다.
+ * 여기를 뒤집으면 이음새를 재는 게 아니라 서로 안 닿는 벽 여섯 장을 재게 된다.
+ */
 const RUN_CASES_JS = `[
-  { name: 'x-런 (i 축)', id: 'wall/glass:a5', di: 1, dj: 0 },
-  { name: 'z-런 (j 축)', id: 'wall/glass:a10', di: 0, dj: 1 },
-  { name: '문 x-런', id: 'wall/door-x', di: 1, dj: 0 },
-  { name: '문 z-런', id: 'wall/door-z', di: 0, dj: 1 },
+  { name: 'i-런 (J+ 경계)', id: 'wall/edge:a1', di: 1, dj: 0 },
+  { name: 'j-런 (I+ 경계)', id: 'wall/edge:a0', di: 0, dj: 1 },
+  { name: '문 i-런', id: 'wall/door:a1', di: 1, dj: 0 },
+  { name: '문 j-런', id: 'wall/door:a0', di: 0, dj: 1 },
   { name: '다리 x-런', id: 'ground/bridge_x', di: 1, dj: 0 },
   { name: '다리 z-런', id: 'ground/bridge_z', di: 0, dj: 1 }
 ]`;
@@ -370,7 +376,7 @@ const SELFTEST_JS = `(() => {
   out.push({ name: '이음새 대비 주입 (가장자리 링 65% 어둡게)', metric: 'bias', got: rg.bias, extra: rg.ratio });
 
   // 4) 주기 오차 — 런의 3번째 칸만 4px 내려 그린다 (이웃과 높이가 안 맞는 에셋)
-  const wall = S.read('wall/glass:a5');
+  const wall = S.read('wall/edge:a1');
   const sunk = S.clone(wall);
   sunk.data.fill(0);
   for (let y = 0; y < wall.h - 4; y++) {

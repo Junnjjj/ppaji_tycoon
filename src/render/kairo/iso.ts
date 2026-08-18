@@ -30,11 +30,23 @@ export const TILE_H = 16;
 export const STEP_X = TILE_W / 2; // 16
 export const STEP_Y = TILE_H / 2; // 8
 
-/** 격자 크기 — 스펙 §1.6. 확장해도 `GRID_W + GRID_H ≤ 100` 을 넘기지 말 것 */
-export const GRID_W = 40;
-export const GRID_H = 32;
+/**
+ * 격자 크기 — 스펙 §1.6, **K25 에서 40×32 → 64×48 로 넓혔다**.
+ *
+ * 40×32 는 한 화면에 거의 다 들어와서 "지도를 넓힌다"는 감각이 없었다. 이제 전체는
+ * 세로로도 팬해야 보이고, 처음부터 다 쓸 수 있는 것도 아니다 — 등급마다 게이트 쪽
+ * 사각형이 넓어진다 (`landRect`). 넓힌 땅이 곧 다음 목표가 된다.
+ */
+export const GRID_W = 64;
+export const GRID_H = 48;
 
-/** 격자 합 상한 — 넘으면 세로도 팬해야 한다 (852 / STEP_Y = 106.5) */
+/**
+ * 격자 합 상한. 넘으면 세로로도 팬해야 한다 (852 / STEP_Y = 106.5).
+ *
+ * ⚠ K25 에서 이 선을 **의도적으로 넘었다** (64+48 = 112). 세로 팬은 카메라가 이미
+ * 지원한다 (`KairoCamera.range()` 의 `tallEnough`). 상한은 "세로 팬이 필요없다"는
+ * 편의였지 정확성 조건이 아니었다. 값은 남겨 둔다 — 얼마나 넘었는지가 보여야 한다.
+ */
 export const GRID_SUM_MAX = 100;
 
 export interface Vec2 {

@@ -77,7 +77,12 @@ export const KAIRO = contract as unknown as {
     tileTexels: readonly [number, number];
     stepScreenTexels: readonly [number, number];
   };
-  presentation: { upscaleSteps: readonly number[]; grid: readonly [number, number] };
+  presentation: {
+    upscaleSteps: readonly number[];
+    grid: readonly [number, number];
+    /** 격자 전체의 화면 크기 — `gridExtent()` 와 같아야 한다 (계약 테스트가 지킨다) */
+    mapTexels: readonly [number, number];
+  };
   guest: {
     cellTexels: readonly [number, number];
     poses: readonly string[];
@@ -87,7 +92,14 @@ export const KAIRO = contract as unknown as {
     palettes: number;
     outline: { baked: boolean; color: string; widthTexels: number };
   };
-  wall: { masks: number; doors: number; heightTexels: number; canvas: readonly [number, number] };
+  wall: {
+    edges: number;
+    edgeNames: readonly string[];
+    doors: number;
+    heightTexels: number;
+    thicknessTexels: number;
+    canvas: readonly [number, number];
+  };
   ground: {
     canvas: readonly [number, number];
     anchorTexel: readonly [number, number];
@@ -169,26 +181,30 @@ export function kairoSpriteSpecs(): SpriteSpec[] {
     });
   }
 
-  // 벽 — 4방 비트마스크 16 + 문 2. 전부 스티플 유리 (§3.2)
-  // 마스크는 `alt` 변형으로 표현한다 (`wall/glass:a5`). ID 에 `:` 를 직접 쓰면
-  // 기존 변형 구분자와 충돌한다.
+  /*
+   * 벽 — **경계 4방 × (벽·문)** = 8장 (K25). 전부 스티플 유리 (§3.2).
+   *
+   * 예전에는 4방 비트마스크 16 + 문 2 = 18장이었다. 벽이 칸을 통째로 먹었기 때문에
+   * "이 칸에서 어느 이웃과 이어지나"를 그림이 표현해야 했다. 이제 벽은 경계 하나에
+   * 하나씩 서므로 **방향 4가지면 끝난다** — 이어짐은 이웃 경계의 그림이 알아서 만든다.
+   * 덤으로 AI 로 뽑을 장수가 18 → 8 로 줄었다.
+   */
   out.push({
-    id: 'wall/glass',
+    id: 'wall/edge',
     size: [KAIRO.wall.canvas[0], KAIRO.wall.canvas[1]] as const,
     anchor: 'bottom-center',
     category: 'prop',
-    variants: { alt: KAIRO.wall.masks },
+    variants: { alt: KAIRO.wall.edges },
     source: 'ai',
   });
-  for (const run of ['x', 'z']) {
-    out.push({
-      id: `wall/door-${run}`,
-      size: [KAIRO.wall.canvas[0], KAIRO.wall.canvas[1]] as const,
-      anchor: 'bottom-center',
-      category: 'prop',
-      source: 'ai',
-    });
-  }
+  out.push({
+    id: 'wall/door',
+    size: [KAIRO.wall.canvas[0], KAIRO.wall.canvas[1]] as const,
+    anchor: 'bottom-center',
+    category: 'prop',
+    variants: { alt: KAIRO.wall.doors },
+    source: 'ai',
+  });
 
   // 지면·경로 (§5) — 캔버스가 다이아몬드 정확히 32×16
   for (const t of KAIRO.ground.types) {

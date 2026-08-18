@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
-import { WallGrid, placeWall } from './walls.js';
+import { WallGrid, EDGE_SOLID, DIR_J_MINUS } from './walls.js';
 import { PlacementGrid } from './placement.js';
 import { GuestStore, GUEST_DEFAULTS } from './guests.js';
 import { WeekRunner, type Season } from './week.js';
@@ -88,8 +88,9 @@ function playGolden(weeks: number): Golden {
   const progress = new ProgressStore();
 
   // 실내동 벽 두 줄 (벽부착 시설이 붙을 곳)
-  for (let i = 10; i < 26; i++) placeWall(t, w, GATE, i, 5);
-  for (let i = 10; i < 26; i++) placeWall(t, w, GATE, i, 7);
+  // 벽부착 시설이 붙을 경계 (K25: 벽은 타일이 아니라 경계에 있다)
+  for (let i = 10; i < 26; i++) w.setEdge(i, 6, DIR_J_MINUS, EDGE_SOLID);
+  for (let i = 10; i < 26; i++) w.setEdge(i, 8, DIR_J_MINUS, EDGE_SOLID);
 
   let placed = 0;
   for (const [id, i, j] of BUILD_ORDER) {
@@ -229,16 +230,23 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
      * 못박히지 않은 상태였다. 직원을 필요 인원만큼 쓰고 앞 세 시설을 한 단계 개선하니
      * 만족도가 2 오르고 방문객이 늘었다. `courseRevenue` 0 은 이 시나리오에 코스를 안
      * 놓았기 때문이고, **0 이 아니게 되면 그건 코스가 어딘가에서 새로 생겼다는 뜻**이다.
+     *
+     * **2026-08-18 벽이 경계로 옮겨갔다** (exitSat 63→72 · visitors 109→118 ·
+     * turnedAway 14→5 · questsDone 5→6): 벽이 더 이상 **칸을 먹지 않는다** (K25).
+     * 예전엔 벽부착 시설을 놓으려고 세운 벽 두 줄이 통행 가능한 32칸을 통째로 지웠고,
+     * 손님은 그걸 돌아서 걸었다. 지금은 같은 벽이 타일 **경계**에 서므로 바닥이 그대로
+     * 남는다 — 걷는 거리가 줄어 만족도가 오르고(걷기 감점이 준다), 회전이 빨라져 같은
+     * 상한에서 더 많이 받는다. **개선이 아니라 모델 변경의 직접 결과다.**
      */
     expect(g).toEqual({
       facilities: 15,
       combos: 7,
       grade: 3,
-      exitSat: 63,
-      visitors: 109,
-      turnedAway: 14,
+      exitSat: 72,
+      visitors: 118,
+      turnedAway: 5,
       profitSign: 1,
-      questsDone: 5,
+      questsDone: 6,
       riskLevel: 'caution',
       cards: 12,
       staffWages: 22_500,

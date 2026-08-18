@@ -286,10 +286,19 @@ export class GuestStore {
    * 성립하지 않는다.
    */
   private walkable = (i: number, j: number): boolean => {
-    if (this.walls.blocks(i, j)) return false;
+    // 벽은 이제 칸이 아니라 **경계**를 막는다 (K25) — 통행 판정은 `canCross` 가 한다
     if (this.placement.blocksWalk(i, j)) return false;
     return this.terrain.isWalkable(i, j) || this.placement.isWalkOn(i, j);
   };
+
+  /**
+   * 두 칸 사이를 지나갈 수 있는가 — **경계 벽** 판정 (K25).
+   *
+   * 칸 판정(`walkable`)과 따로인 이유: 벽은 칸을 막지 않고 이동을 막는다. 거리장과
+   * 걸음 선택이 **둘 다** 이걸 통과해야 손님이 벽을 뚫고 지나가지 않는다.
+   */
+  private readonly canCross = (i: number, j: number, ni: number, nj: number): boolean =>
+    !this.walls.blocksMove(i, j, ni, nj);
 
   /**
    * 거리장 재구축. 시설마다 **발자국에 인접한 걸을 수 있는 칸**을 목적지로 둔다 —
@@ -321,12 +330,12 @@ export class GuestStore {
       }
       if (targets.length === 0) continue;
       const f = new FlowField(w, h);
-      f.build(this.walkable, targets);
+      f.build(this.walkable, targets, this.canCross);
       this.fields.set(item.handle, f);
     }
 
     this.gateField = new FlowField(w, h);
-    this.gateField.build(this.walkable, [[this.gate.i, this.gate.j]]);
+    this.gateField.build(this.walkable, [[this.gate.i, this.gate.j]], this.canCross);
     this.dirty = false;
 
     // 없어진 시설의 슬롯 점유를 정리한다

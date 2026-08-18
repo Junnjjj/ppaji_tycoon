@@ -1,6 +1,7 @@
 import { KairoTerrain, type TerrainSnapshot } from '../sim/kairo/terrain.js';
 import { WallGrid, type WallSnapshot } from '../sim/kairo/walls.js';
 import { PlacementGrid, type PlacementSnapshot } from '../sim/kairo/placement.js';
+import { BuildingStore, type BuildingSnapshot } from '../sim/kairo/building.js';
 import { ProgressStore, type ProgressSnapshot } from '../sim/kairo/progress.js';
 import type { WeekSnapshot, WeekSummary, Season } from '../sim/kairo/week.js';
 import type { CardSnapshot } from '../sim/kairo/cards.js';
@@ -29,16 +30,22 @@ import type { CourseSnapshot } from '../sim/kairo/course.js';
  * (`WeekSummary`) — 그래서 복원 후에도 의뢰 진행도와 등급이 그대로 보인다.
  */
 
-export const KAIRO_SAVE_VERSION = 1;
+export const KAIRO_SAVE_VERSION = 2;
 export const KAIRO_SAVE_KEY = 'ppaji.kairo.save.v1';
 
-export interface KairoSaveV1 {
-  version: 1;
+export interface KairoSaveV2 {
+  version: 2;
   savedAtMs: number;
   seed: number;
   gate: { i: number; j: number };
   terrain: TerrainSnapshot;
   walls: WallSnapshot;
+  /**
+   * 건물 영역 (K25). 벽은 여기서 **파생**되지만 벽 스냅샷도 같이 담는다 —
+   * 불러올 때 다시 굽지 않아도 되고, 지형이 미묘하게 달라져 재굽기가 실패하는
+   * 경우에도 옛 화면이 그대로 복원된다.
+   */
+  buildings?: BuildingSnapshot;
   placement: PlacementSnapshot;
   progress: ProgressSnapshot;
   week: WeekSnapshot;
@@ -95,14 +102,32 @@ export interface KairoSaveV1 {
   accidentCount?: number;
 }
 
-export type AnyKairoSave = KairoSaveV1;
-export type LatestKairoSave = KairoSaveV1;
+export type AnyKairoSave = KairoSaveV2;
+export type LatestKairoSave = KairoSaveV2;
 
 /**
  * v(n) → v(n+1) 변환기. 새 버전마다 한 칸 추가한다.
  * Phase 0 의 교훈 그대로 — 나중에 붙이려 하면 이미 나간 세이브가 전부 깨진다.
  */
-const MIGRATIONS: Record<number, (s: Record<string, unknown>) => Record<string, unknown>> = {};
+const MIGRATIONS: Record<number, (s: Record<string, unknown>) => Record<string, unknown>> = {
+  /*
+   * v1 → v2 (K25): 벽이 **칸에서 경계로** 옮겨갔다.
+   *
+   * 옛 벽 배열은 "이 칸이 벽이다"라 새 모델로 옮길 방법이 없다 — 한 칸을 네 경계로
+   * 펴면 통행이 통째로 막히고, 두 경계만 고르면 어느 쪽인지 알 길이 없다. 그래서
+   * **버린다.** 대신 건물 영역을 빈 채로 넣어 플레이어가 다시 그리게 한다. 벽이
+   * 사라지면 벽부착 시설이 잠깐 떠 있게 되지만 배치는 유지되고 게임은 계속 돈다.
+   */
+  1: (s) => {
+    const old = (s['walls'] ?? {}) as { w?: number; h?: number };
+    return {
+      ...s,
+      version: 2,
+      walls: { w: old.w ?? 40, h: old.h ?? 32, ei: [], ej: [] },
+      buildings: { items: [], next: 1 },
+    };
+  },
+};
 
 export class KairoSaveError extends Error {
   constructor(message: string) {
@@ -116,6 +141,7 @@ export interface KairoSaveInput {
   gate: { i: number; j: number };
   terrain: KairoTerrain;
   walls: WallGrid;
+  buildings?: BuildingStore;
   placement: PlacementGrid;
   progress: ProgressStore;
   week: WeekSnapshot;
@@ -146,6 +172,7 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     gate: { i: input.gate.i, j: input.gate.j },
     terrain: input.terrain.toSnapshot(),
     walls: input.walls.toSnapshot(),
+    ...(input.buildings ? { buildings: input.buildings.toSnapshot() } : {}),
     placement: input.placement.toSnapshot(),
     progress: input.progress.toSnapshot(),
     week: input.week,
@@ -202,6 +229,7 @@ export interface KairoRestored {
   gate: { i: number; j: number };
   terrain: KairoTerrain;
   walls: WallGrid;
+  buildings: BuildingStore;
   placement: PlacementGrid;
   progress: ProgressStore;
   week: WeekSnapshot;
@@ -232,6 +260,7 @@ export function restoreKairo(raw: unknown): KairoRestored {
     gate: s.gate,
     terrain: KairoTerrain.fromSnapshot(s.terrain),
     walls: WallGrid.fromSnapshot(s.walls),
+    buildings: BuildingStore.fromSnapshot(s.buildings ?? { items: [], next: 1 }),
     placement: PlacementGrid.fromSnapshot(s.placement),
     progress: ProgressStore.fromSnapshot(s.progress),
     week: s.week,

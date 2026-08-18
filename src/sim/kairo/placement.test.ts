@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
-import { WallGrid, WALL_SOLID, placeWall } from './walls.js';
+import { WallGrid, EDGE_SOLID, DIR_I_PLUS, DIR_J_MINUS } from './walls.js';
 import {
   PlacementGrid,
   facilityDef,
@@ -158,12 +158,16 @@ describe('배치 거절 이유 — 전부 플레이어가 고칠 수 있어야 �
     expect(g.check(t, w, GATE, 'shop', 6, 6).fail).toBe('occupied');
   });
 
-  it('벽이 지나가면 거절', () => {
+  it('⚠ 벽 위에도 시설을 놓을 수 있다 — 벽이 경계로 옮겨갔다 (K25)', () => {
+    /*
+     * 예전에는 벽이 타일을 점유해서 "벽이 지나가면 거절"이었다. 이제 벽은 두 칸 **사이**에
+     * 있으므로 칸을 막지 않는다 — 벽에 붙여 시설을 놓는 것이 오히려 정상이다.
+     */
     const t = flat(14, 14);
     const w = new WallGrid(14, 14);
-    w.setRaw(6, 5, WALL_SOLID);
+    w.setEdge(5, 5, DIR_J_MINUS, EDGE_SOLID);
     const g = new PlacementGrid(14, 14);
-    expect(g.check(t, w, GATE, 'toilet', 5, 5).fail).toBe('blocked-by-wall');
+    expect(g.check(t, w, GATE, 'toilet', 5, 5).ok).toBe(true);
   });
 
   it('게이트 위는 거절', () => {
@@ -179,7 +183,8 @@ describe('배치 거절 이유 — 전부 플레이어가 고칠 수 있어야 �
     // 샤워실 연립은 wallMount
     expect(facilityDef('shower_row')!.placement.requiresWallAdjacent).toBe(true);
     expect(g.check(t, w, GATE, 'shower_row', 5, 5).fail).toBe('needs-wall');
-    expect(placeWall(t, w, GATE, 5, 4).ok).toBe(true);
+    // 그 칸의 경계에 벽이 생기면 붙일 수 있다
+    w.setEdge(5, 5, DIR_J_MINUS, EDGE_SOLID);
     expect(g.check(t, w, GATE, 'shower_row', 5, 5).ok).toBe(true);
   });
 
@@ -187,9 +192,9 @@ describe('배치 거절 이유 — 전부 플레이어가 고칠 수 있어야 �
     const t = flat(12, 12);
     const w = new WallGrid(12, 12);
     const g = new PlacementGrid(12, 12);
-    // 오른쪽 아래 구석을 벽으로 잘라낸다 (밀폐 검사를 피해 setRaw 로 직접)
-    for (let i = 8; i < 12; i++) w.setRaw(i, 8, WALL_SOLID);
-    for (let j = 9; j < 12; j++) w.setRaw(8, j, WALL_SOLID);
+    // 오른쪽 아래 구석을 경계 벽으로 잘라낸다 (밀폐 검사를 피해 직접 세운다)
+    for (let i = 8; i < 12; i++) w.setEdge(i, 9, DIR_J_MINUS, EDGE_SOLID);
+    for (let j = 9; j < 12; j++) w.setEdge(8, j, DIR_I_PLUS, EDGE_SOLID);
     // 잘린 안쪽 (10,10) 은 게이트에서 못 온다
     expect(g.check(t, w, GATE, 'vending_out', 10, 10).fail).toBe('unreachable');
     // 열린 쪽은 된다
@@ -258,8 +263,8 @@ describe('제거·용량·스냅샷', () => {
     const t = flat(20, 20);
     const w = new WallGrid(20, 20);
     const g = new PlacementGrid(20, 20);
-    // shower_row 는 벽부착이라 벽을 먼저 세운다
-    for (let i = 3; i <= 6; i++) placeWall(t, w, GATE, i, 2);
+    // shower_row 는 벽부착이라 그 칸에 경계를 준다
+    for (let i = 3; i <= 6; i++) w.setEdge(i, 3, DIR_J_MINUS, EDGE_SOLID);
     expect(g.place(t, w, GATE, 'shower_row', 3, 3).ok).toBe(true);
     expect(g.place(t, w, GATE, 'cafe', 8, 8).ok).toBe(true);
     const s = g.toSnapshot();
@@ -281,8 +286,8 @@ describe('실제 지형에서 73종을 다 놓아본다', () => {
   it('각 시설이 적어도 한 자리에는 놓인다 — 못 놓는 시설이 있으면 데이터 오류다', () => {
     const t = KairoTerrain.generate(40, 32, new Rng(9));
     const walls = new WallGrid(40, 32);
-    // 벽부착 시설을 위해 벽 한 줄
-    for (let i = 2; i < 30; i++) placeWall(t, walls, GATE, i, 2);
+    // 벽부착 시설을 위해 경계 한 줄
+    for (let i = 2; i < 30; i++) walls.setEdge(i, 3, DIR_J_MINUS, EDGE_SOLID);
 
     // 물 위 시설을 위해 **잔교 한 줄**을 낸다 — 물 전체에 덱을 깔면 자리가 없어진다
     let pier: { i: number; j: number } | null = null;

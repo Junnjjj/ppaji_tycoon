@@ -1,14 +1,14 @@
 {
   "version": 1,
-  "note": "해금. 시설은 등급으로, 수면 사용 면적은 허가 등급으로, 격자는 토지로 열린다. 허가는 돈으로 못 사고 평판으로만 오른다 (v2 결정). 등급은 **동시 손님 상한과 방문 수요**도 함께 올린다 — 이게 성장의 유일한 축이다. 없으면 시설만 늘고 수요·입장이 막혀 후반에 손익이 꺾인다 (실측 25% 하락).",
+  "note": "해금. 시설은 등급으로, 수면 사용 면적은 허가 등급으로, 격자는 토지로 열린다 (K25: 64×48 격자, 등급마다 게이트 쪽 사각형이 넓어진다). 허가는 돈으로 못 사고 평판으로만 오른다 (v2 결정). 등급은 **동시 손님 상한과 방문 수요**도 함께 올린다 — 이게 성장의 유일한 축이다. 없으면 시설만 늘고 수요·입장이 막혀 후반에 손익이 꺾인다 (실측 25% 하락).",
   "grades": [
     {
       "grade": 1,
       "name": "무허가 빠지",
       "reqExitSatisfaction": 0,
       "permitArea": 40,
-      "landW": 14,
-      "landH": 12,
+      "landW": 18,
+      "landH": 34,
       "maxGuests": 30,
       "reputationPull": 1.0
     },
@@ -17,8 +17,8 @@
       "name": "등록 빠지",
       "reqExitSatisfaction": 55,
       "permitArea": 90,
-      "landW": 20,
-      "landH": 16,
+      "landW": 30,
+      "landH": 38,
       "maxGuests": 50,
       "reputationPull": 1.35
     },
@@ -27,8 +27,8 @@
       "name": "지정 빠지",
       "reqExitSatisfaction": 65,
       "permitArea": 180,
-      "landW": 28,
-      "landH": 22,
+      "landW": 42,
+      "landH": 42,
       "maxGuests": 75,
       "reputationPull": 1.7
     },
@@ -37,8 +37,8 @@
       "name": "우수 빠지",
       "reqExitSatisfaction": 75,
       "permitArea": 320,
-      "landW": 34,
-      "landH": 28,
+      "landW": 54,
+      "landH": 46,
       "maxGuests": 105,
       "reputationPull": 2.1
     },
@@ -47,8 +47,8 @@
       "name": "명소",
       "reqExitSatisfaction": 85,
       "permitArea": 500,
-      "landW": 40,
-      "landH": 32,
+      "landW": 64,
+      "landH": 48,
       "maxGuests": 150,
       "reputationPull": 2.5
     }

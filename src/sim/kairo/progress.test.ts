@@ -71,9 +71,9 @@ describe('해금 — 허가는 돈으로 못 산다', () => {
     }
   });
 
-  it('최종 등급이 격자 40×32 를 다 연다', () => {
+  it('최종 등급이 격자 64×48 을 다 연다', () => {
     const top = GRADES[GRADES.length - 1]!;
-    expect([top.landW, top.landH]).toEqual([40, 32]);
+    expect([top.landW, top.landH]).toEqual([64, 48]);
   });
 
   it('만족도로만 등급이 정해진다', () => {

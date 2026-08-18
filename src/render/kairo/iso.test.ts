@@ -179,12 +179,14 @@ describe('격자', () => {
     }
   });
 
-  it('40×32 격자는 1152×576 텍셀이다', () => {
-    expect(gridExtent()).toEqual({ x: 1152, y: 576 });
+  it('64×48 격자는 1792×896 텍셀이다 (K25 확대)', () => {
+    expect(gridExtent()).toEqual({ x: 1792, y: 896 });
   });
 
-  it('격자 합이 상한 안이다 — 넘으면 세로도 팬해야 한다', () => {
-    expect(GRID_W + GRID_H).toBeLessThanOrEqual(GRID_SUM_MAX);
+  it('⚠ 격자 합이 상한을 넘는다 — K25 부터 세로도 팬한다', () => {
+    // 상한은 "세로 팬이 필요없다"는 편의였다. 넘은 것을 못박아 두어야 되돌림이 보인다
+    expect(GRID_W + GRID_H).toBe(112);
+    expect(GRID_W + GRID_H).toBeGreaterThan(GRID_SUM_MAX);
   });
 
   it('경계 판정', () => {

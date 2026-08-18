@@ -9,7 +9,7 @@ import {
   kairoSpriteSpecs,
   validateContracts,
 } from './kairo-contract.js';
-import { TILE_W, TILE_H, STEP_X, STEP_Y, GRID_W, GRID_H } from '../render/kairo/iso.js';
+import { TILE_W, TILE_H, STEP_X, STEP_Y, GRID_W, GRID_H, gridExtent } from '../render/kairo/iso.js';
 import { KairoProceduralProvider } from './kairo-procedural.js';
 import { GROUND_KINDS, BRIDGE_KINDS } from '../sim/kairo/terrain.js';
 
@@ -27,6 +27,9 @@ describe('계약 정합 — 이게 깨지면 에셋을 뽑아도 못 쓴다', ()
     expect(KAIRO.projection.tileTexels).toEqual([TILE_W, TILE_H]);
     expect(KAIRO.projection.stepScreenTexels).toEqual([STEP_X, STEP_Y]);
     expect(KAIRO.presentation.grid).toEqual([GRID_W, GRID_H]);
+    // 격자를 넓히고 계약의 맵 크기를 잊으면 에셋 쪽 계산이 조용히 어긋난다 (K25)
+    const e = gridExtent();
+    expect(KAIRO.presentation.mapTexels).toEqual([e.x, e.y]);
   });
 
   it('업스케일 단이 정수뿐이다 — 비정수 배율이 도트를 깬다', () => {
@@ -123,8 +126,8 @@ describe('슬라이드 입출구', () => {
 describe('기존 에셋 레이어로 펼쳐진다 — 새 프로바이더를 만들지 않는다', () => {
   const specs = kairoSpriteSpecs();
 
-  it('명세 수 = 시설 73 + 벽 1(마스크 16 변형) + 문 2 + 지면 6 + 다리 2 + 배경 2 + 데코 8', () => {
-    expect(specs).toHaveLength(73 + 1 + 2 + 6 + 2 + 2 + 8);
+  it('명세 수 = 시설 73 + 벽 1(경계 4변형) + 문 1(4변형) + 지면 6 + 다리 2 + 배경 2 + 데코 8', () => {
+    expect(specs).toHaveLength(73 + 1 + 1 + 6 + 2 + 2 + 8);
   });
 
   it('배경은 2겹이고 가로 타일 폭이 계약값이다', () => {
@@ -142,9 +145,16 @@ describe('기존 에셋 레이어로 펼쳐진다 — 새 프로바이더를 만
   });
 
   it('벽 캔버스는 32×40 — 1×1 발자국 다이아몬드 16 + 높이 24', () => {
-    const w = specs.find((s) => s.id === 'wall/glass')!;
+    const w = specs.find((s) => s.id === 'wall/edge')!;
     expect(w.size).toEqual([TILE_W, TILE_H + KAIRO.wall.heightTexels]);
     expect(w.size).toEqual([32, 40]);
+  });
+
+  it('벽은 경계 4방 × (벽·문) = 8장뿐이다 — 마스크 16장 시절보다 10장 적다 (K25)', () => {
+    const walls = specs.filter((s) => s.id.startsWith('wall/'));
+    expect(walls).toHaveLength(2);
+    expect(walls.map((w) => w.variants?.alt)).toEqual([4, 4]);
+    expect(KAIRO.wall.edgeNames).toHaveLength(4);
   });
 });
 
@@ -185,8 +195,8 @@ describe('지면·데코가 계약에 있다 — v1 은 길에 0장을 줬다', 
     expect(KAIRO.deco.items.filter((d) => d.kind === 'scenery')).toHaveLength(4);
   });
 
-  it('변형을 펼친 **이미지** 총계가 121장이다 = 시설 73 + 벽 18 + 지면 20 + 배경 2 + 데코 8', () => {
-    expect(new KairoProceduralProvider().ids).toHaveLength(121);
+  it('변형을 펼친 **이미지** 총계가 111장이다 = 시설 73 + 벽 8 + 지면 20 + 배경 2 + 데코 8', () => {
+    expect(new KairoProceduralProvider().ids).toHaveLength(111);
   });
 });
 

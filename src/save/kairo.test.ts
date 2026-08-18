@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Rng } from '../sim/rng.js';
 import { KairoTerrain } from '../sim/kairo/terrain.js';
-import { WallGrid, placeWall, WALL_SOLID } from '../sim/kairo/walls.js';
+import { WallGrid, EDGE_SOLID, DIR_J_MINUS } from '../sim/kairo/walls.js';
 import { PlacementGrid } from '../sim/kairo/placement.js';
 import { GuestStore } from '../sim/kairo/guests.js';
 import { WeekRunner } from '../sim/kairo/week.js';
@@ -33,7 +33,8 @@ function build(): KairoSaveInput {
   const terrain = KairoTerrain.generate(GRID_W, GRID_H, rng.fork(1));
   const walls = new WallGrid(GRID_W, GRID_H);
   const placement = new PlacementGrid(GRID_W, GRID_H);
-  for (let i = 10; i < 20; i++) placeWall(terrain, walls, GATE, i, 5, WALL_SOLID);
+  // 벽부착 시설을 놓을 수 있게 경계를 준다 (K25: 벽은 타일이 아니라 경계에 있다)
+  for (let i = 10; i < 20; i++) walls.setEdge(i, 5, DIR_J_MINUS, EDGE_SOLID);
   placement.place(terrain, walls, GATE, 'ticket', 4, 2);
   placement.place(terrain, walls, GATE, 'shop', 8, 3);
   placement.place(terrain, walls, GATE, 'pyeongsang_row', 8, 8);

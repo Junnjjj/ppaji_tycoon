@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
-import { WallGrid } from './walls.js';
+import { WallGrid, EDGE_SOLID, DIR_I_PLUS, DIR_I_MINUS, DIR_J_PLUS, DIR_J_MINUS } from './walls.js';
 import { PlacementGrid, allFacilityDefs, facilityDef } from './placement.js';
 import { GuestStore, GUEST_DEFAULTS } from './guests.js';
 import {
@@ -181,15 +181,15 @@ describe('돈', () => {
 
   it('유지비만 있고 손님이 못 오면 적자다', () => {
     const { t, w, p, g } = world(20);
-    // 시설을 놓고 벽으로 완전히 봉한다 (손님이 못 온다)
+    // 시설을 놓고 경계 벽으로 완전히 봉한다 (손님이 못 온다)
     expect(p.place(t, w, GATE, 'shop', 10, 10).ok).toBe(true);
     for (let i = 8; i < 14; i++) {
-      w.setRaw(i, 8, 1);
-      w.setRaw(i, 13, 1);
+      w.setEdge(i, 8, DIR_J_MINUS, EDGE_SOLID);
+      w.setEdge(i, 13, DIR_J_PLUS, EDGE_SOLID);
     }
     for (let j = 8; j < 14; j++) {
-      w.setRaw(8, j, 1);
-      w.setRaw(13, j, 1);
+      w.setEdge(8, j, DIR_I_MINUS, EDGE_SOLID);
+      w.setEdge(13, j, DIR_I_PLUS, EDGE_SOLID);
     }
     g.invalidate();
     const r = new WeekRunner(t, p, g);

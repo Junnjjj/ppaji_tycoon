@@ -29,12 +29,12 @@
     "dprRule": "DPR 은 정수로 반올림한다 (2.625·2.75 같은 값 금지)",
     "cameraSnap": "카메라 target 을 매 프레임 텍셀 격자(1월드)로 반올림한다. 안 하면 팬 중 반 픽셀 밀림",
     "grid": [
-      40,
-      32
+      64,
+      48
     ],
     "mapTexels": [
-      1152,
-      576
+      1792,
+      896
     ]
   },
   "guest": {
@@ -82,13 +82,16 @@
     }
   },
   "wall": {
-    "masks": 16,
-    "doors": 2,
-    "doorOrientations": [
-      "x-run",
-      "z-run"
+    "edges": 4,
+    "edgeNames": [
+      "i+",
+      "j+",
+      "i-",
+      "j-"
     ],
+    "doors": 4,
     "heightTexels": 24,
+    "thicknessTexels": 3,
     "canvas": [
       32,
       40

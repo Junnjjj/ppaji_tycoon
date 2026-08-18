@@ -1,6 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import { KairoTerrain } from './terrain.js';
-import { WallGrid, placeWall } from './walls.js';
+import { WallGrid, EDGE_SOLID, DIR_J_MINUS } from './walls.js';
+/**
+ * 벽부착 시설을 놓을 수 있게 그 칸들의 **위쪽 경계**에 벽을 세운다.
+ *
+ * 벽이 경계로 옮겨간 뒤(K25)로는 "옆 칸이 벽 타일인가"가 아니라 **그 칸에 벽 경계가
+ * 있는가**가 판정이다. 그래서 시설을 놓을 칸 자체에 경계를 준다.
+ */
+function wallBand(w: WallGrid, i0: number, i1: number, j: number): void {
+  for (let i = i0; i <= i1; i++) w.setEdge(i, j, DIR_J_MINUS, EDGE_SOLID);
+}
+
 import { PlacementGrid, allFacilityDefs } from './placement.js';
 import {
   COMBOS,
@@ -82,9 +92,9 @@ describe('체감 — 최적 콤보 도배를 막는다 (v4 결정)', () => {
 describe('소형 — 붙여 놓으면 터진다', () => {
   it('샤워실 옆 락커를 놓으면 발동한다', () => {
     const { t, w, p } = flat();
-    // 둘 다 벽부착 시설이라 벽을 앞뒤로 세운다 (j=4 와 j=7)
-    for (let i = 5; i <= 12; i++) placeWall(t, w, GATE, i, 4);
-    for (let i = 5; i <= 12; i++) placeWall(t, w, GATE, i, 7);
+    // 둘 다 벽부착 시설이라 놓을 칸에 벽 경계를 준다
+    wallBand(w, 5, 12, 5);
+    wallBand(w, 5, 12, 6);
     expect(p.place(t, w, GATE, 'shower_row', 5, 5).ok).toBe(true);
     expect(evaluateCombos(p).active.some((c) => c.id === 'small_shower_locker')).toBe(false);
     expect(p.place(t, w, GATE, 'locker_row', 5, 6).ok).toBe(true);
@@ -95,7 +105,7 @@ describe('소형 — 붙여 놓으면 터진다', () => {
 
   it('멀리 떨어뜨리면 안 터진다 — 거리가 판단이다', () => {
     const { t, w, p } = flat();
-    for (let i = 2; i <= 26; i++) placeWall(t, w, GATE, i, 1);
+    wallBand(w, 2, 26, 2);
     expect(p.place(t, w, GATE, 'shower_row', 3, 2).ok).toBe(true);
     expect(p.place(t, w, GATE, 'locker_row', 20, 2).ok).toBe(true);
     expect(evaluateCombos(p).active.some((c) => c.id === 'small_shower_locker')).toBe(false);
@@ -144,7 +154,7 @@ describe('중형 — 한 구역에 여러 수요', () => {
 describe('대형 — 리조트 전체 구성', () => {
   it('위생 6개면 청결 리조트가 터지고 한 번만 터진다', () => {
     const { t, w, p } = flat(40);
-    for (let i = 2; i <= 36; i++) placeWall(t, w, GATE, i, 1);
+    wallBand(w, 2, 36, 2);
     let placed = 0;
     const ids = ['shower_row', 'changing_row', 'locker_row', 'washbasin_row', 'toilet', 'nursing'];
     let j = 2;
@@ -156,8 +166,8 @@ describe('대형 — 리조트 전체 구성', () => {
         }
       }
       j += 3;
-      // 벽부착 시설을 위해 벽을 앞줄에 계속 세운다
-      for (let i = 2; i <= 36; i++) placeWall(t, w, GATE, i, j - 1);
+      // 다음 줄도 벽부착이 가능하도록 경계를 준다
+      wallBand(w, 2, 36, j);
     }
     expect(placed).toBe(6);
     const hits = evaluateCombos(p).active.filter((c) => c.id === 'large_clean_resort');
@@ -169,8 +179,8 @@ describe('대형 — 리조트 전체 구성', () => {
 describe('놓기 전 미리보기 — 배치 판단을 만든다', () => {
   it('놓으면 터질 콤보를 미리 알려준다', () => {
     const { t, w, p } = flat();
-    for (let i = 5; i <= 12; i++) placeWall(t, w, GATE, i, 4);
-    for (let i = 5; i <= 12; i++) placeWall(t, w, GATE, i, 7);
+    wallBand(w, 5, 12, 5);
+    wallBand(w, 5, 12, 6);
     p.place(t, w, GATE, 'shower_row', 5, 5);
     const pv = previewCombos(p, 'locker_row', 5, 6);
     expect(pv.gained.some((c) => c.id === 'small_shower_locker')).toBe(true);
@@ -181,7 +191,7 @@ describe('놓기 전 미리보기 — 배치 판단을 만든다', () => {
 
   it('멀리 놓으면 아무것도 안 터진다', () => {
     const { t, w, p } = flat();
-    for (let i = 2; i <= 26; i++) placeWall(t, w, GATE, i, 1);
+    wallBand(w, 2, 26, 2);
     p.place(t, w, GATE, 'shower_row', 3, 2);
     const pv = previewCombos(p, 'locker_row', 22, 2);
     expect(pv.gained.some((c) => c.id === 'small_shower_locker')).toBe(false);

@@ -76,6 +76,7 @@ export interface PlacedFacility {
 
 export type PlaceFail =
   | 'outside'
+  | 'outside-land'
   | 'wrong-terrain'
   | 'occupied'
   | 'blocked-by-wall'
@@ -94,6 +95,7 @@ export interface PlaceOutcome {
 
 export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
   outside: '격자 밖입니다',
+  'outside-land': '아직 내 땅이 아닙니다 — 등급을 올리면 넓어집니다',
   'wrong-terrain': '이 지형에는 놓을 수 없습니다',
   occupied: '다른 시설이 있습니다',
   'blocked-by-wall': '벽이 지나갑니다',
@@ -205,6 +207,11 @@ export class PlacementGrid {
     defId: string,
     i: number,
     j: number,
+    /**
+     * 해금된 토지 (K25). 없으면 격자 전체 — 단위 테스트와 구 호출자를 위한 기본값이다.
+     * 부르는 쪽이 등급에서 얻어 넘긴다 (`landRect`).
+     */
+    land?: { w: number; h: number },
   ): PlaceOutcome {
     const def = DEFS[defId];
     if (!def) return { ok: false, fail: 'unknown-def' };
@@ -212,6 +219,12 @@ export class PlacementGrid {
     const tiles = PlacementGrid.footprintTiles(def, i, j);
     for (const [ti, tj] of tiles) {
       if (!this.inside(ti, tj)) return { ok: false, fail: 'outside' };
+    }
+
+    if (land) {
+      for (const [ti, tj] of tiles) {
+        if (ti >= land.w || tj >= land.h) return { ok: false, fail: 'outside-land' };
+      }
     }
 
     const needWater = wantsWater(def.layer);
@@ -225,7 +238,7 @@ export class PlacementGrid {
     }
 
     for (const [ti, tj] of tiles) {
-      if (walls.has(ti, tj)) return { ok: false, fail: 'blocked-by-wall' };
+      // 벽은 이제 **경계**에 있어 칸을 막지 않는다 (K25) — 벽 위에도 시설을 놓을 수 있다
       if (ti === gate.i && tj === gate.j) return { ok: false, fail: 'occupied' };
     }
 
@@ -254,21 +267,20 @@ export class PlacementGrid {
           const nj = tj + (dj as number);
           if (!terrain.inside(ni, nj)) return false;
           // 육지(걸을 수 있는 지면)거나 다른 덱
-          return (terrain.isWalkable(ni, nj) && !walls.blocks(ni, nj)) || this.isWalkOn(ni, nj);
+          return terrain.isWalkable(ni, nj) || this.isWalkOn(ni, nj);
         }),
       );
       if (!connected) return { ok: false, fail: 'deck-not-connected' };
     }
 
     if (def.placement.requiresWallAdjacent) {
-      const touching = tiles.some(([ti, tj]) =>
-        [
-          [1, 0],
-          [-1, 0],
-          [0, 1],
-          [0, -1],
-        ].some(([di, dj]) => walls.has(ti + (di as number), tj + (dj as number))),
-      );
+      /*
+       * 벽부착 — 발자국 칸 중 하나가 **벽 경계에 접해야** 한다 (K25).
+       *
+       * 예전에는 "옆 칸이 벽 타일인가"를 봤다. 이제 벽은 경계에 있으므로 그 칸 자신의
+       * 경계를 본다. 건물 외곽선이 자동 생성되므로, 실질적으로 **건물 벽에 붙은 칸**이다.
+       */
+      const touching = tiles.some(([ti, tj]) => walls.hasAnyEdge(ti, tj));
       if (!touching) return { ok: false, fail: 'needs-wall' };
     }
 
@@ -304,8 +316,9 @@ export class PlacementGrid {
     defId: string,
     i: number,
     j: number,
+    land?: { w: number; h: number },
   ): PlaceOutcome {
-    const r = this.check(terrain, walls, gate, defId, i, j);
+    const r = this.check(terrain, walls, gate, defId, i, j, land);
     if (!r.ok) return r;
     const def = DEFS[defId] as KairoFacilityDef;
     const handle = this.nextHandle++;
