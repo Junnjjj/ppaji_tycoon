@@ -8,6 +8,7 @@ import {
   DIR_I_PLUS,
   DIR_J_MINUS,
 } from './walls.js';
+import { BuildingStore } from './building.js';
 import { PlacementGrid } from './placement.js';
 import { GuestStore, GUEST_DEFAULTS, STUCK_LIMIT, type GuestTunables } from './guests.js';
 
@@ -116,11 +117,12 @@ describe('시설로 걸어가 이용한다', () => {
   it('다중칸 시설은 칸 수만큼 동시에 찬다 — 카이로의 영리한 설계', () => {
     const { t, w, p, g } = world({ maxGuests: 30, useTicks: 300, wantUses: 9 }, 20);
     /*
-     * 코인락커 열 4×1 은 벽부착이다. 벽은 이제 **경계**에 있으므로 (K25) 그 칸의
-     * 위쪽 경계에 벽을 세우면 붙일 수 있다.
+     * 코인락커 열 4×1 은 **실내 시설**이다 (K25 검토 ①) — 방을 먼저 짓는다.
+     * 벽에 접하기만 해서는 안 된다.
      */
-    for (let i = 5; i <= 9; i++) w.setEdge(i, 6, DIR_J_MINUS, EDGE_SOLID);
-    const r = p.place(t, w, GATE, 'locker_row', 5, 6);
+    const b = new BuildingStore();
+    expect(b.place(t, w, GATE, { i: 4, j: 5, w: 7, h: 3 }).ok).toBe(true);
+    const r = p.place(t, w, GATE, 'locker_row', 5, 6, { indoor: (i, j) => b.isIndoor(i, j) });
     expect(r.ok).toBe(true);
     g.invalidate();
     const rng = new Rng(5);

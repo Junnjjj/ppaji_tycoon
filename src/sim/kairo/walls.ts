@@ -72,21 +72,38 @@ export interface PlaceResult {
 }
 
 export class WallGrid {
-  /** (i,j) ↔ (i+1,j) 경계 */
+  /**
+   * 경계 배열 — **(w+1)×(h+1)** 이고 인덱스가 1 밀려 있다.
+   *
+   * ## 왜 격자보다 한 칸 큰가
+   *
+   * (0,j) 의 `-I` 경계는 규칙상 **(−1,j) 의 `+I` 경계**다. 배열이 w×h 면 그 자리가 없어
+   * `setEdge` 가 조용히 버린다 — 격자 가장자리에 지은 건물의 바깥쪽 벽이 통째로
+   * 사라졌다 (K25 검토에서 실측: 가장자리 3×3 의 외곽선이 12 가 아니라 9).
+   *
+   * 그래서 i·j 를 −1 부터 담는다. 인덱스는 `(j+1)·(w+1) + (i+1)`.
+   */
   private readonly ei: Uint8Array;
-  /** (i,j) ↔ (i,j+1) 경계 */
   private readonly ej: Uint8Array;
+  private readonly stride: number;
 
   constructor(
     readonly width: number,
     readonly height: number,
   ) {
-    this.ei = new Uint8Array(width * height);
-    this.ej = new Uint8Array(width * height);
+    this.stride = width + 1;
+    this.ei = new Uint8Array(this.stride * (height + 1));
+    this.ej = new Uint8Array(this.stride * (height + 1));
   }
 
   inside(i: number, j: number): boolean {
     return i >= 0 && j >= 0 && i < this.width && j < this.height;
+  }
+
+  /** 경계를 저장할 수 있는 범위 — 격자보다 한 칸 넓다 (위 주석) */
+  private slot(i: number, j: number): number {
+    if (i < -1 || j < -1 || i >= this.width || j >= this.height) return -1;
+    return (j + 1) * this.stride + (i + 1);
   }
 
   /**
@@ -96,14 +113,12 @@ export class WallGrid {
    * 실제 구현이다.
    */
   edgeAt(i: number, j: number, dir: Dir): EdgeKind {
-    if (dir === DIR_I_PLUS) {
-      return this.inside(i, j) ? ((this.ei[j * this.width + i] as EdgeKind) ?? EDGE_NONE) : EDGE_NONE;
-    }
-    if (dir === DIR_J_PLUS) {
-      return this.inside(i, j) ? ((this.ej[j * this.width + i] as EdgeKind) ?? EDGE_NONE) : EDGE_NONE;
-    }
     if (dir === DIR_I_MINUS) return this.edgeAt(i - 1, j, DIR_I_PLUS);
-    return this.edgeAt(i, j - 1, DIR_J_PLUS);
+    if (dir === DIR_J_MINUS) return this.edgeAt(i, j - 1, DIR_J_PLUS);
+    const k = this.slot(i, j);
+    if (k < 0) return EDGE_NONE;
+    const a = dir === DIR_I_PLUS ? this.ei : this.ej;
+    return (a[k] as EdgeKind) ?? EDGE_NONE;
   }
 
   setEdge(i: number, j: number, dir: Dir, kind: EdgeKind): void {
@@ -115,8 +130,8 @@ export class WallGrid {
       this.setEdge(i, j - 1, DIR_J_PLUS, kind);
       return;
     }
-    if (!this.inside(i, j)) return;
-    const k = j * this.width + i;
+    const k = this.slot(i, j);
+    if (k < 0) return;
     if (dir === DIR_I_PLUS) this.ei[k] = kind;
     else this.ej[k] = kind;
   }
@@ -182,6 +197,12 @@ export class WallGrid {
     const g = new WallGrid(s.w, s.h);
     const ei = s.ei ?? [];
     const ej = s.ej ?? [];
+    /*
+     * 길이가 다르면 **버린다.** 배열이 (w+1)×(h+1) 로 바뀐 적이 있어(가장자리 벽 수정),
+     * 옛 길이를 그대로 밀어 넣으면 벽이 한 칸씩 어긋난 채 복원된다 — 빈 벽보다 나쁘다.
+     * 건물 영역이 정본이므로 세이브를 불러올 때 어차피 다시 굽는다.
+     */
+    if (ei.length !== g.ei.length || ej.length !== g.ej.length) return g;
     for (let k = 0; k < g.ei.length; k++) {
       g.ei[k] = (ei[k] as number) ?? EDGE_NONE;
       g.ej[k] = (ej[k] as number) ?? EDGE_NONE;
@@ -202,12 +223,21 @@ export function reachable(
   terrain: KairoTerrain,
   walls: WallGrid,
   gate: { i: number; j: number },
+  /**
+   * 손님이 **설 수 있는** 칸인가. 기본값은 지형만 본다.
+   *
+   * ⚠ 시설이 놓인 칸은 지형상 걸을 수 있어도 손님은 못 지나간다. 그 차이를 무시했더니
+   * 건물 문이 **시설로 막힌 칸에 뚫렸다** — 검사는 통과하는데 손님은 못 들어간다
+   * (K25 검토에서 실측). 부르는 쪽이 손님과 **같은 판정**을 넘겨야 한다
+   * (`guestWalkable`).
+   */
+  walkable?: (i: number, j: number) => boolean,
 ): Uint8Array {
   const w = terrain.width;
   const h = terrain.height;
   const seen = new Uint8Array(w * h);
-  const standable = (i: number, j: number): boolean =>
-    terrain.inside(i, j) && terrain.isWalkable(i, j);
+  const can = walkable ?? ((i: number, j: number): boolean => terrain.isWalkable(i, j));
+  const standable = (i: number, j: number): boolean => terrain.inside(i, j) && can(i, j);
 
   if (!standable(gate.i, gate.j)) return seen;
 

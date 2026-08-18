@@ -136,6 +136,7 @@ export class BuildingStore {
     walls: WallGrid,
     gate: { i: number; j: number },
     rect: BuildingRect,
+    walkable?: (i: number, j: number) => boolean,
   ): { ok: boolean; fail?: BuildingFail; building?: Building } {
     const c = this.check(terrain, gate, rect);
     if (!c.ok) return { ok: false, ...(c.fail ? { fail: c.fail } : {}) };
@@ -145,13 +146,13 @@ export class BuildingStore {
     const building: Building = { handle: this.nextHandle++, rect: { ...rect } };
     this.items.push(building);
 
-    const applied = this.applyWalls(terrain, walls, gate);
+    const applied = this.applyWalls(terrain, walls, gate, walkable);
     if (!applied.ok) {
       const back = BuildingStore.fromSnapshot(snapshot);
       this.items.length = 0;
       this.items.push(...back.all.map((b) => ({ ...b, rect: { ...b.rect } })));
       this.nextHandle = snapshot.next;
-      this.applyWalls(terrain, walls, gate);
+      this.applyWalls(terrain, walls, gate, walkable);
       return { ok: false, ...(applied.fail ? { fail: applied.fail } : {}) };
     }
     return { ok: true, building };
@@ -168,11 +169,12 @@ export class BuildingStore {
     walls: WallGrid,
     gate: { i: number; j: number },
     handle: number,
+    walkable?: (i: number, j: number) => boolean,
   ): boolean {
     const k = this.items.findIndex((b) => b.handle === handle);
     if (k < 0) return false;
     this.items.splice(k, 1);
-    this.applyWalls(terrain, walls, gate);
+    this.applyWalls(terrain, walls, gate, walkable);
     return true;
   }
 
@@ -186,7 +188,14 @@ export class BuildingStore {
     terrain: KairoTerrain,
     walls: WallGrid,
     gate: { i: number; j: number },
+    /**
+     * 손님이 설 수 있는 칸인가 (`guestWalkable`). 안 넘기면 지형만 본다 —
+     * 그러면 **시설로 막힌 칸에 문이 뚫린다.** 게임 쪽은 반드시 넘긴다.
+     */
+    walkable?: (i: number, j: number) => boolean,
   ): { ok: boolean; fail?: BuildingFail; doors: number } {
+    const canStand =
+      walkable ?? ((i: number, j: number): boolean => terrain.isWalkable(i, j));
     walls.clear();
     if (this.items.length === 0) return { ok: true, doors: 0 };
 
@@ -206,7 +215,12 @@ export class BuildingStore {
           const oi = i + (D[d]![0] as number);
           const oj = j + (D[d]![1] as number);
           if (this.isIndoor(oi, oj)) continue; // 실내끼리 맞닿은 면 — 벽이 아니다
-          if (!terrain.inside(oi, oj)) continue; // 격자 밖 — 어차피 못 지나간다
+          /*
+           * ⚠ 격자 밖 이웃도 **외곽선이다.** 한때 건너뛰었는데, 게이트가 (0,0) 이고
+           * 토지가 거기서 자라므로 초반 건물은 거의 다 가장자리에 붙는다 — 그쪽 면이
+           * 통째로 뚫린 채로 지어졌다 (실측: 가장자리 3×3 의 외곽선이 12 가 아니라 9).
+           * 지나갈 수 없는 것과 벽이 보이는 것은 다른 문제다.
+           */
           outline.push({ i, j, dir: dirs[d] as Dir, oi, oj });
         }
       }
@@ -218,7 +232,7 @@ export class BuildingStore {
      * 문 — **게이트에서 가장 가까운 외곽 경계**에 하나. 바깥쪽 칸이 게이트에서 걸어올 수
      * 있어야 의미가 있다 (물가 쪽에 뚫으면 아무도 못 온다).
      */
-    const reach = reachable(terrain, walls, gate);
+    const reach = reachable(terrain, walls, gate, canStand);
     let doors = 0;
     for (const b of this.items) {
       const mine = outline.filter(
@@ -228,9 +242,18 @@ export class BuildingStore {
           e.j >= b.rect.j &&
           e.j < b.rect.j + b.rect.h,
       );
+      /*
+       * 문은 **양쪽 다** 설 수 있어야 한다.
+       *
+       * 바깥칸만 보면 문이 시설로 꽉 찬 실내 칸으로 열려, 손님이 문을 통과하자마자
+       * 갈 곳이 없다 — 방 안이 통째로 "못 닿는" 상태가 되어 확장이 거절된다.
+       * 안쪽 조건을 빼먹어서 실제로 그렇게 됐다.
+       */
       const usable = mine.filter(
         (e) =>
-          terrain.isWalkable(e.oi, e.oj) &&
+          terrain.inside(e.oi, e.oj) &&
+          canStand(e.oi, e.oj) &&
+          canStand(e.i, e.j) &&
           !this.isIndoor(e.oi, e.oj) &&
           reach[e.oj * terrain.width + e.oi] === 1,
       );
@@ -246,10 +269,18 @@ export class BuildingStore {
       doors++;
     }
 
-    // 문을 뚫은 뒤에도 실내가 전부 닿아야 한다
-    const after = reachable(terrain, walls, gate);
+    /*
+     * 문을 뚫은 뒤에도 실내가 닿아야 한다.
+     *
+     * ⚠ **설 수 없는 칸은 건너뛴다.** 시설이 놓인 칸은 막힌 게 아니라 쓰이는 중이다.
+     * 이걸 빼먹었더니 "시설이 들어 있는 방은 넓힐 수 없다"가 됐다 — 헤드리스 밸런싱이
+     * `place-unreachable` 로 잡아 줬다 (사람이 하는 판에서는 "손님이 걸어올 수 없는
+     * 자리입니다" 가 뜨면서 확장이 통째로 막힌다).
+     */
+    const after = reachable(terrain, walls, gate, canStand);
     for (const b of this.items) {
       for (const [i, j] of cellsOf(b.rect)) {
+        if (!canStand(i, j)) continue;
         if (after[j * terrain.width + i] !== 1) return { ok: false, fail: 'unreachable', doors };
       }
     }

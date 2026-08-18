@@ -2,7 +2,7 @@ import { Rng } from '../rng.js';
 import { FlowField } from '../pathfield.js';
 import type { KairoTerrain } from './terrain.js';
 import { type WallGrid } from './walls.js';
-import { PlacementGrid, facilityDef } from './placement.js';
+import { PlacementGrid, facilityDef, guestWalkable } from './placement.js';
 import {
   pickGroup,
   groupSize,
@@ -285,11 +285,15 @@ export class GuestStore {
    * 뚫고 지나갔고, 그러면 배치가 동선에 영향을 주지 않아 "배치가 결과를 바꾼다"가
    * 성립하지 않는다.
    */
-  private walkable = (i: number, j: number): boolean => {
-    // 벽은 이제 칸이 아니라 **경계**를 막는다 (K25) — 통행 판정은 `canCross` 가 한다
-    if (this.placement.blocksWalk(i, j)) return false;
-    return this.terrain.isWalkable(i, j) || this.placement.isWalkOn(i, j);
-  };
+  /**
+   * 손님이 설 수 있는 칸 — **정의는 `guestWalkable` 한 곳**에 있다.
+   *
+   * 여기서 따로 쓰면 건물 문 자리·도달 검사와 갈라진다. 실제로 갈라져 있었고,
+   * 시설로 막힌 칸에 문이 뚫렸다 (K25 검토 ②).
+   */
+  private standable: ((i: number, j: number) => boolean) | null = null;
+  private walkable = (i: number, j: number): boolean =>
+    (this.standable ??= guestWalkable(this.terrain, this.placement))(i, j);
 
   /**
    * 두 칸 사이를 지나갈 수 있는가 — **경계 벽** 판정 (K25).

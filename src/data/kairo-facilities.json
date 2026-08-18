@@ -13,7 +13,7 @@
       "sprite": "facility/shower_row",
       "capacity": 4,
       "placement": {
-        "requiresWallAdjacent": true
+        "requiresIndoor": true
       },
       "note": "칸마다 손님. 칸막이만 세운다",
       "fee": 1100,
@@ -32,7 +32,7 @@
       "sprite": "facility/changing_row",
       "capacity": 3,
       "placement": {
-        "requiresWallAdjacent": true
+        "requiresIndoor": true
       },
       "note": "입구 옆 고정. 수영복 전환",
       "fee": 1000,
@@ -51,7 +51,7 @@
       "sprite": "facility/locker_row",
       "capacity": 4,
       "placement": {
-        "requiresWallAdjacent": true
+        "requiresIndoor": true
       },
       "note": "",
       "fee": 1100,
@@ -70,7 +70,7 @@
       "sprite": "facility/washbasin_row",
       "capacity": 3,
       "placement": {
-        "requiresWallAdjacent": true
+        "requiresIndoor": true
       },
       "note": "",
       "fee": 1000,
@@ -89,7 +89,7 @@
       "sprite": "facility/toilet",
       "capacity": 2,
       "placement": {
-        "requiresWallAdjacent": true
+        "requiresIndoor": true
       },
       "note": "들어가는 연출 없음 — 문 앞 사용",
       "fee": 800,
@@ -108,7 +108,7 @@
       "sprite": "facility/nursing",
       "capacity": 1,
       "placement": {
-        "requiresWallAdjacent": true
+        "requiresIndoor": true
       },
       "note": "",
       "fee": 600,
@@ -229,7 +229,7 @@
       "sprite": "facility/massage_row",
       "capacity": 3,
       "placement": {
-        "requiresWallAdjacent": true
+        "requiresIndoor": true
       },
       "note": "",
       "fee": 1000,
@@ -333,7 +333,7 @@
       "sprite": "facility/vending_in",
       "capacity": 1,
       "placement": {
-        "requiresWallAdjacent": true
+        "requiresIndoor": true
       },
       "note": "",
       "fee": 600,
@@ -352,7 +352,7 @@
       "sprite": "facility/arcade",
       "capacity": 1,
       "placement": {
-        "requiresWallAdjacent": true
+        "requiresIndoor": true
       },
       "note": "",
       "fee": 600,

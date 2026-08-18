@@ -22,7 +22,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { BuildingStore, BUILDING_FAIL_MESSAGES } = await import(
     './sim/kairo/building.js'
   );
-  const { allFacilityDefs, PLACE_FAIL_MESSAGES } = await import('./sim/kairo/placement.js');
+  const { allFacilityDefs, PLACE_FAIL_MESSAGES, guestWalkable } = await import(
+    './sim/kairo/placement.js'
+  );
   const { WeekRunner } = await import('./sim/kairo/week.js');
   const { previewCombos, evaluateCombos } = await import('./sim/kairo/combos.js');
   const {
@@ -103,6 +105,16 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const buildings = saved?.buildings ?? new BuildingStore();
   /** 건물 한 칸의 값 — 시설보다 싸다. 벽은 목표가 아니라 준비물이다 */
   const BUILD_COST_PER_TILE = 40_000;
+  /**
+   * 배치 검사에 넘길 바깥 사정 — 토지와 **실내 여부**.
+   * `h` 는 boot 뒤에 생기므로 함수로 감싼다 (TDZ 사고를 여러 번 겪었다).
+   */
+  const placeOpts = (): { land: { w: number; h: number }; indoor: (i: number, j: number) => boolean } => ({
+    land: landRect(currentGrade()),
+    indoor: (i, j) => buildings.isIndoor(i, j),
+  });
+  /** 손님과 **같은** 걷기 판정 — 문 자리를 고를 때 쓴다 */
+  const walkableNow = (i: number, j: number): boolean => guestWalkable(h.terrain, h.placement)(i, j);
 
   const h = bootKairo({
     parent,
@@ -184,7 +196,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           );
           return;
         }
-        const r = buildings.place(h.terrain, h.walls, GATE, rect);
+        const r = buildings.place(h.terrain, h.walls, GATE, rect, walkableNow);
         if (!r.ok) {
           toast(BUILDING_FAIL_MESSAGES[r.fail ?? 'outside']);
           return;
@@ -222,7 +234,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         }
         // 벽은 개별로 못 지운다 — 건물을 없애면 그 벽이 같이 사라진다
         const b = buildings.at(i, j);
-        if (b && buildings.remove(h.terrain, h.walls, GATE, b.handle)) {
+        if (b && buildings.remove(h.terrain, h.walls, GATE, b.handle, walkableNow)) {
           h.scene.refreshAllWalls();
           h.guests.invalidate();
           toast(`${b.rect.w}×${b.rect.h} 건물 철거`, 'ok');
@@ -255,7 +267,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           );
           return;
         }
-        const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j, landRect(grade));
+        const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j, placeOpts());
         if (r.ok && r.placed) {
           week.spend(cost);
           h.scene.refreshFacility(r.placed.handle);
@@ -362,7 +374,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       const o = document.createElement('option');
       o.value = d.id;
       o.textContent = `${d.name} ${d.size[0]}×${d.size[1]}${
-        d.placement.requiresWallAdjacent ? ' (벽)' : ''
+        d.placement.requiresIndoor ? ' (실내)' : ''
       }`;
       grp.append(o);
     }
@@ -381,7 +393,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   Object.assign(h, {
     Rng: RngCls,
-    sim: { BuildingStore, BUILDING_FAIL_MESSAGES },
+    sim: { BuildingStore, BUILDING_FAIL_MESSAGES, guestWalkable },
     simDefs: Object.fromEntries(allFacilityDefs().map((d) => [d.id, d])),
   });
   /**

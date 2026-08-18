@@ -33,7 +33,7 @@ export interface KairoFacilityDef {
   /** 손님이 위로 걸어 올라갈 수 있나 — 플로팅덱·선착장만 true */
   walkOn?: boolean;
   placement: {
-    requiresWallAdjacent?: boolean;
+    requiresIndoor?: boolean;
     /** 물 위 기반이 필요하다 (인플레이터블·대여소) */
     requiresDeck?: boolean;
     /** 육지나 다른 덱에 이어져야 한다 (덱·선착장 자신) */
@@ -80,11 +80,25 @@ export type PlaceFail =
   | 'wrong-terrain'
   | 'occupied'
   | 'blocked-by-wall'
-  | 'needs-wall'
+  | 'needs-indoor'
   | 'needs-deck'
   | 'deck-not-connected'
   | 'unreachable'
   | 'unknown-def';
+
+/**
+ * 배치 검사의 **바깥 사정** — 격자·지형만으로는 알 수 없는 것들.
+ *
+ * 인자를 계속 늘리는 대신 가방으로 받는다. 안 넘기면 그 규칙을 안 보는 게 아니라
+ * **가장 엄한 쪽**으로 판정한다 (실내 판정이 없으면 실내 시설은 못 놓는다) —
+ * 넘기는 걸 잊었을 때 조용히 느슨해지면 안 된다.
+ */
+export interface PlaceOptions {
+  /** 해금된 토지 (K25). 없으면 격자 전체 */
+  land?: { w: number; h: number };
+  /** 그 칸이 건물 안인가 (`BuildingStore.isIndoor`) */
+  indoor?: (i: number, j: number) => boolean;
+}
 
 export interface PlaceOutcome {
   ok: boolean;
@@ -93,13 +107,30 @@ export interface PlaceOutcome {
   placed?: PlacedFacility;
 }
 
+/**
+ * 손님이 **설 수 있는** 칸인가 — 이 게임의 유일한 정의.
+ *
+ * 손님 이동·건물 문 자리·도달 검사가 전부 이걸 써야 한다. 정의가 갈라졌을 때
+ * 실제로 생긴 일: 벽 도달 검사는 지형만 봐서 "닿는다"고 했는데 그 칸은 시설로
+ * 막혀 있었고, 손님이 못 들어가는 건물이 통과했다 (K25 검토에서 실측).
+ */
+export function guestWalkable(
+  terrain: KairoTerrain,
+  placement: PlacementGrid,
+): (i: number, j: number) => boolean {
+  return (i, j) => {
+    if (placement.blocksWalk(i, j)) return false;
+    return terrain.isWalkable(i, j) || placement.isWalkOn(i, j);
+  };
+}
+
 export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
   outside: '격자 밖입니다',
   'outside-land': '아직 내 땅이 아닙니다 — 등급을 올리면 넓어집니다',
   'wrong-terrain': '이 지형에는 놓을 수 없습니다',
   occupied: '다른 시설이 있습니다',
   'blocked-by-wall': '벽이 지나갑니다',
-  'needs-wall': '벽에 붙여야 하는 시설입니다',
+  'needs-indoor': '건물 안에만 지을 수 있는 시설입니다',
   'needs-deck': '플로팅덱에 붙여야 합니다',
   'deck-not-connected': '덱이 육지나 다른 덱과 이어져야 합니다',
   unreachable: '손님이 닿을 수 없는 자리입니다',
@@ -207,11 +238,7 @@ export class PlacementGrid {
     defId: string,
     i: number,
     j: number,
-    /**
-     * 해금된 토지 (K25). 없으면 격자 전체 — 단위 테스트와 구 호출자를 위한 기본값이다.
-     * 부르는 쪽이 등급에서 얻어 넘긴다 (`landRect`).
-     */
-    land?: { w: number; h: number },
+    opts?: PlaceOptions,
   ): PlaceOutcome {
     const def = DEFS[defId];
     if (!def) return { ok: false, fail: 'unknown-def' };
@@ -221,7 +248,8 @@ export class PlacementGrid {
       if (!this.inside(ti, tj)) return { ok: false, fail: 'outside' };
     }
 
-    if (land) {
+    if (opts?.land) {
+      const land = opts.land;
       for (const [ti, tj] of tiles) {
         if (ti >= land.w || tj >= land.h) return { ok: false, fail: 'outside-land' };
       }
@@ -273,15 +301,16 @@ export class PlacementGrid {
       if (!connected) return { ok: false, fail: 'deck-not-connected' };
     }
 
-    if (def.placement.requiresWallAdjacent) {
+    if (def.placement.requiresIndoor) {
       /*
-       * 벽부착 — 발자국 칸 중 하나가 **벽 경계에 접해야** 한다 (K25).
+       * 실내 시설 9종 — 발자국이 **전부 건물 안**이어야 한다.
        *
-       * 예전에는 "옆 칸이 벽 타일인가"를 봤다. 이제 벽은 경계에 있으므로 그 칸 자신의
-       * 경계를 본다. 건물 외곽선이 자동 생성되므로, 실질적으로 **건물 벽에 붙은 칸**이다.
+       * ⚠ 한때 "벽 경계에 접했나"(`hasAnyEdge`)로 봤는데 **경계는 두 칸이 공유한다.**
+       * 그래서 건물 **바깥**에서 벽에 접한 칸도 통과했고, 샤워실·탈의실이 야외 잔디에
+       * 놓였다 (K25 검토에서 실측). 붙는 대상은 벽이 아니라 **방**이다.
        */
-      const touching = tiles.some(([ti, tj]) => walls.hasAnyEdge(ti, tj));
-      if (!touching) return { ok: false, fail: 'needs-wall' };
+      const allIndoor = tiles.every(([ti, tj]) => opts?.indoor?.(ti, tj) === true);
+      if (!allIndoor) return { ok: false, fail: 'needs-indoor' };
     }
 
     // 도달 — 발자국에 인접한 칸 중 하나라도 게이트에서 걸어올 수 있어야 한다.
@@ -316,9 +345,9 @@ export class PlacementGrid {
     defId: string,
     i: number,
     j: number,
-    land?: { w: number; h: number },
+    opts?: PlaceOptions,
   ): PlaceOutcome {
-    const r = this.check(terrain, walls, gate, defId, i, j, land);
+    const r = this.check(terrain, walls, gate, defId, i, j, opts);
     if (!r.ok) return r;
     const def = DEFS[defId] as KairoFacilityDef;
     const handle = this.nextHandle++;

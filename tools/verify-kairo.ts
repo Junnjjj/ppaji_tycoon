@@ -569,16 +569,25 @@ async function main(): Promise<void> {
       }
     }
 
-    // 벽부착 시설 — 벽 없이 거절되고, 그 칸의 경계에 벽이 생기면 통과해야 한다
+    /*
+     * 실내 시설 — 방이 없으면 거절, 방을 지으면 통과. 그리고 **벽 바깥에서 벽에 접한
+     * 칸은 여전히 거절**이어야 한다 (K25 검토 ①: 경계는 두 칸이 공유한다).
+     */
     const wi = bi, wj = bj + 6;
-    const before = p.check(t, w, gate, 'locker_row', wi, wj);
-    for (let k = 0; k < 4; k++) w.setEdge(wi + k, wj, 3, 1); // 3 = DIR_J_MINUS
-    for (let k = 0; k < 4; k++) sc.refreshWall(wi + k, wj);
-    const after = p.check(t, w, gate, 'locker_row', wi, wj);
-    out.wallMountBefore = before.fail || 'ok';
-    out.wallMountAfter = after.fail || 'ok';
-    if (after.ok) {
-      const r = p.place(t, w, gate, 'locker_row', wi, wj);
+    const store = new h.sim.BuildingStore();
+    const stand = h.sim.guestWalkable(t, p);
+    const opts = { indoor: (a, b2) => store.isIndoor(a, b2) };
+    out.wallMountBefore = p.check(t, w, gate, 'locker_row', wi, wj, opts).fail || 'ok';
+
+    store.place(t, w, gate, { i: wi, j: wj, w: 6, h: 3 }, stand);
+    sc.refreshAllWalls();
+    out.wallMountAfter = p.check(t, w, gate, 'locker_row', wi, wj, opts).fail || 'ok';
+    // 방 오른쪽 바깥 칸 — 벽에 접해 있지만 실내가 아니다
+    out.wallMountOutside =
+      p.check(t, w, gate, 'locker_row', wi + 6, wj, opts).fail || 'ok';
+    out.outsideTouchesWall = w.hasAnyEdge(wi + 6, wj);
+    if (out.wallMountAfter === 'ok') {
+      const r = p.place(t, w, gate, 'locker_row', wi, wj, opts);
       if (r.ok && r.placed) { sc.refreshFacility(r.placed.handle); out.placed.push('locker_row'); }
     }
 
@@ -595,6 +604,8 @@ async function main(): Promise<void> {
         rejected: string[];
         wallMountBefore: string;
         wallMountAfter: string;
+        wallMountOutside: string;
+        outsideTouchesWall: boolean;
         count: number;
         capacity: number;
         focus: number[];
@@ -610,9 +621,14 @@ async function main(): Promise<void> {
       `놓임 ${fac.placed.join(',')}${fac.rejected.length ? ' · 거절 ' + fac.rejected.join(',') : ''}`,
     );
     record(
-      '벽부착 시설 — 벽 없이 거절 → 벽 세우면 통과',
-      fac.wallMountBefore === 'needs-wall' && fac.wallMountAfter === 'ok' ? 'pass' : 'fail',
+      '실내 시설 — 방 없이 거절 → 방을 지으면 통과',
+      fac.wallMountBefore === 'needs-indoor' && fac.wallMountAfter === 'ok' ? 'pass' : 'fail',
       `${fac.wallMountBefore} → ${fac.wallMountAfter}`,
+    );
+    record(
+      '건물 바깥에서 벽에 접한 칸은 여전히 거절 (K25 검토 ①)',
+      fac.outsideTouchesWall && fac.wallMountOutside === 'needs-indoor' ? 'pass' : 'fail',
+      `벽에 접했나 ${fac.outsideTouchesWall} · 판정 ${fac.wallMountOutside}`,
     );
     record('총 동시 이용 칸 수 > 0', fac.capacity > 0 ? 'pass' : 'fail', `${fac.capacity}칸`);
 

@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
-import { WallGrid, EDGE_SOLID, DIR_J_MINUS } from './walls.js';
-import { PlacementGrid } from './placement.js';
+import { WallGrid } from './walls.js';
+import { BuildingStore } from './building.js';
+import { PlacementGrid, guestWalkable } from './placement.js';
 import { GuestStore, GUEST_DEFAULTS } from './guests.js';
 import { WeekRunner, type Season } from './week.js';
 import { evaluateCombos } from './combos.js';
@@ -87,14 +88,18 @@ function playGolden(weeks: number): Golden {
   const week = new WeekRunner(t, p, g);
   const progress = new ProgressStore();
 
-  // 실내동 벽 두 줄 (벽부착 시설이 붙을 곳)
-  // 벽부착 시설이 붙을 경계 (K25: 벽은 타일이 아니라 경계에 있다)
-  for (let i = 10; i < 26; i++) w.setEdge(i, 6, DIR_J_MINUS, EDGE_SOLID);
-  for (let i = 10; i < 26; i++) w.setEdge(i, 8, DIR_J_MINUS, EDGE_SOLID);
+  /*
+   * 실내동 — 위생 시설 4종이 들어갈 **진짜 방**이다 (K25 검토 ①).
+   * 예전에는 경계 두 줄만 세웠는데, 실내 판정이 "벽에 접함"에서 "건물 안"으로 바뀌어
+   * 그 방식으로는 하나도 못 놓는다.
+   */
+  const buildings = new BuildingStore();
+  buildings.place(t, w, GATE, { i: 10, j: 5, w: 16, h: 5 }, guestWalkable(t, p));
+  const opts = { indoor: (i: number, j: number) => buildings.isIndoor(i, j) };
 
   let placed = 0;
   for (const [id, i, j] of BUILD_ORDER) {
-    if (p.place(t, w, GATE, id, i, j).ok) placed++;
+    if (p.place(t, w, GATE, id, i, j, opts).ok) placed++;
   }
   g.invalidate();
 
@@ -237,14 +242,20 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
      * 손님은 그걸 돌아서 걸었다. 지금은 같은 벽이 타일 **경계**에 서므로 바닥이 그대로
      * 남는다 — 걷는 거리가 줄어 만족도가 오르고(걷기 감점이 준다), 회전이 빨라져 같은
      * 상한에서 더 많이 받는다. **개선이 아니라 모델 변경의 직접 결과다.**
+     *
+     * **2026-08-18 실내동이 진짜 방이 됐다** (exitSat 72→73 · visitors 118→119 ·
+     * turnedAway 5→4): 실내 시설의 조건이 "벽에 접함"에서 "건물 안"으로 바뀌어
+     * (K25 검토 ①) 골든도 경계 두 줄 대신 16×5 방 하나를 짓는다. 방에는 문이 하나뿐이라
+     * 동선이 조금 달라졌다. 변화가 1 안팎인 것이 오히려 확인 — 벽 두 줄과 방 하나가
+     * 손님에게 비슷한 장애물이었다는 뜻이다.
      */
     expect(g).toEqual({
       facilities: 15,
       combos: 7,
       grade: 3,
-      exitSat: 72,
-      visitors: 118,
-      turnedAway: 5,
+      exitSat: 73,
+      visitors: 119,
+      turnedAway: 4,
       profitSign: 1,
       questsDone: 6,
       riskLevel: 'caution',

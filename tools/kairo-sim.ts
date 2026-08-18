@@ -20,8 +20,14 @@
  */
 import { Rng } from '../src/sim/rng.js';
 import { KairoTerrain } from '../src/sim/kairo/terrain.js';
-import { WallGrid, EDGE_SOLID, DIR_J_MINUS } from '../src/sim/kairo/walls.js';
-import { PlacementGrid, allFacilityDefs, MAX_LEVEL } from '../src/sim/kairo/placement.js';
+import { WallGrid } from '../src/sim/kairo/walls.js';
+import { BuildingStore } from '../src/sim/kairo/building.js';
+import {
+  PlacementGrid,
+  allFacilityDefs,
+  MAX_LEVEL,
+  guestWalkable,
+} from '../src/sim/kairo/placement.js';
 import { GuestStore, GUEST_DEFAULTS } from '../src/sim/kairo/guests.js';
 import { WeekRunner, type NeedKind, type Season, type WeekReport } from '../src/sim/kairo/week.js';
 import { evaluateCombos } from '../src/sim/kairo/combos.js';
@@ -97,6 +103,7 @@ interface RunResult {
   /** 건설이 막힌 주 — **안 짓기로 / 돈이 없어서 / 자리가 없어서**를 나눠서 센다 */
   buildPoor: number;
   buildNoSpace: number;
+  buildFailWhy: [string, number][];
   buildCapped: number;
   /** 개선에 쓴 돈과 평균 단계 — 후반 공백이 메워졌는지 본다 */
   upgradeSpend: number;
@@ -135,11 +142,76 @@ interface RunResult {
   buildSpendByWeek: number[];
 }
 
+/**
+ * 실내 시설을 놓을 방을 마련한다 — 없으면 하나 짓는다.
+ *
+ * ⚠ 봇에 **진짜 건물**이 필요해진 이유: 실내 시설 9종의 조건이 "벽에 접함"에서
+ * "건물 안"으로 바뀌었다 (K25 검토 ①). 예전처럼 경계 몇 줄만 세워 두면 봇은 위생
+ * 시설을 하나도 못 지어, 밸런싱이 실제 게임과 완전히 다른 판을 돌게 된다.
+ *
+ * ⚠ 건물값은 아직 안 낸다 (검토 ⑥ — 플레이어는 칸당 4만원을 낸다). 그 차이를 메우는
+ * 것은 밸런스를 움직이는 변경이라 따로 다룬다.
+ */
+function ensureRoom(
+  t: KairoTerrain,
+  w: WallGrid,
+  p: PlacementGrid,
+  b: BuildingStore,
+  land: { w: number; h: number },
+  rng: Rng,
+  need: { w: number; h: number },
+): boolean {
+  const stand = guestWalkable(t, p);
+
+  /** 이 사각형에 방을 지을 수 있나 — 실외 시설을 삼키지 않는 게 핵심이다 */
+  const fits = (r: { i: number; j: number; w: number; h: number }): boolean => {
+    if (r.i < 0 || r.j < 0 || r.i + r.w > land.w || r.j + r.h > land.h) return false;
+    for (let j = r.j; j < r.j + r.h; j++) {
+      for (let i = r.i; i < r.i + r.w; i++) {
+        if (!t.inside(i, j) || !t.isWalkable(i, j)) return false;
+        // 이미 실내인 시설은 그대로 실내로 남는다 — 흡수해도 된다
+        if (p.handleAt(i, j) !== 0 && !b.isIndoor(i, j)) return false;
+      }
+    }
+    return true;
+  };
+
+  /*
+   * ① **기존 방을 넓힌다.** 이걸 안 하면 방이 한 번 차는 순간 실내 시설을 영영 못 짓는다 —
+   * 실측으로 "자리 부족" 경보가 떴고, 이유별로 세어 보니 106건 전부 `no-room` 이었다.
+   * 사람도 방이 좁으면 옆에 새 방을 짓기보다 **그 방을 넓힌다.**
+   */
+  for (const bl of [...b.all]) {
+    for (const [dw, dh] of [
+      [need.w + 1, 0],
+      [0, need.h + 1],
+      [need.w + 1, need.h + 1],
+    ] as const) {
+      const rect = { i: bl.rect.i, j: bl.rect.j, w: bl.rect.w + dw, h: bl.rect.h + dh };
+      if (!fits(rect)) continue;
+      if (b.place(t, w, GATE, rect, stand).ok) return true;
+    }
+  }
+
+  // ② 넓힐 수 없으면 새 방을 낸다
+  const rw = Math.max(3, need.w + 2);
+  const rh = Math.max(3, need.h + 2);
+  for (let attempt = 0; attempt < 60; attempt++) {
+    const i = rng.int(Math.max(1, land.w - rw));
+    const j = rng.int(Math.max(1, land.h - rh));
+    const rect = { i, j, w: rw, h: rh };
+    if (!fits(rect)) continue;
+    if (b.place(t, w, GATE, rect, stand).ok) return true;
+  }
+  return false;
+}
+
 /** 병목을 보고 그 종류를 짓는 봇 */
 function buildOne(
   t: KairoTerrain,
   w: WallGrid,
   p: PlacementGrid,
+  b: BuildingStore,
   cash: number,
   want: NeedKind | null,
   rng: Rng,
@@ -148,7 +220,14 @@ function buildOne(
    * 헤드리스 숫자와 손으로 하는 판이 갈라진다. 검증이 조용히 통과하는 전형적인 모양이다.
    */
   land: { w: number; h: number },
+  /** 실내 판정 — 실내 시설 9종은 **실제 건물 안**에만 놓인다 (K25 검토) */
+  /**
+   * 왜 못 놓았는지 — **한 통으로 세면 엉뚱한 곳을 가리킨다** (K23 의 교훈 그대로).
+   * "자리 부족"이 실은 "방이 없어서"일 수 있고, 그 둘은 처방이 정반대다.
+   */
+  why?: Map<string, number>,
 ): number {
+  const opts = { land, indoor: (i: number, j: number) => b.isIndoor(i, j) };
   const grade = gradeFor(0).grade; // 등급 제한은 아래에서 따로 본다
   void grade;
   const cands = allFacilityDefs()
@@ -169,14 +248,28 @@ function buildOne(
   const pick = cands[rng.int(Math.max(1, Math.ceil(cands.length / 2)))];
   if (!pick) return 0;
 
-  for (let attempt = 0; attempt < 200; attempt++) {
-    const i = rng.int(Math.max(1, land.w - pick.size[0]));
-    const j = rng.int(Math.max(1, land.h - pick.size[1]));
-    if (p.check(t, w, GATE, pick.id, i, j, land).ok) {
-      p.place(t, w, GATE, pick.id, i, j, land);
-      return (pick as unknown as { cost: number }).cost;
+  let lastFail = 'unknown';
+  for (let round = 0; round < 2; round++) {
+    for (let attempt = 0; attempt < 200; attempt++) {
+      const i = rng.int(Math.max(1, land.w - pick.size[0]));
+      const j = rng.int(Math.max(1, land.h - pick.size[1]));
+      const c = p.check(t, w, GATE, pick.id, i, j, opts);
+      if (c.ok) {
+        p.place(t, w, GATE, pick.id, i, j, opts);
+        return (pick as unknown as { cost: number }).cost;
+      }
+      lastFail = c.fail ?? 'unknown';
+    }
+    // 실내 시설인데 자리가 없으면 **방이 모자란 것**이다 — 새로 짓고 다시 본다
+    const needsRoom = (pick as unknown as { placement?: { requiresIndoor?: boolean } }).placement
+      ?.requiresIndoor;
+    if (!needsRoom || round === 1) break;
+    if (!ensureRoom(t, w, p, b, land, rng, { w: pick.size[0], h: pick.size[1] })) {
+      lastFail = 'no-room';
+      break;
     }
   }
+  if (why) why.set(lastFail, (why.get(lastFail) ?? 0) + 1);
   return 0;
 }
 
@@ -186,6 +279,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const t = KairoTerrain.generate(GRID_W, GRID_H, rng.fork(1), map);
   const w = new WallGrid(GRID_W, GRID_H);
   const p = new PlacementGrid(GRID_W, GRID_H);
+  const buildings = new BuildingStore();
   const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
   const week = new WeekRunner(t, p, g);
   const progress = new ProgressStore();
@@ -209,10 +303,11 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   /** 코스 전용 스트림 — 장비 선택이 날씨·손님을 밀면 안 된다 (불변식 2) */
   const courseRng = rng.fork(0xc0125);
 
-  // 벽부착 시설을 위해 벽 몇 줄 (플레이어가 실내동을 짓는 걸 흉내낸다)
-  // 벽부착 시설이 붙을 경계 두 줄 (플레이어가 실내동을 짓는 걸 흉내낸다)
-  for (let i = 6; i < 26; i++) w.setEdge(i, 6, DIR_J_MINUS, EDGE_SOLID);
-  for (let i = 6; i < 26; i++) w.setEdge(i, 10, DIR_J_MINUS, EDGE_SOLID);
+  /*
+   * 시작 실내동 — 플레이어가 처음에 방 하나를 짓는 것과 같다 (건물 값은 아직 안 낸다).
+   * 부족하면 `ensureRoom` 이 더 짓는다.
+   */
+  buildings.place(t, w, GATE, { i: 2, j: 2, w: 8, h: 4 }, guestWalkable(t, p));
 
   let cash = 5_000_000;
   let last: WeekReport | null = null;
@@ -220,6 +315,8 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const seasonByWeek: Season[] = [];
   let buildPoor = 0;
   let buildNoSpace = 0;
+  /** 못 지은 이유별 횟수 — 경보가 엉뚱한 처방을 내지 않게 */
+  const buildFailWhy = new Map<string, number>();
   let buildCapped = 0;
   let upgradeSpend = 0;
   let accidents = 0;
@@ -306,7 +403,17 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
        * 버틸 만큼"은 남긴다.
        */
       const budget = Math.min(weekBudget, Math.max(0, cash - BUILD_RESERVE));
-      const spent = buildOne(t, w, p, budget, b === 0 ? want : null, rng, landRect(GRADES[gradeNo - 1] ?? GRADES[0]!));
+      const spent = buildOne(
+        t,
+        w,
+        p,
+        buildings,
+        budget,
+        b === 0 ? want : null,
+        rng,
+        landRect(GRADES[gradeNo - 1] ?? GRADES[0]!),
+        buildFailWhy,
+      );
       cash -= spent;
       buildSpend += spent;
       weekBudget -= spent;
@@ -525,6 +632,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     seasonByWeek,
     buildPoor,
     buildNoSpace,
+    buildFailWhy: [...buildFailWhy.entries()].sort((a, b2) => b2[1] - a[1]),
     buildCapped,
     upgradeSpend,
     avgLevel: p.averageLevel(),
@@ -659,7 +767,13 @@ function main(): void {
   console.log(
     `건설 막힘 중앙값: 상한 도달 ${stats(runs.map((r) => r.buildCapped)).med}회 · ` +
       `돈 부족 ${stats(runs.map((r) => r.buildPoor)).med}회 · ` +
-      `자리 부족 ${stats(runs.map((r) => r.buildNoSpace)).med}회 (판당)`,
+      `자리 부족 ${stats(runs.map((r) => r.buildNoSpace)).med}회 (판당)` +
+        (() => {
+          const agg = new Map<string, number>();
+          for (const r of runs) for (const [k, v] of r.buildFailWhy) agg.set(k, (agg.get(k) ?? 0) + v);
+          const top = [...agg.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3);
+          return top.length ? ` — 사유 ${top.map(([k, v]) => `${k} ${v}`).join(' · ')}` : '';
+        })(),
   );
   const perWeekMed = (pick: (r: RunResult) => number[]): number[] => {
     const out: number[] = [];

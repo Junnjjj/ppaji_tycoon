@@ -62,7 +62,7 @@ export interface KairoFacilitySim {
   /** 손님이 밟고 지나가는 구조물 (플로팅덱·선착장) */
   walkOn?: boolean;
   placement: {
-    requiresWallAdjacent?: boolean;
+    requiresIndoor?: boolean;
     requiresDeck?: boolean;
     requiresShoreOrDeck?: boolean;
   };

@@ -1,15 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { KairoTerrain } from './terrain.js';
-import { WallGrid, EDGE_SOLID, DIR_J_MINUS } from './walls.js';
-/**
- * 벽부착 시설을 놓을 수 있게 그 칸들의 **위쪽 경계**에 벽을 세운다.
- *
- * 벽이 경계로 옮겨간 뒤(K25)로는 "옆 칸이 벽 타일인가"가 아니라 **그 칸에 벽 경계가
- * 있는가**가 판정이다. 그래서 시설을 놓을 칸 자체에 경계를 준다.
- */
-function wallBand(w: WallGrid, i0: number, i1: number, j: number): void {
-  for (let i = i0; i <= i1; i++) w.setEdge(i, j, DIR_J_MINUS, EDGE_SOLID);
-}
+import { WallGrid } from './walls.js';
+import { BuildingStore } from './building.js';
 
 import { PlacementGrid, allFacilityDefs } from './placement.js';
 import {
@@ -24,10 +16,27 @@ import {
 
 const GATE = { i: 0, j: 0 };
 
-function flat(size = 30): { t: KairoTerrain; w: WallGrid; p: PlacementGrid } {
+/**
+ * 콤보 시험판. 실내 시설 9종을 자유롭게 놓을 수 있도록 **안쪽 전체를 건물 하나**로 덮는다.
+ *
+ * 예전에는 경계 몇 줄만 세웠는데, 실내 판정이 "벽에 접함"에서 "건물 안"으로 바뀌면서
+ * (K25 검토 ①) 그 방식으로는 아무것도 못 놓는다. 콤보는 거리만 보므로 방 하나로 덮어도
+ * 판정이 달라지지 않는다.
+ */
+function flat(size = 30): {
+  t: KairoTerrain;
+  w: WallGrid;
+  p: PlacementGrid;
+  b: BuildingStore;
+  opts: { indoor: (i: number, j: number) => boolean };
+} {
   const t = new KairoTerrain(size, size);
   for (let i = 0; i < size; i++) for (let j = 0; j < size; j++) t.paint(i, j, 'lawn');
-  return { t, w: new WallGrid(size, size), p: new PlacementGrid(size, size) };
+  const w = new WallGrid(size, size);
+  const p = new PlacementGrid(size, size);
+  const b = new BuildingStore();
+  b.place(t, w, GATE, { i: 1, j: 1, w: size - 2, h: size - 2 });
+  return { t, w, p, b, opts: { indoor: (i, j) => b.isIndoor(i, j) } };
 }
 
 describe('콤보 데이터', () => {
@@ -91,33 +100,29 @@ describe('체감 — 최적 콤보 도배를 막는다 (v4 결정)', () => {
 
 describe('소형 — 붙여 놓으면 터진다', () => {
   it('샤워실 옆 락커를 놓으면 발동한다', () => {
-    const { t, w, p } = flat();
-    // 둘 다 벽부착 시설이라 놓을 칸에 벽 경계를 준다
-    wallBand(w, 5, 12, 5);
-    wallBand(w, 5, 12, 6);
-    expect(p.place(t, w, GATE, 'shower_row', 5, 5).ok).toBe(true);
+    const { t, w, p, opts } = flat();
+    expect(p.place(t, w, GATE, 'shower_row', 5, 5, opts).ok).toBe(true);
     expect(evaluateCombos(p).active.some((c) => c.id === 'small_shower_locker')).toBe(false);
-    expect(p.place(t, w, GATE, 'locker_row', 5, 6).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'locker_row', 5, 6, opts).ok).toBe(true);
     const r = evaluateCombos(p);
     expect(r.active.some((c) => c.id === 'small_shower_locker')).toBe(true);
     expect(r.satisfaction).toBeGreaterThan(0);
   });
 
   it('멀리 떨어뜨리면 안 터진다 — 거리가 판단이다', () => {
-    const { t, w, p } = flat();
-    wallBand(w, 2, 26, 2);
-    expect(p.place(t, w, GATE, 'shower_row', 3, 2).ok).toBe(true);
-    expect(p.place(t, w, GATE, 'locker_row', 20, 2).ok).toBe(true);
+    const { t, w, p, opts } = flat();
+    expect(p.place(t, w, GATE, 'shower_row', 3, 2, opts).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'locker_row', 20, 2, opts).ok).toBe(true);
     expect(evaluateCombos(p).active.some((c) => c.id === 'small_shower_locker')).toBe(false);
   });
 
   it('A 하나에 B 셋을 붙여도 콤보는 하나다 — 쌍을 한 번씩만 센다', () => {
-    const { t, w, p } = flat();
-    expect(p.place(t, w, GATE, 'shop', 10, 10).ok).toBe(true);
+    const { t, w, p, opts } = flat();
+    expect(p.place(t, w, GATE, 'shop', 10, 10, opts).ok).toBe(true);
     // 평상 연립 4×1 을 세 개 붙인다
-    expect(p.place(t, w, GATE, 'pyeongsang_row', 6, 12).ok).toBe(true);
-    expect(p.place(t, w, GATE, 'pyeongsang_row', 6, 13).ok).toBe(true);
-    expect(p.place(t, w, GATE, 'pyeongsang_row', 6, 14).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'pyeongsang_row', 6, 12, opts).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'pyeongsang_row', 6, 13, opts).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'pyeongsang_row', 6, 14, opts).ok).toBe(true);
     const hits = evaluateCombos(p).active.filter((c) => c.id === 'small_shop_pyeongsang');
     expect(hits).toHaveLength(1);
   });
@@ -125,22 +130,22 @@ describe('소형 — 붙여 놓으면 터진다', () => {
 
 describe('중형 — 한 구역에 여러 수요', () => {
   it('먹거리·먹거리·쉼터가 모이면 먹거리 골목이 터진다', () => {
-    const { t, w, p } = flat();
-    expect(p.place(t, w, GATE, 'shop', 10, 10).ok).toBe(true);
-    expect(p.place(t, w, GATE, 'snackbar', 13, 10).ok).toBe(true);
+    const { t, w, p, opts } = flat();
+    expect(p.place(t, w, GATE, 'shop', 10, 10, opts).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'snackbar', 13, 10, opts).ok).toBe(true);
     const before = evaluateCombos(p).active.some((c) => c.id === 'medium_food_court');
     expect(before).toBe(false);
-    expect(p.place(t, w, GATE, 'sunbed_row', 10, 13).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'sunbed_row', 10, 13, opts).ok).toBe(true);
     expect(evaluateCombos(p).active.some((c) => c.id === 'medium_food_court')).toBe(true);
   });
 
   it('중복 발동은 체감된다 — 두 번째는 첫 번째보다 작다', () => {
-    const { t, w, p } = flat(40);
+    const { t, w, p, opts } = flat(40);
     // 같은 구성을 두 군데에
     const build = (oi: number, oj: number): void => {
-      p.place(t, w, GATE, 'shop', oi, oj);
-      p.place(t, w, GATE, 'snackbar', oi + 3, oj);
-      p.place(t, w, GATE, 'sunbed_row', oi, oj + 3);
+      p.place(t, w, GATE, 'shop', oi, oj, opts);
+      p.place(t, w, GATE, 'snackbar', oi + 3, oj, opts);
+      p.place(t, w, GATE, 'sunbed_row', oi, oj + 3, opts);
     };
     build(5, 5);
     build(25, 25);
@@ -153,21 +158,18 @@ describe('중형 — 한 구역에 여러 수요', () => {
 
 describe('대형 — 리조트 전체 구성', () => {
   it('위생 6개면 청결 리조트가 터지고 한 번만 터진다', () => {
-    const { t, w, p } = flat(40);
-    wallBand(w, 2, 36, 2);
+    const { t, w, p, opts } = flat(40);
     let placed = 0;
     const ids = ['shower_row', 'changing_row', 'locker_row', 'washbasin_row', 'toilet', 'nursing'];
     let j = 2;
     for (const id of ids) {
       for (let i = 2; i < 34; i += 6) {
-        if (p.place(t, w, GATE, id, i, j).ok) {
+        if (p.place(t, w, GATE, id, i, j, opts).ok) {
           placed++;
           break;
         }
       }
       j += 3;
-      // 다음 줄도 벽부착이 가능하도록 경계를 준다
-      wallBand(w, 2, 36, j);
     }
     expect(placed).toBe(6);
     const hits = evaluateCombos(p).active.filter((c) => c.id === 'large_clean_resort');
@@ -178,10 +180,8 @@ describe('대형 — 리조트 전체 구성', () => {
 
 describe('놓기 전 미리보기 — 배치 판단을 만든다', () => {
   it('놓으면 터질 콤보를 미리 알려준다', () => {
-    const { t, w, p } = flat();
-    wallBand(w, 5, 12, 5);
-    wallBand(w, 5, 12, 6);
-    p.place(t, w, GATE, 'shower_row', 5, 5);
+    const { t, w, p, opts } = flat();
+    p.place(t, w, GATE, 'shower_row', 5, 5, opts);
     const pv = previewCombos(p, 'locker_row', 5, 6);
     expect(pv.gained.some((c) => c.id === 'small_shower_locker')).toBe(true);
     expect(pv.satisfaction).toBeGreaterThan(0);
@@ -190,16 +190,15 @@ describe('놓기 전 미리보기 — 배치 판단을 만든다', () => {
   });
 
   it('멀리 놓으면 아무것도 안 터진다', () => {
-    const { t, w, p } = flat();
-    wallBand(w, 2, 26, 2);
-    p.place(t, w, GATE, 'shower_row', 3, 2);
+    const { t, w, p, opts } = flat();
+    p.place(t, w, GATE, 'shower_row', 3, 2, opts);
     const pv = previewCombos(p, 'locker_row', 22, 2);
     expect(pv.gained.some((c) => c.id === 'small_shower_locker')).toBe(false);
   });
 
   it('미리보기가 상태를 바꾸지 않는다', () => {
-    const { t, w, p } = flat();
-    p.place(t, w, GATE, 'shop', 10, 10);
+    const { t, w, p, opts } = flat();
+    p.place(t, w, GATE, 'shop', 10, 10, opts);
     const before = JSON.stringify(p.toSnapshot());
     previewCombos(p, 'pyeongsang_row', 10, 12);
     expect(JSON.stringify(p.toSnapshot())).toBe(before);
@@ -208,13 +207,12 @@ describe('놓기 전 미리보기 — 배치 판단을 만든다', () => {
 
 describe('미리보기는 콤보만 본다 — 배치 가능성은 호출자가 따로 확인한다', () => {
   it('배치가 거절될 자리에도 콤보 계산은 답을 낸다', () => {
-    const { t, w, p } = flat();
-    p.place(t, w, GATE, 'shop', 10, 10);
-    // 물도 벽도 없지만 벽부착 시설이라 실제로는 못 놓는 자리
+    const { t, w, p, opts } = flat();
+    p.place(t, w, GATE, 'shop', 10, 10, opts);
     const pv = previewCombos(p, 'locker_row', 10, 12);
     expect(Array.isArray(pv.gained)).toBe(true);
-    // 배치 가능성은 별도 검사다
-    expect(p.check(t, w, GATE, 'locker_row', 10, 12).fail).toBe('needs-wall');
+    // 배치 가능성은 별도 검사다 — 실내 판정을 안 넘기면 실내 시설은 거절된다
+    expect(p.check(t, w, GATE, 'locker_row', 10, 12).fail).toBe('needs-indoor');
   });
 });
 
