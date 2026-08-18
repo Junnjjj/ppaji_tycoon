@@ -201,3 +201,107 @@ describe('카메라', () => {
     expect(Number.isFinite(v.scrollY)).toBe(true);
   });
 });
+
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+ * K33 — 중심을 직접 옮긴다.
+ *
+ * **이 메서드의 이유:** 코스 편집을 열었더니 핸들이 화면 밖(x = −284)에 있었다.
+ * 중심을 옮길 수단이 없어 `focusTile` 이 "스크롤 차이만큼 팬"으로 우회했고, 팬은
+ * 고무줄(clampSoft)을 타서 가장자리에서 목표를 못 맞춘다.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+/**
+ * ⚠ **판 가장자리를 쓰면 안 된다.** 처음엔 `(GRID_W+GRID_H)*STEP_Y*0.5` 를 썼는데
+ * 그게 월드 아래끝 근처라 `clampHard` 가 물어서 2텍셀이 어긋났다 — 검사가 아니라
+ * 표본이 틀린 것이었다. 월드 한복판을 쓴다.
+ */
+function midOfWorld(): { x: number; y: number } {
+  const b = worldBounds(GRID_W, GRID_H);
+  return { x: (b.minX + b.maxX) / 2, y: (b.minY + b.maxY) / 2 };
+}
+
+describe('★ centerOn — 준 텍셀이 화면 중앙에 온다', () => {
+  it('판 한복판을 주면 그 점이 뷰 중앙이다', () => {
+    const c = new KairoCamera();
+    c.setScreenSize(393, 852);
+    const t = midOfWorld();
+    c.centerOn(t);
+    const v = c.view();
+    const buf = c.bufferSize();
+    expect(Math.abs(v.scrollX + buf.w / 2 - t.x)).toBeLessThanOrEqual(1);
+    expect(Math.abs(v.scrollY + buf.h / 2 - t.y)).toBeLessThanOrEqual(1);
+  });
+
+  it('★ bottomInset 을 주면 **가려진 영역 위쪽** 중앙에 온다', () => {
+    const c = new KairoCamera();
+    c.setScreenSize(393, 852);
+    const t = midOfWorld();
+    /*
+     * ⚠ inset 은 **실제 UI 만큼**이어야 한다. 슬림 바 + 하단 바가 대략 160px 이다.
+     * 처음에 500 을 넣었더니 중심이 월드 아래끝(`maxCy`)에 물려 90텍셀이 어긋났다 —
+     * 검사가 아니라 표본이 틀린 것이었다.
+     */
+    const inset = 160;
+    c.centerOn(t, inset);
+    const v = c.view();
+    const buf = c.bufferSize();
+    const screenY = t.y - v.scrollY;
+    const visibleH = buf.h - inset / c.upscale;
+    expect(Math.abs(screenY - visibleH / 2)).toBeLessThanOrEqual(1);
+    expect(screenY).toBeLessThan(visibleH); // 가린 곳에 안 들어간다
+  });
+
+  it('⚠ 음성 대조군 — inset 0 이면 그만큼 아래에 남는다 (인자가 일을 하나)', () => {
+    /*
+     * 이걸 안 넣으면 위 검사가 "원래 중앙이던 것"을 본 것과 구분이 안 된다.
+     * inset 을 무시했다면 두 결과가 **같아야** 한다. 정확히 inset/2 만큼 달라야 한다.
+     */
+    const c = new KairoCamera();
+    c.setScreenSize(393, 852);
+    const t = midOfWorld();
+    c.centerOn(t, 0);
+    const plain = t.y - c.view().scrollY;
+    c.centerOn(t, 160);
+    const lifted = t.y - c.view().scrollY;
+    expect(plain).not.toBe(lifted);
+    expect(Math.abs(plain - lifted - 80)).toBeLessThanOrEqual(1);
+  });
+
+  it('경계 클램프가 그대로 산다 — 판 밖을 주면 안으로 들어온다', () => {
+    const c = new KairoCamera();
+    c.setScreenSize(393, 852);
+    c.centerOn({ x: -99999, y: -99999 });
+    const a = c.view();
+    c.centerOn({ x: -50000, y: -50000 });
+    expect(c.view()).toEqual(a); // 둘 다 같은 모서리로 물린다
+  });
+
+  it('스크롤이 정수로 나온다 — 반 픽셀이 다시 들어오면 안 된다', () => {
+    const c = new KairoCamera();
+    c.setScreenSize(393, 852);
+    c.centerOn({ x: 3.7, y: midOfWorld().y + 3.3 }, 137);
+    const v = c.view();
+    expect(Number.isInteger(v.scrollX)).toBe(true);
+    expect(Number.isInteger(v.scrollY)).toBe(true);
+  });
+});
+
+describe('fits — 경계상자가 보이는 영역에 들어가나', () => {
+  it('작은 상자는 들어가고, 화면보다 큰 상자는 안 들어간다', () => {
+    const c = new KairoCamera();
+    c.setScreenSize(393, 852);
+    const buf = c.bufferSize();
+    expect(c.fits({ w: 50, h: 50 })).toBe(true);
+    expect(c.fits({ w: buf.w + 1, h: 50 })).toBe(false);
+  });
+
+  it('inset 만큼 세로가 줄어든다 — 슬림 바가 먹는 만큼', () => {
+    const c = new KairoCamera();
+    c.setScreenSize(393, 852);
+    const buf = c.bufferSize();
+    const h = buf.h - 10;
+    expect(c.fits({ w: 50, h })).toBe(true);
+    expect(c.fits({ w: 50, h }, 200)).toBe(false);
+  });
+});

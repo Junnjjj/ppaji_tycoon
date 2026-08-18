@@ -41,7 +41,8 @@ function rule(name) {
 }
 
 // ── 재질 ────────────────────────────────────────────────────────────────
-for (const cls of ['kbtn', 'kcap', 'kitem']) {
+// K33: 코스 프리셋 버튼도 같은 재질을 써야 한다 — 패널마다 재질이 갈리면 한 게임으로 안 보인다
+for (const cls of ['kbtn', 'kcap', 'kitem', 'kcourse-item']) {
   const body = rule(cls);
   if (!body) {
     check(false, `.${cls} 규칙이 있다`);
@@ -55,13 +56,21 @@ for (const cls of ['kbtn', 'kcap', 'kitem']) {
   check(/--sk-lift|--sk-press/.test(body), `.${cls} 에 그림자`);
 }
 
-for (const cls of ['kbtn', 'kitem']) {
+for (const cls of ['kbtn', 'kitem', 'kcourse-item']) {
   const body = rule(`${cls}:active`);
   check(body !== null && /--sk-press/.test(body), `.${cls}:active 가 눌린 상태를 만든다`);
 }
 
 check(rule('kbar') !== null && /--bar-bg/.test(rule('kbar')), '.kbar 가 토큰 배경을 쓴다');
 check(rule('ksheet') !== null && /animation/.test(rule('ksheet')), '.ksheet 에 등장 모션');
+/*
+ * K33: 코스 패널이 하단 바를 덮으면 안 된다. 예전엔 `bottom:0; z-index:20` 이라
+ * 바를 통째로 가렸다 — `.ksheet`·`.kconfirm` 과 같은 자리에 얹혔는지 본다.
+ */
+check(
+  rule('kcourse') !== null && /bottom:\s*calc\(56px \+ var\(--safe-b\)\)/.test(rule('kcourse')),
+  '.kcourse 가 하단 바 위에 얹힌다 (바를 안 덮는다)',
+);
 
 // ── 모션 ────────────────────────────────────────────────────────────────
 const transitions = [...hud.matchAll(/transition:\s*([^;]+);/g)].map((m) => m[1]);

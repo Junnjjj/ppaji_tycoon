@@ -149,6 +149,9 @@ export class KairoScene extends Phaser.Scene {
   private courseBad = new Set<number>();
   private courseDock: { x: number; y: number } | null = null;
   private courseGfx: Phaser.GameObjects.Graphics | null = null;
+  /** 선착장 후보 (K33) — 편집 중에만 채워진다 */
+  private dockTips: { x: number; y: number }[] = [];
+  private dockSelected = -1;
   /** 건물 영역의 첫 모서리 표시 — 두 번째 탭을 기다리는 동안 어디를 찍었는지 보여준다 */
   private anchorGfx: Phaser.GameObjects.Graphics | null = null;
   /** 해금된 토지 경계선 (K25) */
@@ -679,11 +682,31 @@ export class KairoScene extends Phaser.Scene {
   /** 핸들을 끌 때마다 부른다 — 지표를 실시간으로 갱신하라는 신호 */
   onCourseHandleMove?: (index: number, i: number, j: number) => void;
 
+  /**
+   * 선착장 후보를 지도에 표시한다 (K33). 편집을 닫을 땐 빈 배열로 끈다.
+   *
+   * 예전엔 코드가 찾은 **첫 번째** 데크로 고정이라 플레이어가 못 골랐다. 카이로답게
+   * 목록이 아니라 **화면에서 직접** 고르게 한다 — 그래서 후보가 지도에 보여야 한다.
+   */
+  setDockChoices(tips: readonly { x: number; y: number }[], selected: number): void {
+    this.dockTips = tips.map((t) => ({ ...t }));
+    this.dockSelected = selected;
+    this.drawCourseOverlay();
+  }
+
+  /** 선착장 후보를 탭했을 때 */
+  onCourseDockPick?: (index: number) => void;
+
+  /** 지금 표시 중인 선착장 후보 — 검증용 */
+  get dockMarks(): { x: number; y: number }[] {
+    return this.dockTips.map((t) => ({ ...t }));
+  }
+
   private drawCourseOverlay(): void {
     if (!this.courseGfx) return;
     const g = this.courseGfx;
     g.clear();
-    if (this.courseHandles.length === 0) {
+    if (this.courseHandles.length === 0 && this.dockTips.length === 0) {
       g.setVisible(false);
       return;
     }
@@ -705,6 +728,25 @@ export class KairoScene extends Phaser.Scene {
       g.lineTo((path[0] as { x: number }).x, (path[0] as { y: number }).y);
       g.strokePath();
     }
+    /*
+     * 선착장 후보 — 핸들보다 **먼저** 그린다. 겹치면 핸들이 위에 와야 한다
+     * (끌던 것을 계속 끌 수 있어야 하고, 탭 판정도 핸들이 우선이다).
+     */
+    for (let k = 0; k < this.dockTips.length; k++) {
+      const c = pt(this.dockTips[k] as { x: number; y: number });
+      const on = k === this.dockSelected;
+      const rr = (on ? 16 : 13) / this.cam.upscale;
+      g.fillStyle(0xffe08a, on ? 0.9 : 0.35);
+      g.fillCircle(c.x, c.y, rr);
+      g.lineStyle(2, 0xffe08a, on ? 1 : 0.6);
+      g.strokeCircle(c.x, c.y, rr);
+      // 안쪽 점 — 선택된 것만. 색만 다르면 작은 화면에서 구분이 안 된다
+      if (on) {
+        g.fillStyle(0x12212c, 0.9);
+        g.fillCircle(c.x, c.y, rr * 0.42);
+      }
+    }
+
     // 핸들 — 화면 36px 을 씬 좌표로
     const r = 18 / this.cam.upscale;
     for (let k = 0; k < this.courseHandles.length; k++) {
@@ -726,6 +768,24 @@ export class KairoScene extends Phaser.Scene {
     for (let k = 0; k < this.courseHandles.length; k++) {
       const h = this.courseHandles[k] as { x: number; y: number };
       const c = tileCenter(Math.round(h.x), Math.round(h.y));
+      const d = Math.hypot(c.x - view.scrollX - px, c.y - view.scrollY - py);
+      if (d < bestD) {
+        bestD = d;
+        best = k;
+      }
+    }
+    return best;
+  }
+
+  /** 화면 좌표에서 가장 가까운 선착장 후보 — 없으면 −1 */
+  private dockAtPointer(px: number, py: number): number {
+    const grab = 22 / this.cam.upscale;
+    const view = this.cam.view();
+    let best = -1;
+    let bestD = grab;
+    for (let k = 0; k < this.dockTips.length; k++) {
+      const t = this.dockTips[k] as { x: number; y: number };
+      const c = tileCenter(Math.round(t.x), Math.round(t.y));
       const d = Math.hypot(c.x - view.scrollX - px, c.y - view.scrollY - py);
       if (d < bestD) {
         bestD = d;
@@ -787,6 +847,16 @@ export class KairoScene extends Phaser.Scene {
       this.syncCamera();
 
       if (this.dragMoved >= 12) return; // 드래그였다
+      /*
+       * 선착장 후보를 탭했나 — **더블탭 확대보다 먼저** 본다. 뒤에 두면 후보를 두 번
+       * 눌렀을 때 선택이 아니라 확대가 걸린다.
+       */
+      const dockHit = this.dockAtPointer(p.x, p.y);
+      if (dockHit >= 0) {
+        this.lastTapAt = 0;
+        this.onCourseDockPick?.(dockHit);
+        return;
+      }
       const now = this.time.now;
       const world = this.cameras.main.getWorldPoint(p.x, p.y);
       if (now - this.lastTapAt < 320) {
@@ -1056,17 +1126,55 @@ export class KairoScene extends Phaser.Scene {
     this.focusTile(Math.floor(GRID_W / 2), Math.floor(GRID_H / 2));
   }
 
-  /** 테스트·도구용 — 카메라를 직접 놓는다 */
-  focusTile(i: number, j: number): void {
-    const c = tileCenter(i, j);
-    const buf = this.cam.bufferSize();
-    this.cam.pan(0, 0);
-    // center 를 직접 옮길 수단이 없으므로 스크롤 차이만큼 팬한다
-    const view = this.cam.view();
-    const wantX = c.x - buf.w / 2;
-    const wantY = c.y - buf.h / 2;
-    this.cam.pan((view.scrollX - wantX) * this.cam.upscale, (view.scrollY - wantY) * this.cam.upscale);
-    this.cam.release();
+  /**
+   * 이 칸을 화면 중앙에 놓는다.
+   *
+   * 예전엔 중심을 옮길 수단이 없어 **스크롤 차이만큼 팬**했다. 팬은 고무줄(`clampSoft`)을
+   * 타므로 가장자리 근처에서 목표를 못 맞춘다. `centerOn` 이 생겨서(K33) 그냥 옮긴다.
+   *
+   * `bottomInsetCss` 는 화면 아래가 UI 에 가려진 만큼 — 그 위쪽 중앙에 놓는다.
+   */
+  focusTile(i: number, j: number, bottomInsetCss = 0): void {
+    this.cam.centerOn(tileCenter(i, j), bottomInsetCss);
+    this.syncCamera();
+  }
+
+  /**
+   * 코스 전체(선착장 + 핸들)를 **보이는 영역 안에** 잡는다 (K33).
+   *
+   * ## 왜 필요했나 (실측)
+   *
+   * 코스 탭을 열면 핸들의 화면 좌표가 **x = −284, −380** 이었다. 패널은 "핸들은 화면에서
+   * 직접 끈다"고 적어 뒀는데 끌 게 화면에 없었다. 기존 브라우저 검사가 이걸 못 잡은 이유는
+   * `moveHandleForTest` 로 **좌표를 직접 넣어서** — 화면을 아무도 안 봤다.
+   *
+   * 경계상자가 안 들어가면 배율을 1로 내린다. 허용 배율이 `[1, 2]` 뿐이라 한 단이 전부다.
+   */
+  frameCourse(
+    dock: { x: number; y: number } | null,
+    handles: readonly { x: number; y: number }[],
+    bottomInsetCss = 0,
+  ): void {
+    const pts = (dock ? [dock] : []).concat(handles).map((p) => tileCenter(Math.round(p.x), Math.round(p.y)));
+    if (pts.length === 0) return;
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (const p of pts) {
+      if (p.x < minX) minX = p.x;
+      if (p.x > maxX) maxX = p.x;
+      if (p.y < minY) minY = p.y;
+      if (p.y > maxY) maxY = p.y;
+    }
+    // 타일 한 칸 + 핸들 반지름만큼 여유 — 끝 핸들이 화면 끝에 딱 붙으면 못 잡는다
+    const pad = TILE_W;
+    const box = { w: maxX - minX + pad * 2, h: maxY - minY + pad * 2 };
+    if (this.cam.upscale !== 1 && !this.cam.fits(box, bottomInsetCss)) {
+      this.cam.setUpscale(1);
+      this.applyScale(1);
+    }
+    this.cam.centerOn({ x: (minX + maxX) / 2, y: (minY + maxY) / 2 }, bottomInsetCss);
     this.syncCamera();
   }
 }

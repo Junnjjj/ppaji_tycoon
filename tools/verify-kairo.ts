@@ -2136,9 +2136,14 @@ async function main(): Promise<void> {
     if (!open) return { ok: false, why: '코스 버튼이 없다' };
     open.click();
     const panel = document.getElementById('kairo-course');
-    if (!panel || getComputedStyle(panel).display === 'none') {
-      return { ok: false, why: '코스 패널이 안 열린다' };
-    }
+    if (!panel || panel.hidden) return { ok: false, why: '코스 패널이 안 열린다' };
+    /*
+     * K33: 패널은 **슬림 바가 기본**이다. 프리셋은 펼쳐야 나온다 — 예전엔 열자마자
+     * 화면의 49% 를 먹었고, 그래서 정작 끌 핸들이 화면 밖으로 밀렸다.
+     */
+    const collapsedH = Math.round(panel.getBoundingClientRect().height);
+    document.getElementById('kairo-course-toggle').click();
+    const expandedH = Math.round(panel.getBoundingClientRect().height);
     const tabs = [...panel.querySelectorAll('button[data-preset]')];
     const heights = tabs.map((b) => Math.round(b.getBoundingClientRect().height));
     const badges = tabs.map((b) => b.dataset.fit);
@@ -2147,7 +2152,8 @@ async function main(): Promise<void> {
       minTab: heights.length ? Math.min.apply(null, heights) : 0,
       badges: badges,
       distinct: [...new Set(badges)].length,
-      overflow: panel.scrollWidth > panel.clientWidth
+      overflow: panel.scrollWidth > panel.clientWidth,
+      collapsedH: collapsedH, expandedH: expandedH, vh: window.innerHeight
     };
   })()`)) as {
     ok: boolean;
@@ -2157,6 +2163,9 @@ async function main(): Promise<void> {
     badges?: string[];
     distinct?: number;
     overflow?: boolean;
+    collapsedH?: number;
+    expandedH?: number;
+    vh?: number;
   };
 
   record(
@@ -2168,6 +2177,21 @@ async function main(): Promise<void> {
     '프리셋 탭이 44px 이상 — 폰 터치 타깃',
     (courseUi.minTab ?? 0) >= 44 ? 'pass' : 'fail',
     `최소 ${courseUi.minTab ?? 0}px`,
+  );
+  /*
+   * K33: 접힘이 기본이다. 예전 패널은 열자마자 화면의 **49%** 를 먹어서 핸들을 끌 자리가
+   * 안 남았다. 접힘 ≤14% 는 HUD 에 쓰는 것과 같은 자다.
+   */
+  record(
+    '★ 코스 패널은 접힘이 기본 — 화면의 14% 이하 (예전 49%)',
+    (courseUi.collapsedH ?? 999) / (courseUi.vh ?? 1) <= 0.14 ? 'pass' : 'fail',
+    `접힘 ${Math.round(((courseUi.collapsedH ?? 0) / (courseUi.vh ?? 1)) * 100)}% · ` +
+      `펼침 ${Math.round(((courseUi.expandedH ?? 0) / (courseUi.vh ?? 1)) * 100)}%`,
+  );
+  record(
+    '⚠ 음성 대조군 — 펼치면 실제로 커진다 (접힘이 그냥 빈 바가 아닌가)',
+    (courseUi.expandedH ?? 0) > (courseUi.collapsedH ?? 0) + 100 ? 'pass' : 'fail',
+    `${courseUi.collapsedH ?? 0}px → ${courseUi.expandedH ?? 0}px`,
   );
   record(
     '적합도 배지가 형태마다 다르다 — 19×6 표를 읽히지 않는다는 것이 요지다',
@@ -2246,6 +2270,229 @@ async function main(): Promise<void> {
   );
 
   await page.screenshot({ path: `${SHOT_DIR}/kairo-course.png` });
+  await page.evaluate(`document.getElementById('kairo-course-close').click()`);
+
+  /*
+   * ── 8b·코스를 **화면에서** 만질 수 있나 (K33) ──
+   *
+   * ⚠ 위 절들은 `moveHandleForTest`/`confirmForTest` 로 **좌표를 직접 넣는다.** sim 은
+   * 맞는지 보지만 손가락이 닿는지는 안 본다. 그래서 "핸들이 화면 밖(x = −284)" 이
+   * 검사를 통과한 채 오래 남아 있었다. 여기서는 화면만 본다.
+   */
+  const courseFrame = (await page.evaluate(`(() => {
+    const h = window.__kairo, cv = document.querySelector('canvas');
+    // 편집을 새로 연다
+    document.getElementById('kairo-build-open').click();
+    document.querySelector('#kairo-sheet [data-tab="course"]').click();
+    const panel = document.getElementById('kairo-course');
+    if (!panel || panel.hidden) return { ok: false, why: '코스 패널이 안 열린다' };
+    const st = h.coursePanel.state;
+    if (st.handles.length === 0) return { ok: false, why: '핸들이 없다 — 선착장을 못 찾았다' };
+
+    const cr = cv.getBoundingClientRect();
+    const sx = cr.width / cv.width, sy = cr.height / cv.height;
+    const pos = st.handles.map((v) => {
+      const r = h.scene.tileScreenRect(Math.round(v.x), Math.round(v.y));
+      return { x: Math.round(cr.left + (r.x + 16) * sx), y: Math.round(cr.top + (r.y + 8) * sy) };
+    });
+    const barTop = Math.round(panel.getBoundingClientRect().top);
+    return {
+      ok: true, pos: pos, barTop: barTop,
+      vw: window.innerWidth, vh: window.innerHeight,
+      dockCount: h.courseApi.dockCandidates(
+        h.placement.all().filter((f) => f.defId === 'float_deck').map((f) => ({ x: f.i, y: f.j })),
+        h.gate
+      ).length,
+      dock: st.dock
+    };
+  })()`)) as
+    | { ok: false; why: string }
+    | {
+        ok: true;
+        pos: { x: number; y: number }[];
+        barTop: number;
+        vw: number;
+        vh: number;
+        dockCount: number;
+        dock: { x: number; y: number } | null;
+      };
+
+  if (!courseFrame.ok) {
+    record('★ 코스를 열면 핸들이 화면 안에 있다 (K33)', 'fail', courseFrame.why);
+  } else {
+    const inView = courseFrame.pos.every(
+      (p) => p.x > 0 && p.x < courseFrame.vw && p.y > 0 && p.y < courseFrame.barTop,
+    );
+    record(
+      '★ 코스를 열면 핸들이 **화면 안**, 슬림 바 위에 있다 (K33)',
+      inView ? 'pass' : 'fail',
+      `핸들 ${courseFrame.pos.map((p) => `(${p.x},${p.y})`).join(' ')} · ` +
+        `화면 ${courseFrame.vw}×${courseFrame.vh} · 바 상단 ${courseFrame.barTop}`,
+    );
+  }
+
+  /*
+   * ⚠ 음성 대조군 — 프레이밍을 안 하면 화면 밖이다.
+   *
+   * 실측 대조군이 이미 있다: K33 이전에 이 값이 **x = −284, −380** 이었다. 여기서는
+   * 카메라를 딴 데로 보낸 뒤 다시 재서, "원래 화면 안이던 것"이 아님을 보인다.
+   */
+  const frameControl = (await page.evaluate(`(() => {
+    const h = window.__kairo, cv = document.querySelector('canvas');
+    const cr = cv.getBoundingClientRect();
+    const sx = cr.width / cv.width, sy = cr.height / cv.height;
+    const at = () => h.coursePanel.state.handles.map((v) => {
+      const r = h.scene.tileScreenRect(Math.round(v.x), Math.round(v.y));
+      return Math.round(cr.left + (r.x + 16) * sx);
+    });
+    h.scene.focusTile(60, 2);            // 코스에서 멀리 — 프레이밍 없는 상태를 흉내낸다
+    const away = at();
+    h.scene.frameCourse(h.coursePanel.state.dock, h.coursePanel.state.handles, 160);
+    const framed = at();
+    return { away: away, framed: framed, vw: window.innerWidth };
+  })()`)) as { away: number[]; framed: number[]; vw: number };
+  record(
+    '⚠ 음성 대조군 — 프레이밍이 없으면 화면 밖이다 (검사가 유의미한가)',
+    frameControl.away.some((x) => x < 0 || x > frameControl.vw) &&
+      frameControl.framed.every((x) => x > 0 && x < frameControl.vw)
+      ? 'pass'
+      : 'fail',
+    `프레이밍 전 ${frameControl.away.join(',')} → 후 ${frameControl.framed.join(',')}`,
+  );
+
+  /*
+   * ★ **진짜 손가락으로 핸들을 끈다.**
+   *
+   * `moveHandleForTest` 를 안 쓴다. 화면 좌표로 touchStart → touchMove → touchEnd 를
+   * 보내고, 핸들의 격자 좌표가 실제로 바뀌는지 본다. 이 검사가 있어야 "화면 밖" 같은
+   * 문제가 다시 조용히 통과하지 않는다.
+   */
+  const before0 = (await page.evaluate(
+    `JSON.stringify(window.__kairo.coursePanel.state.handles)`,
+  )) as string;
+  const grab = (await page.evaluate(`(() => {
+    const h = window.__kairo, cv = document.querySelector('canvas');
+    const cr = cv.getBoundingClientRect();
+    const sx = cr.width / cv.width, sy = cr.height / cv.height;
+    const v = h.coursePanel.state.handles[0];
+    const r = h.scene.tileScreenRect(Math.round(v.x), Math.round(v.y));
+    return { x: Math.round(cr.left + (r.x + 16) * sx), y: Math.round(cr.top + (r.y + 8) * sy) };
+  })()`)) as { x: number; y: number };
+  await touch('touchStart', grab.x, grab.y);
+  for (let k = 1; k <= 6; k++) await touch('touchMove', grab.x + k * 6, grab.y + k * 4);
+  await touch('touchEnd', 0, 0);
+  await page.waitForTimeout(250);
+  const after0 = (await page.evaluate(
+    `JSON.stringify(window.__kairo.coursePanel.state.handles)`,
+  )) as string;
+  record(
+    '★ 진짜 손가락으로 핸들을 끈다 — 백도어가 아니라 화면으로 (K33)',
+    before0 !== after0 ? 'pass' : 'fail',
+    `${before0} → ${after0}`,
+  );
+
+  /*
+   * 선착장을 지도에서 탭해 고른다.
+   *
+   * 새 판의 잔교는 하나다 — 후보를 하나 더 만들어야 "고른다"가 성립한다.
+   */
+  const dockPick = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain;
+    // 물가에서 떨어진 곳에 잔교를 하나 더 낸다 (첫 잔교와 안 붙게)
+    let made = 0, tip = null;
+    for (let i = 10; i < 40 && made === 0; i++) {
+      for (let j = 1; j < 40; j++) {
+        if (!t.isWalkable(i, j) || t.isWater(i, j)) continue;
+        if (!t.isWater(i, j + 1) || !t.isWater(i, j + 2)) continue;
+        for (let k = 1; k <= 2; k++) {
+          if (h.placement.place(t, h.walls, h.gate, 'float_deck', i, j + k).ok) { made++; tip = [i, j + k]; }
+        }
+        if (made > 0) break;
+      }
+    }
+    if (made === 0) return { ok: false, why: '두 번째 잔교를 못 놓았다' };
+    h.guests.invalidate();
+    h.scene.rebuildFacilities();
+    // 패널을 다시 열어 후보를 갱신한다
+    h.coursePanel.hide();
+    h.coursePanel.show();
+    const cands = h.scene.dockMarks;
+    const before = h.coursePanel.state.dock;
+    return { ok: true, cands: cands, before: before, made: made, tip: tip };
+  })()`)) as
+    | { ok: false; why: string }
+    | { ok: true; cands: { x: number; y: number }[]; before: { x: number; y: number }; made: number };
+
+  if (!dockPick.ok) {
+    record('선착장을 지도에서 탭해 고른다 (K33)', 'fail', dockPick.why);
+  } else {
+    record(
+      '선착장 후보가 지도에 보인다 — 잔교 하나가 후보 하나 (K33)',
+      dockPick.cands.length >= 2 ? 'pass' : 'fail',
+      `후보 ${dockPick.cands.length}개 · ${dockPick.cands.map((c) => `(${c.x},${c.y})`).join(' ')}`,
+    );
+    // 고르지 않은 후보를 화면에서 탭한다
+    const other = (await page.evaluate(`(() => {
+      const h = window.__kairo, cv = document.querySelector('canvas');
+      const cr = cv.getBoundingClientRect();
+      const sx = cr.width / cv.width, sy = cr.height / cv.height;
+      const cur = h.coursePanel.state.dock;
+      const pick = h.scene.dockMarks.find((c) => c.x !== cur.x || c.y !== cur.y);
+      if (!pick) return null;
+      h.scene.focusTile(pick.x, pick.y, 160);
+      const r = h.scene.tileScreenRect(pick.x, pick.y);
+      return { x: Math.round(cr.left + (r.x + 16) * sx), y: Math.round(cr.top + (r.y + 8) * sy), tile: pick };
+    })()`)) as { x: number; y: number; tile: { x: number; y: number } } | null;
+    if (other === null) {
+      record('선착장을 탭하면 코스가 그쪽으로 옮겨진다 (K33)', 'fail', '다른 후보가 없다');
+    } else {
+      await page.touchscreen.tap(other.x, other.y);
+      await page.waitForTimeout(400);
+      const now = (await page.evaluate(
+        `JSON.stringify(window.__kairo.coursePanel.state.dock)`,
+      )) as string;
+      record(
+        '★ 선착장을 탭하면 코스가 그쪽으로 옮겨진다 (K33)',
+        now === JSON.stringify(other.tile) ? 'pass' : 'fail',
+        `${JSON.stringify(dockPick.before)} → ${now} (탭한 곳 ${JSON.stringify(other.tile)})`,
+      );
+    }
+  }
+
+  /* 확정도 **버튼을 눌러서** 된다 — `confirmForTest` 가 아니라 */
+  const byButton = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    // 물 위로 핸들을 옮겨 유효하게 만든다 (여기서는 확정 경로만 본다)
+    const t = h.terrain, st = h.coursePanel.state;
+    const water = [];
+    for (let j = 1; j < 46 && water.length < st.handles.length; j++) {
+      for (let i = 1; i < 62; i++) {
+        if (!t.isWater(i, j)) continue;
+        const d = Math.abs(i - st.dock.x) + Math.abs(j - st.dock.y);
+        if (d < 3 || d > 12) continue;
+        water.push({ i: i, j: j });
+        break;
+      }
+    }
+    for (let k = 0; k < water.length; k++) h.coursePanel.moveHandleForTest(k, water[k].i, water[k].j);
+    const btn = document.getElementById('kairo-course-confirm');
+    return { before: h.courses.count, cash: h.week.cash, disabled: btn.disabled };
+  })()`)) as { before: number; cash: number; disabled: boolean };
+  if (!byButton.disabled) await page.click('#kairo-course-confirm');
+  await page.waitForTimeout(300);
+  const afterBtn = (await page.evaluate(
+    `(() => { const h = window.__kairo; return { count: h.courses.count, cash: h.week.cash }; })()`,
+  )) as { count: number; cash: number };
+  record(
+    '★ 확정 버튼을 눌러 코스가 생긴다 — 백도어가 아니라 (K33)',
+    !byButton.disabled && afterBtn.count > byButton.before && afterBtn.cash < byButton.cash
+      ? 'pass'
+      : 'fail',
+    `코스 ${byButton.before} → ${afterBtn.count} · ` +
+      `현금 ${Math.round(byButton.cash / 10000)}만 → ${Math.round(afterBtn.cash / 10000)}만` +
+      (byButton.disabled ? ' · ⚠ 확정 버튼이 잠겨 있었다' : ''),
+  );
+
   await page.evaluate(`document.getElementById('kairo-course-close').click()`);
 
   /*

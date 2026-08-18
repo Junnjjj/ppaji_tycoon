@@ -41,6 +41,14 @@
   --risk-caution: #c9762a;
   --risk-danger: #c23a2e;
 
+  /* 코스 적합도 4단계 (K33) — ◎ 최적 · ○ 적합 · △ 부적합 · ✕ 불가 */
+  --fit-best: #7fd0a8;
+  --fit-ok: #9dbdd2;
+  --fit-poor: #e0a05a;
+  --fit-no: #6b8296;
+  /* 코스 오버레이 강조 — 씬의 선착장 마커(0xffe08a)와 같은 색이어야 짝이 보인다 */
+  --course-mark: #ffe08a;
+
   /* 모션 — animation-systems 기본값 (마이크로 120~200, 상태 변화 180~260) */
   --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
   --dur-micro: 160ms;
@@ -983,4 +991,283 @@ body {
 .kconfirm .place-btn:disabled {
   opacity: 0.45;
   cursor: default;
+}
+
+/* ── 코스 편집 (K33) ─────────────────────────────────────────────────────
+ *
+ * 예전 패널은 인라인 스타일 22곳 · 하드코딩 색 35개였고 `bottom:0; z-index:20` 이라
+ * **하단 바를 통째로 덮었다.** 게다가 화면의 49% 를 먹어서, "핸들은 화면에서 직접
+ * 끈다"고 적어 놓고 끌 자리를 안 남겼다.
+ *
+ * 그래서 K32-A 의 배치 확정 바(`.kconfirm`)와 **같은 꼴**로 간다 — 하단 바 위에 얹힌
+ * 슬림한 줄. 세이프에어리어는 `.kbar` 가 이미 흡수했으므로 여기서 또 안 잰다.
+ * 접힘이 기본이고 ▲ 를 눌러야 펼쳐진다.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+.kcourse {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(56px + var(--safe-b));
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  background: var(--sheet-bg);
+  border-top: 1px solid var(--panel-border);
+  box-shadow: 0 -6px 18px rgb(0 0 0 / 34%);
+  color: var(--text);
+  font: 13px/1.4 system-ui, sans-serif;
+  animation: ksheet-in var(--dur-ui) var(--ease);
+}
+
+.kcourse[hidden] {
+  display: none;
+}
+
+/* 슬림 바 — 접힘 상태의 전부. 한 줄 요약 + 지표 + 펼침 + 취소/확정 */
+.kcourse-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+}
+
+.kcourse-sum {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  overflow: hidden;
+}
+
+.kcourse-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: var(--sk-emboss);
+}
+
+/* 지표 — 접힌 채로도 스릴·안전·주매출이 보여야 판단이 된다 */
+.kcourse-chips {
+  font-size: 10.5px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kcourse-chips .warn {
+  color: var(--warn);
+}
+
+.kcourse-chips .bad {
+  color: var(--bad);
+}
+
+/* 못 만드는 이유 — 있을 때만 자리를 차지한다 */
+.kcourse-why {
+  font-size: 10.5px;
+  color: var(--accent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kcourse-why:empty {
+  display: none;
+}
+
+.kcourse-acts {
+  display: flex;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+/* 펼침 — 본문만 스크롤한다 (.ksheet-body 와 같은 flex 규칙) */
+.kcourse-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 8px 10px;
+  max-height: min(46vh, 340px);
+  overflow-y: auto;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.kcourse-body[hidden] {
+  display: none;
+}
+
+.kcourse-presets {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+/* 프리셋 버튼 — .kitem 과 같은 재질. 정적 검사가 이 이름을 본다 */
+.kcourse-item {
+  flex: 0 0 auto;
+  min-width: 88px;
+  min-height: var(--tap);
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background:
+    var(--panel) padding-box,
+    linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
+  box-shadow: var(--sk-lift), var(--sk-inset);
+  color: var(--text);
+  text-shadow: var(--sk-emboss);
+  transition:
+    transform var(--dur-micro) var(--ease),
+    box-shadow var(--dur-micro) var(--ease);
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.kcourse-item:active {
+  transform: translateY(1px);
+  box-shadow: var(--sk-press);
+}
+
+.kcourse-item.on {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.kcourse-item[disabled] {
+  background: var(--panel-sunk) padding-box, transparent border-box;
+  border-color: transparent;
+  box-shadow: var(--sk-press);
+  color: var(--text-mute);
+  text-shadow: none;
+  cursor: default;
+}
+
+.kcourse-item-name {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.kcourse-badge {
+  font-size: 11px;
+}
+
+.kcourse-badge.best {
+  color: var(--fit-best);
+}
+
+.kcourse-badge.ok {
+  color: var(--fit-ok);
+}
+
+.kcourse-badge.poor {
+  color: var(--fit-poor);
+}
+
+.kcourse-badge.no {
+  color: var(--fit-no);
+}
+
+.kcourse-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kcourse-equip {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--tap);
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background:
+    var(--panel) padding-box,
+    linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
+  box-shadow: var(--sk-inset);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.kcourse-veh {
+  min-width: 68px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.kcourse-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.kcourse-metric {
+  background: var(--panel-sunk);
+  border-radius: 8px;
+  padding: 4px 6px;
+  box-shadow: var(--sk-press);
+}
+
+.kcourse-metric-label {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.kcourse-metric-value {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.kcourse-metric-value.good {
+  color: var(--good);
+}
+
+.kcourse-metric-value.warn {
+  color: var(--warn);
+}
+
+.kcourse-metric-value.bad {
+  color: var(--bad);
+}
+
+.kcourse-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kcourse-listrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--panel-sunk);
+  border-radius: 8px;
+  padding: 4px 4px 4px 8px;
+  font-size: 12px;
+}
+
+.kcourse-listrow > span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 선착장 안내 — 지도에서 고른다는 걸 말로도 한 번 한다 */
+.kcourse-hint {
+  font-size: 11px;
+  color: var(--text-dim);
 }

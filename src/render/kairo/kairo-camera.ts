@@ -96,6 +96,35 @@ export class KairoCamera {
     this.clampSoft();
   }
 
+  /**
+   * 이 텍셀을 **화면 중앙에 놓는다** (K33).
+   *
+   * ## 왜 있어야 했나
+   *
+   * 중심을 직접 옮길 수단이 없어서 `KairoScene.focusTile` 은 "가고 싶은 스크롤과 지금
+   * 스크롤의 차이만큼 팬한다"로 우회했다. 팬은 `clampSoft`(고무줄)를 타므로 가장자리
+   * 근처에서 목표를 못 맞추고, 배율이 섞이면 왕복이 필요했다. 중심을 그냥 쓰면 된다.
+   *
+   * ## `bottomInsetCss`
+   *
+   * 화면 아래 `bottomInsetCss` 픽셀이 UI 에 가려져 있다고 치고, **보이는 영역의**
+   * 중앙에 오게 올린다. 코스 편집에서 핸들이 슬림 바 밑으로 숨는 것을 막는다.
+   */
+  centerOn(t: Vec2, bottomInsetCss = 0): void {
+    this.center.x = t.x;
+    // 보이는 영역의 중앙 = 버퍼 중앙보다 inset 의 절반만큼 위 → 중심은 그만큼 아래로
+    this.center.y = t.y + bottomInsetCss / this.scale / 2;
+    this.clampHard();
+  }
+
+  /**
+   * 경계상자가 **보이는 영역 안에 들어가나** (K33). 안 들어가면 부르는 쪽이 배율을 낮춘다.
+   * 허용 배율이 `[1, 2]` 뿐이라 한 단이 전부다.
+   */
+  fits(box: { w: number; h: number }, bottomInsetCss = 0): boolean {
+    return box.w <= this.viewW && box.h <= this.viewH - bottomInsetCss / this.scale;
+  }
+
   /** 손을 뗐을 때 — 경계 밖이면 안으로 되돌린다 */
   release(): void {
     this.clampHard();

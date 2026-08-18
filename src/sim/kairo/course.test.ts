@@ -14,6 +14,7 @@ import {
   validateCourseData,
   CourseStore,
   DOCK_REACH_TILES,
+  dockCandidates,
   type Vec2,
 } from './course.js';
 
@@ -347,5 +348,138 @@ describe('지표가 구분을 만든다 — 다 100 이면 지표가 아니다',
         .weeklyRiders;
     const all = PRESETS.map((p) => riders(p.id));
     expect(riders('shuttle')).toBe(Math.max(...all));
+  });
+});
+
+
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+ * K33 — 선착장 후보.
+ *
+ * **이 함수의 이유:** 코스 시작점이 "코드가 찾은 첫 데크"로 고정돼 있었고, 뻗는 방향은
+ * `{x:0, y:1}` 하드코딩이었다. 플레이어가 못 골랐고, 물이 +j 쪽이 아닌 맵에서는
+ * 코스가 육지로 뻗었다.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+describe('★ 선착장 후보 — 잔교 하나가 후보 하나다', () => {
+  const GATE = { x: 0, y: 0 };
+
+  it('3칸짜리 잔교 하나는 후보 **하나**다', () => {
+    const c = dockCandidates(
+      [
+        { x: 2, y: 18 },
+        { x: 2, y: 19 },
+        { x: 2, y: 20 },
+      ],
+      GATE,
+    );
+    expect(c).toHaveLength(1);
+    expect(c[0]!.tiles).toBe(3);
+  });
+
+  it('⚠ 음성 대조군 — 안 묶으면 후보가 셋이 된다 (묶는 것이 이 함수의 일인가)', () => {
+    /*
+     * 데크는 칸 단위 시설이라 목록에는 3개가 들어온다. 묶기를 안 하면 그대로 3개가
+     * 나오고, 고르는 화면에 같은 잔교가 세 번 뜬다 — 고르는 의미가 사라진다.
+     */
+    const raw = [
+      { x: 2, y: 18 },
+      { x: 2, y: 19 },
+      { x: 2, y: 20 },
+    ];
+    expect(raw).toHaveLength(3);
+    expect(dockCandidates(raw, GATE)).toHaveLength(1);
+  });
+
+  it('떨어진 잔교 둘은 후보 둘이다', () => {
+    const c = dockCandidates(
+      [
+        { x: 2, y: 18 },
+        { x: 2, y: 19 },
+        { x: 9, y: 18 },
+        { x: 9, y: 19 },
+      ],
+      GATE,
+    );
+    expect(c).toHaveLength(2);
+    expect(c.map((x) => x.tiles)).toEqual([2, 2]);
+  });
+
+  it('tip 은 게이트에서 가장 먼 칸 — 코스는 잔교 끝에서 시작한다', () => {
+    const c = dockCandidates(
+      [
+        { x: 2, y: 18 },
+        { x: 2, y: 19 },
+        { x: 2, y: 20 },
+      ],
+      GATE,
+    );
+    expect(c[0]!.tip).toEqual({ x: 2, y: 20 });
+  });
+
+  it('dir 은 뭍 → 끝 방향이다 — 잔교가 뻗은 쪽이 곧 물이다', () => {
+    const down = dockCandidates(
+      [
+        { x: 2, y: 18 },
+        { x: 2, y: 19 },
+        { x: 2, y: 20 },
+      ],
+      GATE,
+    );
+    expect(down[0]!.dir).toEqual({ x: 0, y: 2 });
+
+    // ★ 가로로 뻗은 잔교 — 예전 하드코딩 {x:0,y:1} 이면 코스가 육지로 뻗던 경우다
+    const side = dockCandidates(
+      [
+        { x: 18, y: 3 },
+        { x: 19, y: 3 },
+        { x: 20, y: 3 },
+      ],
+      GATE,
+    );
+    expect(side[0]!.dir).toEqual({ x: 2, y: 0 });
+  });
+
+  it('한 칸짜리 잔교는 게이트 반대쪽으로 나간다 — 방향을 알 수 없으니', () => {
+    const c = dockCandidates([{ x: 4, y: 9 }], GATE);
+    expect(c[0]!.dir).toEqual({ x: 4, y: 9 });
+  });
+
+  it('게이트에서 가까운 잔교가 먼저 온다 — 기본 선택이 곧 첫 번째다', () => {
+    const c = dockCandidates([{ x: 30, y: 30 }, { x: 3, y: 4 }], GATE);
+    expect(c[0]!.tip).toEqual({ x: 3, y: 4 });
+  });
+
+  it('빈 목록은 후보 없음 — 선착장이 없으면 코스도 없다', () => {
+    expect(dockCandidates([], GATE)).toEqual([]);
+  });
+
+  it('결정론 — 같은 입력은 같은 출력, 좌표가 중복돼도', () => {
+    const decks = [
+      { x: 2, y: 19 },
+      { x: 2, y: 18 },
+      { x: 2, y: 19 },
+      { x: 2, y: 20 },
+    ];
+    expect(dockCandidates(decks, GATE)).toEqual(dockCandidates(decks, GATE));
+    expect(dockCandidates(decks, GATE)).toHaveLength(1);
+  });
+
+  it('defaultHandles 가 이 dir 을 그대로 쓴다 — 가로 잔교면 코스도 가로다', () => {
+    const c = dockCandidates(
+      [
+        { x: 18, y: 3 },
+        { x: 19, y: 3 },
+        { x: 20, y: 3 },
+      ],
+      GATE,
+    )[0]!;
+    const shuttle = PRESETS.find((p) => p.shape === 'out-and-back')!;
+    const hs = defaultHandles(shuttle, c.tip, c.dir, 8);
+    // 전부 +x 쪽으로 나가고 y 는 안 변한다
+    for (const h of hs) {
+      expect(h.x).toBeGreaterThan(c.tip.x);
+      expect(Math.round(h.y)).toBe(c.tip.y);
+    }
   });
 });

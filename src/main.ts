@@ -808,13 +808,24 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     terrain: h.terrain,
     scene: h.scene,
     courses,
-    dock: () => {
-      const pier = h.placement.all().find((it) => {
-        const def = allFacilityDefs().find((d) => d.id === it.defId);
-        return def?.layer === 'water' || def?.walkOn === true;
-      });
-      return pier ? { x: pier.i, y: pier.j } : { x: GATE.i, y: GATE.j + 8 };
-    },
+    /*
+     * 선착장 후보 — **잔교 하나가 후보 하나다** (K33, `dockCandidates`).
+     *
+     * 예전엔 여기서 "물 위/밟고 지나가는 첫 시설"을 하나 집어 줬다. 플레이어가 못 골랐고,
+     * 코스가 뻗는 방향도 패널이 `{x:0,y:1}` 로 박아 뒀다. 이제 데크 칸들을 넘겨 주면
+     * sim 이 잔교로 묶고 끝·방향까지 낸다.
+     */
+    docks: () =>
+      course.dockCandidates(
+        h.placement
+          .all()
+          .filter((it) => {
+            const def = allFacilityDefs().find((d) => d.id === it.defId);
+            return def?.layer === 'water' || def?.walkOn === true;
+          })
+          .map((it) => ({ x: it.i, y: it.j })),
+        { x: GATE.i, y: GATE.j },
+      ),
     grade: () => currentGrade().grade,
     cash: () => week.cash,
     spend: (n) => week.spend(n),

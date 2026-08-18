@@ -99,6 +99,98 @@ export function fitBlocked(equipId: string, presetId: string): boolean {
 }
 
 /**
+ * 선착장 후보 — **잔교 하나가 후보 하나다** (K33).
+ *
+ * ## 왜 필요했나 (실측)
+ *
+ * 지금까지 코스의 시작점은 `main.ts` 가 "물 위/밟고 지나가는 **첫 시설**"을 집어서 줬다.
+ * 플레이어가 고를 수 없었고, 뻗는 방향은 `{x:0, y:1}` 로 **하드코딩**돼 있었다 —
+ * 물이 +j 쪽이 아닌 맵에서는 코스가 육지로 뻗는다.
+ *
+ * ## 왜 묶나
+ *
+ * 데크는 **칸 단위 시설**이다. 3칸짜리 잔교 하나가 후보 3개로 나오면 고르는 의미가 없다.
+ * 4-이웃으로 묶어 잔교 하나를 후보 하나로 만든다.
+ *
+ * ## `tip` 과 `dir`
+ *
+ * `tip` 은 **게이트에서 가장 먼 칸** — 잔교 끝이고, 코스는 거기서 시작한다.
+ * `dir` 은 뭍쪽 끝(게이트에서 가장 가까운 칸)에서 `tip` 으로 향하는 방향이다.
+ * 잔교가 뻗은 쪽이 곧 물이므로, 이게 `defaultHandles` 의 하드코딩을 대신한다.
+ * 한 칸짜리 잔교는 방향을 알 수 없어 게이트 반대쪽을 쓴다.
+ *
+ * 순수 함수다 — 격자도 지형도 안 본다. 데크 좌표 목록과 게이트만 받는다.
+ */
+export interface DockChoice {
+  /** 잔교 끝 — 코스 시작점 */
+  tip: Vec2;
+  /** 뭍 → 끝 방향 (정규화 안 함. `defaultHandles` 가 정규화한다) */
+  dir: Vec2;
+  /** 이 잔교의 칸 수 — UI 가 "3칸" 처럼 보여준다 */
+  tiles: number;
+}
+
+export function dockCandidates(decks: readonly Vec2[], gate: Vec2): DockChoice[] {
+  if (decks.length === 0) return [];
+
+  const key = (v: Vec2): string => `${v.x},${v.y}`;
+  const pool = new Map<string, Vec2>();
+  for (const d of decks) pool.set(key(d), { x: d.x, y: d.y });
+
+  const d2 = (v: Vec2): number => (v.x - gate.x) ** 2 + (v.y - gate.y) ** 2;
+
+  const out: DockChoice[] = [];
+  const seen = new Set<string>();
+  /*
+   * ⚠ 순회 순서를 `decks` 그대로 쓴다 — 입력이 결정론적이면 출력도 결정론적이다.
+   * `pool` 의 삽입 순서에 기대면 중복 좌표가 섞였을 때 갈린다.
+   */
+  for (const start of decks) {
+    if (seen.has(key(start))) continue;
+    const group: Vec2[] = [];
+    const stack: Vec2[] = [start];
+    seen.add(key(start));
+    while (stack.length > 0) {
+      const c = stack.pop() as Vec2;
+      group.push(c);
+      for (const [dx, dy] of [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ] as const) {
+        const n = { x: c.x + dx, y: c.y + dy };
+        const k = key(n);
+        if (!pool.has(k) || seen.has(k)) continue;
+        seen.add(k);
+        stack.push(n);
+      }
+    }
+
+    let tip = group[0] as Vec2;
+    let root = group[0] as Vec2;
+    for (const g of group) {
+      if (d2(g) > d2(tip)) tip = g;
+      if (d2(g) < d2(root)) root = g;
+    }
+    // 한 칸짜리면 뻗은 방향이 없다 — 게이트 반대쪽으로 나간다
+    const dir =
+      tip.x === root.x && tip.y === root.y
+        ? { x: tip.x - gate.x, y: tip.y - gate.y }
+        : { x: tip.x - root.x, y: tip.y - root.y };
+    out.push({
+      tip: { ...tip },
+      dir: dir.x === 0 && dir.y === 0 ? { x: 0, y: 1 } : dir,
+      tiles: group.length,
+    });
+  }
+
+  // 게이트에서 가까운 잔교 순 — 기본 선택이 곧 첫 번째다
+  out.sort((a, b) => d2(a.tip) - d2(b.tip) || a.tip.x - b.tip.x || a.tip.y - b.tip.y);
+  return out;
+}
+
+/**
  * 프리셋의 기본 핸들 배치. 선착장(`dock`)을 기준으로 물 쪽(`dir`)으로 펼친다.
  *
  * 여기서 나온 점은 **제안**이다 — 플레이어가 끌어 옮긴다. 그래서 유효하지 않은 자리에
