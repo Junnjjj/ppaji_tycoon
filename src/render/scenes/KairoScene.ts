@@ -13,6 +13,15 @@ import {
   footprintAnchor,
   STEP_X,
   STEP_Y,
+  spanDepthKey,
+  Z_GROUND,
+  Z_WALL_BACK,
+  Z_FACILITY,
+  Z_WALL_FRONT,
+  Z_GUEST,
+  Z_FACE,
+  Z_EMOTE,
+  Z_GHOST,
 } from '../kairo/iso.js';
 import { KairoCamera } from '../kairo/kairo-camera.js';
 import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
@@ -323,7 +332,7 @@ export class KairoScene extends Phaser.Scene {
         const c = tileCenter(i, j);
         const img = this.add.image(c.x, c.y + TILE_H / 2, this.groundTextureId(i, j));
         img.setOrigin(0.5, 1); // bottom-center — 계약 앵커
-        img.setDepth(depthKey(i, j));
+        img.setDepth(depthKey(i, j) + Z_GROUND);
         this.tileImages.push(img);
       }
     }
@@ -353,7 +362,7 @@ export class KairoScene extends Phaser.Scene {
     }
     const img = this.add.image(a.x, a.y, item.defId ? `facility/${item.defId}` : '');
     img.setOrigin(0.5, 1);
-    img.setDepth(depthKey(item.i + w - 1, item.j + d - 1) + 2);
+    img.setDepth(depthKey(item.i + w - 1, item.j + d - 1) + Z_FACILITY);
     this.facilityImages.set(handle, img);
   }
 
@@ -368,9 +377,30 @@ export class KairoScene extends Phaser.Scene {
     return this.guestViews.size;
   }
 
+  /**
+   * 검증 도구용 — 시뮬 tick 을 멈춘다/재개한다.
+   *
+   * 깊이 검사는 **같은 자리를 두 번 찍어 비교**한다 (K37). 그 사이에 손님이 걸어
+   * 들어오면 달라진 픽셀이 벽 때문인지 손님 때문인지 못 가른다.
+   */
+  setAutoTick(on: boolean): void {
+    this.opts.autoTick = on;
+  }
+
   /** 검증 도구용 — 시설 이미지를 직접 본다 (앵커 좌표를 수치로 확인) */
   facilityImageAt(handle: number): Phaser.GameObjects.Image | undefined {
     return this.facilityImages.get(handle);
+  }
+
+  /**
+   * 검증 도구용 — 경계 벽 이미지의 **깊이**. 없으면 `null`.
+   *
+   * 픽셀 검사만으로는 "덮였다"의 원인이 깊이인지 스프라이트인지 못 가른다. 수치를
+   * 같이 봐야 실패했을 때 어디를 볼지 알 수 있다 (K37).
+   */
+  wallDepthAt(i: number, j: number, dir: Dir): number | null {
+    const img = this.wallImages.get((j * GRID_W + i) * 4 + dir);
+    return img ? img.depth : null;
   }
 
   /** 시설 하나가 놓이거나 지워졌을 때 */
@@ -429,12 +459,16 @@ export class KairoScene extends Phaser.Scene {
     const img = this.add.image(c.x, c.y + TILE_H / 2, id);
     img.setOrigin(0.5, 1);
     /*
-     * 깊이 — 뒤쪽 경계(−I·−J)는 그 칸의 지면보다 앞, 시설보다 뒤에 둔다. 앞쪽
-     * 경계(+I·+J)는 **다음 칸의 지면보다도 앞**이어야 밑동이 안 잘린다. depthKey
-     * 사이 여유(4096)를 쓴다.
+     * 깊이는 **띠 상수**로만 준다 (`iso.ts` 의 `Z_*`). 뒤쪽 경계(−I·−J)는 그 칸의
+     * 지면보다 앞, 시설보다 뒤다 — 뒷벽은 시설에 가려야 안이 보인다.
+     *
+     * ⚠ 앞쪽 경계(+I·+J)는 **시설보다 앞**이다 (K37). 예전엔 둘 다 `+2` 라 깊이가
+     * 동률이었고, Phaser 는 동률이면 삽입 순서로 그린다 — 벽이 부팅 때 먼저 만들어지므로
+     * **시설이 늘 벽을 덮어** 실내 시설이 건물 밖으로 삐져나온 것처럼 보였다.
+     * 벽은 유리라 시설은 그대로 비치고, 벽 선이 안 끊겨야 "안에 있다"가 읽힌다.
      */
     const back = dir === DIR_I_MINUS || dir === DIR_J_MINUS;
-    img.setDepth(depthKey(i, j) + (back ? 1 : 2));
+    img.setDepth(depthKey(i, j) + (back ? Z_WALL_BACK : Z_WALL_FRONT));
     this.wallImages.set(key, img);
   }
 
@@ -484,7 +518,7 @@ export class KairoScene extends Phaser.Scene {
     this.ghost.setAlpha(0.62);
     // 못 놓는 자리는 붉게 — 확정 바의 경고색과 짝이다
     this.ghost.setTint(ok ? 0x8fe0ff : 0xff6a5a);
-    this.ghost.setDepth(depthKey(i + w - 1, j + d - 1) + 3);
+    this.ghost.setDepth(depthKey(i + w - 1, j + d - 1) + Z_GHOST);
   }
 
   /**
@@ -582,7 +616,12 @@ export class KairoScene extends Phaser.Scene {
       return;
     }
     const c = gridToScreen(pos.x + 0.5, pos.y + 0.5);
-    g.setDepth(depthKey(Math.round(pos.x), Math.round(pos.y)) + 2);
+    /*
+     * 버스는 시설이 아니지만 **시설 띠**를 쓴다 — 버스가 다니는 도시 띠(공원 밖)는
+     * 못 짓는 지형이라 같은 칸에 시설이 놓일 수 없고, 그래서 동률이 날 수가 없다.
+     * 띠를 하나 더 만들면 "여기는 뭐가 들어오나"를 읽는 사람이 여덟 개를 봐야 한다.
+     */
+    g.setDepth(depthKey(Math.round(pos.x), Math.round(pos.y)) + Z_FACILITY);
     // 임시 도형 — 아이소 상자 하나. 지붕·앞면·옆면 세 면이면 방향이 읽힌다
     const w = TILE_W * 0.9;
     const h = 16;
@@ -1008,20 +1047,28 @@ export class KairoScene extends Phaser.Scene {
       : (sheet.facings[0] as Facing);
     const frame = sheet.frames <= 1 ? 0 : Math.floor(this.animTick / 6) % sheet.frames;
 
+    /*
+     * 깊이는 **출발 칸과 목적 칸 중 가까운 쪽**이다 (K37). 목적 칸만 쓰면 위로
+     * (= `i+j` 가 줄어드는 쪽으로) 걸을 때 이동이 시작되는 순간 깊이가 먼 칸 값으로
+     * 뚝 떨어지는데 그림은 아직 출발 칸 위에 있어 **출발 칸의 지면이 손님을 덮었다**
+     * (실측: 아래로 갈 때는 반대라 안 보였다).
+     */
+    const dk = spanDepthKey(g.fromI, g.fromJ, g.i, g.j);
+
     v.body.setTexture('guest', bodyFrame(g.palette, pose, facing, frame));
     v.body.setPosition(cx, cy);
-    v.body.setDepth(depthKey(g.i, g.j) + 3);
+    v.body.setDepth(dk + Z_GUEST);
 
     const off = (this.guestAtlas?.headOffset ?? { [pose]: { x: 4, y: 2 } })[pose] ?? { x: 4, y: 2 };
     v.face.setTexture('guest', faceFrame(g.face, facing));
     v.face.setPosition(cx - GUEST_W / 2 + off.x, cy - GUEST_H + off.y);
-    v.face.setDepth(depthKey(g.i, g.j) + 4);
+    v.face.setDepth(dk + Z_FACE);
     v.face.setVisible(facing === '+X' || facing === '+Z');
 
     if (g.emote) {
       v.emote.setTexture('emote', `e_${g.emote}`);
       v.emote.setPosition(cx, cy - GUEST_H - 4);
-      v.emote.setDepth(depthKey(g.i, g.j) + 5);
+      v.emote.setDepth(dk + Z_EMOTE);
       v.emote.setVisible(true);
     } else {
       v.emote.setVisible(false);
@@ -1129,7 +1176,9 @@ export class KairoScene extends Phaser.Scene {
       const fr = sheet.frames <= 1 ? 0 : Math.floor(this.animTick / 6) % sheet.frames;
       img.setTexture('guest', bodyFrame(g.palette, pose, facing, fr));
       img.setPosition(STEP_X * (g.i - g.j), STEP_Y * (g.i + g.j + 1));
-      img.setDepth(depthKey(g.i, g.j) + 3);
+      // 실시간과 **같은 규칙** — 두 칸 중 가까운 쪽 (K37). 재생 프레임에 출발 칸을
+      // 같이 담는 이유가 이것이다 (`PlaybackFrame`). 세이브에는 안 들어간다
+      img.setDepth(spanDepthKey(g.fromI, g.fromJ, g.i, g.j) + Z_GUEST);
       img.setVisible(true);
     }
   }
@@ -1173,6 +1222,30 @@ export class KairoScene extends Phaser.Scene {
       w: TILE_W,
       h: TILE_H,
     };
+  }
+
+  /**
+   * 손님 몸통의 **캔버스 픽셀 사각형** — `tileScreenRect` 의 손님 판.
+   *
+   * 걷는 손님은 칸 사이 소수 위치에 있어 타일 사각형으로는 못 짚는다. 깊이 검사가
+   * "이 자리에 손님이 보이나"를 재려면 실제로 그려진 자리가 필요하다 (K37).
+   */
+  guestScreenRect(id: number): { x: number; y: number; w: number; h: number } | null {
+    const v = this.guestViews.get(id);
+    if (!v) return null;
+    const b = v.body;
+    const view = this.cam.view();
+    return {
+      x: Math.round(b.x - b.displayWidth / 2 - view.scrollX),
+      y: Math.round(b.y - b.displayHeight - view.scrollY),
+      w: Math.round(b.displayWidth),
+      h: Math.round(b.displayHeight),
+    };
+  }
+
+  /** 검증 도구용 — 손님 몸통의 깊이. 없으면 `null` */
+  guestDepthAt(id: number): number | null {
+    return this.guestViews.get(id)?.body.depth ?? null;
   }
 
   /** 현재 확대 배율 — 감상 화면·검증이 읽는다 */

@@ -223,6 +223,27 @@ describe('압축 연출용 기록 — 계산이 빠른 것과 안 보여주는 �
     expect(typeof g0.pose).toBe('string');
     expect(typeof g0.facing).toBe('string');
   });
+
+  it('★ 프레임에 출발 칸(fromI/fromJ)이 들어간다 — 렌더가 깊이를 두 칸으로 잡는다 (K37)', () => {
+    const { r } = world(20, [['shop', 5, 5]]);
+    const rep = r.run(new Rng(13), { playbackEvery: 10 });
+    const withGuests = rep.playback.find((f) => f.guests.length > 0);
+    expect(withGuests).toBeDefined();
+    for (const g of withGuests!.guests) {
+      expect(Number.isInteger(g.fromI)).toBe(true);
+      expect(Number.isInteger(g.fromJ)).toBe(true);
+      // 출발 칸은 목적 칸의 이웃이거나 같은 칸이다 (한 걸음이 한 칸이다)
+      expect(Math.abs(g.i - g.fromI) + Math.abs(g.j - g.fromJ)).toBeLessThanOrEqual(1);
+    }
+    // 실제로 **걷는** 손님이 있어야 검사가 유의미하다 (전부 제자리면 조용히 통과한다)
+    const walking = rep.playback
+      .flatMap((f) => f.guests)
+      .filter((g) => g.i !== g.fromI || g.j !== g.fromJ);
+    expect(walking.length).toBeGreaterThan(0);
+    // 그중 **위로** 걷는 손님(i+j 가 주는 쪽)이 있어야 이 버그가 재현되는 상황이다
+    const upward = walking.filter((g) => g.i + g.j < g.fromI + g.fromJ);
+    expect(upward.length).toBeGreaterThan(0);
+  });
 });
 
 describe('결정론', () => {

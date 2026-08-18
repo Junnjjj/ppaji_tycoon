@@ -214,10 +214,26 @@ export interface WeekReport extends WeekSummary {
   byGroup: Record<GroupId, number>;
 }
 
-/** 압축 재생 프레임 — 위치만 남긴다 (스프라이트는 렌더가 정한다) */
+/**
+ * 압축 재생 프레임 — 위치만 남긴다 (스프라이트는 렌더가 정한다).
+ *
+ * `fromI`/`fromJ` 는 **출발 칸**이다. 렌더가 손님 깊이를 두 칸 중 가까운 쪽으로 잡는데
+ * (K37), 목적 칸만 담으면 압축 연출에서만 손님이 지면에 파묻힌다 — 실시간과 규칙이
+ * 갈라지면 "연출에서만 이상하다"가 되고 원인을 못 찾는다.
+ *
+ * ⚠ 이건 **재생만 쓰는 값**이다. 세이브 스냅샷에 넣지 말 것 (세이브가 커진다).
+ */
 export interface PlaybackFrame {
   tick: number;
-  guests: { i: number; j: number; pose: string; facing: string; palette: number }[];
+  guests: {
+    i: number;
+    j: number;
+    fromI: number;
+    fromJ: number;
+    pose: string;
+    facing: string;
+    palette: number;
+  }[];
 }
 
 export interface WeekOptions {
@@ -529,6 +545,8 @@ export class WeekRunner {
             guests: this.guests.all.map((g) => ({
               i: g.i,
               j: g.j,
+              fromI: g.fromI,
+              fromJ: g.fromJ,
               pose: g.pose,
               facing: g.facing,
               palette: g.palette,

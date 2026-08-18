@@ -20,6 +20,16 @@ import {
   tileRowSpan,
   tileMaskArea,
   tileOffsetInCanvas,
+  spanDepthKey,
+  Z_GROUND,
+  Z_WALL_BACK,
+  Z_FACILITY,
+  Z_WALL_FRONT,
+  Z_GUEST,
+  Z_FACE,
+  Z_EMOTE,
+  Z_GHOST,
+  Z_BAND,
 } from './iso.js';
 
 describe('투영이 정수로 떨어진다 — 스케일 계약의 근거', () => {
@@ -273,5 +283,99 @@ describe('타일 마스크 — 이음새 0 의 근거', () => {
         }
       }
     }
+  });
+});
+
+describe('깊이 띠 — 칸 하나 안의 순서 (K37)', () => {
+  it('★ 띠가 순서대로이고 전부 칸 간격(4096) 안에 들어간다', () => {
+    const band = [
+      ['지면', Z_GROUND],
+      ['뒤쪽 벽', Z_WALL_BACK],
+      ['시설', Z_FACILITY],
+      ['앞쪽 벽', Z_WALL_FRONT],
+      ['손님', Z_GUEST],
+      ['표정', Z_FACE],
+      ['이모트', Z_EMOTE],
+      ['고스트', Z_GHOST],
+    ] as const;
+    for (let k = 1; k < band.length; k++) {
+      const [prevName, prev] = band[k - 1] as readonly [string, number];
+      const [name, cur] = band[k] as readonly [string, number];
+      expect(cur, `${prevName} < ${name}`).toBeGreaterThan(prev);
+    }
+    // 띠가 4096 을 넘으면 다음 칸을 침범해 아이소 정렬이 통째로 뒤집힌다
+    for (const [name, z] of band) {
+      expect(z, name).toBeGreaterThanOrEqual(0);
+      expect(z, name).toBeLessThan(Z_BAND);
+    }
+  });
+
+  it('칸 간격이 실제로 Z_BAND 다 — 띠 상한의 근거', () => {
+    // (i+j) 가 한 칸 늘면 depthKey 는 정확히 Z_BAND 만큼 뛴다
+    expect(depthKey(0, 1) - depthKey(0, 0)).toBe(Z_BAND);
+    expect(depthKey(1, 0) - depthKey(0, 0)).toBe(Z_BAND + 1);
+  });
+
+  it('★ 앞쪽 벽이 같은 칸 시설보다 앞이고, 다음 칸 시설보다는 뒤다', () => {
+    for (const [i, j] of [
+      [0, 0],
+      [5, 7],
+      [40, 30],
+    ] as const) {
+      const wallFront = depthKey(i, j) + Z_WALL_FRONT;
+      const facility = depthKey(i, j) + Z_FACILITY;
+      const wallBack = depthKey(i, j) + Z_WALL_BACK;
+      // ① 같은 칸: 앞쪽 벽 > 시설 > 뒤쪽 벽 > 지면
+      expect(wallFront).toBeGreaterThan(facility);
+      expect(facility).toBeGreaterThan(wallBack);
+      expect(wallBack).toBeGreaterThan(depthKey(i, j) + Z_GROUND);
+      // ② 다음 칸의 시설은 여전히 더 앞이다 (벽이 다음 칸을 넘어 덮지 않는다)
+      expect(depthKey(i + 1, j) + Z_FACILITY).toBeGreaterThan(wallFront);
+      expect(depthKey(i, j + 1) + Z_FACILITY).toBeGreaterThan(wallFront);
+      // ③ K29 계약 — 손님은 앞쪽 벽보다 앞이다 (유리로 만든 이유)
+      expect(depthKey(i, j) + Z_GUEST).toBeGreaterThan(wallFront);
+    }
+  });
+
+  it('음성 대조군 — 앞쪽 벽이 시설과 같은 띠면 동률이 되어 삽입 순서에 맡겨진다', () => {
+    // K37 이전 값: 앞쪽 벽도 시설도 `depthKey + 2` 였다
+    const OLD_WALL_FRONT = 2;
+    expect(depthKey(5, 5) + OLD_WALL_FRONT).toBe(depthKey(5, 5) + Z_FACILITY);
+    // 지금 값은 동률이 아니다
+    expect(depthKey(5, 5) + Z_WALL_FRONT).not.toBe(depthKey(5, 5) + Z_FACILITY);
+  });
+});
+
+describe('손님 깊이는 두 칸 중 가까운 쪽 (K37)', () => {
+  it('★ 위로 걸을 때 출발 칸 깊이를 쓴다 — 목적 칸을 쓰면 출발 칸 지면에 파묻힌다', () => {
+    // (5,5) → (5,4): 목적지가 더 먼 칸이다 (i+j 가 준다)
+    const from = depthKey(5, 5);
+    const to = depthKey(5, 4);
+    expect(to).toBeLessThan(from);
+
+    const good = spanDepthKey(5, 5, 5, 4) + Z_GUEST;
+    expect(good).toBe(from + Z_GUEST);
+    // 출발 칸의 지면보다 앞이다 → 안 파묻힌다
+    expect(good).toBeGreaterThan(from + Z_GROUND);
+
+    // 음성 대조군 — 목적 칸 깊이를 쓰면 출발 칸 **지면**보다도 뒤가 된다
+    const bad = to + Z_GUEST;
+    expect(bad).toBeLessThan(from + Z_GROUND);
+    expect(from + Z_GROUND - bad).toBe(4092); // 4096 − Z_GUEST
+  });
+
+  it('아래로 걸을 때는 목적 칸이 곧 가까운 칸이다 (버그가 안 보였던 방향)', () => {
+    expect(spanDepthKey(5, 4, 5, 5)).toBe(depthKey(5, 5));
+    expect(spanDepthKey(5, 5, 6, 5)).toBe(depthKey(6, 5));
+  });
+
+  it('멈춰 있으면 두 칸이 같아 예전 값과 똑같다', () => {
+    expect(spanDepthKey(9, 3, 9, 3)).toBe(depthKey(9, 3));
+  });
+
+  it('같은 i+j 안에서는 i 가 큰 쪽 — 안정 정렬이 유지된다', () => {
+    // (6,4) → (5,5) 는 화면 높이가 같다. i 로 갈리므로 (6,4) 가 가깝다
+    expect(spanDepthKey(6, 4, 5, 5)).toBe(depthKey(6, 4));
+    expect(spanDepthKey(5, 5, 6, 4)).toBe(depthKey(6, 4));
   });
 });
