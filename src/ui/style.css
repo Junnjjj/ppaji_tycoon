@@ -1,81 +1,106 @@
 :root {
-  --panel: linear-gradient(#20364a, #152634);
-  --panel-border: #3f6480;
-  --text: #e8f4fa;
-  --text-dim: #8fb6cc;
-  --accent: #ffe9a8;
-  --good: #4ade80;
-  --warn: #f2b53f;
-  --bad: #e0596a;
+  /*
+   * ── 밝은 팔레트 (K35) ───────────────────────────────────────────────
+   *
+   * 레퍼런스(Pool Slide Story)를 실측한 값에서 왔다:
+   * 하단 바 `#d5ecf2`~`#b9ddf3` · 말풍선 `#feffed` · 주버튼 `#1b76ff`/`#0880fb` ·
+   * 실내 화면 하단은 아예 `#ffffff` 였다. **밝은 표면 + 진한 글씨 + 파란 주버튼**이다.
+   *
+   * K34 에서 색을 여기 한 곳에 모아 둔 덕에 이 블록이 팔레트의 전부다.
+   * TS 에는 하드코딩 색이 없고(정적 검사가 지킨다), 캔버스도 `tokens.ts` 로 여기를 읽는다.
+   */
+  --panel: linear-gradient(#ffffff, #e4f0f8);
+  --panel-border: #a3c1d4;
+  --text: #123143;
+  --text-dim: #4f7789;
+  --accent: #b4600a;
+  --good: #14803d;
+  --warn: #a8590a;
+  --bad: #c02434;
 
   /*
    * 재질 (K29) — `skeuomorphic-ui` 레시피. 카이로 버튼의 구성과 같다:
    * 세로 그라디언트 + 1px 그라디언트 보더 + 바깥 그림자 + 인셋(상단 하이라이트·하단 그림자).
-   * 팔레트는 그대로 두고 **질감만** 얹는다 (사용자 결정).
+   *
+   * ⚠ **밝은 표면에서는 값이 뒤집힌다** (K35). 어두운 표면에서는 위쪽 흰 테두리가
+   * 하이라이트였지만, 흰 표면에서는 흰 테두리가 안 보인다. 위는 거의 흰색, 아래는
+   * 옅은 남색 그림자로 간다. 그림자도 검정이 아니라 **남색 계열**이어야 물때가 안 낀다.
    */
-  --sk-edge-top: rgba(255, 255, 255, 30%);
-  --sk-edge-bottom: rgba(0, 0, 0, 34%);
+  --sk-edge-top: rgb(255 255 255 / 95%);
+  --sk-edge-bottom: rgb(24 66 92 / 24%);
   --sk-inset:
-    inset 0 1px 0 rgb(255 255 255 / 22%),
-    inset 0 -1px 0 rgb(0 0 0 / 30%);
+    inset 0 1px 0 rgb(255 255 255 / 85%),
+    inset 0 -1px 0 rgb(24 66 92 / 14%);
   --sk-lift:
-    0 2px 3px rgb(0 0 0 / 28%),
-    0 6px 12px rgb(0 0 0 / 22%);
-  --sk-press: inset 0 2px 4px rgb(0 0 0 / 38%);
-  --sk-emboss: 0 1px 0 rgb(0 0 0 / 45%);
+    0 1px 2px rgb(24 66 92 / 14%),
+    0 4px 10px rgb(24 66 92 / 11%);
+  --sk-press: inset 0 2px 4px rgb(24 66 92 / 20%);
+  /*
+   * 글씨 양각 — 밝은 표면의 **진한 글씨**에는 아래로 밝은 선을 깐다.
+   * 어두운 그림자를 그대로 두면 진한 글씨가 번져 보인다.
+   */
+  --sk-emboss: 0 1px 0 rgb(255 255 255 / 80%);
+  /*
+   * ⚠ 진한 칠 위의 **흰 글씨**는 반대다 (위험도 칩·주버튼·토스트·감상 띠).
+   * 밝은 양각을 그대로 쓰면 흰 글씨에 흰 그림자라 뭉갠다.
+   */
+  --sk-emboss-on-solid: 0 1px 0 rgb(0 0 0 / 40%);
 
   /* HUD 표면 색 — 하드코딩을 여기로 모은다 (정적 검사가 지킨다) */
-  --panel-sunk: linear-gradient(#16242f, #1b2c3a);
-  --panel-primary: linear-gradient(#3f97d8, #1d5c90);
-  --text-mute: #63808f;
-  --text-locked: #8a6a6a;
+  --panel-sunk: linear-gradient(#dbe9f2, #edf5fa);
+  --panel-primary: linear-gradient(#2472c6, #0f4fa4);
+  --text-mute: #607f92;
+  --text-locked: #97b3c4;
   --text-on-solid: #fff;
-  --primary-edge: #4ea6e0;
-  --bar-bg: linear-gradient(rgb(20 44 60 / 88%), rgb(10 26 36 / 96%));
-  --sheet-bg: rgb(10 26 36 / 97%);
-  --goal-bg: rgb(16 34 46 / 82%);
-  --goal-won: rgb(40 120 80 / 92%);
-  --goal-lost: rgb(150 50 40 / 92%);
-  --risk-safe: #2f8a5c;
-  --risk-watch: #b99327;
-  --risk-caution: #c9762a;
-  --risk-danger: #c23a2e;
+  --primary-edge: #6fb4f0;
+  --bar-bg: linear-gradient(rgb(244 251 255 / 94%), rgb(216 235 246 / 97%));
+  --sheet-bg: rgb(247 252 255 / 97%);
+  --goal-bg: rgb(255 255 255 / 86%);
+  --goal-won: rgb(214 240 224 / 94%);
+  --goal-lost: rgb(250 220 216 / 94%);
+  /* 위험도 칩은 **진한 칠 + 흰 글씨**다 — 밝은 배경에서도 눈에 띄어야 한다 */
+  --risk-safe: #1c7a4d;
+  --risk-watch: #8a6a12;
+  --risk-caution: #b25d15;
+  --risk-danger: #b52a1f;
 
   /* 코스 적합도 4단계 (K33) — ◎ 최적 · ○ 적합 · △ 부적합 · ✕ 불가 */
-  --fit-best: #7fd0a8;
-  --fit-ok: #9dbdd2;
-  --fit-poor: #e0a05a;
-  --fit-no: #6b8296;
+  --fit-best: #16794a;
+  --fit-ok: #3d6f8c;
+  --fit-poor: #9c5a12;
+  --fit-no: #8aa6b6;
   /* 코스 오버레이 강조 — 씬의 선착장 마커(0xffe08a)와 같은 색이어야 짝이 보인다 */
   --course-mark: #ffe08a;
 
   /*
    * 패널 표면 (K34) — 여섯 패널이 각자 하드코딩하던 값들을 여기로 모았다.
-   *
-   * ⚠ 밝은 팔레트로 갈 때 **여기만** 바꾸면 되게 두는 것이 이 블록의 존재 이유다.
    * `src/ui/tokens.ts` 를 통해 캔버스도 이 값을 읽는다.
    */
-  --overlay-bg: #0d1a23; /* 불투명 전면 (새 판·도감) */
-  --scrim: rgb(12 20 28 / 94%); /* 반투명 전면 (결산) */
-  --scrim-deep: rgb(6 14 20 / 86%); /* 모달 스크림 (카드) */
-  --band-scrim: 4 12 18; /* 감상 화면 띠 — 캔버스와 공유하므로 삼원색 */
-  --on-light: #08131a; /* 밝은 칠 위의 글씨 */
-  --sk-modal: 0 12px 40px rgb(0 0 0 / 50%);
+  --overlay-bg: #eef6fb; /* 불투명 전면 (새 판·도감) */
+  --scrim: rgb(238 246 251 / 95%); /* 반투명 전면 (결산) */
+  /*
+   * ⚠ 모달 스크림만은 **어둡게** 둔다 (카드). 밝은 스크림 위에 밝은 상자를 얹으면
+   * 상자가 안 떠 보인다 — 스크림의 일은 뒤를 눌러 앞을 띄우는 것이다.
+   */
+  --scrim-deep: rgb(16 44 62 / 55%);
+  --band-scrim: 8 30 44; /* 감상 화면 띠 — 캔버스와 공유하므로 삼원색 */
+  --on-light: #123143; /* 밝은 칠 위의 글씨 */
+  --sk-modal: 0 12px 40px rgb(16 44 62 / 30%);
 
   /*
    * 부족·주말 주황 — 알파를 16·18·40·100% 네 단계로 쓴다. hex 로 두면 단계마다 다른
    * 상수가 생긴다 (실제로 네 벌이 흩어져 있었다). 그래서 **삼원색으로** 둔다.
    */
-  --shortage: 240 160 60;
+  --shortage: 214 122 20;
 
   /* 결산 차트 — 히트맵과 안 부딪히게 고른 자체 계열이다 (kairo-report.ts 주석) */
-  --group-family: #7fd0a8;
-  --group-couple: #f0a6c0;
-  --group-friends: #f2c96b;
-  --group-company: #8fb8e8;
-  --bar-weekday: #4a9ad0;
-  --bar-turned: 224 80 60;
-  --heat-empty: #0e1a24;
+  --group-family: #4fb489;
+  --group-couple: #e089a8;
+  --group-friends: #ddb040;
+  --group-company: #6d9bd8;
+  --bar-weekday: #2f80c8;
+  --bar-turned: 200 60 44;
+  --heat-empty: #cddce6;
 
   /* 모션 — animation-systems 기본값 (마이크로 120~200, 상태 변화 180~260) */
   --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
@@ -727,6 +752,9 @@ body {
   background:
     var(--panel-primary) padding-box,
     linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
+  border-color: transparent;
+  color: var(--text-on-solid);
+  text-shadow: var(--sk-emboss-on-solid);
 }
 
 /* 가운데 슬롯 — 위험도와 지금 든 붓. 둘 다 상시 표시여야 한다 */
@@ -747,7 +775,7 @@ body {
   color: var(--text-on-solid);
   font-size: 11px;
   font-weight: 700;
-  text-shadow: var(--sk-emboss);
+  text-shadow: var(--sk-emboss-on-solid);
   white-space: nowrap;
 }
 
@@ -856,6 +884,34 @@ body {
   min-height: var(--tap);
   padding: 0 16px;
   font-size: 13px;
+  /*
+   * ⚠ v1 의 `.tab-btn.on` 은 `linear-gradient(#2b4a63,#1d3648)` — **어두운 팔레트 전용**
+   * 이다 (마커 위라 정적 검사가 안 본다). 밝은 팔레트에서는 선택된 탭만 시커멓게 남는다
+   * (스크린샷에서 잡았다). 시트 안에서만 재질을 통일한다.
+   */
+  border: 1px solid transparent;
+  background:
+    var(--panel) padding-box,
+    linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
+  box-shadow: var(--sk-lift), var(--sk-inset);
+  color: var(--text);
+  text-shadow: var(--sk-emboss);
+  transition:
+    transform var(--dur-micro) var(--ease),
+    box-shadow var(--dur-micro) var(--ease);
+}
+
+.ksheet-head .tab-btn:active {
+  transform: translateY(1px);
+  box-shadow: var(--sk-press);
+}
+
+.ksheet-head .tab-btn.on {
+  background:
+    var(--panel) padding-box,
+    linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .ksheet-title {
@@ -955,7 +1011,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .kbtn,
   .kitem,
-  .kcourse-item {
+  .kcourse-item,
+  .ksheet-head .tab-btn {
     transition: none;
   }
 
@@ -1403,16 +1460,25 @@ body {
   background: linear-gradient(rgb(var(--band-scrim) / 0%), rgb(var(--band-scrim) / 82%));
 }
 
+/*
+ * ⚠ 감상 화면의 띠는 **어두운 스크림 위**다 (지도를 가리지 않으려고 반투명 검정을 깐다).
+ * 밝은 팔레트로 가도 여기만은 흰 글씨여야 한다 — `--text` 를 쓰면 진한 남색 글씨가
+ * 어두운 띠에 묻힌다.
+ */
+.kband {
+  color: var(--text-on-solid);
+}
+
 .kband-title {
   font-size: 19px;
   font-weight: 800;
   letter-spacing: -0.2px;
-  text-shadow: var(--sk-emboss);
+  text-shadow: var(--sk-emboss-on-solid);
 }
 
 .kband-sub {
   font-size: 12px;
-  color: var(--text-dim);
+  color: rgb(255 255 255 / 82%);
   margin-top: 2px;
 }
 
@@ -1773,7 +1839,7 @@ body {
   z-index: 11;
   padding: 6px 8px;
   border-radius: 6px;
-  background: rgb(0 0 0 / 55%);
+  background: rgb(255 255 255 / 82%);
   color: var(--text);
   font: 11px/1.5 ui-monospace, monospace;
   white-space: pre;
@@ -1796,7 +1862,7 @@ body {
   color: var(--text-on-solid);
   font: 12px/1.4 system-ui, sans-serif;
   text-align: center;
-  text-shadow: var(--sk-emboss);
+  text-shadow: var(--sk-emboss-on-solid);
   pointer-events: none;
 }
 
@@ -1832,7 +1898,8 @@ body {
 .kprog {
   height: 3px;
   border-radius: 2px;
-  background: rgb(255 255 255 / 15%);
+  /* ⚠ 흰 15% 는 어두운 표면 전용이었다 — 밝은 표면에서는 안 보인다 */
+  background: rgb(24 66 92 / 15%);
   margin: 2px 0;
   overflow: hidden;
 }

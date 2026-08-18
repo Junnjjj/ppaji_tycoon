@@ -169,6 +169,91 @@ check(
   leaks.length ? leaks.join(' · ') : `${uiFiles.length - TS_EXEMPT.size}개 파일 전부 0`,
 );
 
+/*
+ * ── 글씨가 읽히나 (K35) ─────────────────────────────────────────────────
+ *
+ * 밝은 팔레트로 바꾸면서 새로 생긴 실패 방식은 "예쁘지만 안 읽힘"이다. 어두운 팔레트에서
+ * 맞던 대비가 그대로 뒤집히기 때문이다 (흰 글씨 + 밝은 표면). 눈으로만 보면 놓친다.
+ *
+ * WCAG 대비비로 잰다. 본문 4.5:1, 흐린 글씨·큰 글씨 3:1 이 기준이다.
+ * 그라디언트는 **두 끝 중 나쁜 쪽**으로 잰다 — 한쪽만 맞으면 절반은 안 읽힌다.
+ */
+const rootBlock = css.slice(0, css.indexOf('}'));
+const token = (name) => {
+  const m = new RegExp(`${name}:\\s*([^;]+);`).exec(rootBlock);
+  return m ? m[1].trim() : null;
+};
+
+/** `#rgb`/`#rrggbb`/`rgb(r g b / a%)` → [r,g,b] (알파는 흰 바탕에 합성) */
+function toRgb(v, onto = [255, 255, 255]) {
+  const hex = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.exec(v.trim());
+  if (hex) {
+    const h = hex[1].length === 3 ? [...hex[1]].map((c) => c + c).join('') : hex[1];
+    return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
+  }
+  const m = /rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)(?:\s*[/,]\s*([\d.]+)%?)?/.exec(v);
+  if (!m) return null;
+  const c = [Number(m[1]), Number(m[2]), Number(m[3])];
+  if (m[4] === undefined) return c;
+  const a = Number(m[4]) > 1 ? Number(m[4]) / 100 : Number(m[4]);
+  return c.map((x, i) => Math.round(x * a + onto[i] * (1 - a)));
+}
+
+/** 그라디언트면 색 목록을, 단색이면 하나를 돌려준다 */
+function stops(v) {
+  if (v === null) return [];
+  const found = [...v.matchAll(/#[0-9a-fA-F]{3,8}|rgba?\([^)]*\)/g)].map((m) => m[0]);
+  return (found.length ? found : [v]).map((x) => toRgb(x)).filter(Boolean);
+}
+
+const lum = ([r, g, b]) => {
+  const f = (x) => {
+    const c = x / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+};
+const ratio = (a, b) => {
+  const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
+  return (x + 0.05) / (y + 0.05);
+};
+
+const PAIRS = [
+  ['본문 · 패널', '--text', '--panel', 4.5],
+  ['본문 · 시트', '--text', '--sheet-bg', 4.5],
+  ['본문 · 전면', '--text', '--overlay-bg', 4.5],
+  ['본문 · 하단바', '--text', '--bar-bg', 4.5],
+  ['흐린 글씨 · 패널', '--text-dim', '--panel', 3],
+  ['흐린 글씨 · 가라앉은면', '--text-dim', '--panel-sunk', 3],
+  ['잠김 글씨 · 가라앉은면', '--text-mute', '--panel-sunk', 3],
+  ['선택 표시 · 패널', '--accent', '--panel', 3],
+  ['흰 글씨 · 주버튼', '--text-on-solid', '--panel-primary', 4.5],
+  ['흰 글씨 · 위험', '--text-on-solid', '--risk-danger', 4.5],
+  ['흰 글씨 · 경계', '--text-on-solid', '--risk-watch', 4.5],
+  ['좋음 · 패널', '--good', '--panel', 3],
+  ['나쁨 · 패널', '--bad', '--panel', 3],
+  ['밝은칠 위 글씨 · 가족', '--on-light', '--group-family', 3],
+];
+
+const bad = [];
+for (const [name, fg, bgTok, min] of PAIRS) {
+  const f = stops(token(fg));
+  const b = stops(token(bgTok));
+  if (f.length === 0 || b.length === 0) {
+    bad.push(`${name}(토큰 없음)`);
+    continue;
+  }
+  // 두 끝 중 **나쁜 쪽**으로 판정한다
+  let worst = Infinity;
+  for (const bb of b) worst = Math.min(worst, ratio(f[0], bb));
+  if (worst < min) bad.push(`${name} ${worst.toFixed(1)}:1 (필요 ${min})`);
+}
+check(
+  bad.length === 0,
+  '글씨가 읽힌다 — 대비비 (본문 4.5:1 · 보조 3:1)',
+  bad.length ? bad.join(' · ') : `${PAIRS.length}쌍 전부 통과`,
+);
+
 // ── 보고 ────────────────────────────────────────────────────────────────
 console.log('HUD 표면 정적 검사');
 for (const p of pass) console.log(`  ✓ ${p}`);
