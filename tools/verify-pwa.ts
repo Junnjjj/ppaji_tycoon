@@ -102,7 +102,8 @@ async function main(): Promise<void> {
     record('아이콘이 실제로 내려온다', iconOk ? 'pass' : 'fail', iconChecks.join(' · '));
 
     // ── 서비스 워커 ──
-    await page.goto(BASE, { waitUntil: 'load' });
+    // `debug=1` — 부팅 판정을 `#kairo-debug` 로 하는데 K28 부터 기본으로 숨는다
+    await page.goto(`${BASE}/?debug=1`, { waitUntil: 'load' });
     const swReady = await page
       .waitForFunction(
         `(async () => {

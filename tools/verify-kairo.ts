@@ -26,7 +26,12 @@
 import { chromium, type ConsoleMessage } from 'playwright';
 
 const BASE = process.env['PPAJI_URL'] ?? 'http://localhost:5173';
-const URL = `${BASE}/?kairo=1&px=1`; // px=1 = 프레임버퍼 보존 (이음새 픽셀 검사용)
+/*
+ * `px=1` = 프레임버퍼 보존 (이음새 픽셀 검사용).
+ * `debug=1` = 디버그 오버레이. K28 부터 기본으로 숨는데, 이 하네스와 `verify-pwa` 가
+ * `#kairo-debug` 의 textContent 로 부팅 완료를 판정하므로 켜고 들어간다.
+ */
+const URL = `${BASE}/?kairo=1&px=1&debug=1`;
 const HEADED = process.argv.includes('--headed');
 const SHOT_DIR = 'tmp-shots';
 
@@ -284,32 +289,93 @@ async function main(): Promise<void> {
   await page.waitForTimeout(400);
   await page.screenshot({ path: `${SHOT_DIR}/kairo-s1.png` });
 
-  // ── 7b. 지면 붓 — 폰에서 실제로 길을 낼 수 있나 ──
-  const brushBtns = (await page.evaluate(`(() => {
-    const bar = document.getElementById('kairo-brush');
-    if (!bar) return null;
-    const bs = [...bar.querySelectorAll('button')].map((b) => {
+  // ── 7b. 건설 시트 — 폰에서 실제로 고를 수 있나 (K28) ──
+  //
+  // 예전에는 하단에 붓 바가 상시로 깔려 있었다. 이제 `건설` 을 눌러 시트를 연다.
+  // 카이로에 드롭다운이 없듯 여기도 **아이콘 격자**다.
+  const sheet = (await page.evaluate(`(() => {
+    const open = document.getElementById('kairo-build-open');
+    if (!open) return null;
+    open.click();
+    const sh = document.getElementById('kairo-sheet');
+    if (!sh || sh.hidden) return { opened: false };
+    const items = [...sh.querySelectorAll('.ksheet-build .kitem')].map((b) => {
       const r = b.getBoundingClientRect();
-      return { kind: b.dataset.kind, w: Math.round(r.width), h: Math.round(r.height) };
+      return { pick: b.dataset.pick, w: Math.round(r.width), h: Math.round(r.height),
+               locked: b.disabled };
     });
-    return { count: bs.length, minH: Math.min(...bs.map((b) => b.h)),
-             minW: Math.min(...bs.map((b) => b.w)), overflow: bar.scrollWidth > bar.clientWidth };
-  })()`)) as { count: number; minH: number; minW: number; overflow: boolean } | null;
+    const tabs = [...sh.querySelectorAll('.tab-btn')].map((b) => {
+      const r = b.getBoundingClientRect();
+      return { t: b.textContent, w: Math.round(r.width), h: Math.round(r.height) };
+    });
+    const grounds = items.filter((x) => (x.pick || '').indexOf('ground:') === 0).length;
+    const facilities = items.filter((x) => (x.pick || '').indexOf('facility:') === 0).length;
+    const groups = [...sh.querySelectorAll('.ksheet-group')].map((g) => g.textContent);
+    const all = items.concat(tabs.map((t) => ({ pick: 'tab', w: t.w, h: t.h, locked: false })));
+    return { opened: true, grounds: grounds, facilities: facilities, groups: groups,
+             locked: items.filter((x) => x.locked).length,
+             minH: Math.min(...all.map((x) => x.h)), minW: Math.min(...all.map((x) => x.w)),
+             overflowX: document.documentElement.scrollWidth - innerWidth };
+  })()`)) as
+    | null
+    | { opened: false }
+    | {
+        opened: true;
+        grounds: number;
+        facilities: number;
+        groups: string[];
+        locked: number;
+        minH: number;
+        minW: number;
+        overflowX: number;
+      };
 
-  if (!brushBtns) {
-    record('지면 붓 팔레트', 'fail', '팔레트를 못 찾았다');
+  if (!sheet || !sheet.opened) {
+    record('건설 시트', 'fail', sheet ? '열리지 않았다' : '건설 버튼을 못 찾았다');
   } else {
     record(
-      '붓 8종 (바닥 6 + 시설·지우기) — 건물 붓은 사라졌다 (K27)',
-      brushBtns.count === 8 ? 'pass' : 'fail',
-      `${brushBtns.count}개`,
+      '건설 시트가 시설 73종을 격자로 낸다 — 드롭다운이 아니다',
+      sheet.facilities === 73 ? 'pass' : 'fail',
+      `시설 ${sheet.facilities}종 · 존 ${sheet.groups.length}개 (${sheet.groups.join('/')})`,
     );
     record(
-      '터치 타깃 44px 이상',
-      brushBtns.minH >= 44 ? 'pass' : 'fail',
-      `최소 ${brushBtns.minW}×${brushBtns.minH}`,
+      '아직 못 짓는 시설은 잠겨 보인다 — 열어봐야 아는 정보면 아무도 안 연다',
+      sheet.locked > 0 ? 'pass' : 'fail',
+      `잠김 ${sheet.locked}종`,
+    );
+    record(
+      '시트 안 터치 타깃 44px 이상',
+      sheet.minH >= 44 && sheet.minW >= 44 ? 'pass' : 'fail',
+      `최소 ${sheet.minW}×${sheet.minH}`,
+    );
+    record('시트를 열어도 가로 넘침 0', sheet.overflowX <= 0 ? 'pass' : 'fail', `${sheet.overflowX}px`);
+  }
+
+  // 바닥 탭 — 값이 붙어 있어야 "편집기 도구"가 아니라 "사는 것"으로 읽힌다 (K27)
+  const groundTab = (await page.evaluate(`(() => {
+    const sh = document.getElementById('kairo-sheet');
+    if (!sh) return null;
+    const tab = [...sh.querySelectorAll('.tab-btn')].find((b) => b.dataset.tab === 'ground');
+    if (!tab) return null;
+    tab.click();
+    const items = [...sh.querySelectorAll('.ksheet-build .kitem')].map((b) => ({
+      pick: b.dataset.pick,
+      sub: (b.querySelector('.kitem-sub') || {}).textContent || '',
+    }));
+    return { count: items.length, priced: items.filter((x) => /만/.test(x.sub)).length,
+             hasErase: items.some((x) => x.pick === 'erase:erase') };
+  })()`)) as null | { count: number; priced: number; hasErase: boolean };
+
+  if (!groundTab) {
+    record('바닥 탭', 'fail', '탭을 못 찾았다');
+  } else {
+    record(
+      '바닥 탭에 6종 + 철거가 있고 값이 붙어 있다',
+      groundTab.count === 7 && groundTab.priced >= 4 && groundTab.hasErase ? 'pass' : 'fail',
+      `${groundTab.count}개 · 값 표시 ${groundTab.priced}개 · 철거 ${groundTab.hasErase}`,
     );
   }
+  await page.evaluate(`document.getElementById('kairo-sheet-close').click()`);
 
   // 목재 데크길을 골라 물 위 칸을 칠한다 → 걸을 수 있게 바뀌어야 한다
   const painted = (await page.evaluate(`(() => {
@@ -549,7 +615,6 @@ async function main(): Promise<void> {
     const out = { picker: 0, placed: [], rejected: [], anchors: [] };
 
     const sel = document.getElementById('kairo-facility');
-    out.picker = sel ? sel.querySelectorAll('option').length : 0;
 
     // 넓은 육지를 찾는다
     let base = null;
@@ -628,7 +693,6 @@ async function main(): Promise<void> {
   if (!fac.ok) {
     record('시설 배치', 'fail', fac.reason);
   } else {
-    record('시설 선택기에 73종', fac.picker === 73 ? 'pass' : 'fail', `${fac.picker}개`);
     record(
       '시설 4종 배치 (비정사각 4×1 포함)',
       fac.placed.length >= 4 ? 'pass' : 'fail',
@@ -1580,6 +1644,8 @@ async function main(): Promise<void> {
    * 데이터로만 존재한다** — 그래서 화면과 목표 표시를 함께 본다.
    */
   const scenarioUi = (await page.evaluate(`(() => {
+    // K28: 열기 버튼은 메뉴 시트 안이다 — 먼저 시트를 연다
+    document.getElementById('kairo-menu-open').click();
     const open = document.getElementById('kairo-newgame-open');
     const goal = document.getElementById('kairo-goal');
     if (!open) return { ok: false, why: '새 판 버튼이 없다' };
@@ -1736,6 +1802,8 @@ async function main(): Promise<void> {
    * 보여주는지 — 기본이 "미발견만"인지, 한 항목이 56px 인지.
    */
   const catalog = (await page.evaluate(`(() => {
+    // K28: 열기 버튼은 메뉴 시트 안이다 — 먼저 시트를 연다
+    document.getElementById('kairo-menu-open').click();
     const open = document.getElementById('kairo-catalog-open');
     if (!open) return { ok: false, why: '도감 버튼이 없다' };
     open.click();
@@ -1803,19 +1871,21 @@ async function main(): Promise<void> {
    * UI 가 걷히는지, 씬이 **안 멈추는지**(살아 있어야 한다), 공유 이미지가 실제로 나오는지.
    */
   const showcase = (await page.evaluate(`(() => {
+    // K28: 열기 버튼은 메뉴 시트 안이다 — 먼저 시트를 연다
+    document.getElementById('kairo-menu-open').click();
     const open = document.getElementById('kairo-showcase-open');
     if (!open) return { ok: false, why: '감상 버튼이 없다' };
-    const before = [...document.body.children].filter(
-      (el) => el.tagName === 'BUTTON' && getComputedStyle(el).display !== 'none',
-    ).length;
+    // K28: 버튼이 하단 바 안으로 들어가 body 직계가 아니다. 보이는 버튼 전체를 센다.
+    // (백틱과 이름 있는 함수는 이 리터럴 안에서 못 쓴다 — 파일 머리 함정 참고)
+    const before = [...document.querySelectorAll('button')]
+      .filter((b) => b.getBoundingClientRect().width > 2).length;
     open.click();
     const panel = document.getElementById('kairo-showcase');
     if (!panel || getComputedStyle(panel).display === 'none') {
       return { ok: false, why: '감상 화면이 안 열린다' };
     }
-    const after = [...document.body.children].filter(
-      (el) => el.tagName === 'BUTTON' && getComputedStyle(el).display !== 'none',
-    ).length;
+    const after = [...document.querySelectorAll('button')]
+      .filter((b) => b.getBoundingClientRect().width > 2).length;
     const share = document.getElementById('kairo-showcase-share');
     const name = document.getElementById('kairo-showcase-name');
     return {
@@ -1945,6 +2015,8 @@ async function main(): Promise<void> {
    * 그리고 **적합도 배지가 붙는지**를 본다 (19×6 표를 읽히지 않는 것이 §B 의 요지다).
    */
   const courseUi = (await page.evaluate(`(() => {
+    // K28: 열기 버튼은 메뉴 시트 안이다 — 먼저 시트를 연다
+    document.getElementById('kairo-menu-open').click();
     const open = document.getElementById('kairo-course-open');
     if (!open) return { ok: false, why: '코스 버튼이 없다' };
     open.click();
@@ -2067,6 +2139,8 @@ async function main(): Promise<void> {
    * 여섯 동사 중 "사람을 쓴다". **인건비가 실제로 나가고 부족이 결과를 바꾸는지**를 본다.
    */
   const staffUi = (await page.evaluate(`(() => {
+    // K28: 열기 버튼은 메뉴 시트 안이다 — 먼저 시트를 연다
+    document.getElementById('kairo-menu-open').click();
     const open = document.getElementById('kairo-staff-open');
     if (!open) return { ok: false, why: '직원 버튼이 없다' };
     const openH = Math.round(open.getBoundingClientRect().height);
@@ -2355,15 +2429,8 @@ async function main(): Promise<void> {
     [8, 14],
   ];
   const tapResults: string[] = [];
-  await page.evaluate(`(() => {
-    // 붓을 끄면 onTapTile 이 해석한 타일을 콘솔에 찍는다
-    const bar = document.getElementById('kairo-brush');
-    const cur = window.__kairoBrush ? window.__kairoBrush() : null;
-    if (cur && bar) {
-      const b = bar.querySelector('[data-kind="' + cur + '"]');
-      if (b) b.click();
-    }
-  })()`);
+  // 붓을 끄면 onTapTile 이 해석한 타일을 콘솔에 찍는다 (K28: 전용 훅으로 끈다)
+  await page.evaluate(`window.__kairoClearBrush && window.__kairoClearBrush()`);
   for (const [ti, tj] of TAP_CASES) {
     /*
      * 카메라를 그 타일에 맞춘다 — 안 맞추면 대부분이 화면 밖이라 검사가 한두 칸만 보고
@@ -2410,13 +2477,20 @@ async function main(): Promise<void> {
    */
   const candidates = (await page.evaluate(`(() => {
     const h = window.__kairo;
-    const bar = document.getElementById('kairo-brush');
-    const sel = document.getElementById('kairo-facility');
-    const btn = bar ? bar.querySelector('[data-kind="facility"]') : null;
-    if (!btn || !sel) return { ok: false, why: '시설 붓 또는 선택기를 못 찾았다', tiles: [] };
-    sel.value = 'shop';
-    sel.dispatchEvent(new Event('change', { bubbles: true }));
-    if (!window.__kairoBrush || window.__kairoBrush() !== 'facility') btn.click();
+    /*
+     * K28: 붓 바와 드롭다운이 사라졌다. 건설 시트를 열고 격자에서 고른다 —
+     * 플레이어가 실제로 하는 경로 그대로다.
+     */
+    document.getElementById('kairo-build-open').click();
+    // 시트는 마지막으로 본 탭을 기억한다 — 시설 탭을 명시해야 한다
+    const ftab = document.querySelector('#kairo-sheet [data-tab="facility"]');
+    if (ftab) ftab.click();
+    const pick = document.querySelector('[data-pick="facility:shop"]');
+    if (!pick) return { ok: false, why: '건설 시트에서 매점을 못 찾았다', tiles: [] };
+    pick.click();
+    if (!window.__kairoBrush || window.__kairoBrush() !== 'facility') {
+      return { ok: false, why: '고른 뒤에도 붓이 facility 가 아니다', tiles: [] };
+    }
     // shop 은 2×2 다 — **발자국 전체**가 비고 걸을 수 있어야 한다.
     // 앵커 칸만 보면 "다른 시설이 있습니다" 로 거절된다 (실측)
     const fits = (i, j) => {
@@ -2533,6 +2607,173 @@ async function main(): Promise<void> {
     `세이브 ${Math.round((savedInfo.cash ?? 0) / 10000)}만 → 복원 ${cashReload}만`,
   );
   await page.screenshot({ path: `${SHOT_DIR}/kairo-save.png` });
+
+  /*
+   * ── 9b. HUD 가 화면을 얼마나 먹나 · 두 방향 (K28) ──
+   *
+   * "투박하다"를 숫자로 못박는다. 재보니 예전 HUD 는 폰 세로에서 **화면의 40%** 를
+   * 덮었고 상시 컨트롤이 **15개**였다. 레퍼런스(Pool Slide Story)를 같은 방법으로
+   * 재면 ~14% · 버튼 2개다.
+   *
+   * 세로·가로를 **둘 다** 본다. 한쪽만 보면 안 본 쪽이 깨진다.
+   */
+  const MEASURE_HUD = `(() => {
+    const W = innerWidth, H = innerHeight;
+    const boxes = [];
+    for (const el of document.body.children) {
+      if (el.tagName === 'CANVAS' || el.id === 'game' || el.hidden) continue;
+      // 디버그 오버레이는 개발용이라 실제 플레이에서는 숨는다. 이 하네스가 부팅
+      // 판정에 쓰느라 켜 둔 것뿐이므로 예산에서 뺀다 (실제 사용자에게 없는 비용이다)
+      if (el.id === 'kairo-debug') continue;
+      const st = getComputedStyle(el);
+      if (st.display === 'none' || st.visibility === 'hidden') continue;
+      const r = el.getBoundingClientRect();
+      if (r.width < 2 || r.height < 2) continue;
+      boxes.push([r.left, r.top, r.right, r.bottom]);
+    }
+    let hit = 0, tot = 0;
+    for (let y = 0; y < H; y += 4) for (let x = 0; x < W; x += 4) {
+      tot++;
+      if (boxes.some((c) => x >= c[0] && x <= c[2] && y >= c[1] && y <= c[3])) hit++;
+    }
+    const ctrl = [...document.querySelectorAll('button, select, input')].filter((b) => {
+      const r = b.getBoundingClientRect();
+      return r.width > 2 && r.height > 2;
+    });
+    const minTap = ctrl.length
+      ? Math.min(...ctrl.map((b) => { const r = b.getBoundingClientRect(); return Math.min(r.width, r.height); }))
+      : 0;
+    return { chrome: Math.round(hit / tot * 100), controls: ctrl.length,
+             minTap: Math.round(minTap), overflow: document.documentElement.scrollWidth - W };
+  })()`;
+
+  /*
+   * 예산은 방향마다 다르다 — **고정 높이 바(56px)가 화면 높이에서 차지하는 비율**이
+   * 다르기 때문이다. 세로 852px 에서 6.6%, 가로 393px 에서 14.2% 다. 터치 타깃 44px 를
+   * 지키면 바를 더 줄일 수 없으므로 가로는 여기가 사실상 바닥이다.
+   * (레퍼런스도 720px 높이에서 60px 바 = 8.3% 였다.)
+   */
+  for (const [vw, vh, tag, budget] of [
+    [393, 852, '세로', 14],
+    [852, 393, '가로', 22],
+  ] as const) {
+    const cx = await browser.newContext({
+      viewport: { width: vw, height: vh },
+      deviceScaleFactor: 3,
+      isMobile: true,
+      hasTouch: true,
+    });
+    const pg = await cx.newPage();
+    await pg.goto(URL, { waitUntil: 'load' });
+    await pg.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+    const m = (await pg.evaluate(MEASURE_HUD)) as {
+      chrome: number;
+      controls: number;
+      minTap: number;
+      overflow: number;
+    };
+    record(
+      `${tag} — HUD 가 화면의 ${budget}% 이하 (예전 40%)`,
+      m.chrome <= budget ? 'pass' : 'fail',
+      `${m.chrome}%`,
+    );
+    record(
+      `${tag} — 상시 컨트롤 3개 (메뉴·건설·한 주)`,
+      m.controls === 3 ? 'pass' : 'fail',
+      `${m.controls}개`,
+    );
+    record(`${tag} — 터치 타깃 44px · 가로 넘침 0`,
+      m.minTap >= 44 && m.overflow <= 0 ? 'pass' : 'fail',
+      `최소 ${m.minTap}px · 넘침 ${m.overflow}px`);
+
+    // 시트를 열면 덮이지만 닫으면 되돌아온다 — 시트가 안 닫히면 화면이 영영 좁다
+    await pg.evaluate(`document.getElementById('kairo-build-open').click()`);
+    await pg.waitForTimeout(150);
+    const opened = (await pg.evaluate(MEASURE_HUD)) as { chrome: number; minTap: number };
+    await pg.evaluate(`document.getElementById('kairo-sheet-close').click()`);
+    await pg.waitForTimeout(150);
+    const closed = (await pg.evaluate(MEASURE_HUD)) as { chrome: number };
+    record(
+      `${tag} — 시트를 닫으면 화면이 돌아온다`,
+      opened.chrome > m.chrome && closed.chrome === m.chrome ? 'pass' : 'fail',
+      `닫힘 ${m.chrome}% → 열림 ${opened.chrome}% → 닫힘 ${closed.chrome}%`,
+    );
+    record(
+      `${tag} — 시트 안 터치 타깃도 44px`,
+      opened.minTap >= 44 ? 'pass' : 'fail',
+      `최소 ${opened.minTap}px`,
+    );
+    await pg.screenshot({ path: `${SHOT_DIR}/kairo-hud-${tag}.png` });
+    await cx.close();
+  }
+
+  /*
+   * ── 9c. 방향을 바꿔도 판이 살아 있나 (K28) ──
+   *
+   * 회전은 폰에서 언제든 일어난다. 레이아웃만 다시 잡히면 되고 **게임 상태는 그대로**
+   * 여야 한다. 우리 하네스에 이 검사가 없었다.
+   */
+  {
+    const cx = await browser.newContext({
+      viewport: { width: 393, height: 852 },
+      deviceScaleFactor: 3,
+      isMobile: true,
+      hasTouch: true,
+    });
+    const pg = await cx.newPage();
+    await pg.goto(URL, { waitUntil: 'load' });
+    await pg.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+    const before = (await pg.evaluate(`(() => {
+      const h = window.__kairo;
+      // 시설 몇 개를 놓아 "잃을 것"을 만든다
+      const t = h.terrain, w = h.walls, p = h.placement;
+      let n = 0;
+      for (let i = 2; i < 20 && n < 4; i++) {
+        if (p.place(t, w, h.gate, 'vending_out', i, 2).ok) n++;
+      }
+      return { facilities: p.count, cash: h.week ? h.week.cash : -1, week: h.week ? h.week.week : -1 };
+    })()`)) as { facilities: number; cash: number; week: number };
+
+    await pg.setViewportSize({ width: 852, height: 393 });
+
+    await pg.waitForTimeout(500);
+    const after = (await pg.evaluate(`(() => {
+      const h = window.__kairo;
+      const cv = document.querySelector('canvas');
+      return { facilities: h.placement.count, cash: h.week ? h.week.cash : -1,
+               week: h.week ? h.week.week : -1, buf: [cv.width, cv.height],
+               alive: !!(h.scene && h.scene.sys && h.scene.sys.game.loop.running) };
+    })()`)) as {
+      facilities: number;
+      cash: number;
+      week: number;
+      buf: number[];
+      alive: boolean;
+    };
+    record(
+      '회전해도 판이 그대로다 — 시설·현금·주차 보존',
+      after.facilities === before.facilities &&
+        after.cash === before.cash &&
+        after.week === before.week
+        ? 'pass'
+        : 'fail',
+      `시설 ${before.facilities}→${after.facilities} · 현금 ${Math.round(before.cash / 10000)}만→${Math.round(after.cash / 10000)}만`,
+    );
+    record(
+      '회전 뒤 버퍼가 새 방향으로 다시 잡힌다',
+      after.buf[0] === 852 && after.buf[1] === 393 && after.alive ? 'pass' : 'fail',
+      `버퍼 ${after.buf.join('×')} · 루프 ${after.alive}`,
+    );
+    await cx.close();
+  }
 
   // ── 10. 안드로이드 비정수 DPR ──
   const ctx2 = await browser.newContext({

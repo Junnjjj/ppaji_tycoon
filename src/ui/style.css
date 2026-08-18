@@ -526,3 +526,301 @@ body {
     font-size: 17px;
   }
 }
+
+/* ═══════════════ 카이로 HUD (K28) ═══════════════
+ *
+ * 레퍼런스(Pool Slide Story) 구조: **떠 있는 상단 캡슐 둘 + 하단 바 한 줄**, 가운데는
+ * 100% 게임. 우리는 우측 버튼 5개 + 하단 붓 8개 + 좌상단 디버그 + 우상단 의뢰 패널로
+ * 화면의 40% 를 덮고 있었다 (실측). 목표는 18% 이하.
+ *
+ * 위 v1 클래스(.pill/.palette/.tab-*)는 폐기된 v1 씬이 아직 쓰므로 건드리지 않는다.
+ * 여기서는 토큰(--panel/--accent/--tap/--safe-b)만 물려받아 카이로 전용 컴포넌트를 둔다.
+ *
+ * ⚠ 세로(393×852)와 가로(852×393)를 **한 벌로** 낸다. 미디어 쿼리로 레이아웃을 두 벌
+ * 만들면 검증도 두 배가 되고, 어긋나는 쪽은 언제나 안 본 쪽이다.
+ */
+
+/* ── 상단 캡슐 — 좌·우 모서리 고정이라 폭이 변해도 안 겹친다 ── */
+
+.kcap {
+  position: fixed;
+  top: calc(8px + var(--safe-t));
+  z-index: 9;
+  padding: 6px 11px;
+  border-radius: 13px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 3px 10px rgb(0 0 0 / 35%);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.kcap.left {
+  left: 8px;
+}
+
+.kcap.right {
+  right: 8px;
+  color: var(--accent);
+}
+
+/* 목표 — 좌상단 캡슐 아래. 안 보이면 시나리오가 설정 문구가 된다 */
+.kgoal {
+  position: fixed;
+  left: 8px;
+  top: calc(44px + var(--safe-t));
+  z-index: 9;
+  max-width: 56vw;
+  padding: 5px 9px;
+  border-radius: 9px;
+  background: rgb(16 34 46 / 82%);
+  color: var(--text-dim);
+  font-size: 11px;
+  line-height: 1.35;
+  white-space: pre;
+  pointer-events: none;
+}
+
+.kgoal.won {
+  background: rgb(40 120 80 / 92%);
+  color: var(--text);
+}
+
+.kgoal.lost {
+  background: rgb(150 50 40 / 92%);
+  color: var(--text);
+}
+
+/* ── 하단 바 — 높이 고정, 내용은 flex 라 가로에서 늘어난다 ── */
+
+.kbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: calc(56px + var(--safe-b));
+  padding: 0 8px var(--safe-b);
+  background: linear-gradient(rgb(20 44 60 / 88%), rgb(10 26 36 / 96%));
+  border-top: 1px solid var(--panel-border);
+}
+
+.kbtn {
+  flex: 0 0 auto;
+  min-height: var(--tap);
+  padding: 0 13px;
+  border: 1px solid var(--panel-border);
+  border-radius: 11px;
+  background: var(--panel);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.kbtn:active {
+  transform: translateY(1px);
+  border-color: var(--accent);
+}
+
+.kbtn.on {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.kbtn.primary {
+  background: linear-gradient(#2f86c8, #1d5c90);
+  border-color: #4ea6e0;
+}
+
+/* 가운데 슬롯 — 위험도와 지금 든 붓. 둘 다 상시 표시여야 한다 */
+.kmid {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.krisk {
+  flex: 0 0 auto;
+  padding: 5px 9px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.krisk.safe {
+  background: #2f8a5c;
+}
+
+.krisk.watch {
+  background: #b99327;
+}
+
+.krisk.caution {
+  background: #c9762a;
+}
+
+.krisk.danger {
+  background: #c23a2e;
+}
+
+.kbrush {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.kbrush.on {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ── 시트 — 건설·메뉴 공용. 하단 바 위로 올라온다 ── */
+
+.ksheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(56px + var(--safe-b));
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  max-height: min(56vh, 420px);
+  background: rgb(10 26 36 / 97%);
+  border-top: 1px solid var(--panel-border);
+}
+
+.ksheet[hidden] {
+  display: none;
+}
+
+.ksheet-head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+}
+
+/* 제목은 밀리고 탭·닫기가 자리를 갖는다 */
+.ksheet-head .ksheet-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*
+ * ⚠ v1 의 `.tab-btn` 은 `flex:1` 이라 시트 머리에서 23×36 으로 눌린다 (실측).
+ * v1 클래스는 건드리지 않고 **시트 안에서만** 덮는다 — 터치 타깃 44px 는 이 프로젝트의
+ * 모바일 기준이고, 검사도 그걸 본다.
+ */
+.ksheet-head .tab-bar {
+  flex: 0 0 auto;
+  padding: 0;
+}
+
+.ksheet-head .tab-btn {
+  flex: 0 0 auto;
+  min-height: var(--tap);
+  padding: 0 16px;
+  font-size: 13px;
+}
+
+.ksheet-title {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ksheet-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 8px 10px;
+}
+
+.ksheet-group {
+  margin: 9px 0 4px;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/*
+ * 격자 팔레트 — .palette 는 가로 스크롤 전용이라 시설 73종에 안 맞는다.
+ * auto-fill 이라 세로 393px 과 가로 852px 에서 열 수만 달라진다.
+ */
+.kgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 6px;
+}
+
+.kitem {
+  min-height: 56px;
+  padding: 7px 4px;
+  border: 1px solid var(--panel-border);
+  border-radius: 11px;
+  background: var(--panel);
+  color: var(--text);
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.kitem:active {
+  transform: translateY(1px);
+  border-color: var(--accent);
+}
+
+.kitem[disabled] {
+  background: #1b2c3a;
+  border-color: #2a3f50;
+  color: #63808f;
+  cursor: default;
+}
+
+.kitem-name {
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.kitem-sub {
+  font-size: 9.5px;
+  color: var(--text-dim);
+}
+
+.kitem[disabled] .kitem-sub {
+  color: #8a6a6a;
+}
+
+/* 의뢰 목록 — 메뉴 시트 안. 예전엔 우상단을 상시로 덮고 있었다 */
+.kquests {
+  margin-top: 12px;
+  color: var(--text-dim);
+  font-size: 11px;
+  line-height: 1.45;
+}

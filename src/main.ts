@@ -45,6 +45,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const scen = await import('./sim/kairo/scenario.js');
   const { seasonShares } = await import('./sim/kairo/groups.js');
   const { KairoNewGame } = await import('./ui/kairo-newgame.js');
+  const { KairoHud } = await import('./ui/kairo-hud.js');
+  type HudItem = import('./ui/kairo-hud.js').BuildItem;
   const { KairoTerrain: KairoTerrainCls } = await import('./sim/kairo/terrain.js');
   const { GRID_W: GRID_W_C, GRID_H: GRID_H_C } = await import('./render/kairo/iso.js');
   const { StaffStore, STAFF_ROLES: STAFF_ROLE_LIST } = await import('./sim/kairo/staff.js');
@@ -79,12 +81,22 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const mapDef = scen.mapType(mapId);
   const scenario = scen.scenarioDef(scenarioId);
   let accidentCount = saved?.accidentCount ?? 0;
+  /*
+   * 디버그 오버레이 — `?debug=1` 일 때만 **보인다**. 좌상단 1/6 을 상시로 덮고 있었다.
+   *
+   * ⚠ 숨기되 DOM 에서 지우지는 않는다. `verify-kairo` 9곳과 `verify-pwa` 1곳이 이
+   * 요소의 `textContent` 로 부팅 완료를 판정한다 — 지우면 두 하네스가 죽는다.
+   */
   const box = document.createElement('div');
   box.id = 'kairo-debug';
   box.style.cssText =
-    'position:fixed;left:8px;top:8px;z-index:9;font:11px/1.5 ui-monospace,monospace;' +
+    // 상단 캡슐·목표 아래에 둔다 — 켰을 때 그것들을 덮으면 켠 의미가 반감된다
+    'position:fixed;left:8px;top:96px;z-index:11;font:11px/1.5 ui-monospace,monospace;' +
     'background:rgba(0,0,0,.55);color:#e8f4ff;padding:6px 8px;border-radius:6px;' +
     'pointer-events:none;white-space:pre';
+  if (new URLSearchParams(location.search).get('debug') !== '1') {
+    box.style.visibility = 'hidden';
+  }
   document.body.append(box);
 
   /**
@@ -186,7 +198,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         return;
       }
       if (brush === 'facility') {
-        const defId = picker.value;
+        const defId = brushFacility;
         // 등급 해금 — 허가는 돈으로 못 산다 (퇴장 만족도로만 오른다)
         const grade = currentGrade();
         const need = requiredGrade(defId);
@@ -277,54 +289,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     if (text !== '') toastTimer = window.setTimeout(() => (msg.hidden = true), 2600);
   };
 
-  // 지면 붓 — 터치 타깃 44px 이상 (모바일 검증 기준)
-  let brush: string | null = null;
-  const bar = document.createElement('div');
-  bar.id = 'kairo-brush';
-  bar.style.cssText =
-    'position:fixed;left:0;right:0;bottom:0;z-index:9;display:flex;gap:4px;padding:6px;' +
-    'background:rgba(0,0,0,.6);overflow-x:auto';
   /*
-   * 바닥에 값을 붙여 보여준다 — 카이로의 `Tiling` 은 **사는 것**이다 (K27).
-   * 값이 안 보이면 편집기 도구로 읽히고, 그러면 "내 리조트를 짓는다"가 아니라
-   * "맵을 칠한다"가 된다.
+   * 붓 — **건설 시트**에서 고른다 (K28). 예전에는 하단에 바닥 붓 바가 상시로 깔려 있고
+   * 시설은 73종 `<select>` 드롭다운이었다. 카이로에는 드롭다운이 없다 — 아이콘 격자다.
    */
-  const BRUSHES: { id: string; name: string }[] = [
-    ...GROUND_KINDS.map((k) => ({
-      id: k.id,
-      name: k.cost > 0 ? `${k.name}\n${Math.round(k.cost / 10000)}만` : k.name,
-    })),
-    { id: 'facility', name: '시설' },
-    { id: 'erase', name: '지우기' },
-  ];
-  for (const k of BRUSHES) {
-    const b = document.createElement('button');
-    b.textContent = k.name;
-    b.dataset['kind'] = k.id;
-    b.style.cssText =
-      'min-width:64px;min-height:44px;border:2px solid transparent;border-radius:6px;' +
-      'background:#20303c;color:#dceaf4;font-size:12px;white-space:pre-line;line-height:1.25';
-    b.addEventListener('click', () => {
-      brush = brush === k.id ? null : k.id;
-      for (const el of bar.querySelectorAll('button')) {
-        (el as HTMLElement).style.borderColor =
-          (el as HTMLElement).dataset['kind'] === brush ? '#7ad0ff' : 'transparent';
-      }
-    });
-    bar.append(b);
-  }
-  document.body.append(bar);
+  let brush: string | null = null;
+  let brushFacility = '';
 
-  /**
-   * 시설 선택 — 73종이라 버튼 바에 다 못 넣는다. 존별로 묶은 select 로 둔다.
-   * 실제 게임 UI 는 K8 의 도감·건설 팔레트가 대체한다.
-   */
-  const picker = document.createElement('select');
-  picker.id = 'kairo-facility';
-  picker.style.cssText =
-    'position:fixed;left:8px;bottom:64px;z-index:9;min-height:44px;font-size:13px;' +
-    'background:#20303c;color:#dceaf4;border:1px solid #3a5566;border-radius:6px;padding:4px 6px;' +
-    'max-width:60vw';
   const ZONE_NAME: Record<string, string> = {
     indoor: '실내',
     land: '야외',
@@ -332,20 +303,50 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     pension: '펜션',
     season: '계절',
   };
-  for (const zone of ['indoor', 'land', 'water', 'pension', 'season']) {
-    const grp = document.createElement('optgroup');
-    grp.label = ZONE_NAME[zone] ?? zone;
-    for (const d of allFacilityDefs().filter((x) => x.layer === zone)) {
-      const o = document.createElement('option');
-      o.value = d.id;
-      o.textContent = `${d.name} ${d.size[0]}×${d.size[1]}${
-        d.placement.requiresIndoor ? ' (실내)' : ''
-      }`;
-      grp.append(o);
-    }
-    picker.append(grp);
-  }
-  document.body.append(picker);
+
+  const hud = new KairoHud(document.body, {
+    onPick: (it: HudItem) => {
+      if (it.kind === 'facility') {
+        brush = 'facility';
+        brushFacility = it.id;
+      } else {
+        brush = it.kind === 'erase' ? 'erase' : it.id;
+      }
+    },
+    onWeek: () => runWeek(),
+  });
+
+  /** 건설 목록 — 등급이 오르면 잠금이 풀리므로 결산 뒤에 다시 만든다 */
+  const refreshBuildList = (): void => {
+    const grade = currentGrade().grade;
+    const items: HudItem[] = [
+      ...GROUND_KINDS.map((k) => ({
+        kind: 'ground' as const,
+        id: k.id,
+        name: k.name,
+        sub: k.cost > 0 ? `${Math.round(k.cost / 10000)}만` : '무료',
+      })),
+      { kind: 'erase' as const, id: 'erase', name: '철거', sub: '잔디로' },
+      ...allFacilityDefs().map((d) => {
+        const need = requiredGrade(d.id);
+        return {
+          kind: 'facility' as const,
+          id: d.id,
+          name: d.name,
+          sub: `${d.size[0]}×${d.size[1]} · ${Math.round((d.cost ?? 0) / 10000)}만`,
+          group: ZONE_NAME[d.layer] ?? d.layer,
+          ...(need > grade ? { locked: `${need}등급` } : {}),
+        };
+      }),
+    ];
+    hud.setBuildItems(items);
+  };
+
+  /** 붓을 놓는다 — 하네스가 `__kairoBrush()` 로 확인한다 */
+  const clearBrush = (): void => {
+    brush = null;
+    hud.setBrush(null);
+  };
 
   /*
    * 검증 도구가 시뮬 규칙을 직접 부를 수 있게 노출한다 (브라우저에서 규칙을 재구현하지 않도록).
@@ -597,44 +598,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     });
   };
 
-  const weekBtn = document.createElement('button');
-  weekBtn.id = 'kairo-week';
-  weekBtn.textContent = '한 주 진행 ▶';
-  weekBtn.style.cssText =
-    'position:fixed;right:8px;bottom:64px;z-index:9;min-height:48px;min-width:120px;' +
-    'border-radius:10px;border:none;background:#2f7fc0;color:#fff;font-size:15px;font-weight:600';
-  weekBtn.addEventListener('click', runWeek);
-  document.body.append(weekBtn);
-
-  /**
-   * 의뢰 목록 — **상시 표시**다. 선택 카드가 아니라 목록이라 플레이어가 언제든
-   * "다음에 뭘 하지"에 답을 갖는다 (v4 결정).
+  /*
+   * 주 진행·의뢰·위험도는 HUD 가 소유한다 (K28). 위험도는 **하단 바 안**이라
+   * 여전히 상시 표시다 — 사고가 RNG 로 느껴지면 안 된다 (v4 결정).
    */
-  const questPanel = document.createElement('div');
-  questPanel.id = 'kairo-quests';
-  questPanel.style.cssText =
-    'position:fixed;right:8px;top:8px;z-index:9;width:190px;max-height:44vh;overflow-y:auto;' +
-    'background:rgba(0,0,0,.6);color:#e8f4ff;border-radius:8px;padding:6px 8px;' +
-    'font:11px/1.45 system-ui,sans-serif';
-  document.body.append(questPanel);
+  const questPanel = hud.quests;
 
-  /**
-   * 위험도 — **상시 표시**. 사고를 순수 확률로 두면 "안전도 78인데 RNG 로 폐쇄"가 되어
-   * 억울하다. 단계를 항상 보여주고 사고는 경계·위험 단계에서만 난다 (v4 결정).
-   */
-  const riskBox = document.createElement('div');
-  riskBox.id = 'kairo-risk';
-  riskBox.style.cssText =
-    'position:fixed;right:8px;bottom:120px;z-index:9;min-width:120px;padding:6px 8px;' +
-    'border-radius:8px;font:11px/1.4 system-ui,sans-serif;color:#fff;text-align:center';
-  document.body.append(riskBox);
-
-  const RISK_COLOR: Record<string, string> = {
-    safe: 'rgba(40,140,90,.9)',
-    watch: 'rgba(190,160,40,.9)',
-    caution: 'rgba(210,120,40,.92)',
-    danger: 'rgba(200,50,40,.94)',
-  };
 
   /**
    * 직원 버튼 — 시트를 연다. 상시 표시하지 않는 이유는 **매주 만지는 화면이 아니기**
@@ -731,79 +700,55 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const newGameBtn = document.createElement('button');
   newGameBtn.id = 'kairo-newgame-open';
   newGameBtn.textContent = '새 판';
-  newGameBtn.style.cssText =
-    'position:fixed;left:8px;bottom:120px;z-index:9;min-height:44px;min-width:64px;' +
-    'border-radius:10px;border:none;background:#2a5674;color:#eaf6ff;font-size:13px';
+  newGameBtn.className = 'kitem';
   newGameBtn.addEventListener('click', () => {
     if (newGame.visible) newGame.hide();
     else newGame.show();
   });
-  document.body.append(newGameBtn);
+  hud.menuSlot.append(newGameBtn);
 
   /** 목표 표시 — "얼마나 남았나"가 안 보이면 시나리오가 목표가 아니다 */
-  const goalBox = document.createElement('div');
-  goalBox.id = 'kairo-goal';
-  goalBox.style.cssText =
-    'position:fixed;left:8px;bottom:172px;z-index:9;max-width:52vw;padding:6px 8px;' +
-    'border-radius:8px;background:rgba(16,34,46,.9);color:#dbeefa;' +
-    'font:11px/1.4 system-ui,sans-serif';
-  document.body.append(goalBox);
   const refreshGoal = (): void => {
-    const st = {
-      week: week.week,
-      grade: currentGrade().grade,
-      accidents: accidentCount,
-    };
+    const st = { week: week.week, grade: currentGrade().grade, accidents: accidentCount };
     const status = scen.scenarioStatus(scenario, st);
-    goalBox.textContent =
+    hud.setGoal(
       `${mapDef.name} · ${scenario.name}\n` +
-      (status === 'won'
-        ? '🎉 목표 달성'
-        : status === 'lost'
-          ? '실패 — 새 판으로 다시'
-          : scen.scenarioProgress(scenario, st));
-    goalBox.style.whiteSpace = 'pre';
-    goalBox.style.background =
-      status === 'won'
-        ? 'rgba(40,120,80,.92)'
-        : status === 'lost'
-          ? 'rgba(150,50,40,.92)'
-          : 'rgba(16,34,46,.9)';
+        (status === 'won'
+          ? '🎉 목표 달성'
+          : status === 'lost'
+            ? '실패 — 새 판으로 다시'
+            : scen.scenarioProgress(scenario, st)),
+      status === 'won' ? 'won' : status === 'lost' ? 'lost' : 'normal',
+    );
   };
   refreshGoal();
 
   const catalogBtn = document.createElement('button');
   catalogBtn.id = 'kairo-catalog-open';
   catalogBtn.textContent = '도감';
-  catalogBtn.style.cssText =
-    'position:fixed;right:8px;bottom:276px;z-index:9;min-height:44px;min-width:64px;' +
-    'border-radius:10px;border:none;background:#2a5674;color:#eaf6ff;font-size:13px';
+  catalogBtn.className = 'kitem';
   catalogBtn.addEventListener('click', () => {
     if (catalog.visible) catalog.hide();
     else catalog.show();
   });
-  document.body.append(catalogBtn);
+  hud.menuSlot.append(catalogBtn);
 
   const showcaseBtn = document.createElement('button');
   showcaseBtn.id = 'kairo-showcase-open';
   showcaseBtn.textContent = '감상';
-  showcaseBtn.style.cssText =
-    'position:fixed;right:8px;bottom:328px;z-index:9;min-height:44px;min-width:64px;' +
-    'border-radius:10px;border:none;background:#2a5674;color:#eaf6ff;font-size:13px';
+  showcaseBtn.className = 'kitem';
   showcaseBtn.addEventListener('click', () => showcase.show());
-  document.body.append(showcaseBtn);
+  hud.menuSlot.append(showcaseBtn);
 
   const courseBtn = document.createElement('button');
   courseBtn.id = 'kairo-course-open';
   courseBtn.textContent = '코스';
-  courseBtn.style.cssText =
-    'position:fixed;right:8px;bottom:224px;z-index:9;min-height:44px;min-width:64px;' +
-    'border-radius:10px;border:none;background:#2a5674;color:#eaf6ff;font-size:13px';
+  courseBtn.className = 'kitem';
   courseBtn.addEventListener('click', () => {
     if (coursePanel.visible) coursePanel.hide();
     else coursePanel.show();
   });
-  document.body.append(courseBtn);
+  hud.menuSlot.append(courseBtn);
 
   const refreshCourseBtn = (): void => {
     courseBtn.textContent = courses.count > 0 ? `코스 ${courses.count}` : '코스';
@@ -813,9 +758,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const staffBtn = document.createElement('button');
   staffBtn.id = 'kairo-staff-open';
   staffBtn.textContent = '경영';
-  staffBtn.style.cssText =
-    'position:fixed;right:8px;bottom:172px;z-index:9;min-height:44px;min-width:64px;' +
-    'border-radius:10px;border:none;background:#2a5674;color:#eaf6ff;font-size:13px';
+  staffBtn.className = 'kitem';
   staffBtn.addEventListener('click', () => {
     if (staffPanel.visible) staffPanel.hide();
     else
@@ -836,14 +779,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         },
       );
   });
-  document.body.append(staffBtn);
+  hud.menuSlot.append(staffBtn);
 
   /** 부족하면 버튼에 표시한다 — 시트를 열어봐야 아는 정보면 아무도 안 연다 */
   const refreshStaffBtn = (): void => {
     const eff = staff.effects(h.placement);
     const short = STAFF_ROLE_LIST.filter((r) => eff.coverage[r.id] < 1).length;
     staffBtn.textContent = short > 0 ? `경영 ⚠${short}` : '경영';
-    staffBtn.style.background = short > 0 ? '#7a4a1e' : '#2a5674';
+    staffBtn.classList.toggle('on', short > 0);
     staffPanel.refresh();
   };
 
@@ -853,11 +796,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       staffSafety: staff.effects(h.placement).safetyPoints,
       courseRisk: courseRiskPoints(),
     });
-    riskBox.style.background = RISK_COLOR[r.level] ?? RISK_COLOR['safe']!;
-    riskBox.textContent =
-      `위험도 ${RISK_NAMES[r.level]}` +
-      (r.safetyNeeded > 0 ? `\n안전 시설 ${r.safetyNeeded}개 더` : '\n사고 없음');
-    riskBox.style.whiteSpace = 'pre';
+    hud.setRisk(
+      r.level as 'safe' | 'watch' | 'caution' | 'danger',
+      `위험 ${RISK_NAMES[r.level]}` + (r.safetyNeeded > 0 ? ` · 안전 +${r.safetyNeeded}` : ''),
+    );
   };
 
   const refreshQuests = (): void => {
@@ -894,14 +836,37 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       questPanel.append(row);
     }
   };
+  /**
+   * 상단 캡슐 — 주차·계절과 현금. 레퍼런스도 이 둘을 늘 띄워 둔다.
+   * 등급이 바뀌면 건설 시트의 잠금도 같이 풀려야 하므로 여기서 함께 갱신한다.
+   */
+  const SEASON_NAME: Record<string, string> = {
+    summer: '여름',
+    autumn: '가을',
+    winter: '겨울',
+    spring: '봄',
+  };
+  let lastGradeShown = -1;
+  const refreshCaps = (): void => {
+    const g = currentGrade();
+    hud.setStatus(`주 ${week.week} · ${SEASON_NAME[season] ?? season} · ${g.grade}등급`);
+    hud.setCash(week.cash);
+    if (g.grade !== lastGradeShown) {
+      lastGradeShown = g.grade;
+      refreshBuildList();
+    }
+  };
+
   refreshQuests();
   refreshRisk();
   refreshStaffBtn();
+  refreshCaps();
   setInterval(() => {
     refreshQuests();
     refreshRisk();
     refreshStaffBtn();
     refreshGoal();
+    refreshCaps();
   }, 1500);
 
   Object.assign(h, {
@@ -930,7 +895,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     risk: { assessRisk, RISK_NAMES },
     refreshRisk,
   });
-  Object.assign(window, { __kairo: h, __kairoBrush: () => brush, __kairoCards: cardView });
+  Object.assign(window, {
+    __kairo: h,
+    __kairoBrush: () => brush,
+    __kairoClearBrush: clearBrush,
+    __kairoCards: cardView,
+  });
   console.log(
     `[카이로] 에셋 ${h.provider.name} (${h.provider.ids.length}장 플레이스홀더) · ` +
       '카메라 줌 1 고정 · 확대는 캔버스 정수 배율',
