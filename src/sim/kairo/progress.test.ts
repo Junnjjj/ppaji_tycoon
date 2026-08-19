@@ -38,9 +38,18 @@ describe('의뢰 데이터', () => {
     }
   });
 
-  it('보상이 대체로 커진다 — 뒤 의뢰가 더 어렵다', () => {
-    const first = QUESTS[0]!.reward.cash;
-    const last = QUESTS[QUESTS.length - 1]!.reward.cash;
+  it('보상이 대체로 커진다 — 뒤 의뢰가 더 값진 시설을 연다 (K41)', () => {
+    /*
+     * K41 부터 보상의 본체는 현금이 아니라 **시설 해금**이다 (돈은 다음 목표를 만들지
+     * 않는다 — 카이로 준거). 그래서 "커진다"는 보상 시설의 건설비로 잰다.
+     */
+    const costOf = (id: string): number =>
+      (allFacilityDefs().find((d) => d.id === id) as unknown as { cost: number } | undefined)
+        ?.cost ?? 0;
+    const withFacility = QUESTS.filter((q) => q.reward.facility !== undefined);
+    expect(withFacility.length).toBe(14);
+    const first = costOf(withFacility[0]!.reward.facility as string);
+    const last = costOf(withFacility[withFacility.length - 1]!.reward.facility as string);
     expect(last).toBeGreaterThan(first * 5);
   });
 
@@ -85,13 +94,22 @@ describe('해금 — 허가는 돈으로 못 산다', () => {
     expect(gradeFor(90).grade).toBe(5);
   });
 
-  it('시작 등급에서도 시설 절반 이상이 열린다 — 처음부터 할 게 있어야 한다', () => {
+  it('시작 등급 골격이 작지만 첫 세션을 덮는다 (K41 — 73장 중 45% 잠김은 소음이었다)', () => {
+    /*
+     * 예전 단언("절반 이상")은 K41 재배분으로 뒤집혔다 — 시작 목록이 클수록 좋은 게
+     * 아니라 **정보 과부하**였다 (UX 검수 §4). 1등급 골격 = 18종, 대신 그 18종이
+     * 첫 의뢰와 시작 킷을 전부 덮는지는 unlock-graph.test.ts 가 지킨다.
+     */
     const open = allFacilityDefs().filter((d) => requiredGrade(d.id) === 1);
-    expect(open.length).toBeGreaterThan(allFacilityDefs().length / 2);
+    expect(open.length).toBeGreaterThanOrEqual(15);
+    expect(open.length).toBeLessThanOrEqual(24);
   });
 
-  it('가장 큰 시설은 최종 등급에서 열린다', () => {
-    expect(requiredGrade('turtle_island')).toBe(5);
+  it('가장 큰 시설은 최종 의뢰의 보상이다 (K41 — 거북섬은 명소의 상징)', () => {
+    // turtle_island 는 골격이 아니라 마지막 의뢰(landmark) 보상으로만 열린다
+    expect(requiredGrade('turtle_island')).toBe(99);
+    expect(QUESTS[QUESTS.length - 1]!.reward.facility).toBe('turtle_island');
+    // 최고가 숙박은 여전히 최종 등급 골격이다
     expect(requiredGrade('pension_duplex')).toBe(5);
   });
 });

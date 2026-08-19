@@ -24,7 +24,8 @@
         "value": 2
       },
       "reward": {
-        "cash": 500000
+        "cash": 200000,
+        "facility": "sikhye"
       }
     },
     {
@@ -37,7 +38,8 @@
         "value": 3
       },
       "reward": {
-        "cash": 600000
+        "cash": 300000,
+        "facility": "nursing"
       }
     },
     {
@@ -63,7 +65,8 @@
         "value": 1
       },
       "reward": {
-        "cash": 800000
+        "cash": 400000,
+        "facility": "rent_duck"
       }
     },
     {
@@ -75,7 +78,8 @@
         "value": 70
       },
       "reward": {
-        "cash": 1000000
+        "cash": 500000,
+        "facility": "photozone"
       }
     },
     {
@@ -87,7 +91,8 @@
         "value": 0
       },
       "reward": {
-        "cash": 1200000
+        "cash": 600000,
+        "facility": "waterwalk"
       }
     },
     {
@@ -99,7 +104,8 @@
         "value": 5
       },
       "reward": {
-        "cash": 1000000
+        "cash": 500000,
+        "facility": "karaoke"
       }
     },
     {
@@ -111,7 +117,8 @@
         "value": 80
       },
       "reward": {
-        "cash": 1500000
+        "cash": 700000,
+        "facility": "icecream"
       }
     },
     {
@@ -124,7 +131,8 @@
         "value": 3
       },
       "reward": {
-        "cash": 1300000
+        "cash": 600000,
+        "facility": "massage_row"
       }
     },
     {
@@ -137,7 +145,8 @@
         "value": 3
       },
       "reward": {
-        "cash": 1300000
+        "cash": 600000,
+        "facility": "pavilion"
       }
     },
     {
@@ -149,7 +158,8 @@
         "value": 2000000
       },
       "reward": {
-        "cash": 2000000
+        "cash": 1000000,
+        "facility": "chicken"
       }
     },
     {
@@ -162,7 +172,8 @@
         "value": 4
       },
       "reward": {
-        "cash": 2200000
+        "cash": 1100000,
+        "facility": "trampoline_w"
       }
     },
     {
@@ -175,7 +186,8 @@
         "value": 1
       },
       "reward": {
-        "cash": 2500000
+        "cash": 1200000,
+        "facility": "camp_site"
       }
     },
     {
@@ -188,7 +200,8 @@
         "value": 1
       },
       "reward": {
-        "cash": 3000000
+        "cash": 1500000,
+        "facility": "fountain"
       }
     },
     {
@@ -201,7 +214,8 @@
         "sat": 80
       },
       "reward": {
-        "cash": 5000000
+        "cash": 2500000,
+        "facility": "turtle_island"
       }
     }
   ]

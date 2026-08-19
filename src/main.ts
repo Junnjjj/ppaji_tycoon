@@ -31,6 +31,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   );
   const { audio } = await import('./audio/index.js');
   const { previewCombos, evaluateCombos } = await import('./sim/kairo/combos.js');
+  const { UnlockStore } = await import('./sim/kairo/unlocks.js');
   const {
     questStatuses,
     ProgressStore,
@@ -45,6 +46,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { assessRisk, RISK_NAMES } = await import('./sim/kairo/risk.js');
   const { KairoReport } = await import('./ui/kairo-report.js');
   const { KairoCardView } = await import('./ui/kairo-card.js');
+  const { KairoUnlockView } = await import('./ui/kairo-unlock.js');
   const { CardStore, CARD_RNG_SALT, triggerCard } = await import('./sim/kairo/cards.js');
   const { accidentChance } = await import('./sim/kairo/risk.js');
   const scen = await import('./sim/kairo/scenario.js');
@@ -601,7 +603,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        * '자리 없음'(건물을 넓히세요)은 그대로 보인다 — 그건 정보가 아니라 처방이다.
        */
       ...allFacilityDefs()
-        .filter((d) => requiredGrade(d.id) <= grade)
+        .filter((d) => unlocks.isUnlocked(d.id, grade))
         .map((d) => {
           const locked =
             d.placement.requiresIndoor && !indoorFits(d.id)
@@ -618,9 +620,31 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
             ...(locked ? { locked } : {}),
           };
         }),
+      /*
+       * 티저 (K40·K41) — ① 진행 중 의뢰의 보상 시설 ("이 의뢰를 끝내면 이게 열린다"),
+       * ② 다음 등급 골격의 첫 시설. 해금이 벽이 아니라 도착이라는 걸 시트가 예고한다.
+       */
+      ...questStatuses(h.placement, lastSummary)
+        .filter((q) => !q.done && q.rewardFacility !== undefined)
+        .slice(0, 1)
+        .flatMap((q) => {
+          const d = allFacilityDefs().find((x) => x.id === q.rewardFacility);
+          return d
+            ? [
+                {
+                  kind: 'facility' as const,
+                  tab: 'facility' as const,
+                  id: `teaser-${d.id}`,
+                  name: d.name,
+                  teaser: `의뢰 「${q.name}」 보상`,
+                  sprite: d.sprite,
+                },
+              ]
+            : [];
+        }),
       ...allFacilityDefs()
         .filter((d) => requiredGrade(d.id) === grade + 1)
-        .slice(0, 2)
+        .slice(0, 1)
         .map((d) => ({
           kind: 'facility' as const,
           tab: 'facility' as const,
@@ -664,6 +688,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * tick 을 돌리면 결산이 언제 끝났는지 알 수 없다.
    */
   const progress = saved ? saved.progress : new ProgressStore();
+  // 사건 해금 집합 (K41) — 의뢰 보상으로 열린 시설. 등급에서 다시 만들 수 없는 상태다
+  const unlocks = UnlockStore.fromSnapshot(saved?.unlocks);
   const week = new WeekRunner(h.terrain, h.placement, h.guests);
   runner = week; // 프레임이 이제부터 주차·현금을 읽을 수 있다
   const report = new KairoReport(document.body);
@@ -673,6 +699,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 이유인데, 다른 패널이 밀어내면 선택을 조용히 건너뛴다.
    */
   panelHost.register(cardView, { modal: true });
+
+  /*
+   * 해금 도착 큐 (K41, A6) — 판정은 주 경계에서 나고 **연출은 다음 날 아침에 온다.**
+   * 흐름이 아침(tick 8)에 닿으면 하나씩 모달로 띄운다. 모달이라 뜨는 동안 시간이 멈춘다.
+   * 큐는 세이브에 안 넣는다 — 해금 자체(unlocks)는 저장되므로, 재부팅으로 잃는 것은
+   * 축하 연출 한 번뿐이다.
+   */
+  const arrivalQueue: import('./ui/kairo-unlock.js').Celebration[] = [];
+  const unlockView = new KairoUnlockView(document.body, {
+    thumbFor: (sid) => (h.provider.has(sid) ? h.provider.get(sid) : null),
+  });
   const weekRng = new RngCls(31337);
   const cards = saved?.cards ? CardStore.fromSnapshot(saved.cards) : new CardStore();
   /** 카드는 전용 RNG 스트림 — 손님·날씨와 섞으면 카드 한 장에 날씨가 밀린다 (불변식 2) */
@@ -774,6 +811,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       discovered: [...discovered],
       resortName,
       priceMult,
+      unlocks: unlocks.toSnapshot(),
+      weekSkip: flow.weekSkipUnlocked,
     });
   };
 
@@ -828,7 +867,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     /** 하네스·도구용 — true 면 흐름이 완전히 선다 (setAutoTick 과 독립) */
     frozen: false,
     /** 결산까지 스킵 — 첫 심사 통과 보상 (K42, 스펙 A2). 그 전의 ⏩ 는 하루 단위다 */
-    weekSkipUnlocked: false,
+    weekSkipUnlocked: saved?.weekSkip ?? false,
     daysSeen: 0,
   };
   const TICK_MS = 400;
@@ -840,11 +879,22 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     refreshCaps();
   };
 
-  /** step 뒤처리 — 하루 마디 토스트·낮밤 틴트·주 마디 진입 */
+  /** step 뒤처리 — 하루 마디 토스트·낮밤 틴트·해금 도착·주 마디 진입 */
   const afterStep = (): void => {
     const p = week.liveProgress();
     if (!p) return;
     h.scene.setDayPhase(p.done ? null : (p.tick % TICKS_PER_DAY) / TICKS_PER_DAY);
+    // 해금 도착 (A6) — 아침(tick 8)이 되면 하나씩. 모달이 닫히면 흐름이 다시 흘러
+    // 다음 아침 조건에서 다음 것이 온다
+    if (
+      arrivalQueue.length > 0 &&
+      !p.done &&
+      p.tick % TICKS_PER_DAY >= 8 &&
+      !panelHost.anyOpen
+    ) {
+      const c = arrivalQueue.shift();
+      if (c) unlockView.show(c);
+    }
     const closed = week.liveDays() ?? [];
     if (closed.length > flow.daysSeen) {
       const d = closed[closed.length - 1];
@@ -915,7 +965,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       // 등급이 바뀌면 땅이 넓어지거나 좁아진다 — 화면이 바로 그걸 보여줘야 한다
       const nl = landRect(currentGrade());
       h.scene.setLand(nl);
-      if (gradeNo > gradeBefore) toast(`토지가 ${nl.w}×${nl.h} 로 넓어졌습니다`, 'ok');
+      if (gradeNo > gradeBefore) {
+        toast(`토지가 ${nl.w}×${nl.h} 로 넓어졌습니다`, 'ok');
+        // 승급도 도착이다 — 새로 열린 골격 시설을 다음 날 아침에 축하한다 (K41)
+        const newly = allFacilityDefs().filter((d) => requiredGrade(d.id) === gradeNo);
+        arrivalQueue.push({
+          title: `${gradeNo}등급 승급!`,
+          name: currentGrade().name,
+          sub: `새 시설 ${newly.length}종이 열렸습니다`,
+          ...(newly[0]?.sprite !== undefined ? { sprite: newly[0].sprite } : {}),
+        });
+      }
     }
     lastSummary = {
       visitors: rep.visitors,
@@ -930,6 +990,18 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     if (weekClaim.cash > 0) {
       week.earn(weekClaim.cash);
       audio.play('sfx/cash');
+    }
+    // 의뢰 보상 시설 (K41) — 지금 해금하고, 축하는 다음 날 아침에 도착한다 (A6)
+    for (const fid of weekClaim.facilities) {
+      if (!unlocks.grant(fid)) continue;
+      const def = allFacilityDefs().find((x) => x.id === fid);
+      arrivalQueue.push({
+        title: '새 시설 해금!',
+        name: def?.name ?? fid,
+        sub: '의뢰 보상',
+        ...(def?.sprite !== undefined ? { sprite: def.sprite } : {}),
+      });
+      refreshBuildList();
     }
     persist();
     console.log(
@@ -1333,6 +1405,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     report,
     runWeek,
     flow,
+    unlocks,
+    arrivalQueue,
     openWeekCards: nextWeekCards,
     skipForward,
     beginWeek,
@@ -1352,6 +1426,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     cardsApi: { triggerCard },
     progress,
     refreshQuests,
+    refreshBuildList,
     getLastReport: () => lastReport,
     combos: { previewCombos, evaluateCombos },
     quests: { questStatuses, gradeFor, requiredGrade },

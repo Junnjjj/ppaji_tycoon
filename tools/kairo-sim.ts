@@ -56,6 +56,7 @@ import {
   landRect,
   GRADES,
 } from '../src/sim/kairo/progress.js';
+import { UnlockStore } from '../src/sim/kairo/unlocks.js';
 
 const args = process.argv.slice(2);
 const flag = (name: string, dflt: number): number => {
@@ -431,6 +432,12 @@ function buildOne(
   want: NeedKind | null,
   rng: Rng,
   /**
+   * 해금 술어 (K41). ⚠ 예전 봇은 등급조차 안 봤다 (`gradeFor(0); void grade`) —
+   * 1주차에 5등급 시설을 지어 왔고, 헤드리스가 실제 판보다 부유한 세계를 쟀다.
+   * UI 와 같은 `isUnlocked` 하나를 쓴다.
+   */
+  isUnlocked: (id: string) => boolean,
+  /**
    * 해금된 토지 (K25). 봇이 이걸 무시하면 밸런싱이 **실제로 못 쓰는 땅**까지 쓰게 되어,
    * 헤드리스 숫자와 손으로 하는 판이 갈라진다. 검증이 조용히 통과하는 전형적인 모양이다.
    */
@@ -443,11 +450,10 @@ function buildOne(
   why?: Map<string, number>,
 ): number {
   const opts = { land };
-  const grade = gradeFor(0).grade; // 등급 제한은 아래에서 따로 본다
-  void grade;
   const cands = allFacilityDefs()
     .filter((d) => {
       const x = d as unknown as { need?: NeedKind; cost: number };
+      if (!isUnlocked(d.id)) return false;
       if (x.cost > cash) return false;
       if (want && x.need !== want) return false;
       return true;
@@ -538,6 +544,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
   const week = new WeekRunner(t, p, g);
   const progress = new ProgressStore();
+  const unlocks = new UnlockStore();
   /**
    * 평판 — 퇴장 만족도의 이동평균 (§9.2). 지난주 값 하나로 등급을 정하면 진동한다
    * (실측: 40주에 등급이 35번 바뀌었다).
@@ -713,6 +720,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         budget,
         b === 0 ? want : null,
         rng,
+        (id) => unlocks.isUnlocked(id, gradeNo),
         landRect(GRADES[gradeNo - 1] ?? GRADES[0]!),
         buildFailWhy,
       );
@@ -919,6 +927,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
 
     const claimed = progress.claim(questStatuses(p, rep));
     cash += claimed.cash;
+    for (const fid of claimed.facilities) unlocks.grant(fid); // 봇도 보상을 받는다 (K41)
   }
 
   const combos = evaluateCombos(p);

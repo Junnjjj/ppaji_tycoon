@@ -2016,8 +2016,8 @@ async function main(): Promise<void> {
       prog.detailsFilled && prog.progressInRange ? 'pass' : 'fail',
     );
     record(
-      '해금 — 시작 1등급, 거북섬은 5등급',
-      prog.startGrade === 1 && prog.needTurtle === 5 && prog.needShop === 1 ? 'pass' : 'fail',
+      '해금 — 시작 1등급 · 거북섬은 최종 의뢰 보상(99) · 매점은 2등급 골격 (K41)',
+      prog.startGrade === 1 && prog.needTurtle === 99 && prog.needShop === 2 ? 'pass' : 'fail',
       `시작 ${prog.startGrade}등급 · 거북섬 ${prog.needTurtle} · 매점 ${prog.needShop}`,
     );
     record(
@@ -3510,8 +3510,9 @@ async function main(): Promise<void> {
     // 시트는 마지막으로 본 탭을 기억한다 — 시설 탭을 명시해야 한다
     const ftab = document.querySelector('#kairo-sheet [data-tab="facility"]');
     if (ftab) ftab.click();
-    const pick = document.querySelector('[data-pick="facility:shop"]');
-    if (!pick) return { ok: false, why: '건설 시트에서 매점을 못 찾았다', tiles: [] };
+    // K41: shop 은 2등급 골격이 됐다 — 1등급 골격인 분식(snackbar)으로 잰다
+    const pick = document.querySelector('[data-pick="facility:snackbar"]');
+    if (!pick) return { ok: false, why: '건설 시트에서 분식을 못 찾았다', tiles: [] };
     pick.click();
     if (!window.__kairoBrush || window.__kairoBrush() !== 'facility') {
       return { ok: false, why: '고른 뒤에도 붓이 facility 가 아니다', tiles: [] };
@@ -5294,6 +5295,82 @@ async function main(): Promise<void> {
     '사건 밀도 — 1× 기준 분당 가시 사건 ≥ 6 (도착+이모트, 스펙 §2.1 ⚖)',
     perMin >= 6 ? 'pass' : 'fail',
     `분당 ${perMin} (도착 ${density2.entered1 - density.entered0} · 이모트 ${density2.emotes} · 관측 ${Math.round(obsMinutes * 60)}초분)`,
+  );
+
+  /*
+   * ── K41. 해금 셀레브레이션 + 사건 해금 ──
+   *
+   * 판정(주 경계의 grant)은 단위 테스트가 본다 (unlocks.test.ts). 여기서는 화면 배관을
+   * 본다: 도착 큐 → 아침 모달 → 닫으면 흐름 재개, 그리고 grant 가 시트에 카드를 만든다.
+   */
+  await page.evaluate(`(() => {
+    const h = window.__kairo;
+    h.week.abort();
+    h.beginWeek();
+    h.flow.frozen = false;
+    h.flow.speed = 2;
+    h.arrivalQueue.push({
+      title: '새 시설 해금!', name: '식혜', sub: '의뢰 보상', sprite: 'facility/sikhye',
+    });
+  })()`);
+  await page
+    .waitForFunction(
+      `(() => { const u = document.getElementById('kairo-unlock'); return !!u && !u.hidden; })()`,
+      undefined,
+      { timeout: 8000 },
+    )
+    .catch(() => undefined);
+  const celeb = (await page.evaluate(`(() => {
+    const u = document.getElementById('kairo-unlock');
+    if (!u || u.hidden) return { shown: false };
+    const t1 = window.__kairo.week.liveProgress().tick;
+    return {
+      shown: true,
+      name: (u.querySelector('.kunlock-name') || {}).textContent || '',
+      hasThumb: !!u.querySelector('.kunlock-thumb canvas'),
+      tickWhileOpen: t1,
+    };
+  })()`)) as { shown: boolean; name?: string; hasThumb?: boolean; tickWhileOpen?: number };
+  record(
+    '★ 해금이 다음 날 아침 모달로 도착한다 (K41, 스펙 §3.6·A6)',
+    celeb.shown && celeb.name === '식혜' && celeb.hasThumb === true ? 'pass' : 'fail',
+    celeb.shown ? `"${celeb.name}" · 썸네일 ${celeb.hasThumb ? 'OK' : '없음'}` : '모달이 안 떴다',
+  );
+  await page.waitForTimeout(700);
+  const pausedDuring = (await page.evaluate(
+    `window.__kairo.week.liveProgress().tick`,
+  )) as number;
+  record(
+    '모달이 떠 있는 동안 시간이 멈춘다 (멈춤 규칙 그대로)',
+    celeb.tickWhileOpen !== undefined && pausedDuring === celeb.tickWhileOpen ? 'pass' : 'fail',
+    `tick ${celeb.tickWhileOpen} → ${pausedDuring}`,
+  );
+  await page.click('#kairo-unlock-close');
+  await page.waitForTimeout(900);
+  const resumed = (await page.evaluate(
+    `(() => { const p = window.__kairo.week.liveProgress(); window.__kairo.flow.speed = 1; return p ? p.tick : -1; })()`,
+  )) as number;
+  record(
+    '닫으면 흐름이 다시 흐른다',
+    resumed > pausedDuring ? 'pass' : 'fail',
+    `tick ${pausedDuring} → ${resumed}`,
+  );
+
+  // grant → 시트에 카드가 생긴다 (사건 해금이 목록에 반영되는 배관)
+  const granted = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    const before = !!document.querySelector('[data-pick="facility:karaoke"]');
+    h.unlocks.grant('karaoke');
+    h.refreshBuildList();
+    document.getElementById('kairo-build-open').click();
+    const after = !!document.querySelector('[data-pick="facility:karaoke"]');
+    document.getElementById('kairo-sheet-close').click();
+    return { before: before, after: after };
+  })()`)) as { before: boolean; after: boolean };
+  record(
+    '사건으로 열린 시설이 시트에 카드로 나타난다 (K41)',
+    !granted.before && granted.after ? 'pass' : 'fail',
+    `grant 전 ${granted.before ? '있음' : '없음'} → 후 ${granted.after ? '있음' : '없음'}`,
   );
 
   await browser.close();

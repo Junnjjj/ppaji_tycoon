@@ -45,7 +45,8 @@ export interface QuestDef {
   name: string;
   desc: string;
   condition: QuestCondition;
-  reward: { cash: number };
+  /** 보상 — 시설이 주 보상이면 현금은 곁들이다 (K41: 돈은 다음 목표를 만들지 않는다) */
+  reward: { cash: number; facility?: string };
 }
 
 export interface GradeDef {
@@ -75,9 +76,12 @@ const UNLOCKS = rawUnlocks as unknown as {
 
 export const GRADES: readonly GradeDef[] = UNLOCKS.grades;
 
-/** 시설이 열리는 등급 */
+/**
+ * 시설이 열리는 등급 (골격 해금). **목록에 없는 id 는 99** — 의뢰 보상처럼 사건으로만
+ * 열리는 시설이다 (K41). 예전 기본값 1 은 "데이터에 안 적으면 공짜"라는 구멍이었다.
+ */
 export function requiredGrade(defId: string): number {
-  return UNLOCKS.facilityGrade[defId] ?? 1;
+  return UNLOCKS.facilityGrade[defId] ?? 99;
 }
 
 /**
@@ -233,6 +237,8 @@ export interface QuestStatus {
   /** 현재값 / 목표값 (사람이 읽는 형태) */
   detail: string;
   reward: number;
+  /** 완수하면 열리는 시설 (K41) — 티저와 셀레브레이션이 쓴다 */
+  rewardFacility?: string;
 }
 
 function supplyOf(placement: PlacementGrid): Record<string, number> {
@@ -320,6 +326,7 @@ export function questStatuses(
       progress,
       detail,
       reward: q.reward.cash,
+      ...(q.reward.facility !== undefined ? { rewardFacility: q.reward.facility } : {}),
     });
   }
   return out;
@@ -344,17 +351,19 @@ export class ProgressStore {
     return this.claimed.has(id);
   }
 
-  /** 새로 완료된 의뢰들을 청구하고 총 보상을 돌려준다 */
-  claim(statuses: readonly QuestStatus[]): { ids: string[]; cash: number } {
+  /** 새로 완료된 의뢰들을 청구하고 총 보상을 돌려준다 — 시설 해금 포함 (K41) */
+  claim(statuses: readonly QuestStatus[]): { ids: string[]; cash: number; facilities: string[] } {
     const ids: string[] = [];
+    const facilities: string[] = [];
     let cash = 0;
     for (const s of statuses) {
       if (!s.done || this.claimed.has(s.id)) continue;
       this.claimed.add(s.id);
       ids.push(s.id);
       cash += s.reward;
+      if (s.rewardFacility !== undefined) facilities.push(s.rewardFacility);
     }
-    return { ids, cash };
+    return { ids, cash, facilities };
   }
 
   toSnapshot(): ProgressSnapshot {

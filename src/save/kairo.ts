@@ -3,6 +3,7 @@ import { WallGrid, type WallSnapshot } from '../sim/kairo/walls.js';
 import { PlacementGrid, type PlacementSnapshot } from '../sim/kairo/placement.js';
 import { ProgressStore, type ProgressSnapshot } from '../sim/kairo/progress.js';
 import type { WeekSnapshot, WeekSummary, Season } from '../sim/kairo/week.js';
+import type { UnlockSnapshot } from '../sim/kairo/unlocks.js';
 import type { CardSnapshot } from '../sim/kairo/cards.js';
 import type { StaffCounts } from '../sim/kairo/staff.js';
 import type { CourseSnapshot } from '../sim/kairo/course.js';
@@ -30,11 +31,11 @@ import type { DoorSnapshot } from '../sim/kairo/doors.js';
  * (`WeekSummary`) — 그래서 복원 후에도 의뢰 진행도와 등급이 그대로 보인다.
  */
 
-export const KAIRO_SAVE_VERSION = 6;
+export const KAIRO_SAVE_VERSION = 7;
 export const KAIRO_SAVE_KEY = 'ppaji.kairo.save.v1';
 
 export interface KairoSaveV5 {
-  version: 6;
+  version: 7;
   savedAtMs: number;
   seed: number;
   gate: { i: number; j: number };
@@ -100,6 +101,13 @@ export interface KairoSaveV5 {
   reputation?: number;
   gradeNo?: number;
   accidentCount?: number;
+  /**
+   * 사건 해금 집합 (K41). 의뢰 보상으로 열린 시설은 **등급에서 다시 만들 수 없다** —
+   * 안 저장하면 새로고침이 곧 보상 몰수다. v6 이하 세이브는 빈 집합으로 열린다.
+   */
+  unlocks?: UnlockSnapshot;
+  /** ⏩ 주 스킵 해금 (K42 심사 보상) — 도구도 보상이다, 잃으면 안 된다 */
+  weekSkip?: boolean;
 }
 
 export type AnyKairoSave = KairoSaveV5;
@@ -266,6 +274,8 @@ const MIGRATIONS: Record<number, (s: Record<string, unknown>) => Record<string, 
    * 플레이어가 산 것을 마이그레이션이 망가뜨리는 쪽이 훨씬 나쁘다. 새 판부터 산이 있다.
    */
   5: (s) => ({ ...s, version: 6 }),
+  // v7 (K41): unlocks·weekSkip 추가 — 없으면 빈 집합/false 로 읽는다 (하위호환)
+  6: (s) => ({ ...s, version: 7 }),
 };
 
 export class KairoSaveError extends Error {
@@ -301,6 +311,8 @@ export interface KairoSaveInput {
   accidentCount?: number;
   reputation?: number;
   gradeNo?: number;
+  unlocks?: UnlockSnapshot;
+  weekSkip?: boolean;
 }
 
 export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave {
@@ -332,6 +344,8 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.accidentCount !== undefined ? { accidentCount: input.accidentCount } : {}),
     ...(input.reputation !== undefined ? { reputation: input.reputation } : {}),
     ...(input.gradeNo !== undefined ? { gradeNo: input.gradeNo } : {}),
+    ...(input.unlocks ? { unlocks: input.unlocks } : {}),
+    ...(input.weekSkip !== undefined ? { weekSkip: input.weekSkip } : {}),
   };
 }
 
@@ -390,6 +404,8 @@ export interface KairoRestored {
   accidentCount?: number;
   reputation?: number;
   gradeNo?: number;
+  unlocks?: UnlockSnapshot;
+  weekSkip?: boolean;
 }
 
 export function restoreKairo(raw: unknown): KairoRestored {
@@ -421,6 +437,8 @@ export function restoreKairo(raw: unknown): KairoRestored {
     ...(s.accidentCount !== undefined ? { accidentCount: s.accidentCount } : {}),
     ...(s.reputation !== undefined ? { reputation: s.reputation } : {}),
     ...(s.gradeNo !== undefined ? { gradeNo: s.gradeNo } : {}),
+    ...(s.unlocks ? { unlocks: s.unlocks } : {}),
+    ...(s.weekSkip !== undefined ? { weekSkip: s.weekSkip } : {}),
   };
 }
 
