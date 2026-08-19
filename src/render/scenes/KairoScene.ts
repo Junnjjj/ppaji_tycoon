@@ -34,11 +34,25 @@ import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
  * `tools/make-canopy.py` 가 `assets/generated/backdrop/maps/raw-mountain.png` 에서
  * 뽑는다 — 배경 산과 **같은 붓**이라 지평선에서 자연스럽게 이어진다.
  */
-const SURROUND_TEX = 'surround/canopy';
-const SURROUND_URL = 'assets/backdrop/bg-canopy.png';
+const SURROUND_TEX = 'surround/ground';
+/**
+ * 지도 바깥을 채울 때 쓰는 지면 종류 (K38).
+ *
+ * ⚠ 그림 파일이 아니라 **게임이 지금 쓰는 지면 스프라이트**를 굽는다. 사용자 요구:
+ * "숲이 아니고 현재 지형을 깔아달라고, PNG 말고, 현재 설치된 땅 기준으로".
+ * 다른 붓으로 그린 텍스처를 깔면 경계에서 결이 어긋나 "여기부터는 딴 그림"으로 읽힌다.
+ */
+const SURROUND_KIND = 'lawn';
 /** 수평 윗변 위로 쭉 이어지는 하늘+산+숲 (K38) */
 const HORIZON_TEX = 'surround/horizon';
 const HORIZON_URL = 'assets/backdrop/bg-horizon.png';
+/**
+ * 지평선과 땅이 만나는 선에 얹는 **트리라인** (알파, K38).
+ *
+ * 없으면 그 경계가 자로 그은 듯 곧다 (실측). 나무 실루엣이 걸치면 숲 가장자리로 읽힌다.
+ */
+const TREELINE_TEX = 'surround/treeline';
+const TREELINE_URL = 'assets/backdrop/bg-treeline.png';
 /**
  * 지도의 **수평 윗변** 이 놓이는 월드 y (K38).
  *
@@ -253,10 +267,10 @@ export class KairoScene extends Phaser.Scene {
      * 그러면 지금까지처럼 배경색이 보일 뿐이다. 배경 그림 하나 때문에 판이 안 뜨면 안 된다.
      * (`createAssetProvider` 가 아틀라스에 대해 하는 것과 같은 판단이다.)
      */
-    this.load.image(SURROUND_TEX, SURROUND_URL);
     this.load.image(HORIZON_TEX, HORIZON_URL);
+    this.load.image(TREELINE_TEX, TREELINE_URL);
     this.load.once('loaderror', (f: { key?: string }) => {
-      if (f?.key === SURROUND_TEX || f?.key === HORIZON_TEX) {
+      if (f?.key === HORIZON_TEX) {
         console.warn('[카이로] 배경 그림을 못 읽었다 — 절차적 배경으로 간다');
       }
     });
@@ -266,6 +280,8 @@ export class KairoScene extends Phaser.Scene {
       if (this.textures.exists(id)) continue;
       this.textures.addCanvas(id, this.opts.provider.get(id));
     }
+
+    this.bakeSurroundTexture();
 
     // 손님·이모트 아틀라스는 코드로 굽는다 (스펙 §2). 프레임을 하나씩 등록한다
     if (!this.textures.exists('guest')) {
@@ -562,6 +578,62 @@ export class KairoScene extends Phaser.Scene {
    * 플래그로 막는 것이 아니라 존재하지 않는다 (사용자: "하지만 설치는 안되는").
    *
    */
+  /**
+   * 지도 바깥에 깔 **아이소 지면**을 이음새 없이 굽는다 (K38).
+   *
+   * ## 왜 그림 파일이 아닌가
+   *
+   * 처음엔 산 아트에서 뽑은 숲 PNG 를 깔았는데, 사용자가 "숲이 아니고 현재 지형을
+   * 깔아달라고, PNG 말고, 현재 설치된 땅 기준으로" 라고 했다. 다른 붓으로 그린 텍스처는
+   * 경계에서 결이 어긋나 "여기부터는 딴 그림"으로 읽힌다. 게임이 지금 쓰는 지면
+   * 스프라이트를 그대로 쓰면 지도 안팎이 **같은 땅**이 된다.
+   *
+   * ## 아이소가 사각형으로 반복되는 이유
+   *
+   * 타일 중심은 `(16(i−j), 8(i+j))` 의 격자에 있다. 이 격자는 `(32,0)` 과 `(16,8)` 로
+   * 생성되므로 **32×16 직사각형이 기본 영역**이고, 그 안에 마름모 중심이 정확히 둘 들어간다.
+   * 그래서 아이소 지면은 사각형으로 이음새 없이 반복된다 — 이게 타일스프라이트 한 장으로
+   * 화면을 채울 수 있는 근거다.
+   *
+   * 128×64 로 굽는 이유는 **변형 3종을 섞기 위해서**다. 32×16 이면 같은 그림이 반복돼
+   * 격자 무늬가 눈에 띈다.
+   */
+  private bakeSurroundTexture(): void {
+    if (this.textures.exists(SURROUND_TEX)) return;
+    const alts = [0, 1, 2]
+      .map((n) => variantId(`ground/${SURROUND_KIND}`, { alt: n }))
+      .filter((id) => this.opts.provider.has(id));
+    if (alts.length === 0) return;
+
+    const W = TILE_W * 4;
+    const H = TILE_H * 4;
+    const tex = this.textures.createCanvas(SURROUND_TEX, W, H);
+    if (!tex) return;
+    const ctx = tex.getContext();
+    ctx.imageSmoothingEnabled = false;
+
+    /*
+     * 격자점을 넉넉히 돌면서 **감아서** 그린다. 가장자리를 넘는 마름모는 반대쪽에도
+     * 한 번 더 찍어야 이음선이 안 생긴다 — 잘린 마름모의 나머지 반쪽이 거기 있다.
+     */
+    for (let b = -2; b < 6; b++) {
+      for (let a = -2; a < 6; a++) {
+        const x = a * TILE_W + b * (TILE_W / 2);
+        const y = b * (TILE_H / 2);
+        const src = this.opts.provider.get(alts[((a * 7 + b * 13) % alts.length + alts.length) % alts.length] as string);
+        for (const dx of [-W, 0, W]) {
+          for (const dy of [-H, 0, H]) {
+            const px = x + dx;
+            const py = y + dy;
+            if (px > W || py > H || px + TILE_W < 0 || py + TILE_H < 0) continue;
+            ctx.drawImage(src, px, py);
+          }
+        }
+      }
+    }
+    tex.refresh();
+  }
+
   private buildSurround(): void {
     for (const t of this.surrounds) t.destroy();
     this.surrounds = [];
@@ -618,6 +690,20 @@ export class KairoScene extends Phaser.Scene {
       ts.setScrollFactor(0.25, 1);
       ts.setDepth(-980);
       this.backdrops.push(ts);
+
+      /*
+       * 트리라인 — **밑변이 수평 윗변에 닿는다.** 나무 실루엣이 그 선에 걸쳐 자로 그은
+       * 듯한 경계를 흐트러뜨린다 (알파 그림이라 위쪽은 지평선이 그대로 비친다).
+       * 지평선보다 가까우므로 시차를 크게 준다.
+       */
+      if (this.textures.exists(TREELINE_TEX)) {
+        const tsrc = this.textures.get(TREELINE_TEX).getSourceImage();
+        const tl = this.add.tileSprite(-w / 2, SKYLINE_Y - tsrc.height, w, tsrc.height, TREELINE_TEX);
+        tl.setOrigin(0, 0);
+        tl.setScrollFactor(0.5, 1);
+        tl.setDepth(-970);
+        this.backdrops.push(tl);
+      }
       return;
     }
 

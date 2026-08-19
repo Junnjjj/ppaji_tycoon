@@ -2539,10 +2539,20 @@ async function main(): Promise<void> {
    * 한쪽 기준으로 뭉뚱그리면 어느 쪽도 제대로 안 잰다.
    */
   if (backdrop.art) {
+    /*
+     * 실물 아트는 **지평선 + 트리라인** 둘이다. 절차적 3겹처럼 원근을 겹으로 만드는 것이
+     * 아니라, 지평선 한 장이 원근을 이미 담고 있고 트리라인은 **경계를 흐트러뜨리는**
+     * 역할이다 — 없으면 지평선과 땅이 자로 그은 듯 만난다 (실측).
+     */
     record(
-      '배경이 실물 아트 한 장이다 — 겹은 그림 안에 있다 (K38)',
-      backdrop.count === 1 ? 'pass' : 'fail',
+      '배경은 지평선 + 트리라인 둘이다 — 원근은 그림 안에 있다 (K38)',
+      backdrop.count === 2 ? 'pass' : 'fail',
       `${backdrop.count}겹 · 시차 x ${backdrop.factors.join(', ')} · y ${backdrop.factorsY.join(', ')}`,
+    );
+    record(
+      '트리라인이 지평선보다 가깝다 — 시차가 더 크다 (K38)',
+      (backdrop.factors[1] ?? 0) > (backdrop.factors[0] ?? 1) ? 'pass' : 'fail',
+      `지평선 ${backdrop.factors[0]} < 트리라인 ${backdrop.factors[1]}`,
     );
     record(
       '★ 가로는 시차, 세로는 잠긴다 — 지평선이 땅에서 안 떨어진다 (K38)',

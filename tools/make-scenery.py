@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """배경 지형 텍스처 둘 — 생성해 둔 산 아트에서 뽑는다 (K38).
 
-  · `bg-canopy.png`  숲 캐노피, **사방** 타일러블 — 지도 바깥 땅
+  · `bg-treeline.png` 트리라인(알파) — 지평선과 땅이 만나는 선을 흐트러뜨린다
   · `bg-horizon.png` 하늘+산+숲, **가로** 타일러블 — 수평 윗변 위로 쭉 이어지는 배경
 
 ## 왜 필요한가
@@ -32,7 +32,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "assets/generated/backdrop/maps/raw-mountain.png"
-OUT = ROOT / "public/assets/backdrop/bg-canopy.png"
+OUT_T = ROOT / "public/assets/backdrop/bg-treeline.png"
 OUT_H = ROOT / "public/assets/backdrop/bg-horizon.png"
 
 # ── 지평선 (하늘+산+숲) ────────────────────────────────────────────────
@@ -72,35 +72,23 @@ def wrap_axis(a: np.ndarray, size: int, blend: int, axis: int) -> np.ndarray:
     return out
 
 
-def main() -> None:
-    raw = Image.open(SRC).convert("RGB")
-    need_w = (W + BLEND) * SHRINK
-    need_h = (H + BLEND) * SHRINK
-    x0 = max(0, (raw.width - need_w) // 2)
-    y0 = max(0, min(CROP_TOP, raw.height - need_h))
-    crop = raw.crop((x0, y0, x0 + need_w, y0 + need_h))
-    small = crop.resize((W + BLEND, H + BLEND), Image.NEAREST)
+def treeline() -> None:
+    """트리라인(알파)을 게임이 읽는 자리로 옮긴다.
 
-    a = np.asarray(small).astype(np.float64)
-    a = wrap_axis(a, W, BLEND, axis=1)   # 가로
-    a = wrap_axis(a, H, BLEND, axis=0)   # 세로
-    a = np.clip(a * DIM, 0, 255).astype(np.uint8)
+    지평선 아트의 아랫단과 지도 바깥 **지면**이 만나는 선은 그냥 두면 자로 그은 듯
+    곧다 (실측 스크린샷). 나무 실루엣을 그 선에 얹으면 숲 가장자리로 읽힌다.
 
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    Image.fromarray(a, "RGB").save(OUT)
-
-    # 이음선 자가 검사 — 경계 대비가 내부보다 크게 튀면 타일링에서 격자가 보인다
-    f = a.astype(np.int32)
-    seam_x = int(np.abs(f[:, -1] - f[:, 0]).sum())
-    inner_x = int(np.abs(f[:, W // 2] - f[:, W // 2 + 1]).sum())
-    seam_y = int(np.abs(f[-1, :] - f[0, :]).sum())
-    inner_y = int(np.abs(f[H // 2, :] - f[H // 2 + 1, :]).sum())
-    rx = seam_x / max(1, inner_x)
-    ry = seam_y / max(1, inner_y)
-    print(f"{OUT.relative_to(ROOT)} {W}×{H} · 가로 이음선 {rx:.2f}배 · 세로 {ry:.2f}배")
-    if rx > 2.5 or ry > 2.5:
-        raise SystemExit("❌ 이음선이 내부보다 2.5배 넘게 튄다 — BLEND 를 넓히거나 CROP 을 옮길 것")
-    print("✅ 사방 타일러블")
+    ⚠ 새로 그리지 않는다 — `bg-near.png` 가 이미 그 그림이다 (알파, 209×110).
+    """
+    src = ROOT / "assets/generated/backdrop/bg-near.png"
+    im = Image.open(src).convert("RGBA")
+    OUT_T.parent.mkdir(parents=True, exist_ok=True)
+    im.save(OUT_T)
+    a = np.asarray(im).astype(np.int32)
+    f = a[:, :, :3]
+    seam = int(np.abs(f[:, -1] - f[:, 0]).sum())
+    inner = int(np.abs(f[:, im.width // 2] - f[:, im.width // 2 + 1]).sum())
+    print(f"{OUT_T.relative_to(ROOT)} {im.width}×{im.height} · 가로 이음선 {seam / max(1, inner):.2f}배")
 
 
 def horizon() -> None:
@@ -141,5 +129,5 @@ def horizon() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    treeline()
     horizon()
