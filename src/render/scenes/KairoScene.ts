@@ -943,6 +943,15 @@ export class KairoScene extends Phaser.Scene {
     return this.opts.autoTick !== false;
   }
 
+  /**
+   * 렌더가 tick 하나를 소비하는 실시간 초 (K44) — 손님 보간이 이걸 따라간다.
+   * main 이 부팅과 배속 전환에서 넣어 준다. 유휴 시뮬(10Hz) 기본값 0.1.
+   */
+  private tickSeconds = 0.1;
+  setTickSeconds(s: number): void {
+    this.tickSeconds = s;
+  }
+
   /** 검증 도구용 — 시설 이미지를 직접 본다 (앵커 좌표를 수치로 확인) */
   /**
    * 검증 도구용 — 지면 타일 그림 하나. **리프트가 실제로 걸렸는지**를 화면 y 로 잰다 (K37).
@@ -1664,7 +1673,7 @@ export class KairoScene extends Phaser.Scene {
       }
     }
     this.animTick++;
-    this.opts.guests.advanceRenderProgress(delta / 1000);
+    this.opts.guests.advanceRenderProgress(delta / 1000, this.tickSeconds);
     this.syncGuests();
     this.reportFrame();
   }

@@ -5285,8 +5285,8 @@ async function main(): Promise<void> {
     h.flow.speed = 1;
     return { entered1: s1.alive + s1.exited, emotes: emotes, t1: t1 };
   })()`)) as { entered1: number; emotes: number; t1: number };
-  // 관측한 tick 을 1× 실시간으로 환산: tick × 0.4초
-  const obsMinutes = ((density2.t1 - density.t0) * 0.4) / 60;
+  // 관측한 tick 을 1× 실시간으로 환산: tick × 0.2초 (K44 — 하루 24초)
+  const obsMinutes = ((density2.t1 - density.t0) * 0.2) / 60;
   const perMin =
     obsMinutes > 0
       ? Math.round((density2.entered1 - density.entered0 + density2.emotes) / obsMinutes)

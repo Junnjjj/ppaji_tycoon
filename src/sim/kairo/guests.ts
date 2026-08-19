@@ -955,9 +955,17 @@ export class GuestStore {
     return 'idle';
   }
 
-  /** 렌더 보간용 — 프레임마다 progress 를 밀어 준다 (시뮬 상태를 바꾸지 않는다) */
-  advanceRenderProgress(dt: number): void {
-    const per = this.tunables.ticksPerStep / 10; // 10Hz 고정 timestep 기준 초
+  /**
+   * 렌더 보간용 — 프레임마다 progress 를 밀어 준다 (시뮬 상태를 바꾸지 않는다).
+   *
+   * `tickSeconds` 는 렌더가 tick 하나를 실시간 몇 초에 소비하는지다 (K44).
+   * ⚠ 예전엔 10Hz(0.1초) 고정 가정이었다 — 흐르는 낮(K39)이 tick 을 0.4초에
+   * 소비하자 손님이 0.4초 만에 다음 칸까지 미끄러진 뒤 **1.2초를 얼어 있었다**
+   * (스톱모션 — 사용자가 "느려졌다"로 보고한 것의 절반). 보간 시간이 실제 tick
+   * 간격과 같아야 걸음이 이어진다.
+   */
+  advanceRenderProgress(dt: number, tickSeconds = 0.1): void {
+    const per = this.tunables.ticksPerStep * tickSeconds;
     for (const g of this.guests) {
       if (g.progress < 1) g.progress = Math.min(1, g.progress + dt / per);
     }

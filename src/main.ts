@@ -1006,7 +1006,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     weekSkipUnlocked: exam.toolsUnlocked || (saved?.weekSkip ?? false),
     daysSeen: 0,
   };
-  const TICK_MS = 400;
+  /*
+   * 하루 = 120 tick × 0.2초 = **24초** (K44 실측 조정). 처음 48초(0.4초/tick)는
+   * ticksPerStep=4 와 겹쳐 손님이 1.6초/칸으로 걸어 "느려졌다"는 보고를 받았다 —
+   * 0.8초/칸이면 산책으로 읽힌다. 배속 2×(메뉴)면 0.4초/칸 = 예전 유휴 시뮬 속도다.
+   */
+  const TICK_MS = 200;
+
+  /** 씬 보간에 현재 박자를 알린다 — 배속·부팅에서 부른다 (K44) */
+  const syncTickPace = (): void => {
+    h.scene.setTickSeconds(TICK_MS / 1000 / flow.speed);
+  };
 
   const beginWeek = (): void => {
     week.begin(weekRng, assembleWeekOpts());
@@ -1417,6 +1427,22 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     },
   });
 
+  /** 배속 (K44) — 상시 버튼 3개 불변식 때문에 메뉴 안이다. 세션 선호라 저장 안 한다 */
+  const speedBtn = document.createElement('button');
+  speedBtn.id = 'kairo-speed';
+  speedBtn.className = 'kitem';
+  const refreshSpeedBtn = (): void => {
+    speedBtn.textContent = `배속 ${flow.speed}× → ${flow.speed === 1 ? 2 : 1}×`;
+  };
+  speedBtn.addEventListener('click', () => {
+    flow.speed = flow.speed === 1 ? 2 : 1;
+    syncTickPace();
+    refreshSpeedBtn();
+    toast(`배속 ${flow.speed}×`, 'ok');
+  });
+  refreshSpeedBtn();
+  hud.menuSlot.append(speedBtn);
+
   /*
    * 심사 신청 (K42) — 자격이 되면 메뉴에 나타난다. 신청하면 수수료를 내고
    * 주말(목요일 이후 신청이면 다음 주말)에 심사관이 판정한다.
@@ -1713,6 +1739,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 밀린 시간이 몰아서 흐르지 않게 한다 (멈춤이지 빚이 아니다).
    */
   h.scene.setClockOwner('week');
+  syncTickPace();
   if (flow.weekSkipUnlocked) hud.setWeekLabel('한 주 ⏩');
   beginWeek();
   let lastRaf = performance.now();
