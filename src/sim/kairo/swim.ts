@@ -190,3 +190,30 @@ function adjacentStandable(
   }
   return out;
 }
+
+/**
+ * 구역의 가상 시설 핸들 (S2) — 시설 핸들(양의 정수, 작다)과 절대 겹치지 않는 대역.
+ * 구역 파생 순서(스캔 순서)가 결정적이므로 핸들도 결정적이다 — 세이브 복원 후에도
+ * 같은 구역이 같은 핸들을 받는다.
+ */
+export const ZONE_HANDLE_BASE = 1 << 20;
+
+export function zoneHandle(index: number): number {
+  return ZONE_HANDLE_BASE + index;
+}
+
+/** 정원 — 면적 × 0.8 (스펙 §2.1). 물은 시설 슬롯보다 성기게 찬다 */
+export function zoneCapacity(z: SwimZone): number {
+  return Math.max(1, Math.floor(z.area * 0.8));
+}
+
+/** 요금 (1/10 눈금 규칙) — 수영장 800 · 강 구역 500 */
+export function zoneFee(z: SwimZone | undefined): number {
+  if (!z) return 0;
+  return z.kind === 'pool' ? 800 : 500;
+}
+
+/** 위험 기여 (스펙 §2.2) — 구역은 물이다. 구역당 +2 (안전요원 인접 감면은 S4) */
+export function swimRiskPoints(zones: readonly SwimZone[]): number {
+  return zones.length * 2;
+}

@@ -59,6 +59,12 @@ const THRESHOLDS: Record<Exclude<RiskLevel, 'safe'>, number> = {
 
 export interface RiskExtras {
   /**
+   * 수영 구역이 더하는 위험 점수 (S2, 스펙 §2.2) — 구역은 물이다. 값은
+   * `swimRiskPoints(zones)` 로 계산한다. 안 넣으면 "구역을 만들어도 위험도가
+   * 안 오른다"가 되어 코스 위험과 같은 실수를 반복한다.
+   */
+  swimRisk?: number;
+  /**
    * 직원이 더하는 안전 점수 (§11 안전요원). 시설과 같은 축에 더한다 —
    * "구명함을 지을까 안전요원을 쓸까" 가 같은 문제의 두 답이 되어야 한다.
    */
@@ -76,7 +82,7 @@ export function assessRisk(
   guests: GuestStore,
   extra: RiskExtras = {},
 ): RiskReport {
-  let riskPoints = extra.courseRisk ?? 0;
+  let riskPoints = (extra.courseRisk ?? 0) + (extra.swimRisk ?? 0);
   let safetyPoints = extra.staffSafety ?? 0;
 
   for (const item of placement.all()) {

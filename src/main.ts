@@ -47,6 +47,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     GRADES,
   } = await import('./sim/kairo/progress.js');
   const { assessRisk, RISK_NAMES } = await import('./sim/kairo/risk.js');
+  const { swimRiskPoints } = await import('./sim/kairo/swim.js');
   const { KairoReport } = await import('./ui/kairo-report.js');
   const { KairoCardView } = await import('./ui/kairo-card.js');
   const { KairoUnlockView } = await import('./ui/kairo-unlock.js');
@@ -1021,6 +1022,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const risk = assessRisk(h.placement, h.guests, {
       staffSafety: staffEff.safetyPoints,
       courseRisk: courseRiskPoints(),
+      swimRisk: swimRiskPoints(h.guests.swimZones()),
     });
     return {
       season,
@@ -1736,6 +1738,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const r = assessRisk(h.placement, h.guests, {
       staffSafety: staff.effects(h.placement).safetyPoints,
       courseRisk: courseRiskPoints(),
+      swimRisk: swimRiskPoints(h.guests.swimZones()),
     });
     hud.setRisk(
       r.level as 'safe' | 'watch' | 'caution' | 'danger',

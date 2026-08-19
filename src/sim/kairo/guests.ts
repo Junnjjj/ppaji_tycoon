@@ -4,6 +4,15 @@ import { KairoTerrain } from './terrain.js';
 import { type WallGrid } from './walls.js';
 import { PlacementGrid, facilityDef, guestWalkable } from './placement.js';
 import {
+  poolZones,
+  riverZones,
+  zoneHandle,
+  zoneCapacity,
+  zoneFee,
+  ZONE_HANDLE_BASE,
+  type SwimZone,
+} from './swim.js';
+import {
   pickGroup,
   groupSize,
   groupDef,
@@ -336,6 +345,9 @@ export class GuestStore {
    * 매주 1,280칸 거리장을 다시 만들어야 한다.
    */
   private idle = new Set<number>();
+  /** 수영 구역 (S2) — 파생 캐시. rebuildFields 가 매번 다시 만든다 (저장 금지 규칙) */
+  private zones: SwimZone[] = [];
+  private zoneLookup = new Map<number, { list: { x: number; y: number }[]; set: Set<number> }>();
   private patience = new Map<number, number>();
 
   constructor(
@@ -494,10 +506,38 @@ export class GuestStore {
 
     this.gateField = new FlowField(w, h);
     this.gateField.build(this.walkable, [[this.gate.i, this.gate.j]], this.canCross);
+
+    /*
+     * 수영 구역 (S2) — 구역은 저장이 아니라 파생이다. 입수점(구역 밖의 설 수 있는 칸)이
+     * 거리장의 목적지가 된다. 입수점 없는 구역은 목적지가 아니다 (no-entry).
+     * 구역 모양이 바뀌면 슬롯 정원이 달라지므로 구역 슬롯은 통째로 다시 센다 —
+     * 헤엄치던 손님은 slots[usingSlot] 검사가 조용히 실패해 그냥 마저 헤엄친다.
+     */
+    for (const h2 of [...this.claims.keys()]) if (h2 >= ZONE_HANDLE_BASE) this.claims.delete(h2);
+    this.zones = [
+      ...poolZones(this.terrain, this.walkable),
+      ...riverZones(this.terrain, this.placement.waterBarrierKeys(), this.walkable),
+    ];
+    this.zoneLookup.clear();
+    for (let k = 0; k < this.zones.length; k++) {
+      const z = this.zones[k] as SwimZone;
+      if (z.entries.length === 0) continue;
+      const f = new FlowField(w, h);
+      f.build(
+        this.walkable,
+        z.entries.map((e) => [e.x, e.y] as [number, number]),
+        this.canCross,
+      );
+      this.fields.set(zoneHandle(k), f);
+      this.zoneLookup.set(zoneHandle(k), {
+        list: z.tiles,
+        set: new Set(z.tiles.map((t) => (t.y << 10) | t.x)),
+      });
+    }
     this.dirty = false;
 
-    // 없어진 시설의 슬롯 점유를 정리한다
-    const live = new Set(this.placement.all().map((f) => f.handle));
+    // 없어진 시설·구역의 슬롯 점유를 정리한다
+    const live = new Set([...this.placement.all().map((f) => f.handle), ...this.zoneLookup.keys()]);
     for (const handle of [...this.claims.keys()]) {
       if (!live.has(handle)) this.claims.delete(handle);
     }
@@ -507,6 +547,16 @@ export class GuestStore {
   }
 
   private slotsOf(handle: number): SlotClaim | null {
+    if (handle >= ZONE_HANDLE_BASE) {
+      const z = this.zones[handle - ZONE_HANDLE_BASE];
+      if (!z) return null;
+      let zc = this.claims.get(handle);
+      if (!zc) {
+        zc = { slots: new Array<number>(zoneCapacity(z)).fill(0) };
+        this.claims.set(handle, zc);
+      }
+      return zc;
+    }
     const item = this.placement.all().find((f) => f.handle === handle);
     if (!item) return null;
     const def = facilityDef(item.defId);
@@ -556,10 +606,15 @@ export class GuestStore {
       if (!c || c.slots.every((s) => s !== 0)) continue;
       const d = field.distAt(g.i, g.j);
       if (d < 0) continue;
-      const item = this.placement.all().find((f) => f.handle === handle);
-      const need = item
-        ? ((facilityDef(item.defId) as { need?: string } | undefined)?.need ?? '')
-        : '';
+      const item =
+        handle >= ZONE_HANDLE_BASE ? undefined : this.placement.all().find((f) => f.handle === handle);
+      // 수영 구역의 수요 축은 play 다 (스펙 v1.1 — 'fun' 은 없는 축이었다)
+      const need =
+        handle >= ZONE_HANDLE_BASE
+          ? 'play'
+          : item
+            ? ((facilityDef(item.defId) as { need?: string } | undefined)?.need ?? '')
+            : '';
       all.push({ handle, dist: d, need });
     }
     if (all.length === 0) return null;
@@ -718,6 +773,33 @@ export class GuestStore {
       if (g.emoteTicks > 0 && --g.emoteTicks === 0) g.emote = null;
 
       if (g.state === 'using') {
+        // 유영 (S2) — 구역 손님은 4 tick 에 한 칸씩 구역 안 이웃 물로 떠다닌다.
+        // rng 는 이 tick 전용 스트림이라 결정론이 유지된다 (불변식 2)
+        if (g.usingHandle >= ZONE_HANDLE_BASE && g.useTicks > 1 && (g.useTicks & 3) === 0) {
+          const z = this.zoneLookup.get(g.usingHandle);
+          if (z) {
+            const opts: [number, number][] = [];
+            for (const [di, dj] of [
+              [1, 0],
+              [-1, 0],
+              [0, 1],
+              [0, -1],
+            ] as const) {
+              const ni = g.i + di;
+              const nj = g.j + dj;
+              if (z.set.has((nj << 10) | ni)) opts.push([ni, nj]);
+            }
+            if (opts.length > 0) {
+              const [ni, nj] = opts[rng.int(opts.length)] as [number, number];
+              g.fromI = g.i;
+              g.fromJ = g.j;
+              g.i = ni;
+              g.j = nj;
+              g.progress = 0;
+              g.facing = nj >= g.fromJ ? '+Z' : '-Z';
+            }
+          }
+        }
         // 슬라이드 탑승 — 입구에서 출구로 실제로 이동한다. 서 있기만 하면
         // "미끄럼틀 로직이 자연스럽다"가 성립하지 않는다 (사용자 요구)
         if (g.rideTicks > 0) {
@@ -746,6 +828,14 @@ export class GuestStore {
            */
           const usedHandle = g.usingHandle;
           this.releaseSlot(g);
+          if (usedHandle >= ZONE_HANDLE_BASE) {
+            // 뭍으로 (S2) — 입수점에 다시 선다. 물 칸에서 걸으면 거리장이 없어 갇힌다
+            g.fromI = g.i;
+            g.fromJ = g.j;
+            g.i = g.rideFrom[0];
+            g.j = g.rideFrom[1];
+            g.progress = 0;
+          }
           if (g.admitting) {
             /*
              * 입장 수속이 끝났다 — **표는 놀이가 아니다.** `used`(→`wantUses`)도,
@@ -761,16 +851,25 @@ export class GuestStore {
           const gain = (gains[Math.min(g.used, gains.length - 1)] ?? 0) as number;
           g.used++;
           // 채운 수요를 기록해 다음엔 다른 종류로 간다
-          const usedItem = this.placement.all().find((f) => f.handle === usedHandle);
-          const usedNeed = usedItem
-            ? ((facilityDef(usedItem.defId) as { need?: string } | undefined)?.need ?? '')
-            : '';
+          const usedItem =
+            usedHandle >= ZONE_HANDLE_BASE
+              ? undefined
+              : this.placement.all().find((f) => f.handle === usedHandle);
+          const usedNeed =
+            usedHandle >= ZONE_HANDLE_BASE
+              ? 'play'
+              : usedItem
+                ? ((facilityDef(usedItem.defId) as { need?: string } | undefined)?.need ?? '')
+                : '';
           if (usedNeed !== '' && !g.usedNeeds.includes(usedNeed)) g.usedNeeds.push(usedNeed);
           g.satisfaction = Math.min(100, g.satisfaction + gain);
           this.finishedWallet += g.wallet;
           this.finishedCount += 1;
-          // 실제로 이용한 시설의 요금(개선 단계 반영) × 지갑
-          const fee = this.placement.feeOf(usedHandle) * g.wallet;
+          // 실제로 이용한 시설의 요금(개선 단계 반영) × 지갑. 구역은 정액이다
+          const fee =
+            (usedHandle >= ZONE_HANDLE_BASE
+              ? zoneFee(this.zones[usedHandle - ZONE_HANDLE_BASE])
+              : this.placement.feeOf(usedHandle)) * g.wallet;
           const key = usedNeed === '' ? '-' : usedNeed;
           this.finishedFeeByNeed.set(key, (this.finishedFeeByNeed.get(key) ?? 0) + fee);
           this.setEmote(g, g.satisfaction >= 80 ? 'love' : 'happy');
@@ -874,6 +973,26 @@ export class GuestStore {
           } else {
             g.useTicks = this.tunables.useTicks;
             g.pose = this.poseFor(g.usingHandle);
+            if (g.usingHandle >= ZONE_HANDLE_BASE) {
+              /*
+               * 입수 (S2) — 입수점을 기억해 두고(나올 때 그 자리로 올라온다) 물로
+               * 들어간다. ride 의 rideFrom 을 빌려 쓴다: rideTotal 이 0 이라 ride
+               * 분기와 안 얽히고, Guest 에 필드를 안 늘려 세이브가 그대로다.
+               */
+              g.rideFrom = [g.i, g.j];
+              const z = this.zoneLookup.get(g.usingHandle);
+              const first =
+                z?.list.find((t) => Math.abs(t.x - g.i) + Math.abs(t.y - g.j) === 1) ?? z?.list[0];
+              if (first) {
+                g.fromI = g.i;
+                g.fromJ = g.j;
+                g.i = first.x;
+                g.j = first.y;
+                g.progress = 0;
+              }
+              // swim 시트는 ±Z 두 방향뿐이다 — 다른 방향이면 프레임이 없다
+              g.facing = '+Z';
+            }
           }
         }
         continue;
@@ -941,8 +1060,15 @@ export class GuestStore {
     }
   }
 
+  /** 수영 구역 (S2) — 파생 결과. 위험도·부표 렌더·검사가 읽는다 */
+  swimZones(): readonly SwimZone[] {
+    if (this.dirty) this.rebuildFields();
+    return this.zones;
+  }
+
   /** 시설이 정한 이용 포즈 — 슬롯의 포즈는 렌더 계약이 갖고 있지만 기본값은 층으로 낸다 */
   private poseFor(handle: number): GuestPose {
+    if (handle >= ZONE_HANDLE_BASE) return 'swim';
     const item = this.placement.all().find((f) => f.handle === handle);
     const def = item ? facilityDef(item.defId) : undefined;
     if (!def) return 'idle';

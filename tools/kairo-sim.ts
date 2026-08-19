@@ -92,6 +92,8 @@ const EACH = args.includes('--each');
  */
 const GRID_W = 96;
 const GRID_H = 72;
+import { poolZones, POOL_KIND } from '../src/sim/kairo/swim.js';
+
 const GATE = KairoTerrain.parkGate();
 
 /** 봇이 건설에 안 쓰고 남기는 예비비 — 카드 한 장의 최대 지출을 버틸 만큼 */
@@ -105,6 +107,10 @@ interface RunResult {
   weeks: number;
   cash: number;
   facilities: number;
+  /** 수영 구역 수 (S2) — 0 이면 봇이 수영 경제를 안 재고 있는 것이다 */
+  swimZones: number;
+  /** 심사로 딴 실제 등급 (K42) — `grade`(만족도 환산 표시값)와 다르다. 해금은 이걸 따른다 */
+  examGrade: number;
   combos: number;
   grade: number;
   exitSat: number;
@@ -451,6 +457,63 @@ function ensureTicket(
   return 0;
 }
 
+/** 수영장 붓값 — pool_water 6칸 (3×2) × 40,000 */
+const POOL_TILE_COST = 40_000;
+
+/**
+ * 수영장을 하나 판다 (S2) — 2등급부터, 없으면 하나.
+ *
+ * 봇이 안 지으면 헤드리스가 수영 경제(play 공급·요금·위험)를 영영 안 재서,
+ * 골든이 "수영장 없는 세계"를 잰다 — 토지 해금을 봇에 안 넣었을 때와 같은 실수다.
+ * 자리는 게이트 근처의 잔디 3×2, 포장에 접한 곳 (입수점 규칙 — 문이 길 닿은 쪽에
+ * 나는 것과 같다).
+ */
+function ensurePool(
+  t: KairoTerrain,
+  p: PlacementGrid,
+  land: ReturnType<typeof landRect>,
+  rng: Rng,
+): number {
+  const stand = (i: number, j: number): boolean => t.isGuestWalkable(i, j);
+  if (poolZones(t, stand).length > 0) return 0;
+  const fits = (i0: number, j0: number): boolean => {
+    if (i0 < land.i0 || j0 < land.j0 || i0 + 2 > land.i0 + land.w || j0 + 2 > land.j0 + land.h)
+      return false;
+    if (!t.levelUniform(i0, j0, 2, 2)) return false;
+    let touchesPath = false;
+    for (let j = j0; j < j0 + 2; j++) {
+      for (let i = i0; i < i0 + 2; i++) {
+        if (t.kindAt(i, j) !== 'lawn' || p.handleAt(i, j) !== 0) return false;
+        for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
+          if (t.isGuestWalkable(i + di, j + dj)) touchesPath = true;
+        }
+      }
+    }
+    return touchesPath;
+  };
+  /*
+   * 게이트에서 가까운 순 **결정적 스캔** — 무작위 표본은 잔디 3×2 + 포장 인접이라는
+   * 조건을 26주 안에 못 찾는 시드가 대부분이었다 (실측: 12시드 중앙값 0).
+   * 사람은 "입구 근처 빈 잔디"를 눈으로 찾는다 — 그게 봇의 모델이어야 한다.
+   */
+  void rng;
+  const spots: { i: number; j: number; d: number }[] = [];
+  for (let j = land.j0; j < land.j0 + land.h - 2; j++) {
+    for (let i = land.i0; i < land.i0 + land.w - 2; i++) {
+      spots.push({ i, j, d: Math.abs(i - GATE.i) + Math.abs(j - GATE.j) });
+    }
+  }
+  spots.sort((a, b) => a.d - b.d || a.i - b.i || a.j - b.j);
+  for (const sp of spots) {
+    if (!fits(sp.i, sp.j)) continue;
+    for (let j = sp.j; j < sp.j + 2; j++) {
+      for (let i = sp.i; i < sp.i + 2; i++) t.paint(i, j, POOL_KIND);
+    }
+    return POOL_TILE_COST * 4;
+  }
+  return 0;
+}
+
 function buildOne(
   t: KairoTerrain,
   w: WallGrid,
@@ -689,6 +752,15 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       if (spent > 0) ticketRebuilds++;
       cash -= spent;
       buildSpend += spent;
+    }
+    // 수영장 (S2) — 2등급부터 하나 (최소 규격 2×2). 봇이 안 파면 헤드리스가 수영 경제를 안 잰다
+    if (gradeNo >= 2 && cash - BUILD_RESERVE > POOL_TILE_COST * 4) {
+      const spent = ensurePool(t, p, landRect(GRADES[gradeNo - 1] ?? GRADES[0]!), rng);
+      if (spent > 0) {
+        g.invalidate();
+        cash -= spent;
+        buildSpend += spent;
+      }
     }
     /*
      * 이번 주 건설 예산.
@@ -1035,6 +1107,8 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     weeks,
     cash,
     facilities: p.count,
+    swimZones: poolZones(t, (i, j) => t.isGuestWalkable(i, j)).length,
+    examGrade: gradeNo,
     combos: combos.active.length,
     grade: gradeFor(exitSat).grade,
     exitSat,
@@ -1149,6 +1223,8 @@ function main(): void {
   const rows: [string, number[], (n: number) => string][] = [
     ['현금', runs.map((r) => r.cash), fmt],
     ['시설 수', runs.map((r) => r.facilities), (n) => String(n)],
+    ['수영 구역', runs.map((r) => r.swimZones), (n) => String(n)],
+    ['심사 등급', runs.map((r) => r.examGrade), (n) => String(n)],
     ['콤보 발동', runs.map((r) => r.combos), (n) => String(n)],
     ['등급', runs.map((r) => r.grade), (n) => String(n)],
     ['퇴장 만족도', runs.map((r) => r.exitSat), (n) => n.toFixed(0)],

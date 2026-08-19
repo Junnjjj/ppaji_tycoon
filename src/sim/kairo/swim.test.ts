@@ -1,8 +1,18 @@
 import { describe, it, expect } from 'vitest';
+import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
 import { PlacementGrid, guestWalkable } from './placement.js';
-import { poolZones, riverZones, permitUsed, deckKey, POOL_MIN_TILES } from './swim.js';
+import { GuestStore, OPEN_GATE_DEFAULTS } from './guests.js';
+import {
+  poolZones,
+  riverZones,
+  permitUsed,
+  deckKey,
+  POOL_MIN_TILES,
+  ZONE_HANDLE_BASE,
+  swimRiskPoints,
+} from './swim.js';
 
 /**
  * 수영 구역 (S1) — "바닥이 곧 방"의 물 버전.
@@ -164,5 +174,67 @@ describe('permit-over — 밀폐를 완성하는 배치가 허가를 넘으면 �
     const t = shore();
     const { p, w } = ringAllButLast(t);
     expect(p.check(t, w, GATE, 'float_deck', 6, 11).ok).toBe(true);
+  });
+});
+
+describe('수영 활동 (S2) — 손님이 실제로 들어가 헤엄치고 나온다', () => {
+  /** 포장 세계 + 수영장 3×2. 다른 시설이 없어 손님의 유일한 목적지가 구역이다 */
+  function poolWorld(): { t: KairoTerrain; g: GuestStore } {
+    const t = new KairoTerrain(16, 16);
+    for (let i = 0; i < 16; i++) for (let j = 0; j < 16; j++) t.paint(i, j, 'path_stone');
+    pool(t, 6, 6, 3, 2);
+    const w = new WallGrid(16, 16);
+    const p = new PlacementGrid(16, 16);
+    const g = new GuestStore(t, w, p, GATE, { ...OPEN_GATE_DEFAULTS, wantUses: 1 });
+    return { t, g };
+  }
+
+  it('구역이 목적지가 되고, 헤엄치는 동안 pose 가 swim 이며 물칸 위에 있다', () => {
+    const { t, g } = poolWorld();
+    const rng = new Rng(7);
+    const guest = g.spawn(rng);
+    expect(guest).not.toBeNull();
+    let sawSwim = false;
+    for (let k = 0; k < 400 && guest!.state !== 'gone'; k++) {
+      g.tick(rng);
+      if (guest!.pose === 'swim' && guest!.state === 'using') {
+        sawSwim = true;
+        expect(guest!.usingHandle).toBeGreaterThanOrEqual(ZONE_HANDLE_BASE);
+        expect(t.kindAt(guest!.i, guest!.j)).toBe('pool_water');
+      }
+    }
+    expect(sawSwim).toBe(true);
+  });
+
+  it('나올 때 입수점(설 수 있는 칸)으로 올라와 갇히지 않는다 · play 요금이 걷힌다', () => {
+    const { g } = poolWorld();
+    const rng = new Rng(7);
+    const guest = g.spawn(rng);
+    for (let k = 0; k < 800 && guest!.state !== 'gone'; k++) g.tick(rng);
+    // wantUses 1 — 수영 한 번이 이용 한 번으로 세어져 나간다 (갇히면 gone 이 못 된다)
+    expect(guest!.state).toBe('gone');
+    const w = g.takeFinished();
+    expect(w.feeByNeed.get('play') ?? 0).toBeGreaterThan(0);
+  });
+
+  it('음성 대조군 — 수영장이 없으면 swim 목적지도 play 요금도 없다', () => {
+    const t = new KairoTerrain(16, 16);
+    for (let i = 0; i < 16; i++) for (let j = 0; j < 16; j++) t.paint(i, j, 'path_stone');
+    const g = new GuestStore(t, new WallGrid(16, 16), new PlacementGrid(16, 16), GATE, {
+      ...OPEN_GATE_DEFAULTS,
+      wantUses: 1,
+    });
+    const rng = new Rng(7);
+    const guest = g.spawn(rng);
+    for (let k = 0; k < 400 && guest!.state !== 'gone'; k++) {
+      g.tick(rng);
+      expect(guest!.pose).not.toBe('swim');
+    }
+    expect(g.swimZones()).toHaveLength(0);
+  });
+
+  it('위험 기여 — 구역 수 × 2 (코스 위험과 같은 축)', () => {
+    const { g } = poolWorld();
+    expect(swimRiskPoints(g.swimZones())).toBe(2);
   });
 });
