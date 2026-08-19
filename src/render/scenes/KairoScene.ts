@@ -27,6 +27,25 @@ import {
 } from '../kairo/iso.js';
 import { KairoCamera } from '../kairo/kairo-camera.js';
 import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
+
+/**
+ * 지도 바깥을 채우는 숲 텍스처 (K38).
+ *
+ * `tools/make-canopy.py` 가 `assets/generated/backdrop/maps/raw-mountain.png` 에서
+ * 뽑는다 — 배경 산과 **같은 붓**이라 지평선에서 자연스럽게 이어진다.
+ */
+const SURROUND_TEX = 'surround/canopy';
+const SURROUND_URL = 'assets/backdrop/bg-canopy.png';
+/** 수평 윗변 위로 쭉 이어지는 하늘+산+숲 (K38) */
+const HORIZON_TEX = 'surround/horizon';
+const HORIZON_URL = 'assets/backdrop/bg-horizon.png';
+/**
+ * 지도의 **수평 윗변** 이 놓이는 월드 y (K38).
+ *
+ * 다이아몬드의 꼭대기 꼭지점이 (0,0) 이므로 여기가 곧 그 높이다. 이 선 위는 배경(산),
+ * 아래는 땅이다 — 사용자가 그림으로 요구한 "윗변이 평평한 직사각형"이 이 선이다.
+ */
+const SKYLINE_Y = 0;
 import { KairoProceduralProvider } from '../../assets/kairo-procedural.js';
 import { variantId } from '../../assets/types.js';
 import { KairoTerrain } from '../../sim/kairo/terrain.js';
@@ -208,6 +227,8 @@ export class KairoScene extends Phaser.Scene {
    */
   private land: { i0: number; j0: number; w: number; h: number } | null = null;
   private backdrops: Phaser.GameObjects.TileSprite[] = [];
+  /** 지도 바깥을 채우는 땅 (K38) */
+  private surrounds: Phaser.GameObjects.TileSprite[] = [];
   private dragMoved = 0;
   private lastPointer = { x: 0, y: 0 };
   private lastTapAt = 0;
@@ -225,6 +246,21 @@ export class KairoScene extends Phaser.Scene {
   }
 
   preload(): void {
+    /*
+     * 지도 바깥을 채울 **숲 캐노피** (K38). 생성해 둔 산 아트에서 뽑은 사방 타일러블 PNG.
+     *
+     * ⚠ 실패해도 부팅은 계속된다 — `buildSurround` 가 텍스처 유무를 보고 넘어가고,
+     * 그러면 지금까지처럼 배경색이 보일 뿐이다. 배경 그림 하나 때문에 판이 안 뜨면 안 된다.
+     * (`createAssetProvider` 가 아틀라스에 대해 하는 것과 같은 판단이다.)
+     */
+    this.load.image(SURROUND_TEX, SURROUND_URL);
+    this.load.image(HORIZON_TEX, HORIZON_URL);
+    this.load.once('loaderror', (f: { key?: string }) => {
+      if (f?.key === SURROUND_TEX || f?.key === HORIZON_TEX) {
+        console.warn('[카이로] 배경 그림을 못 읽었다 — 절차적 배경으로 간다');
+      }
+    });
+
     // 프로바이더의 캔버스를 Phaser 텍스처로 등록. AtlasProvider 로 갈아끼워도 같은 경로다
     for (const id of this.opts.provider.ids) {
       if (this.textures.exists(id)) continue;
@@ -251,10 +287,16 @@ export class KairoScene extends Phaser.Scene {
 
   create(): void {
     this.cameras.main.setZoom(1); // ★ 영구히 1
-    this.cameras.main.setBackgroundColor('#7ab8d4');
+    /*
+     * 하늘색. 지평선 아트(`bg-horizon.png`)의 **맨 윗줄 색과 같아야** 그 위로 이어질 때
+     * 가로선이 안 보인다 (실측 `#1b92f0`). 아트가 없으면 절차적 배경이 쓰던 값으로 간다 —
+     * 절차적 산은 이 하늘에 녹도록 칠해져 있다.
+     */
+    this.cameras.main.setBackgroundColor(this.textures.exists(HORIZON_TEX) ? '#1b92f0' : '#7ab8d4');
     this.cameras.main.setRoundPixels(true);
 
     this.buildBackdrop();
+    this.buildSurround();
     this.buildGround();
     this.applyLand(); // 부팅보다 먼저 정해진 토지를 여기서 반영한다
     this.buildWalls();
@@ -501,9 +543,84 @@ export class KairoScene extends Phaser.Scene {
    * 이음새가 안 보이는 근거는 **스프라이트 자체가 좌우로 이어지도록 그려졌다는 것**이다
    * (`drawBackdrop` 의 주기 함수) — 여기서 보정하지 않는다.
    */
+  /**
+   * 지도 **바깥**을 땅으로 채운다 (K38).
+   *
+   * ## 왜 필요한가
+   *
+   * 지도는 아이소 다이아몬드라 **사각 화면을 못 채운다.** 다이아몬드의 바운딩 박스
+   * 네 귀퉁이는 아무것도 안 그리므로 카메라 배경색(`#7ab8d4`)이 그대로 보인다 —
+   * 넓은 화면에서 "1시 방향이 통짜 하늘색"으로 드러났다 (사용자 스크린샷).
+   *
+   * ## 어떻게
+   *
+   * **`SKYLINE_Y` 아래**를 숲으로 통째로 깐다. 그러면 지도의 윗변이 다이아몬드의
+   * 뾰족한 꼭지점이 아니라 **수평선**이 된다 (사용자가 그림으로 요구한 모양).
+   * 타일이 있는 곳은 타일이 이기고, 없는 귀퉁이만 이 숲이 보인다.
+   *
+   * ⚠ **설치는 구조적으로 불가능하다.** 격자 밖이라 sim 이 그 좌표를 모른다 —
+   * 플래그로 막는 것이 아니라 존재하지 않는다 (사용자: "하지만 설치는 안되는").
+   *
+   */
+  private buildSurround(): void {
+    for (const t of this.surrounds) t.destroy();
+    this.surrounds = [];
+    if (!this.textures.exists(SURROUND_TEX)) return;
+
+    /*
+     * ## 왜 세로로 아주 길게 까나
+     *
+     * 아이소 다이아몬드는 사각 화면을 못 채운다. 네 귀퉁이가 비면 카메라 배경색이
+     * 그대로 보인다. 여기서 채우는 것은 격자가 아니라 **화면**이다 — 격자를 늘리면
+     * 세이브·성능·밸런스가 다 딸려 온다.
+     *
+     * ⚠ `scrollFactor` 는 **1**이다. 시차를 주면 공원 경계가 그 위를 미끄러져
+     * "공원이 떠 있는" 것처럼 보인다 — 주변 땅은 공원과 같은 거리에 있다.
+     */
+    const w = (GRID_W + GRID_H) * STEP_X * 3;
+    const h = (GRID_W + GRID_H) * STEP_Y * 3;
+    const ts = this.add.tileSprite(-w / 2, SKYLINE_Y, w, h, SURROUND_TEX);
+    ts.setOrigin(0, 0);
+    ts.setScrollFactor(1, 1);
+    ts.setDepth(-960); // 배경(하늘·산)보다 앞, 지면 타일(0+)보다 뒤
+    this.surrounds.push(ts);
+  }
+
   private buildBackdrop(): void {
     for (const img of this.backdrops) img.destroy();
     this.backdrops = [];
+
+    /*
+     * ## 실물 아트가 있으면 그걸 쓴다 (K38)
+     *
+     * 절차적 3겹(사인 합)은 "산이 있다"는 것만 알려 주는 근사였다. 생성해 둔 아트
+     * (`bg-horizon.png` — 하늘·먼 봉우리·숲이 한 장에 들어 있다)를 쓰면 지도 바깥
+     * 숲(`bg-canopy.png`)과 **같은 원본**이라 지평선에서 자연스럽게 만난다.
+     *
+     * ⚠ 못 읽으면 **절차적 3겹으로 폴백**한다 (아래). 배경 그림 하나 때문에 판이
+     * 안 뜨면 안 된다 — `createAssetProvider` 가 아틀라스에 대해 하는 판단과 같다.
+     */
+    if (this.textures.exists(HORIZON_TEX)) {
+      const src = this.textures.get(HORIZON_TEX).getSourceImage();
+      const th = src.height;
+      const w = (GRID_W + GRID_H) * STEP_X * 3;
+      /*
+       * 아랫변이 **정확히 수평 윗변**에 닿는다. 아래쪽이 숲이라 지도 바깥 캐노피와
+       * 이어지고, 위쪽 하늘은 카메라 배경색과 같은 계열이라 더 위는 하늘로 이어진다.
+       */
+      const ts = this.add.tileSprite(-w / 2, SKYLINE_Y - th, w, th, HORIZON_TEX);
+      ts.setOrigin(0, 0);
+      /*
+       * ⚠ **세로는 잠근다** (`scrollFactor` y = 1). 시차를 세로로 주면 지평선이
+       * 땅에서 떨어져 산이 공중에 뜨거나 땅에 파묻힌다. 가로만 시차를 줘야
+       * "멀리 있다"가 읽히면서 지평선은 붙어 다닌다.
+       */
+      ts.setScrollFactor(0.25, 1);
+      ts.setDepth(-980);
+      this.backdrops.push(ts);
+      return;
+    }
+
     const layers: { id: string; factor: number; y: number }[] = [
       { id: 'backdrop/mountain', factor: 0.06, y: -118 },
       { id: 'backdrop/ridge', factor: 0.15, y: -70 },
@@ -567,6 +684,17 @@ export class KairoScene extends Phaser.Scene {
     img.setOrigin(0.5, 1);
     img.setDepth(depthKey(item.i + w - 1, item.j + d - 1) + Z_FACILITY);
     this.facilityImages.set(handle, img);
+  }
+
+  /**
+   * 검증 도구용 — 지도 바깥 땅을 껐다 켠다 (K38).
+   *
+   * 이게 없으면 "귀퉁이가 하늘색이 아니다"를 **주장만** 하게 된다. 끄면 하늘색으로
+   * 돌아오는 것까지 봐야 검사가 실제로 이 기능을 재는 것이 된다.
+   */
+  setSurroundVisibleForTest(on: boolean): void {
+    for (const t of this.surrounds) t.setVisible(on);
+    for (const t of this.backdrops) t.setVisible(on);
   }
 
   /** 검증 도구용 — 업스케일을 직접 바꾼다 */
@@ -1499,11 +1627,23 @@ export class KairoScene extends Phaser.Scene {
   }
 
   /** 검증용 — 배경 띠의 개수와 시차 계수 */
-  get backdropInfo(): { count: number; factors: number[]; depths: number[] } {
+  get backdropInfo(): {
+    count: number;
+    factors: number[];
+    factorsY: number[];
+    depths: number[];
+    /** 실물 아트 배경인가 (K38). 아니면 절차적 3겹 폴백이다 */
+    art: boolean;
+    /** 지도 바깥 땅이 깔렸나 (K38) */
+    surround: number;
+  } {
     return {
       count: this.backdrops.length,
       factors: this.backdrops.map((b) => b.scrollFactorX),
+      factorsY: this.backdrops.map((b) => b.scrollFactorY),
       depths: this.backdrops.map((b) => b.depth),
+      art: this.textures.exists(HORIZON_TEX),
+      surround: this.surrounds.length,
     };
   }
 
