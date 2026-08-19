@@ -418,18 +418,50 @@ export class WeekRunner {
   }
 
   /**
-   * 한 주를 돌린다. **여기서 시간이 흐르는 유일한 지점**이다 —
-   * 렌더가 프레임마다 tick 을 돌리면 결산이 언제 끝났는지 알 수 없다.
+   * 한 주를 돌린다. `begin → step(전부) → finish` 의 합성이다 (K39).
+   *
+   * 헤드리스·골든·밸런싱은 전부 이걸 쓴다. 흐름 모드(분할 step)와 결과가 같다는 것은
+   * `week-identity.test.ts` 의 항등 검사가 지킨다 — 그 검사가 깨져 있으면 흐름 모드를
+   * 켜면 안 된다.
    */
   run(rng: Rng, opts: WeekOptions = {}): WeekReport {
+    this.begin(rng, opts);
+    this.step(TICKS_PER_WEEK);
+    return this.finish();
+  }
+
+  /** 진행 중인 주 — begin() 이 만들고 finish() 가 비운다. 렌더는 프레임마다 나눠 소비한다 */
+  private live: LiveWeekState | null = null;
+
+  /**
+   * 항등 검사의 음성 대조군 (테스트 전용).
+   *
+   * 켜면 **두 번째 step 호출**에서만 rng 를 한 번 더 뽑는다 — run() 은 step 을 한 번만
+   * 부르므로 영향이 없고, 분할 실행만 어긋난다. 항등 검사가 정말 비교하고 있다는 것을
+   * 이걸로 증명한다 (새 검사는 위반을 주입해 잡히는지 먼저 본다).
+   */
+  private identityFaultForTest = false;
+  setIdentityFaultForTest(on: boolean): void {
+    this.identityFaultForTest = on;
+  }
+
+  /** 흐름 모드가 읽는 진행 상태 — 요일 표기·주 마디 판정용 */
+  liveProgress(): { tick: number; day: number; done: boolean } | null {
+    if (!this.live) return null;
+    return {
+      tick: this.live.tick,
+      day: Math.min(DAYS_PER_WEEK - 1, Math.floor(this.live.tick / TICKS_PER_DAY)),
+      done: this.live.tick >= TICKS_PER_WEEK,
+    };
+  }
+
+  /** 주 시작 — 사고 판정·직원 배치·요금 배율 등 "주에 한 번" 일들 */
+  begin(rng: Rng, opts: WeekOptions = {}): void {
+    // 겹쳐 부르면 앞의 주가 소리 없이 사라진다 — 명시적으로 막는다
+    if (this.live) throw new Error('week already in progress — finish() first');
     const season = opts.season ?? 'summer';
-    const profile = SEASON_PROFILE[season];
-    const playbackEvery = opts.playbackEvery ?? 0;
     const w = this.terrain.width;
     const h = this.terrain.height;
-    const heat = new Array<number>(w * h).fill(0);
-    const days: DayReport[] = [];
-    const playback: PlaybackFrame[] = [];
 
     this.priceMult = opts.priceMult ?? 1;
     const staff = opts.staff;
@@ -459,39 +491,79 @@ export class WeekRunner {
     const idle = new Set(staff?.idle ?? []);
     if (accident) idle.add(accident.handle);
     this.guests.setIdle(idle);
-    const supply = this.supply(idle);
+
+    this.live = {
+      rng,
+      opts,
+      season,
+      profile: SEASON_PROFILE[season],
+      playbackEvery: opts.playbackEvery ?? 0,
+      heat: new Array<number>(w * h).fill(0),
+      days: [],
+      playback: [],
+      supply: this.supply(idle),
+      accident,
+      byGroup: { family: 0, couple: 0, friends: 0, company: 0 },
+      weekRevenue: 0,
+      weekAdmission: 0,
+      tick: 0,
+      stepCalls: 0,
+      day: null,
+    };
+  }
+
+  /**
+   * tick 을 최대 `n` 개 소비하고, 실제 소비한 수를 돌려준다 (주가 끝났으면 0).
+   *
+   * 하루의 열고 닫음은 여기서 **게으르게** 일어난다 — 날씨 뽑기(rng)가 그 날의 첫 tick
+   * 을 소비하는 시점에 일어나야 run() 과 뽑기 순서가 한 점도 다르지 않다.
+   */
+  step(n: number): number {
+    const lw = this.live;
+    if (!lw) throw new Error('step() before begin()');
+    lw.stepCalls++;
+    if (this.identityFaultForTest && lw.stepCalls === 2) lw.rng.next();
+    const { rng, opts } = lw;
     const mod = opts.modifiers;
-    const byGroup: Record<GroupId, number> = { family: 0, couple: 0, friends: 0, company: 0 };
-    let weekRevenue = 0;
-    /** 이번 주 입장료 — `weekRevenue` 에도 들어간다. 따로 세는 것은 결산 표시용 */
-    let weekAdmission = 0;
-    let tick = 0;
+    const w = this.terrain.width;
+    let used = 0;
 
-    for (let day = 0; day < DAYS_PER_WEEK; day++) {
-      const weather = rng.pick(profile.weather);
-      const weekendBoost = WEEKEND.includes(day) ? 1.6 : 1.0;
-      // 시설이 조금 끌어당기고, 나머지는 평판이 결정한다
-      const facilityPull = 1 + Math.min(0.6, this.placement.count * 0.015);
-      // 평판 델타는 **더한다** — 배수로 곱하면 등급 배율과 섞여 어느 쪽이 움직였는지 못 본다
-      const reputation = Math.max(0.1, (opts.reputation ?? 1) + (mod?.reputationDelta ?? 0));
-      const arrivalMult = mod?.closed ? 0 : (mod?.arrivalMult ?? 1);
-      const arrivalRate =
-        profile.arrivalBase * weekendBoost * facilityPull * reputation * arrivalMult;
-      const baseTicks = opts.arrivalBaseTicks ?? 10;
-      /**
-       * ⚠ 간격을 정수 tick 으로 반올림하면 **1 에서 바닥을 친다** — 그 위로는 수요를
-       * 아무리 올려도 하루 120명이 상한이 된다 (실측). 누적기로 소수 비율을 그대로 쓴다.
-       */
-      const perTick = arrivalRate / baseTicks;
-
-      const before = this.guests.stats();
-      let arrivals = 0;
-      let visitors = 0;
-      let turnedAway = 0;
-      let noTicket = 0;
-      let peak = 0;
-      let dayRevenue = 0;
-      let dayAdmission = 0;
+    while (used < n && lw.tick < TICKS_PER_WEEK) {
+      const t = lw.tick % TICKS_PER_DAY;
+      if (lw.day === null) {
+        // ── 하루 열기 ────────────────────────────────────────────────────
+        const dayNo = Math.floor(lw.tick / TICKS_PER_DAY);
+        const weather = rng.pick(lw.profile.weather);
+        const weekendBoost = WEEKEND.includes(dayNo) ? 1.6 : 1.0;
+        // 시설이 조금 끌어당기고, 나머지는 평판이 결정한다
+        const facilityPull = 1 + Math.min(0.6, this.placement.count * 0.015);
+        // 평판 델타는 **더한다** — 배수로 곱하면 등급 배율과 섞여 어느 쪽이 움직였는지 못 본다
+        const reputation = Math.max(0.1, (opts.reputation ?? 1) + (mod?.reputationDelta ?? 0));
+        const arrivalMult = mod?.closed ? 0 : (mod?.arrivalMult ?? 1);
+        const arrivalRate =
+          lw.profile.arrivalBase * weekendBoost * facilityPull * reputation * arrivalMult;
+        const baseTicks = opts.arrivalBaseTicks ?? 10;
+        /**
+         * ⚠ 간격을 정수 tick 으로 반올림하면 **1 에서 바닥을 친다** — 그 위로는 수요를
+         * 아무리 올려도 하루 120명이 상한이 된다 (실측). 누적기로 소수 비율을 그대로 쓴다.
+         */
+        const perTick = arrivalRate / baseTicks;
+        lw.day = {
+          no: dayNo,
+          weather,
+          perTick,
+          before: this.guests.stats(),
+          arrivals: 0,
+          visitors: 0,
+          turnedAway: 0,
+          noTicket: 0,
+          peak: 0,
+          revenue: 0,
+          admission: 0,
+          arrivalAcc: 0,
+        };
+      }
+      const d = lw.day;
 
       /*
        * ⚠ **버스가 서 있을 때만 손님이 내린다** (K36-B③).
@@ -504,83 +576,106 @@ export class WeekRunner {
        * 그날 안에 털어 낸다 (`t === TICKS_PER_DAY - 1`) — 안 그러면 버스 시간표가
        * 조용히 수요를 깎아, 밸런스가 왜 움직였는지 못 가린다.
        */
-      let arrivalAcc = 0;
-      for (let t = 0; t < TICKS_PER_DAY; t++, tick++) {
-        arrivalAcc += perTick;
-        // 버스 시계 = 주 루프 시계. 재생 프레임이 담는 tick 과 같아야 연출이 안 어긋난다
-        this.bus.setElapsed(tick);
-        const lastTick = t === TICKS_PER_DAY - 1;
-        const dropping = this.bus.state.atStop || lastTick;
-        while (dropping && arrivalAcc >= 1) {
-          arrivalAcc -= 1;
-          arrivals++;
-          /*
-           * ⚠ **`spawn` 성공은 입장이 아니다** (K36-B②). 손님은 정류장에 내릴 뿐이고,
-           * 매표소를 지나야 입장이다. 그래서 `visitors`·`byGroup` 은 아래 `takeAdmitted`
-           * 가 센다. 여기서 세면 매표소가 없는 판이 "입장 129명 · 매출 0" 으로 보인다.
-           */
-          if (!this.guests.spawn(rng, season, opts.mapShares)) turnedAway++;
-        }
-        this.guests.tick(rng);
-        // 이용이 끝난 손님만큼 요금을 받는다 (이용 시작이 아니라 완료 기준)
-        dayRevenue += this.collectFees(weather);
-        // 표를 산 손님만큼 입장료를 받는다 — 요금 슬라이더가 같이 민다
-        const adm = this.guests.takeAdmitted();
-        visitors += adm.count;
-        noTicket += adm.noTicket;
-        for (const k of Object.keys(byGroup) as GroupId[]) byGroup[k] += adm.byGroup[k];
-        const admIn = Math.round(adm.fee * this.priceMult);
-        dayAdmission += admIn;
-        dayRevenue += admIn;
+      d.arrivalAcc += d.perTick;
+      // 버스 시계 = 주 루프 시계. 흐름 모드가 담는 tick 과 같아야 연출이 안 어긋난다
+      this.bus.setElapsed(lw.tick);
+      const lastTick = t === TICKS_PER_DAY - 1;
+      const dropping = this.bus.state.atStop || lastTick;
+      while (dropping && d.arrivalAcc >= 1) {
+        d.arrivalAcc -= 1;
+        d.arrivals++;
+        /*
+         * ⚠ **`spawn` 성공은 입장이 아니다** (K36-B②). 손님은 정류장에 내릴 뿐이고,
+         * 매표소를 지나야 입장이다. 그래서 `visitors`·`byGroup` 은 아래 `takeAdmitted`
+         * 가 센다. 여기서 세면 매표소가 없는 판이 "입장 129명 · 매출 0" 으로 보인다.
+         */
+        if (!this.guests.spawn(rng, lw.season, opts.mapShares)) d.turnedAway++;
+      }
+      this.guests.tick(rng);
+      // 이용이 끝난 손님만큼 요금을 받는다 (이용 시작이 아니라 완료 기준)
+      d.revenue += this.collectFees(d.weather);
+      // 표를 산 손님만큼 입장료를 받는다 — 요금 슬라이더가 같이 민다
+      const adm = this.guests.takeAdmitted();
+      d.visitors += adm.count;
+      d.noTicket += adm.noTicket;
+      for (const k of Object.keys(lw.byGroup) as GroupId[]) lw.byGroup[k] += adm.byGroup[k];
+      const admIn = Math.round(adm.fee * this.priceMult);
+      d.admission += admIn;
+      d.revenue += admIn;
 
-        for (const g of this.guests.all) {
-          const k = g.j * w + g.i;
-          if (k >= 0 && k < heat.length) heat[k] = (heat[k] as number) + 1;
-        }
-        peak = Math.max(peak, this.guests.count);
+      for (const g of this.guests.all) {
+        const k = g.j * w + g.i;
+        if (k >= 0 && k < lw.heat.length) lw.heat[k] = (lw.heat[k] as number) + 1;
+      }
+      d.peak = Math.max(d.peak, this.guests.count);
 
-        if (playbackEvery > 0 && tick % playbackEvery === 0) {
-          playback.push({
-            tick,
-            guests: this.guests.all.map((g) => ({
-              i: g.i,
-              j: g.j,
-              fromI: g.fromI,
-              fromJ: g.fromJ,
-              pose: g.pose,
-              facing: g.facing,
-              palette: g.palette,
-            })),
-          });
-        }
+      if (lw.playbackEvery > 0 && lw.tick % lw.playbackEvery === 0) {
+        lw.playback.push({
+          tick: lw.tick,
+          guests: this.guests.all.map((g) => ({
+            i: g.i,
+            j: g.j,
+            fromI: g.fromI,
+            fromJ: g.fromJ,
+            pose: g.pose,
+            facing: g.facing,
+            palette: g.palette,
+          })),
+        });
       }
 
-      const after = this.guests.stats();
-      const dayExited = after.exited - before.exited;
-      const daySat =
-        dayExited > 0
-          ? (after.exitSatisfaction * after.exited - before.exitSatisfaction * before.exited) /
-            dayExited
-          : 0;
-      const dayUpkeep = Math.round(this.weeklyUpkeep(season) / DAYS_PER_WEEK);
-      days.push({
-        day,
-        name: DAY_NAMES[day] as string,
-        weather,
-        arrivals,
-        visitors,
-        turnedAway,
-        noTicket,
-        revenue: dayRevenue,
-        admission: dayAdmission,
-        upkeep: dayUpkeep,
-        peak,
-        exitSatisfaction: daySat,
-        gaveUp: after.gaveUp - before.gaveUp,
-      });
-      weekRevenue += dayRevenue;
-      weekAdmission += dayAdmission;
+      lw.tick++;
+      used++;
+
+      if (lastTick) {
+        // ── 하루 닫기 ────────────────────────────────────────────────────
+        const after = this.guests.stats();
+        const dayExited = after.exited - d.before.exited;
+        const daySat =
+          dayExited > 0
+            ? (after.exitSatisfaction * after.exited -
+                d.before.exitSatisfaction * d.before.exited) /
+              dayExited
+            : 0;
+        const dayUpkeep = Math.round(this.weeklyUpkeep(lw.season) / DAYS_PER_WEEK);
+        lw.days.push({
+          day: d.no,
+          name: DAY_NAMES[d.no] as string,
+          weather: d.weather,
+          arrivals: d.arrivals,
+          visitors: d.visitors,
+          turnedAway: d.turnedAway,
+          noTicket: d.noTicket,
+          revenue: d.revenue,
+          admission: d.admission,
+          upkeep: dayUpkeep,
+          peak: d.peak,
+          exitSatisfaction: daySat,
+          gaveUp: after.gaveUp - d.before.gaveUp,
+        });
+        lw.weekRevenue += d.revenue;
+        lw.weekAdmission += d.admission;
+        lw.day = null;
+      }
     }
+    return used;
+  }
+
+  /** 주 마감 — 840 tick 이 다 소비된 뒤에만. 결산을 만들고 진행 상태를 비운다 */
+  finish(): WeekReport {
+    const lw = this.live;
+    if (!lw) throw new Error('finish() before begin()');
+    if (lw.tick < TICKS_PER_WEEK || lw.day !== null) {
+      throw new Error(`finish() with ${lw.tick}/${TICKS_PER_WEEK} ticks — step() the rest first`);
+    }
+    const { opts, season, days } = lw;
+    const staff = opts.staff;
+    const mod = opts.modifiers;
+    const w = this.terrain.width;
+    const h = this.terrain.height;
+    let weekRevenue = lw.weekRevenue;
+    const weekAdmission = lw.weekAdmission;
+
     // 매점직원이 모자라면 식음 매출이 떨어진다. 전체가 아니라 **식음 몫만** 깎아야
     // "직원을 왜 쓰나"가 종류별 판단이 된다 — 근사로 전체의 식음 비중만큼만 곱한다
     if (staff && staff.foodMult !== 1) {
@@ -617,7 +712,7 @@ export class WeekRunner {
      * 코스가 비수기 손익을 통째로 떠받쳐 "겨울에는 무엇을 할까"가 사라진다 (실측: 코스를
      * 넣자 겨울 손익이 +2% 로 평평해졌다). 유지비는 계절과 무관하다 — 장비는 세워둬도 돈이 든다.
      */
-    const courseSeason = profile.arrivalBase;
+    const courseSeason = lw.profile.arrivalBase;
     const courseRevenue = mod?.closed
       ? 0
       : Math.round((opts.courses?.revenue ?? 0) * courseSeason);
@@ -635,8 +730,8 @@ export class WeekRunner {
 
     // 히트맵 최고점
     let hotspot: WeekReport['hotspot'] = null;
-    for (let k = 0; k < heat.length; k++) {
-      const v = heat[k] as number;
+    for (let k = 0; k < lw.heat.length; k++) {
+      const v = lw.heat[k] as number;
       if (v > 0 && (!hotspot || v > hotspot.value)) {
         hotspot = { i: k % w, j: ((k - (k % w)) / w) | 0, value: v };
       }
@@ -646,13 +741,13 @@ export class WeekRunner {
     const demand = {} as Record<NeedKind, number>;
     for (const d of days) {
       const mods = WEATHER_DEMAND[d.weather];
-      for (const need of Object.keys(supply) as NeedKind[]) {
+      for (const need of Object.keys(lw.supply) as NeedKind[]) {
         demand[need] = (demand[need] ?? 0) + (mods[need] ?? 1);
       }
     }
     let bottleneck: WeekReport['bottleneck'] = null;
     for (const need of Object.keys(demand) as NeedKind[]) {
-      const sup = supply[need] ?? 0;
+      const sup = lw.supply[need] ?? 0;
       const dem = demand[need] ?? 0;
       const ratio = sup === 0 ? Infinity : dem / sup;
       if (!bottleneck || ratio > (bottleneck.demand / Math.max(1, bottleneck.supply))) {
@@ -661,6 +756,7 @@ export class WeekRunner {
     }
 
     const totalExited = days.reduce((a, d) => a + (d.exitSatisfaction > 0 ? 1 : 0), 0);
+    this.live = null;
     return {
       week: this.weekNo,
       season,
@@ -696,16 +792,17 @@ export class WeekRunner {
               ),
             ),
       gaveUp: days.reduce((a, d) => a + d.gaveUp, 0),
-      heat,
+      heat: lw.heat,
       heatW: w,
       heatH: h,
       hotspot,
       bottleneck,
-      playback,
-      byGroup,
-      accident,
+      playback: lw.playback,
+      byGroup: lw.byGroup,
+      accident: lw.accident,
     };
   }
+
 
   /**
    * 요금 징수 — 이용이 **끝난** 손님 수만큼. 날씨가 수요 구성을 바꾸므로 그 종류의
@@ -732,4 +829,41 @@ export class WeekRunner {
     }
     return Math.round(total * this.priceMult);
   }
+}
+
+
+/** 하루치 진행 상태 (K39) — 예전 run() 의 하루 지역 변수를 그대로 옮긴 것 */
+interface DayCtx {
+  no: number;
+  weather: Weather;
+  perTick: number;
+  before: ReturnType<GuestStore['stats']>;
+  arrivals: number;
+  visitors: number;
+  turnedAway: number;
+  noTicket: number;
+  peak: number;
+  revenue: number;
+  admission: number;
+  arrivalAcc: number;
+}
+
+/** 주 진행 상태 (K39) — begin() 이 만들고 finish() 가 비운다 */
+interface LiveWeekState {
+  rng: Rng;
+  opts: WeekOptions;
+  season: Season;
+  profile: (typeof SEASON_PROFILE)[Season];
+  playbackEvery: number;
+  heat: number[];
+  days: DayReport[];
+  playback: PlaybackFrame[];
+  supply: Record<NeedKind, number>;
+  accident: WeekReport['accident'];
+  byGroup: Record<GroupId, number>;
+  weekRevenue: number;
+  weekAdmission: number;
+  tick: number;
+  stepCalls: number;
+  day: DayCtx | null;
 }
