@@ -186,6 +186,8 @@ export class KairoScene extends Phaser.Scene {
     t: number;
   }[] = [];
   private boatGfx: Phaser.GameObjects.Graphics | null = null;
+  /** 수영 구역 오버레이 (S3) — 칸마다 그래픽 하나 (깊이가 칸 단위라 한 장으로 못 그린다) */
+  private swimGfx: Phaser.GameObjects.Graphics[] = [];
 
   /** 선착장 후보 (K33) — 편집 중에만 채워진다 */
   private dockTips: { x: number; y: number }[] = [];
@@ -299,6 +301,7 @@ export class KairoScene extends Phaser.Scene {
     this.buildWalls();
     this.rebuildFacilities();
     this.applyLand();
+    this.applySwimZones();
   }
   private dragMoved = 0;
   private lastPointer = { x: 0, y: 0 };
@@ -356,6 +359,7 @@ export class KairoScene extends Phaser.Scene {
     this.buildSurround();
     this.buildGround();
     this.applyLand(); // 부팅보다 먼저 정해진 토지를 여기서 반영한다
+    this.applySwimZones(); // 수영 구역도 같은 규칙 — create() 전에 온 것을 여기서
     this.buildWalls();
     // 코스 오버레이는 전부보다 위 — 손님·시설에 가리면 못 끈다
     this.courseGfx = this.add.graphics().setDepth(1_000_000).setVisible(false);
@@ -1746,6 +1750,72 @@ export class KairoScene extends Phaser.Scene {
     const a = path[i] as { x: number; y: number };
     const b = path[i + 1] as { x: number; y: number };
     return { x: a.x + (b.x - a.x) * frac, y: a.y + (b.y - a.y) * frac };
+  }
+
+  /**
+   * 수영 구역 표시 (S3) — 수영장은 **코핑**(밝은 테두리), 강 구역은 **부표 점선**.
+   * 구역은 파생이라 통째로 다시 그린다 (호출은 mutation 마다 — main 이 서명으로 거른다).
+   *
+   * 칸마다 그래픽 하나다: 깊이는 칸 단위(`depthKey + Z_FACILITY`)여야 남쪽 지면에
+   * 안 덮이고 헤엄치는 손님(Z_GUEST)보다는 뒤에 선다. 한 장에 최대 깊이를 주면
+   * 북쪽 손님이 부표에 덮인다 (보트에서 겪은 그 문제의 면적판).
+   */
+  setSwimZones(zones: readonly { kind: 'pool' | 'river'; tiles: { x: number; y: number }[] }[]): void {
+    // ⚠ create() 전에 불릴 수 있다 — 씬이 기억했다가 적용한다 (setLand 와 같은 규칙.
+    // 실측: 세이브 복원 부팅에서 syncSwim 이 먼저 와 this.add 가 없어 부팅이 죽었다)
+    this.pendingSwim = zones;
+    this.applySwimZones();
+  }
+
+  private pendingSwim: readonly { kind: 'pool' | 'river'; tiles: { x: number; y: number }[] }[] = [];
+
+  private applySwimZones(): void {
+    if (this.tileImages.length === 0) return; // create() 가 다시 부른다
+    const zones = this.pendingSwim;
+    for (const g of this.swimGfx) g.destroy();
+    this.swimGfx = [];
+    const coping = cssColorInt('--swim-coping');
+    const buoy = cssColorInt('--swim-buoy');
+    for (const z of zones) {
+      const inZone = new Set(z.tiles.map((t) => (t.y << 10) | t.x));
+      for (const t of z.tiles) {
+        const c = tileCenter(t.x, t.y);
+        // 다이아몬드 꼭지점 — 위·오른쪽·아래·왼쪽
+        const top = { x: c.x, y: c.y - TILE_H / 2 };
+        const right = { x: c.x + TILE_W / 2, y: c.y };
+        const bottom = { x: c.x, y: c.y + TILE_H / 2 };
+        const left = { x: c.x - TILE_W / 2, y: c.y };
+        // 이웃 방향 → 그 변의 두 끝 (투영: +I 는 오른아래, +J 는 왼아래)
+        const sides: [number, number, { x: number; y: number }, { x: number; y: number }][] = [
+          [1, 0, right, bottom],
+          [-1, 0, top, left],
+          [0, 1, bottom, left],
+          [0, -1, top, right],
+        ];
+        let g: Phaser.GameObjects.Graphics | null = null;
+        for (const [di, dj, a, b] of sides) {
+          if (inZone.has(((t.y + dj) << 10) | (t.x + di))) continue;
+          g ??= this.add.graphics();
+          if (z.kind === 'pool') {
+            g.lineStyle(2, coping, 0.9);
+            g.beginPath();
+            g.moveTo(a.x, a.y);
+            g.lineTo(b.x, b.y);
+            g.strokePath();
+          } else {
+            // 부표 — 변을 따라 점 둘 (1/3 · 2/3 지점)
+            g.fillStyle(buoy, 1);
+            for (const f of [1 / 3, 2 / 3]) {
+              g.fillCircle(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f, 1.6);
+            }
+          }
+        }
+        if (g) {
+          g.setDepth(depthKey(t.x, t.y) + Z_FACILITY);
+          this.swimGfx.push(g);
+        }
+      }
+    }
   }
 
   private drawBoats(): void {

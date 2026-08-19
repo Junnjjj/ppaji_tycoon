@@ -142,15 +142,24 @@ export function riverZones(
       // 입수점 — 인접한 덱 칸 중 설 수 있는 것
       const entries: { x: number; y: number }[] = [];
       const eSeen = new Set<number>();
+      let deckAdjacent = 0;
       for (const t of tiles) {
         for (const [di, dj] of DIRS) {
           const ni = t.x + di;
           const nj = t.y + dj;
           if (!deckTiles.has(key(ni, nj)) || eSeen.has(key(ni, nj))) continue;
           eSeen.add(key(ni, nj));
+          deckAdjacent++;
           if (standable(ni, nj)) entries.push({ x: ni, y: nj });
         }
       }
+      /*
+       * ⚠ 덱이 하나도 안 붙은 밀폐 물은 구역이 **아니다** — 뭍으로만 둘러싸인
+       * **자연 연못**이 여기 걸린다 (실측: 지형에 내륙 연못이 있으면 판마다 공짜
+       * 구역 2개가 생기고 허가 면적까지 먹었다). 구역은 플레이어가 덱으로 **만든**
+       * 것이어야 한다 — "빠지의 시그니처"지 지형의 부산물이 아니다.
+       */
+      if (deckAdjacent === 0) continue;
       zones.push({ kind: 'river', tiles, entries, area: tiles.length });
     }
   }

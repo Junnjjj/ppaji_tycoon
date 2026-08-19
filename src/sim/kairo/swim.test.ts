@@ -109,6 +109,13 @@ describe('수영 구역 (강) — 덱 밀폐', () => {
     expect(zones[0]?.entries.length).toBeGreaterThan(0);
   });
 
+  it('음성 — 뭍으로만 둘러싸인 자연 연못은 구역이 아니다 (덱 0장)', () => {
+    const t = shore();
+    // 땅 한가운데 물 2×2 — 밀폐지만 덱이 없다
+    for (let j = 3; j < 5; j++) for (let i = 3; i < 5; i++) t.paint(i, j, 'water_edge');
+    expect(riverZones(t, new Set(), alwaysStand)).toHaveLength(0);
+  });
+
   it('음성 — 한 장이 빠지면(ㄷ자) 열린 강과 이어져 구역이 아니다', () => {
     const t = shore();
     expect(riverZones(t, ringKeys([5, 11]), alwaysStand)).toHaveLength(0);

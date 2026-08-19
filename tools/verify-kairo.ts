@@ -5120,6 +5120,47 @@ async function main(): Promise<void> {
     const gTo = key(spot.i + 1, spot.j);
     return { ok: true, bus: d, from: gFrom, to: gTo };
   })()`)) as { ok: boolean; why?: string; bus?: number; from?: number; to?: number };
+  /*
+   * ── 수영 구역 (S3) — 칠하면 구역·오버레이가 생기고, 지우면 **파생이라** 사라진다 ──
+   * 음성 대조군이 내장: 되돌린 뒤에도 남으면 "구역을 저장하고 있다"는 뜻이다 (금지 규칙).
+   */
+  const swim = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain, sc = h.scene;
+    // 이 페이지는 앞 절들의 덱이 이미 강 구역을 만들었을 수 있다 — 증분으로 잰다
+    h.guests.invalidate();
+    const base = h.guests.swimZones().length;
+    sc.setSwimZones(h.guests.swimZones());
+    const gfxBase = sc['swimGfx'].length;
+    const i0 = 20, j0 = 20;
+    for (let j = j0; j < j0 + 2; j++) for (let i = i0; i < i0 + 2; i++) t.paint(i, j, 'pool_water');
+    h.guests.invalidate();
+    const zones = h.guests.swimZones();
+    const mine = zones.find((z) => z.kind === 'pool' && z.tiles.some((p2) => p2.x === i0 && p2.y === j0));
+    sc.setSwimZones(zones);
+    const gfx = sc['swimGfx'].length;
+    for (let j = j0; j < j0 + 2; j++) for (let i = i0; i < i0 + 2; i++) t.paint(i, j, 'path_stone');
+    h.guests.invalidate();
+    const after = h.guests.swimZones();
+    sc.setSwimZones(after);
+    return { base: base, zones: zones.length, entries: mine ? mine.entries.length : -1,
+             gfxBase: gfxBase, gfx: gfx, zonesAfter: after.length, gfxAfter: sc['swimGfx'].length };
+  })()`)) as {
+    base: number; zones: number; entries: number;
+    gfxBase: number; gfx: number; zonesAfter: number; gfxAfter: number;
+  };
+  record(
+    '★ 수영장을 칠하면 구역·코핑이 생기고 지우면 사라진다 (S3, 파생 왕복)',
+    swim.zones === swim.base + 1 &&
+      swim.entries > 0 &&
+      swim.gfx > swim.gfxBase &&
+      swim.zonesAfter === swim.base &&
+      swim.gfxAfter === swim.gfxBase
+      ? 'pass'
+      : 'fail',
+    `구역 ${swim.base} → ${swim.zones} (입수점 ${swim.entries} · 표시 ${swim.gfxBase} → ${swim.gfx})` +
+      ` → 되돌린 뒤 ${swim.zonesAfter}/${swim.gfxAfter}`,
+  );
+
   record(
     '★ 이동체(버스) 깊이 — 걸친 두 칸 지면보다 앞 (K46-⑤, 꺼짐 수정)',
     mover.ok && (mover.bus ?? -1) > Math.max(mover.from ?? 0, mover.to ?? 0)

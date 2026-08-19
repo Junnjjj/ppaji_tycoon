@@ -528,6 +528,21 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         }
       }
 
+      /*
+       * 수영장 붓 (S3) — 시설이 선 칸에는 물을 못 채운다. 바닥 붓은 시설 밑을
+       * 지나가도 되지만(포장을 바꾸는 것) 물은 시설을 침수시킨다.
+       */
+      if (kindId === 'pool_water') {
+        for (let dj = 0; dj < n; dj++) {
+          for (let di = 0; di < n; di++) {
+            if (h.placement.handleAt(oi + di, oj + dj) !== 0) {
+              toast('시설 아래에는 물을 채울 수 없습니다 — 먼저 옮기세요');
+              return;
+            }
+          }
+        }
+      }
+
       // 실제로 바뀔 칸 수를 먼저 세어 값을 확인한다 — 물에 걸치면 그만큼 덜 낸다
       let willChange = 0;
       for (let dj = 0; dj < n; dj++) {
@@ -741,6 +756,20 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         name: k.name,
         sub: '무료 · 손님이 못 지나감',
       })),
+      /*
+       * 수영장 붓 (S3) — buildable:false 라 위 두 필터에 안 걸리는 유일한 붓이다
+       * (칠하는 축과 짓는 축이 갈라진 첫 종류). 2등급 해금 — 첫 심사 뒤에 연다
+       * (스펙 §2.4, 초반 과부하 방지). 최소 4칸이어야 구역이 된다.
+       */
+      ...(currentGrade().grade >= 2
+        ? [2, 3].map((n) => ({
+            kind: 'ground' as const,
+            tab: 'ground' as const,
+            id: n === 2 ? 'pool_water@2' : 'pool_water@3',
+            name: `수영장 ${n}×${n}`,
+            sub: '칸당 4만 · 4칸부터 구역',
+          }))
+        : []),
       { kind: 'erase' as const, tab: 'ground' as const, id: 'erase', name: '철거', sub: '잔디로' },
       /*
        * 시설 — **해금된 것만** 카드로 낸다 (K40, UX 검수 §4).
@@ -1865,6 +1894,16 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   refreshRisk();
   refreshStaffBtn();
   refreshCaps();
+  // 수영 구역 오버레이 (S3) — 구역은 파생이라 서명이 바뀔 때만 다시 그린다
+  let swimSig = '';
+  const syncSwim = (): void => {
+    const zones = h.guests.swimZones();
+    const sig = JSON.stringify(zones.map((z) => [z.kind, z.area, z.tiles[0]]));
+    if (sig === swimSig) return;
+    swimSig = sig;
+    h.scene.setSwimZones(zones);
+  };
+  syncSwim();
   setInterval(() => {
     refreshQuests();
     refreshRisk();
@@ -1872,6 +1911,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     refreshExamBtn();
     refreshGoal();
     refreshCaps();
+    syncSwim();
   }, 1500);
 
   /*
