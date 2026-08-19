@@ -65,6 +65,10 @@ export interface GradeDef {
    */
   maxGuests: number;
   reputationPull: number;
+  /** 심사 수수료 (K42) — 승급은 응시하는 시험이다. 1등급에는 없다 */
+  examFee?: number;
+  /** 심사 요구 조건 — 의뢰 condition 풀과 같은 스키마 */
+  examReqs?: QuestCondition[];
 }
 
 export const QUESTS: readonly QuestDef[] = (rawQuests as unknown as { quests: QuestDef[] }).quests;
@@ -241,7 +245,7 @@ export interface QuestStatus {
   rewardFacility?: string;
 }
 
-function supplyOf(placement: PlacementGrid): Record<string, number> {
+export function supplyOf(placement: PlacementGrid): Record<string, number> {
   const out: Record<string, number> = {};
   for (const item of placement.all()) {
     const def = facilityDef(item.defId) as { need?: string } | undefined;
@@ -258,6 +262,80 @@ function supplyOf(placement: PlacementGrid): Record<string, number> {
  * 전체 `WeekReport` 가 아니라 `WeekSummary` 를 받는다 — 여기서 읽는 필드가 넷뿐이고,
  * 그래야 세이브에서 복원한 요약으로도 판정이 된다 (히트맵은 저장하지 않는다).
  */
+
+/** 조건 평가 결과 — 의뢰와 심사(K42)가 같은 평가기를 쓴다 */
+export interface ConditionEval {
+  cur: number;
+  goal: number;
+  detail: string;
+  progress: number;
+  done: boolean;
+}
+
+/**
+ * 조건 하나를 잰다. 의뢰(questStatuses)와 심사(exam.ts)가 **이 하나**를 공유한다 —
+ * 갈라지면 "의뢰로는 3개인데 심사로는 2개"가 된다 (guestWalkable 교훈과 같은 종류).
+ */
+export function evaluateCondition(
+  c: QuestCondition,
+  placement: PlacementGrid,
+  report: WeekSummary | null,
+  supply: Record<string, number>,
+  combos: ReturnType<typeof evaluateCombos>,
+): ConditionEval {
+  let cur = 0;
+  let goal = c.value;
+  let detail = '';
+
+  switch (c.kind) {
+    case 'weekVisitors':
+      cur = report?.visitors ?? 0;
+      detail = `${cur} / ${goal}명`;
+      break;
+    case 'needSupply':
+      cur = supply[c.need ?? ''] ?? 0;
+      detail = `${cur} / ${goal}개`;
+      break;
+    case 'facilityCount':
+      cur = placement.all().filter((x) => x.defId === c.facility).length;
+      detail = `${cur} / ${goal}개`;
+      break;
+    case 'exitSatisfaction':
+      cur = Math.round(report?.exitSatisfaction ?? 0);
+      detail = `${cur} / ${goal}`;
+      break;
+    case 'maxTurnedAway':
+      // 목표가 0 이라 "적을수록 좋다" — 주를 한 번은 돌려야 판정된다
+      cur = report ? (report.turnedAway <= c.value ? 1 : 0) : 0;
+      goal = 1;
+      detail = report ? `만석 ${report.turnedAway}명` : '아직 한 주를 안 돌렸다';
+      break;
+    case 'activeCombos':
+      cur = combos.active.length;
+      detail = `${cur} / ${goal}개`;
+      break;
+    case 'weekProfit':
+      cur = Math.max(0, report?.profit ?? 0);
+      detail = `${Math.round(cur / 10000)} / ${Math.round(goal / 10000)}만`;
+      break;
+    case 'comboTier':
+      cur = combos.active.filter((x) => x.tier === c.tier).length;
+      detail = `${cur} / ${goal}개`;
+      break;
+    case 'facilityTotalAndSat': {
+      const sat = Math.round(report?.exitSatisfaction ?? 0);
+      const needSat = c.sat ?? 0;
+      cur = placement.count >= goal && sat >= needSat ? 1 : 0;
+      detail = `시설 ${placement.count}/${goal} · 만족 ${sat}/${needSat}`;
+      goal = 1;
+      break;
+    }
+  }
+
+  const progress = goal <= 0 ? 1 : Math.max(0, Math.min(1, cur / goal));
+  return { cur, goal, detail, progress, done: cur >= goal };
+}
+
 export function questStatuses(
   placement: PlacementGrid,
   report: WeekSummary | null,
@@ -268,63 +346,14 @@ export function questStatuses(
 
   for (const q of QUESTS) {
     const c = q.condition;
-    let cur = 0;
-    let goal = c.value;
-    let detail = '';
-
-    switch (c.kind) {
-      case 'weekVisitors':
-        cur = report?.visitors ?? 0;
-        detail = `${cur} / ${goal}명`;
-        break;
-      case 'needSupply':
-        cur = supply[c.need ?? ''] ?? 0;
-        detail = `${cur} / ${goal}개`;
-        break;
-      case 'facilityCount':
-        cur = placement.all().filter((x) => x.defId === c.facility).length;
-        detail = `${cur} / ${goal}개`;
-        break;
-      case 'exitSatisfaction':
-        cur = Math.round(report?.exitSatisfaction ?? 0);
-        detail = `${cur} / ${goal}`;
-        break;
-      case 'maxTurnedAway':
-        // 목표가 0 이라 "적을수록 좋다" — 주를 한 번은 돌려야 판정된다
-        cur = report ? (report.turnedAway <= c.value ? 1 : 0) : 0;
-        goal = 1;
-        detail = report ? `만석 ${report.turnedAway}명` : '아직 한 주를 안 돌렸다';
-        break;
-      case 'activeCombos':
-        cur = combos.active.length;
-        detail = `${cur} / ${goal}개`;
-        break;
-      case 'weekProfit':
-        cur = Math.max(0, report?.profit ?? 0);
-        detail = `${Math.round(cur / 10000)} / ${Math.round(goal / 10000)}만`;
-        break;
-      case 'comboTier':
-        cur = combos.active.filter((x) => x.tier === c.tier).length;
-        detail = `${cur} / ${goal}개`;
-        break;
-      case 'facilityTotalAndSat': {
-        const sat = Math.round(report?.exitSatisfaction ?? 0);
-        const needSat = c.sat ?? 0;
-        cur = placement.count >= goal && sat >= needSat ? 1 : 0;
-        detail = `시설 ${placement.count}/${goal} · 만족 ${sat}/${needSat}`;
-        goal = 1;
-        break;
-      }
-    }
-
-    const progress = goal <= 0 ? 1 : Math.max(0, Math.min(1, cur / goal));
+    const ev = evaluateCondition(c, placement, report, supply, combos);
     out.push({
       id: q.id,
       name: q.name,
       desc: q.desc,
-      done: cur >= goal,
-      progress,
-      detail,
+      done: ev.done,
+      progress: ev.progress,
+      detail: ev.detail,
       reward: q.reward.cash,
       ...(q.reward.facility !== undefined ? { rewardFacility: q.reward.facility } : {}),
     });

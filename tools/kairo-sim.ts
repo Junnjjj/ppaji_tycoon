@@ -57,6 +57,7 @@ import {
   GRADES,
 } from '../src/sim/kairo/progress.js';
 import { UnlockStore } from '../src/sim/kairo/unlocks.js';
+import { ExamStore } from '../src/sim/kairo/exam.js';
 
 const args = process.argv.slice(2);
 const flag = (name: string, dflt: number): number => {
@@ -115,6 +116,7 @@ interface RunResult {
   seasonByWeek: Season[];
   /** 건설이 막힌 주 — **안 짓기로 / 돈이 없어서 / 자리가 없어서**를 나눠서 센다 */
   buildPoor: number;
+  buildReserved: number;
   buildNoSpace: number;
   buildFailWhy: [string, number][];
   buildCapped: number;
@@ -545,6 +547,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const week = new WeekRunner(t, p, g);
   const progress = new ProgressStore();
   const unlocks = new UnlockStore();
+  const exam = new ExamStore();
   /**
    * 평판 — 퇴장 만족도의 이동평균 (§9.2). 지난주 값 하나로 등급을 정하면 진동한다
    * (실측: 40주에 등급이 35번 바뀌었다).
@@ -580,6 +583,14 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const profitByWeek: number[] = [];
   const seasonByWeek: Season[] = [];
   let buildPoor = 0;
+  /*
+   * 예비비를 지키느라 안 지은 주 (K42 재분류). 현금이 예비비(150만) **위**인데 여유가
+   * 최저가 시설에 못 미치는 상태는 "돈이 없다"(궁핍)가 아니라 **"안 짓기로 했다"**(신중)다.
+   * K41 로 경제가 현금 적체형에서 소비형으로 바뀌자, 예비비 언저리에서 도는 건강한 판이
+   * 궁핍으로 잘못 세어져 경보가 울렸다 (실측 11회/판 — 손익은 흑자, 현금은 완만한 상승).
+   * 진짜 궁핍(현금이 예비비 아래로 꺼짐)만 buildPoor 로 남긴다.
+   */
+  let buildReserved = 0;
   let buildNoSpace = 0;
   /** 매표소를 다시 지은 횟수 — 0 이 아니면 앞선 건설이 매표소를 가뒀다는 뜻이다 */
   let ticketRebuilds = 0;
@@ -740,16 +751,30 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
          * 세면, 현금 2,220만인 판이 "돈이 없어 건설이 막힌다"로 보고된다 (실측).
          */
         if (weekBudget <= 0) buildCapped++;
-        else if (budget < CHEAPEST_FACILITY) buildPoor++;
+        else if (cash < BUILD_RESERVE) buildPoor++;
+        else if (budget < CHEAPEST_FACILITY) buildReserved++;
         else buildNoSpace++;
         break;
       }
     }
     g.invalidate();
 
-    // 등급을 반영한다 — 동시 손님 상한과 방문 수요가 등급에서 온다
-    const gr = nextGrade(gradeNo, reputation.value);
-    gradeNo = gr.grade;
+    /*
+     * 등급 (K42) — 강등만 자동, 승급은 심사로. 봇은 **자격이 되면 즉시 신청**한다.
+     * 이걸 안 넣으면 봇이 1등급에 갇혀 골든·밸런싱이 성장 없는 세계를 잰다
+     * (봇과 골든은 실제 규칙으로 돈다 — K36 교훈).
+     */
+    const downTo = nextGrade(gradeNo, reputation.value).grade;
+    if (downTo < gradeNo) gradeNo = downTo;
+    const elig = exam.eligible(gradeNo, reputation.value);
+    if (elig) {
+      const fee = elig.examFee ?? 0;
+      if (cash >= fee) {
+        cash -= fee;
+        exam.apply(elig.grade, k + 1, 0); // 주 시작에 신청 — 이번 주말 판정
+      }
+    }
+    const gr = GRADES[gradeNo - 1] ?? GRADES[0]!;
     const season = seasons[Math.floor(k / 4) % seasons.length] as Season;
 
     /*
@@ -928,6 +953,12 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     const claimed = progress.claim(questStatuses(p, rep));
     cash += claimed.cash;
     for (const fid of claimed.facilities) unlocks.grant(fid); // 봇도 보상을 받는다 (K41)
+    // 심사 판정 (K42) — 결산과 같은 요약으로
+    const verdict = exam.judge(k + 1, p, rep);
+    if (verdict?.passed) {
+      gradeNo = verdict.target;
+      cash += verdict.grant; // 통과 지원금 — UI 와 같은 규칙
+    }
   }
 
   const combos = evaluateCombos(p);
@@ -948,6 +979,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     profitByWeek,
     seasonByWeek,
     buildPoor,
+    buildReserved,
     buildNoSpace,
     buildFailWhy: [...buildFailWhy.entries()].sort((a, b2) => b2[1] - a[1]),
     buildCapped,

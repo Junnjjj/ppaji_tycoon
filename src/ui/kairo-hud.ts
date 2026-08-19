@@ -27,7 +27,7 @@
 import { el } from './dom.js';
 import { panelHost, type Panel } from './panels.js';
 
-export type BuildKind = 'ground' | 'facility' | 'erase' | 'door';
+export type BuildKind = 'ground' | 'facility' | 'erase' | 'door' | 'move';
 
 /**
  * 시트 탭 (K31). `kind` 와 따로 두는 이유: **건물 바닥은 지형(`ground`)이지만 탭은
@@ -269,6 +269,11 @@ export class KairoHud {
     return !this.confirmBar.hidden;
   }
 
+  /** ⏩ 라벨 — 주 스킵이 해금되면 '한 주 ⏩' 가 된다 (K42) */
+  setWeekLabel(text: string): void {
+    this.weekBtn.textContent = text;
+  }
+
   setStatus(text: string): void {
     this.statusCap.textContent = text;
   }
@@ -459,4 +464,5 @@ const GLYPH: Partial<Record<BuildKind, string>> = {
   ground: '▤',
   erase: '✕',
   door: '⇄',
+  move: '✥',
 };

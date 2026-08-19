@@ -4,6 +4,7 @@ import { PlacementGrid, type PlacementSnapshot } from '../sim/kairo/placement.js
 import { ProgressStore, type ProgressSnapshot } from '../sim/kairo/progress.js';
 import type { WeekSnapshot, WeekSummary, Season } from '../sim/kairo/week.js';
 import type { UnlockSnapshot } from '../sim/kairo/unlocks.js';
+import type { ExamSnapshot } from '../sim/kairo/exam.js';
 import type { CardSnapshot } from '../sim/kairo/cards.js';
 import type { StaffCounts } from '../sim/kairo/staff.js';
 import type { CourseSnapshot } from '../sim/kairo/course.js';
@@ -108,6 +109,8 @@ export interface KairoSaveV5 {
   unlocks?: UnlockSnapshot;
   /** ⏩ 주 스킵 해금 (K42 심사 보상) — 도구도 보상이다, 잃으면 안 된다 */
   weekSkip?: boolean;
+  /** 심사 상태 (K42) — 신청 대기와 통과 횟수. 잃으면 수수료와 도구가 증발한다 */
+  exam?: ExamSnapshot;
 }
 
 export type AnyKairoSave = KairoSaveV5;
@@ -313,6 +316,7 @@ export interface KairoSaveInput {
   gradeNo?: number;
   unlocks?: UnlockSnapshot;
   weekSkip?: boolean;
+  exam?: ExamSnapshot;
 }
 
 export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave {
@@ -346,6 +350,7 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.gradeNo !== undefined ? { gradeNo: input.gradeNo } : {}),
     ...(input.unlocks ? { unlocks: input.unlocks } : {}),
     ...(input.weekSkip !== undefined ? { weekSkip: input.weekSkip } : {}),
+    ...(input.exam ? { exam: input.exam } : {}),
   };
 }
 
@@ -406,6 +411,7 @@ export interface KairoRestored {
   gradeNo?: number;
   unlocks?: UnlockSnapshot;
   weekSkip?: boolean;
+  exam?: ExamSnapshot;
 }
 
 export function restoreKairo(raw: unknown): KairoRestored {
@@ -439,6 +445,7 @@ export function restoreKairo(raw: unknown): KairoRestored {
     ...(s.gradeNo !== undefined ? { gradeNo: s.gradeNo } : {}),
     ...(s.unlocks ? { unlocks: s.unlocks } : {}),
     ...(s.weekSkip !== undefined ? { weekSkip: s.weekSkip } : {}),
+    ...(s.exam ? { exam: s.exam } : {}),
   };
 }
 

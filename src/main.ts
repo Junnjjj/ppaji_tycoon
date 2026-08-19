@@ -32,6 +32,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { audio } = await import('./audio/index.js');
   const { previewCombos, evaluateCombos } = await import('./sim/kairo/combos.js');
   const { UnlockStore } = await import('./sim/kairo/unlocks.js');
+  const { ExamStore } = await import('./sim/kairo/exam.js');
   const {
     questStatuses,
     ProgressStore,
@@ -225,6 +226,91 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        * 한 바퀴 돌면 없앤다. 후보 판정은 `doorCandidates` 하나를 sim 과 공유한다 —
        * 갈라지면 UI 가 놓으라고 해 놓고 굽기가 무시하는 상태가 된다.
        */
+      /*
+       * 이동 (K42) — 첫 탭: 시설 선택 · 둘째 탭: 고스트 → 확정.
+       * 자기 자신과의 겹침 판정은 "치우고 재고 되돌리는" 프로브로 푼다 — 복제 규칙을
+       * 만들지 않는다 (판정은 placement.check 하나다).
+       */
+      if (brush === 'move') {
+        if (!exam.toolsUnlocked) {
+          toast('이동은 첫 심사 통과의 보상입니다');
+          return;
+        }
+        if (!moveSel) {
+          const hit = h.placement.at(i, j);
+          if (!hit) {
+            toast('옮길 시설을 탭하세요');
+            return;
+          }
+          const def = facilityDef(hit.defId);
+          moveSel = { handle: hit.handle, defId: hit.defId, i: hit.i, j: hit.j };
+          hud.setBrush(`이동: ${def?.name ?? hit.defId}`);
+          toast(
+            `${def?.name ?? hit.defId} — 옮길 자리를 탭하세요 ` +
+              `(${Math.round(Math.floor((def?.cost ?? 0) * 0.1) / 10000)}만)`,
+          );
+          return;
+        }
+        const sel = moveSel;
+        const def = facilityDef(sel.defId);
+        const fee = Math.floor((def?.cost ?? 0) * 0.1);
+        // 프로브 — 원자리를 잠깐 치우고 재야 자기 발자국과 안 겹친다
+        h.placement.remove(sel.handle);
+        const chk = h.placement.check(h.terrain, h.walls, GATE, sel.defId, i, j, placeOpts());
+        const restored = h.placement.place(
+          h.terrain, h.walls, GATE, sel.defId, sel.i, sel.j, placeOpts(),
+        );
+        const oldHandle = sel.handle;
+        if (restored.ok && restored.placed) sel.handle = restored.placed.handle;
+        h.scene.refreshFacility(oldHandle);
+        h.scene.refreshFacility(sel.handle);
+        h.scene.setGhost(sel.defId, i, j, chk.ok);
+        hud.showConfirm(
+          chk.ok
+            ? `이동: ${def?.name ?? sel.defId} · ${Math.round(fee / 10000)}만`
+            : PLACE_FAIL_MESSAGES[chk.fail ?? 'unknown-def'],
+          chk.ok && fee <= week.cash,
+          {
+            cancel: () => {
+              h.scene.setGhost(null);
+              moveSel = null;
+              hud.setBrush('이동');
+            },
+            confirm: () => {
+              h.scene.setGhost(null);
+              if (fee > week.cash) {
+                toast('돈이 부족합니다');
+                return;
+              }
+              h.placement.remove(sel.handle);
+              const r = h.placement.place(h.terrain, h.walls, GATE, sel.defId, i, j, placeOpts());
+              if (!r.ok || !r.placed) {
+                // 되돌린다 — 반쯤 옮겨진 상태가 최악이다
+                const rr = h.placement.place(
+                  h.terrain, h.walls, GATE, sel.defId, sel.i, sel.j, placeOpts(),
+                );
+                const gone = sel.handle;
+                if (rr.ok && rr.placed) sel.handle = rr.placed.handle;
+                h.scene.refreshFacility(gone);
+                h.scene.refreshFacility(sel.handle);
+                toast(PLACE_FAIL_MESSAGES[r.fail ?? 'unknown-def']);
+                return;
+              }
+              week.spend(fee);
+              const gone = sel.handle;
+              moveSel = null;
+              hud.setBrush('이동');
+              h.scene.refreshFacility(gone);
+              h.scene.refreshFacility(r.placed.handle);
+              h.guests.invalidate();
+              audio.play('sfx/place');
+              toast(`이동 — ${Math.round(fee / 10000)}만`, 'ok');
+              persist();
+            },
+          },
+        );
+        return;
+      }
       if (brush === 'door') {
         const cand = doorCandidates(h.terrain, GATE, i, j, walkableNow);
         if (cand.length === 0) {
@@ -293,11 +379,15 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       }
       if (brush === 'facility') {
         const defId = brushFacility;
-        // 등급 해금 — 허가는 돈으로 못 산다 (퇴장 만족도로만 오른다)
+        // 해금 — 골격(등급) 또는 사건(의뢰 보상). isUnlocked 하나로 묻는다 (K41)
         const grade = currentGrade();
-        const need = requiredGrade(defId);
-        if (need > grade.grade) {
-          toast(`아직 못 짓습니다 — ${need}등급 필요 (현재 ${grade.grade}등급 ${grade.name})`);
+        if (!unlocks.isUnlocked(defId, grade.grade)) {
+          const need = requiredGrade(defId);
+          toast(
+            need <= 5
+              ? `아직 못 짓습니다 — ${need}등급 필요 (현재 ${grade.grade}등급 ${grade.name})`
+              : '아직 못 짓습니다 — 의뢰 보상으로 열립니다',
+          );
           return;
         }
         /*
@@ -474,6 +564,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   let brush: string | null = null;
   let brushFacility = '';
+  /** 이동 붓의 선택 시설 (K42) — 첫 탭에서 잡고 확정·취소에서 푼다 */
+  let moveSel: { handle: number; defId: string; i: number; j: number } | null = null;
 
   const ZONE_NAME: Record<string, string> = {
     indoor: '실내',
@@ -621,6 +713,21 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           };
         }),
       /*
+       * 이동 (K42) — 다듬기의 최소 도구. 첫 심사 통과 보상이라 그 전엔 목록에 없다.
+       * 철거+재구매(반값 손실)는 다듬기가 아니라 벌금이었다.
+       */
+      ...(exam.toolsUnlocked
+        ? [
+            {
+              kind: 'move' as const,
+              tab: 'facility' as const,
+              id: 'move',
+              name: '이동',
+              sub: '건설비의 10%',
+            },
+          ]
+        : []),
+      /*
        * 티저 (K40·K41) — ① 진행 중 의뢰의 보상 시설 ("이 의뢰를 끝내면 이게 열린다"),
        * ② 다음 등급 골격의 첫 시설. 해금이 벽이 아니라 도착이라는 걸 시트가 예고한다.
        */
@@ -660,6 +767,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   /** 붓을 놓는다 — 하네스가 `__kairoBrush()` 로 확인한다 */
   const clearBrush = (): void => {
     brush = null;
+    moveSel = null;
     hud.setBrush(null);
     hud.hideConfirm();
     h.scene.setGhost(null);
@@ -690,6 +798,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const progress = saved ? saved.progress : new ProgressStore();
   // 사건 해금 집합 (K41) — 의뢰 보상으로 열린 시설. 등급에서 다시 만들 수 없는 상태다
   const unlocks = UnlockStore.fromSnapshot(saved?.unlocks);
+  // 심사 (K42) — 승급은 응시하는 시험이다. 신청 대기·통과 횟수가 상태다
+  const exam = ExamStore.fromSnapshot(saved?.exam);
   const week = new WeekRunner(h.terrain, h.placement, h.guests);
   runner = week; // 프레임이 이제부터 주차·현금을 읽을 수 있다
   const report = new KairoReport(document.body);
@@ -776,7 +886,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   );
   let gradeNo = saved?.gradeNo ?? gradeFor(reputation.value).grade;
   /** 지금 등급 — 이력이 걸린 값이다. 화면·판정이 전부 이걸 쓴다 */
-  const currentGrade = (): ReturnType<typeof gradeFor> => nextGrade(gradeNo, reputation.value);
+  /*
+   * 지금 등급 = gradeNo 그대로 (K42). 예전엔 nextGrade 로 **평판이 문턱을 넘는 순간
+   * 자동 승급**이었다 — 이제 승급은 심사 통과로만 일어난다. 강등은 결산에서 자동이다.
+   */
+  const currentGrade = (): ReturnType<typeof gradeFor> =>
+    GRADES.find((g) => g.grade === gradeNo) ?? (GRADES[0] as ReturnType<typeof gradeFor>);
 
   /** 세이브 — 배치·주 진행처럼 상태가 실제로 바뀐 뒤에만 부른다 */
   // 부팅 시점의 토지 — 세이브에서 복원된 등급이 그대로 화면에 반영돼야 한다
@@ -813,6 +928,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       priceMult,
       unlocks: unlocks.toSnapshot(),
       weekSkip: flow.weekSkipUnlocked,
+      exam: exam.toSnapshot(),
     });
   };
 
@@ -867,7 +983,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     /** 하네스·도구용 — true 면 흐름이 완전히 선다 (setAutoTick 과 독립) */
     frozen: false,
     /** 결산까지 스킵 — 첫 심사 통과 보상 (K42, 스펙 A2). 그 전의 ⏩ 는 하루 단위다 */
-    weekSkipUnlocked: saved?.weekSkip ?? false,
+    weekSkipUnlocked: exam.toolsUnlocked || (saved?.weekSkip ?? false),
     daysSeen: 0,
   };
   const TICK_MS = 400;
@@ -959,21 +1075,56 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     cards.tickWeek();
     lastReport = rep;
     reputation.push(rep.exitSatisfaction);
-    const gradeBefore = gradeNo;
-    gradeNo = nextGrade(gradeNo, reputation.value).grade;
-    if (gradeNo !== gradeBefore) {
-      // 등급이 바뀌면 땅이 넓어지거나 좁아진다 — 화면이 바로 그걸 보여줘야 한다
-      const nl = landRect(currentGrade());
-      h.scene.setLand(nl);
-      if (gradeNo > gradeBefore) {
-        toast(`토지가 ${nl.w}×${nl.h} 로 넓어졌습니다`, 'ok');
-        // 승급도 도착이다 — 새로 열린 골격 시설을 다음 날 아침에 축하한다 (K41)
+    /*
+     * 강등만 자동이다 (K42) — 관리 실패는 시험을 봐 주지 않는다.
+     * 승급은 아래의 심사 판정으로만 일어난다.
+     */
+    const downTo = nextGrade(gradeNo, reputation.value).grade;
+    if (downTo < gradeNo) {
+      gradeNo = downTo;
+      h.scene.setLand(landRect(currentGrade()));
+      toast(`등급이 내려갔습니다 — ${currentGrade().name}. 만족도를 살피세요`);
+    }
+    // 심사 판정 (K42) — 부분 점수, 무작위 없음. 결과는 다음 날 아침에 도착한다
+    const verdict = exam.judge(week.week, h.placement, {
+      visitors: rep.visitors,
+      turnedAway: rep.turnedAway,
+      profit: rep.profit,
+      exitSatisfaction: rep.exitSatisfaction,
+    });
+    if (verdict) {
+      if (verdict.passed) {
+        gradeNo = verdict.target;
+        if (verdict.grant > 0) week.earn(verdict.grant); // 통과 지원금 (수수료 × 2)
+        const nl = landRect(currentGrade());
+        h.scene.setLand(nl);
+        audio.play('sfx/exam-pass');
         const newly = allFacilityDefs().filter((d) => requiredGrade(d.id) === gradeNo);
         arrivalQueue.push({
           title: `${gradeNo}등급 승급!`,
-          name: currentGrade().name,
-          sub: `새 시설 ${newly.length}종이 열렸습니다`,
+          name: `${currentGrade().name} — ${verdict.score}/${verdict.max}점`,
+          sub: `토지 ${nl.w}×${nl.h} · 새 시설 ${newly.length}종 · 지원금 ${Math.round(verdict.grant / 10000)}만`,
           ...(newly[0]?.sprite !== undefined ? { sprite: newly[0].sprite } : {}),
+        });
+      } else {
+        audio.play('sfx/exam-fail');
+        // 처방 — 가장 점수가 낮은 조건을 지목한다 (거절은 방법까지 말한다)
+        const worst = [...verdict.perReq].sort((a, b) => a.score - b.score)[0];
+        arrivalQueue.push({
+          title: '심사 탈락',
+          name: `${verdict.score}/${verdict.max}점 (커트 ${Math.ceil(verdict.max * 0.75)})`,
+          sub: worst ? `부족한 것: ${worst.detail} — 채우고 다시 신청하세요` : '다시 신청하세요',
+        });
+      }
+      if (verdict.firstPass) {
+        // 첫 통과 보상 — 이동 붓 + ⏩ 주 스킵 (스펙 §4.1·A2)
+        flow.weekSkipUnlocked = true;
+        hud.setWeekLabel('한 주 ⏩');
+        refreshBuildList();
+        arrivalQueue.push({
+          title: '새 도구',
+          name: '이동 · 한 주 감기',
+          sub: '첫 심사 통과 보상 — 시설을 옮기고, ⏩ 가 한 주를 감습니다',
         });
       }
     }
@@ -1181,6 +1332,50 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     },
   });
 
+  /*
+   * 심사 신청 (K42) — 자격이 되면 메뉴에 나타난다. 신청하면 수수료를 내고
+   * 주말(목요일 이후 신청이면 다음 주말)에 심사관이 판정한다.
+   */
+  const examBtn = document.createElement('button');
+  examBtn.id = 'kairo-exam-open';
+  examBtn.className = 'kitem';
+  examBtn.addEventListener('click', () => {
+    const next = exam.eligible(gradeNo, reputation.value);
+    if (!next) return;
+    const fee = next.examFee ?? 0;
+    if (fee > week.cash) {
+      toast(`수수료가 부족합니다 — ${Math.round(fee / 10000)}만`);
+      return;
+    }
+    week.spend(fee);
+    const lp = week.liveProgress();
+    const pending = exam.apply(next.grade, week.week + 1, lp ? lp.tick : TICKS_PER_WEEK);
+    audio.play('sfx/card');
+    const reqText = (next.examReqs ?? [])
+      .map((c) => (c.kind === 'needSupply' ? `${c.need} ${c.value}` : `${c.kind} ${c.value}`))
+      .join(' · ');
+    toast(`심사 신청 — ${pending.judgeWeek}주차 주말 판정 (${reqText})`, 'ok');
+    refreshExamBtn();
+    refreshGoal();
+    persist();
+  });
+  hud.menuSlot.append(examBtn);
+  const refreshExamBtn = (): void => {
+    const next = exam.eligible(gradeNo, reputation.value);
+    if (exam.pending) {
+      examBtn.hidden = false;
+      examBtn.disabled = true;
+      examBtn.textContent = `심사 대기 — ${exam.pending.judgeWeek}주차 주말`;
+    } else if (next) {
+      examBtn.hidden = false;
+      examBtn.disabled = false;
+      examBtn.textContent = `심사 신청 — ${next.grade}등급 (${Math.round((next.examFee ?? 0) / 10000)}만)`;
+    } else {
+      examBtn.hidden = true;
+    }
+  };
+  refreshExamBtn();
+
   const newGameBtn = document.createElement('button');
   newGameBtn.id = 'kairo-newgame-open';
   newGameBtn.textContent = '새 판';
@@ -1207,8 +1402,23 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       chips.push({ icon: '📋', label: q.name, detail: q.detail, progress: q.progress });
     }
     // 다음 등급 게이지 — 구경(만족도)이 쌓이는 게 보인다. 좋아요 1000 의 우리식 번역 (A4)
-    const next = GRADES[currentGrade().grade];
-    if (next) {
+    // 자격이 차면 '응시 가능', 신청하면 '심사 대기'로 바뀐다 (K42)
+    const next = GRADES.find((g) => g.grade === currentGrade().grade + 1);
+    if (exam.pending) {
+      chips.push({
+        icon: '📋',
+        label: `${exam.pending.target}등급 심사`,
+        detail: `${exam.pending.judgeWeek}주차 주말 판정`,
+        progress: 1,
+      });
+    } else if (next && exam.eligible(gradeNo, reputation.value)) {
+      chips.push({
+        icon: '⭐',
+        label: '심사 응시 가능!',
+        detail: '메뉴에서 신청하세요',
+        progress: 1,
+      });
+    } else if (next) {
       chips.push({
         icon: '⭐',
         label: `${next.grade}등급까지`,
@@ -1380,6 +1590,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     refreshQuests();
     refreshRisk();
     refreshStaffBtn();
+    refreshExamBtn();
     refreshGoal();
     refreshCaps();
   }, 1500);
@@ -1390,6 +1601,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 밀린 시간이 몰아서 흐르지 않게 한다 (멈춤이지 빚이 아니다).
    */
   h.scene.setClockOwner('week');
+  if (flow.weekSkipUnlocked) hud.setWeekLabel('한 주 ⏩');
   beginWeek();
   let lastRaf = performance.now();
   const rafLoop = (now: number): void => {
@@ -1406,6 +1618,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     runWeek,
     flow,
     unlocks,
+    exam,
     arrivalQueue,
     openWeekCards: nextWeekCards,
     skipForward,

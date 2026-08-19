@@ -5373,6 +5373,213 @@ async function main(): Promise<void> {
     `grant 전 ${granted.before ? '있음' : '없음'} → 후 ${granted.after ? '있음' : '없음'}`,
   );
 
+  /*
+   * ── K42. 심사 + 이동 ──
+   *
+   * 판정 규칙(부분 점수·재응시·firstPass)은 단위가 본다 (exam.test.ts).
+   * 여기서는 결산 배선(신청 → 주말 판정 → 결과 도착)과 이동 붓의 실터치 경로를 본다.
+   */
+  const examRun = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    h.week.abort();
+    h.beginWeek();
+    // 지금 등급의 다음 등급으로 신청 — 자격 검사를 우회하지 않는다 (자격은 sim 검사 소관,
+    // 여기는 배선이라 apply 를 직접 부른다. 판정은 실제 결산 경로가 한다)
+    const gradeNow = Number((/([0-9])등급/.exec(
+      document.getElementById('kairo-status').textContent) || [0, 1])[1]);
+    h.exam.apply(gradeNow + 1, h.week.week + 1, 0);
+    h.runWeek(); // 주말까지 감기 → 결산에서 판정
+    return { gradeBefore: gradeNow, pendingAfter: h.exam.pending !== null,
+             queued: h.arrivalQueue.length };
+  })()`)) as { gradeBefore: number; pendingAfter: boolean; queued: number };
+  record(
+    '★ 심사가 결산에서 판정된다 — 대기가 풀리고 결과가 도착 큐에 실린다 (K42)',
+    !examRun.pendingAfter && examRun.queued > 0 ? 'pass' : 'fail',
+    `판정 후 대기 ${examRun.pendingAfter ? '남음' : '해제'} · 도착 큐 ${examRun.queued}건`,
+  );
+  // 결산·카드를 치우고 아침까지 흘려 결과 모달을 받는다
+  await page.evaluate(`(() => {
+    const r = document.getElementById('kairo-report');
+    if (r && !r.hidden) {
+      const close = [...r.querySelectorAll('button')].find((b) => b.textContent.includes('계속'))
+        || document.getElementById('kairo-report-close');
+      if (close) close.click();
+    }
+  })()`);
+  await page.waitForTimeout(300);
+  await page.evaluate(`(() => {
+    const cv = window.__kairoCards;
+    let guard = 0;
+    while (cv && cv.visible && guard++ < 5) {
+      const card = cv.currentCard;
+      let pick = 0;
+      if (card) {
+        for (let oi = 0; oi < card.options.length; oi++) {
+          if (!card.options[oi].effects.some((e) => e.closed)) { pick = oi; break; }
+        }
+      }
+      cv.pickForTest(pick);
+    }
+    window.__kairo.flow.frozen = false;
+    window.__kairo.flow.speed = 2;
+  })()`);
+  await page
+    .waitForFunction(
+      `(() => { const u = document.getElementById('kairo-unlock'); return !!u && !u.hidden; })()`,
+      undefined,
+      { timeout: 10000 },
+    )
+    .catch(() => undefined);
+  const examResult = (await page.evaluate(`(() => {
+    const u = document.getElementById('kairo-unlock');
+    const shown = !!u && !u.hidden;
+    const title = shown ? (u.querySelector('.kunlock-title') || {}).textContent || '' : '';
+    if (shown) document.getElementById('kairo-unlock-close').click();
+    window.__kairo.flow.speed = 1;
+    return { shown: shown, title: title };
+  })()`)) as { shown: boolean; title: string };
+  record(
+    '심사 결과가 다음 날 아침 모달로 온다 — 승급 또는 탈락 (둘 다 유효한 결말)',
+    examResult.shown && /승급|탈락/.test(examResult.title) ? 'pass' : 'fail',
+    `"${examResult.title}"`,
+  );
+
+  // ── 이동 붓 — 실터치 경로 (탭 → 시설 선택 → 목적지 탭 → 고스트 → 확정) ──
+  const moveSetup = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    h.flow.frozen = true;
+    // 도구 해금 상태를 만든다 — 판정 규칙은 단위 소관(exam.test.ts), 여기는 붓의 배선이다.
+    // 실판정으로 열려면 위생 3·먹거리 2를 지어야 하는데 그건 판정 검사지 붓 검사가 아니다
+    if (!h.exam.toolsUnlocked) h.exam.passedCount = 1;
+    h.refreshBuildList();
+    if (!h.exam.toolsUnlocked) return { ok: false, why: '도구가 안 열렸다' };
+    /*
+     * 자급자족 — 잔디 3×7 을 찾아 포장하고 파라솔을 직접 놓은 뒤 그걸 옮긴다.
+     * 기존 시설을 집으면 물 전용(float_deck)이 걸려 목적지가 불법이 된다 (실측).
+     */
+    const land = h.land();
+    let pad = null;
+    for (let j = land.j0 + 2; j < land.j0 + land.h - 3 && !pad; j++) {
+      for (let i = land.i0 + 2; i < land.i0 + land.w - 6 && !pad; i++) {
+        let clear = true;
+        for (let dj = 0; dj < 3 && clear; dj++) {
+          for (let di = 0; di < 5 && clear; di++) {
+            const ti = i + di, tj = j + dj;
+            if (
+              h.terrain.isWater(ti, tj) ||
+              !h.terrain.isBuildable(ti, tj) ||
+              h.terrain.isIndoor(ti, tj) ||
+              h.placement.at(ti, tj)
+            ) clear = false;
+          }
+        }
+        if (clear) pad = { i: i, j: j };
+      }
+    }
+    if (!pad) return { ok: false, why: '지을 수 있는 빈 3×5 를 못 찾았다' };
+    for (let dj = 0; dj < 3; dj++) {
+      for (let di = 0; di < 5; di++) {
+        h.terrain.paint(pad.i + di, pad.j + dj, 'path_stone');
+        h.scene.refreshTile(pad.i + di, pad.j + dj);
+      }
+    }
+    h.guests.invalidate();
+    const from = { i: pad.i + 1, j: pad.j + 1 };
+    const target = { i: pad.i + 3, j: pad.j + 1 };
+    const placed = h.placement.place(h.terrain, h.walls, h.gate, 'parasol', from.i, from.j);
+    if (!placed.ok) return { ok: false, why: '파라솔을 못 놓았다: ' + placed.fail };
+    h.scene.refreshFacility(placed.placed.handle);
+    return { ok: true, from: from, defId: 'parasol', target: target, cash: h.week.cash };
+  })()`)) as
+    | { ok: false; why: string }
+    | { ok: true; from: { i: number; j: number }; defId: string; target: { i: number; j: number }; cash: number };
+  if (!moveSetup.ok) {
+    record('★ 이동 붓 — 시설을 옮긴다 (K42)', 'fail', moveSetup.why);
+  } else {
+    await page.evaluate(`(() => {
+      document.getElementById('kairo-build-open').click();
+      const move = document.querySelector('[data-pick="move:move"]');
+      if (move) move.click();
+    })()`);
+    await page.waitForTimeout(200);
+    await page.evaluate(
+      `window.__kairo.tapTile(${moveSetup.from.i}, ${moveSetup.from.j})`,
+    );
+    await page.waitForTimeout(200);
+    await page.evaluate(
+      `window.__kairo.tapTile(${moveSetup.target.i}, ${moveSetup.target.j})`,
+    );
+    await page.waitForTimeout(300);
+    await page.evaluate(`document.getElementById('kairo-place-confirm').click()`);
+    await page.waitForTimeout(300);
+    const moved = (await page.evaluate(`(() => {
+      const h = window.__kairo;
+      const at = h.placement.at(${moveSetup.target.i}, ${moveSetup.target.j});
+      const old = h.placement.at(${moveSetup.from.i}, ${moveSetup.from.j});
+      if (window.__kairoClearBrush) window.__kairoClearBrush();
+      return { movedTo: at ? at.defId : null, oldNow: old ? old.defId : null,
+               cash: h.week.cash };
+    })()`)) as { movedTo: string | null; oldNow: string | null; cash: number };
+    const fee = Math.floor(
+      ((await page.evaluate(
+        `window.__kairo.simDefs['${moveSetup.defId}'].cost`,
+      )) as number) * 0.1,
+    );
+    record(
+      '★ 이동 붓 — 시설이 옮겨지고 수수료(건설비 10%)가 나간다 (K42)',
+      moved.movedTo === moveSetup.defId &&
+        moved.oldNow === null &&
+        moveSetup.cash - moved.cash === fee
+        ? 'pass'
+        : 'fail',
+      `${moveSetup.defId} (${moveSetup.from.i},${moveSetup.from.j}) → ` +
+        `(${moveSetup.target.i},${moveSetup.target.j}) · 수수료 ${Math.round(fee / 10000)}만 ` +
+        `(실제 ${Math.round((moveSetup.cash - moved.cash) / 10000)}만)`,
+    );
+  }
+
+  // ── ⏩ 주 스킵 — 도구 해금 뒤엔 결산까지 감긴다 ──
+  await page.evaluate(`(() => {
+    const h = window.__kairo;
+    window.__kairoClearBrush();
+    h.flow.weekSkipUnlocked = true; // 위 판정에서 통과했으면 이미 true — 배선 검사라 강제한다
+    h.week.abort();
+    h.beginWeek();
+    h.flow.frozen = true;
+  })()`);
+  await page.click('#kairo-week');
+  await page.waitForTimeout(400);
+  const weekSkipped = (await page.evaluate(`(() => {
+    const r = document.getElementById('kairo-report');
+    const shown = !!r && !r.hidden;
+    if (shown) {
+      const close = [...r.querySelectorAll('button')].find((b) => b.textContent.includes('계속'))
+        || document.getElementById('kairo-report-close');
+      if (close) close.click();
+    }
+    return shown;
+  })()`)) as boolean;
+  await page.waitForTimeout(200);
+  await page.evaluate(`(() => {
+    const cv = window.__kairoCards;
+    let guard = 0;
+    while (cv && cv.visible && guard++ < 5) {
+      const card = cv.currentCard;
+      let pick = 0;
+      if (card) {
+        for (let oi = 0; oi < card.options.length; oi++) {
+          if (!card.options[oi].effects.some((e) => e.closed)) { pick = oi; break; }
+        }
+      }
+      cv.pickForTest(pick);
+    }
+    window.__kairo.flow.frozen = false;
+  })()`);
+  record(
+    '⏩ 주 스킵 — 해금 뒤에는 한 번에 결산까지 감긴다 (첫 심사 통과 보상, 스펙 A2)',
+    weekSkipped ? 'pass' : 'fail',
+  );
+
   await browser.close();
 
   const failed = results.filter((r) => r.verdict === 'fail');

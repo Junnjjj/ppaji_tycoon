@@ -20,7 +20,24 @@
       "landW": 42,
       "landH": 54,
       "maxGuests": 70,
-      "reputationPull": 1.35
+      "reputationPull": 1.35,
+      "examFee": 300000,
+      "examReqs": [
+        {
+          "kind": "needSupply",
+          "need": "hygiene",
+          "value": 3
+        },
+        {
+          "kind": "needSupply",
+          "need": "food",
+          "value": 2
+        },
+        {
+          "kind": "exitSatisfaction",
+          "value": 55
+        }
+      ]
     },
     {
       "grade": 3,
@@ -30,7 +47,24 @@
       "landW": 58,
       "landH": 58,
       "maxGuests": 110,
-      "reputationPull": 1.7
+      "reputationPull": 1.7,
+      "examFee": 600000,
+      "examReqs": [
+        {
+          "kind": "needSupply",
+          "need": "thrill",
+          "value": 3
+        },
+        {
+          "kind": "needSupply",
+          "need": "scenery",
+          "value": 2
+        },
+        {
+          "kind": "exitSatisfaction",
+          "value": 65
+        }
+      ]
     },
     {
       "grade": 4,
@@ -40,7 +74,23 @@
       "landW": 76,
       "landH": 62,
       "maxGuests": 160,
-      "reputationPull": 2.1
+      "reputationPull": 2.1,
+      "examFee": 1000000,
+      "examReqs": [
+        {
+          "kind": "needSupply",
+          "need": "warm",
+          "value": 3
+        },
+        {
+          "kind": "activeCombos",
+          "value": 5
+        },
+        {
+          "kind": "exitSatisfaction",
+          "value": 75
+        }
+      ]
     },
     {
       "grade": 5,
@@ -50,7 +100,23 @@
       "landW": 96,
       "landH": 64,
       "maxGuests": 230,
-      "reputationPull": 2.5
+      "reputationPull": 2.5,
+      "examFee": 1500000,
+      "examReqs": [
+        {
+          "kind": "needSupply",
+          "need": "stay",
+          "value": 1
+        },
+        {
+          "kind": "weekVisitors",
+          "value": 250
+        },
+        {
+          "kind": "exitSatisfaction",
+          "value": 85
+        }
+      ]
     }
   ],
   "facilityGrade": {
@@ -114,5 +180,6 @@
     "slide_large": 5,
     "airbounce": 5
   },
-  "note2": "K41 재배분: 시설 73 = 골격 59(여기) + 의뢰 보상 14(kairo-quests.json 의 reward.facility). 여기 없는 id 는 사건으로만 열린다 (requiredGrade 기본값 99). 골격 중 vending_in·firepit_row·shop·arcade·mongol_tent·sunbed_row·office·storage·infirmary·rent_pedal·rent_sup·ice_fishing·junglegym_w 13종 + shop 카드 후보는 K43 에서 소원(12)·숨은 콤보(6)·계절 입고(5) 채널로 옮긴다 — 그때까지 임시로 등급에 둔다. 1등급 18종은 첫 의뢰 조건(먹거리 2·위생 3·스릴 1)과 시작 킷(ticket·float_deck·pingpong·pyeongsang_row)을 덮어야 한다 — unlock-graph.test.ts 가 지킨다."
+  "note2": "K41 재배분: 시설 73 = 골격 59(여기) + 의뢰 보상 14(kairo-quests.json 의 reward.facility). 여기 없는 id 는 사건으로만 열린다 (requiredGrade 기본값 99). 골격 중 vending_in·firepit_row·shop·arcade·mongol_tent·sunbed_row·office·storage·infirmary·rent_pedal·rent_sup·ice_fishing·junglegym_w 13종 + shop 카드 후보는 K43 에서 소원(12)·숨은 콤보(6)·계절 입고(5) 채널로 옮긴다 — 그때까지 임시로 등급에 둔다. 1등급 18종은 첫 의뢰 조건(먹거리 2·위생 3·스릴 1)과 시작 킷(ticket·float_deck·pingpong·pyeongsang_row)을 덮어야 한다 — unlock-graph.test.ts 가 지킨다.",
+  "note3": "K42: 승급은 심사(응시하는 시험)로만 — reqExitSatisfaction 은 응시 자격이 됐다. examReqs 는 의뢰 condition 풀과 같은 스키마 (평가기는 progress.evaluateCondition 하나). 판정에 무작위가 없다 — 부분 점수(조건당 10점) 합이 75% 를 넘으면 통과. 실패는 내 선택 때문이어야 한다 (v4). 강등은 예전처럼 자동이다 (관리 실패의 결과)."
 }
