@@ -77,6 +77,136 @@ const PAVE_ALL = `
     })();
 `;
 
+/**
+ * 빈 육지 사각형 찾기 — 하네스가 좌표를 박지 않는다 (K36). `LAND_BOX` 뒤에 이어 쓴다.
+ *
+ * 발자국 안의 **단이 균일**한지도 같이 본다: 안 보면 `level-mixed` 로 배치가 실패하는데
+ * 그 이유가 절 밖으로 안 나와 "자리를 못 찾았다"로 잘못 읽힌다 (K37 경사 규칙).
+ */
+const FREE_RECT = `
+      const _free = (ww, hh) => {
+        for (let j = J0; j + hh <= J1; j++) {
+          for (let i = I0; i + ww <= I1; i++) {
+            let ok = true;
+            const lv = t.levelAt(i, j);
+            for (let di = 0; di < ww && ok; di++) {
+              for (let dj = 0; dj < hh; dj++) {
+                if (!t.isWalkable(i + di, j + dj) || t.isIndoor(i + di, j + dj) ||
+                    !t.isBuildable(i + di, j + dj) || t.levelAt(i + di, j + dj) !== lv ||
+                    w.hasAnyEdge(i + di, j + dj) || p.handleAt(i + di, j + dj)) { ok = false; break; }
+              }
+            }
+            if (ok) return [i, j];
+          }
+        }
+        return null;
+      };
+`;
+
+/**
+ * 카드 치우기 — 사고 대응 카드는 결산 **앞**에 오고(§12.1), 결산을 닫으면 다음 주
+ * 카드가 뒤따른다. 둘 다 모달이라 남겨 두면 그 뒤가 전부 가려진다.
+ *
+ * ⚠ 주를 감는 절이 여럿(K47-② · P2-B 콤보 블록)이라 **모듈 스코프에 한 벌**만 둔다.
+ * 절마다 복붙하면 카드 구조가 바뀔 때 한쪽만 고쳐져 그 절이 조용히 멈춘다.
+ */
+const DISMISS_CARDS = `(() => {
+      const cv = window.__kairoCards;
+      let guard = 0;
+      while (cv && cv.visible && guard++ < 5) {
+        const card = cv.currentCard;
+        let pick = 0;
+        if (card) {
+          for (let oi = 0; oi < card.options.length; oi++) {
+            if (!card.options[oi].effects.some((e) => e.closed)) { pick = oi; break; }
+          }
+        }
+        cv.pickForTest(pick);
+      }
+      return !!cv && cv.visible;
+    })()`;
+
+/** 결산 닫기 — 화면의 `계속` 버튼과 같은 경로 (없으면 닫기 버튼) */
+const CLOSE_REPORT = `(() => {
+      const r = document.getElementById('kairo-report');
+      if (!r || r.hidden) return false;
+      const close = [...r.querySelectorAll('button')].find((b) => b.textContent.includes('계속'))
+        || document.getElementById('kairo-report-close');
+      if (close) close.click();
+      return true;
+    })()`;
+
+/**
+ * 결산의 **콤보 블록**을 읽는다 (P2-B).
+ *
+ * ⚠ 선택자는 `src/ui/kairo-report.ts` 의 `comboBlock` 실물에서 확인한 것이다 —
+ * 블록 뿌리는 `wrap.dataset['combo']`(= `[data-combo]`), 타일은 `.kstat` 안의
+ * `.kstat-label`/`.kstat-value`, 상위 줄은 `.knums` 안의 `.knum-key`/`.knum-val`,
+ * 처방·설명은 `.kcaption` 이다. **`.knums` 는 위쪽 숫자 표도 쓰는 클래스**라
+ * 반드시 블록 뿌리 안에서만 훑는다 — 뿌리 밖에서 세면 매출·손익 줄이 섞인다.
+ *
+ * "감췄나"는 `hidden` 뿐 아니라 **실제 높이**로도 본다. 0개인 주에 줄을 통째로
+ * 감추는 회귀는 `display:none` 으로도, `count===0`일 때 `return null` 로도 올 수 있다.
+ */
+const READ_COMBO_BLOCK = `(() => {
+      const r = document.getElementById('kairo-report');
+      if (!r || r.hidden) return { open: false };
+      const wrap = r.querySelector('[data-combo]');
+      if (!wrap) return { open: true, block: false };
+      const stats = [...wrap.querySelectorAll('.kstat')].map((c) => ({
+        label: (c.querySelector('.kstat-label') || {}).textContent || '',
+        value: (c.querySelector('.kstat-value') || {}).textContent || '',
+      }));
+      const keys = [...wrap.querySelectorAll('.knums .knum-key')];
+      const vals = [...wrap.querySelectorAll('.knums .knum-val')];
+      const lines = keys.map((k, idx) => ({
+        key: k.textContent || '',
+        val: vals[idx] ? vals[idx].textContent : '',
+      }));
+      const caps = [...wrap.querySelectorAll('.kcaption')].map((c) => c.textContent || '');
+      const cs = getComputedStyle(wrap);
+      const box = wrap.getBoundingClientRect();
+      return {
+        open: true,
+        block: true,
+        count: Number(wrap.getAttribute('data-combo')),
+        visible: cs.display !== 'none' && cs.visibility !== 'hidden' && box.height > 0,
+        stats: stats,
+        lines: lines,
+        caps: caps,
+      };
+    })()`;
+
+/** 결산이 실제로 **적용한** 콤보 값 — `WeekReport.combos` 그대로 (표시와 대조할 정본) */
+const READ_REPORT_COMBOS = `(() => {
+      const r = window.__kairo.getLastReport();
+      if (!r || !r.combos) return null;
+      return { sat: r.combos.satisfactionDelta, mult: r.combos.revenueMult, week: r.week };
+    })()`;
+
+interface ComboBlockView {
+  open: boolean;
+  block?: boolean;
+  count?: number;
+  visible?: boolean;
+  stats?: { label: string; value: string }[];
+  lines?: { key: string; val: string }[];
+  caps?: string[];
+}
+
+/** 블록의 타일 하나를 라벨로 집는다 — 순서에 기대면 열이 하나 늘 때 조용히 어긋난다 */
+const statOf = (b: ComboBlockView, label: string): string =>
+  b.stats?.find((s) => s.label === label)?.value ?? '';
+
+/** 상위 줄의 `이름 ×배율 (칸수)` 표기를 뜯는다 (P1-A). 없으면 null */
+const areaOf = (b: ComboBlockView): { scale: number; area: number; key: string } | null => {
+  for (const line of b.lines ?? []) {
+    const m = /×(\d+(?:\.\d+)?)\s*\((\d+)칸\)/.exec(line.key);
+    if (m) return { scale: Number(m[1]), area: Number(m[2]), key: line.key };
+  }
+  return null;
+};
+
 const SHOT_DIR = 'tmp-shots';
 
 /** iPhone 14 Pro 급 — DPR 3 이 정수라 도트 격자에 유리한 쪽. 안드로이드는 아래에서 따로 본다 */
@@ -6560,33 +6690,8 @@ async function main(): Promise<void> {
    *       티커 탭 → 알림함 → "결산" 행 탭 → 결산이 **다시** 열린다.
    */
   {
-    /*
-     * 카드 치우기 — 사고 대응 카드는 결산 **앞**에 오고(§12.1), 결산을 닫으면
-     * 다음 주 카드가 뒤따른다. 둘 다 모달이라 남겨 두면 그 뒤가 전부 가려진다.
-     */
-    const DISMISS_CARDS = `(() => {
-      const cv = window.__kairoCards;
-      let guard = 0;
-      while (cv && cv.visible && guard++ < 5) {
-        const card = cv.currentCard;
-        let pick = 0;
-        if (card) {
-          for (let oi = 0; oi < card.options.length; oi++) {
-            if (!card.options[oi].effects.some((e) => e.closed)) { pick = oi; break; }
-          }
-        }
-        cv.pickForTest(pick);
-      }
-      return !!cv && cv.visible;
-    })()`;
-    const CLOSE_REPORT = `(() => {
-      const r = document.getElementById('kairo-report');
-      if (!r || r.hidden) return false;
-      const close = [...r.querySelectorAll('button')].find((b) => b.textContent.includes('계속'))
-        || document.getElementById('kairo-report-close');
-      if (close) close.click();
-      return true;
-    })()`;
+    // 카드 치우기·결산 닫기는 모듈 스코프의 `DISMISS_CARDS`/`CLOSE_REPORT` 를 쓴다
+    // (P2-B 콤보 블록 절도 같은 것을 쓴다 — 한 벌이어야 한쪽만 낡지 않는다)
 
     // ① 결산을 하나 만든다 — 없으면 열 것도 없다 (`openLastReport` 는 마지막 결산을 연다)
     await page.evaluate(`(() => {
@@ -7476,6 +7581,736 @@ async function main(): Promise<void> {
       '조준 배치 절에서 페이지 예외 0',
       aimErrors.length === 0 ? 'pass' : 'fail',
       aimErrors.slice(0, 3).join(' | '),
+    );
+    await cx.close();
+  }
+
+  /*
+   * ── P2-B. 결산의 콤보 블록 ──────────────────────────────────────────────
+   *
+   * `kairo-report.ts` 의 `comboBlock` 은 **브라우저 검사가 하나도 없었다.** 보려는 것 넷:
+   *
+   *  ① **0개인 주** — 줄을 감추지 않고 처방을 띄운다. 새 판의 첫 결산은 언제나 0개라
+   *     콤보라는 축을 소개하는 자리가 여기밖에 없다 (설계 결정). 감추면 실패다
+   *  ② **터진 주** — 발동·만족·공원 매출 타일이 실제 값으로 차고 상위 콤보 줄이 보인다
+   *  ③ **표시 == 적용** — 화면 숫자가 `WeekReport.combos`(그 주에 실제로 적용된 값)와
+   *     같아야 한다. 결산이 배치에서 다시 계산하면 흐르는 낮에 지은 시설이 섞여
+   *     "목록은 13개인데 숫자는 12개 몫"이 된다. **주가 열린 뒤에 콤보를 하나 더 만들고
+   *     화면이 그걸 안 세는지**를 본다 — 그게 `WeekReport.combos` 를 그대로 쓰기로 한
+   *     계약을 지키는 유일한 검사다
+   *  ④ **면적 비례(P1-A)가 화면까지 오나** — `×배율 (칸수)`. 수영장을 넓히면 배율이 오른다
+   *
+   * 잔해 위에서 재지 않으려고 **새 판(새 컨텍스트 + 세이브 삭제)**에서 돈다. 그리고
+   * 시작 킷(탁구대·평상)이 이미 콤보를 터뜨릴 수 있으므로 **0개를 만들어 놓고** 시작한다 —
+   * "0개인 주"를 우연에 맡기면 그 절이 어떤 판에서는 조용히 안 도는 검사가 된다.
+   */
+  {
+    const cx = await browser.newContext(DEVICE);
+    const pg = await cx.newPage();
+    const cbErrors: string[] = [];
+    pg.on('pageerror', (e) => cbErrors.push(String(e)));
+    await pg.addInitScript(`try { localStorage.clear(); } catch {}`);
+    await pg.goto(URL, { waitUntil: 'load' });
+    await pg.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+
+    /** 주를 새로 열고 끝까지 감아 결산을 띄운다 — 카드는 절이 스스로 치운다 */
+    const settleWeek = async (): Promise<void> => {
+      await pg.waitForTimeout(400);
+      await pg.evaluate(DISMISS_CARDS);
+      await pg.waitForTimeout(300);
+    };
+    /** 이 절이 연 것은 이 절이 닫는다 — 다음 계측이 잔해 위에서 돌지 않게 */
+    const closeReport = async (): Promise<void> => {
+      await pg.evaluate(CLOSE_REPORT);
+      await pg.waitForTimeout(250);
+      await pg.evaluate(DISMISS_CARDS);
+      await pg.waitForTimeout(250);
+    };
+
+    /* ── ① 콤보 0개인 주 ─────────────────────────────────────────────── */
+    const zeroSetup = (await pg.evaluate(`(() => {
+      const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, sc = h.scene;
+      if (window.__kairoClearBrush) window.__kairoClearBrush();
+      h.flow.frozen = true;
+      h.arrivalQueue.length = 0;
+      ${PAVE_ALL}
+      /*
+       * 콤보 0개를 **만들어** 놓는다. 매표소는 남긴다 — 그게 입구라, 지우면 손님이
+       * 아예 안 들어와 "0개라서 0인지 판이 죽어서 0인지"를 못 가른다.
+       */
+      let guard = 0;
+      let live = h.combos.evaluateCombos(p, undefined, h.guests.swimZones()).active;
+      while (live.length > 0 && guard++ < 40) {
+        const list = p.all().filter((x) => x.defId !== 'ticket');
+        if (list.length === 0) break;
+        const victim = list[list.length - 1];
+        p.remove(victim.handle);
+        sc.refreshFacility(victim.handle);
+        h.guests.invalidate();
+        live = h.combos.evaluateCombos(p, undefined, h.guests.swimZones()).active;
+      }
+      h.week.abort();
+      h.beginWeek();
+      h.runWeek();
+      return { live: live.map((c) => c.id), left: p.all().length, removed: guard };
+    })()`)) as { live: string[]; left: number; removed: number };
+    await settleWeek();
+
+    const zeroBlock = (await pg.evaluate(READ_COMBO_BLOCK)) as ComboBlockView;
+    const zeroApplied = (await pg.evaluate(READ_REPORT_COMBOS)) as {
+      sat: number;
+      mult: number;
+      week: number;
+    } | null;
+
+    record(
+      '★ 콤보 0개인 주에도 결산에 콤보 블록이 뜬다 — 감추면 배울 자리가 없다 (P2-B)',
+      zeroSetup.live.length === 0 &&
+        zeroBlock.open === true &&
+        zeroBlock.block === true &&
+        zeroBlock.visible === true &&
+        zeroBlock.count === 0 &&
+        statOf(zeroBlock, '발동') === '0개'
+        ? 'pass'
+        : 'fail',
+      `발동 조건 정리 ${zeroSetup.removed}회 · 남은 시설 ${zeroSetup.left}개 · ` +
+        `살아 있는 콤보 ${zeroSetup.live.length ? zeroSetup.live.join(',') : '0개'} · ` +
+        `블록 ${zeroBlock.block ? '있음' : '없음'}(보임 ${String(zeroBlock.visible)}) · ` +
+        `data-combo=${String(zeroBlock.count)} · 발동 타일 "${statOf(zeroBlock, '발동')}"`,
+    );
+    record(
+      '0개인 주는 숫자 대신 처방을 말한다 — 상위 줄은 안 그린다 (P2-B)',
+      (zeroBlock.caps ?? []).some((c) => c.includes('아직 발동한 콤보가 없습니다')) &&
+        (zeroBlock.lines ?? []).length === 0 &&
+        statOf(zeroBlock, '만족') === '+0.0' &&
+        statOf(zeroBlock, '공원 매출') === '+0.0%'
+        ? 'pass'
+        : 'fail',
+      `처방 ${(zeroBlock.caps ?? []).some((c) => c.includes('아직 발동한')) ? '있음' : '없음'} · ` +
+        `상위 줄 ${(zeroBlock.lines ?? []).length}개 · ` +
+        `만족 "${statOf(zeroBlock, '만족')}" · 매출 "${statOf(zeroBlock, '공원 매출')}" · ` +
+        `적용값 ${zeroApplied ? `+${zeroApplied.sat.toFixed(1)} / ×${zeroApplied.mult.toFixed(3)}` : '없음'}`,
+    );
+    await pg.screenshot({ path: `${SHOT_DIR}/kairo-combo-block-zero.png` });
+    await closeReport();
+
+    /* ── ② 터진 주 — 매점+평상(소형) · 수영장+DJ 부스(zone, 면적 비례) ── */
+    const built = (await pg.evaluate(`(() => {
+      const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, sc = h.scene;
+      ${LAND_BOX}
+      ${FREE_RECT}
+      const spotA = _free(8, 6);
+      if (!spotA) return { ok: false, why: '매점 자리(8x6)를 못 찾았다' };
+      const shop = p.place(t, w, h.gate, 'shop', spotA[0], spotA[1]);
+      if (!shop.ok) return { ok: false, why: '매점 배치 실패: ' + shop.fail };
+      sc.refreshFacility(shop.placed.handle);
+      // 7j 가 이미 증명한 조합 — 매점 앞 평상 (소형)
+      const py = p.place(t, w, h.gate, 'pyeongsang_row', spotA[0], spotA[1] + 3);
+      if (!py.ok) return { ok: false, why: '평상 배치 실패: ' + py.fail };
+      sc.refreshFacility(py.placed.handle);
+
+      /*
+       * 수영장 12칸 + DJ 부스 → zone 콤보 '풀 파티'. 면적 배율은 sqrt(12/8) = 1.22 이므로
+       * 화면에 ×1.2 로 뜬다. 아래 ④ 에서 32칸으로 넓혀 상한 ×2.0 까지 오르는지 본다.
+       */
+      const spotB = _free(8, 6);
+      if (!spotB) return { ok: false, why: '수영장 자리(8x6)를 못 찾았다' };
+      const pi = spotB[0], pj = spotB[1];
+      for (let dj = 0; dj < 4; dj++) {
+        for (let di = 0; di < 3; di++) {
+          t.paint(pi + di, pj + dj, 'pool_water');
+          sc.refreshTile(pi + di, pj + dj);
+        }
+      }
+      const booth = p.place(t, w, h.gate, 'dj_booth', pi, pj + 4);
+      if (!booth.ok) return { ok: false, why: 'DJ 부스 배치 실패: ' + booth.fail };
+      sc.refreshFacility(booth.placed.handle);
+      h.guests.invalidate();
+
+      const zones = h.guests.swimZones();
+      h.arrivalQueue.length = 0;
+      h.week.abort();
+      h.beginWeek();
+      h.runWeek();
+      return {
+        ok: true,
+        pool: [pi, pj],
+        area: zones.length ? zones[0].area : 0,
+        active: h.combos.evaluateCombos(p, undefined, zones).active.map((c) => c.id),
+      };
+    })()`)) as
+      | { ok: false; why: string }
+      | { ok: true; pool: number[]; area: number; active: string[] };
+
+    if (!built.ok) {
+      record('★ 콤보가 터진 주의 결산 블록 (P2-B)', 'fail', built.why);
+      record('★ 표시 == 적용 — 화면 숫자가 그 주에 실제로 적용된 보너스다 (P2-B)', 'fail', built.why);
+      record('★ 면적 비례가 결산까지 온다 — ×배율 (칸수) (P1-A)', 'fail', built.why);
+    } else {
+      await settleWeek();
+      const firedBlock = (await pg.evaluate(READ_COMBO_BLOCK)) as ComboBlockView;
+      const firedApplied = (await pg.evaluate(READ_REPORT_COMBOS)) as {
+        sat: number;
+        mult: number;
+        week: number;
+      } | null;
+      const firedArea = areaOf(firedBlock);
+
+      record(
+        '★ 콤보가 터진 주 — 발동·만족·매출 타일이 값으로 차고 상위 줄이 보인다 (P2-B)',
+        firedBlock.block === true &&
+          firedBlock.visible === true &&
+          (firedBlock.count ?? 0) > 0 &&
+          statOf(firedBlock, '발동') === `${firedBlock.count ?? 0}개` &&
+          (firedBlock.lines ?? []).length > 0 &&
+          (firedApplied?.sat ?? 0) > 0 &&
+          (firedApplied?.mult ?? 1) > 1
+          ? 'pass'
+          : 'fail',
+        `살아 있는 콤보 ${built.active.join(',') || '0개'} · data-combo=${String(firedBlock.count)} · ` +
+          `발동 "${statOf(firedBlock, '발동')}" · 만족 "${statOf(firedBlock, '만족')}" · ` +
+          `매출 "${statOf(firedBlock, '공원 매출')}" · 상위 줄 ${(firedBlock.lines ?? []).length}개` +
+          `${(firedBlock.lines ?? [])[0] ? ` (첫 줄 "${(firedBlock.lines ?? [])[0]?.key}" → "${(firedBlock.lines ?? [])[0]?.val}")` : ''}`,
+      );
+
+      /*
+       * ⚠ **표시 == 적용.** 타일 두 개를 `WeekReport.combos` 와 **문자열까지** 맞춘다 —
+       * 리포트가 `eff.satisfactionDelta.toFixed(1)` / `(mult-1)*100).toFixed(1)` 로 찍으므로
+       * 같은 규칙으로 지어 비교하면 "다른 값을 예쁘게 반올림해 우연히 같아 보이는" 경우가 없다.
+       */
+      const wantSat = firedApplied ? `+${firedApplied.sat.toFixed(1)}` : '?';
+      const wantRev = firedApplied ? `+${((firedApplied.mult - 1) * 100).toFixed(1)}%` : '?';
+      record(
+        '★ 표시 == 적용 — 결산의 콤보 숫자가 그 주에 실제로 적용된 보너스다 (P2-B)',
+        firedApplied !== null &&
+          statOf(firedBlock, '만족') === wantSat &&
+          statOf(firedBlock, '공원 매출') === wantRev
+          ? 'pass'
+          : 'fail',
+        `화면 만족 "${statOf(firedBlock, '만족')}" vs 적용 "${wantSat}" · ` +
+          `화면 매출 "${statOf(firedBlock, '공원 매출')}" vs 적용 "${wantRev}"`,
+      );
+
+      record(
+        '★ 면적 비례가 결산까지 온다 — 상위 줄에 ×배율 (칸수) (P1-A)',
+        firedArea !== null && firedArea.area === built.area && firedArea.scale > 1
+          ? 'pass'
+          : 'fail',
+        firedArea
+          ? `"${firedArea.key}" → ×${firedArea.scale} (${firedArea.area}칸) · sim 구역 ${built.area}칸`
+          : `표기 없음 · sim 구역 ${built.area}칸 · 줄 ${(firedBlock.lines ?? []).map((l) => l.key).join(' | ')}`,
+      );
+      await pg.screenshot({ path: `${SHOT_DIR}/kairo-combo-block-fired.png` });
+      await closeReport();
+
+      /* ── ③ 수영장을 넓히면 배율이 오른다 (P1-A) ────────────────────── */
+      const widened = (await pg.evaluate(`(() => {
+        const h = window.__kairo, t = h.terrain, p = h.placement, sc = h.scene;
+        const pi = ${built.pool[0] ?? 0}, pj = ${built.pool[1] ?? 0};
+        // 12칸 → 32칸. sqrt(32/8) = 2.0 이라 데이터의 cap(2.0)에 닿는다
+        for (let dj = 0; dj < 4; dj++) {
+          for (let di = 3; di < 8; di++) {
+            t.paint(pi + di, pj + dj, 'pool_water');
+            sc.refreshTile(pi + di, pj + dj);
+          }
+        }
+        h.guests.invalidate();
+        const zones = h.guests.swimZones();
+        h.arrivalQueue.length = 0;
+        h.week.abort();
+        h.beginWeek();
+        h.runWeek();
+        return { area: zones.length ? zones[0].area : 0 };
+      })()`)) as { area: number };
+      await settleWeek();
+      const wideBlock = (await pg.evaluate(READ_COMBO_BLOCK)) as ComboBlockView;
+      const wideArea = areaOf(wideBlock);
+      record(
+        '★ 수영장을 넓히면 결산의 면적 배율이 오른다 — 구역 크기가 결정이 된다 (P1-A)',
+        firedArea !== null &&
+          wideArea !== null &&
+          wideArea.area === widened.area &&
+          widened.area > built.area &&
+          wideArea.scale > firedArea.scale
+          ? 'pass'
+          : 'fail',
+        `${built.area}칸 ×${firedArea?.scale ?? '?'} → ${widened.area}칸 ×${wideArea?.scale ?? '?'}` +
+          `${wideArea ? ` ("${wideArea.key}")` : ' (표기 없음)'}`,
+      );
+      await closeReport();
+
+      /*
+       * ── ④ 흐르는 낮에 지은 시설은 안 섞인다 ────────────────────────────
+       *
+       * 주를 연 **뒤에** 콤보 하나를 더 만든다. 화면은 주가 열린 시점의 수를 그대로
+       * 들고 있어야 한다 — 여기서 갈라지면 리포트가 배치에서 다시 계산하고 있다는 뜻이다.
+       *
+       * ⚠ **검사가 유효한지 먼저 본다**: 늦게 지은 것이 정말로 콤보를 늘렸는가
+       * (`live` > `atBegin`). 안 늘었으면 아무것도 안 재면서 통과하는 검사가 된다.
+       */
+      const late = (await pg.evaluate(`(() => {
+        const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, sc = h.scene;
+        ${LAND_BOX}
+        ${FREE_RECT}
+        h.arrivalQueue.length = 0;
+        h.week.abort();
+        h.beginWeek();
+        const atBegin = h.combos.evaluateCombos(p, undefined, h.guests.swimZones()).active.length;
+        // 주가 열린 뒤 — 흐르는 낮에 짓는 것과 같은 타이밍이다
+        const spot = _free(8, 6);
+        if (!spot) return { ok: false, why: '늦게 지을 자리를 못 찾았다' };
+        const shop = p.place(t, w, h.gate, 'shop', spot[0], spot[1]);
+        if (!shop.ok) return { ok: false, why: '매점 배치 실패: ' + shop.fail };
+        sc.refreshFacility(shop.placed.handle);
+        const py = p.place(t, w, h.gate, 'pyeongsang_row', spot[0], spot[1] + 3);
+        if (!py.ok) return { ok: false, why: '평상 배치 실패: ' + py.fail };
+        sc.refreshFacility(py.placed.handle);
+        h.guests.invalidate();
+        const live = h.combos.evaluateCombos(p, undefined, h.guests.swimZones()).active.length;
+        h.runWeek();
+        return { ok: true, atBegin: atBegin, live: live };
+      })()`)) as { ok: false; why: string } | { ok: true; atBegin: number; live: number };
+
+      if (!late.ok) {
+        record(
+          '★ 흐르는 낮에 지은 시설은 결산 콤보에 안 섞인다 — 주가 열린 시점으로 얼린다 (P2-B)',
+          'fail',
+          late.why,
+        );
+      } else {
+        await settleWeek();
+        const lateBlock = (await pg.evaluate(READ_COMBO_BLOCK)) as ComboBlockView;
+        record(
+          '★ 흐르는 낮에 지은 시설은 결산 콤보에 안 섞인다 — 주가 열린 시점으로 얼린다 (P2-B)',
+          late.live > late.atBegin && lateBlock.count === late.atBegin
+            ? 'pass'
+            : 'fail',
+          `주 시작 ${late.atBegin}개 → 늦게 지어 ${late.live}개 · 화면 ${String(lateBlock.count)}개 ` +
+            `(얼렸으면 ${late.atBegin}, 다시 계산하면 ${late.live})` +
+            `${late.live > late.atBegin ? '' : ' ⚠ 늦은 건설이 콤보를 안 늘렸다 — 이 검사는 무효다'}`,
+        );
+        await closeReport();
+      }
+
+      /*
+       * ── ⑤ ⚠ 음성 대조군 — 콤보를 철거하면 블록이 0개 상태로 돌아온다 ──
+       *
+       * 위 절들이 "블록에 늘 뭔가 그려진다"를 보고 통과한 것이 아님을 증명한다.
+       */
+      const razed = (await pg.evaluate(`(() => {
+        const h = window.__kairo, t = h.terrain, p = h.placement, sc = h.scene;
+        // 수영장도 되돌린다 — zone 콤보가 남으면 "철거했는데 0이 아니다"가 된다
+        for (let j = 0; j < t.height; j++) {
+          for (let i = 0; i < t.width; i++) {
+            if (t.kindAt(i, j) !== 'pool_water') continue;
+            t.paint(i, j, 'path_stone');
+            sc.refreshTile(i, j);
+          }
+        }
+        let guard = 0;
+        h.guests.invalidate();
+        let live = h.combos.evaluateCombos(p, undefined, h.guests.swimZones()).active;
+        while (live.length > 0 && guard++ < 40) {
+          const list = p.all().filter((x) => x.defId !== 'ticket');
+          if (list.length === 0) break;
+          const victim = list[list.length - 1];
+          p.remove(victim.handle);
+          sc.refreshFacility(victim.handle);
+          h.guests.invalidate();
+          live = h.combos.evaluateCombos(p, undefined, h.guests.swimZones()).active;
+        }
+        h.arrivalQueue.length = 0;
+        h.week.abort();
+        h.beginWeek();
+        h.runWeek();
+        return { live: live.map((c) => c.id) };
+      })()`)) as { live: string[] };
+      await settleWeek();
+      const razedBlock = (await pg.evaluate(READ_COMBO_BLOCK)) as ComboBlockView;
+      const razedApplied = (await pg.evaluate(READ_REPORT_COMBOS)) as {
+        sat: number;
+        mult: number;
+        week: number;
+      } | null;
+      record(
+        '⚠ 음성 대조군 — 콤보를 철거하면 블록이 0개 상태로 돌아온다 (P2-B 의 되돌리기)',
+        razed.live.length === 0 &&
+          razedBlock.block === true &&
+          razedBlock.count === 0 &&
+          (razedBlock.lines ?? []).length === 0 &&
+          (razedBlock.caps ?? []).some((c) => c.includes('아직 발동한 콤보가 없습니다')) &&
+          razedApplied?.sat === 0 &&
+          razedApplied?.mult === 1
+          ? 'pass'
+          : 'fail',
+        `살아 있는 콤보 ${razed.live.length ? razed.live.join(',') : '0개'} · ` +
+          `data-combo=${String(razedBlock.count)} · 상위 줄 ${(razedBlock.lines ?? []).length}개 · ` +
+          `적용값 ${razedApplied ? `+${razedApplied.sat.toFixed(1)} / ×${razedApplied.mult.toFixed(3)}` : '없음'}`,
+      );
+      await closeReport();
+    }
+
+    record(
+      '결산 콤보 블록 절에서 페이지 예외 0',
+      cbErrors.length === 0 ? 'pass' : 'fail',
+      cbErrors.slice(0, 3).join(' | '),
+    );
+    await cx.close();
+  }
+
+  /*
+   * ── P1.5. 시설 특화 — 경영 ▸ 개선의 갈림길 ───────────────────────────────
+   *
+   * 3단계에 닿은 시설은 **돈을 쓰는 줄이 아니라 고르는 줄**이 된다 (`kairo-staff.ts` 의
+   * `renderUpgrades`). 단위 테스트(`specialty.test.ts`)가 sim 쪽 성질 셋을 이미 지키지만
+   * **브라우저 검사가 하나도 없었다** — 즉 "데이터는 맞는데 화면에 안 뜬다"와
+   * "버튼은 있는데 안 눌린다"를 잡는 것이 아무것도 없었다.
+   *
+   * 보려는 것 셋:
+   *  ① 3단계 시설에 갈림길 칩이 뜨고, **진짜 터치**로 고르면 그 시설 수치가 바뀐다
+   *     (회전 = 정원 +1 · 수익 = 요금 +25% · 평판 = 만족 +3 — 서로 다른 자원이다)
+   *  ② **데이터가 화면까지 온다** — 매표소는 칩이 하나(회전)뿐이고, 분위기 시설
+   *     (DJ 부스, 정원 0)은 칩이 아예 없다. UI 가 셋을 고정하면 데이터의 필터가 무의미해진다
+   *  ③ ⚠ **음성 대조군** — 안 고른 시설은 세 수치가 전부 그대로다. 이게 깨지면
+   *     특화가 "고르든 말든 오르는 스탯"이 되어 갈림길이 사라진다
+   *
+   * 3단계까지 올리는 것은 `window.__kairo` 백도어로 먹인다 (판 셋업). **고르는 행위만은
+   * 진짜 터치**다 — 화면이 되는지는 진짜 터치로 본다 (K33).
+   */
+  {
+    const cx = await browser.newContext(DEVICE);
+    const pg = await cx.newPage();
+    const spErrors: string[] = [];
+    pg.on('pageerror', (e) => spErrors.push(String(e)));
+    await pg.addInitScript(`try { localStorage.clear(); } catch {}`);
+    await pg.goto(URL, { waitUntil: 'load' });
+    await pg.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+    const spCdp = await cx.newCDPSession(pg);
+    const spTouch = async (type: TouchType, x: number, y: number): Promise<void> => {
+      await spCdp.send('Input.dispatchTouchEvent', {
+        type,
+        touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }],
+      });
+    };
+
+    /*
+     * 판 셋업 — 시작 킷을 걷어내고 **필요한 것만** 남긴다.
+     *
+     * ⚠ `renderUpgrades` 는 목록을 `slice(0, 12)` 로 자른다. 시작 킷의 데크가 그대로
+     * 남으면 고를 것이 없는 줄이 자리를 먹어 DJ 부스가 목록 **밖**으로 밀릴 수 있고,
+     * 그러면 "칩이 없다"를 재는 대신 "줄이 없다"를 재게 된다.
+     */
+    const spSetup = (await pg.evaluate(`(() => {
+      const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, sc = h.scene;
+      if (window.__kairoClearBrush) window.__kairoClearBrush();
+      h.flow.frozen = true;
+      h.arrivalQueue.length = 0;
+      ${PAVE_ALL}
+      ${LAND_BOX}
+      ${FREE_RECT}
+      const ticket = (p.all().find((x) => x.defId === 'ticket') || {}).handle;
+      if (ticket === undefined) return { ok: false, why: '매표소를 못 찾았다' };
+      for (const it of p.all()) {
+        if (it.handle === ticket) continue;
+        p.remove(it.handle);
+        sc.refreshFacility(it.handle);
+      }
+      const put = (defId, ww, hh) => {
+        const spot = _free(ww, hh);
+        if (!spot) return { ok: false, why: defId + ' 자리를 못 찾았다' };
+        const r = p.place(t, w, h.gate, defId, spot[0], spot[1]);
+        if (!r.ok) return { ok: false, why: defId + ' 배치 실패: ' + r.fail };
+        sc.refreshFacility(r.placed.handle);
+        return { ok: true, handle: r.placed.handle };
+      };
+      const ids = { ticket: ticket };
+      for (const [key, defId] of [['turn', 'shop'], ['rev', 'shop'], ['rep', 'shop'], ['none', 'shop']]) {
+        const r = put(defId, 4, 4);
+        if (!r.ok) return r;
+        ids[key] = r.handle;
+      }
+      const booth = put('dj_booth', 4, 3);
+      if (!booth.ok) return booth;
+      ids.booth = booth.handle;
+      // 3단계 = 특화를 고르는 단계 (SPECIALTY_LEVEL). 백도어는 **판을 만드는 데만** 쓴다
+      for (const key of Object.keys(ids)) {
+        let guard = 0;
+        while (p.levelOf(ids[key]) < 3 && guard++ < 8) p.upgrade(ids[key]);
+      }
+      h.guests.invalidate();
+      return { ok: true, ids: ids, total: p.all().length };
+    })()`)) as
+      | { ok: false; why: string }
+      | { ok: true; ids: Record<string, number>; total: number };
+
+    if (!spSetup.ok) {
+      record('★ 3단계 시설에 특화 갈림길이 뜬다 (P1.5)', 'fail', spSetup.why);
+      record('★ 특화를 진짜 터치로 고르면 그 시설 수치가 바뀐다 (P1.5)', 'fail', spSetup.why);
+      record('특화 목록은 데이터가 정한다 — 매표소 1개 · 분위기 시설 0개 (P1.5, 불변식 3)', 'fail', spSetup.why);
+      record('⚠ 음성 대조군 — 안 고른 시설은 수치가 그대로다 (P1.5)', 'fail', spSetup.why);
+    } else {
+      const ids = spSetup.ids;
+      const idsJson = JSON.stringify(ids);
+
+      /** 개선 탭을 연다 — 메뉴 시트 ▸ 경영 ▸ 개선 (K28 부터 열기 버튼은 메뉴 안이다) */
+      const openUpgradeTab = `(() => {
+        const menu = document.getElementById('kairo-menu-open');
+        if (menu) menu.click();
+        const open = document.getElementById('kairo-staff-open');
+        if (open) open.click();
+        const panel = document.getElementById('kairo-staff');
+        if (!panel || panel.hidden) return false;
+        const tab = panel.querySelector('button[data-manage="upgrade"]');
+        if (tab) tab.click();
+        return true;
+      })()`;
+      const opened = (await pg.evaluate(openUpgradeTab)) as boolean;
+      await pg.waitForTimeout(300);
+
+      /*
+       * 개선 목록을 읽는다. 선택자는 `kairo-staff.ts` 실물에서 확인했다 —
+       * 줄은 `div[data-upgrade]`(+ `data-level`, 고른 뒤 `data-specialty`),
+       * 갈림길 칩은 `button[data-specialty-pick]`, 안내문은 `.kitem-sub` 다.
+       */
+      const READ_ROWS = `(() => {
+        const panel = document.getElementById('kairo-staff');
+        if (!panel || panel.hidden) return { open: false, rows: [] };
+        const rows = [...panel.querySelectorAll('div[data-upgrade]')].map((r) => ({
+          handle: Number(r.getAttribute('data-upgrade')),
+          level: Number(r.getAttribute('data-level')),
+          specialty: r.getAttribute('data-specialty') || '',
+          sub: ((r.querySelector('.kitem-sub') || {}).textContent || ''),
+          picks: [...r.querySelectorAll('button[data-specialty-pick]')].map((b) => ({
+            spec: b.getAttribute('data-specialty-pick') || '',
+            label: b.textContent || '',
+            h: Math.round(b.getBoundingClientRect().height),
+          })),
+        }));
+        return { open: true, rows: rows };
+      })()`;
+      type Row = {
+        handle: number;
+        level: number;
+        specialty: string;
+        sub: string;
+        picks: { spec: string; label: string; h: number }[];
+      };
+      const readRows = async (): Promise<Row[]> =>
+        ((await pg.evaluate(READ_ROWS)) as { open: boolean; rows: Row[] }).rows;
+
+      /** 시설 수치의 정본 — sim 에 직접 묻는다 (화면 숫자가 아니라 **결과**를 본다) */
+      const READ_STATS = `(() => {
+        const p = window.__kairo.placement;
+        const ids = ${idsJson};
+        const out = {};
+        for (const k of Object.keys(ids)) {
+          out[k] = {
+            cap: p.capacityOf(ids[k]),
+            fee: p.feeOf(ids[k]),
+            sat: p.satisfactionBonusOf(ids[k]),
+            spec: p.specialtyOf(ids[k]),
+            level: p.levelOf(ids[k]),
+            can: p.canChooseSpecialty(ids[k]),
+          };
+        }
+        return out;
+      })()`;
+      type Stat = {
+        cap: number;
+        fee: number;
+        sat: number;
+        spec: string | null;
+        level: number;
+        can: boolean;
+      };
+      const readStats = async (): Promise<Record<string, Stat>> =>
+        (await pg.evaluate(READ_STATS)) as Record<string, Stat>;
+
+      const rowsBefore = await readRows();
+      const statsBefore = await readStats();
+      const rowOf = (list: Row[], handle: number): Row | undefined =>
+        list.find((r) => r.handle === handle);
+
+      const shopRow = rowOf(rowsBefore, ids['turn'] ?? -1);
+      const ticketRow = rowOf(rowsBefore, ids['ticket'] ?? -1);
+      const boothRow = rowOf(rowsBefore, ids['booth'] ?? -1);
+
+      record(
+        '★ 3단계 시설에 특화 갈림길 3개가 뜬다 — 비용 버튼이 아니라 고르는 줄이다 (P1.5)',
+        opened &&
+          shopRow !== undefined &&
+          shopRow.level === 3 &&
+          shopRow.picks.length === 3 &&
+          shopRow.picks.map((x) => x.spec).sort().join(',') === 'capacity,reputation,revenue' &&
+          shopRow.picks.every((x) => x.h >= 44)
+          ? 'pass'
+          : 'fail',
+        `개선 탭 ${opened ? '열림' : '안 열림'} · 줄 ${rowsBefore.length}개 · ` +
+          `매점 ${shopRow ? `${shopRow.level}단계 칩 ${shopRow.picks.length}개 ` +
+            `[${shopRow.picks.map((x) => `${x.spec}:${x.label.replace(/\s+/g, ' ')}`).join(' | ')}] ` +
+            `최소 ${shopRow.picks.length ? Math.min(...shopRow.picks.map((x) => x.h)) : 0}px` : '줄 없음'}`,
+      );
+
+      /*
+       * ⚠ 데이터가 정한다 (불변식 3). 매표소는 `specialties: ["capacity"]` 하나뿐이고
+       * DJ 부스는 정원 0 이라 빈 배열이다 — UI 가 셋을 고정하면 이 두 줄이 거짓말이 된다.
+       */
+      record(
+        '특화 목록은 데이터가 정한다 — 매표소 1개 · 분위기 시설 0개 (P1.5, 불변식 3)',
+        ticketRow !== undefined &&
+          ticketRow.picks.length === 1 &&
+          ticketRow.picks[0]?.spec === 'capacity' &&
+          boothRow !== undefined &&
+          boothRow.picks.length === 0 &&
+          statsBefore['booth']?.can === false &&
+          boothRow.sub.indexOf('특화') < 0
+          ? 'pass'
+          : 'fail',
+        `매표소 칩 ${ticketRow ? ticketRow.picks.map((x) => x.spec).join(',') || '0개' : '줄 없음'} · ` +
+          `DJ 부스(정원 0) 칩 ${boothRow ? boothRow.picks.length : '줄 없음'}개 · ` +
+          `canChooseSpecialty=${String(statsBefore['booth']?.can)} · ` +
+          `안내문 "${boothRow?.sub ?? ''}"`,
+      );
+
+      /*
+       * 진짜 터치로 고른다. 줄은 고를 때마다 다시 그려지고 정렬도 바뀌므로
+       * **매번 다시 찾는다** — 좌표를 캐 두면 두 번째부터 엉뚱한 칩을 누른다.
+       */
+      const pick = async (
+        handle: number,
+        spec: string,
+      ): Promise<{ ok: boolean; why?: string; onScreen?: boolean }> => {
+        const at = (await pg.evaluate(`(() => {
+          const panel = document.getElementById('kairo-staff');
+          const row = panel ? panel.querySelector('div[data-upgrade="${handle}"]') : null;
+          if (!row) return { ok: false, why: '줄이 없다' };
+          const b = row.querySelector('button[data-specialty-pick="${spec}"]');
+          if (!b) return { ok: false, why: '칩이 없다' };
+          b.scrollIntoView({ block: 'center' });
+          const r = b.getBoundingClientRect();
+          return {
+            ok: true,
+            x: Math.round(r.left + r.width / 2),
+            y: Math.round(r.top + r.height / 2),
+            onScreen: r.top >= 0 && r.bottom <= innerHeight + 2,
+          };
+        })()`)) as { ok: boolean; why?: string; x?: number; y?: number; onScreen?: boolean };
+        if (!at.ok || at.x === undefined || at.y === undefined) return at;
+        await spTouch('touchStart', at.x, at.y);
+        await spTouch('touchEnd', 0, 0);
+        await pg.waitForTimeout(250);
+        return at;
+      };
+
+      const pickedTurn = await pick(ids['turn'] ?? -1, 'capacity');
+      const pickedRev = await pick(ids['rev'] ?? -1, 'revenue');
+      const pickedRep = await pick(ids['rep'] ?? -1, 'reputation');
+      const statsAfter = await readStats();
+      const rowsAfter = await readRows();
+
+      const b = (k: string): Stat | undefined => statsBefore[k];
+      const a = (k: string): Stat | undefined => statsAfter[k];
+      const turnOk =
+        (a('turn')?.cap ?? 0) === (b('turn')?.cap ?? 0) + 1 &&
+        (a('turn')?.fee ?? 0) === (b('turn')?.fee ?? -1) &&
+        (a('turn')?.sat ?? -1) === 0;
+      // 요금 +25% 는 **정가에 더해지는 몫**이다 (배수 1+0.6 → 1.85). 비율이 아니라 차이로 잰다
+      const revOk =
+        (a('rev')?.fee ?? 0) > (b('rev')?.fee ?? 0) &&
+        (a('rev')?.cap ?? -1) === (b('rev')?.cap ?? 0) &&
+        (a('rev')?.sat ?? -1) === 0;
+      const repOk =
+        (a('rep')?.sat ?? 0) === 3 &&
+        (a('rep')?.cap ?? -1) === (b('rep')?.cap ?? 0) &&
+        (a('rep')?.fee ?? -1) === (b('rep')?.fee ?? 0);
+
+      record(
+        '★ 특화를 진짜 터치로 고르면 그 시설 수치가 바뀐다 — 셋이 서로 다른 자원이다 (P1.5)',
+        pickedTurn.ok &&
+          pickedRev.ok &&
+          pickedRep.ok &&
+          pickedTurn.onScreen === true &&
+          turnOk &&
+          revOk &&
+          repOk
+          ? 'pass'
+          : 'fail',
+        `회전 정원 ${b('turn')?.cap}→${a('turn')?.cap} (요금 ${a('turn')?.fee} 그대로 · 만족 ${a('turn')?.sat}) · ` +
+          `수익 요금 ${b('rev')?.fee}→${a('rev')?.fee} (정원 ${a('rev')?.cap} 그대로) · ` +
+          `평판 만족 ${b('rep')?.sat}→${a('rep')?.sat} (정원 ${a('rep')?.cap} · 요금 ${a('rep')?.fee} 그대로)` +
+          `${pickedTurn.ok ? '' : ` · 회전 칩 ${pickedTurn.why ?? '?'}`}` +
+          `${pickedRev.ok ? '' : ` · 수익 칩 ${pickedRev.why ?? '?'}`}` +
+          `${pickedRep.ok ? '' : ` · 평판 칩 ${pickedRep.why ?? '?'}`}`,
+      );
+
+      /*
+       * 고른 뒤의 줄은 **고른 것을 보여주고 칩을 거둔다** — 한 번 고르면 못 바꾸므로
+       * 칩이 남아 있으면 다시 누를 수 있다는 거짓말이 된다.
+       */
+      const turnAfterRow = rowOf(rowsAfter, ids['turn'] ?? -1);
+      record(
+        '고른 특화가 줄에 남고 칩은 거둬진다 — 한 번 고르면 못 바꾼다 (P1.5)',
+        turnAfterRow !== undefined &&
+          turnAfterRow.specialty === 'capacity' &&
+          turnAfterRow.picks.length === 0 &&
+          turnAfterRow.sub.indexOf('회전') >= 0
+          ? 'pass'
+          : 'fail',
+        turnAfterRow
+          ? `data-specialty="${turnAfterRow.specialty}" · 칩 ${turnAfterRow.picks.length}개 · ` +
+            `"${turnAfterRow.sub.replace(/\s+/g, ' ')}"`
+          : '줄이 사라졌다',
+      );
+
+      /*
+       * ⚠ 음성 대조군 — 안 고른 시설(`none`)은 P1.5 이전과 **완전히 같다**.
+       * 이게 깨지면 특화가 "고르든 말든 오르는 스탯"이라 갈림길 자체가 없는 것과 같고,
+       * 특화를 모르는 봇(`tools/kairo-sim.ts`)의 밸런스도 모르는 사이 움직인다.
+       */
+      const noneRow = rowOf(rowsAfter, ids['none'] ?? -1);
+      record(
+        '⚠ 음성 대조군 — 안 고른 시설은 정원·요금·만족이 그대로다 (P1.5)',
+        (a('none')?.cap ?? -1) === (b('none')?.cap ?? 0) &&
+          (a('none')?.fee ?? -1) === (b('none')?.fee ?? 0) &&
+          (a('none')?.sat ?? -1) === 0 &&
+          a('none')?.spec === null &&
+          noneRow !== undefined &&
+          noneRow.specialty === '' &&
+          noneRow.picks.length === 3
+          ? 'pass'
+          : 'fail',
+        `정원 ${b('none')?.cap}→${a('none')?.cap} · 요금 ${b('none')?.fee}→${a('none')?.fee} · ` +
+          `만족 보너스 ${a('none')?.sat} · 특화 ${String(a('none')?.spec)} · ` +
+          `줄의 칩 ${noneRow ? noneRow.picks.length : '줄 없음'}개 (아직 고를 수 있어야 한다)`,
+      );
+      await pg.screenshot({ path: `${SHOT_DIR}/kairo-specialty.png` });
+
+      // 뒷정리 — 이 절이 연 것은 이 절이 닫는다
+      await pg.evaluate(`(() => {
+        const c = document.getElementById('kairo-staff-close');
+        if (c) c.click();
+        // 메뉴·건설은 공용 시트 하나다 (kairo-sheet) — 경영을 열면 저절로 닫히지만,
+        // 안 닫힌 판(패널 열기가 거절된 경우)을 남기지 않는다
+        const sh = document.getElementById('kairo-sheet');
+        if (sh && !sh.hidden) {
+          const mc = document.getElementById('kairo-sheet-close');
+          if (mc) mc.click();
+        }
+      })()`);
+    }
+
+    record(
+      '시설 특화 절에서 페이지 예외 0',
+      spErrors.length === 0 ? 'pass' : 'fail',
+      spErrors.slice(0, 3).join(' | '),
     );
     await cx.close();
   }
