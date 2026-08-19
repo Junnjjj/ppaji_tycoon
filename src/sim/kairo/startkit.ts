@@ -144,6 +144,39 @@ export function applyStartKit(input: StartKitInput): StartKitResult {
     if (laid > 0) dockAt = { x: shore.i, y: shore.j + laid - 1 };
   }
 
+  /*
+   * ── 4½. 놀 것 하나 · 쉴 것 하나 (K40) ──
+   *
+   * 매표소+데크뿐이면 **이용할 시설이 0** 이라 첫 주 퇴장 만족도가 0 이다 — UX 검수
+   * 실측으로 8주를 그냥 둬도 0 이었다 (docs/design-ux-audit.md §2·3). 첫 화면이 실패로
+   * 읽히면 온보딩이 끝난다. 탁구대와 평상을 물려준다 — 아버지의 빠지에 있었을 법한
+   * 것들이고, **먹거리·위생은 일부러 비워 둔다**: 그게 첫 의뢰(다음 목표)다.
+   *
+   * 길(포장) 옆이어야 놓인다 (K32-B — 잔디는 unreachable). 마당~물가 길 주변을 훑는다.
+   */
+  /*
+   * **마당→물가 길의 바로 옆, 동선 위**에 놓는다 (K40).
+   *
+   * 자리 선정을 세 번 실측했다:
+   * · 길에서 2~4칸 떨어진 곳 — 도달 검사(앵커 칸의 이웃이 걷기 가능해야)에 24건 걸림
+   * · 마당 옆 포장 앞마당(막다른 곁길) — 놓이긴 하는데 **가는 길이 왕복 우회**라
+   *   걷기 감점이 만족을 무너뜨렸다 (1주 41 → 5. 하향 압력은 설계 불변식이다)
+   * · 물가 길 **옆 열**(shore.i+1) — 앵커의 서쪽 이웃이 곧 길이라 도달이 구조적으로
+   *   보장되고, 매표소→데크 동선 위라 걷기 낭비가 없다. 이것이 답이었다
+   * 배치가 결과를 바꾼다는 이 게임의 명제가 시작 킷에서도 그대로 성립한 셈이다.
+   */
+  const tryBesidePath = (defId: string): boolean => {
+    if (!shore) return false;
+    for (let j = yard.j + yard.h + 1; j < shore.j - 1; j++) {
+      if (place(placement, terrain, walls, gate, defId, shore.i + 1, j)) return true;
+    }
+    return false;
+  };
+  if (tryBesidePath('pingpong')) facilities++;
+  else skipped.push('탁구대');
+  if (tryBesidePath('pyeongsang_row')) facilities++;
+  else skipped.push('평상');
+
   // ── 5. 코스 — 물려받은 왕복(shuttle) 코스 하나 ──
   let course = false;
   if (st.course && courses && dockAt) {
