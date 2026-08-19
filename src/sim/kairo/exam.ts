@@ -53,7 +53,7 @@ export interface ExamVerdict {
   max: number;
   /** 조건별 점수와 설명 — 결과 모달과 처방이 쓴다 */
   perReq: { detail: string; score: number }[];
-  /** 첫 통과인가 — 이동 붓·⏩ 주 스킵이 여기 걸려 있다 */
+  /** 첫 통과인가 — **이동 붓**이 여기 걸려 있다 (⏩ 주 스킵은 K47-② 에서 사라졌다) */
   firstPass: boolean;
 }
 
@@ -74,7 +74,12 @@ export class ExamStore {
     return this.passedCount;
   }
 
-  /** 이동 붓·⏩ 주 스킵 — 첫 심사 통과의 보상 (스펙 §4.1·A2) */
+  /**
+   * 이동 붓 — 첫 심사 통과의 보상 (스펙 §4.1).
+   *
+   * ⚠ 예전에는 `⏩ 주 스킵`도 여기 걸려 있었지만 K47-② 에서 스킵 자체를 없앴다
+   * (시간은 흐르는 낮으로 자동이고, 스킵을 원하는 순간은 "할 게 없다"는 신호다).
+   */
   get toolsUnlocked(): boolean {
     return this.passedCount > 0;
   }

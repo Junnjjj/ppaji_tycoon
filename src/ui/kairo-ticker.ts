@@ -75,7 +75,8 @@ export class KairoTicker implements Panel {
      * 띠 전체가 탭 대상이다 — 탭하면 알림함. 칩·버튼을 안에 늘어놓지 않는다 (트레이 규칙).
      *
      * ⚠ **`<button>` 이 아니라 `div` + `role="button"` 이다.** 하네스가
-     * `button, select, input` 을 세어 "상시 컨트롤 5개"와 "터치 타깃 44px"를 판정한다.
+     * `button, select, input` 을 세어 "상시 컨트롤 2개"(메뉴·건설, K47-②)와
+     * "터치 타깃 44px"를 세로·가로 두 방향에서 판정한다.
      * 26px 짜리 띠를 버튼으로 만들면 그 검사 넷이 확정 실패한다 — 의뢰 칩 기둥
      * (`.kchipcol`)이 div 인 것과 같은 선례다. 대신 키보드 접근을 직접 채운다.
      */
@@ -127,12 +128,18 @@ export class KairoTicker implements Panel {
     panelHost.closed(this);
   }
 
-  /** 쌓인 소식 수 — 검증·하네스가 "티커에 실제로 흘렀나"를 묻는다 */
+  /**
+   * 쌓인 소식 수 — "티커에 실제로 흘렀나"를 묻는 손잡이.
+   * ⚠ 지금 하네스는 알림함의 `.kinbox-row` 개수를 세므로 이 게터에는 소비자가 없다.
+   */
   get count(): number {
     return this.items.length;
   }
 
-  /** 지금 띠에 보이는 글 — 백도어가 아니라 화면 텍스트 그대로다 */
+  /**
+   * 지금 띠에 보이는 글 — 백도어가 아니라 화면 텍스트 그대로다.
+   * ⚠ 하네스도 `#kairo-ticker .kticker-line` 을 직접 읽는다 (같은 값, 다른 경로).
+   */
   get lineText(): string {
     return this.line.textContent ?? '';
   }

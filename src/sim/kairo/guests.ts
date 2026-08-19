@@ -671,6 +671,17 @@ export class GuestStore {
    * 정류장에서 걸어오는 손님까지 세면, 플레이어가 못 바꾸는 다섯 칸이 정원을 깎는다.
    */
   private insideCount(): number {
+    return this.inside;
+  }
+
+  /**
+   * 공원 **안** 인원 (공개) — 정원 판정과 **위험도 노출**(K47-③)이 같은 값을 봐야 한다.
+   *
+   * ⚠ `count` 와 다르다: `count` 는 정류장에서 걸어오는 `'arriving'` 까지 센다.
+   * 노출을 `count` 로 재면 **아직 입장도 안 한 사람이 위험을 올린다** — 플레이어가
+   * 못 바꾸는 다섯 칸(정류장→매표소)이 위험도를 밀어 올리는 셈이라 처방이 없다.
+   */
+  get inside(): number {
     let n = 0;
     for (const g of this.guests) if (g.state !== 'arriving') n++;
     return n;

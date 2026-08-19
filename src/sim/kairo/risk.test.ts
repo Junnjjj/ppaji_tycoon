@@ -3,7 +3,7 @@ import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
 import { PlacementGrid } from './placement.js';
-import { GuestStore, GUEST_DEFAULTS } from './guests.js';
+import { GuestStore, OPEN_GATE_DEFAULTS } from './guests.js';
 import { assessRisk, accidentChance, RISK_LEVELS, RISK_NAMES } from './risk.js';
 
 const GATE = { i: 0, j: 0 };
@@ -20,7 +20,14 @@ function world(size = 30): {
   }
   const w = new WallGrid(size, size);
   const p = new PlacementGrid(size, size);
-  const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
+  /*
+   * ⚠ **매표소 경유를 끈 판**(`OPEN_GATE_DEFAULTS`)으로 잰다. 기본값은 `requireTicket`
+   * 이라 `spawn` 한 손님이 정류장에 선 `'arriving'` 상태로 남는데, 위험도의 노출은
+   * **공원 안 인원**(`guests.inside`)을 본다 (K47-④) — 그 판에서는 60명을 뽑아도
+   * 노출이 0 이라 검사가 **공허하게** 통과한다. 여기서 재려는 것은 입장 수속이 아니라
+   * "붐비면 위험이 오른다"이므로, 손님이 실제로 공원 안에 있는 판에서 잰다.
+   */
+  const g = new GuestStore(t, w, p, GATE, OPEN_GATE_DEFAULTS);
   return { t, w, p, g };
 }
 

@@ -1127,7 +1127,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   Object.assign(h, {
     Rng: RngCls,
     tapTile, // 도구용 — 하네스가 UI 경로를 그대로 밟는다 (K32)
-    /** 지금 조준 중인 칸·방향 (K47-③) — 검증이 "고스트가 팬을 따라오나"를 읽는다 */
+    /**
+     * 지금 조준 중인 칸·방향 (K47-③) — main 이 쥔 정본 쪽 값이다.
+     * 하네스는 씬의 `aimTileNow()`(그려지는 쪽)로 "고스트가 팬을 따라오나"를 재므로
+     * 이쪽은 둘이 갈라졌을 때 대조하는 용도다.
+     */
     aim: () => (aim ? { ...aim } : null),
     sim: { bakeIndoorWalls, paintFloor, INDOOR_FAIL_MESSAGES, guestWalkable },
     simDefs: Object.fromEntries(allFacilityDefs().map((d) => [d.id, d])),
@@ -1246,7 +1250,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 누적 방문객 (K47-① 신규 발화 d). 이 카운터는 **원래 없었다** — "지금까지 몇 명이
    * 다녀갔나"를 게임 어디에서도 못 물었다.
    *
-   * ⚠ 세이브에는 **optional** 로 들어간다 (`weekSkip` 선례) — 옛 세이브는 0 에서
+   * ⚠ 세이브에는 **optional** 로 들어간다 (`src/save/kairo.ts` 의 v7 규칙) — 옛 세이브는 0 에서
    * 다시 세기 시작할 뿐이라 마이그레이션이 필요 없다. 버전을 올리면 v7 세이브가
    * 전부 한 칸씩 밀린다.
    */
@@ -1791,7 +1795,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
 
   /**
-   * 지금 주를 끝까지 감고 결산으로 — 주 스킵 해금 뒤의 ⏩ 와 하네스가 쓴다.
+   * 지금 주를 끝까지 감고 결산으로 — K47-② 로 ⏩ 주 스킵이 사라져 지금은 **하네스
+   * 전용**이다 (`window.__kairo.runWeek`). 화면에서 주를 감는 경로는 없다.
    * 주 경계(결산·카드가 떠 있는 중)면 아무것도 하지 않는다.
    */
   const runWeek = (): void => {
@@ -1803,8 +1808,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
 
   /*
-   * 주 진행·의뢰·위험도는 HUD 가 소유한다 (K28). 위험도는 **하단 바 안**이라
-   * 여전히 상시 표시다 — 사고가 RNG 로 느껴지면 안 된다 (v4 결정).
+   * 의뢰·위험도는 HUD 가 소유한다 (K28). 위험도는 K47-② 에서 하단 바에서 **헤더
+   * 2줄째**로 올라갔고 상시 표시는 그대로다 — 사고가 RNG 로 느껴지면 안 된다 (v4 결정).
+   * 처방(`안전 +N`)만 티커로 갔다: 그건 상태가 아니라 사건이다.
    */
   const questPanel = hud.quests;
 
@@ -2404,8 +2410,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      * 아직 안 열어 본 결산이 있나 (K47-②).
      *
      * K46 에서는 헤더 배지(N)가 이걸 화면에 그렸다. 배지는 없앴지만 판정은 남긴다 —
-     * 열람 경로가 **알림함 행 하나뿐**이라, 그 행이 실제로 결산을 여는지는 이 값이
-     * 뒤집히는 것으로 증명된다 (검증이 읽는 유일한 소비자다).
+     * 열람 경로가 **알림함 행 하나뿐**이라, 그 행이 실제로 결산을 여는지를 이 값이
+     * 뒤집히는 것으로 증명할 수 있다.
+     *
+     * ⚠ **아직 아무도 안 읽는다.** 하네스는 `#kairo-report` 의 `hidden` 으로 재고 있어
+     * 이 값은 화면에도 검사에도 소비자가 없다 — 쓰이지 않는 판정은 조용히 썩는다.
      */
     reportUnread: () => lastReport !== null && lastReport.week > reportSeenWeek,
     /**
@@ -2434,20 +2443,24 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     land: () => landRect(currentGrade()),
     /** 놓아 둔 출입구 (K36-B) — 검증이 읽는다 */
     doors,
-    /** 뉴스 티커 (K47-①) — 검증이 쌓인 소식 수·띠 글을 읽는다 */
+    /** 뉴스 티커 (K47-①) — 쌓인 소식 수·띠 글을 검증에 여는 손잡이 (`count`·`lineText`) */
     ticker,
     news,
     /**
      * 음성 대조군 (K47-①). 켜면 라우팅이 통째로 죽어 티커에 아무것도 안 흐른다.
      *
      * ⚠ **코드에 둔다.** 손으로 주입해 확인한 것은 다음 사람에게 안 남는다 —
-     * `setRenderFaultForTest` 와 같은 판단이다. 검사는 이걸 켜고 사건을 일으켜
-     * "정말로 이 경로를 재고 있었나"를 증명한다.
+     * `setRenderFaultForTest` 와 같은 판단이다. 켜고 사건을 일으켜 "정말로 이 경로를
+     * 재고 있었나"를 증명하라고 만든 스위치다.
+     *
+     * ⚠ **하네스가 아직 안 켠다.** 티커 절(`verify-kairo.ts` K47-①)은 사건 전후 텍스트
+     * 비교와 라인 강제 원복으로만 대조군을 세운다 — 이 스위치를 쓰는 검사가 붙기 전까지
+     * 대조군은 반쪽이다.
      */
     setNewsMutedForTest: (v: boolean) => {
       newsMuted = v;
     },
-    /** 누적 방문객 (K47-①) — 마일스톤 검증이 읽는다 */
+    /** 누적 방문객 (K47-①) — 마일스톤 판정의 근거. ⚠ 아직 읽는 검사가 없다 */
     visitorsTotal: () => visitorsTotal,
     persist,
   });

@@ -6078,7 +6078,6 @@ async function main(): Promise<void> {
     h.week.abort();
     h.beginWeek();
     h.flow.frozen = true;
-    const g = h.scene.boatProbeForTest ? null : null;
     return { courses: h.courses.count };
   })()`)) as { courses: number };
   const boatMoves = (await page.evaluate(`(() => {
@@ -6494,6 +6493,43 @@ async function main(): Promise<void> {
       );
     }
 
+    /*
+     * ⚠ **음성 대조군 — 라우팅을 끄면 뉴스가 안 흐른다.**
+     *
+     * `setNewsMutedForTest` 는 코드에 심어 둔 되돌리기인데 **아무도 켜지 않고 있었다**
+     * (K47-④ 감사에서 잡혔다). 대조군이 선언만 되고 소비자가 없으면 "검증이 조용히
+     * 통과"의 전형이다 — 이 절이 그 소비자다.
+     */
+    const tkMute = (await page.evaluate(`(async () => {
+      const h = window.__kairo;
+      if (typeof h.setNewsMutedForTest !== 'function') return null;
+      const read = () => {
+        const e = document.querySelector('#kairo-ticker .kticker-line');
+        return e && e.textContent ? e.textContent : '';
+      };
+      h.flow.frozen = true;
+      h.setNewsMutedForTest(true);
+      const before = read();
+      h.skipForward();
+      await new Promise((r) => setTimeout(r, 400));
+      const muted = read();
+      h.setNewsMutedForTest(false);
+      h.skipForward();
+      await new Promise((r) => setTimeout(r, 400));
+      const live = read();
+      h.flow.frozen = false;
+      return { before: before, muted: muted, live: live };
+    })()`)) as { before: string; muted: string; live: string } | null;
+    record(
+      '⚠ 음성 대조군 — 뉴스 라우팅을 끄면 티커가 안 바뀐다 (K47-① 의 되돌리기)',
+      tkMute !== null && tkMute.muted === tkMute.before && tkMute.live !== tkMute.muted
+        ? 'pass'
+        : 'fail',
+      tkMute === null
+        ? 'setNewsMutedForTest 가 없다 — 대조군을 켤 수단이 사라졌다'
+        : `끄면 "${tkMute.muted}" (사건 전 "${tkMute.before}") → 켜면 "${tkMute.live}"`,
+    );
+
     // 뒷정리 — 이 절이 연 것을 이 절이 닫는다 (열어 둔 채 넘어가면 뒤가 전부 깨진다)
     await page.evaluate(`(() => {
       const h = window.__kairo;
@@ -6676,9 +6712,10 @@ async function main(): Promise<void> {
    * **독립 유도**한다 (화면 중심에 중심이 가장 가까운 칸, 2:1 다이메트릭의 다이아몬드
    * 거리). 새 API 로 재면 자기참조라 그 함수가 통째로 틀려도 통과한다 (K38 교훈).
    *
-   * ⚠ 새 표면(`aimTileNow` · `reticleTile` · 조준 결함 모드)은 **방어적으로** 부른다.
-   * 통합 시 이름이 달라질 수 있으므로 후보를 차례로 시도하고, 하나도 없으면 그 사실을
-   * 판정문에 적는다 (예외로 런 전체가 죽지 않게).
+   * 씬의 새 표면은 `scene.aimTileNow()`(조준 칸) · `scene.reticleTile()`(레티클 칸) ·
+   * `scene.setAimFaultForTest('center-lock'|'none')`(결함 모드)로 확정됐다. 호출부는
+   * 하네스가 씬보다 먼저 쓰이던 시절의 **후보 목록**을 그대로 두는데, 이름이 하나도
+   * 안 맞으면 예외로 런 전체가 죽는 대신 그 사실을 판정문에 적기 위해서다.
    *
    * 잔해 위에서 재지 않으려고 **새 판(새 컨텍스트 + 세이브 삭제)**에서 돈다.
    */
@@ -6801,8 +6838,9 @@ async function main(): Promise<void> {
     })()`;
 
     /*
-     * 지금 조준 중인 칸. 이름이 아직 확정이 아니라 후보를 차례로 시도한다 —
-     * 없으면 `null` 을 돌려주고 부르는 쪽이 그 사실을 판정문에 적는다.
+     * 지금 조준 중인 칸 — 씬의 `aimTileNow()` 가 정본이다. 뒤의 세 이름은 그 표면이
+     * 확정되기 전의 후보이고, 하나도 없으면 `null` 을 돌려주어 부르는 쪽이 "못 쟀다"를
+     * 판정문에 적는다 (예외로 런이 죽는 것보다 낫다).
      */
     const AIM_TILE = `(() => {
       const sc = window.__kairo.scene;
@@ -7126,8 +7164,9 @@ async function main(): Promise<void> {
 
     /*
      * ⚠ 먼저 **음성 대조군**을 돌린다 — 오프셋 누적을 끄면(중앙 고정) 같은 팬으로
-     * 가장자리에 못 닿아야 한다. 결함 모드 이름은 박지 않는다: 후보를 차례로 시도하고
-     * 하나도 없으면 그 사실을 적는다 (통합 시 감독자가 이름을 맞춘다).
+     * 가장자리에 못 닿아야 한다. 결함 모드는 씬의 `setAimFaultForTest('center-lock')`
+     * 이고, 뒤의 두 이름은 그 표면이 확정되기 전의 후보다 — 하나도 없으면 판정문에
+     * 그 사실을 적는다 (결함을 못 켠 채 조용히 통과하는 것이 최악이다).
      */
     const AIM_FAULT = (arg: string): string => `(() => {
       const sc = window.__kairo.scene;

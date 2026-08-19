@@ -2237,7 +2237,6 @@ body {
   pointer-events: none;
 }
 
-/* 토스트 — 거절 사유가 뜨는 곳. 처방까지 말하므로 두 줄이 될 수 있다 */
 /* ── 뉴스 티커 (K47-①) — 하단 바 바로 위 얇은 띠. 띠 전체가 알림함 버튼이다 ── */
 .kticker {
   position: fixed;
@@ -2334,6 +2333,7 @@ body {
   font-weight: 800;
 }
 
+/* 토스트 — 거절 사유가 뜨는 곳. 처방까지 말하므로 두 줄이 될 수 있다 */
 .ktoast {
   position: fixed;
   left: 50%;

@@ -108,13 +108,25 @@ describe('효과', () => {
   });
 
   it('안전요원이 위험도를 실제로 내린다 — 시설과 같은 축이어야 한다', () => {
+    /*
+     * ⚠ **손님을 채우고 잰다.** 위험도가 노출(혼잡도)을 곱하도록 바뀌면서(K47-③)
+     * 손님 0 인 판은 비율이 언제나 0 이다 — 그때 이 검사는 `0 <= 0` 으로 **공허하게
+     * 통과**하고 안전요원이 아무 일도 안 해도 초록불이 된다. 실제로 그 상태였고
+     * K47-④ 감사에서 잡혔다. 비율이 움직이는 구간에서 재야 검사가 성립한다.
+     */
     const { p, g } = park(10);
+    const rng = new Rng(7);
+    for (let k = 0; k < 24; k++) g.spawn(rng);
+    for (let k = 0; k < 30; k++) g.tick(rng);
+    expect(g.inside).toBeGreaterThan(0);
     const before = assessRisk(p, g);
+    expect(before.ratio).toBeGreaterThan(0);
     const st = new StaffStore();
     st.set('lifeguard', 4);
     const after = assessRisk(p, g, { staffSafety: st.effects(p).safetyPoints });
     expect(after.safetyPoints).toBeGreaterThan(before.safetyPoints);
-    expect(after.ratio).toBeLessThanOrEqual(before.ratio);
+    // 공허 통과 방지 — "같거나 작다"가 아니라 **실제로 내려가야** 한다
+    expect(after.ratio).toBeLessThan(before.ratio);
   });
 });
 

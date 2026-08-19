@@ -136,7 +136,12 @@ export function assessRisk(
   }
 
   // 혼잡도 — 손님이 많을수록 사고 여지가 커진다
-  const crowd = guests.count;
+  /*
+   * ⚠ **공원 안 인원**이다 (`count` 가 아니라 `inside`). `count` 는 정류장에서 걸어오는
+   * `'arriving'` 까지 세는데, 아직 입장도 안 한 사람이 위험을 올리면 플레이어가 못 바꾸는
+   * 구간(정류장→매표소 다섯 칸)이 위험도를 미는 꼴이 되어 처방이 없다.
+   */
+  const crowd = guests.inside;
   riskPoints += crowd * 0.25;
 
   /*
