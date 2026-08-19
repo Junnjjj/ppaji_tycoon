@@ -92,6 +92,20 @@ const GROUND_BASE: Record<string, string> = {
   mountain_rock: '#8d8474',
 };
 
+/**
+ * 색이 정의된 지면 종류 (K38 아키텍처 점검에서 추가).
+ *
+ * 지면 종류를 늘리려면 **세 곳**이 맞아야 한다: 시뮬 데이터(`kairo-ground.json`) ·
+ * 렌더 계약(`kairo-render-contract.json`) · 여기 색. 앞의 둘은
+ * `kairo-contract.test.ts` 가 서로 대조하는데 색은 아무도 안 봤다.
+ *
+ * ⚠ 색이 없으면 `groundTones` 가 `null` 을 주고 `drawGround` 는 **다리 가지**로
+ * 떨어진다 — 새 지면이 조용히 **나무 널판**으로 그려진다. 실측으로 확인했다:
+ * 색 없는 종류를 넣어도 `npm run verify` 는 792/792 통과했고, `npm run seam` 만
+ * "겹침 2800px"(난간이 마름모 밖으로 나간다)이라는 엉뚱한 이름으로 잡았다.
+ */
+export const GROUND_TONE_KINDS: readonly string[] = Object.keys(GROUND_BASE);
+
 /** 기본색에서 밝음·어두움을 만드는 배율. 표준편차 9~11 을 목표로 맞춘 값 */
 const GROUND_SPREAD = { light: 1.10, dark: 0.90 } as const;
 
