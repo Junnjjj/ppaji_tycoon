@@ -2241,8 +2241,11 @@ async function main(): Promise<void> {
       ok: true, maps: maps.length, scens: scens.length, locked: locked,
       minH: hs.length ? Math.min.apply(null, hs) : 0,
       detailChanged: before !== after,
-      // 이 블록 안에서는 백슬래시 이스케이프를 쓸 수 없다 (파일 머리말의 함정 참고)
-      goalText: goal ? goal.textContent.split(String.fromCharCode(10)).join(' | ') : '(없음)',
+      // K40: 목표란은 의뢰 칩 기둥이 됐다 — 칩 수와 진행바, 메뉴의 판 설정 줄을 본다
+      goalChips: goal ? goal.querySelectorAll('.kchip').length : 0,
+      goalBars: goal ? goal.querySelectorAll('.kprog').length : 0,
+      goalText: goal ? goal.textContent : '(없음)',
+      contextText: (document.getElementById('kairo-context') || {}).textContent || '',
       mapName: window.__kairo.mapDef.name,
       scenarioName: window.__kairo.scenario.name
     };
@@ -2254,7 +2257,10 @@ async function main(): Promise<void> {
     locked?: number;
     minH?: number;
     detailChanged?: boolean;
+    goalChips?: number;
+    goalBars?: number;
     goalText?: string;
+    contextText?: string;
     mapName?: string;
     scenarioName?: string;
   };
@@ -2288,9 +2294,14 @@ async function main(): Promise<void> {
     `최소 ${scenarioUi.minH}px`,
   );
   record(
-    '목표가 화면에 상시 표시된다 — 안 보이면 시나리오가 목표가 아니다',
-    (scenarioUi.goalText ?? '').includes(scenarioUi.mapName ?? '@@') ? 'pass' : 'fail',
-    scenarioUi.goalText ?? '',
+    '★ 다음 할 일이 화면에 상시 표시된다 — 의뢰 칩 + 진행바 (K40, UX 검수 §1)',
+    (scenarioUi.goalChips ?? 0) >= 2 && (scenarioUi.goalBars ?? 0) >= 2 ? 'pass' : 'fail',
+    `칩 ${scenarioUi.goalChips} · 진행바 ${scenarioUi.goalBars} · "${(scenarioUi.goalText ?? '').slice(0, 60)}"`,
+  );
+  record(
+    '판 설정(맵·시나리오)은 메뉴 상단으로 갔다 — 설정은 목표가 아니다',
+    (scenarioUi.contextText ?? '').includes(scenarioUi.mapName ?? '@@') ? 'pass' : 'fail',
+    scenarioUi.contextText ?? '',
   );
 
   /*

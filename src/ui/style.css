@@ -673,30 +673,72 @@ body {
 }
 
 /* 목표 — 좌상단 캡슐 아래. 안 보이면 시나리오가 설정 문구가 된다 */
-.kgoal {
+/* ── 의뢰 칩 기둥 (K40, concept-28) — 목표란의 후신. 기둥 전체가 버튼 하나다 ── */
+.kchipcol {
   position: fixed;
   left: 8px;
   top: calc(44px + var(--safe-t));
   z-index: 9;
-  max-width: 56vw;
-  padding: 5px 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 44vw;
+  cursor: pointer;
+}
+
+.kchip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
   border-radius: 9px;
   background: var(--goal-bg);
   color: var(--text-dim);
-  font-size: 11px;
-  line-height: 1.35;
-  white-space: pre;
-  pointer-events: none;
+  box-shadow: var(--sk-lift);
 }
 
-.kgoal.won {
+.kchip.won {
   background: var(--goal-won);
   color: var(--text);
 }
 
-.kgoal.lost {
+.kchip.lost {
   background: var(--goal-lost);
   color: var(--text);
+}
+
+.kchip-ico {
+  font-size: 14px;
+}
+
+.kchip-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 84px;
+}
+
+.kchip-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.kchip-detail {
+  font-size: 9.5px;
+  line-height: 1.2;
+}
+
+.kchip .kprog {
+  height: 4px;
+}
+
+/* 메뉴 상단의 판 설정 줄 — 목표란에서 옮겨 온 맵·시나리오 이름 */
+.kcontext {
+  font-size: 11px;
+  color: var(--text-dim);
+  padding: 2px 4px 6px;
 }
 
 /* ── 하단 바 — 높이 고정, 내용은 flex 라 가로에서 늘어난다 ── */

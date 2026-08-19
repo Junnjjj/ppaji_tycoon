@@ -40,6 +40,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     Reputation,
     nextGrade,
     landRect,
+    GRADES,
   } = await import('./sim/kairo/progress.js');
   const { assessRisk, RISK_NAMES } = await import('./sim/kairo/risk.js');
   const { KairoReport } = await import('./ui/kairo-report.js');
@@ -50,6 +51,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { seasonShares } = await import('./sim/kairo/groups.js');
   const { KairoNewGame } = await import('./ui/kairo-newgame.js');
   const { KairoHud } = await import('./ui/kairo-hud.js');
+  type GoalChip = import('./ui/kairo-hud.js').GoalChip;
   const { applyStartKit } = await import('./sim/kairo/startkit.js');
   const { WallGrid: WallGridCls } = await import('./sim/kairo/walls.js');
   const { PlacementGrid: PlacementGridCls } = await import('./sim/kairo/placement.js');
@@ -1117,20 +1119,45 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   });
   hud.menuSlot.append(newGameBtn);
 
-  /** 목표 표시 — "얼마나 남았나"가 안 보이면 시나리오가 목표가 아니다 */
+  /**
+   * 의뢰 칩 (K40) — "다음에 뭘 할지"를 상시로. 예전 목표란은 "북한강형 · 자유 플레이"
+   * 라는 판 설정만 비췄다 (UX 검수 §1 — 의도한 주석은 "얼마나 남았나"였는데 기본
+   * 시나리오가 자유 플레이라 자리가 비어 있었다). 이제 의뢰 둘 + 등급 게이지(A4)를
+   * 비추고, 판 설정은 메뉴 상단으로 갔다.
+   */
   const refreshGoal = (): void => {
     const st = { week: week.week, grade: currentGrade().grade, accidents: accidentCount };
     const status = scen.scenarioStatus(scenario, st);
-    hud.setGoal(
-      `${mapDef.name} · ${scenario.name}\n` +
-        (status === 'won'
-          ? '🎉 목표 달성'
-          : status === 'lost'
-            ? '실패 — 새 판으로 다시'
-            : scen.scenarioProgress(scenario, st)),
-      status === 'won' ? 'won' : status === 'lost' ? 'lost' : 'normal',
-    );
+    const chips: GoalChip[] = [];
+    for (const q of questStatuses(h.placement, lastSummary)
+      .filter((q) => !q.done)
+      .slice(0, 2)) {
+      chips.push({ icon: '📋', label: q.name, detail: q.detail, progress: q.progress });
+    }
+    // 다음 등급 게이지 — 구경(만족도)이 쌓이는 게 보인다. 좋아요 1000 의 우리식 번역 (A4)
+    const next = GRADES[currentGrade().grade];
+    if (next) {
+      chips.push({
+        icon: '⭐',
+        label: `${next.grade}등급까지`,
+        detail: `만족도 ${Math.round(reputation.value)}/${next.reqExitSatisfaction}`,
+        progress: reputation.value / Math.max(1, next.reqExitSatisfaction),
+      });
+    }
+    if (status === 'won') chips.push({ icon: '🎉', label: '목표 달성', progress: 1, tone: 'won' });
+    else if (status === 'lost') {
+      chips.push({ icon: '✕', label: '실패 — 새 판으로', progress: 0, tone: 'lost' });
+    } else if (scenario.goal.kind !== 'none') {
+      chips.push({
+        icon: '🚩',
+        label: scenario.name,
+        detail: scen.scenarioProgress(scenario, st),
+        progress: 0,
+      });
+    }
+    hud.setChips(chips);
   };
+  hud.setContext(`${mapDef.name} · ${scenario.name}`);
   refreshGoal();
 
   const catalogBtn = document.createElement('button');

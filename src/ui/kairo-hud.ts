@@ -53,6 +53,16 @@ export interface BuildItem {
   group?: string;
 }
 
+/** 의뢰 칩 하나 (K40) — 아이콘은 임시 글리프다 (ui/* 에셋 슬롯, 계획 §1-1) */
+export interface GoalChip {
+  icon: string;
+  label: string;
+  detail?: string;
+  /** 0..1 */
+  progress: number;
+  tone?: 'won' | 'lost';
+}
+
 export type RiskTone = 'safe' | 'watch' | 'caution' | 'danger';
 
 export interface HudOptions {
@@ -88,6 +98,7 @@ export class KairoHud {
   private readonly tabs: HTMLDivElement;
   private readonly buildBody: HTMLDivElement;
   private readonly menuBody: HTMLDivElement;
+  private readonly context: HTMLDivElement;
 
   private readonly confirmBar: HTMLDivElement;
   private readonly confirmLabel: HTMLDivElement;
@@ -109,8 +120,16 @@ export class KairoHud {
     this.statusCap.id = 'kairo-status';
     this.cashCap = el('div', 'kcap right');
     this.cashCap.id = 'kairo-cash';
-    this.goalBox = el('div', 'kgoal');
+    /*
+     * 의뢰 칩 (K40, concept-28) — 목표란의 후신. "다음에 뭘 할지"가 화면에 상시로
+     * 보인다: 진행 중 의뢰 둘 + 다음 등급 게이지(A4). 시나리오 이름은 메뉴로 갔다 —
+     * 판 설정은 목표가 아니다 (UX 검수 §1).
+     * 표시물이지 컨트롤이 아니다 — 탭하면 메뉴가 열리지만 그건 메뉴 버튼의 지름길일
+     * 뿐이라 div 로 둔다 (상시 컨트롤 3개 불변식은 버튼을 센다).
+     */
+    this.goalBox = el('div', 'kchipcol');
     this.goalBox.id = 'kairo-goal';
+    this.goalBox.addEventListener('click', () => this.toggle('menu'));
     parent.append(this.statusCap, this.cashCap, this.goalBox);
 
     // ── 하단 바 ──────────────────────────────────────────────────────────
@@ -172,7 +191,9 @@ export class KairoHud {
     this.menuSlot.addEventListener('click', (e) => {
       if ((e.target as HTMLElement).closest('button')) this.hide();
     });
-    this.menuBody.append(this.menuSlot, this.quests);
+    this.context = el('div', 'kcontext');
+    this.context.id = 'kairo-context';
+    this.menuBody.append(this.context, this.menuSlot, this.quests);
     body.append(this.buildBody, this.menuBody);
 
     this.sheet.append(head, body);
@@ -261,9 +282,28 @@ export class KairoHud {
     this.riskBox.textContent = text;
   }
 
-  setGoal(text: string, tone: 'normal' | 'won' | 'lost' = 'normal'): void {
-    this.goalBox.className = tone === 'normal' ? 'kgoal' : `kgoal ${tone}`;
-    this.goalBox.textContent = text;
+  /** 의뢰 칩 갱신 — 탭하면 메뉴(의뢰 목록)가 열린다 */
+  setChips(chips: GoalChip[]): void {
+    this.goalBox.replaceChildren();
+    for (const c of chips) {
+      const chip = el('div', `kchip${c.tone !== undefined ? ` ${c.tone}` : ''}`);
+      chip.append(el('span', 'kchip-ico', c.icon));
+      const txt = el('div', 'kchip-txt');
+      txt.append(el('div', 'kchip-label', c.label));
+      if (c.detail !== undefined) txt.append(el('div', 'kchip-detail', c.detail));
+      const bar = el('div', 'kprog');
+      const fill = document.createElement('i');
+      fill.style.width = `${Math.round(Math.max(0, Math.min(1, c.progress)) * 100)}%`;
+      bar.append(fill);
+      txt.append(bar);
+      chip.append(txt);
+      this.goalBox.append(chip);
+    }
+  }
+
+  /** 메뉴 상단의 판 설정 줄 — 맵·시나리오 이름 (목표란에서 옮겨 왔다, K40) */
+  setContext(text: string): void {
+    this.context.textContent = text;
   }
 
   /** 지금 든 붓. null 이면 아무것도 안 들었다 */
