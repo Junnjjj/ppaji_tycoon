@@ -445,6 +445,20 @@ export class WeekRunner {
     this.identityFaultForTest = on;
   }
 
+  /**
+   * 진행 중인 주를 **버린다** (도구·하네스 전용). 돈·주차에 아무 흔적도 남기지 않는다 —
+   * 하네스가 `run()` 으로 배치 주를 돌리기 전에 흐르는 낮의 주를 치우는 용도다.
+   * 게임 로직에서 부르면 반 주가 조용히 증발하므로 production 경로에는 넣지 말 것.
+   */
+  abort(): void {
+    this.live = null;
+  }
+
+  /** 닫힌 하루들의 결산 — 흐름 모드가 하루 끝 토스트에 쓴다 (읽기 전용) */
+  liveDays(): readonly DayReport[] | null {
+    return this.live ? this.live.days : null;
+  }
+
   /** 흐름 모드가 읽는 진행 상태 — 요일 표기·주 마디 판정용 */
   liveProgress(): { tick: number; day: number; done: boolean } | null {
     if (!this.live) return null;

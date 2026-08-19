@@ -52,6 +52,17 @@ export function rgba(name: string, alpha: number, fallback = '240 160 60'): stri
   return `rgb(${cssVar(name, fallback)} / ${alpha}%)`;
 }
 
+/**
+ * `#rrggbb` 토큰을 Phaser 가 먹는 정수로. 낮밤 틴트(K39)처럼 **캔버스 밖 Phaser
+ * 오브젝트**가 토큰을 읽을 때 쓴다 — 색의 정본은 여전히 `:root` 하나다.
+ */
+export function cssColorInt(name: string, fallback = '#000000'): number {
+  const v = cssVar(name, fallback);
+  const hex = v.startsWith('#') ? v.slice(1) : v;
+  const n = parseInt(hex.length === 3 ? [...hex].map((c) => c + c).join('') : hex, 16);
+  return Number.isNaN(n) ? 0 : n;
+}
+
 /** 토큰을 런타임에 바꿨을 때 */
 export function clearTokenCache(): void {
   cache.clear();

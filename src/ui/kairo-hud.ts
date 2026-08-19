@@ -130,7 +130,8 @@ export class KairoHud {
     this.brushBox.id = 'kairo-brushlabel';
     mid.append(this.riskBox, this.brushBox);
 
-    this.weekBtn = el('button', 'kbtn primary', '한 주 ▶');
+    // 흐르는 낮(K39)의 ⏩ — 기본은 하루 스킵. 주 스킵은 첫 심사 통과 보상 (스펙 A2)
+    this.weekBtn = el('button', 'kbtn primary', '하루 ⏩');
     this.weekBtn.id = 'kairo-week';
     this.weekBtn.addEventListener('click', () => this.opts.onWeek());
 

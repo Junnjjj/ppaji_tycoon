@@ -1108,13 +1108,32 @@ async function main(): Promise<void> {
    * 걸어야 할 거리가 달라져 9초로는 모자랐다. 조건 대기는 그 변화에 안 흔들리고,
    * 정말 안 되면 시간 초과로 정직하게 실패한다.
    */
-  await page
-    .waitForFunction(
-      `(() => { const g = window.__kairo.guests; return g.all.some((x) => x.state === 'using'); })()`,
-      undefined,
-      { timeout: 25000 },
-    )
-    .catch(() => undefined);
+  await page.evaluate(`(() => {
+    const h = window.__kairo, g = h.guests;
+    /*
+     * ⚠ '이용 중' 첫 발견에서 서면 안 된다 — 새 판의 첫 이용은 **매표소**인데 매표는
+     * 슬롯을 점유하지 않아서 (표는 놀이가 아니다, K36-B) 점유 검사가 0/0 이 된다.
+     * 점유 슬롯이 실제로 생길 때까지 민다.
+     */
+    const anyOcc = () => {
+      for (const f of h.placement.all()) {
+        if (g.occupancy(f.handle).some((x) => x !== 0)) return true;
+      }
+      return false;
+    };
+    /*
+     * 점유(claim)는 슬롯으로 걸어가는 중에 생기고 '이용 중' 상태는 도착해야 된다 —
+     * 하나만 보고 서면 다른 검사가 그 사이 순간을 재서 경합한다. 둘 다 참일 때까지 민다.
+     * 재는 동안 rAF 흐름이 상태를 더 밀지 않게 얼린다 (끝나고 되살린다).
+     */
+    h.flow.frozen = true;
+    for (let k = 0; k < 220; k++) {
+      const p = h.week.liveProgress();
+      if (!p || p.tick >= 800) break; // 주를 넘기면 rAF 가 결산 모달을 띄운다 — 경계 전에 선다
+      if (anyOcc() && g.stats().using > 0) break;
+      h.week.step(4);
+    }
+  })()`);
   await page.waitForTimeout(1500);
 
   const gstat = (await page.evaluate(`(() => {
@@ -1171,6 +1190,7 @@ async function main(): Promise<void> {
     gstat.s.using > 0 ? 'pass' : 'fail',
     `이용 ${gstat.s.using} · 걷기 ${gstat.s.walking} · 포즈 ${JSON.stringify(gstat.poses)}`,
   );
+  await page.evaluate(`(() => { window.__kairo.flow.frozen = false; })()`);
   // 퇴장까지는 한 방문에 240tick(24초) 이 걸린다. 실시간으로 기다리는 대신 시뮬을
   // 직접 돌린다 — 같은 코드 경로이고 결정론이라 결과가 같다.
   const exitStat = (await page.evaluate(`(() => {
@@ -1662,6 +1682,9 @@ async function main(): Promise<void> {
     // 슬라이드 탑승 — 손님이 실제로 타는지 (충분히 길게 돌린다)
     const ride = (await page.evaluate(`(() => {
       const h = window.__kairo, g = h.guests;
+      // 흐르는 낮(K39)부터 부팅 때 등급 상한이 걸린다 — 이 측정은 상한 없던 시절의
+      // 조건(수백 명 누적)을 가정하므로 상한을 올려 복원한다
+      g.setMaxGuests(400);
       const rng = new h.Rng(777);
       let sawRide = false, deckSteps = 0;
       for (let k = 0; k < 4000; k++) {
@@ -1689,6 +1712,7 @@ async function main(): Promise<void> {
 
   const calc = (await page.evaluate(`(() => {
     const h = window.__kairo;
+    h.week.abort(); // 흐르는 낮의 진행 중인 주를 치운다 — run() 은 배치 전용이다 (K39)
     const t0 = performance.now();
     const rep = h.week.run(new h.Rng(555), { season: 'summer', playbackEvery: 6 });
     const ms = performance.now() - t0;
@@ -1763,46 +1787,22 @@ async function main(): Promise<void> {
   );
 
   /*
-   * 압축 연출 → 결산 화면.
-   *
-   * ⚠ `runWeek()` 은 이제 **카드를 먼저 띄운다** (§3.5). 카드를 안 고르고 재생을 기다리면
-   * 영원히 안 온다 — 실제로 이 검사가 그렇게 멈췄다. 사람이 쓰는 경로와 같은 `pickForTest`
-   * 로 카드를 넘긴다.
+   * 흐르는 낮 (K39) — 압축 연출은 흐름으로 대체됐다. 주를 끝까지 감으면 게임 경로
+   * (settleWeek) 로 결산이 바로 뜬다. 카드는 이제 결산 **뒤**(다음 주 아침)에 온다.
    */
-  await page.evaluate(`window.__kairo.runWeek()`);
-  await page.waitForTimeout(200);
   await page.evaluate(`(() => {
-    const cv = window.__kairoCards;
-    let guard = 0;
-    /*
-     * ⚠ 0번을 무조건 고르면 안 된다. 방송 촬영 카드의 0번은 **그 주 폐쇄**라
-     * 손님 0명인 주가 되고, 뒤따르는 결산 검사가 "구성이 안 보인다"로 실패한다
-     * (실측). 폐쇄가 없는 선택지를 고른다.
-     */
-    while (cv && cv.visible && guard++ < 5) {
-      const card = cv.currentCard;
-      let pick = 0;
-      if (card) {
-        for (let oi = 0; oi < card.options.length; oi++) {
-          const closes = card.options[oi].effects.some((e) => e.closed);
-          if (!closes) { pick = oi; break; }
-        }
-      }
-      cv.pickForTest(pick);
-    }
+    const h = window.__kairo;
+    h.week.abort();
+    h.beginWeek();
+    h.runWeek();
   })()`);
-  await page.waitForTimeout(600);
-  const playing = (await page.evaluate(`window.__kairo.scene.isPlaying`)) as boolean;
-  record('연출이 재생된다 (3.5초)', playing ? 'pass' : 'fail');
-  await page.screenshot({ path: `${SHOT_DIR}/kairo-playback.png` });
-
   await page.waitForFunction(
     `(() => { const r = document.getElementById('kairo-report'); return !!r && !r.hidden; })()`,
     undefined,
     { timeout: 8000 },
   );
-  // waitForFunction 이 시간 초과로 던지므로 여기 도달했다는 것 자체가 통과다
-  record('연출이 끝나면 결산이 뜬다', 'pass');
+  record('주를 끝까지 감으면 결산이 뜬다 (흐르는 낮 — 연출 대체)', 'pass');
+  await page.screenshot({ path: `${SHOT_DIR}/kairo-playback.png` });
 
   /*
    * ⚠ 두 가지를 조심해야 한다.
@@ -1817,6 +1817,7 @@ async function main(): Promise<void> {
    */
   const compo = (await page.evaluate(`(() => {
     const h = window.__kairo;
+    h.week.abort(); // K39 — run() 은 배치 전용
     h.guests.setMaxGuests(240);
     const rep = h.week.run(new h.Rng(4242), { season: 'summer', playbackEvery: 0 });
     h.report.show(rep, { onClose: function () { return undefined; } });
@@ -2139,7 +2140,9 @@ async function main(): Promise<void> {
     const btn = document.getElementById('kairo-week');
     if (!cv || !btn) return { ok: false, why: '카드 뷰 또는 주 진행 버튼이 없다' };
     const cashBefore = window.__kairo.week.cash;
-    btn.click();
+    // K39: 버튼은 하루 스킵이 됐다. 카드는 주 마디(결산 뒤) 경로로 직접 연다
+    window.__kairo.week.abort();
+    window.__kairo.openWeekCards();
     const root = document.getElementById('kairo-card');
     const shown = !!root && getComputedStyle(root).display !== 'none';
     if (!shown) {
@@ -2164,8 +2167,17 @@ async function main(): Promise<void> {
      * 앞선 검사의 잔해 위에서 재면 원인을 알 수 없다. 이 저장소가 손님 검사에서
      * 이미 배운 규칙이다.
      */
-    const first = btns.filter((b) => !b.disabled)[0];
-    if (first) first.click();
+    let guard = 0;
+    while (cv.visible && guard++ < 5) {
+      const card = cv.currentCard;
+      let pick = 0;
+      if (card) {
+        for (let oi = 0; oi < card.options.length; oi++) {
+          if (!card.options[oi].effects.some((e) => e.closed)) { pick = oi; break; }
+        }
+      }
+      cv.pickForTest(pick);
+    }
     return out;
   })()`)) as {
     ok: boolean;
@@ -2270,6 +2282,7 @@ async function main(): Promise<void> {
    */
   const accident = (await page.evaluate(`(() => {
     const h = window.__kairo;
+    h.week.abort(); // 새 판 부팅이 흐름 주를 시작해 뒀을 수 있다 (K39)
     const safe = h.week.run(new h.Rng(31), { season: 'summer', accidentChance: 0 });
     const hit = h.week.run(new h.Rng(31), { season: 'summer', accidentChance: 1 });
     return {
@@ -3251,6 +3264,7 @@ async function main(): Promise<void> {
 
   const staffWeek = (await page.evaluate(`(() => {
     const h = window.__kairo;
+    h.week.abort(); // K39 — run() 은 배치 전용
     const eff = h.staff.effects(h.placement);
     const withStaff = h.week.run(new h.Rng(4242), {
       season: 'summer',
@@ -3338,7 +3352,7 @@ async function main(): Promise<void> {
   );
 
   record(
-    '한 주 진행을 누르면 의사결정 카드가 뜬다 — 없으면 그 버튼은 스킵 버튼이다',
+    '주 마디에 의사결정 카드가 뜬다 — 없으면 한 주가 그냥 지나간다 (K39: 결산 뒤 아침)',
     cardFlow.ok && cardFlow.shown === true ? 'pass' : 'fail',
     cardFlow.ok
       ? cardFlow.shown
@@ -3371,18 +3385,17 @@ async function main(): Promise<void> {
       }
       cv.pickForTest(pick);
     }
-    return { visible: cv.visible, cash: window.__kairo.week.cash, playing: window.__kairo.scene.isPlaying };
-  })()`)) as { visible: boolean; cash: number; playing: boolean };
+    return { visible: cv.visible, cash: window.__kairo.week.cash };
+  })()`)) as { visible: boolean; cash: number };
 
   record(
     '카드를 고르면 화면이 닫히고 그 주가 진행된다',
     !afterPick.visible ? 'pass' : 'fail',
-    `현금 ${Math.round((cardFlow.cashBefore ?? 0) / 10000)}만 → ${Math.round(afterPick.cash / 10000)}만` +
-      ` · 연출 ${afterPick.playing ? '재생 중' : '대기'}`,
+    `현금 ${Math.round((cardFlow.cashBefore ?? 0) / 10000)}만 → ${Math.round(afterPick.cash / 10000)}만`,
   );
 
-  // 연출이 끝날 때까지 기다렸다가 결산을 닫는다 (뒤 검사가 오버레이에 막히지 않게)
-  await page.waitForTimeout(4200);
+  // 결산이 열려 있으면 닫는다 (뒤 검사가 오버레이에 막히지 않게)
+  await page.waitForTimeout(400);
   await page.evaluate(`(() => {
     const r = document.getElementById('kairo-report');
     if (r) {
@@ -5002,6 +5015,10 @@ async function main(): Promise<void> {
     }
     return Math.round((n / Math.max(1, total)) * 100);
   })()`;
+  // 낮밤 틴트(K39)가 켜진 화면은 지형 픽셀이 하늘색 대역으로 밀린다 — 끄고 잰다
+  await page.evaluate(
+    `(() => { const h = window.__kairo; h.flow.frozen = true; h.scene.setDayPhase(null); })()`,
+  );
   const corners: [number, number, string][] = [
     [0, 0, '좌상'],
     [95, 0, '우상'],
@@ -5023,7 +5040,6 @@ async function main(): Promise<void> {
     worst === 0 ? 'pass' : 'fail',
     seen.join(' · '),
   );
-
   /*
    * 음성 대조군 — 지형을 끄면 그 자리가 하늘로 돌아온다.
    *
@@ -5042,6 +5058,8 @@ async function main(): Promise<void> {
     bare > 10 ? 'pass' : 'fail',
     `끄면 ${bare}% · 켜면 ${worst}%`,
   );
+  // 틴트 없는 화면이 필요한 검사가 끝났다 — 흐름을 되살린다
+  await page.evaluate(`(() => { window.__kairo.flow.frozen = false; })()`);
 
   /*
    * 배경이 **지도를 가리지 않는다.**

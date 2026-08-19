@@ -90,6 +90,11 @@ export class PanelHost {
     return this.openSet.has(p);
   }
 
+  /** 무엇이든 열려 있나 — 흐르는 낮이 이걸로 멈춘다 (K39: 시트·패널·카드가 열리면 시간 정지) */
+  get anyOpen(): boolean {
+    return this.openSet.size > 0;
+  }
+
   /**
    * 이 패널을 열겠다고 알린다. **`false` 면 열지 말 것** (모달이 막았다).
    *

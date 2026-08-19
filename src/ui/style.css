@@ -59,6 +59,9 @@
   --goal-won: rgb(214 240 224 / 94%);
   --goal-lost: rgb(250 220 216 / 94%);
   /* 위험도 칩은 **진한 칠 + 흰 글씨**다 — 밝은 배경에서도 눈에 띄어야 한다 */
+  /* 낮밤 틴트 (K39) — 캔버스가 cssColorInt 로 읽는다. 하루 안의 아침/저녁 물들임 */
+  --day-dawn: #ffd9a0;
+  --day-dusk: #2f4a78;
   --risk-safe: #1c7a4d;
   --risk-watch: #8a6a12;
   --risk-caution: #b25d15;

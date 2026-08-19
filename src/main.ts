@@ -26,7 +26,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { allFacilityDefs, PLACE_FAIL_MESSAGES, guestWalkable } = await import(
     './sim/kairo/placement.js'
   );
-  const { WeekRunner } = await import('./sim/kairo/week.js');
+  const { WeekRunner, TICKS_PER_DAY, TICKS_PER_WEEK, DAY_NAMES } = await import(
+    './sim/kairo/week.js'
+  );
+  const { audio } = await import('./audio/index.js');
   const { previewCombos, evaluateCombos } = await import('./sim/kairo/combos.js');
   const {
     questStatuses,
@@ -187,17 +190,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           gate: KairoTerrainCls.parkGate(),
         }),
     onFrame: (s) => {
-      /*
-       * 버스 — sim 이 위치를 갖고 렌더는 따라 그린다 (K36-B③).
-       *
-       * ⚠ 연출 중에는 **손대지 않는다.** 그때는 씬이 재생 프레임의 tick 으로 버스를
-       * 다시 세고 있고, 여기서 러너의 (이미 주가 끝나 멈춘) 위치를 덮으면 버스가
-       * 도착 지점에 붙박인다. 매 프레임 덮어쓰기라 조용히 이긴다.
-       */
-      if (!h.scene.isPlaying) {
-        const bs = runner?.bus.state;
-        h.scene.setBus(bs && bs.visible ? bs.pos : null);
-      }
+      // 버스 — sim 이 위치를 갖고 렌더는 따라 그린다 (K36-B③)
+      const bs = runner?.bus.state;
+      h.scene.setBus(bs && bs.visible ? bs.pos : null);
       box.textContent =
         `FPS ${s.fps}  S=${s.upscale}  버퍼 ${s.bufferW}×${s.bufferH}\n` +
         `스크롤 ${s.scrollX},${s.scrollY}  타일 ${s.tiles}\n` +
@@ -496,7 +491,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         brush = it.kind === 'erase' ? 'erase' : it.id;
       }
     },
-    onWeek: () => runWeek(),
+    onWeek: () => skipForward(),
     /*
      * 코스 탭 — 패널은 `coursePanel` 이 소유한다. `h` 와 마찬가지로 아래에서 만들어지므로
      * 함수로 감싸 지연 참조한다 (TDZ 사고를 여러 번 겪었다).
@@ -760,33 +755,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
 
   /**
-   * 한 주 진행. **카드가 먼저다** — 결산 직전에 선택을 강제하는 것이 스펙 §3.5 의 요지고,
-   * 결산 뒤에 띄우면 이미 끝난 주에 대한 선택이 되어 아무 의미가 없다.
+   * 주 옵션 조립 — `week.begin` 직전에 한 번. 카드 효과(modifiers)가 정해진 **뒤**여야
+   * 하므로 카드 선택 → beginWeek 순서가 고정이다 (카드는 그 주에 적용된다).
    */
-  const runWeek = (): void => {
-    if (h.scene.isPlaying || report.visible || cardView.visible) return;
-    const gr0 = currentGrade();
-    const drawn = cards.draw(cardRng, {
-      season,
-      week: week.week + 1,
-      grade: gr0.grade,
-    });
-    cardView.show(drawn, week.cash, (choices) => {
-      for (const ch of choices) {
-        const r = cards.choose(cardRng, ch.card, ch.optionIndex);
-        if (r.cash > 0) week.earn(r.cash);
-        else if (r.cash < 0) week.spend(-r.cash);
-      }
-      runWeekAfterCards();
-    });
-  };
-
-  const runWeekAfterCards = (): void => {
-    const t0 = performance.now();
-    // 등급이 동시 손님 상한과 방문 수요를 올린다 — 만족도를 관리해야 성장한다
+  const assembleWeekOpts = () => {
     const gr = currentGrade();
-    // 카드 선택이 끝난 뒤에 상한을 정한다 — 혼잡 배율이 이번 주에 반영되어야 한다
     const mods = cards.modifiers();
+    // 등급이 동시 손님 상한과 방문 수요를 올린다 — 만족도를 관리해야 성장한다
     h.guests.setMaxGuests(admissionLimit(gr, h.placement.totalCapacity(), mods.crowdMult));
     const staffEff = staff.effects(h.placement);
     const courseWeek = courses.weekly();
@@ -794,9 +769,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       staffSafety: staffEff.safetyPoints,
       courseRisk: courseRiskPoints(),
     });
-    const rep = week.run(weekRng, {
+    return {
       season,
-      playbackEvery: 6,
       reputation: gr.reputationPull,
       priceMult,
       mapShares: scen.shiftedShares(seasonShares(season), mapDef),
@@ -818,8 +792,88 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           ...accidentIdle.keys(),
         ]),
       },
-    });
+    };
+  };
 
+  /**
+   * 흐르는 낮 (K39) — 지도가 보이는 동안 rAF 가 tick 을 소비한다.
+   * 하루(120 tick) = 48초 ⚖ (스펙 §2.1 — 밀도 계측으로 확정한다).
+   */
+  const flow = {
+    acc: 0,
+    speed: 1,
+    /** 하네스·도구용 — true 면 흐름이 완전히 선다 (setAutoTick 과 독립) */
+    frozen: false,
+    /** 결산까지 스킵 — 첫 심사 통과 보상 (K42, 스펙 A2). 그 전의 ⏩ 는 하루 단위다 */
+    weekSkipUnlocked: false,
+    daysSeen: 0,
+  };
+  const TICK_MS = 400;
+
+  const beginWeek = (): void => {
+    week.begin(weekRng, assembleWeekOpts());
+    flow.acc = 0;
+    flow.daysSeen = 0;
+    refreshCaps();
+  };
+
+  /** step 뒤처리 — 하루 마디 토스트·낮밤 틴트·주 마디 진입 */
+  const afterStep = (): void => {
+    const p = week.liveProgress();
+    if (!p) return;
+    h.scene.setDayPhase(p.done ? null : (p.tick % TICKS_PER_DAY) / TICKS_PER_DAY);
+    const closed = week.liveDays() ?? [];
+    if (closed.length > flow.daysSeen) {
+      const d = closed[closed.length - 1];
+      if (d) {
+        const profit = d.revenue - d.upkeep;
+        toast(
+          `${d.name} · ${profit >= 0 ? '+' : '−'}${Math.abs(Math.round(profit / 10000))}만 · 손님 ${d.visitors}`,
+          profit >= 0 ? 'ok' : '',
+        );
+        audio.play('sfx/day-end');
+      }
+      // 주말 진입 — sim 의 1.6× 는 예전부터 있었다. 표기가 없었을 뿐이다 (검수 A1)
+      if (closed.length === 5) toast('주말 — 손님이 몰립니다', 'ok');
+      flow.daysSeen = closed.length;
+      refreshCaps();
+    }
+    if (p.done) settleWeek();
+  };
+
+  const flowTick = (dtMs: number): void => {
+    if (flow.frozen) return;
+    if (!week.liveProgress()) return; // 주 경계 — 결산·카드 게이트 중
+    if (!h.scene.tickingEnabled) return; // 검증 도구가 화면을 얼렸다 (setAutoTick)
+    if (panelHost.anyOpen) {
+      flow.acc = 0; // 시트·패널이 연 시간은 흐르지 않는다 — 카이로의 암묵 멈춤
+      return;
+    }
+    flow.acc += dtMs;
+    const per = TICK_MS / flow.speed;
+    const n = Math.floor(flow.acc / per);
+    if (n <= 0) return;
+    flow.acc -= n * per;
+    week.step(n);
+    afterStep();
+  };
+
+  /** ⏩ — 기본은 하루 끝까지. 주 스킵은 해금 뒤 (PSS 는 배속을 엔드게임에 준다 — 스펙 A2) */
+  const skipForward = (): void => {
+    const p = week.liveProgress();
+    if (!p || p.done || panelHost.anyOpen) return;
+    audio.play('sfx/tap');
+    week.step(
+      flow.weekSkipUnlocked ? TICKS_PER_WEEK - p.tick : TICKS_PER_DAY - (p.tick % TICKS_PER_DAY),
+    );
+    afterStep();
+  };
+
+  /** 주 마감 — 결산을 띄우고, 닫으면 다음 주 카드 → begin (스펙 §2.1: 결산 → 카드) */
+  const settleWeek = (): void => {
+    const t0 = performance.now();
+    const rep = week.finish();
+    h.scene.setDayPhase(null);
     // 사고로 닫힌 시설의 남은 주를 깎는다
     for (const [handle, left] of [...accidentIdle]) {
       if (left <= 1) accidentIdle.delete(handle);
@@ -830,7 +884,6 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       accidentCount += 1;
     }
     cards.tickWeek();
-    const calcMs = performance.now() - t0;
     lastReport = rep;
     reputation.push(rep.exitSatisfaction);
     const gradeBefore = gradeNo;
@@ -851,42 +904,70 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     // 새로 터진 콤보를 도감에 기록한다 — 결산이 발견의 순간이다 (§0 재미의 축)
     noteDiscoveries();
     const weekClaim = progress.claim(questStatuses(h.placement, lastSummary));
-    if (weekClaim.cash > 0) week.earn(weekClaim.cash);
+    if (weekClaim.cash > 0) {
+      week.earn(weekClaim.cash);
+      audio.play('sfx/cash');
+    }
     persist();
     console.log(
-      `[카이로] ${rep.week}주차 계산 ${calcMs.toFixed(0)}ms · 방문 ${rep.visitors} · ` +
-        `손익 ${rep.profit} · 프레임 ${rep.playback.length}`,
+      `[카이로] ${rep.week}주차 계산 ${(performance.now() - t0).toFixed(0)}ms · ` +
+        `방문 ${rep.visitors} · 손익 ${rep.profit}`,
     );
+    const showReport = (): void => {
+      report.show(rep, { onClose: () => nextWeekCards() });
+    };
     /*
      * 사고가 났으면 결산 **전에** 대응 카드를 띄운다 (§12.1). 결산 뒤에 띄우면 이미
      * 숫자를 본 뒤라 "내 선택으로 끝난다"는 감각이 안 생긴다.
      */
-    const showReport = (): void => {
-      report.show(rep, {
-        onClose: () => undefined,
-        onReplay: () =>
-          h.scene.playWeek(rep.playback, 3500, () =>
-            report.show(rep, { onClose: () => undefined }),
-          ),
-      });
-    };
     const accidentCard = rep.accident ? triggerCard('accident_response') : undefined;
+    if (accidentCard) {
+      cardView.show([accidentCard], week.cash, (choices) => {
+        for (const ch of choices) {
+          const r = cards.choose(cardRng, ch.card, ch.optionIndex);
+          if (r.cash > 0) week.earn(r.cash);
+          else if (r.cash < 0) week.spend(-r.cash);
+        }
+        persist();
+        showReport();
+      });
+      return;
+    }
+    showReport();
+  };
 
-    h.scene.playWeek(rep.playback, 3500, () => {
-      if (accidentCard) {
-        cardView.show([accidentCard], week.cash, (choices) => {
-          for (const ch of choices) {
-            const r = cards.choose(cardRng, ch.card, ch.optionIndex);
-            if (r.cash > 0) week.earn(r.cash);
-            else if (r.cash < 0) week.spend(-r.cash);
-          }
-          persist();
-          showReport();
-        });
-        return;
+  /**
+   * 다음 주 카드 — 결산 **뒤**에 온다 (UX 검수 §5: 결과를 보고 결정한다).
+   * 효과는 이어서 begin 하는 주에 적용된다 — 의미는 예전과 같고 순서만 바로잡았다.
+   * 1주차는 카드 없이 시작한다 (부팅 직후 모달은 온보딩 마찰 — 빼기가 원칙).
+   */
+  const nextWeekCards = (): void => {
+    const gr0 = currentGrade();
+    const drawn = cards.draw(cardRng, { season, week: week.week + 1, grade: gr0.grade });
+    if (drawn.length === 0) {
+      beginWeek();
+      return;
+    }
+    audio.play('sfx/card');
+    cardView.show(drawn, week.cash, (choices) => {
+      for (const ch of choices) {
+        const r = cards.choose(cardRng, ch.card, ch.optionIndex);
+        if (r.cash > 0) week.earn(r.cash);
+        else if (r.cash < 0) week.spend(-r.cash);
       }
-      showReport();
+      beginWeek();
     });
+  };
+
+  /**
+   * 지금 주를 끝까지 감고 결산으로 — 주 스킵 해금 뒤의 ⏩ 와 하네스가 쓴다.
+   * 주 경계(결산·카드가 떠 있는 중)면 아무것도 하지 않는다.
+   */
+  const runWeek = (): void => {
+    const p = week.liveProgress();
+    if (!p) return;
+    week.step(TICKS_PER_WEEK - p.tick);
+    afterStep();
   };
 
   /*
@@ -1159,7 +1240,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   let lastGradeShown = -1;
   const refreshCaps = (): void => {
     const g = currentGrade();
-    hud.setStatus(`주 ${week.week} · ${SEASON_NAME[season] ?? season} · ${g.grade}등급`);
+    const lp = week.liveProgress();
+    const dayLabel = lp && !lp.done ? ` ${DAY_NAMES[lp.day] ?? ''}` : '';
+    hud.setStatus(
+      `주 ${lp ? week.week + 1 : week.week}${dayLabel} · ${SEASON_NAME[season] ?? season} · ${g.grade}등급`,
+    );
     hud.setCash(week.cash);
     if (g.grade !== lastGradeShown) {
       lastGradeShown = g.grade;
@@ -1179,10 +1264,30 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     refreshCaps();
   }, 1500);
 
+  /*
+   * 흐르는 낮 시동 (K39). 배경 탭에서는 rAF 가 서므로 저절로 멈춘다 —
+   * "끄면 멈춘다, 방치 진행 없음" (카이로와 같다, 스펙 §1). 복귀 직후 dt 를 잘라
+   * 밀린 시간이 몰아서 흐르지 않게 한다 (멈춤이지 빚이 아니다).
+   */
+  h.scene.setClockOwner('week');
+  beginWeek();
+  let lastRaf = performance.now();
+  const rafLoop = (now: number): void => {
+    const dt = Math.min(250, now - lastRaf);
+    lastRaf = now;
+    flowTick(dt);
+    requestAnimationFrame(rafLoop);
+  };
+  requestAnimationFrame(rafLoop);
+
   Object.assign(h, {
     week,
     report,
     runWeek,
+    flow,
+    openWeekCards: nextWeekCards,
+    skipForward,
+    beginWeek,
     cards,
     cardView,
     staff,

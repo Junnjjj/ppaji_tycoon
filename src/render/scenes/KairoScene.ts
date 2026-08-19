@@ -52,8 +52,7 @@ import {
 } from '../../sim/kairo/walls.js';
 import { facilityDef, type PlacementGrid } from '../../sim/kairo/placement.js';
 import type { GuestStore, Guest } from '../../sim/kairo/guests.js';
-import type { PlaybackFrame } from '../../sim/kairo/week.js';
-import { busStateAt, BUS_DEFAULT } from '../../sim/kairo/bus.js';
+import { cssColorInt } from '../../ui/tokens.js';
 import {
   bakeGuestAtlas,
   bakeEmoteAtlas,
@@ -151,16 +150,11 @@ export class KairoScene extends Phaser.Scene {
   private animTick = 0;
   private simAcc = 0;
   /**
-   * 압축 연출 상태. 한 주를 0.6초에 계산해도 **3~5초는 보여준다** — 손님이 노는 광경이
-   * 이 게임 최대의 보상이라 리플레이로 격리하면 안 된다 (v4 결정).
+   * 낮밤 틴트 (K39). 압축 연출은 흐르는 낮으로 대체됐다 — 손님이 노는 광경이 이 게임
+   * 최대의 보상이라(v4), 리플레이 3.5초가 아니라 **기본 상태**로 만들었다.
+   * 하루 안의 시각은 렌더 전용이다 — sim 은 tick 만 안다 (불변식 1).
    */
-  private playback: {
-    frames: readonly PlaybackFrame[];
-    elapsed: number;
-    durationMs: number;
-    onDone: () => void;
-  } | null = null;
-  private playbackViews: Phaser.GameObjects.Image[] = [];
+  private dayTint: Phaser.GameObjects.Rectangle | null = null;
   private simTickCount = 0;
   /** 손님 시뮬용 RNG — 씬이 들고 있지만 시드는 주입된다 (결정론) */
   private rng: Rng;
@@ -934,6 +928,21 @@ export class KairoScene extends Phaser.Scene {
     this.opts.autoTick = on;
   }
 
+  /**
+   * 시계 주인 (K39). 'scene' = 장식용 유휴 시뮬(씬 자체 rng) · 'week' = 흐르는 낮
+   * (`week.step` 만이 시간을 민다). 흐름 모드에서 유휴 시뮬이 같이 돌면 헤드리스와
+   * 다른 세계가 된다.
+   */
+  private clockOwner: 'scene' | 'week' = 'scene';
+  setClockOwner(owner: 'scene' | 'week'): void {
+    this.clockOwner = owner;
+  }
+
+  /** 흐름 모드가 묻는다 — 검증 도구가 setAutoTick(false) 로 얼리면 흐름도 선다 */
+  get tickingEnabled(): boolean {
+    return this.opts.autoTick !== false;
+  }
+
   /** 검증 도구용 — 시설 이미지를 직접 본다 (앵커 좌표를 수치로 확인) */
   /**
    * 검증 도구용 — 지면 타일 그림 하나. **리프트가 실제로 걸렸는지**를 화면 y 로 잰다 (K37).
@@ -1637,28 +1646,12 @@ export class KairoScene extends Phaser.Scene {
   }
 
   override update(_time: number, delta: number): void {
-    // 압축 연출 중에는 실시간 시뮬을 멈춘다 — 둘이 동시에 돌면 결산과 화면이 어긋난다
-    if (this.playback) {
-      this.playback.elapsed += delta;
-      const t = Math.min(1, this.playback.elapsed / this.playback.durationMs);
-      const idx = Math.min(
-        this.playback.frames.length - 1,
-        Math.floor(t * this.playback.frames.length),
-      );
-      this.drawPlaybackFrame(this.playback.frames[idx]);
-      if (t >= 1) {
-        const done = this.playback.onDone;
-        this.playback = null;
-        this.clearPlayback();
-        done();
-      }
-      this.animTick++;
-      this.reportFrame();
-      return;
-    }
-
-    // 시뮬 — 고정 timestep 10Hz. 배속은 tick 수를 곱한다 (tick 크기가 아니다)
-    if (this.opts.autoTick !== false) {
+    /*
+     * 장식용 유휴 시뮬 — 씬 자체 rng 로 손님을 움직인다. **흐르는 낮에서는 끈다**
+     * (`autoTick: false`) — 주가 항상 진행 중이라 `week.step` 이 유일한 시계여야 하고,
+     * 여기서 한 번 더 돌리면 헤드리스와 다른 세계가 된다 (K39).
+     */
+    if (this.clockOwner === 'scene' && this.opts.autoTick !== false) {
       this.simAcc += delta;
       const MS_PER_TICK = 100;
       let steps = 0;
@@ -1676,76 +1669,40 @@ export class KairoScene extends Phaser.Scene {
     this.reportFrame();
   }
 
-  /** 압축 연출 시작. `durationMs` 동안 기록을 재생하고 끝나면 `onDone` */
-  playWeek(frames: readonly PlaybackFrame[], durationMs: number, onDone: () => void): void {
-    if (frames.length === 0) {
-      onDone();
+  /**
+   * 하루 안의 시각 표현 (K39) — 아침·저녁에 화면 전체를 살짝 물들인다.
+   *
+   * `frac` 는 하루 진행률 (0~1). `null` 이면 끈다 (주 경계·모달 게이트).
+   * 색은 `style.css` 토큰(`--day-dawn`/`--day-dusk`)에서 읽는다 — 색 소유권 규칙 (K34).
+   * `transform`/`opacity` 급의 값 변경만 하므로 reduced-motion 과 무관하다 (전환 없음).
+   */
+  setDayPhase(frac: number | null): void {
+    if (!this.dayTint) {
+      // 화면 좌표(스크롤 무시)에 깔리는 한 장 — 어떤 버퍼 크기도 덮게 크게 잡는다
+      this.dayTint = this.add.rectangle(0, 0, 8192, 8192, 0x000000, 0);
+      this.dayTint.setOrigin(0, 0);
+      this.dayTint.setScrollFactor(0);
+      this.dayTint.setDepth(10_000_000);
+    }
+    if (frac === null) {
+      this.dayTint.setVisible(false);
       return;
     }
-    // 실시간 손님 그림을 치운다 — 기록 재생과 겹치면 두 배로 보인다
-    for (const v of this.guestViews.values()) {
-      v.body.destroy();
-      v.face.destroy();
-      v.emote.destroy();
+    const dawn = cssColorInt('--day-dawn');
+    const dusk = cssColorInt('--day-dusk');
+    // 아침(0~0.15): 새벽빛이 걷힌다 · 낮: 없음 · 저녁(0.7~1): 땅거미가 깔린다
+    let color = 0;
+    let alpha = 0;
+    if (frac < 0.15) {
+      color = dawn;
+      alpha = 0.18 * (1 - frac / 0.15);
+    } else if (frac > 0.7) {
+      color = dusk;
+      alpha = 0.22 * ((frac - 0.7) / 0.3);
     }
-    this.guestViews.clear();
-    this.playback = { frames, elapsed: 0, durationMs, onDone };
-  }
-
-  get isPlaying(): boolean {
-    return this.playback !== null;
-  }
-
-  private clearPlayback(): void {
-    for (const img of this.playbackViews) img.destroy();
-    this.playbackViews = [];
-  }
-
-  private drawPlaybackFrame(frame: PlaybackFrame | undefined): void {
-    if (!frame) return;
-    /*
-     * 버스는 **프레임의 tick** 으로 다시 센다 (K36-B③).
-     *
-     * `BusRunner` 의 tick 은 주 계산 안에서만 흐른다 — 0.6초에 다 흐르고 멈춘다.
-     * 연출은 그 뒤 3.5초 동안 기록을 되감는 것이라, 러너를 읽으면 버스는 **주가 끝난
-     * 자리에 붙박여** 있고 손님만 움직인다. 내려서 걸어 들어오는 장면이 이 연출의
-     * 요점인데 정작 태워 온 버스가 안 움직이면 앞뒤가 안 맞는다.
-     *
-     * `busStateAt` 은 순수 함수라 기록에 버스 위치를 같이 담을 필요가 없다 —
-     * tick 하나면 같은 답이 나온다 (세이브도 안 커진다).
-     */
-    const bs = busStateAt(frame.tick, BUS_DEFAULT);
-    this.setBus(bs.visible ? bs.pos : null);
-    // 필요한 만큼만 이미지를 늘린다 (프레임마다 만들면 GC 가 튄다)
-    while (this.playbackViews.length < frame.guests.length) {
-      const img = this.add.image(0, 0, 'guest', bodyFrame(0, 'idle', '+Z', 0));
-      img.setOrigin(0.5, 1);
-      this.playbackViews.push(img);
-    }
-    for (let k = 0; k < this.playbackViews.length; k++) {
-      const img = this.playbackViews[k] as Phaser.GameObjects.Image;
-      const g = frame.guests[k];
-      if (!g) {
-        img.setVisible(false);
-        continue;
-      }
-      const pose = g.pose as Pose;
-      const sheet = POSE_SHEET[pose] ?? POSE_SHEET.idle;
-      const facing: Facing = sheet.facings.includes(g.facing as Facing)
-        ? (g.facing as Facing)
-        : (sheet.facings[0] as Facing);
-      const fr = sheet.frames <= 1 ? 0 : Math.floor(this.animTick / 6) % sheet.frames;
-      img.setTexture('guest', bodyFrame(g.palette, pose, facing, fr));
-      // 재생 프레임은 tick 스냅이라 보간이 없다 — 도착 칸의 단을 쓴다 (K37)
-      img.setPosition(
-        STEP_X * (g.i - g.j),
-        STEP_Y * (g.i + g.j + 1) + lift(this.opts.terrain.levelAt(g.i, g.j)),
-      );
-      // 실시간과 **같은 규칙** — 두 칸 중 가까운 쪽 (K37). 재생 프레임에 출발 칸을
-      // 같이 담는 이유가 이것이다 (`PlaybackFrame`). 세이브에는 안 들어간다
-      img.setDepth(spanDepthKey(g.fromI, g.fromJ, g.i, g.j) + Z_GUEST);
-      img.setVisible(true);
-    }
+    this.dayTint.setVisible(alpha > 0);
+    this.dayTint.fillColor = color;
+    this.dayTint.fillAlpha = alpha;
   }
 
   private reportFrame(): void {
