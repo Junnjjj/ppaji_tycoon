@@ -75,7 +75,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { KairoStaffPanel } = await import('./ui/kairo-staff.js');
   const course = await import('./sim/kairo/course.js');
   const { KairoCoursePanel } = await import('./ui/kairo-course.js');
-  const { KairoCatalog, activeComboIds } = await import('./ui/kairo-catalog.js');
+  const { KairoCatalog, activeComboIds, noteSeen } = await import('./ui/kairo-catalog.js');
   const { KairoShowcase } = await import('./ui/kairo-showcase.js');
   const { panelHost } = await import('./ui/panels.js');
   const { Rng: RngCls } = await import('./sim/rng.js');
@@ -1291,6 +1291,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   }
 
   const persist = (): void => {
+    /*
+     * ⚠ **기록이 먼저다** (P3-C). 지금 서 있는 시설·코스를 도감 누적 집합에 합친 뒤 저장한다 —
+     * 이 저장소에서 배치·철거·코스 편집은 전부 직후에 `persist()` 를 부르므로, 여기 한 줄이면
+     * "지었다가 곧바로 철거한" 시설도 도감에 남는다.
+     */
+    noteCatalog();
     saveKairoToStorage({
       seed: KAIRO_SEED,
       gate: GATE,
@@ -1315,6 +1321,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       reputation: reputation.toSnapshot(),
       gradeNo,
       discovered: [...discovered],
+      // 도감 발견은 한 번 보면 영구다 (P3-C) — optional 필드라 옛 세이브도 그대로 열린다
+      builtEver: [...builtEver],
+      equipEver: [...equipEver],
       resortName,
       priceMult,
       unlocks: unlocks.toSnapshot(),
@@ -1404,6 +1413,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       buildable: allFacilityDefs()
         .filter((d) => unlocks.isUnlocked(d.id, gr.grade))
         .map((d) => d.id),
+      /*
+       * 지금 등급 (P3-C) — 결산이 **정원이 찼는지**를 말할 수 있게. 위 `setMaxGuests` 가
+       * 이미 `admissionLimit` 을 부르지만 그 결과는 손님 상한으로만 흘러가고 UI 는
+       * 한 번도 읽지 않았다 — 그래서 후반 결산이 "정원이 꽉 찼는데 더 지으세요"를 했다.
+       */
+      grade: gr,
       // 위험 단계가 아니면 0 — 안전한데 사고가 나면 억울하다 (v4 결정)
       accidentChance: accidentChance(risk, mods.accidentMult),
       staff: {
@@ -1931,17 +1946,37 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 줄어들고, 그건 "발견"이 아니라 현황판이다.
    */
   const discovered = new Set<string>(saved?.discovered ?? []);
-  const noteDiscoveries = (): string[] => {
-    const fresh: string[] = [];
-    for (const id of activeComboIds(h.placement, h.guests.swimZones())) {
-      if (!discovered.has(id)) {
-        discovered.add(id);
-        fresh.push(id);
-      }
-    }
-    return fresh;
+  /*
+   * 도감의 나머지 두 탭도 **누적**이다 (P3-C).
+   *
+   * ⚠ 예전에는 도감이 `placement.all()`·`courses.all` 을 그 자리에서 훑었다 — 즉
+   * **지금 서 있어야** 발견이었다. 철거하면 발견이 사라졌고, 코스 장비 19종은 코스를
+   * 동시에 19개 놓을 수 없어 **완성이 구조적으로 불가능**했다. 도감은 현황판이 아니다.
+   *
+   * 옛 세이브(필드 없음)는 지금 배치에서 채워 시작한다 — 마이그레이션 없이 열린다.
+   */
+  const builtEver = new Set<string>(saved?.builtEver ?? []);
+  const equipEver = new Set<string>(saved?.equipEver ?? []);
+  /**
+   * 지금 있는 것을 발견 집합에 **합친다**. 빼지 않는다.
+   *
+   * `persist()` 첫 줄에서 부른다 — 이 저장소에서 배치·코스·철거는 전부 바뀐 직후
+   * `persist()` 를 부르므로, 기록을 놓치는 경로가 구조적으로 없다. 부르는 쪽마다
+   * 따로 붙이면 새 경로가 생길 때 조용히 빠진다.
+   */
+  const noteCatalog = (): void => {
+    noteSeen(builtEver, h.placement.all().map((it) => it.defId));
+    noteSeen(equipEver, courses.all.map((c) => c.equipId));
   };
+  /*
+   * ⚠ 돌려주는 것은 **이번에 처음 본 것**뿐이다 — 숨은 콤보의 첫 발견 보상(`discoverCash`)이
+   * 이 목록에만 걸려 있어서, 같은 콤보가 계속 발동해도 보상이 두 번 나가지 않는다.
+   * `discovered` 는 세이브에 담기므로 재부팅으로도 다시 받을 수 없다.
+   */
+  const noteDiscoveries = (): string[] =>
+    noteSeen(discovered, activeComboIds(h.placement, h.guests.swimZones()));
   noteDiscoveries();
+  noteCatalog();
 
   /**
    * 발동 중인 콤보의 서명 (K47-① 신규 발화 b).
@@ -1973,10 +2008,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
 
   const catalog = new KairoCatalog(document.body, {
-    placement: h.placement,
-    courses,
     grade: () => currentGrade().grade,
     discovered: () => discovered,
+    builtEver: () => builtEver,
+    equipEver: () => equipEver,
   });
 
   let resortName = saved?.resortName ?? '가평 빠지';

@@ -79,6 +79,19 @@ export interface KairoSaveV5 {
    * 아니라 현황판이다.
    */
   discovered?: string[];
+  /**
+   * 도감의 나머지 두 탭 (P3-C) — **한 번이라도 지은 시설 / 한 번이라도 써본 장비**.
+   *
+   * ⚠ 콤보와 달리 이 둘은 저장이 없었고, 그래서 판정이 **현재 배치**를 봤다: 철거하면
+   * 발견이 사라졌고 장비 19종은 코스를 동시에 19개 놓을 수 없어 완성이 구조적으로
+   * 불가능했다. 발견은 한 번 보면 영구다 — 그게 도감의 정의다.
+   *
+   * ⚠ **optional 이라 마이그레이션이 없다** (`visitorsTotal` 선례). 없으면 부팅 때
+   * 지금 배치·코스에서 다시 채워질 뿐이고, 버전을 올리면 이미 나간 v7 세이브가 전부
+   * 한 칸씩 밀린다.
+   */
+  builtEver?: string[];
+  equipEver?: string[];
   /** 리조트 이름 — 감상 화면에서 바꾼다. 내 리조트라는 감각의 절반은 이름이다 */
   resortName?: string;
   /** 요금 배율 (§15.9) — 안 저장하면 새로고침이 곧 정가 복귀다 */
@@ -321,6 +334,8 @@ export interface KairoSaveInput {
   courses?: CourseSnapshot;
   doors?: DoorSnapshot;
   discovered?: string[];
+  builtEver?: string[];
+  equipEver?: string[];
   resortName?: string;
   priceMult?: number;
   accidentIdle?: [number, number][];
@@ -356,6 +371,9 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.courses ? { courses: input.courses } : {}),
     ...(input.doors ? { doors: input.doors } : {}),
     ...(input.discovered ? { discovered: input.discovered } : {}),
+    // 도감 발견은 누적이다 (P3-C) — optional 이라 옛 세이브도 그대로 열린다
+    ...(input.builtEver ? { builtEver: input.builtEver } : {}),
+    ...(input.equipEver ? { equipEver: input.equipEver } : {}),
     ...(input.resortName ? { resortName: input.resortName } : {}),
     ...(input.priceMult !== undefined ? { priceMult: input.priceMult } : {}),
     ...(input.accidentIdle ? { accidentIdle: input.accidentIdle } : {}),
@@ -418,6 +436,8 @@ export interface KairoRestored {
   courses?: CourseSnapshot;
   doors?: DoorSnapshot;
   discovered?: string[];
+  builtEver?: string[];
+  equipEver?: string[];
   resortName?: string;
   priceMult?: number;
   accidentIdle?: [number, number][];
@@ -453,6 +473,8 @@ export function restoreKairo(raw: unknown): KairoRestored {
     ...(s.courses ? { courses: s.courses } : {}),
     ...(s.doors ? { doors: s.doors } : {}),
     ...(s.discovered ? { discovered: s.discovered } : {}),
+    ...(s.builtEver ? { builtEver: s.builtEver } : {}),
+    ...(s.equipEver ? { equipEver: s.equipEver } : {}),
     ...(s.resortName ? { resortName: s.resortName } : {}),
     ...(s.priceMult !== undefined ? { priceMult: s.priceMult } : {}),
     ...(s.accidentIdle ? { accidentIdle: s.accidentIdle } : {}),

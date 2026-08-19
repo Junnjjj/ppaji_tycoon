@@ -17,6 +17,39 @@
  *
  * 사람처럼 "결산의 병목을 보고 그 종류를 짓는" 봇이다. 무작위로 짓는 봇은 밸런스가
  * 나쁜지 봇이 멍청한지 구분이 안 된다.
+ *
+ * ## ⚠ 봇이 스스로 정한 상한 — **전수 목록** (K49)
+ *
+ * 이 파일의 숫자가 곧 헤드리스가 재는 세계의 크기다. P3-A 는 "등급이 안 오른다"가
+ * 게임이 아니라 봇의 정책 버그였음을 실증했고, `late-game-cap-proposal.md` §1.5.1 은
+ * "코스 4개 · 풀 32칸"이 게임이 아니라 **이 파일의 상수**였음을 실증했다. 같은 함정을
+ * 세 번째로 밟지 않도록, 남아 있는 상한을 여기 모아 두고 **각각 왜 남는지**를 적는다.
+ * 새 상한을 넣으면 이 목록에 줄을 더할 것. 못 적겠으면 그 상한은 넣지 말 것.
+ *
+ * **걷어낸 것** (K49 — 게임 값으로 옮겼다)
+ *   · `courses.count < 4`            → 잔교 수·겹침 판정 (`docksOf`/`validateCourse`)
+ *   · `POOL_TARGET_TILES = 32`       → `kairo-combos.json` 의 `areaScale` 포화점
+ *   · `growPool` "가장 큰 구역 하나" → 목표 미만인 구역들 + 두 번째 풀
+ *   · `ensureTicket` 반경 12         → 해금된 토지 전체
+ *   · `POOL_TILE_COST = 40_000`      → `kairo-ground.json`
+ *   · 선착장값 `772_800`             → `kairo-facilities.json`
+ *   · 코스 문턱 `800_000`            → 가장 싼 탈것 2대 (`MIN_COURSE_SPEND`)
+ *
+ * **남기는 것과 이유**
+ *
+ * | 상한 | 값 | 왜 남기나 |
+ * |---|---|---|
+ * | `BUILD_RESERVE` | 150만 | **사람의 모델.** 없으면 봇이 스스로 파산해 우리가 게임 대신 봇의 무모함을 잰다 (실측 4/16판) |
+ * | 주당 건설 | 3채 | **박자.** 한 주에 열 채를 놓는 사람은 없다. 후반엔 어차피 `capped` 가 예산을 0 으로 만든다 |
+ * | 주당 코스 | 1개 | 같은 박자. 상한이 아니라 속도다 |
+ * | 놀고 있는 잔교 | 2개 | 강이 다 찬 뒤에도 매주 잔교를 사는 최적화기가 되지 않게 (`ensureDock` 참고) |
+ * | 주당 개선 | 24회 | `cash/200만` 이 실제 문턱이고 24 는 **폭주 방지**다. 260주 판에서도 안 물린다 (개선 단계가 5.00 로 포화) |
+ * | `POOL_GROW_TILES` | 4칸/주 | **사람의 모델** — 풀을 한 번에 32칸 파는 사람은 없고, 예비비 때문에 승인도 안 된다 (실측) |
+ * | `COMBO_NUDGE` | 2칸 | 크게 잡으면 봇이 판 전체를 훑는 **최적화기**가 되어 게임이 아니라 탐색 폭을 잰다 |
+ * | 배치 시도 | 200회/`buildOne` | **비용.** 후보를 겨냥해서 뽑으므로 200 안에 들거나 아예 없거나다 |
+ * | 방 만들기 시도 | 60회 | **비용.** ①② 가 실패한 뒤의 마지막 수단이다 |
+ * | 매표소 포장 시도 | 256곳 | **비용** — `ensurePath` 가 후보마다 격자 전체를 BFS 한다 |
+ * | 선착장 자리 시도 | 400곳 | **비용** — `p.check` 가 물가·도달을 본다. 가까운 쪽부터 보므로 못 찾으면 근처가 찬 것 |
  */
 import { Rng } from '../src/sim/rng.js';
 import { KairoTerrain } from '../src/sim/kairo/terrain.js';
@@ -44,9 +77,11 @@ import {
   CourseStore,
   PRESETS,
   COURSE_EQUIPMENT,
-  defaultHandles,
+  suggestCourse,
   validateCourse,
   fitOf,
+  dockCandidates,
+  firstFreeDock,
 } from '../src/sim/kairo/course.js';
 import {
   questStatuses,
@@ -216,6 +251,13 @@ interface RunResult {
   staffWeeks: number;
   wagesByWeek: number[];
   courseCount: number;
+  /**
+   * 잔교 수 (K49) — **코스 개수의 진짜 상한**이다. 코스 수만 보면 "봇이 안 지은 것"과
+   * "게임이 안 열어 준 것"을 못 가른다. 잔교 = 4-연결 데크 무리 중 선착장이 붙은 것
+   * (`dockCandidates`, UI 와 같은 함수). `dockCount == courseCount` 면 잔교가 상한이고,
+   * 크면 겹침(`overlap`)·돈이 상한이다.
+   */
+  dockCount: number;
   /** 산(단≥1) 위에 놓인 시설 수와 전체 — 높이가 헤드리스에서도 쓰이는지 (K37) */
   onSlope: number;
   builtTotal: number;
@@ -336,6 +378,7 @@ function ensureRoom(
   }
 
   // ③ 이어 깔 수 없으면 새 자리에 한 덩어리
+  // 시도 60회는 **비용**이다 (K49 전수 목록) — ①② 가 다 실패한 뒤의 마지막 수단이다
   for (let attempt = 0; attempt < 60; attempt++) {
     const pw = need.w + 2;
     const ph = Math.max(3, need.h + 2);
@@ -535,35 +578,61 @@ function ensureTicket(
   const def = allFacilityDefs().find((d) => d.id === TICKET_DEF_ID);
   if (!def || def.cost > cash) return 0;
   const opts = { land };
-  for (let r = 1; r <= 12; r++) {
-    for (let dj = 0; dj <= r; dj++) {
-      for (const di of [-r, r, ...Array.from({ length: 2 * r - 1 }, (_, k) => k - r + 1)]) {
-        const i = GATE.i + di;
-        const j = GATE.j + dj;
-        if (Math.max(Math.abs(di), dj) !== r) continue;
-        if (!p.check(t, w, GATE, TICKET_DEF_ID, i, j, opts).ok) {
-          // 길만 없으면 깔고 다시 본다 (다른 시설과 같은 정책)
-          const paved = ensurePath(t, w, p, land, {
-            i,
-            j,
-            w: def.size[0] as number,
-            h: def.size[1] as number,
-          });
-          if (paved === 0) continue;
-          if (!p.check(t, w, GATE, TICKET_DEF_ID, i, j, opts).ok) continue;
-          p.place(t, w, GATE, TICKET_DEF_ID, i, j, opts);
-          return (def as unknown as { cost: number }).cost + paved;
-        }
-        p.place(t, w, GATE, TICKET_DEF_ID, i, j, opts);
-        return (def as unknown as { cost: number }).cost;
-      }
+  /*
+   * 후보는 **해금된 토지 전체**다 (K49). 예전엔 게이트에서 반경 12 였다 — 봇이 정한 값이고,
+   * 이 함수의 주석이 이미 그 대가를 실측으로 적어 두고 있었다: *"반경 12 안이 다 차서
+   * 새로 지을 자리도 없었다"* (24판 중 6판이 입장 0 으로 얼어붙음). 매표소를 못 세우면
+   * 판이 통째로 죽으므로, 여기서 상한을 두는 것은 밸런스가 아니라 **판을 죽이는 값**이다.
+   * 사람은 입구가 막히면 반경을 세지 않고 놓을 수 있는 데를 찾는다.
+   *
+   * 게이트에서 가까운 순 — 결정론 (불변식 2).
+   */
+  const spots: { i: number; j: number; d: number }[] = [];
+  for (let j = land.j0; j < land.j0 + land.h; j++) {
+    for (let i = land.i0; i < land.i0 + land.w; i++) {
+      if (i === GATE.i && j === GATE.j) continue;
+      spots.push({ i, j, d: Math.abs(i - GATE.i) + Math.abs(j - GATE.j) });
     }
+  }
+  spots.sort((a, b) => a.d - b.d || a.i - b.i || a.j - b.j);
+  // ① 그냥 되는 자리 — 판정만 하므로 토지 전체를 훑어도 싸다
+  for (const sp of spots) {
+    if (!p.check(t, w, GATE, TICKET_DEF_ID, sp.i, sp.j, opts).ok) continue;
+    p.place(t, w, GATE, TICKET_DEF_ID, sp.i, sp.j, opts);
+    return (def as unknown as { cost: number }).cost;
+  }
+  /*
+   * ② 길만 없는 자리 — 깔고 다시 본다 (다른 시설과 같은 정책).
+   *
+   * ⚠ 여기는 **가까운 곳만** 본다. `ensurePath` 는 후보 하나마다 격자 전체를 0-1 BFS 로
+   * 훑으므로 6천 칸을 다 돌면 한 주가 몇 초가 된다 — 남기는 상한이지만 이유는 밸런스가
+   * 아니라 **비용**이고, 매표소가 게이트에서 32칸 넘게 떨어질 이유도 없다 (정류장에서
+   * 다섯 칸 걸어 들어온다).
+   */
+  const PAVE_TRIES = 256;
+  for (const sp of spots.slice(0, PAVE_TRIES)) {
+    const paved = ensurePath(t, w, p, land, {
+      i: sp.i,
+      j: sp.j,
+      w: def.size[0] as number,
+      h: def.size[1] as number,
+    });
+    if (paved === 0) continue;
+    if (!p.check(t, w, GATE, TICKET_DEF_ID, sp.i, sp.j, opts).ok) continue;
+    p.place(t, w, GATE, TICKET_DEF_ID, sp.i, sp.j, opts);
+    return (def as unknown as { cost: number }).cost + paved;
   }
   return 0;
 }
 
-/** 수영장 붓값 — **칸당**. `kairo-ground.json` 의 pool_water `cost` 와 같아야 한다 */
-const POOL_TILE_COST = 40_000;
+/**
+ * 수영장 붓값 — **칸당**. 값을 여기 적지 않고 `kairo-ground.json` 에서 읽는다 (K49).
+ *
+ * ⚠ 예전엔 `40_000` 을 적어 두고 주석으로 "데이터와 같아야 한다"고만 했다. 그런 상수는
+ * 데이터가 움직이는 날 조용히 갈라진다 — 봇이 실제보다 싸게(또는 비싸게) 파는 세계를
+ * 재고, `npm run verify` 는 그대로 통과한다. 길값·실내 바닥값은 이미 이렇게 읽고 있었다.
+ */
+const POOL_TILE_COST = GROUND_KINDS.find((k) => k.id === 'pool_water')?.cost ?? 0;
 
 /**
  * 한 주에 넓히는 최대 칸 수. 4칸 = 16만 — 최소 규격 하나치다.
@@ -576,13 +645,31 @@ const POOL_TILE_COST = 40_000;
 const POOL_GROW_TILES = 4;
 
 /**
- * 봇이 목표하는 수영장 면적 — `kairo-combos.json` 의 `medium_pool_party`
- * `areaScale`(base 8 · cap 2) 상한 도달점 base × cap² = 32칸.
+ * 봇이 목표하는 **한 구역의** 면적 — 값을 적지 않고 `kairo-combos.json` 에서 유도한다 (K49).
  *
- * ⚠ 이 값이 곧 **헤드리스가 재는 면적 축의 폭**이다. 4칸(최소 규격)만 파면 면적 배율이
- * 영원히 1 이라, 면적 비례를 넣고도 밸런싱은 "상수 콤보 세계"를 잰다 (P1-A 착수 시 실측).
+ * zone 콤보의 면적 배율은 `clamp(sqrt(area / base), 1, cap)` 이므로 보상이 멈추는 지점은
+ * `base × cap²` 다. 게임이 면적에 주는 보상이 거기서 끝나므로, 사람이 **한 구역**을 그보다
+ * 더 파지 않는 지점도 거기다 (그 위는 칸당 4만원을 내고 아무것도 안 받는다).
+ *
+ * ⚠ 예전엔 `32` 를 적어 두고 주석으로만 "medium_pool_party 에서 왔다"고 했다. 두 가지가
+ * 잘못이었다:
+ *   · 데이터가 움직이면 조용히 갈라진다 (`POOL_TILE_COST` 와 같은 형태)
+ *   · 더 나쁘게, 그 32 가 **면적 축의 천장**이자 곧 "수영 구역 1개"의 천장이었다 —
+ *     `growPool` 이 가장 큰 구역 하나만 키웠으므로, 목표에 닿는 순간 수영 축 전체가
+ *     멈췄다. 상한 진단이 "허가 500칸 중 32칸만 쓴다"고 읽은 것이 바로 이 줄이다
+ *     (`docs/research/late-game-cap-proposal.md` §1.5.1).
+ *
+ * 지금 이 값은 **상한이 아니라 한 구역의 목표**다. 더 필요하면 사람은 잔디를 통째로 물로
+ * 칠하는 대신 **두 번째 풀을 판다** — zone 콤보도 구역마다 따로 발동한다 (`comboHits`).
  */
-const POOL_TARGET_TILES = 32;
+const POOL_TARGET_TILES = (() => {
+  let best = POOL_MIN_TILES;
+  for (const c of COMBOS) {
+    if (c.zone !== 'pool' || c.areaScale === undefined) continue;
+    best = Math.max(best, Math.ceil(c.areaScale.base * c.areaScale.cap ** 2));
+  }
+  return best;
+})();
 
 const POOL_DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]] as const;
 
@@ -603,13 +690,27 @@ function ensurePool(
   p: PlacementGrid,
   land: ReturnType<typeof landRect>,
   budget: number,
+  /**
+   * **놀거리가 병목인가** (K49). 있는 풀이 전부 목표 면적에 닿았을 때 두 번째 풀을
+   * 팔지 말지의 근거다.
+   *
+   * ⚠ 새 상수를 안 만든다 — 수영 구역의 수요 축은 `play` 이고(`guests.ts` `pickTarget`),
+   * `play` 가 병목인지는 결산이 이미 화면에 말해 준다. 봇이 짓는 종류를 고를 때 쓰는
+   * 신호와 **같은 신호**다. 이게 없으면 두 가지 중 하나가 된다: 목표 면적에서 수영 축이
+   * 영원히 멈추거나(예전 동작), 병목과 무관하게 잔디를 계속 물로 칠하는 최적화기가 되거나.
+   */
+  wantMore: boolean,
 ): number {
   const stand = (i: number, j: number): boolean => t.isGuestWalkable(i, j);
   const afford = Math.floor(Math.max(0, budget) / POOL_TILE_COST);
   if (afford <= 0) return 0;
   const zones = poolZones(t, stand);
-  if (zones.length > 0)
-    return growPool(t, walls, p, land, zones, Math.min(afford, POOL_GROW_TILES));
+  if (zones.length > 0) {
+    const grown = growPool(t, walls, p, land, zones, Math.min(afford, POOL_GROW_TILES));
+    if (grown > 0) return grown;
+    // 있는 것이 전부 목표 면적이다 — 놀거리가 병목일 때만 하나 더 판다
+    if (!wantMore) return 0;
+  }
   if (afford < POOL_MIN_TILES) return 0;
   const fits = (i0: number, j0: number): boolean => {
     if (i0 < land.i0 || j0 < land.j0 || i0 + 2 > land.i0 + land.w || j0 + 2 > land.j0 + land.h)
@@ -621,6 +722,11 @@ function ensurePool(
         if (t.kindAt(i, j) !== 'lawn' || p.handleAt(i, j) !== 0) return false;
         for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
           if (t.isGuestWalkable(i + di, j + dj)) touchesPath = true;
+          /*
+           * 있는 풀에 **안 붙인다** (K49). 붙이면 한 구역으로 합쳐져 목표 면적을 넘고,
+           * "두 번째 풀"이 아니라 "첫 풀을 더 판 것"이 된다 — zone 콤보도 하나로 센다.
+           */
+          if (t.kindAt(i + di, j + dj) === POOL_KIND) return false;
         }
       }
     }
@@ -675,8 +781,21 @@ function growPool(
   zones: ReturnType<typeof poolZones>,
   maxTiles: number,
 ): number {
-  // 가장 큰 구역 하나만 키운다 — 여러 개를 조금씩 키우면 어느 것도 상한에 못 닿는다
-  const zone = zones.reduce((a, b) => (b.area > a.area ? b : a));
+  /*
+   * **목표에 못 미친 구역 중 가장 큰 것**을 키운다. 여러 개를 조금씩 키우면 어느 것도
+   * 면적 상한에 못 닿는다 — 그 이유로 예전엔 "가장 큰 구역 하나"만 봤다.
+   *
+   * ⚠ 그런데 그러면 그 하나가 목표에 닿는 순간 **수영 축 전체가 영원히 멈춘다** (K49).
+   * 둘째 풀을 파도 4칸에서 안 자라니 파는 의미가 없었고, 그래서 봇의 수영 구역은
+   * 26주에도 260주에도 "1개 · 32칸" 이었다. 목표 미만인 것 중 가장 큰 것을 고르면
+   * 원래 의도(하나씩 상한까지)는 지키면서 구역이 여럿일 때도 순서대로 자란다.
+   */
+  let zone: (typeof zones)[number] | null = null;
+  for (const z of zones) {
+    if (z.area >= POOL_TARGET_TILES) continue;
+    if (zone === null || z.area > zone.area) zone = z;
+  }
+  if (zone === null) return 0;
   const room = POOL_TARGET_TILES - zone.area;
   if (room <= 0) return 0;
   const level = t.levelAt(zone.tiles[0]!.x, zone.tiles[0]!.y);
@@ -718,6 +837,123 @@ function growPool(
     return 0;
   }
   return done.length * POOL_TILE_COST;
+}
+
+/** 선착장 시설의 값 — **데이터가 갖는다**. 예전엔 `772_800` 이 러너에 박혀 있었다 */
+const DOCK_DEF_ID = 'dock';
+
+/**
+ * 코스 하나에 드는 최소 지출 — 가장 싼 탈것 2대. 예전 문턱 `800_000` 을 대신한다
+ * (그 값은 어디서 왔는지 아무도 안 적어 두었고, 장비값이 움직이면 갈라진다).
+ * 선착장값은 **빈 잔교가 없을 때만** 드므로 여기 안 넣는다 — `ensureDock` 이 따로 본다.
+ */
+const MIN_COURSE_SPEND = Math.min(...COURSE_EQUIPMENT.map((e) => e.vehicleCost)) * 2;
+
+/**
+ * 코스가 시작할 **잔교 목록** — 게임(`main.ts`)과 **같은 물음**이다 (K49).
+ *
+ * `dockCandidates` 의 규칙은 딱 하나다: 물 위/밟고 지나가는 시설의 **앵커 칸**을 4-연결로
+ * 묶어 무리(=잔교)를 만들고, 그 무리에 `dock` 시설이 붙어 있으면 후보가 된다.
+ * **무리 하나가 후보 하나**이므로 같은 잔교에 선착장을 열 개 놓아도 코스는 하나뿐이다.
+ *
+ * ⚠ 부르는 쪽의 필터를 `main.ts:1884` 와 **글자 그대로** 맞춘다 (앵커 칸 하나만 넘긴다 —
+ * 발자국 전체를 넘기면 봇이 UI 와 다른 후보를 보게 되고, 그게 이 파일이 격자·토지·해금에서
+ * 이미 세 번 겪은 divergence 다).
+ */
+function docksOf(p: PlacementGrid): ReturnType<typeof dockCandidates> {
+  return dockCandidates(
+    p
+      .all()
+      .filter((it) => {
+        const def = facilityDef(it.defId);
+        return def?.layer === 'water' || def?.walkOn === true;
+      })
+      .map((it) => ({ x: it.i, y: it.j })),
+    { x: GATE.i, y: GATE.j },
+    p.all().filter((it) => it.defId === DOCK_DEF_ID).map((it) => ({ x: it.i, y: it.j })),
+  );
+}
+
+/**
+ * 코스를 하나 더 놓으려면 **잔교를 하나 더 짓는다** (K49).
+ *
+ * ⚠ 예전 봇은 잔교를 **안 지었다.** 물 타일을 성큼성큼 훑어 "여기가 선착장이다" 하고
+ * 값만 냈다 (러너의 옛 주석: *"물자리를 추상화하므로 배치는 생략하고 값만 낸다"*).
+ * 그래서 코스 개수의 진짜 상한 — 게임 규칙 — 이 **한 번도 안 재졌고**, 그 자리를
+ * `courses.count < 4` 라는 봇의 천장이 대신했다 (`late-game-cap-proposal.md` §1.5.1).
+ *
+ * 새 후보를 만들려면 **기존 데크 무리에 안 붙은** 물칸이어야 한다 — 붙이면 같은 무리가
+ * 되어 후보 수가 그대로다. 그것이 이 축의 실제 상한이다: 물가 길이 · 토지 · 코스끼리의
+ * 겹침(`validateCourse` 의 `overlap`) · 돈.
+ *
+ * ⚠ **코스가 들어가는 자리에만 놓는다** (`plan`). 게이트에서 가까운 순으로 아무 물칸에나
+ * 놓으면 잔교가 입구 앞에 뭉치고, 거기서 뻗는 코스는 전부 앞 코스와 겹쳐 거절된다 —
+ * 그러면 "코스가 2개에서 안 는다"가 게임의 답이 아니라 **봇의 스캔 순서**의 답이 된다
+ * (걷어낸 `courses.count < 4` 와 정확히 같은 형태다). 사람은 코스가 들어가는 데를 보고
+ * 잔교를 놓는다.
+ *
+ * 게이트에서 가까운 순 결정적 스캔 (불변식 2). rng 를 안 쓴다.
+ */
+function ensureDock(
+  t: KairoTerrain,
+  w: WallGrid,
+  p: PlacementGrid,
+  land: ReturnType<typeof landRect>,
+  cash: number,
+  permitArea: number,
+  /** 이 잔교 끝에서 코스가 성립하나 — 성립하면 그 핸들 (안 되면 null) */
+  plan: (tip: { x: number; y: number }, dir: { x: number; y: number }) => { x: number; y: number }[] | null,
+): { spent: number; tip: { x: number; y: number }; handles: { x: number; y: number }[] } | null {
+  const def = allFacilityDefs().find((d) => d.id === DOCK_DEF_ID);
+  if (!def || def.cost > cash) return null;
+  const opts = { land, permitArea };
+  /** 이미 잔교인 칸 — 여기에 4-이웃으로 붙으면 같은 무리가 된다 */
+  const deck = new Set<number>();
+  for (const it of p.all()) {
+    const d = facilityDef(it.defId);
+    if (d?.layer === 'water' || d?.walkOn === true) deck.add(it.j * 4096 + it.i);
+  }
+  const spots: { i: number; j: number; d: number }[] = [];
+  for (let j = land.j0; j < land.j0 + land.h; j++) {
+    for (let i = land.i0; i < land.i0 + land.w; i++) {
+      if (!t.isWater(i, j)) continue;
+      let touchesDeck = false;
+      for (const [di, dj] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
+        if (deck.has((j + dj) * 4096 + (i + di))) touchesDeck = true;
+      }
+      if (touchesDeck) continue; // 붙이면 후보가 안 는다
+      spots.push({ i, j, d: Math.abs(i - GATE.i) + Math.abs(j - GATE.j) });
+    }
+  }
+  spots.sort((a, b) => a.d - b.d || a.i - b.i || a.j - b.j);
+  /*
+   * ⚠ 시도 수에 상한을 둔다 — **밸런스가 아니라 비용**이다. `p.check` 가 물가 판정과
+   * 도달 검사를 하므로 물칸 수천 개를 매주 다 두드리면 판이 몇 배로 느려진다.
+   * 가까운 쪽부터 보므로 여기서 못 찾으면 게이트 근처 물가가 다 찬 것이고,
+   * 그때는 다음 주에 (토지가 넓어진 뒤에) 다시 본다.
+   */
+  const TRIES = 400;
+  for (const sp of spots.slice(0, TRIES)) {
+    if (!p.check(t, w, GATE, DOCK_DEF_ID, sp.i, sp.j, opts).ok) continue;
+    /*
+     * 한 칸짜리 잔교의 방향은 **게이트 반대쪽**이다 — `dockCandidates` 가 그렇게 낸다
+     * ("한 칸짜리 잔교는 방향을 알 수 없어 게이트 반대쪽을 쓴다"). 여기서 같은 규칙을
+     * 쓰지 않으면 놓고 나서 후보로 잡힐 때 방향이 달라져 판정이 갈린다.
+     */
+    const tip = { x: sp.i, y: sp.j };
+    const raw = { x: tip.x - GATE.i, y: tip.y - GATE.j };
+    const dir = raw.x === 0 && raw.y === 0 ? { x: 0, y: 1 } : raw;
+    const handles = plan(tip, dir);
+    if (handles === null) continue;
+    const done = p.place(t, w, GATE, DOCK_DEF_ID, sp.i, sp.j, opts);
+    if (!done.ok || !done.placed) continue;
+    if (!ticketsReachable(t, w, p)) {
+      p.remove(done.placed.handle);
+      continue;
+    }
+    return { spent: (def as unknown as { cost: number }).cost, tip, handles };
+  }
+  return null;
 }
 
 /**
@@ -968,6 +1204,8 @@ function buildOne(
       spots.sort((a, b) => a.d - b.d || a.i - b.i || a.j - b.j);
       for (const sp of spots) aim.push([sp.i, sp.j]);
     }
+    // 시도 200회는 **비용**이다 (K49 전수 목록) — 실내·물 위는 후보를 겨냥해서 뽑으므로
+    // 200 안에 들거나 아예 자리가 없거나다 (`aim.length` 로 미리 끊는다)
     for (let attempt = 0; attempt < 200; attempt++) {
       /*
        * ⚠ **게이트 근처부터 짓는다** (K36).
@@ -1176,6 +1414,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         if (t.isIndoor(i, j) && p.handleAt(i, j) === 0) freeIndoor++;
       }
     }
+    // 빈 실내 칸이 8 미만이면 미리 넓힌다 — 8 은 실내 시설 최대 발자국(2×2=4)의 두 배다
     if (freeIndoor < 8) {
       const grade0 = GRADES[gradeNo - 1] ?? GRADES[0]!;
       cash -= ensureRoom(t, w, p, landRect(grade0), rng, { w: 4, h: 1 });
@@ -1233,6 +1472,8 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         p,
         landRect(GRADES[gradeNo - 1] ?? GRADES[0]!),
         cash - BUILD_RESERVE,
+        // 놀거리가 병목이면 두 번째 풀까지 (K49) — 결산이 이미 화면에 말하는 신호다
+        last?.bottleneck?.need === 'play',
       );
       if (spent > 0) {
         g.invalidate();
@@ -1271,6 +1512,12 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
      * (게임 쪽에도 이 사실을 알리는 표시가 필요하다 — 결산 병목 줄에 넣었다.)
      */
     const gradeNow = nextGrade(gradeNo, reputation.value);
+    /*
+     * `1.5` 는 게임의 값이다 (`admissionLimit` 의 `공급 × 1.5`). `1.3` 은 **여유**로,
+     * 상한에 닿자마자 끊지 않고 조금 넘겨서 짓게 한다 — 정확히 상한에서 끊으면 개선으로
+     * 정원이 조금만 늘어도 매주 짓다 말다를 반복한다 (히스테리시스). 봇의 값이지만
+     * 천장이 아니라 **떨림 방지**다.
+     */
     const capped = p.totalCapacity() * 1.5 > gradeNow.maxGuests * 1.3;
     if (capped) weekBudget = 0;
 
@@ -1278,6 +1525,11 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
      * 이번 주에 한 채라도 지었나 — **개선의 방아쇠**다 (아래 § 참고).
      */
     let builtAny = false;
+    /*
+     * 한 주에 **3채까지** — 천장이 아니라 **박자**다 (K49 전수 목록). 한 주에 열 채를
+     * 놓는 사람은 없다. 후반에는 어차피 `capped` 가 `weekBudget` 을 0 으로 만들므로
+     * 이 숫자가 "지을 게 없다"의 원인이 되는 구간은 없다 (실측: 상한 도달 주에 건설 0원).
+     */
     for (let b = 0; b < 3; b++) {
       /*
        * 예비비를 남긴다. **이게 없으면 봇이 스스로 파산하고, 그러면 우리는 게임이 아니라
@@ -1358,6 +1610,12 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
        *
        * 사람은 지을 게 없으면 있는 것을 고친다. 돈이 많을수록 더 고친다.
        * 현금이 예비비 수준이면 3회 — 예전과 같다.
+       */
+      /*
+       * ⚠ `24` 는 폭주 방지이지 후반의 천장이 아니다 (K49 전수 목록). 실제 문턱은
+       * `현금/200만` 과 `upBudget` 이고, 260주 판에서도 개선 단계가 5.00 로 포화하므로
+       * 이 상한에 물린 적이 없다. 물리기 시작하면(= 개선이 후반의 유일한 배수구가 아니게
+       * 되면) 그건 이 숫자가 아니라 게임 쪽을 봐야 한다는 신호다.
        */
       const rounds = Math.max(3, Math.min(24, Math.floor((cash - BUILD_RESERVE) / 2_000_000)));
       /*
@@ -1512,56 +1770,120 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
      * 사람의 최적 플레이는 아니다. 목적은 "직원이 있는 상태의 경제"를 재는 것이다.
      */
     /*
-     * 코스 정책: **여유가 있으면 한 판에 서너 개까지.** 형태는 그 장비에 ◎ 인 것을 고른다
+     * 코스 정책: **빈 잔교가 있으면 한 주에 하나까지.** 형태는 그 장비에 ◎ 인 것을 고른다
      * (§7.8 이 요구하는 학습을 봇도 흉내낸다 — 아무 형태나 고르면 적합도가 경제에
      * 반영되지 않아 "적합도가 있어도 없어도 같다"는 잘못된 결론이 나온다).
+     *
+     * ⚠ **개수 상한을 봇이 정하지 않는다** (K49). 예전엔 `courses.count < 4` 였고,
+     * 그래서 "프리셋 6 × 장비 19 = 114 조합 중 4를 본다"는 게임에 대한 진술이 아니라
+     * **이 줄에 대한 진술**이었다 (`late-game-cap-proposal.md` §1.5.1). 지금은 게임이
+     * 정한다:
+     *   · **잔교 하나에 코스 하나** (`dock-taken`) — 잔교는 4-연결 데크 무리다
+     *   · 코스끼리 3칸 이상 (`overlap`)
+     *   · 새 잔교는 기존 데크에 안 붙은 물칸에만 (`ensureDock`) — 물가 길이가 상한이다
+     *   · 돈 (선착장값 + 탈것 2대)
+     * "한 주에 하나"만 봇의 값인데, 그건 천장이 아니라 **박자**다 — 건설이 주 3채인 것과
+     * 같은 종류의 절제이고, 한 주에 열 개를 놓는 사람은 없다.
      */
-    if (courses.count < 4 && cash - BUILD_RESERVE > 800_000) {
+    if (cash - BUILD_RESERVE > MIN_COURSE_SPEND) {
+      const land = landRect(gr);
       const affordable = COURSE_EQUIPMENT.filter(
         (e) => e.vehicleCost * 2 <= cash - BUILD_RESERVE,
       );
       if (affordable.length > 0) {
         const eq = affordable[Math.floor(courseRng.next() * affordable.length)] as
           (typeof COURSE_EQUIPMENT)[number];
-        const best = PRESETS.filter((pr) => fitOf(eq.id, pr.id) === 'best' && pr.grade <= gr.grade);
-        const pick = (best.length > 0 ? best : PRESETS.filter((pr) => pr.grade <= gr.grade))[0];
+        /*
+         * ⚠ 대안에서 **못 타는 조합을 뺀다** (`fitOf === 'no'` → `blocked-combo`).
+         * 예전 봇은 ◎ 가 없으면 등급만 보고 첫 프리셋을 골랐고, 그게 그 장비로는 못 타는
+         * 형태이면 판정이 통째로 거절했다. 옛 봇에서는 잔교 판정(`dock-taken`)이 먼저
+         * 걸려 이 실패가 안 보였을 뿐이다 — 사람은 시트에서 ✕ 를 보고 안 고른다.
+         */
+        const rideable = PRESETS.filter(
+          (pr) => pr.grade <= gr.grade && fitOf(eq.id, pr.id) !== 'no',
+        );
+        const best = rideable.filter((pr) => fitOf(eq.id, pr.id) === 'best');
+        const pick = (best.length > 0 ? best : rideable)[0];
         if (pick) {
-          // 물가를 찾아 선착장으로 삼는다
-          let dock: { x: number; y: number } | null = null;
-          let handles: { x: number; y: number }[] = [];
-          /*
-           * ⚠ **코스마다 다른 물자리를 쓴다** (K37). 예전엔 "첫 물 타일" 하나만 봤고,
-           * 판정도 기존 코스를 안 봐서 넷이 같은 좌표에 쌓였다. 겹침을 막은 지금
-           * 봇이 한 자리만 보면 두 번째부터 전부 거절되어 헤드리스가 실제 판과 갈라진다.
+          /**
+           * 이 잔교 끝에서 코스가 성립하나 — **UI 와 같은 제안기**로 잰다
+           * (`suggestCourse`, span 8 — `ui/kairo-course.ts:300`).
            *
-           * 가장자리는 피한다 — 판정이 격자 밖을 물로 안 세므로 억울하게 좁아진다.
-           * 성큼성큼(`STRIDE`) 훑는 이유는 비용이다: 후보마다 판정이 수면을 세고 기존
-           * 코스를 샘플링하므로 칸마다 부르면 주당 수백만 번이 된다.
+           * ⚠ 옛 봇은 `defaultHandles` 를 직접 불러 기본 자리 **하나**만 봤다. 그런데
+           * 겹침(`overlap`)을 푸는 장치가 바로 이 함수의 **옆으로 밀기**다 —
+           * 플레이어에게는 있고 봇에는 없었으니, 헤드리스가 잰 코스 상한은 게임의 상한이
+           * 아니라 "밀기를 안 쓴 봇"의 상한이었다.
            */
-          const STRIDE = 4;
-          for (let j = 0; j < GRID_H && !dock; j += STRIDE) {
-            for (let i = 6; i < GRID_W - 6; i += STRIDE) {
-              if (!t.isWater(i, j)) continue;
-              const at = { x: i, y: j };
-              const hs = defaultHandles(pick, at, { x: 0, y: 1 }, 6);
-              const v = validateCourse(t, hs, at, pick, eq.id, gr.grade, courses.all);
-              if (!v.ok) {
-                if (courseFail === '') courseFail = v.issues.join(',') + ' @' + i + ',' + j;
-                continue;
-              }
-              dock = at;
-              handles = hs;
-              break;
+          const plan = (
+            tip: { x: number; y: number },
+            dir: { x: number; y: number },
+          ): { x: number; y: number }[] | null => {
+            const sug = suggestCourse(pick, [{ tip, dir, tiles: 1 }], courses.all, {
+              span: 8,
+              dockIndex: 0,
+              pinned: true,
+            });
+            const v = validateCourse(t, sug.handles, tip, pick, eq.id, gr.grade, courses.all);
+            if (v.ok) return sug.handles;
+            if (courseFail === '') courseFail = v.issues.join(',') + ' @' + tip.x + ',' + tip.y;
+            return null;
+          };
+
+          const docks = docksOf(p);
+          let at: { tip: { x: number; y: number }; handles: { x: number; y: number }[] } | null =
+            null;
+          // ① 이미 있는 **빈 잔교** 부터 (게이트에서 가까운 순)
+          for (const d of docks) {
+            if (firstFreeDock([d], courses.all) < 0) continue; // 이미 쓰는 잔교
+            const hs = plan(d.tip, d.dir);
+            if (hs === null) continue;
+            at = { tip: d.tip, handles: hs };
+            break;
+          }
+          /*
+           * ② 없으면 **코스가 들어가는 자리에 잔교를 새로 놓는다.**
+           *
+           * ⚠ 문턱은 "놀고 있는 잔교가 2개 미만"이다. `plan` 이 이미 걸러 주므로 놀고 있는
+           * 잔교가 쌓이지는 않지만, 값을 치른 뒤 탈것을 못 사는 주가 있을 수 있다.
+           * 상한이 아예 없으면 강이 다 찬 뒤에도 매주 잔교를 사는 최적화기가 된다 —
+           * 사람은 두 번 놔 보고 안 되면 그만한다. 이것이 이 절에 남은 유일한 봇의 값이다.
+           */
+          if (
+            at === null &&
+            docks.filter((d) => firstFreeDock([d], courses.all) >= 0).length < 2
+          ) {
+            const made = ensureDock(
+              t,
+              w,
+              p,
+              land,
+              cash - BUILD_RESERVE - eq.vehicleCost * 2,
+              gr.permitArea,
+              plan,
+            );
+            if (made !== null) {
+              cash -= made.spent;
+              /*
+               * 선착장은 **격자에 놓는 시설**이다 — 매표소와 같은 줄에 센다 (K49).
+               * 안 세면 "건설 0원인 주"가 실제보다 많아진다: 옛 봇은 잔교를 아예 안 지어서
+               * 이 구멍이 안 보였는데, 후반 진단의 핵심 지표가 바로 그 줄이다.
+               * (탈것값은 안 센다 — 그건 장비 구입이지 건설이 아니다.)
+               */
+              buildSpend += made.spent;
+              g.invalidate();
+              at = { tip: made.tip, handles: made.handles };
             }
           }
-          if (dock) {
-            /*
-             * 선착장(dock) 시설값도 치른다 (K45) — 실제 규칙은 "선착장이 붙은 잔교에서만
-             * 코스 시작"인데, 봇은 물자리를 추상화하므로 배치는 생략하고 값만 낸다.
-             * 값마저 빼면 헤드리스가 실제보다 코스를 싸게 얻는다.
-             */
-            cash -= eq.vehicleCost * 2 + 772_800;
-            courses.add({ presetId: pick.id, equipId: eq.id, vehicles: 2, dock, handles });
+          if (at !== null) {
+            cash -= eq.vehicleCost * 2;
+            courses.add({
+              presetId: pick.id,
+              equipId: eq.id,
+              // 대수는 2 로 고정 — 대수까지 봇이 고르면 밸런싱이 봇의 최적화를 잰다
+              vehicles: 2,
+              dock: at.tip,
+              handles: at.handles,
+            });
           }
         }
       }
@@ -1571,6 +1893,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     const staffSeasonMult = season === 'summer' ? 1 : season === 'winter' ? 0.5 : 0.75;
     for (const role of STAFF_ROLES) {
       const need = Math.ceil(neededFor(role, p) * staffSeasonMult);
+      // 8주치 인건비를 낼 수 있을 만큼만 뽑는다 — 사람의 "두 달은 버틸 만큼" (봇의 값)
       const canPay = Math.floor(Math.max(0, cash - BUILD_RESERVE) / (role.wage * 8));
       staff.set(role.id, Math.min(need, Math.max(0, canPay)));
     }
@@ -1769,6 +2092,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     staffWeeks,
     wagesByWeek,
     courseCount: courses.count,
+    dockCount: docksOf(p).length,
     /*
      * ⚠ 산 위에 몇 개 놓였나 (K37). 0 이면 **높이가 헤드리스에서 죽은 것**이다 —
      * 실제 판에는 테라스가 있는데 봇이 안 쓰면 밸런싱이 다른 세계를 잰다. K36 에서
@@ -2034,8 +2358,17 @@ function main(): void {
         (slope.max === 0 ? '  ⚠ 높이가 헤드리스에서 안 쓰인다 — 실제 판과 갈라진다' : ''),
     );
   }
-  console.log(`코스 수 중앙값: ${stats(runs.map((r) => r.courseCount)).med}개` +
-    (runs[0]?.courseFail ? ` (막힌 사유: ${runs[0].courseFail})` : ''));
+  /*
+   * 코스는 **잔교와 함께** 찍는다 (K49). 코스 수만 보면 "봇이 천장을 갖고 있다"와
+   * "게임이 안 열어 준다"가 같은 숫자로 보인다 — 옛 러너가 `courses.count < 4` 로
+   * 4를 찍는 동안 이 표는 그것을 게임의 값으로 보이게 했다.
+   */
+  console.log(
+    `코스 수 중앙값: ${stats(runs.map((r) => r.courseCount)).med}개 / 잔교 ` +
+      `${stats(runs.map((r) => r.dockCount)).med}개 (최대 ${stats(runs.map((r) => r.courseCount)).max}/` +
+      `${stats(runs.map((r) => r.dockCount)).max})` +
+      (runs[0]?.courseFail ? ` (막힌 사유: ${runs[0].courseFail})` : ''),
+  );
   const cs = stats(runs.map((r) => r.cardsSeen));
   const csp = stats(runs.map((r) => r.cardSpend));
   console.log(

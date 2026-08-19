@@ -15,6 +15,7 @@ import {
   type Season,
   type NeedKind,
 } from './week.js';
+import { GRADES, admissionLimit } from './progress.js';
 
 const GATE = { i: 0, j: 0 };
 
@@ -249,6 +250,73 @@ describe('병목은 하나도 없는 종류를 가리킬 수 있다 (P3-B)', () 
     const rep = r.run(new Rng(15), { buildable: ['snackbar', 'sauna'] });
     expect(rep.bottleneck!.missing).toBe(false);
     expect(rep.bottleneck!.need).toBe('food');
+  });
+});
+
+/**
+ * 결산이 입장 상한을 안다 (P3-C).
+ *
+ * 입장은 `min(등급 maxGuests, 공급×1.5)` 다. 공급×1.5 가 등급 천장을 넘으면 시설을 더 지어도
+ * 손님은 한 명도 안 늘고 유지비만 는다 — 그런데 병목은 수요/공급만 봐서 그 구간에서도
+ * "○○이 부족합니다"를 계속 말했다. 봇은 `capped` 로 이 상태를 이미 알았고 **게임 UI 만
+ * 몰랐다** (`docs/research/late-game-cap-proposal.md` §1.7).
+ *
+ * ⚠ 아래 두 it 이 **서로의 음성 대조군**이다. 하나만 두면 "언제나 true 를 내는 판정"도 통과한다.
+ */
+describe('결산이 정원이 찼는지 안다 (P3-C)', () => {
+  // 1등급 = maxGuests 40. 공급×1.5 ≥ 40 이면 상한에 걸린다 → 정원 27 이상
+  const grade1 = GRADES[0]!;
+
+  it('공급이 등급 천장을 넘으면 capped 다 — 지어도 한 명도 더 안 들어온다', () => {
+    /*
+     * 정원을 상한 위로 올린다. 시설 종류가 아니라 **정원 합**이 문제이므로 무엇을 놓든
+     * 상관없다 — 실제로 봇의 후반 판이 이 상태다 (시설 75종 한 채씩 = 정원 185 > 40).
+     */
+    const { p, r } = world(40, [
+      ['pool_warm', 2, 2],
+      ['pool_warm', 8, 2],
+      ['pool_warm', 14, 2],
+      ['pool_lazy', 20, 2],
+      ['pool_kids', 2, 10],
+      ['bbq_zone', 8, 10],
+      ['playground', 14, 10],
+    ]);
+    expect(Math.ceil(p.totalCapacity() * 1.5)).toBeGreaterThanOrEqual(grade1.maxGuests);
+    const rep = r.run(new Rng(21), { grade: grade1 });
+    expect(rep.admissionCap).not.toBeNull();
+    expect(rep.admissionCap!.capped).toBe(true);
+    expect(rep.admissionCap!.gradeMax).toBe(grade1.maxGuests);
+    // 상한에 걸렸으니 적용된 상한이 곧 등급 천장이다
+    expect(rep.admissionCap!.limit).toBe(grade1.maxGuests);
+  });
+
+  it('⚠ 음성 대조군 — 공급이 천장 아래면 capped 가 아니다 (예전 병목 문구가 맞다)', () => {
+    const { p, r } = world(24, [['snackbar', 4, 4]]);
+    expect(Math.ceil(p.totalCapacity() * 1.5)).toBeLessThan(grade1.maxGuests);
+    const rep = r.run(new Rng(21), { grade: grade1 });
+    expect(rep.admissionCap!.capped).toBe(false);
+    expect(rep.admissionCap!.limit).toBeLessThan(grade1.maxGuests);
+    // 이 구간에서는 병목이 여전히 처방이다
+    expect(rep.bottleneck).not.toBeNull();
+  });
+
+  it('등급을 안 주는 호출자(봇·옛 테스트)에게는 null — 기존 호출자 호환', () => {
+    const { r } = world(24, [['snackbar', 4, 4]]);
+    expect(r.run(new Rng(21)).admissionCap).toBeNull();
+  });
+
+  it('판정은 admissionLimit 하나가 소유한다 — 같은 답이 나와야 한다', () => {
+    /*
+     * ⚠ 규칙을 두 벌로 두면 결산만 옛 규칙으로 남는다. 여기서는 결산이 낸 `limit` 이
+     * 정본 함수의 값과 같은지를 직접 대조한다 — 갈라지면 이 줄이 먼저 빨개진다.
+     */
+    const { p, r } = world(40, [
+      ['pool_warm', 2, 2],
+      ['pool_kids', 8, 2],
+      ['snackbar', 2, 10],
+    ]);
+    const rep = r.run(new Rng(22), { grade: grade1 });
+    expect(rep.admissionCap!.limit).toBe(admissionLimit(grade1, p.totalCapacity()));
   });
 });
 

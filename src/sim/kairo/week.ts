@@ -5,6 +5,15 @@ import type { KairoTerrain } from './terrain.js';
 import { PlacementGrid, facilityDef, LEVEL_SATISFACTION } from './placement.js';
 import { GROUPS, needWeight, type GroupId } from './groups.js';
 import type { GuestStore } from './guests.js';
+/*
+ * ⚠ 입장 상한의 **정본은 `progress.ts` 의 `admissionLimit`** 이다. 여기서 규칙
+ * (`min(등급 상한, 공급×1.5)`)을 다시 쓰지 않는다 — 두 벌이 되면 결산이 "더 지으세요"라고
+ * 말한 뒤 실제로는 한 명도 안 들어오는 상태가 조용히 생긴다 (그게 지금 고치는 버그다).
+ *
+ * 순환 import 가 아니다: `progress.ts` 는 이 파일을 **type-only** 로만 가져가므로
+ * (`import type { NeedKind, WeekSummary }`) 컴파일에서 지워진다.
+ */
+import { admissionLimit, type GradeDef } from './progress.js';
 
 /**
  * 주 단위 루프와 결산 — 스펙 v2/v4, CLAUDE.md 의 핵심 루프.
@@ -262,6 +271,29 @@ export interface WeekReport extends WeekSummary {
     example: string | null;
   } | null;
   /**
+   * 입장 상한의 현재 상태 (P3-C). `opts.grade` 를 안 준 호출자에게는 null.
+   *
+   * ## 왜 결산이 이걸 알아야 하나
+   *
+   * 입장은 `min(등급 maxGuests, 공급×1.5)` 다. **공급×1.5 가 등급 상한을 넘는 순간
+   * 시설을 더 지어도 손님은 한 명도 안 늘고 유지비만 는다.** 그런데 병목(`bottleneck`)은
+   * 수요/공급만 보므로 그 구간에서도 "○○이 부족합니다 — 건설 ▸ ○○" 를 계속 말한다.
+   *
+   * ⚠ 헤드리스 봇은 이 상태를 이미 안다 (`capped`) — **게임 UI 만 몰랐다.** 즉 사람은
+   * 봇보다 **나쁜** 후반을 봤다: 결산이 계속 지으라고 하고, 지으면 손님은 안 늘고,
+   * 왜 그런지 화면이 말하지 않는다 (`docs/research/late-game-cap-proposal.md` §1.7).
+   *
+   * 판정은 `admissionLimit` **하나**에게 묻는다 — 규칙을 여기서 다시 쓰지 않는다.
+   */
+  admissionCap: {
+    /** 이번 주에 실제로 적용된 동시 손님 상한 */
+    limit: number;
+    /** 등급이 정한 천장 (`GradeDef.maxGuests`) */
+    gradeMax: number;
+    /** 공급을 아무리 늘려도 상한이 안 오르는 상태 = **정원이 찼다** */
+    capped: boolean;
+  } | null;
+  /**
    * 이번 주 사고 (§12.1). 없으면 null.
    *
    * 위험 단계에서만 일어난다 — 안전도가 78인데 RNG 로 폐쇄되면 억울하다는 v4 결정.
@@ -370,6 +402,14 @@ export interface WeekOptions {
    * 숙박(최소 3등급)은 공급이 0 이지만 지을 방법이 없다 — 조언이 아니라 소음이다.
    */
   buildable?: readonly string[];
+  /**
+   * 지금 등급 (P3-C). 결산이 `admission` 을 채우는 데만 쓴다 — 안 주면 "상한을 모른다"로
+   * 본다 (기존 호출자 호환: 헤드리스 봇은 자기 `capped` 판정을 이미 갖고 있다).
+   *
+   * ⚠ 여기서 등급 **규칙**을 만들지 않는다 (카드·직원·콤보와 같은 규칙, 불변식 3).
+   * 상한 계산은 `progress.admissionLimit` 하나가 소유하고, 이 파일은 그 함수를 부른다.
+   */
+  grade?: GradeDef;
   staff?: {
     wages: number;
     satisfactionDelta: number;
@@ -913,6 +953,7 @@ export class WeekRunner {
     }
 
     const bottleneck = pickBottleneck(lw, days, this.bottleneckFaultForTest);
+    const admissionCap = admissionState(opts.grade, this.placement.totalCapacity());
 
     const totalExited = days.reduce((a, d) => a + (d.exitSatisfaction > 0 ? 1 : 0), 0);
     this.live = null;
@@ -965,6 +1006,7 @@ export class WeekRunner {
       heatH: h,
       hotspot,
       bottleneck,
+      admissionCap,
       playback: lw.playback,
       byGroup: lw.byGroup,
       accident: lw.accident,
@@ -1111,6 +1153,34 @@ function pickBottleneck(
   }
   // "하나도 없다"는 **지어진 것이 없을 때만**. 사고로 쉬는 시설은 없는 것이 아니다
   return { ...best, missing: (lw.built[best.need] ?? 0) === 0, example };
+}
+
+/**
+ * 공급이 아무리 커도 넘을 수 없는 값 — "등급 천장만 남긴다"를 표현하는 인자다.
+ * 상수 대신 이 이름을 쓰는 이유는, 아래 비교가 **산술 트릭이 아니라 질문**임을 남기려는 것:
+ * "공급이 무한이면 상한이 얼마인가?" = 등급 천장.
+ */
+const UNBOUNDED_SUPPLY = Number.MAX_SAFE_INTEGER;
+
+/**
+ * 정원이 등급 상한에 걸렸는가 (P3-C).
+ *
+ * ⚠ **규칙을 여기서 다시 쓰지 않는다.** `bySupply >= gradeMax` 라고 적으면 그 순간
+ * `min(등급, 공급×1.5)` 의 사본이 생기고, `admissionLimit` 이 바뀌면 결산만 옛 규칙으로
+ * 남는다. 대신 정본에게 **두 번 묻는다**: 지금 공급으로 얼마인가 / 공급이 무한이면
+ * 얼마인가. 같으면 시설을 더 지어도 한 명도 더 안 들어온다 — 그게 "정원이 찼다"의 정의다.
+ *
+ * 혼잡 배율(카드)은 **일부러 안 넣는다.** 정원이 찼다는 것은 등급 구조의 상태이지
+ * 이번 주 카드가 만든 일시적 상태가 아니다 (배율은 양쪽에 똑같이 곱해져 비교도 안 바뀐다).
+ */
+function admissionState(
+  grade: GradeDef | undefined,
+  totalCapacity: number,
+): WeekReport['admissionCap'] {
+  if (!grade) return null;
+  const limit = admissionLimit(grade, totalCapacity);
+  const ceiling = admissionLimit(grade, UNBOUNDED_SUPPLY);
+  return { limit, gradeMax: grade.maxGuests, capped: limit >= ceiling };
 }
 
 /** 하루치 진행 상태 (K39) — 예전 run() 의 하루 지역 변수를 그대로 옮긴 것 */

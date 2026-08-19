@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { comboBreakdown, bottleneckLine } from './kairo-report.js';
+import { comboBreakdown, bottleneckLine, admissionCappedLine } from './kairo-report.js';
 import type { WeekReport } from '../sim/kairo/week.js';
 import { facilityDef } from '../sim/kairo/placement.js';
 import type { ActiveCombo } from '../sim/kairo/combos.js';
@@ -132,5 +132,30 @@ describe('병목 한 줄 (P3-B) — 처방은 방법까지 말한다', () => {
 
   it('후보를 못 받은 판(해금 미지정)에서도 막다른 문장이 안 나온다', () => {
     expect(line({ example: null })).toContain('건설에서 지어 보세요');
+  });
+});
+
+/**
+ * 정원이 찼을 때의 한 줄 (P3-C).
+ *
+ * 상한 구간에서 "부족한 것: … — 건설 ▸ …" 는 **틀린 처방**이다: 시키는 대로 하면 손님은
+ * 안 늘고 유지비만 는다. 그래서 이 줄이 병목을 **대신**하고, 처방은 방법까지 말한다.
+ */
+describe('정원이 찼을 때의 한 줄 (P3-C) — 처방이 상한 구간의 답을 가리킨다', () => {
+  const txt = admissionCappedLine({ limit: 230, gradeMax: 230, capped: true });
+
+  it('무슨 일이 일어났는지 + 등급 천장을 숫자로 말한다', () => {
+    expect(txt).toContain('정원이 찼습니다');
+    expect(txt).toContain('230');
+  });
+
+  it('⚠ 방법이 둘 다 들어 있다 — 심사(천장을 올린다)와 개선(정원을 안 올리고 벌이를 올린다)', () => {
+    expect(txt).toContain('심사');
+    expect(txt).toContain('개선');
+  });
+
+  it('⚠ 음성 대조군 — 이 줄은 "더 지으세요"라고 말하지 않는다 (그게 이 버그의 형태였다)', () => {
+    expect(txt).not.toContain('부족한 것');
+    expect(txt).not.toContain('건설 ▸');
   });
 });

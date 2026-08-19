@@ -1953,6 +1953,19 @@ body {
   display: none;
 }
 
+/*
+ * ⚠ 시트 본문 안의 칩 줄은 **안 눌린다** — `flex-shrink` 를 막지 않으면 (P3-C, 실측).
+ *
+ * `.ksheet-body` 는 세로 flex 이고 내용이 넘친다. flex 항목의 자동 최소 크기는 보통
+ * 내용 높이지만, `overflow-x: auto` 인 항목은 **스크롤 컨테이너라 0 으로 떨어진다** —
+ * 그래서 칩 줄이 높이 2px 로 납작해지고 44px 버튼들이 아래 목록 위로 삐져나온다.
+ * 눈에는 버튼이 보이는데 `elementFromPoint` 는 아래 줄을 집는다: 44px 규칙은 지켜지는데
+ * 터치가 안 먹는 상태다 (하네스가 좌표로만 재면 못 잡는 종류의 버그).
+ */
+.ksheet-body > .kchips {
+  flex: 0 0 auto;
+}
+
 .kchips.wrap {
   flex-wrap: wrap;
   overflow-x: visible;

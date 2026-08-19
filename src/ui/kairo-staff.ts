@@ -44,6 +44,59 @@ function won(n: number): string {
   return `${n.toLocaleString('ko-KR')}`;
 }
 
+/** 개선 목록의 2차 필터 (P3-C) */
+export type UpgradeFilter = 'all' | 'choose' | 'afford';
+
+/**
+ * 개선 목록에 실릴 시설 — **순수 함수**라 DOM 없이 잰다 (P3-C).
+ *
+ * ## ⚠ 자르지 않는다
+ *
+ * 예전에는 이 결과를 `.slice(0, 12)` 했다. 후반 판은 시설이 100~130채인데, **확장이 등급
+ * 상한에 막힌 뒤의 유일한 성장 수단**의 입구가 12칸짜리 목록이었다 — 나머지는 화면에
+ * 존재하지 않았다. 자를 이유도 없었다: 시트 본문(`.ksheet-body`)은 이미 스크롤한다.
+ *
+ * ## 순서는 필터보다 먼저다
+ *
+ * "고를 수 있는 줄이 맨 위"는 P1.5 가 정한 규칙이다 (개선은 미뤄도 되지만 특화는 안 고르면
+ * 조용한 손해다). **정렬을 먼저 하고 필터를 나중에** 거는 이유가 그것이다 — 필터를 먼저
+ * 걸면 정렬 기준이 부분집합마다 달라져 규칙이 부분적으로만 성립한다.
+ *
+ * `cash` 는 `afford` 필터에만 쓴다. `null` 이면 "지갑을 모른다"라 아무것도 살 수 없다.
+ */
+export function upgradeCandidates(
+  placement: PlacementGrid,
+  filter: UpgradeFilter = 'all',
+  cash: number | null = null,
+): { rows: { handle: number; defId: string }[]; total: number } {
+  const all = placement
+    .all()
+    .filter(
+      (it) =>
+        placement.levelOf(it.handle) < FACILITY_MAX_LEVEL ||
+        // 최고 단계라도 특화를 고른 시설은 남긴다 — 고른 것이 어디에도 안 보이면 안 된다
+        placement.specialtyOf(it.handle) !== null ||
+        placement.canChooseSpecialty(it.handle),
+    )
+    .sort(
+      (a, b) =>
+        Number(placement.canChooseSpecialty(b.handle)) -
+          Number(placement.canChooseSpecialty(a.handle)) ||
+        placement.levelOf(a.handle) - placement.levelOf(b.handle) ||
+        a.handle - b.handle,
+    );
+  const rows = all.filter((it) => {
+    if (filter === 'choose') return placement.canChooseSpecialty(it.handle);
+    if (filter === 'afford') {
+      if (placement.canChooseSpecialty(it.handle)) return true; // 고르는 것은 공짜다
+      if (placement.levelOf(it.handle) >= FACILITY_MAX_LEVEL) return false;
+      return cash !== null && placement.upgradeCost(it.handle) <= cash;
+    }
+    return true;
+  });
+  return { rows: rows.map((it) => ({ handle: it.handle, defId: it.defId })), total: all.length };
+}
+
 export interface ManageDeps {
   /** 요금 배율을 읽고 쓴다 (§15.9 "값을 매긴다") */
   price: () => number;
@@ -62,8 +115,14 @@ export class KairoStaffPanel {
   private readonly priceLabel: HTMLDivElement;
   private readonly priceHint: HTMLDivElement;
   private readonly staffBox: HTMLDivElement;
+  private readonly upgradeFilters: HTMLDivElement;
   private readonly upgradeBox: HTMLDivElement;
   private tab: 'price' | 'staff' | 'upgrade' = 'staff';
+  /**
+   * 개선 목록의 2차 필터 (P3-C). **기본은 `all`** — 목록이 기본으로 걸러져 있으면
+   * "내 시설이 왜 없지"가 되고, 화면을 읽는 검사도 잔해를 재게 된다.
+   */
+  private upgradeFilter: 'all' | 'choose' | 'afford' = 'all';
   private staff: StaffStore | null = null;
   private placement: PlacementGrid | null = null;
   private manage: ManageDeps | null = null;
@@ -123,10 +182,28 @@ export class KairoStaffPanel {
     this.staffBox = el('div', 'kstack');
     for (const role of STAFF_ROLES) this.staffBox.append(this.roleRow(role));
 
+    /*
+     * 개선 탭의 2차 필터 (P3-C). **새 패널·새 버튼 클래스를 만들지 않는다** — `.kchips` 는
+     * 이미 도감이 쓰는 2차 필터 표면이고, `.kbtn.on` 이 파랑 채움을 준다 (K46).
+     */
+    this.upgradeFilters = el('div', 'kchips');
+    for (const [id, name] of [
+      ['all', '전체'],
+      ['choose', '고를 것'],
+      ['afford', '살 수 있음'],
+    ] as const) {
+      const b = button('kbtn', name, () => {
+        this.upgradeFilter = id;
+        this.refresh();
+      });
+      b.dataset['upgradeFilter'] = id;
+      this.upgradeFilters.append(b);
+    }
+
     this.upgradeBox = el('div', 'kstack');
     this.upgradeBox.style.setProperty('--stack-gap', '4px');
 
-    body.append(this.totalEl, this.priceBox, this.staffBox, this.upgradeBox);
+    body.append(this.totalEl, this.priceBox, this.staffBox, this.upgradeFilters, this.upgradeBox);
     this.root.append(head, body);
     parent.append(this.root);
   }
@@ -198,7 +275,11 @@ export class KairoStaffPanel {
     }
     this.priceBox.hidden = this.tab !== 'price';
     this.staffBox.hidden = this.tab !== 'staff';
+    this.upgradeFilters.hidden = this.tab !== 'upgrade';
     this.upgradeBox.hidden = this.tab !== 'upgrade';
+    for (const b of Array.from(this.upgradeFilters.querySelectorAll('button'))) {
+      b.classList.toggle('on', b.dataset['upgradeFilter'] === this.upgradeFilter);
+    }
 
     if (this.tab === 'price' && this.manage) {
       const mult = this.manage.price();
@@ -246,33 +327,38 @@ export class KairoStaffPanel {
    *
    * ⚠ 새 패널·새 버튼 클래스를 만들지 않는다 — `.krow.kstack` + `.kchips.wrap` +
    * `.kbtn` 으로 충분했다 (CLAUDE.md "표면 셋 · 속은 한 벌").
+   *
+   * 무엇을 실을지는 `upgradeCandidates` 가 정한다 (순수 함수라 DOM 없이 잰다). 길어진
+   * 목록에는 **2차 필터**를 준다 (`.kchips`, 도감과 같은 표면). 기본은 `전체` —
+   * 기본으로 걸러 두면 "내 시설이 왜 없지"가 된다.
    */
   private renderUpgrades(): void {
     const placement = this.placement;
     const manage = this.manage;
     this.upgradeBox.replaceChildren();
     if (!placement) return;
-    const items = placement
-      .all()
-      .filter(
-        (it) =>
-          placement.levelOf(it.handle) < FACILITY_MAX_LEVEL ||
-          // 최고 단계라도 특화를 고른 시설은 남긴다 — 고른 것이 어디에도 안 보이면 안 된다
-          placement.specialtyOf(it.handle) !== null ||
-          placement.canChooseSpecialty(it.handle),
-      )
-      .sort(
-        (a, b) =>
-          Number(placement.canChooseSpecialty(b.handle)) -
-            Number(placement.canChooseSpecialty(a.handle)) ||
-          placement.levelOf(a.handle) - placement.levelOf(b.handle) ||
-          a.handle - b.handle,
-      )
-      .slice(0, 12);
+    const { rows: items, total } = upgradeCandidates(
+      placement,
+      this.upgradeFilter,
+      manage ? manage.cash() : null,
+    );
     if (items.length === 0) {
-      this.upgradeBox.append(el('div', 'kcaption', '전부 최고 단계입니다'));
+      // 비어 있는 이유가 갈린다 — "전부 최고 단계"와 "필터가 걸러냈다"는 다른 처방이다
+      this.upgradeBox.append(
+        el(
+          'div',
+          'kcaption',
+          total === 0 ? '전부 최고 단계입니다' : '이 필터에 해당하는 시설이 없습니다',
+        ),
+      );
       return;
     }
+    // 전체 몇 채 중 몇 채인지 — 130채 판에서 목록이 잘렸는지 아닌지가 보여야 한다
+    this.upgradeBox.append(
+      el('div', 'kcaption', items.length === total
+        ? `${total}채`
+        : `${items.length}채 / 전체 ${total}채`),
+    );
     for (const it of items) {
       const def = facilityDef(it.defId);
       const level = placement.levelOf(it.handle);
@@ -348,5 +434,17 @@ export class KairoStaffPanel {
       }
       this.upgradeBox.append(row);
     }
+  }
+
+  /**
+   * 도구용 — 탭과 개선 필터를 직접 바꾼다 (도감의 `setForTest` 와 같은 자리).
+   *
+   * ⚠ 화면이 되는지는 **진짜 터치로** 본다 (K33). 이건 sim 쪽 상태 확인용 백도어이지
+   * "필터가 눌린다"의 증거가 아니다.
+   */
+  setTabForTest(tab: 'price' | 'staff' | 'upgrade', filter: 'all' | 'choose' | 'afford' = 'all'): void {
+    this.tab = tab;
+    this.upgradeFilter = filter;
+    this.refresh();
   }
 }

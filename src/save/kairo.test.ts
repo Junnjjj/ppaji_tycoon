@@ -323,3 +323,46 @@ describe('★ 특화가 세이브를 건넌다 (P1.5)', () => {
     }
   });
 });
+
+/**
+ * ─────────────────────────────────────────────────────────────────────────
+ * ★ 도감 발견이 세이브를 건넌다 (P3-C)
+ *
+ * 도감의 발견 판정이 **현재 배치**를 봤다: 시설은 `placement.all()` 에 지금 서 있어야,
+ * 장비는 `courses.all` 에 지금 쓰고 있어야 발견이었다. 철거하면 도감에서 사라졌고 —
+ * 그건 도감이 아니라 **현황판**이다 — 코스 장비 19종은 코스를 동시에 19개 놓을 수 없어
+ * **완성이 구조적으로 불가능**했다.
+ *
+ * **버전을 안 올렸다.** `builtEver`/`equipEver` 는 optional 이라 있으면 담고 없으면 안 담는다
+ * (`visitorsTotal`·`specialty` 선례). 버전을 올리면 이미 나간 v7 세이브가 전부 한 칸씩 밀린다.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+describe('★ 도감 발견이 세이브를 건넌다 (P3-C)', () => {
+  it('한 번이라도 지은 시설·써본 장비가 왕복해도 남는다', () => {
+    const src = build();
+    /*
+     * ⚠ **지금 배치에 없는 id 를 일부러 넣는다.** 철거한 시설·지운 코스가 그 값이다 —
+     * 배치에서 다시 만들 수 있는 값이면 저장할 이유 자체가 없다.
+     */
+    src.builtEver = ['shop', 'ticket', 'pyeongsang_row', 'jjimjilbang'];
+    src.equipEver = ['banana_boat', 'flyfish'];
+    const back = restoreKairo(JSON.parse(JSON.stringify(packKairo(src, 1_700_000_000_000))));
+    expect(back.builtEver).toEqual(src.builtEver);
+    expect(back.equipEver).toEqual(src.equipEver);
+    // 지금 서 있는 시설은 3채뿐인데 도감은 4종을 기억한다 — 이 차이가 이 필드의 존재 이유다
+    expect(back.placement.count).toBe(3);
+    expect(back.builtEver!.length).toBe(4);
+  });
+
+  it('⚠ 필드가 없는 옛 세이브가 그대로 열린다 — 버전도 그대로다', () => {
+    const raw = JSON.parse(JSON.stringify(packKairo(build(), 0))) as Record<string, unknown>;
+    expect('builtEver' in raw).toBe(false);
+    expect('equipEver' in raw).toBe(false);
+    expect(raw['version']).toBe(KAIRO_SAVE_VERSION);
+    expect(KAIRO_SAVE_VERSION).toBe(7);
+    const back = restoreKairo(raw);
+    // 없으면 그냥 없다 — 부팅이 지금 배치에서 다시 채운다 (마이그레이션 없음)
+    expect(back.builtEver).toBeUndefined();
+    expect(back.equipEver).toBeUndefined();
+  });
+});

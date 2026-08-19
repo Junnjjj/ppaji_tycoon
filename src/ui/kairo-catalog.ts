@@ -2,7 +2,6 @@ import { COMBOS, evaluateCombos, type ComboTier } from '../sim/kairo/combos.js';
 import { allFacilityDefs } from '../sim/kairo/placement.js';
 import { COURSE_EQUIPMENT } from '../sim/kairo/course.js';
 import type { PlacementGrid } from '../sim/kairo/placement.js';
-import type { CourseStore } from '../sim/kairo/course.js';
 import type { SwimZone } from '../sim/kairo/swim.js';
 import { requiredGrade } from '../sim/kairo/progress.js';
 import { el, button } from './dom.js';
@@ -22,6 +21,16 @@ import { panelHost } from './panels.js';
  *
  * 잠긴 항목은 이름을 가리고 **조건 일부만** 보여준다 (`매점 + ? + ?`). 전부 보여주면
  * 발견이 아니라 체크리스트가 되고, 전부 가리면 힌트가 아니라 벽이 된다.
+ *
+ * ## ⚠ 발견은 한 번 보면 영구다 (P3-C)
+ *
+ * 세 탭의 판정이 서로 달랐다: 콤보만 영구 `discovered` Set 이고, **시설은 지금 서 있어야**
+ * (`placement.all()`), **장비는 지금 쓰고 있어야** (`courses.all`) 발견으로 쳤다.
+ * 그래서 철거하면 도감에서 사라졌고 — 도감이 아니라 **현황판**이었다 — 코스 장비 19종은
+ * 코스를 동시에 19개 놓을 수 없으니 **구조적으로 완성 불가**였다.
+ *
+ * 이제 셋 다 **누적 집합**을 주입받는다. 지금 배치를 훑는 일이 이 파일에 남으면 안 된다 —
+ * 규칙이 두 벌이 되면 한쪽만 고쳐진다.
  */
 
 const TIER_NAME: Record<ComboTier, string> = { small: '소형', medium: '중형', large: '대형' };
@@ -30,11 +39,13 @@ const TIERS: ComboTier[] = ['small', 'medium', 'large'];
 type Tab = 'combo' | 'facility' | 'equipment';
 
 export interface CatalogDeps {
-  placement: PlacementGrid;
-  courses: CourseStore;
   grade: () => number;
   /** 이미 발견한 콤보 id — 결산에서 누적한다 */
   discovered: () => ReadonlySet<string>;
+  /** **한 번이라도 지은** 시설 id (P3-C). 철거해도 안 줄어든다 */
+  builtEver: () => ReadonlySet<string>;
+  /** **한 번이라도 써본** 코스 장비 id (P3-C). 코스를 지워도 안 줄어든다 */
+  equipEver: () => ReadonlySet<string>;
 }
 
 export class KairoCatalog {
@@ -97,12 +108,10 @@ export class KairoCatalog {
   /** 발견 수 — 검증·요약이 읽는다 */
   counts(): { combo: [number, number]; facility: [number, number]; equipment: [number, number] } {
     const disc = this.deps.discovered();
-    const built = new Set(this.deps.placement.all().map((x) => x.defId));
-    const used = new Set(this.deps.courses.all.map((c) => c.equipId));
     return {
       combo: [disc.size, COMBOS.length],
-      facility: [built.size, allFacilityDefs().length],
-      equipment: [used.size, COURSE_EQUIPMENT.length],
+      facility: [this.deps.builtEver().size, allFacilityDefs().length],
+      equipment: [this.deps.equipEver().size, COURSE_EQUIPMENT.length],
     };
   }
 
@@ -214,7 +223,8 @@ export class KairoCatalog {
   }
 
   private renderFacilities(): void {
-    const built = new Set(this.deps.placement.all().map((x) => x.defId));
+    // ⚠ 지금 서 있는 것이 아니라 **한 번이라도 지은 것** (P3-C)
+    const built = this.deps.builtEver();
     const grade = this.deps.grade();
     for (const def of allFacilityDefs()) {
       const found = built.has(def.id);
@@ -239,7 +249,8 @@ export class KairoCatalog {
   }
 
   private renderEquipment(): void {
-    const used = new Set(this.deps.courses.all.map((c) => c.equipId));
+    // ⚠ 지금 쓰는 것이 아니라 **한 번이라도 써본 것** (P3-C). 코스를 19개 동시에 놓을 수는 없다
+    const used = this.deps.equipEver();
     for (const e of COURSE_EQUIPMENT) {
       const found = used.has(e.id);
       if (this.undiscoveredOnly && found) continue;
@@ -273,6 +284,27 @@ export class KairoCatalog {
  * 봇은 `swimZones()` 를 넘기므로 헤드리스와 실제 판이 갈라진다. `evaluateCombos` 의
  * 규칙과 같다: 모든 호출부가 같은 zones 를 받아야 한다.
  */
+/**
+ * 발견 누적 — **합집합만** 하고, **이번에 처음 본 것**을 돌려준다 (P3-C).
+ *
+ * ⚠ 예전 도감은 이 함수 없이 `new Set(placement.all()…)` 을 **매번 새로 만들었다.**
+ * 그래서 철거하면 발견이 사라졌고 (도감이 아니라 현황판), 코스 장비 19종은 코스를 동시에
+ * 19개 놓을 수 없어 **완성이 구조적으로 불가능**했다. "지금 있는 것"으로 되돌리지 말 것 —
+ * 발견은 한 번 보면 영구다.
+ *
+ * 돌려주는 목록이 **첫 발견 보상의 유일한 근거**다 (숨은 콤보의 `discoverCash`). 이미 있는
+ * id 는 절대 안 들어가므로 같은 콤보가 계속 발동해도 보상이 두 번 나가지 않는다.
+ */
+export function noteSeen(seen: Set<string>, present: Iterable<string>): string[] {
+  const fresh: string[] = [];
+  for (const id of present) {
+    if (seen.has(id)) continue;
+    seen.add(id);
+    fresh.push(id);
+  }
+  return fresh;
+}
+
 export function activeComboIds(
   placement: PlacementGrid,
   zones: readonly SwimZone[] = [],

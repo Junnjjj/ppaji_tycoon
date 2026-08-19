@@ -90,6 +90,24 @@ export function bottleneckLine(b: NonNullable<WeekReport['bottleneck']>): string
 }
 
 /**
+ * 정원이 찼을 때의 한 줄 (P3-C) — **병목 대신** 나간다.
+ *
+ * 입장은 `min(등급 상한, 공급×1.5)` 라, 공급이 등급 천장을 넘으면 시설을 더 지어도
+ * 손님은 한 명도 안 늘고 유지비만 는다. 그 구간에서 "부족한 것: 놀이 — 건설 ▸ …" 는
+ * **틀린 처방**이다: 시키는 대로 하면 손해만 는다.
+ *
+ * 처방은 **방법까지** 말한다 (이 저장소 규칙). 상한 구간의 정답은 둘뿐이다:
+ * · **심사** — 등급을 올리면 천장 자체가 올라간다 (돈으로는 못 산다 — 만족도로만)
+ * · **개선/특화** — 정원을 안 올리면서 만족·요금을 올린다. 그래서 이 구간의 정답이다
+ */
+export function admissionCappedLine(a: NonNullable<WeekReport['admissionCap']>): string {
+  return (
+    `정원이 찼습니다 (등급 상한 ${a.gradeMax}명) — 시설을 더 지어도 손님은 안 늘고 ` +
+    '유지비만 늡니다. 심사로 등급을 올리거나, 경영 ▸ 개선으로 있는 시설을 키우세요'
+  );
+}
+
+/**
  * 결산의 콤보 줄이 쓰는 표시 자료 (P2-B).
  *
  * ## 왜 총합이 여기 없나
@@ -496,7 +514,13 @@ export class KairoReport {
      * (공급 0)" 은 처방이 아니다. 처방은 **방법까지 말한다** — 이 저장소가 배치 거절
      * 메시지에서 이미 정한 규칙이다.
      */
-    if (rep.bottleneck) {
+    /*
+     * ⚠ 정원이 찼으면 병목 **대신** 이 줄이다 (P3-C). 둘 다 띄우면 서로 반대되는 처방이
+     * 나란히 서서 어느 쪽이 맞는지 알 수 없다 — 상한 구간에서 "더 지으세요"는 손해다.
+     */
+    if (rep.admissionCap?.capped) {
+      this.root.append(el('div', 'kcallout', admissionCappedLine(rep.admissionCap)));
+    } else if (rep.bottleneck) {
       this.root.append(el('div', 'kcallout', bottleneckLine(rep.bottleneck)));
     }
 
