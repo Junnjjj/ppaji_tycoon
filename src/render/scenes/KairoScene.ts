@@ -31,20 +31,12 @@ import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
 /**
  * 지도 바깥을 채우는 **지형** 텍스처 (K38).
  *
- * 그림 파일이 아니라 게임의 지면 스프라이트를 구운 것이다 — 실제 게임들이 플레이 영역
- * 밖을 **같은 스케일 지형**으로 덮기 때문이다 (Terra Nil,
- * `art-reference/competitor/README.md`). 그려진 원경을 세우면 눈이 곧 무대 배경으로 읽는다.
+ * 그림 파일이 아니라 게임의 지면 스프라이트를 구운 것이다.
+ * 왜 그림이 아닌지는 `bakeSurroundTexture` 에 한 번만 적어 뒀다.
  */
 const SURROUND_TEX = 'surround/ground';
 /** 지형을 바운딩 박스보다 얼마나 더 넓게 굽나 — 카메라 여백 + 고무줄을 덮는다 */
 const SURROUND_PAD = 128;
-/**
- * 지도의 **수평 윗변** 이 놓이는 월드 y (K38).
- *
- * 다이아몬드의 꼭대기 꼭지점이 (0,0) 이므로 여기가 곧 그 높이다. 이 선 위는 배경(산),
- * 아래는 땅이다 — 사용자가 그림으로 요구한 "윗변이 평평한 직사각형"이 이 선이다.
- */
-const SKYLINE_Y = 0;
 import { KairoProceduralProvider } from '../../assets/kairo-procedural.js';
 import { variantId } from '../../assets/types.js';
 import { KairoTerrain } from '../../sim/kairo/terrain.js';
@@ -190,8 +182,6 @@ export class KairoScene extends Phaser.Scene {
   /** 선착장 후보 (K33) — 편집 중에만 채워진다 */
   private dockTips: { x: number; y: number }[] = [];
   private dockSelected = -1;
-  /** 건물 영역의 첫 모서리 표시 — 두 번째 탭을 기다리는 동안 어디를 찍었는지 보여준다 */
-  private anchorGfx: Phaser.GameObjects.Graphics | null = null;
   /** 해금된 토지 경계선 (K25) */
   private landGfx: Phaser.GameObjects.Graphics | null = null;
   /**
@@ -226,8 +216,14 @@ export class KairoScene extends Phaser.Scene {
    */
   private land: { i0: number; j0: number; w: number; h: number } | null = null;
   private backdrops: Phaser.GameObjects.TileSprite[] = [];
-  /** 지도 바깥을 채우는 땅 (K38) */
-  private surrounds: Phaser.GameObjects.Image[] = [];
+  /**
+   * 지도 바깥을 채우는 땅 (K38) — **한 장**이다.
+   *
+   * 굽기가 바운딩 박스 전체를 캔버스 하나로 내므로(`bakeSurroundTexture`) 겹이 늘어날
+   * 여지가 없다. 배경(`backdrops`)이 배열인 것과 헷갈리지 말 것 — 저쪽은 시차 단계가
+   * 겹의 이유다.
+   */
+  private surround: Phaser.GameObjects.Image | null = null;
   private dragMoved = 0;
   private lastPointer = { x: 0, y: 0 };
   private lastTapAt = 0;
@@ -287,7 +283,6 @@ export class KairoScene extends Phaser.Scene {
     this.buildWalls();
     // 코스 오버레이는 전부보다 위 — 손님·시설에 가리면 못 끈다
     this.courseGfx = this.add.graphics().setDepth(1_000_000).setVisible(false);
-    this.anchorGfx = this.add.graphics().setDepth(1_000_001).setVisible(false);
     this.landGfx = this.add.graphics().setDepth(999_999).setVisible(false);
     this.doorGfx = this.add.graphics().setDepth(999_998);
     // 버스는 차도 위 물체다 — 그 칸의 지면 위, 그 앞줄보다 뒤
@@ -477,11 +472,6 @@ export class KairoScene extends Phaser.Scene {
    *
    * 스프라이트가 없으면 지면색을 탈색해 쓰는 쪽으로 물러난다 (하드코딩 색을 안 만든다).
    */
-  /** 검증용 */
-  rockToneForTest(): [number, number, number] {
-    return this.rockTone();
-  }
-
   private rockTone(): [number, number, number] {
     if (this.rockToneCache) return this.rockToneCache;
     let tone: [number, number, number] = [122, 118, 110];
@@ -523,57 +513,18 @@ export class KairoScene extends Phaser.Scene {
   }
 
   /**
-   * 배경 3겹 (§7 배경). 산이 제일 멀고, 능선, 강둑 순으로 가까워진다.
-   *
-   * ## 시차(parallax)가 핵심이다
-   *
-   * 배경이 지도와 **같은 속도로** 움직이면 그냥 큰 그림 한 장이고, **안 움직이면** 벽지가
-   * 된다. 카이로가 주는 "여기가 어디 강변인가"라는 감각은 배경이 지도보다 **느리게**
-   * 따라올 때 생긴다. `scrollFactor` 로 산 0.06 · 능선 0.15 · 강둑 0.35 을 준다.
-   *
-   * ## 왜 셋인가 (K36-B)
-   *
-   * 둘이면 "가깝다/멀다"뿐이라 거리로 안 읽힌다. 겹이 셋이 되어야 시차가 **단계**가 되고,
-   * 그때부터 강 건너가 하늘이 아니라 산자락이 된다. 가장 먼 겹은 시차를 확실히 작게
-   * 줘야 한다 — 0.06 은 능선의 절반도 안 되므로 카메라를 크게 밀어도 거의 안 움직인다.
-   *
-   * `y` 는 겹마다 위로 올린다. 산 −118 은 능선 −70 보다 48px 위라, 능선 실루엣 뒤로
-   * 산머리만 솟는다. 같은 y 에 두면 능선이 산을 통째로 가려서 겹을 더한 뜻이 없다.
-   *
-   * ## 왜 TileSprite 인가
-   *
-   * 가로로 무한히 이어져야 한다 — 이미지 한 장을 늘리면 늘어난 만큼 흐려지고, 여러 장을
-   * 나열하면 이음새를 우리가 관리해야 한다. `TileSprite` 는 GPU 가 wrap 으로 반복한다.
-   * 이음새가 안 보이는 근거는 **스프라이트 자체가 좌우로 이어지도록 그려졌다는 것**이다
-   * (`drawBackdrop` 의 주기 함수) — 여기서 보정하지 않는다.
-   */
-  /**
-   * 지도 **바깥**을 땅으로 채운다 (K38).
-   *
-   * ## 왜 필요한가
-   *
-   * 지도는 아이소 다이아몬드라 **사각 화면을 못 채운다.** 다이아몬드의 바운딩 박스
-   * 네 귀퉁이는 아무것도 안 그리므로 카메라 배경색(`#7ab8d4`)이 그대로 보인다 —
-   * 넓은 화면에서 "1시 방향이 통짜 하늘색"으로 드러났다 (사용자 스크린샷).
-   *
-   * ## 어떻게
-   *
-   * **`SKYLINE_Y` 아래**를 숲으로 통째로 깐다. 그러면 지도의 윗변이 다이아몬드의
-   * 뾰족한 꼭지점이 아니라 **수평선**이 된다 (사용자가 그림으로 요구한 모양).
-   * 타일이 있는 곳은 타일이 이기고, 없는 귀퉁이만 이 숲이 보인다.
-   *
-   * ⚠ **설치는 구조적으로 불가능하다.** 격자 밖이라 sim 이 그 좌표를 모른다 —
-   * 플래그로 막는 것이 아니라 존재하지 않는다 (사용자: "하지만 설치는 안되는").
-   *
-   */
-  /**
    * 지도 바깥에 깔 **지면을 한 장으로** 굽는다 (K38).
    *
-   * ## 왜 그림 파일이 아닌가
+   * ## 왜 그림 파일이 아닌가 — ★ 이 파일에서 가장 되돌리기 쉬운 결정이다
    *
    * 처음엔 산 아트에서 뽑은 숲 PNG 를 깔았는데, 사용자가 "숲이 아니고 현재 지형을
    * 깔아달라고, PNG 말고, 현재 설치된 땅 기준으로" 라고 했다. 다른 붓으로 그린 텍스처는
-   * 경계에서 결이 어긋나 "여기부터는 딴 그림"으로 읽힌다.
+   * 경계에서 결이 어긋나 "여기부터는 딴 그림"으로 읽힌다. 실제로 그려진 산을 세워 봤더니
+   * 눈이 그 수평선을 곧바로 **"무대 뒤에 세운 벽"**으로 읽었다.
+   *
+   * 레퍼런스가 이미 낸 답이기도 하다 (`art-reference/competitor/README.md`, 2026-08-17):
+   * Pool Slide Story 는 경계를 아예 안 보여 주고, Terra Nil 은 플레이 영역 밖을
+   * **같은 스케일 지형**으로 덮는다. 그림을 다시 세우고 싶어지면 여기를 먼저 읽을 것.
    *
    * ## 왜 한 종류로 깔면 안 되나
    *
@@ -621,7 +572,7 @@ export class KairoScene extends Phaser.Scene {
      *
      * 가장자리를 그대로 잇기만 하면 잔디가 끝없이 펼쳐져 "아무것도 없다"로 읽힌다
      * (사용자: "생각보다 어색하네"). 격자에서 멀어질수록 단을 올려 **공원이 골짜기에
-     * 앉은** 모양을 만든다 — 공원 → 도로 → 산자락 → 트리라인 → 배경 산으로 이어진다.
+     * 앉은** 모양을 만든다 — 공원 → 도로 → 산자락 → 화면 밖까지 **전부 게임 지형**이다.
      *
      * ⚠ 물은 안 올린다. 강은 강으로 흘러 나가야 한다 (K37 과 같은 규칙).
      * ⚠ 격자 안 타일과 **같은 기둥 함수**(`columnTexture`)를 쓴다. 다른 코드로 그리면
@@ -633,7 +584,7 @@ export class KairoScene extends Phaser.Scene {
       const k = t.kindAt(clamp(i, GRID_W - 1), clamp(j, GRID_H - 1));
       return k === 'water_edge' || k === 'path_sand';
     };
-    /** 장식 단 — 격자에서 멀수록 높다. 흔들림은 좌표 해시라 결정론적이다 */
+    /** 장식 단 — 격자에서 멀수록 높다. 흔들림은 사인 합이라 난수 없이 결정론적이다 */
     const deco = (i: number, j: number): number => {
       if (isWet(i, j)) return 0;
       const d = outside(i, j);
@@ -722,39 +673,78 @@ export class KairoScene extends Phaser.Scene {
     tex.refresh();
   }
 
+  /**
+   * 구운 판을 화면에 얹는다 — 지도 **바깥**을 땅으로 채운다 (K38).
+   *
+   * ## 왜 필요한가
+   *
+   * 지도는 아이소 다이아몬드라 **사각 화면을 못 채운다.** 다이아몬드의 바운딩 박스
+   * 네 귀퉁이는 아무것도 안 그리므로 카메라 배경색(`#7ab8d4`)이 그대로 보인다 —
+   * 넓은 화면에서 "1시 방향이 통짜 하늘색"으로 드러났다 (사용자 스크린샷).
+   * 판이 바운딩 박스 전체를 덮으므로 귀퉁이까지 지형이고, 지도의 윗변도 다이아몬드의
+   * 뾰족한 꼭지점이 아니라 **수평선**이 된다 (사용자가 그림으로 요구한 모양).
+   *
+   * ⚠ **바깥에 설치는 구조적으로 불가능하다.** 격자 밖이라 sim 이 그 좌표를 모른다 —
+   * 플래그로 막는 것이 아니라 존재하지 않는다 (사용자: "하지만 설치는 안되는").
+   */
   private buildSurround(): void {
-    for (const t of this.surrounds) t.destroy();
-    this.surrounds = [];
+    this.surround?.destroy();
+    this.surround = null;
     if (!this.textures.exists(SURROUND_TEX)) return;
 
     /*
      * 구운 판을 **바운딩 박스 자리에 그대로** 얹는다 (반복 아님 — 한 장이 바로 그 크기다).
-     * 윗변이 `SKYLINE_Y`(다이아몬드 꼭지점 y = 0)라 지도의 윗변이 수평선이 된다.
+     * 위치는 굽기가 정한 캔버스 원점 그대로다: 월드 x = −GRID_H·STEP_X, y = 0
+     * (다이아몬드 꼭대기 꼭지점) 에서 여백(`SURROUND_PAD`)만큼 물러난 자리.
+     * 굽기의 `ox`/`PAD` 와 **같은 식**이어야 한다 — 한쪽만 고치면 판이 통째로 밀린다.
      *
      * ⚠ `scrollFactor` 는 **1**이다. 시차를 주면 공원 경계가 그 위를 미끄러져
      * "공원이 떠 있는" 것처럼 보인다 — 주변 땅은 공원과 같은 거리에 있다.
      */
-    const img = this.add.image(-GRID_H * STEP_X - SURROUND_PAD, SKYLINE_Y - SURROUND_PAD, SURROUND_TEX);
+    const img = this.add.image(-GRID_H * STEP_X - SURROUND_PAD, -SURROUND_PAD, SURROUND_TEX);
     img.setOrigin(0, 0);
     img.setScrollFactor(1, 1);
-    img.setDepth(-960); // 배경(하늘·산·트리라인)보다 앞, 지면 타일(0+)보다 뒤
-    this.surrounds.push(img);
+    img.setDepth(-960); // 절차적 배경(−1000 대)보다 앞, 지면 타일(0+)보다 뒤
+    this.surround = img;
   }
 
+  /**
+   * 절차적 배경 3겹 (§7 배경). 산이 제일 멀고, 능선, 강둑 순으로 가까워진다.
+   *
+   * ## 지금 이건 **안전망**이다 (K38)
+   *
+   * 지도 바깥이 지형으로 덮이므로(`buildSurround`) 평소엔 한 픽셀도 안 보인다 —
+   * 굽기가 프로바이더를 못 얻어 그냥 돌아갈 때만 드러난다. 그려진 배경을 **전면에**
+   * 쓰지 않는 이유는 `bakeSurroundTexture` 에 적어 뒀다.
+   *
+   * 안 보이는데도 성질을 계속 지키는 이유: 드러나는 순간이 곧 굽기가 실패한 순간이라,
+   * 그때 나오는 것이 하늘색 벽지면 두 번 실패한다. 브라우저 검사도 계속 잰다.
+   *
+   * ## 시차(parallax)가 핵심이다
+   *
+   * 배경이 지도와 **같은 속도로** 움직이면 그냥 큰 그림 한 장이고, **안 움직이면** 벽지가
+   * 된다. 카이로가 주는 "여기가 어디 강변인가"라는 감각은 배경이 지도보다 **느리게**
+   * 따라올 때 생긴다. `scrollFactor` 로 산 0.06 · 능선 0.15 · 강둑 0.35 을 준다.
+   *
+   * ## 왜 셋인가 (K36-B)
+   *
+   * 둘이면 "가깝다/멀다"뿐이라 거리로 안 읽힌다. 겹이 셋이 되어야 시차가 **단계**가 되고,
+   * 그때부터 강 건너가 하늘이 아니라 산자락이 된다. 가장 먼 겹은 시차를 확실히 작게
+   * 줘야 한다 — 0.06 은 능선의 절반도 안 되므로 카메라를 크게 밀어도 거의 안 움직인다.
+   *
+   * `y` 는 겹마다 위로 올린다. 산 −118 은 능선 −70 보다 48px 위라, 능선 실루엣 뒤로
+   * 산머리만 솟는다. 같은 y 에 두면 능선이 산을 통째로 가려서 겹을 더한 뜻이 없다.
+   *
+   * ## 왜 TileSprite 인가
+   *
+   * 가로로 무한히 이어져야 한다 — 이미지 한 장을 늘리면 늘어난 만큼 흐려지고, 여러 장을
+   * 나열하면 이음새를 우리가 관리해야 한다. `TileSprite` 는 GPU 가 wrap 으로 반복한다.
+   * 이음새가 안 보이는 근거는 **스프라이트 자체가 좌우로 이어지도록 그려졌다는 것**이다
+   * (`drawBackdrop` 의 주기 함수) — 여기서 보정하지 않는다.
+   */
   private buildBackdrop(): void {
     for (const img of this.backdrops) img.destroy();
     this.backdrops = [];
-
-    /*
-     * ⚠ 이 3겹은 이제 **안전망**이다 (K38). 지도 바깥이 지형으로 덮이므로 평소엔 한
-     * 픽셀도 안 보인다 — 굽기가 프로바이더를 못 얻어 그냥 돌아갈 때만 드러난다.
-     *
-     * 그려진 배경을 **전면에 쓰지 않는 이유**: 실제 게임들이 그렇게 안 한다.
-     * Pool Slide Story 는 경계를 아예 안 보여 주고, Terra Nil 은 플레이 영역 밖을
-     * 같은 스케일 지형으로 덮는다 — `art-reference/competitor/README.md` 가 2026-08-17 에
-     * 이미 적어 둔 결론이다. 그려진 산을 얹어 봤더니 눈이 그 수평선을 곧바로
-     * "무대 뒤에 세운 벽"으로 읽었다.
-     */
 
     const layers: { id: string; factor: number; y: number }[] = [
       { id: 'backdrop/mountain', factor: 0.06, y: -118 },
@@ -826,9 +816,12 @@ export class KairoScene extends Phaser.Scene {
    *
    * 이게 없으면 "귀퉁이가 하늘색이 아니다"를 **주장만** 하게 된다. 끄면 하늘색으로
    * 돌아오는 것까지 봐야 검사가 실제로 이 기능을 재는 것이 된다.
+   *
+   * ⚠ 절차적 배경(안전망)도 **같이** 끈다. 그놈만 남기면 대조군이 하늘 대신 안전망을
+   * 재게 되어 "끄면 하늘이 드러난다"가 거짓으로 실패한다.
    */
   setSurroundVisibleForTest(on: boolean): void {
-    for (const t of this.surrounds) t.setVisible(on);
+    this.surround?.setVisible(on);
     for (const t of this.backdrops) t.setVisible(on);
   }
 
@@ -1051,32 +1044,6 @@ export class KairoScene extends Phaser.Scene {
     g.lineTo(p1.x, p1.y);
     g.lineTo(p2.x, p2.y);
     g.lineTo(p3.x, p3.y);
-    g.closePath();
-    g.strokePath();
-    g.setVisible(true);
-  }
-
-  /**
-   * 건물 영역의 첫 모서리를 표시한다 (null 이면 지운다).
-   *
-   * 표시가 없으면 "한 번 탭했는데 아무 일도 안 일어났다"로 읽혀 같은 칸을 또 찍는다 —
-   * 그러면 1×1 이 되어 거절당하고, 왜 거절인지도 모른다.
-   */
-  setBuildAnchor(i: number | null, j = 0): void {
-    const g = this.anchorGfx;
-    if (!g) return;
-    g.clear();
-    if (i === null) {
-      g.setVisible(false);
-      return;
-    }
-    const c = tileCenter(i, j);
-    g.lineStyle(1, 0x7ad0ff, 1);
-    g.beginPath();
-    g.moveTo(c.x, c.y - TILE_H / 2);
-    g.lineTo(c.x + TILE_W / 2, c.y);
-    g.lineTo(c.x, c.y + TILE_H / 2);
-    g.lineTo(c.x - TILE_W / 2, c.y);
     g.closePath();
     g.strokePath();
     g.setVisible(true);
@@ -1767,9 +1734,7 @@ export class KairoScene extends Phaser.Scene {
     factors: number[];
     factorsY: number[];
     depths: number[];
-    /** 실물 아트 배경인가 (K38). 아니면 절차적 3겹 폴백이다 */
-    art: boolean;
-    /** 지도 바깥 땅이 깔렸나 (K38) */
+    /** 지도 바깥 땅이 깔렸나 (K38) — 0 이면 굽기가 실패해 절차적 배경만 남은 것이다 */
     surround: number;
   } {
     return {
@@ -1777,8 +1742,7 @@ export class KairoScene extends Phaser.Scene {
       factors: this.backdrops.map((b) => b.scrollFactorX),
       factorsY: this.backdrops.map((b) => b.scrollFactorY),
       depths: this.backdrops.map((b) => b.depth),
-      art: false,
-      surround: this.surrounds.length,
+      surround: this.surround ? 1 : 0,
     };
   }
 
