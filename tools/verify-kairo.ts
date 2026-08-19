@@ -2518,7 +2518,7 @@ async function main(): Promise<void> {
     const after = h.scene.tileScreenRect(10, 10);
     return {
       count: info.count, factors: info.factors, factorsY: info.factorsY, depths: info.depths,
-      art: info.art, surround: info.surround,
+      surround: info.surround,
       tileMoved: Math.abs(after.x - before.x)
     };
   })()`)) as {
@@ -2526,7 +2526,6 @@ async function main(): Promise<void> {
     factors: number[];
     factorsY: number[];
     depths: number[];
-    art: boolean;
     surround: number;
     tileMoved: number;
   };
