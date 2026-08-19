@@ -3,6 +3,7 @@ import { allFacilityDefs } from '../sim/kairo/placement.js';
 import { COURSE_EQUIPMENT } from '../sim/kairo/course.js';
 import type { PlacementGrid } from '../sim/kairo/placement.js';
 import type { CourseStore } from '../sim/kairo/course.js';
+import type { SwimZone } from '../sim/kairo/swim.js';
 import { requiredGrade } from '../sim/kairo/progress.js';
 import { el, button } from './dom.js';
 import { panelHost } from './panels.js';
@@ -265,7 +266,16 @@ export class KairoCatalog {
   }
 }
 
-/** 지금 발동 중인 콤보 id — 결산이 이걸 누적해 "발견"으로 삼는다 */
-export function activeComboIds(placement: PlacementGrid): string[] {
-  return evaluateCombos(placement).active.map((c) => c.id);
+/**
+ * 지금 발동 중인 콤보 id — 결산이 이걸 누적해 "발견"으로 삼는다.
+ *
+ * ⚠ `zones` 를 안 넘기면 **zone 콤보 3종이 실게임에서 영원히 발견되지 않는다** —
+ * 봇은 `swimZones()` 를 넘기므로 헤드리스와 실제 판이 갈라진다. `evaluateCombos` 의
+ * 규칙과 같다: 모든 호출부가 같은 zones 를 받아야 한다.
+ */
+export function activeComboIds(
+  placement: PlacementGrid,
+  zones: readonly SwimZone[] = [],
+): string[] {
+  return evaluateCombos(placement, undefined, zones).active.map((c) => c.id);
 }

@@ -693,6 +693,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
 
   /** 실내 바닥 한 칸 값 — 여러 곳에서 쓴다 */
   const FLOOR_COST = GROUND_KINDS.find((k) => k.id === 'floor_indoor')?.cost ?? 0;
+  /**
+   * 수영장 한 칸 값 — 라벨을 값으로 박지 말 것. 데이터의 `cost` 를 바꾸면 UI 가
+   * 조용히 거짓말을 한다 (다른 붓들은 전부 `k.cost` 에서 읽는다).
+   */
+  const POOL_COST = GROUND_KINDS.find((k) => k.id === 'pool_water')?.cost ?? 0;
 
   const refreshBuildList = (): void => {
     const grade = currentGrade().grade;
@@ -757,8 +762,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         sub: '무료 · 손님이 못 지나감',
       })),
       /*
-       * 수영장 붓 (S3) — buildable:false 라 위 두 필터에 안 걸리는 유일한 붓이다
-       * (칠하는 축과 짓는 축이 갈라진 첫 종류). 2등급 해금 — 첫 심사 뒤에 연다
+       * 수영장 붓 (S3) — `buildable:false` 인데 `paintable` 인 유일한 종류라 위 두
+       * 필터(둘 다 `buildable` 을 요구한다)에 안 걸린다. 칠하는 축과 짓는 축이 갈라진
+       * 첫 종류다 — 도로·보도와 달리 **플레이어가 깐다**. 2등급 해금 — 첫 심사 뒤에 연다
        * (스펙 §2.4, 초반 과부하 방지). 최소 4칸이어야 구역이 된다.
        */
       ...(currentGrade().grade >= 2
@@ -767,7 +773,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
             tab: 'ground' as const,
             id: n === 2 ? 'pool_water@2' : 'pool_water@3',
             name: `수영장 ${n}×${n}`,
-            sub: '칸당 4만 · 4칸부터 구역',
+            sub: `칸당 ${Math.round(POOL_COST / 10000)}만 · 4칸부터 구역`,
           }))
         : []),
       { kind: 'erase' as const, tab: 'ground' as const, id: 'erase', name: '철거', sub: '잔디로' },
@@ -1503,7 +1509,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const discovered = new Set<string>(saved?.discovered ?? []);
   const noteDiscoveries = (): string[] => {
     const fresh: string[] = [];
-    for (const id of activeComboIds(h.placement)) {
+    for (const id of activeComboIds(h.placement, h.guests.swimZones())) {
       if (!discovered.has(id)) {
         discovered.add(id);
         fresh.push(id);

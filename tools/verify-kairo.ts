@@ -5102,7 +5102,8 @@ async function main(): Promise<void> {
    *
    * round 로 한 칸만 잡으면 위로(i+j 감소) 이동할 때 이전 칸 지면이 위에 그려져
    * 이동체가 "아래로 꺼진다" (사용자 실측 — 손님의 K37 규칙과 같은 문제).
-   * 깊이는 화면 오브젝트(busGfx)에서 읽고, 걸친 두 칸의 지면 띠와 비교한다.
+   * 깊이는 **양쪽 다** 화면 오브젝트에서 읽는다 — 버스는 busGfx, 지면은 걸친 두 칸의
+   * 타일 그림(tileImageForTest)이다. 한쪽을 공식으로 다시 계산하면 상수 산수가 된다.
    * 음성 대조군이 내장이다: round 회귀면 뒤 칸 지면 깊이에 진다.
    */
   const mover = (await page.evaluate(`(() => {
@@ -5110,15 +5111,18 @@ async function main(): Promise<void> {
     // 깊이 규칙은 지형 종류와 무관하다 — 이 페이지는 합성 지형(전면 포장)이라
     // 도로가 없으므로, 격자 안 임의의 이웃 두 칸에서 잰다 (setBus 는 지형을 안 본다)
     const spot = { i: Math.floor(t.width / 2), j: Math.floor(t.height / 2) };
-    const K = 4096;
-    const key = (i, j) => (i + j) * K + (i % K) / K;
+    /*
+     * 지면 깊이도 **화면에 올라간 오브젝트에서** 읽는다. 페이지 안에서 띠 공식을
+     * 다시 계산하면 상수 산수라, 그리기(depthKey 배정)가 통째로 틀려도 통과한다.
+     */
+    const from = sc.tileImageForTest(spot.i, spot.j);
+    const to = sc.tileImageForTest(spot.i + 1, spot.j);
+    if (!from || !to) return { ok: false, why: '지면 타일 그림 없음 (' + spot.i + ',' + spot.j + ')' };
     // 두 칸 사이 한가운데 — 걸친 상태
     sc.setBus({ x: spot.i + 0.5, y: spot.j });
     const d = sc['busGfx'].depth;
     sc.setBus(null);
-    const gFrom = key(spot.i, spot.j);
-    const gTo = key(spot.i + 1, spot.j);
-    return { ok: true, bus: d, from: gFrom, to: gTo };
+    return { ok: true, bus: d, from: from.depth, to: to.depth };
   })()`)) as { ok: boolean; why?: string; bus?: number; from?: number; to?: number };
   /*
    * ── 수영 구역 (S3) — 칠하면 구역·오버레이가 생기고, 지우면 **파생이라** 사라진다 ──

@@ -56,6 +56,7 @@ import {
   landRect,
   GRADES,
 } from '../src/sim/kairo/progress.js';
+import { poolZones, POOL_KIND } from '../src/sim/kairo/swim.js';
 import { UnlockStore } from '../src/sim/kairo/unlocks.js';
 import { ExamStore } from '../src/sim/kairo/exam.js';
 import { WishStore } from '../src/sim/kairo/wishes.js';
@@ -92,7 +93,6 @@ const EACH = args.includes('--each');
  */
 const GRID_W = 96;
 const GRID_H = 72;
-import { poolZones, POOL_KIND } from '../src/sim/kairo/swim.js';
 
 const GATE = KairoTerrain.parkGate();
 
@@ -107,7 +107,11 @@ interface RunResult {
   weeks: number;
   cash: number;
   facilities: number;
-  /** 수영 구역 수 (S2) — 0 이면 봇이 수영 경제를 안 재고 있는 것이다 */
+  /**
+   * 수영장(땅) 구역 수 (S2) — 0 이면 봇이 수영 경제를 안 재고 있는 것이다.
+   * 봇이 파는 것은 수영장뿐이라 강 구역(덱 밀폐)은 안 센다 — 세려면 `riverZones` 에
+   * `waterBarrierKeys()` 까지 넘겨야 한다.
+   */
   swimZones: number;
   /** 심사로 딴 실제 등급 (K42) — `grade`(만족도 환산 표시값)와 다르다. 해금은 이걸 따른다 */
   examGrade: number;
@@ -457,15 +461,16 @@ function ensureTicket(
   return 0;
 }
 
-/** 수영장 붓값 — pool_water 6칸 (3×2) × 40,000 */
+/** 수영장 붓값 — **칸당**. `kairo-ground.json` 의 pool_water `cost` 와 같아야 한다 */
 const POOL_TILE_COST = 40_000;
 
 /**
- * 수영장을 하나 판다 (S2) — 2등급부터, 없으면 하나.
+ * 수영장을 하나 판다 (S2) — 2등급부터, 없으면 하나. 2×2 = 구역이 되는 최소 규격
+ * (`POOL_MIN_TILES` 4칸)이라 봇은 딱 그만큼만 판다.
  *
  * 봇이 안 지으면 헤드리스가 수영 경제(play 공급·요금·위험)를 영영 안 재서,
  * 골든이 "수영장 없는 세계"를 잰다 — 토지 해금을 봇에 안 넣었을 때와 같은 실수다.
- * 자리는 게이트 근처의 잔디 3×2, 포장에 접한 곳 (입수점 규칙 — 문이 길 닿은 쪽에
+ * 자리는 게이트 근처의 잔디 2×2 중 포장에 접한 곳 (입수점 규칙 — 문이 길 닿은 쪽에
  * 나는 것과 같다).
  */
 function ensurePool(
@@ -492,7 +497,7 @@ function ensurePool(
     return touchesPath;
   };
   /*
-   * 게이트에서 가까운 순 **결정적 스캔** — 무작위 표본은 잔디 3×2 + 포장 인접이라는
+   * 게이트에서 가까운 순 **결정적 스캔** — 무작위 표본은 잔디 2×2 + 포장 인접이라는
    * 조건을 26주 안에 못 찾는 시드가 대부분이었다 (실측: 12시드 중앙값 0).
    * 사람은 "입구 근처 빈 잔디"를 눈으로 찾는다 — 그게 봇의 모델이어야 한다.
    */
