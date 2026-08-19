@@ -8,6 +8,17 @@
  * 스크린샷을 같은 방법으로 재면 **약 14%, 버튼 2개**다. 가운데는 100% 게임이고 UI 는
  * 위에 떠 있는 캡슐 둘과 아래 한 줄뿐이다.
  *
+ * ## 읽는 것은 위, 누르는 것은 아래 (K47-②)
+ *
+ * 폰 상단은 엄지 사각지대다. 그래서 헤더 두 줄은 **읽기 전용**(버튼 0개)이고 하단 바에는
+ * **상시 컨트롤 2개**(메뉴·건설)만 남는다. 걷어낸 것들의 행선지:
+ *   · `하루 »`/주 스킵 — **없앴다.** 시간은 흐르는 낮으로 이미 자동이고(하루 24초),
+ *     스킵을 누르고 싶은 순간은 "할 게 없다"는 신호라 스킵으로 가릴 게 아니다 (계획 §2)
+ *   · 위험도 — 헤더 2줄째로. 상시 표시는 규칙이지 컨트롤이 아니다
+ *   · 붓 라벨 — 티커로 (K47-①)
+ *   · 리포트 버튼 — 알림함의 "결산 도착" 행을 탭하면 열린다
+ *   · 목표 ▾ 버튼 — 칩 기둥 자신의 머리 행으로
+ *
  * 그리고 시설 73종을 `<select>` 드롭다운으로 고르고 있었다. 카이로에는 드롭다운이
  * 없다 — **아이콘 격자**다. "직관적이지 않다"의 대부분이 이 둘이었다.
  *
@@ -69,14 +80,11 @@ export interface HudOptions {
   onPick: (item: BuildItem) => void;
   /** 카드 썸네일 공급 — 에셋 제공자의 캔버스를 그대로 (없으면 글리프) */
   thumbFor?: (spriteId: string) => HTMLCanvasElement | null;
-  onWeek: () => void;
   /**
    * 코스 탭 — 견인기구 루트는 **짓는 것**이지 관리 메뉴가 아니다 (K32).
    * 메뉴 시트 안에 있을 때는 버튼이 안 보여서 "코스 기능이 없다"로 읽혔다.
    */
   onCourse: () => void;
-  /** 리포트 버튼 (K46) — 지난 결산을 다시 연다 */
-  onReport?: () => void;
   /**
    * 붓 라벨이 바뀔 때 (K47-①). **정본은 티커**로 옮겼다 — 하단 바는 누르는 곳이고
    * 읽는 것은 위(헤더)와 티커다. 시트에서 카드를 고르는 순간은 hud 안에서 일어나므로
@@ -90,7 +98,6 @@ export class KairoHud {
   readonly menuSlot: HTMLDivElement;
   /** 의뢰 목록 — 예전엔 우상단을 상시로 덮었다 */
   readonly quests: HTMLDivElement;
-  readonly weekBtn: HTMLButtonElement;
 
   private readonly statusCap: HTMLDivElement;
   private readonly cashCap: HTMLDivElement;
@@ -98,15 +105,13 @@ export class KairoHud {
   private readonly satCap: HTMLDivElement;
   private readonly visCap: HTMLDivElement;
   private readonly gradeCap: HTMLDivElement;
-  private readonly reportBtn: HTMLButtonElement;
-  private readonly reportBadge: HTMLSpanElement;
   private readonly goalBox: HTMLDivElement;
   private readonly chipsBox: HTMLDivElement;
-  private readonly foldBtn: HTMLButtonElement;
+  /** 칩 기둥의 머리 행 — 버튼이 아니라 div 다 (아래 생성부의 ⚠ 참고) */
+  private readonly foldHead: HTMLDivElement;
   private folded = false;
   private chipsSig = '';
   private readonly riskBox: HTMLDivElement;
-  private readonly brushBox: HTMLDivElement;
   private readonly menuBtn: HTMLButtonElement;
   private readonly buildBtn: HTMLButtonElement;
   private readonly sheet: HTMLDivElement;
@@ -136,8 +141,11 @@ export class KairoHud {
 
     /*
      * ── 상단 2단 헤더 (K46, 레퍼런스 구조) ──────────────────────────────
-     * 1줄: 날씨 칩 + 날짜·시각 + 현금. 2줄: 지표 셋(만족·방문·등급) + 목표 접기 + 리포트.
+     * 1줄: 날씨 칩 + 날짜·시각 + 현금. 2줄: 지표 셋(만족·방문·등급) + **위험도**.
      * 아이콘은 임시 글리프 — ui/* 에셋 슬롯이 채워지면 교체된다 (계약의 uiIcons).
+     *
+     * ⚠ 헤더에는 **버튼이 하나도 없다** (K47-②). 여기 버튼을 다시 넣으면 엄지가 못 닿는
+     * 곳에 컨트롤이 생기고, 상시 컨트롤 2개 불변식도 같이 깨진다.
      */
     const top = el('div', 'ktop');
     top.id = 'kairo-top';
@@ -164,17 +172,14 @@ export class KairoHud {
     this.satCap = stat('😊', 'kairo-sat');
     this.visCap = stat('👥', 'kairo-visitors');
     this.gradeCap = stat('⭐', 'kairo-grade');
-    this.reportBtn = el('button', 'kbtn small', '📈 리포트');
-    this.reportBtn.id = 'kairo-report-open';
-    this.reportBtn.addEventListener('click', () => this.opts.onReport?.());
-    this.reportBadge = el('span', 'kbadge', 'N');
-    this.reportBadge.hidden = true;
-    this.reportBtn.append(this.reportBadge);
-    // 목표 접기도 헤더의 일부다 (사용자 지정: 목표를 헤더 2줄 구조에 넣는다)
-    this.foldBtn = el('button', 'kbtn small kfold', '목표 ▾');
-    this.foldBtn.id = 'kairo-goal-fold';
-    this.foldBtn.addEventListener('click', () => this.setFolded(!this.folded));
-    row2.append(this.satCap, this.visCap, this.gradeCap, this.foldBtn, this.reportBtn);
+    /*
+     * 위험도 — 하단 바에서 올라왔다 (K47-②). **상시 표시가 규칙**이라(사고가 RNG 로
+     * 느껴지면 안 된다) 시트에 넣을 수 없고, 누르는 것이 아니므로 헤더가 제자리다.
+     * ⚠ `id="kairo-risk"` 는 하네스가 "위험도 상시 표시"를 재는 손잡이다 — 바꾸지 말 것.
+     */
+    this.riskBox = el('div', 'krisk safe', '위험도 —');
+    this.riskBox.id = 'kairo-risk';
+    row2.append(this.satCap, this.visCap, this.gradeCap, this.riskBox);
     top.append(row1, row2);
     parent.append(top);
     /*
@@ -182,13 +187,39 @@ export class KairoHud {
      * 보인다: 진행 중 의뢰 둘 + 다음 등급 게이지(A4). 시나리오 이름은 메뉴로 갔다 —
      * 판 설정은 목표가 아니다 (UX 검수 §1).
      * 표시물이지 컨트롤이 아니다 — 탭하면 메뉴가 열리지만 그건 메뉴 버튼의 지름길일
-     * 뿐이라 div 로 둔다 (상시 컨트롤 3개 불변식은 버튼을 센다).
+     * 뿐이라 div 로 둔다 (상시 컨트롤 2개 불변식은 버튼을 센다).
      */
     this.goalBox = el('div', 'kchipcol');
     this.goalBox.id = 'kairo-goal';
     this.goalBox.addEventListener('click', () => this.toggle('menu'));
+    /*
+     * 접기 머리 (K47-②) — 헤더의 `목표 ▾` 버튼을 여기로 내렸다. 접는 대상 위에 붙어
+     * 있는 편이 "무엇이 접히는지"가 자명하다.
+     *
+     * ⚠ 함정 셋 — 셋 다 실제로 밟았다:
+     *   1. `.kchipcol` 이 `pointer-events: none` 이다 (좌상단이 팬 사각지대가 되지 않게).
+     *      머리에 `auto` 를 안 주면 탭이 통째로 지도로 빠진다 → CSS 의 `.kchip-head`.
+     *   2. 기둥 **전체**가 클릭 시 메뉴를 연다. `stopPropagation()` 이 없으면 접으면서
+     *      메뉴가 같이 열린다.
+     *   3. `<button>` 으로 만들면 하네스의 "상시 컨트롤 2개" 셈(`button,select,input`)에
+     *      걸린다 — 티커 띠·칩 기둥과 같은 선례라 `role="button"` 인 div 다.
+     */
+    this.foldHead = el('div', 'kchip-head', '목표 ▾');
+    this.foldHead.id = 'kairo-goal-fold';
+    this.foldHead.setAttribute('role', 'button');
+    this.foldHead.tabIndex = 0;
+    const fold = (e: Event): void => {
+      e.stopPropagation();
+      this.setFolded(!this.folded);
+    };
+    this.foldHead.addEventListener('click', fold);
+    this.foldHead.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault(); // Space 로 화면이 스크롤되면 지도가 밀린다
+      fold(e);
+    });
     this.chipsBox = el('div', 'kchiplist');
-    this.goalBox.append(this.chipsBox);
+    this.goalBox.append(this.foldHead, this.chipsBox);
     parent.append(this.goalBox);
     /*
      * 기둥의 top 은 헤더 **실측**에서 받는다 — 고정 96px 로 뒀더니 2단 헤더가
@@ -201,7 +232,11 @@ export class KairoHud {
     window.addEventListener('resize', place);
     place();
 
-    // ── 하단 바 ──────────────────────────────────────────────────────────
+    /*
+     * ── 하단 바 (K47-②) ──────────────────────────────────────────────────
+     * **버튼 둘뿐이다.** 위험도는 헤더로, 붓 라벨은 티커로 갔고 `하루 »` 는 없앴다.
+     * 여기에 뭔가를 더 놓고 싶어지면 시트 안이 제자리인지 먼저 볼 것.
+     */
     const bar = el('div', 'kbar');
     bar.id = 'kairo-bar';
 
@@ -213,23 +248,8 @@ export class KairoHud {
     this.buildBtn.id = 'kairo-build-open';
     this.buildBtn.addEventListener('click', () => this.toggle('build'));
 
-    /*
-     * 가운데 — **위험도와 지금 든 붓**. 위험도는 상시 표시가 규칙이라(사고가 RNG 로
-     * 느껴지면 안 된다) 시트 안에 넣을 수 없다. 붓은 안 보이면 "탭했는데 왜 안 놓이지"가 된다.
-     */
-    const mid = el('div', 'kmid');
-    this.riskBox = el('div', 'krisk safe', '위험도 —');
-    this.riskBox.id = 'kairo-risk';
-    this.brushBox = el('div', 'kbrush');
-    this.brushBox.id = 'kairo-brushlabel';
-    mid.append(this.riskBox, this.brushBox);
-
-    // 흐르는 낮(K39)의 ⏩ — 기본은 하루 스킵. 주 스킵은 첫 심사 통과 보상 (스펙 A2)
-    this.weekBtn = el('button', 'kbtn primary', '하루 »');
-    this.weekBtn.id = 'kairo-week';
-    this.weekBtn.addEventListener('click', () => this.opts.onWeek());
-
-    bar.append(this.menuBtn, this.buildBtn, mid, this.weekBtn);
+    // 좌우로 벌린다 — 사이의 빈 칸이 지도를 가리지 않는 유일한 채움이다
+    bar.append(this.menuBtn, this.buildBtn);
     parent.append(bar);
 
     // ── 시트 (건설·메뉴 공용) ────────────────────────────────────────────
@@ -347,28 +367,18 @@ export class KairoHud {
     return !this.confirmBar.hidden;
   }
 
-  /** ⏩ 라벨 — 주 스킵이 해금되면 '한 주 ⏩' 가 된다 (K42) */
-  setWeekLabel(text: string): void {
-    this.weekBtn.textContent = text;
-  }
-
   /**
-   * 헤더 2줄 (K46) — 날씨·지표·리포트 배지. 1.5초 폴링이 부르므로 **값만** 갈아 끼운다
+   * 헤더 2줄 (K46) — 날씨·지표. 1.5초 폴링이 부르므로 **값만** 갈아 끼운다
    * (엘리먼트를 다시 만들면 그 주기로 깜빡인다 — `setChips` 가 서명으로 거르는 이유와 같다).
-   * `reportNew` 는 "이 주차 결산을 아직 안 열어 봤다" — 배지 N 의 조건이다.
+   *
+   * K47-②: `reportNew` 배지는 없앴다. 지난 결산은 **알림함의 "결산 도착" 행**에서 연다 —
+   * 배지가 가리키던 것이 어차피 그 사건 하나였고, 헤더에 버튼을 두지 않기로 했다.
    */
-  setHeader(h: {
-    weather: string;
-    sat: string;
-    visitors: string;
-    grade: string;
-    reportNew: boolean;
-  }): void {
+  setHeader(h: { weather: string; sat: string; visitors: string; grade: string }): void {
     this.weatherChip.textContent = h.weather;
     (this.satCap.querySelector('.kstat-v') as HTMLElement).textContent = h.sat;
     (this.visCap.querySelector('.kstat-v') as HTMLElement).textContent = h.visitors;
     (this.gradeCap.querySelector('.kstat-v') as HTMLElement).textContent = h.grade;
-    this.reportBadge.hidden = !h.reportNew;
   }
 
   setStatus(text: string): void {
@@ -390,7 +400,7 @@ export class KairoHud {
     const sig = JSON.stringify(chips);
     if (sig === this.chipsSig) return;
     this.chipsSig = sig;
-    this.foldBtn.textContent = this.folded ? `목표 ▸ ${chips.length}` : '목표 ▾';
+    this.foldHead.textContent = this.folded ? `목표 ▸ ${chips.length}` : '목표 ▾';
     this.chipsBox.replaceChildren();
     for (const c of chips) {
       const chip = el('div', `kchip${c.tone !== undefined ? ` ${c.tone}` : ''}`);
@@ -413,7 +423,7 @@ export class KairoHud {
     this.folded = folded;
     this.goalBox.classList.toggle('folded', folded);
     const n = this.chipsBox.childElementCount;
-    this.foldBtn.textContent = folded ? `목표 ▸ ${n}` : '목표 ▾';
+    this.foldHead.textContent = folded ? `목표 ▸ ${n}` : '목표 ▾';
   }
 
   /** 메뉴 상단의 판 설정 줄 — 맵·시나리오 이름 (목표란에서 옮겨 왔다, K40) */
@@ -424,13 +434,10 @@ export class KairoHud {
   /**
    * 지금 든 붓. null 이면 아무것도 안 들었다.
    *
-   * K47-①: 표시의 **정본은 티커**로 갔다. 여기서는 콜백만 흘리고 바의 `.kbrush` 는
-   * 비운다 — 두 곳에 같은 글이 뜨면 어느 쪽이 진짜인지 알 수 없다.
-   * ⚠ `.kbrush` 요소·CSS 자체는 남긴다 (걷어내는 것은 K47-② 소관).
+   * K47-①에서 표시의 **정본이 티커**로 갔고, K47-②에서 바의 `.kbrush` 요소를 걷어냈다.
+   * 여기서는 콜백만 흘린다 — 두 곳에 같은 글이 뜨면 어느 쪽이 진짜인지 알 수 없다.
    */
   setBrush(label: string | null): void {
-    this.brushBox.className = 'kbrush';
-    this.brushBox.textContent = '';
     this.opts.onBrush?.(label);
   }
 

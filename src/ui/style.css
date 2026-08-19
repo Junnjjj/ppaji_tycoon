@@ -815,28 +815,40 @@ body {
   font-size: 13px;
 }
 
-.kbtn.small {
-  min-height: var(--tap); /* 리포트도 버튼이다 — 터치 타깃 44px 불변식 */
-  padding: 4px 12px;
-  font-size: 12px;
-  pointer-events: auto;
-  position: relative;
+/*
+ * 위험도 — 헤더 2줄째의 마지막 칸 (K47-②, 하단 바에서 올라왔다).
+ *
+ * 헤더에서 유일하게 **진한 칠 + 흰 글씨**인 항목이다. 위험은 지표가 아니라 경보라
+ * 같은 톤으로 늘어놓으면 안 읽힌다 (색 넷은 `--risk-*` 토큰, 대비 검사가 지킨다).
+ * ⚠ 폭 예산이 빡빡해 `위험도 안전` 두 낱말까지다 — 처방(`안전 +N`)은 티커로 갔다.
+ */
+.krisk {
+  flex: 0 0 auto;
+  margin-left: 2px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  box-shadow: var(--sk-inset);
+  color: var(--text-on-solid);
+  font-size: 11px;
+  font-weight: 700;
+  text-shadow: var(--sk-emboss-on-solid);
+  white-space: nowrap;
 }
 
-.kbadge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  min-width: 16px;
-  height: 16px;
-  border-radius: 8px;
-  background: var(--bad);
-  color: var(--text-on-solid);
-  text-shadow: var(--sk-emboss-on-solid);
-  font-size: 10px;
-  font-weight: 800;
-  line-height: 16px;
-  text-align: center;
+.krisk.safe {
+  background: var(--risk-safe);
+}
+
+.krisk.watch {
+  background: var(--risk-watch);
+}
+
+.krisk.caution {
+  background: var(--risk-caution);
+}
+
+.krisk.danger {
+  background: var(--risk-danger);
 }
 
 /* 목표 — 좌상단 캡슐 아래. 안 보이면 시나리오가 설정 문구가 된다 */
@@ -861,9 +873,31 @@ body {
   pointer-events: auto;
 }
 
-/* 접기 토글 — 헤더 2줄째에 산다. 접히면 칩 기둥만 사라진다 */
-.kfold {
+/*
+ * 접기 머리 (K47-②) — 헤더의 `목표 ▾` 버튼이 접는 대상 위로 내려왔다.
+ *
+ * ⚠ `pointer-events: auto` 가 **필수**다. 기둥(`.kchipcol`)이 `none` 이라(좌상단이 팬
+ * 사각지대가 되지 않게) 안 주면 탭이 통째로 지도로 빠진다.
+ * 버튼이 아니라 div 다 — 하단 바의 "상시 컨트롤 2개"를 버튼 수로 세기 때문이다.
+ */
+.kchip-head {
+  align-self: flex-start;
   pointer-events: auto;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 9px;
+  background: var(--panel);
+  box-shadow: var(--sk-lift);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 700;
+  text-shadow: var(--sk-emboss);
+  white-space: nowrap;
+  transition: transform var(--dur-micro) var(--ease);
+}
+
+.kchip-head:active {
+  transform: translateY(1px);
 }
 
 .kchiplist {
@@ -941,6 +975,8 @@ body {
   z-index: 10;
   display: flex;
   align-items: center;
+  /* 둘뿐이라 좌우로 벌린다 (K47-②) — 왼쪽에 몰아 두면 오른손 엄지가 건설에 안 닿는다 */
+  justify-content: space-between;
   gap: 6px;
   height: calc(56px + var(--safe-b));
   padding: 0 8px var(--safe-b);
@@ -994,58 +1030,11 @@ body {
   text-shadow: var(--sk-emboss-on-solid);
 }
 
-/* 가운데 슬롯 — 위험도와 지금 든 붓. 둘 다 상시 표시여야 한다 */
-.kmid {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  overflow: hidden;
-}
-
-.krisk {
-  flex: 0 0 auto;
-  padding: 5px 9px;
-  border-radius: 8px;
-  box-shadow: var(--sk-inset);
-  color: var(--text-on-solid);
-  font-size: 11px;
-  font-weight: 700;
-  text-shadow: var(--sk-emboss-on-solid);
-  white-space: nowrap;
-}
-
-.krisk.safe {
-  background: var(--risk-safe);
-}
-
-.krisk.watch {
-  background: var(--risk-watch);
-}
-
-.krisk.caution {
-  background: var(--risk-caution);
-}
-
-.krisk.danger {
-  background: var(--risk-danger);
-}
-
-.kbrush {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--text-dim);
-  font-size: 12px;
-}
-
-.kbrush.on {
-  color: var(--accent);
-  font-weight: 700;
-}
+/*
+ * ⚠ 여기 `.kmid`(위험도 + 붓 라벨)가 있었다. K47-② 에서 **바에는 버튼 둘만** 남기고
+ * 위험도는 헤더로, 붓 라벨은 티커로 보냈다 (`.krisk` 는 헤더 절로 옮겼다).
+ * 바에 새 표시물을 되돌리지 말 것 — 읽는 것은 위, 누르는 것은 아래다.
+ */
 
 /* ── 시트 — 건설·메뉴 공용. 하단 바 위로 올라온다 ── */
 
@@ -1386,6 +1375,8 @@ body {
   .kitem,
   .kcard,
   .kcourse-item,
+  /* 목표 접기 머리 (K47-②) — 버튼이 아니어도 움직이면 가드에 들어온다 */
+  .kchip-head,
   .ksheet-head .tab-btn {
     transition: none;
   }
@@ -2325,6 +2316,22 @@ body {
 
 .kinbox-text {
   flex: 1 1 auto;
+}
+
+/*
+ * 눌리는 행 (K47-②) — 헤더 리포트 버튼을 대신한다. **읽는 줄과 눈으로 구분돼야**
+ * 하므로 면을 밝히고 오른쪽에 `›` 를 단다. 전부에 달면 어디가 눌리는지 안 읽힌다.
+ */
+.kinbox-row.open {
+  cursor: pointer;
+  background: var(--goal-won);
+  box-shadow: var(--sk-lift);
+}
+
+.kinbox-go {
+  flex: 0 0 auto;
+  color: var(--text-dim);
+  font-weight: 800;
 }
 
 .ktoast {

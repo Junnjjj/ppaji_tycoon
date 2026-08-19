@@ -40,6 +40,14 @@ export interface TickerItem {
   text: string;
   /** 알림함에 찍는 시점 라벨 — "3주 화" 처럼 main 이 만들어 준다 */
   stamp: string;
+  /**
+   * 알림함 행을 탭하면 그 사건으로 간다 (K47-②) — 지금은 "결산 도착" → 결산 다시 열기.
+   *
+   * 헤더의 리포트 버튼을 대신한다. 배지가 가리키던 것이 결국 이 사건 하나였고, 뉴스가
+   * 이미 "몇 주차 결산이 왔다"를 들고 있으므로 **소식 자체를 손잡이로** 쓰는 편이 맞다.
+   * 없는 항목은 그냥 읽는 줄이다 — 전부에 링크를 달면 어디가 눌리는지 안 읽힌다.
+   */
+  onOpen?: () => void;
 }
 
 const INBOX_MAX = 50;
@@ -129,9 +137,13 @@ export class KairoTicker implements Panel {
     return this.line.textContent ?? '';
   }
 
-  /** 사건 하나 — 티커에 흐르고 알림함에 쌓인다 */
-  push(icon: string, text: string, stamp: string): void {
-    this.items.unshift({ icon, text, stamp });
+  /**
+   * 사건 하나 — 티커에 흐르고 알림함에 쌓인다.
+   *
+   * `onOpen` 을 주면 알림함 행이 눌린다 (K47-②) — 결산처럼 **다시 열 수 있는** 사건만.
+   */
+  push(icon: string, text: string, stamp: string, onOpen?: () => void): void {
+    this.items.unshift({ icon, text, stamp, ...(onOpen ? { onOpen } : {}) });
     if (this.items.length > INBOX_MAX) this.items.pop();
     this.renderInbox();
     // 새 뉴스는 붓 라벨보다 6초 우선 — 붓을 든 채로도 사건은 보여야 한다
@@ -174,12 +186,34 @@ export class KairoTicker implements Panel {
       return;
     }
     for (const it of this.items) {
-      const row = el('div', 'kinbox-row');
+      const row = el('div', `kinbox-row${it.onOpen ? ' open' : ''}`);
       row.append(
         el('span', 'kinbox-ico', it.icon),
         el('span', 'kinbox-text', it.text),
         el('span', 'kcaption', it.stamp),
       );
+      /*
+       * 눌리는 행 (K47-②) — 띠와 같은 이유로 `<button>` 이 아니라 `role="button"` 이다
+       * (알림함은 시트 안이라 상시 컨트롤 셈에는 안 들지만, 표면 한 벌을 지킨다).
+       * 열기 전에 **알림함을 닫는다** — 결산은 `PanelHost` 패널이라 배타 규칙이 어차피
+       * 알림함을 밀어내는데, 우리가 안 닫으면 `panelHost` 가 닫아 상태가 갈린다.
+       */
+      if (it.onOpen) {
+        const open = it.onOpen;
+        row.setAttribute('role', 'button');
+        row.tabIndex = 0;
+        row.append(el('span', 'kinbox-go', '›'));
+        const go = (): void => {
+          this.hide();
+          open();
+        };
+        row.addEventListener('click', go);
+        row.addEventListener('keydown', (e) => {
+          if (e.key !== 'Enter' && e.key !== ' ') return;
+          e.preventDefault();
+          go();
+        });
+      }
       this.inboxList.append(row);
     }
   }

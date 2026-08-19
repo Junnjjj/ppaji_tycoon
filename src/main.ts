@@ -681,9 +681,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * `stamp` 를 직접 줄 수 있다: 하루 마감처럼 **일어난 시점과 알리는 시점이 다른** 소식은
    * 자동 시점을 쓰면 하루가 밀려 찍힌다 (토요일 결산이 "일" 로 찍혔다 — 실측).
    */
-  const news = (icon: string, text: string, stamp: string = stampNow()): void => {
+  const news = (
+    icon: string,
+    text: string,
+    stamp: string = stampNow(),
+    onOpen?: () => void,
+  ): void => {
     if (newsMuted) return;
-    ticker.push(icon, text, stamp);
+    ticker.push(icon, text, stamp, onOpen);
   };
 
   const hud = new KairoHud(document.body, {
@@ -699,17 +704,6 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       } else {
         brush = it.kind === 'erase' ? 'erase' : it.id;
       }
-    },
-    onWeek: () => skipForward(),
-    // 리포트 (K46) — 지난 결산 다시 보기. 수동 열람이라 카드 사슬을 안 탄다
-    onReport: () => {
-      if (!lastReport) {
-        toast('아직 결산이 없습니다 — 첫 주를 보내세요');
-        return;
-      }
-      reportSeenWeek = lastReport.week;
-      report.show(lastReport, { onClose: () => undefined });
-      refreshCaps();
     },
     // 카드 썸네일 — 게임과 같은 그림을 같은 계약 ID 로 (제공자가 곧 정본이다)
     thumbFor: (sid: string) => (h.provider.has(sid) ? h.provider.get(sid) : null),
@@ -950,6 +944,26 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const week = new WeekRunner(h.terrain, h.placement, h.guests);
   runner = week; // 프레임이 이제부터 주차·현금을 읽을 수 있다
   const report = new KairoReport(document.body);
+  /**
+   * 지난 결산 다시 보기 (K46 의 리포트 버튼 → K47-② 알림함 행).
+   *
+   * 수동 열람이라 **카드 사슬을 안 탄다** (`onClose` 가 비어 있다) — 여기서 다음 주를
+   * 시작하면 결산을 다시 볼 때마다 주가 넘어간다.
+   * ⚠ 본문이 `lastReport`·`reportSeenWeek`·`refreshCaps` 를 읽는다. 전부 아래에서
+   *   선언되지만 **부르는 시점은 사용자 탭**이라 TDZ 에 안 걸린다.
+   * ⚠ 언제나 **가장 최근 결산**을 연다. 전체 결산(히트맵·재생 프레임)은 그 주에만
+   *   존재하고 세이브에도 안 들어가므로(위 `lastReport` 주석), 알림함의 옛 행을 눌러도
+   *   과거 주차를 되살릴 수는 없다. 되살리려면 주별 보관이 먼저다.
+   */
+  const openLastReport = (): void => {
+    if (!lastReport) {
+      toast('아직 결산이 없습니다 — 첫 주를 보내세요');
+      return;
+    }
+    reportSeenWeek = lastReport.week;
+    report.show(lastReport, { onClose: () => undefined });
+    refreshCaps();
+  };
   const cardView = new KairoCardView(document.body);
   /*
    * 주간 카드는 **모달**이다 (K37). 선택하지 않으면 주가 안 넘어가는 것이 카드의 존재
@@ -1085,7 +1099,6 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       resortName,
       priceMult,
       unlocks: unlocks.toSnapshot(),
-      weekSkip: flow.weekSkipUnlocked,
       // 누적 방문객 (K47-①) — optional 필드라 옛 세이브도 그대로 열린다
       visitorsTotal,
       exam: exam.toSnapshot(),
@@ -1159,8 +1172,6 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     speed: 1,
     /** 하네스·도구용 — true 면 흐름이 완전히 선다 (setAutoTick 과 독립) */
     frozen: false,
-    /** 결산까지 스킵 — 첫 심사 통과 보상 (K42, 스펙 A2). 그 전의 ⏩ 는 하루 단위다 */
-    weekSkipUnlocked: exam.toolsUnlocked || (saved?.weekSkip ?? false),
     daysSeen: 0,
   };
   /*
@@ -1280,14 +1291,19 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     afterStep();
   };
 
-  /** ⏩ — 기본은 하루 끝까지. 주 스킵은 해금 뒤 (PSS 는 배속을 엔드게임에 준다 — 스펙 A2) */
+  /**
+   * 하루 끝까지 감기.
+   *
+   * ⚠ K47-② 에서 **화면의 `하루 »` 버튼은 없앴다** (계획 §2: 시간은 흐르는 낮으로 이미
+   * 자동이고, 스킵을 누르고 싶은 순간은 "할 게 없다"는 신호라 스킵으로 가릴 게 아니다).
+   * 함수는 남긴다 — `window.__kairo` 로 노출돼 있어 **하네스가 시간을 감을 유일한
+   * 수단**이다. 주 스킵 분기도 같이 사라져 이제 언제나 하루 단위다.
+   */
   const skipForward = (): void => {
     const p = week.liveProgress();
     if (!p || p.done || panelHost.anyOpen) return;
     audio.play('sfx/tap');
-    const skipped = week.step(
-      flow.weekSkipUnlocked ? TICKS_PER_WEEK - p.tick : TICKS_PER_DAY - (p.tick % TICKS_PER_DAY),
-    );
+    const skipped = week.step(TICKS_PER_DAY - (p.tick % TICKS_PER_DAY));
     h.scene.advanceBoats(skipped);
     afterStep();
   };
@@ -1361,14 +1377,16 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         });
       }
       if (verdict.firstPass) {
-        // 첫 통과 보상 — 이동 붓 + ⏩ 주 스킵 (스펙 §4.1·A2)
-        flow.weekSkipUnlocked = true;
-        hud.setWeekLabel('한 주 »');
+        /*
+         * 첫 통과 보상 — **이동 붓만** (K47-②). 예전엔 ⏩ 주 스킵이 같이 왔는데
+         * 스킵 자체를 없앴다 (계획 §2). 해금의 정본은 `exam.toolsUnlocked` 이고
+         * 그건 이동 붓도 잠그므로 그대로 둔다.
+         */
         refreshBuildList();
         arrivalQueue.push({
           title: '새 도구',
-          name: '이동 · 한 주 감기',
-          sub: '첫 심사 통과 보상 — 시설을 옮기고, ⏩ 가 한 주를 감습니다',
+          name: '이동',
+          sub: '첫 심사 통과 보상 — 이제 지은 시설을 옮길 수 있습니다',
         });
       }
     }
@@ -1484,10 +1502,15 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const showReport = (): void => {
       /*
        * 결산은 **모달 그대로**다 (K47-①). 한 주의 결론을 보는 것이 핵심 루프의 절반이라
-       * 흘려보낼 수 없다. 다만 알림함에도 남긴다 — 리포트 배지(N)와 짝을 이뤄
-       * "몇 주차 결산이 왔었나"가 소식 목록에 남는다.
+       * 흘려보낼 수 없다. 다만 알림함에도 남긴다 — K47-② 부터는 **그 행이 곧 리포트
+       * 버튼**이다 (헤더 버튼을 없앤 자리). 탭하면 그 주 결산을 다시 연다.
        */
-      news('📊', `${rep.week}주차 결산 도착 · 손님 ${rep.visitors} · 손익 ${Math.round(rep.profit / 10000)}만`);
+      news(
+        '📊',
+        `${rep.week}주차 결산 도착 · 손님 ${rep.visitors} · 손익 ${Math.round(rep.profit / 10000)}만`,
+        stampNow(),
+        openLastReport,
+      );
       report.show(rep, { onClose: () => nextWeekCards() });
     };
     /*
@@ -1728,7 +1751,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     },
   });
 
-  /** 배속 (K44) — 상시 버튼 3개 불변식 때문에 메뉴 안이다. 세션 선호라 저장 안 한다 */
+  /** 배속 (K44) — 상시 버튼 2개 불변식 때문에 메뉴 안이다 (K47-②). 세션 선호라 저장 안 한다 */
   const speedBtn = document.createElement('button');
   speedBtn.id = 'kairo-speed';
   speedBtn.className = 'kitem';
@@ -1934,6 +1957,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     staffPanel.refresh();
   };
 
+  /**
+   * 마지막으로 알린 위험 단계 — 처방 뉴스를 **나빠질 때만** 흘리기 위한 기억.
+   * `null` 이면 아직 한 번도 안 쟀다 (부팅 직후에 뉴스가 터지면 안 된다).
+   */
+  let riskShown: number | null = null;
+  /** 나쁨 순서 — 뉴스는 이 값이 **오를 때만** 나간다 (1.5초 폴링이라 왕복이면 소음이다) */
+  const RISK_ORDER: Record<string, number> = { safe: 0, watch: 1, caution: 2, danger: 3 };
   const refreshRisk = (): void => {
     // 안전요원이 위험도를 내린다 — 시설과 같은 축이다
     const r = assessRisk(h.placement, h.guests, {
@@ -1944,8 +1974,23 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     hud.setRisk(
       r.level as 'safe' | 'watch' | 'caution' | 'danger',
       // "위험 위험"으로 겹쳐 읽히던 것 — 축은 '위험도'고 값이 단계 이름이다
-      `위험도 ${RISK_NAMES[r.level]}` + (r.safetyNeeded > 0 ? ` · 안전 +${r.safetyNeeded}` : ''),
+      `위험도 ${RISK_NAMES[r.level]}`,
     );
+    /*
+     * 처방(`안전 +N`)은 헤더에서 뺐다 (K47-②) — 2줄째 폭 예산이 빡빡하고, 처방은
+     * **상시 표시할 상태가 아니라 사건**이다. 단계가 나빠지는 순간만 뉴스로 흘린다.
+     * ⚠ 이 함수는 1.5초 폴링이 부른다. 단계 왕복(watch↔safe)에도 발화하면 티커가
+     *   위험도 소식으로 도배된다 — 그래서 **오를 때만** 이다.
+     */
+    const now = RISK_ORDER[r.level] ?? 0;
+    if (riskShown !== null && now > riskShown) {
+      news(
+        '⚠',
+        `위험도 ${RISK_NAMES[r.level]}` +
+          (r.safetyNeeded > 0 ? ` — 안전 +${r.safetyNeeded} 필요` : ' — 혼잡을 살피세요'),
+      );
+    }
+    riskShown = now;
   };
 
   const refreshQuests = (): void => {
@@ -2017,7 +2062,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     spring: '봄',
   };
   let lastGradeShown = -1;
-  /** 리포트 배지 — 이 주차 결산을 아직 안 열어 봤으면 N (K46) */
+  /**
+   * 마지막으로 열어 본 결산 주차. K46 에서는 헤더 배지(N)의 조건이었고, K47-② 에서
+   * 배지를 없앤 뒤로는 **미열람 판정**에만 쓴다 (알림함 행이 리포트 버튼을 대신한다).
+   */
   let reportSeenWeek = saved?.lastSummary ? (saved.week.week ?? 0) : 0;
   const WEATHER_GLYPH: Record<string, string> = {
     clear: '☀',
@@ -2054,7 +2102,6 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       sat: `${Math.round(reputation.value)}%`,
       visitors: `${lastSummary?.visitors ?? 0}명`,
       grade: `${g.grade}등급`,
-      reportNew: lastReport !== null && lastReport.week > reportSeenWeek,
     });
     if (g.grade !== lastGradeShown) {
       lastGradeShown = g.grade;
@@ -2094,7 +2141,6 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   h.scene.setClockOwner('week');
   syncTickPace();
   syncBoats();
-  if (flow.weekSkipUnlocked) hud.setWeekLabel('한 주 »');
   beginWeek();
   let lastRaf = performance.now();
   const rafLoop = (now: number): void => {
@@ -2135,6 +2181,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     refreshQuests,
     refreshBuildList,
     getLastReport: () => lastReport,
+    /**
+     * 아직 안 열어 본 결산이 있나 (K47-②).
+     *
+     * K46 에서는 헤더 배지(N)가 이걸 화면에 그렸다. 배지는 없앴지만 판정은 남긴다 —
+     * 열람 경로가 **알림함 행 하나뿐**이라, 그 행이 실제로 결산을 여는지는 이 값이
+     * 뒤집히는 것으로 증명된다 (검증이 읽는 유일한 소비자다).
+     */
+    reportUnread: () => lastReport !== null && lastReport.week > reportSeenWeek,
     combos: { previewCombos, evaluateCombos },
     quests: { questStatuses, gradeFor, requiredGrade },
     risk: { assessRisk, RISK_NAMES },

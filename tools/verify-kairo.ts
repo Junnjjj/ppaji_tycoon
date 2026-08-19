@@ -1759,10 +1759,14 @@ async function main(): Promise<void> {
     await page.screenshot({ path: `${SHOT_DIR}/kairo-aqua.png` });
   }
 
-  // ── 7i. 주 단위 루프·결산 ──
-  const weekBtn = await page.$('#kairo-week');
-  record('한 주 진행 버튼', weekBtn ? 'pass' : 'fail');
-
+  /*
+   * ── 7i. 주 단위 루프·결산 ──
+   *
+   * ⚠ K47-② 에서 `하루 »`(`#kairo-week`) 버튼이 사라졌다 — 시간은 흐르는 낮으로
+   * 이미 자동이라 스킵 버튼은 "할 게 없다"를 가리는 장치였다 (계획 §2). 그래서
+   * "한 주 진행 버튼이 있다" 절은 없앴다. 주를 감는 것은 이제 `__kairo.skipForward()`
+   * 백도어(하루 단위)와 `__kairo.runWeek()` 뿐이다.
+   */
   const calc = (await page.evaluate(`(() => {
     const h = window.__kairo;
     h.week.abort(); // 흐르는 낮의 진행 중인 주를 치운다 — run() 은 배치 전용이다 (K39)
@@ -2117,6 +2121,13 @@ async function main(): Promise<void> {
     return {
       hasBox: !!box,
       text: text,
+      /*
+       * K47-② — 위험도 칩이 하단 바에서 **헤더 2줄째**로 옮겨졌다. 존재만 재면
+       * 다시 바로 내려가도 초록불이라, 어디에 있는지와 tone 클래스를 같이 잡는다.
+       * (tone 은 여태 아무도 안 쟀다 — krisk 만 남고 색이 죽어도 통과했다.)
+       */
+      inHeader: !!box && !!box.closest('#kairo-top'),
+      cls: box ? box.className : '',
       beforeLevel: before.level,
       riskyLevel: risky.level,
       riskyRatio: risky.ratio,
@@ -2129,6 +2140,8 @@ async function main(): Promise<void> {
   })()`)) as {
     hasBox: boolean;
     text: string;
+    inHeader: boolean;
+    cls: string;
     beforeLevel: string;
     riskyLevel: string;
     riskyRatio: number;
@@ -2139,6 +2152,16 @@ async function main(): Promise<void> {
   };
 
   record('위험도가 화면에 상시 표시된다', risk.hasBox ? 'pass' : 'fail', risk.text.replace(/\n/g, ' / '));
+  /*
+   * 위험도 칩의 **자리와 색** (K47-②). 계획 §2 가 이 칩을 헤더 2줄째로 올렸다 —
+   * 하단 바는 버튼 둘만 남는다. 자리를 안 재면 "다시 하단 바로" 회귀가 조용히 통과한다.
+   * tone 클래스는 `krisk safe|watch|caution|danger` 넷 중 하나여야 한다 (`RiskTone`).
+   */
+  record(
+    '위험도가 헤더 2줄째에 있다 · tone 클래스가 붙는다 (K47-②)',
+    risk.inHeader && /^krisk (safe|watch|caution|danger)$/.test(risk.cls) ? 'pass' : 'fail',
+    `부모 ${risk.inHeader ? '#kairo-top 안' : '#kairo-top 밖'} · class="${risk.cls}"`,
+  );
   record(
     '스릴 시설을 늘리면 위험도가 올라간다',
     risk.riskyRatio > 0 ? 'pass' : 'fail',
@@ -2190,10 +2213,10 @@ async function main(): Promise<void> {
    */
   const cardFlow = (await page.evaluate(`(() => {
     const cv = window.__kairoCards;
-    const btn = document.getElementById('kairo-week');
-    if (!cv || !btn) return { ok: false, why: '카드 뷰 또는 주 진행 버튼이 없다' };
+    if (!cv) return { ok: false, why: '카드 뷰가 없다' };
     const cashBefore = window.__kairo.week.cash;
-    // K39: 버튼은 하루 스킵이 됐다. 카드는 주 마디(결산 뒤) 경로로 직접 연다
+    // 카드는 주 마디(결산 뒤) 경로로 직접 연다. K47-② 로 스킵 버튼이 사라져
+    // 누를 것이 아예 없다 — 주 마디를 만드는 것은 abort + openWeekCards 다
     window.__kairo.week.abort();
     window.__kairo.openWeekCards();
     const root = document.getElementById('kairo-card');
@@ -3769,18 +3792,21 @@ async function main(): Promise<void> {
    * 레퍼런스 자체가 이 정도를 쓴다 (상단 2줄 + 하단 2단).
    */
   /*
-   * ⚠ K47-① **일시 상향** (25/37). 뉴스 티커가 전폭 26px 띠를 상시로 지므로
-   * 세로 +3.1%p · 가로 +6.6%p 가 그대로 더해진다 (K46 이 22/30 을 여유 0 으로
-   * 딱 맞춰 놓은 상태였다).
+   * 예산 24/36 (K47-② 에서 실측 후 확정. ① 의 임시 25/37 에서 한 칸씩 조였다).
    *
-   * **Phase ② 에서 반드시 다시 조인다.** 헤더 2줄째의 버튼 둘(리포트·목표접기)이
-   * 빠지면 그 줄이 `min-height: var(--tap)`(44px) 을 놓아 헤더가 눈에 띄게 낮아지고,
-   * 하단 바에서도 위험도 칩·붓 라벨·하루 버튼이 빠진다. ②의 완료 조건에 "예산 재측정
-   * 후 상한을 실측값까지 내린다"가 들어 있다 — 이 주석이 남아 있으면 아직 안 조인 것이다.
+   * ⚠ **천장을 정하는 것은 티커가 아니라 의뢰 칩 기둥이다** — ② 에서 헤더 2줄째의
+   * 버튼 둘이 빠지며 그 줄이 `min-height: var(--tap)`(44px) 을 놓아 헤더가
+   * 106 → 78px 로 낮아졌는데(−2%p), `refreshGoal` 이 칩을 최대 4장(의뢰 2 + 등급 +
+   * 시나리오) 낼 때 +1.8%p 가 그대로 붙는다. 실측: 통상 세로 23% / 가로 35%,
+   * 칩 4장 최악 24.9% / 36.7%.
+   *
+   * 그래서 **K46 의 22/30 으로는 돌아갈 수 없다** — 전폭 26px 뉴스 띠의 몫(세로
+   * +3.1%p · 가로 +6.6%p)이 영구히 더해진다. 더 내리려면 칩 기둥을 손대야 하고
+   * 그건 K40 계약이다 (칩 최대 3장으로 줄이면 세로 ~23 / 가로 ~35 까지 내려간다).
    */
   for (const [vw, vh, tag, budget] of [
-    [393, 852, '세로', 25],
-    [852, 393, '가로', 37],
+    [393, 852, '세로', 24],
+    [852, 393, '가로', 36],
   ] as const) {
     const cx = await browser.newContext({
       viewport: { width: vw, height: vh },
@@ -3806,9 +3832,14 @@ async function main(): Promise<void> {
       m.chrome <= budget ? 'pass' : 'fail',
       `${m.chrome}%`,
     );
+    /*
+     * K47-② — 상시 컨트롤은 **둘뿐**이다 (계획 §2). 하루»·주 스킵은 없앴고,
+     * 리포트는 알림함 행으로, 목표 접기는 칩 기둥 머리(div)로 내려갔다. 티커 띠와
+     * 칩 기둥·접기 머리가 전부 `role="button"` 인 div 인 것이 이 숫자를 지키는 장치다.
+     */
     record(
-      `${tag} — 상시 컨트롤 5개 (메뉴·건설·하루·리포트·목표접기)`,
-      m.controls === 5 ? 'pass' : 'fail',
+      `${tag} — 상시 컨트롤 2개 (메뉴·건설)`,
+      m.controls === 2 ? 'pass' : 'fail',
       `${m.controls}개`,
     );
     record(`${tag} — 터치 타깃 44px · 가로 넘침 0`,
@@ -3832,26 +3863,98 @@ async function main(): Promise<void> {
       opened.minTap >= 44 ? 'pass' : 'fail',
       `최소 ${opened.minTap}px`,
     );
-    // K46-③ 겹침·접기 — 칩 기둥은 헤더 실측 아래에 있고, 접으면 칩이 사라진다.
-    // 음성 대조군이 내장이다: 토글이 죽으면 '접힘' 판정이, top 이 고정값으로
-    // 돌아가면 겹침 판정이 실패한다
-    const fold = (await pg.evaluate(`(() => {
-      const top = document.getElementById('kairo-top').getBoundingClientRect();
-      const goal = document.getElementById('kairo-goal').getBoundingClientRect();
+    /*
+     * K46-③ 겹침 + K47-② 접기 — 칩 기둥은 헤더 실측 아래에 있고, **기둥 맨 위
+     * 머리 행**을 누르면 칩이 접힌다 (헤더의 `목표 ▾` 버튼이 여기로 내려왔다).
+     *
+     * ⚠ 머리는 이제 `<button>` 이 아니라 div 다 (상시 컨트롤 2개를 지키려고). 그래서
+     *   **진짜 터치**로 누른다 — `.click()` 은 `pointer-events` 나 z-순서가 틀려도
+     *   통과한다. `.kchipcol` 이 `pointer-events: none` 이라 머리에 `auto` 가 빠지면
+     *   탭이 통째로 지도로 새는데, 그 실패는 실터치로만 보인다 (K33 규칙).
+     * ⚠ 손잡이를 **id 로 찾지 않는다** — 구조(`#kairo-goal` 의 자식 중 칩 목록이
+     *   아닌 것)로 찾는다. id 를 박으면 머리가 사라져도 이름만 살려 두면 통과한다.
+     * ⚠ **"머리를 눌러도 메뉴가 안 열린다"를 같은 판정에 AND 로 넣는다.** 기둥 전체가
+     *   클릭 시 메뉴를 여는 지름길이라, 머리의 `stopPropagation()` 이 빠지면 접을
+     *   때마다 시트가 같이 열린다 — 이 검사가 그 회귀를 잡는 유일한 곳이다.
+     * 음성 대조군은 내장이다: 토글이 죽으면 '접힘' 판정이, top 이 고정값으로
+     * 돌아가면 겹침 판정이 실패한다.
+     */
+    const pgCdp = await cx.newCDPSession(pg);
+    const pgTouch = async (type: TouchType, x: number, y: number): Promise<void> => {
+      await pgCdp.send('Input.dispatchTouchEvent', {
+        type,
+        touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }],
+      });
+    };
+    const FOLD_READ = `(() => {
       const list = document.querySelector('#kairo-goal .kchiplist');
-      const before = getComputedStyle(list).display;
-      document.getElementById('kairo-goal-fold').click();
-      const folded = getComputedStyle(list).display;
-      document.getElementById('kairo-goal-fold').click();
-      const after = getComputedStyle(list).display;
-      return { gap: Math.round(goal.top - top.bottom), before, folded, after };
-    })()`)) as { gap: number; before: string; folded: string; after: string };
+      const sheet = document.getElementById('kairo-sheet');
+      return {
+        display: list ? getComputedStyle(list).display : '(칩 목록 없음)',
+        sheet: !!sheet && !sheet.hidden,
+      };
+    })()`;
+    const foldGeom = (await pg.evaluate(`(() => {
+      const top = document.getElementById('kairo-top').getBoundingClientRect();
+      const goal = document.getElementById('kairo-goal');
+      const g = goal.getBoundingClientRect();
+      // 머리 = 기둥의 자식 중 칩 목록이 아닌 것 (클래스 이름을 박지 않는다)
+      const head = goal.querySelector(':scope > *:not(.kchiplist)');
+      const hr = head ? head.getBoundingClientRect() : null;
+      const list = goal.querySelector('.kchiplist');
+      return {
+        gap: Math.round(g.top - top.bottom),
+        hasHead: !!head,
+        headTag: head ? head.tagName.toLowerCase() : '',
+        before: list ? getComputedStyle(list).display : '(칩 목록 없음)',
+        x: hr ? Math.round(hr.left + hr.width / 2) : 0,
+        y: hr ? Math.round(hr.top + hr.height / 2) : 0,
+      };
+    })()`)) as {
+      gap: number;
+      hasHead: boolean;
+      headTag: string;
+      before: string;
+      x: number;
+      y: number;
+    };
+    let foldedDisp = '(머리 없음)';
+    let afterDisp = '(머리 없음)';
+    let menuLeaked = false;
+    if (foldGeom.hasHead) {
+      await pgTouch('touchStart', foldGeom.x, foldGeom.y);
+      await pgTouch('touchEnd', 0, 0);
+      await pg.waitForTimeout(220);
+      const s1 = (await pg.evaluate(FOLD_READ)) as { display: string; sheet: boolean };
+      await pgTouch('touchStart', foldGeom.x, foldGeom.y);
+      await pgTouch('touchEnd', 0, 0);
+      await pg.waitForTimeout(220);
+      const s2 = (await pg.evaluate(FOLD_READ)) as { display: string; sheet: boolean };
+      foldedDisp = s1.display;
+      afterDisp = s2.display;
+      menuLeaked = s1.sheet || s2.sheet;
+      // 이 절이 연 것은 이 절이 닫는다 — 시트가 새어 열렸으면 스크린샷 전에 치운다
+      if (menuLeaked) {
+        await pg.evaluate(`(() => {
+          const c = document.getElementById('kairo-sheet-close');
+          if (c) c.click();
+        })()`);
+        await pg.waitForTimeout(150);
+      }
+    }
     record(
-      `${tag} — 목표 기둥이 헤더와 안 겹친다 · 접기가 동작한다 (K46-③)`,
-      fold.gap >= 0 && fold.before !== 'none' && fold.folded === 'none' && fold.after !== 'none'
+      `${tag} — ★ 목표 기둥: 헤더와 안 겹치고 · 머리 탭으로 접힌다 · 메뉴는 안 열린다 (K47-②)`,
+      foldGeom.gap >= 0 &&
+        foldGeom.hasHead &&
+        foldGeom.before !== 'none' &&
+        foldedDisp === 'none' &&
+        afterDisp !== 'none' &&
+        !menuLeaked
         ? 'pass'
         : 'fail',
-      `간격 ${fold.gap}px · ${fold.before} → ${fold.folded} → ${fold.after}`,
+      `간격 ${foldGeom.gap}px · 머리 <${foldGeom.headTag || '없음'}> · ` +
+        `${foldGeom.before} → ${foldedDisp} → ${afterDisp} · ` +
+        `메뉴 ${menuLeaked ? '열렸다(stopPropagation 회귀!)' : '안 열림'}`,
     );
     await pg.screenshot({ path: `${SHOT_DIR}/kairo-hud-${tag}.png` });
     await cx.close();
@@ -4111,6 +4214,20 @@ async function main(): Promise<void> {
    *
    * CSS 에 그라디언트를 적었다고 화면에 보인다는 보장이 없다. **렌더된 픽셀**을 잘라
    * 위·아래 밝기를 비교한다. 평면이면 차이가 0 이다 (K29 이전 상태).
+   *
+   * ⚠ K47-② — 대상이 `#kairo-week`(진한 칠 `.kbtn.primary`)였는데 그 버튼이 사라졌다.
+   *   `getBoundingClientRect()` 를 null 에서 부르므로 **런 전체가 예외로 죽는** 자리라
+   *   가장 먼저 옮겼다. 새 대상은 하단 바에 남는 `#kairo-build-open` — 평 `.kbtn`(크림)이다.
+   *
+   *   **크림이라 문턱을 다시 기준 잡았다** (실측, 393×852 @3x):
+   *     · 면의 위아래 차(`--panel` 그라디언트 #fdeecb→#f8e0b4): 236 − 219 = **16.7**
+   *       → `>= 8` 그대로 통과한다 (진한 칠은 17 이었다)
+   *     · 옛 두 번째 판정 `edge > bottom + 4` 는 **크림에서 뒤집힌다**: 최상단은
+   *       그라디언트 보더(#c08c48, 160)라 크림 면(219)보다 **어둡다**. 진한 칠에서만
+   *       "위가 밝다"였을 뿐이고, 밝은 표면에서 그건 하이라이트가 아니라 아웃라인이다.
+   *       → 재질 레시피가 실제로 말하는 것으로 바꾼다: **아웃라인은 위가 밝고 아래가
+   *       어둡다** (`--sk-edge-top #c08c48` → `--sk-edge-bottom #7d5322`, 빛은 위에서).
+   *       실측 160 vs 107 = 53 차 → 문턱 20 (여유 2.6배). 두 표면 모두에서 성립한다.
    */
   {
     const cx = await browser.newContext({
@@ -4127,57 +4244,71 @@ async function main(): Promise<void> {
       { timeout: 15000 },
     );
     const box = (await pg.evaluate(`(() => {
-      const b = document.getElementById('kairo-week').getBoundingClientRect();
+      const el = document.getElementById('kairo-build-open');
+      if (!el) return null;
+      const b = el.getBoundingClientRect();
       return { x: Math.round(b.x), y: Math.round(b.y),
                width: Math.round(b.width), height: Math.round(b.height) };
-    })()`)) as { x: number; y: number; width: number; height: number };
-    const shot = await pg.screenshot({ clip: box });
-    /*
-     * PNG 를 직접 뜯지 않고 캔버스에 그려 읽는다 — 브라우저가 이미 디코더를 갖고 있다.
-     * (Node 쪽에 이미지 라이브러리를 새로 들이지 않으려는 이유이기도 하다.)
-     */
-    const b64 = shot.toString('base64');
-    const surf = (await pg.evaluate(
-      `(async (data) => {
-        const img = new Image();
-        img.src = 'data:image/png;base64,' + data;
-        await img.decode();
-        const cv = document.createElement('canvas');
-        cv.width = img.width; cv.height = img.height;
-        const g = cv.getContext('2d');
-        g.drawImage(img, 0, 0);
-        const px = g.getImageData(0, 0, cv.width, cv.height).data;
-        const lum = (x, y) => {
-          const k = (y * cv.width + x) * 4;
-          return 0.299 * px[k] + 0.587 * px[k + 1] + 0.114 * px[k + 2];
-        };
-        const rowMean = (y) => {
-          let s = 0, n = 0;
-          for (let x = 6; x < cv.width - 6; x++) { s += lum(x, y); n++; }
-          return s / n;
-        };
-        const h = cv.height;
-        return {
-          w: cv.width, h: h,
-          edge: rowMean(1),          // 최상단 — 반사 하이라이트
-          top: rowMean(Math.round(h * 0.25)),
-          bottom: rowMean(Math.round(h * 0.85)),
-        };
-      })(${JSON.stringify(b64)})`,
-    )) as { w: number; h: number; edge: number; top: number; bottom: number };
+    })()`)) as { x: number; y: number; width: number; height: number } | null;
+    if (!box) {
+      // 대상이 없으면 clip 이 예외를 던져 런이 통째로 죽는다 — 정직하게 실패로 적는다
+      record('버튼이 평면이 아니다 — 위아래 밝기 차 (K29)', 'fail', '#kairo-build-open 이 없다');
+      record('아웃라인이 위가 밝고 아래가 어둡다 — 빛은 위에서 (K46 재질 레시피)', 'fail',
+        '#kairo-build-open 이 없다');
+      await cx.close();
+    } else {
+      const shot = await pg.screenshot({ clip: box });
+      /*
+       * PNG 를 직접 뜯지 않고 캔버스에 그려 읽는다 — 브라우저가 이미 디코더를 갖고 있다.
+       * (Node 쪽에 이미지 라이브러리를 새로 들이지 않으려는 이유이기도 하다.)
+       */
+      const b64 = shot.toString('base64');
+      const surf = (await pg.evaluate(
+        `(async (data) => {
+          const img = new Image();
+          img.src = 'data:image/png;base64,' + data;
+          await img.decode();
+          const cv = document.createElement('canvas');
+          cv.width = img.width; cv.height = img.height;
+          const g = cv.getContext('2d');
+          g.drawImage(img, 0, 0);
+          const px = g.getImageData(0, 0, cv.width, cv.height).data;
+          const lum = (x, y) => {
+            const k = (y * cv.width + x) * 4;
+            return 0.299 * px[k] + 0.587 * px[k + 1] + 0.114 * px[k + 2];
+          };
+          const rowMean = (y) => {
+            let s = 0, n = 0;
+            for (let x = 6; x < cv.width - 6; x++) { s += lum(x, y); n++; }
+            return s / n;
+          };
+          const h = cv.height;
+          return {
+            w: cv.width, h: h,
+            // 아웃라인(2px 그라디언트 보더)의 위·아래. 면이 아니라 **테두리**를 읽는다
+            edgeTop: rowMean(1),
+            edgeBottom: rowMean(h - 2),
+            top: rowMean(Math.round(h * 0.25)),
+            bottom: rowMean(Math.round(h * 0.85)),
+          };
+        })(${JSON.stringify(b64)})`,
+      )) as { w: number; h: number; edgeTop: number; edgeBottom: number; top: number; bottom: number };
 
-    const grad = surf.top - surf.bottom;
-    record(
-      '버튼이 평면이 아니다 — 위아래 밝기 차 (K29)',
-      grad >= 8 ? 'pass' : 'fail',
-      `위 ${surf.top.toFixed(0)} · 아래 ${surf.bottom.toFixed(0)} · 차 ${grad.toFixed(0)}`,
-    );
-    record(
-      '상단에 반사 하이라이트가 있다',
-      surf.edge > surf.bottom + 4 ? 'pass' : 'fail',
-      `최상단 ${surf.edge.toFixed(0)} vs 아래 ${surf.bottom.toFixed(0)}`,
-    );
-    await cx.close();
+      const grad = surf.top - surf.bottom;
+      record(
+        '버튼이 평면이 아니다 — 위아래 밝기 차 (K29)',
+        grad >= 8 ? 'pass' : 'fail',
+        `위 ${surf.top.toFixed(0)} · 아래 ${surf.bottom.toFixed(0)} · 차 ${grad.toFixed(0)}`,
+      );
+      const edgeDrop = surf.edgeTop - surf.edgeBottom;
+      record(
+        '아웃라인이 위가 밝고 아래가 어둡다 — 빛은 위에서 (K46 재질 레시피)',
+        edgeDrop >= 20 ? 'pass' : 'fail',
+        `위 테두리 ${surf.edgeTop.toFixed(0)} · 아래 테두리 ${surf.edgeBottom.toFixed(0)} · ` +
+          `차 ${edgeDrop.toFixed(0)} (문턱 20 · 실측 53)`,
+      );
+      await cx.close();
+    }
   }
 
   /*
@@ -4561,24 +4692,40 @@ async function main(): Promise<void> {
       .join(' · ') + ` (토큰 ${selColors.accent})`,
   );
 
-  /* 감상 화면을 닫으면 HUD 가 돌아온다 — 형제의 display 를 직접 만지는 유일한 패널이다 */
+  /*
+   * 감상 화면을 닫으면 HUD 가 돌아온다 — 형제의 display 를 직접 만지는 유일한 패널이다.
+   *
+   * ⚠ 예전엔 **버튼 개수**로 쟀다. K47-② 로 상시 컨트롤이 2개가 되자 감상 화면이
+   * 자기 버튼 2개를 띄우면서 `2 → 2 → 2` 가 되어 판정이 무의미해졌다 (수가 우연히
+   * 같아지면 "가려졌다"와 "안 가려졌다"를 구분 못 한다). 이제 **감상이 실제로 감추는
+   * 대상**(헤더·티커·하단 바)의 표시 상태를 직접 본다 — 개수가 아니라 정체다.
+   */
   const showcaseRestore = (await page.evaluate(`(() => {
-    const count = () => [...document.querySelectorAll('button')]
-      .filter((b) => b.getBoundingClientRect().width > 2).length;
-    const before = count();
+    const ids = ['kairo-top', 'kairo-ticker', 'kairo-bar'];
+    const shown = () => ids.filter((id) => {
+      const el = document.getElementById(id);
+      if (!el || el.hidden) return false;
+      const st = getComputedStyle(el);
+      if (st.display === 'none' || st.visibility === 'hidden') return false;
+      const r = el.getBoundingClientRect();
+      return r.width > 2 && r.height > 2;
+    });
+    const before = shown();
     document.getElementById('kairo-menu-open').click();
     document.getElementById('kairo-showcase-open').click();
-    const during = count();
+    const during = shown();
     document.getElementById('kairo-showcase-close').click();
-    return { before: before, during: during, after: count() };
-  })()`)) as { before: number; during: number; after: number };
+    return { before: before, during: during, after: shown() };
+  })()`)) as { before: string[]; during: string[]; after: string[] };
   record(
     '★ 감상 화면을 닫으면 HUD 가 그대로 돌아온다 (K34)',
-    showcaseRestore.during < showcaseRestore.before &&
-      showcaseRestore.after === showcaseRestore.before
+    showcaseRestore.before.length === 3 &&
+      showcaseRestore.during.length === 0 &&
+      showcaseRestore.after.length === 3
       ? 'pass'
       : 'fail',
-    `버튼 ${showcaseRestore.before} → ${showcaseRestore.during} → ${showcaseRestore.after}`,
+    `HUD 표시 ${showcaseRestore.before.length} → ${showcaseRestore.during.length} → ` +
+      `${showcaseRestore.after.length} (감상 중 남은 것: ${showcaseRestore.during.join(',') || '없음'})`,
   );
 
   // ── 9e. 출입구를 놓아 건물을 통로로 (K36-B) ──
@@ -5379,7 +5526,7 @@ async function main(): Promise<void> {
    * ── K39. 흐르는 낮 ──
    *
    * 공원이 기본 상태로 살아 있는지 — 시간이 흐르고, 시트가 열리면 멈추고,
-   * ⏩ 는 하루만 감고(주 스킵은 심사 해금 전), 사건 밀도가 목표를 넘는지.
+   * 감기는 하루 경계에서 서고, 사건 밀도가 목표를 넘는지.
    * ⚠ 시트 여닫기는 **진짜 클릭**으로 한다 (K33: 백도어는 sim 검사에만).
    */
   await page.evaluate(`(() => {
@@ -5415,7 +5562,13 @@ async function main(): Promise<void> {
   const skipBefore = (await page.evaluate(
     `window.__kairo.week.liveProgress().tick`,
   )) as number;
-  await page.click('#kairo-week'); // 진짜 클릭 — ⏩
+  /*
+   * ⚠ K47-② — `하루 »` 버튼이 사라졌으므로 **백도어로 부른다.** 화면 경로가 없어진
+   * 기능이라 실터치로 잴 대상이 없다 (별 표시를 뗀 이유다). `skipForward` 자체는
+   * 남고 **언제나 하루 단위**다 — 주 스킵 분기가 통째로 없어졌다 (계획 §2).
+   * 하루 경계 산수는 그대로 지킨다: 감기가 주말까지 삼키면 이 판정이 잡는다.
+   */
+  await page.evaluate(`window.__kairo.skipForward()`);
   await page.waitForTimeout(250);
   const skipAfter = (await page.evaluate(`(() => {
     const p = window.__kairo.week.liveProgress();
@@ -5423,7 +5576,7 @@ async function main(): Promise<void> {
   })()`)) as number;
   const dayEnd = Math.ceil((skipBefore + 1) / 120) * 120;
   record(
-    '★ ⏩ 는 하루 끝까지만 감는다 — 주 스킵은 첫 심사 통과 해금 (스펙 A2)',
+    '하루 경계까지만 진행한다 — 주 스킵은 없다 (K47-②)',
     skipAfter === dayEnd && skipAfter < 840 ? 'pass' : 'fail',
     `${skipBefore} → ${skipAfter} (하루 경계 ${dayEnd})`,
   );
@@ -5711,47 +5864,13 @@ async function main(): Promise<void> {
     );
   }
 
-  // ── ⏩ 주 스킵 — 도구 해금 뒤엔 결산까지 감긴다 ──
-  await page.evaluate(`(() => {
-    const h = window.__kairo;
-    window.__kairoClearBrush();
-    h.flow.weekSkipUnlocked = true; // 위 판정에서 통과했으면 이미 true — 배선 검사라 강제한다
-    h.week.abort();
-    h.beginWeek();
-    h.flow.frozen = true;
-  })()`);
-  await page.click('#kairo-week');
-  await page.waitForTimeout(400);
-  const weekSkipped = (await page.evaluate(`(() => {
-    const r = document.getElementById('kairo-report');
-    const shown = !!r && !r.hidden;
-    if (shown) {
-      const close = [...r.querySelectorAll('button')].find((b) => b.textContent.includes('계속'))
-        || document.getElementById('kairo-report-close');
-      if (close) close.click();
-    }
-    return shown;
-  })()`)) as boolean;
-  await page.waitForTimeout(200);
-  await page.evaluate(`(() => {
-    const cv = window.__kairoCards;
-    let guard = 0;
-    while (cv && cv.visible && guard++ < 5) {
-      const card = cv.currentCard;
-      let pick = 0;
-      if (card) {
-        for (let oi = 0; oi < card.options.length; oi++) {
-          if (!card.options[oi].effects.some((e) => e.closed)) { pick = oi; break; }
-        }
-      }
-      cv.pickForTest(pick);
-    }
-    window.__kairo.flow.frozen = false;
-  })()`);
-  record(
-    '⏩ 주 스킵 — 해금 뒤에는 한 번에 결산까지 감긴다 (첫 심사 통과 보상, 스펙 A2)',
-    weekSkipped ? 'pass' : 'fail',
-  );
+  /*
+   * ⚠ **`⏩ 주 스킵` 절은 K47-② 에서 통째로 지웠다.** 기능이 없어졌다 —
+   * 첫 심사 보상은 이제 **이동 붓만**이고, `flow.weekSkipUnlocked`(세이브 `weekSkip`)
+   * 도 함께 사라졌다. 스킵을 누르고 싶은 순간은 "할 게 없다"는 신호이므로 스킵으로
+   * 가릴 게 아니라 목표 밀도를 고친다 (계획 §2). 스킵 요구가 실플레이에서 다시
+   * 나오면 그때 복구하고 이 절도 같이 되살린다 — 복구 비용이 싸다.
+   */
 
   /*
    * ── K45. 회전 · 코스 보트 ──
@@ -5932,11 +6051,12 @@ async function main(): Promise<void> {
     // 해금 축하는 아침 tick 에 모달로 끼어들어 흐름을 세운다 — 이 절에서는 비운다
     h.arrivalQueue.length = 0;
     /*
-     * ⚠ 앞 절(⏩ 주 스킵)이 weekSkipUnlocked 를 강제로 켜 뒀다. 켜진 채로 skipForward 를
-     * 부르면 주가 통째로 끝나 결산 모달이 뜨고, 이 절의 나머지가 전부 모달 뒤에서 죽는다.
-     * 여기서 필요한 사건은 **하루 마감**이므로 하루 단위로 되돌린다.
+     * ⚠ 한때 여기서 flow.weekSkipUnlocked 를 false 로 되돌렸다 — 앞 절(⏩ 주 스킵)이
+     * 켜 둔 채 끝나서, 켜진 상태로 skipForward 를 부르면 주가 통째로 끝나 결산 모달이
+     * 뜨고 이 절의 나머지가 모달 뒤에서 죽었기 때문이다. **K47-② 로 원인이 사라졌다**:
+     * 주 스킵 기능과 그 절이 함께 없어졌고 skipForward 는 언제나 하루 단위다.
+     * 이 절이 필요한 사건은 그대로 **하루 마감**이다.
      */
-    h.flow.weekSkipUnlocked = false;
     h.week.abort(); // K39 — 어느 tick 에 있었는지 모른다. 주 첫 tick 에서 결정적으로 시작
     h.beginWeek();
     h.scene.setAutoTick(true);
@@ -5946,8 +6066,8 @@ async function main(): Promise<void> {
     const r = strip ? strip.getBoundingClientRect() : null;
     /*
      * 상시 컨트롤 수 — HUD 절(9b)의 MEASURE_HUD 와 같은 셈법이다. 티커가 div 면
-     * 여기 안 잡혀 5가 유지되고, button 으로 만들어졌으면 6이 된다.
-     * ⚠ 이 페이즈에서는 하루»·리포트·목표접기가 아직 살아 있다 — 기대값은 그대로 5다
+     * 여기 안 잡혀 2가 유지되고, button 으로 만들어졌으면 3이 된다.
+     * ⚠ K47-② 로 하루»·리포트·목표접기가 전부 빠져 기대값이 5 → **2** 가 됐다
      */
     const ctrl = [...document.querySelectorAll('button, select, input')].filter((b) => {
       const rr = b.getBoundingClientRect();
@@ -6000,8 +6120,8 @@ async function main(): Promise<void> {
     `<${tkSetup.tag.toLowerCase() || '없음'} role="${tkSetup.role}" tabindex="${tkSetup.tabindex}">`,
   );
   record(
-    '상시 컨트롤 5개 유지 — 티커가 컨트롤을 늘리지 않았다 (하루»·리포트 제거는 Phase ②)',
-    tkSetup.controls === 5 ? 'pass' : 'fail',
+    '상시 컨트롤 2개 유지 — 티커가 컨트롤을 늘리지 않았다 (메뉴·건설, K47-②)',
+    tkSetup.controls === 2 ? 'pass' : 'fail',
     `${tkSetup.controls}개 · ${tkSetup.controlIds}`,
   );
 
@@ -6046,8 +6166,8 @@ async function main(): Promise<void> {
     const tkText0 = (await page.evaluate(TK_READ)) as string;
     await page.waitForTimeout(600);
     const tkIdle = (await page.evaluate(TK_READ)) as string; // 대조군 — 사건 없이 흐른 시간
-    // 사건: ⏩ 하루 끝까지. 하루 마감은 계약에 적힌 뉴스 항목이고, skipForward 는
-    // 실제 ⏩ 버튼이 부르는 그 함수다 (afterStep 까지 같은 경로로 돈다)
+    // 사건: 하루 끝까지 감기. 하루 마감은 계약에 적힌 뉴스 항목이고, K47-② 로 화면
+    // 버튼이 없어진 뒤 skipForward 가 시간을 감는 유일한 경로다 (afterStep 까지 그대로 돈다)
     await page.evaluate(`window.__kairo.skipForward()`);
     await page.waitForTimeout(500);
     const tkAfter = (await page.evaluate(TK_READ)) as string;
@@ -6252,6 +6372,157 @@ async function main(): Promise<void> {
       const sheet = document.getElementById('kairo-sheet');
       if (sheet && !sheet.hidden) document.getElementById('kairo-sheet-close').click();
       h.flow.frozen = false;
+    })()`);
+  }
+
+  /*
+   * ── K47-②. 결산 재열람 — 알림함이 리포트 버튼을 대신한다 ────────────────
+   *
+   * 헤더의 `📈 리포트` 버튼(`#kairo-report-open`)이 사라졌다 (상시 컨트롤 5 → 2).
+   * 그 자리를 대신하는 것이 **알림함의 "결산 도착" 행**이다 — 뉴스가 이미 "몇 주차
+   * 결산이 왔다"를 들고 있으니 소식 자체를 손잡이로 쓴다 (계획 §2).
+   *
+   * ⚠ **재열람 경로가 사라지지 않는 것이 이 이동의 전제다.** 버튼만 지우고 행을 안
+   * 배선하면 결산은 그 주에 한 번 보고 영영 못 본다. 그 회귀를 잡는 검사가 여기
+   * 하나뿐이므로 전 구간을 **진짜 터치**로 간다 (K33: 백도어는 sim 검사에만).
+   *
+   * 순서: 주를 끝까지 감는다(결산 모달 + 알림함 적재) → 결산을 닫는다 →
+   *       티커 탭 → 알림함 → "결산" 행 탭 → 결산이 **다시** 열린다.
+   */
+  {
+    /*
+     * 카드 치우기 — 사고 대응 카드는 결산 **앞**에 오고(§12.1), 결산을 닫으면
+     * 다음 주 카드가 뒤따른다. 둘 다 모달이라 남겨 두면 그 뒤가 전부 가려진다.
+     */
+    const DISMISS_CARDS = `(() => {
+      const cv = window.__kairoCards;
+      let guard = 0;
+      while (cv && cv.visible && guard++ < 5) {
+        const card = cv.currentCard;
+        let pick = 0;
+        if (card) {
+          for (let oi = 0; oi < card.options.length; oi++) {
+            if (!card.options[oi].effects.some((e) => e.closed)) { pick = oi; break; }
+          }
+        }
+        cv.pickForTest(pick);
+      }
+      return !!cv && cv.visible;
+    })()`;
+    const CLOSE_REPORT = `(() => {
+      const r = document.getElementById('kairo-report');
+      if (!r || r.hidden) return false;
+      const close = [...r.querySelectorAll('button')].find((b) => b.textContent.includes('계속'))
+        || document.getElementById('kairo-report-close');
+      if (close) close.click();
+      return true;
+    })()`;
+
+    // ① 결산을 하나 만든다 — 없으면 열 것도 없다 (`openLastReport` 는 마지막 결산을 연다)
+    await page.evaluate(`(() => {
+      const h = window.__kairo;
+      if (window.__kairoClearBrush) window.__kairoClearBrush();
+      h.arrivalQueue.length = 0; // 해금 축하 모달이 결산 위로 끼어들지 않게
+      h.flow.frozen = true;
+      h.week.abort();
+      h.beginWeek();
+      h.runWeek(); // 주말까지 감기 → 결산 모달 + 알림함에 '결산 도착'
+    })()`);
+    await page.waitForTimeout(500);
+    await page.evaluate(DISMISS_CARDS);
+    await page.waitForTimeout(300);
+    const firstShown = (await page.evaluate(CLOSE_REPORT)) as boolean;
+    await page.waitForTimeout(300);
+    await page.evaluate(DISMISS_CARDS);
+    await page.waitForTimeout(300);
+
+    // ② 티커를 진짜로 눌러 알림함을 연다
+    const stripAt = (await page.evaluate(`(() => {
+      const s = document.getElementById('kairo-ticker');
+      if (!s) return null;
+      const r = s.getBoundingClientRect();
+      return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };
+    })()`)) as { x: number; y: number } | null;
+    if (stripAt) {
+      await touch('touchStart', stripAt.x, stripAt.y);
+      await touch('touchEnd', 0, 0);
+      await page.waitForTimeout(350);
+    }
+
+    /*
+     * ③ "결산" 행을 찾는다. 뒤이은 뉴스에 밀려 화면 밖으로 내려갈 수 있으므로
+     * 목록을 스크롤해 올린다 — 사용자가 손으로 하는 것과 같은 일이고, 좌표를
+     * 주입하는 백도어가 아니다 (누르는 것은 여전히 실제 손가락이다).
+     */
+    const rowAt = (await page.evaluate(`(() => {
+      const root = document.getElementById('kairo-inbox');
+      if (!root || root.hidden) return { open: false, found: false, rows: 0 };
+      const rows = [...root.querySelectorAll('.kinbox-row')];
+      const hit = rows.find((r) => r.textContent.indexOf('결산') >= 0);
+      if (!hit) return { open: true, found: false, rows: rows.length };
+      hit.scrollIntoView({ block: 'center' });
+      const r = hit.getBoundingClientRect();
+      return {
+        open: true, found: true, rows: rows.length,
+        role: hit.getAttribute('role') || '',
+        text: hit.textContent.slice(0, 40),
+        x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2),
+        onScreen: r.top >= 0 && r.bottom <= innerHeight + 2,
+      };
+    })()`)) as {
+      open: boolean;
+      found: boolean;
+      rows: number;
+      role?: string;
+      text?: string;
+      x?: number;
+      y?: number;
+      onScreen?: boolean;
+    };
+    record(
+      '★ 결산 도착이 알림함에 쌓이고 그 행이 손잡이다 (K47-②)',
+      rowAt.open && rowAt.found && rowAt.role === 'button' && rowAt.onScreen === true
+        ? 'pass'
+        : 'fail',
+      `알림함 ${rowAt.open ? '열림' : '안 열림'} · 항목 ${rowAt.rows}건 · ` +
+        `결산 행 ${rowAt.found ? `"${rowAt.text ?? ''}" role="${rowAt.role ?? ''}"` : '없음'}` +
+        `${rowAt.found && rowAt.onScreen !== true ? ' · 화면 밖' : ''}`,
+    );
+
+    // ④ 행을 진짜로 눌러 결산이 다시 열리는지
+    let reopened = false;
+    let inboxGone = false;
+    if (rowAt.found && rowAt.x !== undefined && rowAt.y !== undefined) {
+      await touch('touchStart', rowAt.x, rowAt.y);
+      await touch('touchEnd', 0, 0);
+      await page.waitForTimeout(400);
+      const after = (await page.evaluate(`(() => {
+        const r = document.getElementById('kairo-report');
+        const ib = document.getElementById('kairo-inbox');
+        return { report: !!r && !r.hidden, inbox: !!ib && ib.hidden };
+      })()`)) as { report: boolean; inbox: boolean };
+      reopened = after.report;
+      inboxGone = after.inbox;
+    }
+    record(
+      '★ 알림함의 결산 행을 탭하면 결산이 다시 열린다 — 리포트 버튼의 후신 (K47-②, 진짜 터치)',
+      firstShown && reopened && inboxGone ? 'pass' : 'fail',
+      `주말 결산 ${firstShown ? '떴다' : '안 떴다'} → 닫음 → 행 탭 → ` +
+        `결산 ${reopened ? '다시 열림' : '안 열림'} · 알림함 ${inboxGone ? '닫힘' : '남음'}`,
+    );
+    await page.screenshot({ path: `${SHOT_DIR}/kairo-report-reopen.png` });
+
+    // 뒷정리 — 이 절이 연 것을 이 절이 닫는다
+    await page.evaluate(CLOSE_REPORT);
+    await page.waitForTimeout(250);
+    await page.evaluate(DISMISS_CARDS);
+    await page.evaluate(`(() => {
+      const ib = document.getElementById('kairo-inbox');
+      if (ib && !ib.hidden) {
+        const c = document.getElementById('kairo-inbox-close');
+        if (c) c.click();
+      }
+      window.__kairo.flow.frozen = false;
     })()`);
   }
 

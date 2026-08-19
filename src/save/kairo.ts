@@ -108,13 +108,18 @@ export interface KairoSaveV5 {
    * 안 저장하면 새로고침이 곧 보상 몰수다. v6 이하 세이브는 빈 집합으로 열린다.
    */
   unlocks?: UnlockSnapshot;
-  /** ⏩ 주 스킵 해금 (K42 심사 보상) — 도구도 보상이다, 잃으면 안 된다 */
-  weekSkip?: boolean;
+  /*
+   * ⚠ `weekSkip?: boolean` 이 여기 있었다 (K42 의 ⏩ 주 스킵 해금). K47-② 에서 **스킵
+   * 기능 자체가 사라져** 걷어냈다 — optional 필드라 `packKairo` 가 새 객체를 만드는
+   * 순간 자연히 없어진다. **버전을 올리지 않았고 마이그레이션도 없다**: 옛 세이브에
+   * 남아 있는 키는 그냥 안 읽힐 뿐이고, 버전을 올리면 이미 나간 v7 세이브가 전부
+   * 한 칸씩 밀린다. 도구 해금의 정본은 `exam.toolsUnlocked` 다.
+   */
   /**
    * 누적 방문객 (K47-①) — 뉴스 마일스톤(100·500·1000·2000·5000)의 근거.
    *
-   * ⚠ **optional 이라 마이그레이션이 없다** (`weekSkip` 과 같은 방식). 없으면 0 에서
-   * 다시 세기 시작할 뿐이고, 버전을 올리면 이미 나간 v7 세이브가 전부 한 칸 밀린다.
+   * ⚠ **optional 이라 마이그레이션이 없다.** 없으면 0 에서 다시 세기 시작할 뿐이고,
+   * 버전을 올리면 이미 나간 v7 세이브가 전부 한 칸 밀린다.
    */
   visitorsTotal?: number;
   /** 심사 상태 (K42) — 신청 대기와 통과 횟수. 잃으면 수수료와 도구가 증발한다 */
@@ -287,7 +292,7 @@ const MIGRATIONS: Record<number, (s: Record<string, unknown>) => Record<string, 
    * 플레이어가 산 것을 마이그레이션이 망가뜨리는 쪽이 훨씬 나쁘다. 새 판부터 산이 있다.
    */
   5: (s) => ({ ...s, version: 6 }),
-  // v7 (K41): unlocks·weekSkip 추가 — 없으면 빈 집합/false 로 읽는다 (하위호환)
+  // v7 (K41): unlocks 추가 — 없으면 빈 집합으로 읽는다 (하위호환)
   6: (s) => ({ ...s, version: 7 }),
 };
 
@@ -325,7 +330,6 @@ export interface KairoSaveInput {
   reputation?: number;
   gradeNo?: number;
   unlocks?: UnlockSnapshot;
-  weekSkip?: boolean;
   visitorsTotal?: number;
   exam?: ExamSnapshot;
   wishes?: WishSnapshot;
@@ -361,7 +365,6 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.reputation !== undefined ? { reputation: input.reputation } : {}),
     ...(input.gradeNo !== undefined ? { gradeNo: input.gradeNo } : {}),
     ...(input.unlocks ? { unlocks: input.unlocks } : {}),
-    ...(input.weekSkip !== undefined ? { weekSkip: input.weekSkip } : {}),
     ...(input.visitorsTotal !== undefined ? { visitorsTotal: input.visitorsTotal } : {}),
     ...(input.exam ? { exam: input.exam } : {}),
     ...(input.wishes ? { wishes: input.wishes } : {}),
@@ -424,7 +427,6 @@ export interface KairoRestored {
   reputation?: number;
   gradeNo?: number;
   unlocks?: UnlockSnapshot;
-  weekSkip?: boolean;
   visitorsTotal?: number;
   exam?: ExamSnapshot;
   wishes?: WishSnapshot;
@@ -460,7 +462,6 @@ export function restoreKairo(raw: unknown): KairoRestored {
     ...(s.reputation !== undefined ? { reputation: s.reputation } : {}),
     ...(s.gradeNo !== undefined ? { gradeNo: s.gradeNo } : {}),
     ...(s.unlocks ? { unlocks: s.unlocks } : {}),
-    ...(s.weekSkip !== undefined ? { weekSkip: s.weekSkip } : {}),
     ...(s.visitorsTotal !== undefined ? { visitorsTotal: s.visitorsTotal } : {}),
     ...(s.exam ? { exam: s.exam } : {}),
     ...(s.wishes ? { wishes: s.wishes } : {}),
