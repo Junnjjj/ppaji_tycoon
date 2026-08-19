@@ -35,14 +35,6 @@ import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
  * 뽑는다 — 배경 산과 **같은 붓**이라 지평선에서 자연스럽게 이어진다.
  */
 const SURROUND_TEX = 'surround/ground';
-/**
- * 지도 바깥을 채울 때 쓰는 지면 종류 (K38).
- *
- * ⚠ 그림 파일이 아니라 **게임이 지금 쓰는 지면 스프라이트**를 굽는다. 사용자 요구:
- * "숲이 아니고 현재 지형을 깔아달라고, PNG 말고, 현재 설치된 땅 기준으로".
- * 다른 붓으로 그린 텍스처를 깔면 경계에서 결이 어긋나 "여기부터는 딴 그림"으로 읽힌다.
- */
-const SURROUND_KIND = 'lawn';
 /** 수평 윗변 위로 쭉 이어지는 하늘+산+숲 (K38) */
 const HORIZON_TEX = 'surround/horizon';
 const HORIZON_URL = 'assets/backdrop/bg-horizon.png';
@@ -242,7 +234,7 @@ export class KairoScene extends Phaser.Scene {
   private land: { i0: number; j0: number; w: number; h: number } | null = null;
   private backdrops: Phaser.GameObjects.TileSprite[] = [];
   /** 지도 바깥을 채우는 땅 (K38) */
-  private surrounds: Phaser.GameObjects.TileSprite[] = [];
+  private surrounds: Phaser.GameObjects.Image[] = [];
   private dragMoved = 0;
   private lastPointer = { x: 0, y: 0 };
   private lastTapAt = 0;
@@ -440,7 +432,14 @@ export class KairoScene extends Phaser.Scene {
      */
     if (hj > 0) {
       for (let x = 0; x < TILE_W / 2; x++) {
-        const yTop = TILE_H / 2 + Math.floor(x / 2) + 1;
+        /*
+         * ⚠ `+1` 을 더하지 말 것. 윗면의 왼아래 변은 (0,8)→(16,16) 이라 열 x 의 마지막
+         * 불투명 픽셀이 `8 + x/2` 이고, 치마는 **바로 그 줄부터** 시작해야 붙는다.
+         * 한 줄 밀었더니 윗면과 치마 사이에 1px 구멍이 뚫려 하늘색이 새어 나왔다 —
+         * 단 지형 가장자리마다 파란 점선으로 보였다 (K37 부터 있었고, K38 에서 배경이
+         * 밝아지며 드러났다).
+         */
+        const yTop = TILE_H / 2 + Math.floor(x / 2);
         /*
          * 세로로 **아래가 더 어둡다** — 바닥에 가까울수록 그림자가 진다.
          * 단색 면은 종이처럼 평평해 보인다.
@@ -453,7 +452,11 @@ export class KairoScene extends Phaser.Scene {
     }
     if (hi > 0) {
       for (let x = TILE_W / 2; x < TILE_W; x++) {
-        const yTop = TILE_H - Math.floor((x - TILE_W / 2) / 2);
+        /*
+         * +J 면과 **대칭**이다 (열 x 의 거울은 TILE_W−1−x). 대칭식을 안 쓰고 따로
+         * 세웠더니 한 줄씩 어긋나 구멍이 154곳 생겼다 — 눈으로는 못 봤고 검사가 잡았다.
+         */
+        const yTop = TILE_H / 2 + Math.floor((TILE_W - 1 - x) / 2);
         for (let y = 0; y < hi; y++) {
           ctx.fillStyle = mix(base, 0.74 - (y / Math.max(1, hi)) * 0.12);
           ctx.fillRect(x, yTop + y, 1, 1);
@@ -579,56 +582,59 @@ export class KairoScene extends Phaser.Scene {
    *
    */
   /**
-   * 지도 바깥에 깔 **아이소 지면**을 이음새 없이 굽는다 (K38).
+   * 지도 바깥에 깔 **지면을 한 장으로** 굽는다 (K38).
    *
    * ## 왜 그림 파일이 아닌가
    *
    * 처음엔 산 아트에서 뽑은 숲 PNG 를 깔았는데, 사용자가 "숲이 아니고 현재 지형을
    * 깔아달라고, PNG 말고, 현재 설치된 땅 기준으로" 라고 했다. 다른 붓으로 그린 텍스처는
-   * 경계에서 결이 어긋나 "여기부터는 딴 그림"으로 읽힌다. 게임이 지금 쓰는 지면
-   * 스프라이트를 그대로 쓰면 지도 안팎이 **같은 땅**이 된다.
+   * 경계에서 결이 어긋나 "여기부터는 딴 그림"으로 읽힌다.
    *
-   * ## 아이소가 사각형으로 반복되는 이유
+   * ## 왜 한 종류로 깔면 안 되나
    *
-   * 타일 중심은 `(16(i−j), 8(i+j))` 의 격자에 있다. 이 격자는 `(32,0)` 과 `(16,8)` 로
-   * 생성되므로 **32×16 직사각형이 기본 영역**이고, 그 안에 마름모 중심이 정확히 둘 들어간다.
-   * 그래서 아이소 지면은 사각형으로 이음새 없이 반복된다 — 이게 타일스프라이트 한 장으로
-   * 화면을 채울 수 있는 근거다.
+   * 잔디 한 종류로 반복해 깔아 봤더니 **균일한 빈 들판**이 됐다 — "밖에도 세상이 있다"가
+   * 아니라 "아무것도 없다"로 읽힌다 (사용자: "생각보다 어색하네"). 그래서 좌표를 격자
+   * 안으로 **클램프**해서 그 칸의 종류를 쓴다: 강은 강으로, 도로는 도로로, 잔디는
+   * 잔디로 — 지도가 화면 밖으로 **이어진다**. K36 의 세이브 마이그레이션이 격자를
+   * 넓힐 때 쓴 것과 같은 수법이다.
    *
-   * 128×64 로 굽는 이유는 **변형 3종을 섞기 위해서**다. 32×16 이면 같은 그림이 반복돼
-   * 격자 무늬가 눈에 띈다.
+   * ## 왜 타일 이미지가 아니라 캔버스 한 장인가
+   *
+   * 바깥을 타일 이미지로 깔면 **7,000장**이 더 필요하다 (바깥 넓이 ÷ 격자점 밀도 256).
+   * 지금 6,912장으로 도는 판에 두 배를 얹으면 폰에서 위험하다. 한 장으로 구우면
+   * 그리기 비용이 부팅 때 한 번이고 매 프레임 비용은 0 이다.
+   *
+   * ⚠ 구운 뒤에는 **갱신하지 않는다.** 플레이어가 가장자리 칸을 칠하면 바깥 띠는 옛
+   * 종류로 남는다 — 장식이라 눈에 안 띄고, 매번 다시 구우면 붓질마다 수천 번 그린다.
    */
   private bakeSurroundTexture(): void {
     if (this.textures.exists(SURROUND_TEX)) return;
-    const alts = [0, 1, 2]
-      .map((n) => variantId(`ground/${SURROUND_KIND}`, { alt: n }))
-      .filter((id) => this.opts.provider.has(id));
-    if (alts.length === 0) return;
+    const t = this.opts.terrain;
 
-    const W = TILE_W * 4;
-    const H = TILE_H * 4;
+    /*
+     * 다이아몬드의 **바운딩 박스**. 꼭지점이 (0,0)·(gw,0)·(gw,gh)·(0,gh) 이므로
+     * 화면에서 x 는 −gh·STEP_X … gw·STEP_X, y 는 0 … (gw+gh)·STEP_Y 다.
+     */
+    const W = (GRID_W + GRID_H) * STEP_X;
+    const H = (GRID_W + GRID_H) * STEP_Y;
+    const ox = GRID_H * STEP_X; // 캔버스 원점이 월드 x = −GRID_H·STEP_X 에 놓인다
     const tex = this.textures.createCanvas(SURROUND_TEX, W, H);
     if (!tex) return;
     const ctx = tex.getContext();
     ctx.imageSmoothingEnabled = false;
 
-    /*
-     * 격자점을 넉넉히 돌면서 **감아서** 그린다. 가장자리를 넘는 마름모는 반대쪽에도
-     * 한 번 더 찍어야 이음선이 안 생긴다 — 잘린 마름모의 나머지 반쪽이 거기 있다.
-     */
-    for (let b = -2; b < 6; b++) {
-      for (let a = -2; a < 6; a++) {
-        const x = a * TILE_W + b * (TILE_W / 2);
-        const y = b * (TILE_H / 2);
-        const src = this.opts.provider.get(alts[((a * 7 + b * 13) % alts.length + alts.length) % alts.length] as string);
-        for (const dx of [-W, 0, W]) {
-          for (const dy of [-H, 0, H]) {
-            const px = x + dx;
-            const py = y + dy;
-            if (px > W || py > H || px + TILE_W < 0 || py + TILE_H < 0) continue;
-            ctx.drawImage(src, px, py);
-          }
-        }
+    const clamp = (v: number, hi: number): number => (v < 0 ? 0 : v > hi ? hi : v);
+    for (let j = -GRID_W; j <= GRID_H + GRID_W; j++) {
+      for (let i = -GRID_H; i <= GRID_W + GRID_H; i++) {
+        // 다이아몬드 안은 진짜 타일이 덮는다 — 굽지 않아 그리기가 절반이 된다
+        if (i >= 0 && j >= 0 && i < GRID_W && j < GRID_H) continue;
+        const x = STEP_X * (i - j) + ox - TILE_W / 2;
+        const y = STEP_Y * (i + j);
+        if (x + TILE_W < 0 || y + TILE_H < 0 || x > W || y > H) continue;
+        const kind = t.kindAt(clamp(i, GRID_W - 1), clamp(j, GRID_H - 1)) ?? 'lawn';
+        const id = variantId(`ground/${kind}`, { alt: (((i * 7 + j * 13) % 3) + 3) % 3 });
+        if (!this.opts.provider.has(id)) continue;
+        ctx.drawImage(this.opts.provider.get(id), Math.round(x), Math.round(y));
       }
     }
     tex.refresh();
@@ -640,22 +646,17 @@ export class KairoScene extends Phaser.Scene {
     if (!this.textures.exists(SURROUND_TEX)) return;
 
     /*
-     * ## 왜 세로로 아주 길게 까나
-     *
-     * 아이소 다이아몬드는 사각 화면을 못 채운다. 네 귀퉁이가 비면 카메라 배경색이
-     * 그대로 보인다. 여기서 채우는 것은 격자가 아니라 **화면**이다 — 격자를 늘리면
-     * 세이브·성능·밸런스가 다 딸려 온다.
+     * 구운 판을 **바운딩 박스 자리에 그대로** 얹는다 (반복 아님 — 한 장이 바로 그 크기다).
+     * 윗변이 `SKYLINE_Y`(다이아몬드 꼭지점 y = 0)라 지도의 윗변이 수평선이 된다.
      *
      * ⚠ `scrollFactor` 는 **1**이다. 시차를 주면 공원 경계가 그 위를 미끄러져
      * "공원이 떠 있는" 것처럼 보인다 — 주변 땅은 공원과 같은 거리에 있다.
      */
-    const w = (GRID_W + GRID_H) * STEP_X * 3;
-    const h = (GRID_W + GRID_H) * STEP_Y * 3;
-    const ts = this.add.tileSprite(-w / 2, SKYLINE_Y, w, h, SURROUND_TEX);
-    ts.setOrigin(0, 0);
-    ts.setScrollFactor(1, 1);
-    ts.setDepth(-960); // 배경(하늘·산)보다 앞, 지면 타일(0+)보다 뒤
-    this.surrounds.push(ts);
+    const img = this.add.image(-GRID_H * STEP_X, SKYLINE_Y, SURROUND_TEX);
+    img.setOrigin(0, 0);
+    img.setScrollFactor(1, 1);
+    img.setDepth(-960); // 배경(하늘·산·트리라인)보다 앞, 지면 타일(0+)보다 뒤
+    this.surrounds.push(img);
   }
 
   private buildBackdrop(): void {

@@ -4804,6 +4804,58 @@ async function main(): Promise<void> {
   }
 
   /*
+   * ── 9d-2. 단 지형에 실틈이 없다 (K38 에서 발견) ─────────────────────────
+   *
+   * 컬럼 텍스처는 윗면과 절벽 치마를 **한 장에** 굽는다. 치마 시작 줄을 한 줄만 밀어도
+   * 그 사이에 1px 구멍이 뚫리고, 뒤에 있는 것(하늘)이 새어 나온다 — 단 지형 가장자리마다
+   * 파란 점선으로 보였다. K37 부터 있었는데 배경이 어두워 안 보였다.
+   *
+   * 세로로 훑어 **불투명 → 투명 → 불투명** 이 나오면 구멍이다. 마름모는 위아래가
+   * 뾰족하므로 바깥쪽 투명은 정상이고, 가운데가 끊기는 것만 잡는다.
+   */
+  const holes = (await page.evaluate(`(() => {
+    const h = window.__kairo, T = h.terrain, S = h.scene;
+    const seen = {};
+    const bad = [];
+    let checked = 0;
+    for (let j = 0; j < T.height; j += 1) {
+      for (let i = 0; i < T.width; i += 1) {
+        if (T.levelAt(i, j) === 0) continue;
+        const img = S.tileImageForTest(i, j);
+        if (!img) continue;
+        const key = img.texture.key;
+        if (key.indexOf('__col/') !== 0 || seen[key]) continue;
+        seen[key] = 1;
+        checked++;
+        const src = img.texture.getSourceImage();
+        const cv = document.createElement('canvas');
+        cv.width = src.width; cv.height = src.height;
+        const cx = cv.getContext('2d');
+        cx.drawImage(src, 0, 0);
+        const d = cx.getImageData(0, 0, cv.width, cv.height).data;
+        for (let x = 0; x < cv.width; x++) {
+          let seenOpaque = false, gap = false;
+          for (let y = 0; y < cv.height; y++) {
+            const a = d[(y * cv.width + x) * 4 + 3];
+            if (a > 8) {
+              if (gap) { bad.push(key + ' x=' + x + ' y=' + y); gap = false; break; }
+              seenOpaque = true;
+            } else if (seenOpaque) gap = true;
+          }
+        }
+      }
+    }
+    return { checked: checked, bad: bad.slice(0, 5), n: bad.length };
+  })()`)) as { checked: number; bad: string[]; n: number };
+  record(
+    '★ 단 지형에 실틈이 없다 — 윗면과 절벽이 붙어 있다 (K38)',
+    holes.n === 0 && holes.checked > 0 ? 'pass' : 'fail',
+    holes.n === 0
+      ? `컬럼 텍스처 ${holes.checked}종 전부 이어짐`
+      : `구멍 ${holes.n}곳 — ${holes.bad.join(' · ')}`,
+  );
+
+  /*
    * ── 9e. 지도 바깥을 땅으로 채운다 (K38) ─────────────────────────────────
    *
    * 아이소 다이아몬드는 사각 화면을 못 채운다. 네 귀퉁이가 비면 카메라 배경색이
