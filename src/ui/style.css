@@ -13,7 +13,7 @@
    * K34 에서 색을 여기 한 곳에 모아 둔 덕에 이 블록이 팔레트의 전부다.
    * TS 에는 하드코딩 색이 없고(정적 검사가 지킨다), 캔버스도 `tokens.ts` 로 여기를 읽는다.
    */
-  --panel: linear-gradient(#fdf3de, #f6e3bd);
+  --panel: linear-gradient(#fdeecb, #f8e0b4);
   --panel-border: #b98d4f;
   --text: #3a2412;
   --text-dim: #6b5128;
@@ -30,15 +30,22 @@
    * 하이라이트였지만, 흰 표면에서는 흰 테두리가 안 보인다. 위는 거의 흰색, 아래는
    * 옅은 남색 그림자로 간다. 그림자도 검정이 아니라 **남색 계열**이어야 물때가 안 낀다.
    */
-  --sk-edge-top: rgb(255 250 238 / 95%);
-  --sk-edge-bottom: rgb(96 62 20 / 32%);
+  /*
+   * ⚠ 레시피 v2 (K44-③) — "색만 바뀌었다"는 지적을 받고 컨셉 버튼의 **픽셀 단면**을
+   * 해부해 다시 만들었다 (docs/kairo-phases.md K44). 질감의 정체는 셋:
+   * ① 요소보다 **어두운 트레이** 위에 뜬다 (분리) ② 진갈색 아웃라인은 위가 밝고
+   * 아래가 어두운 그라디언트 (#d09b57→#9f6b2f 실측) ③ 아웃라인 안쪽에 **또렷한
+   * 흰 하이라이트 선** (#fff1d5). 흐릿한 소프트 섀도가 아니라 만화적 하드 엣지다.
+   */
+  --sk-edge-top: #c08c48;
+  --sk-edge-bottom: #7d5322;
   --sk-inset:
-    inset 0 1px 0 rgb(255 250 236 / 85%),
-    inset 0 -1px 0 rgb(96 62 20 / 16%);
+    inset 0 2px 0 rgb(255 243 214 / 92%),
+    inset 0 -2px 0 rgb(154 104 47 / 26%);
   --sk-lift:
-    0 1px 2px rgb(96 62 20 / 18%),
-    0 4px 10px rgb(96 62 20 / 12%);
-  --sk-press: inset 0 2px 4px rgb(96 62 20 / 24%);
+    0 2px 0 rgb(128 86 38 / 32%),
+    0 3px 6px rgb(96 62 20 / 14%);
+  --sk-press: inset 0 3px 5px rgb(96 62 20 / 30%);
   /*
    * 글씨 양각 — 밝은 표면의 **진한 글씨**에는 아래로 밝은 선을 깐다.
    * 어두운 그림자를 그대로 두면 진한 글씨가 번져 보인다.
@@ -51,14 +58,15 @@
   --sk-emboss-on-solid: 0 1px 0 rgb(0 0 0 / 40%);
 
   /* HUD 표면 색 — 하드코딩을 여기로 모은다 (정적 검사가 지킨다) */
-  --panel-sunk: linear-gradient(#eeddb9, #f7ecd2);
+  --panel-sunk: linear-gradient(#e8c88f, #f0d5a4);
   --panel-primary: linear-gradient(#8a5216, #66380a);
-  --text-mute: #86713f;
-  --text-locked: #b09a6b;
+  --text-mute: #6f5626;
+  --text-locked: #96793f;
   --text-on-solid: #fff;
   --primary-edge: #d19a4a;
-  --bar-bg: linear-gradient(rgb(252 236 205 / 95%), rgb(246 216 160 / 97%));
-  --sheet-bg: rgb(252 242 221 / 97%);
+  /* 트레이는 요소보다 **어둡다** (분리의 원천 — 실측 #e0ab5f 계열) */
+  --bar-bg: linear-gradient(rgb(242 205 143 / 96%), rgb(229 181 106 / 97%));
+  --sheet-bg: rgb(240 202 138 / 97%);
   --goal-bg: rgb(255 250 238 / 88%);
   --goal-won: rgb(224 240 205 / 94%);
   --goal-lost: rgb(248 219 205 / 94%);
