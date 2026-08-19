@@ -1,6 +1,8 @@
 import { el, button } from './dom.js';
 import { cssVar } from './tokens.js';
 import type { WeekReport, NeedKind } from '../sim/kairo/week.js';
+import type { ActiveCombo } from '../sim/kairo/combos.js';
+import type { SwimZone } from '../sim/kairo/swim.js';
 import { panelHost } from './panels.js';
 
 /**
@@ -10,7 +12,8 @@ import { panelHost } from './panels.js';
  *
  * v3 는 결산을 숫자 표로만 뒀는데, 그러면 연출을 스킵하는 순간 **다시 엑셀 게임**이 된다.
  * 그래서 이 화면은 위에서부터 **혼잡 히트맵 → 요일 막대 → 숫자** 순서다. 병목을 눈으로
- * 먼저 보고, 숫자는 확인용이다.
+ * 먼저 보고, 숫자는 확인용이다. 콤보 줄(P2-B)은 그 **뒤**다 — 위 숫자의 일부가 어디서
+ * 왔는지를 설명하는 줄이라, 설명이 대상보다 먼저 오면 무엇에 대한 보너스인지 모른다.
  *
  * ## 왜 DOM 인가
  *
@@ -63,6 +66,95 @@ function won(n: number): string {
   if (v >= 100_000_000) return `${sign}${(v / 100_000_000).toFixed(1)}억`;
   if (v >= 10_000) return `${sign}${Math.round(v / 10_000).toLocaleString('ko-KR')}만`;
   return `${sign}${v.toLocaleString('ko-KR')}`;
+}
+
+/**
+ * 결산의 콤보 줄이 쓰는 표시 자료 (P2-B).
+ *
+ * ## 왜 총합이 여기 없나
+ *
+ * 만족·매출 총합은 `WeekReport.combos` 가 갖는다 — **그 주에 실제로 적용된 값**이다.
+ * 여기 있는 것은 이름·개수·면적 배율뿐이고, 그건 `week.ts` 가 알 수 없는 것이다
+ * (시뮬은 숫자 둘만 받는다 — 불변식 3).
+ *
+ * ⚠ 그래서 이 자료도 **주가 열린 시점**에 떠 놓아야 한다. 결산을 여는 시점에 배치에서
+ * 다시 계산하면 흐르는 낮 동안 지은 시설이 섞여 "목록은 13개인데 숫자는 12개 몫"이 된다.
+ */
+export interface ComboBreakdown {
+  /** 이번 주에 발동한 콤보 수 (같은 콤보의 중복 발동을 각각 센다) */
+  count: number;
+  /** 기여가 큰 순 상위 몇 개. **전체 목록은 도감 소관**이다 */
+  top: ComboLine[];
+}
+
+export interface ComboLine {
+  name: string;
+  /**
+   * 같은 콤보가 몇 곳에서 터졌나. **줄은 콤보 종류마다 하나**다 (발동마다가 아니다) —
+   * 소형은 중복이 무제한이라 발동마다 한 줄이면 같은 이름이 세 줄 늘어선다 (실측).
+   */
+  count: number;
+  /** 면적 배율 (P1-A). zone 콤보가 아니면 언제나 1. 여러 곳이면 **가장 큰 쪽** */
+  areaScale: number;
+  /** 그 구역의 칸 수 — 면적 배율이 붙은 줄에만 있다 */
+  area: number | null;
+  /** 콤보 원점수 합에서 이 종류가 차지한 몫 (0~1) */
+  share: number;
+}
+
+/**
+ * 발동 목록 → 결산 표시 자료.
+ *
+ * ⚠ 기여도를 **최종 효과(점·%)로는 못 잰다.** 포화 곡선이 발동 하나가 아니라 **합계**에
+ * 걸리므로 (`comboEffect`), "이 콤보가 몇 점을 냈다"는 값 자체가 존재하지 않는다.
+ * 그래서 원점수의 **몫**으로 보여준다 — 순위와 "얼마나 크게 기여했나"는 그대로 읽힌다.
+ *
+ * 두 축(만족 3~15 · 매출 4~18)은 눈금이 같아서 그냥 더해도 한쪽이 순위를 독점하지
+ * 않는다 (`kairo-combos.json` 실측 범위).
+ */
+export function comboBreakdown(
+  active: readonly ActiveCombo[],
+  zones: readonly SwimZone[] = [],
+  topN = 3,
+): ComboBreakdown {
+  /*
+   * 구역 첫 타일 → 면적. zone 콤보의 `at` 이 **정확히 그 좌표**다 (`combos.ts` 의
+   * `findZone`: 구역엔 중심이 없어서 첫 타일을 쓴다). 다른 종류의 콤보는 `at` 이
+   * 시설 중심이라 우연히 겹칠 수 있지만, `areaScale > 1` 은 zone 콤보에서만 나오므로
+   * 그때만 찾는다 — 엉뚱한 칸수를 붙이지 않는다.
+   */
+  const areaAt = new Map<string, number>();
+  for (const z of zones) {
+    const t = z.tiles[0];
+    if (t) areaAt.set(`${t.x},${t.y}`, z.area);
+  }
+  const weight = (c: ActiveCombo): number => c.satisfaction + c.revenue;
+  const total = active.reduce((a, c) => a + weight(c), 0);
+  // 콤보 **종류**로 묶는다 — 소형은 중복이 무제한이라 발동마다 한 줄이면 같은 이름만 늘어선다
+  const byId = new Map<string, ComboLine & { weight: number }>();
+  for (const c of active) {
+    const line = byId.get(c.id) ?? {
+      name: c.name,
+      count: 0,
+      areaScale: 1,
+      area: null,
+      share: 0,
+      weight: 0,
+    };
+    line.count += 1;
+    line.weight += weight(c);
+    // 면적은 **가장 크게 터진 곳**을 보여준다 — "구역을 키운다"의 상한이 보여야 한다
+    if (c.areaScale > line.areaScale) {
+      line.areaScale = c.areaScale;
+      line.area = c.at ? (areaAt.get(`${c.at.i},${c.at.j}`) ?? null) : null;
+    }
+    byId.set(c.id, line);
+  }
+  const top = [...byId.values()]
+    .sort((a, b) => b.weight - a.weight || a.name.localeCompare(b.name))
+    .slice(0, topN)
+    .map(({ weight: w, ...line }) => ({ ...line, share: total > 0 ? w / total : 0 }));
+  return { count: active.length, top };
 }
 
 export interface ReportHandlers {
@@ -237,7 +329,96 @@ export class KairoReport {
     return box;
   }
 
-  show(rep: WeekReport, handlers: ReportHandlers): void {
+  /**
+   * 콤보 줄 (P2-B) — **배선은 있는데 화면에 없던 축**을 숫자로 만든다.
+   *
+   * ## 표기가 사실과 어긋나면 안 된다
+   *
+   * 매출 배율은 `week.ts` 에서 **입장료·코스를 뺀 공원 매출**에만 곱해진다. 그래서
+   * 라벨이 그냥 "매출"이면 플레이어가 `매출 × 1.045` 로 검산하다 안 맞는다고 느낀다.
+   * 라벨을 `공원 매출`로 두고, 실제로 늘어난 **원 금액**을 같이 적는다 — 금액은
+   * 결산이 이미 가진 값들로 되짚는다:
+   *
+   *   공원 매출(배율 적용 후) = revenue − admission − courseRevenue
+   *   콤보가 더한 돈          = 공원 매출 × (1 − 1/배율)
+   *
+   * ## 0개인 주도 보여준다
+   *
+   * 줄을 통째로 감추면 "콤보라는 축이 있다"를 배울 자리가 사라진다 — 지금 고치려는
+   * 상태가 정확히 그것이다. 0 이면 대신 **무엇을 하면 터지는지**를 적는다.
+   */
+  private comboBlock(rep: WeekReport, view?: ComboBreakdown): HTMLElement | null {
+    const eff = rep.combos;
+    // 콤보를 안 넘기고 돌린 주(옛 세이브·하네스의 합성 리포트)면 줄 자체가 없다
+    if (!eff) return null;
+    const count = view?.count ?? 0;
+    const wrap = el('div', 'kstack');
+    wrap.style.setProperty('--stack-gap', '6px');
+    wrap.dataset['combo'] = String(count);
+    wrap.append(el('div', 'kcaption', '콤보 — 이번 주 배치가 만든 보너스'));
+
+    const stats = el('div', 'kstats');
+    // 열 수는 **데이터**다 (색·표면만 클래스가 갖는다)
+    stats.style.setProperty('--stat-cols', '3');
+    const revPct = (eff.revenueMult - 1) * 100;
+    const cells: [string, string, string][] = [
+      ['발동', `${count}개`, ''],
+      ['만족', `+${eff.satisfactionDelta.toFixed(1)}`, eff.satisfactionDelta > 0 ? 'good' : ''],
+      ['공원 매출', `+${revPct.toFixed(1)}%`, revPct > 0 ? 'good' : ''],
+    ];
+    for (const [k, v, cls] of cells) {
+      const cell = el('div', 'kstat');
+      cell.append(el('div', 'kstat-label', k), el('div', `kstat-value ${cls}`, v));
+      stats.append(cell);
+    }
+    wrap.append(stats);
+
+    if (count === 0) {
+      wrap.append(
+        el(
+          'div',
+          'kcaption',
+          '아직 발동한 콤보가 없습니다 — 어울리는 시설을 가까이 붙여 보세요 (조건은 도감)',
+        ),
+      );
+      return wrap;
+    }
+
+    const park = rep.revenue - rep.admission - rep.courseRevenue;
+    const added = eff.revenueMult > 1 ? Math.round(park * (1 - 1 / eff.revenueMult)) : 0;
+    wrap.append(
+      el(
+        'div',
+        'kcaption',
+        `배율은 입장료·코스를 뺀 공원 매출에만 붙습니다${added > 0 ? ` · +${won(added)}` : ''}`,
+      ),
+    );
+
+    if (view && view.top.length > 0) {
+      const list = el('div', 'knums');
+      for (const line of view.top) {
+        /*
+         * 면적 배율은 **이름 옆**에 붙인다 (P1-A). "풀 파티 ×1.8 (32칸)" 이 보여야
+         * "구역을 키운다"가 다음 행동이 된다 — 배율만 보여주면 무엇을 키우라는 건지
+         * 모르고, 칸수만 보여주면 그게 이득인지 모른다.
+         */
+        const area =
+          line.areaScale > 1
+            ? ` ×${line.areaScale.toFixed(1)}${line.area !== null ? ` (${line.area}칸)` : ''}`
+            : '';
+        // 몇 곳에서 터졌나는 **값 쪽**에 둔다 — 이름 옆의 `×`(면적 배율)와 안 헷갈리게
+        const where = line.count > 1 ? `${line.count}곳 · ` : '';
+        list.append(
+          el('div', 'knum-key', `${line.name}${area}`),
+          el('div', 'knum-val', `${where}기여 ${Math.round(line.share * 100)}%`),
+        );
+      }
+      wrap.append(list);
+    }
+    return wrap;
+  }
+
+  show(rep: WeekReport, handlers: ReportHandlers, combos?: ComboBreakdown): void {
     this.handlers = handlers;
     this.root.replaceChildren();
 
@@ -264,6 +445,13 @@ export class KairoReport {
 
     // ④ 숫자
     this.root.append(this.numbers(rep));
+
+    /*
+     * ⑤ 콤보 — **숫자 뒤**다. 위 숫자(매출·퇴장 만족도)의 일부가 어디서 왔는지를
+     * 설명하는 줄이라, 설명이 대상보다 먼저 오면 무엇에 대한 보너스인지 알 수 없다.
+     */
+    const combo = this.comboBlock(rep, combos);
+    if (combo) this.root.append(combo);
 
     /*
      * 매표소 경보 — 병목보다 **먼저** 띄운다. 손님이 아예 안 들어오는 판에서

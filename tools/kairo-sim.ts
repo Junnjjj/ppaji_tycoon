@@ -27,12 +27,14 @@ import { GROUND_KINDS } from '../src/sim/kairo/terrain.js';
 import {
   PlacementGrid,
   allFacilityDefs,
+  facilityDef,
   FACILITY_MAX_LEVEL,
   guestWalkable,
+  type FacilitySpecialty,
 } from '../src/sim/kairo/placement.js';
 import { GuestStore, GUEST_DEFAULTS, TICKET_DEF_ID } from '../src/sim/kairo/guests.js';
 import { WeekRunner, type NeedKind, type Season, type WeekReport } from '../src/sim/kairo/week.js';
-import { evaluateCombos, comboEffect } from '../src/sim/kairo/combos.js';
+import { evaluateCombos, comboEffect, previewCombos } from '../src/sim/kairo/combos.js';
 import { CardStore, CARD_RNG_SALT, optionCash, triggerCard } from '../src/sim/kairo/cards.js';
 import { assessRisk, accidentChance } from '../src/sim/kairo/risk.js';
 import { mapType, shiftedShares, MAP_TYPES } from '../src/sim/kairo/scenario.js';
@@ -150,6 +152,12 @@ interface RunResult {
   /** 개선에 쓴 돈과 평균 단계 — 후반 공백이 메워졌는지 본다 */
   upgradeSpend: number;
   avgLevel: number;
+  /**
+   * 고른 특화 (P2-B) — 갈래별 횟수와 합계. **0 이면 P1.5 축이 안 재진 것**이다.
+   * 셋 중 하나가 0 이면 그 갈래는 밸런싱에 안 실려 있다 (`onSlope` 와 같은 자리의 계측).
+   */
+  specialties: Record<FacilitySpecialty, number>;
+  specialtyTotal: number;
   /** 사고 횟수 — 위험도 관리가 계측에 나타나는지 */
   accidents: number;
   /** 마지막 위험 단계 — "사고 0회"가 관리 덕인지 확률이 0이라 그런지 가른다 */
@@ -619,6 +627,135 @@ function growPool(
   return painted * POOL_TILE_COST;
 }
 
+/**
+ * 특화를 고른다 (P1.5 의 축을 헤드리스가 **실제로 재게** — P2-B).
+ *
+ * P1.5 가 갈림길을 만들었는데 봇이 `chooseSpecialty` 를 한 번도 안 불렀다. 즉
+ * 밸런싱이 "아무도 안 고른 세계"를 재고 있었다 — 봇과 골든은 실제 규칙으로 돈다(K36)를
+ * 어긴 상태다. 실측으로도 확인했다: 정원의 정본을 `capacityOf` 로 통일한 뒤
+ * 26주·52주 숫자가 **한 글자도 안 움직였다.** 고칠 것이 없어서가 아니라 특화가
+ * 하나도 없어서였다.
+ *
+ * ## 정책 — 결산이 말하는 부족을 그대로 읽는다 (3분기)
+ *
+ * 특화 셋이 **서로 다른 자원**에 꽂히므로(동시 이용·현금·평판) 규칙도 자원 이름 그대로다.
+ * 셋 다 **결산에 이미 있는 신호**이고 새 상수를 하나도 안 만든다:
+ *   · 이 시설이 **병목 수요**를 채운다 → **회전.** 결산의 `bottleneck` 은 봇이 무엇을
+ *     지을지 고를 때 이미 쓰는 신호다 (`want`). 자리가 모자란 종류의 정원을 늘리면
+ *     슬롯·공급·입장 상한(`min(등급, 공급×1.5)`)이 함께 오른다
+ *   · 아니고 **다음 등급 문턱에 만족도가 못 미친다** → **평판.** 승급은 심사이고
+ *     심사는 만족도로 연다 (K42) — 문턱은 `GRADES` 에서 읽는다
+ *   · 둘 다 아니면 → **수익.** 급한 데가 없으면 돈으로 바꾼다
+ *
+ * ⚠ **최적화기를 만들지 않는다.** 시설별 기대이득을 재는 규칙으로 키우면 밸런싱이
+ * 게임이 아니라 **봇의 영리함**을 재게 된다 — 카드·직원 정책에서 이미 경계한 형태다
+ * ("정책이 정교할수록 밸런스가 좋아 보이는 착시").
+ *
+ * ⚠ **"현금이 마르면 수익"은 뺐다** — 구조적으로 안 밟히는 분기다 (실측). 특화는 개선
+ * 직후에만 열리고 개선은 `cost <= cash - 예비비` 를 요구하므로, 고르는 순간의 현금은
+ * 언제나 예비비 위다. 죽은 분기를 남기면 "세 갈래를 본다"고 적어 두고 실제로는 둘만
+ * 도는 상태가 되고, 그게 이 페이즈가 고치려던 바로 그 형태다.
+ *
+ * ⚠ **rng 를 안 쓴다.** 여기서 뽑으면 날씨·손님 스트림이 밀려 특화 도입 전후를
+ * 비교할 수 없다 (불변식 2). 판단은 전부 지난주 결산에서 온다.
+ *
+ * 데이터가 그 특화를 안 주면(매표소는 회전뿐) **허용 목록의 첫 번째**로 물러난다 —
+ * 건너뛰면 그 시설만 영영 특화가 없어 축이 반쪽으로 측정된다.
+ */
+function chooseSpecialties(
+  p: PlacementGrid,
+  last: WeekReport | null,
+  /** 평판 이동평균 — 심사가 보는 값과 같다 */
+  reputation: number,
+  /** 다음 등급이 요구하는 퇴장 만족도. 최고 등급이면 더 오를 곳이 없으므로 0 */
+  nextReq: number,
+  tally: Map<FacilitySpecialty, number>,
+): void {
+  const bottleneck = last?.bottleneck?.need ?? null;
+  for (const it of p.all()) {
+    if (!p.canChooseSpecialty(it.handle)) continue;
+    const need = (facilityDef(it.defId) as { need?: NeedKind } | undefined)?.need;
+    const want: FacilitySpecialty =
+      bottleneck !== null && need === bottleneck
+        ? 'capacity'
+        : reputation < nextReq
+          ? 'reputation'
+          : 'revenue';
+    const allowed = PlacementGrid.specialtiesFor(it.defId);
+    const pick = allowed.includes(want) ? want : allowed[0];
+    if (!pick) continue;
+    if (p.chooseSpecialty(it.handle, pick)) tally.set(pick, (tally.get(pick) ?? 0) + 1);
+  }
+}
+
+/**
+ * 뽑힌 자리에서 **얼마나 멀리까지 붙여 보나** (P2-B). 맨해튼 거리 칸.
+ *
+ * 콤보 반경이 2~4 이므로 2 면 "옆에 붙인다"가 성립한다. ⚠ 크게 잡으면 봇이 뽑기를
+ * 무시하고 판 전체를 훑는 **최적화기**가 된다 — 그러면 밸런싱이 게임이 아니라 봇의
+ * 탐색 폭을 잰다. 0 으로 두면 예전 동작과 완전히 같아지므로 음성 대조군이기도 하다.
+ */
+const COMBO_NUDGE = 2;
+
+/**
+ * 뽑힌 자리를 **콤보가 터지는 쪽으로 한두 칸 붙인다** (P2-B).
+ *
+ * ## 왜 필요한가
+ *
+ * P2-A 가 콤보를 경제에 배선했지만 봇은 콤보를 **모른다.** 그래서 발동 증가(20→23)는
+ * 시설이 늘어 **우연히** 겹친 결과였고, 헤드리스는 이 축의 **하한만** 재고 있었다
+ * (상한 +7.9점/+13.2% 는 단위 검사로만 확인). 밸런스를 "콤보가 있는 상태"로 말하려면
+ * 봇이 조금이라도 노려야 한다.
+ *
+ * ## 왜 "자리를 여러 개 뽑아 비교"가 아니라 **붙이기**인가
+ *
+ * 처음엔 뽑기를 4번 해서 그중 콤보가 가장 많이 터지는 자리를 골랐다. 그런데 뽑기 횟수가
+ * 달라지면 **그 뒤의 rng 스트림이 통째로 밀린다** — 콤보 선호를 끈 대조군에서도 돈 부족이
+ * 판당 12 → 23회로 똑같이 뛰었다 (실측). 즉 그 설계로는 "콤보를 노린 효과"를 잴 수 없다.
+ * 붙이기는 뽑기를 **한 번만** 하므로 스트림이 그대로고, 바뀌는 것은 그 시설이 놓인
+ * 자리뿐이다 — 그래야 밸런스 변화가 콤보 때문이라고 말할 수 있다.
+ *
+ * 모델로도 이쪽이 맞다. 사람은 지도를 스캔하지 않는다 — 놓으려던 자리 **옆**을 보고
+ * "여기 붙이면 콤보가 뜨네" 한다.
+ *
+ * ## 얼마나 노리나 — **가산점**이지 목적함수가 아니다
+ *
+ * 새로 터지는 콤보 **개수**만 세고, 동점이면 원래 자리다 (원점 우선 = 안 붙이는 쪽이 기본).
+ * 만족 몇 점·매출 몇 % 인지 가중치를 안 매기는 이유는 그것이 곧 최적화기이기 때문이다.
+ *
+ * ⚠ **rng 를 안 쓴다** (불변식 2). 후보는 원점에서 파생된 고정 오프셋이다.
+ */
+function nudgeForCombo(
+  t: KairoTerrain,
+  w: WallGrid,
+  p: PlacementGrid,
+  defId: string,
+  i: number,
+  j: number,
+  opts: { land: ReturnType<typeof landRect> },
+): { i: number; j: number } {
+  let best = { i, j };
+  let bestGain = previewCombos(p, defId, i, j).gained.length;
+  for (let d = 1; d <= COMBO_NUDGE; d++) {
+    for (const [di, dj] of [
+      [d, 0],
+      [-d, 0],
+      [0, d],
+      [0, -d],
+    ] as const) {
+      const ni = i + di;
+      const nj = j + dj;
+      if (!p.check(t, w, GATE, defId, ni, nj, opts).ok) continue;
+      const gain = previewCombos(p, defId, ni, nj).gained.length;
+      if (gain > bestGain) {
+        bestGain = gain;
+        best = { i: ni, j: nj };
+      }
+    }
+  }
+  return best;
+}
+
 function buildOne(
   t: KairoTerrain,
   w: WallGrid,
@@ -703,12 +840,20 @@ function buildOne(
       if (t.isWater(i, j)) continue;
       const c = p.check(t, w, GATE, pick.id, i, j, opts);
       if (c.ok) {
-        p.place(t, w, GATE, pick.id, i, j, opts);
+        // 콤보가 뜨는 쪽으로 한두 칸 붙여 본다 (P2-B) — 왜는 `nudgeForCombo` 참고
+        const at = nudgeForCombo(t, w, p, pick.id, i, j, opts);
+        p.place(t, w, GATE, pick.id, at.i, at.j, opts);
         return (pick as unknown as { cost: number }).cost + roomSpend;
       }
       /*
        * 길만 없는 자리면 깔고 다시 본다 (K32-B). 다른 이유(점유·지형)면 그냥 다음 자리로 —
        * 아무 데나 포장하면 봇이 판 전체를 깔아 값이 왜곡된다.
+       *
+       * ⚠ 후보를 모으게 된 뒤에도 이 가지는 **예전 그대로** 둔다 (P2-B). "이미 되는 자리가
+       * 있으면 포장하지 말자"로 바꿔 봤더니, 길이 안 깔려 길망이 자라지 않았고 그 여파로
+       * 돈 부족이 판당 12 → 23회로 뛰어 52주 경보에 걸렸다 (실측, 콤보 선호를 끈 대조군
+       * 에서도 같은 23회 — 즉 원인은 콤보가 아니라 **포장을 줄인 것**이었다).
+       * 길은 이 봇의 자산이다. 콤보 선호는 "그냥 되는 자리들" 사이에서만 고른다.
        */
       if (c.fail === 'unreachable') {
         const pathSpend = ensurePath(t, w, p, land, {
@@ -720,6 +865,10 @@ function buildOne(
         if (pathSpend > 0) {
           roomSpend += pathSpend;
           if (p.check(t, w, GATE, pick.id, i, j, opts).ok) {
+            /*
+             * ⚠ 여기서는 **붙여 보지 않는다.** 길을 그 자리에 깔아 놓고 옆으로 옮기면
+             * 방금 산 길이 헛돈이 된다. 콤보 선호는 "그냥 되는 자리"에서만 쓴다.
+             */
             p.place(t, w, GATE, pick.id, i, j, opts);
             return (pick as unknown as { cost: number }).cost + roomSpend;
           }
@@ -809,6 +958,12 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const buildFailWhy = new Map<string, number>();
   let buildCapped = 0;
   let upgradeSpend = 0;
+  /**
+   * 고른 특화의 갈래별 횟수 (P2-B). **0 이면 축이 안 재진 것**이다 — 산 위 시설
+   * (`onSlope`)을 세는 것과 같은 이유로 보고에 올린다. 셋 중 하나만 0 이어도
+   * 그 갈래는 밸런싱에 안 실려 있다.
+   */
+  const specialtyTally = new Map<FacilitySpecialty, number>();
   let accidents = 0;
   let riskyWeeks = 0;
   const accidentIdle = new Map<number, number>();
@@ -909,39 +1064,10 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     const capped = p.totalCapacity() * 1.5 > gradeNow.maxGuests * 1.3;
     if (capped) weekBudget = 0;
 
-    /*
-     * 확장이 막혔으면 **개선한다** (§15.9). 정원은 안 늘고 요금·만족도가 오르므로,
-     * 등급 상한에 막힌 구간에서 유일하게 남는 성장 수단이다.
-     *
-     * 이게 없으면 80주 중 58주가 "지을 게 없다"가 되고 현금이 2,220만까지 쌓인다 (실측).
+    /**
+     * 이번 주에 한 채라도 지었나 — **개선의 방아쇠**다 (아래 § 참고).
      */
-    if (capped) {
-      /*
-       * ⚠ 개선 횟수를 **쌓인 현금에 맞춘다** (K36-B②).
-       *
-       * 3회 고정이면 수입이 늘어도 지출이 안 늘어 현금만 쌓인다. 입장료가 들어오자
-       * 52주 현금이 5,335만이 됐는데 **평균 개선 단계는 2.4/5** 였다 — 쓸 곳이 없던 게
-       * 아니라 봇이 **안 쓴 것**이다. 그 상태로 "후반이 빈다" 경보를 믿으면 게임이
-       * 무너졌다고 잘못 읽는다 (이 파일이 상한 도달·예비비에서 이미 겪은 실패다).
-       *
-       * 사람은 지을 게 없으면 있는 것을 고친다. 돈이 많을수록 더 고친다.
-       * 현금이 예비비 수준이면 3회 — 예전과 같다.
-       */
-      const rounds = Math.max(3, Math.min(24, Math.floor((cash - BUILD_RESERVE) / 2_000_000)));
-      for (let k = 0; k < rounds; k++) {
-        const targets = p
-          .all()
-          .filter((it) => p.levelOf(it.handle) < FACILITY_MAX_LEVEL)
-          .sort((a, b) => p.levelOf(a.handle) - p.levelOf(b.handle) || a.handle - b.handle);
-        const t0 = targets[0];
-        if (!t0) break;
-        const cost = p.upgradeCost(t0.handle);
-        if (cost <= 0 || cost > cash - BUILD_RESERVE) break;
-        p.upgrade(t0.handle);
-        cash -= cost;
-        upgradeSpend += cost;
-      }
-    }
+    let builtAny = false;
     for (let b = 0; b < 3; b++) {
       /*
        * 예비비를 남긴다. **이게 없으면 봇이 스스로 파산하고, 그러면 우리는 게임이 아니라
@@ -984,7 +1110,88 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         else buildNoSpace++;
         break;
       }
+      builtAny = true;
     }
+
+    /*
+     * 지을 게 없으면 **있는 것을 고친다** (§15.9).
+     *
+     * ⚠ 방아쇠가 `capped` 하나였고, 자리는 **건설 뒤로** 옮겼다 (P2-B). 둘 다 실측에서 왔다:
+     *   · `capped` 만 보면 26주 판에서 개선이 **판당 한 주**밖에 안 돈다 (상한 도달 중앙 1회).
+     *     그런데 그 판들도 돈·자리로 건설이 막히는 주가 열 번쯤 있다 — 사람이라면 그 주에
+     *     있는 것을 고친다. 상한 도달이든 자리 부족이든 **"이번 주에 지을 게 없다"는 같다.**
+     *   · 개선이 건설보다 **먼저** 돌면 확장 자금을 개선이 가로챈다. 사람은 먼저 짓고
+     *     남는 돈으로 고친다. `capped` 인 주는 `weekBudget = 0` 이라 건설이 어차피 0 원이므로
+     *     예전 동작이 그대로 보존된다 — 새로 도는 것은 **못 지은 주**뿐이다.
+     *
+     * 이게 없으면 평균 개선 단계가 1.10/5 에 머물러(실측) "확장이 막히면 개선한다"는
+     * 후반 대책이 계측에 없는 것과 같고, 3단계 뒤의 **P1.5 특화 축도 함께 죽는다.**
+     */
+    if (capped || !builtAny) {
+      /*
+       * ⚠ 개선 횟수를 **쌓인 현금에 맞춘다** (K36-B②).
+       *
+       * 3회 고정이면 수입이 늘어도 지출이 안 늘어 현금만 쌓인다. 입장료가 들어오자
+       * 52주 현금이 5,335만이 됐는데 **평균 개선 단계는 2.4/5** 였다 — 쓸 곳이 없던 게
+       * 아니라 봇이 **안 쓴 것**이다. 그 상태로 "후반이 빈다" 경보를 믿으면 게임이
+       * 무너졌다고 잘못 읽는다 (이 파일이 상한 도달·예비비에서 이미 겪은 실패다).
+       *
+       * 사람은 지을 게 없으면 있는 것을 고친다. 돈이 많을수록 더 고친다.
+       * 현금이 예비비 수준이면 3회 — 예전과 같다.
+       */
+      const rounds = Math.max(3, Math.min(24, Math.floor((cash - BUILD_RESERVE) / 2_000_000)));
+      /*
+       * ⚠ **못 지은 주의 개선은 건설과 같은 절제를 받는다** (P2-B).
+       *
+       * 상한에 막힌 주(`capped`)는 예전처럼 예비비 위 전부를 쓴다 — 그때는 개선이 유일한
+       * 돈 쓸 곳이고, 그 동작을 바꾸면 K36-B② 의 실측이 무효가 된다.
+       *
+       * 반면 **자리·신중으로 못 지은 주**는 다르다. 건설은 예비비 위 현금을 한 주에
+       * **1/4** 만 쓰는데(위 `weekBudget`), 개선만 100% 를 쓰면 매주 현금이 예비비까지
+       * 훑여 다음 주가 "돈이 없다"가 된다 — 실측으로 돈 부족이 판당 12 → 21회까지 올랐고
+       * 52주 경보에 걸렸다. 같은 1/4 을 쓰면 절제가 한 벌이 된다.
+       */
+      let upBudget = Math.max(0, cash - BUILD_RESERVE);
+      if (!capped) upBudget = Math.floor(upBudget * 0.25);
+      for (let k = 0; k < rounds; k++) {
+        /*
+         * ⚠ **낼 수 있는 것부터 고친다** (P2-B). 예전에는 `단계 오름차순` 으로 골랐는데,
+         * 단계가 낮은 것이 곧 싼 것은 아니다 — 1단계 파도풀(개선비 132만)이 맨 앞에 서면
+         * 11만짜리 탁구대가 뒤에 있어도 `break` 가 그 주의 개선을 **통째로** 끊었다.
+         *
+         * K42 로 경제가 소비형이 되면서 현금이 예비비 언저리에 붙어 살자 이 `break` 가
+         * 거의 매주 첫 바퀴에서 걸렸다 (실측: 52주 평균 개선 단계 **1.10/5** — 판당
+         * 개선이 다섯 번 남짓이다).
+         *
+         * 개선비는 단계와 함께 가팔라지므로(`upgradeCost`) 싼 것부터 사도 한 시설만
+         * 독주하지 않는다 — 올라간 만큼 뒤로 밀린다. 사람도 예산 안에서 살 수 있는 것을 산다.
+         */
+        const targets = p
+          .all()
+          .filter((it) => p.levelOf(it.handle) < FACILITY_MAX_LEVEL)
+          .sort((a, b) => p.upgradeCost(a.handle) - p.upgradeCost(b.handle) || a.handle - b.handle);
+        const t0 = targets[0];
+        if (!t0) break;
+        const cost = p.upgradeCost(t0.handle);
+        if (cost <= 0 || cost > upBudget) break;
+        p.upgrade(t0.handle);
+        cash -= cost;
+        upBudget -= cost;
+        upgradeSpend += cost;
+      }
+    }
+    /*
+     * 개선 **직후**에 특화를 고른다 (P2-B). 3단계에 닿는 것은 위 개선 루프뿐이라,
+     * 여기서 안 고르면 한 주가 통째로 "정원은 늘 수 있었는데 안 늘린" 주가 된다.
+     * 게임에서도 3단계 개선이 그 자리에서 갈림길을 묻는다.
+     */
+    chooseSpecialties(
+      p,
+      last,
+      reputation.value,
+      GRADES[gradeNo]?.reqExitSatisfaction ?? 0, // 다음 등급 (없으면 최고 등급이라 0)
+      specialtyTally,
+    );
     g.invalidate();
 
     /*
@@ -1250,6 +1457,12 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     buildCapped,
     upgradeSpend,
     avgLevel: p.averageLevel(),
+    specialties: {
+      capacity: specialtyTally.get('capacity') ?? 0,
+      revenue: specialtyTally.get('revenue') ?? 0,
+      reputation: specialtyTally.get('reputation') ?? 0,
+    },
+    specialtyTotal: [...specialtyTally.values()].reduce((a, b) => a + b, 0),
     accidents,
     riskLevel: assessRisk(p, g, { staffSafety: staff.effects(p).safetyPoints }).level,
     mapId,
@@ -1351,6 +1564,12 @@ function main(): void {
     ['수영 구역', runs.map((r) => r.swimZones), (n) => String(n)],
     ['최대 풀 면적', runs.map((r) => r.swimArea), (n) => `${n.toFixed(0)}칸`],
     ['심사 등급', runs.map((r) => r.examGrade), (n) => String(n)],
+    /*
+     * 평균 개선 단계 — 표에 없어서 **개선 축이 죽은 것을 몇 페이즈 동안 못 봤다**
+     * (P2-B 실측: 52주에 1.10/5). `--each` 에만 있던 값이라 중앙값 요약을 보는
+     * 눈에는 안 잡혔다. 특화(3단계)가 이 값 뒤에 있으므로 같이 본다.
+     */
+    ['평균 개선 단계', runs.map((r) => r.avgLevel), (n) => n.toFixed(2)],
     ['콤보 발동', runs.map((r) => r.combos), (n) => String(n)],
     ['콤보 원점수(만족)', runs.map((r) => r.comboSatRaw), (n) => n.toFixed(0)],
     ['콤보 만족 보너스', runs.map((r) => r.comboSatApplied), (n) => `+${n.toFixed(1)}`],
@@ -1455,6 +1674,26 @@ function main(): void {
     `매표소: 못 지나간 손님 중앙 ${stats(runs.map((r) => r.lastNoTicket)).med}명/마지막 주 · ` +
       `가둬져 다시 지은 횟수 중앙 ${stats(runs.map((r) => r.ticketRebuilds)).med}회/판`,
   );
+  {
+    /*
+     * 특화 (P2-B) — **셋 중 하나라도 0 이면 그 갈래가 밸런싱에 안 실려 있다.**
+     * 합계가 0 이면 P1.5 축 자체가 안 재진 것이라 산 위 시설과 같은 문구로 경고한다.
+     */
+    const tot = stats(runs.map((r) => r.specialtyTotal));
+    /*
+     * ⚠ 중앙값이 아니라 **몇 판에서 골랐나**로 센다. 3단계에 닿는 판이 소수라
+     * 중앙값은 0 에 붙어 있는데, 그 0 은 "축이 죽었다"가 아니라 "판이 갈렸다"다 —
+     * 갈래별 합계도 마찬가지 이유로 판 전체를 더한다 (중앙값이면 전부 0 으로 읽힌다).
+     */
+    const ran = runs.filter((r) => r.specialtyTotal > 0).length;
+    const sum = (k: FacilitySpecialty): number =>
+      runs.reduce((a, r) => a + r.specialties[k], 0);
+    console.log(
+      `특화 선택: ${ran}/${SEEDS}판에서 골랐다 · 합계 회전 ${sum('capacity')} · ` +
+        `수익 ${sum('revenue')} · 평판 ${sum('reputation')} (판당 최대 ${tot.max}개)` +
+        (tot.max === 0 ? '  ⚠ 특화가 헤드리스에서 안 쓰인다 — 실제 판과 갈라진다' : ''),
+    );
+  }
   {
     const slope = stats(runs.map((r) => r.onSlope));
     const total = stats(runs.map((r) => r.builtTotal));

@@ -16,6 +16,7 @@ import {
 } from './placement.js';
 import { GuestStore, OPEN_GATE_DEFAULTS } from './guests.js';
 import { WeekRunner } from './week.js';
+import { assessRisk } from './risk.js';
 
 /**
  * 시설 개선의 **분기화** (P1.5) — PSS 의 "그릇 속의 그릇"을 새 시스템 없이.
@@ -234,6 +235,70 @@ describe('한 주를 돌려서 잰다 — 수치가 실제로 다르다', () => 
     const rep = atL3('reputation');
     expect(rev.revenue).toBeGreaterThan(rep.revenue);
     expect(rep.exitSatisfaction).toBeGreaterThan(rev.exitSatisfaction);
+  });
+});
+
+/**
+ * 정원의 **정본은 하나**여야 한다 (P2-B).
+ *
+ * P1.5 직후에는 손님 슬롯만 `capacityOf` 를 쓰고 `week.supply()`(병목 진단)와
+ * `assessRisk`(위험 점수)는 `def.capacity` 를 직접 읽고 있었다. 그래서
+ *   · 슬롯은 늘었는데 결산은 "자리가 모자란다"를 그대로 말했고 (플레이어가 고른
+ *     회전 특화가 화면에 안 나타난다)
+ *   · 동시에 더 태우는데 위험은 그대로여서 회전이 **공짜**였다
+ * 두 소비자를 `capacityOf` 로 옮긴 것이 이 절이 지키는 성질이다.
+ *
+ * ⚠ 상수끼리 비교하지 않는다 — `capacityOf` 로 기대값을 만들면 두 곳이 다시 갈라져도
+ * 통과한다. `def.capacity` 라는 **옛 정본**과의 차이를 직접 못박는다.
+ */
+describe('정원의 정본은 capacityOf 하나다 (회전 특화가 병목·위험에 닿는다)', () => {
+  /** 스릴/놀이 수요라 위험 점수에도 잡히는 시설 — 한 판으로 둘 다 잰다 */
+  const RISKY = 'pingpong';
+
+  function riskyPark(n: number): ReturnType<typeof park> {
+    const fx = park(0);
+    for (let k = 0; k < n; k++) fx.p.place(fx.t, fx.w, GATE, RISKY, 6 + k * 3, 8);
+    fx.g.invalidate();
+    return fx;
+  }
+
+  it('병목 공급이 특화만큼 늘어난다 — 안 늘면 결산이 옛 정원으로 진단한다', () => {
+    const n = 4;
+    const base = facilityDef(RISKY)!.capacity;
+    const fx = riskyPark(n);
+    const week = new WeekRunner(fx.t, fx.p, fx.g);
+    expect(week.supply().play).toBe(base * n);
+    for (const it of fx.p.all()) {
+      while (fx.p.levelOf(it.handle) < SPECIALTY_LEVEL) fx.p.upgrade(it.handle);
+      expect(fx.p.chooseSpecialty(it.handle, 'capacity')).toBe(true);
+    }
+    expect(week.supply().play).toBe(base * n + n);
+  });
+
+  it('위험 점수가 특화만큼 오른다 — 더 태우는데 더 안전하면 회전이 공짜다', () => {
+    const n = 4;
+    const base = facilityDef(RISKY)!.capacity;
+    const fx = riskyPark(n);
+    const before = assessRisk(fx.p, fx.g).riskPoints;
+    expect(before).toBe(base * n);
+    for (const it of fx.p.all()) {
+      while (fx.p.levelOf(it.handle) < SPECIALTY_LEVEL) fx.p.upgrade(it.handle);
+      fx.p.chooseSpecialty(it.handle, 'capacity');
+    }
+    expect(assessRisk(fx.p, fx.g).riskPoints).toBe(before + n);
+  });
+
+  it('음성 대조군 — 다른 특화(수익)는 공급도 위험도 한 점 안 움직인다', () => {
+    const fx = riskyPark(4);
+    const week = new WeekRunner(fx.t, fx.p, fx.g);
+    const supply0 = week.supply().play;
+    const risk0 = assessRisk(fx.p, fx.g).riskPoints;
+    for (const it of fx.p.all()) {
+      while (fx.p.levelOf(it.handle) < SPECIALTY_LEVEL) fx.p.upgrade(it.handle);
+      fx.p.chooseSpecialty(it.handle, 'revenue');
+    }
+    expect(week.supply().play).toBe(supply0);
+    expect(assessRisk(fx.p, fx.g).riskPoints).toBe(risk0);
   });
 });
 

@@ -5,6 +5,8 @@ import { createAssetProvider } from './assets/index.js';
 import { boot, type MainScene } from './render/index.js';
 import { Hud } from './ui/hud.js';
 import { loadFromStorage, saveToStorage } from './save/index.js';
+// 타입만 — 값은 아래 동적 import 로 온다 (⚠ `bootKairo` 앞뒤 순서 규칙과 무관하게 지워진다)
+import type { ComboBreakdown } from './ui/kairo-report.js';
 
 const DEFAULT_SEED = 20260811;
 const AUTOSAVE_INTERVAL_MS = 30_000;
@@ -48,7 +50,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   } = await import('./sim/kairo/progress.js');
   const { assessRisk, RISK_NAMES } = await import('./sim/kairo/risk.js');
   const { swimRiskPoints } = await import('./sim/kairo/swim.js');
-  const { KairoReport } = await import('./ui/kairo-report.js');
+  const { KairoReport, comboBreakdown } = await import('./ui/kairo-report.js');
   const { KairoCardView } = await import('./ui/kairo-card.js');
   const { KairoUnlockView } = await import('./ui/kairo-unlock.js');
   const { CardStore, CARD_RNG_SALT, triggerCard } = await import('./sim/kairo/cards.js');
@@ -1158,7 +1160,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    *
    * 수동 열람이라 **카드 사슬을 안 탄다** (`onClose` 가 비어 있다) — 여기서 다음 주를
    * 시작하면 결산을 다시 볼 때마다 주가 넘어간다.
-   * ⚠ 본문이 `lastReport`·`reportSeenWeek`·`refreshCaps` 를 읽는다. 전부 아래에서
+   * ⚠ 본문이 `lastReport`·`lastCombos`·`reportSeenWeek`·`refreshCaps` 를 읽는다. 전부 아래에서
    *   선언되지만 **부르는 시점은 사용자 탭**이라 TDZ 에 안 걸린다.
    * ⚠ 언제나 **가장 최근 결산**을 연다. 전체 결산(히트맵·재생 프레임)은 그 주에만
    *   존재하고 세이브에도 안 들어가므로(위 `lastReport` 주석), 알림함의 옛 행을 눌러도
@@ -1170,7 +1172,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       return;
     }
     reportSeenWeek = lastReport.week;
-    report.show(lastReport, { onClose: () => undefined });
+    report.show(lastReport, { onClose: () => undefined }, lastCombos ?? undefined);
     refreshCaps();
   };
   const cardView = new KairoCardView(document.body);
@@ -1245,6 +1247,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 히트맵 1,280칸은 localStorage 를 넘긴다. 등급·의뢰가 읽는 요약만 복원한다.
    */
   let lastReport: ReturnType<typeof week.run> | null = null;
+  /**
+   * 그 주가 **열린 시점**의 콤보 발동 목록 (P2-B) — 결산의 콤보 줄이 쓴다.
+   *
+   * ⚠ 결산을 열 때 다시 계산하면 안 된다. 흐르는 낮 동안 지은 시설이 섞여
+   * "목록은 13개인데 적용된 숫자는 12개 몫"이 된다 — 주는 `begin()` 시점 배치로 계산된다.
+   * 총합(만족·매출)은 여기 없다: `rep.combos` 가 **실제로 적용된 값**을 들고 온다.
+   */
+  let lastCombos: ComboBreakdown | null = null;
   let lastSummary = saved?.lastSummary ?? null;
   /**
    * 누적 방문객 (K47-① 신규 발화 d). 이 카운터는 **원래 없었다** — "지금까지 몇 명이
@@ -1346,6 +1356,21 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       courseRisk: courseRiskPoints(),
       swimRisk: swimRiskPoints(h.guests.swimZones()),
     });
+    /*
+     * 결산에 실을 콤보 목록 (P2-B) — **주가 열리는 지금** 떠 놓는다. 결산을 열 때
+     * 다시 계산하면 흐르는 낮 동안 지은 시설이 섞여 목록과 숫자가 어긋난다.
+     *
+     * ⚠ `evaluateCombos` 를 아래에서 한 번 더 부른다. 하나로 합치고 싶지만,
+     * `week.test.ts` 의 정적 검사가 **`comboEffect(evaluateCombos(… swimZones()`
+     * 라는 인라인 형태**를 main.ts·kairo-sim.ts 양쪽에서 찾는다 (한쪽만 넘기면
+     * 헤드리스와 실제 판이 갈라지는 사고를 이 저장소가 여러 번 겪었다). 배치가 같은
+     * 시점의 같은 순수 함수라 두 결과는 언제나 같다 — 주에 한 번뿐인 비용이다.
+     */
+    const zonesNow = h.guests.swimZones();
+    lastCombos = comboBreakdown(
+      evaluateCombos(h.placement, undefined, zonesNow).active,
+      zonesNow,
+    );
     return {
       season,
       reputation: gr.reputationPull,
@@ -1744,7 +1769,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         stampNow(),
         openLastReport,
       );
-      report.show(rep, { onClose: () => nextWeekCards() });
+      report.show(rep, { onClose: () => nextWeekCards() }, lastCombos ?? undefined);
     };
     /*
      * 사고가 났으면 결산 **전에** 대응 카드를 띄운다 (§12.1). 결산 뒤에 띄우면 이미

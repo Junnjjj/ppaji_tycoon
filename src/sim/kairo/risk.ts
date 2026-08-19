@@ -132,7 +132,15 @@ export function assessRisk(
       safetyPoints += 4;
       continue;
     }
-    if (def.need && RISKY_NEEDS.has(def.need)) riskPoints += Math.max(1, def.capacity);
+    /*
+     * ⚠ 정원은 **`placement.capacityOf`** 다 (`def.capacity` 가 아니다) — 손님 슬롯의
+     * 정본이고 회전 특화(P1.5)가 반영된 값이다. 직접 읽던 동안에는 정원을 늘려 놓고도
+     * 위험은 그대로여서, "동시에 더 태우는데 더 안전하다"는 공짜가 됐다.
+     * 회전 특화는 위험 축에서 **벌점**이다 — 그래야 안전 시설이 같이 따라온다.
+     */
+    if (def.need && RISKY_NEEDS.has(def.need)) {
+      riskPoints += Math.max(1, placement.capacityOf(item.handle));
+    }
   }
 
   // 혼잡도 — 손님이 많을수록 사고 여지가 커진다

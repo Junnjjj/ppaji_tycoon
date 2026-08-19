@@ -186,6 +186,18 @@ export interface WeekReport extends WeekSummary {
   /** 코스 매출과 탑승객 — 시설 매출과 나눠 보여줘야 "코스를 왜 그리나"가 보인다 */
   courseRevenue: number;
   courseRiders: number;
+  /**
+   * 이번 주에 **실제로 적용된** 콤보 보너스 (P2-B). 콤보 없이 돌린 주면 null.
+   *
+   * `WeekOptions.combos` 를 그대로 되돌려 준다 — 계산은 전혀 안 한다 (규칙은 여전히
+   * `combos.ts` 소유, 불변식 3).
+   *
+   * ⚠ **결산이 이 값을 보여줘야 한다.** UI 가 결산을 열면서 배치에서 다시 계산하면,
+   * 흐르는 낮 동안 지은 시설까지 세어 "화면의 숫자와 그 주에 적용된 값이 다른" 상태가
+   * 된다 (주는 `begin()` 시점 배치로 계산된다). 표시와 적용이 갈라지면 플레이어는
+   * 계산이 안 맞는다고 느낀다.
+   */
+  combos: { satisfactionDelta: number; revenueMult: number } | null;
   gaveUp: number;
   /**
    * 혼잡 히트맵 — 타일별 손님 체류 tick. 결산에서 병목을 **눈으로** 보게 한다.
@@ -383,7 +395,16 @@ export class WeekRunner {
     this.money = s.cash;
   }
 
-  /** 시설 구성이 채우는 수요 — 종류별 총 용량 */
+  /**
+   * 시설 구성이 채우는 수요 — 종류별 총 용량.
+   *
+   * ⚠ 정원은 **`placement.capacityOf`** 다 (`def.capacity` 가 아니다). 그것이 손님
+   * 슬롯의 정본이고 회전 특화(P1.5, 정원 +1)가 반영된 값이다. `def.capacity` 를 직접
+   * 읽던 동안에는 **슬롯은 늘었는데 병목 진단은 옛 정원**이라, 회전 특화를 골라도
+   * 결산이 "자리가 모자란다"를 그대로 말했다 — 플레이어가 고른 것이 화면에 안 나타났다.
+   * 이 값은 `admissionLimit` 의 `공급×1.5` 로도 흘러가므로 정본이 갈리면 입장 상한까지
+   * 갈라진다.
+   */
   supply(idle?: ReadonlySet<number>): Record<NeedKind, number> {
     const out = {} as Record<NeedKind, number>;
     for (const item of this.placement.all()) {
@@ -393,7 +414,7 @@ export class WeekRunner {
       if (!def) continue;
       const need = (def as { need?: NeedKind }).need;
       if (!need) continue;
-      out[need] = (out[need] ?? 0) + Math.max(1, def.capacity);
+      out[need] = (out[need] ?? 0) + Math.max(1, this.placement.capacityOf(item.handle));
     }
     return out;
   }
@@ -837,6 +858,8 @@ export class WeekRunner {
       wages,
       courseRevenue,
       courseRiders: mod?.closed ? 0 : Math.round((opts.courses?.riders ?? 0) * courseSeason),
+      // 받은 것을 그대로 돌려준다 (P2-B) — 결산이 **적용된 값 그 자체**를 보여주게
+      combos: opts.combos ?? null,
       profit: weekRevenue - upkeep - wages,
       /*
        * 만족도 델타는 **평균에 더한다**. 손님 개체마다 더하면 그 손님이 다음 주까지
