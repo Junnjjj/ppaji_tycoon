@@ -27,7 +27,7 @@ import { GROUND_KINDS } from '../src/sim/kairo/terrain.js';
 import {
   PlacementGrid,
   allFacilityDefs,
-  MAX_LEVEL,
+  FACILITY_MAX_LEVEL,
   guestWalkable,
 } from '../src/sim/kairo/placement.js';
 import { GuestStore, GUEST_DEFAULTS, TICKET_DEF_ID } from '../src/sim/kairo/guests.js';
@@ -685,7 +685,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       for (let k = 0; k < rounds; k++) {
         const targets = p
           .all()
-          .filter((it) => p.levelOf(it.handle) < MAX_LEVEL)
+          .filter((it) => p.levelOf(it.handle) < FACILITY_MAX_LEVEL)
           .sort((a, b) => p.levelOf(a.handle) - p.levelOf(b.handle) || a.handle - b.handle);
         const t0 = targets[0];
         if (!t0) break;

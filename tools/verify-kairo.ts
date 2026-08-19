@@ -2538,42 +2538,54 @@ async function main(): Promise<void> {
    * 한쪽 기준으로 뭉뚱그리면 어느 쪽도 제대로 안 잰다.
    */
   /*
-   * 배경 3겹은 이제 **안전망**이다 (K38). 지도 바깥이 지형으로 덮이므로 평소엔 한 픽셀도
-   * 안 보이지만, 굽기가 실패했을 때 하늘 대신 나오는 것이라 성질은 계속 지킨다.
+   * ## 배경 3겹은 **안전망**이고, 평소엔 아예 안 만든다
+   *
+   * 지도 바깥이 지형으로 덮이므로(K38) 배경은 한 픽셀도 안 보인다. 안 보이는 것과
+   * **없는 것**은 다르므로 굽기가 성공하면 아예 만들지 않는다 — 타일스프라이트 3장이
+   * 텍스처 9.6MB 를 붙들고 있었다 (아키텍처 점검 실측).
+   *
+   * 그래서 여기서 재는 것은 "3겹이 있다"가 아니라 **"둘 중 하나가 성립한다"** 이다:
+   *   · 굽기 성공 → 지형이 깔렸고 배경은 0겹
+   *   · 굽기 실패 → 배경 3겹이 계약대로 서 있다 (하늘 대신 산이 보인다)
    */
-  record(
-    `배경 겹 수가 계약과 같다 (${backLayers.length}겹)`,
-    backdrop.count === backLayers.length ? 'pass' : 'fail',
-    `${backdrop.count}겹 · 시차 ${backdrop.factors.join(', ')} (계약 ${backLayers.join('·')})`,
-  );
-  /*
-   * 겹마다 시차가 **달라야** 한다. 같은 값이 둘이면 그 둘은 겹쳐 움직이므로 한 장과 같다.
-   */
-  const uniqueFactors = new Set(backdrop.factors).size;
-  record(
-    '배경이 지도보다 느리게 따라온다 — 같으면 큰 그림 한 장, 0 이면 벽지다',
-    backdrop.factors.length === backLayers.length &&
-      backdrop.factors.every((f) => f > 0 && f < 1) &&
-      uniqueFactors === backdrop.factors.length
-      ? 'pass'
-      : 'fail',
-    backLayers.map((l, k) => `${l} ${backdrop.factors[k]}`).join(' · ') + ' (지도는 1.0)',
-  );
-  /*
-   * 계약의 `layers` 는 **먼 겹부터**다. 먼 겹일수록 시차가 작아야 원근이 안 뒤집힌다.
-   */
-  record(
-    '먼 겹일수록 시차가 작다 — 뒤집히면 산이 앞으로 나온다',
-    backdrop.factors.every((f, k) => k === 0 || f > (backdrop.factors[k - 1] as number))
-      ? 'pass'
-      : 'fail',
-    backdrop.factors.join(' < '),
-  );
-  record(
-    '배경이 지면보다 뒤에 있다',
-    backdrop.depths.length > 0 && backdrop.depths.every((d) => d < 0) ? 'pass' : 'fail',
-    `깊이 ${backdrop.depths.join(', ')}`,
-  );
+  if (backdrop.surround >= 1) {
+    record(
+      '지형이 깔리면 배경 3겹은 안 만든다 — 안 보이는 텍스처 9.6MB (K38)',
+      backdrop.count === 0 ? 'pass' : 'fail',
+      `지형 ${backdrop.surround}장 · 배경 ${backdrop.count}겹 (0 이어야 한다)`,
+    );
+  } else {
+    record(
+      `배경 겹 수가 계약과 같다 (${backLayers.length}겹) — 굽기 실패 시의 안전망`,
+      backdrop.count === backLayers.length ? 'pass' : 'fail',
+      `${backdrop.count}겹 · 시차 ${backdrop.factors.join(', ')} (계약 ${backLayers.join('·')})`,
+    );
+    /*
+     * 겹마다 시차가 **달라야** 한다. 같은 값이 둘이면 겹쳐 움직이므로 한 장과 같다.
+     */
+    const uniqueFactors = new Set(backdrop.factors).size;
+    record(
+      '배경이 지도보다 느리게 따라온다 — 같으면 큰 그림 한 장, 0 이면 벽지다',
+      backdrop.factors.length === backLayers.length &&
+        backdrop.factors.every((f) => f > 0 && f < 1) &&
+        uniqueFactors === backdrop.factors.length
+        ? 'pass'
+        : 'fail',
+      backLayers.map((l, k) => `${l} ${backdrop.factors[k]}`).join(' · ') + ' (지도는 1.0)',
+    );
+    record(
+      '먼 겹일수록 시차가 작다 — 뒤집히면 산이 앞으로 나온다',
+      backdrop.factors.every((f, k) => k === 0 || f > (backdrop.factors[k - 1] as number))
+        ? 'pass'
+        : 'fail',
+      backdrop.factors.join(' < '),
+    );
+    record(
+      '배경이 지면보다 뒤에 있다',
+      backdrop.depths.length > 0 && backdrop.depths.every((d) => d < 0) ? 'pass' : 'fail',
+      `깊이 ${backdrop.depths.join(', ')}`,
+    );
+  }
 
   const backTile = (await page.evaluate(`(() => {
     const prov = window.__kairo.provider;

@@ -7,7 +7,7 @@ import {
 } from '../sim/kairo/staff.js';
 import type { PlacementGrid } from '../sim/kairo/placement.js';
 import { neededFor } from '../sim/kairo/staff.js';
-import { facilityDef, MAX_LEVEL } from '../sim/kairo/placement.js';
+import { facilityDef, FACILITY_MAX_LEVEL } from '../sim/kairo/placement.js';
 import { priceSatisfaction } from '../sim/kairo/week.js';
 import { panelHost } from './panels.js';
 
@@ -238,7 +238,7 @@ export class KairoStaffPanel {
     if (!placement) return;
     const items = placement
       .all()
-      .filter((it) => placement.levelOf(it.handle) < MAX_LEVEL)
+      .filter((it) => placement.levelOf(it.handle) < FACILITY_MAX_LEVEL)
       .sort((a, b) => placement.levelOf(a.handle) - placement.levelOf(b.handle) || a.handle - b.handle)
       .slice(0, 12);
     if (items.length === 0) {

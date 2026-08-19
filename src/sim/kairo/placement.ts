@@ -173,7 +173,15 @@ export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
  * +24 까지 늘어 5등급 문턱(85)이 닿는다. 비용이 단계마다 가팔라지므로 후반 단계는
  * 시설 하나에 건설비 몇 배가 든다 — 그래서 "전부 최고"가 아니라 선택이 된다.
  */
-export const MAX_LEVEL = 5;
+/**
+ * 시설 **개선 등급**의 상한 (§15.9). 지형의 단(`KairoTerrain.MAX_LEVEL`)과 다르다.
+ *
+ * ⚠ 예전 이름은 `MAX_LEVEL` 이었는데, K37 이 지형에 `KairoTerrain.MAX_LEVEL`(단 3)을
+ * 더하면서 sim 안에 같은 이름이 **둘**이 됐다. `economy.test.ts` 는 등급 쪽을,
+ * `levels.test.ts` 는 지형 쪽을 같은 이름으로 읽어서, 하나를 고치며 다른 하나를 고쳤다고
+ * 착각하기 쉬웠다 (아키텍처 점검에서 지적).
+ */
+export const FACILITY_MAX_LEVEL = 5;
 /** 단계당 요금 상승 */
 export const LEVEL_FEE_STEP = 0.3;
 /** 평균 단계가 1 오를 때 만족도 보너스 */
@@ -494,7 +502,7 @@ export class PlacementGrid {
     const def = facilityDef(item.defId);
     if (!def) return 0;
     const level = item.level ?? 1;
-    if (level >= MAX_LEVEL) return 0;
+    if (level >= FACILITY_MAX_LEVEL) return 0;
     return Math.round(def.cost * (0.6 + level * 0.5));
   }
 
@@ -503,7 +511,7 @@ export class PlacementGrid {
     const item = this.items.get(handle);
     if (!item) return false;
     const level = item.level ?? 1;
-    if (level >= MAX_LEVEL) return false;
+    if (level >= FACILITY_MAX_LEVEL) return false;
     item.level = level + 1;
     return true;
   }

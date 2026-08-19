@@ -746,6 +746,19 @@ export class KairoScene extends Phaser.Scene {
     for (const img of this.backdrops) img.destroy();
     this.backdrops = [];
 
+    /*
+     * 굽기가 성공했으면 **아예 만들지 않는다** (아키텍처 점검 지적).
+     *
+     * K38 이 "평소엔 한 픽셀도 안 보인다"고 적어 뒀는데, 안 보이는 것과 **없는 것**은
+     * 다르다 — 타일스프라이트 3장이 텍스처 9.6MB 를 계속 붙들고 있었다 (실측 총 31MB 중).
+     * 이 프로젝트 1순위가 "폰에서 돌아가는 것"이라 안 보이는 배경이 게임 내용의 몇 배를
+     * 쓰는 것은 그냥 낭비다.
+     *
+     * ⚠ 안전망 자체는 유지된다 — 굽기가 프로바이더를 못 얻어 실패하면 텍스처가 없고,
+     * 그때는 여기가 3겹을 세워 하늘 대신 산이 보인다.
+     */
+    if (this.textures.exists(SURROUND_TEX)) return;
+
     const layers: { id: string; factor: number; y: number }[] = [
       { id: 'backdrop/mountain', factor: 0.06, y: -118 },
       { id: 'backdrop/ridge', factor: 0.15, y: -70 },
