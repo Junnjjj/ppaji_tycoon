@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "카이로 전환 시설 73종의 시뮬 정보. 렌더 정보는 assets/kairo-render-contract.json.",
+  "note": "카이로 전환 시설 73종의 시뮬 정보. 렌더 정보는 assets/kairo-render-contract.json. specialties = 개선 3단계에서 고르는 특화 (빈 배열이면 특화가 없다).",
   "facilities": {
     "shower_row": {
       "id": "shower_row",
@@ -19,7 +19,12 @@
       "fee": 1100,
       "upkeep": 2200,
       "cost": 312000,
-      "need": "hygiene"
+      "need": "hygiene",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "changing_row": {
       "id": "changing_row",
@@ -38,7 +43,12 @@
       "fee": 1000,
       "upkeep": 1900,
       "cost": 252000,
-      "need": "hygiene"
+      "need": "hygiene",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "locker_row": {
       "id": "locker_row",
@@ -57,7 +67,12 @@
       "fee": 1100,
       "upkeep": 2200,
       "cost": 312000,
-      "need": "hygiene"
+      "need": "hygiene",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "washbasin_row": {
       "id": "washbasin_row",
@@ -76,7 +91,12 @@
       "fee": 1000,
       "upkeep": 1900,
       "cost": 252000,
-      "need": "hygiene"
+      "need": "hygiene",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "toilet": {
       "id": "toilet",
@@ -95,7 +115,12 @@
       "fee": 800,
       "upkeep": 2200,
       "cost": 312000,
-      "need": "hygiene"
+      "need": "hygiene",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "nursing": {
       "id": "nursing",
@@ -114,7 +139,12 @@
       "fee": 600,
       "upkeep": 1600,
       "cost": 192000,
-      "need": "hygiene"
+      "need": "hygiene",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "pool_kids": {
       "id": "pool_kids",
@@ -131,7 +161,12 @@
       "fee": 1400,
       "upkeep": 4600,
       "cost": 792000,
-      "need": "play"
+      "need": "play",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "pool_warm": {
       "id": "pool_warm",
@@ -148,7 +183,12 @@
       "fee": 1800,
       "upkeep": 5800,
       "cost": 1032000,
-      "need": "warm"
+      "need": "warm",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "pool_lazy": {
       "id": "pool_lazy",
@@ -165,7 +205,12 @@
       "fee": 1800,
       "upkeep": 6400,
       "cost": 1152000,
-      "need": "play"
+      "need": "play",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "sauna": {
       "id": "sauna",
@@ -182,7 +227,12 @@
       "fee": 1100,
       "upkeep": 3700,
       "cost": 612000,
-      "need": "warm"
+      "need": "warm",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "jjimjilbang": {
       "id": "jjimjilbang",
@@ -199,7 +249,12 @@
       "fee": 1400,
       "upkeep": 3700,
       "cost": 612000,
-      "need": "warm"
+      "need": "warm",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "sikhye": {
       "id": "sikhye",
@@ -216,7 +271,12 @@
       "fee": 800,
       "upkeep": 1600,
       "cost": 192000,
-      "need": "food"
+      "need": "food",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "massage_row": {
       "id": "massage_row",
@@ -235,7 +295,12 @@
       "fee": 1000,
       "upkeep": 1900,
       "cost": 252000,
-      "need": "rest"
+      "need": "rest",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "shop": {
       "id": "shop",
@@ -252,7 +317,12 @@
       "fee": 800,
       "upkeep": 2200,
       "cost": 312000,
-      "need": "food"
+      "need": "food",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "snackbar": {
       "id": "snackbar",
@@ -269,7 +339,12 @@
       "fee": 800,
       "upkeep": 2200,
       "cost": 312000,
-      "need": "food"
+      "need": "food",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "chicken": {
       "id": "chicken",
@@ -286,7 +361,12 @@
       "fee": 800,
       "upkeep": 2200,
       "cost": 312000,
-      "need": "food"
+      "need": "food",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "icecream": {
       "id": "icecream",
@@ -303,7 +383,12 @@
       "fee": 600,
       "upkeep": 1600,
       "cost": 192000,
-      "need": "food"
+      "need": "food",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "cafe": {
       "id": "cafe",
@@ -320,7 +405,12 @@
       "fee": 1100,
       "upkeep": 2800,
       "cost": 432000,
-      "need": "rest"
+      "need": "rest",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "vending_in": {
       "id": "vending_in",
@@ -339,7 +429,12 @@
       "fee": 600,
       "upkeep": 1300,
       "cost": 132000,
-      "need": "food"
+      "need": "food",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "arcade": {
       "id": "arcade",
@@ -358,7 +453,12 @@
       "fee": 600,
       "upkeep": 1300,
       "cost": 132000,
-      "need": "play"
+      "need": "play",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "karaoke": {
       "id": "karaoke",
@@ -375,7 +475,12 @@
       "fee": 800,
       "upkeep": 2200,
       "cost": 312000,
-      "need": "play"
+      "need": "play",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "pingpong": {
       "id": "pingpong",
@@ -392,7 +497,12 @@
       "fee": 800,
       "upkeep": 2200,
       "cost": 312000,
-      "need": "play"
+      "need": "play",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "sunbed_row": {
       "id": "sunbed_row",
@@ -409,7 +519,12 @@
       "fee": 1100,
       "upkeep": 2200,
       "cost": 312000,
-      "need": "rest"
+      "need": "rest",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "info": {
       "id": "info",
@@ -426,7 +541,12 @@
       "fee": 600,
       "upkeep": 2200,
       "cost": 312000,
-      "need": "service"
+      "need": "service",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "infirmary": {
       "id": "infirmary",
@@ -443,7 +563,12 @@
       "fee": 600,
       "upkeep": 2200,
       "cost": 312000,
-      "need": "service"
+      "need": "service",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "office": {
       "id": "office",
@@ -460,7 +585,12 @@
       "fee": 600,
       "upkeep": 2200,
       "cost": 312000,
-      "need": "service"
+      "need": "service",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "storage": {
       "id": "storage",
@@ -477,7 +607,8 @@
       "fee": 600,
       "upkeep": 2200,
       "cost": 312000,
-      "need": "service"
+      "need": "service",
+      "specialties": []
     },
     "ticket": {
       "id": "ticket",
@@ -494,7 +625,10 @@
       "fee": 600,
       "upkeep": 2240,
       "cost": 345600,
-      "need": "service"
+      "need": "service",
+      "specialties": [
+        "capacity"
+      ]
     },
     "parking": {
       "id": "parking",
@@ -511,7 +645,8 @@
       "fee": 500,
       "upkeep": 4640,
       "cost": 825600,
-      "need": "service"
+      "need": "service",
+      "specialties": []
     },
     "mongol_tent": {
       "id": "mongol_tent",
@@ -528,7 +663,12 @@
       "fee": 900,
       "upkeep": 1760,
       "cost": 249600,
-      "need": "rest"
+      "need": "rest",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "pyeongsang_row": {
       "id": "pyeongsang_row",
@@ -545,7 +685,12 @@
       "fee": 900,
       "upkeep": 1760,
       "cost": 249600,
-      "need": "rest"
+      "need": "rest",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "shade_net": {
       "id": "shade_net",
@@ -562,7 +707,12 @@
       "fee": 600,
       "upkeep": 1280,
       "cost": 153600,
-      "need": "rest"
+      "need": "rest",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "parasol": {
       "id": "parasol",
@@ -579,7 +729,12 @@
       "fee": 600,
       "upkeep": 1040,
       "cost": 105600,
-      "need": "rest"
+      "need": "rest",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "bbq_zone": {
       "id": "bbq_zone",
@@ -596,7 +751,12 @@
       "fee": 1200,
       "upkeep": 2960,
       "cost": 489600,
-      "need": "food"
+      "need": "food",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "firepit_row": {
       "id": "firepit_row",
@@ -613,7 +773,12 @@
       "fee": 800,
       "upkeep": 1520,
       "cost": 201600,
-      "need": "food"
+      "need": "food",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "camp_site": {
       "id": "camp_site",
@@ -630,7 +795,12 @@
       "fee": 900,
       "upkeep": 2960,
       "cost": 489600,
-      "need": "rest"
+      "need": "rest",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "pavilion": {
       "id": "pavilion",
@@ -647,7 +817,12 @@
       "fee": 900,
       "upkeep": 2960,
       "cost": 489600,
-      "need": "rest"
+      "need": "rest",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "lookout": {
       "id": "lookout",
@@ -664,7 +839,12 @@
       "fee": 600,
       "upkeep": 1760,
       "cost": 249600,
-      "need": "scenery"
+      "need": "scenery",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "playground": {
       "id": "playground",
@@ -681,7 +861,12 @@
       "fee": 900,
       "upkeep": 2960,
       "cost": 489600,
-      "need": "play"
+      "need": "play",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "footvolley": {
       "id": "footvolley",
@@ -698,7 +883,12 @@
       "fee": 900,
       "upkeep": 3680,
       "cost": 633600,
-      "need": "play"
+      "need": "play",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "minigolf": {
       "id": "minigolf",
@@ -715,7 +905,12 @@
       "fee": 800,
       "upkeep": 2720,
       "cost": 441600,
-      "need": "play"
+      "need": "play",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "photozone": {
       "id": "photozone",
@@ -732,7 +927,12 @@
       "fee": 600,
       "upkeep": 1760,
       "cost": 249600,
-      "need": "scenery"
+      "need": "scenery",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "fountain": {
       "id": "fountain",
@@ -749,7 +949,8 @@
       "fee": 500,
       "upkeep": 1760,
       "cost": 249600,
-      "need": "scenery"
+      "need": "scenery",
+      "specialties": []
     },
     "flowerbed": {
       "id": "flowerbed",
@@ -766,7 +967,8 @@
       "fee": 500,
       "upkeep": 1040,
       "cost": 105600,
-      "need": "scenery"
+      "need": "scenery",
+      "specialties": []
     },
     "vending_out": {
       "id": "vending_out",
@@ -783,7 +985,12 @@
       "fee": 500,
       "upkeep": 1040,
       "cost": 105600,
-      "need": "food"
+      "need": "food",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "lifering": {
       "id": "lifering",
@@ -800,7 +1007,8 @@
       "fee": 500,
       "upkeep": 1040,
       "cost": 105600,
-      "need": "service"
+      "need": "service",
+      "specialties": []
     },
     "slide_small": {
       "id": "slide_small",
@@ -830,7 +1038,12 @@
       "fee": 1300,
       "upkeep": 5180,
       "cost": 856800,
-      "need": "thrill"
+      "need": "thrill",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "slide_large": {
       "id": "slide_large",
@@ -860,7 +1073,12 @@
       "fee": 1600,
       "upkeep": 9800,
       "cost": 1780800,
-      "need": "thrill"
+      "need": "thrill",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "slide_tube": {
       "id": "slide_tube",
@@ -890,7 +1108,12 @@
       "fee": 1300,
       "upkeep": 8120,
       "cost": 1444800,
-      "need": "thrill"
+      "need": "thrill",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "jump_cushion": {
       "id": "jump_cushion",
@@ -909,7 +1132,12 @@
       "fee": 1300,
       "upkeep": 6440,
       "cost": 1108800,
-      "need": "thrill"
+      "need": "thrill",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "trampoline_w": {
       "id": "trampoline_w",
@@ -928,7 +1156,12 @@
       "fee": 1300,
       "upkeep": 5180,
       "cost": 856800,
-      "need": "thrill"
+      "need": "thrill",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "airbounce": {
       "id": "airbounce",
@@ -947,7 +1180,12 @@
       "fee": 2500,
       "upkeep": 14000,
       "cost": 2620800,
-      "need": "thrill"
+      "need": "thrill",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "turtle_island": {
       "id": "turtle_island",
@@ -966,7 +1204,12 @@
       "fee": 2500,
       "upkeep": 21560,
       "cost": 4132800,
-      "need": "play"
+      "need": "play",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "junglegym_w": {
       "id": "junglegym_w",
@@ -985,7 +1228,12 @@
       "fee": 1600,
       "upkeep": 8120,
       "cost": 1444800,
-      "need": "play"
+      "need": "play",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "diving": {
       "id": "diving",
@@ -1004,7 +1252,12 @@
       "fee": 1100,
       "upkeep": 3080,
       "cost": 436800,
-      "need": "thrill"
+      "need": "thrill",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "waterwalk": {
       "id": "waterwalk",
@@ -1023,7 +1276,12 @@
       "fee": 1100,
       "upkeep": 3080,
       "cost": 436800,
-      "need": "play"
+      "need": "play",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "float_deck": {
       "id": "float_deck",
@@ -1043,7 +1301,8 @@
       "fee": 900,
       "upkeep": 1820,
       "cost": 184800,
-      "need": "service"
+      "need": "service",
+      "specialties": []
     },
     "dock": {
       "id": "dock",
@@ -1063,7 +1322,12 @@
       "fee": 1100,
       "upkeep": 4760,
       "cost": 772800,
-      "need": "service"
+      "need": "service",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "rent_kayak": {
       "id": "rent_kayak",
@@ -1082,7 +1346,12 @@
       "fee": 900,
       "upkeep": 3080,
       "cost": 436800,
-      "need": "thrill"
+      "need": "thrill",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "rent_pedal": {
       "id": "rent_pedal",
@@ -1101,7 +1370,12 @@
       "fee": 900,
       "upkeep": 3080,
       "cost": 436800,
-      "need": "thrill"
+      "need": "thrill",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "rent_duck": {
       "id": "rent_duck",
@@ -1120,7 +1394,12 @@
       "fee": 900,
       "upkeep": 3080,
       "cost": 436800,
-      "need": "play"
+      "need": "play",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "rent_sup": {
       "id": "rent_sup",
@@ -1139,7 +1418,12 @@
       "fee": 900,
       "upkeep": 3080,
       "cost": 436800,
-      "need": "thrill"
+      "need": "thrill",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "bungalow": {
       "id": "bungalow",
@@ -1156,7 +1440,8 @@
       "fee": 1900,
       "upkeep": 11100,
       "cost": 1836000,
-      "need": "stay"
+      "need": "stay",
+      "specialties": []
     },
     "glamping": {
       "id": "glamping",
@@ -1173,7 +1458,8 @@
       "fee": 1900,
       "upkeep": 13800,
       "cost": 2376000,
-      "need": "stay"
+      "need": "stay",
+      "specialties": []
     },
     "caravan": {
       "id": "caravan",
@@ -1190,7 +1476,8 @@
       "fee": 1900,
       "upkeep": 10200,
       "cost": 1656000,
-      "need": "stay"
+      "need": "stay",
+      "specialties": []
     },
     "pension": {
       "id": "pension",
@@ -1207,7 +1494,8 @@
       "fee": 1900,
       "upkeep": 21000,
       "cost": 3816000,
-      "need": "stay"
+      "need": "stay",
+      "specialties": []
     },
     "pension_duplex": {
       "id": "pension_duplex",
@@ -1224,7 +1512,8 @@
       "fee": 1900,
       "upkeep": 30000,
       "cost": 5616000,
-      "need": "stay"
+      "need": "stay",
+      "specialties": []
     },
     "ice_fishing": {
       "id": "ice_fishing",
@@ -1241,7 +1530,12 @@
       "fee": 1200,
       "upkeep": 6380,
       "cost": 1135200,
-      "need": "play"
+      "need": "play",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "snow_sled": {
       "id": "snow_sled",
@@ -1269,7 +1563,12 @@
       "fee": 1000,
       "upkeep": 7700,
       "cost": 1399200,
-      "need": "thrill"
+      "need": "thrill",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "bungeoppang": {
       "id": "bungeoppang",
@@ -1286,7 +1585,12 @@
       "fee": 700,
       "upkeep": 1760,
       "cost": 211200,
-      "need": "food"
+      "need": "food",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "footbath": {
       "id": "footbath",
@@ -1303,7 +1607,12 @@
       "fee": 1000,
       "upkeep": 2090,
       "cost": 277200,
-      "need": "warm"
+      "need": "warm",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "fishing": {
       "id": "fishing",
@@ -1320,7 +1629,12 @@
       "fee": 1000,
       "upkeep": 3740,
       "cost": 607200,
-      "need": "play"
+      "need": "play",
+      "specialties": [
+        "capacity",
+        "revenue",
+        "reputation"
+      ]
     },
     "maple_walk": {
       "id": "maple_walk",
@@ -1337,7 +1651,8 @@
       "fee": 700,
       "upkeep": 2420,
       "cost": 343200,
-      "need": "scenery"
+      "need": "scenery",
+      "specialties": []
     },
     "dj_booth": {
       "id": "dj_booth",
@@ -1353,7 +1668,8 @@
       "fee": 600,
       "upkeep": 9800,
       "cost": 518000,
-      "need": "play"
+      "need": "play",
+      "specialties": []
     },
     "stage_river": {
       "id": "stage_river",
@@ -1369,7 +1685,8 @@
       "fee": 900,
       "upkeep": 16800,
       "cost": 1512000,
-      "need": "scenery"
+      "need": "scenery",
+      "specialties": []
     }
   }
 }

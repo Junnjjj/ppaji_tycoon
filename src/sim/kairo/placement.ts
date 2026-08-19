@@ -46,7 +46,62 @@ export interface KairoFacilityDef {
     exitTile: readonly [number, number];
     traverseTicks: number;
   };
+  /**
+   * 이 시설이 고를 수 있는 **특화** (P1.5). 빈 배열이면 특화가 없다.
+   *
+   * ⚠ 불변식 3 — 어떤 시설이 무엇으로 클 수 있는지는 코드가 아니라 데이터가 정한다.
+   * 지금 데이터의 규칙: `capacity === 0` 인 분위기·기반 시설(DJ 부스·화단·펜션·플로팅덱)은
+   * 손님이 슬롯을 잡지 않아 셋 다 뜻이 없어 **빈 배열**이고, 매표소는 게이트라
+   * 요금·만족이 안 붙어 `capacity` 하나뿐이다 (입장 수속은 `admissionFee` 가 따로 받는다).
+   */
+  specialties?: readonly FacilitySpecialty[];
 }
+
+/**
+ * 시설 특화 (P1.5 — PSS 의 "그릇 속의 그릇"을 새 시스템 없이).
+ *
+ * 개선 5단계는 "+등급"의 단조 강화라 결정이 없었다 — 어느 시설이든 돈만 있으면 5단계가
+ * 정답이다. 3단계에서 갈림길을 하나 두면 같은 개선 비용에 **"이 매점을 뭘로 키울까"**
+ * 가 생긴다.
+ *
+ * ⚠ 셋은 반드시 **서로 다른 자원**에 꽂는다 (PSS 아이템 3속성의 핵심 — 합치면 스탯
+ * 하나와 같아져 의미가 죽는다):
+ * - `capacity` **회전** — 정원 +1. 시간(동시 이용 인원)에 꽂힌다
+ * - `revenue`  **수익** — 요금 +25%. 돈에 꽂힌다
+ * - `reputation` **평판** — 이용 만족 이득 +3. 평판(→ 유입·등급)에 꽂힌다
+ *
+ * 지금 뭐가 마르냐에 따라 정답이 달라져야 "고스탯 특화"가 안 생긴다.
+ */
+export type FacilitySpecialty = 'capacity' | 'revenue' | 'reputation';
+
+export const FACILITY_SPECIALTIES: readonly FacilitySpecialty[] = [
+  'capacity',
+  'revenue',
+  'reputation',
+];
+
+/** 사람이 읽는 이름과 효과 — UI 가 문구를 새로 짓지 않게 sim 이 갖는다 (데이터 한 벌) */
+export const SPECIALTY_LABELS: Record<FacilitySpecialty, { name: string; effect: string }> = {
+  capacity: { name: '회전', effect: '정원 +1' },
+  revenue: { name: '수익', effect: '요금 +25%' },
+  reputation: { name: '평판', effect: '만족 +3' },
+};
+
+/** 특화를 고르는 개선 단계 */
+export const SPECIALTY_LEVEL = 3;
+/** 회전 — 늘어나는 정원(슬롯) */
+export const SPECIALTY_CAPACITY_BONUS = 1;
+/** 수익 — 요금 배수에 더해지는 몫 */
+export const SPECIALTY_FEE_BONUS = 0.25;
+/** 평판 — 그 시설을 이용했을 때 만족 이득에 더해지는 몫 (`useGains` 는 14/10/7/4) */
+export const SPECIALTY_SATISFACTION_BONUS = 3;
+/**
+ * 특화 효과가 **두 배**가 되는 단계 — "이후 단계는 그 특화를 강화한다".
+ *
+ * 이게 없으면 3단계 이후의 개선이 다시 단조 강화로 돌아간다. 3에서 고른 갈림길이
+ * 5까지 이어져야 "무엇으로 키울까"가 후반까지 산다.
+ */
+export const SPECIALTY_DOUBLE_LEVEL = 5;
 
 const DEFS = (rawFacilities as unknown as { facilities: Record<string, KairoFacilityDef> })
   .facilities;
@@ -76,8 +131,21 @@ export interface PlacedFacility {
    * **정원은 안 늘린다.** 정원을 늘리면 등급 상한에 막힌 상태에서 아무 효과가 없다 —
    * 개선은 "같은 손님에게 더 좋은 경험"이고, 그래서 후반(확장이 막힌 구간)의 유일한
    * 성장 수단이 된다. 요금과 만족도만 올라간다.
+   *
+   * ⚠ 정원은 `specialty === 'capacity'` 일 때만 는다 (P1.5) — 위 문단의 "정원은 안
+   * 늘린다"는 **단조 강화**에 대한 결정이다. 특화는 하나를 고르면 다른 둘을 버리는
+   * 거래라, 등급 상한에 막힌 상태에서도 "무엇을 포기할까"가 남는다.
    */
   level?: number;
+  /**
+   * 고른 특화 (P1.5). **한 번 고르면 안 바꾼다** — 물리면 갈림길이 아니라 슬라이더다.
+   *
+   * ⚠ 옛 세이브에는 없다 (`facing`·`level` 과 같은 자리). optional 이라 세이브
+   * 마이그레이션이 **필요 없다** — `PlacementSnapshot.items` 가 이 객체를 그대로
+   * 담고 그대로 돌려준다. 버전을 올리면 이미 나간 v7 세이브가 전부 한 칸 밀린다
+   * (`visitorsTotal` 선례, `src/save/kairo.ts`).
+   */
+  specialty?: FacilitySpecialty;
 }
 
 export type PlaceFail =
@@ -550,7 +618,7 @@ export class PlacementGrid {
   /** 손님이 동시에 이용할 수 있는 총 칸 수 — 결산에서 병목을 읽는 근거 */
   totalCapacity(): number {
     let n = 0;
-    for (const it of this.items.values()) n += DEFS[it.defId]?.capacity ?? 0;
+    for (const it of this.items.values()) n += this.capacityOf(it.handle);
     return n;
   }
 
@@ -583,13 +651,87 @@ export class PlacementGrid {
     return true;
   }
 
-  /** 개선이 반영된 요금 */
+  /** 개선·특화가 반영된 요금 */
   feeOf(handle: number): number {
     const item = this.items.get(handle);
     if (!item) return 0;
     const def = facilityDef(item.defId);
     if (!def) return 0;
-    return Math.round(def.fee * (1 + (this.levelOf(handle) - 1) * LEVEL_FEE_STEP));
+    const base = 1 + (this.levelOf(handle) - 1) * LEVEL_FEE_STEP;
+    const spec = item.specialty === 'revenue' ? SPECIALTY_FEE_BONUS * this.specialtyScale(handle) : 0;
+    return Math.round(def.fee * (base + spec));
+  }
+
+  /* ────────────── 특화 (P1.5) ────────────── */
+
+  /** 이 시설이 고를 수 있는 특화 — **데이터가 정한다** (불변식 3) */
+  static specialtiesFor(defId: string): readonly FacilitySpecialty[] {
+    return DEFS[defId]?.specialties ?? [];
+  }
+
+  specialtyOf(handle: number): FacilitySpecialty | null {
+    return this.items.get(handle)?.specialty ?? null;
+  }
+
+  /**
+   * 효과 배수 — 3~4단계는 1, 5단계는 2.
+   *
+   * ⚠ 특화가 없으면 0 이다. 곱하는 쪽이 `specialty` 를 안 보고 이 값만 봐도
+   * "특화 미선택 = 예전과 완전히 같다"가 성립해야 한다 (음성 대조군).
+   */
+  specialtyScale(handle: number): number {
+    const item = this.items.get(handle);
+    if (!item?.specialty) return 0;
+    return (item.level ?? 1) >= SPECIALTY_DOUBLE_LEVEL ? 2 : 1;
+  }
+
+  /**
+   * 지금 특화를 고를 수 있나 — 3단계 이상 · 아직 안 골랐음 · 데이터가 허용함.
+   *
+   * ⚠ 개선 자체는 **막지 않는다.** 안 고르고 5단계까지 올려도 되고, 그 경로는 P1.5
+   * 이전과 완전히 동일하다. 막으면 특화를 모르는 봇(`tools/kairo-sim.ts`)이 3단계에
+   * 갇혀 헤드리스 밸런싱이 실제 판과 다른 세계를 잰다 (K36 "봇과 골든은 실제
+   * 격자로 돈다"와 같은 종류의 함정).
+   */
+  canChooseSpecialty(handle: number): boolean {
+    const item = this.items.get(handle);
+    if (!item || item.specialty) return false;
+    if ((item.level ?? 1) < SPECIALTY_LEVEL) return false;
+    return PlacementGrid.specialtiesFor(item.defId).length > 0;
+  }
+
+  /** 특화를 고른다. 데이터가 안 허용하거나 이미 골랐으면 false */
+  chooseSpecialty(handle: number, spec: FacilitySpecialty): boolean {
+    if (!this.canChooseSpecialty(handle)) return false;
+    const item = this.items.get(handle) as PlacedFacility;
+    if (!PlacementGrid.specialtiesFor(item.defId).includes(spec)) return false;
+    item.specialty = spec;
+    return true;
+  }
+
+  /** 특화가 반영된 정원 — 손님 슬롯의 정본 */
+  capacityOf(handle: number): number {
+    const item = this.items.get(handle);
+    if (!item) return 0;
+    const base = DEFS[item.defId]?.capacity ?? 0;
+    if (item.specialty !== 'capacity') return base;
+    /*
+     * ⚠ 정원 0 인 분위기 시설에는 안 붙인다 — 데이터가 이미 걸렀지만(특화 목록이
+     * 빈 배열) 여기서도 지킨다. 0 → 1 이 되면 손님이 DJ 부스에 줄을 선다.
+     */
+    if (base === 0) return 0;
+    return base + SPECIALTY_CAPACITY_BONUS * this.specialtyScale(handle);
+  }
+
+  /**
+   * 이 시설을 이용했을 때 만족 이득에 **더해지는** 몫 (평판 특화).
+   *
+   * ⚠ 손님(`guests.ts`)은 지금까지 전역 `useGains` 만 봤다 — 어느 시설을 썼든 이득이
+   * 같았고, 그래서 "좋은 시설"이 화면에 안 드러났다. 특화가 그 경로를 처음 뚫는다.
+   */
+  satisfactionBonusOf(handle: number): number {
+    if (this.specialtyOf(handle) !== 'reputation') return 0;
+    return SPECIALTY_SATISFACTION_BONUS * this.specialtyScale(handle);
   }
 
   /** 전체 시설의 평균 개선 단계 — 만족도 보너스의 근거 */
@@ -610,6 +752,14 @@ export class PlacementGrid {
     for (const it of s.items) {
       const def = DEFS[it.defId];
       if (!def) continue;
+      /*
+       * ⚠ 데이터가 안 허용하는 특화는 **불러올 때 지운다** — 데이터에서 특화를 뺐거나
+       * (밸런싱) 세이브가 손으로 고쳐졌을 때, 규칙이 세이브에 남아 데이터를 이긴다.
+       * 불변식 3 은 "데이터가 정한다"이지 "한 번 저장되면 영원하다"가 아니다.
+       */
+      if (it.specialty && !PlacementGrid.specialtiesFor(it.defId).includes(it.specialty)) {
+        delete it.specialty;
+      }
       g.items.set(it.handle, it);
       for (const [ti, tj] of PlacementGrid.footprintTiles(def, it.i, it.j, it.facing ?? 0)) {
         if (g.inside(ti, tj)) g.cells[tj * g.width + ti] = it.handle;

@@ -7,7 +7,14 @@ import {
 } from '../sim/kairo/staff.js';
 import type { PlacementGrid } from '../sim/kairo/placement.js';
 import { neededFor } from '../sim/kairo/staff.js';
-import { facilityDef, FACILITY_MAX_LEVEL } from '../sim/kairo/placement.js';
+import {
+  facilityDef,
+  FACILITY_MAX_LEVEL,
+  PlacementGrid as PlacementGridClass,
+  SPECIALTY_LABELS,
+  SPECIALTY_LEVEL,
+  type FacilitySpecialty,
+} from '../sim/kairo/placement.js';
 import { priceSatisfaction } from '../sim/kairo/week.js';
 import { panelHost } from './panels.js';
 
@@ -230,6 +237,15 @@ export class KairoStaffPanel {
   /**
    * 개선 목록 (§15.9). **확장이 등급 상한에 막힌 뒤의 유일한 성장 수단**이라,
    * 낮은 단계부터 위에 놓는다 — 어디에 돈을 쓸지가 바로 보여야 한다.
+   *
+   * ## 특화 (P1.5)
+   *
+   * 3단계에 닿은 시설은 **돈을 쓰는 줄이 아니라 고르는 줄**이 된다 — 비용 버튼 대신
+   * 갈림길 셋. 그래서 고를 것이 있는 줄을 **맨 위**로 올린다: 개선은 미뤄도 되지만
+   * 특화는 안 고르면 그 시설이 계속 예전 성능으로 남는다 (조용한 손해).
+   *
+   * ⚠ 새 패널·새 버튼 클래스를 만들지 않는다 — `.krow.kstack` + `.kchips.wrap` +
+   * `.kbtn` 으로 충분했다 (CLAUDE.md "표면 셋 · 속은 한 벌").
    */
   private renderUpgrades(): void {
     const placement = this.placement;
@@ -238,8 +254,20 @@ export class KairoStaffPanel {
     if (!placement) return;
     const items = placement
       .all()
-      .filter((it) => placement.levelOf(it.handle) < FACILITY_MAX_LEVEL)
-      .sort((a, b) => placement.levelOf(a.handle) - placement.levelOf(b.handle) || a.handle - b.handle)
+      .filter(
+        (it) =>
+          placement.levelOf(it.handle) < FACILITY_MAX_LEVEL ||
+          // 최고 단계라도 특화를 고른 시설은 남긴다 — 고른 것이 어디에도 안 보이면 안 된다
+          placement.specialtyOf(it.handle) !== null ||
+          placement.canChooseSpecialty(it.handle),
+      )
+      .sort(
+        (a, b) =>
+          Number(placement.canChooseSpecialty(b.handle)) -
+            Number(placement.canChooseSpecialty(a.handle)) ||
+          placement.levelOf(a.handle) - placement.levelOf(b.handle) ||
+          a.handle - b.handle,
+      )
       .slice(0, 12);
     if (items.length === 0) {
       this.upgradeBox.append(el('div', 'kcaption', '전부 최고 단계입니다'));
@@ -247,25 +275,77 @@ export class KairoStaffPanel {
     }
     for (const it of items) {
       const def = facilityDef(it.defId);
-      const cost = placement.upgradeCost(it.handle);
-      const row = el('div', 'krow');
+      const level = placement.levelOf(it.handle);
+      const spec = placement.specialtyOf(it.handle);
+      const choosing = placement.canChooseSpecialty(it.handle);
+      const name = def?.name ?? it.defId;
+
+      const row = el('div', choosing ? 'krow kstack' : 'krow');
       row.dataset['upgrade'] = String(it.handle);
-      const t = el(
-        'div',
-        'krow-main',
-        `${def?.name ?? it.defId} · ${placement.levelOf(it.handle)}단계 → ` +
-          `${placement.levelOf(it.handle) + 1}단계`,
+      row.dataset['level'] = String(level);
+      if (spec) row.dataset['specialty'] = spec;
+
+      const main = el('div', 'krow-main');
+      main.append(
+        el(
+          'div',
+          'kitem-name',
+          level >= FACILITY_MAX_LEVEL
+            ? `${name} · ${level}단계 (최고)`
+            : `${name} · ${level}단계 → ${level + 1}단계`,
+        ),
       );
-      const b = el('button', 'kbtn', won(cost));
-      const poor = !manage || cost > manage.cash();
-      b.disabled = poor;
-      b.addEventListener('click', () => {
-        if (!manage || !manage.spend(cost)) return;
-        placement.upgrade(it.handle);
-        this.refresh();
-        this.onChange?.();
-      });
-      row.append(t, b);
+      if (spec) {
+        const lab = SPECIALTY_LABELS[spec];
+        main.append(
+          el(
+            'div',
+            'kitem-sub',
+            `특화 ${lab.name} · ${lab.effect}` + (level >= FACILITY_MAX_LEVEL ? ' ×2' : ''),
+          ),
+        );
+      } else if (choosing) {
+        main.append(el('div', 'kitem-sub', '특화를 고르세요 — 한 번 고르면 못 바꿉니다'));
+      } else if (level < SPECIALTY_LEVEL && PlacementGridClass.specialtiesFor(it.defId).length > 0) {
+        /*
+         * ⚠ 특화가 **없는** 시설(플로팅덱·화단 등 정원 0)에는 이 줄을 안 붙인다.
+         * 붙이면 영영 안 오는 갈림길을 기다리게 된다.
+         */
+        main.append(el('div', 'kitem-sub', `${SPECIALTY_LEVEL}단계에서 특화를 고릅니다`));
+      }
+      row.append(main);
+
+      if (choosing) {
+        /*
+         * 데이터가 허용한 것만 (불변식 3). 매표소처럼 하나뿐인 시설도 있어서
+         * 목록을 그대로 돌린다 — UI 가 셋을 고정하면 데이터의 필터가 무의미해진다.
+         */
+        const chips = el('div', 'kchips wrap');
+        for (const s of PlacementGridClass.specialtiesFor(it.defId) as FacilitySpecialty[]) {
+          const lab = SPECIALTY_LABELS[s];
+          const b = el('button', 'kbtn', `${lab.name} · ${lab.effect}`);
+          b.dataset['specialtyPick'] = s;
+          b.addEventListener('click', () => {
+            if (!placement.chooseSpecialty(it.handle, s)) return;
+            this.refresh();
+            this.onChange?.();
+          });
+          chips.append(b);
+        }
+        row.append(chips);
+      } else if (level < FACILITY_MAX_LEVEL) {
+        const cost = placement.upgradeCost(it.handle);
+        const b = el('button', 'kbtn', won(cost));
+        const poor = !manage || cost > manage.cash();
+        b.disabled = poor;
+        b.addEventListener('click', () => {
+          if (!manage || !manage.spend(cost)) return;
+          placement.upgrade(it.handle);
+          this.refresh();
+          this.onChange?.();
+        });
+        row.append(b);
+      }
       this.upgradeBox.append(row);
     }
   }

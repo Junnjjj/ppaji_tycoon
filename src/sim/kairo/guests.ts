@@ -477,6 +477,17 @@ export class GuestStore {
     return f.reachable(i, j) ? f.distAt(i, j) : -1;
   }
 
+  /**
+   * 이 시설의 손님 슬롯 수 (P1.5 검사용).
+   *
+   * ⚠ 특화가 **실제로 손님 쪽에 도착했는지**를 재려면 점유표를 봐야 한다. `capacityOf`
+   * 끼리 비교하면 상수 산수라 `slotsOf` 가 `def.capacity` 를 그대로 읽어도 통과한다
+   * (K38 "깊이는 화면에 올라간 오브젝트에서 읽는다"와 같은 종류의 함정).
+   */
+  slotCountForTest(handle: number): number {
+    return this.slotsOf(handle)?.slots.length ?? -1;
+  }
+
   private rebuildFields(): void {
     this.fields.clear();
     this.tickets.clear();
@@ -566,10 +577,23 @@ export class GuestStore {
     if (!item) return null;
     const def = facilityDef(item.defId);
     if (!def) return null;
+    /*
+     * ⚠ 정원은 `def.capacity` 가 아니라 **`placement.capacityOf`** 다 (P1.5) —
+     * 회전 특화가 +1 을 얹는다. def 를 직접 읽으면 특화가 화면에는 뜨는데
+     * 손님은 여전히 원래 인원만 들어간다.
+     */
+    const want = this.placement.capacityOf(handle);
     let c = this.claims.get(handle);
     if (!c) {
-      c = { slots: new Array<number>(def.capacity).fill(0) };
+      c = { slots: new Array<number>(want).fill(0) };
       this.claims.set(handle, c);
+    } else if (c.slots.length < want) {
+      /*
+       * 점유표는 캐시라 한 번 만들면 남는다. 특화를 **주 도중에** 고르면 정원만
+       * 늘고 슬롯은 옛 길이로 남는다 — 늘려만 준다. 줄이면 높은 번호 슬롯을 쓰던
+       * 손님이 영영 해제되지 않는다.
+       */
+      while (c.slots.length < want) c.slots.push(0);
     }
     return c;
   }
@@ -868,6 +892,15 @@ export class GuestStore {
           let gain = (gains[Math.min(g.used, gains.length - 1)] ?? 0) as number;
           // 나이트풀 (S4) — 저녁의 수영은 더 즐겁다
           if (usedHandle >= ZONE_HANDLE_BASE && this.swimBoost) gain += 5;
+          /*
+           * 평판 특화 (P1.5) — **이 시설이 좋아서** 더 만족한다.
+           *
+           * ⚠ 여기가 손님이 "그 시설의 만족 보너스"를 읽는 유일한 경로다. 그전까지
+           * 이득은 전역 `useGains` 하나뿐이라 어느 시설을 썼든 같았고, 그래서
+           * 시설을 키우는 것이 만족에 안 보였다 (평균 개선 단계의 간접 보너스만 있었다).
+           * 특화가 없으면 0 이다 — 미선택 경로는 예전과 완전히 같다.
+           */
+          if (usedHandle < ZONE_HANDLE_BASE) gain += this.placement.satisfactionBonusOf(usedHandle);
           g.used++;
           // 채운 수요를 기록해 다음엔 다른 종류로 간다
           const usedItem =

@@ -38,6 +38,18 @@ export interface ComboRequirement {
   count?: number;
 }
 
+/**
+ * 면적 비례 증폭 (P1-A) — zone 콤보 전용. **데이터가 정의한다** (불변식 3).
+ *
+ * `base` 이하의 구역은 예전 상수 그대로고, 그보다 크면 `sqrt(area/base)` 로 자란다.
+ */
+export interface ComboAreaScale {
+  /** 배율이 1 이 되는 기준 면적 (칸). 이보다 작아도 **깎지 않는다** — 아래 주석 참고 */
+  base: number;
+  /** 배율 상한. 수영장은 허가를 안 쓰므로 이 값이 **유일한 제동**이다 */
+  cap: number;
+}
+
 export interface ComboDef {
   id: string;
   name: string;
@@ -45,6 +57,8 @@ export interface ComboDef {
   kind: ComboKind;
   /** zone 콤보 전용 — 어느 구역 종류에서 발동하나 */
   zone?: 'pool' | 'river';
+  /** zone 콤보 전용 — 면적 비례 증폭 (P1-A). 없으면 예전처럼 상수 보너스다 */
+  areaScale?: ComboAreaScale;
   requires: ComboRequirement[];
   bonus: { satisfaction?: number; revenue?: number };
   radius?: number;
@@ -78,8 +92,13 @@ export interface ActiveCombo {
   tier: ComboTier;
   /** 몇 번째 중복인가 (0 = 첫 발동) */
   index: number;
-  /** 체감이 적용된 실효 배율 */
+  /**
+   * 실효 배율 = **티어 체감 × 면적 배율**. 둘은 서로를 상쇄하지 않는다 —
+   * 체감은 "같은 콤보를 몇 개 깔았나"를, 면적은 "하나를 얼마나 크게 만들었나"를 벌하고/상준다
+   */
   scale: number;
+  /** 면적 배율만 떼어 낸 값 (zone 이 아니면 1). UI 가 "면적 ×1.8" 을 보여줄 수 있게 */
+  areaScale: number;
   satisfaction: number;
   revenue: number;
   /** 어디서 발동했나 — 미리보기·강조에 쓴다 */
@@ -98,6 +117,33 @@ export function diminishingScale(tier: ComboTier, index: number): number {
   if (list.length === 0) return 0;
   if (tier === 'large') return index === 0 ? (list[0] as number) : 0;
   return (list[Math.min(index, list.length - 1)] as number) ?? 0;
+}
+
+/**
+ * 면적 배율 (P1-A) — **큰 구역 하나를 만들 이유**.
+ *
+ * PSS 의 SE/Area Boost 는 상수가 아니라 **풀 크기에 곱해진다** (위키 명시:
+ * "the value from Special Effect and Area Bonus can vary based on pool size").
+ * 그래서 "큰 풀 하나를 물 뿜는 시설로 두른다"가 전략이 된다. 우리 zone 콤보 3종은
+ * 상수였고, 그래서 **구역 크기가 게임에 없는 결정**이었다.
+ *
+ * 곡선은 `clamp(sqrt(area / base), 1, cap)`:
+ *   · **제곱근** — 선형이면 거대 구역 하나가 판을 지배한다. 면적을 4배로 키워야 2배다
+ *   · **바닥 1** — base 미만을 깎지 않는다. ⚠ 면적은 **보상 축이지 벌점 축이 아니다** —
+ *     깎으면 이미 지은 판이 조용히 약해지고, 최소 규격 4칸 수영장이 "짓지 말 걸"이 된다
+ *   · **cap** — 수영장(땅)은 `permitArea` 를 **안 쓴다**. 즉 크기 상한이 없다. 강 구역은
+ *     허가가 2차 상한이라 등급이 곧 상한이지만, 수영장엔 그런 제동이 없어서
+ *     **cap 이 없으면 잔디 전체를 물로 칠하는 것이 정답**이 된다
+ *
+ * `base`/`cap` 은 코드가 아니라 `kairo-combos.json` 이 갖는다 (불변식 3).
+ * ⚠ 데이터에서 `areaScale` 을 빼면 **조용히 상수로 되돌아간다** — 그게 음성 대조군이고,
+ * `combos.test.ts` 가 "zone 3종 전부 areaScale 을 갖는다"로 그 회귀를 잡는다.
+ */
+export function zoneAreaScale(combo: ComboDef, area: number): number {
+  const cfg = combo.areaScale;
+  if (!cfg || cfg.base <= 0) return 1;
+  const raw = Math.sqrt(Math.max(0, area) / cfg.base);
+  return Math.min(cfg.cap, Math.max(1, raw));
 }
 
 function needOf(defId: string): NeedKind | undefined {
@@ -152,20 +198,23 @@ export function evaluateCombos(
 
   for (const combo of COMBOS) {
     const hits = findHits(combo, items, zones);
-    for (const at of hits) {
+    for (const hit of hits) {
       const index = counts.get(combo.id) ?? 0;
-      const scale = diminishingScale(combo.tier, index);
+      const tierScale = diminishingScale(combo.tier, index);
       counts.set(combo.id, index + 1);
-      if (scale <= 0) continue;
+      if (tierScale <= 0) continue;
+      // 두 장치의 곱 — 체감은 "몇 개나 깔았나", 면적은 "하나를 얼마나 키웠나"
+      const scale = tierScale * hit.areaScale;
       active.push({
         id: combo.id,
         name: combo.name,
         tier: combo.tier,
         index,
         scale,
+        areaScale: hit.areaScale,
         satisfaction: (combo.bonus.satisfaction ?? 0) * scale,
         revenue: (combo.bonus.revenue ?? 0) * scale,
-        at,
+        at: hit.at,
       });
     }
   }
@@ -177,6 +226,16 @@ export function evaluateCombos(
   };
 }
 
+/** 발동 하나 — 어디서 터졌나 + 면적 배율 (zone 이 아니면 1) */
+interface ComboHit {
+  at: { i: number; j: number } | null;
+  areaScale: number;
+}
+
+const plainHits = (
+  list: readonly ({ i: number; j: number } | null)[],
+): ComboHit[] => list.map((at) => ({ at, areaScale: 1 }));
+
 /**
  * 콤보가 발동한 지점들. `adjacent`·`cluster` 는 여러 번, `zone` 은 구역마다 한 번,
  * `resort` 는 최대 1번
@@ -185,25 +244,29 @@ function findHits(
   combo: ComboDef,
   items: PlacedFacility[],
   zones: readonly SwimZone[] = [],
-): ({ i: number; j: number } | null)[] {
-  if (combo.kind === 'resort') return findResort(combo, items) ? [null] : [];
-  if (combo.kind === 'adjacent') return findAdjacent(combo, items);
+): ComboHit[] {
+  if (combo.kind === 'resort') return findResort(combo, items) ? plainHits([null]) : [];
+  if (combo.kind === 'adjacent') return plainHits(findAdjacent(combo, items));
   if (combo.kind === 'zone') return findZone(combo, items, zones);
-  return findCluster(combo, items);
+  return plainHits(findCluster(combo, items));
 }
 
 /**
  * 수영 구역 콤보 (S4) — 구역마다 한 번. 요구 시설이 구역 타일에서 맨해튼 거리
  * `radius`(기본 2) 안에 `count`(기본 1)개 이상 있으면 발동. `need` 요구는 그 수요
  * 종류의 시설 수로 센다. 발동 지점은 구역의 첫 타일이다 — 구역엔 중심이 없다.
+ *
+ * P1-A: 발동마다 **면적 배율**을 함께 낸다. 그리고 **큰 구역부터** 돌려준다 —
+ * ⚠ 안 그러면 티어 체감의 첫 슬롯(중형 30%)을 **스캔 순서**(좌상단)가 가져가서,
+ * 공들여 키운 큰 구역이 5% 슬롯에 떨어진다. 정렬은 면적 → 좌표 순이라 결정론적이다.
  */
 function findZone(
   combo: ComboDef,
   items: PlacedFacility[],
   zones: readonly SwimZone[],
-): { i: number; j: number }[] {
+): ComboHit[] {
   const radius = combo.radius ?? 2;
-  const hits: { i: number; j: number }[] = [];
+  const hits: (ComboHit & { at: { i: number; j: number } })[] = [];
   for (const z of zones) {
     if (combo.zone !== undefined && z.kind !== combo.zone) continue;
     const near = (it: PlacedFacility): boolean => {
@@ -222,8 +285,13 @@ function findZone(
       }
       if (have < want) { ok = false; break; }
     }
-    if (ok) hits.push({ i: z.tiles[0]?.x ?? 0, j: z.tiles[0]?.y ?? 0 });
+    if (!ok) continue;
+    hits.push({
+      at: { i: z.tiles[0]?.x ?? 0, j: z.tiles[0]?.y ?? 0 },
+      areaScale: zoneAreaScale(combo, z.area),
+    });
   }
+  hits.sort((a, b) => b.areaScale - a.areaScale || a.at.i - b.at.i || a.at.j - b.at.j);
   return hits;
 }
 

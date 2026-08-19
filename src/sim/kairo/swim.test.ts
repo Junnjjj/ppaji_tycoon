@@ -298,6 +298,35 @@ describe('zone 콤보 + 나이트풀 (S4)', () => {
     expect(run(true)).toBe(run(false) + 5);
   });
 
+  /**
+   * P1-A — 파생 구역으로도 성립하나. `combos.test.ts` 는 구역을 평문으로 만들어 곡선을
+   * 재고, 여기선 **실제로 판 수영장**의 `area` 가 그 곡선에 꽂히는지를 본다.
+   * ⚠ 둘 중 하나만 있으면 "면적은 맞는데 파생이 틀렸다"를 못 잡는다.
+   */
+  it('면적 비례 — 실제로 판 수영장이 클수록 풀 파티가 커지고 상한에서 멈춘다', () => {
+    const bonus = (pw: number, ph: number): number => {
+      const t = shore();
+      const p = new PlacementGrid(t.width, t.height);
+      const wl = new WallGrid(t.width, t.height);
+      // DJ 는 풀 서쪽 뭍에 — 어느 크기에서도 반경 3 안이고 풀에 안 잠긴다
+      expect(p.place(t, wl, GATE, 'dj_booth', 2, 2).ok).toBe(true);
+      pool(t, 4, 1, pw, ph);
+      const zones = poolZones(t, guestWalkable(t, p));
+      expect(zones).toHaveLength(1);
+      expect(zones[0]!.area).toBe(pw * ph);
+      const hits = evaluateCombos(p, undefined, zones).active.filter(
+        (c) => c.id === 'medium_pool_party',
+      );
+      expect(hits).toHaveLength(1);
+      return hits[0]!.satisfaction;
+    };
+    const min = bonus(2, 2); // 4칸 — 기준(8) 미만이라 예전 상수 그대로
+    const mid = bonus(3, 6); // 18칸 — sqrt(18/8) = 1.5
+    const big = bonus(6, 6); // 36칸 — 32칸을 넘어 상한 ×2
+    expect(mid).toBeCloseTo(min * 1.5, 6);
+    expect(big).toBeCloseTo(min * 2, 6);
+  });
+
   it('빠지 오리지널 — 강 구역 + 스릴 2 + 구명함', () => {
     const t = shore();
     const p = new PlacementGrid(t.width, t.height);

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "콤보 정의. 티어별 체감 규칙은 src/sim/kairo/combos.ts 가 소유한다.",
+  "note": "콤보 정의. 티어별 체감 규칙은 src/sim/kairo/combos.ts 가 소유한다. zone 콤보의 areaScale{base,cap} 은 면적 비례 증폭(P1-A) — 배율 = clamp(sqrt(area/base), 1, cap). 빼면 조용히 상수 보너스로 되돌아간다 (combos.test.ts 가 그 회귀를 잡는다).",
   "diminishing": {
     "small": [
       1.0
@@ -1527,9 +1527,13 @@
         "satisfaction": 5,
         "revenue": 6
       },
+      "areaScale": {
+        "base": 8,
+        "cap": 2.0
+      },
       "hidden": true,
       "discoverCash": 100000,
-      "note": "수영장 옆 DJ 부스 — 저녁이 나이트풀이 된다 (S4)"
+      "note": "수영장 옆 DJ 부스 — 저녁이 나이트풀이 된다 (S4). 면적 비례(P1-A): 8칸(2×4)이 기준, 32칸에서 상한 ×2. 수영장은 땅이라 permitArea 를 안 써서 cap 이 유일한 제동이다"
     },
     {
       "id": "medium_ppaji_original",
@@ -1551,9 +1555,13 @@
         "satisfaction": 6,
         "revenue": 5
       },
+      "areaScale": {
+        "base": 8,
+        "cap": 2.0
+      },
       "hidden": true,
       "discoverCash": 100000,
-      "note": "덱으로 두른 수영 구역 + 놀이기구 2 + 구명함 — 한국 빠지의 원형"
+      "note": "덱으로 두른 수영 구역 + 놀이기구 2 + 구명함 — 한국 빠지의 원형. 면적 비례(P1-A): 32칸에서 상한 ×2 = 1등급 허가 40 의 80%. 허가를 여기 다 쓸 것인가가 결정이 된다"
     },
     {
       "id": "large_river_festa",
@@ -1574,9 +1582,13 @@
         "satisfaction": 10,
         "revenue": 12
       },
+      "areaScale": {
+        "base": 12,
+        "cap": 2.0
+      },
       "hidden": true,
       "discoverCash": 300000,
-      "note": "강 수영 구역에서 여는 공연 — 무대 + DJ (S4)"
+      "note": "강 수영 구역에서 여는 공연 — 무대 + DJ (S4). 면적 비례(P1-A): 대형이라 기준이 크다 — 48칸에서 상한 ×2 = 2등급 허가 90 의 절반. 대형은 리조트당 1회라 면적이 유일한 성장 축이다"
     }
   ]
 }

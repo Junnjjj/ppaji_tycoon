@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { Rng } from '../sim/rng.js';
 import { KairoTerrain, groundIndex } from '../sim/kairo/terrain.js';
 import { WallGrid, EDGE_SOLID, DIR_J_MINUS } from '../sim/kairo/walls.js';
-import { PlacementGrid } from '../sim/kairo/placement.js';
+import { PlacementGrid, facilityDef, SPECIALTY_LEVEL } from '../sim/kairo/placement.js';
 import { GuestStore } from '../sim/kairo/guests.js';
 import { WeekRunner } from '../sim/kairo/week.js';
 import { ProgressStore, questStatuses } from '../sim/kairo/progress.js';
@@ -275,5 +275,51 @@ describe('★ 세이브 v3 → 최신 — 격자가 넓어져도 판이 살아�
     );
     expect(t.width).toBe(64);
     expect(t.paint(90, 20, 'path_stone')).toBe(false);
+  });
+});
+
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+ * P1.5 — 시설 특화가 세이브를 건넌다.
+ *
+ * **버전을 안 올렸다.** `PlacedFacility.specialty` 는 optional 이라 `PlacementSnapshot`
+ * 이 있으면 담고 없으면 안 담는다 (`visitorsTotal` 선례). 버전을 올리면 이미 나간 v7
+ * 세이브가 전부 한 칸씩 밀린다 — 여기서 재는 것이 정확히 그 "안 밀림"이다.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+describe('★ 특화가 세이브를 건넌다 (P1.5)', () => {
+  it('고른 특화가 왕복해도 남는다 — 잃으면 새로고침이 곧 선택 취소다', () => {
+    const src = build();
+    const handles = src.placement.all().map((it) => it.handle);
+    for (const [k, h] of handles.entries()) {
+      while (src.placement.levelOf(h) < SPECIALTY_LEVEL) src.placement.upgrade(h);
+      // 매표소는 데이터가 회전 하나만 허용한다 — 그래서 시설마다 되는 것을 고른다
+      const allowed = PlacementGrid.specialtiesFor(src.placement.all()[k]!.defId);
+      expect(src.placement.chooseSpecialty(h, allowed[k % allowed.length]!)).toBe(true);
+    }
+    const back = restoreKairo(JSON.parse(JSON.stringify(packKairo(src, 1_700_000_000_000))));
+    expect(back.placement.count).toBe(3);
+    for (const h of handles) {
+      expect(back.placement.specialtyOf(h)).toBe(src.placement.specialtyOf(h));
+      expect(back.placement.feeOf(h)).toBe(src.placement.feeOf(h));
+      expect(back.placement.capacityOf(h)).toBe(src.placement.capacityOf(h));
+    }
+  });
+
+  it('⚠ 필드가 없는 옛 세이브가 그대로 열린다 — 버전도 그대로다', () => {
+    const src = build();
+    const raw = JSON.parse(JSON.stringify(packKairo(src, 0))) as {
+      version: number;
+      placement: { items: Record<string, unknown>[] };
+    };
+    for (const it of raw.placement.items) expect('specialty' in it).toBe(false);
+    expect(raw.version).toBe(KAIRO_SAVE_VERSION);
+    expect(KAIRO_SAVE_VERSION).toBe(7);
+    const back = restoreKairo(raw);
+    for (const it of back.placement.all()) {
+      expect(back.placement.specialtyOf(it.handle)).toBeNull();
+      // 특화가 없으면 예전과 완전히 같다 (음성 대조군)
+      expect(back.placement.capacityOf(it.handle)).toBe(facilityDef(it.defId)?.capacity);
+    }
   });
 });

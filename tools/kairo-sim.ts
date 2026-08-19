@@ -56,7 +56,7 @@ import {
   landRect,
   GRADES,
 } from '../src/sim/kairo/progress.js';
-import { poolZones, POOL_KIND } from '../src/sim/kairo/swim.js';
+import { poolZones, POOL_KIND, POOL_MIN_TILES } from '../src/sim/kairo/swim.js';
 import { UnlockStore } from '../src/sim/kairo/unlocks.js';
 import { ExamStore } from '../src/sim/kairo/exam.js';
 import { WishStore } from '../src/sim/kairo/wishes.js';
@@ -113,6 +113,11 @@ interface RunResult {
    * `waterBarrierKeys()` 까지 넘겨야 한다.
    */
   swimZones: number;
+  /**
+   * 가장 큰 수영장의 면적 (칸, P1-A). 구역 **수**만 보면 면적 비례 증폭이 재지는지
+   * 알 수 없다 — 4칸짜리 하나와 32칸짜리 하나는 콤보 배율이 2배 차이인데 둘 다 "1" 이다.
+   */
+  swimArea: number;
   /** 심사로 딴 실제 등급 (K42) — `grade`(만족도 환산 표시값)와 다르다. 해금은 이걸 따른다 */
   examGrade: number;
   combos: number;
@@ -465,22 +470,49 @@ function ensureTicket(
 const POOL_TILE_COST = 40_000;
 
 /**
- * 수영장을 하나 판다 (S2) — 2등급부터, 없으면 하나. 2×2 = 구역이 되는 최소 규격
- * (`POOL_MIN_TILES` 4칸)이라 봇은 딱 그만큼만 판다.
+ * 한 주에 넓히는 최대 칸 수. 4칸 = 16만 — 최소 규격 하나치다.
+ *
+ * ⚠ 한 번에 목표 크기(32칸= 128만)를 파게 하면 **오히려 수영장이 줄어든다**: 봇의
+ * 예비비(`BUILD_RESERVE`)가 150만인데 현금 중앙값이 156만이라, 예비비 위로 남는 돈이
+ * 한 주에 수십만 뿐이다 — 128만짜리 지출은 사실상 승인되지 않는다. 16만짜리
+ * 2×2 조차 26주 중앙값 0판이었다 (P1-A 전 실측). 사람도 풀을 조금씩 넓힌다.
+ */
+const POOL_GROW_TILES = 4;
+
+/**
+ * 봇이 목표하는 수영장 면적 — `kairo-combos.json` 의 `medium_pool_party`
+ * `areaScale`(base 8 · cap 2) 상한 도달점 base × cap² = 32칸.
+ *
+ * ⚠ 이 값이 곧 **헤드리스가 재는 면적 축의 폭**이다. 4칸(최소 규격)만 파면 면적 배율이
+ * 영원히 1 이라, 면적 비례를 넣고도 밸런싱은 "상수 콤보 세계"를 잰다 (P1-A 착수 시 실측).
+ */
+const POOL_TARGET_TILES = 32;
+
+const POOL_DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]] as const;
+
+/**
+ * 수영장을 판다 (S2) — 2등급부터. 없으면 최소 규격 2×2 를 파고, **있으면 목표 면적까지
+ * 매주 조금씩 넓힌다** (P1-A).
  *
  * 봇이 안 지으면 헤드리스가 수영 경제(play 공급·요금·위험)를 영영 안 재서,
  * 골든이 "수영장 없는 세계"를 잰다 — 토지 해금을 봇에 안 넣었을 때와 같은 실수다.
  * 자리는 게이트 근처의 잔디 2×2 중 포장에 접한 곳 (입수점 규칙 — 문이 길 닿은 쪽에
  * 나는 것과 같다).
+ *
+ * `budget` 은 이번 주에 수영장에 쓸 수 있는 돈이다 — 칸값으로 나눠 나온 만큼만 칠한다.
  */
 function ensurePool(
   t: KairoTerrain,
   p: PlacementGrid,
   land: ReturnType<typeof landRect>,
-  rng: Rng,
+  budget: number,
 ): number {
   const stand = (i: number, j: number): boolean => t.isGuestWalkable(i, j);
-  if (poolZones(t, stand).length > 0) return 0;
+  const afford = Math.floor(Math.max(0, budget) / POOL_TILE_COST);
+  if (afford <= 0) return 0;
+  const zones = poolZones(t, stand);
+  if (zones.length > 0) return growPool(t, p, land, zones, Math.min(afford, POOL_GROW_TILES));
+  if (afford < POOL_MIN_TILES) return 0;
   const fits = (i0: number, j0: number): boolean => {
     if (i0 < land.i0 || j0 < land.j0 || i0 + 2 > land.i0 + land.w || j0 + 2 > land.j0 + land.h)
       return false;
@@ -501,7 +533,6 @@ function ensurePool(
    * 조건을 26주 안에 못 찾는 시드가 대부분이었다 (실측: 12시드 중앙값 0).
    * 사람은 "입구 근처 빈 잔디"를 눈으로 찾는다 — 그게 봇의 모델이어야 한다.
    */
-  void rng;
   const spots: { i: number; j: number; d: number }[] = [];
   for (let j = land.j0; j < land.j0 + land.h - 2; j++) {
     for (let i = land.i0; i < land.i0 + land.w - 2; i++) {
@@ -514,9 +545,68 @@ function ensurePool(
     for (let j = sp.j; j < sp.j + 2; j++) {
       for (let i = sp.i; i < sp.i + 2; i++) t.paint(i, j, POOL_KIND);
     }
-    return POOL_TILE_COST * 4;
+    return POOL_TILE_COST * POOL_MIN_TILES;
   }
   return 0;
+}
+
+/**
+ * 이미 있는 수영장을 목표 면적까지 **한 칸씩** 넓힌다 (P1-A).
+ *
+ * 후보는 풀에 붙은 잔디 칸이다:
+ *   · 포장은 안 덮는다 — 손님 동선이고, 입수점이 사라진다 (잔디는 `guestWalk: false` 라
+ *     원래 입수점이 아니었으니 덮어도 입수점 수가 안 준다)
+ *   · 시설이 놓인 칸도 안 덮는다 (`handleAt`)
+ *   · **단이 같아야** 한다 — 다른 단을 물로 칠하면 절벽 옆에 물이 붙는다
+ *
+ * 순서는 풀 중심에서 가까운 순 → 좌표 순. 무작위로 고르면 물이 실뱀처럼 뻗어 나가
+ * 같은 면적인데 판마다 다른 모양이 되고, 결정론 대조에서 원인을 못 읽는다.
+ */
+function growPool(
+  t: KairoTerrain,
+  p: PlacementGrid,
+  land: ReturnType<typeof landRect>,
+  zones: ReturnType<typeof poolZones>,
+  maxTiles: number,
+): number {
+  // 가장 큰 구역 하나만 키운다 — 여러 개를 조금씩 키우면 어느 것도 상한에 못 닿는다
+  const zone = zones.reduce((a, b) => (b.area > a.area ? b : a));
+  const room = POOL_TARGET_TILES - zone.area;
+  if (room <= 0) return 0;
+  const level = t.levelAt(zone.tiles[0]!.x, zone.tiles[0]!.y);
+  let ci = 0;
+  let cj = 0;
+  for (const tile of zone.tiles) {
+    ci += tile.x;
+    cj += tile.y;
+  }
+  ci /= zone.tiles.length;
+  cj /= zone.tiles.length;
+
+  const seen = new Set<number>();
+  const cand: { i: number; j: number; d: number }[] = [];
+  for (const tile of zone.tiles) {
+    for (const [di, dj] of POOL_DIRS) {
+      const i = tile.x + di;
+      const j = tile.y + dj;
+      const k = j * 4096 + i;
+      if (seen.has(k)) continue;
+      seen.add(k);
+      if (i < land.i0 || j < land.j0 || i >= land.i0 + land.w || j >= land.j0 + land.h) continue;
+      if (t.kindAt(i, j) !== 'lawn' || p.handleAt(i, j) !== 0) continue;
+      if (t.levelAt(i, j) !== level) continue;
+      cand.push({ i, j, d: Math.abs(i - ci) + Math.abs(j - cj) });
+    }
+  }
+  cand.sort((a, b) => a.d - b.d || a.i - b.i || a.j - b.j);
+
+  let painted = 0;
+  for (const c of cand) {
+    if (painted >= Math.min(maxTiles, room)) break;
+    t.paint(c.i, c.j, POOL_KIND);
+    painted++;
+  }
+  return painted * POOL_TILE_COST;
 }
 
 function buildOne(
@@ -758,9 +848,17 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       cash -= spent;
       buildSpend += spent;
     }
-    // 수영장 (S2) — 2등급부터 하나 (최소 규격 2×2). 봇이 안 파면 헤드리스가 수영 경제를 안 잰다
-    if (gradeNo >= 2 && cash - BUILD_RESERVE > POOL_TILE_COST * 4) {
-      const spent = ensurePool(t, p, landRect(GRADES[gradeNo - 1] ?? GRADES[0]!), rng);
+    /*
+     * 수영장 (S2) — 2등급부터. 없으면 최소 규격 2×2, 있으면 목표 면적까지 조금씩 넓힌다
+     * (P1-A). 봇이 안 파면 헤드리스가 수영 경제를 안 재고, **면적 축**도 안 잰다.
+     */
+    if (gradeNo >= 2 && cash - BUILD_RESERVE > POOL_TILE_COST) {
+      const spent = ensurePool(
+        t,
+        p,
+        landRect(GRADES[gradeNo - 1] ?? GRADES[0]!),
+        cash - BUILD_RESERVE,
+      );
       if (spent > 0) {
         g.invalidate();
         cash -= spent;
@@ -1113,6 +1211,10 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     cash,
     facilities: p.count,
     swimZones: poolZones(t, (i, j) => t.isGuestWalkable(i, j)).length,
+    swimArea: poolZones(t, (i, j) => t.isGuestWalkable(i, j)).reduce(
+      (a, z) => Math.max(a, z.area),
+      0,
+    ),
     examGrade: gradeNo,
     combos: combos.active.length,
     grade: gradeFor(exitSat).grade,
@@ -1229,6 +1331,7 @@ function main(): void {
     ['현금', runs.map((r) => r.cash), fmt],
     ['시설 수', runs.map((r) => r.facilities), (n) => String(n)],
     ['수영 구역', runs.map((r) => r.swimZones), (n) => String(n)],
+    ['최대 풀 면적', runs.map((r) => r.swimArea), (n) => `${n.toFixed(0)}칸`],
     ['심사 등급', runs.map((r) => r.examGrade), (n) => String(n)],
     ['콤보 발동', runs.map((r) => r.combos), (n) => String(n)],
     ['등급', runs.map((r) => r.grade), (n) => String(n)],
