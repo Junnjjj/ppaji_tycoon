@@ -10,7 +10,7 @@ import {
   validateContracts,
 } from './kairo-contract.js';
 import { TILE_W, TILE_H, STEP_X, STEP_Y, GRID_W, GRID_H, gridExtent } from '../render/kairo/iso.js';
-import { KairoProceduralProvider, drawBackdrop } from './kairo-procedural.js';
+import { KairoProceduralProvider, drawBackdrop, GROUND_TONE_KINDS } from './kairo-procedural.js';
 import { GROUND_KINDS, BRIDGE_KINDS } from '../sim/kairo/terrain.js';
 
 describe('계약 정합 — 이게 깨지면 에셋을 뽑아도 못 쓴다', () => {
@@ -254,6 +254,24 @@ describe('지면 — 렌더/시뮬 목록이 일치한다', () => {
     expect(KAIRO.ground.bridges.map((b) => b.id).sort()).toEqual(
       BRIDGE_KINDS.map((b) => b.id).sort(),
     );
+  });
+
+  /*
+   * 지면 종류를 늘릴 때 맞춰야 하는 **셋째 자리** — 색.
+   *
+   * 앞의 두 검사는 시뮬 데이터와 렌더 계약을 대조한다. 색은 아무도 안 봤다.
+   * 색이 없으면 `groundTones` 가 null 을 주고 `drawGround` 가 **다리 가지**로 떨어져
+   * 새 지면이 조용히 나무 널판으로 그려진다 — 실측으로 `npm run verify` 는
+   * 792/792 통과했고 `npm run seam` 만 "겹침 2800px" 이라는 엉뚱한 이름으로 잡았다.
+   */
+  it('종류마다 색이 있다 — 없으면 새 지면이 조용히 다리 널판으로 그려진다', () => {
+    const missing = GROUND_KINDS.map((k) => k.id).filter((id) => !GROUND_TONE_KINDS.includes(id));
+    expect(missing).toEqual([]);
+  });
+
+  it('다리는 색이 **없어야** 한다 — 다리 가지가 살아 있어야 널판이 그려진다', () => {
+    const wrong = BRIDGE_KINDS.map((b) => b.id).filter((id) => GROUND_TONE_KINDS.includes(id));
+    expect(wrong).toEqual([]);
   });
 
   it('walkable 은 시뮬 데이터에만 있다 — 렌더 계약에 있으면 SSoT 가 둘이 된다', () => {
