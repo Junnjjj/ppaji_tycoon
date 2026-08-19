@@ -941,6 +941,94 @@ body {
  * 격자 팔레트 — .palette 는 가로 스크롤 전용이라 시설 73종에 안 맞는다.
  * auto-fill 이라 세로 393px 과 가로 852px 에서 열 수만 달라진다.
  */
+/* ── 건설 카드 캐러셀 (K40, concept-29) ─────────────────────────────────
+   카드 = 썸네일 + 이름 + 크기·가격. 가로 스크롤 + 좌우 페이지 버튼(스와이프 병행).
+   질감·색 전환(K44)은 토큰 교체로 온다 — 여기서는 기존 토큰만 쓴다 */
+.kcar-wrap {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  min-height: 118px;
+}
+.kcar-nav {
+  min-width: 44px; /* 터치 타깃 */
+  flex: 0 0 auto;
+  font-size: 14px;
+}
+.kcarousel {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding: 4px 2px;
+  flex: 1 1 auto;
+  -webkit-overflow-scrolling: touch;
+}
+.kcard {
+  min-width: 92px;
+  max-width: 104px;
+  min-height: 110px;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  padding: 8px 6px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background:
+    var(--panel) padding-box,
+    linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
+  box-shadow: var(--sk-lift), var(--sk-inset);
+  color: var(--text);
+  text-shadow: var(--sk-emboss);
+  transition:
+    transform var(--dur-micro) var(--ease),
+    box-shadow var(--dur-micro) var(--ease);
+  font-family: inherit;
+  cursor: pointer;
+}
+.kcard:active {
+  transform: translateY(1px);
+}
+.kcard[disabled] {
+  opacity: 0.55;
+  cursor: default;
+}
+.kcard.teaser {
+  border-style: dashed;
+  border-color: var(--text-dim);
+}
+.kcard-thumb {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: var(--text-dim);
+  overflow: hidden;
+}
+.kcard-thumb canvas {
+  max-width: 48px;
+  max-height: 48px;
+  image-rendering: pixelated;
+}
+.kcard-name {
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.15;
+}
+.kcard-sub {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 1.2;
+}
+
 .kgrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
@@ -1014,6 +1102,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .kbtn,
   .kitem,
+  .kcard,
   .kcourse-item,
   .ksheet-head .tab-btn {
     transition: none;

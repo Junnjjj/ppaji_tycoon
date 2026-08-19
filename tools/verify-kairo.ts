@@ -343,21 +343,32 @@ async function main(): Promise<void> {
     open.click();
     const sh = document.getElementById('kairo-sheet');
     if (!sh || sh.hidden) return { opened: false };
-    const items = [...sh.querySelectorAll('.ksheet-build .kitem')].map((b) => {
+    const items = [...sh.querySelectorAll('.ksheet-build [data-pick]')].map((b) => {
       const r = b.getBoundingClientRect();
       return { pick: b.dataset.pick, w: Math.round(r.width), h: Math.round(r.height),
-               locked: b.disabled };
+               locked: b.disabled, teaser: b.classList.contains('teaser'),
+               thumb: !!b.querySelector('.kcard-thumb') };
     });
     const tabs = [...sh.querySelectorAll('.tab-btn')].map((b) => {
       const r = b.getBoundingClientRect();
       return { t: b.textContent, w: Math.round(r.width), h: Math.round(r.height) };
     });
     const grounds = items.filter((x) => (x.pick || '').indexOf('ground:') === 0).length;
-    const facilities = items.filter((x) => (x.pick || '').indexOf('facility:') === 0).length;
-    const groups = [...sh.querySelectorAll('.ksheet-group')].map((g) => g.textContent);
+    const facilities = items.filter((x) => (x.pick || '').indexOf('facility:') === 0 && !x.teaser).length;
+    // 해금분만 내는지 — 시트의 시설 수가 sim 의 '현 등급 이하' 수와 같아야 한다 (K40)
+    const h = window.__kairo;
+    const gradeNow = Number((/([0-9])등급/.exec(
+      document.getElementById('kairo-status').textContent) || [0, 0])[1]);
+    const unlocked = Object.keys(h.simDefs).filter(
+      (id) => h.quests.requiredGrade(id) <= gradeNow,
+    ).length;
+    const groups = [...sh.querySelectorAll('.kchips button')].map((g) => g.textContent);
     const all = items.concat(tabs.map((t) => ({ pick: 'tab', w: t.w, h: t.h, locked: false })));
     return { opened: true, grounds: grounds, facilities: facilities, groups: groups,
-             locked: items.filter((x) => x.locked).length,
+             unlocked: unlocked,
+             teasers: items.filter((x) => x.teaser).length,
+             thumbs: items.filter((x) => x.thumb).length,
+             locked: items.filter((x) => x.locked && !x.teaser).length,
              minH: Math.min(...all.map((x) => x.h)), minW: Math.min(...all.map((x) => x.w)),
              overflowX: document.documentElement.scrollWidth - innerWidth };
   })()`)) as
@@ -368,6 +379,9 @@ async function main(): Promise<void> {
         grounds: number;
         facilities: number;
         groups: string[];
+        unlocked: number;
+        teasers: number;
+        thumbs: number;
         locked: number;
         minH: number;
         minW: number;
@@ -378,14 +392,19 @@ async function main(): Promise<void> {
     record('건설 시트', 'fail', sheet ? '열리지 않았다' : '건설 버튼을 못 찾았다');
   } else {
     record(
-      '건설 시트가 시설 73종을 격자로 낸다 — 드롭다운이 아니다',
-      sheet.facilities === 73 ? 'pass' : 'fail',
-      `시설 ${sheet.facilities}종 · 존 ${sheet.groups.length}개 (${sheet.groups.join('/')})`,
+      '★ 건설 시트는 해금된 것만 카드로 낸다 — 잠김 45% 는 목록이 아니라 소음이다 (K40)',
+      sheet.facilities === sheet.unlocked ? 'pass' : 'fail',
+      `시설 카드 ${sheet.facilities} = 해금 ${sheet.unlocked} · 유형 칩 ${sheet.groups.length}개 (${sheet.groups.join('/')})`,
     );
     record(
-      '아직 못 짓는 시설은 잠겨 보인다 — 열어봐야 아는 정보면 아무도 안 연다',
-      sheet.locked > 0 ? 'pass' : 'fail',
-      `잠김 ${sheet.locked}종`,
+      '다음에 올 것이 티저 두 장으로 예고된다 — 해금은 벽이 아니라 도착이다',
+      sheet.teasers >= 1 && sheet.teasers <= 2 ? 'pass' : 'fail',
+      `티저 ${sheet.teasers}장`,
+    );
+    record(
+      '카드에 썸네일이 있다 — 게임과 같은 계약 그림 (concept-29)',
+      sheet.thumbs >= sheet.facilities ? 'pass' : 'fail',
+      `썸네일 ${sheet.thumbs}/${sheet.facilities + sheet.teasers}`,
     );
     record(
       '시트 안 터치 타깃 44px 이상',
@@ -409,9 +428,9 @@ async function main(): Promise<void> {
       const tab = [...sh.querySelectorAll('.tab-btn')].find((b) => b.dataset.tab === key);
       if (!tab) return null;
       tab.click();
-      return [...sh.querySelectorAll('.ksheet-build .kitem')].map((b) => ({
+      return [...sh.querySelectorAll('.ksheet-build [data-pick]')].map((b) => ({
         pick: b.dataset.pick,
-        sub: (b.querySelector('.kitem-sub') || {}).textContent || '',
+        sub: (b.querySelector('.kcard-sub') || {}).textContent || '',
       }));
     };
     return { names: names, building: read('building'), ground: read('ground') };

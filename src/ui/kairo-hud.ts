@@ -43,8 +43,12 @@ export interface BuildItem {
   name: string;
   /** 둘째 줄 — 값·크기 같은 것 */
   sub?: string;
-  /** 아직 못 짓는다 (등급 부족). 이유를 대신 보여준다 */
+  /** 아직 못 짓는다 (자리 없음 등). 이유를 대신 보여준다 */
   locked?: string;
+  /** 다음에 올 것 예고 (K40) — 누를 수 없고, 언제 열리는지만 말한다 */
+  teaser?: string;
+  /** 카드 썸네일용 계약 ID — 게임과 같은 그림을 쓴다 */
+  sprite?: string;
   /** 시설 탭 안에서 묶는 이름 (실내/야외/…) */
   group?: string;
 }
@@ -53,6 +57,8 @@ export type RiskTone = 'safe' | 'watch' | 'caution' | 'danger';
 
 export interface HudOptions {
   onPick: (item: BuildItem) => void;
+  /** 카드 썸네일 공급 — 에셋 제공자의 캔버스를 그대로 (없으면 글리프) */
+  thumbFor?: (spriteId: string) => HTMLCanvasElement | null;
   onWeek: () => void;
   /**
    * 코스 탭 — 견인기구 루트는 **짓는 것**이지 관리 메뉴가 아니다 (K32).
@@ -327,29 +333,79 @@ export class KairoHud {
 
     this.buildBody.replaceChildren();
     const mine = this.items.filter((x) => x.tab === this.tab);
-    const groups = new Map<string, BuildItem[]>();
-    for (const it of mine) {
-      const g = it.group ?? '';
-      if (!groups.has(g)) groups.set(g, []);
-      (groups.get(g) as BuildItem[]).push(it);
+
+    /*
+     * 유형 칩 (K40, concept-29 의 서브탭) — 시설 탭에만. 존이 하나뿐이면 안 낸다.
+     * 티저는 필터와 무관하게 항상 끝에 남는다 — "다음"은 어느 존에서도 보여야 한다.
+     */
+    let list = mine;
+    const zones = [...new Set(mine.map((x) => x.group).filter((g): g is string => g !== undefined))];
+    if (this.tab === 'facility' && zones.length > 1) {
+      const chips = el('div', 'kchips');
+      const chip = (label: string, val: string | null): void => {
+        const c = el('button', `kbtn${this.zone === val ? ' on' : ''}`, label);
+        c.addEventListener('click', () => {
+          this.zone = val;
+          this.renderBuild();
+        });
+        chips.append(c);
+      };
+      chip('전체', null);
+      for (const z of zones) chip(z, z);
+      this.buildBody.append(chips);
+      if (this.zone !== null) {
+        list = mine.filter((x) => x.group === this.zone || x.teaser !== undefined);
+      }
     }
-    for (const [g, list] of groups) {
-      if (g) this.buildBody.append(el('div', 'ksheet-group', g));
-      const grid = el('div', 'kgrid');
-      for (const it of list) grid.append(this.itemButton(it));
-      this.buildBody.append(grid);
-    }
+
+    /*
+     * 카드 캐러셀 (K40, concept-29 지정) — 가로 스크롤 + 좌우 페이지 버튼.
+     * 스와이프와 버튼이 같은 일을 한다 — 폰은 쓸고, 검증과 데스크톱은 누른다.
+     */
+    const wrap = el('div', 'kcar-wrap');
+    const car = el('div', 'kcarousel');
+    for (const it of list) car.append(this.itemCard(it));
+    const page = (dir: number): void => {
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      car.scrollBy({ left: dir * car.clientWidth * 0.8, behavior: still ? 'auto' : 'smooth' });
+    };
+    const prev = el('button', 'kbtn kcar-nav', '◀');
+    prev.addEventListener('click', () => page(-1));
+    const next = el('button', 'kbtn kcar-nav', '▶');
+    next.addEventListener('click', () => page(1));
+    wrap.append(prev, car, next);
+    this.buildBody.append(wrap);
   }
 
-  private itemButton(it: BuildItem): HTMLButtonElement {
-    const b = el('button', 'kitem');
+  /** 시설 탭 유형 칩의 현재 필터 (null = 전체) */
+  private zone: string | null = null;
+
+  private itemCard(it: BuildItem): HTMLButtonElement {
+    const b = el('button', 'kcard');
     b.dataset['pick'] = `${it.kind}:${it.id}`;
-    b.disabled = it.locked !== undefined;
-    b.append(el('span', 'kitem-name', it.name));
-    const sub = it.locked ?? it.sub;
-    if (sub !== undefined) b.append(el('span', 'kitem-sub', sub));
+    const blocked = it.locked !== undefined || it.teaser !== undefined;
+    b.disabled = blocked;
+    if (it.teaser !== undefined) b.classList.add('teaser');
+
+    // 썸네일 — 게임과 같은 계약 그림. 그림 계약이 없는 것(바닥 붓·철거·문)은 글리프
+    const thumb = el('div', 'kcard-thumb');
+    const src = it.sprite !== undefined ? (this.opts.thumbFor?.(it.sprite) ?? null) : null;
+    if (src) {
+      const c = document.createElement('canvas');
+      c.width = src.width;
+      c.height = src.height;
+      c.getContext('2d')?.drawImage(src, 0, 0);
+      thumb.append(c);
+    } else {
+      thumb.textContent = GLYPH[it.kind] ?? '■';
+    }
+    b.append(thumb);
+
+    b.append(el('span', 'kcard-name', it.name));
+    const sub = it.teaser ?? it.locked ?? it.sub;
+    if (sub !== undefined) b.append(el('span', 'kcard-sub', sub));
     b.addEventListener('click', () => {
-      if (it.locked !== undefined) return;
+      if (blocked) return;
       this.opts.onPick(it);
       this.setBrush(it.kind === 'erase' ? '철거' : it.name);
       this.hide();
@@ -357,3 +413,10 @@ export class KairoHud {
     return b;
   }
 }
+
+/** 그림 계약이 없는 붓들의 글리프 — ui/* 에셋 슬롯이 채워지면 교체된다 (계획 §1-1) */
+const GLYPH: Partial<Record<BuildKind, string>> = {
+  ground: '▤',
+  erase: '✕',
+  door: '⇄',
+};

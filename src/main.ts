@@ -492,6 +492,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       }
     },
     onWeek: () => skipForward(),
+    // 카드 썸네일 — 게임과 같은 그림을 같은 계약 ID 로 (제공자가 곧 정본이다)
+    thumbFor: (sid: string) => (h.provider.has(sid) ? h.provider.get(sid) : null),
     /*
      * 코스 탭 — 패널은 `coursePanel` 이 소유한다. `h` 와 마찬가지로 아래에서 만들어지므로
      * 함수로 감싸 지연 참조한다 (TDZ 사고를 여러 번 겪었다).
@@ -588,24 +590,43 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         sub: '무료 · 손님이 못 지나감',
       })),
       { kind: 'erase' as const, tab: 'ground' as const, id: 'erase', name: '철거', sub: '잔디로' },
-      ...allFacilityDefs().map((d) => {
-        const need = requiredGrade(d.id);
-        const locked =
-          need > grade
-            ? `${need}등급`
-            : d.placement.requiresIndoor && !indoorFits(d.id)
+      /*
+       * 시설 — **해금된 것만** 카드로 낸다 (K40, UX 검수 §4).
+       *
+       * 73종을 다 늘어놓고 45% 를 잠가 두면 목록이 아니라 소음이다 — 조사 결론이
+       * "정보 과부하는 리텐션 킬러"였다. 잠긴 것은 숨기고, **다음에 올 것 두 장**만
+       * 티저로 예고한다 (카이로: 해금은 벽이 아니라 도착이다). 전 목록은 도감이 담당한다.
+       * '자리 없음'(건물을 넓히세요)은 그대로 보인다 — 그건 정보가 아니라 처방이다.
+       */
+      ...allFacilityDefs()
+        .filter((d) => requiredGrade(d.id) <= grade)
+        .map((d) => {
+          const locked =
+            d.placement.requiresIndoor && !indoorFits(d.id)
               ? '자리 없음 · 건물을 넓히세요'
               : null;
-        return {
+          return {
+            kind: 'facility' as const,
+            tab: 'facility' as const,
+            id: d.id,
+            name: d.name,
+            sub: `${d.size[0]}×${d.size[1]} · ${Math.round((d.cost ?? 0) / 10000)}만`,
+            group: ZONE_NAME[d.layer] ?? d.layer,
+            sprite: d.sprite,
+            ...(locked ? { locked } : {}),
+          };
+        }),
+      ...allFacilityDefs()
+        .filter((d) => requiredGrade(d.id) === grade + 1)
+        .slice(0, 2)
+        .map((d) => ({
           kind: 'facility' as const,
           tab: 'facility' as const,
-          id: d.id,
+          id: `teaser-${d.id}`,
           name: d.name,
-          sub: `${d.size[0]}×${d.size[1]} · ${Math.round((d.cost ?? 0) / 10000)}만`,
-          group: ZONE_NAME[d.layer] ?? d.layer,
-          ...(locked ? { locked } : {}),
-        };
-      }),
+          teaser: `${grade + 1}등급에 열림`,
+          sprite: d.sprite,
+        })),
     ];
     hud.setBuildItems(items);
   };
