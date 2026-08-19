@@ -1,5 +1,5 @@
 import rawFacilities from '../../data/kairo-facilities.json' with { type: 'json' };
-import type { KairoTerrain } from './terrain.js';
+import { KairoTerrain } from './terrain.js';
 import { WallGrid, reachable, EDGE_DOOR } from './walls.js';
 import { riverZones, permitUsed, deckKey } from './swim.js';
 
@@ -156,6 +156,7 @@ export type PlaceFail =
   | 'level-mixed'
   | 'blocks-door'
   | 'would-strand'
+  | 'blocks-gate'
   | 'wrong-terrain'
   | 'occupied'
   | 'blocked-by-wall'
@@ -217,6 +218,90 @@ export function guestWalkable(
   };
 }
 
+/**
+ * 입구 시설의 정의 id — **매표소**.
+ *
+ * ⚠ `guests.ts` 의 `TICKET_DEF_ID` 와 같은 값이어야 한다. 여기 다시 적는 이유는
+ * 의존 방향이다: `guests.ts` 가 이 파일을 import 하므로 반대로 못 가져온다.
+ * 갈라지지 않게 `placement.test.ts` 가 두 값을 대조한다.
+ */
+export const GATE_FACILITY_ID = 'ticket';
+
+const NEIGHBORS: readonly (readonly [number, number])[] = [
+  [1, 0],
+  [-1, 0],
+  [0, 1],
+  [0, -1],
+];
+
+/**
+ * **정류장에서 매표소까지 아직 걸어갈 수 있는가** (P3-B).
+ *
+ * ## 왜 이게 따로 필요한가
+ *
+ * 배치 검사는 오래도록 **놓는 시설**만 봤다. 실내는 `would-strand`(방을 조각내면 거절)와
+ * `blocks-door`(문 앞을 막으면 거절)로 지키는데 **입구에는 그 짝이 없었다.** 그래서
+ * 이미 있는 매표소가 갇히는 것을 아무도 안 막았다 — 실측(봇, P3-A ⑦): 게이트 둘레를
+ * 꽉 채우자 **24판 중 6판이 17~39주차에 입장 0 으로 얼어붙었다.** 매표소로 가는 길이
+ * 막혔고 새로 지을 자리도 없었다. 봇은 우회 로직으로 피했지만 게임에는 그대로 남아
+ * 있었고, 플레이어도 똑같이 자기 판을 죽일 수 있었다.
+ *
+ * 기준점은 **게이트(공원 입구)가 아니라 정류장**이다. 손님은 버스에서 내려 도시 띠를
+ * 걸어 내려와 매표소를 거쳐야 입장한다 (K36-B②) — 끊길 수 있는 구간이 게이트 **위**에도
+ * 있다.
+ *
+ * 판정은 손님과 **같은 `guestWalkable`** 이어야 한다 (K26 ②). 부르는 쪽이 술어를
+ * 넘긴다 — 배치는 "이 발자국을 뺀 판", 바닥 붓은 "이미 칠한 판"을 재기 때문이다.
+ *
+ * 매표소가 여럿이면 **하나라도** 닿으면 된다. 아직 하나도 없는 새 판은 언제나 true —
+ * 이 검사가 새 판에서는 아무것도 막지 않는다.
+ */
+export function ticketsServed(
+  terrain: KairoTerrain,
+  walls: WallGrid,
+  placement: PlacementGrid,
+  stand: (i: number, j: number) => boolean,
+): boolean {
+  const tickets = placement.instancesOf(GATE_FACILITY_ID);
+  if (tickets.length === 0) return true;
+  const seen = reachable(terrain, walls, KairoTerrain.busStop(), stand);
+  for (const it of tickets) {
+    const def = DEFS[it.defId];
+    if (!def) continue;
+    for (const [ti, tj] of PlacementGrid.footprintTiles(def, it.i, it.j, it.facing ?? 0)) {
+      for (const [di, dj] of NEIGHBORS) {
+        const ni = ti + di;
+        const nj = tj + dj;
+        if (terrain.inside(ni, nj) && seen[nj * terrain.width + ni] === 1) return true;
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * 이 변경이 **매표소로 가는 마지막 길**을 끊는가.
+ *
+ * ⚠ 반드시 **전후 비교**여야 한다. "지금 안 닿는다"만 보면, 어떤 이유로든 이미 끊긴
+ * 판에서 **아무것도 못 놓게** 되어 판이 영구히 잠긴다 — 되돌릴 수 있는 실수를 막으려다
+ * 되돌릴 수 없는 상태를 만드는 꼴이다 (`would-seal`·`would-strand` 가 전부 전후 비교인
+ * 이유와 같다).
+ *
+ * 비용: **성공 경로는 BFS 한 번**이다. `after` 가 통과하면 `before` 는 재지 않는다 —
+ * 거절할 때만 두 번째 BFS 를 낸다. `check()` 는 조준 배치에서 칸이 바뀔 때마다 불리므로
+ * 성공 경로의 비용이 곧 상시 비용이다.
+ */
+export function breaksTicketAccess(
+  terrain: KairoTerrain,
+  walls: WallGrid,
+  placement: PlacementGrid,
+  after: (i: number, j: number) => boolean,
+  before: (i: number, j: number) => boolean,
+): boolean {
+  if (ticketsServed(terrain, walls, placement, after)) return false;
+  return ticketsServed(terrain, walls, placement, before);
+}
+
 export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
   outside: '격자 밖입니다',
   'outside-land': '아직 내 땅이 아닙니다 — 등급을 올리면 넓어집니다',
@@ -233,6 +318,11 @@ export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
   'level-mixed': '경사입니다 — 단이 고른 평지에 놓으세요',
   'blocks-door': '문 앞은 비워야 합니다',
   'would-strand': '이 자리에 놓으면 실내 일부에 못 가게 됩니다',
+  /*
+   * P3-B: `would-strand`/`blocks-door` 의 **입구 판**. 처방이 "길을 한 칸 남기라"여야
+   * 한다 — "매표소가 갇힙니다"만으로는 무엇을 하면 되는지 모른다.
+   */
+  'blocks-gate': '매표소로 가는 길이 막힙니다 — 길을 한 칸 남기세요',
   'wrong-terrain': '이 지형에는 놓을 수 없습니다',
   occupied: '다른 시설이 있습니다',
   'blocked-by-wall': '벽이 지나갑니다',
@@ -334,6 +424,18 @@ export class PlacementGrid {
 
   all(): PlacedFacility[] {
     return [...this.items.values()];
+  }
+
+  /**
+   * 이 정의의 인스턴스들 — 없으면 빈 배열.
+   *
+   * `all().filter(...)` 로 쓰면 격자 전체를 배열로 복사한 뒤 버린다. `check()` 는
+   * 조준 배치에서 칸이 바뀔 때마다 불리므로 그 경로에 쓰는 조회는 복사가 없어야 한다.
+   */
+  instancesOf(defId: string): PlacedFacility[] {
+    const out: PlacedFacility[] = [];
+    for (const it of this.items.values()) if (it.defId === defId) out.push(it);
+    return out;
   }
 
   /** 발자국이 덮는 타일 목록 */
@@ -548,6 +650,27 @@ export class PlacementGrid {
           if (before[j * wIdx + i] === 1 && after[j * wIdx + i] !== 1) {
             return { ok: false, fail: 'would-strand' };
           }
+        }
+      }
+    }
+
+    /*
+     * 이미 있는 **매표소를 가두지 않는다** (P3-B). 왜는 `ticketsServed` 참고.
+     *
+     * ⚠ 조기 반환이 둘이다 — `check()` 는 조준 배치에서 칸이 바뀔 때마다 불린다:
+     *   ① 밟고 지나가는 시설(덱·선착장)은 길을 **늘리기만** 한다
+     *   ② 지금 손님이 못 서는 칸(잔디·물)을 덮는 배치는 도달 집합을 **바꾸지 않는다** —
+     *      막기 전에도 못 지나갔다. 시설은 대개 잔디에 놓이므로 이 가지가 자주 탄다
+     * 둘 다 아니면 그때 BFS 한 번 (거절할 때만 두 번 — `breaksTicketAccess`).
+     */
+    if (!def.walkOn) {
+      const stand = guestWalkable(terrain, this);
+      if (tiles.some(([ti, tj]) => stand(ti, tj))) {
+        const inFoot = (x: number, y: number): boolean =>
+          tiles.some(([ti, tj]) => ti === x && tj === y);
+        const afterStand = (x: number, y: number): boolean => !inFoot(x, y) && stand(x, y);
+        if (breaksTicketAccess(terrain, walls, this, afterStand, stand)) {
+          return { ok: false, fail: 'blocks-gate' };
         }
       }
     }

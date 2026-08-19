@@ -3,7 +3,7 @@ import { BusRunner } from './bus.js';
 import { nightPools } from './swim.js';
 import type { KairoTerrain } from './terrain.js';
 import { PlacementGrid, facilityDef, LEVEL_SATISFACTION } from './placement.js';
-import type { GroupId } from './groups.js';
+import { GROUPS, needWeight, type GroupId } from './groups.js';
 import type { GuestStore } from './guests.js';
 
 /**
@@ -54,6 +54,29 @@ export type NeedKind =
   | 'hygiene'
   | 'service'
   | 'stay';
+
+/**
+ * 수요 종류 9종의 **정본 목록**.
+ *
+ * ⚠ 병목 후보는 여기서 나온다 — 예전에는 `Object.keys(supply)` 를 순회했는데, `supply`
+ * 는 **지어진 시설에서 만들어지므로 공급이 0 인 종류는 키 자체가 없다.** 즉 하나도 없는
+ * 종류가 가장 큰 병목인데 결산이 정확히 그것만 말할 수 없었다 (실측: 봇이 스릴 0개로
+ * 52주를 도는 동안 병목이 한 번도 스릴을 안 가리켰다). 결산은 "다음에 뭘 지을까"의
+ * 근거이므로 **가장 중요한 조언을 못 하는 상태**였다.
+ *
+ * 순서는 표시 순서가 아니라 **동점을 끊는 순서**다 (결정론 — 불변식 2).
+ */
+export const NEED_KINDS: readonly NeedKind[] = [
+  'food',
+  'rest',
+  'warm',
+  'play',
+  'thrill',
+  'scenery',
+  'hygiene',
+  'service',
+  'stay',
+];
 
 /** 요일 — 주말이 성수기다 */
 export const DAY_NAMES = ['월', '화', '수', '목', '금', '토', '일'] as const;
@@ -208,8 +231,36 @@ export interface WeekReport extends WeekSummary {
   heatH: number;
   /** 가장 붐빈 타일 (i, j, 값) */
   hotspot: { i: number; j: number; value: number } | null;
-  /** 수요 대비 공급이 가장 부족한 종류 — "다음에 무엇을 지을까" 의 근거 */
-  bottleneck: { need: NeedKind; demand: number; supply: number } | null;
+  /**
+   * 수요 대비 공급이 가장 부족한 종류 — "다음에 무엇을 지을까" 의 근거.
+   *
+   * **공급 0 인 종류가 언제나 이긴다** (충족률 0 = 최악). 그 종류를 후보에서 빼면
+   * 결산이 가장 중요한 조언을 못 한다 — `NEED_KINDS` 주석 참고.
+   */
+  bottleneck: {
+    need: NeedKind;
+    demand: number;
+    supply: number;
+    /**
+     * 이 종류를 **한 채도 안 지었다** — "모자란다"가 아니라 **"하나도 없다"**.
+     *
+     * ⚠ `supply === 0` 과 다르다. 사고로 하나뿐인 사우나가 닫힌 주는 공급이 0 이지만
+     * 시설은 있다 — 그 주에 "온열 시설이 하나도 없습니다"는 거짓말이다.
+     *
+     * 문구가 갈려야 한다:
+     * 모자란 것은 더 지으면 되고, 없는 것은 **처음 짓는** 것이라 무엇을 어디서 고르는지를
+     * 같이 말해야 행동이 된다.
+     */
+    missing: boolean;
+    /**
+     * 지금 지을 수 있는 것 중 **가장 싼 후보** (`opts.buildable` 을 준 경우에만).
+     *
+     * 처방은 방법까지 말한다 (이 저장소 규칙) — "스릴 0개" 보다 "스릴 시설이 하나도
+     * 없습니다 — 건설 ▸ 다이빙대" 가 다음 행동이다. 이름은 UI 가 `facilityDef` 로 푼다
+     * (문자열은 `ui/` 소유).
+     */
+    example: string | null;
+  } | null;
   /**
    * 이번 주 사고 (§12.1). 없으면 null.
    *
@@ -306,6 +357,19 @@ export interface WeekOptions {
    * **곱한다** (입장료·코스 제외 — 아래 finish() 참고).
    */
   combos?: { satisfactionDelta: number; revenueMult: number };
+  /**
+   * **지금 지을 수 있는 시설 id** — 해금(등급 + 사건)과 도구 해금을 이미 통과한 것들.
+   *
+   * 병목이 쓴다. 안 주면 "해금을 안 본다"로 본다 (기존 호출자 호환).
+   *
+   * ⚠ 여기서도 해금 **규칙**을 안 만든다 (카드·직원·콤보와 같은 규칙, 불변식 3).
+   * "지을 수 있나"의 정본은 `unlocks.isUnlocked` 하나이고 (K41), 여기는 그 답만 받는다 —
+   * 규칙을 두 곳에 두면 결산이 "지을 수 있다"고 말한 것을 건설 시트가 거부한다.
+   *
+   * ⚠ 이게 없으면 병목이 **막다른 길**을 가리킬 수 있다. 1등급 판에서 온열(최소 2등급)·
+   * 숙박(최소 3등급)은 공급이 0 이지만 지을 방법이 없다 — 조언이 아니라 소음이다.
+   */
+  buildable?: readonly string[];
   staff?: {
     wages: number;
     satisfactionDelta: number;
@@ -480,6 +544,22 @@ export class WeekRunner {
   }
 
   /**
+   * 병목 검사의 음성 대조군 (테스트 전용).
+   *
+   * 켜면 후보를 **예전 로직**으로 되돌린다 — `Object.keys(supply)`, 즉 **지어진 종류만**.
+   * 그러면 공급 0 인 종류는 후보에 못 들고, "스릴 0개인 판에서 스릴을 가리킨다"가
+   * 반드시 실패한다.
+   *
+   * ⚠ 대조군은 **코드에** 둔다 (이 저장소 규칙: `setRenderFaultForTest`·
+   * `setIdentityFaultForTest` 와 같은 자리). 손으로 한 번 되돌려 확인한 것은 다음
+   * 사람에게 안 남고, 그러면 검사가 조용히 통과하는 상태로 되돌아간다.
+   */
+  private bottleneckFaultForTest = false;
+  setBottleneckFaultForTest(on: boolean): void {
+    this.bottleneckFaultForTest = on;
+  }
+
+  /**
    * 진행 중인 주를 **버린다** (도구·하네스 전용). 돈·주차에 아무 흔적도 남기지 않는다 —
    * 하네스가 `run()` 으로 배치 주를 돌리기 전에 흐르는 낮의 주를 치우는 용도다.
    * 게임 로직에서 부르면 반 주가 조용히 증발하므로 production 경로에는 넣지 말 것.
@@ -555,6 +635,14 @@ export class WeekRunner {
       days: [],
       playback: [],
       supply: this.supply(idle),
+      /*
+       * 선 시설을 **빼지 않은** 공급 — 병목 문구가 "하나도 없다"를 말해도 되는지 판정한다.
+       *
+       * ⚠ 사고로 하나뿐인 사우나가 닫힌 주는 `supply.warm` 이 0 이다. 그걸 "온열 시설이
+       * 하나도 없습니다" 라고 말하면 **거짓말**이다 — 있고, 이번 주에 쉬었을 뿐이다.
+       * 순위는 그대로 `supply` 로 매긴다 (쉬는 시설은 이번 주 공급이 아니다).
+       */
+      built: this.supply(),
       accident,
       byGroup: { family: 0, couple: 0, friends: 0, company: 0 },
       weekRevenue: 0,
@@ -824,23 +912,7 @@ export class WeekRunner {
       }
     }
 
-    // 병목 — 수요(날씨 가중 평균) 대비 공급이 가장 부족한 종류
-    const demand = {} as Record<NeedKind, number>;
-    for (const d of days) {
-      const mods = WEATHER_DEMAND[d.weather];
-      for (const need of Object.keys(lw.supply) as NeedKind[]) {
-        demand[need] = (demand[need] ?? 0) + (mods[need] ?? 1);
-      }
-    }
-    let bottleneck: WeekReport['bottleneck'] = null;
-    for (const need of Object.keys(demand) as NeedKind[]) {
-      const sup = lw.supply[need] ?? 0;
-      const dem = demand[need] ?? 0;
-      const ratio = sup === 0 ? Infinity : dem / sup;
-      if (!bottleneck || ratio > (bottleneck.demand / Math.max(1, bottleneck.supply))) {
-        bottleneck = { need, demand: dem, supply: sup };
-      }
-    }
+    const bottleneck = pickBottleneck(lw, days, this.bottleneckFaultForTest);
 
     const totalExited = days.reduce((a, d) => a + (d.exitSatisfaction > 0 ? 1 : 0), 0);
     this.live = null;
@@ -928,6 +1000,119 @@ export class WeekRunner {
 }
 
 
+/**
+ * 이번 주에 **실제로 온 손님**이 종류마다 얼마나 원했나 (1.0 이 기준).
+ *
+ * `needBias` 는 목표 선택에서 **거리에 곱하는** 값이라 낮을수록 "멀어도 간다" = 더 원한다
+ * (`groups.ts`). 그래서 뒤집어 쓴다 — 그대로 곱하면 가족이 많이 온 주에 "스릴을 지어라"가
+ * 나온다 (가족의 스릴 편향은 1.6 = 가까울 때만 간다).
+ *
+ * 손님이 하나도 안 온 주는 전부 1.0 이다 — 온 사람이 없으면 편향도 없다.
+ *
+ * ## 왜 이걸 병목에 넣나
+ *
+ * 공급 0 인 종류가 여럿일 때 **무엇을 먼저** 가리킬지 규칙이 필요한데, 결산은 바로 위에
+ * 손님 구성 막대를 이미 보여준다 (§10.4). "가족이 많이 왔는데 놀이 시설이 없다"가
+ * 화면에서 이야기로 이어지려면 병목이 그 구성을 읽어야 한다 — 새 데이터를 하나도
+ * 안 만든다.
+ */
+function groupAppetite(byGroup: Record<GroupId, number>): Record<NeedKind, number> {
+  const out = {} as Record<NeedKind, number>;
+  let total = 0;
+  for (const g of GROUPS) total += byGroup[g.id] ?? 0;
+  for (const need of NEED_KINDS) {
+    if (total === 0) {
+      out[need] = 1;
+      continue;
+    }
+    let sum = 0;
+    for (const g of GROUPS) sum += ((byGroup[g.id] ?? 0) / total) / needWeight(g, need);
+    out[need] = sum;
+  }
+  return out;
+}
+
+/**
+ * 병목 — **9종 전부**가 후보다.
+ *
+ * ## 후보에서 빼는 것은 둘뿐이다
+ *
+ * · **그 계절에 안 도는 종류** (`ACTIVE_NEEDS`). 겨울에 "스릴이 없습니다"는 조언이 아니라
+ *   소음이다 — 겨울에 스릴 시설은 세워두고 유지비도 할인받는다 (`OFFSEASON_UPKEEP`).
+ * · **아직 못 짓는 종류** (`opts.buildable`). 못 짓는 것을 가리키면 막다른 길이다.
+ *
+ * 날씨·손님 구성은 후보를 **빼지 않는다** — 배율이 0 이 되는 조합이 없기 때문이다
+ * (비 오는 날 스릴은 0.5 지 0 이 아니다). 대신 **순서**를 정한다.
+ *
+ * ## 순서
+ *
+ * ① 공급 0 이 언제나 먼저다 — 충족률 0 은 어떤 부족보다 나쁘다
+ * ② 공급 0 끼리는 **수요가 큰 쪽** (그 주 날씨 × 온 손님의 선호)
+ * ③ 공급이 있는 것끼리는 예전 그대로 **수요/공급 비**
+ * ④ 동점은 `NEED_KINDS` 순서 — 결정론이어야 한다 (불변식 2)
+ */
+function pickBottleneck(
+  lw: LiveWeekState,
+  days: readonly DayReport[],
+  /** 음성 대조군 — 후보를 예전(`Object.keys(supply)`)으로 되돌린다 */
+  legacyCandidates = false,
+): WeekReport['bottleneck'] {
+  const candidates = legacyCandidates ? (Object.keys(lw.supply) as NeedKind[]) : NEED_KINDS;
+  const active = ACTIVE_NEEDS[lw.season];
+  const appetite = groupAppetite(lw.byGroup);
+  /*
+   * 해금된 것들의 수요 종류. `undefined` 는 "해금을 안 본다" 이고 **빈 배열과 다르다** —
+   * 빈 배열은 "지을 수 있는 것이 하나도 없다"라 병목이 null 이 된다.
+   */
+  const open =
+    lw.opts.buildable === undefined
+      ? null
+      : new Set<NeedKind>(
+          lw.opts.buildable
+            .map((id) => (facilityDef(id) as { need?: NeedKind } | undefined)?.need)
+            .filter((n): n is NeedKind => n !== undefined),
+        );
+
+  let best: { need: NeedKind; demand: number; supply: number } | null = null;
+  for (const need of candidates) {
+    if (active !== null && !active.has(need)) continue;
+    if (open !== null && !open.has(need)) continue;
+    let demand = 0;
+    for (const d of days) demand += (WEATHER_DEMAND[d.weather][need] ?? 1) * appetite[need];
+    if (demand <= 0) continue;
+    const supply = lw.supply[need] ?? 0;
+    if (best === null) {
+      best = { need, demand, supply };
+      continue;
+    }
+    // ⚠ 엄격한 `>` — 동점이면 `NEED_KINDS` 에서 먼저 나온 쪽이 이긴다 (결정론)
+    const better =
+      best.supply === 0 || supply === 0
+        ? supply === 0 && (best.supply !== 0 || demand > best.demand)
+        : demand / supply > best.demand / best.supply;
+    if (better) best = { need, demand, supply };
+  }
+  if (best === null) return null;
+
+  /*
+   * 처방에 붙일 예시 — 지을 수 있는 것 중 **가장 싼 것**. 봇의 건설 정책과 같은 기준이고
+   * (싼 것부터), 처음 짓는 종류라면 가장 싼 것이 실제로 다음에 놓일 물건이다.
+   * 동점은 id 순 — 결정론.
+   */
+  let example: string | null = null;
+  let cheapest = Infinity;
+  for (const id of lw.opts.buildable ?? []) {
+    const def = facilityDef(id) as ({ cost: number; need?: NeedKind } | undefined);
+    if (!def || def.need !== best.need) continue;
+    if (def.cost < cheapest || (def.cost === cheapest && example !== null && id < example)) {
+      cheapest = def.cost;
+      example = id;
+    }
+  }
+  // "하나도 없다"는 **지어진 것이 없을 때만**. 사고로 쉬는 시설은 없는 것이 아니다
+  return { ...best, missing: (lw.built[best.need] ?? 0) === 0, example };
+}
+
 /** 하루치 진행 상태 (K39) — 예전 run() 의 하루 지역 변수를 그대로 옮긴 것 */
 interface DayCtx {
   no: number;
@@ -955,6 +1140,8 @@ interface LiveWeekState {
   days: DayReport[];
   playback: PlaybackFrame[];
   supply: Record<NeedKind, number>;
+  /** 선 시설을 안 뺀 공급 — "하나도 없다" 판정용 (begin() 주석 참고) */
+  built: Record<NeedKind, number>;
   accident: WeekReport['accident'];
   byGroup: Record<GroupId, number>;
   weekRevenue: number;

@@ -1,5 +1,5 @@
 import type { KairoTerrain } from './terrain.js';
-import { facilityDef, type PlacementGrid } from './placement.js';
+import { facilityDef, guestWalkable, ticketsServed, type PlacementGrid } from './placement.js';
 import type { DoorSet } from './doors.js';
 import {
   WallGrid,
@@ -36,7 +36,12 @@ import {
  * 어긋날 수 있다. 여기서는 **읽어서 벽을 굽기만** 한다.
  */
 
-export type IndoorFail = 'no-door' | 'unreachable' | 'would-strand' | 'not-buildable';
+export type IndoorFail =
+  | 'no-door'
+  | 'unreachable'
+  | 'would-strand'
+  | 'blocks-gate'
+  | 'not-buildable';
 
 export const INDOOR_FAIL_MESSAGES: Record<IndoorFail, string> = {
   /*
@@ -51,6 +56,12 @@ export const INDOOR_FAIL_MESSAGES: Record<IndoorFail, string> = {
    * (`reachable` 전후 비교)를 쓴다. 되돌릴 수 있는 실수는 막는 것이 낫다.
    */
   'would-strand': '길이 끊겨 손님이 못 가는 시설이 생깁니다',
+  /*
+   * P3-B: **시설만 막고 바닥을 열어 두면 포장을 지워 같은 일을 할 수 있다** — K32·K36 에서
+   * 두 번 겪은 구멍이다. 문구는 `PLACE_FAIL_MESSAGES['blocks-gate']` 와 같아야 한다:
+   * 같은 규칙이 두 문장으로 나오면 플레이어는 다른 규칙 둘로 읽는다.
+   */
+  'blocks-gate': '매표소로 가는 길이 막힙니다 — 길을 한 칸 남기세요',
   'not-buildable': '공원 밖입니다 — 도로·보도에는 깔 수 없습니다',
 };
 
@@ -311,6 +322,63 @@ export function doorCandidates(
 }
 
 /**
+ * 바닥을 바꾸기 **전에** 재 두는 기준선 — 되돌릴지 판정하는 근거.
+ *
+ * `placement` 를 안 넘기면 잴 것이 없다 (예전 그대로 — 지형만 보는 호출자가 있다).
+ */
+interface FloorBaseline {
+  /** 게이트에서 걸어 닿는 시설 수 */
+  served: number;
+  /** 정류장에서 매표소가 닿았나 (P3-B) */
+  gateOk: boolean;
+}
+
+function floorBaseline(
+  terrain: KairoTerrain,
+  walls: WallGrid,
+  gate: { i: number; j: number },
+  placement?: PlacementGrid,
+  walkable?: (i: number, j: number) => boolean,
+): FloorBaseline {
+  if (placement === undefined) return { served: 0, gateOk: false };
+  return {
+    served: servedFacilities(terrain, walls, gate, placement, walkable),
+    /*
+     * ⚠ 술어는 **손님 판정**으로 떨어진다 (`guestWalkable`). `servedFacilities` 는
+     * 예전 호환 때문에 `walkable` 이 없으면 지형만 보지만, 매표소 도달은 그러면 안 된다 —
+     * 시설로 막힌 칸을 지나간다고 셈하면 "검사는 통과하는데 손님은 못 온다"가 된다.
+     */
+    gateOk: ticketsServed(terrain, walls, placement, walkable ?? guestWalkable(terrain, placement)),
+  };
+}
+
+/**
+ * 칠한 **뒤** 나빠진 것이 있으면 그 사유. 없으면 null.
+ *
+ * 순서는 **매표소 먼저**다: 길이 끊긴 시설이 여럿이어도 그중 매표소가 있으면 판이
+ * 통째로 죽으므로(입장 0), 처방은 그쪽을 말해야 한다.
+ *
+ * ⚠ 전후 비교인 이유는 `breaksTicketAccess` 와 같다 — 이미 끊긴 판에서 아무것도 못
+ * 칠하게 되면 되돌릴 방법까지 막힌다.
+ */
+function floorRegression(
+  terrain: KairoTerrain,
+  walls: WallGrid,
+  gate: { i: number; j: number },
+  base: FloorBaseline,
+  placement?: PlacementGrid,
+  walkable?: (i: number, j: number) => boolean,
+): IndoorFail | null {
+  if (placement === undefined) return null;
+  const stand = walkable ?? guestWalkable(terrain, placement);
+  if (base.gateOk && !ticketsServed(terrain, walls, placement, stand)) return 'blocks-gate';
+  if (servedFacilities(terrain, walls, gate, placement, walkable) < base.served) {
+    return 'would-strand';
+  }
+  return null;
+}
+
+/**
  * 한 칸을 칠하고 벽을 다시 굽는다. 실패하면 **지형까지 되돌린다.**
  *
  * 되돌리기가 여기 있어야 "칠했더니 손님이 못 들어오는데 취소도 안 된다"가 안 생긴다.
@@ -333,19 +401,15 @@ export function paintFloor(
   if (before === kind) return { ok: true, changed: false };
   // 도시 띠는 못 칠한다 (K36) — sim 에서 막아야 봇·테스트도 같이 지킨다
   if (!terrain.isBuildable(i, j)) return { ok: false, fail: 'not-buildable', changed: false };
-  const servedBefore =
-    placement === undefined ? 0 : servedFacilities(terrain, walls, gate, placement, walkable);
+  const base = floorBaseline(terrain, walls, gate, placement, walkable);
   if (!terrain.paint(i, j, kind)) return { ok: false, changed: false };
 
   const r = bakeIndoorWalls(terrain, walls, gate, walkable, doors);
-  const strands =
-    r.ok &&
-    placement !== undefined &&
-    servedFacilities(terrain, walls, gate, placement, walkable) < servedBefore;
-  if (!r.ok || strands) {
+  const worse = r.ok ? floorRegression(terrain, walls, gate, base, placement, walkable) : null;
+  if (!r.ok || worse !== null) {
     terrain.paint(i, j, before);
     bakeIndoorWalls(terrain, walls, gate, walkable, doors);
-    const fail: IndoorFail = strands ? 'would-strand' : (r.fail as IndoorFail);
+    const fail: IndoorFail = worse ?? (r.fail as IndoorFail);
     return { ok: false, fail, changed: false };
   }
   return { ok: true, changed: true };
@@ -387,18 +451,14 @@ export function paintFloorBlock(
   }
   if (before.length === 0) return { ok: true, changed: 0 };
 
-  const servedBefore =
-    placement === undefined ? 0 : servedFacilities(terrain, walls, gate, placement, walkable);
+  const base = floorBaseline(terrain, walls, gate, placement, walkable);
   for (const [i, j] of before) terrain.paint(i, j, kind);
   const r = bakeIndoorWalls(terrain, walls, gate, walkable, doors);
-  const strands =
-    r.ok &&
-    placement !== undefined &&
-    servedFacilities(terrain, walls, gate, placement, walkable) < servedBefore;
-  if (!r.ok || strands) {
+  const worse = r.ok ? floorRegression(terrain, walls, gate, base, placement, walkable) : null;
+  if (!r.ok || worse !== null) {
     for (const [i, j, k] of before) terrain.paint(i, j, k);
     bakeIndoorWalls(terrain, walls, gate, walkable, doors);
-    const fail: IndoorFail = strands ? 'would-strand' : (r.fail as IndoorFail);
+    const fail: IndoorFail = worse ?? (r.fail as IndoorFail);
     return { ok: false, fail, changed: 0 };
   }
   return { ok: true, changed: before.length };

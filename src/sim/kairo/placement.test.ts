@@ -2,14 +2,23 @@ import { describe, it, expect } from 'vitest';
 import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid, EDGE_SOLID, DIR_I_PLUS, DIR_J_MINUS } from './walls.js';
-import { bakeIndoorWalls } from './indoor.js';
+import {
+  bakeIndoorWalls,
+  paintFloor,
+  paintFloorBlock,
+  INDOOR_FAIL_MESSAGES,
+} from './indoor.js';
 import {
   PlacementGrid,
   facilityDef,
   allFacilityDefs,
+  guestWalkable,
+  ticketsServed,
+  GATE_FACILITY_ID,
   PLACE_FAIL_MESSAGES,
   type PlaceFail,
 } from './placement.js';
+import { TICKET_DEF_ID } from './guests.js';
 
 const GATE = { i: 0, j: 0 };
 
@@ -387,5 +396,167 @@ describe('회전 (K45)', () => {
     const { t, w, p } = flat45();
     expect(p.place(t, w, GATE45, 'pingpong', 3, 3, { facing: 1 }).ok).toBe(true);
     expect(p.at(4, 4)?.defId).toBe('pingpong');
+  });
+});
+
+/**
+ * 입구를 봉하는 배치 (P3-B).
+ *
+ * ⚠ **실제 크기 판**에서만 잴 수 있다. 정류장(`KairoTerrain.busStop()`)이 상수 좌표라
+ * 축소판에서는 격자 밖으로 떨어져 아무것도 안 재는 검사가 된다.
+ */
+describe('입구 봉쇄 — blocks-gate (P3-B)', () => {
+  const PARK_GATE = KairoTerrain.parkGate();
+  /** 매표소 3×2 의 왼쪽 위. 아래 통로들이 (48,19) 에서 닿는다 */
+  const TICKET_AT = { i: KairoTerrain.ENTRY_I - 1, j: 20 };
+
+  /**
+   * 정류장 → 공원 → 매표소로 이어지는 **포장 통로만** 있는 판.
+   * `lanes` 는 통로 열의 개수 — 1 이면 외길, 2 면 우회로가 있다.
+   */
+  function corridor(lanes: number): { t: KairoTerrain; w: WallGrid; p: PlacementGrid } {
+    const t = new KairoTerrain(KairoTerrain.WIDTH, KairoTerrain.HEIGHT);
+    const w = new WallGrid(KairoTerrain.WIDTH, KairoTerrain.HEIGHT);
+    const p = new PlacementGrid(KairoTerrain.WIDTH, KairoTerrain.HEIGHT);
+    // 도시 띠: 정류장에서 공원 입구까지 한 열
+    for (let j = KairoTerrain.STOP_ROW; j < KairoTerrain.CITY_BAND; j++) {
+      t.paint(KairoTerrain.ENTRY_I, j, 'sidewalk');
+    }
+    // 공원 안: 통로 열 (나머지는 잔디 — 손님이 못 지나간다)
+    for (let lane = 0; lane < lanes; lane++) {
+      for (let j = KairoTerrain.CITY_BAND; j < TICKET_AT.j; j++) {
+        t.paint(KairoTerrain.ENTRY_I + lane, j, 'path_stone');
+      }
+    }
+    return { t, w, p };
+  }
+
+  function withTicket(lanes: number): ReturnType<typeof corridor> {
+    const b = corridor(lanes);
+    expect(b.p.place(b.t, b.w, PARK_GATE, 'ticket', TICKET_AT.i, TICKET_AT.j).ok).toBe(true);
+    return b;
+  }
+
+  it('★ 매표소로 가는 마지막 길을 막으면 거절된다', () => {
+    const { t, w, p } = withTicket(1);
+    const r = p.check(t, w, PARK_GATE, 'parasol', KairoTerrain.ENTRY_I, 15);
+    expect(r.ok).toBe(false);
+    expect(r.fail).toBe('blocks-gate');
+    // 사유에 처방이 있다 ("길을 한 칸 남기세요")
+    expect(PLACE_FAIL_MESSAGES['blocks-gate']).toContain('길');
+  });
+
+  it('음성 대조군 — 우회로가 있으면 거절되지 않는다', () => {
+    const { t, w, p } = withTicket(2);
+    expect(p.check(t, w, PARK_GATE, 'parasol', KairoTerrain.ENTRY_I, 15).ok).toBe(true);
+    // 남은 한 열까지 막으면 그때 거절된다 — 같은 판, 같은 시설
+    expect(p.place(t, w, PARK_GATE, 'parasol', KairoTerrain.ENTRY_I, 15).ok).toBe(true);
+    expect(p.check(t, w, PARK_GATE, 'parasol', KairoTerrain.ENTRY_I + 1, 15).fail).toBe(
+      'blocks-gate',
+    );
+  });
+
+  it('매표소가 없는 새 판에서는 아무것도 막지 않는다', () => {
+    const { t, w, p } = corridor(1);
+    expect(p.check(t, w, PARK_GATE, 'parasol', KairoTerrain.ENTRY_I, 15).ok).toBe(true);
+  });
+
+  it('이미 끊긴 판을 잠그지 않는다 — 전후 비교다', () => {
+    const { t, w, p } = withTicket(1);
+    // 통로를 잔디로 되돌려 매표소를 이미 고립시킨다
+    t.paint(KairoTerrain.ENTRY_I, 12, 'lawn');
+    expect(ticketsServed(t, w, p, guestWalkable(t, p))).toBe(false);
+    // 그래도 나머지 통로에는 놓을 수 있다 (아니면 되돌릴 방법까지 막힌다)
+    expect(p.check(t, w, PARK_GATE, 'parasol', KairoTerrain.ENTRY_I, 15).fail).not.toBe(
+      'blocks-gate',
+    );
+  });
+
+  it('음성 대조군 — 길 옆 잔디는 그대로 놓인다 (과잉 차단 없음)', () => {
+    const { t, w, p } = withTicket(1);
+    // 손님이 원래 못 서던 칸이라 도달 집합이 안 바뀐다 — 조기 반환이 여기서 돈다
+    expect(p.check(t, w, PARK_GATE, 'parasol', KairoTerrain.ENTRY_I - 1, 15).ok).toBe(true);
+  });
+
+  it('매표소가 둘이면 하나만 닿아도 된다', () => {
+    const t = new KairoTerrain(KairoTerrain.WIDTH, KairoTerrain.HEIGHT);
+    const w = new WallGrid(KairoTerrain.WIDTH, KairoTerrain.HEIGHT);
+    const p = new PlacementGrid(KairoTerrain.WIDTH, KairoTerrain.HEIGHT);
+    const E = KairoTerrain.ENTRY_I;
+    for (let j = KairoTerrain.STOP_ROW; j < KairoTerrain.CITY_BAND; j++) t.paint(E, j, 'sidewalk');
+    // 줄기 하나에서 좌우로 갈라지는 두 가지 — 가지마다 매표소가 하나씩
+    for (let j = KairoTerrain.CITY_BAND; j <= 12; j++) t.paint(E, j, 'path_stone');
+    for (let i = E - 4; i <= E + 4; i++) t.paint(i, 12, 'path_stone');
+    for (let j = 12; j < 20; j++) {
+      t.paint(E - 4, j, 'path_stone');
+      t.paint(E + 4, j, 'path_stone');
+    }
+    expect(p.place(t, w, PARK_GATE, 'ticket', E - 5, 20).ok).toBe(true); // 왼쪽 가지
+    expect(p.place(t, w, PARK_GATE, 'ticket', E + 3, 20).ok).toBe(true); // 오른쪽 가지
+    // 왼쪽 가지를 끊어도 오른쪽 매표소가 살아 있으면 입장이 죽지 않는다
+    expect(p.check(t, w, PARK_GATE, 'parasol', E - 4, 15).ok).toBe(true);
+    // 줄기를 끊으면 둘 다 죽는다
+    expect(p.check(t, w, PARK_GATE, 'parasol', E, 10).fail).toBe('blocks-gate');
+  });
+
+  it('입구 시설 id 가 손님 쪽과 같다 — 정의가 갈라지면 검사가 헛돈다', () => {
+    expect(GATE_FACILITY_ID).toBe(TICKET_DEF_ID);
+  });
+
+  /*
+   * ⚠ 바닥 붓도 같은 규칙을 받아야 한다. 시설만 막고 바닥을 열어 두면 **포장을 지워**
+   * 똑같이 입구를 봉할 수 있다 — K32·K36 에서 두 번 겪은 구멍이다.
+   */
+  it('★ 바닥을 지워 마지막 길을 끊는 것도 막힌다', () => {
+    const { t, w, p } = withTicket(1);
+    const r = paintFloor(
+      t,
+      w,
+      PARK_GATE,
+      KairoTerrain.ENTRY_I,
+      15,
+      'lawn',
+      guestWalkable(t, p),
+      p,
+    );
+    expect(r.ok).toBe(false);
+    expect(r.fail).toBe('blocks-gate');
+    // 되돌렸다 — 지형이 그대로다
+    expect(t.kindAt(KairoTerrain.ENTRY_I, 15)).toBe('path_stone');
+    expect(INDOOR_FAIL_MESSAGES['blocks-gate']).toBe(PLACE_FAIL_MESSAGES['blocks-gate']);
+  });
+
+  it('음성 대조군 — 우회로가 있으면 바닥을 지울 수 있다', () => {
+    const { t, w, p } = withTicket(2);
+    const r = paintFloor(
+      t,
+      w,
+      PARK_GATE,
+      KairoTerrain.ENTRY_I,
+      15,
+      'lawn',
+      guestWalkable(t, p),
+      p,
+    );
+    expect(r).toEqual({ ok: true, changed: true });
+  });
+
+  it('블록 붓도 같은 판정이다 — 한 번에 두 열을 지워도 막힌다', () => {
+    const { t, w, p } = withTicket(2);
+    const r = paintFloorBlock(
+      t,
+      w,
+      PARK_GATE,
+      KairoTerrain.ENTRY_I,
+      15,
+      2,
+      2,
+      'lawn',
+      guestWalkable(t, p),
+      p,
+    );
+    expect(r.fail).toBe('blocks-gate');
+    expect(r.changed).toBe(0);
+    expect(t.kindAt(KairoTerrain.ENTRY_I + 1, 16)).toBe('path_stone');
   });
 });

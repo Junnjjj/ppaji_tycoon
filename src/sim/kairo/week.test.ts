@@ -138,13 +138,17 @@ describe('결산이 병목을 보여준다 — 숫자 표만이면 엑셀 게임
     expect(Math.abs(hs.i - GATE.i) + Math.abs(hs.j - GATE.j)).toBeLessThan(20);
   });
 
-  it('시설이 없으면 병목이 없다', () => {
+  it('시설이 하나도 없으면 그 자체가 병목이다 — 없는 것이 가장 큰 부족이다', () => {
     const { r } = world(16);
     const rep = r.run(new Rng(5));
-    expect(rep.bottleneck).toBeNull();
+    // 예전에는 여기서 null 이었다. `supply` 가 비어 후보가 하나도 없었기 때문이지,
+    // 부족한 것이 없어서가 아니었다 — 빈 공원의 조언이 "없음"이면 결산이 침묵한다
+    expect(rep.bottleneck).not.toBeNull();
+    expect(rep.bottleneck!.supply).toBe(0);
+    expect(rep.bottleneck!.missing).toBe(true);
   });
 
-  it('한 종류만 지으면 다른 종류가 병목으로 나온다', () => {
+  it('한 종류만 지으면 아직 없는 종류가 병목으로 나온다', () => {
     const { r } = world(24, [
       ['shop', 4, 4],
       ['snackbar', 8, 4],
@@ -152,8 +156,99 @@ describe('결산이 병목을 보여준다 — 숫자 표만이면 엑셀 게임
     ]);
     const rep = r.run(new Rng(6));
     expect(rep.bottleneck).not.toBeNull();
-    const needs = new Set<NeedKind>(['food', 'warm']);
-    expect(needs.has(rep.bottleneck!.need)).toBe(true);
+    // 먹거리·온열은 지었다 — 병목은 그 밖의 **하나도 없는** 종류여야 한다
+    expect(rep.bottleneck!.supply).toBe(0);
+    expect(new Set<NeedKind>(['food', 'warm']).has(rep.bottleneck!.need)).toBe(false);
+  });
+});
+
+/*
+ * P3-B — **하나도 없는 종류를 가리킬 수 있어야 한다.**
+ *
+ * 예전 계산은 `Object.keys(lw.supply)` 를 순회했다. `supply` 는 지어진 시설에서
+ * 만들어지므로 **공급 0 인 종류는 키 자체가 없다** → 후보에 안 든다. 실측: 봇이 스릴
+ * 시설 0개로 52주를 도는 동안 병목이 한 번도 스릴을 안 가리켰다.
+ */
+describe('병목은 하나도 없는 종류를 가리킬 수 있다 (P3-B)', () => {
+  /** 먹거리·온열만 지은 판. 스릴은 0개다 */
+  const noThrill = (): World =>
+    world(24, [
+      ['shop', 4, 4],
+      ['snackbar', 8, 4],
+      ['sauna', 4, 8],
+    ]);
+  /** 지금 지을 수 있는 것 — 먹거리·온열·스릴만 열려 있다고 본다 */
+  const OPEN = ['shop', 'snackbar', 'vending_out', 'sauna', 'footbath', 'diving'];
+
+  it('★ 스릴이 0개인 판에서 병목이 스릴을 가리킨다', () => {
+    const { r } = noThrill();
+    const rep = r.run(new Rng(11), { buildable: OPEN });
+    expect(rep.bottleneck!.need).toBe('thrill');
+    expect(rep.bottleneck!.supply).toBe(0);
+    expect(rep.bottleneck!.missing).toBe(true);
+  });
+
+  it('음성 대조군 — 예전 로직(지어진 종류만)으로 되돌리면 스릴이 절대 안 뽑힌다', () => {
+    const { r } = noThrill();
+    r.setBottleneckFaultForTest(true);
+    const rep = r.run(new Rng(11), { buildable: OPEN });
+    expect(rep.bottleneck!.need).not.toBe('thrill');
+    // 되돌린 쪽은 **지어진 종류**만 후보다 — 그게 정확히 옛 버그의 모양이다
+    expect(new Set<NeedKind>(['food', 'warm']).has(rep.bottleneck!.need)).toBe(true);
+    expect(rep.bottleneck!.supply).toBeGreaterThan(0);
+  });
+
+  it('처방이 방법까지 말한다 — 지금 지을 수 있는 것 중 가장 싼 후보를 준다', () => {
+    const { r } = noThrill();
+    const rep = r.run(new Rng(12), { buildable: OPEN });
+    expect(rep.bottleneck!.example).toBe('diving');
+  });
+
+  it('해금 안 된 종류는 안 가리킨다 — 막다른 길 금지', () => {
+    const { r } = noThrill();
+    // 숙박(최소 3등급)·스릴은 안 열렸다. 열린 것은 먹거리·온열뿐
+    const rep = r.run(new Rng(13), { buildable: ['shop', 'snackbar', 'sauna'] });
+    expect(new Set<NeedKind>(['food', 'warm']).has(rep.bottleneck!.need)).toBe(true);
+    expect(rep.bottleneck!.missing).toBe(false);
+  });
+
+  it('지을 수 있는 것이 하나도 없으면 조언도 없다 — 빈 배열과 미지정은 다르다', () => {
+    const { r } = noThrill();
+    expect(r.run(new Rng(14), { buildable: [] }).bottleneck).toBeNull();
+    // 미지정 = "해금을 안 본다" (기존 호출자 호환)
+    expect(r.run(new Rng(14)).bottleneck).not.toBeNull();
+  });
+
+  it('사고로 쉬는 시설은 "하나도 없다"가 아니다 — 있고, 이번 주에 닫혔을 뿐이다', () => {
+    // 시설이 사우나 하나뿐이라 사고는 반드시 그것을 맞춘다
+    const { r } = world(20, [['sauna', 6, 6]]);
+    const rep = r.run(new Rng(16), { buildable: ['sauna'], accidentChance: 1 });
+    expect(rep.accident).not.toBeNull();
+    expect(rep.bottleneck!.need).toBe('warm');
+    expect(rep.bottleneck!.supply).toBe(0); // 이번 주 공급은 0 이 맞다
+    expect(rep.bottleneck!.missing).toBe(false); // 그래도 "하나도 없다"는 거짓말이다
+  });
+
+  it('계절에 안 도는 종류는 안 가리킨다 — 겨울의 "스릴이 없습니다"는 소음이다', () => {
+    const { r } = world(24, [['shop', 4, 4]]);
+    const winter = new Set<NeedKind>(['food', 'stay', 'service', 'hygiene', 'warm']);
+    for (let k = 0; k < 4; k++) {
+      const rep = r.run(new Rng(20 + k), { season: 'winter' });
+      expect(winter.has(rep.bottleneck!.need), rep.bottleneck!.need).toBe(true);
+    }
+  });
+
+  it('공급이 있는 것끼리는 예전 성질 그대로 — 수요/공급 비가 가장 나쁜 쪽', () => {
+    // 먹거리 정원 2 (매점 하나) vs 온열 정원 12 (사우나 셋). 둘 다 공급이 있다
+    const { r } = world(28, [
+      ['snackbar', 4, 4],
+      ['sauna', 8, 4],
+      ['sauna', 12, 4],
+      ['sauna', 16, 4],
+    ]);
+    const rep = r.run(new Rng(15), { buildable: ['snackbar', 'sauna'] });
+    expect(rep.bottleneck!.missing).toBe(false);
+    expect(rep.bottleneck!.need).toBe('food');
   });
 });
 

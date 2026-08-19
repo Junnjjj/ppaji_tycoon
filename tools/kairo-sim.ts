@@ -1613,6 +1613,16 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       // 콤보 보너스 (S5) — `src/main.ts` 의 assembleWeekOpts 와 **같은 함수·같은 인자**.
       // 한쪽만 넘기면 헤드리스와 실제 판이 갈라진다 (week.test.ts 정적 검사가 지킨다)
       combos: comboEffect(evaluateCombos(p, undefined, g.swimZones())),
+      /*
+       * 지금 지을 수 있는 것 — 결산 병목이 **막다른 길**을 안 가리키게 (P3-B).
+       *
+       * ⚠ 봇이 짓는 판정(`buildOne` 의 `isUnlocked`)과 **같은 물음**이어야 한다.
+       * 갈라지면 결산이 "스릴이 없다"고 말하고 봇은 스릴을 못 지어, 헤드리스가
+       * 영원히 같은 조언을 받는 판을 잰다.
+       */
+      buildable: allFacilityDefs()
+        .filter((d) => unlocks.isUnlocked(d.id, gradeNo))
+        .map((d) => d.id),
       // 사고 — 위험 단계에서만 (§12.1). 안 넣으면 안전 시설을 지을 이유가 계측에 안 나온다
       accidentChance: (() => {
         const r = assessRisk(p, g, { staffSafety: staffEff.safetyPoints });

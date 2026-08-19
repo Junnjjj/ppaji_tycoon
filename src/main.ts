@@ -1393,6 +1393,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        * `swimZones()` 를 반드시 같이 넘긴다 — 안 주면 zone 콤보 3종이 **조용히 0** 이다.
        */
       combos: comboEffect(evaluateCombos(h.placement, undefined, h.guests.swimZones())),
+      /*
+       * 지금 지을 수 있는 것 — 결산 병목이 **막다른 길**을 안 가리키게 (P3-B).
+       *
+       * 병목은 이제 공급 0 인 종류도 후보로 올린다. 그런데 1등급 판에서 온열(최소 2등급)·
+       * 숙박(최소 3등급)은 공급이 0 이어도 **지을 방법이 없다** — 그걸 가리키면 조언이
+       * 아니라 소음이다. 건설 시트와 **같은 물음**(`unlocks.isUnlocked`)을 쓴다 —
+       * 갈라지면 결산이 권한 것을 시트가 안 보여준다.
+       */
+      buildable: allFacilityDefs()
+        .filter((d) => unlocks.isUnlocked(d.id, gr.grade))
+        .map((d) => d.id),
       // 위험 단계가 아니면 0 — 안전한데 사고가 나면 억울하다 (v4 결정)
       accidentChance: accidentChance(risk, mods.accidentMult),
       staff: {

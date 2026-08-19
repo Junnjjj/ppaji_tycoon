@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { comboBreakdown } from './kairo-report.js';
+import { comboBreakdown, bottleneckLine } from './kairo-report.js';
+import type { WeekReport } from '../sim/kairo/week.js';
+import { facilityDef } from '../sim/kairo/placement.js';
 import type { ActiveCombo } from '../sim/kairo/combos.js';
 import type { SwimZone } from '../sim/kairo/swim.js';
 
@@ -107,5 +109,28 @@ describe('콤보 결산 줄', () => {
   it('0개인 주는 빈 목록이다 — 줄을 감추는 판단은 화면 쪽이 한다', () => {
     const view = comboBreakdown([]);
     expect(view).toEqual({ count: 0, top: [] });
+  });
+});
+
+describe('병목 한 줄 (P3-B) — 처방은 방법까지 말한다', () => {
+  const line = (over: Partial<NonNullable<WeekReport['bottleneck']>>): string =>
+    bottleneckLine({ need: 'thrill', demand: 7, supply: 0, missing: true, example: null, ...over });
+
+  it('하나도 없으면 종류가 아니라 **무엇을 지을지**를 말한다', () => {
+    // 'diving' 의 표시 이름은 데이터가 정한다 — 여기서는 "이름이 들어간다"만 잰다
+    const txt = line({ example: 'diving' });
+    expect(txt).toContain('스릴 시설이 하나도 없습니다');
+    expect(txt).toContain('건설 ▸ ');
+    expect(txt).toContain(facilityDef('diving')!.name);
+  });
+
+  it('모자란 것은 "없다"고 말하지 않는다 — 문장이 갈려야 한다', () => {
+    const txt = line({ need: 'food', supply: 4, missing: false, example: 'snackbar' });
+    expect(txt).toContain('부족한 것: 먹거리 (공급 4)');
+    expect(txt).not.toContain('하나도 없습니다');
+  });
+
+  it('후보를 못 받은 판(해금 미지정)에서도 막다른 문장이 안 나온다', () => {
+    expect(line({ example: null })).toContain('건설에서 지어 보세요');
   });
 });

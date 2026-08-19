@@ -1,6 +1,8 @@
 import { el, button } from './dom.js';
 import { cssVar } from './tokens.js';
 import type { WeekReport, NeedKind } from '../sim/kairo/week.js';
+// 병목 처방이 시설 **이름**을 부른다 — 계약은 sim 소유, 문자열만 여기서 쓴다
+import { facilityDef } from '../sim/kairo/placement.js';
 import type { ActiveCombo } from '../sim/kairo/combos.js';
 import type { SwimZone } from '../sim/kairo/swim.js';
 import { panelHost } from './panels.js';
@@ -66,6 +68,25 @@ function won(n: number): string {
   if (v >= 100_000_000) return `${sign}${(v / 100_000_000).toFixed(1)}억`;
   if (v >= 10_000) return `${sign}${Math.round(v / 10_000).toLocaleString('ko-KR')}만`;
   return `${sign}${v.toLocaleString('ko-KR')}`;
+}
+
+/**
+ * 병목 한 줄 (P3-B) — **처방은 방법까지 말한다** (이 저장소 규칙: 거절 메시지가 이미 그렇다).
+ *
+ * 두 문장이 갈린다:
+ * · **하나도 없다** — 처음 짓는 것이라 무엇을 고르는지까지 말해야 행동이 된다.
+ *   "스릴 0개" 는 사실이지 조언이 아니었다
+ * · **모자란다** — 이미 있으니 종류와 현재 공급이면 충분하다
+ *
+ * `example` 은 시뮬이 고른다 (지금 지을 수 있는 것 중 가장 싼 것) — 여기서 고르면
+ * "결산이 권한 것을 건설 시트가 안 보여준다"가 될 수 있다. 이름만 여기서 푼다.
+ */
+export function bottleneckLine(b: NonNullable<WeekReport['bottleneck']>): string {
+  const name = NEED_NAME[b.need] ?? b.need;
+  const pick = b.example === null ? undefined : facilityDef(b.example);
+  const how = pick ? ` — 건설 ▸ ${pick.name}` : '';
+  if (!b.missing) return `부족한 것: ${name} (공급 ${b.supply})${how}`;
+  return `${name} 시설이 하나도 없습니다${how !== '' ? how : ' — 건설에서 지어 보세요'}`;
 }
 
 /**
@@ -467,12 +488,16 @@ export class KairoReport {
       );
     }
 
-    // 병목 — 다음에 무엇을 지을까
+    /*
+     * 병목 — 다음에 무엇을 지을까.
+     *
+     * ⚠ **"모자란다"와 "하나도 없다"는 다른 문장이다** (P3-B). 예전에는 공급 0 인 종류가
+     * 후보에도 못 들었고(`week.ts` 의 `NEED_KINDS` 주석), 들어와도 "부족한 것: 스릴
+     * (공급 0)" 은 처방이 아니다. 처방은 **방법까지 말한다** — 이 저장소가 배치 거절
+     * 메시지에서 이미 정한 규칙이다.
+     */
     if (rep.bottleneck) {
-      const name = NEED_NAME[rep.bottleneck.need] ?? rep.bottleneck.need;
-      this.root.append(
-        el('div', 'kcallout', `부족한 것: ${name} (공급 ${rep.bottleneck.supply})`),
-      );
+      this.root.append(el('div', 'kcallout', bottleneckLine(rep.bottleneck)));
     }
 
     const btns = el('div', 'kacts');
