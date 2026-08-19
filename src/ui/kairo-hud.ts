@@ -98,6 +98,7 @@ export class KairoHud {
   private readonly chipsBox: HTMLDivElement;
   private readonly foldBtn: HTMLButtonElement;
   private folded = false;
+  private chipsSig = '';
   private readonly riskBox: HTMLDivElement;
   private readonly brushBox: HTMLDivElement;
   private readonly menuBtn: HTMLButtonElement;
@@ -134,8 +135,9 @@ export class KairoHud {
      */
     const top = el('div', 'ktop');
     top.id = 'kairo-top';
-    // 줄 하나 = 트레이 하나 — 항목마다 캡슐을 띄우면 풍선 무더기가 된다 (가독성 실측)
-    const row1 = el('div', 'ktray');
+    // 줄 하나 = 면 하나, 그리고 두 줄이 **한 패널**이다 (레퍼런스 실측 — 헤더는
+    // 떠 있는 줄 둘이 아니라 구분선으로 나뉜 한 덩어리로 읽힌다)
+    const row1 = el('div', 'khdr-row');
     this.weatherChip = el('div', 'kwx');
     this.weatherChip.id = 'kairo-weather';
     this.weatherChip.textContent = '☀';
@@ -145,7 +147,7 @@ export class KairoHud {
     this.cashCap.id = 'kairo-cash';
     row1.append(this.weatherChip, this.statusCap, this.cashCap);
 
-    const row2 = el('div', 'ktray');
+    const row2 = el('div', 'khdr-row');
     row2.id = 'kairo-stats';
     const stat = (icon: string, id: string): HTMLDivElement => {
       const box = el('div', 'kstat-mini');
@@ -162,7 +164,11 @@ export class KairoHud {
     this.reportBadge = el('span', 'kbadge', 'N');
     this.reportBadge.hidden = true;
     this.reportBtn.append(this.reportBadge);
-    row2.append(this.satCap, this.visCap, this.gradeCap, this.reportBtn);
+    // 목표 접기도 헤더의 일부다 (사용자 지정: 목표를 헤더 2줄 구조에 넣는다)
+    this.foldBtn = el('button', 'kbtn small kfold', '목표 ▾');
+    this.foldBtn.id = 'kairo-goal-fold';
+    this.foldBtn.addEventListener('click', () => this.setFolded(!this.folded));
+    row2.append(this.satCap, this.visCap, this.gradeCap, this.foldBtn, this.reportBtn);
     top.append(row1, row2);
     parent.append(top);
     /*
@@ -175,15 +181,6 @@ export class KairoHud {
     this.goalBox = el('div', 'kchipcol');
     this.goalBox.id = 'kairo-goal';
     this.goalBox.addEventListener('click', () => this.toggle('menu'));
-    // 접기 토글 (사용자 요청) — 칩이 지도의 왼쪽을 상시로 덮으므로 끌 수 있어야 한다.
-    // 클릭이 기둥(메뉴 열기)으로 새지 않게 전파를 끊는다
-    this.foldBtn = el('button', 'kbtn kfold', '목표 ▾');
-    this.foldBtn.id = 'kairo-goal-fold';
-    this.foldBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.setFolded(!this.folded);
-    });
-    this.goalBox.append(this.foldBtn);
     this.chipsBox = el('div', 'kchiplist');
     this.goalBox.append(this.chipsBox);
     parent.append(this.goalBox);
@@ -379,6 +376,10 @@ export class KairoHud {
 
   /** 의뢰 칩 갱신 — 탭하면 메뉴(의뢰 목록)가 열린다 */
   setChips(chips: GoalChip[]): void {
+    // 1.5초 폴링이 매번 DOM 을 갈아치우면 깜빡인다 — 내용이 같으면 건너뛴다
+    const sig = JSON.stringify(chips);
+    if (sig === this.chipsSig) return;
+    this.chipsSig = sig;
     this.foldBtn.textContent = this.folded ? `목표 ▸ ${chips.length}` : '목표 ▾';
     this.chipsBox.replaceChildren();
     for (const c of chips) {

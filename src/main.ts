@@ -1448,6 +1448,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       syncBoats();
       persist();
     },
+    onConfirmed: (text) => {
+      toast(text, 'ok');
+      audio.play('sfx/place');
+    },
   });
 
   /**
@@ -1814,6 +1818,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     heat: '🔥',
     cold: '❄',
   };
+  const WEATHER_NAME: Record<string, string> = {
+    clear: '맑음',
+    cloudy: '흐림',
+    rain: '비',
+    heat: '폭염',
+    cold: '쌀쌀',
+  };
   const refreshCaps = (): void => {
     const g = currentGrade();
     const lp = week.liveProgress();
@@ -1822,8 +1833,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const frac = lp && !lp.done ? (lp.tick % TICKS_PER_DAY) / TICKS_PER_DAY : 0;
     const mins = Math.floor(9 * 60 + frac * 12 * 60);
     const clock = `${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}`;
+    // 날씨 이름도 상태줄에 — 칩의 그림만으로는 "지금 무엇"이 안 읽힌다 (레퍼런스 구조)
+    const wname = WEATHER_NAME[week.liveWeather() ?? ''];
     hud.setStatus(
-      `주 ${lp ? week.week + 1 : week.week}${dayLabel} · ${SEASON_NAME[season] ?? season} · ${clock}`,
+      `주 ${lp ? week.week + 1 : week.week}${dayLabel} · ${SEASON_NAME[season] ?? season}` +
+        (wname !== undefined ? ` · ${wname}` : '') +
+        ` · ${clock}`,
     );
     hud.setCash(week.cash);
     hud.setHeader({

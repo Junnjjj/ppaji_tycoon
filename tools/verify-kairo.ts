@@ -1597,6 +1597,29 @@ async function main(): Promise<void> {
         if (dr.ok && dr.placed) { sc.refreshFacility(dr.placed.handle); break dockLoop; }
       }
     }
+    /*
+     * K46: 선착장이 1×1(데크와 동급)이 되며 후보 잔교가 3으로 줄었다 — 2×4 시절에는
+     * 선착장 발자국 8칸이 스스로 넷째 잔교 그룹이었다. 겹침 절(코스 3개 확정 뒤
+     * "빈 잔교를 제안한다")의 전제가 "빈 후보 ≥ 1"이므로 예비 잔교를 하나 더 놓는다.
+     * 기존 선착장들에서 12칸 이상 떨어진 물가를 찾는다 (붙으면 같은 그룹으로 합쳐진다).
+     */
+    const dockSpots = p.all().filter((it) => it.defId === 'dock').map((it) => [it.i, it.j]);
+    // 기존 코스의 잔교·핸들에서도 멀어야 한다 — 이 잔교의 코스가 그 옆(≤11)에 놓이므로
+    const courseSpots = [];
+    for (const cc of h.courses.all) {
+      courseSpots.push([cc.dock.x, cc.dock.y]);
+      for (const hd of cc.handles) courseSpots.push([hd.x, hd.y]);
+    }
+    spare: for (let j = 2; j < t.height - 2; j++) {
+      if (Math.abs(j - pier.j) > 6) continue; // 같은 물줄기 — 딴 물웅덩이면 코스 공간이 없다
+      for (let i = 2; i < t.width - 2; i++) {
+        if (!t.isWater(i, j)) continue;
+        if (dockSpots.some((d) => Math.abs(i - d[0]) + Math.abs(j - d[1]) < 12)) continue;
+        if (courseSpots.some((d) => Math.abs(i - d[0]) + Math.abs(j - d[1]) < 24)) continue;
+        const r = p.place(t, w, h.gate, 'dock', i, j);
+        if (r.ok && r.placed) { sc.refreshFacility(r.placed.handle); out.spare = [i, j]; break spare; }
+      }
+    }
 
     // 덱 위를 밟을 수 있나
     out.deckWalkable = p.isWalkOn(pier.i, pier.j + 2) && !p.blocksWalk(pier.i, pier.j + 2);
@@ -3050,7 +3073,8 @@ async function main(): Promise<void> {
       for (let i = 1; i < 90; i++) {
         if (!t.isWater(i, j)) continue;
         const d = Math.abs(i - st.dock.x) + Math.abs(j - st.dock.y);
-        if (d < 3 || d > 20) continue;
+        // 상한 11 — far-from-dock 이 유클리드 12 (DOCK_REACH_TILES+8) 라서, 맨해튼 11 이면 안전
+        if (d < 3 || d > 11) continue;
         if (!farFromCourses(i, j)) continue;
         water.push({ i: i, j: j });
         break;

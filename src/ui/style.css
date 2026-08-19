@@ -712,23 +712,12 @@ body {
   z-index: 9;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 0;
   pointer-events: none;
   /* 전폭 밴드가 아니라 내용 폭만 — 가로 화면에서 HUD 예산을 안 태운다 (K46) */
   width: max-content;
   max-width: calc(100vw - 16px);
-}
-
-/*
- * ⚠ 캡슐을 항목마다 하나씩 띄우면 "풍선 무더기"가 된다 — 실제로 그랬고 사용자가
- * 가독성 저하로 지적했다. 레퍼런스처럼 **줄 하나 = 면 하나(트레이)**이고, 안의
- * 항목들은 테두리 없이 구분선으로만 나뉜다. 위계는 색이 만든다: 파란 날씨 칩(닻) ·
- * 크림 본문 · 진갈 현금 알약(값 중의 값).
- */
-.ktray {
-  display: flex;
-  align-items: center;
-  gap: 7px;
+  /* 두 줄이 한 패널이다 (레퍼런스) — 표면은 여기 한 번, 줄은 구분선으로 */
   padding: 3px 6px;
   border: 1px solid transparent;
   border-radius: 12px;
@@ -741,8 +730,23 @@ body {
   font-weight: 700;
   text-shadow: var(--sk-emboss);
   white-space: nowrap;
-  pointer-events: none;
-  width: fit-content;
+}
+
+/*
+ * ⚠ 캡슐을 항목마다 하나씩 띄우면 "풍선 무더기"가 된다 — 실제로 그랬고 사용자가
+ * 가독성 저하로 지적했다. 레퍼런스처럼 **줄 하나 = 면 하나(트레이)**이고, 안의
+ * 항목들은 테두리 없이 구분선으로만 나뉜다. 위계는 색이 만든다: 파란 날씨 칩(닻) ·
+ * 크림 본문 · 진갈 현금 알약(값 중의 값).
+ */
+.khdr-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 0;
+}
+
+.khdr-row + .khdr-row {
+  border-top: 1px solid var(--tray-divider);
 }
 
 /* 날씨 — 하늘색 사각 칩. 트레이의 왼쪽 닻이다 (레퍼런스 그대로) */
@@ -776,7 +780,7 @@ body {
     inset 0 -1px 0 rgb(0 0 0 / 30%);
 }
 
-.ktray .grow {
+.khdr-row .grow {
   padding: 0 4px;
   min-width: 0;
   overflow: hidden;
@@ -847,12 +851,9 @@ body {
   pointer-events: auto;
 }
 
-/* 접기 토글 — 버튼이라 44px 타깃을 지킨다. 접히면 칩만 사라지고 손잡이는 남는다 */
+/* 접기 토글 — 헤더 2줄째에 산다. 접히면 칩 기둥만 사라진다 */
 .kfold {
-  align-self: flex-start;
   pointer-events: auto;
-  padding: 4px 12px;
-  font-size: 12px;
 }
 
 .kchiplist {
@@ -1700,6 +1701,12 @@ body {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+/* 탭한 잔교의 코스 — 선택 채움으로 특정한다 (철거 대상 식별, K46-④) */
+.kcourse-listrow.on {
+  background: var(--select-fill);
+  border-radius: 9px;
 }
 
 .kcourse-listrow {

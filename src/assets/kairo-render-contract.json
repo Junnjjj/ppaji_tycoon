@@ -2350,12 +2350,12 @@
     {
       "sprite": "facility/dock",
       "canvas": [
-        96,
-        60
+        32,
+        28
       ],
       "anchorTexel": [
-        48,
-        60
+        16,
+        28
       ],
       "bodyH": 12,
       "openTop": false,
@@ -2366,15 +2366,23 @@
             0
           ],
           "pose": "float",
-          "facing": "+Z"
+          "facing": "+Z",
+          "offsetTexel": [
+            -5,
+            0
+          ]
         },
         {
           "tile": [
-            1,
+            0,
             0
           ],
           "pose": "float",
-          "facing": "+Z"
+          "facing": "+Z",
+          "offsetTexel": [
+            5,
+            0
+          ]
         }
       ]
     },

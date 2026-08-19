@@ -1050,8 +1050,8 @@
       "name": "선착장",
       "layer": "water",
       "size": [
-        2,
-        4
+        1,
+        1
       ],
       "sprite": "facility/dock",
       "capacity": 2,

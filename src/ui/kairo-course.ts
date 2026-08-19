@@ -75,6 +75,11 @@ export interface CoursePanelDeps {
   cash: () => number;
   spend: (n: number) => boolean;
   onChange: () => void;
+  /**
+   * 확정이 성공한 순간 (K46-④) — 확정 후 편집기가 초기화되어 "됐는지 안 됐는지"가
+   * 안 보였다 (사용자 지적). main 이 토스트+효과음으로 답한다.
+   */
+  onConfirmed: (text: string) => void;
 }
 
 export class KairoCoursePanel {
@@ -427,16 +432,29 @@ export class KairoCoursePanel {
 
   private renderList(): void {
     this.listEl.replaceChildren();
+    /*
+     * 머리글 (K46-④) — 철거 버튼이 목록 안에 있는데 목록이 뭔지 안 보여서
+     * "철거할 구조가 없다"로 읽혔다 (사용자 지적). 운행 중임을 먼저 말한다.
+     */
+    const n = this.deps.courses.all.length;
+    if (n > 0) {
+      this.listEl.append(el('div', 'kcaption', `운행 중인 코스 ${n}`));
+    }
+    // 지도에서 탭한 잔교의 코스가 어느 것인지 — 철거하려면 특정할 수 있어야 한다 (K46-④)
+    const cur = this.dock();
     for (const c of this.deps.courses.all) {
       const equip = courseEquipment(c.equipId);
       const preset = presetDef(c.presetId);
       const row = el('div', 'kcourse-listrow');
       row.dataset['course'] = String(c.handle);
+      const mine = cur !== null && c.dock.x === cur.x && c.dock.y === cur.y;
+      if (mine) row.classList.add('on');
       row.append(
         el(
           'span',
           undefined,
-          `${preset?.name ?? c.presetId} · ${equip?.name ?? c.equipId} ${c.vehicles}대`,
+          `${preset?.name ?? c.presetId} · ${equip?.name ?? c.equipId} ${c.vehicles}대` +
+            (mine ? ' · 고른 잔교' : ''),
         ),
       );
       const del = el('button', 'kbtn', '철거');
@@ -475,6 +493,9 @@ export class KairoCoursePanel {
       handles: this.handles.map((h) => ({ ...h })),
     });
     this.deps.onChange();
+    this.deps.onConfirmed(
+      `코스 확정 — ${preset.name} · ${equip.name} ${this.vehicles}대 운행 시작`,
+    );
     // 방금 이 잔교를 썼다 — 다음 제안은 **빈 잔교**로 옮겨 간다 (K37)
     this.dockPinned = false;
     this.resetHandles();
