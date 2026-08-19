@@ -5097,6 +5097,39 @@ async function main(): Promise<void> {
       ` · 원복 후 구멍 ${clean.holes} 리프트오차 ${clean.liftErr} 앞벽 ${clean.wall?.wall}>시설 ${clean.wall?.facility}`,
   );
 
+  /*
+   * ── 이동체 깊이 (K46-⑤) — 버스·보트는 걸친 두 칸 중 **가까운 쪽** 깊이다 ──
+   *
+   * round 로 한 칸만 잡으면 위로(i+j 감소) 이동할 때 이전 칸 지면이 위에 그려져
+   * 이동체가 "아래로 꺼진다" (사용자 실측 — 손님의 K37 규칙과 같은 문제).
+   * 깊이는 화면 오브젝트(busGfx)에서 읽고, 걸친 두 칸의 지면 띠와 비교한다.
+   * 음성 대조군이 내장이다: round 회귀면 뒤 칸 지면 깊이에 진다.
+   */
+  const mover = (await page.evaluate(`(() => {
+    const h = window.__kairo, sc = h.scene, t = h.terrain;
+    // 깊이 규칙은 지형 종류와 무관하다 — 이 페이지는 합성 지형(전면 포장)이라
+    // 도로가 없으므로, 격자 안 임의의 이웃 두 칸에서 잰다 (setBus 는 지형을 안 본다)
+    const spot = { i: Math.floor(t.width / 2), j: Math.floor(t.height / 2) };
+    const K = 4096;
+    const key = (i, j) => (i + j) * K + (i % K) / K;
+    // 두 칸 사이 한가운데 — 걸친 상태
+    sc.setBus({ x: spot.i + 0.5, y: spot.j });
+    const d = sc['busGfx'].depth;
+    sc.setBus(null);
+    const gFrom = key(spot.i, spot.j);
+    const gTo = key(spot.i + 1, spot.j);
+    return { ok: true, bus: d, from: gFrom, to: gTo };
+  })()`)) as { ok: boolean; why?: string; bus?: number; from?: number; to?: number };
+  record(
+    '★ 이동체(버스) 깊이 — 걸친 두 칸 지면보다 앞 (K46-⑤, 꺼짐 수정)',
+    mover.ok && (mover.bus ?? -1) > Math.max(mover.from ?? 0, mover.to ?? 0)
+      ? 'pass'
+      : 'fail',
+    mover.ok
+      ? `버스 ${mover.bus} > 지면 ${Math.max(mover.from ?? 0, mover.to ?? 0)}`
+      : (mover.why ?? ''),
+  );
+
 
   /*
    * ── 9e. 지도 바깥을 땅으로 채운다 (K38) ─────────────────────────────────

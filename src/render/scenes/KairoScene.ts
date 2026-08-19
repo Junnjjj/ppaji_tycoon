@@ -1206,7 +1206,15 @@ export class KairoScene extends Phaser.Scene {
      * 못 짓는 지형이라 같은 칸에 시설이 놓일 수 없고, 그래서 동률이 날 수가 없다.
      * 띠를 하나 더 만들면 "여기는 뭐가 들어오나"를 읽는 사람이 여덟 개를 봐야 한다.
      */
-    g.setDepth(depthKey(Math.round(pos.x), Math.round(pos.y)) + Z_FACILITY);
+    /*
+     * 깊이는 **걸친 두 칸 중 가까운 쪽**이다 (K46-⑤ — 손님의 K37 규칙과 같다).
+     * round 로 한 칸만 잡으면 위로(i+j 감소) 갈 때 반환점에서 이전 칸 지면이
+     * 위에 그려져 버스가 아래로 꺼진다 (실측, 사용자 지적).
+     */
+    g.setDepth(
+      spanDepthKey(Math.floor(pos.x), Math.floor(pos.y), Math.ceil(pos.x), Math.ceil(pos.y)) +
+        Z_FACILITY,
+    );
     // 임시 도형 — 아이소 상자 하나. 지붕·앞면·옆면 세 면이면 방향이 읽힌다
     const w = TILE_W * 0.9;
     const h = 16;
@@ -1764,7 +1772,10 @@ export class KairoScene extends Phaser.Scene {
         g.fillRect(fx - 7, fy + 1, 14, 2);
         g.fillStyle(0xffffff, 0.35);
         g.fillRect(fx - 11, fy + 2, 4, 1);
-        const d = (Math.round(p.x) + Math.round(p.y)) * 4096 + 2;
+        // 걸친 두 칸 중 가까운 쪽 (버스와 같은 K46-⑤ 규칙) — 매직 넘버도 띠 상수로
+        const d =
+          spanDepthKey(Math.floor(p.x), Math.floor(p.y), Math.ceil(p.x), Math.ceil(p.y)) +
+          Z_FACILITY;
         if (d > maxDepth) maxDepth = d;
       }
     }
