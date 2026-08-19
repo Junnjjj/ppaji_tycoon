@@ -322,3 +322,100 @@ describe('주말이 성수기다', () => {
     for (const d of rep.days) expect(d.arrivals).toBe(d.visitors + d.turnedAway);
   });
 });
+
+/**
+ * 콤보 → 주간 경제 배선 (S5).
+ *
+ * 콤보 73종은 오랫동안 조건 판정·도감 표시용이었고 **현금·만족도에 전혀 닿지 않았다**
+ * (`permitArea` 가 S1 전까지 그랬던 것과 같은 죽은 축). 여기 검사는 배선이 살아 있는지,
+ * 그리고 **끊으면 정말 죽는지**(음성 대조군)를 같은 판으로 잰다.
+ */
+describe('콤보 보너스가 주간 경제에 실린다 (S5)', () => {
+  /** 같은 시드·같은 배치로 한 주를 돌린다 — 콤보 옵션만 바꿔 대조한다 */
+  const runWith = (combos?: { satisfactionDelta: number; revenueMult: number }) => {
+    const { r } = world(24, [
+      ['shop', 5, 5],
+      ['cafe', 9, 5],
+      ['snackbar', 5, 9],
+    ]);
+    return r.run(new Rng(4242), combos ? { combos } : {});
+  };
+
+  it('매출 배율이 매출을 올린다', () => {
+    const base = runWith();
+    const boosted = runWith({ satisfactionDelta: 0, revenueMult: 1.2 });
+    expect(base.revenue).toBeGreaterThan(0);
+    expect(boosted.revenue).toBeGreaterThan(base.revenue);
+  });
+
+  it('만족 보너스가 퇴장 만족도를 올린다', () => {
+    const base = runWith();
+    const boosted = runWith({ satisfactionDelta: 8, revenueMult: 1 });
+    expect(base.exitSatisfaction).toBeGreaterThan(0);
+    expect(boosted.exitSatisfaction).toBeCloseTo(base.exitSatisfaction + 8, 6);
+  });
+
+  it('음성 대조군 — 배선을 끊으면(옵션 미전달) 수치가 한 톨도 안 움직인다', () => {
+    /*
+     * 이 검사가 없으면 위 둘은 "옵션을 주면 달라진다"만 본다. 배선이 실제로 콤보에서
+     * 온다는 것은 호출자 쪽 정적 검사가 보고, 여기서는 **중립값이 정확히 중립**인지를
+     * 본다 — 중립이 아니면 콤보가 없는 판이 조용히 벌점을 받는다.
+     */
+    const none = runWith();
+    const neutral = runWith({ satisfactionDelta: 0, revenueMult: 1 });
+    expect(neutral.revenue).toBe(none.revenue);
+    expect(neutral.exitSatisfaction).toBe(none.exitSatisfaction);
+    expect(neutral.profit).toBe(none.profit);
+  });
+
+  it('매출 배율은 **입장료에 안 붙는다** — 표값은 플레이어 슬라이더 소관', () => {
+    const base = runWith();
+    const boosted = runWith({ satisfactionDelta: 0, revenueMult: 1.5 });
+    expect(base.admission).toBeGreaterThanOrEqual(0);
+    expect(boosted.admission).toBe(base.admission);
+    // 공원 매출(입장료 제외)만 정확히 1.5배
+    expect(boosted.revenue - boosted.admission).toBe(
+      Math.round((base.revenue - base.admission - base.courseRevenue) * 1.5) + base.courseRevenue,
+    );
+  });
+
+  it('매출 배율은 **코스 매출에도 안 붙는다** — 코스는 적합도라는 제 축이 있다', () => {
+    const withCourse = (mult: number) => {
+      const { r } = world(24, [['shop', 5, 5]]);
+      return r.run(new Rng(31), {
+        courses: { revenue: 100_000, upkeep: 0, riders: 10 },
+        combos: { satisfactionDelta: 0, revenueMult: mult },
+      });
+    };
+    const a = withCourse(1);
+    const b = withCourse(2);
+    expect(a.courseRevenue).toBeGreaterThan(0);
+    expect(b.courseRevenue).toBe(a.courseRevenue);
+  });
+
+  it('결정론 — 같은 시드·같은 콤보면 같은 결산', () => {
+    const shot = () =>
+      JSON.stringify(
+        runWith({ satisfactionDelta: 3.7, revenueMult: 1.043 }).days.map((d) => [
+          d.revenue,
+          d.visitors,
+        ]),
+      );
+    expect(shot()).toBe(shot());
+  });
+
+  it('호출자 둘이 **같은 함수**로 넘긴다 — 헤드리스와 실제 판이 갈라지면 안 된다', async () => {
+    /*
+     * 이 저장소가 여러 번 겪은 사고다 (토지 해금·ensurePath). 한쪽만 넘기면 밸런싱이
+     * 실제 판과 다른 세계를 잰다. 정적 검사라도 있는 편이 낫다 — 없으면 다음 사람이
+     * `main.ts` 만 고치고 봇을 잊는다.
+     */
+    const fs = await import('node:fs/promises');
+    for (const path of ['src/main.ts', 'tools/kairo-sim.ts']) {
+      const src = await fs.readFile(path, 'utf8');
+      expect(src, path).toContain('comboEffect(');
+      // zone 콤보 3종은 구역을 안 주면 조용히 0 이 된다
+      expect(src, path).toMatch(/comboEffect\(\s*evaluateCombos\([^)]*swimZones\(\)/);
+    }
+  });
+});

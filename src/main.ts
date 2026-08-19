@@ -30,7 +30,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     './sim/kairo/week.js'
   );
   const { audio } = await import('./audio/index.js');
-  const { previewCombos, evaluateCombos } = await import('./sim/kairo/combos.js');
+  const { previewCombos, evaluateCombos, comboEffect } = await import('./sim/kairo/combos.js');
   const { UnlockStore } = await import('./sim/kairo/unlocks.js');
   const { ExamStore } = await import('./sim/kairo/exam.js');
   const { WishStore } = await import('./sim/kairo/wishes.js');
@@ -1358,6 +1358,16 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         upkeep: courseWeek.upkeep,
         riders: courseWeek.riders,
       },
+      /*
+       * 콤보 보너스 (S5) — 주가 열리는 시점의 배치로 잰다.
+       *
+       * ⚠ `tools/kairo-sim.ts` 도 **같은 함수·같은 인자**로 넘긴다. 한쪽만 넘기면
+       * 헤드리스 밸런싱과 실제 판이 다른 세계를 재게 된다 (이 저장소가 여러 번 겪었다).
+       * `week.test.ts` 의 정적 검사가 두 파일 모두에 `comboEffect(` 가 있는지 본다.
+       *
+       * `swimZones()` 를 반드시 같이 넘긴다 — 안 주면 zone 콤보 3종이 **조용히 0** 이다.
+       */
+      combos: comboEffect(evaluateCombos(h.placement, undefined, h.guests.swimZones())),
       // 위험 단계가 아니면 0 — 안전한데 사고가 나면 억울하다 (v4 결정)
       accidentChance: accidentChance(risk, mods.accidentMult),
       staff: {

@@ -11,6 +11,9 @@ import {
   evaluateCombos,
   previewCombos,
   zoneAreaScale,
+  comboEffect,
+  saturate,
+  COMBO_ECONOMY,
   type ComboDef,
   type ComboTier,
 } from './combos.js';
@@ -346,3 +349,109 @@ describe('알 수 없는 ID', () => {
     expect(comboDef('nope')).toBeUndefined();
   });
 });
+
+/**
+ * 총합 상한 (S5) — 콤보를 주간 경제에 실을 때 **반드시 필요한 제동**.
+ *
+ * 73종이고 소형 40종은 중복 발동이 무제한이라(`diminishing.small = [1]`) 원점수 합은
+ * 후반에 수백 점까지 자란다. 그대로 더하면 만족도가 100 에 붙박이고 매출 배율이 폭주한다.
+ */
+describe('콤보 총합 상한 (S5)', () => {
+  it('포화 곡선은 단조 증가하고 상한을 절대 넘지 않는다', () => {
+    let prev = -1;
+    for (const raw of [0, 1, 10, 45, 90, 200, 500, 5000, 1e9]) {
+      const v = saturate(raw, 10, 90);
+      expect(v).toBeGreaterThanOrEqual(prev);
+      expect(v).toBeLessThan(10);
+      prev = v;
+    }
+  });
+
+  it('half 에서 정확히 상한의 절반이다 — 계수의 뜻이 데이터에서 읽혀야 한다', () => {
+    expect(saturate(90, 10, 90)).toBeCloseTo(5, 9);
+    expect(saturate(150, 18, 150)).toBeCloseTo(9, 9);
+  });
+
+  it('한 개 더 붙이면 **언제나** 조금 더 준다 — 하드 상한이면 그 위로는 죽은 축이다', () => {
+    /*
+     * `min(raw, cap)` 을 썼다면 cap 을 넘는 순간 콤보가 전부 무가치해진다. 그게 정확히
+     * 이번에 고치려던 상태(죽은 축)의 후반부 버전이라 포화 곡선을 골랐다.
+     */
+    for (const raw of [50, 200, 400, 1000]) {
+      const a = comboEffect({ satisfaction: raw, revenue: raw });
+      const b = comboEffect({ satisfaction: raw + 3, revenue: raw + 4 });
+      expect(b.satisfactionDelta).toBeGreaterThan(a.satisfactionDelta);
+      expect(b.revenueMult).toBeGreaterThan(a.revenueMult);
+    }
+  });
+
+  it('음성 대조군 — 상한을 걷어내면(선형) 판이 터진다', () => {
+    /*
+     * 상한이 정말 무는지 보려면 **없는 세계**를 옆에 두고 재야 한다. 콤보를 전부 깔면
+     * 원점수가 몇 백이고, 선형이면 만족도가 100 스케일을 통째로 넘고 매출이 몇 배가 된다.
+     */
+    const raw = fullSetRaw();
+    expect(raw.satisfaction).toBeGreaterThan(200);
+    const linear = { sat: raw.satisfaction, revPct: raw.revenue };
+    expect(linear.sat).toBeGreaterThan(100); // 만족도 스케일(0~100)을 통째로 넘는다
+    expect(linear.revPct).toBeGreaterThan(100); // 매출이 2배를 넘는다
+
+    const capped = comboEffect(raw);
+    expect(capped.satisfactionDelta).toBeLessThan(COMBO_ECONOMY.satCap);
+    expect(capped.revenueMult - 1).toBeLessThan(COMBO_ECONOMY.revCap / 100);
+    // 그래도 봇이 실제로 내는 값(중앙 raw≈38)보다는 확실히 크다 — 축이 살아 있다
+    expect(capped.satisfactionDelta).toBeGreaterThan(
+      comboEffect({ satisfaction: 38, revenue: 47 }).satisfactionDelta * 1.5,
+    );
+  });
+
+  it('중립 입력은 정확히 중립을 낸다 — 콤보 0 개인 판이 벌점을 받으면 안 된다', () => {
+    const e = comboEffect({ satisfaction: 0, revenue: 0 });
+    expect(e.satisfactionDelta).toBe(0);
+    expect(e.revenueMult).toBe(1);
+  });
+
+  it('음수 원점수는 0 으로 본다 — 감점 축은 아직 데이터에 없다 (P1-B 미착수)', () => {
+    const e = comboEffect({ satisfaction: -50, revenue: -50 });
+    expect(e.satisfactionDelta).toBe(0);
+    expect(e.revenueMult).toBe(1);
+  });
+
+  it('satCap 은 **등급 문턱 한 칸**과 같다 — 콤보로 두 등급을 넘기면 안 된다', async () => {
+    /*
+     * 상한을 "적당히 10" 으로 두면 다음 사람이 아무 근거 없이 15 로 올린다. 문턱에
+     * 묶어 두면 근거가 코드에 남는다 — 등급표를 바꾸면 이 검사가 같이 깨진다.
+     */
+    const { GRADES } = await import('./progress.js');
+    const steps = GRADES.slice(1).map(
+      (g, k) => g.reqExitSatisfaction - (GRADES[k] as { reqExitSatisfaction: number }).reqExitSatisfaction,
+    );
+    const step = Math.min(...steps.filter((n) => n > 0));
+    expect(COMBO_ECONOMY.satCap).toBe(step);
+    // 상한은 점근선이라 **절대 도달하지 않는다** — 실제로도 한 칸을 못 넘긴다
+    expect(comboEffect({ satisfaction: 1e6, revenue: 0 }).satisfactionDelta).toBeLessThan(step);
+  });
+
+  it('revCap 은 요금 슬라이더 폭보다 작다 — 콤보가 "값을 매긴다"를 덮으면 안 된다', () => {
+    // 슬라이더는 70~140 (kairo-staff.ts) — 정가 대비 -30%~+40%
+    expect(COMBO_ECONOMY.revCap).toBeLessThan(30);
+  });
+
+  it('계수는 데이터가 갖는다 (불변식 3)', () => {
+    for (const k of ['satCap', 'satHalf', 'revCap', 'revHalf'] as const) {
+      expect(COMBO_ECONOMY[k], k).toBeGreaterThan(0);
+    }
+  });
+});
+
+/** 모든 콤보가 한 번씩 터졌을 때의 원점수 — 상한 대조군의 재료 */
+function fullSetRaw(): { satisfaction: number; revenue: number } {
+  let satisfaction = 0;
+  let revenue = 0;
+  for (const c of COMBOS) {
+    const s = diminishingScale(c.tier, 0);
+    satisfaction += (c.bonus.satisfaction ?? 0) * s;
+    revenue += (c.bonus.revenue ?? 0) * s;
+  }
+  return { satisfaction, revenue };
+}

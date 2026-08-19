@@ -32,7 +32,7 @@ import {
 } from '../src/sim/kairo/placement.js';
 import { GuestStore, GUEST_DEFAULTS, TICKET_DEF_ID } from '../src/sim/kairo/guests.js';
 import { WeekRunner, type NeedKind, type Season, type WeekReport } from '../src/sim/kairo/week.js';
-import { evaluateCombos } from '../src/sim/kairo/combos.js';
+import { evaluateCombos, comboEffect } from '../src/sim/kairo/combos.js';
 import { CardStore, CARD_RNG_SALT, optionCash, triggerCard } from '../src/sim/kairo/cards.js';
 import { assessRisk, accidentChance } from '../src/sim/kairo/risk.js';
 import { mapType, shiftedShares, MAP_TYPES } from '../src/sim/kairo/scenario.js';
@@ -121,6 +121,16 @@ interface RunResult {
   /** 심사로 딴 실제 등급 (K42) — `grade`(만족도 환산 표시값)와 다르다. 해금은 이걸 따른다 */
   examGrade: number;
   combos: number;
+  /**
+   * 마지막 주 기준 콤보 원점수 합 (체감·면적 배율까지 곱한 값). **발동 수만 보면
+   * 경제에 얼마나 실렸는지 알 수 없다** — 소형 40종은 3점이고 대형은 15점이라
+   * "27개 발동"이 81점일 수도 200점일 수도 있다. 상한이 무는지도 이 줄로 본다.
+   */
+  comboSatRaw: number;
+  comboRevRaw: number;
+  /** 상한을 통과한 뒤 실제로 경제에 실린 값 (`comboEffect`) */
+  comboSatApplied: number;
+  comboRevPct: number;
   grade: number;
   exitSat: number;
   turnedAwayRatio: number;
@@ -1134,6 +1144,9 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         upkeep: courseWeek.upkeep,
         riders: courseWeek.riders,
       },
+      // 콤보 보너스 (S5) — `src/main.ts` 의 assembleWeekOpts 와 **같은 함수·같은 인자**.
+      // 한쪽만 넘기면 헤드리스와 실제 판이 갈라진다 (week.test.ts 정적 검사가 지킨다)
+      combos: comboEffect(evaluateCombos(p, undefined, g.swimZones())),
       // 사고 — 위험 단계에서만 (§12.1). 안 넣으면 안전 시설을 지을 이유가 계측에 안 나온다
       accidentChance: (() => {
         const r = assessRisk(p, g, { staffSafety: staffEff.safetyPoints });
@@ -1203,6 +1216,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   }
 
   const combos = evaluateCombos(p, undefined, g.swimZones());
+  const comboFx = comboEffect(combos);
   const exitSat = last?.exitSatisfaction ?? 0;
   const arrivals = Math.max(1, last?.arrivals ?? 1);
   return {
@@ -1217,6 +1231,10 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     ),
     examGrade: gradeNo,
     combos: combos.active.length,
+    comboSatRaw: comboFx.satRaw,
+    comboRevRaw: comboFx.revRaw,
+    comboSatApplied: comboFx.satisfactionDelta,
+    comboRevPct: (comboFx.revenueMult - 1) * 100,
     grade: gradeFor(exitSat).grade,
     exitSat,
     turnedAwayRatio: (last?.turnedAway ?? 0) / arrivals,
@@ -1334,6 +1352,9 @@ function main(): void {
     ['최대 풀 면적', runs.map((r) => r.swimArea), (n) => `${n.toFixed(0)}칸`],
     ['심사 등급', runs.map((r) => r.examGrade), (n) => String(n)],
     ['콤보 발동', runs.map((r) => r.combos), (n) => String(n)],
+    ['콤보 원점수(만족)', runs.map((r) => r.comboSatRaw), (n) => n.toFixed(0)],
+    ['콤보 만족 보너스', runs.map((r) => r.comboSatApplied), (n) => `+${n.toFixed(1)}`],
+    ['콤보 매출 보너스', runs.map((r) => r.comboRevPct), (n) => `+${n.toFixed(1)}%`],
     ['등급', runs.map((r) => r.grade), (n) => String(n)],
     ['퇴장 만족도', runs.map((r) => r.exitSat), (n) => n.toFixed(0)],
     ['만석 비율', runs.map((r) => r.turnedAwayRatio * 100), (n) => `${n.toFixed(0)}%`],

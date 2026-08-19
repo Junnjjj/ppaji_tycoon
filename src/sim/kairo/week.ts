@@ -282,6 +282,18 @@ export interface WeekOptions {
   accidentChance?: number;
   /** 코스 합계 (§7). 없으면 코스가 없는 것으로 본다 */
   courses?: { revenue: number; upkeep: number; riders: number };
+  /**
+   * 콤보 보너스 (S5). 없으면 콤보가 없는 것으로 본다 — 기존 호출자 호환.
+   *
+   * ⚠ 여기도 **숫자 둘만** 받는다 (카드·직원·코스와 같은 규칙, 불변식 3).
+   * 73종의 판정도, 티어 체감도, 면적 배율도, 총합 상한도 전부 `combos.ts` 가
+   * 소유한다 (`comboEffect`). `WeekRunner` 안에 콤보 규칙을 넣으면 콤보를 하나
+   * 추가할 때마다 시뮬을 고쳐야 하고, 그게 불변식 3 이 막으려던 상태다.
+   *
+   * `satisfactionDelta` 는 퇴장 만족도에 **더하고**, `revenueMult` 는 공원 매출에
+   * **곱한다** (입장료·코스 제외 — 아래 finish() 참고).
+   */
+  combos?: { satisfactionDelta: number; revenueMult: number };
   staff?: {
     wages: number;
     satisfactionDelta: number;
@@ -736,6 +748,27 @@ export class WeekRunner {
     }
 
     /*
+     * 콤보 매출 보너스 (S5). 카드 배율과 **같은 자리·같은 규칙**이다 — 입장료를 빼고
+     * 곱한다.
+     *
+     * ⚠ 왜 입장료를 빼나: `admission = 입장객 × 정가 × 요금배율` 이라는 검사 가능한
+     * 성질을 지키기 위해서다 (위 카드 배율 주석과 같은 이유). 콤보는 "공원 안에서
+     * 손님이 더 많이 쓴다"는 효과지, 표가 더 비싸지는 효과가 아니다.
+     *
+     * ⚠ 왜 코스 매출은 빼나: 코스는 **장비×프리셋 적합도**라는 자기 축을 이미 갖는다
+     * (v2 결정). 콤보 배율까지 얹으면 같은 것을 두 번 세게 되고, 코스가 비수기 손익을
+     * 떠받치는 문제(아래 `courseSeason` 주석)를 더 키운다. 그래서 곱하기는 코스 매출을
+     * 더하기 **전**에 끝낸다.
+     */
+    const comboRevMult = opts.combos?.revenueMult ?? 1;
+    if (comboRevMult !== 1) {
+      weekRevenue = Math.round((weekRevenue - weekAdmission) * comboRevMult) + weekAdmission;
+      for (const d of days) {
+        d.revenue = Math.round((d.revenue - d.admission) * comboRevMult) + d.admission;
+      }
+    }
+
+    /*
      * 코스 매출은 **손님 시뮬과 별도로** 더한다. 코스 탑승은 선착장에서 일어나고 손님은
      * 개체로 물 위를 돌지 않는다 — 돌게 하면 1,200명 × 스플라인 추적이 되고, 그 비용은
      * "손님이 노는 광경"이 주는 값보다 크다 (배는 스프라이트로 돈다).
@@ -808,6 +841,12 @@ export class WeekRunner {
       /*
        * 만족도 델타는 **평균에 더한다**. 손님 개체마다 더하면 그 손님이 다음 주까지
        * 남아 델타가 두 번 먹는다 — 카드 효과는 그 주의 경험이지 손님의 성격이 아니다.
+       *
+       * 콤보 만족 보너스(S5)도 같은 자리다. 손님별(`guests.ts`)에 얹지 않는 이유는
+       * 위와 같다 — 콤보는 **그 주의 배치가 만든 경험**이고, 주가 바뀌면 배치도 바뀐다.
+       * 여기 얹으면 퇴장 만족도 → 평판 → 등급 → 수요 사슬을 그대로 탄다 (설계 불변식:
+       * "평판의 기반은 퇴장 만족도"). 그 사슬이 세지 않도록 `comboEffect` 가 총합을
+       * 포화시킨다 — 여기서 다시 자르지 않는다 (규칙이 두 곳에 있으면 갈라진다).
        */
       exitSatisfaction:
         totalExited === 0
@@ -819,6 +858,7 @@ export class WeekRunner {
                 days.reduce((a, d) => a + d.exitSatisfaction, 0) / totalExited +
                   (mod?.satisfactionDelta ?? 0) +
                   (staff?.satisfactionDelta ?? 0) +
+                  (opts.combos?.satisfactionDelta ?? 0) +
                   priceSatisfaction(this.priceMult) +
                   (opts.mapSceneryBonus ?? 0) +
                   (this.placement.averageLevel() - 1) * LEVEL_SATISFACTION,

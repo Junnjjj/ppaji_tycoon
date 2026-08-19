@@ -71,8 +71,23 @@ export interface ComboDef {
 
 const DATA = rawCombos as unknown as {
   diminishing: Record<ComboTier, number[]>;
+  economy: ComboEconomy;
   combos: ComboDef[];
 };
+
+/**
+ * 콤보 원점수를 주간 경제로 옮기는 포화 곡선의 계수 (S5). **데이터가 갖는다** (불변식 3).
+ */
+export interface ComboEconomy {
+  /** 만족도 보너스 상한 (점) */
+  satCap: number;
+  /** 만족도가 상한의 절반이 되는 원점수 */
+  satHalf: number;
+  /** 매출 보너스 상한 (%) */
+  revCap: number;
+  /** 매출이 상한의 절반이 되는 원점수 */
+  revHalf: number;
+}
 
 export const COMBOS: readonly ComboDef[] = DATA.combos;
 export const DIMINISHING: Readonly<Record<ComboTier, readonly number[]>> = {
@@ -81,8 +96,78 @@ export const DIMINISHING: Readonly<Record<ComboTier, readonly number[]>> = {
   large: DATA.diminishing.large,
 };
 
+export const COMBO_ECONOMY: Readonly<ComboEconomy> = DATA.economy;
+
 export function comboDef(id: string): ComboDef | undefined {
   return COMBOS.find((c) => c.id === id);
+}
+
+/**
+ * 포화 곡선 — `cap × raw / (raw + half)`.
+ *
+ * `raw = 0` 에서 0, `raw = half` 에서 `cap/2`, 무한대에서 `cap` 에 점근한다.
+ * 단조 증가이고 **상한을 절대 넘지 않는다**.
+ */
+export function saturate(raw: number, cap: number, half: number): number {
+  if (raw <= 0 || cap <= 0 || half <= 0) return 0;
+  return (cap * raw) / (raw + half);
+}
+
+/** 콤보가 주간 경제에 실제로 싣는 값 — `WeekOptions.combos` 가 받는 그 숫자 */
+export interface ComboEffect {
+  /** 퇴장 만족도에 **더한다** (점) */
+  satisfactionDelta: number;
+  /** 공원 매출(입장료·코스 제외)에 **곱한다**. 1.0 이 무보너스 */
+  revenueMult: number;
+  /** 상한 전 원점수 — 밸런싱·UI 가 "얼마나 잘렸나"를 보게 */
+  satRaw: number;
+  revRaw: number;
+}
+
+/**
+ * 콤보 원점수를 주간 경제 숫자로 옮긴다 (S5).
+ *
+ * ## 왜 여기 있나
+ *
+ * `WeekRunner` 는 카드·직원·코스를 **숫자 몇 개로만** 받는다 (불변식 3). 콤보도 같다 —
+ * 규칙은 데이터(`kairo-combos.json`)가 정의하고 해석은 이 모듈이 소유한다.
+ * `week.ts` 에 콤보 판정을 넣으면 콤보를 하나 추가할 때 시뮬을 고쳐야 한다.
+ *
+ * ## 왜 하드 상한이 아니라 포화인가
+ *
+ * 콤보는 73종이고 소형 40종은 **중복 발동이 무제한**이다 (`diminishing.small = [1]`).
+ * 그래서 원점수 합은 후반에 수백 점까지 자란다 — 그대로 더하면 만족도가 100 에
+ * 붙박이고 매출 배율이 폭주한다.
+ *
+ * `min(raw, cap)` 은 이 폭주는 막지만 **cap 을 넘는 순간 콤보가 전부 무가치**해진다.
+ * 그게 정확히 이번에 고치려던 상태(죽은 축)의 후반부 버전이다. 포화 곡선은
+ * 상한을 지키면서도 **한 개 더 붙이면 언제나 조금 더 준다** — 체감은 줄되 0 이 아니다.
+ *
+ * ## 두 축은 서로 다른 것을 사는 것이어야 한다
+ *
+ * 만족은 **평판 → 등급 → 수요**로, 매출은 **현금 → 건설**로 간다. 같은 raw 를 쓰되
+ * `half` 를 달리 둬서, 소형 도배(작은 raw)는 만족 쪽이 먼저 보이고 대형까지 갖춘
+ * 판(큰 raw)에서 매출 쪽이 따라온다.
+ *
+ * ## 상한을 왜 그 값으로 뒀나 (`kairo-combos.json` 의 `calibration`)
+ *
+ *   · `satCap = 10` — 등급 문턱 간격과 **같다** (`GRADES` 는 0/55/65/75/85).
+ *     콤보로 한 등급은 넘길 수 있고, 두 등급은 못 넘긴다
+ *   · `revCap = 18` — 요금 슬라이더의 폭(70~140)보다 **작다**. 콤보가 "값을 매긴다"
+ *     라는 동사를 덮으면 그 동사가 죽는다
+ */
+export function comboEffect(
+  r: { satisfaction: number; revenue: number },
+  eco: ComboEconomy = COMBO_ECONOMY,
+): ComboEffect {
+  const satRaw = Math.max(0, r.satisfaction);
+  const revRaw = Math.max(0, r.revenue);
+  return {
+    satisfactionDelta: saturate(satRaw, eco.satCap, eco.satHalf),
+    revenueMult: 1 + saturate(revRaw, eco.revCap, eco.revHalf) / 100,
+    satRaw,
+    revRaw,
+  };
 }
 
 /** 발동한 콤보 하나 */
