@@ -21,9 +21,20 @@
 import { STEP_X, STEP_Y, GRID_W, GRID_H, snapCamera, type Vec2 } from './iso.js';
 import { UPSCALE_DEFAULT, stepUpscale, type Upscale } from './upscale.js';
 
-/** 배경 여백 — 맵 위쪽에 능선·건너편이 들어갈 대역, 아래쪽에 앞물 (스펙 §1.6) */
-export const BACKDROP_ABOVE = 200;
-export const BACKDROP_BELOW = 76;
+/**
+ * 맵 바깥으로 더 볼 수 있는 여백 (K38 에서 뜻이 바뀌었다).
+ *
+ * 예전엔 "위쪽에 그려진 능선을 넣을 대역"이었다. 그런데 실제 게임들은 **그림 배경을
+ * 안 쓴다** — Pool Slide Story 는 경계를 아예 안 보여 주고, Terra Nil 은 플레이 영역
+ * 밖을 **같은 스케일 지형**으로 덮는다 (`art-reference/competitor/README.md`).
+ * 그려진 배경은 눈이 곧 "무대 뒤에 세운 벽"으로 읽는다.
+ *
+ * 그래서 지금은 **지형이 화면을 채우는 폭**이다. 지도 바깥도 지형이라(K38) 여백만큼
+ * 더 봐도 계속 땅이고, 하늘은 어디서도 안 보인다. 0 이 아니라 조금 두는 이유는
+ * 고무줄(`ELASTIC`)로 끌릴 때 가장자리가 비지 않게 하기 위해서다.
+ */
+export const BACKDROP_ABOVE = 48;
+export const BACKDROP_BELOW = 48;
 
 /** 팬 경계를 넘어 끌릴 수 있는 최대치와 저항 — 손맛용 */
 const ELASTIC = 40;

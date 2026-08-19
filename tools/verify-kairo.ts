@@ -2538,64 +2538,38 @@ async function main(): Promise<void> {
    * 겹이 하나다. 없으면 절차적 3겹 폴백이다. 두 갈래는 **지켜야 할 성질이 다르다** —
    * 한쪽 기준으로 뭉뚱그리면 어느 쪽도 제대로 안 잰다.
    */
-  if (backdrop.art) {
-    /*
-     * 실물 아트는 **지평선 + 트리라인** 둘이다. 절차적 3겹처럼 원근을 겹으로 만드는 것이
-     * 아니라, 지평선 한 장이 원근을 이미 담고 있고 트리라인은 **경계를 흐트러뜨리는**
-     * 역할이다 — 없으면 지평선과 땅이 자로 그은 듯 만난다 (실측).
-     */
-    record(
-      '배경은 지평선 + 트리라인 둘이다 — 원근은 그림 안에 있다 (K38)',
-      backdrop.count === 2 ? 'pass' : 'fail',
-      `${backdrop.count}겹 · 시차 x ${backdrop.factors.join(', ')} · y ${backdrop.factorsY.join(', ')}`,
-    );
-    record(
-      '트리라인이 지평선보다 가깝다 — 시차가 더 크다 (K38)',
-      (backdrop.factors[1] ?? 0) > (backdrop.factors[0] ?? 1) ? 'pass' : 'fail',
-      `지평선 ${backdrop.factors[0]} < 트리라인 ${backdrop.factors[1]}`,
-    );
-    record(
-      '★ 가로는 시차, 세로는 잠긴다 — 지평선이 땅에서 안 떨어진다 (K38)',
-      backdrop.factors.every((f) => f > 0 && f < 1) && backdrop.factorsY.every((f) => f === 1)
-        ? 'pass'
-        : 'fail',
-      `가로 ${backdrop.factors.join(', ')} (0<f<1) · 세로 ${backdrop.factorsY.join(', ')} (1 이어야 한다)`,
-    );
-    record(
-      '지도 바깥 땅이 깔렸다 (K38)',
-      backdrop.surround >= 1 ? 'pass' : 'fail',
-      `${backdrop.surround}장`,
-    );
-  } else {
-    record(
-      `배경 겹 수가 계약과 같다 (${backLayers.length}겹)`,
-      backdrop.count === backLayers.length ? 'pass' : 'fail',
-      `${backdrop.count}겹 · 시차 ${backdrop.factors.join(', ')} (계약 ${backLayers.join('·')})`,
-    );
-    /*
-     * 겹마다 시차가 **달라야** 한다. 같은 값이 둘이면 그 둘은 겹쳐 움직이므로 한 장과 같다.
-     */
-    const uniqueFactors = new Set(backdrop.factors).size;
-    record(
-      '배경이 지도보다 느리게 따라온다 — 같으면 큰 그림 한 장, 0 이면 벽지다',
-      backdrop.factors.length === backLayers.length &&
-        backdrop.factors.every((f) => f > 0 && f < 1) &&
-        uniqueFactors === backdrop.factors.length
-        ? 'pass'
-        : 'fail',
-      backLayers.map((l, k) => `${l} ${backdrop.factors[k]}`).join(' · ') + ' (지도는 1.0)',
-    );
-    /*
-     * 계약의 `layers` 는 **먼 겹부터**다. 먼 겹일수록 시차가 작아야 원근이 안 뒤집힌다.
-     */
-    record(
-      '먼 겹일수록 시차가 작다 — 뒤집히면 산이 앞으로 나온다',
-      backdrop.factors.every((f, k) => k === 0 || f > (backdrop.factors[k - 1] as number))
-        ? 'pass'
-        : 'fail',
-      backdrop.factors.join(' < '),
-    );
-  }
+  /*
+   * 배경 3겹은 이제 **안전망**이다 (K38). 지도 바깥이 지형으로 덮이므로 평소엔 한 픽셀도
+   * 안 보이지만, 굽기가 실패했을 때 하늘 대신 나오는 것이라 성질은 계속 지킨다.
+   */
+  record(
+    `배경 겹 수가 계약과 같다 (${backLayers.length}겹)`,
+    backdrop.count === backLayers.length ? 'pass' : 'fail',
+    `${backdrop.count}겹 · 시차 ${backdrop.factors.join(', ')} (계약 ${backLayers.join('·')})`,
+  );
+  /*
+   * 겹마다 시차가 **달라야** 한다. 같은 값이 둘이면 그 둘은 겹쳐 움직이므로 한 장과 같다.
+   */
+  const uniqueFactors = new Set(backdrop.factors).size;
+  record(
+    '배경이 지도보다 느리게 따라온다 — 같으면 큰 그림 한 장, 0 이면 벽지다',
+    backdrop.factors.length === backLayers.length &&
+      backdrop.factors.every((f) => f > 0 && f < 1) &&
+      uniqueFactors === backdrop.factors.length
+      ? 'pass'
+      : 'fail',
+    backLayers.map((l, k) => `${l} ${backdrop.factors[k]}`).join(' · ') + ' (지도는 1.0)',
+  );
+  /*
+   * 계약의 `layers` 는 **먼 겹부터**다. 먼 겹일수록 시차가 작아야 원근이 안 뒤집힌다.
+   */
+  record(
+    '먼 겹일수록 시차가 작다 — 뒤집히면 산이 앞으로 나온다',
+    backdrop.factors.every((f, k) => k === 0 || f > (backdrop.factors[k - 1] as number))
+      ? 'pass'
+      : 'fail',
+    backdrop.factors.join(' < '),
+  );
   record(
     '배경이 지면보다 뒤에 있다',
     backdrop.depths.length > 0 && backdrop.depths.every((d) => d < 0) ? 'pass' : 'fail',
@@ -4864,49 +4838,69 @@ async function main(): Promise<void> {
    * 여기서 재는 것은 **화면 픽셀**이다 — 오브젝트가 존재하는지가 아니라 실제로
    * 그 자리를 덮었는지를 봐야 한다.
    */
-  await page.evaluate(`(() => {
-    const h = window.__kairo, S = h.scene;
-    S.setUpscale(1);
-    /* 지도 왼쪽 위 모서리 — 다이아몬드 꼭지점 근처라 귀퉁이가 크게 열린다 */
-    S.focusTile(20, 0, 0);
-  })()`);
-  await page.waitForTimeout(500);
-
-  const cornerPx = `(() => {
+  /*
+   * ★ **하늘이 어디서도 안 보인다** (K38).
+   *
+   * 이전엔 화면 한 줄만 봤는데, 그건 "그 한 줄이 안 비었다"만 잰다. 카메라를 지도 네
+   * 귀퉁이와 중앙으로 밀어 **화면 전체**에서 배경색 비율을 센다 — 아이소 다이아몬드의
+   * 빈 구석은 귀퉁이로 가야 드러난다.
+   *
+   * 근거: 실제 게임들은 플레이 영역 밖을 같은 스케일 지형으로 덮거나 경계를 아예 안
+   * 보여 준다 (`art-reference/competitor/README.md`). 하늘이 보이면 그 규칙이 깨진 것이다.
+   */
+  const skyPct = `(() => {
     const cv = document.querySelector('canvas');
     const g = document.createElement('canvas');
     g.width = cv.width; g.height = cv.height;
     const c = g.getContext('2d');
     c.drawImage(cv, 0, 0);
-    /* 화면 위쪽 1/6 을 가로로 훑어 하늘색(#7ab8d4 / #1b92f0) 비율을 센다 */
-    const y = Math.round(cv.height / 6);
-    const d = c.getImageData(0, y, cv.width, 1).data;
-    let sky = 0;
-    for (let x = 0; x < cv.width; x++) {
-      const r = d[x * 4], gg = d[x * 4 + 1], b = d[x * 4 + 2];
-      const isOld = Math.abs(r - 122) < 10 && Math.abs(gg - 184) < 10 && Math.abs(b - 212) < 10;
-      const isNew = Math.abs(r - 27) < 10 && Math.abs(gg - 146) < 10 && Math.abs(b - 240) < 10;
-      if (isOld || isNew) sky++;
+    const d = c.getImageData(0, 0, cv.width, cv.height).data;
+    let n = 0, total = 0;
+    for (let k = 0; k < d.length; k += 4 * 37) {
+      total++;
+      if (Math.abs(d[k] - 122) < 12 && Math.abs(d[k + 1] - 184) < 12 && Math.abs(d[k + 2] - 212) < 12) n++;
     }
-    return Math.round((sky / cv.width) * 100);
+    return Math.round((n / Math.max(1, total)) * 100);
   })()`;
-
-  const filled = (await page.evaluate(cornerPx)) as number;
-  await page.evaluate(`window.__kairo.scene.setSurroundVisibleForTest(false)`);
-  await page.waitForTimeout(300);
-  const bare = (await page.evaluate(cornerPx)) as number;
-  await page.evaluate(`window.__kairo.scene.setSurroundVisibleForTest(true)`);
-  await page.waitForTimeout(300);
-
+  const corners: [number, number, string][] = [
+    [0, 0, '좌상'],
+    [95, 0, '우상'],
+    [0, 71, '좌하'],
+    [95, 71, '우하'],
+    [48, 36, '중앙'],
+  ];
+  const seen: string[] = [];
+  let worst = 0;
+  for (const [ci, cj, name] of corners) {
+    await page.evaluate(`(() => { const h = window.__kairo; h.scene.setUpscale(1); h.scene.focusTile(${ci}, ${cj}, 0); })()`);
+    await page.waitForTimeout(320);
+    const pct = (await page.evaluate(skyPct)) as number;
+    seen.push(`${name} ${pct}%`);
+    worst = Math.max(worst, pct);
+  }
   record(
-    '★ 지도 바깥이 빈 하늘색이 아니다 — 땅으로 채운다 (K38)',
-    filled <= 5 ? 'pass' : 'fail',
-    `채운 뒤 하늘색 ${filled}% (5% 이하여야 한다)`,
+    '★ 하늘이 어디서도 안 보인다 — 지형이 화면을 채운다 (K38)',
+    worst === 0 ? 'pass' : 'fail',
+    seen.join(' · '),
   );
+
+  /*
+   * 음성 대조군 — 지형을 끄면 그 자리가 하늘로 돌아온다.
+   *
+   * ⚠ **귀퉁이에서 재야 한다.** 중앙은 다이아몬드가 화면을 다 덮어서 지형을 꺼도
+   * 하늘이 0% 다 — 대조군이 아무것도 안 재게 된다 (실측으로 그렇게 통과할 뻔했다).
+   */
+  await page.evaluate(`window.__kairo.scene.focusTile(0, 0, 0)`);
+  await page.waitForTimeout(320);
+  await page.evaluate(`window.__kairo.scene.setSurroundVisibleForTest(false)`);
+  await page.waitForTimeout(320);
+  const bare = (await page.evaluate(skyPct)) as number;
+  await page.evaluate(`window.__kairo.scene.setSurroundVisibleForTest(true)`);
+  await page.waitForTimeout(320);
   record(
-    '★ 음성 대조군 — 배경을 끄면 그 자리가 하늘색으로 돌아온다',
-    bare > filled + 30 ? 'pass' : 'fail',
-    `끄면 ${bare}% · 켜면 ${filled}%`,
+    '★ 음성 대조군 — 지형을 끄면 하늘이 드러난다',
+    bare > 10 ? 'pass' : 'fail',
+    `끄면 ${bare}% · 켜면 ${worst}%`,
   );
 
   /*
@@ -4916,10 +4910,39 @@ async function main(): Promise<void> {
    * 지면 종류를 가정하는 대신 **씬이 그 자리에 있다고 말하는 타일의 텍스처**와 맞춰 본다.
    * 그러면 어떤 지형이 와도 성립하고, 배경이 덮으면 색이 달라져 잡힌다.
    */
+  /*
+   * ⚠ 카메라를 옮긴 **같은 프레임**을 읽으면 안 된다. `focusTile` 은 카메라만 바꾸고
+   * 캔버스는 아직 이전 프레임이라, 좌표는 새 자리인데 픽셀은 옛 화면이 된다
+   * (실측: 포장 자리에서 물색 87,164,194 가 나왔다). 옮기고 한 박자 쉬었다 읽는다.
+   */
+  /*
+   * ⚠ **평지 타일**을 고른다. 단이 있는 칸은 기둥 텍스처라 그림이 위로 올라가 있어
+   * `tileScreenRect`(단을 모르는 사각형) 기준으로 찍으면 이웃 칸을 읽는다
+   * (실측: 포장 자리에서 다른 변형 색 216,212,201 이 나왔다).
+   */
+  const flat = (await page.evaluate(`(() => {
+    const h = window.__kairo, T = h.terrain;
+    /*
+     * ⚠ **해금된 토지 안**에서 고른다. 토지 밖 타일은 어둡게 tint 되므로 (applyLand)
+     * 텍스처 원색과 다르다 — 실측 71,76,80 vs 176,174,165. 이 주석에 백틱 금지 (템플릿 안).
+     */
+    const L = h.land();
+    for (let j = L.j0 + 1; j < L.j0 + L.h - 1; j++) {
+      for (let i = L.i0 + 1; i < L.i0 + L.w - 1; i++) {
+        if (T.levelAt(i, j) !== 0) continue;
+        if (T.levelAt(i + 1, j) !== 0 || T.levelAt(i, j + 1) !== 0) continue;
+        if (T.isWater(i, j)) continue;
+        if (h.placement.handleAt(i, j) !== 0) continue;
+        return { i: i, j: j };
+      }
+    }
+    return null;
+  })()`)) as { i: number; j: number } | null;
+  await page.evaluate(`window.__kairo.scene.focusTile(${flat?.i ?? 48}, ${flat?.j ?? 20}, 0)`);
+  await page.waitForTimeout(320);
   const covered = (await page.evaluate(`(() => {
     const h = window.__kairo, S = h.scene;
-    const TI = 48, TJ = 20;
-    S.focusTile(TI, TJ, 0);
+    const TI = ${flat?.i ?? 48}, TJ = ${flat?.j ?? 20};
     const cv = document.querySelector('canvas');
     const r = S.tileScreenRect(TI, TJ);
     const g = document.createElement('canvas');
@@ -4927,8 +4950,6 @@ async function main(): Promise<void> {
     const c = g.getContext('2d');
     c.drawImage(cv, 0, 0);
     const sx = cv.width / cv.getBoundingClientRect().width;
-    /* 마름모 한가운데 픽셀 — 타일 좌상단 기준 (16, 8) */
-    const px = c.getImageData(Math.round((r.x + 16) * sx), Math.round((r.y + 8) * sx), 1, 1).data;
 
     const img = S.tileImageForTest(TI, TJ);
     const src = img.texture.getSourceImage();
@@ -4937,10 +4958,29 @@ async function main(): Promise<void> {
     const tc = t.getContext('2d');
     tc.drawImage(src, 0, 0);
     const want = tc.getImageData(16, 8, 1, 1).data;
+
+    /*
+     * 마름모 한가운데 근처를 **작은 창으로** 훑어 그 타일 색이 있는지 본다.
+     * 한 점만 찍으면 정렬이 1~2px 어긋날 때 이웃 칸의 다른 변형을 읽어 실패한다
+     * (실측 216,212,201 vs 196,193,183 — 같은 포장인데 변형이 달랐다).
+     * 배경이 지도를 덮었다면 이 창 어디에도 그 색이 없다.
+     */
+    let best = 1e9, got = '';
+    for (let dy = -3; dy <= 3; dy++) {
+      for (let dx = -3; dx <= 3; dx++) {
+        const px = c.getImageData(
+          Math.round((r.x + 16 + dx) * sx),
+          Math.round((r.y + 8 + dy) * sx),
+          1, 1,
+        ).data;
+        const d = Math.abs(px[0] - want[0]) + Math.abs(px[1] - want[1]) + Math.abs(px[2] - want[2]);
+        if (d < best) { best = d; got = px[0] + ',' + px[1] + ',' + px[2]; }
+      }
+    }
     return {
-      got: px[0] + ',' + px[1] + ',' + px[2],
+      got: got,
       want: want[0] + ',' + want[1] + ',' + want[2],
-      d: Math.abs(px[0] - want[0]) + Math.abs(px[1] - want[1]) + Math.abs(px[2] - want[2]),
+      d: best,
     };
   })()`)) as { got: string; want: string; d: number };
   record(
