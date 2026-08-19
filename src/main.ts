@@ -174,7 +174,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 배치 검사에 넘길 바깥 사정 — 이제 **토지뿐**이다.
    * 실내는 지형이 안다 (K27). `h` 는 boot 뒤에 생기므로 함수로 감싼다.
    */
-  const placeOpts = (): { land: ReturnType<typeof landRect> } => ({ land: landRect(currentGrade()) });
+  const placeOpts = (): { land: ReturnType<typeof landRect>; permitArea: number } => ({
+    land: landRect(currentGrade()),
+    // 수면 허가 (S1) — 물 위 시설이 강을 밀폐해 만드는 수영 구역의 총면적 상한
+    permitArea: currentGrade().permitArea,
+  });
   /** 손님과 **같은** 걷기 판정 — 문 자리를 고를 때 쓴다 */
   const walkableNow = (i: number, j: number): boolean => guestWalkable(h.terrain, h.placement)(i, j);
 

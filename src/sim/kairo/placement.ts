@@ -1,6 +1,7 @@
 import rawFacilities from '../../data/kairo-facilities.json' with { type: 'json' };
 import type { KairoTerrain } from './terrain.js';
 import { WallGrid, reachable, EDGE_DOOR } from './walls.js';
+import { riverZones, permitUsed, deckKey } from './swim.js';
 
 /**
  * 시설 배치 — **시뮬 소유**. 스펙 §4.
@@ -83,6 +84,7 @@ export type PlaceFail =
   | 'outside'
   | 'outside-land'
   | 'not-buildable'
+  | 'permit-over'
   | 'level-mixed'
   | 'blocks-door'
   | 'would-strand'
@@ -111,6 +113,12 @@ export interface PlaceOptions {
   land?: { i0: number; j0: number; w: number; h: number };
   /** 회전 (K45) — 0 기본 · 1 = 90° (발자국 w↔h). 판정·기록 전부 이걸 따른다 */
   facing?: 0 | 1;
+  /**
+   * 수면 사용 허가 면적 (S1, 등급의 `permitArea`). 물 위 시설이 강을 **밀폐**해
+   * 수영 구역을 만들 때, 구역 총면적이 이를 넘으면 거절한다 (`permit-over`).
+   * 안 주면 무제한 — 기존 검사·도구가 그대로 돈다.
+   */
+  permitArea?: number;
 }
 
 export interface PlaceOutcome {
@@ -149,6 +157,7 @@ export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
    * `outside-land` 와 달라야 한다 — "기다리면 열린다"로 읽히면 안 된다.
    */
   'not-buildable': '공원 밖입니다 — 도로·보도에는 지을 수 없습니다',
+  'permit-over': '수면 사용 허가 면적을 넘습니다 — 등급을 올리세요',
   /*
    * K37: 단이 섞인 발자국. **처방이 "평지"** 여야 한다 — "지형이 안 맞습니다"로 뭉치면
    * 물가인지 경사인지 구분이 안 된다. 이것이 "산 중턱 평지"가 게임이 되는 지점이다.
@@ -263,6 +272,22 @@ export class PlacementGrid {
   /** 회전을 반영한 발자국 크기 (K45) — 발자국을 쓰는 모든 곳이 이걸 거쳐야 한다 */
   static sizeOf(def: KairoFacilityDef, facing: 0 | 1 = 0): [number, number] {
     return facing === 1 ? [def.size[1], def.size[0]] : [def.size[0], def.size[1]];
+  }
+
+  /**
+   * 물 위 시설이 차지한 칸들 (S1) — 수영 구역 파생의 장벽 집합.
+   * walkOn(덱·선착장)만이 아니라 **물 위 전부**다: 트램폴린이 놓인 칸도 헤엄칠 수 없다.
+   */
+  waterBarrierKeys(): Set<number> {
+    const out = new Set<number>();
+    for (const item of this.items.values()) {
+      const def = DEFS[item.defId];
+      if (!def || def.layer !== 'water') continue;
+      for (const [ti, tj] of PlacementGrid.footprintTiles(def, item.i, item.j, item.facing ?? 0)) {
+        out.add(deckKey(ti, tj));
+      }
+    }
+    return out;
   }
 
   static footprintTiles(
@@ -382,6 +407,19 @@ export class PlacementGrid {
         }),
       );
       if (!connected) return { ok: false, fail: 'deck-not-connected' };
+    }
+
+    /*
+     * 수면 사용 허가 (S1) — 물 위 시설이 강을 밀폐하면 그 안이 수영 구역이 되는데
+     * (`swim.ts`), 구역 면적은 등급의 허가 면적을 소비한다 ("허가는 돈으로 못 산다").
+     * 이 시설을 **놓았다 치고** 구역을 재서 넘으면 거절 — 밀폐를 완성하는 마지막
+     * 한 칸이 걸린다. permitArea 의 첫 소비자다 (v1.1 실측: 그전까지 죽은 값이었다).
+     */
+    if (wantsWater(def.layer) && opts?.permitArea !== undefined) {
+      const barrier = this.waterBarrierKeys();
+      for (const [ti, tj] of tiles) barrier.add(deckKey(ti, tj));
+      const zones = riverZones(terrain, barrier, () => false);
+      if (permitUsed(zones) > opts.permitArea) return { ok: false, fail: 'permit-over' };
     }
 
     if (def.placement.requiresIndoor) {

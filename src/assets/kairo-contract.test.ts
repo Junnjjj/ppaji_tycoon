@@ -126,9 +126,9 @@ describe('슬라이드 입출구', () => {
 describe('기존 에셋 레이어로 펼쳐진다 — 새 프로바이더를 만들지 않는다', () => {
   const specs = kairoSpriteSpecs();
 
-  it('명세 수 = 시설 73 + 벽 1(경계 4변형) + 문 1(4변형) + 지면 10 + 다리 2 + 배경 3 + 데코 8', () => {
-    // 지면: K36 에서 도시 띠 3종 · K37 에서 암반 1종이 늘었다
-    expect(specs).toHaveLength(73 + 1 + 1 + 10 + 2 + 3 + 8);
+  it('명세 수 = 시설 73 + 벽 1(경계 4변형) + 문 1(4변형) + 지면 11 + 다리 2 + 배경 3 + 데코 8', () => {
+    // 지면: K36 도시 띠 3종 · K37 암반 · S1 수영장 물
+    expect(specs).toHaveLength(73 + 1 + 1 + 11 + 2 + 3 + 8);
   });
 
   it('배경은 3겹이고 가로 타일 폭이 계약값이다 — 산·능선·강둑 (K36-B)', () => {
@@ -194,10 +194,10 @@ describe('손님 계약', () => {
 });
 
 describe('지면·데코가 계약에 있다 — v1 은 길에 0장을 줬다', () => {
-  it('지면 10종 × 3변형 + 다리 2 = 32장', () => {
+  it('지면 11종 × 3변형 + 다리 2 = 35장', () => {
     const n =
       KAIRO.ground.types.reduce((a, t) => a + t.alts, 0) + KAIRO.ground.bridges.length;
-    expect(n).toBe(32);
+    expect(n).toBe(35);
   });
 
   it('지면 타일 캔버스가 다이아몬드 정확히 32×16 이다', () => {
@@ -211,8 +211,8 @@ describe('지면·데코가 계약에 있다 — v1 은 길에 0장을 줬다', 
     expect(KAIRO.deco.items.filter((d) => d.kind === 'scenery')).toHaveLength(4);
   });
 
-  it('변형을 펼친 **이미지** 총계가 124장이다 = 시설 73 + 벽 8 + 지면 32 + 배경 3 + 데코 8', () => {
-    expect(new KairoProceduralProvider().ids).toHaveLength(124);
+  it('변형을 펼친 **이미지** 총계가 127장이다 = 시설 73 + 벽 8 + 지면 35 + 배경 3 + 데코 8', () => {
+    expect(new KairoProceduralProvider().ids).toHaveLength(127);
   });
 });
 

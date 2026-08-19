@@ -103,6 +103,18 @@
       "buildable": true,
       "note": "산의 절벽 테두리와 정상 (K37). 잔디와 **플래그가 같다** — 순수하게 보이는 것만 다르다. 짓는 자리를 줄이면 높이가 벌점이 되므로 buildable 을 유지한다",
       "paintable": false
+    },
+    {
+      "id": "pool_water",
+      "name": "수영장 물",
+      "walkable": false,
+      "default": false,
+      "cost": 40000,
+      "indoor": false,
+      "guestWalk": false,
+      "buildable": false,
+      "paintable": true,
+      "note": "야외 수영장 (S1). 칠한 덩어리(4칸+)가 수영장이다 — 구역은 저장하지 않고 swim.ts 가 파생한다. buildable:false 라 시설이 못 올라오고, paintable:true 로 붓 축과 갈라진 첫 종류다 (팔레트는 paintable ?? buildable 를 본다)"
     }
   ],
   "bridges": [

@@ -12,9 +12,9 @@ const GW = 40;
 const GH = 32;
 
 describe('지면 데이터 — 시뮬이 소유한다', () => {
-  it('종류 10종 + 다리 2종', () => {
-    // K36 에서 도시 띠 3종(road·sidewalk·verge) · K37 에서 암반 1종이 늘었다
-    expect(GROUND_KINDS).toHaveLength(10);
+  it('종류 11종 + 다리 2종', () => {
+    // K36 도시 띠 3종 · K37 암반 · S1 수영장 물(pool_water)
+    expect(GROUND_KINDS).toHaveLength(11);
     expect(BRIDGE_KINDS).toHaveLength(2);
   });
 
@@ -23,9 +23,9 @@ describe('지면 데이터 — 시뮬이 소유한다', () => {
     expect(GROUND_KINDS.find((k) => k.default)?.id).toBe('lawn');
   });
 
-  it('물가만 못 걷는다', () => {
+  it('물만 못 걷는다 — 강물과 수영장 (S1)', () => {
     const blocked = GROUND_KINDS.filter((k) => !k.walkable).map((k) => k.id);
-    expect(blocked).toEqual(['water_edge']);
+    expect(blocked).toEqual(['water_edge', 'pool_water']);
   });
 
   it('다리는 걸을 수 있다 — 물 위를 잇는 유일한 지면', () => {

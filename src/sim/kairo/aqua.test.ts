@@ -17,10 +17,19 @@ function shore(w: number, h: number, waterFrom: number): KairoTerrain {
 }
 
 describe('수심이 없다 — 결정 10', () => {
-  it('물 종류가 하나뿐이다', () => {
+  it('강물 종류가 하나뿐이다', () => {
+    /*
+     * 결정 10의 뜻은 "강에 수심이 없다"다. S1 의 pool_water 는 수심이 아니라
+     * **땅 위의 별개 지면**이고 isWater 가 아니다 — 강물(isWater 판정 대상)은
+     * 여전히 water_edge 하나여야 한다.
+     */
     const water = GROUND_KINDS.filter((k) => !k.walkable);
-    expect(water).toHaveLength(1);
-    expect(water[0]?.id).toBe('water_edge');
+    expect(water.map((k) => k.id)).toEqual(['water_edge', 'pool_water']);
+    const t = new KairoTerrain(4, 4);
+    t.paint(1, 1, 'pool_water');
+    t.paint(2, 2, 'water_edge');
+    expect(t.isWater(1, 1)).toBe(false);
+    expect(t.isWater(2, 2)).toBe(true);
   });
 
   it('시설 데이터에 수심 필드가 없다', () => {
