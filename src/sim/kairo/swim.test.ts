@@ -12,7 +12,9 @@ import {
   POOL_MIN_TILES,
   ZONE_HANDLE_BASE,
   swimRiskPoints,
+  nightPools,
 } from './swim.js';
+import { evaluateCombos } from './combos.js';
 
 /**
  * 수영 구역 (S1) — "바닥이 곧 방"의 물 버전.
@@ -243,5 +245,79 @@ describe('수영 활동 (S2) — 손님이 실제로 들어가 헤엄치고 나�
   it('위험 기여 — 구역 수 × 2 (코스 위험과 같은 축)', () => {
     const { g } = poolWorld();
     expect(swimRiskPoints(g.swimZones())).toBe(2);
+  });
+});
+
+describe('zone 콤보 + 나이트풀 (S4)', () => {
+  it('풀 파티 — 수영장 반경 3 안의 DJ 부스로 발동. 구역을 안 주면 조용히 0 (음성)', () => {
+    const t = shore();
+    pool(t, 4, 3, 2, 2);
+    const p = new PlacementGrid(t.width, t.height);
+    const w = new WallGrid(t.width, t.height);
+    const r = p.place(t, w, GATE, 'dj_booth', 7, 3);
+    expect(r.ok).toBe(true);
+    const zones = poolZones(t, alwaysStand);
+    const withZones = evaluateCombos(p, undefined, zones);
+    expect(withZones.active.some((c) => c.id === 'medium_pool_party')).toBe(true);
+    // 음성 ① — 구역을 안 넘기면 발동하지 않는다 (호출부가 빠뜨리면 이 모양이 된다)
+    expect(evaluateCombos(p).active.some((c) => c.id === 'medium_pool_party')).toBe(false);
+    // 음성 ② — DJ 가 멀면 발동하지 않는다
+    const p2 = new PlacementGrid(t.width, t.height);
+    p2.place(t, w, GATE, 'dj_booth', 13, 6);
+    expect(
+      evaluateCombos(p2, undefined, zones).active.some((c) => c.id === 'medium_pool_party'),
+    ).toBe(false);
+  });
+
+  it('나이트풀 — DJ 부스가 붙은 수영장 수. 저녁 부스트로 수영 만족이 더 오른다', () => {
+    const t = shore();
+    pool(t, 4, 3, 2, 2);
+    const zones = poolZones(t, alwaysStand);
+    expect(nightPools(zones, [{ x: 6, y: 3 }])).toBe(1);
+    expect(nightPools(zones, [{ x: 12, y: 7 }])).toBe(0); // 음성 — 멀다
+
+    // 부스트 유무로 같은 시드를 두 번 — 퇴장 만족 합이 갈라져야 한다
+    const run = (boost: boolean): number => {
+      const t2 = new KairoTerrain(16, 16);
+      for (let i = 0; i < 16; i++) for (let j = 0; j < 16; j++) t2.paint(i, j, 'path_stone');
+      pool(t2, 6, 6, 2, 2);
+      const g = new GuestStore(t2, new WallGrid(16, 16), new PlacementGrid(16, 16), GATE, {
+        ...OPEN_GATE_DEFAULTS,
+        wantUses: 1,
+      });
+      g.swimBoost = boost;
+      const rng = new Rng(11);
+      const guest = g.spawn(rng);
+      let last = 0;
+      for (let k = 0; k < 600 && guest!.state !== 'gone'; k++) {
+        g.tick(rng);
+        last = guest!.satisfaction;
+      }
+      return last;
+    };
+    expect(run(true)).toBe(run(false) + 5);
+  });
+
+  it('빠지 오리지널 — 강 구역 + 스릴 2 + 구명함', () => {
+    const t = shore();
+    const p = new PlacementGrid(t.width, t.height);
+    const w = new WallGrid(t.width, t.height);
+    // 고리 덱을 실제로 놓는다 (permit 검사 절과 같은 순서) + 마지막 장
+    const order: [number, number][] = [
+      [4, 8], [5, 8], [6, 8], [7, 8],
+      [4, 9], [7, 9], [4, 10], [7, 10],
+      [4, 11], [5, 11], [7, 11], [6, 11],
+    ];
+    for (const [i, j] of order) expect(p.place(t, w, GATE, 'float_deck', i, j).ok).toBe(true);
+    // 구역 인접 스릴 2 (다이빙대 2×2 — 고리 동쪽에 덱 스퍼를 내고 붙인다) + 구명함
+    expect(p.place(t, w, GATE, 'float_deck', 8, 8).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'diving', 8, 9).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'float_deck', 3, 8).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'diving', 2, 9).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'lifering', 5, 7).ok).toBe(true);
+    const zones = riverZones(t, p.waterBarrierKeys(), guestWalkable(t, p));
+    expect(zones).toHaveLength(1);
+    const r = evaluateCombos(p, undefined, zones);
+    expect(r.active.some((c) => c.id === 'medium_ppaji_original')).toBe(true);
   });
 });

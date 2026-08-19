@@ -2760,6 +2760,34 @@
       "bodyH": 20,
       "openTop": false,
       "slots": []
+    },
+    {
+      "sprite": "facility/dj_booth",
+      "canvas": [
+        48,
+        42
+      ],
+      "anchorTexel": [
+        24,
+        42
+      ],
+      "bodyH": 18,
+      "openTop": false,
+      "slots": []
+    },
+    {
+      "sprite": "facility/stage_river",
+      "canvas": [
+        80,
+        62
+      ],
+      "anchorTexel": [
+        40,
+        62
+      ],
+      "bodyH": 22,
+      "openTop": false,
+      "slots": []
     }
   ],
   "slotRule": "slot.tile 은 발자국 안의 타일 인덱스다. 렌더러가 투영으로 텍셀 위치를 계산한다 — 텍셀 좌표를 직접 적지 않는 이유는 앵커·투영이 바뀌면 185개가 전부 틀어지기 때문. 한 타일에 둘 이상이면 offsetTexel 로 나눈다.",

@@ -1,6 +1,7 @@
 import rawCombos from '../../data/kairo-combos.json' with { type: 'json' };
 import { PlacementGrid, facilityDef, type PlacedFacility } from './placement.js';
 import type { NeedKind } from './week.js';
+import type { SwimZone } from './swim.js';
 
 /**
  * 콤보 — 스펙 v2/v4. 70종 3티어.
@@ -24,7 +25,12 @@ import type { NeedKind } from './week.js';
  */
 
 export type ComboTier = 'small' | 'medium' | 'large';
-export type ComboKind = 'adjacent' | 'cluster' | 'resort';
+/**
+ * `zone` (S4) — **수영 구역 콤보**. 구역 종류(`zone`)가 맞고, 요구 시설들이 구역
+ * 타일에서 반경 안에 있으면 발동한다. 구역은 시설이 아니라 파생이라 (swim.ts)
+ * `evaluateCombos` 가 구역 목록을 따로 받는다 — 안 주면 zone 콤보는 조용히 0 이다.
+ */
+export type ComboKind = 'adjacent' | 'cluster' | 'resort' | 'zone';
 
 export interface ComboRequirement {
   facility?: string;
@@ -37,6 +43,8 @@ export interface ComboDef {
   name: string;
   tier: ComboTier;
   kind: ComboKind;
+  /** zone 콤보 전용 — 어느 구역 종류에서 발동하나 */
+  zone?: 'pool' | 'river';
   requires: ComboRequirement[];
   bonus: { satisfaction?: number; revenue?: number };
   radius?: number;
@@ -130,6 +138,11 @@ function center(item: PlacedFacility): { i: number; j: number } {
 export function evaluateCombos(
   placement: PlacementGrid,
   extra?: { defId: string; i: number; j: number },
+  /**
+   * 수영 구역 (S4) — zone 콤보의 재료. **의뢰·심사·UI 가 같은 값을 받아야 한다** —
+   * 한쪽만 주면 "의뢰로는 3개인데 심사로는 2개"가 된다 (evaluateCondition 규칙과 동일).
+   */
+  zones: readonly SwimZone[] = [],
 ): ComboResult {
   const items: PlacedFacility[] = placement.all();
   if (extra) items.push({ handle: -1, defId: extra.defId, i: extra.i, j: extra.j });
@@ -138,7 +151,7 @@ export function evaluateCombos(
   const counts = new Map<string, number>();
 
   for (const combo of COMBOS) {
-    const hits = findHits(combo, items);
+    const hits = findHits(combo, items, zones);
     for (const at of hits) {
       const index = counts.get(combo.id) ?? 0;
       const scale = diminishingScale(combo.tier, index);
@@ -165,10 +178,49 @@ export function evaluateCombos(
 }
 
 /** 콤보가 발동한 지점들. `adjacent`·`cluster` 는 여러 번, `resort` 는 최대 1번 */
-function findHits(combo: ComboDef, items: PlacedFacility[]): ({ i: number; j: number } | null)[] {
+function findHits(
+  combo: ComboDef,
+  items: PlacedFacility[],
+  zones: readonly SwimZone[] = [],
+): ({ i: number; j: number } | null)[] {
   if (combo.kind === 'resort') return findResort(combo, items) ? [null] : [];
   if (combo.kind === 'adjacent') return findAdjacent(combo, items);
+  if (combo.kind === 'zone') return findZone(combo, items, zones);
   return findCluster(combo, items);
+}
+
+/**
+ * 수영 구역 콤보 (S4) — 구역마다 한 번. 요구 시설이 구역 타일에서 반경(기본 2) 안에
+ * `count`(기본 1)개 이상 있으면 발동. `need` 요구는 그 수요 종류의 시설 수로 센다.
+ */
+function findZone(
+  combo: ComboDef,
+  items: PlacedFacility[],
+  zones: readonly SwimZone[],
+): { i: number; j: number }[] {
+  const radius = combo.radius ?? 2;
+  const hits: { i: number; j: number }[] = [];
+  for (const z of zones) {
+    if (combo.zone !== undefined && z.kind !== combo.zone) continue;
+    const near = (it: PlacedFacility): boolean => {
+      const c = center(it);
+      return z.tiles.some((t) => Math.abs(t.x - c.i) + Math.abs(t.y - c.j) <= radius);
+    };
+    let ok = true;
+    for (const req of combo.requires) {
+      const want = req.count ?? 1;
+      let have = 0;
+      for (const it of items) {
+        if (req.facility !== undefined && it.defId !== req.facility) continue;
+        if (req.need !== undefined && needOf(it.defId) !== req.need) continue;
+        if (req.facility === undefined && req.need === undefined) continue;
+        if (near(it)) have++;
+      }
+      if (have < want) { ok = false; break; }
+    }
+    if (ok) hits.push({ i: z.tiles[0]?.x ?? 0, j: z.tiles[0]?.y ?? 0 });
+  }
+  return hits;
 }
 
 function findResort(combo: ComboDef, items: PlacedFacility[]): boolean {

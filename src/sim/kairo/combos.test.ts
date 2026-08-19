@@ -32,11 +32,11 @@ function flat(size = 30): { t: KairoTerrain; w: WallGrid; p: PlacementGrid } {
 }
 
 describe('콤보 데이터', () => {
-  it('70종 3티어 — 소 40 · 중 20 · 대 10', () => {
-    expect(COMBOS).toHaveLength(70);
+  it('73종 3티어 — 소 40 · 중 22 · 대 11 (S4 에서 zone 3종)', () => {
+    expect(COMBOS).toHaveLength(73);
     const by: Record<string, number> = {};
     for (const c of COMBOS) by[c.tier] = (by[c.tier] ?? 0) + 1;
-    expect(by).toEqual({ small: 40, medium: 20, large: 10 });
+    expect(by).toEqual({ small: 40, medium: 22, large: 11 });
   });
 
   it('ID 가 유일하다', () => {

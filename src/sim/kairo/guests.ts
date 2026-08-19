@@ -347,6 +347,11 @@ export class GuestStore {
   private idle = new Set<number>();
   /** 수영 구역 (S2) — 파생 캐시. rebuildFields 가 매번 다시 만든다 (저장 금지 규칙) */
   private zones: SwimZone[] = [];
+  /**
+   * 나이트풀 저녁 부스트 (S4) — 주 루프가 tick 에서 파생해 설정한다 (결정론:
+   * tick 의 함수다). true 면 수영을 마친 손님의 만족 이득이 +5.
+   */
+  swimBoost = false;
   private zoneLookup = new Map<number, { list: { x: number; y: number }[]; set: Set<number> }>();
   private patience = new Map<number, number>();
 
@@ -848,7 +853,9 @@ export class GuestStore {
             continue;
           }
           const gains = this.tunables.useGains;
-          const gain = (gains[Math.min(g.used, gains.length - 1)] ?? 0) as number;
+          let gain = (gains[Math.min(g.used, gains.length - 1)] ?? 0) as number;
+          // 나이트풀 (S4) — 저녁의 수영은 더 즐겁다
+          if (usedHandle >= ZONE_HANDLE_BASE && this.swimBoost) gain += 5;
           g.used++;
           // 채운 수요를 기록해 다음엔 다른 종류로 간다
           const usedItem =

@@ -18,9 +18,9 @@ describe('계약 정합 — 이게 깨지면 에셋을 뽑아도 못 쓴다', ()
     expect(validateContracts()).toEqual([]);
   });
 
-  it('시설 73종이 양쪽에 다 있다', () => {
-    expect(allSimFacilities()).toHaveLength(73);
-    expect(KAIRO.facilities).toHaveLength(73);
+  it('시설 75종이 양쪽에 다 있다', () => {
+    expect(allSimFacilities()).toHaveLength(75);
+    expect(KAIRO.facilities).toHaveLength(75);
   });
 
   it('렌더 계약의 투영 상수가 iso.ts 와 같다', () => {
@@ -126,9 +126,9 @@ describe('슬라이드 입출구', () => {
 describe('기존 에셋 레이어로 펼쳐진다 — 새 프로바이더를 만들지 않는다', () => {
   const specs = kairoSpriteSpecs();
 
-  it('명세 수 = 시설 73 + 벽 1(경계 4변형) + 문 1(4변형) + 지면 11 + 다리 2 + 배경 3 + 데코 8', () => {
+  it('명세 수 = 시설 75 + 벽 1(경계 4변형) + 문 1(4변형) + 지면 11 + 다리 2 + 배경 3 + 데코 8', () => {
     // 지면: K36 도시 띠 3종 · K37 암반 · S1 수영장 물
-    expect(specs).toHaveLength(73 + 1 + 1 + 11 + 2 + 3 + 8);
+    expect(specs).toHaveLength(75 + 1 + 1 + 11 + 2 + 3 + 8);
   });
 
   it('배경은 3겹이고 가로 타일 폭이 계약값이다 — 산·능선·강둑 (K36-B)', () => {
@@ -211,8 +211,8 @@ describe('지면·데코가 계약에 있다 — v1 은 길에 0장을 줬다', 
     expect(KAIRO.deco.items.filter((d) => d.kind === 'scenery')).toHaveLength(4);
   });
 
-  it('변형을 펼친 **이미지** 총계가 127장이다 = 시설 73 + 벽 8 + 지면 35 + 배경 3 + 데코 8', () => {
-    expect(new KairoProceduralProvider().ids).toHaveLength(127);
+  it('변형을 펼친 **이미지** 총계가 129장이다 = 시설 75 + 벽 8 + 지면 35 + 배경 3 + 데코 8', () => {
+    expect(new KairoProceduralProvider().ids).toHaveLength(129);
   });
 });
 

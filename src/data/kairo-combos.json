@@ -1510,6 +1510,73 @@
       },
       "hidden": true,
       "discoverCash": 300000
+    },
+    {
+      "id": "medium_pool_party",
+      "name": "풀 파티",
+      "tier": "medium",
+      "kind": "zone",
+      "zone": "pool",
+      "requires": [
+        {
+          "facility": "dj_booth"
+        }
+      ],
+      "radius": 3,
+      "bonus": {
+        "satisfaction": 5,
+        "revenue": 6
+      },
+      "hidden": true,
+      "discoverCash": 100000,
+      "note": "수영장 옆 DJ 부스 — 저녁이 나이트풀이 된다 (S4)"
+    },
+    {
+      "id": "medium_ppaji_original",
+      "name": "빠지 오리지널",
+      "tier": "medium",
+      "kind": "zone",
+      "zone": "river",
+      "requires": [
+        {
+          "need": "thrill",
+          "count": 2
+        },
+        {
+          "facility": "lifering"
+        }
+      ],
+      "radius": 4,
+      "bonus": {
+        "satisfaction": 6,
+        "revenue": 5
+      },
+      "hidden": true,
+      "discoverCash": 100000,
+      "note": "덱으로 두른 수영 구역 + 놀이기구 2 + 구명함 — 한국 빠지의 원형"
+    },
+    {
+      "id": "large_river_festa",
+      "name": "리버 페스타",
+      "tier": "large",
+      "kind": "zone",
+      "zone": "river",
+      "requires": [
+        {
+          "facility": "stage_river"
+        },
+        {
+          "facility": "dj_booth"
+        }
+      ],
+      "radius": 4,
+      "bonus": {
+        "satisfaction": 10,
+        "revenue": 12
+      },
+      "hidden": true,
+      "discoverCash": 300000,
+      "note": "강 수영 구역에서 여는 공연 — 무대 + DJ (S4)"
     }
   ]
 }

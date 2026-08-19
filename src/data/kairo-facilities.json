@@ -1338,6 +1338,38 @@
       "upkeep": 2420,
       "cost": 343200,
       "need": "scenery"
+    },
+    "dj_booth": {
+      "id": "dj_booth",
+      "name": "DJ 부스",
+      "size": [
+        2,
+        1
+      ],
+      "sprite": "facility/dj_booth",
+      "capacity": 0,
+      "placement": {},
+      "note": "수영장 옆에 두면 저녁이 나이트풀이 된다 (S4). 손님이 줄 서는 곳이 아니라 분위기 시설 — capacity 0",
+      "fee": 600,
+      "upkeep": 9800,
+      "cost": 518000,
+      "need": "play"
+    },
+    "stage_river": {
+      "id": "stage_river",
+      "name": "공연 무대",
+      "size": [
+        3,
+        2
+      ],
+      "sprite": "facility/stage_river",
+      "capacity": 0,
+      "placement": {},
+      "note": "리버 페스타(대형 콤보)의 축. 분위기 시설 — capacity 0",
+      "fee": 900,
+      "upkeep": 16800,
+      "cost": 1512000,
+      "need": "scenery"
     }
   }
 }

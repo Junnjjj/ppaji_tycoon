@@ -476,7 +476,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
               week.spend(cost);
               h.scene.refreshFacility(r.placed.handle);
               h.guests.invalidate();
-              const now = evaluateCombos(h.placement);
+              const now = evaluateCombos(h.placement, undefined, h.guests.swimZones());
               refreshBuildList(); // 방이 찼으면 다음 시설이 잠겨야 한다 (K31)
               const msgs: string[] = [`−${Math.round(cost / 10000)}만`];
               if (now.active.length > 0) msgs.push(`콤보 ${now.active.length}개 발동`);
@@ -816,7 +816,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        * 티저 (K40·K41) — ① 진행 중 의뢰의 보상 시설 ("이 의뢰를 끝내면 이게 열린다"),
        * ② 다음 등급 골격의 첫 시설. 해금이 벽이 아니라 도착이라는 걸 시트가 예고한다.
        */
-      ...questStatuses(h.placement, lastSummary)
+      ...questStatuses(h.placement, lastSummary, h.guests.swimZones())
         .filter((q) => !q.done && q.rewardFacility !== undefined)
         .slice(0, 1)
         .flatMap((q) => {
@@ -1215,12 +1215,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       toast(`등급이 내려갔습니다 — ${currentGrade().name}. 만족도를 살피세요`);
     }
     // 심사 판정 (K42) — 부분 점수, 무작위 없음. 결과는 다음 날 아침에 도착한다
-    const verdict = exam.judge(week.week, h.placement, {
-      visitors: rep.visitors,
-      turnedAway: rep.turnedAway,
-      profit: rep.profit,
-      exitSatisfaction: rep.exitSatisfaction,
-    });
+    const verdict = exam.judge(
+      week.week,
+      h.placement,
+      {
+        visitors: rep.visitors,
+        turnedAway: rep.turnedAway,
+        profit: rep.profit,
+        exitSatisfaction: rep.exitSatisfaction,
+      },
+      h.guests.swimZones(),
+    );
     if (verdict) {
       if (verdict.passed) {
         gradeNo = verdict.target;
@@ -1280,7 +1285,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
             : '도감에 기록됐습니다',
       });
     }
-    const weekClaim = progress.claim(questStatuses(h.placement, lastSummary));
+    const weekClaim = progress.claim(questStatuses(h.placement, lastSummary, h.guests.swimZones()));
     if (weekClaim.cash > 0) {
       week.earn(weekClaim.cash);
       audio.play('sfx/cash');
@@ -1289,7 +1294,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      * 소원 (K43) — EXP 적립·소원 열림·성사 판정. 전부 결산 tick 의 결정적 계산이고,
      * 연출(인물 도착·말풍선)은 다음 날 아침 큐가 푼다 (A6).
      */
-    for (const ev of wishes.settle(lastSummary, rep.byGroup, h.placement)) {
+    for (const ev of wishes.settle(lastSummary, rep.byGroup, h.placement, h.guests.swimZones())) {
       if (ev.kind === 'arrive') {
         arrivalQueue.push({
           title: '새 손님이 왔어요',
@@ -1638,7 +1643,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const st = { week: week.week, grade: currentGrade().grade, accidents: accidentCount };
     const status = scen.scenarioStatus(scenario, st);
     const chips: GoalChip[] = [];
-    for (const q of questStatuses(h.placement, lastSummary)
+    for (const q of questStatuses(h.placement, lastSummary, h.guests.swimZones())
       .filter((q) => !q.done)
       .slice(0, 2)) {
       chips.push({ icon: '📋', label: q.name, detail: q.detail, progress: q.progress });
@@ -1777,7 +1782,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
 
   const refreshQuests = (): void => {
-    const st = questStatuses(h.placement, lastSummary);
+    const st = questStatuses(h.placement, lastSummary, h.guests.swimZones());
     const open = st.filter((s) => !progress.isClaimed(s.id));
     const rows = open.slice(0, 6);
     questPanel.replaceChildren();
@@ -1810,7 +1815,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      * 소원 (K43) — 열린 소원을 의뢰 아래에 잇는다. 의뢰와 같은 행 모양을 쓴다
      * (새 표면을 만들지 않는다). 인물의 말이 곧 조건 설명이다.
      */
-    const openW = wishes.openWishes(h.placement, lastSummary);
+    const openW = wishes.openWishes(h.placement, lastSummary, h.guests.swimZones());
     if (openW.length > 0) {
       const head = document.createElement('div');
       head.className = 'ksheet-group';

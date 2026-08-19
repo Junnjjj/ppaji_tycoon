@@ -101,14 +101,20 @@ export class ExamStore {
    * 결산에서 부른다 (완료 주 = `weekNo`). 판정 주가 아니면 null.
    * 실패해도 자격이 남아 있으면 다시 신청하면 된다 — 수수료가 재응시의 무게다.
    */
-  judge(weekNo: number, placement: PlacementGrid, summary: WeekSummary | null): ExamVerdict | null {
+  judge(
+    weekNo: number,
+    placement: PlacementGrid,
+    summary: WeekSummary | null,
+    /** 수영 구역 (S4) — 의뢰와 같은 재료를 받아야 "의뢰로는 3개, 심사로는 2개"가 안 된다 */
+    zones: Parameters<typeof evaluateCombos>[2] = [],
+  ): ExamVerdict | null {
     const p = this.pendingState;
     if (!p || p.judgeWeek > weekNo) return null;
     this.pendingState = null;
     const def = GRADES.find((g) => g.grade === p.target);
     const reqs = def?.examReqs ?? [];
     const supply = supplyOf(placement);
-    const combos = evaluateCombos(placement);
+    const combos = evaluateCombos(placement, undefined, zones);
     const perReq = reqs.map((c) => {
       const ev = evaluateCondition(c, placement, summary, supply, combos);
       return { detail: ev.detail, score: Math.round(ev.progress * EXAM_POINTS_PER_REQ) };

@@ -88,9 +88,13 @@ export class WishStore {
   }
 
   /** 열린 소원 목록 (UI) — 진행도는 의뢰와 같은 평가기로 잰다 */
-  openWishes(placement: PlacementGrid, summary: WeekSummary | null): OpenWish[] {
+  openWishes(
+    placement: PlacementGrid,
+    summary: WeekSummary | null,
+    zones: Parameters<typeof evaluateCombos>[2] = [],
+  ): OpenWish[] {
     const supply = supplyOf(placement);
-    const combos = evaluateCombos(placement);
+    const combos = evaluateCombos(placement, undefined, zones);
     const out: OpenWish[] = [];
     for (const id of this.open) {
       const c = WISH_CHARACTERS.find((x) => x.id === id);
@@ -110,6 +114,7 @@ export class WishStore {
     summary: WeekSummary,
     byGroup: Partial<Record<GroupId, number>>,
     placement: PlacementGrid,
+    zones: Parameters<typeof evaluateCombos>[2] = [],
   ): WishEvent[] {
     const events: WishEvent[] = [];
     this.gainExp(summary, byGroup);
@@ -124,7 +129,7 @@ export class WishStore {
     }
 
     const supply = supplyOf(placement);
-    const combos = evaluateCombos(placement);
+    const combos = evaluateCombos(placement, undefined, zones);
     for (const id of [...this.open]) {
       const c = WISH_CHARACTERS.find((x) => x.id === id);
       const w = c ? this.currentWish(c) : null;

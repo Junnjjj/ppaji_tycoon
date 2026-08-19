@@ -44,7 +44,7 @@ function world(size = 24, facilities: [string, number, number][] = []): World {
 }
 
 describe('시설 경제 데이터', () => {
-  it('73종 전부 요금·유지비·건설비·수요 종류를 갖는다', () => {
+  it('75종 전부 요금·유지비·건설비·수요 종류를 갖는다', () => {
     for (const d of allFacilityDefs()) {
       const x = d as unknown as { fee: number; upkeep: number; cost: number; need: string };
       expect(x.fee, d.id).toBeGreaterThan(0);

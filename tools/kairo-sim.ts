@@ -1075,31 +1075,31 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     buildSpendByWeek.push(buildSpend);
     cashByWeek.push(cash);
 
-    const claimed = progress.claim(questStatuses(p, rep));
+    const claimed = progress.claim(questStatuses(p, rep, g.swimZones()));
     cash += claimed.cash;
     for (const fid of claimed.facilities) unlocks.grant(fid); // 봇도 보상을 받는다 (K41)
     // 소원 (K43) — UI 와 같은 규칙. 보상 시설·현금을 그대로 받는다
-    for (const ev of wishes.settle(rep, rep.byGroup, p)) {
+    for (const ev of wishes.settle(rep, rep.byGroup, p, g.swimZones())) {
       if (ev.kind !== 'done') continue;
       if (ev.wish.reward.cash !== undefined) cash += ev.wish.reward.cash;
       if (ev.wish.reward.facility !== undefined) unlocks.grant(ev.wish.reward.facility);
     }
     // 숨은 콤보 발견 (K43) — activeComboIds 는 ui 모듈이라 헤드리스에선 직접 센다
-    for (const cid of evaluateCombos(p).active.map((x) => x.id)) {
+    for (const cid of evaluateCombos(p, undefined, g.swimZones()).active.map((x) => x.id)) {
       if (discovered.has(cid)) continue;
       discovered.add(cid);
       const combo = COMBOS.find((x) => x.id === cid);
       if (combo?.hidden && combo.discoverCash !== undefined) cash += combo.discoverCash;
     }
     // 심사 판정 (K42) — 결산과 같은 요약으로
-    const verdict = exam.judge(k + 1, p, rep);
+    const verdict = exam.judge(k + 1, p, rep, g.swimZones());
     if (verdict?.passed) {
       gradeNo = verdict.target;
       cash += verdict.grant; // 통과 지원금 — UI 와 같은 규칙
     }
   }
 
-  const combos = evaluateCombos(p);
+  const combos = evaluateCombos(p, undefined, g.swimZones());
   const exitSat = last?.exitSatisfaction ?? 0;
   const arrivals = Math.max(1, last?.arrivals ?? 1);
   return {

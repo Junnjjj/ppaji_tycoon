@@ -1,5 +1,6 @@
 import { Rng } from '../rng.js';
 import { BusRunner } from './bus.js';
+import { nightPools } from './swim.js';
 import type { KairoTerrain } from './terrain.js';
 import { PlacementGrid, facilityDef, LEVEL_SATISFACTION } from './placement.js';
 import type { GroupId } from './groups.js';
@@ -610,6 +611,19 @@ export class WeekRunner {
          */
         if (!this.guests.spawn(rng, lw.season, opts.mapShares)) d.turnedAway++;
       }
+      /*
+       * 나이트풀 (S4) — 저녁(하루의 마지막 20%)에 DJ 부스가 붙은 수영장이 있으면
+       * 수영 만족 보너스. tick 의 순수 함수라 항등(run ≡ step)이 유지된다.
+       */
+      this.guests.swimBoost =
+        t >= TICKS_PER_DAY * 0.8 &&
+        nightPools(
+          this.guests.swimZones(),
+          this.placement
+            .all()
+            .filter((it) => it.defId === 'dj_booth')
+            .map((it) => ({ x: it.i, y: it.j })),
+        ) > 0;
       this.guests.tick(rng);
       // 이용이 끝난 손님만큼 요금을 받는다 (이용 시작이 아니라 완료 기준)
       d.revenue += this.collectFees(d.weather);

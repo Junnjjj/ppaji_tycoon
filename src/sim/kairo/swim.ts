@@ -226,3 +226,24 @@ export function zoneFee(z: SwimZone | undefined): number {
 export function swimRiskPoints(zones: readonly SwimZone[]): number {
   return zones.length * 2;
 }
+
+/**
+ * 나이트풀 (S4, 스펙 §2.3) — DJ 부스가 반경 3 안에 붙은 **수영장** 구역 수.
+ *
+ * 저녁(하루의 마지막 20%)에 이 값이 1 이상이면 수영 만족 보너스가 붙는다.
+ * "수요 배수"가 아니라 이용의 질이 오르는 쪽 — 배수는 v4 가 없앤 RNG 세금 축이다.
+ */
+export function nightPools(
+  zones: readonly SwimZone[],
+  djTiles: readonly { x: number; y: number }[],
+): number {
+  let n = 0;
+  for (const z of zones) {
+    if (z.kind !== 'pool') continue;
+    const hit = djTiles.some((d) =>
+      z.tiles.some((t) => Math.abs(t.x - d.x) + Math.abs(t.y - d.y) <= 3),
+    );
+    if (hit) n++;
+  }
+  return n;
+}

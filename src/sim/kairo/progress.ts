@@ -339,9 +339,11 @@ export function evaluateCondition(
 export function questStatuses(
   placement: PlacementGrid,
   report: WeekSummary | null,
+  /** 수영 구역 (S4) — zone 콤보 조건이 있으면 필요. 의뢰·심사·UI 가 같은 값을 받아야 한다 */
+  zones: Parameters<typeof evaluateCombos>[2] = [],
 ): QuestStatus[] {
   const supply = supplyOf(placement);
-  const combos = evaluateCombos(placement);
+  const combos = evaluateCombos(placement, undefined, zones);
   const out: QuestStatus[] = [];
 
   for (const q of QUESTS) {
