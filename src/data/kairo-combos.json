@@ -800,7 +800,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 4
+      "radius": 4,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_food_court",
@@ -821,7 +823,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 3
+      "radius": 3,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_aqua_park",
@@ -846,7 +850,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 5
+      "radius": 5,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_family_zone",
@@ -871,7 +877,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 4
+      "radius": 4,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_marina",
@@ -896,7 +904,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 5
+      "radius": 5,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_camp_zone",
@@ -921,7 +931,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 5
+      "radius": 5,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_wellness",
@@ -946,7 +958,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 4
+      "radius": 4,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_kids_zone",
@@ -971,7 +985,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 4
+      "radius": 4,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_sports_zone",
@@ -992,7 +1008,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 4
+      "radius": 4,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_view_walk",
@@ -1013,7 +1031,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 4
+      "radius": 4,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_hygiene_block",
@@ -1030,7 +1050,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 3
+      "radius": 3,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_thrill_block",
@@ -1051,7 +1073,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 5
+      "radius": 5,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_night_zone",
@@ -1076,7 +1100,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 5
+      "radius": 5,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_pension_zone",
@@ -1101,7 +1127,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 5
+      "radius": 5,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_winter_zone",
@@ -1126,7 +1154,9 @@
         "satisfaction": 8,
         "revenue": 10
       },
-      "radius": 5
+      "radius": 5,
+      "hidden": true,
+      "discoverCash": 100000
     },
     {
       "id": "medium_service_hub",
@@ -1275,7 +1305,9 @@
       "bonus": {
         "satisfaction": 15,
         "revenue": 18
-      }
+      },
+      "hidden": true,
+      "discoverCash": 300000
     },
     {
       "id": "large_aqua_master",
@@ -1295,7 +1327,9 @@
       "bonus": {
         "satisfaction": 15,
         "revenue": 18
-      }
+      },
+      "hidden": true,
+      "discoverCash": 300000
     },
     {
       "id": "large_spa_master",
@@ -1315,7 +1349,9 @@
       "bonus": {
         "satisfaction": 15,
         "revenue": 18
-      }
+      },
+      "hidden": true,
+      "discoverCash": 300000
     },
     {
       "id": "large_family_master",
@@ -1335,7 +1371,9 @@
       "bonus": {
         "satisfaction": 15,
         "revenue": 18
-      }
+      },
+      "hidden": true,
+      "discoverCash": 300000
     },
     {
       "id": "large_scenic_master",
@@ -1355,7 +1393,9 @@
       "bonus": {
         "satisfaction": 15,
         "revenue": 18
-      }
+      },
+      "hidden": true,
+      "discoverCash": 300000
     },
     {
       "id": "large_stay_master",
@@ -1375,7 +1415,9 @@
       "bonus": {
         "satisfaction": 15,
         "revenue": 18
-      }
+      },
+      "hidden": true,
+      "discoverCash": 300000
     },
     {
       "id": "large_all_season",
@@ -1399,7 +1441,9 @@
       "bonus": {
         "satisfaction": 15,
         "revenue": 18
-      }
+      },
+      "hidden": true,
+      "discoverCash": 300000
     },
     {
       "id": "large_clean_resort",
@@ -1415,7 +1459,9 @@
       "bonus": {
         "satisfaction": 15,
         "revenue": 18
-      }
+      },
+      "hidden": true,
+      "discoverCash": 300000
     },
     {
       "id": "large_big_park",
@@ -1435,7 +1481,9 @@
       "bonus": {
         "satisfaction": 15,
         "revenue": 18
-      }
+      },
+      "hidden": true,
+      "discoverCash": 300000
     },
     {
       "id": "large_gapyeong_landmark",
@@ -1459,7 +1507,9 @@
       "bonus": {
         "satisfaction": 15,
         "revenue": 18
-      }
+      },
+      "hidden": true,
+      "discoverCash": 300000
     }
   ]
 }

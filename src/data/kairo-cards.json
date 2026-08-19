@@ -836,6 +836,66 @@
           ]
         }
       ]
+    },
+    {
+      "id": "shop_office",
+      "name": "설비 상인 — 사무실",
+      "type": "shop",
+      "desc": "지나가던 설비 상인이 사무 설비를 헐값에 내놓았습니다. 운영(서비스) 시설입니다.",
+      "options": [
+        {
+          "label": "산다",
+          "detail": "사무실이 건설 목록에 열린다",
+          "effects": [
+            {
+              "cash": -400000
+            },
+            {
+              "unlock": "office"
+            }
+          ]
+        },
+        {
+          "label": "안 산다",
+          "detail": "다음 기회에",
+          "effects": []
+        }
+      ],
+      "weight": 1,
+      "condition": {
+        "minWeek": 6,
+        "needsLocked": "office"
+      }
+    },
+    {
+      "id": "shop_storage",
+      "name": "설비 상인 — 창고",
+      "type": "shop",
+      "desc": "상인이 이번엔 조립식 창고를 가져왔습니다. 운영(서비스) 시설입니다.",
+      "options": [
+        {
+          "label": "산다",
+          "detail": "창고가 건설 목록에 열린다",
+          "effects": [
+            {
+              "cash": -400000
+            },
+            {
+              "unlock": "storage"
+            }
+          ]
+        },
+        {
+          "label": "안 산다",
+          "detail": "다음 기회에",
+          "effects": []
+        }
+      ],
+      "weight": 1,
+      "condition": {
+        "minWeek": 10,
+        "needsLocked": "storage"
+      }
     }
   ]
 }

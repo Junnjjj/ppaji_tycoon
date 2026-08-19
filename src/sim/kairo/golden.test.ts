@@ -339,17 +339,20 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
      * 만석 거절(27)도 같이 늘었다. 총량이 바뀌었다면 시간표가 수요를 만들어 낸 것이고,
      * 그건 버그다.
      */
+    // K43 재기준: 카드 풀 24→26(계절 입고)이 뽑기 순서를 바꿨다 — 입장 118→121 ·
+    // 만족 69→71 · 만석 27→36 · 의뢰 5→6. 방향이 흩어져 있어 총량 버그가 아니라
+    // 뽑기 이동이다 (같은 시드 반복은 여전히 완전 일치).
     expect(g).toEqual({
       facilities: 15,
       combos: 7,
       grade: 3,
-      exitSat: 69,
-      visitors: 118,
-      turnedAway: 27,
-      admission: 118_000,
+      exitSat: 71,
+      visitors: 121,
+      turnedAway: 36,
+      admission: 121_000,
       noTicket: 0,
       profitSign: 1,
-      questsDone: 5,
+      questsDone: 6,
       riskLevel: 'caution',
       cards: 12,
       staffWages: 22_500,

@@ -33,7 +33,8 @@ const CTX: CardContext = { season: 'summer', week: 12, grade: 3 };
 describe('카드 데이터', () => {
   it('주간 카드 24종 + 사건 카드 (스펙 §3.5 · §12.1)', () => {
     // 사건 카드(사고 대응)는 무작위로 안 뽑히므로 24 에 안 센다
-    expect(CARDS.filter((c) => !c.trigger).length).toBe(24);
+    // K43: 계절 입고 카드 2종(설비 상인)이 늘었다 — 24 + 2
+    expect(CARDS.filter((c) => !c.trigger).length).toBe(26);
     expect(CARDS.filter((c) => c.trigger === 'accident').length).toBe(1);
   });
 

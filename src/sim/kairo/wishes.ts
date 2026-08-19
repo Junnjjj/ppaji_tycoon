@@ -1,0 +1,170 @@
+/**
+ * 손님 소원 체인 (K43, 스펙 §3.3) — **해금이 해금을 부른다.**
+ *
+ * 인물 8명은 손님 유형(GroupId)의 대표다. EXP 는 개별 추적이 아니라 **그 유형의 주간
+ * 입장 × 만족 집계**에서 쌓인다 — 1,200 에이전트에 개인사를 붙이지 않는다 (스펙 §9).
+ * 문턱에 닿으면 소원이 열리고(다음 날 아침 인물이 말풍선으로 도착), 조건을 채우면
+ * 보상이 온다: 시설 해금(11) · 다음 인물 초대(사슬 6) · 현금.
+ *
+ * 시작은 2명뿐이다 (민지·수연). 나머지는 소원 보상으로 등장한다 — PSS 의
+ * "rewards include new visitors" 준거 (검수 A5).
+ *
+ * 판정은 결산 tick 에서만 (결정론) — 연출은 도착 큐가 아침에 푼다 (A6).
+ */
+import rawWishes from '../../data/kairo-wishes.json' with { type: 'json' };
+import { evaluateCondition, supplyOf, type QuestCondition } from './progress.js';
+import { evaluateCombos } from './combos.js';
+import type { PlacementGrid } from './placement.js';
+import type { WeekSummary } from './week.js';
+import type { GroupId } from './groups.js';
+
+export interface WishDef {
+  exp: number;
+  condition: QuestCondition;
+  reward: { facility?: string; cash?: number; invite?: string };
+  line: string;
+}
+
+export interface WishCharacter {
+  id: string;
+  name: string;
+  group: GroupId;
+  start?: boolean;
+  wishes: WishDef[];
+}
+
+export const WISH_CHARACTERS: readonly WishCharacter[] = (
+  rawWishes as unknown as { characters: WishCharacter[] }
+).characters;
+
+/** 결산이 만드는 소원 사건 — main 이 도착 큐·보상으로 바꾼다 */
+export type WishEvent =
+  | { kind: 'arrive'; char: WishCharacter }
+  | { kind: 'open'; char: WishCharacter; wish: WishDef }
+  | { kind: 'done'; char: WishCharacter; wish: WishDef };
+
+export interface WishSnapshot {
+  exp: Partial<Record<GroupId, number>>;
+  active: string[];
+  /** 인물별 완수한 소원 수 */
+  stage: Record<string, number>;
+  /** 열려 있는 소원의 인물 id 들 */
+  open: string[];
+}
+
+/** 현재 열린 소원 — UI 목록용 */
+export interface OpenWish {
+  char: WishCharacter;
+  wish: WishDef;
+  progress: number;
+  detail: string;
+}
+
+export class WishStore {
+  private exp: Partial<Record<GroupId, number>> = {};
+  private readonly active = new Set<string>();
+  private readonly stage = new Map<string, number>();
+  private readonly open = new Set<string>();
+
+  constructor() {
+    for (const c of WISH_CHARACTERS) if (c.start) this.active.add(c.id);
+  }
+
+  /** 유형별 EXP — 입장 수 × (0.5 + 만족/200). 만족이 높은 주가 두 배 가깝게 쳐 준다 */
+  private gainExp(summary: WeekSummary, byGroup: Partial<Record<GroupId, number>>): void {
+    const satMult = 0.5 + Math.max(0, Math.min(100, summary.exitSatisfaction)) / 200;
+    for (const [g, n] of Object.entries(byGroup) as [GroupId, number][]) {
+      this.exp[g] = (this.exp[g] ?? 0) + n * satMult;
+    }
+  }
+
+  expOf(group: GroupId): number {
+    return this.exp[group] ?? 0;
+  }
+
+  /** 인물의 다음(현재) 소원 — 3개를 다 이뤘으면 null */
+  private currentWish(c: WishCharacter): WishDef | null {
+    return c.wishes[this.stage.get(c.id) ?? 0] ?? null;
+  }
+
+  /** 열린 소원 목록 (UI) — 진행도는 의뢰와 같은 평가기로 잰다 */
+  openWishes(placement: PlacementGrid, summary: WeekSummary | null): OpenWish[] {
+    const supply = supplyOf(placement);
+    const combos = evaluateCombos(placement);
+    const out: OpenWish[] = [];
+    for (const id of this.open) {
+      const c = WISH_CHARACTERS.find((x) => x.id === id);
+      const w = c ? this.currentWish(c) : null;
+      if (!c || !w) continue;
+      const ev = evaluateCondition(w.condition, placement, summary, supply, combos);
+      out.push({ char: c, wish: w, progress: ev.progress, detail: ev.detail });
+    }
+    return out;
+  }
+
+  /**
+   * 결산 처리 — EXP 적립 → 문턱 도달한 소원 열기 → 열린 소원 판정.
+   * 사건 배열을 돌려준다 (연출·보상은 부르는 쪽 소관 — sim 은 화면을 모른다).
+   */
+  settle(
+    summary: WeekSummary,
+    byGroup: Partial<Record<GroupId, number>>,
+    placement: PlacementGrid,
+  ): WishEvent[] {
+    const events: WishEvent[] = [];
+    this.gainExp(summary, byGroup);
+
+    for (const c of WISH_CHARACTERS) {
+      if (!this.active.has(c.id) || this.open.has(c.id)) continue;
+      const w = this.currentWish(c);
+      if (w && this.expOf(c.group) >= w.exp) {
+        this.open.add(c.id);
+        events.push({ kind: 'open', char: c, wish: w });
+      }
+    }
+
+    const supply = supplyOf(placement);
+    const combos = evaluateCombos(placement);
+    for (const id of [...this.open]) {
+      const c = WISH_CHARACTERS.find((x) => x.id === id);
+      const w = c ? this.currentWish(c) : null;
+      if (!c || !w) {
+        this.open.delete(id);
+        continue;
+      }
+      const ev = evaluateCondition(w.condition, placement, summary, supply, combos);
+      if (!ev.done) continue;
+      this.open.delete(id);
+      this.stage.set(id, (this.stage.get(id) ?? 0) + 1);
+      events.push({ kind: 'done', char: c, wish: w });
+      if (w.reward.invite !== undefined) {
+        const invited = WISH_CHARACTERS.find((x) => x.id === w.reward.invite);
+        if (invited && !this.active.has(invited.id)) {
+          this.active.add(invited.id);
+          events.push({ kind: 'arrive', char: invited });
+        }
+      }
+    }
+    return events;
+  }
+
+  toSnapshot(): WishSnapshot {
+    return {
+      exp: { ...this.exp },
+      active: [...this.active],
+      stage: Object.fromEntries(this.stage),
+      open: [...this.open],
+    };
+  }
+
+  static fromSnapshot(s: WishSnapshot | undefined): WishStore {
+    const w = new WishStore();
+    if (!s) return w;
+    w.exp = { ...s.exp };
+    w.active.clear();
+    for (const id of s.active) w.active.add(id);
+    for (const [id, n] of Object.entries(s.stage)) w.stage.set(id, n);
+    for (const id of s.open) w.open.add(id);
+    return w;
+  }
+}

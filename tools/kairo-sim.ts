@@ -58,6 +58,8 @@ import {
 } from '../src/sim/kairo/progress.js';
 import { UnlockStore } from '../src/sim/kairo/unlocks.js';
 import { ExamStore } from '../src/sim/kairo/exam.js';
+import { WishStore } from '../src/sim/kairo/wishes.js';
+import { COMBOS } from '../src/sim/kairo/combos.js';
 
 const args = process.argv.slice(2);
 const flag = (name: string, dflt: number): number => {
@@ -303,7 +305,18 @@ function ensurePath(
       if (inI === inJ) continue; // 발자국 자신과 대각선은 뺀다
       const ni = target.i + di;
       const nj = target.j + dj;
-      if (!t.inside(ni, nj) || ni >= land.w || nj >= land.h) continue;
+      /*
+       * ⚠ 경계는 i0+w 다 — **크기(w)와 비교하던 버그**가 있었다. 토지가 게이트 중심으로
+       * 좌우로 자라면서 i0 > 0 이 됐는데(K36), i ≥ 26 인 목표가 전부 버려져 ensurePath 가
+       * 지도 대부분에서 조용히 0 을 돌려줬다. unreachable 57회/판의 정체가 이것이었다.
+       */
+      if (
+        !t.inside(ni, nj) ||
+        ni < land.i0 ||
+        nj < land.j0 ||
+        ni >= land.i0 + land.w ||
+        nj >= land.j0 + land.h
+      ) continue;
       goals.push(nj * W + ni);
     }
   }
@@ -337,7 +350,19 @@ function ensurePath(
     ] as const) {
       const ni = i + di;
       const nj = j + dj;
-      if (!t.inside(ni, nj) || ni >= land.w || nj >= land.h) continue;
+      /*
+       * ⚠ 여기도 크기-vs-경계 버그였다 (위 goals 필터와 같은 짝). 게이트가 i=48 인데
+       * `ni >= land.w(26)` 로 걸러서 **BFS 가 첫 발도 못 뗐다** — K36(토지가 게이트
+       * 중심으로 좌우 성장) 이후 ensurePath 전체가 조용히 0 만 돌려주고 있었다.
+       * 봇의 unreachable 57회/판의 진짜 원인.
+       */
+      if (
+        !t.inside(ni, nj) ||
+        ni < land.i0 ||
+        nj < land.j0 ||
+        ni >= land.i0 + land.w ||
+        nj >= land.j0 + land.h
+      ) continue;
       if (w.blocksMove(i, j, ni, nj)) continue;
       if (!t.isWalkable(ni, nj)) continue; // 물은 못 지난다
       if (p.blocksWalk(ni, nj)) continue; // 시설이 막은 칸
@@ -454,8 +479,18 @@ function buildOne(
   const opts = { land };
   const cands = allFacilityDefs()
     .filter((d) => {
-      const x = d as unknown as { need?: NeedKind; cost: number };
+      const x = d as unknown as {
+        need?: NeedKind;
+        cost: number;
+        placement?: { requiresDeck?: boolean };
+      };
       if (!isUnlocked(d.id)) return false;
+      /*
+       * 수상(데크 전용) 시설은 봇이 안 짓는다 — 봇은 뭍 좌표만 뽑아서, 넣으면 시도의
+       * 대부분이 wrong-terrain 으로 타 버린다 (실측 68회/판 — K41 보상으로 수상 시설이
+       * 열리자 no-space 경보가 울렸다). 데크·코스 배치는 봇 모델 밖이다 (코스와 동일).
+       */
+      if (x.placement?.requiresDeck === true) return false;
       if (x.cost > cash) return false;
       if (want && x.need !== want) return false;
       return true;
@@ -492,6 +527,12 @@ function buildOne(
       const jHi = Math.min(land.j0 + land.h - pick.size[1], GATE.j + reach);
       const i = lo + rng.int(Math.max(1, hi - lo + 1));
       const j = land.j0 + rng.int(Math.max(1, jHi - land.j0 + 1));
+      /*
+       * 물 칸은 시도 전에 거른다 — 토지 사각형의 아래쪽은 강이라, 반경이 자라면
+       * 표본의 절반이 물에 떨어져 wrong-terrain 으로 시도 예산을 태운다
+       * (실측 72회/판 — 봇이 부유해진 K41 뒤 no-space 경보의 진범이었다).
+       */
+      if (t.isWater(i, j)) continue;
       const c = p.check(t, w, GATE, pick.id, i, j, opts);
       if (c.ok) {
         p.place(t, w, GATE, pick.id, i, j, opts);
@@ -548,6 +589,8 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const progress = new ProgressStore();
   const unlocks = new UnlockStore();
   const exam = new ExamStore();
+  const wishes = new WishStore();
+  const discovered = new Set<string>();
   /**
    * 평판 — 퇴장 만족도의 이동평균 (§9.2). 지난주 값 하나로 등급을 정하면 진동한다
    * (실측: 40주에 등급이 35번 바뀌었다).
@@ -788,7 +831,12 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
      * 끝나서 혼잡(단체 예약)·폐쇄(방송 촬영) 분기를 한 번도 안 탔다. 카드를 넣기 전과
      * 숫자가 완전히 같아서 알아챘다 — 정책이 분기를 안 태우면 계측이 없는 것과 같다.
      */
-    for (const card of cards.draw(cardRng, { season, week: k + 1, grade: gr.grade })) {
+    for (const card of cards.draw(cardRng, {
+      season,
+      week: k + 1,
+      grade: gr.grade,
+      isUnlocked: (id) => unlocks.isUnlocked(id, gradeNo),
+    })) {
       const affordable: number[] = [];
       for (let oi = 0; oi < card.options.length; oi++) {
         const opt = card.options[oi];
@@ -953,6 +1001,19 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     const claimed = progress.claim(questStatuses(p, rep));
     cash += claimed.cash;
     for (const fid of claimed.facilities) unlocks.grant(fid); // 봇도 보상을 받는다 (K41)
+    // 소원 (K43) — UI 와 같은 규칙. 보상 시설·현금을 그대로 받는다
+    for (const ev of wishes.settle(rep, rep.byGroup, p)) {
+      if (ev.kind !== 'done') continue;
+      if (ev.wish.reward.cash !== undefined) cash += ev.wish.reward.cash;
+      if (ev.wish.reward.facility !== undefined) unlocks.grant(ev.wish.reward.facility);
+    }
+    // 숨은 콤보 발견 (K43) — activeComboIds 는 ui 모듈이라 헤드리스에선 직접 센다
+    for (const cid of evaluateCombos(p).active.map((x) => x.id)) {
+      if (discovered.has(cid)) continue;
+      discovered.add(cid);
+      const combo = COMBOS.find((x) => x.id === cid);
+      if (combo?.hidden && combo.discoverCash !== undefined) cash += combo.discoverCash;
+    }
     // 심사 판정 (K42) — 결산과 같은 요약으로
     const verdict = exam.judge(k + 1, p, rep);
     if (verdict?.passed) {

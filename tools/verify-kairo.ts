@@ -2016,8 +2016,8 @@ async function main(): Promise<void> {
       prog.detailsFilled && prog.progressInRange ? 'pass' : 'fail',
     );
     record(
-      '해금 — 시작 1등급 · 거북섬은 최종 의뢰 보상(99) · 매점은 2등급 골격 (K41)',
-      prog.startGrade === 1 && prog.needTurtle === 99 && prog.needShop === 2 ? 'pass' : 'fail',
+      '해금 — 시작 1등급 · 거북섬은 최종 의뢰 보상 · 매점은 소원 보상 (K41·K43: 사건 해금 = 99)',
+      prog.startGrade === 1 && prog.needTurtle === 99 && prog.needShop === 99 ? 'pass' : 'fail',
       `시작 ${prog.startGrade}등급 · 거북섬 ${prog.needTurtle} · 매점 ${prog.needShop}`,
     );
     record(
@@ -5578,6 +5578,52 @@ async function main(): Promise<void> {
   record(
     '⏩ 주 스킵 — 해금 뒤에는 한 번에 결산까지 감긴다 (첫 심사 통과 보상, 스펙 A2)',
     weekSkipped ? 'pass' : 'fail',
+  );
+
+  /*
+   * ── K43. 소원·발견 ──
+   *
+   * 규칙(EXP·문턱·사슬·보상)은 단위가 본다 (wishes.test.ts). 여기서는 화면 배관:
+   * 열린 소원이 메뉴 목록에 뜨는지, 숨은 콤보가 도감에서 힌트 없이 ??? 인지.
+   */
+  const wishUi = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    // 열린 소원 상태를 만든다 — 배관 검사 (문턱 규칙은 단위 소관)
+    h.wishes.active.add('minji');
+    h.wishes.open.add('minji');
+    h.refreshQuests();
+    document.getElementById('kairo-menu-open').click();
+    const panel = document.getElementById('kairo-quests');
+    const txt = panel ? panel.textContent : '';
+    document.getElementById('kairo-sheet-close').click();
+    return { has: txt.indexOf('민지') >= 0 && txt.indexOf('소원') >= 0 };
+  })()`)) as { has: boolean };
+  record(
+    '열린 소원이 메뉴 목록에 뜬다 — 인물의 말이 곧 조건이다 (K43)',
+    wishUi.has ? 'pass' : 'fail',
+  );
+
+  const hiddenCombo = (await page.evaluate(`(() => {
+    document.getElementById('kairo-menu-open').click();
+    document.getElementById('kairo-catalog-open').click();
+    const root = document.getElementById('kairo-catalog');
+    if (!root || root.hidden) return { ok: false, why: '도감이 안 열렸다' };
+    const comboTab = [...root.querySelectorAll('button')].find(
+      (b) => b.textContent.indexOf('콤보') >= 0,
+    );
+    if (comboTab) comboTab.click();
+    const txt = root.textContent;
+    const q = txt.split('???').length - 1; // 정규식이면 이스케이프가 템플릿에 먹힌다
+    const close = [...root.querySelectorAll('button')].find(
+      (b) => b.textContent.indexOf('닫') >= 0,
+    );
+    if (close) close.click();
+    return { ok: true, hidden: q };
+  })()`)) as { ok: false; why: string } | { ok: true; hidden: number };
+  record(
+    '숨은 콤보는 도감에서 힌트조차 없다 — 놓아 봐야 안다 (K43, MMS 준거)',
+    hiddenCombo.ok && hiddenCombo.hidden > 0 ? 'pass' : 'fail',
+    hiddenCombo.ok ? `??? ${hiddenCombo.hidden}건` : hiddenCombo.why,
   );
 
   await browser.close();

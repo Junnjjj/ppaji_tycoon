@@ -41,6 +41,10 @@ export interface ComboDef {
   bonus: { satisfaction?: number; revenue?: number };
   radius?: number;
   note?: string;
+  /** 숨은 콤보 (K43) — 도감에 힌트조차 없다. 직접 놓아 봐야 안다 (MMS 준거) */
+  hidden?: boolean;
+  /** 숨은 콤보 첫 발동 보상 */
+  discoverCash?: number;
 }
 
 const DATA = rawCombos as unknown as {

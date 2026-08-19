@@ -33,6 +33,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { previewCombos, evaluateCombos } = await import('./sim/kairo/combos.js');
   const { UnlockStore } = await import('./sim/kairo/unlocks.js');
   const { ExamStore } = await import('./sim/kairo/exam.js');
+  const { WishStore } = await import('./sim/kairo/wishes.js');
+  const { COMBOS } = await import('./sim/kairo/combos.js');
   const {
     questStatuses,
     ProgressStore,
@@ -800,6 +802,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const unlocks = UnlockStore.fromSnapshot(saved?.unlocks);
   // 심사 (K42) — 승급은 응시하는 시험이다. 신청 대기·통과 횟수가 상태다
   const exam = ExamStore.fromSnapshot(saved?.exam);
+  // 소원 체인 (K43) — 인물·EXP·열린 소원이 상태다
+  const wishes = WishStore.fromSnapshot(saved?.wishes);
   const week = new WeekRunner(h.terrain, h.placement, h.guests);
   runner = week; // 프레임이 이제부터 주차·현금을 읽을 수 있다
   const report = new KairoReport(document.body);
@@ -929,7 +933,23 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       unlocks: unlocks.toSnapshot(),
       weekSkip: flow.weekSkipUnlocked,
       exam: exam.toSnapshot(),
+      wishes: wishes.toSnapshot(),
     });
+  };
+
+  /** 입고 카드(K43)로 산 시설 — 해금 + 다음 날 아침 도착 */
+  const applyCardUnlocks = (ids: readonly string[]): void => {
+    for (const uid of ids) {
+      if (!unlocks.grant(uid)) continue;
+      const def = allFacilityDefs().find((x) => x.id === uid);
+      arrivalQueue.push({
+        title: '새 시설 해금!',
+        name: def?.name ?? uid,
+        sub: '설비 상인에게서 샀다',
+        ...(def?.sprite !== undefined ? { sprite: def.sprite } : {}),
+      });
+      refreshBuildList();
+    }
   };
 
   /**
@@ -1136,11 +1156,69 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     };
     // 의뢰 보상은 결산 시점에 지급한다 — 배치 때마다 주면 같은 의뢰가 여러 번 판정된다
     // 새로 터진 콤보를 도감에 기록한다 — 결산이 발견의 순간이다 (§0 재미의 축)
-    noteDiscoveries();
+    // 숨은 콤보(K43)는 첫 발동이 사건이다: 보상 + 다음 날 아침 축하
+    for (const cid of noteDiscoveries()) {
+      const combo = COMBOS.find((x) => x.id === cid);
+      if (!combo?.hidden) continue;
+      if (combo.discoverCash !== undefined) week.earn(combo.discoverCash);
+      audio.play('sfx/discover');
+      arrivalQueue.push({
+        title: '숨은 조합 발견!',
+        name: combo.name,
+        sub:
+          combo.discoverCash !== undefined
+            ? `도감에 기록 · +${Math.round(combo.discoverCash / 10000)}만`
+            : '도감에 기록됐습니다',
+      });
+    }
     const weekClaim = progress.claim(questStatuses(h.placement, lastSummary));
     if (weekClaim.cash > 0) {
       week.earn(weekClaim.cash);
       audio.play('sfx/cash');
+    }
+    /*
+     * 소원 (K43) — EXP 적립·소원 열림·성사 판정. 전부 결산 tick 의 결정적 계산이고,
+     * 연출(인물 도착·말풍선)은 다음 날 아침 큐가 푼다 (A6).
+     */
+    for (const ev of wishes.settle(lastSummary, rep.byGroup, h.placement)) {
+      if (ev.kind === 'arrive') {
+        arrivalQueue.push({
+          title: '새 손님이 왔어요',
+          name: ev.char.name,
+          sub: '소원을 들어주면 또 옵니다 (메뉴 → 소원)',
+        });
+      } else if (ev.kind === 'open') {
+        arrivalQueue.push({
+          title: `${ev.char.name}의 소원`,
+          name: ev.wish.line,
+          sub: '메뉴의 소원 목록에서 진행을 볼 수 있어요',
+        });
+      } else {
+        // done — 보상
+        if (ev.wish.reward.cash !== undefined && ev.wish.reward.cash > 0) {
+          week.earn(ev.wish.reward.cash);
+        }
+        const fid = ev.wish.reward.facility;
+        if (fid !== undefined && unlocks.grant(fid)) {
+          const def = allFacilityDefs().find((x) => x.id === fid);
+          arrivalQueue.push({
+            title: '새 시설 해금!',
+            name: def?.name ?? fid,
+            sub: `${ev.char.name}의 소원 보상`,
+            ...(def?.sprite !== undefined ? { sprite: def.sprite } : {}),
+          });
+          refreshBuildList();
+        } else {
+          arrivalQueue.push({
+            title: '소원 성사!',
+            name: ev.char.name,
+            sub:
+              ev.wish.reward.cash !== undefined
+                ? `고마움의 표시 +${Math.round(ev.wish.reward.cash / 10000)}만`
+                : '다음 소원이 기다립니다',
+          });
+        }
+      }
     }
     // 의뢰 보상 시설 (K41) — 지금 해금하고, 축하는 다음 날 아침에 도착한다 (A6)
     for (const fid of weekClaim.facilities) {
@@ -1173,6 +1251,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           const r = cards.choose(cardRng, ch.card, ch.optionIndex);
           if (r.cash > 0) week.earn(r.cash);
           else if (r.cash < 0) week.spend(-r.cash);
+          applyCardUnlocks(r.unlocks);
         }
         persist();
         showReport();
@@ -1189,7 +1268,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   const nextWeekCards = (): void => {
     const gr0 = currentGrade();
-    const drawn = cards.draw(cardRng, { season, week: week.week + 1, grade: gr0.grade });
+    const drawn = cards.draw(cardRng, {
+      season,
+      week: week.week + 1,
+      grade: gr0.grade,
+      isUnlocked: (id) => unlocks.isUnlocked(id, gradeNo),
+    });
     if (drawn.length === 0) {
       beginWeek();
       return;
@@ -1200,6 +1284,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         const r = cards.choose(cardRng, ch.card, ch.optionIndex);
         if (r.cash > 0) week.earn(r.cash);
         else if (r.cash < 0) week.spend(-r.cash);
+        applyCardUnlocks(r.unlocks);
       }
       beginWeek();
     });
@@ -1556,6 +1641,33 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       row.append(name, bar, det);
       questPanel.append(row);
     }
+    /*
+     * 소원 (K43) — 열린 소원을 의뢰 아래에 잇는다. 의뢰와 같은 행 모양을 쓴다
+     * (새 표면을 만들지 않는다). 인물의 말이 곧 조건 설명이다.
+     */
+    const openW = wishes.openWishes(h.placement, lastSummary);
+    if (openW.length > 0) {
+      const head = document.createElement('div');
+      head.className = 'ksheet-group';
+      head.textContent = `소원 ${openW.length}`;
+      questPanel.append(head);
+      for (const w of openW) {
+        const row = document.createElement('div');
+        row.className = 'kquest';
+        const name = document.createElement('div');
+        name.textContent = `${w.char.name} — ${w.wish.line}`;
+        const bar = document.createElement('div');
+        bar.className = 'kprog';
+        const fill = document.createElement('i');
+        fill.style.width = `${Math.round(w.progress * 100)}%`;
+        bar.append(fill);
+        const det = document.createElement('div');
+        det.textContent = w.detail;
+        det.className = 'kquest-detail';
+        row.append(name, bar, det);
+        questPanel.append(row);
+      }
+    }
   };
   /**
    * 상단 캡슐 — 주차·계절과 현금. 레퍼런스도 이 둘을 늘 띄워 둔다.
@@ -1619,6 +1731,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     flow,
     unlocks,
     exam,
+    wishes,
     arrivalQueue,
     openWeekCards: nextWeekCards,
     skipForward,

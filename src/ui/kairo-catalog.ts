@@ -184,8 +184,10 @@ export class KairoCatalog {
        * 전부 가리면 힌트가 아니라 벽이 된다 — 첫 조건 하나만 남긴다.
        */
       const parts = combo.requires.map((r) => r.facility ?? r.need ?? '?');
-      const hint =
-        parts.length > 0
+      // 숨은 콤보(K43)는 힌트조차 없다 — 놓아 봐야 아는 것이 발견의 재미다 (MMS 준거)
+      const hint = combo.hidden
+        ? '???'
+        : parts.length > 0
           ? [parts[0], ...parts.slice(1).map(() => '?')].join(' + ')
           : '?';
       const boost = [

@@ -1,0 +1,346 @@
+{
+  "version": 1,
+  "note": "소원 체인 (K43, 스펙 §3.3). 인물은 유형(GroupId)의 대표다 — EXP 는 개별 추적이 아니라 그 유형의 주간 입장×만족 집계에서 쌓인다 (sim 부담 최소). 시작은 2명뿐이고 소원 보상의 invite 가 다음 인물을 데려온다 — 해금이 해금을 부른다 (PSS 준거). 조건은 의뢰 condition 풀과 같은 스키마 (evaluateCondition 하나). 이름표·초상은 chara/* 에셋 슬롯 — Phase G 전까지 이모트로 대신한다.",
+  "characters": [
+    {
+      "id": "minji",
+      "name": "민지",
+      "group": "friends",
+      "start": true,
+      "wishes": [
+        {
+          "exp": 40,
+          "condition": {
+            "kind": "needSupply",
+            "need": "play",
+            "value": 2
+          },
+          "reward": {
+            "facility": "arcade"
+          },
+          "line": "놀 게 더 있으면 좋겠어! 오락실 어때?"
+        },
+        {
+          "exp": 140,
+          "condition": {
+            "kind": "needSupply",
+            "need": "thrill",
+            "value": 3
+          },
+          "reward": {
+            "invite": "juno"
+          },
+          "line": "스릴 넘치면 준호도 데려올게!"
+        },
+        {
+          "exp": 320,
+          "condition": {
+            "kind": "activeCombos",
+            "value": 3
+          },
+          "reward": {
+            "invite": "haeun"
+          },
+          "line": "커플 손님도 좋아할 거야 — 하은이 데려올게!"
+        }
+      ]
+    },
+    {
+      "id": "sooyeon",
+      "name": "수연",
+      "group": "family",
+      "start": true,
+      "wishes": [
+        {
+          "exp": 40,
+          "condition": {
+            "kind": "needSupply",
+            "need": "rest",
+            "value": 3
+          },
+          "reward": {
+            "facility": "mongol_tent"
+          },
+          "line": "아이들이 쉴 그늘이 부족해요"
+        },
+        {
+          "exp": 140,
+          "condition": {
+            "kind": "needSupply",
+            "need": "hygiene",
+            "value": 4
+          },
+          "reward": {
+            "invite": "grandpa"
+          },
+          "line": "깨끗하면 아버님도 모셔올게요"
+        },
+        {
+          "exp": 320,
+          "condition": {
+            "kind": "needSupply",
+            "need": "play",
+            "value": 4
+          },
+          "reward": {
+            "facility": "junglegym_w"
+          },
+          "line": "아이들 정글짐이 있으면 매주 올 텐데"
+        }
+      ]
+    },
+    {
+      "id": "juno",
+      "name": "준호",
+      "group": "friends",
+      "wishes": [
+        {
+          "exp": 200,
+          "condition": {
+            "kind": "needSupply",
+            "need": "food",
+            "value": 3
+          },
+          "reward": {
+            "facility": "firepit_row"
+          },
+          "line": "물놀이 뒤엔 불멍에 고기지!"
+        },
+        {
+          "exp": 340,
+          "condition": {
+            "kind": "weekVisitors",
+            "value": 120
+          },
+          "reward": {
+            "facility": "rent_sup"
+          },
+          "line": "붐비는 빠지엔 SUP 이 어울려"
+        },
+        {
+          "exp": 520,
+          "condition": {
+            "kind": "comboTier",
+            "tier": "medium",
+            "value": 1
+          },
+          "reward": {
+            "cash": 700000
+          },
+          "line": "제대로 된 조합을 보여줘!"
+        }
+      ]
+    },
+    {
+      "id": "grandpa",
+      "name": "덕수 할아버지",
+      "group": "family",
+      "wishes": [
+        {
+          "exp": 200,
+          "condition": {
+            "kind": "needSupply",
+            "need": "warm",
+            "value": 2
+          },
+          "reward": {
+            "facility": "ice_fishing"
+          },
+          "line": "몸 지질 데가 있으면 겨울 낚시도 하지"
+        },
+        {
+          "exp": 340,
+          "condition": {
+            "kind": "needSupply",
+            "need": "scenery",
+            "value": 4
+          },
+          "reward": {
+            "cash": 600000
+          },
+          "line": "경치 좋은 곳이 최고야"
+        },
+        {
+          "exp": 520,
+          "condition": {
+            "kind": "needSupply",
+            "need": "stay",
+            "value": 1
+          },
+          "reward": {
+            "facility": "infirmary"
+          },
+          "line": "하룻밤 묵어가려면 의무실은 있어야지"
+        }
+      ]
+    },
+    {
+      "id": "haeun",
+      "name": "하은",
+      "group": "couple",
+      "wishes": [
+        {
+          "exp": 120,
+          "condition": {
+            "kind": "needSupply",
+            "need": "scenery",
+            "value": 3
+          },
+          "reward": {
+            "facility": "sunbed_row"
+          },
+          "line": "노을 보면서 눕고 싶어"
+        },
+        {
+          "exp": 260,
+          "condition": {
+            "kind": "needSupply",
+            "need": "food",
+            "value": 4
+          },
+          "reward": {
+            "invite": "taeyang"
+          },
+          "line": "맛집이 늘면 태양이랑 또 올게"
+        },
+        {
+          "exp": 440,
+          "condition": {
+            "kind": "exitSatisfaction",
+            "value": 75
+          },
+          "reward": {
+            "facility": "rent_pedal"
+          },
+          "line": "둘이 타는 오리배, 로망이잖아"
+        }
+      ]
+    },
+    {
+      "id": "taeyang",
+      "name": "태양",
+      "group": "couple",
+      "wishes": [
+        {
+          "exp": 320,
+          "condition": {
+            "kind": "needSupply",
+            "need": "thrill",
+            "value": 5
+          },
+          "reward": {
+            "cash": 700000
+          },
+          "line": "짜릿한 게 최고지"
+        },
+        {
+          "exp": 480,
+          "condition": {
+            "kind": "activeCombos",
+            "value": 6
+          },
+          "reward": {
+            "invite": "boss"
+          },
+          "line": "우리 회사 워크숍 여기서 하자고 할까?"
+        },
+        {
+          "exp": 660,
+          "condition": {
+            "kind": "weekVisitors",
+            "value": 200
+          },
+          "reward": {
+            "cash": 1000000
+          },
+          "line": "명소가 다 됐네!"
+        }
+      ]
+    },
+    {
+      "id": "boss",
+      "name": "박 부장",
+      "group": "company",
+      "wishes": [
+        {
+          "exp": 420,
+          "condition": {
+            "kind": "needSupply",
+            "need": "food",
+            "value": 5
+          },
+          "reward": {
+            "facility": "shop"
+          },
+          "line": "단체는 먹거리가 생명이야. 매점 하나 크게!"
+        },
+        {
+          "exp": 560,
+          "condition": {
+            "kind": "needSupply",
+            "need": "rest",
+            "value": 5
+          },
+          "reward": {
+            "invite": "ceo"
+          },
+          "line": "쉼터가 넉넉하면 사장님도 모시고 오지"
+        },
+        {
+          "exp": 760,
+          "condition": {
+            "kind": "maxTurnedAway",
+            "value": 0
+          },
+          "reward": {
+            "facility": "vending_in"
+          },
+          "line": "돌려보내는 손님이 없어야 진짜지"
+        }
+      ]
+    },
+    {
+      "id": "ceo",
+      "name": "사장님",
+      "group": "company",
+      "wishes": [
+        {
+          "exp": 700,
+          "condition": {
+            "kind": "needSupply",
+            "need": "stay",
+            "value": 2
+          },
+          "reward": {
+            "cash": 1500000
+          },
+          "line": "숙박이 되면 워크숍 예약을 넣지"
+        },
+        {
+          "exp": 900,
+          "condition": {
+            "kind": "comboTier",
+            "tier": "large",
+            "value": 1
+          },
+          "reward": {
+            "cash": 1500000
+          },
+          "line": "대형 조합이라... 대단한 빠지군"
+        },
+        {
+          "exp": 1200,
+          "condition": {
+            "kind": "facilityTotalAndSat",
+            "value": 25,
+            "sat": 80
+          },
+          "reward": {
+            "cash": 2500000
+          },
+          "line": "여기가 가평의 자랑이야"
+        }
+      ]
+    }
+  ]
+}

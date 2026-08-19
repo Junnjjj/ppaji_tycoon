@@ -47,6 +47,8 @@ export interface CardEffects {
   accidentMult?: number;
   /** 그 주 폐쇄 */
   closed?: boolean;
+  /** 시설 해금 (K43 계절 입고) — 사면 카탈로그가 아니라 **해금 집합**에 들어간다 */
+  unlock?: string;
   /** 지속 주 수. 없으면 즉시 1회 (cash 처럼) */
   weeks?: number;
 }
@@ -76,6 +78,8 @@ export interface CardCondition {
   seasons?: Season[];
   minWeek?: number;
   minGrade?: number;
+  /** 이 시설이 아직 잠겨 있을 때만 나온다 (K43 입고 카드 — 산 것을 또 팔지 않는다) */
+  needsLocked?: string;
 }
 
 export interface CardDef {
@@ -115,6 +119,8 @@ export interface CardContext {
   season: Season;
   week: number;
   grade: number;
+  /** 해금 판정 (K43) — needsLocked 조건이 쓴다. 없으면 그 조건은 항상 통과 */
+  isUnlocked?: (id: string) => boolean;
 }
 
 /** 선택지의 즉시 현금 합 (음수면 지출). UI·봇·검증이 같은 정의를 쓰게 한다 */
@@ -160,6 +166,8 @@ export function isEligible(card: CardDef, ctx: CardContext): boolean {
   if (c.seasons && !c.seasons.includes(ctx.season)) return false;
   if (c.minWeek !== undefined && ctx.week < c.minWeek) return false;
   if (c.minGrade !== undefined && ctx.grade < c.minGrade) return false;
+  // 이미 열린 시설을 또 팔지 않는다 (K43 입고 카드)
+  if (c.needsLocked !== undefined && ctx.isUnlocked?.(c.needsLocked) === true) return false;
   return true;
 }
 
@@ -289,16 +297,22 @@ export class CardStore {
    * 확률 효과는 **여기서 굴린다** — 주를 돌릴 때 굴리면 "선택했을 때 이미 정해졌다"는
    * 인상을 못 주고, 결과를 결산에서야 알게 된다.
    */
-  choose(rng: Rng, card: CardDef, optionIndex: number): { cash: number; happened: boolean } {
+  choose(
+    rng: Rng,
+    card: CardDef,
+    optionIndex: number,
+  ): { cash: number; happened: boolean; unlocks: string[] } {
     const opt = card.options[optionIndex];
-    if (!opt) return { cash: 0, happened: false };
+    if (!opt) return { cash: 0, happened: false, unlocks: [] };
     // ★ 확률은 선택지 단위로 **한 번** 굴린다 — 효과마다 굴리면 절반만 일어나는 이상한 상태가 된다
     const happened = opt.chance === undefined || rng.next() < opt.chance;
-    if (!happened) return { cash: 0, happened: false };
+    if (!happened) return { cash: 0, happened: false, unlocks: [] };
 
     let cash = 0;
+    const unlocks: string[] = [];
     for (const e of opt.effects) {
       cash += e.cash ?? 0;
+      if (e.unlock !== undefined) unlocks.push(e.unlock);
       const weeks = e.weeks ?? 0;
       if (weeks > 0) {
         this.activeList.push({
@@ -309,7 +323,7 @@ export class CardStore {
         });
       }
     }
-    return { cash, happened: true };
+    return { cash, happened: true, unlocks };
   }
 
   /**
@@ -385,6 +399,7 @@ export function validateCards(): string[] {
     'accidentMult',
     'closed',
     'weeks',
+    'unlock',
   ]);
   for (const c of CARDS) {
     if (ids.has(c.id)) problems.push(`중복 ID: ${c.id}`);

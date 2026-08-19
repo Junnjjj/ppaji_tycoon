@@ -15,6 +15,8 @@ import { describe, expect, it } from 'vitest';
 import rawFacilities from '../../data/kairo-facilities.json' with { type: 'json' };
 import rawUnlocks from '../../data/kairo-unlocks.json' with { type: 'json' };
 import rawQuests from '../../data/kairo-quests.json' with { type: 'json' };
+import rawCards from '../../data/kairo-cards.json' with { type: 'json' };
+import { WISH_CHARACTERS } from './wishes.js';
 
 interface FacilityRow {
   id: string;
@@ -35,6 +37,27 @@ const QUESTS = (rawQuests as { quests: QuestRow[] }).quests;
 /** 시작 킷이 놓는 시설 — startkit.ts 와 같은 목록 (여기 어긋나면 킷이 잠긴 시설을 준다) */
 const START_KIT = ['ticket', 'float_deck', 'pingpong', 'pyeongsang_row'];
 
+/** 카드의 unlock 효과 (K43 입고) — 데이터에서 직접 읽는다 */
+function cardUnlocks(): string[] {
+  const cards = (rawCards as unknown as {
+    cards: { options: { effects: { unlock?: string }[] }[] }[];
+  }).cards;
+  const out: string[] = [];
+  for (const c of cards) {
+    for (const o of c.options) for (const e of o.effects) if (e.unlock) out.push(e.unlock);
+  }
+  return out;
+}
+
+/** 소원 보상 시설 (K43) */
+function wishUnlocks(): string[] {
+  const out: string[] = [];
+  for (const c of WISH_CHARACTERS) {
+    for (const w of c.wishes) if (w.reward.facility !== undefined) out.push(w.reward.facility);
+  }
+  return out;
+}
+
 function validate(
   skeleton: Record<string, number>,
   quests: readonly QuestRow[],
@@ -44,16 +67,52 @@ function validate(
   const rewards = quests
     .map((q) => q.reward.facility)
     .filter((f): f is string => f !== undefined);
+  const wished = wishUnlocks();
+  const shopped = cardUnlocks();
+  const events = [...rewards, ...wished, ...shopped];
 
-  // 73종 = 골격 + 보상, 겹침·누락 0
+  // 73종 = 골격 + 사건(의뢰·소원·입고), 겹침·누락 0
   const all = new Set(FACILITIES.map((f) => f.id));
-  const covered = new Set([...Object.keys(skeleton), ...rewards]);
+  const covered = new Set([...Object.keys(skeleton), ...events]);
   for (const id of all) if (!covered.has(id)) issues.push(`어디서도 안 열림: ${id}`);
   for (const id of covered) if (!all.has(id)) issues.push(`없는 시설: ${id}`);
-  for (const r of rewards) {
-    if (r in skeleton) issues.push(`골격과 보상 양쪽에: ${r}`);
+  for (const r of events) {
+    if (r in skeleton) issues.push(`골격과 사건 양쪽에: ${r}`);
   }
-  if (new Set(rewards).size !== rewards.length) issues.push('보상 시설 중복');
+  if (new Set(events).size !== events.length) issues.push('사건 해금 중복');
+
+  /*
+   * 소원 조건은 골격 ∪ 의뢰 보상으로 충족 가능해야 한다 (2층 DAG — 의뢰 조건은
+   * 골격만으로 충족되므로 의뢰 보상은 언제나 도달 가능하고, 소원 보상이 소원 조건을
+   * 먹이면 순환이 생길 수 있어 금지).
+   */
+  const reachableByNeed = new Map<string, number>();
+  for (const id of [...Object.keys(skeleton), ...rewards]) {
+    const n = needOf.get(id);
+    if (n !== undefined) reachableByNeed.set(n, (reachableByNeed.get(n) ?? 0) + 1);
+  }
+  // 인물 도달성 — 시작이 아닌 인물은 정확히 한 번 초대돼야 한다 (실측: 하은이 고아였다)
+  const invites = WISH_CHARACTERS.flatMap((c) =>
+    c.wishes.map((w) => w.reward.invite).filter((x): x is string => x !== undefined),
+  );
+  for (const c of WISH_CHARACTERS) {
+    const n = invites.filter((x) => x === c.id).length;
+    if (c.start === true && n > 0) issues.push(`시작 인물을 초대: ${c.id}`);
+    if (c.start !== true && n !== 1) issues.push(`인물 도달 불능/중복: ${c.id} (초대 ${n}회)`);
+  }
+  for (const c of WISH_CHARACTERS) {
+    for (const w of c.wishes) {
+      const cond = w.condition as { kind: string; need?: string; value?: number };
+      if (cond.kind === 'needSupply' && cond.need !== undefined) {
+        const have = reachableByNeed.get(cond.need) ?? 0;
+        if (have < (cond.value ?? 1)) {
+          issues.push(
+            `소원 교착: ${c.id} 가 ${cond.need} ${cond.value}개를 원하는데 도달 가능 ${have}개`,
+          );
+        }
+      }
+    }
+  }
 
   // 의뢰 조건은 골격만으로 충족 가능해야 한다
   const skeletonByNeed = new Map<string, number>();
