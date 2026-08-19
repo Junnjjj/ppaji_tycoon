@@ -385,9 +385,17 @@ export class KairoScene extends Phaser.Scene {
    * 열마다 `fillRect(x, y, 1, h)` 로 채운다 — 2:1 이라 2px 마다 한 칸 내려가는 계단이 된다.
    */
   private columnTextureId(i: number, j: number): string {
-    const top = this.groundTextureId(i, j);
     const { di, dj } = this.dropsAt(i, j);
-    const z = this.opts.terrain.levelAt(i, j);
+    return this.columnTexture(this.groundTextureId(i, j), this.opts.terrain.levelAt(i, j), di, dj);
+  }
+
+  /**
+   * 윗면 텍스처 + 단 + 낙차로 **기둥 한 장**을 만든다 (K38 에서 분리).
+   *
+   * 격자 안 타일과 **지도 바깥 장식**이 같은 함수를 쓴다 — 안팎이 다른 코드로 그려지면
+   * 절벽 모양·색·이음이 미묘하게 갈라지고, 그 차이가 곧 경계선으로 보인다.
+   */
+  private columnTexture(top: string, z: number, di: number, dj: number): string {
     if (di === 0 && dj === 0 && z === 0) return top;
     const id = `__col/${top}/${z}/${di}/${dj}`;
     if (this.textures.exists(id)) return id;
@@ -624,18 +632,109 @@ export class KairoScene extends Phaser.Scene {
     ctx.imageSmoothingEnabled = false;
 
     const clamp = (v: number, hi: number): number => (v < 0 ? 0 : v > hi ? hi : v);
+
+    /*
+     * ## 바깥은 **산으로 올라간다**
+     *
+     * 가장자리를 그대로 잇기만 하면 잔디가 끝없이 펼쳐져 "아무것도 없다"로 읽힌다
+     * (사용자: "생각보다 어색하네"). 격자에서 멀어질수록 단을 올려 **공원이 골짜기에
+     * 앉은** 모양을 만든다 — 공원 → 도로 → 산자락 → 트리라인 → 배경 산으로 이어진다.
+     *
+     * ⚠ 물은 안 올린다. 강은 강으로 흘러 나가야 한다 (K37 과 같은 규칙).
+     * ⚠ 격자 안 타일과 **같은 기둥 함수**(`columnTexture`)를 쓴다. 다른 코드로 그리면
+     *   절벽 모양·색이 미묘하게 갈라지고 그 차이가 곧 경계선으로 보인다.
+     */
+    const outside = (i: number, j: number): number =>
+      Math.max(0, -i, i - (GRID_W - 1), -j, j - (GRID_H - 1));
+    const isWet = (i: number, j: number): boolean => {
+      const k = t.kindAt(clamp(i, GRID_W - 1), clamp(j, GRID_H - 1));
+      return k === 'water_edge' || k === 'path_sand';
+    };
+    /** 장식 단 — 격자에서 멀수록 높다. 흔들림은 좌표 해시라 결정론적이다 */
+    const deco = (i: number, j: number): number => {
+      if (isWet(i, j)) return 0;
+      const d = outside(i, j);
+      if (d === 0) return 0;
+      /*
+       * 흔들림은 **저주파 사인 합**이다. 좌표 해시(`(i*13+j*29)%7`)로 흔들었더니 칸마다
+       * 값이 튀어 계단이 격자무늬로 보였다 (실측). 사인은 이웃끼리 값이 이어져
+       * 등고선이 부드럽게 굽고, 난수가 아니라 결정론적이다.
+       */
+      const wob = 3.2 * Math.sin(i * 0.11) + 3.2 * Math.sin(j * 0.13) + 1.6 * Math.sin((i + j) * 0.07);
+      return Math.max(0, Math.min(3, Math.floor((d + wob) / 7)));
+    };
+
+    /*
+     * 그리는 순서가 곧 겹침 순서다 — `i+j` 오름차순, 같으면 `i` 오름차순.
+     * 화면 깊이(`depthKey`)와 같은 순서라 가까운 기둥이 먼 기둥을 덮는다.
+     */
+    const cells: { i: number; j: number }[] = [];
     for (let j = -GRID_W; j <= GRID_H + GRID_W; j++) {
       for (let i = -GRID_H; i <= GRID_W + GRID_H; i++) {
-        // 다이아몬드 안은 진짜 타일이 덮는다 — 굽지 않아 그리기가 절반이 된다
-        if (i >= 0 && j >= 0 && i < GRID_W && j < GRID_H) continue;
+        /*
+         * ⚠ 격자 **안쪽도 굽는다.** 진짜 타일이 덮으니 낭비 같지만, 단이 있는 곳에서
+         * 타일과 타일 사이에 1px 실틈이 생기면 그 뒤가 비어 하늘색이 새어 나온다
+         * (실측: 단 지형 가장자리마다 파란 점선). 밑에 땅이 깔려 있으면 최악이라도
+         * 땅색이 보인다 — 굽기는 부팅 때 한 번이라 값이 싸다.
+         */
         const x = STEP_X * (i - j) + ox - TILE_W / 2;
         const y = STEP_Y * (i + j);
-        if (x + TILE_W < 0 || y + TILE_H < 0 || x > W || y > H) continue;
-        const kind = t.kindAt(clamp(i, GRID_W - 1), clamp(j, GRID_H - 1)) ?? 'lawn';
-        const id = variantId(`ground/${kind}`, { alt: (((i * 7 + j * 13) % 3) + 3) % 3 });
-        if (!this.opts.provider.has(id)) continue;
-        ctx.drawImage(this.opts.provider.get(id), Math.round(x), Math.round(y));
+        if (x + TILE_W < 0 || y + TILE_H + 4 * LEVEL_H < 0 || x > W || y > H) continue;
+        cells.push({ i, j });
       }
+    }
+    cells.sort((a, b) => a.i + a.j - (b.i + b.j) || a.i - b.i);
+
+    /*
+     * ## 밑칠 — 평평한 지면을 먼저 한 번 깐다
+     *
+     * 단이 있는 칸을 올려 그리면 이웃과의 사이에 1px 틈이 남을 수 있고, 그 뒤는 캔버스가
+     * 투명해서 하늘색이 새어 나온다 (실측: 장식 산 가장자리에 파란 점선). 밑에 평평한
+     * 지면이 이미 깔려 있으면 최악이라도 **땅색**이 보인다.
+     *
+     * 기둥 기하를 더 정교하게 맞추는 대신 밑칠로 막는 이유: 아이소 마름모는 가장자리가
+     * 계단이라 어떤 식으로든 반올림이 남는다. 뒤를 막는 쪽이 확실하다.
+     */
+    for (const c of cells) {
+      const kind = t.kindAt(clamp(c.i, GRID_W - 1), clamp(c.j, GRID_H - 1)) ?? 'lawn';
+      const top = variantId(`ground/${kind}`, { alt: (((c.i * 7 + c.j * 13) % 3) + 3) % 3 });
+      if (!this.opts.provider.has(top)) continue;
+      ctx.drawImage(
+        this.opts.provider.get(top),
+        Math.round(STEP_X * (c.i - c.j) + ox - TILE_W / 2),
+        Math.round(STEP_Y * (c.i + c.j)),
+      );
+    }
+
+    for (const c of cells) {
+      const { i, j } = c;
+      const z = deco(i, j);
+      /*
+       * 종류: 물가는 이어 받고, 올라간 곳은 **절벽 테두리에 암반** — 격자 안 산과
+       * 같은 규칙이다 (`dressMountains`). 테라스 안쪽은 잔디로 남아 초원으로 읽힌다.
+       */
+      let kind = t.kindAt(clamp(i, GRID_W - 1), clamp(j, GRID_H - 1)) ?? 'lawn';
+      const di = Math.max(0, z - deco(i + 1, j));
+      const dj = Math.max(0, z - deco(i, j + 1));
+      if (z > 0) {
+        const cliff =
+          di > 0 || dj > 0 || deco(i - 1, j) !== z || deco(i, j - 1) !== z;
+        if (kind === 'lawn' || kind === 'verge') kind = cliff ? 'mountain_rock' : 'lawn';
+      }
+      const top = variantId(`ground/${kind}`, { alt: (((i * 7 + j * 13) % 3) + 3) % 3 });
+      if (!this.opts.provider.has(top)) continue;
+      const id = this.columnTexture(top, z, di, dj);
+      const src = this.textures.exists(id)
+        ? (this.textures.get(id).getSourceImage() as CanvasImageSource)
+        : this.opts.provider.get(top);
+      const th = this.textures.exists(id) ? this.textures.get(id).getSourceImage().height : TILE_H;
+      const x = STEP_X * (i - j) + ox - TILE_W / 2;
+      /*
+       * 기둥은 **아래로** 자라므로 앵커를 낙차만큼 내린다 — 그러면 윗면이 정확히
+       * `z·LEVEL_H` 만큼 올라간 자리에 온다. 화면 타일(`tileAnchorY`)과 같은 식이다.
+       */
+      const y = STEP_Y * (i + j) + TILE_H - th + Math.max(di, dj) * LEVEL_H - z * LEVEL_H;
+      ctx.drawImage(src, Math.round(x), Math.round(y));
     }
     tex.refresh();
   }
