@@ -1926,7 +1926,13 @@ async function main(): Promise<void> {
     frames: number;
     heatSum: number;
     hotspot: { i: number; j: number; value: number } | null;
-    bottleneck: { need: string; supply: number } | null;
+    bottleneck: {
+      need: string;
+      demand: number;
+      supply: number;
+      missing: boolean;
+      example: string | null;
+    } | null;
     weathers: string[];
     dayVisitors: number[];
   };
@@ -1965,8 +1971,29 @@ async function main(): Promise<void> {
   );
   record('혼잡 히트맵이 쌓인다', calc.heatSum > 0 && calc.hotspot !== null ? 'pass' : 'fail',
     `합 ${calc.heatSum} · 최고점 (${calc.hotspot?.i},${calc.hotspot?.j})=${calc.hotspot?.value}`);
-  record('병목을 알려준다 — 다음에 무엇을 지을까', calc.bottleneck !== null ? 'pass' : 'fail',
-    calc.bottleneck ? `${calc.bottleneck.need} 공급 ${calc.bottleneck.supply}` : '');
+  /*
+   * ⚠ **`!== null` 만 보면 안 된다** (P3-B). 옛 로직(후보 = 지어진 종류만)도 값은
+   * 냈으므로, 공급 0 인 종류를 영원히 못 가리키는 채로 이 줄이 초록이었다.
+   * 여기서는 **자료 모양**을 본다 — `missing` 과 `example` 이 실제로 실려 오나
+   * (UI 가 "하나도 없습니다 / 모자란다"를 가르는 근거가 그 둘이다).
+   * 문장까지 보는 것은 새 판에서 도는 P3-B ① 절이다.
+   */
+  record(
+    '병목을 알려준다 — 다음에 무엇을 지을까 (need·공급·missing·example)',
+    calc.bottleneck !== null &&
+      typeof calc.bottleneck.need === 'string' &&
+      calc.bottleneck.demand > 0 &&
+      calc.bottleneck.supply >= 0 &&
+      typeof calc.bottleneck.missing === 'boolean' &&
+      // `missing` 이면 그 종류를 한 채도 안 지은 것이므로 공급도 반드시 0 이다
+      (!calc.bottleneck.missing || calc.bottleneck.supply === 0)
+      ? 'pass'
+      : 'fail',
+    calc.bottleneck
+      ? `${calc.bottleneck.need} 수요 ${calc.bottleneck.demand.toFixed(1)} · 공급 ${calc.bottleneck.supply} · ` +
+        `missing ${String(calc.bottleneck.missing)} · 예시 ${String(calc.bottleneck.example)}`
+      : 'null',
+  );
   record(
     '압축 연출용 프레임이 기록된다 — 계산이 빠른 것과 안 보여주는 것은 다르다',
     calc.frames > 100 ? 'pass' : 'fail',
@@ -8311,6 +8338,490 @@ async function main(): Promise<void> {
       '시설 특화 절에서 페이지 예외 0',
       spErrors.length === 0 ? 'pass' : 'fail',
       spErrors.slice(0, 3).join(' | '),
+    );
+    await cx.close();
+  }
+
+  /*
+   * ── P3-B ①. 결산 병목이 "하나도 없는 종류"를 가리킨다 ────────────────────────
+   *
+   * `finish()` 의 병목 계산이 `Object.keys(lw.supply)` 를 후보로 썼다. `supply` 는
+   * **지어진 시설에서** 만들어지므로 공급 0 인 종류는 키 자체가 없어 후보에 못 들었다 —
+   * 즉 결산이 **스릴 0개인 빠지에게 스릴을 권하지 못했다.** 결산은 "다음에 뭘 지을까"의
+   * 근거인데(설계: 결산 → 키우거나 붙임 → 다시 한 주) 가장 중요한 조언을 못 한 것이다.
+   *
+   * 하네스의 기존 검사(7i)는 `bottleneck !== null` 만 봤다 — 옛 로직도 값은 냈으므로
+   * **버그가 있는 채로 초록**이었다. 그래서 이 절은 값이 아니라 **문장**을 본다.
+   *
+   * 보려는 것 셋:
+   *  ★ 새 판을 한 주 돌리면 **공급 0 인 종류**가 뽑히고, 결산 화면의 처방이 **방법까지**
+   *    말한다 — `스릴 시설이 하나도 없습니다 — 건설 ▸ 다이빙대` (실측 문장)
+   *  ⚠ **음성 대조군은 코드에** (`week.setBottleneckFaultForTest`) — 켜면 후보가 옛
+   *    `Object.keys(supply)` 로 되돌아가고, 그 판에서 **공급 0 인 종류는 절대 안 뽑힌다**.
+   *    이 저장소 규칙: 손으로 한 번 되돌려 확인한 것은 다음 사람에게 안 남는다
+   *  ⚠ **`missing ≠ supply===0`** — 사고로 하나뿐인 시설이 닫힌 주는 공급이 0 이지만
+   *    "하나도 없습니다"는 거짓말이다. 선 시설(`staff.idle`)로 그 주를 만들어
+   *    문장이 `부족한 것: … (공급 0)` 쪽으로 갈리는지 본다
+   *
+   * ⚠ 잔해 위에서 재지 않으려고 **새 판(새 컨텍스트 + 세이브 삭제)**에서 돈다 —
+   * 앞 절들이 주를 여러 번 돌리고 시설을 지어 놔서, 그 판에서는 "아직 아무것도 없는
+   * 종류"가 무엇인지 자체가 흐려진다.
+   */
+  {
+    const cx = await browser.newContext(DEVICE);
+    const pg = await cx.newPage();
+    const bnErrors: string[] = [];
+    pg.on('pageerror', (e) => bnErrors.push(String(e)));
+    await pg.addInitScript(`try { localStorage.clear(); } catch {}`);
+    await pg.goto(URL, { waitUntil: 'load' });
+    await pg.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+
+    /*
+     * 결산 화면의 처방 줄. **마지막 `.kcallout` 을 읽는다** — 같은 클래스를 매표소
+     * 경보(`noTicket > 0`)가 먼저 쓰고, 그건 병목보다 **앞에** 붙는다 (`kairo-report.ts`
+     * 실물에서 확인). 첫 줄을 읽으면 매표소 경보가 뜬 주에 엉뚱한 문장을 재게 된다.
+     */
+    const CALLOUTS = `(() => {
+      const r = document.getElementById('kairo-report');
+      if (!r || r.hidden) return null;
+      return [...r.querySelectorAll('.kcallout')].map((e) => e.textContent || '');
+    })()`;
+    type Bn = {
+      need: string;
+      demand: number;
+      supply: number;
+      missing: boolean;
+      example: string | null;
+    } | null;
+
+    /* ── ★ 새 판 한 주 — 게임 경로 그대로 (beginWeek → runWeek → 결산) ────────── */
+    await pg.evaluate(`(() => {
+      const h = window.__kairo;
+      h.flow.frozen = true; // 흐르는 낮이 두 번째 주를 열지 않게
+      h.week.abort();       // run() 은 배치 전용 — 진행 중인 주를 치운다 (K39)
+      h.beginWeek();
+      h.runWeek();
+    })()`);
+    await pg.waitForFunction(
+      `(() => { const r = document.getElementById('kairo-report'); return !!r && !r.hidden; })()`,
+      undefined,
+      { timeout: 10000 },
+    );
+    const freshCalls = (await pg.evaluate(CALLOUTS)) as string[] | null;
+    const freshBn = (await pg.evaluate(
+      `(() => { const r = window.__kairo.getLastReport(); return r ? r.bottleneck : null; })()`,
+    )) as Bn;
+    const freshLine = freshCalls && freshCalls.length > 0 ? freshCalls[freshCalls.length - 1]! : '';
+    record(
+      '★ 결산이 "하나도 없는 종류"를 가리키고 처방이 방법까지 말한다 (P3-B, 게임 경로)',
+      freshBn !== null &&
+        freshBn.supply === 0 &&
+        freshBn.missing &&
+        freshBn.example !== null &&
+        freshLine.indexOf('시설이 하나도 없습니다') >= 0 &&
+        freshLine.indexOf('건설 ▸ ') >= 0
+        ? 'pass'
+        : 'fail',
+      `병목 ${freshBn ? `${freshBn.need} 공급 ${freshBn.supply} · missing ${String(freshBn.missing)} · 예시 ${String(freshBn.example)}` : 'null'} · ` +
+        `처방 "${freshLine}"`,
+    );
+    await pg.screenshot({ path: `${SHOT_DIR}/kairo-bottleneck.png` });
+    await pg.evaluate(`(() => {
+      const b = document.getElementById('kairo-report-close');
+      if (b) b.click();
+    })()`);
+    await pg.evaluate(DISMISS_CARDS);
+    await pg.waitForTimeout(200);
+
+    /*
+     * ── ⚠ 음성 대조군 (코드에 심은 결함) ────────────────────────────────────
+     *
+     * 후보를 옛 `Object.keys(supply)` 로 되돌린다. 그러면 위에서 뽑힌 종류(공급 0)는
+     * **후보 목록에 이름조차 없다** — 다시 뽑히면 이 검사가 아무것도 안 재고 있었다는 뜻이다.
+     */
+    const faulted = (await pg.evaluate(`(() => {
+      const h = window.__kairo;
+      h.week.abort();
+      h.week.setBottleneckFaultForTest(true);
+      h.beginWeek();
+      h.runWeek();
+      const r = h.getLastReport();
+      h.week.setBottleneckFaultForTest(false);
+      return r ? r.bottleneck : null;
+    })()`)) as Bn;
+    await pg.waitForTimeout(300);
+    record(
+      '⚠ 음성 대조군 — 후보를 옛 방식으로 되돌리면 공급 0 인 종류가 안 뽑힌다 (P3-B, 코드에 심은 결함)',
+      freshBn !== null && (faulted === null || (faulted.supply > 0 && faulted.need !== freshBn.need))
+        ? 'pass'
+        : 'fail',
+      `정상 ${freshBn?.need ?? 'null'}(공급 ${freshBn?.supply ?? '?'}) → ` +
+        `결함 ${faulted ? `${faulted.need}(공급 ${faulted.supply})` : 'null'}`,
+    );
+    await pg.evaluate(`(() => {
+      const b = document.getElementById('kairo-report-close');
+      if (b) b.click();
+    })()`);
+    await pg.evaluate(DISMISS_CARDS);
+    await pg.waitForTimeout(200);
+
+    /*
+     * ── ⚠ `missing ≠ supply===0` ────────────────────────────────────────────
+     *
+     * 시작 킷에 **있는** 종류를 통째로 세운다 (`staff.idle` — 사고가 쓰는 그 자리다).
+     * 그러면 그 주 공급은 0 이지만 시설은 있다. 문장이 "하나도 없습니다"로 가면
+     * 결산이 거짓말을 하는 것이다.
+     *
+     * `buildable` 을 그 종류의 시설 하나로 좁혀 후보를 고정한다 — 다른 종류가 이겨서
+     * "재려던 문장을 안 재는" 상태를 없애기 위해서다 (해금 규칙은 `unlocks` 소유이고
+     * 여기서 만드는 것이 아니다).
+     */
+    const idleCase = (await pg.evaluate(`(() => {
+      const h = window.__kairo;
+      h.week.abort();
+      const byNeed = {};
+      for (const it of h.placement.all()) {
+        const d = h.simDefs[it.defId];
+        if (!d || !d.need) continue;
+        (byNeed[d.need] = byNeed[d.need] || []).push(it.handle);
+      }
+      for (const need of Object.keys(byNeed)) {
+        let bid = null;
+        for (const k of Object.keys(h.simDefs)) if (h.simDefs[k].need === need) { bid = k; break; }
+        if (!bid) continue;
+        const rep = h.week.run(new h.Rng(31337), {
+          season: 'summer', playbackEvery: 0, buildable: [bid],
+          staff: { wages: 0, satisfactionDelta: 0, foodMult: 1, idle: new Set(byNeed[need]) },
+        });
+        const bn = rep.bottleneck;
+        if (!bn || bn.need !== need || bn.supply !== 0) continue;
+        h.report.show(rep, { onClose: function () { return undefined; } });
+        return { need: need, built: byNeed[need].length, bn: bn };
+      }
+      return null;
+    })()`)) as { need: string; built: number; bn: NonNullable<Bn> } | null;
+    await pg.waitForTimeout(250);
+    const idleCalls = (await pg.evaluate(CALLOUTS)) as string[] | null;
+    const idleLine = idleCalls && idleCalls.length > 0 ? idleCalls[idleCalls.length - 1]! : '';
+    record(
+      '⚠ missing ≠ supply===0 — 선 시설로 공급이 0 인 주는 "하나도 없습니다"가 아니다 (P3-B)',
+      idleCase !== null &&
+        !idleCase.bn.missing &&
+        idleCase.bn.supply === 0 &&
+        idleLine.indexOf('하나도 없습니다') < 0 &&
+        idleLine.indexOf('부족한 것: ') === 0 &&
+        idleLine.indexOf('(공급 0)') > 0
+        ? 'pass'
+        : 'fail',
+      idleCase
+        ? `${idleCase.need} · 지어진 것 ${idleCase.built}개(전부 섬) · 공급 ${idleCase.bn.supply} · ` +
+          `missing ${String(idleCase.bn.missing)} · 처방 "${idleLine}"`
+        : '공급 0 · 시설 있음 상태를 못 만들었다',
+    );
+    await pg.evaluate(`(() => {
+      const b = document.getElementById('kairo-report-close');
+      if (b) b.click();
+    })()`);
+    await pg.evaluate(DISMISS_CARDS);
+
+    record(
+      '결산 병목 절에서 페이지 예외 0',
+      bnErrors.length === 0 ? 'pass' : 'fail',
+      bnErrors.slice(0, 3).join(' | '),
+    );
+    await cx.close();
+  }
+
+  /*
+   * ── P3-B ②. 플레이어가 자기 입구를 봉할 수 있었다 (`blocks-gate`) ─────────────
+   *
+   * 실내는 `would-strand`·`blocks-door` 로 지키는데 **입구엔 그 짝이 없었다** — 실측
+   * (봇)으로 24판 중 6판이 17~39주차에 게이트 둘레가 차며 **입장 0 으로 얼었다**.
+   * sim 쪽 성질은 `placement.test.ts` 가 이미 지키지만, P3-B 페이즈에서는 `tools/**`
+   * 가 금지 파일이라 **브라우저 절이 하나도 없었다**: "규칙은 맞는데 확정 바에 안 뜬다"
+   * 를 잡는 것이 아무것도 없었다는 뜻이다.
+   *
+   * 보려는 것 셋:
+   *  ★ 매표소로 가는 **외길** 위를 겨누면 확정 바가 `매표소로 가는 길이 막힙니다 —
+   *    길을 한 칸 남기세요` 이고 **확정 버튼이 죽는다**
+   *  ⚠ 음성 대조군 ① — 길 **옆** 잔디는 `손님이 못 옵니다` 로 걸린다. 즉 `blocks-gate`
+   *    가 "안 되는 자리를 다 잡는" 그물이 아니라 **자기 사유로만** 잡는다는 대조다
+   *    (사유가 뭉치면 처방이 거짓말이 된다 — 옆칸의 처방은 "길을 까세요"여야 한다)
+   *  ⚠ 음성 대조군 ② — **평행 우회로를 깔면 같은 칸이 다시 놓인다.** 전후 비교가
+   *    아니라 "지금 안 닿는다"로 짰다면 여기서도 계속 막혀야 하고, 그게 곧
+   *    "되돌릴 방법까지 막힌 판"이다
+   *
+   * 조준은 **진짜 터치**다 (CDP `Input.dispatchTouchEvent`). 백도어는 판을 만들고
+   * (지형을 잔디로 밀고 외길 하나만 되돌린다) 조준 칸을 **읽는** 데만 쓴다 —
+   * 화면이 되는지는 진짜 터치로 본다 (K33).
+   *
+   * ⚠ 판을 통째로 갈아엎으므로 **새 컨텍스트**에서 돈다. "절이 만든 지형은 절이
+   * 되돌린다" 를 컨텍스트 격리로 지킨다 (되돌리기보다 강하다 — 세이브도 같이 격리된다).
+   */
+  {
+    const cx = await browser.newContext(DEVICE);
+    const pg = await cx.newPage();
+    const gateErrors: string[] = [];
+    pg.on('pageerror', (e) => gateErrors.push(String(e)));
+    await pg.addInitScript(`try { localStorage.clear(); } catch {}`);
+    await pg.goto(URL, { waitUntil: 'load' });
+    await pg.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+    const gateCdp = await cx.newCDPSession(pg);
+    const gateTouch = async (type: TouchType, x: number, y: number): Promise<void> => {
+      await gateCdp.send('Input.dispatchTouchEvent', {
+        type,
+        touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }],
+      });
+    };
+
+    /*
+     * 판 셋업 — **외길을 하나 만든다.**
+     *
+     * 공원 전체를 잔디로 밀면 손님이 지나갈 수 있는 칸이 0 이 된다 (K32-B: 잔디는
+     * 못 지나간다). 거기서 정류장 쪽 입구 열 → 매표소 윗줄만 포장으로 되돌리면
+     * **매표소로 가는 길이 정확히 하나**다. 그 길 한가운데가 이 절의 과녁이다.
+     *
+     * ⚠ 실내 바닥을 잔디로 밀면 방이 사라지므로 벽도 사라져야 한다 — 게임과 **같은
+     * 함수**(`bakeIndoorWalls`)로 다시 굽는다. 하네스가 벽을 따로 지우면 지형과
+     * 어긋난 벽이 남아 "길은 있는데 못 간다"가 되고, 그러면 이 절이 재는 것이
+     * `blocks-gate` 가 아니라 그 잔해가 된다.
+     */
+    const gateSetup = (await pg.evaluate(`(() => {
+      const h = window.__kairo, t = h.terrain;
+      h.flow.frozen = true; // 조준을 재는 동안 결산·카드가 끼어들지 않게
+      h.week.abort();
+      const tix = h.placement.all().filter((f) => f.defId === 'ticket');
+      if (tix.length !== 1) return { ok: false, why: '매표소가 1개가 아니다: ' + tix.length };
+      const tk = tix[0];
+      for (let j = ${KAIRO_BAND}; j < t.height; j++) {
+        for (let i = 0; i < t.width; i++) {
+          if (t.isWater(i, j)) continue;
+          if (t.kindAt(i, j) !== 'lawn') t.paint(i, j, 'lawn');
+        }
+      }
+      h.sim.bakeIndoorWalls(t, h.walls, h.gate, h.sim.guestWalkable(t, h.placement));
+      const lane = [];
+      for (let j = ${KAIRO_BAND}; j < tk.j; j++) lane.push([h.gate.i, j]);
+      const lo = Math.min(h.gate.i, tk.i), hi = Math.max(h.gate.i, tk.i);
+      for (let i = lo; i <= hi; i++) lane.push([i, tk.j - 1]);
+      for (const [i, j] of lane) t.paint(i, j, 'path_stone');
+      for (let j = 0; j < t.height; j++) for (let i = 0; i < t.width; i++) h.scene.refreshTile(i, j);
+      h.scene.refreshAllWalls();
+      h.guests.invalidate();
+      const mid = lane[Math.floor(lane.length / 2)];
+      return { ok: true, i: mid[0], j: mid[1], lane: lane.length,
+               tk: { i: tk.i, j: tk.j }, gate: { i: h.gate.i, j: h.gate.j } };
+    })()`)) as
+      | { ok: false; why: string }
+      | {
+          ok: true;
+          i: number;
+          j: number;
+          lane: number;
+          tk: { i: number; j: number };
+          gate: { i: number; j: number };
+        };
+
+    /*
+     * 붓 — **1×1 야외 시설 아무거나.** id 를 박지 않는다: 어떤 시설을 놓느냐가 아니라
+     * "길을 막는가"가 이 절의 주제이고, 1등급 해금 목록이 바뀌어도 살아야 한다.
+     */
+    const GATE_PICK = `(() => {
+      document.getElementById('kairo-build-open').click();
+      const defs = window.__kairo.simDefs;
+      const tabs = [...document.querySelectorAll('#kairo-sheet [data-tab]')];
+      let found = null;
+      for (const tab of tabs) {
+        tab.click();
+        const items = [...document.querySelectorAll('#kairo-sheet [data-pick]')]
+          .filter((e) => e.dataset.pick.indexOf('facility:') === 0 && !e.disabled);
+        found = items.find((e) => {
+          const d = defs[e.dataset.pick.slice(9)];
+          return d && d.size[0] === 1 && d.size[1] === 1 && d.layer === 'land' &&
+                 !d.placement.requiresIndoor;
+        });
+        if (found) break;
+      }
+      if (!found) return { ok: false, why: '1x1 야외 시설 붓이 없다' };
+      const id = found.dataset.pick.slice(9);
+      found.click();
+      const sh = document.getElementById('kairo-sheet');
+      if (sh && !sh.hidden) document.getElementById('kairo-sheet-close').click();
+      return { ok: true, id: id };
+    })()`;
+
+    /** 그 칸의 화면 좌표 (CSS px) — 투영은 씬의 `tileScreenRect` 에 물어본다 */
+    const gatePoint = (i: number, j: number): string => `(() => {
+      const sc = window.__kairo.scene, cv = document.querySelector('canvas');
+      const cr = cv.getBoundingClientRect();
+      const s = cr.width / cv.width;
+      const r = sc.tileScreenRect(${i}, ${j});
+      return { x: cr.left + (r.x + r.w / 2) * s, y: cr.top + (r.y + r.h / 2) * s,
+               top: cr.top, bottom: cr.top + cr.height };
+    })()`;
+    const GATE_AIM = `(() => {
+      const a = window.__kairo.scene.aimTileNow();
+      return a ? { i: a.i, j: a.j } : null;
+    })()`;
+    type GateBar = { bar: boolean; disabled: boolean; label: string };
+    const GATE_BAR = `(() => {
+      const c = document.getElementById('kairo-confirm');
+      const b = document.getElementById('kairo-place-confirm');
+      const lab = c ? c.querySelector('.place-label') : null;
+      return { bar: !!c && !c.hidden, disabled: !b || b.disabled,
+               label: lab && lab.textContent ? lab.textContent : '' };
+    })()`;
+
+    /*
+     * 그 칸을 **진짜 손가락으로** 겨눈다.
+     *
+     * `focusTile` 은 카메라만 옮긴다 (K47-③ 이 쓰는 것과 같은 셋업 훅) — 조준은
+     * 그 뒤의 탭이 한다. 탭한 자리가 정말 그 칸이었는지는 `aimTileNow()` 로 **읽어서**
+     * 확인하고, 어긋나면 두 칸의 화면 차이만큼 탭 지점을 밀어 다시 찍는다.
+     * 좌표를 백도어로 넣지 않으므로 투영이 어긋나면 여기서 잡힌다.
+     *
+     * ⚠ 탭 사이에 **430ms** 를 둔다. 320ms 안의 두 번째 탭은 더블탭(확대)이라
+     * 조준이 아니라 배율이 바뀐다 (`KairoScene` 의 `lastTapAt`).
+     */
+    const gateAimAt = async (
+      i: number,
+      j: number,
+    ): Promise<{ landed: boolean; aim: { i: number; j: number } | null; onScreen: boolean }> => {
+      await pg.evaluate(`window.__kairo.scene.focusTile(${i}, ${j})`);
+      await pg.waitForTimeout(250);
+      let dx = 0;
+      let dy = 0;
+      let aim: { i: number; j: number } | null = null;
+      let onScreen = false;
+      for (let k = 0; k < 3; k++) {
+        const p = (await pg.evaluate(gatePoint(i, j))) as {
+          x: number;
+          y: number;
+          top: number;
+          bottom: number;
+        };
+        // HUD 몫(위 210 · 아래 210)을 피한다 — 거기서 찍으면 헤더·확정 바가 탭을 먹는다
+        onScreen = p.y > p.top + 210 && p.y < p.bottom - 210;
+        await gateTouch('touchStart', Math.round(p.x + dx), Math.round(p.y + dy));
+        await gateTouch('touchEnd', 0, 0);
+        await pg.waitForTimeout(430);
+        aim = (await pg.evaluate(GATE_AIM)) as { i: number; j: number } | null;
+        if (aim && aim.i === i && aim.j === j) return { landed: true, aim, onScreen };
+        if (!aim) break;
+        const got = (await pg.evaluate(gatePoint(aim.i, aim.j))) as { x: number; y: number };
+        const want = (await pg.evaluate(gatePoint(i, j))) as { x: number; y: number };
+        dx += want.x - got.x;
+        dy += want.y - got.y;
+      }
+      return { landed: false, aim, onScreen };
+    };
+
+    const GATE_BLOCK_MSG = '매표소로 가는 길이 막힙니다 — 길을 한 칸 남기세요';
+    const UNREACHABLE_MSG = '손님이 못 옵니다 — 여기까지 길을 까세요';
+
+    if (!gateSetup.ok) {
+      record('★ 매표소로 가는 외길 위에는 못 놓는다 — blocks-gate (P3-B, 진짜 터치)', 'fail', gateSetup.why);
+      record('⚠ 음성 대조군 ① — 길 옆 칸은 blocks-gate 가 아니라 "길을 까세요"다 (P3-B)', 'fail', gateSetup.why);
+      record('⚠ 음성 대조군 ② — 우회로를 깔면 같은 칸이 다시 놓인다 (P3-B, 전후 비교)', 'fail', gateSetup.why);
+    } else {
+      const gatePick = (await pg.evaluate(GATE_PICK)) as
+        | { ok: false; why: string }
+        | { ok: true; id: string };
+      await pg.waitForTimeout(200);
+      const brushId = gatePick.ok ? gatePick.id : '?';
+
+      /* ── ★ 외길 위 ─────────────────────────────────────────────────────── */
+      const onLane = await gateAimAt(gateSetup.i, gateSetup.j);
+      const barLane = (await pg.evaluate(GATE_BAR)) as GateBar;
+      record(
+        '★ 매표소로 가는 외길 위에는 못 놓는다 — blocks-gate (P3-B, 진짜 터치)',
+        gatePick.ok &&
+          onLane.landed &&
+          onLane.onScreen &&
+          barLane.bar &&
+          barLane.disabled &&
+          barLane.label === GATE_BLOCK_MSG
+          ? 'pass'
+          : 'fail',
+        `붓 ${brushId} · 외길 ${gateSetup.lane}칸 · 과녁 (${gateSetup.i},${gateSetup.j}) · ` +
+          `조준 ${onLane.aim ? `(${onLane.aim.i},${onLane.aim.j})` : '없음'}` +
+          `${onLane.landed ? '' : ' (탭이 과녁에 안 앉았다)'} · ` +
+          `확정 ${barLane.disabled ? '비활성' : '활성'} · "${barLane.label}"`,
+      );
+
+      /* ── ⚠ 음성 대조군 ① 길 옆 잔디 ────────────────────────────────────── */
+      const beside = await gateAimAt(gateSetup.i + 2, gateSetup.j);
+      const barBeside = (await pg.evaluate(GATE_BAR)) as GateBar;
+      record(
+        '⚠ 음성 대조군 ① — 길 옆 칸은 blocks-gate 가 아니라 "길을 까세요"다 (P3-B)',
+        beside.landed && barBeside.bar && barBeside.label === UNREACHABLE_MSG
+          ? 'pass'
+          : 'fail',
+        `과녁 (${gateSetup.i + 2},${gateSetup.j}) · ` +
+          `조준 ${beside.aim ? `(${beside.aim.i},${beside.aim.j})` : '없음'} · ` +
+          `"${barBeside.label}"`,
+      );
+
+      /* ── ⚠ 음성 대조군 ② 평행 우회로 ───────────────────────────────────── */
+      const detour = (await pg.evaluate(`(() => {
+        const h = window.__kairo, t = h.terrain;
+        // 매표소 두 줄 위에 평행한 우회로 — 외길이 둘이 된다
+        for (let i = ${gateSetup.tk.i}; i <= ${gateSetup.gate.i}; i++) {
+          t.paint(i, ${gateSetup.tk.j} - 2, 'path_stone');
+        }
+        t.paint(${gateSetup.tk.i}, ${gateSetup.tk.j} - 1, 'path_stone');
+        for (let j = 0; j < t.height; j++) for (let i = 0; i < t.width; i++) h.scene.refreshTile(i, j);
+        h.guests.invalidate();
+        return h.placement.count;
+      })()`)) as number;
+      const again = await gateAimAt(gateSetup.i, gateSetup.j);
+      const barAgain = (await pg.evaluate(GATE_BAR)) as GateBar;
+      // 라벨만 보고 넘어가지 않는다 — 확정을 눌러 **실제로 놓이는지**까지 본다
+      if (barAgain.bar && !barAgain.disabled) {
+        await pg.click('#kairo-place-confirm');
+        await pg.waitForTimeout(350);
+      }
+      const placedNow = (await pg.evaluate(
+        `(() => { const h = window.__kairo; const it = h.placement.at(${gateSetup.i}, ${gateSetup.j}); return { defId: it ? it.defId : null, count: h.placement.count }; })()`,
+      )) as { defId: string | null; count: number };
+      record(
+        '⚠ 음성 대조군 ② — 우회로를 깔면 같은 칸이 다시 놓인다 (P3-B, 전후 비교)',
+        again.landed &&
+          barAgain.bar &&
+          !barAgain.disabled &&
+          barAgain.label.indexOf(GATE_BLOCK_MSG) < 0 &&
+          placedNow.defId !== null &&
+          placedNow.count === detour + 1
+          ? 'pass'
+          : 'fail',
+        `같은 칸 (${gateSetup.i},${gateSetup.j}) · 확정 ${barAgain.disabled ? '비활성' : '활성'} · ` +
+          `"${barAgain.label}" · 놓인 것 ${placedNow.defId ?? '없음'} · ` +
+          `시설 ${detour} → ${placedNow.count}`,
+      );
+      await pg.screenshot({ path: `${SHOT_DIR}/kairo-blocks-gate.png` });
+
+      // 뒷정리 — 이 절이 연 것은 이 절이 닫는다 (지형은 컨텍스트 격리가 되돌린다)
+      await pg.evaluate(`(() => {
+        const c = document.getElementById('kairo-place-cancel');
+        if (c && !document.getElementById('kairo-confirm').hidden) c.click();
+        if (window.__kairoClearBrush) window.__kairoClearBrush();
+        const sh = document.getElementById('kairo-sheet');
+        if (sh && !sh.hidden) document.getElementById('kairo-sheet-close').click();
+      })()`);
+    }
+
+    record(
+      '입구 봉쇄 절에서 페이지 예외 0',
+      gateErrors.length === 0 ? 'pass' : 'fail',
+      gateErrors.slice(0, 3).join(' | '),
     );
     await cx.close();
   }
