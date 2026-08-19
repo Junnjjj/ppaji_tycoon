@@ -57,6 +57,26 @@
    */
   --sk-emboss-on-solid: 0 1px 0 rgb(0 0 0 / 40%);
 
+  /*
+   * ── 선택은 채움이다 (K46-② 레퍼런스 실측) ──────────────────────────
+   * 컨셉의 선택 상태는 외곽선 강조가 아니라 **칠해진 면**이다: 메인 탭·버튼은
+   * 노랑(#f8cc38 실측) + 진갈 글씨, 2차 필터(칩)는 파랑(#396bc2 실측) + 흰 글씨.
+   * 파랑은 실측값 그대로면 흰 글씨 4.5:1 미달이라 (K35 의 #1b76ff 와 같은 사고)
+   * 살짝 어둡게 보정했다. 현금은 진갈 알약(#3b2308) + 노란 숫자 — 값 중의 값이라
+   * 헤더에서 유일하게 어둡다. 날씨는 하늘색 사각 칩(#4989d0) — 아이콘 닻이다.
+   */
+  --select-fill: linear-gradient(#fcd964, #f3c22f);
+  --select-sub: linear-gradient(#3f74c9, #2c56a8);
+  --sub-edge-top: #6ea1e4;
+  --sub-edge-bottom: #21447e;
+  --cash-bg: linear-gradient(#452a0e, #331e06);
+  --cash-text: #f6ca3a;
+  --sky-chip: linear-gradient(#5b9ada, #3f7ecb);
+  --sky-edge-top: #7fb5e8;
+  --sky-edge-bottom: #2b5a94;
+  /* 트레이 안 항목 구분선 — 캡슐을 쪼개는 대신 한 면 위에 금을 긋는다 */
+  --tray-divider: rgb(160 110 50 / 35%);
+
   /* HUD 표면 색 — 하드코딩을 여기로 모은다 (정적 검사가 지킨다) */
   --panel-sunk: linear-gradient(#e8c88f, #f0d5a4);
   --panel-primary: linear-gradient(#8a5216, #66380a);
@@ -684,12 +704,131 @@ body {
   color: var(--accent);
 }
 
+/* ── 2단 헤더 (K46, 레퍼런스 구조) — 1줄 날씨·날짜·현금, 2줄 지표·리포트 ── */
+.ktop {
+  position: fixed;
+  top: calc(6px + var(--safe-t));
+  left: 8px;
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: none;
+  /* 전폭 밴드가 아니라 내용 폭만 — 가로 화면에서 HUD 예산을 안 태운다 (K46) */
+  width: max-content;
+  max-width: calc(100vw - 16px);
+}
+
+/*
+ * ⚠ 캡슐을 항목마다 하나씩 띄우면 "풍선 무더기"가 된다 — 실제로 그랬고 사용자가
+ * 가독성 저하로 지적했다. 레퍼런스처럼 **줄 하나 = 면 하나(트레이)**이고, 안의
+ * 항목들은 테두리 없이 구분선으로만 나뉜다. 위계는 색이 만든다: 파란 날씨 칩(닻) ·
+ * 크림 본문 · 진갈 현금 알약(값 중의 값).
+ */
+.ktray {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background:
+    var(--panel) padding-box,
+    linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
+  box-shadow: var(--sk-lift), var(--sk-inset);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+  text-shadow: var(--sk-emboss);
+  white-space: nowrap;
+  pointer-events: none;
+  width: fit-content;
+}
+
+/* 날씨 — 하늘색 사각 칩. 트레이의 왼쪽 닻이다 (레퍼런스 그대로) */
+.kwx {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background:
+    var(--sky-chip) padding-box,
+    linear-gradient(var(--sky-edge-top), var(--sky-edge-bottom)) border-box;
+  box-shadow: inset 0 2px 0 rgb(255 255 255 / 35%);
+  text-shadow: none;
+}
+
+/* 현금 — 진갈 알약 + 노란 숫자. 헤더에서 유일하게 어두운 면이다 */
+.kcash {
+  padding: 5px 13px;
+  border-radius: 999px;
+  background: var(--cash-bg);
+  color: var(--cash-text);
+  font-weight: 800;
+  text-shadow: var(--sk-emboss-on-solid);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 14%),
+    inset 0 -1px 0 rgb(0 0 0 / 30%);
+}
+
+.ktray .grow {
+  padding: 0 4px;
+}
+
+/* 지표 — 트레이 한 면 위에서 구분선으로만 나뉜다 (항목마다 캡슐 금지) */
+.kstat-mini {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  padding: 2px 10px 2px 4px;
+  border-right: 1px solid var(--tray-divider);
+}
+
+.kico-s {
+  font-size: 14px;
+}
+
+.kstat-v {
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.kbtn.small {
+  min-height: var(--tap); /* 리포트도 버튼이다 — 터치 타깃 44px 불변식 */
+  padding: 4px 12px;
+  font-size: 12px;
+  pointer-events: auto;
+  position: relative;
+}
+
+.kbadge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--bad);
+  color: var(--text-on-solid);
+  text-shadow: var(--sk-emboss-on-solid);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 16px;
+  text-align: center;
+}
+
 /* 목표 — 좌상단 캡슐 아래. 안 보이면 시나리오가 설정 문구가 된다 */
 /* ── 의뢰 칩 기둥 (K40, concept-28) — 목표란의 후신. 기둥 전체가 버튼 하나다 ── */
 .kchipcol {
   position: fixed;
   left: 8px;
-  top: calc(44px + var(--safe-t));
+  top: calc(96px + var(--safe-t));
   z-index: 9;
   display: flex;
   flex-direction: column;
@@ -807,8 +946,10 @@ body {
 }
 
 .kbtn.on {
-  border-color: var(--accent);
-  color: var(--accent);
+  background:
+    var(--select-fill) padding-box,
+    linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
+  color: var(--text);
 }
 
 .kbtn.primary {
@@ -971,10 +1112,9 @@ body {
 
 .ksheet-head .tab-btn.on {
   background:
-    var(--panel) padding-box,
+    var(--select-fill) padding-box,
     linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
-  border-color: var(--accent);
-  color: var(--accent);
+  color: var(--text);
 }
 
 .ksheet-title {
@@ -1431,8 +1571,10 @@ body {
 }
 
 .kcourse-item.on {
-  border-color: var(--accent);
-  color: var(--accent);
+  background:
+    var(--select-fill) padding-box,
+    linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
+  color: var(--text);
 }
 
 .kcourse-item[disabled] {
@@ -1785,10 +1927,21 @@ body {
   padding: 0 14px;
 }
 
-/* 고른 것 — `.kbtn.on` 과 **같은 색**이어야 한다 (K34 의 요지다) */
+/* 2차 필터의 선택은 파랑이다 — 메인(노랑)과 층이 다름을 색이 말한다 (레퍼런스 실측) */
+.kchips > .kbtn.on {
+  background:
+    var(--select-sub) padding-box,
+    linear-gradient(var(--sub-edge-top), var(--sub-edge-bottom)) border-box;
+  color: var(--text-on-solid);
+  text-shadow: var(--sk-emboss-on-solid);
+}
+
+/* 고른 것 — `.kbtn.on` 과 **같은 칠**이어야 한다 (K34 의 요지다) */
 .kitem.on {
-  border-color: var(--accent);
-  color: var(--accent);
+  background:
+    var(--select-fill) padding-box,
+    linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
+  color: var(--text);
 }
 
 /* 전면 화면의 머리는 시트보다 크다 — 화면 전체를 차지하니 제목도 그만큼 */

@@ -358,7 +358,7 @@ async function main(): Promise<void> {
     // 해금분만 내는지 — 시트의 시설 수가 sim 의 '현 등급 이하' 수와 같아야 한다 (K40)
     const h = window.__kairo;
     const gradeNow = Number((/([0-9])등급/.exec(
-      document.getElementById('kairo-status').textContent) || [0, 0])[1]);
+      document.getElementById('kairo-grade').textContent) || [0, 0])[1]);
     const unlocked = Object.keys(h.simDefs).filter(
       (id) => h.quests.requiredGrade(id) <= gradeNow,
     ).length;
@@ -3739,9 +3739,14 @@ async function main(): Promise<void> {
    * 지키면 바를 더 줄일 수 없으므로 가로는 여기가 사실상 바닥이다.
    * (레퍼런스도 720px 높이에서 60px 바 = 8.3% 였다.)
    */
+  /*
+   * K46: 레퍼런스(카이로 실물)의 2단 헤더 구조를 사용자가 지정했다 — 헤더가 지표
+   * 3종 + 리포트를 상시로 지므로 예산이 오른다. 예전 40% 대비 여전히 절반 이하이고,
+   * 레퍼런스 자체가 이 정도를 쓴다 (상단 2줄 + 하단 2단).
+   */
   for (const [vw, vh, tag, budget] of [
-    [393, 852, '세로', 14],
-    [852, 393, '가로', 22],
+    [393, 852, '세로', 22],
+    [852, 393, '가로', 30],
   ] as const) {
     const cx = await browser.newContext({
       viewport: { width: vw, height: vh },
@@ -3768,8 +3773,8 @@ async function main(): Promise<void> {
       `${m.chrome}%`,
     );
     record(
-      `${tag} — 상시 컨트롤 3개 (메뉴·건설·한 주)`,
-      m.controls === 3 ? 'pass' : 'fail',
+      `${tag} — 상시 컨트롤 4개 (메뉴·건설·하루·리포트 — K46 헤더)`,
+      m.controls === 4 ? 'pass' : 'fail',
       `${m.controls}개`,
     );
     record(`${tag} — 터치 타깃 44px · 가로 넘침 0`,
@@ -5421,7 +5426,7 @@ async function main(): Promise<void> {
     // 지금 등급의 다음 등급으로 신청 — 자격 검사를 우회하지 않는다 (자격은 sim 검사 소관,
     // 여기는 배선이라 apply 를 직접 부른다. 판정은 실제 결산 경로가 한다)
     const gradeNow = Number((/([0-9])등급/.exec(
-      document.getElementById('kairo-status').textContent) || [0, 1])[1]);
+      document.getElementById('kairo-grade').textContent) || [0, 1])[1]);
     h.exam.apply(gradeNow + 1, h.week.week + 1, 0);
     h.runWeek(); // 주말까지 감기 → 결산에서 판정
     return { gradeBefore: gradeNow, pendingAfter: h.exam.pending !== null,

@@ -2888,5 +2888,86 @@
         "kind": "scenery"
       }
     ]
+  },
+  "uiIcons": {
+    "note": "K46 헤더/푸터의 아이콘 슬롯 — 지금은 DOM 이모지 임시. Phase G 에서 픽셀 아이콘 PNG 로 교체한다 (kcap/kbtn 안의 <img> 로). 스프라이트 계약(specs)에 안 넣는 이유: 절차적 드로어 강제 검사(missingDrawers)가 캔버스 에셋에만 해당하기 때문 — 이 목록이 곧 작업지시서다 (manifest 의 이중 역할 규칙과 같다).",
+    "style": "크림 UI 위 24×24 픽셀 아이콘, 진갈색 아웃라인, 컨셉 팩과 같은 웜 팔레트",
+    "icons": [
+      {
+        "id": "ui/icon-weather-clear",
+        "prompt": "맑음 — 해",
+        "now": "☀"
+      },
+      {
+        "id": "ui/icon-weather-cloudy",
+        "prompt": "흐림 — 구름",
+        "now": "☁"
+      },
+      {
+        "id": "ui/icon-weather-rain",
+        "prompt": "비 — 구름+빗줄기",
+        "now": "🌧"
+      },
+      {
+        "id": "ui/icon-weather-heat",
+        "prompt": "폭염 — 이글대는 해",
+        "now": "🔥"
+      },
+      {
+        "id": "ui/icon-weather-cold",
+        "prompt": "한파 — 눈결정",
+        "now": "❄"
+      },
+      {
+        "id": "ui/icon-coin",
+        "prompt": "동전 (현금 캡슐)",
+        "now": "◎(텍스트)"
+      },
+      {
+        "id": "ui/icon-satisfaction",
+        "prompt": "웃는 얼굴 (만족도)",
+        "now": "😊"
+      },
+      {
+        "id": "ui/icon-visitors",
+        "prompt": "손님 둘 실루엣 (방문객)",
+        "now": "👥"
+      },
+      {
+        "id": "ui/icon-grade",
+        "prompt": "별 (등급)",
+        "now": "⭐"
+      },
+      {
+        "id": "ui/icon-report",
+        "prompt": "차트 종이 (리포트)",
+        "now": "📈"
+      },
+      {
+        "id": "ui/icon-menu",
+        "prompt": "톱니 (메뉴)",
+        "now": "텍스트"
+      },
+      {
+        "id": "ui/icon-build",
+        "prompt": "망치+안전모 (건설)",
+        "now": "텍스트"
+      },
+      {
+        "id": "ui/icon-day",
+        "prompt": "이중 화살표 (하루 감기)",
+        "now": "» 텍스트"
+      },
+      {
+        "id": "ui/icon-quest",
+        "prompt": "클립보드 (의뢰 칩)",
+        "now": "📋"
+      },
+      {
+        "id": "ui/icon-exam",
+        "prompt": "인장 문서 (심사)",
+        "now": "📋"
+      }
+    ]
   }
 }

@@ -75,6 +75,8 @@ export interface HudOptions {
    * 메뉴 시트 안에 있을 때는 버튼이 안 보여서 "코스 기능이 없다"로 읽혔다.
    */
   onCourse: () => void;
+  /** 리포트 버튼 (K46) — 지난 결산을 다시 연다 */
+  onReport?: () => void;
 }
 
 export class KairoHud {
@@ -86,6 +88,12 @@ export class KairoHud {
 
   private readonly statusCap: HTMLDivElement;
   private readonly cashCap: HTMLDivElement;
+  private readonly weatherChip: HTMLDivElement;
+  private readonly satCap: HTMLDivElement;
+  private readonly visCap: HTMLDivElement;
+  private readonly gradeCap: HTMLDivElement;
+  private readonly reportBtn: HTMLButtonElement;
+  private readonly reportBadge: HTMLSpanElement;
   private readonly goalBox: HTMLDivElement;
   private readonly riskBox: HTMLDivElement;
   private readonly brushBox: HTMLDivElement;
@@ -116,11 +124,44 @@ export class KairoHud {
   constructor(parent: HTMLElement, opts: HudOptions) {
     this.opts = opts;
 
-    // ── 상단 캡슐 ────────────────────────────────────────────────────────
-    this.statusCap = el('div', 'kcap left');
+    /*
+     * ── 상단 2단 헤더 (K46, 레퍼런스 구조) ──────────────────────────────
+     * 1줄: 날씨 칩 + 날짜·시각 + 현금. 2줄: 지표 셋(만족·방문·등급) + 리포트.
+     * 아이콘은 임시 글리프 — ui/* 에셋 슬롯이 채워지면 교체된다 (계약의 uiIcons).
+     */
+    const top = el('div', 'ktop');
+    top.id = 'kairo-top';
+    // 줄 하나 = 트레이 하나 — 항목마다 캡슐을 띄우면 풍선 무더기가 된다 (가독성 실측)
+    const row1 = el('div', 'ktray');
+    this.weatherChip = el('div', 'kwx');
+    this.weatherChip.id = 'kairo-weather';
+    this.weatherChip.textContent = '☀';
+    this.statusCap = el('div', 'grow');
     this.statusCap.id = 'kairo-status';
-    this.cashCap = el('div', 'kcap right');
+    this.cashCap = el('div', 'kcash');
     this.cashCap.id = 'kairo-cash';
+    row1.append(this.weatherChip, this.statusCap, this.cashCap);
+
+    const row2 = el('div', 'ktray');
+    row2.id = 'kairo-stats';
+    const stat = (icon: string, id: string): HTMLDivElement => {
+      const box = el('div', 'kstat-mini');
+      box.id = id;
+      box.append(el('span', 'kico-s', icon), el('span', 'kstat-v', '—'));
+      return box;
+    };
+    this.satCap = stat('😊', 'kairo-sat');
+    this.visCap = stat('👥', 'kairo-visitors');
+    this.gradeCap = stat('⭐', 'kairo-grade');
+    this.reportBtn = el('button', 'kbtn small', '📈 리포트');
+    this.reportBtn.id = 'kairo-report-open';
+    this.reportBtn.addEventListener('click', () => this.opts.onReport?.());
+    this.reportBadge = el('span', 'kbadge', 'N');
+    this.reportBadge.hidden = true;
+    this.reportBtn.append(this.reportBadge);
+    row2.append(this.satCap, this.visCap, this.gradeCap, this.reportBtn);
+    top.append(row1, row2);
+    parent.append(top);
     /*
      * 의뢰 칩 (K40, concept-28) — 목표란의 후신. "다음에 뭘 할지"가 화면에 상시로
      * 보인다: 진행 중 의뢰 둘 + 다음 등급 게이지(A4). 시나리오 이름은 메뉴로 갔다 —
@@ -131,7 +172,7 @@ export class KairoHud {
     this.goalBox = el('div', 'kchipcol');
     this.goalBox.id = 'kairo-goal';
     this.goalBox.addEventListener('click', () => this.toggle('menu'));
-    parent.append(this.statusCap, this.cashCap, this.goalBox);
+    parent.append(this.goalBox);
 
     // ── 하단 바 ──────────────────────────────────────────────────────────
     const bar = el('div', 'kbar');
@@ -282,6 +323,21 @@ export class KairoHud {
   /** ⏩ 라벨 — 주 스킵이 해금되면 '한 주 ⏩' 가 된다 (K42) */
   setWeekLabel(text: string): void {
     this.weekBtn.textContent = text;
+  }
+
+  /** 헤더 2줄 (K46) — 날씨·지표·리포트 배지 */
+  setHeader(h: {
+    weather: string;
+    sat: string;
+    visitors: string;
+    grade: string;
+    reportNew: boolean;
+  }): void {
+    this.weatherChip.textContent = h.weather;
+    (this.satCap.querySelector('.kstat-v') as HTMLElement).textContent = h.sat;
+    (this.visCap.querySelector('.kstat-v') as HTMLElement).textContent = h.visitors;
+    (this.gradeCap.querySelector('.kstat-v') as HTMLElement).textContent = h.grade;
+    this.reportBadge.hidden = !h.reportNew;
   }
 
   setStatus(text: string): void {

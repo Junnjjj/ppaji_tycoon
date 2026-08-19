@@ -459,6 +459,11 @@ export class WeekRunner {
     return this.live ? this.live.days : null;
   }
 
+  /** 지금 진행 중인 날의 날씨 (K46 헤더) — 하루가 열리기 전이면 null */
+  liveWeather(): Weather | null {
+    return this.live?.day?.weather ?? null;
+  }
+
   /** 흐름 모드가 읽는 진행 상태 — 요일 표기·주 마디 판정용 */
   liveProgress(): { tick: number; day: number; done: boolean } | null {
     if (!this.live) return null;

@@ -629,6 +629,16 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       }
     },
     onWeek: () => skipForward(),
+    // 리포트 (K46) — 지난 결산 다시 보기. 수동 열람이라 카드 사슬을 안 탄다
+    onReport: () => {
+      if (!lastReport) {
+        toast('아직 결산이 없습니다 — 첫 주를 보내세요');
+        return;
+      }
+      reportSeenWeek = lastReport.week;
+      report.show(lastReport, { onClose: () => undefined });
+      refreshCaps();
+    },
     // 카드 썸네일 — 게임과 같은 그림을 같은 계약 ID 로 (제공자가 곧 정본이다)
     thumbFor: (sid: string) => (h.provider.has(sid) ? h.provider.get(sid) : null),
     /*
@@ -1794,14 +1804,34 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     spring: '봄',
   };
   let lastGradeShown = -1;
+  /** 리포트 배지 — 이 주차 결산을 아직 안 열어 봤으면 N (K46) */
+  let reportSeenWeek = saved?.lastSummary ? (saved.week.week ?? 0) : 0;
+  const WEATHER_GLYPH: Record<string, string> = {
+    clear: '☀',
+    cloudy: '☁',
+    rain: '🌧',
+    heat: '🔥',
+    cold: '❄',
+  };
   const refreshCaps = (): void => {
     const g = currentGrade();
     const lp = week.liveProgress();
     const dayLabel = lp && !lp.done ? ` ${DAY_NAMES[lp.day] ?? ''}` : '';
+    // 하루 120 tick 을 09:00~21:00 으로 — 시각은 표시일 뿐 sim 은 tick 만 안다
+    const frac = lp && !lp.done ? (lp.tick % TICKS_PER_DAY) / TICKS_PER_DAY : 0;
+    const mins = Math.floor(9 * 60 + frac * 12 * 60);
+    const clock = `${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}`;
     hud.setStatus(
-      `주 ${lp ? week.week + 1 : week.week}${dayLabel} · ${SEASON_NAME[season] ?? season} · ${g.grade}등급`,
+      `주 ${lp ? week.week + 1 : week.week}${dayLabel} · ${SEASON_NAME[season] ?? season} · ${clock}`,
     );
     hud.setCash(week.cash);
+    hud.setHeader({
+      weather: WEATHER_GLYPH[week.liveWeather() ?? ''] ?? '☀',
+      sat: `${Math.round(reputation.value)}%`,
+      visitors: `${lastSummary?.visitors ?? 0}명`,
+      grade: `${g.grade}등급`,
+      reportNew: lastReport !== null && lastReport.week > reportSeenWeek,
+    });
     if (g.grade !== lastGradeShown) {
       lastGradeShown = g.grade;
       refreshBuildList();

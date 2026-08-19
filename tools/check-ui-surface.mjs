@@ -275,6 +275,10 @@ const PAIRS = [
   ['좋음 · 패널', '--good', '--panel', 3],
   ['나쁨 · 패널', '--bad', '--panel', 3],
   ['밝은칠 위 글씨 · 가족', '--on-light', '--group-family', 3],
+  // K46-② 채움 선택 — 레퍼런스 파랑 원값(#396bc2)은 4.5:1 미달이라 보정했다. 지킨다
+  ['본문 · 선택 채움(노랑)', '--text', '--select-fill', 4.5],
+  ['흰 글씨 · 2차 선택(파랑)', '--text-on-solid', '--select-sub', 4.5],
+  ['현금 숫자 · 현금판', '--cash-text', '--cash-bg', 4.5],
 ];
 
 const bad = [];
