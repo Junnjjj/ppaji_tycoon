@@ -17,7 +17,12 @@ import { CourseStore } from './course.js';
 import { mapType, DEFAULT_MAP } from './scenario.js';
 import { bakeIndoorWalls } from './indoor.js';
 
-function makeWorld(seed: number): WeekRunner {
+interface World {
+  runner: WeekRunner;
+  place: (defId: string, i: number, j: number) => boolean;
+}
+
+function makeWorld(seed: number): World {
   const W = KairoTerrain.WIDTH;
   const H = KairoTerrain.HEIGHT;
   const map = mapType(DEFAULT_MAP);
@@ -33,7 +38,10 @@ function makeWorld(seed: number): WeekRunner {
   bakeIndoorWalls(terrain, walls, gate, guestWalkable(terrain, placement));
   const guests = new GuestStore(terrain, walls, placement, gate);
   guests.invalidate();
-  return new WeekRunner(terrain, placement, guests);
+  return {
+    runner: new WeekRunner(terrain, placement, guests),
+    place: (defId, i, j) => placement.place(terrain, walls, gate, defId, i, j).ok,
+  };
 }
 
 /** 결산 비교용 — JSON 직렬화로 깊은 동일성 (playback 포함) */
@@ -60,8 +68,8 @@ const SPLITS = [1, 7, 113, 120, 840];
 describe('주 항등 — run ≡ 분할 step', () => {
   it('4시드 × 6주, 결산이 완전히 같다 (재생 기록 포함)', () => {
     for (const seed of [11, 42, 777, 20260819]) {
-      const a = makeWorld(seed);
-      const b = makeWorld(seed);
+      const a = makeWorld(seed).runner;
+      const b = makeWorld(seed).runner;
       for (let wk = 0; wk < 6; wk++) {
         const ra = a.run(new Rng(seed * 1000 + wk), OPTS);
 
@@ -82,8 +90,8 @@ describe('주 항등 — run ≡ 분할 step', () => {
 
   it('음성 대조군 — 위반을 주입하면 어긋난다 (검사가 정말 비교하고 있다)', () => {
     const seed = 42;
-    const a = makeWorld(seed);
-    const b = makeWorld(seed);
+    const a = makeWorld(seed).runner;
+    const b = makeWorld(seed).runner;
     const ra = a.run(new Rng(seed), OPTS);
 
     b.setIdentityFaultForTest(true);
@@ -94,8 +102,37 @@ describe('주 항등 — run ≡ 분할 step', () => {
     expect(key(rb)).not.toBe(key(ra));
   });
 
+  it('주 중간 건설이 그 주 결산에 반영된다 — 흐르는 낮의 요점', () => {
+    /*
+     * 흐름 모드에서는 주가 도는 **중에** 짓는다 (K39). 4일째에 시설을 하나 세우면
+     * 남은 사흘의 유지비가 결산에 들어와야 한다 — 안 들어오면 "놓자마자 반응이 보인다"
+     * 가 거짓이 된다. 경계에만 지은 판(봇·골든의 방식)과 유지비가 달라야 정상이다.
+     */
+    const base = makeWorld(42).runner;
+    const mid = makeWorld(42);
+    const repBase = base.run(new Rng(9), OPTS);
+
+    mid.runner.begin(new Rng(9), OPTS);
+    mid.runner.step(480); // 4일째 한복판
+    let placed = false;
+    outer: for (let j = 10; j < 40; j++) {
+      for (let i = 30; i < 70; i++) {
+        if (mid.place('parasol', i, j)) {
+          placed = true;
+          break outer;
+        }
+      }
+    }
+    expect(placed, '주중 건설 자리를 찾는다').toBe(true);
+    while (!mid.runner.liveProgress()?.done) mid.runner.step(97);
+    const repMid = mid.runner.finish();
+
+    // 유지비: 남은 사흘치만큼 더 나와야 한다 (하루 단위로 나눠 물리므로 > 0 차이)
+    expect(repMid.upkeep).toBeGreaterThan(repBase.upkeep);
+  });
+
   it('수명 가드 — 순서를 어기면 조용히 썩는 대신 던진다', () => {
-    const r = makeWorld(7);
+    const r = makeWorld(7).runner;
     expect(() => r.step(1)).toThrow(); // begin 전 step
     expect(() => r.finish()).toThrow(); // begin 전 finish
     r.begin(new Rng(1), OPTS);

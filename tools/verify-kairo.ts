@@ -5171,6 +5171,101 @@ async function main(): Promise<void> {
   );
   await p2.screenshot({ path: `${SHOT_DIR}/kairo-android.png` });
 
+  /*
+   * ── K39. 흐르는 낮 ──
+   *
+   * 공원이 기본 상태로 살아 있는지 — 시간이 흐르고, 시트가 열리면 멈추고,
+   * ⏩ 는 하루만 감고(주 스킵은 심사 해금 전), 사건 밀도가 목표를 넘는지.
+   * ⚠ 시트 여닫기는 **진짜 클릭**으로 한다 (K33: 백도어는 sim 검사에만).
+   */
+  await page.evaluate(`(() => {
+    const h = window.__kairo;
+    h.flow.frozen = false;
+    h.week.abort(); // 어느 tick 에 있었는지 모른다 — 주 첫 tick 에서 결정적으로 시작
+    h.beginWeek();
+  })()`);
+  const flowT1 = (await page.evaluate(`window.__kairo.week.liveProgress().tick`)) as number;
+  await page.waitForTimeout(1400);
+  const flowT2 = (await page.evaluate(`window.__kairo.week.liveProgress().tick`)) as number;
+  record(
+    '★ 시간이 흐른다 — 지도가 보이는 동안 tick 이 저절로 소비된다 (K39)',
+    flowT2 > flowT1 ? 'pass' : 'fail',
+    `${flowT1} → ${flowT2} (1.4초)`,
+  );
+
+  await page.click('#kairo-build-open'); // 진짜 클릭 — 시트가 열린다
+  await page.waitForTimeout(300);
+  const pauseT1 = (await page.evaluate(`window.__kairo.week.liveProgress().tick`)) as number;
+  await page.waitForTimeout(1200);
+  const pauseT2 = (await page.evaluate(`window.__kairo.week.liveProgress().tick`)) as number;
+  await page.click('#kairo-sheet-close');
+  await page.waitForTimeout(200);
+  record(
+    '★ 시트가 열리면 시간이 멈춘다 — 카이로의 암묵 멈춤 (음성 대조군: 위 검사가 흐름을 증명)',
+    pauseT2 === pauseT1 ? 'pass' : 'fail',
+    `시트 연 1.2초 동안 ${pauseT1} → ${pauseT2}`,
+  );
+
+  // 스킵 측정 동안 rAF 가 tick 을 더 밀지 않게 얼린다 (스킵 자체는 frozen 과 무관)
+  await page.evaluate(`(() => { window.__kairo.flow.frozen = true; })()`);
+  const skipBefore = (await page.evaluate(
+    `window.__kairo.week.liveProgress().tick`,
+  )) as number;
+  await page.click('#kairo-week'); // 진짜 클릭 — ⏩
+  await page.waitForTimeout(250);
+  const skipAfter = (await page.evaluate(`(() => {
+    const p = window.__kairo.week.liveProgress();
+    return p ? p.tick : -1;
+  })()`)) as number;
+  const dayEnd = Math.ceil((skipBefore + 1) / 120) * 120;
+  record(
+    '★ ⏩ 는 하루 끝까지만 감는다 — 주 스킵은 첫 심사 통과 해금 (스펙 A2)',
+    skipAfter === dayEnd && skipAfter < 840 ? 'pass' : 'fail',
+    `${skipBefore} → ${skipAfter} (하루 경계 ${dayEnd})`,
+  );
+  const capsule = (await page.evaluate(
+    `document.getElementById('kairo-status').textContent`,
+  )) as string;
+  record(
+    '상단 캡슐에 요일이 보인다 (검수 A1)',
+    /[월화수목금토일]/.test(capsule) ? 'pass' : 'fail',
+    capsule,
+  );
+  await page.evaluate(`(() => { window.__kairo.flow.frozen = false; })()`);
+
+  /*
+   * 사건 밀도 (스펙 §2.1) — 도착·이모트가 분당 6 을 넘어야 구경이 심심하지 않다.
+   * 2× 로 12초를 관측해 1× 분당으로 환산한다 (도착 = alive+exited 증가).
+   */
+  const density = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    h.flow.speed = 2;
+    const s0 = h.guests.stats();
+    const t0 = h.week.liveProgress().tick;
+    return { entered0: s0.alive + s0.exited, t0: t0 };
+  })()`)) as { entered0: number; t0: number };
+  await page.waitForTimeout(12000);
+  const density2 = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    const s1 = h.guests.stats();
+    let emotes = 0;
+    for (const g of h.guests.all) if (g.emote) emotes++;
+    const t1 = h.week.liveProgress() ? h.week.liveProgress().tick : 840;
+    h.flow.speed = 1;
+    return { entered1: s1.alive + s1.exited, emotes: emotes, t1: t1 };
+  })()`)) as { entered1: number; emotes: number; t1: number };
+  // 관측한 tick 을 1× 실시간으로 환산: tick × 0.4초
+  const obsMinutes = ((density2.t1 - density.t0) * 0.4) / 60;
+  const perMin =
+    obsMinutes > 0
+      ? Math.round((density2.entered1 - density.entered0 + density2.emotes) / obsMinutes)
+      : 0;
+  record(
+    '사건 밀도 — 1× 기준 분당 가시 사건 ≥ 6 (도착+이모트, 스펙 §2.1 ⚖)',
+    perMin >= 6 ? 'pass' : 'fail',
+    `분당 ${perMin} (도착 ${density2.entered1 - density.entered0} · 이모트 ${density2.emotes} · 관측 ${Math.round(obsMinutes * 60)}초분)`,
+  );
+
   await browser.close();
 
   const failed = results.filter((r) => r.verdict === 'fail');
