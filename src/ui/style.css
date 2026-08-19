@@ -696,6 +696,12 @@ body {
   gap: 5px;
   max-width: 44vw;
   cursor: pointer;
+  /* 기둥 자체는 드래그를 안 먹는다 — 좌상단이 팬 사각지대가 되지 않게 (칩만 탭 대상) */
+  pointer-events: none;
+}
+
+.kchipcol .kchip {
+  pointer-events: auto;
 }
 
 .kchip {

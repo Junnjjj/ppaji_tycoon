@@ -142,6 +142,27 @@ export function applyStartKit(input: StartKitInput): StartKitResult {
     facilities += laid;
     if (laid < st.deck) skipped.push(`데크 ${laid}/${st.deck}`);
     if (laid > 0) dockAt = { x: shore.i, y: shore.j + laid - 1 };
+    /*
+     * ── 4¾. 선착장 시설 (K45) — 코스의 관문 ──
+     *
+     * 코스는 선착장이 붙은 잔교에서만 시작한다 (dock 시설 note 의 원래 의도).
+     * 물려받은 빠지에 선착장이 없으면 새 판에서 코스 편집이 후보 0 으로 시작한다 —
+     * 매표소를 1등급으로 내린 것과 같은 관문 문제라, 킷이 하나 물려준다.
+     */
+    if (laid > 0) {
+      let dockPlaced = false;
+      // 2×4 발자국이라 물이 좁은 시드가 있다 (lake/42 실측) — 좌우·상하로 넓게 훑는다
+      outer: for (const di of [1, -2, 2, -3, 3, -4, 4, -5]) {
+        for (let dj = -3; dj <= laid + 2; dj++) {
+          if (place(placement, terrain, walls, gate, 'dock', shore.i + di, shore.j + dj)) {
+            facilities++;
+            dockPlaced = true;
+            break outer;
+          }
+        }
+      }
+      if (!dockPlaced) skipped.push('선착장');
+    }
   }
 
   /*

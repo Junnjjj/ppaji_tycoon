@@ -470,7 +470,7 @@ export class GuestStore {
       const def = facilityDef(item.defId);
       if (!def) continue;
       const targets: [number, number][] = [];
-      for (const [ti, tj] of PlacementGrid.footprintTiles(def, item.i, item.j)) {
+      for (const [ti, tj] of PlacementGrid.footprintTiles(def, item.i, item.j, item.facing ?? 0)) {
         for (const [di, dj] of [
           [1, 0],
           [-1, 0],

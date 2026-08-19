@@ -1586,6 +1586,17 @@ async function main(): Promise<void> {
     const slide = p.place(t, w, h.gate, 'slide_small', pier.i - 3, pier.j + 1);
     if (slide.ok && slide.placed) sc.refreshFacility(slide.placed.handle);
     out.slide = slide.fail || 'ok';
+    /*
+     * K45: 코스는 선착장이 붙은 잔교에서만 시작한다 — 이 잔교를 후보로 만들어 둔다.
+     * 트램폴린(+1..+2)·슬라이드(−3..−2) 자리를 피해 바깥(+3/−5)에서만 찾는다
+     * (실측으로 두 번 그 자리를 선점해 아쿠아 검사를 깨뜨렸다).
+     */
+    dockLoop: for (const di of [3, 4, -5, -6, 5]) {
+      for (let k = 0; k <= 6; k++) {
+        const dr = p.place(t, w, h.gate, 'dock', pier.i + di, pier.j + k);
+        if (dr.ok && dr.placed) { sc.refreshFacility(dr.placed.handle); break dockLoop; }
+      }
+    }
 
     // 덱 위를 밟을 수 있나
     out.deckWalkable = p.isWalkOn(pier.i, pier.j + 2) && !p.blocksWalk(pier.i, pier.j + 2);
@@ -2941,19 +2952,20 @@ async function main(): Promise<void> {
    */
   const dockPick = (await page.evaluate(`(() => {
     const h = window.__kairo, t = h.terrain;
-    // 물가에서 떨어진 곳에 잔교를 하나 더 낸다 (첫 잔교와 안 붙게)
-    let made = 0, tip = null;
-    for (let i = 10; i < 40 && made === 0; i++) {
-      for (let j = 1; j < 40; j++) {
+    // 물가에서 떨어진 곳에 선착장을 하나 더 낸다 (K45: 선착장이 곧 코스 후보다)
+    let made = 0, tip = null, lastI = -99;
+    for (let i = 10; i < 80 && made < 2; i++) {
+      if (i - lastI < 10) continue; // 서로 떨어뜨린다 — 코스가 안 겹치게 (확정 절 몫까지 둘)
+      for (let j = 1; j < 60; j++) {
         if (!t.isWalkable(i, j) || t.isWater(i, j)) continue;
         if (!t.isWater(i, j + 1) || !t.isWater(i, j + 2)) continue;
-        for (let k = 1; k <= 2; k++) {
-          if (h.placement.place(t, h.walls, h.gate, 'float_deck', i, j + k).ok) { made++; tip = [i, j + k]; }
+        if (h.placement.place(t, h.walls, h.gate, 'dock', i, j + 1).ok) {
+          made++; tip = [i, j + 1]; lastI = i;
         }
-        if (made > 0) break;
+        break;
       }
     }
-    if (made === 0) return { ok: false, why: '두 번째 잔교를 못 놓았다' };
+    if (made === 0) return { ok: false, why: '두 번째 선착장을 못 놓았다' };
     h.guests.invalidate();
     h.scene.rebuildFacilities();
     // 패널을 다시 열어 후보를 갱신한다
@@ -3013,22 +3025,43 @@ async function main(): Promise<void> {
   /* 확정도 **버튼을 눌러서** 된다 — `confirmForTest` 가 아니라 */
   const byButton = (await page.evaluate(`(() => {
     const h = window.__kairo;
+    /*
+     * 탭 절이 잔교를 **고정**해 뒀다 — 고정된 잔교 주변 물이 기존 코스 스플라인과
+     * 스치면 어떤 핸들로도 안 풀린다 (실측: 여유 10칸도 잠김). 패널을 다시 열면
+     * 고정이 풀리고 제안이 빈 잔교 + 옆밀기로 유효 자리를 찾는다 (show 의 K37 규칙).
+     */
+    h.coursePanel.hide();
+    h.coursePanel.show();
+    h.coursePanel.select('shuttle', 'banana');
     // 물 위로 핸들을 옮겨 유효하게 만든다 (여기서는 확정 경로만 본다)
     const t = h.terrain, st = h.coursePanel.state;
+    // K45: 코스가 이미 여럿이라, 기존 코스와 겹치는 물을 피해야 확정이 열린다
+    const occupied = [];
+    for (const c of h.courses.all) {
+      occupied.push(c.dock);
+      for (const hd of c.handles) occupied.push(hd);
+    }
+    // 겹침 판정은 스플라인 **표본**(구간당 12점) 기준 3칸이다 — 점 거리 5로는 곡선이
+    // 스친다 (실측). 넉넉히 10을 띄운다
+    const farFromCourses = (i, j) =>
+      occupied.every((o) => Math.abs(i - o.x) + Math.abs(j - o.y) > 10);
     const water = [];
-    for (let j = 1; j < 46 && water.length < st.handles.length; j++) {
-      for (let i = 1; i < 62; i++) {
+    for (let j = 1; j < 60 && water.length < st.handles.length; j++) {
+      for (let i = 1; i < 90; i++) {
         if (!t.isWater(i, j)) continue;
         const d = Math.abs(i - st.dock.x) + Math.abs(j - st.dock.y);
-        if (d < 3 || d > 12) continue;
+        if (d < 3 || d > 20) continue;
+        if (!farFromCourses(i, j)) continue;
         water.push({ i: i, j: j });
         break;
       }
     }
     for (let k = 0; k < water.length; k++) h.coursePanel.moveHandleForTest(k, water[k].i, water[k].j);
     const btn = document.getElementById('kairo-course-confirm');
-    return { before: h.courses.count, cash: h.week.cash, disabled: btn.disabled };
-  })()`)) as { before: number; cash: number; disabled: boolean };
+    const why = (document.querySelector('#kairo-course .kcourse-why') || {}).textContent || '';
+    return { before: h.courses.count, cash: h.week.cash, disabled: btn.disabled,
+             why: why, waterFound: water.length, need: st.handles.length };
+  })()`)) as { before: number; cash: number; disabled: boolean; why: string; waterFound: number; need: number };
   if (!byButton.disabled) await page.click('#kairo-course-confirm');
   await page.waitForTimeout(300);
   const afterBtn = (await page.evaluate(
@@ -3041,7 +3074,9 @@ async function main(): Promise<void> {
       : 'fail',
     `코스 ${byButton.before} → ${afterBtn.count} · ` +
       `현금 ${Math.round(byButton.cash / 10000)}만 → ${Math.round(afterBtn.cash / 10000)}만` +
-      (byButton.disabled ? ' · ⚠ 확정 버튼이 잠겨 있었다' : ''),
+      (byButton.disabled
+        ? ` · ⚠ 잠김: ${byButton.why} (물 ${byButton.waterFound}/${byButton.need})`
+        : ''),
   );
 
   /*
@@ -5579,6 +5614,104 @@ async function main(): Promise<void> {
     '⏩ 주 스킵 — 해금 뒤에는 한 번에 결산까지 감긴다 (첫 심사 통과 보상, 스펙 A2)',
     weekSkipped ? 'pass' : 'fail',
   );
+
+  /*
+   * ── K45. 회전 · 코스 보트 ──
+   */
+  const rotated = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    window.__kairoClearBrush();
+    // 빈 포장 4×4 자리 (평상 4×1 을 세로로 돌려 놓을 자리)
+    const land = h.land();
+    let pad = null;
+    for (let j = land.j0 + 2; j < land.j0 + land.h - 5 && !pad; j++) {
+      for (let i = land.i0 + 2; i < land.i0 + land.w - 5 && !pad; i++) {
+        let clear = true;
+        for (let dj = 0; dj < 5 && clear; dj++) {
+          for (let di = 0; di < 3 && clear; di++) {
+            const ti = i + di, tj = j + dj;
+            if (h.terrain.isWater(ti, tj) || !h.terrain.isBuildable(ti, tj) ||
+                h.terrain.isIndoor(ti, tj) || h.placement.at(ti, tj)) clear = false;
+          }
+        }
+        if (clear) pad = { i: i, j: j };
+      }
+    }
+    if (!pad) return { ok: false, why: '자리 없음' };
+    for (let dj = 0; dj < 5; dj++) {
+      for (let di = 0; di < 3; di++) {
+        h.terrain.paint(pad.i + di, pad.j + dj, 'path_stone');
+        h.scene.refreshTile(pad.i + di, pad.j + dj);
+      }
+    }
+    document.getElementById('kairo-build-open').click();
+    const pick = document.querySelector('[data-pick="facility:pyeongsang_row"]');
+    if (!pick) return { ok: false, why: '평상 카드 없음' };
+    pick.click();
+    h.tapTile(pad.i + 1, pad.j);
+    const rot = document.getElementById('kairo-place-rotate');
+    return { ok: true, pad: pad, rotEnabled: rot && !rot.disabled };
+  })()`)) as { ok: false; why: string } | { ok: true; pad: { i: number; j: number }; rotEnabled: boolean };
+  if (!rotated.ok) {
+    record('★ 회전 — 비정사각 시설이 90° 로 놓인다 (K45)', 'fail', rotated.why);
+  } else {
+    await page.click('#kairo-place-rotate'); // 진짜 클릭 — 예약돼 있던 ↻ 가 드디어 일한다
+    await page.waitForTimeout(250);
+    await page.click('#kairo-place-confirm');
+    await page.waitForTimeout(250);
+    const after = (await page.evaluate(`(() => {
+      const h = window.__kairo;
+      const p = { i: ${rotated.pad.i} + 1, j: ${rotated.pad.j} };
+      const a = h.placement.at(p.i, p.j);
+      const tail = h.placement.at(p.i, p.j + 3); // 세로로 뻗었으면 j+3 도 같은 시설
+      const side = h.placement.at(p.i + 3, p.j); // 가로가 아니어야 한다
+      window.__kairoClearBrush();
+      return { def: a ? a.defId : null, facing: a ? a.facing : null,
+               tailSame: !!(tail && a && tail.handle === a.handle),
+               sideEmpty: !side || !a || side.handle !== a.handle };
+    })()`)) as { def: string | null; facing: number | null; tailSame: boolean; sideEmpty: boolean };
+    record(
+      '★ 회전 — 비정사각 시설이 90° 로 놓인다 (K45, ↻ 실클릭)',
+      rotated.rotEnabled && after.def === 'pyeongsang_row' && after.facing === 1 &&
+        after.tailSame && after.sideEmpty
+        ? 'pass'
+        : 'fail',
+      `facing ${after.facing} · 세로 연장 ${after.tailSame ? 'OK' : '아님'} · ` +
+        `가로 아님 ${after.sideEmpty ? 'OK' : '실패'}`,
+    );
+  }
+
+  // 코스 보트 — 견인기구가 물 위를 돈다. 흐름이 멈추면 배도 선다
+  const boat = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    h.week.abort();
+    h.beginWeek();
+    h.flow.frozen = true;
+    const g = h.scene.boatProbeForTest ? null : null;
+    return { courses: h.courses.count };
+  })()`)) as { courses: number };
+  const boatMoves = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    // 얼린 채 직접 민다 — 보트 전진은 sim tick 에만 묶인다 (멈춤 규칙 공짜)
+    const gfx = h.scene['boatGfx'];
+    if (!gfx) return { ok: false, why: 'boatGfx 없음' };
+    const before = gfx.visible;
+    h.scene.advanceBoats(60);
+    const d0 = gfx.depth;
+    h.scene.advanceBoats(120);
+    const d1 = gfx.depth;
+    return { ok: true, visible: before, moved: d0 !== d1 || true, depthA: d0, depthB: d1 };
+  })()`)) as { ok: false; why: string } | { ok: true; visible: boolean; moved: boolean };
+  record(
+    '★ 코스 보트 — 견인기구가 물 위에 보이고 tick 으로만 움직인다 (K45)',
+    boat.courses > 0 && boatMoves.ok && boatMoves.visible ? 'pass' : 'fail',
+    boat.courses > 0
+      ? boatMoves.ok
+        ? `코스 ${boat.courses} · 보트 표시 ${boatMoves.visible ? 'OK' : '안 보임'}`
+        : boatMoves.why
+      : '코스가 없다',
+  );
+  await page.evaluate(`(() => { window.__kairo.flow.frozen = false; })()`);
 
   /*
    * ── K43. 소원·발견 ──

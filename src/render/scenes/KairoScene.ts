@@ -173,6 +173,20 @@ export class KairoScene extends Phaser.Scene {
    */
   private busGfx: Phaser.GameObjects.Graphics | null = null;
 
+  /**
+   * 코스 보트 (K45) — 견인기구가 실제로 물 위를 돈다. 레거시 프로토타입의
+   * onPath 보트가 원형이다 (prototype/index.html). 경로는 sim 의 스플라인 표본
+   * 그대로, **진행은 sim tick 으로만** 민다 (advanceBoats) — 시간이 멈추면 배도 선다.
+   * 에셋은 마지막이라 임시 도형이다 (버스와 같은 취급).
+   */
+  private courseBoats: {
+    path: { x: number; y: number }[];
+    /** 배마다 위상 오프셋 (0..1) */
+    boats: number[];
+    t: number;
+  }[] = [];
+  private boatGfx: Phaser.GameObjects.Graphics | null = null;
+
   /** 선착장 후보 (K33) — 편집 중에만 채워진다 */
   private dockTips: { x: number; y: number }[] = [];
   private dockSelected = -1;
@@ -349,6 +363,7 @@ export class KairoScene extends Phaser.Scene {
     this.doorGfx = this.add.graphics().setDepth(999_998);
     // 버스는 차도 위 물체다 — 그 칸의 지면 위, 그 앞줄보다 뒤
     this.busGfx = this.add.graphics();
+    this.boatGfx = this.add.graphics();
     this.refreshDoorMarks();
     this.rebuildFacilities();
     this.applyScale(this.cam.upscale);
@@ -878,17 +893,25 @@ export class KairoScene extends Phaser.Scene {
     if (!item) return;
     const def = facilityDef(item.defId);
     if (!def) return;
-    const [w, d] = def.size;
+    /*
+     * 회전 (K45) — 발자국은 w↔h 교환, 그림은 **좌우 반전**. 아이소 상자의 90° 회전은
+     * 화면에서 미러와 동치이고(bbox 가 (w+d) 로 대칭), 프로젝트 계약도 처음부터
+     * "facing 은 flipX 근사" 다 (D-035). 광원이 뒤집히는 것은 그 계약이 감수한 값이다.
+     */
+    const facing = item.facing ?? 0;
+    const [w, d] = facing === 1 ? [def.size[1], def.size[0]] : [def.size[0], def.size[1]];
     const a = footprintAnchor(item.i, item.j, w, d);
     // 단 위의 시설은 같이 올라간다 (K37). 발자국은 단이 균일하므로 시작 칸 하나로 충분하다
     const ay = a.y + this.liftAt(item.i, item.j);
     const existing = this.facilityImages.get(handle);
     if (existing) {
       existing.setPosition(a.x, ay);
+      existing.setFlipX(facing === 1);
       return;
     }
     const img = this.add.image(a.x, ay, item.defId ? `facility/${item.defId}` : '');
     img.setOrigin(0.5, 1);
+    img.setFlipX(facing === 1);
     img.setDepth(depthKey(item.i + w - 1, item.j + d - 1) + Z_FACILITY);
     this.facilityImages.set(handle, img);
   }
@@ -1078,7 +1101,6 @@ export class KairoScene extends Phaser.Scene {
    * 여기만 바뀌고 부르는 쪽은 그대로다.
    */
   setGhost(defId: string | null, i = 0, j = 0, ok = true, facing = 0): void {
-    void facing;
     if (defId === null) {
       this.ghost?.destroy();
       this.ghost = null;
@@ -1086,7 +1108,8 @@ export class KairoScene extends Phaser.Scene {
     }
     const def = facilityDef(defId);
     if (!def) return;
-    const [w, d] = def.size;
+    // 회전 미리보기 (K45) — 실물과 같은 규칙: 발자국 교환 + flipX
+    const [w, d] = facing === 1 ? [def.size[1], def.size[0]] : [def.size[0], def.size[1]];
     const a = footprintAnchor(i, j, w, d);
     // 고스트도 단을 탄다 (K37) — 안 태우면 산 위에서 미리보기가 땅에 파묻힌다
     const ay = a.y + this.liftAt(i, j);
@@ -1097,6 +1120,7 @@ export class KairoScene extends Phaser.Scene {
       this.ghost.setTexture(`facility/${defId}`);
       this.ghost.setPosition(a.x, ay);
     }
+    this.ghost.setFlipX(facing === 1);
     this.ghost.setAlpha(0.62);
     // 못 놓는 자리는 붉게 — 확정 바의 경고색과 짝이다
     this.ghost.setTint(ok ? 0x8fe0ff : 0xff6a5a);
@@ -1678,6 +1702,75 @@ export class KairoScene extends Phaser.Scene {
     this.reportFrame();
   }
 
+  /** 코스가 바뀌면 main 이 부른다 — 경로는 sim 스플라인 표본 (타일 좌표) */
+  setCourseBoats(list: { path: { x: number; y: number }[]; vehicles: number }[]): void {
+    this.courseBoats = list
+      .filter((c) => c.path.length >= 2)
+      .map((c, k) => ({
+        path: c.path.map((p) => ({ ...p })),
+        boats: Array.from({ length: Math.max(1, c.vehicles) }, (_, b) => b / Math.max(1, c.vehicles)),
+        // 코스마다 위상을 다르게 — 전부 동시에 출발하면 기계적으로 보인다
+        t: (k * 0.37) % 1,
+      }));
+    this.drawBoats();
+  }
+
+  /**
+   * sim tick 수만큼 배를 민다 — 흐름·스킵이 부른다. 실시간이 아니라 tick 이라
+   * 멈춤 규칙(시트·모달·배경 탭)이 공짜로 적용된다.
+   */
+  advanceBoats(ticks: number): void {
+    if (this.courseBoats.length === 0 || ticks <= 0) return;
+    for (const c of this.courseBoats) {
+      // 한 바퀴(왕복) ≈ 표본 수 × 1.2tick — 표본 12개/구간이라 잔잔한 속도가 된다
+      c.t = (c.t + ticks / (c.path.length * 2.4)) % 1;
+    }
+    this.drawBoats();
+  }
+
+  /** 왕복(핑퐁) 위치 — 프리셋 종류와 무관하게 시각적으로 안전한 최소형 */
+  private boatPos(path: { x: number; y: number }[], t: number): { x: number; y: number } {
+    const seg = path.length - 1;
+    const tt = t < 0.5 ? t * 2 : (1 - t) * 2; // 0→1→0
+    const f = tt * seg;
+    const i = Math.min(seg - 1, Math.floor(f));
+    const frac = f - i;
+    const a = path[i] as { x: number; y: number };
+    const b = path[i + 1] as { x: number; y: number };
+    return { x: a.x + (b.x - a.x) * frac, y: a.y + (b.y - a.y) * frac };
+  }
+
+  private drawBoats(): void {
+    const g = this.boatGfx;
+    if (!g) return;
+    g.clear();
+    if (this.courseBoats.length === 0) {
+      g.setVisible(false);
+      return;
+    }
+    g.setVisible(true);
+    let maxDepth = 0;
+    for (const c of this.courseBoats) {
+      for (const off of c.boats) {
+        const p = this.boatPos(c.path, (c.t + off) % 1);
+        const w = tileCenter(Math.round(p.x), Math.round(p.y));
+        // 보간 좌표 — 칸 중심이 아니라 표본 사이 실수 좌표로
+        const fx = w.x + (p.x - Math.round(p.x)) * STEP_X - (p.y - Math.round(p.y)) * STEP_X;
+        const fy = w.y + (p.x - Math.round(p.x)) * STEP_Y + (p.y - Math.round(p.y)) * STEP_Y;
+        // 임시 도형 — 선체 + 항적 한 줄 (버스와 같은 취급, 에셋은 마지막)
+        g.fillStyle(0xe8dcc0, 1);
+        g.fillRect(fx - 7, fy - 4, 14, 6);
+        g.fillStyle(0x7a4a14, 1);
+        g.fillRect(fx - 7, fy + 1, 14, 2);
+        g.fillStyle(0xffffff, 0.35);
+        g.fillRect(fx - 11, fy + 2, 4, 1);
+        const d = (Math.round(p.x) + Math.round(p.y)) * 4096 + 2;
+        if (d > maxDepth) maxDepth = d;
+      }
+    }
+    g.setDepth(maxDepth);
+  }
+
   /**
    * 하루 안의 시각 표현 (K39) — 아침·저녁에 화면 전체를 살짝 물들인다.
    *
@@ -1699,15 +1792,19 @@ export class KairoScene extends Phaser.Scene {
     }
     const dawn = cssColorInt('--day-dawn');
     const dusk = cssColorInt('--day-dusk');
-    // 아침(0~0.15): 새벽빛이 걷힌다 · 낮: 없음 · 저녁(0.7~1): 땅거미가 깔린다
+    /*
+     * 아침(0~8%)·저녁(85%~)만, 알파는 낮게 (K45). 처음엔 아침 15%/0.18 · 저녁 30%/0.22
+     * 였는데 하루가 24초가 되자 화면의 절반 가까이가 물들어 "낮인데 황사 낀 것처럼
+     * 뿌옇다"는 보고를 받았다 — 낮 시간의 대부분은 무채여야 한다.
+     */
     let color = 0;
     let alpha = 0;
-    if (frac < 0.15) {
+    if (frac < 0.08) {
       color = dawn;
-      alpha = 0.18 * (1 - frac / 0.15);
-    } else if (frac > 0.7) {
+      alpha = 0.1 * (1 - frac / 0.08);
+    } else if (frac > 0.85) {
       color = dusk;
-      alpha = 0.22 * ((frac - 0.7) / 0.3);
+      alpha = 0.16 * ((frac - 0.85) / 0.15);
     }
     this.dayTint.setVisible(alpha > 0);
     this.dayTint.fillColor = color;

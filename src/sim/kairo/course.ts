@@ -130,8 +130,35 @@ export interface DockChoice {
   tiles: number;
 }
 
-export function dockCandidates(decks: readonly Vec2[], gate: Vec2): DockChoice[] {
+export function dockCandidates(
+  decks: readonly Vec2[],
+  gate: Vec2,
+  /**
+   * 선착장(견인 스테이션) 시설의 발자국 칸들 (K45). 주어지면 **선착장이 붙은 잔교만**
+   * 후보가 된다 — 코스는 아무 데크 끝이 아니라 견인기구를 설치한 곳에서 시작한다
+   * (dock 시설의 note 가 처음부터 "견인 프리셋 루프 시작점"이었다 — 이제야 배선됐다).
+   * 생략하면 예전처럼 모든 잔교가 후보다 (기존 테스트 호환).
+   */
+  anchors?: readonly Vec2[],
+): DockChoice[] {
   if (decks.length === 0) return [];
+  const anchorSet = anchors === undefined ? null : new Set(anchors.map((a) => `${a.x},${a.y}`));
+  /** 이 무리에 선착장이 붙어 있나 — 무리 칸 또는 4-이웃에 앵커가 있으면 참 */
+  const groupAnchored = (group: readonly Vec2[]): boolean => {
+    if (anchorSet === null) return true;
+    for (const g of group) {
+      for (const [dx, dy] of [
+        [0, 0],
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+      ] as const) {
+        if (anchorSet.has(`${g.x + dx},${g.y + dy}`)) return true;
+      }
+    }
+    return false;
+  };
 
   const key = (v: Vec2): string => `${v.x},${v.y}`;
   const pool = new Map<string, Vec2>();
@@ -178,11 +205,13 @@ export function dockCandidates(decks: readonly Vec2[], gate: Vec2): DockChoice[]
       tip.x === root.x && tip.y === root.y
         ? { x: tip.x - gate.x, y: tip.y - gate.y }
         : { x: tip.x - root.x, y: tip.y - root.y };
-    out.push({
-      tip: { ...tip },
-      dir: dir.x === 0 && dir.y === 0 ? { x: 0, y: 1 } : dir,
-      tiles: group.length,
-    });
+    if (groupAnchored(group)) {
+      out.push({
+        tip: { ...tip },
+        dir: dir.x === 0 && dir.y === 0 ? { x: 0, y: 1 } : dir,
+        tiles: group.length,
+      });
+    }
   }
 
   // 게이트에서 가까운 잔교 순 — 기본 선택이 곧 첫 번째다

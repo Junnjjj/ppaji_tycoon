@@ -355,3 +355,37 @@ describe('실제 지형에서 73종을 다 놓아본다', () => {
     expect(unplaceable).toEqual([]);
   });
 });
+
+describe('회전 (K45)', () => {
+  const GATE45 = { i: 0, j: 0 };
+  function flat45(size = 20): { t: KairoTerrain; w: WallGrid; p: PlacementGrid } {
+    const t = new KairoTerrain(size, size);
+    for (let i = 0; i < size; i++) for (let j = 0; j < size; j++) t.paint(i, j, 'path_stone');
+    return { t, w: new WallGrid(size, size), p: new PlacementGrid(size, size) };
+  }
+
+  it('facing 1 은 발자국을 w↔h 로 바꾼다 — 판정·점유·철거·복원까지', () => {
+    const { t, w, p } = flat45();
+    // 평상 4×1 을 세로(1×4)로
+    const r = p.place(t, w, GATE45, 'pyeongsang_row', 5, 5, { facing: 1 });
+    expect(r.ok).toBe(true);
+    expect(p.at(5, 8)?.defId).toBe('pyeongsang_row'); // 세로로 뻗었다
+    expect(p.at(8, 5)).toBeUndefined(); // 가로가 아니다
+    // 겹침 판정도 회전 발자국으로
+    expect(p.place(t, w, GATE45, 'parasol', 5, 7).ok).toBe(false);
+    expect(p.place(t, w, GATE45, 'parasol', 7, 5).ok).toBe(true);
+    // 스냅샷 왕복 — facing 이 살아남고 점유가 같다
+    const back = PlacementGrid.fromSnapshot(p.toSnapshot());
+    expect(back.at(5, 8)?.facing).toBe(1);
+    // 철거가 회전 발자국을 비운다
+    const handle = p.at(5, 5)?.handle as number;
+    p.remove(handle);
+    expect(p.at(5, 8)).toBeUndefined();
+  });
+
+  it('정사각은 회전해도 같다 — 판정이 안 갈라진다', () => {
+    const { t, w, p } = flat45();
+    expect(p.place(t, w, GATE45, 'pingpong', 3, 3, { facing: 1 }).ok).toBe(true);
+    expect(p.at(4, 4)?.defId).toBe('pingpong');
+  });
+});

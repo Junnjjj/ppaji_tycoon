@@ -65,6 +65,11 @@ export interface PlacedFacility {
   i: number;
   j: number;
   /**
+   * 회전 (K45). 0 = 데이터 그대로 · 1 = 90° (발자국 w↔h 교환).
+   * 비정사각(샤워실 4×1 등)에만 뜻이 있다. 옛 세이브에는 없다 — 없으면 0.
+   */
+  facing?: 0 | 1;
+  /**
    * 개선 단계 1~3 (§15.9 시설 상세의 [업그레이드]).
    *
    * **정원은 안 늘린다.** 정원을 늘리면 등급 상한에 막힌 상태에서 아무 효과가 없다 —
@@ -104,6 +109,8 @@ export interface PlaceOptions {
    * `{w,h}` 만 보면 왼쪽 경계를 안 봐서 입구 왼쪽 땅이 통째로 열린다.
    */
   land?: { i0: number; j0: number; w: number; h: number };
+  /** 회전 (K45) — 0 기본 · 1 = 90° (발자국 w↔h). 판정·기록 전부 이걸 따른다 */
+  facing?: 0 | 1;
 }
 
 export interface PlaceOutcome {
@@ -253,10 +260,21 @@ export class PlacementGrid {
   }
 
   /** 발자국이 덮는 타일 목록 */
-  static footprintTiles(def: KairoFacilityDef, i: number, j: number): [number, number][] {
+  /** 회전을 반영한 발자국 크기 (K45) — 발자국을 쓰는 모든 곳이 이걸 거쳐야 한다 */
+  static sizeOf(def: KairoFacilityDef, facing: 0 | 1 = 0): [number, number] {
+    return facing === 1 ? [def.size[1], def.size[0]] : [def.size[0], def.size[1]];
+  }
+
+  static footprintTiles(
+    def: KairoFacilityDef,
+    i: number,
+    j: number,
+    facing: 0 | 1 = 0,
+  ): [number, number][] {
+    const [w, h] = PlacementGrid.sizeOf(def, facing);
     const out: [number, number][] = [];
-    for (let di = 0; di < def.size[0]; di++) {
-      for (let dj = 0; dj < def.size[1]; dj++) out.push([i + di, j + dj]);
+    for (let di = 0; di < w; di++) {
+      for (let dj = 0; dj < h; dj++) out.push([i + di, j + dj]);
     }
     return out;
   }
@@ -277,7 +295,8 @@ export class PlacementGrid {
     const def = DEFS[defId];
     if (!def) return { ok: false, fail: 'unknown-def' };
 
-    const tiles = PlacementGrid.footprintTiles(def, i, j);
+    const facing = opts?.facing ?? 0;
+    const tiles = PlacementGrid.footprintTiles(def, i, j, facing);
     for (const [ti, tj] of tiles) {
       if (!this.inside(ti, tj)) return { ok: false, fail: 'outside' };
     }
@@ -313,7 +332,8 @@ export class PlacementGrid {
        * 하네스만 부르고 있었다 — 규칙이 갈라지면 "검사는 통과하는데 게임은 다르게 판정"이
        * 된다 (K38 아키텍처 점검 지적).
        */
-      if (!terrain.levelUniform(i, j, def.size[0], def.size[1])) {
+      const [fw, fh] = PlacementGrid.sizeOf(def, facing);
+      if (!terrain.levelUniform(i, j, fw, fh)) {
         return { ok: false, fail: 'level-mixed' };
       }
     }
@@ -466,9 +486,10 @@ export class PlacementGrid {
     if (!r.ok) return r;
     const def = DEFS[defId] as KairoFacilityDef;
     const handle = this.nextHandle++;
-    const placed: PlacedFacility = { handle, defId, i, j };
+    const facing = opts?.facing ?? 0;
+    const placed: PlacedFacility = { handle, defId, i, j, ...(facing === 1 ? { facing } : {}) };
     this.items.set(handle, placed);
-    for (const [ti, tj] of PlacementGrid.footprintTiles(def, i, j)) {
+    for (const [ti, tj] of PlacementGrid.footprintTiles(def, i, j, facing)) {
       this.cells[tj * this.width + ti] = handle;
     }
     return { ok: true, placed };
@@ -478,7 +499,7 @@ export class PlacementGrid {
     const item = this.items.get(handle);
     if (!item) return false;
     const def = DEFS[item.defId] as KairoFacilityDef;
-    for (const [ti, tj] of PlacementGrid.footprintTiles(def, item.i, item.j)) {
+    for (const [ti, tj] of PlacementGrid.footprintTiles(def, item.i, item.j, item.facing ?? 0)) {
       if (this.handleAt(ti, tj) === handle) this.cells[tj * this.width + ti] = 0;
     }
     this.items.delete(handle);
@@ -549,7 +570,7 @@ export class PlacementGrid {
       const def = DEFS[it.defId];
       if (!def) continue;
       g.items.set(it.handle, it);
-      for (const [ti, tj] of PlacementGrid.footprintTiles(def, it.i, it.j)) {
+      for (const [ti, tj] of PlacementGrid.footprintTiles(def, it.i, it.j, it.facing ?? 0)) {
         if (g.inside(ti, tj)) g.cells[tj * g.width + ti] = it.handle;
       }
     }

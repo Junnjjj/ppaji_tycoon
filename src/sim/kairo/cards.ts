@@ -403,6 +403,14 @@ export function validateCards(): string[] {
   ]);
   for (const c of CARDS) {
     if (ids.has(c.id)) problems.push(`중복 ID: ${c.id}`);
+    /*
+     * ⚠ 판 잠금 금지 (K45): 어떤 카드든 **확정 지출이 0 이상인 선택지**가 하나는 있어야
+     * 한다. 없으면 현금이 마른 판에서 모달이 안 닫혀 게임이 통째로 멈춘다 (K37 에서
+     * safety_check·typhoon 으로 실제로 겪은 잠금 — 이제 데이터 규칙으로 막는다).
+     */
+    if (!c.options.some((o) => optionCertainCash(o) >= 0)) {
+      problems.push(`${c.id} — 모든 선택지가 확정 지출: 현금이 마르면 판이 잠긴다`);
+    }
     ids.add(c.id);
     if (c.options.length < 2) problems.push(`${c.id} — 선택지가 2개 미만이면 선택이 아니다`);
     if (c.trigger && c.trigger !== 'accident') problems.push(`${c.id} — 모르는 trigger`);

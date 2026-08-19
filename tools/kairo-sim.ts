@@ -904,7 +904,12 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
             }
           }
           if (dock) {
-            cash -= eq.vehicleCost * 2;
+            /*
+             * 선착장(dock) 시설값도 치른다 (K45) — 실제 규칙은 "선착장이 붙은 잔교에서만
+             * 코스 시작"인데, 봇은 물자리를 추상화하므로 배치는 생략하고 값만 낸다.
+             * 값마저 빼면 헤드리스가 실제보다 코스를 싸게 얻는다.
+             */
+            cash -= eq.vehicleCost * 2 + 772_800;
             courses.add({ presetId: pick.id, equipId: eq.id, vehicles: 2, dock, handles });
           }
         }

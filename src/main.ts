@@ -223,6 +223,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         return;
       }
       /*
+       * 코스 편집 중에는 붓이 죽는다 (K45) — 편집기가 지도 탭을 잔교·핸들로 쓰므로
+       * 같은 탭이 붓으로도 흐르면 이중 반응이 된다. openCourse 가 붓을 내려놓지만,
+       * 편집 중에 시트를 다시 열어 붓을 집는 경로가 남아 있어 여기서도 막는다.
+       */
+      if (coursePanel.visible) return;
+      /*
        * 출입구 (K36-B) — **칸을 탭한다.** 경계를 폰에서 정확히 찍는 것은 무리다.
        * 그 칸의 쓸 수 있는 면 중 하나에 문이 나고, 다시 탭하면 다음 면으로 돌아간다.
        * 한 바퀴 돌면 없앤다. 후보 판정은 `doorCandidates` 하나를 sim 과 공유한다 —
@@ -245,7 +251,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
             return;
           }
           const def = facilityDef(hit.defId);
-          moveSel = { handle: hit.handle, defId: hit.defId, i: hit.i, j: hit.j };
+          moveSel = { handle: hit.handle, defId: hit.defId, i: hit.i, j: hit.j, facing: hit.facing ?? 0 };
           hud.setBrush(`이동: ${def?.name ?? hit.defId}`);
           toast(
             `${def?.name ?? hit.defId} — 옮길 자리를 탭하세요 ` +
@@ -258,15 +264,19 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         const fee = Math.floor((def?.cost ?? 0) * 0.1);
         // 프로브 — 원자리를 잠깐 치우고 재야 자기 발자국과 안 겹친다
         h.placement.remove(sel.handle);
-        const chk = h.placement.check(h.terrain, h.walls, GATE, sel.defId, i, j, placeOpts());
-        const restored = h.placement.place(
-          h.terrain, h.walls, GATE, sel.defId, sel.i, sel.j, placeOpts(),
-        );
+        const chk = h.placement.check(h.terrain, h.walls, GATE, sel.defId, i, j, {
+          ...placeOpts(),
+          facing: sel.facing,
+        });
+        const restored = h.placement.place(h.terrain, h.walls, GATE, sel.defId, sel.i, sel.j, {
+          ...placeOpts(),
+          facing: sel.facing,
+        });
         const oldHandle = sel.handle;
         if (restored.ok && restored.placed) sel.handle = restored.placed.handle;
         h.scene.refreshFacility(oldHandle);
         h.scene.refreshFacility(sel.handle);
-        h.scene.setGhost(sel.defId, i, j, chk.ok);
+        h.scene.setGhost(sel.defId, i, j, chk.ok, sel.facing);
         hud.showConfirm(
           chk.ok
             ? `이동: ${def?.name ?? sel.defId} · ${Math.round(fee / 10000)}만`
@@ -285,12 +295,16 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
                 return;
               }
               h.placement.remove(sel.handle);
-              const r = h.placement.place(h.terrain, h.walls, GATE, sel.defId, i, j, placeOpts());
+              const r = h.placement.place(h.terrain, h.walls, GATE, sel.defId, i, j, {
+                ...placeOpts(),
+                facing: sel.facing,
+              });
               if (!r.ok || !r.placed) {
                 // 되돌린다 — 반쯤 옮겨진 상태가 최악이다
-                const rr = h.placement.place(
-                  h.terrain, h.walls, GATE, sel.defId, sel.i, sel.j, placeOpts(),
-                );
+                const rr = h.placement.place(h.terrain, h.walls, GATE, sel.defId, sel.i, sel.j, {
+                  ...placeOpts(),
+                  facing: sel.facing,
+                });
                 const gone = sel.handle;
                 if (rr.ok && rr.placed) sel.handle = rr.placed.handle;
                 h.scene.refreshFacility(gone);
@@ -418,18 +432,38 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
          * 못 놓는 자리도 고스트를 띄운다 — 왜 안 되는지 라벨로 알려주는 편이
          * 토스트만 스치는 것보다 낫다.
          */
-        const chk = h.placement.check(h.terrain, h.walls, GATE, defId, i, j, placeOpts());
-        h.scene.setGhost(defId, i, j, chk.ok);
+        lastFacilityTap = { i, j };
+        const chk = h.placement.check(h.terrain, h.walls, GATE, defId, i, j, {
+          ...placeOpts(),
+          facing: ghostFacing,
+        });
+        h.scene.setGhost(defId, i, j, chk.ok, ghostFacing);
+        // 회전은 비정사각에만 뜻이 있다 (정사각은 발자국이 같아 버튼이 거짓말이 된다)
+        const rotatable = def !== undefined && def.size[0] !== def.size[1];
         hud.showConfirm(
           chk.ok
             ? `${def?.name ?? defId} · ${Math.round(cost / 10000)}만`
             : PLACE_FAIL_MESSAGES[chk.fail ?? 'unknown-def'],
           chk.ok,
           {
-            cancel: () => h.scene.setGhost(null),
+            cancel: () => {
+              h.scene.setGhost(null);
+              ghostFacing = 0;
+            },
+            ...(rotatable
+              ? {
+                  rotate: () => {
+                    ghostFacing = ghostFacing === 0 ? 1 : 0;
+                    if (lastFacilityTap) tapTile(lastFacilityTap.i, lastFacilityTap.j);
+                  },
+                }
+              : {}),
             confirm: () => {
               h.scene.setGhost(null);
-              const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j, placeOpts());
+              const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j, {
+                ...placeOpts(),
+                facing: ghostFacing,
+              });
               if (!r.ok || !r.placed) {
                 toast(PLACE_FAIL_MESSAGES[r.fail ?? 'unknown-def']);
                 return;
@@ -567,7 +601,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   let brush: string | null = null;
   let brushFacility = '';
   /** 이동 붓의 선택 시설 (K42) — 첫 탭에서 잡고 확정·취소에서 푼다 */
-  let moveSel: { handle: number; defId: string; i: number; j: number } | null = null;
+  let moveSel: { handle: number; defId: string; i: number; j: number; facing: 0 | 1 } | null =
+    null;
+  /** 고스트 회전 (K45) — 붓을 새로 집으면 0 으로 */
+  let ghostFacing: 0 | 1 = 0;
+  /** 마지막 시설 탭 자리 — ↻ 가 같은 자리에서 다시 미리보기를 돌린다 */
+  let lastFacilityTap: { i: number; j: number } | null = null;
 
   const ZONE_NAME: Record<string, string> = {
     indoor: '실내',
@@ -770,6 +809,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const clearBrush = (): void => {
     brush = null;
     moveSel = null;
+    ghostFacing = 0;
+    lastFacilityTap = null;
     hud.setBrush(null);
     hud.hideConfirm();
     h.scene.setGhost(null);
@@ -1018,6 +1059,16 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     h.scene.setTickSeconds(TICK_MS / 1000 / flow.speed);
   };
 
+  /** 코스 보트 갱신 (K45) — 코스가 바뀔 때마다. 경로는 sim 스플라인 그대로 */
+  const syncBoats = (): void => {
+    h.scene.setCourseBoats(
+      courses.all.map((c) => ({
+        path: course.sampleCourse(c.dock, c.handles).map((sm) => ({ x: sm.pos.x, y: sm.pos.y })),
+        vehicles: c.vehicles,
+      })),
+    );
+  };
+
   const beginWeek = (): void => {
     week.begin(weekRng, assembleWeekOpts());
     flow.acc = 0;
@@ -1039,7 +1090,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       !panelHost.anyOpen
     ) {
       const c = arrivalQueue.shift();
-      if (c) unlockView.show(c);
+      // 다른 모달이 선점했으면 버리지 않는다 — 축하가 조용히 증발하면 해금이 안 보인다
+      if (c && !unlockView.show(c)) arrivalQueue.unshift(c);
     }
     const closed = week.liveDays() ?? [];
     if (closed.length > flow.daysSeen) {
@@ -1074,6 +1126,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     if (n <= 0) return;
     flow.acc -= n * per;
     week.step(n);
+    h.scene.advanceBoats(n);
     afterStep();
   };
 
@@ -1082,9 +1135,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const p = week.liveProgress();
     if (!p || p.done || panelHost.anyOpen) return;
     audio.play('sfx/tap');
-    week.step(
+    const skipped = week.step(
       flow.weekSkipUnlocked ? TICKS_PER_WEEK - p.tick : TICKS_PER_DAY - (p.tick % TICKS_PER_DAY),
     );
+    h.scene.advanceBoats(skipped);
     afterStep();
   };
 
@@ -1256,6 +1310,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      */
     const accidentCard = rep.accident ? triggerCard('accident_response') : undefined;
     if (accidentCard) {
+      panelHost.closeAll(); // 모달 충돌로 카드가 거절되면 주가 영원히 안 시작된다 (위와 동일)
       cardView.show([accidentCard], week.cash, (choices) => {
         for (const ch of choices) {
           const r = cards.choose(cardRng, ch.card, ch.optionIndex);
@@ -1277,6 +1332,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 1주차는 카드 없이 시작한다 (부팅 직후 모달은 온보딩 마찰 — 빼기가 원칙).
    */
   const nextWeekCards = (): void => {
+    /*
+     * ⚠ 판 잠금 방어 (K45). 카드는 모달이라 **다른 모달이 열려 있으면 show 가 조용히
+     * 거절되고**, 그러면 beginWeek 콜백이 영원히 안 불려 주가 시작되지 않는다 —
+     * "돈이 없어(선택을 못 해) 안 넘어간다"로 보고된 잠금의 유력 경로. 카드 전에
+     * 열려 있는 것을 전부 닫는다 (닫힌 축하는 위의 재큐 규칙이 다시 살린다).
+     */
+    panelHost.closeAll();
     const gr0 = currentGrade();
     const drawn = cards.draw(cardRng, {
       season,
@@ -1307,7 +1369,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const runWeek = (): void => {
     const p = week.liveProgress();
     if (!p) return;
-    week.step(TICKS_PER_WEEK - p.tick);
+    const n = week.step(TICKS_PER_WEEK - p.tick);
+    h.scene.advanceBoats(n);
     afterStep();
   };
 
@@ -1347,6 +1410,24 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           })
           .map((it) => ({ x: it.i, y: it.j })),
         { x: GATE.i, y: GATE.j },
+        /*
+         * 앵커 = 선착장(dock) 시설의 발자국 (K45). 선착장이 붙은 잔교만 코스 후보다 —
+         * 코스는 견인 스테이션에서 시작한다 (시설 note 의 원래 의도).
+         */
+        h.placement
+          .all()
+          .filter((it) => it.defId === 'dock')
+          .flatMap((it) => {
+            const def = allFacilityDefs().find((d) => d.id === 'dock');
+            if (!def) return [];
+            const tiles: { x: number; y: number }[] = [];
+            for (let dj = 0; dj < def.size[1]; dj++) {
+              for (let di = 0; di < def.size[0]; di++) {
+                tiles.push({ x: it.i + di, y: it.j + dj });
+              }
+            }
+            return tiles;
+          }),
       ),
     grade: () => currentGrade().grade,
     cash: () => week.cash,
@@ -1354,6 +1435,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     onChange: () => {
       refreshCourseBtn();
       refreshRisk();
+      syncBoats();
       persist();
     },
   });
@@ -1582,6 +1664,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
 
   // 건설 시트의 코스 탭이 여는 곳 — 메뉴의 버튼과 같은 동작이다 (K32)
   openCourse = (): void => {
+    /*
+     * ⚠ 붓을 먼저 내려놓는다 (K45 버그). 건물/바닥 붓을 든 채 코스 탭을 누르면
+     * 붓이 살아남아, 코스 편집의 지도 탭(잔교 고르기·핸들)이 그대로 **설치**로
+     * 흘렀다 — "코스를 선택하면 건물이 깔린다"로 보고된 버그.
+     */
+    clearBrush();
     if (!coursePanel.visible) coursePanel.show();
   };
 
@@ -1740,6 +1828,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   h.scene.setClockOwner('week');
   syncTickPace();
+  syncBoats();
   if (flow.weekSkipUnlocked) hud.setWeekLabel('한 주 »');
   beginWeek();
   let lastRaf = performance.now();

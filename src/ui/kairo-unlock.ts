@@ -69,8 +69,9 @@ export class KairoUnlockView implements Panel {
     return !this.root.hidden;
   }
 
-  show(c: Celebration): void {
-    if (!panelHost.open(this)) return; // 다른 모달(카드)이 떠 있으면 다음 아침에 다시 온다
+  /** 열었으면 true. 다른 모달(카드)이 떠 있으면 false — 부르는 쪽이 다시 큐에 넣는다 */
+  show(c: Celebration): boolean {
+    if (!panelHost.open(this)) return false;
     this.titleEl.textContent = c.title;
     this.nameEl.textContent = c.name;
     this.subEl.textContent = c.sub ?? '';
@@ -91,6 +92,7 @@ export class KairoUnlockView implements Panel {
     this.thumbEl.classList.add('fx-pop');
     this.root.hidden = false;
     audio.play('sfx/unlock');
+    return true;
   }
 
   hide(): void {

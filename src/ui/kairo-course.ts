@@ -409,6 +409,14 @@ export class KairoCoursePanel {
         : COURSE_ISSUE_TEXT[i],
     );
     if (cost > this.deps.cash()) issues.push(`장비값 ${won(cost)} — 현금이 부족합니다`);
+    /*
+     * 선착장이 하나도 없으면 (K45 — 코스는 선착장이 붙은 잔교에서만) 다른 처방은
+     * 전부 소음이다 — 첫 걸음 하나만 말한다.
+     */
+    if (docksAll.length === 0) {
+      issues.length = 0;
+      issues.push('선착장이 없습니다 — 잔교 옆에 선착장 시설을 지으세요');
+    }
     this.whyEl.textContent = issues.join(' · ');
     const canPlace = v.ok && cost <= this.deps.cash();
     this.confirmBtn.disabled = !canPlace;

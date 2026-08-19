@@ -106,6 +106,7 @@ export class KairoHud {
   private readonly rotateBtn: HTMLButtonElement;
   private onConfirm: (() => void) | null = null;
   private onCancel: (() => void) | null = null;
+  private onRotate: (() => void) | null = null;
 
   private readonly opts: HudOptions;
   private items: BuildItem[] = [];
@@ -231,7 +232,8 @@ export class KairoHud {
     this.rotateBtn = el('button', 'place-btn rotate', '↻');
     this.rotateBtn.id = 'kairo-place-rotate';
     this.rotateBtn.disabled = true;
-    this.rotateBtn.title = '회전 — 방향 스프라이트가 생기면 켜집니다';
+    this.rotateBtn.title = '회전 (비정사각 시설)';
+    this.rotateBtn.addEventListener('click', () => this.onRotate?.());
     this.confirmBtn = el('button', 'place-btn confirm', '확정');
     this.confirmBtn.id = 'kairo-place-confirm';
     this.confirmBtn.addEventListener('click', () => {
@@ -250,12 +252,19 @@ export class KairoHud {
    * 배치 확정 바를 띄운다. `ok` 가 false 면 확정을 막고 라벨을 경고색으로 —
    * 왜 안 되는지(`label`)를 같이 보여준다.
    */
-  showConfirm(label: string, ok: boolean, on: { confirm: () => void; cancel: () => void }): void {
+  showConfirm(
+    label: string,
+    ok: boolean,
+    on: { confirm: () => void; cancel: () => void; rotate?: () => void },
+  ): void {
     this.confirmLabel.className = ok ? 'place-label' : 'place-label bad';
     this.confirmLabel.textContent = label;
     this.confirmBtn.disabled = !ok;
     this.onConfirm = on.confirm;
     this.onCancel = on.cancel;
+    // 회전 (K45) — 비정사각 시설만 켠다. 예약해 뒀던 그 자리다
+    this.onRotate = on.rotate ?? null;
+    this.rotateBtn.disabled = on.rotate === undefined;
     this.confirmBar.hidden = false;
   }
 
@@ -263,6 +272,7 @@ export class KairoHud {
     this.confirmBar.hidden = true;
     this.onConfirm = null;
     this.onCancel = null;
+    this.onRotate = null;
   }
 
   get confirming(): boolean {
