@@ -20,7 +20,7 @@
  */
 import { Rng } from '../src/sim/rng.js';
 import { KairoTerrain } from '../src/sim/kairo/terrain.js';
-import { WallGrid } from '../src/sim/kairo/walls.js';
+import { WallGrid, reachable } from '../src/sim/kairo/walls.js';
 import { bakeIndoorWalls } from '../src/sim/kairo/indoor.js';
 import { applyStartKit } from '../src/sim/kairo/startkit.js';
 import { GROUND_KINDS } from '../src/sim/kairo/terrain.js';
@@ -50,6 +50,7 @@ import {
 } from '../src/sim/kairo/course.js';
 import {
   questStatuses,
+  evaluateCondition,
   ProgressStore,
   gradeFor,
   nextGrade,
@@ -57,10 +58,16 @@ import {
   Reputation,
   landRect,
   GRADES,
+  supplyOf,
 } from '../src/sim/kairo/progress.js';
 import { poolZones, POOL_KIND, POOL_MIN_TILES } from '../src/sim/kairo/swim.js';
 import { UnlockStore } from '../src/sim/kairo/unlocks.js';
-import { ExamStore } from '../src/sim/kairo/exam.js';
+import {
+  ExamStore,
+  nextGradeDef,
+  EXAM_POINTS_PER_REQ,
+  EXAM_PASS_RATIO,
+} from '../src/sim/kairo/exam.js';
 import { WishStore } from '../src/sim/kairo/wishes.js';
 import { COMBOS } from '../src/sim/kairo/combos.js';
 
@@ -122,6 +129,28 @@ interface RunResult {
   swimArea: number;
   /** 심사로 딴 실제 등급 (K42) — `grade`(만족도 환산 표시값)와 다르다. 해금은 이걸 따른다 */
   examGrade: number;
+  /**
+   * 심사 계측 — **"응시를 못 하나 / 응시했는데 떨어지나"를 가른다.**
+   *
+   * `examGrade` 중앙값만 보면 원인을 모른다. 자격이 안 열려서 못 오르는 것과, 열리는데
+   * 커트라인에 못 미치는 것과, 수수료가 없어 못 내는 것은 처방이 완전히 다르다.
+   * 조건별 점수(`examReqScores`)까지 봐야 "어느 조건이 낮은가"에 답할 수 있다.
+   */
+  examApplied: number;
+  examPassed: number;
+  examFailed: number;
+  /** 자격은 되는데 수수료가 모자라 못 낸 주 */
+  examBlockedByFee: number;
+  /** 자격은 되는데 조건 점수가 커트에 못 미쳐 안 낸 주 — 여기가 크면 "조건"이 병목이다 */
+  examNotReady: number;
+  /** 자격조차 안 열린 주 (평판 < 다음 등급 문턱) — 대기 중인 주는 안 센다 */
+  examNoEligibleWeeks: number;
+  /** 자동 강등 횟수 — 올라갔다 내려오면 심사 등급 중앙값이 내려앉는다 */
+  examDemotions: number;
+  /** 탈락한 심사의 조건별 점수 합/횟수 — `목표등급:조건종류` 키 */
+  examReqScores: [string, number, number][];
+  /** 마지막 주 기준 need 별 시설 수 — 심사·의뢰 조건이 재는 바로 그 값 */
+  supply: Record<string, number>;
   combos: number;
   /**
    * 마지막 주 기준 콤보 원점수 합 (체감·면적 배율까지 곱한 값). **발동 수만 보면
@@ -220,11 +249,20 @@ function ensureRoom(
   const stand = guestWalkable(t, p);
   const floorCost = GROUND_KINDS.find((k) => k.id === 'floor_indoor')?.cost ?? 0;
 
-  /** 이 칸에 실내 바닥을 깔아도 되나 — 실외 시설을 삼키지 않는 게 핵심이다 */
+  /**
+   * 이 칸에 실내 바닥을 깔아도 되나 — 실외 시설을 삼키지 않는 게 핵심이다.
+   *
+   * ⚠ **경계는 `i0 + w` 다** (K43 의 교훈, K48 에서 여기도 발견). `i < land.w` 로
+   * 재고 있었다. 입구가 맵 가운데로 간 K36 부터 1등급 토지는 i∈[35,61) 인데 이 식은
+   * i<26 만 통과시켜, **토지 안에서는 방을 한 칸도 못 넓히고 토지 밖에는 아무 데나
+   * 깔 수 있었다** — 시설이 못 들어가는 방에 바닥값만 치른 셈이다.
+   */
   const paintable = (i: number, j: number): boolean =>
     t.inside(i, j) &&
-    i < land.w &&
-    j < land.h &&
+    i >= land.i0 &&
+    j >= land.j0 &&
+    i < land.i0 + land.w &&
+    j < land.j0 + land.h &&
     t.isWalkable(i, j) &&
     !(i === GATE.i && j === GATE.j) &&
     (p.handleAt(i, j) === 0 || t.isIndoor(i, j));
@@ -242,7 +280,13 @@ function ensureRoom(
     }
     if (before.length === 0) return 0; // 이미 전부 실내다
     for (const [i, j] of before) t.paint(i, j, 'floor_indoor');
-    if (bakeIndoorWalls(t, w, GATE, stand).ok) return before.length * floorCost;
+    /*
+     * 벽이 **입구 길을 끊지 않았는지**도 본다 (K48). `bakeIndoorWalls` 는 방이 성립하는지만
+     * 보므로, 게이트 옆에 방을 붙이면 새 벽이 손님 길을 막아도 통과한다 — 그러면 입장이
+     * 0 이 되고 판이 통째로 얼어붙는다 (실측: 24판 중 2~6판).
+     */
+    if (bakeIndoorWalls(t, w, GATE, stand).ok && ticketsReachable(t, w, p))
+      return before.length * floorCost;
     for (const [i, j, k] of before) t.paint(i, j, k);
     bakeIndoorWalls(t, w, GATE, stand);
     return 0;
@@ -253,8 +297,8 @@ function ensureRoom(
    * 까는 것뿐이다 — 사각형을 다시 그리는 절차가 없다.
    */
   const strip = Math.max(2, need.h + 1);
-  for (let j = 0; j < land.h; j++) {
-    for (let i = 0; i < land.w; i++) {
+  for (let j = land.j0; j < land.j0 + land.h; j++) {
+    for (let i = land.i0; i < land.i0 + land.w; i++) {
       if (!t.isIndoor(i, j)) continue;
       for (const [di, dj] of [
         [1, 0],
@@ -276,8 +320,8 @@ function ensureRoom(
    * 사람은 그럴 때 **옆 칸에 한 칸만 더 깐다.** 외곽선이 조금만 바뀌니 문이 살아남는다.
    * 한 번에 시설이 들어갈 만큼은 아니지만 몇 주에 걸쳐 방이 자란다.
    */
-  for (let j = 0; j < land.h; j++) {
-    for (let i = 0; i < land.w; i++) {
+  for (let j = land.j0; j < land.j0 + land.h; j++) {
+    for (let i = land.i0; i < land.i0 + land.w; i++) {
       if (!t.isIndoor(i, j)) continue;
       for (const [di, dj] of [
         [1, 0],
@@ -296,8 +340,8 @@ function ensureRoom(
     const pw = need.w + 2;
     const ph = Math.max(3, need.h + 2);
     const spent = tryPatch(
-      rng.int(Math.max(1, land.w - pw)),
-      rng.int(Math.max(1, land.h - ph)),
+      land.i0 + rng.int(Math.max(1, land.w - pw)),
+      land.j0 + rng.int(Math.max(1, land.h - ph)),
       pw,
       ph,
     );
@@ -433,6 +477,40 @@ function ensurePath(
  * 게이트에서 가까운 순으로 훑는다 — 무작위로 뽑으면 판마다 매표소가 딴 데 서서
  * 정류장→매표소 거리가 시드 잡음이 된다. 결정론 (불변식 2).
  */
+/**
+ * 매표소가 아직 **정류장에서 닿는가** (K48).
+ *
+ * ⚠ 배치 검사는 **놓는 시설**만 본다 — 새 시설이 이미 있던 매표소를 가둬도 아무도
+ * 막지 않는다 (`ensureTicket` 주석과 같은 구멍의 다른 쪽). 봇이 부유해져 게이트
+ * 둘레를 꽉 채우기 시작하자 실측으로 **24판 중 6판이 17~39주차에 입장 0 으로
+ * 얼어붙었다** (매표소는 갇혔고, 반경 12 안이 다 차서 새로 지을 자리도 없었다).
+ *
+ * 사람은 자기 입구를 막지 않는다 — 막았으면 헐고 다시 놓는다. 봇은 헐 줄 모르니
+ * **놓기 전에 막히는지 보고, 막히면 되돌린다.**
+ *
+ * 거리장(`GuestStore.distanceTo`)이 아니라 BFS 한 번으로 잰다 — 거리장은 시설마다
+ * 한 장씩 굽는 거라 시설 하나 놓을 때마다 부르면 판이 몇 배로 느려진다.
+ * 판정은 손님과 같은 `guestWalkable` 을 쓴다 (K26 ②).
+ */
+function ticketsReachable(t: KairoTerrain, w: WallGrid, p: PlacementGrid): boolean {
+  const tix = p.all().filter((it) => it.defId === TICKET_DEF_ID);
+  if (tix.length === 0) return true; // 아직 없으면 `ensureTicket` 소관이다
+  const stop = KairoTerrain.busStop();
+  const seen = reachable(t, w, stop, guestWalkable(t, p));
+  for (const it of tix) {
+    const def = facilityDef(it.defId);
+    if (!def) continue;
+    for (const [ti, tj] of PlacementGrid.footprintTiles(def, it.i, it.j, it.facing ?? 0)) {
+      for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
+        const ni = ti + di;
+        const nj = tj + dj;
+        if (t.inside(ni, nj) && seen[nj * t.width + ni] === 1) return true;
+      }
+    }
+  }
+  return false;
+}
+
 function ensureTicket(
   t: KairoTerrain,
   w: WallGrid,
@@ -521,6 +599,7 @@ const POOL_DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]] as const;
  */
 function ensurePool(
   t: KairoTerrain,
+  walls: WallGrid,
   p: PlacementGrid,
   land: ReturnType<typeof landRect>,
   budget: number,
@@ -529,7 +608,8 @@ function ensurePool(
   const afford = Math.floor(Math.max(0, budget) / POOL_TILE_COST);
   if (afford <= 0) return 0;
   const zones = poolZones(t, stand);
-  if (zones.length > 0) return growPool(t, p, land, zones, Math.min(afford, POOL_GROW_TILES));
+  if (zones.length > 0)
+    return growPool(t, walls, p, land, zones, Math.min(afford, POOL_GROW_TILES));
   if (afford < POOL_MIN_TILES) return 0;
   const fits = (i0: number, j0: number): boolean => {
     if (i0 < land.i0 || j0 < land.j0 || i0 + 2 > land.i0 + land.w || j0 + 2 > land.j0 + land.h)
@@ -563,6 +643,13 @@ function ensurePool(
     for (let j = sp.j; j < sp.j + 2; j++) {
       for (let i = sp.i; i < sp.i + 2; i++) t.paint(i, j, POOL_KIND);
     }
+    // 물이 입구 길을 끊었으면 되돌리고 다음 자리를 본다 (K48)
+    if (!ticketsReachable(t, walls, p)) {
+      for (let j = sp.j; j < sp.j + 2; j++) {
+        for (let i = sp.i; i < sp.i + 2; i++) t.paint(i, j, 'lawn');
+      }
+      continue;
+    }
     return POOL_TILE_COST * POOL_MIN_TILES;
   }
   return 0;
@@ -582,6 +669,7 @@ function ensurePool(
  */
 function growPool(
   t: KairoTerrain,
+  walls: WallGrid,
   p: PlacementGrid,
   land: ReturnType<typeof landRect>,
   zones: ReturnType<typeof poolZones>,
@@ -618,13 +706,18 @@ function growPool(
   }
   cand.sort((a, b) => a.d - b.d || a.i - b.i || a.j - b.j);
 
-  let painted = 0;
+  const done: { i: number; j: number }[] = [];
   for (const c of cand) {
-    if (painted >= Math.min(maxTiles, room)) break;
+    if (done.length >= Math.min(maxTiles, room)) break;
     t.paint(c.i, c.j, POOL_KIND);
-    painted++;
+    done.push(c);
   }
-  return painted * POOL_TILE_COST;
+  // 물이 입구 길을 끊었으면 되돌린다 (K48) — 왜는 `ticketsReachable` 참고
+  if (done.length > 0 && !ticketsReachable(t, walls, p)) {
+    for (const c of done) t.paint(c.i, c.j, 'lawn');
+    return 0;
+  }
+  return done.length * POOL_TILE_COST;
 }
 
 /**
@@ -732,7 +825,7 @@ function nudgeForCombo(
   defId: string,
   i: number,
   j: number,
-  opts: { land: ReturnType<typeof landRect> },
+  opts: { land: ReturnType<typeof landRect>; permitArea?: number },
 ): { i: number; j: number } {
   let best = { i, j };
   let bestGain = previewCombos(p, defId, i, j).gained.length;
@@ -780,22 +873,17 @@ function buildOne(
    * "자리 부족"이 실은 "방이 없어서"일 수 있고, 그 둘은 처방이 정반대다.
    */
   why?: Map<string, number>,
+  /**
+   * 수면 사용 허가 면적 (S1) — **게임과 같은 제약**. 봇이 안 넘기면 헤드리스가
+   * 허가 없이 강을 밀폐하는 세계를 잰다 (K36 의 토지 해금과 같은 종류의 divergence).
+   */
+  permitArea?: number,
 ): number {
-  const opts = { land };
+  const opts = permitArea === undefined ? { land } : { land, permitArea };
   const cands = allFacilityDefs()
     .filter((d) => {
-      const x = d as unknown as {
-        need?: NeedKind;
-        cost: number;
-        placement?: { requiresDeck?: boolean };
-      };
+      const x = d as unknown as { need?: NeedKind; cost: number };
       if (!isUnlocked(d.id)) return false;
-      /*
-       * 수상(데크 전용) 시설은 봇이 안 짓는다 — 봇은 뭍 좌표만 뽑아서, 넣으면 시도의
-       * 대부분이 wrong-terrain 으로 타 버린다 (실측 68회/판 — K41 보상으로 수상 시설이
-       * 열리자 no-space 경보가 울렸다). 데크·코스 배치는 봇 모델 밖이다 (코스와 동일).
-       */
-      if (x.placement?.requiresDeck === true) return false;
       if (x.cost > cash) return false;
       if (want && x.need !== want) return false;
       return true;
@@ -814,7 +902,72 @@ function buildOne(
   let lastFail = 'unknown';
   /** 이번에 깐 바닥값 — 시설을 못 놓아도 바닥은 남으므로 값은 치른다 */
   let roomSpend = 0;
+  const place = (pick as unknown as {
+    layer: string;
+    placement?: { requiresIndoor?: boolean; requiresDeck?: boolean };
+  });
+  const needsIndoor = place.placement?.requiresIndoor === true;
+  /**
+   * 물 위 시설인가 (K48). **빠지의 스릴 시설 11종 중 10종이 물 위다** — 봇이 이걸
+   * 안 지으면 `needSupply(thrill)` 이 영구히 0 이고, 3등급 심사(스릴 3개)가 산수로
+   * 불가능해진다 (실측: 24판×52주에서 3등급 응시 214회 · 스릴 점수 0.0/10 · 통과 0).
+   * 그 상태로 "등급이 안 오른다"를 게임 탓으로 읽으면 안 된다.
+   */
+  const needsWater = place.layer === 'water';
   for (let round = 0; round < 2; round++) {
+    /*
+     * 실내 시설은 **방을 겨냥한다** (K48).
+     *
+     * 균일 난수로 뽑으면 방(시작 킷 9×5 = 45칸)이 토지(26×48) 안의 바늘이라 200번을
+     * 뽑아도 거의 안 맞는다. 실측으로 26주 판의 위생 시설이 평균 2.3개에 머물러
+     * **2등급 심사가 통째로 막혀 있었다** (위생 3개가 조건인데 점수 0.7/10).
+     * 사람은 방 안을 겨냥해서 놓는다 — 그게 봇의 모델이어야 한다.
+     *
+     * 방은 라운드마다 다시 모은다 — 아래에서 방을 넓히면 후보가 늘어난다.
+     */
+    const aim: [number, number][] = [];
+    if (needsIndoor) {
+      for (let j = land.j0; j < land.j0 + land.h; j++)
+        for (let i = land.i0; i < land.i0 + land.w; i++)
+          if (t.isIndoor(i, j) && p.handleAt(i, j) === 0) aim.push([i, j]);
+      // 결정적 셔플 — 늘 왼쪽 위부터 채우면 방 한쪽만 쓰고 4칸짜리가 안 들어간다
+      for (let x = aim.length - 1; x > 0; x--) {
+        const y = rng.int(x + 1);
+        const tmp = aim[x] as [number, number];
+        aim[x] = aim[y] as [number, number];
+        aim[y] = tmp;
+      }
+    }
+    /*
+     * 물 위 시설도 **물가를 겨냥한다** (K48). 같은 이유다 — 균일 난수는 물에 떨어지는
+     * 족족 `wrong-terrain` 이었고, 그래서 예전 봇은 아예 안 지었다.
+     *
+     * 후보는 토지 안의 물칸 중 **기반이 닿는 곳**이다:
+     *   · 덱 전용(`requiresDeck`)  — 5근방에 이미 놓인 덱이 있는 칸
+     *   · 덱/물가(`requiresShoreOrDeck`) — 4근방에 뭍이나 덱이 있는 칸
+     * 게이트에서 가까운 순으로 훑는다 (`ensurePool` 과 같은 결정적 스캔) — 무작위면
+     * 강 건너에 덱이 하나씩 흩어져 아무것도 이어지지 않는다.
+     */
+    if (needsWater) {
+      const deckOnly = place.placement?.requiresDeck === true;
+      const spots: { i: number; j: number; d: number }[] = [];
+      for (let j = land.j0; j <= land.j0 + land.h - (pick.size[1] as number); j++) {
+        for (let i = land.i0; i <= land.i0 + land.w - (pick.size[0] as number); i++) {
+          if (!t.isWater(i, j)) continue;
+          const near = deckOnly
+            ? ([[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]] as const).some(([di, dj]) =>
+                p.isWalkOn(i + di, j + dj),
+              )
+            : ([[1, 0], [-1, 0], [0, 1], [0, -1]] as const).some(
+                ([di, dj]) => t.isWalkable(i + di, j + dj) || p.isWalkOn(i + di, j + dj),
+              );
+          if (!near) continue;
+          spots.push({ i, j, d: Math.abs(i - GATE.i) + Math.abs(j - GATE.j) });
+        }
+      }
+      spots.sort((a, b) => a.d - b.d || a.i - b.i || a.j - b.j);
+      for (const sp of spots) aim.push([sp.i, sp.j]);
+    }
     for (let attempt = 0; attempt < 200; attempt++) {
       /*
        * ⚠ **게이트 근처부터 짓는다** (K36).
@@ -830,19 +983,36 @@ function buildOne(
       const lo = Math.max(land.i0, GATE.i - reach);
       const hi = Math.min(land.i0 + land.w - pick.size[0], GATE.i + reach);
       const jHi = Math.min(land.j0 + land.h - pick.size[1], GATE.j + reach);
-      const i = lo + rng.int(Math.max(1, hi - lo + 1));
-      const j = land.j0 + rng.int(Math.max(1, jHi - land.j0 + 1));
+      let i = lo + rng.int(Math.max(1, hi - lo + 1));
+      let j = land.j0 + rng.int(Math.max(1, jHi - land.j0 + 1));
+      if (needsIndoor || needsWater) {
+        // 겨냥할 칸이 없으면 더 뽑아 봐야 헛일이다 (실내는 아래에서 방을 넓힌다)
+        if (aim.length === 0) {
+          lastFail = needsWater ? 'needs-deck' : 'needs-indoor';
+          break;
+        }
+        if (needsWater && attempt >= aim.length) break;
+        const a = aim[attempt % aim.length] as [number, number];
+        i = a[0];
+        j = a[1];
+      }
       /*
        * 물 칸은 시도 전에 거른다 — 토지 사각형의 아래쪽은 강이라, 반경이 자라면
        * 표본의 절반이 물에 떨어져 wrong-terrain 으로 시도 예산을 태운다
        * (실측 72회/판 — 봇이 부유해진 K41 뒤 no-space 경보의 진범이었다).
        */
-      if (t.isWater(i, j)) continue;
+      if (!needsWater && t.isWater(i, j)) continue;
       const c = p.check(t, w, GATE, pick.id, i, j, opts);
       if (c.ok) {
         // 콤보가 뜨는 쪽으로 한두 칸 붙여 본다 (P2-B) — 왜는 `nudgeForCombo` 참고
         const at = nudgeForCombo(t, w, p, pick.id, i, j, opts);
-        p.place(t, w, GATE, pick.id, at.i, at.j, opts);
+        const done = p.place(t, w, GATE, pick.id, at.i, at.j, opts);
+        // 내 입구를 막았으면 되돌린다 (K48) — 왜는 `ticketsReachable` 참고
+        if (done.ok && done.placed && !ticketsReachable(t, w, p)) {
+          p.remove(done.placed.handle);
+          lastFail = 'seals-gate';
+          continue;
+        }
         return (pick as unknown as { cost: number }).cost + roomSpend;
       }
       /*
@@ -855,7 +1025,8 @@ function buildOne(
        * 에서도 같은 23회 — 즉 원인은 콤보가 아니라 **포장을 줄인 것**이었다).
        * 길은 이 봇의 자산이다. 콤보 선호는 "그냥 되는 자리들" 사이에서만 고른다.
        */
-      if (c.fail === 'unreachable') {
+      // 물 위 시설은 길을 깔아 봐야 소용없다 — 덱이 기반이다
+      if (c.fail === 'unreachable' && !needsWater) {
         const pathSpend = ensurePath(t, w, p, land, {
           i,
           j,
@@ -869,7 +1040,12 @@ function buildOne(
              * ⚠ 여기서는 **붙여 보지 않는다.** 길을 그 자리에 깔아 놓고 옆으로 옮기면
              * 방금 산 길이 헛돈이 된다. 콤보 선호는 "그냥 되는 자리"에서만 쓴다.
              */
-            p.place(t, w, GATE, pick.id, i, j, opts);
+            const done2 = p.place(t, w, GATE, pick.id, i, j, opts);
+            if (done2.ok && done2.placed && !ticketsReachable(t, w, p)) {
+              p.remove(done2.placed.handle);
+              lastFail = 'seals-gate';
+              continue;
+            }
             return (pick as unknown as { cost: number }).cost + roomSpend;
           }
         }
@@ -877,9 +1053,7 @@ function buildOne(
       lastFail = c.fail ?? 'unknown';
     }
     // 실내 시설인데 자리가 없으면 **방이 모자란 것**이다 — 새로 짓고 다시 본다
-    const needsRoom = (pick as unknown as { placement?: { requiresIndoor?: boolean } }).placement
-      ?.requiresIndoor;
-    if (!needsRoom || round === 1) break;
+    if (!needsIndoor || round === 1) break;
     /*
      * 실내 바닥값을 **봇도 낸다** (K27). 플레이어만 내면 밸런싱이 실제보다 부유한 판을
      * 돌게 된다 — 사각형 건물 시절에 실제로 그랬다 (검토 ⑥).
@@ -958,6 +1132,15 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const buildFailWhy = new Map<string, number>();
   let buildCapped = 0;
   let upgradeSpend = 0;
+  /* 심사 계측 (진단) — 위 RunResult 주석 참고 */
+  let examApplied = 0;
+  let examPassed = 0;
+  let examFailed = 0;
+  let examBlockedByFee = 0;
+  let examNotReady = 0;
+  let examNoEligibleWeeks = 0;
+  let examDemotions = 0;
+  const examReqScores = new Map<string, [number, number]>();
   /**
    * 고른 특화의 갈래별 횟수 (P2-B). **0 이면 축이 안 재진 것**이다 — 산 위 시설
    * (`onSlope`)을 세는 것과 같은 이유로 보고에 올린다. 셋 중 하나만 0 이어도
@@ -998,8 +1181,34 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       cash -= ensureRoom(t, w, p, landRect(grade0), rng, { w: 4, h: 1 });
     }
 
-    // 결산의 병목을 보고 짓는다
-    const want = last?.bottleneck?.need ?? null;
+    /*
+     * 무엇을 지을까 — **심사 시트가 먼저, 그 다음이 결산 병목** (K48).
+     *
+     * ⚠ 예전 봇은 병목만 봤다. 그런데 결산 병목(`week.ts` 의 `supply` 키 순회)은
+     * **하나도 없는 종류를 아예 후보로 안 올린다** — 공급이 0 이면 키가 없다.
+     * 그래서 스릴 0개인 판에서 병목이 영원히 스릴을 안 가리켰고, 봇은 "싼 쪽 절반"
+     * 무작위에만 기대야 했다. 스릴 시설은 전부 비싼 쪽이라(최저 436,800) 한 번도
+     * 안 뽑혔고, 3등급 심사(스릴 3개)가 **26·52주 통틀어 0회 통과**였다.
+     *
+     * 사람은 심사 시트에 뜬 조건 세 줄을 보고 그걸 짓는다. 봇도 다음 등급이 요구하는
+     * `needSupply` 중 **가장 모자란 것**을 먼저 짓는다 — 게임이 이미 화면에 알려 주는
+     * 정보라 봇을 부당하게 똑똑하게 만드는 것이 아니다.
+     */
+    let want: NeedKind | null = null;
+    {
+      const nd = nextGradeDef(gradeNo);
+      const sup = supplyOf(p);
+      let worst = 1;
+      for (const c of nd?.examReqs ?? []) {
+        if (c.kind !== 'needSupply' || c.need === undefined) continue;
+        const prog = Math.min(1, (sup[c.need] ?? 0) / Math.max(1, c.value));
+        if (prog < worst) {
+          worst = prog;
+          want = c.need;
+        }
+      }
+    }
+    if (want === null) want = last?.bottleneck?.need ?? null;
     let buildSpend = 0;
     /*
      * ⚠ **매표소가 제일 먼저다.** 없으면 입장이 0 이라 나머지 정책이 아무 의미가 없다.
@@ -1020,6 +1229,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     if (gradeNo >= 2 && cash - BUILD_RESERVE > POOL_TILE_COST) {
       const spent = ensurePool(
         t,
+        w,
         p,
         landRect(GRADES[gradeNo - 1] ?? GRADES[0]!),
         cash - BUILD_RESERVE,
@@ -1088,11 +1298,21 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         (id) => unlocks.isUnlocked(id, gradeNo),
         landRect(GRADES[gradeNo - 1] ?? GRADES[0]!),
         buildFailWhy,
+        (GRADES[gradeNo - 1] ?? GRADES[0]!).permitArea,
       );
       cash -= spent;
       buildSpend += spent;
       weekBudget -= spent;
       if (spent === 0) {
+        /*
+         * ⚠ **한 종류가 막힌 것과 지을 게 없는 것은 다르다** (K48).
+         *
+         * 첫 바퀴는 `want`(심사 조건·병목) 한 종류로 후보를 좁힌다. 그 종류가 자리
+         * 문제로 막혔다고 그 주의 건설을 통째로 끊으면, 밸런싱이 "자리가 없다"를
+         * 판당 10회로 보고한다 — 실제로는 **다른 것은 지을 수 있는 주**였다.
+         * 종류를 풀고 한 번 더 본다.
+         */
+        if (b === 0 && want !== null) continue;
         /*
          * ⚠ "못 지었다"를 한 통으로 세면 안 된다 — 자리가 없어서인지 돈이 없어서인지
          * 구분이 안 되고, 경보가 "토지 해금을 보라"고 엉뚱한 곳을 가리킨다 (실측:
@@ -1195,20 +1415,59 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     g.invalidate();
 
     /*
-     * 등급 (K42) — 강등만 자동, 승급은 심사로. 봇은 **자격이 되면 즉시 신청**한다.
-     * 이걸 안 넣으면 봇이 1등급에 갇혀 골든·밸런싱이 성장 없는 세계를 잰다
-     * (봇과 골든은 실제 규칙으로 돈다 — K36 교훈).
+     * 등급 (K42) — 강등만 자동, 승급은 심사로.
+     *
+     * ⚠ 예전 봇은 **자격이 되면 무조건 신청**했다. 자격은 평판 문턱 하나뿐이라
+     * 조건(위생 3개 등)이 0 이어도 매주 수수료를 냈고, 실측으로 24판×52주에서
+     * **응시 811 · 통과 10** 이었다 — 판당 ₩10.8M(총 이익의 절반)을 "떨어질 걸 아는
+     * 시험"에 태웠다. 그래서 밸런싱의 "돈 부족 19회"가 게임의 빡빡함이 아니라
+     * 봇의 낭비를 재고 있었다.
+     *
+     * 사람은 심사 시트에서 조건 3줄을 보고 신청한다. 봇도 **붙을 점수일 때만** 낸다 —
+     * 판정과 **같은 평가기**(`evaluateCondition`)로 미리 재고, 주간 조건은 지난주
+     * 결산으로 본다 (플레이어가 보는 것과 같은 값이다).
      */
     const downTo = nextGrade(gradeNo, reputation.value).grade;
-    if (downTo < gradeNo) gradeNo = downTo;
+    if (downTo < gradeNo) {
+      examDemotions += gradeNo - downTo;
+      gradeNo = downTo;
+    }
     const elig = exam.eligible(gradeNo, reputation.value);
     if (elig) {
       const fee = elig.examFee ?? 0;
-      if (cash >= fee) {
+      const reqs = elig.examReqs ?? [];
+      const supplyNow = supplyOf(p);
+      const combosNow = evaluateCombos(p, undefined, g.swimZones());
+      const foreseen = reqs.reduce(
+        (a, c) =>
+          a +
+          Math.round(
+            evaluateCondition(c, p, last, supplyNow, combosNow).progress * EXAM_POINTS_PER_REQ,
+          ),
+        0,
+      );
+      const cut = Math.ceil(reqs.length * EXAM_POINTS_PER_REQ * EXAM_PASS_RATIO);
+      if (foreseen < cut) {
+        examNotReady++;
+        for (const c of reqs) {
+          const key = `미달 ${elig.grade}등급 ${c.kind}${c.need ? `(${c.need})` : ''}`;
+          const cur = examReqScores.get(key) ?? [0, 0];
+          examReqScores.set(key, [
+            cur[0] +
+              Math.round(
+                evaluateCondition(c, p, last, supplyNow, combosNow).progress * EXAM_POINTS_PER_REQ,
+              ),
+            cur[1] + 1,
+          ]);
+        }
+      }
+      else if (cash < fee) examBlockedByFee++;
+      else {
         cash -= fee;
         exam.apply(elig.grade, k + 1, 0); // 주 시작에 신청 — 이번 주말 판정
+        examApplied++;
       }
-    }
+    } else if (!exam.pending && nextGradeDef(gradeNo)) examNoEligibleWeeks++;
     const gr = GRADES[gradeNo - 1] ?? GRADES[0]!;
     const season = seasons[Math.floor(k / 4) % seasons.length] as Season;
 
@@ -1416,9 +1675,20 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     }
     // 심사 판정 (K42) — 결산과 같은 요약으로
     const verdict = exam.judge(k + 1, p, rep, g.swimZones());
-    if (verdict?.passed) {
-      gradeNo = verdict.target;
-      cash += verdict.grant; // 통과 지원금 — UI 와 같은 규칙
+    if (verdict) {
+      if (verdict.passed) {
+        examPassed++;
+        gradeNo = verdict.target;
+        cash += verdict.grant; // 통과 지원금 — UI 와 같은 규칙
+      } else {
+        examFailed++;
+        const reqs = GRADES.find((x) => x.grade === verdict.target)?.examReqs ?? [];
+        verdict.perReq.forEach((r, i) => {
+          const key = `${verdict.target}등급 ${reqs[i]?.kind ?? '?'}${reqs[i]?.need ? `(${reqs[i]!.need})` : ''}`;
+          const cur = examReqScores.get(key) ?? [0, 0];
+          examReqScores.set(key, [cur[0] + r.score, cur[1] + 1]);
+        });
+      }
     }
   }
 
@@ -1437,6 +1707,15 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       0,
     ),
     examGrade: gradeNo,
+    examApplied,
+    examPassed,
+    examFailed,
+    examBlockedByFee,
+    examNotReady,
+    examNoEligibleWeeks,
+    examDemotions,
+    examReqScores: [...examReqScores.entries()].map(([k2, v]) => [k2, v[0], v[1]]),
+    supply: supplyOf(p),
     combos: combos.active.length,
     comboSatRaw: comboFx.satRaw,
     comboRevRaw: comboFx.revRaw,
@@ -1674,6 +1953,49 @@ function main(): void {
     `매표소: 못 지나간 손님 중앙 ${stats(runs.map((r) => r.lastNoTicket)).med}명/마지막 주 · ` +
       `가둬져 다시 지은 횟수 중앙 ${stats(runs.map((r) => r.ticketRebuilds)).med}회/판`,
   );
+  {
+    const needTot = new Map<string, number>();
+    for (const r of runs)
+      for (const [k, v] of Object.entries(r.supply)) needTot.set(k, (needTot.get(k) ?? 0) + v);
+    console.log(
+      `need 별 시설 (판당 평균): ` +
+        [...needTot]
+          .sort((a, b) => b[1] - a[1])
+          .map(([k, v]) => `${k} ${(v / SEEDS).toFixed(1)}`)
+          .join(' · '),
+    );
+  }
+  {
+    /*
+     * 심사 — **"응시를 못 하나 / 떨어지나"** 를 가른다 (K48 진단).
+     *
+     * 등급 중앙값만 보면 처방을 못 낸다. 응시 0 이면 자격(평판 문턱)이나 수수료가
+     * 막고 있는 것이고, 응시는 하는데 통과가 없으면 커트라인(75%)이나 조건이 막는
+     * 것이다 — 조건별 평균 점수까지 봐야 "어느 조건"에 답할 수 있다.
+     */
+    const sumOf = (f: (r: RunResult) => number): number => runs.reduce((a, r) => a + f(r), 0);
+    console.log(
+      `심사: 응시 ${sumOf((r) => r.examApplied)} · 통과 ${sumOf((r) => r.examPassed)} · ` +
+        `탈락 ${sumOf((r) => r.examFailed)} · 조건 미달 ${sumOf((r) => r.examNotReady)}주 · ` +
+        `수수료 부족 ${sumOf((r) => r.examBlockedByFee)}주 · ` +
+        `자격 미달 ${sumOf((r) => r.examNoEligibleWeeks)}주 · 강등 ${sumOf((r) => r.examDemotions)}회 ` +
+        `(전체 ${SEEDS * WEEKS}주)`,
+    );
+    const agg = new Map<string, [number, number]>();
+    for (const r of runs)
+      for (const [k, s, n] of r.examReqScores) {
+        const cur = agg.get(k) ?? [0, 0];
+        agg.set(k, [cur[0] + s, cur[1] + n]);
+      }
+    if (agg.size > 0)
+      console.log(
+        `  탈락 심사의 조건별 평균 점수(10점 만점): ` +
+          [...agg]
+            .sort((a, b) => a[0].localeCompare(b[0]))
+            .map(([k, [s, n]]) => `${k} ${(s / n).toFixed(1)}(${n}회)`)
+            .join(' · '),
+      );
+  }
   {
     /*
      * 특화 (P2-B) — **셋 중 하나라도 0 이면 그 갈래가 밸런싱에 안 실려 있다.**

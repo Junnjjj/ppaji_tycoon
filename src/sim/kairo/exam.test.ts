@@ -5,7 +5,8 @@ import { describe, expect, it } from 'vitest';
 import { ExamStore, EXAM_APPLY_CUTOFF_TICK, nextGradeDef } from './exam.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
-import { PlacementGrid } from './placement.js';
+import { PlacementGrid, allFacilityDefs } from './placement.js';
+import { GRADES, requiredGrade, type QuestCondition } from './progress.js';
 
 const GATE = { i: 0, j: 0 };
 
@@ -97,5 +98,61 @@ describe('심사', () => {
   it('nextGradeDef — 5등급 위는 없다', () => {
     expect(nextGradeDef(1)?.grade).toBe(2);
     expect(nextGradeDef(5)).toBeNull();
+  });
+});
+
+/**
+ * 심사 조건은 **그 등급을 딸 때 가진 골격만으로** 충족 가능해야 한다.
+ *
+ * 의뢰에 이미 있는 규칙(`unlock-graph.test.ts`: "의뢰 조건은 골격만으로 충족 가능")의
+ * 심사 판이다. 심사에는 없어서 구멍이 하나 있었다 — 3등급 심사가 `thrill 3` 을
+ * 요구하는데, 그 조건이 실제로 도달 가능한지 **아무도 안 봤다.** 도달 불가능한
+ * 조건이 하나라도 섞이면 승급이 산수로 막히고, 그 등급 뒤의 시설·면적·상한이
+ * 통째로 죽는다 (K48 진단에서 헤드리스가 정확히 그 상태를 재고 있었다).
+ *
+ * "그 등급을 딸 때 가진 골격" = **목표 등급 −1 이하**로 열리는 시설. 목표 등급의
+ * 시설은 아직 못 짓는다 — 그걸 조건 재료로 세면 자기가 자기를 여는 순환이 된다.
+ */
+function examReachability(
+  grades: readonly { grade: number; examReqs?: QuestCondition[] }[],
+  gradeOf: (id: string) => number,
+): string[] {
+  const issues: string[] = [];
+  const defs = allFacilityDefs() as unknown as { id: string; need?: string }[];
+  for (const g of grades) {
+    const byNeed = new Map<string, number>();
+    for (const d of defs) {
+      if (d.need === undefined) continue;
+      if (gradeOf(d.id) > g.grade - 1) continue;
+      byNeed.set(d.need, (byNeed.get(d.need) ?? 0) + 1);
+    }
+    for (const c of g.examReqs ?? []) {
+      if (c.kind !== 'needSupply' || c.need === undefined) continue;
+      const have = byNeed.get(c.need) ?? 0;
+      if (have < c.value) {
+        issues.push(
+          `${g.grade}등급 심사가 ${c.need} ${c.value}개를 요구하는데 ` +
+            `${g.grade - 1}등급까지의 골격에 ${have}개뿐이다`,
+        );
+      }
+    }
+  }
+  return issues;
+}
+
+describe('심사 조건 도달성 — 승급이 산수로 막히면 안 된다 (K48)', () => {
+  it('실데이터의 심사 조건이 전부 골격만으로 충족 가능하다', () => {
+    expect(examReachability(GRADES, requiredGrade)).toEqual([]);
+  });
+
+  it('음성 대조군 — 도달 불가능한 조건을 넣으면 잡힌다', () => {
+    // 5등급에서야 열리는 종류를 2등급 심사가 요구한다면 교착이다
+    const broken = [{ grade: 2, examReqs: [{ kind: 'needSupply', need: 'stay', value: 3 }] }] as {
+      grade: number;
+      examReqs?: QuestCondition[];
+    }[];
+    expect(examReachability(broken, requiredGrade)).not.toEqual([]);
+    // 대조군의 반대쪽 — 규칙 자체가 통과만 하는 검사가 아님을 보인다
+    expect(examReachability([{ grade: 2, examReqs: [] }], requiredGrade)).toEqual([]);
   });
 });
