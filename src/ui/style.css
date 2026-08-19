@@ -17,7 +17,13 @@
   --panel-border: #b98d4f;
   --text: #3a2412;
   --text-dim: #6b5128;
-  --accent: #a05a08;
+  /*
+   * ⚠ K47-① 보정: `#a05a08` 은 **바 크림 위에서 2.87:1** 이었다 (필요 3). 패널 위만
+   * 재고 있었고(4.12:1) 바 위는 아무도 안 쟀는데, 티커가 하단 바와 같은 `--bar-bg`
+   * 를 쓰면서 처음 드러났다. 한 단 어둡게 내려 3.42:1 — 색상은 그대로 호박색이다.
+   * 레퍼런스 실측값이라도 대비가 미달이면 보정한다 (K46 의 파랑 #396bc2 와 같다).
+   */
+  --accent: #8f5007;
   --good: #3e7d2c;
   --warn: #a8590a;
   --bad: #b93a24;
@@ -1387,7 +1393,13 @@ body {
   .ksheet,
   .kcourse,
   .kover,
-  .fx-pop {
+  .fx-pop,
+  /*
+   * ⚠ 티커의 슬라이드 인도 여기다 (K47-①). 파일 끝에 별도 가드 블록을 두면
+   * `check-ui-surface.mjs` 는 **첫 블록만** 읽으므로 잡히지 않는다 —
+   * 움직이는 클래스는 전부 이 한 블록에 모은다.
+   */
+  .kticker-line.fresh {
     animation: none;
   }
 }
@@ -2235,10 +2247,94 @@ body {
 }
 
 /* 토스트 — 거절 사유가 뜨는 곳. 처방까지 말하므로 두 줄이 될 수 있다 */
+/* ── 뉴스 티커 (K47-①) — 하단 바 바로 위 얇은 띠. 띠 전체가 알림함 버튼이다 ── */
+.kticker {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(56px + var(--safe-b));
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 10px;
+  border: 0;
+  border-top: 1px solid var(--tray-divider);
+  background: var(--bar-bg);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  text-shadow: var(--sk-emboss);
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  /* div + role="button" 이라 손가락 힌트를 CSS 가 채워야 한다 (하네스가 버튼을 센다) */
+  cursor: pointer;
+  user-select: none;
+}
+
+.kticker.brush {
+  color: var(--accent);
+}
+
+.kticker-ico {
+  flex: 0 0 auto;
+  font-size: 12px;
+}
+
+.kticker-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 새 소식 슬라이드 인 — transform/opacity 만 (전환 규칙) */
+.kticker-line.fresh {
+  animation: kticker-in 220ms ease-out;
+}
+
+@keyframes kticker-in {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* 모션 가드는 위쪽 한 블록에 모아 뒀다 (K47-① — 검사가 첫 블록만 읽는다) */
+
+.kinbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+}
+
+.kinbox-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 9px;
+  background: var(--goal-bg);
+}
+
+.kinbox-text {
+  flex: 1 1 auto;
+}
+
 .ktoast {
   position: fixed;
   left: 50%;
-  bottom: calc(64px + var(--safe-b));
+  /*
+   * ⚠ 90px 이다 (K47-①). 티커 띠가 56~82px 를 점유하므로 예전 64px 로 두면 토스트가
+   * 뉴스를 덮는다 — 두 채널이 같은 자리를 다투면 둘 다 안 읽힌다.
+   */
+  bottom: calc(90px + var(--safe-b));
   transform: translateX(-50%);
   z-index: 12;
   max-width: 86vw;

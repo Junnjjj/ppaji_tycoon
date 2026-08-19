@@ -110,6 +110,13 @@ export interface KairoSaveV5 {
   unlocks?: UnlockSnapshot;
   /** ⏩ 주 스킵 해금 (K42 심사 보상) — 도구도 보상이다, 잃으면 안 된다 */
   weekSkip?: boolean;
+  /**
+   * 누적 방문객 (K47-①) — 뉴스 마일스톤(100·500·1000·2000·5000)의 근거.
+   *
+   * ⚠ **optional 이라 마이그레이션이 없다** (`weekSkip` 과 같은 방식). 없으면 0 에서
+   * 다시 세기 시작할 뿐이고, 버전을 올리면 이미 나간 v7 세이브가 전부 한 칸 밀린다.
+   */
+  visitorsTotal?: number;
   /** 심사 상태 (K42) — 신청 대기와 통과 횟수. 잃으면 수수료와 도구가 증발한다 */
   exam?: ExamSnapshot;
   /** 소원 체인 (K43) — EXP·활성 인물·진행. 잃으면 인물이 떠나고 사슬이 끊긴다 */
@@ -319,6 +326,7 @@ export interface KairoSaveInput {
   gradeNo?: number;
   unlocks?: UnlockSnapshot;
   weekSkip?: boolean;
+  visitorsTotal?: number;
   exam?: ExamSnapshot;
   wishes?: WishSnapshot;
 }
@@ -354,6 +362,7 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.gradeNo !== undefined ? { gradeNo: input.gradeNo } : {}),
     ...(input.unlocks ? { unlocks: input.unlocks } : {}),
     ...(input.weekSkip !== undefined ? { weekSkip: input.weekSkip } : {}),
+    ...(input.visitorsTotal !== undefined ? { visitorsTotal: input.visitorsTotal } : {}),
     ...(input.exam ? { exam: input.exam } : {}),
     ...(input.wishes ? { wishes: input.wishes } : {}),
   };
@@ -416,6 +425,7 @@ export interface KairoRestored {
   gradeNo?: number;
   unlocks?: UnlockSnapshot;
   weekSkip?: boolean;
+  visitorsTotal?: number;
   exam?: ExamSnapshot;
   wishes?: WishSnapshot;
 }
@@ -451,6 +461,7 @@ export function restoreKairo(raw: unknown): KairoRestored {
     ...(s.gradeNo !== undefined ? { gradeNo: s.gradeNo } : {}),
     ...(s.unlocks ? { unlocks: s.unlocks } : {}),
     ...(s.weekSkip !== undefined ? { weekSkip: s.weekSkip } : {}),
+    ...(s.visitorsTotal !== undefined ? { visitorsTotal: s.visitorsTotal } : {}),
     ...(s.exam ? { exam: s.exam } : {}),
     ...(s.wishes ? { wishes: s.wishes } : {}),
   };

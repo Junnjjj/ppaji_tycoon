@@ -3768,9 +3768,19 @@ async function main(): Promise<void> {
    * 3종 + 리포트를 상시로 지므로 예산이 오른다. 예전 40% 대비 여전히 절반 이하이고,
    * 레퍼런스 자체가 이 정도를 쓴다 (상단 2줄 + 하단 2단).
    */
+  /*
+   * ⚠ K47-① **일시 상향** (25/37). 뉴스 티커가 전폭 26px 띠를 상시로 지므로
+   * 세로 +3.1%p · 가로 +6.6%p 가 그대로 더해진다 (K46 이 22/30 을 여유 0 으로
+   * 딱 맞춰 놓은 상태였다).
+   *
+   * **Phase ② 에서 반드시 다시 조인다.** 헤더 2줄째의 버튼 둘(리포트·목표접기)이
+   * 빠지면 그 줄이 `min-height: var(--tap)`(44px) 을 놓아 헤더가 눈에 띄게 낮아지고,
+   * 하단 바에서도 위험도 칩·붓 라벨·하루 버튼이 빠진다. ②의 완료 조건에 "예산 재측정
+   * 후 상한을 실측값까지 내린다"가 들어 있다 — 이 주석이 남아 있으면 아직 안 조인 것이다.
+   */
   for (const [vw, vh, tag, budget] of [
-    [393, 852, '세로', 22],
-    [852, 393, '가로', 30],
+    [393, 852, '세로', 25],
+    [852, 393, '가로', 37],
   ] as const) {
     const cx = await browser.newContext({
       viewport: { width: vw, height: vh },
@@ -5886,6 +5896,364 @@ async function main(): Promise<void> {
     hiddenCombo.ok && hiddenCombo.hidden > 0 ? 'pass' : 'fail',
     hiddenCombo.ok ? `??? ${hiddenCombo.hidden}건` : hiddenCombo.why,
   );
+
+  /*
+   * ── K47-①. 뉴스 티커 · 알림함 ──────────────────────────────────────────
+   *
+   * 채널 규칙: 모달=축하(시간이 선다) · **티커=뉴스(비차단)** · 토스트=내 행동의 대답.
+   * 티커가 시간까지 멈추면 채널이 셋일 이유가 없어지므로 **안 멈춤**을 직접 잰다.
+   * 반대로 알림함은 `panelHost` 에 등록된 시트라 **열면 멈춘다** — 둘 다 재야
+   * "안 멈춘다"가 "원래 안 돌던 판이었다"의 다른 이름이 아님이 증명된다.
+   *
+   * 계약 (감독이 확정): 띠 `#kairo-ticker` 는 **div + role=button + tabindex=0** 이다.
+   * 버튼이 아닌 것은 의도된 선택이다 — 버튼이면 "상시 컨트롤 N개"와 44px 터치 타깃
+   * 검사에 잡혀 HUD 예산이 티커 때문에 흔들린다.
+   *
+   * ⚠ 이 절은 하네스의 **마지막**이다. 앞선 절이 남긴 붓·패널·주 상태를 먼저 치우고
+   * 시작한다 (하네스 절은 자기가 연 것을 닫는다 — 잔해 위에서 재면 원인을 알 수 없다).
+   */
+  const tkSetup = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    // 잔해 치우기. 패널이 하나라도 열려 있으면 흐름이 이미 멈춰 있어
+    // "티커는 시간을 안 멈춘다"가 거짓 실패로 나온다
+    if (window.__kairoClearBrush) window.__kairoClearBrush();
+    if (h.catalog.visible) h.catalog.hide();
+    if (h.staffPanel.visible) h.staffPanel.hide();
+    if (h.coursePanel.visible) h.coursePanel.hide();
+    if (h.showcase.visible) h.showcase.hide();
+    if (h.cardView.visible) h.cardView.hide();
+    const sheet0 = document.getElementById('kairo-sheet');
+    if (sheet0 && !sheet0.hidden) document.getElementById('kairo-sheet-close').click();
+    const inbox0 = document.getElementById('kairo-inbox');
+    if (inbox0 && !inbox0.hidden) {
+      const c0 = document.getElementById('kairo-inbox-close');
+      if (c0) c0.click();
+    }
+    // 해금 축하는 아침 tick 에 모달로 끼어들어 흐름을 세운다 — 이 절에서는 비운다
+    h.arrivalQueue.length = 0;
+    /*
+     * ⚠ 앞 절(⏩ 주 스킵)이 weekSkipUnlocked 를 강제로 켜 뒀다. 켜진 채로 skipForward 를
+     * 부르면 주가 통째로 끝나 결산 모달이 뜨고, 이 절의 나머지가 전부 모달 뒤에서 죽는다.
+     * 여기서 필요한 사건은 **하루 마감**이므로 하루 단위로 되돌린다.
+     */
+    h.flow.weekSkipUnlocked = false;
+    h.week.abort(); // K39 — 어느 tick 에 있었는지 모른다. 주 첫 tick 에서 결정적으로 시작
+    h.beginWeek();
+    h.scene.setAutoTick(true);
+    h.flow.frozen = true; // 사건을 내가 일으킬 때까지 시간을 세운다 (대조군 구간)
+    const strip = document.getElementById('kairo-ticker');
+    const line = document.querySelector('#kairo-ticker .kticker-line');
+    const r = strip ? strip.getBoundingClientRect() : null;
+    /*
+     * 상시 컨트롤 수 — HUD 절(9b)의 MEASURE_HUD 와 같은 셈법이다. 티커가 div 면
+     * 여기 안 잡혀 5가 유지되고, button 으로 만들어졌으면 6이 된다.
+     * ⚠ 이 페이즈에서는 하루»·리포트·목표접기가 아직 살아 있다 — 기대값은 그대로 5다
+     */
+    const ctrl = [...document.querySelectorAll('button, select, input')].filter((b) => {
+      const rr = b.getBoundingClientRect();
+      return rr.width > 2 && rr.height > 2;
+    });
+    return {
+      exists: !!strip,
+      tag: strip ? strip.tagName : '',
+      role: strip ? strip.getAttribute('role') || '' : '',
+      tabindex: strip ? strip.getAttribute('tabindex') || '' : '',
+      cls: strip ? strip.className : '',
+      hasLine: !!line,
+      x: r ? Math.round(r.left + r.width / 2) : 0,
+      y: r ? Math.round(r.top + r.height / 2) : 0,
+      w: r ? Math.round(r.width) : 0,
+      hgt: r ? Math.round(r.height) : 0,
+      onScreen: !!r && r.width > 2 && r.height > 2 && r.top >= 0 && r.bottom <= innerHeight + 2,
+      controls: ctrl.length,
+      controlIds: ctrl.map((b) => b.id || b.className).join(','),
+    };
+  })()`)) as {
+    exists: boolean;
+    tag: string;
+    role: string;
+    tabindex: string;
+    cls: string;
+    hasLine: boolean;
+    x: number;
+    y: number;
+    w: number;
+    hgt: number;
+    onScreen: boolean;
+    controls: number;
+    controlIds: string;
+  };
+
+  record(
+    '★ 뉴스 티커가 화면에 있다 (K47-①)',
+    tkSetup.exists && tkSetup.hasLine && tkSetup.onScreen ? 'pass' : 'fail',
+    tkSetup.exists
+      ? `<${tkSetup.tag.toLowerCase()} class="${tkSetup.cls}"> ${tkSetup.w}×${tkSetup.hgt} · ` +
+          `라인 ${tkSetup.hasLine ? 'OK' : '.kticker-line 없음'} · 화면 안 ${tkSetup.onScreen ? 'OK' : '아님'}`
+      : '#kairo-ticker 가 없다',
+  );
+  record(
+    '티커는 div + role=button 이다 — 버튼이면 상시 컨트롤·44px 검사에 걸린다 (의도된 선택)',
+    tkSetup.exists && tkSetup.tag !== 'BUTTON' && tkSetup.role === 'button' && tkSetup.tabindex === '0'
+      ? 'pass'
+      : 'fail',
+    `<${tkSetup.tag.toLowerCase() || '없음'} role="${tkSetup.role}" tabindex="${tkSetup.tabindex}">`,
+  );
+  record(
+    '상시 컨트롤 5개 유지 — 티커가 컨트롤을 늘리지 않았다 (하루»·리포트 제거는 Phase ②)',
+    tkSetup.controls === 5 ? 'pass' : 'fail',
+    `${tkSetup.controls}개 · ${tkSetup.controlIds}`,
+  );
+
+  if (!tkSetup.exists) {
+    // 배선 전에는 뒤따르는 절이 전부 같은 이유로 실패한다 — 이유를 한 번만 적고 넘어간다
+    for (const pending of [
+      '★ 티커에 소식이 흐른다 — 하루 마감이 띠에 뜬다 (K47-①)',
+      '★ 티커를 탭하면 알림함이 열리고 소식이 쌓여 있다 (K47-①, 진짜 터치)',
+      '티커는 시간을 멈추지 않는다 — 뉴스는 비차단 채널이다 (모달과의 차이)',
+      '알림함을 열면 시간이 선다 — 시트 규칙 (닫으면 다시 흐른다 = 음성 대조군)',
+      '알림함 시트 터치 타깃 44px 이상 · 가로 넘침 0',
+      '티커가 붓 라벨을 받는다 — 붓을 놓으면 뉴스로 돌아온다 (K47-①)',
+    ]) {
+      record(pending, 'fail', '#kairo-ticker 가 없다 — 티커 배선 전');
+    }
+  } else {
+    const TK_READ = `(() => {
+      const e = document.querySelector('#kairo-ticker .kticker-line');
+      return e && e.textContent ? e.textContent : '';
+    })()`;
+    const TK_TICK = `(() => {
+      const p = window.__kairo.week.liveProgress();
+      return p ? p.tick : -1;
+    })()`;
+
+    /*
+     * ① 소식이 흐른다 — 사건 전후 비교 + **대조군 둘**.
+     *
+     * 판정식 tkJudge(t) = (t 가 비어 있지 않다) && (t !== 사건 전 텍스트).
+     *  · 배선이 없거나 push 가 화면에 안 닿으면 사건 뒤에도 텍스트가 그대로라
+     *    tkJudge(tkAfter) 가 false → 실패. "아무것도 안 하는 티커"는 통과할 수 없다
+     *  · 흐름을 얼려 뒀으므로 사건 없이는 바뀔 이유가 없다. 그래도 바뀌면
+     *    tkIdle !== tkText0 이 되어 실패 — 시간만 지나도 바뀌는 텍스트로는 못 속인다
+     *  · 마지막으로 라인을 사건 전 텍스트로 **강제 원복**해 같은 판정식에 다시 먹인다.
+     *    거기서도 true 가 나오면 판정식이 무엇을 넣든 통과한다는 뜻이므로 실패로 잡는다
+     *    (코드를 못 고치는 대신 하네스 안에 넣은 음성 대조군이다)
+     */
+    await page.evaluate(`(() => {
+      const e = document.querySelector('#kairo-ticker .kticker-line');
+      window.__tkBefore = e && e.textContent ? e.textContent : '';
+    })()`);
+    const tkText0 = (await page.evaluate(TK_READ)) as string;
+    await page.waitForTimeout(600);
+    const tkIdle = (await page.evaluate(TK_READ)) as string; // 대조군 — 사건 없이 흐른 시간
+    // 사건: ⏩ 하루 끝까지. 하루 마감은 계약에 적힌 뉴스 항목이고, skipForward 는
+    // 실제 ⏩ 버튼이 부르는 그 함수다 (afterStep 까지 같은 경로로 돈다)
+    await page.evaluate(`window.__kairo.skipForward()`);
+    await page.waitForTimeout(500);
+    const tkAfter = (await page.evaluate(TK_READ)) as string;
+    const tkReverted = (await page.evaluate(`(() => {
+      const e = document.querySelector('#kairo-ticker .kticker-line');
+      if (!e) return '';
+      e.textContent = window.__tkBefore; // 대조군 — 판정식에 사건 전 텍스트를 그대로 먹인다
+      return e.textContent;
+    })()`)) as string;
+    const tkJudge = (t: string): boolean => t.length > 0 && t !== tkText0;
+    record(
+      '★ 티커에 소식이 흐른다 — 하루 마감이 띠에 뜬다 (K47-①)',
+      tkIdle === tkText0 && tkJudge(tkAfter) && !tkJudge(tkReverted) ? 'pass' : 'fail',
+      `"${tkText0}" → (사건 없이 0.6초) "${tkIdle}" → (하루 마감) "${tkAfter}" · ` +
+        `원복 대조군 ${tkJudge(tkReverted) ? '통과해 버렸다(판정식 결함)' : 'OK'}`,
+    );
+
+    /*
+     * ② 티커는 시간을 멈추지 않는다 — 흐름을 되살리고 tick 이 계속 오르는지 본다.
+     * 모달(카드·해금)이라면 여기서 tick 이 멈춘다. 그 차이가 채널을 셋으로 나눈 이유다.
+     */
+    await page.evaluate(`(() => {
+      const h = window.__kairo;
+      h.flow.frozen = false;
+      h.scene.setAutoTick(true);
+    })()`);
+    const tkFlowA = (await page.evaluate(TK_TICK)) as number;
+    await page.waitForTimeout(900);
+    const tkFlowB = (await page.evaluate(TK_TICK)) as number;
+    record(
+      '티커는 시간을 멈추지 않는다 — 뉴스는 비차단 채널이다 (모달과의 차이)',
+      tkFlowA >= 0 && tkFlowB > tkFlowA ? 'pass' : 'fail',
+      `tick ${tkFlowA} → ${tkFlowB} (0.9초 · 200ms/tick)`,
+    );
+
+    /*
+     * ③ 탭 → 알림함. **진짜 터치**로 누른다 (K33: 백도어 좌표 주입으로 5건이 가짜로
+     * 통과한 적이 있다). touch() 는 CDP Input.dispatchTouchEvent 그대로다.
+     */
+    await touch('touchStart', tkSetup.x, tkSetup.y);
+    await touch('touchEnd', 0, 0);
+    await page.waitForTimeout(350);
+    const tkOpen = (await page.evaluate(`(() => {
+      const root = document.getElementById('kairo-inbox');
+      if (!root) return { exists: false, open: false, rows: 0, minTap: 0, buttons: 0, sheet: false, overflow: 0 };
+      // ⚠ 판정은 !root.hidden 으로 읽는다 — 인라인 display 를 읽으면 표면을 클래스로
+      // 옮기는 순간 조용히 거짓이 된다 (K34)
+      const btns = [...root.querySelectorAll('button, select, input')].filter((b) => {
+        const r = b.getBoundingClientRect();
+        return r.width > 2 && r.height > 2;
+      });
+      const minTap = btns.length
+        ? Math.min(...btns.map((b) => {
+            const r = b.getBoundingClientRect();
+            return Math.min(r.width, r.height);
+          }))
+        : 0;
+      return {
+        exists: true,
+        open: !root.hidden,
+        rows: root.querySelectorAll('.kinbox-row').length,
+        minTap: Math.round(minTap),
+        buttons: btns.length,
+        sheet: root.classList.contains('ksheet'),
+        overflow: document.documentElement.scrollWidth - innerWidth,
+      };
+    })()`)) as {
+      exists: boolean;
+      open: boolean;
+      rows: number;
+      minTap: number;
+      buttons: number;
+      sheet: boolean;
+      overflow: number;
+    };
+    await page.screenshot({ path: `${SHOT_DIR}/kairo-ticker-inbox.png` });
+
+    /* ④ 열린 동안에는 시간이 선다 (시트 규칙) */
+    const tkHeldA = (await page.evaluate(TK_TICK)) as number;
+    await page.waitForTimeout(900);
+    const tkHeldB = (await page.evaluate(TK_TICK)) as number;
+
+    /* 닫기도 진짜 터치로 — 열어 둔 것은 이 절이 닫는다 */
+    const tkCloseAt = (await page.evaluate(`(() => {
+      const b = document.getElementById('kairo-inbox-close');
+      if (!b) return null;
+      const r = b.getBoundingClientRect();
+      return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };
+    })()`)) as { x: number; y: number } | null;
+    if (tkCloseAt) {
+      await touch('touchStart', tkCloseAt.x, tkCloseAt.y);
+      await touch('touchEnd', 0, 0);
+    }
+    await page.waitForTimeout(300);
+    const tkClosed = (await page.evaluate(
+      `(() => { const r = document.getElementById('kairo-inbox'); return !!r && r.hidden; })()`,
+    )) as boolean;
+    /*
+     * 닫은 뒤 다시 흐르는지가 ④ 의 음성 대조군이다 — 안 재면 "열면 멈춘다"는
+     * 판이 통째로 서 있을 때도 통과한다 (그때는 열든 닫든 tick 이 안 움직인다)
+     */
+    const tkResumeA = (await page.evaluate(TK_TICK)) as number;
+    await page.waitForTimeout(800);
+    const tkResumeB = (await page.evaluate(TK_TICK)) as number;
+
+    record(
+      '★ 티커를 탭하면 알림함이 열리고 소식이 쌓여 있다 (K47-①, 진짜 터치)',
+      tkOpen.open && tkOpen.rows > 0 && tkOpen.sheet && tkClosed ? 'pass' : 'fail',
+      `열림 ${tkOpen.open ? 'OK' : '안 열림'} · 항목 ${tkOpen.rows}건 · ` +
+        `표면 ${tkOpen.sheet ? '.ksheet' : '.ksheet 아님'} · 닫기 ${tkClosed ? 'OK' : '안 닫힘'}`,
+    );
+    record(
+      '알림함을 열면 시간이 선다 — 시트 규칙 (닫으면 다시 흐른다 = 음성 대조군)',
+      tkHeldB === tkHeldA && tkResumeB > tkResumeA ? 'pass' : 'fail',
+      `열린 동안 ${tkHeldA}→${tkHeldB} · 닫은 뒤 ${tkResumeA}→${tkResumeB}`,
+    );
+    record(
+      '알림함 시트 터치 타깃 44px 이상 · 가로 넘침 0',
+      tkOpen.minTap >= 44 && tkOpen.overflow <= 0 ? 'pass' : 'fail',
+      `최소 ${tkOpen.minTap}px (버튼 ${tkOpen.buttons}개) · 넘침 ${tkOpen.overflow}px`,
+    );
+
+    /*
+     * ⑤ 붓 라벨 — 티커가 하단 바의 붓 표시를 흡수한다. 붓을 내려놓으면 뉴스로 돌아온다.
+     *
+     * ⚠ 흐름을 다시 얼린다. 붓을 든 사이에 새 뉴스가 오면 뉴스가 잠깐 우선하도록
+     * 설계돼 있어(붓을 들어도 사건은 보여야 한다) 라벨이 가려질 수 있다.
+     */
+    await page.evaluate(`(() => { window.__kairo.flow.frozen = true; })()`);
+    const tkPick = (await page.evaluate(`(() => {
+      const h = window.__kairo;
+      document.getElementById('kairo-build-open').click();
+      let card = document.querySelector('[data-pick^="facility:"]');
+      if (!card) {
+        const tab = [...document.querySelectorAll('#kairo-sheet button')].find(
+          (b) => b.textContent.indexOf('시설') >= 0,
+        );
+        if (tab) tab.click();
+        card = document.querySelector('[data-pick^="facility:"]');
+      }
+      if (!card) {
+        const close = document.getElementById('kairo-sheet-close');
+        if (close) close.click();
+        return { ok: false, why: '건설 시트에서 시설 카드를 못 찾았다' };
+      }
+      const id = card.getAttribute('data-pick').slice(9); // 'facility:'.length
+      card.click();
+      const sheet = document.getElementById('kairo-sheet');
+      if (sheet && !sheet.hidden) document.getElementById('kairo-sheet-close').click();
+      const def = h.simDefs[id];
+      return { ok: true, id: id, name: def ? def.name : '' };
+    })()`)) as { ok: false; why: string } | { ok: true; id: string; name: string };
+
+    if (!tkPick.ok) {
+      record('티커가 붓 라벨을 받는다 — 붓을 놓으면 뉴스로 돌아온다 (K47-①)', 'fail', tkPick.why);
+    } else {
+      /*
+       * 고정 대기 대신 조건 대기 — 뉴스 우선 유예를 하네스에 상수로 박아 두지 않는다.
+       * 안 붙으면 시간 초과로 정직하게 실패한다 (K30 의 고정 대기 교훈과 같다).
+       */
+      let tkBrushOn = false;
+      try {
+        await page.waitForFunction(
+          `(() => { const s = document.getElementById('kairo-ticker'); return !!s && s.classList.contains('brush'); })()`,
+          undefined,
+          { timeout: 9000 },
+        );
+        tkBrushOn = true;
+      } catch {
+        tkBrushOn = false;
+      }
+      const tkBrushText = (await page.evaluate(TK_READ)) as string;
+      // 붓을 내려놓는 경로는 production 과 같다 (`clearBrush`). 재는 것은 그에 대한 티커의 반응이다
+      await page.evaluate(`window.__kairoClearBrush()`);
+      await page.waitForTimeout(300);
+      const tkBack = (await page.evaluate(`(() => {
+        const s = document.getElementById('kairo-ticker');
+        const e = document.querySelector('#kairo-ticker .kticker-line');
+        return {
+          brush: !!s && s.classList.contains('brush'),
+          text: e && e.textContent ? e.textContent : '',
+        };
+      })()`)) as { brush: boolean; text: string };
+      const tkNamed = tkPick.name.length > 0 && tkBrushText.indexOf(tkPick.name) >= 0;
+      record(
+        '티커가 붓 라벨을 받는다 — 붓을 놓으면 뉴스로 돌아온다 (K47-①)',
+        tkBrushOn && tkNamed && !tkBack.brush && tkBack.text !== tkBrushText ? 'pass' : 'fail',
+        `붓 "${tkBrushText}" (기대 이름 "${tkPick.name}") · 놓은 뒤 "${tkBack.text}"` +
+          `${tkBack.brush ? ' · brush 클래스가 안 떨어졌다' : ''}`,
+      );
+    }
+
+    // 뒷정리 — 이 절이 연 것을 이 절이 닫는다 (열어 둔 채 넘어가면 뒤가 전부 깨진다)
+    await page.evaluate(`(() => {
+      const h = window.__kairo;
+      if (window.__kairoClearBrush) window.__kairoClearBrush();
+      const ib = document.getElementById('kairo-inbox');
+      if (ib && !ib.hidden) {
+        const c = document.getElementById('kairo-inbox-close');
+        if (c) c.click();
+      }
+      const sheet = document.getElementById('kairo-sheet');
+      if (sheet && !sheet.hidden) document.getElementById('kairo-sheet-close').click();
+      h.flow.frozen = false;
+    })()`);
+  }
 
   await browser.close();
 

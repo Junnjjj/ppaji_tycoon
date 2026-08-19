@@ -77,6 +77,12 @@ export interface HudOptions {
   onCourse: () => void;
   /** 리포트 버튼 (K46) — 지난 결산을 다시 연다 */
   onReport?: () => void;
+  /**
+   * 붓 라벨이 바뀔 때 (K47-①). **정본은 티커**로 옮겼다 — 하단 바는 누르는 곳이고
+   * 읽는 것은 위(헤더)와 티커다. 시트에서 카드를 고르는 순간은 hud 안에서 일어나므로
+   * (`itemCard`) 바깥이 알 방법이 이 콜백뿐이다.
+   */
+  onBrush?: (label: string | null) => void;
 }
 
 export class KairoHud {
@@ -415,10 +421,17 @@ export class KairoHud {
     this.context.textContent = text;
   }
 
-  /** 지금 든 붓. null 이면 아무것도 안 들었다 */
+  /**
+   * 지금 든 붓. null 이면 아무것도 안 들었다.
+   *
+   * K47-①: 표시의 **정본은 티커**로 갔다. 여기서는 콜백만 흘리고 바의 `.kbrush` 는
+   * 비운다 — 두 곳에 같은 글이 뜨면 어느 쪽이 진짜인지 알 수 없다.
+   * ⚠ `.kbrush` 요소·CSS 자체는 남긴다 (걷어내는 것은 K47-② 소관).
+   */
   setBrush(label: string | null): void {
-    this.brushBox.className = label ? 'kbrush on' : 'kbrush';
-    this.brushBox.textContent = label ? `▸ ${label}` : '건설을 눌러 고르세요';
+    this.brushBox.className = 'kbrush';
+    this.brushBox.textContent = '';
+    this.opts.onBrush?.(label);
   }
 
   /** 등급이 오르면 잠금이 풀리므로 다시 만든다 */

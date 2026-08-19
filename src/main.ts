@@ -56,6 +56,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const scen = await import('./sim/kairo/scenario.js');
   const { seasonShares } = await import('./sim/kairo/groups.js');
   const { KairoNewGame } = await import('./ui/kairo-newgame.js');
+  /*
+   * 뉴스 티커 (K47-①) — 사건의 전용 채널. ⚠ 동적 import 는 **전부 boot 앞**이다
+   * (아래 `Object.assign(h, …)` 위 주석의 경고: boot 뒤 await 는 간헐 부팅 실패가 된다).
+   */
+  const { KairoTicker } = await import('./ui/kairo-ticker.js');
   const { KairoHud } = await import('./ui/kairo-hud.js');
   type GoalChip = import('./ui/kairo-hud.js').GoalChip;
   const { applyStartKit } = await import('./sim/kairo/startkit.js');
@@ -257,7 +262,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           }
           const def = facilityDef(hit.defId);
           moveSel = { handle: hit.handle, defId: hit.defId, i: hit.i, j: hit.j, facing: hit.facing ?? 0 };
-          hud.setBrush(`이동: ${def?.name ?? hit.defId}`);
+          ticker.setBrush(`이동: ${def?.name ?? hit.defId}`);
           toast(
             `${def?.name ?? hit.defId} — 옮길 자리를 탭하세요 ` +
               `(${Math.round(Math.floor((def?.cost ?? 0) * 0.1) / 10000)}만)`,
@@ -291,7 +296,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
             cancel: () => {
               h.scene.setGhost(null);
               moveSel = null;
-              hud.setBrush('이동');
+              ticker.setBrush('이동');
             },
             confirm: () => {
               h.scene.setGhost(null);
@@ -320,7 +325,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
               week.spend(fee);
               const gone = sel.handle;
               moveSel = null;
-              hud.setBrush('이동');
+              ticker.setBrush('이동');
               h.scene.refreshFacility(gone);
               h.scene.refreshFacility(r.placed.handle);
               h.guests.invalidate();
@@ -476,11 +481,16 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
               week.spend(cost);
               h.scene.refreshFacility(r.placed.handle);
               h.guests.invalidate();
-              const now = evaluateCombos(h.placement, undefined, h.guests.swimZones());
               refreshBuildList(); // 방이 찼으면 다음 시설이 잠겨야 한다 (K31)
-              const msgs: string[] = [`−${Math.round(cost / 10000)}만`];
-              if (now.active.length > 0) msgs.push(`콤보 ${now.active.length}개 발동`);
-              toast(msgs.join(' · '), 'ok');
+              /*
+               * 채널 분리 (K47-①). 예전엔 한 토스트에 둘이 섞여 있었다:
+               *   `−12만 · 콤보 3개 발동`
+               * 앞은 **내 행동의 대답**(토스트)이고 뒤는 **일어난 일**(뉴스)이다.
+               * 게다가 `evaluateCombos` 의 이름을 버리고 개수만 쓰고 있어서, 무엇이
+               * 터졌는지 화면 어디에서도 알 수 없었다 — 도감을 열기 전까지.
+               */
+              toast(`−${Math.round(cost / 10000)}만`, 'ok');
+              pushComboNews();
               persist();
             },
           },
@@ -636,7 +646,49 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     season: '계절',
   };
 
+  /*
+   * ── 뉴스 채널 (K47-①) ────────────────────────────────────────────────────
+   *
+   * 채널 계약은 `src/ui/kairo-ticker.ts` 상단 표가 정본이다:
+   *   모달 = 축하(시간 멈춤) · **티커 = 뉴스(내가 안 했는데 일어난 일)** · 토스트 = 내 행동의 대답
+   *
+   * ⚠ hud **보다 먼저** 만든다 — hud 의 `onBrush` 콜백이 티커를 참조한다.
+   */
+  const ticker = new KairoTicker(document.body);
+  /**
+   * 음성 대조군 (저장소 규칙 — "검증이 조용히 통과"를 8건 실측으로 겪었다).
+   * 켜면 라우팅이 통째로 죽는다. 검사는 "끄면 티커가 안 뜬다"를 확인해서,
+   * 자기가 재는 것이 실제로 이 경로인지 증명한다.
+   */
+  let newsMuted = false;
+  /**
+   * 시점 라벨 — "3주 화". 알림함이 "언제 왔나"를 못 말하면 스크롤이 곧 뒤죽박죽이 된다.
+   *
+   * ⚠ 흐름 중의 표시 주차는 `week.week + 1` 이다 (`refreshCaps` 와 같은 규칙).
+   * 갈라지면 헤더와 알림함이 서로 다른 주를 말한다.
+   */
+  const stampNow = (): string => {
+    const lp = week.liveProgress();
+    // 주 사이 (finish 뒤·begin 전) — 방금 끝난 주가 week.week 다
+    if (!lp) return `${week.week}주`;
+    // ⚠ `lp.done` 이어도 **아직 그 주 안**이다. `week.week` 로 찍으면 마지막 날 소식만
+    //   한 주 앞으로 밀려 "0주"가 된다 (실측으로 걸렸다)
+    return lp.done ? `${week.week + 1}주` : `${week.week + 1}주 ${DAY_NAMES[lp.day] ?? ''}`;
+  };
+  /**
+   * 뉴스 한 줄 — 티커에 흐르고 알림함에 쌓인다.
+   *
+   * `stamp` 를 직접 줄 수 있다: 하루 마감처럼 **일어난 시점과 알리는 시점이 다른** 소식은
+   * 자동 시점을 쓰면 하루가 밀려 찍힌다 (토요일 결산이 "일" 로 찍혔다 — 실측).
+   */
+  const news = (icon: string, text: string, stamp: string = stampNow()): void => {
+    if (newsMuted) return;
+    ticker.push(icon, text, stamp);
+  };
+
   const hud = new KairoHud(document.body, {
+    // 붓 라벨의 정본은 티커다 (K47-①) — 하단 바는 누르는 곳, 읽는 것은 티커
+    onBrush: (label) => ticker.setBrush(label),
     onPick: (it: HudItem) => {
       // 붓을 바꾸면 진행 중이던 배치는 취소한다 — 안 그러면 확정 바가 옛 시설을 가리킨다
       hud.hideConfirm();
@@ -861,7 +913,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     moveSel = null;
     ghostFacing = 0;
     lastFacilityTap = null;
-    hud.setBrush(null);
+    ticker.setBrush(null);
     hud.hideConfirm();
     h.scene.setGhost(null);
   };
@@ -972,6 +1024,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   let lastReport: ReturnType<typeof week.run> | null = null;
   let lastSummary = saved?.lastSummary ?? null;
   /**
+   * 누적 방문객 (K47-① 신규 발화 d). 이 카운터는 **원래 없었다** — "지금까지 몇 명이
+   * 다녀갔나"를 게임 어디에서도 못 물었다.
+   *
+   * ⚠ 세이브에는 **optional** 로 들어간다 (`weekSkip` 선례) — 옛 세이브는 0 에서
+   * 다시 세기 시작할 뿐이라 마이그레이션이 필요 없다. 버전을 올리면 v7 세이브가
+   * 전부 한 칸씩 밀린다.
+   */
+  let visitorsTotal = saved?.visitorsTotal ?? 0;
+  /** 마일스톤 — 자릿수가 바뀌는 지점. 너무 촘촘하면 축하가 소음이 된다 */
+  const VISITOR_MILESTONES = [100, 500, 1000, 2000, 5000] as const;
+  /**
    * 평판 — 퇴장 만족도의 **이동평균** (§9.2). 지난주 값 하나로 등급을 정하면 진동한다:
    * 등급↑ → 수요↑ → 혼잡 → 만족도↓ → 등급↓ → 수요↓ → 만족도↑ → … (실측 40주에 35번).
    * 등급에 이력(hysteresis)도 걸어 한 번 오른 등급이 유지되게 한다.
@@ -1023,6 +1086,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       priceMult,
       unlocks: unlocks.toSnapshot(),
       weekSkip: flow.weekSkipUnlocked,
+      // 누적 방문객 (K47-①) — optional 필드라 옛 세이브도 그대로 열린다
+      visitorsTotal,
       exam: exam.toSnapshot(),
       wishes: wishes.toSnapshot(),
     });
@@ -1124,6 +1189,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     week.begin(weekRng, assembleWeekOpts());
     flow.acc = 0;
     flow.daysSeen = 0;
+    /*
+     * 심사 D-day (K47-① 신규 발화 c). `judgeWeek` 는 지금까지 칩·버튼 라벨로만
+     * 렌더됐다 — 상시 표시라 **눈에 익어서 안 보인다.** 판정 주가 열리는 순간
+     * 한 번 흘려야 "이번 주가 그 주"가 사건이 된다.
+     *
+     * ⚠ `week.begin` **뒤**여야 한다. 진행 중 주차는 `week.week + 1` 이고
+     * (stampNow 와 같은 규칙), 판정은 이 주의 결산에서 난다.
+     */
+    if (exam.pending && exam.pending.judgeWeek === week.week + 1) {
+      news('⚖', `이번 주말 심사 — ${exam.pending.target}등급 판정`);
+    }
     refreshCaps();
   };
 
@@ -1146,17 +1222,40 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     }
     const closed = week.liveDays() ?? [];
     if (closed.length > flow.daysSeen) {
-      const d = closed[closed.length - 1];
-      if (d) {
+      /*
+       * 하루 마감·주말 진입은 **뉴스**다 (K47-①) — 내가 누른 것의 대답이 아니라
+       * 시간이 흘러서 일어난 일이다. 토스트에 있던 것을 티커로 옮겼다: 토스트는
+       * 2.6초 뒤 사라져 놓치면 끝인데, 이건 그 주의 손익을 읽는 유일한 실황이었다.
+       */
+      for (let k = flow.daysSeen; k < closed.length; k++) {
+        const d = closed[k];
+        if (!d) continue;
         const profit = d.revenue - d.upkeep;
-        toast(
+        news(
+          profit >= 0 ? '📈' : '📉',
           `${d.name} · ${profit >= 0 ? '+' : '−'}${Math.abs(Math.round(profit / 10000))}만 · 손님 ${d.visitors}`,
-          profit >= 0 ? 'ok' : '',
+          // ⚠ 시점은 **그 날**이다. 자동 시점은 이미 다음 날로 넘어간 뒤라 하루 밀린다
+          `${week.week + 1}주 ${d.name}`,
         );
-        audio.play('sfx/day-end');
+        /*
+         * 누적 방문객 (K47-① 신규 발화 d). 하루가 닫힐 때마다 더한다 —
+         * ⚠ `rep.visitors` 는 이 날들의 합이므로 결산에서 또 더하면 **두 배**가 된다.
+         * 세는 곳은 여기 하나다.
+         */
+        visitorsTotal += d.visitors;
+        for (const m of VISITOR_MILESTONES) {
+          if (visitorsTotal >= m && visitorsTotal - d.visitors < m) {
+            news('🎊', `누적 손님 ${m.toLocaleString('ko-KR')}명 돌파!`);
+          }
+        }
       }
-      // 주말 진입 — sim 의 1.6× 는 예전부터 있었다. 표기가 없었을 뿐이다 (검수 A1)
-      if (closed.length === 5) toast('주말 — 손님이 몰립니다', 'ok');
+      if (closed[closed.length - 1]) audio.play('sfx/day-end');
+      /*
+       * 주말 진입 — sim 의 1.6× 는 예전부터 있었다. 표기가 없었을 뿐이다 (검수 A1).
+       * ⚠ `=== 5` 가 아니라 **넘었는가**로 본다. ⏩ 로 여러 날이 한 번에 닫히면
+       * 정확히 5 인 순간이 없어서 주말 알림이 조용히 사라진다.
+       */
+      if (flow.daysSeen < 5 && closed.length >= 5) news('🏖', '주말 — 손님이 몰립니다');
       flow.daysSeen = closed.length;
       refreshCaps();
     }
@@ -1218,7 +1317,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     if (downTo < gradeNo) {
       gradeNo = downTo;
       h.scene.setLand(landRect(currentGrade()));
-      toast(`등급이 내려갔습니다 — ${currentGrade().name}. 만족도를 살피세요`);
+      /*
+       * 강등은 **뉴스**다 (K47-①). 내가 누른 것의 대답이 아니라 결산이 내린 판정이고,
+       * 2.6초 뒤 사라지는 토스트로 알리기엔 판이 통째로 좁아지는 사건이다.
+       * (승급·탈락은 모달 그대로 — 그건 축하/판정 연출이다.)
+       */
+      news('▼', `등급이 내려갔습니다 — ${currentGrade().name}. 만족도를 살피세요`);
     }
     // 심사 판정 (K42) — 부분 점수, 무작위 없음. 결과는 다음 날 아침에 도착한다
     const verdict = exam.judge(
@@ -1291,10 +1395,25 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
             : '도감에 기록됐습니다',
       });
     }
-    const weekClaim = progress.claim(questStatuses(h.placement, lastSummary, h.guests.swimZones()));
+    const claimStatuses = questStatuses(h.placement, lastSummary, h.guests.swimZones());
+    const weekClaim = progress.claim(claimStatuses);
     if (weekClaim.cash > 0) {
       week.earn(weekClaim.cash);
       audio.play('sfx/cash');
+    }
+    /*
+     * 의뢰 달성 (K47-① 신규 발화 a). 여기가 **UI 가 완전히 무음이던 자리**다 —
+     * 현금만 조용히 들어오고 "무슨 의뢰를 끝냈는지"를 화면 어디에서도 말하지 않았다.
+     * 보상 시설이 붙은 의뢰는 아래 모달(축하)이 따로 뜨지만, 현금뿐인 의뢰는 아무것도
+     * 없었다. `claim` 은 id 만 돌려주므로 방금 넘긴 statuses 에서 이름을 되찾는다.
+     */
+    for (const qid of weekClaim.ids) {
+      const q = claimStatuses.find((s) => s.id === qid);
+      news(
+        '📋',
+        `의뢰 달성 — ${q?.name ?? qid}` +
+          (q && q.reward > 0 ? ` · +${Math.round(q.reward / 10000)}만` : ''),
+      );
     }
     /*
      * 소원 (K43) — EXP 적립·소원 열림·성사 판정. 전부 결산 tick 의 결정적 계산이고,
@@ -1308,11 +1427,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           sub: '소원을 들어주면 또 옵니다 (메뉴 → 소원)',
         });
       } else if (ev.kind === 'open') {
-        arrivalQueue.push({
-          title: `${ev.char.name}의 소원`,
-          name: ev.wish.line,
-          sub: '메뉴의 소원 목록에서 진행을 볼 수 있어요',
-        });
+        /*
+         * 소원 개시는 **뉴스**다 (K47-①). 모달에서 내렸다: 목표가 하나 열리는 것은
+         * 축하가 아니고, 주당 여러 건이 열릴 수 있어 그때마다 시간을 멈추면
+         * "한 주 진행"이 팝업 행렬이 된다 (PSS 부정 리뷰 1위가 팝업 과다였다).
+         * 진행은 메뉴의 소원 목록이 계속 들고 있으므로 놓쳐도 잃는 것이 없다.
+         */
+        news('💭', `${ev.char.name}의 소원 — ${ev.wish.line}`);
       } else {
         // done — 보상
         if (ev.wish.reward.cash !== undefined && ev.wish.reward.cash > 0) {
@@ -1329,14 +1450,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           });
           refreshBuildList();
         } else {
-          arrivalQueue.push({
-            title: '소원 성사!',
-            name: ev.char.name,
-            sub:
-              ev.wish.reward.cash !== undefined
-                ? `고마움의 표시 +${Math.round(ev.wish.reward.cash / 10000)}만`
-                : '다음 소원이 기다립니다',
-          });
+          /*
+           * 보상이 **시설이면 모달**(위: 새 시설 해금 — 축하), 현금뿐이면 **뉴스**다.
+           * 채널을 보상의 무게로 가른다 — 현금 몇 만에 시간을 멈추면 축하가 값싸진다.
+           */
+          news(
+            '💗',
+            `소원 성사! ${ev.char.name}` +
+              (ev.wish.reward.cash !== undefined
+                ? ` · 고마움의 표시 +${Math.round(ev.wish.reward.cash / 10000)}만`
+                : ''),
+          );
         }
       }
     }
@@ -1358,6 +1482,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         `방문 ${rep.visitors} · 손익 ${rep.profit}`,
     );
     const showReport = (): void => {
+      /*
+       * 결산은 **모달 그대로**다 (K47-①). 한 주의 결론을 보는 것이 핵심 루프의 절반이라
+       * 흘려보낼 수 없다. 다만 알림함에도 남긴다 — 리포트 배지(N)와 짝을 이뤄
+       * "몇 주차 결산이 왔었나"가 소식 목록에 남는다.
+       */
+      news('📊', `${rep.week}주차 결산 도착 · 손님 ${rep.visitors} · 손익 ${Math.round(rep.profit / 10000)}만`);
       report.show(rep, { onClose: () => nextWeekCards() });
     };
     /*
@@ -1519,6 +1649,35 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
   noteDiscoveries();
 
+  /**
+   * 발동 중인 콤보의 서명 (K47-① 신규 발화 b).
+   *
+   * `evaluateCombos` 는 이름을 돌려주는데 UI 는 **개수만** 쓰고 버리고 있었다. 같은
+   * 콤보가 계속 발동 중인 것은 뉴스가 아니므로 **새로 터진 것**만 흘린다 —
+   * `id#index` 로 세는 이유는 같은 콤보가 여러 벌 성립할 수 있기 때문이다 (체감 감쇠).
+   *
+   * ⚠ 시작 상태를 미리 담는다. 안 담으면 물려받은 빠지(K30)의 콤보가 첫 배치에서
+   * 한꺼번에 뉴스가 되어, 사건이 아니라 현황판이 된다.
+   */
+  const comboKey = (c: { id: string; index: number }): string => `${c.id}#${c.index}`;
+  let comboSeen = new Set(
+    evaluateCombos(h.placement, undefined, h.guests.swimZones()).active.map(comboKey),
+  );
+  const pushComboNews = (): void => {
+    const now = evaluateCombos(h.placement, undefined, h.guests.swimZones());
+    const fresh = now.active.filter((c) => !comboSeen.has(comboKey(c)));
+    comboSeen = new Set(now.active.map(comboKey));
+    for (const c of fresh) {
+      /*
+       * ⚠ 숨은 콤보의 **첫 발견은 모달**이 담당한다 (결산의 `noteDiscoveries` 사슬).
+       * 여기서도 흘리면 한 사건이 두 채널에 나온다 — 채널 계약 위반이다.
+       * 이미 발견한 숨은 콤보의 재발동은 그냥 뉴스다.
+       */
+      if (COMBOS.find((x) => x.id === c.id)?.hidden === true && !discovered.has(c.id)) continue;
+      news('✨', `콤보 발동 — ${c.name}`);
+    }
+  };
+
   const catalog = new KairoCatalog(document.body, {
     placement: h.placement,
     courses,
@@ -1607,7 +1766,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const reqText = (next.examReqs ?? [])
       .map((c) => (c.kind === 'needSupply' ? `${c.need} ${c.value}` : `${c.kind} ${c.value}`))
       .join(' · ');
+    // 신청은 **내 행동**이라 토스트가 맞다. 예고는 뉴스다 — 둘 다 낸다 (K47-①)
     toast(`심사 신청 — ${pending.judgeWeek}주차 주말 판정 (${reqText})`, 'ok');
+    news('📝', `${next.grade}등급 심사 접수 — ${pending.judgeWeek}주차 주말 판정 (${reqText})`);
     refreshExamBtn();
     refreshGoal();
     persist();
@@ -1982,6 +2143,21 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     land: () => landRect(currentGrade()),
     /** 놓아 둔 출입구 (K36-B) — 검증이 읽는다 */
     doors,
+    /** 뉴스 티커 (K47-①) — 검증이 쌓인 소식 수·띠 글을 읽는다 */
+    ticker,
+    news,
+    /**
+     * 음성 대조군 (K47-①). 켜면 라우팅이 통째로 죽어 티커에 아무것도 안 흐른다.
+     *
+     * ⚠ **코드에 둔다.** 손으로 주입해 확인한 것은 다음 사람에게 안 남는다 —
+     * `setRenderFaultForTest` 와 같은 판단이다. 검사는 이걸 켜고 사건을 일으켜
+     * "정말로 이 경로를 재고 있었나"를 증명한다.
+     */
+    setNewsMutedForTest: (v: boolean) => {
+      newsMuted = v;
+    },
+    /** 누적 방문객 (K47-①) — 마일스톤 검증이 읽는다 */
+    visitorsTotal: () => visitorsTotal,
     persist,
   });
   Object.assign(window, {
