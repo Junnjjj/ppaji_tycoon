@@ -3626,6 +3626,21 @@ async function main(): Promise<void> {
   let tapDetail = candidates.ok ? `붓 ${String(candidates.brush)}` : (candidates.why ?? '실패');
   const countBefore = candidates.count ?? 0;
   for (const [ti, tj] of candidates.tiles) {
+    /*
+     * ⚠ K47-③: 붓이 살아 있는지 **매번 확인한다.** 조준 배치에서 확정·취소는 시설 붓의
+     * 조준을 끝낸다 — 앞 후보에서 거절당해 취소했다면 붓이 이미 떨어져 있을 수 있고,
+     * 그러면 뒤 후보의 탭이 전부 "붓 없음"으로 조용히 새어 검사가 원인 없이 실패한다.
+     */
+    await page.evaluate(`(() => {
+      if (window.__kairoBrush && window.__kairoBrush() === 'facility') return;
+      document.getElementById('kairo-build-open').click();
+      const ft = document.querySelector('#kairo-sheet [data-tab="facility"]');
+      if (ft) ft.click();
+      const p = document.querySelector('[data-pick="facility:snackbar"]');
+      if (p) p.click();
+      const sh = document.getElementById('kairo-sheet');
+      if (sh && !sh.hidden) document.getElementById('kairo-sheet-close').click();
+    })()`);
     await page.evaluate(`window.__kairo.scene.focusTile(${ti}, ${tj})`);
     await page.waitForTimeout(120);
     const pt = (await page.evaluate(`(() => {
@@ -3643,6 +3658,10 @@ async function main(): Promise<void> {
     /*
      * K32: 탭하면 **고스트 + 확정 바**가 뜬다. 바로 안 놓인다 — 회전과 "장비 탄 손님"이
      * 나중에 들어오므로 놓기 전에 만질 수 있는 상태를 뒀다. 확정을 눌러야 놓인다.
+     *
+     * K47-③: 탭의 뜻이 "여기에 놓는다"에서 **"조준을 그 칸으로 옮긴다"**로 바뀌었다
+     * (성긴 조준 — 계획 §3 의 호환 다리). 화면 탭 → 확정이라는 이 절의 경로는 그대로
+     * 살아 있고, 바뀐 것은 탭이 확정의 **전 단계**라는 뜻뿐이다.
      */
     const ghost = (await page.evaluate(`(() => {
       const c = document.getElementById('kairo-confirm');
@@ -3675,7 +3694,7 @@ async function main(): Promise<void> {
   const cashAfter = await cashOf();
   const countAfter = (await page.evaluate(`window.__kairo.placement.count`)) as number;
   record(
-    '화면을 탭해 시설을 놓는다',
+    '화면을 탭해 조준하고 확정해 시설을 놓는다 (K47-③)',
     placedAt !== null ? 'pass' : 'fail',
     placedAt
       ? `(${placedAt[0]}, ${placedAt[1]}) 탭 → 시설 ${countBefore} → ${countAfter}`
@@ -3998,15 +4017,20 @@ async function main(): Promise<void> {
        */
       const _L = h.land();
       let TI = -1, TJ = -1;
-      for (let j = _L.j0 + 1; j < _L.j0 + _L.h - 5 && TI < 0; j++) {
-        for (let i = _L.i0 + 1; i < _L.i0 + _L.w - 5; i++) {
+      for (let j = _L.j0 + 2; j < _L.j0 + _L.h - 6 && TI < 0; j++) {
+        for (let i = _L.i0 + 2; i < _L.i0 + _L.w - 6; i++) {
           let free = true;
           /*
            * ⚠ 잔디만 찾으면 안 된다 — 앞 절들이 판을 통째로 포장해 뒀다 (PAVE_ALL).
            * 실내 바닥은 포장 위에도 깔린다. 조건은 "지을 수 있고 · 실내가 아니고 · 비었다".
+           *
+           * ⚠ K47-③: 창을 **탭한 칸 둘레로 넓혔다** (di,dj = −2…3). 4칸 블록의 좌상단이
+           * 탭한 칸에서 어느 쪽으로 얼마나 밀리는지는 조준 규칙이 정하는데, 그 규칙이
+           * 바뀌는 중이다. 좁게 잡으면 "블록은 제대로 깔렸는데 자리 탓에 거절"이 되어
+           * 검사가 엉뚱한 이유로 빨간불이 된다.
            */
-          for (let dj = 0; dj < 5 && free; dj++)
-            for (let di = 0; di < 5; di++)
+          for (let dj = -2; dj <= 3 && free; dj++)
+            for (let di = -2; di <= 3; di++)
               if (!h.terrain.isBuildable(i + di, j + dj) || h.terrain.isWater(i + di, j + dj) ||
                   h.terrain.isIndoor(i + di, j + dj) || h.placement.handleAt(i + di, j + dj)) { free = false; break; }
           if (free) { TI = i; TJ = j; break; }
@@ -4018,25 +4042,52 @@ async function main(): Promise<void> {
        * paintFloorBlock 이 no-door 로 통째로 되돌려 "실내 +0" 이 된다.
        */
       const _g = h.gate;
-      for (let k = Math.min(_g.i, TI - 1); k <= Math.max(_g.i, TI - 1); k++) {
+      /*
+       * ⚠ K47-③: 길을 **두 줄** 낸다 (TI−2 · TI−1). 블록이 어느 쪽으로 밀리든 한 줄은
+       * 방 밖에 남아 문이 날 자리가 된다 — 한 줄만 내면 그 줄이 방에 먹히는 순간
+       * no-door 로 통째로 되돌아가 "실내 +0" 이 된다 (K32-B 이후의 규칙).
+       */
+      for (let k = Math.min(_g.i, TI - 2); k <= Math.max(_g.i, TI - 2); k++) {
         if (h.terrain.isWalkable(k, _g.j) && h.terrain.isBuildable(k, _g.j)) h.terrain.paint(k, _g.j, 'path_stone');
       }
-      for (let k = _g.j; k <= TJ + 4; k++) {
-        if (h.terrain.isWalkable(TI - 1, k) && h.terrain.isBuildable(TI - 1, k)) h.terrain.paint(TI - 1, k, 'path_stone');
+      for (const col of [TI - 2, TI - 1]) {
+        for (let k = _g.j; k <= TJ + 4; k++) {
+          if (h.terrain.isWalkable(col, k) && h.terrain.isBuildable(col, k)) h.terrain.paint(col, k, 'path_stone');
+        }
       }
       h.guests.invalidate();
       document.getElementById('kairo-build-open').click();
       document.querySelector('#kairo-sheet [data-tab="building"]').click();
       document.querySelector('[data-pick="ground:floor_indoor@4"]').click();
+      const _sh0 = document.getElementById('kairo-sheet');
+      if (_sh0 && !_sh0.hidden) document.getElementById('kairo-sheet-close').click();
+      /*
+       * K47-③ — 바닥·건물도 **조준 + 확정**이다. 탭은 조준일 뿐이라 여기서 아직
+       * 깔리면 안 된다 (48만이 탭 한 번에 나가던 것이 이 붓을 승격시킨 이유다).
+       */
       h.tapTile(TI, TJ);
+      out.indoorMid = countIndoor();
+      const _cbar = document.getElementById('kairo-confirm');
+      const _cbtn = document.getElementById('kairo-place-confirm');
+      out.groundBar = !!_cbar && !_cbar.hidden;
+      out.groundDisabled = !!_cbtn && _cbtn.disabled;
+      if (out.groundBar && _cbtn && !_cbtn.disabled) _cbtn.click();
       out.indoor1 = countIndoor();
       out.cash1 = h.week.cash;
+      // 확정 뒤에도 바가 남아야 한다 — 연속 배치 (계획 §3 붓별 판정)
+      out.groundBarAfter = !!_cbar && !_cbar.hidden;
+      if (window.__kairoClearBrush) window.__kairoClearBrush();
 
       // ② 고스트 — 시설을 고르고 탭하면 아직 안 놓인다
       out.count0 = h.placement.count;
-      document.getElementById('kairo-build-open').click();
-      document.querySelector('#kairo-sheet [data-tab="facility"]').click();
-      document.querySelector('[data-pick="facility:toilet"]').click();
+      const pickToilet = () => {
+        document.getElementById('kairo-build-open').click();
+        document.querySelector('#kairo-sheet [data-tab="facility"]').click();
+        document.querySelector('[data-pick="facility:toilet"]').click();
+        const s = document.getElementById('kairo-sheet');
+        if (s && !s.hidden) document.getElementById('kairo-sheet-close').click();
+      };
+      pickToilet();
       h.tapTile(TI, TJ);
       const c = document.getElementById('kairo-confirm');
       out.bar = !!c && !c.hidden;
@@ -4049,7 +4100,12 @@ async function main(): Promise<void> {
       out.countAfterCancel = h.placement.count;
       out.ghostAfterCancel = !!sc.ghost;
 
-      // 다시 탭하고 확정하면 놓인다
+      /*
+       * 다시 조준하고 확정하면 놓인다.
+       * ⚠ K47-③: 취소는 **조준을 끝낸다.** 붓까지 떨어졌다면 다시 고른다 —
+       * "붓이 남아 있겠지"에 기대면 이 절이 원인 없이 빨간불이 된다.
+       */
+      if (!window.__kairoBrush || window.__kairoBrush() !== 'facility') pickToilet();
       h.tapTile(TI, TJ);
       const cf = document.getElementById('kairo-place-confirm');
       out.barBefore = !document.getElementById('kairo-confirm').hidden;
@@ -4069,6 +4125,23 @@ async function main(): Promise<void> {
       `실내 +${(r.indoor1 as number) - (r.indoor0 as number)} · TI ${String(r.TI)},${String(r.TJ)} · 토지 ${JSON.stringify(r.landBox)} · 현금 −${Math.round(
         ((r.cash0 as number) - (r.cash1 as number)) / 10000,
       )}만`,
+    );
+    /*
+     * ⚠ 값이 나가는 시점이 **확정으로 옮겨졌다** (K47-③). 4×4 = 48만이 탭 한 번에
+     * 즉시 지출이었고 미리보기가 아예 없었다 — 그것이 이 붓을 승격시킨 이유다.
+     * 위 검사는 "총합"만 보므로, 탭 즉시 깔리는 옛 동작에서도 그대로 통과한다.
+     * 게이트가 실제로 생겼는지는 **확정 전 스냅샷**으로만 잡힌다.
+     */
+    record(
+      '건물 블록도 확정을 거친다 — 탭만으로는 안 깔린다 (K47-③)',
+      r.groundBar === true && r.indoorMid === r.indoor0 ? 'pass' : 'fail',
+      `확정 바 ${String(r.groundBar)} (disabled ${String(r.groundDisabled)}) · ` +
+        `탭 직후 실내 ${String(r.indoorMid)} (기준 ${String(r.indoor0)})`,
+    );
+    record(
+      '바닥·건물은 확정 뒤에도 바가 남는다 — 연속 배치 (K47-③)',
+      r.groundBarAfter === true ? 'pass' : 'fail',
+      `확정 후 바 ${String(r.groundBarAfter)}`,
     );
     record(
       '시설을 탭하면 고스트가 뜨고 **아직 안 놓인다**',
@@ -4514,17 +4587,23 @@ async function main(): Promise<void> {
     const block = document.querySelector('[data-pick="ground:path_stone@3"]');
     if (!block) return { ok: false, reason: '석재 보도 3×3 붓이 없다', labels: labels.slice(0, 8) };
     block.click();
+    const _bsh = document.getElementById('kairo-sheet');
+    if (_bsh && !_bsh.hidden) document.getElementById('kairo-sheet-close').click();
     /*
-     * 잔디 3×3 을 **해금된 토지 안에** 만든다. 앞 절의 자리는 i=20 대라 1등급 토지 밖이라
+     * 잔디를 **해금된 토지 안에** 만든다. 앞 절의 자리는 i=20 대라 1등급 토지 밖이라
      * tapTile 이 조용히 거절했다 (실측 — 검사가 0칸으로 나왔다). 게이트 가까이서 찾는다.
+     *
+     * ⚠ K47-③: 잔디판을 5×5 로, 세는 창을 7×7 로 넓혔다. **좌표를 기대하지 않는다** —
+     * 조준 배치에서 블록의 중심 규칙(oi = i − ⌊(n−1)/2⌋)이 레티클 기준으로 바뀔 수
+     * 있으므로, 재는 것은 "어디에 깔렸나"가 아니라 **"한 번에 아홉 칸이 깔렸나"**다.
      */
     ${LAND_BOX}
     let spot = null;
-    for (let j = J0; j < Math.min(J1, J0 + 16) && !spot; j++) {
-      for (let i = I0; i < Math.min(I1, I0 + 16); i++) {
+    for (let j = J0 + 3; j < Math.min(J1 - 3, J0 + 18) && !spot; j++) {
+      for (let i = I0 + 3; i < Math.min(I1 - 3, I0 + 18); i++) {
         let ok = true;
-        for (let dj = -1; dj <= 1 && ok; dj++) {
-          for (let di = -1; di <= 1; di++) {
+        for (let dj = -3; dj <= 3 && ok; dj++) {
+          for (let di = -3; di <= 3; di++) {
             const ti = i + di, tj = j + dj;
             if (!t.isWalkable(ti, tj) || t.isIndoor(ti, tj) || h.placement.handleAt(ti, tj) !== 0) { ok = false; break; }
           }
@@ -4532,32 +4611,50 @@ async function main(): Promise<void> {
         if (ok) { spot = [i, j]; break; }
       }
     }
-    if (!spot) return { ok: false, reason: '토지 안에서 3×3 빈 육지를 못 찾았다', labels: [] };
-    for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
+    if (!spot) return { ok: false, reason: '토지 안에서 7×7 빈 육지를 못 찾았다', labels: [] };
+    for (let dj = -2; dj <= 2; dj++) for (let di = -2; di <= 2; di++) {
       t.paint(spot[0] + di, spot[1] + dj, 'lawn');
       h.scene.refreshTile(spot[0] + di, spot[1] + dj);
     }
     const before = h.week.cash;
-    let paved0 = 0;
-    for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
-      if (t.kindAt(spot[0] + di, spot[1] + dj) === 'path_stone') paved0++;
-    }
+    const countPaved = () => {
+      let n = 0;
+      for (let dj = -3; dj <= 3; dj++) for (let di = -3; di <= 3; di++) {
+        if (t.kindAt(spot[0] + di, spot[1] + dj) === 'path_stone') n++;
+      }
+      return n;
+    };
+    const paved0 = countPaved();
+    /* K47-③ — 탭은 조준이다. 확정을 눌러야 깔린다 (탭 즉시 지출을 없앤 이유) */
     h.tapTile(spot[0], spot[1]);
-    let paved1 = 0;
-    for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
-      if (t.kindAt(spot[0] + di, spot[1] + dj) === 'path_stone') paved1++;
-    }
+    const pavedMid = countPaved();
+    const cbar = document.getElementById('kairo-confirm');
+    const cbtn = document.getElementById('kairo-place-confirm');
+    const barOn = !!cbar && !cbar.hidden;
+    if (barOn && cbtn && !cbtn.disabled) cbtn.click();
+    const paved1 = countPaved();
+    if (window.__kairoClearBrush) window.__kairoClearBrush();
     const walkSub = labels.filter((x) => x.includes('손님 통행')).length;
     const noWalkSub = labels.filter((x) => x.includes('못 지나감')).length;
     const toastEl = document.getElementById('kairo-toast');
-    return { ok: true, paved: paved1 - paved0, spent: before - h.week.cash, walkSub: walkSub,
+    return { ok: true, paved: paved1 - paved0, midPaved: pavedMid - paved0, bar: barOn,
+      spent: before - h.week.cash, walkSub: walkSub,
       noWalkSub: noWalkSub,
       dbg: JSON.stringify({ spot: spot, brush: window.__kairoBrush ? window.__kairoBrush() : null,
         kind: t.kindAt(spot[0], spot[1]), cash: h.week.cash,
         toast: toastEl && !toastEl.hidden ? toastEl.textContent : '' }) };
   })()`)) as
     | { ok: false; reason: string; labels: string[] }
-    | { ok: true; paved: number; spent: number; walkSub: number; noWalkSub: number; dbg: string };
+    | {
+        ok: true;
+        paved: number;
+        midPaved: number;
+        bar: boolean;
+        spent: number;
+        walkSub: number;
+        noWalkSub: number;
+        dbg: string;
+      };
 
   if (!roadBrush.ok) {
     record('길 붓이 블록으로 깐다 (K32-B)', 'fail', `${roadBrush.reason} · ${roadBrush.labels.join(' / ')}`);
@@ -4566,6 +4663,11 @@ async function main(): Promise<void> {
       '길 붓 3×3 이 아홉 칸을 한 번에 깐다 — 한 칸씩은 폰에서 못 깐다 (K32-B)',
       roadBrush.paved === 9 && roadBrush.spent > 0 ? 'pass' : 'fail',
       `포장 +${roadBrush.paved}칸 · ${Math.round(roadBrush.spent / 10000)}만 지출`,
+    );
+    record(
+      '길 붓도 확정을 거친다 — 탭만으로는 안 깔린다 (K47-③)',
+      roadBrush.bar === true && roadBrush.midPaved === 0 ? 'pass' : 'fail',
+      `확정 바 ${String(roadBrush.bar)} · 탭 직후 +${roadBrush.midPaved}칸 (확정 후 +${roadBrush.paved}칸)`,
     );
     record(
       '바닥 목록이 통행 여부를 말해 준다 — 규칙을 바꿨으면 알려줘야 한다',
@@ -4732,6 +4834,9 @@ async function main(): Promise<void> {
   //
   // 카이로에서 건물은 **지나가는 곳**이기도 하다. 문이 하나면 막다른 곳이라 손님이 빙
   // 돌아간다. 사용자 요청: "입구 말고도 설치할 수 있는 입출구를 둬서 통과할 수 있게".
+  //
+  // ⚠ 출입구는 **탭 유지**다 (K47-③ 계획 §3 붓별 판정). 배치가 아니라 대상 지정 + 순환
+  // 이라 조준할 것이 없다 — 확정 클릭을 여기에 넣지 말 것. 코스 탭도 같은 이유로 그대로다.
   const doorUi = (await page.evaluate(`(() => {
     const h = window.__kairo, t = h.terrain, w = h.walls;
     const out = { before: w.count(2) };
@@ -5770,7 +5875,13 @@ async function main(): Promise<void> {
     `"${examResult.title}"`,
   );
 
-  // ── 이동 붓 — 실터치 경로 (탭 → 시설 선택 → 목적지 탭 → 고스트 → 확정) ──
+  /*
+   * ── 이동 붓 — 실터치 경로 (탭 → 시설 선택 → 목적지 조준 → 고스트 → 확정) ──
+   *
+   * ⚠ K47-③: **1단계(대상)는 탭, 2단계(목적지)만 조준**이다 (계획 §3 붓별 판정).
+   * 목적지 탭은 "조준을 그 칸으로 옮긴다"로 뜻이 바뀌었을 뿐이고, 확정을 눌러야
+   * 옮겨지는 것은 K42 부터 그대로다 — 그래서 이 절은 확정 클릭 한 줄로 그대로 산다.
+   */
   const moveSetup = (await page.evaluate(`(() => {
     const h = window.__kairo;
     h.flow.frozen = true;
@@ -5905,10 +6016,16 @@ async function main(): Promise<void> {
     const pick = document.querySelector('[data-pick="facility:pyeongsang_row"]');
     if (!pick) return { ok: false, why: '평상 카드 없음' };
     pick.click();
+    const sh = document.getElementById('kairo-sheet');
+    if (sh && !sh.hidden) document.getElementById('kairo-sheet-close').click();
+    // 탭 = 조준 (K47-③). 확정은 아래에서 진짜 클릭으로 누른다
     h.tapTile(pad.i + 1, pad.j);
     const rot = document.getElementById('kairo-place-rotate');
-    return { ok: true, pad: pad, rotEnabled: rot && !rot.disabled };
-  })()`)) as { ok: false; why: string } | { ok: true; pad: { i: number; j: number }; rotEnabled: boolean };
+    const before = h.placement.all().filter((p) => p.defId === 'pyeongsang_row').length;
+    return { ok: true, pad: pad, rotEnabled: rot && !rot.disabled, before: before };
+  })()`)) as
+    | { ok: false; why: string }
+    | { ok: true; pad: { i: number; j: number }; rotEnabled: boolean; before: number };
   if (!rotated.ok) {
     record('★ 회전 — 비정사각 시설이 90° 로 놓인다 (K45)', 'fail', rotated.why);
   } else {
@@ -5916,25 +6033,42 @@ async function main(): Promise<void> {
     await page.waitForTimeout(250);
     await page.click('#kairo-place-confirm');
     await page.waitForTimeout(250);
+    /*
+     * ⚠ K47-③: **좌표를 기대하지 않는다.** 예전에는 `(pad.i+1, pad.j)` 를 앵커로 박고
+     * 거기서 j+3·i+3 을 읽었는데, 조준 배치에서는 확정 시점의 칸을 레티클 규칙이 정한다.
+     * 재려는 것은 자리가 아니라 **모양**이다 — 발자국이 세로 4 · 가로 1 인가.
+     * 놓인 결과(`placement.all`)에서 읽어 발자국 경계상자를 직접 잰다.
+     */
     const after = (await page.evaluate(`(() => {
       const h = window.__kairo;
-      const p = { i: ${rotated.pad.i} + 1, j: ${rotated.pad.j} };
-      const a = h.placement.at(p.i, p.j);
-      const tail = h.placement.at(p.i, p.j + 3); // 세로로 뻗었으면 j+3 도 같은 시설
-      const side = h.placement.at(p.i + 3, p.j); // 가로가 아니어야 한다
+      const rows = h.placement.all().filter((p) => p.defId === 'pyeongsang_row');
+      const it = rows.length ? rows[rows.length - 1] : null;
+      let w = 0, d = 0;
+      if (it) {
+        let i0 = 1e9, i1 = -1e9, j0 = 1e9, j1 = -1e9;
+        for (let j = 0; j < h.terrain.height; j++) {
+          for (let i = 0; i < h.terrain.width; i++) {
+            if (h.placement.handleAt(i, j) !== it.handle) continue;
+            if (i < i0) i0 = i;
+            if (i > i1) i1 = i;
+            if (j < j0) j0 = j;
+            if (j > j1) j1 = j;
+          }
+        }
+        w = i1 - i0 + 1; d = j1 - j0 + 1;
+      }
       window.__kairoClearBrush();
-      return { def: a ? a.defId : null, facing: a ? a.facing : null,
-               tailSame: !!(tail && a && tail.handle === a.handle),
-               sideEmpty: !side || !a || side.handle !== a.handle };
-    })()`)) as { def: string | null; facing: number | null; tailSame: boolean; sideEmpty: boolean };
+      return { def: it ? it.defId : null, facing: it ? it.facing : null,
+               n: rows.length, w: w, d: d };
+    })()`)) as { def: string | null; facing: number | null; n: number; w: number; d: number };
     record(
       '★ 회전 — 비정사각 시설이 90° 로 놓인다 (K45, ↻ 실클릭)',
-      rotated.rotEnabled && after.def === 'pyeongsang_row' && after.facing === 1 &&
-        after.tailSame && after.sideEmpty
+      rotated.rotEnabled && after.n === rotated.before + 1 && after.def === 'pyeongsang_row' &&
+        after.facing === 1 && after.d === 4 && after.w === 1
         ? 'pass'
         : 'fail',
-      `facing ${after.facing} · 세로 연장 ${after.tailSame ? 'OK' : '아님'} · ` +
-        `가로 아님 ${after.sideEmpty ? 'OK' : '실패'}`,
+      `facing ${after.facing} · 발자국 ${after.w}×${after.d} (기대 1×4) · ` +
+        `평상 ${rotated.before} → ${after.n}`,
     );
   }
 
@@ -6524,6 +6658,787 @@ async function main(): Promise<void> {
       }
       window.__kairo.flow.frozen = false;
     })()`);
+  }
+
+  /*
+   * ── K47-③. 조준 배치 — 픽 → 고스트 → 지도 팬으로 정렬 → 확정 ────────────────
+   *
+   * 배치가 "탭 → 고스트 → 확정"에서 **"픽 → 고스트 → 팬으로 정렬 → 확정"**으로 바뀌었다
+   * (계획 §3). 손가락이 고스트를 가리지 않는 것이 원작이 이 방식을 쓰는 이유다.
+   *
+   * ⚠ **가장 큰 함정은 순진한 "중앙 고정"이다.** 카메라 클램프(`range()` 가 뷰를
+   * `worldBounds` 안에 가둔다) 때문에 화면 중앙이 갈 수 있는 범위가 제한되어, 5등급 판의
+   * **32%** 가 영원히 배치 불가가 된다 (계획 §3 실측). 그래서 고스트가 **정본**이고
+   * 레티클은 화면 표시일 뿐이며, 팬은 레티클 칸의 **증분**만 더한다.
+   * 아래 "지도 가장자리" 절이 그 구멍을 잡는 **유일한** 검사다.
+   *
+   * ⚠ 하네스는 투영을 다시 구현하지 않는다 — 레티클 칸을 씬의 `tileScreenRect` 로
+   * **독립 유도**한다 (화면 중심에 중심이 가장 가까운 칸, 2:1 다이메트릭의 다이아몬드
+   * 거리). 새 API 로 재면 자기참조라 그 함수가 통째로 틀려도 통과한다 (K38 교훈).
+   *
+   * ⚠ 새 표면(`aimTileNow` · `reticleTile` · 조준 결함 모드)은 **방어적으로** 부른다.
+   * 통합 시 이름이 달라질 수 있으므로 후보를 차례로 시도하고, 하나도 없으면 그 사실을
+   * 판정문에 적는다 (예외로 런 전체가 죽지 않게).
+   *
+   * 잔해 위에서 재지 않으려고 **새 판(새 컨텍스트 + 세이브 삭제)**에서 돈다.
+   */
+  {
+    const cx = await browser.newContext(DEVICE);
+    const pg = await cx.newPage();
+    const aimErrors: string[] = [];
+    pg.on('pageerror', (e) => aimErrors.push(String(e)));
+    await pg.addInitScript(`try { localStorage.clear(); } catch {}`);
+    await pg.goto(URL, { waitUntil: 'load' });
+    await pg.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+
+    const aimCdp = await cx.newCDPSession(pg);
+    const aimTouch = async (type: TouchType, x: number, y: number): Promise<void> => {
+      await aimCdp.send('Input.dispatchTouchEvent', {
+        type,
+        touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }],
+      });
+    };
+    type Geo = {
+      left: number;
+      top: number;
+      w: number;
+      h: number;
+      bw: number;
+      bh: number;
+      s: number;
+    };
+    const CANVAS_GEO = `(() => {
+      const cv = document.querySelector('canvas');
+      const cr = cv.getBoundingClientRect();
+      return { left: cr.left, top: cr.top, w: cr.width, h: cr.height,
+               bw: cv.width, bh: cv.height, s: cr.width / cv.width };
+    })()`;
+
+    /*
+     * 진짜 손가락 드래그 (CDP `Input.dispatchTouchEvent`). 합성 PointerEvent 는 Phaser 가
+     * 무시한다 — 멀쩡한 코드가 실패로 나온다.
+     *
+     * ⚠ 시작점과 끝점이 **둘 다 지도 위**여야 한다. 위 210 · 아래 210 은 HUD 몫이라
+     * 거기서 시작하면 헤더·확정 바가 드래그를 먹고 "팬이 안 된다"로 나온다 (실측 함정).
+     * 한 번에 못 가는 거리는 여러 번 나눠 끈다.
+     */
+    const aimDrag = async (dxCss: number, dyCss: number): Promise<void> => {
+      const geo = (await pg.evaluate(CANVAS_GEO)) as Geo;
+      const MAXX = 180;
+      const MAXY = 200;
+      const steps = Math.max(
+        1,
+        Math.ceil(Math.max(Math.abs(dxCss) / MAXX, Math.abs(dyCss) / MAXY)),
+      );
+      const loX = geo.left + 30;
+      const hiX = geo.left + geo.w - 30;
+      const loY = geo.top + 210;
+      const hiY = geo.top + geo.h - 210;
+      for (let s = 0; s < steps; s++) {
+        const dx = Math.round(dxCss / steps);
+        const dy = Math.round(dyCss / steps);
+        let sx = geo.left + geo.w / 2 - dx / 2;
+        let sy = geo.top + geo.h / 2 - dy / 2;
+        sx = Math.min(Math.max(sx, loX), hiX);
+        sy = Math.min(Math.max(sy, loY), hiY);
+        if (sx + dx < loX) sx = loX - dx;
+        if (sx + dx > hiX) sx = hiX - dx;
+        if (sy + dy < loY) sy = loY - dy;
+        if (sy + dy > hiY) sy = hiY - dy;
+        const x0 = Math.round(sx);
+        const y0 = Math.round(sy);
+        /*
+         * ⚠ **되감아서 끈다.** 조준 중에는 탭 임계가 올라가므로(계획 §3) 짧은 드래그는
+         * 탭으로 읽혀 조준이 손가락 밑으로 순간이동한다. 옆으로 한 번 돌았다 오면 이동
+         * **거리**는 임계를 훌쩍 넘고 **최종 변위**는 그대로다 (팬은 손가락을 따라가고
+         * 되돌아온 만큼 상쇄된다). 화면 좌우 여유가 세로보다 넓어 x 로 돈다.
+         */
+        const windRaw = x0 + dx / 2 > (loX + hiX) / 2 ? -48 : 48;
+        // 되감는 점도 캔버스 안이어야 한다 — 밖으로 나간 좌표는 이벤트가 버려진다
+        const wind = Math.round(Math.min(Math.max(x0 + windRaw, loX), hiX)) - x0;
+        await aimTouch('touchStart', x0, y0);
+        for (let k = 1; k <= 4; k++) {
+          await aimTouch('touchMove', Math.round(x0 + (wind * k) / 4), y0);
+        }
+        for (let k = 1; k <= 10; k++) {
+          await aimTouch(
+            'touchMove',
+            Math.round(x0 + wind + ((dx - wind) * k) / 10),
+            Math.round(y0 + (dy * k) / 10),
+          );
+        }
+        await aimTouch('touchEnd', 0, 0);
+        await pg.waitForTimeout(110);
+      }
+    };
+
+    /*
+     * 레티클 칸 — **독립 유도**. `sc.reticleTile()` 은 대조용으로만 같이 읽는다.
+     *
+     * ⚠ 절대값은 게임의 레티클과 다를 수 있다: 게임은 확정 바에 가린 만큼 조준점을
+     * 위로 올린다 (`setReticleInset`). 여기서는 캔버스 정중앙을 쓰므로 몇 칸 어긋난다 —
+     * 그래서 이 값은 **증분으로만** 쓴다. 팬은 평행이동이라 어느 점에서 재도 증분이 같다.
+     */
+    type Ret = { i: number; j: number; d: number; api: { i: number; j: number } | null };
+    const RETICLE = `(() => {
+      const h = window.__kairo, sc = h.scene, cv = document.querySelector('canvas');
+      const px = cv.width / 2, py = cv.height / 2;
+      let bi = -1, bj = -1, bd = 1e9;
+      for (let j = 0; j < h.terrain.height; j++) {
+        for (let i = 0; i < h.terrain.width; i++) {
+          const r = sc.tileScreenRect(i, j);
+          const dx = r.x + r.w / 2 - px, dy = r.y + r.h / 2 - py;
+          const d = Math.abs(dx) + Math.abs(dy) * 2;
+          if (d < bd) { bd = d; bi = i; bj = j; }
+        }
+      }
+      const api = typeof sc.reticleTile === 'function' ? sc.reticleTile() : null;
+      return { i: bi, j: bj, d: Math.round(bd), api: api };
+    })()`;
+
+    /*
+     * 지금 조준 중인 칸. 이름이 아직 확정이 아니라 후보를 차례로 시도한다 —
+     * 없으면 `null` 을 돌려주고 부르는 쪽이 그 사실을 판정문에 적는다.
+     */
+    const AIM_TILE = `(() => {
+      const sc = window.__kairo.scene;
+      const names = ['aimTileNow', 'ghostTile', 'aimTileForTest', 'placeTile'];
+      for (let k = 0; k < names.length; k++) {
+        const fn = sc[names[k]];
+        if (typeof fn !== 'function') continue;
+        const v = fn.call(sc);
+        return v ? { i: v.i, j: v.j, via: names[k] } : { i: -1, j: -1, via: names[k] };
+      }
+      return null;
+    })()`;
+
+    type Confirm = { bar: boolean; disabled: boolean; label: string; ghost: boolean };
+    const CONFIRM = `(() => {
+      const c = document.getElementById('kairo-confirm');
+      const b = document.getElementById('kairo-place-confirm');
+      const lab = c ? c.querySelector('.place-label') : null;
+      return { bar: !!c && !c.hidden, disabled: !b || b.disabled,
+               label: lab && lab.textContent ? lab.textContent : '',
+               ghost: !!window.__kairo.scene.ghost };
+    })()`;
+
+    const HANDLES = `(() => window.__kairo.placement.all().map((p) => p.handle))()`;
+    const newest = (prev: number[]): string => `((prev) => {
+      const it = window.__kairo.placement.all().find((p) => prev.indexOf(p.handle) < 0);
+      return it ? { i: it.i, j: it.j, defId: it.defId } : null;
+    })(${JSON.stringify(prev)})`;
+
+    /** 건설 시트에서 파라솔(1×1 · 1등급 골격)을 고르고 시트를 닫는다 */
+    const PICK_PARASOL = `(() => {
+      document.getElementById('kairo-build-open').click();
+      const ft = document.querySelector('#kairo-sheet [data-tab="facility"]');
+      if (ft) ft.click();
+      const p = document.querySelector('[data-pick="facility:parasol"]');
+      if (!p) return false;
+      p.click();
+      const sh = document.getElementById('kairo-sheet');
+      if (sh && !sh.hidden) document.getElementById('kairo-sheet-close').click();
+      return !!window.__kairoBrush && window.__kairoBrush() === 'facility';
+    })()`;
+    const CANCEL = `(() => {
+      const b = document.getElementById('kairo-place-cancel');
+      if (b) b.click();
+      if (window.__kairoClearBrush) window.__kairoClearBrush();
+      return true;
+    })()`;
+
+    // 판을 통째로 포장한다 — 재려는 것은 조준이지 길이 아니다 (K32-B 이후의 상수)
+    await pg.evaluate(PAVE_ALL);
+    await pg.evaluate(`(() => {
+      const h = window.__kairo;
+      h.flow.frozen = true; // 조준을 재는 동안 결산·카드가 끼어들지 않게
+      h.week.abort();       // 어느 tick 인지 모른다 — 주 첫 tick 에서 결정적으로 시작
+      h.beginWeek();
+    })()`);
+
+    /*
+     * ── ① 팬으로 정렬해 시설을 놓는다 ───────────────────────────────────────
+     *
+     * 판 한가운데(클램프가 안 걸리는 곳)에서 **증분 규칙**만 뽑아 잰다:
+     *   놓인 칸의 이동량 == 레티클 칸의 이동량.
+     * 좌표를 박지 않고 **놓인 결과에서 읽어** 비교한다 — 중심 규칙이 바뀌어도 산다.
+     */
+    /*
+     * ⚠ 토지 한복판은 **물일 수 있다** (물가가 j ≈ 26~51 이라 1등급 땅 가운데를 지난다).
+     * 거기서 시작하면 픽 직후부터 확정이 죽어 있어 증분을 못 잰다. 그래서 "둘레 5칸까지
+     * 전부 놓을 수 있는" 넉넉한 자리를 골라 **중심에서 가장 가까운 것**을 쓴다.
+     * (게임의 조준점은 확정 바 높이만큼 위에 있어 두세 칸 어긋난다 — 그 여유도 5칸 안이다.)
+     */
+    const midTile = (await pg.evaluate(`(() => {
+      const h = window.__kairo, L = h.land();
+      const ci = L.i0 + Math.floor(L.w / 2), cj = L.j0 + Math.floor(L.h / 2);
+      const ok = (i, j) => h.placement.check(h.terrain, h.walls, h.gate, 'parasol', i, j).ok;
+      const roomy = (i, j) => {
+        for (let dj = -5; dj <= 5; dj++)
+          for (let di = -5; di <= 5; di++) if (!ok(i + di, j + dj)) return false;
+        return true;
+      };
+      let best = null, bd = 1e9;
+      for (let j = L.j0 + 5; j < L.j0 + L.h - 5; j++) {
+        for (let i = L.i0 + 5; i < L.i0 + L.w - 5; i++) {
+          const d = Math.abs(i - ci) + Math.abs(j - cj);
+          if (d >= bd) continue;
+          if (!roomy(i, j)) continue;
+          bd = d; best = { i: i, j: j };
+        }
+      }
+      return best || { i: ci, j: cj };
+    })()`)) as { i: number; j: number };
+    await pg.evaluate(`window.__kairo.scene.focusTile(${midTile.i}, ${midTile.j})`);
+    await pg.waitForTimeout(220);
+
+    const baseHandles = (await pg.evaluate(HANDLES)) as number[];
+    const pickedA = (await pg.evaluate(PICK_PARASOL)) as boolean;
+    await pg.waitForTimeout(200);
+    const retA = (await pg.evaluate(RETICLE)) as Ret;
+    const barA = (await pg.evaluate(CONFIRM)) as Confirm;
+    if (barA.bar && !barA.disabled) {
+      await pg.click('#kairo-place-confirm');
+      await pg.waitForTimeout(350);
+    }
+    const placedA = (await pg.evaluate(newest(baseHandles))) as
+      | { i: number; j: number; defId: string }
+      | null;
+
+    // 두 번째 — 이번엔 진짜 드래그로 지도를 옮긴 뒤 확정한다
+    const handlesB = (await pg.evaluate(HANDLES)) as number[];
+    const countBeforePan = (await pg.evaluate(`window.__kairo.placement.count`)) as number;
+    const pickedB = (await pg.evaluate(PICK_PARASOL)) as boolean;
+    await pg.waitForTimeout(200);
+    const retB0 = (await pg.evaluate(RETICLE)) as Ret;
+    /*
+     * 드래그는 **한 방향으로 딱 떨어지게** 잡는다. 2:1 다이메트릭에서 (−64,−32)px 은
+     * 정확히 (Δi,Δj)=(4,0) — 위에서 고른 넉넉한 자리 안에 떨어지므로 "옮긴 칸이 하필
+     * 물이라 확정이 죽었다"가 안 생긴다. (i = x/32 + y/16 · j = y/16 − x/32 로 유도했다.)
+     *
+     * ⚠ 너무 작게 잡지 말 것 — 조준 중에는 **탭 임계가 올라간다** (계획 §3). 임계보다
+     * 짧은 드래그는 탭으로 읽혀 조준이 손가락 밑으로 순간이동하고, 그러면 이 절이
+     * 재는 것이 증분이 아니라 탭이 된다.
+     */
+    const DRAG = { x: -64, y: -32 };
+    await aimDrag(DRAG.x, DRAG.y);
+    await pg.waitForTimeout(220);
+    /* ⚠ 음성 대조군 — **팬만으로는 아무것도 안 놓인다** (확정이 곧 지출이다) */
+    const countAfterPan = (await pg.evaluate(`window.__kairo.placement.count`)) as number;
+    // 옮긴 자리가 불법이면 조금 더 민다 — 재려는 것은 증분이지 그 칸의 지형이 아니다
+    let stB = (await pg.evaluate(CONFIRM)) as Confirm;
+    for (let k = 0; k < 2 && stB.bar && stB.disabled; k++) {
+      await aimDrag(32, 16);
+      await pg.waitForTimeout(180);
+      stB = (await pg.evaluate(CONFIRM)) as Confirm;
+    }
+    const retB1 = (await pg.evaluate(RETICLE)) as Ret;
+    if (stB.bar && !stB.disabled) {
+      await pg.click('#kairo-place-confirm');
+      await pg.waitForTimeout(350);
+    }
+    const placedB = (await pg.evaluate(newest(handlesB))) as
+      | { i: number; j: number; defId: string }
+      | null;
+    await pg.evaluate(CANCEL);
+
+    const panDI = retB1.i - retB0.i;
+    const panDJ = retB1.j - retB0.j;
+    const placeDI = placedA && placedB ? placedB.i - placedA.i : NaN;
+    const placeDJ = placedA && placedB ? placedB.j - placedA.j : NaN;
+    record(
+      '★ 팬으로 정렬해 시설을 놓는다 — 놓인 칸이 레티클 증분만큼 옮겨간다 (K47-③, 진짜 드래그)',
+      pickedA &&
+        pickedB &&
+        placedA !== null &&
+        placedB !== null &&
+        (panDI !== 0 || panDJ !== 0) &&
+        (placeDI !== 0 || placeDJ !== 0) &&
+        /*
+         * ⚠ **칸 증분이 정확히 같기를 요구하면 안 된다.** 조준은 레티클과 다른
+         * **서브타일 위상**을 유지한다 — 그것이 오프셋 설계의 요지고, 클램프 뒤에도
+         * 고스트가 계속 가는 이유다. 손가락이 요구한 텍셀 양은 같아도 칸 경계를
+         * 넘는 시점이 달라 축별로 ±1 이 갈린다 (실측: 레티클 Δ(4,0) vs 조준 Δ(3,−1) —
+         * 둘 다 총 4칸 이동). 그래서 **방향이 같고 축별 오차 ≤ 1** 을 본다.
+         */
+        Math.abs(placeDI - panDI) <= 1 &&
+        Math.abs(placeDJ - panDJ) <= 1 &&
+        placeDI + placeDJ === panDI + panDJ
+        ? 'pass'
+        : 'fail',
+      `드래그 (${DRAG.x},${DRAG.y})px · 레티클 (${retB0.i},${retB0.j})→(${retB1.i},${retB1.j}) ` +
+        `Δ(${panDI},${panDJ}) · 놓인 칸 ${placedA ? `(${placedA.i},${placedA.j})` : '없음'}→` +
+        `${placedB ? `(${placedB.i},${placedB.j})` : '없음'} Δ(${placeDI},${placeDJ})` +
+        `${barA.bar ? '' : ' · 픽 직후 확정 바가 안 떴다'}` +
+        `${retA.api ? ` · reticleTile API (${retA.api.i},${retA.api.j})` : ' · reticleTile API 없음'}`,
+    );
+    record(
+      '⚠ 음성 대조군 — 팬만 하고 확정을 안 누르면 안 놓인다 (K47-③)',
+      countAfterPan === countBeforePan ? 'pass' : 'fail',
+      `팬 전 ${countBeforePan} → 팬 후(확정 전) ${countAfterPan}`,
+    );
+
+    /*
+     * ── ② 지도 가장자리 칸에 놓을 수 있다 ──────────────────────────────────
+     *
+     * §3 의 32% 구멍을 잡는 **유일한** 검사다. 토지 사각형의 네 꼭짓점 방향으로
+     * **가장 먼 합법 칸**을 뽑는다 — 꼭짓점 자체는 물·암반일 수 있으므로 좌표를 박지
+     * 않고 `placement.check` 로 골라 "그 방향의 끝"을 정의한다.
+     */
+    type Corner = { key: string; i: number; j: number };
+    /*
+     * ⚠ **토지를 5등급으로 넓히고 잰다.** 1등급 토지(26×48)는 최대 `i+j` 가 클램프
+     * 상한보다 작아서 **어느 끝도 카메라 클램프에 안 걸린다** — 그 판에서는 "중앙
+     * 고정으로는 못 닿는다"는 음성 대조군이 성립할 수가 없다 (실측: 4/4 전부 닿음).
+     * 커버 구멍(계획 §3 의 32%)은 판이 커야 드러나므로 셋업 훅으로 등급을 올린다.
+     * 조준·판정 경로는 우회하지 않는다 — 넓힌 땅 위에서 평소대로 조준한다.
+     */
+    const gradeSet = (await pg.evaluate(`(() => {
+      const h = window.__kairo;
+      if (typeof h.setGradeForTest !== 'function') return null;
+      h.setGradeForTest(5);
+      return JSON.stringify(h.land());
+    })()`)) as string | null;
+    await pg.waitForTimeout(200);
+    const corners = (await pg.evaluate(`(() => {
+      const h = window.__kairo, L = h.land();
+      const ok = (i, j) => h.placement.check(h.terrain, h.walls, h.gate, 'parasol', i, j).ok;
+      const pick = (score) => {
+        let bi = -1, bj = -1, bs = -1e9;
+        for (let j = L.j0; j < L.j0 + L.h; j++) {
+          for (let i = L.i0; i < L.i0 + L.w; i++) {
+            const s = score(i, j);
+            if (s <= bs) continue;
+            if (!ok(i, j)) continue;
+            bs = s; bi = i; bj = j;
+          }
+        }
+        return bi < 0 ? null : { i: bi, j: bj };
+      };
+      return {
+        land: L,
+        south: pick((i, j) => i + j),   // i+j 최대 — 계획이 지목한 남쪽 삼각형
+        north: pick((i, j) => -(i + j)),
+        east: pick((i, j) => i - j),    // i−j 최대
+        west: pick((i, j) => j - i),    // i−j 최소
+      };
+    })()`)) as {
+      land: { i0: number; j0: number; w: number; h: number };
+      south: { i: number; j: number } | null;
+      north: { i: number; j: number } | null;
+      east: { i: number; j: number } | null;
+      west: { i: number; j: number } | null;
+    };
+    const cornerList: Corner[] = (
+      [
+        ['남(i+j 최대)', corners.south],
+        ['북(i+j 최소)', corners.north],
+        ['동(i−j 최대)', corners.east],
+        ['서(i−j 최소)', corners.west],
+      ] as [string, { i: number; j: number } | null][]
+    )
+      .filter((c): c is [string, { i: number; j: number }] => c[1] !== null)
+      .map(([key, t]) => ({ key, i: t.i, j: t.j }))
+      /*
+       * ⚠ 같은 칸이 두 방향의 끝일 수 있다 (땅 모양에 따라). 안 걸러 내면 둘째 시도가
+       * "다른 시설이 있습니다" 로 거절되어 검사가 엉뚱한 이유로 빨간불이 된다.
+       */
+      .filter((c, k, all) => all.findIndex((o) => o.i === c.i && o.j === c.j) === k);
+
+    /*
+     * 그 칸이 **카메라 중앙에 올 수 있나.** `focusTile` 로 최대한 붙인 뒤 화면 중심과의
+     * 거리를 잰다 — 클램프에 걸리면 남는 거리가 곧 "중앙 고정이면 못 닿는 양"이다.
+     * 이 값이 0 뿐이면 판이 작아서 커버 구멍을 못 재는 것이므로 그대로 적는다.
+     */
+    const clampOf = async (i: number, j: number): Promise<number> => {
+      await pg.evaluate(`window.__kairo.scene.focusTile(${i}, ${j})`);
+      await pg.waitForTimeout(160);
+      return (await pg.evaluate(`(() => {
+        const sc = window.__kairo.scene, cv = document.querySelector('canvas');
+        const r = sc.tileScreenRect(${i}, ${j});
+        const dx = r.x + r.w / 2 - cv.width / 2, dy = r.y + r.h / 2 - cv.height / 2;
+        return Math.round(Math.abs(dx) + Math.abs(dy) * 2);
+      })()`)) as number;
+    };
+    const clamps: { key: string; px: number }[] = [];
+    for (const c of cornerList) clamps.push({ key: c.key, px: await clampOf(c.i, c.j) });
+    const worst = clamps.reduce((a, b) => (b.px > a.px ? b : a), { key: '(없음)', px: -1 });
+    record(
+      '가장자리 검사가 유효하다 — 카메라가 중앙에 못 두는 칸을 실제로 재고 있나 (K47-③)',
+      worst.px > 32 ? 'pass' : 'fail',
+      `토지 ${JSON.stringify(corners.land)}${gradeSet === null ? ' (⚠ setGradeForTest 없음 — 1등급 땅으로 잰다)' : ' (5등급으로 넓혀 잰다)'} · ` +
+        clamps.map((c) => `${c.key} ${c.px}px`).join(' · ') +
+        (worst.px > 32 ? '' : ' — 판이 작아 클램프가 안 걸린다 (커버 구멍을 못 잰다)'),
+    );
+
+    /*
+     * ★ 진짜 팬만으로 가장자리까지 — **탭 없이** 간다. 탭 다리(`tapTile`)를 쓰면
+     * 중앙 고정 결함에서도 통과하므로 (탭은 조준을 그냥 그 칸에 꽂는다) 오프셋 누적을
+     * 재는 것은 **팬 전용 경로**뿐이다.
+     *
+     * 조준 칸은 씬에 물어본다 (`aimTileNow` 계열). 없으면 레티클 칸으로 대신 조준하되
+     * 그 사실을 판정문에 적는다 — 클램프 뒤에는 레티클이 안 움직이므로 그 대체 경로는
+     * 가장자리에 못 닿는다.
+     */
+    /* 후보가 하나도 없으면 좌표 −1 로 떨어뜨린다 — 아래 판정이 정직하게 실패한다 */
+    const panTarget: Corner = cornerList.find((c) => c.key === worst.key) ??
+      cornerList[0] ?? { key: '(방향 없음)', i: -1, j: -1 };
+    const panRunnable = panTarget.i >= 0;
+    const panToTile = async (t: Corner): Promise<{ i: number; j: number; via: string }> => {
+      let last = { i: -1, j: -1, via: '(없음)' };
+      /*
+       * ⚠ **못 가면 멈춘다.** 중앙 고정 결함에서는 클램프 뒤로 조준이 한 발도 안 움직이는데,
+       * 그때 26번을 다 끄는 것은 시간만 쓴다. 세 번 연속 제자리면 그것이 곧 대조군의 답이다.
+       */
+      let stuck = 0;
+      for (let k = 0; k < 22; k++) {
+        const aim = (await pg.evaluate(AIM_TILE)) as { i: number; j: number; via: string } | null;
+        // ⚠ 조준 중이 아니면 API 가 −1 을 준다 — 그때도 레티클로 갈아탄다 (좌표 −1 로 끌면 안 된다)
+        const cur =
+          aim && aim.i >= 0
+            ? aim
+            : { ...((await pg.evaluate(RETICLE)) as Ret), via: aim ? `${aim.via}(조준 없음→레티클)` : '(레티클 대체)' };
+        stuck = last.i === cur.i && last.j === cur.j ? stuck + 1 : 0;
+        last = { i: cur.i, j: cur.j, via: cur.via };
+        if (cur.i === t.i && cur.j === t.j) break;
+        if (stuck >= 3) break;
+        const geo = (await pg.evaluate(CANVAS_GEO)) as Geo;
+        /*
+         * 필요한 손가락 이동 = 지금 조준 칸의 화면 중심 − 목표 칸의 화면 중심.
+         * 스크롤이 상쇄되므로 클램프에 걸린 상태에서도 값이 맞는다.
+         */
+        const d = (await pg.evaluate(`(() => {
+          const sc = window.__kairo.scene;
+          const a = sc.tileScreenRect(${cur.i}, ${cur.j});
+          const b = sc.tileScreenRect(${t.i}, ${t.j});
+          return { x: (a.x - b.x), y: (a.y - b.y) };
+        })()`)) as { x: number; y: number };
+        if (Math.abs(d.x) < 1 && Math.abs(d.y) < 1) break;
+        await aimDrag(Math.round(d.x * geo.s), Math.round(d.y * geo.s));
+        await pg.waitForTimeout(120);
+      }
+      return last;
+    };
+
+    /*
+     * ⚠ 먼저 **음성 대조군**을 돌린다 — 오프셋 누적을 끄면(중앙 고정) 같은 팬으로
+     * 가장자리에 못 닿아야 한다. 결함 모드 이름은 박지 않는다: 후보를 차례로 시도하고
+     * 하나도 없으면 그 사실을 적는다 (통합 시 감독자가 이름을 맞춘다).
+     */
+    const AIM_FAULT = (arg: string): string => `(() => {
+      const sc = window.__kairo.scene;
+      const cands = [['setAimFaultForTest', '${arg}'],
+                     ['setPlaceFaultForTest', '${arg}'],
+                     ['setRenderFaultForTest', 'aim-${arg}']];
+      for (let k = 0; k < cands.length; k++) {
+        const fn = sc[cands[k][0]];
+        if (typeof fn !== 'function') continue;
+        try { fn.call(sc, cands[k][1]); return cands[k][0] + '(' + cands[k][1] + ')'; }
+        catch (e) { /* 이름은 있는데 인자가 다르다 — 다음 후보로 */ }
+      }
+      return null;
+    })()`;
+    /*
+     * ⚠ **어느 끝이 클램프에 걸리는지는 판이 정한다** — px 잔여량으로 고르면 안 된다.
+     * 실측: 잔여 32px 는 한 칸(32×16)보다 작아서 "중앙에 정확히 못 둔다"와 "레티클 칸이
+     * 목표와 다르다"가 갈린다. 그래서 **네 끝을 전부 결함 상태로 몰아 보고 하나라도
+     * 못 닿으면** 대조군 성립으로 본다 (정상 상태에서 전부 닿는 것은 바로 위 검사가 증명한다).
+     * 실측(5등급): 남(i+j 최대)·서는 못 닿고 동은 클램프 안이라 닿는다 — 끝마다 다르다.
+     */
+    await pg.evaluate(PICK_PARASOL);
+    await pg.waitForTimeout(180);
+    const faultOn = (await pg.evaluate(AIM_FAULT('center-lock'))) as string | null;
+    const faultTries: { key: string; reached: boolean; at: string }[] = [];
+    if (faultOn && panRunnable) {
+      for (const c of cornerList) {
+        const got = await panToTile(c);
+        faultTries.push({
+          key: c.key,
+          reached: got.i === c.i && got.j === c.j,
+          at: `(${got.i},${got.j})`,
+        });
+      }
+    }
+    const blocked = faultTries.filter((t) => !t.reached);
+    await pg.evaluate(AIM_FAULT('none'));
+    await pg.evaluate(CANCEL);
+    await pg.waitForTimeout(150);
+    record(
+      '⚠ 음성 대조군 — 중앙 고정으로 되돌리면 가장자리 칸에 조준이 못 닿는다 (K47-③)',
+      faultOn !== null && panRunnable && blocked.length > 0 ? 'pass' : 'fail',
+      faultOn === null
+        ? '조준 결함 모드가 없다 — 이름을 통합 시 맞출 것 ' +
+          '(setAimFaultForTest / setPlaceFaultForTest / setRenderFaultForTest 후보를 시도했다)'
+        : `${faultOn} · 못 닿은 끝 ${blocked.length}/${faultTries.length} — ` +
+          faultTries.map((t) => `${t.key} ${t.reached ? '닿음' : `막힘${t.at}`}`).join(' · ') +
+          (blocked.length > 0
+            ? ''
+            : ' · ⚠ 이 판에서는 어느 끝도 클램프에 안 걸린다 (토지가 작으면 커버 구멍이 없다)'),
+    );
+
+    // ★ 진짜 팬만으로 가장자리 칸에 놓는다 (탭 백도어 없음)
+    const handlesPan = (await pg.evaluate(HANDLES)) as number[];
+    let panAim = { i: -1, j: -1, via: '(가장자리 후보 없음)' };
+    let panSt: Confirm = { bar: false, disabled: true, label: '', ghost: false };
+    let panPlaced: { i: number; j: number; defId: string } | null = null;
+    if (panRunnable) {
+      await pg.evaluate(PICK_PARASOL);
+      await pg.waitForTimeout(180);
+      panAim = await panToTile(panTarget);
+      panSt = (await pg.evaluate(CONFIRM)) as Confirm;
+      if (panSt.bar && !panSt.disabled) {
+        await pg.click('#kairo-place-confirm');
+        await pg.waitForTimeout(350);
+      }
+      panPlaced = (await pg.evaluate(newest(handlesPan))) as
+        | { i: number; j: number; defId: string }
+        | null;
+      await pg.evaluate(CANCEL);
+    }
+    record(
+      '★ 가장자리 칸을 진짜 팬 드래그만으로 조준해 놓는다 — 탭 백도어 없음 (K47-③)',
+      panPlaced !== null && panPlaced.i === panTarget.i && panPlaced.j === panTarget.j
+        ? 'pass'
+        : 'fail',
+      `목표 ${panTarget.key}(${panTarget.i},${panTarget.j}) · 조준 (${panAim.i},${panAim.j}) via ${panAim.via} · ` +
+        `놓인 칸 ${panPlaced ? `(${panPlaced.i},${panPlaced.j})` : '없음'} · ` +
+        `확정 바 ${String(panSt.bar)} disabled ${String(panSt.disabled)} "${panSt.label}"`,
+    );
+    await pg.screenshot({ path: `${SHOT_DIR}/kairo-aim-edge.png` });
+
+    /*
+     * 나머지 세 방향은 **좌표 다리**(`tapTile` = 조준을 그 칸으로 옮긴다)로 간다.
+     * 팬으로 전부 가면 검사 시간이 몇 배가 되는데, 잡으려는 것은 "그 칸에 고스트를
+     * 둘 수 있고 확정이 산다"이지 팬 자체가 아니다 (팬 경로는 바로 위가 증명한다).
+     */
+    const edgeRows: string[] = [
+      `${panTarget.key}(${panTarget.i},${panTarget.j})${panPlaced ? '✓팬' : '✕팬'}`,
+    ];
+    let edgeOk = panPlaced !== null;
+    for (const c of cornerList) {
+      if (c.key === panTarget.key) continue;
+      const prev = (await pg.evaluate(HANDLES)) as number[];
+      await pg.evaluate(PICK_PARASOL);
+      await pg.waitForTimeout(150);
+      await pg.evaluate(`window.__kairo.scene.focusTile(${c.i}, ${c.j})`);
+      await pg.evaluate(`window.__kairo.tapTile(${c.i}, ${c.j})`);
+      await pg.waitForTimeout(250);
+      const st = (await pg.evaluate(CONFIRM)) as Confirm;
+      if (st.bar && !st.disabled) {
+        await pg.click('#kairo-place-confirm');
+        await pg.waitForTimeout(300);
+      }
+      const got = (await pg.evaluate(newest(prev))) as { i: number; j: number } | null;
+      await pg.evaluate(CANCEL);
+      const hit = got !== null && got.i === c.i && got.j === c.j;
+      if (!hit) edgeOk = false;
+      edgeRows.push(`${c.key}(${c.i},${c.j})${hit ? '✓' : `✕"${st.label}"`}`);
+    }
+    record(
+      '★ 지도 가장자리 칸에도 놓을 수 있다 — 중앙 고정이면 판의 32% 가 죽는다 (K47-③)',
+      edgeOk && cornerList.length >= 3 ? 'pass' : 'fail',
+      `${edgeRows.join(' · ')} · 방향 ${cornerList.length}개`,
+    );
+
+    /*
+     * ── ③ 팬 중 판정이 갱신된다 ────────────────────────────────────────────
+     *
+     * 못 놓는 칸에서는 확정이 죽어 있어야 하고, 놓을 수 있는 칸으로 옮기면 살아나야
+     * 한다. 계획 §3 이 "칸이 바뀐 프레임에만 `check()`" 라고 못 박은 지점이라, 갱신을
+     * 빠뜨리면 **옛 칸의 판정으로 확정**이 눌린다.
+     */
+    const badGood = (await pg.evaluate(`(() => {
+      const h = window.__kairo, L = h.land();
+      let bad = null, good = null;
+      for (let j = L.j0; j < L.j0 + L.h && (!bad || !good); j++) {
+        for (let i = L.i0; i < L.i0 + L.w; i++) {
+          const ok = h.placement.check(h.terrain, h.walls, h.gate, 'parasol', i, j).ok;
+          if (!ok && !bad && h.terrain.isWater(i, j)) bad = { i: i, j: j };
+          if (ok && !good) good = { i: i, j: j };
+          if (bad && good) break;
+        }
+      }
+      // 물이 토지 안에 없으면 아무 불법 칸이나 (지형이 아니라 판정 갱신을 보는 절이다)
+      if (!bad) {
+        for (let j = L.j0; j < L.j0 + L.h && !bad; j++) {
+          for (let i = L.i0; i < L.i0 + L.w; i++) {
+            if (!h.placement.check(h.terrain, h.walls, h.gate, 'parasol', i, j).ok) { bad = { i: i, j: j }; break; }
+          }
+        }
+      }
+      return { bad: bad, good: good };
+    })()`)) as {
+      bad: { i: number; j: number } | null;
+      good: { i: number; j: number } | null;
+    };
+    if (!badGood.bad || !badGood.good) {
+      record(
+        '팬 중 판정이 갱신된다 — 못 놓는 칸에서는 확정이 죽어 있다 (K47-③)',
+        'fail',
+        `못 놓는 칸 ${JSON.stringify(badGood.bad)} · 놓을 수 있는 칸 ${JSON.stringify(badGood.good)} — 시험 자리를 못 찾았다`,
+      );
+    } else {
+      await pg.evaluate(PICK_PARASOL);
+      await pg.waitForTimeout(150);
+      await pg.evaluate(`window.__kairo.scene.focusTile(${badGood.bad.i}, ${badGood.bad.j})`);
+      await pg.evaluate(`window.__kairo.tapTile(${badGood.bad.i}, ${badGood.bad.j})`);
+      await pg.waitForTimeout(250);
+      const stBad = (await pg.evaluate(CONFIRM)) as Confirm;
+      /* 팬하면 판정이 다시 돌아야 한다 — 조준 칸과 확정 상태가 짝인가 */
+      await aimDrag(-64, -32);
+      await pg.waitForTimeout(220);
+      const stPan = (await pg.evaluate(CONFIRM)) as Confirm;
+      const aimRaw = (await pg.evaluate(AIM_TILE)) as { i: number; j: number; via: string } | null;
+      // 조준 칸 API 가 없거나 조준 중이 아니면 팬 구간은 못 잰다 — 그 사실을 적는다
+      const aimPan = aimRaw && aimRaw.i >= 0 ? aimRaw : null;
+      const wantPan = aimPan
+        ? ((await pg.evaluate(`window.__kairo.placement.check(
+            window.__kairo.terrain, window.__kairo.walls, window.__kairo.gate,
+            'parasol', ${aimPan.i}, ${aimPan.j}).ok`)) as boolean)
+        : null;
+      await pg.evaluate(`window.__kairo.scene.focusTile(${badGood.good.i}, ${badGood.good.j})`);
+      await pg.evaluate(`window.__kairo.tapTile(${badGood.good.i}, ${badGood.good.j})`);
+      await pg.waitForTimeout(250);
+      const stGood = (await pg.evaluate(CONFIRM)) as Confirm;
+      await pg.evaluate(CANCEL);
+      const panAgrees = aimPan === null ? true : wantPan === !stPan.disabled;
+      record(
+        '팬 중 판정이 갱신된다 — 못 놓는 칸에서는 확정이 죽어 있다 (K47-③)',
+        stBad.bar && stBad.disabled && stGood.bar && !stGood.disabled && panAgrees
+          ? 'pass'
+          : 'fail',
+        `못 놓는 칸 (${badGood.bad.i},${badGood.bad.j}) disabled ${String(stBad.disabled)} "${stBad.label}" → ` +
+          `놓을 수 있는 칸 (${badGood.good.i},${badGood.good.j}) disabled ${String(stGood.disabled)} · ` +
+          (aimPan
+            ? `팬 뒤 조준 (${aimPan.i},${aimPan.j}) check ${String(wantPan)} vs 확정 ${String(!stPan.disabled)}`
+            : '조준 칸 API 가 없어 팬 구간은 못 쟀다 (이름을 통합 시 맞출 것)'),
+      );
+    }
+
+    /*
+     * ── ④ 철거도 확정을 거친다 ─────────────────────────────────────────────
+     *
+     * 지금까지 철거는 **탭 즉시 삭제 + 50% 환급 · 되돌리기 없음**이었고 하네스 동작
+     * 검사가 0건이었다 (계획 §3). 조준 + 확정으로 승격되는 자리라 검사를 같이 만든다.
+     */
+    const eraseSetup = (await pg.evaluate(`(() => {
+      const h = window.__kairo, L = h.land();
+      for (let j = L.j0 + 1; j < L.j0 + L.h - 1; j++) {
+        for (let i = L.i0 + 1; i < L.i0 + L.w - 1; i++) {
+          if (!h.placement.check(h.terrain, h.walls, h.gate, 'parasol', i, j).ok) continue;
+          const r = h.placement.place(h.terrain, h.walls, h.gate, 'parasol', i, j);
+          if (!r.ok || !r.placed) continue;
+          h.scene.refreshFacility(r.placed.handle);
+          h.guests.invalidate();
+          return { ok: true, i: i, j: j, count: h.placement.count, cash: h.week.cash };
+        }
+      }
+      return { ok: false };
+    })()`)) as { ok: boolean; i?: number; j?: number; count?: number; cash?: number };
+    if (!eraseSetup.ok) {
+      record('철거도 확정을 거친다 — 탭 즉시 삭제는 되돌릴 수 없었다 (K47-③)', 'fail', '철거할 시설을 못 놓았다');
+    } else {
+      const picked = (await pg.evaluate(`(() => {
+        document.getElementById('kairo-build-open').click();
+        const gt = document.querySelector('#kairo-sheet [data-tab="ground"]');
+        if (gt) gt.click();
+        const e = document.querySelector('[data-pick="erase:erase"]');
+        if (!e) return false;
+        e.click();
+        const sh = document.getElementById('kairo-sheet');
+        if (sh && !sh.hidden) document.getElementById('kairo-sheet-close').click();
+        return !!window.__kairoBrush && window.__kairoBrush() === 'erase';
+      })()`)) as boolean;
+      await pg.evaluate(`window.__kairo.scene.focusTile(${eraseSetup.i}, ${eraseSetup.j})`);
+      await pg.evaluate(`window.__kairo.tapTile(${eraseSetup.i}, ${eraseSetup.j})`);
+      await pg.waitForTimeout(250);
+      const midCount = (await pg.evaluate(`window.__kairo.placement.count`)) as number;
+      const stE = (await pg.evaluate(CONFIRM)) as Confirm;
+      if (stE.bar && !stE.disabled) {
+        await pg.click('#kairo-place-confirm');
+        await pg.waitForTimeout(300);
+      }
+      const endCount = (await pg.evaluate(`window.__kairo.placement.count`)) as number;
+      await pg.evaluate(CANCEL);
+      record(
+        '철거도 확정을 거친다 — 탭 즉시 삭제는 되돌릴 수 없었다 (K47-③)',
+        picked && stE.bar && midCount === eraseSetup.count && endCount === (eraseSetup.count ?? 0) - 1
+          ? 'pass'
+          : 'fail',
+        `붓 ${picked ? 'erase' : '못 골랐다'} · 확정 바 ${String(stE.bar)} "${stE.label}" · ` +
+          `시설 ${String(eraseSetup.count)} → 탭 직후 ${midCount} → 확정 후 ${endCount}`,
+      );
+    }
+
+    /*
+     * ── ⑤ 조준 중에는 시간이 안 흐른다 ─────────────────────────────────────
+     *
+     * 확정 바는 `PanelHost` 패널이 아니라서 `flowTick` 이 안 멈췄다. 조준 배치는 조준
+     * 시간을 수 초로 늘리므로 "확정 바를 띄운 채 주가 마감 → 결산 위로 확정 클릭 →
+     * 옛 현금 기준 지출"의 확률이 커진다 (계획 §3 원버그).
+     *
+     * ⚠ **"판이 원래 멈춰 있었다"를 배제한다** — 흐름·정지·재개 셋을 한 판정에 AND 로
+     * 묶는다. 앞 절이 얼려 뒀으므로 여기서 녹이고, 끝나면 다시 얼려 넘긴다.
+     */
+    await pg.evaluate(`(() => {
+      const h = window.__kairo;
+      if (window.__kairoClearBrush) window.__kairoClearBrush();
+      h.week.abort();
+      h.beginWeek();
+      h.flow.frozen = false;
+    })()`);
+    const TICK = `(() => { const p = window.__kairo.week.liveProgress(); return p ? p.tick : -1; })()`;
+    const runT0 = (await pg.evaluate(TICK)) as number;
+    await pg.waitForTimeout(1300);
+    const runT1 = (await pg.evaluate(TICK)) as number;
+    const pickedT = (await pg.evaluate(PICK_PARASOL)) as boolean;
+    await pg.waitForTimeout(300);
+    const aimingState = (await pg.evaluate(`(() => {
+      const sh = document.getElementById('kairo-sheet');
+      const c = document.getElementById('kairo-confirm');
+      return { sheet: !!sh && !sh.hidden, bar: !!c && !c.hidden };
+    })()`)) as { sheet: boolean; bar: boolean };
+    const aimT0 = (await pg.evaluate(TICK)) as number;
+    await pg.waitForTimeout(3000);
+    const aimT1 = (await pg.evaluate(TICK)) as number;
+    await pg.evaluate(`(() => { const b = document.getElementById('kairo-place-cancel'); if (b) b.click(); })()`);
+    await pg.waitForTimeout(300);
+    const backT0 = (await pg.evaluate(TICK)) as number;
+    await pg.waitForTimeout(1300);
+    const backT1 = (await pg.evaluate(TICK)) as number;
+    record(
+      '★ 조준 중에는 시간이 안 흐른다 — 취소하면 다시 흐른다 (K47-③)',
+      pickedT &&
+        aimingState.bar &&
+        !aimingState.sheet &&
+        runT1 > runT0 &&
+        aimT1 === aimT0 &&
+        backT1 > backT0
+        ? 'pass'
+        : 'fail',
+      `조준 전 ${runT0}→${runT1} (1.3초) · 조준 중 ${aimT0}→${aimT1} (3초) · ` +
+        `취소 후 ${backT0}→${backT1} (1.3초) · 확정 바 ${String(aimingState.bar)} · ` +
+        `시트 ${aimingState.sheet ? '열린 채다 (시트가 멈춘 것일 수 있다!)' : '닫힘'}`,
+    );
+
+    // 뒷정리 — 이 절이 연 것은 이 절이 닫는다
+    await pg.evaluate(`(() => {
+      const h = window.__kairo;
+      if (window.__kairoClearBrush) window.__kairoClearBrush();
+      const sh = document.getElementById('kairo-sheet');
+      if (sh && !sh.hidden) document.getElementById('kairo-sheet-close').click();
+      h.flow.frozen = true;
+    })()`);
+    record(
+      '조준 배치 절에서 페이지 예외 0',
+      aimErrors.length === 0 ? 'pass' : 'fail',
+      aimErrors.slice(0, 3).join(' | '),
+    );
+    await cx.close();
   }
 
   await browser.close();

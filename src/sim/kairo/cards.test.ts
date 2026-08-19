@@ -299,6 +299,8 @@ describe('혼잡·사고 배율이 실제로 연결돼 있다', () => {
       ratio: 0.1,
       riskPoints: 1,
       safetyPoints: 9,
+      // 노출 — 손님이 차 있는 상태를 가정한다 (2026-08-20, `RiskReport.exposure`)
+      exposure: 1,
       safetyNeeded: 0,
       accidentPossible: false,
     };

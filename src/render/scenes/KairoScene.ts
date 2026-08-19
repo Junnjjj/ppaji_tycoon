@@ -217,6 +217,38 @@ export class KairoScene extends Phaser.Scene {
   /** 배치 미리보기 (K32) — 확정하기 전의 시설 */
   private ghost: Phaser.GameObjects.Image | null = null;
   /**
+   * ## 조준 커서 (K47-③) — **월드 텍셀이 정본이고 레티클은 화면 표시일 뿐이다**
+   *
+   * 카이로식 배치는 "지도를 팬해서 고스트에 맞춘다"이다 (손가락이 고스트를 안 가린다).
+   * 순진하게 "고스트 = 화면 중앙 칸"으로 만들면 **판의 32% 를 못 짓는다** — 카메라
+   * 클램프(`range()`)가 화면 중앙이 갈 수 있는 범위를 가두기 때문이다 (실측: S=1 ·
+   * 5등급 토지에서 커버 68%. 남쪽 `i+j` 큰 삼각형과 동서 끝이 영영 중앙에 못 온다).
+   *
+   * 그래서 커서는 **팬의 의도**(손가락이 민 텍셀)를 그대로 누적한다. 카메라가 클램프에
+   * 걸려 멈춰도 커서는 계속 가므로, 고스트가 화면 중앙에서 밀려나며 지도 가장자리까지
+   * 따라온다. 필요한 최대 오프셋(S=1 에서 x 180.5 · y 378)이 반뷰(196.5 · 426)보다
+   * 항상 작아 고스트가 화면 밖으로 나가지 않는다 — **100% 커버가 수학적으로 보장**된다.
+   *
+   * ⚠ 클램프를 배치 모드에서 푸는 것은 금지다. `BACKDROP 48` 은 "하늘이 어디서도 안
+   * 보인다" 검사의 근거이고 지도 바깥 굽기 여백은 `SURROUND_PAD 128` 뿐이다.
+   */
+  private aimTexel: { x: number; y: number } | null = null;
+  /** 커서가 가리키는 칸 (격자 안으로 클램프된 값). 조준 중이 아니면 `null` */
+  private aimTile: { i: number; j: number } | null = null;
+  /** 조준 칸이 **바뀐 때만** 부른다 — 판정(`placement.check`)이 최악 0.33ms 라 매 프레임은 위험하다 */
+  onAimTile?: (i: number, j: number) => void;
+  /** 화면 아래가 UI(확정 바)에 가려진 높이 — 레티클을 그만큼 위로 올린다 */
+  private reticleInset = 0;
+  /** 조준 발자국의 바닥 윤곽 — 고스트가 크면 "어느 칸인지"가 안 읽힌다 */
+  private reticleMark: { i: number; j: number; ok: boolean; w: number; d: number } | null = null;
+  private aimGfx: Phaser.GameObjects.Graphics | null = null;
+  /**
+   * **일부러 망가뜨리는 스위치** — 오프셋 로직을 끄고 "고스트 = 화면 중앙 칸"으로
+   * 되돌린다. 위의 32% 구멍이 그대로 재현되므로, 가장자리 배치 검사가 정말 그 구멍을
+   * 재고 있는지 증명하는 음성 대조군이다 (`setRenderFaultForTest` 와 같은 판단).
+   */
+  private aimFault = false;
+  /**
    * 해금된 토지 크기 — **기억해 뒀다가 타일이 생기면 적용한다** (K32).
    *
    * ⚠ `setLand` 는 `create()` 보다 먼저 불릴 수 있다 (`bootKairo` 가 씬 생성 전에
@@ -302,6 +334,7 @@ export class KairoScene extends Phaser.Scene {
     this.rebuildFacilities();
     this.applyLand();
     this.applySwimZones();
+    this.drawReticleMark(); // 조준 표식도 리프트를 타므로 결함을 같이 받는다 (K47-③)
   }
   private dragMoved = 0;
   private lastPointer = { x: 0, y: 0 };
@@ -365,6 +398,8 @@ export class KairoScene extends Phaser.Scene {
     this.courseGfx = this.add.graphics().setDepth(1_000_000).setVisible(false);
     this.landGfx = this.add.graphics().setDepth(999_999).setVisible(false);
     this.doorGfx = this.add.graphics().setDepth(999_998);
+    // 조준 표식 (K47-③) — 힌트 층이다. 세계 물체가 아니라 문 앞 발판과 같은 자리
+    this.aimGfx = this.add.graphics().setDepth(999_997).setVisible(false);
     // 버스는 차도 위 물체다 — 그 칸의 지면 위, 그 앞줄보다 뒤
     this.busGfx = this.add.graphics();
     this.boatGfx = this.add.graphics();
@@ -1131,6 +1166,129 @@ export class KairoScene extends Phaser.Scene {
     this.ghost.setDepth(depthKey(i + w - 1, j + d - 1) + Z_GHOST);
   }
 
+  // ── 조준 배치 (K47-③) ───────────────────────────────────────────────────
+
+  /**
+   * 확정 바가 가리는 화면 아래 높이 (CSS px). 레티클은 **보이는 영역의 중앙**이다 —
+   * 안 올리면 조준점이 바 밑에 숨는다 (K33 규칙: 가려진 높이는 재서 쓴다).
+   */
+  setReticleInset(cssBottomInset: number): void {
+    this.reticleInset = Math.max(0, cssBottomInset);
+  }
+
+  /** 레티클(화면 조준점)이 가리키는 월드 텍셀 */
+  private reticleTexel(): { x: number; y: number } {
+    return this.cam.screenToTexel(
+      window.innerWidth / 2,
+      (window.innerHeight - this.reticleInset) / 2,
+    );
+  }
+
+  /**
+   * 레티클이 가리키는 칸. **격자 밖도 그대로 돌려준다** — 클램프하면 음성 대조군
+   * (중앙 고정)이 가장자리에 닿는 것처럼 보여 검사가 무의미해진다.
+   */
+  reticleTile(): { i: number; j: number } {
+    const t = this.reticleTexel();
+    return screenToTile(t.x, t.y);
+  }
+
+  /** 조준 시작·탭·배율 변경 — 커서를 이 칸 중심에 놓는다 (콜백은 안 부른다) */
+  beginAim(i: number, j: number): void {
+    this.aimTexel = tileCenter(i, j);
+    this.aimTile = { i, j };
+  }
+
+  /** 조준 종료 — 표식도 같이 지운다 */
+  endAim(): void {
+    this.aimTexel = null;
+    this.aimTile = null;
+    this.setReticleMark(null);
+  }
+
+  /** 지금 조준 중인 칸 — 검증이 읽는다 */
+  aimTileNow(): { i: number; j: number } | null {
+    return this.aimTile ? { ...this.aimTile } : null;
+  }
+
+  /**
+   * 팬이 민 만큼 커서를 옮긴다. 인자는 **카메라 중심이 실제로 움직인 텍셀**이 아니라
+   * 손가락이 요구한 양이다 — 클램프에 걸려 카메라가 안 움직여도 커서는 가야 한다.
+   */
+  private moveAimCursor(dx: number, dy: number): void {
+    if (!this.aimTexel) return;
+    // 음성 대조군 — 커서를 매번 레티클로 붙여 "고스트 = 화면 중앙 칸"으로 되돌린다
+    if (this.aimFault) this.aimTexel = this.reticleTexel();
+    else {
+      this.aimTexel.x += dx;
+      this.aimTexel.y += dy;
+    }
+    const t = screenToTile(this.aimTexel.x, this.aimTexel.y);
+    const i = Math.max(0, Math.min(GRID_W - 1, t.i));
+    const j = Math.max(0, Math.min(GRID_H - 1, t.j));
+    /*
+     * 격자 밖으로 샌 커서는 되돌린다. 안 되돌리면 밖으로 민 만큼 되돌아올 때 늦게
+     * 반응해(드리프트) "팬했는데 고스트가 안 움직인다"가 된다.
+     */
+    if (i !== t.i || j !== t.j) this.aimTexel = tileCenter(i, j);
+    if (this.aimTile && this.aimTile.i === i && this.aimTile.j === j) return;
+    this.aimTile = { i, j };
+    this.onAimTile?.(i, j);
+  }
+
+  /**
+   * 조준 **발자국**의 바닥 윤곽. `i` 가 `null` 이면 지운다.
+   *
+   * `w`·`d` 를 받는 이유: 바닥 블록 붓(3×3·4×4)은 고스트 스프라이트가 아예 없어서
+   * 이 윤곽이 **유일한 미리보기**다. 한 칸만 그리면 4×4 = 48만원을 어디에 까는지
+   * 모르는 채 확정을 누르게 된다.
+   *
+   * ⚠ 표식도 `lift()` 를 탄다 (K37) — 안 태우면 산 위에서 고스트와 8텍셀 어긋나
+   * "고스트는 여기인데 표식은 저기"가 된다.
+   */
+  setReticleMark(i: number | null, j = 0, ok = true, w = 1, d = 1): void {
+    this.reticleMark = i === null ? null : { i, j, ok, w, d };
+    this.drawReticleMark();
+  }
+
+  private drawReticleMark(): void {
+    const g = this.aimGfx;
+    if (!g) return;
+    g.clear();
+    const m = this.reticleMark;
+    if (!m) {
+      g.setVisible(false);
+      return;
+    }
+    g.setVisible(true);
+    const dy = this.liftAt(m.i, m.j);
+    // 고스트 틴트와 같은 짝 — 못 놓는 자리는 둘 다 붉다
+    const col = m.ok ? 0x8fe0ff : 0xff6a5a;
+    const p = [
+      gridToScreen(m.i, m.j),
+      gridToScreen(m.i + m.w, m.j),
+      gridToScreen(m.i + m.w, m.j + m.d),
+      gridToScreen(m.i, m.j + m.d),
+    ];
+    g.fillStyle(col, 0.2);
+    g.lineStyle(2, col, 0.95);
+    g.beginPath();
+    g.moveTo(p[0]!.x, p[0]!.y + dy);
+    for (let k = 1; k < p.length; k++) g.lineTo(p[k]!.x, p[k]!.y + dy);
+    g.closePath();
+    g.fillPath();
+    g.strokePath();
+  }
+
+  /**
+   * 검증 도구용 음성 대조군 — `'center-lock'` 이면 오프셋 누적을 끄고 고스트를 화면
+   * 중앙 칸에 붙인다. 그 상태에서 지도 가장자리 배치가 **실패해야** 커버 검사가 의미를
+   * 갖는다 (이 저장소는 "검증이 조용히 통과"를 8건 실측으로 겪었다).
+   */
+  setAimFaultForTest(name: 'center-lock' | 'none'): void {
+    this.aimFault = name === 'center-lock';
+  }
+
   /**
    * 해금된 토지를 표시한다 (K25) — 경계선 + 바깥 칸 어둡게.
    *
@@ -1509,6 +1667,20 @@ export class KairoScene extends Phaser.Scene {
     return best;
   }
 
+  /**
+   * 배율이 바뀐 뒤 고스트를 다시 레티클 밑으로 가져온다 (K47-③).
+   *
+   * 확대하면 같은 오프셋(텍셀)이 화면에서 두 배가 되어 고스트가 화면 밖으로 나간다.
+   * 조준 중이 아니면 아무 일도 안 한다 — 평소 더블탭 확대는 찍은 지점을 앵커로 쓴다.
+   */
+  private recenterOnAim(): void {
+    const a = this.aimTile;
+    if (!a) return;
+    this.cam.centerOn(tileCenter(a.i, a.j), this.reticleInset);
+    this.syncCamera();
+    this.beginAim(a.i, a.j); // 커서를 그 칸 중심으로 되돌린다 (오프셋 0)
+  }
+
   private wireInput(): void {
     this.input.on('pointerdown', (p: Phaser.Input.Pointer) => {
       /*
@@ -1548,6 +1720,12 @@ export class KairoScene extends Phaser.Scene {
       this.dragMoved += Math.abs(dx) + Math.abs(dy);
       this.cam.pan(dx, dy);
       this.syncCamera();
+      /*
+       * 조준 커서는 `syncCamera()` **뒤**에 민다 (K47-③). 커서가 받는 것은 카메라가
+       * 실제로 움직인 양이 아니라 **손가락이 요구한 양**이다 — 클램프에 걸려 카메라가
+       * 멈춰도 고스트는 계속 가야 지도 가장자리에 닿는다.
+       */
+      this.moveAimCursor(-dx / this.cam.upscale, -dy / this.cam.upscale);
     });
 
     const end = (p: Phaser.Input.Pointer): void => {
@@ -1559,8 +1737,18 @@ export class KairoScene extends Phaser.Scene {
       this.dragging = false;
       this.cam.release();
       this.syncCamera();
+      /*
+       * ⚠ 손을 뗄 때도 커서를 한 번 민다 — 델타 0 이지만 고무줄(`release`)이 카메라를
+       * 되돌린 **뒤**의 상태로 표식을 맞춰야 한다. 대조군 모드에서는 이 호출이
+       * 커서를 되돌아온 중앙으로 다시 붙인다.
+       */
+      this.moveAimCursor(0, 0);
 
-      if (this.dragMoved >= 12) return; // 드래그였다
+      /*
+       * 조준 중에는 탭 임계를 올린다 (K47-③). 미세 팬 뒤 손을 떼면 12px 로는 "탭"으로
+       * 읽혀 고스트가 손가락 자리로 점프한다 — 정렬하려다 어긋나는 것이 가장 나쁘다.
+       */
+      if (this.dragMoved >= (this.aimTexel ? 24 : 12)) return; // 드래그였다
       /*
        * 선착장 후보를 탭했나 — **더블탭 확대보다 먼저** 본다. 뒤에 두면 후보를 두 번
        * 눌렀을 때 선택이 아니라 확대가 걸린다.
@@ -1579,6 +1767,7 @@ export class KairoScene extends Phaser.Scene {
         const next: Upscale = this.cam.upscale === 1 ? 2 : 1;
         this.cam.setUpscale(next, { x: world.x, y: world.y });
         this.applyScale(next);
+        this.recenterOnAim();
         return;
       }
       this.lastTapAt = now;
@@ -1606,6 +1795,7 @@ export class KairoScene extends Phaser.Scene {
         if (next === this.cam.upscale) return;
         this.cam.setUpscale(next, { x: world.x, y: world.y });
         this.applyScale(next);
+        this.recenterOnAim();
       },
     );
   }

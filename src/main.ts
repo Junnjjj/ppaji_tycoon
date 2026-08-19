@@ -226,6 +226,16 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   /**
    * 화면 탭 한 번. **도구용으로도 열어 둔다** (`__kairo.tapTile`) — 하네스가 실제
    * 좌표 계산 없이 이 경로를 그대로 밟을 수 있어야 검사가 UI 와 안 갈라진다.
+   *
+   * ## K47-③ 에서 뜻이 바뀌었다 — 탭은 이제 **조준 이동**이다
+   *
+   * 예전엔 "탭한 칸에 고스트를 띄운다"였고 그게 곧 배치 좌표였다. 이제 배치는 팬으로
+   * 정렬하고 확정으로 놓는다 (손가락이 고스트를 가리지 않는 것이 카이로가 이 방식을
+   * 쓰는 이유다). 탭은 **성긴 조준**으로 남는다 — 멀리 있는 칸으로 한 번에 건너뛰는
+   * 수단이고, 하네스 10여 곳이 이 시그니처를 쓰므로 다리이기도 하다.
+   *
+   * 탭이 그대로 남는 붓은 둘뿐이다: **출입구**(면 순환)와 **이동 1단계**(대상 지정).
+   * 둘 다 배치가 아니라 대상 지정이라 고스트가 없다.
    */
   const tapTile = (i: number, j: number): void => {
       if (!brush) {
@@ -239,104 +249,35 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        */
       if (coursePanel.visible) return;
       /*
+       * 이동 1단계 (K42) — **탭 유지.** 옮길 시설을 지목하는 것이지 자리를 정하는 게
+       * 아니다. 2단계(목적지)는 아래 `aimMove` 로 넘어가 조준 + 확정을 탄다.
+       */
+      if (brush === 'move' && !moveSel) {
+        if (!exam.toolsUnlocked) {
+          toast('이동은 첫 심사 통과의 보상입니다');
+          return;
+        }
+        const hit = h.placement.at(i, j);
+        if (!hit) {
+          toast('옮길 시설을 탭하세요');
+          return;
+        }
+        const def = facilityDef(hit.defId);
+        moveSel = { handle: hit.handle, defId: hit.defId, i: hit.i, j: hit.j, facing: hit.facing ?? 0 };
+        ticker.setBrush(`이동: ${def?.name ?? hit.defId}`);
+        toast(
+          `${def?.name ?? hit.defId} — 지도를 움직여 자리를 맞추세요 ` +
+            `(${Math.round(Math.floor((def?.cost ?? 0) * 0.1) / 10000)}만)`,
+        );
+        startAim();
+        return;
+      }
+      /*
        * 출입구 (K36-B) — **칸을 탭한다.** 경계를 폰에서 정확히 찍는 것은 무리다.
        * 그 칸의 쓸 수 있는 면 중 하나에 문이 나고, 다시 탭하면 다음 면으로 돌아간다.
        * 한 바퀴 돌면 없앤다. 후보 판정은 `doorCandidates` 하나를 sim 과 공유한다 —
        * 갈라지면 UI 가 놓으라고 해 놓고 굽기가 무시하는 상태가 된다.
        */
-      /*
-       * 이동 (K42) — 첫 탭: 시설 선택 · 둘째 탭: 고스트 → 확정.
-       * 자기 자신과의 겹침 판정은 "치우고 재고 되돌리는" 프로브로 푼다 — 복제 규칙을
-       * 만들지 않는다 (판정은 placement.check 하나다).
-       */
-      if (brush === 'move') {
-        if (!exam.toolsUnlocked) {
-          toast('이동은 첫 심사 통과의 보상입니다');
-          return;
-        }
-        if (!moveSel) {
-          const hit = h.placement.at(i, j);
-          if (!hit) {
-            toast('옮길 시설을 탭하세요');
-            return;
-          }
-          const def = facilityDef(hit.defId);
-          moveSel = { handle: hit.handle, defId: hit.defId, i: hit.i, j: hit.j, facing: hit.facing ?? 0 };
-          ticker.setBrush(`이동: ${def?.name ?? hit.defId}`);
-          toast(
-            `${def?.name ?? hit.defId} — 옮길 자리를 탭하세요 ` +
-              `(${Math.round(Math.floor((def?.cost ?? 0) * 0.1) / 10000)}만)`,
-          );
-          return;
-        }
-        const sel = moveSel;
-        const def = facilityDef(sel.defId);
-        const fee = Math.floor((def?.cost ?? 0) * 0.1);
-        // 프로브 — 원자리를 잠깐 치우고 재야 자기 발자국과 안 겹친다
-        h.placement.remove(sel.handle);
-        const chk = h.placement.check(h.terrain, h.walls, GATE, sel.defId, i, j, {
-          ...placeOpts(),
-          facing: sel.facing,
-        });
-        const restored = h.placement.place(h.terrain, h.walls, GATE, sel.defId, sel.i, sel.j, {
-          ...placeOpts(),
-          facing: sel.facing,
-        });
-        const oldHandle = sel.handle;
-        if (restored.ok && restored.placed) sel.handle = restored.placed.handle;
-        h.scene.refreshFacility(oldHandle);
-        h.scene.refreshFacility(sel.handle);
-        h.scene.setGhost(sel.defId, i, j, chk.ok, sel.facing);
-        hud.showConfirm(
-          chk.ok
-            ? `이동: ${def?.name ?? sel.defId} · ${Math.round(fee / 10000)}만`
-            : PLACE_FAIL_MESSAGES[chk.fail ?? 'unknown-def'],
-          chk.ok && fee <= week.cash,
-          {
-            cancel: () => {
-              h.scene.setGhost(null);
-              moveSel = null;
-              ticker.setBrush('이동');
-            },
-            confirm: () => {
-              h.scene.setGhost(null);
-              if (fee > week.cash) {
-                toast('돈이 부족합니다');
-                return;
-              }
-              h.placement.remove(sel.handle);
-              const r = h.placement.place(h.terrain, h.walls, GATE, sel.defId, i, j, {
-                ...placeOpts(),
-                facing: sel.facing,
-              });
-              if (!r.ok || !r.placed) {
-                // 되돌린다 — 반쯤 옮겨진 상태가 최악이다
-                const rr = h.placement.place(h.terrain, h.walls, GATE, sel.defId, sel.i, sel.j, {
-                  ...placeOpts(),
-                  facing: sel.facing,
-                });
-                const gone = sel.handle;
-                if (rr.ok && rr.placed) sel.handle = rr.placed.handle;
-                h.scene.refreshFacility(gone);
-                h.scene.refreshFacility(sel.handle);
-                toast(PLACE_FAIL_MESSAGES[r.fail ?? 'unknown-def']);
-                return;
-              }
-              week.spend(fee);
-              const gone = sel.handle;
-              moveSel = null;
-              ticker.setBrush('이동');
-              h.scene.refreshFacility(gone);
-              h.scene.refreshFacility(r.placed.handle);
-              h.guests.invalidate();
-              audio.play('sfx/place');
-              toast(`이동 — ${Math.round(fee / 10000)}만`, 'ok');
-              persist();
-            },
-          },
-        );
-        return;
-      }
       if (brush === 'door') {
         const cand = doorCandidates(h.terrain, GATE, i, j, walkableNow);
         if (cand.length === 0) {
@@ -367,152 +308,368 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         toast(next < cand.length ? '출입구를 냈습니다' : '출입구를 없앴습니다', 'ok');
         return;
       }
-      if (brush === 'erase') {
-        // 시설이 먼저 — 시설 위를 탭했으면 그걸 지운다
-        const hit = h.placement.at(i, j);
-        if (hit) {
-          const def = facilityDef(hit.defId);
-          h.placement.remove(hit.handle);
-          h.scene.refreshFacility(hit.handle);
-          h.guests.invalidate();
-          refreshBuildList(); // 자리가 비었으면 잠금이 풀려야 한다 (K31)
-          /*
-           * 절반만 돌려준다. 전액이면 "놓아보고 안 맞으면 지운다"가 공짜라 배치가
-           * 판단이 아니게 되고, 0원이면 오조작 한 번이 판을 망친다.
-           */
-          const back = def ? Math.floor(def.cost * 0.5) : 0;
-          if (back > 0) {
-            week.earn(back);
-            toast(`철거 — ${Math.round(back / 10000)}만 환급`, 'ok');
-          }
-          persist();
-          return;
-        }
-        // 벽은 개별로 못 지운다 — **바닥을 잔디로 되돌리면** 그 벽이 같이 사라진다 (K27)
-        if (h.terrain.kindAt(i, j) !== 'lawn' && !h.terrain.isWater(i, j)) {
-          /* placement 를 넘긴다 — 길을 지워 시설이 끊기면 거절된다 (K32-B) */
-          const r = paintFloor(h.terrain, h.walls, GATE, i, j, 'lawn', walkableNow, h.placement, doors);
-          if (!r.ok) {
-            toast(INDOOR_FAIL_MESSAGES[r.fail ?? 'no-door']);
+      /*
+       * 나머지 붓(시설 · 건물 블록 · 바닥 · 철거 · 이동 2단계)은 전부 **조준**이다.
+       * 탭은 조준을 그 칸으로 옮길 뿐 놓지는 않는다 — 놓는 것은 확정 버튼 하나다.
+       */
+      aimAt(i, j);
+  };
+
+  /*
+   * ── 조준 배치 (K47-③) ─────────────────────────────────────────────────
+   *
+   * `aim = {i, j, facing}` 이 **정본**이고 화면 레티클은 표시일 뿐이다. 팬은 씬의
+   * 조준 커서를 밀고, 커서가 다른 칸으로 넘어간 순간에만 `onAimTile` 이 올라온다 —
+   * 판정 비용 실측이 야외 0.054ms · 실내 0.325ms · 물 위 0.240ms 라 폰 3~5배로 잡아도
+   * 칸이 바뀔 때만이면 무료지만 **매 프레임이면 위험**하다.
+   *
+   * 왜 커서가 화면 중앙이 아닌지(순진한 중앙 고정이 판의 32% 를 못 짓게 만든다)는
+   * `KairoScene.aimTexel` 에 한 번만 적어 뒀다.
+   */
+
+  /** 확정 바가 가리는 높이를 씬에 알린다 — 레티클이 바 밑에 숨지 않게 (K33 규칙) */
+  const syncReticleInset = (): void => {
+    h.scene.setReticleInset(hud.confirmInset);
+  };
+
+  /**
+   * 조준 시작 — 레티클 밑 칸에서. 격자 밖을 보고 있으면 가장자리로 당긴다.
+   *
+   * ⚠ **두 번 잰다.** 조준 자리를 정하는 시점에는 확정 바가 아직 안 떴고, 그 바의
+   * 라벨이 비어 있어 `confirmInset` 이 실제보다 낮게 답한다 (실측: 라벨 없는 바
+   * 83px → 라벨이 든 바 99px). 레티클은 가려진 높이의 **절반**만큼 위로 올라가므로
+   * 16px 차이가 곧 8텍셀 = `i+j` 한 칸이고, 첫 조준만 고스트가 레티클보다
+   * **(+1,+1)** 아래에 섰다.
+   *
+   * 그 어긋남은 세로로만 보인다 — (+1,+1) 은 `i−j` 를 안 바꾸고 `i+j` 만 2 바꾼다.
+   * 그래서 "팬하면 조준의 세로축이 절반만 움직인다"로 나타났다 (K47-③ 실측:
+   * 레티클 Δ(i+j)=4 vs 첫 조준 기준 Δ(i+j)=2). 커서 누적은 멀쩡했다 —
+   * **출발 칸**이 틀렸던 것이다.
+   *
+   * `refreshAim()` 이 바를 띄우고 잰 값을 갱신하므로, 그 뒤에 한 번 더 재서 자리가
+   * 달라졌으면 다시 잡는다. 두 번이면 끝난다 (두 번째부터는 바 높이가 이미 확정이다).
+   * 팬 중에는 절대 다시 재지 않는다 — 그러면 오프셋 설계가 무너져 지도 가장자리
+   * 32% 가 다시 막힌다.
+   */
+  const startAim = (): void => {
+    aim = null;
+    for (let pass = 0; pass < 2; pass++) {
+      syncReticleInset();
+      const r = h.scene.reticleTile();
+      const i = Math.max(0, Math.min(GRID_W_C - 1, r.i));
+      const j = Math.max(0, Math.min(GRID_H_C - 1, r.j));
+      if (aim && aim.i === i && aim.j === j) break;
+      aim = { i, j, facing: 0 };
+      h.scene.beginAim(i, j);
+      refreshAim();
+    }
+  };
+
+  /**
+   * 조준을 이 칸으로 옮긴다 (성긴 조준 = 탭 · 하네스의 `tapTile`).
+   * 방향은 유지한다 — 회전해 둔 것이 탭 한 번에 풀리면 ↻ 가 소용없다.
+   */
+  const aimAt = (i: number, j: number): void => {
+    aim = { i, j, facing: aim?.facing ?? 0 };
+    h.scene.beginAim(i, j);
+    refreshAim();
+  };
+
+  /** 조준 종료 — 고스트·표식·확정 바를 한꺼번에 내린다 */
+  const endAim = (): void => {
+    aim = null;
+    h.scene.endAim();
+    h.scene.setGhost(null);
+    hud.hideConfirm();
+  };
+
+  /** 지금 붓이 조준을 쓰나 — 출입구와 이동 1단계만 탭으로 남는다 */
+  const aimingBrush = (): boolean =>
+    brush !== null && brush !== 'door' && !(brush === 'move' && !moveSel);
+
+  /**
+   * 지금 조준 칸을 다시 판정해 고스트·표식·확정 바를 맞춘다.
+   * **칸이 바뀐 때·회전한 때·확정 직후**에만 부른다 (위 비용 주석).
+   */
+  const refreshAim = (): void => {
+    if (!aim || !brush) return;
+    if (brush === 'facility') aimFacility(aim.i, aim.j);
+    else if (brush === 'move') aimMove(aim.i, aim.j);
+    else if (brush === 'erase') aimErase(aim.i, aim.j);
+    else aimGround(aim.i, aim.j);
+    // 라벨이 두 줄이 되면 바가 높아진다 — 잰 값을 매번 갱신한다 (상수로 박지 말 것)
+    syncReticleInset();
+  };
+
+  /** 조준 중 확정 바의 취소 — 붓은 남는다 (같은 붓으로 다시 겨눌 수 있어야 한다) */
+  const cancelAim = (): void => {
+    if (brush === 'move' && moveSel) {
+      moveSel = null;
+      ticker.setBrush('이동');
+    }
+    endAim();
+  };
+
+  /** 시설 — 조준 + ↻ + 확정. 손가락 가림이 정확히 이 케이스다 */
+  const aimFacility = (i: number, j: number): void => {
+    const defId = brushFacility;
+    const def = facilityDef(defId);
+    const cost = def?.cost ?? 0;
+    const chk = h.placement.check(h.terrain, h.walls, GATE, defId, i, j, {
+      ...placeOpts(),
+      facing: aim?.facing ?? 0,
+    });
+    /*
+     * 건설비를 **놓기 전에** 확인한다. 놓고 나서 차감하면 잔액 부족일 때 되돌려야 하고,
+     * 그 되돌리기가 점유 격자·거리장까지 건드려 실패 경로가 두 배로 늘어난다.
+     * (K12 까지 UI 는 시설을 공짜로 지었다 — 밸런싱한 건설비 곡선이 실제 플레이에 없었다.)
+     *
+     * ⚠ 값 부족은 **확정을 막을 뿐 조준은 막지 않는다.** 예전엔 탭 자체를 거절했는데,
+     * 조준은 "여기 놓으면 얼마"를 보는 화면이라 거절하면 볼 수가 없다.
+     */
+    const poor = cost > week.cash;
+    const ok = chk.ok && !poor;
+    h.scene.setGhost(defId, i, j, ok, aim?.facing ?? 0);
+    // 발자국은 회전을 탄다 — 실물과 같은 규칙(가로·세로 교환)이라야 윤곽이 안 거짓말한다
+    const [fw, fd] =
+      (aim?.facing ?? 0) === 1
+        ? [def?.size[1] ?? 1, def?.size[0] ?? 1]
+        : [def?.size[0] ?? 1, def?.size[1] ?? 1];
+    h.scene.setReticleMark(i, j, ok, fw, fd);
+    // 회전은 비정사각에만 뜻이 있다 (정사각은 발자국이 같아 버튼이 거짓말이 된다)
+    const rotatable = def !== undefined && def.size[0] !== def.size[1];
+    hud.showConfirm(
+      !chk.ok
+        ? PLACE_FAIL_MESSAGES[chk.fail ?? 'unknown-def']
+        : poor
+          ? `돈이 부족합니다 — ${Math.round(cost / 10000)}만 필요 (현재 ${Math.round(week.cash / 10000)}만)`
+          : `${def?.name ?? defId} · ${Math.round(cost / 10000)}만`,
+      ok,
+      {
+        cancel: cancelAim,
+        ...(rotatable
+          ? {
+              rotate: () => {
+                /*
+                 * ⚠ 예전엔 `tapTile(lastFacilityTap)` 을 다시 불러 우회했다 (K45).
+                 * 조준에서는 자리가 정본이므로 방향만 뒤집고 같은 자리를 다시 잰다.
+                 */
+                if (!aim) return;
+                aim.facing = aim.facing === 0 ? 1 : 0;
+                refreshAim();
+              },
+            }
+          : {}),
+        confirm: () => {
+          const facing = aim?.facing ?? 0;
+          const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j, {
+            ...placeOpts(),
+            facing,
+          });
+          if (!r.ok || !r.placed) {
+            toast(PLACE_FAIL_MESSAGES[r.fail ?? 'unknown-def']);
+            refreshAim(); // 바를 되살린다 — 실패로 조준이 사라지면 왜 안 됐는지가 사라진다
             return;
           }
-          h.scene.refreshTile(i, j);
-          h.scene.refreshAllWalls();
+          week.spend(cost);
+          h.scene.refreshFacility(r.placed.handle);
           h.guests.invalidate();
+          refreshBuildList(); // 방이 찼으면 다음 시설이 잠겨야 한다 (K31)
+          /*
+           * 채널 분리 (K47-①). 예전엔 한 토스트에 둘이 섞여 있었다:
+           *   `−12만 · 콤보 3개 발동`
+           * 앞은 **내 행동의 대답**(토스트)이고 뒤는 **일어난 일**(뉴스)이다.
+           */
+          toast(`−${Math.round(cost / 10000)}만`, 'ok');
+          pushComboNews();
           persist();
-        }
-        return;
-      }
-      if (brush === 'facility') {
-        const defId = brushFacility;
-        // 해금 — 골격(등급) 또는 사건(의뢰 보상). isUnlocked 하나로 묻는다 (K41)
-        const grade = currentGrade();
-        if (!unlocks.isUnlocked(defId, grade.grade)) {
-          const need = requiredGrade(defId);
-          toast(
-            need <= 5
-              ? `아직 못 짓습니다 — ${need}등급 필요 (현재 ${grade.grade}등급 ${grade.name})`
-              : '아직 못 짓습니다 — 의뢰 보상으로 열립니다',
-          );
-          return;
-        }
-        /*
-         * 건설비를 **놓기 전에** 확인한다. 놓고 나서 차감하면 잔액 부족일 때 되돌려야 하고,
-         * 그 되돌리기가 점유 격자·거리장까지 건드려 실패 경로가 두 배로 늘어난다.
-         *
-         * ⚠ K12 까지 UI 는 시설을 공짜로 지었다 — 헤드리스 봇만 돈을 써서,
-         * 밸런싱한 건설비 곡선이 실제 플레이에는 없었다.
-         */
-        const def = facilityDef(defId);
-        const cost = def?.cost ?? 0;
-        if (cost > week.cash) {
-          toast(
-            `돈이 부족합니다 — ${Math.round(cost / 10000)}만 필요 ` +
-              `(현재 ${Math.round(week.cash / 10000)}만)`,
-          );
-          return;
-        }
-        /*
-         * ── 고스트 → 확정 (K32) ──
-         *
-         * 탭하면 **바로 안 놓는다.** 실제 스프라이트를 그 자리에 반투명으로 보여주고,
-         * 확정을 눌러야 놓인다. 회전과 "장비 탄 손님" 그림이 나중에 들어오므로 놓기 전에
-         * 만질 수 있는 상태가 필요하다.
-         *
-         * 못 놓는 자리도 고스트를 띄운다 — 왜 안 되는지 라벨로 알려주는 편이
-         * 토스트만 스치는 것보다 낫다.
-         */
-        lastFacilityTap = { i, j };
-        const chk = h.placement.check(h.terrain, h.walls, GATE, defId, i, j, {
-          ...placeOpts(),
-          facing: ghostFacing,
-        });
-        h.scene.setGhost(defId, i, j, chk.ok, ghostFacing);
-        // 회전은 비정사각에만 뜻이 있다 (정사각은 발자국이 같아 버튼이 거짓말이 된다)
-        const rotatable = def !== undefined && def.size[0] !== def.size[1];
-        hud.showConfirm(
-          chk.ok
-            ? `${def?.name ?? defId} · ${Math.round(cost / 10000)}만`
-            : PLACE_FAIL_MESSAGES[chk.fail ?? 'unknown-def'],
-          chk.ok,
-          {
-            cancel: () => {
-              h.scene.setGhost(null);
-              ghostFacing = 0;
-            },
-            ...(rotatable
-              ? {
-                  rotate: () => {
-                    ghostFacing = ghostFacing === 0 ? 1 : 0;
-                    if (lastFacilityTap) tapTile(lastFacilityTap.i, lastFacilityTap.j);
-                  },
-                }
-              : {}),
-            confirm: () => {
-              h.scene.setGhost(null);
-              const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j, {
-                ...placeOpts(),
-                facing: ghostFacing,
-              });
-              if (!r.ok || !r.placed) {
-                toast(PLACE_FAIL_MESSAGES[r.fail ?? 'unknown-def']);
-                return;
-              }
-              week.spend(cost);
-              h.scene.refreshFacility(r.placed.handle);
-              h.guests.invalidate();
-              refreshBuildList(); // 방이 찼으면 다음 시설이 잠겨야 한다 (K31)
-              /*
-               * 채널 분리 (K47-①). 예전엔 한 토스트에 둘이 섞여 있었다:
-               *   `−12만 · 콤보 3개 발동`
-               * 앞은 **내 행동의 대답**(토스트)이고 뒤는 **일어난 일**(뉴스)이다.
-               * 게다가 `evaluateCombos` 의 이름을 버리고 개수만 쓰고 있어서, 무엇이
-               * 터졌는지 화면 어디에서도 알 수 없었다 — 도감을 열기 전까지.
-               */
-              toast(`−${Math.round(cost / 10000)}만`, 'ok');
-              pushComboNews();
-              persist();
-            },
-          },
-        );
-        return;
-      }
-      /*
-       * 바닥 — 카이로의 `Tiling` 이다 (K27). **편집기 도구가 아니라 사는 것**이고,
-       * 실내 바닥을 깐 자리는 그대로 방이 되어 벽이 자동으로 생긴다.
-       */
-      /*
-       * 붓 ID 는 `path_stone` 또는 `floor_indoor@4` 형태다 — 뒤의 숫자가 블록 크기다 (K32).
-       * 탭한 칸을 **블록의 좌상단**이 아니라 가운데에 가깝게 두어야 손가락이 가리킨 곳에
-       * 깔린다.
-       */
-      const [kindId, sizeStr] = brush.split('@');
-      const n = sizeStr ? Number(sizeStr) : 1;
-      const kind = GROUND_KINDS.find((k) => k.id === kindId);
-      if (!kind) return;
-      const oi = i - Math.floor((n - 1) / 2);
-      const oj = j - Math.floor((n - 1) / 2);
+          // 시설은 한 번 놓으면 조준을 끝낸다 (붓은 남는다 — 탭하면 다시 겨눈다)
+          endAim();
+        },
+      },
+    );
+  };
 
+  /**
+   * 이동 2단계 (K42) — 목적지는 시설과 같은 문제라 조준 + 확정이다.
+   *
+   * 자기 자신과의 겹침 판정은 "치우고 재고 되돌리는" 프로브로 푼다 — 복제 규칙을
+   * 만들지 않는다 (판정은 `placement.check` 하나다).
+   */
+  const aimMove = (i: number, j: number): void => {
+    const sel = moveSel;
+    if (!sel) return;
+    const def = facilityDef(sel.defId);
+    const fee = Math.floor((def?.cost ?? 0) * 0.1);
+    // 프로브 — 원자리를 잠깐 치우고 재야 자기 발자국과 안 겹친다
+    h.placement.remove(sel.handle);
+    const chk = h.placement.check(h.terrain, h.walls, GATE, sel.defId, i, j, {
+      ...placeOpts(),
+      facing: sel.facing,
+    });
+    const restored = h.placement.place(h.terrain, h.walls, GATE, sel.defId, sel.i, sel.j, {
+      ...placeOpts(),
+      facing: sel.facing,
+    });
+    const oldHandle = sel.handle;
+    if (restored.ok && restored.placed) sel.handle = restored.placed.handle;
+    h.scene.refreshFacility(oldHandle);
+    h.scene.refreshFacility(sel.handle);
+    const ok = chk.ok && fee <= week.cash;
+    h.scene.setGhost(sel.defId, i, j, ok, sel.facing);
+    const [fw, fd] =
+      sel.facing === 1
+        ? [def?.size[1] ?? 1, def?.size[0] ?? 1]
+        : [def?.size[0] ?? 1, def?.size[1] ?? 1];
+    h.scene.setReticleMark(i, j, ok, fw, fd);
+    hud.showConfirm(
+      chk.ok
+        ? `이동: ${def?.name ?? sel.defId} · ${Math.round(fee / 10000)}만`
+        : PLACE_FAIL_MESSAGES[chk.fail ?? 'unknown-def'],
+      ok,
+      {
+        cancel: cancelAim,
+        confirm: () => {
+          if (fee > week.cash) {
+            toast('돈이 부족합니다');
+            refreshAim();
+            return;
+          }
+          h.placement.remove(sel.handle);
+          const r = h.placement.place(h.terrain, h.walls, GATE, sel.defId, i, j, {
+            ...placeOpts(),
+            facing: sel.facing,
+          });
+          if (!r.ok || !r.placed) {
+            // 되돌린다 — 반쯤 옮겨진 상태가 최악이다
+            const rr = h.placement.place(h.terrain, h.walls, GATE, sel.defId, sel.i, sel.j, {
+              ...placeOpts(),
+              facing: sel.facing,
+            });
+            const gone = sel.handle;
+            if (rr.ok && rr.placed) sel.handle = rr.placed.handle;
+            h.scene.refreshFacility(gone);
+            h.scene.refreshFacility(sel.handle);
+            toast(PLACE_FAIL_MESSAGES[r.fail ?? 'unknown-def']);
+            refreshAim();
+            return;
+          }
+          week.spend(fee);
+          const gone = sel.handle;
+          moveSel = null;
+          ticker.setBrush('이동');
+          h.scene.refreshFacility(gone);
+          h.scene.refreshFacility(r.placed.handle);
+          h.guests.invalidate();
+          audio.play('sfx/place');
+          toast(`이동 — ${Math.round(fee / 10000)}만`, 'ok');
+          persist();
+          endAim(); // 옮길 시설을 다시 고르는 것부터가 다음 이동이다
+        },
+      },
+    );
+  };
+
+  /**
+   * 철거 — K47-③ 에서 **조준 + 확정으로 승격**했다.
+   *
+   * 예전엔 탭 즉시 삭제 + 50% 환급이었고 되돌리기가 없었다. 폰에서 손가락이 미끄러지면
+   * 그대로 손실이고, 하네스에도 동작 검사가 0건이었다.
+   */
+  const aimErase = (i: number, j: number): void => {
+    h.scene.setGhost(null);
+    const hit = h.placement.at(i, j);
+    const def = hit ? facilityDef(hit.defId) : undefined;
+    /*
+     * 절반만 돌려준다. 전액이면 "놓아보고 안 맞으면 지운다"가 공짜라 배치가 판단이
+     * 아니게 되고, 0원이면 오조작 한 번이 판을 망친다.
+     */
+    const back = def ? Math.floor(def.cost * 0.5) : 0;
+    const floorErasable =
+      !hit && h.terrain.kindAt(i, j) !== 'lawn' && !h.terrain.isWater(i, j);
+    const ok = hit !== null || floorErasable;
+    // 시설을 지울 땐 **그 시설의 발자국 전체**를 두른다 — 한 칸만 보면 뭘 지우는지 모른다
+    const eDef = hit ? facilityDef(hit.defId) : undefined;
+    const [ew, ed] =
+      hit && eDef
+        ? hit.facing === 1
+          ? [eDef.size[1], eDef.size[0]]
+          : [eDef.size[0], eDef.size[1]]
+        : [1, 1];
+    h.scene.setReticleMark(hit ? hit.i : i, hit ? hit.j : j, ok, ew, ed);
+    hud.showConfirm(
+      hit
+        ? `철거: ${def?.name ?? hit.defId}` + (back > 0 ? ` · +${Math.round(back / 10000)}만 환급` : '')
+        : floorErasable
+          ? '철거: 바닥을 잔디로'
+          : '지울 것이 없습니다',
+      ok,
+      {
+        cancel: cancelAim,
+        confirm: () => {
+          if (hit) {
+            h.placement.remove(hit.handle);
+            h.scene.refreshFacility(hit.handle);
+            h.guests.invalidate();
+            refreshBuildList(); // 자리가 비었으면 잠금이 풀려야 한다 (K31)
+            if (back > 0) {
+              week.earn(back);
+              toast(`철거 — ${Math.round(back / 10000)}만 환급`, 'ok');
+            }
+            persist();
+          } else if (floorErasable) {
+            // 벽은 개별로 못 지운다 — **바닥을 잔디로 되돌리면** 그 벽이 같이 사라진다 (K27)
+            /* placement 를 넘긴다 — 길을 지워 시설이 끊기면 거절된다 (K32-B) */
+            const r = paintFloor(
+              h.terrain,
+              h.walls,
+              GATE,
+              i,
+              j,
+              'lawn',
+              walkableNow,
+              h.placement,
+              doors,
+            );
+            if (!r.ok) {
+              toast(INDOOR_FAIL_MESSAGES[r.fail ?? 'no-door']);
+              refreshAim();
+              return;
+            }
+            h.scene.refreshTile(i, j);
+            h.scene.refreshAllWalls();
+            h.guests.invalidate();
+            persist();
+          }
+          // 연속 철거 — 붓이 그대로니 바도 그대로다 (같은 자리를 다시 재서 라벨을 고친다)
+          refreshAim();
+        },
+      },
+    );
+  };
+
+  /**
+   * 바닥·건물 블록 — 조준 + 확정, **확정 후 바를 닫지 않는다** (연속 배치).
+   *
+   * 4×4 = 48만원이 예전엔 탭 한 번에 즉시 지출이었고 미리보기가 아예 없었다.
+   * ⚠ 드래그 페인트는 안 넣는다 — 한 손가락 드래그 = 팬이 이미 확정이라
+   * 제스처 문법이 둘이 된다 (계획 §3 표).
+   */
+  const aimGround = (i: number, j: number): void => {
+    h.scene.setGhost(null);
+    /*
+     * 붓 ID 는 `path_stone` 또는 `floor_indoor@4` 형태다 — 뒤의 숫자가 블록 크기다 (K32).
+     * 조준 칸을 **블록의 좌상단**이 아니라 가운데에 가깝게 두어야 표식이 가리킨 곳에 깔린다.
+     */
+    const [kindId, sizeStr] = (brush ?? '').split('@');
+    const n = sizeStr ? Number(sizeStr) : 1;
+    const kind = GROUND_KINDS.find((k) => k.id === kindId);
+    if (!kind) return;
+    const oi = i - Math.floor((n - 1) / 2);
+    const oj = j - Math.floor((n - 1) / 2);
+
+    /** 못 깔면 이유, 깔 수 있으면 `null` — 라벨과 확정 가능 여부가 같은 판정을 쓴다 */
+    const reject = (): string | null => {
       /*
        * 토지 밖에는 못 깐다 (K32).
        *
@@ -521,8 +678,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        */
       const land = landRect(currentGrade());
       if (oi < land.i0 || oj < land.j0 || oi + n > land.i0 + land.w || oj + n > land.j0 + land.h) {
-        toast(PLACE_FAIL_MESSAGES['outside-land']);
-        return;
+        return PLACE_FAIL_MESSAGES['outside-land'];
       }
       /*
        * ⚠ 바닥 붓도 막아야 한다 (K36). 시설만 막고 바닥을 열어 두면 플레이어가 도로를
@@ -532,12 +688,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       for (let dj = 0; dj < n; dj++) {
         for (let di = 0; di < n; di++) {
           if (h.terrain.inside(oi + di, oj + dj) && !h.terrain.isBuildable(oi + di, oj + dj)) {
-            toast(PLACE_FAIL_MESSAGES['not-buildable']);
-            return;
+            return PLACE_FAIL_MESSAGES['not-buildable'];
           }
         }
       }
-
       /*
        * 수영장 붓 (S3) — 시설이 선 칸에는 물을 못 채운다. 바닥 붓은 시설 밑을
        * 지나가도 되지만(포장을 바꾸는 것) 물은 시설을 침수시킨다.
@@ -546,60 +700,76 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         for (let dj = 0; dj < n; dj++) {
           for (let di = 0; di < n; di++) {
             if (h.placement.handleAt(oi + di, oj + dj) !== 0) {
-              toast('시설 아래에는 물을 채울 수 없습니다 — 먼저 옮기세요');
-              return;
+              return '시설 아래에는 물을 채울 수 없습니다 — 먼저 옮기세요';
             }
           }
         }
       }
+      return null;
+    };
 
-      // 실제로 바뀔 칸 수를 먼저 세어 값을 확인한다 — 물에 걸치면 그만큼 덜 낸다
-      let willChange = 0;
-      for (let dj = 0; dj < n; dj++) {
-        for (let di = 0; di < n; di++) {
-          const ti = oi + di;
-          const tj = oj + dj;
-          if (!h.terrain.inside(ti, tj) || h.terrain.isWater(ti, tj)) continue;
-          if (h.terrain.kindAt(ti, tj) !== kindId) willChange++;
-        }
+    // 실제로 바뀔 칸 수를 먼저 세어 값을 확인한다 — 물에 걸치면 그만큼 덜 낸다
+    let willChange = 0;
+    for (let dj = 0; dj < n; dj++) {
+      for (let di = 0; di < n; di++) {
+        const ti = oi + di;
+        const tj = oj + dj;
+        if (!h.terrain.inside(ti, tj) || h.terrain.isWater(ti, tj)) continue;
+        if (h.terrain.kindAt(ti, tj) !== kindId) willChange++;
       }
-      if (willChange === 0) return;
-      const cost = kind.cost * willChange;
-      if (cost > week.cash) {
-        toast(
-          `돈이 부족합니다 — ${Math.round(cost / 10000)}만 필요 ` +
-            `(현재 ${Math.round(week.cash / 10000)}만)`,
-        );
-        return;
-      }
-      const painted = paintFloorBlock(
-        h.terrain,
-        h.walls,
-        GATE,
-        oi,
-        oj,
-        n,
-        n,
-        kindId as string,
-        walkableNow,
-        h.placement,
-        doors,
-      );
-      if (!painted.ok) {
-        toast(INDOOR_FAIL_MESSAGES[painted.fail ?? 'no-door']);
-        return;
-      }
-      if (painted.changed > 0) {
-        if (kind.cost > 0) week.spend(kind.cost * painted.changed);
-        for (let dj = 0; dj < n; dj++) {
-          for (let di = 0; di < n; di++) h.scene.refreshTile(oi + di, oj + dj);
-        }
-        h.scene.refreshAllWalls();
-        h.guests.invalidate(); // 통행 가능성과 실내가 바뀐다
-        // 방이 넓어졌으면 "자리 없음" 잠금이 풀려야 한다 (K31)
-        refreshBuildList();
-        persist();
-      }
+    }
+    const cost = kind.cost * willChange;
+    const why = reject();
+    const poor = cost > week.cash;
+    const ok = why === null && willChange > 0 && !poor;
+    // 블록 전체를 두른다 — 바닥 붓은 고스트가 없어 이 윤곽이 **유일한 미리보기**다
+    h.scene.setReticleMark(oi, oj, ok, n, n);
+    hud.showConfirm(
+      why !== null
+        ? why
+        : willChange === 0
+          ? `${kind.name} — 이미 깔려 있습니다`
+          : poor
+            ? `돈이 부족합니다 — ${Math.round(cost / 10000)}만 필요 (현재 ${Math.round(week.cash / 10000)}만)`
+            : `${kind.name}${n > 1 ? ` ${n}×${n}` : ''} · ${willChange}칸 · ${Math.round(cost / 10000)}만`,
+      ok,
+      {
+        cancel: cancelAim,
+        confirm: () => {
+          const painted = paintFloorBlock(
+            h.terrain,
+            h.walls,
+            GATE,
+            oi,
+            oj,
+            n,
+            n,
+            kindId as string,
+            walkableNow,
+            h.placement,
+            doors,
+          );
+          if (!painted.ok) {
+            toast(INDOOR_FAIL_MESSAGES[painted.fail ?? 'no-door']);
+            refreshAim();
+            return;
+          }
+          if (painted.changed > 0) {
+            if (kind.cost > 0) week.spend(kind.cost * painted.changed);
+            for (let dj = 0; dj < n; dj++) {
+              for (let di = 0; di < n; di++) h.scene.refreshTile(oi + di, oj + dj);
+            }
+            h.scene.refreshAllWalls();
+            h.guests.invalidate(); // 통행 가능성과 실내가 바뀐다
+            // 방이 넓어졌으면 "자리 없음" 잠금이 풀려야 한다 (K31)
+            refreshBuildList();
+            persist();
+          }
+          // 연속 배치 — 바를 닫지 않는다. 길을 까는 것이 가장 자주 하는 동작이다 (K32-B)
+          refreshAim();
+        },
+      },
+    );
   };
 
   /** 게이트 — K4 에서 매표소 배치로 대체한다. 지금은 좌상단 고정 */
@@ -633,10 +803,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   /** 이동 붓의 선택 시설 (K42) — 첫 탭에서 잡고 확정·취소에서 푼다 */
   let moveSel: { handle: number; defId: string; i: number; j: number; facing: 0 | 1 } | null =
     null;
-  /** 고스트 회전 (K45) — 붓을 새로 집으면 0 으로 */
-  let ghostFacing: 0 | 1 = 0;
-  /** 마지막 시설 탭 자리 — ↻ 가 같은 자리에서 다시 미리보기를 돌린다 */
-  let lastFacilityTap: { i: number; j: number } | null = null;
+  /**
+   * 조준 상태 (K47-③) — **이것이 배치 좌표의 정본**이다.
+   *
+   * K45 까지는 `lastFacilityTap`(마지막 탭 자리) + `ghostFacing`(회전) 둘로 흩어져
+   * 있었고, ↻ 는 `tapTile` 을 다시 불러 우회했다. 조준 배치에서는 팬이 자리를 계속
+   * 바꾸므로 자리와 방향이 한 덩어리여야 한다 — 화면 레티클은 이 값을 비추는 표시일 뿐이다.
+   */
+  let aim: { i: number; j: number; facing: 0 | 1 } | null = null;
 
   const ZONE_NAME: Record<string, string> = {
     indoor: '실내',
@@ -696,14 +870,35 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     onBrush: (label) => ticker.setBrush(label),
     onPick: (it: HudItem) => {
       // 붓을 바꾸면 진행 중이던 배치는 취소한다 — 안 그러면 확정 바가 옛 시설을 가리킨다
-      hud.hideConfirm();
-      h.scene.setGhost(null);
+      endAim();
+      moveSel = null;
       if (it.kind === 'facility') {
+        /*
+         * 해금 — 골격(등급) 또는 사건(의뢰 보상). `isUnlocked` 하나로 묻는다 (K41).
+         * ⚠ 조준 **전에** 본다. 못 짓는 것을 겨누게 두면 확정 바가 매 칸 같은 거짓말을
+         * 하고, 왜 안 되는지(등급인지 자리인지)가 섞인다.
+         */
+        const grade = currentGrade();
+        if (!unlocks.isUnlocked(it.id, grade.grade)) {
+          const need = requiredGrade(it.id);
+          toast(
+            need <= 5
+              ? `아직 못 짓습니다 — ${need}등급 필요 (현재 ${grade.grade}등급 ${grade.name})`
+              : '아직 못 짓습니다 — 의뢰 보상으로 열립니다',
+          );
+          brush = null;
+          return;
+        }
         brush = 'facility';
         brushFacility = it.id;
       } else {
         brush = it.kind === 'erase' ? 'erase' : it.id;
       }
+      /*
+       * 고르는 즉시 **고스트가 화면에 뜬다** (K47-③) — 이것이 조준 배치의 시작점이다.
+       * 출입구와 이동은 배치가 아니라 대상 지정이라 탭으로 남는다.
+       */
+      if (aimingBrush()) startAim();
     },
     // 카드 썸네일 — 게임과 같은 그림을 같은 계약 ID 로 (제공자가 곧 정본이다)
     thumbFor: (sid: string) => (h.provider.has(sid) ? h.provider.get(sid) : null),
@@ -905,11 +1100,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const clearBrush = (): void => {
     brush = null;
     moveSel = null;
-    ghostFacing = 0;
-    lastFacilityTap = null;
     ticker.setBrush(null);
-    hud.hideConfirm();
-    h.scene.setGhost(null);
+    endAim(); // 조준·고스트·표식·확정 바가 한 덩어리다 (K47-③)
   };
 
   /*
@@ -921,9 +1113,22 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * `started:true, frame:0, children:1282`). 실측으로 겪었다 — 화면이 그려진 채 멈춘다.
    * 동적 import 는 전부 boot 앞에 모아 둔다.
    */
+  /*
+   * 팬 → 조준 (K47-③). 씬은 커서가 **다른 칸으로 넘어간 순간에만** 올린다 —
+   * 매 프레임 판정은 폰에서 최악 1.6ms 라 위험하다 (실측 근거는 `refreshAim` 주석).
+   */
+  h.scene.onAimTile = (i, j) => {
+    if (!aim) return;
+    aim.i = i;
+    aim.j = j;
+    refreshAim();
+  };
+
   Object.assign(h, {
     Rng: RngCls,
     tapTile, // 도구용 — 하네스가 UI 경로를 그대로 밟는다 (K32)
+    /** 지금 조준 중인 칸·방향 (K47-③) — 검증이 "고스트가 팬을 따라오나"를 읽는다 */
+    aim: () => (aim ? { ...aim } : null),
     sim: { bakeIndoorWalls, paintFloor, INDOOR_FAIL_MESSAGES, guestWalkable },
     simDefs: Object.fromEntries(allFacilityDefs().map((d) => [d.id, d])),
   });
@@ -1275,6 +1480,19 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
 
   const flowTick = (dtMs: number): void => {
     if (flow.frozen) return;
+    /*
+     * 조준 중에는 시간이 안 흐른다 (K47-③).
+     *
+     * 확정 바는 `PanelHost` 패널이 **아니라서**(스크림 없는 바라 배타 규칙이 시트·결산과
+     * 충돌한다) 지금까지 흐름을 못 멈췄다. 그래서 **지금도** 확정 바를 띄운 채 주가
+     * 마감되고, 결산 위로 확정을 눌러 옛 현금 기준으로 지출하는 것이 가능했다.
+     * 조준 배치는 그 시간을 수 초로 늘리므로 여기서 막는다 — 누산기도 0 으로 되돌려
+     * 손을 뗀 순간 밀린 시간이 몰아 흐르지 않게 한다 (멈춤이지 빚이 아니다).
+     */
+    if (hud.confirming) {
+      flow.acc = 0;
+      return;
+    }
     if (!week.liveProgress()) return; // 주 경계 — 결산·카드 게이트 중
     if (!h.scene.tickingEnabled) return; // 검증 도구가 화면을 얼렸다 (setAutoTick)
     if (panelHost.anyOpen) {
@@ -1302,6 +1520,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const skipForward = (): void => {
     const p = week.liveProgress();
     if (!p || p.done || panelHost.anyOpen) return;
+    if (hud.confirming) return; // 조준 중에는 시간이 안 흐른다 (K47-③ — flowTick 과 같은 규칙)
     audio.play('sfx/tap');
     const skipped = week.step(TICKS_PER_DAY - (p.tick % TICKS_PER_DAY));
     h.scene.advanceBoats(skipped);
@@ -2189,6 +2408,24 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      * 뒤집히는 것으로 증명된다 (검증이 읽는 유일한 소비자다).
      */
     reportUnread: () => lastReport !== null && lastReport.week > reportSeenWeek,
+    /**
+     * 판 **셋업**용 등급 설정 (K47-③) — `week.earn`·`terrain.paint` 과 같은 급이다.
+     *
+     * 조준 배치의 커버 검사는 **5등급 토지(96×64)에서만 뜻이 있다.** 1등급 땅은
+     * 통째로 화면 중앙이 닿는 범위 안이라 (i+j 최대 115 < 클램프 상한 120) 중앙 고정과
+     * 오프셋이 같은 결과를 낸다 — 실측으로 확인했다. 즉 낮은 등급에서 재면 32% 구멍을
+     * **재고 있지 않으면서 통과한다.**
+     *
+     * ⚠ 검사하려는 경로(조준·판정)를 우회하지 않는다. 심사를 통과시키는 것도 결국
+     * 이 한 줄인데, 그 길로 가려면 5등급 조건 시설을 다 지어야 해서 검사가 배치
+     * 스크립트가 된다 (그때 재는 것은 조준이 아니다).
+     */
+    setGradeForTest: (n: number) => {
+      gradeNo = Math.max(1, Math.min(5, Math.round(n)));
+      h.scene.setLand(landRect(currentGrade()));
+      refreshBuildList();
+      refreshCaps();
+    },
     combos: { previewCombos, evaluateCombos },
     quests: { questStatuses, gradeFor, requiredGrade },
     risk: { assessRisk, RISK_NAMES },

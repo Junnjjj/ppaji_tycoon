@@ -311,11 +311,7 @@ export class KairoHud {
     const btns = el('div', 'place-buttons');
     const cancel = el('button', 'place-btn cancel', '취소');
     cancel.id = 'kairo-place-cancel';
-    cancel.addEventListener('click', () => {
-      const cb = this.onCancel;
-      this.hideConfirm();
-      cb?.();
-    });
+    cancel.addEventListener('click', () => this.cancelConfirm());
     // 회전 — 방향 스프라이트가 생기면 켠다. 자리를 지금 잡아 둬야 나중에 배치가 안 흔들린다
     this.rotateBtn = el('button', 'place-btn rotate', '↻');
     this.rotateBtn.id = 'kairo-place-rotate';
@@ -363,8 +359,39 @@ export class KairoHud {
     this.onRotate = null;
   }
 
+  /**
+   * 확정 바를 **취소로** 닫는다 (K47-③) — 취소 버튼과 "시트를 열었다"가 같은 길을 쓴다.
+   *
+   * ⚠ 확정 바는 `PanelHost` 패널이 **아니다.** 스크림 없는 바라 배타 규칙이 시트·결산과
+   * 부딪힌다 (등록하면 시트를 열 때마다 서로를 닫는 싸움이 된다). 대신 시트가 열릴 때
+   * 여기를 부른다 — 안 부르면 시트를 다시 열어도 확정 바가 남아, 옛 조준이 화면에 뜬 채
+   * 새 붓을 고르게 된다.
+   */
+  cancelConfirm(): void {
+    if (this.confirmBar.hidden) return;
+    const cb = this.onCancel;
+    this.hideConfirm();
+    cb?.();
+  }
+
   get confirming(): boolean {
     return !this.confirmBar.hidden;
+  }
+
+  /**
+   * 확정 바가 가리는 화면 아래 높이 (CSS px). 조준 레티클을 그만큼 위로 올린다 —
+   * 안 올리면 조준점이 바 밑에 숨어 "고스트가 안 보인다"가 된다 (K33 규칙:
+   * 가려진 높이는 상수로 박지 말고 **재서** 쓴다. 바가 두 줄이 되면 상수는 어긋난다).
+   *
+   * 숨은 상태에서도 답해야 하므로(첫 조준은 바가 뜨기 전에 자리를 정한다) 잠깐
+   * 펼쳐서 잰다 — 같은 프레임 안이라 화면에는 안 나타난다.
+   */
+  get confirmInset(): number {
+    const wasHidden = this.confirmBar.hidden;
+    if (wasHidden) this.confirmBar.hidden = false;
+    const top = this.confirmBar.getBoundingClientRect().top;
+    if (wasHidden) this.confirmBar.hidden = true;
+    return Math.max(0, Math.round(window.innerHeight - top));
   }
 
   /**
@@ -466,6 +493,8 @@ export class KairoHud {
     }
     // 한 번에 하나 (K37) — 도감·경영 같은 패널이 열려 있으면 그쪽이 닫힌다
     if (!panelHost.open(this.sheetPanel)) return;
+    // 시트를 열면 진행 중이던 조준은 취소한다 (K47-③ — 확정 바는 패널이 아니다)
+    this.cancelConfirm();
     this.open = which;
     this.sheet.hidden = false;
     this.buildBody.hidden = which !== 'build';
