@@ -1149,7 +1149,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       if (verdict.firstPass) {
         // 첫 통과 보상 — 이동 붓 + ⏩ 주 스킵 (스펙 §4.1·A2)
         flow.weekSkipUnlocked = true;
-        hud.setWeekLabel('한 주 ⏩');
+        hud.setWeekLabel('한 주 »');
         refreshBuildList();
         arrivalQueue.push({
           title: '새 도구',
@@ -1740,7 +1740,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   h.scene.setClockOwner('week');
   syncTickPace();
-  if (flow.weekSkipUnlocked) hud.setWeekLabel('한 주 ⏩');
+  if (flow.weekSkipUnlocked) hud.setWeekLabel('한 주 »');
   beginWeek();
   let lastRaf = performance.now();
   const rafLoop = (now: number): void => {
