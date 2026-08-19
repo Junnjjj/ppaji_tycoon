@@ -1731,7 +1731,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     });
     hud.setRisk(
       r.level as 'safe' | 'watch' | 'caution' | 'danger',
-      `위험 ${RISK_NAMES[r.level]}` + (r.safetyNeeded > 0 ? ` · 안전 +${r.safetyNeeded}` : ''),
+      // "위험 위험"으로 겹쳐 읽히던 것 — 축은 '위험도'고 값이 단계 이름이다
+      `위험도 ${RISK_NAMES[r.level]}` + (r.safetyNeeded > 0 ? ` · 안전 +${r.safetyNeeded}` : ''),
     );
   };
 

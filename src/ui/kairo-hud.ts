@@ -95,6 +95,9 @@ export class KairoHud {
   private readonly reportBtn: HTMLButtonElement;
   private readonly reportBadge: HTMLSpanElement;
   private readonly goalBox: HTMLDivElement;
+  private readonly chipsBox: HTMLDivElement;
+  private readonly foldBtn: HTMLButtonElement;
+  private folded = false;
   private readonly riskBox: HTMLDivElement;
   private readonly brushBox: HTMLDivElement;
   private readonly menuBtn: HTMLButtonElement;
@@ -172,7 +175,28 @@ export class KairoHud {
     this.goalBox = el('div', 'kchipcol');
     this.goalBox.id = 'kairo-goal';
     this.goalBox.addEventListener('click', () => this.toggle('menu'));
+    // 접기 토글 (사용자 요청) — 칩이 지도의 왼쪽을 상시로 덮으므로 끌 수 있어야 한다.
+    // 클릭이 기둥(메뉴 열기)으로 새지 않게 전파를 끊는다
+    this.foldBtn = el('button', 'kbtn kfold', '목표 ▾');
+    this.foldBtn.id = 'kairo-goal-fold';
+    this.foldBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.setFolded(!this.folded);
+    });
+    this.goalBox.append(this.foldBtn);
+    this.chipsBox = el('div', 'kchiplist');
+    this.goalBox.append(this.chipsBox);
     parent.append(this.goalBox);
+    /*
+     * 기둥의 top 은 헤더 **실측**에서 받는다 — 고정 96px 로 뒀더니 2단 헤더가
+     * 커지자 지표 줄과 겹쳤다 (사용자 실측). 가려진 높이는 재서 쓴다 (K33 규칙).
+     */
+    const place = (): void => {
+      this.goalBox.style.top = `${Math.round(top.getBoundingClientRect().bottom + 6)}px`;
+    };
+    new ResizeObserver(place).observe(top);
+    window.addEventListener('resize', place);
+    place();
 
     // ── 하단 바 ──────────────────────────────────────────────────────────
     const bar = el('div', 'kbar');
@@ -355,7 +379,8 @@ export class KairoHud {
 
   /** 의뢰 칩 갱신 — 탭하면 메뉴(의뢰 목록)가 열린다 */
   setChips(chips: GoalChip[]): void {
-    this.goalBox.replaceChildren();
+    this.foldBtn.textContent = this.folded ? `목표 ▸ ${chips.length}` : '목표 ▾';
+    this.chipsBox.replaceChildren();
     for (const c of chips) {
       const chip = el('div', `kchip${c.tone !== undefined ? ` ${c.tone}` : ''}`);
       chip.append(el('span', 'kchip-ico', c.icon));
@@ -368,8 +393,16 @@ export class KairoHud {
       bar.append(fill);
       txt.append(bar);
       chip.append(txt);
-      this.goalBox.append(chip);
+      this.chipsBox.append(chip);
     }
+  }
+
+  /** 목표 기둥 접기 — 상태만 바꾼다. 라벨은 다음 setChips 가 아니라 지금 갱신한다 */
+  private setFolded(folded: boolean): void {
+    this.folded = folded;
+    this.goalBox.classList.toggle('folded', folded);
+    const n = this.chipsBox.childElementCount;
+    this.foldBtn.textContent = folded ? `목표 ▸ ${n}` : '목표 ▾';
   }
 
   /** 메뉴 상단의 판 설정 줄 — 맵·시나리오 이름 (목표란에서 옮겨 왔다, K40) */

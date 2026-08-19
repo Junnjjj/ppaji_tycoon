@@ -712,7 +712,7 @@ body {
   z-index: 9;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   pointer-events: none;
   /* 전폭 밴드가 아니라 내용 폭만 — 가로 화면에서 HUD 예산을 안 태운다 (K46) */
   width: max-content;
@@ -729,7 +729,7 @@ body {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 4px 6px;
+  padding: 3px 6px;
   border: 1px solid transparent;
   border-radius: 12px;
   background:
@@ -747,8 +747,8 @@ body {
 
 /* 날씨 — 하늘색 사각 칩. 트레이의 왼쪽 닻이다 (레퍼런스 그대로) */
 .kwx {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   flex: 0 0 auto;
   display: flex;
   align-items: center;
@@ -778,6 +778,9 @@ body {
 
 .ktray .grow {
   padding: 0 4px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* 지표 — 트레이 한 면 위에서 구분선으로만 나뉜다 (항목마다 캡슐 금지) */
@@ -828,6 +831,7 @@ body {
 .kchipcol {
   position: fixed;
   left: 8px;
+  /* top 은 헤더 실측으로 JS 가 덮어쓴다 (겹침 실측 — 고정값은 헤더가 크면 어긋난다) */
   top: calc(96px + var(--safe-t));
   z-index: 9;
   display: flex;
@@ -843,11 +847,29 @@ body {
   pointer-events: auto;
 }
 
+/* 접기 토글 — 버튼이라 44px 타깃을 지킨다. 접히면 칩만 사라지고 손잡이는 남는다 */
+.kfold {
+  align-self: flex-start;
+  pointer-events: auto;
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+.kchiplist {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kchipcol.folded .kchiplist {
+  display: none;
+}
+
 .kchip {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 8px;
+  padding: 4px 8px;
   border-radius: 9px;
   background: var(--goal-bg);
   color: var(--text-dim);

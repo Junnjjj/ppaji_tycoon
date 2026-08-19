@@ -3773,8 +3773,8 @@ async function main(): Promise<void> {
       `${m.chrome}%`,
     );
     record(
-      `${tag} — 상시 컨트롤 4개 (메뉴·건설·하루·리포트 — K46 헤더)`,
-      m.controls === 4 ? 'pass' : 'fail',
+      `${tag} — 상시 컨트롤 5개 (메뉴·건설·하루·리포트·목표접기)`,
+      m.controls === 5 ? 'pass' : 'fail',
       `${m.controls}개`,
     );
     record(`${tag} — 터치 타깃 44px · 가로 넘침 0`,
@@ -3797,6 +3797,27 @@ async function main(): Promise<void> {
       `${tag} — 시트 안 터치 타깃도 44px`,
       opened.minTap >= 44 ? 'pass' : 'fail',
       `최소 ${opened.minTap}px`,
+    );
+    // K46-③ 겹침·접기 — 칩 기둥은 헤더 실측 아래에 있고, 접으면 칩이 사라진다.
+    // 음성 대조군이 내장이다: 토글이 죽으면 '접힘' 판정이, top 이 고정값으로
+    // 돌아가면 겹침 판정이 실패한다
+    const fold = (await pg.evaluate(`(() => {
+      const top = document.getElementById('kairo-top').getBoundingClientRect();
+      const goal = document.getElementById('kairo-goal').getBoundingClientRect();
+      const list = document.querySelector('#kairo-goal .kchiplist');
+      const before = getComputedStyle(list).display;
+      document.getElementById('kairo-goal-fold').click();
+      const folded = getComputedStyle(list).display;
+      document.getElementById('kairo-goal-fold').click();
+      const after = getComputedStyle(list).display;
+      return { gap: Math.round(goal.top - top.bottom), before, folded, after };
+    })()`)) as { gap: number; before: string; folded: string; after: string };
+    record(
+      `${tag} — 목표 기둥이 헤더와 안 겹친다 · 접기가 동작한다 (K46-③)`,
+      fold.gap >= 0 && fold.before !== 'none' && fold.folded === 'none' && fold.after !== 'none'
+        ? 'pass'
+        : 'fail',
+      `간격 ${fold.gap}px · ${fold.before} → ${fold.folded} → ${fold.after}`,
     );
     await pg.screenshot({ path: `${SHOT_DIR}/kairo-hud-${tag}.png` });
     await cx.close();
