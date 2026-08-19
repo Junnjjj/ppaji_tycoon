@@ -414,6 +414,9 @@ export class PlacementGrid {
      * (`swim.ts`), 구역 면적은 등급의 허가 면적을 소비한다 ("허가는 돈으로 못 산다").
      * 이 시설을 **놓았다 치고** 구역을 재서 넘으면 거절 — 밀폐를 완성하는 마지막
      * 한 칸이 걸린다. permitArea 의 첫 소비자다 (v1.1 실측: 그전까지 죽은 값이었다).
+     *
+     * 여기서 쓰는 것은 `permitUsed` 가 보는 **면적뿐**이라 입수점 술어는 상수 `false`
+     * 로 준다 — 입수점은 "놓을 수 있나"와 무관하다 (입수점이 없는 구역도 면적은 먹는다).
      */
     if (wantsWater(def.layer) && opts?.permitArea !== undefined) {
       const barrier = this.waterBarrierKeys();

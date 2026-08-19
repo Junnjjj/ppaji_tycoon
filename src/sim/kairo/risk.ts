@@ -60,8 +60,8 @@ const THRESHOLDS: Record<Exclude<RiskLevel, 'safe'>, number> = {
 export interface RiskExtras {
   /**
    * 수영 구역이 더하는 위험 점수 (S2, 스펙 §2.2) — 구역은 물이다. 값은
-   * `swimRiskPoints(zones)` 로 계산한다. 안 넣으면 "구역을 만들어도 위험도가
-   * 안 오른다"가 되어 코스 위험과 같은 실수를 반복한다.
+   * `swimRiskPoints(zones)` 로 계산한다. 부르는 쪽이 안 넣으면 "구역을 만들어도
+   * 위험도가 안 오른다"가 된다 — `courseRisk` 를 열어 둔 것과 같은 이유의 자리다.
    */
   swimRisk?: number;
   /**

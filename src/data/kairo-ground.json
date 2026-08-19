@@ -114,7 +114,7 @@
       "guestWalk": false,
       "buildable": false,
       "paintable": true,
-      "note": "야외 수영장 (S1). 칠한 덩어리(4칸+)가 수영장이다 — 구역은 저장하지 않고 swim.ts 가 파생한다. buildable:false 라 시설이 못 올라오고, paintable:true 로 붓 축과 갈라진 첫 종류다 (팔레트는 paintable ?? buildable 를 본다)"
+      "note": "야외 수영장 (S1). 칠한 덩어리(4칸+)가 수영장이다 — 구역은 저장하지 않고 swim.ts 가 파생한다. buildable:false 라 시설이 못 올라오고, paintable:true 로 붓 축과 갈라진 첫 종류다. 그래서 팔레트의 두 필터(둘 다 buildable && paintable !== false 를 요구한다)에 안 걸려, main.ts 가 2등급 해금 항목으로 따로 넣는다"
     }
   ],
   "bridges": [

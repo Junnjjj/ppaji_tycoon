@@ -838,7 +838,8 @@ body {
 .kchipcol {
   position: fixed;
   left: 8px;
-  /* top 은 헤더 실측으로 JS 가 덮어쓴다 (겹침 실측 — 고정값은 헤더가 크면 어긋난다) */
+  /* 첫 그리기용 어림값 — 실제 top 은 헤더를 **재서** JS 가 덮어쓴다
+     (고정값만 두면 헤더가 두 줄로 커진 순간 지표 줄과 겹친다, K46-③) */
   top: calc(96px + var(--safe-t));
   z-index: 9;
   display: flex;

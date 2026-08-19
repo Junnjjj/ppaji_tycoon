@@ -1754,15 +1754,17 @@ export class KairoScene extends Phaser.Scene {
 
   /**
    * 수영 구역 표시 (S3) — 수영장은 **코핑**(밝은 테두리), 강 구역은 **부표 점선**.
-   * 구역은 파생이라 통째로 다시 그린다 (호출은 mutation 마다 — main 이 서명으로 거른다).
+   * 구역은 파생이라 넘어온 목록으로 **통째로** 다시 그린다. 그래도 되는 이유는
+   * main 이 구역 서명이 바뀐 폴링에서만 부르기 때문이다 — 매 프레임 부르면 안 된다.
    *
    * 칸마다 그래픽 하나다: 깊이는 칸 단위(`depthKey + Z_FACILITY`)여야 남쪽 지면에
    * 안 덮이고 헤엄치는 손님(Z_GUEST)보다는 뒤에 선다. 한 장에 최대 깊이를 주면
    * 북쪽 손님이 부표에 덮인다 (보트에서 겪은 그 문제의 면적판).
    */
   setSwimZones(zones: readonly { kind: 'pool' | 'river'; tiles: { x: number; y: number }[] }[]): void {
-    // ⚠ create() 전에 불릴 수 있다 — 씬이 기억했다가 적용한다 (setLand 와 같은 규칙.
-    // 실측: 세이브 복원 부팅에서 syncSwim 이 먼저 와 this.add 가 없어 부팅이 죽었다)
+    // ⚠ create() 전에 불릴 수 있다 — 씬이 **기억했다가** 적용한다 (setLand 와 같은
+    // 규칙). 부르는 쪽 순서에 기대면 그림만 조용히 안 나온다: 지면 타일이 아직
+    // 없으면 applySwimZones 가 그냥 돌아가고, create() 가 다시 부른다
     this.pendingSwim = zones;
     this.applySwimZones();
   }

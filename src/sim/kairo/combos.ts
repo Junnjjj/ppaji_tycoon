@@ -27,7 +27,7 @@ import type { SwimZone } from './swim.js';
 export type ComboTier = 'small' | 'medium' | 'large';
 /**
  * `zone` (S4) — **수영 구역 콤보**. 구역 종류(`zone`)가 맞고, 요구 시설들이 구역
- * 타일에서 반경 안에 있으면 발동한다. 구역은 시설이 아니라 파생이라 (swim.ts)
+ * 타일에서 맨해튼 거리 `radius` 안에 있으면 발동한다. 구역은 시설이 아니라 파생이라 (swim.ts)
  * `evaluateCombos` 가 구역 목록을 따로 받는다 — 안 주면 zone 콤보는 조용히 0 이다.
  */
 export type ComboKind = 'adjacent' | 'cluster' | 'resort' | 'zone';
@@ -177,7 +177,10 @@ export function evaluateCombos(
   };
 }
 
-/** 콤보가 발동한 지점들. `adjacent`·`cluster` 는 여러 번, `resort` 는 최대 1번 */
+/**
+ * 콤보가 발동한 지점들. `adjacent`·`cluster` 는 여러 번, `zone` 은 구역마다 한 번,
+ * `resort` 는 최대 1번
+ */
 function findHits(
   combo: ComboDef,
   items: PlacedFacility[],
@@ -190,8 +193,9 @@ function findHits(
 }
 
 /**
- * 수영 구역 콤보 (S4) — 구역마다 한 번. 요구 시설이 구역 타일에서 반경(기본 2) 안에
- * `count`(기본 1)개 이상 있으면 발동. `need` 요구는 그 수요 종류의 시설 수로 센다.
+ * 수영 구역 콤보 (S4) — 구역마다 한 번. 요구 시설이 구역 타일에서 맨해튼 거리
+ * `radius`(기본 2) 안에 `count`(기본 1)개 이상 있으면 발동. `need` 요구는 그 수요
+ * 종류의 시설 수로 센다. 발동 지점은 구역의 첫 타일이다 — 구역엔 중심이 없다.
  */
 function findZone(
   combo: ComboDef,

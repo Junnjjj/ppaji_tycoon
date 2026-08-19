@@ -23,6 +23,7 @@ export interface SwimZone {
    * 둘러싼 덱. 비어 있으면 구역은 있되 아무도 못 들어간다 (`no-entry` — 처방 대상).
    */
   entries: { x: number; y: number }[];
+  /** `tiles.length` — 허가 회계(강)와 정원의 기준이 되는 값이라 따로 들고 다닌다 */
   area: number;
 }
 
@@ -83,10 +84,12 @@ export function poolZones(
 /**
  * 수영 구역(강) — **열린 강에 닿지 않는** 물 컴포넌트.
  *
- * 덱·선착장이 깔린 물 칸은 장벽이다 (`deckTiles`). 맵 가장자리의 물에서 flood fill 한
- * "열린 강"에 닿지 못한 열린 물 컴포넌트가 밀폐 — 수영 구역이다.
+ * `deckTiles` 는 물 위 시설이 차지한 칸 전부다 (`placement.waterBarrierKeys`) — 이름은
+ * 덱이지만 트램폴린이 놓인 칸도 헤엄칠 수 없으므로 장벽에 든다. 맵 가장자리의 물에서
+ * flood fill 한 "열린 강"에 닿지 못한 열린 물 컴포넌트가 밀폐 — 수영 구역이다.
  *
- * 입수점은 구역에 인접한 덱 칸 중 **설 수 있는** 것 (덱은 walkOn 이라 손님이 밟는다).
+ * 입수점은 장벽 칸 중 **설 수 있는** 것이라, 결과적으로 덱·선착장만 남는다
+ * (walkOn 이라 손님이 밟는다 — 기구가 놓인 칸은 못 선다).
  */
 export function riverZones(
   terrain: KairoTerrain,
@@ -166,7 +169,7 @@ export function riverZones(
   return zones;
 }
 
-/** 덱 타일 키 — placement 쪽에서 물 위 walkOn 발자국을 모아 만든다 */
+/** 장벽 타일 키 — placement 가 **물 위 시설 발자국 전부**를 이 키로 모아 넘긴다 */
 export function deckKey(i: number, j: number): number {
   return key(i, j);
 }
@@ -222,13 +225,19 @@ export function zoneFee(z: SwimZone | undefined): number {
   return z.kind === 'pool' ? 800 : 500;
 }
 
-/** 위험 기여 (스펙 §2.2) — 구역은 물이다. 구역당 +2 (안전요원 인접 감면은 S4) */
+/**
+ * 위험 기여 (스펙 §2.2) — 구역은 물이다. 구역당 +2.
+ *
+ * 스펙의 "안전요원이 구역에 인접하면 −2"는 **안 넣었다** (S4 까지 미구현, 백로그).
+ * 안전요원은 지금 리조트 전체 축(`RiskExtras.staffSafety`)으로만 들어간다 — 구역별
+ * 인접 감면을 넣으려면 배치까지 봐야 해서 축이 하나 더 는다.
+ */
 export function swimRiskPoints(zones: readonly SwimZone[]): number {
   return zones.length * 2;
 }
 
 /**
- * 나이트풀 (S4, 스펙 §2.3) — DJ 부스가 반경 3 안에 붙은 **수영장** 구역 수.
+ * 나이트풀 (S4, 스펙 §2.3) — DJ 부스가 **맨해튼 거리 3** 안에 붙은 **수영장** 구역 수.
  *
  * 저녁(하루의 마지막 20%)에 이 값이 1 이상이면 수영 만족 보너스가 붙는다.
  * "수요 배수"가 아니라 이용의 질이 오르는 쪽 — 배수는 v4 가 없앤 RNG 세금 축이다.

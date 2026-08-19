@@ -779,7 +779,8 @@ export class GuestStore {
 
       if (g.state === 'using') {
         // 유영 (S2) — 구역 손님은 4 tick 에 한 칸씩 구역 안 이웃 물로 떠다닌다.
-        // rng 는 이 tick 전용 스트림이라 결정론이 유지된다 (불변식 2)
+        // 물 칸엔 거리장이 없어 flow field 를 못 탄다 — 그래서 이웃을 직접 뽑고,
+        // 나올 때는 기억해 둔 입수점으로 되돌린다 (아래 '뭍으로')
         if (g.usingHandle >= ZONE_HANDLE_BASE && g.useTicks > 1 && (g.useTicks & 3) === 0) {
           const z = this.zoneLookup.get(g.usingHandle);
           if (z) {
@@ -1067,7 +1068,12 @@ export class GuestStore {
     }
   }
 
-  /** 수영 구역 (S2) — 파생 결과. 위험도·부표 렌더·검사가 읽는다 */
+  /**
+   * 수영 구역 (S2) — 파생 결과. 위험도·zone 콤보·의뢰·심사·소원·부표 렌더가 읽는다.
+   *
+   * 배치가 바뀌었으면 **여기서 다시 파생한다** (`dirty`) — 부르는 쪽이 `invalidate()`
+   * 뒤 아무것도 안 해도 되는 이유이자, 구역을 따로 저장하지 않아도 되는 이유다.
+   */
   swimZones(): readonly SwimZone[] {
     if (this.dirty) this.rebuildFields();
     return this.zones;
