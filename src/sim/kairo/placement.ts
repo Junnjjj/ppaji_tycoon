@@ -307,9 +307,14 @@ export class PlacementGrid {
      * 물을 걸쳐도 둘 다 0 이므로 통과한다.
      */
     if (!wantsWater(def.layer)) {
-      const z0 = terrain.levelAt(i, j);
-      for (const [ti, tj] of tiles) {
-        if (terrain.levelAt(ti, tj) !== z0) return { ok: false, fail: 'level-mixed' };
+      /*
+       * ⚠ 판정은 `terrain.levelUniform` **하나**를 쓴다. 예전엔 여기서 `levelAt` 을 직접
+       * 돌려 같은 규칙이 두 벌이었고, `levelUniform` 은 production 이 안 쓰는 채로
+       * 하네스만 부르고 있었다 — 규칙이 갈라지면 "검사는 통과하는데 게임은 다르게 판정"이
+       * 된다 (K38 아키텍처 점검 지적).
+       */
+      if (!terrain.levelUniform(i, j, def.size[0], def.size[1])) {
+        return { ok: false, fail: 'level-mixed' };
       }
     }
 

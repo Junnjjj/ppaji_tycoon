@@ -4741,16 +4741,34 @@ async function main(): Promise<void> {
     const wallY = S.wallImageYForTest ? S.wallImageYForTest(hi.i, hi.j + 4) : null;
     out.wallY = wallY;
 
-    /* ⑤ 경사에는 못 놓는다 — 대조군 */
+    /*
+     * ⑤ 경사에는 못 놓는다.
+     *
+     * ⚠ 자리를 levelUniform 으로 찾으면 **자기참조**가 된다 — production 이 쓰는 그
+     * 함수로 "경사다"를 정해 놓고 그 함수가 거절하는지 묻는 꼴이라, 함수가 통째로
+     * 틀려도 통과한다 (K38 아키텍처 점검 지적).
+     *
+     * 그래서 발자국의 단을 **직접 비교**해 자리를 찾는다. 시설 크기도 데이터에서
+     * 읽는다 — 2×2 로 박으면 shop 이 커지는 날 조용히 다른 것을 재게 된다.
+     */
+    const def = h.simDefs ? h.simDefs['shop'] : null;
+    const fw = def && def.size ? def.size[0] : 2;
+    const fd = def && def.size ? def.size[1] : 2;
     let mixed = null;
-    for (let j = 10; j < T.height - 2 && !mixed; j++) {
-      for (let i = 0; i < T.width - 2; i++) {
-        if (!T.levelUniform(i, j, 2, 2) && T.isWalkable(i, j) && !T.isWater(i, j)) { mixed = { i: i, j: j }; break; }
+    for (let j = 10; j < T.height - fd && !mixed; j++) {
+      for (let i = 0; i < T.width - fw; i++) {
+        if (!T.isWalkable(i, j) || T.isWater(i, j)) continue;
+        const z0 = T.levelAt(i, j);
+        let uneven = false;
+        for (let dj = 0; dj < fd && !uneven; dj++) {
+          for (let di = 0; di < fw; di++) if (T.levelAt(i + di, j + dj) !== z0) { uneven = true; break; }
+        }
+        if (uneven) { mixed = { i: i, j: j }; break; }
       }
     }
     if (mixed) {
       const c = h.placement.check(T, h.walls, h.gate, 'shop', mixed.i, mixed.j, { land: { i0: 0, j0: 0, w: T.width, h: T.height } });
-      out.slope = { at: mixed.i + ',' + mixed.j, fail: c.fail || 'ok' };
+      out.slope = { at: mixed.i + ',' + mixed.j + ' (' + fw + '×' + fd + ')', fail: c.fail || 'ok' };
     }
     return out;
   })()`)) as {
@@ -4839,6 +4857,117 @@ async function main(): Promise<void> {
       ? `컬럼 텍스처 ${holes.checked}종 전부 이어짐`
       : `구멍 ${holes.n}곳 — ${holes.bad.join(' · ')}`,
   );
+
+  /*
+   * ── 9d-3. **대조군을 코드로** — 검사가 정말 잡나 (K38 점검 후속) ──────────
+   *
+   * 아키텍처 점검이 짚었다: 새 ★ 18개 중 코드에 음성 대조군이 붙은 것은 1개뿐이고
+   * 나머지는 손으로 주입해야만 확인된다. 손으로 하는 확인은 **다음 사람에게 안 남는다.**
+   *
+   * `seam --selftest` 가 픽셀에 위반을 주입하듯, 씬의 `setRenderFaultForTest` 로
+   * **그리기 규칙**을 되돌린 뒤 같은 검사가 실패하는지 본다. 셋 다 "고쳤다"고 적어 둔
+   * 버그의 원래 모습이다:
+   *   · `wall-depth-tie` — 앞벽을 시설과 같은 띠로 (K37 ① 이전)
+   *   · `skirt-gap`      — 치마 시작 줄 +1 (K38 실틈 이전)
+   *   · `no-lift`        — 단 리프트 0 (K37 ⑤ 이전)
+   */
+  const faultProbe = `(() => {
+    const h = window.__kairo, T = h.terrain, S = h.scene;
+    /* ① 컬럼 텍스처에 구멍이 있나 (실틈 검사와 같은 판정) */
+    const seen = {};
+    let holes = 0;
+    for (let j = 0; j < T.height; j++) {
+      for (let i = 0; i < T.width; i++) {
+        if (T.levelAt(i, j) === 0) continue;
+        const img = S.tileImageForTest(i, j);
+        if (!img) continue;
+        const key = img.texture.key;
+        if (key.indexOf('__col/') !== 0 || seen[key]) continue;
+        seen[key] = 1;
+        const src = img.texture.getSourceImage();
+        const cv = document.createElement('canvas');
+        cv.width = src.width; cv.height = src.height;
+        const cx = cv.getContext('2d');
+        cx.drawImage(src, 0, 0);
+        const d = cx.getImageData(0, 0, cv.width, cv.height).data;
+        for (let x = 0; x < cv.width; x++) {
+          let op = false, gap = false;
+          for (let y = 0; y < cv.height; y++) {
+            const a = d[(y * cv.width + x) * 4 + 3];
+            if (a > 8) { if (gap) { holes++; gap = false; break; } op = true; }
+            else if (op) gap = true;
+          }
+        }
+      }
+    }
+    /* ② 단 위의 것이 올라갔나 (리프트 검사와 같은 판정) */
+    let hi = null;
+    for (let j = 10; j < T.height - 5 && !hi; j++) {
+      for (let i = 0; i < T.width - 5; i++) {
+        if (T.levelAt(i, j) >= 2 && T.levelUniform(i, j, 4, 4)) { hi = { i: i, j: j }; break; }
+      }
+    }
+    let liftErr = -1;
+    if (hi) {
+      const g = S.tileImageForTest(hi.i, hi.j);
+      if (g) liftErr = g.y - (8 * (hi.i + hi.j + 2) - T.levelAt(hi.i, hi.j) * 8);
+    }
+    /* ③ 앞벽 깊이가 시설보다 앞인가 (깊이 띠 검사와 같은 판정) */
+    const iso = S.depthProbeForTest ? S.depthProbeForTest() : null;
+    return { holes: holes, liftErr: liftErr, wall: iso };
+  })()`;
+
+  const faults: { name: string; want: string; got?: string }[] = [];
+  for (const [fault, label] of [
+    ['skirt-gap', '치마 시작 줄 +1 → 컬럼 텍스처에 구멍'],
+    ['no-lift', '단 리프트 0 → 단 위의 것이 안 올라감'],
+    ['wall-depth-tie', '앞벽을 시설 띠로 → 깊이 동률'],
+  ] as [string, string][]) {
+    await page.evaluate(`window.__kairo.scene.setRenderFaultForTest('${fault}')`);
+    await page.waitForTimeout(300);
+    const probe = (await page.evaluate(faultProbe)) as {
+      holes: number;
+      liftErr: number;
+      wall: { wall: number; facility: number } | null;
+    };
+    const caught =
+      fault === 'skirt-gap'
+        ? probe.holes > 0
+        : fault === 'no-lift'
+          ? probe.liftErr !== 0
+          : probe.wall !== null && probe.wall.wall <= probe.wall.facility;
+    faults.push({
+      name: label,
+      want: caught ? 'ok' : 'MISS',
+      got:
+        fault === 'skirt-gap'
+          ? `구멍 ${probe.holes}곳`
+          : fault === 'no-lift'
+            ? `리프트 오차 ${probe.liftErr}px`
+            : `앞벽 띠 ${probe.wall?.wall} vs 시설 띠 ${probe.wall?.facility}`,
+    });
+  }
+  await page.evaluate(`window.__kairo.scene.setRenderFaultForTest('none')`);
+  await page.waitForTimeout(300);
+  const clean = (await page.evaluate(faultProbe)) as {
+    holes: number;
+    liftErr: number;
+    wall: { wall: number; facility: number } | null;
+  };
+
+  record(
+    '★ 대조군 — 그리기 결함을 주입하면 검사가 잡는다 (K38 점검 후속)',
+    faults.every((f) => f.want === 'ok') &&
+      clean.holes === 0 &&
+      clean.liftErr === 0 &&
+      clean.wall !== null &&
+      clean.wall.wall > clean.wall.facility
+      ? 'pass'
+      : 'fail',
+    faults.map((f) => `${f.name}: ${f.want}(${f.got})`).join(' · ') +
+      ` · 원복 후 구멍 ${clean.holes} 리프트오차 ${clean.liftErr} 앞벽 ${clean.wall?.wall}>시설 ${clean.wall?.facility}`,
+  );
+
 
   /*
    * ── 9e. 지도 바깥을 땅으로 채운다 (K38) ─────────────────────────────────

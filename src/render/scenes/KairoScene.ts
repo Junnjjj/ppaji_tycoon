@@ -224,6 +224,74 @@ export class KairoScene extends Phaser.Scene {
    * 겹의 이유다.
    */
   private surround: Phaser.GameObjects.Image | null = null;
+
+  /**
+   * **일부러 망가뜨리는 스위치** — 검사가 정말 잡는지 재려고 둔다 (K38 점검 후속).
+   *
+   * 이 저장소는 "조용히 통과하는 검사"에 열 번 물렸다. 그래서 새 ★ 검사에는 음성
+   * 대조군이 있어야 하는데, 렌더 쪽은 소스를 고쳐야 재현되어 손으로만 해 왔다
+   * (아키텍처 점검: 새 ★ 18개 중 코드에 붙은 대조군은 1개뿐이었다).
+   *
+   * `seam --selftest` 가 픽셀에 위반을 주입하듯, 여기서는 **그리기 규칙**에 주입한다.
+   * 검사는 정상 → 통과, 주입 → 실패를 **둘 다** 확인해야 의미를 갖는다.
+   *
+   * ⚠ 이 값은 검증 도구만 만진다. 켜면 화면이 실제로 깨지므로 게임 코드는 안 읽는다.
+   */
+  private fault: { wallDepthTie: boolean; skirtGap: boolean; noLift: boolean } = {
+    wallDepthTie: false,
+    skirtGap: false,
+    noLift: false,
+  };
+
+  /**
+   * 검증 도구용 — 그리기 결함을 켜고 화면을 다시 만든다.
+   *
+   * 이름은 **무엇이 깨지는지**로 짓는다: `wall-depth-tie`(앞벽과 시설 깊이 동률 = K37 ①
+   * 되돌리기) · `skirt-gap`(치마 시작 줄 +1 = K38 실틈 되돌리기) · `no-lift`(단 리프트 0
+   * = K37 ⑤ 되돌리기).
+   */
+  /**
+   * 검증 도구용 — **앞벽과 시설의 깊이**를 실제 오브젝트에서 읽는다 (K38 점검 후속).
+   *
+   * 띠 상수를 읽어 비교하면 상수끼리의 산수라 그리기가 틀려도 통과한다. 화면에 올라간
+   * 것에서 읽어야 "정말 그렇게 그렸나"를 잰다.
+   */
+  depthProbeForTest(): { wall: number; facility: number } | null {
+    let wall = -1;
+    for (const [key, img] of this.wallImages) {
+      const dir = key % 4;
+      if (dir === DIR_I_PLUS || dir === DIR_J_PLUS) {
+        wall = img.depth - depthKey(Math.floor(key / 4) % GRID_W, Math.floor(key / 4 / GRID_W));
+        break;
+      }
+    }
+    const f = this.facilityImages.values().next();
+    if (wall < 0 || f.done) return null;
+    const item = this.opts.placement.all()[0];
+    if (!item) return null;
+    const def = facilityDef(item.defId);
+    if (!def) return null;
+    const [w, d] = def.size;
+    return {
+      wall,
+      facility: f.value.depth - depthKey(item.i + w - 1, item.j + d - 1),
+    };
+  }
+
+  setRenderFaultForTest(name: 'wall-depth-tie' | 'skirt-gap' | 'no-lift' | 'none'): void {
+    this.fault = { wallDepthTie: false, skirtGap: false, noLift: false };
+    if (name === 'wall-depth-tie') this.fault.wallDepthTie = true;
+    else if (name === 'skirt-gap') this.fault.skirtGap = true;
+    else if (name === 'no-lift') this.fault.noLift = true;
+    /*
+     * 깊이·위치·텍스처가 만들 때 정해지므로 **다시 만들어야** 결함이 화면에 나온다.
+     * 컬럼 텍스처는 결함을 키에 넣어 캐시가 섞이지 않게 한다 (`columnTexture`).
+     */
+    this.buildGround();
+    this.buildWalls();
+    this.rebuildFacilities();
+    this.applyLand();
+  }
   private dragMoved = 0;
   private lastPointer = { x: 0, y: 0 };
   private lastTapAt = 0;
@@ -308,6 +376,7 @@ export class KairoScene extends Phaser.Scene {
    * 하나만 빠뜨리면 그것만 땅에 파묻힌다.
    */
   private liftAt(i: number, j: number): number {
+    if (this.fault.noLift) return 0; // 검사용 결함 (K38 점검 후속)
     return lift(this.opts.terrain.levelAt(i, j));
   }
 
@@ -369,7 +438,7 @@ export class KairoScene extends Phaser.Scene {
    */
   private columnTexture(top: string, z: number, di: number, dj: number): string {
     if (di === 0 && dj === 0 && z === 0) return top;
-    const id = `__col/${top}/${z}/${di}/${dj}`;
+    const id = `__col/${top}/${z}/${di}/${dj}${this.fault.skirtGap ? '/gap' : ''}`;
     if (this.textures.exists(id)) return id;
 
     const hi = di * LEVEL_H;
@@ -419,7 +488,7 @@ export class KairoScene extends Phaser.Scene {
          * 단 지형 가장자리마다 파란 점선으로 보였다 (K37 부터 있었고, K38 에서 배경이
          * 밝아지며 드러났다).
          */
-        const yTop = TILE_H / 2 + Math.floor(x / 2);
+        const yTop = TILE_H / 2 + Math.floor(x / 2) + (this.fault.skirtGap ? 1 : 0);
         /*
          * 세로로 **아래가 더 어둡다** — 바닥에 가까울수록 그림자가 진다.
          * 단색 면은 종이처럼 평평해 보인다.
@@ -606,11 +675,17 @@ export class KairoScene extends Phaser.Scene {
     for (let j = -GRID_W; j <= GRID_H + GRID_W; j++) {
       for (let i = -GRID_H; i <= GRID_W + GRID_H; i++) {
         /*
-         * ⚠ 격자 **안쪽도 굽는다.** 진짜 타일이 덮으니 낭비 같지만, 단이 있는 곳에서
-         * 타일과 타일 사이에 1px 실틈이 생기면 그 뒤가 비어 하늘색이 새어 나온다
-         * (실측: 단 지형 가장자리마다 파란 점선). 밑에 땅이 깔려 있으면 최악이라도
-         * 땅색이 보인다 — 굽기는 부팅 때 한 번이라 값이 싸다.
+         * 격자 **안쪽은 굽지 않는다** — 진짜 타일이 덮는다.
+         *
+         * ⚠ 한때 안쪽까지 구웠다. 단 지형 가장자리에 파란 점선(하늘)이 보였고, 타일
+         * 사이 실틈으로 짐작해 뒤를 막으려 한 것이다. **원인은 실틈이 아니라 컬럼
+         * 텍스처 안의 1px 구멍**이었고 K38 이 기하로 고쳤다 (126곳 → 0).
+         *
+         * 고친 뒤 다시 쟀다: 지형 판을 **통째로 끈 상태**에서 산 지역을 2배 확대로 봐도
+         * 하늘색 픽셀이 **0** 이다 — 타일 사이에 틈이 없다. 그래서 안쪽 굽기는 값만
+         * 치르고 있었다 (칸 19,354 → 바깥 링만).
          */
+        if (i >= 0 && j >= 0 && i < GRID_W && j < GRID_H) continue;
         const x = STEP_X * (i - j) + ox - TILE_W / 2;
         const y = STEP_Y * (i + j) + PAD;
         if (x + TILE_W < 0 || y + TILE_H + 4 * LEVEL_H < 0 || x > W || y > H) continue;
@@ -953,7 +1028,9 @@ export class KairoScene extends Phaser.Scene {
      * 벽은 유리라 시설은 그대로 비치고, 벽 선이 안 끊겨야 "안에 있다"가 읽힌다.
      */
     const back = dir === DIR_I_MINUS || dir === DIR_J_MINUS;
-    img.setDepth(depthKey(i, j) + (back ? Z_WALL_BACK : Z_WALL_FRONT));
+    // 검사용 결함: 앞벽을 시설과 같은 띠로 되돌린다 (K37 ① 이전 상태)
+    const front = this.fault.wallDepthTie ? Z_FACILITY : Z_WALL_FRONT;
+    img.setDepth(depthKey(i, j) + (back ? Z_WALL_BACK : front));
     this.wallImages.set(key, img);
   }
 
