@@ -23,7 +23,8 @@ import { panelHost } from './panels.js';
  * 그대로 따른다 (CLAUDE.md 의 `ui/` 결정).
  */
 
-const NEED_NAME: Record<NeedKind, string> = {
+/** 심사 확인 화면(K48)도 같은 이름을 쓴다 — 두 벌이면 "위생"과 "청결"이 갈린다 */
+export const NEED_NAME: Record<NeedKind, string> = {
   food: '먹거리',
   rest: '쉼터',
   warm: '온열',

@@ -3,7 +3,9 @@ import { Rng } from '../rng.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
 import { PlacementGrid, guestWalkable } from './placement.js';
-import { GuestStore, OPEN_GATE_DEFAULTS } from './guests.js';
+import type { Guest } from './guests.js';
+import { GuestStore, GUEST_DEFAULTS, OPEN_GATE_DEFAULTS } from './guests.js';
+import { TICKS_PER_DAY } from './week.js';
 import {
   poolZones,
   riverZones,
@@ -215,7 +217,7 @@ describe('수영 활동 (S2) — 손님이 실제로 들어가 헤엄치고 나�
     expect(sawSwim).toBe(true);
   });
 
-  it('나올 때 입수점(설 수 있는 칸)으로 올라와 갇히지 않는다 · play 요금이 걷힌다', () => {
+  it('나올 때 입수점(설 수 있는 칸)으로 올라와 갇히지 않는다 · 수영은 표에 포함이라 0 이다', () => {
     const { g } = poolWorld();
     const rng = new Rng(7);
     const guest = g.spawn(rng);
@@ -223,7 +225,16 @@ describe('수영 활동 (S2) — 손님이 실제로 들어가 헤엄치고 나�
     // wantUses 1 — 수영 한 번이 이용 한 번으로 세어져 나간다 (갇히면 gone 이 못 된다)
     expect(guest!.state).toBe('gone');
     const w = g.takeFinished();
-    expect(w.feeByNeed.get('play') ?? 0).toBeGreaterThan(0);
+    /*
+     * ⚠ **2026-08-20 (P6): 이용은 세지만 금액은 0 이다.** 수영이야말로 입장권의 본체라
+     * 물에서 또 받지 않는다 — 요금은 `admissionFee` 로 미리 받았다. `play` 항목이
+     * **생기는지**를 같이 본다: 없어지면 그건 이용 자체가 안 세어진 것이고, 그건 다른
+     * 버그다 (공짜라서 안 쓰는 것이 아니어야 한다).
+     *
+     * 걷히는 쪽 대조군은 `charge.test.ts` 에 있다 (`chargeFaultForTest`).
+     */
+    expect(w.feeByNeed.has('play')).toBe(true);
+    expect(w.feeByNeed.get('play')).toBe(0);
   });
 
   it('음성 대조군 — 수영장이 없으면 swim 목적지도 play 요금도 없다', () => {
@@ -348,5 +359,126 @@ describe('zone 콤보 + 나이트풀 (S4)', () => {
     expect(zones).toHaveLength(1);
     const r = evaluateCombos(p, undefined, zones);
     expect(r.active.some((c) => c.id === 'medium_ppaji_original')).toBe(true);
+  });
+});
+
+/**
+ * 수영 체류 시간 (S5) — **"수영이 짧아 안 읽힌다"를 고친 변경**.
+ *
+ * 이용 시간은 K7 부터 전 시설 공통 `useTicks` 12(2.4초)였고 수영도 같았다. 유영 걸음은
+ * 4 tick 마다 한 칸이라 **걸음이 3번**뿐이었다 — 물에 들어갔다 나온 것으로만 보였다.
+ *
+ * 지켜야 할 것 셋:
+ *   · 수영만 길다 (음성 대조군: **시설은 예전 그대로 12**)
+ *   · 체류를 늘리면 유영 걸음이 그만큼 는다 (걸음 간격은 안 건드린다)
+ *   · **한 방문의 이용 시간 합이 하루(120 tick)를 안 넘는다** — 넘으면 손님이 이틀을
+ *     머물러 공원이 영구히 포화된다 (음성 대조군: 96 을 넣으면 예산을 넘는다)
+ */
+describe('수영 체류 시간 (S5)', () => {
+  /**
+   * 수요 4종이 다 있는 **작은** 판 — 손님이 정확히 4회(먹고·쉬고·보고·수영) 이용한다.
+   * 크게 잡으면 걷기가 이용 시간을 덮어 재려는 것이 안 보인다.
+   */
+  function park(swimTicks?: number): { g: GuestStore } {
+    const N = 14;
+    const t = new KairoTerrain(N, N);
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) t.paint(i, j, 'path_stone');
+    pool(t, 5, 5, 4, 3);
+    const w = new WallGrid(N, N);
+    const p = new PlacementGrid(N, N);
+    for (const [id, i, j] of [
+      ['shop', 3, 3], // food
+      ['parasol', 10, 3], // rest
+      ['photozone', 3, 10], // scenery
+    ] as const) {
+      expect(p.place(t, w, GATE, id, i, j).ok).toBe(true);
+    }
+    const tun = { ...OPEN_GATE_DEFAULTS };
+    if (swimTicks !== undefined) tun.swimTicks = swimTicks;
+    return { g: new GuestStore(t, w, p, GATE, tun) };
+  }
+
+  /** 손님 하나를 끝까지 돌리며 이용 구간을 잰다 — 상수 산수가 아니라 **관측값**이다 */
+  function visit(swimTicks?: number): {
+    ticks: number;
+    used: number;
+    state: string;
+    /** 구역 이용 한 번의 tick 수 (여러 번이면 최대) */
+    swimRun: number;
+    /** 시설 이용 한 번의 tick 수 (여러 번이면 최대) */
+    facilityRun: number;
+    /** 이용 tick 총합 (걷기 제외) — 하루 예산이 무는 값 */
+    usingTotal: number;
+    /** 물 위에서 칸을 옮긴 횟수 (입수 이동 제외) */
+    strokes: number;
+  } {
+    const { g } = park(swimTicks);
+    const rng = new Rng(7);
+    const guest = g.spawn(rng) as Guest;
+    let swimRun = 0;
+    let facilityRun = 0;
+    let usingTotal = 0;
+    let strokes = 0;
+    let run = 0;
+    let wasZone = false;
+    let inUse = false;
+    let li = guest.i;
+    let lj = guest.j;
+    let k = 0;
+    for (; k < 2000 && guest.state !== 'gone'; k++) {
+      g.tick(rng);
+      const zone = guest.state === 'using' && guest.usingHandle >= ZONE_HANDLE_BASE;
+      if (guest.state === 'using') {
+        usingTotal++;
+        run++;
+        // 입수 이동(구역 밖 → 첫 물칸)은 이미 지난 tick 이라 여기 안 걸린다
+        if (zone && inUse && (guest.i !== li || guest.j !== lj)) strokes++;
+        wasZone = zone;
+        inUse = true;
+      } else if (inUse) {
+        if (wasZone) swimRun = Math.max(swimRun, run);
+        else facilityRun = Math.max(facilityRun, run);
+        run = 0;
+        inUse = false;
+      }
+      li = guest.i;
+      lj = guest.j;
+    }
+    return { ticks: k, used: guest.used, state: guest.state, swimRun, facilityRun, usingTotal, strokes };
+  }
+
+  it('수영 체류가 시설보다 길다 · 음성 대조군 — 시설 이용은 예전 그대로 12 tick', () => {
+    const v = visit();
+    expect(v.swimRun).toBe(GUEST_DEFAULTS.swimTicks);
+    expect(v.swimRun).toBeGreaterThan(v.facilityRun);
+    // 음성 대조군 — 수영만 바뀌었다. 시설까지 길어졌다면 회전이 통째로 무너진다
+    expect(v.facilityRun).toBe(GUEST_DEFAULTS.useTicks);
+    expect(v.facilityRun).toBe(12);
+  });
+
+  it('유영 걸음이 늘었다 — 걸음 간격 4 tick 은 그대로고 체류만큼 칸을 옮긴다', () => {
+    const before = visit(12); // 예전 값
+    const after = visit(GUEST_DEFAULTS.swimTicks);
+    expect(before.strokes).toBe(3); // 12 tick 이면 3번 — 이게 "안 읽힌다"의 실체였다
+    expect(after.strokes).toBeGreaterThan(before.strokes);
+    // 간격이 4 tick 그대로라는 것 — 걸음 수가 체류에 정비례한다
+    expect(after.strokes).toBe(GUEST_DEFAULTS.swimTicks / 4);
+    expect(visit(36).strokes).toBe(9);
+  });
+
+  it('하루 예산 — 이용 시간 합이 120 tick 안이다 (음성: 96 을 넣으면 넘는다)', () => {
+    const v = visit();
+    expect(v.usingTotal).toBe(GUEST_DEFAULTS.useTicks * 3 + GUEST_DEFAULTS.swimTicks);
+    expect(v.usingTotal).toBeLessThan(TICKS_PER_DAY);
+    // 걷기 몫이 남아야 한다 — 이용만으로 하루를 다 쓰면 못 걸어 다닌다
+    expect(TICKS_PER_DAY - v.usingTotal).toBeGreaterThanOrEqual(40);
+    // 음성 대조군 — 체류를 키우면 같은 잣대에 걸린다 (검사가 실제로 무언가를 막는다)
+    expect(visit(96).usingTotal).toBeGreaterThan(TICKS_PER_DAY);
+  });
+
+  it('체류가 길어져도 손님은 원하는 횟수를 채우고 나간다 — 갇히지 않는다', () => {
+    const v = visit();
+    expect(v.state).toBe('gone');
+    expect(v.used).toBe(GUEST_DEFAULTS.wantUses);
   });
 });

@@ -34,7 +34,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { audio } = await import('./audio/index.js');
   const { previewCombos, evaluateCombos, comboEffect } = await import('./sim/kairo/combos.js');
   const { UnlockStore } = await import('./sim/kairo/unlocks.js');
-  const { ExamStore } = await import('./sim/kairo/exam.js');
+  const { ExamStore, nextGradeDef, scoreExam, examJudgeWeek } = await import('./sim/kairo/exam.js');
+  const { KairoExamView, examItemView, paintExamItem, setExamFaultForTest } = await import(
+    './ui/kairo-exam.js'
+  );
   // 사이드 인증 (P3-E) — 등급 상한을 푸는 유일한 고리가 `effectiveGrade` 다
   const { CertStore, certStatuses, effectiveGrade, CERTS } = await import('./sim/kairo/certs.js');
   const { WishStore } = await import('./sim/kairo/wishes.js');
@@ -2166,13 +2169,32 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   hud.menuSlot.append(speedBtn);
 
   /*
-   * 심사 신청 (K42) — 자격이 되면 메뉴에 나타난다. 신청하면 수수료를 내고
-   * 주말(목요일 이후 신청이면 다음 주말)에 심사관이 판정한다.
+   * 등급 심사 (K42, K48 에서 화면을 고쳤다).
+   *
+   * ⚠ K48 이전에는 **자격 미달이면 항목을 통째로 숨겼다.** 평판이 다음 문턱을 넘기 전이
+   * 판의 대부분이라 심사는 사실상 없는 기능이었고, 사용자가 "심사로 등급 올리는 부분이
+   * 사라졌다"고 물었다. 승급은 토지·시설 해금·정원 상한이 전부 걸린 유일한 성장 축이므로
+   * **항상 보이고, 없으면 무엇이 모자란지 말한다** (`examItemView`).
+   *
+   * 그리고 탭이 **바로 돈을 쓰지 않는다** — 확인 화면에서 조건별 점수·커트라인·수수료를
+   * 보고 신청을 눌러야 접수된다 (PSS 리서치 §3.1).
    */
+  const examView = new KairoExamView(document.body);
   const examBtn = document.createElement('button');
   examBtn.id = 'kairo-exam-open';
-  examBtn.className = 'kitem';
-  examBtn.addEventListener('click', () => {
+  // 문구가 "무엇이 모자란지"까지 말하므로 92px 칸에 안 들어간다 — 메뉴 격자 한 줄을 쓴다
+  examBtn.className = 'kitem wide span';
+
+  /** 지금 상태 한 벌 — 메뉴 항목과 확인 화면이 **같은 값**을 본다 */
+  const examGate = (): Parameters<typeof examItemView>[0] => ({
+    next: nextGradeDef(gradeNo),
+    gradeName: `${currentGrade().grade}등급 ${currentGrade().name}`,
+    reputation: reputation.value,
+    pendingWeek: exam.pending?.judgeWeek ?? null,
+  });
+
+  /** 신청 — 수수료를 내고 접수한다. **확인 화면의 신청 버튼만** 여기로 온다 */
+  const applyExam = (): void => {
     const next = exam.eligible(gradeNo, reputation.value);
     if (!next) return;
     const fee = next.examFee ?? 0;
@@ -2193,20 +2215,42 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     refreshExamBtn();
     refreshGoal();
     persist();
-  });
+  };
+
+  /**
+   * 확인 화면을 연다 — 메뉴 항목과 **등급 칩**이 같은 입구를 쓴다 (K48-②).
+   * 점수는 판정과 같은 평가기(`scoreExam`)로 잰다 — 갈라지면 "화면은 23점인데 떨어졌다"다.
+   */
+  const openExam = (): void => {
+    const gate = examGate();
+    const lp = week.liveProgress();
+    examView.show(
+      {
+        gate,
+        score: gate.next
+          ? scoreExam(gate.next.grade, h.placement, lastSummary, h.guests.swimZones())
+          : null,
+        cash: week.cash,
+        judgeWeek: examJudgeWeek(week.week + 1, lp ? lp.tick : TICKS_PER_WEEK),
+      },
+      applyExam,
+    );
+  };
+  examBtn.addEventListener('click', openExam);
   hud.menuSlot.append(examBtn);
+
+  /** 자격을 알린 목표 등급 — 매주 반복되면 소음이라 **처음 한 번만** 흘린다 (K48-④) */
+  let examToldGrade = 0;
   const refreshExamBtn = (): void => {
+    paintExamItem(examBtn, examItemView(examGate(), week.cash));
+    /*
+     * 자격 획득은 "내가 안 했는데 일어난 일" = 티커 뉴스다 (채널 계약 K47-①).
+     * 등급 번호로 기억하므로 강등 후 다시 올라와도 한 번만 뜬다.
+     */
     const next = exam.eligible(gradeNo, reputation.value);
-    if (exam.pending) {
-      examBtn.hidden = false;
-      examBtn.disabled = true;
-      examBtn.textContent = `심사 대기 — ${exam.pending.judgeWeek}주차 주말`;
-    } else if (next) {
-      examBtn.hidden = false;
-      examBtn.disabled = false;
-      examBtn.textContent = `심사 신청 — ${next.grade}등급 (${Math.round((next.examFee ?? 0) / 10000)}만)`;
-    } else {
-      examBtn.hidden = true;
+    if (next && next.grade > examToldGrade) {
+      examToldGrade = next.grade;
+      news('⭐', `심사 응시 가능 — ${next.grade}등급 ${next.name}`, stampNow(), openExam);
     }
   };
   refreshExamBtn();
@@ -2236,8 +2280,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       .slice(0, 2)) {
       chips.push({ icon: '📋', label: q.name, detail: q.detail, progress: q.progress });
     }
-    // 다음 등급 게이지 — 구경(만족도)이 쌓이는 게 보인다. 좋아요 1000 의 우리식 번역 (A4)
-    // 자격이 차면 '응시 가능', 신청하면 '심사 대기'로 바뀐다 (K42)
+    /*
+     * 다음 등급 게이지 — 구경(만족도)이 쌓이는 게 보인다. 좋아요 1000 의 우리식 번역 (A4).
+     * 자격이 차면 '응시 가능', 신청하면 '심사 대기'로 바뀐다 (K42).
+     *
+     * K48-②: **이 칩이 심사의 입구다.** 진행률만 보여 주고 "그래서 뭘 하지"를 메뉴에서
+     * 찾게 하면 아무도 안 찾는다 — 진행률과 행동을 같은 자리에 둔다. 칩은 `div` 그대로다.
+     */
     const next = GRADES.find((g) => g.grade === currentGrade().grade + 1);
     if (exam.pending) {
       chips.push({
@@ -2245,13 +2294,15 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         label: `${exam.pending.target}등급 심사`,
         detail: `${exam.pending.judgeWeek}주차 주말 판정`,
         progress: 1,
+        action: openExam,
       });
     } else if (next && exam.eligible(gradeNo, reputation.value)) {
       chips.push({
         icon: '⭐',
         label: '심사 응시 가능!',
-        detail: '메뉴에서 신청하세요',
+        detail: '탭하면 조건과 예상 점수',
         progress: 1,
+        action: openExam,
       });
     } else if (next) {
       chips.push({
@@ -2259,6 +2310,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         label: `${next.grade}등급까지`,
         detail: `만족도 ${Math.round(reputation.value)}/${next.reqExitSatisfaction}`,
         progress: reputation.value / Math.max(1, next.reqExitSatisfaction),
+        action: openExam,
       });
     }
     if (status === 'won') chips.push({ icon: '🎉', label: '목표 달성', progress: 1, tone: 'won' });
@@ -2619,6 +2671,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     flow,
     unlocks,
     exam,
+    /** 심사 확인 화면 (K48) — 하네스가 "탭이 바로 돈을 쓰지 않는다"를 잰다 */
+    examView,
+    openExam,
+    refreshExamBtn,
+    /**
+     * 음성 대조군 (K48) — 고친 규칙을 **코드로** 되돌린다 (`setRenderFaultForTest` 와 같은 급).
+     *
+     * ⚠ 하네스가 `import('/src/ui/kairo-exam.ts')` 로 직접 부르면 **다른 모듈 사본**을
+     * 만질 수 있다 (실측: 주입해도 화면이 안 바뀌었다). 앱이 쓰는 바로 그 사본을 여기로 낸다.
+     */
+    setExamFaultForTest,
     wishes,
     arrivalQueue,
     openWeekCards: nextWeekCards,
@@ -2672,6 +2735,20 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       h.scene.setLand(landRect(currentGrade()));
       refreshBuildList();
       refreshCaps();
+    },
+    /**
+     * 판 셋업용 평판 (K48) — `setGradeForTest` 와 같은 급.
+     *
+     * 심사 화면의 **자격 있는 상태**를 재려면 평판이 다음 문턱을 넘어야 하는데, 정상
+     * 경로로 가려면 여러 주를 돌려야 한다 (그때 재는 것은 심사 화면이 아니다).
+     * 평판은 이동평균이라 한 번 밀어서는 목표값에 못 닿는다 — 수렴시킨다.
+     */
+    setReputationForTest: (n: number) => {
+      for (let i = 0; i < 80; i++) reputation.push(n);
+      refreshExamBtn();
+      refreshGoal();
+      refreshCaps();
+      return reputation.value;
     },
     combos: { previewCombos, evaluateCombos },
     quests: { questStatuses, gradeFor, requiredGrade },

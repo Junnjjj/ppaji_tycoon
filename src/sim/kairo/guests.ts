@@ -142,6 +142,17 @@ export interface GuestTunables {
   ticksPerStep: number;
   /** 시설 1회 이용 tick */
   useTicks: number;
+  /**
+   * 수영 구역 1회 체류 tick — **시설과 따로 두는 유일한 이용 시간**이다.
+   *
+   * 유영 걸음은 4 tick 마다 한 칸이라 (아래 `tick()` 의 `& 3`) 걸음 수 = `swimTicks / 4` 다.
+   * 12 이면 걸음이 **3번**뿐이라 "잠깐 담갔다 나온다"로 읽혔다 (사용자 지적).
+   *
+   * ⚠ 이 값은 **하루 예산**에 걸린다. 방문 = 3 × `useTicks` + `swimTicks` + 이동 약 40 이고
+   * 하루는 120 tick 이다 — 넘으면 손님이 이틀을 머물러 공원이 영구히 포화된다
+   * (`STUCK_LIMIT` 주석의 죽음의 나선). 24 면 36 + 24 + 40 = 100 tick 으로 여유가 20 이다.
+   */
+  swimTicks: number;
   /** 이 횟수만큼 이용하면 만족하고 나간다 */
   wantUses: number;
   /** 목적지를 못 찾은 채 이 tick 이 지나면 불만을 품고 나간다 */
@@ -192,6 +203,30 @@ export const GUEST_DEFAULTS: GuestTunables = {
    * 12 tick × 4회 + 이동 40 = 88 tick 으로 하루 안에 들어온다.
    */
   useTicks: 12,
+  /*
+   * 수영 체류 24 tick = **4.8초 · 유영 걸음 6번**.
+   *
+   * 두 제약의 균형점이다:
+   *   · **아래쪽** — "수영으로 읽히는 최소 시간". 12 tick 은 걸음 3번(2.4초)이라 입수·유영·
+   *     퇴수가 각 한 박자씩이고, 눈에는 물에 들어갔다 나온 것으로만 보였다. 걸음이 6번이면
+   *     구역 안을 실제로 **돌아다니는** 모양이 된다 (레퍼런스의 수영 손님도 그렇다)
+   *   · **위쪽** — 하루 예산 120 tick. 방문 = 12×3 + 24 + 이동 40 = 100 tick.
+   *     36(걸음 9번)이면 112 라 이동이 조금만 길어도 하루를 넘긴다 — 여유가 없다
+   *
+   * ## 회전 비용 — 이 변경의 진짜 값
+   *
+   * 방문이 88 → 100 tick(+14%) 이라 손님 하나가 정원을 묶는 시간이 는다. 밸런싱으로
+   * 재 봤다 (같은 트리에서 `--swim 12` 와 `--swim 24` 를 **동시에** 돌린 대조):
+   *   · 24시드 52주 — 수영 이용 6,200 → 5,746 (−7%) · 만석 중앙 0%(둘 다) · 퇴장 만족 76(둘 다)
+   *   · 12시드 26주 — 수영 이용 2,531 → 2,631 · 만석 31% → 28% (시드 노이즈가 더 크다)
+   * 양쪽 다 경보 0. **보정(요금·정원)은 넣지 않았다** — 이용 횟수(`wantUses`)가 그대로라
+   * 손님 1인당 이용 수가 안 변하고, 줄어든 것은 하루에 받는 손님 수뿐인데 그 폭이
+   * 노이즈 안이다. 요금으로 메우면 "체류를 늘렸더니 객단가가 올랐다"는 **다른 변경**이 섞인다.
+   *
+   * ⚠ 회전이 실제로 무는 것은 **만석**이지 매출이 아니다. 수영은 입장권에 포함(P6)이라
+   * 구역 요금이 0 이고, 그래서 체류를 늘려도 잃을 요금 수입이 애초에 없다.
+   */
+  swimTicks: 24,
   wantUses: 4,
   patienceTicks: 300,
   /*
@@ -212,16 +247,45 @@ export const GUEST_DEFAULTS: GuestTunables = {
   walkPenalty: 0.22,
   waitPenalty: 0.12,
   /*
-   * 입장료 — 설계 §13.1 의 **₩10,000 을 이 게임의 눈금으로 옮긴 값**이다.
+   * 입장료 — **1/10 눈금**이다. 시설 요금이 이미 그 눈금이라 (설계의 식음 객단가
+   * ₩8,000 이 데이터에는 `fee: 800`, 요금 중앙값 900), 명목가 10,000 을 그대로 넣으면
+   * 입장료 한 번이 시설 이용 열 번이 된다 — 실측으로 26주 현금 중앙값이
+   * 400만 → **2,854만** 이 됐다 (K36-B②). 그래서 3,800 은 **명목가 ₩38,000** 이다.
    *
-   * ⚠ 명목가를 그대로 넣으면 안 된다. 시설 요금이 이미 1/10 눈금이라
-   * (설계의 식음 객단가 ₩8,000 이 데이터에는 `fee: 800`, 요금 중앙값 900),
-   * 10,000 을 그대로 쓰면 입장료 한 번이 시설 이용 열 번이 된다 —
-   * 실측으로 26주 현금 중앙값이 400만 → **2,854만** 이 됐다.
+   * ## 왜 1,000 → 3,800 인가 (P6)
    *
-   * 1,000 이면 설계가 정한 비율(입장료 : 식음 ≈ 1.25 : 1)이 그대로 산다.
+   * 빠지 시설 42종이 "입장권에 포함"이 되면서 이용 요금을 안 받는다
+   * (`charge: 'included'`). 그 돈은 사라진 것이 아니라 **표값으로 옮겨 왔다** — 실제
+   * 빠지가 그렇다. 옮기는 양은 실측으로 맞췄다 (`--charge-all --adm 1000` 대조군과
+   * 같은 바이너리로 잰 값, 24시드 52주):
+   *
+   *   | 수입 구성 | 전 | 후 |
+   *   |---|---|---|
+   *   | 입장료      | 15% | 62% |
+   *   | 별도 구매   | 72% | 26% |
+   *   | 코스        | 13% | 14% |
+   *   | **총수입**  | 5,345만 | **5,266만 (−1.5%)** |
+   *
+   * 등급 중앙 4 · 퇴장 만족 75→77 · 경보 0 이 유지된다.
+   *
+   * ⚠ **더 올리면 총수입은 늘지만 판이 나빠진다.** 4,300 은 총수입 +3%(5,513만)인데
+   * 등급 중앙이 4→3 · 퇴장 만족 77→74 로 내려갔다. 표값이 만족을 직접 깎지는 않으므로
+   * (`priceSatisfaction` 은 `priceMult` 만 본다) 경로는 간접이다 — 현금이 많아지면
+   * 봇이 시설을 더 넓게 펴고 걷기 감점이 는다. 원인을 끝까지 파진 않았다.
+   * 여기서 고른 기준은 **총수입 보존**이고, 그 지점이 마침 등급·만족이 가장 나은
+   * 지점이기도 했다.
+   *
+   * 명목가 ₩38,000 은 가평 빠지의 실제 이용권(성인 ₩25,000~40,000, 물놀이 시설 포함)
+   * 대역 안이다 — 눈금을 맞추면 값이 현실과도 맞는 드문 경우라 여기 적어 둔다.
+   *
+   * ⚠ 요금 슬라이더(`priceMult`)의 힘은 **안 변한다.** 슬라이더는 입장료와 시설 요금에
+   * **똑같이** 곱해지므로 (`week.ts` 의 `admIn`·`collectFees`), 둘 사이 비중이 어떻게
+   * 바뀌어도 총수입 대 슬라이더의 기울기는 그대로다. 반면 **입장료를 빼고 곱하는 것들**
+   * (매점직원 `foodMult` · 카드 `revenueMult` · 콤보 `revenueMult`)은 곱해지는 밑동이
+   * 작아져 약해진다 — 그건 의도다. "콤보를 맞추면 공원 안 소비가 는다"는 효과이고,
+   * 공원 안 소비(매점)가 실제로 수입의 일부가 된 것이 이 변경의 요점이다.
    */
-  admissionFee: 1_000,
+  admissionFee: 3_800,
   requireTicket: true,
 };
 
@@ -311,6 +375,37 @@ export class GuestStore {
    * 종류 단위이기 때문이다.
    */
   private finishedFeeByNeed = new Map<string, number>();
+  /**
+   * 수영 구역 이용 **누계** — 밸런싱 계측 전용이다 (`tools/kairo-sim.ts`).
+   *
+   * ⚠ 이 둘은 판정에도 세이브에도 안 쓴다. `finishedFeeByNeed` 의 `play` 는 놀이 시설과
+   * 구역이 **섞여** 있어서, 체류 시간을 바꿨을 때 "구역의 회전이 얼마나 줄었나"를
+   * 따로 볼 수가 없다 — 그걸 보려고 둔 계수기다. 요금은 지갑 배율까지만 곱한
+   * **총액**이다 (날씨·요금 배율은 `week.ts` 소관이라 여기선 모른다).
+   */
+  private zoneUseCount = 0;
+  private zoneFeeSum = 0;
+  /** 밸런싱 계측 — 수영 구역 이용 완료 누계 */
+  get zoneUses(): number {
+    return this.zoneUseCount;
+  }
+  /** 밸런싱 계측 — 수영 구역 요금 누계 (지갑 배율까지, 날씨·요금 배율 전) */
+  get zoneFeeGross(): number {
+    return this.zoneFeeSum;
+  }
+
+  /**
+   * 수영 구역 1회 요금 — **0 이다. 수영이야말로 입장권의 본체다** (P6).
+   *
+   * 물놀이 값을 표에 담아 놓고 정작 물에서 또 받으면 분류가 뒤집힌 것이다.
+   *
+   * ⚠ `swim.ts` 의 `zoneFee`(pool 800 · river 500)는 **정가**로 남겨 둔다 — 지우면
+   * 대조군이 "예전에 얼마였나"를 되살릴 수 없다. 대조군 스위치는 시설과 **같은 것**을
+   * 쓴다 (`placement.chargeFaultForTest`): 분류 스위치가 둘이면 한쪽만 켠 채 재게 된다.
+   */
+  private zoneCharge(idx: number): number {
+    return this.placement.chargeFaultForTest === null ? 0 : zoneFee(this.zones[idx]);
+  }
   /**
    * **입장한** 손님 누계 — 주간 결산의 `visitors` 가 이걸 센다 (K36-B②).
    *
@@ -917,13 +1012,22 @@ export class GuestStore {
           g.satisfaction = Math.min(100, g.satisfaction + gain);
           this.finishedWallet += g.wallet;
           this.finishedCount += 1;
-          // 실제로 이용한 시설의 요금(개선 단계 반영) × 지갑. 구역은 정액이다
+          /*
+           * 실제로 이용한 시설의 요금(개선 단계·과금 분류 반영) × 지갑.
+           *
+           * `feeOf` 는 **입장권에 포함된 시설이면 0** 을 돌려준다 (P6). 여기서 다시
+           * 분류를 보지 않는다 — 규칙이 두 벌이 되면 결산 합계와 화면의 `+₩N` 이 갈라진다.
+           */
           const fee =
             (usedHandle >= ZONE_HANDLE_BASE
-              ? zoneFee(this.zones[usedHandle - ZONE_HANDLE_BASE])
+              ? this.zoneCharge(usedHandle - ZONE_HANDLE_BASE)
               : this.placement.feeOf(usedHandle)) * g.wallet;
           const key = usedNeed === '' ? '-' : usedNeed;
           this.finishedFeeByNeed.set(key, (this.finishedFeeByNeed.get(key) ?? 0) + fee);
+          if (usedHandle >= ZONE_HANDLE_BASE) {
+            this.zoneUseCount += 1;
+            this.zoneFeeSum += fee;
+          }
           this.setEmote(g, g.satisfaction >= 80 ? 'love' : 'happy');
           this.syncFace(g);
           g.state = g.used >= this.tunables.wantUses ? 'leaving' : 'walking';
@@ -1023,7 +1127,13 @@ export class GuestStore {
             g.pose = 'ride';
             g.useTicks = 1;
           } else {
-            g.useTicks = this.tunables.useTicks;
+            /*
+             * 수영만 체류가 길다 (`swimTicks`) — 유영 걸음이 4 tick 마다 한 칸이라
+             * 체류를 늘리면 걸음 수가 그대로 따라 는다. 걸음 간격은 안 건드린다:
+             * 빨라지면 헤엄이 아니라 미끄러지는 것으로 보인다.
+             */
+            g.useTicks =
+              g.usingHandle >= ZONE_HANDLE_BASE ? this.tunables.swimTicks : this.tunables.useTicks;
             g.pose = this.poseFor(g.usingHandle);
             if (g.usingHandle >= ZONE_HANDLE_BASE) {
               /*

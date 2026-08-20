@@ -931,6 +931,20 @@ body {
   box-shadow: var(--sk-lift);
 }
 
+/*
+ * 탭할 수 있는 칩 (K48) — 등급 칩이 심사 확인 화면의 입구다. 44px 는 터치 타깃 최소치이고
+ * (칩 세 줄은 41px 라 조금 모자랐다), 눌린 느낌은 `.kchip-head` 와 같은 규칙을 쓴다.
+ */
+.kchip.tap {
+  min-height: var(--tap);
+  cursor: pointer;
+  transition: transform var(--dur-micro) var(--ease);
+}
+
+.kchip.tap:active {
+  transform: translateY(1px);
+}
+
 .kchip.won {
   background: var(--goal-won);
   color: var(--text);
@@ -1316,6 +1330,14 @@ body {
   gap: 6px;
 }
 
+/*
+ * 격자 한 줄을 통째로 쓰는 항목 (K48) — 심사 항목이 유일하다.
+ * "무엇이 모자란지"를 말해야 해서 92px 칸에는 두 글자만 들어간다.
+ */
+.kgrid > .kitem.span {
+  grid-column: 1 / -1;
+}
+
 .kitem {
   min-height: 56px;
   padding: 7px 4px;
@@ -1342,10 +1364,13 @@ body {
 
 /*
  * ⚠ `display: flex` 가 `[hidden]` 을 이긴다 (P3-E 에서 실측으로 발견).
- * `#kairo-exam-open` 은 응시 자격이 없으면 `hidden = true` 인데 — 판의 대부분이
+ * `#kairo-exam-open` 이 응시 자격이 없으면 `hidden = true` 였는데 — 판의 대부분이
  * 그 상태다 — 메뉴 격자에 **글씨 없는 빈 버튼**이 그대로 남아 있었다. 스크린샷에서
  * 유령 칸으로 보인다. 다른 패널이 `[hidden]` 을 쓰는 것과 같은 이유로, 클래스가
  * 숨김을 이기면 안 된다.
+ *
+ * K48: 심사 항목은 이제 **안 숨는다** (숨긴 것이 버그의 본체였다). 규칙 자체는 남긴다 —
+ * 다음에 `[hidden]` 을 쓰는 `.kitem` 이 생기면 같은 유령이 돌아온다.
  */
 .kitem[hidden] {
   display: none;
@@ -1398,6 +1423,8 @@ body {
   .kcourse-item,
   /* 목표 접기 머리 (K47-②) — 버튼이 아니어도 움직이면 가드에 들어온다 */
   .kchip-head,
+  /* 등급 칩 (K48) — 심사의 입구라 눌린 느낌이 있다. 같은 이유로 여기 */
+  .kchip.tap,
   .ksheet-head .tab-btn {
     transition: none;
   }

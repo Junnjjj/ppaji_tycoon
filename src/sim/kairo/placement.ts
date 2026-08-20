@@ -29,8 +29,27 @@ export interface KairoFacilityDef {
    */
   cost: number;
   upkeep: number;
-  /** 1회 이용 요금 */
+  /**
+   * 1회 이용 **정가**. 실제로 걷히는 금액은 `PlacementGrid.feeOf()` 가 정한다 —
+   * `charge: 'included'` 면 0 이다 (아래 `charge` 주석).
+   */
   fee: number;
+  /**
+   * 과금 방식 (P6) — **입장권에 포함인가, 따로 사는 것인가.**
+   *
+   * 한국 빠지의 실제 요금 구조다: 표 한 장으로 물놀이·샤워·놀이기구를 다 쓰고
+   * (`included`), 음식·자리 대여·숙박·보트 대여만 그 자리에서 또 낸다 (`sale`).
+   * 예전에는 75종 전부가 이용마다 돈을 받아서, 화장실이 매점만큼 버는 판이었다.
+   *
+   * ⚠ **`need` 축과 과금 축은 다르다.** 대여소 4종은 `need: thrill`/`play` 인데
+   * 파는 것이고(보트는 표에 안 들어간다), 카페는 `need: rest` 인데 파는 것이다.
+   * 반대로 `need: play` 인 유수풀은 포함이다. 그래서 코드가 `need` 로 가르면 안 되고
+   * **시설마다 데이터에 적는다** (불변식 3 — 시설 추가는 JSON 한 줄이어야 한다).
+   *
+   * ⚠ 없으면 `'sale'` 로 읽는다 (옛 동작). 다만 `charge.test.ts` 가 75종 전부
+   * **명시**를 요구한다 — 안 적고 넘어간 새 시설이 조용히 돈을 받으면 안 된다.
+   */
+  charge?: FacilityCharge;
   /** 손님이 위로 걸어 올라갈 수 있나 — 플로팅덱·선착장만 true */
   walkOn?: boolean;
   placement: {
@@ -73,6 +92,29 @@ export interface KairoFacilityDef {
  * 지금 뭐가 마르냐에 따라 정답이 달라져야 "고스탯 특화"가 안 생긴다.
  */
 export type FacilitySpecialty = 'capacity' | 'revenue' | 'reputation';
+
+/**
+ * 과금 방식 (P6) — 두 가지뿐이다.
+ *
+ * - `included` **입장권에 포함**. 이용해도 요금이 0 이다. 물놀이·위생·경관·운영이
+ *   여기 든다. 수입은 `admissionFee` 하나로 미리 받았다
+ * - `sale` **별도 구매**. 이용할 때마다 `fee` 를 낸다. 음식·자리 대여·숙박·보트 대여
+ *
+ * ⚠ 셋째를 만들지 말 것 ("반값" 따위). 세 번째가 생기는 순간 결산의 두 줄
+ * (입장료·매점)이 세 줄이 되고, 플레이어가 "이 시설은 어느 쪽이지"를 외워야 한다.
+ */
+export type FacilityCharge = 'included' | 'sale';
+
+/**
+ * 이 시설이 이용마다 돈을 받나 — **과금의 정본**.
+ *
+ * `feeOf()` 와 `foodShare()` 와 검사가 전부 이 함수를 부른다. `def.charge === 'sale'`
+ * 을 여기저기서 직접 쓰면 기본값 규칙("없으면 sale")이 여러 벌이 되고, 언젠가 한 곳만
+ * 고쳐진다.
+ */
+export function chargesOnUse(def: KairoFacilityDef | undefined): boolean {
+  return (def?.charge ?? 'sale') === 'sale';
+}
 
 export const FACILITY_SPECIALTIES: readonly FacilitySpecialty[] = [
   'capacity',
@@ -774,12 +816,38 @@ export class PlacementGrid {
     return true;
   }
 
-  /** 개선·특화가 반영된 요금 */
+  /**
+   * 과금 분류를 **일부러 어긋내는** 스위치 — 음성 대조군 전용 (P6).
+   *
+   * - `'all-sale'` 전부 유료 (P6 이전의 세계). "분류가 실제로 돈을 막나"를 보이는 대조군
+   * - `'invert'`   포함↔판매를 뒤집는다. 수입 구성이 뒤집히는지 보는 대조군
+   *
+   * ⚠ production 에서 세우지 말 것. 헤드리스 러너는 `--charge-all` 로 **P6 이전 수입
+   * 구성을 같은 계측으로 재기 위해** 쓴다 (전후 비교를 코드 두 벌 없이 하는 방법).
+   */
+  chargeFaultForTest: 'all-sale' | 'invert' | null = null;
+
+  /** 이 시설이 이용마다 돈을 받나 — 대조군 스위치를 반영한 판정 */
+  private chargesOnUseHandle(def: KairoFacilityDef | undefined): boolean {
+    const sale = chargesOnUse(def);
+    if (this.chargeFaultForTest === 'all-sale') return true;
+    if (this.chargeFaultForTest === 'invert') return !sale;
+    return sale;
+  }
+
+  /**
+   * 개선·특화가 반영된 요금. **입장권에 포함된 시설은 0 이다** (P6).
+   *
+   * ⚠ 여기가 "이용마다 돈을 받나"의 유일한 관문이다. 손님(`guests.ts`)도 실시간 입금
+   * 배분(`week.ts` 의 `incomeEvents`)도 화면도 전부 이 함수를 부르므로, 한 곳만 고치면
+   * 결산 합계와 화면의 `+₩N` 이 갈라지는 일이 구조적으로 안 생긴다.
+   */
   feeOf(handle: number): number {
     const item = this.items.get(handle);
     if (!item) return 0;
     const def = facilityDef(item.defId);
     if (!def) return 0;
+    if (!this.chargesOnUseHandle(def)) return 0;
     const base = 1 + (this.levelOf(handle) - 1) * LEVEL_FEE_STEP;
     const spec = item.specialty === 'revenue' ? SPECIALTY_FEE_BONUS * this.specialtyScale(handle) : 0;
     return Math.round(def.fee * (base + spec));

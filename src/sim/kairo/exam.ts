@@ -11,7 +11,13 @@
  *
  * 강등은 예전처럼 자동이다 (nextGrade 의 내림 경로) — 관리 실패는 시험을 봐 주지 않는다.
  */
-import { GRADES, evaluateCondition, supplyOf, type GradeDef } from './progress.js';
+import {
+  GRADES,
+  evaluateCondition,
+  supplyOf,
+  type GradeDef,
+  type QuestCondition,
+} from './progress.js';
 import type { WeekSummary } from './week.js';
 import { evaluateCombos } from './combos.js';
 import type { PlacementGrid } from './placement.js';
@@ -62,6 +68,71 @@ export function nextGradeDef(gradeNo: number): GradeDef | null {
   return GRADES.find((g) => g.grade === gradeNo + 1) ?? null;
 }
 
+/**
+ * 어느 주말에 판정하나 (K48) — `apply` 와 확인 화면이 **이 하나**를 쓴다.
+ *
+ * 갈라지면 "화면은 이번 주말이라는데 다음 주에 판정" 이 된다. 규칙 자체는 K42 그대로다:
+ * 목요일(tick 360) 전이면 이번 주말, 이후면 다음 주말 — 준비 기간 최소 2일.
+ */
+export function examJudgeWeek(weekNo: number, tickInWeek: number): number {
+  return tickInWeek < EXAM_APPLY_CUTOFF_TICK ? weekNo : weekNo + 1;
+}
+
+/** 조건 하나의 지금 점수 — 예상과 판정이 같은 모양을 쓴다 */
+export interface ExamReqScore {
+  /** 원본 조건 — 이름표는 화면이 붙인다 (sim 은 표시를 모른다) */
+  req: QuestCondition;
+  detail: string;
+  score: number;
+  done: boolean;
+}
+
+/** 지금 응시하면 몇 점인가 (K48) */
+export interface ExamScore {
+  target: number;
+  perReq: ExamReqScore[];
+  score: number;
+  max: number;
+  /** 커트라인 — 이 점수 이상이면 통과 */
+  cut: number;
+  passed: boolean;
+  /** 수수료 (없으면 0) */
+  fee: number;
+}
+
+/**
+ * 점수를 잰다 — **판정과 예상이 이 하나를 공유한다** (K48).
+ *
+ * ⚠ 갈라지면 "화면은 23점인데 떨어졌다"가 된다. `judge()` 는 이 함수의 결과를 그대로
+ * 옮겨 담을 뿐이고, 확인 화면은 같은 함수를 **상태를 안 바꾸고** 부른다.
+ * `evaluateCondition` 이 의뢰·심사의 유일한 평가기라는 규칙(progress.ts)의 한 겹 위다.
+ */
+export function scoreExam(
+  target: number,
+  placement: PlacementGrid,
+  summary: WeekSummary | null,
+  /** 수영 구역 (S4) — 의뢰와 같은 재료를 받아야 "의뢰로는 3개, 심사로는 2개"가 안 된다 */
+  zones: Parameters<typeof evaluateCombos>[2] = [],
+): ExamScore {
+  const def = GRADES.find((g) => g.grade === target);
+  const reqs = def?.examReqs ?? [];
+  const supply = supplyOf(placement);
+  const combos = evaluateCombos(placement, undefined, zones);
+  const perReq: ExamReqScore[] = reqs.map((c) => {
+    const ev = evaluateCondition(c, placement, summary, supply, combos);
+    return {
+      req: c,
+      detail: ev.detail,
+      score: Math.round(ev.progress * EXAM_POINTS_PER_REQ),
+      done: ev.done,
+    };
+  });
+  const score = perReq.reduce((a, r) => a + r.score, 0);
+  const max = reqs.length * EXAM_POINTS_PER_REQ;
+  const cut = Math.ceil(max * EXAM_PASS_RATIO);
+  return { target, perReq, score, max, cut, passed: max === 0 ? true : score >= cut, fee: def?.examFee ?? 0 };
+}
+
 export class ExamStore {
   private pendingState: ExamPending | null = null;
   private passedCount = 0;
@@ -97,7 +168,7 @@ export class ExamStore {
    * 목요일(tick 360) 전이면 이번 주말, 이후면 다음 주말 — 준비 기간 최소 2일.
    */
   apply(target: number, weekNo: number, tickInWeek: number): ExamPending {
-    const judgeWeek = tickInWeek < EXAM_APPLY_CUTOFF_TICK ? weekNo : weekNo + 1;
+    const judgeWeek = examJudgeWeek(weekNo, tickInWeek);
     this.pendingState = { target, judgeWeek };
     return this.pendingState;
   }
@@ -116,21 +187,13 @@ export class ExamStore {
     const p = this.pendingState;
     if (!p || p.judgeWeek > weekNo) return null;
     this.pendingState = null;
-    const def = GRADES.find((g) => g.grade === p.target);
-    const reqs = def?.examReqs ?? [];
-    const supply = supplyOf(placement);
-    const combos = evaluateCombos(placement, undefined, zones);
-    const perReq = reqs.map((c) => {
-      const ev = evaluateCondition(c, placement, summary, supply, combos);
-      return { detail: ev.detail, score: Math.round(ev.progress * EXAM_POINTS_PER_REQ) };
-    });
-    const score = perReq.reduce((a, r) => a + r.score, 0);
-    const max = reqs.length * EXAM_POINTS_PER_REQ;
-    const passed = max === 0 ? true : score >= Math.ceil(max * EXAM_PASS_RATIO);
-    const firstPass = passed && this.passedCount === 0;
-    if (passed) this.passedCount++;
-    const grant = passed ? (def?.examFee ?? 0) * EXAM_PASS_GRANT_RATIO : 0;
-    return { target: p.target, passed, score, max, perReq, firstPass, grant };
+    // ⚠ 확인 화면과 **같은 평가기**다 (K48). 여기서 다시 세면 두 숫자가 갈라진다
+    const s = scoreExam(p.target, placement, summary, zones);
+    const perReq = s.perReq.map((r) => ({ detail: r.detail, score: r.score }));
+    const firstPass = s.passed && this.passedCount === 0;
+    if (s.passed) this.passedCount++;
+    const grant = s.passed ? s.fee * EXAM_PASS_GRANT_RATIO : 0;
+    return { target: p.target, passed: s.passed, score: s.score, max: s.max, perReq, firstPass, grant };
   }
 
   toSnapshot(): ExamSnapshot {

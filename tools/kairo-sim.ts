@@ -117,6 +117,24 @@ const flag = (name: string, dflt: number): number => {
 };
 const SEEDS = flag('seeds', 20);
 const WEEKS = flag('weeks', 12);
+/**
+ * 수영 체류 tick 을 갈아 끼운다 (`--swim 12`) — **A/B 대조 전용**이다.
+ *
+ * 기본값을 바꾼 뒤 "전"을 재려면 코드를 되돌렸다 다시 고쳐야 하는데, 그러면 계측
+ * 코드까지 같이 왔다 갔다 해서 두 표가 다른 도구의 것이 된다. 같은 바이너리로
+ * 한 축만 갈아 끼워야 비교가 성립한다 (0 이면 기본값 그대로).
+ */
+const SWIM_TICKS = flag('swim', 0);
+/**
+ * 과금 분류를 무시하고 **전부 유료로** 돌린다 (`--charge-all`) — P6 이전 세계다.
+ * 입장료도 같이 되돌려야 진짜 "전"이 된다: `--charge-all --adm 1000`.
+ *
+ * `--swim` 과 같은 이유로 둔다 — 같은 바이너리로 한 축만 갈아 끼워야 전후 표가
+ * 같은 도구의 것이 된다.
+ */
+const CHARGE_ALL = args.includes('--charge-all');
+/** 입장료를 갈아 끼운다 (`--adm 1000`) — A/B 대조 전용. 0 이면 기본값 */
+const ADMISSION = flag('adm', 0);
 const JSON_OUT = args.includes('--json');
 const DETERMINISM = args.includes('--determinism');
 /** 맵별 비교 — 맵마다 최적 빌드가 달라지는지 (§4.5) */
@@ -173,6 +191,14 @@ interface RunResult {
    * 알 수 없다 — 4칸짜리 하나와 32칸짜리 하나는 콤보 배율이 2배 차이인데 둘 다 "1" 이다.
    */
   swimArea: number;
+  /**
+   * 수영 구역 **이용 완료 누계**와 요금 누계 (전 주 합). 체류 시간(`swimTicks`)을 바꾸면
+   * 여기가 먼저 움직인다 — `play` 요금은 놀이 시설과 섞여 있어 구역의 회전이 얼마나
+   * 줄었는지를 따로 못 본다. 면적·구역 수와 **같이** 봐야 한다: 구역이 커져서 이용이
+   * 는 것과 회전이 빨라져서 는 것은 다르다.
+   */
+  swimUses: number;
+  swimFee: number;
   /** 심사로 딴 실제 등급 (K42) — `grade`(만족도 환산 표시값)와 다르다. 해금은 이걸 따른다 */
   examGrade: number;
   /**
@@ -291,6 +317,16 @@ interface RunResult {
   builtTotal: number;
   courseFail: string;
   courseRevByWeek: number[];
+  /**
+   * 수입 구성 누계 (P6) — 입장료 · 별도 구매 · 코스. 셋의 합이 총수입이다.
+   *
+   * ⚠ 총수입 하나만 보면 "빠지 시설을 표에 넣었다"가 밸런스에 무엇을 했는지 안 보인다.
+   * 총액이 같아도 **어디서 오느냐**가 바뀌면 콤보·매점직원·카드 배율이 곱해지는 밑동이
+   * 달라진다 (그 셋은 입장료를 빼고 곱한다).
+   */
+  admissionTotal: number;
+  salesTotal: number;
+  courseTotal: number;
   /** 주차별 수익·유지비 — "무엇이 손익을 깎는가"를 가른다 */
   revenueByWeek: number[];
   upkeepByWeek: number[];
@@ -1374,7 +1410,16 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const t = KairoTerrain.generate(GRID_W, GRID_H, rng.fork(1), map);
   const w = new WallGrid(GRID_W, GRID_H);
   const p = new PlacementGrid(GRID_W, GRID_H);
-  const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
+  if (CHARGE_ALL) p.chargeFaultForTest = 'all-sale';
+  const tunables =
+    SWIM_TICKS > 0 || ADMISSION > 0
+      ? {
+          ...GUEST_DEFAULTS,
+          ...(SWIM_TICKS > 0 ? { swimTicks: SWIM_TICKS } : {}),
+          ...(ADMISSION > 0 ? { admissionFee: ADMISSION } : {}),
+        }
+      : GUEST_DEFAULTS;
+  const g = new GuestStore(t, w, p, GATE, tunables);
   const week = new WeekRunner(t, p, g);
   const progress = new ProgressStore();
   const unlocks = new UnlockStore();
@@ -1471,6 +1516,10 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   let staffWeeks = 0;
   const wagesByWeek: number[] = [];
   const courseRevByWeek: number[] = [];
+  /* 수입 구성 (P6) — 입장료 · 별도 구매 · 코스. 셋의 합이 총수입이어야 한다 */
+  let admissionTotal = 0;
+  let salesTotal = 0;
+  let courseTotal = 0;
   const revenueByWeek: number[] = [];
   const upkeepByWeek: number[] = [];
   const cashByWeek: number[] = [];
@@ -2102,6 +2151,9 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     }
     wagesByWeek.push(rep.wages);
     courseRevByWeek.push(rep.courseRevenue);
+    admissionTotal += rep.admission;
+    salesTotal += rep.sales;
+    courseTotal += rep.courseRevenue;
     cards.tickWeek();
     last = rep;
     reputation.push(rep.exitSatisfaction);
@@ -2226,6 +2278,8 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       (a, z) => Math.max(a, z.area),
       0,
     ),
+    swimUses: g.zoneUses,
+    swimFee: g.zoneFeeGross,
     examGrade: gradeNo,
     examApplied,
     examPassed,
@@ -2293,6 +2347,9 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     builtTotal: p.all().length,
     courseFail,
     courseRevByWeek,
+    admissionTotal,
+    salesTotal,
+    courseTotal,
     revenueByWeek,
     upkeepByWeek,
     cashByWeek,
@@ -2367,6 +2424,13 @@ function main(): void {
     ['시설 수', runs.map((r) => r.facilities), (n) => String(n)],
     ['수영 구역', runs.map((r) => r.swimZones), (n) => String(n)],
     ['최대 풀 면적', runs.map((r) => r.swimArea), (n) => `${n.toFixed(0)}칸`],
+    // 수영 체류(`swimTicks`)를 바꾸면 회전이 여기로 나온다 — 면적·구역 수와 같이 볼 것
+    ['수영 이용', runs.map((r) => r.swimUses), (n) => String(Math.round(n))],
+    /*
+     * ⚠ **지금은 0 이 정상이다.** 수영은 입장권에 포함이라 (P6) 구역 요금을 안 받는다 —
+     * 계측이 죽은 것이 아니라 분류가 그렇다. 대조군(`chargeFaultForTest`)을 켜면 값이 산다.
+     */
+    ['수영 요금', runs.map((r) => r.swimFee), fmt],
     ['심사 등급', runs.map((r) => r.examGrade), (n) => String(n)],
     /*
      * 평균 개선 단계 — 표에 없어서 **개선 축이 죽은 것을 몇 페이즈 동안 못 봤다**
@@ -2447,6 +2511,29 @@ function main(): void {
   console.log(
     `직원 평균: ${(stats(runs.map((r) => r.staffWeeks)).med / WEEKS).toFixed(1)}명/주`,
   );
+  /*
+   * 수입 구성 (P6) — **판마다 비율을 낸 뒤 중앙값**을 잡는다. 합계로 비율을 내면
+   * 큰 판 하나가 표를 대표해 버린다 (판 크기가 시드마다 두 배 넘게 차이 난다).
+   * `--charge-all --adm 1000` 로 같은 도구에서 P6 이전 구성을 다시 잴 수 있다.
+   */
+  {
+    const share = (pick: (r: RunResult) => number): number =>
+      stats(
+        runs.map((r) => {
+          const tot = r.admissionTotal + r.salesTotal + r.courseTotal;
+          return tot > 0 ? (pick(r) / tot) * 100 : 0;
+        }),
+      ).med;
+    const totMed = stats(
+      runs.map((r) => r.admissionTotal + r.salesTotal + r.courseTotal),
+    ).med;
+    console.log(
+      `수입 구성 (판당 중앙): 입장료 ${share((r) => r.admissionTotal).toFixed(0)}% · ` +
+        `별도 구매 ${share((r) => r.salesTotal).toFixed(0)}% · ` +
+        `코스 ${share((r) => r.courseTotal).toFixed(0)}% · 총수입 중앙 ${fmt(totMed)}` +
+        (CHARGE_ALL ? '  ⚠ --charge-all (P6 이전 대조군)' : ''),
+    );
+  }
   /*
    * ── 후반 공백 (P3-E) ─────────────────────────────────────────────────
    *

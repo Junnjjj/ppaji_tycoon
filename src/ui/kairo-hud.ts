@@ -72,6 +72,14 @@ export interface GoalChip {
   /** 0..1 */
   progress: number;
   tone?: 'won' | 'lost';
+  /**
+   * 탭하면 할 일 (K48). 없으면 기둥의 기본 동작(메뉴 열기)으로 흘러간다.
+   *
+   * 등급 칩이 이걸 쓴다 — **진행률과 행동이 같은 자리**에 있어야 "그래서 뭘 하지"가
+   * 안 생긴다. 칩은 여전히 `<div>` 다: `<button>` 으로 만들면 하네스의 "상시 컨트롤
+   * 2개" 셈(`button,select,input`)에 걸린다 (칩 기둥·접기 머리·티커와 같은 선례).
+   */
+  action?: () => void;
 }
 
 export type RiskTone = 'safe' | 'watch' | 'caution' | 'danger';
@@ -430,7 +438,11 @@ export class KairoHud {
 
   /** 의뢰 칩 갱신 — 탭하면 메뉴(의뢰 목록)가 열린다 */
   setChips(chips: GoalChip[]): void {
-    // 1.5초 폴링이 매번 DOM 을 갈아치우면 깜빡인다 — 내용이 같으면 건너뛴다
+    /*
+     * 1.5초 폴링이 매번 DOM 을 갈아치우면 깜빡인다 — 내용이 같으면 건너뛴다.
+     * ⚠ `JSON.stringify` 는 함수를 버린다 (`action`). 칩의 행동은 라벨이 같으면 같으므로
+     *   서명에서 빠져도 되고, 오히려 들어가면 매번 달라져 서명이 무의미해진다.
+     */
     const sig = JSON.stringify(chips);
     if (sig === this.chipsSig) return;
     this.chipsSig = sig;
@@ -448,6 +460,27 @@ export class KairoHud {
       bar.append(fill);
       txt.append(bar);
       chip.append(txt);
+      if (c.action) {
+        /*
+         * ⚠ `stopPropagation` 이 **필수**다 — 기둥 전체가 클릭 시 메뉴를 연다.
+         * 안 막으면 확인 화면을 띄우면서 메뉴 시트가 같이 열리고, 시트는 배타 패널이라
+         * 방금 연 화면을 그대로 닫는다 (접기 머리가 같은 함정을 이미 밟았다).
+         */
+        const act = c.action;
+        chip.classList.add('tap');
+        chip.setAttribute('role', 'button');
+        chip.tabIndex = 0;
+        chip.addEventListener('click', (e) => {
+          e.stopPropagation();
+          act();
+        });
+        chip.addEventListener('keydown', (e) => {
+          if (e.key !== 'Enter' && e.key !== ' ') return;
+          e.preventDefault(); // Space 로 화면이 스크롤되면 지도가 밀린다
+          e.stopPropagation();
+          act();
+        });
+      }
       this.chipsBox.append(chip);
     }
   }

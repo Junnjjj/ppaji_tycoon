@@ -86,6 +86,13 @@ interface Golden {
   turnedAway: number;
   /** 입장료 수입과 매표소를 못 지난 손님 (K36-B②) — 입장 경로도 못박아야 회귀가 잡힌다 */
   admission: number;
+  /**
+   * 별도 구매 수입 (P6) — 음식·자리 대여·숙박에서 그 자리에서 받은 돈.
+   *
+   * ⚠ 입장료와 **따로** 못박는다. 총수입 하나만 보면 "빠지 시설을 표에 넣었다"가
+   * 조용히 되돌아가도 (전부 다시 유료가 돼도) 총액이 비슷하면 통과한다.
+   */
+  sales: number;
   noTicket: number;
   profitSign: number;
   questsDone: number;
@@ -206,6 +213,7 @@ function playGolden(weeks: number): Golden {
     visitors: last.visitors,
     turnedAway: last.turnedAway,
     admission: last.admission,
+    sales: last.sales,
     noTicket: last.noTicket,
     profitSign: Math.sign(last.profit),
     questsDone: progress.claimedCount,
@@ -342,6 +350,20 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
     // K43 재기준: 카드 풀 24→26(계절 입고)이 뽑기 순서를 바꿨다 — 입장 118→121 ·
     // 만족 69→71 · 만석 27→36 · 의뢰 5→6. 방향이 흩어져 있어 총량 버그가 아니라
     // 뽑기 이동이다 (같은 시드 반복은 여전히 완전 일치).
+    /*
+     * **2026-08-20 (P6) 빠지 시설을 입장권에 넣었다** (admission 121,000 → 459,800):
+     * 시설 75종이 이용마다 돈을 받던 것을 실제 빠지처럼 갈랐다 — 물놀이·위생·경관·운영
+     * 42종은 표에 포함(`charge: 'included'`, 이용 요금 0)이고 음식·자리 대여·숙박·보트
+     * 대여 33종만 그 자리에서 산다. 사라진 요금은 표값으로 옮겼다 (1,000 → 3,800).
+     *
+     * ⚠ **손님 쪽 숫자는 한 개도 안 움직였다** — visitors 121 · turnedAway 36 ·
+     * exitSat 71 · questsDone 6 이 그대로다. 요금은 목적지 선택(`pickTarget`)에 안
+     * 들어가므로 궤적이 비트 단위로 같아야 하고, 실제로 그랬다. 이 줄 하나만 움직인
+     * 것이 "구성만 바꿨고 게임플레이는 안 건드렸다"의 증거다.
+     *
+     * `admission` 459,800 = 입장객 121명 × 3,800 × 요금배율 1.0 **정확히**다.
+     * `sales` 는 그 판에 남은 유료 시설(매점·분식류)에서만 나온다.
+     */
     expect(g).toEqual({
       facilities: 15,
       combos: 7,
@@ -349,7 +371,8 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
       exitSat: 71,
       visitors: 121,
       turnedAway: 36,
-      admission: 121_000,
+      admission: 459_800,
+      sales: 265_809,
       noTicket: 0,
       profitSign: 1,
       questsDone: 6,
@@ -384,8 +407,16 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
   });
 
   it('한 방문이 하루 안에 끝난다 — 넘으면 공원이 영구히 포화된다', () => {
-    // 이용 12 × 4회 + 이동 약 40 = 88 tick < 하루 120 tick
-    const visitTicks = GUEST_DEFAULTS.useTicks * GUEST_DEFAULTS.wantUses + 40;
+    /*
+     * 이용 12 × 4회 + 이동 약 40 = 88 tick < 하루 120 tick.
+     *
+     * ⚠ 수영은 체류가 따로다 (`swimTicks`, S5). 4회 중 **한 번이 수영**인 것이 가장
+     * 긴 방문이라 (`usedNeeds` 가 같은 수요를 피하므로 `play` 는 보통 한 번) 그쪽으로
+     * 잰다: 12 × 3 + 24 + 40 = 100 tick. 여기서 재는 것은 **예산**이고, 실제 관측은
+     * `swim.test.ts` 의 「하루 예산」이 판에서 손님을 돌려 확인한다.
+     */
+    const visitTicks =
+      GUEST_DEFAULTS.useTicks * (GUEST_DEFAULTS.wantUses - 1) + GUEST_DEFAULTS.swimTicks + 40;
     expect(visitTicks).toBeLessThan(120);
   });
 

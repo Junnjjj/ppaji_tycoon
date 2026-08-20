@@ -2,7 +2,13 @@
  * 심사 (K42) — 승급이 시험이 됐는지, 그 시험이 공정한지.
  */
 import { describe, expect, it } from 'vitest';
-import { ExamStore, EXAM_APPLY_CUTOFF_TICK, nextGradeDef } from './exam.js';
+import {
+  ExamStore,
+  EXAM_APPLY_CUTOFF_TICK,
+  nextGradeDef,
+  scoreExam,
+  examJudgeWeek,
+} from './exam.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
 import { PlacementGrid, allFacilityDefs } from './placement.js';
@@ -98,6 +104,78 @@ describe('심사', () => {
   it('nextGradeDef — 5등급 위는 없다', () => {
     expect(nextGradeDef(1)?.grade).toBe(2);
     expect(nextGradeDef(5)).toBeNull();
+  });
+});
+
+/**
+ * 응시 **전에** 보는 점수 (K48).
+ *
+ * K42 의 신청 버튼은 누르는 즉시 수수료를 쓰고 접수했다 — 조건도 예상 점수도 안 보여준
+ * 채다 (PSS 부정 리뷰 1위 계열, `docs/research/pss-hermes-research.md` §3.1). 확인 화면이
+ * 생겼는데, 그 화면이 **판정과 다른 셈**을 하면 "화면은 23점인데 떨어졌다"가 된다.
+ * 그래서 `judge()` 가 `scoreExam()` 의 결과를 옮겨 담기만 하게 만들었고, 여기서 그걸 잰다.
+ */
+describe('예상 점수는 판정과 같은 평가기를 쓴다 (K48)', () => {
+  /** 2등급 조건(위생 3·먹거리 2·만족 55)을 부분만 채운 판 — 부분 점수가 나와야 대조가 뜻이 있다 */
+  function partial(): ReturnType<typeof flat> {
+    const f = flat();
+    expect(f.p.place(f.t, f.w, GATE, 'vending_out', 3, 3).ok).toBe(true);
+    expect(f.p.place(f.t, f.w, GATE, 'snackbar', 6, 3).ok).toBe(true);
+    for (let i = 10; i < 20; i++) for (let j = 10; j < 14; j++) f.t.paint(i, j, 'floor_indoor');
+    // 화장실 둘 — 위생 3 중 2 라 10점 만점에 7점이 나온다 (반올림)
+    for (const i of [11, 13]) expect(f.p.place(f.t, f.w, GATE, 'toilet', i, 11).ok).toBe(true);
+    return f;
+  }
+
+  it('★ 화면이 미리 센 점수 = 주말에 나온 점수 (조건별까지)', () => {
+    const { p } = partial();
+    const summary = { visitors: 40, turnedAway: 0, profit: 0, exitSatisfaction: 44 };
+    const pre = scoreExam(2, p, summary);
+    const e = new ExamStore();
+    e.apply(2, 1, 0);
+    const v = e.judge(1, p, summary);
+    expect(v).not.toBeNull();
+    expect(pre.score).toBe(v?.score);
+    expect(pre.max).toBe(v?.max);
+    expect(pre.passed).toBe(v?.passed);
+    expect(pre.perReq.map((r) => [r.detail, r.score])).toEqual(
+      (v?.perReq ?? []).map((r) => [r.detail, r.score]),
+    );
+    // 부분 점수여야 대조가 뜻이 있다 — 만점이면 어떤 셈이든 맞아 보인다
+    expect(pre.score).toBeGreaterThan(0);
+    expect(pre.score).toBeLessThan(pre.max);
+  });
+
+  it('예상은 상태를 안 바꾼다 — 몇 번을 봐도 응시로 이어지지 않는다', () => {
+    const { p } = partial();
+    const e = new ExamStore();
+    for (let i = 0; i < 3; i++) scoreExam(2, p, null);
+    expect(e.pending).toBeNull(); // 화면을 여는 것은 신청이 아니다
+    expect(scoreExam(2, p, null).score).toBe(scoreExam(2, p, null).score);
+  });
+
+  it('커트라인은 만점의 75% — 화면이 보여주는 커트가 판정의 커트다', () => {
+    const { p } = partial();
+    const s = scoreExam(2, p, { visitors: 0, turnedAway: 0, profit: 0, exitSatisfaction: 0 });
+    expect(s.max).toBe(30);
+    expect(s.cut).toBe(23); // ceil(30 × 0.75)
+    expect(s.fee).toBe(300000);
+  });
+
+  it('최고 등급 위를 물으면 빈 채점표 — 화면이 터지지 않는다', () => {
+    const { p } = flat();
+    const s = scoreExam(6, p, null);
+    expect(s.perReq).toEqual([]);
+    expect(s.max).toBe(0);
+    expect(s.passed).toBe(true); // 조건이 없으면 못 떨어진다 (judge 와 같은 규칙)
+  });
+
+  it('판정 주차는 화면과 접수가 같은 함수를 쓴다', () => {
+    // 갈라지면 "화면은 이번 주말이라는데 다음 주에 판정"이 된다
+    for (const tick of [0, EXAM_APPLY_CUTOFF_TICK - 1, EXAM_APPLY_CUTOFF_TICK, 900]) {
+      const e = new ExamStore();
+      expect(e.apply(2, 5, tick).judgeWeek).toBe(examJudgeWeek(5, tick));
+    }
   });
 });
 

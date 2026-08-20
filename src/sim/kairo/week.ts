@@ -1,6 +1,6 @@
 import { Rng } from '../rng.js';
 import { BusRunner } from './bus.js';
-import { nightPools, zoneFee, ZONE_HANDLE_BASE } from './swim.js';
+import { nightPools, ZONE_HANDLE_BASE } from './swim.js';
 import type { KairoTerrain } from './terrain.js';
 import {
   PlacementGrid,
@@ -209,6 +209,20 @@ export interface WeekReport extends WeekSummary {
    * 결산이 "얼마가 표에서 왔나"를 보여주기 위해서다.
    */
   admission: number;
+  /**
+   * **별도 구매** 수입 (P6) — 음식·자리 대여·숙박·보트 대여에서 그 자리에서 받은 돈.
+   * `revenue` 에 이미 들어 있다.
+   *
+   * `revenue = admission + sales + courseRevenue` 가 **항상** 성립한다
+   * (`charge.test.ts` 의 합계 검사가 지킨다). 그래서 따로 누산기를 두지 않고 뺄셈으로
+   * 낸다 — 장부를 두 벌 두면 배율(매점직원·카드·콤보)을 한쪽에만 곱하는 실수가
+   * 언젠가 나고, 그때 화면의 세 줄이 합계와 안 맞는다.
+   *
+   * ⚠ 이름이 "매점"이 아니라 "별도 구매"인 이유: 매점만이 아니다. 평상 대여·펜션·
+   * 카약 대여가 다 여기 든다 (`charge: 'sale'`). 반대로 입장권에 포함된 시설
+   * (물놀이·샤워·경관)은 이용해도 0 이라 이 줄에 **한 푼도 안 들어온다**.
+   */
+  sales: number;
   /**
    * 매표소를 못 지나 돌아간 손님 (K36-B②).
    *
@@ -547,15 +561,22 @@ export class WeekRunner {
     return out;
   }
 
-  /** 전체 요금 중 식음이 차지하는 몫 — 매점직원 부족을 식음에만 물리기 위해 */
+  /**
+   * 전체 요금 중 식음이 차지하는 몫 — 매점직원 부족을 식음에만 물리기 위해.
+   *
+   * ⚠ **실제로 걷히는 요금**(`feeOf`)으로 잰다. `def.fee`(정가)로 재면 입장권에 포함된
+   * 42종이 한 푼도 안 걷는데 분모에 들어가, 매점직원이 모자랄 때 깎이는 몫이 실제
+   * 매점 매출보다 훨씬 작아진다 (P6). 정가는 "받을 수도 있었던 값"이지 매출이 아니다.
+   */
   private foodShare(): number {
     let food = 0;
     let all = 0;
     for (const item of this.placement.all()) {
       const def = facilityDef(item.defId);
       if (!def) continue;
-      all += def.fee;
-      if ((def as { need?: string }).need === 'food') food += def.fee;
+      const fee = this.placement.feeOf(item.handle);
+      all += fee;
+      if ((def as { need?: string }).need === 'food') food += fee;
     }
     return all === 0 ? 0 : food / all;
   }
@@ -1077,6 +1098,8 @@ export class WeekRunner {
       noTicket: days.reduce((a, d) => a + d.noTicket, 0),
       revenue: weekRevenue,
       admission: weekAdmission,
+      // 별도 구매 = 총수입 − 입장료 − 코스 (위 `sales` 주석 — 장부는 한 벌이다)
+      sales: weekRevenue - weekAdmission - courseRevenue,
       upkeep,
       wages,
       courseRevenue,
@@ -1187,11 +1210,15 @@ export class WeekRunner {
         gateN += 1;
         continue;
       }
-      const unit =
-        was >= ZONE_HANDLE_BASE
-          ? zoneFee(this.guests.swimZones()[was - ZONE_HANDLE_BASE])
-          : this.placement.feeOf(was);
-      const wt = Math.max(0.0001, unit * g.wallet);
+      /*
+       * 입장권에 포함된 시설은 **자리를 아예 안 잡는다** (P6). 예전에는 단가 0 도
+       * `Math.max(0.0001, …)` 로 들어왔는데, `spread` 는 **나머지를 마지막 항목이
+       * 먹게** 하므로 공짜 화장실 위에 `+₩N` 이 뜰 수 있었다.
+       * 수영 구역도 마찬가지로 0 이다 (`guests.zoneCharge`).
+       */
+      const unit = was >= ZONE_HANDLE_BASE ? 0 : this.placement.feeOf(was);
+      if (unit <= 0) continue;
+      const wt = unit * g.wallet;
       fee.set(was, (fee.get(was) ?? 0) + wt);
       feeW += wt;
     }
