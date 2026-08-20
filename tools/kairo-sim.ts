@@ -29,6 +29,8 @@
  * **걷어낸 것** (K49 — 게임 값으로 옮겼다)
  *   · `courses.count < 4`            → 잔교 수·겹침 판정 (`docksOf`/`validateCourse`)
  *   · `POOL_TARGET_TILES = 32`       → `kairo-combos.json` 의 `areaScale` 포화점
+ *                                     (P3-E: 아직 못 딴 인증이 더 넓게 요구하면 그쪽 —
+ *                                      `kairo-certs.json` 의 `swimAreaMax`)
  *   · `growPool` "가장 큰 구역 하나" → 목표 미만인 구역들 + 두 번째 풀
  *   · `ensureTicket` 반경 12         → 해금된 토지 전체
  *   · `POOL_TILE_COST = 40_000`      → `kairo-ground.json`
@@ -94,6 +96,7 @@ import {
   landRect,
   GRADES,
   supplyOf,
+  type GradeDef,
 } from '../src/sim/kairo/progress.js';
 import { poolZones, POOL_KIND, POOL_MIN_TILES } from '../src/sim/kairo/swim.js';
 import { UnlockStore } from '../src/sim/kairo/unlocks.js';
@@ -104,6 +107,7 @@ import {
   EXAM_PASS_RATIO,
 } from '../src/sim/kairo/exam.js';
 import { WishStore } from '../src/sim/kairo/wishes.js';
+import { CERTS, CertStore, certStatuses, effectiveGrade } from '../src/sim/kairo/certs.js';
 import { COMBOS } from '../src/sim/kairo/combos.js';
 
 const args = process.argv.slice(2);
@@ -202,6 +206,17 @@ interface RunResult {
   turnedAwayRatio: number;
   gaveUpRatio: number;
   questsDone: number;
+  /**
+   * 딴 사이드 인증 수와 그 정원 가산 (P3-E). **안 재는 축은 죽어도 안 보인다**
+   * (P2-C 교훈) — 0 이면 조건이 너무 무겁고, 12 면 소진했다는 뜻이다.
+   */
+  certsEarned: number;
+  certCapacity: number;
+  /**
+   * 어떤 인증을 땄나 (P3-E). 개수만 세면 "12종 중 7종"이 **어느 7종인지** 모른다 —
+   * 조건이 무거워서 아무도 못 따는 종이 있으면 그건 목록에 있으되 없는 것과 같다.
+   */
+  certIds: string[];
   bankrupt: boolean;
   /** 주차별 손익 — 성장 곡선을 본다 */
   profitByWeek: number[];
@@ -661,6 +676,10 @@ const POOL_GROW_TILES = 4;
  *
  * 지금 이 값은 **상한이 아니라 한 구역의 목표**다. 더 필요하면 사람은 잔디를 통째로 물로
  * 칠하는 대신 **두 번째 풀을 판다** — zone 콤보도 구역마다 따로 발동한다 (`comboHits`).
+ *
+ * ⚠ P3-E 부터 이것이 목표의 **하한**이다. 사이드 인증이 더 넓은 구역을 요구하면
+ * (`cert_swim` 40칸) 그쪽이 목표가 된다 — 그게 "32칸 위로 파는 것이 순손실"이라던
+ * 제안서 §1.8 의 결과②에 게임이 준 답이다. 봇이 32 에서 멈추면 그 답을 안 재게 된다.
  */
 const POOL_TARGET_TILES = (() => {
   let best = POOL_MIN_TILES;
@@ -670,6 +689,23 @@ const POOL_TARGET_TILES = (() => {
   }
   return best;
 })();
+
+/**
+ * 아직 못 딴 인증이 요구하는 **가장 넓은 수영 구역** (P3-E). 없으면 0.
+ *
+ * ⚠ 값을 여기 적지 않는다 — `kairo-certs.json` 에서 읽는다. 봇 상수를 걷어낸
+ * K49 와 같은 규칙이다 (파일 상단의 전수 목록 참고).
+ */
+function certSwimTarget(certs: CertStore): number {
+  let best = 0;
+  for (const c of CERTS) {
+    if (certs.has(c.id)) continue;
+    for (const q of c.conditions) {
+      if (q.kind === 'swimAreaMax') best = Math.max(best, q.value);
+    }
+  }
+  return best;
+}
 
 const POOL_DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]] as const;
 
@@ -700,13 +736,23 @@ function ensurePool(
    * 영원히 멈추거나(예전 동작), 병목과 무관하게 잔디를 계속 물로 칠하는 최적화기가 되거나.
    */
   wantMore: boolean,
+  /**
+   * 한 구역의 목표 면적 (P3-E). 기본은 콤보 포화점(`POOL_TARGET_TILES`)이고, **아직 못 딴
+   * 인증이 그보다 넓은 구역을 요구하면 그쪽**이다 — 사람은 인증 목록의 "수영 구역 40칸"을
+   * 읽고 40 까지 판다.
+   *
+   * ⚠ 봇 상수가 아니라 **데이터에서 나온다** (`kairo-certs.json`). 안 넣으면 봇이
+   * 32칸에서 멈춰 `cert_swim` 을 영원히 못 따고, 그러면 헤드리스가 "면적 축이 열렸는데
+   * 아무도 안 쓰는 세계"를 잰다 (P3-A 의 교훈과 같은 형태).
+   */
+  targetTiles: number,
 ): number {
   const stand = (i: number, j: number): boolean => t.isGuestWalkable(i, j);
   const afford = Math.floor(Math.max(0, budget) / POOL_TILE_COST);
   if (afford <= 0) return 0;
   const zones = poolZones(t, stand);
   if (zones.length > 0) {
-    const grown = growPool(t, walls, p, land, zones, Math.min(afford, POOL_GROW_TILES));
+    const grown = growPool(t, walls, p, land, zones, Math.min(afford, POOL_GROW_TILES), targetTiles);
     if (grown > 0) return grown;
     // 있는 것이 전부 목표 면적이다 — 놀거리가 병목일 때만 하나 더 판다
     if (!wantMore) return 0;
@@ -780,6 +826,8 @@ function growPool(
   land: ReturnType<typeof landRect>,
   zones: ReturnType<typeof poolZones>,
   maxTiles: number,
+  /** 한 구역의 목표 면적 — 콤보 포화점 또는 인증이 요구하는 넓이 (P3-E) */
+  targetTiles: number,
 ): number {
   /*
    * **목표에 못 미친 구역 중 가장 큰 것**을 키운다. 여러 개를 조금씩 키우면 어느 것도
@@ -792,11 +840,11 @@ function growPool(
    */
   let zone: (typeof zones)[number] | null = null;
   for (const z of zones) {
-    if (z.area >= POOL_TARGET_TILES) continue;
+    if (z.area >= targetTiles) continue;
     if (zone === null || z.area > zone.area) zone = z;
   }
   if (zone === null) return 0;
-  const room = POOL_TARGET_TILES - zone.area;
+  const room = targetTiles - zone.area;
   if (room <= 0) return 0;
   const level = t.levelAt(zone.tiles[0]!.x, zone.tiles[0]!.y);
   let ci = 0;
@@ -1319,6 +1367,14 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const unlocks = new UnlockStore();
   const exam = new ExamStore();
   const wishes = new WishStore();
+  /*
+   * 사이드 인증 (P3-E) — **봇이 안 노리면 이 축은 영원히 안 재진다** (P3-A 의 교훈:
+   * 관측된 "게임이 막혔다" 넷이 전부 봇의 정책 버그였다). 다만 최적화기는 만들지
+   * 않는다 — 아래 `want` 가 심사 시트 다음으로 **가장 가까운 인증**의 needSupply 를
+   * 볼 뿐이고, 조건 종류를 골라 판을 재설계하지는 않는다.
+   */
+  const certs = new CertStore();
+  let certsEarned = 0;
   const discovered = new Set<string>();
   /**
    * 평판 — 퇴장 만족도의 이동평균 (§9.2). 지난주 값 하나로 등급을 정하면 진동한다
@@ -1326,6 +1382,13 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
    */
   const reputation = new Reputation();
   let gradeNo = 1;
+  /**
+   * 지금 등급 — **인증 가산이 들어간 값**이다 (`src/main.ts` 의 `currentGrade()` 와
+   * 같은 함수). 봇이 `GRADES` 원본을 그대로 쓰면 헤드리스가 상한 300 인 게임을
+   * 230 으로 재게 된다 (K41 이 "봇이 등급조차 안 보고 있었다"로 겪은 것과 같은 형태).
+   */
+  const gradeNow = (): GradeDef =>
+    effectiveGrade(GRADES[gradeNo - 1] ?? GRADES[0]!, certs.bonus());
   const cards = new CardStore();
   /**
    * 카드는 **전용 RNG 스트림**을 쓴다 (불변식 2). 손님·날씨와 같은 스트림을 쓰면
@@ -1416,7 +1479,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     }
     // 빈 실내 칸이 8 미만이면 미리 넓힌다 — 8 은 실내 시설 최대 발자국(2×2=4)의 두 배다
     if (freeIndoor < 8) {
-      const grade0 = GRADES[gradeNo - 1] ?? GRADES[0]!;
+      const grade0 = gradeNow();
       cash -= ensureRoom(t, w, p, landRect(grade0), rng, { w: 4, h: 1 });
     }
 
@@ -1447,6 +1510,37 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         }
       }
     }
+    /*
+     * 심사가 다 찼으면 **인증**을 본다 (P3-E). 순서가 심사 → 인증 → 병목인 이유:
+     * 심사는 등급을 올려 상한 자체를 키우고(효과가 가장 크다), 인증은 그 옆에서
+     * 상한을 조금씩 풀며, 병목은 "지금 손님이 못 쓰는 것"이다.
+     *
+     * ⚠ **최적화기가 아니다.** 아직 못 딴 인증 중 **가장 가까운 것 하나**의
+     * `needSupply` 조건만 본다 — 조건 종류를 고르거나 판을 재설계하지 않는다.
+     * 사람도 인증 목록에서 다음으로 가까운 줄의 조건을 읽고 그걸 짓는다.
+     */
+    if (want === null) {
+      const near = certStatuses(p, last, {
+        zones: g.swimZones(),
+        courses: courses.count,
+        questsDone: progress.claimedCount,
+      })
+        .filter((s) => !s.done && !certs.has(s.id))
+        .sort((a, b) => b.progress - a.progress)[0];
+      if (near) {
+        const def = CERTS.find((c) => c.id === near.id);
+        const sup = supplyOf(p);
+        let worst = 1;
+        for (const c of def?.conditions ?? []) {
+          if (c.kind !== 'needSupply' || c.need === undefined) continue;
+          const prog = Math.min(1, (sup[c.need] ?? 0) / Math.max(1, c.value));
+          if (prog < worst) {
+            worst = prog;
+            want = c.need;
+          }
+        }
+      }
+    }
     if (want === null) want = last?.bottleneck?.need ?? null;
     let buildSpend = 0;
     /*
@@ -1456,7 +1550,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     {
       // 거리장을 먼저 최신으로 — 지난주 건설이 매표소를 가뒀는지 여기서 드러난다
       g.invalidate();
-      const spent = ensureTicket(t, w, p, g, landRect(GRADES[gradeNo - 1] ?? GRADES[0]!), cash);
+      const spent = ensureTicket(t, w, p, g, landRect(gradeNow()), cash);
       if (spent > 0) ticketRebuilds++;
       cash -= spent;
       buildSpend += spent;
@@ -1470,10 +1564,15 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         t,
         w,
         p,
-        landRect(GRADES[gradeNo - 1] ?? GRADES[0]!),
+        landRect(gradeNow()),
         cash - BUILD_RESERVE,
         // 놀거리가 병목이면 두 번째 풀까지 (K49) — 결산이 이미 화면에 말하는 신호다
         last?.bottleneck?.need === 'play',
+        /*
+         * 목표 면적 (P3-E) — 콤보 포화점과 **아직 못 딴 인증이 요구하는 넓이** 중 큰 쪽.
+         * 32 에서 멈추면 `cert_swim`(40칸)을 영원히 못 따서 면적 축이 안 재진다.
+         */
+        Math.max(POOL_TARGET_TILES, certSwimTarget(certs)),
       );
       if (spent > 0) {
         g.invalidate();
@@ -1511,14 +1610,24 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
      * 우리는 **게임이 무너졌다고 잘못 읽는다** — 무너진 건 봇의 정책이다.
      * (게임 쪽에도 이 사실을 알리는 표시가 필요하다 — 결산 병목 줄에 넣었다.)
      */
-    const gradeNow = nextGrade(gradeNo, reputation.value);
+    /*
+     * ⚠ **등급 천장은 정본에게 묻는다** (P3-E). 예전에는 `gradeNow.maxGuests` 를 직접
+     * 읽었는데, 그러면 상한을 올리는 어떤 변경도 **봇만 옛 규칙으로 남는다** — 인증이
+     * 정원을 +70 해도 봇은 230 을 보고 "이미 꽉 찼으니 그만 짓자"를 해서, 헤드리스가
+     * "상한이 풀렸는데 안 짓는 세계"를 재게 된다. 그건 P3-A 가 겪은 실패와 같은 형태다.
+     *
+     * `week.ts` 의 `admissionState` 와 **같은 수법**이다: 공급이 무한이면 얼마인가 =
+     * 등급 천장. 그래서 `min(등급, 공급×1.5)` 의 사본이 여기 생기지 않는다.
+     */
+    const gradeCapNow = effectiveGrade(nextGrade(gradeNo, reputation.value), certs.bonus());
+    const ceilingNow = admissionLimit(gradeCapNow, Number.MAX_SAFE_INTEGER);
     /*
      * `1.5` 는 게임의 값이다 (`admissionLimit` 의 `공급 × 1.5`). `1.3` 은 **여유**로,
      * 상한에 닿자마자 끊지 않고 조금 넘겨서 짓게 한다 — 정확히 상한에서 끊으면 개선으로
      * 정원이 조금만 늘어도 매주 짓다 말다를 반복한다 (히스테리시스). 봇의 값이지만
      * 천장이 아니라 **떨림 방지**다.
      */
-    const capped = p.totalCapacity() * 1.5 > gradeNow.maxGuests * 1.3;
+    const capped = p.totalCapacity() * 1.5 > ceilingNow * 1.3;
     if (capped) weekBudget = 0;
 
     /**
@@ -1548,9 +1657,9 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         b === 0 ? want : null,
         rng,
         (id) => unlocks.isUnlocked(id, gradeNo),
-        landRect(GRADES[gradeNo - 1] ?? GRADES[0]!),
+        landRect(gradeNow()),
         buildFailWhy,
-        (GRADES[gradeNo - 1] ?? GRADES[0]!).permitArea,
+        gradeNow().permitArea,
       );
       cash -= spent;
       buildSpend += spent;
@@ -1726,7 +1835,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         examApplied++;
       }
     } else if (!exam.pending && nextGradeDef(gradeNo)) examNoEligibleWeeks++;
-    const gr = GRADES[gradeNo - 1] ?? GRADES[0]!;
+    const gr = gradeNow();
     const season = seasons[Math.floor(k / 4) % seasons.length] as Season;
 
     /*
@@ -1993,6 +2102,22 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     const claimed = progress.claim(questStatuses(p, rep, g.swimZones()));
     cash += claimed.cash;
     for (const fid of claimed.facilities) unlocks.grant(fid); // 봇도 보상을 받는다 (K41)
+    /*
+     * 사이드 인증 (P3-E) — **의뢰 청구 뒤**다 (`questsDone` 조건이 방금 청구한 의뢰를
+     * 세야 한다). UI 와 같은 함수·같은 재료를 넘긴다 — 한쪽만 다른 문맥을 주면
+     * 헤드리스가 다른 세계를 잰다 (comboEffect·swimZones 에서 이미 겪은 함정).
+     */
+    {
+      const got = certs.claim(
+        certStatuses(p, rep, {
+          zones: g.swimZones(),
+          courses: courses.count,
+          questsDone: progress.claimedCount,
+        }),
+      );
+      cash += got.cash;
+      certsEarned += got.ids.length;
+    }
     // 소원 (K43) — UI 와 같은 규칙. 보상 시설·현금을 그대로 받는다
     for (const ev of wishes.settle(rep, rep.byGroup, p, g.swimZones())) {
       if (ev.kind !== 'done') continue;
@@ -2059,6 +2184,9 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     turnedAwayRatio: (last?.turnedAway ?? 0) / arrivals,
     gaveUpRatio: (last?.gaveUp ?? 0) / Math.max(1, last?.visitors ?? 1),
     questsDone: progress.claimedCount,
+    certsEarned,
+    certCapacity: certs.bonus().capacity,
+    certIds: [...certs.earnedIds],
     bankrupt: cash < 0,
     profitByWeek,
     seasonByWeek,
@@ -2255,6 +2383,45 @@ function main(): void {
   console.log(`현금 (4주마다):   ${every4(cashW)}`);
   console.log(
     `직원 평균: ${(stats(runs.map((r) => r.staffWeeks)).med / WEEKS).toFixed(1)}명/주`,
+  );
+  /*
+   * ── 후반 공백 (P3-E) ─────────────────────────────────────────────────
+   *
+   * ⚠ **「후반이 빈다」 경보만 보면 아무것도 안 잰 것이다.** 그 경보는
+   * `capped 중앙 > WEEKS×0.5 && 현금 > 1500만` 이라 52~80주에서는 구조적으로 거의
+   * 안 터진다 (실측: 260주에서 처음 터졌다). 그래서 후반 공백을 **직접** 잰다 —
+   * 안 재는 축은 죽어도 안 보인다 (P2-C 교훈).
+   *
+   * 둘 다 판마다 재고 **중앙값**을 낸다. 주별 중앙값 배열(`bldW`)로 재면 "판마다 다른
+   * 주에 쉰 것"이 서로를 메워 공백이 실제보다 작게 보인다.
+   */
+  const dryRatioIn = (r: RunResult, from: number, to: number): number => {
+    const a = r.buildSpendByWeek.slice(from, to);
+    return a.length === 0 ? 0 : a.filter((x) => x === 0).length / a.length;
+  };
+  /** 첫 "4주 연속 무건설"이 시작하는 주 (1-based). 없으면 weeks+1 — 뒤로 밀수록 좋다 */
+  const firstDry = (r: RunResult): number => {
+    let run = 0;
+    for (let k = 0; k < r.buildSpendByWeek.length; k++) {
+      run = r.buildSpendByWeek[k] === 0 ? run + 1 : 0;
+      if (run >= 4) return k + 2 - 4;
+    }
+    return r.buildSpendByWeek.length + 1;
+  };
+  const half = Math.floor(WEEKS / 2);
+  const lateDry = stats(runs.map((r) => Math.round(dryRatioIn(r, half, WEEKS) * 100)));
+  const fd = stats(runs.map(firstDry));
+  console.log(
+    `후반 공백: ${half + 1}~${WEEKS}주 건설 0원 ${lateDry.med}% (p25 ${lateDry.p25} · p75 ${lateDry.p75}) · ` +
+      `첫 4주 연속 무건설 ${fd.med}주차 (최소 ${fd.min}) · ` +
+      `인증 중앙 ${stats(runs.map((r) => r.certsEarned)).med}/${CERTS.length}종 ` +
+      `(정원 +${stats(runs.map((r) => r.certCapacity)).med})`,
+  );
+  // 인증별 획득률 — 0% 인 종은 목록에 있으되 없는 것과 같다 (조건이 무겁다는 신호)
+  console.log(
+    `  인증별: ${CERTS.map(
+      (c) => `${c.name} ${Math.round((100 * runs.filter((r) => r.certIds.includes(c.id)).length) / runs.length)}%`,
+    ).join(' · ')}`,
   );
   if (EACH) {
     console.log(

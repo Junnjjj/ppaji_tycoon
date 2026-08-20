@@ -5,6 +5,7 @@ import { ProgressStore, type ProgressSnapshot } from '../sim/kairo/progress.js';
 import type { WeekSnapshot, WeekSummary, Season } from '../sim/kairo/week.js';
 import type { UnlockSnapshot } from '../sim/kairo/unlocks.js';
 import type { ExamSnapshot } from '../sim/kairo/exam.js';
+import type { CertSnapshot } from '../sim/kairo/certs.js';
 import type { WishSnapshot } from '../sim/kairo/wishes.js';
 import type { CardSnapshot } from '../sim/kairo/cards.js';
 import type { StaffCounts } from '../sim/kairo/staff.js';
@@ -139,6 +140,15 @@ export interface KairoSaveV5 {
   exam?: ExamSnapshot;
   /** 소원 체인 (K43) — EXP·활성 인물·진행. 잃으면 인물이 떠나고 사슬이 끊긴다 */
   wishes?: WishSnapshot;
+  /**
+   * 획득한 사이드 인증 (P3-E) — **등급에서 다시 만들 수 없는 상태**다. 잃으면
+   * 정원 가산이 통째로 증발해 새로고침이 곧 상한 되돌리기가 된다.
+   *
+   * ⚠ **optional 이라 마이그레이션이 없다 · 버전 7 그대로** (`visitorsTotal`·
+   * `builtEver` 선례). 없으면 인증 0종으로 열릴 뿐이고, 버전을 올리면 이미 나간
+   * v7 세이브가 전부 한 칸씩 밀린다.
+   */
+  certs?: CertSnapshot;
 }
 
 export type AnyKairoSave = KairoSaveV5;
@@ -348,6 +358,7 @@ export interface KairoSaveInput {
   visitorsTotal?: number;
   exam?: ExamSnapshot;
   wishes?: WishSnapshot;
+  certs?: CertSnapshot;
 }
 
 export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave {
@@ -386,6 +397,8 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.visitorsTotal !== undefined ? { visitorsTotal: input.visitorsTotal } : {}),
     ...(input.exam ? { exam: input.exam } : {}),
     ...(input.wishes ? { wishes: input.wishes } : {}),
+    // 사이드 인증 (P3-E) — optional 이라 옛 세이브도 그대로 열린다 (버전 7 유지)
+    ...(input.certs ? { certs: input.certs } : {}),
   };
 }
 
@@ -450,6 +463,7 @@ export interface KairoRestored {
   visitorsTotal?: number;
   exam?: ExamSnapshot;
   wishes?: WishSnapshot;
+  certs?: CertSnapshot;
 }
 
 export function restoreKairo(raw: unknown): KairoRestored {
@@ -487,6 +501,7 @@ export function restoreKairo(raw: unknown): KairoRestored {
     ...(s.visitorsTotal !== undefined ? { visitorsTotal: s.visitorsTotal } : {}),
     ...(s.exam ? { exam: s.exam } : {}),
     ...(s.wishes ? { wishes: s.wishes } : {}),
+    ...(s.certs ? { certs: s.certs } : {}),
   };
 }
 

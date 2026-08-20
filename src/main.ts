@@ -35,6 +35,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { previewCombos, evaluateCombos, comboEffect } = await import('./sim/kairo/combos.js');
   const { UnlockStore } = await import('./sim/kairo/unlocks.js');
   const { ExamStore } = await import('./sim/kairo/exam.js');
+  // 사이드 인증 (P3-E) — 등급 상한을 푸는 유일한 고리가 `effectiveGrade` 다
+  const { CertStore, certStatuses, effectiveGrade, CERTS } = await import('./sim/kairo/certs.js');
   const { WishStore } = await import('./sim/kairo/wishes.js');
   const { COMBOS } = await import('./sim/kairo/combos.js');
   const {
@@ -870,6 +872,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const hud = new KairoHud(document.body, {
     // 붓 라벨의 정본은 티커다 (K47-①) — 하단 바는 누르는 곳, 읽는 것은 티커
     onBrush: (label) => ticker.setBrush(label),
+    /*
+     * 메뉴를 여는 순간 목록을 다시 그린다 (P3-E). 인증 목록은 시트가 닫혀 있으면
+     * 안 그리므로(아래 `refreshQuests`), 여는 순간이 유일한 갱신 시점이다.
+     */
+    onSheetOpen: (which) => {
+      if (which === 'menu') refreshQuests();
+    },
     onPick: (it: HudItem) => {
       // 붓을 바꾸면 진행 중이던 배치는 취소한다 — 안 그러면 확정 바가 옛 시설을 가리킨다
       endAim();
@@ -1152,6 +1161,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const exam = ExamStore.fromSnapshot(saved?.exam);
   // 소원 체인 (K43) — 인물·EXP·열린 소원이 상태다
   const wishes = WishStore.fromSnapshot(saved?.wishes);
+  /*
+   * 사이드 인증 (P3-E) — 등급 사다리 **옆**의 병렬 목표. 획득분이 `maxGuests`·
+   * `permitArea` 를 올린다. 이 저장소에서 후반 공백의 뿌리였던 등급 상한을 푸는
+   * 유일한 고리이고, 그 가산은 `currentGrade()` **한 곳**으로만 들어온다.
+   */
+  const certs = CertStore.fromSnapshot(saved?.certs);
+  /** 이미 "곧 딴다"를 알린 인증 — 매주 같은 뉴스가 흐르면 티커가 도배된다 */
+  const certNearShown = new Set<string>();
   const week = new WeekRunner(h.terrain, h.placement, h.guests);
   runner = week; // 프레임이 이제부터 주차·현금을 읽을 수 있다
   const report = new KairoReport(document.body);
@@ -1280,9 +1297,18 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   /*
    * 지금 등급 = gradeNo 그대로 (K42). 예전엔 nextGrade 로 **평판이 문턱을 넘는 순간
    * 자동 승급**이었다 — 이제 승급은 심사 통과로만 일어난다. 강등은 결산에서 자동이다.
+   *
+   * ⚠ **인증 가산이 게임에 들어오는 유일한 지점이다** (P3-E). `effectiveGrade` 로
+   * 감싸므로 입장 상한(`admissionLimit`) · 수면 허가(`placeOpts`) · 결산의
+   * `admissionCap` · 메뉴의 "동시 N명"이 **한 번에** 따라온다. `admissionLimit` 에
+   * 인자를 더하는 쪽을 안 고른 이유는 `certs.ts` 의 `effectiveGrade` 주석에 있다 —
+   * 부르는 쪽이 하나만 잊어도 화면과 시뮬이 다른 상한으로 돈다.
    */
   const currentGrade = (): ReturnType<typeof gradeFor> =>
-    GRADES.find((g) => g.grade === gradeNo) ?? (GRADES[0] as ReturnType<typeof gradeFor>);
+    effectiveGrade(
+      GRADES.find((g) => g.grade === gradeNo) ?? (GRADES[0] as ReturnType<typeof gradeFor>),
+      certs.bonus(),
+    );
 
   /** 세이브 — 배치·주 진행처럼 상태가 실제로 바뀐 뒤에만 부른다 */
   // 부팅 시점의 토지 — 세이브에서 복원된 등급이 그대로 화면에 반영돼야 한다
@@ -1331,6 +1357,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       visitorsTotal,
       exam: exam.toSnapshot(),
       wishes: wishes.toSnapshot(),
+      // 사이드 인증 (P3-E) — optional 필드라 옛 세이브도 그대로 열린다 (버전 7 유지)
+      certs: certs.toSnapshot(),
     });
   };
 
@@ -1716,6 +1744,44 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         `의뢰 달성 — ${q?.name ?? qid}` +
           (q && q.reward > 0 ? ` · +${Math.round(q.reward / 10000)}만` : ''),
       );
+    }
+    /*
+     * 사이드 인증 (P3-E) — **의뢰 청구 뒤**다. `questsDone` 조건이 방금 청구한 의뢰를
+     * 세야 "마지막 의뢰를 끝낸 주에 사철 인증"이 성립한다.
+     *
+     * 채널: **달성은 모달**(정원이 늘어나는 콘텐츠 해금이라 축하 급) · **근접은 티커**
+     * (내가 안 눌렀는데 일어난 소식). 조건이 하나 남았을 때 한 번만 흘린다 —
+     * 매주 흘리면 12종이 티커를 도배한다.
+     */
+    {
+      const certCtx = {
+        zones: h.guests.swimZones(),
+        courses: courses.count,
+        questsDone: progress.claimedCount,
+      };
+      const certSt = certStatuses(h.placement, lastSummary, certCtx);
+      const certClaim = certs.claim(certSt);
+      if (certClaim.cash > 0) week.earn(certClaim.cash);
+      for (const cid of certClaim.ids) {
+        const c = CERTS.find((x) => x.id === cid);
+        if (!c) continue;
+        const gain: string[] = [];
+        if (c.reward.capacity !== undefined) gain.push(`정원 +${c.reward.capacity}명`);
+        if (c.reward.permitArea !== undefined) gain.push(`수면 허가 +${c.reward.permitArea}칸`);
+        if (c.reward.cash !== undefined) gain.push(`+${Math.round(c.reward.cash / 10000)}만`);
+        audio.play('sfx/exam-pass');
+        arrivalQueue.push({
+          title: '인증 획득!',
+          name: c.name,
+          sub: gain.join(' · '),
+        });
+      }
+      for (const s of certSt) {
+        if (s.done || s.remaining !== 1 || certNearShown.has(s.id)) continue;
+        certNearShown.add(s.id);
+        const left = s.reqs.find((r) => !r.done);
+        news('🏅', `${s.name} 조건 하나 남았습니다 — ${left?.detail ?? ''}`);
+      }
     }
     /*
      * 소원 (K43) — EXP 적립·소원 열림·성사 판정. 전부 결산 tick 의 결정적 계산이고,
@@ -2306,9 +2372,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     questPanel.replaceChildren();
     const title = document.createElement('div');
     const g = currentGrade();
+    // 인증 가산은 **여기서 보인다** — 정원 숫자가 왜 등급표보다 큰지 말하지 않으면 버그로 읽힌다
+    const bonus = certs.bonus();
     title.textContent =
       `의뢰 ${st.length - open.length}/${st.length} · ${g.grade}등급 ${g.name}\n` +
-      `동시 ${g.maxGuests}명 · 수요 ×${g.reputationPull}`;
+      `동시 ${g.maxGuests}명${bonus.capacity > 0 ? ` (인증 +${bonus.capacity})` : ''} · 수요 ×${g.reputationPull}`;
     title.className = 'kquest-head';
     questPanel.append(title);
     for (const s of rows) {
@@ -2355,6 +2423,65 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         row.append(name, bar, det);
         questPanel.append(row);
       }
+    }
+    /*
+     * ⚠ **시트가 닫혀 있으면 인증은 안 그린다** (P3-E). `refreshQuests` 는 1.5초 폴링이
+     * 부르는데, 인증 진행도는 `evaluateCombos` 를 한 번 더 돌린다 (실측: 시설 53채에
+     * 2.2ms · 후반 판이면 그 두 배). 안 보이는 목록에 폰 프레임을 쓸 이유가 없다 —
+     * 여는 순간 `onSheetOpen` 이 다시 그린다.
+     *
+     * ⚠ 의뢰·소원 쪽은 **안 막았다.** `verify-kairo` 가 시트가 닫힌 채로
+     * `#kairo-quests` 의 textContent 를 읽는다 (그 파일은 이번 페이즈 금지). 인증은
+     * 목록 **맨 아래**라 그 검사가 읽는 앞 60자에 안 들어간다.
+     */
+    if (!hud.menuOpen) return;
+    /*
+     * 인증 (P3-E) — 의뢰·소원 **아래 같은 목록**이다. 새 패널도, 새 상시 컨트롤도
+     * 만들지 않았다:
+     *   · 셋 다 "조건 → 달성 → 보상"이라 행 모양(`.kquest`)이 이미 맞는다
+     *   · 의뢰 칩 기둥은 **3장이 천장**이라 (세로 24% 예산의 상한) 인증을 칩으로 올릴
+     *     자리가 없다 — 제안서 ⓑ 도 "인증은 상시 칩이 아니라 시트 안"이라고 적었다
+     *   · 시트 본문(`.ksheet-body`)은 이미 스크롤한다
+     * 획득분은 접지 않고 **맨 아래에 ✓ 로 남긴다** — 딴 것이 목록에서 사라지면
+     * "정원 +N" 이 어디서 왔는지 화면 어디에도 안 남는다.
+     */
+    const certSt = certStatuses(h.placement, lastSummary, {
+      zones: h.guests.swimZones(),
+      courses: courses.count,
+      questsDone: progress.claimedCount,
+    });
+    const certHead = document.createElement('div');
+    certHead.className = 'ksheet-group';
+    certHead.textContent = `인증 ${certs.count}/${certSt.length} · 정원 +${certs.bonus().capacity}`;
+    questPanel.append(certHead);
+    // 딴 것은 아래로, 안 딴 것은 가까운 순 — "다음에 뭘 하지"가 맨 위여야 한다
+    const certRows = [...certSt].sort(
+      (a, b) => Number(certs.has(a.id)) - Number(certs.has(b.id)) || b.progress - a.progress,
+    );
+    for (const s of certRows) {
+      const got = certs.has(s.id);
+      const row = document.createElement('div');
+      row.className = 'kquest';
+      const name = document.createElement('div');
+      name.textContent = `${got ? '✓ ' : '🏅 '}${s.name}`;
+      if (got) name.className = 'done';
+      const bar = document.createElement('div');
+      bar.className = got ? 'kprog done' : 'kprog';
+      const fill = document.createElement('i');
+      // 폭은 **데이터**다 — 색은 클래스가 갖는다 (K34)
+      fill.style.width = `${Math.round((got ? 1 : s.progress) * 100)}%`;
+      bar.append(fill);
+      const det = document.createElement('div');
+      const gain = [
+        s.reward.capacity !== undefined ? `정원 +${s.reward.capacity}` : null,
+        s.reward.permitArea !== undefined ? `허가 +${s.reward.permitArea}` : null,
+      ]
+        .filter((x) => x !== null)
+        .join(' · ');
+      det.textContent = got ? gain : `${s.reqs.map((r) => `${r.done ? '✓' : '·'} ${r.detail}`).join('  ')} → ${gain}`;
+      det.className = 'kquest-detail';
+      row.append(name, bar, det);
+      questPanel.append(row);
     }
   };
   /**
@@ -2518,6 +2645,38 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     },
     combos: { previewCombos, evaluateCombos },
     quests: { questStatuses, gradeFor, requiredGrade },
+    /**
+     * 사이드 인증 (P3-E) — 하네스가 **화면과 시뮬이 같은 상한을 말하는지** 재는 손잡이.
+     * `grade()` 는 인증 가산이 **들어간** 등급이다 (`currentGrade` 그대로).
+     */
+    certs: {
+      earned: () => certs.earnedIds,
+      bonus: () => certs.bonus(),
+      grade: () => currentGrade(),
+      statuses: () =>
+        certStatuses(h.placement, lastSummary, {
+          zones: h.guests.swimZones(),
+          courses: courses.count,
+          questsDone: progress.claimedCount,
+        }),
+      /**
+       * 판 셋업용 (`setGradeForTest` 와 같은 급). 인증을 **정상 경로로** 따려면
+       * 시설 수십 종·코스 여러 개를 지어야 해서 검사가 배치 스크립트가 된다 — 그때 재는 것은
+       * "정원 가산이 입장을 늘리는가"가 아니다. 획득 판정 자체는 단위 검사가 잰다.
+       */
+      grantForTest: (id: string) => {
+        const s = certStatuses(h.placement, lastSummary, {
+          zones: h.guests.swimZones(),
+          courses: courses.count,
+          questsDone: progress.claimedCount,
+        }).find((x) => x.id === id);
+        if (!s) return false;
+        certs.claim([{ ...s, done: true, remaining: 0 }]);
+        refreshQuests();
+        refreshCaps();
+        return true;
+      },
+    },
     risk: { assessRisk, RISK_NAMES },
     refreshRisk,
     /** 지금 해금된 토지 — 검증이 좌표를 박지 않게 (K36) */

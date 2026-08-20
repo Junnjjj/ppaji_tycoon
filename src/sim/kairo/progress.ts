@@ -29,7 +29,17 @@ export type QuestConditionKind =
   | 'activeCombos'
   | 'weekProfit'
   | 'comboTier'
-  | 'facilityTotalAndSat';
+  | 'facilityTotalAndSat'
+  /*
+   * ── 인증(P3-E)이 쓰는 후반 축 다섯 ──────────────────────────────────
+   * 앞 둘은 배치만으로 재고, 뒤 셋은 **바깥 문맥이 필요하다**
+   * (`ConditionContext` · `CONTEXT_CONDITION_KINDS` 참고).
+   */
+  | 'avgFacilityLevel'
+  | 'facilityKinds'
+  | 'swimAreaMax'
+  | 'courseCount'
+  | 'questsDone';
 
 export interface QuestCondition {
   kind: QuestConditionKind;
@@ -39,6 +49,34 @@ export interface QuestCondition {
   tier?: ComboTier;
   sat?: number;
 }
+
+/**
+ * 배치·결산만으로는 못 재는 조건들의 재료 (P3-E).
+ *
+ * ⚠ **여기 있는 kind 는 `kairo-certs.json` 에만 쓴다.** 의뢰(`questStatuses`)와
+ * 심사(`exam.judge`)는 문맥을 안 넘기므로, 그쪽 데이터에 넣으면 조용히 0 이 되어
+ * "조건이 영원히 미달"인 의뢰가 생긴다. `certs.test.ts` 의 정적 검사가 지킨다 —
+ * 실제로 위반을 주입해 잡히는 것을 확인했다.
+ */
+export interface ConditionContext {
+  /**
+   * 수영 구역 (S4) — 면적 조건이 읽는다. `guests.swimZones()` 의 결과.
+   * ⚠ 면적은 `area` 로 읽는다 — `tiles.length` 와 같은 값이지만 허가 회계·정원이
+   * 쓰는 필드가 `area` 라, 갈라지면 "수영장이 40칸인데 인증은 39" 가 생긴다.
+   */
+  zones?: readonly { area: number }[];
+  /** 지금 놓인 코스 수 (`CourseStore.count`) */
+  courses?: number;
+  /** 완료(청구)한 의뢰 수 (`ProgressStore.claimedCount`) */
+  questsDone?: number;
+}
+
+/** 문맥 없이는 못 재는 kind — 정적 검사와 UI 가 같은 목록을 본다 */
+export const CONTEXT_CONDITION_KINDS: readonly QuestConditionKind[] = [
+  'swimAreaMax',
+  'courseCount',
+  'questsDone',
+];
 
 export interface QuestDef {
   id: string;
@@ -282,6 +320,11 @@ export function evaluateCondition(
   report: WeekSummary | null,
   supply: Record<string, number>,
   combos: ReturnType<typeof evaluateCombos>,
+  /**
+   * 인증(P3-E)이 쓰는 바깥 재료. 의뢰·심사는 안 넘긴다 — 그래서 `CONTEXT_CONDITION_KINDS`
+   * 의 kind 는 인증 데이터에만 있어야 한다 (정적 검사가 지킨다).
+   */
+  ctx: ConditionContext = {},
 ): ConditionEval {
   let cur = 0;
   let goal = c.value;
@@ -330,6 +373,35 @@ export function evaluateCondition(
       goal = 1;
       break;
     }
+    /*
+     * ── 인증 전용 (P3-E) ────────────────────────────────────────────────
+     * 후반의 축들이다. 시설 **수**만 재면 인증이 의뢰의 큰 판일 뿐이라, 개선 단계 ·
+     * 이어진 물 넓이 · 코스 수 · 종류 수처럼 **다른 축**을 잰다.
+     */
+    case 'avgFacilityLevel':
+      // 소수점이 있는 유일한 조건이다 — 표시는 한 자리로 자른다
+      cur = placement.averageLevel();
+      detail = `${cur.toFixed(1)} / ${goal.toFixed(1)}단계`;
+      break;
+    case 'swimAreaMax':
+      // "가장 큰 한 구역" — 합계로 재면 작은 웅덩이 여럿이 큰 물놀이터를 대신한다
+      cur = (ctx.zones ?? []).reduce((a, z) => Math.max(a, z.area), 0);
+      detail = `${cur} / ${goal}칸`;
+      break;
+    case 'courseCount':
+      cur = ctx.courses ?? 0;
+      detail = `${cur} / ${goal}개`;
+      break;
+    case 'facilityKinds': {
+      const kinds = new Set(placement.all().map((x) => x.defId));
+      cur = kinds.size;
+      detail = `${cur} / ${goal}종`;
+      break;
+    }
+    case 'questsDone':
+      cur = ctx.questsDone ?? 0;
+      detail = `${cur} / ${goal}개`;
+      break;
   }
 
   const progress = goal <= 0 ? 1 : Math.max(0, Math.min(1, cur / goal));

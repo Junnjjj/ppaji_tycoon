@@ -1330,6 +1330,17 @@ body {
   text-align: center;
 }
 
+/*
+ * ⚠ `display: flex` 가 `[hidden]` 을 이긴다 (P3-E 에서 실측으로 발견).
+ * `#kairo-exam-open` 은 응시 자격이 없으면 `hidden = true` 인데 — 판의 대부분이
+ * 그 상태다 — 메뉴 격자에 **글씨 없는 빈 버튼**이 그대로 남아 있었다. 스크린샷에서
+ * 유령 칸으로 보인다. 다른 패널이 `[hidden]` 을 쓰는 것과 같은 이유로, 클래스가
+ * 숨김을 이기면 안 된다.
+ */
+.kitem[hidden] {
+  display: none;
+}
+
 .kitem:active {
   transform: translateY(1px);
   box-shadow: var(--sk-press);

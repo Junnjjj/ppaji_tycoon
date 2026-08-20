@@ -91,6 +91,13 @@ export interface HudOptions {
    * (`itemCard`) 바깥이 알 방법이 이 콜백뿐이다.
    */
   onBrush?: (label: string | null) => void;
+  /**
+   * 시트가 **열리는 순간** (P3-E). 메뉴 안의 목록(의뢰·소원·인증)은 시트가 닫혀 있는
+   * 동안에는 그릴 이유가 없는데, 1.5초 폴링이 매번 다시 그리고 있었다 — 인증이 그
+   * 폴링에 `evaluateCombos` 를 한 번 더 얹으므로(실측 시설 53채에 2.2ms) 열릴 때
+   * 한 번 그리는 쪽으로 옮겼다. 폰이 1순위라는 게 이 콜백의 이유다.
+   */
+  onSheetOpen?: (which: 'build' | 'menu') => void;
 }
 
 export class KairoHud {
@@ -486,6 +493,11 @@ export class KairoHud {
     return this.open !== '';
   }
 
+  /** 메뉴 시트가 열려 있나 — 안 보이는 목록을 다시 그리지 않기 위해 (P3-E) */
+  get menuOpen(): boolean {
+    return this.open === 'menu';
+  }
+
   private toggle(which: 'build' | 'menu'): void {
     if (this.open === which) {
       this.hide();
@@ -504,6 +516,7 @@ export class KairoHud {
     this.menuBtn.classList.toggle('on', which === 'menu');
     this.buildBtn.classList.toggle('on', which === 'build');
     if (which === 'build') this.renderBuild();
+    this.opts.onSheetOpen?.(which);
   }
 
   private renderBuild(): void {

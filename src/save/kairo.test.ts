@@ -6,6 +6,7 @@ import { PlacementGrid, facilityDef, SPECIALTY_LEVEL } from '../sim/kairo/placem
 import { GuestStore } from '../sim/kairo/guests.js';
 import { WeekRunner } from '../sim/kairo/week.js';
 import { ProgressStore, questStatuses } from '../sim/kairo/progress.js';
+import { CertStore, certStatuses, type CertContext, type CertStatus } from '../sim/kairo/certs.js';
 import {
   packKairo,
   restoreKairo,
@@ -27,6 +28,8 @@ import {
 const GRID_W = 40;
 const GRID_H = 32;
 const GATE = { i: 2, j: 2 };
+/** 인증 문맥 — 세이브 검사는 조건 판정을 안 본다 (certs.test.ts 소관) */
+const EMPTY_CERT_CTX: CertContext = { zones: [], courses: 0, questsDone: 0 };
 
 function build(): KairoSaveInput {
   const rng = new Rng(4242);
@@ -364,5 +367,59 @@ describe('★ 도감 발견이 세이브를 건넌다 (P3-C)', () => {
     // 없으면 그냥 없다 — 부팅이 지금 배치에서 다시 채운다 (마이그레이션 없음)
     expect(back.builtEver).toBeUndefined();
     expect(back.equipEver).toBeUndefined();
+  });
+});
+
+/**
+ * ─────────────────────────────────────────────────────────────────────────
+ * ★ 사이드 인증이 세이브를 건넌다 (P3-E)
+ *
+ * 인증은 **등급에서 다시 만들 수 없는 상태**다 (등급은 gradeNo 하나이고 인증은 그 옆의
+ * 병렬 목록이다). 잃으면 정원 가산 +N 이 통째로 증발해 **새로고침이 곧 상한 되돌리기**가
+ * 된다 — 게다가 조건이 이미 지나간 주간 값(그 주 손익·방문객)이면 다시 딸 수도 없다.
+ *
+ * **버전을 안 올렸다.** `certs` 는 optional 이라 있으면 담고 없으면 안 담는다
+ * (`visitorsTotal`·`builtEver` 선례). 버전을 올리면 이미 나간 v7 세이브가 한 칸씩 밀린다.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+describe('★ 사이드 인증이 세이브를 건넌다 (P3-E)', () => {
+  it('딴 인증이 왕복해도 남는다 — 그래야 정원 가산이 유지된다', () => {
+    const src = build();
+    const store = new CertStore();
+    /*
+     * 실데이터의 앞 두 종을 딴 상태로 만든다 (조건 판정은 certs.test.ts 소관).
+     * ⚠ 데이터를 **비우는 것이 되돌리기 경로**라 (certs.ts 머리말) 인증 0종이어도
+     * 이 검사가 죽으면 안 된다 — 그때는 왕복시킬 것이 없으니 건너뛴다.
+     */
+    const some = certStatuses(src.placement, null, EMPTY_CERT_CTX).slice(0, 2);
+    if (some.length === 0) return;
+    store.claim(some.map((s) => ({ ...(s as CertStatus), done: true })));
+    src.certs = store.toSnapshot();
+    const before = store.bonus();
+    const back = restoreKairo(JSON.parse(JSON.stringify(packKairo(src, 1_700_000_000_000))));
+    const after = CertStore.fromSnapshot(back.certs);
+    expect(after.earnedIds).toEqual(store.earnedIds);
+    expect(after.bonus()).toEqual(before);
+    // 가산이 실제로 0 이 아니어야 이 검사가 뭔가를 지킨다 (자기검사)
+    expect(before.capacity).toBeGreaterThan(0);
+    expect(store.count).toBe(2);
+  });
+
+  it('⚠ 필드가 없는 옛 세이브가 그대로 열린다 — 버전도 그대로다', () => {
+    const raw = JSON.parse(JSON.stringify(packKairo(build(), 0))) as Record<string, unknown>;
+    expect('certs' in raw).toBe(false);
+    expect(raw['version']).toBe(KAIRO_SAVE_VERSION);
+    expect(KAIRO_SAVE_VERSION).toBe(7);
+    const back = restoreKairo(raw);
+    expect(back.certs).toBeUndefined();
+    // 없으면 인증 0종 — 가산도 0 이라 예전과 완전히 같다 (음성 대조군)
+    expect(CertStore.fromSnapshot(back.certs).bonus()).toEqual({ capacity: 0, permitArea: 0 });
+  });
+
+  it('⚠ 데이터에서 사라진 인증은 조용히 버린다 — 되돌리기가 세이브를 안 깬다', () => {
+    const src = build();
+    src.certs = { earned: ['cert_that_no_longer_exists'] };
+    const back = restoreKairo(JSON.parse(JSON.stringify(packKairo(src, 0))));
+    expect(CertStore.fromSnapshot(back.certs).count).toBe(0);
   });
 });

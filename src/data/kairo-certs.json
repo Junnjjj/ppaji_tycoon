@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "note": "사이드 인증 (P3-E) — 등급 사다리 **옆**의 병렬 목표다. 등급 심사가 한 번에 하나씩 순차라면 인증은 12개가 동시에 열려 있다 (PSS 사이드 심사 19종의 축소판). 조건 평가는 progress.evaluateCondition **하나**를 쓴다 — 의뢰·심사와 갈라지면 \"의뢰로는 3개인데 인증으로는 2개\"가 된다.",
+  "note2": "⚠ **정원 가산이 핵심 고리다.** 입장은 min(등급 maxGuests + 인증 가산, 공급×1.5) 다. 후반 공백의 뿌리는 5등급 maxGuests 230 인데 시설 75종을 한 채씩만 지어도 정원 합이 185(×1.5 = 277)라, 무엇을 지어도 손님이 안 늘었다 (docs/research/late-game-cap-proposal.md §1.1). 12종 합계 +70 → 300 이다. ⚠ 300 이상은 손님 에이전트 수가 곧 폰 성능 예산이라 실기기 측정 없이 올리지 말 것.",
+  "note3": "보상에 **시설이 없다.** 시설 75종은 골격(등급)·의뢰·소원·입고가 이미 정확히 한 번씩 나눠 갖고 있고 (unlock-graph.test.ts 가 지킨다), 인증을 두 번째 출처로 얹으면 이중 해금이거나 그 시설이 후반까지 잠긴다. 현금도 초반 3종에만 얹었다 — 후반 현금 적체(260주 1.5억)가 지표이므로 현금 보상은 문제를 키운다. 남는 보상은 **정원·허가 가산**이고, 그 둘이 정확히 \"공급을 안 거치는 축\" 이다.",
+  "note4": "조건은 절반 이상이 **배치 형태**를 요구한다: activeCombos·comboTier 는 인접 판정이고 (콤보 정의가 곧 배치 규칙), swimAreaMax 는 이어진 물 구역 넓이, courseCount 는 물가에 선착장을 세워야 는다. 총량 지표만이면 의뢰 16종과 구별이 안 된다 (제안서 ⓑ 주의).",
+  "certs": [
+    {
+      "id": "cert_hygiene",
+      "name": "위생 인증",
+      "desc": "위생 시설 6개 · 퇴장 만족도 70",
+      "conditions": [
+        { "kind": "needSupply", "need": "hygiene", "value": 6 },
+        { "kind": "exitSatisfaction", "value": 70 }
+      ],
+      "reward": { "capacity": 4, "cash": 500000 }
+    },
+    {
+      "id": "cert_food",
+      "name": "미식 인증",
+      "desc": "먹거리 시설 6개 · 한 주 손익 150만",
+      "conditions": [
+        { "kind": "needSupply", "need": "food", "value": 6 },
+        { "kind": "weekProfit", "value": 1500000 }
+      ],
+      "reward": { "capacity": 4, "cash": 500000 }
+    },
+    {
+      "id": "cert_rest",
+      "name": "휴식 인증",
+      "desc": "휴식 6개 · 온열 4개",
+      "conditions": [
+        { "kind": "needSupply", "need": "rest", "value": 6 },
+        { "kind": "needSupply", "need": "warm", "value": 4 }
+      ],
+      "reward": { "capacity": 5, "cash": 500000 }
+    },
+    {
+      "id": "cert_scenery",
+      "name": "경관 인증",
+      "desc": "경관 시설 6개 · 평균 개선 2단계",
+      "conditions": [
+        { "kind": "needSupply", "need": "scenery", "value": 6 },
+        { "kind": "avgFacilityLevel", "value": 2 }
+      ],
+      "reward": { "capacity": 5 }
+    },
+    {
+      "id": "cert_thrill",
+      "name": "스릴 인증",
+      "desc": "스릴 시설 6개 · 콤보 8개 동시 발동",
+      "conditions": [
+        { "kind": "needSupply", "need": "thrill", "value": 6 },
+        { "kind": "activeCombos", "value": 8 }
+      ],
+      "reward": { "capacity": 5, "permitArea": 20 }
+    },
+    {
+      "id": "cert_stay",
+      "name": "체류 인증",
+      "desc": "숙박 3개 · 한 주 손님 150명",
+      "conditions": [
+        { "kind": "needSupply", "need": "stay", "value": 3 },
+        { "kind": "weekVisitors", "value": 150 }
+      ],
+      "reward": { "capacity": 6 }
+    },
+    {
+      "id": "cert_swim",
+      "name": "수영 구역 인증",
+      "desc": "이어진 수영 구역 40칸 · 놀거리 8개",
+      "conditions": [
+        { "kind": "swimAreaMax", "value": 40 },
+        { "kind": "needSupply", "need": "play", "value": 8 }
+      ],
+      "reward": { "capacity": 6, "permitArea": 40 }
+    },
+    {
+      "id": "cert_course",
+      "name": "수상레저 인증",
+      "desc": "코스 3개 · 서비스 시설 8개",
+      "conditions": [
+        { "kind": "courseCount", "value": 3 },
+        { "kind": "needSupply", "need": "service", "value": 8 }
+      ],
+      "reward": { "capacity": 6, "permitArea": 40 }
+    },
+    {
+      "id": "cert_combo",
+      "name": "조합 인증",
+      "desc": "대형 콤보 2개 · 콤보 14개 동시 발동",
+      "conditions": [
+        { "kind": "comboTier", "tier": "large", "value": 2 },
+        { "kind": "activeCombos", "value": 14 }
+      ],
+      "reward": { "capacity": 7 }
+    },
+    {
+      "id": "cert_upkeep",
+      "name": "정비 인증",
+      "desc": "평균 개선 2.8단계 · 시설 40개와 만족도 80",
+      "conditions": [
+        { "kind": "avgFacilityLevel", "value": 2.8 },
+        { "kind": "facilityTotalAndSat", "value": 40, "sat": 80 }
+      ],
+      "reward": { "capacity": 7 }
+    },
+    {
+      "id": "cert_variety",
+      "name": "종합 인증",
+      "desc": "서로 다른 시설 32종 · 만석 없는 주",
+      "conditions": [
+        { "kind": "facilityKinds", "value": 32 },
+        { "kind": "maxTurnedAway", "value": 0 }
+      ],
+      "reward": { "capacity": 7, "permitArea": 50 }
+    },
+    {
+      "id": "cert_allseason",
+      "name": "사철 인증",
+      "desc": "의뢰 14개 완주 · 시설 60개와 만족도 88",
+      "conditions": [
+        { "kind": "questsDone", "value": 14 },
+        { "kind": "facilityTotalAndSat", "value": 60, "sat": 88 }
+      ],
+      "reward": { "capacity": 8, "permitArea": 50 }
+    }
+  ]
+}
