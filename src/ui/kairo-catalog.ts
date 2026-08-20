@@ -1,4 +1,4 @@
-import { COMBOS, evaluateCombos, type ComboTier } from '../sim/kairo/combos.js';
+import { COMBOS, CONFLICTS, evaluateCombos, type ComboTier } from '../sim/kairo/combos.js';
 import { allFacilityDefs } from '../sim/kairo/placement.js';
 import { COURSE_EQUIPMENT } from '../sim/kairo/course.js';
 import type { PlacementGrid } from '../sim/kairo/placement.js';
@@ -120,6 +120,8 @@ export class KairoCatalog {
     title: string,
     detail: string,
     key: string,
+    /** 앞머리 표식. 기본은 발견 여부(✅/🔒) — 감점 줄만 ⚠ 로 갈린다 (P4) */
+    icon?: string,
   ): HTMLElement {
     /*
      * ★ 56px — 스펙이 정한 한 항목 높이. `.kitem.wide` 가 지킨다.
@@ -131,7 +133,7 @@ export class KairoCatalog {
     d.dataset['found'] = found ? '1' : '0';
     d.disabled = !found;
     d.append(
-      el('div', 'kitem-name', `${found ? '✅' : '🔒'} ${title}`),
+      el('div', 'kitem-name', `${icon ?? (found ? '✅' : '🔒')} ${title}`),
       el('div', 'kitem-sub', detail),
     );
     return d;
@@ -183,7 +185,33 @@ export class KairoCatalog {
     else this.renderEquipment();
   }
 
+  /**
+   * 상성 감점 4쌍 (P4) — **발견 대상이 아니라 상시 참조표**다.
+   *
+   * ⚠ 그래서 "미발견만" 필터에서는 **숨긴다.** 이유 둘:
+   *   · 뜻이 맞는다 — 감점은 발견해서 모으는 것이 아니라 피하는 규칙이다
+   *   · 하네스가 기본 상태에서 **발견 항목 0개 노출**을 요구한다 (`verify:kairo`).
+   *     `data-found="1"` 인 줄을 기본 목록에 끼우면 그 검사가 깨진다
+   *
+   * 티어 필터를 걸었을 때도 안 보인다 — 감점엔 티어가 없다.
+   */
+  private renderClashes(): void {
+    if (this.undiscoveredOnly || this.tier !== 'all') return;
+    for (const c of CONFLICTS) {
+      const cost = [
+        c.penalty.satisfaction ? `만족 −${c.penalty.satisfaction}` : '',
+        c.penalty.revenue ? `매출 −${c.penalty.revenue}` : '',
+      ]
+        .filter(Boolean)
+        .join(' · ');
+      this.listEl.append(
+        this.row(true, c.name, `상성 감점 · ${cost} · 두 칸 띄우면 꺼집니다`, c.id, '⚠'),
+      );
+    }
+  }
+
   private renderCombos(): void {
+    this.renderClashes();
     const disc = this.deps.discovered();
     const pool = this.tier === 'all' ? COMBOS : COMBOS.filter((x) => x.tier === this.tier);
     for (const combo of pool) {

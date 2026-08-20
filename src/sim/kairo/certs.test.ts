@@ -35,6 +35,7 @@ import {
   certStatuses,
   effectiveGrade,
   type CertContext,
+  type CertDef,
 } from './certs.js';
 
 const GATE = { i: 0, j: 0 };
@@ -79,10 +80,59 @@ describe('인증 데이터 (P3-E)', () => {
     }
   });
 
-  it('정원 가산 합이 70 이다 — 5등급 230 → 300 (폰 성능 예산의 상한)', () => {
-    expect(CERT_CAPACITY_TOTAL).toBe(70);
+  it('정원 가산 합이 140 이다 — 5등급 230 → 370 (만석이 0 이 되는 자리)', () => {
+    expect(CERT_CAPACITY_TOTAL).toBe(140);
     const g5 = GRADES[GRADES.length - 1]!;
-    expect(g5.maxGuests + CERT_CAPACITY_TOTAL).toBe(300);
+    expect(g5.maxGuests + CERT_CAPACITY_TOTAL).toBe(370);
+  });
+
+  /**
+   * ★ **가산은 후반에 도착하는 종에 실려 있다** (P5).
+   *
+   * 총합만 맞고 배분이 평평하면 41~80주 건설 0원이 60% 다 (총 140 균일 대조군).
+   * 같은 총합을 늦게 도착하는 종에 몰아주면 45% 다 — 정원이 늘면 판이 빨리 커지고,
+   * 판이 커지면 조건도 빨리 충족돼서 평평한 배분은 가산을 전반에 다 써 버린다.
+   *
+   * 아래 두 무리는 **실측한 획득 주차 중앙값**으로 갈랐다 (24시드×80주, P5):
+   * 수상레저 4 · 휴식 13 · 조합 13 · 위생 16 · 체류 32 ‖ 미식 41 · 스릴 47 ·
+   * 수영 49 · 종합 50 · 경관 53 · 사철 60 · 정비 67.
+   *
+   * ⚠ 조건을 바꾸면 이 갈래도 다시 재야 한다 — 주차는 데이터에서 유도되는 값이지
+   * 여기 적어 둔 상수가 정본이 아니다.
+   */
+  const EARLY_CERTS = ['cert_course', 'cert_rest', 'cert_combo', 'cert_hygiene', 'cert_stay'];
+
+  /** 후반 가중이 살아 있나 — 무너지면 P5 의 −18pp 가 통째로 사라진다 */
+  function lateWeightIssues(certs: readonly CertDef[]): string[] {
+    const issues: string[] = [];
+    const sum = (ids: (c: CertDef) => boolean): number =>
+      certs.filter(ids).reduce((a, c) => a + (c.reward.capacity ?? 0), 0);
+    const early = sum((c) => EARLY_CERTS.includes(c.id));
+    const late = sum((c) => !EARLY_CERTS.includes(c.id));
+    // 후반 7종이 초반 5종의 **두 배 넘게** 가져야 한다 (실측 배분은 112 : 28 = 4배)
+    if (late < early * 2) issues.push(`후반 가중 없음: 초반 ${early} · 후반 ${late}`);
+    // 개별로도 갈라져 있어야 한다 — 합만 맞추고 한 종에 몰면 도착 분산이 사라진다
+    const maxEarly = Math.max(...certs.filter((c) => EARLY_CERTS.includes(c.id)).map((c) => c.reward.capacity ?? 0));
+    const minLate = Math.min(...certs.filter((c) => !EARLY_CERTS.includes(c.id)).map((c) => c.reward.capacity ?? 0));
+    if (minLate <= maxEarly) issues.push(`겹침: 초반 최대 ${maxEarly} ≥ 후반 최소 ${minLate}`);
+    return issues;
+  }
+
+  it('★ 실데이터가 후반 가중이다 — 도착이 늦은 종이 더 큰 정원을 준다', () => {
+    expect(lateWeightIssues(CERTS)).toEqual([]);
+  });
+
+  it('⚠ 음성 대조군 — 평평하게 되돌리면 잡힌다', () => {
+    const flatCaps = CERTS.map((c) => ({ ...c, reward: { ...c.reward, capacity: 12 } }));
+    expect(lateWeightIssues(flatCaps).length).toBeGreaterThan(0);
+    // P4 배분(4~8, 완만)도 잡혀야 한다 — 그게 45% 를 63% 로 되돌리는 형태다
+    const p4 = new Map([
+      ['cert_hygiene', 4], ['cert_food', 4], ['cert_rest', 5], ['cert_scenery', 5],
+      ['cert_thrill', 5], ['cert_stay', 6], ['cert_swim', 6], ['cert_course', 6],
+      ['cert_combo', 7], ['cert_upkeep', 7], ['cert_variety', 7], ['cert_allseason', 8],
+    ]);
+    const old = CERTS.map((c) => ({ ...c, reward: { ...c.reward, capacity: p4.get(c.id)! } }));
+    expect(lateWeightIssues(old).length).toBeGreaterThan(0);
   });
 
   it('보상에 시설이 없다 — 시설 75종은 이미 출처가 정확히 하나씩이다', () => {

@@ -1,8 +1,13 @@
 import { Rng } from '../rng.js';
 import { BusRunner } from './bus.js';
-import { nightPools } from './swim.js';
+import { nightPools, zoneFee, ZONE_HANDLE_BASE } from './swim.js';
 import type { KairoTerrain } from './terrain.js';
-import { PlacementGrid, facilityDef, LEVEL_SATISFACTION } from './placement.js';
+import {
+  PlacementGrid,
+  facilityDef,
+  LEVEL_SATISFACTION,
+  GATE_FACILITY_ID,
+} from './placement.js';
 import { GROUPS, needWeight, type GroupId } from './groups.js';
 import type { GuestStore } from './guests.js';
 /*
@@ -440,6 +445,25 @@ export interface WeekSnapshot {
   cash: number;
 }
 
+/**
+ * 돈이 **어디서** 들어왔나 (K48). 렌더가 `+₩N` 을 그 자리에 띄우는 데만 쓴다.
+ *
+ * ⚠ 이것은 **평문 데이터**다 — sim 은 렌더러를 모른다 (불변식 1). 관찰자는 콜백 하나로
+ * 받아 가고, 안 붙이면 아래 관찰 코드는 **한 줄도 돌지 않는다** (헤드리스 밸런싱이
+ * 손님 수만큼 느려지면 안 된다).
+ */
+export interface IncomeEvent {
+  /** 입장권인가 (매표소) 시설 이용료인가 */
+  kind: 'admission' | 'facility';
+  /** 시설 handle. 수영 구역은 `ZONE_HANDLE_BASE` 이상이다 */
+  handle: number;
+  /** 돈이 난 자리 — 시설은 발자국 좌상단, 구역은 첫 칸 */
+  i: number;
+  j: number;
+  /** 원 (요금 배율·날씨까지 반영된 실제 금액) */
+  amount: number;
+}
+
 export class WeekRunner {
   private weekNo = 0;
   /** 이번 주 요금 배율 — `run` 이 매주 설정한다 */
@@ -600,11 +624,49 @@ export class WeekRunner {
   }
 
   /**
+   * 차액 정산의 음성 대조군 (테스트 전용).
+   *
+   * 켜면 `finish()` 가 **이미 실시간으로 넣은 돈을 안 뺀다** — 즉 이중 계산이 된다.
+   * "주간 총액이 예전과 같다" 검사가 정말 총액을 재고 있는지를 이걸로 증명한다.
+   */
+  private doubleCountFaultForTest = false;
+  setDoubleCountFaultForTest(on: boolean): void {
+    this.doubleCountFaultForTest = on;
+  }
+
+  /**
+   * 수입 사건 관찰자 (K48) — 붙이면 tick 마다 "어느 시설에서 얼마"를 받는다.
+   *
+   * ⚠ **없으면 아무 일도 안 한다.** 관찰에는 손님 전수 스캔이 하나 더 붙으므로,
+   * 헤드리스 밸런싱(312주 × 840tick)에는 절대 붙이지 않는다. 붙이는 곳은 씬 하나다.
+   */
+  private incomeObserver: ((events: readonly IncomeEvent[]) => void) | null = null;
+  setIncomeObserver(fn: ((events: readonly IncomeEvent[]) => void) | null): void {
+    this.incomeObserver = fn;
+    this.usingPrev.clear();
+  }
+
+  /**
+   * 손님 id → 직전 tick 에 이용 중이던 시설 handle.
+   *
+   * ⚠ 이용 **완료**는 `guests.ts` 안에서만 일어나고 밖으로 새어 나오지 않는다
+   * (`releaseSlot` 이 `usingHandle` 을 0 으로 지운다). 그래서 밖에서는 "직전엔 H 였는데
+   * 지금은 아니다"로 알아낸다 — 관찰자가 붙었을 때만 유지한다.
+   */
+  private readonly usingPrev = new Map<number, number>();
+
+  /**
    * 진행 중인 주를 **버린다** (도구·하네스 전용). 돈·주차에 아무 흔적도 남기지 않는다 —
    * 하네스가 `run()` 으로 배치 주를 돌리기 전에 흐르는 낮의 주를 치우는 용도다.
    * 게임 로직에서 부르면 반 주가 조용히 증발하므로 production 경로에는 넣지 말 것.
    */
   abort(): void {
+    /*
+     * ⚠ **실시간으로 넣은 돈을 되돌린다** (K48). 안 되돌리면 "아무 흔적도 안 남긴다"가
+     * 거짓이 되고, 하네스가 흐르는 낮의 반 주를 치울 때마다 현금이 조금씩 늘어난다 —
+     * 그 판으로 잰 숫자는 게임과 다른 세계가 된다.
+     */
+    if (this.live) this.money -= this.live.credited;
     this.live = null;
   }
 
@@ -687,6 +749,7 @@ export class WeekRunner {
       byGroup: { family: 0, couple: 0, friends: 0, company: 0 },
       weekRevenue: 0,
       weekAdmission: 0,
+      credited: 0,
       tick: 0,
       stepCalls: 0,
       day: null,
@@ -787,7 +850,8 @@ export class WeekRunner {
         ) > 0;
       this.guests.tick(rng);
       // 이용이 끝난 손님만큼 요금을 받는다 (이용 시작이 아니라 완료 기준)
-      d.revenue += this.collectFees(d.weather);
+      const feeIn = this.collectFees(d.weather);
+      d.revenue += feeIn;
       // 표를 산 손님만큼 입장료를 받는다 — 요금 슬라이더가 같이 민다
       const adm = this.guests.takeAdmitted();
       d.visitors += adm.count;
@@ -796,6 +860,33 @@ export class WeekRunner {
       const admIn = Math.round(adm.fee * this.priceMult);
       d.admission += admIn;
       d.revenue += admIn;
+
+      /*
+       * ── 실시간 입금 (K48) ────────────────────────────────────────────────
+       *
+       * 사용자 보고: "하루 버튼이 없으니 돈이 아예 안 오른다." 맞다 — 예전에는 수입이
+       * 누산기에만 쌓이고 현금은 `finish()` 한 곳에서만 움직였다. K47-② 로 하루»/주
+       * 스킵을 없앤 뒤로는 플레이어가 **한 주 내내(≈3분) 현금이 붙박인 것**을 본다.
+       *
+       * ⚠ **총액은 한 원도 안 바뀐다.** 여기서 넣은 만큼 `lw.credited` 에 적어 두고,
+       * `finish()` 가 `최종 주간 수입 − credited` 만 정산한다 (차액 정산). 배율
+       * (매점직원·카드 `revenueMult`·콤보)은 주가 끝나야 확정되는 값이라 여기서
+       * 곱할 수 없다 — 곱하면 배율이 두 번 붙거나, 주 중간에 바뀐 배율이 이미 지급한
+       * 돈에 소급되지 않아 총액이 갈라진다. 그래서 tick 은 **그 시점에 확정된 금액**
+       * (요금 배율·날씨까지)만 넣고, 배율의 차액은 결산에서 한 번에 붙는다.
+       */
+      const tickIn = feeIn + admIn;
+      if (tickIn !== 0) {
+        this.money += tickIn;
+        lw.credited += tickIn;
+      }
+
+      const obs = this.incomeObserver;
+      if (obs) {
+        // 관찰자가 붙었을 때만 도는 길이다 — 헤드리스는 여기 안 들어온다
+        const events = this.incomeEvents(feeIn, admIn);
+        if (events.length > 0) obs(events);
+      }
 
       for (const g of this.guests.all) {
         const k = g.j * w + g.i;
@@ -940,7 +1031,26 @@ export class WeekRunner {
      * 판단으로 만든다 (§11 의 설계 의도).
      */
     const wages = staff?.wages ?? 0;
-    this.money += weekRevenue - upkeep - wages;
+    /*
+     * ── 차액 정산 (K48) ─────────────────────────────────────────────────
+     *
+     * 수입은 이미 tick 마다 들어갔다 (`step()` 의 실시간 입금). 여기서는 **최종 주간
+     * 수입에서 이미 준 것을 빼고** 나머지만 정산한다. 그러면
+     *
+     *     최종 현금 = 시작 + Σtick + (weekRevenue − Σtick) − upkeep − wages
+     *              = 시작 + weekRevenue − upkeep − wages          ← 예전과 완전히 같다
+     *
+     * 이고, 실시간으로 못 붙인 것(배율의 차액·코스 매출)이 결산에서 한 번에 붙는다.
+     * 차액이 음수일 수도 있다 — 매점직원 부족(`foodMult < 1`)은 이미 준 돈을 되돌린다.
+     *
+     * ⚠ **지출(유지비·인건비)은 여기 그대로 둔다.** 둘 다 "주에 한 번 나가는" 성격이고
+     * (인건비는 손님이 0명인 주에도 나가는 고정비다), 결산이 그것을 한 줄로 보여준다.
+     * tick 마다 1/840 씩 깎으면 화면에서는 **원인 없이 줄어드는 숫자**가 된다 —
+     * 이번 버그가 정확히 그 반대(원인 없이 안 오르는 숫자)라 같은 실수를 반복하게 된다.
+     * 수입은 사건(손님이 표를 산다)이 있어 자리를 가리킬 수 있지만 유지비는 없다.
+     */
+    const settle = weekRevenue - (this.doubleCountFaultForTest ? 0 : lw.credited);
+    this.money += settle - upkeep - wages;
     this.weekNo++;
 
     // 히트맵 최고점
@@ -1038,6 +1148,108 @@ export class WeekRunner {
       total += sum * (mods[need as NeedKind] ?? 1);
     }
     return Math.round(total * this.priceMult);
+  }
+
+  /**
+   * 이번 tick 의 수입을 **자리별로 쪼갠다** (K48) — `+₩N` 을 어디에 띄울지 정한다.
+   *
+   * ## 왜 손님을 훑어야 하나
+   *
+   * `takeFinished()` 는 **수요 종류별 합**만 준다 (`feeByNeed`) — 어느 시설인지는
+   * `guests.ts` 안에서만 알고 밖으로 안 나온다. 그래서 "직전 tick 엔 H 를 쓰고 있었는데
+   * 지금은 아니다" = 방금 끝났다로 밖에서 알아낸다 (`usingPrev`).
+   *
+   * ## 왜 금액을 다시 계산하지 않고 나누나
+   *
+   * 요금 공식(개선 단계 × 지갑 × 날씨 × 요금 배율 × 반올림)을 여기서 한 벌 더 쓰면
+   * 규칙이 둘이 되고, 언젠가 화면의 합과 실제 수입이 갈라진다. 대신 **이미 확정된
+   * tick 수입**(`feeIn`·`admIn`)을 가중치로 나눈다 — 합이 정확히 tick 수입이다.
+   * 가중치는 `요금 단가 × 지갑` 이라 비싼 시설이 큰 숫자를 띄운다.
+   */
+  private incomeEvents(feeIn: number, admIn: number): IncomeEvent[] {
+    const prev = this.usingPrev;
+    const seen = new Set<number>();
+    /** handle → 가중치 합 (시설) · 인원 (매표소) */
+    const fee = new Map<number, number>();
+    const gate = new Map<number, number>();
+    let feeW = 0;
+    let gateN = 0;
+    for (const g of this.guests.all) {
+      seen.add(g.id);
+      const was = prev.get(g.id) ?? 0;
+      const now = g.usingHandle;
+      if (was === now) continue;
+      if (now === 0) prev.delete(g.id);
+      else prev.set(g.id, now);
+      if (was === 0) continue;
+      if (this.isGateHandle(was)) {
+        gate.set(was, (gate.get(was) ?? 0) + 1);
+        gateN += 1;
+        continue;
+      }
+      const unit =
+        was >= ZONE_HANDLE_BASE
+          ? zoneFee(this.guests.swimZones()[was - ZONE_HANDLE_BASE])
+          : this.placement.feeOf(was);
+      const wt = Math.max(0.0001, unit * g.wallet);
+      fee.set(was, (fee.get(was) ?? 0) + wt);
+      feeW += wt;
+    }
+    // 나간 손님의 흔적을 지운다 — 안 지우면 id 가 영원히 쌓인다
+    if (prev.size > 0) for (const id of [...prev.keys()]) if (!seen.has(id)) prev.delete(id);
+
+    const out: IncomeEvent[] = [];
+    this.spread(fee, feeW, feeIn, 'facility', out);
+    this.spread(gate, gateN, admIn, 'admission', out);
+    return out;
+  }
+
+  /** 매표소 handle 인가 — 입장권과 놀이 요금은 다른 사건이다 */
+  private isGateHandle(handle: number): boolean {
+    if (handle >= ZONE_HANDLE_BASE) return false;
+    const it = this.placement.all().find((f) => f.handle === handle);
+    return it?.defId === GATE_FACILITY_ID;
+  }
+
+  /**
+   * 확정된 총액을 가중치대로 나눠 담는다. **나머지는 마지막 항목이 먹는다** — 반올림으로
+   * 몇 원이 증발하면 화면의 합이 결산과 안 맞는다.
+   */
+  private spread(
+    byHandle: ReadonlyMap<number, number>,
+    totalWeight: number,
+    amount: number,
+    kind: IncomeEvent['kind'],
+    out: IncomeEvent[],
+  ): void {
+    if (byHandle.size === 0 || amount <= 0 || totalWeight <= 0) return;
+    let left = amount;
+    let n = byHandle.size;
+    for (const [handle, w] of byHandle) {
+      n--;
+      const give = n === 0 ? left : Math.round((amount * w) / totalWeight);
+      left -= give;
+      if (give <= 0) continue;
+      const at = this.handlePos(handle);
+      if (!at) continue;
+      out.push({ kind, handle, i: at.i, j: at.j, amount: give });
+    }
+  }
+
+  /** 시설·구역이 서 있는 자리 (없으면 null — 같은 tick 에 철거된 경우) */
+  private handlePos(handle: number): { i: number; j: number } | null {
+    if (handle >= ZONE_HANDLE_BASE) {
+      const z = this.guests.swimZones()[handle - ZONE_HANDLE_BASE];
+      const t = z?.tiles[0];
+      return t ? { i: t.x, j: t.y } : null;
+    }
+    const it = this.placement.all().find((f) => f.handle === handle);
+    if (!it) return null;
+    // 발자국 **가운데**다 (소수 허용) — 좌상단이면 4×2 짜리에서 숫자가 모서리에 뜬다
+    const def = facilityDef(it.defId);
+    if (!def) return { i: it.i, j: it.j };
+    const [fw, fd] = PlacementGrid.sizeOf(def, it.facing ?? 0);
+    return { i: it.i + (fw - 1) / 2, j: it.j + (fd - 1) / 2 };
   }
 }
 
@@ -1216,6 +1428,11 @@ interface LiveWeekState {
   byGroup: Record<GroupId, number>;
   weekRevenue: number;
   weekAdmission: number;
+  /**
+   * 이번 주에 **이미 현금에 넣은** 금액 (K48). `finish()` 가 최종 주간 수입에서 이걸
+   * 빼고 정산하므로 총액은 예전과 한 원도 다르지 않다.
+   */
+  credited: number;
   tick: number;
   stepCalls: number;
   day: DayCtx | null;

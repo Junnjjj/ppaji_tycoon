@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { comboBreakdown, bottleneckLine, admissionCappedLine } from './kairo-report.js';
 import type { WeekReport } from '../sim/kairo/week.js';
 import { facilityDef } from '../sim/kairo/placement.js';
-import type { ActiveCombo } from '../sim/kairo/combos.js';
+import type { ActiveCombo, ActiveConflict, ComboResult } from '../sim/kairo/combos.js';
 import type { SwimZone } from '../sim/kairo/swim.js';
 
 /**
@@ -108,7 +108,62 @@ describe('콤보 결산 줄', () => {
 
   it('0개인 주는 빈 목록이다 — 줄을 감추는 판단은 화면 쪽이 한다', () => {
     const view = comboBreakdown([]);
-    expect(view).toEqual({ count: 0, top: [] });
+    expect(view).toEqual({ count: 0, top: [], clashes: [], clashCount: 0 });
+  });
+});
+
+/**
+ * 상성 감점 줄 (P4).
+ *
+ * ⚠ 여기서 재는 것은 표시 자료를 고르는 규칙뿐이다. "결산 화면에 실제로 그려지나"는
+ * 브라우저 검사가 본다 (위 파일 머리말의 경계와 같다).
+ */
+describe('상성 감점 결산 줄 (P4)', () => {
+  const clash = (over: Partial<ActiveConflict> = {}): ActiveConflict => ({
+    id: 'clash_hygiene_food',
+    name: '화장실 옆 먹거리',
+    needs: ['hygiene', 'food'],
+    satisfaction: 5,
+    revenue: 5,
+    at: { i: 3, j: 4 },
+    ...over,
+  });
+  const result = (over: Partial<ComboResult> = {}): ComboResult => ({
+    active: [],
+    satisfaction: 0,
+    revenue: 0,
+    conflicts: [],
+    penaltySatisfaction: 0,
+    penaltyRevenue: 0,
+    ...over,
+  });
+
+  it('감점을 종류마다 한 줄로 묶고 곳 수를 센다', () => {
+    const view = comboBreakdown(
+      result({ conflicts: [clash(), clash(), clash({ id: 'clash_thrill_rest', name: '슬라이드 옆 낮잠' })] }),
+    );
+    expect(view.clashCount).toBe(3);
+    expect(view.clashes).toHaveLength(2);
+    expect(view.clashes[0]).toMatchObject({ name: '화장실 옆 먹거리', count: 2 });
+    expect(view.clashes[0]?.at).toEqual({ i: 3, j: 4 });
+  });
+
+  it('가점 줄과 섞이지 않는다 — 콤보 수가 감점 때문에 늘면 안 된다', () => {
+    const view = comboBreakdown(result({ active: [combo()], conflicts: [clash()] }));
+    expect(view.count).toBe(1);
+    expect(view.top).toHaveLength(1);
+    expect(view.clashCount).toBe(1);
+  });
+
+  it('⚠ 음성 대조군 — 배열만 넘기면 감점 줄이 조용히 사라진다', () => {
+    /*
+     * `zones` 를 안 넘기면 zone 콤보가 0 이 되는 함정과 **같은 계열**이다. 그래서
+     * main.ts 는 결과를 통째로 넘긴다 — 이 검사가 그 계약을 고정한다.
+     */
+    const whole = comboBreakdown(result({ conflicts: [clash()] }));
+    const partial = comboBreakdown([]);
+    expect(whole.clashCount).toBe(1);
+    expect(partial.clashCount).toBe(0);
   });
 });
 

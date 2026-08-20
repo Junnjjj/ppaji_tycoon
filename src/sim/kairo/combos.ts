@@ -22,6 +22,15 @@ import type { SwimZone } from './swim.js';
  * 중형을 "시설 ID 조합"이 아니라 **수요 종류**로 판정하는 이유: ID 조합으로 하면 20종을
  * 만들려고 조합을 억지로 늘려야 하고, 플레이어는 정답 목록을 외우게 된다. 수요로 두면
  * "먹을 것과 쉴 곳을 같이 두면 좋다"는 이해가 남는다.
+ *
+ * ## 상성 감점 (P4, △) — 가점 73종만으로는 최대화 문제였다
+ *
+ * PSS 의 상성은 ⊚(보너스) / ◯(무효) / △(−50%) 이고 **◯가 압도적 다수**다. 그래서
+ * 플레이어가 푸는 것은 "좋은 조합을 다 켜는" 최대화 문제가 아니라 **"나쁜 조합을 피하는"
+ * 제약 만족 문제**다. 우리 콤보는 전부 가점이라 다 켜면 이겼다 — 배치에 고민이 없었다.
+ *
+ * 감점은 `need` 9종 쌍으로만 정의한다 (`CONFLICTS`, 데이터는 `kairo-combos.json`).
+ * 시설 ID 쌍(75종²)으로 하면 데이터가 폭발하고 플레이어는 표를 외우게 된다.
  */
 
 export type ComboTier = 'small' | 'medium' | 'large';
@@ -69,9 +78,28 @@ export interface ComboDef {
   discoverCash?: number;
 }
 
+/**
+ * 상성 감점 한 쌍 (P4, △).
+ *
+ * ⚠ **시설 ID 쌍이 아니라 `need` 쌍이다.** 75종² 이면 데이터가 폭발하고 플레이어는
+ * 표를 외우게 된다. `need` 쌍이면 "화장실 옆에서 먹기 싫다"는 상식 하나로 전부 읽힌다.
+ */
+export interface ConflictDef {
+  id: string;
+  name: string;
+  /** 대칭이다 — `[a, b]` 와 `[b, a]` 는 같은 쌍이고, 데이터에 한 번만 적는다 */
+  needs: [NeedKind, NeedKind];
+  /** 안 적으면 `conflicts.radius`(1). 가점 콤보(2)보다 좁다 — 아래 `CONFLICT_RADIUS` 주석 */
+  radius?: number;
+  /** **양수 크기**다. 부호는 `comboEffect` 가 붙인다 — 데이터에 부호를 섞으면 반드시 어긋난다 */
+  penalty: { satisfaction?: number; revenue?: number };
+  why?: string;
+}
+
 const DATA = rawCombos as unknown as {
   diminishing: Record<ComboTier, number[]>;
   economy: ComboEconomy;
+  conflicts: { radius: number; economy: ComboEconomy; pairs: ConflictDef[] };
   combos: ComboDef[];
 };
 
@@ -98,6 +126,26 @@ export const DIMINISHING: Readonly<Record<ComboTier, readonly number[]>> = {
 
 export const COMBO_ECONOMY: Readonly<ComboEconomy> = DATA.economy;
 
+/**
+ * 상성 감점 쌍 (P4). **소수여야 한다** — PSS 의 상성표는 ◯(무효)가 압도적 다수이고
+ * △ 는 대표 10행 260셀 중 약 14% 다. 감점 도배는 퍼즐이 아니라 스트레스다.
+ * 지금은 4쌍 = 9×9 중 8칸(9.9%)이고, `combos.test.ts` 가 15% 를 상한으로 못 박는다.
+ *
+ * ⚠ 이 배열을 비우면 P4 이전과 **완전히 같아진다** (되돌리기 성질). 그게 음성 대조군이다.
+ */
+export const CONFLICTS: readonly ConflictDef[] = DATA.conflicts.pairs;
+
+/**
+ * 감점 반경 — 가점 `adjacent` 콤보(기본 2)보다 **좁다**.
+ *
+ * 같은 반경이면 "붙이면 터지고 붙이면 깎이는" 자리가 겹쳐 배치가 지뢰밭이 된다.
+ * 1 이면 처방이 언제나 있다 — **한 칸만 떼면 된다**.
+ */
+export const CONFLICT_RADIUS = DATA.conflicts.radius;
+
+/** 감점 쪽 포화 계수. 상한은 가점과 같고 `half` 만 작다 — 첫 한 건부터 물어야 제약이 된다 */
+export const CONFLICT_ECONOMY: Readonly<ComboEconomy> = DATA.conflicts.economy;
+
 export function comboDef(id: string): ComboDef | undefined {
   return COMBOS.find((c) => c.id === id);
 }
@@ -115,13 +163,16 @@ export function saturate(raw: number, cap: number, half: number): number {
 
 /** 콤보가 주간 경제에 실제로 싣는 값 — `WeekOptions.combos` 가 받는 그 숫자 */
 export interface ComboEffect {
-  /** 퇴장 만족도에 **더한다** (점) */
+  /** 퇴장 만족도에 **더한다** (점). 감점이 크면 **음수일 수 있다** (P4) */
   satisfactionDelta: number;
-  /** 공원 매출(입장료·코스 제외)에 **곱한다**. 1.0 이 무보너스 */
+  /** 공원 매출(입장료·코스 제외)에 **곱한다**. 1.0 이 무보너스. 감점이 크면 **1 아래** (P4) */
   revenueMult: number;
   /** 상한 전 원점수 — 밸런싱·UI 가 "얼마나 잘렸나"를 보게 */
   satRaw: number;
   revRaw: number;
+  /** 감점 쪽 원점수 (**양수 크기**, P4). 0 이면 P4 이전과 완전히 같다 */
+  penSatRaw: number;
+  penRevRaw: number;
 }
 
 /**
@@ -155,18 +206,55 @@ export interface ComboEffect {
  *     콤보로 한 등급은 넘길 수 있고, 두 등급은 못 넘긴다
  *   · `revCap = 18` — 요금 슬라이더의 폭(70~140)보다 **작다**. 콤보가 "값을 매긴다"
  *     라는 동사를 덮으면 그 동사가 죽는다
+ *
+ * ## 감점은 **따로 포화시켜 뺀다** (P4)
+ *
+ * 예전 이 함수는 `Math.max(0, …)` 으로 음수 원점수를 0 으로 막고 있었다. 감점 축이
+ * 들어온 지금 그 클램프를 다시 보면, 답은 "풀어서 한 통에 넣는다"가 **아니다**:
+ *
+ *   · 가점과 감점을 더한 뒤 한 번 포화시키면, 후반 raw 300 짜리 판에서 곡선 기울기가
+ *     0.006/점이라 **감점 20점이 −0.12점으로 씻겨 나간다.** 그러면 "나쁜 조합을
+ *     피한다"가 후반에 사라져 감점을 넣은 이유가 통째로 없어진다
+ *   · 그래서 두 축을 **각자의 곡선**으로 포화시키고 뺀다. 감점 쪽은 `half` 가 훨씬 작아
+ *     (20/30 vs 90/150) 첫 한 건부터 문다 — 제약은 즉시 읽혀야 제약이다
+ *   · 상한은 **같다** (10점 · 18%). 감점 축이 최대로 할 수 있는 일은 가점 축을 지우는
+ *     것까지고, 그 이상은 아니다
+ *
+ * ⚠ 그래서 `satisfactionDelta` 는 **음수가 될 수 있고** `revenueMult` 는 **1 아래로
+ * 내려갈 수 있다** (하한 0.82). 그게 맞는 이유: PSS 의 △ 는 해당 인기도를 반토막 내지
+ * "보너스를 0 으로 만드는" 데서 멈추지 않는다. 0 에서 멈추면 콤보를 하나도 안 만든 판은
+ * 아무리 나쁘게 배치해도 무손실이라, 감점이 **가점을 켠 사람만 벌주는** 이상한 축이 된다.
+ * 퇴장 만족도는 `week.ts` 가 0~100 으로 다시 조인다 — 여기서 또 자르지 않는다
+ * (규칙이 두 곳에 있으면 갈라진다).
+ *
+ * `satisfaction`/`revenue` 쪽의 `Math.max(0, …)` 는 **남긴다.** 가점 원점수는 데이터상
+ * 언제나 양수이고(`combos.test.ts` 가 지킨다), 부호를 한 숫자에 겹쳐 싣지 않는 편이
+ * "감점이 어디서 왔나"를 잃지 않는다.
  */
 export function comboEffect(
-  r: { satisfaction: number; revenue: number },
+  r: {
+    satisfaction: number;
+    revenue: number;
+    /** 감점 원점수 — **양수 크기**로 받는다 (P4). 안 주면 P4 이전과 동일 */
+    penaltySatisfaction?: number;
+    penaltyRevenue?: number;
+  },
   eco: ComboEconomy = COMBO_ECONOMY,
+  penEco: ComboEconomy = CONFLICT_ECONOMY,
 ): ComboEffect {
   const satRaw = Math.max(0, r.satisfaction);
   const revRaw = Math.max(0, r.revenue);
+  const penSatRaw = Math.max(0, r.penaltySatisfaction ?? 0);
+  const penRevRaw = Math.max(0, r.penaltyRevenue ?? 0);
+  const satMinus = saturate(penSatRaw, penEco.satCap, penEco.satHalf);
+  const revMinus = saturate(penRevRaw, penEco.revCap, penEco.revHalf);
   return {
-    satisfactionDelta: saturate(satRaw, eco.satCap, eco.satHalf),
-    revenueMult: 1 + saturate(revRaw, eco.revCap, eco.revHalf) / 100,
+    satisfactionDelta: saturate(satRaw, eco.satCap, eco.satHalf) - satMinus,
+    revenueMult: 1 + (saturate(revRaw, eco.revCap, eco.revHalf) - revMinus) / 100,
     satRaw,
     revRaw,
+    penSatRaw,
+    penRevRaw,
   };
 }
 
@@ -190,10 +278,33 @@ export interface ActiveCombo {
   at: { i: number; j: number } | null;
 }
 
-export interface ComboResult {
-  active: ActiveCombo[];
+/**
+ * 발동한 감점 하나 (P4).
+ *
+ * ⚠ `ActiveCombo` 와 **한 배열에 섞지 않는다.** `active` 는 의뢰·심사·도감·소원이
+ * "콤보 몇 개"로 세는 목록이라, 감점을 섞으면 나쁜 배치가 조건을 채워 준다.
+ */
+export interface ActiveConflict {
+  id: string;
+  name: string;
+  needs: [NeedKind, NeedKind];
+  /** **양수 크기**다 — 부호는 `comboEffect` 가 붙인다 */
   satisfaction: number;
   revenue: number;
+  /** 어디서 났나 — 결산·미리보기가 "여기"를 가리킬 수 있게 */
+  at: { i: number; j: number } | null;
+}
+
+export interface ComboResult {
+  active: ActiveCombo[];
+  /** **가점 총합**이다 (감점을 뺀 값이 아니다). 감점은 아래 두 칸에 따로 실린다 */
+  satisfaction: number;
+  revenue: number;
+  /** 발동한 감점 (P4). 데이터가 비면 언제나 빈 배열 */
+  conflicts: ActiveConflict[];
+  /** 감점 총합 — **양수 크기** (P4). `comboEffect` 가 자기 곡선으로 포화시킨 뒤 뺀다 */
+  penaltySatisfaction: number;
+  penaltyRevenue: number;
 }
 
 /** 체감 배율 — 목록 끝을 넘으면 마지막 값을 반복한다 (중형은 5% 가 계속) */
@@ -304,11 +415,49 @@ export function evaluateCombos(
     }
   }
 
+  const conflicts = evaluateConflicts(items);
   return {
     active,
     satisfaction: active.reduce((a, c) => a + c.satisfaction, 0),
     revenue: active.reduce((a, c) => a + c.revenue, 0),
+    conflicts,
+    penaltySatisfaction: conflicts.reduce((a, c) => a + c.satisfaction, 0),
+    penaltyRevenue: conflicts.reduce((a, c) => a + c.revenue, 0),
   };
+}
+
+/**
+ * 상성 감점 판정 (P4) — **가점 `adjacent` 와 같은 짝짓기**를 쓴다 (`pairOnce`).
+ *
+ * 규칙이 하나여야 하는 이유는 이 저장소가 여러 번 겪은 그것이다: 반경·중복 세기가
+ * 갈라지면 "가점은 한 번인데 감점은 셋" 같은 비대칭이 조용히 생긴다. 화장실 하나에
+ * 매점 셋을 붙여도 감점은 하나다 — 가점이 그렇기 때문이다.
+ *
+ * `pairs` 를 인자로 받는 이유: **비운 세계를 옆에 두고 재기 위해서다** (되돌리기 성질의
+ * 음성 대조군). 기본값은 데이터다 (불변식 3).
+ */
+export function evaluateConflicts(
+  items: readonly PlacedFacility[],
+  pairs: readonly ConflictDef[] = CONFLICTS,
+): ActiveConflict[] {
+  const out: ActiveConflict[] = [];
+  for (const c of pairs) {
+    const [na, nb] = c.needs;
+    const as = items.filter((it) => needOf(it.defId) === na);
+    const bs = items.filter((it) => needOf(it.defId) === nb);
+    if (as.length === 0 || bs.length === 0) continue;
+    for (const at of pairOnce(as, bs, c.radius ?? CONFLICT_RADIUS)) {
+      out.push({
+        id: c.id,
+        name: c.name,
+        needs: c.needs,
+        satisfaction: c.penalty.satisfaction ?? 0,
+        revenue: c.penalty.revenue ?? 0,
+        at,
+      });
+    }
+  }
+  return out;
 }
 
 /** 발동 하나 — 어디서 터졌나 + 면적 배율 (zone 이 아니면 1) */
@@ -404,8 +553,24 @@ function findAdjacent(combo: ComboDef, items: PlacedFacility[]): { i: number; j:
   const matches = (it: PlacedFacility, r: ComboRequirement): boolean =>
     r.facility ? it.defId === r.facility : r.need ? needOf(it.defId) === r.need : false;
 
-  const as = items.filter((it) => matches(it, ra));
-  const bs = items.filter((it) => matches(it, rb));
+  return pairOnce(
+    items.filter((it) => matches(it, ra)),
+    items.filter((it) => matches(it, rb)),
+    radius,
+  );
+}
+
+/**
+ * 두 무리를 **한 번씩만** 짝지어 반경 안의 쌍을 센다. 가점(`adjacent`)과 감점(P4)이
+ * 공유하는 유일한 규칙이다 — 갈라지면 "가점은 한 번인데 감점은 셋"이 된다.
+ *
+ * 짝은 발동 지점으로 A 의 중심을 낸다.
+ */
+function pairOnce(
+  as: readonly PlacedFacility[],
+  bs: readonly PlacedFacility[],
+  radius: number,
+): { i: number; j: number }[] {
   const usedA = new Set<number>();
   const usedB = new Set<number>();
   const hits: { i: number; j: number }[] = [];
@@ -476,13 +641,27 @@ function findCluster(combo: ComboDef, items: PlacedFacility[]): { i: number; j: 
 /**
  * 놓기 전 미리보기 — "여기에 놓으면 무엇이 새로 터지나".
  * 이미 터진 것과의 차집합을 돌려준다.
+ *
+ * P4: **새로 나는 감점**(`clashed`)도 같이 낸다. v4 원칙이 "실패는 내 선택 때문이어야"
+ * 이므로 감점은 놓기 **전에** 보여야 한다 (`blocks-door`·`would-strand` 거절과 같은 계열).
+ * ⚠ `gained` 의 뜻은 안 바꿨다 — 부르는 쪽(고스트 UI·봇의 `nudgeForCombo`)이 길이를 세고
+ * 있어서, 여기에 감점을 섞으면 "감점이 늘었는데 좋아 보이는" 반대 신호가 된다.
  */
 export function previewCombos(
   placement: PlacementGrid,
   defId: string,
   i: number,
   j: number,
-): { gained: ActiveCombo[]; satisfaction: number; revenue: number } {
+): {
+  gained: ActiveCombo[];
+  satisfaction: number;
+  revenue: number;
+  /** 이 자리에 놓으면 **새로 나는** 감점 */
+  clashed: ActiveConflict[];
+  /** 감점 증가분 — 양수 크기 */
+  penaltySatisfaction: number;
+  penaltyRevenue: number;
+} {
   const before = evaluateCombos(placement);
   const after = evaluateCombos(placement, { defId, i, j });
   const beforeKeys = new Map<string, number>();
@@ -496,9 +675,24 @@ export function previewCombos(
     }
     gained.push(c);
   }
+  // 감점도 같은 차집합 — 이미 나던 감점은 이 자리 탓이 아니다
+  const beforeClash = new Map<string, number>();
+  for (const c of before.conflicts) beforeClash.set(c.id, (beforeClash.get(c.id) ?? 0) + 1);
+  const clashed: ActiveConflict[] = [];
+  for (const c of after.conflicts) {
+    const left = beforeClash.get(c.id) ?? 0;
+    if (left > 0) {
+      beforeClash.set(c.id, left - 1);
+      continue;
+    }
+    clashed.push(c);
+  }
   return {
     gained,
     satisfaction: after.satisfaction - before.satisfaction,
     revenue: after.revenue - before.revenue,
+    clashed,
+    penaltySatisfaction: after.penaltySatisfaction - before.penaltySatisfaction,
+    penaltyRevenue: after.penaltyRevenue - before.penaltyRevenue,
   };
 }

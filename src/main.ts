@@ -1171,6 +1171,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const certNearShown = new Set<string>();
   const week = new WeekRunner(h.terrain, h.placement, h.guests);
   runner = week; // 프레임이 이제부터 주차·현금을 읽을 수 있다
+  /*
+   * 수입 사건 → 지도 위 `+₩N` (K48). sim 은 평문 데이터만 내보내고 (불변식 1),
+   * 그리는 것은 씬의 FX 등록부다. **관찰자를 붙이는 곳은 여기 하나** — 헤드리스
+   * 밸런싱에는 안 붙는다 (손님 전수 스캔이 하나 더 붙는다).
+   */
+  week.setIncomeObserver((events) => h.scene.pushIncome(events));
   const report = new KairoReport(document.body);
   /**
    * 지난 결산 다시 보기 (K46 의 리포트 버튼 → K47-② 알림함 행).
@@ -1404,10 +1410,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      * 시점의 같은 순수 함수라 두 결과는 언제나 같다 — 주에 한 번뿐인 비용이다.
      */
     const zonesNow = h.guests.swimZones();
-    lastCombos = comboBreakdown(
-      evaluateCombos(h.placement, undefined, zonesNow).active,
-      zonesNow,
-    );
+    /*
+     * ⚠ `.active` 만 넘기면 **상성 감점(P4)이 조용히 사라진다** — 결과를 통째로 넘겨야
+     * 결산이 감점 줄을 그린다. `zones` 를 안 넘기면 zone 콤보가 0 이 되는 함정과 같은 계열이다.
+     */
+    lastCombos = comboBreakdown(evaluateCombos(h.placement, undefined, zonesNow), zonesNow);
     return {
       season,
       reputation: gr.reputationPull,
@@ -1512,8 +1519,27 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     refreshCaps();
   };
 
+  /**
+   * 헤더 현금만 즉시 따라오게 한다 (K48).
+   *
+   * ⚠ `refreshCaps` 는 **1.5초 폴링**이라 실시간 수입이 최대 1.5초 늦게 보인다 —
+   * 지도에는 `+₩N` 이 떴는데 헤더 숫자는 그대로면 "이펙트만 뜨고 돈은 안 오른다"로
+   * 읽힌다 (이번 버그의 재발 형태다). 그렇다고 폴링 주기를 줄일 수는 없다:
+   * 같은 타이머에 `refreshQuests`(의뢰 전수 평가 + DOM 갈아끼우기)가 붙어 있어서
+   * 비용이 현금 한 줄과 비교가 안 된다.
+   *
+   * 그래서 **현금만** step 뒤에 갱신한다. 값이 안 바뀌면 DOM 도 안 만진다.
+   */
+  let cashShown = week.cash;
+  const syncCash = (): void => {
+    if (week.cash === cashShown) return;
+    cashShown = week.cash;
+    hud.setCash(cashShown);
+  };
+
   /** step 뒤처리 — 하루 마디 토스트·낮밤 틴트·해금 도착·주 마디 진입 */
   const afterStep = (): void => {
+    syncCash();
     const p = week.liveProgress();
     if (!p) return;
     h.scene.setDayPhase(p.done ? null : (p.tick % TICKS_PER_DAY) / TICKS_PER_DAY);
@@ -2529,7 +2555,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         (wname !== undefined ? ` · ${wname}` : '') +
         ` · ${clock}`,
     );
-    hud.setCash(week.cash);
+    // 표시 중인 값을 같이 기억한다 — `syncCash`(K48) 와 정본이 갈리면 안 된다
+    cashShown = week.cash;
+    hud.setCash(cashShown);
     hud.setHeader({
       weather: WEATHER_GLYPH[week.liveWeather() ?? ''] ?? '☀',
       sat: `${Math.round(reputation.value)}%`,
@@ -2609,6 +2637,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     scenario,
     mapDef,
     priceMult: () => priceMult,
+    /** 지도 위에 떠 있는 `+₩N` 의 수 (K48) — 하네스가 "이펙트가 실제로 떴나"를 잰다 */
+    floatCount: () => h.scene.floatCountForTest,
     cardsApi: { triggerCard },
     progress,
     refreshQuests,

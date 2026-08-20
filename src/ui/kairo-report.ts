@@ -3,7 +3,7 @@ import { cssVar } from './tokens.js';
 import type { WeekReport, NeedKind } from '../sim/kairo/week.js';
 // 병목 처방이 시설 **이름**을 부른다 — 계약은 sim 소유, 문자열만 여기서 쓴다
 import { facilityDef } from '../sim/kairo/placement.js';
-import type { ActiveCombo } from '../sim/kairo/combos.js';
+import type { ActiveCombo, ActiveConflict, ComboResult } from '../sim/kairo/combos.js';
 import type { SwimZone } from '../sim/kairo/swim.js';
 import { panelHost } from './panels.js';
 
@@ -124,6 +124,21 @@ export interface ComboBreakdown {
   count: number;
   /** 기여가 큰 순 상위 몇 개. **전체 목록은 도감 소관**이다 */
   top: ComboLine[];
+  /**
+   * 상성 감점 (P4) — **안 보여주면 플레이어는 "왜 매출이 낮지"를 영영 모른다.**
+   * 종류마다 한 줄로 묶는다 (가점 줄과 같은 규칙).
+   */
+  clashes: ClashLine[];
+  /** 감점 발동 수 (곳 단위) */
+  clashCount: number;
+}
+
+export interface ClashLine {
+  name: string;
+  /** 몇 곳에서 났나 */
+  count: number;
+  /** 어디서 났나 — 첫 곳. 히트맵 좌표와 같은 눈금이라 "거기"를 찾아갈 수 있다 */
+  at: { i: number; j: number } | null;
 }
 
 export interface ComboLine {
@@ -152,10 +167,21 @@ export interface ComboLine {
  * 않는다 (`kairo-combos.json` 실측 범위).
  */
 export function comboBreakdown(
-  active: readonly ActiveCombo[],
+  /**
+   * 발동 목록. **`ComboResult` 를 통째로 넘기면 감점까지** 읽는다 (P4) — 배열만 넘기던
+   * 예전 호출부도 그대로 돌아간다 (감점 0). ⚠ 배열만 넘기면 감점 줄이 **조용히 사라진다**:
+   * `zones` 를 안 넘기면 zone 콤보가 조용히 0 이 되는 `evaluateCombos` 의 함정과 같은 계열이다.
+   */
+  source: readonly ActiveCombo[] | ComboResult,
   zones: readonly SwimZone[] = [],
   topN = 3,
 ): ComboBreakdown {
+  const active: readonly ActiveCombo[] = Array.isArray(source)
+    ? (source as readonly ActiveCombo[])
+    : (source as ComboResult).active;
+  const rawClashes: readonly ActiveConflict[] = Array.isArray(source)
+    ? []
+    : (source as ComboResult).conflicts;
   /*
    * 구역 첫 타일 → 면적. zone 콤보의 `at` 이 **정확히 그 좌표**다 (`combos.ts` 의
    * `findZone`: 구역엔 중심이 없어서 첫 타일을 쓴다). 다른 종류의 콤보는 `at` 이
@@ -193,7 +219,16 @@ export function comboBreakdown(
     .sort((a, b) => b.weight - a.weight || a.name.localeCompare(b.name))
     .slice(0, topN)
     .map(({ weight: w, ...line }) => ({ ...line, share: total > 0 ? w / total : 0 }));
-  return { count: active.length, top };
+
+  // 감점도 **종류마다 한 줄** (P4). 같은 이유다 — 발동마다 한 줄이면 같은 이름만 늘어선다
+  const byClash = new Map<string, ClashLine>();
+  for (const c of rawClashes) {
+    const line = byClash.get(c.id) ?? { name: c.name, count: 0, at: c.at };
+    line.count += 1;
+    byClash.set(c.id, line);
+  }
+  const clashes = [...byClash.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+  return { count: active.length, top, clashes, clashCount: rawClashes.length };
 }
 
 export interface ReportHandlers {
@@ -391,19 +426,29 @@ export class KairoReport {
     // 콤보를 안 넘기고 돌린 주(옛 세이브·하네스의 합성 리포트)면 줄 자체가 없다
     if (!eff) return null;
     const count = view?.count ?? 0;
+    const clashCount = view?.clashCount ?? 0;
     const wrap = el('div', 'kstack');
     wrap.style.setProperty('--stack-gap', '6px');
     wrap.dataset['combo'] = String(count);
+    // 검사·하네스가 감점 줄을 셀 수 있게 (가점과 같은 자리 규칙)
+    wrap.dataset['clash'] = String(clashCount);
     wrap.append(el('div', 'kcaption', '콤보 — 이번 주 배치가 만든 보너스'));
 
     const stats = el('div', 'kstats');
     // 열 수는 **데이터**다 (색·표면만 클래스가 갖는다)
     stats.style.setProperty('--stat-cols', '3');
     const revPct = (eff.revenueMult - 1) * 100;
+    /*
+     * ⚠ 부호를 **찍지 말고 계산해서 붙인다** (P4). 감점 축이 생긴 뒤로 두 값은 음수가
+     * 될 수 있는데, `+${…}` 로 박아 두면 `+-2.1` 이 나온다 (실제로 그렇게 나왔다).
+     */
+    const signed = (n: number, suffix = ''): string =>
+      `${n >= 0 ? '+' : '−'}${Math.abs(n).toFixed(1)}${suffix}`;
+    const tone = (n: number): string => (n > 0 ? 'good' : n < 0 ? 'bad' : '');
     const cells: [string, string, string][] = [
       ['발동', `${count}개`, ''],
-      ['만족', `+${eff.satisfactionDelta.toFixed(1)}`, eff.satisfactionDelta > 0 ? 'good' : ''],
-      ['공원 매출', `+${revPct.toFixed(1)}%`, revPct > 0 ? 'good' : ''],
+      ['만족', signed(eff.satisfactionDelta), tone(eff.satisfactionDelta)],
+      ['공원 매출', signed(revPct, '%'), tone(revPct)],
     ];
     for (const [k, v, cls] of cells) {
       const cell = el('div', 'kstat');
@@ -412,7 +457,7 @@ export class KairoReport {
     }
     wrap.append(stats);
 
-    if (count === 0) {
+    if (count === 0 && clashCount === 0) {
       wrap.append(
         el(
           'div',
@@ -424,13 +469,14 @@ export class KairoReport {
     }
 
     const park = rep.revenue - rep.admission - rep.courseRevenue;
-    const added = eff.revenueMult > 1 ? Math.round(park * (1 - 1 / eff.revenueMult)) : 0;
+    /*
+     * 배율이 1 아래면 **잃은 돈**이다 (P4). `1 − 1/배율` 은 배율이 1 미만이면 음수라
+     * 같은 식이 그대로 쓰인다 — 부호만 문구로 갈린다.
+     */
+    const delta = Math.round(park * (1 - 1 / eff.revenueMult));
+    const money = delta > 0 ? ` · +${won(delta)}` : delta < 0 ? ` · −${won(-delta)}` : '';
     wrap.append(
-      el(
-        'div',
-        'kcaption',
-        `배율은 입장료·코스를 뺀 공원 매출에만 붙습니다${added > 0 ? ` · +${won(added)}` : ''}`,
-      ),
+      el('div', 'kcaption', `배율은 입장료·코스를 뺀 공원 매출에만 붙습니다${money}`),
     );
 
     if (view && view.top.length > 0) {
@@ -450,6 +496,36 @@ export class KairoReport {
         list.append(
           el('div', 'knum-key', `${line.name}${area}`),
           el('div', 'knum-val', `${where}기여 ${Math.round(line.share * 100)}%`),
+        );
+      }
+      wrap.append(list);
+    }
+
+    /*
+     * 상성 감점 (P4) — **안 보이면 플레이어는 "왜 매출이 낮지"를 영영 모른다.**
+     *
+     * 가점 목록과 **같은 표면**(`.knums`)으로 낸다. 새 컴포넌트를 만들지 않는 이유는
+     * 표면 셋 규칙 그대로다 — 감점은 새 종류의 화면이 아니라 같은 표의 다른 부호다.
+     * 색은 토큰(`--bad`)이 클래스로만 붙는다.
+     *
+     * 처방까지 적는다: 못 놓는 이유를 시트에서 미리 보여주는 규칙과 같은 계열이다.
+     * 여기서는 이미 놓인 뒤라 **되돌리는 방법**("두 칸 띄우세요")이 처방이다.
+     */
+    if (view && view.clashes.length > 0) {
+      wrap.append(
+        el(
+          'div',
+          'kcaption bad',
+          `⚠ 상성 감점 ${view.clashCount}곳 — 어울리지 않는 시설이 붙어 있습니다 (두 칸 띄우면 꺼집니다)`,
+        ),
+      );
+      const list = el('div', 'knums');
+      list.dataset['clashList'] = '1';
+      for (const line of view.clashes) {
+        const where = line.at ? ` (${line.at.i}, ${line.at.j})` : '';
+        list.append(
+          el('div', 'knum-key', line.name),
+          el('div', 'knum-val bad', `${line.count}곳${where}`),
         );
       }
       wrap.append(list);

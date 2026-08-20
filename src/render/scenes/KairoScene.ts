@@ -27,6 +27,8 @@ import {
 } from '../kairo/iso.js';
 import { KairoCamera } from '../kairo/kairo-camera.js';
 import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
+import { IncomeFx, playFx, type FxHost } from '../kairo/fx.js';
+import type { IncomeEvent } from '../../sim/kairo/week.js';
 
 /**
  * 지도 바깥을 채우는 **지형** 텍스처 (K38).
@@ -52,7 +54,7 @@ import {
 } from '../../sim/kairo/walls.js';
 import { facilityDef, type PlacementGrid } from '../../sim/kairo/placement.js';
 import type { GuestStore, Guest } from '../../sim/kairo/guests.js';
-import { cssColorInt } from '../../ui/tokens.js';
+import { cssColorInt, cssVar } from '../../ui/tokens.js';
 import {
   bakeGuestAtlas,
   bakeEmoteAtlas,
@@ -1882,6 +1884,11 @@ export class KairoScene extends Phaser.Scene {
 
   override update(_time: number, delta: number): void {
     /*
+     * 사라진 수입 숫자를 걷어낸다 (K48). `IncomeFx.add` 안에서만 걷으면, 수입이 뜸한
+     * 구간에서 죽은 라벨이 남아 **상한이 유령에 막힌다** — 하네스가 읽는 수도 거짓이 된다.
+     */
+    this.incomeFx?.sweep(this.time.now);
+    /*
      * 장식용 유휴 시뮬 — 씬 자체 rng 로 손님을 움직인다. **흐르는 낮에서는 끈다**
      * (`autoTick: false`) — 주가 항상 진행 중이라 `week.step` 이 유일한 시계여야 하고,
      * 여기서 한 번 더 돌리면 헤드리스와 다른 세계가 된다 (K39).
@@ -2051,6 +2058,48 @@ export class KairoScene extends Phaser.Scene {
    * 색은 `style.css` 토큰(`--day-dawn`/`--day-dusk`)에서 읽는다 — 색 소유권 규칙 (K34).
    * `transform`/`opacity` 급의 값 변경만 하므로 reduced-motion 과 무관하다 (전환 없음).
    */
+  /**
+   * 수입 숫자 (K48) — `+₩N` 이 매표소·시설 **위에** 떠올랐다 사라진다.
+   *
+   * 사용자 보고의 후반부: "매표소 근처에 돈이 증가하는 이펙트 같은것도 추가하고 …
+   * 분식·자판기 등 부차적으로 구매할 수 있는 부분도 마찬가지로." 숫자가 어디서
+   * 났는지가 보여야 "무엇이 돈을 벌고 있나"가 화면에서 읽힌다.
+   *
+   * 그리기는 **등록부**가 한다 (`playFx('income-pop', …)`) — 여기는 이어 붙이기만 한다.
+   */
+  private incomeFx: IncomeFx | null = null;
+
+  /** 이번 tick 의 수입 사건. sim 의 `WeekRunner.setIncomeObserver` 가 그대로 넘긴다 */
+  pushIncome(events: readonly IncomeEvent[]): void {
+    if (events.length === 0) return;
+    this.incomeFx ??= new IncomeFx((t) => playFx(this.fxHost(), 'income-pop', t));
+    const now = this.time.now;
+    for (const e of events) this.incomeFx.add(e.handle, e.i, e.j, e.amount, now);
+  }
+
+  /** 화면에 떠 있는 수입 숫자의 수 — 하네스·검사가 읽는다 */
+  get floatCountForTest(): number {
+    return this.incomeFx?.liveCount ?? 0;
+  }
+
+  private fxHostCache: FxHost | null = null;
+  private fxHost(): FxHost {
+    /*
+     * ⚠ `reduced` 와 색은 **한 번만** 읽는다. `matchMedia`·`getComputedStyle` 은
+     * 레이아웃을 강제하는데, 여기는 초당 수십 번 불릴 수 있는 자리다
+     * (`tokens.ts` 의 캐시와 같은 이유).
+     */
+    this.fxHostCache ??= {
+      scene: this,
+      liftAt: (i, j) => this.liftAt(i, j),
+      reduced:
+        typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches,
+      ink: cssVar('--fx-gain', '#fffaf0'),
+      outline: cssVar('--fx-gain-edge', '#14612f'),
+    };
+    return this.fxHostCache;
+  }
+
   setDayPhase(frac: number | null): void {
     if (!this.dayTint) {
       // 화면 좌표(스크롤 무시)에 깔리는 한 장 — 어떤 버퍼 크기도 덮게 크게 잡는다

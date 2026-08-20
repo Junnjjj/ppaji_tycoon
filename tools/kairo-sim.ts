@@ -107,7 +107,7 @@ import {
   EXAM_PASS_RATIO,
 } from '../src/sim/kairo/exam.js';
 import { WishStore } from '../src/sim/kairo/wishes.js';
-import { CERTS, CertStore, certStatuses, effectiveGrade } from '../src/sim/kairo/certs.js';
+import { CERTS, CERT_CAPACITY_TOTAL, CertStore, certStatuses, effectiveGrade } from '../src/sim/kairo/certs.js';
 import { COMBOS } from '../src/sim/kairo/combos.js';
 
 const args = process.argv.slice(2);
@@ -128,6 +128,13 @@ const MAPS = args.includes('--maps');
  * 가운데 어딘가를 가리킬 뿐이다. 원인을 찾으려면 갈린 판을 각각 봐야 한다.
  */
 const EACH = args.includes('--each');
+/**
+ * 정원 성능 실측 (P5). 다 자란 판에서 동시 손님 수를 올려 가며 **sim tick 비용**을 잰다.
+ * P4 가 "정원 300 위는 예산 확인 필요"를 추정으로 남겼기 때문에 넣었다 — 밸런싱 상한을
+ * 추정으로 정하면 그 뒤 실험이 전부 그 추정 위에 쌓인다.
+ */
+const BENCH = args.includes('--bench');
+const BENCH_STEPS = [230, 300, 400, 500, 600, 800, 1200] as const;
 
 /*
  * ⚠ **실제 판과 같은 격자여야 한다** (K36).
@@ -217,6 +224,12 @@ interface RunResult {
    * 조건이 무거워서 아무도 못 따는 종이 있으면 그건 목록에 있으되 없는 것과 같다.
    */
   certIds: string[];
+  /**
+   * 인증을 **몇 주차에** 땄나 (P5). 획득률만으로는 재배분을 못 한다 — "9/12 를 딴다"가
+   * 12주에 다 끝나면 후반 가산은 0 이다. P4 가 남긴 신호("어려운 인증이 후반에 도착하는
+   * 편이 공백을 더 잘 메운다")를 검증하려면 **도착 시각**을 재야 한다.
+   */
+  certWeek: Record<string, number>;
   bankrupt: boolean;
   /** 주차별 손익 — 성장 곡선을 본다 */
   profitByWeek: number[];
@@ -1375,6 +1388,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
    */
   const certs = new CertStore();
   let certsEarned = 0;
+  const certWeek: Record<string, number> = {};
   const discovered = new Set<string>();
   /**
    * 평판 — 퇴장 만족도의 이동평균 (§9.2). 지난주 값 하나로 등급을 정하면 진동한다
@@ -2117,6 +2131,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       );
       cash += got.cash;
       certsEarned += got.ids.length;
+      for (const id of got.ids) certWeek[id] = k + 1;
     }
     // 소원 (K43) — UI 와 같은 규칙. 보상 시설·현금을 그대로 받는다
     for (const ev of wishes.settle(rep, rep.byGroup, p, g.swimZones())) {
@@ -2154,6 +2169,53 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const comboFx = comboEffect(combos);
   const exitSat = last?.exitSatisfaction ?? 0;
   const arrivals = Math.max(1, last?.arrivals ?? 1);
+  /*
+   * ── 정원 성능 실측 (P5, `--bench`) ─────────────────────────────────────
+   *
+   * P4 는 "정원 300 위는 폰 예산 확인 필요"를 **추정으로** 남겼다. 추정은 밸런싱
+   * 결정의 근거가 못 된다 — 재고 넘어간다.
+   *
+   * ⚠ 재는 자리가 중요하다: **다 자란 판**에서 재야 한다. 빈 판에서 재면 거리장이
+   * 작고 시설이 없어 손님이 할 일도 없다 (실측 비용이 몇 배 낮게 나온다). 그래서
+   * `runOne` 끝, 즉 80주를 실제로 굴린 격자 위에서 잰다.
+   *
+   * ⚠ 이것은 **sim tick 비용**이지 프레임 비용이 아니다. 렌더는 별도다 (보고서에 명시).
+   *
+   * ⚠ 자리는 **결과에 들어갈 값을 다 뽑은 뒤**다. 벤치는 손님을 수백 명 밀어 넣으므로
+   * `RunResult` 를 만드는 어떤 값보다 나중이어야 한다 — 앞에 두면 `--bench` 를 켠 판만
+   * 다른 숫자를 내고, 그러면 성능을 재려고 켠 플래그가 밸런스를 바꾼다.
+   */
+  if (BENCH) {
+    const brng = rng.fork(0xbe0);
+    const shares = shiftedShares(seasonShares('summer'), map);
+    const rows: string[] = [];
+    for (const n of BENCH_STEPS) {
+      /*
+       * ⚠ **독립변수는 `limit` 이 아니라 살아 있는 에이전트 수다.** `limit` 은
+       * `insideCount()`(입장한 손님)만 막고, 정류장에서 걸어 들어오는 손님은 안 센다.
+       * 처음엔 tick 당 8명씩 밀어 넣었더니 상한 230 인데 에이전트가 674 였다 —
+       * 그 숫자로 "230 은 1.3ms" 라고 적었으면 3배 비관한 표를 만들 뻔했다.
+       * 그래서 **tick 당 1명**씩만 넣고 `g.count` 가 목표에 닿으면 멈춘다.
+       */
+      g.setMaxGuests(n);
+      for (let k = 0; k < 4000 && g.count < n; k++) {
+        g.spawn(brng, 'summer', shares);
+        g.tick(brng);
+      }
+      const filled = g.count;
+      const TICKS = 600;
+      const t0 = process.hrtime.bigint();
+      for (let k = 0; k < TICKS; k++) {
+        g.spawn(brng, 'summer', shares);
+        g.tick(brng);
+      }
+      const ms = Number(process.hrtime.bigint() - t0) / 1e6 / TICKS;
+      rows.push(`${String(n).padStart(4)}명(실 ${String(filled).padStart(4)}) ${ms.toFixed(3)}ms/tick`);
+    }
+    console.log(`정원 벤치 (시드 ${seed} · ${weeks}주 자란 판 · 시설 ${p.count}):`);
+    for (const r of rows) console.log(`  ${r}`);
+  }
+
   return {
     seed,
     weeks,
@@ -2187,6 +2249,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     certsEarned,
     certCapacity: certs.bonus().capacity,
     certIds: [...certs.earnedIds],
+    certWeek,
     bankrupt: cash < 0,
     profitByWeek,
     seasonByWeek,
@@ -2417,12 +2480,45 @@ function main(): void {
       `인증 중앙 ${stats(runs.map((r) => r.certsEarned)).med}/${CERTS.length}종 ` +
       `(정원 +${stats(runs.map((r) => r.certCapacity)).med})`,
   );
-  // 인증별 획득률 — 0% 인 종은 목록에 있으되 없는 것과 같다 (조건이 무겁다는 신호)
+  /*
+   * 인증별 획득률과 **도착 주차** (P5).
+   *
+   * ⚠ 획득률 0% 인 종은 목록에 있으되 없는 것과 같다 (조건이 무겁다는 신호 — P4 가
+   * 9/12 쪽을 고른 이유). 그러나 획득률만 보면 재배분을 못 한다: 12종을 다 따도
+   * 전부 20주 안에 도착하면 **후반 가산이 0** 이다. 그래서 딴 판들의 도착 주차
+   * 중앙값을 같이 낸다 — 정원 가산은 `capacity×도착시각` 으로 읽어야 한다.
+   */
+  const certAt = (c: (typeof CERTS)[number]): number[] =>
+    runs.map((r) => r.certWeek[c.id]).filter((w): w is number => w !== undefined);
   console.log(
-    `  인증별: ${CERTS.map(
-      (c) => `${c.name} ${Math.round((100 * runs.filter((r) => r.certIds.includes(c.id)).length) / runs.length)}%`,
-    ).join(' · ')}`,
+    `  인증별: ${CERTS.map((c) => {
+      const got = certAt(c);
+      const pct = Math.round((100 * got.length) / runs.length);
+      return `${c.name} ${pct}%${got.length > 0 ? `@${stats(got).med}주` : ''}(+${c.reward.capacity ?? 0})`;
+    }).join(' · ')}`,
   );
+  /*
+   * 가산이 **언제** 들어오는가 — 4주마다 누적 중앙값. 후반 공백을 메우려면 이 곡선이
+   * 41~80주 구간에서도 계속 올라야 한다. 앞에서 평평해지면 그 뒤는 다시 상한이다.
+   */
+  {
+    const cum: string[] = [];
+    for (let w = 4; w <= WEEKS; w += 4) {
+      cum.push(
+        String(
+          stats(
+            runs.map((r) =>
+              CERTS.reduce(
+                (a, c) => a + ((r.certWeek[c.id] ?? Infinity) <= w ? (c.reward.capacity ?? 0) : 0),
+                0,
+              ),
+            ),
+          ).med,
+        ),
+      );
+    }
+    console.log(`  정원 가산 누적 (4주마다): ${cum.join(' → ')} / 총 ${CERT_CAPACITY_TOTAL}`);
+  }
   if (EACH) {
     console.log(
       `\n판별 결과 — ${'시드'.padStart(5)} ${'등급'.padStart(4)} ${'만족'.padStart(5)} ` +

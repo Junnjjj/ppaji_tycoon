@@ -29,6 +29,7 @@ import {
   Z_FACE,
   Z_EMOTE,
   Z_GHOST,
+  Z_FLOAT,
   Z_BAND,
 } from './iso.js';
 
@@ -297,6 +298,7 @@ describe('깊이 띠 — 칸 하나 안의 순서 (K37)', () => {
       ['표정', Z_FACE],
       ['이모트', Z_EMOTE],
       ['고스트', Z_GHOST],
+      ['떠오르는 숫자', Z_FLOAT],
     ] as const;
     for (let k = 1; k < band.length; k++) {
       const [prevName, prev] = band[k - 1] as readonly [string, number];

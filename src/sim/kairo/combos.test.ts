@@ -6,9 +6,13 @@ import { PlacementGrid, allFacilityDefs } from './placement.js';
 import {
   COMBOS,
   DIMINISHING,
+  CONFLICTS,
+  CONFLICT_RADIUS,
+  CONFLICT_ECONOMY,
   comboDef,
   diminishingScale,
   evaluateCombos,
+  evaluateConflicts,
   previewCombos,
   zoneAreaScale,
   comboEffect,
@@ -17,6 +21,7 @@ import {
   type ComboDef,
   type ComboTier,
 } from './combos.js';
+import { NEED_KINDS } from './week.js';
 import type { SwimZone } from './swim.js';
 
 const GATE = { i: 0, j: 0 };
@@ -411,7 +416,12 @@ describe('콤보 총합 상한 (S5)', () => {
     expect(e.revenueMult).toBe(1);
   });
 
-  it('음수 원점수는 0 으로 본다 — 감점 축은 아직 데이터에 없다 (P1-B 미착수)', () => {
+  it('가점 쪽 음수 입력은 여전히 0 이다 — 감점은 별도 칸으로 들어온다 (P4)', () => {
+    /*
+     * P4 에서 감점 축이 생겼지만 이 클램프는 **남겼다.** 감점은 `penaltySatisfaction`
+     * 이라는 자기 칸으로 들어온다 — 한 숫자에 부호를 겹쳐 실으면 "감점이 어디서 왔나"를
+     * 잃고, 두 축을 각자 포화시키는 일(아래 검사)도 못 한다.
+     */
     const e = comboEffect({ satisfaction: -50, revenue: -50 });
     expect(e.satisfactionDelta).toBe(0);
     expect(e.revenueMult).toBe(1);
@@ -441,6 +451,229 @@ describe('콤보 총합 상한 (S5)', () => {
     for (const k of ['satCap', 'satHalf', 'revCap', 'revHalf'] as const) {
       expect(COMBO_ECONOMY[k], k).toBeGreaterThan(0);
     }
+  });
+});
+
+/**
+ * 상성 감점 (P4, △).
+ *
+ * 검사가 지켜야 하는 것 다섯:
+ *   ① 붙이면 내려간다 · ② **떼면 안 내려간다**(음성 대조군) · ③ 데이터를 비우면
+ *   P4 이전과 **완전히 같다**(되돌리기) · ④ 무효(◯)가 다수다(도배 방지) ·
+ *   ⑤ 음수 총합의 처리가 정해진 규칙대로다
+ */
+describe('상성 감점 (P4) — 나쁜 조합을 피하는 제약 만족 문제', () => {
+  /** 화장실(위생)과 매점(먹거리)을 `d` 만큼 띄워 놓았을 때의 판정 */
+  const clashAt = (d: number): ReturnType<typeof evaluateCombos> => {
+    const { t, w, p } = flat();
+    expect(p.place(t, w, GATE, 'toilet', 5, 5).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'shop', 5, 6 + d).ok).toBe(true);
+    return evaluateCombos(p);
+  };
+
+  it('① 감점 쌍이 붙어 있으면 총점이 내려간다', () => {
+    const near = clashAt(1);
+    expect(near.conflicts.map((c) => c.id)).toContain('clash_hygiene_food');
+    expect(near.penaltySatisfaction).toBeGreaterThan(0);
+    const fx = comboEffect(near);
+    expect(fx.satisfactionDelta).toBeLessThan(0);
+    expect(fx.revenueMult).toBeLessThan(1);
+  });
+
+  it('② 음성 대조군 — 떨어뜨려 놓으면 안 내려간다', () => {
+    const far = clashAt(2);
+    expect(far.conflicts).toHaveLength(0);
+    expect(far.penaltySatisfaction).toBe(0);
+    const fx = comboEffect(far);
+    expect(fx.satisfactionDelta).toBe(0);
+    expect(fx.revenueMult).toBe(1);
+  });
+
+  it('②b 감점 반경(1)이 가점 반경(2)보다 좁다 — 처방이 언제나 있다', () => {
+    /*
+     * 같은 반경이면 "붙이면 터지고 붙이면 깎이는" 자리가 겹쳐 배치가 지뢰밭이 된다.
+     * 좁혀 두면 **두 칸 띄우는 순간 가점은 살아 있고 감점만 꺼진다** — 그게 이 축의 답이다.
+     */
+    expect(CONFLICT_RADIUS).toBe(1);
+    const small = COMBOS.filter((c) => c.kind === 'adjacent').map((c) => c.radius ?? 2);
+    expect(Math.min(...small)).toBeGreaterThan(CONFLICT_RADIUS);
+
+    // 실물로 확인: 가점 쌍(샤워+락커, radius 2)은 두 칸 띄워도 살아 있다
+    const { t, w, p } = flat();
+    expect(p.place(t, w, GATE, 'shower_row', 5, 5).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'locker_row', 5, 7).ok).toBe(true);
+    const r = evaluateCombos(p);
+    expect(r.active.some((c) => c.id === 'small_shower_locker')).toBe(true);
+    expect(r.conflicts).toHaveLength(0);
+  });
+
+  it('②c 가점 `adjacent` 와 감점이 **같은 쌍**을 물지 않는다 — 모순을 데이터가 못 담게', () => {
+    /*
+     * 붙이면 +3 이고 동시에 −5 인 쌍이 있으면 플레이어가 배우는 규칙이 자기모순이 된다.
+     * ⚠ `cluster`·`resort` 는 **일부러 겹친다**: 아이 구역(놀이+위생+먹거리, 반경 4)은
+     * "같은 구역에 두되 서로 붙이지는 마라"가 되어 오히려 이 축의 핵심 퍼즐이다.
+     * 금지는 **거리로 값을 매기는 티어**(adjacent, 반경 2)에만 건다.
+     */
+    const needOfDef = new Map(
+      allFacilityDefs().map((d) => [d.id, (d as { need?: string }).need]),
+    );
+    const banned = new Set(CONFLICTS.map((c) => [...c.needs].sort().join('|')));
+    for (const c of COMBOS) {
+      if (c.kind !== 'adjacent') continue;
+      const needs = c.requires
+        .map((r) => r.need ?? needOfDef.get(r.facility ?? ''))
+        .filter((n): n is string => !!n);
+      for (let a = 0; a < needs.length; a++) {
+        for (let b = a + 1; b < needs.length; b++) {
+          const key = [needs[a], needs[b]].sort().join('|');
+          expect(banned.has(key), `${c.id} = ${key}`).toBe(false);
+        }
+      }
+    }
+  });
+
+  it('③ 되돌리기 — 감점 데이터를 비우면 P4 이전과 완전히 같다', () => {
+    const near = clashAt(1);
+    // 판정 자체가 사라진다
+    const { t, w, p } = flat();
+    p.place(t, w, GATE, 'toilet', 5, 5);
+    p.place(t, w, GATE, 'shop', 5, 7);
+    expect(evaluateConflicts(p.all(), [])).toHaveLength(0);
+    // 경제도 P4 이전 식(포화 곡선 하나)과 **정확히** 같다
+    const empty = comboEffect({ satisfaction: near.satisfaction, revenue: near.revenue });
+    expect(empty.satisfactionDelta).toBeCloseTo(
+      saturate(near.satisfaction, COMBO_ECONOMY.satCap, COMBO_ECONOMY.satHalf),
+      12,
+    );
+    expect(empty.revenueMult).toBeCloseTo(
+      1 + saturate(near.revenue, COMBO_ECONOMY.revCap, COMBO_ECONOMY.revHalf) / 100,
+      12,
+    );
+  });
+
+  it('③b 가점 총합은 감점이 손대지 않는다 — active 는 의뢰·심사가 세는 목록이다', () => {
+    /*
+     * 감점을 `active` 나 `satisfaction` 에 섞으면 **나쁜 배치가 조건을 채워 주거나**
+     * (음수 콤보도 한 개), 반대로 좋은 배치의 조건이 조용히 미달이 된다.
+     */
+    const near = clashAt(1);
+    const far = clashAt(2);
+    expect(near.satisfaction).toBe(far.satisfaction);
+    expect(near.revenue).toBe(far.revenue);
+    expect(near.active.length).toBe(far.active.length);
+  });
+
+  it('④ 무효(◯)가 다수다 — 9×9 중 감점 셀이 15% 이하 (도배 방지)', () => {
+    /*
+     * PSS 대표 10행 260셀의 △ 비율이 약 14% 다. 감점 도배는 퍼즐이 아니라 스트레스라
+     * 그 자릿수를 상한으로 못 박는다. 지금은 4쌍 × 2(대칭) = 8칸 / 81 = 9.9%.
+     */
+    const cells = CONFLICTS.length * 2;
+    const total = NEED_KINDS.length * NEED_KINDS.length;
+    expect(cells / total).toBeLessThanOrEqual(0.15);
+    expect(cells).toBe(8);
+    expect(total).toBe(81);
+  });
+
+  it('④b 감점은 need 쌍이다 — 시설 ID 쌍(75종²)이면 표를 외우게 된다', () => {
+    const kinds = new Set<string>(NEED_KINDS);
+    const seen = new Set<string>();
+    for (const c of CONFLICTS) {
+      expect(c.needs, c.id).toHaveLength(2);
+      for (const n of c.needs) expect(kinds.has(n), `${c.id} → ${n}`).toBe(true);
+      // 같은 수요끼리는 안 문다 — 시작 킷이 위생 시설을 한 방에 몰아 준다
+      expect(c.needs[0], c.id).not.toBe(c.needs[1]);
+      // 쌍은 대칭이라 한 번만 적는다 — 두 번 적으면 그 쌍만 두 배로 문다
+      const key = [...c.needs].sort().join('|');
+      expect(seen.has(key), `${c.id} 중복`).toBe(false);
+      seen.add(key);
+      expect((c.penalty.satisfaction ?? 0) + (c.penalty.revenue ?? 0), c.id).toBeGreaterThan(0);
+      // 데이터는 **양수 크기**만 담는다 — 부호는 comboEffect 가 붙인다
+      expect(c.penalty.satisfaction ?? 0, c.id).toBeGreaterThanOrEqual(0);
+      expect(c.penalty.revenue ?? 0, c.id).toBeGreaterThanOrEqual(0);
+      expect(c.id.startsWith('clash_'), c.id).toBe(true);
+    }
+    expect(new Set(CONFLICTS.map((c) => c.id)).size).toBe(CONFLICTS.length);
+  });
+
+  it('⑤ 총합이 음수면 매출 배율이 1 아래로 내려간다 — 가점을 켠 사람만 벌주면 안 된다', () => {
+    const e = comboEffect({
+      satisfaction: 0,
+      revenue: 0,
+      penaltySatisfaction: 20,
+      penaltyRevenue: 20,
+    });
+    expect(e.satisfactionDelta).toBeLessThan(0);
+    expect(e.revenueMult).toBeLessThan(1);
+    // 감점도 상한이 있다 — 가점 상한과 **같은 크기**까지만 (축이 서로를 지우는 데서 멈춘다)
+    const huge = comboEffect({
+      satisfaction: 0,
+      revenue: 0,
+      penaltySatisfaction: 1e6,
+      penaltyRevenue: 1e6,
+    });
+    expect(huge.satisfactionDelta).toBeGreaterThan(-CONFLICT_ECONOMY.satCap);
+    expect(huge.revenueMult).toBeGreaterThan(1 - CONFLICT_ECONOMY.revCap / 100);
+    expect(CONFLICT_ECONOMY.satCap).toBe(COMBO_ECONOMY.satCap);
+    expect(CONFLICT_ECONOMY.revCap).toBe(COMBO_ECONOMY.revCap);
+  });
+
+  it('⑤b 감점은 후반에도 안 씻긴다 — 두 축을 따로 포화시킨 이유', () => {
+    /*
+     * ⚠ 가점과 감점을 **더한 뒤 한 번** 포화시키면, 후반 raw 300 짜리 판에서 곡선 기울기가
+     * 0.006/점이라 감점 20점이 −0.12점으로 사라진다. 그러면 "나쁜 조합을 피한다"가
+     * 후반에 없어져 이 축을 넣은 이유가 통째로 무너진다. 아래가 그 대조다.
+     */
+    const late = { satisfaction: 300, revenue: 400 };
+    const clean = comboEffect(late);
+    const dirty = comboEffect({ ...late, penaltySatisfaction: 20, penaltyRevenue: 20 });
+    const drop = clean.satisfactionDelta - dirty.satisfactionDelta;
+    expect(drop).toBeGreaterThan(1.5); // 한 통에 넣었으면 0.12 였다
+    expect(clean.revenueMult - dirty.revenueMult).toBeGreaterThan(0.03);
+  });
+
+  it('가점과 같은 짝짓기다 — A 하나에 B 셋을 붙여도 감점은 하나', () => {
+    const { t, w, p } = flat();
+    expect(p.place(t, w, GATE, 'toilet', 10, 10).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'vending_out', 10, 12).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'vending_out', 11, 12).ok).toBe(true);
+    expect(p.place(t, w, GATE, 'vending_out', 12, 12).ok).toBe(true);
+    const hits = evaluateCombos(p).conflicts.filter((c) => c.id === 'clash_hygiene_food');
+    expect(hits).toHaveLength(1);
+  });
+
+  it('감점 쌍이 여럿이면 각각 따로 난다 — 총합이 쌓인다', () => {
+    const { t, w, p } = flat();
+    p.place(t, w, GATE, 'toilet', 10, 10);
+    p.place(t, w, GATE, 'shop', 10, 12); // 위생 × 먹거리
+    p.place(t, w, GATE, 'lookout', 12, 10); // 위생 × 경관
+    const ids = evaluateCombos(p).conflicts.map((c) => c.id);
+    expect(ids).toContain('clash_hygiene_food');
+    expect(ids).toContain('clash_hygiene_scenery');
+  });
+
+  it('미리보기가 **새로 나는** 감점을 알려준다 — 실패는 내 선택 때문이어야 (v4)', () => {
+    const { t, w, p } = flat();
+    p.place(t, w, GATE, 'toilet', 5, 5);
+    const bad = previewCombos(p, 'shop', 5, 7);
+    expect(bad.clashed.map((c) => c.id)).toContain('clash_hygiene_food');
+    expect(bad.penaltySatisfaction).toBeGreaterThan(0);
+    // 두 칸 띄우면 안 난다
+    const good = previewCombos(p, 'shop', 5, 8);
+    expect(good.clashed).toHaveLength(0);
+    expect(good.penaltySatisfaction).toBe(0);
+    // 미리보기는 상태를 안 바꾼다
+    expect(p.count).toBe(1);
+  });
+
+  it('이미 나던 감점은 새 자리 탓이 아니다 — 차집합이다', () => {
+    const { t, w, p } = flat();
+    p.place(t, w, GATE, 'toilet', 5, 5);
+    p.place(t, w, GATE, 'shop', 5, 7);
+    // 이미 한 건 나 있다. 멀리 놓는 시설은 그것을 물려받지 않는다
+    const pv = previewCombos(p, 'sunbed_row', 20, 20);
+    expect(pv.clashed).toHaveLength(0);
+    expect(pv.penaltySatisfaction).toBe(0);
   });
 });
 

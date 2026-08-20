@@ -1,7 +1,11 @@
 {
   "version": 1,
   "note": "사이드 인증 (P3-E) — 등급 사다리 **옆**의 병렬 목표다. 등급 심사가 한 번에 하나씩 순차라면 인증은 12개가 동시에 열려 있다 (PSS 사이드 심사 19종의 축소판). 조건 평가는 progress.evaluateCondition **하나**를 쓴다 — 의뢰·심사와 갈라지면 \"의뢰로는 3개인데 인증으로는 2개\"가 된다.",
-  "note2": "⚠ **정원 가산이 핵심 고리다.** 입장은 min(등급 maxGuests + 인증 가산, 공급×1.5) 다. 후반 공백의 뿌리는 5등급 maxGuests 230 인데 시설 75종을 한 채씩만 지어도 정원 합이 185(×1.5 = 277)라, 무엇을 지어도 손님이 안 늘었다 (docs/research/late-game-cap-proposal.md §1.1). 12종 합계 +70 → 300 이다. ⚠ 300 이상은 손님 에이전트 수가 곧 폰 성능 예산이라 실기기 측정 없이 올리지 말 것.",
+  "note2": "⚠ **정원 가산이 핵심 고리다.** 입장은 min(등급 maxGuests + 인증 가산, 공급×1.5) 다. 후반 공백의 뿌리는 5등급 maxGuests 230 인데 시설 75종을 한 채씩만 지어도 정원 합이 185(×1.5 = 277)라, 무엇을 지어도 손님이 안 늘었다 (docs/research/late-game-cap-proposal.md §1.1). 12종 합계 **+140 → 370** 이다 (P5. P4 는 +70 → 300 이었다).",
+  "note2b": "⚠ **총합과 배분 중 하나만으로는 안 된다** (P5, 24시드×80주 A/B — 인증 데이터만 다르다). 41~80주 건설 0원을 2×2 로 재면: 총70·완만 63%(P4) · 총70·후반가중 60% · 총140·균일 60% · **총140·후반가중 45%**. 배분만 −3pp · 총합만 −3pp 인데 **둘이 같이면 −18pp** 로 단순 합의 3배다 (교호작용). 총합만으로 안 되는 이유는 정원이 늘면 판이 빨리 커지고 그래서 인증 조건도 빨리 충족돼 가산이 전반에 소진되기 때문이고 (사철 도착 중앙 71주→49주), 배분만으로 안 되는 이유는 나눠 줄 양이 없기 때문이다 (총 70 에서 후반에 몰아 주면 초반 몫이 깎여 첫 무건설이 26→24주로 오히려 당겨진다). 그래서 아래 capacity 는 초반 4~7 · 후반 11~19 로 갈라져 있다 — 한쪽만 되돌려도 효과가 사라진다 (certs.test.ts 의 후반 가중 검사가 지킨다).",
+  "note2c": "⚠ **총합을 더 올리지 말 것 — 지어도 손님이 안 는다** (P5 실측). 총 140(정원 370)에서 만석 비율이 24판 전부 0% 가 된다: 수요가 이미 상한에 안 닿는다는 뜻이고, 그 위의 상한은 아무도 안 쓰는 시설을 짓게 하는 숫자다. 대조군 둘: 총 200(같은 후반 가중)은 후반 공백이 45%→43% 로 2pp 좋아지는 대신 시설 122→129 · 후반 수익 226·234만 → **205·219만 (하락)** · 유지비 29→35만 · 퇴장 만족도 p25 73→60. 총 210(균일)은 시설 176 채에 수익은 그대로고 공백은 50% 로 되레 나빠졌으며 만족도 p25 는 55. **멈추는 자리는 「만석이 0 이 되는 지점」이다.**",
+  "note2d": "⚠ **조건을 올려서 도착을 늦추려 하지 말 것** (P5 실측). 후반 7종의 문턱을 올린 대조군(총 170)은 41~80주 57% 로 나빠졌고 **종합 인증 획득률이 0% 가 됐다**. 인증→정원→성장→다음 인증은 양의 되먹임이라, 조건을 조이면 판이 안 커지고 그래서 조건이 더 안 채워진다. 도착을 늦추는 것은 **가산의 배분**으로 하고 조건은 건드리지 않는다.",
+  "note2e": "성능 실측 (P5, 다 자란 판의 sim tick 비용 — `npm run sim:kairo -- --seeds 3 --weeks 80 --bench`): 동시 230명 0.30~0.41ms · 300명 0.47~0.90ms · 400명 1.30~2.72ms · 500명 1.40~4.30ms. tick 은 0.2초마다 오므로 400명이라도 CPU 1~2% 다 — P4 가 남긴 \"300 위는 예산 확인 필요\"는 재보니 sim 쪽 제약이 아니었다. ⚠ 이건 **sim 비용이지 렌더 비용이 아니다.** 그리고 만석 0% 라 실제 동시 손님은 상한 370 에 한참 못 미친다 — 80주 판 12개의 마지막 주 동시 손님은 97~192명(중앙 120)이었다. 상한은 「짓는 이유」로 쓰이고 화면의 손님 수는 수요가 정한다.",
   "note3": "보상에 **시설이 없다.** 시설 75종은 골격(등급)·의뢰·소원·입고가 이미 정확히 한 번씩 나눠 갖고 있고 (unlock-graph.test.ts 가 지킨다), 인증을 두 번째 출처로 얹으면 이중 해금이거나 그 시설이 후반까지 잠긴다. 현금도 초반 3종에만 얹었다 — 후반 현금 적체(260주 1.5억)가 지표이므로 현금 보상은 문제를 키운다. 남는 보상은 **정원·허가 가산**이고, 그 둘이 정확히 \"공급을 안 거치는 축\" 이다.",
   "note4": "조건은 절반 이상이 **배치 형태**를 요구한다: activeCombos·comboTier 는 인접 판정이고 (콤보 정의가 곧 배치 규칙), swimAreaMax 는 이어진 물 구역 넓이, courseCount 는 물가에 선착장을 세워야 는다. 총량 지표만이면 의뢰 16종과 구별이 안 된다 (제안서 ⓑ 주의).",
   "certs": [
@@ -23,7 +27,7 @@
         { "kind": "needSupply", "need": "food", "value": 6 },
         { "kind": "weekProfit", "value": 1500000 }
       ],
-      "reward": { "capacity": 4, "cash": 500000 }
+      "reward": { "capacity": 11, "cash": 500000 }
     },
     {
       "id": "cert_rest",
@@ -43,7 +47,7 @@
         { "kind": "needSupply", "need": "scenery", "value": 6 },
         { "kind": "avgFacilityLevel", "value": 2 }
       ],
-      "reward": { "capacity": 5 }
+      "reward": { "capacity": 18 }
     },
     {
       "id": "cert_thrill",
@@ -53,7 +57,7 @@
         { "kind": "needSupply", "need": "thrill", "value": 6 },
         { "kind": "activeCombos", "value": 8 }
       ],
-      "reward": { "capacity": 5, "permitArea": 20 }
+      "reward": { "capacity": 14, "permitArea": 20 }
     },
     {
       "id": "cert_stay",
@@ -73,7 +77,7 @@
         { "kind": "swimAreaMax", "value": 40 },
         { "kind": "needSupply", "need": "play", "value": 8 }
       ],
-      "reward": { "capacity": 6, "permitArea": 40 }
+      "reward": { "capacity": 18, "permitArea": 40 }
     },
     {
       "id": "cert_course",
@@ -103,7 +107,7 @@
         { "kind": "avgFacilityLevel", "value": 2.8 },
         { "kind": "facilityTotalAndSat", "value": 40, "sat": 80 }
       ],
-      "reward": { "capacity": 7 }
+      "reward": { "capacity": 14 }
     },
     {
       "id": "cert_variety",
@@ -113,7 +117,7 @@
         { "kind": "facilityKinds", "value": 32 },
         { "kind": "maxTurnedAway", "value": 0 }
       ],
-      "reward": { "capacity": 7, "permitArea": 50 }
+      "reward": { "capacity": 18, "permitArea": 50 }
     },
     {
       "id": "cert_allseason",
@@ -123,7 +127,7 @@
         { "kind": "questsDone", "value": 14 },
         { "kind": "facilityTotalAndSat", "value": 60, "sat": 88 }
       ],
-      "reward": { "capacity": 8, "permitArea": 50 }
+      "reward": { "capacity": 19, "permitArea": 50 }
     }
   ]
 }
