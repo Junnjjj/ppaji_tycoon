@@ -31,7 +31,43 @@ import {
   Z_GHOST,
   Z_FLOAT,
   Z_BAND,
+  DEPTH_AIM_MARK,
+  DEPTH_DOOR_MARK,
+  DEPTH_LAND_MARK,
+  DEPTH_COURSE_MARK,
+  DEPTH_RIDE_MARK,
+  DEPTH_RIDE_LABEL,
 } from './iso.js';
+
+describe('힌트 층은 어떤 세계 물체보다도 위다 (K51)', () => {
+  const HINTS = [
+    ['조준 발자국', DEPTH_AIM_MARK],
+    ['문 앞 발판', DEPTH_DOOR_MARK],
+    ['토지 경계', DEPTH_LAND_MARK],
+    ['코스 오버레이', DEPTH_COURSE_MARK],
+    ['입출구 면', DEPTH_RIDE_MARK],
+    ['입출구 글씨', DEPTH_RIDE_LABEL],
+  ] as const;
+
+  it('가장 먼 칸의 가장 높은 띠보다도 위다 — 격자를 키우면 여기가 먼저 깨진다', () => {
+    const worldMax = depthKey(GRID_W - 1, GRID_H - 1) + Z_FLOAT;
+    for (const [name, d] of HINTS) expect(d, name).toBeGreaterThan(worldMax);
+  });
+
+  it('입출구 표식은 고스트보다 위다 — 가려지면 회전을 보여줄 수 없다', () => {
+    const ghostMax = depthKey(GRID_W - 1, GRID_H - 1) + Z_GHOST;
+    expect(DEPTH_RIDE_MARK).toBeGreaterThan(ghostMax);
+    // 글씨는 자기 면보다 위 — 면이 글씨를 덮으면 라벨이 존재 이유를 잃는다
+    expect(DEPTH_RIDE_LABEL).toBeGreaterThan(DEPTH_RIDE_MARK);
+    // 힌트 층 안에서도 입출구가 가장 위다 (코스 오버레이 밑에 깔릴 뻔했다)
+    expect(DEPTH_RIDE_MARK).toBeGreaterThan(DEPTH_COURSE_MARK);
+  });
+
+  it('층끼리 겹치지 않는다 — 동률이면 삽입 순서가 이겨 조용히 어긋난다', () => {
+    const vals = HINTS.map(([, d]) => d);
+    expect(new Set(vals).size).toBe(vals.length);
+  });
+});
 
 describe('투영이 정수로 떨어진다 — 스케일 계약의 근거', () => {
   it('격자 한 걸음이 정확히 (16, 8) 텍셀이다', () => {

@@ -10,6 +10,7 @@ import {
   SPECIALTY_LEVEL,
   type FacilityCharge,
   type FacilitySpecialty,
+  type RideTiles,
 } from '../sim/kairo/placement.js';
 import type { NeedKind } from '../sim/kairo/week.js';
 
@@ -135,6 +136,15 @@ export interface FacilityInfo {
   possible: readonly FacilitySpecialty[];
   /** 가게 품목 (표시 전용, K49). 파는 것이 없으면 빈 배열이고 그 블록이 안 뜬다 */
   menu: readonly { name: string; price: number }[];
+  /**
+   * 슬라이드류의 입출구 (K51) — 없으면 `null` 이고 그 줄이 안 뜬다 (75종 중 4종뿐).
+   *
+   * ⚠ **칸 좌표를 글자로 쓰지 않는다.** `(37, 21)` 은 이 게임 어느 화면에도 없는
+   * 단위다 — 플레이어는 지도를 격자 번호로 읽지 않는다. 그래서 이 줄은 "입출구가
+   * 있다"와 "어느 쪽으로 흐른다"만 말하고, **어느 칸인지는 지도가 답한다**
+   * (시트를 여는 동안 그 시설에만 표식이 뜬다). 값은 검사가 대조하려고 들고 있다.
+   */
+  ride: RideTiles | null;
 }
 
 /**
@@ -208,6 +218,11 @@ export function facilityInfo(
      * 화면이 된다.
      */
     menu: def.menu ?? [],
+    /*
+     * ⚠ **`rideTilesOf` 로 잰다** (K51) — 데이터의 오프셋(`def.ride.entryTile`)을 그대로
+     * 쓰면 회전한 시설에서 화면과 손님이 갈라진다. 손님이 쓰는 그 함수를 쓴다.
+     */
+    ride: PlacementGrid.rideTilesOf(def, item.i, item.j, item.facing ?? 0),
   };
 }
 
@@ -231,6 +246,15 @@ export interface FacilityActions {
   moveHint?: string;
   /** 철거 붓 + 조준 (K47-③) — 여기서 바로 없애지 않는다 */
   erase: () => void;
+  /**
+   * 시트가 닫혔다 (K51). 지도에 켜 둔 것(입출구 표식)을 끄는 **유일한 경로**다.
+   *
+   * ⚠ 닫히는 길이 넷이다 — 닫기 버튼 · 철거/이동이 스스로 `hide()` · 다른 패널이
+   * `PanelHost` 로 밀어냄 · 철거돼서 `rerender` 가 닫음. 부르는 쪽마다 끄게 하면
+   * 다섯 번째가 생길 때 표식이 지도에 남는다 (K50 이 투시 원복에서 겪은 그 함정).
+   * 전부 `hide()` 를 지나므로 여기 하나면 된다.
+   */
+  onClose?: () => void;
 }
 
 export class KairoFacilityInfo {
@@ -270,6 +294,7 @@ export class KairoFacilityInfo {
     // 한 번에 하나 (K37) — 건설 시트를 열어 둔 채 탭해도 겹치지 않는다
     if (!panelHost.open(this)) return;
     this.root.hidden = false;
+    this.closer = actions.onClose ?? null;
     this.rerender = (): void => {
       const now = read();
       // 사라졌으면(철거) 닫는다 — 없는 시설의 정보가 남아 있으면 그게 거짓말이다
@@ -285,6 +310,13 @@ export class KairoFacilityInfo {
   hide(): void {
     this.root.hidden = true;
     this.rerender = null;
+    /*
+     * ⚠ **먼저 비우고 부른다.** `PanelHost.open()` 이 밀어내는 경로에서는 이 콜백이
+     * 다른 패널을 여는 중에 도는데, 참조를 남겨 두면 재진입에서 두 번 불린다.
+     */
+    const closer = this.closer;
+    this.closer = null;
+    closer?.();
     panelHost.closed(this);
   }
 
@@ -305,11 +337,16 @@ export class KairoFacilityInfo {
    */
   private rerender: (() => void) | null = null;
 
+  /** 닫힐 때 부를 것 (K51 — 지도 표식 끄기). 열려 있는 동안만 산다 */
+  private closer: (() => void) | null = null;
+
   private render(info: FacilityInfo, actions: FacilityActions): void {
     this.root.dataset['handle'] = String(info.handle);
     // 과금 분류를 루트에 적는다 — 화면 검사가 글자 파싱 없이 이 값을 대조한다
     this.root.dataset['charge'] = info.charge;
     this.root.dataset['level'] = String(info.level);
+    // 입출구 유무를 글자 파싱 없이 대조할 수 있게 (K51) — 지도 표식과 짝을 이룬다
+    this.root.dataset['ride'] = info.ride ? '1' : '0';
     this.title.textContent = `${info.name} · ${info.size}`;
     this.body.replaceChildren();
 
@@ -377,6 +414,25 @@ export class KairoFacilityInfo {
         '',
       ),
     );
+
+    /*
+     * 입출구 (K51) — 슬라이드류 4종만. **수요 바로 뒤**다: 앞의 두 줄이 "무엇을 얼마에
+     * 파나"라면 이건 "손님이 어떻게 지나가나"라 동선의 이야기이고, 유지비(마지막 숫자)
+     * 앞에 있어야 읽는 흐름이 안 끊긴다.
+     *
+     * 오른쪽 칸은 **비운다.** 여기 쓸 수 있는 값이 칸 좌표뿐인데 그건 화면 어디에도
+     * 없는 단위다 — 어느 칸인지는 지도의 표식이 답한다.
+     */
+    if (info.ride) {
+      rows.append(
+        row(
+          'ride',
+          '입출구',
+          '손님이 입구로 들어가 출구로 나옵니다 — 지도에 표시된 두 칸입니다',
+          '',
+        ),
+      );
+    }
 
     rows.append(
       row('upkeep', '유지비', '손님이 없어도 매주 나갑니다', `${man(info.upkeep)}/주`),

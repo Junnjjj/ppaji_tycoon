@@ -24,6 +24,12 @@ import {
   Z_GHOST,
   LEVEL_H,
   lift,
+  DEPTH_AIM_MARK,
+  DEPTH_DOOR_MARK,
+  DEPTH_LAND_MARK,
+  DEPTH_COURSE_MARK,
+  DEPTH_RIDE_MARK,
+  DEPTH_RIDE_LABEL,
 } from '../kairo/iso.js';
 import { occludes, XRAY_ALPHA, type Rect } from '../kairo/xray.js';
 import { KairoCamera } from '../kairo/kairo-camera.js';
@@ -55,7 +61,7 @@ import {
   type Dir,
   type WallGrid,
 } from '../../sim/kairo/walls.js';
-import { facilityDef, type PlacementGrid } from '../../sim/kairo/placement.js';
+import { facilityDef, PlacementGrid, type RideTiles } from '../../sim/kairo/placement.js';
 import type { GuestStore, Guest } from '../../sim/kairo/guests.js';
 import { cssColorInt, cssVar } from '../../ui/tokens.js';
 import {
@@ -248,6 +254,16 @@ export class KairoScene extends Phaser.Scene {
   private reticleMark: { i: number; j: number; ok: boolean; w: number; d: number } | null = null;
   private aimGfx: Phaser.GameObjects.Graphics | null = null;
   /**
+   * 슬라이드 입출구 표식 (K51) — 지금 보여 주고 있는 두 칸. `null` 이면 꺼져 있다.
+   *
+   * **상시 표시가 아니다.** 슬라이드를 여러 개 지으면 화면이 표식으로 덮이므로,
+   * 뜨는 자리는 둘뿐이다: 조준 중인 고스트(놓기 전)와 정보 시트를 연 시설 하나(놓은 뒤).
+   */
+  private rideMark: RideTiles | null = null;
+  private rideGfx: Phaser.GameObjects.Graphics | null = null;
+  /** 입구·출구 글씨 — 면보다 위 층이라 `Graphics` 와 따로 산다 */
+  private rideLabels: Phaser.GameObjects.Text[] = [];
+  /**
    * **일부러 망가뜨리는 스위치** — 오프셋 로직을 끄고 "고스트 = 화면 중앙 칸"으로
    * 되돌린다. 위의 32% 구멍이 그대로 재현되므로, 가장자리 배치 검사가 정말 그 구멍을
    * 재고 있는지 증명하는 음성 대조군이다 (`setRenderFaultForTest` 와 같은 판단).
@@ -399,12 +415,15 @@ export class KairoScene extends Phaser.Scene {
     this.applyLand(); // 부팅보다 먼저 정해진 토지를 여기서 반영한다
     this.applySwimZones(); // 수영 구역도 같은 규칙 — create() 전에 온 것을 여기서
     this.buildWalls();
-    // 코스 오버레이는 전부보다 위 — 손님·시설에 가리면 못 끈다
-    this.courseGfx = this.add.graphics().setDepth(1_000_000).setVisible(false);
-    this.landGfx = this.add.graphics().setDepth(999_999).setVisible(false);
-    this.doorGfx = this.add.graphics().setDepth(999_998);
+    // 힌트 층 — 값이 아니라 **순서**가 계약이다 (`iso.ts` 의 `DEPTH_*`, K51)
+    this.courseGfx = this.add.graphics().setDepth(DEPTH_COURSE_MARK).setVisible(false);
+    this.landGfx = this.add.graphics().setDepth(DEPTH_LAND_MARK).setVisible(false);
+    this.doorGfx = this.add.graphics().setDepth(DEPTH_DOOR_MARK);
     // 조준 표식 (K47-③) — 힌트 층이다. 세계 물체가 아니라 문 앞 발판과 같은 자리
-    this.aimGfx = this.add.graphics().setDepth(999_997).setVisible(false);
+    this.aimGfx = this.add.graphics().setDepth(DEPTH_AIM_MARK).setVisible(false);
+    // 슬라이드 입출구 (K51) — 고스트를 덮어야 하므로 힌트 층 맨 위다
+    this.rideGfx = this.add.graphics().setDepth(DEPTH_RIDE_MARK).setVisible(false);
+    this.drawRideMark(); // create() 전에 온 표식을 여기서 반영한다 (setLand 와 같은 규칙)
     // 버스는 차도 위 물체다 — 그 칸의 지면 위, 그 앞줄보다 뒤
     this.busGfx = this.add.graphics();
     this.boatGfx = this.add.graphics();
@@ -1151,11 +1170,18 @@ export class KairoScene extends Phaser.Scene {
     if (defId === null) {
       this.ghost?.destroy();
       this.ghost = null;
+      this.setRideMark(null);
       this.syncXray();
       return;
     }
     const def = facilityDef(defId);
     if (!def) return;
+    /*
+     * 입출구 표식은 **여기서 유도한다** (K51) — 부르는 쪽이 따로 켜게 두면 고스트는
+     * 도는데 표식은 안 도는 상태를 만들 수 있고, 그게 정확히 이번에 고친 버그의 모양이다.
+     * 고스트가 있는 곳에 표식이 있고, 없는 곳에 없다.
+     */
+    this.setRideMark(PlacementGrid.rideTilesOf(def, i, j, facing === 1 ? 1 : 0));
     // 회전 미리보기 (K45) — 실물과 같은 규칙: 발자국 교환 + flipX
     const [w, d] = facing === 1 ? [def.size[1], def.size[0]] : [def.size[0], def.size[1]];
     const a = footprintAnchor(i, j, w, d);
@@ -1452,6 +1478,156 @@ export class KairoScene extends Phaser.Scene {
     g.closePath();
     g.fillPath();
     g.strokePath();
+  }
+
+  // ── 슬라이드 입출구 (K51) ───────────────────────────────────────────────
+
+  /**
+   * 놓은 시설 하나의 입출구를 보여준다 (`handle`). `null` 이면 끈다.
+   *
+   * 정보 시트가 쓴다 — **시트가 열려 있는 동안만**이다. 지도에 상시로 그리면 슬라이드
+   * 네 채짜리 워터파크가 표식 여덟 개로 덮인다. 시트를 닫으면 부르는 쪽이 끈다.
+   *
+   * ⚠ 칸은 `PlacementGrid.rideTilesOf` 가 정본이다 — 손님이 쓰는 그 함수다.
+   * 여기서 오프셋을 다시 더하면 화면과 손님이 갈라진다 (그게 K51 이 고친 버그다).
+   */
+  setRideMarkFor(handle: number | null): void {
+    if (handle === null) {
+      this.setRideMark(null);
+      return;
+    }
+    const item = this.opts.placement.all().find((f) => f.handle === handle);
+    const def = item ? facilityDef(item.defId) : undefined;
+    this.setRideMark(
+      item && def ? PlacementGrid.rideTilesOf(def, item.i, item.j, item.facing ?? 0) : null,
+    );
+  }
+
+  private setRideMark(tiles: RideTiles | null): void {
+    this.rideMark = tiles;
+    this.drawRideMark();
+  }
+
+  /**
+   * 입구·출구를 **면 + 글씨**로 그린다.
+   *
+   * ## 왜 글씨까지 넣나 — 색만으로는 못 읽는다
+   *
+   * 폰 393px 에서 타일은 32×16 텍셀이고, 두 표식이 대각으로 붙는 배치가 흔하다
+   * (`slide_small` 은 3×3 의 양 끝 모서리다). 색만 두면 "둘 중 어느 쪽이 입구인가"에
+   * 답할 방법이 **범례밖에 없는데**, 확정 바에는 범례가 들어갈 자리가 없다
+   * (K47-② 가 한 줄 377px 로 못박았다). 글씨는 그 자리에서 스스로 답한다.
+   *
+   * ## 밝은 글씨 + 두꺼운 진한 테두리
+   *
+   * `fx.ts` 의 `+₩N` 이 실측으로 뒤집은 그 규칙이다 — 지면이 잔디·물·포장·암반으로
+   * 밝기가 제각각이라, 진한 글씨는 어두운 지면에 묻힌다. 작은 글씨에서는 테두리가 색을
+   * 지배하므로 **입구/출구의 색 구분도 테두리가 낸다** (면은 거들 뿐이다).
+   *
+   * ⚠ 표식도 `lift()` 를 탄다 (K37) — 안 태우면 산 위에서 고스트와 8텍셀 어긋난다.
+   */
+  private drawRideMark(): void {
+    for (const t of this.rideLabels) t.destroy();
+    this.rideLabels.length = 0;
+    const g = this.rideGfx;
+    if (!g) return;
+    g.clear();
+    const m = this.rideMark;
+    if (!m) {
+      g.setVisible(false);
+      return;
+    }
+    g.setVisible(true);
+    const ink = cssVar('--ride-ink', '#fffaf0');
+    const spec = [
+      { tile: m.entry, text: '입구', fill: '--ride-entry', edge: '--ride-entry-edge' },
+      { tile: m.exit, text: '출구', fill: '--ride-exit', edge: '--ride-exit-edge' },
+    ] as const;
+    for (const s of spec) {
+      const [i, j] = s.tile;
+      const dy = this.liftAt(i, j);
+      const fill = cssColorInt(s.fill, '#2557b0');
+      const edge = cssColorInt(s.edge, '#12315f');
+      const p = [
+        gridToScreen(i, j),
+        gridToScreen(i + 1, j),
+        gridToScreen(i + 1, j + 1),
+        gridToScreen(i, j + 1),
+      ];
+      /*
+       * ⚠ 알파는 **0.82** 다. 처음엔 0.55 로 넣었는데 (고스트가 비쳐야 "어느 구석"이
+       * 읽힌다는 생각), 실측 스크린샷에서 **출구의 주황이 통째로 사라졌다** — 고스트
+       * 스프라이트가 갈색이라 주황 55% 를 섞으면 그냥 갈색이다. 색을 두 번째 채널로
+       * 쓰겠다고 정해 놓고 그 채널이 배경에 먹히면 없는 것과 같다.
+       * "어느 구석"은 붉은 발자국 윤곽과 고스트 실루엣이 이미 답한다.
+       */
+      g.fillStyle(fill, 0.82);
+      g.lineStyle(2, edge, 1);
+      g.beginPath();
+      g.moveTo(p[0]!.x, p[0]!.y + dy);
+      for (let k = 1; k < p.length; k++) g.lineTo(p[k]!.x, p[k]!.y + dy);
+      g.closePath();
+      g.fillPath();
+      g.strokePath();
+
+      /*
+       * ⚠ 글씨는 칸 **위에** 띄운다 (실측으로 옮겼다). 처음엔 칸 중앙에 놓았는데,
+       * 11px 한글 두 자는 테두리까지 28×20 텍셀이라 32×16 다이아몬드보다 크다 —
+       * 면을 통째로 덮어서 **색이 한 픽셀도 안 보였다** (스크린샷 픽셀로 확인:
+       * 칸의 대부분이 글씨 테두리 색이었다). 알파를 올려 봐야 소용이 없었던 이유다.
+       * 위로 띄우면 두 채널(색·글씨)이 둘 다 산다 — `fx.ts` 의 `+₩N` 과 같은 배치다.
+       *
+       * 겹칠 걱정은 없다: 네 슬라이드의 입구↔출구는 화면에서 최소 32텍셀 떨어져 있고
+       * (`slide_small` 의 (2,2)↔(0,0) 이 가장 가깝다) 글씨 높이는 14텍셀이다.
+       */
+      const c = tileCenter(i, j);
+      const label = this.add.text(c.x, c.y + dy - TILE_H / 2 - 1, s.text, {
+        fontFamily: 'system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif',
+        // 12px — 칸 위로 올렸으니 폭 제약이 없다. 11px 에서는 `출` 의 획이 뭉갰다 (실측)
+        fontSize: '12px',
+        fontStyle: 'bold',
+        color: ink,
+        stroke: cssVar(s.edge, '#12315f'),
+        /*
+         * `fx.ts` 의 4 보다 얇다 — 거긴 숫자·기호(`+₩12만`)라 획이 굵어도 버티지만
+         * 한글 11px 은 4 를 두르면 `출` 의 초성이 뭉갠다 (실측 크롭). 면이 이미
+         * 진한 색을 깔아 주므로 여기서는 테두리가 대비를 혼자 낼 필요가 없다.
+         */
+        strokeThickness: 3,
+      });
+      label.setOrigin(0.5, 1);
+      // 정수 배율 업스케일 위에 얹히므로 2배로 그려야 글자가 뭉개지지 않는다 (fx.ts 와 같다)
+      label.setResolution(2);
+      label.setDepth(DEPTH_RIDE_LABEL);
+      this.rideLabels.push(label);
+    }
+  }
+
+  /**
+   * 검증 도구용 — 지금 표시 중인 입출구와 **글씨의 화면 자리**.
+   *
+   * ⚠ 칸 좌표만 돌려주면 `rideTilesOf` 를 두 번 부른 상수 비교가 된다 (K38 규칙).
+   * 실제로 화면에 올라간 `Text` 에서 읽어, "그려졌나"까지 같이 답한다.
+   */
+  rideMarkForTest(): {
+    entry: [number, number];
+    exit: [number, number];
+    labels: { text: string; x: number; y: number; depth: number }[];
+    visible: boolean;
+  } | null {
+    const m = this.rideMark;
+    if (!m) return null;
+    return {
+      entry: [m.entry[0], m.entry[1]],
+      exit: [m.exit[0], m.exit[1]],
+      labels: this.rideLabels.map((t) => ({
+        text: t.text,
+        x: t.x,
+        y: t.y,
+        depth: t.depth,
+      })),
+      visible: this.rideGfx?.visible ?? false,
+    };
   }
 
   /**

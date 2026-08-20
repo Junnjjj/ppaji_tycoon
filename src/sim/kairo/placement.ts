@@ -116,6 +116,31 @@ export interface KairoFacilityDef {
 }
 
 /**
+ * 놓인 슬라이드의 입구·출구 **격자 좌표** (K51). 데이터의 오프셋이 아니라 실제 칸이다 —
+ * 손님도 화면도 이 값만 쓴다 (`PlacementGrid.rideTilesOf`).
+ */
+export interface RideTiles {
+  entry: readonly [number, number];
+  exit: readonly [number, number];
+}
+
+/**
+ * **일부러 망가뜨리는 스위치** — 켜면 `rideTilesOf` 가 회전을 무시하고 K51 이전의
+ * 산수(`i + entryTile[0]`)로 돌아간다.
+ *
+ * 이 저장소 규칙이다 (`setRenderFaultForTest`·`setBottleneckFaultForTest` 와 같은 자리):
+ * 손으로 한 번 되돌려 확인한 것은 다음 사람에게 안 남는다. 켠 상태에서
+ * ★ "회전한 입출구가 발자국 안" 과 ★ "손님이 그 칸으로 들어간다" 가 **실패해야**
+ * 그 검사들이 정말 이 변환을 재고 있는 것이 된다.
+ *
+ * ⚠ production 에서 세우지 말 것 — 손님이 시설 밖 칸에서 미끄럼틀을 탄다.
+ */
+let rideFault = false;
+export function setRideFaultForTest(on: boolean): void {
+  rideFault = on;
+}
+
+/**
  * 시설 특화 (P1.5 — PSS 의 "그릇 속의 그릇"을 새 시스템 없이).
  *
  * 개선 5단계는 "+등급"의 단조 강화라 결정이 없었다 — 어느 시설이든 돈만 있으면 5단계가
@@ -553,6 +578,45 @@ export class PlacementGrid {
       for (let dj = 0; dj < h; dj++) out.push([i + di, j + dj]);
     }
     return out;
+  }
+
+  /**
+   * 슬라이드류의 **입구·출구 칸** — 회전을 반영한 격자 좌표 (K51).
+   *
+   * ## 왜 함수 하나인가
+   *
+   * 예전엔 이 계산이 `guests.ts` 한 곳에만 `item.i + def.ride.entryTile[0]` 로 펼쳐져
+   * 있었다. 화면이 입출구를 그리게 되는 순간(배치 미리보기·시설 정보) 같은 산수를 한 벌
+   * 더 쓰게 되는데, 이 저장소가 **반복해서 겪은 실패가 정확히 그것**이다
+   * (`guestWalkable`·`evaluateCondition`·`capacityOf`·`admissionLimit`). 표시와 손님이
+   * 다른 칸을 가리키면 표시가 조용히 거짓말이 된다 — 그러면 안 보여 주는 편이 낫다.
+   *
+   * ## 회전은 **전치**다 (`(di,dj) → (dj,di)`)
+   *
+   * 발자국과 같은 규칙이어야 한다. `sizeOf` 는 `facing===1` 에서 w↔h 만 바꾸고
+   * `footprintTiles` 는 `(i,j)` 에서 그 사각형을 편다 — 그 사각형에 오프셋을 다시
+   * 넣는 유일한 방법이 전치다 (`dj0 < h0 = w`, `di0 < w0 = h` 라 **항상 발자국 안**이다).
+   *
+   * 그림과도 맞는다. 씬은 회전을 `setFlipX` 로 그리는데, 아이소에서 +I 는 `(+16,+8)`
+   * +J 는 `(−16,+8)` 이므로 i 와 j 를 맞바꾸면 화면 x 만 뒤집히고 y 는 그대로다 —
+   * **전치 = 가로 거울**이다. 다른 변환을 쓰면 스프라이트와 입출구가 따로 논다.
+   *
+   * ⚠ **회전이 입출구를 안 돌리던 것이 버그였다** (K51 에서 재현). `slide_large`(4×5,
+   * 입구 `[3,4]`)를 회전하면 발자국이 5×4 라 `dj=4` 는 **발자국 밖**이고, 손님이 시설
+   * 바깥 칸에서 미끄럼틀을 탔다. 회전 가능 조건이 `size[0] !== size[1]` 이라
+   * `slide_large`·`snow_sled` 둘이 그 상태였다.
+   */
+  static rideTilesOf(
+    def: KairoFacilityDef,
+    i: number,
+    j: number,
+    facing: 0 | 1 = 0,
+  ): RideTiles | null {
+    const r = def.ride;
+    if (!r) return null;
+    const put = (o: readonly [number, number]): [number, number] =>
+      facing === 1 && !rideFault ? [i + o[1], j + o[0]] : [i + o[0], j + o[1]];
+    return { entry: put(r.entryTile), exit: put(r.exitTile) };
   }
 
   /**

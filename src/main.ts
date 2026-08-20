@@ -2509,6 +2509,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       );
     if (!read()) return;
     facilityPanel.show(read, {
+      onClose: () => h.scene.setRideMarkFor(null),
       cash: () => week.cash,
       /*
        * 개선 — **규칙은 `PlacementGrid` 가, 지갑은 `WeekRunner` 가** 갖는다. 경영 시트의
@@ -2558,6 +2559,16 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         aimAt(at.i, at.j);
       },
     });
+    /*
+     * 입출구 표식 (K51) — **이 시설 하나만**, 시트가 열려 있는 동안만이다.
+     * 지도에 상시로 그리면 슬라이드 네 채짜리 워터파크가 표식 여덟 개로 덮인다.
+     * `ride` 가 없는 시설이면 씬이 알아서 끈다 (`rideTilesOf` 가 `null`).
+     *
+     * ⚠ **`show()` 뒤에 `visible` 을 보고 켠다.** 앞에서 켜면 시트가 안 뜬 경우
+     * (주간 카드가 모달로 막았다 — `panelHost.open` 이 `false`) 지도에 표식만 남는다.
+     * 안 뜬 시트에는 `onClose` 도 안 오므로 되돌릴 길이 없다.
+     */
+    h.scene.setRideMarkFor(facilityPanel.visible ? handle : null);
   };
 
   /** 시설의 앵커 칸 — 철거 조준이 그 자리를 겨눠야 무엇을 지우는지가 보인다 */

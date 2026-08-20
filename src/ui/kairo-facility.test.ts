@@ -332,3 +332,55 @@ describe('나머지 표시', () => {
     expect(facilityInfo(p, handle)!.upkeep).toBe(facilityDef('shop')!.upkeep);
   });
 });
+
+describe('입출구 — 놓은 뒤에도 알 수 있다 (K51)', () => {
+  /** 물 위에 덱을 한 줄 깔고 그 옆에 슬라이드를 놓는다 (`requiresDeck` = 덱에 접함) */
+  function placeSlide(facing: 0 | 1): { p: PlacementGrid; handle: number } {
+    const t = new KairoTerrain(SIZE, SIZE);
+    for (let i = 0; i < SIZE; i++) {
+      for (let j = 0; j < SIZE; j++) t.paint(i, j, j >= 10 ? 'water_edge' : 'path_stone');
+    }
+    const w = new WallGrid(SIZE, SIZE);
+    const p = new PlacementGrid(SIZE, SIZE);
+    for (let j = 10; j < 20; j++) p.place(t, w, { i: 0, j: 0 }, 'float_deck', 4, j);
+    const r = p.place(t, w, { i: 0, j: 0 }, 'slide_large', 5, 11, { facing });
+    if (!r.ok || !r.placed) throw new Error(`슬라이드를 못 놓았다: ${r.fail}`);
+    return { p, handle: r.placed.handle };
+  }
+
+  it('★ 정보 화면의 입출구가 손님이 쓰는 그 칸이다 — 회전한 것도', () => {
+    for (const facing of [0, 1] as const) {
+      const { p, handle } = placeSlide(facing);
+      const info = facilityInfo(p, handle)!;
+      const truth = PlacementGrid.rideTilesOf(facilityDef('slide_large')!, 5, 11, facing)!;
+      expect(info.ride, `facing ${facing}`).toEqual(truth);
+      // 발자국 안이어야 한다 — 밖이면 화면이 시설 바깥을 가리킨다
+      const foot = new Set(
+        PlacementGrid.footprintTiles(facilityDef('slide_large')!, 5, 11, facing).map(
+          (x) => `${x[0]},${x[1]}`,
+        ),
+      );
+      expect(foot.has(`${info.ride!.entry[0]},${info.ride!.entry[1]}`)).toBe(true);
+      expect(foot.has(`${info.ride!.exit[0]},${info.ride!.exit[1]}`)).toBe(true);
+    }
+  });
+
+  it('회전하면 정보 화면의 입출구도 같이 돈다', () => {
+    const flat = placeSlide(0);
+    const turned = placeSlide(1);
+    const a = facilityInfo(flat.p, flat.handle)!;
+    const b = facilityInfo(turned.p, turned.handle)!;
+    expect(a.ride).not.toEqual(b.ride);
+  });
+
+  it('ride 가 없는 시설은 null — 화장실에 입출구 줄이 뜨면 안 된다', () => {
+    const { p, handle } = place('shop');
+    expect(facilityInfo(p, handle)!.ride).toBeNull();
+  });
+
+  it('입출구를 가진 시설은 데이터의 4종뿐이다 — 줄이 아무 데나 안 뜬다', () => {
+    expect(allFacilityDefs().filter((d) => d.ride).map((d) => d.id).sort()).toEqual(
+      ['slide_large', 'slide_small', 'slide_tube', 'snow_sled'],
+    );
+  });
+});

@@ -1113,10 +1113,16 @@ export class GuestStore {
           g.state = 'using';
           const item = this.placement.all().find((f) => f.handle === g.usingHandle);
           const def = item ? facilityDef(item.defId) : undefined;
-          if (item && def?.ride) {
-            // 입구로 들어가 출구로 나온다
-            g.rideFrom = [item.i + def.ride.entryTile[0], item.j + def.ride.entryTile[1]];
-            g.rideTo = [item.i + def.ride.exitTile[0], item.j + def.ride.exitTile[1]];
+          const ride =
+            item && def ? PlacementGrid.rideTilesOf(def, item.i, item.j, item.facing ?? 0) : null;
+          if (item && def?.ride && ride) {
+            /*
+             * 입구로 들어가 출구로 나온다. 칸은 **`rideTilesOf` 가 정본**이다 (K51) —
+             * 여기서 `item.i + def.ride.entryTile[0]` 을 다시 계산하면 회전이 빠져
+             * (화면은 도는데 손님은 안 돈다) 표시가 거짓말이 된다.
+             */
+            g.rideFrom = [ride.entry[0], ride.entry[1]];
+            g.rideTo = [ride.exit[0], ride.exit[1]];
             g.rideTotal = def.ride.traverseTicks;
             g.rideTicks = def.ride.traverseTicks;
             g.fromI = g.i;
