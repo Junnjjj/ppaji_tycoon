@@ -25,6 +25,7 @@ import {
   LEVEL_H,
   lift,
 } from '../kairo/iso.js';
+import { occludes, XRAY_ALPHA, type Rect } from '../kairo/xray.js';
 import { KairoCamera } from '../kairo/kairo-camera.js';
 import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
 import { IncomeFx, playFx, type FxHost } from '../kairo/fx.js';
@@ -37,6 +38,8 @@ import type { IncomeEvent } from '../../sim/kairo/week.js';
  * 왜 그림이 아닌지는 `bakeSurroundTexture` 에 한 번만 적어 뒀다.
  */
 const SURROUND_TEX = 'surround/ground';
+/** 투시 재계산을 강제하는 센티널 키 (K50) — `defId|i,j,facing` 형태와 절대 안 겹친다 */
+const XRAY_FORCE = '!force';
 /** 지형을 바운딩 박스보다 얼마나 더 넓게 굽나 — 카메라 여백 + 고무줄을 덮는다 */
 const SURROUND_PAD = 128;
 import { KairoProceduralProvider } from '../../assets/kairo-procedural.js';
@@ -955,6 +958,8 @@ export class KairoScene extends Phaser.Scene {
     img.setFlipX(facing === 1);
     img.setDepth(depthKey(item.i + w - 1, item.j + d - 1) + Z_FACILITY);
     this.facilityImages.set(handle, img);
+    // 조준 중에 다시 만들어졌으면 투시 상태를 이어받는다 (K50 — `aimMove` 의 프로브가 그렇다)
+    this.dimIfOccluding(img);
   }
 
   /**
@@ -1114,6 +1119,7 @@ export class KairoScene extends Phaser.Scene {
     const front = this.fault.wallDepthTie ? Z_FACILITY : Z_WALL_FRONT;
     img.setDepth(depthKey(i, j) + (back ? Z_WALL_BACK : front));
     this.wallImages.set(key, img);
+    this.dimIfOccluding(img); // 조준 중이면 새 벽도 투시 상태를 이어받는다 (K50)
   }
 
   /**
@@ -1145,6 +1151,7 @@ export class KairoScene extends Phaser.Scene {
     if (defId === null) {
       this.ghost?.destroy();
       this.ghost = null;
+      this.syncXray();
       return;
     }
     const def = facilityDef(defId);
@@ -1166,6 +1173,164 @@ export class KairoScene extends Phaser.Scene {
     // 못 놓는 자리는 붉게 — 확정 바의 경고색과 짝이다
     this.ghost.setTint(ok ? 0x8fe0ff : 0xff6a5a);
     this.ghost.setDepth(depthKey(i + w - 1, j + d - 1) + Z_GHOST);
+    // 조준 칸(또는 회전·시설)이 바뀌었으면 가리는 것을 다시 고른다 — 아니면 아무것도 안 한다
+    this.ghostKey = `${defId}|${i},${j},${facing}`;
+    this.syncXray();
+  }
+
+  // ── 가림 투시 (K50) ─────────────────────────────────────────────────────
+
+  /**
+   * 지금 투명해져 있는 것들. **되돌릴 목록**이라 이미지 참조를 그대로 들고 있다 —
+   * 핸들로 들면 벽(경계 키)과 시설(핸들)이 다른 종류라 두 벌이 된다.
+   */
+  private xrayDimmed: Phaser.GameObjects.Image[] = [];
+  /** 지금 조준의 화면 사각형 + 깊이. `null` 이면 투시가 꺼져 있다 */
+  private xrayTarget: { depth: number; rect: Rect } | null = null;
+  /** 마지막으로 계산한 조준 상태. 같으면 **재계산하지 않는다** (칸이 바뀔 때만 돈다) */
+  private xrayKey: string | null = null;
+  private ghostKey: string | null = null;
+  /**
+   * 코드에 심은 음성 대조군 (K38 규칙: 렌더 검사의 대조군은 코드로 둔다).
+   * 켜면 투명화를 통째로 끈다 — 그 상태에서 ★ "가리는 시설이 흐려진다"가 **실패해야**
+   * 검사가 실제로 이 기능을 재는 것이 된다.
+   */
+  private xrayFault = false;
+  private xrayStats = { calcs: 0, scanned: 0, ms: 0 };
+  /** `getBounds` 가 매번 새 사각형을 만들지 않게 재사용한다 (수백 번 돈다) */
+  private readonly xrayScratch = new Phaser.Geom.Rectangle();
+
+  /**
+   * 조준 중 고스트를 가리는 것들을 반투명하게 한다 (K50).
+   *
+   * ## 언제 도나
+   *
+   * `setGhost` 뿐이다. 그리고 조준 상태 키(`시설|칸|방향`)가 **바뀌었을 때만** 실제로
+   * 계산한다. 매 프레임 전수 검사는 시설 130채 + 벽 수백 장 판에서 헛돈다 —
+   * 카메라를 팬해도 월드 좌표는 안 변하므로 다시 잴 이유도 없다.
+   *
+   * ## 무엇을 보나
+   *
+   * 시설과 벽이다. 지면은 안 본다 — 같은 칸에서 지면 띠(0)는 고스트(7)보다 한참 낮고,
+   * 앞 칸 지면은 마름모라 고스트 몸통을 실질적으로 안 가린다.
+   *
+   * 손님도 안 본다. 이유는 둘이다: (1) 손님 그림은 24텍셀이라 2~3층 건물과 달리
+   * 고스트를 삼키지 못한다 (2) 최대 1,200개를 훑으면 비용이 시설·벽 전부의 몇 배인데,
+   * 조준 중에는 시간이 멈춰(`flowTick` 의 `hud.confirming` 게이트) 어차피 한 자리에
+   * 서 있다. 나중에 손님을 넣는다면 **재계산 주기부터** 바꿔야 한다 — 지금 규칙(칸이
+   * 바뀔 때만)으로 손님을 넣으면 걸어 나간 손님이 흐린 채로 남는다.
+   */
+  private syncXray(): void {
+    const g = this.ghost;
+    const key = g && !this.xrayFault ? this.ghostKey : null;
+    if (key === this.xrayKey) return;
+    this.xrayKey = key;
+    this.clearXray();
+    if (key === null || !g) return;
+    const t0 = performance.now();
+    /*
+     * 고스트 스프라이트의 경계 하나면 충분하다 — 발자국 캔버스가 `(w+d)·STEP_X` 폭에
+     * 앵커가 bottom-center 라, 바닥 마름모 bbox 를 **항상 포함**한다 (`footprintCanvas`).
+     */
+    const b = g.getBounds(this.xrayScratch);
+    this.xrayTarget = {
+      depth: g.depth,
+      rect: { x0: b.x, y0: b.y, x1: b.right, y1: b.bottom },
+    };
+    let scanned = 0;
+    for (const img of this.facilityImages.values()) {
+      scanned++;
+      this.dimIfOccluding(img);
+    }
+    for (const img of this.wallImages.values()) {
+      scanned++;
+      this.dimIfOccluding(img);
+    }
+    this.xrayStats = {
+      calcs: this.xrayStats.calcs + 1,
+      scanned,
+      ms: performance.now() - t0,
+    };
+  }
+
+  /**
+   * 이 그림 하나가 지금 조준을 가리면 흐리게 한다.
+   *
+   * 새로 만들어진 시설·벽에도 부른다 — 조준 중에 그림이 다시 만들어지는 경로가 실제로
+   * 있다 (`aimMove` 는 자기 겹침을 재려고 원자리를 치웠다 되돌린다). 그때 알파 1 로
+   * 돌아오면 "옮기는 중에만 앞 건물이 다시 불투명"이 된다.
+   */
+  private dimIfOccluding(img: Phaser.GameObjects.Image): void {
+    const t = this.xrayTarget;
+    if (!t) return;
+    const b = img.getBounds(this.xrayScratch);
+    if (!occludes(t.depth, t.rect, img.depth, { x0: b.x, y0: b.y, x1: b.right, y1: b.bottom })) {
+      return;
+    }
+    img.setAlpha(XRAY_ALPHA);
+    this.xrayDimmed.push(img);
+  }
+
+  /**
+   * 전부 원복한다. 조준 취소·확정·붓 교체·패널 열림이 **모두** `setGhost(null)` 로
+   * 모이므로(main 의 `endAim`) 되돌리기 경로는 이 하나다 — 알파를 남기면 판이 흐려진
+   * 채로 남는다.
+   *
+   * ⚠ 지워진 그림이 목록에 남아 있을 수 있다 (`refreshFacility` 가 destroy 한다).
+   * Phaser 는 destroy 에서 `scene` 을 지우므로 그것으로 거른다.
+   */
+  private clearXray(): void {
+    for (const img of this.xrayDimmed) {
+      if (img.scene) img.setAlpha(1);
+    }
+    this.xrayDimmed.length = 0;
+    this.xrayTarget = null;
+  }
+
+  /**
+   * 검증 도구용 음성 대조군 — 켜면 투시를 안 한다 (K50).
+   * `setRenderFaultForTest` 와 같은 판단이다: 손으로 주입해 확인한 것은 다음 사람에게 안 남는다.
+   */
+  setXrayFaultForTest(on: boolean): void {
+    this.xrayFault = on;
+    /*
+     * ⚠ `null` 로 되돌리면 안 된다. 끄는 쪽의 목표 키도 `null` 이라 `syncXray` 의
+     * "안 바뀌었으면 아무것도 안 한다"에 걸려 **조용히 통과**한다 — 대조군이 정상과
+     * 같은 화면을 내놓았다 (실측: 끔 3 · 켬 3). 어떤 실제 키와도 안 겹치는 값을 넣는다.
+     */
+    this.xrayKey = XRAY_FORCE;
+    this.syncXray();
+  }
+
+  /** 검증 도구용 — 투시 상태와 **계산 비용**. 칸이 바뀔 때만 `calcs` 가 는다 */
+  xrayStatsForTest(): {
+    active: boolean;
+    dimmed: number;
+    scanned: number;
+    calcs: number;
+    ms: number;
+    alpha: number;
+  } {
+    return {
+      active: this.xrayTarget !== null,
+      dimmed: this.xrayDimmed.length,
+      scanned: this.xrayStats.scanned,
+      calcs: this.xrayStats.calcs,
+      ms: this.xrayStats.ms,
+      alpha: XRAY_ALPHA,
+    };
+  }
+
+  /**
+   * 검증 도구용 — 시설 핸들별 알파. 음성 대조군("가리지 않는 시설은 그대로다")은
+   * 이 값을 **가리는 것과 안 가리는 것 양쪽에서** 읽어야 의미가 있다.
+   */
+  facilityAlphasForTest(): { handle: number; alpha: number; depth: number }[] {
+    const out: { handle: number; alpha: number; depth: number }[] = [];
+    for (const [handle, img] of this.facilityImages) {
+      out.push({ handle, alpha: img.alpha, depth: img.depth });
+    }
+    return out;
   }
 
   // ── 조준 배치 (K47-③) ───────────────────────────────────────────────────
@@ -1206,6 +1371,13 @@ export class KairoScene extends Phaser.Scene {
     this.aimTexel = null;
     this.aimTile = null;
     this.setReticleMark(null);
+    /*
+     * 조준이 끝났으면 투시도 끝이다 (K50). `setGhost(null)` 이 곧바로 뒤따르지만
+     * **여기서도** 끊는다 — 되돌리기가 한 경로에만 걸려 있으면, 그 경로를 안 타는
+     * 호출자가 하나 생기는 순간 판이 흐려진 채로 남는다.
+     */
+    this.ghostKey = null;
+    this.syncXray();
   }
 
   /** 지금 조준 중인 칸 — 검증이 읽는다 */
