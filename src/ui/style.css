@@ -1038,6 +1038,27 @@ body {
   box-shadow: var(--sk-press);
 }
 
+/*
+ * 잠긴 상태 (K49). **없었다** — `.kitem[disabled]` 만 있고 `.kbtn` 은 잠겨도 멀쩡해
+ * 보였다 (경영 개선의 "돈이 없어 못 사는" 버튼도 그랬다). 눌러 보고 아무 일도 안
+ * 일어나는 것이 가장 나쁜 피드백이라, `.kitem[disabled]` 와 **같은 레시피**를 쓴다:
+ * 가라앉은 면 + 눌린 그림자 + 흐린 글씨. 재질을 새로 짓지 않는다.
+ */
+.kbtn:disabled {
+  background: var(--panel-sunk) padding-box, transparent border-box;
+  border-color: transparent;
+  box-shadow: var(--sk-press);
+  color: var(--text-mute);
+  text-shadow: none;
+  cursor: default;
+}
+
+/* 잠긴 버튼은 눌려도 안 움직인다 — 움직이면 "됐다"로 읽힌다 */
+.kbtn:disabled:active {
+  transform: none;
+  box-shadow: var(--sk-press);
+}
+
 .kbtn.on {
   background:
     var(--select-fill) padding-box,

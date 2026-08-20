@@ -78,6 +78,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { GRID_W: GRID_W_C, GRID_H: GRID_H_C } = await import('./render/kairo/iso.js');
   const { StaffStore, STAFF_ROLES: STAFF_ROLE_LIST } = await import('./sim/kairo/staff.js');
   const { KairoStaffPanel } = await import('./ui/kairo-staff.js');
+  // 시설 인스턴스 정보 (K49) — 지도에서 시설을 탭하면 뜬다
+  const { KairoFacilityInfo, facilityInfo } = await import('./ui/kairo-facility.js');
   const course = await import('./sim/kairo/course.js');
   const { KairoCoursePanel } = await import('./ui/kairo-course.js');
   const { KairoCatalog, activeComboIds, noteSeen } = await import('./ui/kairo-catalog.js');
@@ -245,16 +247,34 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 둘 다 배치가 아니라 대상 지정이라 고스트가 없다.
    */
   const tapTile = (i: number, j: number): void => {
-      if (!brush) {
-        console.log(`[카이로] 탭 타일 (${i}, ${j}) — ${h.terrain.kindAt(i, j) ?? '?'}`);
-        return;
-      }
+      cancelFacilityInfo(); // 새 탭이 왔으면 먼저 예약된 정보는 무효다
       /*
-       * 코스 편집 중에는 붓이 죽는다 (K45) — 편집기가 지도 탭을 잔교·핸들로 쓰므로
+       * 코스 편집 중에는 지도 탭이 죽는다 (K45) — 편집기가 지도 탭을 잔교·핸들로 쓰므로
        * 같은 탭이 붓으로도 흐르면 이중 반응이 된다. openCourse 가 붓을 내려놓지만,
        * 편집 중에 시트를 다시 열어 붓을 집는 경로가 남아 있어 여기서도 막는다.
+       *
+       * ⚠ 이 검사는 **`!brush` 조기 반환보다 위**여야 한다 (K49). 아래로 내려가 있던
+       * 동안에는 "붓 없음"이 먼저 걸려서 코스 편집 중의 탭이 이 문을 아예 안 지났다 —
+       * 붓이 없을 때 하는 일이 `console.log` 뿐이라 티가 안 났을 뿐이다. 시설 정보가
+       * 그 자리에 들어오면서 곧바로 코스 편집을 덮는 버그가 된다.
        */
       if (coursePanel.visible) return;
+      if (!brush) {
+        /*
+         * ⚠ **이 줄을 지우지 말 것.** `verify-kairo` 의 "탭한 타일이 정확히 해석된다"가
+         * 이 콘솔 줄로 해석 결과를 읽는다 (`tapLog`) — 반 타일이 밀리면 2×2 배치가
+         * 통째로 거절되는데, 그걸 잡는 유일한 검사다.
+         */
+        console.log(`[카이로] 탭 타일 (${i}, ${j}) — ${h.terrain.kindAt(i, j) ?? '?'}`);
+        /*
+         * ★ 붓이 없을 때만 **시설 정보**다 (K49). 붓을 든 상태에서 정보가 뜨면
+         * 배치 흐름이 끊긴다 — 그때의 탭은 조준 이동이고, 그 뜻을 뺏으면 안 된다.
+         * 빈 칸이면 지금까지와 똑같이 아무 일도 안 일어난다.
+         */
+        const hit = h.placement.at(i, j);
+        if (hit) scheduleFacilityInfo(hit.handle);
+        return;
+      }
       /*
        * 이동 1단계 (K42) — **탭 유지.** 옮길 시설을 지목하는 것이지 자리를 정하는 게
        * 아니다. 2단계(목적지)는 아래 `aimMove` 로 넘어가 조준 + 확정을 탄다.
@@ -269,14 +289,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           toast('옮길 시설을 탭하세요');
           return;
         }
-        const def = facilityDef(hit.defId);
-        moveSel = { handle: hit.handle, defId: hit.defId, i: hit.i, j: hit.j, facing: hit.facing ?? 0 };
-        ticker.setBrush(`이동: ${def?.name ?? hit.defId}`);
-        toast(
-          `${def?.name ?? hit.defId} — 지도를 움직여 자리를 맞추세요 ` +
-            `(${Math.round(Math.floor((def?.cost ?? 0) * 0.1) / 10000)}만)`,
-        );
-        startAim();
+        beginMove(hit.handle);
         return;
       }
       /*
@@ -320,6 +333,28 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        * 탭은 조준을 그 칸으로 옮길 뿐 놓지는 않는다 — 놓는 것은 확정 버튼 하나다.
        */
       aimAt(i, j);
+  };
+
+  /**
+   * 이동 1단계 — 이 시설을 붓에 물린다 (K42).
+   *
+   * ⚠ 입구가 **둘**이다: 이동 붓으로 시설을 탭하거나, 시설 정보 화면의 `이동` 버튼
+   * (K49). 두 곳에 같은 다섯 줄을 두면 언젠가 한쪽만 고쳐진다 — 특히 `startAim()` 을
+   * 빠뜨리면 붓은 물렸는데 고스트가 안 떠서 "눌러도 아무 일이 없다"가 된다.
+   */
+  const beginMove = (handle: number): boolean => {
+    const item = h.placement.all().find((it) => it.handle === handle);
+    if (!item) return false;
+    const def = facilityDef(item.defId);
+    brush = 'move';
+    moveSel = { handle, defId: item.defId, i: item.i, j: item.j, facing: item.facing ?? 0 };
+    ticker.setBrush(`이동: ${def?.name ?? item.defId}`);
+    toast(
+      `${def?.name ?? item.defId} — 지도를 움직여 자리를 맞추세요 ` +
+        `(${Math.round(Math.floor((def?.cost ?? 0) * 0.1) / 10000)}만)`,
+    );
+    startAim();
+    return true;
   };
 
   /*
@@ -885,6 +920,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     onPick: (it: HudItem) => {
       // 붓을 바꾸면 진행 중이던 배치는 취소한다 — 안 그러면 확정 바가 옛 시설을 가리킨다
       endAim();
+      // ⚠ 예약된 시설 정보도 버린다 — 안 버리면 붓을 고른 직후 정보 시트가 튀어나온다
+      cancelFacilityInfo();
       moveSel = null;
       if (it.kind === 'facility') {
         /*
@@ -926,6 +963,42 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   /** 코스 편집 열기 — 아래에서 패널이 만들어진 뒤에 실제로 불린다 */
   let openCourse = (): void => {
     /* 패널이 아직 없다 — 시트를 눌러도 아무 일도 안 일어나는 편이 낫다 */
+  };
+
+  /**
+   * 시설 정보 열기 (K49) — 지도 탭이 부른다.
+   *
+   * ⚠ `openCourse` 와 같은 지연 참조다. 실체는 경영 시트·심사 상태가 다 만들어진 **뒤**에
+   * 꽂힌다 (개선 입구가 경영 시트를 열고, 이동 잠금이 `exam.toolsUnlocked` 를 본다).
+   * `const` 로 아래에 두고 위에서 부르면 첫 프레임이 TDZ 를 건드린다 — 이 파일이
+   * `bootKairo` 주석에서 두 번 경고하는 바로 그 사고다.
+   */
+  let openFacilityInfo = (_handle: number): void => {
+    /* 패널이 아직 없다 — 탭해도 아무 일도 안 일어나는 편이 낫다 */
+  };
+
+  /**
+   * ⚠ **더블탭 확대와 같은 탭을 나눠 갖는다** (K49). 씬은 320ms 안의 두 번째 탭을
+   * 확대로 쓰는데, **첫 탭은 그대로 `onTapTile` 로 올라온다** — 즉 정보를 즉시 열면
+   * 시트가 두 번째 탭 자리를 덮어 확대가 안 걸린다 (실측: 시트 상단 y=378, 탭 지점 426
+   * → 둘째 탭을 DIV 가 먹었다).
+   *
+   * 그래서 **한 박자 기다렸다** 연다. 그 사이에 확대 배율이 바뀌었으면 두 번째 탭은
+   * 확대였다는 뜻이므로 정보를 아예 안 연다 — 손가락이 원한 것은 확대였다.
+   * iOS 가 탭/더블탭을 가르는 방식과 같고, 붓을 든 경로(배치)는 **지연 없이** 그대로다.
+   */
+  const DOUBLE_TAP_MS = 320; // ⚠ `KairoScene` 의 더블탭 창과 같은 값이어야 한다
+  let infoTimer = 0;
+  const cancelFacilityInfo = (): void => {
+    window.clearTimeout(infoTimer);
+  };
+  const scheduleFacilityInfo = (handle: number): void => {
+    cancelFacilityInfo();
+    const upscaleAtTap = h.scene.upscale;
+    infoTimer = window.setTimeout(() => {
+      if (h.scene.upscale !== upscaleAtTap) return; // 두 번째 탭은 확대였다
+      openFacilityInfo(handle);
+    }, DOUBLE_TAP_MS);
   };
 
   /** 건설 목록 — 등급이 오르면 잠금이 풀리므로 결산 뒤에 다시 만든다 */
@@ -1230,6 +1303,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     ? RngCls.fromState(saved.staffRngState)
     : new RngCls(20260818).fork(0x57aff);
   const staffPanel = new KairoStaffPanel(document.body);
+  /*
+   * 시설 인스턴스 정보 (K49). **등록하지 않는다** — `PanelHost` 의 기본이 배타라
+   * (등록을 잊으면 겹치는 쪽이 아니라 닫히는 쪽이 기본이다) 건설 시트를 열어 둔 채
+   * 지도를 탭해도 둘이 겹치지 않는다.
+   */
+  const facilityPanel = new KairoFacilityInfo(document.body);
   /**
    * 사고로 닫힌 시설과 남은 주 수 (§12.1). 주마다 하나씩 깎는다.
    * 직원 부족으로 서는 것과 **합쳐서** 손님에게 넘긴다 — 손님은 이유를 구분하지 않는다.
@@ -2398,6 +2477,95 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   });
   hud.menuSlot.append(staffBtn);
 
+  /**
+   * 시설 정보 (K49) — 지도에서 시설을 탭하면 여기로 온다.
+   *
+   * 값은 **전부 sim 에서 잰다** (`facilityInfo`). 데이터의 정가를 보여 주면 개선·특화가
+   * 붙은 인스턴스에서 화면이 곧바로 거짓말이 되고, 이 화면의 존재 이유가 사라진다.
+   */
+  openFacilityInfo = (handle: number): void => {
+    /*
+     * ⚠ **조준을 먼저 끊는다.** 확정 바는 `PanelHost` 패널이 아니라서
+     * (스크림 없는 바라 배타 규칙이 시트·결산과 부딪힌다 — `cancelConfirm` 주석)
+     * `panelHost.open()` 만으로는 안 꺼진다. 조준 중에는 씬이 고스트를 가리는 시설·벽을
+     * **투시**로 흐려 놓는데, 그 원복이 `endAim()`/`setGhost(null)` 에 걸려 있다 —
+     * 안 끊으면 정보 시트를 여는 순간 판이 흐려진 채로 남는다.
+     *
+     * 탭 규칙상(붓이 없을 때만 정보) 정상 흐름에서는 조준 중일 수 없다. 그래도 끊는다 —
+     * "그럴 리 없다"는 이 파일에서 여러 번 틀렸고, 값이 한 줄이다.
+     */
+    hud.cancelConfirm();
+    endAim();
+    /*
+     * ⚠ **읽는 함수**를 넘긴다 (스냅샷이 아니라). 개선·특화를 그 자리에서 하므로 누른 뒤
+     * 값을 다시 재야 하는데, 스냅샷 하나를 넘기면 화면이 옛 값에 고정된다.
+     */
+    const read = (): ReturnType<typeof facilityInfo> =>
+      facilityInfo(
+        h.placement,
+        handle,
+        // 지금 이용 중인 인원 — 슬롯 배열의 0 이 아닌 칸이 곧 손님이다
+        h.guests.occupancy(handle).filter((id) => id !== 0).length,
+      );
+    if (!read()) return;
+    facilityPanel.show(read, {
+      cash: () => week.cash,
+      /*
+       * 개선 — **규칙은 `PlacementGrid` 가, 지갑은 `WeekRunner` 가** 갖는다. 경영 시트의
+       * 개선 탭과 여기는 같은 규칙의 두 입구다 (규칙을 복사한 게 아니다).
+       * ⚠ 돈을 먼저 쓰고 실패하면 안 된다 — 비용을 재고, 지출이 성공했을 때만 올린다.
+       */
+      upgrade: () => {
+        const cost = h.placement.upgradeCost(handle);
+        if (cost <= 0 || cost > week.cash) return false;
+        if (!week.spend(cost)) return false;
+        if (!h.placement.upgrade(handle)) return false;
+        audio.play('sfx/place');
+        toast(`개선 — ${Math.round(cost / 10000)}만`, 'ok');
+        refreshStaffBtn(); // 개선은 필요 직원 수를 바꾼다
+        persist();
+        return true;
+      },
+      /** 특화는 **공짜**다 — 고르는 것이 거래이지 돈이 아니다 (P1.5) */
+      chooseSpecialty: (s) => {
+        if (!h.placement.chooseSpecialty(handle, s)) return false;
+        h.guests.invalidate(); // 회전 특화는 슬롯 수를 바꾼다
+        audio.play('sfx/card');
+        persist();
+        return true;
+      },
+      /*
+       * ⚠ 이동은 **첫 심사 통과의 보상**이다 (K42). 지도 탭의 이동 붓과 같은 조건을
+       * 쓴다 — 갈라지면 "정보에서는 되는데 붓으로는 안 된다"가 된다.
+       */
+      move: exam.toolsUnlocked
+        ? () => {
+            facilityPanel.hide();
+            beginMove(handle);
+          }
+        : null,
+      moveHint: '이동은 첫 심사 통과의 보상입니다',
+      /*
+       * ⚠ 철거는 **조준 + 확정**이다 (K47-③). 정보 화면에서 바로 없애면 그 승격이
+       * 무의미해진다 — 붓을 쥐여 주고 그 시설을 겨눌 뿐이고, 없애는 것은 확정 바다.
+       */
+      erase: () => {
+        facilityPanel.hide();
+        brush = 'erase';
+        moveSel = null;
+        ticker.setBrush('철거');
+        const at = tileOf(handle);
+        aimAt(at.i, at.j);
+      },
+    });
+  };
+
+  /** 시설의 앵커 칸 — 철거 조준이 그 자리를 겨눠야 무엇을 지우는지가 보인다 */
+  const tileOf = (handle: number): { i: number; j: number } => {
+    const it = h.placement.all().find((x) => x.handle === handle);
+    return { i: it?.i ?? 0, j: it?.j ?? 0 };
+  };
+
   /** 부족하면 버튼에 표시한다 — 시트를 열어봐야 아는 정보면 아무도 안 연다 */
   const refreshStaffBtn = (): void => {
     const eff = staff.effects(h.placement);
@@ -2691,6 +2859,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     cardView,
     staff,
     staffPanel,
+    /**
+     * 시설 인스턴스 정보 (K49) — 하네스가 "붓 없이 시설을 탭하면 실제 값이 뜨나"를 잰다.
+     * ⚠ 여는 것은 `tapTile` 로 재라 — 이 손잡이로 직접 열면 **탭 규칙**(붓을 든 상태에서는
+     * 안 뜬다 · 빈 칸은 아무 일도 없다)을 통째로 우회한다.
+     */
+    facilityPanel,
+    facilityInfo: (handle: number) => facilityInfo(h.placement, handle),
     courses,
     coursePanel,
     courseApi: course,
@@ -2788,6 +2963,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     refreshRisk,
     /** 지금 해금된 토지 — 검증이 좌표를 박지 않게 (K36) */
     land: () => landRect(currentGrade()),
+    /**
+     * 공원 입구 칸 (K36) — `land()` 와 같은 급의 읽기 손잡이.
+     * 도달 검사(`placement.check`)가 이 칸에서 BFS 하므로, 검증이 시설을 하나 놓아 보려면
+     * 이 값을 알아야 한다. `(0,0)` 으로 넘기면 전부 `unreachable` 로 조용히 거절된다.
+     */
+    gate: GATE,
     /** 놓아 둔 출입구 (K36-B) — 검증이 읽는다 */
     doors,
     /** 뉴스 티커 (K47-①) — 쌓인 소식 수·띠 글을 검증에 여는 손잡이 (`count`·`lineText`) */

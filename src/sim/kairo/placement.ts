@@ -2,6 +2,11 @@ import rawFacilities from '../../data/kairo-facilities.json' with { type: 'json'
 import { KairoTerrain } from './terrain.js';
 import { WallGrid, reachable, EDGE_DOOR } from './walls.js';
 import { riverZones, permitUsed, deckKey } from './swim.js';
+/*
+ * ⚠ **타입만** 가져온다 (컴파일에서 지워진다). `week.ts` 가 이 파일을 import 하므로
+ * 값으로 가져오면 순환이 된다 — `certs.ts`·`cards.ts` 가 쓰는 것과 같은 방식이다.
+ */
+import type { NeedKind } from './week.js';
 
 /**
  * 시설 배치 — **시뮬 소유**. 스펙 §4.
@@ -50,6 +55,40 @@ export interface KairoFacilityDef {
    * **명시**를 요구한다 — 안 적고 넘어간 새 시설이 조용히 돈을 받으면 안 된다.
    */
   charge?: FacilityCharge;
+  /**
+   * 한 줄 설명 (K49) — **무엇을 하는 곳인가 · 누가 쓰나.**
+   *
+   * ⚠ **효과를 다시 적지 않는다.** 정원·요금·수요는 화면이 sim 에서 잰 실효값으로 따로
+   * 띄운다 (`facilityInfo`) — 여기 스탯 요약을 적으면 같은 값이 두 벌이 되고, 밸런싱으로
+   * 숫자를 바꿀 때마다 데이터의 글이 조용히 거짓말이 된다.
+   *
+   * 불변식 3 — 시설은 코드가 아니라 데이터다. 새 시설의 설명도 JSON 한 줄이다.
+   */
+  desc?: string;
+  /**
+   * 가게 품목 (K49) — PSS 의 "가게에 뭘 파는지 보인다".
+   *
+   * ⚠ **표시 전용이다.** 손님이 무엇을 골랐는지는 시뮬하지 않는다 — 그건 백로그의
+   * **P3-E 메뉴 슬롯**이고 스펙이 먼저다. 지금 sim 에 배선하면 밸런스가 왜 움직였는지
+   * 못 가린다 (이 저장소가 K36-B③ 에서 겪은 "사고 판정이 날씨를 밀었다"와 같은 종류).
+   *
+   * ⚠ **평균 `price` 가 `fee` 와 정확히 같아야 한다.** 갈리면 "메뉴는 ₩3,000인데 결산은
+   * ₩8,000"이 된다 — `kairo-facility.test.ts` 가 전 시설에서 고정한다.
+   * ⚠ 눈금은 `fee` 와 같다 — 화면도 **게임 눈금 그대로** 쓴다. 설계서의 명목가(×10,
+   * K36-B②)로 요금만 부풀리면 같은 시트의 `개선 21만` 과 자가 어긋나, "몇 번 팔아야
+   * 개선비를 뽑나"가 열 배 틀린다 (`kairo-facility.ts` 의 `won` 주석에 실측).
+   * ⚠ 입장권에 포함인 시설에는 넣지 않는다 — 있는 척 채우면 "여기도 음식을 파나?"가 된다.
+   */
+  menu?: readonly { name: string; price: number }[];
+  /**
+   * 어느 수요를 채우나 — 손님의 need 축 9종 중 하나.
+   *
+   * ⚠ **데이터에는 75종 전부 있는데 이 인터페이스에만 없었다.** `combos.ts` 와 `week.ts` 가
+   * `(def as { need?: NeedKind }).need` 로 캐스트해 우회하고 있었고, 그래서 화면이 이 값을
+   * 물으려면 같은 캐스트를 한 벌 더 만들어야 했다 (계약이 데이터보다 좁으면 우회가 는다).
+   * ⚠ 과금 축(`charge`)과는 **다른 축**이다 — 위의 `charge` 주석 참고.
+   */
+  need?: NeedKind;
   /** 손님이 위로 걸어 올라갈 수 있나 — 플로팅덱·선착장만 true */
   walkOn?: boolean;
   placement: {

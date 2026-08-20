@@ -81,9 +81,10 @@ function man(won: number): string {
  * 가 픽셀에 위반을 주입하듯, 여기서는 **고친 규칙 자체**를 되돌려 검사가 잡는지 본다.
  *
  * · `hide-when-locked` — 자격 미달이면 메뉴에서 숨긴다 (이 버그의 원형)
+ * · `lock-when-locked` — 자격 미달이면 **누를 수 없게** 한다 (K48 의 동작, K49 에서 고쳤다)
  * · `spend-on-open` — 확인 없이 여는 즉시 신청한다 (K42 의 동작)
  */
-export type ExamFault = 'hide-when-locked' | 'spend-on-open';
+export type ExamFault = 'hide-when-locked' | 'lock-when-locked' | 'spend-on-open';
 let fault: ExamFault | null = null;
 export function setExamFaultForTest(f: ExamFault | null): void {
   fault = f;
@@ -107,6 +108,17 @@ export interface ExamItemView {
    * 숨기면 "심사로 등급 올리는 부분이 사라졌다"가 그대로 돌아온다.
    */
   hidden: boolean;
+  /**
+   * ★ **최고 등급일 때만 true** 다 (K49).
+   *
+   * K48 은 보이게만 하고 **누르지는 못하게** 했다 — 자격이 없으면 `disabled` 였다.
+   * 그래서 조건표(조건별 점수·커트라인)로 가는 길이 목표 칩 하나뿐이었고, 정작 그 표가
+   * 가장 필요한 사람("무엇을 지어야 오르나")이 못 열었다. 확인 화면은 **읽는 화면**이지
+   * 지출이 아니다 — 막을 것은 신청 버튼 하나뿐이다 (`examBlockedReason`).
+   *
+   * 최고 등급만 예외인 이유: 다음 등급이 없으면 `scoreExam` 이 없어 **보여줄 표 자체가
+   * 없다.** 빈 화면을 여는 버튼은 처방이 아니라 헛걸음이다.
+   */
   disabled: boolean;
   name: string;
   sub: string;
@@ -144,18 +156,25 @@ export function examItemView(g: ExamGate, cash: number): ExamItemView {
   const locked = examGateReason(g) !== null;
   // ⚠ 음성 대조군 — 이 한 줄이 예전 동작이다. 검사가 이걸 켜고 잡히는지 본다
   const hidden = fault === 'hide-when-locked' ? locked : false;
+  /*
+   * ⚠ 음성 대조군 (K49) — 켜면 K48 의 동작으로 돌아간다 (자격 미달 = 못 누름).
+   * 이걸 켜고도 "메뉴 항목으로 조건표가 열린다"가 통과하면, 그 검사는 아무것도 안 재고 있다.
+   */
+  const relock = fault === 'lock-when-locked' && locked;
 
   if (g.pendingWeek !== null) {
     return {
       hidden,
-      disabled: true,
+      // 대기 중에도 연다 — **판정 전까지 조건을 더 채울 수 있으므로** 지금 점수가 가장 쓸모 있다
+      disabled: relock,
       name: `심사 대기 — ${g.pendingWeek}주차 주말`,
-      sub: '판정 전까지 조건을 더 채울 수 있습니다',
+      sub: '판정 전까지 조건을 더 채울 수 있습니다 — 탭하면 지금 점수를 봅니다',
     };
   }
   if (!g.next) {
     return {
       hidden,
+      // 다음 등급이 없으면 점수표가 없다 — 여기만 진짜로 막는다
       disabled: true,
       name: '심사 — 최고 등급',
       sub: `${g.gradeName} · 더 오를 곳이 없습니다`,
@@ -165,7 +184,11 @@ export function examItemView(g: ExamGate, cash: number): ExamItemView {
   if (g.reputation < g.next.reqExitSatisfaction) {
     return {
       hidden,
-      disabled: true,
+      /*
+       * ★ 자격 미달이어도 **누를 수 있다** (K49). 조건별 점수·커트라인을 보는 것이
+       * 이 화면의 목적이고, 그 정보가 가장 필요한 상태가 바로 여기다.
+       */
+      disabled: relock,
       name: `심사 — ${title}`,
       /*
        * 처방은 **방법까지** 말한다 (저장소 규칙). 평판은 손님이 나갈 때의 만족도
@@ -174,7 +197,8 @@ export function examItemView(g: ExamGate, cash: number): ExamItemView {
        */
       sub:
         `평판 ${g.next.reqExitSatisfaction} 필요 · 지금 ${Math.round(g.reputation)}` +
-        ' — 평판은 손님이 나갈 때의 만족도 평균입니다. 대기 줄과 걷는 거리를 줄이세요',
+        ' — 탭하면 조건별 점수를 봅니다. 평판은 손님이 나갈 때의 만족도 평균이니' +
+        ' 대기 줄과 걷는 거리를 줄이세요',
     };
   }
   const fee = g.next.examFee ?? 0;

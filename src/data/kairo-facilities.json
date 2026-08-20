@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "카이로 전환 시설 73종의 시뮬 정보. 렌더 정보는 assets/kairo-render-contract.json. specialties = 개선 3단계에서 고르는 특화 (빈 배열이면 특화가 없다). charge = 과금 방식: included 는 입장권에 포함이라 이용해도 요금 0, sale 은 그 자리에서 따로 산다. ⚠ need 축과 과금 축은 다르다 — 대여소는 need:thrill 인데 sale 이고 카페는 need:rest 인데 sale 이다. 그래서 need 로 가르면 안 되고 시설마다 적는다.",
+  "note": "카이로 전환 시설 73종의 시뮬 정보. 렌더 정보는 assets/kairo-render-contract.json. specialties = 개선 3단계에서 고르는 특화 (빈 배열이면 특화가 없다). charge = 과금 방식: included 는 입장권에 포함이라 이용해도 요금 0, sale 은 그 자리에서 따로 산다. ⚠ need 축과 과금 축은 다르다 — 대여소는 need:thrill 인데 sale 이고 카페는 need:rest 인데 sale 이다. 그래서 need 로 가르면 안 되고 시설마다 적는다. desc = 한 줄 설명(무엇/누가 쓰나 — 스탯 요약이 아니다. 정원·요금·수요는 화면이 실측값으로 따로 띄운다). menu = 가게 품목 (표시 전용, K49). ⚠ 평균 price 가 fee 와 정확히 같아야 한다 — 화면이 말하는 값과 sim 이 걷는 값이 갈리면 안 된다. 손님이 무엇을 골랐는지는 아직 시뮬하지 않는다 (P3-E 메뉴 슬롯의 몫).",
   "facilities": {
     "shower_row": {
       "id": "shower_row",
@@ -25,7 +25,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "물놀이를 마친 손님이 소금기와 모래를 씻어 내는 곳."
     },
     "changing_row": {
       "id": "changing_row",
@@ -50,7 +51,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "입구에서 수영복으로 갈아입는다. 물놀이의 첫 관문."
     },
     "locker_row": {
       "id": "locker_row",
@@ -75,7 +77,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "가방과 옷을 맡긴다. 짐이 없어야 손님이 오래 논다."
     },
     "washbasin_row": {
       "id": "washbasin_row",
@@ -100,7 +103,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "손 씻고 입 헹구는 자리. 화장실 옆에 두면 줄이 갈린다."
     },
     "toilet": {
       "id": "toilet",
@@ -125,7 +129,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "가장 먼저 찾고, 없으면 가장 먼저 불평하는 곳."
     },
     "nursing": {
       "id": "nursing",
@@ -150,7 +155,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "아기를 데려온 가족이 잠깐 쉬어 가는 조용한 방."
     },
     "pool_kids": {
       "id": "pool_kids",
@@ -173,7 +179,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "허리까지 오는 얕은 물. 어린아이가 처음 물에 뜨는 자리."
     },
     "pool_warm": {
       "id": "pool_warm",
@@ -196,7 +203,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "김이 오르는 따뜻한 물. 쌀쌀한 날에도 물놀이가 된다."
     },
     "pool_lazy": {
       "id": "pool_lazy",
@@ -219,7 +227,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "물살을 따라 튜브로 한 바퀴 도는 실내 유수풀."
     },
     "sauna": {
       "id": "sauna",
@@ -242,7 +251,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "뜨거운 나무방에서 몸을 데운다. 물에서 나온 뒤의 코스."
     },
     "jjimjilbang": {
       "id": "jjimjilbang",
@@ -265,7 +275,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "누워서 땀을 뺀다. 어른들이 가장 오래 머무는 자리."
     },
     "sikhye": {
       "id": "sikhye",
@@ -288,6 +299,21 @@
         "capacity",
         "revenue",
         "reputation"
+      ],
+      "desc": "찜질방 앞의 식혜와 맥반석 계란. 나오는 길에 하나씩.",
+      "menu": [
+        {
+          "name": "식혜",
+          "price": 700
+        },
+        {
+          "name": "맥반석 계란",
+          "price": 700
+        },
+        {
+          "name": "미역국",
+          "price": 1000
+        }
       ]
     },
     "massage_row": {
@@ -313,7 +339,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "동전을 넣고 앉는 안마의자. 걷다 지친 어른의 자리."
     },
     "shop": {
       "id": "shop",
@@ -336,6 +363,25 @@
         "capacity",
         "revenue",
         "reputation"
+      ],
+      "desc": "컵라면·과자·음료. 빠지에서 가장 자주 들르는 곳.",
+      "menu": [
+        {
+          "name": "컵라면",
+          "price": 700
+        },
+        {
+          "name": "과자",
+          "price": 600
+        },
+        {
+          "name": "캔음료",
+          "price": 700
+        },
+        {
+          "name": "김밥",
+          "price": 1200
+        }
       ]
     },
     "snackbar": {
@@ -359,6 +405,25 @@
         "capacity",
         "revenue",
         "reputation"
+      ],
+      "desc": "떡볶이와 튀김. 물놀이 사이에 배를 채운다.",
+      "menu": [
+        {
+          "name": "떡볶이",
+          "price": 700
+        },
+        {
+          "name": "순대",
+          "price": 800
+        },
+        {
+          "name": "모둠 튀김",
+          "price": 600
+        },
+        {
+          "name": "라면",
+          "price": 1100
+        }
       ]
     },
     "chicken": {
@@ -382,6 +447,25 @@
         "capacity",
         "revenue",
         "reputation"
+      ],
+      "desc": "저녁이 되면 줄이 가장 길어지는 곳.",
+      "menu": [
+        {
+          "name": "후라이드 한 마리",
+          "price": 1100
+        },
+        {
+          "name": "양념 반반",
+          "price": 1200
+        },
+        {
+          "name": "닭강정",
+          "price": 700
+        },
+        {
+          "name": "감자튀김",
+          "price": 200
+        }
       ]
     },
     "icecream": {
@@ -405,6 +489,21 @@
         "capacity",
         "revenue",
         "reputation"
+      ],
+      "desc": "더운 날 아이들이 줄을 서는 단 것.",
+      "menu": [
+        {
+          "name": "소프트콘",
+          "price": 500
+        },
+        {
+          "name": "팥빙수",
+          "price": 900
+        },
+        {
+          "name": "아이스바",
+          "price": 400
+        }
       ]
     },
     "cafe": {
@@ -428,6 +527,25 @@
         "capacity",
         "revenue",
         "reputation"
+      ],
+      "desc": "커피 한 잔과 그늘. 비 오는 날 손님이 몰린다.",
+      "menu": [
+        {
+          "name": "아메리카노",
+          "price": 900
+        },
+        {
+          "name": "카페라떼",
+          "price": 1200
+        },
+        {
+          "name": "빙수",
+          "price": 1500
+        },
+        {
+          "name": "조각 케이크",
+          "price": 800
+        }
       ]
     },
     "vending_in": {
@@ -453,6 +571,21 @@
         "capacity",
         "revenue",
         "reputation"
+      ],
+      "desc": "24시간 도는 무인 매대. 사람을 안 쓴다.",
+      "menu": [
+        {
+          "name": "생수",
+          "price": 300
+        },
+        {
+          "name": "이온음료",
+          "price": 700
+        },
+        {
+          "name": "캔커피",
+          "price": 800
+        }
       ]
     },
     "arcade": {
@@ -478,7 +611,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "동전 몇 개로 시간을 보내는 실내 놀이."
     },
     "karaoke": {
       "id": "karaoke",
@@ -501,7 +635,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "단체 손님이 저녁을 마무리하는 방."
     },
     "pingpong": {
       "id": "pingpong",
@@ -524,7 +659,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "마주 서서 치는 놀이. 비 오는 날의 실내 활동."
     },
     "sunbed_row": {
       "id": "sunbed_row",
@@ -547,7 +683,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "누워서 볕을 쬐는 자리. 물가에 두면 값이 산다."
     },
     "info": {
       "id": "info",
@@ -570,7 +707,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "길과 요금을 묻는 곳. 처음 온 손님의 첫 대화."
     },
     "infirmary": {
       "id": "infirmary",
@@ -593,7 +731,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "긁히고 데인 손님을 본다. 사고 위험을 낮춘다."
     },
     "office": {
       "id": "office",
@@ -616,7 +755,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "운영진이 앉는 자리. 손님은 들어오지 않는다."
     },
     "storage": {
       "id": "storage",
@@ -635,7 +775,8 @@
       "upkeep": 2200,
       "cost": 312000,
       "need": "service",
-      "specialties": []
+      "specialties": [],
+      "desc": "튜브와 비품을 쌓아 둔다. 손님이 쓰는 곳은 아니다."
     },
     "ticket": {
       "id": "ticket",
@@ -656,7 +797,8 @@
       "need": "service",
       "specialties": [
         "capacity"
-      ]
+      ],
+      "desc": "손님이 표를 사는 곳. 여기를 지나야 공원 안이다."
     },
     "parking": {
       "id": "parking",
@@ -675,7 +817,8 @@
       "upkeep": 4640,
       "cost": 825600,
       "need": "service",
-      "specialties": []
+      "specialties": [],
+      "desc": "차를 대고 걸어 들어온다. 단체 손님의 출발점."
     },
     "mongol_tent": {
       "id": "mongol_tent",
@@ -698,7 +841,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "한국 빠지의 시그니처. 그늘 아래 자리를 통째로 빌린다."
     },
     "pyeongsang_row": {
       "id": "pyeongsang_row",
@@ -721,7 +865,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "신을 벗고 둘러앉는 마루. 하루 자리를 잡는다."
     },
     "shade_net": {
       "id": "shade_net",
@@ -744,7 +889,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "천 한 장으로 볕을 가린다. 가장 싼 자리."
     },
     "parasol": {
       "id": "parasol",
@@ -767,7 +913,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "우산 하나와 의자 둘. 물가에 세우는 작은 그늘."
     },
     "bbq_zone": {
       "id": "bbq_zone",
@@ -790,6 +937,25 @@
         "capacity",
         "revenue",
         "reputation"
+      ],
+      "desc": "고기를 굽는 자리. 저녁까지 남는 손님이 여기 있다.",
+      "menu": [
+        {
+          "name": "삼겹살 세트",
+          "price": 1600
+        },
+        {
+          "name": "목살 세트",
+          "price": 1600
+        },
+        {
+          "name": "숯·불판",
+          "price": 700
+        },
+        {
+          "name": "쌈채소",
+          "price": 900
+        }
       ]
     },
     "firepit_row": {
@@ -813,6 +979,21 @@
         "capacity",
         "revenue",
         "reputation"
+      ],
+      "desc": "불멍과 군것질. 해가 진 뒤에 붐빈다.",
+      "menu": [
+        {
+          "name": "장작 한 단",
+          "price": 600
+        },
+        {
+          "name": "마시멜로 세트",
+          "price": 700
+        },
+        {
+          "name": "군고구마",
+          "price": 1100
+        }
       ]
     },
     "camp_site": {
@@ -836,7 +1017,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "텐트를 칠 수 있는 구획. 하루를 통째로 쓴다."
     },
     "pavilion": {
       "id": "pavilion",
@@ -859,7 +1041,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "지붕이 있는 야외 쉼터. 비가 와도 앉을 수 있다."
     },
     "lookout": {
       "id": "lookout",
@@ -882,7 +1065,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "강을 내려다보는 자리. 공원의 경관을 끌어올린다."
     },
     "playground": {
       "id": "playground",
@@ -905,7 +1089,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "미끄럼틀과 그네. 아이가 물 밖에서도 놀 곳."
     },
     "footvolley": {
       "id": "footvolley",
@@ -928,7 +1113,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "친구·단체가 편을 갈라 노는 모래 코트."
     },
     "minigolf": {
       "id": "minigolf",
@@ -951,7 +1137,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "퍼터 하나로 도는 코스. 물을 싫어하는 손님의 놀이."
     },
     "photozone": {
       "id": "photozone",
@@ -974,7 +1161,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "사진을 찍고 가는 자리. 손님이 남기고 싶어 하는 화면."
     },
     "fountain": {
       "id": "fountain",
@@ -993,7 +1181,8 @@
       "upkeep": 1760,
       "cost": 249600,
       "need": "scenery",
-      "specialties": []
+      "specialties": [],
+      "desc": "물줄기가 오르는 장식. 광장 가운데의 중심."
     },
     "flowerbed": {
       "id": "flowerbed",
@@ -1012,7 +1201,8 @@
       "upkeep": 1040,
       "cost": 105600,
       "need": "scenery",
-      "specialties": []
+      "specialties": [],
+      "desc": "계절 꽃을 심는다. 빈 땅을 볼 만하게 만든다."
     },
     "vending_out": {
       "id": "vending_out",
@@ -1035,6 +1225,21 @@
         "capacity",
         "revenue",
         "reputation"
+      ],
+      "desc": "길가에 세워 두는 무인 매대. 지나가다 뽑는다.",
+      "menu": [
+        {
+          "name": "생수",
+          "price": 300
+        },
+        {
+          "name": "이온음료",
+          "price": 700
+        },
+        {
+          "name": "캔커피",
+          "price": 500
+        }
       ]
     },
     "lifering": {
@@ -1054,7 +1259,8 @@
       "upkeep": 1040,
       "cost": 105600,
       "need": "service",
-      "specialties": []
+      "specialties": [],
+      "desc": "구명환과 튜브를 걸어 둔다. 물가의 안전 장치."
     },
     "slide_small": {
       "id": "slide_small",
@@ -1090,7 +1296,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "짧고 완만한 미끄럼. 아이도 혼자 탈 수 있다."
     },
     "slide_large": {
       "id": "slide_large",
@@ -1126,7 +1333,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "공원에서 가장 높은 곳. 멀리서도 보인다."
     },
     "slide_tube": {
       "id": "slide_tube",
@@ -1162,7 +1370,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "튜브를 타고 굽이를 도는 미끄럼."
     },
     "jump_cushion": {
       "id": "jump_cushion",
@@ -1187,7 +1396,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "한쪽에서 뛰면 반대쪽이 날아오르는 물 위 쿠션."
     },
     "trampoline_w": {
       "id": "trampoline_w",
@@ -1212,7 +1422,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "물 위에서 뛰는 원형 트램폴린."
     },
     "airbounce": {
       "id": "airbounce",
@@ -1237,7 +1448,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "장애물을 건너는 대형 물놀이 코스."
     },
     "turtle_island": {
       "id": "turtle_island",
@@ -1262,7 +1474,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "물 위에 뜬 쉼터 섬. 헤엄쳐 올라가 앉는다."
     },
     "junglegym_w": {
       "id": "junglegym_w",
@@ -1287,7 +1500,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "물 위 프레임을 오르내린다."
     },
     "diving": {
       "id": "diving",
@@ -1312,7 +1526,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "덱 끝에서 뛰어내린다. 스릴을 찾는 손님의 자리."
     },
     "waterwalk": {
       "id": "waterwalk",
@@ -1337,7 +1552,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "공 안에 들어가 물 위를 걷는다."
     },
     "float_deck": {
       "id": "float_deck",
@@ -1359,7 +1575,8 @@
       "upkeep": 1820,
       "cost": 184800,
       "need": "service",
-      "specialties": []
+      "specialties": [],
+      "desc": "물 위에 까는 바닥. 물 위 시설은 전부 여기서 시작한다."
     },
     "dock": {
       "id": "dock",
@@ -1385,7 +1602,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "보트가 드나드는 잔교. 코스가 여기서 뻗는다."
     },
     "rent_kayak": {
       "id": "rent_kayak",
@@ -1410,7 +1628,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "노를 저어 강으로 나간다."
     },
     "rent_pedal": {
       "id": "rent_pedal",
@@ -1435,7 +1654,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "발로 밟아 가는 보트를 빌린다."
     },
     "rent_duck": {
       "id": "rent_duck",
@@ -1460,7 +1680,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "천천히 도는 오리배. 아이와 커플이 탄다."
     },
     "rent_sup": {
       "id": "rent_sup",
@@ -1485,7 +1706,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "보드 위에 서서 노를 젓는다."
     },
     "bungalow": {
       "id": "bungalow",
@@ -1504,7 +1726,8 @@
       "upkeep": 11100,
       "cost": 1836000,
       "need": "stay",
-      "specialties": []
+      "specialties": [],
+      "desc": "하룻밤 묵는 작은 집."
     },
     "glamping": {
       "id": "glamping",
@@ -1523,7 +1746,8 @@
       "upkeep": 13800,
       "cost": 2376000,
       "need": "stay",
-      "specialties": []
+      "specialties": [],
+      "desc": "짐 없이 오는 캠핑. 텐트가 이미 쳐져 있다."
     },
     "caravan": {
       "id": "caravan",
@@ -1542,7 +1766,8 @@
       "upkeep": 10200,
       "cost": 1656000,
       "need": "stay",
-      "specialties": []
+      "specialties": [],
+      "desc": "바퀴 달린 숙소. 안에 부엌과 침대가 있다."
     },
     "pension": {
       "id": "pension",
@@ -1561,7 +1786,8 @@
       "upkeep": 21000,
       "cost": 3816000,
       "need": "stay",
-      "specialties": []
+      "specialties": [],
+      "desc": "가족 단위가 묵는 3층 숙소."
     },
     "pension_duplex": {
       "id": "pension_duplex",
@@ -1580,7 +1806,8 @@
       "upkeep": 30000,
       "cost": 5616000,
       "need": "stay",
-      "specialties": []
+      "specialties": [],
+      "desc": "계단으로 오르는 복층. 단체가 통째로 쓴다."
     },
     "ice_fishing": {
       "id": "ice_fishing",
@@ -1603,7 +1830,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "겨울에만 여는 얼음 구멍 낚시."
     },
     "snow_sled": {
       "id": "snow_sled",
@@ -1637,7 +1865,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "겨울 비탈에서 썰매를 탄다."
     },
     "bungeoppang": {
       "id": "bungeoppang",
@@ -1660,6 +1889,21 @@
         "capacity",
         "revenue",
         "reputation"
+      ],
+      "desc": "겨울 길목의 군것질.",
+      "menu": [
+        {
+          "name": "팥 붕어빵",
+          "price": 600
+        },
+        {
+          "name": "슈크림 붕어빵",
+          "price": 700
+        },
+        {
+          "name": "어묵",
+          "price": 800
+        }
       ]
     },
     "footbath": {
@@ -1683,7 +1927,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "쌀쌀한 철에 발만 담근다."
     },
     "fishing": {
       "id": "fishing",
@@ -1706,7 +1951,8 @@
         "capacity",
         "revenue",
         "reputation"
-      ]
+      ],
+      "desc": "찌를 던져 놓고 기다린다. 조용한 손님의 자리."
     },
     "maple_walk": {
       "id": "maple_walk",
@@ -1725,7 +1971,8 @@
       "upkeep": 2420,
       "cost": 343200,
       "need": "scenery",
-      "specialties": []
+      "specialties": [],
+      "desc": "가을에 걷는 길. 공원의 가을 얼굴이다."
     },
     "dj_booth": {
       "id": "dj_booth",
@@ -1743,7 +1990,8 @@
       "upkeep": 9800,
       "cost": 518000,
       "need": "play",
-      "specialties": []
+      "specialties": [],
+      "desc": "저녁에 음악을 튼다. 수영장 옆이면 나이트풀이 된다."
     },
     "stage_river": {
       "id": "stage_river",
@@ -1761,7 +2009,8 @@
       "upkeep": 16800,
       "cost": 1512000,
       "need": "scenery",
-      "specialties": []
+      "specialties": [],
+      "desc": "강을 등지고 선 무대. 큰 행사의 축이 된다."
     }
   }
 }

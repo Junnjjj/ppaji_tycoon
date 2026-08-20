@@ -42,11 +42,31 @@ describe('심사 메뉴 항목', () => {
   it('★ 자격이 없어도 안 숨는다 — 무엇이 모자란지 말한다', () => {
     // 2등급 문턱은 55. 평판 41 이면 응시 자격이 없다 — 예전엔 이 상태가 곧 `hidden` 이었다
     const v = examItemView(gate({ reputation: 41 }), 10_000_000);
-    expect(v.hidden).toBe(false); // ← 이게 버그였다
-    expect(v.disabled).toBe(true);
+    expect(v.hidden).toBe(false); // ← K48 이 고친 것
     expect(v.name).toContain('2등급');
     expect(v.sub).toContain('평판 55 필요');
     expect(v.sub).toContain('지금 41');
+  });
+
+  it('★ 자격이 없어도 **누를 수 있다** (K49) — 조건표가 가장 필요한 상태가 여기다', () => {
+    /*
+     * K48 은 보이게만 하고 못 누르게 했다. 그래서 조건별 점수·커트라인으로 가는 길이
+     * 목표 칩 하나뿐이었고, "무엇을 지어야 오르나"를 묻는 사람이 정작 못 열었다.
+     * 확인 화면은 **읽는 화면**이지 지출이 아니다 — 막을 것은 신청 버튼뿐이다.
+     */
+    expect(examItemView(gate({ reputation: 41 }), 10_000_000).disabled).toBe(false);
+    // 현금이 0 이어도 마찬가지다 (수수료는 신청만 막는다)
+    expect(examItemView(gate({ reputation: 41 }), 0).disabled).toBe(false);
+    // 대기 중에도 — 판정 전까지 조건을 더 채울 수 있으므로 지금 점수가 가장 쓸모 있다
+    expect(examItemView(gate({ reputation: 90, pendingWeek: 7 }), 0).disabled).toBe(false);
+  });
+
+  it('음성 대조군 — K48 처럼 잠그면 잡힌다', () => {
+    setExamFaultForTest('lock-when-locked');
+    expect(examItemView(gate({ reputation: 41 }), 10_000_000).disabled).toBe(true);
+    expect(examItemView(gate({ reputation: 90, pendingWeek: 7 }), 0).disabled).toBe(true);
+    // 대조군은 **자격 미달만** 되돌린다 — 자격이 있으면 예전에도 눌렸다
+    expect(examItemView(gate({ reputation: 90 }), 10_000_000).disabled).toBe(false);
   });
 
   it('★ 처방이 방법까지 말한다 — 평판은 퇴장 만족도의 이동평균이다', () => {
@@ -82,10 +102,9 @@ describe('심사 메뉴 항목', () => {
     }
   });
 
-  it('대기 중이면 판정 주차를 말한다 (비활성)', () => {
+  it('대기 중이면 판정 주차를 말한다', () => {
     const v = examItemView(gate({ reputation: 90, pendingWeek: 7 }), 10_000_000);
     expect(v.hidden).toBe(false);
-    expect(v.disabled).toBe(true);
     expect(v.name).toContain('7주차');
   });
 
@@ -108,15 +127,21 @@ describe('심사 메뉴 항목', () => {
 });
 
 describe('응시를 막는 이유는 한 곳에서 나온다', () => {
-  it('메뉴 항목의 비활성은 **자격**을 그대로 따른다', () => {
-    // 규칙이 갈라지면 "메뉴는 되는데 확인 화면은 안 된다"가 생긴다
+  it('메뉴 항목의 비활성은 **다음 등급이 있나** 하나만 본다 (K49)', () => {
+    /*
+     * ⚠ K48 까지는 `disabled === (examGateReason !== null)` 이었다 — 자격이 곧 열람
+     * 권한이었다. 이제 자격은 **신청**만 막고, 열람을 막는 것은 "보여줄 표가 없다"
+     * 하나뿐이다. 규칙이 갈라지면 "메뉴는 되는데 확인 화면은 빈 상자"가 생긴다.
+     */
     for (const g of [
       gate({ reputation: 41 }),
       gate({ reputation: 90, pendingWeek: 3 }),
       gate({ next: null, reputation: 99 }),
       gate({ reputation: 90 }),
     ]) {
-      expect(examItemView(g, 10_000_000).disabled).toBe(examGateReason(g) !== null);
+      expect(examItemView(g, 10_000_000).disabled).toBe(g.next === null);
+      // 자격 판정 자체는 그대로 살아 있다 — 신청 버튼이 이걸 본다
+      expect(examBlockedReason(g, 10_000_000) !== null).toBe(examGateReason(g) !== null);
     }
   });
 
