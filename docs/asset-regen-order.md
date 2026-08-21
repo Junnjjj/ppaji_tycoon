@@ -9,6 +9,106 @@
 전단·스케일 없음). 그래서 아래 남은 이탈은 **그림 쪽 결함**이고, 가이드+게이트
 재생성으로만 고쳐진다.
 
+## 한 명령으로 돌리기 — `tools/regen-facility.ts`
+
+아래 「먼저 읽을 것」의 조각들을 **사람이 56번 손으로 이어 붙일 필요가 없다.**
+그 이음매가 `tools/regen-facility.ts` 다.
+
+```bash
+npx tsx tools/regen-facility.ts --id cafe                # 한 종
+npx tsx tools/regen-facility.ts --severe                 # 심각 17종
+npx tsx tools/regen-facility.ts --all --tries 3          # 위반 56종, 종당 최대 3회
+npx tsx tools/regen-facility.ts --id cafe --dry-run      # 프롬프트만 찍고 안 돌린다
+npx tsx tools/regen-facility.ts --all --dry-run          # 56종 조립 검사 (요약만)
+npx tsx tools/regen-facility.ts --verify-gate            # 판정 복제가 게이트와 같은지
+```
+
+종당 루프는 **프롬프트 조립 → 생성 → 후처리(1종 추출) → 게이트 판정 → 채택 또는 리롤**이고,
+통과할 때까지 `--tries` 만큼 돈다.
+
+**대상은 손으로 적지 않는다.** 위 표를 읽는 게 아니라 팩을 **그 자리에서 재서** 고른다
+(`--all` = 지금 위반인 종, `--severe` = 그중 심각). 그림이 바뀌면 목록도 같이 움직인다.
+
+### 프롬프트에 무엇이 들어가나
+
+| 조각 | 출처 | 왜 |
+|---|---|---|
+| 스타일 블록 | `docs/asset-prompts.md` §SHARED STYLE BLOCK **축자** | 34장이 축자 동일한 것이 이 문서의 성질이다. 도구에 베끼면 문서를 고쳐도 도구만 옛 계약으로 남는다 |
+| 항목 본문 | 그 시설이 속한 시트의 대조표 → 칸 번호 → 본문 (라벨로 교차 확인) | 표와 본문이 어긋난 시트가 생겨도 엉뚱한 항목을 안 뽑는다 |
+| 규격 줄 | `guideSpecLine()` (= `make-kairo-guide.ts --table`) **+ 영어 요약** | 한국어 정본을 축자로 넣고 영어를 옆에 붙인다. 번역만 넣으면 규격이 바뀌었을 때 조용히 갈라진다 |
+| 크로마 키 | 그 시트의 `Canvas:` 문단 (`#00FF00` / `#FF00FF`) | 초록 시트(S1·S2·S4·L2)는 소재에 빨강이 있어서 초록이다 |
+| `--ref` 3장 | 발자국 가이드 + 그 시트가 지정한 스타일 크롭 2장 | 항목별 지정(`governs item 1 ONLY`)도 지킨다 — 무시하면 L10 의 실측 실패 모드가 돌아온다 |
+| **실패 모드** | 직전 판정(첫 시도는 지금 팩의 실측) | 아래 |
+
+### 실패 모드를 말해 준다 — 이게 리롤과 다른 점
+
+그냥 다시 뽑으면 같은 실수가 반복된다. 도구는 **직전 시도가 무엇을 틀렸는지**를
+프롬프트에 적는다. `cafe` 의 실제 출력:
+
+```
+WHAT WENT WRONG LAST TIME — do not repeat it:
+  - The previous attempt had the two footprint axes SWAPPED. Its ground bottom vertex
+    measured at 0.556 of the sprite width, which is where a 3x2 footprint would put it —
+    this object is 2x3, so the vertex belongs at 0.400. Do not mirror the guide. The W axis
+    (2 tiles) runs toward the LOWER RIGHT and the D axis (3 tiles) runs toward the LOWER
+    LEFT. Follow the attached guide's diamond exactly.
+  - The previous attempt's ground silhouette overlapped the contract diamond by only IoU
+    0.554 (it must reach 0.839). The base is not the right shape: it must be one clean 80x40
+    px diamond with the object standing on it, with nothing sticking out below or beside it.
+  - The previous attempt still needed to move sideways to sit on its own tile, but it was
+    already touching the edge of its canvas, so it could not be moved at all. …
+```
+
+⚠ **축뒤집힘에서 가이드를 뒤집지 않는다.** 위(19행)의 "가이드를 뒤집어 다시 뽑아야 한다"와
+갈리는 지점이다. 가이드는 정본 접지 마스크에서 파생되어 **구조적으로 옳고**, 뒤집으면
+틀린 발자국을 첨부하게 된다. 그리고 이 문서 §레버 표가 이미 재 놓았다 — **좌우 반전으로는
+통과 0종**이다. 그래서 도구는 **옳은 가이드를 붙이고 뒤집힘을 말로 지목한다**
+(위 예시의 "which is where a 3x2 footprint would put it").
+
+### 채택 규칙 — 통과한 것을 덮어쓰지 않는다
+
+1. 원본을 **먼저** `assets/generated/kairo-regen/<id>/backup.png` 로 백업한다
+2. 후보는 **팩 밖**(작업 폴더)에서 판정한다 — 재려고 팩에 먼저 쓰지 않는다
+3. 통과했거나 **엄격하게 나아졌을 때만** 채택한다. 판정 순서는
+   통과 여부 → 위반 축 수 → 꼭짓점 오차 → IoU 부족 → 기울기 오차이고, **동점은 안 바꾼다**
+4. 쓴 **뒤에** 다시 재서, 그래도 나아지지 않았으면 백업으로 되돌린다
+5. `--strict-adopt` 를 주면 **통과만** 채택한다 (개선은 무시)
+
+작업 폴더는 종마다 `prompt-N.txt` · `gen-N.png` · `cand-N.png` · `backup.png` 를 남긴다
+(`assets/generated/` 아래라 gitignore 다).
+
+### `image_gen` 이 없으면 첫 시도에서 죽는다
+
+이 저장소의 codex 계정에는 권한이 없다 (실측). 그 상태로 `--all` 을 돌리면 56번 실패
+로그가 쌓이므로, 도구는 그 오류 문자열을 알아보고 **즉시 전부 중단**한다 (종료 코드 2):
+
+```
+❌ 생성 불가 — 이 세션에서는 더 돌려도 전부 같은 이유로 실패한다:
+   codex-gen: the built-in image_gen tool never ran in this codex session — …
+   → image_gen 을 제공하는 codex 계정의 세션에서 다시 돌릴 것.
+```
+
+### 생성 없이 검증한 것 (2026-08-22)
+
+이 머신에서는 그림을 못 뽑으므로, **생성 단계만 빼고** 파이프 전체를 태워 봤다.
+
+| 검사 | 방법 | 결과 |
+|---|---|---|
+| 프롬프트 조립 | `--all --dry-run` | **56/56 조립 OK** (경고 0). 스타일 블록 축자·가이드 존재·크롭 지정 전부 통과 |
+| 판정 복제 | `--verify-gate` (`kairo-gate.ts --json` 대조) | **시설 75종 불일치 0** |
+| 파이프 양성 대조군 | `--all --use-existing guide` (임시 팩) | **56/56 채택(통과)** — IoU 0.997~1.000. "가이드대로 그리면 게이트를 통과한다"가 추출 경로까지 포함해 실증됐다 |
+| 채택 음성 대조군 | 통과종 `office` 에 다른 발자국의 가이드를 먹임 | **유지** — 파일 md5 불변 |
+| 권한 없음 | 실제 `sprite-gen gen` 1회 | 1회 시도 후 **전체 중단**, 종료 코드 2 |
+
+⚠ **못 해 본 것은 생성 자체뿐이다** — 실제 그림이 프롬프트를 얼마나 따르는지, 몇 번
+리롤해야 통과하는지는 권한 있는 세션에서만 알 수 있다.
+
+⚠ 크로마 키는 **그림의 모서리에서 읽는다**. 가이드는 시트가 초록을 쓰든 말든 언제나
+마젠타라(`make-kairo-guide.ts` 의 `BG`), 시트 크로마로 키하면 `keyed_pixels 0` 이 되어
+캔버스 전체가 피사체가 된다 — 그 상태로 파라솔(면제 종)이 **게이트를 통과했다** (실측).
+
+---
+
 ## 먼저 읽을 것
 
 - 첨부 가이드: `art-reference/guides/kairo/facility__<id>.png` (75장, 이미 구워져 있다)
@@ -17,7 +117,9 @@
 - 확인: 배치마다 `npx tsx tools/kairo-gate.ts --geom` (통과할 때까지 리롤)
 
 ⚠ **`축뒤집힘` 표시가 붙은 것은 그냥 리롤하면 안 된다** — 발자국 두 축이 바뀐 그림이라
-가이드를 **뒤집어** 다시 뽑아야 한다. 그냥 다시 뽑으면 같은 실수가 반복된다.
+⚠ **가이드를 뒤집지 마라** — 가이드는 엔진 정본 마스크에서 파생돼 구조적으로 옳고,
+좌우 반전은 실측에서 **통과 0종**이었다(아래 레버 표). 가이드를 그대로 붙이고
+**프롬프트로 "지난번엔 두 축이 바뀌었다"를 지목**한다 — `tools/regen-facility.ts` 가 그렇게 한다.
 
 ⚠ **`여백 없음`** 은 추출기가 평행이동으로 더 밀고 싶었지만 **캔버스에 빈 자리가 없어**
 (그림이 좌우 끝에 닿아 있어) 못 민 것이다. 자르는 것은 무손실이 아니므로 갈 수 있는
@@ -92,7 +194,7 @@
 ## 합계
 
 - 위반 **56종** (심각 17 · 나머지 39)
-- **축뒤집힘 11종** — 가이드를 뒤집어 재생성
+- **축뒤집힘 11종** — 가이드는 **그대로** 붙이고(정본 마스크에서 파생돼 구조적으로 옳다) 프롬프트로 **뒤집혔다고 지목**한다
 - 평행이동이 캔버스에 막힌 것 **34종**
 - 통과 19종은 건드리지 말 것: `arcade` `bbq_zone` `changing_row` `firepit_row` `ice_fishing` `jjimjilbang` `junglegym_w` `lifering` `massage_row` `office` `parking` `photozone` `pool_kids` `shade_net` `slide_small` `slide_tube` `storage` `vending_in` `vending_out`
 - 그중 **9종은 이번 정렬 교정으로 통과했다**: `changing_row` `lifering` `massage_row` `office` `parking` `photozone` `storage` `vending_in` `vending_out`

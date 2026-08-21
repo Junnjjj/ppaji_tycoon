@@ -244,7 +244,7 @@ function geomRow(
         `꼭짓점 ${fmt(m.bottomFrac)}(기대 ${fmt(want.bottomFrac)}, ${fmtTx(v.vertexTexels)}) · ` +
         `기울기 ${fmt(m.slopeLeft)}/${fmt(m.slopeRight)}(기대 +0.500/−0.500) · ` +
         `IoU ${m.wedgeIoU.toFixed(3)}(≥${v.iouMin.toFixed(3)})` +
-        (v.axesSwapped === true ? ' · ⚠ 발자국 두 축이 바뀐 그림 (가이드를 뒤집어 재생성)' : ''),
+        (v.axesSwapped === true ? ' · ⚠ 발자국 두 축이 바뀐 그림 (가이드는 그대로, 프롬프트로 지목)' : ''),
     };
   }
   return row;
