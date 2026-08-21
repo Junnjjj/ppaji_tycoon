@@ -26,6 +26,8 @@
 import { chromium, type ConsoleMessage } from 'playwright';
 // 배경 겹 수·id 의 정본. 검사에 상수를 박으면 겹을 더할 때마다 검사가 깨진다 (K36-B)
 import { KAIRO } from '../src/assets/kairo-contract.js';
+// 격자 꼭지점 → 화면 텍셀. 표식 절이 **기대 선분을 스스로 만들 때** 쓴다 (K52)
+import { gridToScreen } from '../src/render/kairo/iso.js';
 
 const BASE = process.env['PPAJI_URL'] ?? 'http://localhost:5173';
 /*
@@ -8827,7 +8829,325 @@ async function main(): Promise<void> {
   }
 
   /*
-   * ── ⑩ Phase G — AI 픽셀아트 아틀라스가 **화면에** 보인다 ───────────────────
+   * ── ⑩ K52. 입구 표식 — 앞 두 면을 굵은 선 하나로 ───────────────────────────
+   *
+   * `PlacementGrid.entryTilesOf` 는 3dc01b0 에서 생겼지만 **아무도 안 썼다.** 손님이
+   * 그리로 들어가는 것은 다음 단계이고, 이 단계는 **눈으로 먼저 확인할 수 있게** 하는
+   * 것이 목적이다 — 표식이 틀렸는데 손님 동작부터 바꾸면 어느 쪽이 틀렸는지 못 가린다.
+   *
+   * ## 무엇을 재나 — **그려진 선분**이다
+   *
+   * `entryTilesOf` 를 하네스가 다시 불러 비교하면 상수 비교다 (K38 규칙). 그래서
+   * 씬이 **실제로 그은 선분**(`rideMarkForTest().edges`, 그리기 루프가 채운다)을 읽고,
+   * 기대값은 하네스가 조준 칸과 발자국 크기에서 **독립적으로** 만든다.
+   * 좌표 변환만 `gridToScreen` 을 공유한다 — 투영 자체는 다른 검사들의 주제다.
+   *
+   * ## 조준 칸을 아는 방법
+   *
+   * `tapTile` 은 K47-③ 부터 **조준 이동**(`aimAt`)이라 탭한 칸이 곧 고스트 앵커다.
+   * 그래서 하네스가 좌표를 짐작할 필요가 없다.
+   */
+  {
+    const cx = await browser.newContext(DEVICE);
+    const pg = await cx.newPage();
+    const markErrors: string[] = [];
+    pg.on('pageerror', (e) => markErrors.push(String(e)));
+    await pg.addInitScript(`try { localStorage.clear(); } catch {}`);
+    await pg.goto(URL, { waitUntil: 'load' });
+    await pg.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+
+    /** 그려진 선분 한 개의 정규형 — 그은 방향(사슬 순서)에 안 흔들리게 양 끝을 정렬한다 */
+    const segKey = (e: { x1: number; y1: number; x2: number; y2: number }): string => {
+      const a = `${Math.round(e.x1)},${Math.round(e.y1)}`;
+      const b = `${Math.round(e.x2)},${Math.round(e.y2)}`;
+      return a < b ? `${a}|${b}` : `${b}|${a}`;
+    };
+    /** 격자 변 하나를 화면 선분으로. `dy` 는 단 보정 (K37) */
+    const gseg = (
+      x1: number,
+      y1: number,
+      x2: number,
+      y2: number,
+      dy: number,
+    ): { x1: number; y1: number; x2: number; y2: number } => {
+      const a = gridToScreen(x1, y1);
+      const b = gridToScreen(x2, y2);
+      return { x1: a.x, y1: a.y + dy, x2: b.x, y2: b.y + dy };
+    };
+    /**
+     * 발자국 `(I,J,w,d)` 의 **앞 두 면**(`front=true`) 또는 **뒤 두 면**의 격자 변 집합.
+     * 씬과 무관하게 하네스가 스스로 만든다 — 이게 독립 유도다.
+     */
+    const faceKeys = (
+      I: number,
+      J: number,
+      w: number,
+      d: number,
+      dy: number,
+      front: boolean,
+    ): Set<string> => {
+      const out = new Set<string>();
+      const xi = front ? I + w : I; // +I 면 vs −I 면
+      const yj = front ? J + d : J; // +J 면 vs −J 면
+      for (let k = 0; k < d; k++) out.add(segKey(gseg(xi, J + k, xi, J + k + 1, dy)));
+      for (let k = 0; k < w; k++) out.add(segKey(gseg(I + k, yj, I + k + 1, yj, dy)));
+      return out;
+    };
+    const sameSet = (a: Set<string>, b: Set<string>): boolean =>
+      a.size === b.size && [...a].every((k) => b.has(k));
+
+    type Mark = {
+      kind: string;
+      visible: boolean;
+      entry: [number, number] | null;
+      exit: [number, number] | null;
+      tiles: [number, number][];
+      edges: { x1: number; y1: number; x2: number; y2: number }[];
+      labels: { text: string; x: number; y: number; depth: number }[];
+    } | null;
+    const READ_MARK = `(() => window.__kairo.scene.rideMarkForTest())()`;
+    const readMark = async (): Promise<Mark> => (await pg.evaluate(READ_MARK)) as Mark;
+
+    /*
+     * 셋업 — 빈 포장 6×6 을 만들고 **평상 연립 4×1** 을 겨눈다.
+     * 비정사각이라 "앞 두 면"과 "뒤 두 면"이 눈으로도 갈리고, 회전하면 면이 맞바뀐다.
+     */
+    const setup = (await pg.evaluate(`(() => {
+      const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement;
+      h.flow.frozen = true; // 표식을 재는 동안 결산·카드가 끼어들지 않게
+      h.week.abort();
+      /*
+       * ⚠ 판 전체를 포장한다 — 잔디는 손님이 못 지나간다 (K32-B). 안 하면 빈 자리를
+       * 찾아 놓아도 unreachable 로 거절돼, 아래 "정보 시트" 검사가 배치 실패로 죽는다.
+       */
+      ${PAVE_ALL}
+      ${LAND_BOX}
+      ${FREE_RECT}
+      const spot = _free(6, 6);
+      if (!spot) return { ok: false, why: '빈 6×6 자리 없음' };
+      for (let dj = 0; dj < 6; dj++) {
+        for (let di = 0; di < 6; di++) {
+          t.paint(spot[0] + di, spot[1] + dj, 'path_stone');
+          h.scene.refreshTile(spot[0] + di, spot[1] + dj);
+        }
+      }
+      h.guests.invalidate();
+      document.getElementById('kairo-build-open').click();
+      const pick = document.querySelector('[data-pick="facility:pyeongsang_row"]');
+      if (!pick) return { ok: false, why: '평상 연립 카드 없음' };
+      pick.click();
+      const sh = document.getElementById('kairo-sheet');
+      if (sh && !sh.hidden) document.getElementById('kairo-sheet-close').click();
+      h.tapTile(spot[0], spot[1]); // 탭 = 조준 이동 (K47-③) — 겨눈 칸이 곧 고스트 앵커다
+      return { ok: true, i: spot[0], j: spot[1], level: t.levelAt(spot[0], spot[1]) };
+    })()`)) as { ok: false; why: string } | { ok: true; i: number; j: number; level: number };
+
+    if (!setup.ok) {
+      record('★ 입구 표식 — 비정사각 시설의 앞 두 면 (K52)', 'fail', setup.why);
+    } else {
+      const { i: I, j: J } = setup;
+      const dy = -setup.level * 8; // LEVEL_H — 단이 있는 칸은 표식도 lift 를 탄다 (K37)
+      await pg.waitForTimeout(200);
+      const m0 = await readMark();
+      const got0 = new Set((m0?.edges ?? []).map(segKey));
+      const want0 = faceKeys(I, J, 4, 1, dy, true);
+      const back0 = faceKeys(I, J, 4, 1, dy, false);
+      const bleed0 = [...got0].filter((k) => back0.has(k)).length;
+      await pg.screenshot({ path: `${SHOT_DIR}/kairo-entry-face-0.png` });
+      record(
+        '★ 입구 표식 — 비정사각 시설을 조준하면 **앞 두 면**에만 뜬다 (K52)',
+        m0 !== null &&
+          m0.kind === 'entry' &&
+          m0.visible &&
+          sameSet(got0, want0) &&
+          bleed0 === 0 &&
+          m0.labels.length === 1 &&
+          m0.labels[0]?.text === '입구'
+          ? 'pass'
+          : 'fail',
+        `평상 4×1 @(${I},${J}) · 종류 ${m0?.kind ?? '없음'} · 선분 ${got0.size}` +
+          ` (기대 ${want0.size}) · 뒤 두 면 침범 ${bleed0} · 글씨 ` +
+          `${m0?.labels.map((l) => l.text).join(',') ?? '없음'}`,
+      );
+
+      /*
+       * ★ 회전 — **진짜 터치**로 ↻ 를 누른다 (K33 "화면이 되는지는 진짜 터치로 본다").
+       * `click()` 으로 부르면 버튼이 화면 밖이어도 통과한다.
+       */
+      const rotBox = await pg.evaluate(`(() => {
+        const b = document.getElementById('kairo-place-rotate');
+        if (!b || b.disabled) return null;
+        const r = b.getBoundingClientRect();
+        return { x: r.x + r.width / 2, y: r.y + r.height / 2, w: r.width, h: r.height };
+      })()`) as { x: number; y: number; w: number; h: number } | null;
+      if (rotBox) await pg.touchscreen.tap(rotBox.x, rotBox.y);
+      await pg.waitForTimeout(250);
+      const m1 = await readMark();
+      const got1 = new Set((m1?.edges ?? []).map(segKey));
+      const want1 = faceKeys(I, J, 1, 4, dy, true); // 회전하면 발자국이 1×4
+      const bleed1 = [...got1].filter((k) => faceKeys(I, J, 1, 4, dy, false).has(k)).length;
+      await pg.screenshot({ path: `${SHOT_DIR}/kairo-entry-face-1.png` });
+      record(
+        '★ 입구 표식 — ↻ 를 **진짜 터치**로 누르면 표식이 반대 두 면으로 옮겨간다 (K52)',
+        rotBox !== null &&
+          rotBox.w >= 44 &&
+          rotBox.h >= 44 &&
+          m1 !== null &&
+          sameSet(got1, want1) &&
+          bleed1 === 0 &&
+          !sameSet(got1, got0) &&
+          m1.labels.length === 1
+          ? 'pass'
+          : 'fail',
+        `↻ ${rotBox ? `${Math.round(rotBox.w)}×${Math.round(rotBox.h)}px` : '없음/비활성'} · ` +
+          `회전 뒤 선분 ${got1.size} (기대 ${want1.size}) · 뒤 면 침범 ${bleed1} · ` +
+          `회전 전과 ${sameSet(got1, got0) ? '같다(실패)' : '다르다'}`,
+      );
+
+      /*
+       * ⚠ **코드에 심은 음성 대조군** — `setEntryFaultForTest` 를 켜면 `entryTilesOf` 가
+       * 네 면 전부를 낸다. 표식이 둘레 전체로 퍼지지 **않으면** 화면이 그 함수를 안 읽고
+       * 발자국 크기로 선을 긋고 있다는 뜻이고, 그러면 위 두 검사는 아무것도 안 재는 검사다.
+       *
+       * 다시 겨눠야 새 값이 나온다 — 표식은 `setGhost` 안에서 **유도**되기 때문이다
+       * (그게 "고스트는 도는데 표식은 안 도는" 상태를 구조적으로 막는 장치다).
+       */
+      await pg.evaluate(
+        `(() => { window.__kairo.scene.setEntryFaultForTest(true); window.__kairo.tapTile(${I}, ${J}); })()`,
+      );
+      await pg.waitForTimeout(200);
+      const mF = await readMark();
+      const gotF = new Set((mF?.edges ?? []).map(segKey));
+      const wantF = new Set([
+        ...faceKeys(I, J, 1, 4, dy, true),
+        ...faceKeys(I, J, 1, 4, dy, false),
+      ]);
+      await pg.evaluate(
+        `(() => { window.__kairo.scene.setEntryFaultForTest(false); window.__kairo.tapTile(${I}, ${J}); })()`,
+      );
+      await pg.waitForTimeout(200);
+      const mR = await readMark();
+      const gotR = new Set((mR?.edges ?? []).map(segKey));
+      record(
+        '⚠ 음성 대조군 — `setEntryFaultForTest` 를 켜면 표식이 **네 면**으로 퍼진다 (표식이 정말 entryTilesOf 를 읽는다)',
+        sameSet(gotF, wantF) && sameSet(gotR, got1) ? 'pass' : 'fail',
+        `대조군 선분 ${gotF.size} (기대 ${wantF.size} = 둘레 전체) · ` +
+          `원복 ${gotR.size} (기대 ${got1.size})`,
+      );
+
+      /*
+       * 슬라이드 4종은 **그대로 마름모 둘**이다 (K51). 입출구가 칸 하나씩으로 선언돼
+       * 있어 칸이 정확한 단위이고, 손님이 그 칸에서 타고 그 칸으로 내린다.
+       *
+       * 조준 붓으로 가면 등급 해금·수상 배치 조건에 얽히므로 **씬 API 를 직접** 부른다 —
+       * 여기서 재려는 것은 배치 가능 여부가 아니라 `setGhost` 안의 유도 분기다.
+       */
+      await pg.evaluate(`(() => {
+        const c = document.getElementById('kairo-place-cancel');
+        if (c && !document.getElementById('kairo-confirm').hidden) c.click();
+        window.__kairoClearBrush();
+        window.__kairo.scene.setGhost('slide_small', ${I}, ${J}, true, 0);
+      })()`);
+      await pg.waitForTimeout(150);
+      const mS = await readMark();
+      await pg.screenshot({ path: `${SHOT_DIR}/kairo-entry-slide.png` });
+      record(
+        '★ 슬라이드는 입구/출구 **마름모 두 개**가 그대로다 (K51 유지)',
+        mS !== null &&
+          mS.kind === 'ride' &&
+          mS.entry?.[0] === I + 2 &&
+          mS.entry?.[1] === J + 2 &&
+          mS.exit?.[0] === I &&
+          mS.exit?.[1] === J &&
+          mS.edges.length === 8 && // 마름모 둘 × 네 변
+          mS.labels.map((l) => l.text).join(',') === '입구,출구'
+          ? 'pass'
+          : 'fail',
+        `slide_small 3×3 @(${I},${J}) · 종류 ${mS?.kind ?? '없음'} · ` +
+          `입구 ${mS?.entry?.join(',') ?? '?'} 출구 ${mS?.exit?.join(',') ?? '?'} · ` +
+          `선분 ${mS?.edges.length ?? 0} · 글씨 ${mS?.labels.map((l) => l.text).join(',') ?? '없음'}`,
+      );
+
+      /*
+       * `walkOn` 2종은 **끈다.** 발자국 전체가 길이라 앞 두 면만 그리면 거짓말이고,
+       * 네 면으로 그리면 위 대조군의 그림과 똑같아진다 (구별 못 하는 검사가 된다).
+       */
+      const walkOn = (await pg.evaluate(`(() => {
+        const s = window.__kairo.scene;
+        const out = {};
+        for (const id of ['float_deck', 'dock']) {
+          s.setGhost(id, ${I}, ${J}, true, 0);
+          out[id] = s.rideMarkForTest();
+        }
+        s.setGhost(null);
+        return out;
+      })()`)) as Record<string, unknown>;
+      record(
+        'walkOn 2종(플로팅덱·선착장)은 표식이 없다 — 발자국 전체가 길이라 앞 면만 그리면 거짓말이다',
+        walkOn['float_deck'] === null && walkOn['dock'] === null ? 'pass' : 'fail',
+        `플로팅덱 ${walkOn['float_deck'] === null ? '없음' : '있음(실패)'} · ` +
+          `선착장 ${walkOn['dock'] === null ? '없음' : '있음(실패)'}`,
+      );
+
+      /*
+       * 놓은 뒤 — **정보 시트가 열려 있는 동안만**이다 (지도 상시 표시 금지).
+       * 시설 정보는 더블탭 창(320ms) 뒤에 열리므로 기다렸다 읽는다.
+       */
+      const placed = (await pg.evaluate(`(() => {
+        const h = window.__kairo;
+        const before = h.placement.count;
+        const r = h.placement.place(h.terrain, h.walls, h.gate, 'pyeongsang_row',
+          ${I}, ${J}, { facing: 0, land: h.land() });
+        h.scene.rebuildFacilities();
+        const it = h.placement.at(${I}, ${J});
+        return { ok: h.placement.count === before + 1, handle: it ? it.handle : 0,
+                 fail: r.fail || '' };
+      })()`)) as { ok: boolean; handle: number; fail: string };
+      let mOpen: Mark = null;
+      let mClosed: Mark = null;
+      let sheetOpen = false;
+      if (placed.ok) {
+        await pg.evaluate(`window.__kairo.tapTile(${I}, ${J})`);
+        await pg.waitForTimeout(500); // 더블탭 창 320ms + 여유
+        sheetOpen = (await pg.evaluate(
+          `!document.getElementById('kairo-facility').hidden`,
+        )) as boolean;
+        mOpen = await readMark();
+        await pg.screenshot({ path: `${SHOT_DIR}/kairo-entry-sheet.png` });
+        await pg.evaluate(`document.getElementById('kairo-facility-close').click()`);
+        await pg.waitForTimeout(200);
+        mClosed = await readMark();
+      }
+      const gotOpen = new Set((mOpen?.edges ?? []).map(segKey));
+      record(
+        '입구 표식은 정보 시트가 **열려 있는 동안만** 뜬다 (지도 상시 표시 금지)',
+        placed.ok &&
+          sheetOpen &&
+          mOpen !== null &&
+          mOpen.kind === 'entry' &&
+          sameSet(gotOpen, faceKeys(I, J, 4, 1, dy, true)) &&
+          mClosed === null
+          ? 'pass'
+          : 'fail',
+        `배치 ${placed.ok ? 'ok' : `실패(${placed.fail})`} · 시트 ${sheetOpen ? '열림' : '안 열림'} · ` +
+          `열렸을 때 선분 ${gotOpen.size} · 닫은 뒤 ${mClosed === null ? '없음' : '남음(실패)'}`,
+      );
+    }
+
+    record(
+      '입구 표식 절에서 페이지 예외 0',
+      markErrors.length === 0 ? 'pass' : 'fail',
+      markErrors.slice(0, 3).join(' | '),
+    );
+    await cx.close();
+  }
+
+  /*
+   * ── ⑪ Phase G — AI 픽셀아트 아틀라스가 **화면에** 보인다 ───────────────────
    *
    * "아틀라스가 로드됐다"는 아무것도 안 재는 검사다 (프로바이더 이름만 보면 텍스처가
    * 등록됐는지, 그 텍스처가 그려졌는지, 그려진 것이 아틀라스 픽셀인지 전부 모른다).

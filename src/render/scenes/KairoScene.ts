@@ -32,6 +32,7 @@ import {
   DEPTH_RIDE_LABEL,
 } from '../kairo/iso.js';
 import { occludes, XRAY_ALPHA, type Rect } from '../kairo/xray.js';
+import { entryFaces, marksEntry } from '../kairo/mark.js';
 import { KairoCamera } from '../kairo/kairo-camera.js';
 import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
 import { IncomeFx, playFx, type FxHost } from '../kairo/fx.js';
@@ -61,7 +62,13 @@ import {
   type Dir,
   type WallGrid,
 } from '../../sim/kairo/walls.js';
-import { facilityDef, PlacementGrid, type RideTiles } from '../../sim/kairo/placement.js';
+import {
+  facilityDef,
+  PlacementGrid,
+  setEntryFaultForTest as setSimEntryFault,
+  type KairoFacilityDef,
+  type RideTiles,
+} from '../../sim/kairo/placement.js';
 import type { GuestStore, Guest } from '../../sim/kairo/guests.js';
 import { cssColorInt, cssVar } from '../../ui/tokens.js';
 import {
@@ -104,6 +111,32 @@ const DIR_STEP: readonly (readonly [number, number])[] = [
   [-1, 0],
   [0, -1],
 ];
+
+/**
+ * 지금 보여 주고 있는 입구 표식 (K52) — **두 종류**다. 종류가 갈리는 이유는 하나다:
+ * 입구가 **칸**인가 **면**인가.
+ *
+ * - `ride`  슬라이드 4종. `entryTile`/`exitTile` 이 데이터에 **칸 하나씩**으로 선언돼
+ *   있고 손님이 실제로 그 칸에서 타고 그 칸으로 내린다 — 마름모 두 개가 정확한 그림이다
+ *   (K51). 여기 손대지 않는다
+ * - `entry` 나머지 71종. 입구는 발자국 **앞 두 면**이라 칸이 아니라 **변**이다.
+ *   칸마다 마름모를 찍으면 `turtle_island 8×6` 이 표식 14개가 되고, 그건 "네 채짜리
+ *   워터파크가 표식 여덟 개로 덮인다"고 K51 이 이미 경고한 그 상태다 — 굵은 선 하나
+ *   + 글씨 하나로 낸다
+ */
+type PlaceMark =
+  | { kind: 'ride'; tiles: RideTiles }
+  | {
+      kind: 'entry';
+      /** 발자국 사각형 — 입구 칸의 **어느 변**이 발자국과 맞닿았는지 판정한다 */
+      foot: { i: number; j: number; w: number; d: number };
+      /**
+       * `PlacementGrid.entryTilesOf` 가 낸 바깥 이웃 칸들 — **표식의 정본**이다.
+       * 여기서 변을 유도하므로, 손님이 들어오는 칸과 화면의 선이 갈라질 수 없다
+       * (갈라지면 표식이 조용히 거짓말이 된다 — K51 이 고친 버그의 모양).
+       */
+      tiles: readonly (readonly [number, number])[];
+    };
 
 export interface KairoSceneStats {
   fps: number;
@@ -255,15 +288,20 @@ export class KairoScene extends Phaser.Scene {
   private reticleMark: { i: number; j: number; ok: boolean; w: number; d: number } | null = null;
   private aimGfx: Phaser.GameObjects.Graphics | null = null;
   /**
-   * 슬라이드 입출구 표식 (K51) — 지금 보여 주고 있는 두 칸. `null` 이면 꺼져 있다.
+   * 입구 표식 (K51 → K52) — 지금 보여 주고 있는 것. `null` 이면 꺼져 있다.
    *
-   * **상시 표시가 아니다.** 슬라이드를 여러 개 지으면 화면이 표식으로 덮이므로,
+   * **상시 표시가 아니다.** 시설을 여러 개 지으면 화면이 표식으로 덮이므로,
    * 뜨는 자리는 둘뿐이다: 조준 중인 고스트(놓기 전)와 정보 시트를 연 시설 하나(놓은 뒤).
    */
-  private rideMark: RideTiles | null = null;
+  private rideMark: PlaceMark | null = null;
   private rideGfx: Phaser.GameObjects.Graphics | null = null;
   /** 입구·출구 글씨 — 면보다 위 층이라 `Graphics` 와 따로 산다 */
   private rideLabels: Phaser.GameObjects.Text[] = [];
+  /**
+   * **실제로 그은 선분** (월드 좌표). 검사가 읽는다 — 상수끼리 비교하면 그리기가 틀려도
+   * 통과한다 (K38 "깊이는 화면에 올라간 오브젝트에서 읽는다"와 같은 규칙).
+   */
+  private rideEdges: { x1: number; y1: number; x2: number; y2: number }[] = [];
   /**
    * **일부러 망가뜨리는 스위치** — 오프셋 로직을 끄고 "고스트 = 화면 중앙 칸"으로
    * 되돌린다. 위의 32% 구멍이 그대로 재현되므로, 가장자리 배치 검사가 정말 그 구멍을
@@ -1178,11 +1216,12 @@ export class KairoScene extends Phaser.Scene {
     const def = facilityDef(defId);
     if (!def) return;
     /*
-     * 입출구 표식은 **여기서 유도한다** (K51) — 부르는 쪽이 따로 켜게 두면 고스트는
-     * 도는데 표식은 안 도는 상태를 만들 수 있고, 그게 정확히 이번에 고친 버그의 모양이다.
-     * 고스트가 있는 곳에 표식이 있고, 없는 곳에 없다.
+     * 입구 표식은 **여기서 유도한다** (K51 → K52) — 부르는 쪽이 따로 켜게 두면 고스트는
+     * 도는데 표식은 안 도는 상태를 만들 수 있고, 그게 정확히 K51 이 고친 버그의 모양이다.
+     * 고스트가 있는 곳에 표식이 있고, 없는 곳에 없다. `facing` 도 같은 인자를 그대로
+     * 넘기므로 `↻` 를 누르면 고스트와 표식이 **같은 프레임에** 함께 돈다.
      */
-    this.setRideMark(PlacementGrid.rideTilesOf(def, i, j, facing === 1 ? 1 : 0));
+    this.setRideMark(KairoScene.markOf(def, i, j, facing === 1 ? 1 : 0));
     // 회전 미리보기 (K45) — 실물과 같은 규칙: 발자국 교환 + flipX
     const [w, d] = facing === 1 ? [def.size[1], def.size[0]] : [def.size[0], def.size[1]];
     const a = footprintAnchor(i, j, w, d);
@@ -1484,13 +1523,14 @@ export class KairoScene extends Phaser.Scene {
   // ── 슬라이드 입출구 (K51) ───────────────────────────────────────────────
 
   /**
-   * 놓은 시설 하나의 입출구를 보여준다 (`handle`). `null` 이면 끈다.
+   * 놓은 시설 하나의 입구를 보여준다 (`handle`). `null` 이면 끈다.
    *
-   * 정보 시트가 쓴다 — **시트가 열려 있는 동안만**이다. 지도에 상시로 그리면 슬라이드
-   * 네 채짜리 워터파크가 표식 여덟 개로 덮인다. 시트를 닫으면 부르는 쪽이 끈다.
+   * 정보 시트가 쓴다 — **시트가 열려 있는 동안만**이다. 지도에 상시로 그리면 시설 130채
+   * 짜리 판이 표식으로 덮인다. 시트를 닫으면 부르는 쪽이 끈다 (`onClose`).
    *
-   * ⚠ 칸은 `PlacementGrid.rideTilesOf` 가 정본이다 — 손님이 쓰는 그 함수다.
-   * 여기서 오프셋을 다시 더하면 화면과 손님이 갈라진다 (그게 K51 이 고친 버그다).
+   * ⚠ 칸은 `PlacementGrid` 가 정본이다 — 손님이 쓰는 그 함수들이다
+   * (`rideTilesOf`·`entryTilesOf`). 여기서 오프셋을 다시 더하면 화면과 손님이 갈라진다
+   * (그게 K51 이 고친 버그다).
    */
   setRideMarkFor(handle: number | null): void {
     if (handle === null) {
@@ -1499,13 +1539,56 @@ export class KairoScene extends Phaser.Scene {
     }
     const item = this.opts.placement.all().find((f) => f.handle === handle);
     const def = item ? facilityDef(item.defId) : undefined;
-    this.setRideMark(
-      item && def ? PlacementGrid.rideTilesOf(def, item.i, item.j, item.facing ?? 0) : null,
-    );
+    this.setRideMark(item && def ? KairoScene.markOf(def, item.i, item.j, item.facing ?? 0) : null);
   }
 
-  private setRideMark(tiles: RideTiles | null): void {
-    this.rideMark = tiles;
+  /**
+   * 무엇을 표식으로 그릴까 — **유도는 여기 한 곳**이다 (K52).
+   *
+   * 조준(고스트)과 정보 시트가 같은 함수를 쓴다. 두 곳에 각자 산수를 두면 "놓기 전엔
+   * 앞 두 면인데 놓고 나면 다른 면"이 될 수 있고, 이 저장소는 그 형태의 버그를 반복해서
+   * 겪었다 (`guestWalkable`·`capacityOf`·`evaluateCondition`).
+   *
+   * ## `walkOn` 2종(플로팅덱·선착장)은 **끈다**
+   *
+   * 발자국 전체가 길이다 — 손님이 네 면 어디로든 밟고 **지나간다**. 그래서
+   * 앞 두 면만 긋는 것은 "나머지 두 면으로는 못 들어온다"는 거짓말이 되고,
+   * 그렇다고 "전부"(네 면 윤곽)로 그리면 문제가 셋이다:
+   *
+   * 1. 그 그림이 음성 대조군(`setEntryFaultForTest` — 네 면 전부)과 **똑같아진다.**
+   *    대조군이 그림으로 구별되지 않으면 그 검사는 아무것도 안 재는 검사다
+   * 2. 둘 다 **1×1** 이라 네 면 윤곽 = 발자국 윤곽인데, 조준 중에는 붉은 발자국 윤곽
+   *    (`reticleMark`)이 이미 같은 자리에 있다 — 표식이 두 벌이 된다
+   * 3. 뜻이 다르다. 표식의 문장은 "손님이 **여기로 들어간다**"인데 덱의 답은
+   *    "들어가는 게 아니라 지나간다"다. 없는 것이 정확하다
+   *
+   * ## `capacity 0` 인 분위기·기반 시설 14종도 **끈다**
+   *
+   * 화단·DJ 부스·펜션·주차장 같은 것들이다. 슬롯이 0개라 손님이 **목적지로 삼지 않는다**
+   * (`rebuildFields` 는 이 시설들에도 거리장을 만들지만 `pickTarget` 이 정원 0 을 안 고른다).
+   * 아무도 안 들어오는 곳에 `입구` 를 그리면 표식이 거짓말이 되고, 표식의 값은 그것이
+   * 손님의 실제 동선과 **같은 집합**이라는 데서 나온다.
+   */
+  private static markOf(
+    def: KairoFacilityDef,
+    i: number,
+    j: number,
+    facing: 0 | 1,
+  ): PlaceMark | null {
+    // 슬라이드류가 먼저다 — 데이터가 이미 칸 하나를 골라 놨다 (K51). 존중한다
+    const ride = PlacementGrid.rideTilesOf(def, i, j, facing);
+    if (ride) return { kind: 'ride', tiles: ride };
+    if (!marksEntry(def)) return null;
+    const [w, d] = PlacementGrid.sizeOf(def, facing);
+    return {
+      kind: 'entry',
+      foot: { i, j, w, d },
+      tiles: PlacementGrid.entryTilesOf(def, i, j, facing),
+    };
+  }
+
+  private setRideMark(mark: PlaceMark | null): void {
+    this.rideMark = mark;
     this.drawRideMark();
   }
 
@@ -1530,6 +1613,7 @@ export class KairoScene extends Phaser.Scene {
   private drawRideMark(): void {
     for (const t of this.rideLabels) t.destroy();
     this.rideLabels.length = 0;
+    this.rideEdges.length = 0;
     const g = this.rideGfx;
     if (!g) return;
     g.clear();
@@ -1538,8 +1622,25 @@ export class KairoScene extends Phaser.Scene {
       g.setVisible(false);
       return;
     }
+    /*
+     * ⚠ **투시(K50)와 공존한다.** `syncXray` 는 `facilityImages`/`wallImages` 만 훑으므로
+     * 이 `Graphics`·`Text` 는 애초에 대상이 아니고, 힌트 층이라 위에 있어 가려지지도
+     * 않는다. **표식이 흐려지면 안 된다**: 투시의 목적이 "고스트를 보이게" 인데 그
+     * 고스트의 입구가 같이 흐려지면 목적을 스스로 깎는다.
+     */
     g.setVisible(true);
-    const ink = cssVar('--ride-ink', '#fffaf0');
+    if (m.kind === 'ride') this.drawRideDiamonds(g, m.tiles);
+    else this.drawEntryFaces(g, m);
+  }
+
+  /**
+   * 슬라이드 4종 — 입구·출구를 **마름모 두 개 + 글씨**로 (K51, 그대로).
+   *
+   * 여기만 마름모인 이유는 데이터가 칸 하나씩을 골라 놨기 때문이다
+   * (`ride.entryTile`/`exitTile`). 손님이 그 칸에서 타고 그 칸으로 내리므로 "칸"이
+   * 정확한 단위다. 나머지 71종은 입구가 **면**이라 아래 `drawEntryFaces` 로 간다.
+   */
+  private drawRideDiamonds(g: Phaser.GameObjects.Graphics, m: RideTiles): void {
     const spec = [
       { tile: m.entry, text: '입구', fill: '--ride-entry', edge: '--ride-entry-edge' },
       { tile: m.exit, text: '출구', fill: '--ride-exit', edge: '--ride-exit-edge' },
@@ -1570,6 +1671,11 @@ export class KairoScene extends Phaser.Scene {
       g.closePath();
       g.fillPath();
       g.strokePath();
+      for (let k = 0; k < p.length; k++) {
+        const a = p[k]!;
+        const b = p[(k + 1) % p.length]!;
+        this.rideEdges.push({ x1: a.x, y1: a.y + dy, x2: b.x, y2: b.y + dy });
+      }
 
       /*
        * ⚠ 글씨는 칸 **위에** 띄운다 (실측으로 옮겼다). 처음엔 칸 중앙에 놓았는데,
@@ -1582,45 +1688,130 @@ export class KairoScene extends Phaser.Scene {
        * (`slide_small` 의 (2,2)↔(0,0) 이 가장 가깝다) 글씨 높이는 14텍셀이다.
        */
       const c = tileCenter(i, j);
-      const label = this.add.text(c.x, c.y + dy - TILE_H / 2 - 1, s.text, {
-        fontFamily: 'system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif',
-        // 12px — 칸 위로 올렸으니 폭 제약이 없다. 11px 에서는 `출` 의 획이 뭉갰다 (실측)
-        fontSize: '12px',
-        fontStyle: 'bold',
-        color: ink,
-        stroke: cssVar(s.edge, '#12315f'),
-        /*
-         * `fx.ts` 의 4 보다 얇다 — 거긴 숫자·기호(`+₩12만`)라 획이 굵어도 버티지만
-         * 한글 11px 은 4 를 두르면 `출` 의 초성이 뭉갠다 (실측 크롭). 면이 이미
-         * 진한 색을 깔아 주므로 여기서는 테두리가 대비를 혼자 낼 필요가 없다.
-         */
-        strokeThickness: 3,
-      });
-      label.setOrigin(0.5, 1);
-      // 정수 배율 업스케일 위에 얹히므로 2배로 그려야 글자가 뭉개지지 않는다 (fx.ts 와 같다)
-      label.setResolution(2);
-      label.setDepth(DEPTH_RIDE_LABEL);
-      this.rideLabels.push(label);
+      this.addMarkLabel(s.text, c.x, c.y + dy - TILE_H / 2 - 1, s.edge);
     }
   }
 
   /**
-   * 검증 도구용 — 지금 표시 중인 입출구와 **글씨의 화면 자리**.
+   * 나머지 71종 — 입구는 **면**이라 앞 두 면을 **굵은 폴리라인 하나 + 글씨 하나**로 (K52).
    *
-   * ⚠ 칸 좌표만 돌려주면 `rideTilesOf` 를 두 번 부른 상수 비교가 된다 (K38 규칙).
-   * 실제로 화면에 올라간 `Text` 에서 읽어, "그려졌나"까지 같이 답한다.
+   * ## 왜 칸마다 마름모를 안 찍나
+   *
+   * `turtle_island 8×6` 은 앞 두 면의 바깥 이웃이 **14칸**이다. 마름모 14개 + 글씨
+   * 14개면 시설이 표식에 통째로 파묻힌다 — K51 이 이미 "네 채짜리 워터파크가 표식
+   * 여덟 개로 덮인다"고 같은 경고를 적어 뒀다. 입구가 면일 때 답은 칸의 나열이 아니라
+   * **변 하나**다. 글씨도 하나면 충분하다: 면 전체가 한 문장("이쪽으로 들어옵니다")이다.
+   *
+   * ## 선은 **입구 칸에서 유도한다**
+   *
+   * 발자국 크기(`w`,`d`)로 "오른쪽 변·아래쪽 변"을 바로 그릴 수도 있지만 그러면 화면이
+   * `entryTilesOf` 를 **안 읽는다** — 손님이 들어오는 칸이 바뀌어도 선은 그대로인
+   * 상태가 되고, 그건 표식이 조용히 거짓말하는 형태다. 그래서 입구 칸과 발자국이
+   * **맞닿은 변**만 모은다. 음성 대조군(`setEntryFaultForTest`)을 켜면 입구 칸이 네 면
+   * 전부가 되므로 선도 네 면으로 퍼진다 — 그게 "정말 읽고 있다"의 증거다.
+   *
+   * ## 조각이 아니라 **이어 붙인 폴리라인**
+   *
+   * 단위 변을 따로따로 그으면 이음매마다 butt cap 이 남아 45° 꺾임에서 톱니가 보인다.
+   * 꼭지점을 이어 한 경로로 만들면 join 이 그 자리를 메운다.
+   *
+   * ⚠ 표식도 `lift()` 를 탄다 (K37). 발자국은 단이 균일하므로(`level-mixed` 가 강제한다)
+   * **발자국 앵커 칸의 단 하나**로 충분하다 — 변은 발자국의 경계이지 바깥 칸의 것이
+   * 아니다. 바깥 칸의 단을 쓰면 계단 옆에서 선이 발자국에서 떨어져 뜬다.
+   */
+  private drawEntryFaces(
+    g: Phaser.GameObjects.Graphics,
+    m: Extract<PlaceMark, { kind: 'entry' }>,
+  ): void {
+    const dy = this.liftAt(m.foot.i, m.foot.j);
+    const { chains, front } = entryFaces(m.foot, m.tiles);
+    if (chains.length === 0) return;
+    const fill = cssColorInt('--ride-entry', '#2557b0');
+    const edge = cssColorInt('--ride-entry-edge', '#12315f');
+    for (const chain of chains) {
+      const pts = chain.map((v) => {
+        const s = gridToScreen(v[0], v[1]);
+        return { x: s.x, y: s.y + dy };
+      });
+      /*
+       * 진한 테두리를 먼저 굵게, 밝은 심을 그 위에 가늘게 — 글씨와 같은 규칙이다
+       * (`fx.ts` 의 `+₩N`). 지면이 잔디·물·포장·암반으로 밝기가 제각각이라 한 색만으로는
+       * 어딘가에서 반드시 묻힌다. 6/2 는 타일 높이 16텍셀에 견주어 정한 값이다.
+       */
+      for (const [width, color] of [
+        [6, edge],
+        [2, fill],
+      ] as const) {
+        g.lineStyle(width, color, 1);
+        g.beginPath();
+        g.moveTo(pts[0]!.x, pts[0]!.y);
+        for (let k = 1; k < pts.length; k++) g.lineTo(pts[k]!.x, pts[k]!.y);
+        g.strokePath();
+      }
+      for (let k = 1; k < pts.length; k++) {
+        const a = pts[k - 1]!;
+        const b = pts[k]!;
+        this.rideEdges.push({ x1: a.x, y1: a.y, x2: b.x, y2: b.y });
+      }
+    }
+
+    /*
+     * 글씨는 **앞 꼭지점** 위 하나 (자리는 `entryFaces` 가 정한다). 앞 두 면이 거기서
+     * 만나므로 글씨가 두 선이 벌어지는 V 안에 앉는다 — 선을 가리지 않으면서 면이 시작
+     * 되는 지점을 가리킨다.
+     */
+    if (!front) return;
+    const s = gridToScreen(front[0], front[1]);
+    this.addMarkLabel('입구', s.x, s.y + dy - TILE_H / 2 - 1, '--ride-entry-edge');
+  }
+
+  /** 표식 글씨 한 장 — 두 그리기 경로가 공유한다 (서식이 갈라지면 한쪽만 안 읽힌다) */
+  private addMarkLabel(text: string, x: number, y: number, edgeToken: string): void {
+    const label = this.add.text(x, y, text, {
+      fontFamily: 'system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif',
+      // 12px — 칸 위로 올렸으니 폭 제약이 없다. 11px 에서는 `출` 의 획이 뭉갰다 (실측)
+      fontSize: '12px',
+      fontStyle: 'bold',
+      color: cssVar('--ride-ink', '#fffaf0'),
+      stroke: cssVar(edgeToken, '#12315f'),
+      /*
+       * `fx.ts` 의 4 보다 얇다 — 거긴 숫자·기호(`+₩12만`)라 획이 굵어도 버티지만
+       * 한글 11px 은 4 를 두르면 `출` 의 초성이 뭉갠다 (실측 크롭). 면이 이미
+       * 진한 색을 깔아 주므로 여기서는 테두리가 대비를 혼자 낼 필요가 없다.
+       */
+      strokeThickness: 3,
+    });
+    label.setOrigin(0.5, 1);
+    // 정수 배율 업스케일 위에 얹히므로 2배로 그려야 글자가 뭉개지지 않는다 (fx.ts 와 같다)
+    label.setResolution(2);
+    label.setDepth(DEPTH_RIDE_LABEL);
+    this.rideLabels.push(label);
+  }
+
+  /**
+   * 검증 도구용 — 지금 표시 중인 표식의 **화면 자리**.
+   *
+   * ⚠ 칸 좌표만 돌려주면 `rideTilesOf`/`entryTilesOf` 를 두 번 부른 상수 비교가 된다
+   * (K38 규칙: 깊이는 화면에 올라간 오브젝트에서 읽는다). 그래서 `edges` 는 **실제로
+   * 그은 선분**을, `labels` 는 실제로 올라간 `Text` 를 읽는다 — "그려졌나"까지 답한다.
    */
   rideMarkForTest(): {
-    entry: [number, number];
-    exit: [number, number];
+    kind: 'ride' | 'entry';
+    entry: [number, number] | null;
+    exit: [number, number] | null;
+    tiles: [number, number][];
+    edges: { x1: number; y1: number; x2: number; y2: number }[];
     labels: { text: string; x: number; y: number; depth: number }[];
     visible: boolean;
   } | null {
     const m = this.rideMark;
     if (!m) return null;
     return {
-      entry: [m.entry[0], m.entry[1]],
-      exit: [m.exit[0], m.exit[1]],
+      kind: m.kind,
+      entry: m.kind === 'ride' ? [m.tiles.entry[0], m.tiles.entry[1]] : null,
+      exit: m.kind === 'ride' ? [m.tiles.exit[0], m.tiles.exit[1]] : null,
+      tiles: m.kind === 'entry' ? m.tiles.map((t) => [t[0], t[1]] as [number, number]) : [],
+      edges: this.rideEdges.map((e) => ({ ...e })),
       labels: this.rideLabels.map((t) => ({
         text: t.text,
         x: t.x,
@@ -1629,6 +1820,22 @@ export class KairoScene extends Phaser.Scene {
       })),
       visible: this.rideGfx?.visible ?? false,
     };
+  }
+
+  /**
+   * 검증 도구용 음성 대조군 **다리** (K52) — sim 의 `setEntryFaultForTest` 를 브라우저에서
+   * 켠다. 켜면 `entryTilesOf` 가 발자국 네 면 전부를 내므로, 표식이 앞 두 면에서 **둘레
+   * 전체로 퍼져야** 한다. 안 퍼지면 화면이 `entryTilesOf` 를 안 읽고 발자국 크기로 선을
+   * 그리고 있다는 뜻이다 — 그 상태에서는 손님이 들어오는 칸이 바뀌어도 표식이 안 따라간다.
+   *
+   * ⚠ **이미 뜬 표식은 안 바뀐다.** 표식은 `setGhost`/`setRideMarkFor` 안에서 **유도**
+   * 되므로(그게 이 설계의 요점이다) 부르는 쪽이 다시 겨눠야 새 값이 나온다. 여기서
+   * 억지로 다시 그리면 "유도 지점이 하나"라는 성질을 검사만 우회하게 된다.
+   *
+   * ⚠ production 에서 세우지 말 것 — 시설 뒤쪽에도 입구가 있다고 그린다.
+   */
+  setEntryFaultForTest(on: boolean): void {
+    setSimEntryFault(on);
   }
 
   /**
