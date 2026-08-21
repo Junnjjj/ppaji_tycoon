@@ -40,11 +40,40 @@ export interface KairoFacilitySlot {
 }
 
 /**
- * 회전(전치)했을 때 슬롯 방향이 어디로 가나 — **가로 거울**이다.
+ * 시설의 **놓인 방향** (K52-⑤ 에서 `0|1` → `0|1|2|3`).
  *
- * 아이소에서 +I 는 `(+16,+8)`, +J 는 `(−16,+8)` 이라 i↔j 교환은 화면 x 만 뒤집는다
- * (`PlacementGrid.footprintTileOf` 주석). 그래서 `+Z↔+X`, `-Z↔-X` 이고 세로 짝은 없다.
+ * 뜻은 **발자국 안 오프셋 `(di,dj)` 에 거는 변환**이고, 정본 산수는
+ * `PlacementGrid.footprintTileOf` **한 곳**뿐이다:
+ *
+ * ```
+ *   0  (di, dj)                    w×d   그대로            앞면 +I·+J (화면 아래)
+ *   1  (dj, di)                    d×w   전치 = 가로 거울   앞면 +I·+J
+ *   2  (w−1−di, d−1−dj)            w×d   180° 점대칭        앞면 −I·−J (화면 위)
+ *   3  (d−1−dj, w−1−di)            d×w   전치 후 뒤집기     앞면 −I·−J
+ * ```
+ *
+ * ⚠ **0·1 의 뜻을 바꾸지 않았다.** 세이브가 v7 그대로일 수 있는 유일한 조건이다
+ * (`0 = w×d`, `1 = d×w`). 뜻을 바꾸면 이미 나간 세이브의 시설이 전부 다른 발자국으로
+ * 열리므로 **v8 + 마이그레이션이 필수**가 된다.
+ *
+ * ⚠ 어떤 시설이 2방향인지 4방향인지는 **데이터가 정한다** (`KairoFacilityDef.facings`,
+ * 불변식 3). 코드에 시설 목록을 박지 말 것 — `facingsOf()` 하나로 묻는다.
+ */
+export type FacilityFacing = 0 | 1 | 2 | 3;
+
+/**
+ * 회전했을 때 슬롯 방향 이름이 어디로 가나.
+ *
+ * 아이소에서 +I 는 `(+16,+8)`, +J 는 `(−16,+8)` 이라 i↔j 교환(전치)은 화면 x 만 뒤집는다
+ * (`PlacementGrid.footprintTileOf` 주석). 그래서 전치는 `+Z↔+X`, `-Z↔-X` 이고 세로 짝은 없다.
+ * 180°(facing 2)는 화면에서도 점대칭이라 앞뒤가 통째로 뒤집힌다 — `+Z↔-Z`, `+X↔-X`.
+ * facing 3 은 그 둘의 합성이고 **순서에 무관**하다 (거울과 점대칭은 교환된다).
+ *
  * 이름의 정본은 렌더 계약의 `guest.facingNames` 다 — 여기는 그 이름들 사이의 **짝**만 안다.
+ *
+ * ⚠ 손님 그림에는 아직 **옆모습이 없다** (팔레트당 고유 14장, `+X`==`+Z`·`-X`==`-Z`).
+ * 그래서 4방향 슬롯의 화면 차이는 지금 앞/뒤 2종으로 근사된다 — 이름 산수는 맞고
+ * 그림이 못 따라오는 상태다 (계획서 §미결 2).
  */
 const MIRROR_FACING: Readonly<Record<string, string>> = {
   '+Z': '+X',
@@ -52,6 +81,52 @@ const MIRROR_FACING: Readonly<Record<string, string>> = {
   '-Z': '-X',
   '-X': '-Z',
 };
+const OPPOSITE_FACING: Readonly<Record<string, string>> = {
+  '+Z': '-Z',
+  '-Z': '+Z',
+  '+X': '-X',
+  '-X': '+X',
+};
+
+/** 슬롯 방향 이름에 회전을 건다 — `MIRROR`/`OPPOSITE` 의 유일한 조합 자리 */
+function rotateFacingName(name: string, facing: FacilityFacing): string {
+  const mirrored = facing % 2 === 1 ? (MIRROR_FACING[name] ?? name) : name;
+  return facing >= 2 ? (OPPOSITE_FACING[mirrored] ?? mirrored) : mirrored;
+}
+
+/**
+ * 이 시설이 몇 방향을 갖나 — **데이터가 정한다** (불변식 3). 안 적었으면 **2** 다.
+ *
+ * 2 = 오늘까지의 세계 (그림 1장 + 좌우 반전). 4 = 방향별 그림 4장.
+ * 그림이 들어오는 순서대로 `kairo-facilities.json` 에 `"facings": 4` 를 한 줄씩 붙인다 —
+ * 코드는 한 글자도 안 바뀐다.
+ *
+ * ⚠ 4방향이 미관 문제가 아닌 이유: `facing 1` 은 발자국을 **전치**할 뿐이라 앞면이 언제나
+ * +I·+J 다. 즉 2방향에서는 "매표소를 정류장 쪽으로 돌린다"가 **게임에 없는 동작**이다
+ * (K52-④ 실측). 입구를 겨누는 유일한 수단이 4방향이다.
+ */
+export function facingsOf(def: KairoFacilityDef): 2 | 4 {
+  return def.facings === 4 ? 4 : 2;
+}
+
+/**
+ * `↻` 를 눌렀을 때 다음 방향. **화면이 이 함수를 쓴다** — `(facing+1)%4` 를 UI 에 박으면
+ * 2방향 시설이 그림 없는 방향으로 돌아간다.
+ */
+export function nextFacing(def: KairoFacilityDef, facing: FacilityFacing): FacilityFacing {
+  return (((facing + 1) % facingsOf(def)) as FacilityFacing);
+}
+
+/**
+ * `↻` 버튼을 띄우나.
+ *
+ * 2방향에서는 **정사각 발자국이면 회전이 아무것도 안 바꾼다** — 전치가 항등이고 그림은
+ * 좌우 반전뿐이라 버튼이 거짓말이 된다. 4방향이면 정사각이어도 그림이 네 장이므로
+ * (매점·대여소 등) 그때 처음으로 정사각 시설에서 회전이 살아난다.
+ */
+export function canRotate(def: KairoFacilityDef): boolean {
+  return facingsOf(def) === 4 || def.size[0] !== def.size[1];
+}
 
 export interface KairoFacilityDef {
   id: string;
@@ -123,6 +198,14 @@ export interface KairoFacilityDef {
   need?: NeedKind;
   /** 손님이 위로 걸어 올라갈 수 있나 — 플로팅덱·선착장만 true */
   walkOn?: boolean;
+  /**
+   * 방향 그림이 **몇 장인가** — 없으면 `2` (K52-⑤). 자세한 뜻은 `FacilityFacing` 주석.
+   *
+   * ⚠ 불변식 3 — 시설 목록을 코드에 박지 말 것. 4방향 그림이 들어온 시설만 여기에
+   * `"facings": 4` 를 한 줄 붙이고, 그전까지는 **동작이 오늘과 완전히 같다**
+   * (`facingsOf` 가 2 를 돌려주므로 회전은 0↔1 뿐이고 스프라이트 ID 도 안 바뀐다).
+   */
+  facings?: 2 | 4;
   placement: {
     requiresIndoor?: boolean;
     /** 물 위 기반이 필요하다 (인플레이터블·대여소) */
@@ -301,10 +384,12 @@ export interface PlacedFacility {
   i: number;
   j: number;
   /**
-   * 회전 (K45). 0 = 데이터 그대로 · 1 = 90° (발자국 w↔h 교환).
-   * 비정사각(샤워실 4×1 등)에만 뜻이 있다. 옛 세이브에는 없다 — 없으면 0.
+   * 회전 (K45 → K52-⑤). `0|1|2|3` — 뜻은 `FacilityFacing` 주석의 표가 정본이다.
+   *
+   * 옛 세이브에는 없다 — 없으면 0. **v7 그대로다**: `0 = w×d`, `1 = d×w` 의 뜻을
+   * 그대로 두고 2·3 을 덧붙였으므로 `facing: 1` 인 옛 스냅샷이 같은 발자국으로 열린다.
    */
-  facing?: 0 | 1;
+  facing?: FacilityFacing;
   /**
    * 개선 단계 1~3 (§15.9 시설 상세의 [업그레이드]).
    *
@@ -360,8 +445,8 @@ export interface PlaceOptions {
    * `{w,h}` 만 보면 왼쪽 경계를 안 봐서 입구 왼쪽 땅이 통째로 열린다.
    */
   land?: { i0: number; j0: number; w: number; h: number };
-  /** 회전 (K45) — 0 기본 · 1 = 90° (발자국 w↔h). 판정·기록 전부 이걸 따른다 */
-  facing?: 0 | 1;
+  /** 회전 (K45 → K52-⑤) — 0 기본. 판정·기록 전부 이걸 따른다 (`FacilityFacing`) */
+  facing?: FacilityFacing;
   /**
    * 수면 사용 허가 면적 (S1, 등급의 `permitArea`). 물 위 시설이 강을 **밀폐**해
    * 수영 구역을 만들 때, 구역 총면적이 이를 넘으면 거절한다 (`permit-over`).
@@ -619,9 +704,16 @@ export class PlacementGrid {
   }
 
   /** 발자국이 덮는 타일 목록 */
-  /** 회전을 반영한 발자국 크기 (K45) — 발자국을 쓰는 모든 곳이 이걸 거쳐야 한다 */
-  static sizeOf(def: KairoFacilityDef, facing: 0 | 1 = 0): [number, number] {
-    return facing === 1 ? [def.size[1], def.size[0]] : [def.size[0], def.size[1]];
+  /**
+   * 회전을 반영한 발자국 크기 (K45) — 발자국을 쓰는 **모든 곳**이 이걸 거쳐야 한다.
+   *
+   * ⚠ 홀수 방향(1·3)만 w↔d 를 맞바꾼다 (`facing % 2`). 180°(2)는 사각형을 안 바꾼다.
+   * 이 한 줄이 판정·점유·철거·복원·화면 윤곽의 **유일한 관문**이라, 부르는 쪽에서
+   * `facing === 1 ? [d,w] : [w,d]` 를 다시 쓰면 4방향에서 반드시 한 곳이 남는다
+   * (K52-⑤ 이전에 실제로 여섯 벌이었다).
+   */
+  static sizeOf(def: KairoFacilityDef, facing: FacilityFacing = 0): [number, number] {
+    return facing % 2 === 1 ? [def.size[1], def.size[0]] : [def.size[0], def.size[1]];
   }
 
   /**
@@ -644,7 +736,7 @@ export class PlacementGrid {
     def: KairoFacilityDef,
     i: number,
     j: number,
-    facing: 0 | 1 = 0,
+    facing: FacilityFacing = 0,
   ): [number, number][] {
     const [w, h] = PlacementGrid.sizeOf(def, facing);
     const out: [number, number][] = [];
@@ -684,13 +776,13 @@ export class PlacementGrid {
     def: KairoFacilityDef,
     i: number,
     j: number,
-    facing: 0 | 1 = 0,
+    facing: FacilityFacing = 0,
   ): RideTiles | null {
     const r = def.ride;
     if (!r) return null;
     // 고장 스위치는 **회전을 안 준 것처럼** 부른다 — 전치 산수 자체는 아래 한 곳뿐이다
     const put = (o: readonly [number, number]): [number, number] =>
-      PlacementGrid.footprintTileOf(i, j, o, rideFault ? 0 : facing);
+      PlacementGrid.footprintTileOf(def, i, j, o, rideFault ? 0 : facing);
     return { entry: put(r.entryTile), exit: put(r.exitTile) };
   }
 
@@ -702,17 +794,42 @@ export class PlacementGrid {
    * 생긴다 — K51 이 정확히 그 버그였다 (`slide_large` 4×5 의 입구 `[3,4]` 가 회전 후
    * 발자국 5×4 밖으로 나가 손님이 시설 바깥 칸에서 미끄럼틀을 탔다).
    *
-   * 규칙은 `sizeOf`/`footprintTiles` 와 같아야 한다: `facing===1` 은 w↔d 를 맞바꾸므로
-   * 오프셋도 맞바꾼다. `dj < d0 = w1`, `di < w0 = d1` 이라 **항상 발자국 안**이다.
-   * 화면으로도 맞는다 — 아이소에서 i↔j 교환은 **가로 거울**이다 (`rideTilesOf` 주석).
+   * 규칙은 `sizeOf`/`footprintTiles` 와 같아야 한다.
+   *
+   * ## 4방향 변환식 (K52-⑤) — `w`·`d` 는 **데이터 그대로의** 발자국 (`def.size`)
+   *
+   * ```
+   *   0  (di, dj)              그대로            사각형 w×d
+   *   1  (dj, di)              전치              사각형 d×w
+   *   2  (w−1−di, d−1−dj)      뒤집기            사각형 w×d
+   *   3  (d−1−dj, w−1−di)      전치 후 뒤집기    사각형 d×w
+   * ```
+   *
+   * ⚠ **전치만으로는 부족하다.** K51 이 정확히 이 자리에서 데였고(회전이 입출구를 안
+   * 돌려 `slide_large` 의 입구 `[3,4]` 가 발자국 밖으로 나갔다), 4방향에서는 **뒤집기를
+   * 빼먹는 것**이 같은 모양의 두 번째 사고가 된다: `facing 2` 를 전치 없이 그대로 두면
+   * 그림만 뒤돌고 입구·슬롯은 앞에 남아, 화면과 손님이 갈라진다.
+   *
+   * 발자국 안이 보장된다: 1·3 은 `dj < d = W`, `di < w = D`; 2·3 의 뒤집기는
+   * `0 ≤ w−1−di < w` 라 구간을 벗어나지 않는다 (검사가 75종 × 4방향 전수로 잰다).
+   *
+   * ⚠ `def` 를 받는 이유는 **뒤집기가 `w`·`d` 를 알아야 하기 때문**이다. 부르는 쪽이
+   * 크기를 따로 넘기게 하면 그 크기가 `sizeOf` 와 갈라질 수 있다 — 여기서 `def.size` 를
+   * 직접 읽어 그럴 자리를 없앤다.
    */
   static footprintTileOf(
+    def: KairoFacilityDef,
     i: number,
     j: number,
     o: readonly [number, number],
-    facing: 0 | 1 = 0,
+    facing: FacilityFacing = 0,
   ): [number, number] {
-    return facing === 1 ? [i + o[1], j + o[0]] : [i + o[0], j + o[1]];
+    const [w, d] = def.size;
+    // 먼저 전치 (홀수 방향), 그 다음 뒤집기 (2·3) — 전치 뒤의 사각형 안에서 뒤집는다
+    const [tw, td] = facing % 2 === 1 ? [d, w] : [w, d];
+    const [ti, tj] = facing % 2 === 1 ? [o[1], o[0]] : [o[0], o[1]];
+    const [fi, fj] = facing >= 2 ? [tw - 1 - ti, td - 1 - tj] : [ti, tj];
+    return [i + fi, j + fj];
   }
 
   /**
@@ -730,16 +847,17 @@ export class PlacementGrid {
    * 되고, "회전 특화로 정원을 올렸는데 아무도 안 들어온다"가 된다. 붐비는 것이 보이는
    * 편이 낫다 — "회전 특화 = 붐빈다"가 화면에 나타나야 그 선택이 읽힌다.
    *
-   * ## 방향은 **가로 거울**이다
+   * ## 방향은 **거울과 점대칭의 합성**이다
    *
-   * 회전이 전치이고 전치가 가로 거울이므로 (`footprintTileOf` 주석), 화면 x 만 뒤집힌다:
-   * `+Z ↔ +X`, `-Z ↔ -X`. 세로(y)는 안 바뀌므로 다른 짝은 없다.
+   * 전치(1·3)는 화면 x 만 뒤집으므로 `+Z ↔ +X`, `-Z ↔ -X`. 180°(2·3)는 화면에서도
+   * 점대칭이라 앞뒤가 뒤집힌다 (`+Z ↔ -Z`, `+X ↔ -X`). 산수는 `rotateFacingName`
+   * 하나가 갖는다 — 여기서 표를 다시 펼치면 `footprintTileOf` 와 갈라진다.
    */
   static slotTileOf(
     def: KairoFacilityDef,
     i: number,
     j: number,
-    facing: 0 | 1 = 0,
+    facing: FacilityFacing = 0,
     k = 0,
   ): PlacedSlot | null {
     const slots = def.slots;
@@ -748,10 +866,10 @@ export class PlacementGrid {
     const idx = ((k % n) + n) % n;
     const s = slots[idx]!;
     return {
-      tile: PlacementGrid.footprintTileOf(i, j, s.tile, facing),
+      tile: PlacementGrid.footprintTileOf(def, i, j, s.tile, facing),
       // 정원 초과분은 데이터가 정한 자세(눕기·헤엄)를 흉내 낼 자리가 없다 — 그냥 선다
       pose: k >= n ? 'idle' : s.pose,
-      facing: facing === 1 ? MIRROR_FACING[s.facing] ?? s.facing : s.facing,
+      facing: rotateFacingName(s.facing, facing),
     };
   }
 
@@ -768,11 +886,20 @@ export class PlacementGrid {
    *
    *   `ride` 가 있으면 → 선언된 입구 칸(`rideTilesOf().entry`)의 **바깥 이웃**만.
    *                      모서리를 데이터가 이미 골랐으므로 존중한다
-   *   아니면          → 발자국 **앞 두 면**(+I·+J)의 바깥 이웃:
-   *                      `{(i+w, j+dj) | dj<d} ∪ {(i+di, j+d) | di<w}`
+   *   아니면          → 발자국 **앞 두 면**의 바깥 이웃:
+   *                      facing 0·1 → +I·+J  `{(i+w, j+dj)} ∪ {(i+di, j+d)}`
+   *                      facing 2·3 → −I·−J  `{(i−1, j+dj)} ∪ {(i+di, j−1)}`
    *
    * 아이소에서 +I·+J 는 화면 **아래쪽** 두 변이다 — 카메라를 향한 면이고, 스프라이트가
    * 정면을 그리는 쪽이다. 모서리 `(i+w, j+d)` 는 어느 면에도 안 붙어 있어 뺀다.
+   *
+   * ## 왜 2·3 에서 면이 뒤집히나 (K52-⑤)
+   *
+   * `footprintTileOf` 의 표를 발자국 **밖 오프셋**에 그대로 적용한 결과다. 데이터의
+   * +I 면 바깥 칸은 `(w, dj)` 인데, facing 2 의 뒤집기 `(w−1−di)` 에 `di = w` 를 넣으면
+   * `−1` 이 나온다 — 즉 그림이 뒤돌면 입구도 같이 뒤로 돈다. 그래야 4방향이 "입구를
+   * 겨누는 수단"이 된다 (facing 1 은 전치라 앞면이 앞면끼리 맞바뀔 뿐이다).
+   * ⚠ 여기서 `sizeOf` 를 안 쓰고 축을 손으로 세면 **회전이 공짜**라는 성질이 사라진다.
    *
    * ⚠ **`slots` 에서 파생하면 안 된다.** 그림 데이터가 이미 반대로 말한다:
    * `pool_warm` 은 슬롯이 전부 안쪽이라 인접한 바깥 칸이 없고, `cafe 2×3` 은 슬롯이
@@ -787,7 +914,7 @@ export class PlacementGrid {
     def: KairoFacilityDef,
     i: number,
     j: number,
-    facing: 0 | 1 = 0,
+    facing: FacilityFacing = 0,
   ): [number, number][] {
     const [w, d] = PlacementGrid.sizeOf(def, facing);
     const out: [number, number][] = [];
@@ -820,8 +947,10 @@ export class PlacementGrid {
       return out;
     }
 
-    for (let dj = 0; dj < d; dj++) push(i + w, j + dj);
-    for (let di = 0; di < w; di++) push(i + di, j + d);
+    // 앞면이 어느 쪽인가 — 0·1 은 +I·+J (화면 아래), 2·3 은 −I·−J (화면 위)
+    const back = facing >= 2;
+    for (let dj = 0; dj < d; dj++) push(back ? i - 1 : i + w, j + dj);
+    for (let di = 0; di < w; di++) push(i + di, back ? j - 1 : j + d);
     return out;
   }
 
@@ -1070,7 +1199,12 @@ export class PlacementGrid {
     const def = DEFS[defId] as KairoFacilityDef;
     const handle = this.nextHandle++;
     const facing = opts?.facing ?? 0;
-    const placed: PlacedFacility = { handle, defId, i, j, ...(facing === 1 ? { facing } : {}) };
+    /*
+     * ⚠ `facing: 0` 은 **계속 생략한다** (K52-⑤). 옛 세이브가 그 필드를 안 갖고 있고,
+     * 지금도 판의 거의 전부가 0 이다 — 넣으면 스냅샷이 시설 수만큼 커진다.
+     * 조건이 `!== 0` 인 것이 핵심: `=== 1` 로 두면 2·3 이 조용히 0 으로 저장된다.
+     */
+    const placed: PlacedFacility = { handle, defId, i, j, ...(facing !== 0 ? { facing } : {}) };
     this.items.set(handle, placed);
     for (const [ti, tj] of PlacementGrid.footprintTiles(def, i, j, facing)) {
       this.cells[tj * this.width + ti] = handle;

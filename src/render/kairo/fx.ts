@@ -155,6 +155,254 @@ export function playFx(host: FxHost, name: FxName, target: FxTarget): FxHandle {
   return FX_REGISTRY[name](host, target);
 }
 
+// ── 상시 연출(생기) 등록부 ─────────────────────────────────────────────────
+/*
+ * ## 왜 위의 `FX_REGISTRY` 에 못 얹었나
+ *
+ * 저쪽은 **한 번 났다 사라지는 것**이다 (`FxHandle.kill()`·`FLOAT_LIFE_MS`·글자 합치기).
+ * 분수의 물줄기는 사건이 아니라 **상태**다 — 시설이 서 있는 한 계속 돌고, 죽지 않고,
+ * 글자가 없다. 같은 타입에 우겨넣으면 `setText` 가 뜻 없는 껍데기가 되고 `alive` 가
+ * 영원히 true 인 핸들이 상한 계산에 섞인다. 그래서 **같은 파일 안에 등록부 하나를 더**
+ * 둔다 — 계약("등록부 밖 하드코딩 이펙트를 만들지 말 것")은 그대로 지킨다.
+ *
+ * ## 그림을 한 장도 안 쓴다
+ *
+ * 계약이 *"물·물결·항적·그림자는 **영구히** 절차적"* 이라고 못박아 뒀고
+ * (`assets/types.ts`), `kairo-facilities.json` 의 분수에는 아예
+ * `"note": "물줄기는 procedural"` 이라고 적혀 있다. 그래서 **AI 픽셀아트를 건드리지
+ * 않는다**: 시설 스프라이트는 아틀라스 텍스처 그대로 두고, 그 **위에 얹는 한 장**을
+ * 코드가 굽는다. `frames: 2` 를 선언해 두 프레임 다 없는 ID 를 만드는 길
+ * (계획 6-A)은 지금 그림이 없어 **절차 도형 폴백 = AI 그림 상실**이 되므로 안 간다.
+ *
+ * ## 어디에 반짝이나 — 그림이 정한다
+ *
+ * 좌표를 손으로 적지 않는다. 시설 스프라이트의 **물빛 픽셀**(`isWaterPixel`)을 읽어
+ * 그 위에만 얹는다. 그래서 `pool_lazy` 처럼 물이 고리 모양인 시설도, 데크·나무 부분에는
+ * 한 점도 안 찍힌다. 그림이 바뀌면 반짝임도 따라 바뀐다 — 계획 3-A 가 입구를
+ * "선언하지 않고 파생한다"로 뒤집은 것과 같은 판단이다.
+ *
+ * ## 다음 연출은 어떻게 추가하나
+ *
+ *   1. `AmbientName` 에 이름을 더하고 `AMBIENT_REGISTRY` 에 그리기를 등록한다
+ *   2. `AMBIENT_FACILITIES` 에 `시설 id → 이름` 한 줄
+ *
+ * 씬 코드는 0줄 바뀐다.
+ */
+
+/** 프레임 수 — **2** (계획 6단계). 손님 스프라이트와 같은 축이다 */
+export const AMBIENT_FRAMES = 2;
+
+/**
+ * 몇 프레임마다 다음 그림으로 넘어가나.
+ *
+ * 손님이 이미 쓰는 박자 그대로다 (`Math.floor(animTick / 6) % frames`, `KairoScene`).
+ * ⚠ Phaser 애니메이션(`anims.create`)을 쓰지 않는다 — 소스 전체에 0건이고, 여기서
+ * 처음 도입하면 "박자를 아는 곳"이 둘이 된다.
+ */
+export const AMBIENT_TICKS_PER_FRAME = 6;
+
+/**
+ * 캔버스에서 우리가 쓰는 것 **전부**. `CanvasRenderingContext2D` 를 얇게 감싼다.
+ *
+ * DOM 타입을 그대로 받지 않는 이유는 `fx.ts` 가 Phaser 를 타입으로만 가져오는 것과
+ * 같다 — 그리기 규칙을 **브라우저 없이** 단위 테스트할 수 있어야 회귀가 잡힌다.
+ */
+export interface Pen {
+  /** 색 하나를 집는다 (CSS 색 문자열) */
+  use(color: string): void;
+  /** 정수 사각형 하나. **정수 스캔라인만** — AA 는 1px 이음새를 만든다 (카이로 규칙) */
+  rect(x: number, y: number, w: number, h: number): void;
+}
+
+/** RGBA8 래스터 — 시설 스프라이트를 읽는 입력 */
+export interface AmbientRaster {
+  w: number;
+  h: number;
+  /** RGBA8, `w*h*4` */
+  data: Uint8Array | Uint8ClampedArray;
+}
+
+/** 색은 `style.css` 가 소유한다 — 씬이 토큰을 읽어 넘긴다 (K34) */
+export interface AmbientPalette {
+  /** 수면 반짝임 */
+  glint: string;
+  /** 거품·물보라 */
+  foam: string;
+}
+
+export type AmbientImpl = (
+  pen: Pen,
+  src: AmbientRaster,
+  phase: number,
+  pal: AmbientPalette,
+) => void;
+
+export type AmbientName = 'water-glint' | 'fountain-spray';
+
+/**
+ * 이 픽셀이 **물빛**인가.
+ *
+ * 색 상수를 안 쓴다 — 채널 사이의 **관계**만 본다. 그래야 팔레트를 바꿔도 따라오고,
+ * "색은 style.css 가 소유한다" 규칙과도 안 부딪힌다 (여긴 디자인 색이 아니라 판정이다).
+ *
+ * · `b > r + 24` — 나무 데크·모래·잔디를 뺀다 (그쪽은 r 이 크다)
+ * · `b >= g - 12` — 청록 물은 통과시키고 **초록 잔디·거북 등딱지**는 뺀다
+ * · `b > 72` · `a > 200` — 그림자 속 어두운 픽셀과 반투명 가장자리를 뺀다
+ */
+export function isWaterPixel(r: number, g: number, b: number, a: number): boolean {
+  return a > 200 && b > 72 && b > r + 24 && b >= g - 12;
+}
+
+function waterAt(src: AmbientRaster, x: number, y: number): boolean {
+  if (x < 0 || y < 0 || x >= src.w || y >= src.h) return false;
+  const k = (y * src.w + x) * 4;
+  return isWaterPixel(
+    src.data[k] as number,
+    src.data[k + 1] as number,
+    src.data[k + 2] as number,
+    src.data[k + 3] as number,
+  );
+}
+
+/** 결정론적 해시 — 프레임마다 같은 자리가 나와야 깜빡임이 아니라 **물결**로 읽힌다 */
+function hash2(x: number, y: number): number {
+  let h = (Math.imul(x, 374761393) + Math.imul(y, 668265263)) | 0;
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return (h ^ (h >>> 16)) >>> 0;
+}
+
+/**
+ * 반짝임 띠의 간격 (텍셀, `x + 2y` 기준).
+ *
+ * ⚠ **`x + 2y` 가 상수인 선은 화면에서 `+J` 축과 정확히 같은 방향이다** —
+ * 투영이 `+J → (−16, +8)` 이라 `x + 2y` 가 안 변한다 (`iso.ts`). 그래서 이 띠는
+ * 격자와 나란히 흐르고, 물결이 "타일에 얹힌 무늬"가 아니라 **수면 자체**로 읽힌다.
+ * 세로줄(`x % n`)로 잡아 봤더니 아이소 위에서 격자무늬로 떨어졌다.
+ */
+const GLINT_BAND = 18;
+/** 띠를 따라가며 몇 줄마다 하나씩 — 이게 없으면 띠가 굵은 대각선 줄무늬가 된다 */
+const GLINT_RUN = 6;
+/** 반짝임 하나의 가로 길이 */
+const GLINT_LEN = 3;
+
+/**
+ * 수면 반짝임 — 물빛 픽셀 위에만 짧은 가로 획을 뿌린다.
+ *
+ * 프레임 사이에 띠가 `GLINT_BAND / 2` 만큼 밀린다. 위치가 **완전히 새로 뽑히는 것이
+ * 아니라 밀리는** 것이 요점이다 — 무작위로 다시 뿌리면 반짝임이 아니라 노이즈가 된다.
+ */
+function waterGlint(pen: Pen, src: AmbientRaster, phase: number, pal: AmbientPalette): void {
+  const shift = phase * (GLINT_BAND / AMBIENT_FRAMES);
+  for (let y = 0; y < src.h; y++) {
+    for (let x = 0; x < src.w; x++) {
+      const u = x + 2 * y + shift;
+      if (u % GLINT_BAND !== 0) continue;
+      // 띠 번호를 섞어 이웃 띠끼리 같은 줄에 서지 않게 — 서면 가로 줄무늬가 된다
+      if ((y + Math.floor(u / GLINT_BAND) * 2) % GLINT_RUN !== 0) continue;
+      if (hash2(x, y) % 4 === 0) continue; // 끊어 준다 — 완벽한 선은 무늬로 읽힌다
+      // 획이 물 위에 온전히 얹힐 때만 — 가장자리에서 데크로 삐져나가면 안 된다
+      let n = 0;
+      while (n < GLINT_LEN && waterAt(src, x + n, y)) n++;
+      if (n < GLINT_LEN) continue;
+      pen.use(hash2(x, y) % 3 === 0 ? pal.foam : pal.glint);
+      pen.rect(x, y, GLINT_LEN, 1);
+    }
+  }
+}
+
+/**
+ * 물줄기의 **꼭대기** — 스프라이트에서 찾는다.
+ *
+ * 분수 그림에는 이미 물줄기가 그려져 있다 (AI 픽셀아트). 그 위에 또 물줄기를 그리면
+ * 두 겹이 되므로, 우리는 **이미 있는 줄기의 끝에서 물방울을 튀긴다.** 좌표를 상수로
+ * 박지 않고 그림에서 유도하므로 분수 그림이 바뀌어도 따라온다.
+ */
+export function sprayOrigin(src: AmbientRaster): { x: number; y: number } | null {
+  for (let y = 0; y < src.h; y++) {
+    let lo = -1;
+    let hi = -1;
+    for (let x = 0; x < src.w; x++) {
+      if (!waterAt(src, x, y)) continue;
+      if (lo < 0) lo = x;
+      hi = x;
+    }
+    if (lo >= 0) return { x: Math.round((lo + hi) / 2), y };
+  }
+  return null;
+}
+
+/** 물방울 — `[dx, dy]` 를 프레임마다. 위로 튀었다가(0) 벌어지며 떨어진다(1) */
+const SPRAY: readonly (readonly (readonly [number, number])[])[] = [
+  [
+    [0, -3],
+    [-3, 0],
+    [3, 1],
+    [-5, 4],
+    [5, 5],
+  ],
+  [
+    [-2, -1],
+    [2, -2],
+    [-6, 5],
+    [6, 6],
+    [-8, 11],
+    [8, 12],
+  ],
+];
+
+/**
+ * 분수 — 수면 반짝임 + 줄기 끝에서 튀는 물방울.
+ *
+ * 물방울은 2텍셀 사각형이다. 1텍셀이면 폰 화면(업스케일 1)에서 안 보이고, 3텍셀이면
+ * 물방울이 아니라 눈발로 읽힌다 (실측으로 2 로 정했다).
+ */
+function fountainSpray(pen: Pen, src: AmbientRaster, phase: number, pal: AmbientPalette): void {
+  waterGlint(pen, src, phase, pal);
+  const o = sprayOrigin(src);
+  if (!o) return;
+  pen.use(pal.foam);
+  for (const [dx, dy] of SPRAY[phase % SPRAY.length] as readonly (readonly [number, number])[]) {
+    pen.rect(o.x + dx - 1, o.y + dy, 2, 2);
+  }
+}
+
+/**
+ * 이름 → 그리기. **여기 없는 상시 연출은 만들지 않는다** (계약).
+ */
+export const AMBIENT_REGISTRY: Record<AmbientName, AmbientImpl> = {
+  'water-glint': waterGlint,
+  'fountain-spray': fountainSpray,
+};
+
+/**
+ * 시설 id → 상시 연출. **일곱 종뿐이다** — 사용자가 "두세 개"라고 했고 계획이
+ * "10종 안팎 · 가장 싼 것부터"로 못박았다.
+ *
+ * 고른 기준은 하나: **자기 스프라이트 안에 물이 있는가.** 그래야 물빛 마스크가
+ * 제자리에 얹힌다.
+ *
+ * ⚠ **워터슬라이드 3종은 일부러 뺐다.** 미끄럼틀의 파란 활강로는 물이 아니라
+ * 플라스틱이라 마스크가 통째로 걸리고, 착수 물보라를 `ride.exitTile` 에 얹으려
+ * 재 보니 **데이터의 출구와 그림의 출구가 다르다**: `slide_small` 은 `exitTile [0,0]`
+ * (뒤쪽 꼭지점)인데 그림의 활강로 끝은 로컬 (2,0) 쪽(오른쪽 꼭지점)이다. 그 어긋남은
+ * 4방향·입구(계획 3·5단계) 소관이지 애니메이션 소관이 아니다 — 여기서 물보라를 얹으면
+ * 엉뚱한 자리에서 물이 튄다.
+ */
+export const AMBIENT_FACILITIES: Readonly<Record<string, AmbientName>> = {
+  fountain: 'fountain-spray',
+  footbath: 'water-glint',
+  pool_kids: 'water-glint',
+  pool_warm: 'water-glint',
+  pool_lazy: 'water-glint',
+  waterwalk: 'water-glint',
+  turtle_island: 'water-glint',
+};
+
+/** 지금 프레임 번호 — 손님과 **같은 식**이다 (박자를 아는 곳이 하나여야 한다) */
+export function ambientPhase(animTick: number): number {
+  return Math.floor(animTick / AMBIENT_TICKS_PER_FRAME) % AMBIENT_FRAMES;
+}
+
 // ── 수입 연출의 정책 (합치기·상한) ─────────────────────────────────────────
 
 /**

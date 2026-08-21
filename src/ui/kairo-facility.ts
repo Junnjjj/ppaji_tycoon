@@ -180,8 +180,12 @@ export function facilityInfo(
    * 먼저 빨개진다.
    */
   const sale = fee > 0;
-  // 회전은 발자국의 w↔h 를 바꾼다 (K45) — 데이터 순서를 그대로 쓰면 샤워실 4×1 이 뒤집힌다
-  const [w, d] = item.facing === 1 ? [def.size[1], def.size[0]] : [def.size[0], def.size[1]];
+  /*
+   * 회전은 발자국의 w↔h 를 바꾼다 (K45) — 데이터 순서를 그대로 쓰면 샤워실 4×1 이 뒤집힌다.
+   * ⚠ 정본은 `PlacementGrid.sizeOf` 하나다 (K52-⑤). 4방향에서는 조건이 `facing % 2` 라
+   * 여기서 `=== 1` 을 그대로 두면 facing 3 의 시설이 시트에서만 4×1 로 뜬다.
+   */
+  const [w, d] = PlacementGrid.sizeOf(def, item.facing ?? 0);
 
   return {
     handle,

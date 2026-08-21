@@ -96,7 +96,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { loadKairoFromStorage, saveKairoToStorage, clearKairoStorage } = await import(
     './save/kairo.js'
   );
-  const { facilityDef } = await import('./sim/kairo/placement.js');
+  const { facilityDef, canRotate, nextFacing } = await import('./sim/kairo/placement.js');
+  type FacilityFacing = import('./sim/kairo/placement.js').FacilityFacing;
 
   /**
    * 세이브를 먼저 읽는다 — 지형·벽·시설을 씬에 넘겨야 하므로 부팅보다 앞이어야 한다.
@@ -480,14 +481,19 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const poor = cost > week.cash;
     const ok = chk.ok && !poor;
     h.scene.setGhost(defId, i, j, ok, aim?.facing ?? 0);
-    // 발자국은 회전을 탄다 — 실물과 같은 규칙(가로·세로 교환)이라야 윤곽이 안 거짓말한다
-    const [fw, fd] =
-      (aim?.facing ?? 0) === 1
-        ? [def?.size[1] ?? 1, def?.size[0] ?? 1]
-        : [def?.size[0] ?? 1, def?.size[1] ?? 1];
+    /*
+     * 발자국은 회전을 탄다 — 산수의 정본은 `PlacementGrid.sizeOf` **하나**다 (K52-⑤).
+     * 예전엔 여기·이동·철거·시트·씬 두 곳에 `facing === 1 ? [d,w] : [w,d]` 가 **여섯 벌**
+     * 이었는데, 4방향에서는 `facing % 2` 로 바뀌므로 각자 고치면 반드시 한 곳이 남는다.
+     */
+    const [fw, fd] = def ? PlacementGridCls.sizeOf(def, aim?.facing ?? 0) : [1, 1];
     h.scene.setReticleMark(i, j, ok, fw, fd);
-    // 회전은 비정사각에만 뜻이 있다 (정사각은 발자국이 같아 버튼이 거짓말이 된다)
-    const rotatable = def !== undefined && def.size[0] !== def.size[1];
+    /*
+     * 회전 버튼을 띄우나 — **데이터가 정한다** (`canRotate`, 불변식 3).
+     * 2방향은 예전 그대로 "비정사각만"이고, `facings: 4` 인 시설은 정사각이어도
+     * 그림이 네 장이라 그때 처음으로 정사각에서 회전이 살아난다 (매점·대여소 등).
+     */
+    const rotatable = def !== undefined && canRotate(def);
     hud.showConfirm(
       !chk.ok
         ? PLACE_FAIL_MESSAGES[chk.fail ?? 'unknown-def']
@@ -504,8 +510,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
                  * ⚠ 예전엔 `tapTile(lastFacilityTap)` 을 다시 불러 우회했다 (K45).
                  * 조준에서는 자리가 정본이므로 방향만 뒤집고 같은 자리를 다시 잰다.
                  */
-                if (!aim) return;
-                aim.facing = aim.facing === 0 ? 1 : 0;
+                if (!aim || !def) return;
+                // 2방향은 0↔1, 4방향은 0→1→2→3→0 — 몇 방향인지는 데이터가 안다
+                aim.facing = nextFacing(def, aim.facing);
                 refreshAim();
               },
             }
@@ -567,10 +574,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     h.scene.refreshFacility(sel.handle);
     const ok = chk.ok && fee <= week.cash;
     h.scene.setGhost(sel.defId, i, j, ok, sel.facing);
-    const [fw, fd] =
-      sel.facing === 1
-        ? [def?.size[1] ?? 1, def?.size[0] ?? 1]
-        : [def?.size[0] ?? 1, def?.size[1] ?? 1];
+    const [fw, fd] = def ? PlacementGridCls.sizeOf(def, sel.facing) : [1, 1];
     h.scene.setReticleMark(i, j, ok, fw, fd);
     hud.showConfirm(
       chk.ok
@@ -640,12 +644,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const ok = hit !== null || floorErasable;
     // 시설을 지울 땐 **그 시설의 발자국 전체**를 두른다 — 한 칸만 보면 뭘 지우는지 모른다
     const eDef = hit ? facilityDef(hit.defId) : undefined;
-    const [ew, ed] =
-      hit && eDef
-        ? hit.facing === 1
-          ? [eDef.size[1], eDef.size[0]]
-          : [eDef.size[0], eDef.size[1]]
-        : [1, 1];
+    const [ew, ed] = hit && eDef ? PlacementGridCls.sizeOf(eDef, hit.facing ?? 0) : [1, 1];
     h.scene.setReticleMark(hit ? hit.i : i, hit ? hit.j : j, ok, ew, ed);
     hud.showConfirm(
       hit
@@ -851,7 +850,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   let brush: string | null = null;
   let brushFacility = '';
   /** 이동 붓의 선택 시설 (K42) — 첫 탭에서 잡고 확정·취소에서 푼다 */
-  let moveSel: { handle: number; defId: string; i: number; j: number; facing: 0 | 1 } | null =
+  let moveSel: {
+    handle: number;
+    defId: string;
+    i: number;
+    j: number;
+    facing: FacilityFacing;
+  } | null =
     null;
   /**
    * 조준 상태 (K47-③) — **이것이 배치 좌표의 정본**이다.
@@ -860,7 +865,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 있었고, ↻ 는 `tapTile` 을 다시 불러 우회했다. 조준 배치에서는 팬이 자리를 계속
    * 바꾸므로 자리와 방향이 한 덩어리여야 한다 — 화면 레티클은 이 값을 비추는 표시일 뿐이다.
    */
-  let aim: { i: number; j: number; facing: 0 | 1 } | null = null;
+  let aim: { i: number; j: number; facing: FacilityFacing } | null = null;
 
   const ZONE_NAME: Record<string, string> = {
     indoor: '실내',

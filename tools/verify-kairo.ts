@@ -4948,6 +4948,226 @@ async function main(): Promise<void> {
   }
 
   /*
+   * ── 9f. 물이 살아 있다 (K53 · 계획 6단계) ──
+   *
+   * 분수·풀·족욕 7종 위에 **코드가 구운 한 장**을 얹어 두 프레임을 번갈아 건다.
+   * 그림은 한 장도 안 늘었다 — 시설 스프라이트의 **물빛 픽셀**을 읽어 그 위에만 얹는다.
+   *
+   * ## 왜 화면에서 재나
+   *
+   * `ambientPhase(animTick)` 을 읽어 비교하면 **상수 산수**라 그리기가 통째로 틀려도
+   * 통과한다 (K38 "깊이는 화면에 올라간 오브젝트에서 읽는다"와 같은 함정). 그래서
+   * 판정은 **프레임버퍼 픽셀**로 하고, 텍스처 키는 원인을 가리는 보조 지표로만 쓴다.
+   *
+   * ## 얼려 놓고 잰다
+   *
+   * 손님이 걸어 들어오면 달라진 픽셀이 물 때문인지 손님 때문인지 못 가른다. 황혼 틴트도
+   * 시간에 따라 지면 색을 민다 (K39 실측 24%). `flow.frozen` + `setAutoTick(false)` +
+   * `setDayPhase(null)` 로 **물만 남긴다**.
+   *
+   * ## 세 갈래를 같은 자로 잰다
+   *
+   *   ★ 모션 켬     → 구분되는 화면이 **2 이상**
+   *   ★ 모션 줄임   → **1** (기기 설정을 존중한다)
+   *   ⚠ 음성 대조군 → `ambient-static` 을 켜면 **1** (검사가 정말 움직임을 재고 있었나)
+   */
+  {
+    /** 대상 7종 — `AMBIENT_FACILITIES` 와 같아야 한다. 갈라지면 아래 개수 검사가 잡는다 */
+    const AMB_IDS = [
+      'fountain',
+      'footbath',
+      'pool_kids',
+      'pool_warm',
+      'pool_lazy',
+      'waterwalk',
+      'turtle_island',
+    ];
+    const AMB_SETUP = `(() => {
+      const h = window.__kairo, sc = h.scene, t = h.terrain, p = h.placement, w = h.walls;
+      h.flow.frozen = true; sc.setAutoTick(false); sc.setDayPhase(null); sc.setUpscale(1);
+      const L = h.land();
+      const ids = ${JSON.stringify(AMB_IDS)};
+      const placed = [];
+      for (const id of ids) {
+        let done = false;
+        for (let j = L.j0 + 1; j + 8 < L.j0 + L.h && !done; j++) {
+          for (let i = L.i0 + 1; i + 10 < L.i0 + L.w && !done; i++) {
+            const r = p.place(t, w, h.gate, id, i, j);
+            if (!r.ok) continue;
+            sc.refreshFacility(r.placed.handle);
+            placed.push({ id: id, i: i, j: j, handle: r.placed.handle });
+            done = true;
+          }
+        }
+      }
+      if (placed.length) { sc.focusTile(placed[0].i, placed[0].j); window.__ambSpot = placed[0]; }
+      return { placed: placed, probe: sc.ambientProbeForTest() };
+    })()`;
+    /** 분수 한 채가 든 창의 지문 — 프레임버퍼에서 직접 읽는다 (텍스처 캔버스가 아니다) */
+    const AMB_SAMPLE = `(() => {
+      const sc = window.__kairo.scene;
+      const cv = document.querySelector('canvas');
+      const gl = cv.getContext('webgl2') || cv.getContext('webgl');
+      const H = cv.height;
+      const r = sc.tileScreenRect(window.__ambSpot.i, window.__ambSpot.j);
+      const x0 = Math.max(0, r.x - 32), y0 = Math.max(0, r.y - 44), w = 96, hh = 84;
+      const buf = new Uint8Array(w * hh * 4);
+      gl.readPixels(x0, H - (y0 + hh), w, hh, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+      let s = 0;
+      for (let k = 0; k < buf.length; k += 4) {
+        s = (s * 31 + buf[k] + buf[k + 1] * 7 + buf[k + 2] * 13) >>> 0;
+      }
+      const pr = sc.ambientProbeForTest();
+      return { hash: s, phase: pr.phase, keys: pr.keys, ms: pr.ms, steps: pr.steps };
+    })()`;
+
+    for (const [reduce, tag] of [
+      [false, '모션 켬'],
+      [true, '모션 줄임'],
+    ] as const) {
+      const cx = await browser.newContext({
+        ...DEVICE,
+        reducedMotion: reduce ? 'reduce' : 'no-preference',
+      });
+      const pg = await cx.newPage();
+      await pg.goto(URL, { waitUntil: 'load' });
+      await pg.waitForFunction(
+        `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+        undefined,
+        { timeout: 20000 },
+      );
+      const amb = (await pg.evaluate(AMB_SETUP)) as {
+        placed: { id: string; i: number; j: number; handle: number }[];
+        probe: { count: number; still: boolean };
+      };
+      /** 같은 창을 여러 번 찍어 **구분되는 화면 수**를 센다 (한 번에 한 프레임만 보인다) */
+      const distinct = async (n = 12, gap = 70): Promise<{ n: number; last: string }> => {
+        const seen = new Set<number>();
+        let last = '';
+        for (let k = 0; k < n; k++) {
+          const s = (await pg.evaluate(AMB_SAMPLE)) as {
+            hash: number;
+            keys: string[];
+            ms: number;
+            steps: number;
+          };
+          seen.add(s.hash);
+          last = `전환 ${s.steps}회 · 마지막 ${s.ms.toFixed(2)}ms`;
+          await pg.waitForTimeout(gap);
+        }
+        return { n: seen.size, last };
+      };
+
+      if (amb.placed.length < AMB_IDS.length) {
+        record(`${tag} — 물 시설 배치`, 'fail', `${amb.placed.length}/${AMB_IDS.length}채만 놓였다`);
+        await cx.close();
+        continue;
+      }
+      if (!reduce) {
+        record(
+          '상시 연출이 대상 시설 전부에 붙는다 (등록부 = 화면)',
+          amb.probe.count === AMB_IDS.length ? 'pass' : 'fail',
+          `${amb.probe.count}/${AMB_IDS.length}채`,
+        );
+      }
+      await pg.waitForTimeout(400);
+      const d = await distinct();
+      record(
+        `★ ${tag} — 물이 ${reduce ? '멈춰 있다' : '움직인다'} (화면 픽셀로)`,
+        (reduce ? d.n === 1 : d.n >= 2) ? 'pass' : 'fail',
+        `구분되는 화면 ${d.n} · ${d.last}`,
+      );
+
+      if (reduce) {
+        await cx.close();
+        continue;
+      }
+
+      // ⚠ 음성 대조군 — 코드에 심은 결함으로 프레임을 얼린다 (K38 규칙)
+      await pg.evaluate(`window.__kairo.scene.setRenderFaultForTest('ambient-static')`);
+      await pg.waitForTimeout(300);
+      const frozen = await distinct();
+      record(
+        '⚠ 음성 대조군 — `ambient-static` 을 켜면 같은 화면만 나온다',
+        frozen.n === 1 ? 'pass' : 'fail',
+        `구분되는 화면 ${frozen.n} (정상 ${d.n})`,
+      );
+      await pg.evaluate(`window.__kairo.scene.setRenderFaultForTest('none')`);
+      await pg.waitForTimeout(300);
+
+      /*
+       * ★ **AI 그림을 안 잃었다.**
+       *
+       * 이것이 이 단계에서 제일 중요한 검사다. 계약에 `frames: 2` 를 선언해 두 프레임 다
+       * 없는 ID 를 만들면 아틀라스가 못 찾아 **절차 도형으로 폴백**하고, 그러면 픽셀아트가
+       * 통째로 사라진다. 그래서 얹기 방식을 택했고, 정말 안 잃었는지는 **아틀라스 원본
+       * 픽셀과 바이트 단위로 대조**해서 증명한다 — "텍스처 키가 그대로다"만 보면
+       * 그 키 뒤의 캔버스가 갈렸을 때 조용히 통과한다.
+       */
+      const keep = (await pg.evaluate(`(async () => {
+        const h = window.__kairo, sc = h.scene;
+        const res = await fetch('/assets/kairo-atlas.json');
+        const map = await res.json();
+        const img = new Image();
+        await new Promise((ok, no) => {
+          img.onload = ok; img.onerror = no; img.src = '/assets/kairo-atlas.png';
+        });
+        const cut = document.createElement('canvas');
+        const cc = cut.getContext('2d', { willReadFrequently: true });
+        const out = [];
+        for (const it of ${JSON.stringify(AMB_IDS)}.map((id) => ({ id: id }))) {
+          const base = sc.facilityImageAt(
+            h.placement.all().filter((f) => f.defId === it.id)[0].handle);
+          const f = map['facility/' + it.id];
+          if (!base || !f) { out.push({ id: it.id, why: 'no-frame' }); continue; }
+          const src = base.texture.getSourceImage();
+          cut.width = f.w; cut.height = f.h;
+          cc.clearRect(0, 0, f.w, f.h);
+          cc.drawImage(img, f.x, f.y, f.w, f.h, 0, 0, f.w, f.h);
+          const want = cc.getImageData(0, 0, f.w, f.h).data;
+          const got = document.createElement('canvas');
+          got.width = src.width; got.height = src.height;
+          got.getContext('2d', { willReadFrequently: true }).drawImage(src, 0, 0);
+          const have = got.getContext('2d').getImageData(0, 0, src.width, src.height).data;
+          let diff = 0;
+          if (src.width !== f.w || src.height !== f.h) diff = -1;
+          else for (let k = 0; k < want.length; k++) if (want[k] !== have[k]) diff++;
+          out.push({ id: it.id, key: base.texture.key, diff: diff });
+        }
+        return { out: out, provider: h.provider ? h.provider.name : 'n/a' };
+      })()`)) as { out: { id: string; key?: string; diff?: number; why?: string }[]; provider: string };
+      const intact = keep.out.filter((r) => r.diff === 0);
+      record(
+        '★ AI 그림을 안 잃었다 — 시설 텍스처가 아틀라스 원본과 바이트 단위로 같다',
+        intact.length === AMB_IDS.length ? 'pass' : 'fail',
+        `${intact.length}/${AMB_IDS.length} · ` +
+          keep.out
+            .filter((r) => r.diff !== 0)
+            .map((r) => `${r.id}:${r.why ?? String(r.diff)}`)
+            .join(' '),
+      );
+      record(
+        '얹은 그림은 **별도 오브젝트**다 — 시설 텍스처를 갈아 끼우지 않는다',
+        keep.out.every((r) => r.key === undefined || !r.key.startsWith('__amb/'))
+          ? 'pass'
+          : 'fail',
+        keep.out.map((r) => r.key ?? '?').join(' '),
+      );
+
+      // 두 프레임을 나란히 — 움직임은 정지 화면 한 장으로 못 보인다
+      for (const want of [0, 1]) {
+        await pg.waitForFunction(
+          `window.__kairo.scene.ambientProbeForTest().phase === ${want}`,
+          undefined,
+          { timeout: 5000 },
+        );
+        await pg.screenshot({ path: `${SHOT_DIR}/kairo-water-f${want}.png` });
+      }
+      await cx.close();
+    }
+  }
+
+  /*
    * ── 9c. 방향을 바꿔도 판이 살아 있나 (K28) ──
    *
    * 회전은 폰에서 언제든 일어난다. 레이아웃만 다시 잡히면 되고 **게임 상태는 그대로**

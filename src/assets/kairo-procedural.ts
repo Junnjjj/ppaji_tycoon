@@ -14,7 +14,7 @@
  * 색은 구분용이지 최종 팔레트가 아니다. 존별로 색조를 달리해 배치 실수를 눈으로 잡는다.
  */
 
-import { KAIRO, KAIRO_SIM, kairoSpriteSpecs } from './kairo-contract.js';
+import { FACILITY_DIR_NAMES, KAIRO, KAIRO_SIM, kairoSpriteSpecs } from './kairo-contract.js';
 import {
   TILE_W,
   TILE_H,
@@ -22,7 +22,7 @@ import {
   tileRowSpan,
   tileOffsetInCanvas,
 } from '../render/kairo/iso.js';
-import { parseId, variantId } from './types.js';
+import { expandSpec, parseId } from './types.js';
 import type { AssetProvider, SpriteSpec } from './types.js';
 
 const OUTLINE = '#2b1d12';
@@ -271,19 +271,45 @@ function punchStipple(
  * `bakeOutline` 이 거기에 윤곽색을 찍어 **윗면에 검은 대각선**이 생긴다 (S=2 스크린샷에서
  * 드러났다). 벽과 같은 방식으로 열마다 정수 압출한다.
  */
-function drawFacility(g: CanvasRenderingContext2D, spec: SpriteSpec, simId: string): void {
+function drawFacility(
+  g: CanvasRenderingContext2D,
+  spec: SpriteSpec,
+  simId: string,
+  dir = 0,
+): void {
   const sim = KAIRO_SIM[simId];
   const [cw, ch] = spec.size;
   const [w, d] = sim ? sim.size : ([1, 1] as const);
-  const [body, top, side] = sim?.walkOn
+  const [body, topBase, side] = sim?.walkOn
     ? WALKON_COLOR
     : (ZONE_COLOR[sim?.layer ?? 'land'] ?? ZONE_COLOR['land']!);
   const bodyH = ch - (w + d) * STEP_Y;
+
+  /*
+   * 방향 (K52-⑤) — 플레이스홀더에서도 **네 장이 서로 달라야** 한다. 같으면 배선이
+   * 통째로 빠져도 화면이 똑같아 검사가 아무것도 못 잰다.
+   *
+   *   전치(1·3) → 캔버스를 **가로로 뒤집어 그린다.** 아이소에서 i↔j 교환은 정확히
+   *               가로 거울이고 (`footprintTileOf` 주석) 캔버스 폭은 `(w+d)·16` 이라
+   *               교환에 불변이므로, 미러가 곧 d×w 발자국이다. 씬은 4방향 시설에
+   *               `setFlipX` 를 **안 걸므로** 그림 쪽이 미리 뒤집혀 있어야 한다
+   *   뒤돌기(2·3) → 윗면을 어둡게. 180° 는 화면에서도 점대칭이라 발자국 마름모는
+   *               그대로이고 달라지는 것은 "어느 면이 보이나"뿐이다
+   */
+  const mirrored = dir % 2 === 1;
+  const top = dir >= 2 ? darken(topBase, 0.78) : topBase;
+  if (mirrored) {
+    g.save();
+    g.translate(cw, 0);
+    g.scale(-1, 1);
+  }
 
   // 바닥 (그림자 겸 발자국 표시) — 몸통이 있으면 아래쪽에 남는 띠만 보인다
   fillFootprint(g, w, d, bodyH, darken(body, 0.72));
 
   if (bodyH <= 0) {
+    // ⚠ 아웃라인은 **미러를 되돌린 뒤** 굽는다 — 픽셀을 읽어 쓰는 단계라 변환이 걸려 있으면 안 된다
+    if (mirrored) g.restore();
     bakeOutline(g, cw, ch);
     return;
   }
@@ -322,6 +348,7 @@ function drawFacility(g: CanvasRenderingContext2D, spec: SpriteSpec, simId: stri
     g.fillRect(o.x + TILE_W / 2 - 1, o.y + TILE_H / 2 - 1, 2, 2);
   }
 
+  if (mirrored) g.restore();
   bakeOutline(g, cw, ch);
 }
 
@@ -510,10 +537,25 @@ function altOf(finalId: string, spec: SpriteSpec): number {
   return spec.variants?.alt ? parseId(finalId, spec).alt : 0;
 }
 
+/**
+ * `facility/shop:d2` → 2. 방향 축이 없는 명세(= `facings: 2`)는 언제나 0 (K52-⑤).
+ *
+ * ⚠ 이름의 정본은 `FACILITY_DIR_NAMES` 하나다 — 여기서 `'d'` 를 벗겨 숫자로 파싱하면
+ * 이름 규칙이 두 벌이 된다.
+ */
+function dirOf(finalId: string, spec: SpriteSpec): number {
+  if (!spec.variants?.dir) return 0;
+  const idx = FACILITY_DIR_NAMES.indexOf(
+    parseId(finalId, spec).dir as (typeof FACILITY_DIR_NAMES)[number],
+  );
+  return idx < 0 ? 0 : idx;
+}
+
 /** ID 접두사 → 드로어. `missingDrawers()` 가 이 표의 빈틈을 잡는다 */
 function drawerFor(baseId: string): Drawer | undefined {
   const [kind, name] = baseId.split('/') as [string, string];
-  if (kind === 'facility') return (g, spec) => drawFacility(g, spec, name);
+  // 방향은 **최종 ID** 로 들어온다 (`facility/shop:d2`) — base 만 보면 네 장이 같아진다
+  if (kind === 'facility') return (g, spec, id) => drawFacility(g, spec, name, dirOf(id, spec));
   if (kind === 'wall') {
     // 방향은 alt 변형으로 들어온다 (`wall/edge:a2` = −I 면)
     if (name === 'edge') return (g, spec, id) => drawWall(g, spec, altOf(id, spec), false);
@@ -632,9 +674,9 @@ export class KairoProceduralProvider implements AssetProvider {
     const ids: string[] = [];
     for (const s of kairoSpriteSpecs()) {
       this.specs.set(s.id, s);
-      const alts = s.variants?.alt ?? 0;
-      if (alts > 0) for (let a = 0; a < alts; a++) ids.push(variantId(s.id, { alt: a }));
-      else ids.push(s.id);
+      // `kairoSpriteIndex()` 와 **같은 전개**여야 한다 (K52-⑤) — 둘이 갈라지면
+      // "색인엔 있는데 프로바이더가 못 그리는 ID" 가 생긴다. 그래서 `expandSpec` 하나로 편다
+      for (const id of expandSpec(s)) ids.push(id);
     }
     this.ids = ids;
   }

@@ -35,7 +35,17 @@ import { occludes, XRAY_ALPHA, type Rect } from '../kairo/xray.js';
 import { entryFaces, marksEntry } from '../kairo/mark.js';
 import { KairoCamera } from '../kairo/kairo-camera.js';
 import { viewport, violatesDotGrid, type Upscale } from '../kairo/upscale.js';
-import { IncomeFx, playFx, type FxHost } from '../kairo/fx.js';
+import {
+  AMBIENT_FACILITIES,
+  AMBIENT_REGISTRY,
+  ambientPhase,
+  IncomeFx,
+  playFx,
+  type AmbientName,
+  type AmbientPalette,
+  type FxHost,
+  type Pen,
+} from '../kairo/fx.js';
 import type { IncomeEvent } from '../../sim/kairo/week.js';
 
 /**
@@ -66,12 +76,17 @@ import {
   facilityDef,
   PlacementGrid,
   setEntryFaultForTest as setSimEntryFault,
+  type FacilityFacing,
   type KairoFacilityDef,
   type RideTiles,
 } from '../../sim/kairo/placement.js';
 import type { GuestStore, Guest } from '../../sim/kairo/guests.js';
 import { cssColorInt, cssVar } from '../../ui/tokens.js';
-import { COSLOT_SPREAD_TEXELS } from '../../assets/kairo-contract.js';
+import {
+  COSLOT_SPREAD_TEXELS,
+  facilityFacings,
+  facilitySpriteId,
+} from '../../assets/kairo-contract.js';
 import {
   bakeGuestAtlas,
   bakeEmoteAtlas,
@@ -381,8 +396,16 @@ export class KairoScene extends Phaser.Scene {
     };
   }
 
-  setRenderFaultForTest(name: 'wall-depth-tie' | 'skirt-gap' | 'no-lift' | 'none'): void {
+  setRenderFaultForTest(
+    name: 'wall-depth-tie' | 'skirt-gap' | 'no-lift' | 'ambient-static' | 'none',
+  ): void {
     this.fault = { wallDepthTie: false, skirtGap: false, noLift: false };
+    /*
+     * `ambient-static` (K53) — 물이 **한 프레임에 멈춘다.** 켜면 ★ "물이 움직인다"가
+     * 실패해야 그 검사가 실제로 움직임을 재는 것이 된다. 다시 만들 필요는 없다
+     * (다음 `update()` 가 프레임 0 을 걸어 준다).
+     */
+    this.ambientFault = name === 'ambient-static';
     if (name === 'wall-depth-tie') this.fault.wallDepthTie = true;
     else if (name === 'skirt-gap') this.fault.skirtGap = true;
     else if (name === 'no-lift') this.fault.noLift = true;
@@ -997,28 +1020,202 @@ export class KairoScene extends Phaser.Scene {
     const def = facilityDef(item.defId);
     if (!def) return;
     /*
-     * 회전 (K45) — 발자국은 w↔h 교환, 그림은 **좌우 반전**. 아이소 상자의 90° 회전은
-     * 화면에서 미러와 동치이고(bbox 가 (w+d) 로 대칭), 프로젝트 계약도 처음부터
-     * "facing 은 flipX 근사" 다 (D-035). 광원이 뒤집히는 것은 그 계약이 감수한 값이다.
+     * 회전 (K45 → K52-⑤). 발자국은 `sizeOf` 가 낸다 — **여기서 w↔h 를 다시 쓰지 말 것**.
+     *
+     * 그림은 두 갈래다:
+     *   `facings: 2` (기본) → 그림 1장 + **좌우 반전**. D-035 의 "facing 은 flipX 근사"
+     *                          그대로다. 광원이 뒤집히는 것은 그 계약이 감수한 값이다
+     *   `facings: 4`        → **방향별 텍스처**. flipX 를 걸면 안 된다 —
+     *                          그림이 이미 그 방향으로 그려져 있어 두 번 뒤집힌다
      */
     const facing = item.facing ?? 0;
-    const [w, d] = facing === 1 ? [def.size[1], def.size[0]] : [def.size[0], def.size[1]];
+    const [w, d] = PlacementGrid.sizeOf(def, facing);
+    const texId = facilitySpriteId(item.defId, facing);
+    const flip = facilityFacings(item.defId) === 2 && facing === 1;
     const a = footprintAnchor(item.i, item.j, w, d);
     // 단 위의 시설은 같이 올라간다 (K37). 발자국은 단이 균일하므로 시작 칸 하나로 충분하다
     const ay = a.y + this.liftAt(item.i, item.j);
     const existing = this.facilityImages.get(handle);
     if (existing) {
       existing.setPosition(a.x, ay);
-      existing.setFlipX(facing === 1);
+      /*
+       * ⚠ **`setTexture` 도 부른다** (K52-⑤). 예전엔 위치·flipX 만 갱신했는데,
+       * 4방향에서는 방향이 곧 **다른 텍스처**라 이 줄이 없으면 회전이 화면에 안 보인다.
+       * 2방향에서는 같은 키를 다시 주는 것이라 아무 일도 안 일어난다.
+       */
+      existing.setTexture(texId);
+      existing.setFlipX(flip);
+      this.syncAmbient(handle, item.defId, existing);
       return;
     }
-    const img = this.add.image(a.x, ay, item.defId ? `facility/${item.defId}` : '');
+    const img = this.add.image(a.x, ay, item.defId ? texId : '');
     img.setOrigin(0.5, 1);
-    img.setFlipX(facing === 1);
+    img.setFlipX(flip);
     img.setDepth(depthKey(item.i + w - 1, item.j + d - 1) + Z_FACILITY);
     this.facilityImages.set(handle, img);
     // 조준 중에 다시 만들어졌으면 투시 상태를 이어받는다 (K50 — `aimMove` 의 프로브가 그렇다)
     this.dimIfOccluding(img);
+    this.syncAmbient(handle, item.defId, img);
+  }
+
+  // ── 상시 연출: 살아 있는 물 (K53) ─────────────────────────────────────────
+  /*
+   * 규칙과 근거는 `render/kairo/fx.ts` 의 등록부 머리말에 한 번만 적어 뒀다.
+   * 여기는 **얹는 자리**만 안다: 시설 그림과 같은 앵커·같은 반전, 깊이는 반 칸 위.
+   */
+
+  /**
+   * 시설 그림 **바로 위** — `Z_FACILITY + 0.5`.
+   *
+   * 새 띠를 만들지 않는다 (계약: `iso.ts` 의 `Z_*` 를 흔들지 말 것). 앉은 손님이
+   * `rank/count × 0.9` 소수로 자기 순서를 잡는 것과 **같은 수법**이다: 1 미만이라
+   * 앞벽(3)·손님(4)을 못 넘고, 그래서 물 위를 걷는 손님은 여전히 반짝임을 덮는다.
+   */
+  private static readonly AMBIENT_SUB = 0.5;
+
+  /** 핸들 → 얹은 그림 + 시설 id (텍스처 키를 다시 구울 때 쓴다) */
+  private ambientImages = new Map<number, { img: Phaser.GameObjects.Image; defId: string }>();
+  /** 지금 화면에 걸린 프레임 번호. `-1` 이면 아직 한 번도 안 걸었다 */
+  private ambientPhaseNow = -1;
+  /** 토큰은 **한 번만** 읽는다 — `getComputedStyle` 은 매 프레임 부를 것이 아니다 */
+  private ambientPal: AmbientPalette | null = null;
+  /**
+   * 코드에 심은 음성 대조군 (K38 규칙). 켜면 프레임이 **영원히 0** 이다 —
+   * 그 상태에서 ★ "물이 움직인다"가 **실패해야** 검사가 실제로 이걸 재는 것이 된다.
+   */
+  private ambientFault = false;
+
+  /** 움직이면 안 되는 상태인가 — 기기 설정(축소 모션) 또는 대조군 */
+  private ambientStill(): boolean {
+    return this.ambientFault || this.fxHost().reduced;
+  }
+
+  /**
+   * 얹을 그림 한 장을 굽는다. `null` 이면 이 시설에는 상시 연출이 없다.
+   *
+   * **시설 텍스처를 그대로 읽어** 물빛 픽셀을 찾으므로, 캔버스 크기·앵커가 자동으로
+   * 맞는다. 그래서 4방향(K52-⑤)이 들어와 텍스처가 방향마다 달라져도 여기는 안 바뀐다 —
+   * 우리가 보는 것은 `defId` 가 아니라 **그 그림이 지금 쓰는 텍스처 키**다.
+   */
+  private ambientTexture(srcKey: string, name: AmbientName, phase: number): string | null {
+    const id = `__amb/${srcKey}/${phase}`;
+    if (this.textures.exists(id)) return id;
+    if (!this.textures.exists(srcKey)) return null;
+    const src = this.textures.get(srcKey).getSourceImage() as HTMLCanvasElement;
+    if (!src.width || !src.height) return null;
+    const tex = this.textures.createCanvas(id, src.width, src.height);
+    if (!tex) return null;
+    const ctx = tex.getContext();
+    ctx.imageSmoothingEnabled = false;
+    // ① 원본을 한 번 그려 픽셀을 읽고 ② 지운 뒤 ③ 얹을 것만 남긴다
+    ctx.drawImage(src, 0, 0);
+    const raster = ctx.getImageData(0, 0, src.width, src.height);
+    ctx.clearRect(0, 0, src.width, src.height);
+    const pen: Pen = {
+      use: (c) => {
+        ctx.fillStyle = c;
+      },
+      rect: (x, y, w, h) => ctx.fillRect(x, y, w, h),
+    };
+    this.ambientPal ??= {
+      glint: cssVar('--water-glint', '#eaf7ff'),
+      foam: cssVar('--water-foam', '#ffffff'),
+    };
+    AMBIENT_REGISTRY[name](
+      pen,
+      { w: src.width, h: src.height, data: raster.data },
+      phase,
+      this.ambientPal,
+    );
+    tex.refresh();
+    return id;
+  }
+
+  /**
+   * 시설 하나의 상시 연출을 위치·반전·텍스처까지 맞춘다.
+   *
+   * ⚠ 반전은 시설 그림에서 **읽어 온다** (`base.flipX`). 규칙을 여기서 다시 유도하면
+   * 2방향/4방향 분기가 두 벌이 되고, 그건 이 저장소가 이미 여러 번 데인 형태다.
+   */
+  private syncAmbient(handle: number, defId: string, base: Phaser.GameObjects.Image): void {
+    const name = AMBIENT_FACILITIES[defId];
+    if (!name) return;
+    const phase = this.ambientPhaseNow < 0 ? 0 : this.ambientPhaseNow;
+    const key = this.ambientTexture(base.texture.key, name, phase);
+    if (!key) return;
+    let slot = this.ambientImages.get(handle);
+    if (!slot) {
+      const img = this.add.image(base.x, base.y, key);
+      img.setOrigin(0.5, 1);
+      slot = { img, defId };
+      this.ambientImages.set(handle, slot);
+    }
+    slot.defId = defId;
+    slot.img.setTexture(key);
+    slot.img.setPosition(base.x, base.y);
+    slot.img.setFlipX(base.flipX);
+    slot.img.setDepth(base.depth + KairoScene.AMBIENT_SUB);
+    // 투시(K50)를 같이 탄다 — 시설만 흐려지고 물만 또렷하면 유리 벽 뒤가 이상해진다
+    slot.img.setAlpha(base.alpha);
+    this.dimIfOccluding(slot.img);
+  }
+
+  /** 시설이 사라지면 얹은 그림도 같이 사라진다 */
+  private dropAmbient(handle: number): void {
+    this.ambientImages.get(handle)?.img.destroy();
+    this.ambientImages.delete(handle);
+  }
+
+  /**
+   * 프레임을 한 칸 넘긴다 — `update()` 가 매 프레임 부르지만 **번호가 바뀐 프레임에만**
+   * 일을 한다 (K47-③ "판정은 칸이 바뀐 프레임에만"과 같은 절약).
+   */
+  private stepAmbient(): void {
+    const want = this.ambientStill() ? 0 : ambientPhase(this.animTick);
+    if (want === this.ambientPhaseNow) return;
+    this.ambientPhaseNow = want;
+    const t0 = performance.now();
+    for (const [handle, slot] of this.ambientImages) {
+      const base = this.facilityImages.get(handle);
+      if (!base) continue;
+      const name = AMBIENT_FACILITIES[slot.defId];
+      if (!name) continue;
+      const key = this.ambientTexture(base.texture.key, name, want);
+      if (key) slot.img.setTexture(key);
+    }
+    this.ambientStats = { steps: this.ambientStats.steps + 1, ms: performance.now() - t0 };
+  }
+
+  /** 마지막 전환에 든 시간 — 폰이 1순위라 "얼마나 드나"가 답할 수 있어야 한다 */
+  private ambientStats = { steps: 0, ms: 0 };
+
+  /**
+   * 검증 도구용 — **화면에 올라간 그림에서** 읽는다 (K38 규칙).
+   *
+   * 상수(`ambientPhase(animTick)`)를 돌려주면 그리기가 틀려도 통과한다. 여기서 내는
+   * `keys` 는 실제 `Image` 가 지금 쓰고 있는 텍스처 키다.
+   */
+  ambientProbeForTest(): {
+    count: number;
+    phase: number;
+    keys: string[];
+    still: boolean;
+    steps: number;
+    ms: number;
+  } {
+    return {
+      count: this.ambientImages.size,
+      phase: this.ambientPhaseNow,
+      keys: [...this.ambientImages.values()].map((s) => s.img.texture.key),
+      still: this.ambientStill(),
+      steps: this.ambientStats.steps,
+      /*
+       * 전환 한 번에 든 시간. **매 프레임이 아니라 6프레임마다** 도는 값이므로
+       * 프레임 평균 부담은 이 값의 1/6 이다 (`AMBIENT_TICKS_PER_FRAME`).
+       * 안 도는 프레임은 정수 비교 하나뿐이라 잴 것이 없다.
+       */
+      ms: this.ambientStats.ms,
+    };
   }
 
   /**
@@ -1113,6 +1310,7 @@ export class KairoScene extends Phaser.Scene {
     if (!exists) {
       this.facilityImages.get(handle)?.destroy();
       this.facilityImages.delete(handle);
+      this.dropAmbient(handle);
       return;
     }
     this.drawFacility(handle);
@@ -1122,6 +1320,7 @@ export class KairoScene extends Phaser.Scene {
   rebuildFacilities(): void {
     for (const img of this.facilityImages.values()) img.destroy();
     this.facilityImages.clear();
+    for (const handle of [...this.ambientImages.keys()]) this.dropAmbient(handle);
     for (const f of this.opts.placement.all()) this.drawFacility(f.handle);
   }
 
@@ -1203,10 +1402,10 @@ export class KairoScene extends Phaser.Scene {
    * 탭하면 바로 놓던 것을 고스트 + 확정으로 바꾼 이유: 회전과 "장비를 타고 있는 손님"
    * 그림이 나중에 들어온다. 놓기 전에 만질 수 있는 상태가 있어야 그걸 받을 수 있다.
    *
-   * `facing` 은 지금 안 쓰지만 **인자를 열어 둔다** — 나중에 방향 스프라이트가 생기면
-   * 여기만 바뀌고 부르는 쪽은 그대로다.
+   * ⚠ 그 예고("나중에 방향 스프라이트가 생기면 여기만 바뀐다")가 K52-⑤ 에서 실현됐다 —
+   * 부르는 쪽은 한 글자도 안 바뀌었고 텍스처 선택만 `facilitySpriteId` 로 옮겼다.
    */
-  setGhost(defId: string | null, i = 0, j = 0, ok = true, facing = 0): void {
+  setGhost(defId: string | null, i = 0, j = 0, ok = true, facing: FacilityFacing = 0): void {
     if (defId === null) {
       this.ghost?.destroy();
       this.ghost = null;
@@ -1222,20 +1421,21 @@ export class KairoScene extends Phaser.Scene {
      * 고스트가 있는 곳에 표식이 있고, 없는 곳에 없다. `facing` 도 같은 인자를 그대로
      * 넘기므로 `↻` 를 누르면 고스트와 표식이 **같은 프레임에** 함께 돈다.
      */
-    this.setRideMark(KairoScene.markOf(def, i, j, facing === 1 ? 1 : 0));
-    // 회전 미리보기 (K45) — 실물과 같은 규칙: 발자국 교환 + flipX
-    const [w, d] = facing === 1 ? [def.size[1], def.size[0]] : [def.size[0], def.size[1]];
+    this.setRideMark(KairoScene.markOf(def, i, j, facing));
+    // 회전 미리보기 (K45) — **실물(`drawFacility`)과 같은 규칙**이어야 한다
+    const [w, d] = PlacementGrid.sizeOf(def, facing);
+    const texId = facilitySpriteId(defId, facing);
     const a = footprintAnchor(i, j, w, d);
     // 고스트도 단을 탄다 (K37) — 안 태우면 산 위에서 미리보기가 땅에 파묻힌다
     const ay = a.y + this.liftAt(i, j);
     if (!this.ghost) {
-      this.ghost = this.add.image(a.x, ay, `facility/${defId}`);
+      this.ghost = this.add.image(a.x, ay, texId);
       this.ghost.setOrigin(0.5, 1);
     } else {
-      this.ghost.setTexture(`facility/${defId}`);
+      this.ghost.setTexture(texId);
       this.ghost.setPosition(a.x, ay);
     }
-    this.ghost.setFlipX(facing === 1);
+    this.ghost.setFlipX(facilityFacings(defId) === 2 && facing === 1);
     this.ghost.setAlpha(0.62);
     // 못 놓는 자리는 붉게 — 확정 바의 경고색과 짝이다
     this.ghost.setTint(ok ? 0x8fe0ff : 0xff6a5a);
@@ -1312,6 +1512,14 @@ export class KairoScene extends Phaser.Scene {
     for (const img of this.wallImages.values()) {
       scanned++;
       this.dimIfOccluding(img);
+    }
+    /*
+     * 얹은 물(K53)도 같이 훑는다. 시설만 흐려지고 그 위의 반짝임이 또렷하게 남으면
+     * 투시가 반만 걸린 것으로 보인다 — `xrayDimmed` 에 들어가야 되돌리기도 같이 된다.
+     */
+    for (const s of this.ambientImages.values()) {
+      scanned++;
+      this.dimIfOccluding(s.img);
     }
     this.xrayStats = {
       calcs: this.xrayStats.calcs + 1,
@@ -1574,7 +1782,7 @@ export class KairoScene extends Phaser.Scene {
     def: KairoFacilityDef,
     i: number,
     j: number,
-    facing: 0 | 1,
+    facing: FacilityFacing,
   ): PlaceMark | null {
     // 슬라이드류가 먼저다 — 데이터가 이미 칸 하나를 골라 놨다 (K51). 존중한다
     const ride = PlacementGrid.rideTilesOf(def, i, j, facing);
@@ -2455,7 +2663,7 @@ export class KairoScene extends Phaser.Scene {
    */
   private rebuildSeats(): void {
     this.seatViews.clear();
-    let items: Map<number, { i: number; j: number; defId: string; facing?: 0 | 1 }> | null = null;
+    let items: Map<number, { i: number; j: number; defId: string; facing?: FacilityFacing }> | null = null;
     const seated: { g: Guest; dk: number; tile: number }[] = [];
     for (const g of this.opts.guests.all) {
       // 수영 구역은 시설이 아니다 (handle 이 `ZONE_HANDLE_BASE` 위) — 아래 `items` 조회에서 빠진다
@@ -2655,6 +2863,12 @@ export class KairoScene extends Phaser.Scene {
       }
     }
     this.animTick++;
+    /*
+     * 물은 **시뮬과 무관하게** 흐른다 (K53). 시트를 열어 시간이 멈춰도 분수는 뿜는다 —
+     * 손님 스프라이트의 프레임(`animTick / 6`)이 이미 같은 규칙이고, 카이로도 그렇다.
+     * 번호가 바뀐 프레임에만 실제로 일한다.
+     */
+    this.stepAmbient();
     this.opts.guests.advanceRenderProgress(delta / 1000, this.tickSeconds);
     this.syncGuests();
     this.reportFrame();
