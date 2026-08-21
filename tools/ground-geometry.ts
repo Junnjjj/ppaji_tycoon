@@ -394,7 +394,7 @@ export const IOU_ERROR_TEXELS = 2;
  * `|Δ bottomFrac| × 캔버스폭` 이라 **가로** 텍셀인데 `TILE_W = 32` 이므로 8 은 **1/4 칸**
  * 이다 (가로 반 칸은 16). 접지선 기울기가 1/2 이라 이음새에서는 세로 4텍셀 어긋남이
  * 되고, `VERTEX_TOL_TEXELS = 2`(세로 1텍셀 예산)의 정확히 **네 배**다.
- * ⚠ `docs/asset-regen-order.md` 가 이 값을 "꼭짓점 반 칸 이상 이탈"이라고 부르는데
+ * ⚠ 한때 `docs/asset-regen-order.md` 가 이 값을 "꼭짓점 반 칸 이상 이탈"이라 불렀는데
  * 그 표현은 이 정의와 어긋난다 — 숫자를 옮길 때 같이 고칠 것.
  *
  * 경고 **65건**(면제 적용 후 — `kairo-gate.ts` 의 게이트 4 주석)을 재생성 순서로 줄 세우는
@@ -412,7 +412,7 @@ export interface GeomVerdict {
   slopeErrLeft: number | null;
   slopeErrRight: number | null;
   iouMin: number;
-  /** 반 칸 이상 밀렸다 — 재생성 우선순위 */
+  /** 가로 8텍셀(= 타일 폭의 1/4) 이상 밀렸다 — 재생성 우선순위. ⚠ "반 칸"이 아니다 (위 `SEVERE_VERTEX_TEXELS` 주석) */
   severe: boolean;
   /**
    * 실측 꼭짓점이 `w/(w+d)` 보다 **`d/(w+d)` 에 가깝다** = 발자국 두 축이 바뀐 그림.
