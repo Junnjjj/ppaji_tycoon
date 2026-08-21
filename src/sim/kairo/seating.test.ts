@@ -326,7 +326,16 @@ describe('손님이 슬롯 칸 위에 선다 (K52 5단계)', () => {
     /*
      * `pickTicket` 은 슬롯을 안 잡으므로 `usingSlot === -1` 이다. 데이터에는 `ticket` 도
      * 슬롯이 둘 있지만(정원 2), 입장 수속은 그 자리에 앉는 것이 아니다.
+     *
+     * ⚠ 그 둘은 지금 **안 쓰이는 데이터**다. 그래도 지운다/검사에 예외를 판다 대신 **둔다**:
+     * `capacity > 0 ⇒ slots.length === capacity` 는 "정원만큼 설 자리가 데이터에 있다"는
+     * **데이터에 대한 규칙**이고, 누가 그 자리를 잡느냐는 `guests.ts` 의 사정이다.
+     * 계약에 "게이트는 예외" 를 넣으면 규칙이 두 벌이 되고 새 게이트류마다 예외가 는다.
+     * 대신 **살아났을 때 맞도록** 포즈를 고쳐 둔다 — 창구 앞은 서 있는 자리다.
      */
+    const tslots = facilityDef('ticket')!.slots ?? [];
+    expect(tslots).toHaveLength(facilityDef('ticket')!.capacity);
+    expect(new Set(tslots.map((s) => s.pose))).toEqual(new Set(['idle']));
     const w = paved();
     const r = w.p.place(w.t, w.walls, GATE, 'ticket', 10, 10);
     expect(r.ok, '매표소가 놓인다').toBe(true);
@@ -383,7 +392,15 @@ describe('포즈는 데이터가 정한다 — `poseFor()` 는 삭제됐다 (K52
     expect(slots[0]!.tile).toEqual(slots[1]!.tile);
   });
 
-  it('★ 17종이 옛 규칙과 어긋난다 — 그래서 함수가 남아 있으면 안 됐다', () => {
+  it('★ 11종이 옛 규칙과 어긋난다 — 그래서 함수가 남아 있으면 안 됐다', () => {
+    /*
+     * ⚠ 한때 **17종**이었다. 그중 여섯(`footvolley`·`minigolf`·`photozone`·`playground`·
+     * `ticket`·`vending_out`)은 **데이터가 틀린 쪽**이었다: 앉는 곳이 아닌데 `sit` 이라
+     * 적혀 있었고, K52-⑤ 가 데이터를 정본으로 만든 순간 화면에 그대로 나왔다.
+     * `idle` 로 고쳤으므로 옛 규칙(`poseFor()`)과 답이 같아져 이 목록에서 빠진다 —
+     * **"옛 함수가 맞았던 여섯"이지 "함수를 되살릴 이유"가 아니다.** 나머지 11종에서
+     * 여전히 어긋나므로 이 검사가 재는 것(함수와 데이터는 다른 답을 낸다)은 그대로다.
+     */
     /** 삭제된 `poseFor()` 의 산수 그대로 (여기가 그 코드의 마지막 사본이다) */
     const old = (def: { id: string; layer: string }): string => {
       if (def.layer === 'water') return 'float';
@@ -407,19 +424,13 @@ describe('포즈는 데이터가 정한다 — `poseFor()` 는 삭제됐다 (K52
         'camp_site',
         'firepit_row',
         'footbath',
-        'footvolley',
         'lookout',
         'massage_row',
-        'minigolf',
         'mongol_tent',
         'parasol',
         'pavilion',
-        'photozone',
-        'playground',
         'pool_lazy',
         'shade_net',
-        'ticket',
-        'vending_out',
       ].sort(),
     );
   });

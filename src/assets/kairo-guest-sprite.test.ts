@@ -10,7 +10,7 @@ import {
   assertGuestContract,
   type Pose,
 } from './kairo-guest-sprite.js';
-import { KAIRO } from './kairo-contract.js';
+import { KAIRO, allSimFacilities } from './kairo-contract.js';
 import { TILE_H } from '../render/kairo/iso.js';
 
 describe('손님 스프라이트 계약 — 나중에 아틀라스로 갈아끼울 때 배치가 안 틀어지게', () => {
@@ -103,5 +103,66 @@ describe('손님 스프라이트 계약 — 나중에 아틀라스로 갈아끼�
   it('브라우저 밖에서는 굽지 않는다 — sim 은 에셋에 의존하지 않는다', async () => {
     const { bakeGuestAtlas } = await import('./kairo-guest-sprite.js');
     expect(() => bakeGuestAtlas()).toThrow(/브라우저/);
+  });
+});
+
+/**
+ * 데이터의 포즈는 **굽는 그림 중에서만** 나와야 한다 (K52 뒤).
+ *
+ * `validateContracts` 도 포즈 이름을 보지만 대조 상대가 **렌더 계약의 이름표**
+ * (`KAIRO.guest.poses`)다. 이름표와 `POSE_SHEET`(실제로 굽는 셀 목록)가 갈라지면
+ * 계약 검사는 통과하는데 화면은 프레임을 못 찾아 **조용히 폴백**한다. 그래서 여기서는
+ * **실물로** 재고, 이름표가 실물과 같은 목록인지를 같은 자리에서 못 박는다.
+ */
+describe('슬롯 포즈 — 그림이 있는 것만 (75종 전부)', () => {
+  /** 그림이 실제로 있는가 — `KairoScene.syncGuest` 가 프레임을 찾는 것과 같은 질문 */
+  const drawn = (pose: string, facing: string): boolean => {
+    const sheet = (POSE_SHEET as Record<string, { frames: number; facings: string[] }>)[pose];
+    return !!sheet && sheet.frames > 0 && sheet.facings.includes(facing);
+  };
+
+  it('★ 이름표(렌더 계약)와 실물(POSE_SHEET)이 같은 목록이다', () => {
+    // 갈라지면 아래 검사와 `validateContracts` 가 서로 다른 답을 내기 시작한다
+    expect([...KAIRO.guest.poses].sort()).toEqual(Object.keys(POSE_SHEET).sort());
+  });
+
+  it('★ 모든 슬롯의 포즈가 POSE_SHEET 에 있다', () => {
+    const bad: string[] = [];
+    let facilities = 0;
+    let slots = 0;
+    for (const f of allSimFacilities()) {
+      facilities++;
+      for (const s of f.slots ?? []) {
+        slots++;
+        const sheet = (POSE_SHEET as Record<string, unknown>)[s.pose];
+        if (!sheet) bad.push(`${f.id}: 굽지 않는 포즈 ${s.pose}`);
+      }
+    }
+    // 아무것도 안 재는 검사가 되지 않게 — 세는 대상이 실제로 있다
+    expect(facilities).toBe(75);
+    expect(slots).toBeGreaterThan(150);
+    expect(bad).toEqual([]);
+  });
+
+  it('★ 슬롯의 (포즈, 방향) 조합에 셀이 있다 — 없으면 화면이 조용히 폴백한다', () => {
+    /*
+     * ⚠ **회전(facing=1)은 안 잰다.** `slotTileOf` 가 `+Z → +X` 로 거울을 치는데
+     * `float` 시트에는 `+X` 가 없다 — 그건 데이터 오류가 아니라 렌더가 `sheet.facings[0]`
+     * 으로 받아 주기로 한 **의도된 축약**이다 (물속은 방향 2·1로 줄였다).
+     * 여기서 재는 것은 **데이터가 적은 그대로의 조합**이다.
+     */
+    const bad: string[] = [];
+    for (const f of allSimFacilities()) {
+      for (const s of f.slots ?? []) {
+        if (!drawn(s.pose, s.facing)) bad.push(`${f.id}: ${s.pose}/${s.facing} 셀 없음`);
+      }
+    }
+    expect(bad).toEqual([]);
+  });
+
+  it('★ 음성 대조군 — 없는 포즈·방향은 같은 술어에 잡힌다', () => {
+    expect(drawn('idle', '+Z')).toBe(true);
+    expect(drawn('dance', '+Z')).toBe(false); // 굽지 않는 포즈
+    expect(drawn('float', '-X')).toBe(false); // 있는 포즈인데 그 방향 셀이 없다
   });
 });

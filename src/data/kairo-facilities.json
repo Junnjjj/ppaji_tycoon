@@ -1471,7 +1471,7 @@
             0,
             0
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         },
         {
@@ -1479,7 +1479,7 @@
             1,
             0
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         }
       ],
@@ -2046,7 +2046,7 @@
             1,
             1
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         },
         {
@@ -2054,7 +2054,7 @@
             0,
             0
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         },
         {
@@ -2062,7 +2062,7 @@
             1,
             0
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         },
         {
@@ -2070,7 +2070,7 @@
             2,
             0
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         }
       ],
@@ -2104,7 +2104,7 @@
             1,
             1
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         },
         {
@@ -2112,7 +2112,7 @@
             2,
             1
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         },
         {
@@ -2120,7 +2120,7 @@
             0,
             0
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         },
         {
@@ -2128,7 +2128,7 @@
             1,
             0
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         }
       ],
@@ -2162,7 +2162,7 @@
             0,
             0
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         },
         {
@@ -2170,7 +2170,7 @@
             1,
             0
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         },
         {
@@ -2178,7 +2178,7 @@
             2,
             0
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         }
       ],
@@ -2212,7 +2212,7 @@
             0,
             0
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         },
         {
@@ -2220,7 +2220,7 @@
             1,
             0
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         }
       ],
@@ -2296,7 +2296,7 @@
             0,
             0
           ],
-          "pose": "sit",
+          "pose": "idle",
           "facing": "+Z"
         }
       ],
