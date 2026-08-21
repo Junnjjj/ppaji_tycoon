@@ -52,6 +52,34 @@
  * | 방 만들기 시도 | 60회 | **비용.** ①② 가 실패한 뒤의 마지막 수단이다 |
  * | 매표소 포장 시도 | 256곳 | **비용** — `ensurePath` 가 후보마다 격자 전체를 BFS 한다 |
  * | 선착장 자리 시도 | 400곳 | **비용** — `p.check` 가 물가·도달을 본다. 가까운 쪽부터 보므로 못 찾으면 근처가 찬 것 |
+ * | 방향 후보 | 2개 | **비용 + 사람의 모델.** 화면의 회전 버튼이 주는 선택지가 정확히 둘이다 (`main.ts` 의 `rotatable = size[0] !== size[1]`). 4방향이 오면(5단계) 여기도 4가 된다 |
+ *
+ * ## ⚠ 봇은 **입구를 겨눈다** (K52)
+ *
+ * 4단계가 거리장 목적지를 발자국 4이웃 전부 → **앞 두 면**(`entryTilesOf`)으로 좁혔다.
+ * 그 변경의 요점은 플레이어가 화면의 입구 표식을 보고 **시설을 길 쪽으로 맞추는 것**인데,
+ * 이 봇은 그때까지 `place()` 에 `facing` 을 **한 번도 안 넘겼고**(전부 `facing 0`)
+ * `ensurePath` 는 **아무 인접 칸**에나 길을 깔았다. 그 상태로 잰 26·52주 숫자는
+ * 게임이 아니라 **"아무도 입구를 겨누지 않는 세계"** 다 — P3-A(등급이 안 오르는 원인이
+ * 전부 봇 안에 있었다)·P3-D(봇 천장이 게임에 없는 세계를 쟀다)와 정확히 같은 함정이다.
+ *
+ * 그래서 사람이 화면에서 **실제로 할 수 있는 것 둘**만 봇에 넣었다:
+ *
+ * | 규칙 | 어디 | 왜 이것이 "사람의 모델"인가 |
+ * |---|---|---|
+ * | 앞면이 길에 닿는 쪽으로 **돌린다** | `aimFacings` | 확정 바의 `↻` 가 하는 일 그대로다. 후보는 게임이 주는 둘뿐이고 **자리는 안 옮긴다** — 옮기면 최적화기가 된다 |
+ * | 길을 **입구 칸까지** 깐다 | `ensurePath` | *"문은 포장이 닿은 쪽에만 난다 — 길이 곧 입구다"*(K32-B). 사람은 시설 **뒤**로 길을 내지 않는다 |
+ *
+ * ⚠ **회전은 앞면을 −I·−J 로 못 보낸다.** `entryTilesOf` 의 앞면은 언제나 +I·+J 이고
+ * `facing 1` 은 발자국을 **전치**할 뿐이다 (`sizeOf`). 그래서 회전이 바꾸는 것은
+ * "어느 쪽 면인가"가 아니라 **"앞면이 어느 칸들인가"** 이고, 정사각 시설에서는 아무것도
+ * 안 바뀐다 — 그 시설들에는 `ensurePath` 쪽이 유일한 레버다. 4방향(5단계)이 오기 전까지
+ * 이 한계는 **게임의 한계이지 봇의 한계가 아니다.**
+ *
+ * ⚠ 되돌려서 재는 법: `--entry-fault` 를 주면 `setEntryFaultForTest(true)` 로 **좁히기
+ * 이전의 목적지 집합**을 켠 채 같은 봇을 돌린다 (`seam --selftest` 와 같은 자리).
+ * 골든 15/15 가 그 스위치로 옛 값 그대로 통과하는 것을 확인했으므로, 이 플래그가 만드는
+ * 세계는 4단계 이전과 **비트 단위로 같다.** ⚠ production 아님 — 측정 전용이다.
  */
 import { Rng } from '../src/sim/rng.js';
 import { KairoTerrain } from '../src/sim/kairo/terrain.js';
@@ -65,7 +93,9 @@ import {
   facilityDef,
   FACILITY_MAX_LEVEL,
   guestWalkable,
+  setEntryFaultForTest,
   type FacilitySpecialty,
+  type KairoFacilityDef,
 } from '../src/sim/kairo/placement.js';
 import { GuestStore, GUEST_DEFAULTS, TICKET_DEF_ID } from '../src/sim/kairo/guests.js';
 import { WeekRunner, type NeedKind, type Season, type WeekReport } from '../src/sim/kairo/week.js';
@@ -135,6 +165,17 @@ const SWIM_TICKS = flag('swim', 0);
 const CHARGE_ALL = args.includes('--charge-all');
 /** 입장료를 갈아 끼운다 (`--adm 1000`) — A/B 대조 전용. 0 이면 기본값 */
 const ADMISSION = flag('adm', 0);
+/**
+ * 거리장 목적지 좁히기(K52 4단계)를 **되돌린 채** 돌린다 (`--entry-fault`).
+ *
+ * `--swim`·`--charge-all` 과 같은 자리다: 같은 바이너리로 한 축만 갈아 끼워야 전후 표가
+ * 같은 도구의 것이 된다. 켜면 `entryTilesOf` 가 **발자국 4이웃 전부**를 돌려주므로
+ * `rebuildFields` 도 `ensurePath` 도 좁히기 이전의 집합을 쓴다.
+ *
+ * ⚠ 이 스위치가 만드는 세계가 정말 "이전"인지는 골든이 증명한다 — 켜면
+ * `golden.test.ts` 15개가 4단계 이전 값 그대로 통과한다.
+ */
+const ENTRY_FAULT = args.includes('--entry-fault');
 const JSON_OUT = args.includes('--json');
 const DETERMINISM = args.includes('--determinism');
 /** 맵별 비교 — 맵마다 최적 빌드가 달라지는지 (§4.5) */
@@ -467,44 +508,63 @@ function ensureRoom(
  *
  * 0-1 BFS 로 **새로 깔 칸이 가장 적은** 경로를 찾는다. 이미 포장된 칸은 값이 0,
  * 잔디는 1. 물·시설이 막은 칸은 못 지난다. 실제로 깐 칸 수 × 석재값을 돌려준다.
+ *
+ * ## K52 — 길은 **입구 칸**까지 깐다
+ *
+ * 예전엔 목표가 발자국 **4이웃 전부**였다. 거리장이 앞 두 면으로 좁혀진 뒤로는 그게
+ * "시설 뒤로 길을 내고 손님은 그 길을 못 쓰는" 배치를 만든다 — 봇이 사람이라면 안 할
+ * 일을 하는 것이고, 그러면 헤드리스가 게임이 아니라 봇의 한계를 잰다.
+ *
+ * ⚠ **폴백은 sim 과 같은 형태여야 한다.** 앞칸까지 못 이으면(물·절벽·다른 시설이 막으면)
+ * 옛 4이웃 집합으로 다시 BFS 한다 — `rebuildFields` 의 폴백이 정확히 그 집합이므로
+ * "길을 깔았는데 손님이 못 온다"가 구조적으로 안 생긴다. 여기서 포기해 버리면 앞이 막힌
+ * 시설을 봇이 영영 못 짓고, 그건 게임이 막은 것이 아니다.
  */
 function ensurePath(
   t: KairoTerrain,
   w: WallGrid,
   p: PlacementGrid,
   land: ReturnType<typeof landRect>,
-  target: { i: number; j: number; w: number; h: number },
+  def: KairoFacilityDef,
+  target: { i: number; j: number },
+  facing: 0 | 1 = 0,
 ): number {
   const stand = guestWalkable(t, p);
   const stoneCost = GROUND_KINDS.find((k) => k.id === 'path_stone')?.cost ?? 0;
   const W = t.width;
   const H = t.height;
 
-  /** 목표 발자국에 인접한 칸들 — 손님은 시설 옆에 서서 쓴다 */
-  const goals: number[] = [];
-  for (let dj = -1; dj <= target.h; dj++) {
-    for (let di = -1; di <= target.w; di++) {
-      const inI = di >= 0 && di < target.w;
-      const inJ = dj >= 0 && dj < target.h;
+  const inLand = (ni: number, nj: number): boolean =>
+    /*
+     * ⚠ 경계는 i0+w 다 — **크기(w)와 비교하던 버그**가 있었다. 토지가 게이트 중심으로
+     * 좌우로 자라면서 i0 > 0 이 됐는데(K36), i ≥ 26 인 목표가 전부 버려져 ensurePath 가
+     * 지도 대부분에서 조용히 0 을 돌려줬다. unreachable 57회/판의 정체가 이것이었다.
+     */
+    t.inside(ni, nj) &&
+    ni >= land.i0 &&
+    nj >= land.j0 &&
+    ni < land.i0 + land.w &&
+    nj < land.j0 + land.h;
+
+  const [fw, fh] = PlacementGrid.sizeOf(def, facing);
+  /** ① 입구 칸 — 손님이 실제로 서는 자리 (`entryTilesOf` 정본을 그대로 쓴다) */
+  const front: number[] = [];
+  for (const [ni, nj] of PlacementGrid.entryTilesOf(def, target.i, target.j, facing)) {
+    if (inLand(ni, nj)) front.push(nj * W + ni);
+  }
+  /** ② 폴백 — 발자국 4이웃 전부 (`rebuildFields` 의 폴백과 **같은 집합**) */
+  const ring: number[] = [];
+  for (let dj = -1; dj <= fh; dj++) {
+    for (let di = -1; di <= fw; di++) {
+      const inI = di >= 0 && di < fw;
+      const inJ = dj >= 0 && dj < fh;
       if (inI === inJ) continue; // 발자국 자신과 대각선은 뺀다
       const ni = target.i + di;
       const nj = target.j + dj;
-      /*
-       * ⚠ 경계는 i0+w 다 — **크기(w)와 비교하던 버그**가 있었다. 토지가 게이트 중심으로
-       * 좌우로 자라면서 i0 > 0 이 됐는데(K36), i ≥ 26 인 목표가 전부 버려져 ensurePath 가
-       * 지도 대부분에서 조용히 0 을 돌려줬다. unreachable 57회/판의 정체가 이것이었다.
-       */
-      if (
-        !t.inside(ni, nj) ||
-        ni < land.i0 ||
-        nj < land.j0 ||
-        ni >= land.i0 + land.w ||
-        nj >= land.j0 + land.h
-      ) continue;
-      goals.push(nj * W + ni);
+      if (inLand(ni, nj)) ring.push(nj * W + ni);
     }
   }
-  if (goals.length === 0) return 0;
+  if (front.length === 0 && ring.length === 0) return 0;
 
   const INF = 1 << 20;
   const dist = new Int32Array(W * H).fill(INF);
@@ -559,9 +619,18 @@ function ensurePath(
     }
   }
 
-  let best = -1;
-  for (const g of goals) if (best < 0 || (dist[g] as number) < (dist[best] as number)) best = g;
-  if (best < 0 || (dist[best] as number) >= INF) return 0;
+  /*
+   * 입구 칸을 먼저 노린다. 못 닿으면 옛 4이웃 집합으로 — sim 의 폴백과 같은 순서다.
+   * BFS 는 한 번뿐이고 고르는 목표만 두 단계다 (비용 그대로).
+   */
+  const pickGoal = (goals: number[]): number => {
+    let b = -1;
+    for (const g of goals) if (b < 0 || (dist[g] as number) < (dist[b] as number)) b = g;
+    return b >= 0 && (dist[b] as number) < INF ? b : -1;
+  };
+  let best = pickGoal(front);
+  if (best < 0) best = pickGoal(ring);
+  if (best < 0) return 0;
   if ((dist[best] as number) === 0) return 0; // 이미 이어져 있다
 
   let paved = 0;
@@ -675,12 +744,7 @@ function ensureTicket(
    */
   const PAVE_TRIES = 256;
   for (const sp of spots.slice(0, PAVE_TRIES)) {
-    const paved = ensurePath(t, w, p, land, {
-      i: sp.i,
-      j: sp.j,
-      w: def.size[0] as number,
-      h: def.size[1] as number,
-    });
+    const paved = ensurePath(t, w, p, land, def, { i: sp.i, j: sp.j });
     if (paved === 0) continue;
     if (!p.check(t, w, GATE, TICKET_DEF_ID, sp.i, sp.j, opts).ok) continue;
     p.place(t, w, GATE, TICKET_DEF_ID, sp.i, sp.j, opts);
@@ -1182,6 +1246,35 @@ function nudgeForCombo(
   return best;
 }
 
+/**
+ * 어느 방향으로 놓을까 — **앞면이 길에 닿는 쪽** (K52). 좋은 쪽부터 순서대로 준다.
+ *
+ * 확정 바의 `↻` 가 하는 일 그대로다. 후보는 게임이 주는 둘뿐이고(정사각은 하나)
+ * **자리는 안 옮긴다** — 자리까지 훑기 시작하면 봇이 최적화기가 되어 헤드리스가
+ * 게임이 아니라 탐색 폭을 잰다 (`COMBO_NUDGE` 주석과 같은 규칙).
+ *
+ * ⚠ 회전 가능 조건은 **화면과 같은 식**이다 (`main.ts` 의 `rotatable = size[0] !== size[1]`).
+ * 봇이 화면에서 못 하는 회전을 하면 그것도 "게임에 없는 세계"다.
+ *
+ * ⚠ 점수는 **이미 손님이 설 수 있는 앞칸 수**다. 0 이어도 거절하지 않는다 —
+ * 길이 아직 없을 뿐이고, 그 자리는 `ensurePath` 가 입구까지 깔아 준다.
+ */
+function aimFacings(
+  def: KairoFacilityDef,
+  i: number,
+  j: number,
+  stand: (i: number, j: number) => boolean,
+): readonly (0 | 1)[] {
+  if (def.size[0] === def.size[1]) return [0];
+  const score = (f: 0 | 1): number =>
+    PlacementGrid.entryTilesOf(def, i, j, f).reduce(
+      (n, [ni, nj]) => n + (stand(ni, nj) ? 1 : 0),
+      0,
+    );
+  // 동점이면 0 — 결정론 (불변식 2). 회전은 이득이 있을 때만 한다
+  return score(1) > score(0) ? [1, 0] : [0, 1];
+}
+
 function buildOne(
   t: KairoTerrain,
   w: WallGrid,
@@ -1213,6 +1306,8 @@ function buildOne(
   permitArea?: number,
 ): number {
   const opts = permitArea === undefined ? { land } : { land, permitArea };
+  /** 손님 판정 — 방향 고르기(K52)가 "여기 이미 길이 있나"를 이걸로 본다 */
+  const stand = guestWalkable(t, p);
   const cands = allFacilityDefs()
     .filter((d) => {
       const x = d as unknown as { need?: NeedKind; cost: number };
@@ -1337,11 +1432,25 @@ function buildOne(
        * (실측 72회/판 — 봇이 부유해진 K41 뒤 no-space 경보의 진범이었다).
        */
       if (!needsWater && t.isWater(i, j)) continue;
-      const c = p.check(t, w, GATE, pick.id, i, j, opts);
+      /*
+       * **앞면이 길에 닿는 쪽부터 돌려 본다** (K52) — 화면의 `↻` 가 주는 선택지 둘.
+       * 좋은 쪽이 다른 이유로 막히면 나머지 하나를 본다 (`check` 최대 2회 — 비용).
+       */
+      const facings = aimFacings(pick as KairoFacilityDef, i, j, stand);
+      let facing = facings[0] as 0 | 1;
+      let c = p.check(t, w, GATE, pick.id, i, j, { ...opts, facing });
+      if (!c.ok && facings.length > 1) {
+        const alt = p.check(t, w, GATE, pick.id, i, j, { ...opts, facing: facings[1] as 0 | 1 });
+        if (alt.ok) {
+          c = alt;
+          facing = facings[1] as 0 | 1;
+        }
+      }
+      const fopts = { ...opts, facing };
       if (c.ok) {
         // 콤보가 뜨는 쪽으로 한두 칸 붙여 본다 (P2-B) — 왜는 `nudgeForCombo` 참고
-        const at = nudgeForCombo(t, w, p, pick.id, i, j, opts);
-        const done = p.place(t, w, GATE, pick.id, at.i, at.j, opts);
+        const at = nudgeForCombo(t, w, p, pick.id, i, j, fopts);
+        const done = p.place(t, w, GATE, pick.id, at.i, at.j, fopts);
         // 내 입구를 막았으면 되돌린다 (K48) — 왜는 `ticketsReachable` 참고
         if (done.ok && done.placed && !ticketsReachable(t, w, p)) {
           p.remove(done.placed.handle);
@@ -1362,20 +1471,15 @@ function buildOne(
        */
       // 물 위 시설은 길을 깔아 봐야 소용없다 — 덱이 기반이다
       if (c.fail === 'unreachable' && !needsWater) {
-        const pathSpend = ensurePath(t, w, p, land, {
-          i,
-          j,
-          w: pick.size[0] as number,
-          h: pick.size[1] as number,
-        });
+        const pathSpend = ensurePath(t, w, p, land, pick as KairoFacilityDef, { i, j }, facing);
         if (pathSpend > 0) {
           roomSpend += pathSpend;
-          if (p.check(t, w, GATE, pick.id, i, j, opts).ok) {
+          if (p.check(t, w, GATE, pick.id, i, j, fopts).ok) {
             /*
              * ⚠ 여기서는 **붙여 보지 않는다.** 길을 그 자리에 깔아 놓고 옆으로 옮기면
              * 방금 산 길이 헛돈이 된다. 콤보 선호는 "그냥 되는 자리"에서만 쓴다.
              */
-            const done2 = p.place(t, w, GATE, pick.id, i, j, opts);
+            const done2 = p.place(t, w, GATE, pick.id, i, j, fopts);
             if (done2.ok && done2.placed && !ticketsReachable(t, w, p)) {
               p.remove(done2.placed.handle);
               lastFail = 'seals-gate';
@@ -2395,6 +2499,15 @@ function compareMaps(seeds: number, weeks: number): void {
 }
 
 function main(): void {
+  /*
+   * 좁히기 이전 세계로 되돌린 채 잰다 (K52, `--entry-fault`). **측정 전용**이고
+   * 프로세스 전체에 걸리므로 여기 한 곳에서만 켠다 — 판마다 껐다 켜면 어느 판이
+   * 어느 세계였는지 알 수 없다.
+   */
+  if (ENTRY_FAULT) {
+    setEntryFaultForTest(true);
+    console.log('⚠ --entry-fault — K52 4단계 이전(발자국 4이웃 전부)으로 되돌린 세계');
+  }
   if (DETERMINISM) {
     const a = runOne(4242, 6);
     const b = runOne(4242, 6);

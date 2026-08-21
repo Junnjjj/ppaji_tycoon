@@ -361,21 +361,44 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
      * 들어가므로 궤적이 비트 단위로 같아야 하고, 실제로 그랬다. 이 줄 하나만 움직인
      * 것이 "구성만 바꿨고 게임플레이는 안 건드렸다"의 증거다.
      *
-     * `admission` 459,800 = 입장객 121명 × 3,800 × 요금배율 1.0 **정확히**다.
+     * `admission` = 입장객 × 3,800 × 요금배율 1.0 **정확히**다.
      * `sales` 는 그 판에 남은 유료 시설(매점·분식류)에서만 나온다.
+     */
+    /*
+     * **2026-08-22 (K52 4단계) 거리장 목적지를 앞 두 면으로 좁혔다**
+     * (visitors 121 → 83 · turnedAway 36 → 9 · exitSat 71 → 63 · grade 3 → 2 ·
+     * admission 459,800 → 315,400 · sales 265,809 → 236,426 · questsDone 6 → 5).
+     *
+     * `rebuildFields()` 가 시설마다 발자국 **4이웃 전부**를 목적지로 두던 것을
+     * `entryTilesOf` 의 **앞 두 면**(+I·+J)으로 좁혔다. 손님이 건물 뒷면으로 들어가던
+     * 것을 고친 변경이고, 대가는 **걷는 거리**다.
+     *
+     * 인과는 한 줄이다: 접근 칸이 절반 이하로 줄어 우회가 길어지고 →
+     * `walkPenalty` 가 쌓여 **exitSat 71 → 63** → 평판이 내려가 **등급 3 → 2** →
+     * 등급이 정하는 수요·상한이 같이 내려가 **visitors 121 → 83**.
+     * `turnedAway` 가 36 → 9 로 **같이** 내려간 것이 이 해석의 근거다 — 상한에 눌린
+     * 것이라면 거절이 늘어야 한다. 줄어든 것은 상한이 아니라 **찾아온 수요**다.
+     *
+     * `admission` 315,400 = 83 × 3,800 × 1.0 **정확히**로 남는다 (P6 의 성질 보존).
+     * `facilities 15` · `combos 7` · `cards 12` · `staffWages` · `avgLevel` 은 그대로다 —
+     * 배치도 콤보도 뽑기도 안 건드렸다는 뜻이다.
+     *
+     * ⚠ **이 변경이 유일한 원인임을 코드로 확인했다**: `setEntryFaultForTest(true)`
+     * (= 좁히기 이전의 목적지 집합)를 켜면 이 파일의 15개 검사가 **옛 값 그대로**
+     * 전부 통과한다. 숫자를 갈아 끼우기 전에 그 대조를 먼저 돌린 것이 근거다.
      */
     expect(g).toEqual({
       facilities: 15,
       combos: 7,
-      grade: 3,
-      exitSat: 71,
-      visitors: 121,
-      turnedAway: 36,
-      admission: 459_800,
-      sales: 265_809,
+      grade: 2,
+      exitSat: 63,
+      visitors: 83,
+      turnedAway: 9,
+      admission: 315_400,
+      sales: 236_426,
       noTicket: 0,
       profitSign: 1,
-      questsDone: 6,
+      questsDone: 5,
       riskLevel: 'caution',
       cards: 12,
       staffWages: 22_500,

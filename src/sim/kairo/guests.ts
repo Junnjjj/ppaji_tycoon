@@ -2,7 +2,13 @@ import { Rng } from '../rng.js';
 import { FlowField } from '../pathfield.js';
 import { KairoTerrain } from './terrain.js';
 import { type WallGrid } from './walls.js';
-import { PlacementGrid, facilityDef, guestWalkable } from './placement.js';
+import {
+  PlacementGrid,
+  facilityDef,
+  guestWalkable,
+  type KairoFacilityDef,
+  type PlacedFacility,
+} from './placement.js';
 import {
   poolZones,
   riverZones,
@@ -555,10 +561,6 @@ export class GuestStore {
     !this.walls.blocksMove(i, j, ni, nj) && this.terrain.levelPassable(i, j, ni, nj);
 
   /**
-   * 거리장 재구축. 시설마다 **발자국에 인접한 걸을 수 있는 칸**을 목적지로 둔다 —
-   * 발자국 자체는 시설이 점유해 못 걷는다.
-   */
-  /**
    * 게이트에서 이 칸까지의 걸음 수. 못 닿으면 −1 (K37 검사용).
    *
    * 단차 규칙(`canCross`)이 **거리장에** 실제로 반영됐는지 재려면 거리장을 읽어야 한다.
@@ -568,6 +570,20 @@ export class GuestStore {
   gateDistanceForTest(i: number, j: number): number {
     if (this.dirty) this.rebuildFields();
     const f = this.gateField;
+    if (!f) return -1;
+    return f.reachable(i, j) ? f.distAt(i, j) : -1;
+  }
+
+  /**
+   * 이 시설의 거리장에서 (i,j) 까지의 걸음 수. 못 닿으면 −1 (K52 검사용).
+   *
+   * 위 `gateDistanceForTest` 와 같은 이유로 **거리장을 읽는다**: 목적지를 앞 두 면으로
+   * 좁히면서 "놓을 수 있었으면 반드시 갈 수 있다"가 깨지지 않았는지를 재려면
+   * "아직 안 갔다"와 "못 간다"를 구분해야 한다. 손님을 굴려서 재면 둘이 섞인다.
+   */
+  facilityDistanceForTest(handle: number, i: number, j: number): number {
+    if (this.dirty) this.rebuildFields();
+    const f = this.fields.get(handle);
     if (!f) return -1;
     return f.reachable(i, j) ? f.distAt(i, j) : -1;
   }
@@ -583,16 +599,29 @@ export class GuestStore {
     return this.slotsOf(handle)?.slots.length ?? -1;
   }
 
+  /**
+   * 거리장 재구축. 시설마다 **손님이 들어가는 칸**을 목적지로 둔다 — 발자국 자체는
+   * 시설이 점유해 못 걷는다. K52 부터 그 칸은 4이웃 전부가 아니라 **앞 두 면**이다
+   * (`PlacementGrid.entryTilesOf`) — 자세한 이유는 아래 루프의 주석.
+   */
   private rebuildFields(): void {
     this.fields.clear();
     this.tickets.clear();
     const w = this.terrain.width;
     const h = this.terrain.height;
 
-    for (const item of this.placement.all()) {
-      const def = facilityDef(item.defId);
-      if (!def) continue;
-      const targets: [number, number][] = [];
+    /*
+     * ⚠ 게이트 거리장을 **시설 루프보다 먼저** 만든다 (K52). 순서만 바뀐 것이고 값은
+     * 그대로다 — 아래 앞칸 후보를 "게이트에서 닿는가"로 걸러야 하는데, 그 판정의 정본이
+     * 이 거리장이기 때문이다. 뒤에 두면 `this.gateField` 가 아직 지난 tick 것이거나 null 이다.
+     */
+    this.gateField = new FlowField(w, h);
+    this.gateField.build(this.walkable, [[this.gate.i, this.gate.j]], this.canCross);
+    const gate = this.gateField;
+
+    /** 오늘까지의 목적지 집합 — 발자국 **4이웃** 중 설 수 있는 칸 전부 (면 구분 없음) */
+    const allNeighbors = (def: KairoFacilityDef, item: PlacedFacility): [number, number][] => {
+      const out: [number, number][] = [];
       for (const [ti, tj] of PlacementGrid.footprintTiles(def, item.i, item.j, item.facing ?? 0)) {
         for (const [di, dj] of [
           [1, 0],
@@ -605,18 +634,50 @@ export class GuestStore {
           if (!this.walkable(ni, nj)) continue;
           // ⚠ "점유된 칸"을 전부 빼면 **덱 위가 목적지가 되지 못한다** — 덱은 시설이면서
           //   밟을 수 있는 칸이다. 물 위 시설로 가는 유일한 길이 덱이므로 walkable 판정만 쓴다.
+          out.push([ni, nj]);
+        }
+      }
+      return out;
+    };
+
+    for (const item of this.placement.all()) {
+      const def = facilityDef(item.defId);
+      if (!def) continue;
+
+      /*
+       * 목적지를 **앞 두 면**으로 좁힌다 (K52). `dist === 0` 이 곧 도착이므로, 목적지가
+       * 4이웃 전부면 손님이 건물 **뒷면**으로 들어간다 — 면·방향 구분이 아예 없었다.
+       *
+       * ⚠ **`walkOn` 2종(플로팅덱·선착장)은 제외한다.** 발자국 자체가 길이라 "앞으로
+       * 들어간다"는 말이 성립하지 않는다 — 좁히면 덱을 옆에서 밟고 지나가는 동선이 끊긴다.
+       *
+       * ⚠ **게이트 도달성으로 거르는 것이 필수다.** `walkable` 만 보면 "설 수는 있으나
+       * 게이트에서 못 닿는 앞칸"이 유일한 목적지로 남아 거리장이 통째로 `UNREACHABLE` 이
+       * 되고 **이미 지어진 시설이 즉사한다**.
+       *
+       * ⚠ 그리고 앞칸이 하나도 안 남으면 **오늘의 집합으로 되돌아간다**. 이 폴백이
+       * 정확히 옳은 이유: 배치 검사 `unreachable`(`placement.ts`)이 "발자국 4이웃 중
+       * 하나라도 게이트에서 `guestWalkable` 로 닿으면 ok" 인데, 폴백이 **그 집합 전체**다
+       * ⇒ **"놓을 수 있었으면 반드시 갈 수 있다"가 항등적으로 보존**된다. 그래서
+       * `check()` 를 한 줄도 안 고쳤다 — 앞면을 요구하도록 조이면 기존 판에 이미 지어진
+       * 시설이 소급으로 불법이 된다.
+       */
+      let targets: [number, number][] = [];
+      if (!def.walkOn) {
+        for (const [ni, nj] of PlacementGrid.entryTilesOf(def, item.i, item.j, item.facing ?? 0)) {
+          if (!this.walkable(ni, nj)) continue;
+          if (!gate.reachable(ni, nj)) continue;
           targets.push([ni, nj]);
         }
       }
+      if (targets.length === 0) targets = allNeighbors(def, item);
+
       if (targets.length === 0) continue;
       const f = new FlowField(w, h);
       f.build(this.walkable, targets, this.canCross);
       this.fields.set(item.handle, f);
       if (item.defId === TICKET_DEF_ID) this.tickets.add(item.handle);
     }
-
-    this.gateField = new FlowField(w, h);
-    this.gateField.build(this.walkable, [[this.gate.i, this.gate.j]], this.canCross);
 
     /*
      * 수영 구역 (S2) — 구역은 저장이 아니라 파생이다. 입수점(구역 밖의 설 수 있는 칸)이
