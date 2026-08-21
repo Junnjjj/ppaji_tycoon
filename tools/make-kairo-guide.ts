@@ -130,7 +130,6 @@ export function drawGuide(g: GuideSpec): Raster {
   const mask = canonicalGroundMask(w, d, bodyH);
   const img = blank(c.x * SCALE, c.y * SCALE);
 
-  // 열별 바닥 윤곽 (최상단·최하단)
   const top: (number | null)[] = [];
   const bot: (number | null)[] = [];
   for (let x = 0; x < c.x; x++) {
@@ -156,7 +155,6 @@ export function drawGuide(g: GuideSpec): Raster {
     }
   }
 
-  // 옆면 — 바닥 윤곽에서 위로 bodyH
   for (let x = 0; x < c.x; x++) {
     const b = bot[x];
     if (b === null || b === undefined) continue;
@@ -164,7 +162,6 @@ export function drawGuide(g: GuideSpec): Raster {
     for (let y = Math.max(0, b - bodyH + 1); y <= b; y++) putTexel(img, x, y, face);
   }
 
-  // 윗면 — 바닥 마스크를 통째로 위로 bodyH
   for (let x = 0; x < c.x; x++) {
     for (let y = 0; y < c.y; y++) {
       if (mask[y * c.x + x] === true) putTexel(img, x, y - bodyH, TOP);

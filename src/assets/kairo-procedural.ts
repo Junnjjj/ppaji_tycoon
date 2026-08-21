@@ -286,7 +286,7 @@ function drawFacility(
   const bodyH = ch - (w + d) * STEP_Y;
 
   /*
-   * 방향 (K52-⑤) — 플레이스홀더에서도 **네 장이 서로 달라야** 한다. 같으면 배선이
+   * 방향 (K53) — 플레이스홀더에서도 **네 장이 서로 달라야** 한다. 같으면 배선이
    * 통째로 빠져도 화면이 똑같아 검사가 아무것도 못 잰다.
    *
    *   전치(1·3) → 캔버스를 **가로로 뒤집어 그린다.** 아이소에서 i↔j 교환은 정확히
@@ -538,7 +538,7 @@ function altOf(finalId: string, spec: SpriteSpec): number {
 }
 
 /**
- * `facility/shop:d2` → 2. 방향 축이 없는 명세(= `facings: 2`)는 언제나 0 (K52-⑤).
+ * `facility/shop:d2` → 2. 방향 축이 없는 명세(= `facings: 2`)는 언제나 0 (K53).
  *
  * ⚠ 이름의 정본은 `FACILITY_DIR_NAMES` 하나다 — 여기서 `'d'` 를 벗겨 숫자로 파싱하면
  * 이름 규칙이 두 벌이 된다.
@@ -674,7 +674,7 @@ export class KairoProceduralProvider implements AssetProvider {
     const ids: string[] = [];
     for (const s of kairoSpriteSpecs()) {
       this.specs.set(s.id, s);
-      // `kairoSpriteIndex()` 와 **같은 전개**여야 한다 (K52-⑤) — 둘이 갈라지면
+      // `kairoSpriteIndex()` 와 **같은 전개**여야 한다 (K53) — 둘이 갈라지면
       // "색인엔 있는데 프로바이더가 못 그리는 ID" 가 생긴다. 그래서 `expandSpec` 하나로 편다
       for (const id of expandSpec(s)) ids.push(id);
     }

@@ -135,10 +135,14 @@ const DIR_STEP: readonly (readonly [number, number])[] = [
  * - `ride`  슬라이드 4종. `entryTile`/`exitTile` 이 데이터에 **칸 하나씩**으로 선언돼
  *   있고 손님이 실제로 그 칸에서 타고 그 칸으로 내린다 — 마름모 두 개가 정확한 그림이다
  *   (K51). 여기 손대지 않는다
- * - `entry` 나머지 71종. 입구는 발자국 **앞 두 면**이라 칸이 아니라 **변**이다.
+ * - `entry` **56종**. 입구는 발자국 **앞 두 면**이라 칸이 아니라 **변**이다.
  *   칸마다 마름모를 찍으면 `turtle_island 8×6` 이 표식 14개가 되고, 그건 "네 채짜리
  *   워터파크가 표식 여덟 개로 덮인다"고 K51 이 이미 경고한 그 상태다 — 굵은 선 하나
  *   + 글씨 하나로 낸다
+ *
+ * ⚠ 4 + 56 은 75 가 아니다. 남는 **15종은 표식 자체가 없다** (`markOf` 가 `null`) —
+ *   `walkOn` 2종과 `capacity 0` 14종의 합집합인데 둘이 서로를 안 덮는다 (선착장은
+ *   정원이 있는데 `walkOn` 이고 플로팅덱은 정원이 0 이다). 이유는 `markOf` 주석.
  */
 type PlaceMark =
   | { kind: 'ride'; tiles: RideTiles }
@@ -1020,7 +1024,7 @@ export class KairoScene extends Phaser.Scene {
     const def = facilityDef(item.defId);
     if (!def) return;
     /*
-     * 회전 (K45 → K52-⑤). 발자국은 `sizeOf` 가 낸다 — **여기서 w↔h 를 다시 쓰지 말 것**.
+     * 회전 (K45 → K53). 발자국은 `sizeOf` 가 낸다 — **여기서 w↔h 를 다시 쓰지 말 것**.
      *
      * 그림은 두 갈래다:
      *   `facings: 2` (기본) → 그림 1장 + **좌우 반전**. D-035 의 "facing 은 flipX 근사"
@@ -1039,7 +1043,7 @@ export class KairoScene extends Phaser.Scene {
     if (existing) {
       existing.setPosition(a.x, ay);
       /*
-       * ⚠ **`setTexture` 도 부른다** (K52-⑤). 예전엔 위치·flipX 만 갱신했는데,
+       * ⚠ **`setTexture` 도 부른다** (K53). 예전엔 위치·flipX 만 갱신했는데,
        * 4방향에서는 방향이 곧 **다른 텍스처**라 이 줄이 없으면 회전이 화면에 안 보인다.
        * 2방향에서는 같은 키를 다시 주는 것이라 아무 일도 안 일어난다.
        */
@@ -1094,7 +1098,7 @@ export class KairoScene extends Phaser.Scene {
    * 얹을 그림 한 장을 굽는다. `null` 이면 이 시설에는 상시 연출이 없다.
    *
    * **시설 텍스처를 그대로 읽어** 물빛 픽셀을 찾으므로, 캔버스 크기·앵커가 자동으로
-   * 맞는다. 그래서 4방향(K52-⑤)이 들어와 텍스처가 방향마다 달라져도 여기는 안 바뀐다 —
+   * 맞는다. 그래서 4방향(K53)이 들어와 텍스처가 방향마다 달라져도 여기는 안 바뀐다 —
    * 우리가 보는 것은 `defId` 가 아니라 **그 그림이 지금 쓰는 텍스처 키**다.
    */
   private ambientTexture(srcKey: string, name: AmbientName, phase: number): string | null {
@@ -1186,7 +1190,14 @@ export class KairoScene extends Phaser.Scene {
     this.ambientStats = { steps: this.ambientStats.steps + 1, ms: performance.now() - t0 };
   }
 
-  /** 마지막 전환에 든 시간 — 폰이 1순위라 "얼마나 드나"가 답할 수 있어야 한다 */
+  /**
+   * 마지막 전환에 든 시간 — 폰이 1순위라 "얼마나 드나"가 답할 수 있어야 한다.
+   *
+   * 실측 (K53, 데스크톱 Chrome): 물 시설 **0채 → 12채**에서 프레임 시간
+   * `16.6757 → 16.6752ms` (60fps 고정, 즉 잴 수 있는 차이가 없다) · 전환 **0.00ms** ·
+   * 텍스처 **+0.5MB**. 첫 굽기만 종류당 0.7~1.4ms 이고 그 뒤로는 **영구 캐시**다
+   * (`__amb/…` 텍스처를 안 지운다 — 프레임 수 × 시설 종류라 상한이 작다).
+   */
   private ambientStats = { steps: 0, ms: 0 };
 
   /**
@@ -1402,7 +1413,7 @@ export class KairoScene extends Phaser.Scene {
    * 탭하면 바로 놓던 것을 고스트 + 확정으로 바꾼 이유: 회전과 "장비를 타고 있는 손님"
    * 그림이 나중에 들어온다. 놓기 전에 만질 수 있는 상태가 있어야 그걸 받을 수 있다.
    *
-   * ⚠ 그 예고("나중에 방향 스프라이트가 생기면 여기만 바뀐다")가 K52-⑤ 에서 실현됐다 —
+   * ⚠ 그 예고("나중에 방향 스프라이트가 생기면 여기만 바뀐다")가 K53 에서 실현됐다 —
    * 부르는 쪽은 한 글자도 안 바뀌었고 텍스처 선택만 `facilitySpriteId` 로 옮겼다.
    */
   setGhost(defId: string | null, i = 0, j = 0, ok = true, facing: FacilityFacing = 0): void {
@@ -1847,7 +1858,7 @@ export class KairoScene extends Phaser.Scene {
    *
    * 여기만 마름모인 이유는 데이터가 칸 하나씩을 골라 놨기 때문이다
    * (`ride.entryTile`/`exitTile`). 손님이 그 칸에서 타고 그 칸으로 내리므로 "칸"이
-   * 정확한 단위다. 나머지 71종은 입구가 **면**이라 아래 `drawEntryFaces` 로 간다.
+   * 정확한 단위다. 입구가 **면**인 56종은 아래 `drawEntryFaces` 로 간다.
    */
   private drawRideDiamonds(g: Phaser.GameObjects.Graphics, m: RideTiles): void {
     const spec = [
@@ -1902,7 +1913,8 @@ export class KairoScene extends Phaser.Scene {
   }
 
   /**
-   * 나머지 71종 — 입구는 **면**이라 앞 두 면을 **굵은 폴리라인 하나 + 글씨 하나**로 (K52).
+   * 표식을 그리는 56종 — 입구는 **면**이라 앞 두 면을 **굵은 폴리라인 하나 + 글씨 하나**로
+   * (K52. 슬라이드 4종은 위 마름모, 나머지 15종은 표식 자체가 없다 — `markOf` 주석).
    *
    * ## 왜 칸마다 마름모를 안 찍나
    *
@@ -2636,6 +2648,12 @@ export class KairoScene extends Phaser.Scene {
    * 통째로 가렸다 — 실측 슬롯 **185개 중 166개(90%)** 다 (`pool_warm 8/8` ·
    * `airbounce 8/8` · `turtle_island 8/8` · `cafe 4/4` · `shop 2/2`). 안 가려지는 19개는
    * 1×1 시설과 N×1 연립의 맨 앞 칸뿐이었다.
+   *
+   * ⚠ **그 166/185 는 `depthKey(슬롯 칸)` 기준이다.** 고치기 전의 실제 깊이는
+   * `spanDepthKey(출발 칸, 슬롯 칸)` 이라 **어느 면으로 걸어 들어왔는지에 따라 갈렸다** —
+   * 입구 오른쪽에 지은 시설은 뒤쪽 면으로 들어와 가려지고 왼쪽은 이미 보였다. 그래서
+   * 이 수정의 실질은 "가림을 없앴다"보다 **"보이는지가 걸어온 방향에 안 흔들리게 했다"**
+   * 에 가깝다. 이 숫자를 "고치기 전 가려지던 비율"로 인용하지 말 것.
    *
    * 시설이 쓰는 **바로 그 키**를 손님도 쓰면 `Z_FACILITY(2) < Z_WALL_FRONT(3) < Z_GUEST(4)`
    * 계약이 발자국 **전체**에 적용된다. 그 계약의 뜻이 원래 "손님은 자기 칸의 시설·앞벽보다

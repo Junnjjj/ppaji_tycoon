@@ -74,7 +74,7 @@ export interface KairoFacilitySim {
   /** 손님이 밟고 지나가는 구조물 (플로팅덱·선착장) */
   walkOn?: boolean;
   /**
-   * 방향 그림 장수 — 없으면 2 (K52-⑤). 정본 뜻은 sim 의 `FacilityFacing` 주석.
+   * 방향 그림 장수 — 없으면 2 (K53). 정본 뜻은 sim 의 `FacilityFacing` 주석.
    * 여기서는 **몇 장을 구워야 하나**만 쓴다 (`kairoSpriteSpecs` 의 `dir` 축).
    */
   facings?: 2 | 4;
@@ -242,7 +242,7 @@ export function kairoSpriteSpecs(): SpriteSpec[] {
   const out: SpriteSpec[] = [];
 
   /*
-   * 시설 — `facings: 4` 인 것만 `dir` 축으로 네 장이 된다 (K52-⑤).
+   * 시설 — `facings: 4` 인 것만 `dir` 축으로 네 장이 된다 (K53).
    *
    * ⚠ 축은 `types.ts` 의 `SpriteVariants.dir` 를 **그대로 쓴다.** 새 축을 만들지 말 것 —
    * `variantId`/`expandSpec`/`parseId` 가 이미 전부 지원하고, 카이로 경로만 `alt` 를
@@ -350,7 +350,7 @@ export function kairoSpriteSpecs(): SpriteSpec[] {
 export function kairoSpriteIndex(): Map<string, SpriteSpec> {
   const out = new Map<string, SpriteSpec>();
   /*
-   * ⚠ **`expandSpec` 로 편다** (K52-⑤). 예전엔 여기가 `alt` 축 하나만 손으로 폈고,
+   * ⚠ **`expandSpec` 로 편다** (K53). 예전엔 여기가 `alt` 축 하나만 손으로 폈고,
    * 그래서 `dir` 를 선언하는 순간 그 변형이 **조용히 색인에서 빠졌다** — 아틀라스가
    * 안 굽고 게이트가 "계약에 없는 산출물"이라 부르는 상태가 된다.
    * `alt` 만 있는 명세에 대해서는 옛 코드와 **글자 그대로 같은 ID·같은 순서**를 낸다.
@@ -442,7 +442,7 @@ export function validateContracts(): string[] {
     }
 
     /*
-     * 방향 장수는 **2 아니면 4** 다 (K52-⑤). 3 이나 8 을 적으면 `dir` 축이 그 수만큼
+     * 방향 장수는 **2 아니면 4** 다 (K53). 3 이나 8 을 적으면 `dir` 축이 그 수만큼
      * 펴져 아틀라스가 굽지도 못하는 ID 를 요구하게 된다. 캔버스는 회전에 불변이므로
      * (`(w+d)` 가 교환에 불변) 크기 검사는 위 한 벌로 네 장을 다 덮는다.
      */

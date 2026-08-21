@@ -482,7 +482,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const ok = chk.ok && !poor;
     h.scene.setGhost(defId, i, j, ok, aim?.facing ?? 0);
     /*
-     * 발자국은 회전을 탄다 — 산수의 정본은 `PlacementGrid.sizeOf` **하나**다 (K52-⑤).
+     * 발자국은 회전을 탄다 — 산수의 정본은 `PlacementGrid.sizeOf` **하나**다 (K53).
      * 예전엔 여기·이동·철거·시트·씬 두 곳에 `facing === 1 ? [d,w] : [w,d]` 가 **여섯 벌**
      * 이었는데, 4방향에서는 `facing % 2` 로 바뀌므로 각자 고치면 반드시 한 곳이 남는다.
      */

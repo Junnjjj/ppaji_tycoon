@@ -15,7 +15,7 @@ import {
 import { KairoProceduralProvider } from './kairo-procedural.js';
 
 /**
- * **에셋 쪽 4방향 배선** (K52-⑤) — 계약이 `facings: 4` 를 만나면 `dir` 축으로 편다.
+ * **에셋 쪽 4방향 배선** (K53) — 계약이 `facings: 4` 를 만나면 `dir` 축으로 편다.
  *
  * ⚠ 데이터에는 아직 4가 하나도 없다 (이번 커밋은 배선만). 그래서 이 파일은 `KAIRO_SIM`
  * 항목 하나를 **잠깐 4로 바꿔** 배선이 실제로 도는지 본다 — 데이터에 4를 미리 적어 두면

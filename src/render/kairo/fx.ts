@@ -80,9 +80,9 @@ const FLOAT_LIFT = 26;
 /**
  * `+₩N` 이 떠올랐다 사라진다 — 카이로의 그 연출.
  *
- * 글자는 Phaser `Text` 다. 도트 아틀라스에 숫자 글리프가 아직 없어서인데
- * (`kairo-procedural` 은 전부 플레이스홀더다, Phase G), **여기가 등록부라서**
- * 아틀라스가 생기면 이 함수 하나만 갈면 된다.
+ * 글자는 Phaser `Text` 다. 카이로 아틀라스에 **숫자 글리프가 없어서**다 — Phase G
+ * (K52) 로 아틀라스 자체는 들어왔지만 144 ID 중 글리프 시트는 0장이다 (실측).
+ * **여기가 등록부라서** 글리프가 들어오면 이 함수 하나만 갈면 된다.
  */
 function incomePop(host: FxHost, t: FxTarget): FxHandle {
   const c = tileCenter(t.i, t.j);

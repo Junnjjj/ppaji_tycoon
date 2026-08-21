@@ -60,7 +60,13 @@ export interface GroundMeasure {
   slopeLeft: number | null;
   /** 오른쪽 아래 변의 최소자승 기울기 (기대 −0.5) */
   slopeRight: number | null;
-  /** 밴드 안에서 윤곽이 잡힌 열의 비율 — 파라솔처럼 뚫린 종을 가른다 */
+  /**
+   * 밴드 안에서 윤곽이 잡힌 열의 비율.
+   *
+   * ⚠ **판정에는 안 들어간다** (`geomVerdict` 가 안 읽는다). `--geom` 표와 면제 사유
+   * (`GEOM_HOLDOUT` 의 `why`)를 사람이 쓰기 위한 근거일 뿐이다 — 파라솔 88% 는 접지가
+   * 아니라 대부분 차양이다. 문턱을 걸고 싶어지면 그것이 새 축이지 이 필드가 아니다.
+   */
   cover: number;
   /** 정본 접지 마스크와의 **여백 쐐기** IoU (아래 주석) */
   wedgeIoU: number;
@@ -95,7 +101,11 @@ export function canonicalGroundMask(w: number, d: number, bodyH: number): boolea
   return mask;
 }
 
-/** 캔버스 폭·높이만 아는 마스크에서 열별 최하단 윤곽을 뽑는다 */
+/**
+ * 열별 최하단 윤곽 — **게이트가 보는 것은 이것 하나**다 (세 축이 전부 여기서 나온다).
+ * 밴드 위(몸통)는 안 본다: 시설 그림은 지붕·간판이 제각각이라 몸통을 재면 각도가 아니라
+ * 취향을 재게 된다.
+ */
 function contourOf(solid: (x: number, y: number) => boolean, W: number, H: number, bandTop: number): (number | null)[] {
   const out: (number | null)[] = [];
   for (let x = 0; x < W; x++) {
@@ -111,7 +121,15 @@ function contourOf(solid: (x: number, y: number) => boolean, W: number, H: numbe
   return out;
 }
 
-/** 최소자승 기울기. 점이 `min` 개 미만이면 `null` */
+/**
+ * 최소자승 기울기. 점이 `min` 개 미만이면 `null`.
+ *
+ * ⚠ **`min` 은 사실상 판정 문턱이다.** `null` 은 "모르겠다"가 아니라 `geomVerdict` 에서
+ * **위반**으로 센다 (그 함수의 ⚠ 참조) — 즉 이 수를 올리면 짧은 변을 가진 그림이
+ * 더 많이 빨개지고, 내리면 톱니 몇 점으로 뽑은 기울기가 판정에 들어온다.
+ * 실측으로 이 경로를 타는 것은 `ticket`(오른쪽 변, 출력에 `기울기 0.150/—`)이다.
+ * 건드리려면 `--geom` 전후를 비교해서 무엇이 바뀌는지 먼저 볼 것.
+ */
 function lsqSlope(pts: { x: number; y: number }[], min = 6): number | null {
   if (pts.length < min) return null;
   const n = pts.length;
@@ -229,7 +247,13 @@ export function measureCanonical(w: number, d: number, bodyH: number): GroundMea
   };
 }
 
-/** 실제 스프라이트를 잰다. 캔버스 크기는 게이트 3 이 이미 검사한 뒤라고 가정한다 */
+/**
+ * 실제 스프라이트를 잰다. 캔버스 크기는 게이트 3 이 이미 검사한 뒤라고 가정한다.
+ *
+ * ⚠ 그 가정이 깨지면 **던지지 않고 조용히 틀린 IoU** 를 낸다: 기대 쐐기(`wantWedge`)를
+ * 정본 윤곽(길이 `c.x`)으로 만들면서 폭은 실측 `r.w` 로 재색인하기 때문이다.
+ * 게이트 3 을 게이트 4 **앞에서** 빼지 말 것 (`kairo-gate.ts` 의 실행 순서).
+ */
 export function measureSprite(r: Raster, w: number, d: number, bodyH: number): GroundMeasure {
   const solid = (x: number, y: number): boolean => r.data[(y * r.w + x) * 4 + 3]! >= ALPHA_SOLID;
   const contour = contourOf(solid, r.w, r.h, bodyH);
@@ -255,9 +279,11 @@ export function measureSprite(r: Raster, w: number, d: number, bodyH: number): G
  *
  *     새윤곽(x) = YB + (정본윤곽(x) − YB) × slopeMul
  *
- * `slopeMul = 1` 이면 정본과 **픽셀 단위로 같다** (양성 대조군 — 게이트가 자기
- * 기대값을 통과시키는지 확인). 축이 최하단 꼭짓점이라 기울여도 캔버스 밖으로
- * 안 나가고 꼭짓점 위치도 안 변한다 — 그래서 **기울기만 따로** 시험할 수 있다.
+ * `slopeMul = 1` 이면 **열별 최하단 윤곽이** 정본과 픽셀 단위로 같다 (양성 대조군 —
+ * 게이트가 자기 기대값을 통과시키는지 확인). ⚠ 래스터 전체가 같은 것은 **아니다** —
+ * 아래에 적었듯 실루엣은 윤곽 위를 다 채운 상자다. 게이트가 보는 것이 윤곽뿐이라
+ * 그것으로 충분하다. 축이 최하단 꼭짓점이라 기울여도 캔버스 밖으로 안 나가고
+ * 꼭짓점 위치도 안 변한다 — 그래서 **기울기만 따로** 시험할 수 있다.
  *
  * · `slopeMul = 2/√3 ≈ 1.1547` → 아래 두 변이 `tan30°`. 관습적인 30° 아이소다
  *   (계획서가 지정한 대조군).
@@ -265,8 +291,11 @@ export function measureSprite(r: Raster, w: number, d: number, bodyH: number): G
  *   (shop `bottomFrac 0.64` vs 기대 0.267), 비정사각에서 `w/(w+d)` 가 `d/(w+d)` 로 뒤집힌다.
  * · `shiftX` → 통째로 옆으로 민 그림 (앵커 어긋남).
  * · `scale` → 접지면만 작게(크게) 그린 것. **최하단 꼭짓점을 축으로** 닮음 변환하므로
- *   기울기도 꼭짓점도 안 변한다 — **IoU 축만** 잡을 수 있는 결함이다. 축 하나가
- *   통째로 죽어도 다른 축이 대신 잡아 주면 모르기 때문에, 축마다 이런 대조군이 있어야 한다.
+ *   **IoU 축만** 잡을 수 있는 결함이다. 축 하나가 통째로 죽어도 다른 축이 대신 잡아 주면
+ *   모르기 때문에, 축마다 이런 대조군이 있어야 한다.
+ *   ⚠ 정확히는 **꼭짓점만** 불변이다 (실측 `--selftest` 0.8배: 꼭짓점 0.500/0.800/0.333/
+ *   0.500 그대로). 기울기는 래스터화 반올림만큼 움직인다 (실측 최대 이탈 0.021 <
+ *   문턱 0.0625) — "안 변한다"고 적어 두면 그 여유가 얼마인지를 다음 사람이 못 본다.
  *
  * 실루엣은 윤곽 위를 전부 채운 **꽉 찬 상자**다. 게이트가 보는 것이 최하단 윤곽
  * 하나이므로 몸통 모양은 판정에 안 들어간다 — 대조군이 재는 축을 흐리지 않는다.
@@ -359,9 +388,17 @@ export const VERTEX_TOL_TEXELS = 2;
 export const IOU_ERROR_TEXELS = 2;
 
 /**
- * "반 칸" — 꼭짓점이 이만큼 밀리면 그림이 **다른 타일에 앉아 보인다**.
- * 한 칸의 가로가 `TILE_W = 32` 텍셀이므로 반 칸은 16, 그 절반(=세로 반 칸)이 8 이다.
- * 경고 66건을 재생성 순서로 줄 세우는 데 쓴다 — 판정 문턱이 아니다.
+ * **가로 8텍셀** — 이만큼 밀리면 그림이 **다른 타일에 앉아 보인다**.
+ *
+ * ⚠ 이것을 "반 칸"이라고 부르지 말 것. 비교 대상인 `vertexTexels` 는
+ * `|Δ bottomFrac| × 캔버스폭` 이라 **가로** 텍셀인데 `TILE_W = 32` 이므로 8 은 **1/4 칸**
+ * 이다 (가로 반 칸은 16). 접지선 기울기가 1/2 이라 이음새에서는 세로 4텍셀 어긋남이
+ * 되고, `VERTEX_TOL_TEXELS = 2`(세로 1텍셀 예산)의 정확히 **네 배**다.
+ * ⚠ `docs/asset-regen-order.md` 가 이 값을 "꼭짓점 반 칸 이상 이탈"이라고 부르는데
+ * 그 표현은 이 정의와 어긋난다 — 숫자를 옮길 때 같이 고칠 것.
+ *
+ * 경고 **65건**(면제 적용 후 — `kairo-gate.ts` 의 게이트 4 주석)을 재생성 순서로 줄 세우는
+ * 데 쓴다 — **판정 문턱이 아니다.**
  */
 export const SEVERE_VERTEX_TEXELS = 8;
 
@@ -399,9 +436,14 @@ export interface GeomVerdict {
  *
  * ⚠ 면제가 20종을 넘으면 게이트가 아무것도 안 재는 것에 가깝다. 지금 7종이다.
  *
- * ⚠ 계획서는 예로 **화단**도 들었지만 실측은 반대였다 — `flowerbed` 는 IoU 0.708 로
- * 문턱 0.333 을 크게 넘고 기울기 하나만 어긋난다. 화단은 접지가 진짜 다이아몬드다.
+ * ⚠ 계획서는 예로 **화단**도 들었지만 실측은 반대였다 — `flowerbed` 는 IoU **0.708** 로
+ * 문턱 **0.667** 을 넘긴다 (여유 0.041). 어긋나는 것은 **꼭짓점(2.5텍셀)과 기울기**이지
+ * 접지 모양이 아니다 — 화단은 접지가 진짜 다이아몬드다.
  * 짐작으로 면제하지 말고 **재고 나서** 넣을 것.
+ *
+ * ⚠ 위 문턱을 **0.333 이라고 적지 말 것.** 그것은 폐기된 `(A−E)/(A+E)` 식의 값이고
+ * (같은 그림이 0.667 ⇔ 0.333), 그 식은 예산을 두 배 써서 "6텍셀 밀린 그림"을 IoU 축이
+ * 못 잡게 만든다 — `IOU_ERROR_TEXELS` 주석의 ⚠ 가 그 사고를 적어 둔 자리다.
  */
 export const GEOM_HOLDOUT: readonly { id: string; axes: readonly GeomAxis[]; why: string }[] = [
   {
@@ -422,7 +464,7 @@ export const GEOM_HOLDOUT: readonly { id: string; axes: readonly GeomAxis[]; why
   {
     id: 'photozone',
     axes: ['slope', 'iou'],
-    why: '세워 놓은 액자. 접지가 발 둘이다 (실측 덮임 66% — 75종 중 최저). 프레임을 받침대 있는 형태로 다시 그리면 이 줄을 지운다.',
+    why: '세워 놓은 액자. 접지가 발 둘이다 (실측 덮임 66% — `vending_in`·`lifering` 의 63% 와 함께 최저권 셋). 프레임을 받침대 있는 형태로 다시 그리면 이 줄을 지운다.',
   },
   {
     id: 'vending_in',
@@ -444,7 +486,15 @@ export const GEOM_HOLDOUT: readonly { id: string; axes: readonly GeomAxis[]; why
 const holdoutFor = (id: string): readonly GeomAxis[] =>
   GEOM_HOLDOUT.find((h) => h.id === id)?.axes ?? [];
 
-/** 실측 + 기대값 → 판정. 기대값은 **정본 마스크를 같은 추정기로 잰 값**이다 */
+/**
+ * 실측 + 기대값 → 판정. 기대값은 **정본 마스크를 같은 추정기로 잰 값**이다.
+ *
+ * ⚠ **못 잰 축(`null`)은 위반으로 센다.** 접지가 아예 없거나 변이 짧아 기울기를 못 내는
+ * 그림이 "측정 불가"로 조용히 통과하면 게이트가 없는 것과 같다 — 이 저장소가 반복해
+ * 겪은 "검사가 조용히 통과"의 정확한 반대편 결정이다. 실제로 발동한다: `ticket` 은
+ * 오른쪽 변의 점이 `lsqSlope` 의 최소 개수에 못 미쳐 이 경로로 빨간불이 되고, 표에도
+ * `기울기 0.150/—` 로 뜬다. 통과시켜야 하는 종은 `GEOM_HOLDOUT` 에 **왜와 함께** 적는다.
+ */
 export function geomVerdict(
   id: string,
   m: GroundMeasure,
@@ -470,8 +520,9 @@ export function geomVerdict(
   };
   /*
    * ⚠ 부동소수 여유. `bottomFrac` 은 나눗셈 두 번을 거치므로 정확히 문턱인 값이
-   * `2.0000000000000004` 로 나온다 — 실측으로 걸렸다 (`slide_small` 이 오차 2.0 인데
-   * 빨간불이었다). 문턱을 느슨하게 하는 게 아니라 **같은 값을 같은 값으로** 보는 것이다.
+   * **문턱보다 아주 조금 큰 수**로 나온다 — 실측으로 걸렸다 (`slide_small` 이 표시상
+   * 오차 2.0 인데 빨간불이었다). 문턱을 느슨하게 하는 게 아니라 **같은 값을 같은 값으로**
+   * 보는 것이다. (구체적 자릿수는 그림이 바뀌면 달라지므로 적지 않는다.)
    */
   const EPS = 1e-9;
   take('vertex', vertexTexels === null || vertexTexels > VERTEX_TOL_TEXELS + EPS);

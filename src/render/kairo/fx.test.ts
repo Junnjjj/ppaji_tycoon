@@ -4,6 +4,9 @@
  * 브라우저 없이 잰다. `fx.ts` 가 Phaser 를 **타입으로만** 가져오기 때문에 가능하고,
  * 그게 이 파일이 존재하는 이유다 — 합치기·상한 같은 정책이 브라우저 검사에서만
  * 확인되면 회귀를 놓친다 (`kairo-camera.ts` 와 같은 판단).
+ *
+ * K53 의 **상시 연출 등록부**(`AMBIENT_REGISTRY`)도 여기서 잰다 — `Pen`/`AmbientRaster`
+ * 가 캔버스를 얇게 감싼 것도 같은 이유다 (그리기 규칙을 브라우저 없이 재려고).
  */
 import { describe, expect, it } from 'vitest';
 import {
