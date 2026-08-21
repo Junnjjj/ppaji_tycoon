@@ -21,6 +21,8 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DOC = ROOT / "docs" / "asset-prompts.md"
 DEFAULT_OUT = ROOT / "assets" / "generated" / "kairo"
+SIM_FACILITIES = ROOT / "src" / "data" / "kairo-facilities.json"
+RENDER_CONTRACT = ROOT / "src" / "assets" / "kairo-render-contract.json"
 
 GLOBAL_PALETTE = (
     "8fbc63 7faa55 9fc973 e8cf9a dcc088 f0dcae "
@@ -37,6 +39,39 @@ class Asset:
     filename: str
     width: int
     height: int
+
+
+@dataclass(frozen=True)
+class Footprint:
+    """The contract geometry a facility sprite has to sit on.
+
+    ``w`` x ``d`` tiles, drawn on a ``(w+d)*16`` x ``(w+d)*8 + body_h`` canvas whose
+    bottom ``(w+d)*8`` rows are exactly the ground diamond (see ``tools/ground-geometry.ts``).
+    """
+
+    w: int
+    d: int
+    body_h: int
+
+
+def facility_footprints() -> dict[str, Footprint]:
+    """Read `w x d` (sim) and `bodyH` (render) for every facility sprite.
+
+    Both files are the existing contract; nothing new is declared here.  The gate
+    (`tools/kairo-gate.ts`) measures against the very same two numbers, so the extractor
+    and the gate cannot drift apart.
+    """
+    sizes = {
+        f["sprite"]: (int(f["size"][0]), int(f["size"][1]))
+        for f in json.loads(SIM_FACILITIES.read_text(encoding="utf-8"))["facilities"].values()
+    }
+    out: dict[str, Footprint] = {}
+    for spec in json.loads(RENDER_CONTRACT.read_text(encoding="utf-8"))["facilities"]:
+        size = sizes.get(spec["sprite"])
+        if size is None:
+            continue
+        out[spec["sprite"]] = Footprint(size[0], size[1], int(spec["bodyH"]))
+    return out
 
 
 def section_for(doc: str, sheet: str) -> str:
@@ -273,11 +308,92 @@ def subject_bbox(cell: Image.Image, label_fraction: float) -> tuple[int, int, in
     )
 
 
+def ground_vertex_shift(
+    image: Image.Image, footprint: Footprint
+) -> tuple[int, dict[str, object]]:
+    """How many whole pixels sideways the drawing has to move to sit on its own tile.
+
+    ## Position, not geometry
+
+    This is a **lossless integer translation** — every pixel keeps its colour and its
+    neighbours, the drawing is never sheared, scaled or resampled.  It corrects *where the
+    picture was put down*, which is this tool's own doing (the old code centred the subject
+    bounding box), not *how the picture was drawn*, which is the generator's.  Drawings whose
+    angle is actually wrong are fixed by re-prompting with a guide and re-running the gate,
+    which is a deliberate project decision — so do **not** grow this into a shear/scale
+    "geometry correction".  Warping the raster would make the gate green while the sprite
+    stops matching the guide it was generated from, and the gate would no longer be measuring
+    the drawing at all.
+
+    ## Why bbox-centring is wrong
+
+    The contract puts the footprint's **bottom vertex** at `w/(w+d)` of the canvas width
+    (`tools/ground-geometry.ts`), because the canvas is the bounding box of the `w x d`
+    diamond.  That equals the middle only when `w == d`.  A 4x1 wants 0.800 and a 2x3 wants
+    0.400, so centring a non-square footprint files the drawing onto the wrong tile — up to a
+    quarter tile off.  `render_ground_asset` never had this bug because it imposes
+    `diamond_mask()`; facilities had no such step, and that is where most of the reported
+    "wrong angle" came from.
+
+    ## Never crop
+
+    Many subjects are scaled until they touch both canvas edges, so the full correction does
+    not always fit.  The shift is clamped to the empty margin actually available: moving as
+    far as the canvas allows stays lossless and strictly reduces the vertex error, while
+    cropping would trade one defect for another.  `dx_wanted != dx_applied` in the report
+    marks every sprite the canvas held back (`dx_applied == 0` means it could not move at
+    all), which is a regeneration list, not a silent pass.
+
+    Returns `(dx, details)`; `dx` is 0 when there is no measurable ground contour, when the
+    drawing is already right, or when there is no margin to move into.
+    """
+    width, height = image.size
+    band_top = footprint.body_h
+    pixels = image.load()
+
+    # Same estimator as the gate: per-column lowest opaque row inside the ground band.
+    contour: list[int | None] = []
+    for x in range(width):
+        bottom: int | None = None
+        for y in range(height - 1, band_top - 1, -1):
+            if pixels[x, y][3] >= 128:
+                bottom = y
+                break
+        contour.append(bottom)
+
+    lowest = max((y for y in contour if y is not None), default=None)
+    if lowest is None:
+        return 0, {"reason": "no ground contour"}
+    bottom_xs = [x for x, y in enumerate(contour) if y == lowest]
+    mean_x = sum(bottom_xs) / len(bottom_xs)
+
+    # Contract target.  bottomFrac is measured at pixel centres, so
+    #   (mean_x + 0.5) / width == w / (w + d)   =>   mean_x == 16w - 0.5
+    want_x = footprint.w * 16 - 0.5
+    wanted = round(want_x - mean_x)
+
+    columns = [x for x in range(width) if any(pixels[x, y][3] >= 128 for y in range(height))]
+    left, right = (columns[0], columns[-1]) if columns else (0, width - 1)
+    room_left, room_right = -left, width - 1 - right
+    applied = max(room_left, min(room_right, wanted))
+    return applied, {
+        "footprint": [footprint.w, footprint.d],
+        "body_h": footprint.body_h,
+        "bottom_frac": round((mean_x + 0.5) / width, 4),
+        "want_frac": round(footprint.w / (footprint.w + footprint.d), 4),
+        "dx_wanted": wanted,
+        "dx_applied": applied,
+        "room": [room_left, room_right],
+        "limited_by_canvas": applied != wanted,
+    }
+
+
 def render_asset(
     cell: Image.Image,
     asset: Asset,
     palette: list[tuple[int, int, int]],
     label_fraction: float,
+    footprint: Footprint | None = None,
 ) -> tuple[Image.Image, dict[str, object]]:
     bbox = subject_bbox(cell, label_fraction)
     subject = cell.crop(bbox)
@@ -302,14 +418,23 @@ def render_asset(
 
     canvas = Image.new("RGBA", (asset.width, asset.height), (0, 0, 0, 0))
     x = (asset.width - resized_width) // 2
+    # Vertical anchoring stays bottom-flush: the contract anchor is the lowest row.
     y = asset.height - resized_height
     canvas.alpha_composite(snapped, (x, y))
-    return canvas, {
+    details: dict[str, object] = {
         "source_bbox": bbox,
         "resized": [resized_width, resized_height],
         "target": [asset.width, asset.height],
         "opaque_pixels": opaque,
     }
+    if footprint is not None:
+        # Horizontal placement is decided by the ground vertex, not by the bounding box.
+        dx, align = ground_vertex_shift(canvas, footprint)
+        if dx:
+            canvas = Image.new("RGBA", (asset.width, asset.height), (0, 0, 0, 0))
+            canvas.alpha_composite(snapped, (x + dx, y))
+        details["ground_align"] = align
+    return canvas, details
 
 
 def diamond_mask(width: int = 32, height: int = 16) -> set[tuple[int, int]]:
@@ -531,6 +656,7 @@ def main() -> None:
     if len(cells) != len(assets):
         raise ValueError(f"{args.sheet}: {len(cells)} cells for {len(assets)} assets")
 
+    footprints = facility_footprints()
     args.out.mkdir(parents=True, exist_ok=True)
     report: dict[str, object] = {
         "sheet": args.sheet,
@@ -563,8 +689,10 @@ def main() -> None:
                 args.sheet == "W5",
             )
         else:
+            # Only facilities carry a footprint contract; deco, UI icons, bridges and
+            # backdrops are not measured by the ground gate and keep bbox-centring.
             output, details = render_asset(
-                cell, asset, asset_palette, label_fraction
+                cell, asset, asset_palette, label_fraction, footprints.get(asset.sprite_id)
             )
         if args.sheet in {"W14", "W15"}:
             enforce_horizontal_seam(output, asset_palette)
