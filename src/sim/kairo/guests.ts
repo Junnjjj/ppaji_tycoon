@@ -136,8 +136,19 @@ export interface Guest {
   /** 슬라이드 탑승 — 남은 tick 과 전체 tick (0 이면 탑승 아님) */
   rideTicks: number;
   rideTotal: number;
-  /** 탑승 구간 (입구 → 출구) */
+  /**
+   * **들어온 자리** — 이용을 마치고 `leaveFacility` 가 돌아갈 기준 칸이다.
+   *
+   * 셋이 같은 필드를 쓴다 (`Guest` 에 필드를 안 늘린다 — 손님은 저장 안 되니 이름만의 문제다):
+   *   · 슬라이드 → 입구 칸. 그대로 **탑승 보간의 출발점**이기도 하다 (`rideTicks > 0` 일 때)
+   *   · 수영     → 입수한 뭍 칸 (S2). 물 칸엔 거리장이 없어 그 자리로 올라와야 한다
+   *   · 슬롯     → 앉기 전에 서 있던 밖 칸
+   *
+   * 기준 칸이 지금 못 걷는 칸일 수 있다 (슬라이드 입구는 발자국 **안**이다) —
+   * `leaveFacility` 가 걸을 수 있는 이웃으로 편다.
+   */
   rideFrom: readonly [number, number];
+  /** 탑승 도착 칸 (출구). `rideTicks > 0` 인 동안만 뜻이 있다 */
   rideTo: readonly [number, number];
 }
 
@@ -199,6 +210,38 @@ export interface GuestTunables {
  * 이건 "길이 없다"라서 더 빨리 판정해야 판이 안 얼어붙는다.
  */
 export const STUCK_LIMIT = 200;
+
+/**
+ * **일부러 망가뜨리는 스위치** — **K52 5단계 이전의 세계**를 그대로 되돌린다:
+ *   · 손님이 슬롯 칸에 **안 앉는다** (이용 중에도 들어온 칸에 서 있다)
+ *   · 복원이 **구역(수영) 분기 안에만** 있다 → 슬라이드를 탄 손님이 출구
+ *     (발자국 안 = 못 걷는 칸)에 남아 `STUCK_LIMIT × ticksPerStep` = **800 tick** 얼어붙는다 (E①)
+ *
+ * 이 저장소 규칙이다 (`setRideFaultForTest`·`setEntryFaultForTest` 와 같은 자리):
+ * 손으로 한 번 되돌려 확인한 것은 다음 사람에게 안 남는다. 켠 상태에서
+ * ★ "이용을 마친 손님이 안 갇힌다" 와 ★ "손님이 슬롯 칸 위에 있다" 가 **실패해야**
+ * 그 검사들이 정말 이 배선을 재고 있는 것이 된다.
+ *
+ * ⚠ **둘을 한 스위치에 묶는다.** 복원만 끄면 손님이 슬롯 칸에 앉은 채 갇혀 예전에도
+ * 지금도 아닌 **제3의 세계**가 되고, 그 세계로 잰 밸런스 Δ 는 아무 뜻이 없다
+ * (실측: 26주 퇴장 만족도 중앙 0 · 심사 자격 미달 312/312주).
+ *
+ * ⚠ 포즈는 되돌리지 않는다 — 삭제된 `poseFor()` 는 **화면만** 보고 밸런스에 안 닿는다.
+ *
+ * ⚠ production 에서 세우지 말 것.
+ */
+let slotRestoreFault = false;
+export function setSlotRestoreFaultForTest(on: boolean): void {
+  slotRestoreFault = on;
+}
+
+/** 4이웃 — 복원 후보를 **고정 순서**로 훑는다 (결정론, 불변식 2) */
+const STEP4: readonly (readonly [number, number])[] = [
+  [1, 0],
+  [-1, 0],
+  [0, 1],
+  [0, -1],
+];
 
 export const GUEST_DEFAULTS: GuestTunables = {
   maxGuests: 60,
@@ -773,6 +816,99 @@ export class GuestStore {
   }
 
   /**
+   * 이용을 **시작한다** — 손님을 `to` 칸으로 옮기고 나올 때 돌아갈 기준 칸(`back`)을 적는다.
+   *
+   * ## 왜 함수 하나인가
+   *
+   * 들어가는 길이 셋(수영·탑승·슬롯)인데 **나오는 길은 수영에만** 있었다. 그래서 슬라이드를
+   * 탄 손님이 출구(발자국 안 = 못 걷는 칸)에 남아 거리장이 `UNREACHABLE` 이 되고,
+   * "길이 막혔다" 분기에서 `STUCK_LIMIT`(200) × `ticksPerStep`(4) = **800 tick 을 얼어
+   * 있다가** 나갔다. 같은 복원 코드를 세 벌 쓰면 언젠가 또 한 벌만 고쳐진다 —
+   * 이 저장소가 반복해 겪은 실패다 (`guestWalkable`·`capacityOf`·`admissionLimit`).
+   *
+   * ⚠ `to === 현재 칸` 은 **정상 경로**다 (매표소·슬롯 없는 시설). "제자리에 선다"를
+   * 분기로 빼지 않는 이유는, 그러면 `back` 을 안 적는 경로가 생겨 다음 `leaveFacility`
+   * 가 지난 이용의 기준 칸으로 손님을 보내기 때문이다.
+   */
+  private enterFacility(
+    g: Guest,
+    to: readonly [number, number],
+    back: readonly [number, number],
+    pose: GuestPose,
+    facing?: Guest['facing'],
+  ): void {
+    g.rideFrom = [back[0], back[1]];
+    g.fromI = g.i;
+    g.fromJ = g.j;
+    g.i = to[0];
+    g.j = to[1];
+    g.progress = 0;
+    g.pose = pose;
+    if (facing) g.facing = facing;
+  }
+
+  /**
+   * 이용을 **마친다** — 손님을 걸을 수 있는 칸으로 되돌린다. 순서가 곧 이유다:
+   *
+   *   1. `rideFrom` 이 설 수 있으면 그 칸 — 수영의 입수점, 슬롯 앞에 서 있던 칸
+   *   2. `rideFrom` 의 걸을 수 있는 이웃 — 슬라이드 입구는 발자국 **안**이라 못 선다.
+   *      타러 왔던 그 칸이다 (`entryTilesOf` 가 목적지로 삼는 집합과 같은 이웃들)
+   *   3. **지금 칸**의 걸을 수 있는 이웃 — 이용 중에 누가 입구 앞을 막았다
+   *   4. 아무 데도 없으면 제자리 — "길이 막혔다" 안전 밸브가 정리한다
+   *
+   * ⚠ **`guestWalkable` 을 건드리지 않는다.** 슬롯 칸은 여전히 못 걷는 칸이고 손님은 그
+   * 위에 **서 있을 뿐**이다 — 통행 판정이 안 바뀌므로 이 복원이 있어야 한다.
+   *
+   * @param usedHandle 방금 이용한 것. **고장 스위치 전용**이다 — 켜면 구역(수영)에만
+   *   복원이 있던 **E① 이전의 세계**를 정확히 재현하므로, 밸런스 Δ 가 이 수정의 몫임을
+   *   같은 실행 파일에서 대조할 수 있다 (`git stash` 없이).
+   */
+  private leaveFacility(g: Guest, usedHandle: number): void {
+    const back = g.rideFrom;
+    if (slotRestoreFault) {
+      /*
+       * 예전 세계를 **비트 단위로** 재현한다: 구역에만 복원이 있었고, 그것도 입수점이
+       * 지금 설 수 있는 칸인지 **안 보고** 세웠다 (이용 중에 그 칸에 시설이 서면 손님이
+       * 못 걷는 칸에 올라갔다). 여기서 그 조건을 살려 두면 대조군이 "예전"이 아니라
+       * 제3의 세계가 되어 밸런스 Δ 가 두 변경의 합이 된다.
+       */
+      if (usedHandle < ZONE_HANDLE_BASE) return;
+      g.fromI = g.i;
+      g.fromJ = g.j;
+      g.i = back[0];
+      g.j = back[1];
+      g.progress = 0;
+      return;
+    }
+    const to = this.walkable(back[0], back[1])
+      ? ([back[0], back[1]] as [number, number])
+      : (this.standNear(back, g) ?? this.standNear([g.i, g.j], g));
+    if (!to || (to[0] === g.i && to[1] === g.j)) return;
+    g.fromI = g.i;
+    g.fromJ = g.j;
+    g.i = to[0];
+    g.j = to[1];
+    g.progress = 0;
+  }
+
+  /** `at` 의 4이웃 중 손님이 설 수 있는 칸 — 손님에게 가장 가까운 것. 없으면 null */
+  private standNear(at: readonly [number, number], g: Guest): [number, number] | null {
+    let best: [number, number] | null = null;
+    let bestD = Infinity;
+    for (const [di, dj] of STEP4) {
+      const ni = at[0] + di;
+      const nj = at[1] + dj;
+      if (!this.walkable(ni, nj)) continue;
+      const d = Math.abs(ni - g.i) + Math.abs(nj - g.j);
+      if (d < bestD) {
+        bestD = d;
+        best = [ni, nj];
+      }
+    }
+    return best;
+  }
+
+  /**
    * 다음에 갈 시설. **아직 안 채운 수요를 우선**하고, 그 안에서 가까운 셋 중 하나를 뽑는다.
    *
    * 거리만 보면 가까운 시설이 빨리 비는 순간 먼 시설을 아무도 안 간다 (실측). 그러면
@@ -1025,14 +1161,12 @@ export class GuestStore {
            */
           const usedHandle = g.usingHandle;
           this.releaseSlot(g);
-          if (usedHandle >= ZONE_HANDLE_BASE) {
-            // 뭍으로 (S2) — 입수점에 다시 선다. 물 칸에서 걸으면 거리장이 없어 갇힌다
-            g.fromI = g.i;
-            g.fromJ = g.j;
-            g.i = g.rideFrom[0];
-            g.j = g.rideFrom[1];
-            g.progress = 0;
-          }
+          /*
+           * 밖으로 — 수영은 뭍으로, 슬라이드는 출구에서 타러 왔던 칸으로, 앉은 손님은
+           * 슬롯 칸에서 앞칸으로. **셋이 한 함수를 지난다** (E①: 예전엔 수영 분기 안에만
+           * 있어서 탑승·슬롯이 못 걷는 칸에 남아 800 tick 얼었다).
+           */
+          this.leaveFacility(g, usedHandle);
           if (g.admitting) {
             /*
              * 입장 수속이 끝났다 — **표는 놀이가 아니다.** `used`(→`wantUses`)도,
@@ -1182,16 +1316,15 @@ export class GuestStore {
              * 여기서 `item.i + def.ride.entryTile[0]` 을 다시 계산하면 회전이 빠져
              * (화면은 도는데 손님은 안 돈다) 표시가 거짓말이 된다.
              */
-            g.rideFrom = [ride.entry[0], ride.entry[1]];
             g.rideTo = [ride.exit[0], ride.exit[1]];
             g.rideTotal = def.ride.traverseTicks;
             g.rideTicks = def.ride.traverseTicks;
-            g.fromI = g.i;
-            g.fromJ = g.j;
-            g.i = g.rideFrom[0];
-            g.j = g.rideFrom[1];
-            g.progress = 0;
-            g.pose = 'ride';
+            /*
+             * 기준 칸이 곧 **입구**다 — 보간의 출발점이면서 나올 때 돌아갈 자리다.
+             * 입구는 발자국 안이라 못 걷는 칸이고, `leaveFacility` 가 그 이웃(= 타러
+             * 왔던 칸)으로 편다.
+             */
+            this.enterFacility(g, ride.entry, ride.entry, 'ride');
             g.useTicks = 1;
           } else {
             /*
@@ -1201,26 +1334,48 @@ export class GuestStore {
              */
             g.useTicks =
               g.usingHandle >= ZONE_HANDLE_BASE ? this.tunables.swimTicks : this.tunables.useTicks;
-            g.pose = this.poseFor(g.usingHandle);
             if (g.usingHandle >= ZONE_HANDLE_BASE) {
               /*
-               * 입수 (S2) — 입수점을 기억해 두고(나올 때 그 자리로 올라온다) 물로
-               * 들어간다. ride 의 rideFrom 을 빌려 쓴다: rideTotal 이 0 이라 ride
-               * 분기와 안 얽히고, Guest 에 필드를 안 늘려 세이브가 그대로다.
+               * 입수 (S2) — 입수점을 기억해 두고(나올 때 그 자리로 올라온다) 물로 들어간다.
+               * 구역엔 슬롯이 없으므로 포즈는 여기서 정한다.
                */
-              g.rideFrom = [g.i, g.j];
               const z = this.zoneLookup.get(g.usingHandle);
               const first =
                 z?.list.find((t) => Math.abs(t.x - g.i) + Math.abs(t.y - g.j) === 1) ?? z?.list[0];
-              if (first) {
-                g.fromI = g.i;
-                g.fromJ = g.j;
-                g.i = first.x;
-                g.j = first.y;
-                g.progress = 0;
-              }
               // swim 시트는 ±Z 두 방향뿐이다 — 다른 방향이면 프레임이 없다
-              g.facing = '+Z';
+              this.enterFacility(
+                g,
+                first ? [first.x, first.y] : [g.i, g.j],
+                [g.i, g.j],
+                'swim',
+                '+Z',
+              );
+            } else {
+              /*
+               * **슬롯 칸 위에 선다** (K52 5단계). 자리·포즈·방향의 정본은 데이터고
+               * `slotTileOf` 가 회전까지 반영해서 낸다 — 여기서 `item.i + slot.tile[0]`
+               * 을 다시 쓰면 전치 산수가 두 벌이 된다 (K51 이 데인 자리).
+               *
+               * ⚠ `null` 인 경우가 둘이고 **둘 다 제자리에 선다**:
+               *   · 슬롯이 없는 시설 14종 — 전부 `capacity 0` 이라 손님이 슬롯을 못 잡는다
+               *   · 매표소 — `pickTicket` 이 슬롯을 안 잡아 `usingSlot === -1` 이다.
+               *     지나가는 곳이지 앉는 곳이 아니다 (`ticket` 데이터에 slots 는 있다)
+               *
+               * ⚠ 포즈는 **`slots[].pose` 가 정본**이다. 예전 `poseFor()` 는 시설 id
+               * 문자열 매칭(`def.id.includes('sunbed')`)이라 계약과 **17종이 어긋났다**.
+               * 이름의 유효성은 `validateContracts` 가 렌더 계약과 대조해 지킨다.
+               */
+              const slot =
+                item && def && g.usingSlot >= 0 && !slotRestoreFault
+                  ? PlacementGrid.slotTileOf(def, item.i, item.j, item.facing ?? 0, g.usingSlot)
+                  : null;
+              this.enterFacility(
+                g,
+                slot ? slot.tile : [g.i, g.j],
+                [g.i, g.j],
+                slot ? (slot.pose as GuestPose) : 'idle',
+                slot ? (slot.facing as Guest['facing']) : undefined,
+              );
             }
           }
         }
@@ -1300,20 +1455,12 @@ export class GuestStore {
     return this.zones;
   }
 
-  /** 시설이 정한 이용 포즈 — 슬롯의 포즈는 렌더 계약이 갖고 있지만 기본값은 층으로 낸다 */
-  private poseFor(handle: number): GuestPose {
-    if (handle >= ZONE_HANDLE_BASE) return 'swim';
-    const item = this.placement.all().find((f) => f.handle === handle);
-    const def = item ? facilityDef(item.defId) : undefined;
-    if (!def) return 'idle';
-    if (def.layer === 'water') return 'float';
-    if (def.id.includes('pool')) return 'swim';
-    if (def.id.includes('sunbed') || def.id.includes('jjimjil')) return 'lie';
-    if (def.id.includes('cafe') || def.id.includes('pyeongsang') || def.id.includes('sauna')) {
-      return 'sit';
-    }
-    return 'idle';
-  }
+  /*
+   * ⚠ **`poseFor()` 는 삭제됐다** (K52 5단계). 시설 id 문자열 매칭
+   * (`def.id.includes('sunbed')`)으로 포즈를 정하던 함수라 데이터의 `slots[].pose` 와
+   * **17종이 어긋나 있었다** (`pool_lazy` swim↔float · 나머지 16종 idle↔sit).
+   * 되살리지 말 것 — 포즈의 정본은 `slots[].pose` 하나다 (`enterFacility` 호출부).
+   */
 
   /**
    * 렌더 보간용 — 프레임마다 progress 를 밀어 준다 (시뮬 상태를 바꾸지 않는다).

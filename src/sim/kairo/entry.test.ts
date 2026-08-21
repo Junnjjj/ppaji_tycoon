@@ -62,10 +62,15 @@ function allNeighborKeys(defId: string, i: number, j: number, facing: 0 | 1): Se
 }
 
 /**
- * 손님이 `'using'` 이 되는 **그 순간의 칸**을 모은다.
+ * 손님이 `'using'` 으로 넘어가기 **직전에 서 있던 칸**을 모은다.
  *
- * 상태 전이를 tick 앞뒤로 잡는 이유: 이용 중에는 위치가 바뀔 수 있고(ride·수영),
- * 우리가 재려는 것은 **어디로 들어갔나**이지 어디서 놀았나가 아니다.
+ * ⚠ **전이 직후의 `(i,j)` 를 읽으면 안 된다** (K52 5단계). 손님은 이제 이용을 시작하는
+ * 그 tick 에 **슬롯 칸으로 옮겨 앉으므로**(`enterFacility`), 전이 후의 칸은 발자국 **안**
+ * 이다 — 예전엔 제자리에 서 있어서 우연히 같았다. 우리가 재려는 것은 **어디로 들어갔나**
+ * 이지 어디에 앉았나가 아니다.
+ *
+ * 전이가 일어나는 tick 에는 걸음이 없다 (`field.arrived` 면 `next()` 를 안 부른다) —
+ * 그래서 tick 직전의 칸이 곧 도착 칸이다.
  */
 function arrivalTiles(world: World, defId: string, i: number, j: number, facing: 0 | 1): string[] {
   const { t, walls, p } = world;
@@ -81,12 +86,16 @@ function arrivalTiles(world: World, defId: string, i: number, j: number, facing:
   const rng = new Rng(52);
   const seen = new Set<string>();
   const was = new Map<number, string>();
+  const wasAt = new Map<number, string>();
   for (let k = 0; k < 2400; k++) {
     if (k % 8 === 0) g.spawn(rng);
-    for (const x of g.all) was.set(x.id, x.state);
+    for (const x of g.all) {
+      was.set(x.id, x.state);
+      wasAt.set(x.id, `${x.i},${x.j}`);
+    }
     g.tick(rng);
     for (const x of g.all) {
-      if (x.state === 'using' && was.get(x.id) !== 'using') seen.add(`${x.i},${x.j}`);
+      if (x.state === 'using' && was.get(x.id) !== 'using') seen.add(wasAt.get(x.id) as string);
     }
   }
   return [...seen].sort();

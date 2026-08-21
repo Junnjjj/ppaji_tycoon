@@ -97,7 +97,12 @@ import {
   type FacilitySpecialty,
   type KairoFacilityDef,
 } from '../src/sim/kairo/placement.js';
-import { GuestStore, GUEST_DEFAULTS, TICKET_DEF_ID } from '../src/sim/kairo/guests.js';
+import {
+  GuestStore,
+  GUEST_DEFAULTS,
+  TICKET_DEF_ID,
+  setSlotRestoreFaultForTest,
+} from '../src/sim/kairo/guests.js';
 import { WeekRunner, type NeedKind, type Season, type WeekReport } from '../src/sim/kairo/week.js';
 import { evaluateCombos, comboEffect, previewCombos } from '../src/sim/kairo/combos.js';
 import { CardStore, CARD_RNG_SALT, optionCash, triggerCard } from '../src/sim/kairo/cards.js';
@@ -176,6 +181,17 @@ const ADMISSION = flag('adm', 0);
  * `golden.test.ts` 15개가 4단계 이전 값 그대로 통과한다.
  */
 const ENTRY_FAULT = args.includes('--entry-fault');
+/**
+ * 이용 종료 복원(K52 5단계, E①)을 **되돌린 채** 돌린다 (`--slot-fault`).
+ *
+ * 위 `--entry-fault` 와 같은 자리다. 켜면 `leaveFacility` 가 **구역(수영)에만** 복원을
+ * 해서, 슬라이드를 탄 손님이 출구(발자국 안 = 못 걷는 칸)에 남아 `STUCK_LIMIT`(200) ×
+ * `ticksPerStep`(4) = **800 tick 을 얼었다가** 나가던 예전 세계가 된다.
+ *
+ * ⚠ 이 스위치가 만드는 세계가 정말 "이전"인지는 골든이 증명한다 — 켜고 껐을 때
+ * `golden.test.ts` 15개가 **같은 값**으로 통과한다 (골든 시나리오에는 슬라이드가 없다).
+ */
+const SLOT_FAULT = args.includes('--slot-fault');
 const JSON_OUT = args.includes('--json');
 const DETERMINISM = args.includes('--determinism');
 /** 맵별 비교 — 맵마다 최적 빌드가 달라지는지 (§4.5) */
@@ -2507,6 +2523,10 @@ function main(): void {
   if (ENTRY_FAULT) {
     setEntryFaultForTest(true);
     console.log('⚠ --entry-fault — K52 4단계 이전(발자국 4이웃 전부)으로 되돌린 세계');
+  }
+  if (SLOT_FAULT) {
+    setSlotRestoreFaultForTest(true);
+    console.log('⚠ --slot-fault — K52 5단계 이전(구역에만 복원)으로 되돌린 세계');
   }
   if (DETERMINISM) {
     const a = runOne(4242, 6);
