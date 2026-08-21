@@ -53,8 +53,25 @@ describe('시설 정의 — 시뮬이 아는 것만 있다', () => {
   it('렌더 전용 필드가 없다 — 불변식 1', () => {
     for (const d of allFacilityDefs()) {
       expect(d).not.toHaveProperty('canvas');
-      expect(d).not.toHaveProperty('slots');
       expect(d).not.toHaveProperty('bodyH');
+      expect(d).not.toHaveProperty('anchorTexel');
+    }
+  });
+
+  it('슬롯은 시뮬 데이터다 — 렌더 좌표가 아니라 게임플레이', () => {
+    /*
+     * ⚠ 여기 있던 `not.toHaveProperty('slots')` 를 **의도적으로 뒤집었다.**
+     *
+     * 슬롯은 손님이 **실제로 서는 칸**이 된 순간 렌더 좌표가 아니라 게임플레이다
+     * (`ride` 와 같은 범주 — `KairoFacilityDef.slots` 주석). 손님이 그 칸 위에 서면
+     * `g.i`/`g.j` 가 슬롯 칸이 되고 히트맵·재생 프레임·골든이 그 값을 읽는다.
+     * 렌더 계약(`assets/`)에 두면 Phaser 없이 도는 `npm run sim` 이 슬롯을 못 읽어
+     * **헤드리스와 브라우저가 다른 손님 위치를 낸다** (불변식 2 의 실질적 붕괴).
+     */
+    for (const d of allFacilityDefs()) {
+      expect(d).toHaveProperty('slots');
+      // 정원이 있으면 설 자리도 있어야 한다 (`validateContracts` 와 같은 규칙)
+      expect(d.slots?.length ?? 0).toBe(d.capacity);
     }
   });
 

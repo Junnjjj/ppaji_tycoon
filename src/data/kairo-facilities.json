@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "카이로 전환 시설 73종의 시뮬 정보. 렌더 정보는 assets/kairo-render-contract.json. specialties = 개선 3단계에서 고르는 특화 (빈 배열이면 특화가 없다). charge = 과금 방식: included 는 입장권에 포함이라 이용해도 요금 0, sale 은 그 자리에서 따로 산다. ⚠ need 축과 과금 축은 다르다 — 대여소는 need:thrill 인데 sale 이고 카페는 need:rest 인데 sale 이다. 그래서 need 로 가르면 안 되고 시설마다 적는다. desc = 한 줄 설명(무엇/누가 쓰나 — 스탯 요약이 아니다. 정원·요금·수요는 화면이 실측값으로 따로 띄운다). menu = 가게 품목 (표시 전용, K49). ⚠ 평균 price 가 fee 와 정확히 같아야 한다 — 화면이 말하는 값과 sim 이 걷는 값이 갈리면 안 된다. 손님이 무엇을 골랐는지는 아직 시뮬하지 않는다 (P3-E 메뉴 슬롯의 몫).",
+  "note": "카이로 전환 시설 75종의 시뮬 정보. 렌더 정보(캔버스·앵커·bodyH)는 assets/kairo-render-contract.json. slots = 손님이 이 시설을 이용할 때 **실제로 서는 발자국 안의 칸**(+ 포즈·방향). ⚠ 렌더 좌표가 아니라 게임플레이다 — 손님이 그 칸 위에 서면 g.i/g.j 가 슬롯 칸이 되고 히트맵·재생 프레임·골든이 그 값을 읽는다. assets/ 에 두면 Phaser 없는 `npm run sim` 이 슬롯을 못 읽어 헤드리스와 브라우저가 다른 손님 위치를 낸다 (불변식 2). ride 와 같은 범주다. slots.length 는 capacity 와 같아야 한다 (validateContracts 가 지킨다). specialties = 개선 3단계에서 고르는 특화 (빈 배열이면 특화가 없다). charge = 과금 방식: included 는 입장권에 포함이라 이용해도 요금 0, sale 은 그 자리에서 따로 산다. ⚠ need 축과 과금 축은 다르다 — 대여소는 need:thrill 인데 sale 이고 카페는 need:rest 인데 sale 이다. 그래서 need 로 가르면 안 되고 시설마다 적는다. desc = 한 줄 설명(무엇/누가 쓰나 — 스탯 요약이 아니다. 정원·요금·수요는 화면이 실측값으로 따로 띄운다). menu = 가게 품목 (표시 전용, K49). ⚠ 평균 price 가 fee 와 정확히 같아야 한다 — 화면이 말하는 값과 sim 이 걷는 값이 갈리면 안 된다. 손님이 무엇을 골랐는지는 아직 시뮬하지 않는다 (P3-E 메뉴 슬롯의 몫).",
   "facilities": {
     "shower_row": {
       "id": "shower_row",
@@ -12,6 +12,40 @@
       ],
       "sprite": "facility/shower_row",
       "capacity": 4,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresIndoor": true
       },
@@ -38,6 +72,32 @@
       ],
       "sprite": "facility/changing_row",
       "capacity": 3,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresIndoor": true
       },
@@ -64,6 +124,40 @@
       ],
       "sprite": "facility/locker_row",
       "capacity": 4,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresIndoor": true
       },
@@ -90,6 +184,32 @@
       ],
       "sprite": "facility/washbasin_row",
       "capacity": 3,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresIndoor": true
       },
@@ -116,6 +236,24 @@
       ],
       "sprite": "facility/toilet",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresIndoor": true
       },
@@ -142,6 +280,16 @@
       ],
       "sprite": "facility/nursing",
       "capacity": 1,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresIndoor": true
       },
@@ -168,6 +316,56 @@
       ],
       "sprite": "facility/pool_kids",
       "capacity": 6,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "bodyH 0 — 바닥에 파인 물",
       "fee": 1400,
@@ -192,6 +390,72 @@
       ],
       "sprite": "facility/pool_warm",
       "capacity": 8,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            2
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            0
+          ],
+          "pose": "swim",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "김 파티클은 procedural",
       "fee": 1800,
@@ -216,6 +480,72 @@
       ],
       "sprite": "facility/pool_lazy",
       "capacity": 8,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            4,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "최대 실내 시설 — 방 8×6 필요",
       "fee": 1800,
@@ -240,6 +570,40 @@
       ],
       "sprite": "facility/sauna",
       "capacity": 4,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 1100,
@@ -264,6 +628,56 @@
       ],
       "sprite": "facility/jjimjilbang",
       "capacity": 6,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            1
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "누운 포즈(lie) 슬롯",
       "fee": 1400,
@@ -288,6 +702,24 @@
       ],
       "sprite": "facility/sikhye",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 800,
@@ -326,6 +758,32 @@
       ],
       "sprite": "facility/massage_row",
       "capacity": 3,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresIndoor": true
       },
@@ -352,6 +810,24 @@
       ],
       "sprite": "facility/shop",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 800,
@@ -394,6 +870,24 @@
       ],
       "sprite": "facility/snackbar",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 800,
@@ -436,6 +930,24 @@
       ],
       "sprite": "facility/chicken",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 800,
@@ -478,6 +990,16 @@
       ],
       "sprite": "facility/icecream",
       "capacity": 1,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 600,
@@ -516,6 +1038,40 @@
       ],
       "sprite": "facility/cafe",
       "capacity": 4,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 1100,
@@ -558,6 +1114,16 @@
       ],
       "sprite": "facility/vending_in",
       "capacity": 1,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresIndoor": true
       },
@@ -598,6 +1164,16 @@
       ],
       "sprite": "facility/arcade",
       "capacity": 1,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresIndoor": true
       },
@@ -624,6 +1200,24 @@
       ],
       "sprite": "facility/karaoke",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 800,
@@ -648,6 +1242,24 @@
       ],
       "sprite": "facility/pingpong",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "양쪽 2슬롯 — 마주보는 facing",
       "fee": 800,
@@ -672,6 +1284,40 @@
       ],
       "sprite": "facility/sunbed_row",
       "capacity": 4,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            0
+          ],
+          "pose": "lie",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "lie 포즈",
       "fee": 1100,
@@ -696,6 +1342,16 @@
       ],
       "sprite": "facility/info",
       "capacity": 1,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 600,
@@ -720,6 +1376,16 @@
       ],
       "sprite": "facility/infirmary",
       "capacity": 1,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 600,
@@ -744,6 +1410,16 @@
       ],
       "sprite": "facility/office",
       "capacity": 1,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 600,
@@ -768,6 +1444,7 @@
       ],
       "sprite": "facility/storage",
       "capacity": 0,
+      "slots": [],
       "placement": {},
       "note": "손님 슬롯 없음",
       "fee": 600,
@@ -788,6 +1465,24 @@
       ],
       "sprite": "facility/ticket",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 600,
@@ -810,6 +1505,7 @@
       ],
       "sprite": "facility/parking",
       "capacity": 0,
+      "slots": [],
       "placement": {},
       "note": "차량은 별도 스프라이트",
       "fee": 500,
@@ -830,6 +1526,40 @@
       ],
       "sprite": "facility/mongol_tent",
       "capacity": 4,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "한국 빠지 시그니처",
       "fee": 900,
@@ -854,6 +1584,40 @@
       ],
       "sprite": "facility/pyeongsang_row",
       "capacity": 4,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "칸마다 그룹 4명. sit 포즈",
       "fee": 900,
@@ -878,6 +1642,24 @@
       ],
       "sprite": "facility/shade_net",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 600,
@@ -902,6 +1684,32 @@
       ],
       "sprite": "facility/parasol",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z",
+          "offsetTexel": [
+            -5,
+            0
+          ]
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z",
+          "offsetTexel": [
+            5,
+            0
+          ]
+        }
+      ],
       "placement": {},
       "note": "2변형",
       "fee": 600,
@@ -926,6 +1734,56 @@
       ],
       "sprite": "facility/bbq_zone",
       "capacity": 6,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 1200,
@@ -968,6 +1826,32 @@
       ],
       "sprite": "facility/firepit_row",
       "capacity": 3,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 800,
@@ -1006,6 +1890,40 @@
       ],
       "sprite": "facility/camp_site",
       "capacity": 4,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 900,
@@ -1030,6 +1948,40 @@
       ],
       "sprite": "facility/pavilion",
       "capacity": 4,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "지붕 있음(야외)",
       "fee": 900,
@@ -1054,6 +2006,24 @@
       ],
       "sprite": "facility/lookout",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "경관 지표 기여",
       "fee": 600,
@@ -1078,6 +2048,40 @@
       ],
       "sprite": "facility/playground",
       "capacity": 4,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 900,
@@ -1102,6 +2106,40 @@
       ],
       "sprite": "facility/footvolley",
       "capacity": 4,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 900,
@@ -1126,6 +2164,32 @@
       ],
       "sprite": "facility/minigolf",
       "capacity": 3,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 800,
@@ -1150,6 +2214,24 @@
       ],
       "sprite": "facility/photozone",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "경관 지표",
       "fee": 600,
@@ -1174,6 +2256,7 @@
       ],
       "sprite": "facility/fountain",
       "capacity": 0,
+      "slots": [],
       "placement": {},
       "note": "물줄기는 procedural",
       "fee": 500,
@@ -1194,6 +2277,7 @@
       ],
       "sprite": "facility/flowerbed",
       "capacity": 0,
+      "slots": [],
       "placement": {},
       "note": "경관 지표",
       "fee": 500,
@@ -1214,6 +2298,16 @@
       ],
       "sprite": "facility/vending_out",
       "capacity": 1,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "",
       "fee": 500,
@@ -1252,6 +2346,7 @@
       ],
       "sprite": "facility/lifering",
       "capacity": 0,
+      "slots": [],
       "placement": {},
       "note": "안전 지표",
       "fee": 500,
@@ -1272,6 +2367,32 @@
       ],
       "sprite": "facility/slide_small",
       "capacity": 3,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresDeck": true
       },
@@ -1309,6 +2430,40 @@
       ],
       "sprite": "facility/slide_large",
       "capacity": 4,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresDeck": true
       },
@@ -1346,6 +2501,32 @@
       ],
       "sprite": "facility/slide_tube",
       "capacity": 3,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresDeck": true
       },
@@ -1383,6 +2564,32 @@
       ],
       "sprite": "facility/jump_cushion",
       "capacity": 3,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresDeck": true
       },
@@ -1409,6 +2616,32 @@
       ],
       "sprite": "facility/trampoline_w",
       "capacity": 3,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresDeck": true
       },
@@ -1435,6 +2668,72 @@
       ],
       "sprite": "facility/airbounce",
       "capacity": 8,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            4,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            4,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresDeck": true
       },
@@ -1461,6 +2760,72 @@
       ],
       "sprite": "facility/turtle_island",
       "capacity": 8,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            3,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            4,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            5,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            6,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresDeck": true
       },
@@ -1487,6 +2852,40 @@
       ],
       "sprite": "facility/junglegym_w",
       "capacity": 4,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            2
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresDeck": true
       },
@@ -1513,6 +2912,24 @@
       ],
       "sprite": "facility/diving",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresDeck": true
       },
@@ -1539,6 +2956,24 @@
       ],
       "sprite": "facility/waterwalk",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresDeck": true
       },
@@ -1565,6 +3000,7 @@
       ],
       "sprite": "facility/float_deck",
       "capacity": 0,
+      "slots": [],
       "placement": {
         "requiresShoreOrDeck": true
       },
@@ -1588,6 +3024,32 @@
       ],
       "sprite": "facility/dock",
       "capacity": 2,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z",
+          "offsetTexel": [
+            -5,
+            0
+          ]
+        },
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z",
+          "offsetTexel": [
+            5,
+            0
+          ]
+        }
+      ],
       "placement": {
         "requiresShoreOrDeck": true
       },
@@ -1615,6 +3077,16 @@
       ],
       "sprite": "facility/rent_kayak",
       "capacity": 1,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresDeck": true
       },
@@ -1641,6 +3113,16 @@
       ],
       "sprite": "facility/rent_pedal",
       "capacity": 1,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresDeck": true
       },
@@ -1667,6 +3149,16 @@
       ],
       "sprite": "facility/rent_duck",
       "capacity": 1,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresDeck": true
       },
@@ -1693,6 +3185,16 @@
       ],
       "sprite": "facility/rent_sup",
       "capacity": 1,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "float",
+          "facing": "+Z"
+        }
+      ],
       "placement": {
         "requiresDeck": true
       },
@@ -1719,6 +3221,7 @@
       ],
       "sprite": "facility/bungalow",
       "capacity": 0,
+      "slots": [],
       "placement": {},
       "note": "프리셋 벽 발자국 + 지붕",
       "fee": 1900,
@@ -1739,6 +3242,7 @@
       ],
       "sprite": "facility/glamping",
       "capacity": 0,
+      "slots": [],
       "placement": {},
       "note": "",
       "fee": 1900,
@@ -1759,6 +3263,7 @@
       ],
       "sprite": "facility/caravan",
       "capacity": 0,
+      "slots": [],
       "placement": {},
       "note": "",
       "fee": 1900,
@@ -1779,6 +3284,7 @@
       ],
       "sprite": "facility/pension",
       "capacity": 0,
+      "slots": [],
       "placement": {},
       "note": "층 20텍셀 × 3 + 지붕",
       "fee": 1900,
@@ -1799,6 +3305,7 @@
       ],
       "sprite": "facility/pension_duplex",
       "capacity": 0,
+      "slots": [],
       "placement": {},
       "note": "",
       "fee": 1900,
@@ -1819,6 +3326,40 @@
       ],
       "sprite": "facility/ice_fishing",
       "capacity": 4,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            2
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "겨울",
       "fee": 1200,
@@ -1843,6 +3384,32 @@
       ],
       "sprite": "facility/snow_sled",
       "capacity": 3,
+      "slots": [
+        {
+          "tile": [
+            1,
+            1
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            1
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            2
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "겨울",
       "ride": {
@@ -1878,6 +3445,16 @@
       ],
       "sprite": "facility/bungeoppang",
       "capacity": 1,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "겨울",
       "fee": 700,
@@ -1916,6 +3493,32 @@
       ],
       "sprite": "facility/footbath",
       "capacity": 3,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "sit",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "봄·가을",
       "fee": 1000,
@@ -1940,6 +3543,32 @@
       ],
       "sprite": "facility/fishing",
       "capacity": 3,
+      "slots": [
+        {
+          "tile": [
+            0,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            1,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        },
+        {
+          "tile": [
+            2,
+            0
+          ],
+          "pose": "idle",
+          "facing": "+Z"
+        }
+      ],
       "placement": {},
       "note": "봄·가을",
       "fee": 1000,
@@ -1964,6 +3593,7 @@
       ],
       "sprite": "facility/maple_walk",
       "capacity": 0,
+      "slots": [],
       "placement": {},
       "note": "가을. 경관 지표",
       "fee": 700,
@@ -1983,6 +3613,7 @@
       ],
       "sprite": "facility/dj_booth",
       "capacity": 0,
+      "slots": [],
       "placement": {},
       "note": "수영장 옆에 두면 저녁이 나이트풀이 된다 (S4). 손님이 줄 서는 곳이 아니라 분위기 시설 — capacity 0",
       "fee": 600,
@@ -2002,6 +3633,7 @@
       ],
       "sprite": "facility/stage_river",
       "capacity": 0,
+      "slots": [],
       "placement": {},
       "note": "리버 페스타(대형 콤보)의 축. 분위기 시설 — capacity 0",
       "fee": 900,

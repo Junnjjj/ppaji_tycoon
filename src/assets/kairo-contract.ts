@@ -3,8 +3,8 @@
  *
  * 계약은 **둘로 쪼개져 있다.** 합치지 말 것:
  *
- *   src/data/kairo-facilities.json      시뮬 — 발자국·용량·배치제약
- *   src/assets/kairo-render-contract.json  렌더 — 캔버스·앵커·슬롯·벽·배경
+ *   src/data/kairo-facilities.json      시뮬 — 발자국·용량·배치제약·**슬롯**·ride 입출구
+ *   src/assets/kairo-render-contract.json  렌더 — 캔버스·앵커·bodyH·벽·배경
  *
  * `sim/` 은 `assets/` 를 import 할 수 없다 (불변식 1). 그래서 발자국·용량 같은
  * **시뮬이 알아야 하는 값**을 렌더 계약에 두면 불변식이 깨진다. 스펙 v1 이 그 실수를
@@ -28,18 +28,28 @@ import { GROUND_KINDS, BRIDGE_KINDS } from '../sim/kairo/terrain.js';
 import { variantId } from './types.js';
 import type { SpriteSpec } from './types.js';
 
-export interface KairoSlot {
-  /** 발자국 **안의 타일 인덱스**. 텍셀 좌표가 아니다 — §2.5 참조 */
-  tile: readonly [number, number];
-  pose: string;
-  facing: string;
-  /** 한 타일에 둘 이상일 때만 (파라솔 1×1 에 2인) */
-  offsetTexel?: readonly [number, number];
-}
+/**
+ * 슬롯 타입의 정본은 **sim** 이다 (`src/sim/kairo/placement.ts`).
+ *
+ * ⚠ 슬롯 데이터가 렌더 계약에서 `src/data/kairo-facilities.json` 으로 이사했다 —
+ * 손님이 슬롯 칸 **위에 서게** 되면 그건 렌더 좌표가 아니라 게임플레이다 (`ride` 와 같은
+ * 범주). 자세한 이유는 `KairoFacilityDef.slots` 주석. 여기서는 **타입만** 다시 내보내
+ * 렌더 쪽 부르는 곳(`slotOffset`)이 이름을 새로 짓지 않게 한다.
+ *
+ * `import type` 이라 컴파일에서 지워진다 — 값 의존이 아니므로 순환도 없다.
+ */
+export type { KairoFacilitySlot as KairoSlot } from '../sim/kairo/placement.js';
+import type { KairoFacilitySlot } from '../sim/kairo/placement.js';
 
+/**
+ * 슬라이드류의 **그림 지시**만 남는다.
+ *
+ * ⚠ `entryTile`/`exitTile` 은 지웠다 — 시뮬 데이터(`kairo-facilities.json` 의 `ride`)에
+ * **똑같은 값이 한 벌 더** 있었고 둘이 같은지 아무도 안 보고 있었다 (우연히 일치 중이었다).
+ * 입출구는 손님이 실제로 타는 칸이므로 게임플레이이고, 정본은 sim 하나다
+ * (`PlacementGrid.rideTilesOf`). 되돌리지 말 것.
+ */
 export interface KairoRide {
-  entryTile: readonly [number, number];
-  exitTile: readonly [number, number];
   ridePose: string;
 }
 
@@ -49,7 +59,6 @@ export interface KairoFacilityRender {
   anchorTexel: readonly [number, number];
   bodyH: number;
   openTop: boolean;
-  slots: readonly KairoSlot[];
   ride?: KairoRide;
 }
 
@@ -60,12 +69,19 @@ export interface KairoFacilitySim {
   size: readonly [number, number];
   sprite: string;
   capacity: number;
+  /** 손님이 서는 칸 — **시뮬 데이터가 소유한다** (위 `KairoSlot` 주석) */
+  slots: readonly KairoFacilitySlot[];
   /** 손님이 밟고 지나가는 구조물 (플로팅덱·선착장) */
   walkOn?: boolean;
   placement: {
     requiresIndoor?: boolean;
     requiresDeck?: boolean;
     requiresShoreOrDeck?: boolean;
+  };
+  ride?: {
+    entryTile: readonly [number, number];
+    exitTile: readonly [number, number];
+    traverseTicks: number;
   };
 }
 
@@ -150,11 +166,11 @@ export function allSimFacilities(): KairoFacilitySim[] {
 /**
  * 슬롯의 화면 텍셀 오프셋 — **앵커 기준**.
  *
- * 계약이 타일 인덱스만 갖고 있으므로 여기서 투영으로 계산한다. 계약에 텍셀 좌표를
+ * 데이터가 타일 인덱스만 갖고 있으므로 여기서 투영으로 계산한다. 데이터에 텍셀 좌표를
  * 박아 두면 앵커나 투영이 바뀔 때 185개가 전부 틀어진다 (스펙 §2.5).
  */
 export function slotOffset(
-  slot: KairoSlot,
+  slot: KairoFacilitySlot,
   footprint: readonly [number, number],
 ): { x: number; y: number } {
   const [w, d] = footprint;
@@ -357,10 +373,24 @@ export function validateContracts(): string[] {
       bad.push(`${s.id}: 앵커 ${r.anchorTexel} ≠ bottom-center (${a.x},${a.y})`);
     }
 
-    if (r.slots.length !== s.capacity) {
-      bad.push(`${s.id}: 슬롯 ${r.slots.length} ≠ 용량 ${s.capacity}`);
+    /*
+     * 슬롯 — **데이터는 sim 이 갖고 이름표는 렌더 계약이 갖는다.** 그래서 이 검사가
+     * 두 파일을 잇는 유일한 다리다 (슬롯이 이사한 뒤에도 그대로 유지한다).
+     * 포즈·방향 이름을 sim 이 자기 목록으로 검사하기 시작하면 목록이 두 벌이 된다.
+     */
+    const slots = s.slots ?? [];
+    if (slots.length !== s.capacity) {
+      bad.push(`${s.id}: 슬롯 ${slots.length} ≠ 용량 ${s.capacity}`);
     }
-    for (const sl of r.slots) {
+    /*
+     * ⚠ 정원이 있는데 슬롯이 없으면 손님이 **설 자리 없이 이용**한다 — 위 등호가
+     * `capacity 0` 인 14종을 덮어 주긴 하지만, 새 시설을 `slots` 없이 추가했을 때
+     * 무엇이 틀렸는지 말해 주는 것은 이 줄이다.
+     */
+    if (s.capacity > 0 && slots.length === 0) {
+      bad.push(`${s.id}: 정원 ${s.capacity} 인데 슬롯이 없다 (kairo-facilities.json 의 slots)`);
+    }
+    for (const sl of slots) {
       const [i, j] = sl.tile;
       if (i < 0 || j < 0 || i >= w || j >= d) {
         bad.push(`${s.id}: 슬롯 타일 [${i},${j}] 이 발자국 ${w}×${d} 밖`);
@@ -371,6 +401,18 @@ export function validateContracts(): string[] {
       if (!KAIRO.guest.facingNames.includes(sl.facing)) {
         bad.push(`${s.id}: 알 수 없는 방향 ${sl.facing}`);
       }
+    }
+
+    /*
+     * ⚠ **이사한 필드가 렌더 계약에 되돌아오지 않게 한다.** 두 파일에 나눠 두는 것이
+     * 이 저장소의 반복 실패이므로, "옮겼다"가 아니라 "저쪽에 없다"를 검사가 지킨다.
+     * `entryTile`/`exitTile` 은 실제로 두 벌이었고 아무도 대조하지 않고 있었다.
+     */
+    const rr = r as unknown as Record<string, unknown>;
+    if ('slots' in rr) bad.push(`${s.id}: 렌더 계약에 slots 가 있다 — 정본은 시뮬 데이터다`);
+    const rideRaw = rr['ride'] as Record<string, unknown> | undefined;
+    if (rideRaw && ('entryTile' in rideRaw || 'exitTile' in rideRaw)) {
+      bad.push(`${s.id}: 렌더 계약에 ride.entryTile/exitTile 이 있다 — 정본은 시뮬 데이터다`);
     }
 
     /*
@@ -386,12 +428,17 @@ export function validateContracts(): string[] {
       bad.push(`${s.id}: 실내인데 openTop 아님`);
     }
 
-    if (r.ride) {
-      for (const t of [r.ride.entryTile, r.ride.exitTile]) {
+    // ride 입출구는 이제 시뮬 데이터 한 벌뿐이다 — 발자국 검사도 그쪽을 읽는다
+    if (s.ride) {
+      for (const t of [s.ride.entryTile, s.ride.exitTile]) {
         if (t[0] < 0 || t[1] < 0 || t[0] >= w || t[1] >= d) {
           bad.push(`${s.id}: ride 타일 [${t}] 이 발자국 밖`);
         }
       }
+    }
+    // 그림 지시(`ridePose`)와 게임플레이(`ride`)는 같은 시설에 있어야 한다
+    if (!!s.ride !== !!r.ride) {
+      bad.push(`${s.id}: ride 선언 불일치 — 시뮬 ${!!s.ride} vs 렌더 ${!!r.ride}`);
     }
   }
 

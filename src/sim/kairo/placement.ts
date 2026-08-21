@@ -21,6 +21,40 @@ import type { NeedKind } from './week.js';
  * 못 오는** 자리를 미리 막는다 — 놓고 나서 매출이 0 인 걸 발견하는 것보다 낫다.
  */
 
+/**
+ * 시설 한 자리 — 손님 하나가 **서는 칸**과 그때의 포즈·방향.
+ *
+ * `tile` 은 **발자국 안의 타일 인덱스**이지 격자 좌표도 텍셀 좌표도 아니다. 격자 좌표는
+ * `PlacementGrid.slotTileOf()` 가 회전까지 반영해서 낸다 — `i + tile[0]` 를 손으로 쓰지 말 것
+ * (`ride` 가 정확히 그 산수 때문에 K51 에서 데였다).
+ *
+ * `pose`·`facing` 의 **이름**은 렌더 계약(`kairo-render-contract.json` 의
+ * `guest.poses`/`guest.facingNames`)이 소유한다. sim 은 문자열을 나르기만 하고,
+ * 이름이 실재하는지는 `validateContracts` 가 두 파일을 맞대 본다.
+ */
+export interface KairoFacilitySlot {
+  /** 발자국 **안의** 타일 인덱스 `(di, dj)`. `0 <= di < w`, `0 <= dj < d` */
+  tile: readonly [number, number];
+  pose: string;
+  facing: string;
+  /** 한 타일에 둘 이상 설 때만 (파라솔 1×1 에 2인) — 화면 텍셀 미세 오프셋 */
+  offsetTexel?: readonly [number, number];
+}
+
+/**
+ * 회전(전치)했을 때 슬롯 방향이 어디로 가나 — **가로 거울**이다.
+ *
+ * 아이소에서 +I 는 `(+16,+8)`, +J 는 `(−16,+8)` 이라 i↔j 교환은 화면 x 만 뒤집는다
+ * (`PlacementGrid.footprintTileOf` 주석). 그래서 `+Z↔+X`, `-Z↔-X` 이고 세로 짝은 없다.
+ * 이름의 정본은 렌더 계약의 `guest.facingNames` 다 — 여기는 그 이름들 사이의 **짝**만 안다.
+ */
+const MIRROR_FACING: Readonly<Record<string, string>> = {
+  '+Z': '+X',
+  '+X': '+Z',
+  '-Z': '-X',
+  '-X': '-Z',
+};
+
 export interface KairoFacilityDef {
   id: string;
   name: string;
@@ -105,6 +139,23 @@ export interface KairoFacilityDef {
     traverseTicks: number;
   };
   /**
+   * 이 시설을 이용하는 손님이 **실제로 서는 칸** — 발자국 안의 타일 인덱스 + 포즈·방향.
+   * `slots.length === capacity` 다 (`validateContracts` 가 지킨다).
+   *
+   * ⚠ **한때 렌더 계약(`src/assets/kairo-render-contract.json`)에 있었다.** 슬롯이
+   * "그림 위 어디에 손님을 얹나"였을 때는 그 자리가 맞았지만, 손님이 그 칸 **위에 서게**
+   * 되는 순간 `g.i`/`g.j` 가 슬롯 칸이 된다 — 그건 시뮬 상태이고 히트맵·재생 프레임·
+   * 골든이 읽는다. `assets/` 에 두면 Phaser 없이 도는 `npm run sim`(불변식 1) 이 슬롯을
+   * 못 읽어 **헤드리스와 브라우저가 다른 손님 위치를 낸다** (불변식 2 의 실질적 붕괴).
+   * 위 `ride` 와 **같은 범주**다 — 되돌리지 말 것.
+   *
+   * ⚠ 렌더 계약에는 슬롯을 **한 벌도 남기지 않았다.** 두 파일에 나눠 두면 같은 값이
+   * 두 벌이 되고 언젠가 한쪽만 고쳐진다 (이 저장소가 네 번 겪은 실패).
+   * 두 파일을 잇는 검사는 `validateContracts` 하나뿐이다 — 포즈·방향 **이름**이
+   * 렌더 계약의 목록에 있는지는 거기서 대조한다.
+   */
+  slots?: readonly KairoFacilitySlot[];
+  /**
    * 이 시설이 고를 수 있는 **특화** (P1.5). 빈 배열이면 특화가 없다.
    *
    * ⚠ 불변식 3 — 어떤 시설이 무엇으로 클 수 있는지는 코드가 아니라 데이터가 정한다.
@@ -125,6 +176,16 @@ export interface RideTiles {
 }
 
 /**
+ * 놓인 시설의 **슬롯 한 자리** — 격자 좌표 + 그 자리에서의 포즈·방향.
+ * 데이터의 발자국 오프셋이 아니라 실제 칸이다 (`RideTiles` 와 같은 규칙).
+ */
+export interface PlacedSlot {
+  tile: readonly [number, number];
+  pose: string;
+  facing: string;
+}
+
+/**
  * **일부러 망가뜨리는 스위치** — 켜면 `rideTilesOf` 가 회전을 무시하고 K51 이전의
  * 산수(`i + entryTile[0]`)로 돌아간다.
  *
@@ -138,6 +199,21 @@ export interface RideTiles {
 let rideFault = false;
 export function setRideFaultForTest(on: boolean): void {
   rideFault = on;
+}
+
+/**
+ * **일부러 망가뜨리는 스위치** — 켜면 `entryTilesOf` 가 **발자국 4이웃 전부**를 돌려준다.
+ * 좁히기 이전의 세계다 (`guests.ts` 의 `rebuildFields` 가 지금 하는 것과 같은 집합).
+ *
+ * 위 `setRideFaultForTest` 와 **같은 자리·같은 문체**다. 손님이 "앞으로 들어간다"를 재는
+ * 검사가 정말 앞 두 면을 재고 있는지는, 켠 상태에서 그 검사가 **실패해야** 증명된다 —
+ * 방향 구분이 없던 옛 동작에서도 통과한다면 그 검사는 아무것도 안 재고 있는 것이다.
+ *
+ * ⚠ production 에서 세우지 말 것 — 손님이 시설 **뒤**로도 들어간다.
+ */
+let entryFault = false;
+export function setEntryFaultForTest(on: boolean): void {
+  entryFault = on;
 }
 
 /**
@@ -614,9 +690,141 @@ export class PlacementGrid {
   ): RideTiles | null {
     const r = def.ride;
     if (!r) return null;
+    // 고장 스위치는 **회전을 안 준 것처럼** 부른다 — 전치 산수 자체는 아래 한 곳뿐이다
     const put = (o: readonly [number, number]): [number, number] =>
-      facing === 1 && !rideFault ? [i + o[1], j + o[0]] : [i + o[0], j + o[1]];
+      PlacementGrid.footprintTileOf(i, j, o, rideFault ? 0 : facing);
     return { entry: put(r.entryTile), exit: put(r.exitTile) };
+  }
+
+  /**
+   * 발자국 **안의 오프셋** `(di,dj)` → **격자 좌표**. 회전을 반영하는 **유일한 자리**.
+   *
+   * ⚠ **전치 산수를 두 벌 만들지 말 것.** `ride` 입출구와 `slots` 가 같은 종류의 값
+   * (발자국 안의 오프셋)인데 각자 `i + o[0]` 를 펼치면, 한쪽만 회전을 배우는 상태가 다시
+   * 생긴다 — K51 이 정확히 그 버그였다 (`slide_large` 4×5 의 입구 `[3,4]` 가 회전 후
+   * 발자국 5×4 밖으로 나가 손님이 시설 바깥 칸에서 미끄럼틀을 탔다).
+   *
+   * 규칙은 `sizeOf`/`footprintTiles` 와 같아야 한다: `facing===1` 은 w↔d 를 맞바꾸므로
+   * 오프셋도 맞바꾼다. `dj < d0 = w1`, `di < w0 = d1` 이라 **항상 발자국 안**이다.
+   * 화면으로도 맞는다 — 아이소에서 i↔j 교환은 **가로 거울**이다 (`rideTilesOf` 주석).
+   */
+  static footprintTileOf(
+    i: number,
+    j: number,
+    o: readonly [number, number],
+    facing: 0 | 1 = 0,
+  ): [number, number] {
+    return facing === 1 ? [i + o[1], j + o[0]] : [i + o[0], j + o[1]];
+  }
+
+  /**
+   * 놓인 시설의 **k번째 손님이 서는 칸** — 격자 좌표 + 포즈·방향 (없으면 `null`).
+   *
+   * `slots` 가 없는 시설(정원 0 인 분위기·기반 시설 14종)은 `null` 이다 — 부르는 쪽이
+   * "슬롯이 없으면 옛날처럼 발자국 밖에 세운다"를 고를 수 있게 던지지 않는다.
+   *
+   * ## 정원이 슬롯보다 많을 수 있다 — **최대 2명**
+   *
+   * `capacityOf` 는 회전 특화(P1.5)로 `def.capacity + 1~2` 가 되는데 `slots` 는 데이터
+   * 고정이라 안 늘어난다. 그래서 `k` 를 **modulo** 로 감고, 넘친 손님(`k >= slots.length`)
+   * 은 포즈를 `'idle'` 로 바꾼다 — 같은 칸에 서고 화면이 나중에 흩는다.
+   * ⚠ 넘친 손님을 **거절하지 않는다**: 슬롯이 정원의 정본이 되면 `capacityOf` 와 두 벌이
+   * 되고, "회전 특화로 정원을 올렸는데 아무도 안 들어온다"가 된다. 붐비는 것이 보이는
+   * 편이 낫다 — "회전 특화 = 붐빈다"가 화면에 나타나야 그 선택이 읽힌다.
+   *
+   * ## 방향은 **가로 거울**이다
+   *
+   * 회전이 전치이고 전치가 가로 거울이므로 (`footprintTileOf` 주석), 화면 x 만 뒤집힌다:
+   * `+Z ↔ +X`, `-Z ↔ -X`. 세로(y)는 안 바뀌므로 다른 짝은 없다.
+   */
+  static slotTileOf(
+    def: KairoFacilityDef,
+    i: number,
+    j: number,
+    facing: 0 | 1 = 0,
+    k = 0,
+  ): PlacedSlot | null {
+    const slots = def.slots;
+    if (!slots || slots.length === 0) return null;
+    const n = slots.length;
+    const idx = ((k % n) + n) % n;
+    const s = slots[idx]!;
+    return {
+      tile: PlacementGrid.footprintTileOf(i, j, s.tile, facing),
+      // 정원 초과분은 데이터가 정한 자세(눕기·헤엄)를 흉내 낼 자리가 없다 — 그냥 선다
+      pose: k >= n ? 'idle' : s.pose,
+      facing: facing === 1 ? MIRROR_FACING[s.facing] ?? s.facing : s.facing,
+    };
+  }
+
+  /**
+   * 손님이 **이 시설로 들어가는 칸** — 발자국 **밖**의 이웃 칸들 (K52).
+   *
+   * ## 왜 선언하지 않고 파생하나
+   *
+   * 75종에 입구 좌표를 손으로 적으면 그림이 바뀔 때마다 조용히 틀리고, 틀렸다는 것을
+   * 잴 방법이 없다. 발자국에서 파생하면 틀릴 곳이 없고 **회전이 공짜**다 —
+   * `sizeOf` 가 이미 w↔d 를 맞바꾸므로 +I/+J 면이 자동으로 따라 돈다 (새 산수 0줄).
+   *
+   * ## 규칙
+   *
+   *   `ride` 가 있으면 → 선언된 입구 칸(`rideTilesOf().entry`)의 **바깥 이웃**만.
+   *                      모서리를 데이터가 이미 골랐으므로 존중한다
+   *   아니면          → 발자국 **앞 두 면**(+I·+J)의 바깥 이웃:
+   *                      `{(i+w, j+dj) | dj<d} ∪ {(i+di, j+d) | di<w}`
+   *
+   * 아이소에서 +I·+J 는 화면 **아래쪽** 두 변이다 — 카메라를 향한 면이고, 스프라이트가
+   * 정면을 그리는 쪽이다. 모서리 `(i+w, j+d)` 는 어느 면에도 안 붙어 있어 뺀다.
+   *
+   * ⚠ **`slots` 에서 파생하면 안 된다.** 그림 데이터가 이미 반대로 말한다:
+   * `pool_warm` 은 슬롯이 전부 안쪽이라 인접한 바깥 칸이 없고, `cafe 2×3` 은 슬롯이
+   * 뒷줄이라 입구가 **뒤로** 간다 — 61종 중 최소 24종이 틀린 답이 된다.
+   * 슬롯이 앞줄을 비워 두는 것은 "앞으로 들어가 뒤에 앉는다"가 이미 데이터에 있다는 뜻이다.
+   *
+   * ⚠ 이 함수는 **순수 파생**이다 — 통행 가능 여부(`guestWalkable`)도 격자 범위도 안 본다.
+   * 부르는 쪽이 자기 판정으로 거른다. 여기서 걸러 버리면 "왜 입구가 없지"를 부르는 쪽이
+   * 설명할 수 없고, 무엇보다 `guestWalkable` 의 정의가 한 벌 더 생긴다 (세 번 사고 난 자리).
+   */
+  static entryTilesOf(
+    def: KairoFacilityDef,
+    i: number,
+    j: number,
+    facing: 0 | 1 = 0,
+  ): [number, number][] {
+    const [w, d] = PlacementGrid.sizeOf(def, facing);
+    const out: [number, number][] = [];
+    const push = (ti: number, tj: number): void => {
+      // 발자국 안은 "들어가는 칸"이 아니다 (ride 입구의 이웃이 안쪽일 수 있다)
+      if (ti >= i && ti < i + w && tj >= j && tj < j + d) return;
+      out.push([ti, tj]);
+    };
+
+    if (entryFault) {
+      // 좁히기 이전 — 네 면 전부. 방향 구분이 없다
+      for (let di = 0; di < w; di++) {
+        push(i + di, j - 1);
+        push(i + di, j + d);
+      }
+      for (let dj = 0; dj < d; dj++) {
+        push(i - 1, j + dj);
+        push(i + w, j + dj);
+      }
+      return out;
+    }
+
+    const r = PlacementGrid.rideTilesOf(def, i, j, facing);
+    if (r) {
+      const [ei, ej] = r.entry;
+      push(ei + 1, ej);
+      push(ei, ej + 1);
+      push(ei - 1, ej);
+      push(ei, ej - 1);
+      return out;
+    }
+
+    for (let dj = 0; dj < d; dj++) push(i + w, j + dj);
+    for (let di = 0; di < w; di++) push(i + di, j + d);
+    return out;
   }
 
   /**

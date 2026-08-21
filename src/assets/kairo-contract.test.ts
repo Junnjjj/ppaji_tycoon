@@ -46,7 +46,15 @@ describe('계약이 둘로 쪼개져 있다 — 불변식 1', () => {
       expect(f).not.toHaveProperty('canvas');
       expect(f).not.toHaveProperty('anchorTexel');
       expect(f).not.toHaveProperty('bodyH');
-      expect(f).not.toHaveProperty('slots');
+      /*
+       * ⚠ 여기 있던 `not.toHaveProperty('slots')` 를 **의도적으로 뒤집었다.**
+       *
+       * 슬롯은 손님이 **실제로 서는 칸**이 된 순간 렌더 좌표가 아니라 게임플레이다
+       * (`ride` 와 같은 범주). 손님이 그 칸 위에 서면 `g.i`/`g.j` 가 슬롯 칸이 되고
+       * 히트맵·재생 프레임·골든이 그 값을 읽는다. 되돌리면 Phaser 없이 도는
+       * `npm run sim` 이 슬롯을 못 읽어 **헤드리스와 브라우저가 다른 손님 위치를 낸다.**
+       */
+      expect(f).toHaveProperty('slots');
     }
   });
 
@@ -55,6 +63,10 @@ describe('계약이 둘로 쪼개져 있다 — 불변식 1', () => {
       expect(f).not.toHaveProperty('size');
       expect(f).not.toHaveProperty('capacity');
       expect(f).not.toHaveProperty('placement');
+      // 이사한 뒤 되돌아오지 않게 — 두 파일에 나눠 두면 언젠가 한쪽만 고쳐진다
+      expect(f).not.toHaveProperty('slots');
+      expect(f.ride ?? {}).not.toHaveProperty('entryTile');
+      expect(f.ride ?? {}).not.toHaveProperty('exitTile');
     }
   });
 
@@ -66,9 +78,13 @@ describe('계약이 둘로 쪼개져 있다 — 불변식 1', () => {
   });
 });
 
+/*
+ * 슬롯 데이터의 정본은 **시뮬 데이터**다 (`simSpec`). 아래 검사는 그 데이터를 렌더 쪽
+ * 투영 함수(`slotOffset`)에 태워 "그림과 맞나"를 재는 것이라 여기 남는다.
+ */
 describe('슬롯 — 칸마다 손님이 보이는 게 카이로의 영리한 설계', () => {
   it('N×1 연립은 칸이 한 줄로 행진한다', () => {
-    const shower = renderSpec('facility/shower_row')!;
+    const shower = simSpec('shower_row')!;
     expect(shower.slots.map((s) => s.tile)).toEqual([
       [0, 0],
       [1, 0],
@@ -78,9 +94,8 @@ describe('슬롯 — 칸마다 손님이 보이는 게 카이로의 영리한 �
   });
 
   it('연립 슬롯 오프셋이 타일 한 걸음씩 벌어진다', () => {
-    const shower = renderSpec('facility/shower_row')!;
-    const fp = simSpec('shower_row')!.size;
-    const o = shower.slots.map((s) => slotOffset(s, fp));
+    const shower = simSpec('shower_row')!;
+    const o = shower.slots.map((s) => slotOffset(s, shower.size));
     for (let k = 1; k < o.length; k++) {
       expect(o[k]!.x - o[k - 1]!.x).toBe(STEP_X);
       expect(o[k]!.y - o[k - 1]!.y).toBe(STEP_Y);
@@ -90,7 +105,7 @@ describe('슬롯 — 칸마다 손님이 보이는 게 카이로의 영리한 �
   it('슬롯 오프셋이 항상 정수다 — 반 픽셀 밀림 방지', () => {
     for (const f of KAIRO.facilities) {
       const sim = KAIRO_SIM[f.sprite.split('/')[1]!]!;
-      for (const s of f.slots) {
+      for (const s of sim.slots) {
         const o = slotOffset(s, sim.size);
         expect(Number.isInteger(o.x)).toBe(true);
         expect(Number.isInteger(o.y)).toBe(true);
@@ -99,27 +114,29 @@ describe('슬롯 — 칸마다 손님이 보이는 게 카이로의 영리한 �
   });
 
   it('한 타일에 둘이면 offsetTexel 로 갈라진다 — 파라솔 1×1 에 2인', () => {
-    const p = renderSpec('facility/parasol')!;
+    const p = simSpec('parasol')!;
     expect(p.slots).toHaveLength(2);
     expect(p.slots[0]!.tile).toEqual(p.slots[1]!.tile);
-    const fp = simSpec('parasol')!.size;
-    expect(slotOffset(p.slots[0]!, fp).x).not.toBe(slotOffset(p.slots[1]!, fp).x);
+    expect(slotOffset(p.slots[0]!, p.size).x).not.toBe(slotOffset(p.slots[1]!, p.size).x);
   });
 
   it('슬롯 총계가 185 다', () => {
-    const n = KAIRO.facilities.reduce((a, f) => a + f.slots.length, 0);
+    const n = allSimFacilities().reduce((a, f) => a + f.slots.length, 0);
     expect(n).toBe(185);
   });
 });
 
 describe('슬라이드 입출구', () => {
-  it('슬라이드류 4종이 entry/exit 를 선언한다', () => {
+  it('슬라이드류 4종이 그림 지시(ridePose)를 선언한다', () => {
     const rides = KAIRO.facilities.filter((f) => f.ride);
     expect(rides).toHaveLength(4);
-    for (const r of rides) {
-      expect(r.ride!.ridePose).toBe('ride');
-      expect(r.ride!.entryTile).not.toEqual(r.ride!.exitTile);
-    }
+    for (const r of rides) expect(r.ride!.ridePose).toBe('ride');
+  });
+
+  it('입출구 좌표는 시뮬 데이터 한 벌뿐이다', () => {
+    const rides = allSimFacilities().filter((f) => f.ride);
+    expect(rides).toHaveLength(4);
+    for (const r of rides) expect(r.ride!.entryTile).not.toEqual(r.ride!.exitTile);
   });
 });
 

@@ -313,10 +313,10 @@ function drawFacility(g: CanvasRenderingContext2D, spec: SpriteSpec, simId: stri
     g.fillRect(x, t + 1, 1, bodyH);
   }
 
-  // 슬롯 위치를 옅은 점으로 — 배치 검증에 쓴다
+  // 슬롯 위치를 옅은 점으로 — 배치 검증에 쓴다.
+  // ⚠ 슬롯은 **시뮬 데이터**가 소유한다 (렌더 계약이 아니다 — `KairoFacilityDef.slots` 주석)
   g.fillStyle = 'rgba(255,255,255,0.45)';
-  const r = KAIRO.facilities.find((f) => f.sprite === spec.id);
-  for (const sl of r?.slots ?? []) {
+  for (const sl of sim?.slots ?? []) {
     const [i, j] = sl.tile;
     const o = tileOffsetInCanvas(i, j, d, 0);
     g.fillRect(o.x + TILE_W / 2 - 1, o.y + TILE_H / 2 - 1, 2, 2);

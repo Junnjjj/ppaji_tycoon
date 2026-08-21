@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "note": "렌더 전용 계약. 시뮬 정보(발자국·용량·배치제약)는 src/data/kairo-facilities.json 이 소유한다 (불변식 1·3).",
+  "note": "렌더 전용 계약. 시뮬 정보(발자국·용량·배치제약·슬롯·ride 입출구)는 src/data/kairo-facilities.json 이 소유한다 (불변식 1·3). ⚠ ride 에 남은 것은 순수 그림 지시(ridePose·pathNote)뿐이다 — entryTile/exitTile 은 시뮬 데이터에만 있다.",
   "projection": {
     "yaw_deg": 45,
     "elev_deg": 30,
@@ -145,41 +145,7 @@
         60
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            3,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/changing_row",
@@ -192,33 +158,7 @@
         52
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/locker_row",
@@ -231,41 +171,7 @@
         60
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            3,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/washbasin_row",
@@ -278,33 +184,7 @@
         44
       ],
       "bodyH": 12,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/toilet",
@@ -317,25 +197,7 @@
         52
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/nursing",
@@ -348,17 +210,7 @@
         44
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/pool_kids",
@@ -371,57 +223,7 @@
         56
       ],
       "bodyH": 0,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "swim",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            1
-          ],
-          "pose": "swim",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "swim",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "swim",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "swim",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            3,
-            0
-          ],
-          "pose": "swim",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/pool_warm",
@@ -434,73 +236,7 @@
         64
       ],
       "bodyH": 0,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "swim",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            1
-          ],
-          "pose": "swim",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            2
-          ],
-          "pose": "swim",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            2
-          ],
-          "pose": "swim",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "swim",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "swim",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "swim",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            3,
-            0
-          ],
-          "pose": "swim",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/pool_lazy",
@@ -513,73 +249,7 @@
         72
       ],
       "bodyH": 0,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            3,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            4,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            3,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/sauna",
@@ -592,41 +262,7 @@
         68
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/jjimjilbang",
@@ -639,57 +275,7 @@
         68
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "lie",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "lie",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "lie",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "lie",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            1
-          ],
-          "pose": "lie",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            1
-          ],
-          "pose": "lie",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/sikhye",
@@ -702,25 +288,7 @@
         40
       ],
       "bodyH": 16,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/massage_row",
@@ -733,33 +301,7 @@
         48
       ],
       "bodyH": 16,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/shop",
@@ -772,25 +314,7 @@
         52
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/snackbar",
@@ -803,25 +327,7 @@
         52
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/chicken",
@@ -834,25 +340,7 @@
         52
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/icecream",
@@ -865,17 +353,7 @@
         44
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/cafe",
@@ -888,41 +366,7 @@
         60
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            1
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/vending_in",
@@ -935,17 +379,7 @@
         36
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/arcade",
@@ -958,17 +392,7 @@
         36
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/karaoke",
@@ -981,25 +405,7 @@
         52
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/pingpong",
@@ -1012,25 +418,7 @@
         44
       ],
       "bodyH": 12,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/sunbed_row",
@@ -1043,41 +431,7 @@
         48
       ],
       "bodyH": 8,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "lie",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "lie",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "lie",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            3,
-            0
-          ],
-          "pose": "lie",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/info",
@@ -1090,17 +444,7 @@
         52
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/infirmary",
@@ -1113,17 +457,7 @@
         52
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/office",
@@ -1136,17 +470,7 @@
         52
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": true
     },
     {
       "sprite": "facility/storage",
@@ -1159,8 +483,7 @@
         52
       ],
       "bodyH": 20,
-      "openTop": true,
-      "slots": []
+      "openTop": true
     },
     {
       "sprite": "facility/ticket",
@@ -1173,25 +496,7 @@
         64
       ],
       "bodyH": 24,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/parking",
@@ -1204,8 +509,7 @@
         68
       ],
       "bodyH": 4,
-      "openTop": false,
-      "slots": []
+      "openTop": false
     },
     {
       "sprite": "facility/mongol_tent",
@@ -1218,41 +522,7 @@
         56
       ],
       "bodyH": 24,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            1
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/pyeongsang_row",
@@ -1265,41 +535,7 @@
         48
       ],
       "bodyH": 8,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            3,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/shade_net",
@@ -1312,25 +548,7 @@
         44
       ],
       "bodyH": 20,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/parasol",
@@ -1343,33 +561,7 @@
         36
       ],
       "bodyH": 20,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z",
-          "offsetTexel": [
-            -5,
-            0
-          ]
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z",
-          "offsetTexel": [
-            5,
-            0
-          ]
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/bbq_zone",
@@ -1382,57 +574,7 @@
         64
       ],
       "bodyH": 16,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            1
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            1
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/firepit_row",
@@ -1445,33 +587,7 @@
         40
       ],
       "bodyH": 8,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/camp_site",
@@ -1484,41 +600,7 @@
         68
       ],
       "bodyH": 20,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/pavilion",
@@ -1531,41 +613,7 @@
         76
       ],
       "bodyH": 28,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/lookout",
@@ -1578,25 +626,7 @@
         72
       ],
       "bodyH": 40,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/playground",
@@ -1609,41 +639,7 @@
         68
       ],
       "bodyH": 20,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/footvolley",
@@ -1656,41 +652,7 @@
         60
       ],
       "bodyH": 4,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            1
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/minigolf",
@@ -1703,33 +665,7 @@
         56
       ],
       "bodyH": 8,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/photozone",
@@ -1742,25 +678,7 @@
         56
       ],
       "bodyH": 24,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/fountain",
@@ -1773,8 +691,7 @@
         44
       ],
       "bodyH": 12,
-      "openTop": false,
-      "slots": []
+      "openTop": false
     },
     {
       "sprite": "facility/flowerbed",
@@ -1787,8 +704,7 @@
         24
       ],
       "bodyH": 8,
-      "openTop": false,
-      "slots": []
+      "openTop": false
     },
     {
       "sprite": "facility/vending_out",
@@ -1801,17 +717,7 @@
         36
       ],
       "bodyH": 20,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/lifering",
@@ -1824,8 +730,7 @@
         28
       ],
       "bodyH": 12,
-      "openTop": false,
-      "slots": []
+      "openTop": false
     },
     {
       "sprite": "facility/slide_small",
@@ -1839,41 +744,7 @@
       ],
       "bodyH": 48,
       "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ],
       "ride": {
-        "entryTile": [
-          2,
-          2
-        ],
-        "exitTile": [
-          0,
-          0
-        ],
         "ridePose": "ride",
         "pathNote": "구현 시 스프라이트 위 텍셀 폴리라인으로 확정"
       }
@@ -1890,49 +761,7 @@
       ],
       "bodyH": 72,
       "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            2
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            2
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ],
       "ride": {
-        "entryTile": [
-          3,
-          4
-        ],
-        "exitTile": [
-          0,
-          0
-        ],
         "ridePose": "ride",
         "pathNote": "구현 시 스프라이트 위 텍셀 폴리라인으로 확정"
       }
@@ -1949,41 +778,7 @@
       ],
       "bodyH": 60,
       "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            2
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ],
       "ride": {
-        "entryTile": [
-          3,
-          3
-        ],
-        "exitTile": [
-          0,
-          0
-        ],
         "ridePose": "ride",
         "pathNote": "구현 시 스프라이트 위 텍셀 폴리라인으로 확정"
       }
@@ -1999,33 +794,7 @@
         76
       ],
       "bodyH": 20,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/trampoline_w",
@@ -2038,33 +807,7 @@
         64
       ],
       "bodyH": 16,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/airbounce",
@@ -2077,73 +820,7 @@
         112
       ],
       "bodyH": 24,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            3,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            4,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            2
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            2
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            3,
-            2
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            4,
-            2
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/turtle_island",
@@ -2156,73 +833,7 @@
         140
       ],
       "bodyH": 28,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            3,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            4,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            5,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            6,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            2
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            2
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/junglegym_w",
@@ -2235,41 +846,7 @@
         96
       ],
       "bodyH": 32,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            1
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            2
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            2
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/diving",
@@ -2282,25 +859,7 @@
         68
       ],
       "bodyH": 36,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/waterwalk",
@@ -2313,25 +872,7 @@
         48
       ],
       "bodyH": 16,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/float_deck",
@@ -2344,8 +885,7 @@
         22
       ],
       "bodyH": 6,
-      "openTop": false,
-      "slots": []
+      "openTop": false
     },
     {
       "sprite": "facility/dock",
@@ -2358,33 +898,7 @@
         28
       ],
       "bodyH": 12,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z",
-          "offsetTexel": [
-            -5,
-            0
-          ]
-        },
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z",
-          "offsetTexel": [
-            5,
-            0
-          ]
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/rent_kayak",
@@ -2397,17 +911,7 @@
         52
       ],
       "bodyH": 20,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/rent_pedal",
@@ -2420,17 +924,7 @@
         52
       ],
       "bodyH": 20,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/rent_duck",
@@ -2443,17 +937,7 @@
         52
       ],
       "bodyH": 20,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/rent_sup",
@@ -2466,17 +950,7 @@
         52
       ],
       "bodyH": 20,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "float",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/bungalow",
@@ -2489,8 +963,7 @@
         80
       ],
       "bodyH": 32,
-      "openTop": false,
-      "slots": []
+      "openTop": false
     },
     {
       "sprite": "facility/glamping",
@@ -2503,8 +976,7 @@
         88
       ],
       "bodyH": 32,
-      "openTop": false,
-      "slots": []
+      "openTop": false
     },
     {
       "sprite": "facility/caravan",
@@ -2517,8 +989,7 @@
         76
       ],
       "bodyH": 28,
-      "openTop": false,
-      "slots": []
+      "openTop": false
     },
     {
       "sprite": "facility/pension",
@@ -2531,8 +1002,7 @@
         136
       ],
       "bodyH": 64,
-      "openTop": false,
-      "slots": []
+      "openTop": false
     },
     {
       "sprite": "facility/pension_duplex",
@@ -2545,8 +1015,7 @@
         152
       ],
       "bodyH": 64,
-      "openTop": false,
-      "slots": []
+      "openTop": false
     },
     {
       "sprite": "facility/ice_fishing",
@@ -2559,41 +1028,7 @@
         72
       ],
       "bodyH": 8,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            1
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            2
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            2
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/snow_sled",
@@ -2607,41 +1042,7 @@
       ],
       "bodyH": 32,
       "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            1,
-            1
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            1
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            2
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ],
       "ride": {
-        "entryTile": [
-          3,
-          4
-        ],
-        "exitTile": [
-          0,
-          0
-        ],
         "ridePose": "ride",
         "pathNote": "구현 시 스프라이트 위 텍셀 폴리라인으로 확정"
       }
@@ -2657,17 +1058,7 @@
         44
       ],
       "bodyH": 20,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/footbath",
@@ -2680,33 +1071,7 @@
         40
       ],
       "bodyH": 8,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "sit",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/fishing",
@@ -2719,33 +1084,7 @@
         56
       ],
       "bodyH": 8,
-      "openTop": false,
-      "slots": [
-        {
-          "tile": [
-            0,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            1,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        },
-        {
-          "tile": [
-            2,
-            0
-          ],
-          "pose": "idle",
-          "facing": "+Z"
-        }
-      ]
+      "openTop": false
     },
     {
       "sprite": "facility/maple_walk",
@@ -2758,8 +1097,7 @@
         60
       ],
       "bodyH": 20,
-      "openTop": false,
-      "slots": []
+      "openTop": false
     },
     {
       "sprite": "facility/dj_booth",
@@ -2772,8 +1110,7 @@
         42
       ],
       "bodyH": 18,
-      "openTop": false,
-      "slots": []
+      "openTop": false
     },
     {
       "sprite": "facility/stage_river",
@@ -2786,8 +1123,7 @@
         62
       ],
       "bodyH": 22,
-      "openTop": false,
-      "slots": []
+      "openTop": false
     }
   ],
   "slotRule": "slot.tile 은 발자국 안의 타일 인덱스다. 렌더러가 투영으로 텍셀 위치를 계산한다 — 텍셀 좌표를 직접 적지 않는 이유는 앵커·투영이 바뀌면 185개가 전부 틀어지기 때문. 한 타일에 둘 이상이면 offsetTexel 로 나눈다.",
