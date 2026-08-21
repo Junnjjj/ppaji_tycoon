@@ -108,6 +108,8 @@ interface GroundResult {
   ratio: number;
   /** 경계 밴드와 내부의 밝기차 / 표준편차 — 격자 밴딩을 잡는다 */
   bias: number;
+  /** 같은 밝기차의 **원값** (0~255). σ 정규화가 과장하는지 보려면 이게 필요하다 */
+  absBias: number;
   sigma: number;
 }
 
@@ -211,6 +213,7 @@ const LIB_JS = `(() => {
       sameMean: Math.round(sameMean * 100) / 100,
       ratio: sameMean > 0.01 ? Math.round((crossMean / sameMean) * 100) / 100 : 0,
       bias: Math.round(bias * 1000) / 1000,
+      absBias: Math.round(Math.abs(bMean - iMean) * 100) / 100,
       sigma: Math.round(sigma * 100) / 100
     };
   };
@@ -485,7 +488,7 @@ async function main(): Promise<void> {
   for (const r of [...gs].sort((a, b) => b.bias - a.bias).slice(0, 5)) {
     console.log(
       `  ${r.id.padEnd(22)} 틈 ${r.gaps} · 겹침 ${r.overlaps} · ` +
-        `이음새 ${r.ratio}배 · 경계 편향 ${r.bias}σ`,
+        `이음새 ${r.ratio}배 · 경계 편향 ${r.bias}σ (원값 ${r.absBias}/255 · σ ${r.sigma})`,
     );
   }
   console.log(

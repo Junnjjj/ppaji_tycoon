@@ -22,6 +22,7 @@
     "sim:kairo": "tsx tools/kairo-sim.ts",
     "seam": "tsx tools/seam-qa.ts",
     "icons": "tsx tools/make-icons.ts",
+    "bake:atlas": "tsx tools/bake-kairo-atlas.ts",
     "verify:pwa": "npm run build && tsx tools/verify-pwa.ts"
   },
   "dependencies": {

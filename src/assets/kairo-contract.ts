@@ -25,6 +25,7 @@ import {
   TILE_H,
 } from '../render/kairo/iso.js';
 import { GROUND_KINDS, BRIDGE_KINDS } from '../sim/kairo/terrain.js';
+import { variantId } from './types.js';
 import type { SpriteSpec } from './types.js';
 
 export interface KairoSlot {
@@ -118,6 +119,14 @@ export const KAIRO = contract as unknown as {
     wrapCrossfade: number;
   };
   facilities: readonly KairoFacilityRender[];
+  /**
+   * HUD 아이콘 — **스프라이트 계약 밖**이다 (절차적 드로어가 없다. 계약 주석 참조).
+   * 그래도 **같은 팩으로 굽는다** (Phase G): 그림이 한 장으로 오면 요청도 한 번이다.
+   */
+  uiIcons: {
+    canvas: readonly [number, number];
+    icons: readonly { id: string; prompt: string; now: string }[];
+  };
 };
 
 export const KAIRO_SIM = (simData as unknown as { facilities: Record<string, KairoFacilitySim> })
@@ -255,6 +264,67 @@ export function kairoSpriteSpecs(): SpriteSpec[] {
   }
 
   return out;
+}
+
+/**
+ * **최종 ID → 명세** 표. `alt` 변형까지 펼친다 (129개).
+ *
+ * ⚠ 이것이 크기·앵커의 **정본**이다. 아틀라스가 아니다. 아틀라스는 픽셀만 준다 —
+ * 크기를 아틀라스에서 읽으면 계약과 두 벌이 되고, 그러면 그림이 조용히 어긋난 채로
+ * 배치만 맞는 상태가 된다 (이 저장소가 `guestWalkable`·`capacityOf`·`admissionLimit`
+ * 에서 세 번 겪은 실패다).
+ */
+export function kairoSpriteIndex(): Map<string, SpriteSpec> {
+  const out = new Map<string, SpriteSpec>();
+  for (const s of kairoSpriteSpecs()) {
+    const alts = s.variants?.alt ?? 0;
+    if (alts > 0) for (let a = 0; a < alts; a++) out.set(variantId(s.id, { alt: a }), s);
+    else out.set(s.id, s);
+  }
+  return out;
+}
+
+/** HUD 아이콘 ID (15). 스프라이트가 아니라 DOM `<img>` 용이지만 같은 팩으로 굽는다 */
+export function kairoUiIconIds(): string[] {
+  return KAIRO.uiIcons.icons.map((i) => i.id);
+}
+
+/**
+ * **한 팩이 담아야 하는 모든 ID → 캔버스 크기** (129 스프라이트 + 15 UI = 144).
+ *
+ * 굽기 도구(`tools/bake-kairo-atlas.ts`)와 에셋 게이트(`tools/kairo-gate.ts`)가
+ * **이 하나**를 본다. 규격표가 둘이면 한쪽만 고쳐 놓고 통과한다.
+ */
+export function kairoAssetSizes(): Map<string, readonly [number, number]> {
+  const out = new Map<string, readonly [number, number]>();
+  for (const [id, spec] of kairoSpriteIndex()) out.set(id, spec.size);
+  for (const id of kairoUiIconIds()) out.set(id, KAIRO.uiIcons.canvas);
+  return out;
+}
+
+/**
+ * 생성물 파일명 ↔ 논리 ID. `docs/asset-prompts.md` 가 정한 규칙이 정본이고
+ * **여기가 그 규칙의 유일한 구현**이다.
+ *
+ *   `facility/shop`     ↔ `facility__shop.png`
+ *   `ground/lawn:a0`    ↔ `ground__lawn__a0.png`
+ *   `ui/icon-coin`      ↔ `ui__icon-coin.png`
+ *
+ * ⚠ 규칙을 두 벌 적지 말 것. 게이트가 폴더 이름으로 ID 를 추측하던 시절이 있었는데,
+ * 파일이 평면으로 바뀌자 144장이 통째로 "계약에 없는 산출물"로 잡혔다 (실측).
+ */
+export function assetIdToFile(id: string): string {
+  return `${id.replace(':', '__').replace('/', '__')}.png`;
+}
+
+/** 파일명 → 논리 ID. 규칙에 안 맞으면 `null` (부르는 쪽이 위반으로 처리한다) */
+export function assetFileToId(fileName: string): string | null {
+  const stem = fileName.replace(/\.png$/, '');
+  const parts = stem.split('__');
+  if (parts.length < 2 || parts.length > 3) return null;
+  const [cat, name, variant] = parts as [string, string, string | undefined];
+  if (!cat || !name) return null;
+  return variant ? `${cat}/${name}:${variant}` : `${cat}/${name}`;
 }
 
 /**

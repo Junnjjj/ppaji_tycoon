@@ -68,6 +68,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * (아래 `Object.assign(h, …)` 위 주석의 경고: boot 뒤 await 는 간헐 부팅 실패가 된다).
    */
   const { KairoTicker } = await import('./ui/kairo-ticker.js');
+  /*
+   * AI 픽셀아트 아틀라스 (Phase G) — 있으면 하이브리드, 없으면 지금까지와 똑같이
+   * 절차 플레이스홀더. ⚠ **여기서** await 한다: `bootKairo` 뒤의 await 는 간헐 부팅
+   * 실패가 된 적이 있다 (아래 `Object.assign(h, …)` 위 경고).
+   */
+  const { createKairoAssetProvider } = await import('./assets/kairo-atlas.js');
+  const kairoProvider = await createKairoAssetProvider();
   const { KairoHud } = await import('./ui/kairo-hud.js');
   type GoalChip = import('./ui/kairo-hud.js').GoalChip;
   const { applyStartKit } = await import('./sim/kairo/startkit.js');
@@ -199,6 +206,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
 
   const h = bootKairo({
     parent,
+    provider: kairoProvider,
     seed: KAIRO_SEED,
     // 세이브가 있으면 그것, 없으면 위에서 만든 **물려받은 빠지** (§4.5 · K30)
     ...(saved

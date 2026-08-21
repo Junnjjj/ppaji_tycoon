@@ -8826,6 +8826,126 @@ async function main(): Promise<void> {
     await cx.close();
   }
 
+  /*
+   * ── ⑩ Phase G — AI 픽셀아트 아틀라스가 **화면에** 보인다 ───────────────────
+   *
+   * "아틀라스가 로드됐다"는 아무것도 안 재는 검사다 (프로바이더 이름만 보면 텍스처가
+   * 등록됐는지, 그 텍스처가 그려졌는지, 그려진 것이 아틀라스 픽셀인지 전부 모른다).
+   * 이 저장소의 규칙대로 **화면 픽셀**로 잰다 (K38 "지도 바깥" 절과 같은 방식).
+   *
+   * ## 대조 방법
+   *
+   * 같은 판(같은 맵·시나리오·세이브 없음)을 **세 번** 띄운다:
+   *   A = 아틀라스 · B, C = `?atlas=0` (절차 플레이스홀더)
+   * 그리고 둘을 본다:
+   *   ★ A ≠ B   — 아틀라스가 실제로 화면을 바꿨다
+   *   ⚠ B = C   — 그 차이가 **아틀라스 때문**이지 두 번 띄운 탓이 아니다
+   *
+   * 둘째가 없으면 첫째는 "두 페이지가 다르다"만 재는 검사가 된다. `?atlas=0` 이
+   * 코드에 심은 음성 대조군이다 (`setAtlasDisabledForTest` 의 URL 판).
+   *
+   * 시설 창의 **도트 경계율**도 같이 본다 — 플레이스홀더는 단색 아이소 상자라
+   * 경계가 드물고, 픽셀아트는 널판·기둥·소품이 있어 촘촘하다. 색 수만 세면 팔레트가
+   * 제한돼 있어 차이가 작다 (실측 전체 화면 114 vs 104 — 못 가른다).
+   */
+  {
+    /** 얼리고 틴트를 끈 뒤 시작 킷 시설로 카메라를 옮긴다 — 판이 같으면 같은 시설이다 */
+    const FOCUS = `(() => {
+      const h = window.__kairo;
+      h.flow.frozen = true; h.scene.setDayPhase(null); h.scene.setUpscale(1);
+      const all = h.placement.all();
+      all.sort(function (a, b) { return a.defId < b.defId ? -1 : 1; });
+      const it = all[0];
+      if (!it) return null;
+      h.scene.focusTile(it.i, it.j, 0);
+      return { i: it.i, j: it.j, defId: it.defId, count: all.length };
+    })()`;
+    /**
+     * 화면 지문 + 시설 창의 색 수·도트 경계율.
+     * ⚠ 캔버스에서 직접 읽는다 — 텍스처 캔버스를 읽으면 "그려졌나"를 안 재게 된다.
+     */
+    const FINGER = `(() => {
+      const h = window.__kairo;
+      const cv = document.querySelector('canvas');
+      const g = document.createElement('canvas');
+      g.width = cv.width; g.height = cv.height;
+      const c = g.getContext('2d');
+      c.drawImage(cv, 0, 0);
+      const all = h.placement.all();
+      all.sort(function (a, b) { return a.defId < b.defId ? -1 : 1; });
+      const r = h.scene.tileScreenRect(all[0].i, all[0].j);
+      const d = c.getImageData(Math.max(0, r.x - 32), Math.max(0, r.y - 40), 96, 72).data;
+      const set = new Set();
+      let edges = 0, prev = -1;
+      for (let k = 0; k < d.length; k += 4) {
+        const v = (d[k] << 16) | (d[k + 1] << 8) | d[k + 2];
+        set.add(v);
+        if (prev >= 0 && v !== prev) edges++;
+        prev = v;
+      }
+      const full = c.getImageData(0, 0, cv.width, cv.height).data;
+      let hash = 0;
+      for (let k = 0; k < full.length; k += 4 * 7) {
+        hash = (hash * 31 + ((full[k] << 16) | (full[k + 1] << 8) | full[k + 2])) >>> 0;
+      }
+      return {
+        hash: hash,
+        colors: set.size,
+        edgePct: Math.round((edges / (d.length / 4)) * 100),
+        provider: h.provider ? h.provider.name : 'n/a',
+      };
+    })()`;
+
+    type Finger = { hash: number; colors: number; edgePct: number; provider: string };
+    const shoot = async (
+      tag: string,
+      extra: string,
+    ): Promise<{ f: Finger; spot: { defId: string } | null }> => {
+      const cx = await browser.newContext(DEVICE);
+      const pg = await cx.newPage();
+      await pg.addInitScript(`try { localStorage.clear(); } catch {}`);
+      await pg.goto(`${URL}&map=bukhan&scenario=inherited${extra}`, { waitUntil: 'load' });
+      await pg.waitForFunction(
+        `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+        undefined,
+        { timeout: 20000 },
+      );
+      const spot = (await pg.evaluate(FOCUS)) as { defId: string } | null;
+      // ⚠ 카메라를 옮긴 **같은 프레임**을 읽으면 좌표는 새 자리인데 픽셀은 옛 화면이다 (K38)
+      await pg.waitForTimeout(500);
+      const f = (await pg.evaluate(FINGER)) as Finger;
+      await pg.screenshot({ path: `${SHOT_DIR}/kairo-${tag}.png` });
+      await cx.close();
+      return { f, spot };
+    };
+
+    const a = await shoot('atlas-on', '');
+    const b = await shoot('atlas-off', '&atlas=0');
+    const c = await shoot('atlas-off2', '&atlas=0');
+
+    record(
+      '아틀라스가 붙었다 — 하이브리드(아틀라스 우선 + 절차 폴백)',
+      a.f.provider.indexOf('kairo-atlas') >= 0 ? 'pass' : 'info',
+      `${a.f.provider} · 대조군 ${b.f.provider}` +
+        ` (129 중 일부는 ATLAS_HOLDOUT — 그림이 계약을 못 맞춘 종만 절차 유지. 이유는 그 표에)`,
+    );
+    record(
+      '★ 아틀라스 그림이 화면에 보인다 — 같은 판을 플레이스홀더로 띄우면 픽셀이 다르다 (Phase G)',
+      a.f.provider.indexOf('kairo-atlas') < 0
+        ? 'info' // 아틀라스가 없는 저장소 — 굽기 전에는 잴 것이 없다
+        : a.f.hash !== b.f.hash && a.f.edgePct > b.f.edgePct
+          ? 'pass'
+          : 'fail',
+      `시설 ${a.spot?.defId ?? '?'} 창 — 색 ${a.f.colors} vs ${b.f.colors} · ` +
+        `도트 경계율 ${a.f.edgePct}% vs ${b.f.edgePct}% · 지문 ${a.f.hash} vs ${b.f.hash}`,
+    );
+    record(
+      '⚠ 음성 대조군 — 아틀라스를 끄고(?atlas=0) 두 번 띄우면 같은 픽셀이 나온다 (차이가 아틀라스 때문임을 증명)',
+      b.f.hash === c.f.hash && b.f.edgePct === c.f.edgePct ? 'pass' : 'fail',
+      `지문 ${b.f.hash} vs ${c.f.hash} · 경계율 ${b.f.edgePct}% vs ${c.f.edgePct}%`,
+    );
+  }
+
   await browser.close();
 
   const failed = results.filter((r) => r.verdict === 'fail');

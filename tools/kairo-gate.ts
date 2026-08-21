@@ -21,7 +21,13 @@
 
 import { readdirSync, existsSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { validateContracts, kairoSpriteSpecs, KAIRO } from '../src/assets/kairo-contract.js';
+import {
+  validateContracts,
+  kairoSpriteSpecs,
+  kairoAssetSizes,
+  assetFileToId,
+  KAIRO,
+} from '../src/assets/kairo-contract.js';
 import { KairoProceduralProvider } from '../src/assets/kairo-procedural.js';
 
 interface Finding {
@@ -62,32 +68,52 @@ function run(): { findings: Finding[]; counts: Record<string, number> } {
   }
 
   const specs = kairoSpriteSpecs();
-  const bySprite = new Map(specs.map((s) => [s.id, s]));
 
-  // 게이트 3 — 생성물 PNG 크기 (있을 때만)
+  /*
+   * 게이트 3 — 생성물 PNG 크기 (있을 때만).
+   *
+   * ⚠ 파일명 → ID 규칙은 **`assetFileToId` 하나**다. 예전엔 여기서 폴더 이름으로
+   * ID 를 추측했는데(`.../<id>/final-*.png`), 생성물이 `docs/asset-prompts.md` 의
+   * 평면 규칙(`facility__shop.png`)으로 바뀌자 144장이 통째로 "계약에 없는 산출물"로
+   * 잡혔다 (실측). 규칙이 두 곳에 있으면 반드시 이렇게 갈라진다.
+   */
   const genRoot = 'assets/generated/kairo';
   const pngs = walkPngs(genRoot);
+  const sizes = kairoAssetSizes();
+  const seen = new Set<string>();
   for (const p of pngs) {
-    // assets/generated/kairo/<zone>/<id>/final-*.png → sprite id 추정
-    const parts = p.split('/');
-    const id = parts[parts.length - 2];
-    if (!id) continue;
-    const spec = bySprite.get(`facility/${id}`) ?? bySprite.get(id);
-    if (!spec) {
-      findings.push({ gate: '생성물', id, detail: `계약에 없는 산출물: ${p}` });
+    const file = p.split('/').pop() ?? '';
+    const id = assetFileToId(file);
+    if (!id || !sizes.has(id)) {
+      findings.push({ gate: '생성물', id: id ?? file, detail: `계약에 없는 산출물: ${p}` });
       continue;
     }
+    if (seen.has(id)) {
+      findings.push({ gate: '생성물', id, detail: `같은 ID 의 파일이 둘 이상: ${p}` });
+      continue;
+    }
+    seen.add(id);
+    const want = sizes.get(id)!;
     const size = pngSize(p);
     if (!size) {
       findings.push({ gate: '생성물', id, detail: `PNG 헤더를 못 읽었다: ${p}` });
       continue;
     }
-    if (size.w !== spec.size[0] || size.h !== spec.size[1]) {
+    if (size.w !== want[0] || size.h !== want[1]) {
       findings.push({
         gate: '캔버스크기',
         id,
-        detail: `실측 ${size.w}×${size.h} ≠ 계약 ${spec.size[0]}×${spec.size[1]} (${p})`,
+        detail: `실측 ${size.w}×${size.h} ≠ 계약 ${want[0]}×${want[1]} (${p})`,
       });
+    }
+  }
+  /*
+   * 빠진 ID — **생성물이 하나라도 있을 때만** 본다. 0장은 "아직 안 뽑았다"(정상)이고,
+   * 143장은 "한 장을 흘렸다"(사고)다. 둘을 같이 잡으면 게이트가 늘 빨간불이라 아무도 안 본다.
+   */
+  if (pngs.length > 0) {
+    for (const id of sizes.keys()) {
+      if (!seen.has(id)) findings.push({ gate: '생성물누락', id, detail: '팩에 그림이 없다' });
     }
   }
 

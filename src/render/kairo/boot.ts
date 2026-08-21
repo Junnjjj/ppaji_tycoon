@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { KairoScene, type KairoSceneStats } from '../scenes/KairoScene.js';
 import { KairoProceduralProvider } from '../../assets/kairo-procedural.js';
+import type { AssetProvider } from '../../assets/types.js';
 import { viewport } from './upscale.js';
 import { KairoTerrain } from '../../sim/kairo/terrain.js';
 import { WallGrid } from '../../sim/kairo/walls.js';
@@ -18,6 +19,13 @@ import { GRID_W, GRID_H } from './iso.js';
  */
 export interface KairoBootOptions {
   parent: HTMLElement | string;
+  /**
+   * 에셋 공급자. 없으면 절차 플레이스홀더 (Phase G 이전과 **완전히 같은 동작**).
+   *
+   * ⚠ 여기서 아틀라스를 직접 로드하지 않는다 — `bootKairo` 는 동기 함수여야 한다.
+   * 비동기 로드는 부르는 쪽이 boot **앞**에서 끝낸다 (`createKairoAssetProvider`).
+   */
+  provider?: AssetProvider;
   /** 없으면 시드에서 만든다 */
   terrain?: KairoTerrain;
   walls?: WallGrid;
@@ -32,7 +40,8 @@ export interface KairoBootOptions {
 export interface KairoHandle {
   game: Phaser.Game;
   scene: KairoScene;
-  provider: KairoProceduralProvider;
+  /** 구상 클래스가 아니라 **인터페이스**다 (Phase G) — 아틀라스로 갈아끼워도 같은 자리 */
+  provider: AssetProvider;
   terrain: KairoTerrain;
   walls: WallGrid;
   placement: PlacementGrid;
@@ -41,7 +50,7 @@ export interface KairoHandle {
 }
 
 export function bootKairo(opts: KairoBootOptions): KairoHandle {
-  const provider = new KairoProceduralProvider();
+  const provider = opts.provider ?? new KairoProceduralProvider();
   const terrain =
     opts.terrain ?? KairoTerrain.generate(GRID_W, GRID_H, new Rng(opts.seed ?? 20260818));
   const walls = opts.walls ?? new WallGrid(GRID_W, GRID_H);

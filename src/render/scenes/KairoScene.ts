@@ -48,7 +48,7 @@ const SURROUND_TEX = 'surround/ground';
 const XRAY_FORCE = '!force';
 /** 지형을 바운딩 박스보다 얼마나 더 넓게 굽나 — 카메라 여백 + 고무줄을 덮는다 */
 const SURROUND_PAD = 128;
-import { KairoProceduralProvider } from '../../assets/kairo-procedural.js';
+import type { AssetProvider } from '../../assets/types.js';
 import { variantId } from '../../assets/types.js';
 import { KairoTerrain } from '../../sim/kairo/terrain.js';
 import {
@@ -126,7 +126,8 @@ export interface KairoSceneStats {
 }
 
 export interface KairoSceneOptions {
-  provider: KairoProceduralProvider;
+  /** 구상 클래스가 아니라 **인터페이스**다 (Phase G) — 절차·아틀라스·하이브리드가 같은 자리 */
+  provider: AssetProvider;
   /** 지면 격자 — **시뮬 소유**. 씬은 읽기만 한다 (불변식 1: 의존 방향은 바깥 → sim) */
   terrain: KairoTerrain;
   /** 벽·문 격자 — 역시 시뮬 소유 */
