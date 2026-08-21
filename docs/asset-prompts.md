@@ -239,6 +239,39 @@ All paths are under `art-reference/crops/`. Attach 2 per sheet; the first is pri
 Whole-scene references (`art-reference/ref-1.png`, `ref-2.png`) set the overall look —
 attach one of them as a third image when a sheet feels like it is drifting off-style.
 
+## ⚠ Also attach the FOOTPRINT GUIDE — this is not optional
+
+The first pass measured **10 of 75 facilities inside the geometry tolerance** (the ground
+tiles scored 33/33, because the post-processor forces geometry on ground and not on
+facilities). Worse, **12 facilities came back with the two footprint axes swapped** — the
+exact accident recorded in `assets/generated/YAW20-RESPEC.md`, where a shop measured
+`bottomFrac 0.64` against an expected `0.267`.
+
+That file also recorded the fix, and it was not a better sentence: **a guide image**.
+Prose does not hold a projection; a picture of the box does.
+
+```bash
+npx tsx tools/make-kairo-guide.ts --all      # → art-reference/guides/kairo/facility__<id>.png
+npx tsx tools/make-kairo-guide.ts --id cafe --table   # the spec line to paste into the sheet
+```
+
+- Attach `art-reference/guides/kairo/facility__<id>.png` **per item**, alongside the two
+  style crops. It draws the exact 2:1 base diamond for that footprint, the vertical
+  columns rising from it, the two visible side faces, and the tile grid.
+- The guide's base is derived from the engine's own ground mask, so **an object drawn to
+  the guide passes the geometry gate by construction** — a test measures IoU = 1.000
+  against the guide silhouette across ten footprints.
+- Paste the `--table` line into the item text. Example:
+  `cafe 2×3 canvas 80×60 · ground band = bottom 40 texels · bottom vertex x/width 0.400
+  (= 2/5) · lower edges +0.500/−0.500`.
+  ⚠ **The bottom vertex is at `w/(w+d)`, not 0.5** — only squares sit at the middle.
+- ⚠ Do **not** use `tools/make-diamond-guide.py`. That one targets the prototype-3d yaw20
+  camera; the maths and the shape are both different.
+
+Check every batch with `npx tsx tools/kairo-gate.ts --geom` before extracting. The gate
+names the failure mode, including `⚠ 발자국 두 축이 바뀐 그림` — for those, **flip the
+guide and regenerate**, don't just reroll.
+
 ---
 
 # MATERIALS THAT CROSS SHEET BOUNDARIES
