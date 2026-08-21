@@ -1691,11 +1691,7 @@
             0
           ],
           "pose": "sit",
-          "facing": "+Z",
-          "offsetTexel": [
-            -5,
-            0
-          ]
+          "facing": "+Z"
         },
         {
           "tile": [
@@ -1703,11 +1699,7 @@
             0
           ],
           "pose": "sit",
-          "facing": "+Z",
-          "offsetTexel": [
-            5,
-            0
-          ]
+          "facing": "+Z"
         }
       ],
       "placement": {},
@@ -3031,11 +3023,7 @@
             0
           ],
           "pose": "float",
-          "facing": "+Z",
-          "offsetTexel": [
-            -5,
-            0
-          ]
+          "facing": "+Z"
         },
         {
           "tile": [
@@ -3043,11 +3031,7 @@
             0
           ],
           "pose": "float",
-          "facing": "+Z",
-          "offsetTexel": [
-            5,
-            0
-          ]
+          "facing": "+Z"
         }
       ],
       "placement": {

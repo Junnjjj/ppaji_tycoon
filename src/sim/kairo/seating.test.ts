@@ -377,7 +377,7 @@ describe('포즈는 데이터가 정한다 — `poseFor()` 는 삭제됐다 (K52
 
   it("★ parasol 1×1 — 슬롯 둘이 같은 칸이고 옛 규칙은 'idle' 이었다", () => {
     expect([...poseAt('parasol', 10, 10)]).toEqual(['sit']);
-    // 한 칸에 둘 — 화면이 `offsetTexel` 로 흩는다. 시뮬은 같은 칸에 세운다
+    // 한 칸에 둘 — 시뮬은 같은 칸에 세우고 **화면이** 인원수에서 파생해 흩는다 (K52-⑦)
     const slots = facilityDef('parasol')!.slots!;
     expect(slots).toHaveLength(2);
     expect(slots[0]!.tile).toEqual(slots[1]!.tile);

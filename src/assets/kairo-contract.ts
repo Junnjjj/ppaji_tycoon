@@ -106,6 +106,8 @@ export const KAIRO = contract as unknown as {
     emotes: readonly string[];
     facings: number;
     facingNames: readonly string[];
+    /** 한 칸에 둘 이상 설 때 좌우로 흩는 간격 (K52-⑦) — `COSLOT_SPREAD_TEXELS` 로 읽는다 */
+    coSlotSpreadTexels: number;
     palettes: number;
     outline: { baked: boolean; color: string; widthTexels: number };
   };
@@ -178,13 +180,22 @@ export function slotOffset(
   // 타일 (i,j) 의 중심. (i+0.5, j+0.5) 를 넣으면 x 의 0.5 가 상쇄돼 16(i−j) 가 된다
   const center = tileCenter(i, j);
   const anchor = footprintAnchor(0, 0, w, d);
-  const off = { x: center.x - anchor.x, y: center.y - anchor.y };
-  if (slot.offsetTexel) {
-    off.x += slot.offsetTexel[0];
-    off.y += slot.offsetTexel[1];
-  }
-  return off;
+  return { x: center.x - anchor.x, y: center.y - anchor.y };
 }
+
+/**
+ * 한 **칸**에 손님이 둘 이상 설 때 좌우로 흩는 간격 (K52-⑦).
+ *
+ * ⚠ 예전에는 슬롯마다 `offsetTexel` 을 데이터에 적었다 (파라솔·선착장의 4개, 전부 `±5,0`).
+ * 그 규칙은 **절반만 돌았다**: 정원이 슬롯보다 많아지는 경우(회전 특화 P1.5, 최대 2명)에는
+ * 넘친 손님이 `k % n` 으로 남의 슬롯 칸에 겹쳐 서는데 그에게 줄 `offsetTexel` 은 데이터에
+ * 있을 수가 없다. 그래서 데이터에서 지우고 **화면이 같은 칸에 선 손님 수에서 파생**한다 —
+ * 규칙 하나가 두 경우를 다 덮는다.
+ *
+ * 텍셀이라 시뮬은 알면 안 되는 값이고(손님은 여전히 **같은 칸**에 선다), 그래서 정본이
+ * 렌더 계약에 있다.
+ */
+export const COSLOT_SPREAD_TEXELS = KAIRO.guest.coSlotSpreadTexels;
 
 /**
  * 렌더 계약을 기존 에셋 레이어의 `SpriteSpec[]` 로 펼친다.

@@ -71,6 +71,7 @@ import {
 } from '../../sim/kairo/placement.js';
 import type { GuestStore, Guest } from '../../sim/kairo/guests.js';
 import { cssColorInt, cssVar } from '../../ui/tokens.js';
+import { COSLOT_SPREAD_TEXELS } from '../../assets/kairo-contract.js';
 import {
   bakeGuestAtlas,
   bakeEmoteAtlas,
@@ -2359,10 +2360,159 @@ export class KairoScene extends Phaser.Scene {
   }
 
   /**
+   * **자리에 앉은 손님**의 그리기 정보 (K52-⑥⑦). 프레임마다 `rebuildSeats` 가 다시 만든다.
+   *
+   * - `dk`      빌려 온 시설의 깊이 칸 — 아래 `rebuildSeats` 주석이 이유다
+   * - `rank`/`count`   같은 시설 안에서 몇 번째인가 (뒤→앞). 동률 깜빡임을 막는 미세 순서
+   * - `coRank`/`coCount` 같은 **칸** 안에서 몇 번째인가. 화면 x 를 흩는 데 쓴다
+   */
+  private seatViews = new Map<
+    number,
+    { dk: number; rank: number; count: number; coRank: number; coCount: number }
+  >();
+
+  /**
+   * 음성 대조군 (K52-⑥) — 켜면 앉은 손님이 **자기 칸**의 깊이를 쓴다 (= 이 수정 전).
+   *
+   * `setRenderFaultForTest` 와 같은 판단이다: 손으로 확인한 것은 다음 사람에게 안 남는다.
+   * 이 스위치를 켠 채로 같은 자리를 재서 보이는 손님 픽셀이 **무너져야** 그 검사가
+   * 실제로 깊이를 재고 있는 것이다.
+   */
+  private slotDepthFault = false;
+  setSlotDepthFaultForTest(on: boolean): void {
+    this.slotDepthFault = on;
+  }
+
+  /** 음성 대조군 (K52-⑦) — 켜면 같은 칸의 손님을 안 흩는다 (= 파라솔 둘이 완전히 겹친다) */
+  private coSpreadFault = false;
+  setCoSpreadFaultForTest(on: boolean): void {
+    this.coSpreadFault = on;
+  }
+
+  /**
+   * 검증 도구용 — 손님 그림 하나를 껐다 켠다.
+   *
+   * "이 자리에 손님이 **보이나**"는 손님을 껐다 켠 픽셀 차로만 잴 수 있다 (K37 이 쓴
+   * 방식이다). 그때는 손님을 판 반대편으로 옮겨서 껐는데, 그러면 `usingSlot`·`state` 까지
+   * 손대야 해서 **시뮬 상태를 조작**하게 된다 — 앉은 손님을 재는 검사에서는 그것이 곧
+   * 재려는 대상을 지우는 일이다. 그림만 끈다.
+   */
+  private hiddenGuests = new Set<number>();
+  setGuestVisibleForTest(id: number, on: boolean): void {
+    if (on) this.hiddenGuests.delete(id);
+    else this.hiddenGuests.add(id);
+  }
+
+  /**
+   * 검증 도구용 — 그 시설에 앉은 손님들의 **화면에 올라간 깊이**.
+   *
+   * 띠 상수끼리 비교하면 상수 산수라 그리기가 틀려도 통과한다 (K38) — Phaser 오브젝트가
+   * 실제로 갖고 있는 값을 돌려준다.
+   */
+  seatDepthsForTest(handle: number): { id: number; slot: number; i: number; j: number; depth: number }[] {
+    const out: { id: number; slot: number; i: number; j: number; depth: number }[] = [];
+    for (const g of this.opts.guests.all) {
+      if (g.usingHandle !== handle || !this.seatViews.has(g.id)) continue;
+      const d = this.guestViews.get(g.id)?.body.depth;
+      if (d === undefined) continue;
+      out.push({ id: g.id, slot: g.usingSlot, i: g.i, j: g.j, depth: d });
+    }
+    return out.sort((a, b) => a.depth - b.depth);
+  }
+
+  /**
+   * ## 앉은 손님이 **그 시설의 깊이 칸을 빌린다** (K52-⑥)
+   *
+   * 시설은 스프라이트 **한 장**이고 깊이가 `depthKey(발자국 최전방 칸) + Z_FACILITY` 다.
+   * 손님은 자기 칸 기준이라 **발자국 뒤쪽 칸의 손님은 깊이가 더 작아** 시설 그림에
+   * 통째로 가렸다 — 실측 슬롯 **185개 중 166개(90%)** 다 (`pool_warm 8/8` ·
+   * `airbounce 8/8` · `turtle_island 8/8` · `cafe 4/4` · `shop 2/2`). 안 가려지는 19개는
+   * 1×1 시설과 N×1 연립의 맨 앞 칸뿐이었다.
+   *
+   * 시설이 쓰는 **바로 그 키**를 손님도 쓰면 `Z_FACILITY(2) < Z_WALL_FRONT(3) < Z_GUEST(4)`
+   * 계약이 발자국 **전체**에 적용된다. 그 계약의 뜻이 원래 "손님은 자기 칸의 시설·앞벽보다
+   * 앞"이므로 새 규칙이 아니라 적용 범위가 넓어진 것뿐이다. 미세 순서까지 합쳐도 `Z_BAND`
+   * (4096) 미만이라 **앞 칸의 것들은 여전히 손님을 덮는다** — 앞줄 시설 뒤로 안 튀어나온다.
+   *
+   * ⚠ **깊이 띠 상수를 새로 만들지 않는다** (`iso.ts` 의 `Z_*`). K37 이 고친 앞벽/시설
+   * 동률 버그가 그 자리로 돌아온다.
+   *
+   * ## 걸어 들어오는 중에는 안 빌린다
+   *
+   * `enterFacility` 는 손님을 슬롯 칸으로 옮기면서 `fromI/fromJ` 에 **밖의 입구 칸**을
+   * 남긴다 (렌더가 미끄러져 들어가는 것을 보여 준다). 그 동안 손님 그림은 발자국 **밖**에
+   * 걸쳐 있고, 시설 깊이는 그 밖 칸보다 뒤일 수 있다 — 그러면 출발 칸의 지면이 손님을
+   * 덮는다 (K37 버그 ② 와 같은 형태). 그래서 **지금 칸도 출발 칸도 발자국 안**일 때만
+   * 빌린다. 탑승(슬라이드)은 두 칸이 다 발자국 안이라 자동으로 포함된다.
+   *
+   * ## 순서는 슬롯 번호가 아니라 **칸 깊이**로 매긴다
+   *
+   * 한 시설의 손님이 전부 같은 키를 쓰므로 그 안에서 누가 앞인지를 정해야 한다. 슬롯
+   * 번호 순으로 하면 데이터가 뒷줄을 먼저 적은 시설(`bbq_zone` 의 첫 슬롯이 가운데다)에서
+   * 뒷자리 손님이 앞자리 손님을 덮는다. `depthKey(손님 칸)` 으로 정렬하면 화면 위아래와
+   * 일치하고, 같은 칸이면 슬롯 번호로 갈라 **결정론**이 된다 (동률이면 Phaser 가 삽입
+   * 순서로 그려 프레임마다 깜빡인다).
+   */
+  private rebuildSeats(): void {
+    this.seatViews.clear();
+    let items: Map<number, { i: number; j: number; defId: string; facing?: 0 | 1 }> | null = null;
+    const seated: { g: Guest; dk: number; tile: number }[] = [];
+    for (const g of this.opts.guests.all) {
+      // 수영 구역은 시설이 아니다 (handle 이 `ZONE_HANDLE_BASE` 위) — 아래 `items` 조회에서 빠진다
+      if (g.usingHandle <= 0 || g.usingSlot < 0) continue;
+      if (!items) items = new Map(this.opts.placement.all().map((f) => [f.handle, f]));
+      const item = items.get(g.usingHandle);
+      if (!item) continue;
+      const def = facilityDef(item.defId);
+      if (!def) continue;
+      // 발자국 산수의 정본은 `sizeOf` 하나다 — 여기서 `facing === 1 ? [d,w] : [w,d]` 를
+      // 다시 쓰면 전치가 두 벌이 된다 (K51 이 데인 자리)
+      const [w, d] = PlacementGrid.sizeOf(def, item.facing ?? 0);
+      const inside = (i: number, j: number): boolean =>
+        i >= item.i && i < item.i + w && j >= item.j && j < item.j + d;
+      if (!inside(g.i, g.j)) continue;
+      if (g.progress < 1 && !inside(g.fromI, g.fromJ)) continue;
+      seated.push({
+        g,
+        dk: depthKey(item.i + w - 1, item.j + d - 1),
+        tile: depthKey(g.i, g.j),
+      });
+    }
+    if (seated.length === 0) return;
+    seated.sort((a, b) => a.g.usingHandle - b.g.usingHandle || a.tile - b.tile || a.g.usingSlot - b.g.usingSlot);
+    // 같은 시설 · 같은 칸의 인원수를 먼저 센다 — 흩는 폭이 인원수에 따라 정해진다
+    const perHandle = new Map<number, number>();
+    const perTile = new Map<string, number>();
+    for (const s of seated) {
+      perHandle.set(s.g.usingHandle, (perHandle.get(s.g.usingHandle) ?? 0) + 1);
+      const k = `${s.g.usingHandle}:${s.tile}`;
+      perTile.set(k, (perTile.get(k) ?? 0) + 1);
+    }
+    const rankOf = new Map<number, number>();
+    const coRankOf = new Map<string, number>();
+    for (const s of seated) {
+      const hk = s.g.usingHandle;
+      const tk = `${hk}:${s.tile}`;
+      const rank = rankOf.get(hk) ?? 0;
+      const coRank = coRankOf.get(tk) ?? 0;
+      rankOf.set(hk, rank + 1);
+      coRankOf.set(tk, coRank + 1);
+      this.seatViews.set(s.g.id, {
+        dk: s.dk,
+        rank,
+        count: perHandle.get(hk) ?? 1,
+        coRank,
+        coCount: perTile.get(tk) ?? 1,
+      });
+    }
+  }
+
+  /**
    * 손님 그리기. 몸통·표정·이모트를 **따로** 얹는다 — 표정을 몸통에 곱하면 1,280셀이
    * 되고, 오버레이면 16셀이면 된다 (스펙 §2.1).
    */
   private syncGuests(): void {
+    this.rebuildSeats();
     const live = new Set<number>();
     for (const g of this.opts.guests.all) {
       live.add(g.id);
@@ -2398,7 +2548,31 @@ export class KairoScene extends Phaser.Scene {
     const t = Math.min(1, Math.max(0, g.progress));
     const fi = g.fromI + (g.i - g.fromI) * t;
     const fj = g.fromJ + (g.j - g.fromJ) * t;
-    const cx = STEP_X * (fi - fj);
+    const seat = this.seatViews.get(g.id);
+    /*
+     * ## 같은 칸에 둘 이상이면 좌우로 흩는다 (K52-⑦)
+     *
+     * 예전에는 슬롯마다 `offsetTexel` 을 **데이터에** 적었다 (파라솔·선착장 4개, 전부
+     * `±5,0`). 그 규칙은 절반만 돌았다 — 회전 특화(P1.5)로 정원이 슬롯보다 많아진
+     * 손님(최대 2명)은 `k % n` 으로 남의 슬롯 칸에 겹쳐 서는데 그에게 줄 오프셋은
+     * 데이터에 있을 자리가 없다. **인원수에서 파생**하면 규칙 하나가 둘 다 덮는다.
+     *
+     * 가운데를 기준으로 대칭이라 (`rank − (n−1)/2`) 인원이 하나면 오프셋이 0 이다 —
+     * 혼자 앉은 손님이 칸 중심에서 밀리지 않는다.
+     *
+     * ⚠ 간격은 **칸을 넘지 않게** 좁힌다. 계약값(10)은 둘일 때 지운 `offsetTexel`(±5)과
+     * 같은 자리인데, 셋이면 총 폭이 `2×10 + 손님 폭 14 = 34` 라 타일 32 를 넘어 옆 칸
+     * 손님과 섞인다. 셋은 회전 특화로 정원이 슬롯보다 많아졌을 때 실제로 생긴다.
+     */
+    const gap =
+      seat && seat.coCount > 1
+        ? Math.min(COSLOT_SPREAD_TEXELS, (TILE_W - GUEST_W) / (seat.coCount - 1))
+        : 0;
+    const spread =
+      seat && !this.coSpreadFault && seat.coCount > 1
+        ? (seat.coRank - (seat.coCount - 1) / 2) * gap
+        : 0;
+    const cx = STEP_X * (fi - fj) + spread;
     // 손님도 단을 탄다 (K37). 리프트는 **보간**한다 — 정수 칸으로 잡으면 8px 순간이동한다
     const cy = STEP_Y * (fi + fj + 1) + this.liftSpan(g.fromI, g.fromJ, g.i, g.j, t);
 
@@ -2416,22 +2590,41 @@ export class KairoScene extends Phaser.Scene {
      * 뚝 떨어지는데 그림은 아직 출발 칸 위에 있어 **출발 칸의 지면이 손님을 덮었다**
      * (실측: 아래로 갈 때는 반대라 안 보였다).
      */
-    const dk = spanDepthKey(g.fromI, g.fromJ, g.i, g.j);
+    /*
+     * 자리에 앉은 손님은 **그 시설의 깊이 칸을 빌린다** (K52-⑥ — 근거는 `rebuildSeats`).
+     * 그 안의 순서는 `rank/count × 0.9` 로 못 박는다: 1 미만이라 띠를 안 넘고, 동률이면
+     * Phaser 가 삽입 순서로 그려 겹친 손님이 프레임마다 깜빡인다.
+     */
+    const borrow = seat && !this.slotDepthFault ? seat : null;
+    const dk = borrow ? borrow.dk : spanDepthKey(g.fromI, g.fromJ, g.i, g.j);
+    const sub = borrow ? (borrow.rank / Math.max(1, borrow.count)) * 0.9 : 0;
+    /*
+     * 표정·이모트를 몸통에 붙이는 간격. 앉은 손님은 **자기 몸통 바로 위**여야 한다 —
+     * 띠 하나(1.0)를 쓰면 미세 순서가 최대 0.9 라서 뒷자리 손님의 표정이 앞자리 손님의
+     * 몸통을 뚫고 나온다.
+     */
+    const faceGap = borrow ? 0.3 : Z_FACE - Z_GUEST;
+    const emoteGap = borrow ? 0.6 : Z_EMOTE - Z_GUEST;
+    const bodyDepth = dk + Z_GUEST + sub;
+
+    // 검증 도구가 이 손님만 껐나 (픽셀 대조 — `setGuestVisibleForTest`)
+    const shown = this.hiddenGuests.size === 0 || !this.hiddenGuests.has(g.id);
 
     v.body.setTexture('guest', bodyFrame(g.palette, pose, facing, frame));
     v.body.setPosition(cx, cy);
-    v.body.setDepth(dk + Z_GUEST);
+    v.body.setDepth(bodyDepth);
+    v.body.setVisible(shown);
 
     const off = (this.guestAtlas?.headOffset ?? { [pose]: { x: 4, y: 2 } })[pose] ?? { x: 4, y: 2 };
     v.face.setTexture('guest', faceFrame(g.face, facing));
     v.face.setPosition(cx - GUEST_W / 2 + off.x, cy - GUEST_H + off.y);
-    v.face.setDepth(dk + Z_FACE);
-    v.face.setVisible(facing === '+X' || facing === '+Z');
+    v.face.setDepth(bodyDepth + faceGap);
+    v.face.setVisible(shown && (facing === '+X' || facing === '+Z'));
 
-    if (g.emote) {
+    if (g.emote && shown) {
       v.emote.setTexture('emote', `e_${g.emote}`);
       v.emote.setPosition(cx, cy - GUEST_H - 4);
-      v.emote.setDepth(dk + Z_EMOTE);
+      v.emote.setDepth(bodyDepth + emoteGap);
       v.emote.setVisible(true);
     } else {
       v.emote.setVisible(false);

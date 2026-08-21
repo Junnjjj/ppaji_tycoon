@@ -6,6 +6,7 @@ import {
   renderSpec,
   simSpec,
   slotOffset,
+  COSLOT_SPREAD_TEXELS,
   kairoSpriteSpecs,
   validateContracts,
 } from './kairo-contract.js';
@@ -113,11 +114,34 @@ describe('슬롯 — 칸마다 손님이 보이는 게 카이로의 영리한 �
     }
   });
 
-  it('한 타일에 둘이면 offsetTexel 로 갈라진다 — 파라솔 1×1 에 2인', () => {
+  /*
+   * ⚠ 예전 이 검사는 "파라솔 두 슬롯의 `offsetTexel` 이 다르다"를 봤다 (K52-⑦ 에 지웠다).
+   * 데이터로 흩는 규칙은 **절반만 돌았다** — 회전 특화(P1.5)로 정원이 슬롯보다 많아진
+   * 손님은 `k % n` 으로 남의 슬롯 칸에 겹쳐 서는데 그에게 줄 오프셋이 데이터에 있을
+   * 자리가 없다. 이제 렌더러가 **같은 칸에 선 인원수에서 파생**한다.
+   *
+   * 그래서 여기 남는 것은 계약뿐이다: "같은 칸에 둘이 있다"(데이터) + "흩을 간격이
+   * 있다"(렌더 계약). **정말 안 겹치는지는 화면에서** 잰다 —
+   * `verify-kairo` 의 `★ 한 칸에 둘이 앉으면 화면에서 갈라진다` 절이 `guestScreenRect`
+   * 두 개를 비교하고, 음성 대조군(`setCoSpreadFaultForTest`)으로 겹치는 것도 확인한다.
+   */
+  it('한 타일에 둘이 서는 시설이 있고, 흩을 간격이 계약에 있다 — 파라솔 1×1 에 2인', () => {
     const p = simSpec('parasol')!;
     expect(p.slots).toHaveLength(2);
     expect(p.slots[0]!.tile).toEqual(p.slots[1]!.tile);
-    expect(slotOffset(p.slots[0]!, p.size).x).not.toBe(slotOffset(p.slots[1]!, p.size).x);
+    // 같은 칸이므로 투영만으로는 완전히 겹친다 — 흩는 것은 렌더러의 일이다
+    expect(slotOffset(p.slots[0]!, p.size)).toEqual(slotOffset(p.slots[1]!, p.size));
+    expect(COSLOT_SPREAD_TEXELS).toBeGreaterThan(0);
+    // 손님 폭(14텍셀)의 절반보다 작아야 두 명이 한 칸(32텍셀) 안에 남는다
+    expect(COSLOT_SPREAD_TEXELS * 2).toBeLessThan(TILE_W);
+  });
+
+  it('슬롯 데이터에 텍셀 좌표가 없다 — 화면 값은 렌더 계약이 소유한다', () => {
+    for (const f of allSimFacilities()) {
+      for (const s of f.slots) {
+        expect(Object.keys(s).sort(), `${f.id} 슬롯`).toEqual(['facing', 'pose', 'tile']);
+      }
+    }
   });
 
   it('슬롯 총계가 185 다', () => {

@@ -27,7 +27,7 @@ import { chromium, type ConsoleMessage } from 'playwright';
 // 배경 겹 수·id 의 정본. 검사에 상수를 박으면 겹을 더할 때마다 검사가 깨진다 (K36-B)
 import { KAIRO } from '../src/assets/kairo-contract.js';
 // 격자 꼭지점 → 화면 텍셀. 표식 절이 **기대 선분을 스스로 만들 때** 쓴다 (K52)
-import { gridToScreen } from '../src/render/kairo/iso.js';
+import { gridToScreen, tileCenter, TILE_H } from '../src/render/kairo/iso.js';
 
 const BASE = process.env['PPAJI_URL'] ?? 'http://localhost:5173';
 /*
@@ -1382,7 +1382,372 @@ async function main(): Promise<void> {
   await page.screenshot({ path: `${SHOT_DIR}/kairo-guests.png` });
 
   /*
-   * ── 7f-2. ★ 위로 걷는 손님이 안 파묻힌다 (K37 버그 ②) ──
+   * ── 7f-2. ★ 자리에 앉은 손님이 화면에 보인다 (K52-⑥⑦) ──
+   *
+   * 시설은 스프라이트 **한 장**이고 깊이가 `depthKey(발자국 최전방 칸) + Z_FACILITY` 다.
+   * 손님은 자기 칸 기준이라 **발자국 뒤쪽 칸에 앉은 손님이 시설에 통째로 가렸다** —
+   * 슬롯 185개 중 166개(90%)가 그 상태였다. 이제 앉은 손님은 **시설이 쓰는 바로 그 키**를
+   * 빌린다.
+   *
+   * ## 왜 `bbq_zone` 인가
+   *
+   * 3×3 인데 슬롯 6개가 **전부 앞줄(j+2)이 아닌 칸**이다 — 어느 자리에 앉아도 발자국
+   * 최전방보다 뒤다. 1×1 이나 N×1 연립의 맨 앞 칸은 원래도 안 가렸으므로 그걸로 재면
+   * 아무것도 안 재는 검사가 된다.
+   *
+   * ## 왜 `usingSlot` 을 손으로 안 넣나
+   *
+   * 백도어로 앉히면 "손님이 걸어와 앉는다"는 경로 자체를 안 재게 된다 (K33: 화면이
+   * 되는지는 진짜 터치로 본다). 손님이 실제로 자리를 잡을 때까지 주를 민다.
+   */
+  const seatOk = (await page.evaluate(`(() => {
+    const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, g = h.guests, sc = h.scene;
+    ${LAND_BOX}
+    ${FREE_RECT}
+    const spot = _free(5, 5);
+    if (!spot) return { ok: false, why: '5×5 빈 자리가 없다' };
+    const r = p.place(t, w, h.gate, 'bbq_zone', spot[0] + 1, spot[1] + 1);
+    if (!r.ok || !r.placed) return { ok: false, why: 'bbq_zone 을 못 놓았다: ' + String(r.fail) };
+    sc.refreshFacility(r.placed.handle);
+    /*
+     * **앞줄 시설** — 뒤 시설의 손님을 여전히 덮어야 한다는 증거용이다 (띠를 안 넘었다).
+     *
+     * ⚠ "j 가 큰 칸"이 앞이 아니다. 아이소의 앞뒤는 i+j 다 — bbq 최전방 칸
+     * (i+2, j+2) 보다 i+j 가 큰 칸이어야 한다. 처음엔 (i, j+3) 에 놓았는데 그 칸은
+     * i+j 가 오히려 **하나 작아** 검사가 거꾸로 실패했다 (실측).
+     * 대각 모서리 (i+3, j+3) 은 entryTilesOf 가 입구에서 빼는 칸이라 막아도 안전하다.
+     */
+    const dkOf = (i, j) => (i + j) * 4096 + i;
+    const facFront = dkOf(spot[0] + 3, spot[1] + 3);
+    let front = 0;
+    for (const off of [[3, 3], [3, 4], [4, 3], [2, 4], [4, 2]]) {
+      const fi = spot[0] + 1 + off[0], fj = spot[1] + 1 + off[1];
+      if (dkOf(fi, fj) <= facFront) continue;
+      const fr = p.place(t, w, h.gate, 'vending_out', fi, fj);
+      if (fr.ok && fr.placed) { sc.refreshFacility(fr.placed.handle); front = fr.placed.handle; break; }
+    }
+    g.invalidate();
+    /*
+     * 손님이 실제로 앉을 때까지 민다 (조건 대기 — 고정 시간이 아니다).
+     *
+     * ⚠ 주 루프(week.step)로 밀지 않는다 — 앞 절들이 이미 주를 끝 가까이 밀어 놔서
+     * 주 경계(800tick)까지 남은 tick 이 자리를 잡기에 모자란다 (실측: 앉은 수 0).
+     * 7f 의 퇴장 절과 같은 방식으로 **시뮬을 직접** 돌린다. 같은 코드 경로다.
+     */
+    h.flow.frozen = true;
+    sc.setAutoTick(false);
+    const bbq = r.placed.handle;
+    /*
+     * ## 재야 할 손님은 **오늘 실제로 가려지는** 손님이다
+     *
+     * 오늘의 깊이는 spanDepthKey(출발 칸과 목적 칸 중 가까운 쪽)이고, 출발 칸은
+     * 손님이 서 있던 **입구 칸**이다. bbq 3×3 의 입구 6칸 중 넷은 i+j 가 최전방보다
+     * 작아 그 손님이 가려지고, 둘은 안 가려진다 — 아무나 고르면 "고쳐도 안 고쳐도
+     * 보인다"가 되어 음성 대조군이 죽는다 (실측: 100% 로 통과했다).
+     * 그래서 **가려지는 손님이 생길 때까지** 민다. 백도어가 아니라 시뮬이 고른 입구다.
+     */
+    const facDepth = facFront + 2; // 시설 그림의 깊이 = 최전방 칸 + Z_FACILITY
+    const hiddenToday = (x) =>
+      Math.max(dkOf(x.fromI, x.fromJ), dkOf(x.i, x.j)) + 4 < facDepth;
+    const seatedNow = () => g.all.filter((x) => x.usingHandle === bbq && x.usingSlot >= 0 &&
+      x.state === 'using');
+    const rng = new h.Rng(9152);
+    for (let k = 0; k < 2400; k++) {
+      if (k % 12 === 0) g.spawn(rng);
+      g.tick(rng);
+      if (seatedNow().some(hiddenToday)) break;
+    }
+    const now = seatedNow();
+    return { ok: true, handle: bbq, front: front, i: spot[0] + 1, j: spot[1] + 1,
+             seated: now.length, hidden: now.filter(hiddenToday).length };
+  })()`)) as
+    | { ok: false; why: string }
+    | { ok: true; handle: number; front: number; i: number; j: number; seated: number; hidden: number };
+
+  if (!seatOk.ok) {
+    record('★ 자리에 앉은 손님이 화면에 보인다 (K52-⑥)', 'fail', seatOk.why);
+  } else {
+    /*
+     * 화면에 손님 그림이 올라가고 **보간이 끝날 때까지** 준다. 한 걸음은
+     * ticksPerStep(4) × tickSeconds(0.2) = 0.8초다 — 그보다 짧게 기다리면 앉은 손님이
+     * 아직 밖 칸에 걸쳐 있어 (progress < 1) 자리를 안 빌린다.
+     */
+    await page.waitForTimeout(1300);
+    /*
+     * ⚠ 픽셀 검사는 **무채 상태에서** — 황혼 틴트가 지형 픽셀을 밀어 두 표본이 달라진다.
+     * 확대는 1 로 고정한다 (`guestScreenRect` 는 내부 해상도 기준이다).
+     */
+    const framed = (await page.evaluate(`(() => {
+      const h = window.__kairo, sc = h.scene, g = h.guests;
+      h.flow.frozen = true; sc.setDayPhase(null); sc.setUpscale(1); sc.setAutoTick(false);
+      sc.focusTile(${seatOk.i} + 1, ${seatOk.j} + 1);
+      const dk = (i, j) => (i + j) * 4096 + i;
+      /*
+       * **오늘 가려지는** 손님을 고른다 (오늘의 깊이 = spanDepthKey = 출발 칸과 목적 칸
+       * 중 가까운 쪽). 아무나 고르면 앞쪽 입구로 들어온 손님을 재서 "고쳐도 안 고쳐도
+       * 보인다"가 된다 — 실제로 그렇게 100% 로 통과했다.
+       * ⚠ 자기가 쓰는 함수(seatDepthsForTest)로 고르지 않는다 — 자기참조가 된다.
+       *   손님의 **칸**에서 직접 유도한다.
+       */
+      const facDk = dk(${seatOk.i} + 2, ${seatOk.j} + 2);
+      let pick = null;
+      for (const x of g.all) {
+        if (x.usingHandle !== ${seatOk.handle} || x.usingSlot < 0 || x.state !== 'using') continue;
+        if (x.progress < 1) continue;
+        const span = Math.max(dk(x.fromI, x.fromJ), dk(x.i, x.j));
+        if (span + 4 >= facDk + 2) continue; // 오늘도 안 가려지는 자리다
+        if (!pick || span < pick.span) {
+          pick = { id: x.id, span: span, i: x.i, j: x.j, slot: x.usingSlot, pose: x.pose };
+        }
+      }
+      if (!pick) return null;
+      /*
+       * 타일 화면 사각형은 **단(높이)을 모른다** — tileScreenRect 는 투영만 쓴다.
+       * 그 칸의 지면 그림이 실제로 올라간 만큼을 재서 보정한다 (K37: 칸 위의 것은
+       * 전부 lift 를 탄다). 안 보정하면 단이 1 인 자리에서 8px 어긋난다 (실측).
+       */
+      const timg = sc.tileImageForTest(pick.i, pick.j);
+      return {
+        pick: pick,
+        facDepth: sc.facilityImageAt(${seatOk.handle}).depth,
+        facDk: facDk,
+        frontDepth: ${seatOk.front} ? sc.facilityImageAt(${seatOk.front}).depth : null,
+        guestDepth: sc.guestDepthAt(pick.id),
+        rect: sc.guestScreenRect(pick.id),
+        tile: sc.tileScreenRect(pick.i, pick.j),
+        tileImgY: timg ? timg.y : null,
+        seats: sc.seatDepthsForTest(${seatOk.handle}),
+      };
+    })()`)) as {
+      pick: { id: number; span: number; i: number; j: number; slot: number; pose: string };
+      facDepth: number;
+      facDk: number;
+      frontDepth: number | null;
+      guestDepth: number;
+      rect: { x: number; y: number; w: number; h: number };
+      tile: { x: number; y: number; w: number; h: number };
+      tileImgY: number | null;
+      seats: { id: number; slot: number; i: number; j: number; depth: number }[];
+    } | null;
+
+    if (!framed) {
+      record(
+        '★ 자리에 앉은 손님이 화면에 보인다 (K52-⑥)',
+        'fail',
+        `오늘 가려지는 자리에 앉은 손님이 없다 (앉은 수 ${seatOk.seated} · 그중 가려지는 자리 ${seatOk.hidden})`,
+      );
+    } else {
+      const f = framed;
+      // ① 깊이 — 시설이 쓰는 바로 그 칸을 빌렸나 (화면에 올라간 오브젝트에서 읽는다)
+      record(
+        '★ 앉은 손님이 시설의 깊이 칸을 빌린다 (K52-⑥)',
+        f.guestDepth >= f.facDk + 4 && f.guestDepth < f.facDk + 5 ? 'pass' : 'fail',
+        `손님 ${f.guestDepth} · 시설 칸 ${f.facDk} + 손님 띠 4 (+ 미세순서 <1)`,
+      );
+      record(
+        '음성 대조군 — 옛 규칙(자기 칸/출발 칸)이었다면 시설 그림보다 뒤였다',
+        f.pick.span + 4 < f.facDepth ? 'pass' : 'fail',
+        `옛 규칙 ${f.pick.span + 4} < 시설 그림 ${f.facDepth} (${f.facDepth - f.pick.span - 4} 만큼 뒤)`,
+      );
+      // ② 앞줄 시설은 여전히 손님을 덮는다 — 띠(4096)를 안 넘었다는 증거
+      if (f.frontDepth === null) {
+        record('앞줄 시설이 여전히 뒤 시설의 손님을 덮는다', 'info', '앞줄 시설을 못 놓았다');
+      } else {
+        record(
+          '★ 앞줄 시설이 여전히 뒤 시설의 손님을 덮는다 (띠를 안 넘었다)',
+          f.frontDepth > f.guestDepth ? 'pass' : 'fail',
+          `앞줄 시설 ${f.frontDepth} > 앉은 손님 ${f.guestDepth}`,
+        );
+      }
+      // ③ 같은 시설 안의 순서 — 동률이 하나도 없어야 깜빡이지 않는다
+      const ds = f.seats.map((s) => s.depth);
+      record(
+        '같은 시설에 앉은 손님끼리 깊이가 동률이 아니다 (깜빡임 방지)',
+        ds.length < 2 ? 'info' : new Set(ds).size === ds.length ? 'pass' : 'fail',
+        ds.length < 2
+          ? `앉은 손님이 ${ds.length}명이라 여기서는 못 잰다 — 아래 파라솔 절이 둘로 잰다`
+          : `${ds.length}명 · ${ds.map((x) => x.toFixed(2)).join(', ')}`,
+      );
+      record(
+        '앉은 손님의 미세 순서가 띠(4096) 안에 있다',
+        ds.every((d) => d - (f.facDk + 4) >= 0 && d - (f.facDk + 4) < 1) ? 'pass' : 'fail',
+        `오프셋 ${ds.map((d) => (d - f.facDk - 4).toFixed(2)).join(', ')}`,
+      );
+      /*
+       * ④ 자리 — **화면 사각형 둘**을 비교한다 (`slotTileOf` 를 두 번 부른 상수 비교가
+       * 아니다). 칸 사각형은 단(높이)을 모르므로 그 칸 지면 그림이 올라간 만큼 내린다 —
+       * 보정을 **하네스가 독립으로 유도**한다 (`tileCenter` + 타일 높이 절반이 단 0 의
+       * 앵커다). 씬이 준 값을 그대로 쓰면 씬이 틀려도 통과하는 자기참조가 된다.
+       */
+      const liftPx =
+        f.tileImgY === null ? 0 : f.tileImgY - (tileCenter(f.pick.i, f.pick.j).y + TILE_H / 2);
+      const ty = f.tile.y + liftPx;
+      /*
+       * 재는 점은 사각형의 **가운데가 아니라 발**이다. 손님 그림은 앵커가
+       * bottom-center 이고 24텍셀이 위로 뻗으므로 가운데는 언제나 칸 위로 나간다 —
+       * 가운데로 재면 멀쩡한 코드가 4px 차이로 실패한다 (실측).
+       */
+      const gfx = f.rect.x + f.rect.w / 2;
+      const gfy = f.rect.y + f.rect.h;
+      record(
+        '★ 앉은 손님의 화면 자리(발)가 슬롯 칸 안이다',
+        gfx >= f.tile.x && gfx <= f.tile.x + f.tile.w && gfy >= ty && gfy <= ty + f.tile.h
+          ? 'pass'
+          : 'fail',
+        `손님 발 (${Math.round(gfx)}, ${Math.round(gfy)}) · 칸 ${f.tile.x}~${f.tile.x + f.tile.w} × ${ty}~${ty + f.tile.h} (단 보정 ${liftPx}px)`,
+      );
+
+      // ⑤ ★ 픽셀 — 손님을 껐다 켠 차이가 곧 "보이는 손님"이다
+      const pad = 6;
+      const rx = Math.max(0, f.rect.x - pad);
+      const ry = Math.max(0, f.rect.y - pad);
+      const rw = f.rect.w + pad * 2;
+      const rh = f.rect.h + pad * 2;
+      const sample = `(() => {
+        const c = document.querySelector('canvas');
+        const gl = c.getContext('webgl2') || c.getContext('webgl');
+        const H = c.height;
+        const buf = new Uint8Array(${rw} * ${rh} * 4);
+        gl.readPixels(${rx}, H - (${ry} + ${rh}), ${rw}, ${rh}, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+        let s = '';
+        for (let k = 0; k < buf.length; k += 4) s += buf[k] + ',' + buf[k+1] + ',' + buf[k+2] + ';';
+        return s;
+      })()`;
+      const diff = (a: string, b: string): number => {
+        const x = a.split(';'), y = b.split(';');
+        let d = 0;
+        for (let k = 0; k < Math.min(x.length, y.length); k++) if (x[k] !== y[k]) d++;
+        return d;
+      };
+      const visible = async (): Promise<number> => {
+        await page.evaluate(`window.__kairo.scene.setGuestVisibleForTest(${f.pick.id}, true)`);
+        await page.waitForTimeout(280);
+        const on = (await page.evaluate(sample)) as string;
+        await page.evaluate(`window.__kairo.scene.setGuestVisibleForTest(${f.pick.id}, false)`);
+        await page.waitForTimeout(280);
+        const off = (await page.evaluate(sample)) as string;
+        await page.evaluate(`window.__kairo.scene.setGuestVisibleForTest(${f.pick.id}, true)`);
+        return diff(on, off);
+      };
+      const visFixed = await visible();
+      await page.screenshot({ path: `${SHOT_DIR}/kairo-seat-depth.png` });
+      await page.evaluate(`window.__kairo.scene.setSlotDepthFaultForTest(true)`);
+      await page.waitForTimeout(280);
+      const visFault = await visible();
+      await page.evaluate(`window.__kairo.scene.setSlotDepthFaultForTest(false)`);
+
+      record(
+        '★ 자리에 앉은 손님이 화면에 보인다 (K52-⑥)',
+        visFixed > 60 ? 'pass' : 'fail',
+        `보이는 손님 픽셀 ${visFixed}px (슬롯 ${f.pick.slot} · 포즈 ${f.pick.pose} · 칸 ${f.pick.i},${f.pick.j})`,
+      );
+      record(
+        '음성 대조군 — 자기 칸 깊이로 되돌리면 시설에 가린다',
+        visFixed > 60 && visFault < visFixed * 0.5 ? 'pass' : 'fail',
+        `되돌리면 ${visFault}px / ${visFixed}px (${Math.round((visFault / Math.max(1, visFixed)) * 100)}%)`,
+      );
+
+      // ⑥ ★ 동석 분산 — 파라솔 1×1 에 둘이 앉으면 화면 x 가 갈린다 (K52-⑦)
+      const co = (await page.evaluate(`(() => {
+        const h = window.__kairo, t = h.terrain, w = h.walls, p = h.placement, g = h.guests, sc = h.scene;
+        ${LAND_BOX}
+        ${FREE_RECT}
+        const made = [];
+        for (let n = 0; n < 4; n++) {
+          const s = _free(1, 1);
+          if (!s) break;
+          const r = p.place(t, w, h.gate, 'parasol', s[0], s[1]);
+          if (r.ok && r.placed) { sc.refreshFacility(r.placed.handle); made.push(r.placed.handle); }
+        }
+        window.__coParasols = made;
+        if (made.length === 0) return { ok: false, why: '파라솔을 못 놓았다' };
+        g.invalidate();
+        const pairOf = () => {
+          for (const hd of made) {
+            const s = g.all.filter((x) => x.usingHandle === hd && x.usingSlot >= 0 &&
+              x.state === 'using');
+            if (s.length >= 2) return { handle: hd, ids: [s[0].id, s[1].id], i: s[0].i, j: s[0].j };
+          }
+          return null;
+        };
+        const rng = new h.Rng(7311);
+        for (let k = 0; k < 2000; k++) {
+          if (k % 12 === 0) g.spawn(rng);
+          g.tick(rng);
+          if (pairOf()) break;
+        }
+        const pair = pairOf();
+        return pair ? { ok: true, ...pair, made: made.length } : { ok: false, why: '파라솔에 둘이 안 앉았다', made: made.length };
+      })()`)) as { ok: false; why: string } | { ok: true; handle: number; ids: number[]; i: number; j: number };
+
+      if (!co.ok) {
+        record('★ 한 칸에 둘이 앉으면 화면에서 갈라진다 (K52-⑦)', 'fail', co.why);
+      } else {
+        await page.waitForTimeout(1300);
+        /*
+         * ⚠ 대조군은 **한 프레임 뒤에** 읽어야 한다. `guestScreenRect` 는 스프라이트가
+         * 지금 갖고 있는 x 를 읽고 그건 다음 `placeGuest` 에서야 바뀐다 — 같은
+         * evaluate 안에서 읽으면 스위치를 켠 척만 하고 옛 값을 두 번 재게 된다
+         * (K38 "카메라를 옮긴 같은 프레임을 읽으면 옛 화면이다" 와 같은 함정).
+         */
+        const readXs = `(() => {
+          const sc = window.__kairo.scene;
+          return [sc.guestScreenRect(${co.ids[0]}), sc.guestScreenRect(${co.ids[1]})];
+        })()`;
+        const on = (await page.evaluate(readXs)) as ({ x: number; w: number } | null)[];
+        await page.evaluate(`window.__kairo.scene.setCoSpreadFaultForTest(true)`);
+        await page.waitForTimeout(300);
+        const off = (await page.evaluate(readXs)) as ({ x: number; w: number } | null)[];
+        await page.evaluate(`window.__kairo.scene.setCoSpreadFaultForTest(false)`);
+        const xs = { on, off };
+        const a = xs.on[0];
+        const b = xs.on[1];
+        record(
+          '★ 한 칸에 둘이 앉으면 화면에서 갈라진다 (K52-⑦)',
+          !!a && !!b && Math.abs(a.x - b.x) >= 8 ? 'pass' : 'fail',
+          a && b ? `화면 x ${a.x} vs ${b.x} (차 ${Math.abs(a.x - b.x)}px)` : '그림이 없다',
+        );
+        const c = xs.off[0];
+        const d = xs.off[1];
+        record(
+          '음성 대조군 — 안 흩으면 파라솔 둘이 완전히 겹친다',
+          !!c && !!d && c.x === d.x ? 'pass' : 'fail',
+          c && d ? `대조군 x ${c.x} vs ${d.x}` : '그림이 없다',
+        );
+        /*
+         * 한 시설에 **둘**이 앉은 상태가 여기서는 보장된다 — bbq 절은 한 명만 앉는
+         * 주가 있어 동률 검사를 못 한다. 동률이면 Phaser 가 삽입 순서로 그려 겹친
+         * 손님이 프레임마다 깜빡인다.
+         */
+        const pairDepths = (await page.evaluate(
+          `window.__kairo.scene.seatDepthsForTest(${co.handle}).map((s) => s.depth)`,
+        )) as number[];
+        record(
+          '★ 같은 칸에 앉은 둘의 깊이가 동률이 아니다 (깜빡임 방지)',
+          pairDepths.length >= 2 && new Set(pairDepths).size === pairDepths.length ? 'pass' : 'fail',
+          `${pairDepths.length}명 · ${pairDepths.map((x) => x.toFixed(2)).join(', ')}`,
+        );
+      }
+
+      // 뒷정리 — 놓은 시설을 걷고 시뮬을 되살린다
+      await page.evaluate(`(() => {
+        const h = window.__kairo;
+        for (const hd of [${seatOk.handle}, ${seatOk.front}].concat(window.__coParasols || [])) {
+          if (!hd) continue;
+          h.placement.remove(hd);
+          h.scene.refreshFacility(hd);
+        }
+        h.scene.setSlotDepthFaultForTest(false);
+        h.scene.setCoSpreadFaultForTest(false);
+        h.guests.invalidate();
+        h.scene.setAutoTick(true);
+        h.flow.frozen = false;
+      })()`);
+    }
+  }
+
+  /*
+   * ── 7f-3. ★ 위로 걷는 손님이 안 파묻힌다 (K37 버그 ②) ──
    *
    * `placeGuest` 는 **위치는 보간**하고 **깊이는 목적 타일**로 줬다. 목적지가 위쪽
    * (= `i+j` 가 작은 = 먼 칸)이면 이동이 시작되는 순간 깊이가 먼 칸 값으로 뚝 떨어지는데

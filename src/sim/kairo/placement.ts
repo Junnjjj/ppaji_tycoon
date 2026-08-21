@@ -37,8 +37,6 @@ export interface KairoFacilitySlot {
   tile: readonly [number, number];
   pose: string;
   facing: string;
-  /** 한 타일에 둘 이상 설 때만 (파라솔 1×1 에 2인) — 화면 텍셀 미세 오프셋 */
-  offsetTexel?: readonly [number, number];
 }
 
 /**
