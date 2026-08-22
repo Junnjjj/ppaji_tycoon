@@ -1,5 +1,5 @@
 재생성 대상 1종 (--dry-run — 생성하지 않는다)
-[1/1] jump_cushion 시트 L5#3 "JUMP CUSHION" · 참조 3장 · 프롬프트 8030자 · 실패모드 3개 · vertex 15.0tx IoU 0.619(≥0.877) slope 0.494/-0.502 ✕vertex,iou
+[1/1] jump_cushion 시트 L5#3 "JUMP CUSHION" · 참조 3장 · 프롬프트 8029자 · 실패모드 3개 · vertex 9.5tx IoU 0.712(≥0.877) slope 0.486/-0.462 ✕vertex,iou
   첨부(순서대로): art-reference/guides/kairo/facility__jump_cushion.png · art-reference/crops/building-dock.png · art-reference/crops/iso-shower-hut.png  [크로마 magenta]
 
 ────────────────────────────────────────────────────────────────────────
@@ -129,12 +129,12 @@ The object:
    lifted out of the water, dry and complete.
 
 WHAT WENT WRONG LAST TIME — do not repeat it:
-  - The previous attempt's ground bottom vertex was 15.0 px off: it measured 0.705 of the
+  - The previous attempt's ground bottom vertex was 9.5 px off: it measured 0.656 of the
     sprite width where the contract puts it at 0.571 (= 4/7). The near corner of the base —
     the lowest point of the whole object — must sit at that fraction across, not in the
     middle.
   - The previous attempt's ground silhouette overlapped the contract diamond by only IoU
-    0.619 (it must reach 0.877). The base is not the right shape: it must be one clean
+    0.712 (it must reach 0.877). The base is not the right shape: it must be one clean
     112x56 px diamond with the object standing on it, with nothing sticking out below or
     beside it.
   - The previous attempt still needed to move sideways to sit on its own tile, but it was

@@ -1,20 +1,20 @@
-# 넘길 것 — 재생성 28종
+# 넘길 것 — 재생성 19종
 
-`npx tsx tools/regen-facility.ts --all --dry-run --print` 로 뽑았다 (2026-08-22, 위반 28 기준).
+`npx tsx tools/regen-facility.ts --all --dry-run --print` 로 뽑았다 (2026-08-22, 위반 19 기준).
 **한 파일 = 한 시설.** 3번째 줄이 **첨부할 이미지(순서대로)**, `────` 사이가 **붙여넣을 프롬프트**다.
 
 ## 저장소에 접근되는 세션이면 — 한 줄
 
 ```bash
-npx tsx tools/regen-facility.ts --severe --tries 3   # 심각 4종 먼저
-npx tsx tools/regen-facility.ts --all --tries 3      # 28종 전부
+npx tsx tools/regen-facility.ts --severe --tries 3   # 심각 2종 먼저
+npx tsx tools/regen-facility.ts --all --tries 3      # 19종 전부
 ```
 조립·첨부·생성·후처리·판정·리롤이 전부 자동이다. 실패하면 **게이트 실측을 다음 프롬프트에
 넣어** 다시 돌린다. 이 폴더는 그게 안 될 때만 쓴다.
 
 ## 손으로 할 때
 
-1. `<id>.txt` 를 연다 (심각 4종부터: `trampoline_w` `airbounce` `jump_cushion` `minigolf`)
+1. `<id>.txt` 를 연다 (심각 2종부터: `airbounce` `jump_cushion`)
 2. 3번째 줄의 이미지 **3장을 그 순서대로** 첨부 — **첫 장이 발자국 가이드**여야 한다
    (프롬프트가 `1. THE FOOTPRINT GUIDE` 로 번호를 가리킨다)
 3. `────` 사이를 복사해 붙인다

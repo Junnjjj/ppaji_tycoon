@@ -1,5 +1,5 @@
 재생성 대상 1종 (--dry-run — 생성하지 않는다)
-[1/1] sunbed_row 시트 L2#2 "SUNBED ROW" · 참조 3장 · 프롬프트 8072자 · 실패모드 4개 · vertex 4.0tx IoU 0.753(≥0.872) slope 0.398/-0.307 ✕vertex,slope,iou
+[1/1] sunbed_row 시트 L2#2 "SUNBED ROW" · 참조 3장 · 프롬프트 7791자 · 실패모드 3개 · vertex 2.0tx IoU 0.848(≥0.872) slope 0.439/-0.397 ✕slope,iou
   첨부(순서대로): art-reference/guides/kairo/facility__sunbed_row.png · art-reference/crops/building-dock.png · art-reference/crops/foliage-hills.png  [크로마 magenta]
 
 ────────────────────────────────────────────────────────────────────────
@@ -126,16 +126,12 @@ The object:
    flat pyeongsang row above it. Open top, interior visible from above.
 
 WHAT WENT WRONG LAST TIME — do not repeat it:
-  - The previous attempt's ground bottom vertex was 4.0 px off: it measured 0.750 of the
-    sprite width where the contract puts it at 0.800 (= 4/5). The near corner of the base —
-    the lowest point of the whole object — must sit at that fraction across, not in the
-    middle.
-  - The previous attempt's two lower base edges measured slope 0.398/-0.307 instead of
+  - The previous attempt's two lower base edges measured slope 0.439/-0.397 instead of
     exactly +0.500/-0.500. Every horizontal edge of the base runs at exactly 2:1 — two
     pixels across for one pixel down. This is 2:1 dimetric, NOT the symmetric 30-degree
     isometric.
   - The previous attempt's ground silhouette overlapped the contract diamond by only IoU
-    0.753 (it must reach 0.872). The base is not the right shape: it must be one clean 80x40
+    0.848 (it must reach 0.872). The base is not the right shape: it must be one clean 80x40
     px diamond with the object standing on it, with nothing sticking out below or beside it.
   - The previous attempt still needed to move sideways to sit on its own tile, but it was
     already touching the edge of its canvas, so it could not be moved at all. Draw the base

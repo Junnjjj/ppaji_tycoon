@@ -1,5 +1,5 @@
 재생성 대상 1종 (--dry-run — 생성하지 않는다)
-[1/1] pool_lazy 시트 L8#2 "LAZY RIVER (INDOOR)" · 참조 3장 · 프롬프트 8308자 · 실패모드 3개 · vertex 5.0tx IoU 0.794(≥0.909) slope 0.467/-0.443 ✕vertex,iou
+[1/1] pool_lazy 시트 L8#2 "LAZY RIVER (INDOOR)" · 참조 3장 · 프롬프트 7756자 · 실패모드 1개 · vertex 0.3tx IoU 0.742(≥0.909) slope 0.490/-0.472 ✕iou
   첨부(순서대로): art-reference/guides/kairo/facility__pool_lazy.png · art-reference/crops/iso-shower-hut.png · art-reference/crops/shore-trees-houses.png  [크로마 magenta]
 
 ────────────────────────────────────────────────────────────────────────
@@ -132,17 +132,10 @@ The object:
    reflections, and not one pixel of water outside the tile rim.
 
 WHAT WENT WRONG LAST TIME — do not repeat it:
-  - The previous attempt's ground bottom vertex was 5.0 px off: it measured 0.701 of the
-    sprite width where the contract puts it at 0.667 (= 6/9). The near corner of the base —
-    the lowest point of the whole object — must sit at that fraction across, not in the
-    middle.
   - The previous attempt's ground silhouette overlapped the contract diamond by only IoU
-    0.794 (it must reach 0.909). The base is not the right shape: it must be one clean
+    0.742 (it must reach 0.909). The base is not the right shape: it must be one clean
     144x72 px diamond with the object standing on it, with nothing sticking out below or
     beside it.
-  - The previous attempt still needed to move sideways to sit on its own tile, but it was
-    already touching the edge of its canvas, so it could not be moved at all. Draw the base
-    diamond as the widest part of the object and leave clear empty margin on both sides.
 
 The object faces the standard way: its front-right face toward the lower right, its
 front-left face toward the lower left, roof or top surface visible.

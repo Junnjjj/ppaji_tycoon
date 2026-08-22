@@ -1,4 +1,4 @@
-빠지 타이쿤 저장소에서 **시설 스프라이트 28종을 재생성**해 줘.
+빠지 타이쿤 저장소에서 **시설 스프라이트 19종을 재생성**해 줘.
 접지 기하 게이트가 빨간불인 것들이고, 그림을 다시 뽑는 것 말고는 고칠 방법이 없다.
 
 ## 먼저 읽을 것
@@ -9,8 +9,8 @@
 ## 하는 법
 
 ```bash
-npx tsx tools/regen-facility.ts --severe --tries 3    # 심각 4종 먼저
-npx tsx tools/regen-facility.ts --all --tries 3       # 잘 되면 28종 전부
+npx tsx tools/regen-facility.ts --severe --tries 3    # 심각 2종 먼저
+npx tsx tools/regen-facility.ts --all --tries 3       # 잘 되면 19종 전부
 ```
 
 이 도구가 프롬프트 조립 → 가이드 첨부 → 생성 → 후처리 → 게이트 판정 → 실패면 **직전 실측을
@@ -42,7 +42,7 @@ npx tsx tools/regen-facility.ts --all --tries 3       # 잘 되면 28종 전부
 ## 판정 — 게이트만 믿지 마라
 
 ```bash
-npx tsx tools/kairo-gate.ts --geom       # 접지 기하 (지금 위반 28 · 심각 4)
+npx tsx tools/kairo-gate.ts --geom       # 접지 기하 (지금 위반 19 · 심각 2)
 npm run bake:atlas                        # 통과분 반입 후
 npm run verify:kairo                      # 화면 305/305 (dev 서버 필요)
 npx vitest run && npx tsc --noEmit && npm run lint

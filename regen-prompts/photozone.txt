@@ -1,5 +1,5 @@
 재생성 대상 1종 (--dry-run — 생성하지 않는다)
-[1/1] photozone 시트 S5#5 "Photo spot" · 참조 3장 · 프롬프트 7490자 · 실패모드 2개 · vertex 0.5tx IoU 0.520(≥0.800) slope 0.403/-0.089 ✕slope,iou
+[1/1] photozone 시트 S5#5 "Photo spot" · 참조 3장 · 프롬프트 7490자 · 실패모드 2개 · vertex 0.0tx IoU 0.511(≥0.800) slope 0.274/-0.014 ✕slope,iou
   첨부(순서대로): art-reference/guides/kairo/facility__photozone.png · art-reference/crops/iso-vest-hut.png · art-reference/crops/foliage-hills.png  [크로마 magenta]
 
 ────────────────────────────────────────────────────────────────────────
@@ -126,12 +126,12 @@ The object:
    rectangle is the silhouette.
 
 WHAT WENT WRONG LAST TIME — do not repeat it:
-  - The previous attempt's two lower base edges measured slope 0.403/-0.089 instead of
+  - The previous attempt's two lower base edges measured slope 0.274/-0.014 instead of
     exactly +0.500/-0.500. Every horizontal edge of the base runs at exactly 2:1 — two
     pixels across for one pixel down. This is 2:1 dimetric, NOT the symmetric 30-degree
     isometric.
   - The previous attempt's ground silhouette overlapped the contract diamond by only IoU
-    0.520 (it must reach 0.800). The base is not the right shape: it must be one clean 64x32
+    0.511 (it must reach 0.800). The base is not the right shape: it must be one clean 64x32
     px diamond with the object standing on it, with nothing sticking out below or beside it.
 
 The object faces the standard way: its front-right face toward the lower right, its
