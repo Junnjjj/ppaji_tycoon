@@ -805,6 +805,14 @@ function main(): void {
     );
 
     if (o.dryRun) {
+      /*
+       * ⚠ 첨부 목록을 **반드시 같이 찍는다.** 이 도구가 자동으로 돌 때는 `--ref` 로
+       * 넘어가지만, `image_gen` 권한이 없는 환경에서는 사람이 **프롬프트를 복사해 다른
+       * 세션에 붙여넣고 이미지를 직접 첨부**한다 (이 저장소의 실제 상황이다).
+       * 그때 무엇을 붙일지 안 적혀 있으면 프롬프트만으로는 재현이 안 된다 —
+       * 첫 장이 발자국 가이드여야 하고 순서도 프롬프트 본문이 번호로 가리킨다.
+       */
+      console.log(`  첨부(순서대로): ${refs.join(' · ')}  [크로마 ${item.chroma}]`);
       if (showPrompt) console.log(`\n${'─'.repeat(72)}\n${prompt}\n${'─'.repeat(72)}\n`);
       summary.push({
         id: t.id,
