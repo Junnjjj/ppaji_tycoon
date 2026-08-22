@@ -5,8 +5,27 @@
  *   npx tsx tools/make-kairo-guide.ts --id shop --id cafe       골라서
  *   npx tsx tools/make-kairo-guide.ts --all --out /tmp/guides   출력 폴더
  *   npx tsx tools/make-kairo-guide.ts --table                   그림 없이 규격표만
+ *   npx tsx tools/make-kairo-guide.ts --id cafe --transpose     **4방향의 d1·d3 용**
  *
  * 기본 출력은 `art-reference/guides/kairo/facility__<id>.png` (생성물 이름 규칙과 같은 꼴).
+ *
+ * ## `--transpose` — 4방향에서 d1·d3 은 발자국이 **전치**된다
+ *
+ * `PlacementGrid.sizeOf` 가 **홀수 방향(1·3)에서만 w↔d 를 맞바꾼다.** 즉 3×2 매표소를
+ * 90° 돌리면 판 위에서 **2×3** 을 차지하고, 접지 다이아몬드의 최하단 꼭짓점이
+ * `w/(w+d) = 0.6` 에서 `0.4` 로 옮겨간다. **캔버스 크기는 안 변한다** — `(w+d)` 가
+ * 불변이기 때문이다 (`kairo-facings.test.ts` 가 네 장의 크기가 같음을 지킨다).
+ *
+ * 그래서 d0·d2 는 `facility__<id>.png` 를, d1·d3 은 이 플래그로 뽑은
+ * `facility__<id>__d1.png` 를 붙인다. **정사각 발자국(w == d)은 두 가이드가 같으므로
+ * 안 만든다.**
+ *
+ * ⚠ 이것은 `docs/asset-regen-order.md` §4.1 「가이드를 뒤집지 마라」와 **모순이 아니다.**
+ * 저기서 금지한 것은 *같은 방향*의 그림이 축뒤집힘으로 나왔을 때 가이드를 뒤집는 것이고
+ * (그때 가이드는 옳다), 여기서는 **발자국이 실제로 전치된 다른 방향**이라 전치된
+ * 가이드가 정본이다. 그리고 뒤집은 그림이 아니라 **다시 그린 그림**이다 — 옆면 명암이
+ * `+J`(왼쪽·밝음) / `+I`(오른쪽·어두움) 그대로 남는다. 가이드 PNG 를 좌우 반전하면
+ * 그 명암까지 뒤집혀 **게이트 5 가 잡는 바로 그 결함**을 지시서가 시키는 꼴이 된다.
  *
  * ## 왜 프롬프트 문장이 아니라 그림인가
  *
@@ -252,11 +271,20 @@ function main(): void {
   const argv = process.argv.slice(2);
   const all = argv.includes('--all');
   const table = argv.includes('--table');
+  const transpose = argv.includes('--transpose');
   const ids = argv.flatMap((a, i) => (a === '--id' ? [argv[i + 1] ?? ''] : []));
   const outIdx = argv.indexOf('--out');
   const outDir = outIdx >= 0 ? (argv[outIdx + 1] ?? '') : 'art-reference/guides/kairo';
 
-  const chosen = specs().filter((g) => all || ids.includes(g.id));
+  const picked = specs().filter((g) => all || ids.includes(g.id));
+  // 정사각은 전치해도 같은 그림이다 — 두 벌을 만들면 어느 쪽이 정본인지 모르게 된다
+  const skipped = transpose ? picked.filter((g) => g.w === g.d).map((g) => g.id) : [];
+  const chosen = transpose
+    ? picked.filter((g) => g.w !== g.d).map((g) => ({ ...g, w: g.d, d: g.w }))
+    : picked;
+  if (skipped.length > 0) {
+    console.log(`정사각이라 전치 가이드가 필요 없다 (${skipped.length}종): ${skipped.join(' ')}`);
+  }
   if (chosen.length === 0) {
     console.error('대상이 없다. --all 이나 --id <시설id> 를 줄 것');
     process.exit(1);
@@ -270,10 +298,16 @@ function main(): void {
   mkdirSync(outDir, { recursive: true });
   for (const g of chosen) {
     const png = encodePng(drawGuide(g));
-    const file = assetIdToFile(g.sprite);
+    // d1·d3 은 전치 발자국이라 파일을 따로 둔다 (d0·d2 는 접미사 없는 원본)
+    const file = transpose
+      ? assetIdToFile(g.sprite).replace(/\.png$/, '__d1.png')
+      : assetIdToFile(g.sprite);
     writeFileSync(join(outDir, file), png);
   }
-  console.log(`가이드 ${chosen.length}장 → ${outDir}/  (1텍셀 = ${SCALE}px, 크로마 #FF00FF)`);
+  console.log(
+    `가이드 ${chosen.length}장 → ${outDir}/  (1텍셀 = ${SCALE}px, 크로마 #FF00FF` +
+      `${transpose ? ' · 전치 = d1·d3 용' : ''})`,
+  );
   console.log('  시트 프롬프트에 --ref 로 첨부하고, 아래 규격을 글로도 같이 박을 것:');
   for (const g of chosen.slice(0, 3)) console.log(`    ${guideSpecLine(g)}`);
   if (chosen.length > 3) console.log(`    … (--table 로 전체)`);

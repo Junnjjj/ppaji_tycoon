@@ -35,9 +35,13 @@ import {
   assetIdToFile,
   allSimFacilities,
   renderSpec,
+  facilityFacings,
+  facilitySpriteId,
+  FACILITY_DIR_NAMES,
   KAIRO,
 } from '../src/assets/kairo-contract.js';
 import { KairoProceduralProvider } from '../src/assets/kairo-procedural.js';
+import { facilityDef, PlacementGrid, type FacilityFacing } from '../src/sim/kairo/placement.js';
 import { decodePng } from './png.js';
 import {
   measureSprite,
@@ -49,6 +53,18 @@ import {
   type GeomAxis,
   type GroundMeasure,
 } from './ground-geometry.js';
+import {
+  measureLight,
+  lightVerdict,
+  synthLitSprite,
+  flipX,
+  LIGHT_TOL,
+  TONE_STEP,
+  BAND_TEXELS,
+  VERDICT_NAME,
+  type LightMeasure,
+  type LightVerdict,
+} from './light-direction.js';
 
 interface Finding {
   gate: string;
@@ -90,7 +106,23 @@ const isWarn = (f: Finding): boolean => WARN_GATES.has(f.gate);
  * (`isWarn` 이 false), 반대로 게이트가 통째로 경고로 남는다. `GATE_FACILITY_ID` /
  * `TICKET_DEF_ID` 가 값만 겹쳐 있던 것과 같은 형태다 (CLAUDE.md 「다음 할 일」 7번).
  */
-const WARN_GATES = new Set(['접지기하']);
+/**
+ * ## 게이트 5(광원)도 **경고**다 — 같은 이유
+ *
+ * 실측 시설 **15/75** 가 뒤집혀 있고 **16/75** 는 평탄(방향을 못 읽음)이다
+ * (`--light` 로 표 전체). 이걸 곧바로 실패로 올리면 `npm run gate` 가 죽어 에셋과
+ * 무관한 작업까지 막힌다 — 게이트 4 가 밟은 길이다. 고치는 방법은 **재생성**이고
+ * 4방향 지시서가 `docs/asset-4dir-order.md` 에 있다.
+ *
+ * ⚠ **`평탄` 은 findings 에 안 넣는다** (요약 줄의 카운트로만 낸다). 위반이 아니라
+ * "이 그림으로는 방향을 말할 수 없다"이기 때문이다 — 뒤집힘과 같은 통에 넣으면
+ * 재생성 목록이 두 배가 되고 그중 절반은 고칠 대상이 아니다. 대신 **요약 줄에서
+ * 절대 사라지지 않는다**: 조용히 통과하는 축을 만들지 않는 것이 이 저장소의 규칙이다.
+ *
+ * ⚠ 게이트 5 의 **대조군 실패(`광원대조군`)는 경고가 아니다.** 그건 그림이 아니라
+ * 게이트 자신이 고장 난 것이므로 종료 코드를 바꾼다 (게이트 4 의 `selftest` 와 같은 결정).
+ */
+const WARN_GATES = new Set(['접지기하', '광원']);
 
 /** PNG 헤더에서 폭·높이만 읽는다 (디코딩 없이) */
 function pngSize(path: string): { w: number; h: number } | null {
@@ -109,7 +141,12 @@ function walkPngs(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-function run(): { findings: Finding[]; counts: Record<string, number>; geom: GeomRow[] } {
+function run(): {
+  findings: Finding[];
+  counts: Record<string, number>;
+  geom: GeomRow[];
+  light: LightRow[];
+} {
   const findings: Finding[] = [];
 
   // 게이트 1 — 계약 정합
@@ -182,6 +219,11 @@ function run(): { findings: Finding[]; counts: Record<string, number>; geom: Geo
   const geom = pngs.length > 0 ? geometryGate() : [];
   for (const g of geom) if (g.bad.length > 0) findings.push(g.finding!);
 
+  // 게이트 5 — 광원 방향. 판을 건너뛰는 규칙은 게이트 4 와 같다
+  const light = pngs.length > 0 ? lightGate() : [];
+  for (const l of light) if (l.finding) findings.push(l.finding);
+  for (const f of lightPackControl(light)) findings.push(f);
+
   const images = new KairoProceduralProvider().ids.length;
   return {
     findings,
@@ -194,8 +236,14 @@ function run(): { findings: Finding[]; counts: Record<string, number>; geom: Geo
       접지위반: geom.filter((g) => g.bad.length > 0).length,
       접지심각: geom.filter((g) => g.bad.length > 0 && g.severe).length,
       접지축뒤집힘: geom.filter((g) => g.axesSwapped === true).length,
+      광원측정: light.length,
+      광원뒤집힘: light.filter((l) => l.verdict === 'flipped').length,
+      광원평탄: light.filter((l) => l.verdict === 'flat').length,
+      광원측정불가: light.filter((l) => l.verdict === 'unmeasurable').length,
+      광원좌상단: light.filter((l) => l.verdict === 'upper-left').length,
     },
     geom,
+    light,
   };
 }
 
@@ -272,8 +320,32 @@ function geometryGate(): GeomRow[] {
   for (const s of allSimFacilities()) {
     const r = renderSpec(s.sprite);
     if (!r) continue;
-    const row = geomRow(s.id, '시설', assetIdToFile(s.sprite), s.size[0], s.size[1], r.bodyH);
-    if (row) rows.push(row);
+    /*
+     * ⚠ **4방향이면 네 장을 다 잰다.** 예전에는 `assetIdToFile(s.sprite)` 하나만 봤는데,
+     * `facings: 4` 를 켜는 순간 그 파일명(`facility__shop.png`)이 계약에서 사라져
+     * `existsSync` 가 false → `geomRow` 가 null → **그 시설이 게이트 4 에서 통째로
+     * 조용히 빠진다** (요약의 `접지측정` 만 줄어든다). 4방향은 접지 결함을 4배로
+     * 늘리는데 게이트가 눈을 감는 꼴이라 순서를 뒤집었다.
+     * 발자국은 **홀수 방향에서 전치된다** — 규칙의 정본은 `PlacementGrid.sizeOf` 하나다
+     * (여기에 `facing % 2` 를 다시 적으면 두 벌이 된다).
+     */
+    const def = facilityDef(s.id);
+    const facings = facilityFacings(s.id);
+    /*
+     * ⚠ **그림 장수만큼** 돈다 — 방향 수가 아니다. `facings: 2` 는 스프라이트가 **한 장**
+     * 이고 (`facilitySpriteId` 가 방향을 무시하고 같은 ID 를 준다) 그 한 장이 회전
+     * 0·1 을 겸한다. 방향 수(2)만큼 돌면 같은 파일을 **전치된 기대값으로 한 번 더**
+     * 재게 되어 위반이 18 → 56 으로 부풀었다 (실측).
+     */
+    const sheets = facings === 4 ? 4 : 1;
+    for (let facing = 0; facing < sheets; facing++) {
+      const [w, d] = def
+        ? PlacementGrid.sizeOf(def, facing as FacilityFacing)
+        : [s.size[0], s.size[1]];
+      const id = facings === 4 ? `${s.id}:${FACILITY_DIR_NAMES[facing]}` : s.id;
+      const row = geomRow(id, '시설', assetIdToFile(facilitySpriteId(s.id, facing)), w, d, r.bodyH);
+      if (row) rows.push(row);
+    }
   }
   for (const t of KAIRO.ground.types) {
     for (let a = 0; a < t.alts; a++) {
@@ -283,6 +355,81 @@ function geometryGate(): GeomRow[] {
     }
   }
   return rows;
+}
+
+// ────────────────────────────── 게이트 5 ──────────────────────────────
+
+interface LightRow {
+  id: string;
+  file: string;
+  m: LightMeasure;
+  verdict: LightVerdict;
+  finding?: Finding;
+}
+
+/**
+ * 광원 방향 — **시설만** 잰다 (`facility/…`, 4방향이 켜지면 `facility/…:d0` 넷).
+ *
+ * 지면·벽·배경·아이콘을 빼는 이유는 **옆면이 없어서**다. 지면 타일은 윗면 하나뿐이라
+ * 좌우 밝기 차가 구조적으로 0 이고, 그걸 `평탄` 33장으로 세면 요약이 지면으로 덮인다.
+ * 데코 8종은 부피가 있으므로 계약에 `deco/` 가 생기면 여기 넣을 것 — 지금은 그 ID 가
+ * 시설이 아니라 별도 축이라 게이트 4 도 안 재고 있다.
+ *
+ * ⚠ **`assetFileToId` 로 ID 를 얻는다** — 게이트 3 과 같은 규칙 하나. 폴더나 파일명을
+ * 여기서 다시 해석하면 4방향 파일(`facility__shop__d0.png`)에서 두 벌이 갈라진다.
+ */
+function lightGate(): LightRow[] {
+  const rows: LightRow[] = [];
+  const sizes = kairoAssetSizes();
+  for (const p of walkPngs(GEN_DIR)) {
+    const file = p.split('/').pop() ?? '';
+    const id = assetFileToId(file);
+    if (id === null || !id.startsWith('facility/') || !sizes.has(id)) continue;
+    const m = measureLight(decodePng(p));
+    const verdict = lightVerdict(m);
+    const row: LightRow = { id: id.slice('facility/'.length), file, m, verdict };
+    if (verdict === 'flipped' || verdict === 'unmeasurable') {
+      row.finding = {
+        gate: '광원',
+        id: row.id,
+        detail:
+          verdict === 'flipped'
+            ? `광원이 오른쪽에서 온다 — 왼쪽 벽 − 오른쪽 벽 ${m.score!.toFixed(1)} ` +
+              `(문턱 ≤ ${(-LIGHT_TOL).toFixed(1)}, 열 ${m.left}/${m.right})`
+            : `벽 띠를 못 떴다 — 좌 ${m.left}열 · 우 ${m.right}열 (양쪽 4열 이상 필요)`,
+      };
+    }
+    rows.push(row);
+  }
+  return rows.sort((a, b) => (a.m.score ?? -1e9) - (b.m.score ?? -1e9));
+}
+
+/**
+ * **팩 음성 대조군** — 가장 확실하게 통과한 그림을 좌우로 뒤집어 다시 재고,
+ * `뒤집힘` 으로 잡히는지 본다. 사용자가 지정한 그 대조군이다
+ * ("정본 스프라이트를 flipX 해서 넣으면 반드시 잡혀야 한다").
+ *
+ * 합성 대조군(`selftest`)이 이미 같은 성질을 보지만, 그건 **게이트가 만든 그림**이다.
+ * 실제 팩의 화소로도 한 번 확인해야 "합성에서만 도는 자"가 아니게 된다.
+ *
+ * ⚠ 실패하면 **경고가 아니라 하드 실패**다 (`WARN_GATES` 에 `광원대조군` 이 없다).
+ * 그림이 나쁜 게 아니라 자가 고장 난 것이므로.
+ */
+function lightPackControl(rows: LightRow[]): Finding[] {
+  const best = rows.filter((r) => r.verdict === 'upper-left').sort((a, b) => b.m.score! - a.m.score!)[0];
+  if (!best) return []; // 통과가 하나도 없는 팩 — 뒤집을 정본이 없다
+  const flipped = measureLight(flipX(decodePng(join(GEN_DIR, best.file))));
+  const v = lightVerdict(flipped);
+  if (v === 'flipped') return [];
+  return [
+    {
+      gate: '광원대조군',
+      id: best.id,
+      detail:
+        `정본 ${best.m.score!.toFixed(1)} 를 좌우 반전했는데 ${VERDICT_NAME[v]} ` +
+        `(${flipped.score?.toFixed(1) ?? '—'}) — 지표가 flipX 에 홀함수가 아니다`,
+    },
+  ];
 }
 
 // ──────────────────────── 음성 대조군 (`seam --selftest` 형태) ────────────────────────
@@ -375,6 +522,47 @@ function selftest(verbose: boolean): string[] {
       }
     }
   }
+
+  bad.push(...lightSelftest(say));
+  return bad;
+}
+
+/**
+ * 게이트 5 의 대조군 — 판정 셋에 각각 하나씩.
+ *
+ * 합성 상자는 왼쪽 면 base(`#dcb079`) · 오른쪽 면 shadow(`#c49a6a`) 로 칠한
+ * **좌상단 광원의 정의 그 자체**다. 그래서:
+ *   · 정본  → `좌상단` (양성 대조군 — 기대값이 자기모순이 아닌지)
+ *   · 미러  → `뒤집힘` (음성 대조군 — 사용자가 지정한 그것)
+ *   · 무음영 → `평탄`  (사각지대가 살아 있는지. 이게 `좌상단` 이 되면 문턱이 죽은 것)
+ *
+ * ⚠ **발자국 넷을 다 돈다.** 앞선 구현(줄 기준 지표)은 정사각에서는 멀쩡했고
+ * **4×1 에서만** 무너졌다 — 한 모양만 시험하면 그 버그가 통과한다.
+ */
+function lightSelftest(say: (s: string) => void): string[] {
+  const bad: string[] = [];
+  const cases: { name: string; opts: { mirror?: boolean; flat?: boolean }; want: LightVerdict }[] = [
+    { name: '정본 (양성)', opts: {}, want: 'upper-left' },
+    { name: '좌우 반전 (음성)', opts: { mirror: true }, want: 'flipped' },
+    { name: '음영 제거', opts: { flat: true }, want: 'flat' },
+  ];
+  say(`\n게이트 5 대조군 — 한 톤 단계 ${TONE_STEP.toFixed(2)} · 사각지대 ±${LIGHT_TOL.toFixed(2)} · 띠 ${BAND_TEXELS}텍셀`);
+  for (const [w, d, bodyH] of CONTROL_SHAPES) {
+    for (const c of cases) {
+      const m = measureLight(synthLitSprite(w, d, bodyH, c.opts));
+      const v = lightVerdict(m);
+      say(
+        `  ${w}×${d} ${c.name.padEnd(18)} ${VERDICT_NAME[v].padEnd(5)} ` +
+          `점수 ${(m.score?.toFixed(2) ?? '—').padStart(7)}  열 ${m.left}/${m.right}` +
+          (v === c.want ? '' : `  ✕ 기대 ${VERDICT_NAME[c.want]}`),
+      );
+      if (v !== c.want) {
+        bad.push(
+          `광원 ${w}×${d} ${c.name}: ${VERDICT_NAME[v]} (기대 ${VERDICT_NAME[c.want]}, 점수 ${m.score?.toFixed(2) ?? '—'})`,
+        );
+      }
+    }
+  }
   return bad;
 }
 
@@ -384,9 +572,10 @@ const argv = process.argv.slice(2);
 const json = argv.includes('--json');
 const strict = argv.includes('--strict');
 const showGeom = argv.includes('--geom');
+const showLight = argv.includes('--light');
 const onlySelftest = argv.includes('--selftest');
 
-const controlFails = selftest(onlySelftest || showGeom);
+const controlFails = selftest(onlySelftest || showGeom || showLight);
 
 /*
  * ⚠ **`process.exit()` 를 쓰지 말 것.** 파이프로 나가는 `console.log` 는 비동기라
@@ -399,8 +588,13 @@ if (onlySelftest) {
   process.exitCode = controlFails.length === 0 ? 0 : 1;
 }
 
-const { findings, counts, geom } = onlySelftest
-  ? { findings: [] as Finding[], counts: {} as Record<string, number>, geom: [] as GeomRow[] }
+const { findings, counts, geom, light } = onlySelftest
+  ? {
+      findings: [] as Finding[],
+      counts: {} as Record<string, number>,
+      geom: [] as GeomRow[],
+      light: [] as LightRow[],
+    }
   : run();
 const hard = findings.filter((f) => !isWarn(f) || strict);
 const warns = findings.filter((f) => isWarn(f) && !strict);
@@ -434,6 +628,16 @@ if (onlySelftest) {
           iouMin: g.iouMin,
           cover: g.m.cover,
         })),
+        light: light.map((l) => ({
+          id: l.id,
+          file: l.file,
+          verdict: l.verdict,
+          score: l.m.score,
+          left: l.m.left,
+          right: l.m.right,
+        })),
+        lightTol: LIGHT_TOL,
+        toneStep: TONE_STEP,
       },
       null,
       2,
@@ -451,6 +655,17 @@ if (onlySelftest) {
       `  접지 기하 ${counts['접지측정']}장 측정 · 위반 ${counts['접지위반']}` +
         ` (심각 ${counts['접지심각']} · 축뒤집힘 ${counts['접지축뒤집힘']})` +
         `${strict ? '' : ' — 경고. 재생성 대상 (docs/asset-regen-order.md)'}`,
+    );
+    /*
+     * ⚠ `평탄`·`측정불가` 는 findings 에 안 들어간다 (`WARN_GATES` 주석). **이 줄이
+     * 그 둘이 세상에 드러나는 유일한 자리**이므로 지우지 말 것 — 지우면 "방향을 못 재는
+     * 그림 16장"이 조용히 사라진다.
+     */
+    console.log(
+      `  광원 방향 ${counts['광원측정']}장 측정 · 좌상단 ${counts['광원좌상단']} · ` +
+        `뒤집힘 ${counts['광원뒤집힘']} · 평탄 ${counts['광원평탄']} · 측정불가 ${counts['광원측정불가']}` +
+        ` (사각지대 ±${LIGHT_TOL.toFixed(1)} 휘도)` +
+        `${strict ? '' : ' — 경고. 목록은 --light'}`,
     );
   }
   console.log(
@@ -483,6 +698,18 @@ if (onlySelftest) {
     }
   }
 
+  if (showLight) {
+    console.log('\n광원 방향 실측 (게이트 5) — 왼쪽 벽 − 오른쪽 벽 (휘도, + 면 좌상단)');
+    console.log(`  한 톤 단계 ${TONE_STEP.toFixed(2)} · 사각지대 ±${LIGHT_TOL.toFixed(2)} · 벽 띠 ${BAND_TEXELS}텍셀`);
+    console.log('  판정    ID                   점수    벽 열 좌/우');
+    for (const l of light) {
+      console.log(
+        `  ${VERDICT_NAME[l.verdict].padEnd(6)}  ${l.id.padEnd(18)}` +
+          `${(l.m.score?.toFixed(1) ?? '—').padStart(8)}   ${l.m.left}/${l.m.right}`,
+      );
+    }
+  }
+
   if (findings.length === 0) {
     console.log('  ✅ 위반 0');
   } else {
@@ -496,11 +723,14 @@ if (onlySelftest) {
        * 기본은 **심각(반 칸 이상 밀림)만** 내고 나머지는 `--geom` 으로 넘긴다 —
        * 그게 5단계 재생성의 우선순위이기도 하다.
        */
-      const severe = warns.filter((f) => f.detail.startsWith('심각'));
-      const shown = showGeom ? warns : severe;
+      const geomWarns = warns.filter((f) => f.gate === '접지기하');
+      const lightWarns = warns.filter((f) => f.gate === '광원');
+      const severe = geomWarns.filter((f) => f.detail.startsWith('심각'));
+      const shown = [...(showGeom ? geomWarns : severe), ...(showLight ? lightWarns : [])];
       console.log(
-        `  ⚠ 경고 ${warns.length} (게이트 4 — 종료 코드에 안 들어간다. --strict 로 승격)` +
-          (showGeom ? '' : ` · 아래는 심각 ${severe.length}건, 전체는 --geom`),
+        `  ⚠ 경고 ${warns.length} (게이트 4·5 — 종료 코드에 안 들어간다. --strict 로 승격)` +
+          (showGeom ? '' : ` · 접지는 심각 ${severe.length}건만, 전체는 --geom`) +
+          (showLight ? '' : ` · 광원 ${lightWarns.length}건은 --light`),
       );
       for (const f of shown) console.log(`     [${f.gate}] ${f.id} — ${f.detail}`);
     }

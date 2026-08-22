@@ -487,8 +487,13 @@ export const GEOM_HOLDOUT: readonly { id: string; axes: readonly GeomAxis[]; why
   },
 ];
 
+/**
+ * ⚠ **방향 접미사를 떼고 찾는다.** 4방향 시설은 `parasol:d2` 처럼 들어오는데
+ * 면제는 "그 물건의 접지가 다이아몬드가 아니다"라는 **물건의 성질**이라 네 방향에
+ * 똑같이 걸린다. 안 떼면 `facings: 4` 를 켜는 순간 면제가 조용히 풀린다.
+ */
 const holdoutFor = (id: string): readonly GeomAxis[] =>
-  GEOM_HOLDOUT.find((h) => h.id === id)?.axes ?? [];
+  GEOM_HOLDOUT.find((h) => h.id === id.split(':')[0])?.axes ?? [];
 
 /**
  * 실측 + 기대값 → 판정. 기대값은 **정본 마스크를 같은 추정기로 잰 값**이다.
