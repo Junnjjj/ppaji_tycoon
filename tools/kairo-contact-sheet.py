@@ -20,7 +20,17 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", type=Path, default=ROOT / "assets" / "generated" / "kairo-qa")
     parser.add_argument("--per-sheet", type=int, default=25)
+    parser.add_argument(
+        "--four-dir-root",
+        type=Path,
+        help="Render accepted facility__<id>__d0..d3 drafts from this directory.",
+    )
+    parser.add_argument("--ids", help="Comma-separated facility ids for --four-dir-root.")
     args = parser.parse_args()
+
+    if args.four_dir_root is not None:
+        render_four_dir(args)
+        return
 
     rows = list(json.loads(FACILITIES.read_text(encoding="utf-8"))["facilities"].items())
     args.out.mkdir(parents=True, exist_ok=True)
@@ -49,6 +59,49 @@ def main() -> None:
             y = oy + image_box[1] + (max_h - sprite.height) // 2
             sheet.paste(sprite, (x, y), sprite)
         destination = args.out / f"facilities-{page}.png"
+        sheet.save(destination)
+        print(destination)
+
+
+def render_four_dir(args: argparse.Namespace) -> None:
+    """Render one facility per row without altering any source sprite pixels."""
+    root = args.four_dir_root.resolve()
+    ids = [item for item in (args.ids or "").split(",") if item]
+    if not ids:
+        ids = sorted(
+            {
+                path.name.removeprefix("facility__").removesuffix("__d0.png")
+                for path in root.glob("facility__*__d0.png")
+            }
+        )
+    args.out.mkdir(parents=True, exist_ok=True)
+    directions = ("d0", "d1", "d2", "d3")
+    cell_w, cell_h = 280, 230
+    per_sheet = max(1, args.per_sheet)
+
+    for page, offset in enumerate(range(0, len(ids), per_sheet), start=1):
+        group = ids[offset : offset + per_sheet]
+        sheet = Image.new("RGB", (len(directions) * cell_w, len(group) * cell_h), (30, 32, 36))
+        draw = ImageDraw.Draw(sheet)
+        for row_index, facility_id in enumerate(group):
+            for col_index, direction in enumerate(directions):
+                ox, oy = col_index * cell_w, row_index * cell_h
+                draw.rectangle((ox, oy, ox + cell_w - 1, oy + cell_h - 1), outline=(72, 76, 84))
+                draw.text((ox + 8, oy + 7), f"{facility_id}  {direction}", fill=(235, 238, 242))
+                path = root / f"facility__{facility_id}__{direction}.png"
+                if not path.exists():
+                    draw.text((ox + 8, oy + 35), "MISSING", fill=(240, 100, 100))
+                    continue
+                sprite = Image.open(path).convert("RGBA")
+                max_w, max_h = cell_w - 24, cell_h - 40
+                scale = max(1, min(6, max_w // sprite.width, max_h // sprite.height))
+                enlarged = sprite.resize(
+                    (sprite.width * scale, sprite.height * scale), Image.Resampling.NEAREST
+                )
+                x = ox + (cell_w - enlarged.width) // 2
+                y = oy + 30 + (max_h - enlarged.height) // 2
+                sheet.paste(enlarged, (x, y), enlarged)
+        destination = args.out / f"facilities-4dir-{page}.png"
         sheet.save(destination)
         print(destination)
 

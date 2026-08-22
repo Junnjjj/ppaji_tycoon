@@ -492,7 +492,7 @@ export function buildPrompt(p: PromptParts): string {
 
 // ────────────────────────────── 외부 명령 ──────────────────────────────
 
-class CapabilityError extends Error {}
+export class CapabilityError extends Error {}
 
 function sh(cmd: string, args: string[]): string {
   try {
@@ -511,7 +511,7 @@ function sh(cmd: string, args: string[]): string {
 }
 
 /** sprite-gen 으로 한 장 생성한다 (크로마 제거까지 그쪽 정본 계약으로) */
-function generate(promptFile: string, refs: string[], out: string, chroma: string): void {
+export function generate(promptFile: string, refs: string[], out: string, chroma: string): void {
   if (!existsSync(SPRITE_GEN)) {
     throw new CapabilityError(`sprite-gen 이 없다: ${SPRITE_GEN}`);
   }
@@ -574,7 +574,7 @@ function detectKey(path: string): 'magenta' | 'green' {
 const EXTRACT_PY = `
 import importlib.util, json, sys
 from PIL import Image
-src, dst, sheet, sprite_id, filename, w, h, label_frac, mod = sys.argv[1:10]
+src, dst, sheet, sprite_id, filename, w, h, label_frac, mod, fp_w, fp_d, fp_body_h = sys.argv[1:13]
 spec = importlib.util.spec_from_file_location("pks", mod)
 m = importlib.util.module_from_spec(spec)
 # ⚠ dataclass 는 자기 모듈을 sys.modules 에서 되찾는다 — 등록 안 하면 AttributeError 로 죽는다
@@ -584,7 +584,7 @@ if sheet.startswith("W"):
     raise SystemExit("regen-facility: 시설 시트가 아니다: " + sheet)
 img = Image.open(src).convert("RGBA")
 asset = m.Asset(sprite_id, filename, int(w), int(h))
-fp = m.facility_footprints().get(sprite_id)
+fp = m.Footprint(int(fp_w), int(fp_d), int(fp_body_h))
 if fp is None:
     raise SystemExit("regen-facility: 발자국 계약이 없다: " + sprite_id)
 out, details = m.render_asset(img, asset, m.palette_for(sheet, ""), float(label_frac), fp)
@@ -592,7 +592,14 @@ out.save(dst)
 print(json.dumps(details, ensure_ascii=False))
 `;
 
-function extract(item: SheetItem, src: string, dst: string, canvas: readonly [number, number], labelFrac: number): unknown {
+export function extract(
+  item: SheetItem,
+  src: string,
+  dst: string,
+  canvas: readonly [number, number],
+  labelFrac: number,
+  footprint: readonly [number, number, number],
+): unknown {
   const log = sh(PYTHON, [
     '-c',
     EXTRACT_PY,
@@ -605,6 +612,9 @@ function extract(item: SheetItem, src: string, dst: string, canvas: readonly [nu
     String(canvas[1]),
     String(labelFrac),
     PROCESS_SHEET,
+    String(footprint[0]),
+    String(footprint[1]),
+    String(footprint[2]),
   ]);
   const last = log.trim().split('\n').pop() ?? '{}';
   try {
@@ -863,7 +873,7 @@ function main(): void {
         } else {
           generate(pf, refs, genPath, item.chroma);
         }
-        extract(item, genPath, candPath, t.canvas, o.labelFrac);
+        extract(item, genPath, candPath, t.canvas, o.labelFrac, [t.w, t.d, t.bodyH]);
       } catch (e) {
         if (e instanceof CapabilityError) {
           fatal = (e as Error).message;

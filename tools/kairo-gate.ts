@@ -54,6 +54,15 @@ import {
   type GroundMeasure,
 } from './ground-geometry.js';
 import {
+  measureRotation,
+  rotationVerdict,
+  rotationSelftest,
+  MIRROR_OF,
+  ROTATION_NAME,
+  type RotationMeasure,
+  type RotationVerdict,
+} from './rotation-check.js';
+import {
   measureLight,
   lightVerdict,
   synthLitSprite,
@@ -122,7 +131,16 @@ const isWarn = (f: Finding): boolean => WARN_GATES.has(f.gate);
  * ⚠ 게이트 5 의 **대조군 실패(`광원대조군`)는 경고가 아니다.** 그건 그림이 아니라
  * 게이트 자신이 고장 난 것이므로 종료 코드를 바꾼다 (게이트 4 의 `selftest` 와 같은 결정).
  */
-const WARN_GATES = new Set(['접지기하', '광원']);
+/**
+ * ## 게이트 6(회전)도 **경고**다 — 게이트 4·5 와 같은 이유
+ *
+ * ⚠ 단 지금은 **잴 것이 0 개**다 (`facings: 4` 인 시설이 없다). 그래서 이 게이트가
+ * 초록인 것은 통과가 아니라 **미측정**이고, 요약 줄의 `회전측정` 이 그 유일한 신호다.
+ * 4방향을 켤 때 이 집합에서 빼서 실패로 올릴 것.
+ *
+ * ⚠ `회전대조군` 은 여기 없다 — 자가 고장 난 것은 경고가 아니다 (게이트 5 와 같은 결정).
+ */
+const WARN_GATES = new Set(['접지기하', '광원', '회전']);
 
 /** PNG 헤더에서 폭·높이만 읽는다 (디코딩 없이) */
 function pngSize(path: string): { w: number; h: number } | null {
@@ -146,6 +164,7 @@ function run(): {
   counts: Record<string, number>;
   geom: GeomRow[];
   light: LightRow[];
+  rot: RotRow[];
 } {
   const findings: Finding[] = [];
 
@@ -224,6 +243,16 @@ function run(): {
   for (const l of light) if (l.finding) findings.push(l.finding);
   for (const f of lightPackControl(light)) findings.push(f);
 
+  /*
+   * 게이트 6 — 회전. **`facings: 4` 인 시설만** 잴 것이 있다 (`d1`·`d3` 짝).
+   * 지금 팩에는 0종이라 `회전측정 0` 이 나온다 — 그것이 "안 쟀다"의 신호다.
+   * ⚠ 게이트 4 주석의 경고를 그대로 물려받는다: 위반 0 은 통과가 아니라 **잰 게 없을**
+   * 수도 있다. 숫자를 인용하기 전에 `회전측정` 을 먼저 볼 것.
+   */
+  const rot = pngs.length > 0 ? rotationGate() : [];
+  for (const r of rot) if (r.finding) findings.push(r.finding);
+  for (const f of rotationSelftestFindings()) findings.push(f);
+
   const images = new KairoProceduralProvider().ids.length;
   return {
     findings,
@@ -241,9 +270,14 @@ function run(): {
       광원평탄: light.filter((l) => l.verdict === 'flat').length,
       광원측정불가: light.filter((l) => l.verdict === 'unmeasurable').length,
       광원좌상단: light.filter((l) => l.verdict === 'upper-left').length,
+      회전측정: rot.length,
+      회전안돎: rot.filter((r) => r.verdict === 'not-rotated').length,
+      회전대칭: rot.filter((r) => r.verdict === 'symmetric').length,
+      회전돎: rot.filter((r) => r.verdict === 'mirrored').length,
     },
     geom,
     light,
+    rot,
   };
 }
 
@@ -402,6 +436,83 @@ function lightGate(): LightRow[] {
     rows.push(row);
   }
   return rows.sort((a, b) => (a.m.score ?? -1e9) - (b.m.score ?? -1e9));
+}
+
+// ────────────────────────────── 게이트 6 ──────────────────────────────
+
+interface RotRow {
+  id: string;
+  dir: string;
+  refDir: string;
+  m: RotationMeasure;
+  verdict: RotationVerdict;
+  finding?: Finding;
+}
+
+/**
+ * 회전 — **`facings: 4` 인 시설의 `d1`·`d3` 만** 잰다.
+ *
+ * `d1` 은 `d0` 의, `d3` 은 `d2` 의 **좌우 미러**여야 한다 (2:1 다이메트릭에서 90° 회전이
+ * 곧 실루엣 반전 — `rotation-check.ts` 머리말). `d2` 는 대상이 아니다: 180° 는 발자국
+ * 다이아몬드를 안 바꾸므로 앞면과 실루엣이 같아야 정상이다.
+ *
+ * ⚠ **짝이 없으면 못 잰다.** `d1` 만 있고 `d0` 이 없는 상태는 게이트 3(생성물 누락)이
+ * 잡는다 — 여기서 조용히 건너뛰는 것이 맞다. 대신 `회전측정` 이 몇 짝을 실제로 쟀는지
+ * 늘 낸다.
+ */
+function rotationGate(): RotRow[] {
+  const rows: RotRow[] = [];
+  const sizes = kairoAssetSizes();
+  const has = (id: string): boolean => sizes.has(id);
+  const read = (id: string): string => join(GEN_DIR, assetIdToFile(id));
+
+  for (const def of allSimFacilities()) {
+    if (facilityFacings(def.id) !== 4) continue; // 2방향은 flipX 근사라 잴 것이 없다
+    for (const { dir: dirN, ref: refN } of MIRROR_OF) {
+      const dir = FACILITY_DIR_NAMES[dirN];
+      const refDir = FACILITY_DIR_NAMES[refN];
+      const candId = facilitySpriteId(def.id, dirN);
+      const refId = facilitySpriteId(def.id, refN);
+      if (!has(candId) || !has(refId)) continue;
+      const cp = read(candId);
+      const rp = read(refId);
+      if (!existsSync(cp) || !existsSync(rp)) continue;
+      const m = measureRotation(decodePng(cp), decodePng(rp));
+      const verdict = rotationVerdict(m);
+      const row: RotRow = { id: def.id, dir, refDir, m, verdict };
+      if (verdict === 'not-rotated') {
+        row.finding = {
+          gate: '회전',
+          id: `${def.id}:${dir}`,
+          detail:
+            `${dir} 이 ${refDir} 의 미러가 아니다 — 그대로 ${m.same.toFixed(3)} > ` +
+            `뒤집기 ${m.flipped.toFixed(3)} (여유 ${m.margin.toFixed(3)}, 1텍셀 흔들림 ${m.wobble.toFixed(3)})`,
+        };
+      }
+      rows.push(row);
+    }
+  }
+  return rows.sort((a, b) => a.m.margin - b.m.margin);
+}
+
+/**
+ * 게이트 6 의 대조군 — `rotation-check.ts` 의 합성 판을 여기서도 돌린다.
+ *
+ * ⚠ **경고가 아니라 하드 실패**다 (`WARN_GATES` 에 `회전대조군` 이 없다). 게이트 5 의
+ * `광원대조군` 과 같은 결정 — 그림이 나쁜 게 아니라 자가 고장 난 것이므로.
+ *
+ * ⚠ 팩 대조군(정본을 뒤집어 넣어 잡히는지)은 **여기 없다**. 4방향 그림이 팩에 0장이라
+ * 뒤집을 정본이 없다. `facings: 4` 를 켤 때 게이트 5 의 `lightPackControl` 과 같은 모양으로
+ * 같이 넣을 것 — 합성에서만 도는 자가 되지 않게.
+ */
+function rotationSelftestFindings(): Finding[] {
+  return rotationSelftest()
+    .filter((c) => !c.ok)
+    .map((c) => ({
+      gate: '회전대조군',
+      id: c.name,
+      detail: `기대 ${ROTATION_NAME[c.want]} · 실제 ${ROTATION_NAME[c.got]} (여유 ${c.m.margin.toFixed(3)} · 흔들림 ${c.m.wobble.toFixed(3)})`,
+    }));
 }
 
 /**
@@ -588,12 +699,13 @@ if (onlySelftest) {
   process.exitCode = controlFails.length === 0 ? 0 : 1;
 }
 
-const { findings, counts, geom, light } = onlySelftest
+const { findings, counts, geom, light, rot } = onlySelftest
   ? {
       findings: [] as Finding[],
       counts: {} as Record<string, number>,
       geom: [] as GeomRow[],
       light: [] as LightRow[],
+      rot: [] as RotRow[],
     }
   : run();
 const hard = findings.filter((f) => !isWarn(f) || strict);
@@ -636,6 +748,16 @@ if (onlySelftest) {
           left: l.m.left,
           right: l.m.right,
         })),
+        rot: rot.map((r) => ({
+          id: r.id,
+          dir: r.dir,
+          refDir: r.refDir,
+          verdict: r.verdict,
+          same: r.m.same,
+          flipped: r.m.flipped,
+          margin: r.m.margin,
+          wobble: r.m.wobble,
+        })),
         lightTol: LIGHT_TOL,
         toneStep: TONE_STEP,
       },
@@ -668,6 +790,16 @@ if (onlySelftest) {
         `${strict ? '' : ' — 경고. 목록은 --light'}`,
     );
   }
+  /*
+   * 게이트 6 — 회전. ⚠ **이 줄은 `회전측정 0` 일 때도 낸다.** 4방향 시설이 0종이라
+   * 잴 게 없는 지금, 이 줄이 없으면 게이트가 "위반 0" 으로 보여 **안 쟀다는 사실이
+   * 화면에서 사라진다** (게이트 4·5 가 `접지측정`·`광원측정` 을 늘 내는 것과 같은 이유).
+   */
+  console.log(
+    `  회전 ${counts['회전측정'] ?? 0}짝 측정 · 돌았다 ${counts['회전돎'] ?? 0} · ` +
+      `안 돌았다 ${counts['회전안돎'] ?? 0} · 대칭(판정불가) ${counts['회전대칭'] ?? 0}` +
+      `${(counts['회전측정'] ?? 0) === 0 ? ' — facings: 4 인 시설이 없다 (미측정)' : strict ? '' : ' — 경고'}`,
+  );
   console.log(
     `  음성 대조군 ${controlFails.length === 0 ? '✅ 전부 잡았다' : `❌ ${controlFails.length}건 못 잡았다`}`,
   );
