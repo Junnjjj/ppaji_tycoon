@@ -1,5 +1,5 @@
 재생성 대상 1종 (--dry-run — 생성하지 않는다)
-[1/1] caravan 시트 L3#2 "CARAVAN" · 참조 3장 · 프롬프트 8222자 · 실패모드 4개 · vertex 30.5tx IoU 0.405(≥0.870) slope 0.558/-0.429 ✕vertex,slope,iou
+[1/1] caravan 시트 L3#2 "CARAVAN" · 참조 3장 · 프롬프트 7540자 · 실패모드 2개 · vertex 1.5tx IoU 0.748(≥0.870) slope 0.429/-0.558 ✕slope,iou
   첨부(순서대로): art-reference/guides/kairo/facility__caravan.png · art-reference/crops/iso-shower-hut.png · art-reference/crops/shore-trees-houses.png  [크로마 magenta]
 
 ────────────────────────────────────────────────────────────────────────
@@ -126,21 +126,13 @@ The object:
    awning in #f2b53f and cream that is clearly attached to and touching the side wall.
 
 WHAT WENT WRONG LAST TIME — do not repeat it:
-  - The previous attempt had the two footprint axes SWAPPED. Its ground bottom vertex
-    measured at 0.349 of the sprite width, which is where a 2x4 footprint would put it —
-    this object is 4x2, so the vertex belongs at 0.667. Do not mirror the guide. The W axis
-    (4 tiles) runs toward the LOWER RIGHT and the D axis (2 tiles) runs toward the LOWER
-    LEFT. Follow the attached guide's diamond exactly.
-  - The previous attempt's two lower base edges measured slope 0.558/-0.429 instead of
+  - The previous attempt's two lower base edges measured slope 0.429/-0.558 instead of
     exactly +0.500/-0.500. Every horizontal edge of the base runs at exactly 2:1 — two
     pixels across for one pixel down. This is 2:1 dimetric, NOT the symmetric 30-degree
     isometric.
   - The previous attempt's ground silhouette overlapped the contract diamond by only IoU
-    0.405 (it must reach 0.870). The base is not the right shape: it must be one clean 96x48
+    0.748 (it must reach 0.870). The base is not the right shape: it must be one clean 96x48
     px diamond with the object standing on it, with nothing sticking out below or beside it.
-  - The previous attempt still needed to move sideways to sit on its own tile, but it was
-    already touching the edge of its canvas, so it could not be moved at all. Draw the base
-    diamond as the widest part of the object and leave clear empty margin on both sides.
 
 The object faces the standard way: its front-right face toward the lower right, its
 front-left face toward the lower left, roof or top surface visible.

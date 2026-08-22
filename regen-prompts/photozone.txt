@@ -1,6 +1,6 @@
 재생성 대상 1종 (--dry-run — 생성하지 않는다)
-[1/1] rent_kayak 시트 S6#4 "Kayak rental" · 참조 3장 · 프롬프트 7451자 · 실패모드 2개 · vertex 0.0tx IoU 0.794(≥0.800) slope 0.572/-0.555 ✕slope,iou
-  첨부(순서대로): art-reference/guides/kairo/facility__rent_kayak.png · art-reference/crops/boats-water.png · art-reference/crops/building-dock.png  [크로마 magenta]
+[1/1] photozone 시트 S5#5 "Photo spot" · 참조 3장 · 프롬프트 7490자 · 실패모드 2개 · vertex 0.5tx IoU 0.520(≥0.800) slope 0.403/-0.089 ✕slope,iou
+  첨부(순서대로): art-reference/guides/kairo/facility__photozone.png · art-reference/crops/iso-vest-hut.png · art-reference/crops/foliage-hills.png  [크로마 magenta]
 
 ────────────────────────────────────────────────────────────────────────
 STYLE CONTRACT — Ppaji Tycoon (Korean riverside water-leisure park, Kairosoft-like)
@@ -88,7 +88,7 @@ or any decorative background element.
 
 Goal: ONE 2D pixel-art sprite of a single object for a Korean riverside water park,
 drawn in the 2:1 dimetric isometric view described above. This is a single-object
-regeneration of one cell from asset sheet S6; everything else on that sheet
+regeneration of one cell from asset sheet S5; everything else on that sheet
 already exists and must not be redrawn.
 
 Canvas: 1536 x 1024 landscape. Flat #FF00FF magenta background filling the whole
@@ -110,27 +110,28 @@ Reference images, in the order attached:
      nothing about this object's shape or footprint; the guide does.
 
 Contract spec line (this is what the geometry gate measures):
-  rent_kayak       2×2    canvas 64×52     접지밴드 하단 32텍셀 · 바닥꼭짓점 x/폭 0.500 (= 2/4) · 아래 두 변 기울기 +0.500/−0.500 · bodyH 20
+  photozone        2×2    canvas 64×56     접지밴드 하단 32텍셀 · 바닥꼭짓점 x/폭 0.500 (= 2/4) · 아래 두 변 기울기 +0.500/−0.500 · bodyH 24
   In English: footprint 2x2 tiles; base diamond exactly 64x32 px;
-  whole sprite 64x52 px; the bottom vertex of the base sits at
+  whole sprite 64x56 px; the bottom vertex of the base sits at
   0.500 (= 2/4) of the sprite width, NOT at the middle;
   the two lower edges run at exactly +0.500 and -0.500 (2:1).
 
 The object:
-1. Kayak rental — footprint 2x2 tiles — base diamond 64x32 px, body about 20 px tall,
-   whole sprite 64x52 px — a pontoon platform carrying an A-frame timber rack that holds
-   THREE long slim kayak hulls stacked on it at a slant, one above the other — orange
-   #ff8c42, teal #62a58c and yellow #ffd23f, each a narrow pointed hull with a single open
-   cockpit hole. A barrel beside the rack holds a bundle of long double-bladed paddles
-   standing upright. The slanted rack of long thin pointed hulls is the silhouette.
+1. Photo spot — footprint 2x2 tiles — base diamond 64x32 px, body about 24 px tall, whole
+   sprite 64x56 px — the corner visitors stop to photograph. A big empty picture frame
+   standing upright on two sturdy posts, the frame painted cream #f0dcae with teal
+   #62a58c corner blocks, and a plain blank painted sign plank fixed across the top of the
+   frame with no lettering on it. A single low timber step platform sits in front of the
+   frame, touching both posts. You can see straight through the empty frame — that hollow
+   rectangle is the silhouette.
 
 WHAT WENT WRONG LAST TIME — do not repeat it:
-  - The previous attempt's two lower base edges measured slope 0.572/-0.555 instead of
+  - The previous attempt's two lower base edges measured slope 0.403/-0.089 instead of
     exactly +0.500/-0.500. Every horizontal edge of the base runs at exactly 2:1 — two
     pixels across for one pixel down. This is 2:1 dimetric, NOT the symmetric 30-degree
     isometric.
   - The previous attempt's ground silhouette overlapped the contract diamond by only IoU
-    0.794 (it must reach 0.800). The base is not the right shape: it must be one clean 64x32
+    0.520 (it must reach 0.800). The base is not the right shape: it must be one clean 64x32
     px diamond with the object standing on it, with nothing sticking out below or beside it.
 
 The object faces the standard way: its front-right face toward the lower right, its

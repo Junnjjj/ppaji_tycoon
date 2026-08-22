@@ -1,32 +1,43 @@
-# 붙여넣을 프롬프트 56장
+# 넘길 것 — 재생성 28종
 
-`npx tsx tools/regen-facility.ts --all --dry-run --print` 로 뽑은 것이다.
-**한 파일 = 한 시설.** 각 파일의 3번째 줄이 **첨부할 이미지 목록(순서대로)** 이고,
-`────` 사이가 **그대로 복사해 붙일 프롬프트**다.
+`npx tsx tools/regen-facility.ts --all --dry-run --print` 로 뽑았다 (2026-08-22, 위반 28 기준).
+**한 파일 = 한 시설.** 3번째 줄이 **첨부할 이미지(순서대로)**, `────` 사이가 **붙여넣을 프롬프트**다.
 
-## 쓰는 법 (이미지 생성이 되는 세션에서)
-
-1. `<id>.txt` 를 연다
-2. 3번째 줄의 이미지 3장을 **그 순서대로** 첨부한다 — **첫 장이 발자국 가이드**여야 한다
-   (프롬프트 본문이 "Reference images, in the order attached: 1. THE FOOTPRINT GUIDE" 로
-   번호를 가리킨다)
-3. `────` 사이를 복사해 붙인다
-4. 나온 그림을 `assets/generated/kairo-regen/<id>.png` 로 저장한다
-
-## 그다음 (이 저장소에서)
+## 저장소에 접근되는 세션이면 — 한 줄
 
 ```bash
-npx tsx tools/kairo-gate.ts --geom | grep <id>     # 통과했나
+npx tsx tools/regen-facility.ts --severe --tries 3   # 심각 4종 먼저
+npx tsx tools/regen-facility.ts --all --tries 3      # 28종 전부
 ```
-통과했으면 `assets/generated/kairo/facility__<id>.png` 로 옮기고 `npm run bake:atlas`.
+조립·첨부·생성·후처리·판정·리롤이 전부 자동이다. 실패하면 **게이트 실측을 다음 프롬프트에
+넣어** 다시 돌린다. 이 폴더는 그게 안 될 때만 쓴다.
 
-⚠ **통과 못 했으면 그 파일을 다시 뽑아라** — 게이트가 낸 실측(꼭짓점 몇 텍셀·IoU 얼마)을
-프롬프트의 `WHAT WENT WRONG LAST TIME` 절에 넣으면 같은 실수를 덜 반복한다.
-`tools/regen-facility.ts` 가 자동으로 그렇게 한다 (`image_gen` 권한이 있는 환경이면
-`npx tsx tools/regen-facility.ts --all --tries 3` 한 줄로 전부 자동이다).
+## 손으로 할 때
 
-## 우선순위
+1. `<id>.txt` 를 연다 (심각 4종부터: `trampoline_w` `airbounce` `jump_cushion` `minigolf`)
+2. 3번째 줄의 이미지 **3장을 그 순서대로** 첨부 — **첫 장이 발자국 가이드**여야 한다
+   (프롬프트가 `1. THE FOOTPRINT GUIDE` 로 번호를 가리킨다)
+3. `────` 사이를 복사해 붙인다
+4. 결과를 `assets/generated/kairo-regen/<id>.png` 로 저장
 
-`docs/asset-regen-order.md` 를 보라 — 심각 17종이 먼저고, 그중 **축뒤집힘 11종**은
-발자국 두 축이 바뀐 그림이다 (프롬프트가 이미 그것을 지목한다).
-⚠ **가이드를 뒤집지 마라** — 가이드는 엔진 정본에서 파생돼 옳다.
+## 돌려주면 이쪽에서
+
+```bash
+npx tsx tools/kairo-gate.ts --geom | grep <id>    # 통과했나
+npm run bake:atlas                                 # 통과분만 팩에 넣은 뒤
+```
+
+## ⚠ 하지 말 것 (실측으로 닫았다 — `docs/asset-regen-order.md` §4)
+
+- **가이드를 뒤집지 마라** — 정본 마스크 파생이라 옳다. 좌우 반전 실측 **통과 0종**
+- **후처리로 다이아몬드를 색으로 채우지 마라** — 아웃라인 계약을 깨고 **"가라앉아 보인다"**
+  (화면 회귀로 26종을 되돌렸다)
+- **후처리로 확대하지 마라** — 51종이 비정수 배율 → 정수 스캔라인 계약이 깨진다
+- **통과 47종·지면 33장을 건드리지 마라**
+
+## 4방향(선택)은 별개다
+
+⚠ **2장 + 미러로는 진짜 4방향이 안 된다** — 미러는 회전이 아니라 반사라 보이는 면이
+4개 중 2개뿐이다. 그리고 이미 뽑아 둔 샘플(`facility-shop-d0~d3`)에서 **생성된 d1·d2 도
+광원이 뒤집혀 있었다**(왼쪽−오른쪽 밝기 −42.6 · −85.0). 4장을 다 뽑아도 광원은 따로 잡아야 한다.
+자세한 것은 `docs/asset-regen-order.md` §5.6.

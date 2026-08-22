@@ -1,5 +1,5 @@
 재생성 대상 1종 (--dry-run — 생성하지 않는다)
-[1/1] minigolf 시트 L4#3 "MINIGOLF" · 참조 3장 · 프롬프트 7928자 · 실패모드 3개 · vertex 36.0tx IoU 0.342(≥0.870) slope 0.534/-0.466 ✕vertex,iou
+[1/1] minigolf 시트 L4#3 "MINIGOLF" · 참조 3장 · 프롬프트 7799자 · 실패모드 3개 · vertex 10.0tx IoU 0.731(≥0.870) slope 0.481/-0.500 ✕vertex,iou
   첨부(순서대로): art-reference/guides/kairo/facility__minigolf.png · art-reference/crops/building-dock.png · art-reference/crops/dock-huts.png  [크로마 magenta]
 
 ────────────────────────────────────────────────────────────────────────
@@ -126,13 +126,12 @@ The object:
    The whole thing is almost flat — only the flags and the ramp rise.
 
 WHAT WENT WRONG LAST TIME — do not repeat it:
-  - The previous attempt had the two footprint axes SWAPPED. Its ground bottom vertex
-    measured at 0.292 of the sprite width, which is where a 2x4 footprint would put it —
-    this object is 4x2, so the vertex belongs at 0.667. Do not mirror the guide. The W axis
-    (4 tiles) runs toward the LOWER RIGHT and the D axis (2 tiles) runs toward the LOWER
-    LEFT. Follow the attached guide's diamond exactly.
+  - The previous attempt's ground bottom vertex was 10.0 px off: it measured 0.771 of the
+    sprite width where the contract puts it at 0.667 (= 4/6). The near corner of the base —
+    the lowest point of the whole object — must sit at that fraction across, not in the
+    middle.
   - The previous attempt's ground silhouette overlapped the contract diamond by only IoU
-    0.342 (it must reach 0.870). The base is not the right shape: it must be one clean 96x48
+    0.731 (it must reach 0.870). The base is not the right shape: it must be one clean 96x48
     px diamond with the object standing on it, with nothing sticking out below or beside it.
   - The previous attempt still needed to move sideways to sit on its own tile, but it was
     already touching the edge of its canvas, so it could not be moved at all. Draw the base

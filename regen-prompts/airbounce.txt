@@ -1,5 +1,5 @@
 재생성 대상 1종 (--dry-run — 생성하지 않는다)
-[1/1] airbounce 시트 L10#1 "AIR BOUNCE PARK" · 참조 3장 · 프롬프트 8410자 · 실패모드 3개 · vertex 32.5tx IoU 0.492(≥0.917) slope 0.500/-0.534 ✕vertex,iou
+[1/1] airbounce 시트 L10#1 "AIR BOUNCE PARK" · 참조 3장 · 프롬프트 8282자 · 실패모드 3개 · vertex 16.5tx IoU 0.616(≥0.917) slope 0.534/-0.500 ✕vertex,iou
   첨부(순서대로): art-reference/guides/kairo/facility__airbounce.png · art-reference/crops/iso-inflatable-a.png · art-reference/ref-1.png  [크로마 magenta]
 
 ────────────────────────────────────────────────────────────────────────
@@ -132,13 +132,12 @@ The object:
    complete.
 
 WHAT WENT WRONG LAST TIME — do not repeat it:
-  - The previous attempt had the two footprint axes SWAPPED. Its ground bottom vertex
-    measured at 0.361 of the sprite width, which is where a 5x6 footprint would put it —
-    this object is 6x5, so the vertex belongs at 0.545. Do not mirror the guide. The W axis
-    (6 tiles) runs toward the LOWER RIGHT and the D axis (5 tiles) runs toward the LOWER
-    LEFT. Follow the attached guide's diamond exactly.
+  - The previous attempt's ground bottom vertex was 16.5 px off: it measured 0.639 of the
+    sprite width where the contract puts it at 0.545 (= 6/11). The near corner of the base —
+    the lowest point of the whole object — must sit at that fraction across, not in the
+    middle.
   - The previous attempt's ground silhouette overlapped the contract diamond by only IoU
-    0.492 (it must reach 0.917). The base is not the right shape: it must be one clean
+    0.616 (it must reach 0.917). The base is not the right shape: it must be one clean
     176x88 px diamond with the object standing on it, with nothing sticking out below or
     beside it.
   - The previous attempt still needed to move sideways to sit on its own tile, but it was

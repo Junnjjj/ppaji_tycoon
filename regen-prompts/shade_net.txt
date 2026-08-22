@@ -1,6 +1,6 @@
 재생성 대상 1종 (--dry-run — 생성하지 않는다)
-[1/1] bungalow 시트 L3#1 "BUNGALOW" · 참조 3장 · 프롬프트 8077자 · 실패모드 4개 · vertex 20.0tx IoU 0.616(≥0.857) slope 0.365/-1.077 ✕vertex,slope,iou
-  첨부(순서대로): art-reference/guides/kairo/facility__bungalow.png · art-reference/crops/iso-shower-hut.png · art-reference/crops/shore-trees-houses.png  [크로마 magenta]
+[1/1] shade_net 시트 S2#5 "Shade sail" · 참조 3장 · 프롬프트 7771자 · 실패모드 3개 · vertex 1.0tx IoU 0.734(≥0.769) slope 0.351/-0.545 ✕slope,iou
+  첨부(순서대로): art-reference/guides/kairo/facility__shade_net.png · art-reference/crops/iso-shower-hut.png · art-reference/crops/iso-vest-hut.png  [크로마 green]
 
 ────────────────────────────────────────────────────────────────────────
 STYLE CONTRACT — Ppaji Tycoon (Korean riverside water-leisure park, Kairosoft-like)
@@ -88,10 +88,10 @@ or any decorative background element.
 
 Goal: ONE 2D pixel-art sprite of a single object for a Korean riverside water park,
 drawn in the 2:1 dimetric isometric view described above. This is a single-object
-regeneration of one cell from asset sheet L3; everything else on that sheet
+regeneration of one cell from asset sheet S2; everything else on that sheet
 already exists and must not be redrawn.
 
-Canvas: 1536 x 1024 landscape. Flat #FF00FF magenta background filling the whole
+Canvas: 1536 x 1024 landscape. Flat #00FF00 green background filling the whole
 image. ONE object only, centred, with generous empty margin on all four sides. No label,
 no caption, no text, no grid, no second object, no cell divisions.
 
@@ -110,32 +110,28 @@ Reference images, in the order attached:
      nothing about this object's shape or footprint; the guide does.
 
 Contract spec line (this is what the geometry gate measures):
-  bungalow         3×3    canvas 96×80     접지밴드 하단 48텍셀 · 바닥꼭짓점 x/폭 0.500 (= 3/6) · 아래 두 변 기울기 +0.500/−0.500 · bodyH 32
-  In English: footprint 3x3 tiles; base diamond exactly 96x48 px;
-  whole sprite 96x80 px; the bottom vertex of the base sits at
-  0.500 (= 3/6) of the sprite width, NOT at the middle;
+  shade_net        2×1    canvas 48×44     접지밴드 하단 24텍셀 · 바닥꼭짓점 x/폭 0.667 (= 2/3) · 아래 두 변 기울기 +0.500/−0.500 · bodyH 20
+  In English: footprint 2x1 tiles; base diamond exactly 48x24 px;
+  whole sprite 48x44 px; the bottom vertex of the base sits at
+  0.667 (= 2/3) of the sprite width, NOT at the middle;
   the two lower edges run at exactly +0.500 and -0.500 (2:1).
 
 The object:
-1. BUNGALOW — footprint 3x3 tiles (a square-ish plot) — base diamond 96x48 px, body about
-   32 px tall, whole sprite 96x80 px — a Korean riverside guesthouse: boxy, balconies,
-   exterior stairs. One small cabin with cream #fdf3e0 walls and #e4d3b4 shadow tone, a
-   blue #4a90b8 hipped roof with #2e5972 shadow tone, one door and two square windows on
-   the visible faces. The one detail that makes the silhouette unmistakable: a short
-   exterior wooden stair of #b5844a climbing the lower-right face to a narrow front
-   balcony with a slatted rail — the stair and rail must touch the wall.
+1. Shade sail — footprint 2x1 tiles — base diamond 48x24 px, body about 20 px tall, whole
+   sprite 48x44 px — the cheapest patch of shade in the park: four thin pale timber poles
+   carrying ONE taut rectangular fabric sail that spans two tiles toward the lower right,
+   cream #f0dcae fabric with a teal #62a58c border stripe and a slight sag in the middle,
+   corners lashed to the pole tops. A plain woven mat lies on the ground between the poles,
+   touching their bases. The single big flat sail plane is the whole silhouette — do not
+   turn it into a tent or a hut.
 
 WHAT WENT WRONG LAST TIME — do not repeat it:
-  - The previous attempt's ground bottom vertex was 20.0 px off: it measured 0.708 of the
-    sprite width where the contract puts it at 0.500 (= 3/6). The near corner of the base —
-    the lowest point of the whole object — must sit at that fraction across, not in the
-    middle.
-  - The previous attempt's two lower base edges measured slope 0.365/-1.077 instead of
+  - The previous attempt's two lower base edges measured slope 0.351/-0.545 instead of
     exactly +0.500/-0.500. Every horizontal edge of the base runs at exactly 2:1 — two
     pixels across for one pixel down. This is 2:1 dimetric, NOT the symmetric 30-degree
     isometric.
   - The previous attempt's ground silhouette overlapped the contract diamond by only IoU
-    0.616 (it must reach 0.857). The base is not the right shape: it must be one clean 96x48
+    0.734 (it must reach 0.769). The base is not the right shape: it must be one clean 48x24
     px diamond with the object standing on it, with nothing sticking out below or beside it.
   - The previous attempt still needed to move sideways to sit on its own tile, but it was
     already touching the edge of its canvas, so it could not be moved at all. Draw the base
