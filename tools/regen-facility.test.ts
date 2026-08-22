@@ -268,14 +268,27 @@ describe('채택 규칙 — 나빠지면 안 바꾼다', () => {
 
 describe.runIf(existsSync(join(PACK_DIR, 'facility__cafe.png')))('실측 팩 대상', () => {
   it('위반 종은 전부 프롬프트가 조립되고 실패 문구가 붙는다', () => {
-    const bad = targets
-      .map((t) => ({ t, m: measurePng(join(PACK_DIR, t.file), t.id, t.w, t.d, t.bodyH) }))
-      .filter((r) => r.m.v.bad.length > 0);
-    expect(bad.length).toBeGreaterThan(0);
-    for (const { t, m } of bad) {
+    const measured = targets.map((t) => ({
+      t,
+      m: measurePng(join(PACK_DIR, t.file), t.id, t.w, t.d, t.bodyH),
+    }));
+    const bad = measured.filter((r) => r.m.v.bad.length > 0);
+    /*
+     * ⚠ **위반이 0 이어도 이 검사가 아무것도 안 재면 안 된다.**
+     *
+     * 처음엔 `expect(bad.length).toBeGreaterThan(0)` 로 표본이 마르는 것을 막았는데,
+     * 재생성으로 위반이 실제로 0 이 되자 **정상 상태에서 빨간불**이 됐다 (실측).
+     * 가드의 의도는 "표본 0 으로 조용히 통과하지 마라"이지 "위반이 있어야 한다"가 아니다.
+     * 그래서 위반이 없으면 **전 종으로 조립을 잰다** — 그때는 실패 문구가 없는 것이 맞으므로
+     * 문구 검사만 건너뛴다. 어느 쪽이든 `targets` 가 비면 여전히 터진다.
+     */
+    expect(targets.length, '대상이 0 이면 이 검사는 아무것도 안 잰다').toBeGreaterThan(0);
+    const subjects = bad.length > 0 ? bad : measured;
+    const wantNotes = bad.length > 0;
+    for (const { t, m } of subjects) {
       const item = findItem(doc, t.id, t.sprite);
       const notes = failureNotes(m);
-      expect(notes.length, `${t.id} 에 실패 문구가 없다`).toBeGreaterThan(0);
+      if (wantNotes) expect(notes.length, `${t.id} 에 실패 문구가 없다`).toBeGreaterThan(0);
       const prompt = buildPrompt({
         item,
         specLine: guideSpecLine({ id: t.id, sprite: t.sprite, w: t.w, d: t.d, bodyH: t.bodyH }),
@@ -286,7 +299,8 @@ describe.runIf(existsSync(join(PACK_DIR, 'facility__cafe.png')))('실측 팩 대
         d: t.d,
       });
       expect(prompt).toContain(style);
-      expect(prompt).toContain('WHAT WENT WRONG LAST TIME');
+      // 실패 문구 절은 위반이 있을 때만 붙는다 — 통과 상태에서는 없는 것이 맞다
+      if (wantNotes) expect(prompt).toContain('WHAT WENT WRONG LAST TIME');
     }
   });
 });

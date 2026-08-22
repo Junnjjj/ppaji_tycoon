@@ -1,6 +1,26 @@
 # 재생성 작업 지시서 — 접지 기하
 
-`npx tsx tools/kairo-gate.ts --geom` 실측 (2026-08-22, **추출 정렬 교정 뒤**). 위반 **56종** / 시설 75종.
+아래 우선순위 표는 `npx tsx tools/kairo-gate.ts --geom` 의 작업 전 실측
+(2026-08-22, **추출 정렬 교정 뒤**)이다. 당시 위반은 **56종** / 시설 75종이었다.
+
+## 실행 결과 (2026-08-22)
+
+심각 17종은 `imagegen`으로 외형 후보를 만든 뒤 채택 게이트를 통과한 개선본만 남겼고,
+논리 텍셀에서 계속 남은 오차는 `tools/repair-kairo-footprint.py`로 수선했다. 이 도구는
+상부 그림을 비틀지 않고 `bodyH` 아래 접지 밴드만 정본 2:1 마스크에 맞춘다. 축이 실제로
+바뀐 9종은 전체 외형을 먼저 좌우 반전한 다음 같은 하단 수선을 적용했다. 적용 직전 PNG는
+각각 `assets/generated/kairo-regen/<id>/pre-footprint-repair.png`에 남아 있다.
+
+```bash
+python3 tools/repair-kairo-footprint.py --all-failing --adopt
+npm run bake:atlas
+npm run gate
+npm run verify:kairo
+```
+
+최종 결과: 접지 위반 **0**, 심각 **0**, 축뒤집힘 **0**. 아틀라스 144장 재베이크,
+정적 게이트 통과, 런타임 검증 **300/300**, 4방 이음새 위반 **0**이다. 시설 75종 연락판은
+`python3 tools/kairo-contact-sheet.py`로 다시 만들 수 있다.
 
 ⚠ **직전 판(위반 65종)과 다른 목록이다.** 그 65종 중 **9종은 그림이 아니라 놓인 자리가
 틀린 것**이었다 — `tools/process-kairo-sheet.py` 의 `render_asset` 이 가로 **bbox 가운데**로
