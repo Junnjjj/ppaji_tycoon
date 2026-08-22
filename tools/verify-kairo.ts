@@ -9485,6 +9485,49 @@ async function main(): Promise<void> {
     const sameSet = (a: Set<string>, b: Set<string>): boolean =>
       a.size === b.size && [...a].every((k) => b.has(k));
 
+    /*
+     * ── 바닥 화살표 (K54) ──
+     *
+     * 화살표도 **그려진 다각형**에서 읽는다 (`arrows[].points`) — `entryFaces` 를 하네스가
+     * 다시 부르면 상수 비교다. 기대값은 발자국과 `gridToScreen` 만으로 독립 유도한다:
+     * 촉은 면의 **가운데**, 꼬리는 거기서 **바깥으로** `ARROW_LEN` 만큼.
+     *
+     * 이 두 점이 맞으면 세 가지가 한꺼번에 증명된다 — ① 화살표가 지면 평면 위에 눕고
+     * (아이소 격자에서 나온 좌표라야 이 값이 나온다) ② 방향이 바깥→안이고
+     * ③ 단(`lift`)을 탄다 (`dy` 가 안 맞으면 두 점 다 틀어진다).
+     */
+    const ARROW_LEN = 0.86;
+    /** 실제로 채운 다각형 → 촉·꼬리. `points[0]` 이 촉, 3·4번이 꼬리 양 끝이다 */
+    const arrowOf = (a: { points: { x: number; y: number }[] }) => ({
+      tip: a.points[0]!,
+      tail: {
+        x: (a.points[3]!.x + a.points[4]!.x) / 2,
+        y: (a.points[3]!.y + a.points[4]!.y) / 2,
+      },
+    });
+    /** 기대 화살표 — `(gx,gy)` 는 면 가운데(격자), `(ox,oy)` 는 **바깥** 방향 */
+    const wantArrow = (gx: number, gy: number, ox: number, oy: number, dy: number) => {
+      const tip = gridToScreen(gx, gy);
+      const tail = gridToScreen(gx + ox * ARROW_LEN, gy + oy * ARROW_LEN);
+      return { tip: { x: tip.x, y: tip.y + dy }, tail: { x: tail.x, y: tail.y + dy } };
+    };
+    const akey = (a: { tip: { x: number; y: number }; tail: { x: number; y: number } }): string =>
+      `${Math.round(a.tip.x)},${Math.round(a.tip.y)}>` +
+      `${Math.round(a.tail.x)},${Math.round(a.tail.y)}`;
+    /** 발자국 `(I,J,w,d)` 의 **앞 두 면**(또는 뒤 두 면) 화살표 기대 집합 */
+    const arrowKeys = (
+      I: number,
+      J: number,
+      w: number,
+      d: number,
+      dy: number,
+      front: boolean,
+    ): Set<string> =>
+      new Set([
+        akey(wantArrow(front ? I + w : I, J + d / 2, front ? 1 : -1, 0, dy)),
+        akey(wantArrow(I + w / 2, front ? J + d : J, 0, front ? 1 : -1, dy)),
+      ]);
+
     type Mark = {
       kind: string;
       visible: boolean;
@@ -9492,6 +9535,7 @@ async function main(): Promise<void> {
       exit: [number, number] | null;
       tiles: [number, number][];
       edges: { x1: number; y1: number; x2: number; y2: number }[];
+      arrows: { points: { x: number; y: number }[] }[];
       labels: { text: string; x: number; y: number; depth: number }[];
     } | null;
     const READ_MARK = `(() => window.__kairo.scene.rideMarkForTest())()`;
@@ -9560,6 +9604,26 @@ async function main(): Promise<void> {
       );
 
       /*
+       * ★ 바닥 화살표 (K54) — 사용자 요청 "입구가 바닥에 화살표랑 같이 보이게끔".
+       * 개수는 **면 수**여야 한다 (칸 수가 아니다 — 아래 거북섬 절이 그 차이를 잰다).
+       */
+      const arrows0 = new Set((m0?.arrows ?? []).map((a) => akey(arrowOf(a))));
+      const wantA0 = arrowKeys(I, J, 4, 1, dy, true);
+      const backA0 = arrowKeys(I, J, 4, 1, dy, false);
+      record(
+        '★ 바닥 화살표 — 앞 두 면에 하나씩, **바깥에서 안으로** 눕는다 (K54)',
+        (m0?.arrows.length ?? 0) === 2 &&
+          sameSet(arrows0, wantA0) &&
+          [...arrows0].every((k) => !backA0.has(k)) &&
+          (m0?.arrows ?? []).every((a) => a.points.length === 7)
+          ? 'pass'
+          : 'fail',
+        `화살표 ${m0?.arrows.length ?? 0}개 (기대 2) · 자리 ${
+          sameSet(arrows0, wantA0) ? '일치' : `불일치 [${[...arrows0].join(' ')}] vs [${[...wantA0].join(' ')}]`
+        } · 뒤 면 침범 ${[...arrows0].filter((k) => backA0.has(k)).length}`,
+      );
+
+      /*
        * ★ 회전 — **진짜 터치**로 ↻ 를 누른다 (K33 "화면이 되는지는 진짜 터치로 본다").
        * `click()` 으로 부르면 버튼이 화면 밖이어도 통과한다.
        */
@@ -9593,6 +9657,19 @@ async function main(): Promise<void> {
           `회전 전과 ${sameSet(got1, got0) ? '같다(실패)' : '다르다'}`,
       );
 
+      const arrows1 = new Set((m1?.arrows ?? []).map((a) => akey(arrowOf(a))));
+      record(
+        '★ 바닥 화살표 — ↻ 를 **진짜 터치**로 누르면 화살표가 같이 돈다 (K54)',
+        (m1?.arrows.length ?? 0) === 2 &&
+          sameSet(arrows1, arrowKeys(I, J, 1, 4, dy, true)) &&
+          !sameSet(arrows1, arrows0)
+          ? 'pass'
+          : 'fail',
+        `회전 뒤 화살표 ${m1?.arrows.length ?? 0}개 · ` +
+          `회전 전과 ${sameSet(arrows1, arrows0) ? '같다(실패)' : '다르다'} · ` +
+          `[${[...arrows1].join(' ')}]`,
+      );
+
       /*
        * ⚠ **코드에 심은 음성 대조군** — `setEntryFaultForTest` 를 켜면 `entryTilesOf` 가
        * 네 면 전부를 낸다. 표식이 둘레 전체로 퍼지지 **않으면** 화면이 그 함수를 안 읽고
@@ -9623,6 +9700,89 @@ async function main(): Promise<void> {
         `대조군 선분 ${gotF.size} (기대 ${wantF.size} = 둘레 전체) · ` +
           `원복 ${gotR.size} (기대 ${got1.size})`,
       );
+      /*
+       * 화살표 쪽 대조군 — 2개 → **4개**. 여기서 면을 "세로 변/가로 변" 두 축으로 묶었다면
+       * `−I` 와 `+I` 가 한 덩어리가 되어 대조군에서도 2개로 남는다 (아무것도 안 재는 검사).
+       */
+      const arrowsF = new Set((mF?.arrows ?? []).map((a) => akey(arrowOf(a))));
+      const wantAF = new Set([
+        ...arrowKeys(I, J, 1, 4, dy, true),
+        ...arrowKeys(I, J, 1, 4, dy, false),
+      ]);
+      const arrowsR = new Set((mR?.arrows ?? []).map((a) => akey(arrowOf(a))));
+      record(
+        '⚠ 음성 대조군 — 대조군을 켜면 바닥 화살표가 **네 면으로** 퍼진다 (K54)',
+        (mF?.arrows.length ?? 0) === 4 && sameSet(arrowsF, wantAF) && sameSet(arrowsR, arrows1)
+          ? 'pass'
+          : 'fail',
+        `대조군 화살표 ${mF?.arrows.length ?? 0}개 (기대 4) · ` +
+          `원복 ${mR?.arrows.length ?? 0}개 (기대 ${m1?.arrows.length ?? 0})`,
+      );
+
+      /*
+       * ★ **발자국이 커도 화살표는 면마다 하나** — `turtle_island 8×6` 은 입구 칸이
+       * 14개다. 칸마다 찍으면 시설이 화살표에 파묻힌다 (K51 이 "네 채짜리 워터파크가
+       * 표식 여덟 개로 덮인다"고 적어 둔 그 상태). 배치 조건에 안 얽히게 씬 API 로 겨눈다.
+       */
+      const bigMark = (await pg.evaluate(`(() => {
+        const s = window.__kairo.scene;
+        const c = document.getElementById('kairo-place-cancel');
+        if (c && !document.getElementById('kairo-confirm').hidden) c.click();
+        window.__kairoClearBrush();
+        s.setGhost('turtle_island', ${I}, ${J}, true, 0);
+        return s.rideMarkForTest();
+      })()`)) as Mark;
+      // 입구 칸 수는 표식 자신이 들고 있다 (`entryTilesOf` 의 결과 그대로) — 표본 크기의 증거
+      const bigTiles = bigMark?.tiles.length ?? 0;
+      const bigArrows = new Set((bigMark?.arrows ?? []).map((a) => akey(arrowOf(a))));
+      await pg.screenshot({ path: `${SHOT_DIR}/kairo-entry-arrow-big.png` });
+      record(
+        '★ 바닥 화살표는 **면마다 하나** — 거북섬 8×6 의 입구 14칸에도 2개다 (K54)',
+        bigTiles > 10 && // 표본이 정말 큰가 — 안 그러면 아무것도 안 재는 검사다
+          (bigMark?.arrows.length ?? 0) === 2 &&
+          sameSet(bigArrows, arrowKeys(I, J, 8, 6, dy, true))
+          ? 'pass'
+          : 'fail',
+        `입구 칸 ${bigTiles}개 · 화살표 ${bigMark?.arrows.length ?? 0}개 (기대 2) · ` +
+          `자리 ${sameSet(bigArrows, arrowKeys(I, J, 8, 6, dy, true)) ? '일치' : '불일치'}`,
+      );
+
+      /*
+       * ★ **단이 있는 칸에서 리프트를 탄다** (K37). 산 중턱 균일 칸에 1×1 시설을 겨눠서
+       * 화살표의 화면 y 가 `−level × LEVEL_H` 만큼 올라갔는지 본다.
+       * ⚠ 기대값은 `gridToScreen` + 단 정의로 만든다 — 씬 코드를 베끼지 않는다.
+       */
+      const hiMark = (await pg.evaluate(`(() => {
+        const h = window.__kairo, T = h.terrain, s = h.scene;
+        let hi = null;
+        for (let j = 10; j < T.height - 3 && !hi; j++) {
+          for (let i = 0; i < T.width - 3; i++) {
+            if (T.levelAt(i, j) >= 1 && T.levelUniform(i, j, 1, 1)) { hi = [i, j]; break; }
+          }
+        }
+        if (!hi) return { ok: false };
+        s.setGhost('parasol', hi[0], hi[1], true, 0);
+        return { ok: true, i: hi[0], j: hi[1], level: T.levelAt(hi[0], hi[1]),
+                 mark: s.rideMarkForTest() };
+      })()`)) as { ok: false } | { ok: true; i: number; j: number; level: number; mark: Mark };
+      if (!hiMark.ok) {
+        record('★ 바닥 화살표가 **단(lift)** 을 탄다 (K54)', 'fail', '단 1 이상 칸을 못 찾음');
+      } else {
+        const hdy = -hiMark.level * 8; // LEVEL_H
+        const hiArrows = new Set((hiMark.mark?.arrows ?? []).map((a) => akey(arrowOf(a))));
+        const wantHi = arrowKeys(hiMark.i, hiMark.j, 1, 1, hdy, true);
+        const flat = arrowKeys(hiMark.i, hiMark.j, 1, 1, 0, true); // 리프트를 안 태웠을 때
+        await pg.screenshot({ path: `${SHOT_DIR}/kairo-entry-arrow-level.png` });
+        record(
+          '★ 바닥 화살표가 **단(lift)** 을 탄다 — 산 위에서 땅에 남지 않는다 (K54)',
+          hiMark.level >= 1 && sameSet(hiArrows, wantHi) && !sameSet(hiArrows, flat)
+            ? 'pass'
+            : 'fail',
+          `(${hiMark.i},${hiMark.j}) 단 ${hiMark.level} · 화살표 ${hiMark.mark?.arrows.length ?? 0}개 · ` +
+            `${sameSet(hiArrows, wantHi) ? '리프트 탐' : '자리 불일치'} · ` +
+            `평지값과 ${sameSet(hiArrows, flat) ? '같다(실패)' : '다르다'}`,
+        );
+      }
 
       /*
        * 슬라이드 4종은 **그대로 마름모 둘**이다 (K51). 입출구가 칸 하나씩으로 선언돼
@@ -9649,12 +9809,20 @@ async function main(): Promise<void> {
           mS.exit?.[0] === I &&
           mS.exit?.[1] === J &&
           mS.edges.length === 8 && // 마름모 둘 × 네 변
+          /*
+           * ⚠ 슬라이드에는 **화살표가 없다** (K54). 데이터가 선언한 것은 `entryTile` 이라는
+           * **칸**이고 어느 변으로 붙어 들어오는지는 아무 데도 안 적혀 있다 — 방향을 하나
+           * 고르면 그건 파생이 아니라 발명이고, K52 가 막아 둔 "조용한 거짓말"의 형태다.
+           * 화살표가 푸는 문제(14칸 면 중 어디로)도 여기엔 없다: 답이 이미 칸 하나다.
+           */
+          mS.arrows.length === 0 &&
           mS.labels.map((l) => l.text).join(',') === '입구,출구'
           ? 'pass'
           : 'fail',
         `slide_small 3×3 @(${I},${J}) · 종류 ${mS?.kind ?? '없음'} · ` +
           `입구 ${mS?.entry?.join(',') ?? '?'} 출구 ${mS?.exit?.join(',') ?? '?'} · ` +
-          `선분 ${mS?.edges.length ?? 0} · 글씨 ${mS?.labels.map((l) => l.text).join(',') ?? '없음'}`,
+          `선분 ${mS?.edges.length ?? 0} · 화살표 ${mS?.arrows.length ?? 0}(기대 0) · ` +
+          `글씨 ${mS?.labels.map((l) => l.text).join(',') ?? '없음'}`,
       );
 
       /*
@@ -9664,7 +9832,7 @@ async function main(): Promise<void> {
       const walkOn = (await pg.evaluate(`(() => {
         const s = window.__kairo.scene;
         const out = {};
-        for (const id of ['float_deck', 'dock']) {
+        for (const id of ['float_deck', 'dock', 'flowerbed']) {
           s.setGhost(id, ${I}, ${J}, true, 0);
           out[id] = s.rideMarkForTest();
         }
@@ -9672,10 +9840,13 @@ async function main(): Promise<void> {
         return out;
       })()`)) as Record<string, unknown>;
       record(
-        'walkOn 2종(플로팅덱·선착장)은 표식이 없다 — 발자국 전체가 길이라 앞 면만 그리면 거짓말이다',
-        walkOn['float_deck'] === null && walkOn['dock'] === null ? 'pass' : 'fail',
+        'walkOn 2종(플로팅덱·선착장)·정원 0(화단)은 표식도 화살표도 없다 — 아무도 안 들어간다',
+        walkOn['float_deck'] === null && walkOn['dock'] === null && walkOn['flowerbed'] === null
+          ? 'pass'
+          : 'fail',
         `플로팅덱 ${walkOn['float_deck'] === null ? '없음' : '있음(실패)'} · ` +
-          `선착장 ${walkOn['dock'] === null ? '없음' : '있음(실패)'}`,
+          `선착장 ${walkOn['dock'] === null ? '없음' : '있음(실패)'} · ` +
+          `화단 ${walkOn['flowerbed'] === null ? '없음' : '있음(실패)'}`,
       );
 
       /*

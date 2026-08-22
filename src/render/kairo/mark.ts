@@ -19,6 +19,23 @@ export interface FootRect {
   d: number;
 }
 
+/**
+ * 바닥 화살표 하나 (K54) — **면마다 하나**다.
+ *
+ * 좌표는 전부 **격자 단위(분수 허용)**다. 씬은 `gridToScreen` 으로 옮기기만 한다 —
+ * 그래서 화살표가 자동으로 **아이소 지면 위에 눕는다**. 화면 좌표에서 삼각형을 그리면
+ * (예: 위쪽을 향한 ▲) 지면과 각이 안 맞아 "바닥에 그린 표시"가 아니라 "화면에 붙인
+ * 아이콘"으로 읽힌다 — 사용자가 요청한 것은 전자다.
+ */
+export interface EntryArrow {
+  /** 화살촉 끝 — 발자국 경계 변 위의 점 (면의 가운데) */
+  tip: GridVert;
+  /** **바깥 → 안** 단위 벡터. 손님이 실제로 걸어 들어가는 방향이다 */
+  dir: GridVert;
+  /** 그릴 다각형 7점 (격자 단위). 꼬리는 발자국 **밖**, 촉은 경계 변 위 */
+  poly: GridVert[];
+}
+
 export interface EntryFaces {
   /**
    * 이어 붙인 폴리라인들. 조각(단위 변)이 아니라 **사슬**인 이유는 이음매 때문이다 —
@@ -31,7 +48,33 @@ export interface EntryFaces {
    * (프레임마다 좌우로 튀면 그것만으로 버그로 읽힌다).
    */
   front: GridVert | null;
+  /**
+   * 바닥 화살표 — **면 하나에 하나**다 (K54). 보통 2개, 음성 대조군에서 4개.
+   *
+   * ⚠ **칸마다 찍지 않는다.** `turtle_island 8×6` 의 앞 두 면 바깥 이웃은 14칸이라
+   * 칸마다 찍으면 화살표 14개가 시설을 덮는다 — K51 이 "네 채짜리 워터파크가 표식
+   * 여덟 개로 덮인다"고 적어 둔 그 상태이고, K52 가 마름모 14개를 피한 이유와 같다.
+   * 면은 한 문장("이쪽으로 들어옵니다")이므로 화살표도 하나면 그 문장을 다 말한다.
+   */
+  arrows: EntryArrow[];
 }
+
+/**
+ * 화살표 치수 (격자 단위). 칸 깊이가 1.0 이므로 전장 0.86 은 **바깥 이웃 칸 하나
+ * 안에 들어간다** — 넘치면 그 다음 칸까지 침범해 "어느 칸에서 들어가나"가 흐려진다.
+ *
+ * 화면 크기로 환산하면 전장 `0.86 × |(16,8)| ≈ 15텍셀`, 촉 폭 `0.8 × |(16,−8)| ≈ 14텍셀`.
+ * 32×16 타일 위에서 눈에 띄되 칸을 덮지 않는 크기다 (정수 업스케일 2~3배면 30~46px).
+ */
+const ARROW_LEN = 0.86;
+const ARROW_HEAD = 0.34; // 촉 길이 — 전장의 40%. 더 길면 삼각형 하나로 뭉개진다
+const ARROW_HEAD_HW = 0.4; // 촉 반폭. 0.5 를 넘으면 옆 칸을 침범한다
+/**
+ * 자루 반폭. ⚠ 처음 값 `0.115` 는 화면에서 자루 폭이 **4텍셀**이었는데 테두리가
+ * 양쪽 2텍셀이라 **속이 한 픽셀도 안 남았다** — 화살표가 실뜨기처럼 보였다 (실측 크롭).
+ * 테두리 굵기를 아는 값이므로 씬의 `lineStyle(2, …)` 를 바꾸면 여기도 같이 볼 것.
+ */
+const ARROW_SHAFT_HW = 0.17;
 
 /**
  * 이 시설에 `입구` 표식을 그리나 — **판정은 여기 한 곳**이다 (K52).
@@ -87,7 +130,7 @@ export function entryFaces(foot: FootRect, tiles: readonly (readonly [number, nu
     if (inFoot(ti, tj + 1)) addSeg(ti, tj + 1, ti + 1, tj + 1);
     if (inFoot(ti, tj - 1)) addSeg(ti, tj, ti + 1, tj);
   }
-  if (segs.length === 0) return { chains: [], front: null };
+  if (segs.length === 0) return { chains: [], front: null, arrows: [] };
 
   const verts = new Map<number, GridVert>();
   const adj = new Map<number, number[]>();
@@ -145,5 +188,88 @@ export function entryFaces(foot: FootRect, tiles: readonly (readonly [number, nu
       }
     }
   }
-  return { chains, front };
+  return { chains, front, arrows: faceArrows(foot, segs) };
+}
+
+/**
+ * 맞닿은 변들 → **면마다 바닥 화살표 하나** (K54).
+ *
+ * ## 면을 어떻게 세나 — 축이 아니라 **선(line)** 으로 묶는다
+ *
+ * "세로 변 = +I 면"으로 묶으면 안 된다. 음성 대조군(`setEntryFaultForTest`)에서는
+ * `−I` 면과 `+I` 면이 **둘 다 세로 변**이라 한 덩어리로 뭉쳐 화살표가 4개가 아니라
+ * 2개가 되고, 그러면 대조군이 그림으로 구별되지 않는다 — 아무것도 안 재는 검사가 된다.
+ * 그래서 `x` 값(세로 변)·`y` 값(가로 변)으로 묶는다: 같은 직선 위의 변들이 한 면이다.
+ *
+ * ## 방향은 **발자국이 어느 쪽에 있나**로 정한다
+ *
+ * `+I·+J` 를 앞면으로 박으면 안 된다 — K53 부터 `facing 2·3` 은 입구가 `−I·−J` 로
+ * 돌아간다 (`entryTilesOf` 주석). 변의 좌표와 발자국 경계를 비교하면 4방향이 공짜다:
+ * 변이 `x = i+w` 면 안쪽은 `−I`, `x = i` 면 안쪽은 `+I`.
+ *
+ * ## 꼬리는 **밖**, 촉은 경계 변 위
+ *
+ * 손님은 바깥 칸에서 걸어 들어온다. 화살표를 발자국 **안**에 그리면 시설 스프라이트
+ * (또는 고스트) 위에 얹혀 그림을 가리고, 무엇보다 "손님이 서는 칸"이 아니다.
+ * 밖에 두면 표식 세 채널이 서로 안 겹친다 — 폴리라인은 경계선, 화살표는 바깥 칸,
+ * 글씨는 앞 꼭지점 **위**.
+ */
+function faceArrows(foot: FootRect, segs: readonly [number, number, number, number][]): EntryArrow[] {
+  /** 같은 직선 위의 변들: 키 `V:x` (세로) / `H:y` (가로) → 그 직선을 따라 덮은 구간 */
+  const lines = new Map<string, { vert: boolean; at: number; lo: number; hi: number }>();
+  for (const [x1, y1, x2, y2] of segs) {
+    const vert = x1 === x2;
+    const at = vert ? x1 : y1;
+    const a = vert ? Math.min(y1, y2) : Math.min(x1, x2);
+    const b = vert ? Math.max(y1, y2) : Math.max(x1, x2);
+    const key = `${vert ? 'V' : 'H'}:${at}`;
+    const cur = lines.get(key);
+    if (cur) {
+      cur.lo = Math.min(cur.lo, a);
+      cur.hi = Math.max(cur.hi, b);
+    } else lines.set(key, { vert, at, lo: a, hi: b });
+  }
+
+  const out: EntryArrow[] = [];
+  /*
+   * 결정론 — Map 삽입 순서는 입구 칸 순서를 타므로 **숫자로** 정렬한다.
+   * ⚠ 키 문자열(`V:10`)로 정렬하면 `V:9 > V:10` 이라 격자 좌표에서 조용히 뒤집힌다.
+   * 축 순서(세로 변 먼저)는 `entryTilesOf` 가 I 면을 먼저 push 하는 것과 맞췄다.
+   */
+  const ordered = [...lines.values()].sort((a, b) =>
+    a.vert === b.vert ? a.at - b.at : a.vert ? -1 : 1,
+  );
+  for (const ln of ordered) {
+    const mid = (ln.lo + ln.hi) / 2;
+    // 안쪽(= 발자국 쪽) 단위 벡터. `>=` 가 아니라 발자국 경계와의 비교여야 4방향이 산다
+    const inward = ln.vert
+      ? ln.at - foot.i >= foot.w
+        ? -1
+        : 1
+      : ln.at - foot.j >= foot.d
+        ? -1
+        : 1;
+    const tip: GridVert = ln.vert ? [ln.at, mid] : [mid, ln.at];
+    const dir: GridVert = ln.vert ? [inward, 0] : [0, inward];
+    const perp: GridVert = [-dir[1], dir[0]];
+    const at = (u: number, v: number): GridVert => [
+      tip[0] + dir[0] * u + perp[0] * v,
+      tip[1] + dir[1] * u + perp[1] * v,
+    ];
+    out.push({
+      tip,
+      dir,
+      // 촉 → 오른쪽 미늘 → 자루 → 왼쪽 미늘 → 촉. `u` 가 음수여야 꼬리가 **밖**이다
+      poly: [
+        at(0, 0),
+        at(-ARROW_HEAD, ARROW_HEAD_HW),
+        at(-ARROW_HEAD, ARROW_SHAFT_HW),
+        at(-ARROW_LEN, ARROW_SHAFT_HW),
+        at(-ARROW_LEN, -ARROW_SHAFT_HW),
+        at(-ARROW_HEAD, -ARROW_SHAFT_HW),
+        at(-ARROW_HEAD, -ARROW_HEAD_HW),
+      ],
+    });
+  }
+  return out;
 }

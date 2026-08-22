@@ -138,7 +138,8 @@ const DIR_STEP: readonly (readonly [number, number])[] = [
  * - `entry` **56종**. 입구는 발자국 **앞 두 면**이라 칸이 아니라 **변**이다.
  *   칸마다 마름모를 찍으면 `turtle_island 8×6` 이 표식 14개가 되고, 그건 "네 채짜리
  *   워터파크가 표식 여덟 개로 덮인다"고 K51 이 이미 경고한 그 상태다 — 굵은 선 하나
- *   + 글씨 하나로 낸다
+ *   + **면마다 바닥 화살표 하나**(K54) + 글씨 하나로 낸다. 셋이 답하는 질문이 다르다:
+ *   선은 *어디까지가 입구인가*, 화살표는 *어느 쪽으로 들어가는가*, 글씨는 *이게 뭔가*
  *
  * ⚠ 4 + 56 은 75 가 아니다. 남는 **15종은 표식 자체가 없다** (`markOf` 가 `null`) —
  *   `walkOn` 2종과 `capacity 0` 14종의 합집합인데 둘이 서로를 안 덮는다 (선착장은
@@ -322,6 +323,11 @@ export class KairoScene extends Phaser.Scene {
    * 통과한다 (K38 "깊이는 화면에 올라간 오브젝트에서 읽는다"와 같은 규칙).
    */
   private rideEdges: { x1: number; y1: number; x2: number; y2: number }[] = [];
+  /**
+   * **실제로 채운 바닥 화살표** (월드 좌표, 단 보정 포함). 검사가 읽는다 —
+   * `entryFaces` 를 하네스가 다시 부르면 상수 비교라 그리기가 틀려도 통과한다 (K38).
+   */
+  private rideArrows: { points: { x: number; y: number }[] }[] = [];
   /**
    * **일부러 망가뜨리는 스위치** — 오프셋 로직을 끄고 "고스트 = 화면 중앙 칸"으로
    * 되돌린다. 위의 32% 구멍이 그대로 재현되므로, 가장자리 배치 검사가 정말 그 구멍을
@@ -1834,6 +1840,7 @@ export class KairoScene extends Phaser.Scene {
     for (const t of this.rideLabels) t.destroy();
     this.rideLabels.length = 0;
     this.rideEdges.length = 0;
+    this.rideArrows.length = 0;
     const g = this.rideGfx;
     if (!g) return;
     g.clear();
@@ -1859,6 +1866,20 @@ export class KairoScene extends Phaser.Scene {
    * 여기만 마름모인 이유는 데이터가 칸 하나씩을 골라 놨기 때문이다
    * (`ride.entryTile`/`exitTile`). 손님이 그 칸에서 타고 그 칸으로 내리므로 "칸"이
    * 정확한 단위다. 입구가 **면**인 56종은 아래 `drawEntryFaces` 로 간다.
+   *
+   * ## ⚠ 슬라이드에는 바닥 화살표를 **안 넣는다** (K54)
+   *
+   * 화살표는 방향을 말하는데 **데이터에 방향이 없다.** `ride` 가 선언한 것은
+   * `entryTile` 이라는 **칸**이고, 그 칸에 어느 변으로 붙어 들어오는지는 아무 데도
+   * 안 적혀 있다 (`slide_small` 의 입구 `(i+2,j+2)` 는 발자국 **안쪽** 모서리라
+   * `+I`·`+J` 양쪽 다 그럴듯하다). 여기서 방향을 하나 골라 그리면 그건 파생이 아니라
+   * **발명**이고, K52 가 "발자국 크기로 선을 그으면 표식이 조용히 거짓말한다"고 막아
+   * 둔 바로 그 형태다.
+   *
+   * 게다가 화살표가 푸는 문제가 여기엔 없다. 화살표는 *14칸짜리 면 중 어디로* 를 푸는
+   * 도구인데 슬라이드의 답은 이미 **칸 하나**다 — 마름모가 그 칸을 통째로 칠하고
+   * 글씨가 이름을 붙인다. 바닥에 누운 표시라는 요구도 마름모가 이미 만족한다
+   * (지면 평면에 그린 다이아몬드다).
    */
   private drawRideDiamonds(g: Phaser.GameObjects.Graphics, m: RideTiles): void {
     const spec = [
@@ -1913,7 +1934,8 @@ export class KairoScene extends Phaser.Scene {
   }
 
   /**
-   * 표식을 그리는 56종 — 입구는 **면**이라 앞 두 면을 **굵은 폴리라인 하나 + 글씨 하나**로
+   * 표식을 그리는 56종 — 입구는 **면**이라 앞 두 면을 **굵은 폴리라인 하나 + 면마다
+   * 바닥 화살표 하나(K54) + 글씨 하나**로
    * (K52. 슬라이드 4종은 위 마름모, 나머지 15종은 표식 자체가 없다 — `markOf` 주석).
    *
    * ## 왜 칸마다 마름모를 안 찍나
@@ -1945,10 +1967,11 @@ export class KairoScene extends Phaser.Scene {
     m: Extract<PlaceMark, { kind: 'entry' }>,
   ): void {
     const dy = this.liftAt(m.foot.i, m.foot.j);
-    const { chains, front } = entryFaces(m.foot, m.tiles);
+    const { chains, front, arrows } = entryFaces(m.foot, m.tiles);
     if (chains.length === 0) return;
     const fill = cssColorInt('--ride-entry', '#2557b0');
     const edge = cssColorInt('--ride-entry-edge', '#12315f');
+    const ink = cssColorInt('--ride-ink', '#fffaf0');
     for (const chain of chains) {
       const pts = chain.map((v) => {
         const s = gridToScreen(v[0], v[1]);
@@ -1974,6 +1997,62 @@ export class KairoScene extends Phaser.Scene {
         const b = pts[k]!;
         this.rideEdges.push({ x1: a.x, y1: a.y, x2: b.x, y2: b.y });
       }
+    }
+
+    /*
+     * ## 바닥 화살표 — **면마다 하나**, 폴리라인 **뒤에** 그린다 (K54)
+     *
+     * ### 왜 폴리라인을 안 없애나 (사용자가 "화살표랑 같이" 라고 한 그대로다)
+     *
+     * 둘은 **다른 질문에 답한다**. 폴리라인은 *어디까지가 입구인가*(범위), 화살표는
+     * *어느 쪽으로 들어가는가*(방향)다. `turtle_island 8×6` 은 앞 두 면이 14칸이라
+     * 화살표만 남기면 그 14칸짜리 입구가 **점 하나짜리 문**으로 읽힌다 — 실제로는
+     * 어디로 붙어도 들어가는데 화면이 한 자리를 가리키면 그건 거짓말이다.
+     * 반대로 폴리라인만으로는 "그 선의 어느 쪽에서 들어가는가"에 답이 없다 (아이소에서
+     * 선 하나는 양쪽 다 그럴듯하다). 시끄러움 걱정은 **자리가 안 겹치기 때문에** 없다:
+     * 선은 경계 위, 화살표는 바깥 칸, 글씨는 앞 꼭지점 **위**. 셋이 다른 픽셀에 산다.
+     *
+     * ### 순서 — 화살표가 위다
+     *
+     * 촉이 경계 변 **위**에 있으므로 폴리라인(6텍셀 굵기)을 나중에 그으면 촉의 절반이
+     * 묻힌다. 화살표를 나중에 그으면 촉이 선을 살짝 **가로지르는** 그림이 되어
+     * "밖에서 안으로 넘어간다"가 그대로 읽힌다.
+     *
+     * ⚠ 화살표는 격자 좌표로 계산돼 `gridToScreen` 만 탄다 — 그래서 **지면 평면 위에
+     * 눕는다.** 화면 좌표에서 ▲ 를 그리면 타일 면과 각이 안 맞아 "바닥에 그린 표시"가
+     * 아니라 "화면에 붙인 아이콘"이 된다. 회전(`↻`)·단(`lift`)도 여기서 공짜다 —
+     * 입구 칸이 돌면 변이 돌고, 변이 돌면 화살표가 돈다.
+     */
+    for (const a of arrows) {
+      const pts = a.poly.map((v) => {
+        const s = gridToScreen(v[0], v[1]);
+        return { x: s.x, y: s.y + dy };
+      });
+      /*
+       * ## 색 — **도로 노면 표시**다 (밝은 칠 + 진한 테두리)
+       *
+       * 처음엔 폴리라인과 같은 파랑(`--ride-entry`)으로 채웠는데, 촉이 선에 닿아 있어서
+       * 둘이 **한 덩어리 파란 얼룩**으로 뭉쳤다 (실측 크롭). 두 채널이 다른 질문에
+       * 답하려면 서로 구별돼야 한다.
+       * `--ride-ink` 로 채우면 현실의 바닥 화살표(아스팔트 위 흰 페인트)와 같은 그림이
+       * 되어 "바닥에 칠한 표시"로 곧바로 읽히고, 테두리가 `--ride-entry-edge` 라
+       * 입구 색 계열에 묶인 채로 남는다. 지면이 잔디·물·포장·암반으로 밝기가 제각각인
+       * 문제는 글씨·폴리라인과 같은 처방(진한 테두리)으로 푼다.
+       *
+       * ⚠ 테두리는 **2텍셀**이다. 폴리라인의 6 을 그대로 가져왔더니 화살표가 15×11텍셀밖에
+       * 안 되는데 테두리가 안쪽까지 먹어서 **속이 안 보이는 검은 덩어리**가 됐다 (실측) —
+       * K51 이 글씨에서 밟은 "테두리가 색을 지배한다"의 도형판이다.
+       * 선은 굵기가 곧 존재라 6 이 맞고, 면은 실루엣이 이미 있으니 2 로 족하다.
+       */
+      g.fillStyle(ink, 0.95);
+      g.lineStyle(2, edge, 1);
+      g.beginPath();
+      g.moveTo(pts[0]!.x, pts[0]!.y);
+      for (let k = 1; k < pts.length; k++) g.lineTo(pts[k]!.x, pts[k]!.y);
+      g.closePath();
+      g.fillPath();
+      g.strokePath();
+      this.rideArrows.push({ points: pts.map((p) => ({ ...p })) });
     }
 
     /*
@@ -2022,6 +2101,8 @@ export class KairoScene extends Phaser.Scene {
     exit: [number, number] | null;
     tiles: [number, number][];
     edges: { x1: number; y1: number; x2: number; y2: number }[];
+    /** 바닥 화살표 — **실제로 채운 다각형**의 화면 텍셀 (K54). `points[0]` 이 촉이다 */
+    arrows: { points: { x: number; y: number }[] }[];
     labels: { text: string; x: number; y: number; depth: number }[];
     visible: boolean;
   } | null {
@@ -2033,6 +2114,7 @@ export class KairoScene extends Phaser.Scene {
       exit: m.kind === 'ride' ? [m.tiles.exit[0], m.tiles.exit[1]] : null,
       tiles: m.kind === 'entry' ? m.tiles.map((t) => [t[0], t[1]] as [number, number]) : [],
       edges: this.rideEdges.map((e) => ({ ...e })),
+      arrows: this.rideArrows.map((a) => ({ points: a.points.map((p) => ({ ...p })) })),
       labels: this.rideLabels.map((t) => ({
         text: t.text,
         x: t.x,
