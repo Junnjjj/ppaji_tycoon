@@ -386,13 +386,27 @@ describe('재생성 루프가 광원을 판정에 넣는다', () => {
     expect(failureNotes(fake({ w: 2, d: 2, bodyH: 20, bottomFrac: 0.5, bad: [], lightScore: 0 }))).toEqual([]);
   });
 
+  /*
+   * 팩의 실제 화소로 한 번 — 합성에서만 도는 자가 되지 않게.
+   *
+   * ⚠ **시설 id 를 박지 말 것.** 처음엔 `rent_duck` 을 박았는데, 그 종이 재생성으로
+   * 고쳐지자마자 절이 깨졌다 (2026-08-23 실측). 이 절이 재는 것은 "특정 시설이 나쁘다"가
+   * 아니라 **"접지가 통과인데 광원만 위반인 그림을 `passed` 가 걸러 내는가"** 이므로,
+   * 그런 종을 **그 자리에서 찾는다.** 재생성이 끝나 한 종도 안 남으면 절은 조용히
+   * 넘어가는 게 아니라 **그 사실을 말하고** 통과한다 (C군이 비었다 = 목표 달성).
+   */
   it('팩의 실제 화소로도 광원이 판정에 들어간다', () => {
-    const t = allTargets().find((x) => x.id === 'rent_duck');
-    expect(t).toBeDefined();
-    const m = measurePng(join(PACK_DIR, t!.file), t!.id, t!.w, t!.d, t!.bodyH);
-    // 실측: 접지는 통과인데 광원이 뒤집혀 있다 — 예전 도구는 이걸 "통과"로 봤다
-    expect(m.v.bad).toEqual([]);
-    expect(m.lightV).toBe('flipped');
-    expect(passed(m)).toBe(false);
+    const found = allTargets()
+      .map((t) => ({ t, m: measurePng(join(PACK_DIR, t.file), t.id, t.w, t.d, t.bodyH) }))
+      .filter((x) => x.m.v.bad.length === 0 && (x.m.lightV === 'flipped' || x.m.lightV === 'unmeasurable'));
+    if (found.length === 0) {
+      // C군이 비었다 — 재생성이 끝났다는 뜻이다. 합성 대조군이 이 축을 계속 지킨다
+      expect(found).toEqual([]);
+      return;
+    }
+    for (const { m } of found) {
+      expect(m.v.bad).toEqual([]); // 접지는 통과인데
+      expect(passed(m)).toBe(false); // 광원 때문에 통과가 아니다
+    }
   });
 });
