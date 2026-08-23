@@ -50,6 +50,7 @@ import { allSimFacilities, renderSpec, assetIdToFile } from '../src/assets/kairo
 import { footprintCanvas } from '../src/render/kairo/iso.js';
 import { guideSpecLine } from './make-kairo-guide.js';
 import { decodePng } from './png.js';
+import { measureLight, lightVerdict, VERDICT_NAME, type LightMeasure, type LightVerdict } from './light-direction.js';
 import {
   measureSprite,
   measureCanonical,
@@ -274,6 +275,15 @@ export interface Measured {
    * **그림 자체가 틀렸다**는 가장 강한 신호다 — 프롬프트에 그대로 넣는다.
    */
   noMargin: boolean;
+  /** 게이트 5 실측 — 왼쪽 벽 − 오른쪽 벽 휘도 */
+  light: LightMeasure;
+  /**
+   * ⚠ **`flat` 은 위반이 아니다.** 게이트 5 가 findings 에 넣는 것은 `flipped` 와
+   * `unmeasurable` 뿐이고, 팩 자체가 `flat` 16장이다. 여기서 `flat` 을 실패로 치면
+   * **자기 원본이 평탄한 시설**(arcade·slide_tube)은 만족 불가능한 조건이 된다 —
+   * 4방향 1차가 정확히 그렇게 8장을 버렸다 (`docs/asset-4dir-order.md` §0-2).
+   */
+  lightV: LightVerdict;
 }
 
 export function measurePng(path: string, id: string, w: number, d: number, bodyH: number): Measured {
@@ -281,6 +291,8 @@ export function measurePng(path: string, id: string, w: number, d: number, bodyH
   const m = measureSprite(png, w, d, bodyH);
   const want = measureCanonical(w, d, bodyH);
   const v = geomVerdict(id, m, want, png.w, canonicalWedgeArea(w, d, bodyH), [w, d]);
+  const light = measureLight(png);
+  const lightV = lightVerdict(light);
 
   const opaqueCol = (x: number): boolean => {
     for (let y = 0; y < png.h; y++) if (png.data[(y * png.w + x) * 4 + 3]! >= ALPHA_SOLID) return true;
@@ -297,8 +309,18 @@ export function measurePng(path: string, id: string, w: number, d: number, bodyH
     const applied = Math.max(-left, Math.min(png.w - 1 - right, wanted));
     noMargin = wanted !== 0 && applied !== wanted;
   }
-  return { id, w, d, bodyH, canvasW: png.w, m, want, v, noMargin };
+  return { id, w, d, bodyH, canvasW: png.w, m, want, v, noMargin, light, lightV };
 }
+
+/**
+ * **통과** — 게이트 4 가 깨끗하고 게이트 5 가 위반이 아니다.
+ *
+ * ⚠ 기준은 `kairo-gate` 와 **같아야 한다**: 게이트 5 가 findings 에 넣는 것은
+ * `flipped`·`unmeasurable` 뿐이고 `flat` 은 아니다. 여기서 `flat` 까지 실패로 치면
+ * 도구가 게임보다 엄격해져서, 원본이 평탄한 시설은 무한 리롤에 빠진다.
+ */
+export const passed = (x: Measured): boolean =>
+  x.v.bad.length === 0 && x.lightV !== 'flipped' && x.lightV !== 'unmeasurable';
 
 /**
  * 낮을수록 좋다 — 사전식으로 비교한다.
@@ -309,7 +331,30 @@ export function measurePng(path: string, id: string, w: number, d: number, bodyH
 export function scoreOf(x: Measured): number[] {
   const iouDeficit = Math.max(0, x.v.iouMin - x.m.wedgeIoU);
   const slope = Math.max(x.v.slopeErrLeft ?? 1e6, x.v.slopeErrRight ?? 1e6);
-  return [x.v.bad.length === 0 ? 0 : 1, x.v.bad.length, x.v.vertexTexels ?? 1e6, iouDeficit, slope];
+  return [
+    passed(x) ? 0 : 1,
+    x.v.bad.length,
+    lightPenalty(x.lightV),
+    x.v.vertexTexels ?? 1e6,
+    iouDeficit,
+    slope,
+  ];
+}
+
+/**
+ * 광원 벌점 — **순서가 규칙이다.** `flat` 이 0 이 아닌 이유는 "그림자가 아예 없다"가
+ * 좋은 상태는 아니어서다. 하지만 위반(2)보다는 낫다.
+ *
+ * ⚠ 이 자리가 `x.v.bad.length` **뒤**인 것이 중요하다. 앞에 두면 기하를 망가뜨리고
+ * 명암만 고친 후보가 이긴다. 뒤에 두면 기하가 같을 때만 명암이 판정에 들어간다.
+ *
+ * ⚠ `flat` 이 1 이라 **원본이 `upper-left` 인데 후보가 `flat` 이면 진다** — 셰이딩을
+ * 잃는 교환을 막는다. 원본이 이미 `flat` 이면 같은 값이라 이 축이 통과하고 기하로 넘어간다.
+ */
+export function lightPenalty(v: LightVerdict): number {
+  if (v === 'upper-left') return 0;
+  if (v === 'flat') return 1;
+  return 2; // flipped · unmeasurable
 }
 
 /** `a` 가 `b` 보다 **엄격하게** 낫나. 같으면 false — 같은 값으로 팩을 흔들지 않는다 */
@@ -324,7 +369,7 @@ export function isBetter(a: Measured, b: Measured): boolean {
   return false;
 }
 
-const passed = (x: Measured): boolean => x.v.bad.length === 0;
+
 
 // ────────────────────────── 실패 모드 → 프롬프트 문장 ──────────────────────────
 
@@ -384,9 +429,33 @@ export function failureNotes(x: Measured): string[] {
     );
   }
 
+  /*
+   * 광원 — 게이트 5. ⚠ **`flat` 은 여기서 말하지 않는다.** 위반이 아니므로 (`passed`
+   * 주석) 지적하면 도구가 게임보다 엄격해지고, 리롤이 못 고칠 것을 고치려다 기하를
+   * 망가뜨린다. 말할 것은 `flipped`(반대쪽에서 온다)와 `unmeasurable`(벽이 없다)뿐이다.
+   */
+  if (x.lightV === 'flipped') {
+    notes.push(
+      `The previous attempt was LIT FROM THE WRONG SIDE. Measuring the wall band just above ` +
+        `the ground contact line, its left face was ${Math.abs(x.light.score ?? 0).toFixed(0)} ` +
+        `luminance DARKER than its right face — the light was coming from the upper RIGHT. ` +
+        `The light is fixed in screen space and always comes from the UPPER LEFT: the face ` +
+        `that recedes toward the lower left must be the BRIGHT one, and the face that recedes ` +
+        `toward the lower right must be the SHADED one. Do not mirror the previous image to ` +
+        `fix this — that would also mirror the footprint. Re-shade the same view.`,
+    );
+  } else if (x.lightV === 'unmeasurable') {
+    notes.push(
+      `The previous attempt had no readable vertical faces: only ${x.light.left} columns on the ` +
+        `left and ${x.light.right} on the right rose at least 3 px above the ground contact ` +
+        `line (4 are needed on each side). The object must stand on its base as a solid volume ` +
+        `with two visible side walls, not as a flat cut-out lying on the ground.`,
+    );
+  }
+
   if (notes.length === 0 && !passed(x)) {
     notes.push(
-      `The previous attempt failed the geometry gate on: ${x.v.bad.join(', ')}. ` +
+      `The previous attempt failed the gates on: ${[...x.v.bad, ...(x.lightV === 'flipped' || x.lightV === 'unmeasurable' ? ['light'] : [])].join(', ')}. ` +
         `Rebuild the base strictly to the attached guide.`,
     );
   }
@@ -663,6 +732,12 @@ interface Options {
   ids: string[];
   all: boolean;
   severe: boolean;
+  /** A군 — 접지와 광원이 **둘 다** 틀린 것. 한 번 다시 뽑아 둘을 같이 잡는다 */
+  both: boolean;
+  /** B군 — 접지만 */
+  geomOnly: boolean;
+  /** C군 — 광원만 (지금까지 한 번도 재생성 대상이 아니었다) */
+  lightOnly: boolean;
   tries: number;
   dryRun: boolean;
   print: boolean;
@@ -683,6 +758,9 @@ function parseArgs(argv: string[]): Options {
     ids: argv.flatMap((a, i) => (a === '--id' ? [argv[i + 1] ?? ''] : [])).filter(Boolean),
     all: argv.includes('--all'),
     severe: argv.includes('--severe'),
+    both: argv.includes('--both'),
+    geomOnly: argv.includes('--geom-only'),
+    lightOnly: argv.includes('--light-only'),
     tries: Number(val('--tries', '3')),
     dryRun: argv.includes('--dry-run'),
     print: argv.includes('--print'),
@@ -709,17 +787,33 @@ function selectTargets(o: Options): { t: Target; base: Measured | null }[] {
     if (missing.length > 0) throw new Error(`계약에 없는 시설 id: ${missing.join(', ')}`);
     return picked;
   }
-  const bad = rows.filter((r) => r.base !== null && r.base.v.bad.length > 0);
+  /*
+   * ⚠ 대상은 **게이트 4 와 5 를 합쳐서** 고른다. 예전에는 기하만 봤는데, 그러면
+   * "각도는 맞고 그림자만 반대"인 8종이 `--all` 에 **한 번도 안 들어간다** — 실제로
+   * 그 8종은 지금까지 재생성을 한 번도 안 돌렸다. 게이트가 두 개면 대상도 둘의 합집합이다.
+   */
+  const geomBad = (r: (typeof rows)[number]): boolean => r.base !== null && r.base.v.bad.length > 0;
+  const lightBad = (r: (typeof rows)[number]): boolean =>
+    r.base !== null && (r.base.lightV === 'flipped' || r.base.lightV === 'unmeasurable');
+  const bad = rows.filter((r) => geomBad(r) || lightBad(r));
+
   if (o.severe) return bad.filter((r) => r.base!.v.severe);
+  if (o.both) return bad.filter((r) => geomBad(r) && lightBad(r)); // A군 — 한 번에 둘을 잡는다
+  if (o.geomOnly) return bad.filter((r) => geomBad(r) && !lightBad(r));
+  if (o.lightOnly) return bad.filter((r) => lightBad(r) && !geomBad(r));
   if (o.all) return bad;
-  throw new Error('대상이 없다 — --id <id> · --severe · --all 중 하나를 줄 것');
+  throw new Error(
+    '대상이 없다 — --id <id> · --severe · --both · --geom-only · --light-only · --all 중 하나를 줄 것',
+  );
 }
 
 function fmtMeasure(x: Measured): string {
+  const lit = `${VERDICT_NAME[x.lightV]}${x.light.score === null ? '' : ` ${x.light.score.toFixed(1)}`}`;
   return (
     `vertex ${(x.v.vertexTexels ?? -1).toFixed(1)}tx IoU ${x.m.wedgeIoU.toFixed(3)}` +
     `(≥${x.v.iouMin.toFixed(3)}) slope ${(x.m.slopeLeft ?? 0).toFixed(3)}/${(x.m.slopeRight ?? 0).toFixed(3)}` +
-    (x.v.bad.length === 0 ? ' 통과' : ` ✕${x.v.bad.join(',')}`)
+    ` 광원 ${lit}` +
+    (passed(x) ? ' 통과' : ` ✕${[...x.v.bad, ...(x.lightV === 'flipped' || x.lightV === 'unmeasurable' ? [`광원:${x.lightV}`] : [])].join(',')}`)
   );
 }
 
@@ -731,7 +825,9 @@ function verifyGate(o: Options): number {
   });
   const parsed = JSON.parse(raw) as {
     geom: { id: string; bad: string[]; severe: boolean; axesSwapped: boolean | null; wedgeIoU: number; vertexTexels: number | null }[];
+    light: { id: string; verdict: string; score: number | null }[];
   };
+  const gateLight = new Map(parsed.light.map((l) => [l.id, l]));
   const byId = new Map(allTargets().map((t) => [t.id, t]));
   let checked = 0;
   let mismatch = 0;
@@ -740,16 +836,23 @@ function verifyGate(o: Options): number {
     if (!t) continue; // 지면 33장은 이 도구의 대상이 아니다
     const mine = measurePng(join(o.pack, t.file), t.id, t.w, t.d, t.bodyH);
     checked++;
+    // ⚠ 광원도 대조한다 — 판정을 복제한 축은 **전부** 대조해야 갈라짐을 잡는다
+    const gl = gateLight.get(g.id);
     const same =
       mine.v.bad.join(',') === g.bad.join(',') &&
       mine.v.severe === g.severe &&
       mine.v.axesSwapped === g.axesSwapped &&
-      Math.abs(mine.m.wedgeIoU - g.wedgeIoU) < 1e-9;
+      Math.abs(mine.m.wedgeIoU - g.wedgeIoU) < 1e-9 &&
+      gl !== undefined &&
+      mine.lightV === gl.verdict &&
+      (mine.light.score === null
+        ? gl.score === null
+        : gl.score !== null && Math.abs(mine.light.score - gl.score) < 1e-9);
     if (!same) {
       mismatch++;
       console.log(
-        `  ✕ ${g.id}: 게이트 [${g.bad.join(',')}] IoU ${g.wedgeIoU.toFixed(4)} / ` +
-          `복제 [${mine.v.bad.join(',')}] IoU ${mine.m.wedgeIoU.toFixed(4)}`,
+        `  ✕ ${g.id}: 게이트 [${g.bad.join(',')}] IoU ${g.wedgeIoU.toFixed(4)} 광원 ${gl?.verdict ?? '없음'} / ` +
+          `복제 [${mine.v.bad.join(',')}] IoU ${mine.m.wedgeIoU.toFixed(4)} 광원 ${mine.lightV}`,
       );
     }
   }

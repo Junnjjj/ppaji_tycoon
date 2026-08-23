@@ -1,5 +1,5 @@
 재생성 대상 1종 (--dry-run — 생성하지 않는다)
-[1/1] dock 시트 S1#2 "Jetty head" · 참조 3장 · 프롬프트 7153자 · 실패모드 1개 · vertex 0.0tx IoU 0.702(≥0.667) slope 0.360/-0.523 ✕slope
+[1/1] dock 시트 S1#2 "Jetty head" · 참조 3장 · 프롬프트 7717자 · 실패모드 2개 · vertex 0.0tx IoU 0.702(≥0.667) slope 0.360/-0.523 광원 뒤집힘 -20.1 ✕slope,광원:flipped
   첨부(순서대로): art-reference/guides/kairo/facility__dock.png · art-reference/crops/iso-lifeguard.png · art-reference/crops/building-dock.png  [크로마 green]
 
 ────────────────────────────────────────────────────────────────────────
@@ -129,6 +129,13 @@ WHAT WENT WRONG LAST TIME — do not repeat it:
     exactly +0.500/-0.500. Every horizontal edge of the base runs at exactly 2:1 — two
     pixels across for one pixel down. This is 2:1 dimetric, NOT the symmetric 30-degree
     isometric.
+  - The previous attempt was LIT FROM THE WRONG SIDE. Measuring the wall band just above the
+    ground contact line, its left face was 20 luminance DARKER than its right face — the
+    light was coming from the upper RIGHT. The light is fixed in screen space and always
+    comes from the UPPER LEFT: the face that recedes toward the lower left must be the
+    BRIGHT one, and the face that recedes toward the lower right must be the SHADED one. Do
+    not mirror the previous image to fix this — that would also mirror the footprint.
+    Re-shade the same view.
 
 The object faces the standard way: its front-right face toward the lower right, its
 front-left face toward the lower left, roof or top surface visible.

@@ -23,7 +23,9 @@ import {
   failureNotes,
   findItem,
   isBetter,
+  lightPenalty,
   measurePng,
+  passed,
   scoreOf,
   sheetSections,
   type Measured,
@@ -135,6 +137,8 @@ function fake(o: {
   axesSwapped?: boolean;
   vertexTexels?: number;
   noMargin?: boolean;
+  /** 게이트 5. 기본은 정상(좌상단) — 광원을 안 쓰는 절이 광원 때문에 실패하지 않게 */
+  lightScore?: number | null;
 }): Measured {
   const want = measureCanonical(o.w, o.d, o.bodyH);
   return {
@@ -164,6 +168,15 @@ function fake(o: {
       axesSwapped: o.axesSwapped ?? null,
     },
     noMargin: o.noMargin ?? false,
+    light: { left: 8, right: 8, score: o.lightScore === undefined ? 21.9 : o.lightScore },
+    lightV:
+      o.lightScore === null
+        ? ('unmeasurable' as const)
+        : (o.lightScore ?? 21.9) >= 6.22
+          ? ('upper-left' as const)
+          : (o.lightScore ?? 21.9) <= -6.22
+            ? ('flipped' as const)
+            : ('flat' as const)
   };
 }
 
@@ -302,5 +315,84 @@ describe.runIf(existsSync(join(PACK_DIR, 'facility__cafe.png')))('실측 팩 대
       // 실패 문구 절은 위반이 있을 때만 붙는다 — 통과 상태에서는 없는 것이 맞다
       if (wantNotes) expect(prompt).toContain('WHAT WENT WRONG LAST TIME');
     }
+  });
+});
+
+// ────────────────────────── 게이트 5(광원)를 같이 본다 ──────────────────────────
+
+describe('재생성 루프가 광원을 판정에 넣는다', () => {
+  it('기하가 깨끗해도 광원이 뒤집혔으면 통과가 아니다', () => {
+    const flipped = fake({ w: 2, d: 2, bodyH: 20, bottomFrac: 0.5, bad: [], lightScore: -30 });
+    expect(passed(flipped)).toBe(false);
+    const ok = fake({ w: 2, d: 2, bodyH: 20, bottomFrac: 0.5, bad: [], lightScore: 30 });
+    expect(passed(ok)).toBe(true);
+  });
+
+  /*
+   * ⚠ 이 절이 4방향 1차가 밟은 함정을 고정한다 (`docs/asset-4dir-order.md` §0-2).
+   * 그 도구는 `좌상단` 만 통과로 쳐서, **자기 원본이 평탄한 시설**(arcade·slide_tube)에
+   * 만족 불가능한 조건을 걸고 8장을 버렸다. 게임 게이트는 `평탄` 을 위반으로 안 센다.
+   */
+  it('평탄은 위반이 아니다 — 게임 게이트와 같은 기준', () => {
+    const flat = fake({ w: 2, d: 2, bodyH: 20, bottomFrac: 0.5, bad: [], lightScore: 0 });
+    expect(flat.lightV).toBe('flat');
+    expect(passed(flat)).toBe(true);
+  });
+
+  it('벽을 못 뜨면(측정불가) 통과가 아니다 — "못 쟀음"을 통과에 넣지 않는다', () => {
+    const un = fake({ w: 2, d: 2, bodyH: 20, bottomFrac: 0.5, bad: [], lightScore: null });
+    expect(un.lightV).toBe('unmeasurable');
+    expect(passed(un)).toBe(false);
+  });
+
+  it('셰이딩을 잃는 교환을 막는다 — 좌상단이던 것이 평탄이 되면 진다', () => {
+    const base = fake({ w: 2, d: 2, bodyH: 20, bottomFrac: 0.5, bad: [], lightScore: 30 });
+    const dull = fake({ w: 2, d: 2, bodyH: 20, bottomFrac: 0.5, bad: [], lightScore: 0 });
+    expect(isBetter(dull, base)).toBe(false);
+    expect(isBetter(base, dull)).toBe(true);
+  });
+
+  it('원본이 이미 평탄이면 그 축은 동점이라 기하로 넘어간다', () => {
+    const base = fake({ w: 2, d: 2, bodyH: 20, bottomFrac: 0.5, bad: ['iou'], iou: 0.7, lightScore: 0 });
+    const better = fake({ w: 2, d: 2, bodyH: 20, bottomFrac: 0.5, bad: [], iou: 0.95, lightScore: 0 });
+    expect(isBetter(better, base)).toBe(true);
+  });
+
+  /*
+   * ⚠ 순서 규칙 — 광원은 `bad.length` **뒤**다. 앞에 두면 기하를 망가뜨리고 명암만
+   * 고친 후보가 이긴다.
+   */
+  it('기하를 망가뜨리고 명암만 고친 후보는 이기지 못한다', () => {
+    const base = fake({ w: 2, d: 2, bodyH: 20, bottomFrac: 0.5, bad: [], lightScore: -30 });
+    const worse = fake({ w: 2, d: 2, bodyH: 20, bottomFrac: 0.5, bad: ['vertex', 'iou'], iou: 0.5, vertexTexels: 9, lightScore: 30 });
+    expect(isBetter(worse, base)).toBe(false);
+  });
+
+  it('벌점은 좌상단 0 · 평탄 1 · 위반 2', () => {
+    expect(lightPenalty('upper-left')).toBe(0);
+    expect(lightPenalty('flat')).toBe(1);
+    expect(lightPenalty('flipped')).toBe(2);
+    expect(lightPenalty('unmeasurable')).toBe(2);
+  });
+
+  it('뒤집힌 그림에는 "반대쪽에서 왔다"와 "미러로 고치지 마라"를 같이 말한다', () => {
+    const n = failureNotes(fake({ w: 2, d: 2, bodyH: 20, bottomFrac: 0.5, bad: [], lightScore: -30 })).join('\n');
+    expect(n).toContain('LIT FROM THE WRONG SIDE');
+    expect(n).toContain('upper RIGHT');
+    expect(n).toMatch(/Do not mirror/i);
+  });
+
+  it('평탄에는 아무 말도 하지 않는다 — 고칠 대상이 아니다', () => {
+    expect(failureNotes(fake({ w: 2, d: 2, bodyH: 20, bottomFrac: 0.5, bad: [], lightScore: 0 }))).toEqual([]);
+  });
+
+  it('팩의 실제 화소로도 광원이 판정에 들어간다', () => {
+    const t = allTargets().find((x) => x.id === 'rent_duck');
+    expect(t).toBeDefined();
+    const m = measurePng(join(PACK_DIR, t!.file), t!.id, t!.w, t!.d, t!.bodyH);
+    // 실측: 접지는 통과인데 광원이 뒤집혀 있다 — 예전 도구는 이걸 "통과"로 봤다
+    expect(m.v.bad).toEqual([]);
+    expect(m.lightV).toBe('flipped');
+    expect(passed(m)).toBe(false);
   });
 });

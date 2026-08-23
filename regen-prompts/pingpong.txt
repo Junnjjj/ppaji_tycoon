@@ -1,5 +1,5 @@
 재생성 대상 1종 (--dry-run — 생성하지 않는다)
-[1/1] pingpong 시트 S4#5 "Table tennis table" · 참조 4장 · 프롬프트 8006자 · 실패모드 4개 · vertex 4.5tx IoU 0.634(≥0.800) slope 0.566/-0.665 ✕vertex,slope,iou
+[1/1] pingpong 시트 S4#5 "Table tennis table" · 참조 4장 · 프롬프트 8017자 · 실패모드 3개 · vertex 0.5tx IoU 0.582(≥0.800) slope 0.318/-0.315 광원 뒤집힘 -8.7 ✕slope,iou,광원:flipped
   첨부(순서대로): art-reference/guides/kairo/facility__pingpong.png · art-reference/crops/iso-shower-hut.png · art-reference/crops/iso-vest-hut.png · art-reference/ref-1.png  [크로마 green]
 
 ────────────────────────────────────────────────────────────────────────
@@ -125,20 +125,20 @@ The object:
    is furniture, not a building, and that is what separates it from its neighbours.
 
 WHAT WENT WRONG LAST TIME — do not repeat it:
-  - The previous attempt's ground bottom vertex was 4.5 px off: it measured 0.570 of the
-    sprite width where the contract puts it at 0.500 (= 2/4). The near corner of the base —
-    the lowest point of the whole object — must sit at that fraction across, not in the
-    middle.
-  - The previous attempt's two lower base edges measured slope 0.566/-0.665 instead of
+  - The previous attempt's two lower base edges measured slope 0.318/-0.315 instead of
     exactly +0.500/-0.500. Every horizontal edge of the base runs at exactly 2:1 — two
     pixels across for one pixel down. This is 2:1 dimetric, NOT the symmetric 30-degree
     isometric.
   - The previous attempt's ground silhouette overlapped the contract diamond by only IoU
-    0.634 (it must reach 0.800). The base is not the right shape: it must be one clean 64x32
+    0.582 (it must reach 0.800). The base is not the right shape: it must be one clean 64x32
     px diamond with the object standing on it, with nothing sticking out below or beside it.
-  - The previous attempt still needed to move sideways to sit on its own tile, but it was
-    already touching the edge of its canvas, so it could not be moved at all. Draw the base
-    diamond as the widest part of the object and leave clear empty margin on both sides.
+  - The previous attempt was LIT FROM THE WRONG SIDE. Measuring the wall band just above the
+    ground contact line, its left face was 9 luminance DARKER than its right face — the
+    light was coming from the upper RIGHT. The light is fixed in screen space and always
+    comes from the UPPER LEFT: the face that recedes toward the lower left must be the
+    BRIGHT one, and the face that recedes toward the lower right must be the SHADED one. Do
+    not mirror the previous image to fix this — that would also mirror the footprint.
+    Re-shade the same view.
 
 The object faces the standard way: its front-right face toward the lower right, its
 front-left face toward the lower left, roof or top surface visible.

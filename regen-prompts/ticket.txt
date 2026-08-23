@@ -1,5 +1,5 @@
 재생성 대상 1종 (--dry-run — 생성하지 않는다)
-[1/1] ticket 시트 L1#4 "TICKET BOOTH" · 참조 3장 · 프롬프트 7978자 · 실패모드 3개 · vertex 2.0tx IoU 0.724(≥0.839) slope 0.190/-0.969 ✕slope,iou
+[1/1] ticket 시트 L1#4 "TICKET BOOTH" · 참조 3장 · 프롬프트 8542자 · 실패모드 4개 · vertex 2.0tx IoU 0.724(≥0.839) slope 0.190/-0.969 광원 뒤집힘 -15.6 ✕slope,iou,광원:flipped
   첨부(순서대로): art-reference/guides/kairo/facility__ticket.png · art-reference/crops/iso-shower-hut.png · art-reference/crops/iso-vest-hut.png  [크로마 magenta]
 
 ────────────────────────────────────────────────────────────────────────
@@ -138,6 +138,13 @@ WHAT WENT WRONG LAST TIME — do not repeat it:
   - The previous attempt still needed to move sideways to sit on its own tile, but it was
     already touching the edge of its canvas, so it could not be moved at all. Draw the base
     diamond as the widest part of the object and leave clear empty margin on both sides.
+  - The previous attempt was LIT FROM THE WRONG SIDE. Measuring the wall band just above the
+    ground contact line, its left face was 16 luminance DARKER than its right face — the
+    light was coming from the upper RIGHT. The light is fixed in screen space and always
+    comes from the UPPER LEFT: the face that recedes toward the lower left must be the
+    BRIGHT one, and the face that recedes toward the lower right must be the SHADED one. Do
+    not mirror the previous image to fix this — that would also mirror the footprint.
+    Re-shade the same view.
 
 The object faces the standard way: its front-right face toward the lower right, its
 front-left face toward the lower left, roof or top surface visible.

@@ -1,5 +1,5 @@
 재생성 대상 1종 (--dry-run — 생성하지 않는다)
-[1/1] caravan 시트 L3#2 "CARAVAN" · 참조 3장 · 프롬프트 7540자 · 실패모드 2개 · vertex 1.5tx IoU 0.748(≥0.870) slope 0.429/-0.558 ✕slope,iou
+[1/1] caravan 시트 L3#2 "CARAVAN" · 참조 3장 · 프롬프트 8104자 · 실패모드 3개 · vertex 1.5tx IoU 0.748(≥0.870) slope 0.429/-0.558 광원 뒤집힘 -51.7 ✕slope,iou,광원:flipped
   첨부(순서대로): art-reference/guides/kairo/facility__caravan.png · art-reference/crops/iso-shower-hut.png · art-reference/crops/shore-trees-houses.png  [크로마 magenta]
 
 ────────────────────────────────────────────────────────────────────────
@@ -133,6 +133,13 @@ WHAT WENT WRONG LAST TIME — do not repeat it:
   - The previous attempt's ground silhouette overlapped the contract diamond by only IoU
     0.748 (it must reach 0.870). The base is not the right shape: it must be one clean 96x48
     px diamond with the object standing on it, with nothing sticking out below or beside it.
+  - The previous attempt was LIT FROM THE WRONG SIDE. Measuring the wall band just above the
+    ground contact line, its left face was 52 luminance DARKER than its right face — the
+    light was coming from the upper RIGHT. The light is fixed in screen space and always
+    comes from the UPPER LEFT: the face that recedes toward the lower left must be the
+    BRIGHT one, and the face that recedes toward the lower right must be the SHADED one. Do
+    not mirror the previous image to fix this — that would also mirror the footprint.
+    Re-shade the same view.
 
 The object faces the standard way: its front-right face toward the lower right, its
 front-left face toward the lower left, roof or top surface visible.
