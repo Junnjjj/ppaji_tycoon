@@ -52,6 +52,11 @@ export interface TickerItem {
 
 const INBOX_MAX = 50;
 
+/** 뉴스가 아직 없을 때도 띠가 다음 손동작을 말하게 한다. */
+export function tickerFallbackText(action: string): string {
+  return `다음: ${action} — 목표 A를 탭하세요`;
+}
+
 export class KairoTicker implements Panel {
   private readonly strip: HTMLDivElement;
   private readonly line: HTMLSpanElement;
@@ -66,6 +71,7 @@ export class KairoTicker implements Panel {
   private readonly inboxList: HTMLDivElement;
   private readonly items: TickerItem[] = [];
   private brushLabel: string | null = null;
+  private fallback = tickerFallbackText('물려받은 코스 시험 운행');
   /** 새 뉴스 강조 — 붓 라벨이 덮고 있어도 뉴스가 오면 잠깐 이긴다 */
   private newsHold = 0;
   private holdTimer = 0;
@@ -166,6 +172,12 @@ export class KairoTicker implements Panel {
     this.renderLine();
   }
 
+  /** 목표가 상태에서 다시 파생될 때 빈 뉴스용 다음 행동도 함께 갱신한다. */
+  setFallback(action: string): void {
+    this.fallback = tickerFallbackText(action);
+    this.renderLine();
+  }
+
   private renderLine(): void {
     const latest = this.items[0];
     const newsFirst = Date.now() < this.newsHold;
@@ -176,7 +188,7 @@ export class KairoTicker implements Panel {
     }
     this.strip.classList.remove('brush');
     if (!latest) {
-      this.line.textContent = '소식이 여기 흐릅니다';
+      this.line.textContent = this.fallback;
       return;
     }
     this.line.textContent = `${latest.icon} ${latest.text}`;

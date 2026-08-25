@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { comboBreakdown, bottleneckLine, admissionCappedLine } from './kairo-report.js';
+import {
+  comboBreakdown,
+  bottleneckLine,
+  admissionCappedLine,
+  reportKpis,
+  reportLedger,
+  reportPrescription,
+} from './kairo-report.js';
 import type { WeekReport } from '../sim/kairo/week.js';
 import { facilityDef } from '../sim/kairo/placement.js';
 import type { ActiveCombo, ActiveConflict, ComboResult } from '../sim/kairo/combos.js';
@@ -26,6 +33,28 @@ function combo(over: Partial<ActiveCombo> = {}): ActiveCombo {
     at: null,
     ...over,
   };
+}
+
+function weeklyReport(over: Partial<WeekReport> = {}): WeekReport {
+  return {
+    visitors: 120,
+    turnedAway: 0,
+    profit: 260_000,
+    exitSatisfaction: 75,
+    admission: 100_000,
+    sales: 80_000,
+    courseRevenue: 40_000,
+    revenue: 220_000,
+    upkeep: 30_000,
+    wages: 20_000,
+    investment: { building: 10, upgrades: 20, menuDevelopment: 30 },
+    noTicket: 0,
+    admissionCap: null,
+    courseDemand: 0,
+    coursePotentialRiders: 0,
+    bottleneck: null,
+    ...over,
+  } as WeekReport;
 }
 
 describe('콤보 결산 줄', () => {
@@ -212,5 +241,52 @@ describe('정원이 찼을 때의 한 줄 (P3-C) — 처방이 상한 구간의 
   it('⚠ 음성 대조군 — 이 줄은 "더 지으세요"라고 말하지 않는다 (그게 이 버그의 형태였다)', () => {
     expect(txt).not.toContain('부족한 것');
     expect(txt).not.toContain('건설 ▸');
+  });
+});
+
+describe('Phase 5 전주 KPI와 권위 회계', () => {
+  it('방문객·영업 손익·퇴장 만족도만 같은 정의끼리 비교한다', () => {
+    const rep = weeklyReport();
+    const previous = {
+      visitors: 100,
+      turnedAway: 0,
+      profit: 290_000,
+      exitSatisfaction: 71,
+    };
+    expect(reportKpis(rep, previous)).toEqual([
+      { id: 'visitors', label: '방문객', value: 120, delta: 20, percent: 20 },
+      { id: 'profit', label: '영업 손익', value: 260_000, delta: -30_000, percent: null },
+      { id: 'satisfaction', label: '퇴장 만족', value: 75, delta: 4, percent: null },
+    ]);
+  });
+
+  it('이전 리포트가 없는 첫 주는 모든 KPI가 첫 주다', () => {
+    expect(reportKpis(weeklyReport(), null).every((k) => k.delta === null && k.percent === null)).toBe(true);
+  });
+
+  it('장부는 정본 필드를 구획만 하고 영업 손익 값을 다시 만들지 않는다', () => {
+    const rep = weeklyReport();
+    const ledger = reportLedger(rep);
+    expect(ledger.income).toEqual({ admission: 100_000, sales: 80_000, course: 40_000, total: 220_000 });
+    expect(ledger.operatingCosts).toEqual({ maintenance: 30_000, staff: 20_000 });
+    expect(ledger.operatingProfit).toBe(260_000);
+    expect(ledger.investment).toEqual({ building: 10, upgrades: 20, menuDevelopment: 30, total: 60 });
+  });
+
+  it('처방은 매표소 → 입장 상한 → 병목 → 코스 대기 순으로 하나만 고른다', () => {
+    const rep = weeklyReport({
+      noTicket: 3,
+      admissionCap: { limit: 10, gradeMax: 10, capped: true },
+      courseDemand: 20,
+      coursePotentialRiders: 5,
+      bottleneck: { need: 'food', demand: 8, supply: 0, missing: true, example: 'snackbar' },
+    });
+    expect(reportPrescription(rep)).toMatchObject({ action: 'build', target: 'ticket' });
+    rep.noTicket = 0;
+    expect(reportPrescription(rep)).toMatchObject({ action: 'manage' });
+    if (rep.admissionCap) rep.admissionCap.capped = false;
+    expect(reportPrescription(rep)).toMatchObject({ action: 'build', target: 'snackbar' });
+    rep.bottleneck = null;
+    expect(reportPrescription(rep)).toMatchObject({ action: 'course' });
   });
 });

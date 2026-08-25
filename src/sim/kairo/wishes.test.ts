@@ -2,7 +2,9 @@
  * 소원 체인 (K43) — EXP·문턱·성사·사슬·저장이 규칙대로 도는가.
  */
 import { describe, expect, it } from 'vitest';
-import { WishStore, WISH_CHARACTERS } from './wishes.js';
+import { REGULAR_CHARACTERS, WishStore, WISH_CHARACTERS } from './wishes.js';
+import { MenuStore, RECIPES, recipeDef, type MenuPurchase } from './menu.js';
+import { requiredGrade } from './progress.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
 import { PlacementGrid } from './placement.js';
@@ -96,5 +98,79 @@ describe('소원 체인', () => {
     const evs = back.settle(SUMMARY, { friends: 0 }, p);
     expect(evs.filter((e) => e.kind === 'open' && e.char.id === 'minji')).toHaveLength(0);
     expect(Math.round(back.expOf('friends'))).toBe(Math.round(ws.expOf('friends')));
+  });
+});
+
+describe('Phase 3 이름 있는 단골', () => {
+  it('기존 8명을 재사용하되 초기 2명만 3단계 메뉴 요청을 가진다', () => {
+    expect(WISH_CHARACTERS).toHaveLength(8);
+    expect(REGULAR_CHARACTERS.map((c) => c.id).sort()).toEqual(['minji', 'sooyeon']);
+    expect(REGULAR_CHARACTERS.every((c) => c.start && c.regular?.requests.length === 3)).toBe(true);
+    const recipeIds = new Set(RECIPES.map((r) => r.id));
+    expect(
+      REGULAR_CHARACTERS.flatMap((c) => c.regular?.requests ?? []).every((r) =>
+        recipeIds.has(r.recipeId),
+      ),
+    ).toBe(true);
+  });
+
+  it('첫 요청 시설은 시작 등급에 열리고 각 3단계 재료 사슬은 자급자족한다', () => {
+    for (const char of REGULAR_CHARACTERS) {
+      const menus = new MenuStore();
+      const requests = char.regular?.requests ?? [];
+      const first = recipeDef(requests[0]?.recipeId);
+      expect(requiredGrade(first?.facilityId ?? '')).toBe(1);
+      for (const request of requests) {
+        const recipe = recipeDef(request.recipeId);
+        expect(recipe, `${char.id}: ${request.recipeId}`).toBeDefined();
+        expect(recipe?.ingredients.every((id) => menus.hasIngredient(id))).toBe(true);
+        if (recipe && !menus.hasRecipe(recipe.id)) {
+          expect(menus.develop(recipe.facilityId, recipe.ingredients, () => true).kind).toBe(
+            'discovered',
+          );
+        }
+        if (request.reward.ingredient) menus.unlockIngredient(request.reward.ingredient);
+      }
+    }
+  });
+
+  it('실제 구매만 친밀도·요청 단계·보상을 올린다', () => {
+    const store = new WishStore();
+    const before = store.regularStatus('minji');
+    expect(before?.stage).toBe(0);
+    expect(before?.affinity).toBe(0);
+    const requested = before?.request.recipeId;
+    expect(requested).toBe('shop_can_drink');
+
+    const wrong: MenuPurchase = {
+      purchaseId: '1:1:shop_snack',
+      week: 1,
+      guestId: 1,
+      characterId: 'minji',
+      menuId: 'shop_snack',
+      facilityHandle: 1,
+      amount: 600,
+    };
+    expect(store.settleRegularPurchases([wrong])).toEqual([]);
+    expect(store.regularStatus('minji')?.affinity).toBe(0);
+
+    const right = { ...wrong, purchaseId: '1:1:shop_can_drink', menuId: requested! };
+    const events = store.settleRegularPurchases([right]);
+    expect(events.some((e) => e.kind === 'regular-done' && e.char.id === 'minji')).toBe(true);
+    expect(store.regularStatus('minji')?.stage).toBe(1);
+    expect(store.regularStatus('minji')?.affinity).toBeGreaterThan(0);
+    expect(events.some((e) => e.kind === 'ingredient-unlock' || e.kind === 'reward')).toBe(true);
+  });
+
+  it('단골 일정과 스냅샷 복원은 결정적이며 일반 손님 상태는 담지 않는다', () => {
+    const a = new WishStore();
+    const b = WishStore.fromSnapshot(a.toSnapshot());
+    for (const week of [1, 2, 3, 20]) {
+      expect(b.regularVisitsForWeek(week)).toEqual(a.regularVisitsForWeek(week));
+    }
+    const snapshot = b.toSnapshot();
+    expect(snapshot).toHaveProperty('regular');
+    expect(snapshot).not.toHaveProperty('guests');
+    expect(snapshot).not.toHaveProperty('agents');
   });
 });

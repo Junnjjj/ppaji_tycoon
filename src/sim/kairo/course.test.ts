@@ -464,7 +464,7 @@ describe('보관', () => {
     const back = CourseStore.fromSnapshot(JSON.parse(JSON.stringify(st.toSnapshot())));
     expect(back.count).toBe(1);
     expect(back.all[0]!.handles).toEqual(c.handles);
-    expect(back.weekly().revenue).toBe(st.weekly().revenue);
+    expect(back.weekly().potentialRevenue).toBe(st.weekly().potentialRevenue);
     expect(st.remove(c.handle)).toBe(true);
     expect(st.count).toBe(0);
   });
@@ -482,7 +482,7 @@ describe('보관', () => {
       });
     }
     const w = st.weekly();
-    expect(w.revenue).toBeGreaterThan(0);
+    expect(w.potentialRevenue).toBeGreaterThan(0);
     expect(w.upkeep).toBe(courseEquipment('banana')!.upkeep * 2 * 3);
     expect(w.thrill).toBeGreaterThan(0);
     expect(w.safety).toBeGreaterThan(0);

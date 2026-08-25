@@ -7,6 +7,30 @@
       "name": "민지",
       "group": "friends",
       "start": true,
+      "regular": {
+        "prefer": ["cool", "savory"],
+        "avoid": ["warm"],
+        "requests": [
+          {
+            "recipeId": "shop_can_drink",
+            "line": "시원한 캔음료를 마시고 싶어!",
+            "affinity": 20,
+            "reward": { "ingredient": "redbean" }
+          },
+          {
+            "recipeId": "cafe_bingsu",
+            "line": "팥으로 만든 빙수도 맛보고 싶어!",
+            "affinity": 25,
+            "reward": { "ingredient": "broth" }
+          },
+          {
+            "recipeId": "shop_cup_ramen",
+            "line": "물놀이 뒤에는 따뜻한 컵라면이지!",
+            "affinity": 35,
+            "reward": { "facility": "arcade" }
+          }
+        ]
+      },
       "wishes": [
         {
           "exp": 40,
@@ -50,6 +74,30 @@
       "name": "수연",
       "group": "family",
       "start": true,
+      "regular": {
+        "prefer": ["hearty", "savory"],
+        "avoid": ["cool"],
+        "requests": [
+          {
+            "recipeId": "shop_gimbap",
+            "line": "아이들이 나눠 먹을 김밥이 있으면 좋겠어요.",
+            "affinity": 20,
+            "reward": { "ingredient": "broth" }
+          },
+          {
+            "recipeId": "shop_cup_ramen",
+            "line": "출출할 때 따뜻한 컵라면이 필요해요.",
+            "affinity": 25,
+            "reward": { "ingredient": "redbean" }
+          },
+          {
+            "recipeId": "cafe_latte",
+            "line": "잠깐 쉬며 마실 카페라떼를 부탁해요.",
+            "affinity": 35,
+            "reward": { "facility": "mongol_tent" }
+          }
+        ]
+      },
       "wishes": [
         {
           "exp": 40,
@@ -270,7 +318,7 @@
             "value": 5
           },
           "reward": {
-            "facility": "shop"
+            "cash": 1000000
           },
           "line": "단체는 먹거리가 생명이야. 매점 하나 크게!"
         },

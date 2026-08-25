@@ -244,7 +244,7 @@ describe('한 줄 설명 (K49) — 데이터가 갖는다 (불변식 3)', () => 
   });
 });
 
-describe('가게 메뉴 (K49) — 표시 전용', () => {
+describe('가게 메뉴 (K49 → Phase 3) — 장착 상태가 정본', () => {
   it('★ 메뉴 평균이 `fee` 와 정확히 같다 — 갈리면 화면이 결산과 다른 돈을 말한다', () => {
     const withMenu = allFacilityDefs().filter((d) => (d.menu?.length ?? 0) > 0);
     expect(withMenu.length).toBeGreaterThan(5); // 표본이 마르면 이 검사는 아무것도 안 잰다
@@ -266,17 +266,21 @@ describe('가게 메뉴 (K49) — 표시 전용', () => {
 
   it('★ 매점은 메뉴가 뜨고, 화장실은 안 뜬다', () => {
     const s = place('shop');
-    const menu = facilityInfo(s.p, s.handle)!.menu;
-    expect(menu.length).toBeGreaterThan(2);
+    const info = facilityInfo(s.p, s.handle)!;
+    const menu = info.menu;
+    expect(menu).toHaveLength(1);
+    expect(info.menuCraft).toBe(true);
+    expect(info.menuSlots).toBe(1);
     expect(menu.every((m) => m.name.length > 0 && m.price > 0)).toBe(true);
     const t = place('toilet');
     expect(facilityInfo(t.p, t.handle)!.menu).toEqual([]);
+    expect(facilityInfo(t.p, t.handle)!.menuCraft).toBe(false);
   });
 
-  it('⚠ sim 에 배선되지 않았다 — 메뉴가 있어도 걷히는 돈은 `feeOf` 뿐이다 (P3-E 의 몫)', () => {
+  it('★ 조리 시설의 기본 요금은 메뉴 구매 가격과 별개다', () => {
     /*
-     * 지금 메뉴를 sim 에 물리면 밸런스가 왜 움직였는지 못 가린다. 이 검사가 그 경계다 —
-     * 언젠가 P3-E 가 배선하면 **여기가 먼저 빨개져야** 한다 (그때 스펙을 보라는 신호).
+     * 지설이 받는 기본 `fee` 와 손님이 고른 조리 메뉴 가격은 독립 수입이다.
+     * 이 검사는 메뉴 슬롯을 도입해도 기존 시설 요금 계약을 보존함을 지킨다.
      */
     const { p, handle } = place('shop');
     expect(p.feeOf(handle)).toBe(facilityDef('shop')!.fee);

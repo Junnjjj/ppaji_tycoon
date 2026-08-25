@@ -10,6 +10,8 @@ import {
 } from './placement.js';
 import { GROUPS, needWeight, type GroupId } from './groups.js';
 import type { GuestStore } from './guests.js';
+import type { MenuPurchase, RegularVisit } from './menu.js';
+import { realizeCourseWeek, type CourseWeekPotential } from './course.js';
 /*
  * ⚠ 입장 상한의 **정본은 `progress.ts` 의 `admissionLimit`** 이다. 여기서 규칙
  * (`min(등급 상한, 공급×1.5)`)을 다시 쓰지 않는다 — 두 벌이 되면 결산이 "더 지으세요"라고
@@ -21,17 +23,15 @@ import type { GuestStore } from './guests.js';
 import { admissionLimit, type GradeDef } from './progress.js';
 
 /**
- * 주 단위 루프와 결산 — 스펙 v2/v4, CLAUDE.md 의 핵심 루프.
+ * 흐르는 낮의 주 집계와 결산 — 현재 CLAUDE.md 계약.
  *
  * ## 왜 주 단위인가
  *
- * 실시간은 폰 2분 세션에 안 맞는다. 한 주를 0.6초에 계산할 수 있으니 공짜로 가능하다.
+ * 생산에서는 지도가 보이는 동안 120 tick/일·840 tick/주가 자동으로 흐르고,
+ * 주 경계에서 결산→카드→다음 주로 넘어간다. 수동 주/겨울 4주 스킵은 없다.
  *
- * ## ⚠ v4 에서 고친 것 — "0.6초에 계산된다"와 "0.6초만 보여준다"는 다르다
- *
- * v3 는 계산이 빠르다는 이유로 연출을 생략했는데, **손님이 노는 광경이 이 게임 최대의
- * 보상**이라 그걸 리플레이로 격리하면 안 된다. 그래서 이 모듈은 한 주를 계산하면서
- * **tick 단위 기록**을 남긴다 — 렌더가 그걸 3~5초로 압축 재생한다.
+ * `run()`의 tick 기록은 헤드리스/결산/검증에서 같은 주 결과를 재현하기 위한 데이터다.
+ * 생산 화면이 3~5초 주간 리플레이를 스킵하는 구 v4 모델로 돌아가지 않는다.
  *
  * ## 날씨는 배수가 아니라 수요 구성을 바꾼다
  *
@@ -52,9 +52,73 @@ export function priceSatisfaction(mult: number): number {
 }
 
 export const DAYS_PER_WEEK = 7;
-/** 하루 tick 수. 10Hz 고정 timestep 기준 = 하루 12초 */
+/** 하루 tick 수. 현재 생산 박자 200ms/tick에서 하루 24초 */
 export const TICKS_PER_DAY = 120;
 export const TICKS_PER_WEEK = DAYS_PER_WEEK * TICKS_PER_DAY;
+
+/** 한 주 안팎에서 서로 소비량을 공유하면 안 되는 RNG 도메인. */
+export interface WeekRngStreams {
+  weather: Rng;
+  guests: Rng;
+  regular: Rng;
+  accident: Rng;
+}
+
+/** localStorage에 넣는 평문 상태. 이름은 도메인 계약이라 순서에 의존하지 않는다. */
+export interface WeekRngSnapshot {
+  weather: number;
+  guests: number;
+  regular: number;
+  accident: number;
+}
+
+const WEEK_RNG_SALTS = {
+  weather: 0x57ea7,
+  guests: 0x6ae57,
+  regular: 0xae601,
+  accident: 0xacc1,
+} as const;
+
+/** 루트 상태를 소비하지 않고 네 개의 영속 스트림을 만든다. */
+export function forkWeekRngStreams(root: Rng): WeekRngStreams {
+  return {
+    weather: root.fork(WEEK_RNG_SALTS.weather),
+    guests: root.fork(WEEK_RNG_SALTS.guests),
+    regular: root.fork(WEEK_RNG_SALTS.regular),
+    accident: root.fork(WEEK_RNG_SALTS.accident),
+  };
+}
+
+export function snapshotWeekRngStreams(streams: WeekRngStreams): WeekRngSnapshot {
+  return {
+    weather: streams.weather.state,
+    guests: streams.guests.state,
+    regular: streams.regular.state,
+    accident: streams.accident.state,
+  };
+}
+
+export function restoreWeekRngStreams(snapshot: WeekRngSnapshot): WeekRngStreams {
+  return {
+    weather: Rng.fromState(snapshot.weather),
+    guests: Rng.fromState(snapshot.guests),
+    regular: Rng.fromState(snapshot.regular),
+    accident: Rng.fromState(snapshot.accident),
+  };
+}
+
+type WeekRngSource = Rng | WeekRngStreams;
+
+/**
+ * 구 호출자 호환: 한 주에 `Rng` 하나를 넘기면 고정 소비 1회로 다음 주의 루트만 전진한다.
+ * 손님 수나 단골 여부가 다음 주 어떤 도메인도 밀지 않는다.
+ */
+function resolveWeekRngStreams(source: WeekRngSource): WeekRngStreams {
+  if (!(source instanceof Rng)) return source;
+  const streams = forkWeekRngStreams(source);
+  source.next();
+  return streams;
+}
 
 export type Season = 'spring' | 'summer' | 'autumn' | 'winter';
 export type Weather = 'clear' | 'cloudy' | 'rain' | 'heat' | 'cold';
@@ -188,14 +252,52 @@ export interface DayReport {
 /**
  * 결산의 **요약 부분**. 히트맵·재생 프레임을 뺀 숫자만이라 세이브에 넣을 수 있다.
  *
- * 의뢰 판정이 읽는 필드가 정확히 이 넷이다. 전체 `WeekReport` 를 저장하면 히트맵
- * 1,280칸 + 재생 프레임까지 들어가 localStorage 를 넘긴다.
+ * 의뢰 판정이 읽는 기본 네 필드에 Phase 3 메뉴/단골의 소형 주간 카운터만 붙인다.
+ * 전체 `WeekReport` 를 저장하면 히트맵 1,280칸 + 재생 프레임까지 들어가 localStorage 를 넘긴다.
  */
 export interface WeekSummary {
   visitors: number;
   turnedAway: number;
+  /** 건설·개선·메뉴 개발비를 제외한 영업 손익. 기존 `profit`의 뜻을 명시한 것이다. */
   profit: number;
   exitSatisfaction: number;
+  /** Phase 3 전주 연결용 소형 집계. 개별 일반 손님은 저장하지 않는다. */
+  menuPurchaseCount?: number;
+  regularVisits?: number;
+  regularPurchases?: number;
+}
+
+/**
+ * 다음 결산의 전주 비교와 기존 진행 판정에 필요한 소형 요약만 만든다.
+ *
+ * `revenue`·히트맵·요일·장부를 넣지 않는다. 전주 KPI는 방문객·영업 손익·퇴장 만족도
+ * 셋뿐이고, 의뢰가 읽는 `turnedAway`와 Phase 3의 소형 카운터만 기존 계약대로 남긴다.
+ */
+export function summarizeWeek(report: WeekReport): WeekSummary {
+  return {
+    visitors: report.visitors,
+    turnedAway: report.turnedAway,
+    profit: report.profit,
+    exitSatisfaction: report.exitSatisfaction,
+    menuPurchaseCount: report.menuPurchaseCount ?? report.menuPurchases.length,
+    regularVisits: report.regularVisits,
+    regularPurchases:
+      report.regularPurchases ??
+      report.menuPurchases.filter((purchase) => purchase.characterId !== undefined).length,
+  };
+}
+
+export type InvestmentKind = 'building' | 'upgrades' | 'menuDevelopment';
+
+/** 영업 손익 밖의 자산/성장 지출. 현금에는 이미 반영돼 있고 결산은 분류만 보여 준다. */
+export interface InvestmentBreakdown {
+  building: number;
+  upgrades: number;
+  menuDevelopment: number;
+}
+
+function emptyInvestment(): InvestmentBreakdown {
+  return { building: 0, upgrades: 0, menuDevelopment: 0 };
 }
 
 export interface WeekReport extends WeekSummary {
@@ -234,9 +336,21 @@ export interface WeekReport extends WeekSummary {
   upkeep: number;
   /** 인건비 — 고정비라 손님이 없어도 나간다 */
   wages: number;
-  /** 코스 매출과 탑승객 — 시설 매출과 나눠 보여줘야 "코스를 왜 그리나"가 보인다 */
+  /** 이번 주 현금에서 빠졌지만 영업 손익에는 들어가지 않는 투자 지출. */
+  investment: InvestmentBreakdown;
+  /** 코스 매출과 실제 탑승객 — 시설 매출과 나눠 보여줘야 "코스를 왜 그리나"가 보인다 */
   courseRevenue: number;
   courseRiders: number;
+  /** 공원에 실제 입장한 사람 중 코스를 원한 사람 */
+  courseDemand: number;
+  /** 수요가 충분할 때 코스가 태울 수 있었던 주간 인원 */
+  coursePotentialRiders: number;
+  /** 이번 주 agent가 시설 슬롯에서 실제로 고른 메뉴 구매. */
+  menuPurchases: MenuPurchase[];
+  /** 이번 주 실제 입장한 이름 있는 단골. */
+  regularVisits: number;
+  /** 요청 메뉴 실구매로 올라간 친밀도. main이 `WishStore`의 결과를 적는다. */
+  regularAffinityGained: number;
   /**
    * 이번 주에 **실제로 적용된** 콤보 보너스 (P2-B). 콤보 없이 돌린 주면 null.
    *
@@ -357,6 +471,8 @@ export interface WeekOptions {
   playbackEvery?: number;
   /** 손님 입장 간격의 기준 tick — 계절·요일·평판으로 조정된다 */
   arrivalBaseTicks?: number;
+  /** `WishStore`가 주차에서 파생한 이름 있는 단골 방문. */
+  regularVisits?: readonly RegularVisit[];
   /**
    * 평판 배율 (등급에서 온다). 1.0 이 기본.
    *
@@ -395,7 +511,7 @@ export interface WeekOptions {
    */
   accidentChance?: number;
   /** 코스 합계 (§7). 없으면 코스가 없는 것으로 본다 */
-  courses?: { revenue: number; upkeep: number; riders: number };
+  courses?: CourseWeekPotential;
   /**
    * 콤보 보너스 (S5). 없으면 콤보가 없는 것으로 본다 — 기존 호출자 호환.
    *
@@ -457,6 +573,11 @@ export interface WeekOptions {
 export interface WeekSnapshot {
   week: number;
   cash: number;
+  /**
+   * 주중 저장 뒤에도 다음 결산의 투자 줄이 보존된다. 구 v7에는 없으며 없으면 결정적으로 0.
+   * 0뿐인 장부는 `toSnapshot()`이 생략해 기존 세이브를 불필요하게 부풀리지 않는다.
+   */
+  investment?: Partial<InvestmentBreakdown>;
 }
 
 /**
@@ -489,6 +610,8 @@ export class WeekRunner {
    */
   readonly bus = new BusRunner();
   private money = 5_000_000;
+  /** 직전 결산 뒤부터 누적한 영업 외 투자 지출. */
+  private investment = emptyInvestment();
 
   /**
    * 벽은 받지 않는다 — 도달 검사는 **배치 시점**에 이미 하므로 결산에서 다시 볼 필요가
@@ -516,9 +639,10 @@ export class WeekRunner {
    * ⚠ 이게 없던 동안 헤드리스 봇만 돈을 쓰고 **UI 는 시설을 공짜로 지었다.**
    * 밸런싱한 건설비 곡선이 실제 플레이에는 없었다는 뜻이다.
    */
-  spend(amount: number): boolean {
+  spend(amount: number, investmentKind?: InvestmentKind): boolean {
     if (amount > this.money) return false;
     this.money -= amount;
+    if (investmentKind !== undefined) this.investment[investmentKind] += amount;
     return true;
   }
 
@@ -528,13 +652,23 @@ export class WeekRunner {
   }
 
   toSnapshot(): WeekSnapshot {
-    return { week: this.weekNo, cash: this.money };
+    const total = this.investment.building + this.investment.upgrades + this.investment.menuDevelopment;
+    return {
+      week: this.weekNo,
+      cash: this.money,
+      ...(total > 0 ? { investment: { ...this.investment } } : {}),
+    };
   }
 
   /** 세이브에서 복원 — 지형·시설은 호출자가 이미 복원해 넣는다 */
   restore(s: WeekSnapshot): void {
     this.weekNo = s.week;
     this.money = s.cash;
+    this.investment = {
+      building: s.investment?.building ?? 0,
+      upgrades: s.investment?.upgrades ?? 0,
+      menuDevelopment: s.investment?.menuDevelopment ?? 0,
+    };
   }
 
   /**
@@ -554,6 +688,9 @@ export class WeekRunner {
       if (idle?.has(item.handle)) continue;
       const def = facilityDef(item.defId);
       if (!def) continue;
+      if (!this.placement.menuOperabilityOf(item.handle, (id) => this.guests.hasMenuRecipe(id)).operable) {
+        continue;
+      }
       const need = (def as { need?: NeedKind }).need;
       if (!need) continue;
       out[need] = (out[need] ?? 0) + Math.max(1, this.placement.capacityOf(item.handle));
@@ -607,7 +744,7 @@ export class WeekRunner {
    * `week-identity.test.ts` 의 항등 검사가 지킨다 — 그 검사가 깨져 있으면 흐름 모드를
    * 켜면 안 된다.
    */
-  run(rng: Rng, opts: WeekOptions = {}): WeekReport {
+  run(rng: WeekRngSource, opts: WeekOptions = {}): WeekReport {
     this.begin(rng, opts);
     this.step(TICKS_PER_WEEK);
     return this.finish();
@@ -712,7 +849,7 @@ export class WeekRunner {
   }
 
   /** 주 시작 — 사고 판정·직원 배치·요금 배율 등 "주에 한 번" 일들 */
-  begin(rng: Rng, opts: WeekOptions = {}): void {
+  begin(rng: WeekRngSource, opts: WeekOptions = {}): void {
     // 겹쳐 부르면 앞의 주가 소리 없이 사라진다 — 명시적으로 막는다
     if (this.live) throw new Error('week already in progress — finish() first');
     const season = opts.season ?? 'summer';
@@ -734,9 +871,10 @@ export class WeekRunner {
      * 비교하고 있었고, 사고 난 쪽 매출이 더 높게 나왔다 (202,360 vs 191,680).
      * 우연히 통과하다 버스 위상이 한 tick 바뀌자 드러났다 (K36-B③).
      */
+    const streams = resolveWeekRngStreams(rng);
     let accident: WeekReport['accident'] = null;
     const chance = opts.accidentChance ?? 0;
-    const arng = rng.fork(0xacc1);
+    const arng = streams.accident;
     if (chance > 0 && arng.next() < chance) {
       const pool = this.placement.all();
       if (pool.length > 0) {
@@ -747,9 +885,10 @@ export class WeekRunner {
     const idle = new Set(staff?.idle ?? []);
     if (accident) idle.add(accident.handle);
     this.guests.setIdle(idle);
+    this.guests.scheduleRegularVisits(opts.regularVisits ?? [], this.weekNo + 1);
 
     this.live = {
-      rng,
+      rng: streams,
       opts,
       season,
       profile: SEASON_PROFILE[season],
@@ -768,6 +907,8 @@ export class WeekRunner {
       built: this.supply(),
       accident,
       byGroup: { family: 0, couple: 0, friends: 0, company: 0 },
+      menuPurchases: [],
+      courseDemand: 0,
       weekRevenue: 0,
       weekAdmission: 0,
       credited: 0,
@@ -787,7 +928,7 @@ export class WeekRunner {
     const lw = this.live;
     if (!lw) throw new Error('step() before begin()');
     lw.stepCalls++;
-    if (this.identityFaultForTest && lw.stepCalls === 2) lw.rng.next();
+    if (this.identityFaultForTest && lw.stepCalls === 2) lw.rng.guests.next();
     const { rng, opts } = lw;
     const mod = opts.modifiers;
     const w = this.terrain.width;
@@ -798,7 +939,7 @@ export class WeekRunner {
       if (lw.day === null) {
         // ── 하루 열기 ────────────────────────────────────────────────────
         const dayNo = Math.floor(lw.tick / TICKS_PER_DAY);
-        const weather = rng.pick(lw.profile.weather);
+        const weather = rng.weather.pick(lw.profile.weather);
         const weekendBoost = WEEKEND.includes(dayNo) ? 1.6 : 1.0;
         // 시설이 조금 끌어당기고, 나머지는 평판이 결정한다
         const facilityPull = 1 + Math.min(0.6, this.placement.count * 0.015);
@@ -854,7 +995,13 @@ export class WeekRunner {
          * 매표소를 지나야 입장이다. 그래서 `visitors`·`byGroup` 은 아래 `takeAdmitted`
          * 가 센다. 여기서 세면 매표소가 없는 판이 "입장 129명 · 매출 0" 으로 보인다.
          */
-        if (!this.guests.spawn(rng, lw.season, opts.mapShares)) d.turnedAway++;
+        if (
+          !this.guests.spawn(
+            { general: rng.guests, regular: rng.regular },
+            lw.season,
+            opts.mapShares,
+          )
+        ) d.turnedAway++;
       }
       /*
        * 나이트풀 (S4) — 저녁(하루의 마지막 20%)에 DJ 부스가 붙은 수영장이 있으면
@@ -869,13 +1016,16 @@ export class WeekRunner {
             .filter((it) => it.defId === 'dj_booth')
             .map((it) => ({ x: it.i, y: it.j })),
         ) > 0;
-      this.guests.tick(rng);
+      this.guests.tick({ general: rng.guests, regular: rng.regular });
+      // 구매 선택은 GuestStore가 시설 슬롯에서 냈고, 주 리포트는 그 사건을 저장한다.
+      lw.menuPurchases.push(...this.guests.takeMenuPurchases());
       // 이용이 끝난 손님만큼 요금을 받는다 (이용 시작이 아니라 완료 기준)
       const feeIn = this.collectFees(d.weather);
       d.revenue += feeIn;
       // 표를 산 손님만큼 입장료를 받는다 — 요금 슬라이더가 같이 민다
       const adm = this.guests.takeAdmitted();
       d.visitors += adm.count;
+      lw.courseDemand += adm.courseDemand;
       d.noTicket += adm.noTicket;
       for (const k of Object.keys(lw.byGroup) as GroupId[]) lw.byGroup[k] += adm.byGroup[k];
       const admIn = Math.round(adm.fee * this.priceMult);
@@ -1030,19 +1180,19 @@ export class WeekRunner {
     }
 
     /*
-     * 코스 매출은 **손님 시뮬과 별도로** 더한다. 코스 탑승은 선착장에서 일어나고 손님은
-     * 개체로 물 위를 돌지 않는다 — 돌게 하면 1,200명 × 스플라인 추적이 되고, 그 비용은
-     * "손님이 노는 광경"이 주는 값보다 크다 (배는 스프라이트로 돈다).
+     * 코스 손님은 개체로 물 위를 추적하지 않는다. 대신 입장 순간의 실제 스릴 선호를 세고,
+     * 여기서 `min(코스 수요, 잠재 처리량)`으로 실현한다. 계절을 다시 곱하지 않는다 — 계절은
+     * 이미 도착·입장객 수를 바꿨으므로 또 곱하면 수요를 두 번 깎는다.
      */
-    /*
-     * 코스 매출은 **계절을 탄다** — 손님이 안 오는데 배만 도는 것은 이상하고, 그대로 두면
-     * 코스가 비수기 손익을 통째로 떠받쳐 "겨울에는 무엇을 할까"가 사라진다 (실측: 코스를
-     * 넣자 겨울 손익이 +2% 로 평평해졌다). 유지비는 계절과 무관하다 — 장비는 세워둬도 돈이 든다.
-     */
-    const courseSeason = lw.profile.arrivalBase;
-    const courseRevenue = mod?.closed
-      ? 0
-      : Math.round((opts.courses?.revenue ?? 0) * courseSeason);
+    const coursePotential = opts.courses ?? {
+      potentialRiders: 0,
+      potentialRevenue: 0,
+      upkeep: 0,
+    };
+    const realizedCourse = mod?.closed
+      ? { riders: 0, revenue: 0 }
+      : realizeCourseWeek(coursePotential, lw.courseDemand);
+    const courseRevenue = realizedCourse.revenue;
     const courseUpkeep = opts.courses?.upkeep ?? 0;
     weekRevenue += courseRevenue;
 
@@ -1084,9 +1234,14 @@ export class WeekRunner {
     }
 
     const bottleneck = pickBottleneck(lw, days, this.bottleneckFaultForTest);
-    const admissionCap = admissionState(opts.grade, this.placement.totalCapacity());
+    const admissionCap = admissionState(
+      opts.grade,
+      this.placement.operationalCapacity((id) => this.guests.hasMenuRecipe(id)),
+    );
 
     const totalExited = days.reduce((a, d) => a + (d.exitSatisfaction > 0 ? 1 : 0), 0);
+    const investment = { ...this.investment };
+    this.investment = emptyInvestment();
     this.live = null;
     return {
       week: this.weekNo,
@@ -1102,8 +1257,14 @@ export class WeekRunner {
       sales: weekRevenue - weekAdmission - courseRevenue,
       upkeep,
       wages,
+      investment,
       courseRevenue,
-      courseRiders: mod?.closed ? 0 : Math.round((opts.courses?.riders ?? 0) * courseSeason),
+      courseRiders: realizedCourse.riders,
+      courseDemand: mod?.closed ? 0 : lw.courseDemand,
+      coursePotentialRiders: Math.max(0, Math.floor(coursePotential.potentialRiders)),
+      menuPurchases: lw.menuPurchases.map((x) => ({ ...x })),
+      regularVisits: this.guests.takeRegularVisits(),
+      regularAffinityGained: 0,
       // 받은 것을 그대로 돌려준다 (P2-B) — 결산이 **적용된 값 그 자체**를 보여주게
       combos: opts.combos ?? null,
       profit: weekRevenue - upkeep - wages,
@@ -1440,7 +1601,7 @@ interface DayCtx {
 
 /** 주 진행 상태 (K39) — begin() 이 만들고 finish() 가 비운다 */
 interface LiveWeekState {
-  rng: Rng;
+  rng: WeekRngStreams;
   opts: WeekOptions;
   season: Season;
   profile: (typeof SEASON_PROFILE)[Season];
@@ -1453,6 +1614,9 @@ interface LiveWeekState {
   built: Record<NeedKind, number>;
   accident: WeekReport['accident'];
   byGroup: Record<GroupId, number>;
+  menuPurchases: MenuPurchase[];
+  /** 이번 주 입장객 중 `Guest.thrill >= COURSE_INTEREST_MIN` 인 사람 수 */
+  courseDemand: number;
   weekRevenue: number;
   weekAdmission: number;
   /**

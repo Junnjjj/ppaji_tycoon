@@ -52,10 +52,18 @@ export interface BuildItem {
   tab: BuildTab;
   id: string;
   name: string;
+  /** 카드에 보이는 명목 비용. 실제 배치 비용은 확정 바에서 다시 계산한다. */
+  cost: number;
+  /** 카드당 정확히 하나인 역할 배지 (먹거리/위생/통행/확장/…). */
+  role: string;
+  /** 정액이 아닌 비용 표기(칸당/건설비 비율). 없으면 `cost`를 만원 단위로 표시한다. */
+  costLabel?: string;
   /** 둘째 줄 — 값·크기 같은 것 */
   sub?: string;
   /** 아직 못 짓는다 (자리 없음 등). 이유를 대신 보여준다 */
   locked?: string;
+  /** `locked`를 해소하는 다음 행동. 막힌 이유와 분리해 선택 전에 같이 보여준다. */
+  unlock?: string;
   /** 다음에 올 것 예고 (K40) — 누를 수 없고, 언제 열리는지만 말한다 */
   teaser?: string;
   /** 카드 썸네일용 계약 ID — 게임과 같은 그림을 쓴다 */
@@ -64,22 +72,125 @@ export interface BuildItem {
   group?: string;
 }
 
-/** 의뢰 칩 하나 (K40) — 아이콘은 임시 글리프다 (ui/* 에셋 슬롯, 계획 §1-1) */
-export interface GoalChip {
+export interface BuildItemView {
+  cost: string;
+  role: string;
+  blockedReason?: string;
+  unlockMethod?: string;
+  selectable: boolean;
+}
+
+/** 카드 표시 모델. DOM이 잠금 규칙이나 돈 단위를 다시 추론하지 않게 한 곳에서 만든다. */
+export function buildItemView(item: BuildItem): BuildItemView {
+  const blockedReason = item.locked ?? (item.teaser !== undefined ? '아직 잠김' : undefined);
+  const unlockMethod = item.unlock ?? item.teaser;
+  return {
+    cost:
+      item.costLabel ??
+      (item.cost === 0 ? '무료' : `${Math.round(item.cost / 10000).toLocaleString('ko-KR')}만`),
+    role: item.role,
+    ...(blockedReason !== undefined ? { blockedReason } : {}),
+    ...(unlockMethod !== undefined ? { unlockMethod } : {}),
+    selectable: blockedReason === undefined,
+  };
+}
+
+/** 터치에서는 스와이프가 기본, 포인팅 기기에는 이름 있는 페이지 버튼이 폴백이다. */
+export function carouselNeedsNav(maxTouchPoints: number): boolean {
+  return maxTouchPoints === 0;
+}
+
+export interface BuildConfirmView {
+  kind: BuildKind;
+  name: string;
+  cost: string;
+  result: string;
+  sprite?: string;
+}
+
+export type GoalRole = 'immediate' | 'mid' | 'long';
+
+/**
+ * 목표 한 칸의 내용. 역할(A/B/C)은 `createGoalSlots` 가 붙인다.
+ *
+ * `action` 은 선택이 아니다. 진행률만 보여 주는 목표는 "그래서 뭘 하지"를 다시 만들기
+ * 때문이다. 각 칸이 자기 목적지를 직접 여는 것이 Phase 1의 계약이다.
+ */
+export interface GoalSlotInput {
   icon: string;
   label: string;
   detail?: string;
   /** 0..1 */
   progress: number;
   tone?: 'won' | 'lost';
-  /**
-   * 탭하면 할 일 (K48). 없으면 기둥의 기본 동작(메뉴 열기)으로 흘러간다.
-   *
-   * 등급 칩이 이걸 쓴다 — **진행률과 행동이 같은 자리**에 있어야 "그래서 뭘 하지"가
-   * 안 생긴다. 칩은 여전히 `<div>` 다: `<button>` 으로 만들면 하네스의 "상시 컨트롤
-   * 2개" 셈(`button,select,input`)에 걸린다 (칩 기둥·접기 머리·티커와 같은 선례).
-   */
-  action?: () => void;
+  action: () => void;
+}
+
+/** 의뢰 칩 하나 (K40) — 아이콘은 임시 글리프다 (ui/* 에셋 슬롯, 계획 §1-1) */
+export interface GoalChip extends GoalSlotInput {
+  role: GoalRole;
+  badge: 'A' | 'B' | 'C';
+}
+
+/**
+ * 카이로식 세 시간축을 언제나 같은 순서·같은 정체로 만든다.
+ * 이 값은 저장하지 않고 기존 시스템 상태가 바뀔 때 다시 파생한다.
+ */
+export function createGoalSlots(input: {
+  immediate: GoalSlotInput;
+  mid: GoalSlotInput;
+  long: GoalSlotInput;
+}): GoalChip[] {
+  return [
+    { ...input.immediate, role: 'immediate', badge: 'A' },
+    { ...input.mid, role: 'mid', badge: 'B' },
+    { ...input.long, role: 'long', badge: 'C' },
+  ];
+}
+
+/**
+ * 첫 즉시 목표. 새 온보딩 플래그를 만들지 않고 **지금 존재하는 첫 코스**에서 파생한다.
+ * handle 을 callback까지 전달해 Phase 2가 기존 코스 편집을 구현할 때 이 파일을 바꾸지 않는다.
+ */
+export function inheritedCourseGoal(
+  courses: readonly { handle: number }[],
+  openCourse: (handle?: number) => void,
+): GoalChip {
+  const handle = courses[0]?.handle;
+  return {
+    role: 'immediate',
+    badge: 'A',
+    icon: '🚤',
+    label: handle === undefined ? '첫 코스 만들기' : '물려받은 코스 시험 운행',
+    detail: handle === undefined ? '선착장에서 코스를 시작하세요' : '탭해서 시작 코스를 바로 엽니다',
+    progress: 0,
+    action: () => openCourse(handle),
+  };
+}
+
+/**
+ * 사용자의 접힘 선택과 편집 중 강제 접힘을 분리한다.
+ * 편집 종료 시 임시 상태만 걷으므로, 사용자가 접어 둔 선택은 그대로 복원된다.
+ */
+export class GoalFoldState {
+  private userFolded = false;
+  private editing = false;
+
+  get folded(): boolean {
+    return this.userFolded || this.editing;
+  }
+
+  toggleUser(): void {
+    this.userFolded = !this.userFolded;
+  }
+
+  beginEditing(): void {
+    this.editing = true;
+  }
+
+  endEditing(): void {
+    this.editing = false;
+  }
 }
 
 export type RiskTone = 'safe' | 'watch' | 'caution' | 'danger';
@@ -124,8 +235,7 @@ export class KairoHud {
   private readonly chipsBox: HTMLDivElement;
   /** 칩 기둥의 머리 행 — 버튼이 아니라 div 다 (아래 생성부의 ⚠ 참고) */
   private readonly foldHead: HTMLDivElement;
-  private folded = false;
-  private chipsSig = '';
+  private readonly goalFold = new GoalFoldState();
   private readonly riskBox: HTMLDivElement;
   private readonly menuBtn: HTMLButtonElement;
   private readonly buildBtn: HTMLButtonElement;
@@ -140,6 +250,10 @@ export class KairoHud {
 
   private readonly confirmBar: HTMLDivElement;
   private readonly confirmLabel: HTMLDivElement;
+  private readonly confirmThumb: HTMLDivElement;
+  private readonly confirmName: HTMLDivElement;
+  private readonly confirmCost: HTMLDivElement;
+  private readonly confirmCheck: HTMLDivElement;
   private readonly confirmBtn: HTMLButtonElement;
   private readonly rotateBtn: HTMLButtonElement;
   private onConfirm: (() => void) | null = null;
@@ -206,7 +320,6 @@ export class KairoHud {
      */
     this.goalBox = el('div', 'kchipcol');
     this.goalBox.id = 'kairo-goal';
-    this.goalBox.addEventListener('click', () => this.toggle('menu'));
     /*
      * 접기 머리 (K47-②) — 헤더의 `목표 ▾` 버튼을 여기로 내렸다. 접는 대상 위에 붙어
      * 있는 편이 "무엇이 접히는지"가 자명하다.
@@ -225,7 +338,8 @@ export class KairoHud {
     this.foldHead.tabIndex = 0;
     const fold = (e: Event): void => {
       e.stopPropagation();
-      this.setFolded(!this.folded);
+      this.goalFold.toggleUser();
+      this.renderGoalFold();
     };
     this.foldHead.addEventListener('click', fold);
     this.foldHead.addEventListener('keydown', (e) => {
@@ -322,7 +436,15 @@ export class KairoHud {
     this.confirmBar = el('div', 'kconfirm');
     this.confirmBar.id = 'kairo-confirm';
     this.confirmBar.hidden = true;
+    const confirmSummary = el('div', 'kconfirm-summary');
     this.confirmLabel = el('div', 'place-label');
+    this.confirmThumb = el('div', 'kconfirm-thumb');
+    const confirmText = el('div', 'kconfirm-text');
+    this.confirmName = el('div', 'kconfirm-name', '배치');
+    this.confirmCost = el('div', 'kconfirm-cost', '비용 확인');
+    this.confirmCheck = el('div', 'kconfirm-check', '자리를 확인하세요');
+    confirmText.append(this.confirmName, this.confirmCost, this.confirmCheck);
+    confirmSummary.append(this.confirmThumb, confirmText);
     const btns = el('div', 'place-buttons');
     const cancel = el('button', 'place-btn cancel', '취소');
     cancel.id = 'kairo-place-cancel';
@@ -341,7 +463,7 @@ export class KairoHud {
       cb?.();
     });
     btns.append(cancel, this.rotateBtn, this.confirmBtn);
-    this.confirmBar.append(this.confirmLabel, btns);
+    this.confirmBar.append(confirmSummary, this.confirmLabel, btns);
     parent.append(this.confirmBar);
 
     this.setBrush(null);
@@ -355,9 +477,19 @@ export class KairoHud {
     label: string,
     ok: boolean,
     on: { confirm: () => void; cancel: () => void; rotate?: () => void },
+    view?: BuildConfirmView,
   ): void {
     this.confirmLabel.className = ok ? 'place-label' : 'place-label bad';
+    // `.place-label`은 K47 하네스와 접근성의 기존 판정 문장 손잡이라 그대로 보존한다.
     this.confirmLabel.textContent = label;
+    this.confirmName.textContent = view?.name ?? '배치';
+    this.confirmCost.textContent = `비용 ${view?.cost ?? '확인'}`;
+    this.confirmCheck.textContent = view?.result ?? label;
+    this.confirmLabel.setAttribute(
+      'aria-label',
+      `${this.confirmName.textContent}, ${this.confirmCost.textContent}, ${this.confirmCheck.textContent}`,
+    );
+    this.drawThumb(this.confirmThumb, view?.sprite, view?.kind);
     this.confirmBtn.disabled = !ok;
     this.onConfirm = on.confirm;
     this.onCancel = on.cancel;
@@ -411,7 +543,8 @@ export class KairoHud {
 
   /**
    * 헤더 2줄 (K46) — 날씨·지표. 1.5초 폴링이 부르므로 **값만** 갈아 끼운다
-   * (엘리먼트를 다시 만들면 그 주기로 깜빡인다 — `setChips` 가 서명으로 거르는 이유와 같다).
+   * (엘리먼트를 다시 만들면 그 주기로 깜빡인다). 목표는 폴링이 아니라 상태 변경
+   * 경계에서만 다시 파생하므로 이 경로와 다르다.
    *
    * K47-②: `reportNew` 배지는 없앴다. 지난 결산은 **알림함의 "결산 도착" 행**에서 연다 —
    * 배지가 가리키던 것이 어차피 그 사건 하나였고, 헤더에 버튼을 두지 않기로 했다.
@@ -436,20 +569,17 @@ export class KairoHud {
     this.riskBox.textContent = text;
   }
 
-  /** 의뢰 칩 갱신 — 탭하면 메뉴(의뢰 목록)가 열린다 */
+  /** A/B/C 목표 갱신 — 각 칩은 자신의 다음 행동을 직접 연다. */
   setChips(chips: GoalChip[]): void {
-    /*
-     * 1.5초 폴링이 매번 DOM 을 갈아치우면 깜빡인다 — 내용이 같으면 건너뛴다.
-     * ⚠ `JSON.stringify` 는 함수를 버린다 (`action`). 칩의 행동은 라벨이 같으면 같으므로
-     *   서명에서 빠져도 되고, 오히려 들어가면 매번 달라져 서명이 무의미해진다.
-     */
-    const sig = JSON.stringify(chips);
-    if (sig === this.chipsSig) return;
-    this.chipsSig = sig;
-    this.foldHead.textContent = this.folded ? `목표 ▸ ${chips.length}` : '목표 ▾';
+    // 목표는 상태 변경 시점에만 다시 파생된다. callback은 JSON 서명에 남지 않으므로
+    // DOM 캐시를 두면 같은 문구에 예전 코스 handle이 남을 수 있다.
+    this.foldHead.textContent = this.goalFold.folded ? `목표 ▸ ${chips.length}` : '목표 ▾';
     this.chipsBox.replaceChildren();
     for (const c of chips) {
       const chip = el('div', `kchip${c.tone !== undefined ? ` ${c.tone}` : ''}`);
+      chip.dataset['goalRole'] = c.role;
+      chip.setAttribute('aria-label', `${c.badge} ${c.label}`);
+      chip.append(el('span', `kchip-role ${c.role}`, c.badge));
       chip.append(el('span', 'kchip-ico', c.icon));
       const txt = el('div', 'kchip-txt');
       txt.append(el('div', 'kchip-label', c.label));
@@ -460,34 +590,39 @@ export class KairoHud {
       bar.append(fill);
       txt.append(bar);
       chip.append(txt);
-      if (c.action) {
-        /*
-         * ⚠ `stopPropagation` 이 **필수**다 — 기둥 전체가 클릭 시 메뉴를 연다.
-         * 안 막으면 확인 화면을 띄우면서 메뉴 시트가 같이 열리고, 시트는 배타 패널이라
-         * 방금 연 화면을 그대로 닫는다 (접기 머리가 같은 함정을 이미 밟았다).
-         */
-        const act = c.action;
-        chip.classList.add('tap');
-        chip.setAttribute('role', 'button');
-        chip.tabIndex = 0;
-        chip.addEventListener('click', (e) => {
-          e.stopPropagation();
-          act();
-        });
-        chip.addEventListener('keydown', (e) => {
-          if (e.key !== 'Enter' && e.key !== ' ') return;
-          e.preventDefault(); // Space 로 화면이 스크롤되면 지도가 밀린다
-          e.stopPropagation();
-          act();
-        });
-      }
+      const act = c.action;
+      chip.classList.add('tap');
+      chip.setAttribute('role', 'button');
+      chip.tabIndex = 0;
+      chip.addEventListener('click', (e) => {
+        e.stopPropagation();
+        act();
+      });
+      chip.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault(); // Space 로 화면이 스크롤되면 지도가 밀린다
+        e.stopPropagation();
+        act();
+      });
       this.chipsBox.append(chip);
     }
+    this.renderGoalFold();
   }
 
-  /** 목표 기둥 접기 — 상태만 바꾼다. 라벨은 다음 setChips 가 아니라 지금 갱신한다 */
-  private setFolded(folded: boolean): void {
-    this.folded = folded;
+  /** Phase 2가 코스/시설 편집을 열 때 부르는 공개 경계. 편집 구현은 HUD 내부를 알 필요가 없다. */
+  collapseGoalsForEditing(): void {
+    this.goalFold.beginEditing();
+    this.renderGoalFold();
+  }
+
+  /** 편집 종료 시 강제 접힘만 걷고 사용자의 이전 선택으로 돌아간다. */
+  restoreGoalsAfterEditing(): void {
+    this.goalFold.endEditing();
+    this.renderGoalFold();
+  }
+
+  private renderGoalFold(): void {
+    const folded = this.goalFold.folded;
     this.goalBox.classList.toggle('folded', folded);
     const n = this.chipsBox.childElementCount;
     this.foldHead.textContent = folded ? `목표 ▸ ${n}` : '목표 ▾';
@@ -529,6 +664,16 @@ export class KairoHud {
   /** 메뉴 시트가 열려 있나 — 안 보이는 목록을 다시 그리지 않기 위해 (P3-E) */
   get menuOpen(): boolean {
     return this.open === 'menu';
+  }
+
+  /** 목표 B/C callback용 — 전체 기둥 탭이 아니라 해당 목표만 메뉴 목적지를 연다. */
+  showMenu(): void {
+    if (this.open !== 'menu') this.toggle('menu');
+  }
+
+  /** 결산 처방용 — 같은 건설 시트를 직접 열되 현재 탭/필터 선택은 보존한다. */
+  showBuild(): void {
+    if (this.open !== 'build') this.toggle('build');
   }
 
   private toggle(which: 'build' | 'menu'): void {
@@ -603,21 +748,31 @@ export class KairoHud {
     }
 
     /*
-     * 카드 캐러셀 (K40, concept-29 지정) — 가로 스크롤 + 좌우 페이지 버튼.
-     * 스와이프와 버튼이 같은 일을 한다 — 폰은 쓸고, 검증과 데스크톱은 누른다.
+     * Phase 4 카드 레일 — 터치에서는 화면 폭에 카드 약 3장을 두고 **스와이프만** 쓴다.
+     * 화살표가 카드 두 장 자리를 먹던 것이 문제였다. 비터치에는 키보드/마우스용 이름 있는
+     * 페이지 버튼을 그대로 만든다. CSS 레이아웃은 둘 다 한 벌이며 미디어 쿼리로 갈리지 않는다.
      */
     const wrap = el('div', 'kcar-wrap');
     const car = el('div', 'kcarousel');
+    car.setAttribute('role', 'region');
+    car.setAttribute('aria-label', '건설 카드 목록');
+    car.tabIndex = 0;
     for (const it of list) car.append(this.itemCard(it));
     const page = (dir: number): void => {
       const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
       car.scrollBy({ left: dir * car.clientWidth * 0.8, behavior: still ? 'auto' : 'smooth' });
     };
-    const prev = el('button', 'kbtn kcar-nav', '◀');
-    prev.addEventListener('click', () => page(-1));
-    const next = el('button', 'kbtn kcar-nav', '▶');
-    next.addEventListener('click', () => page(1));
-    wrap.append(prev, car, next);
+    if (carouselNeedsNav(navigator.maxTouchPoints)) {
+      const prev = el('button', 'kbtn kcar-nav', '◀');
+      prev.setAttribute('aria-label', '이전 건설 카드');
+      prev.addEventListener('click', () => page(-1));
+      const next = el('button', 'kbtn kcar-nav', '▶');
+      next.setAttribute('aria-label', '다음 건설 카드');
+      next.addEventListener('click', () => page(1));
+      wrap.append(prev, car, next);
+    } else {
+      wrap.append(car);
+    }
     this.buildBody.append(wrap);
   }
 
@@ -627,27 +782,33 @@ export class KairoHud {
   private itemCard(it: BuildItem): HTMLButtonElement {
     const b = el('button', 'kcard');
     b.dataset['pick'] = `${it.kind}:${it.id}`;
-    const blocked = it.locked !== undefined || it.teaser !== undefined;
+    const view = buildItemView(it);
+    const blocked = !view.selectable;
     b.disabled = blocked;
     if (it.teaser !== undefined) b.classList.add('teaser');
 
     // 썸네일 — 게임과 같은 계약 그림. 그림 계약이 없는 것(바닥 붓·철거·문)은 글리프
     const thumb = el('div', 'kcard-thumb');
-    const src = it.sprite !== undefined ? (this.opts.thumbFor?.(it.sprite) ?? null) : null;
-    if (src) {
-      const c = document.createElement('canvas');
-      c.width = src.width;
-      c.height = src.height;
-      c.getContext('2d')?.drawImage(src, 0, 0);
-      thumb.append(c);
-    } else {
-      thumb.textContent = GLYPH[it.kind] ?? '■';
-    }
+    this.drawThumb(thumb, it.sprite, it.kind);
     b.append(thumb);
 
     b.append(el('span', 'kcard-name', it.name));
-    const sub = it.teaser ?? it.locked ?? it.sub;
-    if (sub !== undefined) b.append(el('span', 'kcard-sub', sub));
+    const meta = el('span', 'kcard-meta');
+    meta.append(el('span', 'kcard-cost', view.cost), el('span', 'kcard-role', view.role));
+    b.append(meta);
+    if (it.sub !== undefined) b.append(el('span', 'kcard-sub', it.sub));
+    if (view.blockedReason !== undefined) {
+      b.append(el('span', 'kcard-block', `막힘 · ${view.blockedReason}`));
+    }
+    if (view.unlockMethod !== undefined) {
+      b.append(el('span', 'kcard-unlock', `해제 · ${view.unlockMethod}`));
+    }
+    b.setAttribute(
+      'aria-label',
+      [it.name, `비용 ${view.cost}`, `역할 ${view.role}`, view.blockedReason, view.unlockMethod]
+        .filter((x): x is string => x !== undefined)
+        .join(', '),
+    );
     b.addEventListener('click', () => {
       if (blocked) return;
       this.opts.onPick(it);
@@ -655,6 +816,21 @@ export class KairoHud {
       this.hide();
     });
     return b;
+  }
+
+  /** 카드와 확정 바가 같은 에셋 공급자/글리프 폴백을 쓰게 한다. */
+  private drawThumb(host: HTMLElement, sprite: string | undefined, kind: BuildKind | undefined): void {
+    host.replaceChildren();
+    const src = sprite !== undefined ? (this.opts.thumbFor?.(sprite) ?? null) : null;
+    if (src) {
+      const c = document.createElement('canvas');
+      c.width = src.width;
+      c.height = src.height;
+      c.getContext('2d')?.drawImage(src, 0, 0);
+      host.append(c);
+      return;
+    }
+    host.textContent = kind === undefined ? '■' : (GLYPH[kind] ?? '■');
   }
 }
 

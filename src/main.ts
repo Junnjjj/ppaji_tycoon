@@ -6,7 +6,7 @@ import { boot, type MainScene } from './render/index.js';
 import { Hud } from './ui/hud.js';
 import { loadFromStorage, saveToStorage } from './save/index.js';
 // 타입만 — 값은 아래 동적 import 로 온다 (⚠ `bootKairo` 앞뒤 순서 규칙과 무관하게 지워진다)
-import type { ComboBreakdown } from './ui/kairo-report.js';
+import type { ComboBreakdown, ReportPrescription } from './ui/kairo-report.js';
 
 const DEFAULT_SEED = 20260811;
 const AUTOSAVE_INTERVAL_MS = 30_000;
@@ -28,9 +28,16 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { allFacilityDefs, PLACE_FAIL_MESSAGES, guestWalkable } = await import(
     './sim/kairo/placement.js'
   );
-  const { WeekRunner, TICKS_PER_DAY, TICKS_PER_WEEK, DAY_NAMES } = await import(
-    './sim/kairo/week.js'
-  );
+  const {
+    WeekRunner,
+    TICKS_PER_DAY,
+    TICKS_PER_WEEK,
+    DAY_NAMES,
+    forkWeekRngStreams,
+    restoreWeekRngStreams,
+    snapshotWeekRngStreams,
+    summarizeWeek,
+  } = await import('./sim/kairo/week.js');
   const { audio } = await import('./audio/index.js');
   const { previewCombos, evaluateCombos, comboEffect } = await import('./sim/kairo/combos.js');
   const { UnlockStore } = await import('./sim/kairo/unlocks.js');
@@ -40,7 +47,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   );
   // 사이드 인증 (P3-E) — 등급 상한을 푸는 유일한 고리가 `effectiveGrade` 다
   const { CertStore, certStatuses, effectiveGrade, CERTS } = await import('./sim/kairo/certs.js');
-  const { WishStore } = await import('./sim/kairo/wishes.js');
+  const { WishStore, REGULAR_CHARACTERS } = await import('./sim/kairo/wishes.js');
+  const { MenuStore, ingredientDef, recipeDef } = await import('./sim/kairo/menu.js');
   const { COMBOS } = await import('./sim/kairo/combos.js');
   const {
     questStatuses,
@@ -55,7 +63,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   } = await import('./sim/kairo/progress.js');
   const { assessRisk, RISK_NAMES } = await import('./sim/kairo/risk.js');
   const { swimRiskPoints } = await import('./sim/kairo/swim.js');
-  const { KairoReport, comboBreakdown } = await import('./ui/kairo-report.js');
+  const { KairoReport, comboBreakdown, NEED_NAME } = await import('./ui/kairo-report.js');
   const { KairoCardView } = await import('./ui/kairo-card.js');
   const { KairoUnlockView } = await import('./ui/kairo-unlock.js');
   const { CardStore, CARD_RNG_SALT, triggerCard } = await import('./sim/kairo/cards.js');
@@ -75,8 +83,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   const { createKairoAssetProvider } = await import('./assets/kairo-atlas.js');
   const kairoProvider = await createKairoAssetProvider();
-  const { KairoHud } = await import('./ui/kairo-hud.js');
-  type GoalChip = import('./ui/kairo-hud.js').GoalChip;
+  const { KairoHud, createGoalSlots, inheritedCourseGoal } = await import('./ui/kairo-hud.js');
+  type GoalSlotInput = import('./ui/kairo-hud.js').GoalSlotInput;
   const { applyStartKit } = await import('./sim/kairo/startkit.js');
   const { WallGrid: WallGridCls } = await import('./sim/kairo/walls.js');
   const { PlacementGrid: PlacementGridCls } = await import('./sim/kairo/placement.js');
@@ -87,10 +95,21 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { KairoStaffPanel } = await import('./ui/kairo-staff.js');
   // 시설 인스턴스 정보 (K49) — 지도에서 시설을 탭하면 뜬다
   const { KairoFacilityInfo, facilityInfo } = await import('./ui/kairo-facility.js');
+  const { KairoMenuLab } = await import('./ui/kairo-menu-lab.js');
   const course = await import('./sim/kairo/course.js');
   const { KairoCoursePanel } = await import('./ui/kairo-course.js');
   const { KairoCatalog, activeComboIds, noteSeen } = await import('./ui/kairo-catalog.js');
   const { KairoShowcase } = await import('./ui/kairo-showcase.js');
+  const { KairoManagementMenu } = await import('./ui/kairo-management.js');
+  const { KairoEndingPanel, endingChoiceActions } = await import('./ui/kairo-ending.js');
+  const {
+    OnboardingStore,
+    endingMilestone,
+    managementWarnings,
+    todayRecommendation,
+  } = await import('./sim/kairo/meta.js');
+  type OnboardingEvent = import('./sim/kairo/meta.js').OnboardingEvent;
+  const { loadCareerProfile, saveCareerProfile } = await import('./save/kairo-career.js');
   const { panelHost } = await import('./ui/panels.js');
   const { Rng: RngCls } = await import('./sim/rng.js');
   const { loadKairoFromStorage, saveKairoToStorage, clearKairoStorage } = await import(
@@ -104,6 +123,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 없으면 시드에서 새로 만든다 (`bootKairo` 기본 동작).
    */
   const saved = loadKairoFromStorage();
+  const career = loadCareerProfile();
   const KAIRO_SEED = saved?.seed ?? 20260818;
   /**
    * 맵 타입과 시나리오 (§4.5). 세이브에 없으면 기본값 —
@@ -275,6 +295,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
          * 통째로 거절되는데, 그걸 잡는 유일한 검사다.
          */
         console.log(`[카이로] 탭 타일 (${i}, ${j}) — ${h.terrain.kindAt(i, j) ?? '?'}`);
+        const courseHandle = course.courseAtTile(courses.all, { x: i, y: j });
+        if (courseHandle !== null) {
+          openCourse(courseHandle);
+          return;
+        }
         /*
          * ★ 붓이 없을 때만 **시설 정보**다 (K49). 붓을 든 상태에서 정보가 뜨면
          * 배치 흐름이 끊긴다 — 그때의 탭은 조준 이동이고, 그 뜻을 뺏으면 안 된다.
@@ -528,7 +553,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
             refreshAim(); // 바를 되살린다 — 실패로 조준이 사라지면 왜 안 됐는지가 사라진다
             return;
           }
-          week.spend(cost);
+          week.spend(cost, 'building');
           h.scene.refreshFacility(r.placed.handle);
           h.guests.invalidate();
           refreshBuildList(); // 방이 찼으면 다음 시설이 잠겨야 한다 (K31)
@@ -539,10 +564,24 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
            */
           toast(`−${Math.round(cost / 10000)}만`, 'ok');
           pushComboNews();
+          if ((def as { need?: string } | undefined)?.need === 'food') {
+            advanceOnboarding('food-built');
+          }
           persist();
           // 시설은 한 번 놓으면 조준을 끝낸다 (붓은 남는다 — 탭하면 다시 겨눈다)
           endAim();
         },
+      },
+      {
+        kind: 'facility',
+        name: def?.name ?? defId,
+        cost: `${Math.round(cost / 10000)}만`,
+        result: !chk.ok
+          ? PLACE_FAIL_MESSAGES[chk.fail ?? 'unknown-def']
+          : poor
+            ? '돈이 부족합니다'
+            : '배치 가능',
+        ...(def?.sprite !== undefined ? { sprite: def.sprite } : {}),
       },
     );
   };
@@ -621,6 +660,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           endAim(); // 옮길 시설을 다시 고르는 것부터가 다음 이동이다
         },
       },
+      {
+        kind: 'move',
+        name: `이동: ${def?.name ?? sel.defId}`,
+        cost: `${Math.round(fee / 10000)}만`,
+        result: !chk.ok
+          ? PLACE_FAIL_MESSAGES[chk.fail ?? 'unknown-def']
+          : fee > week.cash
+            ? '돈이 부족합니다'
+            : '이동 가능',
+        ...(def?.sprite !== undefined ? { sprite: def.sprite } : {}),
+      },
     );
   };
 
@@ -693,6 +743,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           // 연속 철거 — 붓이 그대로니 바도 그대로다 (같은 자리를 다시 재서 라벨을 고친다)
           refreshAim();
         },
+      },
+      {
+        kind: 'erase',
+        name: hit ? `철거: ${def?.name ?? hit.defId}` : '바닥 철거',
+        cost: back > 0 ? `무료 · +${Math.round(back / 10000)}만 환급` : '무료',
+        result: ok ? '철거 가능' : '지울 것이 없습니다',
+        ...(def?.sprite !== undefined ? { sprite: def.sprite } : {}),
       },
     );
   };
@@ -804,7 +861,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
             return;
           }
           if (painted.changed > 0) {
-            if (kind.cost > 0) week.spend(kind.cost * painted.changed);
+            if (kind.cost > 0) week.spend(kind.cost * painted.changed, 'building');
             for (let dj = 0; dj < n; dj++) {
               for (let di = 0; di < n; di++) h.scene.refreshTile(oi + di, oj + dj);
             }
@@ -817,6 +874,19 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           // 연속 배치 — 바를 닫지 않는다. 길을 까는 것이 가장 자주 하는 동작이다 (K32-B)
           refreshAim();
         },
+      },
+      {
+        kind: 'ground',
+        name: `${kind.name}${n > 1 ? ` ${n}×${n}` : ''}`,
+        cost: `${Math.round(cost / 10000)}만`,
+        result:
+          why !== null
+            ? why
+            : willChange === 0
+              ? '이미 깔려 있습니다'
+              : poor
+                ? '돈이 부족합니다'
+                : '배치 가능',
       },
     );
   };
@@ -920,6 +990,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     ticker.push(icon, text, stamp, onOpen);
   };
 
+  /** 메뉴를 열 때만 Today/경고를 다시 파생한다. 조립 전 호출은 안전한 no-op이다. */
+  let refreshManagement = (): void => undefined;
   const hud = new KairoHud(document.body, {
     // 붓 라벨의 정본은 티커다 (K47-①) — 하단 바는 누르는 곳, 읽는 것은 티커
     onBrush: (label) => ticker.setBrush(label),
@@ -928,7 +1000,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      * 안 그리므로(아래 `refreshQuests`), 여는 순간이 유일한 갱신 시점이다.
      */
     onSheetOpen: (which) => {
-      if (which === 'menu') refreshQuests();
+      if (which === 'menu') {
+        refreshQuests();
+        refreshManagement();
+      }
     },
     onPick: (it: HudItem) => {
       // 붓을 바꾸면 진행 중이던 배치는 취소한다 — 안 그러면 확정 바가 옛 시설을 가리킨다
@@ -974,7 +1049,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   });
 
   /** 코스 편집 열기 — 아래에서 패널이 만들어진 뒤에 실제로 불린다 */
-  let openCourse = (): void => {
+  let openCourse = (_handle?: number): void => {
     /* 패널이 아직 없다 — 시트를 눌러도 아무 일도 안 일어나는 편이 낫다 */
   };
 
@@ -988,6 +1063,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   let openFacilityInfo = (_handle: number): void => {
     /* 패널이 아직 없다 — 탭해도 아무 일도 안 일어나는 편이 낫다 */
+  };
+  let openMenuLab = (_handle: number): void => {
+    /* Phase 3 패널이 만들어지기 전의 안전한 지연 참조. */
   };
 
   /**
@@ -1053,7 +1131,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         tab: 'building' as const,
         id: `floor_indoor@${n}`,
         name: `건물 바닥 ${n}×${n}`,
-        sub: `칸당 ${Math.round(FLOOR_COST / 10000)}만 · 넓어짐`,
+        cost: FLOOR_COST * n * n,
+        role: '확장',
+        sub: '실내 넓어짐',
       })),
       /*
        * 출입구 (K36-B) — 카이로에서 건물은 **지나가는 곳**이기도 하다. 문이 하나면
@@ -1064,9 +1144,19 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         tab: 'building' as const,
         id: 'door',
         name: '출입구',
+        cost: 0,
+        role: '동선',
         sub: '실내 칸을 탭 · 다시 탭하면 옮김',
       },
-      { kind: 'erase' as const, tab: 'building' as const, id: 'erase', name: '철거', sub: '잔디로' },
+      {
+        kind: 'erase' as const,
+        tab: 'building' as const,
+        id: 'erase',
+        name: '철거',
+        cost: 0,
+        role: '정리',
+        sub: '잔디로',
+      },
       /*
        * 길 — K32-B 부터 **손님은 포장한 바닥만 지나간다.** 그래서 길을 까는 것이
        * 가장 자주 하는 동작이 됐는데, 한 칸씩 찍어서는 폰에서 못 깐다. 건물 바닥에
@@ -1083,7 +1173,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           tab: 'ground' as const,
           id: n === 1 ? k.id : `${k.id}@${n}`,
           name: n === 1 ? k.name : `${k.name} ${n}×${n}`,
-          sub: `칸당 ${Math.round(k.cost / 10000)}만 · 손님 통행`,
+          cost: k.cost * n * n,
+          role: '통행',
+          sub: '손님 통행',
         })),
       ),
       /*
@@ -1100,7 +1192,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         tab: 'ground' as const,
         id: k.id,
         name: k.name,
-        sub: '무료 · 손님이 못 지나감',
+        cost: k.cost,
+        role: '바닥',
+        sub: '손님이 못 지나감',
       })),
       /*
        * 수영장 붓 (S3) — `buildable:false` 인데 `paintable` 인 유일한 종류라 위 두
@@ -1114,10 +1208,20 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
             tab: 'ground' as const,
             id: n === 2 ? 'pool_water@2' : 'pool_water@3',
             name: `수영장 ${n}×${n}`,
-            sub: `칸당 ${Math.round(POOL_COST / 10000)}만 · 4칸부터 구역`,
+            cost: POOL_COST * n * n,
+            role: '수영',
+            sub: '4칸부터 구역',
           }))
         : []),
-      { kind: 'erase' as const, tab: 'ground' as const, id: 'erase', name: '철거', sub: '잔디로' },
+      {
+        kind: 'erase' as const,
+        tab: 'ground' as const,
+        id: 'erase',
+        name: '철거',
+        cost: 0,
+        role: '정리',
+        sub: '잔디로',
+      },
       /*
        * 시설 — **해금된 것만** 카드로 낸다 (K40, UX 검수 §4).
        *
@@ -1131,17 +1235,19 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         .map((d) => {
           const locked =
             d.placement.requiresIndoor && !indoorFits(d.id)
-              ? '자리 없음 · 건물을 넓히세요'
+              ? '실내 빈자리 없음'
               : null;
           return {
             kind: 'facility' as const,
             tab: 'facility' as const,
             id: d.id,
             name: d.name,
-            sub: `${d.size[0]}×${d.size[1]} · ${Math.round((d.cost ?? 0) / 10000)}만`,
+            cost: d.cost,
+            role: NEED_NAME[d.need ?? 'service'],
+            sub: `${d.size[0]}×${d.size[1]} · 정원 ${d.capacity}`,
             group: ZONE_NAME[d.layer] ?? d.layer,
             sprite: d.sprite,
-            ...(locked ? { locked } : {}),
+            ...(locked ? { locked, unlock: '건설 ▸ 건물에서 바닥을 넓히세요' } : {}),
           };
         }),
       /*
@@ -1155,7 +1261,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
               tab: 'facility' as const,
               id: 'move',
               name: '이동',
-              sub: '건설비의 10%',
+              cost: 0,
+              costLabel: '건설비 10%',
+              role: '이동',
+              sub: '시설 위치 다듬기',
             },
           ]
         : []),
@@ -1175,6 +1284,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
                   tab: 'facility' as const,
                   id: `teaser-${d.id}`,
                   name: d.name,
+                  cost: d.cost,
+                  role: NEED_NAME[d.need ?? 'service'],
                   teaser: `의뢰 「${q.name}」 보상`,
                   sprite: d.sprite,
                 },
@@ -1189,6 +1300,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           tab: 'facility' as const,
           id: `teaser-${d.id}`,
           name: d.name,
+          cost: d.cost,
+          role: NEED_NAME[d.need ?? 'service'],
           teaser: `${grade + 1}등급에 열림`,
           sprite: d.sprite,
         })),
@@ -1237,19 +1350,20 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     simDefs: Object.fromEntries(allFacilityDefs().map((d) => [d.id, d])),
   });
   /**
-   * 주 단위 루프 — 핵심 루프의 30초 사이클.
-   *   한 주 진행 → 압축 연출(3.5초) → 결산에서 병목 확인 → 구조물을 키움 → 다시 한 주
-   *
-   * 실시간 시뮬은 "만지는 동안"만 돌고, 시간이 흐르는 건 이 버튼뿐이다 — 렌더가 프레임마다
-   * tick 을 돌리면 결산이 언제 끝났는지 알 수 없다.
+   * 흐르는 낮 — 지도가 보이는 동안 rAF가 200ms 박자의 tick을 소비하고,
+   * 840 tick이 차면 결산→카드→다음 주 순서로 넘어간다. 수동 주 스킵·주간 압축
+   * 리플레이는 K39·K47-②에서 제거됐고, 4초 리플레이는 코스 시험 운행에만 남는다.
    */
   const progress = saved ? saved.progress : new ProgressStore();
+  const onboarding = OnboardingStore.fromSnapshot(saved?.onboarding);
   // 사건 해금 집합 (K41) — 의뢰 보상으로 열린 시설. 등급에서 다시 만들 수 없는 상태다
   const unlocks = UnlockStore.fromSnapshot(saved?.unlocks);
   // 심사 (K42) — 승급은 응시하는 시험이다. 신청 대기·통과 횟수가 상태다
   const exam = ExamStore.fromSnapshot(saved?.exam);
   // 소원 체인 (K43) — 인물·EXP·열린 소원이 상태다
   const wishes = WishStore.fromSnapshot(saved?.wishes);
+  const menus = MenuStore.fromSnapshot(saved?.menus);
+  h.guests.setMenuStore(menus);
   /*
    * 사이드 인증 (P3-E) — 등급 사다리 **옆**의 병렬 목표. 획득분이 `maxGuests`·
    * `permitArea` 를 올린다. 이 저장소에서 후반 공백의 뿌리였던 등급 상한을 푸는
@@ -1267,6 +1381,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   week.setIncomeObserver((events) => h.scene.pushIncome(events));
   const report = new KairoReport(document.body);
+  /** 리포트 처방이 여는 실제 운영 표면. 하단 패널들이 만들어진 뒤 실체를 연결한다. */
+  let runReportAction = (_prescription: ReportPrescription): void => {
+    /* 초기화 중에는 결산이 열리지 않는다. 지연 참조로 TDZ만 피한다. */
+  };
   /**
    * 지난 결산 다시 보기 (K46 의 리포트 버튼 → K47-② 알림함 행).
    *
@@ -1284,7 +1402,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       return;
     }
     reportSeenWeek = lastReport.week;
-    report.show(lastReport, { onClose: () => undefined }, lastCombos ?? undefined);
+    report.show(
+      lastReport,
+      { onClose: () => undefined, onPrescription: runReportAction },
+      lastCombos ?? undefined,
+      lastPreviousSummary,
+    );
     refreshCaps();
   };
   const cardView = new KairoCardView(document.body);
@@ -1304,7 +1427,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const unlockView = new KairoUnlockView(document.body, {
     thumbFor: (sid) => (h.provider.has(sid) ? h.provider.get(sid) : null),
   });
-  const weekRng = new RngCls(31337);
+  /*
+   * 주 RNG 루트는 구 v7 세이브의 결정론 호환점이고, 실제 소비는 네 독립 스트림이 한다.
+   * 구 세이브에는 스트림 상태가 없으므로 저장된 루트에서 한 번 fork하면 언제 열어도 같다.
+   */
+  const weekRng = saved ? RngCls.fromState(saved.weekRngState) : new RngCls(31337);
+  const weekRngStreams = saved?.weekRngStreams
+    ? restoreWeekRngStreams(saved.weekRngStreams)
+    : forkWeekRngStreams(weekRng);
   const cards = saved?.cards ? CardStore.fromSnapshot(saved.cards) : new CardStore();
   /** 카드는 전용 RNG 스트림 — 손님·날씨와 섞으면 카드 한 장에 날씨가 밀린다 (불변식 2) */
   const cardRng = saved
@@ -1322,6 +1452,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 지도를 탭해도 둘이 겹치지 않는다.
    */
   const facilityPanel = new KairoFacilityInfo(document.body);
+  const menuLab = new KairoMenuLab(document.body);
   /**
    * 사고로 닫힌 시설과 남은 주 수 (§12.1). 주마다 하나씩 깎는다.
    * 직원 부족으로 서는 것과 **합쳐서** 손님에게 넘긴다 — 손님은 이유를 구분하지 않는다.
@@ -1358,7 +1489,6 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const season = saved?.season ?? 'summer';
   if (saved) {
     week.restore(saved.week);
-    weekRng.setState(saved.weekRngState);
   }
   /**
    * 전체 결산(히트맵·재생 프레임)은 세이브에 안 들어간다 — 재생은 그 주에만 의미가 있고
@@ -1374,13 +1504,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   let lastCombos: ComboBreakdown | null = null;
   let lastSummary = saved?.lastSummary ?? null;
+  /** 현재 세션의 최신 결산이 비교한 전주. 전체 리포트처럼 재시작 뒤에는 보존하지 않는다. */
+  let lastPreviousSummary: typeof lastSummary = null;
   /**
    * 누적 방문객 (K47-① 신규 발화 d). 이 카운터는 **원래 없었다** — "지금까지 몇 명이
    * 다녀갔나"를 게임 어디에서도 못 물었다.
    *
-   * ⚠ 세이브에는 **optional** 로 들어간다 (`src/save/kairo.ts` 의 v7 규칙) — 옛 세이브는 0 에서
-   * 다시 세기 시작할 뿐이라 마이그레이션이 필요 없다. 버전을 올리면 v7 세이브가
-   * 전부 한 칸씩 밀린다.
+   * ⚠ 세이브에는 **optional** 로 들어간다 — 옛 세이브는 0 에서 다시 세기 시작할 뿐이다.
+   * v7→v8 온보딩 migration은 이 필드를 그대로 보존한다.
    */
   let visitorsTotal = saved?.visitorsTotal ?? 0;
   /** 마일스톤 — 자릿수가 바뀌는 지점. 너무 촘촘하면 축하가 소음이 된다 */
@@ -1433,6 +1564,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       progress,
       week: week.toSnapshot(),
       weekRngState: weekRng.state,
+      weekRngStreams: snapshotWeekRngStreams(weekRngStreams),
       season,
       lastSummary,
       cards: cards.toSnapshot(),
@@ -1460,7 +1592,18 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       wishes: wishes.toSnapshot(),
       // 사이드 인증 (P3-E) — optional 필드라 옛 세이브도 그대로 열린다 (버전 7 유지)
       certs: certs.toSnapshot(),
+      menus: menus.toSnapshot(),
+      onboarding: onboarding.toSnapshot(),
     });
+    // A/B/C 목표는 저장하지 않는다. 상태가 실제로 바뀐 이 경계에서 기존 값으로 다시 만든다.
+    refreshGoal();
+  };
+
+  /** production 사건 하나가 현재 단계와 맞을 때만 전진한다. */
+  const advanceOnboarding = (event: OnboardingEvent): boolean => {
+    const changed = onboarding.observe(event);
+    if (changed) refreshManagement();
+    return changed;
   };
 
   /** 입고 카드(K43)로 산 시설 — 해금 + 다음 날 아침 도착 */
@@ -1486,7 +1629,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const gr = currentGrade();
     const mods = cards.modifiers();
     // 등급이 동시 손님 상한과 방문 수요를 올린다 — 만족도를 관리해야 성장한다
-    h.guests.setMaxGuests(admissionLimit(gr, h.placement.totalCapacity(), mods.crowdMult));
+    h.guests.setMaxGuests(
+      admissionLimit(
+        gr,
+        h.placement.operationalCapacity((id) => menus.hasRecipe(id)),
+        mods.crowdMult,
+      ),
+    );
     const staffEff = staff.effects(h.placement);
     const courseWeek = courses.weekly();
     const risk = assessRisk(h.placement, h.guests, {
@@ -1518,9 +1667,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       mapSceneryBonus: mapDef.sceneryBonus,
       modifiers: mods,
       courses: {
-        revenue: courseWeek.revenue,
+        potentialRevenue: courseWeek.potentialRevenue,
         upkeep: courseWeek.upkeep,
-        riders: courseWeek.riders,
+        potentialRiders: courseWeek.potentialRiders,
       },
       /*
        * 콤보 보너스 (S5) — 주가 열리는 시점의 배치로 잰다.
@@ -1560,12 +1709,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           ...accidentIdle.keys(),
         ]),
       },
+      regularVisits: wishes.regularVisitsForWeek(week.week + 1),
     };
   };
 
   /**
    * 흐르는 낮 (K39) — 지도가 보이는 동안 rAF 가 tick 을 소비한다.
-   * 하루(120 tick) = 48초 ⚖ (스펙 §2.1 — 밀도 계측으로 확정한다).
+   * 하루(120 tick) = 24초 (아래 200ms/tick 생산 박자).
    */
   const flow = {
     acc: 0,
@@ -1597,7 +1747,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
 
   const beginWeek = (): void => {
-    week.begin(weekRng, assembleWeekOpts());
+    week.begin(weekRngStreams, assembleWeekOpts());
     flow.acc = 0;
     flow.daysSeen = 0;
     /*
@@ -1741,10 +1891,48 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     afterStep();
   };
 
+  /** 엔딩 패널 조립 뒤 실제 판정으로 교체된다. 주 마감은 이 지연 경계만 안다. */
+  let checkEnding = (): void => undefined;
+
   /** 주 마감 — 결산을 띄우고, 닫으면 다음 주 카드 → begin (스펙 §2.1: 결산 → 카드) */
   const settleWeek = (): void => {
     const t0 = performance.now();
+    // 덮어쓰기 전에 잡는다. 이 값이 이번 결산의 '전주'이며 같은 정의 셋만 비교한다.
+    lastPreviousSummary = lastSummary;
     const rep = week.finish();
+    const regularEvents = wishes.settleRegularPurchases(rep.menuPurchases);
+    for (const ev of regularEvents) {
+      if (ev.kind === 'regular-done') {
+        rep.regularAffinityGained += ev.request.affinity;
+        const next = wishes.regularStatus(ev.char.id);
+        news(
+          '💗',
+          `${ev.char.name} 구매 성공 · 친밀도 ${ev.affinity}` +
+            (next && !next.done ? ` · 다음: ${next.request.line}` : ' · 요청 사슬 완료'),
+        );
+      } else if (ev.kind === 'ingredient-unlock') {
+        if (menus.unlockIngredient(ev.id)) {
+          news(
+            '🧂',
+            `${ev.char.name}의 선물 · 새 재료 ${ingredientDef(ev.id)?.name ?? ev.id} 해금`,
+          );
+        }
+      } else if (ev.kind === 'recipe-unlock') {
+        if (menus.unlockRecipe(ev.id)) news('📖', `${ev.char.name}의 선물 · 새 레시피 해금`);
+      } else {
+        if (ev.reward.cash) week.earn(ev.reward.cash);
+        if (ev.reward.facility && unlocks.grant(ev.reward.facility)) {
+          const def = facilityDef(ev.reward.facility);
+          arrivalQueue.push({
+            title: '단골 보상!',
+            name: def?.name ?? ev.reward.facility,
+            sub: `${ev.char.name}과의 친밀도 보상`,
+            ...(def?.sprite ? { sprite: def.sprite } : {}),
+          });
+          refreshBuildList();
+        }
+      }
+    }
     h.scene.setDayPhase(null);
     // 사고로 닫힌 시설의 남은 주를 깎는다
     for (const [handle, left] of [...accidentIdle]) {
@@ -1823,12 +2011,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         });
       }
     }
-    lastSummary = {
-      visitors: rep.visitors,
-      turnedAway: rep.turnedAway,
-      profit: rep.profit,
-      exitSatisfaction: rep.exitSatisfaction,
-    };
+    lastSummary = summarizeWeek(rep);
     // 의뢰 보상은 결산 시점에 지급한다 — 배치 때마다 주면 같은 의뢰가 여러 번 판정된다
     // 새로 터진 콤보를 도감에 기록한다 — 결산이 발견의 순간이다 (§0 재미의 축)
     // 숨은 콤보(K43)는 첫 발동이 사건이다: 보상 + 다음 날 아침 축하
@@ -1904,6 +2087,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         news('🏅', `${s.name} 조건 하나 남았습니다 — ${left?.detail ?? ''}`);
       }
     }
+    checkEnding();
     /*
      * 소원 (K43) — EXP 적립·소원 열림·성사 판정. 전부 결산 tick 의 결정적 계산이고,
      * 연출(인물 도착·말풍선)은 다음 날 아침 큐가 푼다 (A6).
@@ -1982,7 +2166,16 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         stampNow(),
         openLastReport,
       );
-      report.show(rep, { onClose: () => nextWeekCards() }, lastCombos ?? undefined);
+      report.show(
+        rep,
+        {
+          onClose: () => nextWeekCards(),
+          onPrescription: (prescription) =>
+            nextWeekCards(() => runReportAction(prescription)),
+        },
+        lastCombos ?? undefined,
+        lastPreviousSummary,
+      );
     };
     /*
      * 사고가 났으면 결산 **전에** 대응 카드를 띄운다 (§12.1). 결산 뒤에 띄우면 이미
@@ -2009,9 +2202,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   /**
    * 다음 주 카드 — 결산 **뒤**에 온다 (UX 검수 §5: 결과를 보고 결정한다).
    * 효과는 이어서 begin 하는 주에 적용된다 — 의미는 예전과 같고 순서만 바로잡았다.
-   * 1주차는 카드 없이 시작한다 (부팅 직후 모달은 온보딩 마찰 — 빼기가 원칙).
+   * 1~3주차는 카드 없이 시작한다 (온보딩 중 모달은 건설·관조 리듬을 끊는다).
+   * 4주차부터 `CardStore` 스냅샷이 정한 2~4주 간격으로 최대 한 장만 나온다.
+   * 사고 대응은 위 `triggerCard` 경로, 심사·해금은 `arrivalQueue` 경로라 이 간격을 우회한다.
    */
-  const nextWeekCards = (): void => {
+  const nextWeekCards = (afterBegin?: () => void): void => {
     /*
      * ⚠ 판 잠금 방어 (K45). 카드는 모달이라 **다른 모달이 열려 있으면 show 가 조용히
      * 거절되고**, 그러면 beginWeek 콜백이 영원히 안 불려 주가 시작되지 않는다 —
@@ -2028,6 +2223,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     });
     if (drawn.length === 0) {
       beginWeek();
+      afterBegin?.();
       return;
     }
     audio.play('sfx/card');
@@ -2039,6 +2235,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         applyCardUnlocks(r.unlocks);
       }
       beginWeek();
+      afterBegin?.();
     });
   };
 
@@ -2113,7 +2310,30 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       ),
     grade: () => currentGrade().grade,
     cash: () => week.cash,
-    spend: (n) => week.spend(n),
+    courseDemand: () => lastReport?.courseDemand ?? 0,
+    spend: (n) => week.spend(n, 'building'),
+    onEditingChange: (editing) => {
+      if (editing) hud.collapseGoalsForEditing();
+      else hud.restoreGoalsAfterEditing();
+    },
+    onRouteDragged: () => {
+      if (advanceOnboarding('route-dragged')) persist();
+    },
+    onTrialStarted: () => {
+      audio.play('sfx/course-trial');
+      if (advanceOnboarding('trial-started')) persist();
+    },
+    onRecord: (record) => {
+      audio.play('sfx/course-record');
+      if (career.recordCourse({
+        mapId,
+        scenarioId,
+        presetId: record.presetId,
+        equipmentId: record.equipmentId,
+        thrill: record.thrill,
+        week: week.week,
+      })) saveCareerProfile(career);
+    },
     onChange: () => {
       refreshCourseBtn();
       refreshRisk();
@@ -2123,6 +2343,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     onConfirmed: (text) => {
       toast(text, 'ok');
       audio.play('sfx/place');
+      if (advanceOnboarding('course-applied')) persist();
     },
   });
 
@@ -2305,7 +2526,6 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     toast(`심사 신청 — ${pending.judgeWeek}주차 주말 판정 (${reqText})`, 'ok');
     news('📝', `${next.grade}등급 심사 접수 — ${pending.judgeWeek}주차 주말 판정 (${reqText})`);
     refreshExamBtn();
-    refreshGoal();
     persist();
   };
 
@@ -2366,57 +2586,148 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const refreshGoal = (): void => {
     const st = { week: week.week, grade: currentGrade().grade, accidents: accidentCount };
     const status = scen.scenarioStatus(scenario, st);
-    const chips: GoalChip[] = [];
-    for (const q of questStatuses(h.placement, lastSummary, h.guests.swimZones())
-      .filter((q) => !q.done)
-      .slice(0, 2)) {
-      chips.push({ icon: '📋', label: q.name, detail: q.detail, progress: q.progress });
-    }
+    // refreshGoal은 패널 조립보다 먼저 한 번 돈다. 함수를 값으로 넘기면 그때의 no-op이
+    // 칩에 남으므로, 탭 시점의 production 함수를 읽는 late-bound wrapper를 넘긴다.
+    const immediate = inheritedCourseGoal(courses.all, (handle) => openCourse(handle));
+
     /*
-     * 다음 등급 게이지 — 구경(만족도)이 쌓이는 게 보인다. 좋아요 1000 의 우리식 번역 (A4).
-     * 자격이 차면 '응시 가능', 신청하면 '심사 대기'로 바뀐다 (K42).
+     * B — 이름 있는 소원이 있으면 그것이 먼저다. 없으면 기존 의뢰, 둘 다 끝났으면
+     * 운행 중인 코스로 폴백한다. 새 목표 저장소를 만들지 않고 기존 상태의 뷰만 고른다.
+     */
+    const regular = REGULAR_CHARACTERS.map((c) => wishes.regularStatus(c.id)).find(
+      (x) => x !== null && !x.done,
+    );
+    const wish = wishes.openWishes(h.placement, lastSummary, h.guests.swimZones())[0];
+    const quest = questStatuses(h.placement, lastSummary, h.guests.swimZones()).find(
+      (q) => !progress.isClaimed(q.id),
+    );
+    let mid: GoalSlotInput;
+    if (regular) {
+      mid = {
+        icon: '♥',
+        label: `${regular.char.name}의 메뉴 요청`,
+        detail: `${regular.request.line} · 친밀도 ${regular.affinity}`,
+        progress: regular.stage / Math.max(1, regular.char.regular?.requests.length ?? 3),
+        action: () => {
+          const targetDefId = recipeDef(regular.request.recipeId)?.facilityId;
+          const target = h.placement.all().find((it) => it.defId === targetDefId);
+          if (target) openMenuLab(target.handle);
+          else hud.showMenu();
+        },
+      };
+    } else if (wish) {
+      mid = {
+        icon: '💭',
+        label: `${wish.char.name}의 소원`,
+        detail: `${wish.wish.line} · ${wish.detail}`,
+        progress: wish.progress,
+        action: () => hud.showMenu(),
+      };
+    } else if (quest) {
+      mid = {
+        icon: '📋',
+        label: quest.name,
+        detail: quest.detail,
+        progress: quest.progress,
+        action: () => hud.showMenu(),
+      };
+    } else {
+      mid = {
+        icon: '🏁',
+        label: '코스 기록 살피기',
+        detail: `운행 중 ${courses.count}개`,
+        progress: courses.count > 0 ? 1 : 0,
+        action: () => openCourse(courses.all[0]?.handle),
+      };
+    }
+
+    /*
+     * C — 시나리오 엔딩 → 심사 → 인증 순으로 기존 장기 진행을 비춘다.
      *
-     * K48-②: **이 칩이 심사의 입구다.** 진행률만 보여 주고 "그래서 뭘 하지"를 메뉴에서
-     * 찾게 하면 아무도 안 찾는다 — 진행률과 행동을 같은 자리에 둔다. 칩은 `div` 그대로다.
+     * 심사 칩은 기존과 같은 `openExam` callback을 쓴다. 최고 등급 뒤에는 가장 가까운
+     * 미획득 인증을 골라 메뉴의 인증 목록으로 보낸다.
      */
     const next = GRADES.find((g) => g.grade === currentGrade().grade + 1);
-    if (exam.pending) {
-      chips.push({
+    let long: GoalSlotInput;
+    if (status === 'won') {
+      long = {
+        icon: '🎉',
+        label: '장기 목표 달성',
+        detail: '완성한 리조트를 감상하세요',
+        progress: 1,
+        tone: 'won',
+        action: () => showcase.show(),
+      };
+    } else if (status === 'lost') {
+      long = {
+        icon: '✕',
+        label: '시나리오 실패',
+        detail: '새 판에서 다시 도전하세요',
+        progress: 0,
+        tone: 'lost',
+        action: () => newGame.show(),
+      };
+    } else if (scenario.goal.kind !== 'none') {
+      long = {
+        icon: '🚩',
+        label: scenario.name,
+        detail: scen.scenarioProgress(scenario, st),
+        progress: 0,
+        action: () => hud.showMenu(),
+      };
+    } else if (exam.pending) {
+      long = {
         icon: '📋',
         label: `${exam.pending.target}등급 심사`,
         detail: `${exam.pending.judgeWeek}주차 주말 판정`,
         progress: 1,
         action: openExam,
-      });
+      };
     } else if (next && exam.eligible(gradeNo, reputation.value)) {
-      chips.push({
+      long = {
         icon: '⭐',
         label: '심사 응시 가능!',
         detail: '탭하면 조건과 예상 점수',
         progress: 1,
         action: openExam,
-      });
+      };
     } else if (next) {
-      chips.push({
+      long = {
         icon: '⭐',
         label: `${next.grade}등급까지`,
         detail: `만족도 ${Math.round(reputation.value)}/${next.reqExitSatisfaction}`,
         progress: reputation.value / Math.max(1, next.reqExitSatisfaction),
         action: openExam,
-      });
+      };
+    } else {
+      const cert = certStatuses(h.placement, lastSummary, {
+        zones: h.guests.swimZones(),
+        courses: courses.count,
+        questsDone: progress.claimedCount,
+      })
+        .filter((c) => !certs.has(c.id))
+        .sort((a, b) => b.progress - a.progress)[0];
+      long = cert
+        ? {
+            icon: '🏅',
+            label: cert.name,
+            detail: cert.reqs.find((r) => !r.done)?.detail ?? cert.desc,
+            progress: cert.progress,
+            action: () => hud.showMenu(),
+          }
+        : {
+            icon: '🏆',
+            label: '장기 성장 완료',
+            detail: '리조트를 감상하거나 계속 운영하세요',
+            progress: 1,
+            tone: 'won',
+            action: () => showcase.show(),
+          };
     }
-    if (status === 'won') chips.push({ icon: '🎉', label: '목표 달성', progress: 1, tone: 'won' });
-    else if (status === 'lost') {
-      chips.push({ icon: '✕', label: '실패 — 새 판으로', progress: 0, tone: 'lost' });
-    } else if (scenario.goal.kind !== 'none') {
-      chips.push({
-        icon: '🚩',
-        label: scenario.name,
-        detail: scen.scenarioProgress(scenario, st),
-        progress: 0,
-      });
-    }
+
+    const chips = createGoalSlots({ immediate, mid, long });
     hud.setChips(chips);
+    ticker.setFallback(immediate.label);
   };
   hud.setContext(`${mapDef.name} · ${scenario.name}`);
   refreshGoal();
@@ -2449,14 +2760,26 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   hud.menuSlot.append(courseBtn);
 
   // 건설 시트의 코스 탭이 여는 곳 — 메뉴의 버튼과 같은 동작이다 (K32)
-  openCourse = (): void => {
+  openCourse = (handle?: number): void => {
     /*
      * ⚠ 붓을 먼저 내려놓는다 (K45 버그). 건물/바닥 붓을 든 채 코스 탭을 누르면
      * 붓이 살아남아, 코스 편집의 지도 탭(잔교 고르기·핸들)이 그대로 **설치**로
      * 흘렀다 — "코스를 선택하면 건물이 깔린다"로 보고된 버그.
      */
     clearBrush();
-    if (!coursePanel.visible) coursePanel.show();
+    if (!coursePanel.visible || handle !== undefined) coursePanel.show(handle);
+    if (coursePanel.visible && advanceOnboarding('course-opened')) persist();
+    /*
+     * Phase 1의 기존 코스 production 경로. 패널의 기존 편집 의미는 Phase 2가 소유하므로
+     * 여기서는 handle을 잃지 않고 실제 운행 코스를 화면에 잡는다. Phase 2는 같은 인자를
+     * `coursePanel.show(handle)`로 넘기기만 하면 되고 목표/HUD를 다시 건드릴 필요가 없다.
+     */
+    const existing = handle === undefined ? undefined : courses.all.find((c) => c.handle === handle);
+    if (existing && coursePanel.visible) {
+      const panel = document.getElementById('kairo-course');
+      const inset = panel ? Math.max(0, window.innerHeight - panel.getBoundingClientRect().top) : 0;
+      h.scene.frameCourse(existing.dock, existing.handles, inset);
+    }
   };
 
   const refreshCourseBtn = (): void => {
@@ -2468,27 +2791,156 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   staffBtn.id = 'kairo-staff-open';
   staffBtn.textContent = '경영';
   staffBtn.className = 'kitem';
+  const showManage = (tab: 'price' | 'staff' | 'upgrade'): void => {
+    staffPanel.show(
+      staff,
+      h.placement,
+      () => {
+        refreshStaffBtn();
+        persist();
+      },
+      {
+        price: () => priceMult,
+        setPrice: (v) => {
+          priceMult = v;
+        },
+        cash: () => week.cash,
+        spend: (n) => week.spend(n, 'upgrades'),
+      },
+      tab,
+    );
+  };
   staffBtn.addEventListener('click', () => {
     if (staffPanel.visible) staffPanel.hide();
-    else
-      staffPanel.show(
-        staff,
-        h.placement,
-        () => {
-          refreshStaffBtn();
-          persist();
-        },
-        {
-          price: () => priceMult,
-          setPrice: (v) => {
-            priceMult = v;
-          },
-          cash: () => week.cash,
-          spend: (n) => week.spend(n),
-        },
-      );
+    else showManage('staff');
   });
   hud.menuSlot.append(staffBtn);
+
+  const endingId = `${mapId}:${scenarioId}:first`;
+  const readEnding = () => {
+    const status = scen.scenarioStatus(scenario, {
+      week: week.week,
+      grade: currentGrade().grade,
+      accidents: accidentCount,
+    });
+    return {
+      status,
+      milestone: endingMilestone({ grade: currentGrade().grade, certs: certs.count, scenario: status }),
+    };
+  };
+  const endingPanel = new KairoEndingPanel(document.body, {
+    continue: () => endingPanel.hide(),
+    newRegion: () => {
+      endingPanel.hide();
+      newGame.show();
+    },
+    view: () => {
+      endingPanel.hide();
+      showcase.show();
+    },
+  });
+  const openEnding = (): void => {
+    const state = readEnding();
+    endingPanel.show({
+      milestone: state.milestone,
+      grade: currentGrade().grade,
+      certs: certs.count,
+      title: `${mapDef.name} 첫 엔딩`,
+    });
+  };
+  checkEnding = (): void => {
+    const state = readEnding();
+    let changed = false;
+    if (state.status === 'won') changed = career.clear(mapId, scenarioId) || changed;
+    else if (state.milestone.ready) changed = career.clearMap(mapId) || changed;
+    if (state.milestone.ready && career.recordEnding(endingId)) {
+      changed = true;
+      arrivalQueue.push({
+        title: '첫 엔딩 달성!',
+        name: `${mapDef.name} 첫 엔딩`,
+        sub: '계속 운영하거나 새 지역으로 떠나세요',
+        actions: endingChoiceActions({
+          continue: () => undefined,
+          newRegion: () => newGame.show(),
+          view: () => showcase.show(),
+        }),
+      });
+    }
+    if (changed) saveCareerProfile(career);
+    refreshManagement();
+  };
+
+  const scrollMenuTo = (id: string): void => {
+    refreshQuests();
+    document.getElementById(id)?.scrollIntoView({ block: 'start' });
+  };
+  const management = new KairoManagementMenu(
+    hud.menuSlot,
+    [
+      { id: 'price', domId: 'kairo-price-open', label: '가격', detail: '요금·예상 만족', run: () => showManage('price') },
+      { id: 'staff', domId: 'kairo-staff-open', label: '직원', detail: '인원·개선', run: () => showManage('staff') },
+      { id: 'course', domId: 'kairo-course-open', label: '코스', detail: '루트·시험 운행', run: () => openCourse(courses.all[0]?.handle) },
+      { id: 'exam', domId: 'kairo-exam-open', label: '심사', detail: '등급과 예상 점수', run: openExam },
+      { id: 'regular', label: '단골', detail: '메뉴 요청', stayOpen: true, run: () => scrollMenuTo('kairo-regular-list') },
+      {
+        id: 'quests',
+        label: '의뢰',
+        detail: '진행 목표',
+        stayOpen: true,
+        run: () => {
+          if (onboarding.step === 'build-food') hud.showBuild();
+          else scrollMenuTo('kairo-quests-list');
+        },
+      },
+      { id: 'codex', domId: 'kairo-catalog-open', label: '도감', detail: '누적 발견', run: () => catalog.show() },
+      { id: 'report', label: '결산', detail: '최근 기록', run: openLastReport },
+      { id: 'view', domId: 'kairo-showcase-open', label: '감상', detail: '내 리조트', run: () => showcase.show() },
+      { id: 'certs', label: '인증', detail: '병렬 성장', stayOpen: true, run: () => scrollMenuTo('kairo-cert-list') },
+      { id: 'ending', label: '엔딩', detail: '커리어 기록', run: openEnding },
+    ],
+    () => {
+      const risk = assessRisk(h.placement, h.guests, {
+        staffSafety: staff.effects(h.placement).safetyPoints,
+        courseRisk: courseRiskPoints(),
+        swimRisk: swimRiskPoints(h.guests.swimZones()),
+      }).level;
+      const staffShortages = STAFF_ROLE_LIST.filter(
+        (role) => staff.effects(h.placement).coverage[role.id] < 1,
+      ).length;
+      const state = {
+        onboardingStep: onboarding.step,
+        reportUnread: lastReport !== null && lastReport.week > reportSeenWeek,
+        staffShortages,
+        risk,
+        endingReady: readEnding().milestone.ready,
+        examReady: exam.eligible(gradeNo, reputation.value) !== null,
+        regularReady: REGULAR_CHARACTERS.some((character) => {
+          const status = wishes.regularStatus(character.id);
+          return status !== null && !status.done;
+        }),
+      };
+      return { today: todayRecommendation(state), warnings: managementWarnings(state) };
+    },
+  );
+  refreshManagement = () => management.refresh();
+  // 배속과 수동 새 판은 IA의 세 그룹 바깥에 둔 작은 설정 행이다.
+  const managementUtility = document.createElement('div');
+  managementUtility.className = 'kmanage-utility';
+  managementUtility.append(speedBtn, newGameBtn);
+  hud.menuSlot.append(managementUtility);
+
+  runReportAction = (prescription): void => {
+    if (prescription.action === 'course') {
+      openCourse(courses.all[0]?.handle);
+      return;
+    }
+    if (prescription.action === 'manage') {
+      showManage('staff');
+      return;
+    }
+    // target은 처방의 근거/접근성 표기에 남고, 실제 해금·카드 목록은 HUD 정본이 고른다.
+    hud.showBuild();
+  };
 
   /**
    * 시설 정보 (K49) — 지도에서 시설을 탭하면 여기로 온다.
@@ -2532,7 +2984,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       upgrade: () => {
         const cost = h.placement.upgradeCost(handle);
         if (cost <= 0 || cost > week.cash) return false;
-        if (!week.spend(cost)) return false;
+        if (!week.spend(cost, 'upgrades')) return false;
         if (!h.placement.upgrade(handle)) return false;
         audio.play('sfx/place');
         toast(`개선 — ${Math.round(cost / 10000)}만`, 'ok');
@@ -2571,6 +3023,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         const at = tileOf(handle);
         aimAt(at.i, at.j);
       },
+      developMenu: read()?.menuCraft
+        ? () => {
+            facilityPanel.hide();
+            openMenuLab(handle);
+          }
+        : null,
     });
     /*
      * 입출구 표식 (K51) — **이 시설 하나만**, 시트가 열려 있는 동안만이다.
@@ -2582,6 +3040,23 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      * 안 뜬 시트에는 `onClose` 도 안 오므로 되돌릴 길이 없다.
      */
     h.scene.setRideMarkFor(facilityPanel.visible ? handle : null);
+  };
+
+  openMenuLab = (handle: number): void => {
+    menuLab.show(menus, h.placement, handle, {
+      cash: () => week.cash,
+      spend: (cost) => week.spend(cost, 'menuDevelopment'),
+      onChanged: (result) => {
+        h.guests.invalidate();
+        if (result?.kind === 'discovered') {
+          audio.play('sfx/discover');
+          toast(`${result.recipe?.name ?? '메뉴'} 발견 · 바로 장착`, 'ok');
+        } else if (result?.kind === 'failed') {
+          toast(`${result.clue} · 연구 ${Math.round(result.progress * 100)}%`);
+        }
+        persist();
+      },
+    });
   };
 
   /** 시설의 앵커 칸 — 철거 조준이 그 자리를 겨눠야 무엇을 지우는지가 보인다 */
@@ -2648,6 +3123,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       `의뢰 ${st.length - open.length}/${st.length} · ${g.grade}등급 ${g.name}\n` +
       `동시 ${g.maxGuests}명${bonus.capacity > 0 ? ` (인증 +${bonus.capacity})` : ''} · 수요 ×${g.reputationPull}`;
     title.className = 'kquest-head';
+    title.id = 'kairo-quests-list';
     questPanel.append(title);
     for (const s of rows) {
       const row = document.createElement('div');
@@ -2675,6 +3151,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     if (openW.length > 0) {
       const head = document.createElement('div');
       head.className = 'ksheet-group';
+      head.id = 'kairo-regular-list';
       head.textContent = `소원 ${openW.length}`;
       questPanel.append(head);
       for (const w of openW) {
@@ -2722,6 +3199,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     });
     const certHead = document.createElement('div');
     certHead.className = 'ksheet-group';
+    certHead.id = 'kairo-cert-list';
     certHead.textContent = `인증 ${certs.count}/${certSt.length} · 정원 +${certs.bonus().capacity}`;
     questPanel.append(certHead);
     // 딴 것은 아래로, 안 딴 것은 가까운 순 — "다음에 뭘 하지"가 맨 위여야 한다
@@ -2818,6 +3296,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   refreshRisk();
   refreshStaffBtn();
   refreshCaps();
+  checkEnding();
+  refreshManagement();
   // 수영 구역 오버레이 (S3) — 구역은 파생이라 서명이 바뀔 때만 다시 그린다
   let swimSig = '';
   const syncSwim = (): void => {
@@ -2833,7 +3313,6 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     refreshRisk();
     refreshStaffBtn();
     refreshExamBtn();
-    refreshGoal();
     refreshCaps();
     syncSwim();
   }, 1500);
@@ -2876,6 +3355,20 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     setExamFaultForTest,
     wishes,
     arrivalQueue,
+    /** Phase 7 브라우저 계약 — production 사건만 관찰하고 단계 자체는 고치지 않는다. */
+    onboardingStep: () => onboarding.step,
+    /** 커리어 기록은 별도 영속 프로필이라 코스 적용 전후를 직접 대조한다. */
+    careerSnapshot: () => career.toSnapshot(),
+    /** 첫 엔딩 판정과 기록 시트. 판정은 production 함수 그대로다. */
+    ending: { check: checkEnding, open: openEnding },
+    /** 아침 도착과 같은 KairoUnlockView 경로를 쓰되 시간을 840 tick 감지 않는 셋업 손잡이. */
+    showNextArrivalForTest: () => {
+      const celebration = arrivalQueue.shift();
+      if (!celebration) return false;
+      if (unlockView.show(celebration)) return true;
+      arrivalQueue.unshift(celebration);
+      return false;
+    },
     openWeekCards: nextWeekCards,
     skipForward,
     beginWeek,
@@ -2889,6 +3382,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      * 안 뜬다 · 빈 칸은 아무 일도 없다)을 통째로 우회한다.
      */
     facilityPanel,
+    menuLab,
+    menus,
     facilityInfo: (handle: number) => facilityInfo(h.placement, handle),
     courses,
     coursePanel,

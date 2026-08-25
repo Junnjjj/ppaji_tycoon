@@ -27,6 +27,14 @@ import {
   type GroupId,
 } from './groups.js';
 import type { Season } from './week.js';
+import {
+  chooseMenu,
+  recipeDef,
+  type MenuPurchase,
+  type MenuStore,
+  type RegularVisit,
+  type TasteTag,
+} from './menu.js';
 
 /**
  * 손님 에이전트 — **시뮬 소유**. 스펙 §2.
@@ -79,6 +87,11 @@ export interface Guest {
   wallet: number;
   /** 스릴 선호 0..1 */
   thrill: number;
+  /** Phase 3 이름 있는 단골. 없으면 일반 손님이다. 주가 끝나면 agent와 함께 사라진다. */
+  characterId?: string;
+  requestedRecipeId?: string;
+  regularPrefer?: TasteTag[];
+  regularAvoid?: TasteTag[];
   /** 현재 타일 */
   i: number;
   j: number;
@@ -99,6 +112,8 @@ export interface Guest {
   /** 이용 중인 시설 handle 과 슬롯 번호 */
   usingHandle: number;
   usingSlot: number;
+  /** 현재 이용에서 고른 메뉴. 시설 슬롯에서 파생하며 이용 완료 후 비운다. */
+  menuId: string | null;
   /**
    * 지금 하는 이용이 **입장 수속**인가 (K36-B②).
    *
@@ -150,6 +165,24 @@ export interface Guest {
   rideFrom: readonly [number, number];
   /** 탑승 도착 칸 (출구). `rideTicks > 0` 인 동안만 뜻이 있다 */
   rideTo: readonly [number, number];
+}
+
+/**
+ * 일반 손님과 이름 있는 단골의 독립 RNG 스트림.
+ *
+ * 단골 한 명이 일반 일행 대신 도착해도 `pickGroup`·`groupSize`·개체 성향 뽑기를
+ * 소비하면 안 된다. 기존 단위 호출자는 `Rng` 하나를 그대로 넘길 수 있고, 주 러너만
+ * 이 구조를 써서 두 도메인을 격리한다.
+ */
+export interface GuestRngStreams {
+  general: Rng;
+  regular: Rng;
+}
+
+type GuestRngSource = Rng | GuestRngStreams;
+
+function guestRngStreams(source: GuestRngSource): GuestRngStreams {
+  return source instanceof Rng ? { general: source, regular: source } : source;
 }
 
 export interface GuestTunables {
@@ -353,6 +386,9 @@ export const GUEST_DEFAULTS: GuestTunables = {
  */
 export const OPEN_GATE_DEFAULTS: GuestTunables = { ...GUEST_DEFAULTS, requireTicket: false };
 
+/** 이보다 스릴 선호가 낮은 손님은 코스를 원하지 않는다 (design.md §10.3의 0.35 문턱). */
+export const COURSE_INTEREST_MIN = 0.35;
+
 /**
  * 매표소의 시설 ID — 이건 **게이트**지 놀거리가 아니다.
  *
@@ -424,6 +460,12 @@ export class GuestStore {
    * 종류 단위이기 때문이다.
    */
   private finishedFeeByNeed = new Map<string, number>();
+  /** Phase 3 실제 agent가 시설 슬롯에서 고른 구매. 주 리포트가 가져간다. */
+  private menuPurchases: MenuPurchase[] = [];
+  private admittedRegularCount = 0;
+  private menuStore: MenuStore | null = null;
+  private regularQueue: RegularVisit[] = [];
+  private purchaseWeek = 0;
   /**
    * 수영 구역 이용 **누계** — 밸런싱 계측 전용이다 (`tools/kairo-sim.ts`).
    *
@@ -469,6 +511,8 @@ export class GuestStore {
     friends: 0,
     company: 0,
   };
+  /** 이번 구간 입장객 중 코스를 실제로 원하는 사람 수. 저장하지 않는 주간 파생값이다. */
+  private admittedCourseDemand = 0;
   /** 걷힌 입장료 합 (요금 배율 전). 배율은 `week.ts` 가 곱한다 — 요금 정책은 거기 산다 */
   private admissionSum = 0;
   /** 매표소를 못 지나 돌아간 손님 (누적) */
@@ -480,7 +524,12 @@ export class GuestStore {
    * 정하는데 한 번에 5명이 들어오면 그 주 입장이 5배가 된다. 한 명씩 넣되 **연속으로**
    * 넣어서, 같은 일행이 몇 tick 안에 줄줄이 들어오게 한다.
    */
-  private pending: { def: GroupDef; remaining: number; party: number } | null = null;
+  private pending: {
+    def: GroupDef;
+    remaining: number;
+    party: number;
+    regular?: RegularVisit;
+  } | null = null;
   private nextParty = 1;
   /**
    * 이번 주에 **선** 시설 (운영요원 부족·고장). 목적지에서 뺀다.
@@ -508,6 +557,26 @@ export class GuestStore {
   ) {
     this.limit = tunables.maxGuests;
     this.stop = GuestStore.stopFor(terrain, gate);
+  }
+
+  /** 발견 상태는 저장소, 장착은 placement가 정본이다. */
+  setMenuStore(store: MenuStore | null): void {
+    this.menuStore = store;
+  }
+
+  /** WeekRunner도 같은 발견 저장소로 메뉴 시설 운영 가능 여부를 판정한다. */
+  hasMenuRecipe(recipeId: string): boolean {
+    return this.menuStore?.hasRecipe(recipeId) ?? true;
+  }
+
+  /** 주 시작에 번역된 단골 방문 계획. 주간 agent 상태는 저장하지 않는다. */
+  scheduleRegularVisits(visits: readonly RegularVisit[], week: number): void {
+    this.regularQueue = visits.map((x) => ({
+      ...x,
+      prefer: [...x.prefer],
+      avoid: [...x.avoid],
+    }));
+    this.purchaseWeek = week;
   }
 
   /**
@@ -818,6 +887,7 @@ export class GuestStore {
     if (c && c.slots[g.usingSlot] === g.id) c.slots[g.usingSlot] = 0;
     g.usingHandle = 0;
     g.usingSlot = -1;
+    g.menuId = null;
   }
 
   /**
@@ -924,7 +994,7 @@ export class GuestStore {
    * 나머지가 빈다.
    */
   private pickTarget(g: Guest, rng: Rng): number | null {
-    const all: { handle: number; dist: number; need: string }[] = [];
+    const all: { handle: number; dist: number; need: string; requested: boolean }[] = [];
     for (const [handle, field] of this.fields) {
       if (this.idle.has(handle)) continue; // 선 시설엔 안 간다
       if (this.tickets.has(handle)) continue; // 매표소는 게이트다 — 놀러 가는 곳이 아니다
@@ -934,19 +1004,33 @@ export class GuestStore {
       if (d < 0) continue;
       const item =
         handle >= ZONE_HANDLE_BASE ? undefined : this.placement.all().find((f) => f.handle === handle);
+      const def = item ? facilityDef(item.defId) : undefined;
+      const menu = item
+        ? this.placement.menuOperabilityOf(handle, (id) => this.hasMenuRecipe(id))
+        : { operable: true, menuIds: [] };
+      // 개발형 시설의 빈/잘못된/미발견 메뉴는 목적지가 아니다.
+      if (!menu.operable) continue;
       // 수영 구역의 수요 축은 play 다 (스펙 v1.1 — 'fun' 은 없는 축이었다)
       const need =
         handle >= ZONE_HANDLE_BASE
           ? 'play'
           : item
-            ? ((facilityDef(item.defId) as { need?: string } | undefined)?.need ?? '')
+            ? (def?.need ?? '')
             : '';
-      all.push({ handle, dist: d, need });
+      all.push({
+        handle,
+        dist: d,
+        need,
+        requested:
+          g.requestedRecipeId !== undefined && menu.menuIds.includes(g.requestedRecipeId),
+      });
     }
     if (all.length === 0) return null;
 
-    const fresh = all.filter((c) => c.need !== '' && !g.usedNeeds.includes(c.need));
-    const pool = fresh.length > 0 ? fresh : all;
+    const requested = all.filter((c) => c.requested);
+    const base = requested.length > 0 ? requested : all;
+    const fresh = base.filter((c) => c.need !== '' && !g.usedNeeds.includes(c.need));
+    const pool = fresh.length > 0 ? fresh : base;
     /*
      * 거리에 **유형별 수요 편향**을 곱한다 (§10.4). 1.0 미만이면 "멀어도 간다" —
      * 가족은 놀이·위생을, 친구는 스릴을 찾아간다. 그래서 시설 구성이 손님 구성을 통해
@@ -1012,7 +1096,9 @@ export class GuestStore {
   private admit(g: Guest, fee: number): void {
     this.admittedCount++;
     this.admittedByGroup[g.group] += 1;
+    if (g.thrill >= COURSE_INTEREST_MIN) this.admittedCourseDemand++;
     this.admissionSum += fee;
+    if (g.characterId) this.admittedRegularCount += 1;
     g.state = 'walking';
     g.pose = 'walk';
   }
@@ -1038,7 +1124,7 @@ export class GuestStore {
    * 계절을 안 주면 여름으로 본다 (기존 호출자 호환).
    */
   spawn(
-    rng: Rng,
+    rng: GuestRngSource,
     season: Season = 'summer',
     /** 맵이 바꾼 유형 비중 (§4.5). 없으면 계절 기본값 */
     shares?: Partial<Record<GroupId, number>>,
@@ -1046,19 +1132,35 @@ export class GuestStore {
     if (this.insideCount() >= this.limit) return null;
     if (!this.walkable(this.stop.i, this.stop.j)) return null;
     if (this.dirty) this.rebuildFields();
+    const streams = guestRngStreams(rng);
     if (!this.pending || this.pending.remaining <= 0) {
-      const def = pickGroup(rng, season, shares);
-      this.pending = { def, remaining: groupSize(rng, def), party: this.nextParty++ };
+      const regular = this.regularQueue.shift();
+      const def = regular ? groupDef(regular.group) : pickGroup(streams.general, season, shares);
+      this.pending = {
+        def,
+        remaining: regular ? 1 : groupSize(streams.general, def),
+        party: this.nextParty++,
+        ...(regular ? { regular } : {}),
+      };
     }
     const party = this.pending;
     party.remaining -= 1;
     const def = party.def;
+    const guestRng = party.regular ? streams.regular : streams.general;
     const g: Guest = {
       id: this.nextId++,
       group: def.id,
       party: party.party,
       wallet: def.wallet,
-      thrill: def.thrill[0] + rng.next() * (def.thrill[1] - def.thrill[0]),
+      thrill: def.thrill[0] + guestRng.next() * (def.thrill[1] - def.thrill[0]),
+      ...(party.regular
+        ? {
+            characterId: party.regular.characterId,
+            requestedRecipeId: party.regular.requestedRecipeId,
+            regularPrefer: [...party.regular.prefer],
+            regularAvoid: [...party.regular.avoid],
+          }
+        : {}),
       i: this.stop.i,
       j: this.stop.j,
       fromI: this.stop.i,
@@ -1068,12 +1170,13 @@ export class GuestStore {
       state: this.tunables.requireTicket ? 'arriving' : 'walking',
       pose: 'walk',
       facing: '+Z',
-      palette: rng.int(8),
+      palette: guestRng.int(8),
       face: 'calm',
       emote: null,
       emoteTicks: 0,
       usingHandle: 0,
       usingSlot: -1,
+      menuId: null,
       admitting: false,
       useTicks: 0,
       satisfaction: this.tunables.startSatisfaction,
@@ -1103,10 +1206,13 @@ export class GuestStore {
   }
 
   /** 한 tick. `rng` 는 이 tick 전용 스트림이어야 결정론이 유지된다 */
-  tick(rng: Rng): void {
+  tick(rng: GuestRngSource): void {
     if (this.dirty) this.rebuildFields();
 
+    const streams = guestRngStreams(rng);
+
     for (const g of this.guests) {
+      const guestRng = g.characterId ? streams.regular : streams.general;
       if (g.emoteTicks > 0 && --g.emoteTicks === 0) g.emote = null;
 
       if (g.state === 'using') {
@@ -1128,7 +1234,7 @@ export class GuestStore {
               if (z.set.has((nj << 10) | ni)) opts.push([ni, nj]);
             }
             if (opts.length > 0) {
-              const [ni, nj] = opts[rng.int(opts.length)] as [number, number];
+              const [ni, nj] = opts[guestRng.int(opts.length)] as [number, number];
               g.fromI = g.i;
               g.fromJ = g.j;
               g.i = ni;
@@ -1165,6 +1271,7 @@ export class GuestStore {
            * 손님이 같은 종류를 반복해 이용했다. 지우기 전에 잡는다.
            */
           const usedHandle = g.usingHandle;
+          const usedMenuId = g.menuId;
           this.releaseSlot(g);
           /*
            * 밖으로 — 수영은 뭍으로, 슬라이드는 출구에서 타러 왔던 칸으로, 앉은 손님은
@@ -1196,12 +1303,20 @@ export class GuestStore {
            * 특화가 없으면 0 이다 — 미선택 경로는 예전과 완전히 같다.
            */
           if (usedHandle < ZONE_HANDLE_BASE) gain += this.placement.satisfactionBonusOf(usedHandle);
-          g.used++;
-          // 채운 수요를 기록해 다음엔 다른 종류로 간다
           const usedItem =
             usedHandle >= ZONE_HANDLE_BASE
               ? undefined
               : this.placement.all().find((f) => f.handle === usedHandle);
+          const usedDef = usedItem ? facilityDef(usedItem.defId) : undefined;
+          const boughtRecipe = usedDef?.menuMode === 'craft' ? recipeDef(usedMenuId) : undefined;
+          /*
+           * 레시피 `satisfaction`은 0부터 더하는 보너스가 아니라 **품질 점수**다.
+           * 기본 품질 5는 기존 시설 이용 만족을 보존하고, 6~9 메뉴만 차이만큼 더한다.
+           * 통째로 더하면 시작 캔음료 하나가 모든 손님을 100점에 붙여 평판 특화가 사라진다.
+           */
+          if (boughtRecipe) gain += Math.max(0, boughtRecipe.satisfaction - 5);
+          g.used++;
+          // 채운 수요를 기록해 다음엔 다른 종류로 간다
           const usedNeed =
             usedHandle >= ZONE_HANDLE_BASE
               ? 'play'
@@ -1218,12 +1333,31 @@ export class GuestStore {
            * `feeOf` 는 **입장권에 포함된 시설이면 0** 을 돌려준다 (P6). 여기서 다시
            * 분류를 보지 않는다 — 규칙이 두 벌이 되면 결산 합계와 화면의 `+₩N` 이 갈라진다.
            */
-          const fee =
-            (usedHandle >= ZONE_HANDLE_BASE
+          const unitFee =
+            usedHandle >= ZONE_HANDLE_BASE
               ? this.zoneCharge(usedHandle - ZONE_HANDLE_BASE)
-              : this.placement.feeOf(usedHandle)) * g.wallet;
+              : boughtRecipe && usedDef
+                ? Math.round(
+                    boughtRecipe.price *
+                      (usedDef.fee > 0 ? this.placement.feeOf(usedHandle) / usedDef.fee : 1),
+                  )
+                : usedDef?.menuMode === 'craft'
+                  ? 0
+                  : this.placement.feeOf(usedHandle);
+          const fee = unitFee * g.wallet;
           const key = usedNeed === '' ? '-' : usedNeed;
           this.finishedFeeByNeed.set(key, (this.finishedFeeByNeed.get(key) ?? 0) + fee);
+          if (boughtRecipe && usedItem) {
+            this.menuPurchases.push({
+              purchaseId: `${this.purchaseWeek}:${g.id}:${boughtRecipe.id}:${this.menuPurchases.length}`,
+              week: this.purchaseWeek,
+              guestId: g.id,
+              ...(g.characterId ? { characterId: g.characterId } : {}),
+              menuId: boughtRecipe.id,
+              facilityHandle: usedItem.handle,
+              amount: Math.round(fee),
+            });
+          }
           if (usedHandle >= ZONE_HANDLE_BASE) {
             this.zoneUseCount += 1;
             this.zoneFeeSum += fee;
@@ -1232,6 +1366,7 @@ export class GuestStore {
           this.syncFace(g);
           g.state = g.used >= this.tunables.wantUses ? 'leaving' : 'walking';
           g.pose = 'walk';
+          g.menuId = null;
         }
         continue;
       }
@@ -1266,7 +1401,7 @@ export class GuestStore {
         }
       } else {
         if (g.usingHandle === 0) {
-          const target = this.pickTarget(g, rng);
+          const target = this.pickTarget(g, guestRng);
           if (target === null) {
             // 갈 곳이 없다 — 참다가 나간다
             const p = (this.patience.get(g.id) ?? 0) + 1;
@@ -1287,6 +1422,21 @@ export class GuestStore {
           this.patience.delete(g.id);
           // 슬롯을 미리 잡는다 — 도착해서 잡으면 걸어가는 동안 남이 채운다
           if (!this.claimSlot(g, target)) continue;
+          const item = this.placement.all().find((f) => f.handle === target);
+          const def = item ? facilityDef(item.defId) : undefined;
+          if (def?.menuMode === 'craft') {
+            const available = this.placement.menuOperabilityOf(
+              target,
+              (id) => this.hasMenuRecipe(id),
+            ).menuIds;
+            g.menuId = chooseMenu(
+              available,
+              g.group,
+              g.requestedRecipeId,
+              g.regularPrefer,
+              g.regularAvoid,
+            )?.id ?? null;
+          }
         }
         field = this.fields.get(g.usingHandle) ?? null;
         if (!field) {
@@ -1520,6 +1670,8 @@ export class GuestStore {
   takeAdmitted(): {
     count: number;
     byGroup: Record<GroupId, number>;
+    /** `count` 안에서 스릴 선호 문턱을 넘은 실제 코스 수요 */
+    courseDemand: number;
     /** 걷힌 입장료 합 (요금 배율 전) */
     fee: number;
     /** 매표소를 못 지나 돌아간 손님 */
@@ -1528,11 +1680,13 @@ export class GuestStore {
     const out = {
       count: this.admittedCount,
       byGroup: { ...this.admittedByGroup },
+      courseDemand: this.admittedCourseDemand,
       fee: this.admissionSum,
       noTicket: this.noTicketTaken,
     };
     this.admittedCount = 0;
     this.admittedByGroup = { family: 0, couple: 0, friends: 0, company: 0 };
+    this.admittedCourseDemand = 0;
     this.admissionSum = 0;
     this.noTicketTaken = 0;
     return out;
@@ -1561,6 +1715,20 @@ export class GuestStore {
     this.finishedCount = 0;
     this.finishedWallet = 0;
     this.finishedFeeByNeed.clear();
+    return out;
+  }
+
+  /** 이번 구간의 실제 메뉴 구매를 가져가고 비운다. */
+  takeMenuPurchases(): MenuPurchase[] {
+    const out = this.menuPurchases.map((x) => ({ ...x }));
+    this.menuPurchases = [];
+    return out;
+  }
+
+  /** 이번 주에 실제 입장한 이름 있는 단골 수. */
+  takeRegularVisits(): number {
+    const out = this.admittedRegularCount;
+    this.admittedRegularCount = 0;
     return out;
   }
 

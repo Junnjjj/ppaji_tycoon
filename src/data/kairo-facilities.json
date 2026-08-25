@@ -841,6 +841,8 @@
         "reputation"
       ],
       "desc": "컵라면·과자·음료. 빠지에서 가장 자주 들르는 곳.",
+      "menuMode": "craft",
+      "startingMenu": ["shop_can_drink"],
       "menu": [
         {
           "name": "컵라면",
@@ -1085,6 +1087,8 @@
         "reputation"
       ],
       "desc": "커피 한 잔과 그늘. 비 오는 날 손님이 몰린다.",
+      "menuMode": "craft",
+      "startingMenu": ["cafe_americano"],
       "menu": [
         {
           "name": "아메리카노",

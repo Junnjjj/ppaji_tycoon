@@ -5,7 +5,7 @@ import { WallGrid } from './walls.js';
 import { bakeIndoorWalls } from './indoor.js';
 import { PlacementGrid, guestWalkable } from './placement.js';
 import { GuestStore, GUEST_DEFAULTS, OPEN_GATE_DEFAULTS } from './guests.js';
-import { WeekRunner, type Season } from './week.js';
+import { WeekRunner, forkWeekRngStreams, type Season } from './week.js';
 import { evaluateCombos } from './combos.js';
 import {
   questStatuses,
@@ -116,6 +116,7 @@ function playGolden(weeks: number): Golden {
   const p = new PlacementGrid(GRID_W, GRID_H);
   const g = new GuestStore(t, w, p, GATE, GUEST_DEFAULTS);
   const week = new WeekRunner(t, p, g);
+  const weekRngStreams = forkWeekRngStreams(rng);
   const progress = new ProgressStore();
 
   /*
@@ -177,7 +178,7 @@ function playGolden(weeks: number): Golden {
       cardCount++;
     }
     const eff = staff.effects(p);
-    const r = week.run(rng, {
+    const r = week.run(weekRngStreams, {
       season,
       reputation: pull,
       priceMult: 1,
@@ -386,21 +387,37 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
      * ⚠ **이 변경이 유일한 원인임을 코드로 확인했다**: `setEntryFaultForTest(true)`
      * (= 좁히기 이전의 목적지 집합)를 켜면 이 파일의 15개 검사가 **옛 값 그대로**
      * 전부 통과한다. 숫자를 갈아 끼우기 전에 그 대조를 먼저 돌린 것이 근거다.
+     *
+     * **2026-08-25 (Phase 3) 조리 메뉴를 실제 구매에 배선했다**: 매점의 정적 평균 요금
+     * 대신 장착된 시작 메뉴 `shop_can_drink`의 실제 가격을 받으면서 sales만
+     * 236,426 → 223,038로 움직였다. 입장·만석·만족·등급·의뢰는 모두 동일하므로
+     * 손님 궤적이나 성장 규칙 변경이 아니라 가격 정본을 시설 fee→메뉴로 옮긴 결과다.
+     *
+     * **2026-08-25 (Phase 6) 일반 카드 페이싱**: 12주 12장 → 4장. 카드 효과가
+     * 덬 겹치며 exitSat 59·grade 3이 됐고, 등급 상한과 수요 조합이 바뀌어 방문 69·
+     * 거절 27·입장료 262,200·별도구매 287,714로 이동했다. 카드 수 4가 새 페이싱을
+     * 직접 못박으며, 같은 시드 재실행 검사가 결정론을 따로 지킨다.
+     *
+     * **2026-08-25 post-review RNG 격리**: 날씨·일반 손님·단골·사고를 영속 fork로
+     * 분리하고 골든도 production과 같은 `WeekRngStreams`를 한 번 만들어 계속 쓴다.
+     * 단골 분기나 사고 뽑기 수가 다른 도메인을 밀지 않게 한 모델 변경이라 고정 표본이
+     * 이동했다 (방문 69→70 · 거절 27→7 · 만족 59→62 · 등급 3→2). 시설/콤보/카드/
+     * 직원/코스는 그대로여서 콘텐츠나 경제 공식을 바꾼 결과가 아니다.
      */
     expect(g).toEqual({
       facilities: 15,
       combos: 7,
       grade: 2,
-      exitSat: 63,
-      visitors: 83,
-      turnedAway: 9,
-      admission: 315_400,
-      sales: 236_426,
+      exitSat: 62,
+      visitors: 70,
+      turnedAway: 7,
+      admission: 266_000,
+      sales: 239_782,
       noTicket: 0,
       profitSign: 1,
       questsDone: 5,
       riskLevel: 'caution',
-      cards: 12,
+      cards: 4,
       staffWages: 22_500,
       courseRevenue: 0,
       avgLevel: 1.2,

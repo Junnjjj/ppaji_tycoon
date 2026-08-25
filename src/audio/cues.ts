@@ -16,6 +16,8 @@ export type SfxCue =
   | 'sfx/grade-up' // 등급 승급 (K42)
   | 'sfx/exam-pass' // 심사 통과 (K42)
   | 'sfx/exam-fail' // 심사 탈락 (K42)
-  | 'sfx/discover'; // 숨은 콤보 발견 (K43)
+  | 'sfx/discover' // 숨은 콤보 발견 (K43)
+  | 'sfx/course-trial' // 코스 시험 운행 시작
+  | 'sfx/course-record'; // 코스 시험 신기록
 
 export type MusicId = 'bgm/summer' | 'bgm/offseason';

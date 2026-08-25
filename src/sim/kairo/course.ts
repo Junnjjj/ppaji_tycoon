@@ -1,5 +1,6 @@
 import rawCourses from '../../data/kairo-courses.json' with { type: 'json' };
 import rawEquipment from '../../data/kairo-equipment.json' with { type: 'json' };
+import rawTowBoats from '../../data/kairo-tow-boats.json' with { type: 'json' };
 import { sampleSpline, splineLength, type Vec2, type SplineSample } from '../spline.js';
 import { computeMetrics, type CourseMetrics } from '../course.js';
 import type { KairoTerrain } from './terrain.js';
@@ -57,6 +58,20 @@ export interface CourseEquipment {
   desc: string;
 }
 
+/** 견인 장비 15종이 공유하는 보트 profile — 장비×프리셋 수제 조합표가 아니다. */
+export interface TowBoatDef {
+  id: string;
+  name: string;
+  role: 'work' | 'sport';
+  speedMult: number;
+  thrillMult: number;
+  thrillCap: number;
+  safetyBase: number;
+  sharpSafetyPenalty: number;
+  upkeepMult: number;
+  desc: string;
+}
+
 interface FitEffect {
   thrill: number;
   satisfaction: number;
@@ -72,9 +87,14 @@ export const PRESETS: readonly PresetDef[] = COURSE_DATA.presets;
 export const COURSE_EQUIPMENT: readonly CourseEquipment[] = (
   rawEquipment as unknown as { equipment: CourseEquipment[] }
 ).equipment;
+export const TOW_BOATS: readonly TowBoatDef[] = (
+  rawTowBoats as unknown as { boats: TowBoatDef[] }
+).boats;
+export const DEFAULT_TOW_BOAT_ID = 'work';
 
 const PRESET_BY_ID = new Map(PRESETS.map((p) => [p.id, p]));
 const EQUIP_BY_ID = new Map(COURSE_EQUIPMENT.map((e) => [e.id, e]));
+const TOW_BOAT_BY_ID = new Map(TOW_BOATS.map((boat) => [boat.id, boat]));
 
 export function presetDef(id: string): PresetDef | undefined {
   return PRESET_BY_ID.get(id);
@@ -82,6 +102,19 @@ export function presetDef(id: string): PresetDef | undefined {
 
 export function courseEquipment(id: string): CourseEquipment | undefined {
   return EQUIP_BY_ID.get(id);
+}
+
+export function towBoatDef(id: string): TowBoatDef | undefined {
+  return TOW_BOAT_BY_ID.get(id);
+}
+
+/** 자체동력 장비는 어떤 선택값이 와도 견인선을 쓰지 않는다. */
+export function towBoatForEquipment(
+  equip: CourseEquipment,
+  towBoatId?: string,
+): TowBoatDef | null {
+  if (equip.kind === 'power') return null;
+  return towBoatDef(towBoatId ?? DEFAULT_TOW_BOAT_ID) ?? towBoatDef(DEFAULT_TOW_BOAT_ID) ?? null;
 }
 
 /** 장비 × 프리셋 적합도. 표에 없으면 '적합'으로 본다 (새 장비가 조용히 막히지 않게) */
@@ -405,6 +438,8 @@ export function validateCourse(
   equipId: string | null,
   grade: number,
   others: readonly PlacedCourse[] = [],
+  /** 기존 코스 편집 때 자기 자신을 비교 대상에서 빼는 stable handle */
+  excludeHandle?: number,
 ): CourseValidation {
   const issues: CourseIssueKind[] = [];
   const badHandles: number[] = [];
@@ -456,10 +491,12 @@ export function validateCourse(
    * ⚠ 같은 잔교면 겹침은 **반드시** 난다 (시작점이 같은 점이다). 둘을 같이 말하면
    * 처방이 흐려지므로 `dock-taken` 하나만 말한다 — 옮겨야 하는 것은 핸들이 아니라 잔교다.
    */
-  if (others.length > 0) {
-    if (dockTaken(dock, others)) issues.push('dock-taken');
+  const comparisonCourses =
+    excludeHandle === undefined ? others : others.filter((course) => course.handle !== excludeHandle);
+  if (comparisonCourses.length > 0) {
+    if (dockTaken(dock, comparisonCourses)) issues.push('dock-taken');
     else {
-      const near = courseGap(dock, handles, others);
+      const near = courseGap(dock, handles, comparisonCourses);
       if (near.gap < COURSE_CLEAR_TILES) {
         issues.push('overlap');
         for (const k of near.nearHandles) if (!badHandles.includes(k)) badHandles.push(k);
@@ -474,6 +511,31 @@ export function validateCourse(
 /** 스플라인 표본. 선착장을 시작점으로 넣어 "선착장에서 출발한다"가 형태에 반영된다 */
 export function sampleCourse(dock: Vec2, handles: readonly Vec2[]): SplineSample[] {
   return sampleSpline([dock, ...handles], 12);
+}
+
+/**
+ * 지도 탭이 운행 중인 코스(또는 그 위의 차량)를 가리키는지 판정한다.
+ *
+ * 힌트 테스트나 렌더 바운딩박스를 쓰지 않고 정본 스플라인 표본을 쓴다. 따라서 보트가
+ * 어디에 그려지든 탭의 뜻은 sim 경로와 같다. 거리가 같으면 저장 순서의 첫 handle이다.
+ */
+export function courseAtTile(
+  courses: readonly PlacedCourse[],
+  tile: Vec2,
+  tolerance = 1.35,
+): number | null {
+  let hit: number | null = null;
+  let best = tolerance;
+  for (const course of courses) {
+    for (const sample of sampleCourse(course.dock, course.handles)) {
+      const distance = Math.hypot(sample.pos.x - tile.x, sample.pos.y - tile.y);
+      if (distance < best) {
+        best = distance;
+        hit = course.handle;
+      }
+    }
+  }
+  return hit;
 }
 
 /** 핸들 전체를 잔교의 **옆 방향**으로 민다 — 앞뒤로 밀면 코스가 잔교에서 멀어진다 */
@@ -545,11 +607,17 @@ export function suggestCourse(
 
 export interface CourseResult extends CourseMetrics {
   fit: FitRating;
-  /** 주간 탑승객 — **카이로 시계 기준**. `throughput`(명/h)은 v1 시계라 여기 쓰면 안 된다 */
+  /** 선택된 견인선. 자체동력 장비면 null */
+  towBoatId: string | null;
+  /** 수요가 충분할 때 가능한 주간 탑승객 */
+  potentialWeeklyRiders: number;
+  /** @deprecated 잠재 처리량의 기존 이름. 실제 탑승은 `WeekReport.courseRiders` 다. */
   weeklyRiders: number;
   /** 적합도 반영 후 만족도 배율 */
   satisfactionMult: number;
-  /** 주간 매출 (요금 × 처리량 × 운영시간) */
+  /** 수요가 충분할 때 가능한 주간 매출 */
+  potentialWeeklyRevenue: number;
+  /** @deprecated 잠재 매출의 기존 이름. 실제 매출은 `WeekReport.courseRevenue` 다. */
   weeklyRevenue: number;
   weeklyUpkeep: number;
 }
@@ -579,16 +647,18 @@ export function evaluateCourse(
   equip: CourseEquipment,
   presetId: string,
   vehicles: number,
+  towBoatId?: string,
 ): CourseResult {
   const samples = sampleCourse(dock, handles);
   const preset = presetDef(presetId);
+  const boat = towBoatForEquipment(equip, towBoatId);
   const base = computeMetrics({
     samples,
     def: {
       id: equip.id,
       name: equip.name,
       sprite: equip.sprite,
-      speed: equip.speed,
+      speed: equip.speed * (boat?.speedMult ?? 1),
       capacity: equip.capacity,
       boardTicks: equip.boardTicks,
       minDepth: 1,
@@ -614,19 +684,64 @@ export function evaluateCourse(
   const eff = fitEffect(fit);
   const thrill = Math.max(
     0,
-    Math.min(100, base.thrill * equip.thrillCoef * (eff?.thrill ?? 1)),
+    Math.min(
+      boat?.thrillCap ?? 100,
+      base.thrill * equip.thrillCoef * (eff?.thrill ?? 1) * (boat?.thrillMult ?? 1),
+    ),
+  );
+  const safety = Math.max(
+    0,
+    Math.min(
+      100,
+      base.safety +
+        (boat?.safetyBase ?? 0) -
+        base.sharpFraction * (boat?.sharpSafetyPenalty ?? 0),
+    ),
   );
   const cycles = base.cycleTicks > 0 ? KAIRO_TICKS_PER_WEEK / base.cycleTicks : 0;
-  const weeklyRiders = Math.round(cycles * equip.capacity * vehicles);
+  const potentialWeeklyRiders = Math.round(cycles * equip.capacity * vehicles);
+  const potentialWeeklyRevenue = potentialWeeklyRiders * equip.fee;
   return {
     ...base,
     thrill,
+    safety,
     fit,
+    towBoatId: boat?.id ?? null,
     satisfactionMult: eff?.satisfaction ?? 1,
-    weeklyRiders,
-    weeklyRevenue: weeklyRiders * equip.fee,
-    weeklyUpkeep: equip.upkeep * vehicles,
+    potentialWeeklyRiders,
+    weeklyRiders: potentialWeeklyRiders,
+    potentialWeeklyRevenue,
+    weeklyRevenue: potentialWeeklyRevenue,
+    weeklyUpkeep: Math.round(equip.upkeep * vehicles * (boat?.upkeepMult ?? 1)),
   };
+}
+
+/** 코스가 한 주 동안 제공할 수 있는 잠재 공급. 입장객과 만나기 전 값이다. */
+export interface CourseWeekPotential {
+  potentialRiders: number;
+  potentialRevenue: number;
+  upkeep: number;
+}
+
+export interface RealizedCourseWeek {
+  riders: number;
+  revenue: number;
+}
+
+/**
+ * 잠재 공급과 실제 수요를 결합한다. 평균 요금은 `잠재매출 / 잠재탑승` 한 벌에서만
+ * 파생하므로 코스가 여러 개여도 결정론적이며, 수요 0이면 매출도 반드시 0이다.
+ */
+export function realizeCourseWeek(
+  potential: CourseWeekPotential,
+  wantingGuests: number,
+): RealizedCourseWeek {
+  const capacity = Math.max(0, Math.floor(potential.potentialRiders));
+  const demand = Math.max(0, Math.floor(wantingGuests));
+  const riders = Math.min(capacity, demand);
+  if (riders === 0 || capacity === 0) return { riders: 0, revenue: 0 };
+  const maximumRevenue = Math.max(0, potential.potentialRevenue);
+  return { riders, revenue: Math.round((maximumRevenue * riders) / capacity) };
 }
 
 export interface PlacedCourse {
@@ -636,6 +751,22 @@ export interface PlacedCourse {
   vehicles: number;
   dock: Vec2;
   handles: Vec2[];
+  /** 견인 장비의 보트 profile. 없으면 작업형이며, 자체동력 장비는 무시한다 (v7 optional). */
+  towBoatId?: string;
+}
+
+export type CourseEditDraft = Omit<PlacedCourse, 'handle'>;
+
+export interface CourseEdit {
+  handle: number;
+  original: PlacedCourse;
+  draft: CourseEditDraft;
+}
+
+export interface CourseEditResult {
+  course: PlacedCourse;
+  /** 장비 자산 증가분. 다운그레이드는 환불하지 않으므로 0 아래로 내려가지 않는다. */
+  charge: number;
 }
 
 export interface CourseSnapshot {
@@ -672,30 +803,68 @@ export class CourseStore {
     return true;
   }
 
+  /** 저장소와 참조를 공유하지 않는 편집 초안. 열기만 해서는 상태가 한 바이트도 안 바뀐다. */
+  beginEdit(handle: number): CourseEdit | null {
+    const found = this.items.find((course) => course.handle === handle);
+    if (!found) return null;
+    const original = clonePlacedCourse(found);
+    const { handle: stableHandle, ...draft } = clonePlacedCourse(found);
+    return { handle: stableHandle, original, draft };
+  }
+
+  /** 취소는 명시적인 no-op이며 원본 사본을 돌려준다. */
+  cancelEdit(edit: CourseEdit): PlacedCourse {
+    return clonePlacedCourse(edit.original);
+  }
+
+  /** 같은 초안은 같은 교체와 같은 차액을 만든다. */
+  confirmEdit(edit: CourseEdit): CourseEditResult;
+  /** 검증 → 결제 → 교체를 한 동기 경계에서 수행한다. 결제 거절이면 null. */
+  confirmEdit(edit: CourseEdit, spend: (amount: number) => boolean): CourseEditResult | null;
+  confirmEdit(
+    edit: CourseEdit,
+    spend?: (amount: number) => boolean,
+  ): CourseEditResult | null {
+    const index = this.items.findIndex((course) => course.handle === edit.handle);
+    if (index < 0) throw new Error(`편집할 코스가 없습니다: ${edit.handle}`);
+    if (JSON.stringify(this.items[index]) !== JSON.stringify(edit.original)) {
+      throw new Error(`편집 중 코스가 바뀌었습니다: ${edit.handle}`);
+    }
+    const next = clonePlacedCourse({ handle: edit.handle, ...edit.draft });
+    const charge = Math.max(0, courseInvestment(next) - courseInvestment(edit.original));
+    /*
+     * 검증이 모두 끝난 뒤, 실제 교체 직전에만 결제한다. 이 사이에는 await도 외부 콜백도
+     * 없고 마지막 쓰기는 배열 한 칸 교체뿐이라 confirm 실패가 현금만 남길 수 없다.
+     */
+    if (spend && !spend(charge)) return null;
+    this.items[index] = next;
+    return { course: clonePlacedCourse(next), charge };
+  }
+
   /** 이번 주 코스 합계 — 결산이 이걸 더한다 */
-  weekly(): { revenue: number; upkeep: number; thrill: number; safety: number; riders: number } {
-    let revenue = 0;
+  weekly(): CourseWeekPotential & { thrill: number; safety: number } {
+    let potentialRevenue = 0;
     let upkeep = 0;
     let thrillSum = 0;
     let safetySum = 0;
-    let riders = 0;
+    let potentialRiders = 0;
     for (const c of this.items) {
       const equip = courseEquipment(c.equipId);
       if (!equip) continue;
-      const r = evaluateCourse(c.dock, c.handles, equip, c.presetId, c.vehicles);
-      revenue += r.weeklyRevenue;
+      const r = evaluateCourse(c.dock, c.handles, equip, c.presetId, c.vehicles, c.towBoatId);
+      potentialRevenue += r.potentialWeeklyRevenue;
       upkeep += r.weeklyUpkeep;
       thrillSum += r.thrill;
       safetySum += r.safety;
-      riders += r.weeklyRiders;
+      potentialRiders += r.potentialWeeklyRiders;
     }
     const n = Math.max(1, this.items.length);
     return {
-      revenue,
+      potentialRevenue,
       upkeep,
       thrill: thrillSum / n,
       safety: safetySum / n,
-      riders,
+      potentialRiders,
     };
   }
 
@@ -716,12 +885,32 @@ export class CourseStore {
   }
 }
 
+function clonePlacedCourse(course: PlacedCourse): PlacedCourse {
+  return {
+    ...course,
+    dock: { ...course.dock },
+    handles: course.handles.map((handle) => ({ ...handle })),
+  };
+}
+
+function courseInvestment(course: PlacedCourse): number {
+  const equipment = courseEquipment(course.equipId);
+  return equipment ? equipment.vehicleCost * Math.max(0, course.vehicles) : 0;
+}
+
 /** 데이터 검증 */
 export function validateCourseData(): string[] {
   const problems: string[] = [];
   if (PRESETS.length !== 6) problems.push(`프리셋이 6종이 아니다: ${PRESETS.length}`);
   if (COURSE_EQUIPMENT.length !== 19) {
     problems.push(`장비가 19종이 아니다: ${COURSE_EQUIPMENT.length}`);
+  }
+  if (TOW_BOATS.length !== 2) problems.push(`견인 보트가 2종이 아니다: ${TOW_BOATS.length}`);
+  if (!towBoatDef(DEFAULT_TOW_BOAT_ID)) problems.push('기본 견인 보트가 없다');
+  for (const boat of TOW_BOATS) {
+    if (boat.speedMult <= 0 || boat.upkeepMult <= 0) {
+      problems.push(`${boat.id} — profile 배율이 0 이하`);
+    }
   }
   for (const p of PRESETS) {
     if (p.handles < 2 || p.handles > 4) problems.push(`${p.id} — 핸들이 2~4개가 아니다`);

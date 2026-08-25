@@ -4,7 +4,12 @@ import { KairoTerrain, groundIndex } from '../sim/kairo/terrain.js';
 import { WallGrid, EDGE_SOLID, DIR_J_MINUS } from '../sim/kairo/walls.js';
 import { PlacementGrid, facilityDef, SPECIALTY_LEVEL } from '../sim/kairo/placement.js';
 import { GuestStore } from '../sim/kairo/guests.js';
-import { WeekRunner } from '../sim/kairo/week.js';
+import {
+  WeekRunner,
+  forkWeekRngStreams,
+  snapshotWeekRngStreams,
+  summarizeWeek,
+} from '../sim/kairo/week.js';
 import { ProgressStore, questStatuses } from '../sim/kairo/progress.js';
 import { CertStore, certStatuses, type CertContext, type CertStatus } from '../sim/kairo/certs.js';
 import {
@@ -49,7 +54,8 @@ function build(): KairoSaveInput {
   const guests = new GuestStore(terrain, walls, placement, GATE);
   const week = new WeekRunner(terrain, placement, guests);
   const weekRng = new Rng(31337);
-  const rep = week.run(weekRng, { season: 'summer' });
+  const weekRngStreams = forkWeekRngStreams(weekRng);
+  const rep = week.run(weekRngStreams, { season: 'summer' });
   /*
    * ⚠ 한 주 수입보다 **큰** 금액을 쓴다. 100만이면 입장료(K36-B②)가 들어온 뒤로
    * 그 주 손익이 그걸 넘어서서, 아래 "잔액이 줄었다" 검사가 통과할 수 없다 —
@@ -58,12 +64,7 @@ function build(): KairoSaveInput {
   week.spend(3_000_000);
 
   const progress = new ProgressStore();
-  const summary = {
-    visitors: rep.visitors,
-    turnedAway: rep.turnedAway,
-    profit: rep.profit,
-    exitSatisfaction: rep.exitSatisfaction,
-  };
+  const summary = summarizeWeek(rep);
   progress.claim(questStatuses(placement, summary));
 
   return {
@@ -75,6 +76,7 @@ function build(): KairoSaveInput {
     progress,
     week: week.toSnapshot(),
     weekRngState: weekRng.state,
+    weekRngStreams: snapshotWeekRngStreams(weekRngStreams),
     season: 'summer',
     lastSummary: summary,
   };
@@ -121,6 +123,7 @@ describe('카이로 세이브', () => {
     const a = Rng.fromState(round.weekRngState);
     const b = Rng.fromState(input.weekRngState);
     expect(a.next()).toBe(b.next());
+    expect(round.weekRngStreams).toEqual(input.weekRngStreams);
   });
 
   it('받은 의뢰가 다시 지급되지 않는다', () => {
@@ -135,11 +138,35 @@ describe('카이로 세이브', () => {
     expect(st.some((x) => x.detail.includes('/'))).toBe(true);
   });
 
+  it('전주 비교 요약은 소형 필드만 JSON 왕복한다 — 히트맵·장부는 저장하지 않는다', () => {
+    expect(round.lastSummary).toEqual(input.lastSummary);
+    expect(Object.keys(round.lastSummary ?? {}).sort()).toEqual([
+      'exitSatisfaction',
+      'menuPurchaseCount',
+      'profit',
+      'regularPurchases',
+      'regularVisits',
+      'turnedAway',
+      'visitors',
+    ]);
+    expect(round.lastSummary).not.toHaveProperty('heat');
+    expect(round.lastSummary).not.toHaveProperty('investment');
+    expect(round.lastSummary).not.toHaveProperty('revenue');
+  });
+
   it('복원한 시뮬로 다음 주가 계속 돈다', () => {
     const guests = new GuestStore(round.terrain, round.walls, round.placement, round.gate);
     const week = new WeekRunner(round.terrain, round.placement, guests);
     week.restore(round.week);
-    const rep = week.run(Rng.fromState(round.weekRngState), { season: round.season });
+    const streams = round.weekRngStreams
+      ? {
+          weather: Rng.fromState(round.weekRngStreams.weather),
+          guests: Rng.fromState(round.weekRngStreams.guests),
+          regular: Rng.fromState(round.weekRngStreams.regular),
+          accident: Rng.fromState(round.weekRngStreams.accident),
+        }
+      : forkWeekRngStreams(Rng.fromState(round.weekRngState));
+    const rep = week.run(streams, { season: round.season });
     expect(rep.week).toBe(round.week.week + 1);
   });
 
@@ -317,7 +344,7 @@ describe('★ 특화가 세이브를 건넌다 (P1.5)', () => {
     };
     for (const it of raw.placement.items) expect('specialty' in it).toBe(false);
     expect(raw.version).toBe(KAIRO_SAVE_VERSION);
-    expect(KAIRO_SAVE_VERSION).toBe(7);
+    expect(KAIRO_SAVE_VERSION).toBe(8);
     const back = restoreKairo(raw);
     for (const it of back.placement.all()) {
       expect(back.placement.specialtyOf(it.handle)).toBeNull();
@@ -362,7 +389,7 @@ describe('★ 도감 발견이 세이브를 건넌다 (P3-C)', () => {
     expect('builtEver' in raw).toBe(false);
     expect('equipEver' in raw).toBe(false);
     expect(raw['version']).toBe(KAIRO_SAVE_VERSION);
-    expect(KAIRO_SAVE_VERSION).toBe(7);
+    expect(KAIRO_SAVE_VERSION).toBe(8);
     const back = restoreKairo(raw);
     // 없으면 그냥 없다 — 부팅이 지금 배치에서 다시 채운다 (마이그레이션 없음)
     expect(back.builtEver).toBeUndefined();
@@ -409,7 +436,7 @@ describe('★ 사이드 인증이 세이브를 건넌다 (P3-E)', () => {
     const raw = JSON.parse(JSON.stringify(packKairo(build(), 0))) as Record<string, unknown>;
     expect('certs' in raw).toBe(false);
     expect(raw['version']).toBe(KAIRO_SAVE_VERSION);
-    expect(KAIRO_SAVE_VERSION).toBe(7);
+    expect(KAIRO_SAVE_VERSION).toBe(8);
     const back = restoreKairo(raw);
     expect(back.certs).toBeUndefined();
     // 없으면 인증 0종 — 가산도 0 이라 예전과 완전히 같다 (음성 대조군)

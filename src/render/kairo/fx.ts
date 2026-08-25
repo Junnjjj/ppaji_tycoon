@@ -34,7 +34,7 @@
 import type Phaser from 'phaser';
 import { depthKey, tileCenter, Z_FLOAT } from './iso.js';
 
-export type FxName = 'income-pop';
+export type FxName = 'income-pop' | 'course-reaction' | 'course-record';
 
 /** 씬이 연출에게 내주는 것 — Phaser 씬과 "타일 → 화면" 변환 하나 */
 export interface FxHost {
@@ -148,6 +148,9 @@ function incomePop(host: FxHost, t: FxTarget): FxHandle {
  */
 export const FX_REGISTRY: Record<FxName, FxImpl> = {
   'income-pop': incomePop,
+  // 시험 운행 말풍선과 신기록 인장도 교체 가능한 이름 슬롯을 거친다.
+  'course-reaction': incomePop,
+  'course-record': incomePop,
 };
 
 /** 연출을 하나 재생한다. 부르는 쪽이 아는 것은 이름과 타일 좌표뿐이다 */

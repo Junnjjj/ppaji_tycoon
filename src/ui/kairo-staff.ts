@@ -249,11 +249,13 @@ export class KairoStaffPanel {
     placement: PlacementGrid,
     onChange: () => void,
     manage?: ManageDeps,
+    initialTab?: 'price' | 'staff' | 'upgrade',
   ): void {
     this.staff = staff;
     this.placement = placement;
     this.manage = manage ?? null;
     this.onChange = onChange;
+    if (initialTab) this.tab = initialTab;
     // 한 번에 하나 (K37)
     if (!panelHost.open(this)) return;
     this.root.hidden = false;

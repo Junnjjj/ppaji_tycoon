@@ -1,9 +1,12 @@
 {
-  "note": "주간 의사결정 카드 24종 (design.md §3.5). 선택지는 **효과 목록**을 갖는다 — 한 객체에 몰면 서로 다른 기간의 효과를 못 담는다 (실측: 폐쇄와 평판 +4주를 한 객체에 넣어 4주 연속 폐쇄가 됐고, 후반 수익이 0 이 되어 판이 파산했다). 폐쇄는 언제나 1주다. 확률은 선택지 단위 — 한 선택지에 한 번만 굴린다. 금액은 문서 값을 우리 경제로 축소했다 (주간 손익 30~55만 · 최저 시설 10.5만).\n사고 카드(trigger: accident)는 무작위 뽑기에서 제외된다 — 사고가 났을 때만 뜬다. 금액은 문서(1,200만/2,000만/1,800만)를 우리 경제로 축소했다: 주간 손익 20~50만에 그대로 두면 사고 한 번이 곧 파산이고, 그건 v4 가 없애기로 한 '억울한 실패'다.",
+  "note": "일반 의사결정 카드 26종 + 사고 대응 1종 (design.md §3.5). 선택지는 **효과 목록**을 갖는다 — 한 객체에 몰면 서로 다른 기간의 효과를 못 담는다 (실측: 폐쇄와 평판 +4주를 한 객체에 넣어 4주 연속 폐쇄가 됐고, 후반 수익이 0 이 되어 판이 파산했다). 폐쇄는 언제나 1주다. 확률은 선택지 단위 — 한 선택지에 한 번만 굴린다. 금액은 문서 값을 우리 경제로 축소했다 (주간 손익 30~55만 · 최저 시설 10.5만).\n사고 카드(trigger: accident)는 무작위 뽑기에서 제외된다 — 사고가 났을 때만 뜬다. 금액은 문서(1,200만/2,000만/1,800만)를 우리 경제로 축소했다: 주간 손익 20~50만에 그대로 두면 사고 한 번이 곧 파산이고, 그건 v4 가 없애기로 한 '억울한 실패'다.",
+  "phase6Note": "일반 카드(delivery=ordinary)는 온보딩 3주 뒤 카드 전용 RNG가 정한 2~4주 간격으로 최대 1장만 배달한다. 사고(delivery=immediate+trigger)는 즉시 채널이라 간격을 우회한다. theme 8종은 393px 공유 이미지 슬롯 event/<theme> 계약이다.",
   "cards": [
     {
       "id": "group_booking",
       "name": "단체 예약 문의 (40인)",
+      "theme": "crowd",
+      "delivery": "ordinary",
       "desc": "주말에 40명이 한꺼번에 오겠다고 합니다.",
       "options": [
         {
@@ -41,6 +44,8 @@
     {
       "id": "heatwave",
       "name": "폭염 예보",
+      "theme": "weather",
+      "delivery": "ordinary",
       "desc": "다음 주 낮 최고 35도. 그늘이 부족하면 손님이 지칩니다.",
       "options": [
         {
@@ -77,6 +82,8 @@
     {
       "id": "festival",
       "name": "지역 축제 협찬",
+      "theme": "publicity",
+      "delivery": "ordinary",
       "desc": "읍 축제에 협찬하면 현수막에 리조트 이름이 걸립니다.",
       "options": [
         {
@@ -110,6 +117,8 @@
     {
       "id": "broadcast",
       "name": "방송 촬영 요청",
+      "theme": "publicity",
+      "delivery": "ordinary",
       "desc": "예능 촬영을 하겠다고 합니다. 그 주는 문을 닫아야 합니다.",
       "options": [
         {
@@ -141,6 +150,8 @@
     {
       "id": "influencer",
       "name": "인플루언서 방문 제안",
+      "theme": "publicity",
+      "delivery": "ordinary",
       "desc": "팔로워 12만 계정이 무료 이용을 요청합니다.",
       "options": [
         {
@@ -175,6 +186,8 @@
     {
       "id": "safety_check",
       "name": "안전 점검 통보",
+      "theme": "safety",
+      "delivery": "ordinary",
       "desc": "군에서 수상시설 점검을 예고했습니다.",
       "options": [
         {
@@ -210,6 +223,8 @@
     {
       "id": "equipment_aging",
       "name": "장비 노후 경고",
+      "theme": "facility",
+      "delivery": "ordinary",
       "desc": "구명조끼와 튜브 상당수가 사용 연한을 넘겼습니다.",
       "options": [
         {
@@ -244,6 +259,8 @@
     {
       "id": "lifeguard_shortage",
       "name": "안전요원 결원",
+      "theme": "staff",
+      "delivery": "ordinary",
       "desc": "안전요원 한 명이 갑자기 그만뒀습니다.",
       "options": [
         {
@@ -274,6 +291,8 @@
     {
       "id": "accident_rumor",
       "name": "사고 소문",
+      "theme": "safety",
+      "delivery": "ordinary",
       "desc": "인근 다른 업장 사고가 우리 이야기로 퍼졌습니다.",
       "options": [
         {
@@ -304,6 +323,8 @@
     {
       "id": "typhoon",
       "name": "태풍 경보",
+      "theme": "weather",
+      "delivery": "ordinary",
       "desc": "다음 주 태풍이 서해로 붙습니다. 수상 시설이 위험합니다.",
       "options": [
         {
@@ -338,6 +359,8 @@
     {
       "id": "water_quality",
       "name": "상류 수질 악화",
+      "theme": "environment",
+      "delivery": "ordinary",
       "desc": "상류 공사로 물이 탁해졌습니다.",
       "options": [
         {
@@ -368,6 +391,8 @@
     {
       "id": "rainy_week",
       "name": "장마 예보",
+      "theme": "weather",
+      "delivery": "ordinary",
       "desc": "다음 주 내내 비. 실내 수요가 몰립니다.",
       "options": [
         {
@@ -404,6 +429,8 @@
     {
       "id": "cold_snap",
       "name": "이른 한파",
+      "theme": "weather",
+      "delivery": "ordinary",
       "desc": "물이 차서 수상 이용이 어렵습니다.",
       "options": [
         {
@@ -444,6 +471,8 @@
     {
       "id": "rival_opens",
       "name": "인근 업체 개업",
+      "theme": "market",
+      "delivery": "ordinary",
       "desc": "2km 상류에 새 빠지가 열었습니다.",
       "options": [
         {
@@ -479,6 +508,8 @@
     {
       "id": "price_pressure",
       "name": "요금 인상 검토",
+      "theme": "market",
+      "delivery": "ordinary",
       "desc": "물가가 올라 유지비 부담이 커졌습니다.",
       "options": [
         {
@@ -506,6 +537,8 @@
     {
       "id": "ota_commission",
       "name": "예약 플랫폼 제안",
+      "theme": "market",
+      "delivery": "ordinary",
       "desc": "숙박 예약 플랫폼이 입점을 권합니다. 수수료 12%.",
       "options": [
         {
@@ -533,6 +566,8 @@
     {
       "id": "parttimer",
       "name": "아르바이트 지원자",
+      "theme": "staff",
+      "delivery": "ordinary",
       "desc": "대학생 두 명이 여름 알바를 지원했습니다.",
       "options": [
         {
@@ -570,6 +605,8 @@
     {
       "id": "staff_training",
       "name": "직원 교육 과정",
+      "theme": "staff",
+      "delivery": "ordinary",
       "desc": "군에서 수상안전 교육을 무료로 열지만 이틀을 비워야 합니다.",
       "options": [
         {
@@ -597,6 +634,8 @@
     {
       "id": "wage_demand",
       "name": "임금 인상 요구",
+      "theme": "staff",
+      "delivery": "ordinary",
       "desc": "성수기 인력이 임금 인상을 요구합니다.",
       "options": [
         {
@@ -634,6 +673,8 @@
     {
       "id": "deck_repair",
       "name": "데크 부식 발견",
+      "theme": "facility",
+      "delivery": "ordinary",
       "desc": "플로팅덱 연결부가 삭았습니다.",
       "options": [
         {
@@ -664,6 +705,8 @@
     {
       "id": "solar_offer",
       "name": "태양광 설치 제안",
+      "theme": "environment",
+      "delivery": "ordinary",
       "desc": "지붕에 태양광을 깔면 전기료가 줄어듭니다.",
       "options": [
         {
@@ -694,6 +737,8 @@
     {
       "id": "parking_complaint",
       "name": "주차 민원",
+      "theme": "crowd",
+      "delivery": "ordinary",
       "desc": "마을 길에 손님 차가 늘어 민원이 들어왔습니다.",
       "options": [
         {
@@ -728,6 +773,8 @@
     {
       "id": "research_grant",
       "name": "관광 개선 지원금",
+      "theme": "market",
+      "delivery": "ordinary",
       "desc": "군 관광과에서 시설 개선 지원금을 공고했습니다.",
       "options": [
         {
@@ -757,6 +804,8 @@
     {
       "id": "waste_fee",
       "name": "폐기물 처리비 인상",
+      "theme": "environment",
+      "delivery": "ordinary",
       "desc": "쓰레기 처리 단가가 올랐습니다.",
       "options": [
         {
@@ -787,6 +836,8 @@
     {
       "id": "accident_response",
       "name": "사고가 났습니다",
+      "theme": "safety",
+      "delivery": "immediate",
       "desc": "수상 시설에서 부상 사고가 발생했습니다. 대응을 정해야 합니다.",
       "weight": 1,
       "trigger": "accident",
@@ -840,6 +891,8 @@
     {
       "id": "shop_office",
       "name": "설비 상인 — 사무실",
+      "theme": "facility",
+      "delivery": "ordinary",
       "type": "shop",
       "desc": "지나가던 설비 상인이 사무 설비를 헐값에 내놓았습니다. 운영(서비스) 시설입니다.",
       "options": [
@@ -870,6 +923,8 @@
     {
       "id": "shop_storage",
       "name": "설비 상인 — 창고",
+      "theme": "facility",
+      "delivery": "ordinary",
       "type": "shop",
       "desc": "상인이 이번엔 조립식 창고를 가져왔습니다. 운영(서비스) 시설입니다.",
       "options": [

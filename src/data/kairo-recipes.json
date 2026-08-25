@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "note": "Phase 3 첫 범위: 매점 4 + 카페 4. 기존 시설 menu 이름만 실제 레시피로 올렸다. 조합 순서는 무관하다.",
+  "recipes": [
+    {
+      "id": "shop_cup_ramen",
+      "name": "컵라면",
+      "facilityId": "shop",
+      "ingredients": ["noodle", "broth"],
+      "tags": ["warm", "hearty", "savory"],
+      "price": 700,
+      "satisfaction": 7,
+      "developmentCost": 120000
+    },
+    {
+      "id": "shop_snack",
+      "name": "과자",
+      "facilityId": "shop",
+      "ingredients": ["rice", "redbean"],
+      "tags": ["sweet", "light"],
+      "price": 600,
+      "satisfaction": 5,
+      "developmentCost": 90000
+    },
+    {
+      "id": "shop_can_drink",
+      "name": "캔음료",
+      "facilityId": "shop",
+      "ingredients": ["ice", "seaweed"],
+      "tags": ["cool", "light"],
+      "price": 700,
+      "satisfaction": 5,
+      "developmentCost": 80000,
+      "start": true
+    },
+    {
+      "id": "shop_gimbap",
+      "name": "김밥",
+      "facilityId": "shop",
+      "ingredients": ["rice", "seaweed"],
+      "tags": ["hearty", "savory"],
+      "price": 1200,
+      "satisfaction": 8,
+      "developmentCost": 150000
+    },
+    {
+      "id": "cafe_americano",
+      "name": "아메리카노",
+      "facilityId": "cafe",
+      "ingredients": ["ice", "coffee"],
+      "tags": ["cool", "light"],
+      "price": 900,
+      "satisfaction": 5,
+      "developmentCost": 90000,
+      "start": true
+    },
+    {
+      "id": "cafe_latte",
+      "name": "카페라떼",
+      "facilityId": "cafe",
+      "ingredients": ["coffee", "milk"],
+      "tags": ["warm", "sweet"],
+      "price": 1200,
+      "satisfaction": 7,
+      "developmentCost": 130000
+    },
+    {
+      "id": "cafe_bingsu",
+      "name": "빙수",
+      "facilityId": "cafe",
+      "ingredients": ["ice", "redbean"],
+      "tags": ["cool", "sweet"],
+      "price": 1500,
+      "satisfaction": 9,
+      "developmentCost": 180000
+    },
+    {
+      "id": "cafe_cake",
+      "name": "조각 케이크",
+      "facilityId": "cafe",
+      "ingredients": ["milk", "redbean"],
+      "tags": ["sweet", "hearty"],
+      "price": 800,
+      "satisfaction": 6,
+      "developmentCost": 110000
+    }
+  ]
+}

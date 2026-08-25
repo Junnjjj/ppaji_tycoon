@@ -13,6 +13,7 @@ import {
   type RideTiles,
 } from '../sim/kairo/placement.js';
 import type { NeedKind } from '../sim/kairo/week.js';
+import { recipeDef } from '../sim/kairo/menu.js';
 
 /**
  * 시설 인스턴스 정보 — **지도에서 시설을 탭하면 뜬다** (P2-B 가 남긴 미결).
@@ -136,6 +137,9 @@ export interface FacilityInfo {
   possible: readonly FacilitySpecialty[];
   /** 가게 품목 (표시 전용, K49). 파는 것이 없으면 빈 배열이고 그 블록이 안 뜬다 */
   menu: readonly { name: string; price: number }[];
+  /** Phase 3 개발·장착 시설인가. */
+  menuCraft: boolean;
+  menuSlots: number;
   /**
    * 슬라이드류의 입출구 (K51) — 없으면 `null` 이고 그 줄이 안 뜬다 (75종 중 4종뿐).
    *
@@ -221,7 +225,15 @@ export function facilityInfo(
      * 메뉴가 붙는 일도 없다 (단위 검사가 고정한다) — 있는 척 채우면 화장실에서 뭘 파는
      * 화면이 된다.
      */
-    menu: def.menu ?? [],
+    menu:
+      def.menuMode === 'craft'
+        ? placement.menuIdsOf(handle).flatMap((id) => {
+            const recipe = recipeDef(id);
+            return recipe ? [{ name: recipe.name, price: recipe.price }] : [];
+          })
+        : (def.menu ?? []),
+    menuCraft: def.menuMode === 'craft',
+    menuSlots: placement.menuSlotCount(handle),
     /*
      * ⚠ **`rideTilesOf` 로 잰다** (K51) — 데이터의 오프셋(`def.ride.entryTile`)을 그대로
      * 쓰면 회전한 시설에서 화면과 손님이 갈라진다. 손님이 쓰는 그 함수를 쓴다.
@@ -250,6 +262,8 @@ export interface FacilityActions {
   moveHint?: string;
   /** 철거 붓 + 조준 (K47-③) — 여기서 바로 없애지 않는다 */
   erase: () => void;
+  /** Phase 3 메뉴 개발 시트. 개발형 시설이 아니면 null. */
+  developMenu?: (() => void) | null;
   /**
    * 시트가 닫혔다 (K51). 지도에 켜 둔 것(입출구 표식)을 끄는 **유일한 경로**다.
    *
@@ -382,7 +396,7 @@ export class KairoFacilityInfo {
     this.body.append(this.upgradeBlock(info, actions));
 
     /* ── 4. 메뉴 — 파는 시설만 ─────────────────────────────────────────── */
-    if (info.menu.length > 0) this.body.append(menuBlock(info));
+    if (info.menu.length > 0 || info.menuCraft) this.body.append(menuBlock(info, actions));
 
     /* ── 5. 세부 ───────────────────────────────────────────────────────── */
     const rows = el('div', 'kstack');
@@ -586,11 +600,17 @@ function upgradeSub(info: FacilityInfo): string {
  * 그래서 화면이 **평균이 이용 요금**이라는 것을 말한다 — 안 말하면 "메뉴는 ₩3,000인데
  * 결산은 ₩8,000"으로 읽힌다. 데이터가 그 평균을 정확히 지키고 단위 검사가 고정한다.
  */
-function menuBlock(info: FacilityInfo): HTMLElement {
+function menuBlock(info: FacilityInfo, actions: FacilityActions): HTMLElement {
   const box = el('div', 'krow kstack');
   box.id = 'kairo-facility-menu';
   box.dataset['menu'] = String(info.menu.length);
-  box.append(el('div', 'kitem-name', '판매 품목'));
+  box.append(
+    el(
+      'div',
+      'kitem-name',
+      info.menuCraft ? `장착 메뉴 ${info.menu.length}/${info.menuSlots}` : '판매 품목',
+    ),
+  );
   const list = el('div', 'kstack');
   list.style.setProperty('--stack-gap', '2px');
   for (const m of info.menu) {
@@ -602,8 +622,20 @@ function menuBlock(info: FacilityInfo): HTMLElement {
     list.append(line);
   }
   box.append(list);
+  if (info.menuCraft) {
+    const develop = button('kbtn primary', '메뉴 개발', () => actions.developMenu?.());
+    develop.id = 'kairo-facility-menu-develop';
+    develop.disabled = !actions.developMenu;
+    box.append(develop);
+  }
   box.append(
-    el('div', 'kcaption', `평균 ${won(info.fee)} — 결산에 잡히는 1회 이용 금액입니다`),
+    el(
+      'div',
+      'kcaption',
+      info.menuCraft
+        ? '손님은 장착한 메뉴 중 하나를 실제로 삽니다'
+        : `평균 ${won(info.fee)} — 결산에 잡히는 1회 이용 금액입니다`,
+    ),
   );
   return box;
 }

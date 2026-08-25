@@ -223,10 +223,14 @@ describe('결산이 입장료와 별도 구매를 가른다', () => {
      * **세 줄이 실제로 갈리는지** 본다 — 코스 매출이 매점 줄에 새면 "음식이 돈이 된다"가
      * 거짓이 된다 (코스는 `장비×프리셋 적합도`라는 자기 축을 이미 갖는다).
      */
-    const at = (courses?: { revenue: number; upkeep: number; riders: number }) =>
+    const at = (courses?: {
+      potentialRevenue: number;
+      upkeep: number;
+      potentialRiders: number;
+    }) =>
       world(SHOP_PARK).r.run(new Rng(7), { season: 'summer', ...(courses ? { courses } : {}) });
     const plain = at();
-    const withCourse = at({ revenue: 400_000, upkeep: 0, riders: 40 });
+    const withCourse = at({ potentialRevenue: 400_000, upkeep: 0, potentialRiders: 40 });
     expect(plain.courseRevenue).toBe(0);
     expect(withCourse.courseRevenue).toBeGreaterThan(0);
     // 코스를 켜도 매점 줄은 한 원도 안 움직인다

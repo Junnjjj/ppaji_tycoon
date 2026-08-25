@@ -2,6 +2,12 @@ import rawFacilities from '../../data/kairo-facilities.json' with { type: 'json'
 import { KairoTerrain } from './terrain.js';
 import { WallGrid, reachable, EDGE_DOOR } from './walls.js';
 import { riverZones, permitUsed, deckKey } from './swim.js';
+import {
+  isRecipeForFacility,
+  menuFacilityOperability,
+  menuSlotsForLevel,
+  type MenuFacilityOperability,
+} from './menu.js';
 /*
  * ⚠ **타입만** 가져온다 (컴파일에서 지워진다). `week.ts` 가 이 파일을 import 하므로
  * 값으로 가져오면 순환이 된다 — `certs.ts`·`cards.ts` 가 쓰는 것과 같은 방식이다.
@@ -187,6 +193,10 @@ export interface KairoFacilityDef {
    * ⚠ 입장권에 포함인 시설에는 넣지 않는다 — 있는 척 채우면 "여기도 음식을 파나?"가 된다.
    */
   menu?: readonly { name: string; price: number }[];
+  /** Phase 3: 조합·장착 가능 시설인가. 첫 범위는 매점·카페 둘뿐이다. */
+  menuMode?: 'craft' | 'fixed';
+  /** 구 v7 시설과 신규 시설에 결정적으로 장착되는 기본 메뉴. */
+  startingMenu?: readonly string[];
   /**
    * 어느 수요를 채우나 — 손님의 need 축 9종 중 하나.
    *
@@ -411,6 +421,11 @@ export interface PlacedFacility {
    * (`visitorsTotal` 선례, `src/save/kairo.ts`).
    */
   specialty?: FacilitySpecialty;
+  /**
+   * Phase 3 시설 인스턴스별 장착 메뉴. 일반 손님 취향·재고를 담지 않고
+   * 이 작은 배열만 저장한다. 구 v7에 없으면 `startingMenu`를 파생한다.
+   */
+  menuIds?: string[];
 }
 
 export type PlaceFail =
@@ -1208,7 +1223,16 @@ export class PlacementGrid {
      * 지금도 판의 거의 전부가 0 이다 — 넣으면 스냅샷이 시설 수만큼 커진다.
      * 조건이 `!== 0` 인 것이 핵심: `=== 1` 로 두면 2·3 이 조용히 0 으로 저장된다.
      */
-    const placed: PlacedFacility = { handle, defId, i, j, ...(facing !== 0 ? { facing } : {}) };
+    const placed: PlacedFacility = {
+      handle,
+      defId,
+      i,
+      j,
+      ...(facing !== 0 ? { facing } : {}),
+      ...(def.menuMode === 'craft' && (def.startingMenu?.length ?? 0) > 0
+        ? { menuIds: [...(def.startingMenu ?? [])].slice(0, menuSlotsForLevel(1)) }
+        : {}),
+    };
     this.items.set(handle, placed);
     for (const [ti, tj] of PlacementGrid.footprintTiles(def, i, j, facing)) {
       this.cells[tj * this.width + ti] = handle;
@@ -1237,6 +1261,59 @@ export class PlacementGrid {
   /** 개선 단계 (없으면 1) */
   levelOf(handle: number): number {
     return this.items.get(handle)?.level ?? 1;
+  }
+
+  /** 시설 단계가 여는 메뉴 칸. 규칙은 `menu.ts` 한 곳에 있다. */
+  menuSlotCount(handle: number): number {
+    const item = this.items.get(handle);
+    const def = item ? DEFS[item.defId] : undefined;
+    return def?.menuMode === 'craft' ? menuSlotsForLevel(this.levelOf(handle)) : 0;
+  }
+
+  /** 장착된 메뉴 ID. 반환 배열을 바꾸어도 시설 상태는 바뀌지 않는다. */
+  menuIdsOf(handle: number): string[] {
+    const item = this.items.get(handle);
+    if (!item || this.menuSlotCount(handle) === 0) return [];
+    return [...(item.menuIds ?? [])].slice(0, this.menuSlotCount(handle));
+  }
+
+  /** 손님·주간 공급·입장 정원이 함께 쓰는 메뉴형 시설 운영 판정. */
+  menuOperabilityOf(
+    handle: number,
+    recipeAvailable: (recipeId: string) => boolean = () => true,
+  ): MenuFacilityOperability {
+    const item = this.items.get(handle);
+    const def = item ? DEFS[item.defId] : undefined;
+    return menuFacilityOperability(
+      item?.defId,
+      def?.menuMode,
+      this.menuIdsOf(handle),
+      recipeAvailable,
+    );
+  }
+
+  /** 메뉴 없는 craft 시설을 뺀 실제 동시 이용 정원. */
+  operationalCapacity(
+    recipeAvailable: (recipeId: string) => boolean = () => true,
+  ): number {
+    let n = 0;
+    for (const item of this.items.values()) {
+      if (!this.menuOperabilityOf(item.handle, recipeAvailable).operable) continue;
+      n += this.capacityOf(item.handle);
+    }
+    return n;
+  }
+
+  /**
+   * `MenuStore.equip` 이 발견·호환을 검증한 뒤 들어오는 저수준 저장 관문.
+   * 스냅샷 복원은 아래에서 현재 데이터와 다시 맞댓다.
+   */
+  setMenuIds(handle: number, ids: readonly string[]): boolean {
+    const item = this.items.get(handle);
+    const slots = this.menuSlotCount(handle);
+    if (!item || slots === 0 || ids.length > slots) return false;
+    item.menuIds = [...ids];
+    return true;
   }
 
   /**
@@ -1387,7 +1464,9 @@ export class PlacementGrid {
   static fromSnapshot(s: PlacementSnapshot): PlacementGrid {
     const g = new PlacementGrid(s.w, s.h);
     g.nextHandle = s.next;
-    for (const it of s.items) {
+    for (const raw of s.items) {
+      // 호출자의 fixture·파싱 결과를 복원 중 직접 고치지 않는다.
+      const it: PlacedFacility = { ...raw, ...(raw.menuIds ? { menuIds: [...raw.menuIds] } : {}) };
       const def = DEFS[it.defId];
       if (!def) continue;
       /*
@@ -1397,6 +1476,19 @@ export class PlacementGrid {
        */
       if (it.specialty && !PlacementGrid.specialtiesFor(it.defId).includes(it.specialty)) {
         delete it.specialty;
+      }
+      if (def.menuMode === 'craft') {
+        const slots = menuSlotsForLevel(it.level ?? 1);
+        const source = it.menuIds ?? [...(def.startingMenu ?? [])];
+        const clean: string[] = [];
+        for (const id of source) {
+          if (clean.length >= slots) break;
+          if (typeof id !== 'string' || id === '' || clean.includes(id)) continue;
+          if (isRecipeForFacility(id, it.defId)) clean.push(id);
+        }
+        it.menuIds = clean;
+      } else {
+        delete it.menuIds;
       }
       g.items.set(it.handle, it);
       for (const [ti, tj] of PlacementGrid.footprintTiles(def, it.i, it.j, it.facing ?? 0)) {

@@ -103,7 +103,13 @@ import {
   TICKET_DEF_ID,
   setSlotRestoreFaultForTest,
 } from '../src/sim/kairo/guests.js';
-import { WeekRunner, type NeedKind, type Season, type WeekReport } from '../src/sim/kairo/week.js';
+import {
+  WeekRunner,
+  forkWeekRngStreams,
+  type NeedKind,
+  type Season,
+  type WeekReport,
+} from '../src/sim/kairo/week.js';
 import { evaluateCombos, comboEffect, previewCombos } from '../src/sim/kairo/combos.js';
 import { CardStore, CARD_RNG_SALT, optionCash, triggerCard } from '../src/sim/kairo/cards.js';
 import { assessRisk, accidentChance } from '../src/sim/kairo/risk.js';
@@ -142,8 +148,10 @@ import {
   EXAM_PASS_RATIO,
 } from '../src/sim/kairo/exam.js';
 import { WishStore } from '../src/sim/kairo/wishes.js';
+import { MenuStore, recipeDef } from '../src/sim/kairo/menu.js';
 import { CERTS, CERT_CAPACITY_TOTAL, CertStore, certStatuses, effectiveGrade } from '../src/sim/kairo/certs.js';
 import { COMBOS } from '../src/sim/kairo/combos.js';
+import { ENDING_CERT_THRESHOLD, ENDING_GRADE_THRESHOLD } from '../src/sim/kairo/meta.js';
 
 const args = process.argv.slice(2);
 const flag = (name: string, dflt: number): number => {
@@ -389,6 +397,11 @@ interface RunResult {
   upkeepByWeek: number[];
   cashByWeek: number[];
   buildSpendByWeek: number[];
+  /** Phase 3: 실제 guest-agent 구매와 이름 있는 단골 사슬이 헤드리스에서도 도는지. */
+  menuPurchases: number;
+  regularPurchases: number;
+  regularAffinity: number;
+  regularStages: Record<string, number>;
 }
 
 /**
@@ -1327,6 +1340,8 @@ function buildOne(
    * 허가 없이 강을 밀폐하는 세계를 잰다 (K36 의 토지 해금과 같은 종류의 divergence).
    */
   permitArea?: number,
+  /** Phase 3 단골 B 목표처럼 특정 시설을 겨냥할 때만. 없으면 기존 후보 정책 그대로다. */
+  onlyId?: string,
 ): number {
   const opts = permitArea === undefined ? { land } : { land, permitArea };
   /** 손님 판정 — 방향 고르기(K52)가 "여기 이미 길이 있나"를 이걸로 본다 */
@@ -1334,6 +1349,7 @@ function buildOne(
   const cands = allFacilityDefs()
     .filter((d) => {
       const x = d as unknown as { need?: NeedKind; cost: number };
+      if (onlyId !== undefined && d.id !== onlyId) return false;
       if (!isUnlocked(d.id)) return false;
       if (x.cost > cash) return false;
       if (want && x.need !== want) return false;
@@ -1547,7 +1563,11 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         }
       : GUEST_DEFAULTS;
   const g = new GuestStore(t, w, p, GATE, tunables);
+  const menus = new MenuStore();
+  g.setMenuStore(menus);
   const week = new WeekRunner(t, p, g);
+  /** 날씨·일반 손님·단골·사고는 봇의 건설 RNG와도, 서로와도 소비량을 공유하지 않는다. */
+  const weekRngStreams = forkWeekRngStreams(rng);
   const progress = new ProgressStore();
   const unlocks = new UnlockStore();
   const exam = new ExamStore();
@@ -1651,9 +1671,14 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const upkeepByWeek: number[] = [];
   const cashByWeek: number[] = [];
   const buildSpendByWeek: number[] = [];
+  let menuPurchases = 0;
+  let regularPurchases = 0;
+  let regularAffinity = 0;
   const seasons: Season[] = ['summer', 'summer', 'autumn', 'winter', 'spring'];
 
   for (let k = 0; k < weeks; k++) {
+    const plannedRegularVisits = wishes.regularVisitsForWeek(k + 1);
+    const requestedMenuFacility = recipeDef(plannedRegularVisits[0]?.requestedRecipeId)?.facilityId;
     /*
      * 방을 **미리** 넓힌다.
      *
@@ -1844,12 +1869,19 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         w,
         p,
         budget,
-        b === 0 ? want : null,
+        b === 0 && requestedMenuFacility && p.instancesOf(requestedMenuFacility).length === 0
+          ? null
+          : b === 0
+            ? want
+            : null,
         rng,
         (id) => unlocks.isUnlocked(id, gradeNo),
         landRect(gradeNow()),
         buildFailWhy,
         gradeNow().permitArea,
+        b === 0 && requestedMenuFacility && p.instancesOf(requestedMenuFacility).length === 0
+          ? requestedMenuFacility
+          : undefined,
       );
       cash -= spent;
       buildSpend += spent;
@@ -2220,17 +2252,40 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     const wantGrade5 = gradeNo === 4 && cash > 20_000_000;
     const priceMult = wantGrade5 ? 0.9 : sat > 78 ? 1.2 : sat < 62 ? 0.85 : 1;
 
-    const rep = week.run(rng, {
+    /*
+     * Phase 3 메뉴 봇은 이번 주에 오는 단골의 **현재 요청 하나만** 준비한다. 정답 조합을
+     * 알고 있는 밸런스 봇이지만, 게임과 같은 개발비·해금·슬롯 규칙을 통과한다. 시설이
+     * 없으면 억지 배치하지 않고 기존 건설 봇을 기다린다 — 요청이 실제 판의 성장과 만난다.
+     */
+    const regularVisits = plannedRegularVisits;
+    const visit = regularVisits[0];
+    if (visit) {
+      const request = recipeDef(visit.requestedRecipeId);
+      const target = request ? p.all().find((it) => it.defId === request.facilityId) : undefined;
+      if (request && target && request.ingredients.every((id) => menus.hasIngredient(id))) {
+        if (!menus.hasRecipe(request.id)) {
+          menus.develop(request.facilityId, request.ingredients, (cost) => {
+            if (cash < cost) return false;
+            cash -= cost;
+            return true;
+          });
+        }
+        if (menus.hasRecipe(request.id)) menus.equip(p, target.handle, request.id, 0);
+      }
+    }
+
+    const rep = week.run(weekRngStreams, {
       season,
+      regularVisits,
       reputation: gr.reputationPull,
       priceMult,
       mapShares: shiftedShares(seasonShares(season), map),
       mapSceneryBonus: map.sceneryBonus,
       modifiers: mods,
       courses: {
-        revenue: courseWeek.revenue,
+        potentialRevenue: courseWeek.potentialRevenue,
         upkeep: courseWeek.upkeep,
-        riders: courseWeek.riders,
+        potentialRiders: courseWeek.potentialRiders,
       },
       // 콤보 보너스 (S5) — `src/main.ts` 의 assembleWeekOpts 와 **같은 함수·같은 인자**.
       // 한쪽만 넘기면 헤드리스와 실제 판이 갈라진다 (week.test.ts 정적 검사가 지킨다)
@@ -2281,6 +2336,17 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     admissionTotal += rep.admission;
     salesTotal += rep.sales;
     courseTotal += rep.courseRevenue;
+    menuPurchases += rep.menuPurchases.length;
+    regularPurchases += rep.menuPurchases.filter((x) => x.characterId !== undefined).length;
+    for (const ev of wishes.settleRegularPurchases(rep.menuPurchases)) {
+      if (ev.kind === 'regular-done') regularAffinity += ev.request.affinity;
+      else if (ev.kind === 'ingredient-unlock') menus.unlockIngredient(ev.id);
+      else if (ev.kind === 'recipe-unlock') menus.unlockRecipe(ev.id);
+      else {
+        if (ev.reward.cash) cash += ev.reward.cash;
+        if (ev.reward.facility) unlocks.grant(ev.reward.facility);
+      }
+    }
     cards.tickWeek();
     last = rep;
     reputation.push(rep.exitSatisfaction);
@@ -2481,6 +2547,12 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     upkeepByWeek,
     cashByWeek,
     buildSpendByWeek,
+    menuPurchases,
+    regularPurchases,
+    regularAffinity,
+    regularStages: Object.fromEntries(
+      ['minji', 'sooyeon'].map((id) => [id, wishes.regularStatus(id)?.stage ?? 0]),
+    ),
   };
 }
 
@@ -2552,9 +2624,18 @@ function main(): void {
   const runs: RunResult[] = [];
   for (let s = 0; s < SEEDS; s++) runs.push(runOne(1000 + s * 7, WEEKS));
   const ms = Date.now() - t0;
+  const endingDistribution = {
+    gradeThreshold: ENDING_GRADE_THRESHOLD,
+    certThreshold: ENDING_CERT_THRESHOLD,
+    gradeQualified: runs.filter((r) => r.examGrade >= ENDING_GRADE_THRESHOLD).length,
+    certQualified: runs.filter((r) => r.certsEarned >= ENDING_CERT_THRESHOLD).length,
+    eligible: runs.filter(
+      (r) => r.examGrade >= ENDING_GRADE_THRESHOLD && r.certsEarned >= ENDING_CERT_THRESHOLD,
+    ).length,
+  };
 
   if (JSON_OUT) {
-    console.log(JSON.stringify({ seeds: SEEDS, weeks: WEEKS, ms, runs }, null, 2));
+    console.log(JSON.stringify({ seeds: SEEDS, weeks: WEEKS, ms, endingDistribution, runs }, null, 2));
     return;
   }
 
@@ -2587,6 +2668,9 @@ function main(): void {
     ['만석 비율', runs.map((r) => r.turnedAwayRatio * 100), (n) => `${n.toFixed(0)}%`],
     ['헛걸음 비율', runs.map((r) => r.gaveUpRatio * 100), (n) => `${n.toFixed(0)}%`],
     ['의뢰 완료', runs.map((r) => r.questsDone), (n) => String(n)],
+    ['메뉴 구매', runs.map((r) => r.menuPurchases), (n) => String(n)],
+    ['단골 구매', runs.map((r) => r.regularPurchases), (n) => String(n)],
+    ['단골 친밀도', runs.map((r) => r.regularAffinity), (n) => String(n)],
   ];
   console.log(`\n${'항목'.padEnd(14)}${'최소'.padStart(9)}${'25%'.padStart(9)}${'중앙'.padStart(9)}${'75%'.padStart(9)}${'최대'.padStart(9)}`);
   console.log('-'.repeat(60));
@@ -2604,6 +2688,11 @@ function main(): void {
 
   const bankrupt = runs.filter((r) => r.bankrupt).length;
   console.log(`\n파산 ${bankrupt}/${SEEDS}판`);
+  console.log(
+    `첫 엔딩 문턱: ${ENDING_GRADE_THRESHOLD}등급 ${endingDistribution.gradeQualified}/${SEEDS}판 · ` +
+      `인증 ${ENDING_CERT_THRESHOLD}종 ${endingDistribution.certQualified}/${SEEDS}판 · ` +
+      `동시 달성 ${endingDistribution.eligible}/${SEEDS}판`,
+  );
 
   // 성장 곡선 — 주차별 손익 중앙값
   const byWeek: number[] = [];

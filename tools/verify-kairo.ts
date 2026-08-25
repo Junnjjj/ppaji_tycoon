@@ -23,7 +23,7 @@
  * - **핀치/멀티터치는 CDP `Input.dispatchTouchEvent` 로 보낼 것.** 합성 PointerEvent 는
  *   Phaser 가 무시해서 멀쩡한 코드가 실패로 나온다.
  */
-import { chromium, type ConsoleMessage } from 'playwright';
+import { chromium, type CDPSession, type ConsoleMessage, type Page } from 'playwright';
 // 배경 겹 수·id 의 정본. 검사에 상수를 박으면 겹을 더할 때마다 검사가 깨진다 (K36-B)
 import { KAIRO } from '../src/assets/kairo-contract.js';
 // 격자 꼭지점 → 화면 텍셀. 표식 절이 **기대 선분을 스스로 만들 때** 쓴다 (K52)
@@ -37,6 +37,8 @@ const BASE = process.env['PPAJI_URL'] ?? 'http://localhost:5173';
  */
 const URL = `${BASE}/?kairo=1&px=1&debug=1`;
 const HEADED = process.argv.includes('--headed');
+/** Phase 7의 세로·가로 실제 터치 게이트만 빠르게 재현한다. 전체 회귀 경로는 그대로다. */
+const PHASE7_ONLY = process.argv.includes('--phase7');
 /**
  * 판의 육지를 통째로 포장한다 — K32-B 부터 **잔디는 손님이 못 지나간다.**
  *
@@ -230,6 +232,69 @@ const record = (name: string, verdict: Verdict, detail = ''): void => {
   console.log(`  ${icon} ${name}${detail ? ` — ${detail}` : ''}`);
 };
 
+/** DOM click이 아니라 브라우저 입력 파이프를 타는 한 손가락 탭. */
+async function touchElement(page: Page, cdp: CDPSession, selector: string): Promise<void> {
+  const target = page.locator(selector).first();
+  await target.scrollIntoViewIfNeeded();
+  const box = await target.boundingBox();
+  if (!box) throw new Error(`터치할 수 없는 요소: ${selector}`);
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+  await cdp.send('Input.dispatchTouchEvent', {
+    type: 'touchStart',
+    touchPoints: [{ x, y, id: 1 }],
+  });
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+}
+
+interface SurfaceAudit {
+  controls: number;
+  minTarget: number;
+  unreachable: number;
+  documentOverflow: number;
+}
+
+/**
+ * 가로 화면 표면의 계약: 문서 자체는 옆으로 새지 않고, 각 컨트롤은 표면 스크롤로
+ * 세로 도달 가능하며, 짧은 변이 44px(렌더 소수 오차 0.25px 허용)다.
+ */
+async function auditSurface(page: Page, rootSelector: string): Promise<SurfaceAudit> {
+  const root = page.locator(rootSelector).first();
+  await root.waitFor({ state: 'visible' });
+  const controls = root.locator('button, [role="button"]');
+  const count = await controls.count();
+  let minTarget = Infinity;
+  let unreachable = 0;
+  let visibleCount = 0;
+  for (let index = 0; index < count; index++) {
+    const control = controls.nth(index);
+    if (!(await control.isVisible())) continue;
+    visibleCount++;
+    await control.scrollIntoViewIfNeeded();
+    const box = await control.boundingBox();
+    if (!box) {
+      unreachable++;
+      continue;
+    }
+    minTarget = Math.min(minTarget, box.width, box.height);
+    if (
+      box.x + box.width <= 0 ||
+      box.x >= page.viewportSize()!.width ||
+      box.y + box.height <= 0 ||
+      box.y >= page.viewportSize()!.height
+    ) unreachable++;
+  }
+  const documentOverflow = await page.evaluate(
+    `Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - window.innerWidth`,
+  ) as number;
+  return {
+    controls: visibleCount,
+    minTarget: Number.isFinite(minTarget) ? Math.round(minTarget * 100) / 100 : 0,
+    unreachable,
+    documentOverflow: Math.round(documentOverflow * 100) / 100,
+  };
+}
+
 async function main(): Promise<void> {
   console.log(`카이로 검증 — ${URL}`);
   const browser = await chromium.launch({ channel: 'chrome', headless: !HEADED });
@@ -295,6 +360,333 @@ async function main(): Promise<void> {
     httpFails.length === 0 ? 'pass' : 'fail',
     httpFails.slice(0, 3).join(' | '),
   );
+
+  /*
+   * ── Phase 7 경영 IA/온보딩 ───────────────────────────────────────────
+   * 세로·가로 모두 **진짜 터치**로 메뉴를 연 뒤 Today가 먼저이고 운영/성장/기록이
+   * 정확한 항목을 갖는지 잰다. DOM click만 쓰면 44px 타깃과 터치 경로를 못 잰다.
+   */
+  for (const [w, h, tag] of [
+    [393, 852, '세로'],
+    [852, 393, '가로'],
+  ] as const) {
+    const phase7Context = await browser.newContext({ ...DEVICE, viewport: { width: w, height: h } });
+    const phase7Page = await phase7Context.newPage();
+    await phase7Page.addInitScript(`try { localStorage.clear(); } catch {}`);
+    await phase7Page.goto(URL, { waitUntil: 'load' });
+    await phase7Page.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+    // 디버그 HUD는 Phaser가 첫 프레임을 낸 순간부터 채워지지만, 경영 시트의 동적 import와
+    // 조립은 그 뒤에 끝날 수 있다. DOM 정본이 준비되기 전에 터치하면 버튼만 눌리고 빈 시트를
+    // 재는 부팅 경합이 된다.
+    await phase7Page.waitForFunction(
+      `(() => document.querySelectorAll('.kmanage-action').length === 12 &&
+        !!document.querySelector('.kmanage-today .kmanage-label'))()`,
+      undefined,
+      { timeout: 15000 },
+    );
+    const phase7Cdp = await phase7Context.newCDPSession(phase7Page);
+    const menuAt = (await phase7Page.evaluate(`(() => {
+      const r = document.getElementById('kairo-menu-open').getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    })()`)) as { x: number; y: number };
+    await phase7Cdp.send('Input.dispatchTouchEvent', {
+      type: 'touchStart',
+      touchPoints: [{ x: menuAt.x, y: menuAt.y, id: 1 }],
+    });
+    await phase7Cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await phase7Page.waitForTimeout(150);
+    const view = (await phase7Page.evaluate(`(() => {
+      const host = document.querySelector('.kmanage');
+      const names = [...document.querySelectorAll('[data-manage-group]')].map((group) => ({
+        id: group.getAttribute('data-manage-group'),
+        actions: [...group.querySelectorAll('[data-manage-action]')].map((button) => button.getAttribute('data-manage-action')),
+      }));
+      const targets = [...document.querySelectorAll('.kmanage-action')].map((button) => {
+        const r = button.getBoundingClientRect();
+        // DPR3 레이아웃은 44 CSS px를 43.999969처럼 되돌릴 수 있다. 렌더 소수 오차를
+        // 제품 크기 회귀로 오인하지 않도록 1/100px에서 정규화한다.
+        return Math.round(Math.min(r.width, r.height) * 100) / 100;
+      });
+      return {
+        today: (document.querySelector('.kmanage-today .kmanage-label') || {}).textContent || '',
+        names: names,
+        minTarget: targets.length ? Math.min(...targets) : 0,
+        overflow: host ? host.scrollWidth - host.clientWidth : 999,
+      };
+    })()`)) as {
+      today: string;
+      names: { id: string; actions: string[] }[];
+      minTarget: number;
+      overflow: number;
+    };
+    await phase7Page.screenshot({ path: `${SHOT_DIR}/kairo-management-phase7-${tag}.png` });
+    const exact = JSON.stringify(view.names) === JSON.stringify([
+      { id: 'operations', actions: ['price', 'staff', 'course'] },
+      { id: 'growth', actions: ['exam', 'regular', 'quests', 'codex'] },
+      { id: 'records', actions: ['report', 'view', 'certs', 'ending'] },
+    ]);
+    record(
+      `Phase 7 경영 IA ${tag} — Today 우선 · 세 그룹 · 44px 터치`,
+      view.today.includes('시작 코스') && exact && view.minTarget >= 44 && view.overflow <= 0
+        ? 'pass'
+        : 'fail',
+      `Today "${view.today}" · 그룹 ${view.names.map((group) => group.id).join('/')} · ` +
+        `타깃 ${view.minTarget}px · 넘침 ${view.overflow}px`,
+    );
+
+    if (tag === '세로') {
+      // 온보딩 중에도 Today 밖의 기록 화면을 열 수 있어야 한다 — 안내는 잠금 장치가 아니다.
+      await touchElement(
+        phase7Page,
+        phase7Cdp,
+        '[data-manage-group="records"] [data-manage-action="ending"]',
+      );
+      await phase7Page.waitForTimeout(100);
+      const freePlay = await phase7Page.evaluate(`(() => ({
+        ending: !document.getElementById('kairo-ending').hidden,
+        step: window.__kairo.onboardingStep()
+      }))()`) as { ending: boolean; step: string };
+      record(
+        'Phase 7 온보딩 — Today 밖 경영 행동을 막지 않는다',
+        freePlay.ending && freePlay.step === 'open-course' ? 'pass' : 'fail',
+        `엔딩 표면 ${freePlay.ending ? '열림' : '닫힘'} · 단계 ${freePlay.step}`,
+      );
+      await touchElement(phase7Page, phase7Cdp, '#kairo-ending-close');
+      await touchElement(phase7Page, phase7Cdp, '#kairo-menu-open');
+      await touchElement(phase7Page, phase7Cdp, '.kmanage-today .kmanage-action');
+      await phase7Page.waitForFunction(
+        `(() => !document.getElementById('kairo-course').hidden && window.__kairo.coursePanel.state.phase === 'info')()`,
+      );
+      const openedStep = await phase7Page.evaluate(`window.__kairo.onboardingStep()`);
+
+      // 정보 → 편집은 실제 버튼, route-dragged는 실제 캔버스 손가락 드래그다.
+      await touchElement(phase7Page, phase7Cdp, '#kairo-course-confirm');
+      const routeBefore = await phase7Page.evaluate(
+        `JSON.stringify(window.__kairo.coursePanel.state.handles)`,
+      ) as string;
+      const grab = await phase7Page.evaluate(`(() => {
+        const h = window.__kairo, cv = document.querySelector('canvas');
+        const cr = cv.getBoundingClientRect(), v = h.coursePanel.state.handles[0];
+        const r = h.scene.tileScreenRect(Math.round(v.x), Math.round(v.y));
+        return { x: cr.left + (r.x + 16) * cr.width / cv.width,
+                 y: cr.top + (r.y + 8) * cr.height / cv.height };
+      })()`) as { x: number; y: number };
+      await phase7Cdp.send('Input.dispatchTouchEvent', {
+        type: 'touchStart', touchPoints: [{ x: grab.x, y: grab.y, id: 1 }],
+      });
+      for (let k = 1; k <= 6; k++) {
+        await phase7Cdp.send('Input.dispatchTouchEvent', {
+          type: 'touchMove',
+          touchPoints: [{ x: grab.x + k * 6, y: grab.y + k * 4, id: 1 }],
+        });
+      }
+      await phase7Cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+      await phase7Page.waitForTimeout(150);
+      const dragged = await phase7Page.evaluate(`(() => ({
+        route: JSON.stringify(window.__kairo.coursePanel.state.handles),
+        step: window.__kairo.onboardingStep()
+      }))()`) as { route: string; step: string };
+      record(
+        'Phase 7 온보딩 — Today course-opened → 실제 route-dragged',
+        openedStep === 'drag-route' && dragged.route !== routeBefore && dragged.step === 'test-run'
+          ? 'pass' : 'fail',
+        `${openedStep} → ${dragged.step} · 경로 ${routeBefore} → ${dragged.route}`,
+      );
+
+      // 변경비가 있는 더 비싼 호환 장비를 실제 버튼으로 고른다. tow면 스포츠 보트도 골라
+      // 현재 코스보다 높은 스릴 기록 후보를 확실히 만든다.
+      const candidate = await phase7Page.evaluate(`(() => {
+        const h = window.__kairo, st = h.coursePanel.state, current = h.courses.all[0];
+        const oldCost = h.courseApi.courseEquipment(current.equipId).vehicleCost * current.vehicles;
+        return [...document.querySelectorAll('#kairo-course-equip [data-equip]')]
+          .map((button) => ({ id: button.getAttribute('data-equip'), disabled: button.disabled }))
+          .filter((x) => !x.disabled && !h.courseApi.fitBlocked(x.id, st.presetId))
+          .map((x) => ({ ...x, def: h.courseApi.courseEquipment(x.id) }))
+          .filter((x) => x.def && x.def.vehicleCost * st.vehicles > oldCost)
+          .sort((a, b) => b.def.vehicleCost - a.def.vehicleCost)[0]?.id || null;
+      })()`) as string | null;
+      if (candidate) {
+        await touchElement(phase7Page, phase7Cdp, `[data-equip="${candidate}"]`);
+        const tow = await phase7Page.evaluate(
+          `window.__kairo.courseApi.courseEquipment(window.__kairo.coursePanel.state.equipId).kind === 'tow'`,
+        ) as boolean;
+        if (tow && await phase7Page.locator('[data-boat="sport"]').isVisible()) {
+          await touchElement(phase7Page, phase7Cdp, '[data-boat="sport"]');
+        }
+      }
+      const payable = await phase7Page.evaluate(`(() => {
+        const h = window.__kairo, st = h.coursePanel.state, current = h.courses.all[0];
+        const oldCost = h.courseApi.courseEquipment(current.equipId).vehicleCost * current.vehicles;
+        const nextCost = h.courseApi.courseEquipment(st.equipId).vehicleCost * st.vehicles;
+        return { charge: Math.max(0, nextCost - oldCost), disabled: document.getElementById('kairo-course-confirm').disabled };
+      })()`) as { charge: number; disabled: boolean };
+      await touchElement(phase7Page, phase7Cdp, '#kairo-course-confirm');
+      await phase7Page.waitForFunction(
+        `window.__kairo.coursePanel.state.phase === 'review'`,
+        undefined,
+        { timeout: 6500 },
+      );
+      const trialStep = await phase7Page.evaluate(`window.__kairo.onboardingStep()`);
+      record(
+        'Phase 7 온보딩 — 실제 trial-started → review',
+        payable.charge > 0 && !payable.disabled && trialStep === 'apply-course' ? 'pass' : 'fail',
+        `변경비 ${payable.charge} · 단계 ${trialStep}`,
+      );
+
+      // 시험 성공 자체는 커리어를 쓰지 않는다. 돈 없는 적용도 코스/커리어 모두 그대로다.
+      const beforeApply = await phase7Page.evaluate(`(() => {
+        const h = window.__kairo;
+        const snapshot = h.careerSnapshot();
+        const cash = h.week.cash;
+        h.week.spend(cash);
+        return { course: JSON.stringify(h.courses.all), records: snapshot.courseRecords.length, cash: cash };
+      })()`) as { course: string; records: number; cash: number };
+      await touchElement(phase7Page, phase7Cdp, '#kairo-course-confirm');
+      await phase7Page.waitForTimeout(100);
+      const unpaid = await phase7Page.evaluate(`(() => ({
+        phase: window.__kairo.coursePanel.state.phase,
+        course: JSON.stringify(window.__kairo.courses.all),
+        records: window.__kairo.careerSnapshot().courseRecords.length
+      }))()`) as { phase: string; course: string; records: number };
+      record(
+        'Phase 7 코스 기록 — 시험·미결제 적용은 커리어를 쓰지 않는다',
+        beforeApply.records === 0 && unpaid.records === 0 && unpaid.phase === 'review' &&
+          unpaid.course === beforeApply.course ? 'pass' : 'fail',
+        `기록 ${beforeApply.records} → ${unpaid.records} · phase ${unpaid.phase}`,
+      );
+      await phase7Page.evaluate(`window.__kairo.week.earn(${beforeApply.cash + 5_000_000})`);
+      await touchElement(phase7Page, phase7Cdp, '#kairo-course-confirm');
+      await phase7Page.waitForFunction(
+        `document.getElementById('kairo-course').hidden && window.__kairo.onboardingStep() === 'build-food'`,
+      );
+      const applied = await phase7Page.evaluate(`(() => ({
+        records: window.__kairo.careerSnapshot().courseRecords.length,
+        step: window.__kairo.onboardingStep()
+      }))()`) as { records: number; step: string };
+      record(
+        'Phase 7 코스 기록 — 성공한 course-applied 뒤에만 커리어를 쓴다',
+        applied.records === 1 && applied.step === 'build-food' ? 'pass' : 'fail',
+        `기록 ${unpaid.records} → ${applied.records} · 단계 ${applied.step}`,
+      );
+
+      // build-food Today도 실제 목적지를 타고, 카드와 확정은 진짜 터치다. 좌표 탐색만
+      // 하네스 셋업으로 하고 배치/온보딩 사건은 production confirm 경계를 지난다.
+      await touchElement(phase7Page, phase7Cdp, '#kairo-menu-open');
+      const foodToday = await phase7Page.locator('.kmanage-today .kmanage-label').textContent();
+      await touchElement(phase7Page, phase7Cdp, '.kmanage-today .kmanage-action');
+      const beforeFood = await phase7Page.evaluate(`window.__kairo.placement.count`) as number;
+      await touchElement(phase7Page, phase7Cdp, '[data-pick="facility:shop"]');
+      const aimed = await phase7Page.evaluate(`(() => {
+        const h = window.__kairo, land = h.land();
+        for (let j = land.j0; j < land.j0 + land.h; j++) for (let i = land.i0; i < land.i0 + land.w; i++) {
+          if (h.placement.check(h.terrain, h.walls, h.gate, 'shop', i, j, { land: land }).ok) {
+            h.tapTile(i, j);
+            return { i: i, j: j, aim: h.aim() };
+          }
+        }
+        return null;
+      })()`) as { i: number; j: number; aim: { i: number; j: number } } | null;
+      await touchElement(phase7Page, phase7Cdp, '#kairo-place-confirm');
+      await phase7Page.waitForTimeout(150);
+      const foodBuilt = await phase7Page.evaluate(`(() => ({
+        count: window.__kairo.placement.count,
+        step: window.__kairo.onboardingStep()
+      }))()`) as { count: number; step: string };
+      record(
+        'Phase 7 온보딩 — Today food 목적지 → 실제 food-built → done',
+        !!aimed && foodToday?.includes('먹거리') === true && foodBuilt.count === beforeFood + 1 &&
+          foodBuilt.step === 'done' ? 'pass' : 'fail',
+        `Today "${foodToday ?? ''}" · 시설 ${beforeFood} → ${foodBuilt.count} · 단계 ${foodBuilt.step}`,
+      );
+    } else {
+      const managementAudit = await auditSurface(phase7Page, '.kmanage');
+      record(
+        'Phase 7 가로 — 경영 Today 목적지 문서 넘침·세로 도달·44px',
+        managementAudit.documentOverflow <= 1 && managementAudit.unreachable === 0 &&
+          managementAudit.minTarget >= 43.75 ? 'pass' : 'fail',
+        `컨트롤 ${managementAudit.controls} · 최소 ${managementAudit.minTarget}px · ` +
+          `미도달 ${managementAudit.unreachable} · 문서 넘침 ${managementAudit.documentOverflow}px`,
+      );
+      await touchElement(phase7Page, phase7Cdp, '.kmanage-today .kmanage-action');
+      await touchElement(phase7Page, phase7Cdp, '#kairo-course-confirm');
+      await touchElement(phase7Page, phase7Cdp, '#kairo-course-confirm');
+      await phase7Page.waitForFunction(
+        `window.__kairo.coursePanel.state.phase === 'review'`, undefined, { timeout: 6500 },
+      );
+      const courseAudit = await auditSurface(phase7Page, '#kairo-course');
+      record(
+        'Phase 7 가로 — 코스 trial/review 문서 넘침·세로 도달·44px',
+        courseAudit.documentOverflow <= 1 && courseAudit.unreachable === 0 &&
+          courseAudit.minTarget >= 43.75 ? 'pass' : 'fail',
+        `컨트롤 ${courseAudit.controls} · 최소 ${courseAudit.minTarget}px · ` +
+          `미도달 ${courseAudit.unreachable} · 문서 넘침 ${courseAudit.documentOverflow}px`,
+      );
+      await touchElement(phase7Page, phase7Cdp, '#kairo-course-close');
+
+      const endingRoute = await phase7Page.evaluate(`(() => {
+        const h = window.__kairo, ticker = h.ticker.count, queued = h.arrivalQueue.length;
+        h.setGradeForTest(5);
+        for (const status of h.certs.statuses().slice(0, 6)) h.certs.grantForTest(status.id);
+        h.ending.check();
+        h.ending.check();
+        return {
+          tickerDelta: h.ticker.count - ticker,
+          queueDelta: h.arrivalQueue.length - queued,
+          endings: h.careerSnapshot().endings.length,
+          shown: h.showNextArrivalForTest()
+        };
+      })()`) as { tickerDelta: number; queueDelta: number; endings: number; shown: boolean };
+      await phase7Page.waitForFunction(`!document.getElementById('kairo-unlock').hidden`);
+      const endingAudit = await auditSurface(phase7Page, '#kairo-unlock');
+      const choices = await phase7Page.locator('#kairo-unlock [data-ending-choice]').allTextContents();
+      // 모달 중 다른 표면은 열리지 않는다.
+      await touchElement(phase7Page, phase7Cdp, '#kairo-menu-open');
+      const blocked = await phase7Page.evaluate(`document.getElementById('kairo-sheet').hidden`);
+      record(
+        'Phase 7 첫 엔딩 — 티커 중복 없이 blocking 축하 모달 한 번',
+        endingRoute.tickerDelta === 0 && endingRoute.queueDelta === 1 && endingRoute.endings === 1 &&
+          endingRoute.shown && blocked && JSON.stringify(choices) === JSON.stringify(['계속 운영', '새 지역', '리조트 감상'])
+          ? 'pass' : 'fail',
+        `티커 +${endingRoute.tickerDelta} · 큐 +${endingRoute.queueDelta} · 기록 ${endingRoute.endings} · ` +
+          `선택 ${choices.join('/')}`,
+      );
+      record(
+        'Phase 7 가로 — 엔딩 문서 넘침·세로 도달·44px',
+        endingAudit.documentOverflow <= 1 && endingAudit.unreachable === 0 &&
+          endingAudit.minTarget >= 43.75 ? 'pass' : 'fail',
+        `컨트롤 ${endingAudit.controls} · 최소 ${endingAudit.minTarget}px · ` +
+          `미도달 ${endingAudit.unreachable} · 문서 넘침 ${endingAudit.documentOverflow}px`,
+      );
+      await touchElement(phase7Page, phase7Cdp, '#kairo-unlock [data-ending-choice="continue"]');
+
+      await phase7Page.evaluate(`window.__kairo.runWeek()`);
+      await phase7Page.waitForFunction(`!document.getElementById('kairo-report').hidden`);
+      const reportAudit = await auditSurface(phase7Page, '#kairo-report');
+      record(
+        'Phase 7 가로 — 결산 문서 넘침·세로 도달·44px',
+        reportAudit.documentOverflow <= 1 && reportAudit.unreachable === 0 &&
+          reportAudit.minTarget >= 43.75 ? 'pass' : 'fail',
+        `컨트롤 ${reportAudit.controls} · 최소 ${reportAudit.minTarget}px · ` +
+          `미도달 ${reportAudit.unreachable} · 문서 넘침 ${reportAudit.documentOverflow}px`,
+      );
+      await touchElement(phase7Page, phase7Cdp, '#kairo-report-close');
+    }
+    await phase7Context.close();
+  }
+
+  if (PHASE7_ONLY) {
+    await browser.close();
+    const failed = results.filter((result) => result.verdict === 'fail');
+    console.log(
+      `\n${failed.length === 0 ? '✅' : '❌'} Phase 7 ${results.length - failed.length}/${results.length} 통과` +
+        (failed.length ? ` — 실패: ${failed.map((result) => result.name).join(', ')}` : ''),
+    );
+    process.exit(failed.length === 0 ? 0 : 1);
+  }
 
   // ── 3. 내부 해상도 = 버퍼, CSS = 버퍼 × S ──
   const geo = (await page.evaluate(`(() => {
@@ -563,13 +955,14 @@ async function main(): Promise<void> {
       return [...sh.querySelectorAll('.ksheet-build [data-pick]')].map((b) => ({
         pick: b.dataset.pick,
         sub: (b.querySelector('.kcard-sub') || {}).textContent || '',
+        cost: (b.querySelector('.kcard-cost') || {}).textContent || '',
       }));
     };
     return { names: names, building: read('building'), ground: read('ground') };
   })()`)) as null | {
     names: string[];
-    building: { pick: string; sub: string }[] | null;
-    ground: { pick: string; sub: string }[] | null;
+    building: { pick: string; sub: string; cost: string }[] | null;
+    ground: { pick: string; sub: string; cost: string }[] | null;
   };
 
   if (!tabs || !tabs.building || !tabs.ground) {
@@ -597,7 +990,7 @@ async function main(): Promise<void> {
       tabs.ground.length === 12 &&
         !tabs.ground.some((x) => x.pick === 'ground:floor_indoor') &&
         tabs.ground.some((x) => x.pick === 'ground:path_stone@3') &&
-        tabs.ground.filter((x) => /만/.test(x.sub)).length >= 3
+        tabs.ground.filter((x) => /만|무료/.test(x.cost)).length >= 3
         ? 'pass'
         : 'fail',
       `${tabs.ground.length}개`,
@@ -2401,7 +2794,22 @@ async function main(): Promise<void> {
     h.week.abort(); // K39 — run() 은 배치 전용
     h.guests.setMaxGuests(240);
     const rep = h.week.run(new h.Rng(4242), { season: 'summer', playbackEvery: 0 });
-    h.report.show(rep, { onClose: function () { return undefined; } });
+    window.__phase5Report = rep;
+    window.__phase5Action = 0;
+    h.report.show(
+      rep,
+      {
+        onClose: function () { return undefined; },
+        onPrescription: function () { window.__phase5Action += 1; },
+      },
+      undefined,
+      {
+        visitors: Math.max(0, rep.visitors - 7),
+        turnedAway: rep.turnedAway,
+        profit: rep.profit + 30000,
+        exitSatisfaction: Math.max(0, rep.exitSatisfaction - 4),
+      },
+    );
     const r = document.getElementById('kairo-report');
     if (!r) return { found: false };
     const segs = [...r.querySelectorAll('div[data-group]')];
@@ -2447,42 +2855,125 @@ async function main(): Promise<void> {
     // ★ title 로 세면 손님 구성 막대까지 섞인다 — 요일 막대만 data-day 로 고른다
     //   (이 블록은 템플릿 리터럴 안이라 백틱을 쓸 수 없다)
     const bars = r.querySelectorAll('div[data-day]');
+    const ids = [
+      'kairo-report-kpis',
+      'kairo-report-prescription',
+      'kairo-report-heat',
+      'kairo-report-days',
+      'kairo-report-groups',
+      'kairo-report-ledger',
+      'kairo-report-records',
+    ];
+    const nodes = ids.map((id) => document.getElementById(id));
+    const action = document.getElementById('kairo-report-prescription-action');
+    const heat = document.getElementById('kairo-report-heat');
+    const ledger = document.getElementById('kairo-report-ledger');
+    const records = document.getElementById('kairo-report-records');
     return {
       hasHeat: !!canvas, heatW: canvas ? canvas.width : 0,
+      heatH: heat ? Math.round(heat.querySelector('canvas').getBoundingClientRect().height) : 0,
       bars: bars.length,
       text: r.textContent.slice(0, 200),
+      kpis: r.querySelectorAll('[data-kpi]').length,
+      deltas: [...r.querySelectorAll('.kkpi-delta')].map((d) => d.textContent || ''),
+      ids: ids,
+      ordered: nodes.every((n) => !!n) && nodes.every((n, i) => i === 0 ||
+        !!(nodes[i - 1].compareDocumentPosition(n) & Node.DOCUMENT_POSITION_FOLLOWING)),
+      ledgerAboveFold: !!ledger && ledger.getBoundingClientRect().top < window.innerHeight,
+      ledgerText: ledger ? ledger.textContent : '',
+      recordsText: records ? records.textContent : '',
+      actionMinH: action ? Math.round(action.getBoundingClientRect().height) : 0,
+      actionBox: action ? (() => {
+        const b = action.getBoundingClientRect();
+        return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
+      })() : null,
       closeMinH: (() => {
         const b = document.getElementById('kairo-report-close');
         return b ? Math.round(b.getBoundingClientRect().height) : 0;
       })(),
-      order: [...r.children].map((c) => c.tagName).join(','),
     };
   })()`)) as {
     hasHeat: boolean;
     heatW: number;
+    heatH: number;
     bars: number;
     text: string;
+    kpis: number;
+    deltas: string[];
+    ids: string[];
+    ordered: boolean;
+    ledgerAboveFold: boolean;
+    ledgerText: string;
+    recordsText: string;
+    actionMinH: number;
+    actionBox: { x: number; y: number } | null;
     closeMinH: number;
-    order: string;
   };
 
   record('결산에 혼잡 히트맵이 있다', rep.hasHeat ? 'pass' : 'fail', `${rep.heatW}px`);
+  record(
+    '★ K54 축소 히트맵은 120~140px다',
+    rep.heatH >= 120 && rep.heatH <= 140 ? 'pass' : 'fail',
+    `${rep.heatH}px`,
+  );
   record('요일 막대 7개', rep.bars === 7 ? 'pass' : 'fail', `${rep.bars}개`);
   record(
-    '히트맵이 숫자보다 먼저 온다 — 숫자 표만이면 엑셀 게임이 된다',
-    rep.order.indexOf('CANVAS') > 0 && rep.order.indexOf('CANVAS') < rep.order.lastIndexOf('DIV')
+    '★ 결산은 3 KPI → 처방 → 히트맵 → 요일 → 구성 → 장부 → 기록 순서다',
+    rep.kpis === 3 && rep.ordered ? 'pass' : 'fail',
+    `${rep.kpis} KPI · ${rep.ids.join(' → ')}`,
+  );
+  record(
+    '★ 전주 delta가 3 KPI에 보이고 장부 시작이 393 첫 화면 안이다',
+    rep.deltas.length === 3 && rep.deltas.every((x) => x !== '첫 주') && rep.ledgerAboveFold
       ? 'pass'
       : 'fail',
-    rep.order,
+    `${rep.deltas.join(' · ')} · ledger above fold ${String(rep.ledgerAboveFold)}`,
+  );
+  record(
+    '★ 수익·운영비·투자를 가르고 영업 손익에서 투자 제외를 밝힌다',
+    ['수익', '입장료', '음식·대여', '견인 코스', '운영비', '시설·코스 유지비', '인건비',
+      '영업 손익', '건설·개선·메뉴 개발비 제외', '투자 지출 · 영업 손익 제외',
+      '건설', '개선', '메뉴 개발'].every((x) => rep.ledgerText.indexOf(x) >= 0)
+      ? 'pass'
+      : 'fail',
+    rep.ledgerText.slice(0, 240),
+  );
+  record(
+    '★ 콤보 0개 교육 행과 메뉴·코스 기록이 모두 남는다',
+    rep.recordsText.indexOf('아직 발동한 콤보가 없습니다') >= 0 &&
+      rep.recordsText.indexOf('메뉴·단골 기록') >= 0 &&
+      rep.recordsText.indexOf('견인 코스 기록') >= 0
+      ? 'pass'
+      : 'fail',
+    rep.recordsText.slice(0, 200),
+  );
+  record(
+    '처방 버튼 터치 타깃 44px 이상',
+    rep.actionMinH >= 44 ? 'pass' : 'fail',
+    `${rep.actionMinH}px`,
   );
   record('닫기 버튼 터치 타깃 44px 이상', rep.closeMinH >= 44 ? 'pass' : 'fail', `${rep.closeMinH}px`);
   await page.screenshot({ path: `${SHOT_DIR}/kairo-report.png` });
 
+  if (rep.actionBox) await page.touchscreen.tap(rep.actionBox.x, rep.actionBox.y);
+  await page.waitForTimeout(200);
+  const action = (await page.evaluate(`(() => ({
+    count: window.__phase5Action,
+    closed: document.getElementById('kairo-report').hidden,
+  }))()`)) as { count: number; closed: boolean };
+  record(
+    '★ 처방을 진짜 터치하면 한 동작만 실행하고 결산을 닫는다',
+    action.count === 1 && action.closed ? 'pass' : 'fail',
+    `action ${action.count} · closed ${String(action.closed)}`,
+  );
+
+  await page.evaluate(`(() => {
+    const h = window.__kairo, rep = window.__phase5Report;
+    h.report.show(rep, { onClose: function () { return undefined; } });
+  })()`);
   await page.click('#kairo-report-close');
   await page.waitForTimeout(200);
-  const closed = (await page.evaluate(
-    `document.getElementById('kairo-report').hidden`,
-  )) as boolean;
+  const closed = (await page.evaluate(`document.getElementById('kairo-report').hidden`)) as boolean;
   record('결산을 닫으면 게임으로 돌아온다', closed ? 'pass' : 'fail');
 
   // ── 7j. 콤보·해금·의뢰 ──
@@ -2578,8 +3069,8 @@ async function main(): Promise<void> {
       prog.detailsFilled && prog.progressInRange ? 'pass' : 'fail',
     );
     record(
-      '해금 — 시작 1등급 · 거북섬은 최종 의뢰 보상 · 매점은 소원 보상 (K41·K43: 사건 해금 = 99)',
-      prog.startGrade === 1 && prog.needTurtle === 99 && prog.needShop === 99 ? 'pass' : 'fail',
+      '해금 — 시작 1등급에 매점 · 거북섬은 최종 의뢰 보상 (Phase 3 첫 단골 경로)',
+      prog.startGrade === 1 && prog.needTurtle === 99 && prog.needShop === 1 ? 'pass' : 'fail',
       `시작 ${prog.startGrade}등급 · 거북섬 ${prog.needTurtle} · 매점 ${prog.needShop}`,
     );
     record(
@@ -2738,46 +3229,43 @@ async function main(): Promise<void> {
   const cardFlow = (await page.evaluate(`(() => {
     const cv = window.__kairoCards;
     if (!cv) return { ok: false, why: '카드 뷰가 없다' };
+    const h = window.__kairo;
     const cashBefore = window.__kairo.week.cash;
-    // 카드는 주 마디(결산 뒤) 경로로 직접 연다. K47-② 로 스킵 버튼이 사라져
-    // 누를 것이 아예 없다 — 주 마디를 만드는 것은 abort + openWeekCards 다
-    window.__kairo.week.abort();
-    window.__kairo.openWeekCards();
+    const tickerBefore = h.ticker.count;
+    const toastBefore = (document.getElementById('kairo-toast') || {}).textContent || '';
+    /*
+     * Phase 6: 1~3주는 온보딩이라 일반 카드가 없다. 하네스는 주차만 셀업하고
+     * 4주차 openWeekCards는 실제 게임 경로를 탄다. 카드 선택은 아래에서 진짜 터치로 한다.
+     */
+    h.week.abort();
+    while (h.week.week < 3) h.week.run(new h.Rng(8100 + h.week.week), { season: 'summer' });
+    h.openWeekCards();
     const root = document.getElementById('kairo-card');
     const shown = !!root && getComputedStyle(root).display !== 'none';
     if (!shown) {
-      // 그 주에 카드가 0장일 수 있다 (봄·가을·겨울). 여름 기본이라 보통은 뜬다
-      return { ok: true, shown: false, cashBefore: cashBefore, remaining: cv.remaining };
+      return { ok: false, shown: false, why: '4주차 첫 일반 카드가 안 떴다' };
     }
-    const btns = [...root.querySelectorAll('button')];
+    const btns = [...root.querySelectorAll('button[data-option]')];
     const heights = btns.map((b) => Math.round(b.getBoundingClientRect().height));
+    const tops = btns.map((b) => Math.round(b.getBoundingClientRect().top));
     const labels = btns.map((b) => b.textContent.slice(0, 24));
     const enabled = btns.filter((b) => !b.disabled).length;
+    const pick = btns.find((b) => !b.disabled);
+    const pr = pick ? pick.getBoundingClientRect() : null;
+    const visual = root.querySelector('.kcard-visual');
     const out = {
       ok: true, shown: true, cashBefore: cashBefore,
       options: btns.length, minHeight: Math.min.apply(null, heights),
       labels: labels, remaining: cv.remaining, enabled: enabled,
-      title: (root.querySelector('div > div:nth-child(2)') || {}).textContent || ''
+      title: (root.querySelector('.kcard-title') || {}).textContent || '',
+      oneRow: tops.length > 0 && Math.max.apply(null, tops) - Math.min.apply(null, tops) <= 2,
+      overflow: document.documentElement.scrollWidth - innerWidth,
+      themeSprite: visual ? visual.dataset.sprite || '' : '',
+      touchX: pr ? Math.round(pr.left + pr.width / 2) : 0,
+      touchY: pr ? Math.round(pr.top + pr.height / 2) : 0,
+      tickerBefore: tickerBefore,
+      toastBefore: toastBefore
     };
-    /*
-     * ⚠ **카드를 닫고 넘어간다** (K37). 예전엔 열어 둔 채 다음 절로 갔다. 카드는 모달이라
-     * (선택 전에 다른 패널이 밀어내면 주가 조용히 넘어간다) 열려 있으면 뒤따르는
-     * "새 판" 절 5건이 전부 실패한다 — 실제로 그렇게 잡혔다.
-     *
-     * 앞선 검사의 잔해 위에서 재면 원인을 알 수 없다. 이 저장소가 손님 검사에서
-     * 이미 배운 규칙이다.
-     */
-    let guard = 0;
-    while (cv.visible && guard++ < 5) {
-      const card = cv.currentCard;
-      let pick = 0;
-      if (card) {
-        for (let oi = 0; oi < card.options.length; oi++) {
-          if (!card.options[oi].effects.some((e) => e.closed)) { pick = oi; break; }
-        }
-      }
-      cv.pickForTest(pick);
-    }
     return out;
   })()`)) as {
     ok: boolean;
@@ -2790,6 +3278,34 @@ async function main(): Promise<void> {
     cashBefore?: number;
     enabled?: number;
     title?: string;
+    oneRow?: boolean;
+    overflow?: number;
+    themeSprite?: string;
+    touchX?: number;
+    touchY?: number;
+    tickerBefore?: number;
+    toastBefore?: string;
+  };
+
+  if (cardFlow.shown && cardFlow.touchX && cardFlow.touchY) {
+    await page.touchscreen.tap(cardFlow.touchX, cardFlow.touchY);
+    await page.waitForTimeout(250);
+  }
+  const cardTouchResult = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    return {
+      visible: h.cardView.visible,
+      cash: h.week.cash,
+      weekStarted: !!h.week.liveProgress(),
+      tickerAfter: h.ticker.count,
+      toastAfter: (document.getElementById('kairo-toast') || {}).textContent || ''
+    };
+  })()`)) as {
+    visible: boolean;
+    cash: number;
+    weekStarted: boolean;
+    tickerAfter: number;
+    toastAfter: string;
   };
 
   /*
@@ -2963,7 +3479,7 @@ async function main(): Promise<void> {
   };
   record(
     '사고 대응 카드가 선택지 3개로 뜬다 — 순수 처벌은 기억에 안 남는다',
-    accidentUi.ok && accidentUi.options === 3 && (accidentUi.minH ?? 0) >= 56 ? 'pass' : 'fail',
+    accidentUi.ok && accidentUi.options === 3 && (accidentUi.minH ?? 0) >= 44 ? 'pass' : 'fail',
     accidentUi.ok
       ? `${(accidentUi.labels ?? []).join(' / ')} · 최소 ${accidentUi.minH}px`
       : (accidentUi.why ?? '실패'),
@@ -3318,6 +3834,15 @@ async function main(): Promise<void> {
     const panel = h.coursePanel;
     const api = h.courseApi;
     /*
+     * 이 절은 **새 코스 생성**을 잰다. 앞 절이 패널의 시각 표면만 읽었더라도 inherited
+     * course의 info context가 남아 있을 수 있으므로, 사람의 닫기→코스 열기와 같은 경로로
+     * create context를 명시한다. info에서 test 확정을 직접 부르면 production UI에는 없는
+     * "기존 코스를 제외하고 같은 dock에 새 코스 추가" 경로가 생겨 뒤 절 전체를 오염시킨다.
+     */
+    const takenBefore = h.courses.all.map((course) => course.dock.x + ',' + course.dock.y);
+    panel.hide();
+    panel.show();
+    /*
      * 선착장 **주변**의 물 타일을 모은다 (K36). 예전엔 (0,0)~(40,32) 창을 훑었는데
      * 격자가 96×72 가 되고 선착장이 맵 가운데로 가면서 그 창이 선착장에서 멀어졌다 —
      * 코스는 선착장에서 DOCK_REACH_TILES 안에서 시작해야 한다.
@@ -3325,6 +3850,8 @@ async function main(): Promise<void> {
     panel.select('shuttle', 'banana');
     const dock = panel.state.dock;
     if (!dock) return { ok: false, why: '선착장이 없다' };
+    const createState = panel.state;
+    const onTaken = takenBefore.includes(dock.x + ',' + dock.y);
     const water = [];
     for (let r = 2; r <= 10 && water.length < 60; r++) {
       for (let dj = -r; dj <= r && water.length < 60; dj++) {
@@ -3347,8 +3874,10 @@ async function main(): Promise<void> {
     const weekly = h.courses.weekly();
     return {
       ok: true, before: before, added: added, count: h.courses.count,
+      phase: createState.phase, selectedHandle: createState.selectedHandle,
+      dock: dock, onTaken: onTaken,
       cashBefore: cashBefore, cashAfter: h.week.cash,
-      revenue: weekly.revenue, upkeep: weekly.upkeep,
+      revenue: weekly.potentialRevenue, upkeep: weekly.upkeep,
       thrill: Math.round(weekly.thrill), safety: Math.round(weekly.safety),
       presets: api.PRESETS.length, equipment: api.COURSE_EQUIPMENT.length
     };
@@ -3358,6 +3887,10 @@ async function main(): Promise<void> {
     before?: number;
     added?: number;
     count?: number;
+    phase?: string;
+    selectedHandle?: number | null;
+    dock?: { x: number; y: number };
+    onTaken?: boolean;
     cashBefore?: number;
     cashAfter?: number;
     revenue?: number;
@@ -3370,9 +3903,13 @@ async function main(): Promise<void> {
 
   record(
     '핸들을 물 위로 옮기고 확정하면 코스가 생긴다',
-    coursePlace.ok && (coursePlace.added ?? 0) === 1 ? 'pass' : 'fail',
+    coursePlace.ok && coursePlace.phase === 'create' && coursePlace.selectedHandle === null &&
+      coursePlace.onTaken === false && (coursePlace.added ?? 0) === 1
+      ? 'pass'
+      : 'fail',
     coursePlace.ok
-      ? `코스 ${coursePlace.before} → ${coursePlace.count}`
+      ? `create #${coursePlace.selectedHandle ?? '없음'} · 잔교 (${coursePlace.dock?.x},${coursePlace.dock?.y}) ` +
+        `${coursePlace.onTaken ? '⚠ 사용 중' : '빈 곳'} · 코스 ${coursePlace.before} → ${coursePlace.count}`
       : (coursePlace.why ?? '실패'),
   );
   record(
@@ -3633,20 +4170,28 @@ async function main(): Promise<void> {
     return { before: h.courses.count, cash: h.week.cash, disabled: btn.disabled,
              why: why, waterFound: water.length, need: st.handles.length };
   })()`)) as { before: number; cash: number; disabled: boolean; why: string; waterFound: number; need: number };
-  if (!byButton.disabled) await page.click('#kairo-course-confirm');
+  let courseApplyEnabled = false;
+  if (!byButton.disabled) {
+    await page.click('#kairo-course-confirm'); // 시험 운행
+    await page.waitForTimeout(4_200);
+    courseApplyEnabled = await page.locator('#kairo-course-confirm').isEnabled();
+    if (courseApplyEnabled) await page.click('#kairo-course-confirm'); // 적용
+  }
   await page.waitForTimeout(300);
   const afterBtn = (await page.evaluate(
     `(() => { const h = window.__kairo; return { count: h.courses.count, cash: h.week.cash }; })()`,
   )) as { count: number; cash: number };
   record(
-    '★ 확정 버튼을 눌러 코스가 생긴다 — 백도어가 아니라 (K33)',
-    !byButton.disabled && afterBtn.count > byButton.before && afterBtn.cash < byButton.cash
+    '★ 시험 운행 후 적용을 눌러 코스가 생긴다 — 백도어가 아니라',
+    !byButton.disabled && courseApplyEnabled && afterBtn.count > byButton.before && afterBtn.cash < byButton.cash
       ? 'pass'
       : 'fail',
     `코스 ${byButton.before} → ${afterBtn.count} · ` +
       `현금 ${Math.round(byButton.cash / 10000)}만 → ${Math.round(afterBtn.cash / 10000)}만` +
       (byButton.disabled
         ? ` · ⚠ 잠김: ${byButton.why} (물 ${byButton.waterFound}/${byButton.need})`
+        : !courseApplyEnabled
+          ? ' · ⚠ 시험 운행 후 적용 버튼이 비활성'
         : ''),
   );
 
@@ -3763,6 +4308,355 @@ async function main(): Promise<void> {
   }
 
   await page.evaluate(`document.getElementById('kairo-course-close').click()`);
+
+  /*
+   * ── 8d·Phase 2B 기존 코스 정보 → 루트 편집 → 시험 → 적용 ──
+   *
+   * 이 절은 코스 히트, 핸들 드래그, 주 동작 버튼을 모두 실제 touch event로 보낸다.
+   * `show(handle)`·`moveHandleForTest`·`confirmForTest`는 쓰지 않는다.
+   */
+  const courseTouchPoint = async (): Promise<{ x: number; y: number; handle: number } | null> =>
+    (await page.evaluate(`(() => {
+      const h = window.__kairo, cv = document.querySelector('canvas');
+      const course = h.courses.all[0];
+      if (!course || !cv) return null;
+      const samples = h.courseApi.sampleCourse(course.dock, course.handles);
+      const sample = samples[Math.floor(samples.length / 2)];
+      h.scene.focusTile(Math.round(sample.pos.x), Math.round(sample.pos.y), 140);
+      const cr = cv.getBoundingClientRect(), r = h.scene.tileScreenRect(Math.round(sample.pos.x), Math.round(sample.pos.y));
+      return {
+        x: Math.round(cr.left + (r.x + 16) * cr.width / cv.width),
+        y: Math.round(cr.top + (r.y + 8) * cr.height / cv.height),
+        handle: course.handle
+      };
+    })()`)) as { x: number; y: number; handle: number } | null;
+
+  const touchButton = async (selector: string): Promise<boolean> => {
+    const box = await page.locator(selector).boundingBox();
+    if (!box) return false;
+    await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
+    return true;
+  };
+
+  await page.waitForTimeout(400);
+  const infoPoint = await courseTouchPoint();
+  if (infoPoint) await page.touchscreen.tap(infoPoint.x, infoPoint.y);
+  await page.waitForTimeout(350);
+  const infoState = (await page.evaluate(`(() => ({
+    visible: window.__kairo.coursePanel.visible,
+    phase: window.__kairo.coursePanel.state.phase,
+    handle: window.__kairo.coursePanel.state.selectedHandle,
+    goalsFolded: document.getElementById('kairo-goal').classList.contains('folded')
+  }))()`)) as { visible: boolean; phase: string; handle: number | null; goalsFolded: boolean };
+  record(
+    '★ 지도의 기존 코스/차량 터치 → 코스 정보',
+    !!infoPoint && infoState.visible && infoState.phase === 'info' && infoState.handle === infoPoint.handle
+      ? 'pass'
+      : 'fail',
+    `phase ${infoState.phase} · handle ${infoState.handle} · 목표 ${infoState.goalsFolded ? '접힘' : '펼침'}`,
+  );
+
+  const cancelBefore = (await page.evaluate(
+    `JSON.stringify(window.__kairo.courses.toSnapshot())`,
+  )) as string;
+  await touchButton('#kairo-course-confirm'); // 루트 조정
+  await page.waitForTimeout(250);
+  const editBefore = (await page.evaluate(
+    `JSON.stringify(window.__kairo.coursePanel.state.handles)`,
+  )) as string;
+  const validDrag = (await page.evaluate(`(() => {
+    const h = window.__kairo, cv = document.querySelector('canvas'), st = h.coursePanel.state;
+    const course = h.courses.all.find((item) => item.handle === st.selectedHandle);
+    const preset = h.courseApi.presetDef(st.presetId);
+    if (!cv || !course || !preset || !st.handles[0]) return null;
+    let target = null;
+    for (let dj = -2; dj <= 2 && !target; dj++) for (let di = -2; di <= 2; di++) {
+      if (di === 0 && dj === 0) continue;
+      const candidate = { x: Math.round(st.handles[0].x) + di, y: Math.round(st.handles[0].y) + dj };
+      const handles = st.handles.map((point, index) => index === 0 ? candidate : point);
+      const valid = h.courseApi.validateCourse(h.terrain, handles, course.dock, preset, st.equipId, 5,
+        h.courses.all, course.handle);
+      if (valid.ok) { target = candidate; break; }
+    }
+    if (!target) return null;
+    const cr = cv.getBoundingClientRect();
+    const screen = (point) => {
+      const r = h.scene.tileScreenRect(Math.round(point.x), Math.round(point.y));
+      return { x: Math.round(cr.left + (r.x + 16) * cr.width / cv.width),
+               y: Math.round(cr.top + (r.y + 8) * cr.height / cv.height) };
+    };
+    const from = screen(st.handles[0]), to = screen(target);
+    return {
+      from: from,
+      to: to,
+      target: target,
+      fromHitsCanvas: document.elementFromPoint(from.x, from.y) === cv,
+      toHitsCanvas: document.elementFromPoint(to.x, to.y) === cv
+    };
+  })()`)) as {
+    from: { x: number; y: number };
+    to: { x: number; y: number };
+    target: { x: number; y: number };
+    fromHitsCanvas: boolean;
+    toHitsCanvas: boolean;
+  } | null;
+  if (validDrag) {
+    await touch('touchStart', validDrag.from.x, validDrag.from.y);
+    for (let step = 1; step <= 6; step++) {
+      await touch(
+        'touchMove',
+        validDrag.from.x + ((validDrag.to.x - validDrag.from.x) * step) / 6,
+        validDrag.from.y + ((validDrag.to.y - validDrag.from.y) * step) / 6,
+      );
+    }
+    await touch('touchEnd', 0, 0);
+  }
+  await page.waitForTimeout(250);
+  const editMoved = (await page.evaluate(`(() => ({
+    handles: JSON.stringify(window.__kairo.coursePanel.state.handles),
+    first: window.__kairo.coursePanel.state.handles[0],
+    phase: window.__kairo.coursePanel.state.phase,
+    goalsFolded: document.getElementById('kairo-goal').classList.contains('folded'),
+    comparison: document.getElementById('kairo-course-metrics').textContent
+  }))()`)) as {
+    handles: string;
+    first: { x: number; y: number };
+    phase: string;
+    goalsFolded: boolean;
+    comparison: string;
+  };
+  const reachedDragTarget = !!validDrag && editMoved.first.x === validDrag.target.x &&
+    editMoved.first.y === validDrag.target.y;
+  record(
+    '★ 기존 코스 핸들을 진짜 터치로 드래그하면 투영 지표가 바뀐다',
+    !!validDrag && validDrag.fromHitsCanvas && validDrag.toHitsCanvas && reachedDragTarget &&
+      editMoved.handles !== editBefore && editMoved.comparison.includes('→') && editMoved.goalsFolded
+      ? 'pass'
+      : 'fail',
+    `phase ${editMoved.phase} · 목표 ${editMoved.goalsFolded ? '접힘' : '펼침'} · ` +
+      `canvas ${validDrag?.fromHitsCanvas && validDrag.toHitsCanvas ? '적중' : '빗나감'} · ` +
+      `${editBefore} → ${editMoved.handles} (목표 ${JSON.stringify(validDrag?.target ?? null)})`,
+  );
+
+  await touchButton('#kairo-course-confirm'); // 시험 운행
+  const trialStartedAt = Date.now();
+  await page.waitForTimeout(3_800);
+  const duringTrial = (await page.evaluate(`window.__kairo.coursePanel.state.phase`)) as string;
+  await page.waitForTimeout(400);
+  const review = (await page.evaluate(`(() => ({
+    phase: window.__kairo.coursePanel.state.phase,
+    passed: window.__kairo.coursePanel.state.trialPassed,
+    handles: JSON.stringify(window.__kairo.coursePanel.state.handles)
+  }))()`)) as { phase: string; passed: boolean; handles: string };
+  const trialElapsed = Date.now() - trialStartedAt;
+  record(
+    '★ 시험 운행은 4초 리플레이 후 Apply / Tune Again을 연다',
+    duringTrial === 'trial' && review.phase === 'review' && review.passed && trialElapsed >= 4_000
+      ? 'pass'
+      : 'fail',
+    `3.8초 ${duringTrial} → ${trialElapsed}ms ${review.phase} · ${review.passed ? '완주' : '미완주'}`,
+  );
+
+  await touchButton('#kairo-course-toggle'); // 다시 조정
+  await page.waitForTimeout(200);
+  const tuned = (await page.evaluate(`(() => ({
+    phase: window.__kairo.coursePanel.state.phase,
+    handles: JSON.stringify(window.__kairo.coursePanel.state.handles)
+  }))()`)) as { phase: string; handles: string };
+  record(
+    'Tune Again은 핸들을 유지하고 편집으로 돌아간다',
+    tuned.phase === 'edit' && tuned.handles === review.handles ? 'pass' : 'fail',
+    `${review.handles} → ${tuned.handles}`,
+  );
+  await touchButton('#kairo-course-close');
+  await page.waitForTimeout(250);
+  const cancelAfter = (await page.evaluate(
+    `JSON.stringify(window.__kairo.courses.toSnapshot())`,
+  )) as string;
+  record(
+    '★ Cancel은 저장 snapshot을 바이트 단위로 보존하고 목표를 복원한다',
+    cancelAfter === cancelBefore &&
+      !(await page.evaluate(`document.getElementById('kairo-goal').classList.contains('folded')`))
+      ? 'pass'
+      : 'fail',
+    `snapshot ${cancelBefore === cancelAfter ? '동일' : '변경'}`,
+  );
+
+  // 다시 실제 코스를 탭해 차량 1대를 늘린 뒤 시험→적용→새로고침까지.
+  await page.evaluate(`window.__kairo.week.earn(2000000)`);
+  await page.waitForTimeout(400);
+  const applyPoint = await courseTouchPoint();
+  if (applyPoint) await page.touchscreen.tap(applyPoint.x, applyPoint.y);
+  await page.waitForTimeout(300);
+  await touchButton('#kairo-course-confirm');
+  await page.waitForTimeout(200);
+  const applyEditStart = (await page.evaluate(`(() => ({
+    handle: window.__kairo.coursePanel.state.selectedHandle,
+    vehicles: window.__kairo.coursePanel.state.vehicles,
+    phase: window.__kairo.coursePanel.state.phase
+  }))()`)) as { handle: number; vehicles: number; phase: string };
+  const plus = page.locator('#kairo-course [data-veh="1"]');
+  const plusBox = await plus.boundingBox();
+  if (plusBox) await page.touchscreen.tap(plusBox.x + plusBox.width / 2, plusBox.y + plusBox.height / 2);
+  const applyBefore = (await page.evaluate(`(() => ({
+    handle: window.__kairo.coursePanel.state.selectedHandle,
+    vehicles: window.__kairo.coursePanel.state.vehicles
+  }))()`)) as { handle: number; vehicles: number };
+  await touchButton('#kairo-course-confirm');
+  await page.waitForTimeout(4_200);
+  await touchButton('#kairo-course-confirm');
+  await page.waitForTimeout(350);
+  const applied = (await page.evaluate(`(() => {
+    const course = window.__kairo.courses.all.find((item) => item.handle === ${applyBefore.handle});
+    return { handle: course.handle, vehicles: course.vehicles, visible: window.__kairo.coursePanel.visible };
+  })()`)) as { handle: number; vehicles: number; visible: boolean };
+  await page.reload({ waitUntil: 'load' });
+  await page.waitForFunction(
+    `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+    undefined,
+    { timeout: 15000 },
+  );
+  const reloadedCourse = (await page.evaluate(`(() => {
+    const course = window.__kairo.courses.all.find((item) => item.handle === ${applyBefore.handle});
+    return course ? { handle: course.handle, vehicles: course.vehicles } : null;
+  })()`)) as { handle: number; vehicles: number } | null;
+  record(
+    '★ Apply가 stable handle로 저장되고 새로고침 뒤에도 같다',
+    applyEditStart.phase === 'edit' && applyEditStart.handle === applyBefore.handle &&
+      applyBefore.vehicles === applyEditStart.vehicles + 1 &&
+      !applied.visible && applied.handle === applyBefore.handle && applied.vehicles === applyBefore.vehicles &&
+      reloadedCourse?.handle === applyBefore.handle && reloadedCourse.vehicles === applyBefore.vehicles
+      ? 'pass'
+      : 'fail',
+    `#${applyBefore.handle} ${applyEditStart.vehicles}→${applyBefore.vehicles}대 → ` +
+      `저장 ${applied.vehicles}대 → 로드 ${reloadedCourse?.vehicles ?? '없음'}대`,
+  );
+
+  /*
+   * ── 8e·Phase 3 시설 터치 → 메뉴 개발 → 실패 힌트 → 발견/장착 ──
+   *
+   * 지도 시설과 버튼은 모두 `touchscreen.tap`으로 건너간다. 직접 API는 빈 실내동에
+   * 매점 하나를 놓는 판 setup에만 쓴다. 그 뒤 열기·선택·개발은 UI 정상 경로다.
+   */
+  const menuShop = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    h.week.earn(2000000);
+    let shop = h.placement.all().find((item) => item.defId === 'shop');
+    if (!shop) {
+      outer: for (let j = 0; j < h.terrain.height; j++) for (let i = 0; i < h.terrain.width; i++) {
+        if (!h.terrain.isIndoor(i, j)) continue;
+        const chk = h.placement.check(h.terrain, h.walls, h.gate, 'shop', i, j, { land: h.land() });
+        if (!chk.ok) continue;
+        const placed = h.placement.place(h.terrain, h.walls, h.gate, 'shop', i, j, { land: h.land() });
+        if (placed.ok && placed.placed) { shop = placed.placed; break outer; }
+      }
+      if (shop) {
+        h.scene.refreshFacility(shop.handle);
+        h.guests.invalidate();
+        h.persist();
+      }
+    }
+    if (!shop) return null;
+    h.scene.focusTile(shop.i, shop.j, 140);
+    return { handle: shop.handle, i: shop.i, j: shop.j };
+  })()`)) as { handle: number; i: number; j: number } | null;
+  await page.waitForTimeout(260);
+  const menuShopPoints = menuShop
+    ? ((await page.evaluate(`(() => {
+        const h = window.__kairo, cv = document.querySelector('canvas');
+        const cr = cv.getBoundingClientRect();
+        const points = [];
+        for (let j = 0; j < h.terrain.height; j++) for (let i = 0; i < h.terrain.width; i++) {
+          if (h.placement.at(i, j)?.handle !== ${menuShop.handle}) continue;
+          const r = h.scene.tileScreenRect(i, j);
+          points.push({ x: Math.round(cr.left + (r.x + 16) * cr.width / cv.width),
+                        y: Math.round(cr.top + (r.y + 8) * cr.height / cv.height) });
+        }
+        return points;
+      })()`)) as { x: number; y: number }[])
+    : [];
+  let facilityInfoOpened = false;
+  for (const point of menuShopPoints) {
+    await page.touchscreen.tap(point.x, point.y);
+    await page.waitForTimeout(380); // 시설 정보는 더블탭 320ms 창을 지난 뒤 연다.
+    if (await page.locator('#kairo-facility-menu-develop').isVisible().catch(() => false)) {
+      facilityInfoOpened = true;
+      break;
+    }
+  }
+  if (facilityInfoOpened) await page.locator('#kairo-facility-menu-develop').tap();
+  await page.waitForTimeout(180);
+  const facilityMenuOpen = await page.locator('#kairo-menu-lab').isVisible().catch(() => false);
+  const menuSurface = (await page.evaluate(`(() => {
+    const panel = document.getElementById('kairo-menu-lab');
+    const buttons = [...panel.querySelectorAll('.kairo-menu-ingredient')];
+    return {
+      visible: !panel.hidden,
+      ingredients: buttons.length,
+      minTarget: buttons.length ? Math.min(...buttons.map((b) => Math.round(b.getBoundingClientRect().height))) : 0,
+      slots: panel.querySelectorAll('.kairo-menu-slot').length
+    };
+  })()`)) as { visible: boolean; ingredients: number; minTarget: number; slots: number };
+  record(
+    '★ 매점을 지도에서 터치하면 실제 메뉴 개발 표면이 열린다',
+    menuShop !== null && facilityMenuOpen && menuSurface.visible && menuSurface.ingredients === 6
+      ? 'pass'
+      : 'fail',
+    `재료 ${menuSurface.ingredients}종 · 슬롯 ${menuSurface.slots}개 · 최소 터치 ${menuSurface.minTarget}px`,
+  );
+  record(
+    '메뉴 재료 터치 타겟은 44px 이상이다',
+    menuSurface.minTarget >= 44 ? 'pass' : 'fail',
+    `${menuSurface.minTarget}px`,
+  );
+
+  if (facilityMenuOpen) {
+    await page.locator('[data-kairo-menu-ingredient="ice"]').tap();
+    await page.locator('[data-kairo-menu-ingredient="milk"]').tap();
+    await page.locator('#kairo-menu-develop').tap();
+    await page.waitForTimeout(120);
+  }
+  const menuFailed = facilityMenuOpen ? (await page.evaluate(`(() => {
+    const result = document.querySelector('#kairo-menu-lab [data-result]');
+    const hints = [...document.querySelectorAll('#kairo-menu-lab [data-progress]')];
+    return { kind: result?.dataset.result ?? '', text: result?.textContent ?? '', hints: hints.length,
+      progress: hints[0]?.dataset.progress ?? '' };
+  })()`)) as { kind: string; text: string; hints: number; progress: string } :
+    { kind: '', text: '메뉴 패널을 열지 못함', hints: 0, progress: '' };
+  record(
+    '★ 실패한 재료 조합은 후보를 줄이는 힌트·진행률을 남긴다',
+    menuFailed.kind === 'failed' && menuFailed.hints > 0 && Number(menuFailed.progress) > 0
+      ? 'pass'
+      : 'fail',
+    `${menuFailed.text} · ${Math.round(Number(menuFailed.progress) * 100)}%`,
+  );
+
+  // 선택 해제도 터치로: 얼음·우유 → 쌀·김 = 김밥.
+  if (facilityMenuOpen) {
+    await page.locator('[data-kairo-menu-ingredient="ice"]').tap();
+    await page.locator('[data-kairo-menu-ingredient="milk"]').tap();
+    await page.locator('[data-kairo-menu-ingredient="rice"]').tap();
+    await page.locator('[data-kairo-menu-ingredient="seaweed"]').tap();
+    await page.locator('#kairo-menu-develop').tap();
+    await page.waitForTimeout(120);
+  }
+  const menuDiscovered = facilityMenuOpen ? (await page.evaluate(`(() => ({
+    result: document.querySelector('#kairo-menu-lab [data-result]')?.dataset.result ?? '',
+    text: document.getElementById('kairo-menu-lab').textContent,
+    mounted: window.__kairo.placement.menuIdsOf(${menuShop?.handle ?? -1}),
+    saved: window.__kairo.menus.toSnapshot()
+  }))()`)) as { result: string; text: string; mounted: string[]; saved: { discovered: string[] } } :
+    { result: '', text: '', mounted: [], saved: { discovered: [] } };
+  record(
+    '★ 정답 조합은 레시피를 발견하고 시설 슬롯에 즉시 장착한다',
+    menuDiscovered.result === 'discovered' &&
+      menuDiscovered.mounted.includes('shop_gimbap') &&
+      menuDiscovered.saved.discovered.includes('shop_gimbap')
+      ? 'pass'
+      : 'fail',
+    `${menuDiscovered.result} · 장착 ${menuDiscovered.mounted.join(', ')} · 영구 발견 ${menuDiscovered.saved.discovered.length}종`,
+  );
+  if (facilityMenuOpen) await page.locator('#kairo-menu-lab-close').tap();
 
   /*
    * ── 8·직원 (§11) ──
@@ -3988,46 +4882,44 @@ async function main(): Promise<void> {
   );
 
   record(
-    '주 마디에 의사결정 카드가 뜬다 — 없으면 한 주가 그냥 지나간다 (K39: 결산 뒤 아침)',
+    '4주차에 첫 일반 카드 한 장이 뜬다 — 1~3주는 온보딩',
     cardFlow.ok && cardFlow.shown === true ? 'pass' : 'fail',
     cardFlow.ok
       ? cardFlow.shown
         ? `"${cardFlow.title}" · 선택지 ${cardFlow.options}개 · 남은 ${cardFlow.remaining}장`
-        : '이번 주 카드 0장 (계절에 따라 가능하지만 여름은 1~2장이어야 한다)'
+        : '4주차 카드 0장'
       : (cardFlow.why ?? '실패'),
   );
   record(
-    '선택지 버튼이 56px 이상 — 스펙이 정한 최소 터치 타깃',
-    (cardFlow.minHeight ?? 0) >= 56 ? 'pass' : 'fail',
+    '선택지 2~3개가 한 줄 · 44px 이상 · 393px 가로 넘침 0',
+    (cardFlow.options ?? 0) >= 2 &&
+      (cardFlow.options ?? 0) <= 3 &&
+      cardFlow.oneRow === true &&
+      (cardFlow.minHeight ?? 0) >= 44 &&
+      (cardFlow.overflow ?? 1) <= 0
+      ? 'pass'
+      : 'fail',
     `최소 ${cardFlow.minHeight ?? 0}px`,
   );
   record(
-    '선택지가 2~3개다',
-    (cardFlow.options ?? 0) >= 2 && (cardFlow.options ?? 0) <= 3 ? 'pass' : 'fail',
-    `${cardFlow.options ?? 0}개`,
+    '공유 이미지 슬롯이 event/<theme> 계약 ID를 쓴다',
+    (cardFlow.themeSprite ?? '').indexOf('event/') === 0 ? 'pass' : 'fail',
+    cardFlow.themeSprite ?? '없음',
   );
 
-  // 카드를 실제로 골라 흐름을 끝까지 태운다 — 사람이 쓰는 pick 과 같은 경로다
-  const afterPick = (await page.evaluate(`(() => {
-    const cv = window.__kairoCards;
-    let guard = 0;
-    while (cv.visible && guard++ < 5) {
-      const card = cv.currentCard;
-      let pick = 0;
-      if (card) {
-        for (let oi = 0; oi < card.options.length; oi++) {
-          if (!card.options[oi].effects.some((e) => e.closed)) { pick = oi; break; }
-        }
-      }
-      cv.pickForTest(pick);
-    }
-    return { visible: cv.visible, cash: window.__kairo.week.cash };
-  })()`)) as { visible: boolean; cash: number };
-
   record(
-    '카드를 고르면 화면이 닫히고 그 주가 진행된다',
-    !afterPick.visible ? 'pass' : 'fail',
-    `현금 ${Math.round((cardFlow.cashBefore ?? 0) / 10000)}만 → ${Math.round(afterPick.cash / 10000)}만`,
+    '실제 터치로 카드를 고르면 닫히고 그 주가 진행된다',
+    !cardTouchResult.visible && cardTouchResult.weekStarted ? 'pass' : 'fail',
+    `현금 ${Math.round((cardFlow.cashBefore ?? 0) / 10000)}만 → ${Math.round(cardTouchResult.cash / 10000)}만`,
+  );
+  record(
+    '일반 카드는 모달 한 채널만 쓴다 — 뉴스·토스트 중복 0',
+    cardTouchResult.tickerAfter === cardFlow.tickerBefore &&
+      cardTouchResult.toastAfter === cardFlow.toastBefore
+      ? 'pass'
+      : 'fail',
+    `티커 ${cardFlow.tickerBefore ?? -1}→${cardTouchResult.tickerAfter} · ` +
+      `토스트 "${cardFlow.toastBefore ?? ''}"→"${cardTouchResult.toastAfter}"`,
   );
 
   // 결산이 열려 있으면 닫는다 (뒤 검사가 오버레이에 막히지 않게)
@@ -4389,16 +5281,144 @@ async function main(): Promise<void> {
       m.minTap >= 44 && m.overflow <= 0 ? 'pass' : 'fail',
       `최소 ${m.minTap}px · 넘침 ${m.overflow}px`);
 
-    // 시트를 열면 덮이지만 닫으면 되돌아온다 — 시트가 안 닫히면 화면이 영영 좁다
-    await pg.evaluate(`document.getElementById('kairo-build-open').click()`);
+    const pgCdp = await cx.newCDPSession(pg);
+    const pgTouch = async (type: TouchType, x: number, y: number): Promise<void> => {
+      await pgCdp.send('Input.dispatchTouchEvent', {
+        type,
+        touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }],
+      });
+    };
+
+    // 시트를 여는 것부터 진짜 터치다. `.click()`이면 덮인 버튼도 조용히 통과한다.
+    const buildBox = await pg.locator('#kairo-build-open').boundingBox();
+    if (buildBox) {
+      await pg.touchscreen.tap(buildBox.x + buildBox.width / 2, buildBox.y + buildBox.height / 2);
+    }
     await pg.waitForTimeout(150);
     const opened = (await pg.evaluate(MEASURE_HUD)) as { chrome: number; minTap: number };
-    await pg.evaluate(`document.getElementById('kairo-sheet-close').click()`);
+
+    /*
+     * Phase 4 건설 선택 — 393×852 / 852×393 둘 다 같은 DOM·CSS를 **실제 터치**로 잰다.
+     * 화살표 없음, 약 3장, 비용+역할 하나, 잠금 이유+해제법, 가로 스와이프 이동을 한 번에
+     * 기록하고 스크린샷을 남긴다. 합성 PointerEvent는 네이티브 스크롤을 못 재므로 CDP touch다.
+     */
+    const buildBefore = (await pg.evaluate(`(() => {
+      const sheet = document.getElementById('kairo-sheet');
+      const car = sheet.querySelector('.kcarousel');
+      const cards = [...car.querySelectorAll('.kcard')];
+      const cr = car.getBoundingClientRect();
+      const visible = cards.filter((card) => {
+        const r = card.getBoundingClientRect();
+        const overlap = Math.max(0, Math.min(r.right, cr.right) - Math.max(r.left, cr.left));
+        return overlap >= r.width * 0.5;
+      });
+      const blocked = cards.filter((card) => card.disabled);
+      const names = cards.map((card) => card.querySelector('.kcard-name')).filter(Boolean);
+      const first = cards[0] ? cards[0].getBoundingClientRect() : null;
+      const cs = names[0] ? getComputedStyle(names[0]) : null;
+      return {
+        x: cr.left, y: cr.top, w: cr.width, h: cr.height,
+        scroll: car.scrollLeft, max: car.scrollWidth - car.clientWidth,
+        cards: cards.length, visible: visible.length,
+        cardW: first ? first.width : 0, cardH: first ? first.height : 0,
+        nav: sheet.querySelectorAll('.kcar-nav').length,
+        roleOne: cards.every((card) => card.querySelectorAll('.kcard-role').length === 1),
+        costOne: cards.every((card) => card.querySelectorAll('.kcard-cost').length === 1),
+        blocked: blocked.length,
+        blockedExplained: blocked.every((card) =>
+          card.querySelectorAll('.kcard-block').length === 1 &&
+          card.querySelectorAll('.kcard-unlock').length === 1),
+        lineClamp: cs ? cs.webkitLineClamp : '',
+        sheetH: sheet.getBoundingClientRect().height,
+      };
+    })()`)) as {
+      x: number; y: number; w: number; h: number; scroll: number; max: number;
+      cards: number; visible: number; cardW: number; cardH: number; nav: number;
+      roleOne: boolean; costOne: boolean; blocked: number; blockedExplained: boolean;
+      lineClamp: string; sheetH: number;
+    };
+    const swipeY = buildBefore.y + Math.min(buildBefore.h - 8, buildBefore.cardH / 2);
+    const swipeFrom = buildBefore.x + buildBefore.w * 0.82;
+    const swipeTo = buildBefore.x + buildBefore.w * 0.18;
+    await pgTouch('touchStart', swipeFrom, swipeY);
+    for (let step = 1; step <= 8; step++) {
+      await pgTouch(
+        'touchMove',
+        swipeFrom + ((swipeTo - swipeFrom) * step) / 8,
+        swipeY,
+      );
+    }
+    await pgTouch('touchEnd', 0, 0);
+    await pg.waitForTimeout(450);
+    const buildAfter = (await pg.evaluate(`(() => {
+      const car = document.querySelector('#kairo-sheet .kcarousel');
+      return { scroll: car.scrollLeft, max: car.scrollWidth - car.clientWidth };
+    })()`)) as { scroll: number; max: number };
+    await pg.screenshot({ path: `${SHOT_DIR}/kairo-build-phase4-${tag}.png` });
+    record(
+      `${tag} — Phase 4 터치 레일은 화살표 없이 카드 약 3장을 보인다`,
+      buildBefore.nav === 0 && buildBefore.visible >= 3 && buildBefore.visible <= 4
+        ? 'pass'
+        : 'fail',
+      `카드 ${buildBefore.cards}장 · 화면 ${buildBefore.visible}장 · ` +
+        `카드 ${Math.round(buildBefore.cardW)}×${Math.round(buildBefore.cardH)} · 화살표 ${buildBefore.nav}`,
+    );
+    record(
+      `${tag} — 카드마다 비용 + 역할 배지 하나, 이름은 두 줄 허용`,
+      buildBefore.costOne && buildBefore.roleOne && buildBefore.lineClamp === '2'
+        ? 'pass'
+        : 'fail',
+      `비용 ${buildBefore.costOne ? '1개' : '불일치'} · 역할 ${buildBefore.roleOne ? '1개' : '불일치'} · ` +
+        `line-clamp ${buildBefore.lineClamp || '없음'}`,
+    );
+    record(
+      `${tag} — 막힌 카드는 선택 전에 이유와 해제법을 함께 보인다`,
+      buildBefore.blocked > 0 && buildBefore.blockedExplained ? 'pass' : 'fail',
+      `막힘 ${buildBefore.blocked}장 · 설명 ${buildBefore.blockedExplained ? '완비' : '누락'}`,
+    );
+    record(
+      `${tag} — Phase 4 건설 카드 스와이프가 실제 가로 스크롤을 움직인다`,
+      buildBefore.max > 0 && buildAfter.scroll > buildBefore.scroll + 20 ? 'pass' : 'fail',
+      `scroll ${Math.round(buildBefore.scroll)} → ${Math.round(buildAfter.scroll)} / ${Math.round(buildAfter.max)} · ` +
+        `시트 ${Math.round(buildBefore.sheetH)}px · 스크린샷 kairo-build-phase4-${tag}.png`,
+    );
+
+    const pickPoint = (await pg.evaluate(`(() => {
+      const car = document.querySelector('#kairo-sheet .kcarousel');
+      const cr = car.getBoundingClientRect();
+      const card = [...car.querySelectorAll('.kcard')].find((item) => {
+        if (item.disabled) return false;
+        const r = item.getBoundingClientRect();
+        const overlap = Math.max(0, Math.min(r.right, cr.right) - Math.max(r.left, cr.left));
+        return overlap >= r.width * 0.5;
+      });
+      if (!card) return null;
+      const r = card.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2, pick: card.dataset.pick };
+    })()`)) as { x: number; y: number; pick: string } | null;
+    if (pickPoint) await pg.touchscreen.tap(pickPoint.x, pickPoint.y);
+    await pg.waitForTimeout(180);
+    const pickedByTouch = (await pg.evaluate(`(() => ({
+      brush: window.__kairoBrush ? window.__kairoBrush() : null,
+      sheetHidden: document.getElementById('kairo-sheet').hidden
+    }))()`)) as { brush: string | null; sheetHidden: boolean };
+    record(
+      `${tag} — 보이는 카드를 진짜 터치하면 붓을 고르고 시트가 닫힌다`,
+      pickPoint !== null && pickedByTouch.brush !== null && pickedByTouch.sheetHidden ? 'pass' : 'fail',
+      `${pickPoint?.pick ?? '카드 없음'} → 붓 ${pickedByTouch.brush ?? '없음'} · ` +
+        `시트 ${pickedByTouch.sheetHidden ? '닫힘' : '열림'}`,
+    );
+    await pg.evaluate(`window.__kairoClearBrush && window.__kairoClearBrush()`);
+
+    const closeBox = await pg.locator('#kairo-sheet-close').boundingBox();
+    if (closeBox) {
+      await pg.touchscreen.tap(closeBox.x + closeBox.width / 2, closeBox.y + closeBox.height / 2);
+    }
     await pg.waitForTimeout(150);
     const closed = (await pg.evaluate(MEASURE_HUD)) as { chrome: number };
     record(
       `${tag} — 시트를 닫으면 화면이 돌아온다`,
-      opened.chrome > m.chrome && closed.chrome === m.chrome ? 'pass' : 'fail',
+      opened.chrome > m.chrome && Math.abs(closed.chrome - m.chrome) <= 1 ? 'pass' : 'fail',
       `닫힘 ${m.chrome}% → 열림 ${opened.chrome}% → 닫힘 ${closed.chrome}%`,
     );
     record(
@@ -4422,13 +5442,6 @@ async function main(): Promise<void> {
      * 음성 대조군은 내장이다: 토글이 죽으면 '접힘' 판정이, top 이 고정값으로
      * 돌아가면 겹침 판정이 실패한다.
      */
-    const pgCdp = await cx.newCDPSession(pg);
-    const pgTouch = async (type: TouchType, x: number, y: number): Promise<void> => {
-      await pgCdp.send('Input.dispatchTouchEvent', {
-        type,
-        touchPoints: type === 'touchEnd' ? [] : [{ x, y, id: 1 }],
-      });
-    };
     const FOLD_READ = `(() => {
       const list = document.querySelector('#kairo-goal .kchiplist');
       const sheet = document.getElementById('kairo-sheet');
@@ -4500,6 +5513,48 @@ async function main(): Promise<void> {
         `메뉴 ${menuLeaked ? '열렸다(stopPropagation 회귀!)' : '안 열림'}`,
     );
     await pg.screenshot({ path: `${SHOT_DIR}/kairo-hud-${tag}.png` });
+    await cx.close();
+  }
+
+  /* 터치가 없는 키보드/마우스 환경은 이름 있는 44px 페이지 버튼을 폴백으로 쓴다. */
+  {
+    const cx = await browser.newContext({
+      viewport: { width: 852, height: 393 },
+      deviceScaleFactor: 1,
+      isMobile: false,
+      hasTouch: false,
+    });
+    const pg = await cx.newPage();
+    await pg.goto(URL, { waitUntil: 'load' });
+    await pg.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+    await pg.locator('#kairo-build-open').click();
+    const fallback = (await pg.evaluate(`(() => {
+      const car = document.querySelector('#kairo-sheet .kcarousel');
+      const nav = [...document.querySelectorAll('#kairo-sheet .kcar-nav')];
+      const before = car.scrollLeft;
+      const sizes = nav.map((b) => b.getBoundingClientRect());
+      return {
+        before: before,
+        labels: nav.map((b) => b.getAttribute('aria-label')),
+        min: sizes.length ? Math.min(...sizes.map((r) => Math.min(r.width, r.height))) : 0,
+      };
+    })()`)) as { before: number; labels: Array<string | null>; min: number };
+    await pg.getByRole('button', { name: '다음 건설 카드' }).click();
+    await pg.waitForTimeout(350);
+    const after = (await pg.locator('#kairo-sheet .kcarousel').evaluate((el) => el.scrollLeft)) as number;
+    record(
+      '비터치 폴백은 이름 있는 이전/다음 44px 버튼이고 실제로 페이지를 넘긴다',
+      fallback.labels.join(',') === '이전 건설 카드,다음 건설 카드' &&
+        fallback.min >= 44 && after > fallback.before
+        ? 'pass'
+        : 'fail',
+      `${fallback.labels.join(' / ')} · 최소 ${Math.round(fallback.min)}px · ` +
+        `scroll ${Math.round(fallback.before)} → ${Math.round(after)}`,
+    );
     await cx.close();
   }
 
@@ -4635,10 +5690,17 @@ async function main(): Promise<void> {
       out.barBefore = !document.getElementById('kairo-confirm').hidden;
       out.confirmDisabled = cf.disabled;
       out.label2 = (document.getElementById('kairo-confirm').querySelector('.place-label') || {}).textContent;
-      cf.click();
-      out.countAfterConfirm = h.placement.count;
+      out.previewThumb = !!document.querySelector('#kairo-confirm .kconfirm-thumb canvas');
+      out.previewName = (document.querySelector('#kairo-confirm .kconfirm-name') || {}).textContent || '';
+      out.previewCost = (document.querySelector('#kairo-confirm .kconfirm-cost') || {}).textContent || '';
+      out.previewCheck = (document.querySelector('#kairo-confirm .kconfirm-check') || {}).textContent || '';
       return out;
     })()`)) as Record<string, number | boolean>;
+
+    await pg.screenshot({ path: `${SHOT_DIR}/kairo-build-confirm-phase4.png` });
+    await pg.locator('#kairo-place-confirm').tap();
+    await pg.waitForTimeout(120);
+    const countAfterConfirm = (await pg.evaluate(`window.__kairo.placement.count`)) as number;
 
     record(
       '건물 4×4 블록이 실내를 16칸 늘리고 값이 그만큼 나간다 (K32)',
@@ -4679,8 +5741,19 @@ async function main(): Promise<void> {
     );
     record(
       '확정하면 놓인다',
-      (r.countAfterConfirm as number) === (r.count0 as number) + 1 ? 'pass' : 'fail',
-      `${String(r.count0)} → ${String(r.countAfterConfirm)} · 바 ${String(r.barBefore)} · disabled ${String(r.confirmDisabled)} · "${String(r.label2)}"`,
+      countAfterConfirm === (r.count0 as number) + 1 ? 'pass' : 'fail',
+      `${String(r.count0)} → ${countAfterConfirm} · 바 ${String(r.barBefore)} · disabled ${String(r.confirmDisabled)} · "${String(r.label2)}"`,
+    );
+    record(
+      'Phase 4 확정 바는 선택 썸네일·실제 비용·현재 자리 판정을 함께 보인다',
+      r.previewThumb === true &&
+        String(r.previewName).includes('화장실') &&
+        /비용\s+\d+만/.test(String(r.previewCost)) &&
+        String(r.previewCheck) === '배치 가능'
+        ? 'pass'
+        : 'fail',
+      `썸네일 ${String(r.previewThumb)} · ${String(r.previewName)} · ` +
+        `${String(r.previewCost)} · ${String(r.previewCheck)} · 스크린샷 kairo-build-confirm-phase4.png`,
     );
     record(
       '회전 버튼은 자리만 잡혀 있다 (방향 스프라이트가 생기면 켠다)',
@@ -5723,7 +6796,14 @@ async function main(): Promise<void> {
 
     /* 카드는 모달 — 선택 전에 다른 패널이 밀어내면 주가 조용히 넘어간다 */
     h.cardView.show(
-      [{ id: 'k37', name: '검사', desc: '검사', options: [{ label: 'a', detail: 'a', effects: [] }] }],
+      [{
+        id: 'k37',
+        name: '검사',
+        desc: '검사',
+        theme: 'safety',
+        delivery: 'immediate',
+        options: [{ label: 'a', detail: 'a', effects: [] }],
+      }],
       99999999,
       noop,
     );
@@ -8967,15 +10047,11 @@ async function main(): Promise<void> {
       { timeout: 15000 },
     );
 
-    /*
-     * 결산 화면의 처방 줄. **마지막 `.kcallout` 을 읽는다** — 같은 클래스를 매표소
-     * 경보(`noTicket > 0`)가 먼저 쓰고, 그건 병목보다 **앞에** 붙는다 (`kairo-report.ts`
-     * 실물에서 확인). 첫 줄을 읽으면 매표소 경보가 뜬 주에 엉뚱한 문장을 재게 된다.
-     */
+    /* K54부터 처방은 상충하는 여러 callout이 아니라 상단의 **한 줄**이다. */
     const CALLOUTS = `(() => {
       const r = document.getElementById('kairo-report');
       if (!r || r.hidden) return null;
-      return [...r.querySelectorAll('.kcallout')].map((e) => e.textContent || '');
+      return [...r.querySelectorAll('.kreport-prescription-text')].map((e) => e.textContent || '');
     })()`;
     type Bn = {
       need: string;

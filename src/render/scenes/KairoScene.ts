@@ -47,6 +47,7 @@ import {
   type Pen,
 } from '../kairo/fx.js';
 import type { IncomeEvent } from '../../sim/kairo/week.js';
+import { surroundDecorationPlan } from '../kairo/surround.js';
 
 /**
  * 지도 바깥을 채우는 **지형** 텍스처 (K38).
@@ -231,6 +232,13 @@ export class KairoScene extends Phaser.Scene {
   private courseBad = new Set<number>();
   private courseDock: { x: number; y: number } | null = null;
   private courseGfx: Phaser.GameObjects.Graphics | null = null;
+  private courseInteractive = true;
+  private courseRiskSegments: { a: { x: number; y: number }; b: { x: number; y: number } }[] = [];
+  private courseHandleLabels: Phaser.GameObjects.Text[] = [];
+  private trialGfx: Phaser.GameObjects.Graphics | null = null;
+  private trialTween: Phaser.Tweens.Tween | null = null;
+  private trialCalls: Phaser.Time.TimerEvent[] = [];
+  private trialPath: { x: number; y: number }[] = [];
   /**
    * 정류장 버스 (K36-B③) — **위치는 sim 이 준다.**
    *
@@ -490,6 +498,7 @@ export class KairoScene extends Phaser.Scene {
     this.buildWalls();
     // 힌트 층 — 값이 아니라 **순서**가 계약이다 (`iso.ts` 의 `DEPTH_*`, K51)
     this.courseGfx = this.add.graphics().setDepth(DEPTH_COURSE_MARK).setVisible(false);
+    this.trialGfx = this.add.graphics().setDepth(DEPTH_COURSE_MARK + 1).setVisible(false);
     this.landGfx = this.add.graphics().setDepth(DEPTH_LAND_MARK).setVisible(false);
     this.doorGfx = this.add.graphics().setDepth(DEPTH_DOOR_MARK);
     // 조준 표식 (K47-③) — 힌트 층이다. 세계 물체가 아니라 문 앞 발판과 같은 자리
@@ -890,6 +899,20 @@ export class KairoScene extends Phaser.Scene {
       const y = STEP_Y * (i + j) + PAD + TILE_H - th + Math.max(di, dj) * LEVEL_H - z * LEVEL_H;
       ctx.drawImage(src, Math.round(x), Math.round(y));
     }
+
+    /*
+     * Phase 7 주변 장식 — 기존 `deco/*` 계약 스프라이트를 **같은 surround 캔버스에**
+     * 합성한다. Phaser 오브젝트를 늘리지 않고, 이 함수도 텍스처가 없을 때 부팅 한 번만
+     * 도므로 런타임 갱신 비용은 0이다. 물가에는 놓지 않아 조형물이 강 위에 뜨지 않는다.
+     */
+    for (const item of surroundDecorationPlan(GRID_W, GRID_H)) {
+      if (!item.id.startsWith('deco/') || isWet(item.i, item.j) || !this.opts.provider.has(item.id)) continue;
+      const src = this.opts.provider.get(item.id);
+      const z = deco(item.i, item.j);
+      const x = STEP_X * (item.i - item.j) + ox;
+      const y = STEP_Y * (item.i + item.j) + PAD + TILE_H - z * LEVEL_H;
+      ctx.drawImage(src, Math.round(x - src.width / 2), Math.round(y - src.height));
+    }
     tex.refresh();
   }
 
@@ -1287,7 +1310,8 @@ export class KairoScene extends Phaser.Scene {
 
   /**
    * 렌더가 tick 하나를 소비하는 실시간 초 (K44) — 손님 보간이 이걸 따라간다.
-   * main 이 부팅과 배속 전환에서 넣어 준다. 유휴 시뮬(10Hz) 기본값 0.1.
+   * main 이 부팅과 배속 전환에서 넣어 준다. 필드 초기값은 0.1이지만
+   * 생산 1× 박자는 부팅 시 0.2로 설정된다.
    */
   private tickSeconds = 0.1;
   setTickSeconds(s: number): void {
@@ -2405,10 +2429,19 @@ export class KairoScene extends Phaser.Scene {
     handles: readonly { x: number; y: number }[],
     bad: readonly number[],
     dock: { x: number; y: number } | null,
+    options: {
+      interactive?: boolean;
+      riskSegments?: readonly { a: { x: number; y: number }; b: { x: number; y: number } }[];
+    } = {},
   ): void {
     this.courseHandles = handles.map((h) => ({ ...h }));
     this.courseBad = new Set(bad);
     this.courseDock = dock ? { ...dock } : null;
+    this.courseInteractive = options.interactive ?? true;
+    this.courseRiskSegments = (options.riskSegments ?? []).map((segment) => ({
+      a: { ...segment.a },
+      b: { ...segment.b },
+    }));
     this.drawCourseOverlay();
   }
 
@@ -2439,6 +2472,8 @@ export class KairoScene extends Phaser.Scene {
     if (!this.courseGfx) return;
     const g = this.courseGfx;
     g.clear();
+    for (const label of this.courseHandleLabels) label.destroy();
+    this.courseHandleLabels = [];
     if (this.courseHandles.length === 0 && this.dockTips.length === 0) {
       g.setVisible(false);
       return;
@@ -2451,7 +2486,7 @@ export class KairoScene extends Phaser.Scene {
     // 경로 — 선착장 → 핸들 순서
     const path = (this.courseDock ? [this.courseDock] : []).concat(this.courseHandles).map(pt);
     if (path.length >= 2) {
-      g.lineStyle(2, 0x7ad0ff, 0.85);
+      g.lineStyle(2, cssColorInt('--course-route'), 0.85);
       g.beginPath();
       g.moveTo((path[0] as { x: number }).x, (path[0] as { y: number }).y);
       for (let k = 1; k < path.length; k++) {
@@ -2460,6 +2495,13 @@ export class KairoScene extends Phaser.Scene {
       // 닫는다 — 코스는 돌아온다
       g.lineTo((path[0] as { x: number }).x, (path[0] as { y: number }).y);
       g.strokePath();
+      for (let index = 1; index < path.length; index++) {
+        this.drawCourseDirection(g, path[index - 1]!, path[index]!);
+      }
+      this.drawCourseDirection(g, path[path.length - 1]!, path[0]!);
+    }
+    for (const segment of this.courseRiskSegments) {
+      this.drawCourseRiskSegment(g, pt(segment.a), pt(segment.b));
     }
     /*
      * 선착장 후보 — 핸들보다 **먼저** 그린다. 겹치면 핸들이 위에 와야 한다
@@ -2469,31 +2511,91 @@ export class KairoScene extends Phaser.Scene {
       const c = pt(this.dockTips[k] as { x: number; y: number });
       const on = k === this.dockSelected;
       const rr = (on ? 16 : 13) / this.cam.upscale;
-      g.fillStyle(0xffe08a, on ? 0.9 : 0.35);
+      g.fillStyle(cssColorInt('--course-dock'), on ? 0.9 : 0.35);
       g.fillCircle(c.x, c.y, rr);
-      g.lineStyle(2, 0xffe08a, on ? 1 : 0.6);
+      g.lineStyle(2, cssColorInt('--course-dock'), on ? 1 : 0.6);
       g.strokeCircle(c.x, c.y, rr);
       // 안쪽 점 — 선택된 것만. 색만 다르면 작은 화면에서 구분이 안 된다
       if (on) {
-        g.fillStyle(0x12212c, 0.9);
+        g.fillStyle(cssColorInt('--course-dock-ink'), 0.9);
         g.fillCircle(c.x, c.y, rr * 0.42);
       }
     }
 
     // 핸들 — 화면 36px 을 씬 좌표로
     const r = 18 / this.cam.upscale;
+    if (this.courseDock) this.drawCourseStart(g, pt(this.courseDock), r);
     for (let k = 0; k < this.courseHandles.length; k++) {
       const c = pt(this.courseHandles[k] as { x: number; y: number });
       const bad = this.courseBad.has(k);
-      g.fillStyle(bad ? 0xd8503c : 0x2f9fd0, 0.85);
+      g.fillStyle(cssColorInt(bad ? '--course-risk' : '--course-handle'), 0.85);
       g.fillCircle(c.x, c.y, r);
-      g.lineStyle(2, 0xffffff, 0.9);
+      g.lineStyle(2, cssColorInt('--course-ink'), 0.9);
       g.strokeCircle(c.x, c.y, r);
+      this.drawCourseHandleNumber(k, c);
     }
+  }
+
+  private drawCourseStart(
+    g: Phaser.GameObjects.Graphics,
+    point: { x: number; y: number },
+    radius: number,
+  ): void {
+    g.fillStyle(cssColorInt('--course-start'), 0.95);
+    g.fillCircle(point.x, point.y, radius * 0.58);
+    g.lineStyle(2, cssColorInt('--course-ink'), 0.95);
+    g.strokeCircle(point.x, point.y, radius * 0.58);
+  }
+
+  private drawCourseDirection(
+    g: Phaser.GameObjects.Graphics,
+    from: { x: number; y: number },
+    to: { x: number; y: number },
+  ): void {
+    const length = Math.hypot(to.x - from.x, to.y - from.y);
+    if (length < 4) return;
+    const ux = (to.x - from.x) / length;
+    const uy = (to.y - from.y) / length;
+    const nx = -uy;
+    const ny = ux;
+    const center = { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 };
+    const size = 5 / this.cam.upscale;
+    g.fillStyle(cssColorInt('--course-direction'), 0.9);
+    g.beginPath();
+    g.moveTo(center.x + ux * size, center.y + uy * size);
+    g.lineTo(center.x - ux * size + nx * size * 0.7, center.y - uy * size + ny * size * 0.7);
+    g.lineTo(center.x - ux * size - nx * size * 0.7, center.y - uy * size - ny * size * 0.7);
+    g.closePath();
+    g.fillPath();
+  }
+
+  private drawCourseHandleNumber(index: number, point: { x: number; y: number }): void {
+    const label = this.add.text(point.x, point.y, String(index + 1), {
+      color: cssVar('--course-ink'),
+      fontFamily: 'ui-monospace, monospace',
+      fontSize: `${Math.max(8, Math.round(10 / this.cam.upscale))}px`,
+      fontStyle: 'bold',
+    });
+    label.setOrigin(0.5, 0.5);
+    label.setDepth(DEPTH_COURSE_MARK + 1);
+    this.courseHandleLabels.push(label);
+  }
+
+  private drawCourseRiskSegment(
+    g: Phaser.GameObjects.Graphics,
+    from: { x: number; y: number },
+    to: { x: number; y: number },
+  ): void {
+    g.lineStyle(4 / this.cam.upscale, cssColorInt('--course-risk'), 0.92);
+    g.beginPath();
+    g.moveTo(from.x, from.y);
+    g.lineTo(to.x, to.y);
+    g.strokePath();
   }
 
   /** 화면 좌표에서 가장 가까운 핸들 — 없으면 −1 */
   private handleAtPointer(px: number, py: number): number {
+    if (!this.courseInteractive) return -1;
     const grab = 22 / this.cam.upscale;
     const view = this.cam.view();
     let best = -1;
@@ -2929,8 +3031,10 @@ export class KairoScene extends Phaser.Scene {
     v.face.setDepth(bodyDepth + faceGap);
     v.face.setVisible(shown && (facing === '+X' || facing === '+Z'));
 
-    if (g.emote && shown) {
-      v.emote.setTexture('emote', `e_${g.emote}`);
+    // 이름 있는 단골은 일반 1,200명 에이전트와 구분되는 영구 하트 표식을 써다.
+    // 별도 렌더 상태를 저장하지 않고 sim의 `characterId`만 읽는다.
+    if ((g.characterId || g.emote) && shown) {
+      v.emote.setTexture('emote', `e_${g.characterId ? 'love' : g.emote}`);
       v.emote.setPosition(cx, cy - GUEST_H - 4);
       v.emote.setDepth(bodyDepth + emoteGap);
       v.emote.setVisible(true);
@@ -3214,6 +3318,70 @@ export class KairoScene extends Phaser.Scene {
       exitSat: gs.exitSatisfaction,
       dotGridViolations: this.violations,
     });
+  }
+
+  private trialPoint(progress: number): { x: number; y: number } | null {
+    if (this.trialPath.length < 2) return null;
+    const scaled = Math.max(0, Math.min(1, progress)) * (this.trialPath.length - 1);
+    const index = Math.min(this.trialPath.length - 2, Math.floor(scaled));
+    const fraction = scaled - index;
+    const a = this.trialPath[index]!;
+    const b = this.trialPath[index + 1]!;
+    return { x: a.x + (b.x - a.x) * fraction, y: a.y + (b.y - a.y) * fraction };
+  }
+
+  private drawCourseTrial(progress: number): void {
+    const g = this.trialGfx;
+    const point = this.trialPoint(progress);
+    if (!g || !point) return;
+    g.clear();
+    g.setVisible(true);
+    const center = tileCenter(Math.round(point.x), Math.round(point.y));
+    const fx = center.x + (point.x - Math.round(point.x)) * STEP_X - (point.y - Math.round(point.y)) * STEP_X;
+    const fy = center.y + (point.x - Math.round(point.x)) * STEP_Y + (point.y - Math.round(point.y)) * STEP_Y;
+    g.fillStyle(cssColorInt('--course-trial-boat'), 1);
+    g.fillRect(fx - 7, fy - 4, 14, 6);
+    g.fillStyle(cssColorInt('--course-trial-edge'), 1);
+    g.fillRect(fx - 7, fy + 1, 14, 2);
+  }
+
+  /** 3–5초 시험 운행. 시계는 편집 패널이 멈춘 채로 렌더 리플레이만 진행한다. */
+  startCourseTrial(
+    path: readonly { x: number; y: number }[],
+    durationMs: number,
+    reactions: readonly { progress: number; text: string }[],
+  ): void {
+    this.clearCourseTrial();
+    this.trialPath = path.map((point) => ({ ...point }));
+    if (this.trialPath.length < 2) return;
+    this.drawCourseTrial(0);
+    this.trialTween = this.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: durationMs,
+      onUpdate: (tween) => this.drawCourseTrial(tween.getValue() ?? 0),
+    });
+    for (const reaction of reactions) {
+      const call = this.time.delayedCall(durationMs * reaction.progress, () => {
+        const point = this.trialPoint(reaction.progress);
+        if (point) playFx(this.fxHost(), 'course-reaction', { i: point.x, j: point.y, text: reaction.text });
+      });
+      this.trialCalls.push(call);
+    }
+  }
+
+  clearCourseTrial(): void {
+    this.trialTween?.remove();
+    this.trialTween = null;
+    for (const call of this.trialCalls) call.remove(false);
+    this.trialCalls = [];
+    this.trialPath = [];
+    this.trialGfx?.clear().setVisible(false);
+  }
+
+  /** 신기록은 패널을 막지 않는 일회성 FX 슬롯으로만 낸다. */
+  playCourseRecord(at: { x: number; y: number }, text: string): void {
+    playFx(this.fxHost(), 'course-record', { i: at.x, j: at.y, text });
   }
 
   /** 타일의 지면 종류 — 검증 도구가 "여기는 잔디"임을 확인하는 데 쓴다 */

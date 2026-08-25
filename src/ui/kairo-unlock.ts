@@ -24,6 +24,14 @@ export interface Celebration {
   sub?: string;
   /** 썸네일용 계약 ID */
   sprite?: string;
+  /** 첫 엔딩처럼 확인 뒤 갈림길이 필요한 큰 사건. 없으면 기존 `좋아!` 한 버튼이다. */
+  actions?: readonly CelebrationAction[];
+}
+
+export interface CelebrationAction {
+  id: string;
+  label: string;
+  run: () => void;
 }
 
 export interface UnlockViewOptions {
@@ -38,6 +46,7 @@ export class KairoUnlockView implements Panel {
   private readonly thumbEl: HTMLDivElement;
   private readonly nameEl: HTMLDivElement;
   private readonly subEl: HTMLDivElement;
+  private readonly actionsEl: HTMLDivElement;
   private readonly opts: UnlockViewOptions;
 
   constructor(parent: HTMLElement, opts: UnlockViewOptions) {
@@ -51,13 +60,8 @@ export class KairoUnlockView implements Panel {
     this.thumbEl = el('div', 'kunlock-thumb fx-pop');
     this.nameEl = el('div', 'kunlock-name');
     this.subEl = el('div', 'kcaption');
-    const ok = el('button', 'kbtn primary', '좋아!');
-    ok.id = 'kairo-unlock-close';
-    ok.addEventListener('click', () => {
-      this.hide();
-      this.opts.onClose?.();
-    });
-    box.append(this.titleEl, this.thumbEl, this.nameEl, this.subEl, ok);
+    this.actionsEl = el('div', 'kunlock-actions');
+    box.append(this.titleEl, this.thumbEl, this.nameEl, this.subEl, this.actionsEl);
     this.root.append(box);
     parent.append(this.root);
 
@@ -75,6 +79,26 @@ export class KairoUnlockView implements Panel {
     this.titleEl.textContent = c.title;
     this.nameEl.textContent = c.name;
     this.subEl.textContent = c.sub ?? '';
+    const actions: readonly CelebrationAction[] = c.actions ?? [
+      { id: 'close', label: '좋아!', run: () => undefined },
+    ];
+    this.actionsEl.replaceChildren(
+      ...actions.map((action, index) => {
+        const button = el('button', index === 0 ? 'kbtn primary' : 'kbtn', action.label);
+        button.dataset['celebrationAction'] = action.id;
+        if (action.id === 'close') button.id = 'kairo-unlock-close';
+        if (action.id === 'continue' || action.id === 'new-region' || action.id === 'view') {
+          button.dataset['endingChoice'] = action.id;
+        }
+        button.addEventListener('click', () => {
+          // 모달을 먼저 닫아야 새 지역/감상 패널을 PanelHost가 열 수 있다.
+          this.hide();
+          action.run();
+          this.opts.onClose?.();
+        });
+        return button;
+      }),
+    );
     this.thumbEl.replaceChildren();
     const src = c.sprite !== undefined ? (this.opts.thumbFor?.(c.sprite) ?? null) : null;
     if (src) {

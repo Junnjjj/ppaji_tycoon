@@ -1,5 +1,5 @@
 import { el } from './dom.js';
-import type { CardDef, CardOption } from '../sim/kairo/cards.js';
+import type { CardDef, CardOption, CardTheme } from '../sim/kairo/cards.js';
 import { optionCash, optionCertainCash } from '../sim/kairo/cards.js';
 import { panelHost } from './panels.js';
 
@@ -8,18 +8,29 @@ import { panelHost } from './panels.js';
  *
  * ## 왜 전면인가
  *
- * 스펙이 정한 것: **전면 카드, 선택지는 전폭 버튼 2~3개, 각 56px.** 폰에서 오독이 없어야
- * 하고, 5초 안에 읽고 고를 분량이어야 한다. 작은 팝업으로 띄우면 스크롤 중에 잘못 눌린다.
- *
- * ## 여러 장이면 한 장씩
- *
- * 동시에 안 띄운다 (스펙). 두 장을 나란히 놓으면 둘을 비교하게 되는데, 카드는 서로 무관한
- * 사건이라 비교할 것이 없다. 한 장 고르면 다음 장.
+ * Phase 6 규칙: 393px 카드에 **테마 이미지 슬롯 하나 + 선택지 2~3개 한 줄**.
+ * 선택지는 짧은 동사/핵심 효과로 읽고 44px 터치 토큰을 쓴다. 작은 팝업으로 띄우면
+ * 스크롤 중에 잘못 눌린다.
  *
  * ## 왜 DOM 인가
  *
- * `ui/` 결정 그대로 — 에셋 0장, 선명, 다크모드 공짜, 폰 텍스트 크기 정책을 따른다.
+ * 테마 슬롯은 `event/<theme>` 계약 ID를 달고 CSS가 절차적으로 그린다. 나중에 실물 아트로
+ * 교체해도 데이터 ID·레이아웃·터치 규칙은 바뀌지 않는다.
  */
+
+const CARD_THEME_PRESENTATION: Record<
+  CardTheme,
+  { label: string; mark: string; sprite: `event/${CardTheme}` }
+> = {
+  crowd: { label: '단체·혼잡', mark: '40', sprite: 'event/crowd' },
+  weather: { label: '날씨', mark: '☂', sprite: 'event/weather' },
+  safety: { label: '안전', mark: '+', sprite: 'event/safety' },
+  publicity: { label: '홍보·방송', mark: '▶', sprite: 'event/publicity' },
+  staff: { label: '직원', mark: '人', sprite: 'event/staff' },
+  market: { label: '경영·거래', mark: '₩', sprite: 'event/market' },
+  facility: { label: '시설·장비', mark: '▦', sprite: 'event/facility' },
+  environment: { label: '환경', mark: '↺', sprite: 'event/environment' },
+};
 
 function won(n: number): string {
   const v = Math.abs(Math.round(n));
@@ -37,6 +48,9 @@ export class KairoCardView {
   private readonly titleEl: HTMLDivElement;
   private readonly descEl: HTMLDivElement;
   private readonly countEl: HTMLDivElement;
+  private readonly visualEl: HTMLDivElement;
+  private readonly visualMarkEl: HTMLSpanElement;
+  private readonly visualLabelEl: HTMLSpanElement;
   private readonly optionsEl: HTMLDivElement;
   private queue: CardDef[] = [];
   private index = 0;
@@ -50,14 +64,18 @@ export class KairoCardView {
     this.root.id = 'kairo-card';
     this.root.hidden = true;
 
-    const box = el('div', 'kdialog-box');
+    const box = el('div', 'kdialog-box kcard-dialog');
     this.countEl = el('div', 'kcaption');
+    this.visualEl = el('div', 'kcard-visual');
+    this.visualEl.setAttribute('role', 'img');
+    this.visualMarkEl = el('span', 'kcard-visual-mark');
+    this.visualLabelEl = el('span', 'kcard-visual-label');
+    this.visualEl.append(this.visualMarkEl, this.visualLabelEl);
     this.titleEl = el('div', 'kcard-title');
     this.descEl = el('div', 'kcard-desc');
-    this.optionsEl = el('div', 'kstack');
-    this.optionsEl.style.setProperty('--stack-gap', '10px');
+    this.optionsEl = el('div', 'kcard-options');
 
-    box.append(this.countEl, this.titleEl, this.descEl, this.optionsEl);
+    box.append(this.countEl, this.visualEl, this.titleEl, this.descEl, this.optionsEl);
     this.root.append(box);
     parent.append(this.root);
   }
@@ -114,7 +132,14 @@ export class KairoCardView {
       this.queue.length > 1 ? `이번 주 결정 ${this.index + 1} / ${this.queue.length}` : '이번 주 결정';
     this.titleEl.textContent = card.name;
     this.descEl.textContent = card.desc;
+    const theme = CARD_THEME_PRESENTATION[card.theme];
+    this.visualEl.dataset['theme'] = card.theme;
+    this.visualEl.dataset['sprite'] = theme.sprite;
+    this.visualEl.setAttribute('aria-label', `${theme.label} 사건 삽화`);
+    this.visualMarkEl.textContent = theme.mark;
+    this.visualLabelEl.textContent = theme.label;
     this.optionsEl.replaceChildren();
+    this.optionsEl.style.setProperty('--card-options', String(card.options.length));
 
     card.options.forEach((opt, oi) => {
       const cash = optionCash(opt);
@@ -125,16 +150,17 @@ export class KairoCardView {
        * **아무것도 못 고르고** 카드는 모달이라 메뉴도 안 열린다 — 판이 잠긴다.
        */
       const tooPoor = optionCertainCash(opt) < 0 && -optionCertainCash(opt) > this.cash;
-      // ★ 56px — `.kitem.wide` 가 지킨다. 새 판 시나리오·도감 항목과 같은 모양이다
-      const btn = el('button', 'kitem wide');
+      // ★ 44px — 한 줄 2~3열이라 공용 전폭 항목(56px)과 분리한다.
+      const btn = el('button', 'kitem kcard-choice');
       btn.disabled = tooPoor;
       btn.dataset['option'] = String(oi);
+      const core = `${cash !== 0 ? `${won(cash)} · ` : ''}${opt.detail}`;
       btn.append(
-        el('div', 'kitem-name', opt.label + (cash !== 0 ? ` (${won(cash)})` : '')),
+        el('div', 'kitem-name', opt.label),
         el(
           'div',
           'kitem-sub',
-          tooPoor ? `${opt.detail} — 현금이 부족합니다` : opt.detail,
+          tooPoor ? `${core} · 현금 부족` : core,
         ),
       );
       btn.addEventListener('click', () => this.pick(card, oi));

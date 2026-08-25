@@ -8,13 +8,14 @@ import type { Season } from './week.js';
  * ## 왜 있는가
  *
  * 적대적 검증에서 나온 최대 결함: 시설을 20개쯤 지으면 할 게 없어지고 `한 주 진행` 이
- * **스킵 버튼**으로 전락한다. 방치형 게임의 전형적 붕괴다. 카드는 매주 선택을 강제한다.
+ * **스킵 버튼**으로 전락한다. 방치형 게임의 전형적 붕괴다. Phase 6 카드는
+ * 매주 막지 않고, 온보딩 뒤 2~4주에 한 번 의미 있는 선택을 만든다.
  *
  * 어느 쪽도 명백한 정답이 아니어야 한다 — "돈을 쓰면 항상 이득"이면 카드가 아니라 청구서다.
  *
  * ## 효과 어휘를 8개로 묶은 이유
  *
- * 카드마다 새 효과를 만들면 24종이 **24개의 특수 규칙**이 되고, 그때부터 카드를 추가할 때
+ * 카드마다 새 효과를 만들면 26종이 **26개의 특수 규칙**이 되고, 그때부터 카드를 추가할 때
  * 시뮬을 고쳐야 한다. 그건 불변식 3(시설·장비·연구는 데이터다)이 막으려던 바로 그 상태다.
  * 카드 추가 = JSON 항목. 코드 변경 없음.
  *
@@ -82,10 +83,33 @@ export interface CardCondition {
   needsLocked?: string;
 }
 
+/** 일반 사건이 공유하는 절차적 이미지 슬롯 8종. */
+export const CARD_THEMES = [
+  'crowd',
+  'weather',
+  'safety',
+  'publicity',
+  'staff',
+  'market',
+  'facility',
+  'environment',
+] as const;
+export type CardTheme = (typeof CARD_THEMES)[number];
+
+/**
+ * 일반 사건은 페이싱이 배달하고, 사고 대응은 발생 즉시 배달한다.
+ *
+ * `trigger` 유무만으로도 알 수 있지만 데이터에 명시해 카드를 추가할 때 채널을
+ * 빼먹어 일반 풀과 즉시 사건에 동시 등장시키는 중복을 검증할 수 있게 한다.
+ */
+export type CardDelivery = 'ordinary' | 'immediate';
+
 export interface CardDef {
   id: string;
   name: string;
   desc: string;
+  theme: CardTheme;
+  delivery: CardDelivery;
   options: CardOption[];
   weight: number;
   condition?: CardCondition;
@@ -107,13 +131,10 @@ export const CARD_RNG_SALT = 0xca7d;
 
 export const CARDS: readonly CardDef[] = (rawCards as unknown as { cards: CardDef[] }).cards;
 
-/** 계절별 주당 카드 수 (스펙 §3.5 등장 빈도) */
-export const CARDS_PER_WEEK: Record<Season, [number, number]> = {
-  summer: [1, 2],
-  spring: [0, 1],
-  autumn: [0, 1],
-  winter: [0, 1],
-};
+/** 온보딩 3주가 끝난 뒤 첫 일반 사건이 올 수 있다. */
+export const ORDINARY_CARD_FIRST_WEEK = 4;
+/** 일반 사건 간격. 카드 전용 RNG가 2·3·4 주 중 하나를 고른다. */
+export const ORDINARY_CARD_GAP = [2, 4] as const;
 
 export interface CardContext {
   season: Season;
@@ -172,13 +193,15 @@ export function isEligible(card: CardDef, ctx: CardContext): boolean {
 }
 
 export function eligibleCards(ctx: CardContext, exclude: ReadonlySet<string>): CardDef[] {
-  // trigger 가 있는 카드는 사건이 부를 때만 나온다
-  return CARDS.filter((c) => !c.trigger && isEligible(c, ctx) && !exclude.has(c.id));
+  // 즉시 카드는 사건이 부를 때만 나온다. 일반 페이싱 풀과 중복하지 않는다.
+  return CARDS.filter(
+    (c) => c.delivery === 'ordinary' && !c.trigger && isEligible(c, ctx) && !exclude.has(c.id),
+  );
 }
 
 /** 사건 카드를 이름으로 가져온다 (사고 대응 등) */
 export function triggerCard(id: string): CardDef | undefined {
-  return CARDS.find((c) => c.id === id);
+  return CARDS.find((c) => c.id === id && c.delivery === 'immediate');
 }
 
 /** 적용 중인 지속 효과 하나 */
@@ -231,6 +254,8 @@ export const MOD_CAPS = {
 export interface CardSnapshot {
   active: ActiveEffect[];
   seen: string[];
+  /** 다음 일반 사건 주차. 구 세이브에 없으면 4주차부터 즉시 재개한다. */
+  nextOrdinaryWeek?: number;
 }
 
 /**
@@ -238,13 +263,14 @@ export interface CardSnapshot {
  *
  * ## 최근에 나온 카드는 다시 안 뽑는다
  *
- * 24종이 있어도 무작위로 뽑으면 같은 카드가 연달아 나온다. 그러면 플레이어는 카드를
+ * 26종이 있어도 무작위로 뽑으면 같은 카드가 연달아 나온다. 그러면 플레이어는 카드를
  * 읽지 않고 같은 버튼을 누르게 되고, 그건 카드가 막으려던 바로 그 상태다.
  * 풀이 소진될 때까지 안 겹치게 뽑고, 소진되면 비운다.
  */
 export class CardStore {
   private readonly activeList: ActiveEffect[] = [];
   private readonly seen = new Set<string>();
+  private nextOrdinaryWeek = ORDINARY_CARD_FIRST_WEEK;
 
   get active(): readonly ActiveEffect[] {
     return this.activeList;
@@ -255,40 +281,38 @@ export class CardStore {
   }
 
   /**
-   * 이번 주 카드를 뽑는다. **`rng` 는 카드 전용 스트림이어야 한다**
+   * 이번 주 일반 카드를 최대 한 장 뽑는다. **`rng` 는 카드 전용 스트림이어야 한다**
    * (`rng.fork(CARD_RNG_SALT)`) —
    * 손님·날씨와 같은 스트림을 쓰면 카드를 하나 더 뽑는 것만으로 날씨 시퀀스가 밀려
    * 밸런싱 실험에서 변수를 하나만 바꿀 수 없다 (불변식 2).
    */
   draw(rng: Rng, ctx: CardContext): CardDef[] {
-    const [lo, hi] = CARDS_PER_WEEK[ctx.season];
-    const n = lo + Math.floor(rng.next() * (hi - lo + 1));
-    const out: CardDef[] = [];
-    const usedThisWeek = new Set<string>();
-    for (let k = 0; k < n; k++) {
-      let pool = eligibleCards(ctx, new Set([...this.seen, ...usedThisWeek]));
-      if (pool.length === 0) {
-        // 풀이 소진됐다 — 비우고 다시. 이번 주에 뽑은 것만 제외한다
-        this.seen.clear();
-        pool = eligibleCards(ctx, usedThisWeek);
-      }
-      if (pool.length === 0) break;
-      const total = pool.reduce((a, c) => a + Math.max(1, c.weight), 0);
-      let r = rng.next() * total;
-      let pickIdx = pool.length - 1;
-      for (let idx = 0; idx < pool.length; idx++) {
-        r -= Math.max(1, (pool[idx] as CardDef).weight);
-        if (r <= 0) {
-          pickIdx = idx;
-          break;
-        }
-      }
-      const pick = pool[pickIdx] as CardDef;
-      this.seen.add(pick.id);
-      usedThisWeek.add(pick.id);
-      out.push(pick);
+    if (ctx.week < ORDINARY_CARD_FIRST_WEEK || ctx.week < this.nextOrdinaryWeek) return [];
+
+    let pool = eligibleCards(ctx, this.seen);
+    if (pool.length === 0) {
+      // 풀이 소진됐다 — 비우고 다시. 한 주에 한 장이므로 별도 제외 집합은 필요 없다.
+      this.seen.clear();
+      pool = eligibleCards(ctx, this.seen);
     }
-    return out;
+    if (pool.length === 0) return [];
+
+    const total = pool.reduce((a, c) => a + Math.max(1, c.weight), 0);
+    let r = rng.next() * total;
+    let pickIdx = pool.length - 1;
+    for (let idx = 0; idx < pool.length; idx++) {
+      r -= Math.max(1, (pool[idx] as CardDef).weight);
+      if (r <= 0) {
+        pickIdx = idx;
+        break;
+      }
+    }
+    const pick = pool[pickIdx] as CardDef;
+    this.seen.add(pick.id);
+
+    const [lo, hi] = ORDINARY_CARD_GAP;
+    this.nextOrdinaryWeek = ctx.week + lo + Math.floor(rng.next() * (hi - lo + 1));
+    return [pick];
   }
 
   /**
@@ -374,6 +398,7 @@ export class CardStore {
     return {
       active: this.activeList.map((a) => ({ ...a, effects: { ...a.effects } })),
       seen: [...this.seen],
+      nextOrdinaryWeek: this.nextOrdinaryWeek,
     };
   }
 
@@ -381,6 +406,13 @@ export class CardStore {
     const st = new CardStore();
     for (const a of s.active) st.activeList.push({ ...a, effects: { ...a.effects } });
     for (const id of s.seen) st.seen.add(id);
+    if (
+      s.nextOrdinaryWeek !== undefined &&
+      Number.isInteger(s.nextOrdinaryWeek) &&
+      s.nextOrdinaryWeek >= ORDINARY_CARD_FIRST_WEEK
+    ) {
+      st.nextOrdinaryWeek = s.nextOrdinaryWeek;
+    }
     return st;
   }
 }
@@ -412,6 +444,16 @@ export function validateCards(): string[] {
       problems.push(`${c.id} — 모든 선택지가 확정 지출: 현금이 마르면 판이 잠긴다`);
     }
     ids.add(c.id);
+    if (!CARD_THEMES.includes(c.theme)) problems.push(`${c.id} — 모르는 테마 ${String(c.theme)}`);
+    if (c.delivery === 'ordinary' && c.trigger !== undefined) {
+      problems.push(`${c.id} — 일반 카드에 trigger가 있어 채널이 중복된다`);
+    }
+    if (c.delivery === 'immediate' && c.trigger === undefined) {
+      problems.push(`${c.id} — 즉시 카드에 trigger가 없다`);
+    }
+    if (c.delivery !== 'ordinary' && c.delivery !== 'immediate') {
+      problems.push(`${c.id} — 모르는 배달 채널 ${String(c.delivery)}`);
+    }
     if (c.options.length < 2) problems.push(`${c.id} — 선택지가 2개 미만이면 선택이 아니다`);
     if (c.trigger && c.trigger !== 'accident') problems.push(`${c.id} — 모르는 trigger`);
     if (c.options.length > 3) problems.push(`${c.id} — 선택지 3개 초과는 폰에서 5초에 못 읽는다`);

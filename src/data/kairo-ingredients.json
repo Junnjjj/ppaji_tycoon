@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "note": "Phase 3 메뉴 개발 수직 슬라이스. 재료는 재고가 아니라 영구 해금 키다. 수량·발주·소모·새 화폐는 없다.",
+  "ingredients": [
+    { "id": "ice", "name": "얼음", "start": true },
+    { "id": "coffee", "name": "원두", "start": true },
+    { "id": "milk", "name": "우유", "start": true },
+    { "id": "noodle", "name": "면", "start": true },
+    { "id": "rice", "name": "쌀", "start": true },
+    { "id": "seaweed", "name": "김", "start": true },
+    { "id": "broth", "name": "육수", "start": false },
+    { "id": "redbean", "name": "팥", "start": false }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "note": "견인 장비가 공유하는 보트 profile. 장비×프리셋 조합표를 늘리지 않고 속도·스릴·안전·유지비 배율만 적용한다. 자체동력 장비에는 적용하지 않는다.",
+  "boats": [
+    {
+      "id": "work",
+      "name": "작업형 견인선",
+      "role": "work",
+      "speedMult": 1.0,
+      "thrillMult": 1.0,
+      "thrillCap": 92,
+      "safetyBase": 8,
+      "sharpSafetyPenalty": 0,
+      "upkeepMult": 1.0,
+      "desc": "조향과 안전에 여유가 있고 유지비가 낮지만 최고 스릴이 제한된다."
+    },
+    {
+      "id": "sport",
+      "name": "스포츠형 견인선",
+      "role": "sport",
+      "speedMult": 1.18,
+      "thrillMult": 1.15,
+      "thrillCap": 100,
+      "safetyBase": 0,
+      "sharpSafetyPenalty": 30,
+      "upkeepMult": 1.5,
+      "desc": "빠르고 스릴이 높지만 급커브 안전 감점과 유지비가 크다."
+    }
+  ]
+}

@@ -546,7 +546,7 @@ describe('콤보 보너스가 주간 경제에 실린다 (S5)', () => {
     const withCourse = (mult: number) => {
       const { r } = world(24, [['shop', 5, 5]]);
       return r.run(new Rng(31), {
-        courses: { revenue: 100_000, upkeep: 0, riders: 10 },
+        courses: { potentialRevenue: 100_000, upkeep: 0, potentialRiders: 10 },
         combos: { satisfactionDelta: 0, revenueMult: mult },
       });
     };

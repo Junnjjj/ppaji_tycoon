@@ -1,21 +1,27 @@
 import { el, button } from './dom.js';
 import { cssVar } from './tokens.js';
-import type { WeekReport, NeedKind } from '../sim/kairo/week.js';
+import type {
+  WeekReport,
+  WeekSummary,
+  NeedKind,
+  InvestmentBreakdown,
+} from '../sim/kairo/week.js';
 // 병목 처방이 시설 **이름**을 부른다 — 계약은 sim 소유, 문자열만 여기서 쓴다
 import { facilityDef } from '../sim/kairo/placement.js';
 import type { ActiveCombo, ActiveConflict, ComboResult } from '../sim/kairo/combos.js';
 import type { SwimZone } from '../sim/kairo/swim.js';
 import { panelHost } from './panels.js';
+import { recipeDef } from '../sim/kairo/menu.js';
+import { WISH_CHARACTERS } from '../sim/kairo/wishes.js';
 
 /**
- * 주간 결산 화면 — 스펙 v4.
+ * 주간 결산 화면 — K54/Phase 5.
  *
- * ## 왜 히트맵이 먼저인가
+ * ## 왜 결론이 먼저인가
  *
- * v3 는 결산을 숫자 표로만 뒀는데, 그러면 연출을 스킵하는 순간 **다시 엑셀 게임**이 된다.
- * 그래서 이 화면은 위에서부터 **혼잡 히트맵 → 요일 막대 → 숫자** 순서다. 병목을 눈으로
- * 먼저 보고, 숫자는 확인용이다. 콤보 줄(P2-B)은 그 **뒤**다 — 위 숫자의 일부가 어디서
- * 왔는지를 설명하는 줄이라, 설명이 대상보다 먼저 오면 무엇에 대한 보너스인지 모른다.
+ * v4의 히트맵 우선 계약은 96×72 맵에서 거의 한 화면을 차지해 핵심 결과를 폴드 아래로
+ * 밀었다. K54는 이를 의도적으로 폐기하고 **3 KPI → 처방 하나 → 132px 히트맵 → 분석**
+ * 순서로 바꿨다. 히트맵을 없애지는 않는다. 숫자 결론 뒤에 시각적 원인을 바로 붙인다.
  *
  * ## 왜 DOM 인가
  *
@@ -69,6 +75,129 @@ function won(n: number): string {
   if (v >= 100_000_000) return `${sign}${(v / 100_000_000).toFixed(1)}억`;
   if (v >= 10_000) return `${sign}${Math.round(v / 10_000).toLocaleString('ko-KR')}만`;
   return `${sign}${v.toLocaleString('ko-KR')}`;
+}
+
+export interface ReportKpi {
+  id: 'visitors' | 'profit' | 'satisfaction';
+  label: string;
+  value: number;
+  /** `null`이면 저장된 이전 주가 없는 첫 주다. */
+  delta: number | null;
+  /** 방문객만 전주 대비 비율을 함께 낸다. 전주 0명이면 계산하지 않는다. */
+  percent: number | null;
+}
+
+/** 전주 비교는 저장 요약에 실제로 있는 동일 정의 셋만 사용한다. */
+export function reportKpis(report: WeekReport, previous: WeekSummary | null): ReportKpi[] {
+  const visitorDelta = previous === null ? null : report.visitors - previous.visitors;
+  return [
+    {
+      id: 'visitors',
+      label: '방문객',
+      value: report.visitors,
+      delta: visitorDelta,
+      percent:
+        visitorDelta === null || previous === null || previous.visitors === 0
+          ? null
+          : Math.round((visitorDelta / previous.visitors) * 100),
+    },
+    {
+      id: 'profit',
+      label: '영업 손익',
+      value: report.profit,
+      delta: previous === null ? null : report.profit - previous.profit,
+      percent: null,
+    },
+    {
+      id: 'satisfaction',
+      label: '퇴장 만족',
+      value: report.exitSatisfaction,
+      delta: previous === null ? null : report.exitSatisfaction - previous.exitSatisfaction,
+      percent: null,
+    },
+  ];
+}
+
+export interface ReportLedger {
+  income: { admission: number; sales: number; course: number; total: number };
+  operatingCosts: { maintenance: number; staff: number };
+  /** WeekRunner가 낸 정본 `profit`. UI에서 수입-비용으로 재계산하지 않는다. */
+  operatingProfit: number;
+  investment: InvestmentBreakdown & { total: number };
+}
+
+/** 정본 장부의 항목을 화면 구획으로만 묶는다. */
+export function reportLedger(report: WeekReport): ReportLedger {
+  return {
+    income: {
+      admission: report.admission,
+      sales: report.sales,
+      course: report.courseRevenue,
+      total: report.revenue,
+    },
+    operatingCosts: { maintenance: report.upkeep, staff: report.wages },
+    operatingProfit: report.profit,
+    investment: {
+      ...report.investment,
+      total:
+        report.investment.building +
+        report.investment.upgrades +
+        report.investment.menuDevelopment,
+    },
+  };
+}
+
+export interface ReportPrescription {
+  text: string;
+  button: string;
+  action: 'build' | 'course' | 'manage';
+  target?: string;
+}
+
+/** 상충하는 조언을 여러 줄 늘어놓지 않고 지금 할 한 동작만 고른다. */
+export function reportPrescription(report: WeekReport): ReportPrescription {
+  if (report.noTicket > 0) {
+    return {
+      text: `${report.noTicket}명이 표를 못 샀습니다 — 입구 길과 매표소를 먼저 고치세요`,
+      button: '매표소 건설 열기',
+      action: 'build',
+      target: 'ticket',
+    };
+  }
+  if (report.admissionCap?.capped) {
+    return {
+      text: admissionCappedLine(report.admissionCap),
+      button: '심사·개선 보기',
+      action: 'manage',
+    };
+  }
+  if (report.bottleneck) {
+    return {
+      text: bottleneckLine(report.bottleneck),
+      button: '건설 열기',
+      action: 'build',
+      ...(report.bottleneck.example ? { target: report.bottleneck.example } : {}),
+    };
+  }
+  if (report.courseDemand > report.coursePotentialRiders) {
+    return {
+      text: `코스 수요 ${report.courseDemand}명, 처리 ${report.coursePotentialRiders}명 — 대기 수요를 놓치고 있습니다`,
+      button: '코스 조정',
+      action: 'course',
+    };
+  }
+  if (report.profit < 0) {
+    return {
+      text: '영업 적자입니다 — 요금·직원·시설 개선을 한 번에 점검하세요',
+      button: '경영 보기',
+      action: 'manage',
+    };
+  }
+  return {
+    text: '운영이 안정적입니다 — 견인 코스 기록을 한 단계 더 높여 보세요',
+    button: '코스 기록 도전',
+    action: 'course',
+  };
 }
 
 /**
@@ -236,6 +365,8 @@ export interface ReportHandlers {
   onClose: () => void;
   /** 압축 연출 다시 보기 */
   onReplay?: () => void;
+  /** 처방 버튼은 결산을 닫은 뒤 해당 운영 표면을 직접 연다. */
+  onPrescription?: (prescription: ReportPrescription) => void;
 }
 
 export class KairoReport {
@@ -262,6 +393,57 @@ export class KairoReport {
   hide(): void {
     this.root.hidden = true;
     panelHost.closed(this);
+  }
+
+  private kpiBlock(rep: WeekReport, previous: WeekSummary | null): HTMLElement {
+    const box = el('div', 'kkpis');
+    box.id = 'kairo-report-kpis';
+    for (const kpi of reportKpis(rep, previous)) {
+      const cell = el('div', 'kkpi');
+      cell.dataset['kpi'] = kpi.id;
+      const value =
+        kpi.id === 'visitors'
+          ? `${Math.round(kpi.value).toLocaleString('ko-KR')}명`
+          : kpi.id === 'profit'
+            ? `${kpi.value >= 0 ? '+' : '−'}${won(Math.abs(kpi.value))}`
+            : Math.round(kpi.value).toString();
+      const delta =
+        kpi.delta === null
+          ? '첫 주'
+          : `${kpi.delta >= 0 ? '▲' : '▼'}${
+              kpi.id === 'profit'
+                ? won(Math.abs(kpi.delta))
+                : Math.abs(Math.round(kpi.delta)).toLocaleString('ko-KR')
+            }${kpi.percent === null ? '' : ` / ${kpi.percent >= 0 ? '+' : ''}${kpi.percent}%`}`;
+      cell.append(
+        el('div', 'kkpi-label', kpi.label),
+        el('div', `kkpi-value${kpi.id === 'profit' ? (kpi.value >= 0 ? ' good' : ' bad') : ''}`, value),
+        el(
+          'div',
+          `kkpi-delta${kpi.delta === null ? '' : kpi.delta >= 0 ? ' good' : ' bad'}`,
+          delta,
+        ),
+      );
+      box.append(cell);
+    }
+    return box;
+  }
+
+  private prescriptionBlock(rep: WeekReport): HTMLElement {
+    const prescription = reportPrescription(rep);
+    const wrap = el('div', 'kreport-prescription');
+    wrap.id = 'kairo-report-prescription';
+    wrap.append(el('div', 'kreport-prescription-text', prescription.text));
+    const action = button('kbtn primary', prescription.button, () => {
+      const handler = this.handlers?.onPrescription;
+      if (!handler) return;
+      this.hide();
+      handler(prescription);
+    });
+    action.id = 'kairo-report-prescription-action';
+    action.disabled = this.handlers?.onPrescription === undefined;
+    wrap.append(action);
+    return wrap;
   }
 
   /**
@@ -354,6 +536,7 @@ export class KairoReport {
    */
   private groupBar(rep: WeekReport): HTMLElement {
     const wrap = el('div', 'kstack');
+    wrap.id = 'kairo-report-groups';
     wrap.style.setProperty('--stack-gap', '4px');
     const label = el('div', 'kcaption', '손님 구성');
     const bar = el('div', 'kgroups');
@@ -379,29 +562,144 @@ export class KairoReport {
     return wrap;
   }
 
-  private numbers(rep: WeekReport): HTMLElement {
-    const box = el('div', 'knums');
-    const rows: [string, string, string][] = [
-      ['입장', `${rep.visitors}명`, ''],
-      ['만석으로 돌려보냄', `${rep.turnedAway}명`, rep.turnedAway > 0 ? 'bad' : ''],
-      /*
-       * 매표소를 못 지나 돌아간 손님 (K36-B②) — **만석과 갈라서** 보여준다.
-       * 둘을 합치면 "시설을 늘려라"와 "매표소를 지어라"가 한 줄에 섞여, 정작 못 들어오는
-       * 이유를 못 읽는다.
-       */
-      ['매표소를 못 지나감', `${rep.noTicket}명`, rep.noTicket > 0 ? 'bad' : ''],
-      ['매출', won(rep.revenue), ''],
-      // 입장료는 매출 **안에** 들어 있다. 따로 보여야 "표를 올릴까 시설을 늘릴까"가 판단이 된다
-      ['ㄴ 입장료', won(rep.admission), ''],
-      ['유지비', won(-rep.upkeep), ''],
-      ['손익', won(rep.profit), rep.profit >= 0 ? 'good' : 'bad'],
-      ['퇴장 만족도', rep.exitSatisfaction.toFixed(0), ''],
-      ['헛걸음', `${rep.gaveUp}명`, rep.gaveUp > 0 ? 'warn' : ''],
-    ];
-    for (const [k, v, cls] of rows) {
-      box.append(el('div', 'knum-key', k), el('div', `knum-val ${cls}`, v));
+  /** Phase 3: 일반 메뉴 판매와 이름 있는 단골의 실제 구매 기록. 0건도 기록 행은 남긴다. */
+  private menuRecordBlock(rep: WeekReport): HTMLElement {
+    const wrap = el('div', 'kstack');
+    wrap.id = 'kairo-report-regulars';
+    wrap.dataset['visits'] = String(rep.regularVisits);
+    wrap.dataset['purchases'] = String(rep.menuPurchases.length);
+    wrap.append(el('div', 'kcaption', '메뉴·단골 기록'));
+
+    const byMenu = new Map<string, { count: number; amount: number }>();
+    for (const purchase of rep.menuPurchases) {
+      const old = byMenu.get(purchase.menuId) ?? { count: 0, amount: 0 };
+      old.count += 1;
+      old.amount += purchase.amount;
+      byMenu.set(purchase.menuId, old);
     }
-    return box;
+    const popular = [...byMenu.entries()].sort(
+      (a, b) => b[1].count - a[1].count || b[1].amount - a[1].amount || a[0].localeCompare(b[0]),
+    )[0];
+    wrap.append(
+      el(
+        'div',
+        'krow',
+        popular
+          ? `인기 메뉴 ${recipeDef(popular[0])?.name ?? popular[0]} · ${popular[1].count}개 · ${won(popular[1].amount)}`
+          : '메뉴 구매 0건 — 음식 시설에 발견 메뉴를 장착해 보세요',
+      ),
+    );
+
+    const named = rep.menuPurchases.filter((p) => p.characterId);
+    if (named.length === 0) {
+      wrap.append(el('div', 'kcaption', `단골 ${rep.regularVisits}명 방문 · 요청 메뉴 구매 없음`));
+      return wrap;
+    }
+    const seen = new Set<string>();
+    for (const purchase of named) {
+      const key = `${purchase.characterId}:${purchase.menuId}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const char = WISH_CHARACTERS.find((c) => c.id === purchase.characterId);
+      const recipe = recipeDef(purchase.menuId);
+      wrap.append(
+        el(
+          'div',
+          'krow',
+          `${char?.name ?? purchase.characterId} · ${recipe?.name ?? purchase.menuId} 구매 +${won(purchase.amount)}`,
+        ),
+      );
+    }
+    if (rep.regularAffinityGained > 0) {
+      wrap.append(el('div', 'kcaption good', `친밀도 +${rep.regularAffinityGained}`));
+    }
+    return wrap;
+  }
+
+  private courseRecordBlock(rep: WeekReport): HTMLElement {
+    const wrap = el('div', 'kstack');
+    wrap.id = 'kairo-report-course-record';
+    wrap.append(el('div', 'kcaption', '견인 코스 기록'));
+    const stats = el('div', 'kstats');
+    stats.style.setProperty('--stat-cols', '3');
+    for (const [label, value] of [
+      ['실제 탑승', `${rep.courseRiders}명`],
+      ['원한 손님', `${rep.courseDemand}명`],
+      ['잠재 처리', `${rep.coursePotentialRiders}명`],
+    ]) {
+      const cell = el('div', 'kstat');
+      cell.append(el('div', 'kstat-label', label), el('div', 'kstat-value', value));
+      stats.append(cell);
+    }
+    wrap.append(stats);
+    return wrap;
+  }
+
+  private ledgerBlock(rep: WeekReport): HTMLElement {
+    const ledger = reportLedger(rep);
+    const wrap = el('div', 'kledger');
+    wrap.id = 'kairo-report-ledger';
+
+    const card = (title: string, rows: [string, number][], total: [string, number]): HTMLElement => {
+      const section = el('section', 'kledger-card');
+      section.append(el('div', 'kledger-title', title));
+      const nums = el('div', 'knums');
+      for (const [label, value] of rows) {
+        nums.append(el('div', 'knum-key', label), el('div', 'knum-val', won(value)));
+      }
+      nums.append(
+        el('div', 'knum-key strong', total[0]),
+        el('div', 'knum-val strong', won(total[1])),
+      );
+      section.append(nums);
+      return section;
+    };
+
+    wrap.append(
+      card(
+        '수익',
+        [
+          ['입장료', ledger.income.admission],
+          ['음식·대여', ledger.income.sales],
+          ['견인 코스', ledger.income.course],
+        ],
+        ['수익 합계', ledger.income.total],
+      ),
+      card(
+        '운영비',
+        [
+          ['시설·코스 유지비', ledger.operatingCosts.maintenance],
+          ['인건비', ledger.operatingCosts.staff],
+        ],
+        ['운영비 합계', ledger.operatingCosts.maintenance + ledger.operatingCosts.staff],
+      ),
+    );
+
+    const result = el('div', `koperating-profit${ledger.operatingProfit >= 0 ? ' good' : ' bad'}`);
+    result.append(
+      el('span', undefined, '영업 손익'),
+      el(
+        'strong',
+        undefined,
+        `${ledger.operatingProfit >= 0 ? '+' : '−'}${won(Math.abs(ledger.operatingProfit))}`,
+      ),
+    );
+    const operating = el('div', 'kledger-operating');
+    operating.append(result, el('div', 'kcaption', '건설·개선·메뉴 개발비 제외'));
+    wrap.append(operating);
+
+    wrap.append(
+      card(
+        '투자 지출 · 영업 손익 제외',
+        [
+          ['건설', ledger.investment.building],
+          ['개선', ledger.investment.upgrades],
+          ['메뉴 개발', ledger.investment.menuDevelopment],
+        ],
+        ['투자 합계', ledger.investment.total],
+      ),
+    );
+    return wrap;
   }
 
   /**
@@ -422,10 +720,9 @@ export class KairoReport {
    * 줄을 통째로 감추면 "콤보라는 축이 있다"를 배울 자리가 사라진다 — 지금 고치려는
    * 상태가 정확히 그것이다. 0 이면 대신 **무엇을 하면 터지는지**를 적는다.
    */
-  private comboBlock(rep: WeekReport, view?: ComboBreakdown): HTMLElement | null {
-    const eff = rep.combos;
-    // 콤보를 안 넘기고 돌린 주(옛 세이브·하네스의 합성 리포트)면 줄 자체가 없다
-    if (!eff) return null;
+  private comboBlock(rep: WeekReport, view?: ComboBreakdown): HTMLElement {
+    // 옛 하네스/세이브의 null은 중립값이다. 0개 교육 행까지 숨길 이유가 되지 않는다.
+    const eff = rep.combos ?? { satisfactionDelta: 0, revenueMult: 1 };
     const count = view?.count ?? 0;
     const clashCount = view?.clashCount ?? 0;
     const wrap = el('div', 'kstack');
@@ -534,13 +831,25 @@ export class KairoReport {
     return wrap;
   }
 
-  show(rep: WeekReport, handlers: ReportHandlers, combos?: ComboBreakdown): void {
+  show(
+    rep: WeekReport,
+    handlers: ReportHandlers,
+    combos?: ComboBreakdown,
+    previous: WeekSummary | null = null,
+  ): void {
     this.handlers = handlers;
     this.root.replaceChildren();
 
-    this.root.append(el('div', 'ksheet-title', `${rep.week}주차 결산`));
+    const title = el('div', 'ksheet-title', `${rep.week}주차 결산`);
+    title.id = 'kairo-report-title';
+    this.root.append(title);
 
-    // ① 혼잡 히트맵 — 병목을 먼저 눈으로
+    // K54/Phase 5 — 결론과 다음 한 동작이 언제나 첫 두 블록이다.
+    this.root.append(this.kpiBlock(rep, previous), this.prescriptionBlock(rep));
+
+    // 시각적 원인은 없애지 않고 132px로 압축한다.
+    const heat = el('div', 'kreport-heat');
+    heat.id = 'kairo-report-heat';
     const heatLabel = el(
       'div',
       'kcaption',
@@ -548,58 +857,31 @@ export class KairoReport {
         ? `혼잡 — 가장 붐빈 곳 (${rep.hotspot.i}, ${rep.hotspot.j})`
         : '혼잡 — 손님이 없었다',
     );
-    this.root.append(heatLabel, this.heatCanvas(rep));
+    heat.append(heatLabel, this.heatCanvas(rep));
+    this.root.append(heat);
 
-    // ② 요일 막대
-    this.root.append(
+    const days = el('div', 'kstack');
+    days.id = 'kairo-report-days';
+    days.append(
       el('div', 'kcaption', '요일별 수요 (주말 주황 · 빗금 = 만석으로 돌려보냄)'),
       this.dayBars(rep),
     );
+    this.root.append(days);
 
-    // ③ 손님 구성 — "누가 왔나"가 "무엇을 지을까"의 근거다
+    // "누가 왔나"가 수익/비용을 읽기 전의 수요 근거다.
     this.root.append(this.groupBar(rep));
 
-    // ④ 숫자
-    this.root.append(this.numbers(rep));
+    this.root.append(this.ledgerBlock(rep));
 
-    /*
-     * ⑤ 콤보 — **숫자 뒤**다. 위 숫자(매출·퇴장 만족도)의 일부가 어디서 왔는지를
-     * 설명하는 줄이라, 설명이 대상보다 먼저 오면 무엇에 대한 보너스인지 알 수 없다.
-     */
-    const combo = this.comboBlock(rep, combos);
-    if (combo) this.root.append(combo);
-
-    /*
-     * 매표소 경보 — 병목보다 **먼저** 띄운다. 손님이 아예 안 들어오는 판에서
-     * "부족한 것: 놀이" 를 먼저 보여주면 엉뚱한 곳을 고치게 된다.
-     */
-    if (rep.noTicket > 0) {
-      this.root.append(
-        el(
-          'div',
-          'kcallout',
-          `${rep.noTicket}명이 표를 못 사고 돌아갔습니다 — 입구 근처에 매표소를 짓고 길을 이으세요`,
-        ),
-      );
-    }
-
-    /*
-     * 병목 — 다음에 무엇을 지을까.
-     *
-     * ⚠ **"모자란다"와 "하나도 없다"는 다른 문장이다** (P3-B). 예전에는 공급 0 인 종류가
-     * 후보에도 못 들었고(`week.ts` 의 `NEED_KINDS` 주석), 들어와도 "부족한 것: 스릴
-     * (공급 0)" 은 처방이 아니다. 처방은 **방법까지 말한다** — 이 저장소가 배치 거절
-     * 메시지에서 이미 정한 규칙이다.
-     */
-    /*
-     * ⚠ 정원이 찼으면 병목 **대신** 이 줄이다 (P3-C). 둘 다 띄우면 서로 반대되는 처방이
-     * 나란히 서서 어느 쪽이 맞는지 알 수 없다 — 상한 구간에서 "더 지으세요"는 손해다.
-     */
-    if (rep.admissionCap?.capped) {
-      this.root.append(el('div', 'kcallout', admissionCappedLine(rep.admissionCap)));
-    } else if (rep.bottleneck) {
-      this.root.append(el('div', 'kcallout', bottleneckLine(rep.bottleneck)));
-    }
+    // 위 장부의 원인을 설명하는 주간 기록. 0 콤보 교육 행도 이 안에 항상 남는다.
+    const records = el('div', 'kstack');
+    records.id = 'kairo-report-records';
+    records.append(
+      this.comboBlock(rep, combos),
+      this.menuRecordBlock(rep),
+      this.courseRecordBlock(rep),
+    );
+    this.root.append(records);
 
     const btns = el('div', 'kacts');
     if (handlers.onReplay) {

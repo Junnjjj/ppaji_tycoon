@@ -7,8 +7,9 @@ import {
   eligibleCards,
   isEligible,
   NEUTRAL_MODIFIERS,
-  CARDS_PER_WEEK,
   CARD_RNG_SALT,
+  ORDINARY_CARD_FIRST_WEEK,
+  ORDINARY_CARD_GAP,
   triggerCard,
   MOD_CAPS,
   optionCash,
@@ -31,7 +32,7 @@ import { accidentChance } from './risk.js';
 const CTX: CardContext = { season: 'summer', week: 12, grade: 3 };
 
 describe('카드 데이터', () => {
-  it('주간 카드 24종 + 사건 카드 (스펙 §3.5 · §12.1)', () => {
+  it('일반 카드 26종 + 사건 카드 (스펙 §3.5 · §12.1)', () => {
     // 사건 카드(사고 대응)는 무작위로 안 뽑히므로 24 에 안 센다
     // K43: 계절 입고 카드 2종(설비 상인)이 늘었다 — 24 + 2
     expect(CARDS.filter((c) => !c.trigger).length).toBe(26);
@@ -112,20 +113,28 @@ describe('등장 조건', () => {
     expect(isEligible(broadcast, CTX)).toBe(true); // 12주차 · 3등급 — 둘 다 충족
   });
 
-  it('1주차에도 뽑을 카드가 있다 — 없으면 첫 주가 조용해진다', () => {
+  it('온보딩 풀은 있어도 1~3주차에는 일반 카드를 배달하지 않는다', () => {
     const first = eligibleCards({ season: 'summer', week: 1, grade: 1 }, new Set());
     expect(first.length).toBeGreaterThanOrEqual(3);
+
+    const st = new CardStore();
+    const rng = new Rng(73).fork(CARD_RNG_SALT);
+    for (let week = 1; week < ORDINARY_CARD_FIRST_WEEK; week++) {
+      expect(st.draw(rng, { season: 'summer', week, grade: 1 }), `${week}주차`).toEqual([]);
+    }
   });
 });
 
 describe('뽑기', () => {
-  it('같은 시드는 같은 카드 순서를 낸다', () => {
+  it('같은 시드는 같은 등장 주차·카드 순서를 낸다', () => {
     const seq = (): string[] => {
       const st = new CardStore();
       const rng = new Rng(999).fork(CARD_RNG_SALT);
       const out: string[] = [];
-      for (let w = 1; w <= 20; w++) {
-        for (const c of st.draw(rng, { season: 'summer', week: w, grade: 3 })) out.push(c.id);
+      for (let w = 1; w <= 80; w++) {
+        for (const c of st.draw(rng, { season: 'summer', week: w, grade: 3 })) {
+          out.push(`${w}:${c.id}`);
+        }
         st.tickWeek();
       }
       return out;
@@ -133,19 +142,21 @@ describe('뽑기', () => {
     expect(seq()).toEqual(seq());
   });
 
-  it('여름은 주당 1~2장, 겨울은 0~1장', () => {
-    for (const season of ['summer', 'winter'] as const) {
-      const st = new CardStore();
-      const rng = new Rng(7).fork(CARD_RNG_SALT);
-      const counts: number[] = [];
-      for (let w = 1; w <= 40; w++) {
-        counts.push(st.draw(rng, { season, week: w, grade: 4 }).length);
-        st.tickWeek();
-      }
-      const [lo, hi] = CARDS_PER_WEEK[season];
-      expect(Math.min(...counts)).toBeGreaterThanOrEqual(lo);
-      expect(Math.max(...counts)).toBeLessThanOrEqual(hi);
+  it('일반 카드는 2~4주 간격·평균 3주에 한 번, 한 주 최대 1장이다', () => {
+    const st = new CardStore();
+    const rng = new Rng(7).fork(CARD_RNG_SALT);
+    const weeks: number[] = [];
+    for (let week = 1; week <= 240; week++) {
+      const drawn = st.draw(rng, { season: 'summer', week, grade: 5 });
+      expect(drawn.length, `${week}주차`).toBeLessThanOrEqual(1);
+      if (drawn.length === 1) weeks.push(week);
+      st.tickWeek();
     }
+    expect(weeks[0]).toBe(ORDINARY_CARD_FIRST_WEEK);
+    const gaps = weeks.slice(1).map((week, index) => week - (weeks[index] as number));
+    expect(Math.min(...gaps)).toBe(ORDINARY_CARD_GAP[0]);
+    expect(Math.max(...gaps)).toBe(ORDINARY_CARD_GAP[1]);
+    expect(gaps.reduce((sum, gap) => sum + gap, 0) / gaps.length).toBeCloseTo(3, 0);
   });
 
   it('한 주 안에서 같은 카드가 두 번 나오지 않는다', () => {
@@ -176,11 +187,21 @@ describe('뽑기', () => {
     const st = new CardStore();
     const rng = new Rng(11).fork(CARD_RNG_SALT);
     let total = 0;
-    for (let w = 1; w <= 60; w++) {
+    for (let w = 1; w <= 160; w++) {
       total += st.draw(rng, { season: 'summer', week: w, grade: 5 }).length;
       st.tickWeek();
     }
-    expect(total).toBeGreaterThan(CARDS.length); // 24종보다 많이 뽑혔다 = 재사용됐다
+    expect(total).toBeGreaterThan(CARDS.length); // 전체 정의 수보다 많이 뽑혔다 = 재사용됐다
+  });
+
+  it('사고 대응은 온보딩·일반 카드 간격과 무관한 즉시 채널이다', () => {
+    const st = new CardStore();
+    const rng = new Rng(31).fork(CARD_RNG_SALT);
+    expect(st.draw(rng, { season: 'summer', week: 1, grade: 1 })).toEqual([]);
+    expect(triggerCard('accident_response')?.delivery).toBe('immediate');
+    expect(CARDS.filter((card) => !card.trigger).every((card) => card.delivery === 'ordinary')).toBe(
+      true,
+    );
   });
 });
 
@@ -237,6 +258,26 @@ describe('효과', () => {
     expect(back.modifiers()).toEqual(st.modifiers());
     expect(back.active[0]?.remaining).toBe(st.active[0]?.remaining);
     expect(back.seenCount).toBe(st.seenCount);
+  });
+
+  it('스냅샷을 왕복해도 다음 일반 카드 주차가 밀리지 않는다', () => {
+    const rng = new Rng(314).fork(CARD_RNG_SALT);
+    const st = new CardStore();
+    for (let week = 1; week <= 17; week++) {
+      st.draw(rng, { season: 'summer', week, grade: 4 });
+      st.tickWeek();
+    }
+    const rngState = rng.state;
+    const back = CardStore.fromSnapshot(JSON.parse(JSON.stringify(st.toSnapshot())));
+    const a: string[] = [];
+    const b: string[] = [];
+    const rngA = Rng.fromState(rngState);
+    const rngB = Rng.fromState(rngState);
+    for (let week = 18; week <= 50; week++) {
+      a.push(...st.draw(rngA, { season: 'summer', week, grade: 4 }).map((card) => `${week}:${card.id}`));
+      b.push(...back.draw(rngB, { season: 'summer', week, grade: 4 }).map((card) => `${week}:${card.id}`));
+    }
+    expect(b).toEqual(a);
   });
 });
 

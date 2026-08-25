@@ -2,7 +2,12 @@ import { KairoTerrain, groundIndex, type TerrainSnapshot } from '../sim/kairo/te
 import { WallGrid, type WallSnapshot } from '../sim/kairo/walls.js';
 import { PlacementGrid, type PlacementSnapshot } from '../sim/kairo/placement.js';
 import { ProgressStore, type ProgressSnapshot } from '../sim/kairo/progress.js';
-import type { WeekSnapshot, WeekSummary, Season } from '../sim/kairo/week.js';
+import type {
+  WeekRngSnapshot,
+  WeekSnapshot,
+  WeekSummary,
+  Season,
+} from '../sim/kairo/week.js';
 import type { UnlockSnapshot } from '../sim/kairo/unlocks.js';
 import type { ExamSnapshot } from '../sim/kairo/exam.js';
 import type { CertSnapshot } from '../sim/kairo/certs.js';
@@ -11,6 +16,8 @@ import type { CardSnapshot } from '../sim/kairo/cards.js';
 import type { StaffCounts } from '../sim/kairo/staff.js';
 import type { CourseSnapshot } from '../sim/kairo/course.js';
 import type { DoorSnapshot } from '../sim/kairo/doors.js';
+import type { MenuSnapshot } from '../sim/kairo/menu.js';
+import type { OnboardingSnapshot } from '../sim/kairo/meta.js';
 
 /**
  * 카이로 세이브 — v1 세이브와 **완전히 분리**한다.
@@ -34,11 +41,11 @@ import type { DoorSnapshot } from '../sim/kairo/doors.js';
  * (`WeekSummary`) — 그래서 복원 후에도 의뢰 진행도와 등급이 그대로 보인다.
  */
 
-export const KAIRO_SAVE_VERSION = 7;
+export const KAIRO_SAVE_VERSION = 8;
 export const KAIRO_SAVE_KEY = 'ppaji.kairo.save.v1';
 
-export interface KairoSaveV5 {
-  version: 7;
+export interface KairoSaveV8 {
+  version: 8;
   savedAtMs: number;
   seed: number;
   gate: { i: number; j: number };
@@ -53,6 +60,11 @@ export interface KairoSaveV5 {
   week: WeekSnapshot;
   /** 주 진행에 쓰는 RNG 상태 — 이걸 저장해야 같은 세이브가 같은 다음 주를 낸다 */
   weekRngState: number;
+  /**
+   * 날씨·일반 손님·단골·사고의 독립 영속 스트림.
+   * v7에는 없으므로 optional이며, 부팅이 `weekRngState`에서 결정적으로 fork한다.
+   */
+  weekRngStreams?: WeekRngSnapshot;
   season: Season;
   /** 지난주 요약. 없으면 아직 한 주도 안 돌렸다 */
   lastSummary: WeekSummary | null;
@@ -71,7 +83,11 @@ export interface KairoSaveV5 {
    */
   staff?: Partial<StaffCounts>;
   staffRngState?: number;
-  /** 놓인 코스 — 장비값을 치르고 그린 것이라 안 저장하면 새로고침이 곧 전부 철거다 */
+  /**
+   * 놓인 코스 — 장비값을 치르고 그린 것이라 안 저장하면 새로고침이 곧 전부 철거다.
+   * `PlacedCourse.towBoatId?`는 v7 optional이다. 없으면 sim이 작업형을 파생하고 save는
+   * 필드를 강제로 채우지 않으므로 구 v7 JSON과 기존 필드 의미가 그대로 보존된다.
+   */
   courses?: CourseSnapshot;
   /** 플레이어가 놓은 출입구 (K36-B). 없으면 빈 집합 — 예전 세이브가 그대로 열린다 */
   doors?: DoorSnapshot;
@@ -87,9 +103,9 @@ export interface KairoSaveV5 {
    * 발견이 사라졌고 장비 19종은 코스를 동시에 19개 놓을 수 없어 완성이 구조적으로
    * 불가능했다. 발견은 한 번 보면 영구다 — 그게 도감의 정의다.
    *
-   * ⚠ **optional 이라 마이그레이션이 없다** (`visitorsTotal` 선례). 없으면 부팅 때
-   * 지금 배치·코스에서 다시 채워질 뿐이고, 버전을 올리면 이미 나간 v7 세이브가 전부
-   * 한 칸씩 밀린다.
+   * ⚠ **optional 이라 별도 마이그레이션이 없다** (`visitorsTotal` 선례). 없으면 부팅 때
+   * 지금 배치·코스에서 다시 채운다. Phase 7의 v7→v8 온보딩 migration도 이 필드는
+   * 그대로 보존한다.
    */
   builtEver?: string[];
   equipEver?: string[];
@@ -126,14 +142,14 @@ export interface KairoSaveV5 {
    * ⚠ `weekSkip?: boolean` 이 여기 있었다 (K42 의 ⏩ 주 스킵 해금). K47-② 에서 **스킵
    * 기능 자체가 사라져** 걷어냈다 — optional 필드라 `packKairo` 가 새 객체를 만드는
    * 순간 자연히 없어진다. **버전을 올리지 않았고 마이그레이션도 없다**: 옛 세이브에
-   * 남아 있는 키는 그냥 안 읽힐 뿐이고, 버전을 올리면 이미 나간 v7 세이브가 전부
-   * 한 칸씩 밀린다. 도구 해금의 정본은 `exam.toolsUnlocked` 다.
+   * 남아 있는 키는 그냥 안 읽힐 뿐이다. Phase 7의 v7→v8 온보딩 migration도 이를
+   * 되살리지 않는다. 도구 해금의 정본은 `exam.toolsUnlocked` 다.
    */
   /**
    * 누적 방문객 (K47-①) — 뉴스 마일스톤(100·500·1000·2000·5000)의 근거.
    *
-   * ⚠ **optional 이라 마이그레이션이 없다.** 없으면 0 에서 다시 세기 시작할 뿐이고,
-   * 버전을 올리면 이미 나간 v7 세이브가 전부 한 칸 밀린다.
+   * ⚠ **optional 이라 별도 마이그레이션이 없다.** 없으면 0 에서 다시 세기 시작할 뿐이고,
+   * Phase 7의 v7→v8 온보딩 migration은 값을 그대로 보존한다.
    */
   visitorsTotal?: number;
   /** 심사 상태 (K42) — 신청 대기와 통과 횟수. 잃으면 수수료와 도구가 증발한다 */
@@ -144,15 +160,18 @@ export interface KairoSaveV5 {
    * 획득한 사이드 인증 (P3-E) — **등급에서 다시 만들 수 없는 상태**다. 잃으면
    * 정원 가산이 통째로 증발해 새로고침이 곧 상한 되돌리기가 된다.
    *
-   * ⚠ **optional 이라 마이그레이션이 없다 · 버전 7 그대로** (`visitorsTotal`·
-   * `builtEver` 선례). 없으면 인증 0종으로 열릴 뿐이고, 버전을 올리면 이미 나간
-   * v7 세이브가 전부 한 칸씩 밀린다.
+   * ⚠ **optional 이라 별도 마이그레이션이 없다** (`visitorsTotal`·`builtEver` 선례).
+   * 없으면 인증 0종으로 열리고, Phase 7의 v7→v8 온보딩 migration은 값을 그대로 보존한다.
    */
   certs?: CertSnapshot;
+  /** Phase 3 영구 재료·레시피·개발 힌트. 수량·재고는 없다. */
+  menus?: MenuSnapshot;
+  /** Phase 7 실행형 온보딩. 잠금이 아니라 완료한 production 사건의 커서다. */
+  onboarding: OnboardingSnapshot;
 }
 
-export type AnyKairoSave = KairoSaveV5;
-export type LatestKairoSave = KairoSaveV5;
+export type AnyKairoSave = KairoSaveV8;
+export type LatestKairoSave = KairoSaveV8;
 
 /**
  * v(n) → v(n+1) 변환기. 새 버전마다 한 칸 추가한다.
@@ -317,6 +336,8 @@ const MIGRATIONS: Record<number, (s: Record<string, unknown>) => Record<string, 
   5: (s) => ({ ...s, version: 6 }),
   // v7 (K41): unlocks 추가 — 없으면 빈 집합으로 읽는다 (하위호환)
   6: (s) => ({ ...s, version: 7 }),
+  // v8 (Phase 7): 실행형 온보딩 커서. 기존 판도 첫 단계부터 안내하되 어떤 행동도 막지 않는다.
+  7: (s) => ({ ...s, version: 8, onboarding: { version: 1, step: 'open-course' } }),
 };
 
 export class KairoSaveError extends Error {
@@ -335,6 +356,7 @@ export interface KairoSaveInput {
   progress: ProgressStore;
   week: WeekSnapshot;
   weekRngState: number;
+  weekRngStreams?: WeekRngSnapshot;
   season: Season;
   lastSummary: WeekSummary | null;
   cards?: CardSnapshot;
@@ -359,6 +381,8 @@ export interface KairoSaveInput {
   exam?: ExamSnapshot;
   wishes?: WishSnapshot;
   certs?: CertSnapshot;
+  menus?: MenuSnapshot;
+  onboarding?: OnboardingSnapshot;
 }
 
 export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave {
@@ -373,6 +397,7 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     progress: input.progress.toSnapshot(),
     week: input.week,
     weekRngState: input.weekRngState,
+    ...(input.weekRngStreams ? { weekRngStreams: { ...input.weekRngStreams } } : {}),
     season: input.season,
     lastSummary: input.lastSummary,
     ...(input.cards ? { cards: input.cards } : {}),
@@ -397,8 +422,11 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.visitorsTotal !== undefined ? { visitorsTotal: input.visitorsTotal } : {}),
     ...(input.exam ? { exam: input.exam } : {}),
     ...(input.wishes ? { wishes: input.wishes } : {}),
-    // 사이드 인증 (P3-E) — optional 이라 옛 세이브도 그대로 열린다 (버전 7 유지)
+    // 사이드 인증 (P3-E) — optional 이라 v7→v8에서도 값과 부재를 그대로 보존한다
     ...(input.certs ? { certs: input.certs } : {}),
+    // 메뉴 개발 상태는 legacy optional. 시설별 장착은 placement.items에 있다.
+    ...(input.menus ? { menus: input.menus } : {}),
+    onboarding: input.onboarding ?? { version: 1, step: 'open-course' },
   };
 }
 
@@ -439,6 +467,8 @@ export interface KairoRestored {
   progress: ProgressStore;
   week: WeekSnapshot;
   weekRngState: number;
+  /** 없으면(v7 또는 구 v8) 호출자가 `weekRngState`에서 결정적으로 fork한다. */
+  weekRngStreams?: WeekRngSnapshot;
   season: Season;
   lastSummary: WeekSummary | null;
   cards?: CardSnapshot;
@@ -464,6 +494,8 @@ export interface KairoRestored {
   exam?: ExamSnapshot;
   wishes?: WishSnapshot;
   certs?: CertSnapshot;
+  menus?: MenuSnapshot;
+  onboarding: OnboardingSnapshot;
 }
 
 export function restoreKairo(raw: unknown): KairoRestored {
@@ -477,6 +509,7 @@ export function restoreKairo(raw: unknown): KairoRestored {
     progress: ProgressStore.fromSnapshot(s.progress),
     week: s.week,
     weekRngState: s.weekRngState,
+    ...(s.weekRngStreams ? { weekRngStreams: { ...s.weekRngStreams } } : {}),
     season: s.season,
     lastSummary: s.lastSummary,
     ...(s.cards ? { cards: s.cards } : {}),
@@ -502,6 +535,8 @@ export function restoreKairo(raw: unknown): KairoRestored {
     ...(s.exam ? { exam: s.exam } : {}),
     ...(s.wishes ? { wishes: s.wishes } : {}),
     ...(s.certs ? { certs: s.certs } : {}),
+    ...(s.menus ? { menus: s.menus } : {}),
+    onboarding: s.onboarding,
   };
 }
 
