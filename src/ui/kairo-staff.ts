@@ -17,6 +17,7 @@ import {
 } from '../sim/kairo/placement.js';
 import { priceSatisfaction } from '../sim/kairo/week.js';
 import { panelHost } from './panels.js';
+import { won } from './money.js';
 
 /**
  * 경영 패널 — 스펙 §15.9. **탭 3개: 가격 · 직원 · 개선.**
@@ -38,11 +39,6 @@ import { panelHost } from './panels.js';
  * 매주 만지는 것이 아니라 **가끔** 만지는 화면이다 (시설 구성이 바뀔 때). 상시 표시하면
  * 폰 화면을 잡아먹는다. 버튼 하나로 열고 닫는다.
  */
-
-function won(n: number): string {
-  if (n >= 10000) return `${Math.round(n / 1000) / 10}만`;
-  return `${n.toLocaleString('ko-KR')}`;
-}
 
 /** 개선 목록의 2차 필터 (P3-C) */
 export type UpgradeFilter = 'all' | 'choose' | 'afford';

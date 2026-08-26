@@ -8,6 +8,12 @@ import {
   eventScenePlan,
   type EventSpriteSource,
 } from './kairo-event-art.js';
+import {
+  createEventShell,
+  renderEventShell,
+  type EventShellNodes,
+} from './kairo-event-shell.js';
+import { won } from './money.js';
 
 /**
  * 주간 의사결정 카드 화면 — 스펙 §A (S11).
@@ -44,10 +50,24 @@ const CARD_THEME_PRESENTATION: Record<
   environment: { label: '환경', mark: '↺', sprite: 'event/environment' },
 };
 
-function won(n: number): string {
-  const v = Math.abs(Math.round(n));
-  if (v >= 10000) return `${n < 0 ? '−' : '+'}${Math.round(v / 10000)}만`;
-  return `${n < 0 ? '−' : '+'}${v}`;
+/**
+ * 선택지의 **돈 한 줄** — 지금 나가는 돈인지, 확률에 걸린 돈인지, 없는지를 말한다.
+ *
+ * ⚠ 실측(UX 감사 P0-6): 카드 데이터가 `주급 25만원` 이라고 적어 놓고 효과는
+ * `cash: -250000` **한 번**이었다. 게임의 실제 주급은 4,000~6,000원이라 같은 세션에서 두
+ * 화면을 보면 **40배** 어긋났다. 그래서 규칙을 시설(`desc`)과 똑같이 만든다:
+ * **데이터는 돈을 다시 적지 않고, 화면이 실효값에서 만든다.**
+ */
+export function optionMoneyText(opt: CardOption, tooPoor: boolean): string {
+  const certain = optionCertainCash(opt);
+  const total = optionCash(opt);
+  if (certain !== 0) {
+    return `${won(certain, { signed: true })} · 한 번${tooPoor ? ' · 현금 부족' : ''}`;
+  }
+  if (total !== 0 && opt.chance !== undefined) {
+    return `${Math.round(opt.chance * 100)}% 확률로 ${won(total, { signed: true })}`;
+  }
+  return '돈이 들지 않습니다';
 }
 
 export interface CardChoice {
@@ -67,11 +87,13 @@ export class KairoCardView {
   private readonly root: HTMLDivElement;
   private readonly titleEl: HTMLDivElement;
   private readonly descEl: HTMLDivElement;
+  /** 셸의 kicker 를 빌린다 — `이번 주 결정 1 / 2` */
   private readonly countEl: HTMLDivElement;
   private readonly visualEl: HTMLDivElement;
   private readonly visualMarkEl: HTMLSpanElement;
   private readonly visualLabelEl: HTMLSpanElement;
   private readonly sceneEl: HTMLDivElement;
+  private readonly shell: EventShellNodes;
   private readonly opts: CardViewOptions;
   private readonly optionsEl: HTMLDivElement;
   private queue: CardDef[] = [];
@@ -87,19 +109,32 @@ export class KairoCardView {
     this.root.id = 'kairo-card';
     this.root.hidden = true;
 
+    /*
+     * 주간 카드도 **공용 사건 상자**를 쓴다 (UI v4) — 무대 · 제목 · 본문 · 아래 선택지 줄.
+     *
+     * 옛 손잡이는 전부 보존한다: 무대가 `.kcard-visual`(테마 배경 CSS 가 여기 걸린다) ·
+     * 장면 슬롯이 `.kcard-scene-slot` · 제목이 `.kcard-title` · 선택지가 `[data-option]`.
+     * 선택지 줄만 카드가 소유한다 — **한 줄에 N열**이 카드의 계약이기 때문이다
+     * (게이트 두 곳이 `oneRow` 를 잰다).
+     */
     const box = el('div', 'kdialog-box kcard-dialog');
-    this.countEl = el('div', 'kcaption');
-    this.visualEl = el('div', 'kcard-visual');
-    this.visualEl.setAttribute('role', 'img');
+    this.shell = createEventShell();
+    this.visualEl = this.shell.stage;
+    this.visualEl.classList.add('kcard-visual');
+    this.sceneEl = this.shell.artSlot;
+    this.sceneEl.classList.add('kcard-scene-slot');
     this.visualMarkEl = el('span', 'kcard-visual-mark');
     this.visualLabelEl = el('span', 'kcard-visual-label');
-    this.sceneEl = el('div', 'kcard-scene-slot');
-    this.visualEl.append(this.sceneEl, this.visualMarkEl, this.visualLabelEl);
-    this.titleEl = el('div', 'kcard-title');
-    this.descEl = el('div', 'kcard-desc');
+    this.visualEl.append(this.visualMarkEl, this.visualLabelEl);
+    this.countEl = this.shell.kicker;
+    this.countEl.classList.add('kcaption');
+    this.titleEl = this.shell.title;
+    this.titleEl.classList.add('kcard-title');
+    this.descEl = this.shell.body;
+    this.descEl.classList.add('kcard-desc');
     this.optionsEl = el('div', 'kcard-options');
 
-    box.append(this.countEl, this.visualEl, this.titleEl, this.descEl, this.optionsEl);
+    box.append(this.shell.root);
     this.root.append(box);
     parent.append(this.root);
   }
@@ -152,45 +187,54 @@ export class KairoCardView {
   private render(): void {
     const card = this.queue[this.index];
     if (!card) return;
-    this.countEl.textContent =
-      this.queue.length > 1 ? `이번 주 결정 ${this.index + 1} / ${this.queue.length}` : '이번 주 결정';
-    this.titleEl.textContent = card.name;
-    this.descEl.textContent = card.desc;
     const theme = CARD_THEME_PRESENTATION[card.theme];
-    this.visualEl.dataset['theme'] = card.theme;
-    this.visualEl.dataset['sprite'] = theme.sprite;
-    this.visualEl.setAttribute('aria-label', `${theme.label} 사건 삽화`);
-    this.visualMarkEl.textContent = theme.mark;
-    this.visualLabelEl.textContent = theme.label;
-    this.paintScene(card.theme);
     this.optionsEl.replaceChildren();
     this.optionsEl.style.setProperty('--card-options', String(card.options.length));
 
     card.options.forEach((opt, oi) => {
-      const cash = optionCash(opt);
       /*
        * 살 수 있나는 **확정 지출**로 본다 (K37). 확률에 걸린 선택지(예: "무시한다" —
        * 35% 로 과태료)는 지금 내는 돈이 아니다. `optionCash` 로 재면 도박을 못 하게
        * 막는데, `safety_check`·`typhoon` 은 선택지가 둘 다 돈이 들어서 현금이 마르면
        * **아무것도 못 고르고** 카드는 모달이라 메뉴도 안 열린다 — 판이 잠긴다.
        */
-      const tooPoor = optionCertainCash(opt) < 0 && -optionCertainCash(opt) > this.cash;
+      const certain = optionCertainCash(opt);
+      const tooPoor = certain < 0 && -certain > this.cash;
       // ★ 44px — 한 줄 2~3열이라 공용 전폭 항목(56px)과 분리한다.
       const btn = el('button', 'kitem kcard-choice');
       btn.disabled = tooPoor;
       btn.dataset['option'] = String(oi);
-      const core = `${cash !== 0 ? `${won(cash)} · ` : ''}${opt.detail}`;
       btn.append(
         el('div', 'kitem-name', opt.label),
-        el(
-          'div',
-          'kitem-sub',
-          tooPoor ? `${core} · 현금 부족` : core,
-        ),
+        el('div', 'kitem-sub kcard-money', optionMoneyText(opt, tooPoor)),
+        el('div', 'kitem-sub', opt.detail),
       );
       btn.addEventListener('click', () => this.pick(card, oi));
       this.optionsEl.append(btn);
     });
+
+    renderEventShell(this.shell, {
+      kind: 'week-card',
+      mood: 'decision',
+      scene: card.theme,
+      kicker:
+        this.queue.length > 1
+          ? `이번 주 결정 ${this.index + 1} / ${this.queue.length}`
+          : '이번 주 결정',
+      title: card.name,
+      body: card.desc,
+      showFigure: false,
+      // 카드는 **선택 전에는 못 닫는다** — 그 규칙을 화면이 말한다 (예전엔 아무 데도 없었다)
+      note: '시간이 멈춰 있습니다 — 하나를 고르면 이번 주가 이어집니다',
+      choices: [],
+      choicesNode: this.optionsEl,
+    });
+    this.visualEl.dataset['theme'] = card.theme;
+    this.visualEl.dataset['sprite'] = theme.sprite;
+    this.visualEl.setAttribute('aria-label', `${theme.label} 사건 삽화`);
+    this.visualMarkEl.textContent = theme.mark;
+    this.visualLabelEl.textContent = theme.label;
+    this.paintScene(card.theme);
   }
 
   /**
@@ -198,7 +242,7 @@ export class KairoCardView {
    * (카드는 모달이라 안 뜨면 주가 안 넘어간다).
    */
   private paintScene(theme: CardTheme): void {
-    this.sceneEl.replaceChildren();
+    // `renderEventShell` 이 이미 `artSlot` 을 비웠다 — 여기서는 얹기만 한다
     this.visualEl.classList.remove('has-scene');
     const resolve = this.opts.spriteFor;
     if (!resolve) return;

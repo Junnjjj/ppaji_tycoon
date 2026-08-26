@@ -256,7 +256,8 @@ describe('Phase 5 전주 KPI와 권위 회계', () => {
     expect(reportKpis(rep, previous)).toEqual([
       { id: 'visitors', label: '방문객', value: 120, delta: 20, percent: 20 },
       { id: 'profit', label: '영업 손익', value: 260_000, delta: -30_000, percent: null },
-      { id: 'satisfaction', label: '퇴장 만족', value: 75, delta: 4, percent: null },
+      // UI v4 — 정본 이름은 `평판` 이다 (UX 감사 P0-5). `퇴장 만족도` 는 결산 부제 한 줄에만 남는다
+      { id: 'satisfaction', label: '평판', value: 75, delta: 4, percent: null },
     ]);
   });
 

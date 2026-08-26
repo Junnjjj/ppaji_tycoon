@@ -170,6 +170,43 @@ check(
 );
 
 /*
+ * ── 결정에 쓰는 글씨는 12px 이상이다 (UI v4) ─────────────────────────────
+ *
+ * 계획 §1.3 이 "12px 미만 금지"를 세웠는데 적용은 **메뉴에만** 됐다. 실측(393×852)에서
+ * 화면에 살아 있는 12px 미만이 25군데 남았고, 하필 **결정에 직접 쓰이는 글자**였다:
+ * 건설 카드의 비용(10px)과 잠김 이유(9.5px) · 주간 카드 선택지의 효과(10px) ·
+ * 결산의 유일한 처방 문장(11.5px) · 헤더의 위험도 칩(11px).
+ *
+ * 규칙을 화면 단위가 아니라 **CSS 전역**으로 만든다. 예외는 둘뿐이고 각각 이유가 있다:
+ *   · `.kdebug*` — `?debug=1` 뒤의 개발자 오버레이 (게임 화면이 아니다)
+ *   · `.boot-error pre` — 부팅 실패 스택 (읽는 사람이 개발자다)
+ *
+ * ⚠ 음성 대조군: 아래 목록 중 하나를 11px 로 되돌리면 이 검사가 빨간불이 된다.
+ *   확인함 — `.kcard-meta` 를 10px 로 되돌려 실패를 재현했다.
+ */
+const TYPO_EXEMPT = [/\.kdebug/, /\.boot-error/];
+const tiny = [];
+{
+  // 선택자 { … font-size: Npx … } 를 통째로 훑는다 — 주석은 이미 뺀 `hudNoComments` 를 안 쓴다
+  //  (예외 판정에 선택자 이름이 필요하다)
+  const ruleRe = /([^{}]+)\{([^}]*)\}/g;
+  let m;
+  while ((m = ruleRe.exec(hud)) !== null) {
+    const selector = m[1].replace(/\/\*[\s\S]*?\*\//g, '').trim();
+    if (selector.startsWith('@') || selector.length === 0) continue;
+    if (TYPO_EXEMPT.some((re) => re.test(selector))) continue;
+    const size = /font-size:\s*([\d.]+)px/.exec(m[2]);
+    if (!size) continue;
+    if (Number(size[1]) < 12) tiny.push(`${selector.split('\n').join(' ')} ${size[1]}px`);
+  }
+}
+check(
+  tiny.length === 0,
+  '결정에 쓰는 글씨가 12px 이상이다 (디버그·부팅 오류 제외)',
+  tiny.length ? tiny.slice(0, 8).join(' · ') : 'HUD 블록 전부 12px 이상',
+);
+
+/*
  * ── 패널은 한 번에 하나 (K37) ────────────────────────────────────────────
  *
  * 패널 8종이 각자 `this.root.hidden = false` 를 하고 "다른 걸 닫는다"를 아는 곳이 없었다.

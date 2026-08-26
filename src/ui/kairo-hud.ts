@@ -36,7 +36,14 @@
  */
 
 import { el } from './dom.js';
-import { panelHost, type Panel } from './panels.js';
+import {
+  homeInputOwnership,
+  panelHost,
+  type HomeInputOwnership,
+  type InputSurface,
+  type Panel,
+} from './panels.js';
+import { won } from './money.js';
 
 export type BuildKind = 'ground' | 'facility' | 'erase' | 'door' | 'move';
 
@@ -87,7 +94,7 @@ export function buildItemView(item: BuildItem): BuildItemView {
   return {
     cost:
       item.costLabel ??
-      (item.cost === 0 ? '무료' : `${Math.round(item.cost / 10000).toLocaleString('ko-KR')}만`),
+      (item.cost === 0 ? '무료' : won(item.cost)),
     role: item.role,
     ...(blockedReason !== undefined ? { blockedReason } : {}),
     ...(unlockMethod !== undefined ? { unlockMethod } : {}),
@@ -106,6 +113,22 @@ export interface BuildConfirmView {
   cost: string;
   result: string;
   sprite?: string;
+  /**
+   * 지금 무슨 모드인가 — `배치 중 · 화장실` / `연속 설치 중 · 석재 보도` (UI v3).
+   * 정본은 `BuildSession.modeLabel` 이다. 확정 바가 이 글자를 그대로 보여 준다.
+   */
+  mode?: string;
+}
+
+/**
+ * 연속 설치 토글 (UI v3, 계획 §1.5) — **기본은 꺼짐**이고 켜는 것은 사용자다.
+ *
+ * `undefined` 면 토글 자체가 안 뜬다 (이동처럼 반복이 뜻 없는 붓).
+ */
+export interface RepeatToggle {
+  on: boolean;
+  label: string;
+  toggle: () => void;
 }
 
 export type GoalRole = 'immediate' | 'mid' | 'long';
@@ -187,8 +210,47 @@ export function recommendedActionGoal(
   };
 }
 
-/** 홈에만 보이는 목표를 메뉴·건설·패널·코스 전환과 같은 언어로 표현한다. */
-export type GoalSurfaceMode = 'home' | 'menu' | 'build' | 'panel' | 'course';
+/** 홈 밴드가 읽는 것 — 아이콘이 아니라 **글 셋**이다 (계획 §1.1, §1.3). */
+export interface CurrentActionView {
+  kicker: string;
+  icon: string;
+  label: string;
+  detail: string;
+}
+
+/** 홈 밴드에 남는 목표 — 지금 할 일 하나뿐이다. */
+export function homeGoalChips(chips: readonly GoalChip[]): GoalChip[] {
+  return chips.filter((chip) => chip.role === 'immediate');
+}
+
+/**
+ * 홈에서 뺀 중·장기 목표. 없애는 게 아니라 **메뉴의 `목표` 절로 옮긴다** —
+ * 홈에서는 하트·별 아이콘만 남아 뜻을 말하지 못했다 (2026-08-26 실측).
+ */
+export function menuGoalChips(chips: readonly GoalChip[]): GoalChip[] {
+  return chips.filter((chip) => chip.role !== 'immediate');
+}
+
+/**
+ * 카이로의 직원 메시지 바처럼 **현재 행동 한 개**를 말한다.
+ * 상세가 없어도 이름은 남는다 — 뜻을 아이콘에만 두면 화면이 다시 벙어리가 된다.
+ */
+export function currentActionView(chip: GoalChip): CurrentActionView {
+  return {
+    kicker: '다음 할 일',
+    icon: chip.icon,
+    label: chip.label,
+    detail: chip.detail ?? '',
+  };
+}
+
+/**
+ * 홈에만 보이는 목표를 메뉴·건설·패널·코스 전환과 같은 언어로 표현한다.
+ *
+ * 표면의 정본은 `panels.ts` 의 `InputSurface` 다 — 목표 가시성은 그 소유권의
+ * **한 항목**이지 별도 축이 아니다 (계획 §1.2).
+ */
+export type GoalSurfaceMode = InputSurface;
 
 /** 홈 목표가 패널 DOM의 세부 구현을 모르도록 모드를 한 곳에서 가시성으로 바꾼다. */
 export class GoalSurfaceState {
@@ -231,6 +293,17 @@ export interface HudOptions {
    * 한 번 그리는 쪽으로 옮겼다. 폰이 1순위라는 게 이 콜백의 이유다.
    */
   onSheetOpen?: (which: 'build' | 'menu') => void;
+  /**
+   * 입력 소유권이 바뀔 때 (UI v3). HUD 는 목표·하단 바만 소유하므로 **티커처럼 HUD 밖에
+   * 사는 홈 입력층**은 같은 소유권 값을 이 콜백으로 받아 자기 표면을 내린다.
+   * 각자 z-index 를 올려 싸우는 대신 한 값이 세 표면을 함께 정한다.
+   */
+  onSurface?: (surface: InputSurface, ownership: HomeInputOwnership) => void;
+  /**
+   * 홈에서 뺀 중·장기 목표의 새 집 (UI v3). 홈이 이걸 그리지 않는 대신, 목적지를
+   * 아는 쪽(메뉴)에게 같은 chip 을 넘긴다 — 새 sim 상태를 만들지 않는다.
+   */
+  onMenuGoals?: (chips: GoalChip[]) => void;
 }
 
 export class KairoHud {
@@ -247,9 +320,12 @@ export class KairoHud {
   private readonly gradeCap: HTMLDivElement;
   private readonly goalBox: HTMLDivElement;
   private readonly primaryGoal: HTMLDivElement;
-  private readonly secondaryGoals: HTMLDivElement;
   private readonly goalSurface = new GoalSurfaceState();
   private readonly riskBox: HTMLDivElement;
+  /** 홈 입력층의 나머지 절반 — 소유권을 잃으면 통째로 내린다 (계획 §1.2) */
+  private readonly bar: HTMLDivElement;
+  /** 소유권 정체를 CSS 가 읽는 자리. HUD 밖 표면(티커·시트 바닥)이 같은 값을 본다 */
+  private readonly surfaceRoot: HTMLElement;
   private readonly menuBtn: HTMLButtonElement;
   private readonly buildBtn: HTMLButtonElement;
   private readonly sheet: HTMLDivElement;
@@ -269,9 +345,14 @@ export class KairoHud {
   private readonly confirmCheck: HTMLDivElement;
   private readonly confirmBtn: HTMLButtonElement;
   private readonly rotateBtn: HTMLButtonElement;
+  /** 모드 줄 — "지금 배치 중" + 연속 설치 토글 (UI v3) */
+  private readonly confirmMode: HTMLDivElement;
+  private readonly confirmModeLabel: HTMLDivElement;
+  private readonly repeatBtn: HTMLButtonElement;
   private onConfirm: (() => void) | null = null;
   private onCancel: (() => void) | null = null;
   private onRotate: (() => void) | null = null;
+  private onRepeat: (() => void) | null = null;
 
   private readonly opts: HudOptions;
   private items: BuildItem[] = [];
@@ -280,6 +361,7 @@ export class KairoHud {
 
   constructor(parent: HTMLElement, opts: HudOptions) {
     this.opts = opts;
+    this.surfaceRoot = parent;
 
     /*
      * ── 상단 2단 헤더 (K46, 레퍼런스 구조) ──────────────────────────────
@@ -311,7 +393,13 @@ export class KairoHud {
       box.append(el('span', 'kico-s', icon), el('span', 'kstat-v', '—'));
       return box;
     };
+    /*
+     * 😊 는 그대로 두되 **뜻을 접근성에 남긴다** — 아이콘만으로는 "만족도"인지 "평판"인지
+     * 안 읽힌다. 정본 이름은 `평판` 이고 눈금은 0~100 정수다 (UX 감사 P0-5).
+     */
     this.satCap = stat('😊', 'kairo-sat');
+    this.satCap.setAttribute('aria-label', '평판');
+    this.satCap.title = '평판 — 손님이 나갈 때의 만족 평균';
     this.visCap = stat('👥', 'kairo-visitors');
     this.gradeCap = stat('⭐', 'kairo-grade');
     /*
@@ -325,17 +413,18 @@ export class KairoHud {
     top.append(row1, row2);
     parent.append(top);
     /*
-     * 홈 셸 v2: A/B/C 는 하단 뉴스 띠 위의 **한 밴드**다 — A 약 60% · B/C 각 약 20%.
-     * 밴드의 자리·폭·높이는 전부 `style.css` 가 소유한다 (헤더 실측 배선은 없앴다 —
-     * 한 밴드가 되면서 B/C 가 헤더 아래를 볼 이유가 사라졌다).
+     * 홈 셸 v3 (계획 §1.1): 하단 뉴스 띠 위의 **현재 행동 한 줄**이다.
+     *
+     * ⚠ v2 는 여기에 A/B/C 세 칸을 넣었다. 폭이 각각 20% 뿐인 B/C 는 글자가 잘려
+     * CSS 가 label/detail 을 아예 감췄고, 화면에는 하트·별만 남아 **뜻을 말하지 못했다**
+     * (실측). 중·장기는 메뉴의 `목표` 절로 옮긴다 — 밴드의 자리·폭·높이는 여전히
+     * `style.css` 가 소유한다.
      */
     this.goalBox = el('div', 'kgoals');
     this.goalBox.id = 'kairo-goal';
     this.primaryGoal = el('div', 'kgoal-primary');
-    this.secondaryGoals = el('div', 'kgoal-secondary');
-    this.goalBox.append(this.primaryGoal, this.secondaryGoals);
+    this.goalBox.append(this.primaryGoal);
     parent.append(this.goalBox);
-    this.setGoalSurface('home');
 
     /*
      * ── 하단 바 (K47-②) ──────────────────────────────────────────────────
@@ -344,6 +433,7 @@ export class KairoHud {
      */
     const bar = el('div', 'kbar');
     bar.id = 'kairo-bar';
+    this.bar = bar;
 
     this.menuBtn = el('button', 'kbtn', '메뉴');
     this.menuBtn.id = 'kairo-menu-open';
@@ -356,6 +446,8 @@ export class KairoHud {
     // 좌우로 벌린다 — 사이의 빈 칸이 지도를 가리지 않는 유일한 채움이다
     bar.append(this.menuBtn, this.buildBtn);
     parent.append(bar);
+    // 목표·바가 둘 다 존재해야 소유권을 한 번에 적용할 수 있다 (부분 상태를 만들지 않는다)
+    this.setGoalSurface('home');
 
     // ── 시트 (건설·메뉴 공용) ────────────────────────────────────────────
     this.sheet = el('div', 'ksheet');
@@ -387,6 +479,8 @@ export class KairoHud {
     });
     this.context = el('div', 'kcontext');
     this.context.id = 'kairo-context';
+    // 경영 IA가 같은 판 정보를 자기 문맥 줄에 표시한다. 이 레거시 손잡이는 검증용 text만 보존한다.
+    this.context.hidden = true;
     this.menuBody.append(this.context, this.menuSlot, this.quests);
     body.append(this.buildBody, this.menuBody);
 
@@ -402,11 +496,13 @@ export class KairoHud {
      */
     this.sheetPanel = { hide: () => this.hide() };
     panelHost.register(this.sheetPanel);
-    panelHost.onChange((open) => {
-      if (!open) this.setGoalSurface('home');
-      else if (this.open === 'menu' || this.open === 'build') this.setGoalSurface(this.open);
-      else this.setGoalSurface('panel');
-    });
+    /*
+     * ⚠ `panelHost.onChange` 는 **등록 즉시 한 번 부른다** (`panels.ts`). 그 콜백이
+     * `this.confirming` 을 읽으므로 확정 바가 만들어진 **뒤에** 등록해야 한다 —
+     * 여기 두면 `confirmBar` 가 아직 `undefined` 라 부팅이 통째로 죽는다
+     * (2026-08-26 브라우저 게이트가 잡았다: `Cannot read properties of undefined`,
+     * 캔버스는 떴는데 `window.__kairo` 가 영원히 안 생겼다). 등록은 생성자 끝에 있다.
+     */
 
     /*
      * ── 확정 바 (K32) ──
@@ -417,6 +513,24 @@ export class KairoHud {
     this.confirmBar = el('div', 'kconfirm');
     this.confirmBar.id = 'kairo-confirm';
     this.confirmBar.hidden = true;
+    /*
+     * ── 모드 줄 (UI v3) ──
+     *
+     * "지금 배치 중이다"와 "연속 설치가 켜져 있나"를 **글자로** 말한다. 아이콘만
+     * 남기면 뜻을 못 읽는다 (계획 §1.3, B/C 목표가 그렇게 벙어리가 됐다).
+     *
+     * ⚠ 토글을 `취소 | ↻ | 확정` 과 **같은 줄에 넣지 않는다.** 확정 바 한 줄은 377px
+     * 이라 44px 넷이 안 들어간다 — K47-③ 이 십자 화살표를 뺀 것과 같은 산수다.
+     */
+    this.confirmMode = el('div', 'kconfirm-mode');
+    this.confirmModeLabel = el('div', 'kconfirm-mode-label', '배치 중');
+    this.repeatBtn = el('button', 'kbtn kconfirm-repeat', '연속 설치 끔');
+    this.repeatBtn.id = 'kairo-place-repeat';
+    this.repeatBtn.type = 'button';
+    this.repeatBtn.setAttribute('aria-pressed', 'false');
+    this.repeatBtn.addEventListener('click', () => this.onRepeat?.());
+    this.confirmMode.append(this.confirmModeLabel, this.repeatBtn);
+
     const confirmSummary = el('div', 'kconfirm-summary');
     this.confirmLabel = el('div', 'place-label');
     this.confirmThumb = el('div', 'kconfirm-thumb');
@@ -444,10 +558,21 @@ export class KairoHud {
       cb?.();
     });
     btns.append(cancel, this.rotateBtn, this.confirmBtn);
-    this.confirmBar.append(confirmSummary, this.confirmLabel, btns);
+    this.confirmBar.append(this.confirmMode, confirmSummary, this.confirmLabel, btns);
     parent.append(this.confirmBar);
 
     this.setBrush(null);
+
+    /*
+     * 패널 소유권 구독 — **확정 바까지 다 만든 뒤**다 (위 경고). 등록 즉시 한 번
+     * 불리므로 이 시점의 초기 표면(`home`)도 여기서 확정된다.
+     */
+    panelHost.onChange((open) => {
+      // 패널이 다 닫혔는데 조준이 살아 있으면 화면 주인은 여전히 배치다 (UI v3)
+      if (!open) this.setGoalSurface(this.confirming ? 'aiming' : 'home');
+      else if (this.open === 'menu' || this.open === 'build') this.setGoalSurface(this.open);
+      else this.setGoalSurface('panel');
+    });
   }
 
   /**
@@ -457,7 +582,7 @@ export class KairoHud {
   showConfirm(
     label: string,
     ok: boolean,
-    on: { confirm: () => void; cancel: () => void; rotate?: () => void },
+    on: { confirm: () => void; cancel: () => void; rotate?: () => void; repeat?: RepeatToggle },
     view?: BuildConfirmView,
   ): void {
     this.confirmLabel.className = ok ? 'place-label' : 'place-label bad';
@@ -477,7 +602,26 @@ export class KairoHud {
     // 회전 (K45) — 비정사각 시설만 켠다. 예약해 뒀던 그 자리다
     this.onRotate = on.rotate ?? null;
     this.rotateBtn.disabled = on.rotate === undefined;
+    /*
+     * 모드 줄 (UI v3) — 반복이 뜻 없는 붓(이동)에서는 토글 자체를 안 만든다.
+     * 라벨은 언제나 남는다: "지금 무엇을 배치 중인가"가 이 바의 첫 질문이다.
+     */
+    this.confirmModeLabel.textContent = view?.mode ?? '배치 중';
+    this.onRepeat = on.repeat?.toggle ?? null;
+    this.repeatBtn.hidden = on.repeat === undefined;
+    if (on.repeat !== undefined) {
+      this.repeatBtn.textContent = on.repeat.label;
+      this.repeatBtn.classList.toggle('on', on.repeat.on);
+      this.repeatBtn.setAttribute('aria-pressed', on.repeat.on ? 'true' : 'false');
+    }
     this.confirmBar.hidden = false;
+    /*
+     * 조준은 **모드**다 (계획 §1.2). 홈 목표·티커·하단 바가 살아 있으면 그 hit surface
+     * 가 확정 버튼 위를 지나간다 — 실측: 티커의 44px hit(z 11)이 `.kconfirm`(z 10)의
+     * 확정 버튼 아래쪽 27px 를 먹는다. 시트가 열려 있는 동안은 그쪽이 소유자이므로
+     * 건드리지 않고, 시트가 닫히는 순간 `onChange` 가 다시 여기를 반영한다.
+     */
+    if (!panelHost.anyOpen) this.setGoalSurface('aiming');
   }
 
   hideConfirm(): void {
@@ -485,6 +629,9 @@ export class KairoHud {
     this.onConfirm = null;
     this.onCancel = null;
     this.onRotate = null;
+    this.onRepeat = null;
+    // 조준이 끝났으면 화면은 홈으로 돌아온다 (패널이 열려 있으면 그쪽이 정한다)
+    if (!panelHost.anyOpen) this.setGoalSurface('home');
   }
 
   /**
@@ -550,27 +697,27 @@ export class KairoHud {
     this.riskBox.textContent = text;
   }
 
-  /** A/B/C 목표 갱신 — 각 목표는 자신의 다음 행동을 직접 연다. */
+  /**
+   * 목표 갱신 (UI v3). 홈은 **현재 행동 한 줄**만 그리고, 중·장기는 `onMenuGoals` 로
+   * 메뉴에 넘긴다 — 어느 목표도 사라지지 않고 읽는 자리만 바뀐다.
+   */
   setChips(chips: GoalChip[]): void {
     // 목표는 상태 변경 시점에만 다시 파생된다. callback은 JSON 서명에 남지 않으므로
     // DOM 캐시를 두면 같은 문구에 예전 코스 handle이 남을 수 있다.
     this.primaryGoal.replaceChildren();
-    this.secondaryGoals.replaceChildren();
-    for (const c of chips) {
-      const chip = el('div', `kgoal tap${c.tone !== undefined ? ` ${c.tone}` : ''}`);
+    for (const c of homeGoalChips(chips)) {
+      const view = currentActionView(c);
+      const chip = el('div', `kgoal kgoal-current tap${c.tone !== undefined ? ` ${c.tone}` : ''}`);
       chip.dataset['goalRole'] = c.role;
-      chip.setAttribute('aria-label', `${c.badge} ${c.label}`);
-      chip.append(el('span', `kgoal-role ${c.role}`, c.badge));
-      chip.append(el('span', 'kgoal-ico', c.icon));
+      chip.setAttribute('aria-label', `${view.kicker}, ${view.label}`);
+      chip.append(el('span', 'kgoal-ico', view.icon));
       const txt = el('div', 'kgoal-txt');
-      txt.append(el('div', 'kgoal-label', c.label));
-      if (c.detail !== undefined) txt.append(el('div', 'kgoal-detail', c.detail));
-      const bar = el('div', 'kprog');
-      const fill = document.createElement('i');
-      fill.style.width = `${Math.round(Math.max(0, Math.min(1, c.progress)) * 100)}%`;
-      bar.append(fill);
-      txt.append(bar);
+      txt.append(el('div', 'kgoal-kicker', view.kicker));
+      txt.append(el('div', 'kgoal-label', view.label));
+      if (view.detail !== '') txt.append(el('div', 'kgoal-detail', view.detail));
       chip.append(txt);
+      // 카이로의 직원 메시지 바처럼 "여기를 누르면 그리로 간다"를 글자로 말한다
+      chip.append(el('span', 'kgoal-go', '〉'));
       const act = c.action;
       chip.setAttribute('role', 'button');
       chip.tabIndex = 0;
@@ -584,15 +731,28 @@ export class KairoHud {
         e.stopPropagation();
         act();
       });
-      (c.role === 'immediate' ? this.primaryGoal : this.secondaryGoals).append(chip);
+      this.primaryGoal.append(chip);
     }
+    this.opts.onMenuGoals?.(menuGoalChips(chips));
   }
 
-  /** 홈/패널/편집 호출부가 DOM을 직접 만지지 않는 유일한 목표 가시성 경계. */
+  /**
+   * 홈/패널/편집 호출부가 DOM을 직접 만지지 않는 **유일한 입력 소유권 경계** (UI v3).
+   *
+   * 예전에는 목표만 내렸다. 그래서 시트가 열려 있어도 티커 hit surface(44px)와 하단
+   * 바가 살아 있었고, 실측에서 시트 아래쪽 버튼 네 개의 중심 `elementFromPoint` 가
+   * 시트가 아니라 하단 바를 돌려줬다. 이제 세 표면을 **한 값으로 함께** 정한다.
+   */
   setGoalSurface(mode: GoalSurfaceMode): void {
     this.goalSurface.set(mode);
+    const own = homeInputOwnership(mode);
     this.goalBox.dataset['goalSurface'] = mode;
-    this.goalBox.hidden = !this.goalSurface.visible;
+    this.goalBox.hidden = !own.goals;
+    this.bar.hidden = !own.bar;
+    // CSS 는 이 정체 하나만 읽는다 — 시트가 바 자리를 대신하는 것도 같은 값이 정한다
+    this.surfaceRoot.dataset['uiSurface'] = mode;
+    this.surfaceRoot.dataset['homeInput'] = own.goals ? 'on' : 'off';
+    this.opts.onSurface?.(mode, own);
   }
 
   /** 메뉴 상단의 판 설정 줄 — 맵·시나리오 이름 (목표란에서 옮겨 왔다, K40) */
@@ -779,8 +939,14 @@ export class KairoHud {
     );
     b.addEventListener('click', () => {
       if (blocked) return;
+      /*
+       * ⚠ 여기서 붓 라벨을 **다시 쓰지 않는다** (UI v3). 예전엔 `onPick` 뒤에
+       * `setBrush(이름)` 을 한 번 더 불렀는데, 이제 `onPick` 이 `BuildSession.pick()`
+       * 으로 흘러 `배치 중 · 화장실` 같은 모드 문장을 이미 심는다 — 여기서 또 쓰면
+       * 그 문장을 raw 이름으로 덮어써 "연속 설치 중"이 화면에서 사라진다.
+       * 라벨의 주인은 세션 하나다.
+       */
       this.opts.onPick(it);
-      this.setBrush(it.kind === 'erase' ? '철거' : it.name);
       this.hide();
     });
     return b;

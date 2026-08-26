@@ -25,6 +25,7 @@ import type { KairoTerrain } from '../sim/kairo/terrain.js';
 import type { KairoScene } from '../render/scenes/KairoScene.js';
 import { el } from './dom.js';
 import { panelHost } from './panels.js';
+import { won } from './money.js';
 
 /**
  * 코스 편집 — 스펙 §7.3, §A(S11) UI.
@@ -129,8 +130,14 @@ export function courseProjection(
   };
 }
 
-/** 코스 독의 다섯 상태. 라벨·비활성 규칙은 아래 순수 함수 하나가 소유한다. */
-export type CoursePhase = 'create' | 'info' | 'edit' | 'trial' | 'review';
+/**
+ * 코스 독의 여섯 상태. 라벨·비활성 규칙은 아래 순수 함수 하나가 소유한다.
+ *
+ * `applied` 는 Task 6 이 더한 **끝 상태**다. 예전에는 확정 성공이 곧 `hide()` 였고,
+ * 증거는 2.6초 뒤 사라지는 토스트뿐이었다 (2026-08-26 실측) — 무엇이 적용됐는지
+ * 확인할 자리가 화면에 하나도 없었다. 이제 나가는 문은 `닫기` 하나다.
+ */
+export type CoursePhase = 'create' | 'info' | 'edit' | 'trial' | 'review' | 'applied';
 
 export interface CourseDeltaCell {
   key: 'thrill' | 'safety' | 'riders' | 'profit';
@@ -140,7 +147,7 @@ export interface CourseDeltaCell {
   tone: '' | 'good' | 'warn' | 'bad';
 }
 
-/** 만원 눈금 + 부호. 단위(`만`)는 셀 끝에 한 번만 붙는다 — 두 번 붙으면 칸을 넘친다. */
+/** 만원 눈금 + 부호. 단위(`만`)는 라벨에 한 번만 붙는다 — 값에 붙이면 15px에서 칸을 넘친다. */
 function manNumber(n: number): string {
   const v = Math.round(n / 1000) / 10;
   return `${v > 0 ? '+' : ''}${v}`;
@@ -174,14 +181,20 @@ export function courseDeltaCells(
     },
     {
       key: 'riders',
-      label: '실제',
+      /*
+       * `실제` 는 **무엇의 실제인지** 화면 어디에도 없었다 (UX 감사 P1-9). 값은
+       * `actualRiders` — 이번 주 실제로 탈 손님 수다. 같은 줄의 `스릴 18`·`안전 100` 은
+       * 100점 척도라 눈금이 섞였다.
+       */
+      label: '탑승/주',
       text: pair(String(current.actualRiders), String(projected.actualRiders)),
       tone: '',
     },
     {
       key: 'profit',
-      label: '손익',
-      text: `${pair(manNumber(current.profit), manNumber(projected.profit))}만`,
+      /* 단위는 **값**이 갖는다 — 라벨에 넣으면 열이 좁아질 때 라벨만 잘려 단위가 사라진다 */
+      label: '손익/주',
+      text: pair(manNumber(current.profit), manNumber(projected.profit)),
       tone: projected.profit < 0 ? 'bad' : projected.profit > 0 ? 'good' : '',
     },
   ];
@@ -191,41 +204,128 @@ export interface CourseDockAction {
   id: 'settings' | 'cancel' | 'primary';
   label: string;
   disabled: boolean;
+  /**
+   * "지금 눌러야 할 것" — 상태마다 다르다. 조정·시험은 `시험 운행` 이 주버튼이지만
+   * **적용 완료에서는 `닫기` 가 주버튼**이다 (그것이 이 화면을 끝내는 행동이라서).
+   * 클래스를 버튼에 박아 두면 그 차이를 표현할 수 없다.
+   */
+  emphasis: boolean;
+}
+
+/**
+ * 후보가 **정본 현재 코스와 같은가** (Task 6, 계획 §1.6).
+ *
+ * 참조가 아니라 내용으로 본다 — 편집 초안은 `beginEdit` 가 만든 사본이라 참조는
+ * 언제나 다르다. 같으면 적용이 뜻 없는 행동이므로 주버튼이 `변경 없음` 으로 잠긴다.
+ *
+ * ⚠ 새 코스 생성(`current === null`)은 언제나 변경이다 — 비교 대상이 없다.
+ */
+export function courseDraftUnchanged(
+  current: PlacedCourse | null,
+  draft: CourseEditDraft | null,
+): boolean {
+  if (!current || !draft) return false;
+  return courseShape(current) === courseShape(draft);
+}
+
+/** 코스의 뜻을 정하는 값만 — `handle` 처럼 정체가 아닌 필드는 비교에서 뺀다. */
+function courseShape(c: CourseEditDraft): string {
+  return JSON.stringify({
+    presetId: c.presetId,
+    equipId: c.equipId,
+    vehicles: c.vehicles,
+    towBoatId: c.towBoatId ?? null,
+    dock: { x: c.dock.x, y: c.dock.y },
+    handles: c.handles.map((handle) => ({ x: handle.x, y: handle.y })),
+  });
+}
+
+export interface CourseReceiptLine {
+  key: 'head' | 'spend' | 'trial' | 'record' | 'saved';
+  text: string;
+}
+
+/**
+ * 적용 완료 영수증 (Task 6) — **무엇을 · 얼마에 · 기록까지** 한 벌로 낸다.
+ *
+ * ⚠ 값이 0이어도 줄을 지우지 말 것. 자리가 사라지면 "돈이 안 나갔다"와 "못 읽었다"를
+ * 구분할 수 없다 — 결산의 "콤보 0개인 주에도 줄을 감추지 않는다"와 같은 규칙이다.
+ * 시험 줄만은 시험을 안 거친 경로(생성·도구 확정)에서 정직하게 빠진다.
+ */
+export function courseAppliedLines(o: {
+  presetName: string;
+  equipName: string;
+  vehicles: number;
+  charge: number;
+  trial: { thrill: number; safety: number } | null;
+  record: { thrill: number } | null;
+}): CourseReceiptLine[] {
+  const lines: CourseReceiptLine[] = [
+    { key: 'head', text: `적용 완료 · ${o.presetName} · ${o.equipName} ${o.vehicles}대` },
+    { key: 'spend', text: o.charge > 0 ? `차감 −${won(o.charge)}` : '추가 비용 없음' },
+  ];
+  if (o.trial) {
+    lines.push({
+      key: 'trial',
+      text: `시험 운행 완료 · 스릴 ${Math.round(o.trial.thrill)} · 안전 ${Math.round(o.trial.safety)}`,
+    });
+  }
+  lines.push({
+    key: 'record',
+    text: o.record ? `코스 신기록 · 스릴 ${Math.round(o.record.thrill)}` : '신기록 없음',
+  });
+  lines.push({ key: 'saved', text: '저장 완료' });
+  return lines;
 }
 
 /**
  * 상태별 버튼 정체 (§3.3) — 정보 `닫기/루트 조정` · 편집 `설정/취소/시험 운행` ·
- * 시험 `취소/시험 운행 중` · 리뷰 `다시 조정/적용`.
+ * 시험 `취소/시험 운행 중` · 리뷰 `다시 조정/이 설정 적용` · 완료 `다시 조정/닫기`.
  *
  * ⚠ 라벨을 `refresh()` 안에서 다시 대입하지 말 것. 한때 `Settings` 가 영문으로 남아
  * 있었던 이유가 바로 그 흩어진 대입이었다 — 정체가 한 곳에 있으면 검사가 잰다.
+ *
+ * ⚠ `적용` 은 **무엇을** 적용하는지 안 말한다. 핸들을 안 움직여도 시험 뒤에 떠서
+ * "무엇이 적용됐는가"를 더 흐렸다 (2026-08-26 실측) — 이름은 `이 설정 적용` 이고,
+ * 바꾼 것이 없으면 `변경 없음` 으로 잠긴다.
  */
 export function courseDockActions(
   phase: CoursePhase,
-  o: { canTrial: boolean; trialPassed: boolean },
+  o: { canTrial: boolean; trialPassed: boolean; noop: boolean },
 ): CourseDockAction[] {
   if (phase === 'info') {
     return [
-      { id: 'cancel', label: '닫기', disabled: false },
-      { id: 'primary', label: '루트 조정', disabled: false },
+      { id: 'cancel', label: '닫기', disabled: false, emphasis: false },
+      { id: 'primary', label: '루트 조정', disabled: false, emphasis: true },
     ];
   }
   if (phase === 'trial') {
     return [
-      { id: 'cancel', label: '취소', disabled: false },
-      { id: 'primary', label: '시험 운행 중', disabled: true },
+      { id: 'cancel', label: '취소', disabled: false, emphasis: false },
+      { id: 'primary', label: '시험 운행 중', disabled: true, emphasis: true },
     ];
   }
   if (phase === 'review') {
     return [
-      { id: 'settings', label: '다시 조정', disabled: false },
-      { id: 'primary', label: '적용', disabled: !o.trialPassed },
+      { id: 'settings', label: '다시 조정', disabled: false, emphasis: false },
+      {
+        id: 'primary',
+        label: o.noop ? '변경 없음' : '이 설정 적용',
+        disabled: o.noop || !o.trialPassed,
+        emphasis: true,
+      },
+    ];
+  }
+  if (phase === 'applied') {
+    return [
+      { id: 'settings', label: '다시 조정', disabled: false, emphasis: false },
+      { id: 'cancel', label: '닫기', disabled: false, emphasis: true },
     ];
   }
   return [
-    { id: 'settings', label: '설정', disabled: false },
-    { id: 'cancel', label: '취소', disabled: false },
-    { id: 'primary', label: '시험 운행', disabled: !o.canTrial },
+    { id: 'settings', label: '설정', disabled: false, emphasis: false },
+    { id: 'cancel', label: '취소', disabled: false, emphasis: false },
+    { id: 'primary', label: '시험 운행', disabled: !o.canTrial, emphasis: true },
   ];
 }
 
@@ -312,11 +412,6 @@ export function courseTrialPlan(draft: CourseEditDraft, wantingGuests: number): 
   return { durationMs: 4_000, metrics, reactions };
 }
 
-function won(n: number): string {
-  if (n >= 10000) return `${Math.round(n / 1000) / 10}만`;
-  return n.toLocaleString('ko-KR');
-}
-
 function sectionHeading(label: string): HTMLDivElement {
   return el('div', 'kcourse-section', label);
 }
@@ -367,6 +462,8 @@ export class KairoCoursePanel {
   private readonly titleEl: HTMLDivElement;
   /** 현재→예상 네 지표. 잘리는 한 줄 요약(`.kcourse-chips`)을 대체한다 (v2 §3.3). */
   private readonly deltasEl: HTMLDivElement;
+  /** 적용 완료 영수증 (Task 6). 끝 상태에서만 자리를 차지한다 */
+  private readonly receiptEl: HTMLDivElement;
   private readonly whyEl: HTMLDivElement;
   private readonly actsEl: HTMLDivElement;
   private readonly toggleBtn: HTMLButtonElement;
@@ -403,6 +500,10 @@ export class KairoCoursePanel {
   private editingNotified = false;
   private trialTimers: number[] = [];
   private trialPassed = false;
+  /** 방금 끝난 시험의 지표 — 영수증이 "무엇을 확인하고 적용했나"를 말하는 재료다 */
+  private trialResult: { thrill: number; safety: number } | null = null;
+  /** 확정이 남긴 영수증. `applied` 상태에서만 채워져 있다 */
+  private receipt: CourseReceiptLine[] = [];
 
   constructor(
     parent: HTMLElement,
@@ -424,16 +525,18 @@ export class KairoCoursePanel {
     this.titleEl = el('div', 'kcourse-title');
     this.deltasEl = el('div', 'kcourse-deltas');
     this.deltasEl.id = 'kairo-course-deltas';
+    this.receiptEl = el('div', 'kcourse-receipt');
+    this.receiptEl.id = 'kairo-course-receipt';
+    this.receiptEl.hidden = true;
     this.whyEl = el('div', 'kcourse-why');
 
     this.toggleBtn = el('button', 'kbtn');
     this.toggleBtn.id = 'kairo-course-toggle';
     this.toggleBtn.setAttribute('aria-label', '코스 설정');
     this.toggleBtn.addEventListener('click', () => {
-      if (this.phase === 'review') {
-        this.phase = this.selectedHandle === null ? 'create' : 'edit';
-        this.trialPassed = false;
-        this.refresh();
+      // 완료·리뷰의 `다시 조정` — 같은 버튼이 상태에 따라 다른 문을 연다 (라벨이 말한다)
+      if (this.phase === 'applied' || this.phase === 'review') {
+        this.readjust();
         return;
       }
       this.setExpanded(this.bodyEl.hidden);
@@ -442,11 +545,11 @@ export class KairoCoursePanel {
     this.closeBtn = el('button', 'kbtn');
     this.closeBtn.id = 'kairo-course-close';
     this.closeBtn.addEventListener('click', () => this.hide());
-    this.confirmBtn = el('button', 'kbtn primary');
+    this.confirmBtn = el('button', 'kbtn');
     this.confirmBtn.id = 'kairo-course-confirm';
     this.confirmBtn.addEventListener('click', () => this.primaryAction());
     this.actsEl = el('div', 'kcourse-acts');
-    dock.append(this.titleEl, this.deltasEl, this.whyEl, this.actsEl);
+    dock.append(this.titleEl, this.deltasEl, this.receiptEl, this.whyEl, this.actsEl);
 
     // ── 펼침 본문 ──
     this.bodyEl = el('div', 'kcourse-body');
@@ -459,8 +562,14 @@ export class KairoCoursePanel {
       '선착장은 지도에서 탭해 고르고, 코스는 핸들을 끌어 만듭니다',
     );
 
+    /*
+     * 세 행(루트·장비·보트)이 **같은 구조**여야 한다 (UX 감사 P0-1). 예전에는 장비만
+     * `.kcourse-row` 로 감싸여 살아남았고 나머지 둘은 직속이라 2px 로 접혔다.
+     */
     this.presetBar = el('div', 'kcourse-presets');
     this.presetBar.id = 'kairo-course-presets';
+    const presetRow = el('div', 'kcourse-row');
+    presetRow.append(this.presetBar);
 
     this.equipmentBar = el('div', 'kcourse-options');
     this.equipmentBar.id = 'kairo-course-equip';
@@ -469,6 +578,8 @@ export class KairoCoursePanel {
 
     this.boatBar = el('div', 'kcourse-options');
     this.boatBar.id = 'kairo-course-boats';
+    const boatRow = el('div', 'kcourse-row');
+    boatRow.append(this.boatBar);
 
     const vehRow = el('div', 'kcourse-row');
     this.vehiclesEl = el('div', 'kcourse-veh');
@@ -495,12 +606,12 @@ export class KairoCoursePanel {
     this.bodyEl.append(
       hint,
       sectionHeading('루트'),
-      this.presetBar,
+      presetRow,
       sectionHeading('장비'),
       equipRow,
       vehRow,
       sectionHeading('보트'),
-      this.boatBar,
+      boatRow,
       this.metricsEl,
       this.trialEl,
       this.listEl,
@@ -537,7 +648,9 @@ export class KairoCoursePanel {
     // 한 번에 하나 (K37)
     if (!panelHost.open(this)) return;
     this.clearTrial();
+    this.clearReceipt();
     this.pendingRecord = null;
+    this.trialResult = null;
     this.root.hidden = false;
     this.setExpanded(false);
     const existing = handle === undefined ? undefined : this.deps.courses.all.find((c) => c.handle === handle);
@@ -569,7 +682,9 @@ export class KairoCoursePanel {
 
   hide(): void {
     this.clearTrial();
+    this.clearReceipt();
     this.pendingRecord = null;
+    this.trialResult = null;
     if (this.edit) this.deps.courses.cancelEdit(this.edit);
     this.edit = null;
     this.root.hidden = true;
@@ -577,6 +692,32 @@ export class KairoCoursePanel {
     this.deps.scene.setCourseOverlay([], [], null);
     this.deps.scene.setDockChoices([], -1);
     this.notifyEditing(false);
+  }
+
+  /**
+   * `다시 조정` — 리뷰·적용 완료에서 조정 상태로 되돌아간다 (Task 6).
+   *
+   * ⚠ 완료에서 오면 정본은 **방금 적용된 코스**다. 새 편집 트랜잭션을 다시 열어야
+   * 저장소의 stale 검사가 성립한다 — 이미 확정으로 소비된 옛 `edit` 을 재사용하면
+   * 원본이 어긋나 `confirmEdit` 이 던진다.
+   */
+  private readjust(): void {
+    this.clearReceipt();
+    this.trialPassed = false;
+    this.trialResult = null;
+    this.pendingRecord = null;
+    if (this.phase === 'applied' && this.selectedHandle !== null) {
+      this.beginRouteEdit();
+      return;
+    }
+    this.phase = this.selectedHandle === null ? 'create' : 'edit';
+    this.refresh();
+  }
+
+  private clearReceipt(): void {
+    this.receipt = [];
+    this.receiptEl.replaceChildren();
+    this.receiptEl.hidden = true;
   }
 
   private notifyEditing(active: boolean): void {
@@ -798,6 +939,10 @@ export class KairoCoursePanel {
     const equip = courseEquipment(this.equipId);
     if (!preset || !equip) return;
 
+    // CSS 와 하네스가 같은 값을 읽는다 — 상태 정체를 두 벌로 만들지 않는다
+    this.root.dataset['coursePhase'] = this.phase;
+    this.renderReceipt();
+
     const docks = this.deps.docks();
     const dock = this.dock();
     const editing = this.phase === 'create' || this.phase === 'edit';
@@ -818,7 +963,7 @@ export class KairoCoursePanel {
       this.deps.scene.setCourseOverlay([], [], null);
       this.deltasEl.replaceChildren();
       this.whyEl.textContent = '선착장이 없습니다 — 물가에 플로팅덱을 놓으세요';
-      this.renderDock(false);
+      this.renderDock(false, false);
       this.metricsEl.replaceChildren();
       this.renderList();
       return;
@@ -851,9 +996,13 @@ export class KairoCoursePanel {
     /*
      * 정보 상태는 **현재값**이다 — 아직 아무것도 안 바꿨는데 `18→18` 이 뜨면
      * "무엇이 달라지나"라는 화살표의 뜻이 닳는다.
+     *
+     * 적용 완료도 같은 이유로 현재값이다. 다만 여기서는 그 값이 **방금 갱신된 정본**이라
+     * (확정 뒤 `selectedHandle` 이 확정된 코스를 가리킨다) 화살표가 아니라 결과다.
      */
+    const showDelta = this.phase !== 'info' && this.phase !== 'applied';
     this.deltasEl.replaceChildren(
-      ...courseDeltaCells(projection, this.phase !== 'info').map((c) => {
+      ...courseDeltaCells(projection, showDelta).map((c) => {
         const d = el('div', 'kcourse-delta');
         d.dataset['metric'] = c.key;
         d.append(
@@ -903,9 +1052,13 @@ export class KairoCoursePanel {
       issues.length = 0;
       issues.push('선착장이 없습니다 — 잔교 옆에 선착장 시설을 지으세요');
     }
-    this.whyEl.textContent = issues.join(' · ');
+    /*
+     * 적용 완료에서는 이유 줄을 비운다 — 그 자리의 주인은 영수증이고, 방금 확정한
+     * 코스에 대고 "변경비가 부족합니다" 를 말하면 무엇이 끝났는지가 흐려진다.
+     */
+    this.whyEl.textContent = this.phase === 'applied' ? '' : issues.join(' · ');
     const canPlace = v.ok && cost <= this.deps.cash();
-    this.renderDock(canPlace);
+    this.renderDock(canPlace, courseDraftUnchanged(this.current(), draft));
     if (this.phase === 'info') {
       this.trialEl.textContent = '운행 중 · 지도 코스나 차량을 탭해 연 정보입니다';
     } else if (this.phase === 'trial') {
@@ -928,7 +1081,7 @@ export class KairoCoursePanel {
    * 하네스의 `button, [role="button"]` 계수 검사가 안 보이는 것까지 세고,
    * 사람도 44px 자리를 못 쓴다.
    */
-  private renderDock(canTrial: boolean): void {
+  private renderDock(canTrial: boolean, noop: boolean): void {
     const buttons: Record<CourseDockAction['id'], HTMLButtonElement> = {
       settings: this.toggleBtn,
       cancel: this.closeBtn,
@@ -937,14 +1090,60 @@ export class KairoCoursePanel {
     const actions = courseDockActions(this.phase, {
       canTrial,
       trialPassed: this.trialPassed,
+      noop,
     });
     this.actsEl.replaceChildren();
     for (const action of actions) {
       const button = buttons[action.id];
       button.textContent = action.label;
       button.disabled = action.disabled;
+      /*
+       * 강조도 `courseDockActions` 가 정한다 — 적용 완료의 주버튼은 `닫기` 이지
+       * `confirmBtn` 이 아니다. 클래스를 생성 시점에 박아 두면 그 차이를 못 낸다.
+       */
+      button.classList.toggle('primary', action.emphasis);
+      /*
+       * `settings` 슬롯은 상태에 따라 **다른 문**을 연다: 조정 중에는 설정 본문을
+       * 펼치고(`aria-expanded` 가 뜻이 있다), 리뷰·완료에서는 `다시 조정` 이다.
+       * 접힘/펼침 라벨을 그대로 두면 화면은 `다시 조정` 인데 스크린리더는
+       * "코스 설정 펼치기" 라고 읽는다 — 이름이 둘이 된다.
+       */
+      if (action.id === 'settings') {
+        const expands = this.phase !== 'review' && this.phase !== 'applied';
+        if (expands) {
+          button.setAttribute('aria-expanded', String(!this.bodyEl.hidden));
+          button.setAttribute(
+            'aria-label',
+            this.bodyEl.hidden ? '코스 설정 펼치기' : '코스 설정 접기',
+          );
+        } else {
+          button.removeAttribute('aria-expanded');
+          button.setAttribute('aria-label', action.label);
+        }
+      }
       this.actsEl.append(button);
     }
+  }
+
+  /** 적용 완료 영수증 — `applied` 에서만 자리를 차지한다 (그 밖에는 `hidden`) */
+  private renderReceipt(): void {
+    if (this.phase !== 'applied' || this.receipt.length === 0) {
+      this.receiptEl.replaceChildren();
+      this.receiptEl.hidden = true;
+      return;
+    }
+    this.receiptEl.hidden = false;
+    this.receiptEl.replaceChildren(
+      ...this.receipt.map((line) => {
+        const d = el(
+          'div',
+          line.key === 'head' ? 'kcourse-receipt-head' : 'kcourse-receipt-line',
+          line.text,
+        );
+        d.dataset['receipt'] = line.key;
+        return d;
+      }),
+    );
   }
 
   private chargeFor(draft: CourseEditDraft): number {
@@ -1000,8 +1199,16 @@ export class KairoCoursePanel {
       this.beginRouteEdit();
       return;
     }
+    // 적용 완료의 주버튼은 `닫기`(closeBtn)라 여기까지 오지 않는다 — 와도 아무 일이 없다
+    if (this.phase === 'applied') return;
     if (this.phase === 'review') {
-      this.commit(true);
+      /*
+       * ⚠ 비활성 라벨(`변경 없음`)만으로는 부족하다. 버튼의 disabled 는 화면의 사실이고
+       * 이 판정은 **규칙**이다 — 규칙을 화면에만 두면 다른 입구(하네스·키보드)가 뜻 없는
+       * 적용을 통과시킨다.
+       */
+      if (courseDraftUnchanged(this.current(), this.draft())) return;
+      this.commit('applied');
       return;
     }
     if (this.phase === 'create' || this.phase === 'edit') this.startTrial();
@@ -1028,7 +1235,9 @@ export class KairoCoursePanel {
     const validation = this.validation();
     if (!draft || !validation?.ok || this.chargeFor(draft) > this.deps.cash()) return;
     this.clearTrial();
+    this.clearReceipt();
     this.pendingRecord = null;
+    this.trialResult = null;
     const plan = courseTrialPlan(draft, this.deps.courseDemand());
     this.phase = 'trial';
     this.trialPassed = false;
@@ -1045,6 +1254,8 @@ export class KairoCoursePanel {
       this.phase = 'review';
       this.trialPassed = true;
       const current = courseProjection(this.current(), draft, this.deps.courseDemand());
+      // 영수증이 "무엇을 확인하고 적용했나"를 말하려면 시험 결과가 확정까지 살아 있어야 한다
+      this.trialResult = { thrill: current.projected.thrill, safety: current.projected.safety };
       if (current.projected.thrill > current.current.thrill) {
         this.deps.scene.playCourseRecord(draft.dock, `NEW ${Math.round(current.projected.thrill)}`);
         this.pendingRecord = {
@@ -1064,25 +1275,43 @@ export class KairoCoursePanel {
     this.deps.scene.clearCourseTrial();
   }
 
-  private commit(closeAfter: boolean): void {
+  /**
+   * 확정 — 검증 · 결제 · 교체는 그대로고 **끝나는 자리만** 둘이다 (Task 6).
+   *
+   * · `applied` — 사람이 누른 경로. 패널을 닫지 않고 영수증 상태로 남는다
+   * · `next` — 도구(`confirmForTest`) 경로. 기존 생성 흐름처럼 다음 빈 선착장을 준비한다
+   *
+   * ⚠ 여기서 `hide()` 를 부르지 말 것. 성공의 증거가 2.6초 토스트뿐이 된다
+   *   (2026-08-26 실측 — 3초 뒤에는 "적용됨"이 화면에 하나도 안 남았다).
+   * ⚠ 결제·stale·기록 보장은 손대지 않았다 — `confirmEdit` 이 실패하면 여기서
+   *   **그 자리에 되돌아가고** 영수증도 기록도 안 생긴다.
+   */
+  private commit(exit: 'applied' | 'next'): void {
     const preset = presetDef(this.presetId);
     const equip = courseEquipment(this.equipId);
     const draft = this.draft();
     const validation = this.validation();
     if (!preset || !equip || !draft || !validation?.ok) return;
+    /** 실제로 나간 돈. 편집은 저장소가 계산한 차액이 정본이다 */
+    let charge = 0;
+    let applied: PlacedCourse | null = null;
     if (this.edit) {
       this.edit.draft = draft;
       /*
        * 저장소가 stale 원본 검증 → 차액 계산 → 결제 → 교체를 한 경계에서 수행한다.
        * UI가 먼저 spend하면 confirmEdit 예외 뒤에 현금만 빠진 상태가 남는다.
        */
-      if (!this.deps.courses.confirmEdit(this.edit, this.deps.spend)) return;
+      const result = this.deps.courses.confirmEdit(this.edit, this.deps.spend);
+      if (!result) return;
+      charge = result.charge;
+      applied = result.course;
     } else {
-      const charge = this.chargeFor(draft);
+      charge = this.chargeFor(draft);
       if (!this.deps.spend(charge)) return;
-      this.deps.courses.add(draft);
+      applied = this.deps.courses.add(draft);
     }
     const record = this.pendingRecord;
+    const trial = this.trialResult;
     this.pendingRecord = null;
     this.deps.onChange();
     if (record) this.deps.onRecord(record);
@@ -1091,17 +1320,38 @@ export class KairoCoursePanel {
     );
     this.clearTrial();
     this.edit = null;
-    if (closeAfter) {
-      this.hide();
+    this.trialPassed = false;
+    if (exit === 'next') {
+      // 하네스 직접 확정은 기존 생성 흐름처럼 다음 빈 선착장을 준비한다.
+      this.trialResult = null;
+      this.clearReceipt();
+      this.selectedHandle = null;
+      this.phase = 'create';
+      this.dockPinned = false;
+      this.resetHandles();
+      this.refresh();
       return;
     }
-    // 하네스 직접 확정은 기존 생성 흐름처럼 다음 빈 선착장을 준비한다.
-    this.selectedHandle = null;
-    this.phase = 'create';
-    this.trialPassed = false;
+    /*
+     * 확정한 코스가 곧 **현재**다. 생성 경로도 여기서 handle 을 잡아야 갱신된 현재값이
+     * 뜨고, `다시 조정` 이 그 코스를 대상으로 새 편집 트랜잭션을 열 수 있다.
+     */
+    this.selectedHandle = applied.handle;
     this.dockPinned = false;
-    this.resetHandles();
+    this.loadCourse(applied);
+    this.phase = 'applied';
+    this.receipt = courseAppliedLines({
+      presetName: preset.name,
+      equipName: equip.name,
+      vehicles: this.vehicles,
+      charge,
+      trial,
+      record: record ? { thrill: record.thrill } : null,
+    });
+    this.trialResult = null;
+    this.setExpanded(false);
     this.refresh();
+    this.frame();
   }
 
   /**
@@ -1112,7 +1362,7 @@ export class KairoCoursePanel {
    */
   confirmForTest(): number {
     const before = this.deps.courses.count;
-    this.commit(false);
+    this.commit('next');
     return this.deps.courses.count - before;
   }
 
@@ -1137,6 +1387,10 @@ export class KairoCoursePanel {
     phase: CoursePhase;
     selectedHandle: number | null;
     trialPassed: boolean;
+    /** 후보가 정본과 같은가 — 리뷰의 `변경 없음` 이 이 값을 읽는다 */
+    noop: boolean;
+    /** 적용 완료 영수증. 그 밖의 상태에서는 빈 배열이다 */
+    receipt: CourseReceiptLine[];
   } {
     return {
       presetId: this.presetId,
@@ -1149,6 +1403,8 @@ export class KairoCoursePanel {
       phase: this.phase,
       selectedHandle: this.selectedHandle,
       trialPassed: this.trialPassed,
+      noop: courseDraftUnchanged(this.current(), this.draft()),
+      receipt: this.receipt.map((line) => ({ ...line })),
     };
   }
 

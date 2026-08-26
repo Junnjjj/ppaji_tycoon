@@ -1,9 +1,8 @@
 import { el } from './dom.js';
 import { panelHost } from './panels.js';
-import { NEED_NAME } from './kairo-report.js';
+import { conditionSubject, REPUTATION_DEFINITION, REPUTATION_NAME } from './kairo-terms.js';
 import type { ExamScore } from '../sim/kairo/exam.js';
-import type { GradeDef, QuestCondition } from '../sim/kairo/progress.js';
-import type { NeedKind } from '../sim/kairo/week.js';
+import type { GradeDef } from '../sim/kairo/progress.js';
 
 /**
  * 등급 심사 — 메뉴 항목의 문구와 **응시 확인 화면** (K48).
@@ -33,41 +32,13 @@ import type { NeedKind } from '../sim/kairo/week.js';
  * 한 벌로 충분했다. 색은 `style.css` 가 소유한다 — 여기 hex 0.
  */
 
-/** 조건 종류별 이름표 — sim 은 표시를 모르므로 이름은 화면이 붙인다 */
-function reqLabel(c: QuestCondition): string {
-  switch (c.kind) {
-    case 'needSupply':
-      return `${NEED_NAME[(c.need ?? '') as NeedKind] ?? c.need} 시설`;
-    case 'exitSatisfaction':
-      return '퇴장 만족도';
-    case 'weekVisitors':
-      return '주간 방문객';
-    case 'weekProfit':
-      return '주간 수익';
-    case 'activeCombos':
-      return '발동 중인 콤보';
-    case 'comboTier':
-      return `${c.tier ?? ''} 콤보`;
-    case 'facilityCount':
-      return '지정 시설';
-    case 'facilityKinds':
-      return '시설 종류';
-    case 'facilityTotalAndSat':
-      return '시설 수와 만족도';
-    case 'maxTurnedAway':
-      return '만석으로 돌려보낸 손님';
-    case 'avgFacilityLevel':
-      return '평균 개선 단계';
-    case 'swimAreaMax':
-      return '가장 큰 물놀이 구역';
-    case 'courseCount':
-      return '코스';
-    case 'questsDone':
-      return '완료한 의뢰';
-    default:
-      return '조건';
-  }
-}
+/**
+ * 조건 종류별 이름표 — **정본은 `kairo-terms.ts` 하나다** (UX 감사 P0-5·P1-10).
+ *
+ * 예전에는 이 표가 여기에만 있어서, 같은 `evaluateCondition` 결과를 심사 화면은 주어와
+ * 함께 그리고 인증 목록은 주어 없이(`· 1 / 3개`) 그렸다. 표를 옮기고 여기서는 부른다.
+ */
+const reqLabel = conditionSubject;
 
 /** 만원 단위 — 게임 전체가 이 눈금으로 말한다 (헤더 현금과 같다) */
 function man(won: number): string {
@@ -132,7 +103,7 @@ export function examGateReason(g: ExamGate): string | null {
   if (g.pendingWeek !== null) return `이미 접수했습니다 — ${g.pendingWeek}주차 주말 판정`;
   if (!g.next) return `${g.gradeName} — 더 오를 등급이 없습니다`;
   if (g.reputation < g.next.reqExitSatisfaction) {
-    return `평판 ${g.next.reqExitSatisfaction} 필요 · 지금 ${Math.round(g.reputation)}`;
+    return `${REPUTATION_NAME} ${g.next.reqExitSatisfaction} 필요 · 지금 ${Math.round(g.reputation)}`;
   }
   return null;
 }
@@ -196,8 +167,8 @@ export function examItemView(g: ExamGate, cash: number): ExamItemView {
        * 걷는 거리가 그 값을 깎는 두 축이다 (`guests.ts` 의 하향 압력).
        */
       sub:
-        `평판 ${g.next.reqExitSatisfaction} 필요 · 지금 ${Math.round(g.reputation)}` +
-        ' — 탭하면 조건별 점수를 봅니다. 평판은 손님이 나갈 때의 만족도 평균이니' +
+        `${REPUTATION_NAME} ${g.next.reqExitSatisfaction} 필요 · 지금 ${Math.round(g.reputation)}` +
+        ` — 탭하면 조건별 점수를 봅니다. ${REPUTATION_NAME}은 ${REPUTATION_DEFINITION}` +
         ' 대기 줄과 걷는 거리를 줄이세요',
     };
   }
@@ -347,7 +318,35 @@ export class KairoExamView {
     }
     this.box.append(rows);
 
-    if (!score.passed) {
+    /*
+     * ⚠ **안내문이 권하는 행동을 버튼이 막으면 안 된다** (UX 감사 P1-11).
+     *
+     * 실측(새 판): 화면이 "탈락해도 수수료만 잃고 바로 다시 응시할 수 있습니다"라고
+     * 권해 놓고, 신청 버튼은 `평판 55 필요 · 지금 0` 으로 **잠겨 있었다.** 실제 규칙은
+     * `examGateReason` — **평판이 문턱을 넘어야 응시 자체가 된다.** 점수는 그 다음이다.
+     * 안내문만 점수 이야기를 하고 있었던 것이다.
+     *
+     * 그래서 **지금 무엇이 막고 있나 → 그 다음엔 무엇이 기다리나** 순서로 말한다.
+     */
+    const gateReason = examGateReason(gate);
+    if (gateReason !== null) {
+      const callout = el('div', 'kcallout');
+      callout.append(
+        el('div', undefined, `아직 응시할 수 없습니다 — ${gateReason}.`),
+        el(
+          'div',
+          'kcaption',
+          `${REPUTATION_NAME}은 ${REPUTATION_DEFINITION} 줄이 길거나 많이 걸으면 내려갑니다.`,
+        ),
+        el(
+          'div',
+          'kcaption',
+          `${REPUTATION_NAME}이 차면 ${Math.max(0, score.cut - score.score)}점이 모자라도 ` +
+            '응시할 수 있고, 탈락해도 수수료만 잃습니다.',
+        ),
+      );
+      this.box.append(callout);
+    } else if (!score.passed) {
       this.box.append(
         el(
           'div',

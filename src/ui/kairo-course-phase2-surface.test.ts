@@ -20,7 +20,9 @@ describe('Phase 2B 모바일 표면 계약', () => {
 
   it('시험 운행의 적용/다시 조정 경로와 44px 터치 표면이 있다', () => {
     expect(panel).toContain("'시험 운행'");
-    expect(panel).toContain("'적용'");
+    // Task 6: 라벨이 무엇을 적용하는지 말한다. 옛 모호한 `적용` 은 되돌리지 말 것.
+    expect(panel).toContain("'이 설정 적용'");
+    expect(code).not.toMatch(/label:\s*'적용'/);
     expect(panel).toContain("'다시 조정'");
     expect(css).toMatch(/\.kcourse-acts\s+\.kbtn\s*\{[^}]*min-height:\s*var\(--tap\)/s);
   });
@@ -51,9 +53,28 @@ describe('코스 v2 액션 독 표면', () => {
     expect(css).not.toMatch(/\.kcourse-delta-value\s*\{[^}]*text-overflow:\s*ellipsis/s);
   });
 
+  it('코스 결정 글씨는 제목 18·지표값 15·본문 13·보조 12px 아래로 내려가지 않는다', () => {
+    expect(css).toMatch(/\.kcourse-title\s*\{[^}]*font-size:\s*18px/s);
+    expect(css).toMatch(/\.kcourse-delta-label\s*\{[^}]*font-size:\s*12px/s);
+    expect(css).toMatch(/\.kcourse-delta-value\s*\{[^}]*font-size:\s*15px/s);
+    expect(css).toMatch(/\.kcourse-receipt-head\s*\{[^}]*font-size:\s*18px/s);
+    expect(css).toMatch(/\.kcourse-receipt-line\s*\{[^}]*font-size:\s*13px/s);
+    expect(css).toMatch(/\.kcourse-why\s*\{[^}]*font-size:\s*12px/s);
+    expect(css).toMatch(/\.kcourse-acts \.kbtn\s*\{[^}]*font-size:\s*16px/s);
+  });
+
   it('독은 지표 1행 + 버튼 1행이고 112px를 넘지 않는다', () => {
-    expect(css).toMatch(/\.kcourse-dock\s*\{[^}]*max-height:\s*112px/s);
+    // Task 6에서 천장을 토큰으로 옮겼다 — 토스트 리프트가 같은 자를 읽어야 해서다.
+    expect(css).toMatch(/\.kcourse-dock\s*\{[^}]*max-height:\s*var\(--course-dock-cap\)/s);
+    expect(css).toMatch(/--course-dock-cap:\s*112px/);
     expect(panel).toContain("el('div', 'kcourse-dock')");
+  });
+
+  it('적용 완료만 천장이 더 높다 — 조작 지도 대신 영수증이 그 자리의 주인이다', () => {
+    expect(css).toMatch(
+      /\.kcourse\[data-course-phase='applied'\]\s+\.kcourse-dock\s*\{[^}]*max-height:\s*var\(--course-dock-cap-applied\)/s,
+    );
+    expect(css).toMatch(/--course-dock-cap-applied:\s*176px/);
   });
 
   it('버튼 정체는 순수 함수가 정하고 패널은 그것만 그린다', () => {
