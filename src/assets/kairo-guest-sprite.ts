@@ -267,6 +267,22 @@ function drawFace(
 }
 
 /**
+ * 포즈별 머리 위치 (셀 좌상단 기준) — `drawBody` 의 baseY 와 맞춰야 한다.
+ *
+ * 모듈 상수인 이유: 아틀라스와 한 칸 굽기(`bakeGuestCell`)가 **같은 표**를 써야
+ * 표정이 한쪽에서만 어긋나지 않는다.
+ */
+const HEAD_OFFSET: Record<Pose, { x: number; y: number }> = {
+  idle: { x: 4, y: 2 },
+  walk: { x: 4, y: 2 },
+  sit: { x: 4, y: 4 },
+  ride: { x: 4, y: 4 },
+  swim: { x: 4, y: 6 },
+  float: { x: 4, y: 6 },
+  lie: { x: 2, y: 15 },
+};
+
+/**
  * 손님 아틀라스를 굽는다. 셀은 격자로 배치하고 프레임 사각형을 돌려준다 —
  * Phaser 의 `texture.add(name, 0, x, y, w, h)` 에 그대로 넣는다.
  */
@@ -339,18 +355,36 @@ export function bakeGuestAtlas(): GuestAtlas {
     frames.set(c.key, { x, y: faceY, w: FACE_W, h: FACE_H });
   });
 
-  // 포즈별 머리 위치 — drawBody 의 baseY 와 맞춰야 한다
-  const headOffset: Record<Pose, { x: number; y: number }> = {
-    idle: { x: 4, y: 2 },
-    walk: { x: 4, y: 2 },
-    sit: { x: 4, y: 4 },
-    ride: { x: 4, y: 4 },
-    swim: { x: 4, y: 6 },
-    float: { x: 4, y: 6 },
-    lie: { x: 2, y: 15 },
-  };
+  return { canvas, frames, headOffset: HEAD_OFFSET };
+}
 
-  return { canvas, frames, headOffset };
+/**
+ * 손님 **한 칸만** 굽는다 — 사건 삽화(`ui/kairo-event-art.ts`)가 쓴다.
+ *
+ * ⚠ 아틀라스를 복제하지 않는다. 삽화에 필요한 것은 서너 명이고, 전체 아틀라스
+ * (560×304)를 UI 쪽에서 한 번 더 구우면 폰에서 0.7MB 를 그냥 버린다 — 이 프로젝트
+ * 1순위가 "폰에서 돌아가는 것"이다. 14×24 한 장이면 200바이트다.
+ *
+ * 그리는 코드는 `drawBody`/`drawFace`/`bakeOutlineCells` **그대로**다. 삽화 전용으로
+ * 다시 그리면 손님 모습이 두 벌이 되어 카드와 지도의 사람이 달라진다.
+ */
+export function bakeGuestCell(
+  palette: number,
+  pose: Pose,
+  facing: Facing,
+  frame = 0,
+  face: Face = 'calm',
+): HTMLCanvasElement {
+  const canvas = createCanvas(GUEST_W, GUEST_H);
+  const g = canvas.getContext('2d');
+  if (!g) throw new Error('2d 컨텍스트를 못 얻었습니다');
+  g.imageSmoothingEnabled = false;
+  const p = PALETTES[((palette % PALETTES.length) + PALETTES.length) % PALETTES.length] as Palette;
+  drawBody(g, 0, 0, p, pose, facing, frame);
+  bakeOutlineCells(g, GUEST_W, GUEST_H, 1, 1);
+  const off = HEAD_OFFSET[pose];
+  drawFace(g, off.x, off.y, face, facing);
+  return canvas;
 }
 
 /** 이모트 말풍선 6종 — 12×12, 손님 머리 위에 띄운다 */

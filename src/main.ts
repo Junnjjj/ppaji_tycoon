@@ -10,6 +10,8 @@ import type { ComboBreakdown, ReportPrescription } from './ui/kairo-report.js';
 
 const DEFAULT_SEED = 20260811;
 const AUTOSAVE_INTERVAL_MS = 30_000;
+/** 공유 URL이 실제로 어느 소스에서 시작됐는지 확인하는 읽기 전용 정체. */
+const KAIRO_BUILD = Object.freeze({ ...__PPAJI_BUILD__ });
 
 /**
  * 카이로 씬 — **기본**이다 (K13). v1 씬은 `?v1=1` 로만 열린다.
@@ -65,6 +67,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { swimRiskPoints } = await import('./sim/kairo/swim.js');
   const { KairoReport, comboBreakdown, NEED_NAME } = await import('./ui/kairo-report.js');
   const { KairoCardView } = await import('./ui/kairo-card.js');
+  const { createEventSpriteSource } = await import('./ui/kairo-event-art.js');
   const { KairoUnlockView } = await import('./ui/kairo-unlock.js');
   const { CardStore, CARD_RNG_SALT, triggerCard } = await import('./sim/kairo/cards.js');
   const { accidentChance } = await import('./sim/kairo/risk.js');
@@ -83,7 +86,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   const { createKairoAssetProvider } = await import('./assets/kairo-atlas.js');
   const kairoProvider = await createKairoAssetProvider();
-  const { KairoHud, createGoalSlots, inheritedCourseGoal } = await import('./ui/kairo-hud.js');
+  const {
+    KairoHud,
+    createGoalSlots,
+    inheritedCourseGoal,
+    recommendedActionGoal,
+  } = await import('./ui/kairo-hud.js');
   type GoalSlotInput = import('./ui/kairo-hud.js').GoalSlotInput;
   const { applyStartKit } = await import('./sim/kairo/startkit.js');
   const { WallGrid: WallGridCls } = await import('./sim/kairo/walls.js');
@@ -100,15 +108,24 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { KairoCoursePanel } = await import('./ui/kairo-course.js');
   const { KairoCatalog, activeComboIds, noteSeen } = await import('./ui/kairo-catalog.js');
   const { KairoShowcase } = await import('./ui/kairo-showcase.js');
-  const { KairoManagementMenu } = await import('./ui/kairo-management.js');
+  const {
+    KairoManagementMenu,
+    managementTodayPresentation,
+    runManagementAction,
+  } = await import('./ui/kairo-management.js');
+  type ManagementMenuAction = import('./ui/kairo-management.js').ManagementMenuAction;
   const { KairoEndingPanel, endingChoiceActions } = await import('./ui/kairo-ending.js');
   const {
     OnboardingStore,
     endingMilestone,
     managementWarnings,
+    observeOnboardingBuild,
+    observeOnboardingMenu,
+    onboardingRecommendation,
     todayRecommendation,
   } = await import('./sim/kairo/meta.js');
   type OnboardingEvent = import('./sim/kairo/meta.js').OnboardingEvent;
+  type ManagementAction = import('./sim/kairo/meta.js').ManagementAction;
   const { loadCareerProfile, saveCareerProfile } = await import('./save/kairo-career.js');
   const { panelHost } = await import('./ui/panels.js');
   const { Rng: RngCls } = await import('./sim/rng.js');
@@ -564,9 +581,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
            */
           toast(`−${Math.round(cost / 10000)}만`, 'ok');
           pushComboNews();
-          if ((def as { need?: string } | undefined)?.need === 'food') {
-            advanceOnboarding('food-built');
-          }
+          if (observeOnboardingBuild(onboarding, def)) refreshManagement();
           persist();
           // 시설은 한 번 놓으면 조준을 끝낸다 (붓은 남는다 — 탭하면 다시 겨눈다)
           endAim();
@@ -1408,9 +1423,16 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       lastCombos ?? undefined,
       lastPreviousSummary,
     );
+    if (report.visible && advanceOnboarding('report-opened')) persist();
     refreshCaps();
   };
-  const cardView = new KairoCardView(document.body);
+  /*
+   * 사건 카드 삽화 (Task 6) — 카드 뷰는 에셋을 모르고 **논리 ID 해석기만** 받는다.
+   * 그림을 못 얻으면 합성이 `null` 을 내고 기존 CSS 테마 슬롯이 폴백으로 남는다.
+   */
+  const cardView = new KairoCardView(document.body, {
+    spriteFor: createEventSpriteSource(h.provider),
+  });
   /*
    * 주간 카드는 **모달**이다 (K37). 선택하지 않으면 주가 안 넘어가는 것이 카드의 존재
    * 이유인데, 다른 패널이 밀어내면 선택을 조용히 건너뛴다.
@@ -1903,6 +1925,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const regularEvents = wishes.settleRegularPurchases(rep.menuPurchases);
     for (const ev of regularEvents) {
       if (ev.kind === 'regular-done') {
+        // `WishStore`가 characterId + 요청 메뉴를 모두 검증한 실제 구매만 여기 도착한다.
+        advanceOnboarding('regular-purchased');
         rep.regularAffinityGained += ev.request.affinity;
         const next = wishes.regularStatus(ev.char.id);
         news(
@@ -2176,6 +2200,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         lastCombos ?? undefined,
         lastPreviousSummary,
       );
+      if (report.visible && advanceOnboarding('report-opened')) persist();
     };
     /*
      * 사고가 났으면 결산 **전에** 대응 카드를 띄운다 (§12.1). 결산 뒤에 띄우면 이미
@@ -2312,9 +2337,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     cash: () => week.cash,
     courseDemand: () => lastReport?.courseDemand ?? 0,
     spend: (n) => week.spend(n, 'building'),
-    onEditingChange: (editing) => {
-      if (editing) hud.collapseGoalsForEditing();
-      else hud.restoreGoalsAfterEditing();
+    onCourseModeChange: (active) => {
+      hud.setGoalSurface(active ? 'course' : panelHost.anyOpen ? 'panel' : 'home');
     },
     onRouteDragged: () => {
       if (advanceOnboarding('route-dragged')) persist();
@@ -2335,7 +2359,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       })) saveCareerProfile(career);
     },
     onChange: () => {
-      refreshCourseBtn();
+      // 코스 수는 경영 메뉴 `코스` 행동의 보조값(`운행 N개`)이 정본이다.
+      refreshManagement();
       refreshRisk();
       syncBoats();
       persist();
@@ -2577,6 +2602,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   });
   hud.menuSlot.append(newGameBtn);
 
+  /** 홈 A와 경영 Today가 같은 실제 action adapter를 쓰기 위한 late-bound 경계. */
+  let runRecommendedAction = (_action: ManagementAction): void => undefined;
+
   /**
    * 의뢰 칩 (K40) — "다음에 뭘 할지"를 상시로. 예전 목표란은 "북한강형 · 자유 플레이"
    * 라는 판 설정만 비췄다 (UX 검수 §1 — 의도한 주석은 "얼마나 남았나"였는데 기본
@@ -2588,7 +2616,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const status = scen.scenarioStatus(scenario, st);
     // refreshGoal은 패널 조립보다 먼저 한 번 돈다. 함수를 값으로 넘기면 그때의 no-op이
     // 칩에 남으므로, 탭 시점의 production 함수를 읽는 late-bound wrapper를 넘긴다.
-    const immediate = inheritedCourseGoal(courses.all, (handle) => openCourse(handle));
+    const onboardingToday = onboardingRecommendation(onboarding.step);
+    const immediate = onboardingToday
+      ? recommendedActionGoal(
+          managementTodayPresentation(onboardingToday),
+          () => runRecommendedAction(onboardingToday.action),
+        )
+      : inheritedCourseGoal(courses.all, (handle) => openCourse(handle));
 
     /*
      * B — 이름 있는 소원이 있으면 그것이 먼저다. 없으면 기존 의뢰, 둘 다 끝났으면
@@ -2749,17 +2783,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   showcaseBtn.addEventListener('click', () => showcase.show());
   hud.menuSlot.append(showcaseBtn);
 
-  const courseBtn = document.createElement('button');
-  courseBtn.id = 'kairo-course-open';
-  courseBtn.textContent = '코스';
-  courseBtn.className = 'kitem';
-  courseBtn.addEventListener('click', () => {
-    if (coursePanel.visible) coursePanel.hide();
-    else coursePanel.show();
-  });
-  hud.menuSlot.append(courseBtn);
+  /*
+   * ⚠ 여기 있던 레거시 `코스` 버튼(id `kairo-course-open`)을 걷어냈다.
+   *
+   * 경영 메뉴 v2 가 같은 id 를 자기 행동에 쓰면서 **소스에 같은 id 가 둘**이 됐다.
+   * 실제 DOM 에서는 `KairoManagementMenu` 가 `host.replaceChildren()` 로 이 버튼을
+   * 지워 살아남지 않았지만, `getElementById` 로 코스를 여는 모든 검사·문서가
+   * "어느 쪽인가"를 물을 수 없는 상태였다. 진입점은 **경영 메뉴의 `코스` 하나**이고
+   * 그 한 번 탭이 물려받은 코스를 그대로 연다 (`openCourse(courses.all[0]?.handle)`).
+   */
 
-  // 건설 시트의 코스 탭이 여는 곳 — 메뉴의 버튼과 같은 동작이다 (K32)
+  // 건설 시트의 코스 탭이 여는 곳 — 경영 메뉴의 `코스` 행동과 같은 경로다 (K32)
   openCourse = (handle?: number): void => {
     /*
      * ⚠ 붓을 먼저 내려놓는다 (K45 버그). 건물/바닥 붓을 든 채 코스 탭을 누르면
@@ -2781,11 +2815,6 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       h.scene.frameCourse(existing.dock, existing.handles, inset);
     }
   };
-
-  const refreshCourseBtn = (): void => {
-    courseBtn.textContent = courses.count > 0 ? `코스 ${courses.count}` : '코스';
-  };
-  refreshCourseBtn();
 
   const staffBtn = document.createElement('button');
   staffBtn.id = 'kairo-staff-open';
@@ -2871,17 +2900,32 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
 
   const scrollMenuTo = (id: string): void => {
+    // 홈 A/B/C에서도 이 adapter를 부른다. 닫힌 목록에 scroll만 보내지 말고 먼저
+    // production 공용 메뉴 시트를 연 뒤, 그 안의 실제 목적지를 그린다.
+    hud.showMenu();
     refreshQuests();
     document.getElementById(id)?.scrollIntoView({ block: 'start' });
   };
-  const management = new KairoManagementMenu(
-    hud.menuSlot,
-    [
+  const firstCraftMenuFacility = () => h.placement.all().find((item) => {
+    const def = facilityDef(item.defId);
+    return def?.menuMode === 'craft';
+  });
+  const managementActions: ManagementMenuAction[] = [
       { id: 'price', domId: 'kairo-price-open', label: '가격', detail: '요금·예상 만족', run: () => showManage('price') },
       { id: 'staff', domId: 'kairo-staff-open', label: '직원', detail: '인원·개선', run: () => showManage('staff') },
       { id: 'course', domId: 'kairo-course-open', label: '코스', detail: '루트·시험 운행', run: () => openCourse(courses.all[0]?.handle) },
       { id: 'exam', domId: 'kairo-exam-open', label: '심사', detail: '등급과 예상 점수', run: openExam },
-      { id: 'regular', label: '단골', detail: '메뉴 요청', stayOpen: true, run: () => scrollMenuTo('kairo-regular-list') },
+      {
+        id: 'regular',
+        label: '단골',
+        detail: '메뉴 요청',
+        stayOpen: true,
+        run: () => {
+          const target = onboarding.step === 'equip-menu' ? firstCraftMenuFacility() : undefined;
+          if (target) openMenuLab(target.handle);
+          else scrollMenuTo('kairo-regular-list');
+        },
+      },
       {
         id: 'quests',
         label: '의뢰',
@@ -2897,7 +2941,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       { id: 'view', domId: 'kairo-showcase-open', label: '감상', detail: '내 리조트', run: () => showcase.show() },
       { id: 'certs', label: '인증', detail: '병렬 성장', stayOpen: true, run: () => scrollMenuTo('kairo-cert-list') },
       { id: 'ending', label: '엔딩', detail: '커리어 기록', run: openEnding },
-    ],
+  ];
+  runRecommendedAction = (id): void => {
+    const action = managementActions.find((candidate) => candidate.id === id);
+    if (action) runManagementAction(action);
+  };
+  const management = new KairoManagementMenu(
+    hud.menuSlot,
+    managementActions,
     () => {
       const risk = assessRisk(h.placement, h.guests, {
         staffSafety: staff.effects(h.placement).safetyPoints,
@@ -2919,7 +2970,24 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           return status !== null && !status.done;
         }),
       };
-      return { today: todayRecommendation(state), warnings: managementWarnings(state) };
+      const discovered = catalog.counts();
+      return {
+        today: todayRecommendation(state),
+        warnings: managementWarnings(state),
+        details: {
+          price: `현재 요금 ${Math.round(priceMult * 100)}%`,
+          staff: staffShortages > 0 ? `부족 ${staffShortages}개 역할` : '필요 역할 배치 완료',
+          course: `운행 ${courses.count}개`,
+          exam: `현재 ${currentGrade().grade}등급`,
+          regular: state.regularReady ? '메뉴 요청 진행 중' : '다음 방문 대기',
+          quests: onboarding.step === 'done' ? '운영 목표 진행 중' : '첫 운영 진행 중',
+          codex: `콤보 ${discovered.combo[0]}/${discovered.combo[1]}`,
+          report: lastReport ? `${lastReport.week}주 결산` : '첫 결산 대기',
+          view: mapDef.name,
+          certs: `${certs.count}/${CERTS.length} 획득`,
+          ending: state.endingReady ? '달성 확인 가능' : '성장 마일스톤',
+        },
+      };
     },
   );
   refreshManagement = () => management.refresh();
@@ -2927,7 +2995,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const managementUtility = document.createElement('div');
   managementUtility.className = 'kmanage-utility';
   managementUtility.append(speedBtn, newGameBtn);
-  hud.menuSlot.append(managementUtility);
+  const managementVersion = document.createElement('small');
+  managementVersion.className = 'kcaption';
+  managementVersion.dataset['buildIdentity'] = '';
+  managementVersion.textContent = `버전 ${KAIRO_BUILD.shortSha} · ${KAIRO_BUILD.branch}`;
+  hud.menuSlot.append(managementUtility, managementVersion);
 
   runReportAction = (prescription): void => {
     if (prescription.action === 'course') {
@@ -3043,11 +3115,21 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
 
   openMenuLab = (handle: number): void => {
+    const confirmEquippedMenu = (): boolean => {
+      const item = h.placement.all().find((candidate) => candidate.handle === handle);
+      const def = item ? facilityDef(item.defId) : undefined;
+      // 장착·발견·시설 호환 규칙은 sim의 단일 운영 판정을 그대로 쓴다.
+      const operable = h.placement.menuOperabilityOf(handle, (id) => menus.hasRecipe(id));
+      const changed = observeOnboardingMenu(onboarding, def, operable);
+      if (changed) refreshManagement();
+      return changed;
+    };
     menuLab.show(menus, h.placement, handle, {
       cash: () => week.cash,
       spend: (cost) => week.spend(cost, 'menuDevelopment'),
       onChanged: (result) => {
         h.guests.invalidate();
+        confirmEquippedMenu();
         if (result?.kind === 'discovered') {
           audio.play('sfx/discover');
           toast(`${result.recipe?.name ?? '메뉴'} 발견 · 바로 장착`, 'ok');
@@ -3057,6 +3139,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         persist();
       },
     });
+    // 매점 기본 메뉴처럼 배치 순간 이미 장착된 상태는 실제 메뉴 시트를 열어 확인하면 된다.
+    if (menuLab.visible && confirmEquippedMenu()) persist();
   };
 
   /** 시설의 앵커 칸 — 철거 조준이 그 자리를 겨눠야 무엇을 지우는지가 보인다 */
@@ -3336,6 +3420,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   requestAnimationFrame(rafLoop);
 
   Object.assign(h, {
+    build: KAIRO_BUILD,
     week,
     report,
     runWeek,

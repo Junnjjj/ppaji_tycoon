@@ -78,28 +78,27 @@ export class KairoTicker implements Panel {
 
   constructor(parent: HTMLElement) {
     /*
-     * 띠 전체가 탭 대상이다 — 탭하면 알림함. 칩·버튼을 안에 늘어놓지 않는다 (트레이 규칙).
-     *
-     * ⚠ **`<button>` 이 아니라 `div` + `role="button"` 이다.** 하네스가
-     * `button, select, input` 을 세어 "상시 컨트롤 2개"(메뉴·건설, K47-②)와
-     * "터치 타깃 44px"를 세로·가로 두 방향에서 판정한다.
-     * 26px 짜리 띠를 버튼으로 만들면 그 검사 넷이 확정 실패한다 — 의뢰 칩 기둥
-     * (`.kchipcol`)이 div 인 것과 같은 선례다. 대신 키보드 접근을 직접 채운다.
+     * 보이는 띠는 26px를 보존하되, 가운데 별도 hit surface가 44×44px를 맡는다. 외곽을
+     * 44px로 키우면 HUD가 더 칠해진 것처럼 계측되고, 전폭 hit surface는 목표/하단 버튼을
+     * 훔치므로 시각 면과 중앙 손가락 면을 분리한다.
      */
     this.strip = el('div', 'kticker');
     this.strip.id = 'kairo-ticker';
-    this.strip.setAttribute('role', 'button');
-    this.strip.tabIndex = 0;
-    this.strip.setAttribute('aria-label', '소식');
+    const visual = el('div', 'kticker-visual');
     this.line = el('span', 'kticker-line');
-    this.strip.append(el('span', 'kticker-ico', '📰'), this.line);
+    visual.append(el('span', 'kticker-ico', '📰'), this.line);
+    const hit = el('div', 'kticker-hit');
+    hit.setAttribute('role', 'button');
+    hit.tabIndex = 0;
+    hit.setAttribute('aria-label', '소식');
+    this.strip.append(visual, hit);
     const activate = (): void => {
       if (this.visible) this.hide();
       else if (panelHost.open(this)) this.root.hidden = false;
     };
-    this.strip.addEventListener('click', activate);
+    hit.addEventListener('click', activate);
     // role="button" 을 붙였으면 Enter/Space 도 클릭과 같아야 한다 (네이티브 버튼의 계약)
-    this.strip.addEventListener('keydown', (e) => {
+    hit.addEventListener('keydown', (e) => {
       if (e.key !== 'Enter' && e.key !== ' ') return;
       e.preventDefault(); // Space 로 화면이 스크롤되면 지도가 밀린다
       activate();

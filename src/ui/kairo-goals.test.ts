@@ -1,8 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
-  GoalFoldState,
+  GoalSurfaceState,
   createGoalSlots,
   inheritedCourseGoal,
+  recommendedActionGoal,
   type GoalSlotInput,
 } from './kairo-hud.js';
 
@@ -60,36 +61,43 @@ describe('카이로식 A/B/C 목표', () => {
     goal.action();
     expect(open).toHaveBeenCalledWith(undefined);
   });
+
+  it('미완료 온보딩의 sim 추천을 규칙 재계산 없이 홈 A 행동으로 옮긴다', () => {
+    const run = vi.fn();
+    const goal = recommendedActionGoal(
+      { icon: '♥', label: '기본 메뉴 확인', detail: '장착 메뉴를 확인하세요' },
+      run,
+    );
+
+    expect(goal).toMatchObject({
+      role: 'immediate',
+      badge: 'A',
+      icon: '♥',
+      label: '기본 메뉴 확인',
+      detail: '장착 메뉴를 확인하세요',
+    });
+    goal.action();
+    expect(run).toHaveBeenCalledOnce();
+  });
 });
 
-describe('목표 자동 접기/복원 상태', () => {
-  it('편집을 시작하면 자동으로 접고 끝나면 펼친 사용자 상태로 복원한다', () => {
-    const state = new GoalFoldState();
-    expect(state.folded).toBe(false);
+describe('홈 목표 표면 상태', () => {
+  it('홈에서만 목표를 보이고 메뉴·건설·패널·코스에서는 숨긴다', () => {
+    const state = new GoalSurfaceState();
+    expect(state.mode).toBe('home');
+    expect(state.visible).toBe(true);
 
-    state.beginEditing();
-    expect(state.folded).toBe(true);
-    state.endEditing();
-    expect(state.folded).toBe(false);
+    for (const mode of ['menu', 'build', 'panel', 'course'] as const) {
+      state.set(mode);
+      expect(state.mode).toBe(mode);
+      expect(state.visible).toBe(false);
+    }
   });
 
-  it('원래 접어 둔 사용자의 선택은 편집 종료 뒤에도 유지한다', () => {
-    const state = new GoalFoldState();
-    state.toggleUser();
-    expect(state.folded).toBe(true);
-
-    state.beginEditing();
-    state.endEditing();
-    expect(state.folded).toBe(true);
-  });
-
-  it('편집 중 사용자가 바꾼 선택도 종료 뒤 복원 상태에 반영한다', () => {
-    const state = new GoalFoldState();
-    state.beginEditing();
-    state.toggleUser();
-    expect(state.folded).toBe(true);
-
-    state.endEditing();
-    expect(state.folded).toBe(true);
+  it('다른 표면을 닫으면 같은 경계로 홈 목표를 복원한다', () => {
+    const state = new GoalSurfaceState();
+    state.set('course');
+    state.set('home');
+    expect(state.visible).toBe(true);
   });
 });

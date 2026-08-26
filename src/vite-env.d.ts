@@ -1,5 +1,13 @@
 /// <reference types="vite/client" />
 
+declare const __PPAJI_BUILD__: Readonly<{
+  sha: string;
+  shortSha: string;
+  branch: string;
+  sourceDigest: string;
+  startedAt: string;
+}>;
+
 /*
  * Vite 가 주입하는 `import.meta.env` 타입.
  *

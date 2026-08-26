@@ -239,6 +239,8 @@ export class KairoScene extends Phaser.Scene {
   private trialTween: Phaser.Tweens.Tween | null = null;
   private trialCalls: Phaser.Time.TimerEvent[] = [];
   private trialPath: { x: number; y: number }[] = [];
+  /** 시험 운행에서 **실제로 발화한** 반응. 렌더 전용 검사 표면이다 (세이브 무관). */
+  private trialLog: { text: string; at: number }[] = [];
   /**
    * 정류장 버스 (K36-B③) — **위치는 sim 이 준다.**
    *
@@ -360,6 +362,12 @@ export class KairoScene extends Phaser.Scene {
    * 겹의 이유다.
    */
   private surround: Phaser.GameObjects.Image | null = null;
+  /**
+   * 굽기가 **실제로 얹은** 주변 장식 (Task 7). 계획만 보고 검사하면 굽기가 조용히
+   * 걸러도 초록이 된다 — 화면에 올라간 것에서 읽는다 (K38 「깊이는 화면에 올라간
+   * 오브젝트에서 읽는다」와 같은 규칙). 문자열 12개라 메모리는 무시할 수 있다.
+   */
+  private surroundDecorDrawn: string[] = [];
 
   /**
    * **일부러 망가뜨리는 스위치** — 검사가 정말 잡는지 재려고 둔다 (K38 점검 후속).
@@ -768,6 +776,7 @@ export class KairoScene extends Phaser.Scene {
    */
   private bakeSurroundTexture(): void {
     if (this.textures.exists(SURROUND_TEX)) return;
+    this.surroundDecorDrawn = [];
     const t = this.opts.terrain;
 
     /*
@@ -901,17 +910,22 @@ export class KairoScene extends Phaser.Scene {
     }
 
     /*
-     * Phase 7 주변 장식 — 기존 `deco/*` 계약 스프라이트를 **같은 surround 캔버스에**
-     * 합성한다. Phaser 오브젝트를 늘리지 않고, 이 함수도 텍스처가 없을 때 부팅 한 번만
-     * 도므로 런타임 갱신 비용은 0이다. 물가에는 놓지 않아 조형물이 강 위에 뜨지 않는다.
+     * Phase 7 주변 장식 (Task 7) — 계획이 고른 **기존 계약 스프라이트**를 같은 surround
+     * 캔버스에 합성한다. Phaser 오브젝트를 늘리지 않고, 이 함수는 텍스처가 없을 때 부팅
+     * 한 번만 도므로 런타임 갱신 비용은 0이다. 물가에는 놓지 않아 집이 강 위에 뜨지 않는다.
+     *
+     * ⚠ **`deco/` 로 거르지 말 것.** 예전에는 접두사로 걸렀는데, 그러면 계획이 주택·상점·
+     * 차량을 내도 화면에는 **조용히 안 나온다** — 검사는 계획만 보고 통과한다. 프로바이더가
+     * 그 ID 를 아는지(`has`)만 물으면 없는 그림은 알아서 빠진다 (HybridProvider 와 같은 규칙).
      */
     for (const item of surroundDecorationPlan(GRID_W, GRID_H)) {
-      if (!item.id.startsWith('deco/') || isWet(item.i, item.j) || !this.opts.provider.has(item.id)) continue;
+      if (isWet(item.i, item.j) || !this.opts.provider.has(item.id)) continue;
       const src = this.opts.provider.get(item.id);
       const z = deco(item.i, item.j);
       const x = STEP_X * (item.i - item.j) + ox;
       const y = STEP_Y * (item.i + item.j) + PAD + TILE_H - z * LEVEL_H;
       ctx.drawImage(src, Math.round(x - src.width / 2), Math.round(y - src.height));
+      this.surroundDecorDrawn.push(`${item.kind}@${item.i},${item.j}`);
     }
     tex.refresh();
   }
@@ -1270,6 +1284,17 @@ export class KairoScene extends Phaser.Scene {
   setSurroundVisibleForTest(on: boolean): void {
     this.surround?.setVisible(on);
     for (const t of this.backdrops) t.setVisible(on);
+  }
+
+  /**
+   * 검증 도구용 — 굽기가 **실제로 얹은** 주변 장식 (Task 7).
+   *
+   * 계획(`surroundDecorationPlan`)만 재면 굽기가 조용히 걸러도 초록이 된다. 화면 판
+   * 하나를 픽셀로 재는 것보다 이 목록이 정확하고, 여기에 없는 종류는 그림이 없거나
+   * 물 위라 빠진 것이다.
+   */
+  surroundDecorForTest(): string[] {
+    return [...this.surroundDecorDrawn];
   }
 
   /** 검증 도구용 — 업스케일을 직접 바꾼다 */
@@ -3361,16 +3386,30 @@ export class KairoScene extends Phaser.Scene {
       duration: durationMs,
       onUpdate: (tween) => this.drawCourseTrial(tween.getValue() ?? 0),
     });
+    this.trialLog = [];
+    const startedAt = this.time.now;
     for (const reaction of reactions) {
       const call = this.time.delayedCall(durationMs * reaction.progress, () => {
         const point = this.trialPoint(reaction.progress);
         if (point) playFx(this.fxHost(), 'course-reaction', { i: point.x, j: point.y, text: reaction.text });
+        /*
+         * 말풍선은 캔버스 FX 라 DOM 하네스가 못 본다. **같은 지점에서** 시각을 남겨
+         * "반응 3개 이상이 서로 다른 시점에 떴다"를 잴 수 있게 한다 — 계획을 다시
+         * 계산하는 게 아니라 실제로 발화한 순간을 적는 것이다.
+         */
+        this.trialLog.push({ text: reaction.text, at: Math.round(this.time.now - startedAt) });
       });
       this.trialCalls.push(call);
     }
   }
 
+  /** 도구용 — 이번 시험에서 실제로 뜬 반응과 그 시각(ms). */
+  courseTrialLogForTest(): { text: string; at: number }[] {
+    return this.trialLog.map((entry) => ({ ...entry }));
+  }
+
   clearCourseTrial(): void {
+    this.trialLog = [];
     this.trialTween?.remove();
     this.trialTween = null;
     for (const call of this.trialCalls) call.remove(false);

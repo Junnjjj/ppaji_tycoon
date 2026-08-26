@@ -17,7 +17,7 @@ import type { StaffCounts } from '../sim/kairo/staff.js';
 import type { CourseSnapshot } from '../sim/kairo/course.js';
 import type { DoorSnapshot } from '../sim/kairo/doors.js';
 import type { MenuSnapshot } from '../sim/kairo/menu.js';
-import type { OnboardingSnapshot } from '../sim/kairo/meta.js';
+import { migrateOnboardingSnapshot, type OnboardingSnapshot } from '../sim/kairo/meta.js';
 
 /**
  * 카이로 세이브 — v1 세이브와 **완전히 분리**한다.
@@ -336,8 +336,8 @@ const MIGRATIONS: Record<number, (s: Record<string, unknown>) => Record<string, 
   5: (s) => ({ ...s, version: 6 }),
   // v7 (K41): unlocks 추가 — 없으면 빈 집합으로 읽는다 (하위호환)
   6: (s) => ({ ...s, version: 7 }),
-  // v8 (Phase 7): 실행형 온보딩 커서. 기존 판도 첫 단계부터 안내하되 어떤 행동도 막지 않는다.
-  7: (s) => ({ ...s, version: 8, onboarding: { version: 1, step: 'open-course' } }),
+  // v8 (Phase 7): 실행형 온보딩 커서. 현재 앱은 중첩 커서 v2부터 시작한다.
+  7: (s) => ({ ...s, version: 8, onboarding: { version: 2, step: 'open-course' } }),
 };
 
 export class KairoSaveError extends Error {
@@ -426,7 +426,7 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.certs ? { certs: input.certs } : {}),
     // 메뉴 개발 상태는 legacy optional. 시설별 장착은 placement.items에 있다.
     ...(input.menus ? { menus: input.menus } : {}),
-    onboarding: input.onboarding ?? { version: 1, step: 'open-course' },
+    onboarding: input.onboarding ?? { version: 2, step: 'open-course' },
   };
 }
 
@@ -455,7 +455,11 @@ export function migrateKairo(raw: unknown): LatestKairoSave {
       throw new KairoSaveError(`세이브에 ${key} 가 없습니다`);
     }
   }
-  return cur as unknown as LatestKairoSave;
+  return {
+    ...cur,
+    // 운영 포맷은 v8 그대로지만 이미 배포된 중첩 onboarding v1 의미를 여기서 v2로 올린다.
+    onboarding: migrateOnboardingSnapshot(cur['onboarding']),
+  } as unknown as LatestKairoSave;
 }
 
 export interface KairoRestored {

@@ -112,7 +112,7 @@
   --event-ink: #fff7df;
   /* 트레이는 요소보다 **어둡다** (분리의 원천 — 실측 #e0ab5f 계열) */
   --bar-bg: linear-gradient(rgb(242 205 143 / 96%), rgb(229 181 106 / 97%));
-  --sheet-bg: rgb(240 202 138 / 97%);
+  --sheet-bg: rgb(240 202 138);
   --goal-bg: rgb(255 250 238 / 88%);
   --goal-won: rgb(224 240 205 / 94%);
   --goal-lost: rgb(248 219 205 / 94%);
@@ -232,6 +232,9 @@
   --tap: 44px;
   --safe-b: env(safe-area-inset-bottom);
   --safe-t: env(safe-area-inset-top);
+  /* 목표 밴드 — 폰 세로 393px 에서 좌우 8px 을 뺀 폭, 높이는 카드 한 장 */
+  --goal-col: 377px;
+  --goal-band: 64px;
 }
 
 * {
@@ -928,68 +931,55 @@ body {
   background: var(--risk-danger);
 }
 
-/* 목표 — 좌상단 캡슐 아래. 안 보이면 시나리오가 설정 문구가 된다 */
-/* ── 의뢰 칩 기둥 (K40, concept-28) — 목표란의 후신. 기둥 전체가 버튼 하나다 ── */
-.kchipcol {
-  position: fixed;
-  left: 8px;
-  /* 첫 그리기용 어림값 — 실제 top 은 헤더를 **재서** JS 가 덮어쓴다
-     (고정값만 두면 헤더가 두 줄로 커진 순간 지표 줄과 겹친다, K46-③) */
-  top: calc(96px + var(--safe-t));
-  z-index: 9;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  max-width: 38vw;
-  cursor: pointer;
-  /* 기둥 자체는 드래그를 안 먹는다 — 좌상단이 팬 사각지대가 되지 않게 (칩만 탭 대상) */
-  pointer-events: none;
-}
-
-.kchipcol .kchip {
-  pointer-events: auto;
-}
-
 /*
- * 접기 머리 (K47-②) — 헤더의 `목표 ▾` 버튼이 접는 대상 위로 내려왔다.
+ * 홈 셸 v2 — A/B/C 는 **하단 뉴스 띠 위의 한 밴드**다 (64px).
  *
- * ⚠ `pointer-events: auto` 가 **필수**다. 기둥(`.kchipcol`)이 `none` 이라(좌상단이 팬
- * 사각지대가 되지 않게) 안 주면 탭이 통째로 지도로 빠진다.
- * 버튼이 아니라 div 다 — 하단 바의 "상시 컨트롤 2개"를 버튼 수로 세기 때문이다.
+ * ⚠ 두 번 고쳤다. 처음엔 루트가 `position: fixed; inset: 0` 이라 **자기 경계 상자로
+ * 화면 전체를 덮어** HUD 예산이 세로·가로 100% 였고, "시트를 닫으면 화면이 돌아온다"
+ * 까지 같이 깨졌다. 그 다음엔 A 를 하단 전폭 카드, B/C 를 헤더 아래 별도 행으로 두었는데
+ * **상자가 둘**이라 세로 28% · 가로 53% 로 예산(24/36)을 못 지켰다 — 실측상 B/C 를
+ * 아무리 좁혀도 1%p 도 안 내려간다 (전폭 A 카드 하나가 세로 7.2%p 다).
+ *
+ * 그래서 셋을 **한 밴드**에 넣는다: A 약 60% · B/C 각 약 20%, 전부 64px 라 터치 44px 는
+ * 높이로 지켜지고, 칠하는 넓이는 밴드 하나(377×64 = 세로 7.2%p)뿐이다.
+ * 결과 세로 24% · 가로 35%. 루트가 곧 그 밴드이므로 **상자와 칠하는 것이 같다.**
+ *
+ * 가로에서는 `--goal-col` 로 캡한다 — 852px 현수막은 화면의 14%p 를 먹고 읽기도 나쁘다
+ * (K47-① 이 헤더에서 이미 배운 것: 전폭 밴드는 폭이 넓어질수록 비싸지기만 한다).
  */
-.kchip-head {
-  align-self: flex-start;
+.kgoals {
+  position: fixed;
+  z-index: 9;
+  left: 8px;
+  right: 8px;
+  max-width: var(--goal-col);
+  /* 중앙 티커의 44px 손가락 면과 1px도 겹치지 않는다 (시각 띠는 그대로 26px). */
+  bottom: calc(92px + var(--safe-b));
+  height: var(--goal-band);
   display: flex;
-  align-items: center;
-  pointer-events: auto;
-  cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 9px;
-  background: var(--panel);
-  box-shadow: var(--sk-lift);
-  color: var(--text);
-  font-size: 11px;
-  font-weight: 700;
-  text-shadow: var(--sk-emboss);
-  white-space: nowrap;
-  transition: transform var(--dur-micro) var(--ease);
+  gap: 6px;
 }
 
-.kchip-head:active {
-  transform: translateY(1px);
-}
-
-.kchiplist {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.kchipcol.folded .kchiplist {
+.kgoals[hidden] {
   display: none;
 }
 
-.kchip {
+/* A = 주역. 제목이 잘리지 않는 것이 이 카드의 존재 이유다 */
+.kgoal-primary {
+  flex: 3 1 0;
+  min-width: 0;
+}
+
+/* B/C = 아이콘 + 진행 축약. 각각 밴드의 약 20% */
+.kgoal-secondary {
+  flex: 2 1 0;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.kgoal {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1001,37 +991,55 @@ body {
 }
 
 /*
- * 탭할 수 있는 칩 (K48) — 등급 칩이 심사 확인 화면의 입구다. 44px 는 터치 타깃 최소치이고
- * (칩 세 줄은 41px 라 조금 모자랐다), 눌린 느낌은 `.kchip-head` 와 같은 규칙을 쓴다.
+ * 모든 목표는 production 목적지를 직접 여는 44px 이상 터치 표적이다.
  */
-.kchip.tap {
+.kgoal.tap {
   box-sizing: border-box;
-  height: var(--tap);
   min-height: var(--tap);
   cursor: pointer;
   transition: transform var(--dur-micro) var(--ease);
 }
 
-.kchip.tap:active {
+.kgoal-primary .kgoal {
+  min-height: var(--goal-band);
+  height: 100%;
+  padding-inline: 10px;
+}
+
+/*
+ * B/C 는 밴드의 20% 폭(약 70px)이다. 세로로 쌓아 아이콘 → 진행바만 낸다 —
+ * 글자를 욱여넣으면 잘리고, 잘린 글자는 안 보이는 것과 같다.
+ */
+.kgoal-secondary .kgoal {
+  min-height: var(--goal-band);
+  height: 100%;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  padding: 4px 6px;
+}
+
+.kgoal.tap:active {
   transform: translateY(1px);
 }
 
-.kchip.won {
+.kgoal.won {
   background: var(--goal-won);
   color: var(--text);
 }
 
-.kchip.lost {
+.kgoal.lost {
   background: var(--goal-lost);
   color: var(--text);
 }
 
-.kchip-ico {
+.kgoal-ico {
   font-size: 14px;
 }
 
 /* A=지금 할 일 · B=단골/운영 · C=장기 성장. 색이 아니라 글자도 정체를 말한다. */
-.kchip-role {
+.kgoal-role {
   display: inline-grid;
   place-items: center;
   flex: 0 0 20px;
@@ -1045,35 +1053,53 @@ body {
   text-shadow: var(--sk-emboss-on-solid);
 }
 
-.kchip-txt {
+.kgoal-txt {
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 84px;
+  min-width: 0;
   overflow: hidden;
 }
 
-.kchip-label {
+.kgoal-label {
   font-size: 11px;
   font-weight: 700;
   color: var(--text);
   line-height: 1.2;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
 }
 
-/* 홈 목표는 44px 한 줄 요약이다. 상세는 탭한 목적지가 말한다. */
-.kchipcol .kchip-detail {
-  display: none;
+.kgoal-primary .kgoal-label {
+  overflow: hidden;
+  text-overflow: clip;
+  font-size: 14px;
 }
 
-.kchip-detail {
+.kgoal-detail {
   font-size: 9.5px;
   line-height: 1.2;
 }
 
-.kchip .kprog {
+/* 축약 카드에는 글이 없다 — 정체는 배지·아이콘·진행바가 말하고 전문은 aria-label 이 준다 */
+.kgoal-secondary .kgoal-label,
+.kgoal-secondary .kgoal-detail {
+  display: none;
+}
+
+.kgoal-secondary .kgoal-ico {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.kgoal-secondary .kgoal-txt {
+  flex: 0 0 auto;
+  align-self: stretch;
+}
+
+.kgoal .kprog {
   height: 4px;
 }
 
@@ -1205,12 +1231,10 @@ body {
 @keyframes ksheet-in {
   from {
     transform: translateY(14px);
-    opacity: 0;
   }
 
   to {
     transform: translateY(0);
-    opacity: 1;
   }
 }
 
@@ -1588,10 +1612,8 @@ body {
   .kitem,
   .kcard,
   .kcourse-item,
-  /* 목표 접기 머리 (K47-②) — 버튼이 아니어도 움직이면 가드에 들어온다 */
-  .kchip-head,
-  /* 등급 칩 (K48) — 심사의 입구라 눌린 느낌이 있다. 같은 이유로 여기 */
-  .kchip.tap,
+  /* 홈 목표는 div role=button이어도 실제로 움직이는 터치 표적이다. */
+  .kgoal.tap,
   .ksheet-head .tab-btn {
     transition: none;
   }
@@ -1752,25 +1774,28 @@ body {
   display: none;
 }
 
-/* 슬림 바 — 접힘 상태의 전부. 한 줄 요약 + 지표 + 펼침 + 취소/확정 */
-.kcourse-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 8px;
-}
-
-.kcourse-sum {
-  flex: 1;
-  min-width: 0;
+/*
+ * 액션 독 (v2 §3.3) — 코스 화면의 전부. **지표 1행 + 버튼 1행**이고 112px를 넘지 않는다.
+ *
+ * 예전 `.kcourse-bar` 는 요약·지표·이유를 한 열에 쌓고 버튼을 옆에 붙였다. 그래서
+ * 지표가 `nowrap` 한 줄로 눌려 393px 에서 `실제 0…` 로 잘렸다 — 현재→예상이 이
+ * 화면의 전부인데 첫 화면에서 못 읽었다. 이제 지표는 자기 격자를 갖는다.
+ */
+.kcourse-dock {
   display: flex;
   flex-direction: column;
-  gap: 1px;
-  overflow: hidden;
+  gap: 2px;
+  padding: 5px 8px;
+  /*
+   * ⚠ 이건 **천장이지 목표가 아니다.** 자연 높이가 이 값에 닿으면 내용이 상자 밖으로
+   * 새어 하단 바를 덮는다 (`overflow` 는 visible 이다). 줄을 더할 일이 생기면
+   * 여기를 늘리지 말고 무엇을 뺄지부터 고를 것 — 조작 지도 620px 계약이 그 반대편이다.
+   */
+  max-height: 112px;
 }
 
 .kcourse-title {
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
@@ -1778,20 +1803,44 @@ body {
   text-shadow: var(--sk-emboss);
 }
 
-/* 지표 — 접힌 채로도 스릴·안전·주매출이 보여야 판단이 된다 */
-.kcourse-chips {
-  font-size: 10.5px;
-  color: var(--text-dim);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+/*
+ * 현재→예상 네 칸. ⚠ **말줄임을 쓰지 않는다** — 자를 바에는 글자를 줄인다.
+ * 잘린 지표는 "안 보이는 것"과 같은데, 여기서는 그게 곧 결정 불가다.
+ */
+.kcourse-deltas {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
 }
 
-.kcourse-chips .warn {
+.kcourse-delta {
+  background: var(--panel-sunk);
+  border-radius: 7px;
+  padding: 2px 4px;
+  min-width: 0;
+  text-align: center;
+}
+
+.kcourse-delta-label {
+  font-size: 9.5px;
+  color: var(--text-dim);
+}
+
+.kcourse-delta-value {
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.kcourse-delta-value.good {
+  color: var(--good);
+}
+
+.kcourse-delta-value.warn {
   color: var(--warn);
 }
 
-.kcourse-chips .bad {
+.kcourse-delta-value.bad {
   color: var(--bad);
 }
 
@@ -1808,6 +1857,7 @@ body {
   display: none;
 }
 
+/* 버튼 줄 — 상태마다 2~3개. 주버튼이 가장 넓다 (§3.3 "명확한 주버튼") */
 .kcourse-acts {
   display: flex;
   gap: 6px;
@@ -1816,6 +1866,12 @@ body {
 
 .kcourse-acts .kbtn {
   min-height: var(--tap);
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.kcourse-acts .kbtn.primary {
+  flex: 1.6 1 0;
 }
 
 /* −/+처럼 글자가 한 자인 조작도 가로·세로 모두 손가락 44px를 확보한다. */
@@ -1840,7 +1896,7 @@ body {
   flex-direction: column;
   gap: 8px;
   padding: 0 8px 10px;
-  max-height: min(46vh, 340px);
+  max-height: min(38vh, 300px);
   overflow-y: auto;
   min-height: 0;
   -webkit-overflow-scrolling: touch;
@@ -1996,7 +2052,7 @@ body {
 }
 
 .kcourse .kstats {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .kcourse-metric {
@@ -2224,6 +2280,37 @@ body {
 .kcard-visual[data-theme='environment'] {
   --event-a: var(--event-environment-a);
   --event-b: var(--event-environment-b);
+}
+
+/*
+ * 테마 미니 장면 (Task 6) — 기존 스프라이트를 합성한 캔버스가 색면 위에 앉는다.
+ * 장면이 붙으면 CSS 표지(기호·마름모)는 감춘다. 라벨은 남는다 — 장면 위 캡션이다.
+ */
+.kcard-scene-slot {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: 9px;
+}
+
+.kcard-scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.kcard-visual.has-scene .kcard-visual-mark,
+.kcard-visual.has-scene::before,
+.kcard-visual.has-scene::after {
+  display: none;
+}
+
+.kcard-visual.has-scene .kcard-visual-label {
+  padding: 1px 6px;
+  border-radius: 7px;
+  background: rgb(var(--band-scrim) / 62%);
 }
 
 .kcard-visual-mark {
@@ -2863,19 +2950,27 @@ body {
   pointer-events: none;
 }
 
-/* ── 뉴스 티커 (K47-①) — 하단 바 바로 위 얇은 띠. 띠 전체가 알림함 버튼이다 ── */
+/* ── 뉴스 티커 (K47-①) — 하단 바 바로 위 얇은 띠 + 중앙 알림함 손잡이 ── */
 .kticker {
   position: fixed;
   left: 0;
   right: 0;
   bottom: calc(56px + var(--safe-b));
-  z-index: 8;
+  /* hit surface가 목표/바의 빈 면 아래로 숨지 않게 하되, 부모 자체는 탭을 먹지 않는다. */
+  z-index: 11;
+  height: 26px;
+  border: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.kticker-visual {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   gap: 6px;
-  height: 26px;
   padding: 0 10px;
-  border: 0;
   border-top: 1px solid var(--tray-divider);
   background: var(--bar-bg);
   color: var(--text);
@@ -2885,13 +2980,32 @@ body {
   text-align: left;
   overflow: hidden;
   white-space: nowrap;
-  /* div + role="button" 이라 손가락 힌트를 CSS 가 채워야 한다 (하네스가 버튼을 센다) */
-  cursor: pointer;
-  user-select: none;
+  pointer-events: none;
 }
 
-.kticker.brush {
+/*
+ * 26px 시각 띠를 키우지 않는 중앙 44×44px 손가락 표면.
+ * 전폭 44px면 위의 목표와 아래 양끝 메뉴/건설을 훔치므로 중앙 손잡이만 pointer를 받는다.
+ */
+.kticker-hit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--tap);
+  min-height: var(--tap);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.kticker.brush .kticker-visual {
   color: var(--accent);
+}
+
+.kticker-hit:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--accent));
+  outline-offset: -2px;
 }
 
 .kticker-ico {
@@ -2948,9 +3062,16 @@ body {
  * 하므로 면을 밝히고 오른쪽에 `›` 를 단다. 전부에 달면 어디가 눌리는지 안 읽힌다.
  */
 .kinbox-row.open {
+  min-height: var(--tap);
+  align-items: center;
   cursor: pointer;
   background: var(--goal-won);
   box-shadow: var(--sk-lift);
+}
+
+/* 코스 독은 같은 하단 레일을 쓰므로 열려 있는 동안 티커 면·hit surface를 함께 감춘다. */
+body:has(.kcourse:not([hidden])) .kticker {
+  display: none;
 }
 
 .kinbox-go {
@@ -3047,6 +3168,11 @@ body {
   background: var(--panel);
 }
 
+.kmanage-today {
+  border-width: 2px;
+  box-shadow: var(--sk-lift);
+}
+
 .kmanage-kicker,
 .kmanage-group > h3 {
   margin: 0 0 5px;
@@ -3075,7 +3201,41 @@ body {
 
 .kmanage-action.primary {
   background: var(--select-fill);
+  min-height: 68px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-color: var(--primary-edge);
   font-size: 13px;
+  box-shadow: var(--sk-lift), var(--sk-inset);
+}
+
+.kmanage-today-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--select-sub);
+  color: var(--text-on-solid);
+  font-size: 20px;
+  text-shadow: var(--sk-emboss-on-solid);
+}
+
+.kmanage-today-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.kmanage-reason {
+  color: var(--text-dim);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .03em;
 }
 
 .kmanage-label {
@@ -3135,10 +3295,4 @@ body {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 5px;
-}
-
-@media (max-width: 430px) {
-  .kmanage-detail {
-    display: none;
-  }
 }

@@ -169,27 +169,41 @@ export function inheritedCourseGoal(
 }
 
 /**
- * 사용자의 접힘 선택과 편집 중 강제 접힘을 분리한다.
- * 편집 종료 시 임시 상태만 걷으므로, 사용자가 접어 둔 선택은 그대로 복원된다.
+ * sim이 고른 Today 추천을 홈의 A 슬롯 모양으로만 바꾼다. 단계·목적지·우선순위는
+ * 여기서 다시 계산하지 않고, 호출자가 넘긴 presentation과 production callback을 쓴다.
  */
-export class GoalFoldState {
-  private userFolded = false;
-  private editing = false;
+export function recommendedActionGoal(
+  presentation: { icon: string; label: string; detail: string },
+  action: () => void,
+): GoalChip {
+  return {
+    role: 'immediate',
+    badge: 'A',
+    icon: presentation.icon,
+    label: presentation.label,
+    detail: presentation.detail,
+    progress: 0,
+    action,
+  };
+}
 
-  get folded(): boolean {
-    return this.userFolded || this.editing;
+/** 홈에만 보이는 목표를 메뉴·건설·패널·코스 전환과 같은 언어로 표현한다. */
+export type GoalSurfaceMode = 'home' | 'menu' | 'build' | 'panel' | 'course';
+
+/** 홈 목표가 패널 DOM의 세부 구현을 모르도록 모드를 한 곳에서 가시성으로 바꾼다. */
+export class GoalSurfaceState {
+  private current: GoalSurfaceMode = 'home';
+
+  get mode(): GoalSurfaceMode {
+    return this.current;
   }
 
-  toggleUser(): void {
-    this.userFolded = !this.userFolded;
+  get visible(): boolean {
+    return this.current === 'home';
   }
 
-  beginEditing(): void {
-    this.editing = true;
-  }
-
-  endEditing(): void {
-    this.editing = false;
+  set(mode: GoalSurfaceMode): void {
+    this.current = mode;
   }
 }
 
@@ -232,10 +246,9 @@ export class KairoHud {
   private readonly visCap: HTMLDivElement;
   private readonly gradeCap: HTMLDivElement;
   private readonly goalBox: HTMLDivElement;
-  private readonly chipsBox: HTMLDivElement;
-  /** 칩 기둥의 머리 행 — 버튼이 아니라 div 다 (아래 생성부의 ⚠ 참고) */
-  private readonly foldHead: HTMLDivElement;
-  private readonly goalFold = new GoalFoldState();
+  private readonly primaryGoal: HTMLDivElement;
+  private readonly secondaryGoals: HTMLDivElement;
+  private readonly goalSurface = new GoalSurfaceState();
   private readonly riskBox: HTMLDivElement;
   private readonly menuBtn: HTMLButtonElement;
   private readonly buildBtn: HTMLButtonElement;
@@ -312,54 +325,17 @@ export class KairoHud {
     top.append(row1, row2);
     parent.append(top);
     /*
-     * 의뢰 칩 (K40, concept-28) — 목표란의 후신. "다음에 뭘 할지"가 화면에 상시로
-     * 보인다: 진행 중 의뢰 둘 + 다음 등급 게이지(A4). 시나리오 이름은 메뉴로 갔다 —
-     * 판 설정은 목표가 아니다 (UX 검수 §1).
-     * 표시물이지 컨트롤이 아니다 — 탭하면 메뉴가 열리지만 그건 메뉴 버튼의 지름길일
-     * 뿐이라 div 로 둔다 (상시 컨트롤 2개 불변식은 버튼을 센다).
+     * 홈 셸 v2: A/B/C 는 하단 뉴스 띠 위의 **한 밴드**다 — A 약 60% · B/C 각 약 20%.
+     * 밴드의 자리·폭·높이는 전부 `style.css` 가 소유한다 (헤더 실측 배선은 없앴다 —
+     * 한 밴드가 되면서 B/C 가 헤더 아래를 볼 이유가 사라졌다).
      */
-    this.goalBox = el('div', 'kchipcol');
+    this.goalBox = el('div', 'kgoals');
     this.goalBox.id = 'kairo-goal';
-    /*
-     * 접기 머리 (K47-②) — 헤더의 `목표 ▾` 버튼을 여기로 내렸다. 접는 대상 위에 붙어
-     * 있는 편이 "무엇이 접히는지"가 자명하다.
-     *
-     * ⚠ 함정 셋 — 셋 다 실제로 밟았다:
-     *   1. `.kchipcol` 이 `pointer-events: none` 이다 (좌상단이 팬 사각지대가 되지 않게).
-     *      머리에 `auto` 를 안 주면 탭이 통째로 지도로 빠진다 → CSS 의 `.kchip-head`.
-     *   2. 기둥 **전체**가 클릭 시 메뉴를 연다. `stopPropagation()` 이 없으면 접으면서
-     *      메뉴가 같이 열린다.
-     *   3. `<button>` 으로 만들면 하네스의 "상시 컨트롤 2개" 셈(`button,select,input`)에
-     *      걸린다 — 티커 띠·칩 기둥과 같은 선례라 `role="button"` 인 div 다.
-     */
-    this.foldHead = el('div', 'kchip-head', '목표 ▾');
-    this.foldHead.id = 'kairo-goal-fold';
-    this.foldHead.setAttribute('role', 'button');
-    this.foldHead.tabIndex = 0;
-    const fold = (e: Event): void => {
-      e.stopPropagation();
-      this.goalFold.toggleUser();
-      this.renderGoalFold();
-    };
-    this.foldHead.addEventListener('click', fold);
-    this.foldHead.addEventListener('keydown', (e) => {
-      if (e.key !== 'Enter' && e.key !== ' ') return;
-      e.preventDefault(); // Space 로 화면이 스크롤되면 지도가 밀린다
-      fold(e);
-    });
-    this.chipsBox = el('div', 'kchiplist');
-    this.goalBox.append(this.foldHead, this.chipsBox);
+    this.primaryGoal = el('div', 'kgoal-primary');
+    this.secondaryGoals = el('div', 'kgoal-secondary');
+    this.goalBox.append(this.primaryGoal, this.secondaryGoals);
     parent.append(this.goalBox);
-    /*
-     * 기둥의 top 은 헤더 **실측**에서 받는다 — 고정 96px 로 뒀더니 2단 헤더가
-     * 커지자 지표 줄과 겹쳤다 (사용자 실측). 가려진 높이는 재서 쓴다 (K33 규칙).
-     */
-    const place = (): void => {
-      this.goalBox.style.top = `${Math.round(top.getBoundingClientRect().bottom + 6)}px`;
-    };
-    new ResizeObserver(place).observe(top);
-    window.addEventListener('resize', place);
-    place();
+    this.setGoalSurface('home');
 
     /*
      * ── 하단 바 (K47-②) ──────────────────────────────────────────────────
@@ -426,6 +402,11 @@ export class KairoHud {
      */
     this.sheetPanel = { hide: () => this.hide() };
     panelHost.register(this.sheetPanel);
+    panelHost.onChange((open) => {
+      if (!open) this.setGoalSurface('home');
+      else if (this.open === 'menu' || this.open === 'build') this.setGoalSurface(this.open);
+      else this.setGoalSurface('panel');
+    });
 
     /*
      * ── 확정 바 (K32) ──
@@ -569,21 +550,21 @@ export class KairoHud {
     this.riskBox.textContent = text;
   }
 
-  /** A/B/C 목표 갱신 — 각 칩은 자신의 다음 행동을 직접 연다. */
+  /** A/B/C 목표 갱신 — 각 목표는 자신의 다음 행동을 직접 연다. */
   setChips(chips: GoalChip[]): void {
     // 목표는 상태 변경 시점에만 다시 파생된다. callback은 JSON 서명에 남지 않으므로
     // DOM 캐시를 두면 같은 문구에 예전 코스 handle이 남을 수 있다.
-    this.foldHead.textContent = this.goalFold.folded ? `목표 ▸ ${chips.length}` : '목표 ▾';
-    this.chipsBox.replaceChildren();
+    this.primaryGoal.replaceChildren();
+    this.secondaryGoals.replaceChildren();
     for (const c of chips) {
-      const chip = el('div', `kchip${c.tone !== undefined ? ` ${c.tone}` : ''}`);
+      const chip = el('div', `kgoal tap${c.tone !== undefined ? ` ${c.tone}` : ''}`);
       chip.dataset['goalRole'] = c.role;
       chip.setAttribute('aria-label', `${c.badge} ${c.label}`);
-      chip.append(el('span', `kchip-role ${c.role}`, c.badge));
-      chip.append(el('span', 'kchip-ico', c.icon));
-      const txt = el('div', 'kchip-txt');
-      txt.append(el('div', 'kchip-label', c.label));
-      if (c.detail !== undefined) txt.append(el('div', 'kchip-detail', c.detail));
+      chip.append(el('span', `kgoal-role ${c.role}`, c.badge));
+      chip.append(el('span', 'kgoal-ico', c.icon));
+      const txt = el('div', 'kgoal-txt');
+      txt.append(el('div', 'kgoal-label', c.label));
+      if (c.detail !== undefined) txt.append(el('div', 'kgoal-detail', c.detail));
       const bar = el('div', 'kprog');
       const fill = document.createElement('i');
       fill.style.width = `${Math.round(Math.max(0, Math.min(1, c.progress)) * 100)}%`;
@@ -591,7 +572,6 @@ export class KairoHud {
       txt.append(bar);
       chip.append(txt);
       const act = c.action;
-      chip.classList.add('tap');
       chip.setAttribute('role', 'button');
       chip.tabIndex = 0;
       chip.addEventListener('click', (e) => {
@@ -604,28 +584,15 @@ export class KairoHud {
         e.stopPropagation();
         act();
       });
-      this.chipsBox.append(chip);
+      (c.role === 'immediate' ? this.primaryGoal : this.secondaryGoals).append(chip);
     }
-    this.renderGoalFold();
   }
 
-  /** Phase 2가 코스/시설 편집을 열 때 부르는 공개 경계. 편집 구현은 HUD 내부를 알 필요가 없다. */
-  collapseGoalsForEditing(): void {
-    this.goalFold.beginEditing();
-    this.renderGoalFold();
-  }
-
-  /** 편집 종료 시 강제 접힘만 걷고 사용자의 이전 선택으로 돌아간다. */
-  restoreGoalsAfterEditing(): void {
-    this.goalFold.endEditing();
-    this.renderGoalFold();
-  }
-
-  private renderGoalFold(): void {
-    const folded = this.goalFold.folded;
-    this.goalBox.classList.toggle('folded', folded);
-    const n = this.chipsBox.childElementCount;
-    this.foldHead.textContent = folded ? `목표 ▸ ${n}` : '목표 ▾';
+  /** 홈/패널/편집 호출부가 DOM을 직접 만지지 않는 유일한 목표 가시성 경계. */
+  setGoalSurface(mode: GoalSurfaceMode): void {
+    this.goalSurface.set(mode);
+    this.goalBox.dataset['goalSurface'] = mode;
+    this.goalBox.hidden = !this.goalSurface.visible;
   }
 
   /** 메뉴 상단의 판 설정 줄 — 맵·시나리오 이름 (목표란에서 옮겨 왔다, K40) */
@@ -666,7 +633,7 @@ export class KairoHud {
     return this.open === 'menu';
   }
 
-  /** 목표 B/C callback용 — 전체 기둥 탭이 아니라 해당 목표만 메뉴 목적지를 연다. */
+  /** 목표 B/C callback용 — 해당 목표만 메뉴 목적지를 연다. */
   showMenu(): void {
     if (this.open !== 'menu') this.toggle('menu');
   }
@@ -686,6 +653,7 @@ export class KairoHud {
     // 시트를 열면 진행 중이던 조준은 취소한다 (K47-③ — 확정 바는 패널이 아니다)
     this.cancelConfirm();
     this.open = which;
+    this.setGoalSurface(which);
     this.sheet.hidden = false;
     this.buildBody.hidden = which !== 'build';
     this.menuBody.hidden = which !== 'menu';

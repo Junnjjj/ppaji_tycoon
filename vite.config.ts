@@ -1,14 +1,39 @@
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
+import { createBuildIdentity } from './tools/build-identity.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+const buildIdentity = Object.freeze(createBuildIdentity(__dirname));
+
+const buildIdentityPlugin = (): Plugin => ({
+  name: 'ppaji-build-identity',
+  configureServer(server) {
+    server.middlewares.use((request, response, next) => {
+      const pathname = new URL(request.url ?? '/', 'http://localhost').pathname;
+      if (pathname !== '/__ppaji_build') {
+        next();
+        return;
+      }
+      response.statusCode = 200;
+      response.setHeader('content-type', 'application/json; charset=utf-8');
+      response.setHeader('cache-control', 'no-store');
+      response.end(JSON.stringify(buildIdentity));
+    });
+  },
+});
+
 export default defineConfig({
   base: './',
+  plugins: [buildIdentityPlugin()],
+  define: {
+    __PPAJI_BUILD__: JSON.stringify(buildIdentity),
+  },
   server: {
     host: true, // 같은 네트워크의 폰에서 접속 가능하게
     port: 5173,
+    strictPort: true,
     /*
      * 외부 호스트 접속 허용 (기본값은 localhost 만 허용한다).
      *

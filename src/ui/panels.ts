@@ -58,6 +58,18 @@ const DEFAULT: Resolved = { exclusive: true, modal: false };
 export class PanelHost {
   private readonly opts = new Map<Panel, Resolved>();
   private readonly openSet = new Set<Panel>();
+  private readonly listeners = new Set<(open: boolean) => void>();
+
+  /** HUD처럼 모든 패널의 가시성만 필요한 소비자를 위한 단일 전환 경계. */
+  onChange(listener: (open: boolean) => void): () => void {
+    this.listeners.add(listener);
+    listener(this.anyOpen);
+    return () => this.listeners.delete(listener);
+  }
+
+  private changed(): void {
+    for (const listener of this.listeners) listener(this.anyOpen);
+  }
 
   register(p: Panel, o: PanelOptions = {}): void {
     this.opts.set(p, {
@@ -113,12 +125,13 @@ export class PanelHost {
       }
     }
     this.openSet.add(p);
+    this.changed();
     return true;
   }
 
   /** 패널이 닫혔음을 알린다. `hide()` 마지막에 부른다 */
   closed(p: Panel): void {
-    this.openSet.delete(p);
+    if (this.openSet.delete(p)) this.changed();
   }
 
   closeAll(): void {
@@ -129,6 +142,7 @@ export class PanelHost {
   reset(): void {
     this.openSet.clear();
     this.opts.clear();
+    this.changed();
   }
 }
 

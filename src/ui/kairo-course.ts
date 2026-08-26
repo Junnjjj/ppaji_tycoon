@@ -129,6 +129,106 @@ export function courseProjection(
   };
 }
 
+/** 코스 독의 다섯 상태. 라벨·비활성 규칙은 아래 순수 함수 하나가 소유한다. */
+export type CoursePhase = 'create' | 'info' | 'edit' | 'trial' | 'review';
+
+export interface CourseDeltaCell {
+  key: 'thrill' | 'safety' | 'riders' | 'profit';
+  label: string;
+  /** `18→24` (편집) 또는 `18` (정보). 393px 독 한 칸에서 잘리지 않을 길이다. */
+  text: string;
+  tone: '' | 'good' | 'warn' | 'bad';
+}
+
+/** 만원 눈금 + 부호. 단위(`만`)는 셀 끝에 한 번만 붙는다 — 두 번 붙으면 칸을 넘친다. */
+function manNumber(n: number): string {
+  const v = Math.round(n / 1000) / 10;
+  return `${v > 0 ? '+' : ''}${v}`;
+}
+
+/**
+ * 하단 독의 네 지표 — **`courseProjection()` 결과만** 쓴다.
+ *
+ * 예전 요약 줄(`.kcourse-chips`)은 `white-space: nowrap` 한 줄이라 393px 에서
+ * `스릴 18 · 안전 100 · 실제 0…` 로 잘렸다. 현재→예상이 핵심 화면의 전부인데
+ * 그게 첫 화면에서 안 읽혔다. 네 칸 격자로 나누면 각 칸이 자기 폭을 갖는다.
+ */
+export function courseDeltaCells(
+  projection: CourseProjection,
+  showDelta: boolean,
+): CourseDeltaCell[] {
+  const { current, projected } = projection;
+  const pair = (a: string, b: string): string => (showDelta ? `${a}→${b}` : b);
+  return [
+    {
+      key: 'thrill',
+      label: '스릴',
+      text: pair(String(Math.round(current.thrill)), String(Math.round(projected.thrill))),
+      tone: projected.thrill > 75 ? 'warn' : '',
+    },
+    {
+      key: 'safety',
+      label: '안전',
+      text: pair(String(Math.round(current.safety)), String(Math.round(projected.safety))),
+      tone: projected.safety < 60 ? 'bad' : 'good',
+    },
+    {
+      key: 'riders',
+      label: '실제',
+      text: pair(String(current.actualRiders), String(projected.actualRiders)),
+      tone: '',
+    },
+    {
+      key: 'profit',
+      label: '손익',
+      text: `${pair(manNumber(current.profit), manNumber(projected.profit))}만`,
+      tone: projected.profit < 0 ? 'bad' : projected.profit > 0 ? 'good' : '',
+    },
+  ];
+}
+
+export interface CourseDockAction {
+  id: 'settings' | 'cancel' | 'primary';
+  label: string;
+  disabled: boolean;
+}
+
+/**
+ * 상태별 버튼 정체 (§3.3) — 정보 `닫기/루트 조정` · 편집 `설정/취소/시험 운행` ·
+ * 시험 `취소/시험 운행 중` · 리뷰 `다시 조정/적용`.
+ *
+ * ⚠ 라벨을 `refresh()` 안에서 다시 대입하지 말 것. 한때 `Settings` 가 영문으로 남아
+ * 있었던 이유가 바로 그 흩어진 대입이었다 — 정체가 한 곳에 있으면 검사가 잰다.
+ */
+export function courseDockActions(
+  phase: CoursePhase,
+  o: { canTrial: boolean; trialPassed: boolean },
+): CourseDockAction[] {
+  if (phase === 'info') {
+    return [
+      { id: 'cancel', label: '닫기', disabled: false },
+      { id: 'primary', label: '루트 조정', disabled: false },
+    ];
+  }
+  if (phase === 'trial') {
+    return [
+      { id: 'cancel', label: '취소', disabled: false },
+      { id: 'primary', label: '시험 운행 중', disabled: true },
+    ];
+  }
+  if (phase === 'review') {
+    return [
+      { id: 'settings', label: '다시 조정', disabled: false },
+      { id: 'primary', label: '적용', disabled: !o.trialPassed },
+    ];
+  }
+  return [
+    { id: 'settings', label: '설정', disabled: false },
+    { id: 'cancel', label: '취소', disabled: false },
+    { id: 'primary', label: '시험 운행', disabled: !o.canTrial },
+  ];
+}
+
 export interface EquipmentChoice {
   id: string;
   recommended: boolean;
@@ -239,8 +339,14 @@ export interface CoursePanelDeps {
   courseDemand: () => number;
   spend: (n: number) => boolean;
   onChange: () => void;
-  /** HUD는 편집 상태를 저장하지 않고 공개 API로 접기/복원만 한다. */
-  onEditingChange: (editing: boolean) => void;
+  /**
+   * 코스 화면이 주인공인 동안 (v2 §3.3) — 정보·편집·시험·리뷰 전부 포함한다.
+   *
+   * HUD는 편집 상태를 저장하지 않고 공개 API로 목표 표면만 바꾼다. 예전 이름은
+   * `onEditingChange` 였고 **편집일 때만** 참이라, 코스를 열어 놓고 정보를 볼 때는
+   * 목표 표면이 `panel` 로 남아 "코스 모드"를 정체로 잴 수 없었다.
+   */
+  onCourseModeChange: (active: boolean) => void;
   /** 실제 지도 핸들이 움직인 순간. 실행형 온보딩은 이 production 사건만 본다. */
   onRouteDragged: () => void;
   onTrialStarted: () => void;
@@ -259,8 +365,10 @@ export interface CoursePanelDeps {
 export class KairoCoursePanel {
   private readonly root: HTMLDivElement;
   private readonly titleEl: HTMLDivElement;
-  private readonly chipsEl: HTMLDivElement;
+  /** 현재→예상 네 지표. 잘리는 한 줄 요약(`.kcourse-chips`)을 대체한다 (v2 §3.3). */
+  private readonly deltasEl: HTMLDivElement;
   private readonly whyEl: HTMLDivElement;
+  private readonly actsEl: HTMLDivElement;
   private readonly toggleBtn: HTMLButtonElement;
   private readonly closeBtn: HTMLButtonElement;
   private readonly bodyEl: HTMLDivElement;
@@ -289,7 +397,7 @@ export class KairoCoursePanel {
    * 열 때와 확정한 뒤에는 풀린다 — 방금 코스를 놓은 잔교에 계속 붙어 있을 이유가 없다.
    */
   private dockPinned = false;
-  private phase: 'create' | 'info' | 'edit' | 'trial' | 'review' = 'create';
+  private phase: CoursePhase = 'create';
   private edit: CourseEdit | null = null;
   private selectedHandle: number | null = null;
   private editingNotified = false;
@@ -304,17 +412,22 @@ export class KairoCoursePanel {
     this.root.id = 'kairo-course';
     this.root.hidden = true;
 
-    // ── 슬림 바 — 접힘 상태의 전부 ──
-    const bar = el('div', 'kcourse-bar');
-    const sum = el('div', 'kcourse-sum');
+    /*
+     * ── 액션 독 (v2 §3.3) ────────────────────────────────────────────────
+     *
+     * 코스가 화면의 주인공이므로 독은 **지표 1행 + 버튼 1행**이 전부다 (≤112px).
+     * 예전 슬림 바는 요약을 한 줄 `nowrap` 으로 밀어 넣어 393px 에서
+     * `스릴 18 · 안전 100 · 실제 0…` 로 잘렸다 — 현재→예상이 이 화면의 전부인데
+     * 그게 안 읽혔다. 프리셋·장비·보트는 `설정` 뒤로 물러난다.
+     */
+    const dock = el('div', 'kcourse-dock');
     this.titleEl = el('div', 'kcourse-title');
-    this.chipsEl = el('div', 'kcourse-chips');
+    this.deltasEl = el('div', 'kcourse-deltas');
+    this.deltasEl.id = 'kairo-course-deltas';
     this.whyEl = el('div', 'kcourse-why');
-    sum.append(this.titleEl, this.chipsEl, this.whyEl);
 
     this.toggleBtn = el('button', 'kbtn');
     this.toggleBtn.id = 'kairo-course-toggle';
-    this.toggleBtn.textContent = 'Settings';
     this.toggleBtn.setAttribute('aria-label', '코스 설정');
     this.toggleBtn.addEventListener('click', () => {
       if (this.phase === 'review') {
@@ -326,15 +439,14 @@ export class KairoCoursePanel {
       this.setExpanded(this.bodyEl.hidden);
     });
 
-    const acts = el('div', 'kcourse-acts');
-    this.closeBtn = el('button', 'kbtn', '취소');
+    this.closeBtn = el('button', 'kbtn');
     this.closeBtn.id = 'kairo-course-close';
     this.closeBtn.addEventListener('click', () => this.hide());
-    this.confirmBtn = el('button', 'kbtn primary', '시험 운행');
+    this.confirmBtn = el('button', 'kbtn primary');
     this.confirmBtn.id = 'kairo-course-confirm';
     this.confirmBtn.addEventListener('click', () => this.primaryAction());
-    acts.append(this.closeBtn, this.confirmBtn);
-    bar.append(sum, this.toggleBtn, acts);
+    this.actsEl = el('div', 'kcourse-acts');
+    dock.append(this.titleEl, this.deltasEl, this.whyEl, this.actsEl);
 
     // ── 펼침 본문 ──
     this.bodyEl = el('div', 'kcourse-body');
@@ -393,7 +505,7 @@ export class KairoCoursePanel {
       this.trialEl,
       this.listEl,
     );
-    this.root.append(bar, this.bodyEl);
+    this.root.append(dock, this.bodyEl);
     parent.append(this.root);
 
     // 핸들을 끌면 지표가 실시간으로 갱신된다 (§7.3)
@@ -433,6 +545,8 @@ export class KairoCoursePanel {
       this.selectedHandle = existing.handle;
       this.edit = null;
       this.phase = 'info';
+      // 정보도 코스 모드다 — 홈 목표는 코스가 보이는 내내 숨는다.
+      this.notifyEditing(true);
       this.loadCourse(existing);
       this.refresh();
       this.frame();
@@ -465,10 +579,10 @@ export class KairoCoursePanel {
     this.notifyEditing(false);
   }
 
-  private notifyEditing(editing: boolean): void {
-    if (editing === this.editingNotified) return;
-    this.editingNotified = editing;
-    this.deps.onEditingChange(editing);
+  private notifyEditing(active: boolean): void {
+    if (active === this.editingNotified) return;
+    this.editingNotified = active;
+    this.deps.onCourseModeChange(active);
   }
 
   private loadCourse(course: PlacedCourse): void {
@@ -492,7 +606,12 @@ export class KairoCoursePanel {
     this.trialPassed = false;
     this.loadCourse({ handle: edit.handle, ...edit.draft });
     this.notifyEditing(true);
-    this.setExpanded(true);
+    /*
+     * ⚠ 예전엔 여기서 `setExpanded(true)` 였다 — 편집을 시작하자마자 설정 본문이
+     * 열려 화면의 46%를 먹었고, 정작 끌어야 할 핸들이 그 아래로 숨었다.
+     * 편집 상태의 기본은 **독만**이다. 프리셋을 바꾸고 싶으면 `설정`을 누른다.
+     */
+    this.setExpanded(false);
     this.refresh();
     this.frame();
   }
@@ -513,7 +632,6 @@ export class KairoCoursePanel {
 
   private setExpanded(on: boolean): void {
     this.bodyEl.hidden = !on;
-    this.toggleBtn.textContent = 'Settings';
     this.toggleBtn.setAttribute('aria-label', on ? '코스 설정 접기' : '코스 설정 펼치기');
     this.toggleBtn.setAttribute('aria-expanded', String(on));
     /*
@@ -691,15 +809,16 @@ export class KairoCoursePanel {
     this.vehiclesEl.textContent = `${this.vehicles}대`;
     const draft = this.draft();
     const cost = draft ? this.chargeFor(draft) : 0;
-    this.titleEl.textContent = `${preset.name} · ${equip.name} ${this.vehicles}대`;
+    const boat = equip.kind === 'tow' ? TOW_BOATS.find((b) => b.id === this.towBoatId) : undefined;
+    this.titleEl.textContent =
+      `${preset.name} · ${equip.name} ${this.vehicles}대` + (boat ? ` · ${boat.name}` : '');
 
     if (!dock) {
       // 선착장이 없으면 코스도 없다 — 무엇을 하면 되는지 말한다
       this.deps.scene.setCourseOverlay([], [], null);
-      this.chipsEl.textContent = '';
+      this.deltasEl.replaceChildren();
       this.whyEl.textContent = '선착장이 없습니다 — 물가에 플로팅덱을 놓으세요';
-      this.confirmBtn.disabled = true;
-      this.confirmBtn.textContent = '시험 운행';
+      this.renderDock(false);
       this.metricsEl.replaceChildren();
       this.renderList();
       return;
@@ -729,29 +848,35 @@ export class KairoCoursePanel {
     if (!draft) return;
     const projection = courseProjection(this.current(), draft, this.deps.courseDemand());
     const r = projection.projected;
-    const thrillCls = r.thrill > 75 ? 'warn' : '';
-    const safeCls = r.safety < 60 ? 'bad' : 'good';
-    this.chipsEl.replaceChildren(
-      el('span', thrillCls, `스릴 ${Math.round(r.thrill)}`),
-      document.createTextNode(' · '),
-      el('span', safeCls === 'bad' ? 'bad' : '', `안전 ${Math.round(r.safety)}`),
-      document.createTextNode(` · 실제 ${r.actualRiders}명 · 이익 ${won(r.profit)}`),
+    /*
+     * 정보 상태는 **현재값**이다 — 아직 아무것도 안 바꿨는데 `18→18` 이 뜨면
+     * "무엇이 달라지나"라는 화살표의 뜻이 닳는다.
+     */
+    this.deltasEl.replaceChildren(
+      ...courseDeltaCells(projection, this.phase !== 'info').map((c) => {
+        const d = el('div', 'kcourse-delta');
+        d.dataset['metric'] = c.key;
+        d.append(
+          el('div', 'kcourse-delta-label', c.label),
+          el('div', `kcourse-delta-value${c.tone ? ` ${c.tone}` : ''}`, c.text),
+        );
+        return d;
+      }),
     );
 
-    const cell = (label: string, current: number, projected: number, suffix = '', cls = ''): HTMLElement => {
+    // 설정 본문에는 독에 안 들어가는 상세만 남긴다 — 같은 숫자를 두 번 적지 않는다.
+    const cell = (label: string, current: number, projected: number, suffix = ''): HTMLElement => {
       const d = el('div', 'kstat');
       d.append(
         el('div', 'kstat-label', label),
-        el('div', `kstat-value ${cls}`, `${Math.round(current)} → ${Math.round(projected)}${suffix}`),
+        el('div', 'kstat-value', `${Math.round(current)} → ${Math.round(projected)}${suffix}`),
       );
       return d;
     };
     this.metricsEl.replaceChildren(
-      cell('스릴', projection.current.thrill, r.thrill, '', thrillCls),
-      cell('안전', projection.current.safety, r.safety, '', safeCls),
       cell('처리량', projection.current.throughput, r.throughput, '명'),
-      cell('실제 탑승', projection.current.actualRiders, r.actualRiders, '명'),
-      cell('주간 이익', projection.current.profit, r.profit, '원'),
+      cell('주간 매출', projection.current.revenue, r.revenue, '원'),
+      cell('유지비', projection.current.upkeep, r.upkeep, '원'),
     );
 
     /*
@@ -780,27 +905,46 @@ export class KairoCoursePanel {
     }
     this.whyEl.textContent = issues.join(' · ');
     const canPlace = v.ok && cost <= this.deps.cash();
-    this.closeBtn.textContent = this.phase === 'info' ? '닫기' : '취소';
-    this.toggleBtn.textContent = this.phase === 'review' ? '다시 조정' : 'Settings';
+    this.renderDock(canPlace);
     if (this.phase === 'info') {
-      this.confirmBtn.disabled = false;
-      this.confirmBtn.textContent = '루트 조정';
       this.trialEl.textContent = '운행 중 · 지도 코스나 차량을 탭해 연 정보입니다';
     } else if (this.phase === 'trial') {
-      this.confirmBtn.disabled = true;
-      this.confirmBtn.textContent = '시험 운행 4초';
       this.trialEl.textContent = '대표 손님 반응을 확인하는 중…';
     } else if (this.phase === 'review') {
-      this.confirmBtn.disabled = !this.trialPassed;
-      this.confirmBtn.textContent = '적용';
-      this.trialEl.textContent = '시험 완료 · 적용하거나 다시 조정하세요';
+      this.trialEl.textContent =
+        cost > 0 ? `시험 완료 · 변경비 ${won(cost)} · 적용하거나 다시 조정하세요`
+          : '시험 완료 · 적용하거나 다시 조정하세요';
     } else {
-      this.confirmBtn.disabled = !canPlace;
-      this.confirmBtn.textContent = canPlace ? '시험 운행' : '시험 운행';
       this.trialEl.textContent = '';
     }
 
     this.renderList();
+  }
+
+  /**
+   * 독의 버튼 줄 — 정체는 `courseDockActions` 하나가 소유한다.
+   *
+   * 한 상태에 필요 없는 버튼은 **DOM 에서 뺀다** (숨기는 게 아니라). 감춰 두면
+   * 하네스의 `button, [role="button"]` 계수 검사가 안 보이는 것까지 세고,
+   * 사람도 44px 자리를 못 쓴다.
+   */
+  private renderDock(canTrial: boolean): void {
+    const buttons: Record<CourseDockAction['id'], HTMLButtonElement> = {
+      settings: this.toggleBtn,
+      cancel: this.closeBtn,
+      primary: this.confirmBtn,
+    };
+    const actions = courseDockActions(this.phase, {
+      canTrial,
+      trialPassed: this.trialPassed,
+    });
+    this.actsEl.replaceChildren();
+    for (const action of actions) {
+      const button = buttons[action.id];
+      button.textContent = action.label;
+      button.disabled = action.disabled;
+      this.actsEl.append(button);
+    }
   }
 
   private chargeFor(draft: CourseEditDraft): number {
@@ -990,7 +1134,7 @@ export class KairoCoursePanel {
     dockIndex: number;
     dock: Vec2 | null;
     expanded: boolean;
-    phase: 'create' | 'info' | 'edit' | 'trial' | 'review';
+    phase: CoursePhase;
     selectedHandle: number | null;
     trialPassed: boolean;
   } {

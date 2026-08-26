@@ -28,6 +28,7 @@ import { chromium, type CDPSession, type ConsoleMessage, type Page } from 'playw
 import { KAIRO } from '../src/assets/kairo-contract.js';
 // 격자 꼭지점 → 화면 텍셀. 표식 절이 **기대 선분을 스스로 만들 때** 쓴다 (K52)
 import { gridToScreen, tileCenter, TILE_H } from '../src/render/kairo/iso.js';
+import { createBuildIdentity } from './build-identity.js';
 
 const BASE = process.env['PPAJI_URL'] ?? 'http://localhost:5173';
 /*
@@ -37,8 +38,21 @@ const BASE = process.env['PPAJI_URL'] ?? 'http://localhost:5173';
  */
 const URL = `${BASE}/?kairo=1&px=1&debug=1`;
 const HEADED = process.argv.includes('--headed');
+/** 공유 명령이 외부 정체·첫 DOM·393×852 캡처만 빠르게 확인할 때 쓴다. */
+const IDENTITY_ONLY = process.argv.includes('--identity');
+const LOCAL_BUILD = createBuildIdentity(process.cwd());
+const EXPECTED_SHA = process.env['PPAJI_EXPECTED_SHA'] ?? LOCAL_BUILD.sha;
+const EXPECTED_SOURCE_DIGEST = process.env['PPAJI_EXPECTED_SOURCE_DIGEST'] ??
+  LOCAL_BUILD.sourceDigest;
+const RESOLVE_RULE = process.env['PPAJI_RESOLVE_RULE'];
 /** Phase 7의 세로·가로 실제 터치 게이트만 빠르게 재현한다. 전체 회귀 경로는 그대로다. */
 const PHASE7_ONLY = process.argv.includes('--phase7');
+/** 홈/메뉴 셸 v2의 첫 프레임과 실제 터치 전환만 빠르게 재현한다. */
+const SHELL_V2_ONLY = process.argv.includes('--shell-v2');
+/** 코스 v2의 정보→편집→시험→리뷰→적용을 실제 CDP 터치로만 재현한다. */
+const COURSE_V2_ONLY = process.argv.includes('--course-v2');
+/** 사건 미니 장면(Task 6)과 지도 밖 생활 장식(Task 7)만 빠르게 재현한다. */
+const SCENE_V2_ONLY = process.argv.includes('--scene-v2');
 /**
  * 판의 육지를 통째로 포장한다 — K32-B 부터 **잔디는 손님이 못 지나간다.**
  *
@@ -297,7 +311,11 @@ async function auditSurface(page: Page, rootSelector: string): Promise<SurfaceAu
 
 async function main(): Promise<void> {
   console.log(`카이로 검증 — ${URL}`);
-  const browser = await chromium.launch({ channel: 'chrome', headless: !HEADED });
+  const browser = await chromium.launch({
+    channel: 'chrome',
+    headless: !HEADED,
+    ...(RESOLVE_RULE ? { args: [`--host-resolver-rules=${RESOLVE_RULE}`] } : {}),
+  });
   const ctx = await browser.newContext(DEVICE);
   const page = await ctx.newPage();
 
@@ -349,6 +367,49 @@ async function main(): Promise<void> {
   const hasCanvas = await page.evaluate(`document.querySelectorAll('canvas').length`);
   record('부팅 — 캔버스 생성', hasCanvas ? 'pass' : 'fail', `캔버스 ${String(hasCanvas)}개`);
 
+  // ── 1-A. 공유 소스 정체 ──
+  await page.waitForFunction(
+    `(() => !!window.__kairo.build && !!document.querySelector('.kmanage') &&
+      !!document.querySelector('[data-build-identity]'))()`,
+    undefined,
+    { timeout: 15000 },
+  );
+  const sharedSource = await page.evaluate(`(() => ({
+    build: window.__kairo.build,
+    management: !!document.querySelector('.kmanage'),
+    version: (document.querySelector('[data-build-identity]') || {}).textContent || '',
+    viewport: [window.innerWidth, window.innerHeight],
+  }))()` ) as {
+    build: { sha: string; shortSha: string; branch: string; sourceDigest: string; startedAt: string };
+    management: boolean;
+    version: string;
+    viewport: [number, number];
+  };
+  record(
+    '공유 정체 — window.__kairo.build SHA가 현재 HEAD다',
+    sharedSource.build.sha === EXPECTED_SHA ? 'pass' : 'fail',
+    `외부 ${sharedSource.build.sha} · 기대 ${EXPECTED_SHA}`,
+  );
+  record(
+    '공유 정체 — DOM source digest가 현재 dirty tree와 같고 절대 경로를 노출하지 않는다',
+    sharedSource.build.sourceDigest === EXPECTED_SOURCE_DIGEST &&
+      !Object.prototype.hasOwnProperty.call(sharedSource.build, 'worktree') ? 'pass' : 'fail',
+    `외부 ${sharedSource.build.sourceDigest} · 기대 ${EXPECTED_SOURCE_DIGEST}`,
+  );
+  record(
+    '공유 첫 DOM — 최신 경영 루트와 읽기 전용 버전 줄',
+    sharedSource.management && sharedSource.version.includes(sharedSource.build.shortSha)
+      ? 'pass'
+      : 'fail',
+    sharedSource.version,
+  );
+  await page.screenshot({ path: `${SHOT_DIR}/kairo-share-identity.png` });
+  record(
+    '공유 캡처 — 393×852',
+    sharedSource.viewport[0] === 393 && sharedSource.viewport[1] === 852 ? 'pass' : 'fail',
+    `${sharedSource.viewport[0]}×${sharedSource.viewport[1]} · ${SHOT_DIR}/kairo-share-identity.png`,
+  );
+
   // ── 2. 콘솔 에러 / 요청 실패 ──
   record(
     '콘솔 에러 0',
@@ -360,6 +421,786 @@ async function main(): Promise<void> {
     httpFails.length === 0 ? 'pass' : 'fail',
     httpFails.slice(0, 3).join(' | '),
   );
+
+  if (IDENTITY_ONLY) {
+    await browser.close();
+    const failed = results.filter((result) => result.verdict === 'fail');
+    console.log(
+      `\n${failed.length === 0 ? '✅' : '❌'} 공유 정체 ${results.length - failed.length}/${results.length} 통과` +
+        (failed.length ? ` — 실패: ${failed.map((result) => result.name).join(', ')}` : ''),
+    );
+    process.exit(failed.length === 0 ? 0 : 1);
+  }
+
+  if (SHELL_V2_ONLY) {
+    for (const [w, h, tag] of [
+      [393, 852, 'portrait'],
+      [852, 393, 'landscape'],
+    ] as const) {
+      const shellContext = await browser.newContext({ ...DEVICE, viewport: { width: w, height: h } });
+      const shellPage = await shellContext.newPage();
+      await shellPage.addInitScript(`try { localStorage.clear(); } catch {}`);
+      await shellPage.goto(URL, { waitUntil: 'load' });
+      await shellPage.waitForFunction(
+        `(() => document.querySelectorAll('[data-goal-role]').length === 3 &&
+          document.querySelectorAll('.kmanage-action').length === 12)()`,
+        undefined,
+        { timeout: 15000 },
+      );
+      const shellCdp = await shellContext.newCDPSession(shellPage);
+      /*
+       * 홈 셸 v2 는 **한 밴드**다 (주인님 결정, 2026-08-25): A 약 60% · B/C 각 약 20%,
+       * 셋 다 64px. 예전 계약("A 가 전폭")은 상자가 둘이라 HUD 예산 24/36 을 못 지켰다 —
+       * 이제 **밴드**가 세로에서 전폭이고 가로에서는 폰 한 칸 폭(377px)으로 캡된다.
+       */
+      const home = await shellPage.evaluate(`(() => {
+        const root = document.getElementById('kairo-goal');
+        const immediate = document.querySelector('[data-goal-role="immediate"]');
+        const label = immediate && immediate.querySelector('.kgoal-label');
+        const secondary = [...document.querySelectorAll('[data-goal-role="mid"], [data-goal-role="long"]')];
+        const band = root.getBoundingClientRect();
+        const rect = immediate && immediate.getBoundingClientRect();
+        const secondaryRects = secondary.map((item) => item.getBoundingClientRect());
+        const top = document.getElementById('kairo-top').getBoundingClientRect();
+        const controls = [...document.querySelectorAll('#kairo-bar > button')];
+        const targets = [...document.querySelectorAll('#kairo-goal [role="button"]')]
+          .map((item) => { const r = item.getBoundingClientRect(); return Math.min(r.width, r.height); });
+        const rows = [rect, ...secondaryRects];
+        return {
+          legacy: !!document.querySelector('.kchipcol'),
+          visible: !!root && !root.hidden && root.dataset.goalSurface === 'home',
+          count: document.querySelectorAll('#kairo-goal [data-goal-role]').length,
+          immediateText: label ? label.textContent : '',
+          immediateFits: !!label && label.scrollWidth <= label.clientWidth,
+          bandW: Math.round(band.width),
+          bandH: Math.round(band.height),
+          bandFullWidth: band.left <= 8.5 && band.right >= window.innerWidth - 8.5,
+          bandCapped: Math.round(band.width) <= 377,
+          // 셋이 한 줄이다 — A 와 B/C 가 같은 top 을 공유한다.
+          sameRow: rows.length === 3 && rows.every((r) => r && Math.abs(r.top - rows[0].top) <= 1),
+          primaryShare: rect ? rect.width / band.width : 0,
+          secondaryShare: secondaryRects.map((r) => r.width / band.width),
+          belowHeader: band.top >= top.bottom,
+          mapHeight: band.top - top.bottom,
+          headerButtons: document.querySelectorAll('#kairo-top button').length,
+          controls: controls.map((item) => item.id),
+          minTarget: targets.length ? Math.min(...targets) : 0,
+          overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - window.innerWidth,
+        };
+      })()`) as {
+        legacy: boolean; visible: boolean; count: number; immediateText: string;
+        immediateFits: boolean; bandW: number; bandH: number; bandFullWidth: boolean;
+        bandCapped: boolean; sameRow: boolean; primaryShare: number; secondaryShare: number[];
+        belowHeader: boolean; mapHeight: number; headerButtons: number; controls: string[];
+        minTarget: number; overflow: number;
+      };
+      await shellPage.screenshot({ path: `${SHOT_DIR}/kairo-home-shell-v2-${tag}.png` });
+      const bandWidthOk = tag === 'portrait' ? home.bandFullWidth : home.bandCapped;
+      const sharesOk = home.primaryShare >= 0.5 && home.primaryShare <= 0.7 &&
+        home.secondaryShare.length === 2 &&
+        home.secondaryShare.every((share) => share >= 0.15 && share <= 0.25);
+      record(
+        `홈 셸 v2 ${tag} — A/B/C 한 밴드 · A 약 60% · 제목 무잘림`,
+        !home.legacy && home.visible && home.count === 3 && bandWidthOk && home.sameRow &&
+          sharesOk && home.belowHeader && home.immediateFits &&
+          home.immediateText.includes('물려받은 코스 시험 운행') ? 'pass' : 'fail',
+        `A "${home.immediateText}" ${Math.round(home.primaryShare * 100)}% · ` +
+          `B/C ${home.secondaryShare.map((share) => `${Math.round(share * 100)}%`).join('/')} · ` +
+          `밴드 ${home.bandW}×${home.bandH}px · 지도 틈 ${Math.round(home.mapHeight)}px · ` +
+          `캡처 ${SHOT_DIR}/kairo-home-shell-v2-${tag}.png`,
+      );
+      record(
+        `홈 셸 v2 ${tag} — 헤더 0 · 하단 메뉴/건설 · 44px · overflow 0`,
+        home.headerButtons === 0 && JSON.stringify(home.controls) ===
+          JSON.stringify(['kairo-menu-open', 'kairo-build-open']) && home.minTarget >= 44 &&
+          home.overflow <= 0 && home.mapHeight >= (tag === 'portrait' ? 280 : 80) ? 'pass' : 'fail',
+        `타깃 ${home.minTarget}px · 지도 틈 ${Math.round(home.mapHeight)}px · 넘침 ${home.overflow}px`,
+      );
+
+      /*
+       * 경계 상자만 44px인 것은 터치 계약이 아니다. 티커 hit surface는 26px 시각 띠의
+       * 위·아래로 삐져나오므로 목표 밴드/하단 바보다 실제로 위에 있어야 한다. 중앙 세로축의
+       * 44개 표본을 `elementFromPoint`로 확인하고, 가장 취약한 아래쪽 끝을 진짜 CDP 터치한다.
+       * 동시에 hit surface가 메뉴/건설/목표의 상자를 침범하지 않는지도 면적으로 확인한다.
+       */
+      const tickerHit = await shellPage.evaluate(`(() => {
+        const hit = document.querySelector('#kairo-ticker .kticker-hit');
+        if (!hit) return null;
+        const r = hit.getBoundingClientRect();
+        const x = r.left + r.width / 2;
+        const samples = Array.from({ length: 44 }, (_, i) => {
+          const y = r.top + ((i + 0.5) * r.height) / 44;
+          const top = document.elementFromPoint(x, y);
+          return top === hit || hit.contains(top);
+        });
+        const controls = [
+          ...document.querySelectorAll('#kairo-goal [role="button"]'),
+          document.getElementById('kairo-menu-open'),
+          document.getElementById('kairo-build-open'),
+        ].filter(Boolean);
+        const overlap = (a, b) =>
+          Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) *
+          Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+        return {
+          width: r.width,
+          height: r.height,
+          topmost: samples.filter(Boolean).length,
+          controlsClear: controls.every((control) => overlap(r, control.getBoundingClientRect()) === 0),
+          touchX: Math.round(x),
+          touchY: Math.round(r.bottom - 1),
+        };
+      })()`) as {
+        width: number; height: number; topmost: number; controlsClear: boolean;
+        touchX: number; touchY: number;
+      } | null;
+      if (tickerHit) {
+        await shellCdp.send('Input.dispatchTouchEvent', {
+          type: 'touchStart',
+          touchPoints: [{ x: tickerHit.touchX, y: tickerHit.touchY, id: 1 }],
+        });
+        await shellCdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+        await shellPage.waitForTimeout(180);
+      }
+      const inboxOpened = await shellPage.evaluate(
+        `(() => { const inbox = document.getElementById('kairo-inbox'); return !!inbox && !inbox.hidden; })()`,
+      ) as boolean;
+      record(
+        `티커 hit ${tag} — elementFromPoint 44/44 · 컨트롤 비침범 · CDP 터치`,
+        tickerHit !== null && tickerHit.width >= 44 && tickerHit.height >= 44 &&
+          tickerHit.topmost === 44 && tickerHit.controlsClear && inboxOpened ? 'pass' : 'fail',
+        tickerHit
+          ? `${tickerHit.topmost}/44 topmost · ${Math.round(tickerHit.width)}×${Math.round(tickerHit.height)}px · ` +
+            `컨트롤 ${tickerHit.controlsClear ? '비침범' : '겹침'} · 알림함 ${inboxOpened ? '열림' : '닫힘'}`
+          : '.kticker-hit 없음',
+      );
+      if (inboxOpened) {
+        await touchElement(shellPage, shellCdp, '#kairo-inbox-close');
+        await shellPage.waitForFunction(`document.getElementById('kairo-inbox').hidden`);
+      }
+
+      await touchElement(shellPage, shellCdp, '#kairo-menu-open');
+      await shellPage.waitForFunction(`!document.getElementById('kairo-sheet').hidden`);
+      await shellPage.waitForTimeout(260);
+      const menu = await shellPage.evaluate(`(() => {
+        const root = document.getElementById('kairo-goal');
+        const host = document.querySelector('.ksheet-menu > .kmanage');
+        const body = document.querySelector('.ksheet-body').getBoundingClientRect();
+        const today = document.querySelector('.kmanage-today').getBoundingClientRect();
+        const operations = document.querySelector('[data-manage-group="operations"]').getBoundingClientRect();
+        const growth = document.querySelector('[data-manage-group="growth"]').getBoundingClientRect();
+        const semantic = host ? [...host.children].slice(0, 3).map((item) => item.className) : [];
+        const todayButton = document.querySelector('.kmanage-today > .kmanage-action.primary');
+        const todayRect = todayButton && todayButton.getBoundingClientRect();
+        const paint = (element) => {
+          const style = getComputedStyle(element);
+          return {
+            opacity: Number(style.opacity),
+            backgroundColor: style.backgroundColor,
+            backgroundImage: style.backgroundImage,
+          };
+        };
+        return {
+          goalsHidden: !!root && root.hidden && root.dataset.goalSurface === 'menu',
+          directRoot: !!host,
+          semantic: semantic,
+          todayPrimary: !!todayButton && !!todayButton.querySelector('.kmanage-today-icon') &&
+            !!todayButton.querySelector('.kmanage-reason') && !!todayButton.querySelector('.kmanage-detail'),
+          todayTarget: todayRect ? Math.min(todayRect.width, todayRect.height) : 0,
+          operationsInFold: operations.bottom <= body.bottom + 1,
+          growthStartsInFold: growth.top < body.bottom,
+          overflow: host ? host.scrollWidth - host.clientWidth : 999,
+          verticalOrder: today.top < operations.top && operations.top < growth.top,
+          paint: {
+            sheet: paint(document.getElementById('kairo-sheet')),
+            today: paint(document.querySelector('.kmanage-today')),
+            group: paint(document.querySelector('.kmanage-group')),
+            action: paint(document.querySelector('.kmanage-action:not(.primary)')),
+          },
+        };
+      })()`) as {
+        goalsHidden: boolean; directRoot: boolean; semantic: string[]; todayPrimary: boolean;
+        todayTarget: number; operationsInFold: boolean; growthStartsInFold: boolean;
+        overflow: number; verticalOrder: boolean;
+        paint: Record<string, { opacity: number; backgroundColor: string; backgroundImage: string }>;
+      };
+      await shellPage.screenshot({ path: `${SHOT_DIR}/kairo-menu-shell-v2-${tag}.png` });
+      const semanticOrder = menu.semantic[0] === 'kmanage-today' &&
+        menu.semantic[1] === 'kmanage-warnings' && menu.semantic[2] === 'kmanage-groups';
+      record(
+        `메뉴 셸 v2 ${tag} — 목표 숨김 · Today 최상위 한 탭 · semantic order`,
+        menu.goalsHidden && menu.directRoot && semanticOrder && menu.todayPrimary &&
+          menu.todayTarget >= 44 && menu.verticalOrder && menu.overflow <= 0 ? 'pass' : 'fail',
+        `Today ${Math.round(menu.todayTarget)}px · 순서 ${menu.semantic.join(' > ')} · ` +
+          `캡처 ${SHOT_DIR}/kairo-menu-shell-v2-${tag}.png`,
+      );
+      const opaquePaint = Object.values(menu.paint).every((surface) =>
+        surface.opacity === 1 &&
+        (surface.backgroundImage !== 'none'
+          ? !surface.backgroundImage.includes('rgba(')
+          : surface.backgroundColor.startsWith('rgb(') && !surface.backgroundColor.startsWith('rgba(')),
+      );
+      record(
+        `메뉴 셸 v2 ${tag} — 시트·Today·그룹·행 불투명 크림 recipe`,
+        opaquePaint ? 'pass' : 'fail',
+        Object.entries(menu.paint).map(([name, surface]) =>
+          `${name} opacity ${surface.opacity} · ${surface.backgroundImage === 'none' ? surface.backgroundColor : surface.backgroundImage}`,
+        ).join(' | '),
+      );
+      if (tag === 'portrait') {
+        record(
+          '메뉴 셸 v2 portrait 첫 폴드 — Today + 운영 전체 + 성장 일부',
+          menu.operationsInFold && menu.growthStartsInFold ? 'pass' : 'fail',
+          `운영 ${menu.operationsInFold ? '전체' : '잘림'} · 성장 ${menu.growthStartsInFold ? '보임' : '아래'}`,
+        );
+      }
+
+      await touchElement(shellPage, shellCdp, '#kairo-sheet-close');
+      await shellPage.waitForFunction(
+        `document.getElementById('kairo-sheet').hidden && !document.getElementById('kairo-goal').hidden`,
+      );
+      await touchElement(shellPage, shellCdp, '#kairo-build-open');
+      const buildHidden = await shellPage.evaluate(
+        `document.getElementById('kairo-goal').hidden && document.getElementById('kairo-goal').dataset.goalSurface === 'build'`,
+      ) as boolean;
+      await touchElement(shellPage, shellCdp, '#kairo-sheet-close');
+      await touchElement(shellPage, shellCdp, '[data-goal-role="immediate"]');
+      await shellPage.waitForFunction(`!document.getElementById('kairo-course').hidden`);
+      const courseHidden = await shellPage.evaluate(
+        // 코스는 정보 상태부터 **course** 다 — 'panel' 을 허용하면 정체를 안 재는 검사가 된다.
+        `document.getElementById('kairo-goal').hidden && document.getElementById('kairo-goal').dataset.goalSurface === 'course'`,
+      ) as boolean;
+      await touchElement(shellPage, shellCdp, '#kairo-course-close');
+      const restored = await shellPage.evaluate(
+        `!document.getElementById('kairo-goal').hidden && document.getElementById('kairo-goal').dataset.goalSurface === 'home'`,
+      ) as boolean;
+      record(
+        `목표 표면 ${tag} 실제 터치 — build/course 숨김 · 닫기 복원`,
+        buildHidden && courseHidden && restored ? 'pass' : 'fail',
+        `build ${buildHidden} · course ${courseHidden} · home ${restored}`,
+      );
+      await shellContext.close();
+    }
+
+    await browser.close();
+    const failed = results.filter((result) => result.verdict === 'fail');
+    console.log(
+      `\n${failed.length === 0 ? '✅' : '❌'} 홈/메뉴 셸 v2 ${results.length - failed.length}/${results.length} 통과` +
+        (failed.length ? ` — 실패: ${failed.map((result) => result.name).join(', ')}` : ''),
+    );
+    process.exit(failed.length === 0 ? 0 : 1);
+  }
+
+  /*
+   * ── 코스 v2 실제 터치 (Task 4) ──────────────────────────────────────────
+   *
+   * K33 이 남긴 규칙: **화면이 되는지는 진짜 터치로 본다.** 좌표를 직접 넣는
+   * `moveHandleForTest` 는 sim 검사 전용이므로, 이 절은 A 목표 탭 · 루트 조정 ·
+   * 캔버스 손가락 드래그 · 시험 운행 · 적용을 전부 `Input.dispatchTouchEvent` 로 한다.
+   *
+   * 재는 것: 홈 목표가 코스 모드에서 정체로 숨는가 · 독에 영문이 없는가 ·
+   * 현재→예상 네 지표가 **잘리지 않는가** · 독이 112px 이하이고 조작 지도가 남는가 ·
+   * 상태별 버튼 정체 · 시험 중 대표 반응이 서로 다른 시각에 뜨는가.
+   */
+  if (COURSE_V2_ONLY) {
+    /*
+     * 한 프로브로 다섯 상태를 같은 자로 잰다. ⚠ 이름 있는 함수를 쓰지 말 것
+     * (tsx 가 주입하는 `__name` 헬퍼가 페이지 쪽에 없다 — CLAUDE.md).
+     */
+    const PROBE = `(() => {
+      const root = document.getElementById('kairo-course');
+      const goal = document.getElementById('kairo-goal');
+      const dock = root.querySelector('.kcourse-dock');
+      const acts = root.querySelector('.kcourse-acts');
+      const buttons = [...acts.querySelectorAll('button')];
+      const rects = buttons.map((b) => b.getBoundingClientRect());
+      const cells = [...root.querySelectorAll('.kcourse-delta')];
+      const ticker = document.getElementById('kairo-ticker');
+      const courseRect = root.getBoundingClientRect();
+      const tickerRect = ticker.getBoundingClientRect();
+      const tickerVisible = getComputedStyle(ticker).display !== 'none';
+      const tickerOverlap = tickerVisible
+        ? Math.max(0, Math.min(courseRect.right, tickerRect.right) - Math.max(courseRect.left, tickerRect.left)) *
+          Math.max(0, Math.min(courseRect.bottom, tickerRect.bottom) - Math.max(courseRect.top, tickerRect.top))
+        : 0;
+      return {
+        phase: window.__kairo.coursePanel.state.phase,
+        goalsHidden: goal.hidden && goal.dataset.goalSurface === 'course',
+        labels: buttons.map((b) => b.textContent),
+        disabled: buttons.map((b) => b.disabled),
+        minTarget: rects.length ? Math.min(...rects.map((r) => Math.min(r.width, r.height))) : 0,
+        sameRow: rects.length > 1
+          ? rects.every((r) => Math.abs(r.top - rects[0].top) <= 1) : true,
+        dockHeight: Math.round(dock.getBoundingClientRect().height),
+        mapTop: Math.round(root.getBoundingClientRect().top),
+        tickerOverlap: Math.round(tickerOverlap),
+        settingsOpen: !document.getElementById('kairo-course-body').hidden,
+        title: root.querySelector('.kcourse-title').textContent,
+        latin: (root.innerText || '').match(/[A-Za-z]+/g) || [],
+        metrics: cells.map((c) => {
+          const v = c.querySelector('.kcourse-delta-value');
+          return {
+            key: c.dataset.metric,
+            label: c.querySelector('.kcourse-delta-label').textContent,
+            text: v.textContent,
+            clipped: v.scrollWidth > v.clientWidth + 0.5,
+          };
+        }),
+        overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) -
+          window.innerWidth,
+      };
+    })()`;
+    type Probe = {
+      phase: string; goalsHidden: boolean; labels: string[]; disabled: boolean[];
+      minTarget: number; sameRow: boolean; dockHeight: number; mapTop: number;
+      tickerOverlap: number;
+      settingsOpen: boolean; title: string; latin: string[];
+      metrics: { key: string; label: string; text: string; clipped: boolean }[];
+      overflow: number;
+    };
+
+    for (const [w, h, tag] of [
+      [393, 852, 'portrait'],
+      [852, 393, 'landscape'],
+    ] as const) {
+      const courseContext = await browser.newContext({ ...DEVICE, viewport: { width: w, height: h } });
+      const coursePage = await courseContext.newPage();
+      await coursePage.addInitScript(`try { localStorage.clear(); } catch {}`);
+      await coursePage.goto(URL, { waitUntil: 'load' });
+      await coursePage.waitForFunction(
+        `document.querySelectorAll('[data-goal-role]').length === 3`,
+        undefined,
+        { timeout: 15000 },
+      );
+      const courseCdp = await courseContext.newCDPSession(coursePage);
+
+      // ① 정보 — 홈 A 목표 **한 번 탭**으로 물려받은 코스가 열린다
+      await touchElement(coursePage, courseCdp, '[data-goal-role="immediate"]');
+      await coursePage.waitForFunction(
+        `!document.getElementById('kairo-course').hidden && window.__kairo.coursePanel.state.phase === 'info'`,
+      );
+      const info = await coursePage.evaluate(PROBE) as Probe;
+      await coursePage.screenshot({ path: `${SHOT_DIR}/kairo-course-v2-info-${tag}.png` });
+      record(
+        `코스 v2 ${tag} 정보 — 목표 숨김 · 영문 0 · 지표 무잘림 · 닫기/루트 조정`,
+        info.goalsHidden && info.latin.length === 0 && !info.settingsOpen &&
+          JSON.stringify(info.labels) === JSON.stringify(['닫기', '루트 조정']) &&
+          info.metrics.length === 4 && info.metrics.every((m) => !m.clipped) &&
+          info.metrics.every((m) => !m.text.includes('→')) &&
+          info.minTarget >= 43.75 && info.overflow <= 0 ? 'pass' : 'fail',
+        `"${info.title}" · ${info.metrics.map((m) => `${m.label} ${m.text}`).join(' · ')} · ` +
+          `영문 ${info.latin.join(',') || '0'} · 타깃 ${Math.round(info.minTarget)}px · ` +
+          `캡처 ${SHOT_DIR}/kairo-course-v2-info-${tag}.png`,
+      );
+      record(
+        `코스 독과 티커 교차 0 — ${tag}`,
+        info.tickerOverlap === 0 ? 'pass' : 'fail',
+        `교차 ${info.tickerOverlap}px² · 독 ${info.dockHeight}px`,
+      );
+
+      // ② 편집 — 독만 남고 지도가 주인공이다
+      await touchElement(coursePage, courseCdp, '#kairo-course-confirm');
+      await coursePage.waitForFunction(`window.__kairo.coursePanel.state.phase === 'edit'`);
+      const edit = await coursePage.evaluate(PROBE) as Probe;
+      record(
+        `코스 v2 ${tag} 편집 — 설정/취소/시험 운행 한 행 · 독 ≤112px · 설정 접힘`,
+        JSON.stringify(edit.labels) === JSON.stringify(['설정', '취소', '시험 운행']) &&
+          !edit.settingsOpen && edit.dockHeight <= 112 && edit.sameRow &&
+          edit.minTarget >= 43.75 && edit.overflow <= 0 ? 'pass' : 'fail',
+        `독 ${edit.dockHeight}px · 지도 ${edit.mapTop}px · 타깃 ${Math.round(edit.minTarget)}px`,
+      );
+      if (tag === 'portrait') {
+        record(
+          '코스 v2 portrait 조작 지도 — 독 위로 620px 이상 남는다',
+          edit.mapTop >= 620 ? 'pass' : 'fail',
+          `지도 ${edit.mapTop}px / 화면 ${h}px`,
+        );
+      }
+
+      // ③ 실제 캔버스 손가락 드래그 → 현재→예상이 화살표로 갈린다
+      const before = await coursePage.evaluate(
+        `JSON.stringify(window.__kairo.coursePanel.state.handles)`,
+      ) as string;
+      const grab = await coursePage.evaluate(`(() => {
+        const k = window.__kairo, cv = document.querySelector('canvas');
+        const cr = cv.getBoundingClientRect(), v = k.coursePanel.state.handles[0];
+        const r = k.scene.tileScreenRect(Math.round(v.x), Math.round(v.y));
+        return { x: cr.left + (r.x + 16) * cr.width / cv.width,
+                 y: cr.top + (r.y + 8) * cr.height / cv.height };
+      })()`) as { x: number; y: number };
+      await courseCdp.send('Input.dispatchTouchEvent', {
+        type: 'touchStart', touchPoints: [{ x: grab.x, y: grab.y, id: 1 }],
+      });
+      for (let k = 1; k <= 6; k++) {
+        await courseCdp.send('Input.dispatchTouchEvent', {
+          type: 'touchMove', touchPoints: [{ x: grab.x + k * 6, y: grab.y + k * 4, id: 1 }],
+        });
+      }
+      await courseCdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+      await coursePage.waitForTimeout(160);
+      const dragged = await coursePage.evaluate(PROBE) as Probe;
+      const route = await coursePage.evaluate(
+        `JSON.stringify(window.__kairo.coursePanel.state.handles)`,
+      ) as string;
+      await coursePage.screenshot({ path: `${SHOT_DIR}/kairo-course-v2-edit-${tag}.png` });
+      record(
+        `코스 v2 ${tag} 편집 — 실제 드래그 뒤 네 지표가 현재→예상으로 갈린다`,
+        route !== before && dragged.metrics.length === 4 &&
+          dragged.metrics.every((m) => m.text.includes('→') && !m.clipped) &&
+          JSON.stringify(dragged.metrics.map((m) => m.key)) ===
+            JSON.stringify(['thrill', 'safety', 'riders', 'profit']) ? 'pass' : 'fail',
+        `${dragged.metrics.map((m) => `${m.label} ${m.text}`).join(' · ')} · ` +
+          `캡처 ${SHOT_DIR}/kairo-course-v2-edit-${tag}.png`,
+      );
+
+      // ④ 시험 운행 — 대표 반응이 서로 다른 시각에 뜬다 (말풍선은 캔버스 FX 다)
+      await touchElement(coursePage, courseCdp, '#kairo-course-confirm');
+      await coursePage.waitForFunction(`window.__kairo.coursePanel.state.phase === 'trial'`);
+      const trial = await coursePage.evaluate(PROBE) as Probe;
+      await coursePage.screenshot({ path: `${SHOT_DIR}/kairo-course-v2-trial-${tag}.png` });
+      await coursePage.waitForFunction(
+        `window.__kairo.coursePanel.state.phase === 'review'`, undefined, { timeout: 8000 },
+      );
+      const reactions = await coursePage.evaluate(
+        `JSON.stringify(window.__kairo.scene.courseTrialLogForTest())`,
+      ) as string;
+      const log = JSON.parse(reactions) as { text: string; at: number }[];
+      const distinct = new Set(log.map((entry) => entry.at)).size;
+      record(
+        `코스 v2 ${tag} 시험 — 4초 · 대표 반응 3개 이상이 서로 다른 시각`,
+        JSON.stringify(trial.labels) === JSON.stringify(['취소', '시험 운행 중']) &&
+          trial.disabled[1] === true && log.length >= 3 && distinct === log.length ? 'pass' : 'fail',
+        `반응 ${log.map((entry) => `${entry.at}ms ${entry.text}`).join(' | ')} · ` +
+          `캡처 ${SHOT_DIR}/kairo-course-v2-trial-${tag}.png`,
+      );
+
+      // ⑤ 리뷰 → 적용. 두 버튼뿐이고 적용은 실제로 코스를 바꾼다
+      const review = await coursePage.evaluate(PROBE) as Probe;
+      await coursePage.screenshot({ path: `${SHOT_DIR}/kairo-course-v2-review-${tag}.png` });
+      const beforeApply = await coursePage.evaluate(
+        `JSON.stringify(window.__kairo.courses.all)`,
+      ) as string;
+      await touchElement(coursePage, courseCdp, '#kairo-course-confirm');
+      await coursePage.waitForFunction(`document.getElementById('kairo-course').hidden`);
+      const after = await coursePage.evaluate(`(() => ({
+        courses: JSON.stringify(window.__kairo.courses.all),
+        surface: document.getElementById('kairo-goal').dataset.goalSurface,
+        restored: !document.getElementById('kairo-goal').hidden
+      }))()`) as { courses: string; surface: string; restored: boolean };
+      record(
+        `코스 v2 ${tag} 리뷰 → 적용 — 다시 조정/적용 · 실제 반영 · 목표 복원`,
+        JSON.stringify(review.labels) === JSON.stringify(['다시 조정', '적용']) &&
+          review.disabled[1] === false && review.latin.length === 0 &&
+          after.courses !== beforeApply && after.restored && after.surface === 'home'
+          ? 'pass' : 'fail',
+        `리뷰 ${review.labels.join('/')} · 적용 후 목표 ${after.surface} · ` +
+          `캡처 ${SHOT_DIR}/kairo-course-v2-review-${tag}.png`,
+      );
+      await courseContext.close();
+    }
+
+    await browser.close();
+    const courseFailed = results.filter((result) => result.verdict === 'fail');
+    console.log(
+      `\n${courseFailed.length === 0 ? '✅' : '❌'} 코스 v2 ${results.length - courseFailed.length}/${results.length} 통과` +
+        (courseFailed.length ? ` — 실패: ${courseFailed.map((result) => result.name).join(', ')}` : ''),
+    );
+    process.exit(courseFailed.length === 0 ? 0 : 1);
+  }
+
+  /*
+   * ── 사건 미니 장면 · 지도 밖 생활 장식 (Task 6·7) ───────────────────────
+   *
+   * 두 변경 다 **눈에 보이는 것**이라 단위 검사만으로는 부족하다. 삽화는 "테마마다
+   * 다른 장면인가"와 "그림을 못 얻으면 CSS 폴백으로 돌아가는가"를, 장식은 "계획이
+   * 화면(구운 판)에 실제로 올라갔는가"와 "하늘이 여전히 0%인가"를 본다.
+   *
+   * ⚠ 계획만 재면 조용히 통과한다 — 굽기가 접두사로 걸러도 초록이던 상태가 정확히
+   * 그 형태였다. 그래서 씬이 **실제로 얹은** 목록(`surroundDecorForTest`)을 읽는다.
+   */
+  if (SCENE_V2_ONLY) {
+    const sceneContext = await browser.newContext({ ...DEVICE, viewport: { width: 393, height: 852 } });
+    const scenePage = await sceneContext.newPage();
+    const sceneErrors: string[] = [];
+    scenePage.on('pageerror', (e) => sceneErrors.push(String(e)));
+    await scenePage.addInitScript(`try { localStorage.clear(); } catch {}`);
+    await scenePage.goto(URL, { waitUntil: 'load' });
+    await scenePage.waitForFunction(
+      `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
+      undefined,
+      { timeout: 15000 },
+    );
+    const sceneCdp = await sceneContext.newCDPSession(scenePage);
+
+    /*
+     * ── A. 테마 8종이 서로 다른 장면인가 ──
+     *
+     * 카드 뷰의 **production 경로**(`show` → `render` → `paintScene`)를 그대로 태우고
+     * 캔버스 픽셀에서 서명을 뽑는다. 서명은 4×2 칸 평균색이라 "색만 다른 색면"과
+     * "구성이 다른 장면"을 함께 잡는다.
+     */
+    const themeProbe = (await scenePage.evaluate(`(() => {
+      const cv = window.__kairoCards;
+      const out = [];
+      const themes = ['crowd','weather','safety','publicity','staff','market','facility','environment'];
+      for (const theme of themes) {
+        cv.show([{ id: 'probe-' + theme, name: '검사 카드', desc: '삽화 확인', theme: theme,
+          weight: 1, options: [{ label: '확인', detail: '닫기', effects: [] }] }], 9999999, () => {});
+        const visual = document.querySelector('#kairo-card .kcard-visual');
+        const canvas = visual ? visual.querySelector('canvas.kcard-scene') : null;
+        if (!canvas) { out.push({ theme: theme, ok: false }); cv.pickForTest(0); continue; }
+        const probe = document.createElement('canvas');
+        probe.width = canvas.width; probe.height = canvas.height;
+        const g = probe.getContext('2d');
+        g.drawImage(canvas, 0, 0);
+        const d = g.getImageData(0, 0, canvas.width, canvas.height).data;
+        let ink = 0, total = 0;
+        const cells = [];
+        for (let cy = 0; cy < 2; cy++) {
+          for (let cx = 0; cx < 4; cx++) {
+            let r = 0, gg = 0, b = 0, n = 0;
+            const x0 = Math.floor((canvas.width / 4) * cx), x1 = Math.floor((canvas.width / 4) * (cx + 1));
+            const y0 = Math.floor((canvas.height / 2) * cy), y1 = Math.floor((canvas.height / 2) * (cy + 1));
+            for (let y = y0; y < y1; y += 3) {
+              for (let x = x0; x < x1; x += 3) {
+                const k = (y * canvas.width + x) * 4;
+                r += d[k]; gg += d[k + 1]; b += d[k + 2]; n++;
+                total++;
+                if (d[k + 3] > 8) ink++;
+              }
+            }
+            cells.push(Math.round(r / n / 8) + ':' + Math.round(gg / n / 8) + ':' + Math.round(b / n / 8));
+          }
+        }
+        const rect = visual.getBoundingClientRect();
+        out.push({
+          theme: theme, ok: true,
+          hasScene: visual.classList.contains('has-scene'),
+          markShown: getComputedStyle(visual.querySelector('.kcard-visual-mark')).display !== 'none',
+          sprite: visual.dataset.sprite || '',
+          w: canvas.width, h: canvas.height,
+          ink: Math.round((ink / Math.max(1, total)) * 100),
+          sig: cells.join('|'),
+          boxW: Math.round(rect.width), boxH: Math.round(rect.height),
+        });
+        cv.pickForTest(0);
+      }
+      return JSON.stringify(out);
+    })()`)) as string;
+    type ThemeShot = {
+      theme: string; ok: boolean; hasScene?: boolean; markShown?: boolean; sprite?: string;
+      w?: number; h?: number; ink?: number; sig?: string; boxW?: number; boxH?: number;
+    };
+    const shots = JSON.parse(themeProbe) as ThemeShot[];
+    const drawn = shots.filter((shot) => shot.ok);
+    const sigs = new Set(drawn.map((shot) => shot.sig));
+    record(
+      '★ 사건 카드 8종이 실제 그림으로 뜬다 — CSS 숫자 표지가 아니다 (Task 6)',
+      /*
+       * 잉크 문턱 22% — 장면은 **바닥 두 줄 + 물체**라 위쪽은 일부러 비운다.
+       * 그 빈 곳으로 테마 색면(CSS)이 하늘처럼 비친다. 문턱은 "빈 캔버스가 아니다"를
+       * 재는 값이지 화면을 꽉 채우라는 뜻이 아니다 (실측 최소 28%).
+       */
+      drawn.length === 8 && drawn.every((shot) => shot.hasScene === true && (shot.ink ?? 0) >= 22)
+        ? 'pass' : 'fail',
+      `장면 ${drawn.length}/8 · 최소 잉크 ${Math.min(...drawn.map((s) => s.ink ?? 0))}% · ` +
+        `캔버스 ${drawn[0]?.w}×${drawn[0]?.h}`,
+    );
+    record(
+      '★ 테마마다 구성이 다르다 — 이름을 가려도 서명이 갈린다 (Task 6)',
+      sigs.size === drawn.length && drawn.length === 8 ? 'pass' : 'fail',
+      `서로 다른 서명 ${sigs.size}/${drawn.length}`,
+    );
+    record(
+      '장면이 뜨면 CSS 기호는 가려지고 테마 데이터 ID 는 남는다',
+      drawn.every((shot) => shot.markShown === false && (shot.sprite ?? '').startsWith('event/'))
+        ? 'pass' : 'fail',
+      `기호 표시 ${drawn.filter((s) => s.markShown).length}개 · sprite ${drawn[0]?.sprite}`,
+    );
+    record(
+      '삽화가 카드 상자를 밀지 않는다 — 슬롯 높이 116px 유지',
+      drawn.every((shot) => (shot.boxH ?? 0) <= 120 && (shot.boxW ?? 0) <= 380) ? 'pass' : 'fail',
+      `슬롯 ${drawn[0]?.boxW}×${drawn[0]?.boxH}px`,
+    );
+
+    /*
+     * ── A-2. 음성 대조군 — 그림을 못 얻으면 **현재 CSS 슬롯**으로 돌아간다 ──
+     *
+     * 프로바이더가 시설 ID 를 모른다고 답하게 만들면 주역이 사라진다. 그때 카드가
+     * 안 뜨거나 빈 상자가 되면 안 된다 — 카드는 모달이라 못 뜨면 주가 안 넘어간다.
+     */
+    const fallback = (await scenePage.evaluate(`(() => {
+      const h = window.__kairo, cv = window.__kairoCards;
+      const real = h.provider.has.bind(h.provider);
+      h.provider.has = (id) => (id.indexOf('facility/') === 0 ? false : real(id));
+      cv.show([{ id: 'probe-fallback', name: '폴백 확인', desc: '주역 없음', theme: 'crowd',
+        weight: 1, options: [{ label: '확인', detail: '닫기', effects: [] }] }], 9999999, () => {});
+      const visual = document.querySelector('#kairo-card .kcard-visual');
+      const out = {
+        shown: !document.getElementById('kairo-card').hidden,
+        hasScene: visual.classList.contains('has-scene'),
+        canvas: !!visual.querySelector('canvas.kcard-scene'),
+        mark: (visual.querySelector('.kcard-visual-mark').textContent || '').trim(),
+        markShown: getComputedStyle(visual.querySelector('.kcard-visual-mark')).display !== 'none',
+        options: document.querySelectorAll('#kairo-card button[data-option]').length,
+      };
+      cv.pickForTest(0);
+      h.provider.has = real;
+      return JSON.stringify(out);
+    })()`)) as string;
+    const fb = JSON.parse(fallback) as {
+      shown: boolean; hasScene: boolean; canvas: boolean; mark: string; markShown: boolean; options: number;
+    };
+    record(
+      '★ 음성 대조군 — 주역 그림이 없으면 CSS 테마 슬롯이 그대로 폴백한다 (Task 6)',
+      fb.shown && !fb.hasScene && !fb.canvas && fb.markShown && fb.mark.length > 0 && fb.options === 1
+        ? 'pass' : 'fail',
+      `카드 ${fb.shown ? '뜸' : '안 뜸'} · 장면 ${fb.canvas ? '있음' : '없음'} · 기호 "${fb.mark}"`,
+    );
+
+    /*
+     * ── A-3. 실제 게임 경로 — 4주차 첫 일반 카드를 **진짜 터치**로 고른다 ──
+     */
+    const realCard = (await scenePage.evaluate(`(() => {
+      const h = window.__kairo;
+      h.week.abort();
+      while (h.week.week < 3) h.week.run(new h.Rng(8100 + h.week.week), { season: 'summer' });
+      h.openWeekCards();
+      const root = document.getElementById('kairo-card');
+      if (!root || root.hidden) return JSON.stringify({ ok: false });
+      const visual = root.querySelector('.kcard-visual');
+      const canvas = visual.querySelector('canvas.kcard-scene');
+      const btns = [...root.querySelectorAll('button[data-option]')];
+      const rects = btns.map((b) => b.getBoundingClientRect());
+      const pick = btns.find((b) => !b.disabled);
+      const pr = pick ? pick.getBoundingClientRect() : null;
+      return JSON.stringify({
+        ok: true,
+        theme: visual.dataset.theme || '',
+        scene: !!canvas,
+        minTarget: rects.length ? Math.min(...rects.map((r) => Math.min(r.width, r.height))) : 0,
+        oneRow: rects.length > 0 && Math.max(...rects.map((r) => r.top)) - Math.min(...rects.map((r) => r.top)) <= 2,
+        overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - window.innerWidth,
+        x: pr ? Math.round(pr.left + pr.width / 2) : 0,
+        y: pr ? Math.round(pr.top + pr.height / 2) : 0,
+      });
+    })()`)) as string;
+    const rc = JSON.parse(realCard) as {
+      ok: boolean; theme?: string; scene?: boolean; minTarget?: number; oneRow?: boolean;
+      overflow?: number; x?: number; y?: number;
+    };
+    await scenePage.screenshot({ path: `${SHOT_DIR}/kairo-event-card.png` });
+    if (rc.ok && rc.x && rc.y) {
+      await sceneCdp.send('Input.dispatchTouchEvent', {
+        type: 'touchStart',
+        touchPoints: [{ x: rc.x, y: rc.y, id: 1 }],
+      });
+      await sceneCdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+      await scenePage.waitForTimeout(250);
+    }
+    const cardClosed = (await scenePage.evaluate(`window.__kairoCards.visible`)) as boolean;
+    record(
+      '★ 실제 4주차 카드에도 삽화가 뜨고 진짜 터치로 고를 수 있다 (Task 6)',
+      rc.ok === true && rc.scene === true && (rc.minTarget ?? 0) >= 43.75 && rc.oneRow === true &&
+        (rc.overflow ?? 99) <= 1 && cardClosed === false ? 'pass' : 'fail',
+      `테마 ${rc.theme} · 장면 ${rc.scene ? '있음' : '없음'} · 최소 ${Math.round(rc.minTarget ?? 0)}px · ` +
+        `넘침 ${rc.overflow}px · 캡처 ${SHOT_DIR}/kairo-event-card.png`,
+    );
+
+    /*
+     * ── B. 지도 밖 생활 장식 — 굽기가 **실제로 얹은** 것을 읽는다 ──
+     */
+    const decor = (await scenePage.evaluate(`(() => {
+      const sc = window.__kairo.scene;
+      const drawn = sc.surroundDecorForTest();
+      const kinds = {};
+      for (const line of drawn) {
+        const kind = line.split('@')[0];
+        kinds[kind] = (kinds[kind] || 0) + 1;
+      }
+      const list = sc.children.list;
+      const keys = list.map((o) => (o.texture && o.texture.key) || '');
+      return JSON.stringify({
+        drawn: drawn,
+        kinds: Object.keys(kinds).sort(),
+        surroundImages: keys.filter((k) => k === 'surround/ground').length,
+        decoObjects: keys.filter((k) => k.indexOf('deco/') === 0).length,
+        textures: sc.textures.getTextureKeys().length,
+      });
+    })()`)) as string;
+    const dec = JSON.parse(decor) as {
+      drawn: string[]; kinds: string[]; surroundImages: number; decoObjects: number; textures: number;
+    };
+    record(
+      '★ 지도 밖에 생활 장식이 실제로 구워진다 — 표지 3종 복제가 아니다 (Task 7)',
+      dec.drawn.length >= 10 && dec.drawn.length <= 12 && dec.kinds.length === 7 ? 'pass' : 'fail',
+      `${dec.drawn.length}개 · 종류 ${dec.kinds.length} (${dec.kinds.join('/')})`,
+    );
+    record(
+      '장식은 런타임 Phaser 오브젝트를 안 만든다 — 구운 판 한 장뿐 (Task 7)',
+      dec.surroundImages === 1 && dec.decoObjects === 0 ? 'pass' : 'fail',
+      `surround 이미지 ${dec.surroundImages}장 · deco 오브젝트 ${dec.decoObjects}개 · ` +
+        `텍스처 ${dec.textures}종`,
+    );
+
+    /*
+     * ── C. 하늘은 여전히 어디서도 안 보인다 (K38 불변식) ──
+     */
+    const sceneSkyPct = `(() => {
+      const cv = document.querySelector('canvas');
+      const g = document.createElement('canvas');
+      g.width = cv.width; g.height = cv.height;
+      const c = g.getContext('2d');
+      c.drawImage(cv, 0, 0);
+      const d = c.getImageData(0, 0, cv.width, cv.height).data;
+      let n = 0, total = 0;
+      for (let k = 0; k < d.length; k += 4 * 37) {
+        total++;
+        if (Math.abs(d[k] - 122) < 12 && Math.abs(d[k + 1] - 184) < 12 && Math.abs(d[k + 2] - 212) < 12) n++;
+      }
+      return Math.round((n / Math.max(1, total)) * 100);
+    })()`;
+    await scenePage.evaluate(
+      `(() => { const h = window.__kairo; h.flow.frozen = true; h.scene.setDayPhase(null); })()`,
+    );
+    let worstSky = 0;
+    const skySeen: string[] = [];
+    for (const [ci, cj, name] of [
+      [0, 0, '좌상'],
+      [95, 0, '우상'],
+      [0, 71, '좌하'],
+      [95, 71, '우하'],
+      [48, 36, '중앙'],
+    ] as [number, number, string][]) {
+      await scenePage.evaluate(
+        `(() => { const h = window.__kairo; h.scene.setUpscale(1); h.scene.focusTile(${ci}, ${cj}, 0); })()`,
+      );
+      await scenePage.waitForTimeout(320);
+      const pct = (await scenePage.evaluate(sceneSkyPct)) as number;
+      skySeen.push(`${name} ${pct}%`);
+      worstSky = Math.max(worstSky, pct);
+    }
+    await scenePage.screenshot({ path: `${SHOT_DIR}/kairo-surround-decor.png` });
+    record(
+      '★ 장식을 늘려도 하늘은 어디서도 안 보인다 (K38 유지)',
+      worstSky === 0 ? 'pass' : 'fail',
+      `${skySeen.join(' · ')} · 캡처 ${SHOT_DIR}/kairo-surround-decor.png`,
+    );
+    await scenePage.evaluate(`(() => { window.__kairo.flow.frozen = false; })()`);
+    record(
+      '장면/장식 절 콘솔 오류 0',
+      sceneErrors.length === 0 ? 'pass' : 'fail',
+      sceneErrors.slice(0, 2).join(' | '),
+    );
+
+    await sceneContext.close();
+    await browser.close();
+    const sceneFailed = results.filter((result) => result.verdict === 'fail');
+    console.log(
+      `\n${sceneFailed.length === 0 ? '✅' : '❌'} 장면 v2 ${results.length - sceneFailed.length}/${results.length} 통과` +
+        (sceneFailed.length ? ` — 실패: ${sceneFailed.map((result) => result.name).join(', ')}` : ''),
+    );
+    process.exit(sceneFailed.length === 0 ? 0 : 1);
+  }
 
   /*
    * ── Phase 7 경영 IA/온보딩 ───────────────────────────────────────────
@@ -431,7 +1272,7 @@ async function main(): Promise<void> {
     ]);
     record(
       `Phase 7 경영 IA ${tag} — Today 우선 · 세 그룹 · 44px 터치`,
-      view.today.includes('시작 코스') && exact && view.minTarget >= 44 && view.overflow <= 0
+      view.today.includes('물려받은 코스 시험 운행') && exact && view.minTarget >= 44 && view.overflow <= 0
         ? 'pass'
         : 'fail',
       `Today "${view.today}" · 그룹 ${view.names.map((group) => group.id).join('/')} · ` +
@@ -497,8 +1338,15 @@ async function main(): Promise<void> {
         `${openedStep} → ${dragged.step} · 경로 ${routeBefore} → ${dragged.route}`,
       );
 
-      // 변경비가 있는 더 비싼 호환 장비를 실제 버튼으로 고른다. tow면 스포츠 보트도 골라
-      // 현재 코스보다 높은 스릴 기록 후보를 확실히 만든다.
+      /*
+       * 변경비가 있는 더 비싼 호환 장비를 실제 버튼으로 고른다. tow면 스포츠 보트도 골라
+       * 현재 코스보다 높은 스릴 기록 후보를 확실히 만든다.
+       *
+       * ⚠ v2 부터 편집 상태의 기본은 **독만**이다 (지도가 주인공). 장비·보트·프리셋은
+       * `설정` 뒤에 있으므로 사람과 같은 경로로 한 번 더 누르고 들어간다.
+       */
+      await touchElement(phase7Page, phase7Cdp, '#kairo-course-toggle');
+      await phase7Page.waitForFunction(`!document.getElementById('kairo-course-body').hidden`);
       const candidate = await phase7Page.evaluate(`(() => {
         const h = window.__kairo, st = h.coursePanel.state, current = h.courses.all[0];
         const oldCost = h.courseApi.courseEquipment(current.equipId).vehicleCost * current.vehicles;
@@ -597,11 +1445,183 @@ async function main(): Promise<void> {
         step: window.__kairo.onboardingStep()
       }))()`) as { count: number; step: string };
       record(
-        'Phase 7 온보딩 — Today food 목적지 → 실제 food-built → done',
+        '온보딩 v2 — Today food 목적지 → 실제 food-built → 메뉴 확인',
         !!aimed && foodToday?.includes('먹거리') === true && foodBuilt.count === beforeFood + 1 &&
-          foodBuilt.step === 'done' ? 'pass' : 'fail',
+          foodBuilt.step === 'equip-menu' ? 'pass' : 'fail',
         `Today "${foodToday ?? ''}" · 시설 ${beforeFood} → ${foodBuilt.count} · 단계 ${foodBuilt.step}`,
       );
+
+      // 기본 메뉴가 배치와 함께 이미 장착된 매점도 실제 메뉴 시트를 열어 확인하면 전진한다.
+      await touchElement(phase7Page, phase7Cdp, '#kairo-menu-open');
+      const menuToday = await phase7Page.locator('.kmanage-today .kmanage-label').textContent();
+      await touchElement(phase7Page, phase7Cdp, '.kmanage-today .kmanage-action');
+      await phase7Page.waitForFunction(`!document.getElementById('kairo-menu-lab').hidden`);
+      const menuConfirmed = await phase7Page.evaluate(`(() => {
+        const h = window.__kairo;
+        const handle = Number(document.getElementById('kairo-menu-lab').dataset.handle);
+        return {
+          handle: handle,
+          mounted: h.placement.menuIdsOf(handle),
+          operable: h.placement.menuOperabilityOf(handle, (id) => h.menus.hasRecipe(id)).operable,
+          step: h.onboardingStep()
+        };
+      })()`) as { handle: number; mounted: string[]; operable: boolean; step: string };
+      record(
+        '온보딩 v2 — 기본 메뉴가 이미 장착됐어도 실제 시트 확인으로 전진',
+        menuToday?.includes('기본 메뉴') === true && menuConfirmed.operable &&
+          menuConfirmed.mounted.length > 0 && menuConfirmed.step === 'regular-purchase'
+          ? 'pass' : 'fail',
+        `Today "${menuToday ?? ''}" · handle ${menuConfirmed.handle} · ` +
+          `장착 ${menuConfirmed.mounted.join(',')} · 단계 ${menuConfirmed.step}`,
+      );
+      await touchElement(phase7Page, phase7Cdp, '#kairo-menu-lab-close');
+
+      // regular-purchase의 홈 A도 숨은 목록에 scroll만 시키면 안 된다. 실제 손가락으로 A를
+      // 눌러 공용 메뉴 시트와 그 안의 단골 행동 표면이 함께 나타나는지 확인한다.
+      await phase7Page.waitForFunction(
+        `(() => window.__kairo.onboardingStep() === 'regular-purchase' &&
+          !document.getElementById('kairo-goal').hidden)()`,
+      );
+      const regularToday = await phase7Page.locator(
+        '[data-goal-role="immediate"] .kgoal-label',
+      ).textContent();
+      await touchElement(phase7Page, phase7Cdp, '[data-goal-role="immediate"]');
+      await phase7Page.waitForTimeout(150);
+      const regularSurface = await phase7Page.evaluate(`(() => {
+        const sheet = document.getElementById('kairo-sheet');
+        const menu = document.querySelector('.ksheet-menu');
+        const action = document.querySelector('[data-manage-action="regular"]');
+        const rect = action && action.getBoundingClientRect();
+        return {
+          sheet: !!sheet && !sheet.hidden,
+          menu: !!menu && !menu.hidden,
+          action: !!rect && rect.width > 2 && rect.height >= 44,
+          goalsHidden: document.getElementById('kairo-goal').hidden,
+          step: window.__kairo.onboardingStep(),
+        };
+      })()`) as { sheet: boolean; menu: boolean; action: boolean; goalsHidden: boolean; step: string };
+      record(
+        '온보딩 v2 — regular-purchase 홈 A 실제 터치로 메뉴/단골 표면을 연다',
+        regularToday?.includes('구매') === true && regularSurface.sheet && regularSurface.menu &&
+          regularSurface.action && regularSurface.goalsHidden && regularSurface.step === 'regular-purchase'
+          ? 'pass' : 'fail',
+        `A "${regularToday ?? ''}" · 시트 ${regularSurface.sheet} · 메뉴 ${regularSurface.menu} · ` +
+          `단골행동 ${regularSurface.action} · 단계 ${regularSurface.step}`,
+      );
+      if (regularSurface.sheet) await touchElement(phase7Page, phase7Cdp, '#kairo-sheet-close');
+
+      // 생산 주간 루프가 만든 characterId 구매만 regular-purchased가 되고, 같은 주의 실제
+      // 결산 표면이 열려야 done이다. 일반 손님 집계나 하네스 직접 observe는 쓰지 않는다.
+      await phase7Page.evaluate(`window.__kairo.runWeek()`);
+      await phase7Page.waitForFunction(`!document.getElementById('kairo-report').hidden`);
+      const completed = await phase7Page.evaluate(`(() => {
+        const h = window.__kairo, rep = h.getLastReport();
+        const raw = JSON.parse(localStorage.getItem('ppaji.kairo.save.v1'));
+        return {
+          named: rep.menuPurchases
+            .filter((purchase) => !!purchase.characterId)
+            .map((purchase) => ({ characterId: purchase.characterId, menuId: purchase.menuId })),
+          reportVisible: !document.getElementById('kairo-report').hidden,
+          step: h.onboardingStep(),
+          saved: raw.onboarding
+        };
+      })()`) as {
+        named: { characterId: string; menuId: string }[];
+        reportVisible: boolean;
+        step: string;
+        saved: { version: number; step: string };
+      };
+      record(
+        '온보딩 v2 — 이름 있는 실제 구매 → 첫 결산 열기 → done 저장',
+        completed.named.length > 0 && completed.reportVisible && completed.step === 'done' &&
+          completed.saved.version === 2 && completed.saved.step === 'done' ? 'pass' : 'fail',
+        `구매 ${completed.named.map((purchase) => `${purchase.characterId}:${purchase.menuId}`).join(',')} · ` +
+          `결산 ${completed.reportVisible ? '열림' : '닫힘'} · 저장 v${completed.saved.version}/${completed.saved.step}`,
+      );
+      await touchElement(phase7Page, phase7Cdp, '#kairo-report-close');
+      // 이 페이지의 init script는 fresh 검사를 위해 navigation마다 storage를 비운다.
+      // 저장 상태를 새 context에 넘겨 실제 재부팅을 재현해야 reload가 테스트 자체를 지우지 않는다.
+      const onboardingStorage = await phase7Context.storageState();
+      const reloadContext = await browser.newContext({
+        ...DEVICE,
+        viewport: { width: w, height: h },
+        storageState: onboardingStorage,
+      });
+      const reloadPage = await reloadContext.newPage();
+      await reloadPage.goto(URL, { waitUntil: 'load' });
+      await reloadPage.waitForFunction(
+        `(() => { const b = document.getElementById('kairo-debug');
+          return !!window.__kairo && !!b && b.textContent.includes('FPS'); })()`,
+        undefined,
+        { timeout: 15000 },
+      );
+      const reloaded = await reloadPage.evaluate(`(() => ({
+        step: window.__kairo.onboardingStep(),
+        snapshot: JSON.parse(localStorage.getItem('ppaji.kairo.save.v1')).onboarding
+      }))()`) as { step: string; snapshot: { version: number; step: string } };
+      record(
+        '온보딩 v2 — 완료 커서 저장/재로드',
+        reloaded.step === 'done' && reloaded.snapshot.version === 2 &&
+        reloaded.snapshot.step === 'done' ? 'pass' : 'fail',
+        `단계 ${reloaded.step} · 저장 v${reloaded.snapshot.version}/${reloaded.snapshot.step}`,
+      );
+      await reloadContext.close();
+
+      /*
+       * 배포된 중첩 onboarding v1 두 갈래를 **유효한 실제 판 스냅샷**에 심어 브라우저로
+       * 다시 부팅한다. migrate 함수만 부르는 단위 테스트로는 main의 UI 커서 배선을 못 잰다.
+       */
+      const validSave = await phase7Page.evaluate(
+        `localStorage.getItem('ppaji.kairo.save.v1')`,
+      ) as string;
+      for (const legacyStep of ['done', 'build-food'] as const) {
+        const legacySave = {
+          ...(JSON.parse(validSave) as Record<string, unknown>),
+          onboarding: { version: 1, step: legacyStep },
+        };
+        const legacyContext = await browser.newContext({ ...DEVICE, viewport: { width: w, height: h } });
+        const legacyPage = await legacyContext.newPage();
+        await legacyPage.addInitScript(
+          `localStorage.setItem('ppaji.kairo.save.v1', ${JSON.stringify(JSON.stringify(legacySave))})`,
+        );
+        await legacyPage.goto(URL, { waitUntil: 'load' });
+        await legacyPage.waitForFunction(
+          `(() => !!window.__kairo && document.querySelectorAll('[data-goal-role]').length === 3)()`,
+          undefined,
+          { timeout: 15000 },
+        );
+        const legacyBoot = await legacyPage.evaluate(`(() => ({
+          step: window.__kairo.onboardingStep(),
+          goal: document.querySelector('[data-goal-role="immediate"] .kgoal-label').textContent,
+          canvas: document.querySelectorAll('canvas').length
+        }))()`) as { step: string; goal: string; canvas: number };
+
+        if (legacyStep === 'done') {
+          record(
+            'legacy v1 done 세이브 브라우저 부팅',
+            legacyBoot.step === 'done' && legacyBoot.canvas > 0 &&
+              legacyBoot.goal.includes('코스') ? 'pass' : 'fail',
+            `단계 ${legacyBoot.step} · A "${legacyBoot.goal}" · 캔버스 ${legacyBoot.canvas}`,
+          );
+        } else {
+          const legacyCdp = await legacyContext.newCDPSession(legacyPage);
+          await touchElement(legacyPage, legacyCdp, '[data-goal-role="immediate"]');
+          await legacyPage.waitForFunction(`!document.getElementById('kairo-sheet').hidden`);
+          const actionable = await legacyPage.evaluate(`(() => ({
+            step: window.__kairo.onboardingStep(),
+            build: !document.querySelector('.ksheet-build').hidden,
+            title: document.querySelector('#kairo-sheet .ksheet-title').textContent
+          }))()`) as { step: string; build: boolean; title: string };
+          record(
+            'legacy v1 미완료 세이브 A 행동',
+            legacyBoot.step === 'build-food' && legacyBoot.goal.includes('먹거리') &&
+              actionable.step === 'build-food' && actionable.build && actionable.title.includes('건설')
+              ? 'pass' : 'fail',
+            `A "${legacyBoot.goal}" → ${actionable.title} · 단계 ${actionable.step}`,
+          );
+        }
+        await legacyContext.close();
+      }
     } else {
       const managementAudit = await auditSurface(phase7Page, '.kmanage');
       record(
@@ -624,6 +1644,14 @@ async function main(): Promise<void> {
           courseAudit.minTarget >= 43.75 ? 'pass' : 'fail',
         `컨트롤 ${courseAudit.controls} · 최소 ${courseAudit.minTarget}px · ` +
           `미도달 ${courseAudit.unreachable} · 문서 넘침 ${courseAudit.documentOverflow}px`,
+      );
+      /*
+       * ⚠ 리뷰 독에는 취소가 없다 (v2 §3.3 — `다시 조정 / 적용` 둘뿐). 사람과 같은
+       * 경로로 편집으로 되돌린 뒤에 취소한다.
+       */
+      await touchElement(phase7Page, phase7Cdp, '#kairo-course-toggle');
+      await phase7Page.waitForFunction(
+        `window.__kairo.coursePanel.state.phase !== 'review'`,
       );
       await touchElement(phase7Page, phase7Cdp, '#kairo-course-close');
 
@@ -3338,8 +4366,8 @@ async function main(): Promise<void> {
       ok: true, maps: maps.length, scens: scens.length, locked: locked,
       minH: hs.length ? Math.min.apply(null, hs) : 0,
       detailChanged: before !== after,
-      // K40: 목표란은 의뢰 칩 기둥이 됐다 — 칩 수와 진행바, 메뉴의 판 설정 줄을 본다
-      goalChips: goal ? goal.querySelectorAll('.kchip').length : 0,
+      // 홈 셸 v2: A/B/C 목표와 진행바, 메뉴의 판 설정 줄을 본다
+      goalChips: goal ? goal.querySelectorAll('.kgoal').length : 0,
       goalBars: goal ? goal.querySelectorAll('.kprog').length : 0,
       goalText: goal ? goal.textContent : '(없음)',
       contextText: (document.getElementById('kairo-context') || {}).textContent || '',
@@ -3391,7 +4419,7 @@ async function main(): Promise<void> {
     `최소 ${scenarioUi.minH}px`,
   );
   record(
-    '★ 다음 할 일이 화면에 상시 표시된다 — 의뢰 칩 + 진행바 (K40, UX 검수 §1)',
+    '★ 다음 할 일이 화면에 상시 표시된다 — A/B/C 목표 + 진행바 (홈 셸 v2)',
     (scenarioUi.goalChips ?? 0) >= 2 && (scenarioUi.goalBars ?? 0) >= 2 ? 'pass' : 'fail',
     `칩 ${scenarioUi.goalChips} · 진행바 ${scenarioUi.goalBars} · "${(scenarioUi.goalText ?? '').slice(0, 60)}"`,
   );
@@ -3770,9 +4798,17 @@ async function main(): Promise<void> {
     /*
      * K33: 패널은 **슬림 바가 기본**이다. 프리셋은 펼쳐야 나온다 — 예전엔 열자마자
      * 화면의 49% 를 먹었고, 그래서 정작 끌 핸들이 화면 밖으로 밀렸다.
+     *
+     * ⚠ v2: 경영 메뉴의 '코스'는 **물려받은 코스를 정보 상태로** 연다. 정보 독에는
+     * '설정'이 없다 (닫기/루트 조정 둘뿐) — 사람과 같은 경로로 편집에 들어간 뒤 편다.
      */
     const collapsedH = Math.round(panel.getBoundingClientRect().height);
-    document.getElementById('kairo-course-toggle').click();
+    if (window.__kairo.coursePanel.state.phase === 'info') {
+      document.getElementById('kairo-course-confirm').click();
+    }
+    const toggle = document.getElementById('kairo-course-toggle');
+    if (!toggle) return { ok: false, why: '설정 버튼이 없다 (phase ' + window.__kairo.coursePanel.state.phase + ')' };
+    toggle.click();
     const expandedH = Math.round(panel.getBoundingClientRect().height);
     const tabs = [...panel.querySelectorAll('button[data-preset]')];
     const heights = tabs.map((b) => Math.round(b.getBoundingClientRect().height));
@@ -4346,14 +5382,14 @@ async function main(): Promise<void> {
     visible: window.__kairo.coursePanel.visible,
     phase: window.__kairo.coursePanel.state.phase,
     handle: window.__kairo.coursePanel.state.selectedHandle,
-    goalsFolded: document.getElementById('kairo-goal').classList.contains('folded')
-  }))()`)) as { visible: boolean; phase: string; handle: number | null; goalsFolded: boolean };
+    goalsHidden: document.getElementById('kairo-goal').hidden
+  }))()`)) as { visible: boolean; phase: string; handle: number | null; goalsHidden: boolean };
   record(
     '★ 지도의 기존 코스/차량 터치 → 코스 정보',
     !!infoPoint && infoState.visible && infoState.phase === 'info' && infoState.handle === infoPoint.handle
       ? 'pass'
       : 'fail',
-    `phase ${infoState.phase} · handle ${infoState.handle} · 목표 ${infoState.goalsFolded ? '접힘' : '펼침'}`,
+    `phase ${infoState.phase} · handle ${infoState.handle} · 목표 ${infoState.goalsHidden ? '숨김' : '보임'}`,
   );
 
   const cancelBefore = (await page.evaluate(
@@ -4416,13 +5452,18 @@ async function main(): Promise<void> {
     handles: JSON.stringify(window.__kairo.coursePanel.state.handles),
     first: window.__kairo.coursePanel.state.handles[0],
     phase: window.__kairo.coursePanel.state.phase,
-    goalsFolded: document.getElementById('kairo-goal').classList.contains('folded'),
-    comparison: document.getElementById('kairo-course-metrics').textContent
+    goalsHidden: document.getElementById('kairo-goal').hidden,
+    /*
+     * ⚠ 예전엔 설정 본문 안의 '#kairo-course-metrics' 를 읽었다. v2 부터 그 본문은
+     * 편집 중 **접혀 있으므로**, 숨은 요소의 textContent 로 "화면에 보인다"를 재면
+     * 조용히 통과하는 검사가 된다 (K33 의 재발). 보이는 독을 읽는다.
+     */
+    comparison: document.getElementById('kairo-course-deltas').textContent
   }))()`)) as {
     handles: string;
     first: { x: number; y: number };
     phase: string;
-    goalsFolded: boolean;
+    goalsHidden: boolean;
     comparison: string;
   };
   const reachedDragTarget = !!validDrag && editMoved.first.x === validDrag.target.x &&
@@ -4430,10 +5471,10 @@ async function main(): Promise<void> {
   record(
     '★ 기존 코스 핸들을 진짜 터치로 드래그하면 투영 지표가 바뀐다',
     !!validDrag && validDrag.fromHitsCanvas && validDrag.toHitsCanvas && reachedDragTarget &&
-      editMoved.handles !== editBefore && editMoved.comparison.includes('→') && editMoved.goalsFolded
+      editMoved.handles !== editBefore && editMoved.comparison.includes('→') && editMoved.goalsHidden
       ? 'pass'
       : 'fail',
-    `phase ${editMoved.phase} · 목표 ${editMoved.goalsFolded ? '접힘' : '펼침'} · ` +
+    `phase ${editMoved.phase} · 목표 ${editMoved.goalsHidden ? '숨김' : '보임'} · ` +
       `canvas ${validDrag?.fromHitsCanvas && validDrag.toHitsCanvas ? '적중' : '빗나감'} · ` +
       `${editBefore} → ${editMoved.handles} (목표 ${JSON.stringify(validDrag?.target ?? null)})`,
   );
@@ -4495,6 +5536,9 @@ async function main(): Promise<void> {
     vehicles: window.__kairo.coursePanel.state.vehicles,
     phase: window.__kairo.coursePanel.state.phase
   }))()`)) as { handle: number; vehicles: number; phase: string };
+  // v2: 차량 대수는 `설정` 뒤다 — 편집 독에는 지표와 버튼 한 줄만 있다.
+  await touchButton('#kairo-course-toggle');
+  await page.waitForFunction(`!document.getElementById('kairo-course-body').hidden`);
   const plus = page.locator('#kairo-course [data-veh="1"]');
   const plusBox = await plus.boundingBox();
   if (plusBox) await page.touchscreen.tap(plusBox.x + plusBox.width / 2, plusBox.y + plusBox.height / 2);
@@ -5185,26 +6229,41 @@ async function main(): Promise<void> {
    *
    * 세로·가로를 **둘 다** 본다. 한쪽만 보면 안 본 쪽이 깨진다.
    */
+  /*
+   * ⚠ **통과 상자(`display: contents`)는 뚫고 들어간다.** 홈 셸 v2 의 목표 루트가
+   * 그 꼴이다 — 자기 상자가 없고 A 카드와 B/C 칩만 칠한다. 뚫지 않으면 0×0 이라
+   * 건너뛰어져, 예산이 내려간 게 아니라 **HUD 를 안 세는 검사**가 된다
+   * (「검사가 조용히 통과」). 뚫으면 실제 칠하는 자식이 그대로 예산에 들어온다.
+   */
   const MEASURE_HUD = `(() => {
     const W = innerWidth, H = innerHeight;
     const boxes = [];
+    const collect = (node) => {
+      const st = getComputedStyle(node);
+      if (st.display === 'none' || st.visibility === 'hidden') return;
+      if (st.display === 'contents') {
+        for (const child of node.children) {
+          if (!child.hidden) collect(child);
+        }
+        return;
+      }
+      const r = node.getBoundingClientRect();
+      if (r.width < 2 || r.height < 2) return;
+      boxes.push([r.left, r.top, r.right, r.bottom]);
+    };
     for (const el of document.body.children) {
       if (el.tagName === 'CANVAS' || el.id === 'game' || el.hidden) continue;
       // 디버그 오버레이는 개발용이라 실제 플레이에서는 숨는다. 이 하네스가 부팅
       // 판정에 쓰느라 켜 둔 것뿐이므로 예산에서 뺀다 (실제 사용자에게 없는 비용이다)
       if (el.id === 'kairo-debug') continue;
-      const st = getComputedStyle(el);
-      if (st.display === 'none' || st.visibility === 'hidden') continue;
-      const r = el.getBoundingClientRect();
-      if (r.width < 2 || r.height < 2) continue;
-      boxes.push([r.left, r.top, r.right, r.bottom]);
+      collect(el);
     }
     let hit = 0, tot = 0;
     for (let y = 0; y < H; y += 4) for (let x = 0; x < W; x += 4) {
       tot++;
       if (boxes.some((c) => x >= c[0] && x <= c[2] && y >= c[1] && y <= c[3])) hit++;
     }
-    const ctrl = [...document.querySelectorAll('button, select, input')].filter((b) => {
+    const ctrl = [...document.querySelectorAll('button, select, input, [role="button"]')].filter((b) => {
       const r = b.getBoundingClientRect();
       return r.width > 2 && r.height > 2;
     });
@@ -5268,13 +6327,12 @@ async function main(): Promise<void> {
       `${m.chrome}%`,
     );
     /*
-     * K47-② — 상시 컨트롤은 **둘뿐**이다 (계획 §2). 하루»·주 스킵은 없앴고,
-     * 리포트는 알림함 행으로, 목표 접기는 칩 기둥 머리(div)로 내려갔다. 티커 띠와
-     * 칩 기둥·접기 머리가 전부 `role="button"` 인 div 인 것이 이 숫자를 지키는 장치다.
+     * 네이티브 버튼뿐 아니라 모든 role=button도 센다. 홈에서는 메뉴·건설 + 목표 A/B/C +
+     * 티커 hit surface까지 6개이고, 모두 같은 44px 하한을 지켜야 한다.
      */
     record(
-      `${tag} — 상시 컨트롤 2개 (메뉴·건설)`,
-      m.controls === 2 ? 'pass' : 'fail',
+      `${tag} — 상시 행동 표면 6개 (메뉴·건설·목표 A/B/C·티커)`,
+      m.controls === 6 ? 'pass' : 'fail',
       `${m.controls}개`,
     );
     record(`${tag} — 터치 타깃 44px · 가로 넘침 0`,
@@ -5427,90 +6485,55 @@ async function main(): Promise<void> {
       `최소 ${opened.minTap}px`,
     );
     /*
-     * K46-③ 겹침 + K47-② 접기 — 칩 기둥은 헤더 실측 아래에 있고, **기둥 맨 위
-     * 머리 행**을 누르면 칩이 접힌다 (헤더의 `목표 ▾` 버튼이 여기로 내려왔다).
-     *
-     * ⚠ 머리는 이제 `<button>` 이 아니라 div 다 (상시 컨트롤 2개를 지키려고). 그래서
-     *   **진짜 터치**로 누른다 — `.click()` 은 `pointer-events` 나 z-순서가 틀려도
-     *   통과한다. `.kchipcol` 이 `pointer-events: none` 이라 머리에 `auto` 가 빠지면
-     *   탭이 통째로 지도로 새는데, 그 실패는 실터치로만 보인다 (K33 규칙).
-     * ⚠ 손잡이를 **id 로 찾지 않는다** — 구조(`#kairo-goal` 의 자식 중 칩 목록이
-     *   아닌 것)로 찾는다. id 를 박으면 머리가 사라져도 이름만 살려 두면 통과한다.
-     * ⚠ **"머리를 눌러도 메뉴가 안 열린다"를 같은 판정에 AND 로 넣는다.** 기둥 전체가
-     *   클릭 시 메뉴를 여는 지름길이라, 머리의 `stopPropagation()` 이 빠지면 접을
-     *   때마다 시트가 같이 열린다 — 이 검사가 그 회귀를 잡는 유일한 곳이다.
-     * 음성 대조군은 내장이다: 토글이 죽으면 '접힘' 판정이, top 이 고정값으로
-     * 돌아가면 겹침 판정이 실패한다.
+     * 예산 절의 짝 — HUD 가 예산 안에 들어온 **이유**가 한 밴드이기 때문임을 여기서 잰다.
+     * 세로는 밴드가 전폭, 가로는 폰 한 칸 폭(377px) 캡이다.
      */
-    const FOLD_READ = `(() => {
-      const list = document.querySelector('#kairo-goal .kchiplist');
-      const sheet = document.getElementById('kairo-sheet');
-      return {
-        display: list ? getComputedStyle(list).display : '(칩 목록 없음)',
-        sheet: !!sheet && !sheet.hidden,
-      };
-    })()`;
-    const foldGeom = (await pg.evaluate(`(() => {
+    const goalGeom = (await pg.evaluate(`(() => {
       const top = document.getElementById('kairo-top').getBoundingClientRect();
       const goal = document.getElementById('kairo-goal');
-      const g = goal.getBoundingClientRect();
-      // 머리 = 기둥의 자식 중 칩 목록이 아닌 것 (클래스 이름을 박지 않는다)
-      const head = goal.querySelector(':scope > *:not(.kchiplist)');
-      const hr = head ? head.getBoundingClientRect() : null;
-      const list = goal.querySelector('.kchiplist');
+      const immediate = goal.querySelector('[data-goal-role="immediate"]');
+      const label = immediate && immediate.querySelector('.kgoal-label');
+      const secondary = [...goal.querySelectorAll('[data-goal-role="mid"], [data-goal-role="long"]')];
+      const band = goal.getBoundingClientRect();
+      const ir = immediate && immediate.getBoundingClientRect();
+      const rows = [ir, ...secondary.map((item) => item.getBoundingClientRect())];
+      const taps = [...goal.querySelectorAll('[role="button"]')]
+        .map((item) => { const r = item.getBoundingClientRect(); return Math.min(r.width, r.height); });
       return {
-        gap: Math.round(g.top - top.bottom),
-        hasHead: !!head,
-        headTag: head ? head.tagName.toLowerCase() : '',
-        before: list ? getComputedStyle(list).display : '(칩 목록 없음)',
-        x: hr ? Math.round(hr.left + hr.width / 2) : 0,
-        y: hr ? Math.round(hr.top + hr.height / 2) : 0,
+        legacy: !!document.querySelector('.kchipcol'),
+        visible: !goal.hidden && goal.dataset.goalSurface === 'home',
+        bandW: Math.round(band.width),
+        bandFullWidth: band.left <= 8.5 && band.right >= window.innerWidth - 8.5,
+        bandCapped: Math.round(band.width) <= 377,
+        sameRow: rows.length === 3 && rows.every((r) => r && Math.abs(r.top - rows[0].top) <= 1),
+        primaryShare: ir ? ir.width / band.width : 0,
+        belowHeader: band.top >= top.bottom,
+        fits: !!label && label.scrollWidth <= label.clientWidth,
+        minTap: taps.length ? Math.min(...taps) : 0,
       };
     })()`)) as {
-      gap: number;
-      hasHead: boolean;
-      headTag: string;
-      before: string;
-      x: number;
-      y: number;
+      legacy: boolean;
+      visible: boolean;
+      bandW: number;
+      bandFullWidth: boolean;
+      bandCapped: boolean;
+      sameRow: boolean;
+      primaryShare: number;
+      belowHeader: boolean;
+      fits: boolean;
+      minTap: number;
     };
-    let foldedDisp = '(머리 없음)';
-    let afterDisp = '(머리 없음)';
-    let menuLeaked = false;
-    if (foldGeom.hasHead) {
-      await pgTouch('touchStart', foldGeom.x, foldGeom.y);
-      await pgTouch('touchEnd', 0, 0);
-      await pg.waitForTimeout(220);
-      const s1 = (await pg.evaluate(FOLD_READ)) as { display: string; sheet: boolean };
-      await pgTouch('touchStart', foldGeom.x, foldGeom.y);
-      await pgTouch('touchEnd', 0, 0);
-      await pg.waitForTimeout(220);
-      const s2 = (await pg.evaluate(FOLD_READ)) as { display: string; sheet: boolean };
-      foldedDisp = s1.display;
-      afterDisp = s2.display;
-      menuLeaked = s1.sheet || s2.sheet;
-      // 이 절이 연 것은 이 절이 닫는다 — 시트가 새어 열렸으면 스크린샷 전에 치운다
-      if (menuLeaked) {
-        await pg.evaluate(`(() => {
-          const c = document.getElementById('kairo-sheet-close');
-          if (c) c.click();
-        })()`);
-        await pg.waitForTimeout(150);
-      }
-    }
+    const bandOk = tag === '세로' ? goalGeom.bandFullWidth : goalGeom.bandCapped;
     record(
-      `${tag} — ★ 목표 기둥: 헤더와 안 겹치고 · 머리 탭으로 접힌다 · 메뉴는 안 열린다 (K47-②)`,
-      foldGeom.gap >= 0 &&
-        foldGeom.hasHead &&
-        foldGeom.before !== 'none' &&
-        foldedDisp === 'none' &&
-        afterDisp !== 'none' &&
-        !menuLeaked
+      `${tag} — ★ 홈 목표: A/B/C 한 밴드 · A 약 60% · 제목 무잘림 · 44px`,
+      !goalGeom.legacy && goalGeom.visible && bandOk && goalGeom.sameRow &&
+        goalGeom.primaryShare >= 0.5 && goalGeom.primaryShare <= 0.7 &&
+        goalGeom.belowHeader && goalGeom.fits && goalGeom.minTap >= 44
         ? 'pass'
         : 'fail',
-      `간격 ${foldGeom.gap}px · 머리 <${foldGeom.headTag || '없음'}> · ` +
-        `${foldGeom.before} → ${foldedDisp} → ${afterDisp} · ` +
-        `메뉴 ${menuLeaked ? '열렸다(stopPropagation 회귀!)' : '안 열림'}`,
+      `밴드 ${goalGeom.bandW}px · A ${Math.round(goalGeom.primaryShare * 100)}% · ` +
+        `같은 행 ${goalGeom.sameRow} · 헤더 아래 ${goalGeom.belowHeader} · ` +
+        `제목 ${goalGeom.fits ? '맞음' : '넘침'} · 최소 ${Math.round(goalGeom.minTap)}px`,
     );
     await pg.screenshot({ path: `${SHOT_DIR}/kairo-hud-${tag}.png` });
     await cx.close();
@@ -7981,9 +9004,8 @@ async function main(): Promise<void> {
    * 반대로 알림함은 `panelHost` 에 등록된 시트라 **열면 멈춘다** — 둘 다 재야
    * "안 멈춘다"가 "원래 안 돌던 판이었다"의 다른 이름이 아님이 증명된다.
    *
-   * 계약 (감독이 확정): 띠 `#kairo-ticker` 는 **div + role=button + tabindex=0** 이다.
-   * 버튼이 아닌 것은 의도된 선택이다 — 버튼이면 "상시 컨트롤 N개"와 44px 터치 타깃
-   * 검사에 잡혀 HUD 예산이 티커 때문에 흔들린다.
+   * 보이는 26px 띠와 44px `.kticker-hit[role=button]`을 따로 잰다. HUD 예산은 보이는
+   * 띠만 세고 행동 감사는 role surface까지 센다.
    *
    * ⚠ 이 절은 하네스의 **마지막**이다. 앞선 절이 남긴 붓·패널·주 상태를 먼저 치우고
    * 시작한다 (하네스 절은 자기가 연 것을 닫는다 — 잔해 위에서 재면 원인을 알 수 없다).
@@ -8019,28 +9041,31 @@ async function main(): Promise<void> {
     h.scene.setAutoTick(true);
     h.flow.frozen = true; // 사건을 내가 일으킬 때까지 시간을 세운다 (대조군 구간)
     const strip = document.getElementById('kairo-ticker');
+    const hit = strip && strip.querySelector('.kticker-hit');
     const line = document.querySelector('#kairo-ticker .kticker-line');
     const r = strip ? strip.getBoundingClientRect() : null;
+    const hr = hit ? hit.getBoundingClientRect() : null;
     /*
      * 상시 컨트롤 수 — HUD 절(9b)의 MEASURE_HUD 와 같은 셈법이다. 티커가 div 면
      * 여기 안 잡혀 2가 유지되고, button 으로 만들어졌으면 3이 된다.
      * ⚠ K47-② 로 하루»·리포트·목표접기가 전부 빠져 기대값이 5 → **2** 가 됐다
      */
-    const ctrl = [...document.querySelectorAll('button, select, input')].filter((b) => {
+    const ctrl = [...document.querySelectorAll('button, select, input, [role="button"]')].filter((b) => {
       const rr = b.getBoundingClientRect();
       return rr.width > 2 && rr.height > 2;
     });
     return {
       exists: !!strip,
       tag: strip ? strip.tagName : '',
-      role: strip ? strip.getAttribute('role') || '' : '',
-      tabindex: strip ? strip.getAttribute('tabindex') || '' : '',
+      role: hit ? hit.getAttribute('role') || '' : '',
+      tabindex: hit ? hit.getAttribute('tabindex') || '' : '',
       cls: strip ? strip.className : '',
       hasLine: !!line,
-      x: r ? Math.round(r.left + r.width / 2) : 0,
-      y: r ? Math.round(r.top + r.height / 2) : 0,
+      x: hr ? Math.round(hr.left + hr.width / 2) : 0,
+      y: hr ? Math.round(hr.top + hr.height / 2) : 0,
       w: r ? Math.round(r.width) : 0,
       hgt: r ? Math.round(r.height) : 0,
+      hitH: hr ? Math.round(hr.height) : 0,
       onScreen: !!r && r.width > 2 && r.height > 2 && r.top >= 0 && r.bottom <= innerHeight + 2,
       controls: ctrl.length,
       controlIds: ctrl.map((b) => b.id || b.className).join(','),
@@ -8056,6 +9081,7 @@ async function main(): Promise<void> {
     y: number;
     w: number;
     hgt: number;
+    hitH: number;
     onScreen: boolean;
     controls: number;
     controlIds: string;
@@ -8070,15 +9096,16 @@ async function main(): Promise<void> {
       : '#kairo-ticker 가 없다',
   );
   record(
-    '티커는 div + role=button 이다 — 버튼이면 상시 컨트롤·44px 검사에 걸린다 (의도된 선택)',
-    tkSetup.exists && tkSetup.tag !== 'BUTTON' && tkSetup.role === 'button' && tkSetup.tabindex === '0'
+    '티커는 26px 시각 띠 + 별도 44px role=button hit surface다',
+    tkSetup.exists && tkSetup.tag !== 'BUTTON' && tkSetup.hgt === 26 && tkSetup.hitH >= 44 &&
+      tkSetup.role === 'button' && tkSetup.tabindex === '0'
       ? 'pass'
       : 'fail',
     `<${tkSetup.tag.toLowerCase() || '없음'} role="${tkSetup.role}" tabindex="${tkSetup.tabindex}">`,
   );
   record(
-    '상시 컨트롤 2개 유지 — 티커가 컨트롤을 늘리지 않았다 (메뉴·건설, K47-②)',
-    tkSetup.controls === 2 ? 'pass' : 'fail',
+    '상시 행동 감사가 role button을 포함한다 — 메뉴·건설·목표 A/B/C·티커',
+    tkSetup.controls === 6 ? 'pass' : 'fail',
     `${tkSetup.controls}개 · ${tkSetup.controlIds}`,
   );
 
@@ -8172,7 +9199,7 @@ async function main(): Promise<void> {
       if (!root) return { exists: false, open: false, rows: 0, minTap: 0, buttons: 0, sheet: false, overflow: 0 };
       // ⚠ 판정은 !root.hidden 으로 읽는다 — 인라인 display 를 읽으면 표면을 클래스로
       // 옮기는 순간 조용히 거짓이 된다 (K34)
-      const btns = [...root.querySelectorAll('button, select, input')].filter((b) => {
+      const btns = [...root.querySelectorAll('button, select, input, [role="button"]')].filter((b) => {
         const r = b.getBoundingClientRect();
         return r.width > 2 && r.height > 2;
       });
@@ -8407,7 +9434,7 @@ async function main(): Promise<void> {
 
     // ② 티커를 진짜로 눌러 알림함을 연다
     const stripAt = (await page.evaluate(`(() => {
-      const s = document.getElementById('kairo-ticker');
+      const s = document.querySelector('#kairo-ticker .kticker-hit');
       if (!s) return null;
       const r = s.getBoundingClientRect();
       return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };

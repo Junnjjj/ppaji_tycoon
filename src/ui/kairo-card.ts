@@ -2,6 +2,12 @@ import { el } from './dom.js';
 import type { CardDef, CardOption, CardTheme } from '../sim/kairo/cards.js';
 import { optionCash, optionCertainCash } from '../sim/kairo/cards.js';
 import { panelHost } from './panels.js';
+import {
+  composeEventScene,
+  createSceneSurface,
+  eventScenePlan,
+  type EventSpriteSource,
+} from './kairo-event-art.js';
 
 /**
  * 주간 의사결정 카드 화면 — 스펙 §A (S11).
@@ -16,6 +22,12 @@ import { panelHost } from './panels.js';
  *
  * 테마 슬롯은 `event/<theme>` 계약 ID를 달고 CSS가 절차적으로 그린다. 나중에 실물 아트로
  * 교체해도 데이터 ID·레이아웃·터치 규칙은 바뀌지 않는다.
+ *
+ * ## 삽화 (Task 6)
+ *
+ * 그 CSS 색면은 **표시**지 장면이 아니었다. 이제 `kairo-event-art.ts` 가 **이미 있는
+ * 논리 스프라이트**를 조합해 테마별 미니 장면을 캔버스로 합성하고, 그림을 못 얻으면
+ * `null` 이 와서 **기존 CSS 슬롯이 그대로 폴백**으로 남는다 (새 아트 팩 0장).
  */
 
 const CARD_THEME_PRESENTATION: Record<
@@ -43,6 +55,14 @@ export interface CardChoice {
   optionIndex: number;
 }
 
+export interface CardViewOptions {
+  /**
+   * 논리 ID → 그림. `main` 이 에셋 프로바이더(+손님 한 칸)를 묶어 넘긴다.
+   * 없으면 삽화 없이 CSS 폴백만 쓴다 — 카드 뷰는 에셋을 직접 모른다.
+   */
+  spriteFor?: EventSpriteSource;
+}
+
 export class KairoCardView {
   private readonly root: HTMLDivElement;
   private readonly titleEl: HTMLDivElement;
@@ -51,6 +71,8 @@ export class KairoCardView {
   private readonly visualEl: HTMLDivElement;
   private readonly visualMarkEl: HTMLSpanElement;
   private readonly visualLabelEl: HTMLSpanElement;
+  private readonly sceneEl: HTMLDivElement;
+  private readonly opts: CardViewOptions;
   private readonly optionsEl: HTMLDivElement;
   private queue: CardDef[] = [];
   private index = 0;
@@ -59,7 +81,8 @@ export class KairoCardView {
   /** 현금이 모자란 선택지를 회색으로 — 얼마나 있는지는 호출자가 안다 */
   private cash = 0;
 
-  constructor(parent: HTMLElement) {
+  constructor(parent: HTMLElement, opts: CardViewOptions = {}) {
+    this.opts = opts;
     this.root = el('div', 'kover dialog');
     this.root.id = 'kairo-card';
     this.root.hidden = true;
@@ -70,7 +93,8 @@ export class KairoCardView {
     this.visualEl.setAttribute('role', 'img');
     this.visualMarkEl = el('span', 'kcard-visual-mark');
     this.visualLabelEl = el('span', 'kcard-visual-label');
-    this.visualEl.append(this.visualMarkEl, this.visualLabelEl);
+    this.sceneEl = el('div', 'kcard-scene-slot');
+    this.visualEl.append(this.sceneEl, this.visualMarkEl, this.visualLabelEl);
     this.titleEl = el('div', 'kcard-title');
     this.descEl = el('div', 'kcard-desc');
     this.optionsEl = el('div', 'kcard-options');
@@ -138,6 +162,7 @@ export class KairoCardView {
     this.visualEl.setAttribute('aria-label', `${theme.label} 사건 삽화`);
     this.visualMarkEl.textContent = theme.mark;
     this.visualLabelEl.textContent = theme.label;
+    this.paintScene(card.theme);
     this.optionsEl.replaceChildren();
     this.optionsEl.style.setProperty('--card-options', String(card.options.length));
 
@@ -166,6 +191,26 @@ export class KairoCardView {
       btn.addEventListener('click', () => this.pick(card, oi));
       this.optionsEl.append(btn);
     });
+  }
+
+  /**
+   * 테마 미니 장면. **못 그리면 조용히 폴백**이다 — 삽화가 카드를 막으면 안 된다
+   * (카드는 모달이라 안 뜨면 주가 안 넘어간다).
+   */
+  private paintScene(theme: CardTheme): void {
+    this.sceneEl.replaceChildren();
+    this.visualEl.classList.remove('has-scene');
+    const resolve = this.opts.spriteFor;
+    if (!resolve) return;
+    let canvas: HTMLCanvasElement | null = null;
+    try {
+      canvas = composeEventScene(eventScenePlan(theme), resolve, createSceneSurface);
+    } catch {
+      canvas = null;
+    }
+    if (!canvas) return;
+    this.sceneEl.append(canvas);
+    this.visualEl.classList.add('has-scene');
   }
 
   private pick(card: CardDef, optionIndex: number): void {

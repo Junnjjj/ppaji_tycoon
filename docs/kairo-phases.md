@@ -3880,11 +3880,10 @@ vitest **1234**(1178 → 1182 → 1196 → 1234) · `verify:kairo` **300/300**(2
 
 ### Phase 2 경계
 
-Phase 1은 `KairoHud.collapseGoalsForEditing()`과
-`KairoHud.restoreGoalsAfterEditing()` 공개 API만 두었다. 편집 중에는 임시 접힘을
-사용자 접힘 선택과 분리하고, 종료 시 편집 플래그만 걷어 이전 선택을 복원한다.
-`kairo-course.ts`의 편집 스냅샷·저장 의미는 건드리지 않았다. Phase 2는 이 두 API를 패널
-생명주기에 붙이고, 현재 `openCourse(handle)` 경로에 handle 편집을 연결하면 된다.
+현재 경계는 `KairoHud.setGoalSurface('course')`로 코스 표면에서 목표를 숨기고
+`KairoHud.setGoalSurface('home')`으로 홈 표면을 복원한다. 별도 편집/접힘 상태를 저장하지
+않으며 `kairo-course.ts`의 편집 스냅샷·저장 의미도 건드리지 않는다. Phase 2 패널은 이
+surface state API를 생명주기에 붙이고 `openCourse(handle)` 경로에 handle 편집을 연결한다.
 
 ### TDD
 
@@ -4274,3 +4273,22 @@ PNG 2개 부재와 병렬 `accident` 5초 timeout이며, 같은 `accident` 파�
 확장 집중 묶음은 11파일 **85/85**, 전체 vitest는 **1378 통과 / 3 실패 / 1 제외**이며
 잔여는 기존 생성 PNG 2장과 병렬 사고 timeout뿐이다(사고 단일 워커 **10/10**).
 전체 `verify:kairo`는 신규 게이트 포함 **345/347**이고 알려진 K37 화소 표본 두 건만 남았다.
+
+## 2026-08-25 UI 셸 v2와 완료 주장 복구
+
+K61 뒤의 눈에 보이는 복구는 새 K 번호가 아니라 기존 Phase 0~7 주장의 정직성 교정이다.
+홈은 왼쪽 3장 기둥에서 A/B/C 한 밴드로, 메뉴는 Today→경고→운영/성장/기록 단일 시트로,
+코스는 4개 현재→예상 지표와 109px 독으로 바뀌었다. 운영 세이브 v8은 유지하면서 onboarding
+snapshot만 v2 여덟 단계로 확장했고, CSS 사건 슬롯은 8개 합성 장면으로, 주변은 7종 12개로
+확장했다.
+
+외부 strict 공유는 HEAD SHA뿐 아니라 dirty-tree 내용 digest도 서버·DOM·검증기 사이에서
+일치시킨다. 최초 외부 집중 경로는 코스 20/20, Phase 7/온보딩 25/25, 사건/주변 17/17이
+GREEN이었다. 홈/메뉴는 과거 문구 불일치로 13/15 RED를 재현한 뒤 production A 문구와
+source digest를 교정해 16/16이 됐고, post-fix 로컬에서 불투명 recipe와 실제 단골 A 터치를
+더해 홈/메뉴 **18/18**, Phase 7/온보딩 **26/26**이 됐다. 전체
+브라우저는 **354/356**이며 기존 K37 표본 두 건은
+별도 알려진 항목이다. 무라벨 A/B, 사건 이름 가림, 설명 없는 30초 코스와
+주인님 외부 첫 화면 승인은 수행하지 않았다. 따라서 이 기록은 **구현 완료 / 통합 부분 통과 /
+사람 승인 대기**이며 `UI 전면 개편 완료`가 아니다. 전체 명령·캡처·남은 실패는
+`docs/ui-shell-v2-validation.md`가 정본이다.

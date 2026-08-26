@@ -1,4 +1,6 @@
 import type { ScenarioStatus } from './scenario.js';
+import type { KairoFacilityDef } from './placement.js';
+import type { MenuFacilityOperability } from './menu.js';
 
 /** Phase 7 경영 시트의 정보 구조. 이 순서가 모바일의 읽기 순서다. */
 export const MANAGEMENT_GROUPS = [
@@ -16,6 +18,9 @@ export type OnboardingStep =
   | 'test-run'
   | 'apply-course'
   | 'build-food'
+  | 'equip-menu'
+  | 'regular-purchase'
+  | 'open-report'
   | 'done';
 
 export type OnboardingEvent =
@@ -23,7 +28,10 @@ export type OnboardingEvent =
   | 'route-dragged'
   | 'trial-started'
   | 'course-applied'
-  | 'food-built';
+  | 'food-built'
+  | 'menu-equipped'
+  | 'regular-purchased'
+  | 'report-opened';
 
 const ONBOARDING_FLOW: readonly {
   step: Exclude<OnboardingStep, 'done'>;
@@ -34,12 +42,62 @@ const ONBOARDING_FLOW: readonly {
   { step: 'drag-route', event: 'route-dragged', next: 'test-run' },
   { step: 'test-run', event: 'trial-started', next: 'apply-course' },
   { step: 'apply-course', event: 'course-applied', next: 'build-food' },
-  { step: 'build-food', event: 'food-built', next: 'done' },
+  { step: 'build-food', event: 'food-built', next: 'equip-menu' },
+  { step: 'equip-menu', event: 'menu-equipped', next: 'regular-purchase' },
+  { step: 'regular-purchase', event: 'regular-purchased', next: 'open-report' },
+  { step: 'open-report', event: 'report-opened', next: 'done' },
 ];
 
 export interface OnboardingSnapshot {
-  version: 1;
+  version: 2;
   step: OnboardingStep;
+}
+
+type OnboardingV1Step = Exclude<OnboardingStep, 'equip-menu' | 'regular-purchase' | 'open-report'>;
+
+interface OnboardingSnapshotV1 {
+  version: 1;
+  step: OnboardingV1Step;
+}
+
+const ONBOARDING_STEPS: readonly OnboardingStep[] = [
+  'open-course',
+  'drag-route',
+  'test-run',
+  'apply-course',
+  'build-food',
+  'equip-menu',
+  'regular-purchase',
+  'open-report',
+  'done',
+];
+
+const ONBOARDING_V1_STEPS: readonly OnboardingV1Step[] = [
+  'open-course',
+  'drag-route',
+  'test-run',
+  'apply-course',
+  'build-food',
+  'done',
+];
+
+/**
+ * 운영 세이브 자체는 v8을 유지하지만, 그 안의 온보딩 커서 의미는 v2로 확장됐다.
+ * 이미 v1에서 `done`이던 플레이어는 절대 되돌리지 않고, 미완료 커서는 같은 이름의
+ * v2 단계에서 이어진다. 알 수 없는 값은 자유 행동을 막지 않는 첫 단계로 복구한다.
+ */
+export function migrateOnboardingSnapshot(snapshot: unknown): OnboardingSnapshot {
+  if (typeof snapshot !== 'object' || snapshot === null) {
+    return { version: 2, step: 'open-course' };
+  }
+  const candidate = snapshot as Partial<OnboardingSnapshot | OnboardingSnapshotV1>;
+  if (candidate.version === 2 && ONBOARDING_STEPS.includes(candidate.step as OnboardingStep)) {
+    return { version: 2, step: candidate.step as OnboardingStep };
+  }
+  if (candidate.version === 1 && ONBOARDING_V1_STEPS.includes(candidate.step as OnboardingV1Step)) {
+    return { version: 2, step: candidate.step as OnboardingV1Step };
+  }
+  return { version: 2, step: 'open-course' };
 }
 
 /**
@@ -74,20 +132,44 @@ export class OnboardingStore {
   }
 
   toSnapshot(): OnboardingSnapshot {
-    return { version: 1, step: this.current };
+    return { version: 2, step: this.current };
   }
 
-  static fromSnapshot(snapshot?: Partial<OnboardingSnapshot> | null): OnboardingStore {
-    const steps: readonly OnboardingStep[] = [
-      'open-course',
-      'drag-route',
-      'test-run',
-      'apply-course',
-      'build-food',
-      'done',
-    ];
-    return new OnboardingStore(steps.includes(snapshot?.step as OnboardingStep) ? snapshot!.step! : 'open-course');
+  static fromSnapshot(snapshot?: unknown): OnboardingStore {
+    return new OnboardingStore(migrateOnboardingSnapshot(snapshot).step);
   }
+}
+
+/**
+ * 첫 먹거리 안내는 "배가 차는 아무 시설"이 아니라 다음 단계에서 실제 메뉴를 열 수 있는
+ * craft 시설의 완공을 관찰한다. 분식·자판기처럼 고정 판매만 하는 시설이 커서를 넘기면
+ * equip-menu A 행동이 열 목적지를 잃는다.
+ */
+export function observeOnboardingBuild(
+  onboarding: OnboardingStore,
+  facility: Pick<KairoFacilityDef, 'menuMode'> | undefined,
+): boolean {
+  return onboardingMenuFacility(facility) && onboarding.observe('food-built');
+}
+
+/**
+ * 건설과 메뉴 확인이 공유하는 craft 시설 경계. `need`는 손님 수요 분류라 카페처럼
+ * craft지만 food가 아닌 시설을 배제할 수 있으므로 온보딩 종류 판정에 쓰지 않는다.
+ */
+function onboardingMenuFacility(
+  facility: Pick<KairoFacilityDef, 'menuMode'> | undefined,
+): boolean {
+  return facility?.menuMode === 'craft';
+}
+
+/** 실제 장착 메뉴 확인은 craft 정의와 sim의 단일 운영 판정을 모두 통과해야 전진한다. */
+export function observeOnboardingMenu(
+  onboarding: OnboardingStore,
+  facility: Pick<KairoFacilityDef, 'menuMode'> | undefined,
+  operability: MenuFacilityOperability,
+): boolean {
+  return onboardingMenuFacility(facility) && operability.operable &&
+    onboarding.observe('menu-equipped');
 }
 
 export interface ManagementState {
@@ -110,7 +192,7 @@ export interface TodayRecommendation {
 const ONBOARDING_RECOMMENDATIONS: Record<Exclude<OnboardingStep, 'done'>, TodayRecommendation> = {
   'open-course': {
     action: 'course',
-    label: '시작 코스 열기',
+    label: '물려받은 코스 시험 운행',
     detail: '물려받은 코스를 열어 보세요',
     source: 'onboarding',
   },
@@ -135,14 +217,38 @@ const ONBOARDING_RECOMMENDATIONS: Record<Exclude<OnboardingStep, 'done'>, TodayR
   'build-food': {
     action: 'quests',
     label: '먹거리 시설 짓기',
-    detail: '건설에서 매점이나 카페를 놓으세요',
+    detail: '건설에서 1등급 매점을 놓으세요',
+    source: 'onboarding',
+  },
+  'equip-menu': {
+    action: 'regular',
+    label: '기본 메뉴 확인',
+    detail: '방금 지은 먹거리 시설의 장착 메뉴를 확인하세요',
+    source: 'onboarding',
+  },
+  'regular-purchase': {
+    action: 'regular',
+    label: '민지의 실제 구매 기다리기',
+    detail: '요청 메뉴를 산 이름 있는 단골 기록을 확인하세요',
+    source: 'onboarding',
+  },
+  'open-report': {
+    action: 'report',
+    label: '첫 결산 열기',
+    detail: '단골 구매와 KPI·처방을 실제 결산에서 확인하세요',
     source: 'onboarding',
   },
 };
 
+/** HUD와 경영 시트가 같은 sim 추천을 쓰도록 미완료 온보딩 규칙만 공개한다. */
+export function onboardingRecommendation(step: OnboardingStep): TodayRecommendation | null {
+  return step === 'done' ? null : ONBOARDING_RECOMMENDATIONS[step];
+}
+
 /** 상태에서 하나만 파생한다. 경고를 추천에 섞지 않아 우선순위가 매번 뒤집히지 않는다. */
 export function todayRecommendation(state: ManagementState): TodayRecommendation {
-  if (state.onboardingStep !== 'done') return ONBOARDING_RECOMMENDATIONS[state.onboardingStep];
+  const onboarding = onboardingRecommendation(state.onboardingStep);
+  if (onboarding) return onboarding;
   if (state.endingReady) {
     return { action: 'ending', label: '첫 엔딩 보기', detail: '성장 마일스톤을 달성했습니다', source: 'milestone' };
   }
@@ -211,4 +317,3 @@ export function endingMilestone(state: EndingMilestoneState): EndingMilestone {
     ),
   };
 }
-

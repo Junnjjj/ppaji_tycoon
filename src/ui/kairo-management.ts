@@ -15,6 +15,45 @@ export interface ManagementMenuAction {
 export interface ManagementMenuState {
   today: TodayRecommendation;
   warnings: readonly string[];
+  /** 시뮬 규칙을 복제하지 않고 현재 값을 붙이는 UI adapter 출력. */
+  details?: Partial<Record<ManagementAction, string>>;
+}
+
+export interface ManagementTodayPresentation {
+  icon: string;
+  reason: string;
+  label: string;
+  detail: string;
+}
+
+const ACTION_ICONS: Record<ManagementAction, string> = {
+  price: '◎', staff: '👥', course: '🚤', exam: '⭐', regular: '♥', quests: '✓',
+  codex: '▣', report: '▤', view: '◉', certs: '◆', ending: '🏁',
+};
+
+const SOURCE_REASONS: Record<TodayRecommendation['source'], string> = {
+  onboarding: '첫 운영 안내',
+  milestone: '성장 마일스톤',
+  operation: '운영 점검',
+  growth: '다음 성장',
+  record: '새 운영 기록',
+};
+
+/** Today의 새 표현은 기존 추천 action/source만 번역하며 새 우선순위 규칙을 만들지 않는다. */
+export function managementTodayPresentation(today: TodayRecommendation): ManagementTodayPresentation {
+  return {
+    icon: ACTION_ICONS[today.action],
+    reason: SOURCE_REASONS[today.source],
+    label: today.label,
+    detail: today.detail,
+  };
+}
+
+export function managementActionDetail(
+  action: ManagementMenuAction,
+  details: Partial<Record<ManagementAction, string>>,
+): string | undefined {
+  return details[action.id] ?? action.detail;
 }
 
 type StopEvent = Pick<Event, 'stopPropagation'>;
@@ -41,6 +80,7 @@ export class KairoManagementMenu {
   private readonly actionById: Map<ManagementAction, ManagementMenuAction>;
   private readonly todayButton: HTMLButtonElement;
   private readonly warningBox: HTMLDivElement;
+  private readonly detailById = new Map<ManagementAction, HTMLSpanElement>();
 
   constructor(
     host: HTMLElement,
@@ -81,7 +121,9 @@ export class KairoManagementMenu {
     if (action.domId) button.id = action.domId;
     button.dataset['manageAction'] = action.id;
     button.append(el('span', 'kmanage-label', action.label));
-    if (action.detail) button.append(el('span', 'kmanage-detail', action.detail));
+    const detail = el('span', 'kmanage-detail', action.detail ?? '') as HTMLSpanElement;
+    this.detailById.set(action.id, detail);
+    button.append(detail);
     button.addEventListener('click', (event) => {
       runManagementAction(action, event);
     });
@@ -91,14 +133,25 @@ export class KairoManagementMenu {
   refresh(): void {
     const state = this.read();
     const action = managementActionForToday([...this.actionById.values()], state.today);
+    const today = managementTodayPresentation(state.today);
     this.todayButton.replaceChildren(
-      el('span', 'kmanage-label', state.today.label),
-      el('span', 'kmanage-detail', state.today.detail),
+      el('span', 'kmanage-today-icon', today.icon),
+      el('span', 'kmanage-today-copy'),
+    );
+    const copy = this.todayButton.lastElementChild as HTMLSpanElement;
+    copy.append(
+      el('span', 'kmanage-reason', today.reason),
+      el('span', 'kmanage-label', today.label),
+      el('span', 'kmanage-detail', today.detail),
     );
     this.todayButton.dataset['manageAction'] = state.today.action;
     this.todayButton.onclick = (event) => {
       if (action) runManagementAction(action, event);
     };
+    for (const item of this.actionById.values()) {
+      const detail = this.detailById.get(item.id);
+      if (detail) detail.textContent = managementActionDetail(item, state.details ?? {}) ?? '';
+    }
     this.warningBox.replaceChildren(
       ...state.warnings.map((warning) => el('div', 'kmanage-warning', `⚠ ${warning}`)),
     );
