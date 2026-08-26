@@ -24,6 +24,39 @@
  */
 
 /**
+ * 지금 입력을 소유한 표면 (UI v3).
+ *
+ * `home` 만 홈 HUD(목표 · 티커 · 하단 바)를 살려 둔다. 나머지는 전부 "다른 층이 화면을
+ * 가졌다"는 뜻이다.
+ *
+ * ⚠ `aiming` 은 **패널이 아니다** (확정 바는 `PanelHost` 밖에 산다 — 스크림 없는 바라
+ * 배타 규칙이 시트·결산과 부딪힌다). 그래도 소유권 축에서는 다른 표면들과 똑같이
+ * 다룬다: 실측(2026-08-26)에서 티커의 44px hit surface(z 11)가 확정 버튼(z 10) 아래
+ * 27px 를 먹고 있었고, 목표 밴드는 `.kconfirm` 의 pointer-events 빈 면 아래에서 탭을
+ * 가로챘다. 조준 중 홈 입력층을 살려 두면 "보이는 버튼이 안 눌린다"가 그대로 재발한다.
+ */
+export type InputSurface = 'home' | 'menu' | 'build' | 'panel' | 'course' | 'aiming';
+
+export interface HomeInputOwnership {
+  goals: boolean;
+  ticker: boolean;
+  bar: boolean;
+}
+
+/**
+ * 홈 입력층을 누가 갖는가 — **z-index 경쟁이 아니라 소유권**이다 (계획 §1.2, §4).
+ *
+ * 층 번호를 올려 덮으면 다른 화면에서 역가림이 재발한다. 실측(2026-08-26, 393×852):
+ * 메뉴를 열어도 티커(z 11)와 하단 바(z 10)가 시트(z 10) 위/같은 층에 살아 있어
+ * `결산·감상·인증·엔딩` 네 버튼의 중심 `elementFromPoint` 가 하단 바를 돌려줬다.
+ * 그래서 세 표면을 **한 값으로 함께** 내린다 — 하나만 내리면 남은 하나가 다시 훔친다.
+ */
+export function homeInputOwnership(surface: InputSurface): HomeInputOwnership {
+  const home = surface === 'home';
+  return { goals: home, ticker: home, bar: home };
+}
+
+/**
  * 호스트가 패널에게 요구하는 것은 **닫힐 수 있음** 하나다.
  *
  * `root: HTMLElement` 를 넣었더니 패널 8종의 `private readonly root` 를 전부 public 으로

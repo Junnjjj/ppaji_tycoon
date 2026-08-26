@@ -1,6 +1,11 @@
 import { MAP_TYPES, unlockedScenarios, type MapType, type ScenarioDef } from '../sim/kairo/scenario.js';
 import { el, button } from './dom.js';
 import { panelHost } from './panels.js';
+import {
+  createEventShell,
+  renderEventShell,
+  type EventShellNodes,
+} from './kairo-event-shell.js';
 
 /**
  * 새 판 — 맵 타입과 시나리오를 고른다 (§4.5).
@@ -27,10 +32,21 @@ export interface NewGameDeps {
   grade: () => number;
   /** 고른 뒤: 세이브를 지우고 새 판으로 다시 시작한다 */
   start: (mapId: string, scenarioId: string) => void;
+  /**
+   * **무엇이 지워지는가** — 확인 화면이 숫자로 말한다.
+   *
+   * "정말 지울까요?" 만으로는 무게가 안 읽힌다. 주차·시설 수·현금을 보여 주면 그 판이
+   * 얼마나 자랐는지가 그 자리에서 보인다.
+   */
+  currentRun?: () => { week: number; facilities: number; cash: number };
 }
 
 export class KairoNewGame {
   private readonly root: HTMLDivElement;
+  private readonly titleEl: HTMLDivElement;
+  private readonly pickBox: HTMLDivElement;
+  private readonly confirmBox: HTMLDivElement;
+  private readonly confirmShell: EventShellNodes;
   private readonly mapBar: HTMLDivElement;
   private readonly scenBar: HTMLDivElement;
   private readonly detail: HTMLDivElement;
@@ -46,8 +62,13 @@ export class KairoNewGame {
     this.root.id = 'kairo-newgame';
     this.root.hidden = true;
 
+    /*
+     * 제목은 **`새 게임`** 이다 (UX 감사 P1-8 계열 · IA §7.1). 메뉴 버튼은 `새 게임 시작`
+     * 인데 열리는 화면은 `새 판` 이라 낱말이 갈렸다 — 목적지는 이름으로 예고돼야 한다.
+     */
     const head = el('div', 'ksheet-head');
-    head.append(el('div', 'ksheet-title', '새 판'));
+    this.titleEl = el('div', 'ksheet-title', '새 게임');
+    head.append(this.titleEl);
     const close = button('kbtn', '닫기', () => this.hide());
     close.id = 'kairo-newgame-close';
     head.append(close);
@@ -62,14 +83,32 @@ export class KairoNewGame {
     this.detail = el('div', 'krow kstack');
     this.detail.style.setProperty('--stack-gap', '2px');
 
-    this.startBtn = button('kbtn primary', '이 판으로 시작 (지금 판은 지워집니다)', () => {
-      // 되돌릴 수 없는 조작 — 한 번 더 묻는다
-      if (!window.confirm('지금 판을 지우고 새로 시작합니다. 계속할까요?')) return;
-      this.deps.start(this.mapId, this.scenarioId);
-    });
+    /*
+     * 1단 — 고른다. 괄호의 경고는 **확인 단계로 옮겼다**: 여기서 겁을 주면 고르는 일이
+     * 무거워지고, 정작 되돌릴 수 없는 순간에는 브라우저 `confirm` 이 떴다.
+     */
+    this.startBtn = button('kbtn primary', '이 판으로 시작', () => this.askConfirm());
     this.startBtn.id = 'kairo-newgame-start';
 
-    this.root.append(head, mapLabel, this.mapBar, scenLabel, this.scenBar, this.detail, this.startBtn);
+    this.pickBox = el('div', 'kstack');
+    this.pickBox.append(
+      mapLabel, this.mapBar, scenLabel, this.scenBar, this.detail, this.startBtn,
+    );
+
+    /*
+     * 2단 — **게임 안의 확인**이다 (IA §6.6).
+     *
+     * 예전에는 브라우저 네이티브 확인창이었다. 게임 밖 표면이라 크림 팔레트·44px 터치·한국어
+     * 문구 계약이 **하나도 안 걸리고**, iOS 홈 화면 PWA 에서는 모양이 또 다르다.
+     * 공용 사건 상자를 쓰면 그 넷이 전부 그대로 걸린다.
+     */
+    this.confirmShell = createEventShell();
+    this.confirmBox = el('div', 'kstack');
+    this.confirmBox.id = 'kairo-newgame-confirm';
+    this.confirmBox.hidden = true;
+    this.confirmBox.append(this.confirmShell.root);
+
+    this.root.append(head, this.pickBox, this.confirmBox);
     parent.append(this.root);
   }
 
@@ -81,7 +120,47 @@ export class KairoNewGame {
     // 한 번에 하나 (K37) — 모달이 떠 있으면 열지 않는다
     if (!panelHost.open(this)) return;
     this.root.hidden = false;
+    this.backToPick();
     this.render();
+  }
+
+  /** 확인 상태 → 고르기로. `‹` 는 **선택 화면으로만** 돌아간다 (IA §6.6) */
+  private backToPick(): void {
+    this.titleEl.textContent = '새 게임';
+    this.pickBox.hidden = false;
+    this.confirmBox.hidden = true;
+  }
+
+  /**
+   * 파괴 확인 — **지워지는 것을 숫자로 말한다.**
+   *
+   * 취소가 주버튼이다: 되돌릴 수 없는 쪽이 기본 손가락 자리에 있으면 안 된다.
+   */
+  private askConfirm(): void {
+    const run = this.deps.currentRun?.();
+    const m = MAP_TYPES.find((x) => x.id === this.mapId) as MapType;
+    const s = unlockedScenarios(5).find((x) => x.id === this.scenarioId) as ScenarioDef;
+    this.titleEl.textContent = '지금 판을 지웁니다';
+    this.pickBox.hidden = true;
+    this.confirmBox.hidden = false;
+    renderEventShell(this.confirmShell, {
+      kind: 'new-game-confirm',
+      mood: 'alert',
+      kicker: `${m.name} · ${s.name}(으)로 시작합니다`,
+      title: '지금 판을 지웁니다',
+      body: run
+        ? `주 ${run.week} · 시설 ${run.facilities}채 · 현금 ${Math.round(run.cash / 10000)}만 — 되돌릴 수 없습니다`
+        : '지금 판의 진행이 전부 사라집니다 — 되돌릴 수 없습니다',
+      choices: [
+        { id: 'cancel', label: '취소', run: () => this.backToPick() },
+        {
+          id: 'wipe',
+          label: '지우고 시작',
+          danger: true,
+          run: () => this.deps.start(this.mapId, this.scenarioId),
+        },
+      ],
+    });
   }
 
   hide(): void {

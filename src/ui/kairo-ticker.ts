@@ -52,14 +52,29 @@ export interface TickerItem {
 
 const INBOX_MAX = 50;
 
-/** 뉴스가 아직 없을 때도 띠가 다음 손동작을 말하게 한다. */
-export function tickerFallbackText(action: string): string {
-  return `다음: ${action} — 목표 A를 탭하세요`;
+/**
+ * 뉴스가 없을 때 띠가 말하는 것 — **자기 상태와 자기 입구**다.
+ *
+ * ⚠ 예전 문구는 `다음: <행동> — 목표 A를 탭하세요` 였다. 두 가지가 틀렸다 (UX 감사 P0-7):
+ *
+ * 1. **`목표 A` 라는 것이 화면에 없다.** UI v3 가 홈의 A/B/C 세 칸을 `다음 할 일` 한 줄로
+ *    바꿨고 `A` 라는 이름표는 어디에도 안 그려진다. 첫 프레임의 상시 띠가 **존재하지 않는
+ *    UI 요소**를 가리키고 있었다.
+ * 2. **바로 위 줄의 복창이다.** 목표 밴드가 이미 같은 문장을 굵게 말하는데 띠가 26px
+ *    전폭을 써서 한 번 더 말했다 — 채널 계약("티커 = 내가 안 했는데 일어난 일")과도
+ *    어긋난다. 이건 뉴스가 아니라 내 목표의 사본이었다.
+ *
+ * 뉴스가 없을 때만 현재 즉시 목표를 **다음 행동**으로 짧게 안내한다. `목표 A` 같은
+ * 내부 이름은 쓰지 않는다.
+ */
+export function tickerFallbackText(nextAction: string): string {
+  return `다음 행동 · ${nextAction}`;
 }
 
 export class KairoTicker implements Panel {
   private readonly strip: HTMLDivElement;
   private readonly line: HTMLSpanElement;
+  private readonly icon: HTMLSpanElement;
   /**
    * 알림함 시트의 루트.
    *
@@ -71,7 +86,7 @@ export class KairoTicker implements Panel {
   private readonly inboxList: HTMLDivElement;
   private readonly items: TickerItem[] = [];
   private brushLabel: string | null = null;
-  private fallback = tickerFallbackText('물려받은 코스 시험 운행');
+  private fallback = tickerFallbackText('리조트를 살펴보세요');
   /** 새 뉴스 강조 — 붓 라벨이 덮고 있어도 뉴스가 오면 잠깐 이긴다 */
   private newsHold = 0;
   private holdTimer = 0;
@@ -86,7 +101,12 @@ export class KairoTicker implements Panel {
     this.strip.id = 'kairo-ticker';
     const visual = el('div', 'kticker-visual');
     this.line = el('span', 'kticker-line');
-    visual.append(el('span', 'kticker-ico', '📰'), this.line);
+    /*
+     * 아이콘은 **하나**다 (알려진 항목 15번 · UX 감사 P2-29). 고정 `📰` 와 항목 아이콘이
+     * 겹쳐 둘로 보였다 — 이제 항목이 있으면 그 아이콘이, 없으면 `📰` 가 그 자리에 온다.
+     */
+    this.icon = el('span', 'kticker-ico', '📰');
+    visual.append(this.icon, this.line);
     const hit = el('div', 'kticker-hit');
     hit.setAttribute('role', 'button');
     hit.tabIndex = 0;
@@ -165,15 +185,31 @@ export class KairoTicker implements Panel {
     this.renderLine();
   }
 
+  /**
+   * 홈 입력층 소유권 (UI v3). 시트·패널·코스가 화면을 가지면 **26px 시각 띠와 44px
+   * hit surface를 함께** 내린다.
+   *
+   * ⚠ hit surface 만 죽이지 말 것 — 띠가 남으면 시트 아래쪽에 읽을 수 없는 뉴스가
+   * 겹쳐 보이고, "지금 무엇이 눌리는가"가 다시 애매해진다. z-index 를 낮추는 방식도
+   * 안 된다 (다른 화면에서 역가림이 재발한다, 계획 §4).
+   */
+  setInputOwned(owned: boolean): void {
+    this.strip.hidden = !owned;
+  }
+
   /** 붓 상태 — 하단 바에서 옮겨 온 표시. null 이면 뉴스로 돌아간다 */
   setBrush(label: string | null): void {
     this.brushLabel = label;
     this.renderLine();
   }
 
-  /** 목표가 상태에서 다시 파생될 때 빈 뉴스용 다음 행동도 함께 갱신한다. */
-  setFallback(action: string): void {
-    this.fallback = tickerFallbackText(action);
+  /**
+   * 빈 띠 문구를 다시 그린다.
+   *
+   * 뉴스가 없을 때의 다음 행동은 홈의 즉시 목표에서 받는다. 뉴스가 생기면 뉴스가 우선한다.
+   */
+  setFallback(nextAction: string): void {
+    this.fallback = tickerFallbackText(nextAction);
     this.renderLine();
   }
 
@@ -182,15 +218,18 @@ export class KairoTicker implements Panel {
     const newsFirst = Date.now() < this.newsHold;
     if (this.brushLabel !== null && !newsFirst) {
       this.strip.classList.add('brush');
-      this.line.textContent = `🖌 ${this.brushLabel}`;
+      this.icon.textContent = '🖌';
+      this.line.textContent = this.brushLabel;
       return;
     }
     this.strip.classList.remove('brush');
     if (!latest) {
+      this.icon.textContent = '📰';
       this.line.textContent = this.fallback;
       return;
     }
-    this.line.textContent = `${latest.icon} ${latest.text}`;
+    this.icon.textContent = latest.icon;
+    this.line.textContent = latest.text;
     // 슬라이드 인 재시작 — 클래스를 뗐다 붙여야 애니메이션이 다시 돈다 (kairo-unlock 과 동일)
     this.line.classList.remove('fresh');
     void this.line.offsetWidth;
@@ -200,7 +239,17 @@ export class KairoTicker implements Panel {
   private renderInbox(): void {
     this.inboxList.replaceChildren();
     if (this.items.length === 0) {
-      this.inboxList.append(el('div', 'kcaption', '아직 소식이 없습니다'));
+      /*
+       * 빈 알림함도 **사실 + 방법**이다 (UX 감사 P1-22). 시트를 열면 시간이 멈추는데
+       * 한 줄만 있고 나갈 이유만 있으면 연 사람이 손해를 본다.
+       */
+      const empty = el('div', 'kgrowth-empty');
+      empty.dataset['emptyFor'] = 'inbox';
+      empty.append(
+        el('div', 'kgrowth-empty-fact', '아직 소식이 없습니다'),
+        el('div', 'kgrowth-empty-how', '해금 · 승급 · 결산 도착 같은 소식이 여기 쌓입니다 (최근 50건)'),
+      );
+      this.inboxList.append(empty);
       return;
     }
     for (const it of this.items) {

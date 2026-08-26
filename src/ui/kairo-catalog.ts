@@ -5,6 +5,7 @@ import type { PlacementGrid } from '../sim/kairo/placement.js';
 import type { SwimZone } from '../sim/kairo/swim.js';
 import { requiredGrade } from '../sim/kairo/progress.js';
 import { el, button } from './dom.js';
+import { ingredientName, REPUTATION_NAME } from './kairo-terms.js';
 import { panelHost } from './panels.js';
 
 /**
@@ -199,13 +200,14 @@ export class KairoCatalog {
     if (this.undiscoveredOnly || this.tier !== 'all') return;
     for (const c of CONFLICTS) {
       const cost = [
-        c.penalty.satisfaction ? `만족 −${c.penalty.satisfaction}` : '',
+        c.penalty.satisfaction ? `${REPUTATION_NAME} −${c.penalty.satisfaction}` : '',
         c.penalty.revenue ? `매출 −${c.penalty.revenue}` : '',
       ]
         .filter(Boolean)
         .join(' · ');
       this.listEl.append(
-        this.row(true, c.name, `상성 감점 · ${cost} · 두 칸 띄우면 꺼집니다`, c.id, '⚠'),
+        // `상성`(相性)은 일본어 차용이라 한국어 게임에서 잘 안 쓴다 (UX 감사 P2-33)
+        this.row(true, c.name, `궁합 감점 · ${cost} · 두 칸 띄우면 꺼집니다`, c.id, '⚠'),
       );
     }
   }
@@ -221,7 +223,20 @@ export class KairoCatalog {
        * 미발견은 **힌트만**. 전부 보여주면 발견이 아니라 체크리스트가 되고,
        * 전부 가리면 힌트가 아니라 벽이 된다 — 첫 조건 하나만 남긴다.
        */
-      const parts = combo.requires.map((r) => r.facility ?? r.need ?? '?');
+      /*
+       * ⚠ **영문 내부 ID 를 화면에 내지 않는다** (UX 감사 P0-4).
+       *
+       * 실측: 새 판의 도감은 73/73 이 전부 미발견이라 **언제나** 이 힌트 목록으로 처음
+       * 열리는데, 거기 `shower_row + ?` · `thrill + ? + ?` 같은 sim 키가 37종 떴다.
+       * 한글 이름은 이미 데이터(`kairo-facilities.json` 의 `name`)와 `NEED_NAME` 에 있다 —
+       * `ingredientName` 이 그 둘을 묶는다.
+       */
+      const facilityName = (id: string): string | undefined =>
+        allFacilityDefs().find((d) => d.id === id)?.name;
+      const parts = combo.requires.map((r) => {
+        const token = r.facility ?? r.need;
+        return token === undefined ? '?' : ingredientName(token, facilityName);
+      });
       // 숨은 콤보(K43)는 힌트조차 없다 — 놓아 봐야 아는 것이 발견의 재미다 (MMS 준거)
       const hint = combo.hidden
         ? '???'
@@ -229,7 +244,7 @@ export class KairoCatalog {
           ? [parts[0], ...parts.slice(1).map(() => '?')].join(' + ')
           : '?';
       const boost = [
-        combo.bonus.satisfaction ? `만족 +${combo.bonus.satisfaction}` : '',
+        combo.bonus.satisfaction ? `${REPUTATION_NAME} +${combo.bonus.satisfaction}` : '',
         combo.bonus.revenue ? `매출 +${Math.round(combo.bonus.revenue * 100)}%` : '',
       ]
         .filter(Boolean)

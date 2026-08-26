@@ -162,8 +162,13 @@ export interface CertStatus {
   done: boolean;
   /** 0..1 — 조건별 진행도의 평균. 막대 하나로 "얼마나 남았나"가 읽혀야 한다 */
   progress: number;
-  /** 조건별 한 줄 (사람이 읽는 형태) */
-  reqs: { detail: string; done: boolean }[];
+  /**
+   * 조건별 한 줄 (사람이 읽는 형태) + **판정에 쓴 조건 그대로**.
+   *
+   * 화면이 주어를 붙이려면 `kind`·`need` 가 필요하다 (`QuestStatus.cond` 와 같은 이유).
+   * sim 은 여전히 한글을 모른다 — 흘려보내기만 한다.
+   */
+  reqs: { detail: string; done: boolean; cond: QuestCondition }[];
   /** 아직 못 채운 조건 수 — 1 이면 "곧 딴다" (티커 발화 조건) */
   remaining: number;
   reward: CertReward;
@@ -196,7 +201,7 @@ export function certStatuses(
       desc: c.desc,
       done: remaining === 0,
       progress: evs.length === 0 ? 1 : evs.reduce((a, e) => a + e.progress, 0) / evs.length,
-      reqs: evs.map((e) => ({ detail: e.detail, done: e.done })),
+      reqs: evs.map((e, i) => ({ detail: e.detail, done: e.done, cond: c.conditions[i]! })),
       remaining,
       reward: c.reward,
     };

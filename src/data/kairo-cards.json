@@ -50,7 +50,7 @@
       "options": [
         {
           "label": "그늘막 임시 설치",
-          "detail": "80만원",
+          "detail": "1주 동안 평판 +4",
           "effects": [
             {
               "cash": -800000
@@ -88,7 +88,7 @@
       "options": [
         {
           "label": "협찬한다",
-          "detail": "60만원 — 다음 주 방문객 증가",
+          "detail": "1주 동안 방문객 1.5배",
           "effects": [
             {
               "cash": -600000
@@ -192,7 +192,7 @@
       "options": [
         {
           "label": "자진 점검한다",
-          "detail": "40만원 — 사고 위험이 크게 내려간다",
+          "detail": "3주 동안 사고 확률 0.4배",
           "effects": [
             {
               "cash": -400000
@@ -229,7 +229,7 @@
       "options": [
         {
           "label": "지금 교체한다",
-          "detail": "90만원",
+          "detail": "4주 동안 사고 확률 0.6배",
           "effects": [
             {
               "cash": -900000
@@ -265,7 +265,7 @@
       "options": [
         {
           "label": "급하게 채운다",
-          "detail": "주급 선지급 30만원",
+          "detail": "빈 안전요원 자리를 바로 메운다",
           "effects": [
             {
               "cash": -300000
@@ -297,7 +297,7 @@
       "options": [
         {
           "label": "해명 공지를 낸다",
-          "detail": "20만원 — 평판 회복",
+          "detail": "평판을 회복한다",
           "effects": [
             {
               "cash": -200000
@@ -329,7 +329,7 @@
       "options": [
         {
           "label": "시설을 결박한다",
-          "detail": "70만원 — 손상 막는다",
+          "detail": "태풍 손상을 막는다",
           "effects": [
             {
               "cash": -700000
@@ -365,7 +365,7 @@
       "options": [
         {
           "label": "정화 설비를 넣는다",
-          "detail": "130만원",
+          "detail": "수질 문제를 없앤다",
           "effects": [
             {
               "cash": -1300000
@@ -397,7 +397,7 @@
       "options": [
         {
           "label": "실내 좌석을 늘린다",
-          "detail": "35만원 — 만족도 유지",
+          "detail": "1주 동안 평판 +3",
           "effects": [
             {
               "cash": -350000
@@ -435,7 +435,7 @@
       "options": [
         {
           "label": "온수 샤워를 늘린다",
-          "detail": "45만원",
+          "detail": "2주 동안 평판 +5",
           "effects": [
             {
               "cash": -450000
@@ -488,7 +488,7 @@
         },
         {
           "label": "시설로 승부한다",
-          "detail": "60만원 투자 — 평판이 오른다",
+          "detail": "4주 동안 평판이 오른다",
           "effects": [
             {
               "cash": -600000
@@ -572,7 +572,7 @@
       "options": [
         {
           "label": "바로 채용한다",
-          "detail": "주급 25만원 — 만족도 오른다",
+          "detail": "3주 동안 평판 +4",
           "effects": [
             {
               "cash": -250000
@@ -640,7 +640,7 @@
       "options": [
         {
           "label": "올려준다",
-          "detail": "주 20만원 — 만족도 유지",
+          "detail": "4주 동안 평판 +3",
           "effects": [
             {
               "cash": -200000
@@ -679,7 +679,7 @@
       "options": [
         {
           "label": "보수한다",
-          "detail": "55만원",
+          "detail": "덱 손상을 고친다",
           "effects": [
             {
               "cash": -550000
@@ -711,7 +711,7 @@
       "options": [
         {
           "label": "설치한다",
-          "detail": "160만원 — 이후 유지비 절감",
+          "detail": "12주 동안 매출 1.08배",
           "effects": [
             {
               "cash": -1600000
@@ -743,7 +743,7 @@
       "options": [
         {
           "label": "임시 주차장을 빌린다",
-          "detail": "40만원",
+          "detail": "3주 동안 평판 +3",
           "effects": [
             {
               "cash": -400000

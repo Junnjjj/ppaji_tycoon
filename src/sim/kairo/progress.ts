@@ -278,6 +278,15 @@ export interface QuestStatus {
   progress: number;
   /** 현재값 / 목표값 (사람이 읽는 형태) */
   detail: string;
+  /**
+   * 판정에 쓴 조건 **그대로** — 화면이 주어(`위생 시설`)를 붙이려면 `kind`·`need` 가 필요하다.
+   *
+   * ⚠ 여기에 한글을 넣지 않는다 (불변식 1: sim 은 렌더러를 모른다). 이름표는 화면
+   * (`src/ui/kairo-terms.ts`)이 붙인다 — 이 필드는 **이미 있던 값을 흘려보내기만** 한다.
+   * 그전에는 `detail` 이 수량만 담고 주어를 버려서, 인증 목록이 `· 1 / 3개` 처럼
+   * "무엇이 3개인지" 화면 어디에도 없는 상태였다 (UX 감사 P1-10).
+   */
+  cond: QuestCondition;
   reward: number;
   /** 완수하면 열리는 시설 (K41) — 티저와 셀레브레이션이 쓴다 */
   rewardFacility?: string;
@@ -428,6 +437,7 @@ export function questStatuses(
       done: ev.done,
       progress: ev.progress,
       detail: ev.detail,
+      cond: c,
       reward: q.reward.cash,
       ...(q.reward.facility !== undefined ? { rewardFacility: q.reward.facility } : {}),
     });

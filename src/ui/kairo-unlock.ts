@@ -14,6 +14,11 @@
 import { el } from './dom.js';
 import { panelHost, type Panel } from './panels.js';
 import { audio } from '../audio/index.js';
+import {
+  createEventShell,
+  renderEventShell,
+  type EventShellNodes,
+} from './kairo-event-shell.js';
 
 export interface Celebration {
   /** '새 시설 해금!' · 'N등급 승급!' 같은 머리 */
@@ -42,11 +47,14 @@ export interface UnlockViewOptions {
 
 export class KairoUnlockView implements Panel {
   private readonly root: HTMLDivElement;
-  private readonly titleEl: HTMLDivElement;
-  private readonly thumbEl: HTMLDivElement;
-  private readonly nameEl: HTMLDivElement;
-  private readonly subEl: HTMLDivElement;
-  private readonly actionsEl: HTMLDivElement;
+  /**
+   * 축하도 **공용 사건 상자**를 쓴다 (UI v4).
+   *
+   * 예전에는 축하·주간 카드·새 게임 확인이 각자 다른 모양이었고, 셋째는 아예 브라우저
+   * `confirm` 이었다. 상자를 공유해도 **채널은 그대로 셋**이다 (K47-①) — 이건 표면이지
+   * 채널이 아니다.
+   */
+  private readonly shell: EventShellNodes;
   private readonly opts: UnlockViewOptions;
 
   constructor(parent: HTMLElement, opts: UnlockViewOptions) {
@@ -56,12 +64,16 @@ export class KairoUnlockView implements Panel {
     this.root.hidden = true;
 
     const box = el('div', 'kdialog-box kunlock');
-    this.titleEl = el('div', 'kunlock-title');
-    this.thumbEl = el('div', 'kunlock-thumb fx-pop');
-    this.nameEl = el('div', 'kunlock-name');
-    this.subEl = el('div', 'kcaption');
-    this.actionsEl = el('div', 'kunlock-actions');
-    box.append(this.titleEl, this.thumbEl, this.nameEl, this.subEl, this.actionsEl);
+    this.shell = createEventShell();
+    /*
+     * 옛 클래스 손잡이를 **그대로** 남긴다 — 하네스가 `.kunlock-title`(머리) ·
+     * `.kunlock-name`(이름) · `.kunlock-thumb canvas`(썸네일) 로 이 모달을 읽는다.
+     * 셸이 같은 노드에 그 이름을 겹쳐 달면 표면을 통일하면서 검사가 안 깨진다.
+     */
+    this.shell.kicker.classList.add('kunlock-title');
+    this.shell.title.classList.add('kunlock-name');
+    this.shell.figure.classList.add('kunlock-thumb');
+    box.append(this.shell.root);
     this.root.append(box);
     parent.append(this.root);
 
@@ -76,44 +88,48 @@ export class KairoUnlockView implements Panel {
   /** 열었으면 true. 다른 모달(카드)이 떠 있으면 false — 부르는 쪽이 다시 큐에 넣는다 */
   show(c: Celebration): boolean {
     if (!panelHost.open(this)) return false;
-    this.titleEl.textContent = c.title;
-    this.nameEl.textContent = c.name;
-    this.subEl.textContent = c.sub ?? '';
     const actions: readonly CelebrationAction[] = c.actions ?? [
       { id: 'close', label: '좋아!', run: () => undefined },
     ];
-    this.actionsEl.replaceChildren(
-      ...actions.map((action, index) => {
-        const button = el('button', index === 0 ? 'kbtn primary' : 'kbtn', action.label);
-        button.dataset['celebrationAction'] = action.id;
-        if (action.id === 'close') button.id = 'kairo-unlock-close';
-        if (action.id === 'continue' || action.id === 'new-region' || action.id === 'view') {
-          button.dataset['endingChoice'] = action.id;
-        }
-        button.addEventListener('click', () => {
-          // 모달을 먼저 닫아야 새 지역/감상 패널을 PanelHost가 열 수 있다.
-          this.hide();
-          action.run();
-          this.opts.onClose?.();
-        });
-        return button;
-      }),
-    );
-    this.thumbEl.replaceChildren();
     const src = c.sprite !== undefined ? (this.opts.thumbFor?.(c.sprite) ?? null) : null;
+    let figure: HTMLCanvasElement | null = null;
     if (src) {
       const cv = document.createElement('canvas');
       cv.width = src.width;
       cv.height = src.height;
       cv.getContext('2d')?.drawImage(src, 0, 0);
-      this.thumbEl.append(cv);
-    } else {
-      this.thumbEl.textContent = '🎁';
+      figure = cv;
     }
-    // 반짝 재시작 — 클래스를 뗐다 붙여야 애니메이션이 다시 돈다
-    this.thumbEl.classList.remove('fx-pop');
-    void this.thumbEl.offsetWidth;
-    this.thumbEl.classList.add('fx-pop');
+    renderEventShell(this.shell, {
+      kind: 'celebration',
+      mood: 'celebrate',
+      kicker: c.title,
+      title: c.name,
+      ...(c.sub !== undefined && c.sub.length > 0 ? { body: c.sub } : {}),
+      figure,
+      choices: actions.map((action) => ({
+        id: action.id,
+        label: action.label,
+        run: () => {
+          // 모달을 먼저 닫아야 새 지역/감상 패널을 PanelHost가 열 수 있다.
+          this.hide();
+          action.run();
+          this.opts.onClose?.();
+        },
+      })),
+    });
+    /*
+     * 옛 손잡이를 그대로 남긴다 — 하네스가 `#kairo-unlock-close` 와
+     * `[data-ending-choice]` 로 이 모달을 조작한다.
+     */
+    for (const node of this.shell.choices.querySelectorAll('button')) {
+      const id = node.dataset['eventChoice'] ?? '';
+      node.dataset['celebrationAction'] = id;
+      if (id === 'close') node.id = 'kairo-unlock-close';
+      if (id === 'continue' || id === 'new-region' || id === 'view') {
+        node.dataset['endingChoice'] = id;
+      }
+    }
     this.root.hidden = false;
     audio.play('sfx/unlock');
     return true;

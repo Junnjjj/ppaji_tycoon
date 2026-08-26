@@ -14,6 +14,7 @@ import {
 } from '../sim/kairo/placement.js';
 import type { NeedKind } from '../sim/kairo/week.js';
 import { recipeDef } from '../sim/kairo/menu.js';
+import { cashText, won } from './money.js';
 
 /**
  * 시설 인스턴스 정보 — **지도에서 시설을 탭하면 뜬다** (P2-B 가 남긴 미결).
@@ -71,15 +72,6 @@ import { recipeDef } from '../sim/kairo/menu.js';
  * ⚠ 게임 전체를 명목가(×10)로 옮기는 것은 별개 결정이다 — 헤더 현금·결산·건설비·토스트가
  * 전부 이 눈금이라 한 곳만 옮기면 같은 게임 안에서 두 화면이 다른 돈을 말한다.
  */
-function won(fee: number): string {
-  return `₩${fee.toLocaleString('ko-KR')}`;
-}
-
-/** 만원 단위 — 게임 전체가 이 눈금으로 말한다 (헤더 현금·결산과 같다) */
-function man(won: number): string {
-  if (won >= 10000) return `${Math.round(won / 10000).toLocaleString('ko-KR')}만`;
-  return won.toLocaleString('ko-KR');
-}
 
 /** 고른 특화 한 벌 — 이름·효과는 sim 이 갖는다 (`SPECIALTY_LABELS`, 데이터 한 벌) */
 export interface SpecialtyView {
@@ -206,7 +198,7 @@ export function facilityInfo(
     upgradeCost: placement.upgradeCost(handle),
     charge: sale ? 'sale' : 'included',
     fee,
-    chargeLabel: sale ? `이용 ${won(fee)}` : '입장권에 포함',
+    chargeLabel: sale ? `이용 ${cashText(fee)}` : '입장권에 포함',
     upkeep: def.upkeep,
     specialty: spec
       ? {
@@ -388,7 +380,7 @@ export class KairoFacilityInfo {
       ),
       stat('개선', `${info.level}단계`),
       // ★ 포함/별도가 **한눈에** 갈려야 한다 — 이 화면의 첫 번째 존재 이유다 (K49)
-      stat('요금', info.charge === 'sale' ? won(info.fee) : '포함'),
+      stat('요금', info.charge === 'sale' ? cashText(info.fee) : '포함'),
     );
     this.body.append(stats);
 
@@ -453,7 +445,7 @@ export class KairoFacilityInfo {
     }
 
     rows.append(
-      row('upkeep', '유지비', '손님이 없어도 매주 나갑니다', `${man(info.upkeep)}/주`),
+      row('upkeep', '유지비', '손님이 없어도 매주 나갑니다', `${won(info.upkeep)}/주`),
     );
     this.body.append(rows);
 
@@ -512,7 +504,7 @@ export class KairoFacilityInfo {
 
     if (!info.atMaxLevel) {
       const cost = info.upgradeCost;
-      const b = button('kbtn primary', `개선 · ${man(cost)}`, () => {
+      const b = button('kbtn primary', `개선 · ${won(cost)}`, () => {
         if (!actions.upgrade()) return;
         this.rerender?.();
       });
@@ -618,7 +610,7 @@ function menuBlock(info: FacilityInfo, actions: FacilityActions): HTMLElement {
     line.dataset['menuItem'] = m.name;
     const main = el('div', 'krow-main');
     main.append(el('div', 'kitem-name', m.name));
-    line.append(main, el('div', 'kstat-value', won(m.price)));
+    line.append(main, el('div', 'kstat-value', cashText(m.price)));
     list.append(line);
   }
   box.append(list);
@@ -634,7 +626,7 @@ function menuBlock(info: FacilityInfo, actions: FacilityActions): HTMLElement {
       'kcaption',
       info.menuCraft
         ? '손님은 장착한 메뉴 중 하나를 실제로 삽니다'
-        : `평균 ${won(info.fee)} — 결산에 잡히는 1회 이용 금액입니다`,
+        : `평균 ${cashText(info.fee)} — 결산에 잡히는 1회 이용 금액입니다`,
     ),
   );
   return box;

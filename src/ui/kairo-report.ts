@@ -3,7 +3,6 @@ import { cssVar } from './tokens.js';
 import type {
   WeekReport,
   WeekSummary,
-  NeedKind,
   InvestmentBreakdown,
 } from '../sim/kairo/week.js';
 // 병목 처방이 시설 **이름**을 부른다 — 계약은 sim 소유, 문자열만 여기서 쓴다
@@ -13,6 +12,7 @@ import type { SwimZone } from '../sim/kairo/swim.js';
 import { panelHost } from './panels.js';
 import { recipeDef } from '../sim/kairo/menu.js';
 import { WISH_CHARACTERS } from '../sim/kairo/wishes.js';
+import { NEED_NAME, REPUTATION_NAME, REPUTATION_DEFINITION } from './kairo-terms.js';
 
 /**
  * 주간 결산 화면 — K54/Phase 5.
@@ -29,18 +29,11 @@ import { WISH_CHARACTERS } from '../sim/kairo/wishes.js';
  * 그대로 따른다 (CLAUDE.md 의 `ui/` 결정).
  */
 
-/** 심사 확인 화면(K48)도 같은 이름을 쓴다 — 두 벌이면 "위생"과 "청결"이 갈린다 */
-export const NEED_NAME: Record<NeedKind, string> = {
-  food: '먹거리',
-  rest: '쉼터',
-  warm: '온열',
-  play: '놀이',
-  thrill: '스릴',
-  scenery: '경관',
-  hygiene: '위생',
-  service: '운영',
-  stay: '숙박',
-};
+/**
+ * 낱말 표의 정본은 `kairo-terms.ts` 다 (UI v4). 여기서는 **다시 내보내기만** 한다 —
+ * 기존 import 경로(`kairo-facility.ts` 등)를 안 흔들면서 표를 하나로 유지하는 길이다.
+ */
+export { NEED_NAME };
 
 /** 손님 유형 — 표시 순서·이름·색. 색은 팔레트 계열에서 골라 히트맵과 안 부딪히게 */
 const GROUP_ORDER = ['family', 'couple', 'friends', 'company'] as const;
@@ -69,13 +62,14 @@ const WEATHER_ICON: Record<string, string> = {
   cold: '❄',
 };
 
-function won(n: number): string {
-  const sign = n < 0 ? '−' : '';
-  const v = Math.abs(Math.round(n));
-  if (v >= 100_000_000) return `${sign}${(v / 100_000_000).toFixed(1)}억`;
-  if (v >= 10_000) return `${sign}${Math.round(v / 10_000).toLocaleString('ko-KR')}만`;
-  return `${sign}${v.toLocaleString('ko-KR')}`;
-}
+/*
+ * 금액 포맷터의 정본은 `money.ts` 하나다 (UX 감사 P1-8 · P2-31).
+ *
+ * 여기 있던 사본은 `won(0)` 이 **단위 없는 `0`** 이었고, 그래서 장부에
+ * `인건비 0 · 건설 0 · 개선 0 · 메뉴 개발 0 · 투자 합계 0` 처럼 **뜻을 모를 0 이 7개**
+ * 떴다 ("없음"인지 "0원"인지 안 읽힌다). 코드베이스에 포맷터가 넷이었다.
+ */
+import { won } from './money.js';
 
 export interface ReportKpi {
   id: 'visitors' | 'profit' | 'satisfaction';
@@ -110,7 +104,11 @@ export function reportKpis(report: WeekReport, previous: WeekSummary | null): Re
     },
     {
       id: 'satisfaction',
-      label: '퇴장 만족',
+      /*
+       * 정본 이름은 `평판` 이다 (UX 감사 P0-5) — 헤더·목표·심사·인증이 같은 낱말을 쓴다.
+       * `퇴장 만족도` 라는 정확한 말은 **이 화면의 부제 한 줄에만** 남긴다.
+       */
+      label: REPUTATION_NAME,
       value: report.exitSatisfaction,
       delta: previous === null ? null : report.exitSatisfaction - previous.exitSatisfaction,
       percent: null,
@@ -426,7 +424,17 @@ export class KairoReport {
       );
       box.append(cell);
     }
-    return box;
+    const wrap = el('div', 'kkpis-wrap');
+    /*
+     * `평판` 이 무엇인지 **여기서 한 번** 가르친다 (UX 감사 P0-5). 낱말은 헤더·목표·심사·
+     * 인증이 전부 같은 것을 쓰고, 정의문은 이 한 줄에만 산다 — 여러 화면에 흩어 놓으면
+     * 다시 네 가지 설명이 된다.
+     */
+    wrap.append(
+      box,
+      el('div', 'kkpis-note', `${REPUTATION_NAME} — ${REPUTATION_DEFINITION}`),
+    );
+    return wrap;
   }
 
   private prescriptionBlock(rep: WeekReport): HTMLElement {

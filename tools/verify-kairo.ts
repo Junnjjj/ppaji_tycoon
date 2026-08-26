@@ -51,6 +51,12 @@ const PHASE7_ONLY = process.argv.includes('--phase7');
 const SHELL_V2_ONLY = process.argv.includes('--shell-v2');
 /** 코스 v2의 정보→편집→시험→리뷰→적용을 실제 CDP 터치로만 재현한다. */
 const COURSE_V2_ONLY = process.argv.includes('--course-v2');
+/**
+ * 건설 v3 — 조준 배치·1회 설치 기본·명시적 연속 설치를 실제 CDP 터치로만 재현한다
+ * (UI v3 Task 5). 본문은 `runBuildV3AimingSuite()` 하나이고, 전체 스위트 안에서도
+ * 그대로 돈다 — 이 플래그는 그 절만 빠르게 떼어 도는 지름길일 뿐 별도 로직이 아니다.
+ */
+const BUILD_V3_ONLY = process.argv.includes('--build-v3');
 /** 사건 미니 장면(Task 6)과 지도 밖 생활 장식(Task 7)만 빠르게 재현한다. */
 const SCENE_V2_ONLY = process.argv.includes('--scene-v2');
 /**
@@ -246,6 +252,202 @@ const record = (name: string, verdict: Verdict, detail = ''): void => {
   console.log(`  ${icon} ${name}${detail ? ` — ${detail}` : ''}`);
 };
 
+/**
+ * 경영 메뉴가 **조립을 끝냈는가** — 개수가 아니라 **정체**로 판정한다.
+ *
+ * ⚠ 예전엔 `.kmanage-action` 이 정확히 12개일 때를 준비 완료로 봤다. 목표 행과 설정 행이
+ * 같은 클래스를 쓰기 시작하자 실측 16이 되어 **기본 verify 경로가 6번째 검사에서 죽었고**,
+ * 그 뒤의 모든 절(경영 IA · HUD 예산 · 손님 · 주 루프 · 건설 v3)이 한 번도 안 돌았다.
+ * IA 가 바뀔 때마다 같은 사고가 나므로 숫자를 다시 박지 않는다 — 라우터의 네 목적지와
+ * Today 라벨이 **이름으로** 있으면 준비된 것이다.
+ */
+const MANAGEMENT_READY_EXPR = `!!document.querySelector('.kmanage-today .kmanage-label') &&
+  ['operations', 'growth', 'records', 'settings'].every((id) =>
+    !!document.querySelector('[data-manage-route="' + id + '"], [data-manage-group="' + id + '"]'))`;
+const MANAGEMENT_READY = `(() => ${MANAGEMENT_READY_EXPR})()`;
+
+/**
+ * 홈의 **상시 역할 제어**를 정체로 잰다 (K47-② 「개수를 세는 검사는 조용히 죽는다」).
+ *
+ * 계약은 넷이다: `메뉴` · `건설` · **즉시 목표 밴드** · **소식 띠**. 각각이
+ *   · 존재하고 (missing)
+ *   · 44px 이상이며 (small)
+ *   · 그 밖의 상시 컨트롤이 홈에 새로 생기지 않았다 (extra)
+ * 를 본다. 수가 우연히 맞아 통과하는 형태가 구조적으로 불가능해진다.
+ */
+const HOME_CONTROL_IDENTITY = `(() => {
+  const want = [
+    ['menu', '#kairo-menu-open'],
+    ['build', '#kairo-build-open'],
+    ['goal', '#kairo-goal [data-goal-role="immediate"]'],
+    ['ticker', '#kairo-ticker .kticker-hit'],
+  ];
+  const shown = (node) => {
+    if (!node) return false;
+    const style = getComputedStyle(node);
+    if (style.display === 'none' || style.visibility === 'hidden') return false;
+    if (Number(style.opacity) === 0) return false;
+    const r = node.getBoundingClientRect();
+    return r.width >= 1 && r.height >= 1;
+  };
+  const missing = [];
+  const small = [];
+  const seen = new Set();
+  for (const [name, sel] of want) {
+    const node = document.querySelector(sel);
+    if (!shown(node)) { missing.push(name); continue; }
+    seen.add(node);
+    const r = node.getBoundingClientRect();
+    if (Math.round(Math.min(r.width, r.height) * 100) / 100 < 44) small.push(name);
+  }
+  const extra = [];
+  for (const node of document.querySelectorAll('button, select, input, [role="button"]')) {
+    if (!shown(node)) continue;
+    if (node.disabled || node.getAttribute('aria-disabled') === 'true') continue;
+    if (seen.has(node)) continue;
+    if (want.some(([, sel]) => node.closest(sel))) continue;
+    extra.push(node.id || node.className || node.tagName);
+  }
+  return { missing, small, extra };
+})()`;
+
+/**
+ * 보이는 enabled 컨트롤이 **그 자리에서 눌리는가** (UI v3, 계획 §1.2).
+ *
+ * ⚠ 경계 상자가 44px 인 것은 터치 계약이 아니다. 2026-08-26 실측에서 메뉴의
+ * `결산·감상·인증·엔딩` 네 버튼은 87×44px 로 그려졌지만 중심
+ * `document.elementFromPoint()` 가 **하단 바**를 돌려줬다 — 옛 게이트는 상자만 보고
+ * 통과시켰다. 그래서 중앙 한 점이 아니라 **중앙 + 네 inset 5점**을 재고, 화면에
+ * 일부만 걸친 버튼(`contained: false`)은 "보이는 버튼"으로 치지 않는다.
+ *
+ * ⚠ "보이는가"는 **window 만으로는 못 잰다** (2026-08-26 실측). `.ksheet-body` 는
+ * `overflow-y: auto` 스크롤 컨테이너라, 스크롤 전 아래쪽 항목은 아직 window 안 좌표에도
+ * 하나도 안 그려진(0px 노출) 상태다 — 하지만 그 rect 는 window 보다 훨씬 아래(예: bottom
+ * 916/979/1033)까지 내려가 옛 `contained` 판정이 이걸 "화면에 반쯤 걸쳤다"는 결함으로
+ * 오분류했다. **완전히 안 보이는 것(스크롤로 아직 안 옴)**과 **진짜 절반만 잘린 것(레이아웃
+ * 버그)**은 다른 사건이다 — 전자는 hidden 과 동급으로 스윕에서 빼고, 후자만 위반으로 남긴다.
+ * 그래서 각 스크롤 조상(overflow: hidden/auto/scroll)의 clip 사각형을 window 와 교집합해
+ * "실제로 몇 % 가 그려지는가"를 재고, 0%는 제외·100%는 `contained`·그 사이만 위반이다.
+ */
+const OWNERSHIP_SWEEP = (rootSelector: string): string => `(() => {
+  const root = document.querySelector('${rootSelector}');
+  if (!root) return null;
+  const clipRectFor = (el) => {
+    let rect = { top: 0, left: 0, right: window.innerWidth, bottom: window.innerHeight };
+    let node = el.parentElement;
+    while (node) {
+      const style = getComputedStyle(node);
+      const clipsY = style.overflowY === 'hidden' || style.overflowY === 'auto' || style.overflowY === 'scroll';
+      const clipsX = style.overflowX === 'hidden' || style.overflowX === 'auto' || style.overflowX === 'scroll';
+      if (clipsY || clipsX) {
+        const cr = node.getBoundingClientRect();
+        rect = {
+          top: clipsY ? Math.max(rect.top, cr.top) : rect.top,
+          bottom: clipsY ? Math.min(rect.bottom, cr.bottom) : rect.bottom,
+          left: clipsX ? Math.max(rect.left, cr.left) : rect.left,
+          right: clipsX ? Math.min(rect.right, cr.right) : rect.right,
+        };
+      }
+      node = node.parentElement;
+    }
+    return rect;
+  };
+  const out = [];
+  const nodes = root.querySelectorAll('button, select, input, [role="button"]');
+  for (const node of nodes) {
+    if (node.disabled || node.getAttribute('aria-disabled') === 'true') continue;
+    const style = getComputedStyle(node);
+    if (style.display === 'none' || style.visibility === 'hidden') continue;
+    if (Number(style.opacity) === 0) continue;
+    const r = node.getBoundingClientRect();
+    if (r.width < 1 || r.height < 1) continue;
+    const clip = clipRectFor(node);
+    const overlapW = Math.max(0, Math.min(r.right, clip.right) - Math.max(r.left, clip.left));
+    const overlapH = Math.max(0, Math.min(r.bottom, clip.bottom) - Math.max(r.top, clip.top));
+    const visibleFrac = (overlapW * overlapH) / (r.width * r.height);
+    // 아직 스크롤로 안 온 것 — hidden 과 동급이라 위반 목록에 안 넣는다
+    if (visibleFrac <= 0.02) continue;
+    const contained = visibleFrac >= 0.98;
+    const px = Math.min(6, r.width / 2 - 0.5);
+    const py = Math.min(6, r.height / 2 - 0.5);
+    const points = [
+      [r.left + r.width / 2, r.top + r.height / 2],
+      [r.left + px, r.top + py],
+      [r.right - px, r.top + py],
+      [r.left + px, r.bottom - py],
+      [r.right - px, r.bottom - py],
+    ];
+    let owned = 0;
+    let thief = '';
+    for (const point of points) {
+      const top = document.elementFromPoint(point[0], point[1]);
+      if (top === node || node.contains(top)) owned++;
+      else if (!thief) thief = top ? (top.id || String(top.className) || top.tagName) : 'none';
+    }
+    out.push({
+      id: node.id || node.dataset.manageAction || node.dataset.settingsAction ||
+        node.dataset.goalRole || String(node.textContent || '').trim().slice(0, 14),
+      owned: owned,
+      contained: contained,
+      visiblePct: Math.round(visibleFrac * 100),
+      short: Math.round(Math.min(r.width, r.height)),
+      bottom: Math.round(r.bottom),
+      thief: thief,
+      isClose: node.id === 'kairo-sheet-close',
+      isTodayPrimary: !!node.closest('.kmanage-today'),
+    });
+  }
+  return out;
+})()`;
+
+interface OwnershipHit {
+  id: string;
+  owned: number;
+  contained: boolean;
+  visiblePct: number;
+  short: number;
+  bottom: number;
+  thief: string;
+  isClose: boolean;
+  isTodayPrimary: boolean;
+}
+
+/**
+ * 실제 computed font-size 를 잰다 (계획 §1.3 — 9px 사용 금지).
+ *
+ * CSS 정적 검사는 "규칙에 몇 px 이라 적었나"만 본다. 상속·중첩·미디어 쿼리가 겹치면
+ * 화면 값은 다를 수 있으므로 **그려진 값**을 잰다. 텍스트 노드를 직접 가진 요소만
+ * 대상이다 — 컨테이너까지 세면 자식의 글씨를 두 번 재고 판정이 흐려진다.
+ */
+const TYPOGRAPHY_SWEEP = (rootSelector: string): string => `(() => {
+  const root = document.querySelector('${rootSelector}');
+  if (!root) return null;
+  const out = [];
+  for (const node of root.querySelectorAll('*')) {
+    const style = getComputedStyle(node);
+    if (style.display === 'none' || style.visibility === 'hidden') continue;
+    let text = '';
+    for (const child of node.childNodes) {
+      if (child.nodeType === 3) text += String(child.textContent || '').trim();
+    }
+    if (!text) continue;
+    out.push({
+      text: text.slice(0, 18),
+      cls: String(node.className || node.tagName),
+      fontSize: Math.round(parseFloat(style.fontSize) * 10) / 10,
+      weight: Number(style.fontWeight),
+    });
+  }
+  return out;
+})()`;
+
+interface TypeHit {
+  text: string;
+  cls: string;
+  fontSize: number;
+  weight: number;
+}
+
 /** DOM click이 아니라 브라우저 입력 파이프를 타는 한 손가락 탭. */
 async function touchElement(page: Page, cdp: CDPSession, selector: string): Promise<void> {
   const target = page.locator(selector).first();
@@ -432,7 +634,15 @@ async function main(): Promise<void> {
     process.exit(failed.length === 0 ? 0 : 1);
   }
 
-  if (SHELL_V2_ONLY) {
+  /**
+   * 홈/메뉴 셸 v3 — **기본 경로에서도 돈다.**
+   *
+   * ⚠ 예전엔 이 절 전체가 `if (SHELL_V2_ONLY)` 안에 있었고 끝에서 `process.exit` 했다.
+   * 즉 `--shell-v2` 를 직접 준 사람만 이 36건의 보호를 받았고, `npm run verify:kairo` 만
+   * 도는 다음 사람은 하나도 못 받았다 (계획서가 「새 게이트를 `if (FLAG_ONLY)` 안에만
+   * 두지 않는다」로 못 박은 규칙). 플래그는 이제 **그 함수만 부르고 나가는 지름길**이다.
+   */
+  async function runShellV3Suite(): Promise<void> {
     for (const [w, h, tag] of [
       [393, 852, 'portrait'],
       [852, 393, 'landscape'],
@@ -441,80 +651,110 @@ async function main(): Promise<void> {
       const shellPage = await shellContext.newPage();
       await shellPage.addInitScript(`try { localStorage.clear(); } catch {}`);
       await shellPage.goto(URL, { waitUntil: 'load' });
+      /*
+       * UI v3: 홈에는 **현재 행동 한 줄**만 산다. 중·장기 목표는 메뉴의 `목표` 절로
+       * 옮겨졌으므로 홈 밴드의 `[data-goal-role]` 은 정확히 1개다.
+       */
       await shellPage.waitForFunction(
-        `(() => document.querySelectorAll('[data-goal-role]').length === 3 &&
-          document.querySelectorAll('.kmanage-action').length === 12)()`,
+        `(() => document.querySelectorAll('#kairo-goal [data-goal-role]').length === 1 &&
+          (${MANAGEMENT_READY_EXPR}))()`,
         undefined,
         { timeout: 15000 },
       );
       const shellCdp = await shellContext.newCDPSession(shellPage);
       /*
-       * 홈 셸 v2 는 **한 밴드**다 (주인님 결정, 2026-08-25): A 약 60% · B/C 각 약 20%,
-       * 셋 다 64px. 예전 계약("A 가 전폭")은 상자가 둘이라 HUD 예산 24/36 을 못 지켰다 —
-       * 이제 **밴드**가 세로에서 전폭이고 가로에서는 폰 한 칸 폭(377px)으로 캡된다.
+       * 홈 셸 v3 (2026-08-26) — 밴드는 **현재 행동 한 줄**이다.
+       *
+       * ⚠ v2 의 "A 60% · B/C 각 20%" 계약은 폐기했다. 실측에서 B/C 는 하트·별
+       * **아이콘만** 남고 label/detail 을 CSS 가 `display:none` 으로 지웠기 때문에
+       * (`style.css` 옛 1086-1089) 화면만 보고는 뜻을 알 수 없었다 — 접근성 이름만 있고
+       * 화면에는 아이콘뿐인 주요 행동은 금지다 (계획 §1.3). 중·장기 목표는 메뉴의
+       * `목표` 절에서 이름과 진행률로 읽는다.
        */
       const home = await shellPage.evaluate(`(() => {
         const root = document.getElementById('kairo-goal');
-        const immediate = document.querySelector('[data-goal-role="immediate"]');
+        const immediate = document.querySelector('#kairo-goal [data-goal-role="immediate"]');
         const label = immediate && immediate.querySelector('.kgoal-label');
-        const secondary = [...document.querySelectorAll('[data-goal-role="mid"], [data-goal-role="long"]')];
+        const kicker = immediate && immediate.querySelector('.kgoal-kicker');
+        const detail = immediate && immediate.querySelector('.kgoal-detail');
         const band = root.getBoundingClientRect();
         const rect = immediate && immediate.getBoundingClientRect();
-        const secondaryRects = secondary.map((item) => item.getBoundingClientRect());
         const top = document.getElementById('kairo-top').getBoundingClientRect();
         const controls = [...document.querySelectorAll('#kairo-bar > button')];
         const targets = [...document.querySelectorAll('#kairo-goal [role="button"]')]
           .map((item) => { const r = item.getBoundingClientRect(); return Math.min(r.width, r.height); });
-        const rows = [rect, ...secondaryRects];
+        const visible = (node) => {
+          if (!node) return false;
+          const style = getComputedStyle(node);
+          if (style.display === 'none' || style.visibility === 'hidden') return false;
+          return String(node.textContent || '').trim().length > 0;
+        };
         return {
-          legacy: !!document.querySelector('.kchipcol'),
+          // 음성 대조군은 **살아 있는 반대 조건**이어야 한다: 옛 v2 칩 기둥이 돌아오거나
+          // 홈 밴드가 다시 두 칸 이상이 되면(= B/C 재유입) 잡힌다. 이미 지운 선택자를
+          // 대조군으로 두면 언제나 false 라 아무것도 안 재는 죽은 검사가 된다.
+          legacy: !!document.querySelector('.kchipcol') ||
+            document.querySelectorAll('#kairo-goal [data-goal-role]').length > 1,
           visible: !!root && !root.hidden && root.dataset.goalSurface === 'home',
           count: document.querySelectorAll('#kairo-goal [data-goal-role]').length,
+          kickerText: kicker ? String(kicker.textContent).trim() : '',
           immediateText: label ? label.textContent : '',
+          detailShown: visible(detail),
+          kickerShown: visible(kicker),
           immediateFits: !!label && label.scrollWidth <= label.clientWidth,
           bandW: Math.round(band.width),
           bandH: Math.round(band.height),
           bandFullWidth: band.left <= 8.5 && band.right >= window.innerWidth - 8.5,
           bandCapped: Math.round(band.width) <= 377,
-          // 셋이 한 줄이다 — A 와 B/C 가 같은 top 을 공유한다.
-          sameRow: rows.length === 3 && rows.every((r) => r && Math.abs(r.top - rows[0].top) <= 1),
           primaryShare: rect ? rect.width / band.width : 0,
-          secondaryShare: secondaryRects.map((r) => r.width / band.width),
           belowHeader: band.top >= top.bottom,
           mapHeight: band.top - top.bottom,
           headerButtons: document.querySelectorAll('#kairo-top button').length,
           controls: controls.map((item) => item.id),
+          controlText: controls.map((item) => String(item.textContent).trim()),
           minTarget: targets.length ? Math.min(...targets) : 0,
           overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - window.innerWidth,
         };
       })()`) as {
-        legacy: boolean; visible: boolean; count: number; immediateText: string;
+        legacy: boolean; visible: boolean; count: number; kickerText: string;
+        immediateText: string; detailShown: boolean; kickerShown: boolean;
         immediateFits: boolean; bandW: number; bandH: number; bandFullWidth: boolean;
-        bandCapped: boolean; sameRow: boolean; primaryShare: number; secondaryShare: number[];
+        bandCapped: boolean; primaryShare: number;
         belowHeader: boolean; mapHeight: number; headerButtons: number; controls: string[];
-        minTarget: number; overflow: number;
+        controlText: string[]; minTarget: number; overflow: number;
       };
-      await shellPage.screenshot({ path: `${SHOT_DIR}/kairo-home-shell-v2-${tag}.png` });
+      await shellPage.screenshot({ path: `${SHOT_DIR}/kairo-home-shell-v3-${tag}.png` });
       const bandWidthOk = tag === 'portrait' ? home.bandFullWidth : home.bandCapped;
-      const sharesOk = home.primaryShare >= 0.5 && home.primaryShare <= 0.7 &&
-        home.secondaryShare.length === 2 &&
-        home.secondaryShare.every((share) => share >= 0.15 && share <= 0.25);
       record(
-        `홈 셸 v2 ${tag} — A/B/C 한 밴드 · A 약 60% · 제목 무잘림`,
-        !home.legacy && home.visible && home.count === 3 && bandWidthOk && home.sameRow &&
-          sharesOk && home.belowHeader && home.immediateFits &&
+        `홈 셸 v3 ${tag} — 현재 행동 한 줄 · 아이콘 only 금지 · 제목 무잘림`,
+        !home.legacy && home.visible && home.count === 1 && bandWidthOk &&
+          home.primaryShare >= 0.98 && home.kickerShown && home.detailShown &&
+          home.belowHeader && home.immediateFits &&
           home.immediateText.includes('물려받은 코스 시험 운행') ? 'pass' : 'fail',
-        `A "${home.immediateText}" ${Math.round(home.primaryShare * 100)}% · ` +
-          `B/C ${home.secondaryShare.map((share) => `${Math.round(share * 100)}%`).join('/')} · ` +
+        `"${home.kickerText} 〉 ${home.immediateText}" ${Math.round(home.primaryShare * 100)}% · ` +
+          `상세 ${home.detailShown ? '보임' : '없음'} · 잔여 목표칸 ${home.count} · ` +
           `밴드 ${home.bandW}×${home.bandH}px · 지도 틈 ${Math.round(home.mapHeight)}px · ` +
-          `캡처 ${SHOT_DIR}/kairo-home-shell-v2-${tag}.png`,
+          `캡처 ${SHOT_DIR}/kairo-home-shell-v3-${tag}.png`,
       );
       record(
-        `홈 셸 v2 ${tag} — 헤더 0 · 하단 메뉴/건설 · 44px · overflow 0`,
+        `홈 셸 v3 ${tag} — 헤더 0 · 하단 메뉴/건설(이름 있는 버튼) · 48px · overflow 0`,
         home.headerButtons === 0 && JSON.stringify(home.controls) ===
-          JSON.stringify(['kairo-menu-open', 'kairo-build-open']) && home.minTarget >= 44 &&
+          JSON.stringify(['kairo-menu-open', 'kairo-build-open']) &&
+          JSON.stringify(home.controlText) === JSON.stringify(['메뉴', '건설']) &&
+          home.minTarget >= 48 &&
           home.overflow <= 0 && home.mapHeight >= (tag === 'portrait' ? 280 : 80) ? 'pass' : 'fail',
-        `타깃 ${home.minTarget}px · 지도 틈 ${Math.round(home.mapHeight)}px · 넘침 ${home.overflow}px`,
+        `타깃 ${home.minTarget}px · 상시 ${home.controlText.join('/')} · ` +
+          `지도 틈 ${Math.round(home.mapHeight)}px · 넘침 ${home.overflow}px`,
+      );
+      const homeType = await shellPage.evaluate(TYPOGRAPHY_SWEEP('#kairo-goal')) as TypeHit[] | null;
+      const homeTypeMin = homeType && homeType.length ? Math.min(...homeType.map((hit) => hit.fontSize)) : 0;
+      const homeLabelSize = homeType?.find((hit) => hit.cls.includes('kgoal-label'))?.fontSize ?? 0;
+      record(
+        `홈 셸 v3 ${tag} — 현재 행동 15px+ · 보조 12px+ (9px 금지)`,
+        homeType !== null && homeType.length >= 3 && homeTypeMin >= 12 && homeLabelSize >= 15
+          ? 'pass' : 'fail',
+        `최소 ${homeTypeMin}px · 제목 ${homeLabelSize}px · ` +
+          (homeType ?? []).map((hit) => `${hit.text}:${hit.fontSize}`).join(' · '),
       );
 
       /*
@@ -584,14 +824,20 @@ async function main(): Promise<void> {
       const menu = await shellPage.evaluate(`(() => {
         const root = document.getElementById('kairo-goal');
         const host = document.querySelector('.ksheet-menu > .kmanage');
-        const body = document.querySelector('.ksheet-body').getBoundingClientRect();
+        const index = document.querySelector('[data-manage-screen="index"]');
+        const bodyBox = document.querySelector('.kmanage-body');
+        const body = (bodyBox || document.querySelector('.ksheet-body')).getBoundingClientRect();
         const today = document.querySelector('.kmanage-today').getBoundingClientRect();
-        const operations = document.querySelector('[data-manage-group="operations"]').getBoundingClientRect();
-        const growth = document.querySelector('[data-manage-group="growth"]').getBoundingClientRect();
-        const semantic = host ? [...host.children].slice(0, 3).map((item) => item.className) : [];
+        const routes = [...document.querySelectorAll('[data-manage-route]')]
+          .filter((node) => node.closest('[data-manage-screen="index"]'));
+        const routeIds = routes.map((node) => node.getAttribute('data-manage-route'));
+        const routeBoxes = routes.map((node) => node.getBoundingClientRect());
+        const semantic = host ? [...host.children].map((item) => item.className) : [];
+        const indexOrder = index ? [...index.children].map((item) => item.className) : [];
         const todayButton = document.querySelector('.kmanage-today > .kmanage-action.primary');
         const todayRect = todayButton && todayButton.getBoundingClientRect();
         const paint = (element) => {
+          if (!element) return { opacity: 0, backgroundColor: 'none', backgroundImage: 'none' };
           const style = getComputedStyle(element);
           return {
             opacity: Number(style.opacity),
@@ -599,39 +845,111 @@ async function main(): Promise<void> {
             backgroundImage: style.backgroundImage,
           };
         };
+        const ticker = document.getElementById('kairo-ticker');
+        const bar = document.getElementById('kairo-bar');
+        const gone = (node) => !node || node.hidden ||
+          getComputedStyle(node).display === 'none' ||
+          node.getBoundingClientRect().height < 1;
+        const grid = document.querySelector('.kmanage-routes');
+        const gridColumns = grid
+          ? getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length : 0;
         return {
           goalsHidden: !!root && root.hidden && root.dataset.goalSurface === 'menu',
+          // 홈 입력층 셋이 **함께** 내려간다 — 하나만 살아 있으면 그것이 시트를 훔친다
+          homeInputOff: document.body.dataset.homeInput === 'off' &&
+            gone(root) && gone(ticker) && gone(bar),
+          gridColumns: gridColumns,
+          routeIds: routeIds,
+          // 라우터 네 줄이 **전부 첫 폴드 안**이어야 한다 — 목적지를 찾으려고 스크롤하면 안 된다
+          routesInFold: routeBoxes.length > 0 &&
+            routeBoxes.every((r) => r.bottom <= body.bottom + 1),
+          routeMinTap: routeBoxes.length === 0 ? 0 :
+            Math.round(Math.min.apply(null, routeBoxes.map((r) => Math.min(r.width, r.height))) * 100) / 100,
+          // 인덱스의 스크롤 깊이 — 1,893px(5.2화면)이었던 그 자리다
+          scrollRatio: bodyBox ? Math.round((bodyBox.scrollHeight / Math.max(1, bodyBox.clientHeight)) * 100) / 100 : 99,
+          settings: !!document.querySelector('[data-manage-screen="settings"]'),
+          // 이미 지운 .kmanage-utility 대신, **새 게임이 설정 목적지 밖에 있으면** 잡는다.
+          newGameInUtility: (() => {
+            const node = document.getElementById('kairo-newgame-open');
+            if (!node) return false;
+            return !node.closest('[data-manage-group="settings"], [data-manage-screen="settings"]');
+          })(),
+          newGameInSettings:
+            !!document.querySelector('[data-manage-screen="settings"] #kairo-newgame-open'),
+          newGameText: (() => {
+            const node = document.getElementById('kairo-newgame-open');
+            return node ? String(node.textContent).trim() : '';
+          })(),
           directRoot: !!host,
           semantic: semantic,
+          indexOrder: indexOrder,
           todayPrimary: !!todayButton && !!todayButton.querySelector('.kmanage-today-icon') &&
             !!todayButton.querySelector('.kmanage-reason') && !!todayButton.querySelector('.kmanage-detail'),
           todayTarget: todayRect ? Math.min(todayRect.width, todayRect.height) : 0,
-          operationsInFold: operations.bottom <= body.bottom + 1,
-          growthStartsInFold: growth.top < body.bottom,
+          verticalOrder: routeBoxes.length > 0 && today.top < routeBoxes[0].top,
           overflow: host ? host.scrollWidth - host.clientWidth : 999,
-          verticalOrder: today.top < operations.top && operations.top < growth.top,
+          // 목록 넷의 머리 id 가 **닫힌 화면에서도** DOM 에 남아 있는가 (하네스 손잡이)
+          listHeads: ['kairo-quests-list', 'kairo-wish-list', 'kairo-cert-list', 'kairo-regular-list']
+            .filter((id) => !!document.getElementById(id)),
           paint: {
             sheet: paint(document.getElementById('kairo-sheet')),
             today: paint(document.querySelector('.kmanage-today')),
-            group: paint(document.querySelector('.kmanage-group')),
+            route: paint(document.querySelector('.kmanage-route')),
             action: paint(document.querySelector('.kmanage-action:not(.primary)')),
           },
         };
       })()`) as {
-        goalsHidden: boolean; directRoot: boolean; semantic: string[]; todayPrimary: boolean;
-        todayTarget: number; operationsInFold: boolean; growthStartsInFold: boolean;
+        goalsHidden: boolean; homeInputOff: boolean; gridColumns: number; settings: boolean;
+        routeIds: string[]; routesInFold: boolean; routeMinTap: number; scrollRatio: number;
+        newGameInUtility: boolean; newGameInSettings: boolean; newGameText: string;
+        directRoot: boolean; semantic: string[]; indexOrder: string[]; todayPrimary: boolean;
+        todayTarget: number; listHeads: string[];
         overflow: number; verticalOrder: boolean;
         paint: Record<string, { opacity: number; backgroundColor: string; backgroundImage: string }>;
       };
       await shellPage.screenshot({ path: `${SHOT_DIR}/kairo-menu-shell-v2-${tag}.png` });
-      const semanticOrder = menu.semantic[0] === 'kmanage-today' &&
-        menu.semantic[1] === 'kmanage-warnings' && menu.semantic[2] === 'kmanage-groups';
+      /*
+       * ── 메뉴 v4: **라우터 한 장** ────────────────────────────────────────
+       *
+       * 옛 메뉴는 34항목 1,893px 한 스크롤이었다 (세로 5.2화면 · 가로 11.8화면). 이제
+       * 인덱스는 `판 설정 · 오늘 할 일 · 경고 · 목적지 넷` 이고 **여기서 끝나는 행동은
+       * 오늘 할 일 하나뿐**이다.
+       */
+      const semanticOrder = menu.semantic[0] === 'kmanage-head' &&
+        menu.semantic[1] === 'kmanage-body';
+      const indexOrderOk = menu.indexOrder[0] === 'kmanage-context' &&
+        menu.indexOrder[1] === 'kmanage-today' &&
+        menu.indexOrder[2] === 'kmanage-warnings' &&
+        menu.indexOrder[3] === 'kmanage-routes';
       record(
-        `메뉴 셸 v2 ${tag} — 목표 숨김 · Today 최상위 한 탭 · semantic order`,
-        menu.goalsHidden && menu.directRoot && semanticOrder && menu.todayPrimary &&
-          menu.todayTarget >= 44 && menu.verticalOrder && menu.overflow <= 0 ? 'pass' : 'fail',
-        `Today ${Math.round(menu.todayTarget)}px · 순서 ${menu.semantic.join(' > ')} · ` +
-          `캡처 ${SHOT_DIR}/kairo-menu-shell-v2-${tag}.png`,
+        `메뉴 셸 v4 ${tag} — 목표 숨김 · 머리/본문 · Today 최상위 한 탭`,
+        menu.goalsHidden && menu.directRoot && semanticOrder && indexOrderOk &&
+          menu.todayPrimary && menu.todayTarget >= 44 && menu.verticalOrder &&
+          menu.overflow <= 0 ? 'pass' : 'fail',
+        `Today ${Math.round(menu.todayTarget)}px · 셸 ${menu.semantic.join(' > ')} · ` +
+          `인덱스 ${menu.indexOrder.join(' > ')} · 캡처 ${SHOT_DIR}/kairo-menu-shell-v2-${tag}.png`,
+      );
+      record(
+        `메뉴 셸 v4 ${tag} — 목적지 넷이 이름으로 있고 전부 첫 폴드 · 44px`,
+        JSON.stringify(menu.routeIds) ===
+          JSON.stringify(['operations', 'growth', 'records', 'settings']) &&
+          menu.routesInFold && menu.routeMinTap >= 43.75 ? 'pass' : 'fail',
+        `${menu.routeIds.join('/')} · 첫 폴드 ${menu.routesInFold ? '전부' : '잘림'} · ` +
+          `최소 ${menu.routeMinTap}px`,
+      );
+      /*
+       * ⚠ 스크롤 깊이는 **컨테이너 쪽 원인**이었다. 열을 반으로 줄이면 행이 두 배가 되므로
+       * 열 수만 재면 안 된다 — 실제 깊이를 잰다. 인덱스는 한 화면 안에 들어와야 한다.
+       */
+      record(
+        `메뉴 셸 v4 ${tag} — 인덱스 스크롤 깊이 ≤ 1.6화면 (옛 5.2 / 11.8)`,
+        menu.scrollRatio <= 1.6 ? 'pass' : 'fail',
+        `${menu.scrollRatio}화면`,
+      );
+      record(
+        `메뉴 셸 v4 ${tag} — 목록 머리 넷이 닫힌 화면에서도 DOM 에 남는다`,
+        menu.listHeads.length === 4 ? 'pass' : 'fail',
+        `${menu.listHeads.length}/4 · ${menu.listHeads.join(',')}`,
       );
       const opaquePaint = Object.values(menu.paint).every((surface) =>
         surface.opacity === 1 &&
@@ -640,51 +958,196 @@ async function main(): Promise<void> {
           : surface.backgroundColor.startsWith('rgb(') && !surface.backgroundColor.startsWith('rgba(')),
       );
       record(
-        `메뉴 셸 v2 ${tag} — 시트·Today·그룹·행 불투명 크림 recipe`,
+        `메뉴 셸 v4 ${tag} — 시트·Today·목적지·행 불투명 크림 recipe`,
         opaquePaint ? 'pass' : 'fail',
         Object.entries(menu.paint).map(([name, surface]) =>
           `${name} opacity ${surface.opacity} · ${surface.backgroundImage === 'none' ? surface.backgroundColor : surface.backgroundImage}`,
         ).join(' | '),
       );
-      if (tag === 'portrait') {
-        record(
-          '메뉴 셸 v2 portrait 첫 폴드 — Today + 운영 전체 + 성장 일부',
-          menu.operationsInFold && menu.growthStartsInFold ? 'pass' : 'fail',
-          `운영 ${menu.operationsInFold ? '전체' : '잘림'} · 성장 ${menu.growthStartsInFold ? '보임' : '아래'}`,
-        );
-      }
+
+      /*
+       * ── 메뉴 v3: 실제 소유권 · 타이포 · IA ────────────────────────────────
+       *
+       * 옛 게이트는 Today 버튼 하나와 첫 폴드 배치만 봤다. 메뉴 안의 **모든** 실제
+       * 버튼 중심 소유권은 안 재고 있었고, 그래서 네 버튼이 하단 바에 가려진 채로
+       * 초록불이었다 (2026-08-26 실측).
+       */
+      record(
+        `메뉴 v3 ${tag} — 홈 입력층 셋(목표·티커·바)이 함께 내려간다`,
+        menu.homeInputOff ? 'pass' : 'fail',
+        `data-home-input=${menu.homeInputOff ? 'off · 셋 다 사라짐' : '남아 있음'}`,
+      );
+      /*
+       * ⚠ 열 수 계약이 **방향마다 다르다** (IA 재설계 §4.2). 393px 에서 4열은 라벨이
+       * 아이콘으로 줄어드는 길이고, 852px 에서 폰 2열은 **가로가 세로보다 두 배 나쁜**
+       * 그 상태다 (실측 11.8화면). 미디어 쿼리 두 벌이 아니라 `auto-fit` 하나로 낸다.
+       */
+      record(
+        tag === 'portrait'
+          ? `메뉴 v4 ${tag} — 393px에서 4열 금지 (최대 2열)`
+          : `메뉴 v4 ${tag} — 넓은 화면은 폭을 쓴다 (최소 2열)`,
+        tag === 'portrait'
+          ? menu.gridColumns > 0 && menu.gridColumns <= 2 ? 'pass' : 'fail'
+          : menu.gridColumns >= 2 ? 'pass' : 'fail',
+        `${menu.gridColumns}열`,
+      );
+      record(
+        `메뉴 v3 ${tag} — 새 게임은 설정 IA 안이고 배속과 같은 위계가 아니다`,
+        menu.settings && menu.newGameInSettings && !menu.newGameInUtility &&
+          menu.newGameText.includes('새 게임 시작') ? 'pass' : 'fail',
+        `설정 ${menu.settings ? '있음' : '없음'} · "${menu.newGameText}" · ` +
+          `옛 유틸리티 행 ${menu.newGameInUtility ? '남음' : '없음'}`,
+      );
+
+      const menuOwnership = await shellPage.evaluate(
+        OWNERSHIP_SWEEP('#kairo-sheet'),
+      ) as OwnershipHit[] | null;
+      const visibleHits = (menuOwnership ?? []).filter((hit) => hit.contained);
+      const stolen = visibleHits.filter((hit) => hit.owned < 5);
+      const halfOut = (menuOwnership ?? []).filter((hit) => !hit.contained);
+      const smallHits = visibleHits.filter((hit) => hit.short < 44);
+      /*
+       * ⚠ **"12개 이상"은 잘못 옮겨붙은 숫자였다** (2026-08-26 실측) — `.kmanage-action`
+       * 총 개수(전체 메뉴가 완비됐는가) 검사에서 그대로 복사돼, 스크롤 전 첫 화면에
+       * 실제로 보이는 개수(닫기+Today 뿐인 가로 393×852 에서 5개, 852×393 에서 2개)에는
+       * 처음부터 못 맞는 문턱이었다 — "5/5 전부 자기 소유"인데도 무조건 빨간불이었다.
+       * 첫 폴드가 몇 개를 보여주는지는 화면 크기·레이아웃에 달렸으므로 매직 넘버가 아니라
+       * **구조적으로 항상 보여야 하는 것**(닫기 버튼·Today 주 행동)이 실제로 그 안에
+       * 있는지를 재는 쪽이 정직하다 — 세로/가로 어느 쪽도 이 둘은 스크롤 없이 보인다.
+       */
+      const hasClose = visibleHits.some((hit) => hit.isClose);
+      const hasTodayPrimary = visibleHits.some((hit) => hit.isTodayPrimary);
+      record(
+        `메뉴 v3 ${tag} — 보이는 컨트롤 ${visibleHits.length}개 전부 5점 소유 · 44px`,
+        menuOwnership !== null && visibleHits.length > 0 && stolen.length === 0 &&
+          smallHits.length === 0 && hasClose && hasTodayPrimary ? 'pass' : 'fail',
+        `5점 소유 ${visibleHits.length - stolen.length}/${visibleHits.length} · ` +
+          `닫기 ${hasClose ? '보임' : '⚠ 안 보임'} · Today ${hasTodayPrimary ? '보임' : '⚠ 안 보임'} · ` +
+          (stolen.length
+            ? `도둑맞음 ${stolen.slice(0, 4).map((hit) => `${hit.id}(${hit.owned}/5←${hit.thief})`).join(', ')}`
+            : '전부 자기 소유') +
+          (smallHits.length ? ` · 44px 미만 ${smallHits.map((hit) => hit.id).join(',')}` : ''),
+      );
+      record(
+        `메뉴 v3 ${tag} — 화면에 반쯤 걸친 버튼 0 (스크롤 컨테이너가 clip)`,
+        menuOwnership !== null && halfOut.length === 0 ? 'pass' : 'fail',
+        halfOut.length
+          ? halfOut.slice(0, 4).map((hit) => `${hit.id} bottom ${hit.bottom} (${hit.visiblePct}% 보임)`).join(', ')
+          : '없음 (완전히 안 보이는 스크롤 미도달 항목은 제외하고 잰다)',
+      );
+
+      /*
+       * ⚠ **`.ksheet-menu` 전체를 쓸면 액션 글씨가 아닌 것까지 걸린다** (2026-08-26 실측).
+       * 40건 중 하나도 `.kmanage-label`/`.kmanage-detail`(메뉴 IA 행동 글씨)이 아니었다 —
+       * 판 이름·버전 캡션(`#kairo-context`, 디버그 각주), 의뢰·소원·인증 진행 목록
+       * (`#kairo-quests`, 읽기 전용 현황판)이 전부였다. 계획 §1.3 이 겨눈 것은
+       * "행동 이름을 보고 다음 결과를 예상"하는 **메뉴 IA 행동 글씨**이지 이 현황판이
+       * 아니다 — 그래서 스윕을 `.kmanage`(Today·그룹·행동·목표)로 좁힌다.
+       * 현황판이 실제로 안 읽히는 것은 별개 결함이라 CSS 로 직접 고쳤다 (`.kquests`
+       * 11→12px · `.kquest-detail` 10→12px · `.kcontext` 11→12px · `.kcaption` 11.5→12px) —
+       * 게이트를 무의미하게 넓히는 대신 **그 문제를 실제로 없앴다.**
+       */
+      const menuType = await shellPage.evaluate(
+        TYPOGRAPHY_SWEEP('.kmanage'),
+      ) as TypeHit[] | null;
+      const tiny = (menuType ?? []).filter((hit) => hit.fontSize < 12);
+      const labels = (menuType ?? []).filter((hit) => hit.cls.includes('kmanage-label'));
+      const details = (menuType ?? []).filter((hit) => hit.cls.includes('kmanage-detail'));
+      const primaryLabel = labels.find((hit) => hit.fontSize >= 16);
+      record(
+        `메뉴 v3 ${tag} — 9~10px 행동 글씨 0 · 이름 15px+ · 상세 13px+ · 주요 16px+`,
+        menuType !== null && tiny.length === 0 && labels.length > 0 &&
+          labels.every((hit) => hit.fontSize >= 15) && details.length > 0 &&
+          details.every((hit) => hit.fontSize >= 13) && primaryLabel !== undefined
+          ? 'pass' : 'fail',
+        `표본 ${(menuType ?? []).length} · 12px 미만 ${tiny.length}` +
+          (tiny.length ? ` (${tiny.slice(0, 5).map((hit) => `${hit.text}:${hit.fontSize}`).join(', ')})` : '') +
+          ` · 이름 최소 ${labels.length ? Math.min(...labels.map((hit) => hit.fontSize)) : 0}px` +
+          ` · 상세 최소 ${details.length ? Math.min(...details.map((hit) => hit.fontSize)) : 0}px`,
+      );
+
+      /*
+       * 가장 깊은 항목까지 **실제로 간다.**
+       *
+       * ⚠ UI v4 부터는 "인덱스를 끝까지 스크롤"이 아니다 — 메뉴가 라우터라 `새 게임 시작`
+       * 은 `설정` 목적지 안에 산다. 그래서 **진짜 터치로 목적지를 열고** 거기서 잰다.
+       * 옛 방식(마지막 `.kmanage-action` 을 스크롤)은 라우터에서 구조적으로 못 찾는다 —
+       * "마지막 항목을 못 찾음"으로 조용히 실패했다.
+       */
+      await touchElement(shellPage, shellCdp, '[data-manage-route="settings"]');
+      await shellPage.waitForFunction(
+        `(() => { const s = document.querySelector('[data-manage-screen="settings"]'); return !!s && !s.hidden; })()`,
+      );
+      await shellPage.waitForTimeout(160);
+      const lastMenuAction = await shellPage.evaluate(`(() => {
+        const nodes = [...document.querySelectorAll('[data-manage-screen="settings"] .kmanage-action')];
+        const last = nodes[nodes.length - 1];
+        return last ? (last.id || last.dataset.settingsAction || '') : '';
+      })()`) as string;
+      await shellPage.evaluate(`(() => {
+        const nodes = [...document.querySelectorAll('[data-manage-screen="settings"] .kmanage-action')];
+        const last = nodes[nodes.length - 1];
+        if (last) last.scrollIntoView({ block: 'center' });
+      })()`);
+      await shellPage.waitForTimeout(120);
+      const lastReachable = await shellPage.evaluate(OWNERSHIP_SWEEP('.ksheet-menu')) as
+        OwnershipHit[] | null;
+      const lastHit = (lastReachable ?? []).filter((hit) => hit.contained).slice(-1)[0];
+      record(
+        `메뉴 v3 ${tag} — 스크롤 뒤 마지막 항목(${lastMenuAction || '?'})도 5점 소유`,
+        lastHit !== undefined && lastHit.owned === 5 && lastHit.short >= 44 ? 'pass' : 'fail',
+        lastHit
+          ? `${lastHit.id} ${lastHit.owned}/5 · ${lastHit.short}px${lastHit.owned < 5 ? ` ←${lastHit.thief}` : ''}`
+          : '마지막 항목을 못 찾음',
+      );
 
       await touchElement(shellPage, shellCdp, '#kairo-sheet-close');
       await shellPage.waitForFunction(
         `document.getElementById('kairo-sheet').hidden && !document.getElementById('kairo-goal').hidden`,
       );
+      /*
+       * 표면마다 홈 입력층 셋의 **정체**를 본다 (개수가 아니라 정체 — K47-② 규칙).
+       * 목표만 보면 티커·바가 살아 있는 상태를 놓친다.
+       */
+      const OWNED = `(() => {
+        const ids = ['kairo-goal', 'kairo-ticker', 'kairo-bar'];
+        const gone = (node) => !node || node.hidden ||
+          getComputedStyle(node).display === 'none' ||
+          node.getBoundingClientRect().height < 1;
+        return {
+          surface: document.getElementById('kairo-goal').dataset.goalSurface,
+          alive: ids.filter((id) => !gone(document.getElementById(id))),
+        };
+      })()`;
+      type Owned = { surface: string; alive: string[] };
       await touchElement(shellPage, shellCdp, '#kairo-build-open');
-      const buildHidden = await shellPage.evaluate(
-        `document.getElementById('kairo-goal').hidden && document.getElementById('kairo-goal').dataset.goalSurface === 'build'`,
-      ) as boolean;
+      const build = await shellPage.evaluate(OWNED) as Owned;
       await touchElement(shellPage, shellCdp, '#kairo-sheet-close');
       await touchElement(shellPage, shellCdp, '[data-goal-role="immediate"]');
       await shellPage.waitForFunction(`!document.getElementById('kairo-course').hidden`);
-      const courseHidden = await shellPage.evaluate(
-        // 코스는 정보 상태부터 **course** 다 — 'panel' 을 허용하면 정체를 안 재는 검사가 된다.
-        `document.getElementById('kairo-goal').hidden && document.getElementById('kairo-goal').dataset.goalSurface === 'course'`,
-      ) as boolean;
+      // 코스는 정보 상태부터 **course** 다 — 'panel' 을 허용하면 정체를 안 재는 검사가 된다.
+      const course = await shellPage.evaluate(OWNED) as Owned;
       await touchElement(shellPage, shellCdp, '#kairo-course-close');
-      const restored = await shellPage.evaluate(
-        `!document.getElementById('kairo-goal').hidden && document.getElementById('kairo-goal').dataset.goalSurface === 'home'`,
-      ) as boolean;
+      const back = await shellPage.evaluate(OWNED) as Owned;
       record(
-        `목표 표면 ${tag} 실제 터치 — build/course 숨김 · 닫기 복원`,
-        buildHidden && courseHidden && restored ? 'pass' : 'fail',
-        `build ${buildHidden} · course ${courseHidden} · home ${restored}`,
+        `입력 소유권 ${tag} 실제 터치 — build/course에서 홈 입력 0 · 닫기 복원 3`,
+        build.surface === 'build' && build.alive.length === 0 &&
+          course.surface === 'course' && course.alive.length === 0 &&
+          back.surface === 'home' && back.alive.length === 3 ? 'pass' : 'fail',
+        `build(${build.surface}) 남은 것 ${build.alive.join(',') || '없음'} · ` +
+          `course(${course.surface}) 남은 것 ${course.alive.join(',') || '없음'} · ` +
+          `home(${back.surface}) 복원 ${back.alive.length}/3`,
       );
       await shellContext.close();
     }
+  }
 
+  if (SHELL_V2_ONLY) {
+    await runShellV3Suite();
     await browser.close();
     const failed = results.filter((result) => result.verdict === 'fail');
     console.log(
-      `\n${failed.length === 0 ? '✅' : '❌'} 홈/메뉴 셸 v2 ${results.length - failed.length}/${results.length} 통과` +
+      `\n${failed.length === 0 ? '✅' : '❌'} 홈/메뉴 셸 v3 ${results.length - failed.length}/${results.length} 통과` +
         (failed.length ? ` — 실패: ${failed.map((result) => result.name).join(', ')}` : ''),
     );
     process.exit(failed.length === 0 ? 0 : 1);
@@ -701,7 +1164,8 @@ async function main(): Promise<void> {
    * 현재→예상 네 지표가 **잘리지 않는가** · 독이 112px 이하이고 조작 지도가 남는가 ·
    * 상태별 버튼 정체 · 시험 중 대표 반응이 서로 다른 시각에 뜨는가.
    */
-  if (COURSE_V2_ONLY) {
+  /** 코스 v3 — 셸과 같은 이유로 기본 경로에서도 돈다. */
+  async function runCourseV3Suite(): Promise<void> {
     /*
      * 한 프로브로 다섯 상태를 같은 자로 잰다. ⚠ 이름 있는 함수를 쓰지 말 것
      * (tsx 가 주입하는 `__name` 헬퍼가 페이지 쪽에 없다 — CLAUDE.md).
@@ -736,6 +1200,31 @@ async function main(): Promise<void> {
         settingsOpen: !document.getElementById('kairo-course-body').hidden,
         title: root.querySelector('.kcourse-title').textContent,
         latin: (root.innerText || '').match(/[A-Za-z]+/g) || [],
+        /*
+         * 적용 완료 영수증 (Task 6). **보이는가**까지 잰다 — hidden 속성만 읽으면
+         * CSS 로 감춘 상태를 놓친다. 홈 목표·티커·하단 바가 살아 있으면 소유권 위반이다.
+         *
+         * ⚠ 이 주석에 역따옴표를 쓰지 말 것 — 이 블록 전체가 바깥 템플릿 리터럴이라
+         * 역따옴표 하나가 문자열을 그 자리에서 끊는다 (CLAUDE.md 의 page.evaluate 규칙).
+         */
+        receipt: (() => {
+          const box = document.getElementById('kairo-course-receipt');
+          if (!box || box.hidden || getComputedStyle(box).display === 'none') return null;
+          const r = box.getBoundingClientRect();
+          const bar = document.getElementById('kairo-bar');
+          return {
+            lines: [...box.children].map((c) => ({
+              key: c.getAttribute('data-receipt'), text: c.textContent,
+            })),
+            height: Math.round(r.height),
+            inView: r.top >= 0 && r.bottom <= window.innerHeight + 0.5,
+            homeAlive: [
+              goal.hidden ? '' : '목표',
+              getComputedStyle(ticker).display === 'none' ? '' : '티커',
+              !bar || bar.hidden ? '' : '하단바',
+            ].filter(Boolean),
+          };
+        })(),
         metrics: cells.map((c) => {
           const v = c.querySelector('.kcourse-delta-value');
           return {
@@ -754,6 +1243,10 @@ async function main(): Promise<void> {
       minTarget: number; sameRow: boolean; dockHeight: number; mapTop: number;
       tickerOverlap: number;
       settingsOpen: boolean; title: string; latin: string[];
+      receipt: {
+        lines: { key: string; text: string }[];
+        height: number; inView: boolean; homeAlive: string[];
+      } | null;
       metrics: { key: string; label: string; text: string; clipped: boolean }[];
       overflow: number;
     };
@@ -764,10 +1257,20 @@ async function main(): Promise<void> {
     ] as const) {
       const courseContext = await browser.newContext({ ...DEVICE, viewport: { width: w, height: h } });
       const coursePage = await courseContext.newPage();
-      await coursePage.addInitScript(`try { localStorage.clear(); } catch {}`);
+      /*
+       * 첫 문서에서만 저장소를 비운다. addInitScript는 reload 때도 다시 실행되므로
+       * 무조건 clear하면 아래 "새로고침에도 적용값 유지"가 자기 저장을 지우는
+       * 공허한 검사가 된다. sessionStorage 표식은 같은 탭 reload 동안 유지된다.
+       */
+      await coursePage.addInitScript(`try {
+        if (!sessionStorage.getItem('__kairo_course_v2_ready')) {
+          localStorage.clear();
+          sessionStorage.setItem('__kairo_course_v2_ready', '1');
+        }
+      } catch {}`);
       await coursePage.goto(URL, { waitUntil: 'load' });
       await coursePage.waitForFunction(
-        `document.querySelectorAll('[data-goal-role]').length === 3`,
+        `document.querySelectorAll('#kairo-goal [data-goal-role]').length === 1`,
         undefined,
         { timeout: 15000 },
       );
@@ -873,38 +1376,199 @@ async function main(): Promise<void> {
           `캡처 ${SHOT_DIR}/kairo-course-v2-trial-${tag}.png`,
       );
 
-      // ⑤ 리뷰 → 적용. 두 버튼뿐이고 적용은 실제로 코스를 바꾼다
+      /*
+       * ⑤ 리뷰 — 두 버튼뿐이고 주버튼은 **무엇을** 적용하는지 이름이 말한다 (Task 6).
+       *
+       * ⚠ 옛 기대("적용하면 패널이 즉시 닫힌다")를 되살리지 말 것. 그게 곧 "성공의
+       * 증거가 2.6초 토스트뿐"이었다 (2026-08-26 실측 — 3초 뒤 화면에 아무것도 안 남았다).
+       */
       const review = await coursePage.evaluate(PROBE) as Probe;
       await coursePage.screenshot({ path: `${SHOT_DIR}/kairo-course-v2-review-${tag}.png` });
-      const beforeApply = await coursePage.evaluate(
+      const beforeApply = await coursePage.evaluate(`(() => ({
+        courses: JSON.stringify(window.__kairo.courses.all),
+        cash: window.__kairo.week.cash,
+        noop: window.__kairo.coursePanel.state.noop
+      }))()`) as { courses: string; cash: number; noop: boolean };
+      record(
+        `코스 v2 ${tag} 리뷰 — 다시 조정 / 이 설정 적용 · 실제로 바뀐 후보만 적용 가능`,
+        JSON.stringify(review.labels) === JSON.stringify(['다시 조정', '이 설정 적용']) &&
+          review.disabled[1] === false && review.latin.length === 0 &&
+          beforeApply.noop === false && review.receipt === null ? 'pass' : 'fail',
+        `리뷰 ${review.labels.join('/')} · 변경 없음 ${beforeApply.noop} · ` +
+          `캡처 ${SHOT_DIR}/kairo-course-v2-review-${tag}.png`,
+      );
+
+      /*
+       * ⑥ 적용 — 패널은 **안 닫힌다.** 영수증이 갱신된 현재값·실제 차감액·시험/기록까지
+       * 말하고, 그동안에도 홈 입력층은 코스가 갖는다 (Phase A 소유권).
+       */
+      await touchElement(coursePage, courseCdp, '#kairo-course-confirm');
+      await coursePage.waitForFunction(
+        `window.__kairo.coursePanel.state.phase === 'applied'`,
+        undefined,
+        { timeout: 4000 },
+      );
+      const applied = await coursePage.evaluate(PROBE) as Probe;
+      const appliedCourses = await coursePage.evaluate(`(() => ({
+        courses: JSON.stringify(window.__kairo.courses.all),
+        cash: window.__kairo.week.cash,
+        hidden: document.getElementById('kairo-course').hidden
+      }))()`) as { courses: string; cash: number; hidden: boolean };
+      await coursePage.screenshot({ path: `${SHOT_DIR}/kairo-course-v2-applied-${tag}.png` });
+      const receiptText = (applied.receipt?.lines ?? []).map((l) => l.text).join(' / ');
+      record(
+        `코스 v2 ${tag} 적용 완료 — 패널이 남고 영수증이 무엇을·얼마에를 말한다`,
+        !appliedCourses.hidden && applied.phase === 'applied' &&
+          applied.receipt !== null && applied.receipt.inView &&
+          applied.receipt.lines[0]?.key === 'head' &&
+          (applied.receipt.lines[0]?.text ?? '').startsWith('적용 완료') &&
+          applied.receipt.lines.some((l) => l.key === 'spend') &&
+          applied.receipt.lines.some((l) => l.key === 'saved') &&
+          applied.receipt.homeAlive.length === 0 &&
+          JSON.stringify(applied.labels) === JSON.stringify(['다시 조정', '닫기']) &&
+          applied.metrics.length === 4 && applied.metrics.every((m) => !m.clipped) &&
+          // 완료의 지표는 화살표가 아니라 **갱신된 현재값**이다
+          applied.metrics.every((m) => !m.text.includes('→')) &&
+          appliedCourses.courses !== beforeApply.courses &&
+          applied.latin.length === 0 && applied.minTarget >= 43.75 &&
+          applied.overflow <= 0 ? 'pass' : 'fail',
+        `${receiptText || '영수증 없음'} · 버튼 ${applied.labels.join('/')} · ` +
+          `지표 ${applied.metrics.map((m) => `${m.label} ${m.text}`).join(' · ')} · ` +
+          `살아 있는 홈 입력 ${applied.receipt?.homeAlive.join(',') || '0'} · ` +
+          `현금 ${beforeApply.cash} → ${appliedCourses.cash} · ` +
+          `캡처 ${SHOT_DIR}/kairo-course-v2-applied-${tag}.png`,
+      );
+
+      /*
+       * ⑦ 완료 상태에서 다시 조정 → 아무것도 안 바꾸고 시험 → `변경 없음` 이 잠긴다.
+       * 뜻 없는 적용을 막는 규칙이 **실제 화면에서** 성립하는지 여기서 잰다.
+       */
+      await touchElement(coursePage, courseCdp, '#kairo-course-toggle');
+      await coursePage.waitForFunction(`window.__kairo.coursePanel.state.phase === 'edit'`);
+      await touchElement(coursePage, courseCdp, '#kairo-course-confirm');
+      await coursePage.waitForFunction(
+        `window.__kairo.coursePanel.state.phase === 'review'`, undefined, { timeout: 8000 },
+      );
+      const noopReview = await coursePage.evaluate(PROBE) as Probe;
+      /*
+       * 음성 대조군 — 버튼의 disabled 를 **지우고** 누른다.
+       *
+       * disabled 만 재면 "화면이 막았다"까지밖에 못 잰다. 뜻 없는 적용을 막는 것은
+       * 규칙이어야 하므로(`primaryAction` 의 가드) 화면의 사실을 치우고 규칙만 남긴다 —
+       * 가드가 없으면 여기서 코스가 바뀌고 현금이 움직인다.
+       */
+      const noopForced = await coursePage.evaluate(`(() => {
+        const button = document.getElementById('kairo-course-confirm');
+        const was = button.disabled;
+        button.disabled = false;
+        button.click();
+        button.disabled = was;
+        return {
+          courses: JSON.stringify(window.__kairo.courses.all),
+          cash: window.__kairo.week.cash,
+          phase: window.__kairo.coursePanel.state.phase
+        };
+      })()`) as { courses: string; cash: number; phase: string };
+      record(
+        `코스 v2 ${tag} 변경 없음 — 잠긴 라벨이고 강제로 눌러도 코스·현금이 안 움직인다`,
+        JSON.stringify(noopReview.labels) === JSON.stringify(['다시 조정', '변경 없음']) &&
+          noopReview.disabled[1] === true && noopReview.receipt === null &&
+          noopForced.courses === appliedCourses.courses &&
+          noopForced.cash === appliedCourses.cash &&
+          noopForced.phase === 'review' ? 'pass' : 'fail',
+        `버튼 ${noopReview.labels.join('/')} · 비활성 ${noopReview.disabled.join(',')} · ` +
+          `강제 클릭 뒤 코스 ${noopForced.courses === appliedCourses.courses ? '그대로' : '⚠ 바뀜'} · ` +
+          `현금 ${appliedCourses.cash} → ${noopForced.cash} · phase ${noopForced.phase}`,
+      );
+
+      /*
+       * ⑧ 닫기 — **명시적 닫기에서만** 홈으로 돌아간다. 그 다음 재열기와 새로고침에서
+       * 적용값이 그대로여야 한다 (계획 §1.6: "재접속 후 같은 코스를 열었을 때 적용값이
+       * 그대로여야 한다").
+       */
+      await touchElement(coursePage, courseCdp, '#kairo-course-toggle');
+      await coursePage.waitForFunction(`window.__kairo.coursePanel.state.phase === 'edit'`);
+      await touchElement(coursePage, courseCdp, '#kairo-course-close');
+      await coursePage.waitForFunction(`document.getElementById('kairo-course').hidden`);
+      const home = await coursePage.evaluate(`(() => ({
+        surface: document.getElementById('kairo-goal').dataset.goalSurface,
+        restored: !document.getElementById('kairo-goal').hidden,
+        courses: JSON.stringify(window.__kairo.courses.all)
+      }))()`) as { surface: string; restored: boolean; courses: string };
+
+      /*
+       * 재열기는 **경영 메뉴의 `코스`** 로 한다 — 적용 뒤 홈 A 목표는 다음 할 일로
+       * 넘어갈 수 있어 코스로 안 간다. 진입점을 상태에 안 기대는 쪽으로 잡는다.
+       */
+      /*
+       * ⚠ UI v4 — 메뉴는 **라우터**다. `코스` 는 `운영` 목적지 안에 살고, 인덱스에서는
+       * 그 화면이 `hidden` 이라 곧바로 못 누른다. 사람과 같은 경로로 두 번 누른다.
+       * 그리고 `[data-manage-action="course"]` 만 쓰면 **Today 버튼**과도 겹치므로
+       * (Today 의 dataset 도 추천 행동 id 를 단다) 목적지로 스코프를 좁힌다.
+       */
+      await touchElement(coursePage, courseCdp, '#kairo-menu-open');
+      await touchElement(coursePage, courseCdp, '[data-manage-route="operations"]');
+      await coursePage.waitForFunction(
+        `(() => { const s = document.querySelector('[data-manage-screen="operations"]'); return !!s && !s.hidden; })()`,
+      );
+      await touchElement(
+        coursePage, courseCdp, '[data-manage-screen="operations"] [data-manage-action="course"]',
+      );
+      await coursePage.waitForFunction(
+        `!document.getElementById('kairo-course').hidden`, undefined, { timeout: 4000 },
+      );
+      const reopened = await coursePage.evaluate(`(() => ({
+        courses: JSON.stringify(window.__kairo.courses.all),
+        phase: window.__kairo.coursePanel.state.phase,
+        metrics: [...document.querySelectorAll('.kcourse-delta-value')].map((v) => v.textContent)
+      }))()`) as { courses: string; phase: string; metrics: string[] };
+      await touchElement(coursePage, courseCdp, '#kairo-course-close');
+
+      await coursePage.reload({ waitUntil: 'load' });
+      await coursePage.waitForFunction(
+        `document.querySelectorAll('#kairo-goal [data-goal-role]').length === 1`,
+        undefined,
+        { timeout: 15000 },
+      );
+      const reloaded = await coursePage.evaluate(
         `JSON.stringify(window.__kairo.courses.all)`,
       ) as string;
-      await touchElement(coursePage, courseCdp, '#kairo-course-confirm');
-      await coursePage.waitForFunction(`document.getElementById('kairo-course').hidden`);
-      const after = await coursePage.evaluate(`(() => ({
-        courses: JSON.stringify(window.__kairo.courses.all),
-        surface: document.getElementById('kairo-goal').dataset.goalSurface,
-        restored: !document.getElementById('kairo-goal').hidden
-      }))()`) as { courses: string; surface: string; restored: boolean };
       record(
-        `코스 v2 ${tag} 리뷰 → 적용 — 다시 조정/적용 · 실제 반영 · 목표 복원`,
-        JSON.stringify(review.labels) === JSON.stringify(['다시 조정', '적용']) &&
-          review.disabled[1] === false && review.latin.length === 0 &&
-          after.courses !== beforeApply && after.restored && after.surface === 'home'
-          ? 'pass' : 'fail',
-        `리뷰 ${review.labels.join('/')} · 적용 후 목표 ${after.surface} · ` +
-          `캡처 ${SHOT_DIR}/kairo-course-v2-review-${tag}.png`,
+        `코스 v2 ${tag} 닫기 → 홈 복원 · 재열기·새로고침에도 적용값 그대로`,
+        home.restored && home.surface === 'home' &&
+          home.courses === appliedCourses.courses &&
+          reopened.courses === appliedCourses.courses && reopened.phase === 'info' &&
+          reopened.metrics.length === 4 && reopened.metrics.every((m) => !m.includes('→')) &&
+          reloaded === appliedCourses.courses ? 'pass' : 'fail',
+        `닫기 뒤 목표 ${home.surface} · 재열기 ${reopened.courses === appliedCourses.courses ? '일치' : '⚠ 불일치'}` +
+          ` (${reopened.phase} · ${reopened.metrics.join(' ')}) · ` +
+          `새로고침 ${reloaded === appliedCourses.courses ? '일치' : '⚠ 불일치'}`,
       );
       await courseContext.close();
     }
 
+  }
+
+  if (COURSE_V2_ONLY) {
+    await runCourseV3Suite();
     await browser.close();
     const courseFailed = results.filter((result) => result.verdict === 'fail');
     console.log(
-      `\n${courseFailed.length === 0 ? '✅' : '❌'} 코스 v2 ${results.length - courseFailed.length}/${results.length} 통과` +
+      `\n${courseFailed.length === 0 ? '✅' : '❌'} 코스 v3 ${results.length - courseFailed.length}/${results.length} 통과` +
         (courseFailed.length ? ` — 실패: ${courseFailed.map((result) => result.name).join(', ')}` : ''),
     );
     process.exit(courseFailed.length === 0 ? 0 : 1);
+  }
+
+  if (BUILD_V3_ONLY) {
+    await runBuildV3AimingSuite();
+    await browser.close();
+    const buildFailed = results.filter((result) => result.verdict === 'fail');
+    console.log(
+      `\n${buildFailed.length === 0 ? '✅' : '❌'} 건설 v3 ${results.length - buildFailed.length}/${results.length} 통과` +
+        (buildFailed.length ? ` — 실패: ${buildFailed.map((result) => result.name).join(', ')}` : ''),
+    );
+    process.exit(buildFailed.length === 0 ? 0 : 1);
   }
 
   /*
@@ -1223,12 +1887,7 @@ async function main(): Promise<void> {
     // 디버그 HUD는 Phaser가 첫 프레임을 낸 순간부터 채워지지만, 경영 시트의 동적 import와
     // 조립은 그 뒤에 끝날 수 있다. DOM 정본이 준비되기 전에 터치하면 버튼만 눌리고 빈 시트를
     // 재는 부팅 경합이 된다.
-    await phase7Page.waitForFunction(
-      `(() => document.querySelectorAll('.kmanage-action').length === 12 &&
-        !!document.querySelector('.kmanage-today .kmanage-label'))()`,
-      undefined,
-      { timeout: 15000 },
-    );
+    await phase7Page.waitForFunction(MANAGEMENT_READY, undefined, { timeout: 15000 });
     const phase7Cdp = await phase7Context.newCDPSession(phase7Page);
     const menuAt = (await phase7Page.evaluate(`(() => {
       const r = document.getElementById('kairo-menu-open').getBoundingClientRect();
@@ -1242,16 +1901,30 @@ async function main(): Promise<void> {
     await phase7Page.waitForTimeout(150);
     const view = (await phase7Page.evaluate(`(() => {
       const host = document.querySelector('.kmanage');
-      const names = [...document.querySelectorAll('[data-manage-group]')].map((group) => ({
-        id: group.getAttribute('data-manage-group'),
-        actions: [...group.querySelectorAll('[data-manage-action]')].map((button) => button.getAttribute('data-manage-action')),
-      }));
-      const targets = [...document.querySelectorAll('.kmanage-action')].map((button) => {
-        const r = button.getBoundingClientRect();
-        // DPR3 레이아웃은 44 CSS px를 43.999969처럼 되돌릴 수 있다. 렌더 소수 오차를
-        // 제품 크기 회귀로 오인하지 않도록 1/100px에서 정규화한다.
-        return Math.round(Math.min(r.width, r.height) * 100) / 100;
-      });
+      /*
+       * ⚠ 설정은 **표현 계층의 네 번째 목적지**이지 MANAGEMENT_GROUPS 의 그룹이 아니다
+       * (넣으면 todayRecommendation 이 새 게임을 추천할 수 있다). 그래서
+       * sim 그룹 셋만 비교한다.
+       */
+      const names = [...document.querySelectorAll('[data-manage-group]')]
+        .filter((group) => group.getAttribute('data-manage-group') !== 'settings')
+        .map((group) => ({
+          id: group.getAttribute('data-manage-group'),
+          actions: [...group.querySelectorAll('[data-manage-action]')].map((button) => button.getAttribute('data-manage-action')),
+        }));
+      /*
+       * ⚠ **보이는 것만 잰다.** UI v4 부터 목적지 화면은 한 번에 하나만 보이고 나머지는
+       * hidden 이라 rect 가 0×0 이다 — 전부 재면 최소값이 언제나 0 이 되어 이 검사가
+       * 44px 이상을 아예 못 잰다 (조용히 빨간불).
+       */
+      const targets = [...document.querySelectorAll('.kmanage-action')]
+        .map((button) => button.getBoundingClientRect())
+        .filter((r) => r.width >= 1 && r.height >= 1)
+        .map((r) => {
+          // DPR3 레이아웃은 44 CSS px를 43.999969처럼 되돌릴 수 있다. 렌더 소수 오차를
+          // 제품 크기 회귀로 오인하지 않도록 1/100px에서 정규화한다.
+          return Math.round(Math.min(r.width, r.height) * 100) / 100;
+        });
       return {
         today: (document.querySelector('.kmanage-today .kmanage-label') || {}).textContent || '',
         names: names,
@@ -1280,11 +1953,18 @@ async function main(): Promise<void> {
     );
 
     if (tag === '세로') {
-      // 온보딩 중에도 Today 밖의 기록 화면을 열 수 있어야 한다 — 안내는 잠금 장치가 아니다.
+      /*
+       * 온보딩 중에도 Today 밖의 기록 화면을 열 수 있어야 한다 — 안내는 잠금 장치가 아니다.
+       * ⚠ UI v4 — `기록` 은 라우터의 목적지라 **두 번** 누른다 (사람과 같은 경로).
+       */
+      await touchElement(phase7Page, phase7Cdp, '[data-manage-route="records"]');
+      await phase7Page.waitForFunction(
+        `(() => { const s = document.querySelector('[data-manage-screen="records"]'); return !!s && !s.hidden; })()`,
+      );
       await touchElement(
         phase7Page,
         phase7Cdp,
-        '[data-manage-group="records"] [data-manage-action="ending"]',
+        '[data-manage-screen="records"] [data-manage-action="ending"]',
       );
       await phase7Page.waitForTimeout(100);
       const freePlay = await phase7Page.evaluate(`(() => ({
@@ -1408,18 +2088,32 @@ async function main(): Promise<void> {
       );
       await phase7Page.evaluate(`window.__kairo.week.earn(${beforeApply.cash + 5_000_000})`);
       await touchElement(phase7Page, phase7Cdp, '#kairo-course-confirm');
+      /*
+       * ⚠ 옛 기대는 `document.getElementById('kairo-course').hidden` 이었다 (Task 6 이전).
+       * 적용 성공이 곧 닫기라서 "무엇이 적용됐는가"의 증거가 2.6초 토스트뿐이었다.
+       * 이제 성공은 **영수증 상태**로 끝나고, 홈으로 돌아가는 것은 명시적 `닫기` 뿐이다.
+       */
       await phase7Page.waitForFunction(
-        `document.getElementById('kairo-course').hidden && window.__kairo.onboardingStep() === 'build-food'`,
+        `window.__kairo.coursePanel.state.phase === 'applied' && window.__kairo.onboardingStep() === 'build-food'`,
       );
       const applied = await phase7Page.evaluate(`(() => ({
         records: window.__kairo.careerSnapshot().courseRecords.length,
-        step: window.__kairo.onboardingStep()
-      }))()`) as { records: number; step: string };
+        step: window.__kairo.onboardingStep(),
+        open: !document.getElementById('kairo-course').hidden,
+        receipt: [...document.querySelectorAll('#kairo-course-receipt [data-receipt]')]
+          .map((c) => c.getAttribute('data-receipt'))
+      }))()`) as { records: number; step: string; open: boolean; receipt: string[] };
       record(
-        'Phase 7 코스 기록 — 성공한 course-applied 뒤에만 커리어를 쓴다',
-        applied.records === 1 && applied.step === 'build-food' ? 'pass' : 'fail',
-        `기록 ${unpaid.records} → ${applied.records} · 단계 ${applied.step}`,
+        'Phase 7 코스 기록 — 성공한 course-applied 뒤에만 커리어를 쓴다 · 영수증이 남는다',
+        applied.records === 1 && applied.step === 'build-food' && applied.open &&
+          applied.receipt.includes('head') && applied.receipt.includes('spend') &&
+          applied.receipt.includes('record') ? 'pass' : 'fail',
+        `기록 ${unpaid.records} → ${applied.records} · 단계 ${applied.step} · ` +
+          `영수증 ${applied.receipt.join(',') || '없음'}`,
       );
+      // 명시적 닫기 — 다음 절(건설)은 홈에서 시작해야 한다 (잔해 위에서 재지 않는다)
+      await touchElement(phase7Page, phase7Cdp, '#kairo-course-close');
+      await phase7Page.waitForFunction(`document.getElementById('kairo-course').hidden`);
 
       // build-food Today도 실제 목적지를 타고, 카드와 확정은 진짜 터치다. 좌표 탐색만
       // 하네스 셋업으로 하고 배치/온보딩 사건은 production confirm 경계를 지난다.
@@ -1487,21 +2181,30 @@ async function main(): Promise<void> {
       ).textContent();
       await touchElement(phase7Page, phase7Cdp, '[data-goal-role="immediate"]');
       await phase7Page.waitForTimeout(150);
+      /*
+       * ⚠ UI v4 — 이 행동은 이제 **단골 화면 자체**를 연다 (UX 감사 P0-2).
+       *
+       * 예전에는 메뉴의 `단골` 버튼이 보이는지만 봤는데, 그 버튼을 눌러도 실제로는
+       * 아무 일도 안 났다 (`#kairo-regular-list` 앵커가 열린 소원이 있을 때만 만들어져
+       * `scrollIntoView` 가 조용한 no-op 이었다). 즉 옛 검사는 **눌러도 안 되는 버튼이
+       * 화면에 있는지**를 재고 있었다. 이제 목적지가 실제로 열렸는지를 잰다.
+       */
       const regularSurface = await phase7Page.evaluate(`(() => {
         const sheet = document.getElementById('kairo-sheet');
         const menu = document.querySelector('.ksheet-menu');
-        const action = document.querySelector('[data-manage-action="regular"]');
-        const rect = action && action.getBoundingClientRect();
+        const screen = document.querySelector('[data-manage-screen="regulars"]');
+        const head = document.getElementById('kairo-regular-list');
+        const rect = head && head.getBoundingClientRect();
         return {
           sheet: !!sheet && !sheet.hidden,
           menu: !!menu && !menu.hidden,
-          action: !!rect && rect.width > 2 && rect.height >= 44,
+          action: !!screen && !screen.hidden && !!rect && rect.width > 2,
           goalsHidden: document.getElementById('kairo-goal').hidden,
           step: window.__kairo.onboardingStep(),
         };
       })()`) as { sheet: boolean; menu: boolean; action: boolean; goalsHidden: boolean; step: string };
       record(
-        '온보딩 v2 — regular-purchase 홈 A 실제 터치로 메뉴/단골 표면을 연다',
+        '온보딩 v2 — regular-purchase 홈 A 실제 터치로 단골 화면이 실제로 열린다',
         regularToday?.includes('구매') === true && regularSurface.sheet && regularSurface.menu &&
           regularSurface.action && regularSurface.goalsHidden && regularSurface.step === 'regular-purchase'
           ? 'pass' : 'fail',
@@ -1586,7 +2289,7 @@ async function main(): Promise<void> {
         );
         await legacyPage.goto(URL, { waitUntil: 'load' });
         await legacyPage.waitForFunction(
-          `(() => !!window.__kairo && document.querySelectorAll('[data-goal-role]').length === 3)()`,
+          `(() => !!window.__kairo && document.querySelectorAll('#kairo-goal [data-goal-role]').length === 1)()`,
           undefined,
           { timeout: 15000 },
         );
@@ -1646,7 +2349,7 @@ async function main(): Promise<void> {
           `미도달 ${courseAudit.unreachable} · 문서 넘침 ${courseAudit.documentOverflow}px`,
       );
       /*
-       * ⚠ 리뷰 독에는 취소가 없다 (v2 §3.3 — `다시 조정 / 적용` 둘뿐). 사람과 같은
+       * ⚠ 리뷰 독에는 취소가 없다 (v2 §3.3 — `다시 조정 / 이 설정 적용` 둘뿐). 사람과 같은
        * 경로로 편집으로 되돌린 뒤에 취소한다.
        */
       await touchElement(phase7Page, phase7Cdp, '#kairo-course-toggle');
@@ -1671,9 +2374,24 @@ async function main(): Promise<void> {
       await phase7Page.waitForFunction(`!document.getElementById('kairo-unlock').hidden`);
       const endingAudit = await auditSurface(phase7Page, '#kairo-unlock');
       const choices = await phase7Page.locator('#kairo-unlock [data-ending-choice]').allTextContents();
-      // 모달 중 다른 표면은 열리지 않는다.
-      await touchElement(phase7Page, phase7Cdp, '#kairo-menu-open');
-      const blocked = await phase7Page.evaluate(`document.getElementById('kairo-sheet').hidden`);
+      /*
+       * 모달 중 다른 표면은 열리지 않는다.
+       *
+       * ⚠ **진짜 터치로 재지 말 것** — 축하 모달이 뜨면 홈 입력층(목표·티커·바)이 통째로
+       * 내려가므로 `#kairo-menu-open` 은 보이지 않는다 (UI v3 소유권 계약). 여기서 보려는
+       * 것은 "손가락이 닿는가"가 아니라 **`modal: true` 가 다른 패널을 막는가**이므로,
+       * 바가 실제로 내려갔는지를 같이 재고 열기 시도는 DOM click 으로 한다.
+       */
+      const barDownDuringModal = await phase7Page.evaluate(`(() => {
+        const bar = document.getElementById('kairo-bar');
+        if (!bar) return false;
+        return bar.hidden || getComputedStyle(bar).display === 'none' ||
+          bar.getBoundingClientRect().height < 1;
+      })()`);
+      await phase7Page.evaluate(`document.getElementById('kairo-menu-open').click()`);
+      const blocked = (await phase7Page.evaluate(
+        `document.getElementById('kairo-sheet').hidden`,
+      )) && barDownDuringModal;
       record(
         'Phase 7 첫 엔딩 — 티커 중복 없이 blocking 축하 모달 한 번',
         endingRoute.tickerDelta === 0 && endingRoute.queueDelta === 1 && endingRoute.endings === 1 &&
@@ -4418,10 +5136,18 @@ async function main(): Promise<void> {
     (scenarioUi.minH ?? 0) >= 44 ? 'pass' : 'fail',
     `최소 ${scenarioUi.minH}px`,
   );
+  /*
+   * ⚠ 옛 계약(A/B/C 세 칩 + 진행바 둘)은 **UI v3 가 이미 폐기했다.** 70px 폭에서 B/C 의
+   * label/detail 이 `display:none` 이 되어 화면에 하트·별만 남았고, 그건 "목표가 있다"가
+   * 아니라 "뜻을 말하지 못한다"였다. 홈은 **현재 행동 한 줄**이고 중·장기는 메뉴의
+   * `성장 › 목표` 가 소유한다 — 개수가 아니라 **그 한 줄이 실제로 문장인지**를 잰다.
+   */
   record(
-    '★ 다음 할 일이 화면에 상시 표시된다 — A/B/C 목표 + 진행바 (홈 셸 v2)',
-    (scenarioUi.goalChips ?? 0) >= 2 && (scenarioUi.goalBars ?? 0) >= 2 ? 'pass' : 'fail',
-    `칩 ${scenarioUi.goalChips} · 진행바 ${scenarioUi.goalBars} · "${(scenarioUi.goalText ?? '').slice(0, 60)}"`,
+    '★ 다음 할 일 한 줄이 홈에 상시 표시된다 (UI v3·v4)',
+    (scenarioUi.goalChips ?? 0) === 1 &&
+      (scenarioUi.goalText ?? '').includes('다음 할 일') &&
+      (scenarioUi.goalText ?? '').length > 12 ? 'pass' : 'fail',
+    `칩 ${scenarioUi.goalChips} · "${(scenarioUi.goalText ?? '').slice(0, 60)}"`,
   );
   record(
     '판 설정(맵·시나리오)은 메뉴 상단으로 갔다 — 설정은 목표가 아니다',
@@ -5550,10 +6276,44 @@ async function main(): Promise<void> {
   await page.waitForTimeout(4_200);
   await touchButton('#kairo-course-confirm');
   await page.waitForTimeout(350);
+  /*
+   * ⚠ 옛 기대는 `!applied.visible` 이었다 — 적용 성공이 곧 닫기였고, 그래서 "무엇이
+   * 적용됐는가"의 증거가 2.6초 토스트뿐이었다 (Task 6 이전, 2026-08-26 실측).
+   * 이제 성공은 **영수증 상태로 남고** 홈으로 돌아가는 것은 명시적 `닫기` 뿐이다.
+   */
   const applied = (await page.evaluate(`(() => {
     const course = window.__kairo.courses.all.find((item) => item.handle === ${applyBefore.handle});
-    return { handle: course.handle, vehicles: course.vehicles, visible: window.__kairo.coursePanel.visible };
-  })()`)) as { handle: number; vehicles: number; visible: boolean };
+    const box = document.getElementById('kairo-course-receipt');
+    return {
+      handle: course.handle, vehicles: course.vehicles,
+      visible: window.__kairo.coursePanel.visible,
+      phase: window.__kairo.coursePanel.state.phase,
+      receiptShown: !!box && !box.hidden,
+      receipt: [...box.querySelectorAll('[data-receipt]')].map((c) => c.textContent)
+    };
+  })()`)) as {
+    handle: number; vehicles: number; visible: boolean; phase: string;
+    receiptShown: boolean; receipt: string[];
+  };
+  record(
+    '★ 적용은 패널을 닫지 않고 영수증으로 끝난다 — 성공의 증거가 화면에 남는다',
+    applied.visible && applied.phase === 'applied' && applied.receiptShown &&
+      applied.receipt.some((line) => line.startsWith('적용 완료')) &&
+      applied.receipt.some((line) => line.includes('저장 완료')) ? 'pass' : 'fail',
+    `phase ${applied.phase} · ${applied.receipt.join(' / ') || '영수증 없음'}`,
+  );
+  // 자기가 연 것은 닫고 넘어간다 — 새로고침 뒤 절이 잔해 위에서 재지 않게
+  await touchButton('#kairo-course-close');
+  await page.waitForTimeout(200);
+  const closedAfterApply = (await page.evaluate(`(() => ({
+    hidden: document.getElementById('kairo-course').hidden,
+    surface: document.getElementById('kairo-goal').dataset.goalSurface
+  }))()`)) as { hidden: boolean; surface: string };
+  record(
+    '★ 적용 완료에서 `닫기` 를 눌러야 홈으로 돌아간다',
+    closedAfterApply.hidden && closedAfterApply.surface === 'home' ? 'pass' : 'fail',
+    `패널 ${closedAfterApply.hidden ? '닫힘' : '열림'} · 목표 표면 ${closedAfterApply.surface}`,
+  );
   await page.reload({ waitUntil: 'load' });
   await page.waitForFunction(
     `(() => { const b = document.getElementById('kairo-debug'); return !!b && b.textContent.includes('FPS'); })()`,
@@ -5568,7 +6328,7 @@ async function main(): Promise<void> {
     '★ Apply가 stable handle로 저장되고 새로고침 뒤에도 같다',
     applyEditStart.phase === 'edit' && applyEditStart.handle === applyBefore.handle &&
       applyBefore.vehicles === applyEditStart.vehicles + 1 &&
-      !applied.visible && applied.handle === applyBefore.handle && applied.vehicles === applyBefore.vehicles &&
+      applied.handle === applyBefore.handle && applied.vehicles === applyBefore.vehicles &&
       reloadedCourse?.handle === applyBefore.handle && reloadedCourse.vehicles === applyBefore.vehicles
       ? 'pass'
       : 'fail',
@@ -5708,8 +6468,14 @@ async function main(): Promise<void> {
    * 여섯 동사 중 "사람을 쓴다". **인건비가 실제로 나가고 부족이 결과를 바꾸는지**를 본다.
    */
   const staffUi = (await page.evaluate(`(() => {
-    // K28: 열기 버튼은 메뉴 시트 안이다 — 먼저 시트를 연다
+    /*
+     * K28: 열기 버튼은 메뉴 시트 안이다 — 먼저 시트를 연다.
+     * ⚠ UI v4 — 메뉴는 라우터라 직원은 운영 목적지 안이다. 목적지를 먼저 열지 않으면
+     * 그 버튼의 rect 가 0×0 이라 44px 검사가 구조적으로 0px 를 읽는다.
+     */
     document.getElementById('kairo-menu-open').click();
+    const route = document.querySelector('[data-manage-route="operations"]');
+    if (route) route.click();
     const open = document.getElementById('kairo-staff-open');
     if (!open) return { ok: false, why: '직원 버튼이 없다' };
     const openH = Math.round(open.getBoundingClientRect().height);
@@ -6327,13 +7093,23 @@ async function main(): Promise<void> {
       `${m.chrome}%`,
     );
     /*
-     * 네이티브 버튼뿐 아니라 모든 role=button도 센다. 홈에서는 메뉴·건설 + 목표 A/B/C +
-     * 티커 hit surface까지 6개이고, 모두 같은 44px 하한을 지켜야 한다.
+     * ⚠ **개수로 재지 않는다** (K47-② 의 「개수를 세는 검사는 조용히 죽는다」).
+     * 홈의 상시 표면은 **이름이 있는 넷**이다 — 메뉴·건설·즉시 목표·티커. 넷이 각각
+     * 존재하고 44px 이상인지를 정체로 확인하고, 그 밖의 상시 컨트롤이 새로 생기면
+     * (예산을 먹는다) 같은 자리에서 잡는다.
      */
+    const identity = (await pg.evaluate(HOME_CONTROL_IDENTITY)) as {
+      missing: string[];
+      small: string[];
+      extra: string[];
+    };
     record(
-      `${tag} — 상시 행동 표면 6개 (메뉴·건설·목표 A/B/C·티커)`,
-      m.controls === 6 ? 'pass' : 'fail',
-      `${m.controls}개`,
+      `${tag} — 상시 행동 표면 정체 4종 (메뉴·건설·즉시 목표·티커) · 각 44px`,
+      identity.missing.length === 0 && identity.small.length === 0 && identity.extra.length === 0
+        ? 'pass'
+        : 'fail',
+      `없음 [${identity.missing.join(',')}] · 작음 [${identity.small.join(',')}] · ` +
+        `계약 밖 [${identity.extra.join(',')}]`,
     );
     record(`${tag} — 터치 타깃 44px · 가로 넘침 0`,
       m.minTap >= 44 && m.overflow <= 0 ? 'pass' : 'fail',
@@ -6524,15 +7300,20 @@ async function main(): Promise<void> {
       minTap: number;
     };
     const bandOk = tag === '세로' ? goalGeom.bandFullWidth : goalGeom.bandCapped;
+    /*
+     * ⚠ UI v3·v4 — 밴드는 **현재 행동 한 줄**이 통째로 갖는다 (`primaryShare === 1`).
+     * 옛 계약은 `A 약 60% · 같은 행에 B/C` 였는데, 그 20% 칸에서 B/C 라벨이 감춰지는
+     * 것이 결함의 정체였다. 되돌리면 `primaryShare` 가 0.6 대로 떨어져 빨간불이 된다.
+     */
     record(
-      `${tag} — ★ 홈 목표: A/B/C 한 밴드 · A 약 60% · 제목 무잘림 · 44px`,
-      !goalGeom.legacy && goalGeom.visible && bandOk && goalGeom.sameRow &&
-        goalGeom.primaryShare >= 0.5 && goalGeom.primaryShare <= 0.7 &&
+      `${tag} — ★ 홈 목표: 현재 행동 한 줄이 밴드 전부 · 제목 무잘림 · 44px`,
+      !goalGeom.legacy && goalGeom.visible && bandOk &&
+        goalGeom.primaryShare >= 0.98 &&
         goalGeom.belowHeader && goalGeom.fits && goalGeom.minTap >= 44
         ? 'pass'
         : 'fail',
-      `밴드 ${goalGeom.bandW}px · A ${Math.round(goalGeom.primaryShare * 100)}% · ` +
-        `같은 행 ${goalGeom.sameRow} · 헤더 아래 ${goalGeom.belowHeader} · ` +
+      `밴드 ${goalGeom.bandW}px · 현재 행동 ${Math.round(goalGeom.primaryShare * 100)}% · ` +
+        `헤더 아래 ${goalGeom.belowHeader} · ` +
         `제목 ${goalGeom.fits ? '맞음' : '넘침'} · 최소 ${Math.round(goalGeom.minTap)}px`,
     );
     await pg.screenshot({ path: `${SHOT_DIR}/kairo-hud-${tag}.png` });
@@ -6676,8 +7457,23 @@ async function main(): Promise<void> {
       if (out.groundBar && _cbtn && !_cbtn.disabled) _cbtn.click();
       out.indoor1 = countIndoor();
       out.cash1 = h.week.cash;
-      // 확정 뒤에도 바가 남아야 한다 — 연속 배치 (계획 §3 붓별 판정)
-      out.groundBarAfter = !!_cbar && !_cbar.hidden;
+      /*
+       * ★ **1회 설치가 기본이다** (UI v3 Task 5).
+       *
+       * ⚠ 여기 있던 기대는 정확히 반대였다: "확정 뒤에도 바가 남아야 한다 — 연속 배치".
+       * 그 계약 때문에 석재 보도 한 번 확정 뒤 조준이 살아남아 다음 칸이 즉시
+       * 활성화됐고, 실제 터치에서 현금이 두 번 빠졌다 (2026-08-26 실측:
+       * 500만 → 499.3만 → 498.6만). 새 검사만 얹는 것이 아니라 **옛 기대를 뒤집는다.**
+       */
+      out.oneShotBarAfter = !!_cbar && !_cbar.hidden;
+      out.oneShotBrushAfter = window.__kairoBrush ? window.__kairoBrush() : null;
+      out.oneShotGhostAfter = !!sc.ghost;
+      /* 두 번째 지도 탭 — one-shot 이면 배치도 지출도 없어야 한다 */
+      out.oneShotCashAfterTap = h.week.cash;
+      h.tapTile(TI + 1, TJ + 1);
+      out.oneShotIndoorAfterTap = countIndoor();
+      out.oneShotCashAfterTap2 = h.week.cash;
+      out.oneShotBarAfterTap = !!_cbar && !_cbar.hidden;
       if (window.__kairoClearBrush) window.__kairoClearBrush();
 
       // ② 고스트 — 시설을 고르고 탭하면 아직 안 놓인다
@@ -6747,10 +7543,28 @@ async function main(): Promise<void> {
       `확정 바 ${String(r.groundBar)} (disabled ${String(r.groundDisabled)}) · ` +
         `탭 직후 실내 ${String(r.indoorMid)} (기준 ${String(r.indoor0)})`,
     );
+    /*
+     * ★ 옛 계약(`확정 뒤에도 바가 남는다`)을 **뒤집은 자리**다. 붓·바·고스트가 함께
+     * 사라지고, 그 뒤의 지도 탭이 실내도 현금도 안 건드려야 통과다 (계획 §1.5-6).
+     */
     record(
-      '바닥·건물은 확정 뒤에도 바가 남는다 — 연속 배치 (K47-③)',
-      r.groundBarAfter === true ? 'pass' : 'fail',
-      `확정 후 바 ${String(r.groundBarAfter)}`,
+      '★ 1회 설치가 기본이다 — 확정 한 번 뒤 붓·바·고스트가 함께 사라진다 (UI v3)',
+      r.oneShotBarAfter === false && r.oneShotBrushAfter === null && r.oneShotGhostAfter === false
+        ? 'pass'
+        : 'fail',
+      `확정 후 바 ${String(r.oneShotBarAfter)} · 붓 ${String(r.oneShotBrushAfter)} · ` +
+        `고스트 ${String(r.oneShotGhostAfter)}`,
+    );
+    record(
+      '★ 1회 설치 뒤 지도를 다시 눌러도 상태·현금이 안 바뀐다 (UI v3)',
+      r.oneShotIndoorAfterTap === r.indoor1 &&
+        r.oneShotCashAfterTap2 === r.oneShotCashAfterTap &&
+        r.oneShotBarAfterTap === false
+        ? 'pass'
+        : 'fail',
+      `실내 ${String(r.indoor1)} → ${String(r.oneShotIndoorAfterTap)} · ` +
+        `현금 ${String(r.oneShotCashAfterTap)} → ${String(r.oneShotCashAfterTap2)} · ` +
+        `바 ${String(r.oneShotBarAfterTap)}`,
     );
     record(
       '시설을 탭하면 고스트가 뜨고 **아직 안 놓인다**',
@@ -9103,11 +9917,21 @@ async function main(): Promise<void> {
       : 'fail',
     `<${tkSetup.tag.toLowerCase() || '없음'} role="${tkSetup.role}" tabindex="${tkSetup.tabindex}">`,
   );
-  record(
-    '상시 행동 감사가 role button을 포함한다 — 메뉴·건설·목표 A/B/C·티커',
-    tkSetup.controls === 6 ? 'pass' : 'fail',
-    `${tkSetup.controls}개 · ${tkSetup.controlIds}`,
-  );
+  /*
+   * ⚠ **개수가 아니라 정체다** (K47-② 「개수를 세는 검사는 조용히 죽는다」).
+   * 홈의 상시 역할 제어는 넷이다: 메뉴 · 건설 · 즉시 목표 밴드 · 소식 띠.
+   * 옛 `=== 6` 은 A/B/C 세 칩 시절 값이라 지금 구조에서는 **영원히 안 나온다.**
+   */
+  {
+    const wanted = ['kairo-menu-open', 'kairo-build-open', 'kgoal', 'kticker-hit'];
+    const ids = String(tkSetup.controlIds ?? '');
+    const missing = wanted.filter((name) => !ids.includes(name));
+    record(
+      '상시 행동 감사가 role button을 포함한다 — 메뉴·건설·즉시 목표·티커 (정체)',
+      missing.length === 0 && tkSetup.controls === 4 ? 'pass' : 'fail',
+      `${tkSetup.controls}개 · ${ids}` + (missing.length ? ` · 없음 ${missing.join(',')}` : ''),
+    );
+  }
 
   if (!tkSetup.exists) {
     // 배선 전에는 뒤따르는 절이 전부 같은 이유로 실패한다 — 이유를 한 번만 적고 넘어간다
@@ -9544,8 +10368,12 @@ async function main(): Promise<void> {
    * 안 맞으면 예외로 런 전체가 죽는 대신 그 사실을 판정문에 적기 위해서다.
    *
    * 잔해 위에서 재지 않으려고 **새 판(새 컨텍스트 + 세이브 삭제)**에서 돈다.
+   *
+   * ⚠ 이 절은 `function` 선언(호이스팅)으로 뺐다 — `--build-v3` 플래그가 전체 스위트를
+   * 처음부터 다 돌리지 않고 이 절만 실제 CDP 터치로 빠르게 재현하려면, main() 앞머리의
+   * 다른 `_ONLY` 분기에서도 이 이름을 호출할 수 있어야 한다.
    */
-  {
+  async function runBuildV3AimingSuite(): Promise<void> {
     const cx = await browser.newContext(DEVICE);
     const pg = await cx.newPage();
     const aimErrors: string[] = [];
@@ -9704,8 +10532,11 @@ async function main(): Promise<void> {
       const p = document.querySelector('[data-pick="facility:parasol"]');
       if (!p) return false;
       p.click();
-      const sh = document.getElementById('kairo-sheet');
-      if (sh && !sh.hidden) document.getElementById('kairo-sheet-close').click();
+      /*
+       * UI v3에서 카드 선택이 카탈로그를 닫고 조준 소유권으로 전환한다.
+       * 여기서 닫기 버튼을 다시 누르면 그건 "시트 닫기 = 배치 취소"라 방금 고른
+       * 붓까지 지운다. 선택 경로 자체가 닫히지 않았다면 아래 brush 판정이 실패해야 한다.
+       */
       return !!window.__kairoBrush && window.__kairoBrush() === 'facility';
     })()`;
     const CANCEL = `(() => {
@@ -9740,7 +10571,11 @@ async function main(): Promise<void> {
     const midTile = (await pg.evaluate(`(() => {
       const h = window.__kairo, L = h.land();
       const ci = L.i0 + Math.floor(L.w / 2), cj = L.j0 + Math.floor(L.h / 2);
-      const ok = (i, j) => h.placement.check(h.terrain, h.walls, h.gate, 'parasol', i, j).ok;
+      /* production과 같은 토지 계약으로 고른다. land를 빼면 아직 안 산 칸도
+       * roomy 후보가 되어 첫 확정만 disabled인 공허한 팬 검사가 된다. */
+      const ok = (i, j) => h.placement.check(
+        h.terrain, h.walls, h.gate, 'parasol', i, j, { land: L },
+      ).ok;
       const roomy = (i, j) => {
         for (let dj = -5; dj <= 5; dj++)
           for (let di = -5; di <= 5; di++) if (!ok(i + di, j + dj)) return false;
@@ -9762,6 +10597,10 @@ async function main(): Promise<void> {
 
     const baseHandles = (await pg.evaluate(HANDLES)) as number[];
     const pickedA = (await pg.evaluate(PICK_PARASOL)) as boolean;
+    /* 기준점만 독립 유도한 유효 칸에 맞춘다. 이 절이 재는 입력은 아래 두 번째
+     * 배치의 실제 팬 드래그이고, 기준점이 우연히 기존 시설/문 위에 걸려 첫 표본이
+     * 사라지는 것을 막는다. 가장자리 절은 별도로 tapTile 없이 팬만 쓴다. */
+    if (pickedA) await pg.evaluate(`window.__kairo.tapTile(${midTile.i}, ${midTile.j})`);
     await pg.waitForTimeout(200);
     const retA = (await pg.evaluate(RETICLE)) as Ret;
     const barA = (await pg.evaluate(CONFIRM)) as Confirm;
@@ -9777,6 +10616,7 @@ async function main(): Promise<void> {
     const handlesB = (await pg.evaluate(HANDLES)) as number[];
     const countBeforePan = (await pg.evaluate(`window.__kairo.placement.count`)) as number;
     const pickedB = (await pg.evaluate(PICK_PARASOL)) as boolean;
+    if (pickedB) await pg.evaluate(`window.__kairo.tapTile(${midTile.i}, ${midTile.j})`);
     await pg.waitForTimeout(200);
     const retB0 = (await pg.evaluate(RETICLE)) as Ret;
     /*
@@ -10240,6 +11080,179 @@ async function main(): Promise<void> {
     }
 
     /*
+     * ── ④-b 1회 설치가 기본 · 연속 설치는 명시적 선택 (UI v3 Task 5) ────────
+     *
+     * ⚠ 이 절이 뒤집은 계약이 무엇인지 적어 둔다. K47-③ 까지 바닥·철거는 **확정 뒤에도
+     * 바를 남기는 것**이 통과 조건이었다 (옛 판정문의 이름은 "연속 배치"였다).
+     * 그래서 석재 보도를 한 번 확정하면 조준이 살아남아 다음 칸이 즉시 활성화됐고,
+     * 실제 터치에서 현금이 **두 번** 빠졌다 (2026-08-26 실측: 500만 → 499.3만 → 498.6만).
+     * 사용자는 한 번 놓았다고 생각한다.
+     *
+     * 지금 계약: **확정 한 번 = 배치 한 번.** 반복은 확정 바의 이름 있는 토글
+     * (`#kairo-place-repeat`, 기본 꺼짐)을 사용자가 직접 누를 때만 열린다.
+     *
+     * ⚠ 토글은 **진짜 터치**로 누른다 (`locator.tap()`). Playwright 의 actionability 가
+     * 그 자리의 topmost hit ownership 까지 같이 재므로, 확정 바가 티커·목표 밴드에
+     * 가려 있으면 여기서 걸린다 — P3-C④ 의 "좌표만 재는 검사로는 못 잡는" 종류다.
+     */
+    const repeatSpots = (await pg.evaluate(`(() => {
+      const h = window.__kairo, L = h.land();
+      const cost = h.simDefs && h.simDefs.parasol ? h.simDefs.parasol.cost : 0;
+      const spots = [];
+      for (let j = L.j0 + 1; j < L.j0 + L.h - 1 && spots.length < 3; j++) {
+        for (let i = L.i0 + 1; i < L.i0 + L.w - 1; i++) {
+          if (!h.placement.check(h.terrain, h.walls, h.gate, 'parasol', i, j).ok) continue;
+          spots.push([i, j]);
+          if (spots.length >= 3) break;
+        }
+      }
+      /* 현금이 마르면 두 번째 확정이 "돈이 부족합니다"로 죽어 엉뚱한 이유의 빨간불이 된다 */
+      if (h.week.cash < cost * 6) h.week.earn(cost * 6);
+      return { ok: spots.length >= 3, spots: spots, cost: cost };
+    })()`)) as { ok: boolean; spots: [number, number][]; cost: number };
+
+    /** 확정 바의 모드 줄 · 연속 설치 토글 상태 — 화면이 말하는 것만 읽는다 */
+    type RepeatUi = {
+      bar: boolean;
+      brush: string | null;
+      ghost: boolean;
+      mode: string;
+      toggle: string;
+      pressed: string;
+      toggleShown: boolean;
+      count: number;
+      cash: number;
+    };
+    const REPEAT_UI = `(() => {
+      const c = document.getElementById('kairo-confirm');
+      const t = document.getElementById('kairo-place-repeat');
+      const m = c ? c.querySelector('.kconfirm-mode-label') : null;
+      return {
+        bar: !!c && !c.hidden,
+        brush: window.__kairoBrush ? window.__kairoBrush() : null,
+        ghost: !!window.__kairo.scene.ghost,
+        mode: m && m.textContent ? m.textContent : '',
+        toggle: t && t.textContent ? t.textContent : '',
+        pressed: t ? String(t.getAttribute('aria-pressed')) : 'none',
+        toggleShown: !!t && !t.hidden,
+        count: window.__kairo.placement.count,
+        cash: window.__kairo.week.cash,
+      };
+    })()`;
+
+    /** 조준을 이 칸으로 옮긴다 — 씬을 그 칸으로 몰고 성긴 조준(탭)을 태운다 */
+    const aimAtTile = async (i: number, j: number): Promise<void> => {
+      await pg.evaluate(`window.__kairo.scene.focusTile(${i}, ${j})`);
+      await pg.evaluate(`window.__kairo.tapTile(${i}, ${j})`);
+      await pg.waitForTimeout(220);
+    };
+
+    if (!repeatSpots.ok || repeatSpots.cost <= 0) {
+      for (const name of [
+        '★ 1회 설치가 기본이다 — 확정 뒤 두 번째 터치가 아무것도 안 바꾼다 (UI v3)',
+        '★ 연속 설치를 켠 경우에만 두 번째 배치가 일어난다 (UI v3)',
+      ]) {
+        record(name, 'fail', `파라솔 자리 3칸/정가를 못 찾았다 (${JSON.stringify(repeatSpots)})`);
+      }
+    } else {
+      const [A, B, C] = repeatSpots.spots as [
+        [number, number],
+        [number, number],
+        [number, number],
+      ];
+      const COST = repeatSpots.cost;
+
+      // ── 기본(one-shot): 확정 한 번 뒤 붓·바·고스트가 함께 사라진다 ──
+      await pg.evaluate(PICK_PARASOL);
+      await pg.waitForTimeout(150);
+      await aimAtTile(A[0], A[1]);
+      const oneBefore = (await pg.evaluate(REPEAT_UI)) as RepeatUi;
+      /* 기본은 반드시 꺼짐이다 — 토글이 켜진 채로 시작하면 그 자체가 계약 위반이다 */
+      const oneToggleDefault = oneBefore.pressed === 'false' && oneBefore.toggle.includes('끔');
+      await pg.locator('#kairo-place-confirm').tap();
+      await pg.waitForTimeout(260);
+      const oneAfter = (await pg.evaluate(REPEAT_UI)) as RepeatUi;
+      /* 두 번째 지도 터치 — one-shot 이면 조준도 안 열리고 돈도 안 나간다 */
+      await aimAtTile(B[0], B[1]);
+      const oneTapped = (await pg.evaluate(REPEAT_UI)) as RepeatUi;
+      record(
+        '★ 1회 설치가 기본이다 — 확정 뒤 두 번째 터치가 아무것도 안 바꾼다 (UI v3)',
+        oneToggleDefault &&
+          oneBefore.bar &&
+          oneAfter.bar === false &&
+          oneAfter.brush === null &&
+          oneAfter.ghost === false &&
+          oneAfter.count === oneBefore.count + 1 &&
+          oneBefore.cash - oneAfter.cash === COST &&
+          oneTapped.bar === false &&
+          oneTapped.count === oneAfter.count &&
+          oneTapped.cash === oneAfter.cash
+          ? 'pass'
+          : 'fail',
+        `토글 기본 "${oneBefore.toggle}"/${oneBefore.pressed} · ` +
+          `확정 후 바 ${String(oneAfter.bar)} 붓 ${String(oneAfter.brush)} 고스트 ${String(oneAfter.ghost)} · ` +
+          `시설 ${oneBefore.count}→${oneAfter.count}→${oneTapped.count} · ` +
+          `현금 ${oneBefore.cash}→${oneAfter.cash}→${oneTapped.cash} (정가 ${COST})`,
+      );
+
+      /*
+       * ── 명시적 연속 설치: 토글을 눌러야만 두 번째가 일어난다 ──
+       *
+       * ⚠ **A 는 다시 못 쓴다.** 바로 위 one-shot 절이 A 를 실제로 확정해 이미
+       * 시설이 서 있다 (그것이 one-shot 이 증명하려는 바다) — 여기서 A 를 다시 조준하면
+       * "이미 놓여 있습니다"로 확정이 영구히 disabled 라 `.tap()` 이 타임아웃한다.
+       * one-shot 절이 B 는 조준만 하고 확정하지 않았으므로(그 절의 "안 바뀐다" 증거) B 가
+       * 비어 있는 다음 자리다.
+       */
+      await pg.evaluate(CANCEL);
+      await pg.waitForTimeout(120);
+      await pg.evaluate(PICK_PARASOL);
+      await pg.waitForTimeout(150);
+      await aimAtTile(B[0], B[1]);
+      const repOff = (await pg.evaluate(REPEAT_UI)) as RepeatUi;
+      // ⚠ 진짜 터치다 — 보이기만 하고 안 눌리면 여기서 예외로 걸린다
+      await pg.locator('#kairo-place-repeat').tap();
+      await pg.waitForTimeout(220);
+      const repOn = (await pg.evaluate(REPEAT_UI)) as RepeatUi;
+      await pg.screenshot({ path: `${SHOT_DIR}/kairo-build-repeat-on.png` });
+      await pg.locator('#kairo-place-confirm').tap();
+      await pg.waitForTimeout(260);
+      const rep1 = (await pg.evaluate(REPEAT_UI)) as RepeatUi;
+      await aimAtTile(C[0], C[1]);
+      await pg.locator('#kairo-place-confirm').tap();
+      await pg.waitForTimeout(260);
+      const rep2 = (await pg.evaluate(REPEAT_UI)) as RepeatUi;
+      await pg.evaluate(CANCEL);
+      await pg.waitForTimeout(120);
+      const repEnd = (await pg.evaluate(REPEAT_UI)) as RepeatUi;
+      record(
+        '★ 연속 설치를 켠 경우에만 두 번째 배치가 일어난다 (UI v3)',
+        repOff.toggleShown &&
+          repOff.pressed === 'false' &&
+          repOn.pressed === 'true' &&
+          repOn.toggle.includes('켬') &&
+          repOn.mode.includes('연속 설치 중') &&
+          rep1.bar === true &&
+          rep1.brush === 'facility' &&
+          rep1.mode.includes('연속 설치 중') &&
+          rep2.count === repOn.count + 2 &&
+          repOn.cash - rep2.cash === COST * 2 &&
+          repEnd.bar === false &&
+          repEnd.brush === null
+          ? 'pass'
+          : 'fail',
+        `토글 ${repOff.pressed} → ${repOn.pressed} "${repOn.toggle}" · 모드 "${repOn.mode}" → "${rep1.mode}" · ` +
+          `1회차 뒤 바 ${String(rep1.bar)} 붓 ${String(rep1.brush)} · ` +
+          `시설 ${repOn.count}→${rep1.count}→${rep2.count} · ` +
+          `현금 ${repOn.cash}→${rep2.cash} (기대 −${COST * 2}) · ` +
+          `취소 후 바 ${String(repEnd.bar)} 붓 ${String(repEnd.brush)} · ` +
+          `스크린샷 kairo-build-repeat-on.png`,
+      );
+      // 이 절이 연 것은 이 절이 닫는다 — 잔해 위에서 재면 원인을 알 수 없다
+      await pg.evaluate(CANCEL);
+    }
+
+    /*
      * ── ⑤ 조준 중에는 시간이 안 흐른다 ─────────────────────────────────────
      *
      * 확정 바는 `PanelHost` 패널이 아니라서 `flowTick` 이 안 멈췄다. 조준 배치는 조준
@@ -10305,6 +11318,13 @@ async function main(): Promise<void> {
     );
     await cx.close();
   }
+  await runBuildV3AimingSuite();
+  /*
+   * 셸 v3 · 코스 v3 도 **기본 경로에서** 돈다 (플래그는 지름길일 뿐이다).
+   * 각자 자기 컨텍스트를 열고 닫으므로 순서 의존이 없다.
+   */
+  await runShellV3Suite();
+  await runCourseV3Suite();
 
   /*
    * ── P2-B. 결산의 콤보 블록 ──────────────────────────────────────────────

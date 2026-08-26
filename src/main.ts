@@ -93,6 +93,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     recommendedActionGoal,
   } = await import('./ui/kairo-hud.js');
   type GoalSlotInput = import('./ui/kairo-hud.js').GoalSlotInput;
+  type GoalChip = import('./ui/kairo-hud.js').GoalChip;
+  // 건설 상태 머신 (UI v3) — 붓·조준·연속 설치가 여기 하나에 산다
+  const { BuildSession } = await import('./ui/kairo-build-flow.js');
+  type RepeatToggleView = import('./ui/kairo-hud.js').RepeatToggle;
   const { applyStartKit } = await import('./sim/kairo/startkit.js');
   const { WallGrid: WallGridCls } = await import('./sim/kairo/walls.js');
   const { PlacementGrid: PlacementGridCls } = await import('./sim/kairo/placement.js');
@@ -114,7 +118,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     runManagementAction,
   } = await import('./ui/kairo-management.js');
   type ManagementMenuAction = import('./ui/kairo-management.js').ManagementMenuAction;
+  type ManagementSettingsSection = import('./ui/kairo-management.js').ManagementSettingsSection;
+  type ManageScreenId = import('./ui/kairo-management.js').ManageScreenId;
+  const { certList, questList, regularList, wishList } = await import('./ui/kairo-growth.js');
+  const { conditionLine, conditionSubject, REPUTATION_NAME } =
+    await import('./ui/kairo-terms.js');
   const { KairoEndingPanel, endingChoiceActions } = await import('./ui/kairo-ending.js');
+  const { KairoEventDialog } = await import('./ui/kairo-event-dialog.js');
+  const { won } = await import('./ui/money.js');
   const {
     OnboardingStore,
     endingMilestone,
@@ -133,7 +144,6 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     './save/kairo.js'
   );
   const { facilityDef, canRotate, nextFacing } = await import('./sim/kairo/placement.js');
-  type FacilityFacing = import('./sim/kairo/placement.js').FacilityFacing;
 
   /**
    * 세이브를 먼저 읽는다 — 지형·벽·시설을 씬에 넘겨야 하므로 부팅보다 앞이어야 한다.
@@ -305,7 +315,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        * 그 자리에 들어오면서 곧바로 코스 편집을 덮는 버그가 된다.
        */
       if (coursePanel.visible) return;
-      if (!brush) {
+      if (!build.brush) {
         /*
          * ⚠ **이 줄을 지우지 말 것.** `verify-kairo` 의 "탭한 타일이 정확히 해석된다"가
          * 이 콘솔 줄로 해석 결과를 읽는다 (`tapLog`) — 반 타일이 밀리면 2×2 배치가
@@ -330,7 +340,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        * 이동 1단계 (K42) — **탭 유지.** 옮길 시설을 지목하는 것이지 자리를 정하는 게
        * 아니다. 2단계(목적지)는 아래 `aimMove` 로 넘어가 조준 + 확정을 탄다.
        */
-      if (brush === 'move' && !moveSel) {
+      if (build.brush === 'move' && build.move === null) {
         if (!exam.toolsUnlocked) {
           toast('이동은 첫 심사 통과의 보상입니다');
           return;
@@ -349,7 +359,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        * 한 바퀴 돌면 없앤다. 후보 판정은 `doorCandidates` 하나를 sim 과 공유한다 —
        * 갈라지면 UI 가 놓으라고 해 놓고 굽기가 무시하는 상태가 된다.
        */
-      if (brush === 'door') {
+      if (build.brush === 'door') {
         const cand = doorCandidates(h.terrain, GATE, i, j, walkableNow);
         if (cand.length === 0) {
           toast(
@@ -397,14 +407,18 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const item = h.placement.all().find((it) => it.handle === handle);
     if (!item) return false;
     const def = facilityDef(item.defId);
-    brush = 'move';
-    moveSel = { handle, defId: item.defId, i: item.i, j: item.j, facing: item.facing ?? 0 };
-    ticker.setBrush(`이동: ${def?.name ?? item.defId}`);
+    /*
+     * 세션이 붓·선택·조준을 한 번에 잡는다 (UI v3) — `beginMove` 가 `startAim()` 을
+     * 빠뜨려 "붓은 물렸는데 고스트가 안 뜬다"가 되던 자리가 이제 구조적으로 없다.
+     */
+    build.beginMove(
+      { handle, defId: item.defId, i: item.i, j: item.j, facing: item.facing ?? 0 },
+      `이동: ${def?.name ?? item.defId}`,
+    );
     toast(
       `${def?.name ?? item.defId} — 지도를 움직여 자리를 맞추세요 ` +
         `(${Math.round(Math.floor((def?.cost ?? 0) * 0.1) / 10000)}만)`,
     );
-    startAim();
     return true;
   };
 
@@ -445,14 +459,15 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 32% 가 다시 막힌다.
    */
   const startAim = (): void => {
-    aim = null;
+    build.setAim(-1, -1);
     for (let pass = 0; pass < 2; pass++) {
       syncReticleInset();
       const r = h.scene.reticleTile();
       const i = Math.max(0, Math.min(GRID_W_C - 1, r.i));
       const j = Math.max(0, Math.min(GRID_H_C - 1, r.j));
-      if (aim && aim.i === i && aim.j === j) break;
-      aim = { i, j, facing: 0 };
+      const cur = build.aim;
+      if (cur && cur.i === i && cur.j === j) break;
+      build.setAim(i, j);
       h.scene.beginAim(i, j);
       refreshAim();
     }
@@ -463,54 +478,85 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 방향은 유지한다 — 회전해 둔 것이 탭 한 번에 풀리면 ↻ 가 소용없다.
    */
   const aimAt = (i: number, j: number): void => {
-    aim = { i, j, facing: aim?.facing ?? 0 };
+    build.aimTo(i, j);
     h.scene.beginAim(i, j);
     refreshAim();
   };
 
-  /** 조준 종료 — 고스트·표식·확정 바를 한꺼번에 내린다 */
-  const endAim = (): void => {
-    aim = null;
+  /**
+   * 조준 종료 — 고스트·표식·확정 바·투시를 한꺼번에 내린다.
+   *
+   * ⚠ **세션의 `closeAim` 효과다.** 여기서 붓·조준 상태를 지우지 않는다 —
+   * 상태를 지우는 곳은 `BuildSession.end()` **하나**여야 정리가 갈라지지 않는다
+   * (`src/ui/kairo-build-flow.ts` 머리말: 붓마다 남는 것이 달랐던 것이 원버그다).
+   */
+  const closeAim = (): void => {
     h.scene.endAim();
     h.scene.setGhost(null);
     hud.hideConfirm();
   };
 
-  /** 지금 붓이 조준을 쓰나 — 출입구와 이동 1단계만 탭으로 남는다 */
-  const aimingBrush = (): boolean =>
-    brush !== null && brush !== 'door' && !(brush === 'move' && !moveSel);
-
   /**
    * 지금 조준 칸을 다시 판정해 고스트·표식·확정 바를 맞춘다.
-   * **칸이 바뀐 때·회전한 때·확정 직후**에만 부른다 (위 비용 주석).
+   * **칸이 바뀐 때·회전한 때·연속 설치의 다음 판정**에만 부른다 (위 비용 주석).
    */
   const refreshAim = (): void => {
-    if (!aim || !brush) return;
-    if (brush === 'facility') aimFacility(aim.i, aim.j);
-    else if (brush === 'move') aimMove(aim.i, aim.j);
-    else if (brush === 'erase') aimErase(aim.i, aim.j);
-    else aimGround(aim.i, aim.j);
+    const at = build.aim;
+    const brush = build.brush;
+    if (!at || brush === null) return;
+    if (brush === 'facility') aimFacility(at.i, at.j);
+    else if (brush === 'move') aimMove(at.i, at.j);
+    else if (brush === 'erase') aimErase(at.i, at.j);
+    else aimGround(at.i, at.j);
     // 라벨이 두 줄이 되면 바가 높아진다 — 잰 값을 매번 갱신한다 (상수로 박지 말 것)
     syncReticleInset();
   };
 
-  /** 조준 중 확정 바의 취소 — 붓은 남는다 (같은 붓으로 다시 겨눌 수 있어야 한다) */
-  const cancelAim = (): void => {
-    if (brush === 'move' && moveSel) {
-      moveSel = null;
-      ticker.setBrush('이동');
-    }
-    endAim();
+  /**
+   * 조준 중 확정 바의 취소 — **세션이 끝난다** (UI v3).
+   *
+   * ⚠ 예전엔 붓을 남겼다. 그래서 취소한 뒤에도 지도 탭이 다시 조준을 열었고, 화면에는
+   * 아무 모드 표시가 없어 "끝난 줄 알았는데 안 끝난" 상태가 됐다. 지금은 취소가 곧
+   * 종료이고, 같은 것을 또 놓으려면 건설 시트에서 다시 고른다 (계획 §1.5 전이표).
+   */
+  const cancelAim = (): void => build.cancel();
+
+  /**
+   * 연속 설치 토글의 화면 계약 — 못 켜는 붓(이동)에서는 **토글 자체를 안 만든다.**
+   * `rotate` 와 같은 조건부 스프레드다 (`exactOptionalPropertyTypes`).
+   */
+  const repeatToggle = (): { repeat: RepeatToggleView } | Record<string, never> =>
+    build.canRepeat
+      ? {
+          repeat: {
+            on: build.repeat,
+            label: build.repeatLabel,
+            toggle: () => {
+              build.setRepeat(!build.repeat);
+              refreshAim(); // 바의 라벨·토글 상태를 같은 판정으로 다시 그린다
+            },
+          },
+        }
+      : {};
+
+  /**
+   * 성공 영수증 (계획 §1.5-8) — **무엇을 · 얼마에 · 남은 돈**을 한 줄로.
+   * 예전엔 `−12만` 뿐이라 무엇을 놓았는지도, 얼마가 남았는지도 안 말했다.
+   */
+  const receiptText = (what: string, delta: number): string => {
+    const money = delta === 0 ? '무료' : delta < 0 ? won(delta) : `${won(delta, { signed: true })} 환급`;
+    return `${what} · ${money} · 잔액 ${won(week.cash)}`;
   };
 
   /** 시설 — 조준 + ↻ + 확정. 손가락 가림이 정확히 이 케이스다 */
   const aimFacility = (i: number, j: number): void => {
-    const defId = brushFacility;
+    const defId = build.facilityId;
     const def = facilityDef(defId);
     const cost = def?.cost ?? 0;
+    const facing0 = build.aim?.facing ?? 0;
     const chk = h.placement.check(h.terrain, h.walls, GATE, defId, i, j, {
       ...placeOpts(),
-      facing: aim?.facing ?? 0,
+      facing: facing0,
     });
     /*
      * 건설비를 **놓기 전에** 확인한다. 놓고 나서 차감하면 잔액 부족일 때 되돌려야 하고,
@@ -522,13 +568,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      */
     const poor = cost > week.cash;
     const ok = chk.ok && !poor;
-    h.scene.setGhost(defId, i, j, ok, aim?.facing ?? 0);
+    h.scene.setGhost(defId, i, j, ok, facing0);
     /*
      * 발자국은 회전을 탄다 — 산수의 정본은 `PlacementGrid.sizeOf` **하나**다 (K53).
      * 예전엔 여기·이동·철거·시트·씬 두 곳에 `facing === 1 ? [d,w] : [w,d]` 가 **여섯 벌**
      * 이었는데, 4방향에서는 `facing % 2` 로 바뀌므로 각자 고치면 반드시 한 곳이 남는다.
      */
-    const [fw, fd] = def ? PlacementGridCls.sizeOf(def, aim?.facing ?? 0) : [1, 1];
+    const [fw, fd] = def ? PlacementGridCls.sizeOf(def, facing0) : [1, 1];
     h.scene.setReticleMark(i, j, ok, fw, fd);
     /*
      * 회전 버튼을 띄우나 — **데이터가 정한다** (`canRotate`, 불변식 3).
@@ -540,8 +586,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       !chk.ok
         ? PLACE_FAIL_MESSAGES[chk.fail ?? 'unknown-def']
         : poor
-          ? `돈이 부족합니다 — ${Math.round(cost / 10000)}만 필요 (현재 ${Math.round(week.cash / 10000)}만)`
-          : `${def?.name ?? defId} · ${Math.round(cost / 10000)}만`,
+          ? `돈이 부족합니다 — ${won(cost)} 필요 (현재 ${won(week.cash)})`
+          : `${def?.name ?? defId} · ${won(cost)}`,
       ok,
       {
         cancel: cancelAim,
@@ -552,15 +598,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
                  * ⚠ 예전엔 `tapTile(lastFacilityTap)` 을 다시 불러 우회했다 (K45).
                  * 조준에서는 자리가 정본이므로 방향만 뒤집고 같은 자리를 다시 잰다.
                  */
-                if (!aim || !def) return;
+                const at = build.aim;
+                if (!at || !def) return;
                 // 2방향은 0↔1, 4방향은 0→1→2→3→0 — 몇 방향인지는 데이터가 안다
-                aim.facing = nextFacing(def, aim.facing);
+                build.setFacing(nextFacing(def, at.facing));
                 refreshAim();
               },
             }
           : {}),
+        ...repeatToggle(),
         confirm: () => {
-          const facing = aim?.facing ?? 0;
+          const facing = build.aim?.facing ?? 0;
           const r = h.placement.place(h.terrain, h.walls, GATE, defId, i, j, {
             ...placeOpts(),
             facing,
@@ -579,18 +627,22 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
            *   `−12만 · 콤보 3개 발동`
            * 앞은 **내 행동의 대답**(토스트)이고 뒤는 **일어난 일**(뉴스)이다.
            */
-          toast(`−${Math.round(cost / 10000)}만`, 'ok');
+          const receipt = receiptText(`${def?.name ?? defId} 설치 완료`, -cost);
           pushComboNews();
           if (observeOnboardingBuild(onboarding, def)) refreshManagement();
           persist();
-          // 시설은 한 번 놓으면 조준을 끝낸다 (붓은 남는다 — 탭하면 다시 겨눈다)
-          endAim();
+          /*
+           * 1회 설치가 기본이다 (UI v3). 세션이 붓·조준·고스트·레티클·확정 콜백·투시를
+           * **원자적으로** 지운다 — 연속 설치를 켜 뒀을 때만 같은 붓으로 다시 겨눈다.
+           */
+          build.finish(receipt);
         },
       },
       {
         kind: 'facility',
+        mode: build.modeLabel,
         name: def?.name ?? defId,
-        cost: `${Math.round(cost / 10000)}만`,
+        cost: won(cost),
         result: !chk.ok
           ? PLACE_FAIL_MESSAGES[chk.fail ?? 'unknown-def']
           : poor
@@ -608,7 +660,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 만들지 않는다 (판정은 `placement.check` 하나다).
    */
   const aimMove = (i: number, j: number): void => {
-    const sel = moveSel;
+    const sel = build.move;
     if (!sel) return;
     const def = facilityDef(sel.defId);
     const fee = Math.floor((def?.cost ?? 0) * 0.1);
@@ -623,7 +675,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       facing: sel.facing,
     });
     const oldHandle = sel.handle;
-    if (restored.ok && restored.placed) sel.handle = restored.placed.handle;
+    // 프로브가 새 handle 을 만들면 세션의 선택도 같이 옮긴다 (정본은 하나다)
+    if (restored.ok && restored.placed) build.retagMove(restored.placed.handle);
     h.scene.refreshFacility(oldHandle);
     h.scene.refreshFacility(sel.handle);
     const ok = chk.ok && fee <= week.cash;
@@ -632,7 +685,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     h.scene.setReticleMark(i, j, ok, fw, fd);
     hud.showConfirm(
       chk.ok
-        ? `이동: ${def?.name ?? sel.defId} · ${Math.round(fee / 10000)}만`
+        ? `이동: ${def?.name ?? sel.defId} · ${won(fee)}`
         : PLACE_FAIL_MESSAGES[chk.fail ?? 'unknown-def'],
       ok,
       {
@@ -655,7 +708,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
               facing: sel.facing,
             });
             const gone = sel.handle;
-            if (rr.ok && rr.placed) sel.handle = rr.placed.handle;
+            if (rr.ok && rr.placed) build.retagMove(rr.placed.handle);
             h.scene.refreshFacility(gone);
             h.scene.refreshFacility(sel.handle);
             toast(PLACE_FAIL_MESSAGES[r.fail ?? 'unknown-def']);
@@ -664,21 +717,21 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           }
           week.spend(fee);
           const gone = sel.handle;
-          moveSel = null;
-          ticker.setBrush('이동');
           h.scene.refreshFacility(gone);
           h.scene.refreshFacility(r.placed.handle);
           h.guests.invalidate();
           audio.play('sfx/place');
-          toast(`이동 — ${Math.round(fee / 10000)}만`, 'ok');
+          const receipt = receiptText(`${def?.name ?? sel.defId} 이동 완료`, -fee);
           persist();
-          endAim(); // 옮길 시설을 다시 고르는 것부터가 다음 이동이다
+          // 옮길 시설을 다시 고르는 것부터가 다음 이동이다 — 이동은 연속을 못 켠다
+          build.finish(receipt);
         },
       },
       {
         kind: 'move',
+        mode: build.modeLabel,
         name: `이동: ${def?.name ?? sel.defId}`,
-        cost: `${Math.round(fee / 10000)}만`,
+        cost: won(fee),
         result: !chk.ok
           ? PLACE_FAIL_MESSAGES[chk.fail ?? 'unknown-def']
           : fee > week.cash
@@ -713,23 +766,25 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     h.scene.setReticleMark(hit ? hit.i : i, hit ? hit.j : j, ok, ew, ed);
     hud.showConfirm(
       hit
-        ? `철거: ${def?.name ?? hit.defId}` + (back > 0 ? ` · +${Math.round(back / 10000)}만 환급` : '')
+        ? `철거: ${def?.name ?? hit.defId}` + (back > 0 ? ` · ${won(back, { signed: true })} 환급` : '')
         : floorErasable
           ? '철거: 바닥을 잔디로'
           : '지울 것이 없습니다',
       ok,
       {
         cancel: cancelAim,
+        ...repeatToggle(),
         confirm: () => {
+          // 확정이 눌린 이상 지울 것은 있다 (`ok` 가 아니면 버튼이 죽어 있다) — 그래도
+          // 빈 영수증으로 끝나지 않게 기본 문장을 둔다
+          let receipt = '철거 완료';
           if (hit) {
             h.placement.remove(hit.handle);
             h.scene.refreshFacility(hit.handle);
             h.guests.invalidate();
             refreshBuildList(); // 자리가 비었으면 잠금이 풀려야 한다 (K31)
-            if (back > 0) {
-              week.earn(back);
-              toast(`철거 — ${Math.round(back / 10000)}만 환급`, 'ok');
-            }
+            if (back > 0) week.earn(back);
+            receipt = receiptText(`${def?.name ?? hit.defId} 철거 완료`, back);
             persist();
           } else if (floorErasable) {
             // 벽은 개별로 못 지운다 — **바닥을 잔디로 되돌리면** 그 벽이 같이 사라진다 (K27)
@@ -753,16 +808,22 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
             h.scene.refreshTile(i, j);
             h.scene.refreshAllWalls();
             h.guests.invalidate();
+            receipt = receiptText('바닥 철거 완료 — 잔디로', 0);
             persist();
           }
-          // 연속 철거 — 붓이 그대로니 바도 그대로다 (같은 자리를 다시 재서 라벨을 고친다)
-          refreshAim();
+          /*
+           * 1회 철거가 기본이다 (UI v3). 예전엔 여기서 `refreshAim()` 으로 바를
+           * 되살려 **연속 철거가 기본**이었다 — 되돌릴 수 없는 행동이 반복 상태로
+           * 남아 있는 것이 가장 위험한 조합이었다.
+           */
+          build.finish(receipt);
         },
       },
       {
         kind: 'erase',
+        mode: build.modeLabel,
         name: hit ? `철거: ${def?.name ?? hit.defId}` : '바닥 철거',
-        cost: back > 0 ? `무료 · +${Math.round(back / 10000)}만 환급` : '무료',
+        cost: back > 0 ? `무료 · ${won(back, { signed: true })} 환급` : '무료',
         result: ok ? '철거 가능' : '지울 것이 없습니다',
         ...(def?.sprite !== undefined ? { sprite: def.sprite } : {}),
       },
@@ -770,7 +831,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
 
   /**
-   * 바닥·건물 블록 — 조준 + 확정, **확정 후 바를 닫지 않는다** (연속 배치).
+   * 바닥·건물 블록 — 조준 + 확정, 그리고 **확정 한 번으로 끝난다** (UI v3).
+   * 길을 길게 까는 편의는 명시적 `연속 설치` 토글로 남는다 (계획 §4: 편의를 없애지 않는다).
    *
    * 4×4 = 48만원이 예전엔 탭 한 번에 즉시 지출이었고 미리보기가 아예 없었다.
    * ⚠ 드래그 페인트는 안 넣는다 — 한 손가락 드래그 = 팬이 이미 확정이라
@@ -782,7 +844,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      * 붓 ID 는 `path_stone` 또는 `floor_indoor@4` 형태다 — 뒤의 숫자가 블록 크기다 (K32).
      * 조준 칸을 **블록의 좌상단**이 아니라 가운데에 가깝게 두어야 표식이 가리킨 곳에 깔린다.
      */
-    const [kindId, sizeStr] = (brush ?? '').split('@');
+    const [kindId, sizeStr] = (build.brush ?? '').split('@');
     const n = sizeStr ? Number(sizeStr) : 1;
     const kind = GROUND_KINDS.find((k) => k.id === kindId);
     if (!kind) return;
@@ -851,11 +913,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         : willChange === 0
           ? `${kind.name} — 이미 깔려 있습니다`
           : poor
-            ? `돈이 부족합니다 — ${Math.round(cost / 10000)}만 필요 (현재 ${Math.round(week.cash / 10000)}만)`
-            : `${kind.name}${n > 1 ? ` ${n}×${n}` : ''} · ${willChange}칸 · ${Math.round(cost / 10000)}만`,
+            ? `돈이 부족합니다 — ${won(cost)} 필요 (현재 ${won(week.cash)})`
+            : `${kind.name}${n > 1 ? ` ${n}×${n}` : ''} · ${willChange}칸 · ${won(cost)}`,
       ok,
       {
         cancel: cancelAim,
+        ...repeatToggle(),
         confirm: () => {
           const painted = paintFloorBlock(
             h.terrain,
@@ -875,6 +938,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
             refreshAim();
             return;
           }
+          let receipt = `${kind.name} — 바뀐 칸이 없습니다`;
           if (painted.changed > 0) {
             if (kind.cost > 0) week.spend(kind.cost * painted.changed, 'building');
             for (let dj = 0; dj < n; dj++) {
@@ -884,16 +948,27 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
             h.guests.invalidate(); // 통행 가능성과 실내가 바뀐다
             // 방이 넓어졌으면 "자리 없음" 잠금이 풀려야 한다 (K31)
             refreshBuildList();
+            receipt = receiptText(
+              `${kind.name} ${painted.changed}칸 완료`,
+              -kind.cost * painted.changed,
+            );
             persist();
           }
-          // 연속 배치 — 바를 닫지 않는다. 길을 까는 것이 가장 자주 하는 동작이다 (K32-B)
-          refreshAim();
+          /*
+           * ⚠ 여기가 **원버그의 자리**다 (UI v3). 예전에는 확정 직후 `refreshAim()` 로
+           * 바를 되살려 두는 것이 기본이었고 ("길을 까는 것이 가장 자주 하는 동작"이라는
+           * 이유였다), 그래서 확정 한 번 뒤 조준이 남아 다음 칸이 즉시 활성화됐다
+           * (2026-08-26 실측: 석재 보도 한 번에 현금 2회 차감). 길 깔기의 편의는
+           * 없애지 않고 **명시적 `연속 설치` 토글**로 보존한다 (계획 §4).
+           */
+          build.finish(receipt);
         },
       },
       {
         kind: 'ground',
+        mode: build.modeLabel,
         name: `${kind.name}${n > 1 ? ` ${n}×${n}` : ''}`,
-        cost: `${Math.round(cost / 10000)}만`,
+        cost: won(cost),
         result:
           why !== null
             ? why
@@ -929,28 +1004,26 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
 
   /*
-   * 붓 — **건설 시트**에서 고른다 (K28). 예전에는 하단에 바닥 붓 바가 상시로 깔려 있고
-   * 시설은 73종 `<select>` 드롭다운이었다. 카이로에는 드롭다운이 없다 — 아이콘 격자다.
-   */
-  let brush: string | null = null;
-  let brushFacility = '';
-  /** 이동 붓의 선택 시설 (K42) — 첫 탭에서 잡고 확정·취소에서 푼다 */
-  let moveSel: {
-    handle: number;
-    defId: string;
-    i: number;
-    j: number;
-    facing: FacilityFacing;
-  } | null =
-    null;
-  /**
-   * 조준 상태 (K47-③) — **이것이 배치 좌표의 정본**이다.
+   * 건설 세션 (UI v3) — 붓·시설 ID·이동 선택·조준·연속 설치가 **한 상태**다.
    *
-   * K45 까지는 `lastFacilityTap`(마지막 탭 자리) + `ghostFacing`(회전) 둘로 흩어져
-   * 있었고, ↻ 는 `tapTile` 을 다시 불러 우회했다. 조준 배치에서는 팬이 자리를 계속
-   * 바꾸므로 자리와 방향이 한 덩어리여야 한다 — 화면 레티클은 이 값을 비추는 표시일 뿐이다.
+   * 붓은 **건설 시트**에서 고른다 (K28). 예전에는 하단에 바닥 붓 바가 상시로 깔려 있고
+   * 시설은 73종 `<select>` 드롭다운이었다. 카이로에는 드롭다운이 없다 — 아이콘 격자다.
+   *
+   * 조준 자리(K47-③)는 여전히 **배치 좌표의 정본**이고 화면 레티클은 그 표시일 뿐이다.
+   * K45 까지 `lastFacilityTap` + `ghostFacing` 둘로 흩어져 있던 것을 K47-③ 이 한
+   * 덩어리로 모았고, UI v3 이 붓·이동 선택까지 같은 상자에 넣었다 — 정리 코드가
+   * 호출부마다 복제되던 것이 "성공 뒤 무엇이 남는가"를 붓마다 다르게 만든 원인이다
+   * (`src/ui/kairo-build-flow.ts` 머리말).
    */
-  let aim: { i: number; j: number; facing: FacilityFacing } | null = null;
+  const build = new BuildSession({
+    // 붓 라벨의 정본은 티커다 (K47-①) — 확정 바의 모드 줄은 같은 문장을 크게 쓴다
+    label: (text) => ticker.setBrush(text),
+    openAim: () => startAim(),
+    reaim: () => refreshAim(),
+    closeAim: () => closeAim(),
+    // 내 행동의 대답 (K47-① 채널 계약) — 무엇을 · 얼마에 · 남은 돈
+    receipt: (text) => toast(text, 'ok'),
+  });
 
   const ZONE_NAME: Record<string, string> = {
     indoor: '실내',
@@ -1007,9 +1080,23 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
 
   /** 메뉴를 열 때만 Today/경고를 다시 파생한다. 조립 전 호출은 안전한 no-op이다. */
   let refreshManagement = (): void => undefined;
+  /** 메뉴 라우터를 인덱스로 되돌린다 — 조립 전 호출은 안전한 no-op 이다 */
+  let resetManagementScreen = (): void => undefined;
+  /**
+   * 홈에서 뺀 중·장기 목표를 메뉴에 넘기는 late-bound 경계 (UI v3).
+   * `refreshGoal` 이 경영 메뉴 조립보다 먼저 한 번 도는 것은 그대로다.
+   */
+  let setMenuGoals = (_chips: readonly GoalChip[]): void => undefined;
   const hud = new KairoHud(document.body, {
     // 붓 라벨의 정본은 티커다 (K47-①) — 하단 바는 누르는 곳, 읽는 것은 티커
     onBrush: (label) => ticker.setBrush(label),
+    /*
+     * 홈 입력층은 셋(목표·티커·하단 바)이고 소유권은 한 값이다 (UI v3, 계획 §1.2).
+     * HUD 가 목표·바를 직접 내리고, HUD 밖에 사는 티커만 이 콜백으로 같은 값을 받는다.
+     */
+    onSurface: (_surface, own) => ticker.setInputOwned(own.ticker),
+    // 홈은 현재 행동 한 줄만 읽는다 — 중·장기는 메뉴의 `목표` 절로 간다 (계획 §1.1)
+    onMenuGoals: (chips) => setMenuGoals(chips),
     /*
      * 메뉴를 여는 순간 목록을 다시 그린다 (P3-E). 인증 목록은 시트가 닫혀 있으면
      * 안 그리므로(아래 `refreshQuests`), 여는 순간이 유일한 갱신 시점이다.
@@ -1018,14 +1105,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       if (which === 'menu') {
         refreshQuests();
         refreshManagement();
+        /*
+         * 메뉴는 **언제나 인덱스에서 시작한다.** 지난번에 들어갔던 목적지에서 열리면
+         * "여기가 어디였지"가 되고, `‹ 뒤로` 가 나타난 이유도 안 읽힌다.
+         * ⚠ `openManageScreen` 은 이 뒤에 자기 화면으로 다시 보내므로 충돌하지 않는다.
+         */
+        resetManagementScreen();
       }
     },
     onPick: (it: HudItem) => {
-      // 붓을 바꾸면 진행 중이던 배치는 취소한다 — 안 그러면 확정 바가 옛 시설을 가리킨다
-      endAim();
       // ⚠ 예약된 시설 정보도 버린다 — 안 버리면 붓을 고른 직후 정보 시트가 튀어나온다
       cancelFacilityInfo();
-      moveSel = null;
       if (it.kind === 'facility') {
         /*
          * 해금 — 골격(등급) 또는 사건(의뢰 보상). `isUnlocked` 하나로 묻는다 (K41).
@@ -1040,19 +1130,23 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
               ? `아직 못 짓습니다 — ${need}등급 필요 (현재 ${grade.grade}등급 ${grade.name})`
               : '아직 못 짓습니다 — 의뢰 보상으로 열립니다',
           );
-          brush = null;
+          // 못 짓는 것을 고르면 세션은 시작조차 안 한다 (옛 조준이 남지 않게 통째로 끝낸다)
+          build.abandon();
           return;
         }
-        brush = 'facility';
-        brushFacility = it.id;
-      } else {
-        brush = it.kind === 'erase' ? 'erase' : it.id;
       }
       /*
+       * 붓을 바꾸면 진행 중이던 배치는 여기서 끝난다 (`pick` 이 먼저 `end()` 한다) —
+       * 안 그러면 확정 바가 옛 시설을 가리킨 채 새 붓이 물린다.
+       *
        * 고르는 즉시 **고스트가 화면에 뜬다** (K47-③) — 이것이 조준 배치의 시작점이다.
-       * 출입구와 이동은 배치가 아니라 대상 지정이라 탭으로 남는다.
+       * 출입구와 이동은 배치가 아니라 대상 지정이라 탭으로 남는다 (세션이 안다).
        */
-      if (aimingBrush()) startAim();
+      if (it.kind === 'facility') {
+        build.pick('facility', it.name, { facilityId: it.id });
+      } else {
+        build.pick(it.kind === 'erase' ? 'erase' : it.id, it.kind === 'erase' ? '철거' : it.name);
+      }
     },
     // 카드 썸네일 — 게임과 같은 그림을 같은 계약 ID 로 (제공자가 곧 정본이다)
     thumbFor: (sid: string) => (h.provider.has(sid) ? h.provider.get(sid) : null),
@@ -1061,6 +1155,22 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      * 함수로 감싸 지연 참조한다 (TDZ 사고를 여러 번 겪었다).
      */
     onCourse: () => openCourse(),
+  });
+
+  /*
+   * ★ 화면을 뺏기면 건설 세션도 끝난다 (UI v3, 계획 §1.2).
+   *
+   * 시트(메뉴·건설)는 `hud.toggle` 이 `cancelConfirm()` 으로 끊고 있었지만, 그 길은
+   * **확정 바가 떠 있을 때만** 지난다. 출입구·이동 1단계처럼 바가 없는 붓은 시트를 열어도
+   * 그대로 남았고, 시설 정보·결산·코스처럼 `PanelHost` 로만 열리는 화면은 아예 안 지났다
+   * (`openFacilityInfo` 가 손으로 두 줄을 적어 두고 있던 이유가 그것이다).
+   *
+   * 그래서 소유권 경계 하나에 건다 — 어떤 패널이 열리든 세션은 여기서 끝난다.
+   * ⚠ `hud` 뒤에 등록하는 것이 규칙이다: `abandon()` 이 `hud.hideConfirm()` 을 타므로
+   * 그 전에 걸면 첫 패널이 TDZ 를 건드린다 (이 파일이 여러 번 겪은 사고).
+   */
+  panelHost.onChange((open) => {
+    if (open) build.abandon();
   });
 
   /** 코스 편집 열기 — 아래에서 패널이 만들어진 뒤에 실제로 불린다 */
@@ -1325,12 +1435,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
 
   /** 붓을 놓는다 — 하네스가 `__kairoBrush()` 로 확인한다 */
-  const clearBrush = (): void => {
-    brush = null;
-    moveSel = null;
-    ticker.setBrush(null);
-    endAim(); // 조준·고스트·표식·확정 바가 한 덩어리다 (K47-③)
-  };
+  const clearBrush = (): void => build.reset();
 
   /*
    * 검증 도구가 시뮬 규칙을 직접 부를 수 있게 노출한다 (브라우저에서 규칙을 재구현하지 않도록).
@@ -1346,9 +1451,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 매 프레임 판정은 폰에서 최악 1.6ms 라 위험하다 (실측 근거는 `refreshAim` 주석).
    */
   h.scene.onAimTile = (i, j) => {
-    if (!aim) return;
-    aim.i = i;
-    aim.j = j;
+    if (!build.aim) return;
+    build.aimTo(i, j);
     refreshAim();
   };
 
@@ -1360,7 +1464,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      * 하네스는 씬의 `aimTileNow()`(그려지는 쪽)로 "고스트가 팬을 따라오나"를 재므로
      * 이쪽은 둘이 갈라졌을 때 대조하는 용도다.
      */
-    aim: () => (aim ? { ...aim } : null),
+    aim: () => (build.aim ? { ...build.aim } : null),
     sim: { bakeIndoorWalls, paintFloor, INDOOR_FAIL_MESSAGES, guestWalkable },
     simDefs: Object.fromEntries(allFacilityDefs().map((d) => [d.id, d])),
   });
@@ -1983,7 +2087,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        * 2.6초 뒤 사라지는 토스트로 알리기엔 판이 통째로 좁아지는 사건이다.
        * (승급·탈락은 모달 그대로 — 그건 축하/판정 연출이다.)
        */
-      news('▼', `등급이 내려갔습니다 — ${currentGrade().name}. 만족도를 살피세요`);
+      news('▼', `등급이 내려갔습니다 — ${currentGrade().name}. ${REPUTATION_NAME}을 살피세요`);
     }
     // 심사 판정 (K42) — 부분 점수, 무작위 없음. 결과는 다음 날 아침에 도착한다
     const verdict = exam.judge(
@@ -2282,7 +2386,6 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 2줄째**로 올라갔고 상시 표시는 그대로다 — 사고가 RNG 로 느껴지면 안 된다 (v4 결정).
    * 처방(`안전 +N`)만 티커로 갔다: 그건 상태가 아니라 사건이다.
    */
-  const questPanel = hud.quests;
 
 
   /**
@@ -2440,6 +2543,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     }
   };
 
+  /**
+   * 삽화 사건 상자 — 의뢰·인증·소원·단골 상세가 여기로 온다 (표면은 여전히 셋).
+   * ⚠ `PanelHost` 등록은 자기 생성자가 한다 — 배타가 기본이다.
+   */
+  const eventDialog = new KairoEventDialog(document.body);
+
   const catalog = new KairoCatalog(document.body, {
     grade: () => currentGrade().grade,
     discovered: () => discovered,
@@ -2480,6 +2589,15 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   const newGame = new KairoNewGame(document.body, {
     grade: () => currentGrade().grade,
+    /*
+     * 확인 화면이 **지워지는 것을 숫자로** 말한다 — 주차·시설·현금.
+     * 값은 전부 지금 판에서 읽는다 (새 상태 0).
+     */
+    currentRun: () => ({
+      week: week.week + 1,
+      facilities: h.placement.count,
+      cash: week.cash,
+    }),
     start: (m, sc) => {
       clearKairoStorage();
       const url = new URL(location.href);
@@ -2490,21 +2608,53 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     },
   });
 
-  /** 배속 (K44) — 상시 버튼 2개 불변식 때문에 메뉴 안이다 (K47-②). 세션 선호라 저장 안 한다 */
-  const speedBtn = document.createElement('button');
-  speedBtn.id = 'kairo-speed';
-  speedBtn.className = 'kitem';
-  const refreshSpeedBtn = (): void => {
-    speedBtn.textContent = `배속 ${flow.speed}× → ${flow.speed === 1 ? 2 : 1}×`;
-  };
-  speedBtn.addEventListener('click', () => {
-    flow.speed = flow.speed === 1 ? 2 : 1;
-    syncTickPace();
-    refreshSpeedBtn();
-    toast(`배속 ${flow.speed}×`, 'ok');
-  });
-  refreshSpeedBtn();
-  hud.menuSlot.append(speedBtn);
+  /**
+   * 설정 IA (UI v3, 계획 §1.4) — 배속은 `진행`, 파괴적 시작은 `새 게임` 이다.
+   *
+   * ⚠ 예전엔 둘이 `.kmanage-utility` 한 줄에 **같은 크기로 나란히** 있었다. 배속은
+   * 되돌릴 수 있는 세션 선호이고 새 판은 자동 저장을 덮는 파괴적 행동이라, 같은 위계로
+   * 두면 실수 한 번이 몇 시간을 지운다. 파괴적 확인은 `KairoNewGame`의 게임 안 사건
+   * 상자가 맡는다 — 여기서 다시 만들지 않는다.
+   */
+  const managementSettings: ManagementSettingsSection[] = [
+    {
+      id: 'play',
+      label: '진행',
+      items: [
+        {
+          id: 'speed',
+          domId: 'kairo-speed',
+          label: '배속',
+          detail: '진행 속도',
+          // 세션 선호라 저장 안 한다 (K44) — 현재값은 볼 때마다 다시 읽는다
+          read: () => `현재 ${flow.speed}× · 탭하면 ${flow.speed === 1 ? 2 : 1}×`,
+          run: () => {
+            flow.speed = flow.speed === 1 ? 2 : 1;
+            syncTickPace();
+            refreshManagement();
+            toast(`배속 ${flow.speed}×`, 'ok');
+          },
+        },
+      ],
+    },
+    {
+      id: 'save',
+      label: '새 게임',
+      items: [
+        {
+          id: 'newgame',
+          domId: 'kairo-newgame-open',
+          label: '새 게임 시작',
+          detail: '지금 판을 지우고 처음부터 시작합니다 · 되돌릴 수 없습니다',
+          destructive: true,
+          run: () => {
+            if (newGame.visible) newGame.hide();
+            else newGame.show();
+          },
+        },
+      ],
+    },
+  ];
 
   /*
    * 등급 심사 (K42, K48 에서 화면을 고쳤다).
@@ -2544,12 +2694,26 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     const lp = week.liveProgress();
     const pending = exam.apply(next.grade, week.week + 1, lp ? lp.tick : TICKS_PER_WEEK);
     audio.play('sfx/card');
+    /*
+     * ⚠ **sim 의 원 키를 화면에 뿌리지 않는다** (UX 감사 P0-3).
+     *
+     * 예전엔 `hygiene 3 · food 2 · exitSatisfaction 55` 가 토스트·티커·알림함 **세 표면**에
+     * 그대로 나갔다. 같은 게임의 심사 확인 화면은 이미 `위생 시설`·`먹거리 시설`·`평판` 으로
+     * 쓰고 있었다 — 표가 없어서가 아니라 **연결이 안 돼 있어서**였다. 이제 그 표
+     * (`kairo-terms.ts`)를 여기서도 쓴다.
+     */
     const reqText = (next.examReqs ?? [])
-      .map((c) => (c.kind === 'needSupply' ? `${c.need} ${c.value}` : `${c.kind} ${c.value}`))
+      .map((c) => `${conditionSubject(c)} ${c.value}`)
       .join(' · ');
-    // 신청은 **내 행동**이라 토스트가 맞다. 예고는 뉴스다 — 둘 다 낸다 (K47-①)
-    toast(`심사 신청 — ${pending.judgeWeek}주차 주말 판정 (${reqText})`, 'ok');
-    news('📝', `${next.grade}등급 심사 접수 — ${pending.judgeWeek}주차 주말 판정 (${reqText})`);
+    /*
+     * 393px 한 줄을 넘으므로 **토스트는 요약만**, 조건 상세는 알림함에 남긴다
+     * (토스트 = 내 행동의 대답 · 티커/알림함 = 뉴스, K47-① 채널 계약 그대로).
+     */
+    toast(`심사 접수 — ${pending.judgeWeek}주차 주말에 판정합니다`, 'ok');
+    news(
+      '📝',
+      `${next.grade}등급 심사 접수 — ${pending.judgeWeek}주차 주말 판정 · ${reqText}`,
+    );
     refreshExamBtn();
     persist();
   };
@@ -2592,15 +2756,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   };
   refreshExamBtn();
 
-  const newGameBtn = document.createElement('button');
-  newGameBtn.id = 'kairo-newgame-open';
-  newGameBtn.textContent = '새 판';
-  newGameBtn.className = 'kitem';
-  newGameBtn.addEventListener('click', () => {
-    if (newGame.visible) newGame.hide();
-    else newGame.show();
-  });
-  hud.menuSlot.append(newGameBtn);
+  /*
+   * ⚠ 여기 `새 판` 버튼(`.kitem`)이 있었다. UI v3 에서 `설정 > 저장 및 새 게임 >
+   * 새 게임 시작` 으로 옮겼다 (`managementSettings`) — 손잡이 id 는 그대로다.
+   */
 
   /** 홈 A와 경영 Today가 같은 실제 action adapter를 쓰기 위한 late-bound 경계. */
   let runRecommendedAction = (_action: ManagementAction): void => undefined;
@@ -2729,7 +2888,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       long = {
         icon: '⭐',
         label: `${next.grade}등급까지`,
-        detail: `만족도 ${Math.round(reputation.value)}/${next.reqExitSatisfaction}`,
+        detail: `${REPUTATION_NAME} ${Math.round(reputation.value)}/${next.reqExitSatisfaction}`,
         progress: reputation.value / Math.max(1, next.reqExitSatisfaction),
         action: openExam,
       };
@@ -2761,6 +2920,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
 
     const chips = createGoalSlots({ immediate, mid, long });
     hud.setChips(chips);
+    /* 뉴스가 없을 때는 CLAUDE.md 계약대로 현재 즉시 목표가 다음 행동 힌트가 된다. */
     ticker.setFallback(immediate.label);
   };
   hud.setContext(`${mapDef.name} · ${scenario.name}`);
@@ -2899,12 +3059,19 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     refreshManagement();
   };
 
-  const scrollMenuTo = (id: string): void => {
-    // 홈 A/B/C에서도 이 adapter를 부른다. 닫힌 목록에 scroll만 보내지 말고 먼저
-    // production 공용 메뉴 시트를 연 뒤, 그 안의 실제 목적지를 그린다.
+  /**
+   * 목적지를 **연다** — 예전의 목록 점프는 같은 시트를 1,000px 가까이 튀게 했고,
+   * 앵커가 없는 판(`#kairo-regular-list` 는 열린 소원이 있을 때만 만들어졌다)에서는
+   * 자동 스크롤이 **조용한 no-op** 이었다 (UX 감사 P0-2 — 온보딩 6·7단계가
+   * 그 버튼을 Today 주버튼으로 띄우는데 화면이 아무 반응도 안 했다).
+   *
+   * 이제 메뉴는 라우터라 목적지가 **자기 화면**이다. 화면은 언제나 존재하고, 내용이
+   * 없으면 빈 상태(사실 + 방법 + 버튼)를 낸다.
+   */
+  const openManageScreen = (id: ManageScreenId): void => {
     hud.showMenu();
     refreshQuests();
-    document.getElementById(id)?.scrollIntoView({ block: 'start' });
+    management.show(id);
   };
   const firstCraftMenuFacility = () => h.placement.all().find((item) => {
     const def = facilityDef(item.defId);
@@ -2923,7 +3090,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         run: () => {
           const target = onboarding.step === 'equip-menu' ? firstCraftMenuFacility() : undefined;
           if (target) openMenuLab(target.handle);
-          else scrollMenuTo('kairo-regular-list');
+          else openManageScreen('regulars');
         },
       },
       {
@@ -2933,13 +3100,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         stayOpen: true,
         run: () => {
           if (onboarding.step === 'build-food') hud.showBuild();
-          else scrollMenuTo('kairo-quests-list');
+          else openManageScreen('quests');
         },
       },
       { id: 'codex', domId: 'kairo-catalog-open', label: '도감', detail: '누적 발견', run: () => catalog.show() },
       { id: 'report', label: '결산', detail: '최근 기록', run: openLastReport },
       { id: 'view', domId: 'kairo-showcase-open', label: '감상', detail: '내 리조트', run: () => showcase.show() },
-      { id: 'certs', label: '인증', detail: '병렬 성장', stayOpen: true, run: () => scrollMenuTo('kairo-cert-list') },
+      { id: 'certs', label: '인증', detail: '등급 밖 성장', stayOpen: true, run: () => openManageScreen('certs') },
       { id: 'ending', label: '엔딩', detail: '커리어 기록', run: openEnding },
   ];
   runRecommendedAction = (id): void => {
@@ -2985,21 +3152,74 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           report: lastReport ? `${lastReport.week}주 결산` : '첫 결산 대기',
           view: mapDef.name,
           certs: `${certs.count}/${CERTS.length} 획득`,
-          ending: state.endingReady ? '달성 확인 가능' : '성장 마일스톤',
+          ending: state.endingReady ? '달성 확인 가능' : '커리어 이정표',
         },
+        /*
+         * L1 라우터 네 줄의 부제 — **열기 전에** 그 안에 지금 무엇이 있는지 말한다.
+         * 인증 가산(`동시 입장 +N`)이 여기 산다: 정원 숫자가 왜 등급표보다 큰지
+         * 화면 어딘가는 말해야 하는데, 예전에는 의뢰 목록 머리가 그 자리였다.
+         */
+        routeDetails: {
+          operations: `요금 ${Math.round(priceMult * 100)}% · 코스 ${courses.count}개 · ` +
+            (staffShortages > 0 ? `직원 ${staffShortages}개 역할이 부족합니다` : '직원 배치 완료'),
+          growth: `${currentGrade().grade}등급 · 인증 ${certs.count}/${CERTS.length}` +
+            (certs.bonus().capacity > 0 ? ` (동시 입장 +${certs.bonus().capacity}명)` : ''),
+          records: lastReport
+            ? `${lastReport.week}주차 결산 · 콤보 ${discovered.combo[0]}/${discovered.combo[1]}`
+            : `첫 결산 대기 · 콤보 ${discovered.combo[0]}/${discovered.combo[1]}`,
+          settings: `배속 ${flow.speed}× · 자동 저장 켜짐`,
+        },
+        context: `${mapDef.name} · ${scenario.name}`,
       };
+    },
+    managementSettings,
+    {
+      listHost: hud.quests,
+      /*
+       * 빈 목록의 버튼은 **막다른 길이 아닐 때만** 만든다 (`kairo-growth.ts`).
+       * 여기서는 그 버튼이 실제로 가는 곳을 잇는다 — 토스트로 대답하고 끝내지 않는다.
+       */
+      onListAction: (id) => {
+        if (id === 'quests') openExam();
+        else hud.showBuild();
+      },
+      /*
+       * 목록의 한 행을 누르면 **삽화 사건 상자**가 뜬다 (카이로 문법: 장면 · 인물 · 이야기 ·
+       * 아래 선택지). 발견 · 수락 · 완료가 전부 같은 상자다. 채널은 안 늘어난다 — 이건
+       * 내가 열어 본 것이지 알림이 아니다 (K47-①).
+       */
+      onRowOpen: (list, event) => {
+        eventDialog.show({
+          kind: `growth:${list}`,
+          mood: event.mood,
+          kicker: event.kicker,
+          title: event.title,
+          body: event.body,
+          figure: event.figure,
+          choices: [
+            { id: 'close', label: '알겠습니다', run: () => undefined },
+            ...(list === 'certs' || list === 'quests'
+              ? [{ id: 'build', label: '건설 열기', run: (): void => hud.showBuild() }]
+              : []),
+          ],
+        });
+      },
     },
   );
   refreshManagement = () => management.refresh();
-  // 배속과 수동 새 판은 IA의 세 그룹 바깥에 둔 작은 설정 행이다.
-  const managementUtility = document.createElement('div');
-  managementUtility.className = 'kmanage-utility';
-  managementUtility.append(speedBtn, newGameBtn);
-  const managementVersion = document.createElement('small');
-  managementVersion.className = 'kcaption';
-  managementVersion.dataset['buildIdentity'] = '';
-  managementVersion.textContent = `버전 ${KAIRO_BUILD.shortSha} · ${KAIRO_BUILD.branch}`;
-  hud.menuSlot.append(managementUtility, managementVersion);
+  resetManagementScreen = () => management.reset();
+  /*
+   * 홈에서 뺀 중·장기 목표의 새 집 (UI v3). 새 상태를 만들지 않고 `refreshGoal` 이
+   * 이미 파생한 chip 을 그대로 넘긴다 — 조립 전 호출은 안전한 no-op 이었다.
+   */
+  setMenuGoals = (chips) => management.setGoals(chips);
+  refreshGoal();
+  /*
+   * 버전 줄은 **설정 화면 안**이다 (UX 감사 P2-27). 예전에는 메뉴 첫 화면 아래에
+   * 커밋 SHA 와 브랜치명이 그대로 떴다 — 플레이어에게는 소음이고 개발자에게는
+   * 설정에 있어도 충분하다. 하네스가 읽는 `data-build-identity` 손잡이는 그대로다.
+   */
+  management.setVersionLine(`버전 ${KAIRO_BUILD.shortSha} · ${KAIRO_BUILD.branch}`);
 
   runReportAction = (prescription): void => {
     if (prescription.action === 'course') {
@@ -3025,14 +3245,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      * ⚠ **조준을 먼저 끊는다.** 확정 바는 `PanelHost` 패널이 아니라서
      * (스크림 없는 바라 배타 규칙이 시트·결산과 부딪힌다 — `cancelConfirm` 주석)
      * `panelHost.open()` 만으로는 안 꺼진다. 조준 중에는 씬이 고스트를 가리는 시설·벽을
-     * **투시**로 흐려 놓는데, 그 원복이 `endAim()`/`setGhost(null)` 에 걸려 있다 —
+     * **투시**로 흐려 놓는데, 그 원복이 세션의 `closeAim`/`setGhost(null)` 에 걸려 있다 —
      * 안 끊으면 정보 시트를 여는 순간 판이 흐려진 채로 남는다.
      *
      * 탭 규칙상(붓이 없을 때만 정보) 정상 흐름에서는 조준 중일 수 없다. 그래도 끊는다 —
      * "그럴 리 없다"는 이 파일에서 여러 번 틀렸고, 값이 한 줄이다.
      */
     hud.cancelConfirm();
-    endAim();
+    build.abandon();
     /*
      * ⚠ **읽는 함수**를 넘긴다 (스냅샷이 아니라). 개선·특화를 그 자리에서 하므로 누른 뒤
      * 값을 다시 재야 하는데, 스냅샷 하나를 넘기면 화면이 옛 값에 고정된다.
@@ -3089,9 +3309,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        */
       erase: () => {
         facilityPanel.hide();
-        brush = 'erase';
-        moveSel = null;
-        ticker.setBrush('철거');
+        // 붓을 쥐여 주고 그 시설을 겨눌 뿐이다 — 없애는 것은 확정 바다
+        build.pick('erase', '철거');
         const at = tileOf(handle);
         aimAt(at.i, at.j);
       },
@@ -3194,128 +3413,111 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     riskShown = now;
   };
 
+  /**
+   * 성장 목록 넷을 다시 그린다 — 의뢰 · 소원 · 인증 · **단골**.
+   *
+   * ## 무엇이 바뀌었나 (IA 재설계 §4.1 · UX 감사 P0-2 · P1-10)
+   *
+   * · 넷이 메뉴 시트 꼬리에 직렬로 붙어 900px 를 먹던 것을 **각자 자기 화면**으로 보냈다.
+   * · 의뢰는 `slice(0, 6)` 으로 16종 중 6종만 보이던 것을 **전량**으로.
+   * · 조건 줄에 **주어를 붙인다** — `· 1 / 3개` 가 아니라 `선착장 1 / 3개`.
+   *   주어는 `kairo-terms.ts` 가 `QuestCondition` 에서 만든다 (sim 에 한글 0).
+   * · **단골 목록이 생겼다.** 예전에는 `#kairo-regular-list` 가 소원 머리였고 열린 소원이
+   *   없으면 아예 없어서, 온보딩 6·7단계의 Today 버튼이 조용한 no-op 이었다.
+   *
+   * ⚠ 화면에 안 보여도 **언제나 그린다** — 하네스가 닫힌 시트에서 `#kairo-quests` 의
+   * textContent 를 읽는다.
+   */
   const refreshQuests = (): void => {
     const st = questStatuses(h.placement, lastSummary, h.guests.swimZones());
-    const open = st.filter((s) => !progress.isClaimed(s.id));
-    const rows = open.slice(0, 6);
-    questPanel.replaceChildren();
-    const title = document.createElement('div');
     const g = currentGrade();
-    // 인증 가산은 **여기서 보인다** — 정원 숫자가 왜 등급표보다 큰지 말하지 않으면 버그로 읽힌다
-    const bonus = certs.bonus();
-    title.textContent =
-      `의뢰 ${st.length - open.length}/${st.length} · ${g.grade}등급 ${g.name}\n` +
-      `동시 ${g.maxGuests}명${bonus.capacity > 0 ? ` (인증 +${bonus.capacity})` : ''} · 수요 ×${g.reputationPull}`;
-    title.className = 'kquest-head';
-    title.id = 'kairo-quests-list';
-    questPanel.append(title);
-    for (const s of rows) {
-      const row = document.createElement('div');
-      row.className = 'kquest';
-      const name = document.createElement('div');
-      name.textContent = `${s.done ? '✓ ' : ''}${s.name}`;
-      if (s.done) name.className = 'done';
-      const bar = document.createElement('div');
-      bar.className = s.done ? 'kprog done' : 'kprog';
-      const fill = document.createElement('i');
-      // 폭은 **데이터**다 — 색은 클래스가 갖는다 (K34)
-      fill.style.width = `${Math.round(s.progress * 100)}%`;
-      bar.append(fill);
-      const det = document.createElement('div');
-      det.textContent = s.detail;
-      det.className = 'kquest-detail';
-      row.append(name, bar, det);
-      questPanel.append(row);
-    }
-    /*
-     * 소원 (K43) — 열린 소원을 의뢰 아래에 잇는다. 의뢰와 같은 행 모양을 쓴다
-     * (새 표면을 만들지 않는다). 인물의 말이 곧 조건 설명이다.
-     */
-    const openW = wishes.openWishes(h.placement, lastSummary, h.guests.swimZones());
-    if (openW.length > 0) {
-      const head = document.createElement('div');
-      head.className = 'ksheet-group';
-      head.id = 'kairo-regular-list';
-      head.textContent = `소원 ${openW.length}`;
-      questPanel.append(head);
-      for (const w of openW) {
-        const row = document.createElement('div');
-        row.className = 'kquest';
-        const name = document.createElement('div');
-        name.textContent = `${w.char.name} — ${w.wish.line}`;
-        const bar = document.createElement('div');
-        bar.className = 'kprog';
-        const fill = document.createElement('i');
-        fill.style.width = `${Math.round(w.progress * 100)}%`;
-        bar.append(fill);
-        const det = document.createElement('div');
-        det.textContent = w.detail;
-        det.className = 'kquest-detail';
-        row.append(name, bar, det);
-        questPanel.append(row);
-      }
-    }
-    /*
-     * ⚠ **시트가 닫혀 있으면 인증은 안 그린다** (P3-E). `refreshQuests` 는 1.5초 폴링이
-     * 부르는데, 인증 진행도는 `evaluateCombos` 를 한 번 더 돌린다 (실측: 시설 53채에
-     * 2.2ms · 후반 판이면 그 두 배). 안 보이는 목록에 폰 프레임을 쓸 이유가 없다 —
-     * 여는 순간 `onSheetOpen` 이 다시 그린다.
-     *
-     * ⚠ 의뢰·소원 쪽은 **안 막았다.** `verify-kairo` 가 시트가 닫힌 채로
-     * `#kairo-quests` 의 textContent 를 읽는다 (그 파일은 이번 페이즈 금지). 인증은
-     * 목록 **맨 아래**라 그 검사가 읽는 앞 60자에 안 들어간다.
-     */
-    if (!hud.menuOpen) return;
-    /*
-     * 인증 (P3-E) — 의뢰·소원 **아래 같은 목록**이다. 새 패널도, 새 상시 컨트롤도
-     * 만들지 않았다:
-     *   · 셋 다 "조건 → 달성 → 보상"이라 행 모양(`.kquest`)이 이미 맞는다
-     *   · 의뢰 칩 기둥은 **3장이 천장**이라 (세로 24% 예산의 상한) 인증을 칩으로 올릴
-     *     자리가 없다 — 제안서 ⓑ 도 "인증은 상시 칩이 아니라 시트 안"이라고 적었다
-     *   · 시트 본문(`.ksheet-body`)은 이미 스크롤한다
-     * 획득분은 접지 않고 **맨 아래에 ✓ 로 남긴다** — 딴 것이 목록에서 사라지면
-     * "정원 +N" 이 어디서 왔는지 화면 어디에도 안 남는다.
-     */
-    const certSt = certStatuses(h.placement, lastSummary, {
-      zones: h.guests.swimZones(),
-      courses: courses.count,
-      questsDone: progress.claimedCount,
-    });
-    const certHead = document.createElement('div');
-    certHead.className = 'ksheet-group';
-    certHead.id = 'kairo-cert-list';
-    certHead.textContent = `인증 ${certs.count}/${certSt.length} · 정원 +${certs.bonus().capacity}`;
-    questPanel.append(certHead);
-    // 딴 것은 아래로, 안 딴 것은 가까운 순 — "다음에 뭘 하지"가 맨 위여야 한다
-    const certRows = [...certSt].sort(
-      (a, b) => Number(certs.has(a.id)) - Number(certs.has(b.id)) || b.progress - a.progress,
+    const nextGrade = GRADES.find((grade) => grade.grade === g.grade + 1);
+    const quests = questList(
+      st.map((s) => ({
+        id: s.id,
+        name: s.name,
+        desc: s.desc,
+        detail: s.detail,
+        cond: s.cond,
+        progress: s.progress,
+        done: s.done,
+        reward: s.reward,
+        claimed: progress.isClaimed(s.id),
+      })),
+      nextGrade ? `${nextGrade.grade}등급` : '다음 등급',
     );
-    for (const s of certRows) {
-      const got = certs.has(s.id);
-      const row = document.createElement('div');
-      row.className = 'kquest';
-      const name = document.createElement('div');
-      name.textContent = `${got ? '✓ ' : '🏅 '}${s.name}`;
-      if (got) name.className = 'done';
-      const bar = document.createElement('div');
-      bar.className = got ? 'kprog done' : 'kprog';
-      const fill = document.createElement('i');
-      // 폭은 **데이터**다 — 색은 클래스가 갖는다 (K34)
-      fill.style.width = `${Math.round((got ? 1 : s.progress) * 100)}%`;
-      bar.append(fill);
-      const det = document.createElement('div');
-      const gain = [
-        s.reward.capacity !== undefined ? `정원 +${s.reward.capacity}` : null,
-        s.reward.permitArea !== undefined ? `허가 +${s.reward.permitArea}` : null,
-      ]
-        .filter((x) => x !== null)
-        .join(' · ');
-      det.textContent = got ? gain : `${s.reqs.map((r) => `${r.done ? '✓' : '·'} ${r.detail}`).join('  ')} → ${gain}`;
-      det.className = 'kquest-detail';
-      row.append(name, bar, det);
-      questPanel.append(row);
+
+    const openW = wishes.openWishes(h.placement, lastSummary, h.guests.swimZones());
+    const wishesList = wishList(
+      openW.map((w) => ({
+        id: `${w.char.id}:${w.wish.condition.kind}`,
+        character: w.char.name,
+        line: w.wish.line,
+        detail: w.detail,
+        progress: w.progress,
+      })),
+    );
+
+    const regulars = regularList(
+      REGULAR_CHARACTERS.map((character) => {
+        const status = wishes.regularStatus(character.id);
+        const requests = character.regular?.requests ?? [];
+        return {
+          id: character.id,
+          name: character.name,
+          /*
+           * "만났다" = 단골 사슬이 시작됐다. `regularStatus` 는 데이터가 있는 인물이면
+           * 언제나 값을 주므로, 만남 여부는 **친밀도가 움직였는지**로 잰다 — 그래야 새
+           * 판에서 `아직 안 만났습니다` 가 정직하다.
+           */
+          met: status !== null && (status.stage > 0 || status.affinity > 0),
+          stage: status?.stage ?? 0,
+          stages: requests.length,
+          want: status ? `“${status.request.line}”` : '',
+          done: status?.done ?? false,
+        };
+      }),
+    );
+
+    /*
+     * ⚠ **인증은 시트가 닫혀 있으면 다시 안 잰다** (P3-E). `evaluateCombos` 를 한 번 더
+     * 돌리는 비용이 커서(실측 시설 53채에 2.2ms) 1.5초 폴링이 안 보이는 목록에 폰
+     * 프레임을 쓸 이유가 없다. 대신 **옛 값을 그대로 유지**한다 — 목록 자체는 늘 있다.
+     */
+    const lists = [quests, wishesList, regulars];
+    if (hud.menuOpen) {
+      const certSt = certStatuses(h.placement, lastSummary, {
+        zones: h.guests.swimZones(),
+        courses: courses.count,
+        questsDone: progress.claimedCount,
+      });
+      const nearest = [...certSt]
+        .filter((c) => !certs.has(c.id))
+        .sort((a, b) => b.progress - a.progress)[0];
+      lists.push(
+        certList(
+          certSt.map((c) => ({
+            id: c.id,
+            name: c.name,
+            desc: c.desc,
+            reqs: c.reqs,
+            progress: c.progress,
+            earned: certs.has(c.id),
+            reward: c.reward,
+          })),
+          nearest
+            ? `가장 가까운 것은 ${nearest.name}입니다 (${conditionLine(nearest.reqs[0]!.cond, nearest.reqs[0]!.detail)})`
+            : '시설을 늘리면 인증 조건이 채워집니다',
+        ),
+      );
     }
+    management.setLists(lists);
+    /*
+     * 인증 가산은 **어딘가에서 보여야 한다** — 정원 숫자가 왜 등급표보다 큰지 말하지
+     * 않으면 버그로 읽힌다. 라우터의 `성장` 부제가 그 자리다 (아래 `routeDetails`).
+     */
   };
+
   /**
    * 상단 캡슐 — 주차·계절과 현금. 레퍼런스도 이 둘을 늘 띄워 둔다.
    * 등급이 바뀌면 건설 시트의 잠금도 같이 풀려야 하므로 여기서 함께 갱신한다.
@@ -3366,7 +3568,12 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     hud.setCash(cashShown);
     hud.setHeader({
       weather: WEATHER_GLYPH[week.liveWeather() ?? ''] ?? '☀',
-      sat: `${Math.round(reputation.value)}%`,
+      /*
+       * ⚠ **`%` 를 붙이지 않는다** (UX 감사 P0-5). 평판은 0~100 정수지 백분율이 아니고,
+       * 목표·심사·인증이 전부 `0/55` 처럼 같은 눈금으로 말한다. `%` 가 붙어 있으면
+       * "헤더의 0% 와 목표의 0/55 가 같은 값인가"를 화면만 보고 풀 수 없다.
+       */
+      sat: `${Math.round(reputation.value)}`,
       visitors: `${lastSummary?.visitors ?? 0}명`,
       grade: `${g.grade}등급`,
     });
@@ -3598,7 +3805,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   });
   Object.assign(window, {
     __kairo: h,
-    __kairoBrush: () => brush,
+    __kairoBrush: () => build.brush,
     __kairoClearBrush: clearBrush,
     __kairoCards: cardView,
   });

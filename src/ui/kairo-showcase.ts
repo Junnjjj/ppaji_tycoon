@@ -39,6 +39,8 @@ export class KairoShowcase {
   private readonly root: HTMLDivElement;
   private readonly titleEl: HTMLDivElement;
   private readonly subEl: HTMLDivElement;
+  private readonly renamePane: HTMLDivElement;
+  private readonly renameInput: HTMLInputElement;
   private hidden: HTMLElement[] = [];
   private lastShot: string | null = null;
 
@@ -60,12 +62,10 @@ export class KairoShowcase {
     top.append(this.titleEl, this.subEl);
     // 이름을 탭하면 바꾼다 — 내 리조트라는 감각의 절반은 이름이다
     top.addEventListener('click', () => {
-      const cur = this.info().name;
-      const next = window.prompt('리조트 이름', cur);
-      if (next !== null && next.trim() !== '') {
-        this.onRename(next.trim().slice(0, 20));
-        this.refresh();
-      }
+      this.renameInput.value = this.info().name;
+      this.renamePane.hidden = false;
+      this.renameInput.focus();
+      this.renameInput.select();
     });
 
     const bottom = el('div', 'kband bottom');
@@ -75,7 +75,38 @@ export class KairoShowcase {
     close.id = 'kairo-showcase-close';
     bottom.append(share, close);
 
-    this.root.append(top, bottom);
+    this.renamePane = el('div', 'kshowcase-rename');
+    this.renamePane.hidden = true;
+    this.renamePane.setAttribute('role', 'dialog');
+    this.renamePane.setAttribute('aria-label', '리조트 이름 바꾸기');
+    this.renameInput = document.createElement('input');
+    this.renameInput.className = 'kshowcase-name-input';
+    this.renameInput.maxLength = 20;
+    this.renameInput.setAttribute('aria-label', '새 리조트 이름');
+    const renameActions = el('div', 'kevent-actions');
+    const cancelRename = button('kbtn', '취소', () => {
+      this.renamePane.hidden = true;
+    });
+    const saveRename = button('kbtn primary', '이 이름으로 바꾸기', () => {
+      const next = this.renameInput.value.trim();
+      if (next === '') return;
+      this.onRename(next.slice(0, 20));
+      this.renamePane.hidden = true;
+      this.refresh();
+    });
+    this.renameInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') saveRename.click();
+      if (event.key === 'Escape') cancelRename.click();
+    });
+    renameActions.append(cancelRename, saveRename);
+    this.renamePane.append(
+      el('div', 'kevent-kicker', '리조트 이름'),
+      el('div', 'kevent-title', '어떤 이름으로 부를까요?'),
+      this.renameInput,
+      renameActions,
+    );
+
+    this.root.append(top, this.renamePane, bottom);
     parent.append(this.root);
   }
 
