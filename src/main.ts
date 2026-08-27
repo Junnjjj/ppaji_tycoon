@@ -26,6 +26,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const hdApprovedFit = hdPixelPilot && launchQuery.get('hdFit') === '1';
   const terrainV2Pilot = hdPixelPilot && launchQuery.get('terrain') === 'v2';
   const terrainV3SourcePilot = hdPixelPilot && launchQuery.get('terrain') === 'v3';
+  /** 20종×4방향 런타임 검토. 세이브와 시간 흐름에서 격리한다. */
+  const assetReview = launchQuery.get('assetReview') === '1';
   const shoreRadiusRaw = launchQuery.get('shoreRadius');
   const shoreRadius = shoreRadiusRaw === null ? undefined : Number(shoreRadiusRaw);
   const reviewedShoreRadius =
@@ -183,12 +185,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     './save/kairo.js'
   );
   const { facilityDef, canRotate, nextFacing } = await import('./sim/kairo/placement.js');
+  const { installFourDirectionAssetReview } = await import('./review/kairo-asset-review.js');
 
   /**
    * 세이브를 먼저 읽는다 — 지형·벽·시설을 씬에 넘겨야 하므로 부팅보다 앞이어야 한다.
    * 없으면 시드에서 새로 만든다 (`bootKairo` 기본 동작).
    */
-  const saved = loadKairoFromStorage();
+  // 리뷰 URL은 사용자 판을 읽지도, 뒤에서 덮어쓰지도 않는 일회성 전시 판이다.
+  const saved = assetReview ? null : loadKairoFromStorage();
   const career = loadCareerProfile();
   const KAIRO_SEED = saved?.seed ?? 20260818;
   /**
@@ -1734,6 +1738,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   }
 
   const persist = (): void => {
+    if (assetReview) return;
     /*
      * ⚠ **기록이 먼저다** (P3-C). 지금 서 있는 시설·코스를 도감 누적 집합에 합친 뒤 저장한다 —
      * 이 저장소에서 배치·철거·코스 편집은 전부 직후에 `persist()` 를 부르므로, 여기 한 줄이면
@@ -3868,6 +3873,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     __kairoClearBrush: clearBrush,
     __kairoCards: cardView,
   });
+  if (assetReview) {
+    Object.assign(h, {
+      assetReview: installFourDirectionAssetReview(
+        h as import('./review/kairo-asset-review.js').ReviewRuntimeHandle,
+        allFacilityDefs(),
+      ),
+    });
+  }
   console.log(
     `[카이로] 에셋 ${h.provider.name} (${h.provider.ids.length}장 플레이스홀더) · ` +
       `${hdPixelPilot ? `HD 검토${terrainV3SourcePilot ? ' + terrain-v3-source D=4' : terrainV2Pilot ? ' + terrain-v2 D=2' : ' D=2'}` : '기본 D=1'} · ` +
