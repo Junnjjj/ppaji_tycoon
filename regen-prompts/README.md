@@ -4,7 +4,7 @@
 **한 파일 = 한 시설.** 3번째 줄이 **첨부할 이미지(순서대로)**, `────` 사이가
 **붙여넣을 프롬프트**다.
 
-지시서 정본은 `docs/asset-regen-order.md`, 넘길 한 장은 **`_CODEX.md`** 다.
+지시서 정본은 `docs/assets/maintenance/legacy-v2-regeneration.md`, 넘길 한 장은 **`_CODEX.md`** 다.
 
 ## 저장소에 접근되는 세션이면 — 한 줄
 

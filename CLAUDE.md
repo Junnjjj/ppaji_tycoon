@@ -107,7 +107,7 @@ prototype/
 - `'ai'` — 지금은 임시 도형, 나중에 AI 픽셀아트로 교체
 
 이 분리 덕에 AI 로 뽑을 이미지가 수백 장이 아니라 **40~50장**이다 (v1 계약. 카이로 계약은
-**144장** — `docs/asset-prompts.md`). 테스트가 이 상한을 지킨다.
+**144장** — `docs/assets/maintenance/legacy-sheet-prompts.md`). 테스트가 이 상한을 지킨다.
 
 ---
 
@@ -1016,7 +1016,7 @@ P3-C② · 개선 목록 12개 잘림 → P3-C③)
    ⚠ **실측**: `sprite-gen gen --provider codex` 는 있으나 이 Codex 계정에 `image_gen` 권한이
    없고 grok 도 없다. 그림은 그 권한이 있는 세션에서 뽑아야 한다.
    · **22종을 다시 뽑아야 한다** (1차 재생성 뒤 26 → 22 · 통과 49 → 53 · 심각 2 → 1 ·
-     광원 뒤집힘 15 → 8). 지시서 `docs/asset-regen-order.md` (표는
+     광원 뒤집힘 15 → 8). 지시서 `docs/assets/maintenance/legacy-v2-regeneration.md` (표는
      `npx tsx tools/regen-table.ts` 가 **생성**한다. 손으로 적지 말 것). 무리 셋:
      **A 접지+광원 둘 다 4종**(← 여기부터) · B 접지만 13종 · C 광원만 5종.
      ⚠ B 가 10 → 13 으로 는 것은 **나빠진 게 아니라** A 넷의 광원이 고쳐져 B 로 옮겨 온 것이다.
@@ -1040,7 +1040,7 @@ P3-C② · 개선 목록 12개 잘림 → P3-C③)
      `+X`==`+Z` · `sit`==`ride` · idle/swim/float 2프레임이 픽셀 동일)
    · ⚠ **1차 생성을 이미 돌렸고 실패했다** (2026-08-22, 19종 × d1~d3 · 생성 118회 ·
      리롤 69회). 게이트 셋을 통과한 19장 중 **실제로 돌아 있는 것 0장** — 진단·회수
-     가능분·다음 판 규칙이 `docs/asset-4dir-order.md` **§0**, 원자료는
+     가능분·다음 판 규칙이 `docs/assets/history/prompt-chain-4dir-retrospective.md` **§0**, 원자료는
      `assets/generated/kairo-4dir/` (라이브 팩은 **한 바이트도 안 건드렸다**, 해시 대조
      75/75). **§0 을 안 읽고 다시 돌리면 같은 결과가 나온다.**
      건질 수 있는 것은 **3장**뿐이다 (`slide_large:d1` · `slide_small:d1` ·
@@ -1050,7 +1050,7 @@ P3-C② · 개선 목록 12개 잘림 → P3-C③)
      `exitTile [0,0]` 인데 그림은 로컬 `(2,0)`. 재생성 때 맞출 것 (그전엔 착수 물보라를 못 얹는다)
    · **`bodyH ≥ 32` 이면서 슬롯이 있는 7종**(슬라이드 3·전망대·다이빙·정글짐·눈썰매)은 뒤 슬롯
      손님이 탑에 붙어 보인다 — 코드가 아니라 **그림 계약**에서 풀 일
-   · 다시 뽑을 때: 프롬프트는 `docs/asset-prompts.md`(시트 34장 = 144장 전부, ID 대조표 +
+   · 다시 뽑을 때: 프롬프트는 `docs/assets/maintenance/legacy-sheet-prompts.md`(시트 34장 = 144장 전부, ID 대조표 +
      §레퍼런스 절의 가이드 첨부 방법). ⚠ 그 문서의 *"The second facing … Only draw one view"*
      는 **`facings: 2` 시설에만 맞는다** — 4방향을 켤 시설은 방향 4장이 필요하다 (K53).
      ⚠ 흔한 "front-facing RPG 뷰"를 그대로 쓰지 말 것 — 2:1 다이메트릭이고 **캔버스가 발자국에서

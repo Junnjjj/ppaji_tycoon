@@ -52,7 +52,7 @@
  * | 방 만들기 시도 | 60회 | **비용.** ①② 가 실패한 뒤의 마지막 수단이다 |
  * | 매표소 포장 시도 | 256곳 | **비용** — `ensurePath` 가 후보마다 격자 전체를 BFS 한다 |
  * | 선착장 자리 시도 | 400곳 | **비용** — `p.check` 가 물가·도달을 본다. 가까운 쪽부터 보므로 못 찾으면 근처가 찬 것 |
- * | 방향 후보 | 2개 | **비용 + 사람의 모델.** 화면의 회전 버튼이 주는 선택지가 곧 이 수다 (`main.ts` → `canRotate`). ⚠ **4방향 배선은 K53 에 이미 들어왔다** — 다만 `kairo-facilities.json` 이 아직 아무 시설도 `facings: 4` 로 안 켰다(75종 전부 미선언)라 지금은 둘이 같은 답이다. **첫 시설을 켜는 사람이 `aimFacings` 도 같이 4로 옮겨야 한다** (K36: 봇과 골든은 실제 게임으로 돈다) |
+ * | 방향 후보 | 시설별 1·2·4개 | **비용 + 사람의 모델.** 화면의 회전 버튼이 주는 선택지를 그대로 쓴다 (`facingsOf`). 4방향 채택 시설은 네 입구 방향을 모두 비교하고, 기존 정사각 2방향 시설은 회전 효과가 없어 하나만 본다 |
  *
  * ## ⚠ 봇은 **입구를 겨눈다** (K52)
  *
@@ -73,8 +73,8 @@
  * ⚠ **회전은 앞면을 −I·−J 로 못 보낸다.** `entryTilesOf` 의 앞면은 언제나 +I·+J 이고
  * `facing 1` 은 발자국을 **전치**할 뿐이다 (`sizeOf`). 그래서 회전이 바꾸는 것은
  * "어느 쪽 면인가"가 아니라 **"앞면이 어느 칸들인가"** 이고, 정사각 시설에서는 아무것도
- * 안 바뀐다 — 그 시설들에는 `ensurePath` 쪽이 유일한 레버다. 4방향(5단계)이 오기 전까지
- * 이 한계는 **게임의 한계이지 봇의 한계가 아니다.**
+ * 안 바뀐다 — 그 시설들에는 `ensurePath` 쪽이 유일한 레버다. 반면 `facings: 4` 로
+ * 채택된 시설은 네 앞면을 실제 그림·입구와 함께 돌리므로 봇도 같은 네 후보를 본다.
  *
  * ⚠ 되돌려서 재는 법: `--entry-fault` 를 주면 `setEntryFaultForTest(true)` 로 **좁히기
  * 이전의 목적지 집합**을 켠 채 같은 봇을 돌린다 (`seam --selftest` 와 같은 자리).
@@ -92,8 +92,10 @@ import {
   allFacilityDefs,
   facilityDef,
   FACILITY_MAX_LEVEL,
+  facingsOf,
   guestWalkable,
   setEntryFaultForTest,
+  type FacilityFacing,
   type FacilitySpecialty,
   type KairoFacilityDef,
 } from '../src/sim/kairo/placement.js';
@@ -1278,15 +1280,14 @@ function nudgeForCombo(
 /**
  * 어느 방향으로 놓을까 — **앞면이 길에 닿는 쪽** (K52). 좋은 쪽부터 순서대로 준다.
  *
- * 확정 바의 `↻` 가 하는 일 그대로다. 후보는 게임이 주는 둘뿐이고(정사각은 하나)
+ * 확정 바의 `↻` 가 하는 일 그대로다. 후보는 게임이 주는 1·2·4개이고
  * **자리는 안 옮긴다** — 자리까지 훑기 시작하면 봇이 최적화기가 되어 헤드리스가
  * 게임이 아니라 탐색 폭을 잰다 (`COMBO_NUDGE` 주석과 같은 규칙).
  *
  * ⚠ 회전 가능 조건은 **화면과 같은 답**이어야 한다. 봇이 화면에서 못 하는 회전을 하면
  * 그것도 "게임에 없는 세계"다. 화면은 `canRotate(def)` 를 부르고 그것은
- * `facingsOf(def) === 4 || size[0] !== size[1]` 인데, 지금은 **75종 전부 `facings` 미선언**
- * 이라 아래 `size[0] === size[1]` 과 답이 같다. ⚠ 데이터가 첫 `facings: 4` 를 켜는 순간
- * 둘이 갈라진다 — 그때 여기도 `canRotate`/`facingsOf` 로 옮길 것 (K53).
+ * `facingsOf(def) === 4 || size[0] !== size[1]` 이다. 아래도 같은 정본 `facingsOf` 를
+ * 읽으므로 4방향 정사각 시설까지 네 입구 방향을 빠짐없이 비교한다.
  *
  * ⚠ 점수는 **이미 손님이 설 수 있는 앞칸 수**다. 0 이어도 거절하지 않는다 —
  * 길이 아직 없을 뿐이고, 그 자리는 `ensurePath` 가 입구까지 깔아 준다.
@@ -1300,15 +1301,17 @@ function aimFacings(
   i: number,
   j: number,
   stand: (i: number, j: number) => boolean,
-): readonly (0 | 1)[] {
-  if (def.size[0] === def.size[1]) return [0];
-  const score = (f: 0 | 1): number =>
+): readonly FacilityFacing[] {
+  const count = facingsOf(def);
+  if (count === 2 && def.size[0] === def.size[1]) return [0];
+  const candidates: FacilityFacing[] = count === 4 ? [0, 1, 2, 3] : [0, 1];
+  const score = (f: FacilityFacing): number =>
     PlacementGrid.entryTilesOf(def, i, j, f).reduce(
       (n, [ni, nj]) => n + (stand(ni, nj) ? 1 : 0),
       0,
     );
-  // 동점이면 0 — 결정론 (불변식 2). 회전은 이득이 있을 때만 한다
-  return score(1) > score(0) ? [1, 0] : [0, 1];
+  // 동점이면 낮은 facing 우선 — 결정론 (불변식 2). 모든 합법 후보는 보존한다.
+  return candidates.sort((a, b) => score(b) - score(a) || a - b);
 }
 
 function buildOne(

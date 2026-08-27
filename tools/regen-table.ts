@@ -1,5 +1,5 @@
 /**
- * `docs/asset-regen-order.md` §1 의 **표를 생성한다.**
+ * `docs/assets/maintenance/legacy-v2-regeneration.md` §1 의 **표를 생성한다.**
  *
  *   npx tsx tools/regen-table.ts            표 셋(A·B·C)을 찍는다
  *   npx tsx tools/regen-table.ts --pass     「건드리지 말 것」의 통과 목록
@@ -35,7 +35,7 @@ import {
 import { measureLight, lightVerdict, type LightVerdict } from './light-direction.js';
 
 const PACK = 'assets/generated/kairo';
-const DOC = 'docs/asset-regen-order.md';
+const DOC = 'docs/assets/maintenance/legacy-v2-regeneration.md';
 
 const AXIS_NAME: Record<GeomAxis, string> = { vertex: '꼭짓점', slope: '기울기', iou: '모양' };
 const LIGHT_NAME: Record<LightVerdict, string> = {

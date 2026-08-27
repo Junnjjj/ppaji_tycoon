@@ -15,6 +15,7 @@
  */
 
 import { FACILITY_DIR_NAMES, KAIRO, KAIRO_SIM, kairoSpriteSpecs } from './kairo-contract.js';
+import { quarterTurnOffset, quarterTurnSize } from '../kairo-facing.js';
 import {
   TILE_W,
   TILE_H,
@@ -279,37 +280,28 @@ function drawFacility(
 ): void {
   const sim = KAIRO_SIM[simId];
   const [cw, ch] = spec.size;
-  const [w, d] = sim ? sim.size : ([1, 1] as const);
+  const sourceSize = sim ? sim.size : ([1, 1] as const);
+  const physicalFourWay = sim?.facings === 4;
+  const turn = physicalFourWay ? (dir as 0 | 1 | 2 | 3) : 0;
+  const [w, d] = physicalFourWay ? quarterTurnSize(sourceSize, turn) : sourceSize;
   const [body, topBase, side] = sim?.walkOn
     ? WALKON_COLOR
     : (ZONE_COLOR[sim?.layer ?? 'land'] ?? ZONE_COLOR['land']!);
   const bodyH = ch - (w + d) * STEP_Y;
 
   /*
-   * 방향 (K53) — 플레이스홀더에서도 **네 장이 서로 달라야** 한다. 같으면 배선이
-   * 통째로 빠져도 화면이 똑같아 검사가 아무것도 못 잰다.
+   * 방향 (K53) — 4방향은 **거울이 아니라 물리 quarter-turn**이다. 발자국 크기와 슬롯은
+   * `quarterTurnSize`/`quarterTurnOffset`이라는 같은 정본 함수를 쓴다. d1/d3을 캔버스
+   * 미러로 만들면 determinant -1인 반사가 되어 Blender root 회전과 절대 일치하지 않는다.
    *
-   *   전치(1·3) → 캔버스를 **가로로 뒤집어 그린다.** 아이소에서 i↔j 교환은 정확히
-   *               가로 거울이고 (`footprintTileOf` 주석) 캔버스 폭은 `(w+d)·16` 이라
-   *               교환에 불변이므로, 미러가 곧 d×w 발자국이다. 씬은 4방향 시설에
-   *               `setFlipX` 를 **안 걸므로** 그림 쪽이 미리 뒤집혀 있어야 한다
-   *   뒤돌기(2·3) → 윗면을 어둡게. 180° 는 화면에서도 점대칭이라 발자국 마름모는
-   *               그대로이고 달라지는 것은 "어느 면이 보이나"뿐이다
+   * 대칭인 1×1 박스도 방향 배선 검사가 가능하도록 아래에서 주황색 +J 표식을 찍는다.
    */
-  const mirrored = dir % 2 === 1;
-  const top = dir >= 2 ? darken(topBase, 0.78) : topBase;
-  if (mirrored) {
-    g.save();
-    g.translate(cw, 0);
-    g.scale(-1, 1);
-  }
+  const top = topBase;
 
   // 바닥 (그림자 겸 발자국 표시) — 몸통이 있으면 아래쪽에 남는 띠만 보인다
   fillFootprint(g, w, d, bodyH, darken(body, 0.72));
 
   if (bodyH <= 0) {
-    // ⚠ 아웃라인은 **미러를 되돌린 뒤** 굽는다 — 픽셀을 읽어 쓰는 단계라 변환이 걸려 있으면 안 된다
-    if (mirrored) g.restore();
     bakeOutline(g, cw, ch);
     return;
   }
@@ -343,12 +335,26 @@ function drawFacility(
   // ⚠ 슬롯은 **시뮬 데이터**가 소유한다 (렌더 계약이 아니다 — `KairoFacilityDef.slots` 주석)
   g.fillStyle = 'rgba(255,255,255,0.45)';
   for (const sl of sim?.slots ?? []) {
-    const [i, j] = sl.tile;
+    const [i, j] = physicalFourWay
+      ? quarterTurnOffset(sourceSize, sl.tile, turn)
+      : sl.tile;
     const o = tileOffsetInCanvas(i, j, d, 0);
     g.fillRect(o.x + TILE_W / 2 - 1, o.y + TILE_H / 2 - 1, 2, 2);
   }
 
-  if (mirrored) g.restore();
+  if (physicalFourWay) {
+    // 로컬 +J가 화면에서 향하는 사분면: d0 좌하 → d1 우하 → d2 우상 → d3 좌상.
+    const screenSigns = [
+      [-1, 1],
+      [1, 1],
+      [1, -1],
+      [-1, -1],
+    ] as const;
+    const [sx, sy] = screenSigns[turn];
+    g.fillStyle = '#f27b45';
+    g.fillRect(cw / 2 + sx * 6 - 1, (w + d) * STEP_Y / 2 + sy * 3 - 1, 3, 3);
+  }
+
   bakeOutline(g, cw, ch);
 }
 

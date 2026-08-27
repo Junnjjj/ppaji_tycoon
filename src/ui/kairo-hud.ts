@@ -548,7 +548,7 @@ export class KairoHud {
     this.rotateBtn = el('button', 'place-btn rotate', '↻');
     this.rotateBtn.id = 'kairo-place-rotate';
     this.rotateBtn.disabled = true;
-    this.rotateBtn.title = '회전 (비정사각 시설)';
+    this.rotateBtn.title = '회전 (방향 변경)';
     this.rotateBtn.addEventListener('click', () => this.onRotate?.());
     this.confirmBtn = el('button', 'place-btn confirm', '확정');
     this.confirmBtn.id = 'kairo-place-confirm';
@@ -599,7 +599,7 @@ export class KairoHud {
     this.confirmBtn.disabled = !ok;
     this.onConfirm = on.confirm;
     this.onCancel = on.cancel;
-    // 회전 (K45) — 비정사각 시설만 켠다. 예약해 뒀던 그 자리다
+    // 회전 (K45/K53) — 비정사각 2방향 또는 방향 그림이 있는 4방향 시설에서 켠다
     this.onRotate = on.rotate ?? null;
     this.rotateBtn.disabled = on.rotate === undefined;
     /*

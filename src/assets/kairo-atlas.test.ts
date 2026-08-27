@@ -22,13 +22,13 @@ const NO_IMAGE = null as unknown as CanvasImageSource;
 const held = (id: string): boolean => ATLAS_HOLDOUT.some((h) => id.startsWith(h.prefix));
 
 describe('생성물 파일명 ↔ 논리 ID — 규칙의 유일한 구현', () => {
-  it('144개 정본 ID 가 전부 왕복한다', () => {
+  it('204개 정본 ID 가 전부 왕복한다', () => {
     for (const id of kairoAssetSizes().keys()) {
       expect(assetFileToId(assetIdToFile(id)), id).toBe(id);
     }
   });
 
-  it('docs/asset-prompts.md 가 든 예시 셋이 그대로 성립한다', () => {
+  it('docs/assets/maintenance/legacy-sheet-prompts.md 가 든 예시 셋이 그대로 성립한다', () => {
     expect(assetIdToFile('facility/shop')).toBe('facility__shop.png');
     expect(assetIdToFile('ground/lawn:a0')).toBe('ground__lawn__a0.png');
     expect(assetIdToFile('ui/icon-coin')).toBe('ui__icon-coin.png');
@@ -43,9 +43,9 @@ describe('생성물 파일명 ↔ 논리 ID — 규칙의 유일한 구현', () 
   });
 });
 
-describe('한 팩이 담아야 하는 것 — 129 스프라이트 + 15 UI', () => {
-  it('스프라이트 색인이 129개다 (절차 프로바이더와 같은 전개)', () => {
-    expect(kairoSpriteIndex().size).toBe(129);
+describe('한 팩이 담아야 하는 것 — 189 스프라이트 + 15 UI', () => {
+  it('스프라이트 색인이 189개다 (절차 프로바이더와 같은 전개)', () => {
+    expect(kairoSpriteIndex().size).toBe(189);
   });
 
   it('UI 아이콘 15개는 스프라이트 계약 **밖**이다 — 드로어 강제 검사에 안 걸린다', () => {
@@ -55,9 +55,9 @@ describe('한 팩이 담아야 하는 것 — 129 스프라이트 + 15 UI', () =
     for (const id of ui) expect(sprites.has(id), id).toBe(false);
   });
 
-  it('규격표가 144개이고 UI 아이콘 크기는 계약값에서 온다', () => {
+  it('규격표가 204개이고 UI 아이콘 크기는 계약값에서 온다', () => {
     const sizes = kairoAssetSizes();
-    expect(sizes.size).toBe(144);
+    expect(sizes.size).toBe(204);
     for (const id of kairoUiIconIds()) expect(sizes.get(id)).toEqual(KAIRO.uiIcons.canvas);
   });
 });
@@ -86,20 +86,22 @@ describe('구운 아틀라스가 계약과 맞다', () => {
     for (const [id, want] of kairoAssetSizes()) {
       const f = index?.[id];
       if (!f) continue;
-      if (f.w !== want[0] || f.h !== want[1]) {
-        drift.push(`${id} ${f.w}×${f.h}≠${want[0]}×${want[1]}`);
+      const density = f.density ?? 1;
+      if (f.w !== want[0] * density || f.h !== want[1] * density) {
+        drift.push(`${id} ${f.w}×${f.h}@${density}≠${want[0]}×${want[1]} logical`);
       }
     }
     expect(drift).toEqual([]);
   });
 
-  it('144장을 전부 덮는다 — 빠진 것이 있으면 npm run bake:atlas', () => {
+  it('204장을 전부 덮는다 — 빠진 것이 있으면 npm run bake:atlas', () => {
     const missing = [...kairoAssetSizes().keys()].filter((id) => !index?.[id]);
     expect(missing).toEqual([]);
   });
 });
 
 describe('KairoAtlasProvider — 계약이 정본, 아틀라스는 픽셀만', () => {
+  const facilityId = 'facility/shop:d0';
   const full = (): AtlasIndex => {
     const idx: AtlasIndex = {};
     let x = 0;
@@ -110,8 +112,8 @@ describe('KairoAtlasProvider — 계약이 정본, 아틀라스는 픽셀만', (
     return idx;
   };
 
-  /** 반입 보류분(`ATLAS_HOLDOUT`)을 뺀 장수 — 지금은 벽 8종 */
-  const servable = 129 - [...kairoSpriteIndex().keys()].filter((id) => held(id)).length;
+  /** 반입 보류분(`ATLAS_HOLDOUT`)을 뺀 장수. 4방향 채택으로 수가 늘어도 자동 추적한다. */
+  const servable = [...kairoSpriteIndex().keys()].filter((id) => !held(id)).length;
 
   it('UI 아이콘은 씬 텍스처가 아니다 — 스프라이트만 낸다', () => {
     const idx = full();
@@ -130,7 +132,7 @@ describe('KairoAtlasProvider — 계약이 정본, 아틀라스는 픽셀만', (
       expect(hit.length, `${h.prefix} 가 아무 ID 도 안 가린다 — 오타다`).toBeGreaterThan(0);
       for (const id of hit) expect(p.has(id), id).toBe(false);
     }
-    expect(p.held.length).toBe(129 - servable);
+    expect(p.held.length).toBe([...kairoSpriteIndex().keys()].length - servable);
   });
 
   it('spec 은 계약에서 온다 — 아틀라스 프레임이 아니다', () => {
@@ -146,18 +148,27 @@ describe('KairoAtlasProvider — 계약이 정본, 아틀라스는 픽셀만', (
 
   it('⚠ 크기가 다른 프레임은 버린다 — 밀린 그림보다 플레이스홀더가 낫다', () => {
     const idx = full();
-    idx['facility/shop'] = { x: 0, y: 0, w: 7, h: 7 };
+    idx[facilityId] = { x: 0, y: 0, w: 7, h: 7 };
     const p = KairoAtlasProvider.fromLoaded(NO_IMAGE, idx);
-    expect(p.has('facility/shop')).toBe(false);
-    expect(p.dropped.some((d) => d.startsWith('facility/shop'))).toBe(true);
+    expect(p.has(facilityId)).toBe(false);
+    expect(p.dropped.some((d) => d.startsWith(facilityId))).toBe(true);
     expect(p.ids).toHaveLength(servable - 1);
+  });
+
+  it('2× 프레임은 논리 계약을 유지하고 소스 밀도만 2로 낸다', () => {
+    const idx = full();
+    idx[facilityId] = { x: 0, y: 0, w: 128, h: 104, density: 2 };
+    const p = KairoAtlasProvider.fromLoaded(NO_IMAGE, idx);
+    expect(p.has(facilityId)).toBe(true);
+    expect(p.spec(facilityId)!.size).toEqual([64, 52]);
+    expect(p.density(facilityId)).toBe(2);
   });
 
   it('부분 아틀라스도 성립한다 — 빠진 ID 는 폴백 몫이라 조용히 없다', () => {
     const idx = full();
-    delete idx['facility/shop'];
+    delete idx[facilityId];
     const p = KairoAtlasProvider.fromLoaded(NO_IMAGE, idx);
-    expect(p.has('facility/shop')).toBe(false);
+    expect(p.has(facilityId)).toBe(false);
     expect(p.dropped).toEqual([]);
     expect(p.ids).toHaveLength(servable - 1);
   });

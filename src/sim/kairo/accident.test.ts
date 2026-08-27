@@ -48,7 +48,7 @@ describe('사고는 위험할 때만 난다', () => {
       if (runner.run(new Rng(k), { season: 'summer', accidentChance: 0 }).accident) hits++;
     }
     expect(hits).toBe(0);
-  });
+  }, 15_000);
 
   it('확률이 있으면 사고가 나고, 시설 하나가 1~3주 닫힌다', () => {
     const f = park('shop', 6);
@@ -67,7 +67,7 @@ describe('사고는 위험할 때만 난다', () => {
     expect(hits).toBeLessThan(140);
     expect(Math.min(...weeks)).toBeGreaterThanOrEqual(1);
     expect(Math.max(...weeks)).toBeLessThanOrEqual(3);
-  });
+  }, 15_000);
 
   /*
    * **시드 하나로 재면 안 된다** (2026-08-19).

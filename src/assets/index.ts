@@ -51,6 +51,11 @@ export class HybridProvider implements AssetProvider {
   get(id: string): HTMLCanvasElement {
     return this.primary.has(id) ? this.primary.get(id) : this.fallback.get(id);
   }
+
+  density(id: string): number {
+    const provider = this.primary.has(id) ? this.primary : this.fallback;
+    return provider.density?.(id) ?? 1;
+  }
 }
 
 /**

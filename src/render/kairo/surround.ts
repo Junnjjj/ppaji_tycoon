@@ -1,4 +1,5 @@
 import { KairoTerrain } from '../../sim/kairo/terrain.js';
+import { facilitySpriteId } from '../../assets/kairo-contract.js';
 
 /**
  * 지도 **바깥**의 생활 장식 (Phase 7 / Task 7).
@@ -51,7 +52,7 @@ export interface SurroundDecoration {
  */
 const DECOR_SPRITE: Record<SurroundDecorKind, string> = {
   house: 'facility/bungalow',
-  shop: 'facility/shop',
+  shop: facilitySpriteId('shop', 0),
   car: 'facility/parking',
   lamp: 'deco/night_light',
   sign: 'deco/safety_sign',

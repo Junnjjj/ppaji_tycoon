@@ -1,4 +1,5 @@
 import rawFacilities from '../../data/kairo-facilities.json' with { type: 'json' };
+import { quarterTurnOffset } from '../../kairo-facing.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid, reachable, EDGE_DOOR } from './walls.js';
 import { riverZones, permitUsed, deckKey } from './swim.js';
@@ -49,18 +50,23 @@ export interface KairoFacilitySlot {
  * 시설의 **놓인 방향** (K53 에서 `0|1` → `0|1|2|3`).
  *
  * 뜻은 **발자국 안 오프셋 `(di,dj)` 에 거는 변환**이고, 정본 산수는
- * `PlacementGrid.footprintTileOf` **한 곳**뿐이다:
+ * `PlacementGrid.footprintTileOf` **한 곳**뿐이다. 2방향 레거시와 물리 4방향은
+ * 의도적으로 갈린다:
  *
  * ```
- *   0  (di, dj)                    w×d   그대로            앞면 +I·+J (화면 아래)
- *   1  (dj, di)                    d×w   전치 = 가로 거울   앞면 +I·+J
- *   2  (w−1−di, d−1−dj)            w×d   180° 점대칭        앞면 −I·−J (화면 위)
- *   3  (d−1−dj, w−1−di)            d×w   전치 후 뒤집기     앞면 −I·−J
+ *   2방향 facing 0  (di,dj)         w×d   레거시 원본
+ *   2방향 facing 1  (dj,di)         d×w   레거시 가로 거울/전치
+ *
+ *   4방향 d0  (di,dj)               w×d   root Z   0°
+ *   4방향 d1  (dj,w−1−di)           d×w   root Z  90°
+ *   4방향 d2  (w−1−di,d−1−dj)       w×d   root Z 180°
+ *   4방향 d3  (d−1−dj,di)           d×w   root Z 270°
  * ```
  *
- * ⚠ **0·1 의 뜻을 바꾸지 않았다.** 세이브가 v7 그대로일 수 있는 유일한 조건이다
- * (`0 = w×d`, `1 = d×w`). 뜻을 바꾸면 이미 나간 세이브의 시설이 전부 다른 발자국으로
- * 열리므로 **v8 + 마이그레이션이 필수**가 된다.
+ * ⚠ `facings` 가 없는 기존 2방향 시설의 **0·1 뜻은 바꾸지 않았다.** 세이브가 v7 그대로일
+ * 수 있는 조건이다. 아직 라이브 데이터에는 `facings: 4` 가 0개이므로 새 4방향 시설만
+ * 물리 quarter-turn 산수를 사용한다. 4방향에서 전치를 90° 회전이라고 부르면 안 된다 —
+ * determinant가 −1인 반사라 Blender 단일 루트 회전과 절대 일치하지 않는다.
  *
  * ⚠ 어떤 시설이 2방향인지 4방향인지는 **데이터가 정한다** (`KairoFacilityDef.facings`,
  * 불변식 3). 코드에 시설 목록을 박지 말 것 — `facingsOf()` 하나로 묻는다.
@@ -74,6 +80,8 @@ export type FacilityFacing = 0 | 1 | 2 | 3;
  * (`PlacementGrid.footprintTileOf` 주석). 그래서 전치는 `+Z↔+X`, `-Z↔-X` 이고 세로 짝은 없다.
  * 180°(facing 2)는 화면에서도 점대칭이라 앞뒤가 통째로 뒤집힌다 — `+Z↔-Z`, `+X↔-X`.
  * facing 3 은 그 둘의 합성이고 **순서에 무관**하다 (거울과 점대칭은 교환된다).
+ * 이것은 2방향 레거시 호환 규칙이다. 물리 4방향에서는 `+Z→+X→−Z→−X` quarter-turn을
+ * 반복한다.
  *
  * 이름의 정본은 렌더 계약의 `guest.facingNames` 다 — 여기는 그 이름들 사이의 **짝**만 안다.
  *
@@ -93,9 +101,20 @@ const OPPOSITE_FACING: Readonly<Record<string, string>> = {
   '+X': '-X',
   '-X': '+X',
 };
+const QUARTER_TURN_FACING: Readonly<Record<string, string>> = {
+  '+Z': '+X',
+  '+X': '-Z',
+  '-Z': '-X',
+  '-X': '+Z',
+};
 
-/** 슬롯 방향 이름에 회전을 건다 — `MIRROR`/`OPPOSITE` 의 유일한 조합 자리 */
-function rotateFacingName(name: string, facing: FacilityFacing): string {
+/** 슬롯 방향 이름에 회전을 건다 — 레거시 거울과 물리 quarter-turn의 유일한 분기 자리 */
+function rotateFacingName(name: string, facing: FacilityFacing, physicalFourWay: boolean): string {
+  if (physicalFourWay) {
+    let rotated = name;
+    for (let turn = 0; turn < facing; turn++) rotated = QUARTER_TURN_FACING[rotated] ?? rotated;
+    return rotated;
+  }
   const mirrored = facing % 2 === 1 ? (MIRROR_FACING[name] ?? name) : name;
   return facing >= 2 ? (OPPOSITE_FACING[mirrored] ?? mirrored) : mirrored;
 }
@@ -378,6 +397,22 @@ export const SPECIALTY_DOUBLE_LEVEL = 5;
 
 const DEFS = (rawFacilities as unknown as { facilities: Record<string, KairoFacilityDef> })
   .facilities;
+
+/**
+ * URL로만 여는 HD 배치 검토가 승인된 풋프린트와 4방향 산수를 실제 시뮬에 태우는 손잡이.
+ * JSON 파일은 바꾸지 않고 이 페이지 수명 동안의 메모리 정의만 덮는다.
+ */
+export function setFacilityReviewOverrides(
+  overrides: Readonly<Record<string, Pick<KairoFacilityDef, 'size' | 'facings'>>>,
+): void {
+  for (const [id, patch] of Object.entries(overrides)) {
+    const current = DEFS[id];
+    if (!current) throw new Error(`검토 오버라이드 시설이 없음: ${id}`);
+    const next: KairoFacilityDef = { ...current, size: [...patch.size] as [number, number] };
+    if (patch.facings !== undefined) next.facings = patch.facings;
+    DEFS[id] = next;
+  }
+}
 
 export function facilityDef(id: string): KairoFacilityDef | undefined {
   return DEFS[id];
@@ -772,15 +807,16 @@ export class PlacementGrid {
    * (`guestWalkable`·`evaluateCondition`·`capacityOf`·`admissionLimit`). 표시와 손님이
    * 다른 칸을 가리키면 표시가 조용히 거짓말이 된다 — 그러면 안 보여 주는 편이 낫다.
    *
-   * ## 회전은 **전치**다 (`(di,dj) → (dj,di)`)
+   * ## 2방향 레거시는 전치, 4방향은 물리 quarter-turn이다
    *
-   * 발자국과 같은 규칙이어야 한다. `sizeOf` 는 `facing===1` 에서 w↔h 만 바꾸고
+   * 발자국과 같은 규칙이어야 한다. `sizeOf` 는 홀수 facing에서 w↔h를 바꾸고
    * `footprintTiles` 는 `(i,j)` 에서 그 사각형을 편다 — 그 사각형에 오프셋을 다시
    * 넣는 유일한 방법이 전치다 (`dj0 < h0 = w`, `di0 < w0 = h` 라 **항상 발자국 안**이다).
    *
-   * 그림과도 맞는다. 씬은 회전을 `setFlipX` 로 그리는데, 아이소에서 +I 는 `(+16,+8)`
+   * 2방향 그림과도 맞는다. 씬은 레거시 회전을 `setFlipX` 로 그리는데, 아이소에서 +I 는 `(+16,+8)`
    * +J 는 `(−16,+8)` 이므로 i 와 j 를 맞바꾸면 화면 x 만 뒤집히고 y 는 그대로다 —
-   * **전치 = 가로 거울**이다. 다른 변환을 쓰면 스프라이트와 입출구가 따로 논다.
+   * **전치 = 가로 거울**이다. 4방향 생산 에셋은 별도 d0–d3 이미지이므로 전치를 재사용하지
+   * 않고 Blender root Z `0/90/180/270°`와 같은 quarter-turn을 쓴다.
    *
    * ⚠ **회전이 입출구를 안 돌리던 것이 버그였다** (K51 에서 재현). `slide_large`(4×5,
    * 입구 `[3,4]`)를 회전하면 발자국이 5×4 라 `dj=4` 는 **발자국 밖**이고, 손님이 시설
@@ -811,19 +847,19 @@ export class PlacementGrid {
    *
    * 규칙은 `sizeOf`/`footprintTiles` 와 같아야 한다.
    *
-   * ## 4방향 변환식 (K53) — `w`·`d` 는 **데이터 그대로의** 발자국 (`def.size`)
+   * ## 물리 4방향 변환식 — `w`·`d` 는 **데이터 그대로의** 발자국 (`def.size`)
    *
    * ```
    *   0  (di, dj)              그대로            사각형 w×d
-   *   1  (dj, di)              전치              사각형 d×w
+   *   1  (dj, w−1−di)          +90°              사각형 d×w
    *   2  (w−1−di, d−1−dj)      뒤집기            사각형 w×d
-   *   3  (d−1−dj, w−1−di)      전치 후 뒤집기    사각형 d×w
+   *   3  (d−1−dj, di)           +270°             사각형 d×w
    * ```
    *
-   * ⚠ **전치만으로는 부족하다.** K51 이 정확히 이 자리에서 데였고(회전이 입출구를 안
-   * 돌려 `slide_large` 의 입구 `[3,4]` 가 발자국 밖으로 나갔다), 4방향에서는 **뒤집기를
-   * 빼먹는 것**이 같은 모양의 두 번째 사고가 된다: `facing 2` 를 전치 없이 그대로 두면
-   * 그림만 뒤돌고 입구·슬롯은 앞에 남아, 화면과 손님이 갈라진다.
+   * ⚠ `(dj,di)`는 determinant −1인 반사이고 90° 회전이 아니다. Blender 축을
+   * `I=+X, J=−Y, height=+Z`로 놓았을 때 root Z +90°는 정확히
+   * `(di,dj)→(dj,w−1−di)`다. d1/d3에서 이 한 축 뒤집기를 빼면 그림과 입구·슬롯이
+   * 서로 다른 물체를 설명한다.
    *
    * 발자국 안이 보장된다: 1·3 은 `dj < d = W`, `di < w = D`; 2·3 의 뒤집기는
    * `0 ≤ w−1−di < w` 라 구간을 벗어나지 않는다 (검사가 75종 × 4방향 전수로 잰다).
@@ -840,6 +876,11 @@ export class PlacementGrid {
     facing: FacilityFacing = 0,
   ): [number, number] {
     const [w, d] = def.size;
+    if (facingsOf(def) === 4) {
+      const [fi, fj] = quarterTurnOffset([w, d], o, facing);
+      return [i + fi, j + fj];
+    }
+    // 이미 출시된 2방향 세이브 호환: facing 1은 실제 90°가 아니라 전치/가로 거울이다.
     // 먼저 전치 (홀수 방향), 그 다음 뒤집기 (2·3) — 전치 뒤의 사각형 안에서 뒤집는다
     const [tw, td] = facing % 2 === 1 ? [d, w] : [w, d];
     const [ti, tj] = facing % 2 === 1 ? [o[1], o[0]] : [o[0], o[1]];
@@ -862,11 +903,11 @@ export class PlacementGrid {
    * 되고, "회전 특화로 정원을 올렸는데 아무도 안 들어온다"가 된다. 붐비는 것이 보이는
    * 편이 낫다 — "회전 특화 = 붐빈다"가 화면에 나타나야 그 선택이 읽힌다.
    *
-   * ## 방향은 **거울과 점대칭의 합성**이다
+   * ## 방향은 2방향 레거시와 물리 4방향을 구분한다
    *
    * 전치(1·3)는 화면 x 만 뒤집으므로 `+Z ↔ +X`, `-Z ↔ -X`. 180°(2·3)는 화면에서도
    * 점대칭이라 앞뒤가 뒤집힌다 (`+Z ↔ -Z`, `+X ↔ -X`). 산수는 `rotateFacingName`
-   * 하나가 갖는다 — 여기서 표를 다시 펼치면 `footprintTileOf` 와 갈라진다.
+   * 하나가 갖는다. `facings: 4`에서는 `+Z→+X→−Z→−X`를 quarter-turn 수만큼 반복한다.
    */
   static slotTileOf(
     def: KairoFacilityDef,
@@ -884,7 +925,7 @@ export class PlacementGrid {
       tile: PlacementGrid.footprintTileOf(def, i, j, s.tile, facing),
       // 정원 초과분은 데이터가 정한 자세(눕기·헤엄)를 흉내 낼 자리가 없다 — 그냥 선다
       pose: k >= n ? 'idle' : s.pose,
-      facing: rotateFacingName(s.facing, facing),
+      facing: rotateFacingName(s.facing, facing, facingsOf(def) === 4),
     };
   }
 
@@ -901,9 +942,9 @@ export class PlacementGrid {
    *
    *   `ride` 가 있으면 → 선언된 입구 칸(`rideTilesOf().entry`)의 **바깥 이웃**만.
    *                      모서리를 데이터가 이미 골랐으므로 존중한다
-   *   아니면          → 발자국 **앞 두 면**의 바깥 이웃:
-   *                      facing 0·1 → +I·+J  `{(i+w, j+dj)} ∪ {(i+di, j+d)}`
-   *                      facing 2·3 → −I·−J  `{(i−1, j+dj)} ∪ {(i+di, j−1)}`
+   *   아니면          → 발자국 **앞 두 면**의 바깥 이웃. 4방향에서는 물리 회전과 같다:
+   *                      d0 → +I·+J, d1 → +I·−J, d2 → −I·−J, d3 → −I·+J
+   *                      2방향 레거시는 facing 0·1 모두 +I·+J를 유지한다.
    *
    * 아이소에서 +I·+J 는 화면 **아래쪽** 두 변이다 — 카메라를 향한 면이고, 스프라이트가
    * 정면을 그리는 쪽이다. 모서리 `(i+w, j+d)` 는 어느 면에도 안 붙어 있어 뺀다.
@@ -966,7 +1007,19 @@ export class PlacementGrid {
       return out;
     }
 
-    // 앞면이 어느 쪽인가 — 0·1 은 +I·+J (화면 아래), 2·3 은 −I·−J (화면 위)
+    if (facingsOf(def) === 4) {
+      const addIPlus = (): void => { for (let dj = 0; dj < d; dj++) push(i + w, j + dj); };
+      const addIMinus = (): void => { for (let dj = 0; dj < d; dj++) push(i - 1, j + dj); };
+      const addJPlus = (): void => { for (let di = 0; di < w; di++) push(i + di, j + d); };
+      const addJMinus = (): void => { for (let di = 0; di < w; di++) push(i + di, j - 1); };
+      if (facing === 0) { addIPlus(); addJPlus(); }
+      else if (facing === 1) { addIPlus(); addJMinus(); }
+      else if (facing === 2) { addIMinus(); addJMinus(); }
+      else { addIMinus(); addJPlus(); }
+      return out;
+    }
+
+    // 2방향 레거시: 0·1 모두 +I·+J (화면 아래), 도달 불가능한 2·3은 옛 점대칭을 보존한다.
     const back = facing >= 2;
     for (let dj = 0; dj < d; dj++) push(back ? i - 1 : i + w, j + dj);
     for (let di = 0; di < w; di++) push(i + di, back ? j - 1 : j + d);

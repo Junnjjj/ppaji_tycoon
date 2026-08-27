@@ -12,19 +12,41 @@ import {
 } from './placement.js';
 
 /**
- * **4방향 배선** (K53) — 발자국 변환이 `facing 0|1` 에서 `0|1|2|3` 로 넓어졌다.
+ * **4방향 배선** — 2방향 레거시 거울과 물리 4방향 quarter-turn을 분리한다.
  *
  * 이 파일이 지키는 것은 셋이다:
  *   ① **켜기 전에는 오늘과 완전히 같다** (`facings` 기본값 2). 데이터에 4가 하나도
  *      없는 상태가 정상이고, 그래서 골든·헤드리스가 바이트 단위로 안 움직인다
- *   ② **켜면 2·3 도 발자국 안이다.** K51 이 데인 자리(전치)를 4방향으로 넓혔으므로
- *      같은 모양의 두 번째 사고(뒤집기 누락)를 여기서 잡는다 — 75종 × 4방향 전수
+ *   ② **켜면 d0–d3가 Blender root Z 0/90/180/270°와 같은 변환이다.** 전치는 반사라
+ *      물리 d1이 될 수 없다 — 75종 × 4방향 전수로 입출구·슬롯도 같이 잰다
  *   ③ **세이브가 v7 그대로다.** `0 = w×d`, `1 = d×w` 의 뜻을 보존했으므로 `facing: 1`
  *      인 옛 스냅샷이 같은 발자국으로 열린다
  */
 
 const DEFS = allFacilityDefs();
 const FACINGS: FacilityFacing[] = [0, 1, 2, 3];
+const LIVE_FOUR_WAY = [
+  'arcade',
+  'cafe',
+  'changing_row',
+  'chicken',
+  'icecream',
+  'infirmary',
+  'info',
+  'karaoke',
+  'locker_row',
+  'nursing',
+  'office',
+  'pingpong',
+  'shop',
+  'shower_row',
+  'sikhye',
+  'snackbar',
+  'storage',
+  'toilet',
+  'vending_in',
+  'washbasin_row',
+].sort();
 
 /** 데이터를 건드리지 않고 "4방향인 척" — 전역 상태를 안 만든다 (골든이 같은 프로세스에 산다) */
 function asFourWay(def: KairoFacilityDef): KairoFacilityDef {
@@ -38,23 +60,30 @@ function footprint(def: KairoFacilityDef, i: number, j: number, f: FacilityFacin
   return new Set(PlacementGrid.footprintTiles(def, i, j, f).map(key));
 }
 
-describe('① 데이터가 켜기 전 — 동작이 오늘과 같다', () => {
-  it('75종 전부 `facings` 가 없다 (이번 커밋은 배선만이다)', () => {
+describe('① 승인된 20종만 라이브 4방향이고 나머지는 기존 동작을 유지한다', () => {
+  it('라이브 4방향 목록이 승인된 20종과 정확히 같다', () => {
     const four = DEFS.filter((d) => facingsOf(d) === 4).map((d) => d.id);
-    expect(four).toEqual([]);
+    expect(four.sort()).toEqual(LIVE_FOUR_WAY);
   });
 
-  it('그래서 회전은 0↔1 뿐이고 2·3 은 UI 가 절대 못 만든다', () => {
+  it('20종은 0→1→2→3, 나머지는 기존 0↔1이다', () => {
     for (const def of DEFS) {
-      expect(facingsOf(def), def.id).toBe(2);
-      expect(nextFacing(def, 0), def.id).toBe(1);
-      expect(nextFacing(def, 1), def.id).toBe(0);
+      if (LIVE_FOUR_WAY.includes(def.id)) {
+        expect(facingsOf(def), def.id).toBe(4);
+        expect([0, 1, 2, 3].map((f) => nextFacing(def, f as FacilityFacing)), def.id).toEqual([
+          1, 2, 3, 0,
+        ]);
+      } else {
+        expect(facingsOf(def), def.id).toBe(2);
+        expect(nextFacing(def, 0), def.id).toBe(1);
+        expect(nextFacing(def, 1), def.id).toBe(0);
+      }
     }
   });
 
-  it('`↻` 는 여전히 비정사각에만 뜬다 (2방향의 옛 규칙)', () => {
+  it('`↻` 는 4방향 20종과 기존 비정사각 시설에 뜬다', () => {
     for (const def of DEFS) {
-      expect(canRotate(def), def.id).toBe(def.size[0] !== def.size[1]);
+      expect(canRotate(def), def.id).toBe(facingsOf(def) === 4 || def.size[0] !== def.size[1]);
     }
   });
 
@@ -69,8 +98,8 @@ describe('① 데이터가 켜기 전 — 동작이 오늘과 같다', () => {
 describe('② 켜면 — 75종 × 4방향 전수', () => {
   /*
    * ⚠ 여기서 `facings: 4` 를 주입하는 이유는 **회전 UI 를 흉내내기 위해서가 아니다.**
-   * 변환 자체(`footprintTileOf`)는 `facings` 를 안 보므로 2·3 을 그냥 넣으면 된다 —
-   * 주입은 `nextFacing`/`canRotate`/스프라이트 ID 처럼 **데이터를 읽는 쪽**에만 쓴다.
+   * 물리 quarter-turn은 `facings: 4`에서만 켜진다. 라이브의 2방향 시설은 같은 함수에서
+   * 레거시 전치를 보존하므로, 이 절은 반드시 `asFourWay`를 주입해야 실제 생산 경로를 잰다.
    */
   it('발자국 사각형은 홀수 방향에서만 w↔d 를 맞바꾼다', () => {
     for (const def of DEFS) {
@@ -80,10 +109,28 @@ describe('② 켜면 — 75종 × 4방향 전수', () => {
     }
   });
 
+  it('★ d0–d3 오프셋이 root Z 0/90/180/270° 강체 회전식과 정확히 같다', () => {
+    const def = { ...asFourWay(facilityDef('shop')!), size: [3, 2] as const };
+    const source = [0, 0] as const;
+    expect(PlacementGrid.footprintTileOf(def, 0, 0, source, 0)).toEqual([0, 0]);
+    expect(PlacementGrid.footprintTileOf(def, 0, 0, source, 1)).toEqual([0, 2]);
+    expect(PlacementGrid.footprintTileOf(def, 0, 0, source, 2)).toEqual([2, 1]);
+    expect(PlacementGrid.footprintTileOf(def, 0, 0, source, 3)).toEqual([1, 0]);
+
+    for (let di = 0; di < 3; di++) {
+      for (let dj = 0; dj < 2; dj++) {
+        expect(PlacementGrid.footprintTileOf(def, 0, 0, [di, dj], 1)).toEqual([dj, 2 - di]);
+        expect(PlacementGrid.footprintTileOf(def, 0, 0, [di, dj], 2)).toEqual([2 - di, 1 - dj]);
+        expect(PlacementGrid.footprintTileOf(def, 0, 0, [di, dj], 3)).toEqual([1 - dj, di]);
+      }
+    }
+  });
+
   it('ride 입출구가 네 방향 전부 발자국 안이다 (K51 을 4방향으로)', () => {
     const rides = DEFS.filter((d) => d.ride);
     expect(rides.length).toBeGreaterThan(0);
-    for (const def of rides) {
+    for (const rawDef of rides) {
+      const def = asFourWay(rawDef);
       for (const f of FACINGS) {
         const foot = footprint(def, 7, 9, f);
         const r = PlacementGrid.rideTilesOf(def, 7, 9, f)!;
@@ -94,7 +141,8 @@ describe('② 켜면 — 75종 × 4방향 전수', () => {
   });
 
   it('슬롯이 네 방향 전부 발자국 안이고, 한 방향 안에서 서로 안 겹친다', () => {
-    for (const def of DEFS) {
+    for (const rawDef of DEFS) {
+      const def = asFourWay(rawDef);
       if (!def.slots || def.slots.length === 0) continue;
       for (const f of FACINGS) {
         const foot = footprint(def, 7, 9, f);
@@ -111,7 +159,8 @@ describe('② 켜면 — 75종 × 4방향 전수', () => {
   });
 
   it('입구는 네 방향 전부 발자국 밖 · 발자국에 인접하다', () => {
-    for (const def of DEFS) {
+    for (const rawDef of DEFS) {
+      const def = asFourWay(rawDef);
       for (const f of FACINGS) {
         const foot = footprint(def, 7, 9, f);
         const es = PlacementGrid.entryTilesOf(def, 7, 9, f);
@@ -130,23 +179,33 @@ describe('② 켜면 — 75종 × 4방향 전수', () => {
     }
   });
 
-  it('입구 면이 **뒤로 돈다** — 2·3 은 0·1 과 겹치는 칸이 하나도 없다', () => {
-    /*
-     * 이것이 4방향의 존재 이유다 (K52-④): `facing 1` 은 전치라 앞면이 앞면끼리 맞바뀔
-     * 뿐이라 "매표소를 정류장 쪽으로 돌린다"가 게임에 없는 동작이었다.
-     */
-    for (const def of DEFS) {
-      if (def.ride) continue; // 슬라이드는 데이터가 모서리 하나를 골라 놨다 (다른 규칙)
-      const front = new Set([
-        ...PlacementGrid.entryTilesOf(def, 7, 9, 0).map(key),
-        ...PlacementGrid.entryTilesOf(def, 7, 9, 1).map(key),
-      ]);
-      for (const f of [2, 3] as FacilityFacing[]) {
-        for (const e of PlacementGrid.entryTilesOf(def, 7, 9, f)) {
-          expect(front.has(key(e)), `${def.id} f${f} ${key(e)}`).toBe(false);
-        }
-      }
-    }
+  it('★ 일반 시설의 앞 두 면이 d0 +I/+J → d1 +I/−J → d2 −I/−J → d3 −I/+J로 돈다', () => {
+    const def = { ...asFourWay(facilityDef('shop')!), size: [3, 2] as const };
+    const entries = (f: FacilityFacing): string[] =>
+      PlacementGrid.entryTilesOf(def, 10, 20, f).map(key).sort();
+    expect(entries(0)).toEqual(['10,22', '11,22', '12,22', '13,20', '13,21'].sort());
+    expect(entries(1)).toEqual(['10,19', '11,19', '12,20', '12,21', '12,22'].sort());
+    expect(entries(2)).toEqual(['10,19', '11,19', '12,19', '9,20', '9,21'].sort());
+    expect(entries(3)).toEqual(['10,23', '11,23', '9,20', '9,21', '9,22'].sort());
+  });
+
+  it('★ 슬롯 facing 이름도 +Z→+X→−Z→−X quarter-turn을 따른다', () => {
+    const def: KairoFacilityDef = {
+      ...asFourWay(facilityDef('shop')!),
+      size: [1, 1],
+      slots: [
+        { tile: [0, 0], pose: 'idle', facing: '+Z' },
+        { tile: [0, 0], pose: 'idle', facing: '+X' },
+        { tile: [0, 0], pose: 'idle', facing: '-Z' },
+        { tile: [0, 0], pose: 'idle', facing: '-X' },
+      ],
+    };
+    expect(FACINGS.map((f) => PlacementGrid.slotTileOf(def, 0, 0, f, 0)!.facing)).toEqual([
+      '+Z', '+X', '-Z', '-X',
+    ]);
+    expect(FACINGS.map((f) => PlacementGrid.slotTileOf(def, 0, 0, f, 1)!.facing)).toEqual([
+      '+X', '-Z', '-X', '+Z',
+    ]);
   });
 
   it('점유 격자가 네 방향 전부 발자국과 정확히 같다 (배치·철거가 따라온다)', () => {
@@ -175,7 +234,8 @@ describe('② 음성 대조군 — `setRideFaultForTest` 가 4방향에서도 �
   it('고장을 켜면 회전한 입출구가 facing 0 의 칸으로 돌아온다', () => {
     const rides = DEFS.filter((d) => d.ride);
     let differed = 0;
-    for (const def of rides) {
+    for (const rawDef of rides) {
+      const def = asFourWay(rawDef);
       const base = PlacementGrid.rideTilesOf(def, 7, 9, 0)!;
       for (const f of [1, 2, 3] as FacilityFacing[]) {
         setRideFaultForTest(false);
@@ -193,7 +253,7 @@ describe('② 음성 대조군 — `setRideFaultForTest` 가 4방향에서도 �
 
   it('고장 상태에서 facing 3 의 입구가 **발자국 밖으로** 나가는 시설이 있다', () => {
     // K51 의 원래 증상: `slide_large` 4×5 의 입구 [3,4] 가 회전한 발자국 5×4 밖으로 나갔다
-    const def = facilityDef('slide_large')!;
+    const def = asFourWay(facilityDef('slide_large')!);
     setRideFaultForTest(true);
     const bad = PlacementGrid.rideTilesOf(def, 5, 11, 3)!;
     expect(footprint(def, 5, 11, 3).has(key(bad.entry))).toBe(false);
@@ -236,7 +296,7 @@ describe('③ 세이브 — v7 그대로', () => {
 
 describe('④ 회전 UI 는 `facings` 를 따른다', () => {
   it('2방향은 0↔1, 4방향은 0→1→2→3→0', () => {
-    const two = facilityDef('shop')!;
+    const two = facilityDef('ticket')!;
     expect([nextFacing(two, 0), nextFacing(two, 1)]).toEqual([1, 0]);
     const four = asFourWay(two);
     expect([
@@ -248,7 +308,7 @@ describe('④ 회전 UI 는 `facings` 를 따른다', () => {
   });
 
   it('정사각 시설은 4방향이 되어야 비로소 `↻` 가 산다', () => {
-    const square = DEFS.find((d) => d.size[0] === d.size[1])!;
+    const square = DEFS.find((d) => d.size[0] === d.size[1] && facingsOf(d) === 2)!;
     expect(canRotate(square)).toBe(false);
     expect(canRotate(asFourWay(square))).toBe(true);
   });
