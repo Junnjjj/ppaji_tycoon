@@ -1940,7 +1940,8 @@ async function main(): Promise<void> {
     await phase7Page.screenshot({ path: `${SHOT_DIR}/kairo-management-phase7-${tag}.png` });
     const exact = JSON.stringify(view.names) === JSON.stringify([
       { id: 'operations', actions: ['price', 'staff', 'course'] },
-      { id: 'growth', actions: ['exam', 'regular', 'quests', 'codex'] },
+      /* UI v4: 단골·의뢰는 성장 화면의 3단 목록 라우터로 옮겨져 직접 행동이 아니다. */
+      { id: 'growth', actions: ['exam', 'codex'] },
       { id: 'records', actions: ['report', 'view', 'certs', 'ending'] },
     ]);
     record(
@@ -2434,24 +2435,32 @@ async function main(): Promise<void> {
     process.exit(failed.length === 0 ? 0 : 1);
   }
 
-  // ── 3. 내부 해상도 = 버퍼, CSS = 버퍼 × S ──
+  // ── 3. 내부 해상도 = 논리 버퍼 × D, CSS = 논리 버퍼 × S ──
   const geo = (await page.evaluate(`(() => {
     const c = document.querySelector('canvas');
     if (!c) return null;
     const r = c.getBoundingClientRect();
+    const tile = window.__kairo.scene.tileScreenRect(0, 0);
+    const density = Math.round(tile.w / 32);
     return { w: c.width, h: c.height, cssW: Math.round(r.width), cssH: Math.round(r.height),
-             dpr: window.devicePixelRatio };
-  })()`)) as { w: number; h: number; cssW: number; cssH: number; dpr: number } | null;
+             dpr: window.devicePixelRatio, density: density };
+  })()`)) as { w: number; h: number; cssW: number; cssH: number; dpr: number; density: number } | null;
 
   if (!geo) {
     record('캔버스 기하', 'fail', '캔버스를 못 찾았다');
   } else {
-    const s = Math.round(geo.cssW / geo.w);
-    const ok = geo.cssW === geo.w * s && geo.cssH === geo.h * s && Number.isInteger(s);
+    const logicalW = geo.w / geo.density;
+    const logicalH = geo.h / geo.density;
+    const s = Math.round(geo.cssW / logicalW);
+    const ok =
+      geo.cssW === logicalW * s &&
+      geo.cssH === logicalH * s &&
+      Number.isInteger(s) &&
+      (geo.density === 1 || geo.density === 2);
     record(
-      '도트 격자 — CSS = 내부해상도 × 정수 S',
+      '도트 격자 — 내부해상도 = 논리 × D, CSS = 논리 × 정수 S',
       ok ? 'pass' : 'fail',
-      `내부 ${geo.w}×${geo.h} · CSS ${geo.cssW}×${geo.cssH} · S=${s} · DPR ${geo.dpr}`,
+      `내부 ${geo.w}×${geo.h} · CSS ${geo.cssW}×${geo.cssH} · D=${geo.density} · S=${s} · DPR ${geo.dpr}`,
     );
     const deviceScale = s * Math.round(geo.dpr);
     record(
@@ -2495,7 +2504,8 @@ async function main(): Promise<void> {
         if (sc.groundAt(i + 1, j + 1) !== 'lawn') continue;
         const r = sc.tileScreenRect(i, j);
         // 네 타일이 모두 화면 안쪽에 여유 있게 들어와야 한다
-        if (r.x > 8 && r.y > 8 && r.x + 3 * 16 < W - 8 && r.y + 3 * 8 < H - 8) {
+        const D = Math.round(r.w / 32);
+        if (r.x > 8 * D && r.y > 8 * D && r.x + 3 * 16 * D < W - 8 * D && r.y + 3 * 8 * D < H - 8 * D) {
           found = { i: i, j: j, r: r };
           break;
         }
@@ -2503,8 +2513,9 @@ async function main(): Promise<void> {
     }
     if (!found) return { ok: false, reason: '화면 안의 잔디 2×2 블록을 못 찾았다' };
     // 네 타일이 만나는 중심부를 샘플 — 이음새가 있으면 여기에 배경색이 뜬다
-    const cx = found.r.x + 16, cy = found.r.y + 16;
-    const w = 20, h = 10;
+    const D = Math.round(found.r.w / 32);
+    const cx = found.r.x + 16 * D, cy = found.r.y + 16 * D;
+    const w = 20 * D, h = 10 * D;
     const x0 = cx - w / 2, y0 = cy - h / 2;
     const buf = new Uint8Array(w * h * 4);
     g.readPixels(x0, H - (y0 + h), w, h, g.RGBA, g.UNSIGNED_BYTE, buf);
@@ -3265,7 +3276,8 @@ async function main(): Promise<void> {
       const gl = c.getContext('webgl2') || c.getContext('webgl');
       const H = c.height;
       const r = sc.tileScreenRect(${wi}, ${wj});
-      const x0 = r.x, y0 = r.y - 10, w = 32, hh = 26;
+      const D = Math.round(r.w / 32);
+      const x0 = r.x, y0 = r.y - 10 * D, w = 32 * D, hh = 26 * D;
       const buf = new Uint8Array(w * hh * 4);
       gl.readPixels(x0, H - (y0 + hh), w, hh, gl.RGBA, gl.UNSIGNED_BYTE, buf);
       let s = '';
@@ -3274,6 +3286,40 @@ async function main(): Promise<void> {
     })()`;
     const setWall = (kind: number): string =>
       `(() => { const h = window.__kairo; h.walls.setEdge(${wi}, ${wj}, 1, ${kind}); h.scene.refreshWall(${wi}, ${wj}); })()`;
+
+    /*
+     * 네 방향 벽 이미지는 같은 타일 중심·앵커를 공유한다. 모서리 칸에서는 옆 벽이 목표
+     * 앞벽과 같은 픽셀을 다시 칠해, 목표 벽 하나만 꺼도 A/B가 같아지는 거짓 무효가 생긴다.
+     * 이 절에서는 목표 J+만 남기고 나머지 세 경계를 잠시 격리한 뒤 끝에서 정확히 복원한다.
+     */
+    const siblingWalls = (await page.evaluate(`(() => {
+      const h = window.__kairo, dirs = [0, 2, 3];
+      const saved = dirs.map((dir) => ({ dir: dir, kind: h.walls.edgeAt(${wi}, ${wj}, dir) }));
+      for (const edge of saved) h.walls.setEdge(${wi}, ${wj}, edge.dir, 0);
+      h.scene.refreshWall(${wi}, ${wj});
+      return saved;
+    })()`)) as Array<{ dir: number; kind: number }>;
+    await page.waitForTimeout(220);
+
+    const wallProbeKey = '__qa/wall-depth-probe';
+    const setWallProbe = `(() => {
+      const h = window.__kairo, sc = h.scene;
+      const key = (${wj} * h.terrain.width + ${wi}) * 4 + 1;
+      const img = sc.wallImages.get(key);
+      if (!img) return false;
+      if (!sc.textures.exists('${wallProbeKey}')) {
+        const probe = sc.textures.createCanvas('${wallProbeKey}', 96, 72);
+        const ctx = probe.getContext();
+        ctx.fillStyle = '#20d0f0';
+        ctx.fillRect(0, 0, 96, 72);
+        probe.refresh();
+      }
+      img.setTexture('${wallProbeKey}');
+      return true;
+    })()`;
+    const wallProbeReady = (await page.evaluate(setWallProbe)) as boolean;
+    if (!wallProbeReady) throw new Error('깊이 검증용 앞벽 이미지를 못 찾았다');
+    await page.waitForTimeout(220);
 
     // B — 벽만 (부팅 때 만들어진 그대로)
     await page.waitForTimeout(220);
@@ -3284,6 +3330,7 @@ async function main(): Promise<void> {
     const noWall = (await page.evaluate(sampleWall)) as string;
     // 벽을 되돌린다 — 이 이미지가 시설보다 **먼저** 존재해야 한다
     await page.evaluate(setWall(inWall.kind));
+    await page.evaluate(setWallProbe);
     await page.waitForTimeout(220);
 
     // C — 벽 + 시설
@@ -3292,15 +3339,34 @@ async function main(): Promise<void> {
       const r = h.placement.place(h.terrain, h.walls, h.gate, '${inWall.def}', ${inWall.oi}, ${wj});
       if (!r.ok || !r.placed) return { ok: false, why: String(r.fail) };
       sc.refreshFacility(r.placed.handle);
+      /*
+       * 채택된 AI 그림은 방향마다 실루엣지가 달라 벽과 불투명 픽셀이 우연히 안 겹칠 수 있다.
+       * 깊이 검사의 목적은 그림 모양이 아니라 **실제 시설 이미지 오브젝트와 벽의 Z 경쟁**이다.
+       * 따라서 같은 이미지 오브젝트·위치·앵커·깊이를 유지한 채, 이 절에서만 벽 경계를
+       * 확실히 가로지를 만큼 넓은 불투명 probe를 씌운다. probe가 없으면 그림 여백 변화만으로 검사가
+       * 무효(overlap 0)가 되어 깊이 회귀를 보지 못한다.
+       */
+      const img = sc.facilityImageAt(r.placed.handle);
+      const src = img.texture.getSourceImage();
+      const probeKey = '__qa/facility-wall-depth-probe';
+      if (sc.textures.exists(probeKey)) sc.textures.remove(probeKey);
+      const probe = sc.textures.createCanvas(probeKey, src.width * 3, src.height * 2);
+      const ctx = probe.getContext();
+      ctx.clearRect(0, 0, src.width * 3, src.height * 2);
+      ctx.fillStyle = '#f020d0';
+      ctx.fillRect(0, 0, src.width * 3, src.height * 2);
+      probe.refresh();
+      img.setTexture(probeKey);
       return {
         ok: true,
         handle: r.placed.handle,
+        probeKey: probeKey,
         facDepth: sc.facilityImageAt(r.placed.handle).depth,
         wallDepth: sc.wallDepthAt(${wi}, ${wj}, 1),
       };
     })()`)) as
       | { ok: false; why: string }
-      | { ok: true; handle: number; facDepth: number; wallDepth: number };
+      | { ok: true; handle: number; probeKey: string; facDepth: number; wallDepth: number };
 
     if (!placedIn.ok) {
       record('★ 실내 시설이 벽 안에 있다 (K37)', 'fail', `시설을 못 놓았다: ${placedIn.why}`);
@@ -3359,7 +3425,12 @@ async function main(): Promise<void> {
         const h = window.__kairo;
         h.placement.remove(${placedIn.handle});
         h.scene.refreshFacility(${placedIn.handle});
+        if (h.scene.textures.exists('${placedIn.probeKey}')) h.scene.textures.remove('${placedIn.probeKey}');
+        if (h.scene.textures.exists('${wallProbeKey}')) h.scene.textures.remove('${wallProbeKey}');
         h.walls.setEdge(${wi}, ${wj}, 1, ${inWall.kind});
+        for (const edge of ${JSON.stringify(siblingWalls)}) {
+          h.walls.setEdge(${wi}, ${wj}, edge.dir, edge.kind);
+        }
         h.scene.refreshWall(${wi}, ${wj});
         h.scene.setAutoTick(true);
       })()`);
@@ -7593,8 +7664,8 @@ async function main(): Promise<void> {
         `${String(r.previewCost)} · ${String(r.previewCheck)} · 스크린샷 kairo-build-confirm-phase4.png`,
     );
     record(
-      '회전 버튼은 자리만 잡혀 있다 (방향 스프라이트가 생기면 켠다)',
-      r.rotateDisabled === true ? 'pass' : 'fail',
+      '승인된 4방향 시설은 회전 버튼이 실제로 켜진다',
+      r.rotateDisabled === false ? 'pass' : 'fail',
       `disabled ${String(r.rotateDisabled)}`,
     );
     await cx.close();
@@ -8135,7 +8206,7 @@ async function main(): Promise<void> {
     );
     record(
       '회전 뒤 버퍼가 새 방향으로 다시 잡힌다',
-      after.buf[0] === 852 && after.buf[1] === 393 && after.alive ? 'pass' : 'fail',
+      after.buf[0] === 852 * 2 && after.buf[1] === 393 * 2 && after.alive ? 'pass' : 'fail',
       `버퍼 ${after.buf.join('×')} · 루프 ${after.alive}`,
     );
     await cx.close();
@@ -9224,8 +9295,6 @@ async function main(): Promise<void> {
     g.width = cv.width; g.height = cv.height;
     const c = g.getContext('2d');
     c.drawImage(cv, 0, 0);
-    const sx = cv.width / cv.getBoundingClientRect().width;
-
     const img = S.tileImageForTest(TI, TJ);
     const src = img.texture.getSourceImage();
     const t = document.createElement('canvas');
@@ -9241,11 +9310,12 @@ async function main(): Promise<void> {
      * 배경이 지도를 덮었다면 이 창 어디에도 그 색이 없다.
      */
     let best = 1e9, got = '';
-    for (let dy = -3; dy <= 3; dy++) {
-      for (let dx = -3; dx <= 3; dx++) {
+    const D = Math.round(r.w / 32);
+    for (let dy = -3 * D; dy <= 3 * D; dy++) {
+      for (let dx = -3 * D; dx <= 3 * D; dx++) {
         const px = c.getImageData(
-          Math.round((r.x + 16 + dx) * sx),
-          Math.round((r.y + 8 + dy) * sx),
+          Math.round(r.x + r.w / 2 + dx),
+          Math.round(r.y + r.h / 2 + dy),
           1, 1,
         ).data;
         const d = Math.abs(px[0] - want[0]) + Math.abs(px[1] - want[1]) + Math.abs(px[2] - want[2]);
@@ -9633,6 +9703,123 @@ async function main(): Promise<void> {
       `${moveSetup.defId} (${moveSetup.from.i},${moveSetup.from.j}) → ` +
         `(${moveSetup.target.i},${moveSetup.target.j}) · 수수료 ${Math.round(fee / 10000)}만 ` +
         `(실제 ${Math.round((moveSetup.cash - moved.cash) / 10000)}만)`,
+    );
+  }
+
+  /*
+   * 4방향 시설의 이동 회전 — 새 배치의 ↻만 검사하면 이미 놓인 시설에서 콜백이 빠져도
+   * 전부 통과한다. 미리보기 회전은 원본을 바꾸지 않고, 취소는 d0을 보존하며, 확정만
+   * 선택한 d2를 새 위치에 저장해야 한다.
+   */
+  const moveRotateSetup = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    if (window.__kairoClearBrush) window.__kairoClearBrush();
+    h.flow.frozen = true;
+    h.week.earn(1000000);
+    if (!h.exam.toolsUnlocked) h.exam.passedCount = 1;
+    h.refreshBuildList();
+    const land = h.land();
+    let pad = null;
+    for (let j = land.j0 + 2; j < land.j0 + land.h - 4 && !pad; j++) {
+      for (let i = land.i0 + 2; i < land.i0 + land.w - 9 && !pad; i++) {
+        let clear = true;
+        for (let dj = 0; dj < 4 && clear; dj++) {
+          for (let di = 0; di < 9 && clear; di++) {
+            const ti = i + di, tj = j + dj;
+            if (h.terrain.isWater(ti, tj) || !h.terrain.isBuildable(ti, tj) ||
+                h.terrain.isIndoor(ti, tj) || h.placement.at(ti, tj)) clear = false;
+          }
+        }
+        if (clear) pad = { i: i, j: j };
+      }
+    }
+    if (!pad) return { ok: false, why: '4방향 이동용 빈 9×4를 못 찾았다' };
+    for (let dj = 0; dj < 4; dj++) {
+      for (let di = 0; di < 9; di++) {
+        h.terrain.paint(pad.i + di, pad.j + dj, 'path_stone');
+        h.scene.refreshTile(pad.i + di, pad.j + dj);
+      }
+    }
+    h.guests.invalidate();
+    const from = { i: pad.i + 1, j: pad.j + 1 };
+    const target = { i: pad.i + 6, j: pad.j + 1 };
+    const placed = h.placement.place(h.terrain, h.walls, h.gate, 'shop', from.i, from.j,
+      { facing: 0 });
+    if (!placed.ok || !placed.placed) {
+      return { ok: false, why: '매점을 못 놓았다: ' + placed.fail };
+    }
+    h.scene.refreshFacility(placed.placed.handle);
+    document.getElementById('kairo-build-open').click();
+    const move = document.querySelector('[data-pick="move:move"]');
+    if (!move) return { ok: false, why: '이동 카드가 없다' };
+    move.click();
+    h.tapTile(from.i, from.j);
+    h.tapTile(target.i, target.j);
+    const rot = document.getElementById('kairo-place-rotate');
+    return { ok: true, from: from, target: target, rotEnabled: !!rot && !rot.disabled };
+  })()`)) as
+    | { ok: false; why: string }
+    | { ok: true; from: { i: number; j: number }; target: { i: number; j: number }; rotEnabled: boolean };
+  if (!moveRotateSetup.ok) {
+    record('★ 이동 회전 — 4방향 시설의 취소·확정이 원자적이다', 'fail', moveRotateSetup.why);
+  } else {
+    await page.click('#kairo-place-rotate');
+    await page.waitForTimeout(150);
+    const preview = (await page.evaluate(`(() => {
+      const h = window.__kairo;
+      const original = h.placement.at(${moveRotateSetup.from.i}, ${moveRotateSetup.from.j});
+      const ghost = h.scene['ghost'];
+      return { originalFacing: original ? (original.facing || 0) : null,
+               ghostTexture: ghost && ghost.texture ? ghost.texture.key : '' };
+    })()`)) as { originalFacing: number | null; ghostTexture: string };
+    await page.click('#kairo-place-cancel');
+    await page.waitForTimeout(150);
+    const cancelledFacing = (await page.evaluate(`(() => {
+      const it = window.__kairo.placement.at(${moveRotateSetup.from.i}, ${moveRotateSetup.from.j});
+      return it ? (it.facing || 0) : null;
+    })()`)) as number | null;
+
+    // UI v3는 취소하면 붓까지 끝낸다. 이동 도구를 다시 골라 d2까지 돌려 확정한다.
+    await page.evaluate(`(() => {
+      const h = window.__kairo;
+      document.getElementById('kairo-build-open').click();
+      const move = document.querySelector('[data-pick="move:move"]');
+      if (move) move.click();
+      h.tapTile(${moveRotateSetup.from.i}, ${moveRotateSetup.from.j});
+      h.tapTile(${moveRotateSetup.target.i}, ${moveRotateSetup.target.j});
+    })()`);
+    await page.click('#kairo-place-rotate');
+    await page.click('#kairo-place-rotate');
+    await page.waitForTimeout(150);
+    await page.click('#kairo-place-confirm');
+    await page.waitForTimeout(200);
+    const moveRotateResult = (await page.evaluate(`(() => {
+      const h = window.__kairo;
+      const target = h.placement.at(${moveRotateSetup.target.i}, ${moveRotateSetup.target.j});
+      const old = h.placement.at(${moveRotateSetup.from.i}, ${moveRotateSetup.from.j});
+      const image = target ? h.scene['facilityImages'].get(target.handle) : null;
+      if (window.__kairoClearBrush) window.__kairoClearBrush();
+      return { targetDef: target ? target.defId : null,
+               targetFacing: target ? (target.facing || 0) : null,
+               oldDef: old ? old.defId : null,
+               texture: image && image.texture ? image.texture.key : '' };
+    })()`)) as {
+      targetDef: string | null;
+      targetFacing: number | null;
+      oldDef: string | null;
+      texture: string;
+    };
+    record(
+      '★ 이동 회전 — 4방향 시설은 취소 시 d0, 확정 시 선택한 d2로 놓인다',
+      moveRotateSetup.rotEnabled && preview.originalFacing === 0 &&
+        preview.ghostTexture === 'facility/shop:d1' && cancelledFacing === 0 &&
+        moveRotateResult.targetDef === 'shop' && moveRotateResult.targetFacing === 2 &&
+        moveRotateResult.oldDef === null && moveRotateResult.texture === 'facility/shop:d2'
+        ? 'pass'
+        : 'fail',
+      `미리보기 ${preview.ghostTexture} (원본 d${preview.originalFacing}) · ` +
+        `취소 d${cancelledFacing} · 확정 ${moveRotateResult.texture} ` +
+        `(facing ${moveRotateResult.targetFacing})`,
     );
   }
 
@@ -13126,7 +13313,7 @@ async function main(): Promise<void> {
       '아틀라스가 붙었다 — 하이브리드(아틀라스 우선 + 절차 폴백)',
       a.f.provider.indexOf('kairo-atlas') >= 0 ? 'pass' : 'info',
       `${a.f.provider} · 대조군 ${b.f.provider}` +
-        ` (129 중 일부는 ATLAS_HOLDOUT — 그림이 계약을 못 맞춘 종만 절차 유지. 이유는 그 표에)`,
+        ` (189 중 일부는 ATLAS_HOLDOUT — 그림이 계약을 못 맞춘 종만 절차 유지. 이유는 그 표에)`,
     );
     record(
       '★ 아틀라스 그림이 화면에 보인다 — 같은 판을 플레이스홀더로 띄우면 픽셀이 다르다 (Phase G)',

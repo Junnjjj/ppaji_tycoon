@@ -4,7 +4,7 @@
 
 ## 먼저 읽을 것
 
-`docs/asset-regen-order.md` — 무리 나누기(§1) · 방법(§2) · 판정(§3) ·
+`docs/assets/maintenance/legacy-v2-regeneration.md` — 무리 나누기(§1) · 방법(§2) · 판정(§3) ·
 **하면 안 되는 것(§4)** · 왜 이 상태인지(§5). §4 를 안 읽으면 이미 두 번 실패한 길을
 그대로 반복하게 된다.
 
@@ -59,7 +59,7 @@ npx tsx tools/regen-facility.ts --both --tries 3     # 잘 되면 A군 8종 전�
    배율**(1.2~1.6×)이 필요하고, 이 프로젝트는 **정수 스캔라인·AA 금지**가 렌더 계약의
    기반이다. 각도를 고치려다 화면 밀도를 잃는다.
 
-5. **통과 49종과 지면 33장을 건드리지 마라.** 목록은 `docs/asset-regen-order.md`
+5. **통과 49종과 지면 33장을 건드리지 마라.** 목록은 `docs/assets/maintenance/legacy-v2-regeneration.md`
    §1 「건드리지 말 것」에 있다.
 
 즉 **고치는 방법은 "다시 뽑기" 하나**다. 후처리 도구를 새로 만들지 마라.
@@ -78,7 +78,7 @@ npx vitest run && npx tsc --noEmit && npm run lint
 ⚠ **`평탄` 은 위반이 아니다.** 게이트 5 가 잡는 것은 `뒤집힘` 과 `측정불가` 뿐이고
 팩 자체가 `평탄` 16장이다. 이 기준을 **스스로 조이지 마라** — 4방향 1차 시도가 정확히
 그렇게 8장을 버렸고, 그중엔 **자기 원본이 평탄이라 만족 자체가 불가능한** 것도 있었다
-(`docs/asset-4dir-order.md` §0-2).
+(`docs/assets/history/prompt-chain-4dir-retrospective.md` §0-2).
 
 ⚠ **게이트는 그림을 안 본다.** 위반이 줄었어도 아래 셋을 같이 재서 보고해:
 

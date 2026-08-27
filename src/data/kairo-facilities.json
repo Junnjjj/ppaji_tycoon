@@ -60,7 +60,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "물놀이를 마친 손님이 소금기와 모래를 씻어 내는 곳."
+      "desc": "물놀이를 마친 손님이 소금기와 모래를 씻어 내는 곳.",
+      "facings": 4
     },
     "changing_row": {
       "id": "changing_row",
@@ -112,7 +113,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "입구에서 수영복으로 갈아입는다. 물놀이의 첫 관문."
+      "desc": "입구에서 수영복으로 갈아입는다. 물놀이의 첫 관문.",
+      "facings": 4
     },
     "locker_row": {
       "id": "locker_row",
@@ -172,7 +174,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "가방과 옷을 맡긴다. 짐이 없어야 손님이 오래 논다."
+      "desc": "가방과 옷을 맡긴다. 짐이 없어야 손님이 오래 논다.",
+      "facings": 4
     },
     "washbasin_row": {
       "id": "washbasin_row",
@@ -224,7 +227,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "손 씻고 입 헹구는 자리. 화장실 옆에 두면 줄이 갈린다."
+      "desc": "손 씻고 입 헹구는 자리. 화장실 옆에 두면 줄이 갈린다.",
+      "facings": 4
     },
     "toilet": {
       "id": "toilet",
@@ -268,7 +272,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "가장 먼저 찾고, 없으면 가장 먼저 불평하는 곳."
+      "desc": "가장 먼저 찾고, 없으면 가장 먼저 불평하는 곳.",
+      "facings": 4
     },
     "nursing": {
       "id": "nursing",
@@ -304,7 +309,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "아기를 데려온 가족이 잠깐 쉬어 가는 조용한 방."
+      "desc": "아기를 데려온 가족이 잠깐 쉬어 가는 조용한 방.",
+      "facings": 4
     },
     "pool_kids": {
       "id": "pool_kids",
@@ -746,7 +752,8 @@
           "name": "미역국",
           "price": 1000
         }
-      ]
+      ],
+      "facings": 4
     },
     "massage_row": {
       "id": "massage_row",
@@ -842,7 +849,9 @@
       ],
       "desc": "컵라면·과자·음료. 빠지에서 가장 자주 들르는 곳.",
       "menuMode": "craft",
-      "startingMenu": ["shop_can_drink"],
+      "startingMenu": [
+        "shop_can_drink"
+      ],
       "menu": [
         {
           "name": "컵라면",
@@ -860,7 +869,8 @@
           "name": "김밥",
           "price": 1200
         }
-      ]
+      ],
+      "facings": 4
     },
     "snackbar": {
       "id": "snackbar",
@@ -920,7 +930,8 @@
           "name": "라면",
           "price": 1100
         }
-      ]
+      ],
+      "facings": 4
     },
     "chicken": {
       "id": "chicken",
@@ -980,7 +991,8 @@
           "name": "감자튀김",
           "price": 200
         }
-      ]
+      ],
+      "facings": 4
     },
     "icecream": {
       "id": "icecream",
@@ -988,7 +1000,7 @@
       "layer": "indoor",
       "size": [
         1,
-        2
+        1
       ],
       "sprite": "facility/icecream",
       "capacity": 1,
@@ -1028,7 +1040,8 @@
           "name": "아이스바",
           "price": 400
         }
-      ]
+      ],
+      "facings": 4
     },
     "cafe": {
       "id": "cafe",
@@ -1036,7 +1049,7 @@
       "layer": "indoor",
       "size": [
         2,
-        3
+        2
       ],
       "sprite": "facility/cafe",
       "capacity": 4,
@@ -1088,7 +1101,9 @@
       ],
       "desc": "커피 한 잔과 그늘. 비 오는 날 손님이 몰린다.",
       "menuMode": "craft",
-      "startingMenu": ["cafe_americano"],
+      "startingMenu": [
+        "cafe_americano"
+      ],
       "menu": [
         {
           "name": "아메리카노",
@@ -1106,7 +1121,8 @@
           "name": "조각 케이크",
           "price": 800
         }
-      ]
+      ],
+      "facings": 4
     },
     "vending_in": {
       "id": "vending_in",
@@ -1156,7 +1172,8 @@
           "name": "캔커피",
           "price": 800
         }
-      ]
+      ],
+      "facings": 4
     },
     "arcade": {
       "id": "arcade",
@@ -1192,7 +1209,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "동전 몇 개로 시간을 보내는 실내 놀이."
+      "desc": "동전 몇 개로 시간을 보내는 실내 놀이.",
+      "facings": 4
     },
     "karaoke": {
       "id": "karaoke",
@@ -1234,7 +1252,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "단체 손님이 저녁을 마무리하는 방."
+      "desc": "단체 손님이 저녁을 마무리하는 방.",
+      "facings": 4
     },
     "pingpong": {
       "id": "pingpong",
@@ -1276,7 +1295,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "마주 서서 치는 놀이. 비 오는 날의 실내 활동."
+      "desc": "마주 서서 치는 놀이. 비 오는 날의 실내 활동.",
+      "facings": 4
     },
     "sunbed_row": {
       "id": "sunbed_row",
@@ -1368,7 +1388,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "길과 요금을 묻는 곳. 처음 온 손님의 첫 대화."
+      "desc": "길과 요금을 묻는 곳. 처음 온 손님의 첫 대화.",
+      "facings": 4
     },
     "infirmary": {
       "id": "infirmary",
@@ -1402,7 +1423,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "긁히고 데인 손님을 본다. 사고 위험을 낮춘다."
+      "desc": "긁히고 데인 손님을 본다. 사고 위험을 낮춘다.",
+      "facings": 4
     },
     "office": {
       "id": "office",
@@ -1436,7 +1458,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "운영진이 앉는 자리. 손님은 들어오지 않는다."
+      "desc": "운영진이 앉는 자리. 손님은 들어오지 않는다.",
+      "facings": 4
     },
     "storage": {
       "id": "storage",
@@ -1457,7 +1480,8 @@
       "cost": 312000,
       "need": "service",
       "specialties": [],
-      "desc": "튜브와 비품을 쌓아 둔다. 손님이 쓰는 곳은 아니다."
+      "desc": "튜브와 비품을 쌓아 둔다. 손님이 쓰는 곳은 아니다.",
+      "facings": 4
     },
     "ticket": {
       "id": "ticket",

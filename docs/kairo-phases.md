@@ -3405,7 +3405,7 @@ K49 ③ 이 "자격 미달이면 항목이 사라진다"를 고쳤고, K50 은 �
   디코더는 Node `zlib` 자작이라 **새 의존성 0** (캔버스 왕복은 프리멀티플라이로 픽셀을
   건드린다). 144프레임을 되읽어 원본과 **바이트 단위 일치** 확인
 - ⚠ `assets/generated/` 는 gitignore(538M)라 **아틀라스 두 파일이 그림의 유일한 추적본**이다.
-  재현 도구(`tools/process-kairo-sheet.py`)와 프롬프트(`docs/asset-prompts.md`)가 있지만,
+  재현 도구(`tools/process-kairo-sheet.py`)와 프롬프트(`docs/assets/maintenance/legacy-sheet-prompts.md`)가 있지만,
   클린 클론에서 곧바로 도는 것은 이 둘 덕이다
 - 부팅 **624ms(아틀라스) vs 722ms(절차)** — 이미지 슬라이스가 129장 절차 드로잉보다 싸서
   **100ms 빠르다**. 텍스처 21.68MB 동일(228키) · JS heap 동일 · 오프라인 precache +315KB ·
@@ -3612,7 +3612,7 @@ vitest **1178**(1129 → 1148 → 1163 → 1177 → 1178) · `verify:kairo` **29
   `photozone`·`vending_out`) · `ticket` 슬롯 2개는 **죽은 데이터**(`pickTicket` 이 안 잡는데
   "슬롯 수 == 정원" 검사 때문에 존재한다)
 - **`bodyH ≥ 32` 이면서 슬롯이 있는 7종**(슬라이드 3·전망대·다이빙·정글짐·눈썰매)은 뒤 슬롯
-  손님이 탑에 붙어 보인다 — 코드가 아니라 **그림 계약**(`docs/asset-prompts.md`)에서 풀 일
+  손님이 탑에 붙어 보인다 — 코드가 아니라 **그림 계약**(`docs/assets/maintenance/legacy-sheet-prompts.md`)에서 풀 일
 - **`slotOffset()` 은 이제 검사만 쓴다** — 손님이 슬롯 **칸 위**에 서므로 텍셀 오프셋이 필요
   없어졌다. 정리 후보
 - **하네스 위생** — K37 절이 손님 전원을 `useTicks: 999999` 로 판 구석에 박아 두고 안 되돌린다
@@ -3703,12 +3703,12 @@ K52 §남은 것의 **각도 게이트 없음 · 4방향 없음 · JSON 6건** �
 
 - ⚠ **바닥 꼭짓점은 `w/(w+d)` 이지 0.5 가 아니다** — 정사각 발자국만 가운데다
 - ⚠ `tools/make-diamond-guide.py` 는 prototype-3d 의 **yaw20** 카메라용이라 쓰면 안 된다
-- ⚠ 스타일 블록은 `docs/asset-prompts.md` **34장 중 33장이 여전히 축자 동일**하다
+- ⚠ 스타일 블록은 `docs/assets/maintenance/legacy-sheet-prompts.md` **34장 중 33장이 여전히 축자 동일**하다
   (나머지 하나는 UI 아이콘 시트로, 투영 문단을 평면 아이콘으로 일부러 갈아 끼웠다)
 
 ### 재생성 작업 지시서 (`09b9583`) — 게이트 출력에서 생성했다
 
-`docs/asset-regen-order.md` (105줄). 손으로 안 적었다 — `tools/kairo-gate.ts --geom` 실측에서
+`docs/assets/maintenance/legacy-v2-regeneration.md` (105줄). 손으로 안 적었다 — `tools/kairo-gate.ts --geom` 실측에서
 뽑았으므로 게이트가 바뀌면 다시 뽑으면 된다. 우선순위 A(꼭짓점이 가로 8텍셀 = 타일 폭 1/4 이상 이탈) **19종**을
 이탈량 순으로, 나머지 46종을 B 로 나누고 시설마다 발자국·캔버스·이탈 텍셀·IoU·축뒤집힘을 적었다.
 
@@ -3829,7 +3829,7 @@ vitest **1234**(1178 → 1182 → 1196 → 1234) · `verify:kairo` **300/300**(2
 ### 남은 것
 
 - **그림 재생성이 이 머신에서 불가능하다** — `sprite-gen gen --provider codex` 는 있으나 이
-  Codex 계정에 `image_gen` 권한이 없고 grok 도 없다(실측). 지시서 `docs/asset-regen-order.md` ·
+  Codex 계정에 `image_gen` 권한이 없고 grok 도 없다(실측). 지시서 `docs/assets/maintenance/legacy-v2-regeneration.md` ·
   가이드 `art-reference/guides/kairo/` 75장 · 확인 `kairo-gate.ts --geom` 이 다 준비돼 있다
 - **게이트 4는 경고 모드**다 — 재생성이 끝나면 `WARN_GATES` 에서 빼서 **실패로 승격**할 것
 - **`facings: 4` 를 켤 때 봇(`tools/kairo-sim.ts` 의 `aimFacings`)을 같이 옮길 것** —

@@ -10,8 +10,8 @@
  *
  * ## 왜 이 도구가 필요한가
  *
- * 접지 기하 게이트가 시설 **56종**을 빨간불로 낸다 (`docs/asset-regen-order.md`).
- * 조각은 이미 다 있다 — 프롬프트(`docs/asset-prompts.md`) · 발자국 가이드 75장 ·
+ * 접지 기하 게이트가 시설 **56종**을 빨간불로 낸다 (`docs/assets/maintenance/legacy-v2-regeneration.md`).
+ * 조각은 이미 다 있다 — 프롬프트(`docs/assets/maintenance/legacy-sheet-prompts.md`) · 발자국 가이드 75장 ·
  * 규격 줄(`tools/make-kairo-guide.ts --table`) · 생성기(sprite-gen) ·
  * 후처리(`tools/process-kairo-sheet.py`) · 판정(`tools/kairo-gate.ts`).
  * 그런데 **사람이 56번 손으로 이어 붙여야 했다.** 그 이음매가 이 파일이다.
@@ -63,7 +63,7 @@ import {
 
 // ────────────────────────────── 경로 ──────────────────────────────
 
-export const DOC = 'docs/asset-prompts.md';
+export const DOC = 'docs/assets/maintenance/legacy-sheet-prompts.md';
 export const GUIDE_DIR = 'art-reference/guides/kairo';
 export const PACK_DIR = 'assets/generated/kairo';
 export const WORK_DIR = 'assets/generated/kairo-regen';
@@ -84,7 +84,7 @@ const PYTHON = existsSync(`${process.env['HOME'] ?? ''}/tools/sprite-gen/.venv/b
 /** ⚠ 실측 오류 문자열. 이게 보이면 이 머신에서는 생성이 **불가능**하다 — 즉시 죽는다 */
 const NO_IMAGE_GEN = 'the built-in image_gen tool never ran in this codex session';
 
-/** 생성 해상도. `docs/asset-prompts.md` §HOW THE SHEETS ARE SIZED 와 같은 값 */
+/** 생성 해상도. `docs/assets/maintenance/legacy-sheet-prompts.md` §HOW THE SHEETS ARE SIZED 와 같은 값 */
 const GEN_SIZE = '1536 x 1024';
 
 // ────────────────────────── 문서 파싱 (프롬프트 조립) ──────────────────────────
@@ -266,7 +266,7 @@ export interface Measured {
   want: GroundMeasure;
   v: GeomVerdict;
   /**
-   * 아직 옆으로 밀어야 하는데 **캔버스에 빈 자리가 없다** (`docs/asset-regen-order.md` 의
+   * 아직 옆으로 밀어야 하는데 **캔버스에 빈 자리가 없다** (`docs/assets/maintenance/legacy-v2-regeneration.md` 의
    * `⚠ 여백 없음`).
    *
    * `tools/process-kairo-sheet.py` 의 `ground_vertex_shift` 와 **같은 산수**다: 바닥
@@ -281,7 +281,7 @@ export interface Measured {
    * ⚠ **`flat` 은 위반이 아니다.** 게이트 5 가 findings 에 넣는 것은 `flipped` 와
    * `unmeasurable` 뿐이고, 팩 자체가 `flat` 16장이다. 여기서 `flat` 을 실패로 치면
    * **자기 원본이 평탄한 시설**(arcade·slide_tube)은 만족 불가능한 조건이 된다 —
-   * 4방향 1차가 정확히 그렇게 8장을 버렸다 (`docs/asset-4dir-order.md` §0-2).
+   * 4방향 1차가 정확히 그렇게 8장을 버렸다 (`docs/assets/history/prompt-chain-4dir-retrospective.md` §0-2).
    */
   lightV: LightVerdict;
 }

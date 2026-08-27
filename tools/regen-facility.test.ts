@@ -104,8 +104,9 @@ describe('프롬프트 조립', () => {
       d: t.d,
     });
     expect(prompt).toContain(specLine);
-    expect(prompt).toContain('base diamond exactly 80x40 px');
-    expect(prompt).toContain('0.400 (= 2/5)');
+    expect(prompt).toContain('base diamond exactly 64x32 px');
+    expect(prompt).toContain('0.500 (= 2/4)');
+    expect(prompt).not.toContain('footprint 2x3 tiles');
   });
 
   it('시트가 지정한 크로마 키를 그대로 쓴다', () => {
@@ -329,7 +330,7 @@ describe('재생성 루프가 광원을 판정에 넣는다', () => {
   });
 
   /*
-   * ⚠ 이 절이 4방향 1차가 밟은 함정을 고정한다 (`docs/asset-4dir-order.md` §0-2).
+   * ⚠ 이 절이 4방향 1차가 밟은 함정을 고정한다 (`docs/assets/history/prompt-chain-4dir-retrospective.md` §0-2).
    * 그 도구는 `좌상단` 만 통과로 쳐서, **자기 원본이 평탄한 시설**(arcade·slide_tube)에
    * 만족 불가능한 조건을 걸고 8장을 버렸다. 게임 게이트는 `평탄` 을 위반으로 안 센다.
    */
@@ -397,6 +398,8 @@ describe('재생성 루프가 광원을 판정에 넣는다', () => {
    */
   it('팩의 실제 화소로도 광원이 판정에 들어간다', () => {
     const found = allTargets()
+      // 이미 물리 d0–d3로 채택된 시설은 legacy base 파일을 의도적으로 제거했다.
+      .filter((t) => existsSync(join(PACK_DIR, t.file)))
       .map((t) => ({ t, m: measurePng(join(PACK_DIR, t.file), t.id, t.w, t.d, t.bodyH) }))
       .filter((x) => x.m.v.bad.length === 0 && (x.m.lightV === 'flipped' || x.m.lightV === 'unmeasurable'));
     if (found.length === 0) {

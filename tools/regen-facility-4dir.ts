@@ -4,7 +4,7 @@
  *
  * Drafts and accepted candidates stay outside the live pack until every image
  * has passed geometry and lighting.  This avoids the contract/file-name split
- * described in docs/asset-4dir-order.md section 2.
+ * described in docs/assets/history/prompt-chain-4dir-retrospective.md section 2.
  */
 
 import { execFile, execFileSync } from 'node:child_process';

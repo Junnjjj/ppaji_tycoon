@@ -4,7 +4,7 @@
  * ## 왜 필요한가 — 4방향을 뽑기 전에 만드는 "자"
  *
  * 스타일 계약은 *"LIGHTING. Single light from the upper left."* 다
- * (`docs/asset-prompts.md` §SHARED STYLE BLOCK, 34시트 축자 동일). **광원은 화면에
+ * (`docs/assets/maintenance/legacy-sheet-prompts.md` §SHARED STYLE BLOCK, 34시트 축자 동일). **광원은 화면에
  * 고정**이지 물체에 붙어 있지 않다 — 물체를 90° 돌려도 **화면 왼쪽 면이 밝아야 한다.**
  *
  * 4방향 그림을 받기 전에 이 자가 필요한 이유는 이미 뽑아 둔 표본이 답을 냈기 때문이다.
@@ -18,7 +18,7 @@
  *
  * ## 무엇을 재나 — **접지선 바로 위의 벽 띠**, 왼쪽 면 vs 오른쪽 면
  *
- * 2:1 다이메트릭에서 물체의 보이는 수직면은 둘이다 (`docs/asset-prompts.md` 의 FOOTPRINT
+ * 2:1 다이메트릭에서 물체의 보이는 수직면은 둘이다 (`docs/assets/maintenance/legacy-sheet-prompts.md` 의 FOOTPRINT
  * 문단): 법선이 화면 **왼쪽 아래**를 향하는 면(+D 쪽)과 **오른쪽 아래**를 향하는 면(+W 쪽).
  * 좌상단 광원이면 **왼쪽 면이 밝고 오른쪽 면이 어둡다.** 두 면은 접지 다이아몬드의
  * 아래 두 변 위에 각각 서 있고, 그 두 변은 **최하단 꼭짓점**에서 만난다.

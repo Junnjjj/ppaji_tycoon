@@ -42,7 +42,7 @@ import {
 } from '../src/assets/kairo-contract.js';
 import { KairoProceduralProvider } from '../src/assets/kairo-procedural.js';
 import { facilityDef, PlacementGrid, type FacilityFacing } from '../src/sim/kairo/placement.js';
-import { decodePng } from './png.js';
+import { decodePng, type Raster } from './png.js';
 import {
   measureSprite,
   measureCanonical,
@@ -90,20 +90,20 @@ const isWarn = (f: Finding): boolean => WARN_GATES.has(f.gate);
  * 실측 시설 **28/75** 가 빨갛다 (지면은 33/33 통과 — `geometryGate` 주석 참조).
  * 이걸 곧바로 실패로 만들면 `npm run gate` 가 죽어서 **에셋과 무관한 작업까지 전부
  * 막힌다** — 그 28종을 고치는 일은 **재생성**이고, 무엇을 어떤 순서로 다시 뽑을지는
- * `docs/asset-regen-order.md` 에 있다 (이 게이트 출력에서 **생성**한 목록이다).
+ * `docs/assets/maintenance/legacy-v2-regeneration.md` 에 있다 (이 게이트 출력에서 **생성**한 목록이다).
  * 그때까지 게이트는 **목록을 내는 일**을 한다.
  *
  * ⚠ **세는 기준은 "면제를 적용한 뒤"다** — 게이트 자신의 요약 줄이 내는 그 수다
  * (`npx tsx tools/kairo-gate.ts --geom` → `위반 28 (심각 4 · 축뒤집힘 0)`,
  * 통과 47 + 위반 28 = 75). 지금 면제(`GEOM_HOLDOUT`)는 **5종**이다.
- * 숫자를 인용할 일이 있으면 위 명령을 다시 돌릴 것 — `docs/asset-regen-order.md` 는
+ * 숫자를 인용할 일이 있으면 위 명령을 다시 돌릴 것 — `docs/assets/maintenance/legacy-v2-regeneration.md` 는
  * 손으로 적은 것이 아니라 그 출력에서 **생성**한 목록이다.
  *
  * ⚠ **한때 0 이었다 (2026-08-22). 그 0 은 그림이 좋아진 게 아니었다** —
  * `tools/repair-kairo-footprint.py` 가 정본 다이아몬드를 단색으로 메워 만든 0 이었고,
  * 사용자가 화면에서 회귀를 보고해 26종을 되돌렸다. **이 게이트는 실루엣 최하단 윤곽만
  * 재므로 "다이아몬드를 색으로 칠하기"가 언제나 최단 경로다.** 위반 수를 0 으로 만드는
- * 변경이 들어오면 **그림을 먼저 볼 것** (`docs/asset-regen-order.md` §2026-08-22).
+ * 변경이 들어오면 **그림을 먼저 볼 것** (`docs/assets/maintenance/legacy-v2-regeneration.md` §2026-08-22).
  *
  * ⚠ 문턱을 "지금 통과하도록" 낮추지 않았다. 문턱은 투영에서 유도한 값이고
  * (`ground-geometry.ts` 머리말), 재생성이 끝나면 이 집합을 비워서 실패로 올린다.
@@ -121,7 +121,7 @@ const isWarn = (f: Finding): boolean => WARN_GATES.has(f.gate);
  * 실측 시설 **15/75** 가 뒤집혀 있고 **16/75** 는 평탄(방향을 못 읽음)이다
  * (`--light` 로 표 전체). 이걸 곧바로 실패로 올리면 `npm run gate` 가 죽어 에셋과
  * 무관한 작업까지 막힌다 — 게이트 4 가 밟은 길이다. 고치는 방법은 **재생성**이고
- * 4방향 지시서가 `docs/asset-4dir-order.md` 에 있다.
+ * 4방향 지시서가 `docs/assets/contracts/four-direction.md` 에 있다.
  *
  * ⚠ **`평탄` 은 findings 에 안 넣는다** (요약 줄의 카운트로만 낸다). 위반이 아니라
  * "이 그림으로는 방향을 말할 수 없다"이기 때문이다 — 뒤집힘과 같은 통에 넣으면
@@ -159,6 +159,43 @@ function walkPngs(dir: string, out: string[] = []): string[] {
   return out;
 }
 
+/** A live pack may mix legacy 1× frames and approved 2× source frames. */
+function frameDensity(
+  size: { w: number; h: number },
+  logical: readonly [number, number],
+): 1 | 2 | null {
+  if (size.w === logical[0] && size.h === logical[1]) return 1;
+  if (size.w === logical[0] * 2 && size.h === logical[1] * 2) return 2;
+  return null;
+}
+
+/** Geometry is measured in logical texels; collapse a density-2 alpha mask deterministically. */
+function logicalRaster(raster: Raster, density: 1 | 2): Raster {
+  if (density === 1) return raster;
+  const w = raster.w / density;
+  const h = raster.h / density;
+  const data = new Uint8Array(w * h * 4);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      let best = -1;
+      let bestAlpha = -1;
+      for (let sy = 0; sy < density; sy++) {
+        for (let sx = 0; sx < density; sx++) {
+          const source = (((y * density + sy) * raster.w) + x * density + sx) * 4;
+          const alpha = raster.data[source + 3]!;
+          if (alpha > bestAlpha) {
+            best = source;
+            bestAlpha = alpha;
+          }
+        }
+      }
+      const target = (y * w + x) * 4;
+      for (let channel = 0; channel < 4; channel++) data[target + channel] = raster.data[best + channel]!;
+    }
+  }
+  return { w, h, data };
+}
+
 function run(): {
   findings: Finding[];
   counts: Record<string, number>;
@@ -185,7 +222,7 @@ function run(): {
    * 게이트 3 — 생성물 PNG 크기 (있을 때만).
    *
    * ⚠ 파일명 → ID 규칙은 **`assetFileToId` 하나**다. 예전엔 여기서 폴더 이름으로
-   * ID 를 추측했는데(`.../<id>/final-*.png`), 생성물이 `docs/asset-prompts.md` 의
+   * ID 를 추측했는데(`.../<id>/final-*.png`), 생성물이 `docs/assets/maintenance/legacy-sheet-prompts.md` 의
    * 평면 규칙(`facility__shop.png`)으로 바뀌자 144장이 통째로 "계약에 없는 산출물"로
    * 잡혔다 (실측). 규칙이 두 곳에 있으면 반드시 이렇게 갈라진다.
    */
@@ -211,11 +248,12 @@ function run(): {
       findings.push({ gate: '생성물', id, detail: `PNG 헤더를 못 읽었다: ${p}` });
       continue;
     }
-    if (size.w !== want[0] || size.h !== want[1]) {
+    const density = frameDensity(size, want);
+    if (density === null) {
       findings.push({
         gate: '캔버스크기',
         id,
-        detail: `실측 ${size.w}×${size.h} ≠ 계약 ${want[0]}×${want[1]} (${p})`,
+        detail: `실측 ${size.w}×${size.h} ≠ 계약 ${want[0]}×${want[1]} logical @1×/2× (${p})`,
       });
     }
   }
@@ -315,7 +353,11 @@ function geomRow(
 ): GeomRow | null {
   const path = join(GEN_DIR, file);
   if (!existsSync(path)) return null;
-  const png = decodePng(path);
+  const physical = decodePng(path);
+  const logicalCanvas: readonly [number, number] = [(w + d) * 16, (w + d) * 8 + bodyH];
+  const density = frameDensity({ w: physical.w, h: physical.h }, logicalCanvas);
+  if (density === null) return null; // gate 3 already reports the exact canvas violation
+  const png = logicalRaster(physical, density);
   // 캔버스 크기가 계약과 다르면 게이트 3 이 이미 잡았다 — 여기서 또 세지 않는다
   if (png.h < bodyH + 8) return null;
   const m = measureSprite(png, w, d, bodyH);
@@ -776,7 +818,7 @@ if (onlySelftest) {
     console.log(
       `  접지 기하 ${counts['접지측정']}장 측정 · 위반 ${counts['접지위반']}` +
         ` (심각 ${counts['접지심각']} · 축뒤집힘 ${counts['접지축뒤집힘']})` +
-        `${strict ? '' : ' — 경고. 재생성 대상 (docs/asset-regen-order.md)'}`,
+        `${strict ? '' : ' — 경고. 재생성 대상 (docs/assets/maintenance/legacy-v2-regeneration.md)'}`,
     );
     /*
      * ⚠ `평탄`·`측정불가` 는 findings 에 안 들어간다 (`WARN_GATES` 주석). **이 줄이

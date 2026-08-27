@@ -138,12 +138,25 @@ describe('1회 설치가 기본이다', () => {
     // 1단계는 조준이 아니다 — 옮길 시설을 지목하는 탭이다
     expect(b.session.usesAim).toBe(false);
     expect(b.session.mode).toBe('selecting');
-    b.session.beginMove({ handle: 7, defId: 'ping_pong', i: 3, j: 4, facing: 0 }, '이동: 탁구대');
+    b.session.beginMove(
+      { handle: 7, defId: 'ping_pong', i: 3, j: 4, originalFacing: 0, facing: 0 },
+      '이동: 탁구대',
+    );
     expect(b.session.usesAim).toBe(true);
     expect(b.session.move?.handle).toBe(7);
     b.confirm();
     expect(b.spends).toEqual([10]);
     expectIdle(b.session);
+  });
+
+  it('이동 회전은 선택 방향만 바꾸고 취소용 원본 방향을 보존한다', () => {
+    const b = makeBoard();
+    b.session.beginMove(
+      { handle: 7, defId: 'shop', i: 3, j: 4, originalFacing: 0, facing: 0 },
+      '이동: 매점',
+    );
+    b.session.setMoveFacing(2);
+    expect(b.session.move).toMatchObject({ originalFacing: 0, facing: 2 });
   });
 
   it('확정 뒤 지도를 다시 눌러도 배치가 시작되지 않고 돈도 안 나간다', () => {
@@ -250,7 +263,10 @@ describe('연속 설치는 사용자가 켤 때만 켜진다', () => {
   it('이동은 연속 설치를 못 켠다 — 옮길 시설을 다시 고르는 것부터가 다음 이동이다', () => {
     const b = makeBoard();
     b.session.pick('move', '이동');
-    b.session.beginMove({ handle: 7, defId: 'ping_pong', i: 3, j: 4, facing: 0 }, '이동: 탁구대');
+    b.session.beginMove(
+      { handle: 7, defId: 'ping_pong', i: 3, j: 4, originalFacing: 0, facing: 0 },
+      '이동: 탁구대',
+    );
     expect(b.session.canRepeat).toBe(false);
     b.session.setRepeat(true);
     expect(b.session.repeat).toBe(false);

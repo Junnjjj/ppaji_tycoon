@@ -21,6 +21,17 @@ const KAIRO_BUILD = Object.freeze({ ...__PPAJI_BUILD__ });
  * ("폰에서 돌아가는 것")에 정면으로 어긋난다.
  */
 async function mainKairo(parent: HTMLElement): Promise<void> {
+  const launchQuery = new URLSearchParams(location.search);
+  const hdPixelPilot = launchQuery.get('hd') === '1';
+  const hdApprovedFit = hdPixelPilot && launchQuery.get('hdFit') === '1';
+  const terrainV2Pilot = hdPixelPilot && launchQuery.get('terrain') === 'v2';
+  const terrainV3SourcePilot = hdPixelPilot && launchQuery.get('terrain') === 'v3';
+  const shoreRadiusRaw = launchQuery.get('shoreRadius');
+  const shoreRadius = shoreRadiusRaw === null ? undefined : Number(shoreRadiusRaw);
+  const reviewedShoreRadius =
+    shoreRadius !== undefined && Number.isFinite(shoreRadius) && shoreRadius >= 0 && shoreRadius <= 1
+      ? shoreRadius
+      : undefined;
   const { bootKairo } = await import('./render/kairo/boot.js');
   const { GROUND_KINDS } = await import('./sim/kairo/terrain.js');
   const { DoorSet: DoorSetCls } = await import('./sim/kairo/doors.js');
@@ -85,7 +96,35 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 실패가 된 적이 있다 (아래 `Object.assign(h, …)` 위 경고).
    */
   const { createKairoAssetProvider } = await import('./assets/kairo-atlas.js');
-  const kairoProvider = await createKairoAssetProvider();
+  const baseKairoProvider = await createKairoAssetProvider();
+  let kairoProvider = baseKairoProvider;
+  if (hdPixelPilot) {
+    const { createKairoHdPilotProvider } = await import('./assets/kairo-hd-pilot.js');
+    if (hdApprovedFit) {
+      const [{ setFacilityReviewOverrides }, { setKairoFacilityReviewOverrides }] = await Promise.all([
+        import('./sim/kairo/placement.js'),
+        import('./assets/kairo-contract.js'),
+      ]);
+      const approved = {
+        icecream: { size: [1, 1] as const, facings: 4 as const },
+        cafe: { size: [2, 2] as const, facings: 4 as const },
+      };
+      setFacilityReviewOverrides(approved);
+      setKairoFacilityReviewOverrides(approved);
+    }
+    kairoProvider = await createKairoHdPilotProvider(baseKairoProvider, {
+      approvedFit: hdApprovedFit,
+    });
+    if (terrainV3SourcePilot) {
+      const { createKairoTerrainV3SourceProvider } = await import('./assets/kairo-terrain-v3-source.js');
+      kairoProvider = await createKairoTerrainV3SourceProvider(kairoProvider, {
+        ...(reviewedShoreRadius !== undefined ? { shoreRadius: reviewedShoreRadius } : {}),
+      });
+    } else if (terrainV2Pilot) {
+      const { createKairoTerrainV2PilotProvider } = await import('./assets/kairo-terrain-v2-pilot.js');
+      kairoProvider = await createKairoTerrainV2PilotProvider(kairoProvider);
+    }
+  }
   const {
     KairoHud,
     createGoalSlots,
@@ -160,7 +199,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 새 판은 URL 로 넘어온다 (`?map=…&scenario=…`) — 세이브를 지운 직후라 저장값이 없다.
    * 세이브가 있으면 저장값이 이긴다: 진행 중인 판의 맵을 URL 로 바꿀 수 있으면 안 된다.
    */
-  const q = new URLSearchParams(location.search);
+  const q = launchQuery;
   const mapId = saved?.mapId ?? q.get('map') ?? scen.DEFAULT_MAP;
   const scenarioId = saved?.scenarioId ?? q.get('scenario') ?? scen.DEFAULT_SCENARIO;
   const mapDef = scen.mapType(mapId);
@@ -255,6 +294,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const h = bootKairo({
     parent,
     provider: kairoProvider,
+    // 승인된 C안: 논리 32×16 타일은 그대로, 기본 백버퍼만 2×로 렌더한다.
+    // 아틀라스는 프레임별 1×/2× 밀도를 기록하므로 레거시와 새 시설을 함께 그릴 수 있다.
+    renderDensity: 2 as const,
     seed: KAIRO_SEED,
     // 세이브가 있으면 그것, 없으면 위에서 만든 **물려받은 빠지** (§4.5 · K30)
     ...(saved
@@ -276,7 +318,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       const bs = runner?.bus.state;
       h.scene.setBus(bs && bs.visible ? bs.pos : null);
       box.textContent =
-        `FPS ${s.fps}  S=${s.upscale}  버퍼 ${s.bufferW}×${s.bufferH}\n` +
+        `FPS ${s.fps}  S=${s.upscale}  D=${s.renderDensity}  버퍼 ${s.bufferW}×${s.bufferH}\n` +
         `스크롤 ${s.scrollX},${s.scrollY}  타일 ${s.tiles}\n` +
         `벽 ${s.walls}  시설 ${s.facilities}  손님 ${s.guests}\n` +
         `퇴장만족 ${s.exitSat.toFixed(0)}  주차 ${runner?.week ?? 0}  ` +
@@ -411,8 +453,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      * 세션이 붓·선택·조준을 한 번에 잡는다 (UI v3) — `beginMove` 가 `startAim()` 을
      * 빠뜨려 "붓은 물렸는데 고스트가 안 뜬다"가 되던 자리가 이제 구조적으로 없다.
      */
+    const facing = item.facing ?? 0;
     build.beginMove(
-      { handle, defId: item.defId, i: item.i, j: item.j, facing: item.facing ?? 0 },
+      { handle, defId: item.defId, i: item.i, j: item.j, originalFacing: facing, facing },
       `이동: ${def?.name ?? item.defId}`,
     );
     toast(
@@ -672,7 +715,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     });
     const restored = h.placement.place(h.terrain, h.walls, GATE, sel.defId, sel.i, sel.j, {
       ...placeOpts(),
-      facing: sel.facing,
+      // 이동 미리보기에서 방향을 바꿔도 원본은 확정 전까지 그대로 둔다.
+      facing: sel.originalFacing,
     });
     const oldHandle = sel.handle;
     // 프로브가 새 handle 을 만들면 세션의 선택도 같이 옮긴다 (정본은 하나다)
@@ -690,6 +734,21 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       ok,
       {
         cancel: cancelAim,
+        ...(def && canRotate(def)
+          ? {
+              rotate: () => {
+                /*
+                 * 이미 놓인 시설도 새 배치와 같은 방향 순서를 쓴다. 선택 방향은 고스트에만
+                 * 반영하고, 원본은 `originalFacing` 으로 복원한다 — 취소가 회전 확정이 되면
+                 * 안 된다.
+                 */
+                const move = build.move;
+                if (!move) return;
+                build.setMoveFacing(nextFacing(def, move.facing));
+                refreshAim();
+              },
+            }
+          : {}),
         confirm: () => {
           if (fee > week.cash) {
             toast('돈이 부족합니다');
@@ -705,7 +764,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
             // 되돌린다 — 반쯤 옮겨진 상태가 최악이다
             const rr = h.placement.place(h.terrain, h.walls, GATE, sel.defId, sel.i, sel.j, {
               ...placeOpts(),
-              facing: sel.facing,
+              facing: sel.originalFacing,
             });
             const gone = sel.handle;
             if (rr.ok && rr.placed) build.retagMove(rr.placed.handle);
@@ -3811,7 +3870,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   });
   console.log(
     `[카이로] 에셋 ${h.provider.name} (${h.provider.ids.length}장 플레이스홀더) · ` +
-      '카메라 줌 1 고정 · 확대는 캔버스 정수 배율',
+      `${hdPixelPilot ? `HD 검토${terrainV3SourcePilot ? ' + terrain-v3-source D=4' : terrainV2Pilot ? ' + terrain-v2 D=2' : ' D=2'}` : '기본 D=1'} · ` +
+        '확대는 캔버스 정수 배율',
   );
 }
 

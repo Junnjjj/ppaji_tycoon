@@ -20,6 +20,7 @@
  */
 import type { CardTheme } from '../sim/kairo/cards.js';
 import { bakeGuestCell, type Facing, type Pose } from '../assets/kairo-guest-sprite.js';
+import { facilitySpriteId } from '../assets/kairo-contract.js';
 import { cssVar } from './tokens.js';
 
 /** 장면 캔버스의 **텍셀** 크기. 카드 이미지 슬롯(≈345×116px)과 같은 3:1 비율이다 */
@@ -131,7 +132,7 @@ const SCENES: Record<CardTheme, { ground: string; accent: EventSceneAccent; item
     ground: 'ground/path_sand:a0',
     accent: 'none',
     items: [
-      { id: 'facility/infirmary', role: 'subject', x: 62, y: 76 },
+      { id: facilitySpriteId('infirmary', 0), role: 'subject', x: 62, y: 76 },
       { id: 'deco/ring_rack', role: 'support', x: 132, y: 76 },
       { id: 'deco/first_aid', role: 'support', x: 196, y: 80 },
       { id: G(0, 'idle', '+X'), role: 'figure', x: 106, y: 80 },
@@ -154,8 +155,8 @@ const SCENES: Record<CardTheme, { ground: string; accent: EventSceneAccent; item
     ground: 'ground/floor_indoor:a0',
     accent: 'none',
     items: [
-      { id: 'facility/office', role: 'subject', x: 60, y: 76 },
-      { id: 'facility/info', role: 'support', x: 186, y: 80 },
+      { id: facilitySpriteId('office', 0), role: 'subject', x: 60, y: 76 },
+      { id: facilitySpriteId('info', 0), role: 'support', x: 186, y: 80 },
       { id: G(6, 'idle', '+X'), role: 'figure', x: 112, y: 76 },
       { id: G(7, 'idle', '+Z'), role: 'figure', x: 128, y: 80 },
     ],
@@ -165,8 +166,8 @@ const SCENES: Record<CardTheme, { ground: string; accent: EventSceneAccent; item
     ground: 'ground/path_stone:a2',
     accent: 'coin',
     items: [
-      { id: 'facility/shop', role: 'subject', x: 62, y: 76 },
-      { id: 'facility/snackbar', role: 'support', x: 184, y: 80 },
+      { id: facilitySpriteId('shop', 0), role: 'subject', x: 62, y: 76 },
+      { id: facilitySpriteId('snackbar', 0), role: 'support', x: 184, y: 80 },
       { id: G(2, 'idle', '+X'), role: 'figure', x: 114, y: 76 },
       { id: G(5, 'walk', '+X'), role: 'figure', x: 130, y: 80 },
     ],
@@ -178,7 +179,7 @@ const SCENES: Record<CardTheme, { ground: string; accent: EventSceneAccent; item
     items: [
       { id: 'facility/sauna', role: 'subject', x: 68, y: 78 },
       { id: 'deco/safety_sign', role: 'support', x: 132, y: 74 },
-      { id: 'facility/storage', role: 'support', x: 194, y: 80 },
+      { id: facilitySpriteId('storage', 0), role: 'support', x: 194, y: 80 },
       { id: G(4, 'idle', '-Z'), role: 'figure', x: 152, y: 80 },
     ],
   },

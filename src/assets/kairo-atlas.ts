@@ -76,6 +76,7 @@ export class KairoAtlasProvider implements AssetProvider {
 
   private readonly specs = new Map<string, SpriteSpec>();
   private readonly frames = new Map<string, AtlasFrame>();
+  private readonly densities = new Map<string, 1 | 2>();
   private readonly cache = new Map<string, HTMLCanvasElement>();
 
   private constructor(
@@ -93,12 +94,16 @@ export class KairoAtlasProvider implements AssetProvider {
         held.push(id);
         continue;
       }
-      if (f.w !== spec.size[0] || f.h !== spec.size[1]) {
-        dropped.push(`${id} ${f.w}×${f.h}≠${spec.size[0]}×${spec.size[1]}`);
+      const density = f.density ?? 1;
+      if ((density !== 1 && density !== 2) || f.w !== spec.size[0] * density || f.h !== spec.size[1] * density) {
+        dropped.push(
+          `${id} ${f.w}×${f.h}@${density}≠${spec.size[0]}×${spec.size[1]} logical`,
+        );
         continue;
       }
       this.specs.set(id, spec);
       this.frames.set(id, f);
+      this.densities.set(id, density);
       ids.push(id);
     }
     this.ids = ids;
@@ -129,6 +134,11 @@ export class KairoAtlasProvider implements AssetProvider {
   /** ⚠ 계약이 정본 — 아틀라스 프레임 크기를 여기서 돌려주지 말 것 */
   spec(id: string): SpriteSpec | undefined {
     return this.specs.get(id);
+  }
+
+  /** Mixed-density atlas: approved replacements may be 2× while legacy frames stay 1×. */
+  density(id: string): number {
+    return this.densities.get(id) ?? 1;
   }
 
   get(id: string): HTMLCanvasElement {

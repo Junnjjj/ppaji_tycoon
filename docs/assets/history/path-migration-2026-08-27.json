@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-27",
+  "note": "Current hashes are after folder migration, link repair, and status banners. Historical provenance hashes remain immutable snapshots and are not rewritten to these values.",
+  "moved": [
+    {
+      "from": "docs/asset-index.md",
+      "to": "docs/assets/README.md",
+      "current_sha256": "21f5b3f81c4378ee50997147e398193ac195cd6c36068d8068861dd202b6734a"
+    },
+    {
+      "from": "docs/asset-camera-direction-contract.md",
+      "to": "docs/assets/contracts/camera-direction.md",
+      "current_sha256": "17dded522a2b5a1c8ac357b78e90faaecf6f2231d78b94e59a7cf3fe7625550f"
+    },
+    {
+      "from": "docs/asset-4dir-order.md",
+      "to": "docs/assets/history/prompt-chain-4dir-retrospective.md",
+      "current_sha256": "d197e66486930fb26a3cf743289399cb6b6007d8fadbea8ff934b072aba54e26"
+    },
+    {
+      "from": "docs/asset-concept-portfolio.md",
+      "to": "docs/assets/pipelines/concept-portfolio.md",
+      "current_sha256": "7b67da847268d9acc2bdbbdcba468c9db1ce807bbfd0e688bfe23d1ce7728fa5"
+    },
+    {
+      "from": "docs/asset-facility-batch-orchestration.md",
+      "to": "docs/assets/pipelines/facility-batch-orchestration.md",
+      "current_sha256": "130eba388a4abcdd426817597e37f8f26f1361e32ceaac5b004b2086e2886420"
+    },
+    {
+      "from": "docs/asset-watercraft-pipeline.md",
+      "to": "docs/assets/pipelines/watercraft.md",
+      "current_sha256": "b8229e48748611dd0e592192d9d01e0d5ac75059f4fc30bcbcc629f4ab3397bb"
+    },
+    {
+      "from": "docs/asset-runtime-fit-decisions.md",
+      "to": "docs/assets/adoption/runtime-fit-decisions.md",
+      "current_sha256": "f02220a00b3d7d652d4033d53a33295414237ab6f4be5116f8363adee2739869"
+    },
+    {
+      "from": "docs/asset-prompts.md",
+      "to": "docs/assets/maintenance/legacy-sheet-prompts.md",
+      "current_sha256": "601231c87cdf7eb6c91d9d961930a1a4237a27d90b2dafd03659049d36942811"
+    },
+    {
+      "from": "docs/asset-regen-order.md",
+      "to": "docs/assets/maintenance/legacy-v2-regeneration.md",
+      "current_sha256": "5ffdf69409d3a352fa490b9ee1b75fd0361737e6ff775f50a50d13309586b6f9"
+    },
+    {
+      "from": "docs/asset-orchestration-token-efficiency.md",
+      "to": "docs/assets/operations/token-efficiency-experiment.md",
+      "current_sha256": "09dde57922a9dc42b62dedd42fe2109debe7879f9584c96c0aa7bb1fcd811f0c"
+    },
+    {
+      "from": "docs/asset-4dir-round1-report.md",
+      "to": "docs/assets/history/4dir-round1-report.md",
+      "current_sha256": "33345b6660f3acf6e933aeb4ddab5178f7c1ea6f428f2d30a4635e1769b084ad"
+    },
+    {
+      "from": "docs/asset-cleanup-2026-08-17.json",
+      "to": "docs/assets/history/cleanup-2026-08-17.json",
+      "current_sha256": "b39a15a57a53a35de89f9d6b324d648080da1d2d41d8342085fe4d43fb9927ad"
+    },
+    {
+      "from": "docs/shots-index.md",
+      "to": "docs/assets/history/screenshots.md",
+      "current_sha256": "7c27bf5e203708c69ec3ca80b1e4a52876716d3c2a6a075dac18639ad3439292"
+    }
+  ],
+  "created": [
+    "docs/README.md",
+    "docs/assets/contracts/four-direction.md",
+    "docs/assets/history/README.md"
+  ],
+  "removed_to_trash": {
+    "trash_directory": "/Users/jangjunpyo/.Trash/ppaji-docs-legacy-20260827",
+    "files": [
+      "docs/wave2-dense-d0-worker-contract.md",
+      "docs/wave3-physical-directions-worker-contract.md"
+    ],
+    "reason": "one-off completed worker contracts, zero live references, superseded by the current skill and facility batch pipeline"
+  }
+}

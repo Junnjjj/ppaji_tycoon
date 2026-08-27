@@ -2,8 +2,104 @@
   "version": 2,
   "note": "렌더 전용 계약. 시뮬 정보(발자국·용량·배치제약·슬롯·ride 입출구)는 src/data/kairo-facilities.json 이 소유한다 (불변식 1·3). ⚠ ride 에 남은 것은 순수 그림 지시(ridePose·pathNote)뿐이다 — entryTile/exitTile 은 시뮬 데이터에만 있다.",
   "projection": {
+    "type": "orthographic",
     "yaw_deg": 45,
     "elev_deg": 30,
+    "pitch_down_deg": 30,
+    "roll_deg": 0,
+    "viewConvention": "game yaw is measured on the I/J ground plane toward the camera; pitch_down is optical-axis depression below horizontal; roll is screen roll",
+    "blender": {
+      "axisMap": {
+        "gameI": "+X",
+        "gameJ": "-Y",
+        "height": "+Z"
+      },
+      "cameraPositionSideGame": [
+        "+I",
+        "+J",
+        "+height"
+      ],
+      "cameraPositionUnitXYZ": [
+        0.612372435696,
+        -0.612372435696,
+        0.5
+      ],
+      "cameraForwardUnitXYZ": [
+        -0.612372435696,
+        0.612372435696,
+        -0.5
+      ],
+      "cameraRightUnitXYZ": [
+        0.707106781187,
+        0.707106781187,
+        0
+      ],
+      "cameraUpUnitXYZ": [
+        -0.353553390593,
+        0.353553390593,
+        0.866025403784
+      ],
+      "rotationMode": "XYZ",
+      "rotationEulerDeg": [
+        60,
+        0,
+        45
+      ],
+      "rotationQuaternionWXYZ": [
+        0.800103145191,
+        0.461939766256,
+        0.191341716183,
+        0.331413574036
+      ],
+      "orthoScaleRule": "For the landscape-or-square facility canvases, when one tile edge is tileWorld Blender units and pixel aspect is 1:1, set ortho_scale to output canvas width in texels",
+      "rootRotationMode": "XYZ"
+    },
+    "facilityDirections": [
+      {
+        "id": "d0",
+        "gameFacing": 0,
+        "rootEulerXYZDeg": [
+          0,
+          0,
+          0
+        ],
+        "offsetFormula": "(di,dj)",
+        "canonicalPlusJMarkerScreen": "lower-left"
+      },
+      {
+        "id": "d1",
+        "gameFacing": 1,
+        "rootEulerXYZDeg": [
+          0,
+          0,
+          90
+        ],
+        "offsetFormula": "(dj,w-1-di)",
+        "canonicalPlusJMarkerScreen": "lower-right"
+      },
+      {
+        "id": "d2",
+        "gameFacing": 2,
+        "rootEulerXYZDeg": [
+          0,
+          0,
+          180
+        ],
+        "offsetFormula": "(w-1-di,d-1-dj)",
+        "canonicalPlusJMarkerScreen": "upper-right"
+      },
+      {
+        "id": "d3",
+        "gameFacing": 3,
+        "rootEulerXYZDeg": [
+          0,
+          0,
+          270
+        ],
+        "offsetFormula": "(d-1-dj,di)",
+        "canonicalPlusJMarkerScreen": "upper-left"
+      }
+    ],
     "tileWorld": 22.627417,
     "tileTexels": [
       32,
@@ -153,39 +249,39 @@
       "sprite": "facility/changing_row",
       "canvas": [
         64,
-        52
+        58
       ],
       "anchorTexel": [
         32,
-        52
+        58
       ],
-      "bodyH": 20,
+      "bodyH": 26,
       "openTop": true
     },
     {
       "sprite": "facility/locker_row",
       "canvas": [
         80,
-        60
+        72
       ],
       "anchorTexel": [
         40,
-        60
+        72
       ],
-      "bodyH": 20,
+      "bodyH": 32,
       "openTop": true
     },
     {
       "sprite": "facility/washbasin_row",
       "canvas": [
         64,
-        44
+        56
       ],
       "anchorTexel": [
         32,
-        44
+        56
       ],
-      "bodyH": 12,
+      "bodyH": 24,
       "openTop": true
     },
     {
@@ -283,13 +379,13 @@
       "sprite": "facility/sikhye",
       "canvas": [
         48,
-        40
+        42
       ],
       "anchorTexel": [
         24,
-        40
+        42
       ],
-      "bodyH": 16,
+      "bodyH": 18,
       "openTop": true
     },
     {
@@ -347,12 +443,12 @@
     {
       "sprite": "facility/icecream",
       "canvas": [
-        48,
-        44
+        32,
+        36
       ],
       "anchorTexel": [
-        24,
-        44
+        16,
+        36
       ],
       "bodyH": 20,
       "openTop": true
@@ -360,12 +456,12 @@
     {
       "sprite": "facility/cafe",
       "canvas": [
-        80,
-        60
+        64,
+        52
       ],
       "anchorTexel": [
-        40,
-        60
+        32,
+        52
       ],
       "bodyH": 20,
       "openTop": true
@@ -1271,7 +1367,10 @@
   "uiIcons": {
     "note": "K46 헤더/푸터의 아이콘 슬롯 — 지금은 DOM 이모지 임시. Phase G 에서 픽셀 아이콘 PNG 로 교체한다 (kcap/kbtn 안의 <img> 로). 스프라이트 계약(specs)에 안 넣는 이유: 절차적 드로어 강제 검사(missingDrawers)가 캔버스 에셋에만 해당하기 때문 — 이 목록이 곧 작업지시서다 (manifest 의 이중 역할 규칙과 같다).",
     "style": "크림 UI 위 24×24 픽셀 아이콘, 진갈색 아웃라인, 컨셉 팩과 같은 웜 팔레트",
-    "canvas": [24, 24],
+    "canvas": [
+      24,
+      24
+    ],
     "canvasWhy": "Phase G: 아이콘도 아틀라스에 함께 굽는다. 크기가 style 문장 안에만 있으면 굽기 도구가 규격을 대조할 수 없어 '조용히 다른 크기'가 통과한다 — 스프라이트 캔버스와 같은 급의 계약값으로 끌어냈다.",
     "icons": [
       {

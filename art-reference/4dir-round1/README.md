@@ -1,8 +1,8 @@
 # 4방향 1차 (2026-08-22) — **회전이 실측으로 확인된 3장만** 여기 있다
 
 19종 × d1·d2·d3 을 목표로 118회 생성했고, 접지·광원·팔레트 게이트를 통과한 19장 중
-**실제로 돌아 있는 것은 이 3장뿐**이었다. 진단은 `docs/asset-4dir-order.md` §0,
-워커 원본 보고는 `docs/asset-4dir-round1-report.md`.
+**실제로 돌아 있는 것은 이 3장뿐**이었다. 진단은 `docs/assets/history/prompt-chain-4dir-retrospective.md` §0,
+워커 원본 보고는 `docs/assets/history/4dir-round1-report.md`.
 
 | 파일 | 기준 | 그대로 | 뒤집기 | 여유 |
 |---|---|---|---|---|

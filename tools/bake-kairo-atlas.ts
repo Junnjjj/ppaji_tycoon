@@ -3,7 +3,7 @@
  *
  *   npm run bake:atlas
  *
- * `assets/generated/kairo/*.png` (144장) → `public/assets/kairo-atlas.png` + `.json`.
+ * `assets/generated/kairo/*.png` → `public/assets/kairo-atlas.png` + `.json`.
  *
  * ## 왜 굽나
  *
@@ -49,6 +49,7 @@ interface Placed {
   y: number;
   w: number;
   h: number;
+  density: 1 | 2;
 }
 
 /**
@@ -57,7 +58,7 @@ interface Placed {
  * 정렬 키에 **ID 를 마지막으로** 넣는다 — 같은 크기끼리 순서가 파일시스템 나열 순서에
  * 좌우되면 같은 입력에서 다른 아틀라스가 나온다. 굽기는 결정론적이어야 diff 가 읽힌다.
  */
-function pack(items: { id: string; w: number; h: number }[], width: number): {
+function pack(items: { id: string; w: number; h: number; density: 1 | 2 }[], width: number): {
   placed: Placed[];
   height: number;
 } {
@@ -72,7 +73,7 @@ function pack(items: { id: string; w: number; h: number }[], width: number): {
       y += rowH + PAD;
       rowH = 0;
     }
-    placed.push({ id: it.id, x, y, w: it.w, h: it.h });
+    placed.push({ id: it.id, x, y, w: it.w, h: it.h, density: it.density });
     x += it.w + PAD;
     if (it.h > rowH) rowH = it.h;
   }
@@ -82,10 +83,15 @@ function pack(items: { id: string; w: number; h: number }[], width: number): {
 // ────────────────────────────── 본문 ──────────────────────────────
 
 function main(): void {
+  const densityArg = process.argv.indexOf('--density');
+  const allowedDensity = densityArg >= 0 ? Number(process.argv[densityArg + 1]) : 1;
+  if (allowedDensity !== 1 && allowedDensity !== 2) {
+    throw new Error(`--density 는 1 또는 2여야 한다 (받음: ${String(process.argv[densityArg + 1])})`);
+  }
   const sizes = kairoAssetSizes();
   const files = readdirSync(SRC_DIR).filter((f) => f.endsWith('.png'));
   const bad: string[] = [];
-  const byId = new Map<string, { file: string; raster: Raster }>();
+  const byId = new Map<string, { file: string; raster: Raster; density: 1 | 2 }>();
 
   for (const file of files.sort()) {
     const id = assetFileToId(file);
@@ -99,11 +105,21 @@ function main(): void {
     }
     const raster = decodePng(join(SRC_DIR, file));
     const want = sizes.get(id)!;
-    if (raster.w !== want[0] || raster.h !== want[1]) {
-      bad.push(`${id}: 실측 ${raster.w}×${raster.h} ≠ 계약 ${want[0]}×${want[1]} (${file})`);
+    const sourceDensity: 1 | 2 | null =
+      raster.w === want[0] && raster.h === want[1]
+        ? 1
+        : allowedDensity === 2 && raster.w === want[0] * 2 && raster.h === want[1] * 2
+          ? 2
+          : null;
+    if (sourceDensity === null) {
+      bad.push(
+        `${id}: 실측 ${raster.w}×${raster.h} ≠ 계약 ${want[0]}×${want[1]}` +
+          (allowedDensity === 2 ? ' 또는 승인 밀도 2×' : '') +
+          ` (${file})`,
+      );
       continue;
     }
-    byId.set(id, { file, raster });
+    byId.set(id, { file, raster, density: sourceDensity });
   }
 
   for (const id of sizes.keys()) if (!byId.has(id)) bad.push(`팩에 그림이 없다: ${id}`);
@@ -114,7 +130,12 @@ function main(): void {
     process.exit(1);
   }
 
-  const items = [...byId].map(([id, v]) => ({ id, w: v.raster.w, h: v.raster.h }));
+  const items = [...byId].map(([id, v]) => ({
+    id,
+    w: v.raster.w,
+    h: v.raster.h,
+    density: v.density,
+  }));
   /*
    * 폭 1024 로 먼저 시도한다. 실측 총 799,040px 은 1024×1024 안에 들 것처럼 보이지만,
    * 512×200 짜리 배경 3장(`backdrop/farbank`·`mountain`·`ridge`)이 선반을 통째로 먹어서
@@ -141,9 +162,15 @@ function main(): void {
     }
   }
 
-  const index: Record<string, { x: number; y: number; w: number; h: number }> = {};
+  const index: Record<string, { x: number; y: number; w: number; h: number; density?: 2 }> = {};
   for (const p of [...placed].sort((a, b) => (a.id < b.id ? -1 : 1))) {
-    index[p.id] = { x: p.x, y: p.y, w: p.w, h: p.h };
+    index[p.id] = {
+      x: p.x,
+      y: p.y,
+      w: p.w,
+      h: p.h,
+      ...(p.density === 2 ? { density: 2 as const } : {}),
+    };
   }
 
   mkdirSync('public/assets', { recursive: true });
@@ -153,6 +180,7 @@ function main(): void {
 
   const used = placed.reduce((n, p) => n + p.w * p.h, 0);
   console.log(`카이로 아틀라스 — ${placed.length}장`);
+  console.log(`  소스 밀도 2× ${placed.filter((p) => p.density === 2).length}장 · 1× ${placed.filter((p) => p.density === 1).length}장`);
   console.log(
     `  ${OUT_PNG}  ${width}×${height} · ${(png.length / 1024).toFixed(0)}KB · ` +
       `채움 ${Math.round((used / (width * height)) * 100)}%`,

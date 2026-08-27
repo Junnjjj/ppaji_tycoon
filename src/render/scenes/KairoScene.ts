@@ -23,7 +23,6 @@ import {
   Z_EMOTE,
   Z_GHOST,
   LEVEL_H,
-  lift,
   DEPTH_AIM_MARK,
   DEPTH_DOOR_MARK,
   DEPTH_LAND_MARK,
@@ -48,6 +47,12 @@ import {
 } from '../kairo/fx.js';
 import type { IncomeEvent } from '../../sim/kairo/week.js';
 import { surroundDecorationPlan } from '../kairo/surround.js';
+import {
+  buildRoundedShoreGeometry,
+  segmentsNearCell,
+  signedDistanceToShore,
+  type RoundedShoreGeometry,
+} from '../kairo/rounded-shore.js';
 
 /**
  * 지도 바깥을 채우는 **지형** 텍스처 (K38).
@@ -60,6 +65,11 @@ const SURROUND_TEX = 'surround/ground';
 const XRAY_FORCE = '!force';
 /** 지형을 바운딩 박스보다 얼마나 더 넓게 굽나 — 카메라 여백 + 고무줄을 덮는다 */
 const SURROUND_PAD = 128;
+interface CliffPixelSource {
+  width: number;
+  height: number;
+  data: Uint8ClampedArray;
+}
 import type { AssetProvider } from '../../assets/types.js';
 import { variantId } from '../../assets/types.js';
 import { KairoTerrain } from '../../sim/kairo/terrain.js';
@@ -103,12 +113,13 @@ import {
 /**
  * 카이로 씬 — 2:1 아이소메트릭 격자.
  *
- * ## 카메라 줌을 쓰지 않는다
+ * ## 플레이 줌과 렌더 밀도를 구분한다
  *
  * `camera.setZoom` 은 줌을 카메라 중점 기준으로 걸어 worldView 를 `width·(1−1/z)/2`
  * 만큼 민다. 폰 393px 에서 그게 98.25px — 반 픽셀이 정확히 여기서 들어온다.
- * 그래서 **카메라 줌은 영구히 1** 이고, 확대는 `ScaleManager` 로 캔버스 전체를
- * 정수배 늘린다. 씬 좌표계는 항상 텍셀 1:1 이다.
+ * 기본 모드의 플레이 줌은 여전히 1이고, 확대는 `ScaleManager`의 정수 배율만
+ * 쓴다. `?hd=1` 검토에서만 카메라 줌 2와 캔버스 CSS 1/2를 짝지어
+ * 같은 월드 범위를 2배 프레임버퍼에 그린다. 이때도 시뮬레이션 타일은 32×16이다.
  *
  * ## 왜 타일마다 Image 를 만드나
  *
@@ -163,6 +174,8 @@ type PlaceMark =
 export interface KairoSceneStats {
   fps: number;
   upscale: Upscale;
+  /** 1=기존, 2=검토용 HD 프레임버퍼/소스 밀도 */
+  renderDensity: 1 | 2;
   bufferW: number;
   bufferH: number;
   scrollX: number;
@@ -183,6 +196,8 @@ export interface KairoSceneStats {
 export interface KairoSceneOptions {
   /** 구상 클래스가 아니라 **인터페이스**다 (Phase G) — 절차·아틀라스·하이브리드가 같은 자리 */
   provider: AssetProvider;
+  /** 논리 텍셀은 그대로 두고 프레임버퍼와 지원 에셋 소스만 고밀도로 그린다. */
+  renderDensity?: 1 | 2;
   /** 지면 격자 — **시뮬 소유**. 씬은 읽기만 한다 (불변식 1: 의존 방향은 바깥 → sim) */
   terrain: KairoTerrain;
   /** 벽·문 격자 — 역시 시뮬 소유 */
@@ -203,6 +218,12 @@ export interface KairoSceneOptions {
 export class KairoScene extends Phaser.Scene {
   private readonly opts: KairoSceneOptions;
   private readonly cam = new KairoCamera();
+  /** 프로바이더와 씬이 만든 동적 텍스처의 소스 픽셀 밀도. */
+  private readonly textureDensities = new Map<string, number>();
+  /** review-only 반경 해안은 모든 타일이 공유하는 전역 격자 경계에서 한 번만 추출한다. */
+  private roundedShoreGeometry: RoundedShoreGeometry | null = null;
+  private roundedShoreRevision = 0;
+  private readonly shorePixelSources = new Map<string, CliffPixelSource | null>();
   private tileImages: Phaser.GameObjects.Image[] = [];
   /** 벽 이미지 — 있는 칸만 만든다 (1,280개를 미리 만들면 대부분 빈 이미지가 된다) */
   private wallImages = new Map<number, Phaser.GameObjects.Image>();
@@ -288,6 +309,8 @@ export class KairoScene extends Phaser.Scene {
   private doorGfx: Phaser.GameObjects.Graphics | null = null;
   /** 암석 대표색 캐시 — 타일마다 스프라이트를 훑으면 부팅이 느려진다 */
   private rockToneCache: [number, number, number] | null = null;
+  /** 승인 source-v1 절벽면의 픽셀 캐시. 없다는 결과도 저장해 반복 조회를 막는다. */
+  private cliffFaceCache = new Map<string, CliffPixelSource | null>();
   /** 그린 발판의 칸 목록 — 검증이 "보인다"를 실제로 물어볼 수 있어야 한다 */
   private doorMarkTiles: { i: number; j: number }[] = [];
   /** 배치 미리보기 (K32) — 확정하기 전의 시설 */
@@ -451,6 +474,18 @@ export class KairoScene extends Phaser.Scene {
   private lastTapAt = 0;
   private violations: readonly string[] = [];
 
+  private get renderDensity(): 1 | 2 {
+    return this.opts.renderDensity === 2 ? 2 : 1;
+  }
+
+  private densityOf(id: string): number {
+    return this.textureDensities.get(id) ?? this.opts.provider.density?.(id) ?? 1;
+  }
+
+  private fitTextureDensity(image: Phaser.GameObjects.Image, id: string): void {
+    image.setScale(1 / this.densityOf(id));
+  }
+
   constructor(opts: KairoSceneOptions) {
     super({ key: 'kairo' });
     this.opts = opts;
@@ -467,6 +502,7 @@ export class KairoScene extends Phaser.Scene {
     for (const id of this.opts.provider.ids) {
       if (this.textures.exists(id)) continue;
       this.textures.addCanvas(id, this.opts.provider.get(id));
+      this.textureDensities.set(id, this.opts.provider.density?.(id) ?? 1);
     }
 
     this.bakeSurroundTexture();
@@ -490,13 +526,14 @@ export class KairoScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.cameras.main.setZoom(1); // ★ 영구히 1
+    this.cameras.main.setZoom(this.renderDensity);
     /*
      * 하늘색. **평소엔 한 픽셀도 안 보인다** — 지도 바깥까지 지형이 덮기 때문이다 (K38).
      * 굽기가 실패했을 때만 절차적 배경과 함께 드러나는 안전망 색이다.
      */
     this.cameras.main.setBackgroundColor('#7ab8d4');
-    this.cameras.main.setRoundPixels(true);
+    // HD에서 0.5 논리 스크롤은 정확히 1 물리 픽셀이다. 강제 반올림하면 한 픽셀 흔들린다.
+    this.cameras.main.setRoundPixels(this.renderDensity === 1);
 
     this.buildBackdrop();
     this.buildSurround();
@@ -528,7 +565,243 @@ export class KairoScene extends Phaser.Scene {
   /** 지면 타일 텍스처 ID — 변형은 좌표로 결정한다 (같은 칸은 항상 같은 그림) */
   private groundTextureId(i: number, j: number): string {
     const kind = this.opts.terrain.kindAt(i, j) ?? 'lawn';
-    return variantId(`ground/${kind}`, { alt: (i * 7 + j * 13) % 3 });
+    const alt = this.opts.provider.groundAlt?.(i, j, kind) ?? (i * 7 + j * 13) % 3;
+    const base = variantId(`ground/${kind}`, { alt });
+    const shoreRadius = this.opts.provider.terrainShoreRadius?.();
+    // 반경 파일럿에서는 거절된 8종 반복 오버레이를 완전히 우회한다.
+    if (shoreRadius !== undefined) return this.roundedShoreTexture(i, j, kind, base, shoreRadius);
+    if (kind === 'water_edge') {
+      const t = this.opts.terrain;
+      const landBeforeI = t.inside(i - 1, j) && t.kindAt(i - 1, j) !== 'water_edge';
+      const landBeforeJ = t.inside(i, j - 1) && t.kindAt(i, j - 1) !== 'water_edge';
+      const macroOverlay = this.macroShoreOverlayId(i, j, landBeforeI, landBeforeJ);
+      if (macroOverlay && this.opts.provider.has(macroOverlay)) {
+        const water = variantId('ground/water_edge', { alt });
+        return this.shoreCompositeTexture(water, macroOverlay);
+      }
+      const edge = landBeforeI && landBeforeJ ? 'ij' : landBeforeI ? 'i' : landBeforeJ ? 'j' : null;
+      if (edge) {
+        const shoreline = variantId(`ground/water_edge_shore_${edge}`, { alt });
+        if (this.opts.provider.has(shoreline)) return shoreline;
+      }
+
+      // 검토 팩이 세 조각짜리 파도마루를 제공하면 +I 방향으로 이어 붙인다.
+      // 각 조각은 공유 변의 같은 점에서 만나므로 타일 경계에서 끊기지 않는다.
+      const isWater = (ti: number, tj: number): boolean =>
+        t.inside(ti, tj) && t.kindAt(ti, tj) === 'water_edge';
+      const waveStart = (ti: number, tj: number): boolean => {
+        let value = Math.imul(ti, 0x27d4eb2d) ^ Math.imul(tj, 0x165667b1) ^ 0x5bd1e995;
+        value = Math.imul(value ^ (value >>> 15), 0x85ebca6b);
+        return (value >>> 0) % 37 === 0;
+      };
+      let part: 'start' | 'mid' | 'end' | null = null;
+      if (waveStart(i, j) && isWater(i + 1, j) && isWater(i + 2, j)) part = 'start';
+      else if (waveStart(i - 1, j) && isWater(i - 1, j) && isWater(i + 1, j)) part = 'mid';
+      else if (waveStart(i - 2, j) && isWater(i - 2, j) && isWater(i - 1, j)) part = 'end';
+      if (part) {
+        const macro = variantId(`ground/water_edge_wave_${part}`, { alt });
+        if (this.opts.provider.has(macro)) return macro;
+      }
+    }
+    return base;
+  }
+
+  private shoreGeometry(radius: number): RoundedShoreGeometry {
+    if (this.roundedShoreGeometry?.radius === radius) return this.roundedShoreGeometry;
+    const terrain = this.opts.terrain;
+    this.roundedShoreGeometry = buildRoundedShoreGeometry(
+      terrain.width,
+      terrain.height,
+      (i, j) => terrain.kindAt(i, j) === 'water_edge',
+      radius,
+    );
+    return this.roundedShoreGeometry;
+  }
+
+  private shorePixelSource(id: string): CliffPixelSource | null {
+    if (this.shorePixelSources.has(id)) return this.shorePixelSources.get(id) ?? null;
+    if (!this.textures.exists(id)) {
+      this.shorePixelSources.set(id, null);
+      return null;
+    }
+    const canvas = this.textures.get(id).getSourceImage() as HTMLCanvasElement;
+    const ctx = canvas.getContext?.('2d');
+    if (!ctx) {
+      this.shorePixelSources.set(id, null);
+      return null;
+    }
+    const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const source = { width: canvas.width, height: canvas.height, data: pixels.data };
+    this.shorePixelSources.set(id, source);
+    return source;
+  }
+
+  /**
+   * 연속 해안선을 전역 격자 좌표에서 샘플링해 현재 타일에만 구운다.
+   *
+   * 시뮬레이션의 물/육지 셀은 바뀌지 않는다. 곡선이 셀 너머로 넘는 부분만
+   * source-v1 모래·포말·엕은 물로 바꾸므로써 볼록한 돌출부와 오목한 만을 모두 반영한다.
+   */
+  private roundedShoreTexture(
+    i: number,
+    j: number,
+    kind: string,
+    baseId: string,
+    radius: number,
+  ): string {
+    const geometry = this.shoreGeometry(radius);
+    const localSegments = segmentsNearCell(geometry.segments, i, j, 0.85);
+    if (localSegments.length === 0) return baseId;
+
+    const density = this.densityOf(baseId);
+    const waterAlt = this.opts.provider.groundAlt?.(i, j, 'water_edge') ?? (i * 7 + j * 13) % 4;
+    const waterId = variantId('ground/water_edge', { alt: waterAlt });
+    const sandId = variantId('ground/path_sand', { alt: 0 });
+    if (density !== this.densityOf(waterId) || density !== this.densityOf(sandId)) return baseId;
+
+    const radiusKey = Math.round(radius * 100);
+    const id = `__shoreRadius/r${radiusKey}/v${this.roundedShoreRevision}/${i},${j}/${baseId}`;
+    if (this.textures.exists(id)) return id;
+    const base = this.shorePixelSource(baseId);
+    const water = this.shorePixelSource(waterId);
+    const sand = this.shorePixelSource(sandId);
+    if (!base || !water || !sand || base.width !== water.width || base.height !== water.height) return baseId;
+
+    const texture = this.textures.createCanvas(id, base.width, base.height);
+    if (!texture) return baseId;
+    const output = new Uint8ClampedArray(base.data);
+    const center = tileCenter(i, j);
+    const logicalWater = kind === 'water_edge';
+    const copy = (target: number, source: Uint8ClampedArray, sourceIndex: number): void => {
+      output[target] = source[sourceIndex] as number;
+      output[target + 1] = source[sourceIndex + 1] as number;
+      output[target + 2] = source[sourceIndex + 2] as number;
+      output[target + 3] = source[sourceIndex + 3] as number;
+    };
+
+    for (let py = 0; py < base.height; py++) {
+      for (let px = 0; px < base.width; px++) {
+        const offset = (py * base.width + px) * 4;
+        if ((base.data[offset + 3] as number) === 0) continue;
+        const screenX = center.x + (px + 0.5) / density - TILE_W / 2;
+        const screenY = center.y + (py + 0.5) / density - TILE_H / 2;
+        const axisI = screenX / (2 * STEP_X) + screenY / (2 * STEP_Y);
+        const axisJ = screenY / (2 * STEP_Y) - screenX / (2 * STEP_X);
+        const signed = signedDistanceToShore({ x: axisI, y: axisJ }, localSegments);
+
+        if (signed >= 0.28) {
+          if (logicalWater) copy(offset, sand.data, offset);
+          continue;
+        }
+        if (signed >= -0.08) {
+          copy(offset, sand.data, offset);
+          continue;
+        }
+        if (signed >= -0.22) {
+          // source-v1 포말의 따뜻한 백색. 2×2 텍셀 덩어리로 만들어 엣지를 흐리지 않는다.
+          const sparkle = ((Math.floor(px / 2) + Math.floor(py / 2)) & 3) === 0 ? 255 : 247;
+          output[offset] = sparkle;
+          output[offset + 1] = Math.min(255, sparkle + 1);
+          output[offset + 2] = Math.max(232, sparkle - 5);
+          output[offset + 3] = 255;
+          continue;
+        }
+        copy(offset, water.data, offset);
+        if (signed >= -0.68) {
+          // 엕은 물: source-v1 물 픽셀을 버리지 않고 청록 밝기만 조금 올린다.
+          output[offset] = Math.round((output[offset] as number) * 0.72 + 88 * 0.28);
+          output[offset + 1] = Math.round((output[offset + 1] as number) * 0.72 + 202 * 0.28);
+          output[offset + 2] = Math.round((output[offset + 2] as number) * 0.72 + 218 * 0.28);
+        }
+      }
+    }
+
+    const ctx = texture.getContext();
+    ctx.imageSmoothingEnabled = false;
+    ctx.putImageData(new ImageData(output, base.width, base.height), 0, 0);
+    texture.refresh();
+    this.textureDensities.set(id, density);
+    return id;
+  }
+
+  /** 캡처 하네스가 지형을 일괄 편집한 뒤 전역 해안선을 한 번 다시 굽는다. */
+  refreshRoundedShoreForTest(): void {
+    this.roundedShoreRevision++;
+    this.roundedShoreGeometry = null;
+    this.buildGround();
+    this.applyLand();
+    this.applySwimZones();
+  }
+
+  roundedShoreProbeForTest(): {
+    radius: number | null;
+    contours: number;
+    segments: number;
+    curvedSegments: number;
+    simulationGridUnchanged: true;
+  } {
+    const radius = this.opts.provider.terrainShoreRadius?.();
+    if (radius === undefined) {
+      return { radius: null, contours: 0, segments: 0, curvedSegments: 0, simulationGridUnchanged: true };
+    }
+    const geometry = this.shoreGeometry(radius);
+    return {
+      radius,
+      contours: geometry.contours,
+      segments: geometry.segments.length,
+      curvedSegments: geometry.curvedSegments,
+      simulationGridUnchanged: true,
+    };
+  }
+
+  /**
+   * B형 곡선 해안 — start/mid/end는 한 칸짜리지만 세 칸 주기로 이어져 큰 곡선을 만든다.
+   * 물 phase와 독립된 투명 오버레이이므로 P0–P3별로 해안 PNG를 복제하지 않는다.
+   */
+  private macroShoreOverlayId(
+    i: number,
+    j: number,
+    landBeforeI: boolean,
+    landBeforeJ: boolean,
+  ): string | null {
+    const prefix = 'overlay/shore_curve_';
+    if (!this.opts.provider.has(`${prefix}i_start`)) return null;
+    if (landBeforeI && landBeforeJ) return `${prefix}outer_corner`;
+    const phases = ['start', 'mid', 'end'] as const;
+    if (landBeforeI) return `${prefix}i_${phases[((j % 3) + 3) % 3]}`;
+    if (landBeforeJ) return `${prefix}j_${phases[((i % 3) + 3) % 3]}`;
+    // 대각선 육지만 보고 inner corner를 고르면 한 칸 앞 물에 분리된 모래 섬이 생긴다.
+    // inner 조각은 보존하되, 양쪽 물/육지 마스크를 함께 판정하는 후속 호수 트랙 전에는 쓰지 않는다.
+    return null;
+  }
+
+  /** 기존 물 phase 위에 phase 독립 해안 오버레이를 한 번만 합성해 캐시한다. */
+  private shoreCompositeTexture(water: string, overlay: string): string {
+    const id = `__shore/${water}/${overlay}`;
+    if (this.textures.exists(id)) return id;
+    const density = this.densityOf(water);
+    if (density !== this.densityOf(overlay)) return water;
+    const waterSource = this.textures.get(water).getSourceImage() as HTMLCanvasElement;
+    const overlaySource = this.textures.get(overlay).getSourceImage() as HTMLCanvasElement;
+    if (waterSource.width !== overlaySource.width || waterSource.height !== overlaySource.height) return water;
+    const texture = this.textures.createCanvas(id, waterSource.width, waterSource.height);
+    if (!texture) return water;
+    const ctx = texture.getContext();
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(waterSource, 0, 0);
+    ctx.drawImage(overlaySource, 0, 0);
+    texture.refresh();
+    this.textureDensities.set(id, density);
+    return id;
+  }
+
+  /** 기본은 8px, 검토 공급자는 자체 높이(현재 terrain-v2 D5는 16px)를 선언한다. */
+  private levelHeight(): number {
+    return this.opts.provider.terrainLevelHeight?.() ?? LEVEL_H;
+  }
+
+  private levelLift(level: number): number {
+    return -level * this.levelHeight();
   }
 
   /**
@@ -539,7 +812,7 @@ export class KairoScene extends Phaser.Scene {
    */
   private liftAt(i: number, j: number): number {
     if (this.fault.noLift) return 0; // 검사용 결함 (K38 점검 후속)
-    return lift(this.opts.terrain.levelAt(i, j));
+    return this.levelLift(this.opts.terrain.levelAt(i, j));
   }
 
   /**
@@ -549,8 +822,8 @@ export class KairoScene extends Phaser.Scene {
    * 칸으로 스냅하지만(`spanDepthKey`) 화면 y 는 이어져야 한다 — 그 둘은 다른 문제다.
    */
   private liftSpan(fi: number, fj: number, i: number, j: number, t: number): number {
-    const a = lift(this.opts.terrain.levelAt(Math.round(fi), Math.round(fj)));
-    const b = lift(this.opts.terrain.levelAt(i, j));
+    const a = this.levelLift(this.opts.terrain.levelAt(Math.round(fi), Math.round(fj)));
+    const b = this.levelLift(this.opts.terrain.levelAt(i, j));
     return a + (b - a) * Math.min(1, Math.max(0, t));
   }
 
@@ -600,21 +873,24 @@ export class KairoScene extends Phaser.Scene {
    */
   private columnTexture(top: string, z: number, di: number, dj: number): string {
     if (di === 0 && dj === 0 && z === 0) return top;
-    const id = `__col/${top}/${z}/${di}/${dj}${this.fault.skirtGap ? '/gap' : ''}`;
+    const density = this.densityOf(top);
+    const levelHeight = this.levelHeight();
+    const id = `__col/${top}/${z}/${di}/${dj}/d${density}/h${levelHeight}${this.fault.skirtGap ? '/gap' : ''}`;
     if (this.textures.exists(id)) return id;
 
-    const hi = di * LEVEL_H;
-    const hj = dj * LEVEL_H;
-    const H = TILE_H + Math.max(hi, hj);
-    const tex = this.textures.createCanvas(id, TILE_W, H);
+    const hi = di * levelHeight * density;
+    const hj = dj * levelHeight * density;
+    const H = TILE_H * density + Math.max(hi, hj);
+    const tex = this.textures.createCanvas(id, TILE_W * density, H);
     if (!tex) return top;
+    this.textureDensities.set(id, density);
     const ctx = tex.getContext();
     ctx.imageSmoothingEnabled = false;
     const src = this.textures.get(top).getSourceImage() as HTMLCanvasElement;
-    ctx.drawImage(src, 0, 0);
+    ctx.drawImage(src, 0, 0, TILE_W * density, TILE_H * density);
 
     // 윗면 가운데 픽셀 = 이 지면의 대표색
-    const px = ctx.getImageData(TILE_W / 2, TILE_H / 2, 1, 1).data;
+    const px = ctx.getImageData((TILE_W * density) / 2, (TILE_H * density) / 2, 1, 1).data;
     const base: [number, number, number] = [px[0] as number, px[1] as number, px[2] as number];
 
     /*
@@ -633,6 +909,21 @@ export class KairoScene extends Phaser.Scene {
       const m = (k: 0 | 1 | 2): number => Math.round((c[k] * (1 - mixT) + rock[k] * mixT) * f);
       return `rgb(${m(0)} ${m(1)} ${m(2)})`;
     };
+    const cliffJ = this.cliffFaceSource('terrain/cliff_j');
+    const cliffI = this.cliffFaceSource('terrain/cliff_i');
+    const sourceCliffs = Boolean(cliffJ || cliffI);
+    const detailAlt = Number(/:a(\d+)$/.exec(top)?.[1] ?? 0);
+    const sampleCliff = (source: CliffPixelSource, x: number, y: number): string => {
+      const halfWidth = (TILE_W * density) / 2;
+      const mappedX = Math.floor((x / Math.max(1, halfWidth - 1)) * (source.width - 1));
+      const sx = (mappedX + detailAlt * 11 * density) % source.width;
+      const sy = Math.min(
+        source.height - 1,
+        Math.floor((y * source.height) / Math.max(1, 3 * levelHeight * density)),
+      );
+      const k = (sy * source.width + sx) * 4;
+      return `rgb(${source.data[k]} ${source.data[k + 1]} ${source.data[k + 2]})`;
+    };
 
     /*
      * 마름모 꼭지점 (텍스처 좌표): 위 (16,0) · 오른 (32,8) · 아래 (16,16) · 왼 (0,8).
@@ -642,7 +933,7 @@ export class KairoScene extends Phaser.Scene {
      * 두 면이 같은 밝기면 단이 안 읽힌다.
      */
     if (hj > 0) {
-      for (let x = 0; x < TILE_W / 2; x++) {
+      for (let x = 0; x < (TILE_W * density) / 2; x++) {
         /*
          * ⚠ `+1` 을 더하지 말 것. 윗면의 왼아래 변은 (0,8)→(16,16) 이라 열 x 의 마지막
          * 불투명 픽셀이 `8 + x/2` 이고, 치마는 **바로 그 줄부터** 시작해야 붙는다.
@@ -650,29 +941,102 @@ export class KairoScene extends Phaser.Scene {
          * 단 지형 가장자리마다 파란 점선으로 보였다 (K37 부터 있었고, K38 에서 배경이
          * 밝아지며 드러났다).
          */
-        const yTop = TILE_H / 2 + Math.floor(x / 2) + (this.fault.skirtGap ? 1 : 0);
+        const yTop = (TILE_H * density) / 2 + Math.floor(x / 2) + (this.fault.skirtGap ? density : 0);
         /*
          * 세로로 **아래가 더 어둡다** — 바닥에 가까울수록 그림자가 진다.
          * 단색 면은 종이처럼 평평해 보인다.
          */
         for (let y = 0; y < hj; y++) {
-          ctx.fillStyle = mix(base, 0.92 - (y / Math.max(1, hj)) * 0.14);
+          const topLight = this.opts.provider.terrainRockTone ? 1.03 : 0.92;
+          const falloff = this.opts.provider.terrainRockTone ? 0.12 : 0.14;
+          ctx.fillStyle = cliffJ
+            ? sampleCliff(cliffJ, x, y)
+            : mix(base, topLight - (y / Math.max(1, hj)) * falloff);
           ctx.fillRect(x, yTop + y, 1, 1);
         }
       }
     }
     if (hi > 0) {
-      for (let x = TILE_W / 2; x < TILE_W; x++) {
+      for (let x = (TILE_W * density) / 2; x < TILE_W * density; x++) {
         /*
          * +J 면과 **대칭**이다 (열 x 의 거울은 TILE_W−1−x). 대칭식을 안 쓰고 따로
          * 세웠더니 한 줄씩 어긋나 구멍이 154곳 생겼다 — 눈으로는 못 봤고 검사가 잡았다.
          */
-        const yTop = TILE_H / 2 + Math.floor((TILE_W - 1 - x) / 2);
+        const yTop = (TILE_H * density) / 2 + Math.floor((TILE_W * density - 1 - x) / 2);
         for (let y = 0; y < hi; y++) {
-          ctx.fillStyle = mix(base, 0.74 - (y / Math.max(1, hi)) * 0.12);
+          const topLight = this.opts.provider.terrainRockTone ? 0.88 : 0.74;
+          ctx.fillStyle = cliffI
+            ? sampleCliff(cliffI, x - (TILE_W * density) / 2, y)
+            : mix(base, topLight - (y / Math.max(1, hi)) * 0.12);
           ctx.fillRect(x, yTop + y, 1, 1);
         }
       }
+    }
+
+    // 컨셉 충실 후보는 절벽을 점처럼 반복되는 돌이 아니라 맞물린 흙·암석 모자이크로 읽힌다.
+    // 기본 공급자는 terrainRockTone을 내지 않으므로 라이브 기본 경로는 그대로다.
+    if (this.opts.provider.terrainRockTone && !sourceCliffs) {
+      const detailAlt = Number(/:a(\d+)$/.exec(top)?.[1] ?? 0) % 6;
+      type Rock = readonly [x: number, y: number, w: number, h: number, tone: number];
+      const layouts: readonly (readonly Rock[])[] = [
+        [[0, 1, 9, 5, 0], [7, 2, 9, 4, 1]],
+        [[1, 2, 8, 4, 3], [7, 1, 9, 5, 0]],
+        [[0, 2, 7, 4, 1], [5, 1, 8, 5, 3], [12, 3, 4, 3, 2]],
+        [[1, 1, 9, 5, 0], [8, 2, 8, 4, 3]],
+        [[0, 2, 8, 4, 3], [6, 1, 9, 5, 1]],
+        [[1, 2, 8, 4, 0], [7, 1, 9, 5, 3]],
+      ];
+      const bodies = ['rgb(211 148 61)', 'rgb(183 108 41)', 'rgb(139 132 116)', 'rgb(225 174 77)'];
+      const highlights = ['rgb(236 184 89)', 'rgb(208 139 59)', 'rgb(171 163 146)', 'rgb(244 198 104)'];
+      const shades = ['rgb(150 91 39)', 'rgb(127 73 32)', 'rgb(103 95 82)', 'rgb(167 108 43)'];
+
+      const drawFaceMosaic = (right: boolean, faceHeight: number): void => {
+        if (faceHeight < 5 * density) return;
+        const rows = Math.max(1, Math.floor(faceHeight / (7 * density)));
+        for (let row = 0; row < rows; row++) {
+          const layout = layouts[(detailAlt + row * 2 + (right ? 3 : 0)) % layouts.length] as readonly Rock[];
+          for (const [lx, ly, lw, lh, baseTone] of layout) {
+            const tone = baseTone;
+            const x = ((right ? 16 : 0) + lx) * density;
+            const w = lw * density;
+            const h = lh * density;
+            const edgeY =
+              (TILE_H * density) / 2 +
+              Math.floor((right ? TILE_W * density - 1 - x : x) / 2);
+            const y = edgeY + (ly + row * 7) * density;
+            if (y + h > edgeY + faceHeight) continue;
+
+            // 면 바탕을 틈으로 남기고 큰 계단형 덩어리만 얹어 체크무늬 외곽선을 피한다.
+            ctx.fillStyle = bodies[tone] as string;
+            ctx.fillRect(x + density, y, Math.max(density, w - 2 * density), density);
+            ctx.fillRect(x, y + density, w, Math.max(density, h - 2 * density));
+            ctx.fillRect(x + density, y + h - density, Math.max(density, w - 2 * density), density);
+            ctx.fillStyle = highlights[tone] as string;
+            ctx.fillRect(x + density, y, Math.max(density, Math.floor(w * 0.62)), density);
+            ctx.fillStyle = shades[tone] as string;
+            ctx.fillRect(x + w - density, y + 2 * density, density, Math.max(density, h - 3 * density));
+            ctx.fillRect(
+              x + Math.floor(w * 0.52),
+              y + h - density,
+              Math.max(density, Math.floor(w * 0.42)),
+              density,
+            );
+          }
+
+          if ((detailAlt + row + (right ? 1 : 0)) % 2 === 0) {
+            // 일부 행에만 짧은 균열을 넣어 수평 점선 리듬을 끊는다.
+            const crackX = ((right ? 17 : 1) + ((detailAlt * 5 + row * 3) % 10)) * density;
+            const crackEdgeY =
+              (TILE_H * density) / 2 +
+              Math.floor((right ? TILE_W * density - 1 - crackX : crackX) / 2);
+            ctx.fillStyle = 'rgb(104 62 31)';
+            ctx.fillRect(crackX, crackEdgeY + (5 + row * 7) * density, 2 * density, density);
+          }
+        }
+      };
+
+      drawFaceMosaic(false, hj);
+      drawFaceMosaic(true, hi);
     }
 
     /*
@@ -681,9 +1045,10 @@ export class KairoScene extends Phaser.Scene {
      * 아주 약하게만 (0.06/단) — 세게 하면 정상이 회색 사막이 된다.
      */
     if (z > 0) {
-      const d = ctx.getImageData(0, 0, TILE_W, TILE_H);
-      const t2 = Math.min(0.3, z * 0.1);
-      const dim = 1 - z * 0.04;
+      const d = ctx.getImageData(0, 0, TILE_W * density, TILE_H * density);
+      const vivid = Boolean(this.opts.provider.terrainRockTone);
+      const t2 = vivid ? Math.min(0.15, z * 0.05) : Math.min(0.3, z * 0.1);
+      const dim = vivid ? 1 - z * 0.02 : 1 - z * 0.04;
       for (let k = 0; k < d.data.length; k += 4) {
         if ((d.data[k + 3] as number) < 8) continue;
         for (let c = 0 as 0 | 1 | 2; c < 3; c++) {
@@ -698,6 +1063,24 @@ export class KairoScene extends Phaser.Scene {
     return id;
   }
 
+  private cliffFaceSource(id: string): CliffPixelSource | null {
+    const cached = this.cliffFaceCache.get(id);
+    if (cached !== undefined) return cached;
+    if (!this.opts.provider.has(id)) {
+      this.cliffFaceCache.set(id, null);
+      return null;
+    }
+    const canvas = this.opts.provider.get(id);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      this.cliffFaceCache.set(id, null);
+      return null;
+    }
+    const source = { width: canvas.width, height: canvas.height, data: ctx.getImageData(0, 0, canvas.width, canvas.height).data };
+    this.cliffFaceCache.set(id, source);
+    return source;
+  }
+
   /**
    * 암석의 대표색 — `terrain/rock` 스프라이트에서 한 번 뽑아 캐시한다.
    *
@@ -705,6 +1088,11 @@ export class KairoScene extends Phaser.Scene {
    */
   private rockTone(): [number, number, number] {
     if (this.rockToneCache) return this.rockToneCache;
+    const supplied = this.opts.provider.terrainRockTone?.();
+    if (supplied) {
+      this.rockToneCache = supplied;
+      return supplied;
+    }
     let tone: [number, number, number] = [122, 118, 110];
     if (this.textures.exists('terrain/rock')) {
       const src = this.textures.get('terrain/rock').getSourceImage() as HTMLCanvasElement;
@@ -740,7 +1128,7 @@ export class KairoScene extends Phaser.Scene {
   private tileAnchorY(i: number, j: number): number {
     const c = tileCenter(i, j);
     const { di, dj } = this.dropsAt(i, j);
-    return c.y + TILE_H / 2 + Math.max(di, dj) * LEVEL_H + this.liftAt(i, j);
+    return c.y + TILE_H / 2 + Math.max(di, dj) * this.levelHeight() + this.liftAt(i, j);
   }
 
   /**
@@ -794,6 +1182,7 @@ export class KairoScene extends Phaser.Scene {
     const ox = GRID_H * STEP_X + PAD; // 캔버스 원점이 월드 x = −GRID_H·STEP_X − PAD 에 놓인다
     const tex = this.textures.createCanvas(SURROUND_TEX, W, H);
     if (!tex) return;
+    this.textureDensities.set(SURROUND_TEX, 1);
     const ctx = tex.getContext();
     ctx.imageSmoothingEnabled = false;
 
@@ -851,7 +1240,7 @@ export class KairoScene extends Phaser.Scene {
         if (i >= 0 && j >= 0 && i < GRID_W && j < GRID_H) continue;
         const x = STEP_X * (i - j) + ox - TILE_W / 2;
         const y = STEP_Y * (i + j) + PAD;
-        if (x + TILE_W < 0 || y + TILE_H + 4 * LEVEL_H < 0 || x > W || y > H) continue;
+        if (x + TILE_W < 0 || y + TILE_H + 4 * this.levelHeight() < 0 || x > W || y > H) continue;
         cells.push({ i, j });
       }
     }
@@ -871,10 +1260,17 @@ export class KairoScene extends Phaser.Scene {
       const kind = t.kindAt(clamp(c.i, GRID_W - 1), clamp(c.j, GRID_H - 1)) ?? 'lawn';
       const top = variantId(`ground/${kind}`, { alt: (((c.i * 7 + c.j * 13) % 3) + 3) % 3 });
       if (!this.opts.provider.has(top)) continue;
+      const src = this.opts.provider.get(top);
       ctx.drawImage(
-        this.opts.provider.get(top),
+        src,
+        0,
+        0,
+        src.width,
+        src.height,
         Math.round(STEP_X * (c.i - c.j) + ox - TILE_W / 2),
         Math.round(STEP_Y * (c.i + c.j) + PAD),
+        TILE_W,
+        TILE_H,
       );
     }
 
@@ -897,16 +1293,21 @@ export class KairoScene extends Phaser.Scene {
       if (!this.opts.provider.has(top)) continue;
       const id = this.columnTexture(top, z, di, dj);
       const src = this.textures.exists(id)
-        ? (this.textures.get(id).getSourceImage() as CanvasImageSource)
+        ? (this.textures.get(id).getSourceImage() as HTMLCanvasElement)
         : this.opts.provider.get(top);
-      const th = this.textures.exists(id) ? this.textures.get(id).getSourceImage().height : TILE_H;
+      const density = this.densityOf(id);
+      const sourceWidth = src.width;
+      const sourceHeight = src.height;
+      const logicalWidth = sourceWidth / density;
+      const th = sourceHeight / density;
       const x = STEP_X * (i - j) + ox - TILE_W / 2;
       /*
        * 기둥은 **아래로** 자라므로 앵커를 낙차만큼 내린다 — 그러면 윗면이 정확히
        * `z·LEVEL_H` 만큼 올라간 자리에 온다. 화면 타일(`tileAnchorY`)과 같은 식이다.
        */
-      const y = STEP_Y * (i + j) + PAD + TILE_H - th + Math.max(di, dj) * LEVEL_H - z * LEVEL_H;
-      ctx.drawImage(src, Math.round(x), Math.round(y));
+      const levelHeight = this.levelHeight();
+      const y = STEP_Y * (i + j) + PAD + TILE_H - th + Math.max(di, dj) * levelHeight - z * levelHeight;
+      ctx.drawImage(src, 0, 0, sourceWidth, sourceHeight, Math.round(x), Math.round(y), logicalWidth, th);
     }
 
     /*
@@ -921,10 +1322,23 @@ export class KairoScene extends Phaser.Scene {
     for (const item of surroundDecorationPlan(GRID_W, GRID_H)) {
       if (isWet(item.i, item.j) || !this.opts.provider.has(item.id)) continue;
       const src = this.opts.provider.get(item.id);
+      const density = this.opts.provider.density?.(item.id) ?? 1;
+      const logicalW = src.width / density;
+      const logicalH = src.height / density;
       const z = deco(item.i, item.j);
       const x = STEP_X * (item.i - item.j) + ox;
-      const y = STEP_Y * (item.i + item.j) + PAD + TILE_H - z * LEVEL_H;
-      ctx.drawImage(src, Math.round(x - src.width / 2), Math.round(y - src.height));
+      const y = STEP_Y * (item.i + item.j) + PAD + TILE_H - z * this.levelHeight();
+      ctx.drawImage(
+        src,
+        0,
+        0,
+        src.width,
+        src.height,
+        Math.round(x - logicalW / 2),
+        Math.round(y - logicalH),
+        logicalW,
+        logicalH,
+      );
       this.surroundDecorDrawn.push(`${item.kind}@${item.i},${item.j}`);
     }
     tex.refresh();
@@ -1043,8 +1457,10 @@ export class KairoScene extends Phaser.Scene {
     for (let j = 0; j < GRID_H; j++) {
       for (let i = 0; i < GRID_W; i++) {
         const c = tileCenter(i, j);
-        const img = this.add.image(c.x, this.tileAnchorY(i, j), this.columnTextureId(i, j));
+        const textureId = this.columnTextureId(i, j);
+        const img = this.add.image(c.x, this.tileAnchorY(i, j), textureId);
         img.setOrigin(0.5, 1); // bottom-center — 계약 앵커
+        this.fitTextureDensity(img, textureId);
         img.setDepth(depthKey(i, j) + Z_GROUND);
         this.tileImages.push(img);
       }
@@ -1091,12 +1507,14 @@ export class KairoScene extends Phaser.Scene {
        * 2방향에서는 같은 키를 다시 주는 것이라 아무 일도 안 일어난다.
        */
       existing.setTexture(texId);
+      this.fitTextureDensity(existing, texId);
       existing.setFlipX(flip);
       this.syncAmbient(handle, item.defId, existing);
       return;
     }
     const img = this.add.image(a.x, ay, item.defId ? texId : '');
     img.setOrigin(0.5, 1);
+    if (item.defId) this.fitTextureDensity(img, texId);
     img.setFlipX(flip);
     img.setDepth(depthKey(item.i + w - 1, item.j + d - 1) + Z_FACILITY);
     this.facilityImages.set(handle, img);
@@ -1501,6 +1919,7 @@ export class KairoScene extends Phaser.Scene {
       this.ghost.setTexture(texId);
       this.ghost.setPosition(a.x, ay);
     }
+    this.fitTextureDensity(this.ghost, texId);
     this.ghost.setFlipX(facilityFacings(defId) === 2 && facing === 1);
     this.ghost.setAlpha(0.62);
     // 못 놓는 자리는 붉게 — 확정 바의 경고색과 짝이다
@@ -2272,7 +2691,10 @@ export class KairoScene extends Phaser.Scene {
      * 버스도 단을 탄다 (K37). 지금 도시 띠는 전부 단 0 이라 값이 0 이지만, **같은 헬퍼를
      * 태워 둔다** — 나중에 경사 도로가 오면 여기만 바뀌면 된다.
      */
-    const c = { x: c0.x, y: c0.y + lift(this.opts.terrain.levelAt(Math.round(pos.x), Math.round(pos.y))) };
+    const c = {
+      x: c0.x,
+      y: c0.y + this.levelLift(this.opts.terrain.levelAt(Math.round(pos.x), Math.round(pos.y))),
+    };
     /*
      * 버스는 시설이 아니지만 **시설 띠**를 쓴다 — 버스가 다니는 도시 띠(공원 밖)는
      * 못 짓는 지형이라 같은 칸에 시설이 놓일 수 없고, 그래서 동률이 날 수가 없다.
@@ -2404,17 +2826,24 @@ export class KairoScene extends Phaser.Scene {
      * 단으로 정해진다 — 이 칸이 바뀌면 이웃의 치마도 틀려진다. 벽이 경계를 공유해
      * 네 이웃을 갱신하는 것(`refreshWall`)과 같은 종류의 사고다.
      */
-    for (const [di, dj] of [
+    const neighbors: Array<readonly [number, number]> = [
       [0, 0],
       [-1, 0],
       [0, -1],
-    ] as const) {
+    ];
+    // 해안/매크로 물결 후보는 앞쪽 물 칸이 현재 칸의 종류를 읽는다.
+    if (this.opts.provider.has('ground/water_edge_shore_i:a0')) neighbors.push([1, 0], [0, 1]);
+    if (this.opts.provider.has('overlay/shore_curve_i_start')) neighbors.push([1, 1]);
+    if (this.opts.provider.has('ground/water_edge_wave_start:a0')) neighbors.push([-2, 0], [2, 0]);
+    for (const [di, dj] of neighbors) {
       const ti = i + di;
       const tj = j + dj;
       if (!inGrid(ti, tj)) continue;
       const img = this.tileImages[tj * GRID_W + ti];
       if (!img) continue;
-      img.setTexture(this.columnTextureId(ti, tj));
+      const textureId = this.columnTextureId(ti, tj);
+      img.setTexture(textureId);
+      this.fitTextureDensity(img, textureId);
       img.setY(this.tileAnchorY(ti, tj));
     }
   }
@@ -2432,16 +2861,23 @@ export class KairoScene extends Phaser.Scene {
     const v = viewport(cssW, cssH, s, window.devicePixelRatio || 1);
     this.violations = violatesDotGrid(v, s);
     this.cam.setScreenSize(cssW, cssH);
-    if (this.scale.width !== v.bufferW || this.scale.height !== v.bufferH) {
-      this.scale.resize(v.bufferW, v.bufferH);
+    const internalW = v.bufferW * this.renderDensity;
+    const internalH = v.bufferH * this.renderDensity;
+    if (this.scale.width !== internalW || this.scale.height !== internalH) {
+      this.scale.resize(internalW, internalH);
     }
-    if (this.scale.zoom !== s) this.scale.setZoom(s);
+    const cssZoom = s / this.renderDensity;
+    if (this.scale.zoom !== cssZoom) this.scale.setZoom(cssZoom);
+    if (this.cameras.main.zoom !== this.renderDensity) this.cameras.main.setZoom(this.renderDensity);
     this.syncCamera();
   }
 
   private syncCamera(): void {
     const view = this.cam.view();
-    this.cameras.main.setScroll(view.scrollX, view.scrollY);
+    const buffer = this.cam.bufferSize();
+    const shiftX = ((this.renderDensity - 1) * buffer.w) / 2;
+    const shiftY = ((this.renderDensity - 1) * buffer.h) / 2;
+    this.cameras.main.setScroll(view.scrollX - shiftX, view.scrollY - shiftY);
   }
 
   /**
@@ -2622,13 +3058,13 @@ export class KairoScene extends Phaser.Scene {
   private handleAtPointer(px: number, py: number): number {
     if (!this.courseInteractive) return -1;
     const grab = 22 / this.cam.upscale;
-    const view = this.cam.view();
+    const world = this.cameras.main.getWorldPoint(px, py);
     let best = -1;
     let bestD = grab;
     for (let k = 0; k < this.courseHandles.length; k++) {
       const h = this.courseHandles[k] as { x: number; y: number };
       const c = tileCenter(Math.round(h.x), Math.round(h.y));
-      const d = Math.hypot(c.x - view.scrollX - px, c.y - view.scrollY - py);
+      const d = Math.hypot(c.x - world.x, c.y - world.y);
       if (d < bestD) {
         bestD = d;
         best = k;
@@ -2640,13 +3076,13 @@ export class KairoScene extends Phaser.Scene {
   /** 화면 좌표에서 가장 가까운 선착장 후보 — 없으면 −1 */
   private dockAtPointer(px: number, py: number): number {
     const grab = 22 / this.cam.upscale;
-    const view = this.cam.view();
+    const world = this.cameras.main.getWorldPoint(px, py);
     let best = -1;
     let bestD = grab;
     for (let k = 0; k < this.dockTips.length; k++) {
       const t = this.dockTips[k] as { x: number; y: number };
       const c = tileCenter(Math.round(t.x), Math.round(t.y));
-      const d = Math.hypot(c.x - view.scrollX - px, c.y - view.scrollY - py);
+      const d = Math.hypot(c.x - world.x, c.y - world.y);
       if (d < bestD) {
         bestD = d;
         best = k;
@@ -2689,8 +3125,8 @@ export class KairoScene extends Phaser.Scene {
 
     this.input.on('pointermove', (p: Phaser.Input.Pointer) => {
       if (this.draggingHandle >= 0) {
-        const view = this.cam.view();
-        const t = screenToTile(p.x + view.scrollX, p.y + view.scrollY);
+        const world = this.cameras.main.getWorldPoint(p.x, p.y);
+        const t = screenToTile(world.x, world.y);
         const h = this.courseHandles[this.draggingHandle];
         if (h && (h.x !== t.i || h.y !== t.j) && inGrid(t.i, t.j)) {
           h.x = t.i;
@@ -2702,8 +3138,8 @@ export class KairoScene extends Phaser.Scene {
       }
       if (!this.dragging) return;
       // p.x 는 **씬 좌표(텍셀)** 다. 팬은 화면 픽셀 기준이라 S 를 곱해 되돌린다
-      const dx = (p.x - this.lastPointer.x) * this.cam.upscale;
-      const dy = (p.y - this.lastPointer.y) * this.cam.upscale;
+      const dx = ((p.x - this.lastPointer.x) * this.cam.upscale) / this.renderDensity;
+      const dy = ((p.y - this.lastPointer.y) * this.cam.upscale) / this.renderDensity;
       this.lastPointer = { x: p.x, y: p.y };
       this.dragMoved += Math.abs(dx) + Math.abs(dy);
       this.cam.pan(dx, dy);
@@ -3332,6 +3768,7 @@ export class KairoScene extends Phaser.Scene {
     this.opts.onFrame?.({
       fps: Math.round(this.game.loop.actualFps),
       upscale: this.cam.upscale,
+      renderDensity: this.renderDensity,
       bufferW: buf.w,
       bufferH: buf.h,
       scrollX: view.scrollX,
@@ -3437,10 +3874,10 @@ export class KairoScene extends Phaser.Scene {
     const c = tileCenter(i, j);
     const view = this.cam.view();
     return {
-      x: Math.round(c.x - TILE_W / 2 - view.scrollX),
-      y: Math.round(c.y - TILE_H / 2 - view.scrollY),
-      w: TILE_W,
-      h: TILE_H,
+      x: Math.round((c.x - TILE_W / 2 - view.scrollX) * this.renderDensity),
+      y: Math.round((c.y - TILE_H / 2 - view.scrollY) * this.renderDensity),
+      w: TILE_W * this.renderDensity,
+      h: TILE_H * this.renderDensity,
     };
   }
 
@@ -3456,10 +3893,10 @@ export class KairoScene extends Phaser.Scene {
     const b = v.body;
     const view = this.cam.view();
     return {
-      x: Math.round(b.x - b.displayWidth / 2 - view.scrollX),
-      y: Math.round(b.y - b.displayHeight - view.scrollY),
-      w: Math.round(b.displayWidth),
-      h: Math.round(b.displayHeight),
+      x: Math.round((b.x - b.displayWidth / 2 - view.scrollX) * this.renderDensity),
+      y: Math.round((b.y - b.displayHeight - view.scrollY) * this.renderDensity),
+      w: Math.round(b.displayWidth * this.renderDensity),
+      h: Math.round(b.displayHeight * this.renderDensity),
     };
   }
 
