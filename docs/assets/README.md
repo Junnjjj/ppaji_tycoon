@@ -66,6 +66,21 @@ docs/assets/
 검사했고, 최종 채택 단계에서 80방향 모두 알파 유지율 1.0·클립 0이 되도록 공통 스케일을
 보정했다. 아이스크림은 1×1, 카페는 2×2로 라이브 적용되었고 20종 모두 d0–d3를 쓴다.
 
+외형·크기·입구면을 다시 볼 때는 실제 Phaser 맵의 `?assetReview=1`을 사용한다.
+승인된 20종을 각각 네 방향으로 놓고, 개별 검토 화면에서는 **위 d0 · 오른쪽 d1 ·
+아래 d2 · 왼쪽 d3** 순서로 보여 준다. 리뷰 판은 기존 세이브를 읽거나 쓰지 않는다.
+재촬영과 80텍스처 검증은 다음을 쓴다.
+
+```bash
+PPAJI_URL=http://127.0.0.1:<current-workspace-port> \
+  npx tsx tools/capture-four-direction-asset-review.ts
+```
+
+개별 20종과 전체 전시 캡처는
+`artifacts/asset-concept-sheets/indoor-facilities-v1/four-direction-live-review-v1/`에 생성된다.
+사용자가 특정 시설·방향을 거절하면 스킬의 시각 거절 게이트에 따라 해당
+`visual-review.json`을 `FAIL_USER_VISUAL_REJECTION`으로 갱신한 뒤 교체본을 다시 보여 준다.
+
 HD 픽셀 렌더 실제 맵 파일럿은 `artifacts/hd-pixel-mode-pilot-v1/runtime-map/`에 있다.
 기본 A, 2× 렌더/현재 풋프린트 B, 2× 렌더/승인 풋프린트 C를 같은 좌표에서 비교했으며,
 C의 4방향 선택과 실제 캔버스 클릭까지 통과했다. 이후 C가 기본 런타임으로 채택되었다.
