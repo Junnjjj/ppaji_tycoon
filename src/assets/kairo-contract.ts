@@ -58,6 +58,8 @@ export interface KairoFacilityRender {
   canvas: readonly [number, number];
   anchorTexel: readonly [number, number];
   bodyH: number;
+  /** 물리 ground scale을 줄이지 않고 좌우 clip만 막는 대칭 투명 guard. */
+  horizontalGuardTexel?: number;
   openTop: boolean;
   ride?: KairoRide;
 }
@@ -484,13 +486,24 @@ export function validateContracts(): string[] {
     const [w, d] = s.size;
 
     const c = footprintCanvas(w, d, r.bodyH);
-    if (r.canvas[0] !== c.x || r.canvas[1] !== c.y) {
-      bad.push(`${s.id}: 캔버스 ${r.canvas} ≠ 파생 (${c.x},${c.y})`);
+    const guard = r.horizontalGuardTexel ?? 0;
+    if (!Number.isInteger(guard) || guard < 0) {
+      bad.push(`${s.id}: horizontalGuardTexel ${String(guard)} — 0 이상의 정수여야 한다`);
+    }
+    const guardedCanvas = { x: c.x + Math.max(0, guard) * 2, y: c.y };
+    if (r.canvas[0] !== guardedCanvas.x || r.canvas[1] !== guardedCanvas.y) {
+      bad.push(
+        `${s.id}: 캔버스 ${r.canvas} ≠ 파생 (${guardedCanvas.x},${guardedCanvas.y})` +
+          (guard > 0 ? ` (좌우 guard ${guard})` : ''),
+      );
     }
 
     const a = canvasAnchor(w, d, r.bodyH);
-    if (r.anchorTexel[0] !== a.x || r.anchorTexel[1] !== a.y) {
-      bad.push(`${s.id}: 앵커 ${r.anchorTexel} ≠ bottom-center (${a.x},${a.y})`);
+    const guardedAnchor = { x: a.x + Math.max(0, guard), y: a.y };
+    if (r.anchorTexel[0] !== guardedAnchor.x || r.anchorTexel[1] !== guardedAnchor.y) {
+      bad.push(
+        `${s.id}: 앵커 ${r.anchorTexel} ≠ bottom-center (${guardedAnchor.x},${guardedAnchor.y})`,
+      );
     }
 
     /*

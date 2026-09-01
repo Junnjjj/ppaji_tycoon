@@ -300,15 +300,16 @@
     {
       "sprite": "facility/nursing",
       "canvas": [
-        48,
-        44
+        72,
+        60
       ],
       "anchorTexel": [
-        24,
-        44
+        36,
+        60
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 28,
+      "openTop": true,
+      "horizontalGuardTexel": 4
     },
     {
       "sprite": "facility/pool_kids",

@@ -19,6 +19,14 @@ describe('계약 정합 — 이게 깨지면 에셋을 뽑아도 못 쓴다', ()
     expect(validateContracts()).toEqual([]);
   });
 
+  it('수유실 2×2는 물리 스케일을 줄이지 않는 좌우 4텍셀 투명 guard를 쓴다', () => {
+    const nursing = renderSpec('facility/nursing')!;
+    expect(nursing.canvas).toEqual([72, 60]);
+    expect(nursing.anchorTexel).toEqual([36, 60]);
+    expect(nursing.bodyH).toBe(28);
+    expect(nursing.horizontalGuardTexel).toBe(4);
+  });
+
   it('시설 75종이 양쪽에 다 있다', () => {
     expect(allSimFacilities()).toHaveLength(75);
     expect(KAIRO.facilities).toHaveLength(75);

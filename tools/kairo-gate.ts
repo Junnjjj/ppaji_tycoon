@@ -196,6 +196,20 @@ function logicalRaster(raster: Raster, density: 1 | 2): Raster {
   return { w, h, data };
 }
 
+/** 접지 기하는 투명 guard가 아니라 footprint 파생 base canvas에서 잰다. */
+function removeHorizontalGuard(raster: Raster, guard: number): Raster {
+  if (guard === 0) return raster;
+  const w = raster.w - guard * 2;
+  if (w <= 0) throw new Error(`horizontal guard ${guard}가 raster 폭 ${raster.w} 이상이다`);
+  const data = new Uint8Array(w * raster.h * 4);
+  for (let y = 0; y < raster.h; y++) {
+    const sourceStart = (y * raster.w + guard) * 4;
+    const targetStart = y * w * 4;
+    data.set(raster.data.subarray(sourceStart, sourceStart + w * 4), targetStart);
+  }
+  return { w, h: raster.h, data };
+}
+
 function run(): {
   findings: Finding[];
   counts: Record<string, number>;
@@ -350,14 +364,18 @@ function geomRow(
   w: number,
   d: number,
   bodyH: number,
+  horizontalGuardTexel = 0,
 ): GeomRow | null {
   const path = join(GEN_DIR, file);
   if (!existsSync(path)) return null;
   const physical = decodePng(path);
-  const logicalCanvas: readonly [number, number] = [(w + d) * 16, (w + d) * 8 + bodyH];
+  const logicalCanvas: readonly [number, number] = [
+    (w + d) * 16 + horizontalGuardTexel * 2,
+    (w + d) * 8 + bodyH,
+  ];
   const density = frameDensity({ w: physical.w, h: physical.h }, logicalCanvas);
   if (density === null) return null; // gate 3 already reports the exact canvas violation
-  const png = logicalRaster(physical, density);
+  const png = removeHorizontalGuard(logicalRaster(physical, density), horizontalGuardTexel);
   // 캔버스 크기가 계약과 다르면 게이트 3 이 이미 잡았다 — 여기서 또 세지 않는다
   if (png.h < bodyH + 8) return null;
   const m = measureSprite(png, w, d, bodyH);
@@ -419,7 +437,15 @@ function geometryGate(): GeomRow[] {
         ? PlacementGrid.sizeOf(def, facing as FacilityFacing)
         : [s.size[0], s.size[1]];
       const id = facings === 4 ? `${s.id}:${FACILITY_DIR_NAMES[facing]}` : s.id;
-      const row = geomRow(id, '시설', assetIdToFile(facilitySpriteId(s.id, facing)), w, d, r.bodyH);
+      const row = geomRow(
+        id,
+        '시설',
+        assetIdToFile(facilitySpriteId(s.id, facing)),
+        w,
+        d,
+        r.bodyH,
+        r.horizontalGuardTexel ?? 0,
+      );
       if (row) rows.push(row);
     }
   }

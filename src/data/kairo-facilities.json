@@ -281,7 +281,7 @@
       "layer": "indoor",
       "size": [
         2,
-        1
+        2
       ],
       "sprite": "facility/nursing",
       "capacity": 1,
