@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "state": "USER_APPROVED_AND_LIVE_ADOPTED",
+  "asset": "cafe",
+  "source_package": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/assets/generated/kairo-v4-simple-pilot/cafe/corrected-source-remesh-v1/roof-rigid-single-window-panel-v5",
+  "source_review_manifest": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/public/assets/kairo-cafe-v5-map-review-v1/manifest.json",
+  "source_review_manifest_sha256": "3cf378757f9c67b7835b5bfb35dbfec36582f76ebf78b9b8fe56b87080904a7c",
+  "user_approval": {
+    "text": "카페는 적용안되었네",
+    "decision": "APPROVE_CAFE_V5_3X2_FOUR_DIRECTION_LIVE_ADOPTION",
+    "interpreted_scope": "adopt the separately held latest cafe-v5 package into live main"
+  },
+  "rejected_package_excluded": "kairo-cafe-3x2-strict-color-v2",
+  "previous_footprint": [
+    2,
+    2
+  ],
+  "approved_footprint": [
+    3,
+    2
+  ],
+  "render_contract": {
+    "logical_canvas": [
+      106,
+      78
+    ],
+    "anchor_texel": [
+      53,
+      78
+    ],
+    "body_h": 38,
+    "horizontal_guard_texel": 13
+  },
+  "runtime_registration": {
+    "reason": "locked packer centered contact; non-square 3x2 canvas requires facing-aware bottom-vertex registration",
+    "x_logical_texels": {
+      "d0": 8,
+      "d1": -8,
+      "d2": 8,
+      "d3": -8
+    },
+    "geometry_changed": false,
+    "palette_changed": false
+  },
+  "slot_contract": {
+    "preserved": true,
+    "tiles": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "all_inside_approved_footprint": true
+  },
+  "evidence": {
+    "strictAudit": {
+      "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/assets/generated/kairo-v4-simple-pilot/cafe/corrected-source-remesh-v1/roof-rigid-single-window-panel-v5/color-transfer/strict-v1/qa-v2/qa.json",
+      "sha256": "4b29f05ff8b338256c394bdc3fe1a4f1bef4b957ee9fc5b8d58ba97cb95de213"
+    },
+    "runtimeAudit": {
+      "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/assets/generated/kairo-v4-simple-pilot/cafe/corrected-source-remesh-v1/roof-rigid-single-window-panel-v5/color-transfer/strict-v1/qa-v2/runtime-review.json",
+      "sha256": "f1ce1c19da0817d8ecb8af4310413113df4d68cf76728dc508d54e986f78539f"
+    },
+    "physicalEvidence": {
+      "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/assets/generated/kairo-v4-simple-pilot/cafe/corrected-source-remesh-v1/roof-rigid-single-window-panel-v5/evidence/cafe-single-window-panel-v5-4dir.png",
+      "sha256": "91d7dfec67eb4b813877b7fd5903632bbe237de3ea9986f8096366d4eac94885"
+    },
+    "colorEvidence": {
+      "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/assets/generated/kairo-v4-simple-pilot/cafe/corrected-source-remesh-v1/roof-rigid-single-window-panel-v5/color-transfer/strict-v1/qa-v2/evidence/cafe-strict-color-runtime-review.png",
+      "sha256": "4a6c28ed67b9c4d78b734563a24e6ba9b4ccbd1d25b76bc0a194ceb5025bec17"
+    },
+    "independentReview": {
+      "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/assets/generated/kairo-v4-simple-pilot/cafe/corrected-source-remesh-v1/roof-rigid-single-window-panel-v5/color-transfer/strict-v1/independent-strict-review.json",
+      "sha256": "d396ab90ccb91e8b36818264d6017a283e1d3648690930e3bcbb746d3b8c6cd7"
+    },
+    "independentGeometryReview": {
+      "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/assets/generated/kairo-v4-simple-pilot/cafe/corrected-source-remesh-v1/roof-rigid-single-window-panel-v5/independent-geometry-review.json",
+      "sha256": "47337b999951b4e28667399c6793847f4d59ae460928978cb99866b14120c628"
+    },
+    "provenance": {
+      "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/assets/generated/kairo-v4-simple-pilot/cafe/corrected-source-remesh-v1/roof-rigid-single-window-panel-v5/FINAL-PROVENANCE.json",
+      "sha256": "66a1fc3ca6ee94b96fab3d7e73f3681cf3eeb63e96943032059cf3e602876f57"
+    }
+  },
+  "directions": [
+    {
+      "direction": "d0",
+      "density_4_source_sha256": "043147572971c6ea395bfcd68edd39b5890071e884b7ee1ec3a316fcfe84677b",
+      "live_density_2_sha256": "26704e743a0c7551a2450ef40cbb4adf542a0656fcd4c0f9642cf5760490b37d",
+      "logical_canvas": [
+        106,
+        78
+      ],
+      "physical_size": [
+        212,
+        156
+      ],
+      "runtime_registration_x_logical_texels": 8,
+      "retained_foreground_ratio": 1.0,
+      "clipped": false
+    },
+    {
+      "direction": "d1",
+      "density_4_source_sha256": "c25d8b5bf55402f29743c77dd6ef3bdb5c1590094fe3e27559087c494a665b78",
+      "live_density_2_sha256": "f7ba7c1698a9b972a6cf6f81466fc1fdd99081989f0a1964a5402e908f143f08",
+      "logical_canvas": [
+        106,
+        78
+      ],
+      "physical_size": [
+        212,
+        156
+      ],
+      "runtime_registration_x_logical_texels": -8,
+      "retained_foreground_ratio": 1.0,
+      "clipped": false
+    },
+    {
+      "direction": "d2",
+      "density_4_source_sha256": "0b82cea295d55871f7419aa2a3df984752c1042ef31d89daa80f91e186e7caf8",
+      "live_density_2_sha256": "cc8188bbc9d2e0eb9ae5a683fc919c5bb04adf3000bd9c996ac709550e0e8177",
+      "logical_canvas": [
+        106,
+        78
+      ],
+      "physical_size": [
+        212,
+        156
+      ],
+      "runtime_registration_x_logical_texels": 8,
+      "retained_foreground_ratio": 1.0,
+      "clipped": false
+    },
+    {
+      "direction": "d3",
+      "density_4_source_sha256": "97fe29edf2df48ff5bf1ed7629007ca46abd50c74e07a6e1a67c6108936ffa5a",
+      "live_density_2_sha256": "3f1796d4bb1197222fac057a00fc35ff156134d5dc3d4eb785e5645d8c63ffdd",
+      "logical_canvas": [
+        106,
+        78
+      ],
+      "physical_size": [
+        212,
+        156
+      ],
+      "runtime_registration_x_logical_texels": -8,
+      "retained_foreground_ratio": 1.0,
+      "clipped": false
+    }
+  ],
+  "atlas": {
+    "png_sha256": "2b64fa0e707147927f7cbdb705bed48ec269c7a2f750610b2a2024c8180e6080",
+    "index_sha256": "6b81d3bf55e0975f35505b632af068670ca214776f89d9dd245e6c81ee1e691d",
+    "frame_count": 204,
+    "cafe_frames": {
+      "d0": {
+        "x": 1540,
+        "y": 1,
+        "w": 212,
+        "h": 156,
+        "density": 2
+      },
+      "d1": {
+        "x": 1753,
+        "y": 1,
+        "w": 212,
+        "h": 156,
+        "density": 2
+      },
+      "d2": {
+        "x": 1,
+        "y": 202,
+        "w": 212,
+        "h": 156,
+        "density": 2
+      },
+      "d3": {
+        "x": 214,
+        "y": 202,
+        "w": 212,
+        "h": 156,
+        "density": 2
+      }
+    }
+  },
+  "live_geometry_gate": {
+    "command": "npx tsx tools/kairo-gate.ts --geom",
+    "captured_output_sha256": "bb4f634555c55d8c272bebd3800edaf9cedda807d990ba9860f1ccaf4b237fb6",
+    "all_four_directions_pass": true,
+    "rows": {
+      "d0": "·     cafe:d0           3×2    100%   0.600(0.600)      0.0텍셀  0.501/-0.499  0.942(0.839)",
+      "d1": "·     cafe:d1           2×3    100%   0.394(0.400)      0.5텍셀  0.494/-0.501  0.950(0.839)",
+      "d2": "·     cafe:d2           3×2    100%   0.600(0.600)      0.0텍셀  0.501/-0.499  0.942(0.839)",
+      "d3": "·     cafe:d3           2×3    100%   0.400(0.400)      0.0텍셀  0.499/-0.501  0.942(0.839)"
+    }
+  }
+}

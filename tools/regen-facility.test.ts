@@ -104,9 +104,10 @@ describe('프롬프트 조립', () => {
       d: t.d,
     });
     expect(prompt).toContain(specLine);
-    expect(prompt).toContain('base diamond exactly 64x32 px');
-    expect(prompt).toContain('0.500 (= 2/4)');
-    expect(prompt).not.toContain('footprint 2x3 tiles');
+    expect(prompt).toContain('base diamond exactly 80x40 px');
+    expect(prompt).toContain('0.600 (= 3/5)');
+    expect(prompt).toContain('footprint 3x2 tiles');
+    expect(prompt).not.toContain('footprint 2x2 tiles');
   });
 
   it('시트가 지정한 크로마 키를 그대로 쓴다', () => {

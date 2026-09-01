@@ -459,15 +459,16 @@
     {
       "sprite": "facility/cafe",
       "canvas": [
-        64,
-        52
+        106,
+        78
       ],
       "anchorTexel": [
-        32,
-        52
+        53,
+        78
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 38,
+      "openTop": true,
+      "horizontalGuardTexel": 13
     },
     {
       "sprite": "facility/vending_in",

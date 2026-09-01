@@ -3049,7 +3049,7 @@ async function main(): Promise<void> {
     // 비정사각 포함 4종 — 앵커 계산이 틀리면 여기서 드러난다
     const trials = [
       ['shop', 0, 0],            // 2×2
-      ['cafe', 3, 0],            // 2×3
+      ['cafe', 3, 0],            // 3×2
       ['pyeongsang_row', 0, 4],  // 4×1  ← 비정사각
       ['lookout', 6, 4],         // 2×2
     ];

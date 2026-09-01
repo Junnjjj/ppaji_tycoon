@@ -1563,7 +1563,7 @@ or any decorative background element.
 
 Goal: One labeled 2D pixel-art asset sheet for a Korean riverside water park, drawn in
 the 2:1 dimetric isometric view described above. Sheet theme: service rooms and the park
-gate — three open-topped indoor fittings and one roofed ticket booth.
+gate — two open-topped indoor fittings, one roofed cafe and one roofed ticket booth.
 
 Canvas: 1536 x 1024 landscape. Flat #FF00FF magenta background (no subject on this sheet
 is pink or red, so the magenta key is safe). 2 columns by 2 rows of evenly spaced cells,
@@ -1572,25 +1572,27 @@ each cell about 768 x 512 px. Small dark pixel-font English label above each cel
 Reference: match the pixel density, palette and outline weight of the attached reference
 image(s). The references are the style authority — follow them over any wording here.
 
-OPEN TOP — read this before drawing items 1, 2 and 3.
-Three of these four objects are indoor fittings that the game places inside a room the
-player has already built. They have NO roof slab. Draw them open from above so the
+OPEN TOP — read this before drawing items 2 and 3.
+Two of these four objects are indoor fittings that the game places inside a room the
+player has already built. They have NO roof slab. Draw those two open from above so the
 interior floor and every fitting inside is visible, because the engine draws its own
 visitors standing inside them. Use the reference huts for material and outline weight
 only, not for "put a roof on it".
 
 Items — exactly 4, one per cell, in this order:
 
-1. CAFE — footprint 2x2 tiles (two tiles on each ground axis, a square-ish isometric
-   diamond) — base diamond 64x32 px, body about 20 px tall, whole sprite 64x52 px — an
-   open-top cafe fitting.
-   An L-shaped service counter of warm wood #b5844a with a cream #fdf3e0 front panel
-   runs along the back-left edge; on the counter sit a chunky espresso machine #3a3f4a
-   and a shelf of cups; two small round tables of #c49a6a wood stand on the open floor.
-   The one detail that makes the silhouette unmistakable: a tall dark #3a3f4a chalkboard
-   menu board standing upright at the end of the counter, blank (no lettering), the only
-   thing on this object that rises above counter height. Open top, interior visible from
-   above. No roof, no awning.
+1. CAFE — footprint 3x2 tiles (three tiles toward the lower right and two toward the
+   lower left, a wide shallow rectangle) — base diamond 80x40 px, body about 38 px tall,
+   whole unguarded sprite 80x78 px — a compact roofed timber cafe.
+   Cream plaster wall panels #fdf3e0 sit inside a warm timber frame #b5844a. A dark
+   charcoal gabled tile roof #3a3f4a covers the full building and stays visibly longer
+   along the 3-tile axis. The public long face has one blue #2e5972 door, one connected
+   blue awning and one open service window with a chunky espresso machine, cup shelf and
+   pastry display. Put exactly one plain glass window on the +X short wall; the opposite
+   short wall and rear are closed and plain. No words, letters or national-language
+   signage: function must read from the cup, coffee machine, awning and display alone.
+   Keep the integral timber foundation trim inside the 3x2 footprint; do not add a
+   separate ground plate, shadow or detached decoration.
 
 2. LOCKER ROW — footprint 4x1 tiles (a row of FOUR locker cabinets marching away toward
    the lower right, only one unit deep — a long thin diamond, not a square building) —

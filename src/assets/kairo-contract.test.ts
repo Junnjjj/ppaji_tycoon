@@ -27,6 +27,17 @@ describe('계약 정합 — 이게 깨지면 에셋을 뽑아도 못 쓴다', ()
     expect(nursing.horizontalGuardTexel).toBe(4);
   });
 
+  it('카페 v5는 승인된 3×2 발자국과 물리 스케일 보존 캔버스를 함께 쓴다', () => {
+    const cafeSim = simSpec('cafe')!;
+    const cafeRender = renderSpec('facility/cafe')!;
+    expect(cafeSim.size).toEqual([3, 2]);
+    expect(cafeSim.facings).toBe(4);
+    expect(cafeRender.canvas).toEqual([106, 78]);
+    expect(cafeRender.anchorTexel).toEqual([53, 78]);
+    expect(cafeRender.bodyH).toBe(38);
+    expect(cafeRender.horizontalGuardTexel).toBe(13);
+  });
+
   it('채택된 지붕형 2×2 시설은 물리 스케일을 보존한 확장 캔버스를 쓴다', () => {
     const expected = {
       shop: { canvas: [74, 72], bodyH: 40, guard: 5 },

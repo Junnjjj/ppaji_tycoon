@@ -1048,7 +1048,7 @@
       "name": "카페",
       "layer": "indoor",
       "size": [
-        2,
+        3,
         2
       ],
       "sprite": "facility/cafe",
