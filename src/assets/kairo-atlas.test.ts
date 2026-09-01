@@ -157,10 +157,11 @@ describe('KairoAtlasProvider — 계약이 정본, 아틀라스는 픽셀만', (
 
   it('2× 프레임은 논리 계약을 유지하고 소스 밀도만 2로 낸다', () => {
     const idx = full();
-    idx[facilityId] = { x: 0, y: 0, w: 128, h: 104, density: 2 };
+    const logical = kairoSpriteIndex().get(facilityId)!.size;
+    idx[facilityId] = { x: 0, y: 0, w: logical[0] * 2, h: logical[1] * 2, density: 2 };
     const p = KairoAtlasProvider.fromLoaded(NO_IMAGE, idx);
     expect(p.has(facilityId)).toBe(true);
-    expect(p.spec(facilityId)!.size).toEqual([64, 52]);
+    expect(p.spec(facilityId)!.size).toEqual(logical);
     expect(p.density(facilityId)).toBe(2);
   });
 

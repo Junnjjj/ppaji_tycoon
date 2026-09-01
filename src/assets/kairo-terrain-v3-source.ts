@@ -12,11 +12,14 @@ interface TerrainEntry {
 
 interface TerrainManifest {
   schemaVersion: 1;
-  status: 'TERRAIN_V3_SOURCE_REVIEW_ONLY';
+  status: 'TERRAIN_V3_SOURCE_LIVE_NO_RADIUS';
+  productionApproved: true;
   assets: Record<string, TerrainEntry>;
 }
 
-/** 승인된 source-v1 계열의 실제 픽셀을 쓰는 검토 공급자. 라이브 팩과 기본 URL은 그대로다. */
+const REJECTED_MACRO_SHORE_PREFIX = 'overlay/shore_curve_';
+
+/** 승인된 source-v1 계열의 실제 픽셀을 쓰는 라이브 공급자. */
 class KairoTerrainV3SourceProvider implements AssetProvider {
   readonly name: string;
   readonly ids: readonly string[];
@@ -38,11 +41,18 @@ class KairoTerrainV3SourceProvider implements AssetProvider {
     const response = await fetch(MANIFEST_URL);
     if (!response.ok) throw new Error(`terrain-v3 source 매니페스트를 못 읽음 (${response.status})`);
     const manifest = (await response.json()) as TerrainManifest;
-    if (manifest.schemaVersion !== 1 || manifest.status !== 'TERRAIN_V3_SOURCE_REVIEW_ONLY') {
+    if (
+      manifest.schemaVersion !== 1 ||
+      manifest.status !== 'TERRAIN_V3_SOURCE_LIVE_NO_RADIUS' ||
+      manifest.productionApproved !== true
+    ) {
       throw new Error('terrain-v3 source 매니페스트 계약이 다름');
     }
 
-    const entries = new Map(Object.entries(manifest.assets));
+    // 실제 맵에서 반복 무늬로 보여 사용자 거절된 8종은 파일이 남아 있어도 공급하지 않는다.
+    const entries = new Map(
+      Object.entries(manifest.assets).filter(([id]) => !id.startsWith(REJECTED_MACRO_SHORE_PREFIX)),
+    );
     const canvases = new Map<string, HTMLCanvasElement>();
     await Promise.all(
       [...entries].map(async ([id, entry]) => {

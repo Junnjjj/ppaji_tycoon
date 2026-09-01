@@ -127,11 +127,12 @@ density 4 물리 캔버스는 256×128을 기준으로 한다.
 
 - source-v1 재질 방향: `USER_SELECTED`
 - terrain-v3 density-4 반복 지면: `PASS_TECHNICAL`
+- source-v1 no-radius 기본 공급자: `USER_ADOPTED_LIVE` (2026-09-01)
 - B형 곡선 해안 방향: `USER_APPROVED_VISUAL_TARGET`
 - 8종 곡선 오버레이 v1: `FAIL_USER_VISUAL_REJECTION`
 - 반경 기반 교체안 R=0.5/0.75/1.0: `PASS_TECHNICAL_USER_REVIEW_PENDING`
 - 시간 기반 물 P0–P3 재생: `PENDING`
-- 기본/라이브 채택: `NOT_AUTHORIZED`
+- 곡선 해안 기본/라이브 채택: `NOT_AUTHORIZED`
 
 다음 정지점은 축소 비교판에서 R=0.5/0.75/1.0 중 한 반경을 사용자가 선택하거나 모두
 거절하는 `ROUNDED_SHORE_RADIUS_USER_REVIEW`다.

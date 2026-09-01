@@ -27,6 +27,24 @@ describe('계약 정합 — 이게 깨지면 에셋을 뽑아도 못 쓴다', ()
     expect(nursing.horizontalGuardTexel).toBe(4);
   });
 
+  it('채택된 지붕형 2×2 시설은 물리 스케일을 보존한 확장 캔버스를 쓴다', () => {
+    const expected = {
+      shop: { canvas: [74, 72], bodyH: 40, guard: 5 },
+      snackbar: { canvas: [72, 74], bodyH: 42, guard: 4 },
+      karaoke: { canvas: [70, 75], bodyH: 43, guard: 3 },
+      info: { canvas: [64, 71], bodyH: 39, guard: 0 },
+      infirmary: { canvas: [68, 78], bodyH: 46, guard: 2 },
+      office: { canvas: [68, 73], bodyH: 41, guard: 2 },
+    } as const;
+    for (const [id, want] of Object.entries(expected)) {
+      const render = renderSpec(`facility/${id}`)!;
+      expect(render.canvas, id).toEqual(want.canvas);
+      expect(render.anchorTexel, id).toEqual([want.canvas[0] / 2, want.canvas[1]]);
+      expect(render.bodyH, id).toBe(want.bodyH);
+      expect(render.horizontalGuardTexel ?? 0, id).toBe(want.guard);
+    }
+  });
+
   it('시설 75종이 양쪽에 다 있다', () => {
     expect(allSimFacilities()).toHaveLength(75);
     expect(KAIRO.facilities).toHaveLength(75);

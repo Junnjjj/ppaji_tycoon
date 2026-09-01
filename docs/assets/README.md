@@ -90,6 +90,16 @@ C의 4방향 선택과 실제 캔버스 클릭까지 통과했다. 이후 C가 �
 [런타임 크기·채택 결정](adoption/runtime-fit-decisions.md)의 “HD 픽셀 모드 실제 맵
 파일럿” 절과 `live-adoption-v1/LIVE-ADOPTION.json`을 따른다.
 
+2026-09-01에는 최신 지붕형 엄격 검수 패키지 중 **기존 2×2 풋프린트를 유지하고**
+접지·4방향·독립 시각 검수를 통과한 매점, 분식, 노래방, 안내소, 의무실, 사무실 6종을
+라이브 density-2 아틀라스에 추가 채택했다. 수유실은 더 최신 v9 2×2 채택본을 유지한다.
+카페는 3×2 전환 결정이 남아 있고, 화장실 d2는 라이브 접지 게이트, 창고는 strict-color
+게이트에서 보류했으므로 기존 라이브 그림을 유지한다. 정확한 해시와 제외 이유는
+[`roofed-pass-facilities-live-v1.json`](adoption/roofed-pass-facilities-live-v1.json)에 있다.
+이때 논리 1×를 단순 확대하지 않고, 검증된 density-4 프레임에서 density 2를 직접
+추출한다. 수유실 v9도 같은 정보 밀도 규칙으로 다시 포장했으며 기록은
+[`nursing-v9-density2-refinement.json`](adoption/nursing-v9-density2-refinement.json)에 있다.
+
 ## 현재 terrain-v3 지형·물 상태
 
 source-v1의 색·질감과 density-4 실제 맵 방향은 사용자가 선택했다. 반복 지면은 틈 0,
@@ -99,7 +109,12 @@ source-v1의 색·질감과 density-4 실제 맵 방향은 사용자가 선택�
 phase 독립 8종 매크로 해안 오버레이 v1은 제작·연결 QA까지 했지만 실제 맵에서 반복되는
 둥근 물결무늬로 보여 사용자가 거절했다. source-v1 재질 방향과 B 목표는 유지하며, v1은
 `FAIL_USER_VISUAL_REJECTION`으로 보존한다. 다음은 타일 조각보다 먼저 긴 연결 스트립 또는
-큰 마스크의 시각 원본을 검토하는 교체 트랙이다. 기본 공급자와 라이브 팩은 미변경이다.
+큰 마스크의 시각 원본을 검토하는 교체 트랙이다.
+
+2026-09-01부터 source-v1의 잔디·모래·돌·데크·물·절벽은 **기본 공급자**다. 기본 URL은
+`terrain=v3` query 없이 density 4 원본을 읽는다. 사용자가 선택하지 않은 radius 합성은
+없고, 거절된 `overlay/shore_curve_*` 8종은 매니페스트에 실패 증거로 남더라도 공급자가
+로드하지 않는다. 즉 현재 라이브는 `source-v1 + no-radius + no rejected macro overlay`다.
 정본 상태와 다음 게이트는
 [지형·물·곡선 해안 파이프라인](pipelines/terrain-ground-water.md)을 따른다.
 

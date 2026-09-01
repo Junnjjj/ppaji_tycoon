@@ -1,8 +1,11 @@
 {
   "schemaVersion": 1,
-  "status": "TERRAIN_V3_SOURCE_REVIEW_ONLY",
-  "productionApproved": false,
+  "status": "TERRAIN_V3_SOURCE_LIVE_NO_RADIUS",
+  "productionApproved": true,
   "liveAtlasModified": false,
+  "liveProviderDefault": true,
+  "shoreRadius": null,
+  "rejectedMacroShoreAssetsExcludedByProvider": true,
   "visualAuthority": {
     "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/artifacts/asset-concept-sheets/terrain-v3-high-quality-source/terrain-master-source-v1.png",
     "sha256": "3e3f5b6d5d7df6ad159926aea379a5edf6ceef6915d06d4fcf00f505ea50a3d8"

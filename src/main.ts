@@ -25,7 +25,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const hdPixelPilot = launchQuery.get('hd') === '1';
   const hdApprovedFit = hdPixelPilot && launchQuery.get('hdFit') === '1';
   const terrainV2Pilot = hdPixelPilot && launchQuery.get('terrain') === 'v2';
-  const terrainV3SourcePilot = hdPixelPilot && launchQuery.get('terrain') === 'v3';
+  const terrainV3SourceRequested = launchQuery.get('terrain') === 'v3';
   /** 20종×4방향 런타임 검토. 세이브와 시간 흐름에서 격리한다. */
   const assetReview = launchQuery.get('assetReview') === '1';
   const shoreRadiusRaw = launchQuery.get('shoreRadius');
@@ -114,18 +114,26 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       setFacilityReviewOverrides(approved);
       setKairoFacilityReviewOverrides(approved);
     }
-    kairoProvider = await createKairoHdPilotProvider(baseKairoProvider, {
+    kairoProvider = await createKairoHdPilotProvider(kairoProvider, {
       approvedFit: hdApprovedFit,
     });
-    if (terrainV3SourcePilot) {
-      const { createKairoTerrainV3SourceProvider } = await import('./assets/kairo-terrain-v3-source.js');
-      kairoProvider = await createKairoTerrainV3SourceProvider(kairoProvider, {
-        ...(reviewedShoreRadius !== undefined ? { shoreRadius: reviewedShoreRadius } : {}),
-      });
-    } else if (terrainV2Pilot) {
+    if (terrainV2Pilot) {
       const { createKairoTerrainV2PilotProvider } = await import('./assets/kairo-terrain-v2-pilot.js');
       kairoProvider = await createKairoTerrainV2PilotProvider(kairoProvider);
     }
+  }
+  /*
+   * source-v1 지형·물은 라이브 기본값이다. 거절된 macro-shore 8종은 공급자에서
+   * 제외하며, 반경 합성도 명시적인 검토 query에서만 켠다. `terrain=v2`는 과거
+   * 비교 화면을 보존하기 위한 유일한 예외다.
+   */
+  if (!terrainV2Pilot) {
+    const { createKairoTerrainV3SourceProvider } = await import('./assets/kairo-terrain-v3-source.js');
+    kairoProvider = await createKairoTerrainV3SourceProvider(kairoProvider, {
+      ...(terrainV3SourceRequested && reviewedShoreRadius !== undefined
+        ? { shoreRadius: reviewedShoreRadius }
+        : {}),
+    });
   }
   const {
     KairoHud,
@@ -3881,9 +3889,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       ),
     });
   }
+  const terrainLog = terrainV2Pilot
+    ? 'terrain-v2 D=2'
+    : terrainV3SourceRequested && reviewedShoreRadius !== undefined
+      ? `terrain-v3-source D=4 radius=${reviewedShoreRadius}`
+      : 'terrain-v3-source D=4 no-radius';
   console.log(
     `[카이로] 에셋 ${h.provider.name} (${h.provider.ids.length}장 플레이스홀더) · ` +
-      `${hdPixelPilot ? `HD 검토${terrainV3SourcePilot ? ' + terrain-v3-source D=4' : terrainV2Pilot ? ' + terrain-v2 D=2' : ' D=2'}` : '기본 D=1'} · ` +
+      `${hdPixelPilot ? 'HD 검토 D=2' : '기본 시설 D=2'} + ${terrainLog} · ` +
         '확대는 캔버스 정수 배율',
   );
 }

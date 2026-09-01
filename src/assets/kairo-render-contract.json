@@ -405,28 +405,30 @@
     {
       "sprite": "facility/shop",
       "canvas": [
-        64,
-        52
+        74,
+        72
       ],
       "anchorTexel": [
-        32,
-        52
+        37,
+        72
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 40,
+      "openTop": true,
+      "horizontalGuardTexel": 5
     },
     {
       "sprite": "facility/snackbar",
       "canvas": [
-        64,
-        52
+        72,
+        74
       ],
       "anchorTexel": [
-        32,
-        52
+        36,
+        74
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 42,
+      "openTop": true,
+      "horizontalGuardTexel": 4
     },
     {
       "sprite": "facility/chicken",
@@ -496,15 +498,16 @@
     {
       "sprite": "facility/karaoke",
       "canvas": [
-        64,
-        52
+        70,
+        75
       ],
       "anchorTexel": [
-        32,
-        52
+        35,
+        75
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 43,
+      "openTop": true,
+      "horizontalGuardTexel": 3
     },
     {
       "sprite": "facility/pingpong",
@@ -536,40 +539,42 @@
       "sprite": "facility/info",
       "canvas": [
         64,
-        52
+        71
       ],
       "anchorTexel": [
         32,
-        52
+        71
       ],
-      "bodyH": 20,
+      "bodyH": 39,
       "openTop": true
     },
     {
       "sprite": "facility/infirmary",
       "canvas": [
-        64,
-        52
+        68,
+        78
       ],
       "anchorTexel": [
-        32,
-        52
+        34,
+        78
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 46,
+      "openTop": true,
+      "horizontalGuardTexel": 2
     },
     {
       "sprite": "facility/office",
       "canvas": [
-        64,
-        52
+        68,
+        73
       ],
       "anchorTexel": [
-        32,
-        52
+        34,
+        73
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 41,
+      "openTop": true,
+      "horizontalGuardTexel": 2
     },
     {
       "sprite": "facility/storage",

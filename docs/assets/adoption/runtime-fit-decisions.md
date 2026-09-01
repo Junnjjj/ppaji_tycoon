@@ -97,3 +97,19 @@ C에서는 실제 런타임이 `facility/icecream:d0..d3`, `facility/cafe:d0..d3
 - `artifacts/asset-concept-sheets/indoor-facilities-v1/live-adoption-v1/runtime-map/live-actual-map-s2.png`
 - `artifacts/asset-concept-sheets/indoor-facilities-v1/live-adoption-v1/runtime-map/live-four-directions-actual-map-s2.png`
 - `artifacts/asset-concept-sheets/indoor-facilities-v1/live-adoption-v1/runtime-map/evidence.json`
+
+## 2026-09-01 지붕형 PASS 시설 추가 채택
+
+동일 2×2 풋프린트를 유지한 엄격 검수 후보 중 매점, 분식, 노래방, 안내소, 의무실,
+사무실 6종을 density 2 라이브 아틀라스에 채택했다. 각 시설은 원래 메시의 접지 크기를
+줄이지 않고 좌우 투명 guard만 추가해 지붕과 간판 클리핑을 막는다. 수유실은 이미 승인된
+v9 2×2 채택본을 그대로 사용한다.
+
+보류는 세 종류를 섞지 않는다.
+
+- 화장실: 새 d2의 왼쪽 접지 기울기 0.576으로 정본 0.500 게이트에서 보류.
+- 카페: 최신 v5가 2×2에서 3×2로 바뀌므로 별도 풋프린트 승인 필요.
+- 창고: `FAIL_CLOSED_STRICT_COLOR_VALIDATION` / `RUNTIME_FIT_HELD`.
+
+채택 프레임·엄격 QA·독립 검수 해시는
+[`roofed-pass-facilities-live-v1.json`](roofed-pass-facilities-live-v1.json)이 정본이다.
