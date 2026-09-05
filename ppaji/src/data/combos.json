@@ -1,0 +1,445 @@
+{
+  "$comment": "인접 콤보 (P16, D24 ③ — 레거시 kairo-combos.json 의 adjacent 73 중 현재 시설 id 로 성립하는 40). pair 두 시설이 radius(체비셰프) 안에 있으면 발동. sat 는 두 시설을 쓸 때 만족 가산, revenue 는 식당 쪽 판매가 %. 소형은 중복마다 온전히(레거시 diminishing small).",
+  "combos": [
+    {
+      "id": "small_shower_locker",
+      "name": "샤워 뒤 락커",
+      "pair": [
+        "shower_row",
+        "locker_row"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_changing_shower",
+      "name": "탈의 후 샤워",
+      "pair": [
+        "changing_row",
+        "shower_row"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_locker_pool",
+      "name": "락커 옆 유아풀",
+      "pair": [
+        "locker_row",
+        "pool_kids"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_sauna_sikhye",
+      "name": "사우나 후 식혜",
+      "pair": [
+        "sauna",
+        "sikhye"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_jjimjil_sikhye",
+      "name": "찜질방 식혜",
+      "pair": [
+        "jjimjilbang",
+        "sikhye"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_sauna_massage",
+      "name": "사우나 안마의자",
+      "pair": [
+        "sauna",
+        "massage_row"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_shop_pyeongsang",
+      "name": "매점 앞 평상",
+      "pair": [
+        "shop",
+        "pyeongsang_row"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_chicken_pyeongsang",
+      "name": "치킨과 평상",
+      "pair": [
+        "chicken",
+        "pyeongsang_row"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_snack_shade",
+      "name": "분식과 그늘막",
+      "pair": [
+        "snackbar",
+        "shade_net"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_cafe_lookout",
+      "name": "카페 옆 전망대",
+      "pair": [
+        "cafe",
+        "lookout"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_ice_parasol",
+      "name": "아이스크림 파라솔",
+      "pair": [
+        "icecream",
+        "parasol"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_bbq_firepit",
+      "name": "BBQ 화로대",
+      "pair": [
+        "bbq_zone",
+        "firepit_row"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_bbq_tent",
+      "name": "BBQ 몽골텐트",
+      "pair": [
+        "bbq_zone",
+        "mongol_tent"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_camp_firepit",
+      "name": "캠핑 화로대",
+      "pair": [
+        "camp_site",
+        "firepit_row"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_deck_trampoline",
+      "name": "덱 위 트램폴린",
+      "pair": [
+        "float_deck",
+        "trampoline_w"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_deck_cushion",
+      "name": "덱 점프쿠션",
+      "pair": [
+        "float_deck",
+        "jump_cushion"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_deck_slide",
+      "name": "덱과 슬라이드",
+      "pair": [
+        "float_deck",
+        "slide_small"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_dock_kayak",
+      "name": "선착장 카약",
+      "pair": [
+        "dock",
+        "rent_kayak"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_dock_sup",
+      "name": "선착장 SUP",
+      "pair": [
+        "dock",
+        "rent_sup"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_dock_duck",
+      "name": "선착장 오리배",
+      "pair": [
+        "dock",
+        "rent_duck"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_dock_pedal",
+      "name": "선착장 패들보트",
+      "pair": [
+        "dock",
+        "rent_pedal"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_slide_diving",
+      "name": "슬라이드와 다이빙대",
+      "pair": [
+        "slide_large",
+        "diving"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_island_junglegym",
+      "name": "거북섬 정글짐",
+      "pair": [
+        "turtle_island",
+        "junglegym_w"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_airbounce_tube",
+      "name": "에어바운스 튜브슬라이드",
+      "pair": [
+        "airbounce",
+        "slide_tube"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_pool_sunbed",
+      "name": "풀사이드 선베드",
+      "pair": [
+        "pool_warm",
+        "sunbed_row"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_lazy_sunbed",
+      "name": "유수풀 선베드",
+      "pair": [
+        "pool_lazy",
+        "sunbed_row"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_kids_nursing",
+      "name": "유아풀 수유실",
+      "pair": [
+        "pool_kids",
+        "nursing"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_toilet_washbasin",
+      "name": "화장실 세면대",
+      "pair": [
+        "toilet",
+        "washbasin_row"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_info_ticket",
+      "name": "안내소와 매표소",
+      "pair": [
+        "info",
+        "ticket"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_ticket_parking",
+      "name": "매표소 주차장",
+      "pair": [
+        "ticket",
+        "parking"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_lifering_infirmary",
+      "name": "구명함과 의무실",
+      "pair": [
+        "lifering",
+        "infirmary"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_playground_shade",
+      "name": "놀이터 그늘막",
+      "pair": [
+        "playground",
+        "shade_net"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_footvolley_vending",
+      "name": "족구장 자판기",
+      "pair": [
+        "footvolley",
+        "vending_out"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_minigolf_photo",
+      "name": "미니골프 포토존",
+      "pair": [
+        "minigolf",
+        "photozone"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_pavilion_flower",
+      "name": "정자와 화단",
+      "pair": [
+        "pavilion",
+        "flowerbed"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_fountain_photo",
+      "name": "분수 포토존",
+      "pair": [
+        "fountain",
+        "photozone"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_karaoke_arcade",
+      "name": "노래방 오락기",
+      "pair": [
+        "karaoke",
+        "arcade"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_pingpong_vending",
+      "name": "탁구대 자판기",
+      "pair": [
+        "pingpong",
+        "vending_in"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_bungalow_bbq",
+      "name": "방갈로 BBQ",
+      "pair": [
+        "bungalow",
+        "bbq_zone"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    },
+    {
+      "id": "small_pension_firepit",
+      "name": "펜션 화로대",
+      "pair": [
+        "pension",
+        "firepit_row"
+      ],
+      "radius": 2,
+      "sat": 3,
+      "revenue": 4
+    }
+  ]
+}

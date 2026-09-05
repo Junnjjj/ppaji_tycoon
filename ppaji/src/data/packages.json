@@ -1,0 +1,5 @@
+[
+  { "id": "meat", "name": "고기 패키지", "needs": "restaurant", "price": 900, "taste": "food", "sat": 8, "hp": 25, "desc": "자리 잡고 고기부터 — 팀이 매점에서 한 번 공짜로 받아 간다" },
+  { "id": "gear", "name": "기구 패키지", "needs": "course", "price": 0, "feeMul": 0.8, "taste": "thrill", "sat": 4, "hp": 0, "desc": "선착장 기구 1회 — 정가의 80%, 팀 자리에서 미리 낸다" },
+  { "id": "swim", "name": "수영 패키지", "needs": "pool", "price": 300, "taste": "water", "sat": 6, "hp": 5, "desc": "튜브와 구역 이용 — 팀이 물놀이를 먼저 간다" }
+]

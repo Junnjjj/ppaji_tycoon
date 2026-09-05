@@ -1,0 +1,237 @@
+[
+  {
+    "id": "attraction_1",
+    "track": "attraction",
+    "order": 1,
+    "name": "물놀이 시설 투자 1",
+    "cost": 3000,
+    "unlocks": [
+      "parasol"
+    ]
+  },
+  {
+    "id": "attraction_2",
+    "track": "attraction",
+    "order": 2,
+    "name": "물놀이 시설 투자 2",
+    "cost": 5000,
+    "unlocks": [
+      "sauna",
+      "trampoline_w"
+    ]
+  },
+  {
+    "id": "attraction_3",
+    "track": "attraction",
+    "order": 3,
+    "name": "물놀이 시설 투자 3",
+    "cost": 3000,
+    "unlocks": [
+      "jjimjilbang"
+    ]
+  },
+  {
+    "id": "attraction_4",
+    "track": "attraction",
+    "order": 4,
+    "name": "물놀이 시설 투자 4",
+    "cost": 7000,
+    "unlocks": [
+      "merlion",
+      "turtle_island"
+    ]
+  },
+  {
+    "id": "attraction_5",
+    "track": "attraction",
+    "order": 5,
+    "name": "물놀이 시설 투자 5",
+    "cost": 9000,
+    "unlocks": [
+      "footbath"
+    ]
+  },
+  {
+    "id": "attraction_6",
+    "track": "attraction",
+    "order": 6,
+    "name": "물놀이 시설 투자 6",
+    "cost": 10000,
+    "unlocks": [
+      "playground",
+      "waterwalk"
+    ]
+  },
+  {
+    "id": "attraction_7",
+    "track": "attraction",
+    "order": 7,
+    "name": "물놀이 시설 투자 7",
+    "cost": 12000,
+    "unlocks": [
+      "jump_cushion",
+      "airbounce"
+    ]
+  },
+  {
+    "id": "attraction_8",
+    "track": "attraction",
+    "order": 8,
+    "name": "물놀이 시설 투자 8",
+    "cost": 14000,
+    "unlocks": [
+      "performing_kairobot"
+    ]
+  },
+  {
+    "id": "attraction_9",
+    "track": "attraction",
+    "order": 9,
+    "name": "물놀이 시설 투자 9",
+    "cost": 30000,
+    "unlocks": [
+      "blue_slide"
+    ]
+  },
+  {
+    "id": "attraction_10",
+    "track": "attraction",
+    "order": 10,
+    "name": "물놀이 시설 투자 10",
+    "cost": 50000,
+    "unlocks": [
+      "tree_house_slide"
+    ]
+  },
+  {
+    "id": "lounge_1",
+    "track": "lounge",
+    "order": 1,
+    "name": "편의·숙박 투자 1",
+    "cost": 3000,
+    "unlocks": [
+      "nursing"
+    ]
+  },
+  {
+    "id": "lounge_2",
+    "track": "lounge",
+    "order": 2,
+    "name": "편의·숙박 투자 2",
+    "cost": 5000,
+    "unlocks": [
+      "info"
+    ]
+  },
+  {
+    "id": "lounge_3",
+    "track": "lounge",
+    "order": 3,
+    "name": "편의·숙박 투자 3",
+    "cost": 4000,
+    "unlocks": [
+      "storage"
+    ]
+  },
+  {
+    "id": "lounge_4",
+    "track": "lounge",
+    "order": 4,
+    "name": "편의·숙박 투자 4",
+    "cost": 7000,
+    "unlocks": [
+      "parking"
+    ]
+  },
+  {
+    "id": "lounge_5",
+    "track": "lounge",
+    "order": 5,
+    "name": "편의·숙박 투자 5",
+    "cost": 9000,
+    "unlocks": [
+      "caravan",
+      "pool_kids"
+    ]
+  },
+  {
+    "id": "lounge_6",
+    "track": "lounge",
+    "order": 6,
+    "name": "편의·숙박 투자 6",
+    "cost": 10000,
+    "unlocks": [
+      "pool_warm"
+    ]
+  },
+  {
+    "id": "lounge_7",
+    "track": "lounge",
+    "order": 7,
+    "name": "편의·숙박 투자 7",
+    "cost": 12000,
+    "unlocks": [
+      "pool_lazy"
+    ]
+  },
+  {
+    "id": "lounge_8",
+    "track": "lounge",
+    "order": 8,
+    "name": "편의·숙박 투자 8",
+    "cost": 15000,
+    "unlocks": [
+      "glamping"
+    ]
+  },
+  {
+    "id": "lounge_9",
+    "track": "lounge",
+    "order": 9,
+    "name": "편의·숙박 투자 9",
+    "cost": 18000,
+    "unlocks": [
+      "bungalow"
+    ]
+  },
+  {
+    "id": "lounge_10",
+    "track": "lounge",
+    "order": 10,
+    "name": "편의·숙박 투자 10",
+    "cost": 22000,
+    "unlocks": [
+      "pavilion"
+    ]
+  },
+  {
+    "id": "lounge_11",
+    "track": "lounge",
+    "order": 11,
+    "name": "편의·숙박 투자 11",
+    "cost": 28000,
+    "unlocks": [
+      "pension"
+    ]
+  },
+  {
+    "id": "lounge_12",
+    "track": "lounge",
+    "order": 12,
+    "name": "편의·숙박 투자 12",
+    "cost": 36000,
+    "unlocks": [
+      "junglegym_w"
+    ]
+  },
+  {
+    "id": "lounge_13",
+    "track": "lounge",
+    "order": 13,
+    "name": "편의·숙박 투자 13",
+    "cost": 50000,
+    "unlocks": [
+      "pension_duplex"
+    ]
+  }
+]

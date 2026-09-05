@@ -1,0 +1,39 @@
+[
+  {
+    "$comment": "라이벌 빠지 5 (G19/G22) — 연차마다 인기가 자란다. 순위 = 우리보다 인기 높은 라이벌 수 + 1. 손으로 바꾸면 봇 밴드가 흔들린다",
+    "id": "_",
+    "name": "_",
+    "basePop": 0,
+    "growth": 0
+  },
+  {
+    "id": "sunny_beach",
+    "name": "청평 옆집 빠지",
+    "basePop": 180,
+    "growth": 260
+  },
+  {
+    "id": "blue_lagoon",
+    "name": "남이섬 물놀이장",
+    "basePop": 420,
+    "growth": 380
+  },
+  {
+    "id": "aqua_dome",
+    "name": "대성리 빠지촌",
+    "basePop": 900,
+    "growth": 520
+  },
+  {
+    "id": "ocean_park",
+    "name": "양평 워터랜드",
+    "basePop": 1600,
+    "growth": 700
+  },
+  {
+    "id": "kairo_land",
+    "name": "전국구 빠지왕",
+    "basePop": 3200,
+    "growth": 900
+  }
+]

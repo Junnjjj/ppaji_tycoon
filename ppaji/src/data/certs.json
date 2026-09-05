@@ -1,0 +1,863 @@
+[
+  {
+    "id": "grade_f",
+    "name": "읍내 물놀이 심사",
+    "family": "grade",
+    "grade": "F",
+    "pass": 15,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "popMin": 60
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 20
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "blue_orca"
+    },
+    "fee": 500
+  },
+  {
+    "id": "grade_d",
+    "name": "면 대표 물놀이 심사",
+    "family": "grade",
+    "grade": "D",
+    "pass": 20,
+    "requires": "grade_f",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "popMin": 100
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 30
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "duck_float"
+    },
+    "fee": 1000
+  },
+  {
+    "id": "grade_b",
+    "name": "군 대표 물놀이 심사",
+    "family": "grade",
+    "grade": "B",
+    "pass": 25,
+    "requires": "grade_d",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "popMin": 150
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 40
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "sandy"
+    },
+    "fee": 2000
+  },
+  {
+    "id": "grade_a",
+    "name": "도 대표 물놀이 심사",
+    "family": "grade",
+    "grade": "A",
+    "pass": 25,
+    "requires": "grade_b",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "popMin": 200
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 50,
+          "tile": "sandy"
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "kayak_float"
+    },
+    "fee": 4000
+  },
+  {
+    "id": "grade_s",
+    "name": "전국 빠지 대상",
+    "family": "grade",
+    "grade": "S",
+    "pass": 25,
+    "requires": "grade_a",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "likesMin": 2000
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 80
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "golden_kairobot",
+          "adjacentPool": true
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "kairo_float"
+    },
+    "fee": 8000
+  },
+  {
+    "id": "color_f",
+    "name": "강변 경관 심사 (초급)",
+    "family": "color",
+    "grade": "F",
+    "pass": 15,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "color": "yellow"
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 3
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "yellow"
+    },
+    "fee": 500
+  },
+  {
+    "id": "color_d",
+    "name": "강변 경관 인증 (중급)",
+    "family": "color",
+    "grade": "D",
+    "pass": 20,
+    "requires": "color_f",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "color": "blue"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "item",
+          "id": "blueberry",
+          "count": 2
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "simple"
+    },
+    "fee": 1000
+  },
+  {
+    "id": "color_b",
+    "name": "강변 경관 대상",
+    "family": "color",
+    "grade": "B",
+    "pass": 25,
+    "requires": "color_d",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "color": "blue",
+          "intensityMin": 40
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "item",
+          "id": "blueberry",
+          "count": 4
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 10
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "colorful"
+    },
+    "fee": 2500
+  },
+  {
+    "id": "scent_f",
+    "name": "SNS 입소문 심사",
+    "family": "scent",
+    "grade": "F",
+    "pass": 15,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "scent": "berry"
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "popularity",
+          "min": 100
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "pink"
+    },
+    "fee": 500
+  },
+  {
+    "id": "scent_d",
+    "name": "SNS 핫플 인증",
+    "family": "scent",
+    "grade": "D",
+    "pass": 20,
+    "requires": "scent_f",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "scent": "coffee"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "popularity",
+          "min": 250
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "likes",
+          "min": 600
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "granite"
+    },
+    "fee": 1000
+  },
+  {
+    "id": "scent_b",
+    "name": "전국 핫플 대상",
+    "family": "scent",
+    "grade": "B",
+    "pass": 25,
+    "requires": "scent_d",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "scent": "tropical"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "popularity",
+          "min": 400
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "likes",
+          "min": 1500
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "kairo"
+    },
+    "fee": 2500
+  },
+  {
+    "id": "spa_d",
+    "name": "사철 온수 인증",
+    "family": "spa",
+    "grade": "D",
+    "pass": 20,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "tempMin": 32,
+          "scent": "floral"
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "footbath",
+          "adjacentPool": true
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "stone"
+    },
+    "fee": 1000
+  },
+  {
+    "id": "spa_b",
+    "name": "사철 실내 빠지 대상",
+    "family": "spa",
+    "grade": "B",
+    "pass": 25,
+    "requires": "spa_d",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "tempMin": 40,
+          "scent": "floral",
+          "indoor": true
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "footbath",
+          "count": 2,
+          "adjacentPool": true
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "sauna",
+          "adjacentPool": true
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "wooden"
+    },
+    "fee": 2500
+  },
+  {
+    "id": "fruit_e",
+    "name": "가평 먹거리 심사",
+    "family": "fruit",
+    "grade": "E",
+    "pass": 15,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "facilityClass",
+          "class": "restaurant",
+          "count": 2
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "recipeCount",
+          "min": 24
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "donut_float"
+    },
+    "fee": 700
+  },
+  {
+    "id": "fruit_c",
+    "name": "가평 맛집 인증",
+    "family": "fruit",
+    "grade": "C",
+    "pass": 22,
+    "requires": "fruit_e",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "facilityClass",
+          "class": "restaurant",
+          "count": 4
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "recipeCount",
+          "min": 40
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "cookingLevel",
+          "min": 2
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "banana_float"
+    },
+    "fee": 1500
+  },
+  {
+    "id": "fruit_a",
+    "name": "경기 맛집 대상",
+    "family": "fruit",
+    "grade": "A",
+    "pass": 25,
+    "requires": "fruit_c",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "facilityClass",
+          "class": "restaurant",
+          "count": 7
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "recipeCount",
+          "min": 65
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "cookingLevel",
+          "min": 4
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "watermelon_float"
+    },
+    "fee": 4000
+  },
+  {
+    "id": "stream_d",
+    "name": "스릴 코스 인증 (초급)",
+    "family": "stream",
+    "grade": "D",
+    "pass": 20,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "courseThrill",
+          "min": 45
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "dock"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 20
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "blue"
+    },
+    "fee": 1000
+  },
+  {
+    "id": "stream_b",
+    "name": "스릴 코스 인증 (상급)",
+    "family": "stream",
+    "grade": "B",
+    "pass": 25,
+    "requires": "stream_d",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "courseThrill",
+          "min": 80,
+          "count": 2
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "dock",
+          "count": 2
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 40
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "excellent"
+    },
+    "fee": 2500
+  },
+  {
+    "id": "fun_e",
+    "name": "해경 안전 인증 (초급)",
+    "family": "fun",
+    "grade": "E",
+    "pass": 17,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "lifering",
+          "count": 2,
+          "adjacentPool": true
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "lifeguard_chair",
+          "adjacentPool": true
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "popularity",
+          "min": 100
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "river_orca"
+    },
+    "fee": 700
+  },
+  {
+    "id": "fun_c",
+    "name": "해경 안전 인증 (중급)",
+    "family": "fun",
+    "grade": "C",
+    "pass": 22,
+    "requires": "fun_e",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "any",
+          "of": [
+            {
+              "kind": "facility",
+              "id": "lifeguard_chair",
+              "count": 2,
+              "adjacentPool": true
+            },
+            {
+              "kind": "facility",
+              "id": "lifering",
+              "count": 5,
+              "adjacentPool": true
+            }
+          ]
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facilityAdjacent",
+          "ids": [
+            "lifering",
+            "lifeguard_chair"
+          ]
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "popularity",
+          "min": 250
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "cheerful"
+    },
+    "fee": 1500
+  },
+  {
+    "id": "fun_a",
+    "name": "해경 안전 인증 (상급)",
+    "family": "fun",
+    "grade": "A",
+    "pass": 25,
+    "requires": "fun_c",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "lifeguard_chair",
+          "count": 3,
+          "adjacentPool": true
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facilityAdjacent",
+          "ids": [
+            "lifering",
+            "lifeguard_chair"
+          ],
+          "count": 2
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "popularity",
+          "min": 400
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "hammock"
+    },
+    "fee": 4000
+  },
+  {
+    "id": "cutesy_d",
+    "name": "군청 위생 점검",
+    "family": "cutesy",
+    "grade": "D",
+    "pass": 17,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "toilet",
+          "count": 2
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facilityClass",
+          "class": "utility",
+          "count": 4
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "popularity",
+          "min": 100
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "flamingo_float"
+    },
+    "fee": 1000
+  },
+  {
+    "id": "cutesy_c",
+    "name": "군청 위생 인증",
+    "family": "cutesy",
+    "grade": "C",
+    "pass": 22,
+    "requires": "cutesy_d",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "toilet",
+          "count": 4
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facilityClass",
+          "class": "utility",
+          "count": 8
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "shower_row",
+          "count": 2
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "dreaming_orca"
+    },
+    "fee": 1500
+  },
+  {
+    "id": "cutesy_a",
+    "name": "도 위생 최우수 인증",
+    "family": "cutesy",
+    "grade": "A",
+    "pass": 25,
+    "requires": "cutesy_c",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "toilet",
+          "count": 6
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facilityClass",
+          "class": "utility",
+          "count": 14
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "shower_row",
+          "count": 4
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "shell_float"
+    },
+    "fee": 4000
+  }
+]

@@ -1,0 +1,411 @@
+[
+  {
+    "id": "peanut",
+    "name": "땅콩튜브",
+    "cat": "tube",
+    "key": "grip_handle+rope_nylon+tube_small",
+    "taste": 3,
+    "look": 3,
+    "pop": 3,
+    "unlock": "start"
+  },
+  {
+    "id": "jjinppang",
+    "name": "찐빵튜브",
+    "cat": "tube",
+    "key": "rope_nylon+seat_cushion+tube_small",
+    "taste": 2,
+    "look": 4,
+    "pop": 3,
+    "unlock": "start"
+  },
+  {
+    "id": "banana",
+    "name": "바나나보트",
+    "cat": "tube",
+    "key": "grip_handle+rope_nylon+tube_round",
+    "taste": 4,
+    "look": 4,
+    "pop": 4,
+    "unlock": "cook"
+  },
+  {
+    "id": "honeycomb",
+    "name": "벌집튜브",
+    "cat": "tube",
+    "key": "honey_cell+rope_nylon+tube_round",
+    "taste": 4,
+    "look": 5,
+    "pop": 4,
+    "unlock": "cook"
+  },
+  {
+    "id": "flyduck",
+    "name": "날아라오리",
+    "cat": "tube",
+    "key": "@fun+rope_nylon+seat_cushion+tube_round",
+    "taste": 2,
+    "look": 6,
+    "pop": 5,
+    "unlock": "cook"
+  },
+  {
+    "id": "hexa",
+    "name": "육각튜브",
+    "cat": "tube",
+    "key": "@tube+bar_handle+honey_cell",
+    "taste": 5,
+    "look": 5,
+    "pop": 5,
+    "unlock": "cook"
+  },
+  {
+    "id": "turbo_turtle",
+    "name": "번개거북",
+    "cat": "tube",
+    "key": "fin_plate+power_grip+rope_steel+tube_round",
+    "taste": 6,
+    "look": 5,
+    "pop": 5,
+    "unlock": "cook"
+  },
+  {
+    "id": "lotus",
+    "name": "연꽃보트",
+    "cat": "tube",
+    "key": "mirror_ball+rope_steel+seat_bucket+tube_donut",
+    "taste": 5,
+    "look": 7,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "wagon",
+    "name": "마차튜브",
+    "cat": "tube",
+    "key": "bar_handle+rope_steel+seat_bench+seat_sling+tube_round",
+    "taste": 3,
+    "look": 6,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "swing",
+    "name": "좌우그네",
+    "cat": "special",
+    "key": "rope_kevlar+safety_bar+seat_bucket+twin_bar",
+    "taste": 6,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "spinpang",
+    "name": "회전팡",
+    "cat": "special",
+    "key": "grip_handle+motor_electric+seat_bucket+tube_donut",
+    "taste": 6,
+    "look": 6,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "twinpang",
+    "name": "쌍둥이팡",
+    "cat": "special",
+    "key": "airbag_pad+grip_handle+motor_electric+seat_bucket+tube_donut",
+    "taste": 5,
+    "look": 7,
+    "pop": 7,
+    "unlock": "cook",
+    "upgradeOf": [
+      {
+        "base": "spinpang",
+        "add": [
+          "seat_bench"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dancing",
+    "name": "댄싱보트",
+    "cat": "special",
+    "key": "@fun+engine_twin+seat_bucket+tube_donut",
+    "taste": 7,
+    "look": 8,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "flyfish",
+    "name": "플라이피쉬",
+    "cat": "special",
+    "key": "air_chamber+harness_belt+rope_bungee+wing_grip",
+    "taste": 7,
+    "look": 7,
+    "pop": 8,
+    "unlock": "level:4"
+  },
+  {
+    "id": "skyfly",
+    "name": "하늘날기",
+    "cat": "special",
+    "key": "air_chamber+harness_belt+hydro_wing+rope_kevlar+wing_grip",
+    "taste": 8,
+    "look": 9,
+    "pop": 9,
+    "unlock": "level:6"
+  },
+  {
+    "id": "jetski",
+    "name": "제트스키",
+    "cat": "ski",
+    "key": "jet_pump+motor_outboard+seat_bucket+twin_bar",
+    "taste": 9,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "jetboat",
+    "name": "제트보트",
+    "cat": "special",
+    "key": "airbag_pad+deck_board+engine_twin+jet_pump+seat_bench",
+    "taste": 9,
+    "look": 8,
+    "pop": 8,
+    "unlock": "level:6"
+  },
+  {
+    "id": "wakeboard",
+    "name": "웨이크보드",
+    "cat": "board",
+    "key": "bar_handle+deck_board+foot_strap+rope_steel",
+    "taste": 8,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "waterski",
+    "name": "수상스키",
+    "cat": "ski",
+    "key": "foot_strap+power_grip+rope_steel+ski_blade+ski_blade",
+    "taste": 9,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "sofa_boat",
+    "name": "소파보트",
+    "cat": "tube",
+    "key": "rope_nylon+seat_bench+seat_cushion+tube_small",
+    "taste": 2,
+    "look": 5,
+    "pop": 4,
+    "unlock": "cook",
+    "upgradeOf": [
+      {
+        "base": "jjinppang",
+        "add": [
+          "seat_bench"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "flycarpet",
+    "name": "플라잉카펫",
+    "cat": "tube",
+    "key": "deck_board+rope_nylon+seat_bench+seat_cushion+tube_giant",
+    "taste": 3,
+    "look": 6,
+    "pop": 5,
+    "unlock": "cook",
+    "upgradeOf": [
+      {
+        "base": "sofa_boat",
+        "add": [
+          "deck_board"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rocket_tube",
+    "name": "로켓튜브",
+    "cat": "tube",
+    "key": "grip_handle+motor_turbo+rope_nylon+tube_round",
+    "taste": 6,
+    "look": 5,
+    "pop": 5,
+    "unlock": "cook",
+    "upgradeOf": [
+      {
+        "base": "banana",
+        "add": [
+          "motor_electric"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "discopang",
+    "name": "디스코팡팡",
+    "cat": "tube",
+    "key": "led_strip+motor_electric+rope_nylon+speaker_box+tube_round",
+    "taste": 6,
+    "look": 8,
+    "pop": 8,
+    "unlock": "cook",
+    "upgradeOf": [
+      {
+        "base": "rocket_tube",
+        "add": [
+          "speaker_box"
+        ]
+      },
+      {
+        "base": "peanut",
+        "add": [
+          "motor_electric",
+          "speaker_box"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "blobjump",
+    "name": "블롭점프",
+    "cat": "special",
+    "key": "air_chamber+life_strap+safety_bar+tube_round",
+    "taste": 7,
+    "look": 5,
+    "pop": 5,
+    "unlock": "cook"
+  },
+  {
+    "id": "water_roller",
+    "name": "워터롤러",
+    "cat": "special",
+    "key": "harness_belt+honey_cell+life_strap+safety_bar+tube_giant",
+    "taste": 6,
+    "look": 7,
+    "pop": 6,
+    "unlock": "cook",
+    "upgradeOf": [
+      {
+        "base": "blobjump",
+        "add": [
+          "harness_belt"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "watersled",
+    "name": "워터슬레드",
+    "cat": "board",
+    "key": "bar_handle+deck_board+keel_fin+rope_steel",
+    "taste": 5,
+    "look": 5,
+    "pop": 5,
+    "unlock": "cook"
+  },
+  {
+    "id": "kneeboard",
+    "name": "니보드",
+    "cat": "board",
+    "key": "carbon_deck+foot_strap+grip_handle+keel_fin",
+    "taste": 7,
+    "look": 5,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "air_chair",
+    "name": "에어체어",
+    "cat": "board",
+    "key": "bar_handle+deck_board+foot_strap+rope_steel+seat_sling",
+    "taste": 8,
+    "look": 7,
+    "pop": 7,
+    "unlock": "level:5",
+    "upgradeOf": [
+      {
+        "base": "wakeboard",
+        "add": [
+          "seat_sling"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "marine_jet",
+    "name": "마린제트",
+    "cat": "ski",
+    "key": "jet_pump+motor_outboard+power_grip+seat_bucket+twin_bar",
+    "taste": 9,
+    "look": 8,
+    "pop": 8,
+    "unlock": "level:7",
+    "upgradeOf": [
+      {
+        "base": "jetski",
+        "add": [
+          "power_grip"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hydrofoil",
+    "name": "하이드로포일",
+    "cat": "ski",
+    "key": "carbon_deck+deck_board+foot_strap+grip_handle+keel_fin",
+    "taste": 10,
+    "look": 9,
+    "pop": 9,
+    "unlock": "level:8",
+    "upgradeOf": [
+      {
+        "base": "kneeboard",
+        "add": [
+          "carbon_deck"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "flat_tube",
+    "name": "구멍 난 튜브",
+    "cat": "tube",
+    "key": "@fail+tube",
+    "taste": 1,
+    "look": 1,
+    "pop": 1,
+    "unlock": "fail"
+  },
+  {
+    "id": "tangled_rope",
+    "name": "엉킨 로프",
+    "cat": "special",
+    "key": "@fail+rope",
+    "taste": 1,
+    "look": 1,
+    "pop": 1,
+    "unlock": "fail"
+  },
+  {
+    "id": "sunk_board",
+    "name": "가라앉은 판",
+    "cat": "board",
+    "key": "@fail+other",
+    "taste": 1,
+    "look": 1,
+    "pop": 1,
+    "unlock": "fail"
+  }
+]

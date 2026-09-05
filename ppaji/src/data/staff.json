@@ -1,0 +1,10 @@
+{
+  "$comment": "직원 역할 (G20) — 카이로의 「직원을 쓴다」. hireCost 는 월급×5. 효과는 staff.ts 가 레벨(1~5, +10%/단)로 키운다.",
+  "roles": [
+    { "id": "lifeguard", "name": "안전요원", "salary": 120, "hireCost": 600, "palette": 0, "desc": "풀 체력 소모 −30% · 수영 만족 +20%", "effect": { "hpMul": 0.7, "satMul": 1.2 } },
+    { "id": "cleaner", "name": "청소부", "salary": 100, "hireCost": 500, "palette": 3, "desc": "하루 청결 +18 — 청결이 낮으면 손님 만족이 준다", "effect": { "clean": 18 } },
+    { "id": "mascot", "name": "마스코트", "salary": 150, "hireCost": 750, "palette": 2, "desc": "사진 확률 ×1.5 · 좋아요 +20%", "effect": { "photoMul": 1.5, "likeMul": 1.2 } },
+    { "id": "cook", "name": "요리사", "salary": 180, "hireCost": 900, "palette": 7, "desc": "식당 메뉴 인기 +10%", "effect": { "menuMul": 1.1 } }
+  ],
+  "names": ["강민", "수지", "태현", "은비", "재원", "혜진", "동현", "소희", "정우", "다혜", "성민", "유진"]
+}

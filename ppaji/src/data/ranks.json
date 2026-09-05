@@ -1,0 +1,112 @@
+[
+  {
+    "star": 1,
+    "name": "동네 빠지",
+    "conditions": [
+      {
+        "kind": "popularity",
+        "min": 200
+      },
+      {
+        "kind": "certPasses",
+        "min": 1
+      }
+    ],
+    "reward": {
+      "kind": "facility",
+      "id": "diving"
+    }
+  },
+  {
+    "star": 2,
+    "name": "소문난 빠지",
+    "conditions": [
+      {
+        "kind": "popularity",
+        "min": 1000
+      },
+      {
+        "kind": "certPasses",
+        "min": 2
+      },
+      {
+        "kind": "friends",
+        "min": 10
+      }
+    ],
+    "reward": {
+      "kind": "unlock",
+      "id": "cooking"
+    }
+  },
+  {
+    "star": 3,
+    "name": "화제의 빠지",
+    "conditions": [
+      {
+        "kind": "popularity",
+        "min": 1400
+      },
+      {
+        "kind": "certPasses",
+        "min": 4
+      },
+      {
+        "kind": "friends",
+        "min": 18
+      }
+    ],
+    "reward": {
+      "kind": "money",
+      "amount": 8000
+    }
+  },
+  {
+    "star": 4,
+    "name": "전국구 빠지",
+    "conditions": [
+      {
+        "kind": "popularity",
+        "min": 2600
+      },
+      {
+        "kind": "certPasses",
+        "min": 7
+      },
+      {
+        "kind": "friends",
+        "min": 30
+      }
+    ],
+    "reward": {
+      "kind": "money",
+      "amount": 15000
+    }
+  },
+  {
+    "star": 5,
+    "name": "전설의 빠지",
+    "conditions": [
+      {
+        "kind": "popularity",
+        "min": 4200
+      },
+      {
+        "kind": "certPasses",
+        "min": 10
+      },
+      {
+        "kind": "friends",
+        "min": 44
+      },
+      {
+        "kind": "areas",
+        "min": 7
+      }
+    ],
+    "reward": {
+      "kind": "facility",
+      "id": "golden_kairobot"
+    }
+  }
+]

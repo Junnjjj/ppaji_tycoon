@@ -1,0 +1,449 @@
+[
+  {
+    "id": "ice",
+    "name": "얼음",
+    "unlock": "start",
+    "class": "base"
+  },
+  {
+    "id": "water",
+    "name": "물",
+    "unlock": "start",
+    "class": "base"
+  },
+  {
+    "id": "sugar",
+    "name": "설탕",
+    "unlock": "start",
+    "class": "sweet"
+  },
+  {
+    "id": "milk",
+    "name": "우유",
+    "unlock": "start",
+    "class": "dairy"
+  },
+  {
+    "id": "flour",
+    "name": "밀가루",
+    "unlock": "start",
+    "class": "grain"
+  },
+  {
+    "id": "egg",
+    "name": "달걀",
+    "unlock": "start",
+    "class": "base"
+  },
+  {
+    "id": "orange_fruit",
+    "name": "오렌지",
+    "unlock": "start",
+    "class": "fruit"
+  },
+  {
+    "id": "strawberry_fruit",
+    "name": "딸기",
+    "unlock": "start",
+    "class": "fruit"
+  },
+  {
+    "id": "lemon_fruit",
+    "name": "레몬",
+    "unlock": "start",
+    "class": "fruit"
+  },
+  {
+    "id": "butter",
+    "name": "버터",
+    "unlock": "shop",
+    "price": 400,
+    "class": "dairy"
+  },
+  {
+    "id": "cream",
+    "name": "생크림",
+    "unlock": "shop",
+    "price": 400,
+    "class": "dairy"
+  },
+  {
+    "id": "chocolate_bar",
+    "name": "초콜릿",
+    "unlock": "shop",
+    "price": 500,
+    "class": "sweet"
+  },
+  {
+    "id": "vanilla",
+    "name": "바닐라",
+    "unlock": "wish",
+    "class": "sweet"
+  },
+  {
+    "id": "coffee_bean",
+    "name": "원두",
+    "unlock": "wish",
+    "class": "base"
+  },
+  {
+    "id": "tea_leaf",
+    "name": "찻잎",
+    "unlock": "wish",
+    "class": "base"
+  },
+  {
+    "id": "cheese",
+    "name": "치즈",
+    "unlock": "shop",
+    "price": 500,
+    "class": "dairy"
+  },
+  {
+    "id": "chicken",
+    "name": "닭고기",
+    "unlock": "wish",
+    "class": "meat"
+  },
+  {
+    "id": "beef",
+    "name": "소고기",
+    "unlock": "wish",
+    "class": "meat"
+  },
+  {
+    "id": "pork",
+    "name": "돼지고기",
+    "unlock": "wish",
+    "class": "meat"
+  },
+  {
+    "id": "shrimp",
+    "name": "새우",
+    "unlock": "wish",
+    "class": "seafood"
+  },
+  {
+    "id": "salmon",
+    "name": "연어",
+    "unlock": "wish",
+    "class": "seafood"
+  },
+  {
+    "id": "tuna",
+    "name": "참치",
+    "unlock": "wish",
+    "class": "seafood"
+  },
+  {
+    "id": "rice",
+    "name": "쌀",
+    "unlock": "shop",
+    "price": 300,
+    "class": "grain"
+  },
+  {
+    "id": "seaweed",
+    "name": "김",
+    "unlock": "wish",
+    "class": "veg"
+  },
+  {
+    "id": "tomato",
+    "name": "토마토",
+    "unlock": "shop",
+    "price": 300,
+    "class": "veg"
+  },
+  {
+    "id": "potato",
+    "name": "감자",
+    "unlock": "shop",
+    "price": 300,
+    "class": "veg"
+  },
+  {
+    "id": "honey_jar",
+    "name": "꿀",
+    "unlock": "wish",
+    "class": "sweet"
+  },
+  {
+    "id": "matcha",
+    "name": "말차",
+    "unlock": "wish",
+    "class": "base"
+  },
+  {
+    "id": "hazelnut",
+    "name": "헤이즐넛",
+    "unlock": "wish",
+    "class": "nut"
+  },
+  {
+    "id": "banana_fruit",
+    "name": "바나나",
+    "unlock": "wish",
+    "class": "fruit"
+  },
+  {
+    "id": "melon_fruit",
+    "name": "멜론",
+    "unlock": "wish",
+    "class": "fruit"
+  },
+  {
+    "id": "peach_fruit",
+    "name": "복숭아",
+    "unlock": "wish",
+    "class": "fruit"
+  },
+  {
+    "id": "grapefruit_fruit",
+    "name": "자몽",
+    "unlock": "cert",
+    "class": "fruit"
+  },
+  {
+    "id": "kiwi_fruit",
+    "name": "키위",
+    "unlock": "cert",
+    "class": "fruit"
+  },
+  {
+    "id": "mango",
+    "name": "망고",
+    "unlock": "cert",
+    "class": "fruit"
+  },
+  {
+    "id": "coconut_milk",
+    "name": "코코넛밀크",
+    "unlock": "cert",
+    "class": "dairy"
+  },
+  {
+    "id": "soda_water",
+    "name": "탄산수",
+    "unlock": "year",
+    "year": 2,
+    "class": "base"
+  },
+  {
+    "id": "curry_powder",
+    "name": "카레가루",
+    "unlock": "year",
+    "year": 3,
+    "class": "base"
+  },
+  {
+    "id": "soy_sauce",
+    "name": "간장",
+    "unlock": "year",
+    "year": 4,
+    "class": "base"
+  },
+  {
+    "id": "truffle",
+    "name": "트러플",
+    "unlock": "year",
+    "year": 5,
+    "class": "base"
+  },
+  {
+    "id": "mayonnaise",
+    "name": "마요네즈",
+    "unlock": "wish",
+    "class": "base"
+  },
+  {
+    "id": "corn",
+    "name": "옥수수",
+    "unlock": "wish",
+    "class": "grain"
+  },
+  {
+    "id": "cabbage",
+    "name": "양배추",
+    "unlock": "wish",
+    "class": "veg"
+  },
+  {
+    "id": "noodle",
+    "name": "생면",
+    "unlock": "wish",
+    "class": "grain"
+  },
+  {
+    "id": "squid",
+    "name": "오징어",
+    "unlock": "wish",
+    "class": "seafood"
+  },
+  {
+    "id": "octopus",
+    "name": "문어",
+    "unlock": "wish",
+    "class": "seafood"
+  },
+  {
+    "id": "watermelon_fruit",
+    "name": "수박",
+    "unlock": "cert",
+    "class": "fruit"
+  },
+  {
+    "id": "dragonfruit",
+    "name": "용과",
+    "unlock": "cert",
+    "class": "fruit"
+  },
+  {
+    "id": "papaya",
+    "name": "파파야",
+    "unlock": "cert",
+    "class": "fruit"
+  },
+  {
+    "id": "pineapple_fruit",
+    "name": "파인애플",
+    "unlock": "cert",
+    "class": "fruit"
+  },
+  {
+    "id": "blueberry_fruit",
+    "name": "블루베리",
+    "unlock": "cert",
+    "class": "fruit"
+  },
+  {
+    "id": "raspberry_fruit",
+    "name": "라즈베리",
+    "unlock": "cert",
+    "class": "fruit"
+  },
+  {
+    "id": "grape_fruit",
+    "name": "포도",
+    "unlock": "cert",
+    "class": "fruit"
+  },
+  {
+    "id": "chestnut",
+    "name": "밤",
+    "unlock": "cert",
+    "class": "nut"
+  },
+  {
+    "id": "olive_oil",
+    "name": "올리브유",
+    "unlock": "year",
+    "year": 2,
+    "class": "base"
+  },
+  {
+    "id": "caramel",
+    "name": "캐러멜",
+    "unlock": "year",
+    "year": 3,
+    "class": "sweet"
+  },
+  {
+    "id": "bbq_sauce",
+    "name": "바비큐소스",
+    "unlock": "year",
+    "year": 4,
+    "class": "base"
+  },
+  {
+    "id": "charcoal",
+    "name": "숯",
+    "unlock": "year",
+    "year": 5,
+    "class": "base"
+  },
+  {
+    "id": "almond",
+    "name": "아몬드",
+    "unlock": "year",
+    "year": 6,
+    "class": "nut"
+  },
+  {
+    "id": "gold_leaf",
+    "name": "금박",
+    "unlock": "year",
+    "year": 8,
+    "class": "base"
+  },
+  {
+    "id": "fish_cake",
+    "name": "어묵",
+    "unlock": "shop",
+    "class": "seafood",
+    "price": 400
+  },
+  {
+    "id": "gochujang",
+    "name": "고추장",
+    "unlock": "shop",
+    "class": "base",
+    "price": 500
+  },
+  {
+    "id": "tteok",
+    "name": "가래떡",
+    "unlock": "shop",
+    "class": "grain",
+    "price": 400
+  },
+  {
+    "id": "ramyeon",
+    "name": "라면사리",
+    "unlock": "shop",
+    "class": "grain",
+    "price": 300
+  },
+  {
+    "id": "red_bean",
+    "name": "팥",
+    "unlock": "shop",
+    "class": "grain",
+    "price": 400
+  },
+  {
+    "id": "misugaru",
+    "name": "미숫가루",
+    "unlock": "shop",
+    "class": "grain",
+    "price": 500
+  },
+  {
+    "id": "silkworm",
+    "name": "번데기",
+    "unlock": "shop",
+    "class": "meat",
+    "price": 300
+  },
+  {
+    "id": "malt",
+    "name": "엿기름",
+    "unlock": "shop",
+    "class": "grain",
+    "price": 600
+  },
+  {
+    "id": "smelt",
+    "name": "빙어",
+    "unlock": "year",
+    "year": 3,
+    "class": "seafood"
+  },
+  {
+    "id": "persimmon",
+    "name": "홍시",
+    "unlock": "year",
+    "year": 4,
+    "class": "fruit"
+  }
+]

@@ -1,0 +1,461 @@
+[
+  {
+    "id": "calendar_y1_spring_pot",
+    "year": 1,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 1660,
+    "from": "president",
+    "title": "개업 첫날 — 포토존",
+    "line": "첫 영업 마감하느라 고생했어요. 포토존을 보냈으니 강가에 두면 꽃내음이 퍼집니다.",
+    "grant": {
+      "kind": "facility",
+      "id": "photozone"
+    }
+  },
+  {
+    "id": "calendar_day3",
+    "year": 1,
+    "season": 0,
+    "dayInSeason": 2,
+    "tick": 0,
+    "from": "president",
+    "title": "개업 사흘째 선물",
+    "line": "손님은 배가 고프면 오래 못 놀아요. 붕어빵를 하나 보냈으니 물가 가까이 세워 보세요.",
+    "grant": {
+      "kind": "facility",
+      "id": "bungeoppang"
+    }
+  },
+  {
+    "id": "calendar_y1_spring_weekend",
+    "year": 1,
+    "season": 0,
+    "dayInSeason": 3,
+    "tick": 0,
+    "from": "president",
+    "title": "첫 주말 — 파란 링 튜브",
+    "line": "첫 주말이에요! 물 위에서 쉬라고 파란 링 튜브를 보냅니다. SNS 친구에게 선물해 보세요.",
+    "grant": {
+      "kind": "gift",
+      "id": "swim_ring"
+    }
+  },
+  {
+    "id": "calendar_y1_spring_chair",
+    "year": 1,
+    "season": 0,
+    "dayInSeason": 3,
+    "tick": 280,
+    "from": "president",
+    "title": "주말 오전 — 그늘막",
+    "line": "주말 손님이 몰리죠? 창고에 있던 그늘막을 보냅니다. 수역 옆에 두면 눕고 갑니다.",
+    "grant": {
+      "kind": "facility",
+      "id": "shade_net"
+    }
+  },
+  {
+    "id": "calendar_y1_summer_swimsuit",
+    "year": 1,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 540,
+    "from": "president",
+    "title": "여름 첫날 — MT 수영복",
+    "line": "여름이 왔어요. 대학가 MT 철이라 MT 수영복을 챙겼습니다. 친구에게 선물하면 좋아해요.",
+    "grant": {
+      "kind": "gift",
+      "id": "school_swimsuit"
+    }
+  },
+  {
+    "id": "calendar_y1_summer_shop",
+    "year": 1,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 560,
+    "from": "president",
+    "title": "강변 장날이 선다",
+    "line": "오후 5시부터 강변에 장날이 섭니다. 장식·평상·놀이시설을 팔아요. 첫 장보기 밑천 1,000G 넣어 둡니다.",
+    "grant": {
+      "kind": "money",
+      "amount": 1000
+    }
+  },
+  {
+    "id": "calendar_y1_summer_fireworks",
+    "year": 1,
+    "season": 1,
+    "dayInSeason": 3,
+    "tick": 1540,
+    "from": "president",
+    "title": "여름 주말 불꽃놀이",
+    "line": "여름 주말 저녁엔 강 건너에서 불꽃이 오릅니다. 손님이 하늘 보느라 더 머물 거예요. 구경값 500G!",
+    "grant": {
+      "kind": "money",
+      "amount": 500
+    },
+    "priority": "inbox"
+  },
+  {
+    "id": "calendar_y1_autumn_exam",
+    "year": 1,
+    "season": 2,
+    "dayInSeason": 0,
+    "tick": 0,
+    "from": "president",
+    "title": "가을 — 첫 심사 응원",
+    "line": "가을은 빠지 심사철이에요. 유자향 노란 향초를 넣으면 물빛이 노랗고 분위기가 상큼해집니다.",
+    "grant": {
+      "kind": "item",
+      "id": "lemon"
+    }
+  },
+  {
+    "id": "calendar_y1_autumn_move",
+    "year": 1,
+    "season": 2,
+    "dayInSeason": 3,
+    "tick": 0,
+    "from": "president",
+    "title": "이동 도구 선물",
+    "line": "첫 심사를 통과한 지 아흐레군요! 시설을 부수지 않고 옮기는 이동 도구를 드릴게요. 배치를 고쳐 보세요.",
+    "grant": {
+      "kind": "tool",
+      "id": "move"
+    },
+    "when": {
+      "kind": "certPasses",
+      "min": 1
+    },
+    "afterCertDays": 9
+  },
+  {
+    "id": "calendar_y1_winter_lights",
+    "year": 1,
+    "season": 3,
+    "dayInSeason": 0,
+    "tick": 1260,
+    "from": "president",
+    "title": "겨울 저녁 조명",
+    "line": "해가 짧아 저녁엔 빠지에 조명을 켭니다. 얼음 덩어리도 보냈어요 — 한여름 무더위에 꺼내 쓰세요.",
+    "grant": {
+      "kind": "item",
+      "id": "ice_block"
+    },
+    "priority": "inbox"
+  },
+  {
+    "id": "calendar_y2_spring_honey",
+    "year": 2,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "2년차 봄 — 사장 인사",
+    "line": "벌써 2년차네요. 꿀단지 향로를 보냅니다 — 봄엔 군것질 분위기가 5점이고 물도 따뜻해져요.",
+    "grant": {
+      "kind": "item",
+      "id": "honey"
+    }
+  },
+  {
+    "id": "calendar_y2_summer_bonus",
+    "year": 2,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "여름 성수기 지원금",
+    "line": "여름은 빠지의 대목이죠. 조합에서 성수기 지원금 3,000G 를 내려보냈어요. 슬라이드 한 대 어때요?",
+    "grant": {
+      "kind": "money",
+      "amount": 3000
+    }
+  },
+  {
+    "id": "calendar_y2_autumn_flour",
+    "year": 2,
+    "season": 2,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "가을 — 밀가루",
+    "line": "요리는 해 보셨나요? 밀가루를 보냅니다. 달걀·우유·설탕과 섞으면 크레페가 될지도 몰라요.",
+    "grant": {
+      "kind": "ingredient",
+      "id": "flour"
+    }
+  },
+  {
+    "id": "calendar_y2_winter_orca",
+    "year": 2,
+    "season": 3,
+    "dayInSeason": 3,
+    "tick": 280,
+    "from": "president",
+    "title": "연말 선물 — 범고래 튜브",
+    "line": "한 해 고생 많았어요. 바다 범고래 튜브를 보냅니다. 친구에게 주면 그걸 타고 떠다닐 거예요.",
+    "grant": {
+      "kind": "gift",
+      "id": "blue_orca"
+    }
+  },
+  {
+    "id": "calendar_y3_spring_lavender",
+    "year": 3,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "3년차 봄 — 사장 인사",
+    "line": "3년차 첫날이에요. 보라 라벤더 화환을 보냅니다 — 꽃내음은 봄에 4점, 보랏빛은 가을에 4점.",
+    "grant": {
+      "kind": "item",
+      "id": "lavender"
+    }
+  },
+  {
+    "id": "calendar_y3_summer_kairobot",
+    "year": 3,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "트로트 가수가 왔다",
+    "line": "화제의 빠지가 됐다고 트로트 가수가 놀러 왔어요. 출연료 대신 3,000G 를 두고 갑니다.",
+    "grant": {
+      "kind": "money",
+      "amount": 3000
+    },
+    "when": {
+      "kind": "rank",
+      "min": 3
+    }
+  },
+  {
+    "id": "calendar_y3_autumn_bonus",
+    "year": 3,
+    "season": 2,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "가을 — 심사 지원금",
+    "line": "올가을 빠지 심사도 신청하세요. 준비 자금 5,000G 를 보냅니다. 부표부터 손보면 좋겠어요.",
+    "grant": {
+      "kind": "money",
+      "amount": 5000
+    }
+  },
+  {
+    "id": "calendar_y4_spring_coffee",
+    "year": 4,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "4년차 봄 — 사장 인사",
+    "line": "4년차예요. 커피 트럭 스피커를 보냅니다 — 커피향은 가을에 4점이고 물도 데워 줘요.",
+    "grant": {
+      "kind": "item",
+      "id": "coffee_beans"
+    }
+  },
+  {
+    "id": "calendar_y4_autumn_kayak",
+    "year": 4,
+    "season": 2,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "가을 — 카약 튜브",
+    "line": "단골이 늘었죠? 카약 튜브를 보냅니다. 낚시 동호회 손님에게 선물하면 ☆ 이 빨리 찹니다.",
+    "grant": {
+      "kind": "gift",
+      "id": "kayak_float"
+    }
+  },
+  {
+    "id": "calendar_y5_spring_bonus",
+    "year": 5,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "5년차 봄 — 반환점",
+    "line": "여덟 해 중 절반이 지났어요. 지원금 8,000G — 큰 슬라이드나 선착장에 투자해 보세요.",
+    "grant": {
+      "kind": "money",
+      "amount": 8000
+    }
+  },
+  {
+    "id": "calendar_y5_autumn_cinnamon",
+    "year": 5,
+    "season": 2,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "가을 — 계피향 화로",
+    "line": "밤바람이 차죠. 계피향 빨간 화로를 보냅니다 — 물을 데우고 붉은빛은 겨울에 4점이에요.",
+    "grant": {
+      "kind": "item",
+      "id": "cinnamon"
+    }
+  },
+  {
+    "id": "calendar_y6_spring_bonus",
+    "year": 6,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "6년차 봄 — 사장 인사",
+    "line": "6년차네요. 출신지는 몇 곳이나 트셨나요? 지원금 10,000G 보냅니다. 소문을 더 멀리 내 보세요.",
+    "grant": {
+      "kind": "money",
+      "amount": 10000
+    }
+  },
+  {
+    "id": "calendar_y7_spring_salt",
+    "year": 7,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "7년차 봄 — 온수관",
+    "line": "7년차예요. 온수관을 보냅니다 — 물을 8도나 데워서 사철 부문 심사에 딱 맞아요.",
+    "grant": {
+      "kind": "item",
+      "id": "bath_salt"
+    }
+  },
+  {
+    "id": "calendar_y8_spring_final",
+    "year": 8,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "마지막 해가 왔다",
+    "line": "8년차 — 올겨울이 끝나면 결산이에요. 마지막 지원금 20,000G. 전설의 빠지로 마무리합시다.",
+    "grant": {
+      "kind": "money",
+      "amount": 20000
+    }
+  },
+  {
+    "id": "calendar_y3_winter_orange",
+    "year": 3,
+    "season": 3,
+    "dayInSeason": 0,
+    "tick": 280,
+    "title": "겨울 — 오렌지향 등불",
+    "line": "긴 밤에는 불빛이 좋아요. 오렌지향 등불을 보냅니다 — 물빛이 노을빛으로 곱게 물듭니다.",
+    "grant": {
+      "kind": "item",
+      "id": "orange"
+    },
+    "from": "president"
+  },
+  {
+    "id": "calendar_y4_summer_banana",
+    "year": 4,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 280,
+    "title": "여름 — 바나나 보트",
+    "line": "노란 바나나 보트를 보냅니다. 트로피컬 분위기는 여름에 5점이라 손님이 몰려요.",
+    "grant": {
+      "kind": "item",
+      "id": "banana"
+    },
+    "from": "president"
+  },
+  {
+    "id": "calendar_y4_winter_seaweed",
+    "year": 4,
+    "season": 3,
+    "dayInSeason": 3,
+    "tick": 280,
+    "title": "겨울 주말 — 물레방아",
+    "line": "옛 방앗간에서 물레방아를 얻었어요. 강바람 분위기가 돌고 물빛도 초록으로 물듭니다.",
+    "grant": {
+      "kind": "item",
+      "id": "seaweed"
+    },
+    "from": "president"
+  },
+  {
+    "id": "calendar_y5_summer_mint",
+    "year": 5,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 280,
+    "title": "여름 — 솔잎 얼음",
+    "line": "솔잎 얼음 바구니를 보냅니다. 물을 4도 식히고 솔내음은 여름에 4점이에요.",
+    "grant": {
+      "kind": "item",
+      "id": "mint"
+    },
+    "from": "president"
+  },
+  {
+    "id": "calendar_y6_summer_grapes",
+    "year": 6,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 280,
+    "title": "여름 — 야간 조명",
+    "line": "보랏빛 야간 조명을 미리 보냅니다. 보랏빛은 가을에 4점이니 지금 달아 두세요.",
+    "grant": {
+      "kind": "item",
+      "id": "grapes"
+    },
+    "from": "president"
+  },
+  {
+    "id": "calendar_y6_winter_milk",
+    "year": 6,
+    "season": 3,
+    "dayInSeason": 0,
+    "tick": 280,
+    "title": "겨울 — 안개 분무기",
+    "line": "우윳빛 안개 분무기예요. 김이 서린 듯한 우유빛 분위기는 겨울에 4점입니다.",
+    "grant": {
+      "kind": "item",
+      "id": "milk"
+    },
+    "from": "president"
+  },
+  {
+    "id": "calendar_y7_summer_kiwi",
+    "year": 7,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 280,
+    "title": "여름 — 초록 염료",
+    "line": "키위향 초록 염료를 보냅니다. 초록빛은 여름에 4점이라 강물이 시원해 보여요.",
+    "grant": {
+      "kind": "item",
+      "id": "kiwi"
+    },
+    "from": "president"
+  },
+  {
+    "id": "calendar_y8_summer_final_gift",
+    "year": 8,
+    "season": 1,
+    "dayInSeason": 3,
+    "tick": 280,
+    "title": "마지막 여름 주말",
+    "line": "8년차 여름 주말이네요. 하얀 야자잎 매트를 보냅니다. 남은 두 계절도 잘 부탁해요.",
+    "grant": {
+      "kind": "item",
+      "id": "coconut"
+    },
+    "from": "president"
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "$comment": "기능 스위치 (G22) — PSS 에 없는 축은 기본 OFF (「완전 비슷하게」 결정 2026-09-03). 코드는 남아 있고, 켜면 되살아난다. 하네스는 window.__pj.features 로 켜서 검사한다.",
+  "staff": false,
+  "facilityLevels": false,
+  "randomEvents": true,
+  "rivals": false,
+  "dailyResults": false
+}

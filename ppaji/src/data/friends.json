@@ -1,0 +1,1220 @@
+[
+  {
+    "id": "kiddie",
+    "name": "읍내 꼬마",
+    "area": "residential",
+    "age": 10,
+    "gender": "M",
+    "fav": {
+      "color": "lime",
+      "scent": "citrus",
+      "food": "자몽주스"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 0
+  },
+  {
+    "id": "art_master",
+    "name": "그림 예린",
+    "area": "residential",
+    "age": 10,
+    "gender": "F",
+    "fav": {
+      "color": "orange",
+      "scent": "berry",
+      "food": "딸기 셔벗"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 1
+  },
+  {
+    "id": "illustrator",
+    "name": "웹툰 작가",
+    "area": "residential",
+    "age": 20,
+    "gender": "F",
+    "fav": {
+      "color": "pink",
+      "scent": "tropical",
+      "food": "크레페"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "kiddie",
+      "star": 1
+    },
+    "palette": 2
+  },
+  {
+    "id": "brat",
+    "name": "말썽쟁이",
+    "area": "residential",
+    "age": 10,
+    "gender": "M",
+    "fav": {
+      "color": "red",
+      "scent": "fruity",
+      "food": "레모네이드"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "art_master",
+      "star": 1
+    },
+    "palette": 3
+  },
+  {
+    "id": "housewife",
+    "name": "읍내 주부",
+    "area": "residential",
+    "age": 30,
+    "gender": "F",
+    "fav": {
+      "color": "red",
+      "scent": "coffee",
+      "food": "초코 아이스크림"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "illustrator",
+      "star": 1
+    },
+    "palette": 4
+  },
+  {
+    "id": "helicopter_mom",
+    "name": "극성 엄마",
+    "area": "residential",
+    "age": 30,
+    "gender": "F",
+    "fav": {
+      "color": "purple",
+      "scent": "spices",
+      "food": "과일 크레페"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "brat",
+      "star": 1
+    },
+    "palette": 5
+  },
+  {
+    "id": "rich_lady",
+    "name": "펜션 사모님",
+    "area": "residential",
+    "age": 40,
+    "gender": "F",
+    "fav": {
+      "color": "green",
+      "scent": "cookie",
+      "food": "도넛"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "housewife",
+      "star": 1
+    },
+    "palette": 6
+  },
+  {
+    "id": "ping_ponger",
+    "name": "MT 총무",
+    "area": "school",
+    "age": 20,
+    "gender": "M",
+    "fav": {
+      "color": "lime",
+      "scent": "pine",
+      "food": "사이다"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 7
+  },
+  {
+    "id": "rabbit_keeper",
+    "name": "과대표 지수",
+    "area": "school",
+    "age": 20,
+    "gender": "F",
+    "fav": {
+      "color": "white",
+      "scent": "milky",
+      "food": "수박주스"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 1
+  },
+  {
+    "id": "student_councilor",
+    "name": "MT 회장",
+    "area": "school",
+    "age": 20,
+    "gender": "M",
+    "fav": {
+      "color": "yellow",
+      "scent": "tropical",
+      "food": "포도주스"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "ping_ponger",
+      "star": 1
+    },
+    "palette": 3
+  },
+  {
+    "id": "phd_student",
+    "name": "대학원생",
+    "area": "school",
+    "age": 20,
+    "gender": "M",
+    "fav": {
+      "color": "lime",
+      "scent": "spices",
+      "food": "바나나우유"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "rabbit_keeper",
+      "star": 1
+    },
+    "palette": 5
+  },
+  {
+    "id": "high_schooler",
+    "name": "새내기",
+    "area": "school",
+    "age": 20,
+    "gender": "M",
+    "fav": {
+      "color": "green",
+      "scent": "citrus",
+      "food": "치즈버거"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "student_councilor",
+      "star": 1
+    },
+    "palette": 0
+  },
+  {
+    "id": "baseball_kid",
+    "name": "야구 동아리",
+    "area": "school",
+    "age": 20,
+    "gender": "M",
+    "fav": {
+      "color": "blue",
+      "scent": "berry",
+      "food": "핫도그"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "phd_student",
+      "star": 1
+    },
+    "palette": 2
+  },
+  {
+    "id": "vice_principal",
+    "name": "지도 교수",
+    "area": "school",
+    "age": 40,
+    "gender": "M",
+    "fav": {
+      "color": "purple",
+      "scent": "floral",
+      "food": "닭꼬치"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "high_schooler",
+      "star": 1
+    },
+    "palette": 6
+  },
+  {
+    "id": "daydreaming_girl",
+    "name": "몽상 소녀",
+    "area": "forest",
+    "age": 10,
+    "gender": "F",
+    "fav": {
+      "color": "pink",
+      "scent": "tropical",
+      "food": "초코민트 아이스크림"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 2
+  },
+  {
+    "id": "dancer",
+    "name": "캠핑 누나",
+    "area": "forest",
+    "age": 20,
+    "gender": "F",
+    "fav": {
+      "color": "purple",
+      "scent": "fruity",
+      "food": "키위주스"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 5
+  },
+  {
+    "id": "trumpeter",
+    "name": "트럼펫 형",
+    "area": "forest",
+    "age": 20,
+    "gender": "M",
+    "fav": {
+      "color": "yellow",
+      "scent": "cookie",
+      "food": "햄버거"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "daydreaming_girl",
+      "star": 1
+    },
+    "palette": 3
+  },
+  {
+    "id": "woodcutter",
+    "name": "장작 아빠",
+    "area": "forest",
+    "age": 40,
+    "gender": "M",
+    "fav": {
+      "color": "green",
+      "scent": "pine",
+      "food": "수박소다"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "dancer",
+      "star": 1
+    },
+    "palette": 6
+  },
+  {
+    "id": "florist",
+    "name": "들꽃 엄마",
+    "area": "forest",
+    "age": 30,
+    "gender": "F",
+    "fav": {
+      "color": "lime",
+      "scent": "floral",
+      "food": "디럭스 크레페"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "trumpeter",
+      "star": 1
+    },
+    "palette": 1
+  },
+  {
+    "id": "bunbun",
+    "name": "캠핑 막내",
+    "area": "forest",
+    "age": 10,
+    "gender": "M",
+    "fav": {
+      "color": "green",
+      "scent": "coffee",
+      "food": "파인애플주스"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "woodcutter",
+      "star": 2
+    },
+    "palette": 7
+  },
+  {
+    "id": "kappappa",
+    "name": "물놀이 아빠",
+    "area": "forest",
+    "age": 30,
+    "gender": "M",
+    "fav": {
+      "color": "blue",
+      "scent": "floral",
+      "food": "크림소다"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "bunbun",
+      "star": 1
+    },
+    "palette": 4
+  },
+  {
+    "id": "grizzly_bearington",
+    "name": "곰 아저씨",
+    "area": "forest",
+    "age": 40,
+    "gender": "M",
+    "fav": {
+      "color": "white",
+      "scent": "marine",
+      "food": "카레라이스"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "kappappa",
+      "star": 2
+    },
+    "palette": 0
+  },
+  {
+    "id": "cheeky_brat",
+    "name": "따라온 동생",
+    "area": "shopping",
+    "age": 20,
+    "gender": "M",
+    "fav": {
+      "color": "blue",
+      "scent": "spices",
+      "food": "팝콘"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 3
+  },
+  {
+    "id": "movie_editor",
+    "name": "사진 남친",
+    "area": "shopping",
+    "age": 30,
+    "gender": "M",
+    "fav": {
+      "color": "red",
+      "scent": "coffee",
+      "food": "레몬 빙수"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 4
+  },
+  {
+    "id": "lunchbox_seller",
+    "name": "소풍 여친",
+    "area": "shopping",
+    "age": 30,
+    "gender": "F",
+    "fav": {
+      "color": "orange",
+      "scent": "milky",
+      "food": "김밥"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "movie_editor",
+      "star": 1
+    },
+    "palette": 1
+  },
+  {
+    "id": "greengrocer",
+    "name": "알뜰 남친",
+    "area": "shopping",
+    "age": 30,
+    "gender": "M",
+    "fav": {
+      "color": "yellow",
+      "scent": "citrus",
+      "food": "시저 샐러드"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "lunchbox_seller",
+      "star": 1
+    },
+    "palette": 6
+  },
+  {
+    "id": "chef",
+    "name": "요리 남친",
+    "area": "shopping",
+    "age": 40,
+    "gender": "M",
+    "fav": {
+      "color": "lime",
+      "scent": "cookie",
+      "food": "볶음면"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "greengrocer",
+      "star": 1
+    },
+    "palette": 0
+  },
+  {
+    "id": "cook",
+    "name": "맛집 여친",
+    "area": "shopping",
+    "age": 30,
+    "gender": "F",
+    "fav": {
+      "color": "red",
+      "scent": "marine",
+      "food": "바나나우유"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "chef",
+      "star": 2
+    },
+    "palette": 5
+  },
+  {
+    "id": "doctor",
+    "name": "의사 여친",
+    "area": "shopping",
+    "age": 30,
+    "gender": "F",
+    "fav": {
+      "color": "blue",
+      "scent": "tropical",
+      "food": "과일 샐러드"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "cook",
+      "star": 1
+    },
+    "palette": 2
+  },
+  {
+    "id": "part_timer",
+    "name": "인턴 수아",
+    "area": "office",
+    "age": 21,
+    "gender": "F",
+    "fav": {
+      "color": "purple",
+      "scent": "spices",
+      "food": "수박주스"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 7
+  },
+  {
+    "id": "rookie_employee",
+    "name": "신입 준영",
+    "area": "office",
+    "age": 26,
+    "gender": "M",
+    "fav": {
+      "color": "orange",
+      "scent": "cookie",
+      "food": "멜론빵"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 2
+  },
+  {
+    "id": "office_clerk_m",
+    "name": "김 대리",
+    "area": "office",
+    "age": 32,
+    "gender": "M",
+    "fav": {
+      "color": "red",
+      "scent": "coffee",
+      "food": "캔커피"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "part_timer",
+      "star": 1
+    },
+    "palette": 4
+  },
+  {
+    "id": "office_clerk_f",
+    "name": "이 주임",
+    "area": "office",
+    "age": 30,
+    "gender": "F",
+    "fav": {
+      "color": "pink",
+      "scent": "floral",
+      "food": "과일 크레페"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "rookie_employee",
+      "star": 1
+    },
+    "palette": 1
+  },
+  {
+    "id": "office_worker",
+    "name": "박 과장",
+    "area": "office",
+    "age": 38,
+    "gender": "M",
+    "fav": {
+      "color": "yellow",
+      "scent": "pine",
+      "food": "닭꼬치"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "office_clerk_m",
+      "star": 1
+    },
+    "palette": 6
+  },
+  {
+    "id": "tax_advisor",
+    "name": "회계 팀장",
+    "area": "office",
+    "age": 43,
+    "gender": "F",
+    "fav": {
+      "color": "lime",
+      "scent": "marine",
+      "food": "치즈케이크"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "office_clerk_f",
+      "star": 2
+    },
+    "palette": 3
+  },
+  {
+    "id": "ceo",
+    "name": "대표님",
+    "area": "office",
+    "age": 52,
+    "gender": "M",
+    "fav": {
+      "color": "green",
+      "scent": "coffee",
+      "food": "아이스커피"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "office_worker",
+      "star": 2
+    },
+    "palette": 0
+  },
+  {
+    "id": "chairman",
+    "name": "그룹 회장",
+    "area": "office",
+    "age": 63,
+    "gender": "M",
+    "fav": {
+      "color": "blue",
+      "scent": "citrus",
+      "food": "그린 스무디"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "ceo",
+      "star": 2
+    },
+    "palette": 5
+  },
+  {
+    "id": "fashionista",
+    "name": "이병 유진",
+    "area": "station",
+    "age": 20,
+    "gender": "F",
+    "fav": {
+      "color": "yellow",
+      "scent": "berry",
+      "food": "크림소다"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 1
+  },
+  {
+    "id": "movie_director",
+    "name": "행보관",
+    "area": "station",
+    "age": 44,
+    "gender": "M",
+    "fav": {
+      "color": "white",
+      "scent": "spices",
+      "food": "볶음밥"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 6
+  },
+  {
+    "id": "comedian",
+    "name": "병장 태식",
+    "area": "station",
+    "age": 22,
+    "gender": "M",
+    "fav": {
+      "color": "red",
+      "scent": "fruity",
+      "food": "잔치국수"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "fashionista",
+      "star": 1
+    },
+    "palette": 3
+  },
+  {
+    "id": "perfumer",
+    "name": "위생병 소희",
+    "area": "station",
+    "age": 24,
+    "gender": "F",
+    "fav": {
+      "color": "orange",
+      "scent": "milky",
+      "food": "해산물 피자"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "movie_director",
+      "star": 1
+    },
+    "palette": 4
+  },
+  {
+    "id": "famous_painter",
+    "name": "상병 준호",
+    "area": "station",
+    "age": 21,
+    "gender": "M",
+    "fav": {
+      "color": "yellow",
+      "scent": "fruity",
+      "food": "소고기 덮밥"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "perfumer",
+      "star": 2
+    },
+    "palette": 7
+  },
+  {
+    "id": "master_artist",
+    "name": "주임원사",
+    "area": "station",
+    "age": 49,
+    "gender": "M",
+    "fav": {
+      "color": "lime",
+      "scent": "cookie",
+      "food": "카레라이스"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "famous_painter",
+      "star": 2
+    },
+    "palette": 0
+  },
+  {
+    "id": "shop_clerk",
+    "name": "펜션 알바",
+    "area": "downtown",
+    "age": 20,
+    "gender": "F",
+    "fav": {
+      "color": "green",
+      "scent": "coffee",
+      "food": "트로피컬 피자"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 2
+  },
+  {
+    "id": "student",
+    "name": "총무 민석",
+    "area": "downtown",
+    "age": 22,
+    "gender": "M",
+    "fav": {
+      "color": "blue",
+      "scent": "floral",
+      "food": "딸기우유"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 5
+  },
+  {
+    "id": "racer",
+    "name": "셔틀 기사",
+    "area": "downtown",
+    "age": 39,
+    "gender": "M",
+    "fav": {
+      "color": "purple",
+      "scent": "pine",
+      "food": "초코 도넛"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "shop_clerk",
+      "star": 1
+    },
+    "palette": 3
+  },
+  {
+    "id": "beautician",
+    "name": "미용실 언니",
+    "area": "downtown",
+    "age": 32,
+    "gender": "F",
+    "fav": {
+      "color": "pink",
+      "scent": "berry",
+      "food": "카레빵"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "student",
+      "star": 1
+    },
+    "palette": 1
+  },
+  {
+    "id": "columnist",
+    "name": "후기 블로거",
+    "area": "downtown",
+    "age": 41,
+    "gender": "F",
+    "fav": {
+      "color": "red",
+      "scent": "coffee",
+      "food": "샌드위치"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "racer",
+      "star": 2
+    },
+    "palette": 6
+  },
+  {
+    "id": "ex_celebrity",
+    "name": "펜션 사장 순자",
+    "area": "downtown",
+    "age": 57,
+    "gender": "F",
+    "fav": {
+      "color": "orange",
+      "scent": "tropical",
+      "food": "츄러스"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "beautician",
+      "star": 1
+    },
+    "palette": 4
+  },
+  {
+    "id": "fitness_coach",
+    "name": "헬스 관장",
+    "area": "downtown",
+    "age": 36,
+    "gender": "M",
+    "fav": {
+      "color": "yellow",
+      "scent": "berry",
+      "food": "헤이즐넛 번"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "columnist",
+      "star": 2
+    },
+    "palette": 0
+  },
+  {
+    "id": "boxer",
+    "name": "복싱 막내",
+    "area": "downtown",
+    "age": 24,
+    "gender": "M",
+    "fav": {
+      "color": "lime",
+      "scent": "citrus",
+      "food": "자몽주스"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "ex_celebrity",
+      "star": 2
+    },
+    "palette": 7
+  },
+  {
+    "id": "sassy_girl",
+    "name": "새침한 막내",
+    "area": "specialty",
+    "age": 20,
+    "gender": "F",
+    "fav": {
+      "color": "red",
+      "scent": "floral",
+      "food": "오렌지에이드"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 1
+  },
+  {
+    "id": "sales_staff",
+    "name": "동호회 총무",
+    "area": "specialty",
+    "age": 35,
+    "gender": "M",
+    "fav": {
+      "color": "blue",
+      "scent": "floral",
+      "food": "전골"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 4
+  },
+  {
+    "id": "foodie",
+    "name": "먹보 조사",
+    "area": "specialty",
+    "age": 40,
+    "gender": "M",
+    "fav": {
+      "color": "purple",
+      "scent": "spices",
+      "food": "트러플 리조토"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "sassy_girl",
+      "star": 1
+    },
+    "palette": 6
+  },
+  {
+    "id": "cosmetician",
+    "name": "물광 조사",
+    "area": "specialty",
+    "age": 30,
+    "gender": "F",
+    "fav": {
+      "color": "white",
+      "scent": "milky",
+      "food": "우유 푸딩"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "sales_staff",
+      "star": 1
+    },
+    "palette": 2
+  },
+  {
+    "id": "chocolatier",
+    "name": "간식 담당",
+    "area": "specialty",
+    "age": 28,
+    "gender": "F",
+    "fav": {
+      "color": "red",
+      "scent": "cookie",
+      "food": "초코 케이크"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "foodie",
+      "star": 2
+    },
+    "palette": 3
+  },
+  {
+    "id": "acupuncturist",
+    "name": "한의원 조사",
+    "area": "specialty",
+    "age": 50,
+    "gender": "M",
+    "fav": {
+      "color": "orange",
+      "scent": "floral",
+      "food": "잔치국수"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "cosmetician",
+      "star": 2
+    },
+    "palette": 0
+  },
+  {
+    "id": "homemaker",
+    "name": "도시락 담당",
+    "area": "specialty",
+    "age": 45,
+    "gender": "F",
+    "fav": {
+      "color": "green",
+      "scent": "pine",
+      "food": "김밥"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "chocolatier",
+      "star": 2
+    },
+    "palette": 5
+  },
+  {
+    "id": "fashion_designer",
+    "name": "멋쟁이 조사",
+    "area": "specialty",
+    "age": 40,
+    "gender": "F",
+    "fav": {
+      "color": "lime",
+      "scent": "marine",
+      "food": "시저 샐러드"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "acupuncturist",
+      "star": 3
+    },
+    "palette": 7
+  },
+  {
+    "id": "rising_celeb",
+    "name": "유학생 소피",
+    "area": "airport",
+    "age": 22,
+    "gender": "F",
+    "fav": {
+      "color": "green",
+      "scent": "coffee",
+      "food": "간장치킨"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 2
+  },
+  {
+    "id": "car_dealer",
+    "name": "출장객 마크",
+    "area": "airport",
+    "age": 40,
+    "gender": "M",
+    "fav": {
+      "color": "blue",
+      "scent": "citrus",
+      "food": "간장 라면"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 6
+  },
+  {
+    "id": "famous_model",
+    "name": "모델 클로이",
+    "area": "airport",
+    "age": 24,
+    "gender": "F",
+    "fav": {
+      "color": "purple",
+      "scent": "berry",
+      "food": "과일 샐러드"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "rising_celeb",
+      "star": 1
+    },
+    "palette": 1
+  },
+  {
+    "id": "pilot",
+    "name": "기장 미겔",
+    "area": "airport",
+    "age": 45,
+    "gender": "M",
+    "fav": {
+      "color": "blue",
+      "scent": "tropical",
+      "food": "몽블랑"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "car_dealer",
+      "star": 1
+    },
+    "palette": 4
+  },
+  {
+    "id": "tv_personality",
+    "name": "리포터 에마",
+    "area": "airport",
+    "age": 30,
+    "gender": "F",
+    "fav": {
+      "color": "pink",
+      "scent": "fruity",
+      "food": "치즈케이크"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "famous_model",
+      "star": 2
+    },
+    "palette": 3
+  },
+  {
+    "id": "magnate",
+    "name": "회장 로버트",
+    "area": "airport",
+    "age": 60,
+    "gender": "M",
+    "fav": {
+      "color": "yellow",
+      "scent": "money",
+      "food": "말차 밤 선데"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "pilot",
+      "star": 2
+    },
+    "palette": 0
+  },
+  {
+    "id": "bossy_lady",
+    "name": "단장 마르타",
+    "area": "airport",
+    "age": 50,
+    "gender": "F",
+    "fav": {
+      "color": "lime",
+      "scent": "spices",
+      "food": "무지개 빙수"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "tv_personality",
+      "star": 2
+    },
+    "palette": 5
+  },
+  {
+    "id": "king_ackbar",
+    "name": "왕족 아크바",
+    "area": "airport",
+    "age": 60,
+    "gender": "M",
+    "fav": {
+      "color": "yellow",
+      "scent": "cookie",
+      "food": "열대과일주스"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "magnate",
+      "star": 3
+    },
+    "palette": 7
+  },
+  {
+    "id": "kairobot",
+    "name": "꼬마 유튜버",
+    "area": "kairo_island",
+    "age": 12,
+    "gender": "M",
+    "fav": {
+      "color": "red",
+      "scent": "citrus",
+      "food": "콘도그"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 3
+  },
+  {
+    "id": "sally_prin",
+    "name": "먹방 샐리",
+    "area": "kairo_island",
+    "age": 23,
+    "gender": "F",
+    "fav": {
+      "color": "pink",
+      "scent": "cookie",
+      "food": "모둠초밥"
+    },
+    "start": true,
+    "invitedBy": null,
+    "palette": 1
+  },
+  {
+    "id": "wairobot",
+    "name": "리뷰 유튜버",
+    "area": "kairo_island",
+    "age": 11,
+    "gender": "M",
+    "fav": {
+      "color": "purple",
+      "scent": "money",
+      "food": "참치초밥"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "sally_prin",
+      "star": 2
+    },
+    "palette": 5
+  },
+  {
+    "id": "chimpan_z",
+    "name": "정글 유튜버",
+    "area": "kairo_island",
+    "age": 10,
+    "gender": "M",
+    "fav": {
+      "color": "green",
+      "scent": "tropical",
+      "food": "바나나주스"
+    },
+    "start": false,
+    "invitedBy": {
+      "friend": "wairobot",
+      "star": 3
+    },
+    "palette": 6
+  }
+]

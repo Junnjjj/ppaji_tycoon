@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#12265c" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>워터파크 스토리</title>
+  </head>
+  <body>
+    <div id="game"></div>
+        <script>
+      // ?diag=1 — 폰 진단 (G40): 콘솔이 없는 실기에서 부팅 오류를 화면에 띄운다
+      if (/[?&]diag=1/.test(location.search)) {
+        var box = document.createElement('pre'); box.id = 'wp-diag';
+        box.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:999;max-height:45vh;overflow:auto;margin:0;padding:8px;background:#200c;color:#fff;font:11px/1.35 monospace;white-space:pre-wrap;pointer-events:none';
+        var log = function (m) { if (!box.parentNode) document.body.appendChild(box); box.textContent += m + '\n'; };
+        window.addEventListener('error', function (e) { log('[error] ' + e.message + ' @' + (e.filename || '') + ':' + e.lineno + (e.error && e.error.stack ? '\n' + String(e.error.stack).slice(0, 600) : '')); });
+        window.addEventListener('unhandledrejection', function (e) { log('[reject] ' + (e.reason && e.reason.stack ? String(e.reason.stack).slice(0, 600) : String(e.reason))); });
+        window.__pjDiag = log;
+        setTimeout(function () { log('[boot] ' + navigator.userAgent.slice(0, 80) + ' · webgl=' + !!(document.createElement('canvas').getContext('webgl2') || document.createElement('canvas').getContext('webgl')) + ' · wp=' + (typeof window.__pj)); }, 4000);
+      }
+    </script>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

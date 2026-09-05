@@ -1,0 +1,1884 @@
+[
+  {
+    "id": "ice_water",
+    "name": "얼음물",
+    "cat": "drink",
+    "key": "ice+water",
+    "taste": 2,
+    "look": 1,
+    "pop": 2,
+    "unlock": "start"
+  },
+  {
+    "id": "orange_juice",
+    "name": "오렌지주스",
+    "cat": "drink",
+    "key": "orange_fruit+orange_fruit",
+    "taste": 4,
+    "look": 3,
+    "pop": 4,
+    "unlock": "start"
+  },
+  {
+    "id": "lemonade",
+    "name": "레모네이드",
+    "cat": "drink",
+    "key": "lemon_fruit+lemon_fruit+sugar+water",
+    "taste": 4,
+    "look": 4,
+    "pop": 5,
+    "unlock": "start"
+  },
+  {
+    "id": "orange_ade",
+    "name": "오렌지에이드",
+    "cat": "drink",
+    "key": "ice+orange_fruit+sugar+water",
+    "taste": 4,
+    "look": 4,
+    "pop": 4,
+    "unlock": "start"
+  },
+  {
+    "id": "strawberry_milk",
+    "name": "딸기우유",
+    "cat": "drink",
+    "key": "milk+strawberry_fruit+sugar",
+    "taste": 5,
+    "look": 5,
+    "pop": 5,
+    "unlock": "start"
+  },
+  {
+    "id": "milkshake",
+    "name": "밀크셰이크",
+    "cat": "drink",
+    "key": "ice+milk+milk+sugar",
+    "taste": 5,
+    "look": 4,
+    "pop": 4,
+    "unlock": "start"
+  },
+  {
+    "id": "egg_bread",
+    "name": "계란빵",
+    "cat": "snack",
+    "key": "egg+flour+sugar",
+    "taste": 4,
+    "look": 3,
+    "pop": 4,
+    "unlock": "start"
+  },
+  {
+    "id": "pancake",
+    "name": "팬케이크",
+    "cat": "snack",
+    "key": "egg+flour+milk",
+    "taste": 5,
+    "look": 4,
+    "pop": 5,
+    "unlock": "start"
+  },
+  {
+    "id": "french_toast",
+    "name": "프렌치토스트",
+    "cat": "snack",
+    "key": "egg+egg+flour+milk",
+    "taste": 5,
+    "look": 5,
+    "pop": 5,
+    "unlock": "start"
+  },
+  {
+    "id": "churros",
+    "name": "츄러스",
+    "cat": "snack",
+    "key": "flour+flour+sugar",
+    "taste": 4,
+    "look": 4,
+    "pop": 5,
+    "unlock": "start"
+  },
+  {
+    "id": "donut",
+    "name": "도넛",
+    "cat": "snack",
+    "key": "egg+flour+flour+sugar",
+    "taste": 5,
+    "look": 4,
+    "pop": 5,
+    "unlock": "start"
+  },
+  {
+    "id": "crepe",
+    "name": "크레페",
+    "cat": "snack",
+    "key": "egg+flour+milk+sugar",
+    "taste": 5,
+    "look": 5,
+    "pop": 6,
+    "unlock": "start"
+  },
+  {
+    "id": "omelet",
+    "name": "오믈렛",
+    "cat": "meal",
+    "key": "egg+egg+milk",
+    "taste": 4,
+    "look": 3,
+    "pop": 3,
+    "unlock": "start"
+  },
+  {
+    "id": "egg_sandwich",
+    "name": "에그 샌드위치",
+    "cat": "meal",
+    "key": "egg+egg+flour",
+    "taste": 4,
+    "look": 3,
+    "pop": 4,
+    "unlock": "start"
+  },
+  {
+    "id": "snow_cone",
+    "name": "눈꽃빙수",
+    "cat": "dessert",
+    "key": "ice+strawberry_fruit+sugar",
+    "taste": 5,
+    "look": 6,
+    "pop": 6,
+    "unlock": "start"
+  },
+  {
+    "id": "strawberry_sorbet",
+    "name": "딸기 셔벗",
+    "cat": "dessert",
+    "key": "ice+strawberry_fruit+strawberry_fruit",
+    "taste": 5,
+    "look": 5,
+    "pop": 5,
+    "unlock": "start"
+  },
+  {
+    "id": "lemon_shaved_ice",
+    "name": "레몬 빙수",
+    "cat": "dessert",
+    "key": "ice+lemon_fruit+sugar",
+    "taste": 4,
+    "look": 5,
+    "pop": 4,
+    "unlock": "start"
+  },
+  {
+    "id": "orange_sorbet",
+    "name": "오렌지 셔벗",
+    "cat": "dessert",
+    "key": "ice+orange_fruit+sugar",
+    "taste": 4,
+    "look": 4,
+    "pop": 4,
+    "unlock": "start"
+  },
+  {
+    "id": "milk_pudding",
+    "name": "우유 푸딩",
+    "cat": "dessert",
+    "key": "egg+milk+sugar",
+    "taste": 5,
+    "look": 4,
+    "pop": 4,
+    "unlock": "start"
+  },
+  {
+    "id": "fruit_crepe",
+    "name": "과일 크레페",
+    "cat": "dessert",
+    "key": "@fruit+egg+flour+milk",
+    "taste": 6,
+    "look": 6,
+    "pop": 6,
+    "unlock": "start",
+    "upgradeOf": [
+      {
+        "base": "crepe",
+        "add": [
+          "@fruit"
+        ]
+      },
+      {
+        "base": "pancake",
+        "add": [
+          "@fruit"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "iced_coffee",
+    "name": "아이스커피",
+    "cat": "drink",
+    "key": "coffee_bean+ice+water",
+    "taste": 5,
+    "look": 4,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "cafe_latte",
+    "name": "카페라테",
+    "cat": "drink",
+    "key": "coffee_bean+milk",
+    "taste": 6,
+    "look": 5,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "milk_tea",
+    "name": "밀크티",
+    "cat": "drink",
+    "key": "milk+sugar+tea_leaf",
+    "taste": 5,
+    "look": 5,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "banana_milk",
+    "name": "바나나우유",
+    "cat": "drink",
+    "key": "banana_fruit+milk+sugar",
+    "taste": 6,
+    "look": 5,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "strawberry_smoothie",
+    "name": "딸기 스무디",
+    "cat": "drink",
+    "key": "ice+milk+strawberry_fruit+strawberry_fruit",
+    "taste": 6,
+    "look": 6,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "matcha_latte",
+    "name": "말차라테",
+    "cat": "drink",
+    "key": "matcha+milk+sugar",
+    "taste": 6,
+    "look": 7,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "melon_soda",
+    "name": "멜론소다",
+    "cat": "drink",
+    "key": "melon_fruit+soda_water+sugar",
+    "taste": 6,
+    "look": 8,
+    "pop": 7,
+    "unlock": "level:2"
+  },
+  {
+    "id": "grapefruit_ade",
+    "name": "자몽에이드",
+    "cat": "drink",
+    "key": "grapefruit_fruit+ice+soda_water+sugar",
+    "taste": 7,
+    "look": 7,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "tropical_juice",
+    "name": "열대과일주스",
+    "cat": "drink",
+    "key": "banana_fruit+coconut_milk+mango",
+    "taste": 8,
+    "look": 8,
+    "pop": 10,
+    "unlock": "level:4"
+  },
+  {
+    "id": "chocolate_crepe",
+    "name": "초코 크레페",
+    "cat": "snack",
+    "key": "chocolate_bar+egg+flour+milk",
+    "taste": 7,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "butter_cookie",
+    "name": "버터쿠키",
+    "cat": "snack",
+    "key": "butter+flour+sugar",
+    "taste": 5,
+    "look": 5,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "croissant",
+    "name": "크루아상",
+    "cat": "snack",
+    "key": "butter+butter+egg+flour",
+    "taste": 6,
+    "look": 6,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "fries",
+    "name": "감자튀김",
+    "cat": "snack",
+    "key": "potato+potato",
+    "taste": 5,
+    "look": 3,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "hot_dog",
+    "name": "핫도그",
+    "cat": "snack",
+    "key": "flour+pork",
+    "taste": 5,
+    "look": 4,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "chicken_nugget",
+    "name": "치킨너겟",
+    "cat": "snack",
+    "key": "chicken+egg+flour",
+    "taste": 6,
+    "look": 5,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "seafood_tempura",
+    "name": "해물튀김",
+    "cat": "snack",
+    "key": "@seafood+egg+flour",
+    "taste": 7,
+    "look": 6,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "cheese_stick",
+    "name": "치즈스틱",
+    "cat": "snack",
+    "key": "cheese+egg+flour",
+    "taste": 6,
+    "look": 5,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "potato_pancake",
+    "name": "감자전",
+    "cat": "snack",
+    "key": "egg+flour+potato",
+    "taste": 5,
+    "look": 4,
+    "pop": 5,
+    "unlock": "level:2"
+  },
+  {
+    "id": "salmon_sushi",
+    "name": "연어초밥",
+    "cat": "meal",
+    "key": "rice+salmon+seaweed",
+    "taste": 8,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "tuna_sushi",
+    "name": "참치초밥",
+    "cat": "meal",
+    "key": "rice+seaweed+tuna",
+    "taste": 8,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "gimbap",
+    "name": "김밥",
+    "cat": "meal",
+    "key": "egg+rice+seaweed",
+    "taste": 5,
+    "look": 5,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "seafood_fried_rice",
+    "name": "해물볶음밥",
+    "cat": "meal",
+    "key": "@seafood+egg+rice",
+    "taste": 6,
+    "look": 5,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "omurice",
+    "name": "오므라이스",
+    "cat": "meal",
+    "key": "egg+egg+rice+tomato",
+    "taste": 6,
+    "look": 7,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "tonkatsu",
+    "name": "돈가스",
+    "cat": "meal",
+    "key": "egg+flour+pork",
+    "taste": 7,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "cheeseburger",
+    "name": "치즈버거",
+    "cat": "meal",
+    "key": "beef+cheese+flour+tomato",
+    "taste": 7,
+    "look": 7,
+    "pop": 9,
+    "unlock": "cook",
+    "upgradeOf": [
+      {
+        "base": "hamburger",
+        "add": [
+          "cheese",
+          "tomato"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "curry_rice",
+    "name": "카레라이스",
+    "cat": "meal",
+    "key": "beef+curry_powder+potato+rice",
+    "taste": 8,
+    "look": 6,
+    "pop": 8,
+    "unlock": "level:3"
+  },
+  {
+    "id": "soy_chicken",
+    "name": "간장치킨",
+    "cat": "meal",
+    "key": "chicken+chicken+soy_sauce+sugar",
+    "taste": 8,
+    "look": 7,
+    "pop": 9,
+    "unlock": "level:4"
+  },
+  {
+    "id": "truffle_risotto",
+    "name": "트러플 리조토",
+    "cat": "meal",
+    "key": "butter+cheese+rice+truffle",
+    "taste": 10,
+    "look": 9,
+    "pop": 8,
+    "unlock": "level:6"
+  },
+  {
+    "id": "vanilla_ice_cream",
+    "name": "바닐라 아이스크림",
+    "cat": "dessert",
+    "key": "cream+milk+sugar+vanilla",
+    "taste": 7,
+    "look": 6,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "choco_mint_ice_cream",
+    "name": "초코민트 아이스크림",
+    "cat": "dessert",
+    "key": "chocolate_bar+cream+matcha+milk",
+    "taste": 8,
+    "look": 8,
+    "pop": 9,
+    "unlock": "cook"
+  },
+  {
+    "id": "affogato",
+    "name": "아포가토",
+    "cat": "dessert",
+    "key": "coffee_bean+cream+milk+vanilla",
+    "taste": 8,
+    "look": 7,
+    "pop": 8,
+    "unlock": "level:3",
+    "upgradeOf": [
+      {
+        "base": "vanilla_ice_cream",
+        "add": [
+          "coffee_bean"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "matcha_shaved_ice",
+    "name": "녹차 빙수",
+    "cat": "dessert",
+    "key": "ice+matcha+milk+sugar",
+    "taste": 7,
+    "look": 8,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "mango_shaved_ice",
+    "name": "망고 빙수",
+    "cat": "dessert",
+    "key": "ice+mango+mango+milk",
+    "taste": 8,
+    "look": 9,
+    "pop": 9,
+    "unlock": "level:2"
+  },
+  {
+    "id": "fruit_sorbet",
+    "name": "과일 셔벗",
+    "cat": "dessert",
+    "key": "@fruit+ice+sugar",
+    "taste": 6,
+    "look": 6,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "strawberry_cake",
+    "name": "딸기 케이크",
+    "cat": "dessert",
+    "key": "cream+egg+flour+strawberry_fruit+sugar",
+    "taste": 8,
+    "look": 9,
+    "pop": 9,
+    "unlock": "cook"
+  },
+  {
+    "id": "chocolate_cake",
+    "name": "초코 케이크",
+    "cat": "dessert",
+    "key": "chocolate_bar+egg+flour+sugar",
+    "taste": 7,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "cheesecake",
+    "name": "치즈케이크",
+    "cat": "dessert",
+    "key": "cheese+cream+egg+sugar",
+    "taste": 8,
+    "look": 7,
+    "pop": 8,
+    "unlock": "level:2"
+  },
+  {
+    "id": "honey_toast",
+    "name": "허니 토스트",
+    "cat": "dessert",
+    "key": "butter+flour+honey_jar+milk",
+    "taste": 7,
+    "look": 8,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "hazelnut_chocolate",
+    "name": "헤이즐넛 초콜릿",
+    "cat": "dessert",
+    "key": "chocolate_bar+hazelnut",
+    "taste": 7,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "peach_tart",
+    "name": "복숭아 타르트",
+    "cat": "dessert",
+    "key": "butter+egg+flour+peach_fruit+sugar",
+    "taste": 9,
+    "look": 9,
+    "pop": 8,
+    "unlock": "level:5"
+  },
+  {
+    "id": "grapefruit_juice",
+    "name": "자몽주스",
+    "cat": "drink",
+    "key": "grapefruit_fruit+grapefruit_fruit",
+    "taste": 7,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "grape_juice",
+    "name": "포도주스",
+    "cat": "drink",
+    "key": "grape_fruit+grape_fruit",
+    "taste": 7,
+    "look": 7,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "watermelon_juice",
+    "name": "수박주스",
+    "cat": "drink",
+    "key": "watermelon_fruit+watermelon_fruit",
+    "taste": 7,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "dragonfruit_juice",
+    "name": "용과주스",
+    "cat": "drink",
+    "key": "dragonfruit+dragonfruit",
+    "taste": 8,
+    "look": 9,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "papaya_juice",
+    "name": "파파야주스",
+    "cat": "drink",
+    "key": "papaya+papaya",
+    "taste": 7,
+    "look": 7,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "banana_juice",
+    "name": "바나나주스",
+    "cat": "drink",
+    "key": "banana_fruit+banana_fruit",
+    "taste": 6,
+    "look": 5,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "pineapple_juice",
+    "name": "파인애플주스",
+    "cat": "drink",
+    "key": "pineapple_fruit+pineapple_fruit",
+    "taste": 7,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "blueberry_juice",
+    "name": "블루베리주스",
+    "cat": "drink",
+    "key": "blueberry_fruit+blueberry_fruit",
+    "taste": 7,
+    "look": 8,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "raspberry_juice",
+    "name": "라즈베리주스",
+    "cat": "drink",
+    "key": "raspberry_fruit+raspberry_fruit",
+    "taste": 7,
+    "look": 8,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "peach_juice",
+    "name": "복숭아주스",
+    "cat": "drink",
+    "key": "peach_fruit+peach_fruit",
+    "taste": 7,
+    "look": 7,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "kiwi_juice",
+    "name": "키위주스",
+    "cat": "drink",
+    "key": "kiwi_fruit+kiwi_fruit",
+    "taste": 6,
+    "look": 7,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "coconut_water",
+    "name": "코코넛워터",
+    "cat": "drink",
+    "key": "coconut_milk+coconut_milk",
+    "taste": 6,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "grape_soda",
+    "name": "포도소다",
+    "cat": "drink",
+    "key": "grape_fruit+soda_water+sugar",
+    "taste": 8,
+    "look": 8,
+    "pop": 8,
+    "unlock": "level:2"
+  },
+  {
+    "id": "fruit_soda",
+    "name": "과일 소다",
+    "cat": "drink",
+    "key": "@fruit+soda_water+sugar",
+    "taste": 5,
+    "look": 6,
+    "pop": 6,
+    "unlock": "cook",
+    "upgradeOf": [
+      {
+        "base": "orange_juice",
+        "add": [
+          "soda_water",
+          "sugar"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "watermelon_soda",
+    "name": "수박소다",
+    "cat": "drink",
+    "key": "soda_water+sugar+watermelon_fruit",
+    "taste": 8,
+    "look": 9,
+    "pop": 9,
+    "unlock": "level:3"
+  },
+  {
+    "id": "mixed_fruit_juice",
+    "name": "믹스 과일주스",
+    "cat": "drink",
+    "key": "@fruit+@fruit+milk",
+    "taste": 6,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "ramune",
+    "name": "사이다",
+    "cat": "drink",
+    "key": "lemon_fruit+soda_water+sugar",
+    "taste": 5,
+    "look": 6,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "canned_coffee",
+    "name": "캔커피",
+    "cat": "drink",
+    "key": "coffee_bean+sugar+water",
+    "taste": 5,
+    "look": 4,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "green_smoothie",
+    "name": "그린 스무디",
+    "cat": "drink",
+    "key": "cabbage+kiwi_fruit+tomato",
+    "taste": 7,
+    "look": 6,
+    "pop": 6,
+    "unlock": "level:4"
+  },
+  {
+    "id": "cream_soda",
+    "name": "크림소다",
+    "cat": "drink",
+    "key": "ice+melon_fruit+milk+soda_water",
+    "taste": 9,
+    "look": 10,
+    "pop": 10,
+    "unlock": "level:5"
+  },
+  {
+    "id": "egg_crepe",
+    "name": "에그 크레페",
+    "cat": "snack",
+    "key": "egg+flour+mayonnaise",
+    "taste": 5,
+    "look": 4,
+    "pop": 5,
+    "unlock": "cook"
+  },
+  {
+    "id": "chicken_crepe",
+    "name": "치킨 크레페",
+    "cat": "snack",
+    "key": "chicken+egg+flour+mayonnaise",
+    "taste": 7,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook",
+    "upgradeOf": [
+      {
+        "base": "egg_crepe",
+        "add": [
+          "chicken"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tuna_mayo_crepe",
+    "name": "참치마요 크레페",
+    "cat": "snack",
+    "key": "egg+flour+mayonnaise+tuna",
+    "taste": 8,
+    "look": 7,
+    "pop": 8,
+    "unlock": "level:3"
+  },
+  {
+    "id": "hazelnut_bun",
+    "name": "헤이즐넛 번",
+    "cat": "snack",
+    "key": "flour+flour+hazelnut",
+    "taste": 7,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "melon_bun",
+    "name": "멜론빵",
+    "cat": "snack",
+    "key": "flour+flour+melon_fruit+sugar",
+    "taste": 7,
+    "look": 8,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "pain_au_chocolat",
+    "name": "팽오쇼콜라",
+    "cat": "snack",
+    "key": "butter+chocolate_bar+flour",
+    "taste": 7,
+    "look": 7,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "sandwich",
+    "name": "샌드위치",
+    "cat": "snack",
+    "key": "cabbage+flour+pork+tomato",
+    "taste": 6,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "curry_bun",
+    "name": "카레빵",
+    "cat": "snack",
+    "key": "curry_powder+flour+flour+pork",
+    "taste": 8,
+    "look": 6,
+    "pop": 8,
+    "unlock": "level:3"
+  },
+  {
+    "id": "kumax_bun",
+    "name": "연어빵",
+    "cat": "snack",
+    "key": "flour+flour+salmon",
+    "taste": 7,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "kairo_bun",
+    "name": "빠지 번",
+    "cat": "snack",
+    "key": "charcoal+flour+flour",
+    "taste": 10,
+    "look": 9,
+    "pop": 11,
+    "unlock": "level:6"
+  },
+  {
+    "id": "taco",
+    "name": "타코",
+    "cat": "snack",
+    "key": "@meat+cabbage+corn",
+    "taste": 7,
+    "look": 6,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "hamburger",
+    "name": "햄버거",
+    "cat": "snack",
+    "key": "beef+flour+flour",
+    "taste": 7,
+    "look": 6,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "corn_dog",
+    "name": "콘도그",
+    "cat": "snack",
+    "key": "corn+flour+pork",
+    "taste": 6,
+    "look": 5,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "fried_chicken",
+    "name": "프라이드치킨",
+    "cat": "snack",
+    "key": "chicken+flour+olive_oil",
+    "taste": 8,
+    "look": 6,
+    "pop": 9,
+    "unlock": "cook"
+  },
+  {
+    "id": "steamed_pork_bun",
+    "name": "고기만두",
+    "cat": "snack",
+    "key": "flour+pork+water",
+    "taste": 6,
+    "look": 5,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "fried_calamari",
+    "name": "오징어튀김",
+    "cat": "snack",
+    "key": "flour+olive_oil+squid",
+    "taste": 7,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "corn_on_cob",
+    "name": "군옥수수",
+    "cat": "snack",
+    "key": "charcoal+corn",
+    "taste": 8,
+    "look": 7,
+    "pop": 9,
+    "unlock": "level:5"
+  },
+  {
+    "id": "chicken_kebab",
+    "name": "닭꼬치",
+    "cat": "snack",
+    "key": "charcoal+chicken+egg",
+    "taste": 9,
+    "look": 7,
+    "pop": 9,
+    "unlock": "level:5"
+  },
+  {
+    "id": "salmon_rice_ball",
+    "name": "연어 주먹밥",
+    "cat": "snack",
+    "key": "rice+rice+salmon",
+    "taste": 7,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "popcorn",
+    "name": "팝콘",
+    "cat": "snack",
+    "key": "butter+corn",
+    "taste": 5,
+    "look": 5,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "caramel_popcorn",
+    "name": "캐러멜 팝콘",
+    "cat": "snack",
+    "key": "butter+caramel+corn",
+    "taste": 8,
+    "look": 8,
+    "pop": 9,
+    "unlock": "level:4",
+    "upgradeOf": [
+      {
+        "base": "popcorn",
+        "add": [
+          "caramel"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "caesar_salad",
+    "name": "시저 샐러드",
+    "cat": "snack",
+    "key": "cabbage+cheese+egg+mayonnaise",
+    "taste": 7,
+    "look": 7,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "fruit_salad",
+    "name": "과일 샐러드",
+    "cat": "snack",
+    "key": "@fruit+@fruit+@fruit+cabbage",
+    "taste": 7,
+    "look": 8,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "octopus_fritters",
+    "name": "타코야키",
+    "cat": "snack",
+    "key": "bbq_sauce+flour+octopus",
+    "taste": 9,
+    "look": 7,
+    "pop": 10,
+    "unlock": "level:4"
+  },
+  {
+    "id": "almond_cookie",
+    "name": "아몬드 쿠키",
+    "cat": "snack",
+    "key": "almond+butter+flour+sugar",
+    "taste": 10,
+    "look": 9,
+    "pop": 10,
+    "unlock": "level:7"
+  },
+  {
+    "id": "bbq_kebab",
+    "name": "바비큐 꼬치",
+    "cat": "meal",
+    "key": "beef+charcoal+corn+tomato",
+    "taste": 11,
+    "look": 9,
+    "pop": 11,
+    "unlock": "level:6"
+  },
+  {
+    "id": "bone_in_roast",
+    "name": "뼈째 통구이",
+    "cat": "meal",
+    "key": "@meat+@meat+@meat",
+    "taste": 8,
+    "look": 7,
+    "pop": 9,
+    "unlock": "cook"
+  },
+  {
+    "id": "seafood_curry",
+    "name": "해물카레",
+    "cat": "meal",
+    "key": "curry_powder+rice+shrimp+squid",
+    "taste": 9,
+    "look": 7,
+    "pop": 9,
+    "unlock": "level:4"
+  },
+  {
+    "id": "beef_veg_rice",
+    "name": "소고기 덮밥",
+    "cat": "meal",
+    "key": "bbq_sauce+beef+cabbage+rice",
+    "taste": 8,
+    "look": 7,
+    "pop": 8,
+    "unlock": "level:4"
+  },
+  {
+    "id": "beefsteak",
+    "name": "비프스테이크",
+    "cat": "meal",
+    "key": "beef+beef+butter",
+    "taste": 9,
+    "look": 8,
+    "pop": 9,
+    "unlock": "cook"
+  },
+  {
+    "id": "margherita_pizza",
+    "name": "마르게리타 피자",
+    "cat": "meal",
+    "key": "cheese+flour+tomato",
+    "taste": 7,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "seafood_pizza",
+    "name": "해산물 피자",
+    "cat": "meal",
+    "key": "@seafood+@seafood+cheese+flour",
+    "taste": 8,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "tropical_pizza",
+    "name": "트로피컬 피자",
+    "cat": "meal",
+    "key": "cheese+flour+pineapple_fruit",
+    "taste": 8,
+    "look": 8,
+    "pop": 9,
+    "unlock": "cook"
+  },
+  {
+    "id": "meat_pie",
+    "name": "미트파이",
+    "cat": "meal",
+    "key": "bbq_sauce+butter+flour+pork",
+    "taste": 8,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "fried_noodles",
+    "name": "볶음면",
+    "cat": "meal",
+    "key": "bbq_sauce+cabbage+noodle",
+    "taste": 8,
+    "look": 6,
+    "pop": 9,
+    "unlock": "level:4"
+  },
+  {
+    "id": "stir_fry_rice",
+    "name": "볶음밥",
+    "cat": "meal",
+    "key": "bbq_sauce+egg+rice",
+    "taste": 7,
+    "look": 6,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "boiled_noodles",
+    "name": "잔치국수",
+    "cat": "meal",
+    "key": "noodle+soy_sauce+water",
+    "taste": 6,
+    "look": 5,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "hot_pot",
+    "name": "전골",
+    "cat": "meal",
+    "key": "cabbage+egg+pork+soy_sauce",
+    "taste": 8,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "soy_ramen",
+    "name": "간장 라면",
+    "cat": "meal",
+    "key": "noodle+pork+soy_sauce+water",
+    "taste": 9,
+    "look": 7,
+    "pop": 10,
+    "unlock": "level:5"
+  },
+  {
+    "id": "squid_sushi",
+    "name": "오징어초밥",
+    "cat": "meal",
+    "key": "rice+seaweed+squid",
+    "taste": 7,
+    "look": 6,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "octopus_sushi",
+    "name": "문어초밥",
+    "cat": "meal",
+    "key": "octopus+rice+seaweed",
+    "taste": 8,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "sushi_set",
+    "name": "모둠초밥",
+    "cat": "meal",
+    "key": "octopus+rice+salmon+squid+tuna",
+    "taste": 11,
+    "look": 10,
+    "pop": 12,
+    "unlock": "level:6"
+  },
+  {
+    "id": "kairobot_toast",
+    "name": "해태 탄 토스트",
+    "cat": "meal",
+    "key": "charcoal+flour+water",
+    "taste": 11,
+    "look": 6,
+    "pop": 12,
+    "unlock": "level:8"
+  },
+  {
+    "id": "soda_popsicle",
+    "name": "소다 아이스바",
+    "cat": "dessert",
+    "key": "ice+lemon_fruit+soda_water",
+    "taste": 6,
+    "look": 7,
+    "pop": 7,
+    "unlock": "level:2"
+  },
+  {
+    "id": "fruit_popsicle",
+    "name": "과일 아이스바",
+    "cat": "dessert",
+    "key": "@fruit+ice",
+    "taste": 7,
+    "look": 8,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "chocolate_ice_cream",
+    "name": "초코 아이스크림",
+    "cat": "dessert",
+    "key": "caramel+chocolate_bar+ice+milk",
+    "taste": 9,
+    "look": 8,
+    "pop": 9,
+    "unlock": "cook"
+  },
+  {
+    "id": "matcha_ice_cream",
+    "name": "말차 아이스크림",
+    "cat": "dessert",
+    "key": "caramel+ice+matcha+milk",
+    "taste": 9,
+    "look": 9,
+    "pop": 9,
+    "unlock": "level:4"
+  },
+  {
+    "id": "coffee_soft_serve",
+    "name": "커피 소프트콘",
+    "cat": "dessert",
+    "key": "butter+coffee_bean+ice+milk+sugar",
+    "taste": 9,
+    "look": 8,
+    "pop": 9,
+    "unlock": "level:5"
+  },
+  {
+    "id": "matcha_hazelnut_crepe",
+    "name": "말차 헤이즐넛 크레페",
+    "cat": "dessert",
+    "key": "egg+flour+hazelnut+matcha",
+    "taste": 8,
+    "look": 8,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "deluxe_crepe",
+    "name": "디럭스 크레페",
+    "cat": "dessert",
+    "key": "@fruit+@fruit+@fruit+egg+flour",
+    "taste": 10,
+    "look": 11,
+    "pop": 11,
+    "unlock": "level:5"
+  },
+  {
+    "id": "chocolate_donut",
+    "name": "초코 도넛",
+    "cat": "dessert",
+    "key": "chocolate_bar+flour+olive_oil+sugar",
+    "taste": 7,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook",
+    "upgradeOf": [
+      {
+        "base": "donut",
+        "add": [
+          "chocolate_bar"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "blue_hawaii_snow_cone",
+    "name": "블루하와이 빙수",
+    "cat": "dessert",
+    "key": "blueberry_fruit+ice+sugar",
+    "taste": 7,
+    "look": 9,
+    "pop": 9,
+    "unlock": "cook"
+  },
+  {
+    "id": "rainbow_snow_cone",
+    "name": "무지개 빙수",
+    "cat": "dessert",
+    "key": "ice+lemon_fruit+melon_fruit+strawberry_fruit",
+    "taste": 10,
+    "look": 12,
+    "pop": 11,
+    "unlock": "level:6"
+  },
+  {
+    "id": "strawberry_sundae",
+    "name": "딸기 선데",
+    "cat": "dessert",
+    "key": "almond+banana_fruit+milk+strawberry_fruit",
+    "taste": 11,
+    "look": 11,
+    "pop": 11,
+    "unlock": "level:7"
+  },
+  {
+    "id": "oriental_sundae",
+    "name": "말차 밤 선데",
+    "cat": "dessert",
+    "key": "chestnut+hazelnut+matcha+milk",
+    "taste": 12,
+    "look": 12,
+    "pop": 11,
+    "unlock": "level:7"
+  },
+  {
+    "id": "chestnut_cream_cake",
+    "name": "몽블랑",
+    "cat": "dessert",
+    "key": "butter+chestnut+egg+flour",
+    "taste": 10,
+    "look": 11,
+    "pop": 10,
+    "unlock": "level:6"
+  },
+  {
+    "id": "raspberry_tart",
+    "name": "라즈베리 타르트",
+    "cat": "dessert",
+    "key": "butter+egg+flour+raspberry_fruit+sugar",
+    "taste": 9,
+    "look": 9,
+    "pop": 9,
+    "unlock": "cook"
+  },
+  {
+    "id": "dragonfruit_sorbet",
+    "name": "용과 셔벗",
+    "cat": "dessert",
+    "key": "dragonfruit+ice+sugar",
+    "taste": 8,
+    "look": 10,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "kairobot_pudding",
+    "name": "해태 황금 푸딩",
+    "cat": "dessert",
+    "key": "egg+gold_leaf+milk+sugar",
+    "taste": 16,
+    "look": 16,
+    "pop": 16,
+    "unlock": "level:10"
+  },
+  {
+    "id": "kairobot_parfait",
+    "name": "해태 숯 파르페",
+    "cat": "dessert",
+    "key": "charcoal+cream+ice+milk",
+    "taste": 12,
+    "look": 13,
+    "pop": 14,
+    "unlock": "level:9"
+  },
+  {
+    "id": "veg_scraps",
+    "name": "야채 찌꺼기",
+    "cat": "snack",
+    "key": "@fail+veg",
+    "taste": 1,
+    "look": 1,
+    "pop": 1,
+    "unlock": "fail"
+  },
+  {
+    "id": "burnt_bread",
+    "name": "탄 빵",
+    "cat": "snack",
+    "key": "@fail+grain",
+    "taste": 1,
+    "look": 1,
+    "pop": 1,
+    "unlock": "fail"
+  },
+  {
+    "id": "tsukune",
+    "name": "탄 꼬치",
+    "cat": "meal",
+    "key": "@fail+meat",
+    "taste": 2,
+    "look": 1,
+    "pop": 2,
+    "unlock": "fail"
+  },
+  {
+    "id": "mystery_juice",
+    "name": "수상한 주스",
+    "cat": "drink",
+    "key": "@fail+other",
+    "taste": 1,
+    "look": 1,
+    "pop": 1,
+    "unlock": "fail"
+  },
+  {
+    "id": "sikhye",
+    "name": "식혜",
+    "cat": "drink",
+    "key": "malt+rice+sugar",
+    "taste": 7,
+    "look": 6,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "misugaru_shake",
+    "name": "미숫가루 셰이크",
+    "cat": "drink",
+    "key": "ice+milk+misugaru+sugar",
+    "taste": 8,
+    "look": 6,
+    "pop": 8,
+    "unlock": "level:3"
+  },
+  {
+    "id": "sujeonggwa",
+    "name": "수정과",
+    "cat": "drink",
+    "key": "persimmon+sugar+water",
+    "taste": 8,
+    "look": 7,
+    "pop": 8,
+    "unlock": "level:4"
+  },
+  {
+    "id": "iced_americano",
+    "name": "아이스 아메리카노",
+    "cat": "drink",
+    "key": "coffee_bean+coffee_bean+ice+water",
+    "taste": 6,
+    "look": 5,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "dalgona_latte",
+    "name": "달고나 라떼",
+    "cat": "drink",
+    "key": "caramel+coffee_bean+ice+milk",
+    "taste": 9,
+    "look": 9,
+    "pop": 10,
+    "unlock": "level:5",
+    "upgradeOf": [
+      {
+        "base": "cafe_latte",
+        "add": [
+          "caramel",
+          "ice",
+          "sugar"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "slush",
+    "name": "슬러시",
+    "cat": "drink",
+    "key": "ice+ice+soda_water+sugar",
+    "taste": 6,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "corn_tea",
+    "name": "옥수수차",
+    "cat": "drink",
+    "key": "corn+water",
+    "taste": 4,
+    "look": 3,
+    "pop": 5,
+    "unlock": "cook"
+  },
+  {
+    "id": "persimmon_smoothie",
+    "name": "홍시 스무디",
+    "cat": "drink",
+    "key": "ice+milk+persimmon",
+    "taste": 9,
+    "look": 9,
+    "pop": 9,
+    "unlock": "level:4"
+  },
+  {
+    "id": "watermelon_hwachae",
+    "name": "수박화채",
+    "cat": "drink",
+    "key": "ice+milk+sugar+watermelon_fruit",
+    "taste": 9,
+    "look": 10,
+    "pop": 10,
+    "unlock": "level:3"
+  },
+  {
+    "id": "fish_cake_skewer",
+    "name": "어묵꼬치",
+    "cat": "snack",
+    "key": "fish_cake+fish_cake+soy_sauce",
+    "taste": 7,
+    "look": 5,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "bungeoppang",
+    "name": "붕어빵",
+    "cat": "snack",
+    "key": "flour+red_bean+sugar",
+    "taste": 7,
+    "look": 6,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "hotteok",
+    "name": "호떡",
+    "cat": "snack",
+    "key": "flour+honey_jar+sugar",
+    "taste": 7,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "tteokbokki",
+    "name": "떡볶이",
+    "cat": "snack",
+    "key": "gochujang+sugar+tteok",
+    "taste": 9,
+    "look": 8,
+    "pop": 10,
+    "unlock": "cook"
+  },
+  {
+    "id": "sotteok",
+    "name": "소떡소떡",
+    "cat": "snack",
+    "key": "gochujang+pork+tteok",
+    "taste": 9,
+    "look": 8,
+    "pop": 10,
+    "unlock": "level:3"
+  },
+  {
+    "id": "hotbar",
+    "name": "핫바",
+    "cat": "snack",
+    "key": "fish_cake+flour+olive_oil",
+    "taste": 7,
+    "look": 5,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "smelt_fry",
+    "name": "빙어튀김",
+    "cat": "snack",
+    "key": "flour+olive_oil+smelt",
+    "taste": 9,
+    "look": 7,
+    "pop": 9,
+    "unlock": "level:4"
+  },
+  {
+    "id": "beondegi",
+    "name": "번데기",
+    "cat": "snack",
+    "key": "silkworm+soy_sauce+water",
+    "taste": 5,
+    "look": 3,
+    "pop": 6,
+    "unlock": "cook"
+  },
+  {
+    "id": "grilled_squid",
+    "name": "오징어구이",
+    "cat": "snack",
+    "key": "charcoal+gochujang+squid",
+    "taste": 10,
+    "look": 8,
+    "pop": 10,
+    "unlock": "level:5"
+  },
+  {
+    "id": "ramyeon_soup",
+    "name": "라면",
+    "cat": "meal",
+    "key": "ramyeon+soy_sauce+water",
+    "taste": 8,
+    "look": 6,
+    "pop": 10,
+    "unlock": "cook"
+  },
+  {
+    "id": "cup_ramyeon",
+    "name": "컵라면",
+    "cat": "meal",
+    "key": "ramyeon+water",
+    "taste": 6,
+    "look": 4,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "sujebi",
+    "name": "수제비",
+    "cat": "meal",
+    "key": "flour+potato+water",
+    "taste": 7,
+    "look": 5,
+    "pop": 7,
+    "unlock": "cook"
+  },
+  {
+    "id": "maeuntang",
+    "name": "매운탕",
+    "cat": "meal",
+    "key": "cabbage+gochujang+salmon+water",
+    "taste": 11,
+    "look": 8,
+    "pop": 11,
+    "unlock": "level:5"
+  },
+  {
+    "id": "mulhoe",
+    "name": "물회",
+    "cat": "meal",
+    "key": "gochujang+ice+squid+water",
+    "taste": 9,
+    "look": 8,
+    "pop": 9,
+    "unlock": "level:4"
+  },
+  {
+    "id": "pajeon",
+    "name": "파전",
+    "cat": "meal",
+    "key": "egg+flour+squid",
+    "taste": 8,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "samgyeopsal",
+    "name": "삼겹살",
+    "cat": "meal",
+    "key": "charcoal+pork+pork",
+    "taste": 10,
+    "look": 8,
+    "pop": 11,
+    "unlock": "level:3"
+  },
+  {
+    "id": "dakgalbi",
+    "name": "닭갈비",
+    "cat": "meal",
+    "key": "cabbage+chicken+gochujang+tteok",
+    "taste": 11,
+    "look": 9,
+    "pop": 11,
+    "unlock": "level:5"
+  },
+  {
+    "id": "bibim_guksu",
+    "name": "비빔국수",
+    "cat": "meal",
+    "key": "cabbage+gochujang+noodle+sugar",
+    "taste": 9,
+    "look": 7,
+    "pop": 9,
+    "unlock": "level:4"
+  },
+  {
+    "id": "patbingsu",
+    "name": "팥빙수",
+    "cat": "dessert",
+    "key": "ice+milk+red_bean+sugar",
+    "taste": 9,
+    "look": 9,
+    "pop": 10,
+    "unlock": "cook"
+  },
+  {
+    "id": "ice_persimmon",
+    "name": "아이스홍시",
+    "cat": "dessert",
+    "key": "ice+persimmon",
+    "taste": 8,
+    "look": 9,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "injeolmi_bingsu",
+    "name": "인절미 빙수",
+    "cat": "dessert",
+    "key": "ice+milk+misugaru+red_bean",
+    "taste": 10,
+    "look": 10,
+    "pop": 10,
+    "unlock": "level:5",
+    "upgradeOf": [
+      {
+        "base": "patbingsu",
+        "add": [
+          "misugaru"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dalgona",
+    "name": "달고나",
+    "cat": "dessert",
+    "key": "caramel+sugar",
+    "taste": 6,
+    "look": 7,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "red_bean_porridge",
+    "name": "단팥죽",
+    "cat": "dessert",
+    "key": "red_bean+rice+sugar",
+    "taste": 8,
+    "look": 6,
+    "pop": 8,
+    "unlock": "cook"
+  },
+  {
+    "id": "melon_ice_bar",
+    "name": "메론 아이스바",
+    "cat": "dessert",
+    "key": "ice+melon_fruit+milk",
+    "taste": 8,
+    "look": 9,
+    "pop": 9,
+    "unlock": "cook"
+  },
+  {
+    "id": "corn_ice_bar",
+    "name": "옥수수 아이스바",
+    "cat": "dessert",
+    "key": "corn+ice+milk+sugar",
+    "taste": 8,
+    "look": 8,
+    "pop": 9,
+    "unlock": "level:3"
+  },
+  {
+    "id": "yakgwa",
+    "name": "약과",
+    "cat": "dessert",
+    "key": "flour+honey_jar+olive_oil+sugar",
+    "taste": 9,
+    "look": 9,
+    "pop": 9,
+    "unlock": "level:4"
+  },
+  {
+    "id": "strawberry_mochi",
+    "name": "딸기 찹쌀떡",
+    "cat": "dessert",
+    "key": "red_bean+strawberry_fruit+tteok",
+    "taste": 10,
+    "look": 11,
+    "pop": 10,
+    "unlock": "level:4"
+  }
+]

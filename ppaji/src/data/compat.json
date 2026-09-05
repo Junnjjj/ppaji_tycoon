@@ -1,0 +1,234 @@
+[
+  {
+    "restaurant": "bbq_zone",
+    "good": [
+      "fish_cake_skewer",
+      "hotbar",
+      "octopus_fritters",
+      "fried_calamari",
+      "seafood_tempura",
+      "potato_pancake",
+      "octopus_sushi",
+      "beondegi",
+      "ramune",
+      "fries"
+    ],
+    "bad": [
+      "vanilla_ice_cream",
+      "strawberry_cake",
+      "cafe_latte",
+      "chestnut_cream_cake"
+    ]
+  },
+  {
+    "restaurant": "bungeoppang",
+    "good": [
+      "bungeoppang",
+      "egg_bread",
+      "hotteok",
+      "donut",
+      "churros",
+      "red_bean_porridge",
+      "dalgona",
+      "milk_pudding",
+      "sikhye",
+      "strawberry_mochi"
+    ],
+    "bad": [
+      "salmon_sushi",
+      "gimbap",
+      "fries",
+      "hot_pot"
+    ]
+  },
+  {
+    "restaurant": "cafe",
+    "good": [
+      "iced_coffee",
+      "cafe_latte",
+      "milk_tea",
+      "affogato",
+      "cheesecake",
+      "honey_toast",
+      "iced_americano",
+      "dalgona_latte",
+      "matcha_latte",
+      "coffee_soft_serve"
+    ],
+    "bad": [
+      "fries",
+      "hot_dog",
+      "tuna_sushi",
+      "octopus_fritters"
+    ]
+  },
+  {
+    "restaurant": "chicken",
+    "good": [
+      "maeuntang",
+      "hot_pot",
+      "seafood_curry",
+      "mulhoe",
+      "pajeon",
+      "beefsteak",
+      "meat_pie",
+      "tonkatsu",
+      "ice_water",
+      "smelt_fry"
+    ],
+    "bad": [
+      "snow_cone",
+      "strawberry_sorbet",
+      "vanilla_ice_cream",
+      "lemon_shaved_ice",
+      "dragonfruit_sorbet"
+    ]
+  },
+  {
+    "restaurant": "firepit_row",
+    "good": [
+      "tteokbokki",
+      "fried_noodles",
+      "stir_fry_rice",
+      "bibim_guksu",
+      "boiled_noodles",
+      "potato_pancake",
+      "sotteok",
+      "beef_veg_rice",
+      "sujebi",
+      "pajeon"
+    ],
+    "bad": [
+      "strawberry_cake",
+      "cheesecake",
+      "milkshake",
+      "snow_cone",
+      "chocolate_donut"
+    ]
+  },
+  {
+    "restaurant": "icecream",
+    "good": [
+      "snow_cone",
+      "lemon_shaved_ice",
+      "orange_sorbet",
+      "patbingsu",
+      "injeolmi_bingsu",
+      "ice_persimmon",
+      "matcha_shaved_ice",
+      "mango_shaved_ice",
+      "blue_hawaii_snow_cone",
+      "rainbow_snow_cone"
+    ],
+    "bad": [
+      "tuna_sushi",
+      "cheeseburger",
+      "hot_dog",
+      "bbq_kebab"
+    ]
+  },
+  {
+    "restaurant": "shop",
+    "good": [
+      "vanilla_ice_cream",
+      "choco_mint_ice_cream",
+      "strawberry_sorbet",
+      "fruit_sorbet",
+      "milkshake",
+      "chocolate_ice_cream",
+      "matcha_ice_cream",
+      "melon_ice_bar",
+      "corn_ice_bar",
+      "strawberry_sundae"
+    ],
+    "bad": [
+      "tonkatsu",
+      "curry_rice",
+      "salmon_sushi",
+      "fried_noodles"
+    ]
+  },
+  {
+    "restaurant": "sikhye",
+    "good": [
+      "orange_juice",
+      "lemonade",
+      "orange_ade",
+      "strawberry_smoothie",
+      "grapefruit_ade",
+      "tropical_juice",
+      "watermelon_juice",
+      "mixed_fruit_juice",
+      "watermelon_hwachae",
+      "persimmon_smoothie"
+    ],
+    "bad": [
+      "tonkatsu",
+      "curry_rice",
+      "truffle_risotto",
+      "soy_ramen"
+    ]
+  },
+  {
+    "restaurant": "snackbar",
+    "good": [
+      "hot_dog",
+      "corn_dog",
+      "churros",
+      "cheese_stick",
+      "chicken_nugget",
+      "fried_chicken",
+      "popcorn",
+      "lemonade",
+      "fruit_soda",
+      "hotbar"
+    ],
+    "bad": [
+      "truffle_risotto",
+      "salmon_sushi",
+      "affogato",
+      "sushi_set"
+    ]
+  },
+  {
+    "restaurant": "vending_in",
+    "good": [
+      "ramyeon_soup",
+      "cup_ramyeon",
+      "soy_ramen",
+      "gimbap",
+      "steamed_pork_bun",
+      "boiled_noodles",
+      "sikhye",
+      "squid_sushi",
+      "ice_water"
+    ],
+    "bad": [
+      "strawberry_cake",
+      "milkshake",
+      "fruit_sorbet",
+      "chocolate_ice_cream"
+    ]
+  },
+  {
+    "restaurant": "vending_out",
+    "good": [
+      "ice_water",
+      "orange_juice",
+      "lemonade",
+      "canned_coffee",
+      "iced_coffee",
+      "banana_milk",
+      "melon_soda",
+      "fruit_soda",
+      "slush",
+      "corn_tea"
+    ],
+    "bad": [
+      "salmon_sushi",
+      "strawberry_cake",
+      "truffle_risotto",
+      "sushi_set"
+    ]
+  }
+]

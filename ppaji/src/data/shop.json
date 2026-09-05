@@ -1,0 +1,303 @@
+[
+  {
+    "id": "shop_footbath",
+    "kind": "facility",
+    "ref": "footbath",
+    "price": 1760,
+    "tier": 1
+  },
+  {
+    "id": "shop_parasol",
+    "kind": "facility",
+    "ref": "parasol",
+    "price": 660,
+    "tier": 1
+  },
+  {
+    "id": "shop_mongol_tent",
+    "kind": "facility",
+    "ref": "mongol_tent",
+    "price": 1540,
+    "tier": 2
+  },
+  {
+    "id": "shop_stripy_slide",
+    "kind": "facility",
+    "ref": "stripy_slide",
+    "price": 22000,
+    "tier": 3
+  },
+  {
+    "id": "shop_slide_small",
+    "kind": "facility",
+    "ref": "slide_small",
+    "price": 5720,
+    "tier": 3
+  },
+  {
+    "id": "shop_sunbed_row",
+    "kind": "facility",
+    "ref": "sunbed_row",
+    "price": 1980,
+    "tier": 1
+  },
+  {
+    "id": "shop_massage_row",
+    "kind": "facility",
+    "ref": "massage_row",
+    "price": 1760,
+    "tier": 1
+  },
+  {
+    "id": "shop_ticket",
+    "kind": "facility",
+    "ref": "ticket",
+    "price": 2200,
+    "tier": 1
+  },
+  {
+    "id": "shop_camp_site",
+    "kind": "facility",
+    "ref": "camp_site",
+    "price": 3300,
+    "tier": 2
+  },
+  {
+    "id": "shop_fountain",
+    "kind": "facility",
+    "ref": "fountain",
+    "price": 1540,
+    "tier": 2
+  },
+  {
+    "id": "shop_azalea",
+    "kind": "facility",
+    "ref": "azalea",
+    "price": 1700,
+    "tier": 1
+  },
+  {
+    "id": "shop_lookout",
+    "kind": "facility",
+    "ref": "lookout",
+    "price": 1540,
+    "tier": 1
+  },
+  {
+    "id": "shop_cypress",
+    "kind": "facility",
+    "ref": "cypress",
+    "price": 2200,
+    "tier": 1
+  },
+  {
+    "id": "shop_float_deck",
+    "kind": "facility",
+    "ref": "float_deck",
+    "price": 1320,
+    "tier": 1
+  },
+  {
+    "id": "shop_banana_tree",
+    "kind": "facility",
+    "ref": "banana_tree",
+    "price": 2800,
+    "tier": 4
+  },
+  {
+    "id": "shop_pine",
+    "kind": "facility",
+    "ref": "pine",
+    "price": 3100,
+    "tier": 5
+  },
+  {
+    "id": "shop_dj_booth",
+    "kind": "facility",
+    "ref": "dj_booth",
+    "price": 3520,
+    "tier": 4
+  },
+  {
+    "id": "shop_ficus",
+    "kind": "facility",
+    "ref": "ficus",
+    "price": 4200,
+    "tier": 4
+  },
+  {
+    "id": "shop_antique_pillar",
+    "kind": "facility",
+    "ref": "antique_pillar",
+    "price": 4800,
+    "tier": 5
+  },
+  {
+    "id": "shop_chocolate",
+    "kind": "item",
+    "ref": "chocolate",
+    "price": 2250,
+    "tier": 2
+  },
+  {
+    "id": "shop_blueberry",
+    "kind": "item",
+    "ref": "blueberry",
+    "price": 1980,
+    "tier": 2
+  },
+  {
+    "id": "shop_peach",
+    "kind": "item",
+    "ref": "peach",
+    "price": 1620,
+    "tier": 1
+  },
+  {
+    "id": "shop_grapes",
+    "kind": "item",
+    "ref": "grapes",
+    "price": 1800,
+    "tier": 2
+  },
+  {
+    "id": "shop_grapefruit",
+    "kind": "item",
+    "ref": "grapefruit",
+    "price": 1440,
+    "tier": 1
+  },
+  {
+    "id": "shop_melon",
+    "kind": "item",
+    "ref": "melon",
+    "price": 2340,
+    "tier": 3
+  },
+  {
+    "id": "shop_kiwi",
+    "kind": "item",
+    "ref": "kiwi",
+    "price": 1620,
+    "tier": 1
+  },
+  {
+    "id": "shop_pineapple",
+    "kind": "item",
+    "ref": "pineapple",
+    "price": 2160,
+    "tier": 2
+  },
+  {
+    "id": "shop_coconut",
+    "kind": "item",
+    "ref": "coconut",
+    "price": 1980,
+    "tier": 2
+  },
+  {
+    "id": "shop_coffee_beans",
+    "kind": "item",
+    "ref": "coffee_beans",
+    "price": 2520,
+    "tier": 3
+  },
+  {
+    "id": "shop_mint",
+    "kind": "item",
+    "ref": "mint",
+    "price": 1350,
+    "tier": 1
+  },
+  {
+    "id": "shop_bath_salt",
+    "kind": "item",
+    "ref": "bath_salt",
+    "price": 3600,
+    "tier": 3
+  },
+  {
+    "id": "shop_rose",
+    "kind": "item",
+    "ref": "rose",
+    "price": 2700,
+    "tier": 3
+  },
+  {
+    "id": "shop_cinnamon",
+    "kind": "item",
+    "ref": "cinnamon",
+    "price": 2340,
+    "tier": 3
+  },
+  {
+    "id": "shop_honey",
+    "kind": "item",
+    "ref": "honey",
+    "price": 1800,
+    "tier": 2
+  },
+  {
+    "id": "shop_lavender",
+    "kind": "item",
+    "ref": "lavender",
+    "price": 2160,
+    "tier": 2
+  },
+  {
+    "id": "shop_orange",
+    "kind": "item",
+    "ref": "orange",
+    "price": 1260,
+    "tier": 1
+  },
+  {
+    "id": "shop_banana",
+    "kind": "item",
+    "ref": "banana",
+    "price": 1440,
+    "tier": 1
+  },
+  {
+    "id": "shop_seaweed",
+    "kind": "item",
+    "ref": "seaweed",
+    "price": 1620,
+    "tier": 1
+  },
+  {
+    "id": "shop_school_swimsuit",
+    "kind": "gift",
+    "ref": "school_swimsuit",
+    "price": 1500,
+    "tier": 1
+  },
+  {
+    "id": "shop_crystal_fountain",
+    "kind": "facility",
+    "ref": "crystal_fountain",
+    "price": 35640,
+    "tier": 5
+  },
+  {
+    "id": "shop_grand_arch",
+    "kind": "facility",
+    "ref": "grand_arch",
+    "price": 27720,
+    "tier": 4
+  },
+  {
+    "id": "shop_moon_tower",
+    "kind": "facility",
+    "ref": "moon_tower",
+    "price": 43560,
+    "tier": 5
+  },
+  {
+    "id": "shop_sikhye",
+    "kind": "facility",
+    "ref": "sikhye",
+    "price": 1320,
+    "tier": 1
+  }
+]

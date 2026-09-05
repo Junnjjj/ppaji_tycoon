@@ -1,0 +1,282 @@
+[
+  {
+    "id": "motor_electric",
+    "name": "전동모터",
+    "unlock": "shop",
+    "class": "engine",
+    "price": 900
+  },
+  {
+    "id": "motor_outboard",
+    "name": "선외기모터",
+    "unlock": "shop",
+    "class": "engine",
+    "price": 700
+  },
+  {
+    "id": "motor_turbo",
+    "name": "터보모터",
+    "unlock": "shop",
+    "class": "engine",
+    "price": 1200
+  },
+  {
+    "id": "jet_pump",
+    "name": "제트펌프",
+    "unlock": "year",
+    "class": "engine",
+    "year": 4
+  },
+  {
+    "id": "engine_twin",
+    "name": "트윈엔진",
+    "unlock": "year",
+    "class": "engine",
+    "year": 6
+  },
+  {
+    "id": "tube_small",
+    "name": "소형튜브",
+    "unlock": "start",
+    "class": "tube"
+  },
+  {
+    "id": "tube_round",
+    "name": "원형튜브",
+    "unlock": "shop",
+    "class": "tube",
+    "price": 300
+  },
+  {
+    "id": "tube_donut",
+    "name": "도넛튜브",
+    "unlock": "shop",
+    "class": "tube",
+    "price": 450
+  },
+  {
+    "id": "honey_cell",
+    "name": "벌집셀",
+    "unlock": "shop",
+    "class": "tube",
+    "price": 600
+  },
+  {
+    "id": "air_chamber",
+    "name": "공기주머니",
+    "unlock": "year",
+    "class": "tube",
+    "year": 3
+  },
+  {
+    "id": "tube_giant",
+    "name": "대형튜브",
+    "unlock": "year",
+    "class": "tube",
+    "year": 5
+  },
+  {
+    "id": "rope_nylon",
+    "name": "나일론로프",
+    "unlock": "start",
+    "class": "rope"
+  },
+  {
+    "id": "rope_steel",
+    "name": "강선로프",
+    "unlock": "shop",
+    "class": "rope",
+    "price": 500
+  },
+  {
+    "id": "rope_bungee",
+    "name": "번지로프",
+    "unlock": "shop",
+    "class": "rope",
+    "price": 800
+  },
+  {
+    "id": "rope_kevlar",
+    "name": "케블라로프",
+    "unlock": "year",
+    "class": "rope",
+    "year": 6
+  },
+  {
+    "id": "grip_handle",
+    "name": "손잡이",
+    "unlock": "start",
+    "class": "handle"
+  },
+  {
+    "id": "bar_handle",
+    "name": "핸들바",
+    "unlock": "shop",
+    "class": "handle",
+    "price": 250
+  },
+  {
+    "id": "wing_grip",
+    "name": "날개그립",
+    "unlock": "shop",
+    "class": "handle",
+    "price": 550
+  },
+  {
+    "id": "twin_bar",
+    "name": "쌍핸들",
+    "unlock": "shop",
+    "class": "handle",
+    "price": 750
+  },
+  {
+    "id": "power_grip",
+    "name": "파워그립",
+    "unlock": "year",
+    "class": "handle",
+    "year": 5
+  },
+  {
+    "id": "seat_cushion",
+    "name": "방석시트",
+    "unlock": "start",
+    "class": "seat"
+  },
+  {
+    "id": "seat_bucket",
+    "name": "버킷시트",
+    "unlock": "shop",
+    "class": "seat",
+    "price": 400
+  },
+  {
+    "id": "seat_bench",
+    "name": "벤치시트",
+    "unlock": "shop",
+    "class": "seat",
+    "price": 650
+  },
+  {
+    "id": "seat_sling",
+    "name": "슬링시트",
+    "unlock": "year",
+    "class": "seat",
+    "year": 4
+  },
+  {
+    "id": "life_strap",
+    "name": "구명끈",
+    "unlock": "start",
+    "class": "safety"
+  },
+  {
+    "id": "foot_strap",
+    "name": "발끈",
+    "unlock": "shop",
+    "class": "safety",
+    "price": 300
+  },
+  {
+    "id": "safety_bar",
+    "name": "안전바",
+    "unlock": "shop",
+    "class": "safety",
+    "price": 350
+  },
+  {
+    "id": "harness_belt",
+    "name": "하네스벨트",
+    "unlock": "shop",
+    "class": "safety",
+    "price": 700
+  },
+  {
+    "id": "airbag_pad",
+    "name": "에어백패드",
+    "unlock": "year",
+    "class": "safety",
+    "year": 7
+  },
+  {
+    "id": "fin_plate",
+    "name": "핀판",
+    "unlock": "start",
+    "class": "board"
+  },
+  {
+    "id": "deck_board",
+    "name": "데크판",
+    "unlock": "shop",
+    "class": "board",
+    "price": 400
+  },
+  {
+    "id": "keel_fin",
+    "name": "킬핀",
+    "unlock": "shop",
+    "class": "board",
+    "price": 500
+  },
+  {
+    "id": "ski_blade",
+    "name": "스키날",
+    "unlock": "shop",
+    "class": "board",
+    "price": 600
+  },
+  {
+    "id": "hydro_wing",
+    "name": "수중날개",
+    "unlock": "shop",
+    "class": "board",
+    "price": 950
+  },
+  {
+    "id": "carbon_deck",
+    "name": "카본데크",
+    "unlock": "year",
+    "class": "board",
+    "year": 7
+  },
+  {
+    "id": "flag_small",
+    "name": "작은깃발",
+    "unlock": "start",
+    "class": "fun"
+  },
+  {
+    "id": "water_gun",
+    "name": "물총",
+    "unlock": "shop",
+    "class": "fun",
+    "price": 200
+  },
+  {
+    "id": "led_strip",
+    "name": "LED띠",
+    "unlock": "shop",
+    "class": "fun",
+    "price": 450
+  },
+  {
+    "id": "speaker_box",
+    "name": "스피커",
+    "unlock": "shop",
+    "class": "fun",
+    "price": 550
+  },
+  {
+    "id": "bubble_maker",
+    "name": "거품기",
+    "unlock": "shop",
+    "class": "fun",
+    "price": 800
+  },
+  {
+    "id": "mirror_ball",
+    "name": "미러볼",
+    "unlock": "year",
+    "class": "fun",
+    "year": 3
+  }
+]

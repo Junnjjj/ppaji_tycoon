@@ -1,0 +1,322 @@
+[
+  {
+    "id": "residential",
+    "name": "가평 읍내",
+    "order": 0,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "strawberry"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350,
+    "bus": "읍내 마을버스",
+    "desc": "강 건너 읍내 사람들 — 처음부터 걸어온다",
+    "taste": {
+      "water": 1.0,
+      "thrill": 0.9,
+      "food": 1.0,
+      "rest": 1.1,
+      "tempBias": 0
+    }
+  },
+  {
+    "id": "school",
+    "name": "대학가 MT",
+    "order": 1,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "apple"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350,
+    "bus": "MT 전세버스",
+    "desc": "서울 대학가 동아리 — 밤새 놀 기세로 온다",
+    "taste": {
+      "water": 1.2,
+      "thrill": 1.6,
+      "food": 1.2,
+      "rest": 0.6,
+      "tempBias": 0
+    }
+  },
+  {
+    "id": "forest",
+    "name": "가족 캠핑",
+    "order": 2,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "mint"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350,
+    "bus": "캠핑카 행렬",
+    "desc": "텐트 치고 사흘 묵는 가족들 — 아이가 먼저 물에 뛰어든다",
+    "taste": {
+      "water": 1.2,
+      "thrill": 0.7,
+      "food": 1.1,
+      "rest": 1.4,
+      "tempBias": 1
+    }
+  },
+  {
+    "id": "shopping",
+    "name": "커플",
+    "order": 3,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "chocolate"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350,
+    "bus": "커플 드라이브",
+    "desc": "사진이 목적인 연인들 — 노을빛 수역에 약하다",
+    "taste": {
+      "water": 0.9,
+      "thrill": 0.8,
+      "food": 1.3,
+      "rest": 1.3,
+      "tempBias": 2
+    }
+  },
+  {
+    "id": "office",
+    "name": "회사 워크숍",
+    "order": 4,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "coffee_beans"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350,
+    "bus": "워크숍 관광버스",
+    "desc": "단체로 와서 단체로 탄다 — 팀장이 계산한다",
+    "taste": {
+      "water": 0.9,
+      "thrill": 1.2,
+      "food": 1.4,
+      "rest": 1.0,
+      "tempBias": 0
+    }
+  },
+  {
+    "id": "station",
+    "name": "군부대 휴가",
+    "order": 5,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "lemon"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350,
+    "bus": "군 휴가 버스",
+    "desc": "휴가 나온 병사들 — 스릴과 고기라면 뭐든",
+    "taste": {
+      "water": 1.1,
+      "thrill": 1.8,
+      "food": 1.3,
+      "rest": 0.5,
+      "tempBias": -1
+    }
+  },
+  {
+    "id": "downtown",
+    "name": "펜션 단체",
+    "order": 6,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "grapes"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350,
+    "bus": "펜션 셔틀",
+    "desc": "근처 펜션에서 셔틀 타고 오는 손님들 — 저녁까지 논다",
+    "taste": {
+      "water": 1.0,
+      "thrill": 1.0,
+      "food": 1.2,
+      "rest": 1.2,
+      "tempBias": 1
+    }
+  },
+  {
+    "id": "specialty",
+    "name": "낚시 동호회",
+    "order": 7,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "lavender"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350,
+    "bus": "낚시회 봉고",
+    "desc": "새벽부터 자리 잡는 조사들 — 잔잔한 물을 찾는다",
+    "taste": {
+      "water": 0.6,
+      "thrill": 0.4,
+      "food": 1.0,
+      "rest": 1.6,
+      "tempBias": -2
+    }
+  },
+  {
+    "id": "airport",
+    "name": "외국인 관광",
+    "order": 8,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "pineapple"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350,
+    "bus": "공항 리무진",
+    "desc": "K-빠지를 보러 온 여행자들 — 별난 것에 좋아요를 누른다",
+    "taste": {
+      "water": 1.2,
+      "thrill": 1.3,
+      "food": 1.1,
+      "rest": 0.9,
+      "tempBias": 0
+    }
+  },
+  {
+    "id": "kairo_island",
+    "name": "유튜버",
+    "order": 9,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "honey"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350,
+    "bus": "유튜버 밴",
+    "desc": "구독자를 몰고 오는 사람들 — 한 편 찍히면 전국구",
+    "taste": {
+      "water": 1.1,
+      "thrill": 1.6,
+      "food": 1.1,
+      "rest": 0.7,
+      "tempBias": 0
+    }
+  }
+]
