@@ -1,5 +1,24 @@
 # 4방향 작업 지시서 — 창구·탑승·무대 26종
 
+> **HISTORY ONLY — 현행 작업 지시가 아니다.** 현재 계약은
+> `docs/assets/contracts/four-direction.md`다. 이 원문은 2026-08-22 prompt-chain 실패의
+> 재발 방지 증거로만 보존한다.
+
+> **2026-08-26 정정 — 아래 ImageGen 체인·미러 판정 경로는 생산용으로 폐기됐다.**
+>
+> 사용자 검토에서 다수 결과의 45°/30° 투영과 실제 회전이 실패한 것이 확인됐다.
+> `rotation-check.ts`의 “d1/d3가 좌우 미러에 가까운가” 검사는 과거 플레이스홀더 관습을
+> 진단할 뿐, 같은 물체의 물리 `0/90/180/270` 회전을 증명하지 못한다. 아래 1차 기록은
+> 실패 증거와 라이브 배선 참고로만 보존한다.
+>
+> 새 생산 정본은 `$ppaji-kairo-assets`의
+> `references/physical-direction-validation.md`와
+> `docs/assets/contracts/camera-direction.md`다. 시설별 단일 Blender 루트, 고정
+> orthographic yaw 45°/elevation 30° 카메라, 실제 root yaw `0/90/180/270`, ±26.565°
+> 투영 검사, 패널별 랜드마크 대응, 사용자 `visual-review.json`이 모두 있어야 한다.
+> Prompt-only 4-up과 독립 방향 생성은 `CONCEPT_DIAGNOSTIC_ONLY`이며 `facings: 4` 채택
+> 근거가 될 수 없다.
+
 **지금 상태 (2026-08-23): 4방향 그림 0장.** 계약은 `facings: 4` 를 이미 받을 준비가 돼
 있고 (`src/data/kairo-facilities.json`, K53), 게이트 **다섯**이 4방향을 잰다.
 
@@ -42,7 +61,7 @@ npx tsx tools/kairo-gate.ts                          # 게이트 6 이 요약에
 
 **셋 다 `art-reference/4dir-round1/` 로 옮겨 뒀다** (추적본 — `assets/generated/` 는
 gitignore 라 그대로 두면 이 머신에서만 존재한다). 워커 원본 보고는
-`docs/asset-4dir-round1-report.md`.
+`docs/assets/history/4dir-round1-report.md`.
 
 | 시설 | 방향 | 기준 | 그대로 | 뒤집기 | 여유 |
 |---|---|---|---|---|---|
@@ -74,7 +93,7 @@ gitignore 라 그대로 두면 이 머신에서만 존재한다). 워커 원본 
 읽는 순서가 곧 하는 순서다 — §1 무엇을 → §2 배선 → §3 어떻게 → §4 판정 →
 §5 하면 안 되는 것. §6 은 이 상태의 실측이다.
 
-⚠ 이 문서는 `docs/asset-regen-order.md`(접지 기하 재생성)와 **짝**이다. 스타일 블록·
+⚠ 이 문서는 `docs/assets/maintenance/legacy-v2-regeneration.md`(접지 기하 재생성)와 **짝**이다. 스타일 블록·
 크로마·참조 크롭·채택 규칙은 저쪽이 정본이고, 여기서는 **방향이 늘어서 달라지는 것만**
 적는다. 겹치는 문장을 여기 베끼지 말 것.
 
@@ -127,7 +146,7 @@ gitignore 라 그대로 두면 이 머신에서만 존재한다). 워커 원본 
 - **지금 광원 / 지금 접지** — 지금 팩(단방향 1장)의 게이트 판정이다. **d0 의 출발점**이
   여기다: 이미 뒤집힌 4종(`ticket`·`icecream`·`rent_duck`·`karaoke`)은 d0 부터 다시
   그려야 하고, 접지가 빨간 4종(`ticket`·`bungeoppang`·`snow_sled`·`photozone`)은
-  `docs/asset-regen-order.md` 의 대상이기도 하다 — **거기서 먼저 고치고 여기로 오는 편이
+  `docs/assets/maintenance/legacy-v2-regeneration.md` 의 대상이기도 하다 — **거기서 먼저 고치고 여기로 오는 편이
   싸다.** 안 그러면 결함 하나가 네 장으로 복제된다
 
 ### 왜 이 26종인가 (다른 49종은 왜 아닌가)
@@ -187,7 +206,7 @@ d3  d2 를 참조           — "MIRRORED rear"
 
 ⚠ **한 캔버스 4-up 스트립 금지.** 실측으로 두 가지가 깨졌다 — 셀당 해상도가 **1/4** 로
 떨어지고, 차양의 빨강이 이웃 셀로 **주황으로 샜다**. 시트를 합치지 않는 이유
-(`docs/asset-prompts.md` §시트 크기 산식)와 같은 사고다.
+(`docs/assets/maintenance/legacy-sheet-prompts.md` §시트 크기 산식)와 같은 사고다.
 
 ⚠ 체인 참조는 **모양을 잇는 장치이지 그림을 복사하는 장치가 아니다.** 참조를 그대로
 좌우 반전해 오면 §5.5 의 광원 뒤집힘이 그대로 들어온다 — 지금 shop 표본이 정확히 그 상태다.
@@ -216,7 +235,7 @@ npx tsx tools/make-kairo-guide.ts --id ticket --transpose --table # 규격 한 �
 칠해 둔 명암(`+J` 왼쪽 밝음 / `+I` 오른쪽 어두움)까지 뒤집혀서 — **게이트 5 가 잡는 바로
 그 결함을 지시서가 시키는 꼴**이 된다. `--transpose` 는 뒤집는 게 아니라 **다시 그린다.**
 
-⚠ 이것은 `docs/asset-regen-order.md` §4.1 「가이드를 뒤집지 마라」와 모순이 **아니다.**
+⚠ 이것은 `docs/assets/maintenance/legacy-v2-regeneration.md` §4.1 「가이드를 뒤집지 마라」와 모순이 **아니다.**
 저기서 금지한 것은 *같은 방향*의 그림이 축뒤집힘으로 나왔을 때 옳은 가이드를 뒤집는
 것이고, 여기서는 **발자국이 실제로 전치된 다른 방향**이다.
 
@@ -331,7 +350,7 @@ PY
 
 ## 5. ⚠ 하면 안 되는 것
 
-§5.1~5.4 는 `docs/asset-regen-order.md` §4 를 그대로 이어받는다 (숫자와 근거는 거기에).
+§5.1~5.4 는 `docs/assets/maintenance/legacy-v2-regeneration.md` §4 를 그대로 이어받는다 (숫자와 근거는 거기에).
 **§5.5 가 4방향에서 새로 생기는 것이다.**
 
 ### 5.1 가이드를 뒤집지 마라

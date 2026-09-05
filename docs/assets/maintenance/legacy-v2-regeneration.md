@@ -1,5 +1,8 @@
 # 재생성 작업 지시서 — 접지 기하 + 광원
 
+> **LEGACY V2 MAINTENANCE ONLY.** 기존 라이브 팩의 접지·광원 수리에만 사용한다. 신규
+> 시설의 물리 4방향 제작에는 `docs/assets/contracts/four-direction.md`를 사용한다.
+
 **지금 상태 (2026-08-23, 1차 재생성 뒤): 시설 75종 중 22종이 빨간불이다.**
 
 | 무리 | 무엇이 틀렸나 | 종수 | 상태 |
@@ -189,7 +192,7 @@ done
 
 | 조각 | 출처 | 왜 |
 |---|---|---|
-| 스타일 블록 | `docs/asset-prompts.md` §SHARED STYLE BLOCK **축자** | 34장이 축자 동일한 것이 이 문서의 성질이다. 도구에 베끼면 문서를 고쳐도 도구만 옛 계약으로 남는다 |
+| 스타일 블록 | `docs/assets/maintenance/legacy-sheet-prompts.md` §SHARED STYLE BLOCK **축자** | 34장이 축자 동일한 것이 이 문서의 성질이다. 도구에 베끼면 문서를 고쳐도 도구만 옛 계약으로 남는다 |
 | 항목 본문 | 그 시설이 속한 시트의 대조표 → 칸 번호 → 본문 (라벨로 교차 확인) | 표와 본문이 어긋난 시트가 생겨도 엉뚱한 항목을 안 뽑는다 |
 | 규격 줄 | `guideSpecLine()` (= `make-kairo-guide.ts --table`) **+ 영어 요약** | 한국어 정본을 축자로 넣고 영어를 옆에 붙인다. 번역만 넣으면 규격이 바뀌었을 때 조용히 갈라진다 |
 | 크로마 키 | 그 시트의 `Canvas:` 문단 (`#00FF00` / `#FF00FF`) | 초록 시트(S1·S2·S4·L2)는 소재에 빨강이 있어서 초록이다 |
@@ -200,7 +203,7 @@ done
 
 - 첨부 가이드: `art-reference/guides/kairo/facility__<id>.png` (75장, 이미 구워져 있다)
 - 규격 줄: `npx tsx tools/make-kairo-guide.ts --id <id> --table`
-- 프롬프트 정본: `docs/asset-prompts.md` — 시트별 코드블록 + §레퍼런스 절의 가이드 첨부 방법
+- 프롬프트 정본: `docs/assets/maintenance/legacy-sheet-prompts.md` — 시트별 코드블록 + §레퍼런스 절의 가이드 첨부 방법
 
 ### 실패 모드를 말해 준다 — 이게 리롤과 다른 점
 
@@ -265,7 +268,7 @@ npx tsx tools/regen-facility.ts --verify-gate   # 도구의 판정 복제가 게
 
 ⚠ **이 규칙을 스스로 조이지 말 것.** 4방향 1차 시도가 정확히 그렇게 실패했다 —
 그 도구가 `좌상단` 만 통과로 쳐서 **8장을 버렸는데**, `arcade`·`slide_tube` 는 **자기
-원본이 평탄**이라 애초에 만족 불가능한 조건이었다 (`docs/asset-4dir-order.md` §0-2).
+원본이 평탄**이라 애초에 만족 불가능한 조건이었다 (`docs/assets/history/prompt-chain-4dir-retrospective.md` §0-2).
 지금은 `regen-facility.ts` 의 `passed()` 가 게이트와 같은 기준을 쓰고, 단위 검사가
 그것을 고정한다 (`평탄은 위반이 아니다 — 게임 게이트와 같은 기준`).
 

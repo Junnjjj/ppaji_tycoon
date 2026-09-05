@@ -1,5 +1,7 @@
 # Facility 4-direction worker report
 
+> **HISTORY ONLY.** 독립 ImageGen 방향 생성 실험의 결과이며 현재 물리 4방향 승인 근거가 아니다.
+
 Generated: 2026-08-22T17:47:24.170Z
 
 Scope: 19 coordinator-approved existing d0 locks. The seven held-out ids are ticket, icecream,
@@ -50,4 +52,3 @@ attempts and M rerolls. PASS still required visual inspection.
 - Raw images, extracted candidates, prompts, and per-attempt metrics: `assets/generated/kairo-4dir/<id>/<direction>/`
 - Nearest-neighbour expanded QA sheets: `assets/generated/kairo-4dir/qa/facilities-4dir-{1,2,3,4}.png`
 - Fresh transposed guides: `art-reference/guides/kairo/facility__{ticket,icecream,cafe,sikhye,bungeoppang,slide_large,snow_sled,stage_river,dj_booth}__d1.png`
-

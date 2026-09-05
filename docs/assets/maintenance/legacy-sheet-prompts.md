@@ -1,5 +1,8 @@
 # 에셋 생성 프롬프트 — 전체 작업지시서
 
+> **LEGACY V2 MAINTENANCE ONLY.** 현재 코드가 기존 75종 시트 이름과 추출 계약을 참조해
+> 보존한다. 신규 물리 d0–d3 시설 제작에는 `docs/assets/README.md`의 현행 파이프라인을 쓴다.
+
 **2026-08-22.** GPT 이미지 생성에 그대로 붙여 넣는 영어 프롬프트 모음이다.
 시트 **34장 · 그림 144장**으로 게임의 AI 에셋 전부를 덮는다.
 
@@ -656,9 +659,8 @@ Items — exactly 6, one per cell, in this order:
    string of festival bulbs runs along the front edge, attached to the table at both ends.
    Low and wide; no roof.
 
-3. Ice cream counter — footprint 1x2 tiles — base diamond 48x24 px, body about 20 px tall,
-   whole sprite 48x44 px — NOTE: this one is 1x2, so it is the MIRRORED long row — it runs
-   two tiles toward the LOWER LEFT, not the lower right. A soft-serve ice cream counter:
+3. Ice cream counter — footprint 1x1 tile — base diamond 32x16 px, body about 20 px tall,
+   whole sprite 32x36 px — a compact single-tile soft-serve ice cream counter:
    pale mint-cream counter front #fdf3e0 with a teal #62a58c base band, a chrome soft-serve
    machine with two nozzles standing on the counter top, an open chilled well beside it
    with three tubs of pale-pink, cream and pale-brown ice cream, and a big cone-shaped sign
@@ -1579,9 +1581,9 @@ only, not for "put a roof on it".
 
 Items — exactly 4, one per cell, in this order:
 
-1. CAFE — footprint 2x3 tiles (2 wide toward the lower right, 3 deep toward the lower
-   left, so it is a deep rectangle, half again as deep as it is wide) — base diamond
-   80x40 px, body about 20 px tall, whole sprite 80x60 px — an open-top cafe fitting.
+1. CAFE — footprint 2x2 tiles (two tiles on each ground axis, a square-ish isometric
+   diamond) — base diamond 64x32 px, body about 20 px tall, whole sprite 64x52 px — an
+   open-top cafe fitting.
    An L-shaped service counter of warm wood #b5844a with a cream #fdf3e0 front panel
    runs along the back-left edge; on the counter sit a chunky espresso machine #3a3f4a
    and a shelf of cups; two small round tables of #c49a6a wood stand on the open floor.
