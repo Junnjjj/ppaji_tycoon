@@ -1,6 +1,6 @@
 # 새 세션 시작 — Ppaji 시설·사람 에셋
 
-작업 폴더: `/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬`
+작업 기준: 최신 main 체크아웃. 이 문서의 과거 실험 경로는 출처 기록이며, 생성 산출물 복구는 `docs/assets/LOCAL-ASSET-RECOVERY.md`를 먼저 읽는다.
 
 `$ppaji-kairo-assets`와 `$ppaji-npc-assets`를 사용해 이어가줘.
 먼저 `docs/assets/CURRENT.md`, `codex-output/asset-cleanup-execute-2026-09-11/HANDOFF.json`만 읽고,

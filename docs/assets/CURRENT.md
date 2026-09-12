@@ -1,5 +1,7 @@
 # 에셋 작업 현재 상태
 
+> 메인 반영: 2026-09-12. 아래 검토 맵/실험 상태는 에셋 작업 브랜치의 기록이다. main에 이미 채택된 게임/시설을 이 기록으로 되돌리지 않는다. 생성 에셋·미커밋 작업은 [로컬 복구 안내](LOCAL-ASSET-RECOVERY.md)를 따른다.
+
 최종 갱신: 2026-09-11. **이 파일이 현재 상태의 짧은 진입점**이다.
 [새 세션 시작문](../../codex-output/NEXT-SESSION-PROMPT.md), [이번 세션 정리](handoffs/2026-09-11-assets-skills-session-close.md).
 
