@@ -1,0 +1,178 @@
+{
+  "d0": {
+    "door": {
+      "pixel": [
+        267.07200622558594,
+        372.0831298828125
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        345.59999084472656,
+        428.8000259399414
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "coffee_machine": {
+      "pixel": [
+        375.0399856567383,
+        408.2094039916992
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "pastry_case": {
+      "pixel": [
+        316.47999572753906,
+        397.2832946777344
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "side_window": {
+      "pixel": [
+        485.1199951171875,
+        392.39122009277344
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "ridge": {
+      "pixel": [
+        384.0,
+        251.3748321533203
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d1": {
+    "door": {
+      "pixel": [
+        389.9520263671875,
+        427.5711364746094
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        473.6000061035156,
+        403.2000274658203
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "coffee_machine": {
+      "pixel": [
+        491.5199890136719,
+        358.92938232421875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "pastry_case": {
+      "pixel": [
+        441.9200134277344,
+        402.08329010009766
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "side_window": {
+      "pixel": [
+        469.760009765625,
+        298.9512176513672
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "ridge": {
+      "pixel": [
+        384.0,
+        251.3748321533203
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d2": {
+    "door": {
+      "pixel": [
+        500.92799377441406,
+        366.1311492919922
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        422.40000915527344,
+        339.2000427246094
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "coffee_machine": {
+      "pixel": [
+        392.9599914550781,
+        300.68939208984375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "pastry_case": {
+      "pixel": [
+        451.52000427246094,
+        339.36328125
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "side_window": {
+      "pixel": [
+        282.8799819946289,
+        306.63121032714844
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "ridge": {
+      "pixel": [
+        384.0,
+        251.3748321533203
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d3": {
+    "door": {
+      "pixel": [
+        378.0479965209961,
+        310.6431427001953
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        294.3999938964844,
+        364.8000183105469
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "coffee_machine": {
+      "pixel": [
+        276.47998809814453,
+        349.9693908691406
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "pastry_case": {
+      "pixel": [
+        326.0799865722656,
+        334.5633087158203
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "side_window": {
+      "pixel": [
+        298.239990234375,
+        400.0712127685547
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "ridge": {
+      "pixel": [
+        384.0,
+        251.3748321533203
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  }
+}

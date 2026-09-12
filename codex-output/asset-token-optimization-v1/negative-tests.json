@@ -1,0 +1,17 @@
+[
+  {
+    "test": "wrong-count",
+    "correctly_rejected": true,
+    "reason": "inventory front_doors"
+  },
+  {
+    "test": "wrong-camera",
+    "correctly_rejected": true,
+    "reason": "camera scale"
+  },
+  {
+    "test": "wrong-floor",
+    "correctly_rejected": true,
+    "reason": "floor footprint"
+  }
+]

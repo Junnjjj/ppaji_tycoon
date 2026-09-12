@@ -1,0 +1,28 @@
+{
+  "keep": [
+    "charcoal tiled gable with ridge parallel X",
+    "warm timber framing, cream infill, timber lower panels",
+    "blue door left, blue awning above front counter",
+    "recessed opening with dark interior and bright sill",
+    "pastry case left, espresso machine right, separate cups",
+    "one divided window on +X wall"
+  ],
+  "adapt": [
+    "3\u00d72 integral floor proposal versus live2\u00d72",
+    "door1.23 tiles and counter.68 tiles for H1.07165",
+    "tile rows and machine details simplified into native-readable forms",
+    "no written labels; raised language-neutral cup on door"
+  ],
+  "unspecified": [
+    "rear and left are closed cream/timber walls with lower timber paneling; no added openings",
+    "interior staff circulation not certified"
+  ],
+  "target_body_coverage": [
+    0.9,
+    0.9
+  ],
+  "floor_mode": "full-footprint-integral",
+  "status": "HUMAN_SCALE_PROPOSAL_USER_REVIEW",
+  "source_sha256": "b1cd01568f1f600314f47131a85aa2deb7a7878e44b8a2cb8225884061df074a",
+  "atlas_sha256": "04ae72ce06eb1bb5cf06c60e54db5f84202bcfe12af60d9e171633f0d818d1f6"
+}

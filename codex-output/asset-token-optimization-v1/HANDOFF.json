@@ -1,0 +1,12 @@
+{
+  "status": "IMPLEMENTED_AND_ONE_TRIAL_MEASURED",
+  "report": "codex-output/asset-token-optimization-v1/REPORT.md",
+  "review_url": "http://100.114.231.15:63021/run/optimization-compare/review.html",
+  "worker_total_token_reduction_percent": 50.08,
+  "worker_output_reduction_percent": 35.21,
+  "uncached_input_increase_percent": 24.1,
+  "billing_reduction_measured": false,
+  "art_approval": false,
+  "live_changed": false,
+  "next": "Reuse optimized authored route on next requested facility; no automatic further trials"
+}

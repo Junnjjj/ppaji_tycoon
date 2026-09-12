@@ -1,0 +1,42 @@
+{
+  "task": "화장실 시설 하나를 첨부 컨셉과 시설 스킬로 새로 제작하고 네 방향을 보여주세요. 컨셉의 색감/질감과 주요 건축 요소를 유지하세요. 미세 부품의 완벽한 복제보다 일관된 느낌과 실제 크기의 시설 식별을 우선합니다.",
+  "scope": "One new authored review candidate; no existing model or rendered answer provided.",
+  "size": [
+    2,
+    2
+  ],
+  "floor_mode": "full-footprint-integral",
+  "tile_world": 22.62741699796952,
+  "human_height_logical_px": 21,
+  "human_height_tiles": 1.0716517624676405,
+  "logical_canvas": [
+    192,
+    192
+  ],
+  "render_canvas": [
+    768,
+    768
+  ],
+  "ortho_scale": 192,
+  "camera_euler_deg": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.6,
+  "game_axes": {
+    "I": "+X",
+    "J": "-Y",
+    "height": "+Z"
+  },
+  "front": "-Y",
+  "access_kind": "portal",
+  "inventory": {
+    "front_doors": 2,
+    "front_clerestory_windows": 4,
+    "right_clerestory_windows": 2,
+    "right_vent": 1
+  },
+  "constraints": "One complete root 0/90/180/270. Empty base, no people baked in. Simple language-neutral pictograms allowed. Only supplied raw files and skill plus standard installed libraries. No provider calls, previous models, project scripts or logs. Output only output/ under this evaluation folder. No game adoption.",
+  "iteration_scope": "One candidate with up to two local d0 corrections if materially needed; do not chase insignificant microdetail or make additional facilities."
+}

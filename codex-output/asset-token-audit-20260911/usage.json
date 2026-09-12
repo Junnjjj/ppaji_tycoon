@@ -1,0 +1,38 @@
+{
+  "scope": "Toilet request through last token event preceding next user message; excludes current audit. Parent counter delta plus independent worker final counter, no summing cumulative events. Reasoning is within output, cached is within input.",
+  "start_utc": "2026-09-11T09:05:45.529Z",
+  "end_utc": "2026-09-11T09:13:11.743Z",
+  "parent_log": "rollout-2026-09-11T17-37-08-01a08f9d-099c-75a3-88cf-0f1ff1057977.jsonl",
+  "worker_log": "rollout-2026-09-11T18-07-47-01a08fb9-1787-78b3-a2bf-ed17af3294b2.jsonl",
+  "parent": {
+    "input_tokens": 1446616,
+    "cached_input_tokens": 1386880,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 8526,
+    "reasoning_output_tokens": 268,
+    "total_tokens": 1455142,
+    "uncached_input_tokens": 59736,
+    "cache_share_of_input": 0.9587063878734924
+  },
+  "worker": {
+    "input_tokens": 1002400,
+    "cached_input_tokens": 955392,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 10257,
+    "reasoning_output_tokens": 807,
+    "total_tokens": 1012657,
+    "uncached_input_tokens": 47008,
+    "cache_share_of_input": 0.9531045490822028
+  },
+  "combined": {
+    "input_tokens": 2449016,
+    "cached_input_tokens": 2342272,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 18783,
+    "reasoning_output_tokens": 1075,
+    "total_tokens": 2467799,
+    "uncached_input_tokens": 106744,
+    "cache_share_of_input": 0.9564135146524155
+  },
+  "billing": "Token counters, not an invoice or exact subscription quota attribution."
+}

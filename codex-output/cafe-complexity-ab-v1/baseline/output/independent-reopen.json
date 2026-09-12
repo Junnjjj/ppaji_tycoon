@@ -1,0 +1,64 @@
+{
+  "state": "PASS",
+  "new_blender_process": true,
+  "saved_scene": "cafe.blend",
+  "complete_root": true,
+  "mesh_count": 335,
+  "camera_exact": true,
+  "packed_images": true,
+  "floor_dimensions_exact": true,
+  "root_uniform_scale": true,
+  "RGBA_comparison": {
+    "color-d0": {
+      "decoded_rgba_equal": true,
+      "max_abs_channel_delta": 0,
+      "original": "color-d0.png",
+      "reopened": "verification-color-d0.png"
+    },
+    "native-d0": {
+      "decoded_rgba_equal": true,
+      "max_abs_channel_delta": 0,
+      "original": "native-d0.png",
+      "reopened": "verification-native-d0.png"
+    },
+    "color-d1": {
+      "decoded_rgba_equal": true,
+      "max_abs_channel_delta": 0,
+      "original": "color-d1.png",
+      "reopened": "verification-color-d1.png"
+    },
+    "native-d1": {
+      "decoded_rgba_equal": true,
+      "max_abs_channel_delta": 0,
+      "original": "native-d1.png",
+      "reopened": "verification-native-d1.png"
+    },
+    "color-d2": {
+      "decoded_rgba_equal": true,
+      "max_abs_channel_delta": 0,
+      "original": "color-d2.png",
+      "reopened": "verification-color-d2.png"
+    },
+    "native-d2": {
+      "decoded_rgba_equal": true,
+      "max_abs_channel_delta": 0,
+      "original": "native-d2.png",
+      "reopened": "verification-native-d2.png"
+    },
+    "color-d3": {
+      "decoded_rgba_equal": true,
+      "max_abs_channel_delta": 0,
+      "original": "color-d3.png",
+      "reopened": "verification-color-d3.png"
+    },
+    "native-d3": {
+      "decoded_rgba_equal": true,
+      "max_abs_channel_delta": 0,
+      "original": "native-d3.png",
+      "reopened": "verification-native-d3.png"
+    }
+  },
+  "checked_views": 8,
+  "scope": "all four directions, both resolutions, second independent Blender process",
+  "additional_qa_round_trip": "Coordinator requested completion of all-eight-image comparison; no model edits"
+}

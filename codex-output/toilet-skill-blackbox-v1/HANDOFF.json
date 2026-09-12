@@ -1,0 +1,13 @@
+{
+  "status": "TOILET_BLACKBOX_CANDIDATE_USER_REVIEW",
+  "url": "http://100.114.231.15:63021/run/review.html",
+  "output": "codex-output/toilet-skill-blackbox-v1/output",
+  "report": "codex-output/toilet-skill-blackbox-v1/REPORT.md",
+  "trial_count": 1,
+  "skill_modified_for_toilet": false,
+  "rgba_exact_images": 8,
+  "protected_files_unchanged": 44,
+  "input_files_unchanged": 24,
+  "remaining": "User appearance review; no automatic rerun or live adoption",
+  "server_session": 57126
+}

@@ -1,0 +1,60 @@
+{
+  "status": "FRESH_AUTHORED_REVIEW_PROPOSAL",
+  "reference_role": "facility-specific supplied café concept, art reference; no adoption approval inferred",
+  "reference_sha256": "b1cd01568f1f600314f47131a85aa2deb7a7878e44b8a2cb8225884061df074a",
+  "keep": [
+    "dark segmented gable roof, ridge along X",
+    "warm timber, cream plaster, blue single door and front awning",
+    "front door on left, service aperture on right, separate pastry display and espresso machine, visible cups",
+    "single divided window on right side"
+  ],
+  "adapt": [
+    "proposed full 3x2 integral foundation versus live 2x2; no live edit",
+    "door height 1.36 tiles = 1.27 human heights; counter top .6175 tiles = .576 human heights",
+    "gable rise .55 tile, timber posts .13 tile",
+    "functional equipment enlarged modestly for native-size readability; case front remains optically open rather than a transparency shader",
+    "cup pictogram simplified into geometric cup mark; no letters or labels"
+  ],
+  "unspecified": [
+    "rear and left proposed closed plaster above timber wainscot, no invented duplicate entrances or service openings",
+    "interior circulation/pathfinding not certified"
+  ],
+  "visual_mass_target": {
+    "body_xy_tiles": [
+      2.84,
+      1.82
+    ],
+    "floor_xy_tiles": [
+      3,
+      2
+    ],
+    "coverage": [
+      0.9467,
+      0.91
+    ],
+    "roof_xy_tiles": [
+      3.1,
+      2.08
+    ],
+    "eaves_z_tiles": 1.7,
+    "ridge_z_tiles": 2.3445
+  },
+  "access": {
+    "kind": "portal-and-service-face",
+    "front": "-Y",
+    "door_anchor": [
+      -0.867,
+      -1.02,
+      0
+    ],
+    "service_anchor": [
+      0.4,
+      -1.15,
+      0
+    ],
+    "door_approach": "outside -Y, canopy only over service",
+    "gameplay": "DEFERRED"
+  },
+  "iteration_budget": 2,
+  "runtime_status": "NO_LIVE_ADOPTION; roof/body/footprint user review pending"
+}

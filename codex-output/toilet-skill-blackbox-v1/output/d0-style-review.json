@@ -1,0 +1,134 @@
+{
+  "status": "ART_PROPOSAL_USER_REVIEW",
+  "local_corrections": 0,
+  "material_patches": {
+    "cream": {
+      "concept": [
+        608,
+        540,
+        638,
+        585
+      ],
+      "candidate": [
+        394,
+        377,
+        414,
+        404
+      ],
+      "concept_median_rgb": [
+        229.0,
+        210.0,
+        179.0
+      ],
+      "candidate_median_rgb": [
+        187.0,
+        165.0,
+        129.0
+      ]
+    },
+    "orange": {
+      "concept": [
+        244,
+        624,
+        281,
+        661
+      ],
+      "candidate": [
+        281,
+        402,
+        294,
+        427
+      ],
+      "concept_median_rgb": [
+        157.0,
+        49.0,
+        23.0
+      ],
+      "candidate_median_rgb": [
+        200.0,
+        80.0,
+        41.0
+      ]
+    },
+    "blue": {
+      "concept": [
+        459,
+        690,
+        490,
+        729
+      ],
+      "candidate": [
+        340,
+        435,
+        352,
+        454
+      ],
+      "concept_median_rgb": [
+        36.0,
+        73.0,
+        113.0
+      ],
+      "candidate_median_rgb": [
+        53.0,
+        107.0,
+        154.0
+      ]
+    },
+    "teal": {
+      "concept": [
+        691,
+        734,
+        711,
+        753
+      ],
+      "candidate": [
+        439,
+        437,
+        448,
+        445
+      ],
+      "concept_median_rgb": [
+        24.0,
+        45.0,
+        50.0
+      ],
+      "candidate_median_rgb": [
+        36.0,
+        82.0,
+        96.0
+      ]
+    },
+    "roof": {
+      "concept": [
+        462,
+        299,
+        482,
+        308
+      ],
+      "candidate": [
+        395,
+        247,
+        406,
+        252
+      ],
+      "concept_median_rgb": [
+        69.0,
+        62.5,
+        55.0
+      ],
+      "candidate_median_rgb": [
+        84.0,
+        82.0,
+        71.0
+      ]
+    }
+  },
+  "observations": [
+    "Concept palette roles retained: cream plaster, teal dado, orange and blue doors, charcoal roof",
+    "Shared atlas variation visible in plaster and doors at 768, restrained at native scale",
+    "Fixed equal-axis camera differs from the concept facade aspect; physical front and right widths are equal",
+    "Native two doors and white pictogram cues, four front windows, two side windows and dark vent are identifiable; tiny symbol gender distinction is not certified",
+    "Roof grid is crisper and regular; candidate has less hand-painted edge variation than reference"
+  ],
+  "decision": "One coherent candidate; no material correction judged necessary for practical black-box scope"
+}

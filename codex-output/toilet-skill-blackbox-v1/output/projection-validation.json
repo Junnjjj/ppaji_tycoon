@@ -1,0 +1,318 @@
+{
+  "camera_exact": true,
+  "controls_timing": "Executed after model construction; pre-model control order was not followed",
+  "diagnostics": {
+    "calibration-positive": {
+      "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/\uc5d0\uc14b\ub9cc\ub4e4\uae30_\uc2a4\ud0ac/codex-output/toilet-skill-blackbox-v1/output/calibration-positive.png",
+      "layout": "single",
+      "contract": {
+        "projection": "orthographic",
+        "camera_yaw_deg": 45,
+        "camera_elevation_deg": 30,
+        "tile_texels": [
+          32,
+          16
+        ],
+        "signed_ground_edge_deg": [
+          -26.565,
+          26.565
+        ],
+        "vertical_deg": 90
+      },
+      "cells": {
+        "single": {
+          "edge_points": 268,
+          "families": {
+            "diag_negative": {
+              "target_deg": -26.565,
+              "measured_deg": -26.565,
+              "abs_error_deg": 0.0,
+              "peak_edge_pixels": 42,
+              "score": 14.134,
+              "verdict": "PASS"
+            },
+            "diag_positive": {
+              "target_deg": 26.565,
+              "measured_deg": 26.565,
+              "abs_error_deg": 0.0,
+              "peak_edge_pixels": 49,
+              "score": 12.948,
+              "verdict": "PASS"
+            },
+            "vertical": {
+              "target_deg": 90.0,
+              "measured_deg": 91.0,
+              "abs_error_deg": 1.0,
+              "peak_edge_pixels": 23,
+              "score": 5.97,
+              "verdict": "PASS"
+            }
+          },
+          "overall": "PASS",
+          "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+        }
+      },
+      "overall": "PASS"
+    },
+    "calibration-negative": {
+      "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/\uc5d0\uc14b\ub9cc\ub4e4\uae30_\uc2a4\ud0ac/codex-output/toilet-skill-blackbox-v1/output/calibration-negative.png",
+      "layout": "single",
+      "contract": {
+        "projection": "orthographic",
+        "camera_yaw_deg": 45,
+        "camera_elevation_deg": 30,
+        "tile_texels": [
+          32,
+          16
+        ],
+        "signed_ground_edge_deg": [
+          -26.565,
+          26.565
+        ],
+        "vertical_deg": 90
+      },
+      "cells": {
+        "single": {
+          "edge_points": 230,
+          "families": {
+            "diag_negative": {
+              "target_deg": -26.565,
+              "measured_deg": -35.565,
+              "abs_error_deg": 9.0,
+              "peak_edge_pixels": 35,
+              "score": 10.348,
+              "verdict": "FAIL"
+            },
+            "diag_positive": {
+              "target_deg": 26.565,
+              "measured_deg": 35.565,
+              "abs_error_deg": 9.0,
+              "peak_edge_pixels": 31,
+              "score": 10.683,
+              "verdict": "FAIL"
+            },
+            "vertical": {
+              "target_deg": 90.0,
+              "measured_deg": 89.25,
+              "abs_error_deg": 0.75,
+              "peak_edge_pixels": 14,
+              "score": 3.391,
+              "verdict": "PASS"
+            }
+          },
+          "overall": "FAIL",
+          "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+        }
+      },
+      "overall": "FAIL"
+    },
+    "color-d0": {
+      "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/\uc5d0\uc14b\ub9cc\ub4e4\uae30_\uc2a4\ud0ac/codex-output/toilet-skill-blackbox-v1/output/color-d0.png",
+      "layout": "single",
+      "contract": {
+        "projection": "orthographic",
+        "camera_yaw_deg": 45,
+        "camera_elevation_deg": 30,
+        "tile_texels": [
+          32,
+          16
+        ],
+        "signed_ground_edge_deg": [
+          -26.565,
+          26.565
+        ],
+        "vertical_deg": 90
+      },
+      "cells": {
+        "single": {
+          "edge_points": 4829,
+          "families": {
+            "diag_negative": {
+              "target_deg": -26.565,
+              "measured_deg": -26.565,
+              "abs_error_deg": 0.0,
+              "peak_edge_pixels": 131,
+              "score": 23.779,
+              "verdict": "PASS"
+            },
+            "diag_positive": {
+              "target_deg": 26.565,
+              "measured_deg": 26.565,
+              "abs_error_deg": 0.0,
+              "peak_edge_pixels": 120,
+              "score": 21.186,
+              "verdict": "PASS"
+            },
+            "vertical": {
+              "target_deg": 90.0,
+              "measured_deg": 87.75,
+              "abs_error_deg": 2.25,
+              "peak_edge_pixels": 75,
+              "score": 12.541,
+              "verdict": "WARN"
+            }
+          },
+          "overall": "WARN",
+          "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+        }
+      },
+      "overall": "WARN"
+    },
+    "color-d1": {
+      "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/\uc5d0\uc14b\ub9cc\ub4e4\uae30_\uc2a4\ud0ac/codex-output/toilet-skill-blackbox-v1/output/color-d1.png",
+      "layout": "single",
+      "contract": {
+        "projection": "orthographic",
+        "camera_yaw_deg": 45,
+        "camera_elevation_deg": 30,
+        "tile_texels": [
+          32,
+          16
+        ],
+        "signed_ground_edge_deg": [
+          -26.565,
+          26.565
+        ],
+        "vertical_deg": 90
+      },
+      "cells": {
+        "single": {
+          "edge_points": 4260,
+          "families": {
+            "diag_negative": {
+              "target_deg": -26.565,
+              "measured_deg": -26.565,
+              "abs_error_deg": 0.0,
+              "peak_edge_pixels": 104,
+              "score": 22.014,
+              "verdict": "PASS"
+            },
+            "diag_positive": {
+              "target_deg": 26.565,
+              "measured_deg": 26.565,
+              "abs_error_deg": 0.0,
+              "peak_edge_pixels": 107,
+              "score": 19.967,
+              "verdict": "PASS"
+            },
+            "vertical": {
+              "target_deg": 90.0,
+              "measured_deg": 91.25,
+              "abs_error_deg": 1.25,
+              "peak_edge_pixels": 71,
+              "score": 13.26,
+              "verdict": "PASS"
+            }
+          },
+          "overall": "PASS",
+          "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+        }
+      },
+      "overall": "PASS"
+    },
+    "color-d2": {
+      "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/\uc5d0\uc14b\ub9cc\ub4e4\uae30_\uc2a4\ud0ac/codex-output/toilet-skill-blackbox-v1/output/color-d2.png",
+      "layout": "single",
+      "contract": {
+        "projection": "orthographic",
+        "camera_yaw_deg": 45,
+        "camera_elevation_deg": 30,
+        "tile_texels": [
+          32,
+          16
+        ],
+        "signed_ground_edge_deg": [
+          -26.565,
+          26.565
+        ],
+        "vertical_deg": 90
+      },
+      "cells": {
+        "single": {
+          "edge_points": 3015,
+          "families": {
+            "diag_negative": {
+              "target_deg": -26.565,
+              "measured_deg": -26.565,
+              "abs_error_deg": 0.0,
+              "peak_edge_pixels": 97,
+              "score": 22.279,
+              "verdict": "PASS"
+            },
+            "diag_positive": {
+              "target_deg": 26.565,
+              "measured_deg": 26.565,
+              "abs_error_deg": 0.0,
+              "peak_edge_pixels": 97,
+              "score": 23.896,
+              "verdict": "PASS"
+            },
+            "vertical": {
+              "target_deg": 90.0,
+              "measured_deg": 90.25,
+              "abs_error_deg": 0.25,
+              "peak_edge_pixels": 71,
+              "score": 12.32,
+              "verdict": "PASS"
+            }
+          },
+          "overall": "PASS",
+          "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+        }
+      },
+      "overall": "PASS"
+    },
+    "color-d3": {
+      "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/\uc5d0\uc14b\ub9cc\ub4e4\uae30_\uc2a4\ud0ac/codex-output/toilet-skill-blackbox-v1/output/color-d3.png",
+      "layout": "single",
+      "contract": {
+        "projection": "orthographic",
+        "camera_yaw_deg": 45,
+        "camera_elevation_deg": 30,
+        "tile_texels": [
+          32,
+          16
+        ],
+        "signed_ground_edge_deg": [
+          -26.565,
+          26.565
+        ],
+        "vertical_deg": 90
+      },
+      "cells": {
+        "single": {
+          "edge_points": 3595,
+          "families": {
+            "diag_negative": {
+              "target_deg": -26.565,
+              "measured_deg": -26.565,
+              "abs_error_deg": 0.0,
+              "peak_edge_pixels": 97,
+              "score": 20.25,
+              "verdict": "PASS"
+            },
+            "diag_positive": {
+              "target_deg": 26.565,
+              "measured_deg": 26.565,
+              "abs_error_deg": 0.0,
+              "peak_edge_pixels": 108,
+              "score": 23.649,
+              "verdict": "PASS"
+            },
+            "vertical": {
+              "target_deg": 90.0,
+              "measured_deg": 89.25,
+              "abs_error_deg": 0.75,
+              "peak_edge_pixels": 71,
+              "score": 11.782,
+              "verdict": "PASS"
+            }
+          },
+          "overall": "PASS",
+          "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+        }
+      },
+      "overall": "PASS"
+    }
+  }
+}

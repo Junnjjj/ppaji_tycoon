@@ -1,0 +1,65 @@
+{
+  "image": "output/four-projection-diagnostic.png",
+  "canvas": [
+    1536,
+    1536
+  ],
+  "has_alpha": false,
+  "layout": "components",
+  "measurement_status": "COMPLETED",
+  "semantic_status": "NOT_EVALUATED",
+  "projection_status": "NOT_EVALUATED",
+  "physical_rotation_status": "NOT_EVALUATED",
+  "cells": {
+    "d0": {
+      "bbox": [
+        218,
+        196,
+        550,
+        511
+      ],
+      "width": 332,
+      "height": 315,
+      "foreground_pixels": 67911
+    },
+    "d1": {
+      "bbox": [
+        986,
+        196,
+        1318,
+        511
+      ],
+      "width": 332,
+      "height": 315,
+      "foreground_pixels": 68253
+    },
+    "d2": {
+      "bbox": [
+        218,
+        964,
+        550,
+        1279
+      ],
+      "width": 332,
+      "height": 315,
+      "foreground_pixels": 67908
+    },
+    "d3": {
+      "bbox": [
+        986,
+        964,
+        1318,
+        1279
+      ],
+      "width": 332,
+      "height": 315,
+      "foreground_pixels": 68091
+    }
+  },
+  "spread_percent": {
+    "width": 0.0,
+    "height": 0.0,
+    "foreground_area": 0.51
+  },
+  "warning": "Occupancy measurement only. Exit code zero means parsing completed; it is never semantic, projection, physical-rotation, or production PASS."
+}

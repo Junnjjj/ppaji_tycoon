@@ -1,0 +1,27 @@
+{
+  "complete_root": true,
+  "camera_exact": true,
+  "root_scale": [
+    1,
+    1,
+    1
+  ],
+  "mesh_count": 131,
+  "inventory": {
+    "front_doors": 2,
+    "front_clerestory_windows": 4,
+    "right_clerestory_windows": 2,
+    "right_vent": 1
+  },
+  "packed_images": [
+    {
+      "name": "material-atlas.png",
+      "packed": true
+    },
+    {
+      "name": "Viewer Node",
+      "packed": false
+    }
+  ],
+  "independent_process": true
+}

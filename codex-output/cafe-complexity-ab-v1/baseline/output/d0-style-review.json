@@ -1,0 +1,114 @@
+{
+  "state": "VISUAL_CANDIDATE_NOT_USER_APPROVED",
+  "iterations": 2,
+  "patches": {
+    "roof": {
+      "source_rect": [
+        539,
+        250,
+        559,
+        270
+      ],
+      "candidate_rect": [
+        330,
+        260,
+        338,
+        268
+      ],
+      "source_median_RGB": [
+        19.0,
+        19.0,
+        20.0
+      ],
+      "candidate_median_RGB": [
+        64.0,
+        65.0,
+        65.0
+      ]
+    },
+    "wood": {
+      "source_rect": [
+        907,
+        632,
+        919,
+        660
+      ],
+      "candidate_rect": [
+        403,
+        423,
+        407,
+        438
+      ],
+      "source_median_RGB": [
+        162.0,
+        84.0,
+        1.0
+      ],
+      "candidate_median_RGB": [
+        123.0,
+        84.5,
+        47.0
+      ]
+    },
+    "cream": {
+      "source_rect": [
+        974,
+        498,
+        986,
+        530
+      ],
+      "candidate_rect": [
+        442,
+        388,
+        450,
+        409
+      ],
+      "source_median_RGB": [
+        216.0,
+        179.0,
+        127.0
+      ],
+      "candidate_median_RGB": [
+        163.5,
+        137.0,
+        97.0
+      ]
+    },
+    "blue": {
+      "source_rect": [
+        353,
+        680,
+        371,
+        710
+      ],
+      "candidate_rect": [
+        251,
+        372,
+        260,
+        395
+      ],
+      "source_median_RGB": [
+        12.0,
+        40.0,
+        82.0
+      ],
+      "candidate_median_RGB": [
+        36.0,
+        67.0,
+        108.0
+      ]
+    }
+  },
+  "changes": [
+    "Correction1: shorter/higher awning exposes machine and pastries; darker blue/wood; more legible metal",
+    "Correction2: move buried gable timbers outward to actual surface; add one stacked sill cup"
+  ],
+  "native_findings": [
+    "Tile seams, frame, blue door/awning, counter cavity and four-pane side window read at native192",
+    "Pastry case and machine remain separate light/dark clusters, but tiny dispensers/handles and cup rims are not reliably individually readable",
+    "Two cups on machine are often occluded by awning; stacked sill cups provide visible cup cue",
+    "Regular squared tile profiles differ from concept rounded overlaps; wood is less saturated and less richly shaded than concept"
+  ],
+  "stopped": "two meaningful permitted corrections consumed",
+  "patch_interpretation": "Sampled roof and blue midtones are lighter than concept; timber is less saturated. Rectangles are supporting diagnostics from differently scaled images, not pixel correspondence."
+}

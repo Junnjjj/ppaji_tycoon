@@ -1,0 +1,82 @@
+{
+  "url": "http://100.114.231.15:63021/run/review.html",
+  "http_files": [
+    {
+      "file": "review.html",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/before-color-d0.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/before-color-d1.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/before-color-d2.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/before-color-d3.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/before-native-d0.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/before-native-d1.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/before-native-d2.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/before-native-d3.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/candidate-color-d0.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/candidate-color-d1.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/candidate-color-d2.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/candidate-color-d3.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/candidate-native-d0.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/candidate-native-d1.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/candidate-native-d2.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/candidate-native-d3.png",
+      "http_bytes_equal": true
+    },
+    {
+      "file": "review-media/concept.png",
+      "http_bytes_equal": true
+    }
+  ],
+  "desktop_states": 16,
+  "desktop_states_pass": true,
+  "mobile_width": 390,
+  "mobile_overflow": false,
+  "errors": []
+}

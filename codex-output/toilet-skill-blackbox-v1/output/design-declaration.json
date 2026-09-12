@@ -1,0 +1,25 @@
+{
+  "keep": [
+    "flat recessed charcoal roof with raised parapet",
+    "cream plaster, teal tiled lower walls",
+    "orange left door and blue right door",
+    "four front clerestory windows, two right windows and one right louver vent"
+  ],
+  "adapt": [
+    "2x2 integral footprint; body 1.86x1.86 tiles",
+    "door height 1.36 tiles = 1.269 human heights",
+    "simplified language-neutral raised pictograms and handles"
+  ],
+  "unspecified": [
+    "rear and left faces proposed as closed plaster with continuous tile dado",
+    "no interior or gameplay pathfinding certification"
+  ],
+  "body_coverage_target": [
+    0.93,
+    0.93
+  ],
+  "floor_mode": "full-footprint-integral",
+  "human_height_tiles": 1.0716517624676405,
+  "geometry_lane": "AUTHORED_SHARED_B_MATERIAL_PREVIEW",
+  "state": "USER_REVIEW"
+}

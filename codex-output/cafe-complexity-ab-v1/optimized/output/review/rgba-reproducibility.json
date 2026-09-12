@@ -1,0 +1,130 @@
+{
+  "color-d0": {
+    "size": [
+      768,
+      768
+    ],
+    "bbox": [
+      217,
+      193,
+      551,
+      512
+    ],
+    "foreground_pixels": 71954,
+    "clipped": false,
+    "rgba_equal": true,
+    "sha256": "8f7353facccf66871ce8d2244fe617023a7f17b8dfa9a1f5013151b2c70d58b1"
+  },
+  "native-d0": {
+    "size": [
+      192,
+      192
+    ],
+    "bbox": [
+      55,
+      49,
+      137,
+      128
+    ],
+    "foreground_pixels": 4481,
+    "clipped": false,
+    "rgba_equal": true,
+    "sha256": "4ec986379db2eb52ed77b08b6fa744d52fd378a28e78c977e838ed2063d78524"
+  },
+  "color-d1": {
+    "size": [
+      768,
+      768
+    ],
+    "bbox": [
+      217,
+      193,
+      553,
+      512
+    ],
+    "foreground_pixels": 72277,
+    "clipped": false,
+    "rgba_equal": true,
+    "sha256": "6b05aaa2a83bd5604866e5576fc7e7e95baea8642a1726611ac52b9f04a07711"
+  },
+  "native-d1": {
+    "size": [
+      192,
+      192
+    ],
+    "bbox": [
+      55,
+      49,
+      138,
+      128
+    ],
+    "foreground_pixels": 4495,
+    "clipped": false,
+    "rgba_equal": true,
+    "sha256": "a2897ae0a82ab87057d313e4e5b5238fbfd6daede2ef90e0761f154c7020e896"
+  },
+  "color-d2": {
+    "size": [
+      768,
+      768
+    ],
+    "bbox": [
+      217,
+      193,
+      551,
+      512
+    ],
+    "foreground_pixels": 71959,
+    "clipped": false,
+    "rgba_equal": true,
+    "sha256": "381b532091c869945d68f564ee314c1da9e32c15dd2b9bd24aa2d95c04952dd2"
+  },
+  "native-d2": {
+    "size": [
+      192,
+      192
+    ],
+    "bbox": [
+      55,
+      49,
+      137,
+      128
+    ],
+    "foreground_pixels": 4481,
+    "clipped": false,
+    "rgba_equal": true,
+    "sha256": "fad268dfe360da00028d8c45869b0055eb1874e9aa719f273e4342a0f766a2c7"
+  },
+  "color-d3": {
+    "size": [
+      768,
+      768
+    ],
+    "bbox": [
+      215,
+      193,
+      551,
+      512
+    ],
+    "foreground_pixels": 72168,
+    "clipped": false,
+    "rgba_equal": true,
+    "sha256": "e882e242bc9c9264015b6a99c6d7883f0a3c01a3892b2d737c0baa8221c9f169"
+  },
+  "native-d3": {
+    "size": [
+      192,
+      192
+    ],
+    "bbox": [
+      54,
+      49,
+      137,
+      128
+    ],
+    "foreground_pixels": 4491,
+    "clipped": false,
+    "rgba_equal": true,
+    "sha256": "225fcf6b524c8d3939acf656556f687efbfe79def6c04708e8b7d11307539a18"
+  }
+}

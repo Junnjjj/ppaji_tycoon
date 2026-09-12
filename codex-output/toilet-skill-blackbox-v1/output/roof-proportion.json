@@ -1,0 +1,27 @@
+{
+  "state": "ROOF_PROPORTION_USER_REVIEW",
+  "physical_root_sha256": "58904c17206f9a53d59ba46ec5ec727323b5c87c2779ea5e521332672f4f0acd",
+  "canonical_size_from_brief": [
+    2,
+    2
+  ],
+  "floor_bounds_tiles": [
+    2,
+    2
+  ],
+  "body_coverage": [
+    0.93,
+    0.93
+  ],
+  "roof_to_body_ratio": [
+    1.118279569892473,
+    1.118279569892473
+  ],
+  "roof_overhang_tiles": 0.11,
+  "eaves_tiles": 1.905,
+  "parapet_top_tiles": 2.065,
+  "family_references": [],
+  "family_comparison": "Not available in permitted black-box inputs",
+  "imagegen_calls": 0,
+  "live_files_modified": false
+}

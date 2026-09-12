@@ -1,0 +1,11 @@
+{
+  "status": "USER_REVIEW",
+  "geometry_review": "One rigid complete root; front doors/windows disappear naturally from rear; right vent and windows remain on right side",
+  "style_review": "Recognizable toilet structure and palette; less painterly/irregular edgework than concept; native microdetails simplified",
+  "production_approved": false,
+  "runtime_validated": false,
+  "independent_visual_reviewer": "Pending coordinator/user review",
+  "scope": "Single practical black-box candidate",
+  "live_files_modified": false,
+  "projection_d0_warning": "Image diagnostic WARN: vertical detected at 87.75 degrees. Exact camera and analytic true vertical validated separately."
+}

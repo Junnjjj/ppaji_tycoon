@@ -1,0 +1,210 @@
+{
+  "d0": {
+    "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/codex-output/cafe-complexity-ab-v1/optimized/output/review/color-d0.png",
+    "layout": "single",
+    "contract": {
+      "projection": "orthographic",
+      "camera_yaw_deg": 45,
+      "camera_elevation_deg": 30,
+      "tile_texels": [
+        32,
+        16
+      ],
+      "signed_ground_edge_deg": [
+        -26.565,
+        26.565
+      ],
+      "vertical_deg": 90
+    },
+    "cells": {
+      "single": {
+        "edge_points": 6697,
+        "families": {
+          "diag_negative": {
+            "target_deg": -26.565,
+            "measured_deg": -14.815,
+            "abs_error_deg": 11.75,
+            "peak_edge_pixels": 112,
+            "score": 18.013,
+            "verdict": "FAIL"
+          },
+          "diag_positive": {
+            "target_deg": 26.565,
+            "measured_deg": 26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 142,
+            "score": 29.754,
+            "verdict": "PASS"
+          },
+          "vertical": {
+            "target_deg": 90.0,
+            "measured_deg": 84.25,
+            "abs_error_deg": 5.75,
+            "peak_edge_pixels": 67,
+            "score": 7.345,
+            "verdict": "FAIL"
+          }
+        },
+        "overall": "FAIL",
+        "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+      }
+    },
+    "overall": "FAIL"
+  },
+  "d1": {
+    "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/codex-output/cafe-complexity-ab-v1/optimized/output/review/color-d1.png",
+    "layout": "single",
+    "contract": {
+      "projection": "orthographic",
+      "camera_yaw_deg": 45,
+      "camera_elevation_deg": 30,
+      "tile_texels": [
+        32,
+        16
+      ],
+      "signed_ground_edge_deg": [
+        -26.565,
+        26.565
+      ],
+      "vertical_deg": 90
+    },
+    "cells": {
+      "single": {
+        "edge_points": 6091,
+        "families": {
+          "diag_negative": {
+            "target_deg": -26.565,
+            "measured_deg": -26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 140,
+            "score": 29.08,
+            "verdict": "PASS"
+          },
+          "diag_positive": {
+            "target_deg": 26.565,
+            "measured_deg": 26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 136,
+            "score": 19.684,
+            "verdict": "PASS"
+          },
+          "vertical": {
+            "target_deg": 90.0,
+            "measured_deg": 89.75,
+            "abs_error_deg": 0.25,
+            "peak_edge_pixels": 68,
+            "score": 8.017,
+            "verdict": "PASS"
+          }
+        },
+        "overall": "PASS",
+        "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+      }
+    },
+    "overall": "PASS"
+  },
+  "d2": {
+    "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/codex-output/cafe-complexity-ab-v1/optimized/output/review/color-d2.png",
+    "layout": "single",
+    "contract": {
+      "projection": "orthographic",
+      "camera_yaw_deg": 45,
+      "camera_elevation_deg": 30,
+      "tile_texels": [
+        32,
+        16
+      ],
+      "signed_ground_edge_deg": [
+        -26.565,
+        26.565
+      ],
+      "vertical_deg": 90
+    },
+    "cells": {
+      "single": {
+        "edge_points": 4629,
+        "families": {
+          "diag_negative": {
+            "target_deg": -26.565,
+            "measured_deg": -26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 92,
+            "score": 17.165,
+            "verdict": "PASS"
+          },
+          "diag_positive": {
+            "target_deg": 26.565,
+            "measured_deg": 26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 161,
+            "score": 39.44,
+            "verdict": "PASS"
+          },
+          "vertical": {
+            "target_deg": 90.0,
+            "measured_deg": 90.25,
+            "abs_error_deg": 0.25,
+            "peak_edge_pixels": 64,
+            "score": 9.941,
+            "verdict": "PASS"
+          }
+        },
+        "overall": "PASS",
+        "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+      }
+    },
+    "overall": "PASS"
+  },
+  "d3": {
+    "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/codex-output/cafe-complexity-ab-v1/optimized/output/review/color-d3.png",
+    "layout": "single",
+    "contract": {
+      "projection": "orthographic",
+      "camera_yaw_deg": 45,
+      "camera_elevation_deg": 30,
+      "tile_texels": [
+        32,
+        16
+      ],
+      "signed_ground_edge_deg": [
+        -26.565,
+        26.565
+      ],
+      "vertical_deg": 90
+    },
+    "cells": {
+      "single": {
+        "edge_points": 5271,
+        "families": {
+          "diag_negative": {
+            "target_deg": -26.565,
+            "measured_deg": -26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 165,
+            "score": 31.619,
+            "verdict": "PASS"
+          },
+          "diag_positive": {
+            "target_deg": 26.565,
+            "measured_deg": 26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 117,
+            "score": 19.551,
+            "verdict": "PASS"
+          },
+          "vertical": {
+            "target_deg": 90.0,
+            "measured_deg": 81.0,
+            "abs_error_deg": 9.0,
+            "peak_edge_pixels": 80,
+            "score": 12.717,
+            "verdict": "FAIL"
+          }
+        },
+        "overall": "FAIL",
+        "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+      }
+    },
+    "overall": "FAIL"
+  }
+}

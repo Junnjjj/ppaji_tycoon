@@ -1,0 +1,72 @@
+{
+  "access_kind": "portal",
+  "front": "-Y",
+  "inventory": {
+    "front_doors": 2,
+    "front_clerestory_windows": 4,
+    "right_clerestory_windows": 2,
+    "right_vent": 1
+  },
+  "landmarks_local_tiles": {
+    "door_orange": [
+      -0.46,
+      -0.963,
+      0.78
+    ],
+    "door_blue": [
+      0.46,
+      -0.963,
+      0.78
+    ],
+    "front_window_0": [
+      -0.66,
+      -0.949,
+      1.7
+    ],
+    "front_window_1": [
+      -0.22000000000000003,
+      -0.949,
+      1.7
+    ],
+    "front_window_2": [
+      0.21999999999999997,
+      -0.949,
+      1.7
+    ],
+    "front_window_3": [
+      0.66,
+      -0.949,
+      1.7
+    ],
+    "right_window_0": [
+      0.949,
+      -0.43,
+      1.7
+    ],
+    "right_window_1": [
+      0.949,
+      0.43,
+      1.7
+    ],
+    "right_vent": [
+      0.957,
+      0,
+      1.0
+    ]
+  },
+  "owning_component": "FacilityRoot",
+  "permitted_occlusion": "Front features hidden in d2,d3; right features hidden in d1,d2",
+  "hidden_faces": "Closed plain rear and left walls; tile dado wraps all walls",
+  "access_local_tiles": [
+    [
+      -0.46,
+      -1,
+      0
+    ],
+    [
+      0.46,
+      -1,
+      0
+    ]
+  ]
+}

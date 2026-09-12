@@ -1,0 +1,23 @@
+{
+  "source": "independently reopened Blender camera projection of 1-tile basis vectors",
+  "screen_steps_native": {
+    "I": [
+      15.999996185302734,
+      7.999998092651367
+    ],
+    "J": [
+      -16.000001907348633,
+      7.999998092651367
+    ],
+    "height": [
+      0.0,
+      -19.595918655395508
+    ]
+  },
+  "vertical_degrees": 90.0,
+  "expected_ground_step_abs": [
+    16,
+    8
+  ],
+  "diagnostic_d0_vertical_warning": "Image line detector measured 87.75 degrees; camera-derived true vertical remains 90 degrees. Warning retained."
+}

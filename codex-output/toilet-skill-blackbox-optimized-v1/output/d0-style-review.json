@@ -1,0 +1,159 @@
+{
+  "status": "D0_AUTHOR_VISUAL_REVIEW_CONDITIONAL",
+  "material_patches": {
+    "cream_right": {
+      "source_box": [
+        846,
+        456,
+        858,
+        486
+      ],
+      "candidate_box": [
+        457,
+        397,
+        466,
+        409
+      ],
+      "source_median_RGB": [
+        143.0,
+        116.0,
+        81.0
+      ],
+      "candidate_median_RGB": [
+        191.0,
+        171.0,
+        134.0
+      ]
+    },
+    "roof": {
+      "source_box": [
+        455,
+        255,
+        485,
+        270
+      ],
+      "candidate_box": [
+        370,
+        253,
+        380,
+        260
+      ],
+      "source_median_RGB": [
+        75.0,
+        69.0,
+        61.0
+      ],
+      "candidate_median_RGB": [
+        78.0,
+        78.0,
+        70.0
+      ]
+    },
+    "red_door": {
+      "source_box": [
+        247,
+        605,
+        275,
+        645
+      ],
+      "candidate_box": [
+        279,
+        408,
+        289,
+        425
+      ],
+      "source_median_RGB": [
+        160.0,
+        51.0,
+        24.0
+      ],
+      "candidate_median_RGB": [
+        181.0,
+        72.0,
+        39.0
+      ]
+    },
+    "blue_door": {
+      "source_box": [
+        460,
+        660,
+        480,
+        700
+      ],
+      "candidate_box": [
+        342,
+        433,
+        352,
+        449
+      ],
+      "source_median_RGB": [
+        35.0,
+        73.0,
+        115.0
+      ],
+      "candidate_median_RGB": [
+        49.0,
+        101.0,
+        141.0
+      ]
+    },
+    "teal": {
+      "source_box": [
+        605,
+        750,
+        630,
+        780
+      ],
+      "candidate_box": [
+        452,
+        441,
+        466,
+        449
+      ],
+      "source_median_RGB": [
+        52.0,
+        94.0,
+        102.0
+      ],
+      "candidate_median_RGB": [
+        48.0,
+        88.0,
+        98.0
+      ]
+    },
+    "glass": {
+      "source_box": [
+        420,
+        397,
+        443,
+        413
+      ],
+      "candidate_box": [
+        330,
+        337,
+        336,
+        343
+      ],
+      "source_median_RGB": [
+        107.0,
+        172.0,
+        195.0
+      ],
+      "candidate_median_RGB": [
+        106.0,
+        184.0,
+        203.0
+      ]
+    }
+  },
+  "native_findings": [
+    "Two contrasting doors and white pictograms distinguish toilet function",
+    "Four front windows, two side windows and right vent discernible",
+    "Fine louver lines and gender distinction weaker at native than enlarged",
+    "Square footprint has more visible depth than reference illustration; intentional numeric brief fit",
+    "Atlas texture subtler than concept; no full style equivalence claimed"
+  ],
+  "corrections_used": 0,
+  "decision": "Proceed with four-view authored technical review, user art approval pending",
+  "method": "Fixed-size native render inspected; patch medians supportive only, differing projection and face lighting."
+}

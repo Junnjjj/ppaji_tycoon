@@ -1,0 +1,106 @@
+{
+  "positive": {
+    "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/codex-output/cafe-complexity-ab-v1/optimized/output/calibration/positive.png",
+    "layout": "single",
+    "contract": {
+      "projection": "orthographic",
+      "camera_yaw_deg": 45,
+      "camera_elevation_deg": 30,
+      "tile_texels": [
+        32,
+        16
+      ],
+      "signed_ground_edge_deg": [
+        -26.565,
+        26.565
+      ],
+      "vertical_deg": 90
+    },
+    "cells": {
+      "single": {
+        "edge_points": 298,
+        "families": {
+          "diag_negative": {
+            "target_deg": -26.565,
+            "measured_deg": -26.815,
+            "abs_error_deg": 0.25,
+            "peak_edge_pixels": 33,
+            "score": 9.695,
+            "verdict": "PASS"
+          },
+          "diag_positive": {
+            "target_deg": 26.565,
+            "measured_deg": 26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 36,
+            "score": 9.312,
+            "verdict": "PASS"
+          },
+          "vertical": {
+            "target_deg": 90.0,
+            "measured_deg": 91.25,
+            "abs_error_deg": 1.25,
+            "peak_edge_pixels": 30,
+            "score": 11.876,
+            "verdict": "PASS"
+          }
+        },
+        "overall": "PASS",
+        "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+      }
+    },
+    "overall": "PASS"
+  },
+  "negative": {
+    "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/codex-output/cafe-complexity-ab-v1/optimized/output/calibration/negative.png",
+    "layout": "single",
+    "contract": {
+      "projection": "orthographic",
+      "camera_yaw_deg": 45,
+      "camera_elevation_deg": 30,
+      "tile_texels": [
+        32,
+        16
+      ],
+      "signed_ground_edge_deg": [
+        -26.565,
+        26.565
+      ],
+      "vertical_deg": 90
+    },
+    "cells": {
+      "single": {
+        "edge_points": 286,
+        "families": {
+          "diag_negative": {
+            "target_deg": -26.565,
+            "measured_deg": -36.565,
+            "abs_error_deg": 10.0,
+            "peak_edge_pixels": 28,
+            "score": 9.647,
+            "verdict": "FAIL"
+          },
+          "diag_positive": {
+            "target_deg": 26.565,
+            "measured_deg": 35.065,
+            "abs_error_deg": 8.5,
+            "peak_edge_pixels": 33,
+            "score": 10.566,
+            "verdict": "FAIL"
+          },
+          "vertical": {
+            "target_deg": 90.0,
+            "measured_deg": 91.75,
+            "abs_error_deg": 1.75,
+            "peak_edge_pixels": 25,
+            "score": 8.322,
+            "verdict": "PASS"
+          }
+        },
+        "overall": "FAIL",
+        "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+      }
+    },
+    "overall": "FAIL"
+  }
+}

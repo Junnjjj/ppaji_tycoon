@@ -1,0 +1,93 @@
+{
+  "baseline": {
+    "images": {
+      "color-d0.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 68839
+      },
+      "color-d1.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 69224
+      },
+      "color-d2.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 68839
+      },
+      "color-d3.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 69063
+      },
+      "native-d0.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 4283
+      },
+      "native-d1.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 4304
+      },
+      "native-d2.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 4283
+      },
+      "native-d3.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 4294
+      }
+    },
+    "frozen_inputs_unchanged": 24
+  },
+  "optimized": {
+    "images": {
+      "color-d0.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 71954
+      },
+      "color-d1.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 72277
+      },
+      "color-d2.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 71959
+      },
+      "color-d3.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 72168
+      },
+      "native-d0.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 4481
+      },
+      "native-d1.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 4495
+      },
+      "native-d2.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 4481
+      },
+      "native-d3.png": {
+        "rgba_equal": true,
+        "no_clipping": true,
+        "foreground_pixels": 4491
+      }
+    },
+    "frozen_inputs_unchanged": 26
+  },
+  "original_live_files_unchanged": 44
+}
