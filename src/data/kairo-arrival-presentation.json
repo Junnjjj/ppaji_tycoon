@@ -1,0 +1,20 @@
+{
+  "revision": 2,
+  "indoor": { "width": 13, "depth": 8, "topFromGate": 3 },
+  "patio": { "depth": 3, "sideWidth": 2, "clearAisleWidth": 3 },
+  "managedDecor": ["pine", "deciduous", "willow", "shrubs", "rocks", "flower_pot", "long_flowerbed", "bench", "street_lamp"],
+  "wallModules": [
+    { "kind": "long_flowerbed", "edge": "west", "along": 1, "outward": 1, "facing": 1 },
+    { "kind": "bench", "edge": "west", "along": 4, "outward": 1, "facing": 3 },
+    { "kind": "flower_pot", "edge": "west", "along": 7, "outward": 1, "facing": 0 },
+    { "kind": "long_flowerbed", "edge": "east", "along": 1, "outward": 1, "facing": 1 },
+    { "kind": "bench", "edge": "east", "along": 4, "outward": 1, "facing": 1 },
+    { "kind": "flower_pot", "edge": "east", "along": 7, "outward": 1, "facing": 0 },
+    { "kind": "long_flowerbed", "edge": "south", "along": 1, "outward": 1, "facing": 0 },
+    { "kind": "bench", "edge": "south", "along": 1, "outward": 2, "facing": 0 },
+    { "kind": "long_flowerbed", "edge": "south", "along": -3, "outward": 1, "facing": 0 },
+    { "kind": "bench", "edge": "south", "along": -3, "outward": 2, "facing": 0 },
+    { "kind": "street_lamp", "edge": "south", "along": 0, "outward": 3, "facing": 0 },
+    { "kind": "street_lamp", "edge": "south", "along": -1, "outward": 3, "facing": 0 }
+  ]
+}

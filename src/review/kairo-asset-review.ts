@@ -7,7 +7,7 @@ import {
 } from '../sim/kairo/placement.js';
 
 export const ASSET_REVIEW_QUERY = 'assetReview';
-export const EXPECTED_REVIEW_FACILITIES = 20;
+export const EXPECTED_REVIEW_FACILITIES = 25;
 
 export interface AssetReviewPlacement {
   defId: string;
@@ -43,7 +43,7 @@ const DIRECTION_OFFSETS: ReadonlyArray<readonly [number, number]> = [
 export function fourDirectionReviewLayout(
   definitions: readonly KairoFacilityDef[],
 ): AssetReviewGroup[] {
-  const approved = definitions.filter((def) => facingsOf(def) === 4);
+  const approved = definitions.filter((def) => facingsOf(def) === 4 && !def.id.startsWith('env_') && def.id !== 'ticket');
   if (approved.length !== EXPECTED_REVIEW_FACILITIES) {
     throw new Error(
       `4방향 리뷰 시설 수가 ${approved.length}종입니다 ` +
@@ -52,9 +52,9 @@ export function fourDirectionReviewLayout(
   }
 
   return approved.map((def, index) => {
-    const column = index % 4;
-    const row = Math.floor(index / 4);
-    const center = { i: 12 + column * 24, j: 12 + row * 13 };
+    const column = index % 5;
+    const row = Math.floor(index / 5);
+    const center = { i: 12 + column * 18, j: 12 + row * 12 };
     return {
       defId: def.id,
       name: def.name,
@@ -96,7 +96,7 @@ function makeButton(label: string, action: () => void): HTMLButtonElement {
   return button;
 }
 
-/** 실제 Phaser 맵 위에 20종×4방향을 놓는 리뷰 전용 모드. */
+/** 실제 Phaser 맵 위에 25종×4방향을 놓는 리뷰 전용 모드. */
 export function installFourDirectionAssetReview(
   h: ReviewRuntimeHandle,
   definitions: readonly KairoFacilityDef[],

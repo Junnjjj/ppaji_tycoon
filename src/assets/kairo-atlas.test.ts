@@ -22,7 +22,7 @@ const NO_IMAGE = null as unknown as CanvasImageSource;
 const held = (id: string): boolean => ATLAS_HOLDOUT.some((h) => id.startsWith(h.prefix));
 
 describe('생성물 파일명 ↔ 논리 ID — 규칙의 유일한 구현', () => {
-  it('204개 정본 ID 가 전부 왕복한다', () => {
+  it('219개 정본 ID 가 전부 왕복한다', () => {
     for (const id of kairoAssetSizes().keys()) {
       expect(assetFileToId(assetIdToFile(id)), id).toBe(id);
     }
@@ -43,9 +43,9 @@ describe('생성물 파일명 ↔ 논리 ID — 규칙의 유일한 구현', () 
   });
 });
 
-describe('한 팩이 담아야 하는 것 — 189 스프라이트 + 15 UI', () => {
-  it('스프라이트 색인이 189개다 (절차 프로바이더와 같은 전개)', () => {
-    expect(kairoSpriteIndex().size).toBe(189);
+describe('한 팩이 담아야 하는 것 — 204 스프라이트 + 15 UI', () => {
+  it('스프라이트 색인이 204개다 (절차 프로바이더와 같은 전개)', () => {
+    expect(kairoSpriteIndex().size).toBe(329);
   });
 
   it('UI 아이콘 15개는 스프라이트 계약 **밖**이다 — 드로어 강제 검사에 안 걸린다', () => {
@@ -55,9 +55,9 @@ describe('한 팩이 담아야 하는 것 — 189 스프라이트 + 15 UI', () =
     for (const id of ui) expect(sprites.has(id), id).toBe(false);
   });
 
-  it('규격표가 204개이고 UI 아이콘 크기는 계약값에서 온다', () => {
+  it('규격표가 219개이고 UI 아이콘 크기는 계약값에서 온다', () => {
     const sizes = kairoAssetSizes();
-    expect(sizes.size).toBe(204);
+    expect(sizes.size).toBe(344);
     for (const id of kairoUiIconIds()) expect(sizes.get(id)).toEqual(KAIRO.uiIcons.canvas);
   });
 });
@@ -94,7 +94,7 @@ describe('구운 아틀라스가 계약과 맞다', () => {
     expect(drift).toEqual([]);
   });
 
-  it('204장을 전부 덮는다 — 빠진 것이 있으면 npm run bake:atlas', () => {
+  it('219장을 전부 덮는다 — 빠진 것이 있으면 npm run bake:atlas', () => {
     const missing = [...kairoAssetSizes().keys()].filter((id) => !index?.[id]);
     expect(missing).toEqual([]);
   });

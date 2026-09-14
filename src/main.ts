@@ -27,7 +27,9 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const terrainV2Pilot = hdPixelPilot && launchQuery.get('terrain') === 'v2';
   const terrainV3SourceRequested = launchQuery.get('terrain') === 'v3';
   /** 20종×4방향 런타임 검토. 세이브와 시간 흐름에서 격리한다. */
-  const assetReview = launchQuery.get('assetReview') === '1';
+  const environmentReview = launchQuery.get('assetReview') === 'environment';
+  const heightReview = environmentReview && launchQuery.has('heightDemo');
+  const assetReview = launchQuery.get('assetReview') === '1' || environmentReview;
   const shoreRadiusRaw = launchQuery.get('shoreRadius');
   const shoreRadius = shoreRadiusRaw === null ? undefined : Number(shoreRadiusRaw);
   const reviewedShoreRadius =
@@ -37,7 +39,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
   const { bootKairo } = await import('./render/kairo/boot.js');
   const { GROUND_KINDS } = await import('./sim/kairo/terrain.js');
   const { DoorSet: DoorSetCls } = await import('./sim/kairo/doors.js');
-  const { bakeIndoorWalls, paintFloor, paintFloorBlock, doorCandidates, INDOOR_FAIL_MESSAGES } = await import(
+  const { bakeIndoorWalls, paintFloor, paintFloorBlock, floorHeightFailure, cycleIndoorPassage, INDOOR_FAIL_MESSAGES } = await import(
     './sim/kairo/indoor.js'
   );
   const { allFacilityDefs, PLACE_FAIL_MESSAGES, guestWalkable } = await import(
@@ -99,7 +101,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    */
   const { createKairoAssetProvider } = await import('./assets/kairo-atlas.js');
   const baseKairoProvider = await createKairoAssetProvider();
-  let kairoProvider = baseKairoProvider;
+  const { createEnvironmentProvider } = await import('./assets/kairo-environment.js');
+  let kairoProvider = await createEnvironmentProvider(baseKairoProvider);
   if (hdPixelPilot) {
     const { createKairoHdPilotProvider } = await import('./assets/kairo-hd-pilot.js');
     if (hdApprovedFit) {
@@ -135,6 +138,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         : {}),
     });
   }
+  const { createHeightProvider } = await import('./assets/kairo-height.js');
+  kairoProvider = await createHeightProvider(kairoProvider);
   const {
     KairoHud,
     createGoalSlots,
@@ -200,7 +205,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 없으면 시드에서 새로 만든다 (`bootKairo` 기본 동작).
    */
   // 리뷰 URL은 사용자 판을 읽지도, 뒤에서 덮어쓰지도 않는 일회성 전시 판이다.
-  const saved = assetReview ? null : loadKairoFromStorage();
+  const saved = assetReview && !heightReview ? null : loadKairoFromStorage();
   const career = loadCareerProfile();
   const KAIRO_SEED = saved?.seed ?? 20260818;
   /**
@@ -286,10 +291,29 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
           gate: KairoTerrainCls.parkGate(),
           map: mapDef,
           courses: kitCourses,
+          // Open ticket booth: indoor facilities keep their separate room.
+          entranceLobby: false,
+          starterLeisure: false,
         });
         if (r.skipped.length > 0) console.warn('[카이로] 시작 배치 일부 생략', r.skipped);
         return { terrain, walls, placement, courses: kitCourses, kit: r };
       })();
+
+  // The adapter owns atomic save migration; the boot code only adopts its result.
+  const { adoptArrival } = await import('./sim/kairo/arrival-adoption.js');
+  const layoutState = saved ?? fresh!;
+  const arrival = adoptArrival({ ...layoutState,
+    gate: saved?.gate ?? KairoTerrainCls.parkGate(), map: mapDef,
+    doors: saved?.doors ?? fresh?.kit.doors ?? { keys: [] } });
+  layoutState.terrain = arrival.terrain;
+  layoutState.walls = arrival.walls;
+  layoutState.placement = arrival.placement;
+  if (saved) saved.doors = arrival.doors;
+  else fresh!.kit.doors = arrival.doors;
+  const indoorTicketEntryConnected = arrival.indoorTicketEntryConnected;
+  const parkArrivalLayoutApplied = arrival.parkArrivalLayoutApplied;
+  const arrivalPresentationRevision = arrival.arrivalPresentationRevision;
+  if (arrival.reason) console.warn('[카이로] 기존 입구 배치 보존', arrival.reason);
 
   /**
    * 배치 검사에 넘길 바깥 사정 — 이제 **토지뿐**이다.
@@ -414,33 +438,17 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        * 갈라지면 UI 가 놓으라고 해 놓고 굽기가 무시하는 상태가 된다.
        */
       if (build.brush === 'door') {
-        const cand = doorCandidates(h.terrain, GATE, i, j, walkableNow);
-        if (cand.length === 0) {
-          toast(
-            h.terrain.isIndoor(i, j)
-              ? '길이 닿은 쪽이 없습니다 — 건물 옆에 길을 까세요'
-              : '건물 안을 탭하세요 — 출입구는 건물에 냅니다',
-          );
-          return;
-        }
-        const cur = cand.findIndex((d) => doors.has(i, j, d));
-        for (const d of cand) doors.remove(i, j, d);
-        // 마지막 후보에서 또 탭하면 없앤다 — 되돌릴 방법이 있어야 한다
-        const next = cur + 1;
-        if (next < cand.length) doors.add(i, j, cand[next]!);
-        const baked = bakeIndoorWalls(h.terrain, h.walls, GATE, walkableNow, doors);
-        if (!baked.ok) {
-          // 되돌린다 — 반쯤 적용된 벽이 남는 것이 최악이다
-          for (const d of cand) doors.remove(i, j, d);
-          if (cur >= 0) doors.add(i, j, cand[cur]!);
-          bakeIndoorWalls(h.terrain, h.walls, GATE, walkableNow, doors);
-          toast(INDOOR_FAIL_MESSAGES[baked.fail ?? 'no-door']);
+        const edited = cycleIndoorPassage(h.terrain, h.walls, GATE, doors, i, j, h.placement);
+        if (!edited.ok) {
+          toast(edited.fail === 'no-door'
+            ? '실내 벽에 맞닿은 안쪽 또는 바깥쪽 길을 탭하세요'
+            : INDOOR_FAIL_MESSAGES[edited.fail ?? 'no-door']);
           return;
         }
         h.scene.refreshAllWalls();
         h.guests.invalidate();
         persist();
-        toast(next < cand.length ? '출입구를 냈습니다' : '출입구를 없앴습니다', 'ok');
+        toast(edited.opened ? '실내·실외 연결 통로를 냈습니다' : '연결 통로를 없앴습니다', 'ok');
         return;
       }
       /*
@@ -941,6 +949,8 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
        */
       for (let dj = 0; dj < n; dj++) {
         for (let di = 0; di < n; di++) {
+          const heightFail = floorHeightFailure(h.terrain, oi + di, oj + dj, kindId!, h.placement);
+          if (heightFail) return INDOOR_FAIL_MESSAGES[heightFail];
           if (h.terrain.inside(oi + di, oj + dj) && !h.terrain.isBuildable(oi + di, oj + dj)) {
             return PLACE_FAIL_MESSAGES['not-buildable'];
           }
@@ -1339,10 +1349,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
         kind: 'door' as const,
         tab: 'building' as const,
         id: 'door',
-        name: '출입구',
+        name: '연결 통로',
         cost: 0,
         role: '동선',
-        sub: '실내 칸을 탭 · 다시 탭하면 옮김',
+        sub: '실내·실외 연결 · 벽 양쪽에서 지정',
       },
       {
         kind: 'erase' as const,
@@ -1364,14 +1374,14 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
       ...GROUND_KINDS.filter(
         (k) => k.id !== 'floor_indoor' && k.buildable && k.guestWalk && k.paintable !== false,
       ).flatMap((k) =>
-        [1, 2, 3].map((n) => ({
+        (k.slope ? [1] : [1, 2, 3]).map((n) => ({
           kind: 'ground' as const,
           tab: 'ground' as const,
           id: n === 1 ? k.id : `${k.id}@${n}`,
           name: n === 1 ? k.name : `${k.name} ${n}×${n}`,
           cost: k.cost * n * n,
           role: '통행',
-          sub: '손님 통행',
+          sub: k.slope ? '한 단 낮은 칸에 설치 · 높은 쪽으로 자동 연결' : '손님 통행',
         })),
       ),
       /*
@@ -1435,13 +1445,13 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
               : null;
           return {
             kind: 'facility' as const,
-            tab: 'facility' as const,
+            tab: d.id.startsWith('env_') ? 'building' as const : 'facility' as const,
             id: d.id,
             name: d.name,
             cost: d.cost,
             role: NEED_NAME[d.need ?? 'service'],
-            sub: `${d.size[0]}×${d.size[1]} · 정원 ${d.capacity}`,
-            group: ZONE_NAME[d.layer] ?? d.layer,
+            sub: d.id.startsWith('env_') ? `${d.size[0]}×${d.size[1]} · 장식 · 4방향` : `${d.size[0]}×${d.size[1]} · 정원 ${d.capacity}`,
+            group: d.id.startsWith('env_') ? '풍경·경계' : ZONE_NAME[d.layer] ?? d.layer,
             sprite: d.sprite,
             ...(locked ? { locked, unlock: '건설 ▸ 건물에서 바닥을 넓히세요' } : {}),
           };
@@ -1663,7 +1673,7 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
    * 플레이어가 놓은 출입구 (K36-B). **희망이지 상태가 아니다** — 벽은 여전히 실내
    * 바닥에서 파생된다 (K27). 세이브에 담기지만 없으면 빈 집합이라 예전과 똑같이 돈다.
    */
-  const doors = DoorSetCls.fromSnapshot(saved?.doors);
+  const doors = DoorSetCls.fromSnapshot(saved?.doors ?? fresh?.kit.doors);
 
   const courses = saved?.courses
     ? course.CourseStore.fromSnapshot(saved.courses)
@@ -1754,6 +1764,10 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
      */
     noteCatalog();
     saveKairoToStorage({
+      entranceBoundaryCleared: true,
+      indoorTicketEntryConnected,
+      parkArrivalLayoutApplied,
+      arrivalPresentationRevision,
       seed: KAIRO_SEED,
       gate: GATE,
       terrain: h.terrain,
@@ -3881,7 +3895,11 @@ async function mainKairo(parent: HTMLElement): Promise<void> {
     __kairoClearBrush: clearBrush,
     __kairoCards: cardView,
   });
-  if (assetReview) {
+  if (heightReview) {
+    const { installHeightLiveReview } = await import('./review/height-live.js');
+    installHeightLiveReview(h);
+  }
+  if (assetReview && !environmentReview) {
     Object.assign(h, {
       assetReview: installFourDirectionAssetReview(
         h as import('./review/kairo-asset-review.js').ReviewRuntimeHandle,
@@ -3993,7 +4011,36 @@ function registerServiceWorker(): void {
 
 registerServiceWorker();
 
-main().catch((err: unknown) => {
+main().catch(async (err: unknown) => {
+  const { KairoStorageReadError } = await import('./save/kairo.js');
+  if (err instanceof KairoStorageReadError) {
+    const box = document.createElement('div');
+    box.className = 'boot-error';
+    const title = document.createElement('h1');
+    title.textContent = '저장 복원이 필요합니다';
+    const message = document.createElement('p');
+    message.textContent = err.message;
+    box.append(title, message);
+    if (err.raw !== null) {
+      const download = document.createElement('button');
+      download.textContent = '기존 저장 파일 내려받기';
+      download.onclick = () => {
+        const url = URL.createObjectURL(new Blob([err.raw!], { type: 'application/json' }));
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'ppaji-save-recovery.json';
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      };
+      box.append(download);
+    }
+    const retry = document.createElement('button');
+    retry.textContent = '다시 불러오기';
+    retry.onclick = () => location.reload();
+    box.append(retry);
+    document.body.append(box);
+    return;
+  }
   console.error(err);
   const box = document.createElement('div');
   box.className = 'boot-error';

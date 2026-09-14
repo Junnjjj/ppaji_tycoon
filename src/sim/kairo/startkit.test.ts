@@ -328,3 +328,24 @@ describe('★ 물려받은 것들이 포장으로 이어진다', () => {
     }
   });
 });
+
+describe('매표소 로비와 실외 연결 통로', () => {
+  it('세 맵에서 매표소를 실내에 배치하고 두 출입구를 저장한다', () => {
+    for (const m of MAP_TYPES) for (const seed of SEEDS) {
+      const { t, w, p, c, map } = world(m.id, seed);
+      const result = applyStartKit({ terrain: t, walls: w, placement: p, gate: GATE, map, courses: c, entranceLobby: true });
+      expect(result.skipped, `${m.id}/${seed}`).toEqual([]);
+      const ticket = p.instancesOf('ticket')[0]!;
+      expect(ticket).toBeDefined();
+      expect(t.isIndoor(ticket.i, ticket.j)).toBe(true);
+      expect(result.doors?.keys).toHaveLength(2);
+      const reach = reachable(t, w, GATE, guestWalkable(t, p));
+      for (const key of result.doors!.keys) {
+        const [i, j, dir] = key.split(',').map(Number) as [number, number, number];
+        expect(w.edgeAt(i, j, dir as 0 | 1)).toBe(EDGE_DOOR);
+        expect(reach[j * GRID_W + i], key).toBe(1);
+        expect(reach[(j + (dir === 1 ? 1 : 0)) * GRID_W + i + (dir === 0 ? 1 : 0)], key).toBe(1);
+      }
+    }
+  });
+});

@@ -78,6 +78,8 @@ export type GuestFace = 'calm' | 'happy' | 'annoyed' | 'tired';
 export type GuestEmote = 'happy' | 'love' | 'neutral' | 'annoyed' | 'hot' | 'alert';
 
 export interface Guest {
+  /** Optional authored appearance ID; omitted guests use the presentation catalog. */
+  appearanceId?: string;
   id: number;
   /** 일행 유형 (§10.4) — 지갑·인내·수요 편향이 여기서 온다 */
   group: GroupId;
@@ -122,6 +124,7 @@ export interface Guest {
    * 다른 시설과 같아지기 때문이다.
    */
   admitting: boolean;
+  admissionRoute?: [number, number][];
   /** 남은 이용 tick */
   useTicks: number;
   /** 만족도 0..100 — 퇴장 시점 값만 집계한다 */
@@ -670,7 +673,7 @@ export class GuestStore {
    * 하나만 넣으면 "거리장은 맞는데 손님이 절벽을 타고 오른다"가 된다.
    */
   private readonly canCross = (i: number, j: number, ni: number, nj: number): boolean =>
-    !this.walls.blocksMove(i, j, ni, nj) && this.terrain.levelPassable(i, j, ni, nj);
+    !this.walls.blocksMove(i, j, ni, nj) && !this.placement.blocksCross(i, j, ni, nj) && this.terrain.levelPassable(i, j, ni, nj);
 
   /**
    * 게이트에서 이 칸까지의 걸음 수. 못 닿으면 −1 (K37 검사용).
@@ -780,14 +783,16 @@ export class GuestStore {
        * 시작 킷 절반이 손님을 못 받는다 — `entry.test.ts` 가 그 존재를 고정한다.
        */
       let targets: [number, number][] = [];
+      const entryDef = { ...def };
+      if (item.legacyAdmission) delete entryDef.entryTiles;
       if (!def.walkOn) {
-        for (const [ni, nj] of PlacementGrid.entryTilesOf(def, item.i, item.j, item.facing ?? 0)) {
+        for (const [ni, nj] of PlacementGrid.entryTilesOf(entryDef, item.i, item.j, item.facing ?? 0)) {
           if (!this.walkable(ni, nj)) continue;
           if (!gate.reachable(ni, nj)) continue;
           targets.push([ni, nj]);
         }
       }
-      if (targets.length === 0) targets = allNeighbors(def, item);
+      if (targets.length === 0 && (!def.admissionPassage || item.legacyAdmission)) targets = allNeighbors(def, item);
 
       if (targets.length === 0) continue;
       const f = new FlowField(w, h);
@@ -1287,7 +1292,14 @@ export class GuestStore {
              * 채워 버려 안내소·사무실을 지을 이유가 사라진다.
              */
             g.admitting = false;
-            this.admit(g, this.tunables.admissionFee);
+            const ticket = this.placement.all().find(item => item.handle === usedHandle);
+            const def = ticket ? facilityDef(ticket.defId) : undefined;
+            if (ticket && !ticket.legacyAdmission && def?.admissionPassage) {
+              g.admissionRoute = def.admissionPassage.map(tile => PlacementGrid.footprintTileOf(def, ticket.i, ticket.j, tile, ticket.facing ?? 0));
+              g.usingHandle = usedHandle; // Keep income attribution until the passage completes.
+              g.state = 'arriving';
+              g.pose = 'walk';
+            } else this.admit(g, this.tunables.admissionFee);
             continue;
           }
           const gains = this.tunables.useGains;
@@ -1372,6 +1384,30 @@ export class GuestStore {
       }
 
       if (g.state === 'gone') continue;
+
+      // Ticket confirmation is followed by actual ordered steps through the clear lane.
+      // Charge admission only after reaching the park-side exit; never teleport through the booth.
+      if (g.admissionRoute) {
+        g.stepAcc++;
+        if (g.stepAcc < this.tunables.ticksPerStep) continue;
+        g.stepAcc = 0;
+        const next = g.admissionRoute.shift();
+        if (!next) {
+          delete g.admissionRoute;
+          this.releaseSlot(g);
+          this.admit(g, this.tunables.admissionFee);
+          continue;
+        }
+        if (!this.walkable(next[0], next[1]) || !this.canCross(g.i, g.j, next[0], next[1]) || Math.abs(g.i-next[0])+Math.abs(g.j-next[1]) !== 1) {
+          delete g.admissionRoute;
+          this.turnBack(g);
+          continue;
+        }
+        g.fromI = g.i; g.fromJ = g.j;
+        g.i = next[0]; g.j = next[1]; g.progress = 0; g.pose = 'walk';
+        g.facing = g.i > g.fromI ? '+X' : g.i < g.fromI ? '-X' : g.j > g.fromJ ? '+Z' : '-Z';
+        continue;
+      }
 
       // 목적지 결정
       let field: FlowField | null = null;

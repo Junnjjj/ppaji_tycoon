@@ -12,9 +12,9 @@ const GW = 40;
 const GH = 32;
 
 describe('지면 데이터 — 시뮬이 소유한다', () => {
-  it('종류 11종 + 다리 2종', () => {
+  it('종류 13종 + 다리 2종', () => {
     // K36 도시 띠 3종 · K37 암반 · S1 수영장 물(pool_water)
-    expect(GROUND_KINDS).toHaveLength(11);
+    expect(GROUND_KINDS).toHaveLength(13);
     expect(BRIDGE_KINDS).toHaveLength(2);
   });
 

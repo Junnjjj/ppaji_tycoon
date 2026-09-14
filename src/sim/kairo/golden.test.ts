@@ -415,18 +415,19 @@ describe('골든 시나리오 — 고정 시드·고정 건설 순서', () => {
      * 아래의 같은 시드 재실행 검사도 완전 일치를 유지하므로 새 풋프린트에서 파생된
      * 결정적 경로 변화다.
      */
+    // 2026-09-13: admission now follows the ordered physical ticket passage.
     expect(g).toEqual({
       facilities: 15,
       combos: 7,
-      grade: 3,
-      exitSat: 62,
-      visitors: 93,
-      turnedAway: 28,
-      admission: 353_400,
-      sales: 309_643,
+      grade: 2,
+      exitSat: 64,
+      visitors: 83,
+      turnedAway: 0,
+      admission: 315_400,
+      sales: 240_198,
       noTicket: 0,
       profitSign: 1,
-      questsDone: 5,
+      questsDone: 6,
       riskLevel: 'caution',
       cards: 4,
       staffWages: 22_500,

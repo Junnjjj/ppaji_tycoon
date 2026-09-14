@@ -222,7 +222,7 @@ describe('한 줄 설명 (K49) — 데이터가 갖는다 (불변식 3)', () => 
       .filter((d) => (d.desc ?? '').trim().length === 0)
       .map((d) => d.id);
     expect(empty).toEqual([]);
-    expect(allFacilityDefs().length).toBe(75);
+    expect(allFacilityDefs().length).toBe(104);
   });
 
   it('⚠ 설명이 스탯을 다시 적지 않는다 — 정원·요금은 화면이 실측값으로 띄운다', () => {

@@ -1,3 +1,7 @@
+import { NPC_PRESENTATION, npcV8Frame } from '../../assets/kairo-npc-v8.js';
+import { continuousWalk, type WalkSample } from '../kairo/walk-continuity.js';
+import { heightTileAt } from '../kairo/height.js';
+import { isSlopeKind, slopeAt, movementLevel } from '../../sim/kairo/slopes.js';
 import Phaser from 'phaser';
 import { Rng } from '../../sim/rng.js';
 import {
@@ -8,7 +12,6 @@ import {
   tileCenter,
   gridToScreen,
   depthKey,
-  screenToTile,
   inGrid,
   footprintAnchor,
   STEP_X,
@@ -97,6 +100,7 @@ import {
   COSLOT_SPREAD_TEXELS,
   facilityFacings,
   facilitySpriteId,
+  KAIRO,
 } from '../../assets/kairo-contract.js';
 import {
   bakeGuestAtlas,
@@ -230,6 +234,7 @@ export class KairoScene extends Phaser.Scene {
   /** 시설 이미지 — handle 로 관리한다 (발자국이 여러 칸이라 타일 키로는 못 잡는다) */
   private facilityImages = new Map<number, Phaser.GameObjects.Image>();
   /** 손님 하나당 몸통·표정·이모트 세 이미지 */
+  private guestWalkSamples = new Map<number, WalkSample>();
   private guestViews = new Map<
     number,
     { body: Phaser.GameObjects.Image; face: Phaser.GameObjects.Image; emote: Phaser.GameObjects.Image }
@@ -268,6 +273,7 @@ export class KairoScene extends Phaser.Scene {
    * 여기서 자기 시계로 굴리면 스폰 시점과 화면이 갈라져 버스가 떠난 뒤에 손님이 나타난다.
    * 에셋이 아직 없어 임시 사각형이다 (사용자 확인).
    */
+  private busSprite: Phaser.GameObjects.Image | null = null;
   private busGfx: Phaser.GameObjects.Graphics | null = null;
 
   /**
@@ -377,6 +383,7 @@ export class KairoScene extends Phaser.Scene {
    */
   private land: { i0: number; j0: number; w: number; h: number } | null = null;
   private backdrops: Phaser.GameObjects.TileSprite[] = [];
+  private environmentLandscape: Phaser.GameObjects.Image[] = [];
   /**
    * 지도 바깥을 채우는 땅 (K38) — **한 장**이다.
    *
@@ -498,6 +505,7 @@ export class KairoScene extends Phaser.Scene {
   }
 
   preload(): void {
+    this.load.atlas(NPC_PRESENTATION.texture, NPC_PRESENTATION.atlasImage, NPC_PRESENTATION.atlasData);
     // 프로바이더의 캔버스를 Phaser 텍스처로 등록. AtlasProvider 로 갈아끼워도 같은 경로다
     for (const id of this.opts.provider.ids) {
       if (this.textures.exists(id)) continue;
@@ -564,7 +572,8 @@ export class KairoScene extends Phaser.Scene {
 
   /** 지면 타일 텍스처 ID — 변형은 좌표로 결정한다 (같은 칸은 항상 같은 그림) */
   private groundTextureId(i: number, j: number): string {
-    const kind = this.opts.terrain.kindAt(i, j) ?? 'lawn';
+    const rawKind = this.opts.terrain.kindAt(i, j) ?? 'lawn';
+    const kind = isSlopeKind(rawKind) ? 'path_stone' : rawKind;
     const alt = this.opts.provider.groundAlt?.(i, j, kind) ?? (i * 7 + j * 13) % 3;
     const base = variantId(`ground/${kind}`, { alt });
     const shoreRadius = this.opts.provider.terrainShoreRadius?.();
@@ -822,9 +831,7 @@ export class KairoScene extends Phaser.Scene {
    * 칸으로 스냅하지만(`spanDepthKey`) 화면 y 는 이어져야 한다 — 그 둘은 다른 문제다.
    */
   private liftSpan(fi: number, fj: number, i: number, j: number, t: number): number {
-    const a = this.levelLift(this.opts.terrain.levelAt(Math.round(fi), Math.round(fj)));
-    const b = this.levelLift(this.opts.terrain.levelAt(i, j));
-    return a + (b - a) * Math.min(1, Math.max(0, t));
+    return this.levelLift(movementLevel(this.opts.terrain, fi, fj, i, j, t));
   }
 
   /** 이 칸의 +I·+J 쪽으로 떨어지는 단 수 (0 이면 치마가 없다) */
@@ -862,7 +869,23 @@ export class KairoScene extends Phaser.Scene {
    */
   private columnTextureId(i: number, j: number): string {
     const { di, dj } = this.dropsAt(i, j);
-    return this.columnTexture(this.groundTextureId(i, j), this.opts.terrain.levelAt(i, j), di, dj);
+    const column = this.columnTexture(this.groundTextureId(i, j), this.opts.terrain.levelAt(i, j), di, dj);
+    const slope = slopeAt(this.opts.terrain, i, j);
+    if (!slope) return column;
+    const art = `height/${this.opts.terrain.kindAt(i, j) === 'path_steps' ? 'steps' : 'ramp'}:d${slope.facing}`;
+    if (!this.opts.provider.has(art)) return column;
+    const id = `__slope/${art}/${column}`;
+    if (this.textures.exists(id)) return id;
+    const density = this.densityOf(column), drop = Math.max(di, dj) * this.levelHeight();
+    const width = 34, height = 64 + drop;
+    const texture = this.textures.createCanvas(id, width * density, height * density);
+    if (!texture) return column;
+    const ctx = texture.getContext(); ctx.imageSmoothingEnabled = false;
+    const base = this.textures.get(column).getSourceImage() as HTMLCanvasElement;
+    ctx.drawImage(base, (width * density - base.width) / 2, height * density - base.height);
+    ctx.drawImage(this.opts.provider.get(art), 0, 0, width * density, 64 * density);
+    texture.refresh(); this.textureDensities.set(id, density);
+    return id;
   }
 
   /**
@@ -1416,6 +1439,34 @@ export class KairoScene extends Phaser.Scene {
   private buildBackdrop(): void {
     for (const img of this.backdrops) img.destroy();
     this.backdrops = [];
+    for (const img of this.environmentLandscape) img.destroy();
+    this.environmentLandscape = [];
+    for (const [layer, slug, start, step, row, w, h] of [
+      [0, 'mountain_far', -32, 20, -36, 24, 6],
+      [1, 'forest_near', -22, 17, -26, 20, 5],
+      [2, 'farbank', -16, 17, -20, 20, 3],
+    ] as const) {
+      const id = `environment/${slug}:d0`;
+      if (!this.opts.provider.has(id)) continue;
+      for (let i = start; i < GRID_W; i += step) {
+        const p = gridToScreen(i + w / 2, row + h / 2);
+        const img = this.add.image(p.x, p.y, id).setOrigin(0.5, (384 + 11.7575626373291) / 768).setDepth(-900 + layer);
+        this.environmentLandscape.push(img);
+      }
+    }
+
+    // Roadside village occupies the space in front of the distant mountain layers.
+    const village = ['env_village_house', 'env_village_shop', 'env_pension',
+      'env_small_hotel', 'env_convenience_store', 'env_maintenance_shed'];
+    village.forEach((defId, n) => {
+      const id = facilitySpriteId(defId, 0), def = facilityDef(defId);
+      if (!def || !this.opts.provider.has(id)) return;
+      const i = KairoTerrain.ENTRY_I - 20 + n * 8, j = -6;
+      const p = footprintAnchor(i, j, def.size[0], def.size[1]);
+      const img = this.add.image(p.x, p.y, id).setOrigin(0.5, 1).setDepth(-880 + n);
+      this.fitTextureDensity(img, id);
+      this.environmentLandscape.push(img);
+    });
 
     /*
      * 굽기가 성공했으면 **아예 만들지 않는다** (아키텍처 점검 지적).
@@ -1477,6 +1528,13 @@ export class KairoScene extends Phaser.Scene {
    * 깊이는 **발자국의 가장 앞 타일** 기준이다. 시작 타일로 잡으면 큰 시설이 앞의
    * 작은 시설보다 뒤로 밀려 겹침이 뒤집힌다.
    */
+  private terrainFacilitySprite(defId: string, i: number, j: number, facing: FacilityFacing): string {
+    const slope = slopeAt(this.opts.terrain, i, j);
+    const id = `height/fence:d${facing}`;
+    return defId === 'env_wood_fence' && slope?.facing === facing && this.opts.provider.has(id)
+      ? id : facilitySpriteId(defId, facing);
+  }
+
   private drawFacility(handle: number): void {
     const item = this.opts.placement.all().find((f) => f.handle === handle);
     if (!item) return;
@@ -1493,7 +1551,7 @@ export class KairoScene extends Phaser.Scene {
      */
     const facing = item.facing ?? 0;
     const [w, d] = PlacementGrid.sizeOf(def, facing);
-    const texId = facilitySpriteId(item.defId, facing);
+    const texId = this.terrainFacilitySprite(item.defId, item.i, item.j, facing);
     const flip = facilityFacings(item.defId) === 2 && facing === 1;
     const a = footprintAnchor(item.i, item.j, w, d);
     // 단 위의 시설은 같이 올라간다 (K37). 발자국은 단이 균일하므로 시작 칸 하나로 충분하다
@@ -1702,6 +1760,7 @@ export class KairoScene extends Phaser.Scene {
   setSurroundVisibleForTest(on: boolean): void {
     this.surround?.setVisible(on);
     for (const t of this.backdrops) t.setVisible(on);
+    for (const t of this.environmentLandscape) t.setVisible(on);
   }
 
   /**
@@ -1837,6 +1896,18 @@ export class KairoScene extends Phaser.Scene {
       this.wallImages.delete(key);
       return;
     }
+    const authoredId = `environment/${kind === EDGE_DOOR ? 'glass_door' : 'glass_wall'}:d${[3, 2, 1, 0][dir]}`;
+    if (this.opts.provider.has(authoredId)) {
+      const c = tileCenter(i, j);
+      const img = existing ?? this.add.image(c.x, c.y, authoredId);
+      img.setTexture(authoredId).setOrigin(0.5, (96 + 11.7575626373291) / 192);
+      img.setPosition(c.x, c.y + this.liftAt(i, j));
+      const back = dir === DIR_I_MINUS || dir === DIR_J_MINUS;
+      img.setDepth(depthKey(i, j) + (back ? Z_WALL_BACK : Z_WALL_FRONT));
+      this.wallImages.set(key, img);
+      this.dimIfOccluding(img);
+      return;
+    }
     const id = variantId(kind === EDGE_DOOR ? 'wall/door' : 'wall/edge', { alt: dir });
     if (existing) {
       existing.setTexture(id);
@@ -1908,7 +1979,7 @@ export class KairoScene extends Phaser.Scene {
     this.setRideMark(KairoScene.markOf(def, i, j, facing));
     // 회전 미리보기 (K45) — **실물(`drawFacility`)과 같은 규칙**이어야 한다
     const [w, d] = PlacementGrid.sizeOf(def, facing);
-    const texId = facilitySpriteId(defId, facing);
+    const texId = this.terrainFacilitySprite(defId, i, j, facing);
     const a = footprintAnchor(i, j, w, d);
     // 고스트도 단을 탄다 (K37) — 안 태우면 산 위에서 미리보기가 땅에 파묻힌다
     const ay = a.y + this.liftAt(i, j);
@@ -2117,12 +2188,13 @@ export class KairoScene extends Phaser.Scene {
    */
   reticleTile(): { i: number; j: number } {
     const t = this.reticleTexel();
-    return screenToTile(t.x, t.y);
+    return heightTileAt(this.opts.terrain, t.x, t.y, this.levelHeight());
   }
 
   /** 조준 시작·탭·배율 변경 — 커서를 이 칸 중심에 놓는다 (콜백은 안 부른다) */
   beginAim(i: number, j: number): void {
     this.aimTexel = tileCenter(i, j);
+    this.aimTexel.y += this.levelLift(movementLevel(this.opts.terrain, i, j, i, j, 1));
     this.aimTile = { i, j };
   }
 
@@ -2157,7 +2229,7 @@ export class KairoScene extends Phaser.Scene {
       this.aimTexel.x += dx;
       this.aimTexel.y += dy;
     }
-    const t = screenToTile(this.aimTexel.x, this.aimTexel.y);
+    const t = heightTileAt(this.opts.terrain, this.aimTexel.x, this.aimTexel.y, this.levelHeight());
     const i = Math.max(0, Math.min(GRID_W - 1, t.i));
     const j = Math.max(0, Math.min(GRID_H - 1, t.j));
     /*
@@ -2204,6 +2276,14 @@ export class KairoScene extends Phaser.Scene {
       gridToScreen(m.i + m.w, m.j + m.d),
       gridToScreen(m.i, m.j + m.d),
     ];
+    const slope = m.w === 1 && m.d === 1 ? slopeAt(this.opts.terrain, m.i, m.j) : null;
+    if (slope) {
+      const corners = [[0, 0], [1, 0], [1, 1], [0, 1]];
+      p.forEach((point, k) => {
+        const [u, v] = corners[k]!;
+        point.y += this.levelLift(.5 + (u! - .5) * slope.di + (v! - .5) * slope.dj);
+      });
+    }
     g.fillStyle(col, 0.2);
     g.lineStyle(2, col, 0.95);
     g.beginPath();
@@ -2683,6 +2763,20 @@ export class KairoScene extends Phaser.Scene {
     if (!g) return;
     g.clear();
     if (!pos) {
+      this.busSprite?.setVisible(false);
+      g.setVisible(false);
+      return;
+    }
+    const busId = facilitySpriteId('env_bus', 0);
+    if (this.opts.provider.has(busId)) {
+      if (!this.busSprite) {
+        this.busSprite = this.add.image(0, 0, busId).setOrigin(0.5, 1);
+        this.fitTextureDensity(this.busSprite, busId);
+      }
+      const p = footprintAnchor(pos.x - 2, pos.y - 0.5, 5, 2);
+      this.busSprite.setPosition(p.x, p.y + this.levelLift(this.opts.terrain.levelAt(Math.round(pos.x), Math.round(pos.y))))
+        .setDepth(spanDepthKey(Math.floor(pos.x - 2), Math.floor(pos.y - 0.5), Math.ceil(pos.x + 2), Math.ceil(pos.y + 0.5)) + Z_FACILITY)
+        .setVisible(true);
       g.setVisible(false);
       return;
     }
@@ -2830,6 +2924,8 @@ export class KairoScene extends Phaser.Scene {
       [0, 0],
       [-1, 0],
       [0, -1],
+      [1, 0],
+      [0, 1],
     ];
     // 해안/매크로 물결 후보는 앞쪽 물 칸이 현재 칸의 종류를 읽는다.
     if (this.opts.provider.has('ground/water_edge_shore_i:a0')) neighbors.push([1, 0], [0, 1]);
@@ -3100,7 +3196,9 @@ export class KairoScene extends Phaser.Scene {
   private recenterOnAim(): void {
     const a = this.aimTile;
     if (!a) return;
-    this.cam.centerOn(tileCenter(a.i, a.j), this.reticleInset);
+    const center = tileCenter(a.i, a.j);
+    center.y += this.levelLift(movementLevel(this.opts.terrain, a.i, a.j, a.i, a.j, 1));
+    this.cam.centerOn(center, this.reticleInset);
     this.syncCamera();
     this.beginAim(a.i, a.j); // 커서를 그 칸 중심으로 되돌린다 (오프셋 0)
   }
@@ -3126,7 +3224,7 @@ export class KairoScene extends Phaser.Scene {
     this.input.on('pointermove', (p: Phaser.Input.Pointer) => {
       if (this.draggingHandle >= 0) {
         const world = this.cameras.main.getWorldPoint(p.x, p.y);
-        const t = screenToTile(world.x, world.y);
+        const t = heightTileAt(this.opts.terrain, world.x, world.y, this.levelHeight());
         const h = this.courseHandles[this.draggingHandle];
         if (h && (h.x !== t.i || h.y !== t.j) && inGrid(t.i, t.j)) {
           h.x = t.i;
@@ -3204,7 +3302,7 @@ export class KairoScene extends Phaser.Scene {
        * `screenToTile` 은 `gridToScreen` 의 역이고 타일 (i,j) 의 셀 중심이 곧
        * `tileCenter(i,j)` 다 — 그래서 보정 없이 넣는 것이 경계에서 가장 안전하다.
        */
-      const t = screenToTile(world.x, world.y);
+      const t = heightTileAt(this.opts.terrain, world.x, world.y, this.levelHeight());
       if (inGrid(t.i, t.j)) this.opts.onTapTile?.(t.i, t.j);
     };
     this.input.on('pointerup', end);
@@ -3408,6 +3506,7 @@ export class KairoScene extends Phaser.Scene {
       v.face.destroy();
       v.emote.destroy();
       this.guestViews.delete(id);
+      this.guestWalkSamples.delete(id);
     }
   }
 
@@ -3443,9 +3542,17 @@ export class KairoScene extends Phaser.Scene {
       seat && !this.coSpreadFault && seat.coCount > 1
         ? (seat.coRank - (seat.coCount - 1) / 2) * gap
         : 0;
-    const cx = STEP_X * (fi - fj) + spread;
+    let cx = STEP_X * (fi - fj) + spread;
     // 손님도 단을 탄다 (K37). 리프트는 **보간**한다 — 정수 칸으로 잡으면 8px 순간이동한다
-    const cy = STEP_Y * (fi + fj + 1) + this.liftSpan(g.fromI, g.fromJ, g.i, g.j, t);
+    let cy = STEP_Y * (fi + fj + 1) + this.liftSpan(g.fromI, g.fromJ, g.i, g.j, t);
+    if (g.pose === 'walk' && !seat) {
+      const segment = `${g.fromI},${g.fromJ}>${g.i},${g.j}`;
+      const sample = continuousWalk(this.guestWalkSamples.get(g.id), segment, t, cx, cy);
+      this.guestWalkSamples.set(g.id, sample);
+      cx = sample.x; cy = sample.y;
+    } else {
+      this.guestWalkSamples.delete(g.id);
+    }
 
     const pose = g.pose as Pose;
     const sheet = POSE_SHEET[pose];
@@ -3479,9 +3586,16 @@ export class KairoScene extends Phaser.Scene {
     const bodyDepth = dk + Z_GUEST + sub;
 
     // 검증 도구가 이 손님만 껐나 (픽셀 대조 — `setGuestVisibleForTest`)
-    const shown = this.hiddenGuests.size === 0 || !this.hiddenGuests.has(g.id);
+    const occupied = g.usingHandle > 0 && g.progress >= 1
+      ? this.opts.placement.all().find((item) => item.handle === g.usingHandle)
+      : undefined;
+    const enclosed = occupied && KAIRO.facilities.find((f) => f.sprite === `facility/${occupied.defId}`)?.occupantsHidden;
+    const shown = !enclosed && (this.hiddenGuests.size === 0 || !this.hiddenGuests.has(g.id));
 
-    v.body.setTexture('guest', bodyFrame(g.palette, pose, facing, frame));
+    const authored = this.textures.exists(NPC_PRESENTATION.texture)
+      ? npcV8Frame(g, this.time.now) : null;
+    if (authored) v.body.setTexture(authored.texture, authored.frame).setOrigin(authored.originX, authored.originY);
+    else v.body.setTexture('guest', bodyFrame(g.palette, pose, facing, frame)).setOrigin(0.5, 1);
     v.body.setPosition(cx, cy);
     v.body.setDepth(bodyDepth);
     v.body.setVisible(shown);
@@ -3490,7 +3604,7 @@ export class KairoScene extends Phaser.Scene {
     v.face.setTexture('guest', faceFrame(g.face, facing));
     v.face.setPosition(cx - GUEST_W / 2 + off.x, cy - GUEST_H + off.y);
     v.face.setDepth(bodyDepth + faceGap);
-    v.face.setVisible(shown && (facing === '+X' || facing === '+Z'));
+    v.face.setVisible(!authored && shown && (facing === '+X' || facing === '+Z'));
 
     // 이름 있는 단골은 일반 1,200명 에이전트와 구분되는 영구 하트 표식을 써다.
     // 별도 렌더 상태를 저장하지 않고 sim의 `characterId`만 읽는다.
@@ -3948,7 +4062,9 @@ export class KairoScene extends Phaser.Scene {
    * `bottomInsetCss` 는 화면 아래가 UI 에 가려진 만큼 — 그 위쪽 중앙에 놓는다.
    */
   focusTile(i: number, j: number, bottomInsetCss = 0): void {
-    this.cam.centerOn(tileCenter(i, j), bottomInsetCss);
+    const center = tileCenter(i, j);
+    center.y += this.levelLift(movementLevel(this.opts.terrain, i, j, i, j, 1));
+    this.cam.centerOn(center, bottomInsetCss);
     this.syncCamera();
   }
 

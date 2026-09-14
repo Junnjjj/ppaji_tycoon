@@ -40,7 +40,7 @@ afterEach(() => {
 describe('슬롯 자리 — 손님이 서는 칸', () => {
   it('데이터가 61종에 있고 14종에 없다 — 정원 0 인 분위기·기반 시설', () => {
     expect(WITH_SLOTS).toHaveLength(61);
-    expect(NO_SLOTS).toHaveLength(14);
+    expect(NO_SLOTS).toHaveLength(43);
     // 슬롯이 없는 것은 정확히 정원 0 인 것들이다 (`validateContracts` 와 같은 규칙)
     expect(NO_SLOTS.every((d) => d.capacity === 0)).toBe(true);
   });
@@ -165,7 +165,7 @@ describe('입구 칸 — 발자국에서 파생한다 (데이터 0줄)', () => {
 
   it('★ 뒤 두 면(−I·−J)은 입구가 아니다 — "앞으로 들어간다"의 실질', () => {
     for (const def of DEFS) {
-      if (def.ride) continue;
+      if (def.ride || def.entryTiles) continue;
       const got = new Set(PlacementGrid.entryTilesOf(def, 7, 9, 0).map(key));
       const [w, d] = PlacementGrid.sizeOf(def, 0);
       for (let dj = 0; dj < d; dj++) expect(got.has(`${6},${9 + dj}`), def.id).toBe(false);

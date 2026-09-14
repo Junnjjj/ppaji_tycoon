@@ -1,0 +1,182 @@
+[
+  {
+    "id": "height/ramp:d0",
+    "path": "assets/kairo-height-v1/ramp-d0.png",
+    "size": [
+      34,
+      64
+    ],
+    "sourceSha": "461ad9fc6e1b79d542f936ebc4f425c277f0252f1404353675a7807715cbf89b",
+    "bbox": [
+      81,
+      92,
+      112,
+      116
+    ]
+  },
+  {
+    "id": "height/ramp:d1",
+    "path": "assets/kairo-height-v1/ramp-d1.png",
+    "size": [
+      34,
+      64
+    ],
+    "sourceSha": "c6cd933c8b42e2a6865cb29549c341f091877f4ab62bd4b2551528b4b0323508",
+    "bbox": [
+      80,
+      84,
+      112,
+      116
+    ]
+  },
+  {
+    "id": "height/ramp:d2",
+    "path": "assets/kairo-height-v1/ramp-d2.png",
+    "size": [
+      34,
+      64
+    ],
+    "sourceSha": "2b5565bed4c7ae8ba3e85ad337989affef992cadca6d4855ac214cd1250b3e1f",
+    "bbox": [
+      80,
+      84,
+      112,
+      116
+    ]
+  },
+  {
+    "id": "height/ramp:d3",
+    "path": "assets/kairo-height-v1/ramp-d3.png",
+    "size": [
+      34,
+      64
+    ],
+    "sourceSha": "48702e1a272ed19d10bc11e7445f3080db76b01d4825c68c3dddedf0b8d03dd2",
+    "bbox": [
+      80,
+      92,
+      111,
+      116
+    ]
+  },
+  {
+    "id": "height/steps:d0",
+    "path": "assets/kairo-height-v1/steps-d0.png",
+    "size": [
+      34,
+      64
+    ],
+    "sourceSha": "0dfb8ff7928276f11b73825eaacda225da0d7fee2759f3c6a1713c07bce09111",
+    "bbox": [
+      80,
+      90,
+      112,
+      116
+    ]
+  },
+  {
+    "id": "height/steps:d1",
+    "path": "assets/kairo-height-v1/steps-d1.png",
+    "size": [
+      34,
+      64
+    ],
+    "sourceSha": "38b195c933b73a7695a7da0b7cbb3d27d162cf5c543241a2f9ec9abfde45f30d",
+    "bbox": [
+      80,
+      84,
+      112,
+      116
+    ]
+  },
+  {
+    "id": "height/steps:d2",
+    "path": "assets/kairo-height-v1/steps-d2.png",
+    "size": [
+      34,
+      64
+    ],
+    "sourceSha": "0ce6589122c578cac4f06141ded80994b40c08df0e0bcf84e4961a4a45f9877c",
+    "bbox": [
+      80,
+      84,
+      112,
+      116
+    ]
+  },
+  {
+    "id": "height/steps:d3",
+    "path": "assets/kairo-height-v1/steps-d3.png",
+    "size": [
+      34,
+      64
+    ],
+    "sourceSha": "64c23dbad5ac462063d7a2369113fcf0a0b3e28a535b71af3b0125743a5ee8be",
+    "bbox": [
+      80,
+      90,
+      112,
+      116
+    ]
+  },
+  {
+    "id": "height/fence:d0",
+    "path": "assets/kairo-height-v1/fence-d0.png",
+    "size": [
+      34,
+      64
+    ],
+    "sourceSha": "5e6de34fc07307de9a6bb0bfc565b15dc6317efe3f53383d2fc718ca08fc8de8",
+    "bbox": [
+      96,
+      76,
+      112,
+      100
+    ]
+  },
+  {
+    "id": "height/fence:d1",
+    "path": "assets/kairo-height-v1/fence-d1.png",
+    "size": [
+      34,
+      64
+    ],
+    "sourceSha": "02ca07dc80f39ed81cc871c57834b90b715a9e7e08e10478acd0d9f0c359f7a0",
+    "bbox": [
+      80,
+      68,
+      96,
+      108
+    ]
+  },
+  {
+    "id": "height/fence:d2",
+    "path": "assets/kairo-height-v1/fence-d2.png",
+    "size": [
+      34,
+      64
+    ],
+    "sourceSha": "0fc158185cb060cef7028a65fbd408b20004fc3193200b54110da3df3f2d4c37",
+    "bbox": [
+      80,
+      76,
+      96,
+      116
+    ]
+  },
+  {
+    "id": "height/fence:d3",
+    "path": "assets/kairo-height-v1/fence-d3.png",
+    "size": [
+      34,
+      64
+    ],
+    "sourceSha": "f34a9a1917925102f10fdbedc06c6a9f5c85f6ea329b48156f1c59c9f3cf716e",
+    "bbox": [
+      96,
+      84,
+      113,
+      108
+    ]
+  }
+]

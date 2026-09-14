@@ -40,10 +40,10 @@ describe('계약 정합 — 이게 깨지면 에셋을 뽑아도 못 쓴다', ()
 
   it('채택된 지붕형 2×2 시설은 물리 스케일을 보존한 확장 캔버스를 쓴다', () => {
     const expected = {
-      shop: { canvas: [74, 72], bodyH: 40, guard: 5 },
+      shop: { canvas: [74, 76], bodyH: 44, guard: 5 },
       snackbar: { canvas: [72, 74], bodyH: 42, guard: 4 },
       karaoke: { canvas: [70, 75], bodyH: 43, guard: 3 },
-      info: { canvas: [64, 71], bodyH: 39, guard: 0 },
+      info: { canvas: [66, 71], bodyH: 39, guard: 1 },
       infirmary: { canvas: [68, 78], bodyH: 46, guard: 2 },
       office: { canvas: [68, 73], bodyH: 41, guard: 2 },
     } as const;
@@ -57,8 +57,8 @@ describe('계약 정합 — 이게 깨지면 에셋을 뽑아도 못 쓴다', ()
   });
 
   it('시설 75종이 양쪽에 다 있다', () => {
-    expect(allSimFacilities()).toHaveLength(75);
-    expect(KAIRO.facilities).toHaveLength(75);
+    expect(allSimFacilities()).toHaveLength(104);
+    expect(KAIRO.facilities).toHaveLength(104);
   });
 
   it('렌더 계약의 투영 상수가 iso.ts 와 같다', () => {
@@ -287,7 +287,7 @@ describe('기존 에셋 레이어로 펼쳐진다 — 새 프로바이더를 만
 
   it('명세 수 = 시설 75 + 벽 1(경계 4변형) + 문 1(4변형) + 지면 11 + 다리 2 + 배경 3 + 데코 8', () => {
     // 지면: K36 도시 띠 3종 · K37 암반 · S1 수영장 물
-    expect(specs).toHaveLength(75 + 1 + 1 + 11 + 2 + 3 + 8);
+    expect(specs).toHaveLength(104 + 1 + 1 + 13 + 2 + 3 + 8);
   });
 
   it('배경은 3겹이고 가로 타일 폭이 계약값이다 — 산·능선·강둑 (K36-B)', () => {
@@ -356,7 +356,7 @@ describe('지면·데코가 계약에 있다 — v1 은 길에 0장을 줬다', 
   it('지면 11종 × 3변형 + 다리 2 = 35장', () => {
     const n =
       KAIRO.ground.types.reduce((a, t) => a + t.alts, 0) + KAIRO.ground.bridges.length;
-    expect(n).toBe(35);
+    expect(n).toBe(41);
   });
 
   it('지면 타일 캔버스가 다이아몬드 정확히 32×16 이다', () => {
@@ -370,8 +370,8 @@ describe('지면·데코가 계약에 있다 — v1 은 길에 0장을 줬다', 
     expect(KAIRO.deco.items.filter((d) => d.kind === 'scenery')).toHaveLength(4);
   });
 
-  it('20종 4방향을 펼친 **이미지** 총계가 189장이다', () => {
-    expect(new KairoProceduralProvider().ids).toHaveLength(189);
+  it('20종 4방향을 펼친 **이미지** 총계가 204장이다', () => {
+    expect(new KairoProceduralProvider().ids).toHaveLength(329);
   });
 });
 

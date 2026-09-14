@@ -61,6 +61,8 @@ export interface KairoFacilityRender {
   /** 물리 ground scale을 줄이지 않고 좌우 clip만 막는 대칭 투명 guard. */
   horizontalGuardTexel?: number;
   openTop: boolean;
+  /** Occupants inside enclosed authored shells are hidden while using the facility. */
+  occupantsHidden?: boolean;
   ride?: KairoRide;
 }
 

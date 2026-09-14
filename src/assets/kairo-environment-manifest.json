@@ -1,0 +1,212 @@
+[
+  {
+    "id": "environment/mountain_far:d0",
+    "path": "assets/kairo-environment-v1/mountain_far-d0.png",
+    "size": 768,
+    "sha256": "ccc0ffce7439f9dc5088dd2f4b86f55a4973303ab2230e0783d3df199809ab4e"
+  },
+  {
+    "id": "environment/forest_near:d0",
+    "path": "assets/kairo-environment-v1/forest_near-d0.png",
+    "size": 768,
+    "sha256": "7da86c4cd39be713f03159f409314005a38b6b8646ccf3fda7352651823cba65"
+  },
+  {
+    "id": "environment/farbank:d0",
+    "path": "assets/kairo-environment-v1/farbank-d0.png",
+    "size": 768,
+    "sha256": "429699ea6d2f457a19eab578b626ebb294ce31a1f8856386e0fcb39f19a3b9da"
+  },
+  {
+    "id": "environment/glass_wall:d0",
+    "path": "assets/kairo-environment-v1/glass_wall-d0.png",
+    "size": 192,
+    "sha256": "9a777eda945f7a3db56c7210353f6a9e3bb1b9af7419cbd36482f5021d72ac9f"
+  },
+  {
+    "id": "environment/glass_wall:d1",
+    "path": "assets/kairo-environment-v1/glass_wall-d1.png",
+    "size": 192,
+    "sha256": "d4b9b76b7ccfc2f9aac1d3cf0b7c75e3355b73fca190adcc495f6c9e1fb763f9"
+  },
+  {
+    "id": "environment/glass_wall:d2",
+    "path": "assets/kairo-environment-v1/glass_wall-d2.png",
+    "size": 192,
+    "sha256": "9b1db90694d53d2cbcd3cff8259774c063cc49dadf004ae02a23dc3a040a6450"
+  },
+  {
+    "id": "environment/glass_wall:d3",
+    "path": "assets/kairo-environment-v1/glass_wall-d3.png",
+    "size": 192,
+    "sha256": "5bcd12a9b7fcc0c1ff0d4b87302819f536fb63489d22b607f4a4fb40ef792d99"
+  },
+  {
+    "id": "environment/glass_wall_corner:d0",
+    "path": "assets/kairo-environment-v1/glass_wall_corner-d0.png",
+    "size": 192,
+    "sha256": "07307706a1cb8f45ef5bc2c9d69a8e1ca01d5f8397c987a204538e7235fb3d5f"
+  },
+  {
+    "id": "environment/glass_wall_corner:d1",
+    "path": "assets/kairo-environment-v1/glass_wall_corner-d1.png",
+    "size": 192,
+    "sha256": "aa2a112fd4296fb794f9105eac06e151940a1561e66f6ef5d675178b8b2d6221"
+  },
+  {
+    "id": "environment/glass_wall_corner:d2",
+    "path": "assets/kairo-environment-v1/glass_wall_corner-d2.png",
+    "size": 192,
+    "sha256": "a0315892df558bf9ce4aa15f87396e72a083a96a27029c1c21b6404c4d71de08"
+  },
+  {
+    "id": "environment/glass_wall_corner:d3",
+    "path": "assets/kairo-environment-v1/glass_wall_corner-d3.png",
+    "size": 192,
+    "sha256": "c4cce37c2c06a909d7e8173710299aba2788a4b798947573e21bc2ba41f154fb"
+  },
+  {
+    "id": "environment/glass_wall_end:d0",
+    "path": "assets/kairo-environment-v1/glass_wall_end-d0.png",
+    "size": 192,
+    "sha256": "f19454366b9d27b7edc082f7a4081264e1fbf4e61528492a60660361b5e8881f"
+  },
+  {
+    "id": "environment/glass_wall_end:d1",
+    "path": "assets/kairo-environment-v1/glass_wall_end-d1.png",
+    "size": 192,
+    "sha256": "abd47763e83d27f0163cbcfffa43e6871b3f99304925e364511747812dd8d11a"
+  },
+  {
+    "id": "environment/glass_wall_end:d2",
+    "path": "assets/kairo-environment-v1/glass_wall_end-d2.png",
+    "size": 192,
+    "sha256": "438a6f131bab674822fc7c2919d6b394ecec1e47c22425d378009626e461828e"
+  },
+  {
+    "id": "environment/glass_wall_end:d3",
+    "path": "assets/kairo-environment-v1/glass_wall_end-d3.png",
+    "size": 192,
+    "sha256": "88e61331f45528d4377192574bdf5da1a3a38db1a1796d25464009714d9d07ae"
+  },
+  {
+    "id": "environment/solid_wall:d0",
+    "path": "assets/kairo-environment-v1/solid_wall-d0.png",
+    "size": 192,
+    "sha256": "ee779c7e73367a724b791e9185665983cb910c77609955c33e937d0efde3cd98"
+  },
+  {
+    "id": "environment/solid_wall:d1",
+    "path": "assets/kairo-environment-v1/solid_wall-d1.png",
+    "size": 192,
+    "sha256": "f2cb8c2976016a8260a002d99e99abc0d7a3a3ec21d8abfd3b93bc1e7ab01402"
+  },
+  {
+    "id": "environment/solid_wall:d2",
+    "path": "assets/kairo-environment-v1/solid_wall-d2.png",
+    "size": 192,
+    "sha256": "ad4ec489d2db288d368692dfa803178bd37ad8688617eb879fd7ae3fb3aaf6e6"
+  },
+  {
+    "id": "environment/solid_wall:d3",
+    "path": "assets/kairo-environment-v1/solid_wall-d3.png",
+    "size": 192,
+    "sha256": "06dd1b28df06a9d23f6fe09f5542bf175edef532305216b75ddf224f30cbe698"
+  },
+  {
+    "id": "environment/solid_wall_corner:d0",
+    "path": "assets/kairo-environment-v1/solid_wall_corner-d0.png",
+    "size": 192,
+    "sha256": "a05242e4d3ecbfc477005c8a3dafe97c8d028201814593830469bb80da1fb24f"
+  },
+  {
+    "id": "environment/solid_wall_corner:d1",
+    "path": "assets/kairo-environment-v1/solid_wall_corner-d1.png",
+    "size": 192,
+    "sha256": "962f0dde5a7360e0bc9c22eb2c3d8de068aed5e113d02f304a7739f37500afcf"
+  },
+  {
+    "id": "environment/solid_wall_corner:d2",
+    "path": "assets/kairo-environment-v1/solid_wall_corner-d2.png",
+    "size": 192,
+    "sha256": "10ac2de665f69db9a44f28a297ca7dfe2faedc12f22a5a7eee1cb29c656b9eb1"
+  },
+  {
+    "id": "environment/solid_wall_corner:d3",
+    "path": "assets/kairo-environment-v1/solid_wall_corner-d3.png",
+    "size": 192,
+    "sha256": "f8f04df66228580f6ec6bdfcc426d2bacf0e86bdaa1ea0e3fa2804ed0e380d2b"
+  },
+  {
+    "id": "environment/solid_wall_end:d0",
+    "path": "assets/kairo-environment-v1/solid_wall_end-d0.png",
+    "size": 192,
+    "sha256": "1682e5e0185a8636589e4ed148868a2ae9c410a448711f59ea2f03755f48716f"
+  },
+  {
+    "id": "environment/solid_wall_end:d1",
+    "path": "assets/kairo-environment-v1/solid_wall_end-d1.png",
+    "size": 192,
+    "sha256": "3c4834a35c3cbb7d2a613c9cda1e744ea9d643331f5a472d4ecbef40b8414816"
+  },
+  {
+    "id": "environment/solid_wall_end:d2",
+    "path": "assets/kairo-environment-v1/solid_wall_end-d2.png",
+    "size": 192,
+    "sha256": "f6a748fe0059be6c475272c942170d40a2f9ec1f66f3c4411b5df975ad758d17"
+  },
+  {
+    "id": "environment/solid_wall_end:d3",
+    "path": "assets/kairo-environment-v1/solid_wall_end-d3.png",
+    "size": 192,
+    "sha256": "0ce981fccf3a1201b489d417e5cf5a657e359d5369f0b4b8ea6e2f3bc732ed16"
+  },
+  {
+    "id": "environment/glass_door:d0",
+    "path": "assets/kairo-environment-v1/glass_door-d0.png",
+    "size": 192,
+    "sha256": "8e92ed87eab1f1e19a0c3280ae332410fc4179fbae3d61b705b3912e42ad0d09"
+  },
+  {
+    "id": "environment/glass_door:d1",
+    "path": "assets/kairo-environment-v1/glass_door-d1.png",
+    "size": 192,
+    "sha256": "e0720fdb17d8707ce72aa2c72a8a03122e2ebfeb1846fbd7fd004ec98e57ceca"
+  },
+  {
+    "id": "environment/glass_door:d2",
+    "path": "assets/kairo-environment-v1/glass_door-d2.png",
+    "size": 192,
+    "sha256": "165c550b02595e991cc2185129793bcb5b3c4fb5c3ae0ca3a9b90f621f30143d"
+  },
+  {
+    "id": "environment/glass_door:d3",
+    "path": "assets/kairo-environment-v1/glass_door-d3.png",
+    "size": 192,
+    "sha256": "32cd00c73520553002f8045534ea6a5b85b25ae4769c520ecbd68869347278f3"
+  },
+  {
+    "id": "environment/outside_gate:d0",
+    "path": "assets/kairo-environment-v1/outside_gate-d0.png",
+    "size": 192,
+    "sha256": "98bfc68eaab3c35defc43f8749e81a70b60a5f7cf13958769aba876250605437"
+  },
+  {
+    "id": "environment/outside_gate:d1",
+    "path": "assets/kairo-environment-v1/outside_gate-d1.png",
+    "size": 192,
+    "sha256": "d7d0bcc091615c0955c832ded8ae464e0f169247784903c6782defcd7450ab0d"
+  },
+  {
+    "id": "environment/outside_gate:d2",
+    "path": "assets/kairo-environment-v1/outside_gate-d2.png",
+    "size": 192,
+    "sha256": "fc09c11aca1ea4e82f98dfa3713666c681d46817cc4c9e4fecb0869ec6906ab1"
+  },
+  {
+    "id": "environment/outside_gate:d3",
+    "path": "assets/kairo-environment-v1/outside_gate-d3.png",
+    "size": 192,
+    "sha256": "dc007aacbac372f9206d749dd13531de8951832ad3099a9021ea251893f0640a"
+  }
+]

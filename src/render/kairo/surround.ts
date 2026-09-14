@@ -51,13 +51,13 @@ export interface SurroundDecoration {
  * 어긋나 "여기부터는 딴 그림"이 된다, K38).
  */
 const DECOR_SPRITE: Record<SurroundDecorKind, string> = {
-  house: 'facility/bungalow',
-  shop: facilitySpriteId('shop', 0),
-  car: 'facility/parking',
-  lamp: 'deco/night_light',
+  house: 'facility/env_village_house:d0',
+  shop: facilitySpriteId('env_village_shop', 0),
+  car: 'facility/env_car:d0',
+  lamp: 'facility/env_street_lamp:d0',
   sign: 'deco/safety_sign',
-  flowerbed: 'facility/flowerbed',
-  shrub: 'deco/planter_row',
+  flowerbed: 'facility/env_long_flowerbed:d0',
+  shrub: 'facility/env_shrubs:d0',
 };
 
 /** 도시 띠의 어느 줄에 서는가 — 차도 옆(정류장 줄)과 가로수 줄 */
@@ -99,8 +99,8 @@ export function surroundDecorationPlan(width: number, height: number): SurroundD
      * **조용히 안 그려진다** (실측: 12개 중 3개가 그렇게 사라져 종류가 6/7 이었다).
      * 계획이 지형을 못 읽으므로(순수 함수) 물이 없을 자리를 고르는 쪽이 맞다.
      */
-    at('house', entry - 20, -5),
-    at('house', entry + 22, -5),
+    at('house', entry - 30, -5),
+    at('house', entry + 32, -5),
     at('house', left, side(0.15)),
     at('shrub', left, side(0.3)),
     at('shrub', right, side(0.22)),

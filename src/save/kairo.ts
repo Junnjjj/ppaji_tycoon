@@ -1,3 +1,4 @@
+import { migrateFacilityFootprints } from './kairo-facility-footprints.js';
 import { KairoTerrain, groundIndex, type TerrainSnapshot } from '../sim/kairo/terrain.js';
 import { WallGrid, type WallSnapshot } from '../sim/kairo/walls.js';
 import { PlacementGrid, type PlacementSnapshot } from '../sim/kairo/placement.js';
@@ -43,8 +44,22 @@ import { migrateOnboardingSnapshot, type OnboardingSnapshot } from '../sim/kairo
 
 export const KAIRO_SAVE_VERSION = 8;
 export const KAIRO_SAVE_KEY = 'ppaji.kairo.save.v1';
+let storageWriteBlocked = false;
+
+/** A failed read is not an empty save slot. Keep the game stopped until recovery. */
+export class KairoStorageReadError extends Error {
+  constructor(message: string, readonly raw: string | null) {
+    super(message);
+    this.name = 'KairoStorageReadError';
+  }
+}
 
 export interface KairoSaveV8 {
+  /** One-time removal of the supplied entrance boundary; later player fences persist. */
+  entranceBoundaryCleared?: boolean;
+  indoorTicketEntryConnected?: boolean;
+  parkArrivalLayoutApplied?: boolean;
+  arrivalPresentationRevision?: number;
   version: 8;
   savedAtMs: number;
   seed: number;
@@ -348,6 +363,11 @@ export class KairoSaveError extends Error {
 }
 
 export interface KairoSaveInput {
+  /** One-time removal of the supplied entrance boundary; later player fences persist. */
+  entranceBoundaryCleared?: boolean;
+  indoorTicketEntryConnected?: boolean;
+  parkArrivalLayoutApplied?: boolean;
+  arrivalPresentationRevision?: number;
   seed: number;
   gate: { i: number; j: number };
   terrain: KairoTerrain;
@@ -390,6 +410,10 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     version: KAIRO_SAVE_VERSION,
     savedAtMs: nowMs,
     seed: input.seed,
+    ...(input.arrivalPresentationRevision ? { arrivalPresentationRevision: input.arrivalPresentationRevision } : {}),
+    ...(input.parkArrivalLayoutApplied ? { parkArrivalLayoutApplied: true } : {}),
+    ...(input.indoorTicketEntryConnected ? { indoorTicketEntryConnected: true } : {}),
+    ...(input.entranceBoundaryCleared ? { entranceBoundaryCleared: true } : {}),
     gate: { i: input.gate.i, j: input.gate.j },
     terrain: input.terrain.toSnapshot(),
     walls: input.walls.toSnapshot(),
@@ -463,6 +487,11 @@ export function migrateKairo(raw: unknown): LatestKairoSave {
 }
 
 export interface KairoRestored {
+  /** One-time removal of the supplied entrance boundary; later player fences persist. */
+  entranceBoundaryCleared?: boolean;
+  indoorTicketEntryConnected?: boolean;
+  parkArrivalLayoutApplied?: boolean;
+  arrivalPresentationRevision?: number;
   seed: number;
   gate: { i: number; j: number };
   terrain: KairoTerrain;
@@ -504,12 +533,28 @@ export interface KairoRestored {
 
 export function restoreKairo(raw: unknown): KairoRestored {
   const s = migrateKairo(raw);
+  const terrain = KairoTerrain.fromSnapshot(s.terrain);
+  const walls = WallGrid.fromSnapshot(s.walls);
+  let placementSnapshot: PlacementSnapshot;
+  try {
+    placementSnapshot = migrateFacilityFootprints(s.placement, terrain, walls, s.gate);
+    if (s.placement.footprintRevision === undefined) {
+      placementSnapshot = { ...placementSnapshot, items: placementSnapshot.items.map(f =>
+        f.defId === 'ticket' ? { ...f, legacyAdmission: true } : f) };
+    }
+  } catch (error) {
+    throw new KairoSaveError(error instanceof Error ? error.message : String(error));
+  }
   return {
     seed: s.seed,
+    ...(s.arrivalPresentationRevision ? { arrivalPresentationRevision: s.arrivalPresentationRevision } : {}),
+    ...(s.parkArrivalLayoutApplied === true ? { parkArrivalLayoutApplied: true } : {}),
+    ...(s.indoorTicketEntryConnected === true ? { indoorTicketEntryConnected: true } : {}),
+    ...(s.entranceBoundaryCleared === true ? { entranceBoundaryCleared: true } : {}),
     gate: s.gate,
-    terrain: KairoTerrain.fromSnapshot(s.terrain),
-    walls: WallGrid.fromSnapshot(s.walls),
-    placement: PlacementGrid.fromSnapshot(s.placement),
+    terrain,
+    walls,
+    placement: PlacementGrid.fromSnapshot(placementSnapshot),
     progress: ProgressStore.fromSnapshot(s.progress),
     week: s.week,
     weekRngState: s.weekRngState,
@@ -545,6 +590,7 @@ export function restoreKairo(raw: unknown): KairoRestored {
 }
 
 export function saveKairoToStorage(input: KairoSaveInput, nowMs: number = Date.now()): void {
+  if (storageWriteBlocked) return;
   try {
     localStorage.setItem(KAIRO_SAVE_KEY, JSON.stringify(packKairo(input, nowMs)));
   } catch (e) {
@@ -558,21 +604,28 @@ export function loadKairoFromStorage(): KairoRestored | null {
   try {
     raw = localStorage.getItem(KAIRO_SAVE_KEY);
   } catch {
+    storageWriteBlocked = true;
+    throw new KairoStorageReadError('저장소에 접근할 수 없습니다. 접근이 복구된 후 다시 열어 주세요.', null);
+  }
+  if (raw === null) {
+    storageWriteBlocked = false;
     return null;
   }
-  if (raw === null) return null;
   try {
-    return restoreKairo(JSON.parse(raw));
+    const restored = restoreKairo(JSON.parse(raw));
+    storageWriteBlocked = false;
+    return restored;
   } catch (e) {
-    // 깨진 세이브로 부팅이 막히면 폰에서 복구할 방법이 없다 — 버리고 새로 시작한다
-    console.warn('[카이로] 세이브를 읽지 못해 새로 시작합니다', e);
-    return null;
+    storageWriteBlocked = true;
+    throw new KairoStorageReadError(
+      `저장을 불러오지 못했습니다. 기존 저장은 유지되며 새 게임으로 덮어쓰지 않습니다. ${e instanceof Error ? e.message : String(e)}`, raw);
   }
 }
 
 export function clearKairoStorage(): void {
   try {
     localStorage.removeItem(KAIRO_SAVE_KEY);
+    storageWriteBlocked = false;
   } catch {
     /* 무시 */
   }

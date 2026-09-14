@@ -109,7 +109,7 @@ const SCENES: Record<CardTheme, { ground: string; accent: EventSceneAccent; item
     ground: 'ground/path_stone:a0',
     accent: 'none',
     items: [
-      { id: 'facility/ticket', role: 'subject', x: 66, y: 74 },
+      { id: 'facility/ticket:d0', role: 'subject', x: 66, y: 74 },
       { id: 'facility/parking', role: 'support', x: 184, y: 80 },
       { id: G(1, 'walk', '+X'), role: 'figure', x: 112, y: 76 },
       { id: G(4, 'walk', '+X'), role: 'figure', x: 126, y: 80 },
@@ -177,7 +177,7 @@ const SCENES: Record<CardTheme, { ground: string; accent: EventSceneAccent; item
     ground: 'ground/path_deck:a1',
     accent: 'none',
     items: [
-      { id: 'facility/sauna', role: 'subject', x: 68, y: 78 },
+      { id: 'facility/sauna:d0', role: 'subject', x: 68, y: 78 },
       { id: 'deco/safety_sign', role: 'support', x: 132, y: 74 },
       { id: facilitySpriteId('storage', 0), role: 'support', x: 194, y: 80 },
       { id: G(4, 'idle', '-Z'), role: 'figure', x: 152, y: 80 },

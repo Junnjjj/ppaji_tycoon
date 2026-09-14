@@ -1,0 +1,269 @@
+{
+  "version": 8,
+  "texture": "npc-v8",
+  "atlasImage": "assets/kairo-npc-v8/atlas.png",
+  "atlasData": "assets/kairo-npc-v8/atlas.json",
+  "looks": [
+    "guest-01",
+    "guest-02",
+    "guest-03",
+    "guest-04",
+    "guest-05",
+    "guest-06",
+    "guest-07",
+    "guest-08",
+    "guest-09",
+    "guest-10",
+    "guest-11",
+    "guest-12",
+    "guest-13",
+    "guest-14",
+    "guest-15",
+    "guest-16",
+    "guest-17",
+    "guest-18",
+    "guest-19",
+    "guest-20",
+    "guest-21",
+    "guest-22",
+    "guest-23",
+    "guest-24",
+    "guest-25",
+    "guest-26",
+    "guest-27",
+    "guest-28",
+    "guest-29",
+    "guest-30",
+    "guest-31",
+    "guest-32",
+    "guest-33",
+    "guest-34",
+    "guest-35",
+    "guest-36",
+    "guest-37",
+    "guest-38",
+    "guest-39",
+    "guest-40",
+    "guest-41",
+    "guest-42",
+    "guest-43",
+    "guest-44",
+    "guest-45",
+    "guest-46",
+    "guest-47",
+    "guest-48",
+    "guest-49",
+    "guest-50",
+    "guest-51",
+    "guest-52",
+    "guest-53",
+    "guest-54"
+  ],
+  "states": {
+    "front_idle": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.5,
+        0.6640625
+      ]
+    },
+    "back_idle": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.5,
+        0.6640625
+      ]
+    },
+    "front_sit": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.49453125,
+        0.671875
+      ]
+    },
+    "back_sit": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.49453125,
+        0.671875
+      ]
+    },
+    "front_swim": {
+      "frames": 2,
+      "fps": 3,
+      "origin": [
+        0.51015625,
+        0.671875
+      ]
+    },
+    "back_swim": {
+      "frames": 2,
+      "fps": 3,
+      "origin": [
+        0.48984375,
+        0.68671875
+      ]
+    },
+    "front_jump": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.5,
+        0.66953125
+      ]
+    },
+    "back_jump": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.5,
+        0.66953125
+      ]
+    },
+    "front_cheer_jump": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.5,
+        0.66953125
+      ]
+    },
+    "back_cheer_jump": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.5,
+        0.66953125
+      ]
+    },
+    "front_waterstand": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.5,
+        0.68671875
+      ]
+    },
+    "back_waterstand": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.5,
+        0.68671875
+      ]
+    },
+    "front_slide": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.49453125,
+        0.671875
+      ]
+    },
+    "back_slide": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.487890625,
+        0.685546875
+      ]
+    },
+    "front_lie": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.51015625,
+        0.680078125
+      ]
+    },
+    "back_lie": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.49375,
+        0.68125
+      ]
+    },
+    "front_floor_sit": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.5,
+        0.6640625
+      ]
+    },
+    "back_floor_sit": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.5,
+        0.6640625
+      ]
+    },
+    "front_footbath": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.49453125,
+        0.671875
+      ]
+    },
+    "back_footbath": {
+      "frames": 1,
+      "fps": 1,
+      "origin": [
+        0.5046875,
+        0.67734375
+      ]
+    },
+    "front_walk": {
+      "frames": 4,
+      "fps": 5,
+      "origin": [
+        0.5,
+        0.6640625
+      ]
+    },
+    "back_walk": {
+      "frames": 4,
+      "fps": 5,
+      "origin": [
+        0.5,
+        0.6640625
+      ]
+    }
+  },
+  "poses": {
+    "idle": "idle",
+    "walk": "walk",
+    "sit": "sit",
+    "swim": "swim",
+    "float": "waterstand",
+    "lie": "lie",
+    "ride": "slide"
+  },
+  "facings": {
+    "+X": {
+      "side": "front",
+      "mirror": false
+    },
+    "+Z": {
+      "side": "front",
+      "mirror": true
+    },
+    "-X": {
+      "side": "back",
+      "mirror": true
+    },
+    "-Z": {
+      "side": "back",
+      "mirror": false
+    }
+  },
+  "sourceManifestSha256": "39f8d708ff0cafbaf9e38521677eef87b032d65848c8d66fa21d527c0aa6190a",
+  "bodyHeight": 21
+}

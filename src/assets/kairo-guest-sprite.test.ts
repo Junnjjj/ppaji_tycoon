@@ -139,7 +139,7 @@ describe('슬롯 포즈 — 그림이 있는 것만 (75종 전부)', () => {
       }
     }
     // 아무것도 안 재는 검사가 되지 않게 — 세는 대상이 실제로 있다
-    expect(facilities).toBe(75);
+    expect(facilities).toBe(104);
     expect(slots).toBeGreaterThan(150);
     expect(bad).toEqual([]);
   });

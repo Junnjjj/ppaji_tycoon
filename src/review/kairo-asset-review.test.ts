@@ -6,10 +6,10 @@ import {
 } from './kairo-asset-review.js';
 
 describe('4방향 시설 실제 맵 리뷰 배치', () => {
-  it('승인된 20종을 d0~d3로 한 번씩 배치한다', () => {
+  it('승인된 25종을 d0~d3로 한 번씩 배치한다', () => {
     const groups = fourDirectionReviewLayout(allFacilityDefs());
     expect(groups).toHaveLength(EXPECTED_REVIEW_FACILITIES);
-    expect(groups.flatMap((group) => group.placements)).toHaveLength(80);
+    expect(groups.flatMap((group) => group.placements)).toHaveLength(100);
     for (const group of groups) {
       expect(group.placements.map((placement) => placement.facing)).toEqual([0, 1, 2, 3]);
     }

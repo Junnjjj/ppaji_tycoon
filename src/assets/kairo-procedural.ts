@@ -66,6 +66,8 @@ const ZONE_COLOR: Record<string, [string, string, string]> = {
  */
 const GROUND_BASE: Record<string, string> = {
   path_stone: '#c4c1b7',
+  path_ramp: '#c4c1b7',
+  path_steps: '#c4c1b7',
   path_deck: '#ab8557',
   path_sand: '#d9c493',
   lawn: '#79a94f',
@@ -474,6 +476,7 @@ function drawWall(g: CanvasRenderingContext2D, spec: SpriteSpec, dir: number, do
  */
 function drawGround(g: CanvasRenderingContext2D, spec: SpriteSpec, kind: string, alt: number): void {
   const [cw, ch] = spec.size;
+  if (kind === 'path_ramp' || kind === 'path_steps') kind = 'path_stone';
   const tri = groundTones(kind);
   if (!tri) {
     // 다리 — 널 + 난간

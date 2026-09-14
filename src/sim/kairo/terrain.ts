@@ -1,3 +1,4 @@
+import { slopeCrossable } from './slopes.js';
 import rawGround from '../../data/kairo-ground.json' with { type: 'json' };
 import { Rng } from '../rng.js';
 
@@ -52,6 +53,8 @@ export interface GroundKindDef {
   paintable?: boolean;
   /** 실내 바닥인가. **이 칸들이 곧 방이다** — 벽은 그 외곽선으로 자동 생성된다 */
   indoor: boolean;
+  /** One-cell terrain connector; orientation follows the higher landing. */
+  slope?: boolean;
 }
 
 const DATA = rawGround as unknown as {
@@ -631,7 +634,10 @@ export class KairoTerrain {
    * 그것이 "도로는 이을수있고"(사용자)의 sim 쪽 규칙이다. 경사 스프라이트는 에셋 단계다.
    */
   levelPassable(ai: number, aj: number, bi: number, bj: number): boolean {
-    return Math.abs(this.levelAt(ai, aj) - this.levelAt(bi, bj)) <= 1;
+    return this.inside(ai, aj) && this.inside(bi, bj)
+      && Math.abs(ai - bi) + Math.abs(aj - bj) === 1
+      && Math.abs(this.levelAt(ai, aj) - this.levelAt(bi, bj)) <= 1
+      && slopeCrossable(this, ai, aj, bi, bj);
   }
 
   /** 직선 경로를 칠한다 — 배치 UI 가 드래그로 길을 낼 때 쓴다 */

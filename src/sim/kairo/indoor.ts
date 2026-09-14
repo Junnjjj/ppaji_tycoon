@@ -1,3 +1,4 @@
+import { isSlopeKind, slopeShapeAt } from './slopes.js';
 import type { KairoTerrain } from './terrain.js';
 import { facilityDef, guestWalkable, ticketsServed, type PlacementGrid } from './placement.js';
 import type { DoorSet } from './doors.js';
@@ -41,7 +42,10 @@ export type IndoorFail =
   | 'unreachable'
   | 'would-strand'
   | 'blocks-gate'
-  | 'not-buildable';
+  | 'not-buildable'
+  | 'slope-shape'
+  | 'occupied-slope'
+  | 'indoor-height';
 
 export const INDOOR_FAIL_MESSAGES: Record<IndoorFail, string> = {
   /*
@@ -63,6 +67,9 @@ export const INDOOR_FAIL_MESSAGES: Record<IndoorFail, string> = {
    */
   'blocks-gate': '매표소로 가는 길이 막힙니다 — 길을 한 칸 남기세요',
   'not-buildable': '공원 밖입니다 — 도로·보도에는 깔 수 없습니다',
+  'slope-shape': '한 단 높은 땅 바로 아래 칸에 설치하세요 — 반대쪽은 낮은 평지가 필요합니다',
+  'occupied-slope': '시설 아래에는 경사를 만들거나 지울 수 없습니다 — 먼저 시설을 옮기세요',
+  'indoor-height': '실내 바닥은 높이 0의 평지에만 설치할 수 있습니다',
 };
 
 export interface BakeResult {
@@ -378,6 +385,74 @@ function floorRegression(
   return null;
 }
 
+/** Edit an indoor/outdoor passage from either side, preserving the lobby's existing entrance. */
+export function cycleIndoorPassage(
+  terrain: KairoTerrain,
+  walls: WallGrid,
+  gate: { i: number; j: number },
+  doors: DoorSet,
+  i: number,
+  j: number,
+  placement?: PlacementGrid,
+): { ok: boolean; opened?: boolean; fail?: IndoorFail } {
+  const stand = placement ? guestWalkable(terrain, placement) : (x: number, y: number) => terrain.isGuestWalkable(x, y);
+  let ii = i, jj = j;
+  let candidates = doorCandidates(terrain, gate, ii, jj, stand);
+  if (!terrain.isIndoor(i, j)) {
+    for (const dir of DIRS) {
+      const ni = i + DI[dir]!, nj = j + DJ[dir]!;
+      const inward = ((dir + 2) % 4) as Dir;
+      if (doorCandidates(terrain, gate, ni, nj, stand).includes(inward)) {
+        ii = ni; jj = nj; candidates = [inward]; break;
+      }
+    }
+  }
+  if (!candidates.length) return { ok: false, fail: 'no-door' };
+  const before = doors.toSnapshot();
+  const base = floorBaseline(terrain, walls, gate, placement, stand);
+  const current = candidates.findIndex(dir => doors.has(ii, jj, dir));
+  const areas = indoorAreas(terrain), room = areas[jj * terrain.width + ii];
+  // An automatic lobby entrance becomes explicit when adding another passage.
+  // Otherwise the bake replaces that entrance with the new exit and severs the through-route.
+  for (let y = 0; y < terrain.height; y++) for (let x = 0; x < terrain.width; x++) {
+    if (areas[y * terrain.width + x] !== room) continue;
+    for (const dir of DIRS) {
+      if (walls.edgeAt(x, y, dir) === EDGE_DOOR) doors.add(x, y, dir);
+    }
+  }
+  for (const dir of candidates) doors.remove(ii, jj, dir);
+  const next = current + 1;
+  if (next < candidates.length) doors.add(ii, jj, candidates[next]!);
+  const baked = bakeIndoorWalls(terrain, walls, gate, stand, doors);
+  const fail = baked.ok ? floorRegression(terrain, walls, gate, base, placement, stand) : baked.fail;
+  if (!baked.ok || fail) {
+    doors.clear();
+    for (const key of before.keys) {
+      const [x, y, dir] = key.split(',').map(Number);
+      if (x !== undefined && y !== undefined && (dir === DIR_I_PLUS || dir === DIR_J_PLUS)) doors.add(x, y, dir);
+    }
+    bakeIndoorWalls(terrain, walls, gate, stand, doors);
+    return { ok: false, fail: fail ?? 'no-door' };
+  }
+  return { ok: true, opened: next < candidates.length };
+}
+
+function breaksNearbySlope(terrain: KairoTerrain, cells: readonly (readonly [number, number])[]): boolean {
+  return cells.some(([i, j]) => [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].some(([di, dj]) => {
+    const x = i + di!, y = j + dj!;
+    return isSlopeKind(terrain.kindAt(x, y)) && !slopeShapeAt(terrain, x, y);
+  }));
+}
+
+/** Shared by preview, single paint and block paint; no terrain mutation. */
+export function floorHeightFailure(terrain: KairoTerrain, i: number, j: number, kind: string, placement?: PlacementGrid): IndoorFail | null {
+  if (terrain.kindAt(i, j) === kind) return null;
+  if (kind === 'floor_indoor' && terrain.levelAt(i, j) !== 0) return 'indoor-height';
+  if (isSlopeKind(kind) && !slopeShapeAt(terrain, i, j)) return 'slope-shape';
+  if ((isSlopeKind(kind) || isSlopeKind(terrain.kindAt(i, j))) && placement?.handleAt(i, j)) return 'occupied-slope';
+  return null;
+}
+
 /**
  * 한 칸을 칠하고 벽을 다시 굽는다. 실패하면 **지형까지 되돌린다.**
  *
@@ -397,17 +472,23 @@ export function paintFloor(
   doors?: DoorSet,
 ): { ok: boolean; fail?: IndoorFail; changed: boolean } {
   const before = terrain.kindAt(i, j);
+  const beforeLevel = terrain.levelAt(i, j);
   if (before === null) return { ok: false, changed: false };
   if (before === kind) return { ok: true, changed: false };
   // 도시 띠는 못 칠한다 (K36) — sim 에서 막아야 봇·테스트도 같이 지킨다
   if (!terrain.isBuildable(i, j)) return { ok: false, fail: 'not-buildable', changed: false };
+  const heightFail = floorHeightFailure(terrain, i, j, kind, placement);
+  if (heightFail) return { ok: false, fail: heightFail, changed: false };
   const base = floorBaseline(terrain, walls, gate, placement, walkable);
   if (!terrain.paint(i, j, kind)) return { ok: false, changed: false };
 
-  const r = bakeIndoorWalls(terrain, walls, gate, walkable, doors);
+  const r: BakeResult = breaksNearbySlope(terrain, [[i, j]])
+    ? { ok: false, fail: 'slope-shape', areas: 0, doors: 0 }
+    : bakeIndoorWalls(terrain, walls, gate, walkable, doors);
   const worse = r.ok ? floorRegression(terrain, walls, gate, base, placement, walkable) : null;
   if (!r.ok || worse !== null) {
     terrain.paint(i, j, before);
+    terrain.setLevel(i, j, beforeLevel);
     bakeIndoorWalls(terrain, walls, gate, walkable, doors);
     const fail: IndoorFail = worse ?? (r.fail as IndoorFail);
     return { ok: false, fail, changed: false };
@@ -439,24 +520,28 @@ export function paintFloorBlock(
   /** 놓아 둔 출입구 (K36-B) — 안 넘기면 다시 구울 때 자동 하나로 되돌아간다 */
   doors?: DoorSet,
 ): { ok: boolean; fail?: IndoorFail; changed: number } {
-  const before: [number, number, string][] = [];
+  const before: [number, number, string, number][] = [];
   for (let j = j0; j < j0 + bh; j++) {
     for (let i = i0; i < i0 + bw; i++) {
       // 물·도시 띠는 건너뛴다 — 그래서 4×4 라고 늘 16칸이 아니다
       if (!terrain.inside(i, j) || terrain.isWater(i, j) || !terrain.isBuildable(i, j)) continue;
       const k = terrain.kindAt(i, j);
       if (k === null || k === kind) continue;
-      before.push([i, j, k]);
+      const heightFail = floorHeightFailure(terrain, i, j, kind, placement);
+      if (heightFail) return { ok: false, fail: heightFail, changed: 0 };
+      before.push([i, j, k, terrain.levelAt(i, j)]);
     }
   }
   if (before.length === 0) return { ok: true, changed: 0 };
 
   const base = floorBaseline(terrain, walls, gate, placement, walkable);
   for (const [i, j] of before) terrain.paint(i, j, kind);
-  const r = bakeIndoorWalls(terrain, walls, gate, walkable, doors);
+  const r: BakeResult = breaksNearbySlope(terrain, before.map(([i, j]) => [i, j] as const))
+    ? { ok: false, fail: 'slope-shape', areas: 0, doors: 0 }
+    : bakeIndoorWalls(terrain, walls, gate, walkable, doors);
   const worse = r.ok ? floorRegression(terrain, walls, gate, base, placement, walkable) : null;
   if (!r.ok || worse !== null) {
-    for (const [i, j, k] of before) terrain.paint(i, j, k);
+    for (const [i, j, k, z] of before) { terrain.paint(i, j, k); terrain.setLevel(i, j, z); }
     bakeIndoorWalls(terrain, walls, gate, walkable, doors);
     const fail: IndoorFail = worse ?? (r.fail as IndoorFail);
     return { ok: false, fail, changed: 0 };

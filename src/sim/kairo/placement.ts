@@ -1,3 +1,4 @@
+import { isSlopeKind, slopeAt } from './slopes.js';
 import rawFacilities from '../../data/kairo-facilities.json' with { type: 'json' };
 import { quarterTurnOffset } from '../../kairo-facing.js';
 import { KairoTerrain } from './terrain.js';
@@ -227,6 +228,8 @@ export interface KairoFacilityDef {
   need?: NeedKind;
   /** 손님이 위로 걸어 올라갈 수 있나 — 플로팅덱·선착장만 true */
   walkOn?: boolean;
+  /** Ordered clear cells within a ticket facility, ending at the park-side exit. */
+  admissionPassage?: readonly (readonly [number, number])[];
   /**
    * 방향 그림이 **몇 장인가** — 없으면 `2` (K53). 자세한 뜻은 `FacilityFacing` 주석.
    *
@@ -235,6 +238,8 @@ export interface KairoFacilityDef {
    * (`facingsOf` 가 2 를 돌려주므로 회전은 0↔1 뿐이고 스프라이트 ID 도 안 바뀐다).
    */
   facings?: 2 | 4;
+  /** Canonical outside access tiles, rotated with the physical facility. */
+  entryTiles?: readonly (readonly [number, number])[];
   placement: {
     requiresIndoor?: boolean;
     /** 물 위 기반이 필요하다 (인플레이터블·대여소) */
@@ -423,6 +428,10 @@ export function allFacilityDefs(): KairoFacilityDef[] {
 }
 
 export interface PlacedFacility {
+  /** Pre-passage saves retain counter service until their entrance is safely adopted. */
+  legacyAdmission?: boolean;
+  /** Only untouched, authored arrival props may be replaced by a later presentation. */
+  arrivalDecoration?: { defId: string; i: number; j: number; facing: FacilityFacing };
   /** 인스턴스 번호 — 점유 격자가 이 값을 담는다 (0 은 "빈 칸") */
   handle: number;
   defId: string;
@@ -468,6 +477,7 @@ export type PlaceFail =
   | 'outside-land'
   | 'not-buildable'
   | 'permit-over'
+  | 'slope-facing'
   | 'level-mixed'
   | 'blocks-door'
   | 'would-strand'
@@ -522,8 +532,8 @@ export interface PlaceOutcome {
 export function guestWalkable(
   terrain: KairoTerrain,
   placement: PlacementGrid,
-): (i: number, j: number) => boolean {
-  return (i, j) => {
+): ((i: number, j: number) => boolean) & { canCross: (i: number, j: number, ni: number, nj: number) => boolean } {
+  const stand = (i: number, j: number): boolean => {
     if (placement.blocksWalk(i, j)) return false;
     /*
      * ⚠ `isWalkable`(육지인가)이 아니라 `isGuestWalkable`(손님이 다니나)이다 (K32-B).
@@ -531,6 +541,7 @@ export function guestWalkable(
      */
     return terrain.isGuestWalkable(i, j) || placement.isWalkOn(i, j);
   };
+  return Object.assign(stand, { canCross: (i: number, j: number, ni: number, nj: number) => !placement.blocksCross(i, j, ni, nj) });
 }
 
 /**
@@ -631,6 +642,7 @@ export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
    * 물가인지 경사인지 구분이 안 된다. 이것이 "산 중턱 평지"가 게임이 되는 지점이다.
    */
   'level-mixed': '경사입니다 — 단이 고른 평지에 놓으세요',
+  'slope-facing': '울타리를 회전해 경사로의 오르막 방향에 맞추세요',
   'blocks-door': '문 앞은 비워야 합니다',
   'would-strand': '이 자리에 놓으면 실내 일부에 못 가게 됩니다',
   /*
@@ -677,6 +689,7 @@ export const LEVEL_FEE_STEP = 0.3;
 export const LEVEL_SATISFACTION = 6;
 
 export interface PlacementSnapshot {
+  footprintRevision?: number;
   w: number;
   h: number;
   next: number;
@@ -718,7 +731,28 @@ export class PlacementGrid {
    */
   isWalkOn(i: number, j: number): boolean {
     const item = this.at(i, j);
-    return item ? DEFS[item.defId]?.walkOn === true : false;
+    if (!item) return false;
+    const def = DEFS[item.defId];
+    if (!def) return false;
+    return def.walkOn === true || (!item.legacyAdmission && (def.admissionPassage ?? []).some(tile => {
+      const [x, y] = PlacementGrid.footprintTileOf(def, item.i, item.j, tile, item.facing ?? 0);
+      return x === i && y === j;
+    }));
+  }
+
+  /** Passage side walls remain solid; only consecutive lane cells and its two mouths connect. */
+  blocksCross(i: number, j: number, ni: number, nj: number): boolean {
+    for (const [x, y] of [[i, j], [ni, nj]]) {
+      const item = this.at(x!, y!);
+      const def = item ? DEFS[item.defId] : undefined;
+      if (!item || item.legacyAdmission || !def?.admissionPassage) continue;
+      const local = [...(def.entryTiles ?? []), ...def.admissionPassage];
+      const lane = local.map(t => PlacementGrid.footprintTileOf(def, item.i, item.j, t, item.facing ?? 0));
+      const a = lane.findIndex(t => t[0] === i && t[1] === j);
+      const b = lane.findIndex(t => t[0] === ni && t[1] === nj);
+      if (a < 0 || b < 0 || Math.abs(a - b) !== 1) return true;
+    }
+    return false;
   }
 
   /** 손님의 길을 막나 — 점유돼 있고 걸어 올라갈 수 없으면 막는다 */
@@ -1007,6 +1041,10 @@ export class PlacementGrid {
       return out;
     }
 
+    if (def.entryTiles) {
+      return def.entryTiles.map((tile) => PlacementGrid.footprintTileOf(def, i, j, tile, facing));
+    }
+
     if (facingsOf(def) === 4) {
       const addIPlus = (): void => { for (let dj = 0; dj < d; dj++) push(i + w, j + dj); };
       const addIMinus = (): void => { for (let dj = 0; dj < d; dj++) push(i - 1, j + dj); };
@@ -1081,6 +1119,16 @@ export class PlacementGrid {
        */
       const [fw, fh] = PlacementGrid.sizeOf(def, facing);
       if (!terrain.levelUniform(i, j, fw, fh)) {
+        return { ok: false, fail: 'level-mixed' };
+      }
+    }
+
+    // Only the existing straight wood fence has authored geometry for a sloped tile.
+    for (const [ti, tj] of tiles) {
+      if (!isSlopeKind(terrain.kindAt(ti, tj))) continue;
+      const slope = slopeAt(terrain, ti, tj);
+      if (defId === 'env_wood_fence' && slope && facing !== slope.facing) return { ok: false, fail: 'slope-facing' };
+      if (defId !== 'env_wood_fence' || !slope) {
         return { ok: false, fail: 'level-mixed' };
       }
     }
@@ -1511,7 +1559,7 @@ export class PlacementGrid {
   }
 
   toSnapshot(): PlacementSnapshot {
-    return { w: this.width, h: this.height, next: this.nextHandle, items: this.all() };
+    return { w: this.width, h: this.height, next: this.nextHandle, items: this.all(), footprintRevision: 1 };
   }
 
   static fromSnapshot(s: PlacementSnapshot): PlacementGrid {

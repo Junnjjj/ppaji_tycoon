@@ -47,7 +47,7 @@ function withWater(w: number, h: number, fromJ: number): KairoTerrain {
 
 describe('시설 정의 — 시뮬이 아는 것만 있다', () => {
   it('75종', () => {
-    expect(allFacilityDefs()).toHaveLength(75);
+    expect(allFacilityDefs()).toHaveLength(104);
   });
 
   it('렌더 전용 필드가 없다 — 불변식 1', () => {

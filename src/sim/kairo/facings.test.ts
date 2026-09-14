@@ -46,6 +46,8 @@ const LIVE_FOUR_WAY = [
   'toilet',
   'vending_in',
   'washbasin_row',
+  'ticket', 'sauna', 'jjimjilbang', 'bungalow', 'shade_net', 'mongol_tent',
+  'env_village_house', 'env_village_shop', 'env_pension', 'env_small_hotel', 'env_convenience_store', 'env_maintenance_shed', 'env_pine', 'env_deciduous', 'env_willow', 'env_shrubs', 'env_rocks', 'env_bus', 'env_car', 'env_wood_fence', 'env_wood_fence_corner', 'env_wood_fence_end', 'env_stone_wall', 'env_stone_wall_corner', 'env_stone_wall_end', 'env_hedge', 'env_hedge_corner', 'env_hedge_end', 'env_water_rail', 'env_water_rail_corner', 'env_water_rail_end', 'env_flower_pot', 'env_long_flowerbed', 'env_bench', 'env_street_lamp',
 ].sort();
 
 /** 데이터를 건드리지 않고 "4방향인 척" — 전역 상태를 안 만든다 (골든이 같은 프로세스에 산다) */
@@ -60,13 +62,13 @@ function footprint(def: KairoFacilityDef, i: number, j: number, f: FacilityFacin
   return new Set(PlacementGrid.footprintTiles(def, i, j, f).map(key));
 }
 
-describe('① 승인된 20종만 라이브 4방향이고 나머지는 기존 동작을 유지한다', () => {
-  it('라이브 4방향 목록이 승인된 20종과 정확히 같다', () => {
+describe('① 승인된 25종만 라이브 4방향이고 나머지는 기존 동작을 유지한다', () => {
+  it('라이브 4방향 목록이 승인된 25종과 정확히 같다', () => {
     const four = DEFS.filter((d) => facingsOf(d) === 4).map((d) => d.id);
     expect(four.sort()).toEqual(LIVE_FOUR_WAY);
   });
 
-  it('20종은 0→1→2→3, 나머지는 기존 0↔1이다', () => {
+  it('25종은 0→1→2→3, 나머지는 기존 0↔1이다', () => {
     for (const def of DEFS) {
       if (LIVE_FOUR_WAY.includes(def.id)) {
         expect(facingsOf(def), def.id).toBe(4);
@@ -81,7 +83,7 @@ describe('① 승인된 20종만 라이브 4방향이고 나머지는 기존 동
     }
   });
 
-  it('`↻` 는 4방향 20종과 기존 비정사각 시설에 뜬다', () => {
+  it('`↻` 는 4방향 25종과 기존 비정사각 시설에 뜬다', () => {
     for (const def of DEFS) {
       expect(canRotate(def), def.id).toBe(facingsOf(def) === 4 || def.size[0] !== def.size[1]);
     }
@@ -296,7 +298,7 @@ describe('③ 세이브 — v7 그대로', () => {
 
 describe('④ 회전 UI 는 `facings` 를 따른다', () => {
   it('2방향은 0↔1, 4방향은 0→1→2→3→0', () => {
-    const two = facilityDef('ticket')!;
+    const two = facilityDef('parasol')!;
     expect([nextFacing(two, 0), nextFacing(two, 1)]).toEqual([1, 0]);
     const four = asFourWay(two);
     expect([
