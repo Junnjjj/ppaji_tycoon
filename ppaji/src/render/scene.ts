@@ -1,3 +1,4 @@
+import { npcV8Key } from '../assets/npc-v8.js';
 /**
  * 워터파크 씬 — 지면 타일·(G1 부터) 풀·손님·FX 를 한 `i+j` 깊이 축 위에 그린다.
  * 타일 하나에 Image 하나 (3,072). 타일맵을 안 쓰는 이유는 지면·시설·손님이 **같은 깊이 축**을
@@ -424,6 +425,12 @@ export class WaterparkScene extends Phaser.Scene {
 
   private guestKey(g: Guest): string {
     const pose = this.guestPose(g);
+    // V8 has adult poses, but no authored child/elderly bodies or rental equipment.
+    // Keep those existing presentations until corresponding approved art is available.
+    if (buildOf(g) === 'adult' && !((pose === 'swim' || pose === 'ride') && g.float)) {
+      const native = npcV8Key(g.uid, g.facing, pose, this.time.now, moodOf(g));
+      if (this.deps.provider.spec(native)) return native;
+    }
     const frames = GUEST_FRAMES[pose];
     const frame = frames === 1 ? 0 : Math.floor(this.animFrame / (pose === 'swim' ? 14 : pose === 'ride' ? 5 : 7)) % frames;
     return guestTextureKey(g.palette, buildOf(g), pose === 'swim' || pose === 'ride' ? g.float : 0, pose, frame, moodOf(g));
@@ -468,11 +475,14 @@ export class WaterparkScene extends Phaser.Scene {
       } else if (img.texture.key !== key) {
         img.setTexture(key);
       }
+      const native = key.startsWith('guest/v8/');
+      const spec = native ? this.deps.provider.spec(key) : null;
+      img.setOrigin(spec ? spec.ax / spec.w : GUEST_ANCHOR.x / GUEST_W, spec ? spec.ay / spec.h : GUEST_ANCHOR.y / GUEST_H);
       const p = this.guestWorld(g);
       // 대기 줄 (G34) — 같은 칸에 선 사람들을 뒤로 한 명씩 비켜 세운다
       const qx = g.state === 'queue' ? -6 * g.queuePos : 0; const qy = g.state === 'queue' ? 4 * g.queuePos : 0;
-      img.setPosition(Math.round(p.x + qx), Math.round(p.y + qy + (g.state === 'swim' ? 4 : g.state === 'use' && g.progress >= 1 ? -2 : 0)));
-      img.setFlipX(g.facing === 1 || g.facing === 2);
+      img.setPosition(Math.round(p.x + qx), Math.round(p.y + qy + (native ? 0 : g.state === 'swim' ? 4 : g.state === 'use' && g.progress >= 1 ? -2 : 0)));
+      img.setFlipX(!native && (g.facing === 1 || g.facing === 2));
       img.setDepth(spanDepthKey(g.fromI, g.fromJ, g.i, g.j) + Z_GUEST + (g.state === 'climb' || g.state === 'ride' ? 1 : 0));
     }
     for (const [uid, img] of this.guestImgs) {

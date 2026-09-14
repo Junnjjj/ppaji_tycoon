@@ -25,6 +25,7 @@ import type { PeriodReport } from './sim/game.js';
 import { ASSET_VERSION } from './assets/draw/pix.js';
 import { cssVar } from './ui/tokens.js';
 import { loadAtlas, HybridProvider } from './assets/atlas-provider.js';
+import { loadNpcV8 } from './assets/npc-v8.js';
 import { loadKairoAtlas } from './assets/kairo-atlas.js';
 import { loadLandscape } from './assets/landscape.js';
 import { GuestInfoWindow } from './ui/windows/guest-info.js';
@@ -85,7 +86,8 @@ const atlas = await loadAtlas();
 const kairo = await loadKairoAtlas(); // P14: 레거시 도트가 먼저, 없으면 3D 프리렌더 → 절차
 const landscape = await loadLandscape(); // P57-b: 북쪽 바깥 풍경 띠(main 그림 2장)
 if (!saved) game.checkStory(true);
-const provider = new HybridProvider(kairo, new HybridProvider(atlas, new ProceduralProvider()));
+const npc = await loadNpcV8();
+const provider = new HybridProvider(npc, new HybridProvider(kairo, new HybridProvider(atlas, new ProceduralProvider())));
 const missing = ProceduralProvider.missingDrawers();
 if (missing.length > 0) console.error('매니페스트에 그리는 함수가 없는 id:', missing);
 
