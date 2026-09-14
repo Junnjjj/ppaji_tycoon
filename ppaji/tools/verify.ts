@@ -1230,6 +1230,21 @@ async function verifyP57a(page: import('playwright').Page): Promise<void> {
   record('P57-a main 아틀라스 — ppaji 시설 중 레거시 프레임 ≥49 · 4방향 ≥26 · 카페 facing 1 은 뒤집기가 아닌 옆면(뒤집은 앞면과 다른 픽셀 ≥ 500) · 카페 발자국 3×2 로 놓인다 · PNG v15 로드', (r['legacy'] as number) >= 49 && (r['fourDir'] as number) >= 26 && (r['cafeSide'] as number) >= 500 && r['png'] === true && r['placed'] === true && JSON.stringify(r['fp']) === '[3,2]' ? 'pass' : 'fail', JSON.stringify(r));
 }
 
+/** P57-b — main 병합 M3: 북쪽 바깥 풍경 띠(먼 산 7 + 가까운 숲 7) · 바깥 장식이 main env 그림(가로등·마을 줄·이웃 건물) · 도로 버스 = env_bus · env 장식 29 가 건설 「장식」 탭(시작 18) · 생울타리를 마당 잔디에 놓는다 · `?scenery=0` 이면 풍경 0(대조군) */
+async function verifyP57b(page: import('playwright').Page): Promise<void> {
+  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
+  await page.waitForTimeout(500);
+  const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; g.money = 50000; w.buildWin.show(); const tab = [...document.querySelectorAll('#win-build .ktab')].find((x) => x.dataset.tab === 'decor'); if (tab) tab.click(); const cards = [...document.querySelectorAll('#win-build .kpcard')].map((x) => x.dataset.facility); w.buildWin.hide(); const envStart = [...g.unlocked.facilities].filter((id) => id.startsWith('env_')).length; const ok = g.placeFacility('env_hedge', gt.i - 18, gt.j + 19, 0); const ok2 = g.placeFacility('env_wood_fence', gt.i - 16, gt.j + 19, 1); /* P46 과 같은 북서 잔디 — 동쪽 열은 S 자 본류가 북으로 굽어 강 건너다 */ w.syncWorldToScene(); const tex = w.scene.textures.exists('fac/env_hedge/0') && w.scene.textures.exists('fac/env_wood_fence/1'); return { landscape: w.scene.landscapeCountForTest(), borderEnv: w.scene.borderEnvCountForTest(), border: w.scene.borderCountForTest(), bus: w.scene.busTextureKeyForTest(), cards: cards.length, hasFence: cards.includes('env_wood_fence'), hasHedge: cards.includes('env_hedge'), envStart, hedge: ok.ok, hedgeWhy: ok.ok ? '' : ok.reason, fence: ok2.ok, tex, defs: g.facilities.defsCount }; })()`)) as { landscape: number; borderEnv: number; border: number; bus: string; cards: number; hasFence: boolean; hasHedge: boolean; envStart: number; hedge: boolean; hedgeWhy: string; fence: boolean; tex: boolean; defs: number };
+  record('P57-b 풍경·바깥 장식 — 북쪽 풍경 띠 14(먼 산 7 · 숲 7) · 바깥 장식 중 main env 그림 ≥ 20(가로등 12 · 마을 줄 8 · 이웃 4) · 도로 버스 = env_bus', r.landscape === 14 && r.borderEnv >= 20 && r.bus === 'fac/env_bus/1' ? 'pass' : 'fail', JSON.stringify({ landscape: r.landscape, borderEnv: r.borderEnv, border: r.border, bus: r.bus }));
+  record('P57-b env 장식 29 — 시설 정의 177 · 새 판 시작 해금 env 18 · 「장식」 탭에 울타리·생울타리 카드 · 마당 잔디에 생울타리(0)·울타리(1) 배치 → 아틀라스 텍스처', r.defs === 177 && r.envStart === 18 && r.hasFence && r.hasHedge && r.cards >= 21 && r.hedge && r.fence && r.tex ? 'pass' : 'fail', JSON.stringify({ defs: r.defs, envStart: r.envStart, cards: r.cards, hedge: r.hedge, hedgeWhy: r.hedgeWhy, fence: r.fence, tex: r.tex }));
+  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0&scenery=0`, { waitUntil: 'load' });
+  await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
+  await page.waitForTimeout(300);
+  const z = (await page.evaluate(`(() => { const w = window.__pj; return { landscape: w.scene.landscapeCountForTest(), borderEnv: w.scene.borderEnvCountForTest() }; })()`)) as { landscape: number; borderEnv: number };
+  record('P57-b 대조군 — `?scenery=0` 이면 풍경 띠 0(바깥 env 장식은 아틀라스라 그대로)', z.landscape === 0 && z.borderEnv >= 20 ? 'pass' : 'fail', JSON.stringify(z));
+}
+
 /** P56-b — 그림 반입: 등록부에 그림 ≥300 · 요리 창 재료 카드가 폴백 아이콘이 아니라 시트 그림(`.kpic`)이고 폴백 0 · 도감(아는 요리)도 그림 · 시트 PNG 가 실제로 로드된다 */
 async function verifyP56b(page: import('playwright').Page): Promise<void> {
   await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
@@ -1657,7 +1672,7 @@ async function verifyP22(page: import('playwright').Page, cdp: CDPSession): Prom
   await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const un = (await page.evaluate(`(() => { const g = window.__pj.game; return { n: g.unlocked.facilities.size, shop: g.isUnlocked('shop'), fire: g.isUnlocked('firepit_row'), stage: g.isUnlocked('stage_river') }; })()`)) as { n: number; shop: boolean; fire: boolean; stage: boolean };
-  record('P21 해금 재배치 — 새 판 시설 27종(P45-b 대여소·실내 매점 +2 · P49-a1 시작 기구 8) · 매점·화로대는 시작 · 강변 스테이지는 아직 소원', un.n === 27 && un.shop && un.fire && !un.stage ? 'pass' : 'fail', JSON.stringify(un));
+  record('P21 해금 재배치 — 새 판 시설 45종(P45-b 대여소·실내 매점 +2 · P49-a1 시작 기구 8 · P57-b env 장식 18) · 매점·화로대는 시작 · 강변 스테이지는 아직 소원', un.n === 45 && un.shop && un.fire && !un.stage ? 'pass' : 'fail', JSON.stringify(un));
   // 지면 탭 → 모래길 칩(기본) → 잔디 두 칸 실터치 → 완료
   await page.evaluate(`(() => { const w = window.__pj; w.game.money = 50000; w.dock.enter('ground'); const gt = w.game.gate; w.scene.focusTile(gt.i + 14, gt.j + 12, 150); })()`);
   await page.waitForTimeout(400);
@@ -2037,6 +2052,7 @@ async function main(): Promise<void> {
   if (G >= 156.2) await verifyP56b(page);
   if (G >= 156.3) await verifyP56c(page);
   if (G >= 157.1) await verifyP57a(page);
+  if (G >= 157.2) await verifyP57b(page);
   if (G >= 31) await verifyG31(page);
   if (G >= 33) await verifyG33(page);
   if (G >= 34) await verifyG34(page);

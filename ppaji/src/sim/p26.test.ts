@@ -3,9 +3,9 @@ import { Game, FACILITY_DEFS } from './game.js';
 
 /** P26 (D32) — 경관 전염: 장식·조경 지면이 반경 2 안 시설의 인기와 판매가에 붙는다. 화장실은 자리 등급을 깎는다(P24) */
 describe('P26 경관 전염', () => {
-  it('장식 22종 전부 scenery 4~16 (인기에서 유도)', () => {
+  it('장식 51종(22 + P57-b env 29) 전부 scenery 4~16 (인기에서 유도)', () => {
     const decor = [...FACILITY_DEFS.values()].filter((d) => d.class === 'decor');
-    expect(decor.length).toBe(22);
+    expect(decor.length).toBe(51); // P57-b: main env 장식 29
     for (const d of decor) { expect(d.scenery).toBeGreaterThanOrEqual(4); expect(d.scenery).toBeLessThanOrEqual(16); }
     expect(FACILITY_DEFS.get('waterfall')!.scenery).toBe(16);
     expect(FACILITY_DEFS.get('flowerbed')!.scenery).toBe(5);

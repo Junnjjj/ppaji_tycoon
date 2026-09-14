@@ -28,7 +28,10 @@
       "rig_blob",
       "rig_roller",
       "rig_sunbed",
-      "rig_rack"
+      "rig_rack",
+      "env_pine",
+      "env_deciduous",
+      "env_willow"
     ]
   },
   {
@@ -62,7 +65,15 @@
       "minigolf",
       "rig_slidedock",
       "rig_float_bar",
-      "rescue_dock"
+      "rescue_dock",
+      "env_village_house",
+      "env_village_shop",
+      "env_pension",
+      "env_small_hotel",
+      "env_convenience_store",
+      "env_maintenance_shed",
+      "env_bus",
+      "env_car"
     ]
   },
   {

@@ -16,6 +16,7 @@ import { WaterGlint } from './water.js';
 import { GUEST_ANCHOR, GUEST_FRAMES, GUEST_H, GUEST_W, guestTextureKey, type GuestPose } from '../assets/draw/guest.js';
 import { drawEmote, drawBattery } from '../assets/draw/emote.js';
 import { drawBus, BUS_W, BUS_H, drawBusStop, drawLamp } from '../assets/draw/bus.js';
+import type { Landscape } from '../assets/landscape.js';
 import { Surround } from './surround.js';
 import type { BusState } from '../sim/game.js';
 import type { Staff } from '../sim/staff.js';
@@ -53,6 +54,8 @@ export interface SceneDeps {
   /** P4-B: 핸들을 끌 때마다 (지표 실시간 갱신 신호) · 선착장 후보 탭 */
   onCourseHandleMove?: (index: number, i: number, j: number) => void;
   onCourseDockPick?: (index: number) => void;
+  /** P57-b — 북쪽 바깥 풍경 띠(먼 산·가까운 숲). null 이면 안 그린다 */
+  landscape?: Landscape | null;
 }
 
 const TAP_MOVE_PX = 12;
@@ -148,6 +151,7 @@ export class WaterparkScene extends Phaser.Scene {
     this.wallsReady = true;
     this.surround = new Surround(this, (id) => this.deps.provider.canvas(id), -100); // P44 지도 바깥
     this.surround.build();
+    this.buildLandscape();
     this.buildTraffic();
     this.applyScale(this.cam.upscale);
     const bootAt = performance.now();
@@ -514,8 +518,7 @@ export class WaterparkScene extends Phaser.Scene {
   private syncBus(): void {
     const bs = this.busRef; const road = this.busRoad;
     if (!bs || !road || !this.sys.isActive()) { if (this.busImg) { this.busImg.destroy(); this.busImg = null; } return; }
-    if (!this.textures.exists('bus/0')) this.textures.addCanvas('bus/0', drawBus());
-    if (!this.busImg) this.busImg = this.add.image(0, 0, 'bus/0').setOrigin(0.5, (BUS_H - 2) / BUS_H);
+    if (!this.busImg) { const bk = this.busTexture(); this.busImg = this.add.image(0, 0, bk).setOrigin(0.5, bk === 'bus/0' ? (BUS_H - 2) / BUS_H : 1); }
     const fi = bs.phase === 'in' ? road.i0 + (road.iStop - road.i0) * bs.t : bs.phase === 'stop' ? road.iStop : road.iStop + (road.i1 - road.iStop) * bs.t;
     const a = tileCenter(Math.floor(fi), road.j); const b = tileCenter(Math.floor(fi) + 1, road.j);
     const f = fi - Math.floor(fi);
@@ -612,15 +615,19 @@ export class WaterparkScene extends Phaser.Scene {
       this.borderImgs.push(img);
     };
     if (!this.textures.exists('busstop/0')) this.textures.addCanvas('busstop/0', drawBusStop());
-    if (!this.textures.exists('lamp/0')) this.textures.addCanvas('lamp/0', drawLamp());
+    const has = (k: string): boolean => { if (!this.textures.exists(k)) { const c = this.deps.provider.canvas(k); if (c) this.textures.addCanvas(k, c); } return this.textures.exists(k); };
+    if (!has('fac/env_street_lamp/0') && !this.textures.exists('lamp/0')) this.textures.addCanvas('lamp/0', drawLamp()); // P57-b: main 가로등이 없으면 절차 가로등
     decor('busstop/0', gt.i + 1, STOP_ROW);
-    for (let i = 4; i < grid.w; i += 8) decor('lamp/0', i, STOP_ROW); // 보도 가로등
+    for (let i = 4; i < grid.w; i += 8) decor(has('fac/env_street_lamp/0') ? 'fac/env_street_lamp/0' : 'lamp/0', i, STOP_ROW); // 보도 가로등
     // 길 건너(격자 위, 줄 −4~−1 은 Surround 잔디) — 마을 건물 줄: 펜션·복층 펜션·창고·안내소를 번갈아
-    const town = ['fac/pension/0', 'fac/storage/0', 'fac/pension_duplex/0', 'fac/info/0', 'fac/bungalow/0'];
+    // P57-b: main 의 마을 건물 6(단독주택·2층 상가·펜션·소형 호텔·편의점·관리창고)이 있으면 그것, 없으면 옛 빌린 그림
+    const envTown = ['fac/env_village_house/0', 'fac/env_village_shop/0', 'fac/env_pension/0', 'fac/env_small_hotel/0', 'fac/env_convenience_store/0', 'fac/env_maintenance_shed/0'];
+    const town = envTown.every(has) ? envTown : ['fac/pension/0', 'fac/storage/0', 'fac/pension_duplex/0', 'fac/info/0', 'fac/bungalow/0'];
     let tn = 0;
     for (let i = 4; i < grid.w - 4; i += 11) { decor(town[tn % town.length] as string, i, -3); tn++; }
     // 들판의 이웃 빠지·펜션(마당 좌우 멀찍이) — 확장하면 마당이 삼킨다(그림뿐이라 충돌 없음)
-    const side = [['fac/caravan/0', land.i0 - 10, land.j0 + 6], ['fac/camp_site/0', land.i0 - 8, land.j0 + 22], ['fac/bungalow/0', land.i0 + land.w + 7, land.j0 + 8], ['fac/glamping/0', land.i0 + land.w + 9, land.j0 + 26]] as const;
+    const envSide = has('fac/env_pension/0') && has('fac/env_small_hotel/0');
+    const side = (envSide ? [['fac/env_pension/1', land.i0 - 10, land.j0 + 6], ['fac/env_village_house/1', land.i0 - 8, land.j0 + 22], ['fac/env_small_hotel/0', land.i0 + land.w + 7, land.j0 + 8], ['fac/env_maintenance_shed/0', land.i0 + land.w + 9, land.j0 + 26]] : [['fac/caravan/0', land.i0 - 10, land.j0 + 6], ['fac/camp_site/0', land.i0 - 8, land.j0 + 22], ['fac/bungalow/0', land.i0 + land.w + 7, land.j0 + 8], ['fac/glamping/0', land.i0 + land.w + 9, land.j0 + 26]]) as readonly (readonly [string, number, number])[];
     for (const [k, i, j] of side) if (i > 0 && i < grid.w - 1 && grid.at(i, j) === FLOOR.grass) decor(k, i, j);
     this.landForTint = land;
     for (let j = 0; j < grid.h; j++) for (let i = 0; i < grid.w; i++) this.refreshTile(i, j); // P44-c 토지 밖 어둡게(레거시 setLand)
@@ -630,6 +637,8 @@ export class WaterparkScene extends Phaser.Scene {
 
   /** 검사용 — 경계 나무 수 */
   borderCountForTest(): number { return this.borderImgs.length; }
+  /** P57-b 검사용 — 바깥 장식 중 main env 그림을 쓰는 수 */
+  borderEnvCountForTest(): number { return this.borderImgs.filter((im) => im.texture.key.startsWith('fac/env_')).length; }
 
   /** 검사용 — 지금 떠 있는 친구 게이지 수 */
   gaugeCountForTest(): number { return this.gaugeImgs.size; }
@@ -843,13 +852,43 @@ export class WaterparkScene extends Phaser.Scene {
   drawFence(land: { i0: number; j0: number; w: number; h: number }, gate: { i: number; j: number }): void { void land; void gate; }
   /** P39 — 문 표식 */
   drawDoors(): void { this.redrawWalls(); }
+  /**
+   * P57-b — 북쪽 바깥 풍경 띠(main `buildBackdrop` 과 같은 자리): 먼 산은 줄 −36 부터 6줄·20칸 간격, 가까운 숲은 줄 −26 부터 5줄·17칸 간격.
+   * 그림 한 장 = 24타일 폭(768px)·원점 y (384+11.76)/768 — 아래 절반은 투명이라 도시 띠 위 Surround 잔디와 겹쳐도 가리지 않는다. 깊이는 Surround(−100) 위·격자(≥0) 아래.
+   */
+  private landscapeImgs: Phaser.GameObjects.Image[] = [];
+  private buildLandscape(): void {
+    for (const im of this.landscapeImgs) im.destroy();
+    this.landscapeImgs = [];
+    const ls = this.deps.landscape;
+    if (!ls) return;
+    for (const [layer, slug, start, step, row, w, h] of [[0, 'mountain_far', -32, 20, -36, 24, 6], [1, 'forest_near', -22, 17, -26, 20, 5]] as const) {
+      const img = ls.get(slug);
+      if (!img) continue;
+      const key = `landscape/${slug}`;
+      if (!this.textures.exists(key)) this.textures.addImage(key, img);
+      for (let i = start; i < GW; i += step) {
+        const p = gridToScreen(i + w / 2, row + h / 2);
+        this.landscapeImgs.push(this.add.image(p.x, p.y, key).setOrigin(0.5, (384 + 11.7575626373291) / 768).setDepth(-90 + layer));
+      }
+    }
+  }
+  landscapeCountForTest(): number { return this.landscapeImgs.length; }
+  /** 버스 그림 — main 아틀라스의 지역 버스(`env_bus`, +I 를 보는 d1)가 있으면 그것, 없으면 절차 상자. 둘 다 원점은 발자국 아래 꼭짓점 */
+  private busTexture(): string {
+    const k = 'fac/env_bus/1';
+    if (!this.textures.exists(k)) { const c = this.deps.provider.canvas(k); if (c) this.textures.addCanvas(k, c); }
+    if (this.textures.exists(k)) return k;
+    if (!this.textures.exists('bus/0')) this.textures.addCanvas('bus/0', drawBus());
+    return 'bus/0';
+  }
   /** P44-d — 도로 위 시내버스 한 대(장식, sim 밖). 시간이 멈춰도 돈다 — 도시는 내 빠지와 무관하게 산다 */
   private traffic: { img: Phaser.GameObjects.Image; row: number; fi: number; speed: number }[] = [];
   private buildTraffic(): void {
     for (const t of this.traffic) t.img.destroy();
     this.traffic = [];
-    if (!this.textures.exists('bus/0')) this.textures.addCanvas('bus/0', drawBus());
-    const img = this.add.image(0, 0, 'bus/0').setOrigin(0.5, (BUS_H - 2) / BUS_H);
+    const bk = this.busTexture();
+    const img = this.add.image(0, 0, bk).setOrigin(0.5, bk === 'bus/0' ? (BUS_H - 2) / BUS_H : 1);
     this.traffic.push({ img, row: ROAD_ROWS[0] as number, fi: -20, speed: 4.5 });
     this.stepTraffic(0);
   }
@@ -865,6 +904,8 @@ export class WaterparkScene extends Phaser.Scene {
     }
   }
   trafficCountForTest(): number { return this.traffic.filter((t) => t.img.visible).length; }
+  /** P57-b 검사용 — 도로 버스의 텍스처 키(`fac/env_bus/1` 이면 main 그림) */
+  busTextureKeyForTest(): string { return this.traffic[0]?.img.texture.key ?? ''; }
   /** 검사용 — 벽 층 수 */
   wallLayerCountForTest(): number { return this.wallLayers.size; }
   doorCount = 0;

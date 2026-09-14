@@ -10,8 +10,8 @@ describe('P21 해금 재배치', () => {
     expect(g.unlocked.facilities.size).toBeGreaterThanOrEqual(17);
   });
   it('★1 은 입구(P42)+BBQ존·치킨·족구장·카약·락커·수국·놀이터 8종, ★2 는 카페·노래방·오락기·SUP·낚시터·무궁화·미니골프 7종을 연다 (데이터)', () => {
-    expect(RANK_DEFS[0]!.unlocks).toEqual(['entrance', 'bbq_zone', 'chicken', 'footvolley', 'rent_kayak', 'locker_row', 'hydrangea', 'playground', 'rig_blob', 'rig_roller', 'rig_sunbed', 'rig_rack']); // P49-a1 기구 4
-    expect(RANK_DEFS[1]!.unlocks).toEqual(['cafe', 'karaoke', 'arcade', 'rent_sup', 'fishing', 'hibiscus', 'minigolf', 'rig_slidedock', 'rig_float_bar', 'rescue_dock']); // P49-a1 기구 3
+    expect(RANK_DEFS[0]!.unlocks).toEqual(['entrance', 'bbq_zone', 'chicken', 'footvolley', 'rent_kayak', 'locker_row', 'hydrangea', 'playground', 'rig_blob', 'rig_roller', 'rig_sunbed', 'rig_rack', 'env_pine', 'env_deciduous', 'env_willow']); // P49-a1 기구 4
+    expect(RANK_DEFS[1]!.unlocks).toEqual(['cafe', 'karaoke', 'arcade', 'rent_sup', 'fishing', 'hibiscus', 'minigolf', 'rig_slidedock', 'rig_float_bar', 'rescue_dock', 'env_village_house', 'env_village_shop', 'env_pension', 'env_small_hotel', 'env_convenience_store', 'env_maintenance_shed', 'env_bus', 'env_car']); // P49-a1 기구 3
     for (const id of [...RANK_DEFS[0]!.unlocks!, ...RANK_DEFS[1]!.unlocks!]) expect(FACILITY_DEFS.get(id)!.unlock.source, id).toBe('rank');
   });
   it('소원 해금 시설은 34 → 14 (시그니처만 남는다) + P49-a1 워터 토템 = 15', () => {

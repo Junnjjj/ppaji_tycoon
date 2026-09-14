@@ -26,6 +26,7 @@ import { ASSET_VERSION } from './assets/draw/pix.js';
 import { cssVar } from './ui/tokens.js';
 import { loadAtlas, HybridProvider } from './assets/atlas-provider.js';
 import { loadKairoAtlas } from './assets/kairo-atlas.js';
+import { loadLandscape } from './assets/landscape.js';
 import { GuestInfoWindow } from './ui/windows/guest-info.js';
 import { BuildWindow, BUILD_TABS } from './ui/windows/build.js';
 import { PlaceDock } from './ui/windows/place.js';
@@ -82,6 +83,7 @@ registerFacilityDefs(FACILITY_DEFS.values());
 // 아틀라스(프리렌더 PNG)가 있으면 그것을, 없으면 절차 도트 — 같은 ID 라 게임 코드는 모른다 (G15)
 const atlas = await loadAtlas();
 const kairo = await loadKairoAtlas(); // P14: 레거시 도트가 먼저, 없으면 3D 프리렌더 → 절차
+const landscape = await loadLandscape(); // P57-b: 북쪽 바깥 풍경 띠(main 그림 2장)
 if (!saved) game.checkStory(true);
 const provider = new HybridProvider(kairo, new HybridProvider(atlas, new ProceduralProvider()));
 const missing = ProceduralProvider.missingDrawers();
@@ -98,6 +100,7 @@ const scene = new WaterparkScene({
   onCourseHandleMove: (k, i, j) => courseDock.onHandleMove(k, i, j),
   onCourseDockPick: (k) => courseDock.onDockPick(k),
   provider,
+  landscape,
   grid: game.grid,
   camera,
   rank: () => game.rank,
