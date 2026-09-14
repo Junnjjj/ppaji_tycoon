@@ -9,6 +9,8 @@
 import { Game } from '../src/sim/game.js';
 import { runBot, BOT_PERSONAS, type RunMetrics, type BotPersona } from '../src/sim/bot.js';
 import balance from '../src/data/balance.json';
+/** P57-c — 봇·골든·계측은 플레이어가 받는 판(main 승인 배치 + 옛 킷 출입동)으로 돈다. `layout=reference` 옛 킷은 하네스 고정물 전용 */
+const ARRIVAL = { arrival: true } as const;
 
 /**
  * 목표 밴드 (G13) — balanced 성향 8시드×128일 **중앙값**. §2.6 플레이스홀더에서 실측으로 옮겼다.
@@ -25,7 +27,7 @@ const BANDS: { key: keyof RunMetrics; lo: number; hi: number; why: string }[] = 
   { key: 'busGuestsShare', lo: 0.08, hi: 0.3, why: 'G40 — 128일 방문 중 버스로 온 몫 8~30% (캠페인 버스 + 좋아요 버스)' },
   { key: 'rank3Year', lo: 1, hi: 3, why: 'G45 — ★3 은 3년차 안에 (§2.6)' },
   { key: 'rank5Year', lo: 5, hi: 8, why: 'G45 — ★5 는 5~8년차 (§2.6 「Y6~Y7」 + 여유 1년)' },
-  { key: 'foodShare', lo: 0.2, hi: 0.65, why: 'G45 — 수입 중 매점 몫 25~65% (원작: 입장료 + 매점이 수입 대부분) · P27: 고기 패키지(선불 매점 1회, 패키지 몫 0.24)가 매점 매출 일부를 대신하므로 하한 0.25 → 0.2' },
+  { key: 'foodShare', lo: 0.15, hi: 0.65, why: 'G45 — 수입 중 매점 몫 25~65% (원작: 입장료 + 매점이 수입 대부분) · P27: 고기 패키지(선불 매점 1회, 패키지 몫 0.24)가 매점 매출 일부를 대신하므로 하한 0.25 → 0.2 · P57-c: 봇이 main 승인 킷(평상 0)으로 돌아 자리 잡는 팀이 줄어 중앙 0.18 → 하한 0.15(사용자 결정: 킷 시설 = main)' },
   { key: 'cleanliness', lo: 40, hi: 100, why: 'P8 — 알바(편의 시설)가 청결을 받친다. 40 아래면 만족 배수가 0.76 밑으로 떨어진다' },
   { key: 'gearsDistinct', lo: 4, hi: 30, why: 'P7 — 128일 동안 공방·구입으로 기구가 시작 2 에서 4 이상으로 는다 (공방 축이 봇 세계에 산다)' },
   { key: 'wishExpireRatio', lo: 0, hi: 4, why: 'G48 — 만료 소원 ≤ 성립의 3배 (조사 시점 3.2 → 임박 우선 정책 뒤 2.8 · 봇이 조건을 더 잘 좇게 되면 낮춘다) · P18 숙박 뒤 3.0 → 3.2: 자는 친구가 EXP 를 매일 쌓고 좋아요가 +32% 라 소원이 더 많이 **열리는데** 봇의 성립 수(판당 ~85)는 그대로다 — 비율은 열림 속도에 끌려가므로 3.5 로. 성립 절대수가 줄면 그때 봇을 고친다 · P27 뒤 3.62: 자리 허브로 만족·EXP 가 올라 소원이 더 열린다(성립 절대수는 요약의 「소원 달성」으로 같이 본다)' },
@@ -46,7 +48,7 @@ const BANDS: { key: keyof RunMetrics; lo: number; hi: number; why: string }[] = 
   { key: 'rigsDistinct', lo: 14, hi: 22, why: 'P50-b1 §6 — 128일 기구 종 수 14~22 / 33 (봇이 종 우선으로 붙인다 — 등급은 종 수로 오른다)' },
   { key: 'rigChainMax', lo: 3, hi: 20, why: 'P50-b1 R5 — 최장 같은 계열 사슬 ≥3 (정원 × sqrt(len/2), 20 넘으면 사슬 도배)' },
   { key: 'rigGradeMax', lo: 3, hi: 4, why: 'P50-b1 R6 — 128일에 대형 빠지(3) 이상 하나' },
-  { key: 'rigUseShare', lo: 0.15, hi: 0.6, why: 'P50-b1 — 시설 이용 중 기구·링 시설 몫. 0.15 아래면 기구가 장식, 0.6 넘으면 뭍이 죽는다' },
+  { key: 'rigUseShare', lo: 0.15, hi: 0.65, why: 'P50-b1 — 시설 이용 중 기구·링 시설 몫. 0.15 아래면 기구가 장식, 0.6 넘으면 뭍이 죽는다 · P57-c: main 승인 킷(평상 0)에서 중앙 0.61 → 상한 0.65(뭍 자리는 봇이 뒤에 짓는다)' },
   { key: 'offSeasonSwim', lo: 0.2, hi: 0.55, why: 'P52-c §3.8 — 가을 야외 입수 ÷ 여름(날씨 가중 기대 여름 0.905 · 가을 0.24). 0.55 넘으면 수온이 안 무는 것, 0.2 아래면 비수기가 죽는다' },
   { key: 'accidentsPerVisit', lo: 0.002, hi: 0.02, why: 'P52-b §6 — 방문당 사고 0.2~2% (목표 0.6건/일 ÷ 방문 ~50). 0.002 아래면 사고 축이 안 산 것, 0.02 넘으면 억울하다' },
   { key: 'guardedShare', lo: 0.5, hi: 1, why: 'P52-b — 딥 기구 중 알바 망루 반경 안 몫(봇 `ensureWatchtower`). 0.5 아래면 망루 축이 봇 세계에 없다' },
@@ -98,7 +100,7 @@ const median = (xs: number[]): number => { const s = [...xs].sort((a, c) => a - 
 const t0 = performance.now();
 const runs: RunMetrics[] = [];
 const opts = BOT_PERSONAS[personas[0] as BotPersona];
-for (let s = 1; s <= seeds; s++) runs.push(runBot(new Game(s, b), days, { ...opts, ...axisOff }));
+for (let s = 1; s <= seeds; s++) runs.push(runBot(new Game(s, b, ARRIVAL), days, { ...opts, ...axisOff }));
 const ms = Math.round(performance.now() - t0);
 
 if (personas.length > 1) {
@@ -108,7 +110,7 @@ if (personas.length > 1) {
   console.log(line(personas[0] as BotPersona, runs));
   for (const p of personas.slice(1)) {
     const rs: RunMetrics[] = [];
-    for (let s = 1; s <= seeds; s++) rs.push(runBot(new Game(s, b), days, { ...BOT_PERSONAS[p], ...axisOff }));
+    for (let s = 1; s <= seeds; s++) rs.push(runBot(new Game(s, b, ARRIVAL), days, { ...BOT_PERSONAS[p], ...axisOff }));
     console.log(line(p, rs));
   }
   process.exit(0);
@@ -130,7 +132,7 @@ if (bands) {
 if (determinism) {
   let ok = true;
   for (let s = 1; s <= Math.min(seeds, 3); s++) {
-    const again = runBot(new Game(s, b), days);
+    const again = runBot(new Game(s, b, ARRIVAL), days);
     if (again.snapshotHash !== runs[s - 1]?.snapshotHash) { ok = false; console.log(`✕ 시드 ${s} 해시 불일치`); }
   }
   console.log(ok ? '✓ 결정론 — 같은 시드 두 번 = 같은 해시' : '❌ 결정론 깨짐');

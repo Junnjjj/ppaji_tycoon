@@ -4,12 +4,14 @@
  */
 import { Game } from '../src/sim/game.js';
 import { runBot, BOT_DEFAULTS } from '../src/sim/bot.js';
+/** P57-c — 봇·골든·계측은 플레이어가 받는 판(main 승인 배치 + 옛 킷 출입동)으로 돈다. `layout=reference` 옛 킷은 하네스 고정물 전용 */
+const ARRIVAL = { arrival: true } as const;
 
 const arg = (name: string, def: string): string => { const at = process.argv.indexOf(`--${name}`); return at >= 0 ? (process.argv[at + 1] ?? def) : def; };
 const seeds = Number(arg('seeds', '8')), days = Number(arg('days', '128'));
 const median = (xs: number[]): number => { const s = [...xs].sort((a, b) => a - b); return s.length % 2 ? (s[(s.length - 1) / 2] as number) : (((s[s.length / 2 - 1] as number) + (s[s.length / 2] as number)) / 2); };
 const runs = [];
-for (let s = 1; s <= seeds; s++) runs.push(runBot(new Game(s), days, BOT_DEFAULTS));
+for (let s = 1; s <= seeds; s++) runs.push(runBot(new Game(s, undefined, ARRIVAL), days, BOT_DEFAULTS));
 const out = {
   rigRepeatRatio: median(runs.map((r) => r.rigRepeatRatio)),
   rigUseShare: median(runs.map((r) => r.rigUseShare)),

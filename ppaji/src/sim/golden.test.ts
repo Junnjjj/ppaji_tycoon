@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { Game } from './game.js';
 import { runBot, hashSnapshot } from './bot.js';
+/** P57-c — 봇·골든·계측은 플레이어가 받는 판(main 승인 배치 + 옛 킷 출입동)으로 돈다. `layout=reference` 옛 킷은 하네스 고정물 전용 */
+const ARRIVAL = { arrival: true } as const;
 
 /**
  * 골든 — 시드 3개 × 16일. 해시가 바뀌면 **밸런스나 규칙이 바뀐 것**이다: 의도한 변경이면
@@ -35,22 +37,23 @@ const GOLDEN: Record<number, { hash: number; visitors: number }> = {
   // P24 (2026-09-06) 재베이크 — 시작 킷 평상이 물가로 옮겨 첫날부터 다르다
   // P4-A (2026-09-04) 재베이크 — 스냅샷에 `courses` 가 들어가고 봇이 코스·선착장을 놓는다
   // P57-b (2026-09-14) 재베이크 — env 장식 29 가 시작 해금 18·랭크 해금 11 로 `unlocked.facilities` 에 들어 스냅샷 해시만 바뀐다(봇은 capacity 0 장식을 안 짓는다 — 방문객 820/842/876 · 시설 59/58/59 · 현금 동일)
-  1: { hash: 42357745, visitors: 820 },
-  2: { hash: 346260289, visitors: 842 },
-  3: { hash: 743480095, visitors: 876 },
+  // P57-c (2026-09-15) 재베이크 — 골든·봇이 플레이어가 받는 판(main 승인 배치: 출입동은 옛 킷 20×13, 킷 시설은 main — 평상 2줄 없음·env 장식 19·매표/매점/화장실 이동·정문 앞마당)으로 돈다. 방문객 820/842/876 → 823/839/878 · 16일 현금 19~26만 → 15~17만(자리 없는 킷의 실제 효과. 장식이 물가 산책로를 끊던 것을 고친 뒤 값)
+  1: { hash: 2599231894, visitors: 823 },
+  2: { hash: 3850987424, visitors: 839 },
+  3: { hash: 762889468, visitors: 878 },
 };
 
 describe('골든 시나리오', () => {
   it('같은 시드는 두 번 돌려도 같은 해시 (결정론)', () => {
     for (const seed of [1, 2, 3]) {
-      const a = runBot(new Game(seed), 16);
-      const b = runBot(new Game(seed), 16);
+      const a = runBot(new Game(seed, undefined, ARRIVAL), 16);
+      const b = runBot(new Game(seed, undefined, ARRIVAL), 16);
       expect(a.snapshotHash).toBe(b.snapshotHash);
       expect(a.visitors).toBeGreaterThan(0);
     }
   }, 20000); // 3시드 × 2 × 16일 — 기본 5초는 봇 밴드가 같이 돌면 넘친다 (실측 5.4초)
   it('스냅샷 왕복 뒤 이어 돌려도 같은 해시', () => {
-    const a = new Game(4);
+    const a = new Game(4, undefined, ARRIVAL);
     runBot(a, 8);
     const b = Game.fromSnapshot(JSON.parse(JSON.stringify(a.toSnapshot())));
     runBot(a, 8);
@@ -59,7 +62,7 @@ describe('골든 시나리오', () => {
   });
   it('골든 표와 일치한다 (표가 0 이면 아직 안 박은 것 — 값을 출력한다)', () => {
     for (const seed of [1, 2, 3]) {
-      const m = runBot(new Game(seed), 16);
+      const m = runBot(new Game(seed, undefined, ARRIVAL), 16);
       const g = GOLDEN[seed]!;
       if (g.hash === 0) {
         console.log(`GOLDEN[${seed}] = { hash: ${m.snapshotHash}, visitors: ${m.visitors} }`);

@@ -10,12 +10,12 @@ describe('approved initial arrival layout', () => {
   it('reuses the authored layout data exactly, with two working indoor doors', () => {
     expect(readFileSync('src/data/arrival-presentation.json').equals(readFileSync('../src/data/kairo-arrival-presentation.json'))).toBe(true);
     const g = create();
-    expect(arrivalRoom(g.gate)).toEqual({ i0: 42, j0: 11, w: 13, h: 8 });
-    expect(Array.from(g.grid.floor).filter(isIndoorCode)).toHaveLength(104);
-    expect(g.grid.doors()).toEqual([{ i: 48, j: 11, oi: 48, oj: 10 }, { i: 48, j: 18, oi: 48, oj: 19 }]);
+    expect(arrivalRoom(g.gate)).toEqual({ i0: 38, j0: 8, w: 20, h: 13 }); // P57-c 절충: 출입동은 옛 킷 20×13
+    expect(Array.from(g.grid.floor).filter(isIndoorCode)).toHaveLength(259); // 실내 247 + 복도 12
+    expect(g.grid.doors()).toEqual([{ i: 48, j: 9, oi: 48, oj: 8 }, { i: 48, j: 20, oi: 48, oj: 21 }]);
     expect(g.money).toBe(12000);
     expect(g.facilities.all.some(f => ['pyeongsang_row', 'pingpong'].includes(f.defId))).toBe(false);
-    expect(g.facilities.all.filter(f => f.defId.startsWith('env_'))).toHaveLength(22);
+    expect(g.facilities.all.filter(f => f.defId.startsWith('env_'))).toHaveLength(16); // 20×13 건물에선 정문 옆 화분 2(보도 위)·동쪽 바위 1·물가 산책로 위 셋(벤치·화단·가로등)이 자리를 못 찾는다
   });
   it('reserves actual decoration footprints while keeping the 3-cell patio aisle open', () => {
     const g = create(); const occupied = new Set<string>();
@@ -23,7 +23,7 @@ describe('approved initial arrival layout', () => {
       const key = `${t.i},${t.j}`; expect(occupied.has(key)).toBe(false); occupied.add(key);
       if (f.defId.startsWith('env_')) { expect(isIndoorCode(g.grid.at(t.i, t.j))).toBe(false); expect(g.facilities.occupied(t.i, t.j)).toBe(true); }
     }
-    for (let j = 19; j <= 21; j++) for (let i = 47; i <= 49; i++) { expect(g.grid.at(i, j)).toBe(FLOOR.path); expect(g.guests.walkable(i, j)).toBe(true); }
+    for (let j = 21; j <= 23; j++) for (let i = 47; i <= 49; i++) { expect(g.grid.at(i, j)).toBe(FLOOR.path); expect(g.guests.walkable(i, j)).toBe(true); }
     expect(g.canPlace('env_flower_pot', 48, 12).ok).toBe(false);
     expect(g.guests.walkable(48, 9)).toBe(true); expect(g.facilities.occupied(48, 9)).toBe(true);
     expect(g.guests.walkable(47, 9)).toBe(false);
