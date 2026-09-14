@@ -12,10 +12,19 @@ export type KairoAtlasJson = Record<string, Frame>;
 
 const TILE_TO_GROUND: Record<string, string> = { sand: 'path_sand', grass: 'lawn', path: 'path_stone', indoor: 'floor_indoor', river: 'water_edge', shallow: 'water_edge', deck: 'path_deck', gate: 'path_stone', sandpath: 'path_sand', sidewalk: 'sidewalk', woodpath: 'path_deck', flowerbed: 'verge', gravel: 'mountain_rock', road: 'road', rock: 'mountain_rock', hall: 'path_stone' }; // P43 도시 띠 차도 · P44 암반 · P45-a 복도 // P22 지면 5종 // 수역(pool)은 뺀다 — 물빛 tint 를 받는 흰빛 절차 베이스가 정본(레거시 pool_water 는 어두워 핑크가 안 뜬다)
 
-/** ppaji ID → 레거시 프레임 이름 (없으면 null) */
-export function kairoFrameFor(id: string): { frame: string; flip: boolean } | null {
+/**
+ * ppaji ID → 레거시 프레임 이름 후보 (없으면 null).
+ * P57-a(main 병합): main 아틀라스는 4방향 시설을 `facility/<id>:d0~d3` 로만 들고 있다(옛 `facility/<id>` 키 없음) —
+ * facing 0 = `:d0`, facing 1 = `:d1`(진짜 옆면, 뒤집기 아님). 2방향 시설은 옛 키 + facing 1 뒤집기 그대로.
+ * `json` 을 주면 있는 것을 고르고, 안 주면(검사) 첫 후보를 낸다.
+ */
+export function kairoFrameFor(id: string, json?: KairoAtlasJson): { frame: string; flip: boolean } | null {
   const fac = id.match(/^fac\/([a-z0-9_]+)\/([01])$/);
-  if (fac) return { frame: `facility/${fac[1]}`, flip: fac[2] === '1' };
+  if (fac) {
+    const dir = `facility/${fac[1]}:d${fac[2]}`;
+    if (!json || json[dir]) return { frame: dir, flip: false };
+    return { frame: `facility/${fac[1]}`, flip: fac[2] === '1' };
+  }
   const tile = id.match(/^tile\/([a-z]+)(?::(\d+))?$/);
   if (tile) {
     const g = TILE_TO_GROUND[tile[1] as string];
@@ -33,7 +42,7 @@ export class KairoAtlasProvider implements AssetProvider {
   ids(): readonly string[] { return []; } // 이름은 ppaji 쪽이 정한다 — 이 공급자는 「있으면 준다」
 
   spec(id: string): SpriteSpec | null {
-    const m = kairoFrameFor(id);
+    const m = kairoFrameFor(id, this.json);
     const f = m ? this.json[m.frame] : undefined;
     return f ? { id, w: f.w, h: f.h, ax: Math.round(f.w / 2), ay: f.h, source: 'art' } : null;
   }
@@ -41,7 +50,7 @@ export class KairoAtlasProvider implements AssetProvider {
   canvas(id: string): HTMLCanvasElement | null {
     const hit = this.cache.get(id);
     if (hit !== undefined) return hit;
-    const m = kairoFrameFor(id);
+    const m = kairoFrameFor(id, this.json);
     const f = m ? this.json[m.frame] : undefined;
     let out: HTMLCanvasElement | null = null;
     if (m && f) {
@@ -70,7 +79,7 @@ export function loadKairoAtlas(base = './assets/kairo-atlas'): Promise<KairoAtla
       const img = new Image();
       img.onload = () => resolve(new KairoAtlasProvider(img, json));
       img.onerror = () => resolve(null);
-      img.src = `${base}.png?v=14`;
+      img.src = `${base}.png?v=15`;
     }))
     .catch(() => null);
 }
