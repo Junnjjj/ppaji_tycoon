@@ -18,848 +18,2088 @@
   "h": 200
  },
  "deco/banner": {
-  "x": 1627,
-  "y": 412,
+  "x": 229,
+  "y": 1131,
   "w": 32,
   "h": 36
  },
  "deco/first_aid": {
-  "x": 1957,
-  "y": 412,
+  "x": 493,
+  "y": 1131,
   "w": 32,
   "h": 28
  },
  "deco/guard_stand": {
-  "x": 1660,
-  "y": 412,
+  "x": 262,
+  "y": 1131,
   "w": 32,
   "h": 36
  },
  "deco/night_light": {
-  "x": 1693,
-  "y": 412,
+  "x": 295,
+  "y": 1131,
   "w": 32,
   "h": 36
  },
  "deco/planter_row": {
-  "x": 364,
-  "y": 465,
+  "x": 922,
+  "y": 1131,
   "w": 32,
   "h": 24
  },
  "deco/ring_rack": {
-  "x": 1924,
-  "y": 412,
+  "x": 460,
+  "y": 1131,
   "w": 32,
   "h": 32
  },
  "deco/safety_sign": {
-  "x": 1726,
-  "y": 412,
+  "x": 328,
+  "y": 1131,
   "w": 32,
   "h": 36
  },
  "deco/sculpture": {
-  "x": 1759,
-  "y": 412,
+  "x": 361,
+  "y": 1131,
   "w": 32,
   "h": 36
  },
  "facility/airbounce": {
-  "x": 500,
-  "y": 202,
+  "x": 130,
+  "y": 480,
   "w": 176,
   "h": 112
  },
- "facility/arcade": {
-  "x": 1792,
-  "y": 412,
-  "w": 32,
-  "h": 36
+ "facility/arcade:d0": {
+  "x": 1346,
+  "y": 873,
+  "w": 64,
+  "h": 72,
+  "density": 2
+ },
+ "facility/arcade:d1": {
+  "x": 1411,
+  "y": 873,
+  "w": 64,
+  "h": 72,
+  "density": 2
+ },
+ "facility/arcade:d2": {
+  "x": 1476,
+  "y": 873,
+  "w": 64,
+  "h": 72,
+  "density": 2
+ },
+ "facility/arcade:d3": {
+  "x": 1541,
+  "y": 873,
+  "w": 64,
+  "h": 72,
+  "density": 2
  },
  "facility/bbq_zone": {
-  "x": 583,
-  "y": 343,
+  "x": 1501,
+  "y": 948,
   "w": 96,
   "h": 64
  },
- "facility/bungalow": {
-  "x": 1161,
-  "y": 202,
-  "w": 96,
-  "h": 80
+ "facility/bungalow:d0": {
+  "x": 823,
+  "y": 480,
+  "w": 104,
+  "h": 108
+ },
+ "facility/bungalow:d1": {
+  "x": 928,
+  "y": 480,
+  "w": 104,
+  "h": 108
+ },
+ "facility/bungalow:d2": {
+  "x": 1033,
+  "y": 480,
+  "w": 104,
+  "h": 108
+ },
+ "facility/bungalow:d3": {
+  "x": 1138,
+  "y": 480,
+  "w": 104,
+  "h": 108
  },
  "facility/bungeoppang": {
-  "x": 1203,
-  "y": 412,
+  "x": 1,
+  "y": 1131,
   "w": 48,
   "h": 44
  },
- "facility/cafe": {
-  "x": 1052,
-  "y": 343,
-  "w": 80,
-  "h": 60
+ "facility/cafe:d0": {
+  "x": 1116,
+  "y": 706,
+  "w": 106,
+  "h": 78
+ },
+ "facility/cafe:d1": {
+  "x": 1223,
+  "y": 706,
+  "w": 106,
+  "h": 78
+ },
+ "facility/cafe:d2": {
+  "x": 1330,
+  "y": 706,
+  "w": 106,
+  "h": 78
+ },
+ "facility/cafe:d3": {
+  "x": 1437,
+  "y": 706,
+  "w": 106,
+  "h": 78
  },
  "facility/camp_site": {
-  "x": 1,
-  "y": 343,
+  "x": 853,
+  "y": 948,
   "w": 96,
   "h": 68
  },
  "facility/caravan": {
-  "x": 1371,
-  "y": 202,
+  "x": 292,
+  "y": 795,
   "w": 96,
   "h": 76
  },
- "facility/changing_row": {
-  "x": 1813,
-  "y": 343,
-  "w": 64,
-  "h": 52
+ "facility/changing_row:d0": {
+  "x": 1605,
+  "y": 355,
+  "w": 128,
+  "h": 116,
+  "density": 2
  },
- "facility/chicken": {
-  "x": 1878,
-  "y": 343,
-  "w": 64,
-  "h": 52
+ "facility/changing_row:d1": {
+  "x": 1734,
+  "y": 355,
+  "w": 128,
+  "h": 116,
+  "density": 2
+ },
+ "facility/changing_row:d2": {
+  "x": 1863,
+  "y": 355,
+  "w": 128,
+  "h": 116,
+  "density": 2
+ },
+ "facility/changing_row:d3": {
+  "x": 1,
+  "y": 480,
+  "w": 128,
+  "h": 116,
+  "density": 2
+ },
+ "facility/chicken:d0": {
+  "x": 251,
+  "y": 597,
+  "w": 128,
+  "h": 104,
+  "density": 2
+ },
+ "facility/chicken:d1": {
+  "x": 380,
+  "y": 597,
+  "w": 128,
+  "h": 104,
+  "density": 2
+ },
+ "facility/chicken:d2": {
+  "x": 509,
+  "y": 597,
+  "w": 128,
+  "h": 104,
+  "density": 2
+ },
+ "facility/chicken:d3": {
+  "x": 638,
+  "y": 597,
+  "w": 128,
+  "h": 104,
+  "density": 2
  },
  "facility/diving": {
-  "x": 389,
-  "y": 343,
+  "x": 1047,
+  "y": 948,
   "w": 64,
   "h": 68
  },
  "facility/dj_booth": {
-  "x": 1399,
-  "y": 412,
+  "x": 50,
+  "y": 1131,
   "w": 48,
   "h": 42
  },
  "facility/dock": {
-  "x": 1990,
-  "y": 412,
+  "x": 526,
+  "y": 1131,
   "w": 32,
   "h": 28
  },
+ "facility/env_bench:d0": {
+  "x": 592,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_bench:d1": {
+  "x": 641,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_bench:d2": {
+  "x": 690,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_bench:d3": {
+  "x": 739,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_bus:d0": {
+  "x": 1801,
+  "y": 597,
+  "w": 112,
+  "h": 88
+ },
+ "facility/env_bus:d1": {
+  "x": 1914,
+  "y": 597,
+  "w": 112,
+  "h": 88
+ },
+ "facility/env_bus:d2": {
+  "x": 1,
+  "y": 706,
+  "w": 112,
+  "h": 88
+ },
+ "facility/env_bus:d3": {
+  "x": 114,
+  "y": 706,
+  "w": 112,
+  "h": 88
+ },
+ "facility/env_car:d0": {
+  "x": 788,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_car:d1": {
+  "x": 837,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_car:d2": {
+  "x": 886,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_car:d3": {
+  "x": 935,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_convenience_store:d0": {
+  "x": 1820,
+  "y": 706,
+  "w": 88,
+  "h": 77
+ },
+ "facility/env_convenience_store:d1": {
+  "x": 1909,
+  "y": 706,
+  "w": 88,
+  "h": 77
+ },
+ "facility/env_convenience_store:d2": {
+  "x": 1,
+  "y": 795,
+  "w": 88,
+  "h": 77
+ },
+ "facility/env_convenience_store:d3": {
+  "x": 90,
+  "y": 795,
+  "w": 88,
+  "h": 77
+ },
+ "facility/env_deciduous:d0": {
+  "x": 1394,
+  "y": 795,
+  "w": 64,
+  "h": 75
+ },
+ "facility/env_deciduous:d1": {
+  "x": 1459,
+  "y": 795,
+  "w": 64,
+  "h": 75
+ },
+ "facility/env_deciduous:d2": {
+  "x": 1524,
+  "y": 795,
+  "w": 64,
+  "h": 75
+ },
+ "facility/env_deciduous:d3": {
+  "x": 1589,
+  "y": 795,
+  "w": 64,
+  "h": 75
+ },
+ "facility/env_flower_pot:d0": {
+  "x": 906,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_flower_pot:d1": {
+  "x": 939,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_flower_pot:d2": {
+  "x": 972,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_flower_pot:d3": {
+  "x": 1005,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_hedge:d0": {
+  "x": 1038,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_hedge:d1": {
+  "x": 1071,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_hedge:d2": {
+  "x": 1104,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_hedge:d3": {
+  "x": 1137,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_hedge_corner:d0": {
+  "x": 1170,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_hedge_corner:d1": {
+  "x": 1203,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_hedge_corner:d2": {
+  "x": 1236,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_hedge_corner:d3": {
+  "x": 1269,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_hedge_end:d0": {
+  "x": 1302,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_hedge_end:d1": {
+  "x": 1335,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_hedge_end:d2": {
+  "x": 1368,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_hedge_end:d3": {
+  "x": 1401,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_long_flowerbed:d0": {
+  "x": 984,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_long_flowerbed:d1": {
+  "x": 1033,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_long_flowerbed:d2": {
+  "x": 1082,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_long_flowerbed:d3": {
+  "x": 1131,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_maintenance_shed:d0": {
+  "x": 486,
+  "y": 795,
+  "w": 80,
+  "h": 76
+ },
+ "facility/env_maintenance_shed:d1": {
+  "x": 567,
+  "y": 795,
+  "w": 80,
+  "h": 76
+ },
+ "facility/env_maintenance_shed:d2": {
+  "x": 648,
+  "y": 795,
+  "w": 80,
+  "h": 76
+ },
+ "facility/env_maintenance_shed:d3": {
+  "x": 729,
+  "y": 795,
+  "w": 80,
+  "h": 76
+ },
+ "facility/env_pension:d0": {
+  "x": 1337,
+  "y": 202,
+  "w": 112,
+  "h": 126
+ },
+ "facility/env_pension:d1": {
+  "x": 1450,
+  "y": 202,
+  "w": 112,
+  "h": 126
+ },
+ "facility/env_pension:d2": {
+  "x": 1563,
+  "y": 202,
+  "w": 112,
+  "h": 126
+ },
+ "facility/env_pension:d3": {
+  "x": 1676,
+  "y": 202,
+  "w": 112,
+  "h": 126
+ },
+ "facility/env_pine:d0": {
+  "x": 812,
+  "y": 873,
+  "w": 64,
+  "h": 73
+ },
+ "facility/env_pine:d1": {
+  "x": 877,
+  "y": 873,
+  "w": 64,
+  "h": 73
+ },
+ "facility/env_pine:d2": {
+  "x": 942,
+  "y": 873,
+  "w": 64,
+  "h": 73
+ },
+ "facility/env_pine:d3": {
+  "x": 1007,
+  "y": 873,
+  "w": 64,
+  "h": 73
+ },
+ "facility/env_rocks:d0": {
+  "x": 1180,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_rocks:d1": {
+  "x": 1229,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_rocks:d2": {
+  "x": 1278,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_rocks:d3": {
+  "x": 1327,
+  "y": 1021,
+  "w": 48,
+  "h": 56
+ },
+ "facility/env_shrubs:d0": {
+  "x": 1434,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_shrubs:d1": {
+  "x": 1467,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_shrubs:d2": {
+  "x": 1500,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_shrubs:d3": {
+  "x": 1533,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_small_hotel:d0": {
+  "x": 1540,
+  "y": 1,
+  "w": 112,
+  "h": 160
+ },
+ "facility/env_small_hotel:d1": {
+  "x": 1653,
+  "y": 1,
+  "w": 112,
+  "h": 160
+ },
+ "facility/env_small_hotel:d2": {
+  "x": 1766,
+  "y": 1,
+  "w": 112,
+  "h": 160
+ },
+ "facility/env_small_hotel:d3": {
+  "x": 1879,
+  "y": 1,
+  "w": 112,
+  "h": 160
+ },
+ "facility/env_stone_wall:d0": {
+  "x": 1566,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_stone_wall:d1": {
+  "x": 1599,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_stone_wall:d2": {
+  "x": 1632,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_stone_wall:d3": {
+  "x": 1665,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_stone_wall_corner:d0": {
+  "x": 1698,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_stone_wall_corner:d1": {
+  "x": 1731,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_stone_wall_corner:d2": {
+  "x": 1764,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_stone_wall_corner:d3": {
+  "x": 1797,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_stone_wall_end:d0": {
+  "x": 1830,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_stone_wall_end:d1": {
+  "x": 1863,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_stone_wall_end:d2": {
+  "x": 1896,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_stone_wall_end:d3": {
+  "x": 1929,
+  "y": 1082,
+  "w": 32,
+  "h": 48
+ },
+ "facility/env_street_lamp:d0": {
+  "x": 1636,
+  "y": 1021,
+  "w": 32,
+  "h": 52
+ },
+ "facility/env_street_lamp:d1": {
+  "x": 1669,
+  "y": 1021,
+  "w": 32,
+  "h": 52
+ },
+ "facility/env_street_lamp:d2": {
+  "x": 1702,
+  "y": 1021,
+  "w": 32,
+  "h": 52
+ },
+ "facility/env_street_lamp:d3": {
+  "x": 1735,
+  "y": 1021,
+  "w": 32,
+  "h": 52
+ },
+ "facility/env_village_house:d0": {
+  "x": 340,
+  "y": 706,
+  "w": 96,
+  "h": 84
+ },
+ "facility/env_village_house:d1": {
+  "x": 437,
+  "y": 706,
+  "w": 96,
+  "h": 84
+ },
+ "facility/env_village_house:d2": {
+  "x": 534,
+  "y": 706,
+  "w": 96,
+  "h": 84
+ },
+ "facility/env_village_house:d3": {
+  "x": 631,
+  "y": 706,
+  "w": 96,
+  "h": 84
+ },
+ "facility/env_village_shop:d0": {
+  "x": 1185,
+  "y": 355,
+  "w": 104,
+  "h": 118
+ },
+ "facility/env_village_shop:d1": {
+  "x": 1290,
+  "y": 355,
+  "w": 104,
+  "h": 118
+ },
+ "facility/env_village_shop:d2": {
+  "x": 1395,
+  "y": 355,
+  "w": 104,
+  "h": 118
+ },
+ "facility/env_village_shop:d3": {
+  "x": 1500,
+  "y": 355,
+  "w": 104,
+  "h": 118
+ },
+ "facility/env_water_rail:d0": {
+  "x": 66,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_water_rail:d1": {
+  "x": 101,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_water_rail:d2": {
+  "x": 136,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_water_rail:d3": {
+  "x": 171,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_water_rail_corner:d0": {
+  "x": 206,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_water_rail_corner:d1": {
+  "x": 241,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_water_rail_corner:d2": {
+  "x": 276,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_water_rail_corner:d3": {
+  "x": 311,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_water_rail_end:d0": {
+  "x": 346,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_water_rail_end:d1": {
+  "x": 381,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_water_rail_end:d2": {
+  "x": 416,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_water_rail_end:d3": {
+  "x": 451,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_willow:d0": {
+  "x": 1946,
+  "y": 795,
+  "w": 64,
+  "h": 74
+ },
+ "facility/env_willow:d1": {
+  "x": 1,
+  "y": 873,
+  "w": 64,
+  "h": 74
+ },
+ "facility/env_willow:d2": {
+  "x": 66,
+  "y": 873,
+  "w": 64,
+  "h": 74
+ },
+ "facility/env_willow:d3": {
+  "x": 131,
+  "y": 873,
+  "w": 64,
+  "h": 74
+ },
+ "facility/env_wood_fence:d0": {
+  "x": 486,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_wood_fence:d1": {
+  "x": 521,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_wood_fence:d2": {
+  "x": 556,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_wood_fence:d3": {
+  "x": 591,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_wood_fence_corner:d0": {
+  "x": 626,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_wood_fence_corner:d1": {
+  "x": 661,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_wood_fence_corner:d2": {
+  "x": 696,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_wood_fence_corner:d3": {
+  "x": 731,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_wood_fence_end:d0": {
+  "x": 766,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_wood_fence_end:d1": {
+  "x": 801,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_wood_fence_end:d2": {
+  "x": 836,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
+ "facility/env_wood_fence_end:d3": {
+  "x": 871,
+  "y": 1082,
+  "w": 34,
+  "h": 48
+ },
  "facility/firepit_row": {
-  "x": 1448,
-  "y": 412,
+  "x": 99,
+  "y": 1131,
   "w": 64,
   "h": 40
  },
  "facility/fishing": {
-  "x": 1489,
-  "y": 343,
+  "x": 333,
+  "y": 1021,
   "w": 96,
   "h": 56
  },
  "facility/float_deck": {
-  "x": 805,
-  "y": 465,
+  "x": 1363,
+  "y": 1131,
   "w": 32,
   "h": 22
  },
  "facility/flowerbed": {
-  "x": 397,
-  "y": 465,
+  "x": 955,
+  "y": 1131,
   "w": 32,
   "h": 24
  },
  "facility/footbath": {
-  "x": 1513,
-  "y": 412,
+  "x": 164,
+  "y": 1131,
   "w": 64,
   "h": 40
  },
  "facility/footvolley": {
-  "x": 939,
-  "y": 343,
+  "x": 1776,
+  "y": 948,
   "w": 112,
   "h": 60
  },
  "facility/fountain": {
-  "x": 1008,
-  "y": 412,
+  "x": 1962,
+  "y": 1082,
   "w": 64,
   "h": 44
  },
  "facility/glamping": {
-  "x": 1048,
-  "y": 202,
+  "x": 227,
+  "y": 706,
   "w": 112,
   "h": 88
  },
  "facility/ice_fishing": {
-  "x": 1710,
-  "y": 202,
+  "x": 1217,
+  "y": 873,
   "w": 128,
   "h": 72
  },
- "facility/icecream": {
-  "x": 1252,
-  "y": 412,
-  "w": 48,
-  "h": 44
- },
- "facility/infirmary": {
-  "x": 1943,
-  "y": 343,
+ "facility/icecream:d0": {
+  "x": 1606,
+  "y": 873,
   "w": 64,
-  "h": 52
+  "h": 72,
+  "density": 2
  },
- "facility/info": {
+ "facility/icecream:d1": {
+  "x": 1671,
+  "y": 873,
+  "w": 64,
+  "h": 72,
+  "density": 2
+ },
+ "facility/icecream:d2": {
+  "x": 1736,
+  "y": 873,
+  "w": 64,
+  "h": 72,
+  "density": 2
+ },
+ "facility/icecream:d3": {
+  "x": 1801,
+  "y": 873,
+  "w": 64,
+  "h": 72,
+  "density": 2
+ },
+ "facility/infirmary:d0": {
+  "x": 1544,
+  "y": 706,
+  "w": 68,
+  "h": 78
+ },
+ "facility/infirmary:d1": {
+  "x": 1613,
+  "y": 706,
+  "w": 68,
+  "h": 78
+ },
+ "facility/infirmary:d2": {
+  "x": 1682,
+  "y": 706,
+  "w": 68,
+  "h": 78
+ },
+ "facility/infirmary:d3": {
+  "x": 1751,
+  "y": 706,
+  "w": 68,
+  "h": 78
+ },
+ "facility/info:d0": {
+  "x": 196,
+  "y": 948,
+  "w": 66,
+  "h": 71
+ },
+ "facility/info:d1": {
+  "x": 263,
+  "y": 948,
+  "w": 66,
+  "h": 71
+ },
+ "facility/info:d2": {
+  "x": 330,
+  "y": 948,
+  "w": 66,
+  "h": 71
+ },
+ "facility/info:d3": {
+  "x": 397,
+  "y": 948,
+  "w": 66,
+  "h": 71
+ },
+ "facility/jjimjilbang:d0": {
+  "x": 1789,
+  "y": 202,
+  "w": 136,
+  "h": 124
+ },
+ "facility/jjimjilbang:d1": {
   "x": 1,
-  "y": 412,
-  "w": 64,
-  "h": 52
+  "y": 355,
+  "w": 136,
+  "h": 124
  },
- "facility/jjimjilbang": {
-  "x": 98,
-  "y": 343,
-  "w": 96,
-  "h": 68
+ "facility/jjimjilbang:d2": {
+  "x": 138,
+  "y": 355,
+  "w": 136,
+  "h": 124
+ },
+ "facility/jjimjilbang:d3": {
+  "x": 275,
+  "y": 355,
+  "w": 136,
+  "h": 124
  },
  "facility/jump_cushion": {
-  "x": 1258,
-  "y": 202,
+  "x": 179,
+  "y": 795,
   "w": 112,
   "h": 76
  },
  "facility/junglegym_w": {
-  "x": 822,
-  "y": 202,
+  "x": 767,
+  "y": 597,
   "w": 128,
   "h": 96
  },
- "facility/karaoke": {
-  "x": 66,
-  "y": 412,
-  "w": 64,
-  "h": 52
+ "facility/karaoke:d0": {
+  "x": 1110,
+  "y": 795,
+  "w": 70,
+  "h": 75
+ },
+ "facility/karaoke:d1": {
+  "x": 1181,
+  "y": 795,
+  "w": 70,
+  "h": 75
+ },
+ "facility/karaoke:d2": {
+  "x": 1252,
+  "y": 795,
+  "w": 70,
+  "h": 75
+ },
+ "facility/karaoke:d3": {
+  "x": 1323,
+  "y": 795,
+  "w": 70,
+  "h": 75
  },
  "facility/lifering": {
-  "x": 1,
-  "y": 465,
+  "x": 559,
+  "y": 1131,
   "w": 32,
   "h": 28
  },
- "facility/locker_row": {
-  "x": 1133,
-  "y": 343,
-  "w": 80,
-  "h": 60
+ "facility/locker_row:d0": {
+  "x": 178,
+  "y": 202,
+  "w": 160,
+  "h": 144,
+  "density": 2
+ },
+ "facility/locker_row:d1": {
+  "x": 339,
+  "y": 202,
+  "w": 160,
+  "h": 144,
+  "density": 2
+ },
+ "facility/locker_row:d2": {
+  "x": 500,
+  "y": 202,
+  "w": 160,
+  "h": 144,
+  "density": 2
+ },
+ "facility/locker_row:d3": {
+  "x": 661,
+  "y": 202,
+  "w": 160,
+  "h": 144,
+  "density": 2
  },
  "facility/lookout": {
-  "x": 1839,
-  "y": 202,
+  "x": 1866,
+  "y": 873,
   "w": 64,
   "h": 72
  },
  "facility/maple_walk": {
-  "x": 1214,
-  "y": 343,
+  "x": 1889,
+  "y": 948,
   "w": 80,
   "h": 60
  },
  "facility/massage_row": {
-  "x": 878,
-  "y": 412,
+  "x": 1930,
+  "y": 1021,
   "w": 64,
   "h": 48
  },
  "facility/minigolf": {
-  "x": 1586,
-  "y": 343,
+  "x": 430,
+  "y": 1021,
   "w": 96,
   "h": 56
  },
- "facility/mongol_tent": {
-  "x": 1683,
-  "y": 343,
-  "w": 64,
-  "h": 56
+ "facility/mongol_tent:d0": {
+  "x": 1243,
+  "y": 480,
+  "w": 104,
+  "h": 108
  },
- "facility/nursing": {
-  "x": 1301,
-  "y": 412,
-  "w": 48,
-  "h": 44
+ "facility/mongol_tent:d1": {
+  "x": 1348,
+  "y": 480,
+  "w": 104,
+  "h": 108
  },
- "facility/office": {
-  "x": 131,
-  "y": 412,
-  "w": 64,
-  "h": 52
+ "facility/mongol_tent:d2": {
+  "x": 1453,
+  "y": 480,
+  "w": 104,
+  "h": 108
+ },
+ "facility/mongol_tent:d3": {
+  "x": 1558,
+  "y": 480,
+  "w": 104,
+  "h": 108
+ },
+ "facility/nursing:d0": {
+  "x": 1970,
+  "y": 948,
+  "w": 72,
+  "h": 60
+ },
+ "facility/nursing:d1": {
+  "x": 1,
+  "y": 1021,
+  "w": 72,
+  "h": 60
+ },
+ "facility/nursing:d2": {
+  "x": 74,
+  "y": 1021,
+  "w": 72,
+  "h": 60
+ },
+ "facility/nursing:d3": {
+  "x": 147,
+  "y": 1021,
+  "w": 72,
+  "h": 60
+ },
+ "facility/office:d0": {
+  "x": 536,
+  "y": 873,
+  "w": 68,
+  "h": 73
+ },
+ "facility/office:d1": {
+  "x": 605,
+  "y": 873,
+  "w": 68,
+  "h": 73
+ },
+ "facility/office:d2": {
+  "x": 674,
+  "y": 873,
+  "w": 68,
+  "h": 73
+ },
+ "facility/office:d3": {
+  "x": 743,
+  "y": 873,
+  "w": 68,
+  "h": 73
  },
  "facility/parasol": {
-  "x": 1825,
-  "y": 412,
+  "x": 394,
+  "y": 1131,
   "w": 32,
   "h": 36
  },
  "facility/parking": {
-  "x": 1904,
-  "y": 202,
+  "x": 724,
+  "y": 948,
   "w": 128,
   "h": 68
  },
  "facility/pavilion": {
-  "x": 1468,
-  "y": 202,
+  "x": 389,
+  "y": 795,
   "w": 96,
   "h": 76
  },
  "facility/pension": {
-  "x": 226,
+  "x": 1192,
   "y": 202,
   "w": 144,
   "h": 136
  },
  "facility/pension_duplex": {
-  "x": 1540,
-  "y": 1,
+  "x": 1,
+  "y": 202,
   "w": 176,
   "h": 152
  },
  "facility/photozone": {
-  "x": 1748,
-  "y": 343,
+  "x": 527,
+  "y": 1021,
   "w": 64,
   "h": 56
  },
- "facility/pingpong": {
-  "x": 1073,
-  "y": 412,
-  "w": 64,
-  "h": 44
+ "facility/pingpong:d0": {
+  "x": 1285,
+  "y": 597,
+  "w": 128,
+  "h": 88,
+  "density": 2
+ },
+ "facility/pingpong:d1": {
+  "x": 1414,
+  "y": 597,
+  "w": 128,
+  "h": 88,
+  "density": 2
+ },
+ "facility/pingpong:d2": {
+  "x": 1543,
+  "y": 597,
+  "w": 128,
+  "h": 88,
+  "density": 2
+ },
+ "facility/pingpong:d3": {
+  "x": 1672,
+  "y": 597,
+  "w": 128,
+  "h": 88,
+  "density": 2
  },
  "facility/playground": {
-  "x": 195,
-  "y": 343,
+  "x": 950,
+  "y": 948,
   "w": 96,
   "h": 68
  },
  "facility/pool_kids": {
-  "x": 1376,
-  "y": 343,
+  "x": 220,
+  "y": 1021,
   "w": 112,
   "h": 56
  },
  "facility/pool_lazy": {
-  "x": 1565,
-  "y": 202,
+  "x": 1072,
+  "y": 873,
   "w": 144,
   "h": 72
  },
  "facility/pool_warm": {
-  "x": 454,
-  "y": 343,
+  "x": 1372,
+  "y": 948,
   "w": 128,
   "h": 64
  },
  "facility/pyeongsang_row": {
-  "x": 716,
-  "y": 412,
+  "x": 1768,
+  "y": 1021,
   "w": 80,
   "h": 48
  },
  "facility/rent_duck": {
-  "x": 196,
-  "y": 412,
+  "x": 1376,
+  "y": 1021,
   "w": 64,
   "h": 52
  },
  "facility/rent_kayak": {
-  "x": 261,
-  "y": 412,
+  "x": 1441,
+  "y": 1021,
   "w": 64,
   "h": 52
  },
  "facility/rent_pedal": {
-  "x": 326,
-  "y": 412,
+  "x": 1506,
+  "y": 1021,
   "w": 64,
   "h": 52
  },
  "facility/rent_sup": {
-  "x": 391,
-  "y": 412,
+  "x": 1571,
+  "y": 1021,
   "w": 64,
   "h": 52
  },
- "facility/sauna": {
-  "x": 292,
-  "y": 343,
+ "facility/sauna:d0": {
+  "x": 1663,
+  "y": 480,
+  "w": 104,
+  "h": 108
+ },
+ "facility/sauna:d1": {
+  "x": 1768,
+  "y": 480,
+  "w": 104,
+  "h": 108
+ },
+ "facility/sauna:d2": {
+  "x": 1873,
+  "y": 480,
+  "w": 104,
+  "h": 108
+ },
+ "facility/sauna:d3": {
+  "x": 1,
+  "y": 597,
+  "w": 104,
+  "h": 108
+ },
+ "facility/shade_net:d0": {
+  "x": 993,
+  "y": 597,
+  "w": 72,
+  "h": 92
+ },
+ "facility/shade_net:d1": {
+  "x": 1066,
+  "y": 597,
+  "w": 72,
+  "h": 92
+ },
+ "facility/shade_net:d2": {
+  "x": 1139,
+  "y": 597,
+  "w": 72,
+  "h": 92
+ },
+ "facility/shade_net:d3": {
+  "x": 1212,
+  "y": 597,
+  "w": 72,
+  "h": 92
+ },
+ "facility/shop:d0": {
+  "x": 810,
+  "y": 795,
+  "w": 74,
+  "h": 76
+ },
+ "facility/shop:d1": {
+  "x": 885,
+  "y": 795,
+  "w": 74,
+  "h": 76
+ },
+ "facility/shop:d2": {
+  "x": 960,
+  "y": 795,
+  "w": 74,
+  "h": 76
+ },
+ "facility/shop:d3": {
+  "x": 1035,
+  "y": 795,
+  "w": 74,
+  "h": 76
+ },
+ "facility/shower_row:d0": {
+  "x": 541,
+  "y": 355,
+  "w": 160,
+  "h": 120,
+  "density": 2
+ },
+ "facility/shower_row:d1": {
+  "x": 702,
+  "y": 355,
+  "w": 160,
+  "h": 120,
+  "density": 2
+ },
+ "facility/shower_row:d2": {
+  "x": 863,
+  "y": 355,
+  "w": 160,
+  "h": 120,
+  "density": 2
+ },
+ "facility/shower_row:d3": {
+  "x": 1024,
+  "y": 355,
+  "w": 160,
+  "h": 120,
+  "density": 2
+ },
+ "facility/sikhye:d0": {
+  "x": 728,
+  "y": 706,
   "w": 96,
-  "h": 68
+  "h": 84,
+  "density": 2
  },
- "facility/shade_net": {
-  "x": 1350,
-  "y": 412,
-  "w": 48,
-  "h": 44
+ "facility/sikhye:d1": {
+  "x": 825,
+  "y": 706,
+  "w": 96,
+  "h": 84,
+  "density": 2
  },
- "facility/shop": {
-  "x": 456,
-  "y": 412,
-  "w": 64,
-  "h": 52
+ "facility/sikhye:d2": {
+  "x": 922,
+  "y": 706,
+  "w": 96,
+  "h": 84,
+  "density": 2
  },
- "facility/shower_row": {
-  "x": 1295,
-  "y": 343,
-  "w": 80,
-  "h": 60
- },
- "facility/sikhye": {
-  "x": 1578,
-  "y": 412,
-  "w": 48,
-  "h": 40
+ "facility/sikhye:d3": {
+  "x": 1019,
+  "y": 706,
+  "w": 96,
+  "h": 84,
+  "density": 2
  },
  "facility/slide_large": {
-  "x": 1717,
-  "y": 1,
+  "x": 822,
+  "y": 202,
   "w": 144,
   "h": 144
  },
  "facility/slide_small": {
-  "x": 951,
-  "y": 202,
+  "x": 896,
+  "y": 597,
   "w": 96,
   "h": 96
  },
  "facility/slide_tube": {
-  "x": 371,
-  "y": 202,
+  "x": 412,
+  "y": 355,
   "w": 128,
   "h": 124
  },
- "facility/snackbar": {
-  "x": 521,
-  "y": 412,
-  "w": 64,
-  "h": 52
+ "facility/snackbar:d0": {
+  "x": 1654,
+  "y": 795,
+  "w": 72,
+  "h": 74
+ },
+ "facility/snackbar:d1": {
+  "x": 1727,
+  "y": 795,
+  "w": 72,
+  "h": 74
+ },
+ "facility/snackbar:d2": {
+  "x": 1800,
+  "y": 795,
+  "w": 72,
+  "h": 74
+ },
+ "facility/snackbar:d3": {
+  "x": 1873,
+  "y": 795,
+  "w": 72,
+  "h": 74
  },
  "facility/snow_sled": {
-  "x": 677,
-  "y": 202,
+  "x": 106,
+  "y": 597,
   "w": 144,
   "h": 104
  },
  "facility/stage_river": {
-  "x": 858,
-  "y": 343,
+  "x": 1695,
+  "y": 948,
   "w": 80,
   "h": 62
  },
- "facility/storage": {
-  "x": 586,
-  "y": 412,
+ "facility/storage:d0": {
+  "x": 464,
+  "y": 948,
   "w": 64,
-  "h": 52
+  "h": 71
+ },
+ "facility/storage:d1": {
+  "x": 529,
+  "y": 948,
+  "w": 64,
+  "h": 71
+ },
+ "facility/storage:d2": {
+  "x": 594,
+  "y": 948,
+  "w": 64,
+  "h": 71
+ },
+ "facility/storage:d3": {
+  "x": 659,
+  "y": 948,
+  "w": 64,
+  "h": 71
  },
  "facility/sunbed_row": {
-  "x": 797,
-  "y": 412,
+  "x": 1849,
+  "y": 1021,
   "w": 80,
   "h": 48
  },
- "facility/ticket": {
-  "x": 777,
-  "y": 343,
-  "w": 80,
-  "h": 64
+ "facility/ticket:d0": {
+  "x": 196,
+  "y": 873,
+  "w": 84,
+  "h": 73
  },
- "facility/toilet": {
-  "x": 651,
-  "y": 412,
+ "facility/ticket:d1": {
+  "x": 281,
+  "y": 873,
+  "w": 84,
+  "h": 73
+ },
+ "facility/ticket:d2": {
+  "x": 366,
+  "y": 873,
+  "w": 84,
+  "h": 73
+ },
+ "facility/ticket:d3": {
+  "x": 451,
+  "y": 873,
+  "w": 84,
+  "h": 73
+ },
+ "facility/toilet:d0": {
+  "x": 1112,
+  "y": 948,
   "w": 64,
-  "h": 52
+  "h": 68
+ },
+ "facility/toilet:d1": {
+  "x": 1177,
+  "y": 948,
+  "w": 64,
+  "h": 68
+ },
+ "facility/toilet:d2": {
+  "x": 1242,
+  "y": 948,
+  "w": 64,
+  "h": 68
+ },
+ "facility/toilet:d3": {
+  "x": 1307,
+  "y": 948,
+  "w": 64,
+  "h": 68
  },
  "facility/trampoline_w": {
-  "x": 680,
-  "y": 343,
+  "x": 1598,
+  "y": 948,
   "w": 96,
   "h": 64
  },
  "facility/turtle_island": {
-  "x": 1,
+  "x": 967,
   "y": 202,
   "w": 224,
   "h": 140
  },
- "facility/vending_in": {
-  "x": 1858,
-  "y": 412,
-  "w": 32,
-  "h": 36
+ "facility/vending_in:d0": {
+  "x": 1931,
+  "y": 873,
+  "w": 64,
+  "h": 72,
+  "density": 2
+ },
+ "facility/vending_in:d1": {
+  "x": 1,
+  "y": 948,
+  "w": 64,
+  "h": 72,
+  "density": 2
+ },
+ "facility/vending_in:d2": {
+  "x": 66,
+  "y": 948,
+  "w": 64,
+  "h": 72,
+  "density": 2
+ },
+ "facility/vending_in:d3": {
+  "x": 131,
+  "y": 948,
+  "w": 64,
+  "h": 72,
+  "density": 2
  },
  "facility/vending_out": {
-  "x": 1891,
-  "y": 412,
+  "x": 427,
+  "y": 1131,
   "w": 32,
   "h": 36
  },
- "facility/washbasin_row": {
-  "x": 1138,
-  "y": 412,
-  "w": 64,
-  "h": 44
+ "facility/washbasin_row:d0": {
+  "x": 307,
+  "y": 480,
+  "w": 128,
+  "h": 112,
+  "density": 2
+ },
+ "facility/washbasin_row:d1": {
+  "x": 436,
+  "y": 480,
+  "w": 128,
+  "h": 112,
+  "density": 2
+ },
+ "facility/washbasin_row:d2": {
+  "x": 565,
+  "y": 480,
+  "w": 128,
+  "h": 112,
+  "density": 2
+ },
+ "facility/washbasin_row:d3": {
+  "x": 694,
+  "y": 480,
+  "w": 128,
+  "h": 112,
+  "density": 2
  },
  "facility/waterwalk": {
-  "x": 943,
-  "y": 412,
+  "x": 1,
+  "y": 1082,
   "w": 64,
   "h": 48
  },
  "ground/bridge_x": {
-  "x": 34,
-  "y": 465,
+  "x": 592,
+  "y": 1131,
   "w": 32,
   "h": 28
  },
  "ground/bridge_z": {
-  "x": 67,
-  "y": 465,
+  "x": 625,
+  "y": 1131,
   "w": 32,
   "h": 28
  },
  "ground/floor_indoor:a0": {
-  "x": 838,
-  "y": 465,
+  "x": 1396,
+  "y": 1131,
   "w": 32,
   "h": 16
  },
  "ground/floor_indoor:a1": {
-  "x": 871,
-  "y": 465,
+  "x": 1429,
+  "y": 1131,
   "w": 32,
   "h": 16
  },
  "ground/floor_indoor:a2": {
-  "x": 904,
-  "y": 465,
+  "x": 1462,
+  "y": 1131,
   "w": 32,
   "h": 16
  },
  "ground/lawn:a0": {
-  "x": 937,
-  "y": 465,
+  "x": 1495,
+  "y": 1131,
   "w": 32,
   "h": 16
  },
  "ground/lawn:a1": {
-  "x": 970,
-  "y": 465,
+  "x": 1528,
+  "y": 1131,
   "w": 32,
   "h": 16
  },
  "ground/lawn:a2": {
-  "x": 1003,
-  "y": 465,
+  "x": 1561,
+  "y": 1131,
   "w": 32,
   "h": 16
  },
  "ground/mountain_rock:a0": {
-  "x": 1036,
-  "y": 465,
+  "x": 1594,
+  "y": 1131,
   "w": 32,
   "h": 16
  },
  "ground/mountain_rock:a1": {
-  "x": 1069,
-  "y": 465,
+  "x": 1627,
+  "y": 1131,
   "w": 32,
   "h": 16
  },
  "ground/mountain_rock:a2": {
-  "x": 1102,
-  "y": 465,
+  "x": 1660,
+  "y": 1131,
   "w": 32,
   "h": 16
  },
  "ground/path_deck:a0": {
-  "x": 1135,
-  "y": 465,
+  "x": 1693,
+  "y": 1131,
   "w": 32,
   "h": 16
  },
  "ground/path_deck:a1": {
-  "x": 1168,
-  "y": 465,
+  "x": 1726,
+  "y": 1131,
   "w": 32,
   "h": 16
  },
  "ground/path_deck:a2": {
-  "x": 1201,
-  "y": 465,
+  "x": 1759,
+  "y": 1131,
+  "w": 32,
+  "h": 16
+ },
+ "ground/path_ramp:a0": {
+  "x": 1792,
+  "y": 1131,
+  "w": 32,
+  "h": 16
+ },
+ "ground/path_ramp:a1": {
+  "x": 1825,
+  "y": 1131,
+  "w": 32,
+  "h": 16
+ },
+ "ground/path_ramp:a2": {
+  "x": 1858,
+  "y": 1131,
   "w": 32,
   "h": 16
  },
  "ground/path_sand:a0": {
-  "x": 1234,
-  "y": 465,
+  "x": 1891,
+  "y": 1131,
   "w": 32,
   "h": 16
  },
  "ground/path_sand:a1": {
-  "x": 1267,
-  "y": 465,
+  "x": 1924,
+  "y": 1131,
   "w": 32,
   "h": 16
  },
  "ground/path_sand:a2": {
-  "x": 1300,
-  "y": 465,
+  "x": 1957,
+  "y": 1131,
+  "w": 32,
+  "h": 16
+ },
+ "ground/path_steps:a0": {
+  "x": 1990,
+  "y": 1131,
+  "w": 32,
+  "h": 16
+ },
+ "ground/path_steps:a1": {
+  "x": 1,
+  "y": 1176,
+  "w": 32,
+  "h": 16
+ },
+ "ground/path_steps:a2": {
+  "x": 34,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/path_stone:a0": {
-  "x": 1333,
-  "y": 465,
+  "x": 67,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/path_stone:a1": {
-  "x": 1366,
-  "y": 465,
+  "x": 100,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/path_stone:a2": {
-  "x": 1399,
-  "y": 465,
+  "x": 133,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/pool_water:a0": {
-  "x": 1432,
-  "y": 465,
+  "x": 166,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/pool_water:a1": {
-  "x": 1465,
-  "y": 465,
+  "x": 199,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/pool_water:a2": {
-  "x": 1498,
-  "y": 465,
+  "x": 232,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/road:a0": {
-  "x": 1531,
-  "y": 465,
+  "x": 265,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/road:a1": {
-  "x": 1564,
-  "y": 465,
+  "x": 298,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/road:a2": {
-  "x": 1597,
-  "y": 465,
+  "x": 331,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/sidewalk:a0": {
-  "x": 1630,
-  "y": 465,
+  "x": 364,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/sidewalk:a1": {
-  "x": 1663,
-  "y": 465,
+  "x": 397,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/sidewalk:a2": {
-  "x": 1696,
-  "y": 465,
+  "x": 430,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/verge:a0": {
-  "x": 1729,
-  "y": 465,
+  "x": 463,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/verge:a1": {
-  "x": 1762,
-  "y": 465,
+  "x": 496,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/verge:a2": {
-  "x": 1795,
-  "y": 465,
+  "x": 529,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/water_edge:a0": {
-  "x": 1828,
-  "y": 465,
+  "x": 562,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/water_edge:a1": {
-  "x": 1861,
-  "y": 465,
+  "x": 595,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ground/water_edge:a2": {
-  "x": 1894,
-  "y": 465,
+  "x": 628,
+  "y": 1176,
   "w": 32,
   "h": 16
  },
  "ui/icon-build": {
-  "x": 430,
-  "y": 465,
+  "x": 988,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "ui/icon-coin": {
-  "x": 455,
-  "y": 465,
+  "x": 1013,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "ui/icon-day": {
-  "x": 480,
-  "y": 465,
+  "x": 1038,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "ui/icon-exam": {
-  "x": 505,
-  "y": 465,
+  "x": 1063,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "ui/icon-grade": {
-  "x": 530,
-  "y": 465,
+  "x": 1088,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "ui/icon-menu": {
-  "x": 555,
-  "y": 465,
+  "x": 1113,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "ui/icon-quest": {
-  "x": 580,
-  "y": 465,
+  "x": 1138,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "ui/icon-report": {
-  "x": 605,
-  "y": 465,
+  "x": 1163,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "ui/icon-satisfaction": {
-  "x": 630,
-  "y": 465,
+  "x": 1188,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "ui/icon-visitors": {
-  "x": 655,
-  "y": 465,
+  "x": 1213,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "ui/icon-weather-clear": {
-  "x": 680,
-  "y": 465,
+  "x": 1238,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "ui/icon-weather-cloudy": {
-  "x": 705,
-  "y": 465,
+  "x": 1263,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "ui/icon-weather-cold": {
-  "x": 730,
-  "y": 465,
+  "x": 1288,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "ui/icon-weather-heat": {
-  "x": 755,
-  "y": 465,
+  "x": 1313,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "ui/icon-weather-rain": {
-  "x": 780,
-  "y": 465,
+  "x": 1338,
+  "y": 1131,
   "w": 24,
   "h": 24
  },
  "wall/door:a0": {
-  "x": 100,
-  "y": 465,
+  "x": 658,
+  "y": 1131,
   "w": 32,
   "h": 26
  },
  "wall/door:a1": {
-  "x": 133,
-  "y": 465,
+  "x": 691,
+  "y": 1131,
   "w": 32,
   "h": 26
  },
  "wall/door:a2": {
-  "x": 166,
-  "y": 465,
+  "x": 724,
+  "y": 1131,
   "w": 32,
   "h": 26
  },
  "wall/door:a3": {
-  "x": 199,
-  "y": 465,
+  "x": 757,
+  "y": 1131,
   "w": 32,
   "h": 26
  },
  "wall/edge:a0": {
-  "x": 232,
-  "y": 465,
+  "x": 790,
+  "y": 1131,
   "w": 32,
   "h": 26
  },
  "wall/edge:a1": {
-  "x": 265,
-  "y": 465,
+  "x": 823,
+  "y": 1131,
   "w": 32,
   "h": 26
  },
  "wall/edge:a2": {
-  "x": 298,
-  "y": 465,
+  "x": 856,
+  "y": 1131,
   "w": 32,
   "h": 26
  },
  "wall/edge:a3": {
-  "x": 331,
-  "y": 465,
+  "x": 889,
+  "y": 1131,
   "w": 32,
   "h": 26
  }

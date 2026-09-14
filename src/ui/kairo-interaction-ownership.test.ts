@@ -18,18 +18,14 @@ const harnessSource = readFileSync(new URL('../../tools/verify-kairo.ts', import
 const NON_HOME: readonly InputSurface[] = ['menu', 'build', 'panel', 'course'];
 
 describe('홈 입력층 소유권', () => {
-  it('홈 표면에서만 목표·티커·바·밴드가 입력을 소유한다', () => {
-    expect(homeInputOwnership('home')).toEqual({
-      goals: true, ticker: true, bar: true, band: true,
-    });
+  it('홈 표면에서만 목표·티커·하단 바가 입력을 소유한다', () => {
+    expect(homeInputOwnership('home')).toEqual({ goals: true, ticker: true, bar: true });
     for (const surface of NON_HOME) {
-      expect(homeInputOwnership(surface)).toEqual({
-        goals: false, ticker: false, bar: false, band: false,
-      });
+      expect(homeInputOwnership(surface)).toEqual({ goals: false, ticker: false, bar: false });
     }
   });
 
-  it('소유권은 네 표면을 한 번에 정한다 — 한 곳만 내리는 부분 상태가 없다', () => {
+  it('소유권은 세 표면을 한 번에 정한다 — 한 곳만 내리는 부분 상태가 없다', () => {
     for (const surface of ['home', ...NON_HOME] as const) {
       const own = homeInputOwnership(surface);
       expect(new Set(Object.values(own)).size).toBe(1);
@@ -58,18 +54,9 @@ describe('소유권 배선', () => {
 
   it('시트는 하단 바 위에 얹지 않고 그 자리를 대신한다', () => {
     expect(hudSource).toMatch(/dataset\['homeInput'\]/);
-    /*
-     * ⚠ **셋이 같이 받아야 한다** (P8). 예전에는 `.ksheet` 만 그 자리를 넘겨받아서,
-     * 코스 독과 확정 바는 바·티커가 `display: none` 인데도 `bottom: var(--bottom-stack)`
-     * 에 붙어 있었다 — 화면 아래에 **빈 띠 100px** 가 남았다 (실측 스크린샷 2026-08-27).
-     * 셋이 같은 자리를 쓰므로 규칙도 셋이 같이 받는다.
-     */
-    const vacated = /\[data-home-input='off'\][^{]*\{[^}]*bottom:\s*0/s.exec(cssSource);
-    expect(vacated).not.toBeNull();
-    const selectors = (vacated?.[0] ?? '').split('{')[0] ?? '';
-    for (const surface of ['.ksheet', '.kcourse', '.kconfirm']) {
-      expect(selectors).toContain(surface);
-    }
+    expect(cssSource).toMatch(
+      /\[data-home-input='off'\] \.ksheet\s*\{[^}]*bottom:\s*0/s,
+    );
   });
 
   /*

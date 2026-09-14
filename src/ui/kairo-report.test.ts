@@ -47,7 +47,7 @@ function weeklyReport(over: Partial<WeekReport> = {}): WeekReport {
     revenue: 220_000,
     upkeep: 30_000,
     wages: 20_000,
-    investment: { building: 10, upgrades: 20, menuDevelopment: 30, commission: 40, shopping: 50 },
+    investment: { building: 10, upgrades: 20, menuDevelopment: 30 },
     noTicket: 0,
     admissionCap: null,
     courseDemand: 0,
@@ -271,9 +271,7 @@ describe('Phase 5 전주 KPI와 권위 회계', () => {
     expect(ledger.income).toEqual({ admission: 100_000, sales: 80_000, course: 40_000, total: 220_000 });
     expect(ledger.operatingCosts).toEqual({ maintenance: 30_000, staff: 20_000 });
     expect(ledger.operatingProfit).toBe(260_000);
-    expect(ledger.investment).toEqual({
-      building: 10, upgrades: 20, menuDevelopment: 30, commission: 40, shopping: 50, total: 150,
-    });
+    expect(ledger.investment).toEqual({ building: 10, upgrades: 20, menuDevelopment: 30, total: 60 });
   });
 
   it('처방은 매표소 → 입장 상한 → 병목 → 코스 대기 순으로 하나만 고른다', () => {

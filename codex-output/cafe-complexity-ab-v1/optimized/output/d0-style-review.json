@@ -1,0 +1,170 @@
+{
+  "status": "ART_REVIEW_PENDING_WITH_WARNINGS",
+  "material_patches": {
+    "roof": {
+      "source": {
+        "xyxy": [
+          458,
+          281,
+          477,
+          293
+        ],
+        "median_rgb": [
+          21.0,
+          21.0,
+          21.5
+        ],
+        "median_luma": 21.036099999999998
+      },
+      "candidate": {
+        "xyxy": [
+          314,
+          263,
+          322,
+          269
+        ],
+        "median_rgb": [
+          49.0,
+          51.0,
+          55.0
+        ],
+        "median_luma": 50.86359999999999
+      }
+    },
+    "wood": {
+      "source": {
+        "xyxy": [
+          214,
+          530,
+          224,
+          572
+        ],
+        "median_rgb": [
+          164.0,
+          83.0,
+          1.0
+        ],
+        "median_luma": 94.30019999999999
+      },
+      "candidate": {
+        "xyxy": [
+          418,
+          420,
+          422,
+          438
+        ],
+        "median_rgb": [
+          121.5,
+          75.0,
+          27.5
+        ],
+        "median_luma": 81.4564
+      }
+    },
+    "cream": {
+      "source": {
+        "xyxy": [
+          985,
+          555,
+          1005,
+          587
+        ],
+        "median_rgb": [
+          217.0,
+          183.0,
+          133.0
+        ],
+        "median_luma": 186.61839999999998
+      },
+      "candidate": {
+        "xyxy": [
+          449,
+          375,
+          460,
+          388
+        ],
+        "median_rgb": [
+          172.0,
+          145.0,
+          103.0
+        ],
+        "median_luma": 147.7078
+      }
+    },
+    "blue": {
+      "source": {
+        "xyxy": [
+          595,
+          536,
+          613,
+          549
+        ],
+        "median_rgb": [
+          12.0,
+          50.5,
+          108.0
+        ],
+        "median_luma": 46.4664
+      },
+      "candidate": {
+        "xyxy": [
+          330,
+          351,
+          339,
+          356
+        ],
+        "median_rgb": [
+          45.0,
+          88.0,
+          136.0
+        ],
+        "median_luma": 82.32379999999999
+      }
+    }
+  },
+  "patch_method": "Interior rectangular samples, high-resolution d0, no background samples. Lighting/geometry differ; these are diagnostics rather than equality gates.",
+  "iterations": [
+    {
+      "index": 0,
+      "findings": [
+        "roof backing hid tile mesh surfaces",
+        "wood and awning too pale"
+      ]
+    },
+    {
+      "index": 1,
+      "changes": [
+        "lower backing .043 tile, raise tiles .015 tile",
+        "richer amber wood and darker blue palettes"
+      ],
+      "findings": [
+        "tile pattern visible",
+        "roof still lighter than reference",
+        "canopy hid top cups"
+      ]
+    },
+    {
+      "index": 2,
+      "changes": [
+        "roof linear-light gain .48",
+        "canopy shortened .10 tile and raised .02 at front"
+      ],
+      "findings": [
+        "dark roof, warm timber/cream and blue accents retained",
+        "machine top cups more exposed"
+      ]
+    }
+  ],
+  "native_findings": {
+    "structure": "gable roof, timber frame, cream side wall, blue door and attached canopy read at 192 canvas",
+    "function": "pastry case and espresso machine distinguishable adjacent blocks; pastry circles and dispenser contrast present",
+    "limitations": [
+      "individual handles and cup rims are subpixel or one-pixel details at actual size",
+      "native service interior is dark and compact; jars do not independently read",
+      "tile geometry uses rectangular overlapping tiles, not the concept rounded tile profile",
+      "illustrated wood remains cleaner and less richly grainy than concept",
+      "door cup pictogram is simplified and not independently legible at native size"
+    ]
+  },
+  "approval": "No user art, roof proportion, family size, access or runtime approval claimed"
+}

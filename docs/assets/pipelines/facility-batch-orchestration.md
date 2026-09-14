@@ -46,7 +46,7 @@ provider 대상은 최대 19종이다.
 | `snackbar` | 분식 | 2×2 | 2×2 | service-face |
 | `chicken` | 치킨 | 2×2 | 2×2 | service-face |
 | `icecream` | 아이스크림 | 1×2 | 2×1 | service-face |
-| `cafe` | 카페 | 2×3 | 3×2 | service-face |
+| `cafe` | 카페 | 3×2 | 2×3 | service-face |
 | `vending_in` | 자판기(실내) | 1×1 | 1×1 | service-face |
 | `arcade` | 오락기 | 1×1 | 1×1 | service-face |
 | `karaoke` | 노래방 | 2×2 | 2×2 | portal |

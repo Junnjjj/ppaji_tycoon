@@ -1,0 +1,27 @@
+{
+  "status": "AUTHOR_REVIEW_CONDITIONAL_USER_ART_REVIEW_PENDING",
+  "reviewer": "candidate author; independent visual review by coordinator remains separate",
+  "directions": {
+    "d0": "Two front doors and 4 windows on left projected face; two windows and vent on right projected face. Category readable.",
+    "d1": "Front now right projected face, both doors and 4 windows retained; plain left wall proposed. Vent naturally hidden.",
+    "d2": "Rear and left walls visible, no copied entry or vent; sparse rear intentional proposal.",
+    "d3": "Right physical wall now left projected face with two clerestories and vent; front doors naturally hidden."
+  },
+  "native": "Doors and contrasting palettes readable; pictogram gender and individual vent louvers weak at 192px. Texture flatter and architectural proportions deeper than reference.",
+  "projection_warning": "d0 raster vertical edge estimate 87.75 degrees WARN (2.25 degree residual); signed diagonals exact, saved camera and all root rotations exact; warning retained. d1-d3 raster projection PASS.",
+  "roof": "Simple shallow parapet on exact 2x2 foundation; 1.9x1.9 body and 2.086x2.086 roof; user approval pending.",
+  "access": "Closed facade doors are visual portals; no interior, animation or pathfinding proof. Door fixtures extend in front of floor about 0.134 tile; approach must be reviewed in game.",
+  "technical": {
+    "independent_process_reopen_rgba_equal": 8,
+    "clipped_images": 0,
+    "native_foregrounds": {
+      "0": 3638,
+      "1": 3637,
+      "2": 3638,
+      "3": 3637
+    },
+    "mesh_count": 106,
+    "packed_atlas": true
+  },
+  "adoption": "NOT_ADOPTED"
+}

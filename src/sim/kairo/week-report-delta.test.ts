@@ -50,13 +50,10 @@ describe('Phase 5 영업 회계와 투자 지출', () => {
     const actual = paid.finish();
     const control = finish(base);
     expect(actual.profit).toBe(control.profit);
-    // P3 이 `commission`(기다림이 있는 지출)·`shopping`(즉시 구입)을 더했다 — 장부 3줄 → 5줄
     expect(actual.investment).toEqual({
       building: 120_000,
       upgrades: 80_000,
       menuDevelopment: 30_000,
-      commission: 0,
-      shopping: 0,
     });
     expect(paid.cash).toBe(base.cash - 230_000);
   });
@@ -67,8 +64,7 @@ describe('Phase 5 영업 회계와 투자 지출', () => {
     r.spend(50_000, 'building');
     r.step(TICKS_PER_WEEK);
     expect(r.finish().investment.building).toBe(50_000);
-    expect(finish(r, 2).investment)
-      .toEqual({ building: 0, upgrades: 0, menuDevelopment: 0, commission: 0, shopping: 0 });
+    expect(finish(r, 2).investment).toEqual({ building: 0, upgrades: 0, menuDevelopment: 0 });
   });
 });
 
@@ -98,8 +94,7 @@ describe('Phase 5 저장 경계', () => {
 
     const ra = finish(a, 99);
     const rb = finish(b, 99);
-    expect(ra.investment)
-      .toEqual({ building: 0, upgrades: 0, menuDevelopment: 0, commission: 0, shopping: 0 });
+    expect(ra.investment).toEqual({ building: 0, upgrades: 0, menuDevelopment: 0 });
     expect(rb).toEqual(ra);
     expect(b.cash).toBe(a.cash);
   });

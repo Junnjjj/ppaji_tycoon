@@ -16,6 +16,8 @@ export interface AtlasFrame {
   y: number;
   w: number;
   h: number;
+  /** Physical source pixels per logical game texel. Omitted means legacy 1×. */
+  density?: 1 | 2;
 }
 
 export type AtlasIndex = Record<string, AtlasFrame>;

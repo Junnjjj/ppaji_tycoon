@@ -1,0 +1,25 @@
+{
+  "status": "COMPLEX_CAFE_AB_COMPLETE_USER_REVIEW",
+  "report": "codex-output/cafe-complexity-ab-v1/REPORT.md",
+  "url": "http://100.114.231.15:63021/run/cafe-ab/review.html",
+  "worker_total_reduction_percent": 36.46,
+  "worker_uncached_reduction_percent": 34.54,
+  "worker_output_reduction_percent": 37.0,
+  "same_raw_inputs": true,
+  "model": "gpt-6-astra",
+  "local_corrections_per_lane": 2,
+  "baseline_extra_qa_request": 1,
+  "rgba_equal_images": 16,
+  "projection_flags": {
+    "baseline": [
+      "d3 FAIL"
+    ],
+    "optimized": [
+      "d0 FAIL",
+      "d3 FAIL"
+    ]
+  },
+  "live_modified": false,
+  "skill_modified_this_trial": false,
+  "next": "User visual review; reuse optimized route for next requested facility, no automatic new trials"
+}

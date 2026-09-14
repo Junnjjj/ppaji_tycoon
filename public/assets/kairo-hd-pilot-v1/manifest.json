@@ -1,0 +1,687 @@
+{
+  "schemaVersion": 1,
+  "status": "HD_PIXEL_MODE_REVIEW_ONLY",
+  "liveAtlasModified": false,
+  "logicalTile": [
+    32,
+    16
+  ],
+  "renderDensity": 2,
+  "assets": {
+    "ground/path_stone:a0": {
+      "path": "assets/kairo-hd-pilot-v1/ground__path_stone__a0.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "348f5499f8649a01b86c58780eb57bc09df23f322a26442b3c867751d392c675"
+    },
+    "ground/path_stone:a1": {
+      "path": "assets/kairo-hd-pilot-v1/ground__path_stone__a1.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "348f5499f8649a01b86c58780eb57bc09df23f322a26442b3c867751d392c675"
+    },
+    "ground/path_stone:a2": {
+      "path": "assets/kairo-hd-pilot-v1/ground__path_stone__a2.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "348f5499f8649a01b86c58780eb57bc09df23f322a26442b3c867751d392c675"
+    },
+    "ground/path_deck:a0": {
+      "path": "assets/kairo-hd-pilot-v1/ground__path_deck__a0.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "aa62d4a0b59532c4e85645ee0708f96b534b9f88d48913ad22c7567d8ed514a3"
+    },
+    "ground/path_deck:a1": {
+      "path": "assets/kairo-hd-pilot-v1/ground__path_deck__a1.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "914dc9f3f77f82c8f558c4b6233c09f8eb8f885d325e65c56b0af98313a204e6"
+    },
+    "ground/path_deck:a2": {
+      "path": "assets/kairo-hd-pilot-v1/ground__path_deck__a2.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "aa62d4a0b59532c4e85645ee0708f96b534b9f88d48913ad22c7567d8ed514a3"
+    },
+    "ground/path_sand:a0": {
+      "path": "assets/kairo-hd-pilot-v1/ground__path_sand__a0.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "a9b390a0bfd224f7e011708b9273b21e9cd960a3a1069e2bc4f6b5b97517b15f"
+    },
+    "ground/path_sand:a1": {
+      "path": "assets/kairo-hd-pilot-v1/ground__path_sand__a1.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "9a458badc97a1ebd91df505303512490d69059fdfe5f1a42eab020e9b448d324"
+    },
+    "ground/path_sand:a2": {
+      "path": "assets/kairo-hd-pilot-v1/ground__path_sand__a2.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "d335b57e0b4c06601c168fd681d84078e80dc22b5d19ff128d7191c0a20a4ec3"
+    },
+    "ground/lawn:a0": {
+      "path": "assets/kairo-hd-pilot-v1/ground__lawn__a0.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "5ee40620ef04157402c0a833133371bb4db8c01cc4370f92040c6a48a37ea59d"
+    },
+    "ground/lawn:a1": {
+      "path": "assets/kairo-hd-pilot-v1/ground__lawn__a1.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "967a2004b903e0284e02c1adfc7bf69911ac0459ade41f3d82b867abdae58923"
+    },
+    "ground/lawn:a2": {
+      "path": "assets/kairo-hd-pilot-v1/ground__lawn__a2.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "eb7467e9a2305e3234487b14a329155483ea7105a9ed6989a320ee81e10f4a96"
+    },
+    "ground/water_edge:a0": {
+      "path": "assets/kairo-hd-pilot-v1/ground__water_edge__a0.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "e94073d7a68aeaa9ec0a81bc298a76ebb08d3bf6bae8a211e9bd2a23823aab01"
+    },
+    "ground/water_edge:a1": {
+      "path": "assets/kairo-hd-pilot-v1/ground__water_edge__a1.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "7e7d19dcff24f5ffee3d73449c5d2ff1db8f6dabd00da0860abdd80632cacaac"
+    },
+    "ground/water_edge:a2": {
+      "path": "assets/kairo-hd-pilot-v1/ground__water_edge__a2.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "1f32297745210dfa02c9360b8a7d109529d9e4487ba83e47fce710804f4eb058"
+    },
+    "ground/floor_indoor:a0": {
+      "path": "assets/kairo-hd-pilot-v1/ground__floor_indoor__a0.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "802e75eed7ae675a42123d440ced840c490c8518d8b1fa50570aaa9156c50e1e"
+    },
+    "ground/floor_indoor:a1": {
+      "path": "assets/kairo-hd-pilot-v1/ground__floor_indoor__a1.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "802e75eed7ae675a42123d440ced840c490c8518d8b1fa50570aaa9156c50e1e"
+    },
+    "ground/floor_indoor:a2": {
+      "path": "assets/kairo-hd-pilot-v1/ground__floor_indoor__a2.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "802e75eed7ae675a42123d440ced840c490c8518d8b1fa50570aaa9156c50e1e"
+    },
+    "ground/road:a0": {
+      "path": "assets/kairo-hd-pilot-v1/ground__road__a0.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "0fc4d4447a80ca6d10eb65056027a7104f3e0dc03266da40a98ce8c8825a699d"
+    },
+    "ground/road:a1": {
+      "path": "assets/kairo-hd-pilot-v1/ground__road__a1.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "fbcc7d663684c86956077cf0e73a52a042471e7dfc818c379b838b3878633c4e"
+    },
+    "ground/road:a2": {
+      "path": "assets/kairo-hd-pilot-v1/ground__road__a2.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "c5c1b31138a19286f859229203b9d2421b7d6a44715778f956daf502871e959c"
+    },
+    "ground/sidewalk:a0": {
+      "path": "assets/kairo-hd-pilot-v1/ground__sidewalk__a0.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "4c68e6b8356c200534ea4ed1e70e37e34c190567c1a0f5a876df7f8658bd6d92"
+    },
+    "ground/sidewalk:a1": {
+      "path": "assets/kairo-hd-pilot-v1/ground__sidewalk__a1.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "4c68e6b8356c200534ea4ed1e70e37e34c190567c1a0f5a876df7f8658bd6d92"
+    },
+    "ground/sidewalk:a2": {
+      "path": "assets/kairo-hd-pilot-v1/ground__sidewalk__a2.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "4c68e6b8356c200534ea4ed1e70e37e34c190567c1a0f5a876df7f8658bd6d92"
+    },
+    "ground/verge:a0": {
+      "path": "assets/kairo-hd-pilot-v1/ground__verge__a0.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "272fcf19328527b88d4cda34fb48d9f2cd62ab3f271f051b4f084c7cd83b0742"
+    },
+    "ground/verge:a1": {
+      "path": "assets/kairo-hd-pilot-v1/ground__verge__a1.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "a642feea95a54fbb5e7b313044c5799ea21fb0b41441fac30265bccedc494632"
+    },
+    "ground/verge:a2": {
+      "path": "assets/kairo-hd-pilot-v1/ground__verge__a2.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "bd42a7ca109b8bb53bb93c977e88ba4ae3ccc72625d85a76b7ea754da93d8062"
+    },
+    "ground/mountain_rock:a0": {
+      "path": "assets/kairo-hd-pilot-v1/ground__mountain_rock__a0.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "53f0fb816751b3c6e0c8d921e1d95c974ad24c26effc8a6cab2ca325f380e395"
+    },
+    "ground/mountain_rock:a1": {
+      "path": "assets/kairo-hd-pilot-v1/ground__mountain_rock__a1.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "58f226a27a5dc1d63dd71bc4255af69e23560997999f75fb5156ebdd5991ef98"
+    },
+    "ground/mountain_rock:a2": {
+      "path": "assets/kairo-hd-pilot-v1/ground__mountain_rock__a2.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "fe5aa71d98683052e291d5bb8e2e5b1fd3079dde7a54d7787f839a8b61d34266"
+    },
+    "ground/pool_water:a0": {
+      "path": "assets/kairo-hd-pilot-v1/ground__pool_water__a0.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "c8c286a739d0587f7bb976a575b7336d98be2a771c94b1adc865a29c96dc1d24"
+    },
+    "ground/pool_water:a1": {
+      "path": "assets/kairo-hd-pilot-v1/ground__pool_water__a1.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "605a25e0fa4592f4d4a49bcb34a7652f41dcb9d80917efb3e6245689f22e677d"
+    },
+    "ground/pool_water:a2": {
+      "path": "assets/kairo-hd-pilot-v1/ground__pool_water__a2.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        16
+      ],
+      "physicalSize": [
+        64,
+        32
+      ],
+      "category": "terrain",
+      "sha256": "0494de854d3f94d98586f40a70ce934be131df251d67a51bf1eefac273cc2be7"
+    },
+    "ground/bridge_x": {
+      "path": "assets/kairo-hd-pilot-v1/ground__bridge_x.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        28
+      ],
+      "physicalSize": [
+        64,
+        56
+      ],
+      "category": "terrain",
+      "sha256": "52802fed82e58e3a717fa04ef1698c00a4d399041f6041aac23b0b0b41c5863e"
+    },
+    "ground/bridge_z": {
+      "path": "assets/kairo-hd-pilot-v1/ground__bridge_z.png",
+      "group": "ground",
+      "density": 2,
+      "logicalSize": [
+        32,
+        28
+      ],
+      "physicalSize": [
+        64,
+        56
+      ],
+      "category": "terrain",
+      "sha256": "88177df1712303d7cf54dd583a2f78b83f44b7295f60a9451e5876ec04b6dbd0"
+    },
+    "facility/icecream": {
+      "path": "assets/kairo-hd-pilot-v1/facility__icecream__current-fit.png",
+      "group": "facility-current-fit",
+      "density": 2,
+      "logicalSize": [
+        48,
+        44
+      ],
+      "physicalSize": [
+        96,
+        88
+      ],
+      "category": "facility",
+      "sha256": "d8e57229716a40f950487bed211c70ca5c35ee1a091aed8473c5531e4c701bc7"
+    },
+    "facility/cafe": {
+      "path": "assets/kairo-hd-pilot-v1/facility__cafe__current-fit.png",
+      "group": "facility-current-fit",
+      "density": 2,
+      "logicalSize": [
+        80,
+        60
+      ],
+      "physicalSize": [
+        160,
+        120
+      ],
+      "category": "facility",
+      "sha256": "6224a7e812547fc5fe4c04616629a60b7095617a8396c852a83f8d61924db49b"
+    },
+    "facility/icecream:d0": {
+      "path": "assets/kairo-hd-pilot-v1/facility__icecream__d0__approved-fit.png",
+      "group": "facility-approved-fit",
+      "density": 2,
+      "logicalSize": [
+        32,
+        36
+      ],
+      "physicalSize": [
+        64,
+        72
+      ],
+      "category": "facility",
+      "sha256": "a3ea8954235cd78e4925df63d8122f71df905c4336ba795e656514dfa686d31f"
+    },
+    "facility/icecream:d1": {
+      "path": "assets/kairo-hd-pilot-v1/facility__icecream__d1__approved-fit.png",
+      "group": "facility-approved-fit",
+      "density": 2,
+      "logicalSize": [
+        32,
+        36
+      ],
+      "physicalSize": [
+        64,
+        72
+      ],
+      "category": "facility",
+      "sha256": "efaf983bfd984550bbd3e3295e1b137a7d3b5b15f304a2e26d730ee1c9185075"
+    },
+    "facility/icecream:d2": {
+      "path": "assets/kairo-hd-pilot-v1/facility__icecream__d2__approved-fit.png",
+      "group": "facility-approved-fit",
+      "density": 2,
+      "logicalSize": [
+        32,
+        36
+      ],
+      "physicalSize": [
+        64,
+        72
+      ],
+      "category": "facility",
+      "sha256": "90f097082618ae7099bc58d507b91b0ac531280aa554f8e9cb3fe160e3999484"
+    },
+    "facility/icecream:d3": {
+      "path": "assets/kairo-hd-pilot-v1/facility__icecream__d3__approved-fit.png",
+      "group": "facility-approved-fit",
+      "density": 2,
+      "logicalSize": [
+        32,
+        36
+      ],
+      "physicalSize": [
+        64,
+        72
+      ],
+      "category": "facility",
+      "sha256": "334b5af84057c546f203042db17147ec7ba1f4574b801371afec018d7fe0d2e7"
+    },
+    "facility/cafe:d0": {
+      "path": "assets/kairo-hd-pilot-v1/facility__cafe__d0__approved-fit.png",
+      "group": "facility-approved-fit",
+      "density": 2,
+      "logicalSize": [
+        64,
+        52
+      ],
+      "physicalSize": [
+        128,
+        104
+      ],
+      "category": "facility",
+      "sha256": "3274b170ac8a3f246ee37b79958ce5639dc9a1295599aa7a9d8a8b62d81178c3"
+    },
+    "facility/cafe:d1": {
+      "path": "assets/kairo-hd-pilot-v1/facility__cafe__d1__approved-fit.png",
+      "group": "facility-approved-fit",
+      "density": 2,
+      "logicalSize": [
+        64,
+        52
+      ],
+      "physicalSize": [
+        128,
+        104
+      ],
+      "category": "facility",
+      "sha256": "a9980ac40a9c8bd83afd773462bce5cb6a7b7d9d3ac3dd613232dfbcd296d574"
+    },
+    "facility/cafe:d2": {
+      "path": "assets/kairo-hd-pilot-v1/facility__cafe__d2__approved-fit.png",
+      "group": "facility-approved-fit",
+      "density": 2,
+      "logicalSize": [
+        64,
+        52
+      ],
+      "physicalSize": [
+        128,
+        104
+      ],
+      "category": "facility",
+      "sha256": "8602c1c41125897debbbece991d5d035c138db832b6bc5a98bc91bdac719c38d"
+    },
+    "facility/cafe:d3": {
+      "path": "assets/kairo-hd-pilot-v1/facility__cafe__d3__approved-fit.png",
+      "group": "facility-approved-fit",
+      "density": 2,
+      "logicalSize": [
+        64,
+        52
+      ],
+      "physicalSize": [
+        128,
+        104
+      ],
+      "category": "facility",
+      "sha256": "437e716fc55efbd966ef7db04601723cb1faf39719401dcd9b0f1571cd9bfab6"
+    }
+  }
+}

@@ -708,6 +708,8 @@ export interface Target {
 export function allTargets(): Target[] {
   const out: Target[] = [];
   for (const s of allSimFacilities()) {
+    // Authored environment packages have their own saved Blender sources, not legacy image sheets.
+    if (s.id.startsWith('env_')) continue;
     const r = renderSpec(s.sprite);
     if (!r) continue;
     const w = s.size[0];

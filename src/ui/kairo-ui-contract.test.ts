@@ -1,5 +1,4 @@
 import { readFileSync } from 'node:fs';
-import { resolveFontSize } from './type-scale.js';
 import { describe, expect, it } from 'vitest';
 import { tickerFallbackText } from './kairo-ticker.js';
 
@@ -22,9 +21,8 @@ const fontSizesUnder = (prefix: string): { selector: string; size: number }[] =>
   for (const match of body.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
     const selector = (match[1] ?? '').trim();
     if (!selector.split(',').some((part) => part.trim().startsWith(prefix))) continue;
-    // ⚠ 토큰도 리터럴도 같은 자로 (P1.5-A) — 토큰만 놓치면 12px 하한 검사가 공허해진다
-    const size = resolveFontSize(match[2] ?? '');
-    if (size !== null) out.push({ selector, size });
+    const size = /font-size:\s*([\d.]+)px/.exec(match[2] ?? '');
+    if (size) out.push({ selector, size: Number(size[1]) });
   }
   return out;
 };
@@ -33,29 +31,23 @@ const rule = (selector: string): string => {
   const re = new RegExp(`\\n${selector.replace(/[.[\]]/g, '\\$&')}\\s*\\{([^}]*)\\}`);
   return re.exec(cssSource)?.[1] ?? '';
 };
+const goalsRule = rule('.kgoals');
 
 describe('카이로 홈 화면 계약', () => {
-  it('헤더 버튼 0개, 하단 네이티브 버튼 1개(MENU 토글)를 유지한다 (P1)', () => {
+  it('헤더 버튼 0개, 하단 상시 버튼 2개를 유지한다', () => {
     const header = hudSource.slice(
       hudSource.indexOf('── 상단 2단 헤더'),
-      hudSource.indexOf('── 오른쪽 밴드 (P1)'),
+      hudSource.indexOf('홈 셸 v3'),
     );
     const bottom = hudSource.slice(
-      hudSource.indexOf('── 하단 바 (P1, K47-② 대체)'),
+      hudSource.indexOf('── 하단 바 (K47-②)'),
       hudSource.indexOf('── 시트 (건설·메뉴 공용)'),
     );
 
-    // 상단은 엄지 사각지대다 — 「읽는 것은 위」는 그대로 유지한다
     expect(header).not.toContain("el('button'");
-    /*
-     * ⚠ **1개다.** K47-② 의 「하단 2개(메뉴·건설)」는 P1 이 대체했다 — `건설` 은 밴드의
-     * 칸이 됐고 그 자리에 `다음 할 일`(옛 64px 전용 밴드)이 들어왔다. `MENU` 는 이제
-     * 시트를 여는 버튼이 아니라 **밴드 토글**이다.
-     */
-    expect(bottom.match(/el\('button'/g)).toHaveLength(1);
+    expect(bottom.match(/el\('button'/g)).toHaveLength(2);
     expect(bottom).toContain("id = 'kairo-menu-open'");
-    // 건설의 옛 손잡이는 밴드 칸이 그대로 잇는다 — 하네스가 이 id 로 건설 시트를 연다
-    expect(hudSource).toContain("cell.id === 'build' ? 'kairo-build-open'");
+    expect(bottom).toContain("id = 'kairo-build-open'");
   });
 
   it('직접 행동 목표의 터치 타깃은 style.css의 44px 토큰을 쓴다', () => {
@@ -92,16 +84,17 @@ describe('카이로 홈 화면 계약', () => {
    * `document.body.children` 의 **경계 상자**를 재므로 세로·가로 모두 100% 가 됐고
    * "시트를 닫으면 화면이 돌아온다"까지 같이 깨졌다 (닫힘 100% → 열림 46% → 닫힘 100%).
    */
-  it('상태 밴드는 하단 바 안에 산다 — 전용 64px 띠를 없앴다 (P1)', () => {
-    const goals = rule('.kgoals');
-    /*
-     * ⚠ 예전에는 티커 위에 뜨는 **전용 밴드(64px)** 였다. 하단 바가 `메뉴`·`건설` 둘만
-     * 갖고 있어 그 옆이 비어 있었는데, 버튼을 밴드로 옮기면서 이 자리가 났다 —
-     * 밴드를 하나 없애고 하나를 합쳐 지도가 74% → 81.5% 로 넓어진다.
-     */
-    expect(goals).toMatch(/flex:\s*1 1 0/);
-    expect(goals).not.toMatch(/position:\s*fixed/);
-    expect(cssSource).toMatch(/\.kbar\s*\{[^}]*position:\s*fixed/s);
+  it('목표 루트는 화면이 아니라 64px 밴드다 — 칠하는 것이 곧 상자다', () => {
+    expect(goalsRule).not.toMatch(/inset:\s*0/);
+    expect(goalsRule).toMatch(/height:\s*var\(--goal-band\)/);
+    expect(goalsRule).toMatch(/display:\s*flex/);
+    // 가로에서 852px 현수막이 되지 않도록 폰 한 칸 폭으로 캡한다.
+    expect(goalsRule).toMatch(/max-width:\s*var\(--goal-col\)/);
+    expect(cssSource).toMatch(/--goal-band:\s*64px/);
+    expect(cssSource).toMatch(/--goal-col:\s*377px/);
+    // 헤더 실측으로 B/C 를 띄우던 배선은 한 밴드가 되면서 사라진다.
+    expect(cssSource).not.toContain('--goal-secondary-top');
+    expect(hudSource).not.toContain('--goal-secondary-top');
   });
 
   /*
@@ -112,13 +105,7 @@ describe('카이로 홈 화면 계약', () => {
   it('밴드는 통째로 현재 행동의 것이고 글자를 감추는 규칙이 없다', () => {
     expect(rule('.kgoal-primary')).toMatch(/flex:\s*1\s/);
     expect(cssSource).not.toContain('.kgoal-secondary');
-    /*
-     * ⚠ P1 — 높이는 `--goal-band`(64px, 옛 전용 밴드) 가 아니라 **터치 하한**이다.
-     * 상태 밴드가 하단 바 안으로 들어오면서 64px 를 그대로 두었더니 56px 바를 위아래로
-     * 넘쳐 티커의 44px hit surface 와 3px 겹쳤다 (실측). 바 높이는 64 로 올렸고
-     * 칩은 `--tap` 을 쓴다.
-     */
-    expect(rule('.kgoal-primary .kgoal')).toMatch(/min-height:\s*var\(--tap\)/);
+    expect(rule('.kgoal-primary .kgoal')).toMatch(/min-height:\s*var\(--goal-band\)/);
   });
 
   /*
@@ -144,20 +131,19 @@ describe('카이로 홈 화면 계약', () => {
   });
 
   it('이름 15px · 상세 13px · 주요 행동 16px 최소를 규칙이 지킨다', () => {
-    // ⚠ **하한**으로 잰다 — 계약은 "이만큼보다 작지 않다"이지 "정확히 N px"가 아니다
-    expect(resolveFontSize(rule('.kmanage-label'))).toBeGreaterThanOrEqual(15);
+    expect(rule('.kmanage-label')).toMatch(/font-size:\s*15px/);
     expect(rule('.kmanage-label')).toMatch(/font-weight:\s*800/);
-    expect(resolveFontSize(rule('.kmanage-detail'))).toBeGreaterThanOrEqual(13);
-    expect(resolveFontSize(rule('.kmanage-action.primary'))).toBeGreaterThanOrEqual(16);
+    expect(rule('.kmanage-detail')).toMatch(/font-size:\s*13px/);
+    expect(rule('.kmanage-action.primary')).toMatch(/font-size:\s*16px/);
     // 주요 행동은 48px 이상, 나머지는 기존 44px 최소 (§1.3)
     expect(rule('.kmanage-action.primary')).toMatch(/min-height:\s*(6[89]|[7-9]\d)px/);
     expect(rule('.kmanage-action')).toMatch(/min-height:\s*var\(--tap\)/);
-    expect(resolveFontSize(rule('.kgoal-label'))).toBeGreaterThanOrEqual(15);
-    expect(resolveFontSize(rule('.kgoal-detail'))).toBeGreaterThanOrEqual(13);
+    expect(rule('.kgoal-label')).toMatch(/font-size:\s*15px/);
+    expect(rule('.kgoal-detail')).toMatch(/font-size:\s*13px/);
   });
 
   it('시트 제목은 18px·900 이상이다 — 화면 제목을 본문 크기로 내리지 않는다', () => {
-    expect(resolveFontSize(rule('.ksheet-title'))).toBeGreaterThanOrEqual(18);
+    expect(rule('.ksheet-title')).toMatch(/font-size:\s*(?:1[89]|[2-9]\d)px/);
     expect(rule('.ksheet-title')).toMatch(/font-weight:\s*900/);
   });
 
@@ -206,15 +192,13 @@ describe('카이로 홈 화면 계약', () => {
     expect(manageSource).toContain('kmanage-goal-term');
     expect(manageSource).toContain('settingsItemView');
     /*
-     * P1 — 목적지는 **밴드 표**(`BAND_CELLS`)가 만든다. 화면은 그 id 를 그대로 단다.
-     * ⚠ `설정` 은 밴드에 칸이 없다 — 거의 안 가는 곳이고 파괴적 행동(새 게임)이 살아서
-     * `정보` 한 겹 안쪽이 맞다. 그 입구는 `settingsEntry()` 하나다.
+     * UI v4 — 목적지는 **라우터 표**가 만든다. 예전에는 `settings` 문자열이 조립 코드에
+     * 박혀 있었는데, 이제 `MANAGE_ROUTES` 가 정본이고 화면이 그 id 를 그대로 단다.
+     * 표를 지우거나 `설정` 을 빼면 이 검사가 빨간불이 된다.
      */
-    expect(manageSource).toContain('const BAND_CELLS: readonly BandCell[]');
-    expect(manageSource).toContain("dataset['manageRoute'] = 'settings';");
-    expect(manageSource).toContain("{ id: 'settings', title: '설정', back: 'records' }");
-    expect(manageSource).toContain("screen.dataset['manageGroup'] = def.id;");
-    expect(manageSource).toContain("screen.dataset['manageScreen'] = def.id;");
+    expect(manageSource).toContain("{ id: 'settings', label: '설정'");
+    expect(manageSource).toContain("screen.dataset['manageGroup'] = route.id;");
+    expect(manageSource).toContain("screen.dataset['manageScreen'] = route.id;");
     expect(mainSource).toContain('onMenuGoals');
   });
 
@@ -263,7 +247,7 @@ describe('카이로 홈 화면 계약', () => {
       /const openManageScreen[\s\S]*?hud\.showMenu\(\)[\s\S]*?refreshQuests\(\)[\s\S]*?management\.show\(id\)/,
     );
     expect(mainSource).toMatch(
-      /onboarding\.step === 'equip-menu'[\s\S]*?openMenuLab\(target\.handle\)[\s\S]*?openManageScreen\('goals'\)/,
+      /onboarding\.step === 'equip-menu'[\s\S]*?openMenuLab\(target\.handle\)[\s\S]*?openManageScreen\('regulars'\)/,
     );
     // 목록으로 튀는 옛 경로가 남아 있으면 같은 no-op 이 돌아온다
     expect(mainSource).not.toContain('scrollIntoView');

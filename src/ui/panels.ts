@@ -41,8 +41,6 @@ export interface HomeInputOwnership {
   goals: boolean;
   ticker: boolean;
   bar: boolean;
-  /** 오른쪽 밴드 (P1) — `MENU` 로 열고 닫는 목적지 일곱 칸 */
-  band: boolean;
 }
 
 /**
@@ -55,12 +53,7 @@ export interface HomeInputOwnership {
  */
 export function homeInputOwnership(surface: InputSurface): HomeInputOwnership {
   const home = surface === 'home';
-  /*
-   * P1 에서 **밴드**가 넷째 표면으로 들어왔다. 밴드는 지도 위에 떠 있으므로 조준 중에
-   * 반드시 같이 내려가야 한다 — 안 내리면 고스트를 가리고, 그 가림을 `z-index` 로
-   * 덮는 순간 「소유권은 한 값이 정한다」가 무너진다.
-   */
-  return { goals: home, ticker: home, bar: home, band: home };
+  return { goals: home, ticker: home, bar: home };
 }
 
 /**

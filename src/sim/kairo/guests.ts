@@ -75,52 +75,11 @@ export type GuestPose = 'idle' | 'walk' | 'swim' | 'float' | 'sit' | 'lie' | 'ri
 export type GuestFace = 'calm' | 'happy' | 'annoyed' | 'tired';
 
 /** 이모트 6종 */
-/**
- * 손님 머리 위 표식.
- *
- * ⚠ `alert` 는 **지웠다** (P7) — 호출부가 0 이었다. 계약에만 있고 화면에 한 번도 안 뜬
- * 프레임은 「그림이 있다고 주장하는데 없다」의 반대 판본이고, 아틀라스 한 칸을 낭비한다.
- * ⚠ `ask`·`wish` 는 **지도 표식**이다 (P7) — 아래 `GuestMark` 가 정한다.
- */
-export type GuestEmote =
-  | 'happy'
-  | 'love'
-  | 'neutral'
-  | 'annoyed'
-  | 'hot'
-  | 'ask'
-  | 'wish';
-
-/**
- * 지도 위 말풍선 (P7) — **sim 이 정하고 렌더는 고르지 않는다.**
- *
- * ⚠ 예전에는 씬이 `characterId ? 'love' : g.emote` 로 **직접 골랐다.** 그러면 「누구에게
- * 무엇이 뜨나」가 렌더 코드에 숨고, 단위 검사가 못 잰다. 규칙은 sim 이 갖는다.
- */
-export type GuestMark =
-  | 'love'
-  | 'ask'
-  | 'wish'
-  /**
-   * **아주 불만인 이름 없는 손님** (Q7). 이름 있는 손님이 없을 때만 자리를 얻는다.
-   *
-   * ⚠ `hot` 은 `GuestEmote` 에 이미 있는 프레임을 **재사용**한다 — 새 그림을 안 만든다
-   * (P7 의 「이름을 만들면 심을 자리도 같이 정할 것」의 반대편: 이미 있는 것을 쓴다).
-   */
-  | 'hot';
-
-/** 동시에 몇 개까지 띄우나 (P7). 넷이 넘으면 지도가 말풍선밭이 된다 */
-/**
- * 이름 없는 손님이 표식을 받는 만족도 문턱 (Q7).
- *
- * 값은 **표정 눈금에서 유도한다** — `syncFace` 가 25 미만을 `annoyed` 로 본다.
- * 새 문턱을 발명하지 않았다: 「얼굴이 찡그려진 손님」이 곧 「말풍선을 띄울 손님」이다.
- */
-export const UNHAPPY_MARK_BELOW = 25;
-
-export const MAX_GUEST_MARKS = 3;
+export type GuestEmote = 'happy' | 'love' | 'neutral' | 'annoyed' | 'hot' | 'alert';
 
 export interface Guest {
+  /** Optional authored appearance ID; omitted guests use the presentation catalog. */
+  appearanceId?: string;
   id: number;
   /** 일행 유형 (§10.4) — 지갑·인내·수요 편향이 여기서 온다 */
   group: GroupId;
@@ -151,11 +110,6 @@ export interface Guest {
   palette: number;
   face: GuestFace;
   emote: GuestEmote | null;
-  /**
-   * 지도 표식 (P7). **이름 있는 손님만** 갖고 동시에 `MAX_GUEST_MARKS` 개까지다.
-   * 우선순위는 `assignGuestMarks` 가 정한다 — 렌더는 이 값을 그리기만 한다.
-   */
-  mark: GuestMark | null;
   emoteTicks: number;
   /** 이용 중인 시설 handle 과 슬롯 번호 */
   usingHandle: number;
@@ -170,6 +124,7 @@ export interface Guest {
    * 다른 시설과 같아지기 때문이다.
    */
   admitting: boolean;
+  admissionRoute?: [number, number][];
   /** 남은 이용 tick */
   useTicks: number;
   /** 만족도 0..100 — 퇴장 시점 값만 집계한다 */
@@ -664,15 +619,6 @@ export class GuestStore {
    * 매 tick `placement.all().find(...)` 로 찾으면 손님×시설 이라 금방 비싸진다.
    */
   private readonly tickets = new Set<number>();
-  /**
-   * 오늘이 폭염인가 (P7). ⚠ **손님은 날씨를 모른다** — 러너가 넣어 준다. 여기서
-   * 날씨를 읽으면 손님 코드가 주 루프를 알게 되고 의존이 거꾸로 선다.
-   */
-  private heat = false;
-
-  setHeat(on: boolean): void {
-    this.heat = on;
-  }
 
   get all(): readonly Guest[] {
     return this.guests;
@@ -727,7 +673,7 @@ export class GuestStore {
    * 하나만 넣으면 "거리장은 맞는데 손님이 절벽을 타고 오른다"가 된다.
    */
   private readonly canCross = (i: number, j: number, ni: number, nj: number): boolean =>
-    !this.walls.blocksMove(i, j, ni, nj) && this.terrain.levelPassable(i, j, ni, nj);
+    !this.walls.blocksMove(i, j, ni, nj) && !this.placement.blocksCross(i, j, ni, nj) && this.terrain.levelPassable(i, j, ni, nj);
 
   /**
    * 게이트에서 이 칸까지의 걸음 수. 못 닿으면 −1 (K37 검사용).
@@ -837,14 +783,16 @@ export class GuestStore {
        * 시작 킷 절반이 손님을 못 받는다 — `entry.test.ts` 가 그 존재를 고정한다.
        */
       let targets: [number, number][] = [];
+      const entryDef = { ...def };
+      if (item.legacyAdmission) delete entryDef.entryTiles;
       if (!def.walkOn) {
-        for (const [ni, nj] of PlacementGrid.entryTilesOf(def, item.i, item.j, item.facing ?? 0)) {
+        for (const [ni, nj] of PlacementGrid.entryTilesOf(entryDef, item.i, item.j, item.facing ?? 0)) {
           if (!this.walkable(ni, nj)) continue;
           if (!gate.reachable(ni, nj)) continue;
           targets.push([ni, nj]);
         }
       }
-      if (targets.length === 0) targets = allNeighbors(def, item);
+      if (targets.length === 0 && (!def.admissionPassage || item.legacyAdmission)) targets = allNeighbors(def, item);
 
       if (targets.length === 0) continue;
       const f = new FlowField(w, h);
@@ -1230,7 +1178,6 @@ export class GuestStore {
       palette: guestRng.int(8),
       face: 'calm',
       emote: null,
-      mark: null,
       emoteTicks: 0,
       usingHandle: 0,
       usingSlot: -1,
@@ -1251,54 +1198,6 @@ export class GuestStore {
     // 경유를 끈 판(대조군·구형 하네스)은 그 자리에서 입장이다. 입장료는 안 받는다
     if (!this.tunables.requireTicket) this.admit(g, 0);
     return g;
-  }
-
-  /**
-   * 지도 표식을 다시 고른다 (P7). **규칙이 여기 있다** — 렌더는 `g.mark` 를 그리기만 한다.
-   *
-   * 우선순위: **요청이 열린 단골 > 소원이 열린 인물 > 나머지 이름 있는 손님**.
-   * ⚠ 이름 없는 1,200 에이전트는 대상이 아니다 — 전부에게 띄우면 지도가 말풍선밭이 되고,
-   * 「이 손님이 나에게 말을 건다」는 뜻이 사라진다.
-   */
-  assignMarks(open: { requests?: ReadonlySet<string>; wishes?: ReadonlySet<string> } = {}): void {
-    for (const g of this.all) g.mark = null;
-    /*
-     * ── Q7: 후보를 넓힌다 (개수는 그대로) ────────────────────────────────
-     *
-     * ⚠ 실측(2026-08-28): 손님 15명 중 **이름 있는 손님 0명 · 표식 0개**. 단골 방문이
-     * **주당 1명**이라 P7 의 「이름 있는 손님만」이 **사실상 안 뜨는 기능**이었다
-     * (사용자 지적: *"말풍선 단 손님이 안 보이고, 직관적이지가 않아"*).
-     *
-     * 그래서 **후보**를 넓힌다 — 이름 있는 손님 + **아주 불만인 손님**.
-     * ⚠ **동시 3개 상한은 그대로다** (`MAX_GUEST_MARKS`). 1,200 에이전트 전부에게 띄우면
-     * 「나에게 말을 건다」가 사라진다는 P7 의 근거는 그대로 유효하다 — 넓히는 것은
-     * **후보**지 **개수**가 아니다.
-     *
-     * 우선순위: **요청 > 소원 > 이름 있는 손님 > 강한 불만.** 이름 있는 손님이 있으면
-     * 언제나 이긴다 — 그래야 「아는 사람이 말을 건다」가 안 묻힌다.
-     */
-    const rank = (g: Guest): number => {
-      const id = g.characterId;
-      if (id !== undefined && id !== '') {
-        if (open.requests?.has(id) === true) return 0;
-        if (open.wishes?.has(id) === true) return 1;
-        return 2;
-      }
-      return 3;
-    };
-    const candidates = this.all.filter((g: Guest) => {
-      if (g.characterId !== undefined && g.characterId !== '') return true;
-      // 이름 없는 손님은 **아주 불만일 때만** — 그 표정이 곧 처방이 필요한 자리다
-      return g.state !== 'arriving' && g.satisfaction < UNHAPPY_MARK_BELOW;
-    });
-    candidates
-      // 결정론 — 같은 순위면 **id 순**이다 (도착 순서는 렌더 프레임마다 흔들린다)
-      .sort((a: Guest, b: Guest) => rank(a) - rank(b) || a.id - b.id)
-      .slice(0, MAX_GUEST_MARKS)
-      .forEach((g: Guest) => {
-        const r = rank(g);
-        g.mark = r === 0 ? 'ask' : r === 1 ? 'wish' : r === 2 ? 'love' : 'hot';
-      });
   }
 
   private setEmote(g: Guest, e: GuestEmote): void {
@@ -1393,7 +1292,14 @@ export class GuestStore {
              * 채워 버려 안내소·사무실을 지을 이유가 사라진다.
              */
             g.admitting = false;
-            this.admit(g, this.tunables.admissionFee);
+            const ticket = this.placement.all().find(item => item.handle === usedHandle);
+            const def = ticket ? facilityDef(ticket.defId) : undefined;
+            if (ticket && !ticket.legacyAdmission && def?.admissionPassage) {
+              g.admissionRoute = def.admissionPassage.map(tile => PlacementGrid.footprintTileOf(def, ticket.i, ticket.j, tile, ticket.facing ?? 0));
+              g.usingHandle = usedHandle; // Keep income attribution until the passage completes.
+              g.state = 'arriving';
+              g.pose = 'walk';
+            } else this.admit(g, this.tunables.admissionFee);
             continue;
           }
           const gains = this.tunables.useGains;
@@ -1479,6 +1385,30 @@ export class GuestStore {
 
       if (g.state === 'gone') continue;
 
+      // Ticket confirmation is followed by actual ordered steps through the clear lane.
+      // Charge admission only after reaching the park-side exit; never teleport through the booth.
+      if (g.admissionRoute) {
+        g.stepAcc++;
+        if (g.stepAcc < this.tunables.ticksPerStep) continue;
+        g.stepAcc = 0;
+        const next = g.admissionRoute.shift();
+        if (!next) {
+          delete g.admissionRoute;
+          this.releaseSlot(g);
+          this.admit(g, this.tunables.admissionFee);
+          continue;
+        }
+        if (!this.walkable(next[0], next[1]) || !this.canCross(g.i, g.j, next[0], next[1]) || Math.abs(g.i-next[0])+Math.abs(g.j-next[1]) !== 1) {
+          delete g.admissionRoute;
+          this.turnBack(g);
+          continue;
+        }
+        g.fromI = g.i; g.fromJ = g.j;
+        g.i = next[0]; g.j = next[1]; g.progress = 0; g.pose = 'walk';
+        g.facing = g.i > g.fromI ? '+X' : g.i < g.fromI ? '-X' : g.j > g.fromJ ? '+Z' : '-Z';
+        continue;
+      }
+
       // 목적지 결정
       let field: FlowField | null = null;
       if (g.state === 'leaving') {
@@ -1520,12 +1450,7 @@ export class GuestStore {
               this.syncFace(g);
               g.state = 'leaving';
             } else if (p % 60 === 0) {
-              /*
-               * ⚠ `hot` 은 유니언에만 있고 **호출부가 0** 이었다 (P7). 줄을 선 채로
-               * 더운 날이면 그게 그 표식의 제자리다 — 안 쓰이는 프레임은 아틀라스
-               * 한 칸을 낭비하고 「슬롯이 있다」는 착각만 남긴다.
-               */
-              this.setEmote(g, this.heat ? 'hot' : 'neutral');
+              this.setEmote(g, 'neutral');
             }
             g.pose = 'idle';
             continue;

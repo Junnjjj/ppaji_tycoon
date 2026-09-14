@@ -1,0 +1,20 @@
+{
+  "status": "CONDITIONAL_ART_REVIEW_PENDING",
+  "reviewer": "author self-review; independent user/main-agent art review still pending",
+  "views": {
+    "d0": "Front door at left, recessed counter at right, case before espresso machine; single right-side window. Top cups partly occluded by canopy, smaller handle details not legible native.",
+    "d1": "Front rotates to right screen plane, blank proposed left gable side on left. Door/case/machine order remains rigid; cups and dispensing gap more exposed.",
+    "d2": "Rear and left proposed blank walls, no duplicate door or service counter. Roof and timber remain consistent.",
+    "d3": "Right-side window now on left screen plane, blank rear on right. Front canopy edge naturally peeks around far left; no equipment relocated."
+  },
+  "material_findings": [
+    "Dark roof/blue/warm timber/cream roles retained with fixed world lighting",
+    "Remaining source/candidate patch differences: candidate roof and awning lighter, cream side darker; different face lighting and sampled positions limit direct comparison",
+    "Tile pattern rectangular and planar, unlike rounded concept tiles",
+    "Native caf\u00e9 equipment distinct as blocks, individual mugs/handles are not all separable"
+  ],
+  "roof_review": "ROOF_PROPORTION_USER_REVIEW",
+  "floor_review": "Exact integral 3x2; live 2x2 remains unchanged",
+  "runtime_access": "DEFERRED; no actual Phaser placement or pathfinding proof",
+  "raster_projection_diagnostic": "FAIL d0 and d3 retained; exact camera/matrix geometry independently projects required floor edge slopes and verticals. Likely edge-family ambiguity from roof/tile edges, not a license to label raster check PASS."
+}

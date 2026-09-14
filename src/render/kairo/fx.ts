@@ -34,18 +34,7 @@
 import type Phaser from 'phaser';
 import { depthKey, tileCenter, Z_FLOAT } from './iso.js';
 
-export type FxName =
-  | 'income-pop'
-  | 'course-reaction'
-  | 'course-record'
-  /** 시설 개선이 적용된 순간, **그 칸 위**에 (P5) */
-  | 'facility-upgrade'
-  /** 메뉴를 걸었다 — 그 가게 위에 (P2) */
-  | 'menu-equip'
-  /** 수배가 도착했다 — 입구 위에 (P4) */
-  | 'agency-arrive'
-  /** 손님이 말을 건다 — 그 손님 위에 (P7) */
-  | 'guest-ask';
+export type FxName = 'income-pop' | 'course-reaction' | 'course-record';
 
 /** 씬이 연출에게 내주는 것 — Phaser 씬과 "타일 → 화면" 변환 하나 */
 export interface FxHost {
@@ -162,14 +151,6 @@ export const FX_REGISTRY: Record<FxName, FxImpl> = {
   // 시험 운행 말풍선과 신기록 인장도 교체 가능한 이름 슬롯을 거친다.
   'course-reaction': incomePop,
   'course-record': incomePop,
-  /*
-   * ⚠ 지금 구현은 `incomePop` 재사용이다 — **이름이 먼저다.** 등록부 계약의 요지가
-   * 「이름 한 줄 + 구현 한 줄」이라, 전용 연출은 이 이름을 그대로 두고 이 줄만 바꾼다.
-   */
-  'facility-upgrade': incomePop,
-  'menu-equip': incomePop,
-  'agency-arrive': incomePop,
-  'guest-ask': incomePop,
 };
 
 /** 연출을 하나 재생한다. 부르는 쪽이 아는 것은 이름과 타일 좌표뿐이다 */

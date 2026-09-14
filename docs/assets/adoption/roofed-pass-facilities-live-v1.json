@@ -1,0 +1,433 @@
+{
+  "schema_version": 1,
+  "state": "LIVE_ATLAS_AND_RUNTIME_VERIFIED",
+  "user_request": "시설 만든 것들과 새 맵을 메인 기본 화면에 적용",
+  "included": [
+    "shop",
+    "snackbar",
+    "karaoke",
+    "info",
+    "infirmary",
+    "office"
+  ],
+  "excluded": {
+    "nursing": "already adopted from newer v9 package",
+    "cafe": "newer v5 changes footprint from 2x2 to 3x2; separate decision required",
+    "toilet": "live geometry gate held d2: left ground slope 0.576 versus 0.500 authority",
+    "storage": "FAIL_CLOSED_STRICT_COLOR_VALIDATION / RUNTIME_FIT_HELD"
+  },
+  "source_manifest_sha256": "4b45e324235ff6cf5fe39eb41145a7ead96fa8edc5c8f76439621fad5702026b",
+  "live_atlas": {
+    "png": "public/assets/kairo-atlas.png",
+    "png_sha256": "181600e6600f1b36829c8c4982abce2a1e7526f6f2fbfe4082dd9a2989bd54f2",
+    "index": "public/assets/kairo-atlas.json",
+    "index_sha256": "e11db285f4f69200e2f896d49481054cd4a2ef1141925df22a8856f8d4d62fa4",
+    "frame_count": 204,
+    "density_2_frame_count": 80
+  },
+  "verification": {
+    "test_files_passed": 104,
+    "tests_passed": 1567,
+    "tests_skipped": 1,
+    "production_build": "PASS",
+    "selected_facility_directions_geometry_passed": 24,
+    "runtime_facility_placements": 80
+  },
+  "facilities": [
+    {
+      "facility": "shop",
+      "footprint": [
+        2,
+        2
+      ],
+      "render": {
+        "sprite": "facility/shop",
+        "canvas": [
+          74,
+          72
+        ],
+        "anchorTexel": [
+          37,
+          72
+        ],
+        "bodyH": 40,
+        "openTop": true,
+        "horizontalGuardTexel": 5
+      },
+      "strict_audit_sha256": "e4b0160d3a92755e92924a16108f43fdf26f5134d8c82675e676ea24f2e071b1",
+      "runtime_audit_sha256": "d92ecda361897473aefb327f24f444f8b4fa5f4d9418429580c57c0cc8b9a703",
+      "independent_review_sha256": "21459dc973ef1e427aaf559e82d8e1407c7b0ba5e8efae4241ac66755ef64399",
+      "directions": [
+        {
+          "direction": "d0",
+          "density_4_source_sha256": "44e23d4445e8003633bd7c5d7f1bf84a1fcf4942a74e882efd652d57d1498b01",
+          "live_source_sha256": "c9c23d0b35beda8d48458ae8b81bd9152d53485bd552b5f5e5216bb3826c21fc",
+          "logical_canvas": [
+            74,
+            72
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d1",
+          "density_4_source_sha256": "81ccaf2194efdbabbf860e1fca05552d3854d82ec5b8a8305726419e090e0ead",
+          "live_source_sha256": "2a91b3477d4f2964f7b50334d13841c67998ebbe6cc622479f3a2f7c1fa4eca1",
+          "logical_canvas": [
+            74,
+            72
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d2",
+          "density_4_source_sha256": "cfb46b563a8ab9f6aaf3d611b6f65003fefd34c928c83330b699e5791f7af619",
+          "live_source_sha256": "161a50d1a0bde4beb4a4b668f960b44edcaf0bf9815b315dba683cfc36c2774b",
+          "logical_canvas": [
+            74,
+            72
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d3",
+          "density_4_source_sha256": "f73732b0588dedbb75894a55230f695255e61a83dad18209b335d0793ffcf5dd",
+          "live_source_sha256": "8dfd1a920d5ec5138c1cb546f25aacfcbc3efd8fabdc803b10b2e48b56f00677",
+          "logical_canvas": [
+            74,
+            72
+          ],
+          "density": 2
+        }
+      ]
+    },
+    {
+      "facility": "snackbar",
+      "footprint": [
+        2,
+        2
+      ],
+      "render": {
+        "sprite": "facility/snackbar",
+        "canvas": [
+          72,
+          74
+        ],
+        "anchorTexel": [
+          36,
+          74
+        ],
+        "bodyH": 42,
+        "openTop": true,
+        "horizontalGuardTexel": 4
+      },
+      "strict_audit_sha256": "00b0bec655f0777e6691418ef9dc1044b69128208a4099fd049e51df68ff636d",
+      "runtime_audit_sha256": "a6b94ea606a479a143614e9a2fed77fcd1677fa72664b3cb1b022921b2665762",
+      "independent_review_sha256": "a1b55eb19ca05e296ae447a93e602c85a485a096e17ae02ce637b127f9d93e7e",
+      "directions": [
+        {
+          "direction": "d0",
+          "density_4_source_sha256": "355c175a8483220d0b30f97664872e43f752def81ded6f0ddd54cb6d64631fc8",
+          "live_source_sha256": "d107e2421a67b8957b807fd0751be8fde692868daa981cca460ef8f200a44fb4",
+          "logical_canvas": [
+            72,
+            74
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d1",
+          "density_4_source_sha256": "98349f422f3e126665d808f306073f71f6a93ebe3a167aff7333488e72ec8078",
+          "live_source_sha256": "2128fee4e17cc75704d5729aaa15048ae199b62d1acf45ec6c6bac15d9210710",
+          "logical_canvas": [
+            72,
+            74
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d2",
+          "density_4_source_sha256": "fbeb6b0b795ae38bfbf941b067fea10cae5bbc15cbc35e31e7bcf92110ee7d34",
+          "live_source_sha256": "3934e08c53288517943444105cf4c9468c2a5ccc5244308de3c84fb3b815243c",
+          "logical_canvas": [
+            72,
+            74
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d3",
+          "density_4_source_sha256": "2ba0cd60e4aac304eb8785e793fa6fa818d34549a5a81235f458abac8913d45c",
+          "live_source_sha256": "17d9f2db705e01b2276c1848ef4f0be02ff7c67a1ad7bf26deb7f8d7edfd1909",
+          "logical_canvas": [
+            72,
+            74
+          ],
+          "density": 2
+        }
+      ]
+    },
+    {
+      "facility": "karaoke",
+      "footprint": [
+        2,
+        2
+      ],
+      "render": {
+        "sprite": "facility/karaoke",
+        "canvas": [
+          70,
+          75
+        ],
+        "anchorTexel": [
+          35,
+          75
+        ],
+        "bodyH": 43,
+        "openTop": true,
+        "horizontalGuardTexel": 3
+      },
+      "strict_audit_sha256": "f63ea6d866b6a98fc6860e0843736c8ea13a8df74115db975a57446ed92cba18",
+      "runtime_audit_sha256": "4e5bebab9610fc60f7cfac93c22100dce778db6f18a945a61aead39a7a071957",
+      "independent_review_sha256": "a1124e955c8278f18608b10662344b526bf091500c090167f207d6ef6eeb3c80",
+      "directions": [
+        {
+          "direction": "d0",
+          "density_4_source_sha256": "adf99154dd6fab5d6d2be8d270be47f9efe3f722ff80e418a8ef525a32e3df25",
+          "live_source_sha256": "3c78846ed2edff7650e49d5fdf35ef073a3bed62ebbe836b22b6624e8640120a",
+          "logical_canvas": [
+            70,
+            75
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d1",
+          "density_4_source_sha256": "3b82549ffbcdaa0550201a19c228ffa0c6f7bb9ec33b69a37d16d32300ae2fb9",
+          "live_source_sha256": "2426a1bf3357c2be80d19d721249f56e51f73bd141fdb9e34db592b1e24da598",
+          "logical_canvas": [
+            70,
+            75
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d2",
+          "density_4_source_sha256": "ff090f8dfe94d46b45da586236df9ef5e8884f52e50017b9c3b4e657ef6ed3bb",
+          "live_source_sha256": "0627fa975f2c19a2d1607de5d613ee028589b2497956466c4d11199efcf569ec",
+          "logical_canvas": [
+            70,
+            75
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d3",
+          "density_4_source_sha256": "4709d8327a830c051d218abd2198c1713fb5c5103234ccbc4c1c7fca139b84b4",
+          "live_source_sha256": "44b124c36bdecb582e367ce72eb46b71cf46c90e1ebb4905b0777d6270874c1a",
+          "logical_canvas": [
+            70,
+            75
+          ],
+          "density": 2
+        }
+      ]
+    },
+    {
+      "facility": "info",
+      "footprint": [
+        2,
+        2
+      ],
+      "render": {
+        "sprite": "facility/info",
+        "canvas": [
+          64,
+          71
+        ],
+        "anchorTexel": [
+          32,
+          71
+        ],
+        "bodyH": 39,
+        "openTop": true
+      },
+      "strict_audit_sha256": "5ed802eff6e58ebdae079a6b20cf24962b673fa92a86aca9504608f5fb4df6d9",
+      "runtime_audit_sha256": "cff631214d1141d4bdd8b7f4e7e1c800f69eb1ac9c9fad06adedcc5f9d510b4b",
+      "independent_review_sha256": "8dd4d5ff85ae8844df2dca86e7569f50941789e5cc9ee425cce10b0e258966c4",
+      "directions": [
+        {
+          "direction": "d0",
+          "density_4_source_sha256": "94d06139186bab8b12c7a9d48dadeb63e0ca893b0a92f52aa978b5241d1af964",
+          "live_source_sha256": "cc4acc14ecbd981a49a441bfd3fed4749251c60b4dd566d1163970c360666e26",
+          "logical_canvas": [
+            64,
+            71
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d1",
+          "density_4_source_sha256": "4269a718299f79d18f36231e483843cbf9dff8a778d3b4d715d2fd80e4ec5f38",
+          "live_source_sha256": "d0092a65b1524ca0e2dbf18d4d995e91bf30485c205878f3793d8fbed888c81a",
+          "logical_canvas": [
+            64,
+            71
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d2",
+          "density_4_source_sha256": "5c720aa2228afa4c733f792e85d9547d89b63b22f7e3e03eb0b0fe942251e663",
+          "live_source_sha256": "80640f70c3722f4a3f5c72d9dee53971fdeefd8711f4285d097964224a2cdcb9",
+          "logical_canvas": [
+            64,
+            71
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d3",
+          "density_4_source_sha256": "98b523bf0eed8b7ef4c752d9f90e33aab15fa6726de34fef7ccfbbd904d02f3a",
+          "live_source_sha256": "2e07e240b65f03ad52c05316516264f29cb2a25a116947d7bd8ff426d8373194",
+          "logical_canvas": [
+            64,
+            71
+          ],
+          "density": 2
+        }
+      ]
+    },
+    {
+      "facility": "infirmary",
+      "footprint": [
+        2,
+        2
+      ],
+      "render": {
+        "sprite": "facility/infirmary",
+        "canvas": [
+          68,
+          78
+        ],
+        "anchorTexel": [
+          34,
+          78
+        ],
+        "bodyH": 46,
+        "openTop": true,
+        "horizontalGuardTexel": 2
+      },
+      "strict_audit_sha256": "33238fa1692b140c293f7aa49a30f9747b1e325cdfead61eeba67f7c5ce6db55",
+      "runtime_audit_sha256": "355cfbf3b4c7b8f9fdada57e5f539eacec5cc99dfb723d7fd78705a69fac8f9c",
+      "independent_review_sha256": "cd6d1968304694b447ff4fca338a21c044af3566868a7cd1780574ab63e8cd1e",
+      "directions": [
+        {
+          "direction": "d0",
+          "density_4_source_sha256": "3322b3e5e8429baaae80e7589cf53a256dd90752395e7682443b0a665b1ee3dc",
+          "live_source_sha256": "1045feacc0aa11e8e338fdc7ff83dcfe0c48a77943ee4f193a8e84c87a4c7aea",
+          "logical_canvas": [
+            68,
+            78
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d1",
+          "density_4_source_sha256": "6c12665454f0a39e295158ea2d7edb13d909118384d1530b9f3106e493fb49f1",
+          "live_source_sha256": "c753ab6700c0deb2a79bf4add4b05a5e0524793c94c058c36a045e12227f4d97",
+          "logical_canvas": [
+            68,
+            78
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d2",
+          "density_4_source_sha256": "a1fba72b1bdc6cc0fd2cc77ab116ec4c9b45ab128b5a288c892a61c69e1e140c",
+          "live_source_sha256": "ae99411e1ecf68f0b5729832f35bd0aed157a57a3a776e04424220c81354ab19",
+          "logical_canvas": [
+            68,
+            78
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d3",
+          "density_4_source_sha256": "9d1a7a609e5845dde634ec795751fa8211c976d106149bd1ff966b340a620eab",
+          "live_source_sha256": "6db480d5f8566ec9e84769ff71258b2db353a60c46c5079743d7de4b9acac46d",
+          "logical_canvas": [
+            68,
+            78
+          ],
+          "density": 2
+        }
+      ]
+    },
+    {
+      "facility": "office",
+      "footprint": [
+        2,
+        2
+      ],
+      "render": {
+        "sprite": "facility/office",
+        "canvas": [
+          68,
+          73
+        ],
+        "anchorTexel": [
+          34,
+          73
+        ],
+        "bodyH": 41,
+        "openTop": true,
+        "horizontalGuardTexel": 2
+      },
+      "strict_audit_sha256": "1dce2ea58fcc0d4f5d384227478dc21eb95ef720a488c17e2eecfecf98d86c34",
+      "runtime_audit_sha256": "4c881293324cc43a854da38183c57d9bd5a76596ebc6d5353da7db27cadd4f78",
+      "independent_review_sha256": "ca2ddbe8019e7fd81055f6f1fd4604597cf6f7594821a8fa3c813e1dc7c756fb",
+      "directions": [
+        {
+          "direction": "d0",
+          "density_4_source_sha256": "576acd3abd6d8959290712de0107a3aad598828fc43780f32204a52bc4d4b969",
+          "live_source_sha256": "dd194b57831adcce19169c61062eb2e7383b37919d30d1338a283bce2d4777cb",
+          "logical_canvas": [
+            68,
+            73
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d1",
+          "density_4_source_sha256": "6a0723b22ab8f609a7100a57038a08086058887277ffd3af67366633242c7dec",
+          "live_source_sha256": "7e59fdb0be78a327ff545e276b4884daf3d1dab4990a72868675a02ae4b2cf48",
+          "logical_canvas": [
+            68,
+            73
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d2",
+          "density_4_source_sha256": "f560aea250f7799b65f9205765d95c6886e0047f1c3131362b75c499b9331eda",
+          "live_source_sha256": "4b85e0b93dfb77d453d51245f70e97a865bff6cb67c632e6266ab73ddd0ea2bb",
+          "logical_canvas": [
+            68,
+            73
+          ],
+          "density": 2
+        },
+        {
+          "direction": "d3",
+          "density_4_source_sha256": "6b921c5b260225075fd93e933e8bf3c0bf19992f8f9a6dc86444626147c4a443",
+          "live_source_sha256": "54e9a83f697e59e32af507dc5f014a59a14cec0832ef6b35fdc228e49759f965",
+          "logical_canvas": [
+            68,
+            73
+          ],
+          "density": 2
+        }
+      ]
+    }
+  ]
+}

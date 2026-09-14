@@ -11,7 +11,7 @@ import {
   reachable,
 } from './walls.js';
 import { PlacementGrid, guestWalkable } from './placement.js';
-import { bakeIndoorWalls, doorCandidates } from './indoor.js';
+import { bakeIndoorWalls, doorCandidates, cycleIndoorPassage } from './indoor.js';
 import { DoorSet, canonical } from './doors.js';
 
 /**
@@ -237,5 +237,34 @@ describe('길찾기는 손댈 것이 없다 — 문은 원래 통과 가능하�
     const seen = reachable(t, w, GATE, guestWalkable(t, p));
     expect(seen[10 * W + 10]).toBe(1); // 방 안
     expect(seen[11 * W + 10]).toBe(1); // 방 아래 바깥
+  });
+});
+
+
+describe('indoor/outdoor passage editor used by the build tool', () => {
+  it('keeps the automatic lobby entrance when adding an outdoor exit, including after save/reload', () => {
+    const { t, w, p } = world(); const doors = new DoorSet();
+    expect(bakeIndoorWalls(t, w, GATE, guestWalkable(t, p), doors).ok).toBe(true);
+    expect(steps(t, w, p, 10, 11)).toBe(-1);
+    expect(cycleIndoorPassage(t, w, GATE, doors, 10, 11, p)).toEqual({ ok: true, opened: true });
+    expect(doors.count).toBe(2);
+    expect(steps(t, w, p, 10, 11)).toBeGreaterThan(0);
+    expect(w.blocksMove(10, 10, 10, 11)).toBe(false);
+    expect(w.blocksMove(10, 11, 10, 10)).toBe(false);
+    const restored = DoorSet.fromSnapshot(doors.toSnapshot());
+    expect(bakeIndoorWalls(t, w, GATE, guestWalkable(t, p), restored).ok).toBe(true);
+    expect(steps(t, w, p, 10, 11)).toBeGreaterThan(0);
+    expect(p.check(t, w, GATE, 'flowerbed', 10, 11)).toMatchObject({ ok: false, fail: 'blocks-door' });
+    expect(p.check(t, w, GATE, 'flowerbed', 10, 10)).toMatchObject({ ok: false, fail: 'blocks-door' });
+  });
+
+  it('can add the same passage from its indoor side and rejects unrelated outdoor ground', () => {
+    const { t, w, p } = world(); const doors = new DoorSet();
+    bakeIndoorWalls(t, w, GATE, guestWalkable(t, p), doors);
+    expect(cycleIndoorPassage(t, w, GATE, doors, 10, 10, p).ok).toBe(true);
+    const before = doors.toSnapshot();
+    expect(cycleIndoorPassage(t, w, GATE, doors, 1, 1, p)).toMatchObject({ ok: false });
+    expect(doors.toSnapshot()).toEqual(before);
+    expect(steps(t, w, p, 10, 11)).toBeGreaterThan(0);
   });
 });

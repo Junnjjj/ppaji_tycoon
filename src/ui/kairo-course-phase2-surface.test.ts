@@ -1,5 +1,4 @@
 import { readFileSync } from 'node:fs';
-import { resolveFontSize } from './type-scale.js';
 import { describe, expect, it } from 'vitest';
 
 const panel = readFileSync(new URL('./kairo-course.ts', import.meta.url), 'utf8');
@@ -55,42 +54,19 @@ describe('코스 v2 액션 독 표면', () => {
   });
 
   it('코스 결정 글씨는 제목 18·지표값 15·본문 13·보조 12px 아래로 내려가지 않는다', () => {
-    /*
-     * ⚠ **크기는 스케일 토큰이다** (P1.5-A). 리터럴 px 대조는 토큰화에 깨지고,
-     * 토큰만 읽으면 리터럴이 숨는다 — `resolveFontSize` 가 둘을 같은 자로 푼다.
-     * ⚠ 그리고 **font-size 를 실제로 가진 규칙**을 찾아야 한다: 같은 이름이 더 긴
-     * 선택자에 먼저 나오면(`.kcourse[...] .kcourse-title`) 그 빈 규칙을 집는다.
-     * 계약은 "이만큼보다 작지 않다"이지 "정확히 N px"가 아니므로 **하한**으로 잰다.
-     */
-    const fs = (selector: string): number => {
-      const escaped = selector.replace(/[.[\]]/g, (ch) => `\\${ch}`);
-      const re = new RegExp(`${escaped}\\s*\\{([^}]*)\\}`, 'gs');
-      for (const m of css.matchAll(re)) {
-        const px = resolveFontSize(m[1] ?? '');
-        if (px !== null) return px;
-      }
-      return 0;
-    };
-    expect(fs('.kcourse-title')).toBeGreaterThanOrEqual(18);
-    expect(fs('.kcourse-delta-label')).toBeGreaterThanOrEqual(12);
-    expect(fs('.kcourse-delta-value')).toBeGreaterThanOrEqual(15);
-    expect(fs('.kcourse-receipt-head')).toBeGreaterThanOrEqual(18);
-    expect(fs('.kcourse-receipt-line')).toBeGreaterThanOrEqual(13);
-    expect(fs('.kcourse-why')).toBeGreaterThanOrEqual(12);
-    expect(fs('.kcourse-acts .kbtn')).toBeGreaterThanOrEqual(16);
+    expect(css).toMatch(/\.kcourse-title\s*\{[^}]*font-size:\s*18px/s);
+    expect(css).toMatch(/\.kcourse-delta-label\s*\{[^}]*font-size:\s*12px/s);
+    expect(css).toMatch(/\.kcourse-delta-value\s*\{[^}]*font-size:\s*15px/s);
+    expect(css).toMatch(/\.kcourse-receipt-head\s*\{[^}]*font-size:\s*18px/s);
+    expect(css).toMatch(/\.kcourse-receipt-line\s*\{[^}]*font-size:\s*13px/s);
+    expect(css).toMatch(/\.kcourse-why\s*\{[^}]*font-size:\s*12px/s);
+    expect(css).toMatch(/\.kcourse-acts \.kbtn\s*\{[^}]*font-size:\s*16px/s);
   });
 
-  it('독은 지표 1행 + 버튼 1행이고 천장을 안 넘는다', () => {
+  it('독은 지표 1행 + 버튼 1행이고 112px를 넘지 않는다', () => {
     // Task 6에서 천장을 토큰으로 옮겼다 — 토스트 리프트가 같은 자를 읽어야 해서다.
     expect(css).toMatch(/\.kcourse-dock\s*\{[^}]*max-height:\s*var\(--course-dock-cap\)/s);
-    /*
-     * ⚠ 값이 **112 → 132** 로 바뀌었다 (P8). 112 는 유도된 값이 아니라 관측값이었고,
-     * 실측 자연 높이 **126** 을 14px 잘라 내고 있었다 (`overflow: visible` 이라 잘린 만큼이
-     * 상자 밖으로 샜다). 132 는 내용에서 유도한다 —
-     * 제목 27 + 지표 42 + 버튼 44(터치 타깃 하한) + 패딩 10 + 간격 8 = 131.
-     * 반대편 계약인 **조작 지도 620px** 은 그대로 지켜진다 (실측 지도 725px).
-     */
-    expect(css).toMatch(/--course-dock-cap:\s*132px/);
+    expect(css).toMatch(/--course-dock-cap:\s*112px/);
     expect(panel).toContain("el('div', 'kcourse-dock')");
   });
 

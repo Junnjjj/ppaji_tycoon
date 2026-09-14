@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "state": "LIVE_ATLAS_AND_RUNTIME_VERIFIED",
+  "asset": "nursing",
+  "footprint": [
+    2,
+    2
+  ],
+  "logical_canvas": [
+    72,
+    60
+  ],
+  "change": "derive live D=2 directly from approved D=4 instead of upscaling logical D=1",
+  "approval_sha256": "29b34e0dbe357504c13d3a97c57229c9e085ad34749710b719a0c4aa12482d37",
+  "strict_qa_sha256": "d0aa35c05dbd7b25b6e5ebcf720f9375e14c24f60e3de52d1104064d40c61e6f",
+  "runtime_review_sha256": "26a79dfcfef4f770d64644499b1bb4a1fdb3c50063d51e352db3cea518dd7bf4",
+  "live_atlas_png_sha256": "181600e6600f1b36829c8c4982abce2a1e7526f6f2fbfe4082dd9a2989bd54f2",
+  "live_atlas_index_sha256": "e11db285f4f69200e2f896d49481054cd4a2ef1141925df22a8856f8d4d62fa4",
+  "geometry_gate": "PASS_D0_D1_D2_D3",
+  "directions": [
+    {
+      "direction": "d0",
+      "density_4_source_sha256": "fa022ef6572472d4d8dbd21ba185bb3da85579f3707919e17ea3bfda60285d7c",
+      "live_density_2_sha256": "9ec5d354a00b81b4976f189ff102ab37820304d8798210cb1a06bfdf4e7069a0"
+    },
+    {
+      "direction": "d1",
+      "density_4_source_sha256": "07065340043ceded3f44e3a5bc6749b4c543595fce5136d051a24c6baf9590d1",
+      "live_density_2_sha256": "9c1df1cf61ab9bf6278d4b3bf56152aad79a00acee5d6c7d6bc3d11ece6d4b00"
+    },
+    {
+      "direction": "d2",
+      "density_4_source_sha256": "d4811f869c21ea29b2ac9a04c700a11078616733ed1feec2c3f8c04615d687b3",
+      "live_density_2_sha256": "fdc83f55819e18b4059b29eefe1aa8bc87c340c2e6a90b52ccf59b0aa3f5b6d8"
+    },
+    {
+      "direction": "d3",
+      "density_4_source_sha256": "ae19c67750eba26b0de5ccc2673584f1d2af74cb9a01e85e12ebea7bbfb7cd96",
+      "live_density_2_sha256": "6ec874e9bb8fd4d7f2173885a55d5120412ed1330b7b49cee826953d4f566503"
+    }
+  ]
+}

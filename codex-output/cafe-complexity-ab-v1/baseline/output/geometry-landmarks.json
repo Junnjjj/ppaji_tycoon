@@ -1,0 +1,62 @@
+{
+  "access_kind": "portal-and-service-face",
+  "landmarks": {
+    "front_door": {
+      "count": 1,
+      "position": [
+        -0.92,
+        -0.94,
+        0.76
+      ],
+      "side": "-Y"
+    },
+    "service_counter": {
+      "count": 1,
+      "position": [
+        0.44,
+        -0.98,
+        0.68
+      ],
+      "side": "-Y"
+    },
+    "coffee_machine": {
+      "count": 1,
+      "position": [
+        0.86,
+        -0.79,
+        0.93
+      ],
+      "side": "-Y"
+    },
+    "pastry_case": {
+      "count": 1,
+      "position": [
+        0.02,
+        -0.81,
+        0.92
+      ],
+      "side": "-Y"
+    },
+    "side_window": {
+      "count": 1,
+      "position": [
+        1.37,
+        0.05,
+        1.05
+      ],
+      "side": "+X"
+    },
+    "front_awning": {
+      "count": 1,
+      "position": [
+        0.42,
+        -1.08,
+        1.4
+      ],
+      "side": "-Y"
+    }
+  },
+  "rear": "closed",
+  "permitted_occlusion": "Front features naturally hidden d2/d3; right window hidden d1/d2",
+  "npc_occupancy": "deferred"
+}

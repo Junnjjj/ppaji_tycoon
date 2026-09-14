@@ -1,5 +1,4 @@
 import { readFileSync } from 'node:fs';
-import { resolveFontSize } from './type-scale.js';
 import { describe, expect, it } from 'vitest';
 import { BuildSession, type BuildSessionHost } from './kairo-build-flow.js';
 
@@ -139,12 +138,25 @@ describe('1회 설치가 기본이다', () => {
     // 1단계는 조준이 아니다 — 옮길 시설을 지목하는 탭이다
     expect(b.session.usesAim).toBe(false);
     expect(b.session.mode).toBe('selecting');
-    b.session.beginMove({ handle: 7, defId: 'ping_pong', i: 3, j: 4, facing: 0 }, '이동: 탁구대');
+    b.session.beginMove(
+      { handle: 7, defId: 'ping_pong', i: 3, j: 4, originalFacing: 0, facing: 0 },
+      '이동: 탁구대',
+    );
     expect(b.session.usesAim).toBe(true);
     expect(b.session.move?.handle).toBe(7);
     b.confirm();
     expect(b.spends).toEqual([10]);
     expectIdle(b.session);
+  });
+
+  it('이동 회전은 선택 방향만 바꾸고 취소용 원본 방향을 보존한다', () => {
+    const b = makeBoard();
+    b.session.beginMove(
+      { handle: 7, defId: 'shop', i: 3, j: 4, originalFacing: 0, facing: 0 },
+      '이동: 매점',
+    );
+    b.session.setMoveFacing(2);
+    expect(b.session.move).toMatchObject({ originalFacing: 0, facing: 2 });
   });
 
   it('확정 뒤 지도를 다시 눌러도 배치가 시작되지 않고 돈도 안 나간다', () => {
@@ -251,7 +263,10 @@ describe('연속 설치는 사용자가 켤 때만 켜진다', () => {
   it('이동은 연속 설치를 못 켠다 — 옮길 시설을 다시 고르는 것부터가 다음 이동이다', () => {
     const b = makeBoard();
     b.session.pick('move', '이동');
-    b.session.beginMove({ handle: 7, defId: 'ping_pong', i: 3, j: 4, facing: 0 }, '이동: 탁구대');
+    b.session.beginMove(
+      { handle: 7, defId: 'ping_pong', i: 3, j: 4, originalFacing: 0, facing: 0 },
+      '이동: 탁구대',
+    );
     expect(b.session.canRepeat).toBe(false);
     b.session.setRepeat(true);
     expect(b.session.repeat).toBe(false);
@@ -334,26 +349,10 @@ describe('확정 바가 연속 설치를 글자로 보여 준다', () => {
     );
     expect(confirm).toContain('color: var(--text-on-solid)');
     expect(confirm).toContain('text-shadow: var(--sk-emboss-on-solid)');
-    /*
-     * ⚠ **크기는 스케일 토큰이다** (P1.5-A). 리터럴 px 대조는 토큰화에 깨지고,
-     * 토큰만 읽으면 리터럴이 숨는다 — `resolveFontSize` 가 둘을 같은 자로 푼다.
-     * ⚠ 그리고 **font-size 를 실제로 가진 규칙**을 찾아야 한다: 같은 이름이 더 긴
-     * 선택자에 먼저 나오면(`.kcourse[...] .kcourse-title`) 그 빈 규칙을 집는다.
-     * 계약은 "이만큼보다 작지 않다"이지 "정확히 N px"가 아니므로 **하한**으로 잰다.
-     */
-    const fs = (selector: string): number => {
-      const escaped = selector.replace(/[.[\]]/g, (ch) => `\\${ch}`);
-      const re = new RegExp(`${escaped}\\s*\\{([^}]*)\\}`, 'gs');
-      for (const m of cssSource.matchAll(re)) {
-        const px = resolveFontSize(m[1] ?? '');
-        if (px !== null) return px;
-      }
-      return 0;
-    };
-    expect(fs('.kconfirm-name')).toBeGreaterThanOrEqual(15);
-    expect(fs('.kconfirm-cost')).toBeGreaterThanOrEqual(13);
-    expect(fs('.kconfirm-check')).toBeGreaterThanOrEqual(13);
-    expect(fs('.kconfirm .place-btn')).toBeGreaterThanOrEqual(16);
+    expect(cssSource).toMatch(/\.kconfirm-name\s*\{[^}]*font-size:\s*15px/s);
+    expect(cssSource).toMatch(/\.kconfirm-cost\s*\{[^}]*font-size:\s*13px/s);
+    expect(cssSource).toMatch(/\.kconfirm-check\s*\{[^}]*font-size:\s*13px/s);
+    expect(cssSource).toMatch(/\.kconfirm \.place-btn\s*\{[^}]*font-size:\s*16px/s);
   });
 
   it('조준 중에는 홈 입력층이 화면을 안 가진다 (mode ownership)', () => {

@@ -1,0 +1,12 @@
+{
+  "old_render_rgba_unchanged": 8,
+  "independent_new_rerender_rgba_equal": 8,
+  "bad_contracts_rejected": 3,
+  "protected_original_live_files_unchanged": 44,
+  "frozen_new_input_files_unchanged": 26,
+  "http_files_exact": 18,
+  "browser_comparison_states": 8,
+  "browser_errors": 0,
+  "runner_mobile_width": 390,
+  "runner_mobile_overflow": false
+}

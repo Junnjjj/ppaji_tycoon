@@ -1,0 +1,148 @@
+{
+  "status": "RIGID_ROOT_CHECKED",
+  "physical_and_color": "same authored material renders; identical by construction",
+  "projected_centers": {
+    "d0": {
+      "front_door": [
+        264.95999908447266,
+        372.09864807128906
+      ],
+      "service_counter": [
+        349.4399871826172,
+        423.16934967041016
+      ],
+      "coffee_machine": [
+        388.47999572753906,
+        410.9334182739258
+      ],
+      "pastry_case": [
+        333.44000244140625,
+        385.4772491455078
+      ],
+      "side_window": [
+        474.8800048828125,
+        390.96736907958984
+      ],
+      "front_awning": [
+        341.75999450683594,
+        369.29310607910156
+      ]
+    },
+    "d1": {
+      "front_door": [
+        385.2799987792969,
+        430.9786376953125
+      ],
+      "service_counter": [
+        474.8800048828125,
+        395.0093307495117
+      ],
+      "coffee_machine": [
+        489.59999084472656,
+        355.8934020996094
+      ],
+      "pastry_case": [
+        437.1199951171875,
+        384.19725036621094
+      ],
+      "side_window": [
+        468.4800109863281,
+        303.2873840332031
+      ],
+      "front_awning": [
+        480.0,
+        342.4130859375
+      ]
+    },
+    "d2": {
+      "front_door": [
+        503.04002380371094,
+        370.8186492919922
+      ],
+      "service_counter": [
+        418.5600128173828,
+        332.28932189941406
+      ],
+      "coffee_machine": [
+        379.51998138427734,
+        305.3334045410156
+      ],
+      "pastry_case": [
+        434.55999755859375,
+        332.3572540283203
+      ],
+      "side_window": [
+        293.1199951171875,
+        306.4873809814453
+      ],
+      "front_awning": [
+        426.24000549316406,
+        273.29310607910156
+      ]
+    },
+    "d3": {
+      "front_door": [
+        382.7200012207031,
+        311.93865966796875
+      ],
+      "service_counter": [
+        293.1199951171875,
+        360.4493408203125
+      ],
+      "coffee_machine": [
+        278.39998626708984,
+        360.3734436035156
+      ],
+      "pastry_case": [
+        330.8800048828125,
+        333.6372528076172
+      ],
+      "side_window": [
+        299.5199890136719,
+        394.1673889160156
+      ],
+      "front_awning": [
+        288.0,
+        300.17308044433594
+      ]
+    }
+  },
+  "visual_correspondence": {
+    "d0": {
+      "front_door": "left facade visible",
+      "service_counter": "left facade visible",
+      "pastry_case": "six pastries physically present; separate two-tier case visible",
+      "coffee_machine": "right of case; buttons/head/base distinct at768; finer parts reduced at192",
+      "front_awning": "same facade over service opening",
+      "side_window": "right facade visible"
+    },
+    "d1": {
+      "front_door": "right facade visible",
+      "service_counter": "right facade visible",
+      "pastry_case": "left of machine retained",
+      "coffee_machine": "right of pastry case retained",
+      "front_awning": "right facade above counter",
+      "side_window": "occluded"
+    },
+    "d2": {
+      "front_features": "naturally occluded behind closed rear/left walls",
+      "side_window": "occluded"
+    },
+    "d3": {
+      "front_features": "occluded, tiny awning end/ledge at far left silhouette",
+      "side_window": "left screen facade visible"
+    }
+  },
+  "counts": {
+    "front_door": 1,
+    "service_counter": 1,
+    "coffee_machine": 1,
+    "pastry_case": 1,
+    "side_window": 1,
+    "front_awning": 1,
+    "pastry_ring": 6,
+    "cup": 4
+  },
+  "access_overlay": "projected door/counter physical centers only; simulation slots not supplied",
+  "npc_runtime": "NOT_EVALUATED"
+}

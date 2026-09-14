@@ -1,4 +1,6 @@
+import { isSlopeKind, slopeAt } from './slopes.js';
 import rawFacilities from '../../data/kairo-facilities.json' with { type: 'json' };
+import { quarterTurnOffset } from '../../kairo-facing.js';
 import { KairoTerrain } from './terrain.js';
 import { WallGrid, reachable, EDGE_DOOR } from './walls.js';
 import { riverZones, permitUsed, deckKey } from './swim.js';
@@ -49,18 +51,23 @@ export interface KairoFacilitySlot {
  * 시설의 **놓인 방향** (K53 에서 `0|1` → `0|1|2|3`).
  *
  * 뜻은 **발자국 안 오프셋 `(di,dj)` 에 거는 변환**이고, 정본 산수는
- * `PlacementGrid.footprintTileOf` **한 곳**뿐이다:
+ * `PlacementGrid.footprintTileOf` **한 곳**뿐이다. 2방향 레거시와 물리 4방향은
+ * 의도적으로 갈린다:
  *
  * ```
- *   0  (di, dj)                    w×d   그대로            앞면 +I·+J (화면 아래)
- *   1  (dj, di)                    d×w   전치 = 가로 거울   앞면 +I·+J
- *   2  (w−1−di, d−1−dj)            w×d   180° 점대칭        앞면 −I·−J (화면 위)
- *   3  (d−1−dj, w−1−di)            d×w   전치 후 뒤집기     앞면 −I·−J
+ *   2방향 facing 0  (di,dj)         w×d   레거시 원본
+ *   2방향 facing 1  (dj,di)         d×w   레거시 가로 거울/전치
+ *
+ *   4방향 d0  (di,dj)               w×d   root Z   0°
+ *   4방향 d1  (dj,w−1−di)           d×w   root Z  90°
+ *   4방향 d2  (w−1−di,d−1−dj)       w×d   root Z 180°
+ *   4방향 d3  (d−1−dj,di)           d×w   root Z 270°
  * ```
  *
- * ⚠ **0·1 의 뜻을 바꾸지 않았다.** 세이브가 v7 그대로일 수 있는 유일한 조건이다
- * (`0 = w×d`, `1 = d×w`). 뜻을 바꾸면 이미 나간 세이브의 시설이 전부 다른 발자국으로
- * 열리므로 **v8 + 마이그레이션이 필수**가 된다.
+ * ⚠ `facings` 가 없는 기존 2방향 시설의 **0·1 뜻은 바꾸지 않았다.** 세이브가 v7 그대로일
+ * 수 있는 조건이다. 아직 라이브 데이터에는 `facings: 4` 가 0개이므로 새 4방향 시설만
+ * 물리 quarter-turn 산수를 사용한다. 4방향에서 전치를 90° 회전이라고 부르면 안 된다 —
+ * determinant가 −1인 반사라 Blender 단일 루트 회전과 절대 일치하지 않는다.
  *
  * ⚠ 어떤 시설이 2방향인지 4방향인지는 **데이터가 정한다** (`KairoFacilityDef.facings`,
  * 불변식 3). 코드에 시설 목록을 박지 말 것 — `facingsOf()` 하나로 묻는다.
@@ -74,6 +81,8 @@ export type FacilityFacing = 0 | 1 | 2 | 3;
  * (`PlacementGrid.footprintTileOf` 주석). 그래서 전치는 `+Z↔+X`, `-Z↔-X` 이고 세로 짝은 없다.
  * 180°(facing 2)는 화면에서도 점대칭이라 앞뒤가 통째로 뒤집힌다 — `+Z↔-Z`, `+X↔-X`.
  * facing 3 은 그 둘의 합성이고 **순서에 무관**하다 (거울과 점대칭은 교환된다).
+ * 이것은 2방향 레거시 호환 규칙이다. 물리 4방향에서는 `+Z→+X→−Z→−X` quarter-turn을
+ * 반복한다.
  *
  * 이름의 정본은 렌더 계약의 `guest.facingNames` 다 — 여기는 그 이름들 사이의 **짝**만 안다.
  *
@@ -93,9 +102,20 @@ const OPPOSITE_FACING: Readonly<Record<string, string>> = {
   '+X': '-X',
   '-X': '+X',
 };
+const QUARTER_TURN_FACING: Readonly<Record<string, string>> = {
+  '+Z': '+X',
+  '+X': '-Z',
+  '-Z': '-X',
+  '-X': '+Z',
+};
 
-/** 슬롯 방향 이름에 회전을 건다 — `MIRROR`/`OPPOSITE` 의 유일한 조합 자리 */
-function rotateFacingName(name: string, facing: FacilityFacing): string {
+/** 슬롯 방향 이름에 회전을 건다 — 레거시 거울과 물리 quarter-turn의 유일한 분기 자리 */
+function rotateFacingName(name: string, facing: FacilityFacing, physicalFourWay: boolean): string {
+  if (physicalFourWay) {
+    let rotated = name;
+    for (let turn = 0; turn < facing; turn++) rotated = QUARTER_TURN_FACING[rotated] ?? rotated;
+    return rotated;
+  }
   const mirrored = facing % 2 === 1 ? (MIRROR_FACING[name] ?? name) : name;
   return facing >= 2 ? (OPPOSITE_FACING[mirrored] ?? mirrored) : mirrored;
 }
@@ -208,6 +228,8 @@ export interface KairoFacilityDef {
   need?: NeedKind;
   /** 손님이 위로 걸어 올라갈 수 있나 — 플로팅덱·선착장만 true */
   walkOn?: boolean;
+  /** Ordered clear cells within a ticket facility, ending at the park-side exit. */
+  admissionPassage?: readonly (readonly [number, number])[];
   /**
    * 방향 그림이 **몇 장인가** — 없으면 `2` (K53). 자세한 뜻은 `FacilityFacing` 주석.
    *
@@ -216,6 +238,8 @@ export interface KairoFacilityDef {
    * (`facingsOf` 가 2 를 돌려주므로 회전은 0↔1 뿐이고 스프라이트 ID 도 안 바뀐다).
    */
   facings?: 2 | 4;
+  /** Canonical outside access tiles, rotated with the physical facility. */
+  entryTiles?: readonly (readonly [number, number])[];
   placement: {
     requiresIndoor?: boolean;
     /** 물 위 기반이 필요하다 (인플레이터블·대여소) */
@@ -379,6 +403,22 @@ export const SPECIALTY_DOUBLE_LEVEL = 5;
 const DEFS = (rawFacilities as unknown as { facilities: Record<string, KairoFacilityDef> })
   .facilities;
 
+/**
+ * URL로만 여는 HD 배치 검토가 승인된 풋프린트와 4방향 산수를 실제 시뮬에 태우는 손잡이.
+ * JSON 파일은 바꾸지 않고 이 페이지 수명 동안의 메모리 정의만 덮는다.
+ */
+export function setFacilityReviewOverrides(
+  overrides: Readonly<Record<string, Pick<KairoFacilityDef, 'size' | 'facings'>>>,
+): void {
+  for (const [id, patch] of Object.entries(overrides)) {
+    const current = DEFS[id];
+    if (!current) throw new Error(`검토 오버라이드 시설이 없음: ${id}`);
+    const next: KairoFacilityDef = { ...current, size: [...patch.size] as [number, number] };
+    if (patch.facings !== undefined) next.facings = patch.facings;
+    DEFS[id] = next;
+  }
+}
+
 export function facilityDef(id: string): KairoFacilityDef | undefined {
   return DEFS[id];
 }
@@ -388,6 +428,10 @@ export function allFacilityDefs(): KairoFacilityDef[] {
 }
 
 export interface PlacedFacility {
+  /** Pre-passage saves retain counter service until their entrance is safely adopted. */
+  legacyAdmission?: boolean;
+  /** Only untouched, authored arrival props may be replaced by a later presentation. */
+  arrivalDecoration?: { defId: string; i: number; j: number; facing: FacilityFacing };
   /** 인스턴스 번호 — 점유 격자가 이 값을 담는다 (0 은 "빈 칸") */
   handle: number;
   defId: string;
@@ -399,11 +443,6 @@ export interface PlacedFacility {
    * 옛 세이브에는 없다 — 없으면 0. **v7 그대로다**: `0 = w×d`, `1 = d×w` 의 뜻을
    * 그대로 두고 2·3 을 덧붙였으므로 `facing: 1` 인 옛 스냅샷이 같은 발자국으로 열린다.
    */
-  /**
-   * 붙은 강화품 (P3). **풀 재고를 안 만든다** — 산 순간 이 시설에 붙고, P5 의 개선이
-   * 이것을 요구한다. optional 이라 마이그레이션이 없다 (`specialty` 선례).
-   */
-  fittings?: string[];
   facing?: FacilityFacing;
   /**
    * 개선 단계 1~3 (§15.9 시설 상세의 [업그레이드]).
@@ -438,12 +477,11 @@ export type PlaceFail =
   | 'outside-land'
   | 'not-buildable'
   | 'permit-over'
+  | 'slope-facing'
   | 'level-mixed'
   | 'blocks-door'
   | 'would-strand'
   | 'blocks-gate'
-  /** 놓인 코스의 루트를 가로막는다 (Q10) */
-  | 'blocks-course'
   | 'wrong-terrain'
   | 'occupied'
   | 'blocked-by-wall'
@@ -475,16 +513,6 @@ export interface PlaceOptions {
    * 안 주면 무제한 — 기존 검사·도구가 그대로 돈다.
    */
   permitArea?: number;
-  /**
-   * 놓인 코스들의 **루트 칸** (Q10, `courseRouteTiles` 의 출력). 발자국이 겹치면
-   * `blocks-course` 로 거절한다 — 플로팅덱으로 운행 중인 코스를 막으면 보트가 시설을
-   * 뚫거나 코스가 조용히 죽는다 (사용자 지적: "플로팅덱으로 막으면 안 되잖아").
-   *
-   * ⚠ **placement 는 코스를 모른다** (모듈 경계) — 칸 집합만 받는다. `blocks-gate` 가
-   * `guestWalkable` 술어만 받는 것과 같은 자리다. 안 주면 안 본다 (기존 검사 호환).
-   * production 은 main·봇 둘 다 넘긴다 — 정적 검사가 지킨다.
-   */
-  courseTiles?: ReadonlySet<string>;
 }
 
 export interface PlaceOutcome {
@@ -504,8 +532,8 @@ export interface PlaceOutcome {
 export function guestWalkable(
   terrain: KairoTerrain,
   placement: PlacementGrid,
-): (i: number, j: number) => boolean {
-  return (i, j) => {
+): ((i: number, j: number) => boolean) & { canCross: (i: number, j: number, ni: number, nj: number) => boolean } {
+  const stand = (i: number, j: number): boolean => {
     if (placement.blocksWalk(i, j)) return false;
     /*
      * ⚠ `isWalkable`(육지인가)이 아니라 `isGuestWalkable`(손님이 다니나)이다 (K32-B).
@@ -513,6 +541,7 @@ export function guestWalkable(
      */
     return terrain.isGuestWalkable(i, j) || placement.isWalkOn(i, j);
   };
+  return Object.assign(stand, { canCross: (i: number, j: number, ni: number, nj: number) => !placement.blocksCross(i, j, ni, nj) });
 }
 
 /**
@@ -613,8 +642,8 @@ export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
    * 물가인지 경사인지 구분이 안 된다. 이것이 "산 중턱 평지"가 게임이 되는 지점이다.
    */
   'level-mixed': '경사입니다 — 단이 고른 평지에 놓으세요',
+  'slope-facing': '울타리를 회전해 경사로의 오르막 방향에 맞추세요',
   'blocks-door': '문 앞은 비워야 합니다',
-  'blocks-course': '보트 코스가 지나가는 물입니다 — 코스를 옮기거나 비켜서 놓으세요',
   'would-strand': '이 자리에 놓으면 실내 일부에 못 가게 됩니다',
   /*
    * P3-B: `would-strand`/`blocks-door` 의 **입구 판**. 처방이 "길을 한 칸 남기라"여야
@@ -660,6 +689,7 @@ export const LEVEL_FEE_STEP = 0.3;
 export const LEVEL_SATISFACTION = 6;
 
 export interface PlacementSnapshot {
+  footprintRevision?: number;
   w: number;
   h: number;
   next: number;
@@ -669,19 +699,6 @@ export interface PlacementSnapshot {
 /** 물 위에 놓는 층 — 나머지는 걸을 수 있는 땅을 요구한다 */
 function wantsWater(layer: KairoFacilityDef['layer']): boolean {
   return layer === 'water';
-}
-
-/**
- * 그 단계로 올리려면 무엇이 필요한가 (P5). **데이터가 정한다** (불변식 3).
- *
- * ⚠ 비우면 P1.5 이전과 **완전히 같은 경로**로 돌아간다 — 그게 이 페이즈의 되돌리기다.
- * ⚠ `defId` 를 받는 것은 **나중에 시설마다 다르게** 하려는 자리다. 지금 데이터는 단계만
- * 보지만, 인자를 안 받아 두면 그때 시그니처를 바꿔야 하고 호출부가 전부 흔들린다.
- */
-export function upgradeRequirement(_defId: string, toLevel: number): readonly string[] {
-  const table = (rawFacilities as unknown as { upgradeRequires?: Record<string, string[]> })
-    .upgradeRequires;
-  return table?.[String(toLevel)] ?? [];
 }
 
 export class PlacementGrid {
@@ -714,7 +731,28 @@ export class PlacementGrid {
    */
   isWalkOn(i: number, j: number): boolean {
     const item = this.at(i, j);
-    return item ? DEFS[item.defId]?.walkOn === true : false;
+    if (!item) return false;
+    const def = DEFS[item.defId];
+    if (!def) return false;
+    return def.walkOn === true || (!item.legacyAdmission && (def.admissionPassage ?? []).some(tile => {
+      const [x, y] = PlacementGrid.footprintTileOf(def, item.i, item.j, tile, item.facing ?? 0);
+      return x === i && y === j;
+    }));
+  }
+
+  /** Passage side walls remain solid; only consecutive lane cells and its two mouths connect. */
+  blocksCross(i: number, j: number, ni: number, nj: number): boolean {
+    for (const [x, y] of [[i, j], [ni, nj]]) {
+      const item = this.at(x!, y!);
+      const def = item ? DEFS[item.defId] : undefined;
+      if (!item || item.legacyAdmission || !def?.admissionPassage) continue;
+      const local = [...(def.entryTiles ?? []), ...def.admissionPassage];
+      const lane = local.map(t => PlacementGrid.footprintTileOf(def, item.i, item.j, t, item.facing ?? 0));
+      const a = lane.findIndex(t => t[0] === i && t[1] === j);
+      const b = lane.findIndex(t => t[0] === ni && t[1] === nj);
+      if (a < 0 || b < 0 || Math.abs(a - b) !== 1) return true;
+    }
+    return false;
   }
 
   /** 손님의 길을 막나 — 점유돼 있고 걸어 올라갈 수 없으면 막는다 */
@@ -803,15 +841,16 @@ export class PlacementGrid {
    * (`guestWalkable`·`evaluateCondition`·`capacityOf`·`admissionLimit`). 표시와 손님이
    * 다른 칸을 가리키면 표시가 조용히 거짓말이 된다 — 그러면 안 보여 주는 편이 낫다.
    *
-   * ## 회전은 **전치**다 (`(di,dj) → (dj,di)`)
+   * ## 2방향 레거시는 전치, 4방향은 물리 quarter-turn이다
    *
-   * 발자국과 같은 규칙이어야 한다. `sizeOf` 는 `facing===1` 에서 w↔h 만 바꾸고
+   * 발자국과 같은 규칙이어야 한다. `sizeOf` 는 홀수 facing에서 w↔h를 바꾸고
    * `footprintTiles` 는 `(i,j)` 에서 그 사각형을 편다 — 그 사각형에 오프셋을 다시
    * 넣는 유일한 방법이 전치다 (`dj0 < h0 = w`, `di0 < w0 = h` 라 **항상 발자국 안**이다).
    *
-   * 그림과도 맞는다. 씬은 회전을 `setFlipX` 로 그리는데, 아이소에서 +I 는 `(+16,+8)`
+   * 2방향 그림과도 맞는다. 씬은 레거시 회전을 `setFlipX` 로 그리는데, 아이소에서 +I 는 `(+16,+8)`
    * +J 는 `(−16,+8)` 이므로 i 와 j 를 맞바꾸면 화면 x 만 뒤집히고 y 는 그대로다 —
-   * **전치 = 가로 거울**이다. 다른 변환을 쓰면 스프라이트와 입출구가 따로 논다.
+   * **전치 = 가로 거울**이다. 4방향 생산 에셋은 별도 d0–d3 이미지이므로 전치를 재사용하지
+   * 않고 Blender root Z `0/90/180/270°`와 같은 quarter-turn을 쓴다.
    *
    * ⚠ **회전이 입출구를 안 돌리던 것이 버그였다** (K51 에서 재현). `slide_large`(4×5,
    * 입구 `[3,4]`)를 회전하면 발자국이 5×4 라 `dj=4` 는 **발자국 밖**이고, 손님이 시설
@@ -842,19 +881,19 @@ export class PlacementGrid {
    *
    * 규칙은 `sizeOf`/`footprintTiles` 와 같아야 한다.
    *
-   * ## 4방향 변환식 (K53) — `w`·`d` 는 **데이터 그대로의** 발자국 (`def.size`)
+   * ## 물리 4방향 변환식 — `w`·`d` 는 **데이터 그대로의** 발자국 (`def.size`)
    *
    * ```
    *   0  (di, dj)              그대로            사각형 w×d
-   *   1  (dj, di)              전치              사각형 d×w
+   *   1  (dj, w−1−di)          +90°              사각형 d×w
    *   2  (w−1−di, d−1−dj)      뒤집기            사각형 w×d
-   *   3  (d−1−dj, w−1−di)      전치 후 뒤집기    사각형 d×w
+   *   3  (d−1−dj, di)           +270°             사각형 d×w
    * ```
    *
-   * ⚠ **전치만으로는 부족하다.** K51 이 정확히 이 자리에서 데였고(회전이 입출구를 안
-   * 돌려 `slide_large` 의 입구 `[3,4]` 가 발자국 밖으로 나갔다), 4방향에서는 **뒤집기를
-   * 빼먹는 것**이 같은 모양의 두 번째 사고가 된다: `facing 2` 를 전치 없이 그대로 두면
-   * 그림만 뒤돌고 입구·슬롯은 앞에 남아, 화면과 손님이 갈라진다.
+   * ⚠ `(dj,di)`는 determinant −1인 반사이고 90° 회전이 아니다. Blender 축을
+   * `I=+X, J=−Y, height=+Z`로 놓았을 때 root Z +90°는 정확히
+   * `(di,dj)→(dj,w−1−di)`다. d1/d3에서 이 한 축 뒤집기를 빼면 그림과 입구·슬롯이
+   * 서로 다른 물체를 설명한다.
    *
    * 발자국 안이 보장된다: 1·3 은 `dj < d = W`, `di < w = D`; 2·3 의 뒤집기는
    * `0 ≤ w−1−di < w` 라 구간을 벗어나지 않는다 (검사가 75종 × 4방향 전수로 잰다).
@@ -871,6 +910,11 @@ export class PlacementGrid {
     facing: FacilityFacing = 0,
   ): [number, number] {
     const [w, d] = def.size;
+    if (facingsOf(def) === 4) {
+      const [fi, fj] = quarterTurnOffset([w, d], o, facing);
+      return [i + fi, j + fj];
+    }
+    // 이미 출시된 2방향 세이브 호환: facing 1은 실제 90°가 아니라 전치/가로 거울이다.
     // 먼저 전치 (홀수 방향), 그 다음 뒤집기 (2·3) — 전치 뒤의 사각형 안에서 뒤집는다
     const [tw, td] = facing % 2 === 1 ? [d, w] : [w, d];
     const [ti, tj] = facing % 2 === 1 ? [o[1], o[0]] : [o[0], o[1]];
@@ -893,11 +937,11 @@ export class PlacementGrid {
    * 되고, "회전 특화로 정원을 올렸는데 아무도 안 들어온다"가 된다. 붐비는 것이 보이는
    * 편이 낫다 — "회전 특화 = 붐빈다"가 화면에 나타나야 그 선택이 읽힌다.
    *
-   * ## 방향은 **거울과 점대칭의 합성**이다
+   * ## 방향은 2방향 레거시와 물리 4방향을 구분한다
    *
    * 전치(1·3)는 화면 x 만 뒤집으므로 `+Z ↔ +X`, `-Z ↔ -X`. 180°(2·3)는 화면에서도
    * 점대칭이라 앞뒤가 뒤집힌다 (`+Z ↔ -Z`, `+X ↔ -X`). 산수는 `rotateFacingName`
-   * 하나가 갖는다 — 여기서 표를 다시 펼치면 `footprintTileOf` 와 갈라진다.
+   * 하나가 갖는다. `facings: 4`에서는 `+Z→+X→−Z→−X`를 quarter-turn 수만큼 반복한다.
    */
   static slotTileOf(
     def: KairoFacilityDef,
@@ -915,7 +959,7 @@ export class PlacementGrid {
       tile: PlacementGrid.footprintTileOf(def, i, j, s.tile, facing),
       // 정원 초과분은 데이터가 정한 자세(눕기·헤엄)를 흉내 낼 자리가 없다 — 그냥 선다
       pose: k >= n ? 'idle' : s.pose,
-      facing: rotateFacingName(s.facing, facing),
+      facing: rotateFacingName(s.facing, facing, facingsOf(def) === 4),
     };
   }
 
@@ -932,9 +976,9 @@ export class PlacementGrid {
    *
    *   `ride` 가 있으면 → 선언된 입구 칸(`rideTilesOf().entry`)의 **바깥 이웃**만.
    *                      모서리를 데이터가 이미 골랐으므로 존중한다
-   *   아니면          → 발자국 **앞 두 면**의 바깥 이웃:
-   *                      facing 0·1 → +I·+J  `{(i+w, j+dj)} ∪ {(i+di, j+d)}`
-   *                      facing 2·3 → −I·−J  `{(i−1, j+dj)} ∪ {(i+di, j−1)}`
+   *   아니면          → 발자국 **앞 두 면**의 바깥 이웃. 4방향에서는 물리 회전과 같다:
+   *                      d0 → +I·+J, d1 → +I·−J, d2 → −I·−J, d3 → −I·+J
+   *                      2방향 레거시는 facing 0·1 모두 +I·+J를 유지한다.
    *
    * 아이소에서 +I·+J 는 화면 **아래쪽** 두 변이다 — 카메라를 향한 면이고, 스프라이트가
    * 정면을 그리는 쪽이다. 모서리 `(i+w, j+d)` 는 어느 면에도 안 붙어 있어 뺀다.
@@ -952,9 +996,9 @@ export class PlacementGrid {
    *   · **4종**(`airbounce`·`turtle_island`·`junglegym_w`·`ice_fishing`)은 슬롯이 전부
    *     발자국 **안쪽**이라 인접한 바깥 칸이 **하나도 없다** — 입구가 빈 집합이 된다
    *   · `pool_warm 4×4` 는 8개 중 4개가 안쪽이고 나머지 4개가 **`−J` 뒷변**에 있어,
-   *     파생하면 입구가 통째로 **뒤**로 간다 (`cafe 2×3` 도 슬롯이 뒷줄이라 같다)
-   * 슬롯이 앞줄을 비워 두는 것은 "앞으로 들어가 뒤에 앉는다"가 이미 데이터에 있다는 뜻이다 —
-   * 그 빈 줄이 입구이지, 슬롯이 입구인 것이 아니다.
+   *     파생하면 입구가 통째로 **뒤**로 간다 (카페도 좌석 슬롯과 서비스 면이 다르다)
+   * 슬롯이 서비스 면 쪽 공간을 비워 두는 것은 "앞으로 들어가 안쪽에 앉는다"가 이미
+   * 데이터에 있다는 뜻이다 — 그 빈 공간이 입구이지, 슬롯이 입구인 것이 아니다.
    *
    * ⚠ 이 함수는 **순수 파생**이다 — 통행 가능 여부(`guestWalkable`)도 격자 범위도 안 본다.
    * 부르는 쪽이 자기 판정으로 거른다. 여기서 걸러 버리면 "왜 입구가 없지"를 부르는 쪽이
@@ -997,7 +1041,23 @@ export class PlacementGrid {
       return out;
     }
 
-    // 앞면이 어느 쪽인가 — 0·1 은 +I·+J (화면 아래), 2·3 은 −I·−J (화면 위)
+    if (def.entryTiles) {
+      return def.entryTiles.map((tile) => PlacementGrid.footprintTileOf(def, i, j, tile, facing));
+    }
+
+    if (facingsOf(def) === 4) {
+      const addIPlus = (): void => { for (let dj = 0; dj < d; dj++) push(i + w, j + dj); };
+      const addIMinus = (): void => { for (let dj = 0; dj < d; dj++) push(i - 1, j + dj); };
+      const addJPlus = (): void => { for (let di = 0; di < w; di++) push(i + di, j + d); };
+      const addJMinus = (): void => { for (let di = 0; di < w; di++) push(i + di, j - 1); };
+      if (facing === 0) { addIPlus(); addJPlus(); }
+      else if (facing === 1) { addIPlus(); addJMinus(); }
+      else if (facing === 2) { addIMinus(); addJMinus(); }
+      else { addIMinus(); addJPlus(); }
+      return out;
+    }
+
+    // 2방향 레거시: 0·1 모두 +I·+J (화면 아래), 도달 불가능한 2·3은 옛 점대칭을 보존한다.
     const back = facing >= 2;
     for (let dj = 0; dj < d; dj++) push(back ? i - 1 : i + w, j + dj);
     for (let di = 0; di < w; di++) push(i + di, back ? j - 1 : j + d);
@@ -1039,15 +1099,6 @@ export class PlacementGrid {
      * 도시 띠(도로·보도·가로수)에는 못 짓는다 (K36). **토지 검사 다음, 지형 검사 앞**이다 —
      * "내 땅 밖"과 "내 땅 안이지만 도로"는 처방이 다르므로 사유를 갈라야 한다.
      */
-    /*
-     * 코스 루트 (Q10) — 지형 판정보다 먼저다. "물이 아니라서"보다 "코스가 지나가서"가
-     * 더 바깥 제약이다 (판정 순서 규칙: 가장 바깥 제약부터 말해야 처방이 맞는다).
-     */
-    if (opts?.courseTiles !== undefined && opts.courseTiles.size > 0) {
-      for (const [ti, tj] of tiles) {
-        if (opts.courseTiles.has(`${ti},${tj}`)) return { ok: false, fail: 'blocks-course' };
-      }
-    }
     for (const [ti, tj] of tiles) {
       if (!terrain.isBuildable(ti, tj)) return { ok: false, fail: 'not-buildable' };
     }
@@ -1068,6 +1119,16 @@ export class PlacementGrid {
        */
       const [fw, fh] = PlacementGrid.sizeOf(def, facing);
       if (!terrain.levelUniform(i, j, fw, fh)) {
+        return { ok: false, fail: 'level-mixed' };
+      }
+    }
+
+    // Only the existing straight wood fence has authored geometry for a sloped tile.
+    for (const [ti, tj] of tiles) {
+      if (!isSlopeKind(terrain.kindAt(ti, tj))) continue;
+      const slope = slopeAt(terrain, ti, tj);
+      if (defId === 'env_wood_fence' && slope && facing !== slope.facing) return { ok: false, fail: 'slope-facing' };
+      if (defId !== 'env_wood_fence' || !slope) {
         return { ok: false, fail: 'level-mixed' };
       }
     }
@@ -1280,52 +1341,6 @@ export class PlacementGrid {
     return { ok: true, placed };
   }
 
-  /**
-   * **자리만 옮긴다** (P5 — §8-9). 같은 시설이므로 개선 단계·특화·메뉴·강화품을 **보존한다.**
-   *
-   * ⚠ 예전에는 부르는 쪽이 `remove()` + `place()` 를 이어 붙였고, `place()` 는 **새 시설을
-   * 만드므로** 수수료를 내고 5단계 시설이 1단계로 돌아왔다. 계약이 아니라 버그였다
-   * (이동 수수료는 `'upgrades'` — 「이미 있는 자산에 쓰는 돈」이라고 회계까지 적어 뒀는데
-   * 실제로는 자산을 버리고 있었다).
-   *
-   * ⚠ **철거는 여전히 전부 잃는다** — 그게 규칙이다. 강화품만 환불하면 규칙이 두 벌이 되고
-   * 「철거 → 재설치」가 이득이 된다.
-   *
-   * 실패하면 **아무것도 안 바뀐다** (원본이 그대로 남는다).
-   */
-  relocate(
-    terrain: KairoTerrain,
-    walls: WallGrid,
-    gate: { i: number; j: number },
-    handle: number,
-    i: number,
-    j: number,
-    opts?: PlaceOptions,
-  ): PlaceOutcome {
-    const from = this.items.get(handle);
-    if (!from) return { ok: false, fail: 'unknown-def' };
-    const carry: Partial<PlacedFacility> = {
-      ...(from.level !== undefined ? { level: from.level } : {}),
-      ...(from.specialty !== undefined ? { specialty: from.specialty } : {}),
-      ...(from.menuIds !== undefined ? { menuIds: [...from.menuIds] } : {}),
-      ...(from.fittings !== undefined ? { fittings: [...from.fittings] } : {}),
-    };
-    const back = { ...from };
-    this.remove(handle);
-    const moved = this.place(terrain, walls, gate, from.defId, i, j, opts);
-    if (!moved.ok || !moved.placed) {
-      // 되돌린다 — 반쯤 옮겨진 상태가 최악이다
-      const undo = this.place(terrain, walls, gate, back.defId, back.i, back.j, {
-        ...opts,
-        ...(back.facing !== undefined ? { facing: back.facing } : {}),
-      });
-      if (undo.ok && undo.placed) Object.assign(undo.placed, carry);
-      return moved;
-    }
-    Object.assign(moved.placed, carry);
-    return moved;
-  }
-
   remove(handle: number): boolean {
     const item = this.items.get(handle);
     if (!item) return false;
@@ -1416,80 +1431,13 @@ export class PlacementGrid {
     return Math.round(def.cost * (0.6 + level * 0.5));
   }
 
-  /** 이 시설에 붙은 강화품 (P3) */
-  fittingsOf(handle: number): readonly string[] {
-    return this.items.get(handle)?.fittings ?? [];
-  }
-
-  /**
-   * 강화품을 붙인다 (P3). **같은 것을 여러 번 붙일 수 있다** — 소유가 아니라 소모품이고,
-   * P5 의 개선이 하나씩 쓴다.
-   */
-  addFitting(id: string, handle: number): boolean {
-    const item = this.items.get(handle);
-    if (!item) return false;
-    item.fittings = [...(item.fittings ?? []), id];
-    return true;
-  }
-
   /** 한 단계 올린다. 이미 최고면 false */
-  /**
-   * 한 단계 올린다. 이미 최고면 false.
-   *
-   * ⚠ **시그니처를 바꾸지 말 것** — 골든이 직접 부른다. 강화품 요구는 **상위 경계**
-   * (`tryUpgrade`)가 지고, 여기는 그대로 「올린다」만 한다. 재고 검사를 여기 넣으면
-   * 골든이 통째로 다른 세계가 된다.
-   */
   upgrade(handle: number): boolean {
     const item = this.items.get(handle);
     if (!item) return false;
     const level = item.level ?? 1;
     if (level >= FACILITY_MAX_LEVEL) return false;
     item.level = level + 1;
-    return true;
-  }
-
-  /**
-   * **상위 경계** — 재고 검사 → 결제 → 소비 → 올리기를 한 동기 경계에서 한다 (P5).
-   *
-   * ⚠ **원자성**: 재고가 없으면 **현금도 재고도 안 움직인다** (`CourseStore.confirmEdit` 과
-   * 같은 규약). 결제가 거절돼도 강화품이 사라지면 안 되므로 **소비는 결제 뒤**다.
-   *
-   * ⚠ `main.ts`·`tools/kairo-sim.ts` 는 `placement.upgrade(` 를 **직접 안 부른다** —
-   * 정적 검사가 지킨다. 직접 부르면 이 경계가 우회되어 강화품 축이 조용히 사라진다.
-   */
-  tryUpgrade(
-    handle: number,
-    spend: (amount: number) => boolean,
-  ): { ok: boolean; missing: readonly string[] } {
-    const item = this.items.get(handle);
-    if (!item) return { ok: false, missing: [] };
-    const level = item.level ?? 1;
-    if (level >= FACILITY_MAX_LEVEL) return { ok: false, missing: [] };
-    const need = upgradeRequirement(item.defId, level + 1);
-    const have = [...(item.fittings ?? [])];
-    const missing: string[] = [];
-    for (const id of need) {
-      const at = have.indexOf(id);
-      if (at < 0) missing.push(id);
-      else have.splice(at, 1);
-    }
-    if (missing.length > 0) return { ok: false, missing };
-    if (!spend(this.upgradeCost(handle))) return { ok: false, missing: [] };
-    for (const id of need) this.consumeFitting(handle, id);
-    this.upgrade(handle);
-    return { ok: true, missing: [] };
-  }
-
-  /** 그 시설에서 강화품 하나를 쓴다 (P5) — 개선이 소비한다 */
-  consumeFitting(handle: number, id: string): boolean {
-    const item = this.items.get(handle);
-    const at = item?.fittings?.indexOf(id) ?? -1;
-    if (!item || at < 0) return false;
-    const next = [...(item.fittings ?? [])];
-    next.splice(at, 1);
-    if (next.length > 0) item.fittings = next;
-    else delete item.fittings;
     return true;
   }
 
@@ -1611,7 +1559,7 @@ export class PlacementGrid {
   }
 
   toSnapshot(): PlacementSnapshot {
-    return { w: this.width, h: this.height, next: this.nextHandle, items: this.all() };
+    return { w: this.width, h: this.height, next: this.nextHandle, items: this.all(), footprintRevision: 1 };
   }
 
   static fromSnapshot(s: PlacementSnapshot): PlacementGrid {

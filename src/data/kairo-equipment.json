@@ -15,8 +15,7 @@
       "thrillCoef": 0.85,
       "thrillBase": 23,
       "safeCurvature": 0.185,
-      "desc": "땅콩튜브",
-      "start": true
+      "desc": "땅콩튜브"
     },
     {
       "id": "jjinppang",
@@ -32,8 +31,7 @@
       "thrillCoef": 0.9,
       "thrillBase": 21,
       "safeCurvature": 0.1875,
-      "desc": "찐빵튜브",
-      "start": true
+      "desc": "찐빵튜브"
     },
     {
       "id": "banana",

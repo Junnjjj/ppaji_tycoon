@@ -104,7 +104,7 @@ function arrivalTiles(world: World, defId: string, i: number, j: number, facing:
 afterEach(() => setEntryFaultForTest(false));
 
 describe('손님이 앞면으로 들어간다 (K52)', () => {
-  it('★ 사방이 뚫린 평지의 cafe 2×3 — 도착 칸이 전부 앞 두 면이다', () => {
+  it('★ 사방이 뚫린 평지의 cafe 3×2 — 도착 칸이 전부 앞 두 면이다', () => {
     const want = new Set(PlacementGrid.entryTilesOf(facilityDef('cafe')!, 10, 10, 0).map(key));
     const seen = arrivalTiles(paved(), 'cafe', 10, 10, 0);
 
@@ -139,7 +139,7 @@ describe('손님이 앞면으로 들어간다 (K52)', () => {
 
 describe('폴백 — 앞면이 막힌 배치에서도 기존 판이 안 죽는다 (K52)', () => {
   /**
-   * cafe 2×3 @ (10,10) 의 앞 두 면을 물로 지운다.
+   * cafe 3×2 @ (10,10) 의 앞 두 면을 물로 지운다.
    * 앞칸이 하나도 안 남으므로 목적지가 **옛 집합(4이웃 전부)** 으로 되돌아가야 한다.
    */
   function frontBlocked(): World {

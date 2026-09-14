@@ -450,3 +450,26 @@ describe('★ 사이드 인증이 세이브를 건넌다 (P3-E)', () => {
     expect(CertStore.fromSnapshot(back.certs).count).toBe(0);
   });
 });
+
+it('preserves ramp/step ground, elevations and the rotated slope fence through actual save JSON', () => {
+  const input = build(), { terrain:t, walls:w, placement:p, gate }=input;
+  for(let j=8;j<=13;j++)for(let i=28;i<=34;i++){t.paint(i,j,'path_stone');t.setLevel(i,j,i>=31?1:0);}
+  t.paint(30,10,'path_ramp');t.paint(30,11,'path_steps');
+  const placed=p.place(t,w,gate,'env_wood_fence',30,10,{facing:0});
+  expect(placed.ok).toBe(true);
+  const restored=restoreKairo(JSON.parse(JSON.stringify(packKairo(input,1700000000000))));
+  expect(restored.terrain.toSnapshot()).toEqual(t.toSnapshot());
+  expect(restored.placement.toSnapshot()).toEqual(p.toSnapshot());
+  expect(restored.terrain.levelPassable(30,11,31,11)).toBe(true);
+  expect(restored.terrain.levelPassable(30,11,30,12)).toBe(false);
+  expect(restored.placement.blocksWalk(30,10)).toBe(true);
+});
+
+it('persists entrance migration completion so later player edits are not reapplied on load', () => {
+  const input = { ...build(), entranceBoundaryCleared: true, indoorTicketEntryConnected: true, parkArrivalLayoutApplied: true, arrivalPresentationRevision: 2 };
+  const restored = restoreKairo(JSON.parse(JSON.stringify(packKairo(input, 123))));
+  expect(restored.entranceBoundaryCleared).toBe(true);
+  expect(restored.indoorTicketEntryConnected).toBe(true);
+  expect(restored.parkArrivalLayoutApplied).toBe(true);
+  expect(restored.arrivalPresentationRevision).toBe(2);
+});

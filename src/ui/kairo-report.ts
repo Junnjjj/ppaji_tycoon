@@ -1,5 +1,4 @@
 import { el, button } from './dom.js';
-import { icon } from './icons.js';
 import { cssVar } from './tokens.js';
 import type {
   WeekReport,
@@ -11,9 +10,6 @@ import { facilityDef } from '../sim/kairo/placement.js';
 import type { ActiveCombo, ActiveConflict, ComboResult } from '../sim/kairo/combos.js';
 import type { SwimZone } from '../sim/kairo/swim.js';
 import { panelHost } from './panels.js';
-import { countUp, type CountTarget } from './kairo-event-shell.js';
-import { weekVoices } from '../sim/kairo/voice.js';
-import { weekVoiceText } from './kairo-voice.js';
 import { recipeDef } from '../sim/kairo/menu.js';
 import { WISH_CHARACTERS } from '../sim/kairo/wishes.js';
 import { NEED_NAME, REPUTATION_NAME, REPUTATION_DEFINITION } from './kairo-terms.js';
@@ -59,11 +55,11 @@ const GROUP_CLASS: Record<(typeof GROUP_ORDER)[number], string> = {
 };
 
 const WEATHER_ICON: Record<string, string> = {
-  clear: icon('weather-clear'),
-  cloudy: icon('weather-cloudy'),
-  rain: icon('weather-rain'),
-  heat: icon('weather-heat'),
-  cold: icon('weather-cold'),
+  clear: '☀',
+  cloudy: '☁',
+  rain: '☂',
+  heat: '🔥',
+  cold: '❄',
 };
 
 /*
@@ -144,9 +140,7 @@ export function reportLedger(report: WeekReport): ReportLedger {
       total:
         report.investment.building +
         report.investment.upgrades +
-        report.investment.menuDevelopment +
-        report.investment.commission +
-        report.investment.shopping,
+        report.investment.menuDevelopment,
     },
   };
 }
@@ -373,18 +367,6 @@ export interface ReportHandlers {
   onPrescription?: (prescription: ReportPrescription) => void;
 }
 
-/**
- * KPI 한 칸의 글자 — **한 곳에서만 만든다** (P8).
- *
- * ⚠ 처음 그리는 글자와 카운트업이 굴리는 글자가 **같은 규칙**이어야 한다. 두 곳에 적으면
- * 굴러가는 동안만 `1,284명` 이고 멎으면 `1284` 가 되는 식으로 조용히 갈라진다.
- */
-function kpiText(id: string, v: number): string {
-  if (id === 'visitors') return `${v.toLocaleString('ko-KR')}명`;
-  if (id === 'profit') return `${v >= 0 ? '+' : '−'}${won(Math.abs(v))}`;
-  return String(v);
-}
-
 export class KairoReport {
   private readonly root: HTMLDivElement;
   private handlers: ReportHandlers | null = null;
@@ -414,16 +396,15 @@ export class KairoReport {
   private kpiBlock(rep: WeekReport, previous: WeekSummary | null): HTMLElement {
     const box = el('div', 'kkpis');
     box.id = 'kairo-report-kpis';
-    /*
-     * P8 — **세 KPI 가 0 에서 굴러 올라온다.** 결산의 첫 화면이 「이번 주가 어땠나」이고,
-     * 숫자가 자리에 앉는 동안 눈이 그 세 칸에 머문다. 굴리는 것은 `textContent` 뿐이고
-     * `prefers-reduced-motion` 이면 **최종값이 처음부터 앉아 있다** (움직임만 뺀다).
-     */
-    const counts: CountTarget[] = [];
     for (const kpi of reportKpis(rep, previous)) {
       const cell = el('div', 'kkpi');
       cell.dataset['kpi'] = kpi.id;
-      const value = kpiText(kpi.id, Math.round(kpi.value));
+      const value =
+        kpi.id === 'visitors'
+          ? `${Math.round(kpi.value).toLocaleString('ko-KR')}명`
+          : kpi.id === 'profit'
+            ? `${kpi.value >= 0 ? '+' : '−'}${won(Math.abs(kpi.value))}`
+            : Math.round(kpi.value).toString();
       const delta =
         kpi.delta === null
           ? '첫 주'
@@ -432,25 +413,9 @@ export class KairoReport {
                 ? won(Math.abs(kpi.delta))
                 : Math.abs(Math.round(kpi.delta)).toLocaleString('ko-KR')
             }${kpi.percent === null ? '' : ` / ${kpi.percent >= 0 ? '+' : ''}${kpi.percent}%`}`;
-      const valueNode = el(
-        'div',
-        `kkpi-value${kpi.id === 'profit' ? (kpi.value >= 0 ? ' good' : ' bad') : ''}`,
-        value,
-      );
-      /*
-       * ⚠ **정착값을 데이터로 들고 있는다** (`data-kpi-final`). 검사가 애니메이션 타이밍에
-       * 기대면 느린 기기에서 조용히 깜빡인다 — 델타 줄의 `data-delta-final` 과 같은 규칙이다.
-       */
-      valueNode.dataset['kpiFinal'] = value;
-      counts.push({
-        node: valueNode,
-        from: 0,
-        to: Math.round(kpi.value),
-        format: (v) => kpiText(kpi.id, v),
-      });
       cell.append(
         el('div', 'kkpi-label', kpi.label),
-        valueNode,
+        el('div', `kkpi-value${kpi.id === 'profit' ? (kpi.value >= 0 ? ' good' : ' bad') : ''}`, value),
         el(
           'div',
           `kkpi-delta${kpi.delta === null ? '' : kpi.delta >= 0 ? ' good' : ' bad'}`,
@@ -469,37 +434,6 @@ export class KairoReport {
       box,
       el('div', 'kkpis-note', `${REPUTATION_NAME} — ${REPUTATION_DEFINITION}`),
     );
-    countUp(box, counts, { startMs: 180, durMs: 520 });
-    return wrap;
-  }
-
-  /** 이번 주 손님들의 말 — 주간 숫자에서 파생한다 (손님 개체를 다시 안 훑는다) */
-  private voiceBlock(rep: WeekReport): HTMLElement {
-    const wrap = el('div', 'kstack kreport-voices');
-    wrap.id = 'kairo-report-voices';
-    const tallies = weekVoices({
-      visitors: rep.visitors,
-      turnedAway: rep.turnedAway,
-      noTicket: rep.noTicket,
-      gaveUp: rep.gaveUp,
-      exitSatisfaction: rep.exitSatisfaction,
-      ...(rep.bottleneck ? { bottleneck: rep.bottleneck.need } : {}),
-    }).slice(0, 3);
-    wrap.append(el('div', 'kcaption', '손님들이 한 말'));
-    if (tallies.length === 0) {
-      /*
-       * ⚠ **빈 주에도 줄을 감추지 않는다** — 콤보 줄과 같은 규칙이다 (P2-B).
-       * 감추면 「손님이 말을 한다」는 축이 있다는 것을 배울 자리가 사라진다.
-       */
-      wrap.append(el('div', 'kcaption', '조용한 한 주였습니다'));
-      return wrap;
-    }
-    for (const t of tallies) {
-      const row = el('div', `kvoice ${t.tone}`);
-      row.dataset['voiceTopic'] = t.topic;
-      row.append(el('div', 'kvoice-text', weekVoiceText(t)));
-      wrap.append(row);
-    }
     return wrap;
   }
 
@@ -596,12 +530,6 @@ export class KairoReport {
         d.turnedAway > 0 ? `${d.visitors}/${d.arrivals}` : String(d.visitors),
       );
       const label = el('div', 'kday-label', `${d.name}\n${WEATHER_ICON[d.weather] ?? '?'}`);
-      /*
-       * P8 — 막대가 **월→일 순서로** 올라온다. 순서는 **데이터**이고 지연·이징은
-       * `style.css` 가 계산한다 (색과 시간은 CSS 소유 — 델타 줄의 `--delta-index` 와 같다).
-       * ⚠ 애니메이트하는 것은 `transform` 뿐이다. `height` 를 굴리면 프레임이 떨어진다.
-       */
-      col.style.setProperty('--day-index', String(d.day));
       col.append(num, bar, label);
       box.append(col);
     }
@@ -775,13 +703,6 @@ export class KairoReport {
           ['건설', ledger.investment.building],
           ['개선', ledger.investment.upgrades],
           ['메뉴 개발', ledger.investment.menuDevelopment],
-          /*
-           * P3 — 3줄 → **5줄**. ⚠ 심사 수수료는 그전까지 **어느 줄에도 안 떴다**
-           * (실제 회계 구멍이었다). 「기다림이 있는 지출」이라는 한 정의가 수배와 심사를
-           * 같이 덮는다.
-           */
-          ['수배·심사', ledger.investment.commission],
-          ['구입', ledger.investment.shopping],
         ],
         ['투자 합계', ledger.investment.total],
       ),
@@ -901,7 +822,7 @@ export class KairoReport {
         el(
           'div',
           'kcaption bad',
-          `${icon('warn')} 상성 감점 ${view.clashCount}곳 — 어울리지 않는 시설이 붙어 있습니다 (두 칸 띄우면 꺼집니다)`,
+          `⚠ 상성 감점 ${view.clashCount}곳 — 어울리지 않는 시설이 붙어 있습니다 (두 칸 띄우면 꺼집니다)`,
         ),
       );
       const list = el('div', 'knums');
@@ -923,54 +844,16 @@ export class KairoReport {
     handlers: ReportHandlers,
     combos?: ComboBreakdown,
     previous: WeekSummary | null = null,
-    /**
-     * 지금 등급 (P8) — **표시 전용**이다. `WeekReport` 에 넣지 않는다: 세이브도 sim 도
-     * 안 바뀌어야 하고(P8 되돌리기 = 표현 전용), 등급은 이미 `progress` 가 소유한다.
-     */
-    grade?: { grade: number; name: string },
   ): void {
     this.handlers = handlers;
     this.root.replaceChildren();
 
-    /*
-     * P8 — 결산도 **다른 시트와 같은 머리**를 쓴다 (`--sheet-head` 58px).
-     * ⚠ 예전에는 `.ksheet-title` 이 루트에 맨몸으로 붙어 있어서 이 화면만 머리 높이가
-     * 달랐다 — 표면 리듬 통일(P8-A)에서 이 화면은 열 수가 없어 빠져 있었다.
-     */
-    const head = el('div', 'ksheet-head');
     const title = el('div', 'ksheet-title', `${rep.week}주차 결산`);
     title.id = 'kairo-report-title';
-    head.append(title);
-    if (grade) {
-      /*
-       * 등급 도장 — 「이 주가 어느 등급에서 돌았나」. 숫자가 아니라 **도장**인 이유는
-       * 결산이 그 주의 **기록**이기 때문이다. 색·회전은 `style.css` 가 갖는다.
-       */
-      const stamp = el('div', 'kgrade-stamp');
-      stamp.id = 'kairo-report-grade';
-      stamp.dataset['grade'] = String(grade.grade);
-      stamp.append(
-        el('span', 'kgrade-stamp-num', `${grade.grade}등급`),
-        el('span', 'kgrade-stamp-name', grade.name),
-      );
-      head.append(stamp);
-    }
-    this.root.append(head);
+    this.root.append(title);
 
     // K54/Phase 5 — 결론과 다음 한 동작이 언제나 첫 두 블록이다.
     this.root.append(this.kpiBlock(rep, previous), this.prescriptionBlock(rep));
-    /*
-     * ── Q9: **손님들이 뭐라고 했나** ──────────────────────────────────────
-     *
-     * RCT 는 손님 생각을 **인기순으로 정렬**해 보여 줬고, 그것이 사실상 진단 화면이었다.
-     * 우리 결산은 같은 사실을 **숫자와 처방**으로만 말하고 있었다 — 정확하지만 RCT 가
-     * 일부러 피한 「명시적 지시」쪽이다.
-     *
-     * ⚠ **처방 다음, 히트맵 앞**이다. 결론(3 KPI) → 할 일(처방) → **왜 그런지(손님 말)**
-     * → 어디서(히트맵) 순서가 된다. 처방보다 앞에 두면 「돈의 결론이 첫 화면」이 깨진다.
-     * ⚠ **같은 데이터에서 만든다** — 숫자와 말이 어긋나면 둘 중 하나가 거짓말이 된다.
-     */
-    this.root.append(this.voiceBlock(rep));
 
     // 시각적 원인은 없애지 않고 132px로 압축한다.
     const heat = el('div', 'kreport-heat');

@@ -4,7 +4,7 @@ import tseslint from 'typescript-eslint';
 export default tseslint.config(
   {
     // prototype-3d 는 별도 프로젝트(자체 tsconfig·Three.js)다 — prototype/ 과 같은 취급
-    ignores: ['dist/**', 'node_modules/**', 'prototype/**', 'prototype-3d/**', 'prototype-3d-v1/**', '.superpowers/**', 'waterpark/**', 'ppaji/**'],
+    ignores: ['codex-output/**', 'artifacts/**', '.agents/**', 'dist/**', 'node_modules/**', 'prototype/**', 'prototype-3d/**', 'prototype-3d-v1/**', '.superpowers/**'],
   },
 
   js.configs.recommended,

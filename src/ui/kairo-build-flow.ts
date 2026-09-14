@@ -39,6 +39,9 @@ export interface MoveSelection {
   defId: string;
   i: number;
   j: number;
+  /** 이동을 취소하거나 실패했을 때 원래 자리에 복원할 방향 */
+  originalFacing: FacilityFacing;
+  /** 고스트와 확정 배치에 적용할 사용자가 고른 방향 */
   facing: FacilityFacing;
 }
 
@@ -196,6 +199,12 @@ export class BuildSession {
   setFacing(facing: FacilityFacing): void {
     if (this.aimState === null) return;
     this.aimState.facing = facing;
+  }
+
+  /** 이미 놓인 시설의 이동 미리보기 방향 — 원본 방향은 건드리지 않는다 */
+  setMoveFacing(facing: FacilityFacing): void {
+    if (this.selection === null) return;
+    this.selection.facing = facing;
   }
 
   /** 이동 확정이 새 handle 을 만들면 선택도 따라간다 (프로브 복원) */

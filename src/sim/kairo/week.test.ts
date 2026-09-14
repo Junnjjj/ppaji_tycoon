@@ -48,6 +48,13 @@ describe('시설 경제 데이터', () => {
   it('75종 전부 요금·유지비·건설비·수요 종류를 갖는다', () => {
     for (const d of allFacilityDefs()) {
       const x = d as unknown as { fee: number; upkeep: number; cost: number; need: string };
+      if (d.id.startsWith('env_')) {
+        expect(d.capacity, d.id).toBe(0);
+        expect(x.fee, d.id).toBe(0);
+        expect(x.upkeep, d.id).toBe(0);
+        expect(x.cost, d.id).toBeGreaterThan(0);
+        continue;
+      }
       expect(x.fee, d.id).toBeGreaterThan(0);
       expect(x.upkeep, d.id).toBeGreaterThan(0);
       expect(x.cost, d.id).toBeGreaterThan(0);

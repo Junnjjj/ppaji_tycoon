@@ -1,0 +1,22 @@
+{
+  "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+  "rgba_equal_images": 8,
+  "clipping": 0,
+  "protected": {
+    "blend": "d98df53885226dfea44b4a51925a6cf34d313c7caa5f192d49e7cff88ac4af26",
+    "concept": "b1cd01568f1f600314f47131a85aa2deb7a7878e44b8a2cb8225884061df074a"
+  },
+  "projection": {
+    "d0": "FAIL",
+    "d1": "PASS",
+    "d2": "PASS",
+    "d3": "FAIL"
+  },
+  "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/codex-output/cafe-complexity-ab-v1/optimized/output/review/scene-check.json",
+  "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/codex-output/cafe-complexity-ab-v1/optimized/output/review/review.html",
+  "limitations": [
+    "Bounds selectors and count labels require semantic visual review",
+    "Landmark projections do not prove occlusion",
+    "Runtime, access, family scale and artist approval remain separate"
+  ]
+}

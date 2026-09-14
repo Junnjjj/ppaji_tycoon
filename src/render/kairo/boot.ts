@@ -19,6 +19,8 @@ import { GRID_W, GRID_H } from './iso.js';
  */
 export interface KairoBootOptions {
   parent: HTMLElement | string;
+  /** `?hd=1` 검토에서만 2. 기본 게임은 1. */
+  renderDensity?: 1 | 2;
   /**
    * 에셋 공급자. 없으면 절차 플레이스홀더 (Phase G 이전과 **완전히 같은 동작**).
    *
@@ -60,6 +62,7 @@ export function bootKairo(opts: KairoBootOptions): KairoHandle {
   const guests = new GuestStore(terrain, walls, placement, gate);
   const scene = new KairoScene({
     provider,
+    ...(opts.renderDensity ? { renderDensity: opts.renderDensity } : {}),
     terrain,
     walls,
     placement,
@@ -70,6 +73,7 @@ export function bootKairo(opts: KairoBootOptions): KairoHandle {
   });
 
   const v = viewport(window.innerWidth, window.innerHeight, 1, window.devicePixelRatio || 1);
+  const renderDensity = opts.renderDensity === 2 ? 2 : 1;
 
   /**
    * `?px=1` 이면 프레임버퍼를 보존한다 — 검증 도구가 `readPixels` 로 실제 렌더 픽셀을
@@ -90,9 +94,9 @@ export function bootKairo(opts: KairoBootOptions): KairoHandle {
       // ★ NONE — 내부 해상도를 우리가 정한다. RESIZE 를 쓰면 Phaser 가 CSS 크기를
       //   내부 해상도로 써서 텍셀 1:1 이 깨진다
       mode: Phaser.Scale.NONE,
-      width: v.bufferW,
-      height: v.bufferH,
-      zoom: 1,
+      width: v.bufferW * renderDensity,
+      height: v.bufferH * renderDensity,
+      zoom: 1 / renderDensity,
     },
     input: { activePointers: 3 },
     ...(preserve ? { render: { preserveDrawingBuffer: true } } : {}),

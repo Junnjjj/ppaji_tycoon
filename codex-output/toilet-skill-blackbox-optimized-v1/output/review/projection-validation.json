@@ -1,0 +1,210 @@
+{
+  "d0": {
+    "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/codex-output/toilet-skill-blackbox-optimized-v1/output/review/color-d0.png",
+    "layout": "single",
+    "contract": {
+      "projection": "orthographic",
+      "camera_yaw_deg": 45,
+      "camera_elevation_deg": 30,
+      "tile_texels": [
+        32,
+        16
+      ],
+      "signed_ground_edge_deg": [
+        -26.565,
+        26.565
+      ],
+      "vertical_deg": 90
+    },
+    "cells": {
+      "single": {
+        "edge_points": 4393,
+        "families": {
+          "diag_negative": {
+            "target_deg": -26.565,
+            "measured_deg": -26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 135,
+            "score": 24.63,
+            "verdict": "PASS"
+          },
+          "diag_positive": {
+            "target_deg": 26.565,
+            "measured_deg": 26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 117,
+            "score": 20.287,
+            "verdict": "PASS"
+          },
+          "vertical": {
+            "target_deg": 90.0,
+            "measured_deg": 87.75,
+            "abs_error_deg": 2.25,
+            "peak_edge_pixels": 75,
+            "score": 13.846,
+            "verdict": "WARN"
+          }
+        },
+        "overall": "WARN",
+        "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+      }
+    },
+    "overall": "WARN"
+  },
+  "d1": {
+    "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/codex-output/toilet-skill-blackbox-optimized-v1/output/review/color-d1.png",
+    "layout": "single",
+    "contract": {
+      "projection": "orthographic",
+      "camera_yaw_deg": 45,
+      "camera_elevation_deg": 30,
+      "tile_texels": [
+        32,
+        16
+      ],
+      "signed_ground_edge_deg": [
+        -26.565,
+        26.565
+      ],
+      "vertical_deg": 90
+    },
+    "cells": {
+      "single": {
+        "edge_points": 3395,
+        "families": {
+          "diag_negative": {
+            "target_deg": -26.565,
+            "measured_deg": -26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 109,
+            "score": 19.767,
+            "verdict": "PASS"
+          },
+          "diag_positive": {
+            "target_deg": 26.565,
+            "measured_deg": 26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 132,
+            "score": 21.042,
+            "verdict": "PASS"
+          },
+          "vertical": {
+            "target_deg": 90.0,
+            "measured_deg": 89.25,
+            "abs_error_deg": 0.75,
+            "peak_edge_pixels": 75,
+            "score": 17.064,
+            "verdict": "PASS"
+          }
+        },
+        "overall": "PASS",
+        "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+      }
+    },
+    "overall": "PASS"
+  },
+  "d2": {
+    "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/codex-output/toilet-skill-blackbox-optimized-v1/output/review/color-d2.png",
+    "layout": "single",
+    "contract": {
+      "projection": "orthographic",
+      "camera_yaw_deg": 45,
+      "camera_elevation_deg": 30,
+      "tile_texels": [
+        32,
+        16
+      ],
+      "signed_ground_edge_deg": [
+        -26.565,
+        26.565
+      ],
+      "vertical_deg": 90
+    },
+    "cells": {
+      "single": {
+        "edge_points": 2095,
+        "families": {
+          "diag_negative": {
+            "target_deg": -26.565,
+            "measured_deg": -26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 100,
+            "score": 26.747,
+            "verdict": "PASS"
+          },
+          "diag_positive": {
+            "target_deg": 26.565,
+            "measured_deg": 26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 107,
+            "score": 29.307,
+            "verdict": "PASS"
+          },
+          "vertical": {
+            "target_deg": 90.0,
+            "measured_deg": 90.0,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 73,
+            "score": 13.315,
+            "verdict": "PASS"
+          }
+        },
+        "overall": "PASS",
+        "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+      }
+    },
+    "overall": "PASS"
+  },
+  "d3": {
+    "image": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/codex-output/toilet-skill-blackbox-optimized-v1/output/review/color-d3.png",
+    "layout": "single",
+    "contract": {
+      "projection": "orthographic",
+      "camera_yaw_deg": 45,
+      "camera_elevation_deg": 30,
+      "tile_texels": [
+        32,
+        16
+      ],
+      "signed_ground_edge_deg": [
+        -26.565,
+        26.565
+      ],
+      "vertical_deg": 90
+    },
+    "cells": {
+      "single": {
+        "edge_points": 3028,
+        "families": {
+          "diag_negative": {
+            "target_deg": -26.565,
+            "measured_deg": -26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 142,
+            "score": 23.738,
+            "verdict": "PASS"
+          },
+          "diag_positive": {
+            "target_deg": 26.565,
+            "measured_deg": 26.565,
+            "abs_error_deg": 0.0,
+            "peak_edge_pixels": 103,
+            "score": 24.935,
+            "verdict": "PASS"
+          },
+          "vertical": {
+            "target_deg": 90.0,
+            "measured_deg": 90.25,
+            "abs_error_deg": 0.25,
+            "peak_edge_pixels": 72,
+            "score": 13.044,
+            "verdict": "PASS"
+          }
+        },
+        "overall": "PASS",
+        "warning": "Projection edges only. PASS does not prove rigid rotation, component identity, camera metadata, scale, anchor, or user approval."
+      }
+    },
+    "overall": "PASS"
+  }
+}

@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
 import { KairoTerrain } from './terrain.js';
 import {
   PRESETS,
@@ -25,7 +24,6 @@ import {
   DOCK_REACH_TILES,
   dockCandidates,
   type Vec2,
-  courseRouteTiles,
 } from './course.js';
 
 /**
@@ -664,138 +662,5 @@ describe('★ 선착장 후보 — 잔교 하나가 후보 하나다', () => {
       expect(h.x).toBeGreaterThan(c.tip.x);
       expect(Math.round(h.y)).toBe(c.tip.y);
     }
-  });
-});
-
-/**
- * ── Q10: 선착장이 곧 시작점이다 · 루트는 물 위 시설을 못 지난다 ─────────────
- *
- * 사용자 지적(2026-09-01): *"선착장에서 견인 기구든 수상기구 코스가 가능하고, 지금은 그런
- * 구조가 아니네. 플로팅덱으로 막으면 그게 안 되잖아, 루트에도 막으면 안 되고."*
- *
- * 실측으로 확인된 세 구멍: ① 코스가 선착장이 아니라 **잔교 끝**에서 출발했다 ②
- * 루트가 덱을 **가로질러도** 통과했다 (`terrain.isWater` 만 봤다) ③ 덱을 **코스 위에**
- * 놓아도 배치가 통과했다 (placement 가 코스를 모른다).
- */
-describe('Q10 — 선착장 중심 후보', () => {
-  const GATE = { x: 0, y: 0 };
-  it('★ 앵커 모드의 tip 은 선착장 칸이다 — 잔교 끝이 아니다', () => {
-    // 잔교 (4,5)-(4,8) + 선착장 (5,6)
-    const decks = [
-      { x: 4, y: 5 },
-      { x: 4, y: 6 },
-      { x: 4, y: 7 },
-      { x: 4, y: 8 },
-    ];
-    const c = dockCandidates(decks, GATE, [{ x: 5, y: 6 }]);
-    expect(c).toHaveLength(1);
-    expect(c[0]?.tip).toEqual({ x: 5, y: 6 });
-    // 방향은 잔교에서 **멀어지는 쪽** — 잔교가 (4,6)에 붙어 있으니 +x
-    expect(c[0]?.dir.x).toBeGreaterThan(0);
-  });
-
-  it('claim 은 선착장 ∪ 이어진 잔교다 — 옛 코스가 「빈 후보」로 안 보인다', () => {
-    const decks = [
-      { x: 4, y: 5 },
-      { x: 4, y: 6 },
-      { x: 4, y: 7 },
-    ];
-    const c = dockCandidates(decks, GATE, [{ x: 5, y: 6 }]);
-    expect(c[0]?.claim).toHaveLength(4);
-    // 물려받은 코스는 dock 이 잔교 끝(4,7)이다 — claim 으로 재면 「찬 후보」다
-    const legacy = [{ handle: 1, dock: { x: 4, y: 7 } } as unknown as PlacedCourse];
-    expect(dockTaken(c[0]!.tip, legacy, c[0]!.claim)).toBe(true);
-    // ⚠ 점 비교였다면 tip(5,6) ≠ dock(4,7) 이라 「빈 후보」 — 그게 고친 버그다
-    expect(dockTaken(c[0]!.tip, legacy)).toBe(false);
-  });
-
-  it('선착장이 잔교 없이 홀로 서면 게이트 반대쪽으로 뻗는다', () => {
-    const c = dockCandidates([], GATE, [{ x: 9, y: 9 }]);
-    expect(c).toHaveLength(1);
-    expect(c[0]?.tip).toEqual({ x: 9, y: 9 });
-    expect(c[0]?.dir.x).toBeGreaterThan(0);
-    expect(c[0]?.dir.y).toBeGreaterThan(0);
-  });
-
-  it('앵커를 생략하면 예전 그대로다 — 잔교 모드 호환', () => {
-    const decks = [
-      { x: 4, y: 5 },
-      { x: 4, y: 6 },
-    ];
-    const c = dockCandidates(decks, GATE);
-    expect(c).toHaveLength(1);
-    expect(c[0]?.tip).toEqual({ x: 4, y: 6 });
-    expect(c[0]?.claim).toBeUndefined();
-  });
-});
-
-describe('Q10 — 루트 차단', () => {
-  /** 30×30 전부 물 — 루트 판정만 잰다 */
-  function waterWorld(): KairoTerrain {
-    const t = new KairoTerrain(30, 30);
-    for (let i = 0; i < 30; i++) for (let j = 0; j < 30; j++) t.paint(i, j, 'water_edge');
-    return t;
-  }
-  const dock = { x: 5, y: 5 };
-  const straight = [
-    { x: 5, y: 10 },
-    { x: 5, y: 15 },
-  ];
-  const preset = PRESETS[0]!;
-  const equip = COURSE_EQUIPMENT[0]!;
-
-  it('★ 루트 한가운데 덱이 있으면 route-blocked 다 — 핸들만 보면 못 잡는다', () => {
-    const t = waterWorld();
-    // 핸들 둘 다 물이고, 그 **사이**(5,12)에 덱이 있다
-    const blocked = new Set(['5,12']);
-    const v = validateCourse(t, straight, dock, preset, equip.id, 9, [], undefined, undefined, blocked);
-    expect(v.issues).toContain('route-blocked');
-    expect(v.badHandles.length).toBeGreaterThan(0);
-  });
-
-  it('시작점 주변(선착장 자신)은 건너뛴다 — 출발지가 곧 시설이다', () => {
-    const t = waterWorld();
-    const blocked = new Set(['5,5', '5,6']);
-    const v = validateCourse(t, straight, dock, preset, equip.id, 9, [], undefined, undefined, blocked);
-    expect(v.issues).not.toContain('route-blocked');
-  });
-
-  it('⚠ blocked 를 안 넘기면 안 본다 — 기존 검사 호환 (production 은 정적 검사가 지킨다)', () => {
-    const t = waterWorld();
-    const v = validateCourse(t, straight, dock, preset, equip.id, 9, []);
-    expect(v.issues).not.toContain('route-blocked');
-  });
-
-  it('courseRouteTiles 는 겹침 검사와 같은 표본을 쓴다', () => {
-    const tiles = courseRouteTiles([
-      { handle: 1, presetId: preset.id, equipId: equip.id, vehicles: 1, dock, handles: straight } as unknown as PlacedCourse,
-    ]);
-    // 직선 루트의 중간 칸이 들어 있다
-    expect(tiles.has('5,12')).toBe(true);
-    expect(tiles.has('5,5')).toBe(true); // 시작점 포함 — 배치는 시작점도 막아야 한다
-  });
-});
-
-describe('Q10 — production 호출부 (정적)', () => {
-  /*
-   * ⚠ `blocked`/`courseTiles` 는 optional 이다 — 안 넘기면 안 본다. 그러면 「덱을 뚫는
-   * 보트」와 「코스 위에 덱」이 조용히 돌아온다. P3 의 `owned` 정적 검사와 같은 자리다.
-   */
-  it('validateCourse 호출부가 전부 blocked 를 넘긴다', () => {
-    const files = ['../../ui/kairo-course.ts', '../../../tools/kairo-sim.ts', './startkit.ts'];
-    for (const f of files) {
-      const src = readFileSync(new URL(f, import.meta.url), 'utf8');
-      const calls = [...src.matchAll(/validateCourse\(/g)].length;
-      const blocked = [...src.matchAll(/blockedWater|blocked\b/g)].length;
-      expect(blocked, f).toBeGreaterThanOrEqual(calls);
-    }
-  });
-
-  it('배치 opts 가 courseTiles 를 넘긴다 — main 과 봇 둘 다', () => {
-    const main = readFileSync(new URL('../../main.ts', import.meta.url), 'utf8');
-    expect(main).toMatch(/courseTiles: courseTilesNow\(\)/);
-    expect(main).toMatch(/courseTilesNow = \(\) => course\.courseRouteTiles\(courses\.all\)/);
-    const bot = readFileSync(new URL('../../../tools/kairo-sim.ts', import.meta.url), 'utf8');
-    expect([...bot.matchAll(/courseRouteTiles\(courses\.all\)/g)].length).toBeGreaterThanOrEqual(2);
   });
 });

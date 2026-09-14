@@ -1,0 +1,98 @@
+{
+  "status": "STARTING_RECIPE_NOT_UNIVERSAL_OR_USER_APPROVED",
+  "palettes": {
+    "cream": [
+      "#796344",
+      "#AE9268",
+      "#EFE1BD",
+      "#FFF5D7"
+    ],
+    "wood": [
+      "#342214",
+      "#88511E",
+      "#CA903B",
+      "#FFD082"
+    ],
+    "blue": [
+      "#101C31",
+      "#1B3559",
+      "#345D92",
+      "#5C88BB"
+    ],
+    "base": [
+      "#121E2C",
+      "#293B56",
+      "#536C87",
+      "#A2B1BA"
+    ],
+    "metal": [
+      "#161A19",
+      "#3B403D",
+      "#838A7F",
+      "#DADCD0"
+    ],
+    "dark": [
+      "#10130F",
+      "#151B18",
+      "#222A24",
+      "#364035"
+    ],
+    "yellow": [
+      "#735024",
+      "#BF822D",
+      "#F6BD54",
+      "#FFF0A2"
+    ],
+    "green": [
+      "#17331B",
+      "#356928",
+      "#80BA45",
+      "#C5E773"
+    ],
+    "white": [
+      "#766D51",
+      "#B4A486",
+      "#EDE2C6",
+      "#FFF5DD"
+    ]
+  },
+  "atlas_quadrants": {
+    "cream": [
+      0,
+      0
+    ],
+    "wood": [
+      1,
+      0
+    ],
+    "blue": [
+      0,
+      1
+    ],
+    "base": [
+      0,
+      1
+    ]
+  },
+  "texture_strength": {
+    "cream": 0.28,
+    "wood": 0.42,
+    "blue": 0.42,
+    "base": 0.42
+  },
+  "edge_width_tiles": {
+    "cream": 0.017,
+    "wood": 0.017,
+    "blue": 0.017,
+    "base": 0.017,
+    "metal": 0.01,
+    "dark": 0
+  },
+  "period_tiles": 3,
+  "role_linear_gain": {
+    "blue": 0.68,
+    "metal": 0.72,
+    "wood": 0.85,
+    "dark": 0.7
+  }
+}

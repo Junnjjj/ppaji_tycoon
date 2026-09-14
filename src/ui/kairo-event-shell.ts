@@ -39,7 +39,6 @@
  * · 선택지 라벨에 **효과를 다시 적지 않는다** — 값은 `meta` 슬롯이 낸다.
  */
 import { el } from './dom.js';
-import { icon } from './icons.js';
 
 /** 사건의 성격 — 무대 자리표시의 분위기와 배지 문구를 가른다 */
 export type EventShellMood = 'celebrate' | 'quest' | 'decision' | 'alert';
@@ -58,26 +57,6 @@ export interface EventShellChoice {
   /** 못 고르는 이유 — 회색으로 죽이는 대신 말한다 (K48 규칙) */
   blockedReason?: string;
   run: () => void;
-}
-
-/**
- * **델타 줄** (§2.6) — 이 엔진의 다섯 번째 단계인 「회수」를 화면에 세우는 한 줄.
- *
- * 축하 모달 11종은 여태 **이름만 말했다** (`수배 완료 · 빙수 기계`). 무엇이 얼마나
- * 좋아졌는지를 안 보여 주면 내가 낸 돈과 기다린 시간이 어디로 갔는지 알 수 없고,
- * 그게 곧 「뭘 할지 명확하지 않다」의 뒷면이다.
- *
- * ⚠ 값은 **sim 실효값에서 읽는다** (`feeOf`·`capacityOf`·`menuSlotCount` …).
- * 데이터의 `desc` 처럼 글로 적으면 밸런싱 때마다 조용히 거짓말이 된다 (기존 계약).
- */
-export interface CelebrationDelta {
-  /** '카페 요금' · '만족' — 무엇이 바뀌었나 */
-  label: string;
-  /** 이전 값. 없으면 **증분만** 뜬다 (`+3`) */
-  from?: number | string;
-  to: number | string;
-  /** 안 주면 숫자 비교로 유도한다 — 글자 값만 직접 준다 */
-  tone?: 'up' | 'down' | 'flat';
 }
 
 export interface EventShellView {
@@ -99,8 +78,6 @@ export interface EventShellView {
   choices: readonly EventShellChoice[];
   /** 선택지 아래 작은 주석 — `시간이 멈춰 있습니다` 같은 규칙 안내 */
   note?: string;
-  /** 본문과 선택지 사이의 **회수 줄**. 비면 줄 자체를 안 만든다 (빈 상자 금지) */
-  deltas?: readonly CelebrationDelta[];
   /**
    * 무대에 글리프 주인공을 세울지. 카드처럼 무대 자체가 테마 그림인 경우는 `false` 다 —
    * 안 그러면 테마 위에 뜻 없는 이모지가 하나 더 뜬다.
@@ -127,50 +104,14 @@ export interface EventShellPlan {
   note: string;
   figureText: string;
   choices: readonly (EventShellChoice & { primary: boolean })[];
-  deltas: readonly ResolvedDelta[];
-}
-
-/** 화면에 그대로 얹히는 형태 — 방향 유도와 글자 포맷이 여기서 끝난다 */
-export interface ResolvedDelta {
-  label: string;
-  fromText: string;
-  toText: string;
-  tone: 'up' | 'down' | 'flat';
-  /** 카운트업이 가능한가 — 양쪽이 숫자일 때만 */
-  fromNumber: number | null;
-  toNumber: number | null;
-}
-
-const numberText = (v: number): string => v.toLocaleString('ko-KR');
-
-/**
- * ⚠ **방향은 값에서 유도한다.** 호출부가 `tone` 을 손으로 적으면 밸런싱이 부호를 뒤집었을 때
- * 색만 옛 방향으로 남는다 — `desc` 에 효과를 적지 않는 것과 같은 이유다.
- */
-export function resolveDelta(delta: CelebrationDelta): ResolvedDelta {
-  const toNumber = typeof delta.to === 'number' ? delta.to : null;
-  const fromNumber = typeof delta.from === 'number' ? delta.from : null;
-  let tone: 'up' | 'down' | 'flat' = delta.tone ?? 'flat';
-  if (delta.tone === undefined && toNumber !== null) {
-    const base = fromNumber ?? 0;
-    tone = toNumber > base ? 'up' : toNumber < base ? 'down' : 'flat';
-  }
-  // `from` 이 없으면 증분만 — 부호를 붙여야 `+3` 과 `3` 이 안 헷갈린다
-  const toText = toNumber !== null
-    ? (delta.from === undefined && toNumber > 0 ? `+${numberText(toNumber)}` : numberText(toNumber))
-    : String(delta.to);
-  const fromText = delta.from === undefined
-    ? ''
-    : (fromNumber !== null ? numberText(fromNumber) : String(delta.from));
-  return { label: delta.label, fromText, toText, tone, fromNumber, toNumber };
 }
 
 /** 무대에 그림이 없을 때 세우는 기본 주인공. 분위기마다 다른 글리프다 */
 const MOOD_FIGURE: Record<EventShellMood, string> = {
-  celebrate: icon('gift'),
-  quest: icon('scroll'),
-  decision: icon('ask'),
-  alert: icon('warn'),
+  celebrate: '🎁',
+  quest: '📜',
+  decision: '❓',
+  alert: '⚠',
 };
 
 /**
@@ -198,7 +139,6 @@ export function eventShellPlan(view: EventShellView): EventShellPlan {
       ? view.figure
       : MOOD_FIGURE[view.mood],
     choices,
-    deltas: (view.deltas ?? []).map(resolveDelta),
   };
 }
 
@@ -211,7 +151,6 @@ export interface EventShellNodes {
   title: HTMLDivElement;
   body: HTMLDivElement;
   note: HTMLDivElement;
-  deltas: HTMLDivElement;
   choices: HTMLDivElement;
 }
 
@@ -231,11 +170,10 @@ export function createEventShell(): EventShellNodes {
   const title = el('div', 'kevent-title');
   const body = el('div', 'kevent-body');
   copy.append(kicker, title, body);
-  const deltas = el('div', 'kevent-deltas');
   const choices = el('div', 'kevent-choices');
   const note = el('div', 'kevent-note');
-  root.append(stage, copy, deltas, choices, note);
-  return { root, stage, artSlot, figure, kicker, title, body, note, deltas, choices };
+  root.append(stage, copy, choices, note);
+  return { root, stage, artSlot, figure, kicker, title, body, note, choices };
 }
 
 /**
@@ -275,7 +213,6 @@ export function renderEventShell(
   nodes.body.hidden = plan.body.length === 0;
   nodes.note.textContent = plan.note;
   nodes.note.hidden = plan.note.length === 0;
-  renderDeltas(nodes.deltas, plan.deltas);
 
   if (view.choicesNode) {
     nodes.choices.replaceChildren(view.choicesNode);
@@ -310,126 +247,4 @@ export function renderEventShell(
   );
   nodes.choices.hidden = plan.choices.length === 0;
   return plan;
-}
-
-
-/** 지금 도는 카운트업 — 상자 하나라 새 사건이 오면 앞의 것을 끊는다 */
-const counting = new WeakMap<HTMLElement, number>();
-
-export const reducedMotion = (): boolean =>
-  typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/** 숫자 하나가 어디에서 어디로 가나 */
-export interface CountTarget {
-  node: HTMLElement;
-  from: number;
-  to: number;
-  /** 화면에 쓸 글자. 없으면 천단위 구분만 넣는다 */
-  format?: (value: number) => string;
-}
-
-/**
- * 숫자를 **`textContent` 만 만져서** 굴린다 (P8 — 델타 줄과 결산 KPI 가 같은 것을 쓴다).
- *
- * ⚠ 레이아웃 속성을 애니메이트하지 않는다는 계약 안이다 — 줄이 흘러드는 것은 CSS 의
- * `transform`/`opacity` 가 한다.
- * ⚠ `prefers-reduced-motion` 이면 **아무것도 굴리지 않고 최종값을 그대로 둔다.**
- * 움직임만 빼고 숫자는 남긴다 — 숫자가 사라지면 그 줄의 존재 이유가 사라진다.
- * ⚠ 같은 `host` 로 다시 부르면 **앞의 것을 끊는다.** 두 벌이 겹쳐 돌면 숫자가 떨린다.
- *
- * @param host 이 카운트업의 주인. 새 내용이 오면 앞의 것이 취소된다
- */
-export function countUp(
-  host: HTMLElement,
-  targets: readonly CountTarget[],
-  opts: { startMs?: number; durMs?: number } = {},
-): void {
-  const running = counting.get(host);
-  if (running !== undefined) cancelAnimationFrame(running);
-  counting.delete(host);
-  const text = (t: CountTarget, v: number): string =>
-    t.format ? t.format(v) : numberText(v);
-  if (reducedMotion() || targets.length === 0) {
-    for (const t of targets) t.node.textContent = text(t, t.to);
-    return;
-  }
-  for (const t of targets) t.node.textContent = text(t, t.from);
-  const START = opts.startMs ?? 0;
-  const DUR = opts.durMs ?? 400;
-  const t0 = performance.now();
-  const tick = (now: number): void => {
-    const p = Math.min(1, Math.max(0, (now - t0 - START) / DUR));
-    // 끝에서 부드럽게 멎는다 — 마지막 숫자가 정확히 목표값에 앉아야 읽힌다
-    const eased = 1 - (1 - p) * (1 - p);
-    for (const t of targets) {
-      t.node.textContent = text(t, Math.round(t.from + (t.to - t.from) * eased));
-    }
-    if (p < 1) counting.set(host, requestAnimationFrame(tick));
-    else counting.delete(host);
-  };
-  counting.set(host, requestAnimationFrame(tick));
-}
-
-/**
- * 델타 줄을 얹는다 (§2.6 연출표의 500ms·600ms 칸).
- *
- * ⚠ 카운트업은 **`textContent` 만** 만진다 — 레이아웃 속성을 애니메이트하지 않는다는
- * 기존 계약 안이다 (줄이 흘러드는 것은 `transform`/`opacity` 로 CSS 가 한다).
- * ⚠ `prefers-reduced-motion` 이면 **움직임만 빼고 최종 숫자는 남긴다** — 숫자가 사라지면
- * 이 줄의 존재 이유가 사라진다 (FX 등록부와 같은 규칙).
- * ⚠ `data-delta-final` 은 연출과 무관한 **정착값**이다. 검사가 애니메이션 타이밍에
- * 기대지 않도록 처음부터 최종값을 들고 있는다.
- */
-export function renderDeltas(host: HTMLElement, deltas: readonly ResolvedDelta[]): void {
-  const running = counting.get(host);
-  if (running !== undefined) cancelAnimationFrame(running);
-  counting.delete(host);
-  host.replaceChildren();
-  host.hidden = deltas.length === 0;
-  if (deltas.length === 0) return;
-
-  const still = reducedMotion();
-  const targets: { node: HTMLElement; from: number; to: number }[] = [];
-  deltas.forEach((delta, index) => {
-    const row = el('div', 'kevent-delta');
-    row.dataset['deltaTone'] = delta.tone;
-    row.dataset['deltaLabel'] = delta.label;
-    row.dataset['deltaFinal'] = delta.toText;
-    // 줄 순서는 **데이터**다 — CSS 가 이 값으로 지연을 계산한다 (색·시간은 style.css 소유)
-    row.style.setProperty('--delta-index', String(index));
-    row.append(el('span', 'kevent-delta-label', delta.label));
-    const value = el('span', 'kevent-delta-value');
-    if (delta.fromText.length > 0) {
-      value.append(
-        el('span', 'kevent-delta-from', delta.fromText),
-        el('span', 'kevent-delta-arrow', '→'),
-      );
-    }
-    const to = el('span', 'kevent-delta-to', delta.toText);
-    value.append(to);
-    row.append(value);
-    host.append(row);
-    if (!still && delta.toNumber !== null && delta.toNumber !== (delta.fromNumber ?? 0)) {
-      const from = delta.fromNumber ?? 0;
-      to.textContent = delta.fromText.length > 0 ? numberText(from) : delta.toNumber > 0 ? '+0' : '0';
-      targets.push({ node: to, from, to: delta.toNumber });
-    }
-  });
-  if (targets.length === 0) return;
-
-  const START = 600;
-  const DUR = 400;
-  const t0 = performance.now();
-  const tick = (now: number): void => {
-    const p = Math.min(1, Math.max(0, (now - t0 - START) / DUR));
-    // 끝에서 부드럽게 멎는다 — 마지막 숫자가 정확히 목표값에 앉아야 읽힌다
-    const eased = 1 - (1 - p) * (1 - p);
-    for (const t of targets) {
-      const v = Math.round(t.from + (t.to - t.from) * eased);
-      t.node.textContent = t.from === 0 && t.to > 0 ? `+${numberText(v)}` : numberText(v);
-    }
-    if (p < 1) counting.set(host, requestAnimationFrame(tick));
-    else counting.delete(host);
-  };
-  counting.set(host, requestAnimationFrame(tick));
 }

@@ -1,5 +1,4 @@
 import { el } from './dom.js';
-import { icon } from './icons.js';
 import { panelHost } from './panels.js';
 import { conditionSubject, REPUTATION_DEFINITION, REPUTATION_NAME } from './kairo-terms.js';
 import type { ExamScore } from '../sim/kairo/exam.js';
@@ -311,7 +310,7 @@ export class KairoExamView {
       row.dataset['req'] = r.req.kind;
       const main = el('div', 'krow-main');
       main.append(
-        el('div', 'kitem-name', `${r.done ? `${icon('check')} ` : ''}${reqLabel(r.req)}`),
+        el('div', 'kitem-name', `${r.done ? '✓ ' : ''}${reqLabel(r.req)}`),
         el('div', 'kcaption', r.detail),
       );
       row.append(main, el('div', 'kstat-value', `${r.score}점`));

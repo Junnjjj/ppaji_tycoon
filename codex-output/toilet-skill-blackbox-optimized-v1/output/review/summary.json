@@ -1,0 +1,22 @@
+{
+  "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+  "rgba_equal_images": 8,
+  "clipping": 0,
+  "protected": {
+    "blend": "7a363b77f8183ec1b145f843e04e4743a5e8eca552f1457dd7ff2e759501d219",
+    "concept": "378081ac2f68e50c97b52ef5c5a75d8210bcabb5f6dbdded530254f8df8425e4"
+  },
+  "projection": {
+    "d0": "WARN",
+    "d1": "PASS",
+    "d2": "PASS",
+    "d3": "PASS"
+  },
+  "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/codex-output/toilet-skill-blackbox-optimized-v1/output/review/scene-check.json",
+  "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_스킬/codex-output/toilet-skill-blackbox-optimized-v1/output/review/review.html",
+  "limitations": [
+    "Bounds selectors and count labels require semantic visual review",
+    "Landmark projections do not prove occlusion",
+    "Runtime, access, family scale and artist approval remain separate"
+  ]
+}

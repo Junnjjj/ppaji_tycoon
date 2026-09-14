@@ -1,7 +1,8 @@
 import { KairoTerrain } from './terrain.js';
 import type { WallGrid } from './walls.js';
+import { DoorSet, type DoorSnapshot } from './doors.js';
 import { bakeIndoorWalls } from './indoor.js';
-import { PlacementGrid, guestWalkable, facilityDef } from './placement.js';
+import { PlacementGrid, guestWalkable } from './placement.js';
 import {
   CourseStore,
   PRESETS,
@@ -47,6 +48,7 @@ import type { MapType } from './scenario.js';
 
 export interface StartKitResult {
   indoorTiles: number;
+  doors?: DoorSnapshot;
   facilities: number;
   course: boolean;
   /** 못 놓은 것. 비어 있어야 정상이다 (테스트가 이걸 본다) */
@@ -62,6 +64,9 @@ export interface StartKitInput {
   map: MapType;
   /** 코스를 물려줄 때만 필요하다 */
   courses?: CourseStore;
+  /** New-game ticket lobby with two persistent entrances. */
+  entranceLobby?: boolean;
+  starterLeisure?: boolean;
 }
 
 /** 마당의 왼쪽 위 모서리 — 게이트 바로 안쪽 */
@@ -99,7 +104,13 @@ export function applyStartKit(input: StartKitInput): StartKitResult {
       if (paintIfLand(terrain, i, j, 'floor_indoor')) indoorTiles++;
     }
   }
-  const baked = bakeIndoorWalls(terrain, walls, gate, guestWalkable(terrain, placement));
+  const doors = new DoorSet();
+  if (input.entranceLobby) {
+    const aisle = Math.min(room.i + room.w - 2, Math.max(room.i + 3, gate.i));
+    doors.add(aisle, room.j, 3);
+    doors.add(aisle, room.j + room.h - 1, 1);
+  }
+  const baked = bakeIndoorWalls(terrain, walls, gate, guestWalkable(terrain, placement), doors);
   if (!baked.ok) {
     // 방을 못 만들면 위생 시설이 다시 막힌다 — 되돌리고 기록한다
     for (let j = room.j; j < room.j + room.h; j++) {
@@ -118,9 +129,14 @@ export function applyStartKit(input: StartKitInput): StartKitResult {
    * 매표소가 없는 판이 나온다.
    */
   let facilities = 0;
-  const ticketAt = { i: yard.i + 1, j: yard.j + room.h + 2 };
-  for (let j = yard.j + yard.h; j < ticketAt.j; j++) paintIfLand(terrain, ticketAt.i, j, 'path_stone');
-  if (place(placement, terrain, walls, gate, 'ticket', ticketAt.i, ticketAt.j)) facilities++;
+  const ticketAt = input.entranceLobby && indoorTiles > 0
+    ? { i: room.i, j: room.j + 1 }
+    : { i: yard.i + 1, j: yard.j + room.h + 2 };
+  // Connect both mouths of the integrated ticket lane to the yard.
+  for (let j = yard.j + yard.h; j <= ticketAt.j + 2; j++)
+    for (let i = ticketAt.i - 1; i <= ticketAt.i + 2; i++)
+      if (!terrain.isIndoor(i, j)) paintIfLand(terrain, i, j, 'path_stone');
+  if (placement.place(terrain, walls, gate, 'ticket', ticketAt.i, ticketAt.j, { facing: input.entranceLobby ? 0 : 1 }).ok) facilities++;
   else skipped.push('매표소');
 
   // ── 4. 데크 + 선착장 — 시그니처(코스)를 5분 안에 만나게 하려고 ──
@@ -193,10 +209,12 @@ export function applyStartKit(input: StartKitInput): StartKitResult {
     }
     return false;
   };
-  if (tryBesidePath('pingpong')) facilities++;
-  else skipped.push('탁구대');
-  if (tryBesidePath('pyeongsang_row')) facilities++;
-  else skipped.push('평상');
+  if (input.starterLeisure !== false) {
+    if (tryBesidePath('pingpong')) facilities++;
+    else skipped.push('탁구대');
+    if (tryBesidePath('pyeongsang_row')) facilities++;
+    else skipped.push('평상');
+  }
 
   // ── 5. 코스 — 물려받은 왕복(shuttle) 코스 하나 ──
   let course = false;
@@ -209,20 +227,7 @@ export function applyStartKit(input: StartKitInput): StartKitResult {
     if (preset && equip) {
       const handles = defaultHandles(preset, dockAt, { x: 0, y: 1 });
       // 물려받은 코스는 첫 코스지만, 겹침 판정에 같은 목록을 넘긴다 (K37 — 규칙이 하나다)
-      /*
-       * 물 위 시설 발자국 (Q10) — production 과 **같은 blocked 규칙**으로 검증한다.
-       * 킷이 느슨한 규칙으로 코스를 물려주면 첫 화면부터 「덱을 뚫는 보트」가 생긴다.
-       */
-      const blockedWater = new Set<string>();
-      for (const it of placement.all()) {
-        const def = facilityDef(it.defId);
-        if (def?.layer !== 'water' && def?.walkOn !== true) continue;
-        for (const [bi, bj] of PlacementGrid.footprintTiles(def, it.i, it.j, it.facing ?? 0)) {
-          blockedWater.add(`${bi},${bj}`);
-        }
-      }
-      const v = validateCourse(terrain, handles, dockAt, preset, equip.id, 1, courses.all,
-        undefined, courses.ownedEquipment, blockedWater);
+      const v = validateCourse(terrain, handles, dockAt, preset, equip.id, 1, courses.all);
       if (v.ok) {
         courses.add({ presetId: preset.id, equipId: equip.id, vehicles: 1, dock: dockAt, handles });
         course = true;
@@ -234,7 +239,7 @@ export function applyStartKit(input: StartKitInput): StartKitResult {
     }
   }
 
-  return { indoorTiles, facilities, course, skipped };
+  return { indoorTiles, facilities, course, skipped, ...(input.entranceLobby ? { doors: doors.toSnapshot() } : {}) };
 }
 
 /** 육지일 때만 칠한다 — 물을 덮으면 지형이 통째로 달라진다 */

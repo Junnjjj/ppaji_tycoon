@@ -140,4 +140,22 @@ export interface AssetProvider {
   get(id: string): HTMLCanvasElement;
   /** 명세 조회 (크기·앵커) */
   spec(id: string): SpriteSpec | undefined;
+  /**
+   * 한 논리 텍셀을 몇 소스 픽셀로 저장했는가. 없으면 1이다.
+   *
+   * HD 파일럿은 논리 32×16 타일을 64×32 PNG로 보존한다. 이 값은 배치 크기를
+   * 바꾸는 배율이 아니라 소스 밀도라서, 씬은 오브젝트를 `1 / density`로 그린다.
+   */
+  density?(id: string): number;
+  /** 검토용 고해상도 지면이 좌표 반복을 피할 때 쓰는 결정론적 변형 선택. */
+  groundAlt?(i: number, j: number, kind: string): number;
+  /** 절벽 혼색용 대표 암반색. 없으면 씬이 기존 `terrain/rock`에서 읽는다. */
+  terrainRockTone?(): [number, number, number];
+  /** 검토 지형의 한 단 높이. 없으면 라이브 계약값 8을 그대로 쓴다. */
+  terrainLevelHeight?(): number;
+  /**
+   * review-only 해안 코너 반경(논리 타일 단위). `undefined`면 기존 렌더를 쓴다.
+   * 0은 음성 대조군(날카로운 격자 경계)이고, 0.5~1.0은 곡률 파일럿이다.
+   */
+  terrainShoreRadius?(): number | undefined;
 }

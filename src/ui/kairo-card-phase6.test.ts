@@ -21,15 +21,7 @@ describe('Phase 6 일반 사건 카드', () => {
     expect(viewSource).toContain("'kcard-options'");
     expect(viewSource).toContain('kcard-choice');
     expect(cssSource).toMatch(/\.kcard-options\s*\{[^}]*grid-template-columns:[^}]*minmax\(0,\s*1fr\)/s);
-    /*
-     * ⚠ 높이는 **터치 토큰에서 유도**하기만 하면 된다 — 리터럴 `var(--tap)` 을 요구하면
-     * 「더 크게」가 금지된다. P8 이 이 버튼을 `calc(var(--tap) * 2)` 로 키웠다: 그 주의
-     * 유일한 결정이고 시간이 멈춰 있으므로 **터치 타깃이 아니라 읽는 상자**다.
-     * 지키려는 것은 「44px 아래로 안 내려간다」이지 「정확히 44px」가 아니다.
-     */
-    expect(cssSource).toMatch(/\.kcard-choice\s*\{[^}]*min-width:\s*0[^}]*min-height:[^;]*var\(--tap\)/s);
-    // 리터럴 px 로 되돌리면 빨간불 — 토큰에서 유도한다는 것이 계약이다
-    expect(cssSource).not.toMatch(/\.kcard-choice\s*\{[^}]*min-height:\s*\d+px/s);
+    expect(cssSource).toMatch(/\.kcard-choice\s*\{[^}]*min-width:\s*0[^}]*min-height:\s*var\(--tap\)/s);
     expect(cssSource).toMatch(/\.kcard-choice \.kitem-(?:name|sub)\s*\{[^}]*overflow:\s*hidden/s);
   });
 

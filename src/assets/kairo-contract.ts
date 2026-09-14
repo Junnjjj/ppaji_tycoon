@@ -58,7 +58,11 @@ export interface KairoFacilityRender {
   canvas: readonly [number, number];
   anchorTexel: readonly [number, number];
   bodyH: number;
+  /** 물리 ground scale을 줄이지 않고 좌우 clip만 막는 대칭 투명 guard. */
+  horizontalGuardTexel?: number;
   openTop: boolean;
+  /** Occupants inside enclosed authored shells are hidden while using the facility. */
+  occupantsHidden?: boolean;
   ride?: KairoRide;
 }
 
@@ -90,14 +94,46 @@ export interface KairoFacilitySim {
   };
 }
 
+export interface KairoProjectionDirection {
+  id: 'd0' | 'd1' | 'd2' | 'd3';
+  gameFacing: 0 | 1 | 2 | 3;
+  rootEulerXYZDeg: readonly [number, number, number];
+  offsetFormula: string;
+  canonicalPlusJMarkerScreen: 'lower-left' | 'lower-right' | 'upper-right' | 'upper-left';
+}
+
+export interface KairoBlenderProjection {
+  axisMap: { gameI: '+X'; gameJ: '-Y'; height: '+Z' };
+  cameraPositionSideGame: readonly ['+I', '+J', '+height'];
+  cameraPositionUnitXYZ: readonly [number, number, number];
+  cameraForwardUnitXYZ: readonly [number, number, number];
+  cameraRightUnitXYZ: readonly [number, number, number];
+  cameraUpUnitXYZ: readonly [number, number, number];
+  rotationMode: 'XYZ';
+  rotationEulerDeg: readonly [number, number, number];
+  rotationQuaternionWXYZ: readonly [number, number, number, number];
+  orthoScaleRule: string;
+  rootRotationMode: 'XYZ';
+}
+
 /** 렌더 계약 — 투영·표현·손님·벽·배경 상수 */
 export const KAIRO = contract as unknown as {
   version: number;
   projection: {
+    type: 'orthographic';
     yaw_deg: number;
     elev_deg: number;
+    pitch_down_deg: number;
+    roll_deg: number;
+    viewConvention: string;
+    blender: KairoBlenderProjection;
+    facilityDirections: readonly KairoProjectionDirection[];
+    tileWorld: number;
     tileTexels: readonly [number, number];
     stepScreenTexels: readonly [number, number];
+    worldPerTexelHoriz: number;
+    quadHeightScale: number;
+    quadHeightScaleWhy: string;
   };
   presentation: {
     upscaleSteps: readonly number[];
@@ -159,6 +195,26 @@ export const KAIRO_SIM = (simData as unknown as { facilities: Record<string, Kai
 const renderBySprite = new Map(KAIRO.facilities.map((f) => [f.sprite, f]));
 /** `facility/shop` → 시뮬 항목. 스프라이트 명세가 `facings` 를 물을 때만 쓴다 */
 const simBySprite = new Map(allSimFacilities().map((f) => [f.sprite, f]));
+
+/**
+ * HD 승인 풋프린트 검토용 메모리 오버라이드. 기본 URL과 JSON/아틀라스는 건드리지 않는다.
+ * 기본 공급자를 만든 뒤 호출하므로 구형 아틀라스 크기 검사는 원래 계약으로 끝난 상태다.
+ */
+export function setKairoFacilityReviewOverrides(
+  overrides: Readonly<Record<string, Pick<KairoFacilitySim, 'size' | 'facings'>>>,
+): void {
+  for (const [id, patch] of Object.entries(overrides)) {
+    const current = KAIRO_SIM[id];
+    if (!current) throw new Error(`검토 오버라이드 시설이 없음: ${id}`);
+    const next: KairoFacilitySim = {
+      ...current,
+      size: [...patch.size] as [number, number],
+    };
+    if (patch.facings !== undefined) next.facings = patch.facings;
+    KAIRO_SIM[id] = next;
+    simBySprite.set(next.sprite, next);
+  }
+}
 
 export function renderSpec(sprite: string): KairoFacilityRender | undefined {
   return renderBySprite.get(sprite);
@@ -248,7 +304,7 @@ export function kairoSpriteSpecs(): SpriteSpec[] {
    * `variantId`/`expandSpec`/`parseId` 가 이미 전부 지원하고, 카이로 경로만 `alt` 를
    * 손으로 펴고 있었을 뿐이다. 손님(`guest/body:3/up/1`)이 쓰는 그 축이다.
    * ⚠ `facings: 2` 면 `variants` 자체를 **안 붙인다** — 붙이면 ID 가 `:d0` 로 바뀌어
-   * 아틀라스·게이트·생성물 144장이 전부 이름이 달라진다.
+   * 아틀라스·게이트·생성물 전체가 전부 이름이 달라진다.
    */
   for (const f of KAIRO.facilities) {
     const sim = simBySprite.get(f.sprite);
@@ -340,7 +396,7 @@ export function kairoSpriteSpecs(): SpriteSpec[] {
 }
 
 /**
- * **최종 ID → 명세** 표. `alt` 변형까지 펼친다 (129개).
+ * **최종 ID → 명세** 표. `alt`·`dir` 변형까지 펼친다 (현재 189개).
  *
  * ⚠ 이것이 크기·앵커의 **정본**이다. 아틀라스가 아니다. 아틀라스는 픽셀만 준다 —
  * 크기를 아틀라스에서 읽으면 계약과 두 벌이 되고, 그러면 그림이 조용히 어긋난 채로
@@ -365,7 +421,7 @@ export function kairoUiIconIds(): string[] {
 }
 
 /**
- * **한 팩이 담아야 하는 모든 ID → 캔버스 크기** (129 스프라이트 + 15 UI = 144).
+ * **한 팩이 담아야 하는 모든 ID → 캔버스 크기** (현재 189 스프라이트 + 15 UI = 204).
  *
  * 굽기 도구(`tools/bake-kairo-atlas.ts`)와 에셋 게이트(`tools/kairo-gate.ts`)가
  * **이 하나**를 본다. 규격표가 둘이면 한쪽만 고쳐 놓고 통과한다.
@@ -432,13 +488,24 @@ export function validateContracts(): string[] {
     const [w, d] = s.size;
 
     const c = footprintCanvas(w, d, r.bodyH);
-    if (r.canvas[0] !== c.x || r.canvas[1] !== c.y) {
-      bad.push(`${s.id}: 캔버스 ${r.canvas} ≠ 파생 (${c.x},${c.y})`);
+    const guard = r.horizontalGuardTexel ?? 0;
+    if (!Number.isInteger(guard) || guard < 0) {
+      bad.push(`${s.id}: horizontalGuardTexel ${String(guard)} — 0 이상의 정수여야 한다`);
+    }
+    const guardedCanvas = { x: c.x + Math.max(0, guard) * 2, y: c.y };
+    if (r.canvas[0] !== guardedCanvas.x || r.canvas[1] !== guardedCanvas.y) {
+      bad.push(
+        `${s.id}: 캔버스 ${r.canvas} ≠ 파생 (${guardedCanvas.x},${guardedCanvas.y})` +
+          (guard > 0 ? ` (좌우 guard ${guard})` : ''),
+      );
     }
 
     const a = canvasAnchor(w, d, r.bodyH);
-    if (r.anchorTexel[0] !== a.x || r.anchorTexel[1] !== a.y) {
-      bad.push(`${s.id}: 앵커 ${r.anchorTexel} ≠ bottom-center (${a.x},${a.y})`);
+    const guardedAnchor = { x: a.x + Math.max(0, guard), y: a.y };
+    if (r.anchorTexel[0] !== guardedAnchor.x || r.anchorTexel[1] !== guardedAnchor.y) {
+      bad.push(
+        `${s.id}: 앵커 ${r.anchorTexel} ≠ bottom-center (${guardedAnchor.x},${guardedAnchor.y})`,
+      );
     }
 
     /*

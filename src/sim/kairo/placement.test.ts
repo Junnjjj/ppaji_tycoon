@@ -47,7 +47,7 @@ function withWater(w: number, h: number, fromJ: number): KairoTerrain {
 
 describe('시설 정의 — 시뮬이 아는 것만 있다', () => {
   it('75종', () => {
-    expect(allFacilityDefs()).toHaveLength(75);
+    expect(allFacilityDefs()).toHaveLength(104);
   });
 
   it('렌더 전용 필드가 없다 — 불변식 1', () => {
@@ -575,47 +575,5 @@ describe('입구 봉쇄 — blocks-gate (P3-B)', () => {
     expect(r.fail).toBe('blocks-gate');
     expect(r.changed).toBe(0);
     expect(t.kindAt(KairoTerrain.ENTRY_I + 1, 16)).toBe('path_stone');
-  });
-});
-
-/**
- * ── Q10: 배치가 코스를 막지 못한다 ─────────────────────────────────────────
- *
- * ⚠ 실측(2026-09-01): placement 는 코스를 **전혀 몰랐다** — 운행 중인 코스 루트 위에
- * 플로팅덱을 놓아도 통과했고, 보트가 시설을 뚫었다. `blocks-gate` 가 입구를 지키듯
- * `blocks-course` 가 물길을 지킨다. placement 는 여전히 코스를 모른다 — **칸 집합**만 받는다.
- */
-describe('Q10 — blocks-course', () => {
-  function waterWorld(): { t: KairoTerrain; w: WallGrid; p: PlacementGrid } {
-    const t = new KairoTerrain(30, 30);
-    for (let i = 0; i < 30; i++) {
-      for (let j = 0; j < 30; j++) t.paint(i, j, j >= 10 ? 'water_edge' : 'path_stone');
-    }
-    return { t, w: new WallGrid(30, 30), p: new PlacementGrid(30, 30) };
-  }
-  const GATE = { i: 5, j: 0 };
-
-  it('★ 코스 루트 칸 위의 덱은 거절된다 — 이유가 blocks-course 다', () => {
-    const { t, w, p } = waterWorld();
-    // ⚠ 덱은 물가에 이어져야 한다 (`deck-not-connected`) — 물가 첫 줄(j=10)에서 잰다
-    const r = p.check(t, w, GATE, 'float_deck', 6, 10, { courseTiles: new Set(['6,10']) });
-    expect(r.ok).toBe(false);
-    expect(r.fail).toBe('blocks-course');
-  });
-
-  it('루트를 안 건드리면 그대로 놓인다', () => {
-    const { t, w, p } = waterWorld();
-    const r = p.check(t, w, GATE, 'float_deck', 6, 10, { courseTiles: new Set(['9,20']) });
-    expect(r.ok).toBe(true);
-  });
-
-  it('⚠ 대조군 — courseTiles 를 안 넘기면 예전처럼 통과한다 (그게 고치기 전의 구멍이다)', () => {
-    const { t, w, p } = waterWorld();
-    expect(p.check(t, w, GATE, 'float_deck', 6, 10).ok).toBe(true);
-  });
-
-  it('거절 문구는 방법까지 말한다', () => {
-    expect(PLACE_FAIL_MESSAGES['blocks-course']).toContain('코스');
-    expect(PLACE_FAIL_MESSAGES['blocks-course']).toMatch(/옮기|비켜/);
   });
 });

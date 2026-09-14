@@ -1,0 +1,35 @@
+{
+  "floor_mode": "full-footprint-integral",
+  "canonical_size": [
+    3,
+    2
+  ],
+  "canonical_live_size": [
+    2,
+    2
+  ],
+  "proposal_only": true,
+  "floor_objects": [
+    "FacilityFloor"
+  ],
+  "bounds": {
+    "min": [
+      -1.499999932181745,
+      -0.999999982885729,
+      0.0
+    ],
+    "max": [
+      1.499999932181745,
+      0.999999982885729,
+      0.11999999078132324
+    ],
+    "size": [
+      2.99999986436349,
+      1.999999965771458,
+      0.11999999078132324
+    ]
+  },
+  "physical_floor_gate": "PASS",
+  "runtime_floor_gate": "NOT_EVALUATED",
+  "external_ground_allowed": false
+}

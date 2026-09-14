@@ -12,13 +12,13 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
-  BAND_CELLS,
   MANAGE_LISTS,
+  MANAGE_ROUTES,
   MANAGE_SCREENS,
   actionsForRoute,
+  manageScreen,
   type ManagementMenuAction,
 } from './kairo-management.js';
-import { MANAGEMENT_GROUPS } from '../sim/kairo/meta.js';
 import { certList, questList, regularList, wishList } from './kairo-growth.js';
 import { conditionLine, conditionSubject, rewardLine, REPUTATION_NAME } from './kairo-terms.js';
 import { won } from './money.js';
@@ -30,43 +30,34 @@ const cond = (over: Partial<QuestCondition> = {}): QuestCondition =>
   ({ kind: 'needSupply', value: 3, need: 'hygiene', ...over }) as QuestCondition;
 
 const cssSource = readFileSync('src/ui/style.css', 'utf8');
-const hudSource = readFileSync('src/ui/kairo-hud.ts', 'utf8');
 const mainSource = readFileSync('src/main.ts', 'utf8');
 const manageSource = readFileSync('src/ui/kairo-management.ts', 'utf8');
 const courseSource = readFileSync('src/ui/kairo-course.ts', 'utf8');
 const cardData = readFileSync('src/data/kairo-cards.json', 'utf8');
 
-describe('밴드 — 목적지는 지도 위 일곱 칸이다 (P1)', () => {
-  it('밴드는 일곱 칸이고 순서가 고정이며 건설만 그룹 밖이다', () => {
-    expect(BAND_CELLS.map((c) => c.id)).toEqual([
-      'build', 'course', 'kitchen', 'store', 'manage', 'goals', 'records',
+describe('L1 라우터 — 메뉴는 목적지를 고르는 한 장이다', () => {
+  it('인덱스는 네 목적지만 갖고 설정이 마지막이다', () => {
+    expect(MANAGE_ROUTES.map((r) => r.id)).toEqual([
+      'operations', 'growth', 'records', 'settings',
     ]);
-    // `건설` 만 `MANAGEMENT_GROUPS` 밖의 네이티브 칸이다
-    expect(BAND_CELLS.filter((c) => c.id === 'build')).toHaveLength(1);
-    expect(MANAGEMENT_GROUPS.map((g) => g.id)).toEqual(
-      BAND_CELLS.filter((c) => c.id !== 'build').map((c) => c.id),
-    );
+    // `설정` 이 중간에 있으면 아무도 못 찾는다 (실측: 옛 메뉴에서 전체 스크롤의 66% 지점)
+    expect(MANAGE_ROUTES[MANAGE_ROUTES.length - 1]?.id).toBe('settings');
   });
 
-  it('항목이 하나인 그룹은 화면을 안 끼우고 바로 행동을 연다', () => {
-    for (const cell of BAND_CELLS) {
-      if (cell.id === 'build') continue;
-      const group = MANAGEMENT_GROUPS.find((g) => g.id === cell.id)!;
-      // 한 줄짜리 목록 화면을 한 겹 끼우면 탭이 공짜로 하나 는다
-      expect(cell.direct === null).toBe(group.items.length > 1);
-    }
-  });
-
-  it('깊이는 최대 2다 — 설정만 정보 아래 3단이다', () => {
+  it('깊이는 최대 3이다 — 목록 넷만 성장 아래 3단이다', () => {
     for (const screen of MANAGE_SCREENS) {
-      if (screen.id === 'settings') {
-        expect(screen.back).toBe('records');
+      if (screen.id === 'index') {
+        expect(screen.back).toBeNull();
         continue;
       }
-      // 나머지는 밴드에서 바로 온다 — 시트 안에 인덱스가 없다
-      expect(screen.back).toBeNull();
+      expect(screen.back).not.toBeNull();
+      // 3단(목록)의 부모는 반드시 `growth`, 2단의 부모는 반드시 `index`
+      const parent = manageScreen(screen.back!);
+      expect(parent.back === null || parent.back === 'index').toBe(true);
     }
-    expect(MANAGE_SCREENS.map((s) => s.id)).not.toContain('index');
+    for (const list of MANAGE_LISTS) {
+      expect(manageScreen(list.id).back).toBe('growth');
+    }
   });
 
   it('목적지의 행동은 sim 상수(MANAGEMENT_GROUPS)에서만 온다 — 화면이 만들어내지 않는다', () => {
@@ -75,41 +66,31 @@ describe('밴드 — 목적지는 지도 위 일곱 칸이다 (P1)', () => {
       { id: 'course', label: '코스', run: () => undefined },
       { id: 'exam', label: '심사', run: () => undefined },
       { id: 'report', label: '결산', run: () => undefined },
-      { id: 'quests', label: '의뢰', run: () => undefined },
-      // 밴드의 네이티브 칸 — 어느 목적지에도 안 뜨는 것이 계약이다
-      { id: 'build', label: '건설', run: () => undefined },
     ];
-    const manage = actionsForRoute('manage', actions).map((a) => a.id);
-    const goals = actionsForRoute('goals', actions).map((a) => a.id);
+    const ops = actionsForRoute('operations', actions).map((a) => a.id);
+    const growth = actionsForRoute('growth', actions).map((a) => a.id);
     const records = actionsForRoute('records', actions).map((a) => a.id);
-    const course = actionsForRoute('course', actions).map((a) => a.id);
-    expect(manage).toContain('price');
-    expect(goals).toContain('quests');
+    expect(ops).toContain('price');
+    expect(growth).toContain('exam');
     expect(records).toContain('report');
-    expect(course).toEqual(['course']);
     // 어느 목적지에도 두 번 나오지 않는다 — 같은 행동이 두 화면에 있으면 어느 쪽이 진짜인지 모른다
-    const all = [...manage, ...goals, ...records, ...course];
+    const all = [...ops, ...growth, ...records];
     expect(new Set(all).size).toBe(all.length);
-    // `build` 는 그룹 밖이라 어디에도 안 뜬다
-    expect(all).not.toContain('build');
   });
 
-  it('의뢰·소원·인증·단골은 목표 화면의 섹션이고 목록 머리 id 를 보존한다', () => {
+  it('의뢰·소원·인증·단골이 각자 화면을 갖고 목록 머리 id 를 보존한다', () => {
     expect(MANAGE_LISTS.map((l) => l.id)).toEqual(['quests', 'wishes', 'certs', 'regulars']);
     // 하네스가 닫힌 시트에서 읽는 손잡이 — 잃으면 조용히 빈 문자열을 읽는다
     for (const id of ['kairo-quests-list', 'kairo-cert-list', 'kairo-regular-list']) {
       expect(manageSource).toContain(id);
     }
     // 목록 호스트는 DOM 에서 빼지 않고 hidden 으로만 감춘다 (textContent 는 hidden 을 무시한다)
-    expect(manageSource).toContain("this.listHost.hidden = def.id !== 'goals';");
-    // 넷은 `목표` 안에서 **전부 같이** 보인다 — 종류로 갈라 놓으면 "어디였더라"가 다시 생긴다
-    expect(manageSource).toContain('for (const node of this.listSections.values()) node.hidden = false;');
+    expect(manageSource).toContain('this.listHost.hidden = list === undefined;');
   });
 
-  it('오늘 할 일은 메뉴가 다시 그리지 않는다 — 홈 밴드의 복창을 만들지 않는다', () => {
-    // 노드는 남지만 DOM 에 안 붙는다. 붙이면 홈과 두 곳에서 같은 문장을 말한다
-    expect(manageSource).toContain('this.todayButton = el(');
-    expect(manageSource).not.toContain('today.append(this.todayButton)');
+  it('메뉴는 언제나 인덱스에서 열린다 — 지난 목적지에서 시작하지 않는다', () => {
+    expect(manageSource).toContain('reset(): void {');
+    expect(mainSource).toContain('resetManagementScreen()');
   });
 });
 
@@ -160,8 +141,8 @@ describe('성장 목록 — 조건에 주어가 붙고 빈 상태가 언제나 �
 
   it('단골은 안 만난 인물도 행으로 남는다 — 버튼이 조용한 no-op 이 되지 않는다', () => {
     const list = regularList([
-      { id: 'minji', name: '민지', met: false, stage: 0, stages: 3, want: '', how: '', done: false },
-      { id: 'suyeon', name: '수연', met: true, stage: 1, stages: 3, want: '“식혜 주세요”', how: '', done: false },
+      { id: 'minji', name: '민지', met: false, stage: 0, stages: 3, want: '', done: false },
+      { id: 'suyeon', name: '수연', met: true, stage: 1, stages: 3, want: '“식혜 주세요”', done: false },
     ]);
     expect(list.rows).toHaveLength(2);
     expect(list.rows[0]?.name).toContain('아직 안 만났습니다');
@@ -262,61 +243,8 @@ describe('문구가 지금 상태를 말한다', () => {
   it('코스의 세 선택 행이 같은 구조다 — 하나만 감싸면 나머지가 2px 로 접힌다', () => {
     expect(courseSource).toContain('presetRow.append(this.presetBar)');
     expect(courseSource).toContain('boatRow.append(this.boatBar)');
-    /*
-     * 스크롤 줄은 **접히지도 넘치지도 않는다** — 축이 둘이라 규칙도 둘이다.
-     *
-     * ⚠ 예전 가드는 `flex: 0 0 auto` **하나**를 요구했다. 그건 P3-C④(`.ksheet-body >
-     * .kchips` 가 **세로** flex 에서 2px 로 접힘)의 처방인데, 이 줄들의 부모는
-     * `.kcourse-row` 라 **가로** flex 다. 가로에서 `0 0 auto` 는 "줄어들지 마라"라
-     * 377px 줄 안에서 스크롤러가 **450px 로 벌어져** 칩이 화면 밖 566px 까지 나갔다
-     * (실측, 사용자 스크린샷 2026-08-27). 축을 안 보고 처방만 옮긴 것이 원인이다.
-     *
-     * 그래서 지금은 둘 다 잰다 — `min-width: 0` 이 넘침을, `min-height` 가 접힘을 막는다.
-     * 자동 최소 크기가 0 으로 떨어지는 성질 자체는 두 축에 다 있고, 스크롤 축이 아닌 쪽을
-     * 명시적으로 받쳐야 한다.
-     */
-    const presets = /\.kcourse-presets,\s*\n\.kcourse-options\s*\{([^}]*)\}/s.exec(cssSource);
-    expect(presets).not.toBeNull();
-    const decl = presets?.[1] ?? '';
-    expect(decl).toMatch(/min-width:\s*0/);
-    expect(decl).toMatch(/min-height:\s*calc\(var\(--tap\)/);
-    expect(decl).toMatch(/overflow-x:\s*auto/);
-    // ⚠ 가로 축에서 `flex: 0 0 auto` 로 되돌리지 말 것 — 그것이 넘침의 원인이었다
-    expect(decl).not.toMatch(/flex:\s*0 0 auto/);
-  });
-});
-
-/**
- * ── Q6: 건설 시트의 두 줄은 **같은 층이 아니다** ────────────────────────────
- *
- * ⚠ 실측(2026-08-28): 머리(58px)와 필터 줄(52px)이 거의 같은 무게라 **컨트롤 8개가
- * 2줄**로 읽혔다 (사용자 지적: *"건설 ui도 2줄로 보이고 건설 종류 배치도 좀 애매한 것 같아"*).
- * 계층이 **색으로만** 있었기 때문이다 (노랑 탭 vs 파랑 칩).
- */
-describe('Q6 — 건설 시트의 계층', () => {
-  it('2차 필터가 낱말로 자기 층을 말한다', () => {
-    expect(hudSource).toContain("el('div', 'kchips sub')");
-    expect(hudSource).toContain("el('span', 'kchips-label', '분류')");
-  });
-
-  it('★ 2차 줄이 탭보다 가볍다 — 색이 아니라 크기가 계층을 말한다', () => {
-    const sub = /\.kchips\.sub \.kbtn\s*\{([^}]*)\}/s.exec(cssSource);
-    expect(sub).not.toBeNull();
-    // 글씨가 한 급 작다
-    expect(sub?.[1]).toMatch(/font-size:\s*var\(--fs-tiny\)/);
-    const label = /\.kchips-label\s*\{([^}]*)\}/s.exec(cssSource);
-    expect(label?.[1]).toMatch(/font-size:\s*var\(--fs-tiny\)/);
-  });
-
-  it('⚠ 터치 타깃은 안 줄인다 — 줄여야 하는 것은 무게이지 표적이 아니다', () => {
-    const sub = /\.kchips\.sub \.kbtn\s*\{([^}]*)\}/s.exec(cssSource);
-    // 높이/min-height 를 건드리지 않았는지 — `.kbtn` 의 44px 하한이 그대로 산다
-    expect(sub?.[1]).not.toMatch(/min-height|height:/);
-  });
-
-  it('⚠ 선택 채움 계약은 안 건드린다 (노랑 = 메인 · 파랑 = 2차)', () => {
-    // 이 줄들이 사라지면 K46 의 「선택됨은 채움이다」가 무너진다
-    expect(cssSource).toMatch(/--select-fill/);
-    expect(cssSource).toMatch(/--select-sub/);
+    // 스크롤 컨테이너의 자동 최소 크기 0 을 막는 한 줄 (P3-C④ 의 재발 방지)
+    expect(cssSource).toMatch(/\.kcourse-presets\s*\{[^}]*flex:\s*0 0 auto/s);
+    expect(cssSource).toMatch(/\.kcourse-options\s*\{[^}]*flex:\s*0 0 auto/s);
   });
 });

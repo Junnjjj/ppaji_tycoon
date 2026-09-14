@@ -1,0 +1,22 @@
+{
+  "common_native_roi": [
+    48,
+    43,
+    96,
+    90
+  ],
+  "image_count": 16,
+  "no_per_asset_fitting": true,
+  "inputs": {
+    "baseline": {
+      "frozen_files": 24,
+      "unchanged": true
+    },
+    "optimized": {
+      "frozen_files": 26,
+      "unchanged": true
+    }
+  },
+  "original_live_unchanged": 44,
+  "published": "codex-output/toilet-skill-blackbox-v1/curation/cafe-ab"
+}

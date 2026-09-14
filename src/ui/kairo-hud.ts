@@ -35,10 +35,7 @@
  * 두 벌 만들면 검증도 두 배가 되고, 어긋나는 쪽은 언제나 안 본 쪽이다.
  */
 
-import { attachSheetHandle } from './kairo-sheet-handle.js';
 import { el } from './dom.js';
-import { icon } from './icons.js';
-import { BAND_CELLS, type BandCell } from './kairo-management.js';
 import {
   homeInputOwnership,
   panelHost,
@@ -146,13 +143,6 @@ export interface GoalSlotInput {
   icon: string;
   label: string;
   detail?: string;
-  /**
-   * **누가 말하나** (Q8) — 있으면 kicker 앞에 이름이 붙는다.
-   *
-   * ⚠ 모달이 아니라 **밴드**에 화자를 붙이는 이유는 채널 계약이다
-   * (`meta.ts` 의 `TodayRecommendation.speaker` 주석에 근거가 있다).
-   */
-  speaker?: string;
   /** 0..1 */
   progress: number;
   tone?: 'won' | 'lost';
@@ -193,7 +183,7 @@ export function inheritedCourseGoal(
   return {
     role: 'immediate',
     badge: 'A',
-    icon: icon('course'),
+    icon: '🚤',
     label: handle === undefined ? '첫 코스 만들기' : '물려받은 코스 시험 운행',
     detail: handle === undefined ? '선착장에서 코스를 시작하세요' : '탭해서 시작 코스를 바로 엽니다',
     progress: 0,
@@ -206,7 +196,7 @@ export function inheritedCourseGoal(
  * 여기서 다시 계산하지 않고, 호출자가 넘긴 presentation과 production callback을 쓴다.
  */
 export function recommendedActionGoal(
-  presentation: { icon: string; label: string; detail: string; speaker?: string },
+  presentation: { icon: string; label: string; detail: string },
   action: () => void,
 ): GoalChip {
   return {
@@ -215,8 +205,6 @@ export function recommendedActionGoal(
     icon: presentation.icon,
     label: presentation.label,
     detail: presentation.detail,
-    // 화자는 **표시 전용**이다 — 있으면 붙고 없으면 예전과 같다 (Q8)
-    ...(presentation.speaker === undefined ? {} : { speaker: presentation.speaker }),
     progress: 0,
     action,
   };
@@ -285,18 +273,6 @@ export type RiskTone = 'safe' | 'watch' | 'caution' | 'danger';
 
 export interface HudOptions {
   onPick: (item: BuildItem) => void;
-  /**
-   * 밴드 칸을 눌렀다 (P1). `건설` 은 HUD 가 직접 처리하므로 여기로 안 온다.
-   *
-   * ⚠ **HUD 는 목적지를 모른다** — 어떤 화면을 열지는 `main.ts` 가 정한다. HUD 가
-   * 라우팅을 알기 시작하면 셸과 내용이 다시 엉킨다.
-   */
-  onBandCell?: (cell: BandCell) => void;
-  /**
-   * 잠긴 칸을 눌렀다. **여는 방법을 말해 주는 것**이 이 콜백의 유일한 목적이다 —
-   * 「잠김 문구는 이유에서 끝내지 않고 해제 방법까지 말한다」.
-   */
-  onBandLocked?: (id: BandCell['id']) => void;
   /** 카드 썸네일 공급 — 에셋 제공자의 캔버스를 그대로 (없으면 글리프) */
   thumbFor?: (spriteId: string) => HTMLCanvasElement | null;
   /**
@@ -351,19 +327,7 @@ export class KairoHud {
   /** 소유권 정체를 CSS 가 읽는 자리. HUD 밖 표면(티커·시트 바닥)이 같은 값을 본다 */
   private readonly surfaceRoot: HTMLElement;
   private readonly menuBtn: HTMLButtonElement;
-  /** 밴드의 `건설` 칸 — 옛 하단 버튼의 손잡이(`#kairo-build-open`)를 그대로 잇는다 */
   private readonly buildBtn: HTMLButtonElement;
-  /** 오른쪽 밴드 (P1) — `MENU` 로 여닫는 목적지 일곱 칸 */
-  private readonly band: HTMLDivElement;
-  private readonly bandCells = new Map<BandCell['id'], HTMLButtonElement>();
-  /**
-   * 지금 열려 있는 칸.
-   *
-   * ⚠ **잠긴 칸을 목록에서 빼지 않는다** — `?` 로 남겨 "여기 뭔가 더 생긴다"를 상시로
-   * 보여 주는 것이 이 구조의 튜토리얼이다 (D6).
-   */
-  private bandUnlocked = new Set<BandCell['id']>(['build', 'records']);
-  private bandOpen = false;
   private readonly sheet: HTMLDivElement;
   /** 시트의 패널 얼굴 — `panelHost` 가 이걸 안다 */
   readonly sheetPanel: Panel;
@@ -414,7 +378,7 @@ export class KairoHud {
     const row1 = el('div', 'khdr-row');
     this.weatherChip = el('div', 'kwx');
     this.weatherChip.id = 'kairo-weather';
-    this.weatherChip.textContent = icon('weather-clear');
+    this.weatherChip.textContent = '☀';
     this.statusCap = el('div', 'grow');
     this.statusCap.id = 'kairo-status';
     this.cashCap = el('div', 'kcash');
@@ -433,11 +397,11 @@ export class KairoHud {
      * 😊 는 그대로 두되 **뜻을 접근성에 남긴다** — 아이콘만으로는 "만족도"인지 "평판"인지
      * 안 읽힌다. 정본 이름은 `평판` 이고 눈금은 0~100 정수다 (UX 감사 P0-5).
      */
-    this.satCap = stat(icon('mood'), 'kairo-sat');
+    this.satCap = stat('😊', 'kairo-sat');
     this.satCap.setAttribute('aria-label', '평판');
     this.satCap.title = '평판 — 손님이 나갈 때의 만족 평균';
-    this.visCap = stat(icon('visitors'), 'kairo-visitors');
-    this.gradeCap = stat(icon('grade'), 'kairo-grade');
+    this.visCap = stat('👥', 'kairo-visitors');
+    this.gradeCap = stat('⭐', 'kairo-grade');
     /*
      * 위험도 — 하단 바에서 올라왔다 (K47-②). **상시 표시가 규칙**이라(사고가 RNG 로
      * 느껴지면 안 된다) 시트에 넣을 수 없고, 누르는 것이 아니므로 헤더가 제자리다.
@@ -456,57 +420,31 @@ export class KairoHud {
      * (실측). 중·장기는 메뉴의 `목표` 절로 옮긴다 — 밴드의 자리·폭·높이는 여전히
      * `style.css` 가 소유한다.
      */
-    /*
-     * ── 오른쪽 밴드 (P1) ─────────────────────────────────────────────────
-     *
-     * **밴드가 곧 메뉴다.** 옛 구조는 `홈 → 메뉴 인덱스 시트 → 목적지` 3단이었는데,
-     * 인덱스가 하던 일("목적지를 고른다")을 지도 위 일곱 칸이 대신하면서 **2단**이 됐다.
-     *
-     * ⚠ **평소엔 접혀 있다.** 상시로 띄우면 오른쪽 48px 를 영구히 먹어 지도가 지금보다
-     * 좁아진다 (실측: 상시 71.7% vs 접힘 81.5%). 레퍼런스도 `MENU` 토글 뒤에 둔다.
-     * ⚠ 순서는 **영구 고정**이고 잠긴 칸은 숨기지 않고 `?` 로 남는다 — 가림막이 아니라
-     * **예고**이고, 그것이 이 게임의 튜토리얼이다 (`BAND_CELLS` 주석 참고).
-     */
-    this.band = el('div', 'kband');
-    this.band.id = 'kairo-band';
-    this.band.dataset['bandOpen'] = 'off';
-    for (const cell of BAND_CELLS) {
-      const button = el('button', 'kbtn kband-cell') as HTMLButtonElement;
-      button.dataset['bandCell'] = cell.id;
-      /* 건설의 옛 손잡이를 그대로 잇는다 — 하네스가 이 id 로 건설 시트를 연다 */
-      button.id = cell.id === 'build' ? 'kairo-build-open' : `kairo-band-${cell.id}`;
-      button.append(el('span', 'kband-ico', ''), el('span', 'kband-label', cell.label));
-      button.addEventListener('click', () => this.runBandCell(cell));
-      this.bandCells.set(cell.id, button);
-      this.band.append(button);
-    }
-    this.buildBtn = this.bandCells.get('build')!;
-    parent.append(this.band);
-    this.applyBandLocks();
-
     this.goalBox = el('div', 'kgoals');
     this.goalBox.id = 'kairo-goal';
     this.primaryGoal = el('div', 'kgoal-primary');
     this.goalBox.append(this.primaryGoal);
+    parent.append(this.goalBox);
 
     /*
-     * ── 하단 바 (P1, K47-② 대체) ─────────────────────────────────────────
-     *
-     * **상태 밴드 + `MENU` 토글**이다. 옛 계약의 「네이티브 버튼 2개(메뉴·건설)」는
-     * 밴드로 옮겼고, 그 자리에 `다음 할 일`(옛 64px 전용 밴드)이 들어왔다 —
-     * 밴드를 하나 없애고 하나를 합쳐 **지도가 74% → 81.5%** 로 넓어진다.
+     * ── 하단 바 (K47-②) ──────────────────────────────────────────────────
+     * **버튼 둘뿐이다.** 위험도는 헤더로, 붓 라벨은 티커로 갔고 `하루 »` 는 없앴다.
+     * 여기에 뭔가를 더 놓고 싶어지면 시트 안이 제자리인지 먼저 볼 것.
      */
     const bar = el('div', 'kbar');
     bar.id = 'kairo-bar';
     this.bar = bar;
 
-    this.menuBtn = el('button', 'kbtn kbar-menu', '메뉴');
+    this.menuBtn = el('button', 'kbtn', '메뉴');
     this.menuBtn.id = 'kairo-menu-open';
-    this.menuBtn.setAttribute('aria-expanded', 'false');
-    this.menuBtn.setAttribute('aria-controls', 'kairo-band');
-    this.menuBtn.addEventListener('click', () => this.toggleBand());
+    this.menuBtn.addEventListener('click', () => this.toggle('menu'));
 
-    bar.append(this.goalBox, this.menuBtn);
+    this.buildBtn = el('button', 'kbtn', '건설');
+    this.buildBtn.id = 'kairo-build-open';
+    this.buildBtn.addEventListener('click', () => this.toggle('build'));
+
+    // 좌우로 벌린다 — 사이의 빈 칸이 지도를 가리지 않는 유일한 채움이다
+    bar.append(this.menuBtn, this.buildBtn);
     parent.append(bar);
     // 목표·바가 둘 다 존재해야 소유권을 한 번에 적용할 수 있다 (부분 상태를 만들지 않는다)
     this.setGoalSurface('home');
@@ -523,7 +461,6 @@ export class KairoHud {
     close.id = 'kairo-sheet-close';
     close.addEventListener('click', () => this.hide());
     head.append(this.sheetTitle, this.tabs, close);
-    attachSheetHandle(this.sheet, head, () => this.hide());
 
     const body = el('div', 'ksheet-body');
     this.buildBody = el('div', 'ksheet-build');
@@ -611,7 +548,7 @@ export class KairoHud {
     this.rotateBtn = el('button', 'place-btn rotate', '↻');
     this.rotateBtn.id = 'kairo-place-rotate';
     this.rotateBtn.disabled = true;
-    this.rotateBtn.title = '회전 (비정사각 시설)';
+    this.rotateBtn.title = '회전 (방향 변경)';
     this.rotateBtn.addEventListener('click', () => this.onRotate?.());
     this.confirmBtn = el('button', 'place-btn confirm', '확정');
     this.confirmBtn.id = 'kairo-place-confirm';
@@ -662,7 +599,7 @@ export class KairoHud {
     this.confirmBtn.disabled = !ok;
     this.onConfirm = on.confirm;
     this.onCancel = on.cancel;
-    // 회전 (K45) — 비정사각 시설만 켠다. 예약해 뒀던 그 자리다
+    // 회전 (K45/K53) — 비정사각 2방향 또는 방향 그림이 있는 4방향 시설에서 켠다
     this.onRotate = on.rotate ?? null;
     this.rotateBtn.disabled = on.rotate === undefined;
     /*
@@ -775,16 +712,7 @@ export class KairoHud {
       chip.setAttribute('aria-label', `${view.kicker}, ${view.label}`);
       chip.append(el('span', 'kgoal-ico', view.icon));
       const txt = el('div', 'kgoal-txt');
-      const kicker = el('div', 'kgoal-kicker');
-      if (c.speaker !== undefined && c.speaker !== '') {
-        // 「민지 — 다음 할 일」 — 이름이 먼저 온다 (누가 말하는지가 먼저 읽혀야 한다)
-        const who = el('span', 'kgoal-speaker', c.speaker);
-        who.dataset['goalSpeaker'] = c.speaker;
-        kicker.append(who, document.createTextNode(` · ${view.kicker}`));
-      } else {
-        kicker.textContent = view.kicker;
-      }
-      txt.append(kicker);
+      txt.append(el('div', 'kgoal-kicker', view.kicker));
       txt.append(el('div', 'kgoal-label', view.label));
       if (view.detail !== '') txt.append(el('div', 'kgoal-detail', view.detail));
       chip.append(txt);
@@ -821,73 +749,10 @@ export class KairoHud {
     this.goalBox.dataset['goalSurface'] = mode;
     this.goalBox.hidden = !own.goals;
     this.bar.hidden = !own.bar;
-    /*
-     * 밴드도 **같은 한 값**이 정한다 (P1). 지도 위에 떠 있으므로 조준 중에 안 내리면
-     * 고스트를 가리고, 그 가림을 `z-index` 로 덮는 순간 소유권 계약이 무너진다.
-     */
-    this.band.hidden = !own.band;
-    if (!own.band) this.toggleBand(false);
     // CSS 는 이 정체 하나만 읽는다 — 시트가 바 자리를 대신하는 것도 같은 값이 정한다
     this.surfaceRoot.dataset['uiSurface'] = mode;
     this.surfaceRoot.dataset['homeInput'] = own.goals ? 'on' : 'off';
     this.opts.onSurface?.(mode, own);
-  }
-
-  /**
-   * 밴드를 여닫는다 (`MENU`).
-   *
-   * ⚠ **여는 것이 기본이 아니다.** 상시로 띄우면 오른쪽 48px 를 영구히 먹어 지도가
-   * 지금보다 좁아진다 (실측 71.7% vs 81.5%).
-   */
-  toggleBand(force?: boolean): void {
-    this.bandOpen = force ?? !this.bandOpen;
-    this.band.dataset['bandOpen'] = this.bandOpen ? 'on' : 'off';
-    this.menuBtn.classList.toggle('on', this.bandOpen);
-    this.menuBtn.setAttribute('aria-expanded', this.bandOpen ? 'true' : 'false');
-  }
-
-  get bandVisible(): boolean {
-    return this.bandOpen && !this.band.hidden;
-  }
-
-  /**
-   * 어느 칸이 열려 있나. **밴드 칸의 해금은 `UnlockStore` 가 정본**이고 여기는 표시만 한다
-   * (§8-2) — 표시 쪽에 두 번째 진실을 만들면 세이브와 화면이 갈라진다.
-   */
-  setBandUnlocked(ids: Iterable<BandCell['id']>): void {
-    this.bandUnlocked = new Set(ids);
-    /* 건설과 정보는 언제나 열려 있다 — 첫 판에서 아무 데도 못 가면 판이 잠긴다 */
-    this.bandUnlocked.add('build');
-    this.bandUnlocked.add('records');
-    this.applyBandLocks();
-  }
-
-  private applyBandLocks(): void {
-    for (const cell of BAND_CELLS) {
-      const button = this.bandCells.get(cell.id);
-      if (!button) continue;
-      const open = this.bandUnlocked.has(cell.id);
-      button.dataset['bandLocked'] = open ? 'off' : 'on';
-      const label = button.querySelector('.kband-label');
-      if (label) label.textContent = open ? cell.label : '?';
-      /*
-       * ⚠ `disabled` 로 만들지 않는다. 잠긴 칸도 **눌러서 여는 방법을 들을 수 있어야**
-       * 예고가 성립한다 — 「잠김 문구는 이유에서 끝내지 않고 해제 방법까지 말한다」.
-       */
-      button.setAttribute('aria-label', open ? `${cell.label}, ${cell.hint}` : '아직 잠긴 칸');
-    }
-  }
-
-  private runBandCell(cell: BandCell): void {
-    if (!this.bandUnlocked.has(cell.id)) {
-      this.opts.onBandLocked?.(cell.id);
-      return;
-    }
-    if (cell.id === 'build') {
-      this.toggle('build');
-      return;
-    }
-    this.opts.onBandCell?.(cell);
   }
 
   /** 메뉴 상단의 판 설정 줄 — 맵·시나리오 이름 (목표란에서 옮겨 왔다, K40) */
@@ -914,7 +779,7 @@ export class KairoHud {
   hide(): void {
     this.open = '';
     this.sheet.hidden = true;
-    /* ⚠ `menuBtn` 은 이제 **밴드 토글**이다 — 시트를 닫아도 밴드는 그대로 둔다 */
+    this.menuBtn.classList.remove('on');
     this.buildBtn.classList.remove('on');
     panelHost.closed(this.sheetPanel);
   }
@@ -936,18 +801,6 @@ export class KairoHud {
   /** 결산 처방용 — 같은 건설 시트를 직접 열되 현재 탭/필터 선택은 보존한다. */
   showBuild(): void {
     if (this.open !== 'build') this.toggle('build');
-  }
-
-  /**
-   * 시트 머리의 제목 (P8) — 목적지 화면이 자기 이름을 올린다.
-   *
-   * ⚠ 옛 값 `메뉴` 는 P1 이 지운 **인덱스 화면**의 이름이었다. 인덱스가 사라진 뒤에도
-   * 남아서, 목표·정보·경영이 전부 `메뉴` 라는 머리 아래에 자기 제목을 한 번 더 그렸다.
-   * `건설` 은 시트가 스스로 아는 이름이라 여기를 안 지난다.
-   */
-  setSheetTitle(text: string): void {
-    if (this.open !== 'menu') return;
-    this.sheetTitle.textContent = text;
   }
 
   private toggle(which: 'build' | 'menu'): void {
@@ -1005,17 +858,7 @@ export class KairoHud {
     let list = mine;
     const zones = [...new Set(mine.map((x) => x.group).filter((g): g is string => g !== undefined))];
     if (this.tab === 'facility' && zones.length > 1) {
-      /*
-       * ⚠ **이 줄은 2차 필터다** (Q6). 위의 `시설·건물·바닥·코스` 는 **무엇을 놓나**(탭)이고
-       * 이 줄은 **어디에 놓나**(분류)인데, 둘이 같은 크기·같은 모양이라 실측으로
-       * **8개가 2줄로** 읽혔다 (사용자 지적: "건설 ui도 2줄로 보이고").
-       *
-       * 계층은 색이 아니라 **무게**로 말한다 — `.kchips.sub` 가 줄 높이를 낮추고 글씨를
-       * 한 급 줄인다. ⚠ **선택 채움 계약은 안 건드린다** (노랑 = 메인 탭 · 파랑 = 2차 필터).
-       * 그리고 낱말로도 말한다 — 맨 앞에 `분류` 라벨을 둔다.
-       */
-      const chips = el('div', 'kchips sub');
-      chips.append(el('span', 'kchips-label', '분류'));
+      const chips = el('div', 'kchips');
       const chip = (label: string, val: string | null): void => {
         const c = el('button', `kbtn${this.zone === val ? ' on' : ''}`, label);
         c.addEventListener('click', () => {
@@ -1128,7 +971,7 @@ export class KairoHud {
 /** 그림 계약이 없는 붓들의 글리프 — ui/* 에셋 슬롯이 채워지면 교체된다 (계획 §1-1) */
 const GLYPH: Partial<Record<BuildKind, string>> = {
   ground: '▤',
-  erase: icon('cross'),
+  erase: '✕',
   door: '⇄',
-  move: icon('move'),
+  move: '✥',
 };

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cut a keyed asset sheet into the flat PNG files named by asset-prompts.md.
+"""Cut a keyed asset sheet into the flat PNG files named by the facility prompt contract.
 
 The image generator draws each logical texel at a large scale.  This tool removes the
 label band, trims each generated subject, downsamples it into the contract canvas, snaps
@@ -19,7 +19,7 @@ from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_DOC = ROOT / "docs" / "asset-prompts.md"
+DEFAULT_DOC = ROOT / "docs" / "assets" / "maintenance" / "legacy-sheet-prompts.md"
 DEFAULT_OUT = ROOT / "assets" / "generated" / "kairo"
 SIM_FACILITIES = ROOT / "src" / "data" / "kairo-facilities.json"
 RENDER_CONTRACT = ROOT / "src" / "assets" / "kairo-render-contract.json"

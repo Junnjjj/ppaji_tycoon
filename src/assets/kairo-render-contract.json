@@ -2,8 +2,104 @@
   "version": 2,
   "note": "렌더 전용 계약. 시뮬 정보(발자국·용량·배치제약·슬롯·ride 입출구)는 src/data/kairo-facilities.json 이 소유한다 (불변식 1·3). ⚠ ride 에 남은 것은 순수 그림 지시(ridePose·pathNote)뿐이다 — entryTile/exitTile 은 시뮬 데이터에만 있다.",
   "projection": {
+    "type": "orthographic",
     "yaw_deg": 45,
     "elev_deg": 30,
+    "pitch_down_deg": 30,
+    "roll_deg": 0,
+    "viewConvention": "game yaw is measured on the I/J ground plane toward the camera; pitch_down is optical-axis depression below horizontal; roll is screen roll",
+    "blender": {
+      "axisMap": {
+        "gameI": "+X",
+        "gameJ": "-Y",
+        "height": "+Z"
+      },
+      "cameraPositionSideGame": [
+        "+I",
+        "+J",
+        "+height"
+      ],
+      "cameraPositionUnitXYZ": [
+        0.612372435696,
+        -0.612372435696,
+        0.5
+      ],
+      "cameraForwardUnitXYZ": [
+        -0.612372435696,
+        0.612372435696,
+        -0.5
+      ],
+      "cameraRightUnitXYZ": [
+        0.707106781187,
+        0.707106781187,
+        0
+      ],
+      "cameraUpUnitXYZ": [
+        -0.353553390593,
+        0.353553390593,
+        0.866025403784
+      ],
+      "rotationMode": "XYZ",
+      "rotationEulerDeg": [
+        60,
+        0,
+        45
+      ],
+      "rotationQuaternionWXYZ": [
+        0.800103145191,
+        0.461939766256,
+        0.191341716183,
+        0.331413574036
+      ],
+      "orthoScaleRule": "For the landscape-or-square facility canvases, when one tile edge is tileWorld Blender units and pixel aspect is 1:1, set ortho_scale to output canvas width in texels",
+      "rootRotationMode": "XYZ"
+    },
+    "facilityDirections": [
+      {
+        "id": "d0",
+        "gameFacing": 0,
+        "rootEulerXYZDeg": [
+          0,
+          0,
+          0
+        ],
+        "offsetFormula": "(di,dj)",
+        "canonicalPlusJMarkerScreen": "lower-left"
+      },
+      {
+        "id": "d1",
+        "gameFacing": 1,
+        "rootEulerXYZDeg": [
+          0,
+          0,
+          90
+        ],
+        "offsetFormula": "(dj,w-1-di)",
+        "canonicalPlusJMarkerScreen": "lower-right"
+      },
+      {
+        "id": "d2",
+        "gameFacing": 2,
+        "rootEulerXYZDeg": [
+          0,
+          0,
+          180
+        ],
+        "offsetFormula": "(w-1-di,d-1-dj)",
+        "canonicalPlusJMarkerScreen": "upper-right"
+      },
+      {
+        "id": "d3",
+        "gameFacing": 3,
+        "rootEulerXYZDeg": [
+          0,
+          0,
+          270
+        ],
+        "offsetFormula": "(d-1-dj,di)",
+        "canonicalPlusJMarkerScreen": "upper-left"
+      }
+    ],
     "tileWorld": 22.627417,
     "tileTexels": [
       32,
@@ -58,8 +154,7 @@
       "neutral",
       "annoyed",
       "hot",
-      "ask",
-      "wish"
+      "alert"
     ],
     "face": {
       "draw": true,
@@ -154,66 +249,68 @@
       "sprite": "facility/changing_row",
       "canvas": [
         64,
-        52
+        58
       ],
       "anchorTexel": [
         32,
-        52
+        58
       ],
-      "bodyH": 20,
+      "bodyH": 26,
       "openTop": true
     },
     {
       "sprite": "facility/locker_row",
       "canvas": [
         80,
-        60
+        72
       ],
       "anchorTexel": [
         40,
-        60
+        72
       ],
-      "bodyH": 20,
+      "bodyH": 32,
       "openTop": true
     },
     {
       "sprite": "facility/washbasin_row",
       "canvas": [
         64,
-        44
+        56
       ],
       "anchorTexel": [
         32,
-        44
+        56
       ],
-      "bodyH": 12,
+      "bodyH": 24,
       "openTop": true
     },
     {
       "sprite": "facility/toilet",
       "canvas": [
         64,
-        52
+        68
       ],
       "anchorTexel": [
         32,
-        52
+        68
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 36,
+      "openTop": true,
+      "horizontalGuardTexel": 0
     },
     {
       "sprite": "facility/nursing",
       "canvas": [
-        48,
-        44
+        72,
+        60
       ],
       "anchorTexel": [
-        24,
-        44
+        36,
+        60
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 28,
+      "openTop": true,
+      "horizontalGuardTexel": 4
     },
     {
       "sprite": "facility/pool_kids",
@@ -257,40 +354,44 @@
     {
       "sprite": "facility/sauna",
       "canvas": [
-        96,
-        68
+        104,
+        108
       ],
       "anchorTexel": [
-        48,
-        68
+        52,
+        108
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 60,
+      "openTop": true,
+      "horizontalGuardTexel": 4,
+      "occupantsHidden": true
     },
     {
       "sprite": "facility/jjimjilbang",
       "canvas": [
-        96,
-        68
+        136,
+        124
       ],
       "anchorTexel": [
-        48,
-        68
+        68,
+        124
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 60,
+      "openTop": true,
+      "horizontalGuardTexel": 4,
+      "occupantsHidden": true
     },
     {
       "sprite": "facility/sikhye",
       "canvas": [
         48,
-        40
+        42
       ],
       "anchorTexel": [
         24,
-        40
+        42
       ],
-      "bodyH": 16,
+      "bodyH": 18,
       "openTop": true
     },
     {
@@ -309,28 +410,30 @@
     {
       "sprite": "facility/shop",
       "canvas": [
-        64,
-        52
+        74,
+        76
       ],
       "anchorTexel": [
-        32,
-        52
+        37,
+        76
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 44,
+      "openTop": true,
+      "horizontalGuardTexel": 5
     },
     {
       "sprite": "facility/snackbar",
       "canvas": [
-        64,
-        52
+        72,
+        74
       ],
       "anchorTexel": [
-        32,
-        52
+        36,
+        74
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 42,
+      "openTop": true,
+      "horizontalGuardTexel": 4
     },
     {
       "sprite": "facility/chicken",
@@ -348,12 +451,12 @@
     {
       "sprite": "facility/icecream",
       "canvas": [
-        48,
-        44
+        32,
+        36
       ],
       "anchorTexel": [
-        24,
-        44
+        16,
+        36
       ],
       "bodyH": 20,
       "openTop": true
@@ -361,15 +464,16 @@
     {
       "sprite": "facility/cafe",
       "canvas": [
-        80,
-        60
+        106,
+        78
       ],
       "anchorTexel": [
-        40,
-        60
+        53,
+        78
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 38,
+      "openTop": true,
+      "horizontalGuardTexel": 13
     },
     {
       "sprite": "facility/vending_in",
@@ -400,15 +504,16 @@
     {
       "sprite": "facility/karaoke",
       "canvas": [
-        64,
-        52
+        70,
+        75
       ],
       "anchorTexel": [
-        32,
-        52
+        35,
+        75
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 43,
+      "openTop": true,
+      "horizontalGuardTexel": 3
     },
     {
       "sprite": "facility/pingpong",
@@ -439,67 +544,72 @@
     {
       "sprite": "facility/info",
       "canvas": [
-        64,
-        52
+        66,
+        71
       ],
       "anchorTexel": [
-        32,
-        52
+        33,
+        71
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 39,
+      "openTop": true,
+      "horizontalGuardTexel": 1
     },
     {
       "sprite": "facility/infirmary",
       "canvas": [
-        64,
-        52
+        68,
+        78
       ],
       "anchorTexel": [
-        32,
-        52
+        34,
+        78
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 46,
+      "openTop": true,
+      "horizontalGuardTexel": 2
     },
     {
       "sprite": "facility/office",
       "canvas": [
-        64,
-        52
+        68,
+        73
       ],
       "anchorTexel": [
-        32,
-        52
+        34,
+        73
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 41,
+      "openTop": true,
+      "horizontalGuardTexel": 2
     },
     {
       "sprite": "facility/storage",
       "canvas": [
         64,
-        52
+        71
       ],
       "anchorTexel": [
         32,
-        52
+        71
       ],
-      "bodyH": 20,
-      "openTop": true
+      "bodyH": 39,
+      "openTop": true,
+      "horizontalGuardTexel": 0
     },
     {
       "sprite": "facility/ticket",
       "canvas": [
-        80,
-        64
+        84,
+        73
       ],
       "anchorTexel": [
-        40,
-        64
+        42,
+        73
       ],
-      "bodyH": 24,
-      "openTop": false
+      "bodyH": 33,
+      "openTop": false,
+      "horizontalGuardTexel": 2
     },
     {
       "sprite": "facility/parking",
@@ -517,15 +627,17 @@
     {
       "sprite": "facility/mongol_tent",
       "canvas": [
-        64,
-        56
+        104,
+        108
       ],
       "anchorTexel": [
-        32,
-        56
+        52,
+        108
       ],
-      "bodyH": 24,
-      "openTop": false
+      "bodyH": 60,
+      "openTop": false,
+      "horizontalGuardTexel": 4,
+      "occupantsHidden": false
     },
     {
       "sprite": "facility/pyeongsang_row",
@@ -543,15 +655,17 @@
     {
       "sprite": "facility/shade_net",
       "canvas": [
-        48,
-        44
+        72,
+        92
       ],
       "anchorTexel": [
-        24,
-        44
+        36,
+        92
       ],
-      "bodyH": 20,
-      "openTop": false
+      "bodyH": 60,
+      "openTop": false,
+      "horizontalGuardTexel": 4,
+      "occupantsHidden": false
     },
     {
       "sprite": "facility/parasol",
@@ -958,15 +1072,17 @@
     {
       "sprite": "facility/bungalow",
       "canvas": [
-        96,
-        80
+        104,
+        108
       ],
       "anchorTexel": [
-        48,
-        80
+        52,
+        108
       ],
-      "bodyH": 32,
-      "openTop": false
+      "bodyH": 60,
+      "openTop": false,
+      "horizontalGuardTexel": 4,
+      "occupantsHidden": false
     },
     {
       "sprite": "facility/glamping",
@@ -1127,6 +1243,412 @@
       ],
       "bodyH": 22,
       "openTop": false
+    },
+    {
+      "sprite": "facility/env_village_house",
+      "openTop": false,
+      "canvas": [
+        96,
+        84
+      ],
+      "anchorTexel": [
+        48,
+        84
+      ],
+      "bodyH": 36,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_village_shop",
+      "openTop": false,
+      "canvas": [
+        104,
+        118
+      ],
+      "anchorTexel": [
+        52,
+        118
+      ],
+      "bodyH": 70,
+      "horizontalGuardTexel": 4
+    },
+    {
+      "sprite": "facility/env_pension",
+      "openTop": false,
+      "canvas": [
+        112,
+        126
+      ],
+      "anchorTexel": [
+        56,
+        126
+      ],
+      "bodyH": 70,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_small_hotel",
+      "openTop": false,
+      "canvas": [
+        112,
+        160
+      ],
+      "anchorTexel": [
+        56,
+        160
+      ],
+      "bodyH": 104,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_convenience_store",
+      "openTop": false,
+      "canvas": [
+        88,
+        77
+      ],
+      "anchorTexel": [
+        44,
+        77
+      ],
+      "bodyH": 37,
+      "horizontalGuardTexel": 4
+    },
+    {
+      "sprite": "facility/env_maintenance_shed",
+      "openTop": false,
+      "canvas": [
+        80,
+        76
+      ],
+      "anchorTexel": [
+        40,
+        76
+      ],
+      "bodyH": 36,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_pine",
+      "openTop": false,
+      "canvas": [
+        64,
+        73
+      ],
+      "anchorTexel": [
+        32,
+        73
+      ],
+      "bodyH": 41,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_deciduous",
+      "openTop": false,
+      "canvas": [
+        64,
+        75
+      ],
+      "anchorTexel": [
+        32,
+        75
+      ],
+      "bodyH": 43,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_willow",
+      "openTop": false,
+      "canvas": [
+        64,
+        74
+      ],
+      "anchorTexel": [
+        32,
+        74
+      ],
+      "bodyH": 42,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_shrubs",
+      "openTop": false,
+      "canvas": [
+        32,
+        48
+      ],
+      "anchorTexel": [
+        16,
+        48
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_rocks",
+      "openTop": false,
+      "canvas": [
+        48,
+        56
+      ],
+      "anchorTexel": [
+        24,
+        56
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_bus",
+      "openTop": false,
+      "canvas": [
+        112,
+        88
+      ],
+      "anchorTexel": [
+        56,
+        88
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_car",
+      "openTop": false,
+      "canvas": [
+        48,
+        56
+      ],
+      "anchorTexel": [
+        24,
+        56
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_wood_fence",
+      "openTop": false,
+      "canvas": [
+        34,
+        48
+      ],
+      "anchorTexel": [
+        17,
+        48
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 1
+    },
+    {
+      "sprite": "facility/env_wood_fence_corner",
+      "openTop": false,
+      "canvas": [
+        34,
+        48
+      ],
+      "anchorTexel": [
+        17,
+        48
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 1
+    },
+    {
+      "sprite": "facility/env_wood_fence_end",
+      "openTop": false,
+      "canvas": [
+        34,
+        48
+      ],
+      "anchorTexel": [
+        17,
+        48
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 1
+    },
+    {
+      "sprite": "facility/env_stone_wall",
+      "openTop": false,
+      "canvas": [
+        32,
+        48
+      ],
+      "anchorTexel": [
+        16,
+        48
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_stone_wall_corner",
+      "openTop": false,
+      "canvas": [
+        32,
+        48
+      ],
+      "anchorTexel": [
+        16,
+        48
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_stone_wall_end",
+      "openTop": false,
+      "canvas": [
+        32,
+        48
+      ],
+      "anchorTexel": [
+        16,
+        48
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_hedge",
+      "openTop": false,
+      "canvas": [
+        32,
+        48
+      ],
+      "anchorTexel": [
+        16,
+        48
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_hedge_corner",
+      "openTop": false,
+      "canvas": [
+        32,
+        48
+      ],
+      "anchorTexel": [
+        16,
+        48
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_hedge_end",
+      "openTop": false,
+      "canvas": [
+        32,
+        48
+      ],
+      "anchorTexel": [
+        16,
+        48
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_water_rail",
+      "openTop": false,
+      "canvas": [
+        34,
+        48
+      ],
+      "anchorTexel": [
+        17,
+        48
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 1
+    },
+    {
+      "sprite": "facility/env_water_rail_corner",
+      "openTop": false,
+      "canvas": [
+        34,
+        48
+      ],
+      "anchorTexel": [
+        17,
+        48
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 1
+    },
+    {
+      "sprite": "facility/env_water_rail_end",
+      "openTop": false,
+      "canvas": [
+        34,
+        48
+      ],
+      "anchorTexel": [
+        17,
+        48
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 1
+    },
+    {
+      "sprite": "facility/env_flower_pot",
+      "openTop": false,
+      "canvas": [
+        32,
+        48
+      ],
+      "anchorTexel": [
+        16,
+        48
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_long_flowerbed",
+      "openTop": false,
+      "canvas": [
+        48,
+        56
+      ],
+      "anchorTexel": [
+        24,
+        56
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_bench",
+      "openTop": false,
+      "canvas": [
+        48,
+        56
+      ],
+      "anchorTexel": [
+        24,
+        56
+      ],
+      "bodyH": 32,
+      "horizontalGuardTexel": 0
+    },
+    {
+      "sprite": "facility/env_street_lamp",
+      "openTop": false,
+      "canvas": [
+        32,
+        52
+      ],
+      "anchorTexel": [
+        16,
+        52
+      ],
+      "bodyH": 36,
+      "horizontalGuardTexel": 0
     }
   ],
   "slotRule": "slot.tile 은 발자국 안의 타일 인덱스다. 렌더러가 투영으로 텍셀 위치를 계산한다 — 텍셀 좌표를 직접 적지 않는 이유는 앵커·투영이 바뀌면 185개가 전부 틀어지기 때문. 한 타일에 둘 이상이면 렌더러가 guest.coSlotSpreadTexels 로 흩는다 (슬롯별 offsetTexel 은 K52-⑦ 에 지웠다 — 정원 초과분에는 적을 슬롯이 없어서 절반만 도는 규칙이었다).",
@@ -1193,6 +1715,16 @@
       {
         "id": "pool_water",
         "name": "수영장 물",
+        "alts": 3
+      },
+      {
+        "id": "path_ramp",
+        "name": "석재 경사로",
+        "alts": 3
+      },
+      {
+        "id": "path_steps",
+        "name": "낮은 석재 계단",
         "alts": 3
       }
     ],

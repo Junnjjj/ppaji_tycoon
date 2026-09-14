@@ -65,7 +65,8 @@ describe('게이트 6 — 회전', () => {
    * 넣어 본다. 4방향이 켜지면 이 절을 팩 대조군으로 승격할 것.
    */
   it('팩의 실제 화소로도 미러가 잡힌다', () => {
-    const p = 'assets/generated/kairo/facility__slide_large.png';
+    // Freeze the real-art control in Git; clean checkouts do not contain generation outputs.
+    const p = 'tools/fixtures/rotation-slide-large.png';
     const r = decodePng(p);
     expect(rotationVerdict(measureRotation(flipRaster(r), r))).toBe('mirrored');
     expect(rotationVerdict(measureRotation(r, r))).toBe('not-rotated');

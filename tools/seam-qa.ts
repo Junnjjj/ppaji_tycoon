@@ -61,7 +61,8 @@
 import { chromium } from 'playwright';
 
 const BASE = process.env['PPAJI_URL'] ?? 'http://localhost:5173';
-const URL = `${BASE}/?kairo=1&px=1`;
+const QUERY = process.env['PPAJI_QUERY'] ?? '?kairo=1&px=1';
+const URL = `${BASE}/${QUERY}`;
 const JSON_OUT = process.argv.includes('--json');
 const SELFTEST = process.argv.includes('--selftest');
 
@@ -270,8 +271,22 @@ const LIB_JS = `(() => {
 
   const read = (id) => {
     const c = window.__kairo.provider.get(id);
-    const g = c.getContext('2d');
-    return { w: c.width, h: c.height, data: g.getImageData(0, 0, c.width, c.height).data };
+    const density = window.__kairo.provider.density?.(id) || 1;
+    if (density === 1) {
+      const g = c.getContext('2d');
+      return { w: c.width, h: c.height, data: g.getImageData(0, 0, c.width, c.height).data };
+    }
+    const logical = document.createElement('canvas');
+    logical.width = c.width / density;
+    logical.height = c.height / density;
+    const g = logical.getContext('2d');
+    g.imageSmoothingEnabled = false;
+    g.drawImage(c, 0, 0, c.width, c.height, 0, 0, logical.width, logical.height);
+    return {
+      w: logical.width,
+      h: logical.height,
+      data: g.getImageData(0, 0, logical.width, logical.height).data,
+    };
   };
 
   const clone = (img) => ({ w: img.w, h: img.h, data: new Uint8ClampedArray(img.data) });
@@ -300,7 +315,18 @@ const MEASURE_JS = `(() => {
   const S = window.__seam;
   const prov = window.__kairo.provider;
   // 다리는 물 위로 들린 **방향 런**이라 4방 타일이 아니다 → 런 검사로 보낸다
-  const ids = prov.ids.filter((s) => s.indexOf('ground/') === 0 && s.indexOf('bridge') < 0);
+  // 해안 폼 타일은 물끼리 반복하는 타일이 아니라 육지와 맞닿은 한 변에만 쓰는 경계 조각이다.
+  // 자기 자신 5×5 검사는 의도된 흰 외곽선을 "경계 대비"로 오판하므로 런타임 인접 캡처에서 잰다.
+  const ids = prov.ids.filter(
+    (s) =>
+      s.indexOf('ground/') === 0 &&
+      s.indexOf('bridge') < 0 &&
+      s.indexOf('water_edge_shore_') < 0 &&
+      s.indexOf('water_edge_wave_') < 0,
+  );
+  const specialized = prov.ids.filter(
+    (s) => s.indexOf('ground/water_edge_shore_') === 0 || s.indexOf('ground/water_edge_wave_') === 0,
+  );
   const results = [], skipped = [];
   for (const id of ids) {
     const img = S.read(id);
@@ -318,7 +344,7 @@ const MEASURE_JS = `(() => {
     for (let n = 0; n < 6; n++) imgs.push(img);
     runs.push(Object.assign({ id: c.name + ' (' + c.id + ')' }, S.run(imgs, c.di, c.dj)));
   }
-  return { results: results, skipped: skipped, runs: runs };
+  return { results: results, skipped: skipped, specialized: specialized, runs: runs };
 })()`;
 
 /**
@@ -420,6 +446,7 @@ async function main(): Promise<void> {
   const m = (await page.evaluate(MEASURE_JS)) as {
     results: GroundResult[];
     skipped: string[];
+    specialized: string[];
     runs: RunResult[];
   };
   const control = SELFTEST ? ((await page.evaluate(SELFTEST_JS)) as ControlCase[]) : [];
@@ -471,6 +498,7 @@ async function main(): Promise<void> {
           ground: gs,
           runs: ws,
           skipped: m.skipped,
+          specialized: m.specialized,
           control,
           fails,
           controlFails,
@@ -498,6 +526,9 @@ async function main(): Promise<void> {
   );
   if (m.skipped.length > 0) {
     console.log(`  격자 검사에서 뺀 것 (타일 크기가 아니다): ${m.skipped.join(', ')}`);
+  }
+  if (m.specialized.length > 0) {
+    console.log(`  인접 해안 캡처로 보내는 경계 조각: ${m.specialized.length}종`);
   }
 
   console.log(`\n방향 런 ${ws.length}종 — 6칸 직선 (벽·문·다리)`);

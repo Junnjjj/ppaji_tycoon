@@ -231,7 +231,7 @@ export function reachable(
    * (K25 검토에서 실측). 부르는 쪽이 손님과 **같은 판정**을 넘겨야 한다
    * (`guestWalkable`).
    */
-  walkable?: (i: number, j: number) => boolean,
+  walkable?: ((i: number, j: number) => boolean) & { canCross?: (i: number, j: number, ni: number, nj: number) => boolean },
 ): Uint8Array {
   const w = terrain.width;
   const h = terrain.height;
@@ -252,7 +252,7 @@ export function reachable(
       const ni = i + (DI[d] as number);
       const nj = j + (DJ[d] as number);
       if (!standable(ni, nj)) continue;
-      if (walls.blocksMove(i, j, ni, nj)) continue;
+      if (walls.blocksMove(i, j, ni, nj) || !terrain.levelPassable(i, j, ni, nj) || walkable?.canCross?.(i, j, ni, nj) === false) continue;
       const nk = nj * w + ni;
       if (seen[nk]) continue;
       seen[nk] = 1;

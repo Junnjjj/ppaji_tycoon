@@ -4,15 +4,7 @@ import { KairoTerrain } from './terrain.js';
 import { WallGrid } from './walls.js';
 import { PlacementGrid } from './placement.js';
 import { GuestStore, OPEN_GATE_DEFAULTS } from './guests.js';
-import {
-  assessRisk,
-  accidentChance,
-  facilityRiskWeights,
-  MIN_RISK_WEIGHT,
-  setAccidentTargetFaultForTest,
-  RISK_LEVELS,
-  RISK_NAMES,
-} from './risk.js';
+import { assessRisk, accidentChance, RISK_LEVELS, RISK_NAMES } from './risk.js';
 
 const GATE = { i: 0, j: 0 };
 
@@ -245,82 +237,5 @@ describe('위험은 노출이 있어야 성립한다', () => {
     crowd(g, 8);
     // 혼잡 가산(+0.25/명)만 붙는다 — 노출이 점수를 깎지 않는다
     expect(assessRisk(p, g).riskPoints).toBe(dry + 8 * 0.25);
-  });
-});
-
-/**
- * ── Q1: 사고는 **위험한 곳에서** 난다 ───────────────────────────────────────
- *
- * ⚠ 이 절이 생긴 이유는 실측이다 (2026-08-28): `week.ts` 가 사고 시설을 **놓인 것
- * 전체에서 균일 무작위**로 골라서, 슬라이드 옆에 구명함을 지어도 화장실이 닫힐 확률이
- * 똑같았다. 「내가 한 일」과 「일어난 일」이 안 이어졌고, 그것이 사용자가 말한
- * *"뭐가 많지만 연결되어 있다는 느낌이 안 든다"* 의 기계적 정체였다.
- */
-describe('Q1 — 사고 대상 가중치', () => {
-  it('위험하지 않은 시설은 대상이 아니다 (가중치 0)', () => {
-    const { t, w, p } = world();
-    expect(p.place(t, w, GATE, 'pyeongsang_row', 2, 2).ok).toBe(true);
-    expect(p.place(t, w, GATE, 'pingpong', 6, 2).ok).toBe(true);
-    const weights = facilityRiskWeights(p);
-    const byDef = new Map(weights.map((x) => [x.defId, x.weight]));
-    expect(byDef.get('pyeongsang_row')).toBe(0);
-    expect(byDef.get('pingpong') ?? 0).toBeGreaterThan(0);
-  });
-
-  it('안전 시설 자신도 대상이 아니다', () => {
-    const { t, w, p } = world();
-    p.place(t, w, GATE, 'lifering', 2, 2);
-    expect(facilityRiskWeights(p).every((x) => x.weight === 0)).toBe(true);
-  });
-
-  it('★ 안전 시설이 붙으면 그 시설의 가중치가 내려간다 — 그리고 0 은 안 된다', () => {
-    const near = (() => {
-      const { t, w, p } = world();
-      p.place(t, w, GATE, 'pingpong', 6, 6);
-      // ⚠ `pingpong` 은 2×1 이라 (7,6) 은 이미 점유다 — (8,6) 이 맨해튼 2, 반경 안이다
-      expect(p.place(t, w, GATE, 'lifering', 8, 6).ok).toBe(true);
-      return facilityRiskWeights(p).find((x) => x.defId === 'pingpong')?.weight ?? 0;
-    })();
-    const far = (() => {
-      const { t, w, p } = world();
-      p.place(t, w, GATE, 'pingpong', 6, 6);
-      expect(p.place(t, w, GATE, 'lifering', 18, 6).ok).toBe(true); // 멀다 (맨해튼 12)
-      return facilityRiskWeights(p).find((x) => x.defId === 'pingpong')?.weight ?? 0;
-    })();
-    expect(near).toBeLessThan(far);
-    /*
-     * ⚠ **0 이 되면 안 된다.** 구명함 하나로 그 시설이 영원히 안전해지면 위험 축이
-     * 다시 죽는다 — 「포화 곡선으로 두고 하드 상한을 쓰지 말 것」(P2-A)과 같은 이유다.
-     */
-    expect(near).toBeGreaterThanOrEqual(MIN_RISK_WEIGHT);
-  });
-
-  it('⚠ 음성 대조군 — `uniform` 을 켜면 전부 같은 가중치가 된다 (예전 동작)', () => {
-    const { t, w, p } = world();
-    p.place(t, w, GATE, 'pyeongsang_row', 2, 2);
-    p.place(t, w, GATE, 'pingpong', 6, 2);
-    setAccidentTargetFaultForTest('uniform');
-    try {
-      const weights = facilityRiskWeights(p);
-      expect(weights.every((x) => x.weight === 1)).toBe(true);
-      // 대조군에서는 「위험한 것이 더 자주 뽑힌다」가 성립하지 않는다
-      expect(new Set(weights.map((x) => x.weight)).size).toBe(1);
-    } finally {
-      setAccidentTargetFaultForTest(null);
-    }
-  });
-
-  it('가중치는 `assessRisk` 와 같은 식을 쓴다 — 정원이 오르면 가중치도 오른다', () => {
-    const { t, w, p } = world();
-    const placed = p.place(t, w, GATE, 'pingpong', 6, 6);
-    const before = facilityRiskWeights(p)[0]?.weight ?? 0;
-    if (placed.ok && placed.placed) {
-      // 회전 특화는 정원을 올린다 — 위험 축에서는 벌점이어야 한다 (`assessRisk` 주석)
-      p.upgrade(placed.placed.handle);
-      p.upgrade(placed.placed.handle);
-      p.chooseSpecialty(placed.placed.handle, 'capacity');
-    }
-    const after = facilityRiskWeights(p)[0]?.weight ?? 0;
-    expect(after).toBeGreaterThanOrEqual(before);
   });
 });

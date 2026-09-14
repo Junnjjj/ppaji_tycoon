@@ -1,0 +1,161 @@
+{
+  "status": "STARTING_RECIPE_NOT_UNIVERSAL_OR_USER_APPROVED",
+  "palettes": {
+    "cream": [
+      "#746347",
+      "#BBA581",
+      "#E8D7B1",
+      "#FFF0D1"
+    ],
+    "wood": [
+      "#3C2913",
+      "#886025",
+      "#B88C43",
+      "#EBC781"
+    ],
+    "blue": [
+      "#10263C",
+      "#234F79",
+      "#366D9D",
+      "#6E9EC6"
+    ],
+    "base": [
+      "#121E2C",
+      "#293B56",
+      "#536C87",
+      "#A2B1BA"
+    ],
+    "metal": [
+      "#161A19",
+      "#3B403D",
+      "#838A7F",
+      "#DADCD0"
+    ],
+    "dark": [
+      "#10130F",
+      "#151B18",
+      "#222A24",
+      "#364035"
+    ],
+    "yellow": [
+      "#735024",
+      "#BF822D",
+      "#F6BD54",
+      "#FFF0A2"
+    ],
+    "green": [
+      "#17331B",
+      "#356928",
+      "#80BA45",
+      "#C5E773"
+    ],
+    "white": [
+      "#BBBBAA",
+      "#DDDDC8",
+      "#FFFDEA",
+      "#FFFFFF"
+    ],
+    "teal": [
+      "#15353B",
+      "#245361",
+      "#377888",
+      "#6D9FAA"
+    ],
+    "orange": [
+      "#4E2115",
+      "#9F351B",
+      "#C75029",
+      "#EB8650"
+    ],
+    "roof": [
+      "#171B1B",
+      "#333938",
+      "#515553",
+      "#888C83"
+    ],
+    "roofpanel": [
+      "#222320",
+      "#42433A",
+      "#605E51",
+      "#93917F"
+    ],
+    "glass": [
+      "#164453",
+      "#378797",
+      "#70CBDE",
+      "#C6F4F1"
+    ]
+  },
+  "atlas_quadrants": {
+    "cream": [
+      0,
+      0
+    ],
+    "wood": [
+      1,
+      0
+    ],
+    "blue": [
+      0,
+      1
+    ],
+    "base": [
+      0,
+      1
+    ],
+    "teal": [
+      0,
+      1
+    ],
+    "orange": [
+      1,
+      0
+    ],
+    "roof": [
+      1,
+      1
+    ],
+    "roofpanel": [
+      1,
+      1
+    ],
+    "glass": [
+      0,
+      1
+    ]
+  },
+  "texture_strength": {
+    "cream": 0.24,
+    "wood": 0.42,
+    "blue": 0.42,
+    "base": 0.42,
+    "teal": 0.29,
+    "orange": 0.25,
+    "roof": 0.25,
+    "roofpanel": 0.35,
+    "glass": 0.19
+  },
+  "edge_width_tiles": {
+    "cream": 0.008,
+    "wood": 0.017,
+    "blue": 0.017,
+    "base": 0.017,
+    "metal": 0.01,
+    "dark": 0,
+    "teal": 0.01,
+    "orange": 0.01,
+    "roof": 0.01,
+    "roofpanel": 0.01,
+    "glass": 0.01,
+    "white": 0
+  },
+  "period_tiles": 3,
+  "role_linear_gain": {
+    "blue": 1,
+    "metal": 0.9,
+    "wood": 1,
+    "dark": 0.7,
+    "roof": 0.8,
+    "roofpanel": 0.8
+  }
+}

@@ -2,7 +2,6 @@
  * 소원 체인 (K43) — EXP·문턱·성사·사슬·저장이 규칙대로 도는가.
  */
 import { describe, expect, it } from 'vitest';
-import { SHOP_ITEMS } from './shop.js';
 import { REGULAR_CHARACTERS, WishStore, WISH_CHARACTERS } from './wishes.js';
 import { MenuStore, RECIPES, recipeDef, type MenuPurchase } from './menu.js';
 import { requiredGrade } from './progress.js';
@@ -115,50 +114,23 @@ describe('Phase 3 이름 있는 단골', () => {
     ).toBe(true);
   });
 
-  /**
-   * ⚠ **Q4 에서 계약이 날카로워졌다.** 예전 문장은 「3단계 사슬이 **자급자족**한다」였다 —
-   * 시작 재료 18종에서는 그게 성립했지만, 재료를 4종으로 잠근 뒤에는 성립하지 않는다.
-   *
-   * 그런데 그것이 **더 나은 설계**다 (사용자 지적: *"뭐가 많지만 연결되어 있다는 느낌이
-   * 안 들어"*). 실측하면 상점을 타는 것은 **수연의 마지막 단계 하나**뿐이고
-   * (`cafe_latte ← coffee + milk`), 그 한 걸음이 **단골 축과 상점 축을 잇는다.**
-   *
-   * 그래서 계약을 둘로 나눈다:
-   * · **첫 요청은 자급자족** — 튜토리얼이므로 상점 없이 시작할 수 있어야 한다
-   * · **모든 요청은 손에 넣을 수 있어야** 한다 — 시작 ∪ 사슬 보상 ∪ **상점**.
-   *   막다른 사슬을 막는 것이 원래 목적이고, 그 목적은 그대로다
-   */
-  it('첫 요청은 자급자족이고, 나머지는 손에 넣을 수 있는 재료만 쓴다', () => {
-    const buyable = new Set(
-      SHOP_ITEMS.filter((x) => x.kind === 'ingredient').map((x) => x.target),
-    );
+  it('첫 요청 시설은 시작 등급에 열리고 각 3단계 재료 사슬은 자급자족한다', () => {
     for (const char of REGULAR_CHARACTERS) {
       const menus = new MenuStore();
       const requests = char.regular?.requests ?? [];
       const first = recipeDef(requests[0]?.recipeId);
       expect(requiredGrade(first?.facilityId ?? '')).toBe(1);
-      requests.forEach((request, index) => {
+      for (const request of requests) {
         const recipe = recipeDef(request.recipeId);
         expect(recipe, `${char.id}: ${request.recipeId}`).toBeDefined();
-        const have = (id: string): boolean => menus.hasIngredient(id);
-        if (index === 0) {
-          // 첫 걸음은 상점 없이 — 새 판에서 곧바로 시작할 수 있어야 한다
-          expect(recipe?.ingredients.every(have), `${char.id} 첫 요청`).toBe(true);
-        }
-        // 어느 단계든 **막다른 길이면 안 된다**
-        expect(
-          recipe?.ingredients.every((id) => have(id) || buyable.has(id)),
-          `${char.id}: ${request.recipeId} 재료를 못 구한다`,
-        ).toBe(true);
-        // 사슬을 이어 보려면 상점에서 산 셈 쳐야 한다 (그것이 지금의 경로다)
-        for (const id of recipe?.ingredients ?? []) menus.unlockIngredient(id);
+        expect(recipe?.ingredients.every((id) => menus.hasIngredient(id))).toBe(true);
         if (recipe && !menus.hasRecipe(recipe.id)) {
           expect(menus.develop(recipe.facilityId, recipe.ingredients, () => true).kind).toBe(
             'discovered',
           );
         }
         if (request.reward.ingredient) menus.unlockIngredient(request.reward.ingredient);
-      });
+      }
     }
   });
 

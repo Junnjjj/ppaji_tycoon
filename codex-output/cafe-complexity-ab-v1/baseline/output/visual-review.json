@@ -1,0 +1,39 @@
+{
+  "state": "USER_REVIEW_REQUIRED",
+  "technical_reopen": "PASS",
+  "not_production_PASS": true,
+  "concept_language": "charcoal roof, amber framing, cream infill, blue front accents preserved in authored interpretation",
+  "limitations": [
+    "Material richness and rounded tiled roof fidelity below concept",
+    "At192 equipment is identifiable as distinct clusters; fine internal features cannot be certified individually readable",
+    "No accepted family geometry, actual guest sprite, game map, slots or runtime overlay available in isolated test"
+  ],
+  "direction_observations": {
+    "d0": {
+      "front_door": "left facade visible",
+      "service_counter": "left facade visible",
+      "pastry_case": "six pastries physically present; separate two-tier case visible",
+      "coffee_machine": "right of case; buttons/head/base distinct at768; finer parts reduced at192",
+      "front_awning": "same facade over service opening",
+      "side_window": "right facade visible"
+    },
+    "d1": {
+      "front_door": "right facade visible",
+      "service_counter": "right facade visible",
+      "pastry_case": "left of machine retained",
+      "coffee_machine": "right of pastry case retained",
+      "front_awning": "right facade above counter",
+      "side_window": "occluded"
+    },
+    "d2": {
+      "front_features": "naturally occluded behind closed rear/left walls",
+      "side_window": "occluded"
+    },
+    "d3": {
+      "front_features": "occluded, tiny awning end/ledge at far left silhouette",
+      "side_window": "left screen facade visible"
+    }
+  },
+  "projection_diagnostic": "FAIL_D3_VERTICAL_FAMILY_85.5_DEG",
+  "package_state": "REVIEW_CANDIDATE_WITH_UNRESOLVED_DIAGNOSTIC_FAILURE"
+}

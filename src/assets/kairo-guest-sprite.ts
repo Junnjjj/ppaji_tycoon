@@ -387,13 +387,7 @@ export function bakeGuestCell(
   return canvas;
 }
 
-/**
- * 이모트 말풍선 — 손님 머리 위에 띄운다. 목록은 **계약이 정한다** (`KAIRO.guest.emotes`).
- *
- * ⚠ **그림이 없어도 여기서 다 그린다** (P7). `ask`·`wish` 는 AI 픽셀아트가 아직 없지만
- * 절차 도형이 계약을 먼저 채우므로 화면이 안 깨진다 — Phase G 의 `HybridProvider` 와
- * 같은 규칙이고, 그림이 오면 이 함수는 그대로 두고 아틀라스만 얹는다.
- */
+/** 이모트 말풍선 6종 — 12×12, 손님 머리 위에 띄운다 */
 export function bakeEmoteAtlas(): { canvas: HTMLCanvasElement; frames: Map<string, FrameRect> } {
   const list = KAIRO.guest.emotes;
   const canvas = createCanvas(list.length * EMOTE_SIZE, EMOTE_SIZE);
@@ -408,12 +402,7 @@ export function bakeEmoteAtlas(): { canvas: HTMLCanvasElement; frames: Map<strin
     neutral: '#c8ccd0',
     annoyed: '#e0603c',
     hot: '#f09030',
-    /*
-     * 지도 표식 (P7). ⚠ **색만으로 가르지 않는다** — `ask` 는 컵(사각), `wish` 는 별로
-     * **모양이 먼저** 다르다. 색약·흑백에서 색은 사라지지만 모양은 남는다.
-     */
-    ask: '#3f8fd0',
-    wish: '#c88ce0',
+    alert: '#e03c3c',
   };
 
   list.forEach((name, k) => {
@@ -463,27 +452,8 @@ export function bakeEmoteAtlas(): { canvas: HTMLCanvasElement; frames: Map<strin
       g.fillRect(cx, cy - 4, 2, 4);
       g.fillRect(cx - 1, cy, 4, 2);
       g.fillRect(cx + 4, cy - 2, 2, 3);
-    } else if (name === 'ask') {
-      /*
-       * 컵 (P7) — 단골의 **메뉴 요청**. 사각 몸통 + 손잡이 + 김 두 줄.
-       * ⚠ 별(`wish`)과 **실루엣이 안 겹치게** 각진 형태로 둔다 (색약 대비 첫째 채널).
-       */
-      g.fillRect(cx - 4, cy - 2, 7, 7);
-      g.fillRect(cx + 3, cy, 2, 3);
-      g.fillRect(cx - 3, cy - 5, 2, 2);
-      g.fillRect(cx + 1, cy - 6, 2, 3);
-    } else if (name === 'wish') {
-      /*
-       * 별 (P7) — 인물의 **소원**. 뾰족한 실루엣이라 컵과 한눈에 갈린다.
-       */
-      g.fillRect(cx - 1, cy - 6, 3, 12);
-      g.fillRect(cx - 6, cy - 1, 13, 3);
-      g.fillRect(cx - 4, cy - 4, 3, 3);
-      g.fillRect(cx + 2, cy - 4, 3, 3);
-      g.fillRect(cx - 4, cy + 2, 3, 3);
-      g.fillRect(cx + 2, cy + 2, 3, 3);
     } else {
-      // 느낌표 — 남은 이름의 기본형
+      // 느낌표
       g.fillRect(cx - 1, cy - 5, 3, 7);
       g.fillRect(cx - 1, cy + 4, 3, 3);
     }

@@ -1,0 +1,43 @@
+{
+  "baseline": {
+    "log": "/Users/jangjunpyo/.codex/sessions/2026/09/12/rollout-2026-09-12T09-33-14-01a09308-60bb-7f73-b62e-163aab5789f7.jsonl",
+    "first_token_event": "2026-09-12T00:33:19.462Z",
+    "last_token_event": "2026-09-12T00:39:08.537Z",
+    "models": [
+      "gpt-6-astra"
+    ],
+    "requests_with_usage": 28,
+    "input_tokens": 1556188,
+    "cached_input_tokens": 1489792,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 16501,
+    "reasoning_output_tokens": 2101,
+    "total_tokens": 1572689,
+    "uncached_input_tokens": 66396
+  },
+  "optimized": {
+    "log": "/Users/jangjunpyo/.codex/sessions/2026/09/12/rollout-2026-09-12T09-33-23-01a09308-8348-7232-8487-a416db09ef52.jsonl",
+    "first_token_event": "2026-09-12T00:33:29.826Z",
+    "last_token_event": "2026-09-12T00:37:53.523Z",
+    "models": [
+      "gpt-6-astra"
+    ],
+    "requests_with_usage": 23,
+    "input_tokens": 988868,
+    "cached_input_tokens": 945408,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 10395,
+    "reasoning_output_tokens": 784,
+    "total_tokens": 999263,
+    "uncached_input_tokens": 43460
+  },
+  "reduction_percent": {
+    "input_tokens": 36.46,
+    "cached_input_tokens": 36.54,
+    "uncached_input_tokens": 34.54,
+    "output_tokens": 37.0,
+    "total_tokens": 36.46,
+    "requests_with_usage": 17.86
+  },
+  "scope": "Independent worker vs worker only; excludes parent implementation, review and research overhead. Cumulative last counter once; cached within input, reasoning within output. One trial, not a general expected saving or invoice."
+}

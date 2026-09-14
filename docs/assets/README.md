@@ -1,6 +1,6 @@
 # 빠지 타이쿤 에셋 문서 허브
 
-최종 갱신 2026-08-27. 에셋 작업은 이 문서에서 시작한다. `history/`와
+최종 갱신 2026-09-01. 에셋 작업은 이 문서에서 시작한다. `history/`와
 `maintenance/legacy-*`는 현행 생산 승인의 근거가 아니다.
 
 ## 작업별 시작 문서
@@ -15,9 +15,6 @@
 | 승인 에셋을 메인·라이브 팩에 적용 | [런타임 크기·채택 결정](adoption/runtime-fit-decisions.md) | 해당 파이프라인 |
 | 구형 V2 시설을 유지보수 | [구형 재생성 지시서](maintenance/legacy-v2-regeneration.md), [구형 시트 프롬프트](maintenance/legacy-sheet-prompts.md) | 신규 제작에는 사용 금지 |
 | 토큰 절감 방식을 별도 실험 | [토큰 절감 실험안](operations/token-efficiency-experiment.md) | 현재 파이프라인 미적용 |
-| UI 아이콘 44종 제작·반입 | [UI 아이콘 파이프라인](pipelines/ui-icons.md) | `$ppaji-kairo-assets` |
-| **빠지 스토리 그림 시트 342장**(재료·요리·부품·기구·소품·선물·팔찌 아이콘) — ChatGPT 주문서 | [그림 시트 주문서](pipelines/ppaji-picture-sheet.md) · 계획 `docs/plan-ppaji-picture-ui.md` | (외부 세션) |
-| 사건 배경 삽화 9종 제작 | [사건 배경 파이프라인](pipelines/event-art.md) | `$ppaji-kairo-assets` |
 
 ## 폴더 구조
 
@@ -68,6 +65,8 @@ docs/assets/
 `artifacts/asset-concept-sheets/indoor-facilities-v1/runtime-fit-map-v1/`에 있다. 80개 방향을
 검사했고, 최종 채택 단계에서 80방향 모두 알파 유지율 1.0·클립 0이 되도록 공통 스케일을
 보정했다. 아이스크림은 1×1, 카페는 2×2로 라이브 적용되었고 20종 모두 d0–d3를 쓴다.
+이후 수유실 v9는 별도 사용자 승인으로 2×1에서 2×2로 교체되었으며 논리 72×60,
+density-2 d0–d3를 쓴다.
 
 외형·크기·입구면을 다시 볼 때는 실제 Phaser 맵의 `?assetReview=1`을 사용한다.
 승인된 20종을 각각 네 방향으로 놓고, 개별 검토 화면에서는 **위 d0 · 오른쪽 d1 ·
@@ -91,6 +90,16 @@ C의 4방향 선택과 실제 캔버스 클릭까지 통과했다. 이후 C가 �
 [런타임 크기·채택 결정](adoption/runtime-fit-decisions.md)의 “HD 픽셀 모드 실제 맵
 파일럿” 절과 `live-adoption-v1/LIVE-ADOPTION.json`을 따른다.
 
+2026-09-01에는 최신 지붕형 엄격 검수 패키지 중 **기존 2×2 풋프린트를 유지하고**
+접지·4방향·독립 시각 검수를 통과한 매점, 분식, 노래방, 안내소, 의무실, 사무실 6종을
+라이브 density-2 아틀라스에 추가 채택했다. 수유실은 더 최신 v9 2×2 채택본을 유지한다.
+카페는 3×2 전환 결정이 남아 있고, 화장실 d2는 라이브 접지 게이트, 창고는 strict-color
+게이트에서 보류했으므로 기존 라이브 그림을 유지한다. 정확한 해시와 제외 이유는
+[`roofed-pass-facilities-live-v1.json`](adoption/roofed-pass-facilities-live-v1.json)에 있다.
+이때 논리 1×를 단순 확대하지 않고, 검증된 density-4 프레임에서 density 2를 직접
+추출한다. 수유실 v9도 같은 정보 밀도 규칙으로 다시 포장했으며 기록은
+[`nursing-v9-density2-refinement.json`](adoption/nursing-v9-density2-refinement.json)에 있다.
+
 ## 현재 terrain-v3 지형·물 상태
 
 source-v1의 색·질감과 density-4 실제 맵 방향은 사용자가 선택했다. 반복 지면은 틈 0,
@@ -100,7 +109,12 @@ source-v1의 색·질감과 density-4 실제 맵 방향은 사용자가 선택�
 phase 독립 8종 매크로 해안 오버레이 v1은 제작·연결 QA까지 했지만 실제 맵에서 반복되는
 둥근 물결무늬로 보여 사용자가 거절했다. source-v1 재질 방향과 B 목표는 유지하며, v1은
 `FAIL_USER_VISUAL_REJECTION`으로 보존한다. 다음은 타일 조각보다 먼저 긴 연결 스트립 또는
-큰 마스크의 시각 원본을 검토하는 교체 트랙이다. 기본 공급자와 라이브 팩은 미변경이다.
+큰 마스크의 시각 원본을 검토하는 교체 트랙이다.
+
+2026-09-01부터 source-v1의 잔디·모래·돌·데크·물·절벽은 **기본 공급자**다. 기본 URL은
+`terrain=v3` query 없이 density 4 원본을 읽는다. 사용자가 선택하지 않은 radius 합성은
+없고, 거절된 `overlay/shore_curve_*` 8종은 매니페스트에 실패 증거로 남더라도 공급자가
+로드하지 않는다. 즉 현재 라이브는 `source-v1 + no-radius + no rejected macro overlay`다.
 정본 상태와 다음 게이트는
 [지형·물·곡선 해안 파이프라인](pipelines/terrain-ground-water.md)을 따른다.
 

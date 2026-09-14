@@ -1,0 +1,127 @@
+{
+  "canvas_color": [
+    768,
+    768
+  ],
+  "canvas_native": [
+    192,
+    192
+  ],
+  "union_alpha_bbox": [
+    217,
+    196,
+    551,
+    512
+  ],
+  "same_world_scale": true,
+  "auto_crop": false,
+  "native_render": "direct192 / filter0.01 /24samples",
+  "foreground_min_declared": 2500,
+  "all_native_above_min": true,
+  "measurements": {
+    "d0": {
+      "color": {
+        "bbox": [
+          217,
+          196,
+          551,
+          512
+        ],
+        "foreground_pixels": 68839,
+        "opaque_pixels": 66983,
+        "clipped_edge_pixels": 0,
+        "sha256": "bbe3ed370dc52176d81a85e07645326531c5f256676534ad5325bdfa4addd620"
+      },
+      "native": {
+        "bbox": [
+          55,
+          49,
+          137,
+          128
+        ],
+        "foreground_pixels": 4283,
+        "opaque_pixels": 4268,
+        "clipped_edge_pixels": 0,
+        "sha256": "fd1cca080f9db3a8b30c9b6368ac73e07e1cbc91f5967d75f7d7072bf3373a4d"
+      }
+    },
+    "d1": {
+      "color": {
+        "bbox": [
+          217,
+          196,
+          551,
+          512
+        ],
+        "foreground_pixels": 69224,
+        "opaque_pixels": 67337,
+        "clipped_edge_pixels": 0,
+        "sha256": "f2da0e712a743c62f9b2d3018068dfdbf4615b6a36731d04fcceef5497cbcec8"
+      },
+      "native": {
+        "bbox": [
+          55,
+          49,
+          137,
+          128
+        ],
+        "foreground_pixels": 4304,
+        "opaque_pixels": 4292,
+        "clipped_edge_pixels": 0,
+        "sha256": "1a9ebc40e016672018fb76bd102928191fb6b46fb7861fc0e359b061c5a650fa"
+      }
+    },
+    "d2": {
+      "color": {
+        "bbox": [
+          217,
+          196,
+          551,
+          512
+        ],
+        "foreground_pixels": 68839,
+        "opaque_pixels": 66983,
+        "clipped_edge_pixels": 0,
+        "sha256": "d126706261fe00a4f165ef0cb7e7666529697f367e4750cf903672c5d5cef6d0"
+      },
+      "native": {
+        "bbox": [
+          55,
+          49,
+          137,
+          128
+        ],
+        "foreground_pixels": 4283,
+        "opaque_pixels": 4268,
+        "clipped_edge_pixels": 0,
+        "sha256": "d22b6265e07409cdcf197839c964a0d3bf922005a0167b8622aaaa71dcc0e2c3"
+      }
+    },
+    "d3": {
+      "color": {
+        "bbox": [
+          217,
+          196,
+          551,
+          512
+        ],
+        "foreground_pixels": 69063,
+        "opaque_pixels": 67182,
+        "clipped_edge_pixels": 0,
+        "sha256": "99208db95b66ae7ba9972f3332d8d1429b8ee9a94803727e3ce84ec156d16a02"
+      },
+      "native": {
+        "bbox": [
+          55,
+          49,
+          137,
+          128
+        ],
+        "foreground_pixels": 4294,
+        "opaque_pixels": 4281,
+        "clipped_edge_pixels": 0,
+        "sha256": "c76b1e184e11b49d51806ba9f48d8c53488f811999688d165bb39215eeea7524"
+      }
+    }
+  }
+}

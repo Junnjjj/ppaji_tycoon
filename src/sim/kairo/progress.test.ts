@@ -100,7 +100,7 @@ describe('해금 — 허가는 돈으로 못 산다', () => {
      * 아니라 **정보 과부하**였다 (UX 검수 §4). 1등급 골격 = 18종, 대신 그 18종이
      * 첫 의뢰와 시작 킷을 전부 덮는지는 unlock-graph.test.ts 가 지킨다.
      */
-    const open = allFacilityDefs().filter((d) => requiredGrade(d.id) === 1);
+    const open = allFacilityDefs().filter((d) => !d.id.startsWith('env_') && requiredGrade(d.id) === 1);
     expect(open.length).toBeGreaterThanOrEqual(15);
     expect(open.length).toBeLessThanOrEqual(24);
   });

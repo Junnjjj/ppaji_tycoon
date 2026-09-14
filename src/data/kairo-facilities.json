@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "카이로 전환 시설 75종의 시뮬 정보. 렌더 정보(캔버스·앵커·bodyH)는 assets/kairo-render-contract.json. slots = 손님이 이 시설을 이용할 때 **실제로 서는 발자국 안의 칸**(+ 포즈·방향). ⚠ 렌더 좌표가 아니라 게임플레이다 — 손님이 그 칸 위에 서면 g.i/g.j 가 슬롯 칸이 되고 히트맵·재생 프레임·골든이 그 값을 읽는다. assets/ 에 두면 Phaser 없는 `npm run sim` 이 슬롯을 못 읽어 헤드리스와 브라우저가 다른 손님 위치를 낸다 (불변식 2). ride 와 같은 범주다. slots.length 는 capacity 와 같아야 한다 (validateContracts 가 지킨다). specialties = 개선 3단계에서 고르는 특화 (빈 배열이면 특화가 없다). charge = 과금 방식: included 는 입장권에 포함이라 이용해도 요금 0, sale 은 그 자리에서 따로 산다. ⚠ need 축과 과금 축은 다르다 — 대여소는 need:thrill 인데 sale 이고 카페는 need:rest 인데 sale 이다. 그래서 need 로 가르면 안 되고 시설마다 적는다. desc = 한 줄 설명(무엇/누가 쓰나 — 스탯 요약이 아니다. 정원·요금·수요는 화면이 실측값으로 따로 띄운다). menu = 가게 품목 (표시 전용, K49). ⚠ 평균 price 가 fee 와 정확히 같아야 한다 — 화면이 말하는 값과 sim 이 걷는 값이 갈리면 안 된다. 손님이 무엇을 골랐는지는 아직 시뮬하지 않는다 (P3-E 메뉴 슬롯의 몫). · P2: 분식·붕어빵·BBQ존을 `menuMode: \"craft\"` 로 승격했다. ⚠ **승격 시설은 반드시 `startingMenu` 를 갖고 그 레시피가 `start: true` 여야 한다** — 없으면 이미 세이브에 서 있는 그 시설이 운영 불가가 되어 손님 목적지·주간 공급·입장 정원에서 통째로 빠지고 판이 조용히 작아진다 (`validateMenuData` 가 지킨다). ⚠ **자판기 2종은 절대 승격 금지** — cap 1 짜리가 \"메뉴를 안 꽂으면 안 도는 시설\"이 되는 것은 부당하다. ⚠ `upgradeRequires` 는 **몇 단계로 올릴 때 무엇이 필요한가**다 (P5). 키는 목표 단계. 비우면 P1.5 이전과 완전히 같은 경로로 돌아간다.",
+  "note": "카이로 전환 시설 75종의 시뮬 정보. 렌더 정보(캔버스·앵커·bodyH)는 assets/kairo-render-contract.json. slots = 손님이 이 시설을 이용할 때 **실제로 서는 발자국 안의 칸**(+ 포즈·방향). ⚠ 렌더 좌표가 아니라 게임플레이다 — 손님이 그 칸 위에 서면 g.i/g.j 가 슬롯 칸이 되고 히트맵·재생 프레임·골든이 그 값을 읽는다. assets/ 에 두면 Phaser 없는 `npm run sim` 이 슬롯을 못 읽어 헤드리스와 브라우저가 다른 손님 위치를 낸다 (불변식 2). ride 와 같은 범주다. slots.length 는 capacity 와 같아야 한다 (validateContracts 가 지킨다). specialties = 개선 3단계에서 고르는 특화 (빈 배열이면 특화가 없다). charge = 과금 방식: included 는 입장권에 포함이라 이용해도 요금 0, sale 은 그 자리에서 따로 산다. ⚠ need 축과 과금 축은 다르다 — 대여소는 need:thrill 인데 sale 이고 카페는 need:rest 인데 sale 이다. 그래서 need 로 가르면 안 되고 시설마다 적는다. desc = 한 줄 설명(무엇/누가 쓰나 — 스탯 요약이 아니다. 정원·요금·수요는 화면이 실측값으로 따로 띄운다). menu = 가게 품목 (표시 전용, K49). ⚠ 평균 price 가 fee 와 정확히 같아야 한다 — 화면이 말하는 값과 sim 이 걷는 값이 갈리면 안 된다. 손님이 무엇을 골랐는지는 아직 시뮬하지 않는다 (P3-E 메뉴 슬롯의 몫).",
   "facilities": {
     "shower_row": {
       "id": "shower_row",
@@ -60,7 +60,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "물놀이를 마친 손님이 소금기와 모래를 씻어 내는 곳."
+      "desc": "물놀이를 마친 손님이 소금기와 모래를 씻어 내는 곳.",
+      "facings": 4
     },
     "changing_row": {
       "id": "changing_row",
@@ -112,7 +113,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "입구에서 수영복으로 갈아입는다. 물놀이의 첫 관문."
+      "desc": "입구에서 수영복으로 갈아입는다. 물놀이의 첫 관문.",
+      "facings": 4
     },
     "locker_row": {
       "id": "locker_row",
@@ -172,7 +174,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "가방과 옷을 맡긴다. 짐이 없어야 손님이 오래 논다."
+      "desc": "가방과 옷을 맡긴다. 짐이 없어야 손님이 오래 논다.",
+      "facings": 4
     },
     "washbasin_row": {
       "id": "washbasin_row",
@@ -224,7 +227,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "손 씻고 입 헹구는 자리. 화장실 옆에 두면 줄이 갈린다."
+      "desc": "손 씻고 입 헹구는 자리. 화장실 옆에 두면 줄이 갈린다.",
+      "facings": 4
     },
     "toilet": {
       "id": "toilet",
@@ -268,7 +272,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "가장 먼저 찾고, 없으면 가장 먼저 불평하는 곳."
+      "desc": "가장 먼저 찾고, 없으면 가장 먼저 불평하는 곳.",
+      "facings": 4
     },
     "nursing": {
       "id": "nursing",
@@ -276,7 +281,7 @@
       "layer": "indoor",
       "size": [
         2,
-        1
+        2
       ],
       "sprite": "facility/nursing",
       "capacity": 1,
@@ -304,7 +309,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "아기를 데려온 가족이 잠깐 쉬어 가는 조용한 방."
+      "desc": "아기를 데려온 가족이 잠깐 쉬어 가는 조용한 방.",
+      "facings": 4
     },
     "pool_kids": {
       "id": "pool_kids",
@@ -616,15 +622,22 @@
         "revenue",
         "reputation"
       ],
-      "desc": "뜨거운 나무방에서 몸을 데운다. 물에서 나온 뒤의 코스."
+      "desc": "뜨거운 나무방에서 몸을 데운다. 물에서 나온 뒤의 코스.",
+      "facings": 4,
+      "entryTiles": [
+        [
+          0,
+          3
+        ]
+      ]
     },
     "jjimjilbang": {
       "id": "jjimjilbang",
       "name": "찜질방",
       "layer": "indoor",
       "size": [
-        3,
-        3
+        4,
+        4
       ],
       "sprite": "facility/jjimjilbang",
       "capacity": 6,
@@ -690,7 +703,14 @@
         "revenue",
         "reputation"
       ],
-      "desc": "누워서 땀을 뺀다. 어른들이 가장 오래 머무는 자리."
+      "desc": "누워서 땀을 뺀다. 어른들이 가장 오래 머무는 자리.",
+      "facings": 4,
+      "entryTiles": [
+        [
+          2,
+          4
+        ]
+      ]
     },
     "sikhye": {
       "id": "sikhye",
@@ -746,7 +766,8 @@
           "name": "미역국",
           "price": 1000
         }
-      ]
+      ],
+      "facings": 4
     },
     "massage_row": {
       "id": "massage_row",
@@ -862,7 +883,8 @@
           "name": "김밥",
           "price": 1200
         }
-      ]
+      ],
+      "facings": 4
     },
     "snackbar": {
       "id": "snackbar",
@@ -923,10 +945,7 @@
           "price": 1100
         }
       ],
-      "menuMode": "craft",
-      "startingMenu": [
-        "snack_ramen"
-      ]
+      "facings": 4
     },
     "chicken": {
       "id": "chicken",
@@ -986,7 +1005,8 @@
           "name": "감자튀김",
           "price": 200
         }
-      ]
+      ],
+      "facings": 4
     },
     "icecream": {
       "id": "icecream",
@@ -994,7 +1014,7 @@
       "layer": "indoor",
       "size": [
         1,
-        2
+        1
       ],
       "sprite": "facility/icecream",
       "capacity": 1,
@@ -1034,15 +1054,16 @@
           "name": "아이스바",
           "price": 400
         }
-      ]
+      ],
+      "facings": 4
     },
     "cafe": {
       "id": "cafe",
       "name": "카페",
       "layer": "indoor",
       "size": [
-        2,
-        3
+        3,
+        2
       ],
       "sprite": "facility/cafe",
       "capacity": 4,
@@ -1114,7 +1135,8 @@
           "name": "조각 케이크",
           "price": 800
         }
-      ]
+      ],
+      "facings": 4
     },
     "vending_in": {
       "id": "vending_in",
@@ -1164,7 +1186,8 @@
           "name": "캔커피",
           "price": 800
         }
-      ]
+      ],
+      "facings": 4
     },
     "arcade": {
       "id": "arcade",
@@ -1200,7 +1223,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "동전 몇 개로 시간을 보내는 실내 놀이."
+      "desc": "동전 몇 개로 시간을 보내는 실내 놀이.",
+      "facings": 4
     },
     "karaoke": {
       "id": "karaoke",
@@ -1242,7 +1266,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "단체 손님이 저녁을 마무리하는 방."
+      "desc": "단체 손님이 저녁을 마무리하는 방.",
+      "facings": 4
     },
     "pingpong": {
       "id": "pingpong",
@@ -1284,7 +1309,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "마주 서서 치는 놀이. 비 오는 날의 실내 활동."
+      "desc": "마주 서서 치는 놀이. 비 오는 날의 실내 활동.",
+      "facings": 4
     },
     "sunbed_row": {
       "id": "sunbed_row",
@@ -1376,7 +1402,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "길과 요금을 묻는 곳. 처음 온 손님의 첫 대화."
+      "desc": "길과 요금을 묻는 곳. 처음 온 손님의 첫 대화.",
+      "facings": 4
     },
     "infirmary": {
       "id": "infirmary",
@@ -1410,7 +1437,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "긁히고 데인 손님을 본다. 사고 위험을 낮춘다."
+      "desc": "긁히고 데인 손님을 본다. 사고 위험을 낮춘다.",
+      "facings": 4
     },
     "office": {
       "id": "office",
@@ -1444,7 +1472,8 @@
         "revenue",
         "reputation"
       ],
-      "desc": "운영진이 앉는 자리. 손님은 들어오지 않는다."
+      "desc": "운영진이 앉는 자리. 손님은 들어오지 않는다.",
+      "facings": 4
     },
     "storage": {
       "id": "storage",
@@ -1465,7 +1494,8 @@
       "cost": 312000,
       "need": "service",
       "specialties": [],
-      "desc": "튜브와 비품을 쌓아 둔다. 손님이 쓰는 곳은 아니다."
+      "desc": "튜브와 비품을 쌓아 둔다. 손님이 쓰는 곳은 아니다.",
+      "facings": 4
     },
     "ticket": {
       "id": "ticket",
@@ -1505,7 +1535,28 @@
       "specialties": [
         "capacity"
       ],
-      "desc": "손님이 표를 사는 곳. 여기를 지나야 공원 안이다."
+      "desc": "손님이 표를 사는 곳. 여기를 지나야 공원 안이다.",
+      "facings": 4,
+      "entryTiles": [
+        [
+          2,
+          -1
+        ]
+      ],
+      "admissionPassage": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ]
     },
     "parking": {
       "id": "parking",
@@ -1533,8 +1584,8 @@
       "name": "몽골텐트",
       "layer": "land",
       "size": [
-        2,
-        2
+        3,
+        3
       ],
       "sprite": "facility/mongol_tent",
       "capacity": 4,
@@ -1549,7 +1600,7 @@
         },
         {
           "tile": [
-            1,
+            2,
             0
           ],
           "pose": "sit",
@@ -1558,15 +1609,15 @@
         {
           "tile": [
             0,
-            1
+            2
           ],
           "pose": "sit",
           "facing": "+Z"
         },
         {
           "tile": [
-            1,
-            1
+            2,
+            2
           ],
           "pose": "sit",
           "facing": "+Z"
@@ -1584,7 +1635,22 @@
         "revenue",
         "reputation"
       ],
-      "desc": "한국 빠지의 시그니처. 그늘 아래 자리를 통째로 빌린다."
+      "desc": "한국 빠지의 시그니처. 그늘 아래 자리를 통째로 빌린다.",
+      "facings": 4,
+      "entryTiles": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ]
+      ]
     },
     "pyeongsang_row": {
       "id": "pyeongsang_row",
@@ -1650,7 +1716,7 @@
       "layer": "land",
       "size": [
         2,
-        1
+        2
       ],
       "sprite": "facility/shade_net",
       "capacity": 2,
@@ -1684,7 +1750,18 @@
         "revenue",
         "reputation"
       ],
-      "desc": "천 한 장으로 볕을 가린다. 가장 싼 자리."
+      "desc": "천 한 장으로 볕을 가린다. 가장 싼 자리.",
+      "facings": 4,
+      "entryTiles": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ]
     },
     "parasol": {
       "id": "parasol",
@@ -1818,10 +1895,6 @@
           "name": "쌈채소",
           "price": 900
         }
-      ],
-      "menuMode": "craft",
-      "startingMenu": [
-        "bbq_samgyup"
       ]
     },
     "firepit_row": {
@@ -3230,7 +3303,14 @@
       "cost": 1836000,
       "need": "stay",
       "specialties": [],
-      "desc": "하룻밤 묵는 작은 집."
+      "desc": "하룻밤 묵는 작은 집.",
+      "facings": 4,
+      "entryTiles": [
+        [
+          0,
+          3
+        ]
+      ]
     },
     "glamping": {
       "id": "glamping",
@@ -3481,10 +3561,6 @@
           "name": "어묵",
           "price": 800
         }
-      ],
-      "menuMode": "craft",
-      "startingMenu": [
-        "bung_custard"
       ]
     },
     "footbath": {
@@ -3647,14 +3723,615 @@
       "need": "scenery",
       "specialties": [],
       "desc": "강을 등지고 선 무대. 큰 행사의 축이 된다."
+    },
+    "env_village_house": {
+      "id": "env_village_house",
+      "name": "단독주택",
+      "layer": "land",
+      "size": [
+        3,
+        3
+      ],
+      "sprite": "facility/env_village_house",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 9000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_village_shop": {
+      "id": "env_village_shop",
+      "name": "2층 상가",
+      "layer": "land",
+      "size": [
+        3,
+        3
+      ],
+      "sprite": "facility/env_village_shop",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 9000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_pension": {
+      "id": "env_pension",
+      "name": "펜션",
+      "layer": "land",
+      "size": [
+        4,
+        3
+      ],
+      "sprite": "facility/env_pension",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 12000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_small_hotel": {
+      "id": "env_small_hotel",
+      "name": "소형 호텔",
+      "layer": "land",
+      "size": [
+        4,
+        3
+      ],
+      "sprite": "facility/env_small_hotel",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 12000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_convenience_store": {
+      "id": "env_convenience_store",
+      "name": "편의점",
+      "layer": "land",
+      "size": [
+        3,
+        2
+      ],
+      "sprite": "facility/env_convenience_store",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 6000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_maintenance_shed": {
+      "id": "env_maintenance_shed",
+      "name": "관리창고",
+      "layer": "land",
+      "size": [
+        3,
+        2
+      ],
+      "sprite": "facility/env_maintenance_shed",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 6000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_pine": {
+      "id": "env_pine",
+      "name": "소나무",
+      "layer": "land",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/env_pine",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 4000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_deciduous": {
+      "id": "env_deciduous",
+      "name": "활엽수",
+      "layer": "land",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/env_deciduous",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 4000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_willow": {
+      "id": "env_willow",
+      "name": "버드나무",
+      "layer": "land",
+      "size": [
+        2,
+        2
+      ],
+      "sprite": "facility/env_willow",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 4000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_shrubs": {
+      "id": "env_shrubs",
+      "name": "관목 군집",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_shrubs",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_rocks": {
+      "id": "env_rocks",
+      "name": "강변 바위",
+      "layer": "land",
+      "size": [
+        2,
+        1
+      ],
+      "sprite": "facility/env_rocks",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 2000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_bus": {
+      "id": "env_bus",
+      "name": "지역 버스",
+      "layer": "land",
+      "size": [
+        5,
+        2
+      ],
+      "sprite": "facility/env_bus",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 10000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_car": {
+      "id": "env_car",
+      "name": "승용차",
+      "layer": "land",
+      "size": [
+        2,
+        1
+      ],
+      "sprite": "facility/env_car",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 2000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_wood_fence": {
+      "id": "env_wood_fence",
+      "name": "목재 울타리",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_wood_fence",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_wood_fence_corner": {
+      "id": "env_wood_fence_corner",
+      "name": "목재 울타리 모서리",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_wood_fence_corner",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_wood_fence_end": {
+      "id": "env_wood_fence_end",
+      "name": "목재 울타리 끝마감",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_wood_fence_end",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_stone_wall": {
+      "id": "env_stone_wall",
+      "name": "낮은 돌담",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_stone_wall",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_stone_wall_corner": {
+      "id": "env_stone_wall_corner",
+      "name": "낮은 돌담 모서리",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_stone_wall_corner",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_stone_wall_end": {
+      "id": "env_stone_wall_end",
+      "name": "낮은 돌담 끝마감",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_stone_wall_end",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_hedge": {
+      "id": "env_hedge",
+      "name": "생울타리",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_hedge",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_hedge_corner": {
+      "id": "env_hedge_corner",
+      "name": "생울타리 모서리",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_hedge_corner",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_hedge_end": {
+      "id": "env_hedge_end",
+      "name": "생울타리 끝마감",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_hedge_end",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_water_rail": {
+      "id": "env_water_rail",
+      "name": "수변 난간",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_water_rail",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_water_rail_corner": {
+      "id": "env_water_rail_corner",
+      "name": "수변 난간 모서리",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_water_rail_corner",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_water_rail_end": {
+      "id": "env_water_rail_end",
+      "name": "수변 난간 끝마감",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_water_rail_end",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_flower_pot": {
+      "id": "env_flower_pot",
+      "name": "화분",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_flower_pot",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_long_flowerbed": {
+      "id": "env_long_flowerbed",
+      "name": "긴 화단",
+      "layer": "land",
+      "size": [
+        2,
+        1
+      ],
+      "sprite": "facility/env_long_flowerbed",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 2000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_bench": {
+      "id": "env_bench",
+      "name": "벤치",
+      "layer": "land",
+      "size": [
+        2,
+        1
+      ],
+      "sprite": "facility/env_bench",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 2000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
+    },
+    "env_street_lamp": {
+      "id": "env_street_lamp",
+      "name": "가로등",
+      "layer": "land",
+      "size": [
+        1,
+        1
+      ],
+      "sprite": "facility/env_street_lamp",
+      "capacity": 0,
+      "slots": [],
+      "placement": {},
+      "fee": 0,
+      "charge": "included",
+      "upkeep": 0,
+      "cost": 1000,
+      "need": "scenery",
+      "specialties": [],
+      "desc": "가평 풍경 장식. 한 칸씩 회전·배치하여 경계와 주변 풍경을 구성합니다.",
+      "facings": 4
     }
-  },
-  "upgradeRequires": {
-    "4": [
-      "parts_basic"
-    ],
-    "5": [
-      "parts_premium"
-    ]
   }
 }

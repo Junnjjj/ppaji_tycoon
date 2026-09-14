@@ -1,5 +1,4 @@
 import { el, button } from './dom.js';
-import { icon } from './icons.js';
 import { cssVar, rgba } from './tokens.js';
 import type { KairoScene } from '../render/scenes/KairoScene.js';
 import { panelHost } from './panels.js';
@@ -56,10 +55,10 @@ export class KairoShowcase {
     this.root.id = 'kairo-showcase';
     this.root.hidden = true;
 
-    const top = el('div', 'kshowcase-band');
-    this.titleEl = el('div', 'kshowcase-band-title');
+    const top = el('div', 'kband');
+    this.titleEl = el('div', 'kband-title');
     this.titleEl.id = 'kairo-showcase-name';
-    this.subEl = el('div', 'kshowcase-band-sub');
+    this.subEl = el('div', 'kband-sub');
     top.append(this.titleEl, this.subEl);
     // 이름을 탭하면 바꾼다 — 내 리조트라는 감각의 절반은 이름이다
     top.addEventListener('click', () => {
@@ -69,8 +68,8 @@ export class KairoShowcase {
       this.renameInput.select();
     });
 
-    const bottom = el('div', 'kshowcase-band bottom');
-    const share = button('kbtn primary big', `${icon('camera')} 공유`, () => this.share());
+    const bottom = el('div', 'kband bottom');
+    const share = button('kbtn primary big', '📷 공유', () => this.share());
     share.id = 'kairo-showcase-share';
     const close = button('kbtn big', '닫기', () => this.hide());
     close.id = 'kairo-showcase-close';
@@ -158,7 +157,7 @@ export class KairoShowcase {
 
   refresh(): void {
     const i = this.info();
-    this.titleEl.textContent = `${icon('star').repeat(Math.max(1, i.grade))} ${i.name}`;
+    this.titleEl.textContent = `${'★'.repeat(Math.max(1, i.grade))} ${i.name}`;
     this.subEl.textContent =
       `방문객 ${i.visitors}명 · ${i.week}주차 · 시설 ${i.facilities}개 — 이름을 탭하면 바꿉니다`;
   }
@@ -192,7 +191,7 @@ export class KairoShowcase {
     g.fillRect(0, 0, out.width, Math.round(out.height * 0.11));
     g.fillStyle = cssVar('--text-on-solid');
     g.font = `700 ${Math.round(out.height * 0.035)}px system-ui, sans-serif`;
-    g.fillText(`${icon('star').repeat(Math.max(1, i.grade))} ${i.name}`, pad, Math.round(out.height * 0.05));
+    g.fillText(`${'★'.repeat(Math.max(1, i.grade))} ${i.name}`, pad, Math.round(out.height * 0.05));
     g.font = `${Math.round(out.height * 0.022)}px system-ui, sans-serif`;
     g.fillStyle = cssVar('--text-dim');
     g.fillText(

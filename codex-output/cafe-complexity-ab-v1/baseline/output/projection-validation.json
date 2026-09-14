@@ -1,0 +1,53 @@
+{
+  "state": "FAIL",
+  "diagnostics": {
+    "projection-d0": "PASS",
+    "projection-d1": "PASS",
+    "projection-d2": "PASS",
+    "projection-d3": "FAIL",
+    "projection-positive": "PASS",
+    "projection-negative": "FAIL"
+  },
+  "exact_camera": {
+    "euler_deg": [
+      60,
+      0,
+      45
+    ],
+    "location": [
+      146.96939086914062,
+      -146.96939086914062,
+      133.57644653320312
+    ],
+    "ortho_scale": 192,
+    "target_z_tiles": 0.6,
+    "matrix_world": [
+      [
+        0.7071067690849304,
+        -0.3535533845424652,
+        0.6123724579811096,
+        146.96939086914062
+      ],
+      [
+        0.7071067690849304,
+        0.3535533547401428,
+        -0.6123724579811096,
+        -146.96939086914062
+      ],
+      [
+        0.0,
+        0.866025447845459,
+        0.4999999701976776,
+        133.57644653320312
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "selftest": "PASS",
+  "warning": "Image edge diagnostics support but do not establish rigidity."
+}

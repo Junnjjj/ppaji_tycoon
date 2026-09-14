@@ -1,0 +1,4 @@
+interface:
+  display_name: "빠지 카이로 에셋"
+  short_description: "사람 기준 시설 비율·공유 재질·물리 4방향 제작과 검증"
+  default_prompt: "Use $ppaji-kairo-assets to explore a Ppaji Tycoon facility family, then prepare only the approved candidate for production."

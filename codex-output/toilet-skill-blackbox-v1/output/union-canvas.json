@@ -1,0 +1,22 @@
+{
+  "canvas_native": [
+    192,
+    192
+  ],
+  "canvas_enlarged": [
+    768,
+    768
+  ],
+  "ortho_scale": 192,
+  "uniform_ground_fit_scale": 1,
+  "union_bbox_native": [
+    62.5,
+    50.5,
+    129.5,
+    124.0
+  ],
+  "minimum_native_foreground_declared_for_review": 2000,
+  "native_foreground_pass": true,
+  "per_direction_autofit": false,
+  "clipping": 0
+}

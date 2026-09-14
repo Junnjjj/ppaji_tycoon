@@ -1,6 +1,5 @@
 import { el } from './dom.js';
-import { icon } from './icons.js';
-import type { CardDef, CardEffects, CardOption, CardTheme } from '../sim/kairo/cards.js';
+import type { CardDef, CardOption, CardTheme } from '../sim/kairo/cards.js';
 import { optionCash, optionCertainCash } from '../sim/kairo/cards.js';
 import { panelHost } from './panels.js';
 import {
@@ -15,7 +14,6 @@ import {
   type EventShellNodes,
 } from './kairo-event-shell.js';
 import { won } from './money.js';
-import { REPUTATION_NAME } from './kairo-terms.js';
 
 /**
  * 주간 의사결정 카드 화면 — 스펙 §A (S11).
@@ -43,7 +41,7 @@ const CARD_THEME_PRESENTATION: Record<
   { label: string; mark: string; sprite: `event/${CardTheme}` }
 > = {
   crowd: { label: '단체·혼잡', mark: '40', sprite: 'event/crowd' },
-  weather: { label: '날씨', mark: icon('weather-rain'), sprite: 'event/weather' },
+  weather: { label: '날씨', mark: '☂', sprite: 'event/weather' },
   safety: { label: '안전', mark: '+', sprite: 'event/safety' },
   publicity: { label: '홍보·방송', mark: '▶', sprite: 'event/publicity' },
   staff: { label: '직원', mark: '人', sprite: 'event/staff' },
@@ -70,107 +68,6 @@ export function optionMoneyText(opt: CardOption, tooPoor: boolean): string {
     return `${Math.round(opt.chance * 100)}% 확률로 ${won(total, { signed: true })}`;
   }
   return '돈이 들지 않습니다';
-}
-
-/** 결과 미리보기 한 줄 — 무엇이 · 얼마나 · 몇 주 */
-export interface CardEffectLine {
-  key: string;
-  label: string;
-  text: string;
-  tone: 'up' | 'down';
-}
-
-/**
- * 선택지의 **결과 미리보기** (P8) — `effects` 에서 만든다.
- *
- * ⚠ `optionMoneyText` 와 **같은 규칙**이다: 데이터(`detail`)는 효과를 다시 적지 않고
- * 화면이 실효값에서 만든다. 글로 적어 두면 밸런싱이 값을 바꿀 때마다 조용히 거짓말이 된다
- * (시설 `desc` 계약과 같은 자리).
- *
- * ⚠ **방향은 값에서 유도한다** — 호출부가 손으로 적으면 밸런싱이 부호를 뒤집었을 때
- * 색만 옛 방향으로 남는다 (`CelebrationDelta` 의 `tone` 과 같은 이유).
- * ⚠ `accidentMult` 는 **클수록 나쁘다** — 배율이라고 다 같은 방향이 아니다.
- * ⚠ 돈은 여기 안 넣는다 — 이미 `optionMoneyText` 가 확정/확률을 갈라서 말한다.
- */
-export function optionEffectLines(opt: CardOption): CardEffectLine[] {
-  const lines: CardEffectLine[] = [];
-  const weeksOf = (pick: (e: CardEffects) => number | boolean | undefined): number => {
-    let w = 0;
-    for (const e of opt.effects) {
-      const v = pick(e);
-      if (v === undefined) continue;
-      w = Math.max(w, e.weeks ?? 1);
-    }
-    return w;
-  };
-  const span = (w: number): string => (w > 1 ? ` · ${String(w)}주` : '');
-  const mult = (
-    key: keyof CardEffects,
-    label: string,
-    /** 배율이 1보다 클 때 좋은 일인가 */
-    upIsGood: boolean,
-  ): void => {
-    let product = 1;
-    for (const e of opt.effects) {
-      const v = e[key];
-      if (typeof v === 'number') product *= v;
-    }
-    if (Math.abs(product - 1) < 0.005) return;
-    const w = weeksOf((e) => e[key] as number | undefined);
-    lines.push({
-      key: String(key),
-      label,
-      text: `×${product.toFixed(2).replace(/\.?0+$/, '')}${span(w)}`,
-      tone: product > 1 === upIsGood ? 'up' : 'down',
-    });
-  };
-  const delta = (
-    key: 'satisfactionDelta' | 'reputationDelta',
-    label: string,
-    /** 눈금 — 점수인가 백분율인가 */
-    scale: 'point' | 'percent',
-  ): void => {
-    let sum = 0;
-    for (const e of opt.effects) sum += e[key] ?? 0;
-    if (sum === 0) return;
-    const w = weeksOf((e) => e[key]);
-    const size =
-      scale === 'percent'
-        ? `${String(Math.round(Math.abs(sum) * 100))}%`
-        : String(Math.round(Math.abs(sum) * 100) / 100);
-    lines.push({
-      key,
-      label,
-      text: `${sum > 0 ? '+' : '−'}${size}${span(w)}`,
-      tone: sum > 0 ? 'up' : 'down',
-    });
-  };
-  mult('arrivalMult', '방문객', true);
-  mult('revenueMult', '매출', true);
-  mult('crowdMult', '혼잡', false);
-  mult('accidentMult', '사고 위험', false);
-  /*
-   * ⚠ **필드 이름이 거꾸로다.** 화면의 낱말은 sim 필드명이 아니라 **게임의 어휘**를 쓴다:
-   *
-   * | 필드 | 실제로 하는 일 | 화면의 낱말 |
-   * |---|---|---|
-   * | `satisfactionDelta` | **퇴장 만족도에 더한다** (`week.ts:538`) | **평판** (`REPUTATION_NAME` — 정의가 "손님이 나갈 때의 만족 평균") |
-   * | `reputationDelta` | `reputation = (opts.reputation ?? 1) + delta` 로 **방문 수요 배율**에 더한다 (`week.ts:977`) | **방문 수요** (`-0.12` = **−12%**) |
-   *
-   * 이름을 그대로 믿고 `reputationDelta` 를 「평판」이라 쓰면, HUD 의 평판(0~100)과
-   * 같은 낱말이 **두 눈금**을 가리킨다 — 「돈의 눈금은 한 화면 안에서 하나다」(K50-②)와
-   * 같은 종류의 거짓말이다. ⚠ 실측으로 카드 데이터 12건이 둘 다 「평판」이라 적고 있고,
-   * 그중 **7건은 `satisfactionDelta`** 다 (그 7건은 데이터가 맞고 필드 이름이 틀렸다).
-   */
-  delta('satisfactionDelta', REPUTATION_NAME, 'point');
-  delta('reputationDelta', '방문 수요', 'percent');
-  if (opt.effects.some((e) => e.closed === true)) {
-    lines.push({ key: 'closed', label: '휴장', text: '이번 주', tone: 'down' });
-  }
-  if (opt.effects.some((e) => e.unlock !== undefined)) {
-    lines.push({ key: 'unlock', label: '해금', text: '새 시설', tone: 'up' });
-  }
-  return lines;
 }
 
 export interface CardChoice {
@@ -312,31 +209,6 @@ export class KairoCardView {
         el('div', 'kitem-sub kcard-money', optionMoneyText(opt, tooPoor)),
         el('div', 'kitem-sub', opt.detail),
       );
-      /*
-       * P8 — **결과 미리보기.** 예전에는 `detail` 한 줄이 전부라 "무엇이 얼마나 바뀌나"를
-       * 고르기 전에 알 수 없었다. 값은 `effects` 에서 유도하므로 밸런싱을 따라 저절로 맞는다.
-       * ⚠ `chance` 가 붙은 선택지는 **미리보기 전체가 확률**이다 — 한 줄로 그것을 먼저 말한다.
-       */
-      const lines = optionEffectLines(opt);
-      if (lines.length > 0) {
-        const fx = el('div', 'kcard-effects');
-        fx.dataset['effects'] = String(lines.length);
-        if (opt.chance !== undefined && opt.chance < 1) {
-          fx.append(
-            el('span', 'kcard-effect chance', `${String(Math.round(opt.chance * 100))}% 확률`),
-          );
-        }
-        for (const line of lines) {
-          const chip = el('span', `kcard-effect ${line.tone}`);
-          chip.dataset['effectKey'] = line.key;
-          chip.append(
-            el('span', 'kcard-effect-label', line.label),
-            el('span', 'kcard-effect-value', line.text),
-          );
-          fx.append(chip);
-        }
-        btn.append(fx);
-      }
       btn.addEventListener('click', () => this.pick(card, oi));
       this.optionsEl.append(btn);
     });

@@ -1,0 +1,138 @@
+{
+  "color-d0": {
+    "size": [
+      768,
+      768
+    ],
+    "bbox": [
+      250,
+      202,
+      518,
+      496
+    ],
+    "foreground_pixels": 57244,
+    "edge_pixels": 0,
+    "decoded_rgba_reproduced": true,
+    "max_channel_delta": 0,
+    "sha256": "aba83b91f45a0094bbce339d5c6d65c83a7d0d4b929817c87693eb9a3e94428f"
+  },
+  "native-d0": {
+    "size": [
+      192,
+      192
+    ],
+    "bbox": [
+      63,
+      51,
+      129,
+      124
+    ],
+    "foreground_pixels": 3560,
+    "edge_pixels": 0,
+    "decoded_rgba_reproduced": true,
+    "max_channel_delta": 0,
+    "sha256": "243fa8eac6576fe65299378087008eeda5d05c32b80d8227f2aa0e9831395b01"
+  },
+  "color-d1": {
+    "size": [
+      768,
+      768
+    ],
+    "bbox": [
+      250,
+      202,
+      518,
+      496
+    ],
+    "foreground_pixels": 57231,
+    "edge_pixels": 0,
+    "decoded_rgba_reproduced": true,
+    "max_channel_delta": 0,
+    "sha256": "689a9da345fe16759e61b6056adec915caadeb2af4b06eeb5b7aef54748bf6c6"
+  },
+  "native-d1": {
+    "size": [
+      192,
+      192
+    ],
+    "bbox": [
+      63,
+      51,
+      129,
+      124
+    ],
+    "foreground_pixels": 3559,
+    "edge_pixels": 0,
+    "decoded_rgba_reproduced": true,
+    "max_channel_delta": 0,
+    "sha256": "f533bf691a6a0fe500c29f0618bf5d78f58b24ec19b5ba1f8d01fab9552f76fd"
+  },
+  "color-d2": {
+    "size": [
+      768,
+      768
+    ],
+    "bbox": [
+      250,
+      202,
+      518,
+      496
+    ],
+    "foreground_pixels": 57245,
+    "edge_pixels": 0,
+    "decoded_rgba_reproduced": true,
+    "max_channel_delta": 0,
+    "sha256": "d7a02f76912840bfa77df030174729b7a99c1ff69f5e4b5435e3741f7c43e1df"
+  },
+  "native-d2": {
+    "size": [
+      192,
+      192
+    ],
+    "bbox": [
+      63,
+      51,
+      129,
+      124
+    ],
+    "foreground_pixels": 3560,
+    "edge_pixels": 0,
+    "decoded_rgba_reproduced": true,
+    "max_channel_delta": 0,
+    "sha256": "cbc15ede895b09b2a247945d7bb6aa0a0762c0f2a11ca0c1181a9f365e2f1bf3"
+  },
+  "color-d3": {
+    "size": [
+      768,
+      768
+    ],
+    "bbox": [
+      250,
+      202,
+      518,
+      496
+    ],
+    "foreground_pixels": 57235,
+    "edge_pixels": 0,
+    "decoded_rgba_reproduced": true,
+    "max_channel_delta": 0,
+    "sha256": "4734ea69ac0f3d9f7de16e070f97c75edfb945a68d51a5efd3408c0a7d8779ab"
+  },
+  "native-d3": {
+    "size": [
+      192,
+      192
+    ],
+    "bbox": [
+      63,
+      51,
+      129,
+      124
+    ],
+    "foreground_pixels": 3559,
+    "edge_pixels": 0,
+    "decoded_rgba_reproduced": true,
+    "max_channel_delta": 0,
+    "sha256": "bdaa842bfe96f396ceb324581413a62dbbfc1784033bb2d8461a29181b12c3c2"
+  }
+}

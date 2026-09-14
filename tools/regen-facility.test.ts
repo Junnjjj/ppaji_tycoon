@@ -105,7 +105,9 @@ describe('프롬프트 조립', () => {
     });
     expect(prompt).toContain(specLine);
     expect(prompt).toContain('base diamond exactly 80x40 px');
-    expect(prompt).toContain('0.400 (= 2/5)');
+    expect(prompt).toContain('0.600 (= 3/5)');
+    expect(prompt).toContain('footprint 3x2 tiles');
+    expect(prompt).not.toContain('footprint 2x2 tiles');
   });
 
   it('시트가 지정한 크로마 키를 그대로 쓴다', () => {
@@ -397,6 +399,8 @@ describe('재생성 루프가 광원을 판정에 넣는다', () => {
    */
   it('팩의 실제 화소로도 광원이 판정에 들어간다', () => {
     const found = allTargets()
+      // 이미 물리 d0–d3로 채택된 시설은 legacy base 파일을 의도적으로 제거했다.
+      .filter((t) => existsSync(join(PACK_DIR, t.file)))
       .map((t) => ({ t, m: measurePng(join(PACK_DIR, t.file), t.id, t.w, t.d, t.bodyH) }))
       .filter((x) => x.m.v.bad.length === 0 && (x.m.lightV === 'flipped' || x.m.lightV === 'unmeasurable'));
     if (found.length === 0) {

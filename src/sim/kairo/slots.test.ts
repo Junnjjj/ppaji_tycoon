@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach } from 'vitest';
 import {
   PlacementGrid,
   facilityDef,
+  facingsOf,
   allFacilityDefs,
   setEntryFaultForTest,
   setRideFaultForTest,
@@ -20,6 +21,7 @@ import {
 
 const DEFS = allFacilityDefs();
 const WITH_SLOTS = DEFS.filter((d) => (d.slots?.length ?? 0) > 0);
+const LEGACY_WITH_SLOTS = WITH_SLOTS.filter((d) => facingsOf(d) === 2);
 const NO_SLOTS = DEFS.filter((d) => (d.slots?.length ?? 0) === 0);
 const RIDES = DEFS.filter((d) => d.ride);
 
@@ -38,7 +40,7 @@ afterEach(() => {
 describe('슬롯 자리 — 손님이 서는 칸', () => {
   it('데이터가 61종에 있고 14종에 없다 — 정원 0 인 분위기·기반 시설', () => {
     expect(WITH_SLOTS).toHaveLength(61);
-    expect(NO_SLOTS).toHaveLength(14);
+    expect(NO_SLOTS).toHaveLength(43);
     // 슬롯이 없는 것은 정확히 정원 0 인 것들이다 (`validateContracts` 와 같은 규칙)
     expect(NO_SLOTS.every((d) => d.capacity === 0)).toBe(true);
   });
@@ -64,7 +66,7 @@ describe('슬롯 자리 — 손님이 서는 칸', () => {
   });
 
   it('★ 회전은 전치다 — 그림의 flipX 와 같은 변환 (`ride` 와 같은 규칙)', () => {
-    for (const def of WITH_SLOTS) {
+    for (const def of LEGACY_WITH_SLOTS) {
       for (let k = 0; k < def.slots!.length; k++) {
         const a = PlacementGrid.slotTileOf(def, 0, 0, 0, k)!;
         const b = PlacementGrid.slotTileOf(def, 0, 0, 1, k)!;
@@ -84,11 +86,11 @@ describe('슬롯 자리 — 손님이 서는 칸', () => {
     }
   });
 
-  it('비정사각 4종의 회전이 손으로 센 값과 맞는다', () => {
+  it('비정사각 4종은 2방향 전치/4방향 quarter-turn 규칙과 맞는다', () => {
     // (i,j)=(0,0) 에 놓으면 슬롯 타일이 곧 발자국 오프셋이다
     const cases: [string, [number, number][]][] = [
       ['shower_row', [[0, 0], [1, 0], [2, 0], [3, 0]]], // 4×1 연립
-      ['cafe', [[0, 0], [1, 0], [0, 1], [1, 1]]], // 2×3 (앞줄 j=2 를 비운다)
+      ['cafe', [[0, 0], [1, 0], [0, 1], [1, 1]]], // 3×2 (서비스 쪽 i=2 열을 비운다)
       ['icecream', [[0, 0]]], // 1×2
       ['pool_lazy', undefined as unknown as [number, number][]], // 6×3 — 아래에서 채운다
     ];
@@ -98,10 +100,11 @@ describe('슬롯 자리 — 손님이 서는 칸', () => {
       const def = facilityDef(id)!;
       for (let k = 0; k < tiles.length; k++) {
         expect(PlacementGrid.slotTileOf(def, 0, 0, 0, k)!.tile, `${id} f0 k${k}`).toEqual(tiles[k]);
-        expect(PlacementGrid.slotTileOf(def, 0, 0, 1, k)!.tile, `${id} f1 k${k}`).toEqual([
-          tiles[k]![1],
-          tiles[k]![0],
-        ]);
+        const expected =
+          facingsOf(def) === 4
+            ? [tiles[k]![1], def.size[0] - 1 - tiles[k]![0]]
+            : [tiles[k]![1], tiles[k]![0]];
+        expect(PlacementGrid.slotTileOf(def, 0, 0, 1, k)!.tile, `${id} f1 k${k}`).toEqual(expected);
       }
     }
   });
@@ -145,7 +148,7 @@ describe('입구 칸 — 발자국에서 파생한다 (데이터 0줄)', () => {
 
   it('★ ride 가 없으면 정확히 앞 두 면(+I·+J)이다 — 모서리는 뺀다', () => {
     for (const def of DEFS) {
-      if (def.ride) continue;
+      if (def.ride || facingsOf(def) === 4) continue;
       for (const facing of [0, 1] as const) {
         const [w, d] = PlacementGrid.sizeOf(def, facing);
         const want = new Set<string>();
@@ -162,7 +165,7 @@ describe('입구 칸 — 발자국에서 파생한다 (데이터 0줄)', () => {
 
   it('★ 뒤 두 면(−I·−J)은 입구가 아니다 — "앞으로 들어간다"의 실질', () => {
     for (const def of DEFS) {
-      if (def.ride) continue;
+      if (def.ride || def.entryTiles) continue;
       const got = new Set(PlacementGrid.entryTilesOf(def, 7, 9, 0).map(key));
       const [w, d] = PlacementGrid.sizeOf(def, 0);
       for (let dj = 0; dj < d; dj++) expect(got.has(`${6},${9 + dj}`), def.id).toBe(false);
@@ -198,7 +201,7 @@ describe('입구 칸 — 발자국에서 파생한다 (데이터 0줄)', () => {
   });
 
   it('★ 회전이 공짜다 — 입구 집합도 전치된다 (새 산수 0줄)', () => {
-    for (const def of DEFS) {
+    for (const def of DEFS.filter((candidate) => facingsOf(candidate) === 2)) {
       const a = PlacementGrid.entryTilesOf(def, 0, 0, 0).map((t) => `${t[1]},${t[0]}`);
       const b = PlacementGrid.entryTilesOf(def, 0, 0, 1).map(key);
       expect(new Set(b), def.id).toEqual(new Set(a));
@@ -208,13 +211,14 @@ describe('입구 칸 — 발자국에서 파생한다 (데이터 0줄)', () => {
 
 describe('고장 스위치 — 좁히기 이전과 다른 답을 낸다', () => {
   it('★ 켜면 네 면 전부가 입구가 된다 (= 방향 구분이 없던 옛 동작)', () => {
-    const def = facilityDef('cafe')!; // 2×3
+    const def = facilityDef('pool_lazy')!; // 6×3, 아직 레거시 2방향
+    const [w, d] = def.size;
     const narrow = new Set(PlacementGrid.entryTilesOf(def, 7, 9, 0).map(key));
     setEntryFaultForTest(true);
     const wide = new Set(PlacementGrid.entryTilesOf(def, 7, 9, 0).map(key));
 
-    expect(narrow.size).toBe(2 + 3); // 앞 두 면
-    expect(wide.size).toBe(2 * (2 + 3)); // 네 면
+    expect(narrow.size).toBe(w + d); // 앞 두 면
+    expect(wide.size).toBe(2 * (w + d)); // 네 면
     for (const t of narrow) expect(wide.has(t)).toBe(true);
     // 뒤쪽 칸이 새로 들어온다 — 이것이 "좁히기 이전"의 실질이다
     expect(narrow.has('6,9')).toBe(false);

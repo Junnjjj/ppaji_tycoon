@@ -1,0 +1,220 @@
+{
+  "inputs-sha256.json": {
+    "count": 24,
+    "changed": []
+  },
+  "protected-before.json": {
+    "count": 44,
+    "changed": []
+  },
+  "comparison_images": {
+    "before-color-d0.png": {
+      "size": [
+        768,
+        768
+      ],
+      "alpha_bbox": [
+        255,
+        213,
+        513,
+        496
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "before-color-d1.png": {
+      "size": [
+        768,
+        768
+      ],
+      "alpha_bbox": [
+        255,
+        213,
+        513,
+        496
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "before-color-d2.png": {
+      "size": [
+        768,
+        768
+      ],
+      "alpha_bbox": [
+        255,
+        213,
+        513,
+        496
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "before-color-d3.png": {
+      "size": [
+        768,
+        768
+      ],
+      "alpha_bbox": [
+        255,
+        213,
+        513,
+        496
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "before-native-d0.png": {
+      "size": [
+        192,
+        192
+      ],
+      "alpha_bbox": [
+        64,
+        54,
+        128,
+        124
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "before-native-d1.png": {
+      "size": [
+        192,
+        192
+      ],
+      "alpha_bbox": [
+        64,
+        54,
+        128,
+        124
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "before-native-d2.png": {
+      "size": [
+        192,
+        192
+      ],
+      "alpha_bbox": [
+        64,
+        54,
+        128,
+        124
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "before-native-d3.png": {
+      "size": [
+        192,
+        192
+      ],
+      "alpha_bbox": [
+        64,
+        54,
+        128,
+        124
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "candidate-color-d0.png": {
+      "size": [
+        768,
+        768
+      ],
+      "alpha_bbox": [
+        250,
+        202,
+        518,
+        496
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "candidate-color-d1.png": {
+      "size": [
+        768,
+        768
+      ],
+      "alpha_bbox": [
+        250,
+        202,
+        518,
+        496
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "candidate-color-d2.png": {
+      "size": [
+        768,
+        768
+      ],
+      "alpha_bbox": [
+        250,
+        202,
+        518,
+        496
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "candidate-color-d3.png": {
+      "size": [
+        768,
+        768
+      ],
+      "alpha_bbox": [
+        250,
+        202,
+        518,
+        496
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "candidate-native-d0.png": {
+      "size": [
+        192,
+        192
+      ],
+      "alpha_bbox": [
+        63,
+        51,
+        129,
+        124
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "candidate-native-d1.png": {
+      "size": [
+        192,
+        192
+      ],
+      "alpha_bbox": [
+        63,
+        51,
+        129,
+        124
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "candidate-native-d2.png": {
+      "size": [
+        192,
+        192
+      ],
+      "alpha_bbox": [
+        63,
+        51,
+        129,
+        124
+      ],
+      "common_roi_contains_alpha": true
+    },
+    "candidate-native-d3.png": {
+      "size": [
+        192,
+        192
+      ],
+      "alpha_bbox": [
+        63,
+        51,
+        129,
+        124
+      ],
+      "common_roi_contains_alpha": true
+    }
+  }
+}

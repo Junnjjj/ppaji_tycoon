@@ -48,13 +48,6 @@ export interface ExamPending {
 export interface ExamSnapshot {
   pending: ExamPending | null;
   passed: number;
-  /**
-   * 마지막으로 **신청한** 주 (Q5). 없으면 아직 안 냈다.
-   *
-   * ⚠ **optional 이라 마이그레이션이 없다** (`visitorsTotal`·`specialty` 선례) —
-   * 옛 세이브는 「한 번도 안 냈다」로 열리고, 그건 사실과 다르지 않다 (창구만 바로 열린다).
-   */
-  lastApply?: number;
 }
 
 export interface ExamVerdict {
@@ -140,19 +133,9 @@ export function scoreExam(
   return { target, perReq, score, max, cut, passed: max === 0 ? true : score >= cut, fee: def?.examFee ?? 0 };
 }
 
-/**
- * 심사 창구의 간격 — **한 계절**이다 (Q5).
- *
- * 값은 게임의 기존 눈금에서 유도했다: 봇이 `Math.floor(k / 4)` 로 계절을 넘기므로
- * 한 계절은 **4주**다. 새 상수를 발명하지 않았다.
- */
-export const EXAM_COOLDOWN_WEEKS = 4;
-
 export class ExamStore {
   private pendingState: ExamPending | null = null;
   private passedCount = 0;
-  /** 마지막으로 **신청한** 주 — `null` 이면 아직 안 냈다 */
-  private lastApplyWeek: number | null = null;
 
   get pending(): ExamPending | null {
     return this.pendingState;
@@ -172,45 +155,12 @@ export class ExamStore {
     return this.passedCount > 0;
   }
 
-  /**
-   * 응시 자격 — 다음 등급이 있고, 평판(이동평균)이 그 문턱을 넘었고, 대기 중이 아니고,
-   * **이번 계절에 아직 안 냈다** (Q5).
-   *
-   * ## 왜 창구를 좁혔나
-   *
-   * ⚠ 실측(2026-08-28): **12주에 6번 응시 · 6번 통과 · 탈락 0.** 재응시 제한이 없어서
-   * 자격만 되면 곧바로 다시 냈고, 등급 사다리를 몇 주 만에 다 밟았다.
-   * 사용자 지적 *"템포가 너무 빨라, 심사까지도"* 의 단일 최대 원인이다.
-   *
-   * 레퍼런스: > *"Certification trials take place in **spring and fall**."* — Pool Slide Story.
-   * 본편은 **8년차 겨울**에 끝난다. 즉 **연 2회**이고 우리는 사실상 무제한이었다.
-   *
-   * ## 왜 계절이 아니라 주로 재나
-   *
-   * ⚠ **main 은 계절이 상수다** (`const season = saved?.season ?? 'summer'` — 안 바뀐다).
-   * 계절 값으로 창구를 열면 실제 게임에서는 영원히 같은 계절이라 규칙이 죽는다.
-   * 그래서 **계절의 길이**에서 유도한다 — 봇이 `Math.floor(k / 4)` 로 계절을 넘기므로
-   * 한 계절은 **4주**이고, 「계절당 1회」는 곧 **4주에 1회**다.
-   *
-   * @param weekNo 지금 주차. 안 주면 창구를 안 본다 (기존 호출자 호환 — 검사·골든)
-   */
-  eligible(gradeNo: number, reputation: number, weekNo?: number): GradeDef | null {
+  /** 응시 자격 — 다음 등급이 있고, 평판(이동평균)이 그 문턱을 넘었고, 대기 중이 아니다 */
+  eligible(gradeNo: number, reputation: number): GradeDef | null {
     if (this.pendingState) return null;
     const next = nextGradeDef(gradeNo);
     if (!next) return null;
-    if (weekNo !== undefined && !this.windowOpen(weekNo)) return null;
     return reputation >= next.reqExitSatisfaction ? next : null;
-  }
-
-  /** 이번 주에 창구가 열려 있나 — 마지막 신청에서 한 계절(4주)이 지났나 */
-  windowOpen(weekNo: number): boolean {
-    if (this.lastApplyWeek === null) return true;
-    return weekNo - this.lastApplyWeek >= EXAM_COOLDOWN_WEEKS;
-  }
-
-  /** 다음 창구가 열리는 주 — 화면이 「언제 낼 수 있나」를 말할 수 있어야 한다 */
-  nextWindowWeek(): number | null {
-    return this.lastApplyWeek === null ? null : this.lastApplyWeek + EXAM_COOLDOWN_WEEKS;
   }
 
   /**
@@ -220,8 +170,6 @@ export class ExamStore {
   apply(target: number, weekNo: number, tickInWeek: number): ExamPending {
     const judgeWeek = examJudgeWeek(weekNo, tickInWeek);
     this.pendingState = { target, judgeWeek };
-    // ⚠ **신청한 주**를 적는다 (판정 주가 아니다) — 떨어져도 그 계절은 쓴 것이다
-    this.lastApplyWeek = weekNo;
     return this.pendingState;
   }
 
@@ -249,20 +197,13 @@ export class ExamStore {
   }
 
   toSnapshot(): ExamSnapshot {
-    // ⚠ 안 낸 판에서는 필드를 **안 쓴다** — 옛 세이브가 바이트 보존을 잃지 않는다
-    if (this.lastApplyWeek === null) return { pending: this.pendingState, passed: this.passedCount };
-    return {
-      pending: this.pendingState,
-      passed: this.passedCount,
-      lastApply: this.lastApplyWeek,
-    };
+    return { pending: this.pendingState, passed: this.passedCount };
   }
 
   static fromSnapshot(s: ExamSnapshot | undefined): ExamStore {
     const e = new ExamStore();
     e.pendingState = s?.pending ?? null;
     e.passedCount = s?.passed ?? 0;
-    e.lastApplyWeek = s?.lastApply ?? null;
     return e;
   }
 }

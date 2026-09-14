@@ -89,15 +89,17 @@ const LOADED: WeekOptions = {
  * (5637537 …)이 **세 시드 모두 정확히** 재현된다. 수영 체류(S5) 변경은 이 값을 안
  * 움직인다 — 시작 킷 세계에는 수영 구역이 없다.
  */
+// 2026-09-13: integrated ticket passage + rotated start-kit exit.
+// Admission occurs after physical traversal; income-event sum and split-run identity remain independently tested.
 const BEFORE_K48: Record<number, readonly number[]> = {
   /*
    * 2026-08-25 post-review 재기준: 주 RNG를 날씨/일반/단골/사고로 분리했다.
    * 수입 계산식은 그대로이고, 바뀐 것은 고정 시드가 고른 손님·날씨 표본이다.
    * 아래 음성 대조군과 run/분할 항등이 이 값에서 차액 정산 자체를 계속 검증한다.
    */
-  7: [5791690, 6689813, 7517838, 8451252, 9343075, 10210499],
-  42: [5853205, 6736187, 7643490, 8518566, 9447419, 10208837],
-  20260818: [5796861, 6698412, 7582509, 8321850, 9276270, 10176502],
+  7: [5795630, 6615097, 7375511, 8205081, 9000728, 9676311],
+  42: [5806287, 6680703, 7410879, 8140825, 9014144, 9637657],
+  20260818: [5765073, 6491909, 7176008, 7841410, 8510592, 9274455],
 };
 
 function sixWeeks(seed: number, runner: WeekRunner): number[] {

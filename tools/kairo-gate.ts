@@ -42,7 +42,7 @@ import {
 } from '../src/assets/kairo-contract.js';
 import { KairoProceduralProvider } from '../src/assets/kairo-procedural.js';
 import { facilityDef, PlacementGrid, type FacilityFacing } from '../src/sim/kairo/placement.js';
-import { decodePng } from './png.js';
+import { decodePng, type Raster } from './png.js';
 import {
   measureSprite,
   measureCanonical,
@@ -121,7 +121,7 @@ const isWarn = (f: Finding): boolean => WARN_GATES.has(f.gate);
  * 실측 시설 **15/75** 가 뒤집혀 있고 **16/75** 는 평탄(방향을 못 읽음)이다
  * (`--light` 로 표 전체). 이걸 곧바로 실패로 올리면 `npm run gate` 가 죽어 에셋과
  * 무관한 작업까지 막힌다 — 게이트 4 가 밟은 길이다. 고치는 방법은 **재생성**이고
- * 4방향 지시서가 `docs/assets/history/prompt-chain-4dir-retrospective.md` 에 있다.
+ * 4방향 지시서가 `docs/assets/contracts/four-direction.md` 에 있다.
  *
  * ⚠ **`평탄` 은 findings 에 안 넣는다** (요약 줄의 카운트로만 낸다). 위반이 아니라
  * "이 그림으로는 방향을 말할 수 없다"이기 때문이다 — 뒤집힘과 같은 통에 넣으면
@@ -157,6 +157,57 @@ function walkPngs(dir: string, out: string[] = []): string[] {
     else if (e.endsWith('.png')) out.push(p);
   }
   return out;
+}
+
+/** A live pack may mix legacy 1× frames and approved 2× source frames. */
+function frameDensity(
+  size: { w: number; h: number },
+  logical: readonly [number, number],
+): 1 | 2 | null {
+  if (size.w === logical[0] && size.h === logical[1]) return 1;
+  if (size.w === logical[0] * 2 && size.h === logical[1] * 2) return 2;
+  return null;
+}
+
+/** Geometry is measured in logical texels; collapse a density-2 alpha mask deterministically. */
+function logicalRaster(raster: Raster, density: 1 | 2): Raster {
+  if (density === 1) return raster;
+  const w = raster.w / density;
+  const h = raster.h / density;
+  const data = new Uint8Array(w * h * 4);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      let best = -1;
+      let bestAlpha = -1;
+      for (let sy = 0; sy < density; sy++) {
+        for (let sx = 0; sx < density; sx++) {
+          const source = (((y * density + sy) * raster.w) + x * density + sx) * 4;
+          const alpha = raster.data[source + 3]!;
+          if (alpha > bestAlpha) {
+            best = source;
+            bestAlpha = alpha;
+          }
+        }
+      }
+      const target = (y * w + x) * 4;
+      for (let channel = 0; channel < 4; channel++) data[target + channel] = raster.data[best + channel]!;
+    }
+  }
+  return { w, h, data };
+}
+
+/** 접지 기하는 투명 guard가 아니라 footprint 파생 base canvas에서 잰다. */
+function removeHorizontalGuard(raster: Raster, guard: number): Raster {
+  if (guard === 0) return raster;
+  const w = raster.w - guard * 2;
+  if (w <= 0) throw new Error(`horizontal guard ${guard}가 raster 폭 ${raster.w} 이상이다`);
+  const data = new Uint8Array(w * raster.h * 4);
+  for (let y = 0; y < raster.h; y++) {
+    const sourceStart = (y * raster.w + guard) * 4;
+    const targetStart = y * w * 4;
+    data.set(raster.data.subarray(sourceStart, sourceStart + w * 4), targetStart);
+  }
+  return { w, h: raster.h, data };
 }
 
 function run(): {
@@ -211,11 +262,12 @@ function run(): {
       findings.push({ gate: '생성물', id, detail: `PNG 헤더를 못 읽었다: ${p}` });
       continue;
     }
-    if (size.w !== want[0] || size.h !== want[1]) {
+    const density = frameDensity(size, want);
+    if (density === null) {
       findings.push({
         gate: '캔버스크기',
         id,
-        detail: `실측 ${size.w}×${size.h} ≠ 계약 ${want[0]}×${want[1]} (${p})`,
+        detail: `실측 ${size.w}×${size.h} ≠ 계약 ${want[0]}×${want[1]} logical @1×/2× (${p})`,
       });
     }
   }
@@ -312,10 +364,18 @@ function geomRow(
   w: number,
   d: number,
   bodyH: number,
+  horizontalGuardTexel = 0,
 ): GeomRow | null {
   const path = join(GEN_DIR, file);
   if (!existsSync(path)) return null;
-  const png = decodePng(path);
+  const physical = decodePng(path);
+  const logicalCanvas: readonly [number, number] = [
+    (w + d) * 16 + horizontalGuardTexel * 2,
+    (w + d) * 8 + bodyH,
+  ];
+  const density = frameDensity({ w: physical.w, h: physical.h }, logicalCanvas);
+  if (density === null) return null; // gate 3 already reports the exact canvas violation
+  const png = removeHorizontalGuard(logicalRaster(physical, density), horizontalGuardTexel);
   // 캔버스 크기가 계약과 다르면 게이트 3 이 이미 잡았다 — 여기서 또 세지 않는다
   if (png.h < bodyH + 8) return null;
   const m = measureSprite(png, w, d, bodyH);
@@ -377,7 +437,15 @@ function geometryGate(): GeomRow[] {
         ? PlacementGrid.sizeOf(def, facing as FacilityFacing)
         : [s.size[0], s.size[1]];
       const id = facings === 4 ? `${s.id}:${FACILITY_DIR_NAMES[facing]}` : s.id;
-      const row = geomRow(id, '시설', assetIdToFile(facilitySpriteId(s.id, facing)), w, d, r.bodyH);
+      const row = geomRow(
+        id,
+        '시설',
+        assetIdToFile(facilitySpriteId(s.id, facing)),
+        w,
+        d,
+        r.bodyH,
+        r.horizontalGuardTexel ?? 0,
+      );
       if (row) rows.push(row);
     }
   }

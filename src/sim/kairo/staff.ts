@@ -78,17 +78,6 @@ export const EMPTY_STAFF: StaffCounts = {
   clerk: 0,
 };
 
-/**
- * 새 판의 인원 (P6) — **데이터가 정한다** (불변식 3).
- *
- * ⚠ 구인이 1~2주 걸리게 된 순간 **0명에서 시작하면 첫 주가 통째로 벌**이 된다.
- * 물려받은 빠지에 사람이 셋 있다는 설정과도 맞는다 (주급 합 14,500 = 초반 손익의 2~5%).
- */
-export const STARTING_STAFF: StaffCounts = {
-  ...EMPTY_STAFF,
-  ...((rawStaff as unknown as { startingCounts?: Partial<StaffCounts> }).startingCounts ?? {}),
-};
-
 /** 스릴·놀이 = 안전요원이 봐야 하는 대상 */
 const RISKY_NEEDS = new Set(['thrill', 'play']);
 
@@ -145,19 +134,7 @@ export interface StaffEffects {
  * 실제 차감은 러너가 한다 (카드와 같은 규칙: 돈의 주인은 하나여야 한다).
  */
 export class StaffStore {
-  /*
-   * ⚠ **기본은 0 이다.** 시작 인원은 `newGame()` 이 넣는다 — 새 판의 물려받은 것은
-   * `startkit` 의 소관이지 스토어의 기본값이 아니다. 기본값을 바꾸면 골든·봇·단위 검사가
-   * 전부 「사람이 셋 있는 세계」로 조용히 옮겨 간다.
-   */
   private counts: StaffCounts = { ...EMPTY_STAFF };
-
-  /** 새 판 — 물려받은 빠지에 사람이 셋 있다 (P6). 데이터가 정한다 */
-  static newGame(): StaffStore {
-    const st = new StaffStore();
-    st.counts = { ...STARTING_STAFF };
-    return st;
-  }
 
   get all(): StaffCounts {
     return { ...this.counts };

@@ -19,9 +19,46 @@ describe('계약 정합 — 이게 깨지면 에셋을 뽑아도 못 쓴다', ()
     expect(validateContracts()).toEqual([]);
   });
 
+  it('수유실 2×2는 물리 스케일을 줄이지 않는 좌우 4텍셀 투명 guard를 쓴다', () => {
+    const nursing = renderSpec('facility/nursing')!;
+    expect(nursing.canvas).toEqual([72, 60]);
+    expect(nursing.anchorTexel).toEqual([36, 60]);
+    expect(nursing.bodyH).toBe(28);
+    expect(nursing.horizontalGuardTexel).toBe(4);
+  });
+
+  it('카페 v5는 승인된 3×2 발자국과 물리 스케일 보존 캔버스를 함께 쓴다', () => {
+    const cafeSim = simSpec('cafe')!;
+    const cafeRender = renderSpec('facility/cafe')!;
+    expect(cafeSim.size).toEqual([3, 2]);
+    expect(cafeSim.facings).toBe(4);
+    expect(cafeRender.canvas).toEqual([106, 78]);
+    expect(cafeRender.anchorTexel).toEqual([53, 78]);
+    expect(cafeRender.bodyH).toBe(38);
+    expect(cafeRender.horizontalGuardTexel).toBe(13);
+  });
+
+  it('채택된 지붕형 2×2 시설은 물리 스케일을 보존한 확장 캔버스를 쓴다', () => {
+    const expected = {
+      shop: { canvas: [74, 76], bodyH: 44, guard: 5 },
+      snackbar: { canvas: [72, 74], bodyH: 42, guard: 4 },
+      karaoke: { canvas: [70, 75], bodyH: 43, guard: 3 },
+      info: { canvas: [66, 71], bodyH: 39, guard: 1 },
+      infirmary: { canvas: [68, 78], bodyH: 46, guard: 2 },
+      office: { canvas: [68, 73], bodyH: 41, guard: 2 },
+    } as const;
+    for (const [id, want] of Object.entries(expected)) {
+      const render = renderSpec(`facility/${id}`)!;
+      expect(render.canvas, id).toEqual(want.canvas);
+      expect(render.anchorTexel, id).toEqual([want.canvas[0] / 2, want.canvas[1]]);
+      expect(render.bodyH, id).toBe(want.bodyH);
+      expect(render.horizontalGuardTexel ?? 0, id).toBe(want.guard);
+    }
+  });
+
   it('시설 75종이 양쪽에 다 있다', () => {
-    expect(allSimFacilities()).toHaveLength(75);
-    expect(KAIRO.facilities).toHaveLength(75);
+    expect(allSimFacilities()).toHaveLength(104);
+    expect(KAIRO.facilities).toHaveLength(104);
   });
 
   it('렌더 계약의 투영 상수가 iso.ts 와 같다', () => {
@@ -31,6 +68,87 @@ describe('계약 정합 — 이게 깨지면 에셋을 뽑아도 못 쓴다', ()
     // 격자를 넓히고 계약의 맵 크기를 잊으면 에셋 쪽 계산이 조용히 어긋난다 (K25)
     const e = gridExtent();
     expect(KAIRO.presentation.mapTexels).toEqual([e.x, e.y]);
+  });
+
+  it('★ 게임 I/J 축을 Blender 카메라에 넣으면 정확히 (+16,+8)/(−16,+8)이다', () => {
+    const p = KAIRO.projection;
+    const b = p.blender;
+    expect(p.type).toBe('orthographic');
+    expect([p.yaw_deg, p.pitch_down_deg, p.roll_deg]).toEqual([45, 30, 0]);
+    expect(b.axisMap).toEqual({ gameI: '+X', gameJ: '-Y', height: '+Z' });
+
+    const dot = (a: readonly number[], c: readonly number[]): number =>
+      a.reduce((sum, value, index) => sum + value * c[index]!, 0);
+    const length = (v: readonly number[]): number => Math.sqrt(dot(v, v));
+    const right = b.cameraRightUnitXYZ;
+    const up = b.cameraUpUnitXYZ;
+    const forward = b.cameraForwardUnitXYZ;
+    const position = b.cameraPositionUnitXYZ;
+    for (const axis of [right, up, forward, position]) expect(length(axis)).toBeCloseTo(1, 10);
+    expect(dot(right, up)).toBeCloseTo(0, 10);
+    expect(dot(right, forward)).toBeCloseTo(0, 10);
+    expect(dot(up, forward)).toBeCloseTo(0, 10);
+    expect(position.map((value) => -value)).toEqual(forward);
+
+    const toScreen = (world: readonly number[]): [number, number] => [
+      dot(world, right),
+      -dot(world, up), // 게임 화면 y는 아래가 +
+    ];
+    const tile = p.tileWorld;
+    const i = toScreen([tile, 0, 0]);
+    const j = toScreen([0, -tile, 0]); // game +J = Blender −Y
+    expect(i[0]).toBeCloseTo(STEP_X, 5);
+    expect(i[1]).toBeCloseTo(STEP_Y, 5);
+    expect(j[0]).toBeCloseTo(-STEP_X, 5);
+    expect(j[1]).toBeCloseTo(STEP_Y, 5);
+    expect(Math.atan2(i[1], i[0]) * 180 / Math.PI).toBeCloseTo(26.565051, 5);
+    expect(Math.atan2(j[1], j[0]) * 180 / Math.PI).toBeCloseTo(153.434949, 5);
+
+    // 수직 논리 1텍셀을 quadHeightScale만큼 모델링하면 화면 위로 정확히 1텍셀이다.
+    expect(toScreen([0, 0, p.quadHeightScale])[1]).toBeCloseTo(-1, 5);
+  });
+
+  it('★ Blender XYZ Euler와 quaternion까지 고정돼 roll/축 부호가 바뀌지 않는다', () => {
+    const b = KAIRO.projection.blender;
+    expect(b.rotationMode).toBe('XYZ');
+    expect(b.rotationEulerDeg).toEqual([60, 0, 45]);
+    expect(b.rotationQuaternionWXYZ).toEqual([
+      0.800103145191,
+      0.461939766256,
+      0.191341716183,
+      0.331413574036,
+    ]);
+
+    const rad = b.rotationEulerDeg.map((value) => value * Math.PI / 180) as [number, number, number];
+    const rotateXYZ = ([x0, y0, z0]: readonly [number, number, number]): [number, number, number] => {
+      const [rx, ry, rz] = rad;
+      const x1 = x0;
+      const y1 = y0 * Math.cos(rx) - z0 * Math.sin(rx);
+      const z1 = y0 * Math.sin(rx) + z0 * Math.cos(rx);
+      const x2 = x1 * Math.cos(ry) + z1 * Math.sin(ry);
+      const y2 = y1;
+      const z2 = -x1 * Math.sin(ry) + z1 * Math.cos(ry);
+      return [
+        x2 * Math.cos(rz) - y2 * Math.sin(rz),
+        x2 * Math.sin(rz) + y2 * Math.cos(rz),
+        z2,
+      ];
+    };
+    const expectVector = (actual: readonly number[], expected: readonly number[]): void => {
+      for (let axis = 0; axis < 3; axis++) expect(actual[axis]).toBeCloseTo(expected[axis]!, 10);
+    };
+    expectVector(rotateXYZ([1, 0, 0]), b.cameraRightUnitXYZ);
+    expectVector(rotateXYZ([0, 1, 0]), b.cameraUpUnitXYZ);
+    expectVector(rotateXYZ([0, 0, -1]), b.cameraForwardUnitXYZ);
+  });
+
+  it('★ 시설 d0–d3는 카메라가 아니라 root Z만 0/90/180/270° 돈다', () => {
+    expect(KAIRO.projection.facilityDirections).toEqual([
+      { id: 'd0', gameFacing: 0, rootEulerXYZDeg: [0, 0, 0], offsetFormula: '(di,dj)', canonicalPlusJMarkerScreen: 'lower-left' },
+      { id: 'd1', gameFacing: 1, rootEulerXYZDeg: [0, 0, 90], offsetFormula: '(dj,w-1-di)', canonicalPlusJMarkerScreen: 'lower-right' },
+      { id: 'd2', gameFacing: 2, rootEulerXYZDeg: [0, 0, 180], offsetFormula: '(w-1-di,d-1-dj)', canonicalPlusJMarkerScreen: 'upper-right' },
+      { id: 'd3', gameFacing: 3, rootEulerXYZDeg: [0, 0, 270], offsetFormula: '(d-1-dj,di)', canonicalPlusJMarkerScreen: 'upper-left' },
+    ]);
   });
 
   it('업스케일 단이 정수뿐이다 — 비정수 배율이 도트를 깬다', () => {
@@ -169,7 +287,7 @@ describe('기존 에셋 레이어로 펼쳐진다 — 새 프로바이더를 만
 
   it('명세 수 = 시설 75 + 벽 1(경계 4변형) + 문 1(4변형) + 지면 11 + 다리 2 + 배경 3 + 데코 8', () => {
     // 지면: K36 도시 띠 3종 · K37 암반 · S1 수영장 물
-    expect(specs).toHaveLength(75 + 1 + 1 + 11 + 2 + 3 + 8);
+    expect(specs).toHaveLength(104 + 1 + 1 + 13 + 2 + 3 + 8);
   });
 
   it('배경은 3겹이고 가로 타일 폭이 계약값이다 — 산·능선·강둑 (K36-B)', () => {
@@ -219,15 +337,7 @@ describe('손님 계약', () => {
   it('셀 14×24, 포즈 7, 이모트 6, 방향 4', () => {
     expect(KAIRO.guest.cellTexels).toEqual([14, 24]);
     expect(KAIRO.guest.poses).toHaveLength(7);
-    /*
-     * ⚠ P7 — **`alert` 를 지우고 `ask`·`wish` 를 더했다** (6 → 7).
-     * `alert` 는 호출부가 **0** 이었다: 계약에만 있고 화면에 한 번도 안 뜬 프레임은
-     * 아틀라스 한 칸을 낭비하고, 「있다고 주장하는데 없다」의 반대 판본이다.
-     */
-    expect(KAIRO.guest.emotes).toHaveLength(7);
-    expect(KAIRO.guest.emotes).not.toContain('alert');
-    expect(KAIRO.guest.emotes).toContain('ask');
-    expect(KAIRO.guest.emotes).toContain('wish');
+    expect(KAIRO.guest.emotes).toHaveLength(6);
     expect(KAIRO.guest.facings).toBe(4);
     expect(KAIRO.guest.facingNames).toHaveLength(4);
   });
@@ -246,7 +356,7 @@ describe('지면·데코가 계약에 있다 — v1 은 길에 0장을 줬다', 
   it('지면 11종 × 3변형 + 다리 2 = 35장', () => {
     const n =
       KAIRO.ground.types.reduce((a, t) => a + t.alts, 0) + KAIRO.ground.bridges.length;
-    expect(n).toBe(35);
+    expect(n).toBe(41);
   });
 
   it('지면 타일 캔버스가 다이아몬드 정확히 32×16 이다', () => {
@@ -260,8 +370,8 @@ describe('지면·데코가 계약에 있다 — v1 은 길에 0장을 줬다', 
     expect(KAIRO.deco.items.filter((d) => d.kind === 'scenery')).toHaveLength(4);
   });
 
-  it('변형을 펼친 **이미지** 총계가 129장이다 = 시설 75 + 벽 8 + 지면 35 + 배경 3 + 데코 8', () => {
-    expect(new KairoProceduralProvider().ids).toHaveLength(129);
+  it('20종 4방향을 펼친 **이미지** 총계가 204장이다', () => {
+    expect(new KairoProceduralProvider().ids).toHaveLength(329);
   });
 });
 

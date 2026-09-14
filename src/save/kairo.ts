@@ -1,3 +1,4 @@
+import { migrateFacilityFootprints } from './kairo-facility-footprints.js';
 import { KairoTerrain, groundIndex, type TerrainSnapshot } from '../sim/kairo/terrain.js';
 import { WallGrid, type WallSnapshot } from '../sim/kairo/walls.js';
 import { PlacementGrid, type PlacementSnapshot } from '../sim/kairo/placement.js';
@@ -17,7 +18,6 @@ import type { StaffCounts } from '../sim/kairo/staff.js';
 import type { CourseSnapshot } from '../sim/kairo/course.js';
 import type { DoorSnapshot } from '../sim/kairo/doors.js';
 import type { MenuSnapshot } from '../sim/kairo/menu.js';
-import type { CommissionSnapshot } from '../sim/kairo/commission.js';
 import { migrateOnboardingSnapshot, type OnboardingSnapshot } from '../sim/kairo/meta.js';
 
 /**
@@ -44,8 +44,22 @@ import { migrateOnboardingSnapshot, type OnboardingSnapshot } from '../sim/kairo
 
 export const KAIRO_SAVE_VERSION = 8;
 export const KAIRO_SAVE_KEY = 'ppaji.kairo.save.v1';
+let storageWriteBlocked = false;
+
+/** A failed read is not an empty save slot. Keep the game stopped until recovery. */
+export class KairoStorageReadError extends Error {
+  constructor(message: string, readonly raw: string | null) {
+    super(message);
+    this.name = 'KairoStorageReadError';
+  }
+}
 
 export interface KairoSaveV8 {
+  /** One-time removal of the supplied entrance boundary; later player fences persist. */
+  entranceBoundaryCleared?: boolean;
+  indoorTicketEntryConnected?: boolean;
+  parkArrivalLayoutApplied?: boolean;
+  arrivalPresentationRevision?: number;
   version: 8;
   savedAtMs: number;
   seed: number;
@@ -84,8 +98,6 @@ export interface KairoSaveV8 {
    */
   staff?: Partial<StaffCounts>;
   staffRngState?: number;
-  /** 수배 전용 스트림 (P4) — 없으면 판당 고정 seed 에서 fork 한다 (마이그레이션 없음) */
-  commissionRngState?: number;
   /**
    * 놓인 코스 — 장비값을 치르고 그린 것이라 안 저장하면 새로고침이 곧 전부 철거다.
    * `PlacedCourse.towBoatId?`는 v7 optional이다. 없으면 sim이 작업형을 파생하고 save는
@@ -169,14 +181,6 @@ export interface KairoSaveV8 {
   certs?: CertSnapshot;
   /** Phase 3 영구 재료·레시피·개발 힌트. 수량·재고는 없다. */
   menus?: MenuSnapshot;
-  /**
-   * 맡겨 둔 수배 (P4). **optional 이라 마이그레이션이 없다** — 없으면 빈 큐다.
-   *
-   * ⚠ **연출 큐(`arrivalQueue`)와 다르다.** 저건 세션 전용이고 이건 저장한다 —
-   * 2주짜리 수배가 리로드 한 번에 증발하면 안 된다. 효과는 due tick 에서 확정되고
-   * 연출만 아침 큐로 간다.
-   */
-  commissions?: CommissionSnapshot;
   /** Phase 7 실행형 온보딩. 잠금이 아니라 완료한 production 사건의 커서다. */
   onboarding: OnboardingSnapshot;
 }
@@ -359,6 +363,11 @@ export class KairoSaveError extends Error {
 }
 
 export interface KairoSaveInput {
+  /** One-time removal of the supplied entrance boundary; later player fences persist. */
+  entranceBoundaryCleared?: boolean;
+  indoorTicketEntryConnected?: boolean;
+  parkArrivalLayoutApplied?: boolean;
+  arrivalPresentationRevision?: number;
   seed: number;
   gate: { i: number; j: number };
   terrain: KairoTerrain;
@@ -374,8 +383,6 @@ export interface KairoSaveInput {
   cardRngState?: number;
   staff?: StaffCounts;
   staffRngState?: number;
-  /** 수배 전용 스트림 (P4) — 없으면 판당 고정 seed 에서 fork 한다 (마이그레이션 없음) */
-  commissionRngState?: number;
   courses?: CourseSnapshot;
   doors?: DoorSnapshot;
   discovered?: string[];
@@ -395,7 +402,6 @@ export interface KairoSaveInput {
   wishes?: WishSnapshot;
   certs?: CertSnapshot;
   menus?: MenuSnapshot;
-  commissions?: CommissionSnapshot;
   onboarding?: OnboardingSnapshot;
 }
 
@@ -404,6 +410,10 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     version: KAIRO_SAVE_VERSION,
     savedAtMs: nowMs,
     seed: input.seed,
+    ...(input.arrivalPresentationRevision ? { arrivalPresentationRevision: input.arrivalPresentationRevision } : {}),
+    ...(input.parkArrivalLayoutApplied ? { parkArrivalLayoutApplied: true } : {}),
+    ...(input.indoorTicketEntryConnected ? { indoorTicketEntryConnected: true } : {}),
+    ...(input.entranceBoundaryCleared ? { entranceBoundaryCleared: true } : {}),
     gate: { i: input.gate.i, j: input.gate.j },
     terrain: input.terrain.toSnapshot(),
     walls: input.walls.toSnapshot(),
@@ -418,9 +428,6 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.cardRngState !== undefined ? { cardRngState: input.cardRngState } : {}),
     ...(input.staff ? { staff: input.staff } : {}),
     ...(input.staffRngState !== undefined ? { staffRngState: input.staffRngState } : {}),
-    ...(input.commissionRngState !== undefined
-      ? { commissionRngState: input.commissionRngState }
-      : {}),
     ...(input.courses ? { courses: input.courses } : {}),
     ...(input.doors ? { doors: input.doors } : {}),
     ...(input.discovered ? { discovered: input.discovered } : {}),
@@ -443,13 +450,6 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.certs ? { certs: input.certs } : {}),
     // 메뉴 개발 상태는 legacy optional. 시설별 장착은 placement.items에 있다.
     ...(input.menus ? { menus: input.menus } : {}),
-    /*
-     * ⚠ **비어 있으면 필드를 안 쓴다** — 아무것도 안 맡긴 판이 v7 과 바이트로 같아야 한다
-     * (`CourseSnapshot.owned` 와 같은 규칙).
-     */
-    ...(input.commissions && input.commissions.pending.length > 0
-      ? { commissions: input.commissions }
-      : {}),
     onboarding: input.onboarding ?? { version: 2, step: 'open-course' },
   };
 }
@@ -487,6 +487,11 @@ export function migrateKairo(raw: unknown): LatestKairoSave {
 }
 
 export interface KairoRestored {
+  /** One-time removal of the supplied entrance boundary; later player fences persist. */
+  entranceBoundaryCleared?: boolean;
+  indoorTicketEntryConnected?: boolean;
+  parkArrivalLayoutApplied?: boolean;
+  arrivalPresentationRevision?: number;
   seed: number;
   gate: { i: number; j: number };
   terrain: KairoTerrain;
@@ -504,10 +509,6 @@ export interface KairoRestored {
   cardRngState: number;
   staff?: Partial<StaffCounts>;
   staffRngState: number;
-  /** 맡겨 둔 수배 (P4) — 없으면 빈 큐다 */
-  commissions?: CommissionSnapshot;
-  /** 없으면(구 세이브) 호출자가 판당 고정 seed 에서 fork 한다 */
-  commissionRngState?: number;
   courses?: CourseSnapshot;
   doors?: DoorSnapshot;
   discovered?: string[];
@@ -532,12 +533,28 @@ export interface KairoRestored {
 
 export function restoreKairo(raw: unknown): KairoRestored {
   const s = migrateKairo(raw);
+  const terrain = KairoTerrain.fromSnapshot(s.terrain);
+  const walls = WallGrid.fromSnapshot(s.walls);
+  let placementSnapshot: PlacementSnapshot;
+  try {
+    placementSnapshot = migrateFacilityFootprints(s.placement, terrain, walls, s.gate);
+    if (s.placement.footprintRevision === undefined) {
+      placementSnapshot = { ...placementSnapshot, items: placementSnapshot.items.map(f =>
+        f.defId === 'ticket' ? { ...f, legacyAdmission: true } : f) };
+    }
+  } catch (error) {
+    throw new KairoSaveError(error instanceof Error ? error.message : String(error));
+  }
   return {
     seed: s.seed,
+    ...(s.arrivalPresentationRevision ? { arrivalPresentationRevision: s.arrivalPresentationRevision } : {}),
+    ...(s.parkArrivalLayoutApplied === true ? { parkArrivalLayoutApplied: true } : {}),
+    ...(s.indoorTicketEntryConnected === true ? { indoorTicketEntryConnected: true } : {}),
+    ...(s.entranceBoundaryCleared === true ? { entranceBoundaryCleared: true } : {}),
     gate: s.gate,
-    terrain: KairoTerrain.fromSnapshot(s.terrain),
-    walls: WallGrid.fromSnapshot(s.walls),
-    placement: PlacementGrid.fromSnapshot(s.placement),
+    terrain,
+    walls,
+    placement: PlacementGrid.fromSnapshot(placementSnapshot),
     progress: ProgressStore.fromSnapshot(s.progress),
     week: s.week,
     weekRngState: s.weekRngState,
@@ -549,10 +566,6 @@ export function restoreKairo(raw: unknown): KairoRestored {
     cardRngState: s.cardRngState ?? 31337,
     ...(s.staff ? { staff: s.staff } : {}),
     staffRngState: s.staffRngState ?? 20260818,
-    ...(s.commissions ? { commissions: s.commissions } : {}),
-    ...(s.commissionRngState !== undefined
-      ? { commissionRngState: s.commissionRngState }
-      : {}),
     ...(s.courses ? { courses: s.courses } : {}),
     ...(s.doors ? { doors: s.doors } : {}),
     ...(s.discovered ? { discovered: s.discovered } : {}),
@@ -577,6 +590,7 @@ export function restoreKairo(raw: unknown): KairoRestored {
 }
 
 export function saveKairoToStorage(input: KairoSaveInput, nowMs: number = Date.now()): void {
+  if (storageWriteBlocked) return;
   try {
     localStorage.setItem(KAIRO_SAVE_KEY, JSON.stringify(packKairo(input, nowMs)));
   } catch (e) {
@@ -590,21 +604,28 @@ export function loadKairoFromStorage(): KairoRestored | null {
   try {
     raw = localStorage.getItem(KAIRO_SAVE_KEY);
   } catch {
+    storageWriteBlocked = true;
+    throw new KairoStorageReadError('저장소에 접근할 수 없습니다. 접근이 복구된 후 다시 열어 주세요.', null);
+  }
+  if (raw === null) {
+    storageWriteBlocked = false;
     return null;
   }
-  if (raw === null) return null;
   try {
-    return restoreKairo(JSON.parse(raw));
+    const restored = restoreKairo(JSON.parse(raw));
+    storageWriteBlocked = false;
+    return restored;
   } catch (e) {
-    // 깨진 세이브로 부팅이 막히면 폰에서 복구할 방법이 없다 — 버리고 새로 시작한다
-    console.warn('[카이로] 세이브를 읽지 못해 새로 시작합니다', e);
-    return null;
+    storageWriteBlocked = true;
+    throw new KairoStorageReadError(
+      `저장을 불러오지 못했습니다. 기존 저장은 유지되며 새 게임으로 덮어쓰지 않습니다. ${e instanceof Error ? e.message : String(e)}`, raw);
   }
 }
 
 export function clearKairoStorage(): void {
   try {
     localStorage.removeItem(KAIRO_SAVE_KEY);
+    storageWriteBlocked = false;
   } catch {
     /* 무시 */
   }

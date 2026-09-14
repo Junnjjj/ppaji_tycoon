@@ -28,7 +28,6 @@ describe('Phase 7 경영 행동 배선', () => {
     const ran: string[] = [];
     const actions: ManagementMenuAction[] = [
       { id: 'course', label: '코스', run: () => ran.push('course') },
-      { id: 'build', label: '건설', run: () => ran.push('build') },
       { id: 'quests', label: '의뢰', run: () => ran.push('quests') },
       { id: 'regular', label: '단골', run: () => ran.push('regular') },
       { id: 'report', label: '결산', run: () => ran.push('report') },
@@ -39,12 +38,8 @@ describe('Phase 7 경영 행동 배선', () => {
       expect(action?.id).toBe('course');
       if (action) runManagementAction(action);
     }
-    /*
-     * ⚠ **`build` 다.** 예전에는 추천의 `action` 이 `quests` 인데 실제 `run` 은 건설 시트를
-     * 열어서 이름과 행동이 갈려 있었다 (P1 에서 맞췄다).
-     */
     const food = managementActionForToday(actions, todayRecommendation(state('build-food')));
-    expect(food?.id).toBe('build');
+    expect(food?.id).toBe('quests');
     if (food) runManagementAction(food);
 
     for (const step of ['equip-menu', 'regular-purchase'] as const) {
@@ -57,7 +52,7 @@ describe('Phase 7 경영 행동 배선', () => {
     if (report) runManagementAction(report);
 
     expect(ran).toEqual([
-      'course', 'course', 'course', 'course', 'build', 'regular', 'regular', 'report',
+      'course', 'course', 'course', 'course', 'quests', 'regular', 'regular', 'report',
     ]);
   });
 
@@ -76,25 +71,14 @@ describe('Phase 7 경영 행동 배선', () => {
     ).toBeUndefined();
   });
 
-  it('Today는 기존 추천의 action/source에서 아이콘·이유·상세·화자를 파생한다', () => {
+  it('Today는 기존 추천의 action/source에서 아이콘·이유·상세를 파생한다', () => {
     const today = todayRecommendation(state('open-course'));
     expect(managementTodayPresentation(today)).toEqual({
       icon: '🚤',
       reason: '첫 운영 안내',
       label: '물려받은 코스 시험 운행',
       detail: '물려받은 코스를 열어 보세요',
-      /*
-       * ⚠ **화자가 여기까지 온다** (Q8) — sim(`TodayRecommendation.speaker`)이 정하고
-       * 화면은 나르기만 한다. 이 줄이 빠지면 밴드가 다시 화자 없는 안내가 된다.
-       */
-      speaker: '민지',
     });
-  });
-
-  it('⚠ 화자가 없는 추천은 예전과 완전히 같다 — 표시 전용이다', () => {
-    // 온보딩이 끝난 뒤의 추천에는 화자가 없다
-    const plain = todayRecommendation(state('done'));
-    expect('speaker' in managementTodayPresentation(plain)).toBe(false);
   });
 
   it('그룹 항목은 UI adapter의 현재 상태 보조값을 정적 설명보다 우선한다', () => {

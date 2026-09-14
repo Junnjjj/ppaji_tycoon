@@ -1,0 +1,25 @@
+{
+  "visual_criteria": [
+    "dark tiled gable roof and timber/cream material roles",
+    "blue front door and blue awning distinguishable",
+    "deep service opening with counter lip",
+    "pastry case separately identifiable from coffee machine",
+    "cups/pastries retained as meaningful secondary props",
+    "single right window and plausible unreferenced hidden faces",
+    "native192 readability at unchanged world scale"
+  ],
+  "technical_criteria": [
+    "3x2 exact integral floor",
+    "one complete rigid root with fixed camera and four physical rotations",
+    "required inventory counts and side positions",
+    "all eight enlarged/native images independently reproducible",
+    "zero clipping and declared native visible mass",
+    "raw inputs and current asset/live hashes unchanged"
+  ],
+  "token_scope": "Compare completed independent workers only with same model; report cached/uncached/output separately. Parent excluded. No price inference or blanket quality equivalence.",
+  "trial_budget": {
+    "candidates_per_lane": 1,
+    "max_local_d0_corrections": 2
+  },
+  "candidate_selection": "No automatic art approval or live adoption."
+}

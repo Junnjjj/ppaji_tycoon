@@ -1,0 +1,50 @@
+{
+  "status": "NEW_AUTHORED_PROPOSAL_USER_REVIEW",
+  "reference_role": "facility-specific concept; user-supplied art reference, no prior approval inferred",
+  "inputs": {
+    "concept.png": "378081ac2f68e50c97b52ef5c5a75d8210bcabb5f6dbdded530254f8df8425e4",
+    "material-atlas.png": "04ae72ce06eb1bb5cf06c60e54db5f84202bcfe12af60d9e171633f0d818d1f6",
+    "brief.json": "4538fd2e54449e51c07ca8556c929081c1c0028d016118e77dbcfe258545e63c"
+  },
+  "keep": [
+    "flat inset roof with charcoal parapet",
+    "cream plaster with teal two-course tile plinth",
+    "red female door at front left; blue male door at front right",
+    "four front clerestories, two right clerestories, one right vent"
+  ],
+  "adapt": [
+    "2x2 integral foundation, 1.9x1.9 structural body",
+    "door clear leaf 0.52 tile wide, 1.255 tile high versus human height 1.07165 tile",
+    "nine broad roof panels and restrained louver/tile details for native legibility",
+    "simple gender pictograms, no text"
+  ],
+  "unspecified": [
+    "rear and left proposed as plain cream walls with continuous tile base",
+    "interior and NPC access behavior deferred"
+  ],
+  "visual_mass_target": {
+    "body_coverage_each_axis": 0.95,
+    "roof_width_tiles": 2.085,
+    "roof_height_tiles": 0.197,
+    "body_height_tiles": 1.86
+  },
+  "access": {
+    "kind": "portal",
+    "front": "-Y",
+    "anchors": [
+      [
+        -0.46,
+        -1.055,
+        0.08
+      ],
+      [
+        0.46,
+        -1.055,
+        0.08
+      ]
+    ],
+    "status": "visual anchors only; gameplay deferred"
+  },
+  "approval": "ROOF_PROPORTION_USER_REVIEW; authored review renders authorized; no ImageGen or adoption",
+  "iteration_budget": 2
+}

@@ -261,10 +261,9 @@ const record = (name: string, verdict: Verdict, detail = ''): void => {
  * IA 가 바뀔 때마다 같은 사고가 나므로 숫자를 다시 박지 않는다 — 라우터의 네 목적지와
  * Today 라벨이 **이름으로** 있으면 준비된 것이다.
  */
-const MANAGEMENT_READY_EXPR = `['build', 'course', 'kitchen', 'store', 'manage', 'goals', 'records']
-    .every((id) => !!document.querySelector('[data-band-cell="' + id + '"]')) &&
-  ['store', 'manage', 'goals', 'records']
-    .every((id) => !!document.querySelector('[data-manage-group="' + id + '"]'))`;
+const MANAGEMENT_READY_EXPR = `!!document.querySelector('.kmanage-today .kmanage-label') &&
+  ['operations', 'growth', 'records', 'settings'].every((id) =>
+    !!document.querySelector('[data-manage-route="' + id + '"], [data-manage-group="' + id + '"]'))`;
 const MANAGEMENT_READY = `(() => ${MANAGEMENT_READY_EXPR})()`;
 
 /**
@@ -277,13 +276,9 @@ const MANAGEMENT_READY = `(() => ${MANAGEMENT_READY_EXPR})()`;
  * 를 본다. 수가 우연히 맞아 통과하는 형태가 구조적으로 불가능해진다.
  */
 const HOME_CONTROL_IDENTITY = `(() => {
-  /*
-   * P1 — 건설이 밴드 칸으로 옮겨 갔고 밴드는 평소 접혀 있다. 홈에서 **상시로**
-   * 보이는 역할 제어는 셋이다: MENU 토글 · 상태 밴드(다음 할 일) · 소식 띠.
-   * 여전히 **정체로** 잰다 — 개수로 재면 수가 우연히 맞아 조용히 통과한다 (K47-2).
-   */
   const want = [
     ['menu', '#kairo-menu-open'],
+    ['build', '#kairo-build-open'],
     ['goal', '#kairo-goal [data-goal-role="immediate"]'],
     ['ticker', '#kairo-ticker .kticker-hit'],
   ];
@@ -454,24 +449,6 @@ interface TypeHit {
 }
 
 /** DOM click이 아니라 브라우저 입력 파이프를 타는 한 손가락 탭. */
-/**
- * 첫 진입 인사를 닫는다 (Q8).
- *
- * 새 판은 인물이 **한 번** 말을 건다. 그 상자가 떠 있는 동안에는 홈 셸을 못 잰다 —
- * 모달이 다른 것을 밀어내기 때문이다 (실측: 홈 검사 3건이 그래서 빨간불이었다).
- * 사람도 이 상자를 닫고 시작하므로 하네스도 **닫고** 잰다. 없으면 no-op 이다.
- *
- * ⚠ 인사 자체는 **별도 절이 잰다** — 여기서 그냥 닫아 버리면 「뜨는지」를 아무도 안 본다.
- */
-async function dismissIntro(pg: Page): Promise<void> {
-  await pg.evaluate(`(() => {
-    const d = document.getElementById('kairo-event');
-    if (!d || d.hidden) return;
-    const b = [...d.querySelectorAll('button')].find((x) => (x.textContent || '').includes('나중에'));
-    if (b) b.click();
-  })()`);
-}
-
 async function touchElement(page: Page, cdp: CDPSession, selector: string): Promise<void> {
   const target = page.locator(selector).first();
   await target.scrollIntoViewIfNeeded();
@@ -588,9 +565,6 @@ async function main(): Promise<void> {
     { timeout: 15000 },
   );
 
-  // 첫 진입 인사를 닫는다 (Q8) — 캔버스를 덮고 있으면 아래 터치 절들이 전부 죽는다
-  await dismissIntro(page);
-
   // ── 1. 부팅 ──
   const hasCanvas = await page.evaluate(`document.querySelectorAll('canvas').length`);
   record('부팅 — 캔버스 생성', hasCanvas ? 'pass' : 'fail', `캔버스 ${String(hasCanvas)}개`);
@@ -687,33 +661,6 @@ async function main(): Promise<void> {
         undefined,
         { timeout: 15000 },
       );
-      /*
-       * ── Q8: 첫 진입에 **인물이 할 일을 말한다** ────────────────────────
-       *
-       * ⚠ 처음엔 부팅 **모달**로 만들었다가 되돌렸다 — 채널 계약(모달 = 축하)에 어긋나고,
-       * 실측으로 **하네스 컨텍스트 넷이 연달아 죽었다** (모달이 지도를 덮는다).
-       * 지금은 **상태 밴드에 화자**가 붙는다: 모달 없이 「사람이 시킨다」가 된다.
-       */
-      const speaker = (await shellPage.evaluate(`(() => {
-        const chip = document.querySelector('#kairo-goal [data-goal-role="immediate"]');
-        if (!chip) return { found: false };
-        const who = chip.querySelector('[data-goal-speaker]');
-        return {
-          found: true,
-          speaker: who ? (who.textContent || '').trim() : '',
-          text: (chip.textContent || '').replace(/\\s+/g, ' ').trim().slice(0, 50),
-        };
-      })()`)) as { found: boolean; speaker?: string; text?: string };
-      if (tag === 'portrait') {
-        record(
-          '★ Q8 첫 진입 — 밴드가 **누가 말하는지**까지 말한다 (모달 아님)',
-          speaker.found && (speaker.speaker ?? '').length > 0 ? 'pass' : 'fail',
-          speaker.found
-            ? `화자 "${speaker.speaker ?? '없음'}" · "${speaker.text ?? ''}"`
-            : '즉시 목표 칩을 못 찾았다',
-        );
-      }
-      await dismissIntro(shellPage);
       const shellCdp = await shellContext.newCDPSession(shellPage);
       /*
        * 홈 셸 v3 (2026-08-26) — 밴드는 **현재 행동 한 줄**이다.
@@ -757,23 +704,8 @@ async function main(): Promise<void> {
           immediateFits: !!label && label.scrollWidth <= label.clientWidth,
           bandW: Math.round(band.width),
           bandH: Math.round(band.height),
-          /*
-           * P1 — 상태 밴드는 **하단 바 안**에서 MENU 를 뺀 나머지를 쓴다.
-           * 전폭이 아니라 「왼쪽 끝에 붙고 MENU 직전까지」가 계약이다.
-           */
-          bandFillsBar: (() => {
-            const menu = document.getElementById('kairo-menu-open');
-            if (!menu) return false;
-            const m = menu.getBoundingClientRect();
-            return band.left <= 8.5 && band.right >= m.left - 8.5;
-          })(),
-          bandInBar: (() => {
-            const barBox = document.getElementById('kairo-bar');
-            if (!barBox) return false;
-            const b = barBox.getBoundingClientRect();
-            // 바 밖으로 넘치면 티커의 44px hit surface 와 겹친다 (실측으로 밟았다)
-            return band.top >= b.top - 0.5 && band.bottom <= b.bottom + 0.5;
-          })(),
+          bandFullWidth: band.left <= 8.5 && band.right >= window.innerWidth - 8.5,
+          bandCapped: Math.round(band.width) <= 377,
           primaryShare: rect ? rect.width / band.width : 0,
           belowHeader: band.top >= top.bottom,
           mapHeight: band.top - top.bottom,
@@ -786,34 +718,29 @@ async function main(): Promise<void> {
       })()`) as {
         legacy: boolean; visible: boolean; count: number; kickerText: string;
         immediateText: string; detailShown: boolean; kickerShown: boolean;
-        immediateFits: boolean; bandW: number; bandH: number; bandFillsBar: boolean;
-        bandInBar: boolean; primaryShare: number;
+        immediateFits: boolean; bandW: number; bandH: number; bandFullWidth: boolean;
+        bandCapped: boolean; primaryShare: number;
         belowHeader: boolean; mapHeight: number; headerButtons: number; controls: string[];
         controlText: string[]; minTarget: number; overflow: number;
       };
       await shellPage.screenshot({ path: `${SHOT_DIR}/kairo-home-shell-v3-${tag}.png` });
-      const bandWidthOk = home.bandFillsBar && home.bandInBar;
+      const bandWidthOk = tag === 'portrait' ? home.bandFullWidth : home.bandCapped;
       record(
-        `홈 셸 P1 ${tag} — 현재 행동 한 줄 · 바 안 · 아이콘 only 금지 · 제목 무잘림`,
+        `홈 셸 v3 ${tag} — 현재 행동 한 줄 · 아이콘 only 금지 · 제목 무잘림`,
         !home.legacy && home.visible && home.count === 1 && bandWidthOk &&
           home.primaryShare >= 0.98 && home.kickerShown && home.detailShown &&
           home.belowHeader && home.immediateFits &&
           home.immediateText.includes('물려받은 코스 시험 운행') ? 'pass' : 'fail',
         `"${home.kickerText} 〉 ${home.immediateText}" ${Math.round(home.primaryShare * 100)}% · ` +
           `상세 ${home.detailShown ? '보임' : '없음'} · 잔여 목표칸 ${home.count} · ` +
-          `밴드 ${home.bandW}×${home.bandH}px(바 안 ${home.bandInBar ? 'O' : 'X'}) · ` +
-          `지도 틈 ${Math.round(home.mapHeight)}px · ` +
+          `밴드 ${home.bandW}×${home.bandH}px · 지도 틈 ${Math.round(home.mapHeight)}px · ` +
           `캡처 ${SHOT_DIR}/kairo-home-shell-v3-${tag}.png`,
       );
       record(
-        `홈 셸 P1 ${tag} — 헤더 0 · 하단 MENU 토글 하나 · 48px · overflow 0`,
-        /*
-         * P1 — `건설` 은 밴드 칸으로 갔고 밴드는 평소 접혀 있다. 하단에 상시로 남는
-         * 네이티브 버튼은 **MENU 하나**이고, 그 옆은 상태 밴드(다음 할 일)가 쓴다.
-         */
+        `홈 셸 v3 ${tag} — 헤더 0 · 하단 메뉴/건설(이름 있는 버튼) · 48px · overflow 0`,
         home.headerButtons === 0 && JSON.stringify(home.controls) ===
-          JSON.stringify(['kairo-menu-open']) &&
-          JSON.stringify(home.controlText) === JSON.stringify(['메뉴']) &&
+          JSON.stringify(['kairo-menu-open', 'kairo-build-open']) &&
+          JSON.stringify(home.controlText) === JSON.stringify(['메뉴', '건설']) &&
           home.minTarget >= 48 &&
           home.overflow <= 0 && home.mapHeight >= (tag === 'portrait' ? 280 : 80) ? 'pass' : 'fail',
         `타깃 ${home.minTarget}px · 상시 ${home.controlText.join('/')} · ` +
@@ -891,46 +818,24 @@ async function main(): Promise<void> {
         await shellPage.waitForFunction(`document.getElementById('kairo-inbox').hidden`);
       }
 
-      /*
-       * P1 — `MENU` 는 이제 **밴드 토글**이다. 사람과 같은 경로로 간다:
-       * `MENU` 를 눌러 밴드를 펴고, 밴드의 `정보` 칸을 눌러 시트를 연다.
-       * ⚠ `정보` 를 고르는 이유는 **처음부터 열려 있는 두 칸 중 하나**여서다 —
-       * 잠긴 칸을 누르면 시트가 아니라 토스트가 뜬다 (그게 계약이다).
-       */
       await touchElement(shellPage, shellCdp, '#kairo-menu-open');
-      await shellPage.waitForFunction(
-        `document.getElementById('kairo-band').dataset.bandOpen === 'on'`,
-      );
-      await shellPage.waitForTimeout(200);
-      const bandProbe = await shellPage.evaluate(`(() => {
-        const cells = [...document.querySelectorAll('[data-band-cell]')];
-        const boxes = cells.map((node) => node.getBoundingClientRect());
-        return {
-          ids: cells.map((node) => node.getAttribute('data-band-cell')),
-          minTap: boxes.length === 0 ? 0 :
-            Math.round(Math.min.apply(null, boxes.map((r) => Math.min(r.width, r.height))) * 100) / 100,
-          // 잠긴 칸은 숨지 않고 물음표로 남는다 — 가림막이 아니라 예고다
-          locked: cells.filter((n) => n.dataset.bandLocked === 'on')
-            .map((n) => n.getAttribute('data-band-cell')),
-          lockedShowsMark: cells.filter((n) => n.dataset.bandLocked === 'on')
-            .every((n) => (n.querySelector('.kband-label') || {}).textContent === '?'),
-        };
-      })()`) as { ids: string[]; minTap: number; locked: string[]; lockedShowsMark: boolean };
-      record(
-        `P1 밴드 ${tag} — 잠긴 칸이 숨지 않고 ? 로 남는다`,
-        bandProbe.lockedShowsMark && bandProbe.locked.length > 0 ? 'pass' : 'fail',
-        `잠김 ${bandProbe.locked.join('/') || '없음'} · 표식 ${bandProbe.lockedShowsMark ? '?' : '없음'}`,
-      );
-      await touchElement(shellPage, shellCdp, '[data-band-cell="records"]');
       await shellPage.waitForFunction(`!document.getElementById('kairo-sheet').hidden`);
       await shellPage.waitForTimeout(260);
       const menu = await shellPage.evaluate(`(() => {
         const root = document.getElementById('kairo-goal');
         const host = document.querySelector('.ksheet-menu > .kmanage');
+        const index = document.querySelector('[data-manage-screen="index"]');
         const bodyBox = document.querySelector('.kmanage-body');
+        const body = (bodyBox || document.querySelector('.ksheet-body')).getBoundingClientRect();
+        const today = document.querySelector('.kmanage-today').getBoundingClientRect();
+        const routes = [...document.querySelectorAll('[data-manage-route]')]
+          .filter((node) => node.closest('[data-manage-screen="index"]'));
+        const routeIds = routes.map((node) => node.getAttribute('data-manage-route'));
+        const routeBoxes = routes.map((node) => node.getBoundingClientRect());
         const semantic = host ? [...host.children].map((item) => item.className) : [];
-        const bandCells = [...document.querySelectorAll('[data-band-cell]')];
-        const bandBoxes = bandCells.map((node) => node.getBoundingClientRect());
+        const indexOrder = index ? [...index.children].map((item) => item.className) : [];
+        const todayButton = document.querySelector('.kmanage-today > .kmanage-action.primary');
+        const todayRect = todayButton && todayButton.getBoundingClientRect();
         const paint = (element) => {
           if (!element) return { opacity: 0, backgroundColor: 'none', backgroundImage: 'none' };
           const style = getComputedStyle(element);
@@ -945,13 +850,7 @@ async function main(): Promise<void> {
         const gone = (node) => !node || node.hidden ||
           getComputedStyle(node).display === 'none' ||
           node.getBoundingClientRect().height < 1;
-        /*
-         * P1 — 라우터 줄이 밴드로 갔다. 열 계약은 이제 목적지 화면의 행동 목록이 진다.
-         * 보이는 화면의 것을 재야 한다 — 첫 .kmanage-list 를 그냥 잡으면 숨은 화면(폭 0)을
-         * 재게 되고, getComputedStyle 이 계산값 대신 선언 문자열을 돌려줘 토큰 수가 열 수로
-         * 잘못 읽힌다 (실측: 숨은 화면에서 3열).
-         */
-        const grid = document.querySelector('.kmanage-screen:not([hidden]) .kmanage-list');
+        const grid = document.querySelector('.kmanage-routes');
         const gridColumns = grid
           ? getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length : 0;
         return {
@@ -960,10 +859,13 @@ async function main(): Promise<void> {
           homeInputOff: document.body.dataset.homeInput === 'off' &&
             gone(root) && gone(ticker) && gone(bar),
           gridColumns: gridColumns,
-          bandIds: bandCells.map((node) => node.getAttribute('data-band-cell')),
-          bandMinTap: bandBoxes.length === 0 ? 0 :
-            Math.round(Math.min.apply(null, bandBoxes.map((r) => Math.min(r.width, r.height))) * 100) / 100,
-          // 목적지 화면의 스크롤 깊이 — 1,893px(5.2화면)이었던 그 자리다
+          routeIds: routeIds,
+          // 라우터 네 줄이 **전부 첫 폴드 안**이어야 한다 — 목적지를 찾으려고 스크롤하면 안 된다
+          routesInFold: routeBoxes.length > 0 &&
+            routeBoxes.every((r) => r.bottom <= body.bottom + 1),
+          routeMinTap: routeBoxes.length === 0 ? 0 :
+            Math.round(Math.min.apply(null, routeBoxes.map((r) => Math.min(r.width, r.height))) * 100) / 100,
+          // 인덱스의 스크롤 깊이 — 1,893px(5.2화면)이었던 그 자리다
           scrollRatio: bodyBox ? Math.round((bodyBox.scrollHeight / Math.max(1, bodyBox.clientHeight)) * 100) / 100 : 99,
           settings: !!document.querySelector('[data-manage-screen="settings"]'),
           // 이미 지운 .kmanage-utility 대신, **새 게임이 설정 목적지 밖에 있으면** 잡는다.
@@ -980,65 +882,67 @@ async function main(): Promise<void> {
           })(),
           directRoot: !!host,
           semantic: semantic,
-          /*
-           * P1 — 오늘 할 일은 메뉴가 안 그린다. 그리면 홈 상태 밴드의 복창이 되고,
-           * 그게 티커 폴백이 이미 밟은 실패다. 여기서는 없다는 것을 계약으로 잰다.
-           */
-          todayInMenu: !!document.querySelector('.kmanage-today'),
+          indexOrder: indexOrder,
+          todayPrimary: !!todayButton && !!todayButton.querySelector('.kmanage-today-icon') &&
+            !!todayButton.querySelector('.kmanage-reason') && !!todayButton.querySelector('.kmanage-detail'),
+          todayTarget: todayRect ? Math.min(todayRect.width, todayRect.height) : 0,
+          verticalOrder: routeBoxes.length > 0 && today.top < routeBoxes[0].top,
           overflow: host ? host.scrollWidth - host.clientWidth : 999,
           // 목록 넷의 머리 id 가 **닫힌 화면에서도** DOM 에 남아 있는가 (하네스 손잡이)
           listHeads: ['kairo-quests-list', 'kairo-wish-list', 'kairo-cert-list', 'kairo-regular-list']
             .filter((id) => !!document.getElementById(id)),
           paint: {
             sheet: paint(document.getElementById('kairo-sheet')),
-            // P1 — Today 는 메뉴에 없다. 대신 밴드 칸이 같은 크림 레시피를 써야 한다
-            band: paint(document.querySelector('[data-band-cell]')),
+            today: paint(document.querySelector('.kmanage-today')),
             route: paint(document.querySelector('.kmanage-route')),
             action: paint(document.querySelector('.kmanage-action:not(.primary)')),
           },
         };
       })()`) as {
         goalsHidden: boolean; homeInputOff: boolean; gridColumns: number; settings: boolean;
-        bandIds: string[]; bandMinTap: number; scrollRatio: number;
+        routeIds: string[]; routesInFold: boolean; routeMinTap: number; scrollRatio: number;
         newGameInUtility: boolean; newGameInSettings: boolean; newGameText: string;
-        directRoot: boolean; semantic: string[]; todayInMenu: boolean; listHeads: string[];
-        overflow: number;
+        directRoot: boolean; semantic: string[]; indexOrder: string[]; todayPrimary: boolean;
+        todayTarget: number; listHeads: string[];
+        overflow: number; verticalOrder: boolean;
         paint: Record<string, { opacity: number; backgroundColor: string; backgroundImage: string }>;
       };
       await shellPage.screenshot({ path: `${SHOT_DIR}/kairo-menu-shell-v2-${tag}.png` });
       /*
-       * ── 메뉴 P1: **밴드가 곧 메뉴다** ───────────────────────────────────
+       * ── 메뉴 v4: **라우터 한 장** ────────────────────────────────────────
        *
-       * 옛 메뉴는 34항목 1,893px 한 스크롤(세로 5.2화면)이었고, UI v4 가 그것을 인덱스
-       * 한 장으로 줄였다. P1 은 그 인덱스마저 없앴다 — 목적지를 고르는 일은 지도 위
-       * **밴드**가 하고, 시트는 목적지 화면 하나만 그린다 (깊이 3 → 2).
+       * 옛 메뉴는 34항목 1,893px 한 스크롤이었다 (세로 5.2화면 · 가로 11.8화면). 이제
+       * 인덱스는 `판 설정 · 오늘 할 일 · 경고 · 목적지 넷` 이고 **여기서 끝나는 행동은
+       * 오늘 할 일 하나뿐**이다.
        */
       const semanticOrder = menu.semantic[0] === 'kmanage-head' &&
         menu.semantic[1] === 'kmanage-body';
+      const indexOrderOk = menu.indexOrder[0] === 'kmanage-context' &&
+        menu.indexOrder[1] === 'kmanage-today' &&
+        menu.indexOrder[2] === 'kmanage-warnings' &&
+        menu.indexOrder[3] === 'kmanage-routes';
       record(
-        `메뉴 셸 P1 ${tag} — 목표 숨김 · 머리/본문 · 메뉴가 오늘 할 일을 복창하지 않는다`,
-        menu.goalsHidden && menu.directRoot && semanticOrder &&
-          !menu.todayInMenu && menu.overflow <= 0 ? 'pass' : 'fail',
-        `셸 ${menu.semantic.join(' > ')} · 오늘 할 일 복창 ${menu.todayInMenu ? '있음' : '없음'} · ` +
-          `캡처 ${SHOT_DIR}/kairo-menu-shell-v2-${tag}.png`,
+        `메뉴 셸 v4 ${tag} — 목표 숨김 · 머리/본문 · Today 최상위 한 탭`,
+        menu.goalsHidden && menu.directRoot && semanticOrder && indexOrderOk &&
+          menu.todayPrimary && menu.todayTarget >= 44 && menu.verticalOrder &&
+          menu.overflow <= 0 ? 'pass' : 'fail',
+        `Today ${Math.round(menu.todayTarget)}px · 셸 ${menu.semantic.join(' > ')} · ` +
+          `인덱스 ${menu.indexOrder.join(' > ')} · 캡처 ${SHOT_DIR}/kairo-menu-shell-v2-${tag}.png`,
       );
-      /*
-       * P1 — 인덱스의 라우터 줄이 사라지고 **지도 위 밴드 일곱 칸**이 그 일을 한다.
-       * 잠긴 칸은 숨기지 않고 `?` 로 남으므로 **일곱이 언제나 다 있다**.
-       */
       record(
-        `P1 밴드 ${tag} — 일곱 칸이 이름으로 있고 전부 44px`,
-        JSON.stringify(menu.bandIds) ===
-          JSON.stringify(['build', 'course', 'kitchen', 'store', 'manage', 'goals', 'records']) &&
-          menu.bandMinTap >= 43.75 ? 'pass' : 'fail',
-        `${menu.bandIds.join('/')} · 최소 ${menu.bandMinTap}px`,
+        `메뉴 셸 v4 ${tag} — 목적지 넷이 이름으로 있고 전부 첫 폴드 · 44px`,
+        JSON.stringify(menu.routeIds) ===
+          JSON.stringify(['operations', 'growth', 'records', 'settings']) &&
+          menu.routesInFold && menu.routeMinTap >= 43.75 ? 'pass' : 'fail',
+        `${menu.routeIds.join('/')} · 첫 폴드 ${menu.routesInFold ? '전부' : '잘림'} · ` +
+          `최소 ${menu.routeMinTap}px`,
       );
       /*
        * ⚠ 스크롤 깊이는 **컨테이너 쪽 원인**이었다. 열을 반으로 줄이면 행이 두 배가 되므로
        * 열 수만 재면 안 된다 — 실제 깊이를 잰다. 인덱스는 한 화면 안에 들어와야 한다.
        */
       record(
-        `메뉴 셸 P1 ${tag} — 목적지 화면 스크롤 깊이 ≤ 1.6화면 (옛 5.2 / 11.8)`,
+        `메뉴 셸 v4 ${tag} — 인덱스 스크롤 깊이 ≤ 1.6화면 (옛 5.2 / 11.8)`,
         menu.scrollRatio <= 1.6 ? 'pass' : 'fail',
         `${menu.scrollRatio}화면`,
       );
@@ -1054,7 +958,7 @@ async function main(): Promise<void> {
           : surface.backgroundColor.startsWith('rgb(') && !surface.backgroundColor.startsWith('rgba(')),
       );
       record(
-        `메뉴 셸 P1 ${tag} — 시트·밴드·목적지·행 불투명 크림 recipe`,
+        `메뉴 셸 v4 ${tag} — 시트·Today·목적지·행 불투명 크림 recipe`,
         opaquePaint ? 'pass' : 'fail',
         Object.entries(menu.paint).map(([name, surface]) =>
           `${name} opacity ${surface.opacity} · ${surface.backgroundImage === 'none' ? surface.backgroundColor : surface.backgroundImage}`,
@@ -1080,8 +984,8 @@ async function main(): Promise<void> {
        */
       record(
         tag === 'portrait'
-          ? `메뉴 P1 ${tag} — 393px에서 4열 금지 (최대 2열)`
-          : `메뉴 P1 ${tag} — 넓은 화면은 폭을 쓴다 (최소 2열)`,
+          ? `메뉴 v4 ${tag} — 393px에서 4열 금지 (최대 2열)`
+          : `메뉴 v4 ${tag} — 넓은 화면은 폭을 쓴다 (최소 2열)`,
         tag === 'portrait'
           ? menu.gridColumns > 0 && menu.gridColumns <= 2 ? 'pass' : 'fail'
           : menu.gridColumns >= 2 ? 'pass' : 'fail',
@@ -1112,17 +1016,13 @@ async function main(): Promise<void> {
        * 있는지를 재는 쪽이 정직하다 — 세로/가로 어느 쪽도 이 둘은 스크롤 없이 보인다.
        */
       const hasClose = visibleHits.some((hit) => hit.isClose);
-      /*
-       * ⚠ **Today 는 더 이상 메뉴에 없다** (P1). 오늘 할 일은 하단 상태 밴드가 말하고,
-       * 메뉴가 그것을 다시 그리면 홈의 복창이 된다. 구조적으로 항상 보여야 하는 것은
-       * 이제 `닫기` 하나다.
-       */
+      const hasTodayPrimary = visibleHits.some((hit) => hit.isTodayPrimary);
       record(
-        `메뉴 P1 ${tag} — 보이는 컨트롤 ${visibleHits.length}개 전부 5점 소유 · 44px`,
+        `메뉴 v3 ${tag} — 보이는 컨트롤 ${visibleHits.length}개 전부 5점 소유 · 44px`,
         menuOwnership !== null && visibleHits.length > 0 && stolen.length === 0 &&
-          smallHits.length === 0 && hasClose ? 'pass' : 'fail',
+          smallHits.length === 0 && hasClose && hasTodayPrimary ? 'pass' : 'fail',
         `5점 소유 ${visibleHits.length - stolen.length}/${visibleHits.length} · ` +
-          `닫기 ${hasClose ? '보임' : '⚠ 안 보임'} · ` +
+          `닫기 ${hasClose ? '보임' : '⚠ 안 보임'} · Today ${hasTodayPrimary ? '보임' : '⚠ 안 보임'} · ` +
           (stolen.length
             ? `도둑맞음 ${stolen.slice(0, 4).map((hit) => `${hit.id}(${hit.owned}/5←${hit.thief})`).join(', ')}`
             : '전부 자기 소유') +
@@ -1153,16 +1053,12 @@ async function main(): Promise<void> {
       const tiny = (menuType ?? []).filter((hit) => hit.fontSize < 12);
       const labels = (menuType ?? []).filter((hit) => hit.cls.includes('kmanage-label'));
       const details = (menuType ?? []).filter((hit) => hit.cls.includes('kmanage-detail'));
-      /*
-       * ⚠ 옛 `주요 16px+` 는 메뉴 안의 **Today 주 행동**을 가리키던 조건이다. P1 이
-       * Today 를 하단 상태 밴드로 옮겼으므로 메뉴에는 그 크기의 글이 없다 —
-       * 조건을 지운다. **타이포 위계 자체는 P1.5 가 자로 다시 잰다** (단수 ≤ 8 · 13~15px 구간 ≤ 40%).
-       */
+      const primaryLabel = labels.find((hit) => hit.fontSize >= 16);
       record(
-        `메뉴 P1 ${tag} — 9~10px 행동 글씨 0 · 이름 15px+ · 상세 13px+`,
+        `메뉴 v3 ${tag} — 9~10px 행동 글씨 0 · 이름 15px+ · 상세 13px+ · 주요 16px+`,
         menuType !== null && tiny.length === 0 && labels.length > 0 &&
           labels.every((hit) => hit.fontSize >= 15) && details.length > 0 &&
-          details.every((hit) => hit.fontSize >= 13)
+          details.every((hit) => hit.fontSize >= 13) && primaryLabel !== undefined
           ? 'pass' : 'fail',
         `표본 ${(menuType ?? []).length} · 12px 미만 ${tiny.length}` +
           (tiny.length ? ` (${tiny.slice(0, 5).map((hit) => `${hit.text}:${hit.fontSize}`).join(', ')})` : '') +
@@ -1224,15 +1120,6 @@ async function main(): Promise<void> {
         };
       })()`;
       type Owned = { surface: string; alive: string[] };
-      /*
-       * P1 — `건설` 은 밴드 칸이고 밴드는 평소 접혀 있다. 사람과 같은 경로로 간다:
-       * MENU 로 펴고 → 칸을 누른다.
-       */
-      await touchElement(shellPage, shellCdp, '#kairo-menu-open');
-      await shellPage.waitForFunction(
-        `document.getElementById('kairo-band').dataset.bandOpen === 'on'`,
-      );
-      await shellPage.waitForTimeout(200);
       await touchElement(shellPage, shellCdp, '#kairo-build-open');
       const build = await shellPage.evaluate(OWNED) as Owned;
       await touchElement(shellPage, shellCdp, '#kairo-sheet-close');
@@ -1274,7 +1161,7 @@ async function main(): Promise<void> {
    * 캔버스 손가락 드래그 · 시험 운행 · 적용을 전부 `Input.dispatchTouchEvent` 로 한다.
    *
    * 재는 것: 홈 목표가 코스 모드에서 정체로 숨는가 · 독에 영문이 없는가 ·
-   * 현재→예상 네 지표가 **잘리지 않는가** · 독이 천장 이하이고 조작 지도가 남는가 ·
+   * 현재→예상 네 지표가 **잘리지 않는가** · 독이 112px 이하이고 조작 지도가 남는가 ·
    * 상태별 버튼 정체 · 시험 중 대표 반응이 서로 다른 시각에 뜨는가.
    */
   /** 코스 v3 — 셸과 같은 이유로 기본 경로에서도 돈다. */
@@ -1387,7 +1274,6 @@ async function main(): Promise<void> {
         undefined,
         { timeout: 15000 },
       );
-      await dismissIntro(coursePage);
       const courseCdp = await courseContext.newCDPSession(coursePage);
 
       // ① 정보 — 홈 A 목표 **한 번 탭**으로 물려받은 코스가 열린다
@@ -1418,16 +1304,10 @@ async function main(): Promise<void> {
       await touchElement(coursePage, courseCdp, '#kairo-course-confirm');
       await coursePage.waitForFunction(`window.__kairo.coursePanel.state.phase === 'edit'`);
       const edit = await coursePage.evaluate(PROBE) as Probe;
-      /*
-       * ⚠ 천장이 **112 → 132** 로 바뀌었다 (P8). 112 는 유도값이 아니라 관측값이었고
-       * 자연 높이 126 을 14px 잘라 내고 있었다. 정본은 `--course-dock-cap` 토큰이고
-       * 그 값은 단위 검사가 못 박는다 — 여기는 **그려진 높이**를 잰다.
-       * ⚠ 진짜 계약은 바로 아래의 **조작 지도 ≥ 620px** 이다 (이 줄은 그 파생이다).
-       */
       record(
-        `코스 v2 ${tag} 편집 — 설정/취소/시험 운행 한 행 · 독 ≤132px · 설정 접힘`,
+        `코스 v2 ${tag} 편집 — 설정/취소/시험 운행 한 행 · 독 ≤112px · 설정 접힘`,
         JSON.stringify(edit.labels) === JSON.stringify(['설정', '취소', '시험 운행']) &&
-          !edit.settingsOpen && edit.dockHeight <= 132 && edit.sameRow &&
+          !edit.settingsOpen && edit.dockHeight <= 112 && edit.sameRow &&
           edit.minTarget >= 43.75 && edit.overflow <= 0 ? 'pass' : 'fail',
         `독 ${edit.dockHeight}px · 지도 ${edit.mapTop}px · 타깃 ${Math.round(edit.minTarget)}px`,
       );
@@ -1621,23 +1501,18 @@ async function main(): Promise<void> {
        * 넘어갈 수 있어 코스로 안 간다. 진입점을 상태에 안 기대는 쪽으로 잡는다.
        */
       /*
-       * P1 — 코스는 **밴드의 자기 칸**이고 항목이 하나라 화면을 안 끼운다.
-       * 사람과 같은 경로: MENU 로 밴드를 펴고 → `코스` 칸을 누르면 바로 편집이 열린다.
-       * ⚠ 밴드 칸은 진행으로 열린다 — 코스는 첫 코스 적용 또는 2주차부터다.
-       * 하네스는 첫 주에 돌므로 온보딩이 아직 `open-course` 일 수 있어, 잠겨 있으면
-       * 홈의 즉시 목표(같은 행동)로 간다.
+       * ⚠ UI v4 — 메뉴는 **라우터**다. `코스` 는 `운영` 목적지 안에 살고, 인덱스에서는
+       * 그 화면이 `hidden` 이라 곧바로 못 누른다. 사람과 같은 경로로 두 번 누른다.
+       * 그리고 `[data-manage-action="course"]` 만 쓰면 **Today 버튼**과도 겹치므로
+       * (Today 의 dataset 도 추천 행동 id 를 단다) 목적지로 스코프를 좁힌다.
        */
       await touchElement(coursePage, courseCdp, '#kairo-menu-open');
+      await touchElement(coursePage, courseCdp, '[data-manage-route="operations"]');
       await coursePage.waitForFunction(
-        `document.getElementById('kairo-band').dataset.bandOpen === 'on'`,
+        `(() => { const s = document.querySelector('[data-manage-screen="operations"]'); return !!s && !s.hidden; })()`,
       );
-      const courseCellOpen = await coursePage.evaluate(
-        `document.querySelector('[data-band-cell="course"]').dataset.bandLocked === 'off'`,
-      ) as boolean;
       await touchElement(
-        coursePage,
-        courseCdp,
-        courseCellOpen ? '[data-band-cell="course"]' : '[data-goal-role="immediate"]',
+        coursePage, courseCdp, '[data-manage-screen="operations"] [data-manage-action="course"]',
       );
       await coursePage.waitForFunction(
         `!document.getElementById('kairo-course').hidden`, undefined, { timeout: 4000 },
@@ -1718,7 +1593,6 @@ async function main(): Promise<void> {
       undefined,
       { timeout: 15000 },
     );
-    await dismissIntro(scenePage);
     const sceneCdp = await sceneContext.newCDPSession(scenePage);
 
     /*
@@ -2010,7 +1884,6 @@ async function main(): Promise<void> {
       undefined,
       { timeout: 15000 },
     );
-    await dismissIntro(phase7Page);
     // 디버그 HUD는 Phaser가 첫 프레임을 낸 순간부터 채워지지만, 경영 시트의 동적 import와
     // 조립은 그 뒤에 끝날 수 있다. DOM 정본이 준비되기 전에 터치하면 버튼만 눌리고 빈 시트를
     // 재는 부팅 경합이 된다.
@@ -2025,15 +1898,6 @@ async function main(): Promise<void> {
       touchPoints: [{ x: menuAt.x, y: menuAt.y, id: 1 }],
     });
     await phase7Cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-    await phase7Page.waitForTimeout(150);
-    /*
-     * P1 — MENU 는 밴드 토글이다. 시트를 열려면 밴드 칸을 한 번 더 누른다.
-     * `정보` 는 처음부터 열려 있는 두 칸 중 하나라 첫 주에도 확실히 눌린다.
-     */
-    await touchElement(phase7Page, phase7Cdp, '[data-band-cell="records"]');
-    await phase7Page.waitForFunction(
-      `(() => { const s = document.querySelector('[data-manage-screen="records"]'); return !!s && !s.hidden; })()`,
-    );
     await phase7Page.waitForTimeout(150);
     const view = (await phase7Page.evaluate(`(() => {
       const host = document.querySelector('.kmanage');
@@ -2062,44 +1926,42 @@ async function main(): Promise<void> {
           return Math.round(Math.min(r.width, r.height) * 100) / 100;
         });
       return {
+        today: (document.querySelector('.kmanage-today .kmanage-label') || {}).textContent || '',
         names: names,
         minTarget: targets.length ? Math.min(...targets) : 0,
         overflow: host ? host.scrollWidth - host.clientWidth : 999,
       };
     })()`)) as {
+      today: string;
       names: { id: string; actions: string[] }[];
       minTarget: number;
       overflow: number;
     };
     await phase7Page.screenshot({ path: `${SHOT_DIR}/kairo-management-phase7-${tag}.png` });
-    /*
-     * P1 — 그룹이 여섯이고 목적지 화면은 넷이다 (코스·요리는 항목이 하나라 화면을 안 끼운다).
-     * ⚠ `오늘 할 일` 은 메뉴가 아니라 **하단 상태 밴드**가 말한다 — 여기서 또 재면
-     * 홈의 복창을 계약으로 굳히게 된다.
-     */
-    /*
-     * ⚠ P3 이 `store` 를 채웠다 — 그전에는 `actions: []`(빈 화면)이었다. 상점 칸이
-     * 목적지로만 있고 안에 아무것도 없던 상태가 계약으로 굳어 있었던 것이다.
-     * `commission`(수배)은 P4 가 채운다.
-     */
     const exact = JSON.stringify(view.names) === JSON.stringify([
-      { id: 'store', actions: ['shop'] },
-      { id: 'manage', actions: ['price', 'staff', 'exam'] },
-      { id: 'goals', actions: [] },
-      { id: 'records', actions: ['report', 'codex', 'view', 'ending'] },
+      { id: 'operations', actions: ['price', 'staff', 'course'] },
+      /* UI v4: 단골·의뢰는 성장 화면의 3단 목록 라우터로 옮겨져 직접 행동이 아니다. */
+      { id: 'growth', actions: ['exam', 'codex'] },
+      { id: 'records', actions: ['report', 'view', 'certs', 'ending'] },
     ]);
     record(
-      `P1 밴드 IA ${tag} — 목적지 화면 넷 · 44px 터치`,
-      exact && view.minTarget >= 44 && view.overflow <= 0 ? 'pass' : 'fail',
-      `그룹 ${view.names.map((group) => group.id).join('/')} · ` +
+      `Phase 7 경영 IA ${tag} — Today 우선 · 세 그룹 · 44px 터치`,
+      view.today.includes('물려받은 코스 시험 운행') && exact && view.minTarget >= 44 && view.overflow <= 0
+        ? 'pass'
+        : 'fail',
+      `Today "${view.today}" · 그룹 ${view.names.map((group) => group.id).join('/')} · ` +
         `타깃 ${view.minTarget}px · 넘침 ${view.overflow}px`,
     );
 
     if (tag === '세로') {
       /*
-       * 온보딩 중에도 추천 밖의 기록 화면을 열 수 있어야 한다 — 안내는 잠금 장치가 아니다.
-       * P1 — 위에서 이미 밴드의 `정보` 칸으로 그 화면을 열어 두었다.
+       * 온보딩 중에도 Today 밖의 기록 화면을 열 수 있어야 한다 — 안내는 잠금 장치가 아니다.
+       * ⚠ UI v4 — `기록` 은 라우터의 목적지라 **두 번** 누른다 (사람과 같은 경로).
        */
+      await touchElement(phase7Page, phase7Cdp, '[data-manage-route="records"]');
+      await phase7Page.waitForFunction(
+        `(() => { const s = document.querySelector('[data-manage-screen="records"]'); return !!s && !s.hidden; })()`,
+      );
       await touchElement(
         phase7Page,
         phase7Cdp,
@@ -2116,144 +1978,8 @@ async function main(): Promise<void> {
         `엔딩 표면 ${freePlay.ending ? '열림' : '닫힘'} · 단계 ${freePlay.step}`,
       );
       await touchElement(phase7Page, phase7Cdp, '#kairo-ending-close');
-      /*
-       * ── 구입 상점 (P3) — **장비는 사야 쓴다** ─────────────────────────────
-       *
-       * ⚠ 이 절이 없으면 아래 「더 비싼 장비로 신기록」이 통째로 막힌다 — 새 판은
-       * 물려받은 `peanut` 하나만 갖고 있어서 나머지 18종이 `not-owned` 다. 게이트가
-       * 하네스의 옛 가정(아무 장비나 고를 수 있다)을 문 것이고, **그게 P3 의 요점**이다.
-       */
-      await phase7Page.evaluate(`(() => {
-        const h = window.__kairo;
-        h.week.earn(30000000);
-        h.runAction('shop');
-      })()`);
-      await phase7Page.waitForFunction(`!document.getElementById('kairo-shop').hidden`);
-      const shopSeen = await phase7Page.evaluate(`(() => {
-        const sheet = document.getElementById('kairo-shop');
-        const tabs = [...sheet.querySelectorAll('[data-shop-tab]')].map((b) => b.dataset.shopTab);
-        const taps = [...sheet.querySelectorAll('button')]
-          .map((b) => Math.round(Math.min(b.getBoundingClientRect().width,
-            b.getBoundingClientRect().height)))
-          .filter((n) => n > 0);
-        return { tabs: tabs, minTap: taps.length ? Math.min(...taps) : 0 };
-      })()`) as { tabs: string[]; minTap: number };
-      /*
-       * ⚠ P4 가 **다섯째 탭**(`commission` = 맡긴다)을 더했다. 앞 넷은 즉시(P3)고
-       * 이것만 기다린다 — 그 줄 갈림이 D2 의 전부라 **정체로** 잰다 (개수가 아니다).
-       */
-      record(
-        '★ 상점이 즉시 넷 + 맡긴다 하나로 열린다 (P3·P4)',
-        shopSeen.tabs.join(',') === 'ingredient,fitting,decor,equipment,commission' &&
-          shopSeen.minTap >= 44
-          ? 'pass'
-          : 'fail',
-        `탭 ${shopSeen.tabs.join('/')} · 최소 터치 ${shopSeen.minTap}px`,
-      );
-
-      await touchElement(phase7Page, phase7Cdp, '[data-shop-tab="equipment"]');
-      await phase7Page.waitForTimeout(150);
-      const buyTarget = await phase7Page.evaluate(`(() => {
-        const rows = [...document.querySelectorAll('#kairo-shop-list [data-shop-item]')]
-          .filter((r) => r.dataset.blocked === '');
-        const id = rows[0] ? rows[0].dataset.shopItem : null;
-        const h = window.__kairo;
-        return { id: id, owned: h.courses.ownedEquipment.size, cash: h.week.cash };
-      })()`) as { id: string | null; owned: number; cash: number };
-      if (buyTarget.id) {
-        await touchElement(phase7Page, phase7Cdp, `[data-shop-buy="${buyTarget.id}"]`);
-        await phase7Page.waitForTimeout(220);
-      }
-      const bought = await phase7Page.evaluate(`(() => {
-        const h = window.__kairo;
-        const row = document.querySelector('#kairo-shop-list [data-shop-item="${buyTarget.id ?? ''}"]');
-        return {
-          owned: h.courses.ownedEquipment.size,
-          cash: h.week.cash,
-          blocked: row ? row.dataset.blocked : 'gone'
-        };
-      })()`) as { owned: number; cash: number; blocked: string };
-      /*
-       * ⚠ **산 항목은 진열에서 빠진다** (Q3, 2026-08-28). 예전에는 `blocked === 'owned'`
-       * 로 줄이 **남아 있는지**를 봤는데, 주간 입고가 들어오면서 진열의 뜻이
-       * 「이번 주에 **살 수 있는** 것」이 됐으므로 산 것은 칸을 안 먹는다.
-       *
-       * ⚠ K48 의 「못 사는 것을 목록에서 지우지 않는다」와 **안 부딪힌다** — 그 규칙은
-       * 등급·현금이 모자라 **아직 못 사는 것**을 말한다 (그건 다음 목표다). 이미 산 것은
-       * 목표가 아니다.
-       *
-       * 그래서 판정은 `'gone'` **또는** `'owned'` 둘 다 받는다 — 이 절이 재려는 것은
-       * 「소유로 들어왔나 · 현금이 줄었나」이지 줄의 생사가 아니다.
-       */
-      record(
-        '★ 산 장비가 실제로 소유로 들어오고 현금이 준다 (P3)',
-        bought.owned === buyTarget.owned + 1 &&
-          bought.cash < buyTarget.cash &&
-          (bought.blocked === 'gone' || bought.blocked === 'owned')
-          ? 'pass'
-          : 'fail',
-        `소유 ${buyTarget.owned} → ${bought.owned} · 현금 ${Math.round(buyTarget.cash / 10000)}만 → ` +
-          `${Math.round(bought.cash / 10000)}만 · 줄 상태 "${bought.blocked}"`,
-      );
-      /*
-       * ── 수배 (P4) — **맡기고 기다린다** ─────────────────────────────────
-       *
-       * 구입과 같은 시트의 마지막 탭이다. 둘의 차이(즉시 vs 기다림)가 D2 의 전부라
-       * 화면에서도 줄이 갈려야 한다.
-       */
-      await touchElement(phase7Page, phase7Cdp, '[data-shop-tab="commission"]');
-      await phase7Page.waitForTimeout(160);
-      const orderable = await phase7Page.evaluate(`(() => {
-        const rows = [...document.querySelectorAll('#kairo-commission-list [data-commission-item]')]
-          .filter((r) => r.dataset.blocked === '');
-        return {
-          total: document.querySelectorAll('[data-commission-item]').length,
-          id: rows[0] ? rows[0].dataset.commissionItem : null,
-          pending: window.__kairo.commissions.pending.length,
-          cash: window.__kairo.week.cash
-        };
-      })()`) as { total: number; id: string | null; pending: number; cash: number };
-      if (orderable.id) {
-        await touchElement(phase7Page, phase7Cdp, `[data-commission-order="${orderable.id}"]`);
-        await phase7Page.waitForTimeout(240);
-      }
-      const ordered = await phase7Page.evaluate(`(() => {
-        const running = [...document.querySelectorAll('[data-commission-running]')];
-        return {
-          pending: window.__kairo.commissions.pending.length,
-          cash: window.__kairo.week.cash,
-          rows: running.length,
-          label: running[0] ? running[0].textContent : '',
-          saved: (window.__kairo.readSaveForTest().commissions || { pending: [] }).pending.length
-        };
-      })()`) as {
-        pending: number; cash: number; rows: number; label: string; saved: number;
-      };
-      record(
-        '★ 수배를 맡기면 큐에 남고 D- 로 남은 날을 말한다 (P4)',
-        // ⚠ P6 이 구인 5 를 더해 21 이다 (§8-1 의 16 + 역할 수)
-        orderable.total === 21 && ordered.pending === orderable.pending + 1 &&
-          ordered.cash < orderable.cash && ordered.rows >= 1 && ordered.label.includes('D-')
-          ? 'pass'
-          : 'fail',
-        `목록 ${orderable.total}종 · 큐 ${orderable.pending} → ${ordered.pending} · ` +
-          `현금 ${Math.round(orderable.cash / 10000)}만 → ${Math.round(ordered.cash / 10000)}만 · ` +
-          `"${(ordered.label || '').slice(0, 30)}"`,
-      );
-      record(
-        '★ 맡긴 수배는 세이브에 남는다 — 리로드로 증발하지 않는다 (P4)',
-        ordered.saved === ordered.pending && ordered.saved > 0 ? 'pass' : 'fail',
-        `세이브 ${ordered.saved}건 · 메모리 ${ordered.pending}건`,
-      );
-
-      await touchElement(phase7Page, phase7Cdp, '#kairo-shop-close');
-      await phase7Page.waitForTimeout(180);
-
-      /*
-       * P1 — 오늘 할 일은 메뉴가 아니라 **홈의 상태 밴드**가 말한다. 사람과 같은 경로로
-       * 그 한 줄을 직접 누른다 (메뉴를 안 거친다 — 그게 이 개편의 요지다).
-       */
-      await touchElement(phase7Page, phase7Cdp, '[data-goal-role="immediate"]');
+      await touchElement(phase7Page, phase7Cdp, '#kairo-menu-open');
+      await touchElement(phase7Page, phase7Cdp, '.kmanage-today .kmanage-action');
       await phase7Page.waitForFunction(
         `(() => !document.getElementById('kairo-course').hidden && window.__kairo.coursePanel.state.phase === 'info')()`,
       );
@@ -2307,9 +2033,7 @@ async function main(): Promise<void> {
         const oldCost = h.courseApi.courseEquipment(current.equipId).vehicleCost * current.vehicles;
         return [...document.querySelectorAll('#kairo-course-equip [data-equip]')]
           .map((button) => ({ id: button.getAttribute('data-equip'), disabled: button.disabled }))
-          // ⚠ 플레이어가 고를 수 있는 것 = **가진 것**이다 (P3 소유 게이트)
-          .filter((x) => !x.disabled && !h.courseApi.fitBlocked(x.id, st.presetId) &&
-            h.courses.ownedEquipment.has(x.id))
+          .filter((x) => !x.disabled && !h.courseApi.fitBlocked(x.id, st.presetId))
           .map((x) => ({ ...x, def: h.courseApi.courseEquipment(x.id) }))
           .filter((x) => x.def && x.def.vehicleCost * st.vehicles > oldCost)
           .sort((a, b) => b.def.vehicleCost - a.def.vehicleCost)[0]?.id || null;
@@ -2394,11 +2118,9 @@ async function main(): Promise<void> {
 
       // build-food Today도 실제 목적지를 타고, 카드와 확정은 진짜 터치다. 좌표 탐색만
       // 하네스 셋업으로 하고 배치/온보딩 사건은 production confirm 경계를 지난다.
-      // P1 — 오늘 할 일은 홈의 상태 밴드다 (메뉴를 안 거친다)
-      const foodToday = await phase7Page
-        .locator('[data-goal-role="immediate"] .kgoal-label')
-        .textContent();
-      await touchElement(phase7Page, phase7Cdp, '[data-goal-role="immediate"]');
+      await touchElement(phase7Page, phase7Cdp, '#kairo-menu-open');
+      const foodToday = await phase7Page.locator('.kmanage-today .kmanage-label').textContent();
+      await touchElement(phase7Page, phase7Cdp, '.kmanage-today .kmanage-action');
       const beforeFood = await phase7Page.evaluate(`window.__kairo.placement.count`) as number;
       await touchElement(phase7Page, phase7Cdp, '[data-pick="facility:shop"]');
       const aimed = await phase7Page.evaluate(`(() => {
@@ -2425,11 +2147,9 @@ async function main(): Promise<void> {
       );
 
       // 기본 메뉴가 배치와 함께 이미 장착된 매점도 실제 메뉴 시트를 열어 확인하면 전진한다.
-      // P1 — 오늘 할 일은 홈의 상태 밴드다
-      const menuToday = await phase7Page
-        .locator('[data-goal-role="immediate"] .kgoal-label')
-        .textContent();
-      await touchElement(phase7Page, phase7Cdp, '[data-goal-role="immediate"]');
+      await touchElement(phase7Page, phase7Cdp, '#kairo-menu-open');
+      const menuToday = await phase7Page.locator('.kmanage-today .kmanage-label').textContent();
+      await touchElement(phase7Page, phase7Cdp, '.kmanage-today .kmanage-action');
       await phase7Page.waitForFunction(`!document.getElementById('kairo-menu-lab').hidden`);
       const menuConfirmed = await phase7Page.evaluate(`(() => {
         const h = window.__kairo;
@@ -2473,8 +2193,7 @@ async function main(): Promise<void> {
       const regularSurface = await phase7Page.evaluate(`(() => {
         const sheet = document.getElementById('kairo-sheet');
         const menu = document.querySelector('.ksheet-menu');
-        // P1 — 단골은 화면이 아니라 목표 화면의 섹션이다
-        const screen = document.querySelector('[data-manage-screen="goals"]');
+        const screen = document.querySelector('[data-manage-screen="regulars"]');
         const head = document.getElementById('kairo-regular-list');
         const rect = head && head.getBoundingClientRect();
         return {
@@ -2616,9 +2335,7 @@ async function main(): Promise<void> {
         `컨트롤 ${managementAudit.controls} · 최소 ${managementAudit.minTarget}px · ` +
           `미도달 ${managementAudit.unreachable} · 문서 넘침 ${managementAudit.documentOverflow}px`,
       );
-      // P1 — 오늘 할 일은 홈의 상태 밴드다. 시트를 닫고 그 한 줄을 직접 누른다
-      await touchElement(phase7Page, phase7Cdp, '#kairo-sheet-close');
-      await touchElement(phase7Page, phase7Cdp, '[data-goal-role="immediate"]');
+      await touchElement(phase7Page, phase7Cdp, '.kmanage-today .kmanage-action');
       await touchElement(phase7Page, phase7Cdp, '#kairo-course-confirm');
       await touchElement(phase7Page, phase7Cdp, '#kairo-course-confirm');
       await phase7Page.waitForFunction(
@@ -2718,24 +2435,32 @@ async function main(): Promise<void> {
     process.exit(failed.length === 0 ? 0 : 1);
   }
 
-  // ── 3. 내부 해상도 = 버퍼, CSS = 버퍼 × S ──
+  // ── 3. 내부 해상도 = 논리 버퍼 × D, CSS = 논리 버퍼 × S ──
   const geo = (await page.evaluate(`(() => {
     const c = document.querySelector('canvas');
     if (!c) return null;
     const r = c.getBoundingClientRect();
+    const tile = window.__kairo.scene.tileScreenRect(0, 0);
+    const density = Math.round(tile.w / 32);
     return { w: c.width, h: c.height, cssW: Math.round(r.width), cssH: Math.round(r.height),
-             dpr: window.devicePixelRatio };
-  })()`)) as { w: number; h: number; cssW: number; cssH: number; dpr: number } | null;
+             dpr: window.devicePixelRatio, density: density };
+  })()`)) as { w: number; h: number; cssW: number; cssH: number; dpr: number; density: number } | null;
 
   if (!geo) {
     record('캔버스 기하', 'fail', '캔버스를 못 찾았다');
   } else {
-    const s = Math.round(geo.cssW / geo.w);
-    const ok = geo.cssW === geo.w * s && geo.cssH === geo.h * s && Number.isInteger(s);
+    const logicalW = geo.w / geo.density;
+    const logicalH = geo.h / geo.density;
+    const s = Math.round(geo.cssW / logicalW);
+    const ok =
+      geo.cssW === logicalW * s &&
+      geo.cssH === logicalH * s &&
+      Number.isInteger(s) &&
+      (geo.density === 1 || geo.density === 2);
     record(
-      '도트 격자 — CSS = 내부해상도 × 정수 S',
+      '도트 격자 — 내부해상도 = 논리 × D, CSS = 논리 × 정수 S',
       ok ? 'pass' : 'fail',
-      `내부 ${geo.w}×${geo.h} · CSS ${geo.cssW}×${geo.cssH} · S=${s} · DPR ${geo.dpr}`,
+      `내부 ${geo.w}×${geo.h} · CSS ${geo.cssW}×${geo.cssH} · D=${geo.density} · S=${s} · DPR ${geo.dpr}`,
     );
     const deviceScale = s * Math.round(geo.dpr);
     record(
@@ -2779,7 +2504,8 @@ async function main(): Promise<void> {
         if (sc.groundAt(i + 1, j + 1) !== 'lawn') continue;
         const r = sc.tileScreenRect(i, j);
         // 네 타일이 모두 화면 안쪽에 여유 있게 들어와야 한다
-        if (r.x > 8 && r.y > 8 && r.x + 3 * 16 < W - 8 && r.y + 3 * 8 < H - 8) {
+        const D = Math.round(r.w / 32);
+        if (r.x > 8 * D && r.y > 8 * D && r.x + 3 * 16 * D < W - 8 * D && r.y + 3 * 8 * D < H - 8 * D) {
           found = { i: i, j: j, r: r };
           break;
         }
@@ -2787,8 +2513,9 @@ async function main(): Promise<void> {
     }
     if (!found) return { ok: false, reason: '화면 안의 잔디 2×2 블록을 못 찾았다' };
     // 네 타일이 만나는 중심부를 샘플 — 이음새가 있으면 여기에 배경색이 뜬다
-    const cx = found.r.x + 16, cy = found.r.y + 16;
-    const w = 20, h = 10;
+    const D = Math.round(found.r.w / 32);
+    const cx = found.r.x + 16 * D, cy = found.r.y + 16 * D;
+    const w = 20 * D, h = 10 * D;
     const x0 = cx - w / 2, y0 = cy - h / 2;
     const buf = new Uint8Array(w * h * 4);
     g.readPixels(x0, H - (y0 + h), w, h, g.RGBA, g.UNSIGNED_BYTE, buf);
@@ -3322,7 +3049,7 @@ async function main(): Promise<void> {
     // 비정사각 포함 4종 — 앵커 계산이 틀리면 여기서 드러난다
     const trials = [
       ['shop', 0, 0],            // 2×2
-      ['cafe', 3, 0],            // 2×3
+      ['cafe', 3, 0],            // 3×2
       ['pyeongsang_row', 0, 4],  // 4×1  ← 비정사각
       ['lookout', 6, 4],         // 2×2
     ];
@@ -3513,124 +3240,86 @@ async function main(): Promise<void> {
      * 검사가 예민해지므로 4×1 → 3×1 → 1×1 순으로 시도한다.
      */
     const cands = [['shower_row', 4], ['changing_row', 3], ['arcade', 1]];
-    /*
-     * ⚠ **후보를 여럿 낸다** (2026-08-27). 예전에는 첫 자리 하나만 골랐는데, 그 칸이
-     * 앞의 잔교에 **가려 있으면** 벽이 화면에 한 픽셀도 안 나와 다투는 자리가 0 이 된다
-     * (실측: 타일 44,13 은 앞 잔교 뒤였고, 벽을 지워도 캔버스 전체에서 0px 이 바뀌었다).
-     * 「보이는가」는 지형만 봐서 알 수 없으므로 **부르는 쪽이 픽셀로 걸러 낸다.**
-     */
-    const spots = [];
-    for (let j = 0; j < t.height && spots.length < 8; j++) {
-      for (let i = 0; i < t.width && spots.length < 8; i++) {
+    let spot = null;
+    for (let j = 0; j < t.height && !spot; j++) {
+      for (let i = 0; i < t.width && !spot; i++) {
         if (!t.isIndoor(i, j)) continue;
         const kind = w.edgeAt(i, j, 1); // 1 = DIR_J_PLUS
         if (kind === 0) continue;
         for (const c of cands) {
           const oi = i - (c[1] - 1); // 가장 앞 타일이 (i, j) 가 되게 왼쪽으로 민다
           if (!p.check(t, w, h.gate, c[0], oi, j).ok) continue;
-          spots.push({ i: i, j: j, kind: kind, def: c[0], oi: oi });
+          spot = { i: i, j: j, kind: kind, def: c[0], oi: oi };
           break;
         }
       }
     }
-    if (spots.length === 0) { sc.setAutoTick(true); return { ok: false, reason: '앞쪽 벽이 있는 빈 실내 칸을 못 찾았다' }; }
+    if (!spot) { sc.setAutoTick(true); return { ok: false, reason: '앞쪽 벽이 있는 빈 실내 칸을 못 찾았다' }; }
     sc.setUpscale(1);
-    return { ok: true, spots: spots };
+    sc.focusTile(spot.i, spot.j);
+    return { ok: true, i: spot.i, j: spot.j, kind: spot.kind, def: spot.def, oi: spot.oi };
   })()`)) as
     | { ok: false; reason: string }
-    | { ok: true; spots: { i: number; j: number; kind: number; def: string; oi: number }[] };
+    | { ok: true; i: number; j: number; kind: number; def: string; oi: number };
 
   if (!inWall.ok) {
     record('★ 실내 시설이 벽 안에 있다 (K37)', 'fail', inWall.reason);
   } else {
-    /*
-     * ── 보이는 자리를 **픽셀로** 고른다 ────────────────────────────────────
-     *
-     * 지형이 「실내 + 앞쪽 벽」이라고 말해도 그 칸이 앞의 잔교·건물에 가려 있으면
-     * 벽이 화면에 한 픽셀도 안 나온다. 그러면 A/B/C/D 가 전부 같아져 다투는 자리가 0 이 되고,
-     * 「검사가 유효하다」가 빨간불이 된다 (실측 2026-08-27 — 그게 이 절이 오래 실패한 이유다).
-     * 그래서 후보마다 **벽을 껐다 켜 보고** 실제로 픽셀이 바뀌는 자리를 쓴다.
-     */
-    const sampleAt = (i: number, j: number): string =>
-      `new Promise((done) => requestAnimationFrame(() => done((() => {
-        const sc = window.__kairo.scene;
-        const c = document.querySelector('canvas');
-        const gl = c.getContext('webgl2') || c.getContext('webgl');
-        const H = c.height;
-        const r = sc.tileScreenRect(${i}, ${j});
-        const x0 = r.x, y0 = r.y - 10, w = 32, hh = 26;
-        const buf = new Uint8Array(w * hh * 4);
-        gl.readPixels(x0, H - (y0 + hh), w, hh, gl.RGBA, gl.UNSIGNED_BYTE, buf);
-        let s = '';
-        for (let k = 0; k < buf.length; k += 4) s += buf[k] + ',' + buf[k+1] + ',' + buf[k+2] + ';';
-        return s;
-      })())))`;
-    let picked: { i: number; j: number; kind: number; def: string; oi: number } | null = null;
-    let visibleWallPx = 0;
-    const seen: string[] = [];
-    for (const cand of inWall.spots) {
-      await page.evaluate(`window.__kairo.scene.focusTile(${cand.i}, ${cand.j})`);
-      await page.waitForTimeout(700);   // 카메라가 정착해야 좌표와 픽셀이 같은 프레임이 된다
-      const withWall = (await page.evaluate(sampleAt(cand.i, cand.j))) as string;
-      await page.evaluate(
-        `(() => { const h = window.__kairo; h.walls.setEdge(${cand.i}, ${cand.j}, 1, 0); h.scene.refreshWall(${cand.i}, ${cand.j}); })()`,
-      );
-      await page.waitForTimeout(260);
-      const noWall = (await page.evaluate(sampleAt(cand.i, cand.j))) as string;
-      await page.evaluate(
-        `(() => { const h = window.__kairo; h.walls.setEdge(${cand.i}, ${cand.j}, 1, ${cand.kind}); h.scene.refreshWall(${cand.i}, ${cand.j}); })()`,
-      );
-      const p1 = withWall.split(';'), p2 = noWall.split(';');
-      let diff = 0;
-      for (let k = 0; k < Math.min(p1.length, p2.length); k++) if (p1[k] !== p2[k]) diff++;
-      seen.push(`${cand.i},${cand.j}:${diff}`);
-      if (diff > visibleWallPx) { visibleWallPx = diff; picked = cand; }
-      if (diff >= 60) break;   // 충분히 보이면 더 안 찾는다
-    }
-    if (!picked) {
-      record(
-        '깊이 검사가 유효한 자리를 찾았다 (벽이 화면에 실제로 보이나)',
-        'fail',
-        `후보 ${inWall.spots.length}곳 전부 가려져 있다 · ${seen.join(' ')}`,
-      );
-      picked = inWall.spots[0] ?? null;
-    } else {
-      record(
-        '깊이 검사가 유효한 자리를 찾았다 (벽이 화면에 실제로 보이나)',
-        visibleWallPx >= 15 ? 'pass' : 'fail',
-        `고른 칸 ${picked.i},${picked.j} · 벽 픽셀 ${visibleWallPx} · 후보 ${seen.join(' ')}`,
-      );
-    }
-    const wi = picked?.i ?? 0, wj = picked?.j ?? 0;
-    const inWallPick = { i: wi, j: wj, kind: picked?.kind ?? 1, def: picked?.def ?? 'arcade', oi: picked?.oi ?? 0 };
-    await page.evaluate(`window.__kairo.scene.focusTile(${wi}, ${wj})`);
-    await page.waitForTimeout(700);
+    const wi = inWall.i, wj = inWall.j;
     /*
      * 벽 스프라이트는 32 × (16 + 10) 이고 앵커가 타일 하단 꼭지점이다.
      * 그래서 표본은 타일 사각형에서 위로 10텍셀 넓힌 32×26 이다 (계약에서 온 수치).
      */
-    /*
-     * ⚠ **rAF 안에서 읽는다.** `preserveDrawingBuffer: false` 라 `readPixels` 를 프레임
-     * 밖에서 부르면 브라우저가 이미 버퍼를 비운 뒤라 **전부 `0,0,0`** 이 돌아온다
-     * (실측 2026-08-27: 네 표본이 전부 검정 → 다투는 픽셀 0/833 → 「검사가 유효하다」가
-     * 정직하게 빨간불). 다른 픽셀 절들이 초록인 것은 **운이 좋았을 뿐**이다 — 같은 경쟁을
-     * 안고 있다. rAF 콜백 안에서 읽으면 그 프레임의 그림이 아직 살아 있어 결정적이다.
-     */
-    const sampleWall = `new Promise((done) => requestAnimationFrame(() => done((() => {
+    const sampleWall = `(() => {
       const sc = window.__kairo.scene;
       const c = document.querySelector('canvas');
       const gl = c.getContext('webgl2') || c.getContext('webgl');
       const H = c.height;
       const r = sc.tileScreenRect(${wi}, ${wj});
-      const x0 = r.x, y0 = r.y - 10, w = 32, hh = 26;
+      const D = Math.round(r.w / 32);
+      const x0 = r.x, y0 = r.y - 10 * D, w = 32 * D, hh = 26 * D;
       const buf = new Uint8Array(w * hh * 4);
       gl.readPixels(x0, H - (y0 + hh), w, hh, gl.RGBA, gl.UNSIGNED_BYTE, buf);
       let s = '';
       for (let k = 0; k < buf.length; k += 4) s += buf[k] + ',' + buf[k+1] + ',' + buf[k+2] + ';';
       return s;
-    })())))`;
+    })()`;
     const setWall = (kind: number): string =>
       `(() => { const h = window.__kairo; h.walls.setEdge(${wi}, ${wj}, 1, ${kind}); h.scene.refreshWall(${wi}, ${wj}); })()`;
+
+    /*
+     * 네 방향 벽 이미지는 같은 타일 중심·앵커를 공유한다. 모서리 칸에서는 옆 벽이 목표
+     * 앞벽과 같은 픽셀을 다시 칠해, 목표 벽 하나만 꺼도 A/B가 같아지는 거짓 무효가 생긴다.
+     * 이 절에서는 목표 J+만 남기고 나머지 세 경계를 잠시 격리한 뒤 끝에서 정확히 복원한다.
+     */
+    const siblingWalls = (await page.evaluate(`(() => {
+      const h = window.__kairo, dirs = [0, 2, 3];
+      const saved = dirs.map((dir) => ({ dir: dir, kind: h.walls.edgeAt(${wi}, ${wj}, dir) }));
+      for (const edge of saved) h.walls.setEdge(${wi}, ${wj}, edge.dir, 0);
+      h.scene.refreshWall(${wi}, ${wj});
+      return saved;
+    })()`)) as Array<{ dir: number; kind: number }>;
+    await page.waitForTimeout(220);
+
+    const wallProbeKey = '__qa/wall-depth-probe';
+    const setWallProbe = `(() => {
+      const h = window.__kairo, sc = h.scene;
+      const key = (${wj} * h.terrain.width + ${wi}) * 4 + 1;
+      const img = sc.wallImages.get(key);
+      if (!img) return false;
+      if (!sc.textures.exists('${wallProbeKey}')) {
+        const probe = sc.textures.createCanvas('${wallProbeKey}', 96, 72);
+        const ctx = probe.getContext();
+        ctx.fillStyle = '#20d0f0';
+        ctx.fillRect(0, 0, 96, 72);
+        probe.refresh();
+      }
+      img.setTexture('${wallProbeKey}');
+      return true;
+    })()`;
+    const wallProbeReady = (await page.evaluate(setWallProbe)) as boolean;
+    if (!wallProbeReady) throw new Error('깊이 검증용 앞벽 이미지를 못 찾았다');
+    await page.waitForTimeout(220);
 
     // B — 벽만 (부팅 때 만들어진 그대로)
     await page.waitForTimeout(220);
@@ -3640,24 +3329,44 @@ async function main(): Promise<void> {
     await page.waitForTimeout(220);
     const noWall = (await page.evaluate(sampleWall)) as string;
     // 벽을 되돌린다 — 이 이미지가 시설보다 **먼저** 존재해야 한다
-    await page.evaluate(setWall(inWallPick.kind));
+    await page.evaluate(setWall(inWall.kind));
+    await page.evaluate(setWallProbe);
     await page.waitForTimeout(220);
 
     // C — 벽 + 시설
     const placedIn = (await page.evaluate(`(() => {
       const h = window.__kairo, sc = h.scene;
-      const r = h.placement.place(h.terrain, h.walls, h.gate, '${inWallPick.def}', ${inWallPick.oi}, ${wj});
+      const r = h.placement.place(h.terrain, h.walls, h.gate, '${inWall.def}', ${inWall.oi}, ${wj});
       if (!r.ok || !r.placed) return { ok: false, why: String(r.fail) };
       sc.refreshFacility(r.placed.handle);
+      /*
+       * 채택된 AI 그림은 방향마다 실루엣지가 달라 벽과 불투명 픽셀이 우연히 안 겹칠 수 있다.
+       * 깊이 검사의 목적은 그림 모양이 아니라 **실제 시설 이미지 오브젝트와 벽의 Z 경쟁**이다.
+       * 따라서 같은 이미지 오브젝트·위치·앵커·깊이를 유지한 채, 이 절에서만 벽 경계를
+       * 확실히 가로지를 만큼 넓은 불투명 probe를 씌운다. probe가 없으면 그림 여백 변화만으로 검사가
+       * 무효(overlap 0)가 되어 깊이 회귀를 보지 못한다.
+       */
+      const img = sc.facilityImageAt(r.placed.handle);
+      const src = img.texture.getSourceImage();
+      const probeKey = '__qa/facility-wall-depth-probe';
+      if (sc.textures.exists(probeKey)) sc.textures.remove(probeKey);
+      const probe = sc.textures.createCanvas(probeKey, src.width * 3, src.height * 2);
+      const ctx = probe.getContext();
+      ctx.clearRect(0, 0, src.width * 3, src.height * 2);
+      ctx.fillStyle = '#f020d0';
+      ctx.fillRect(0, 0, src.width * 3, src.height * 2);
+      probe.refresh();
+      img.setTexture(probeKey);
       return {
         ok: true,
         handle: r.placed.handle,
+        probeKey: probeKey,
         facDepth: sc.facilityImageAt(r.placed.handle).depth,
         wallDepth: sc.wallDepthAt(${wi}, ${wj}, 1),
       };
     })()`)) as
       | { ok: false; why: string }
-      | { ok: true; handle: number; facDepth: number; wallDepth: number };
+      | { ok: true; handle: number; probeKey: string; facDepth: number; wallDepth: number };
 
     if (!placedIn.ok) {
       record('★ 실내 시설이 벽 안에 있다 (K37)', 'fail', `시설을 못 놓았다: ${placedIn.why}`);
@@ -3690,7 +3399,7 @@ async function main(): Promise<void> {
       record(
         '깊이 검사가 유효하다 (벽과 시설이 실제로 같은 픽셀을 다투나)',
         overlap >= 15 ? 'pass' : 'fail',
-        `타일 ${wi},${wj} · ${inWallPick.def} · 다투는 픽셀 ${overlap}/${n}`,
+        `타일 ${wi},${wj} · ${inWall.def} · 다투는 픽셀 ${overlap}/${n}`,
       );
       // ② 그 자리에서 벽이 이긴다
       /*
@@ -3716,7 +3425,12 @@ async function main(): Promise<void> {
         const h = window.__kairo;
         h.placement.remove(${placedIn.handle});
         h.scene.refreshFacility(${placedIn.handle});
-        h.walls.setEdge(${wi}, ${wj}, 1, ${inWallPick.kind});
+        if (h.scene.textures.exists('${placedIn.probeKey}')) h.scene.textures.remove('${placedIn.probeKey}');
+        if (h.scene.textures.exists('${wallProbeKey}')) h.scene.textures.remove('${wallProbeKey}');
+        h.walls.setEdge(${wi}, ${wj}, 1, ${inWall.kind});
+        for (const edge of ${JSON.stringify(siblingWalls)}) {
+          h.walls.setEdge(${wi}, ${wj}, edge.dir, edge.kind);
+        }
         h.scene.refreshWall(${wi}, ${wj});
         h.scene.setAutoTick(true);
       })()`);
@@ -5871,17 +5585,10 @@ async function main(): Promise<void> {
    * 그리고 **적합도 배지가 붙는지**를 본다 (19×6 표를 읽히지 않는 것이 §B 의 요지다).
    */
   const courseUi = (await page.evaluate(`(() => {
-    /*
-     * P1 — 코스는 밴드의 자기 칸이고 항목이 하나라 화면을 안 끼운다.
-     * 밴드를 펴고 그 칸을 누른다. 첫 주에는 잠겨 있을 수 있어(진행으로 열린다)
-     * 그때는 홈의 즉시 목표(같은 행동)로 간다.
-     */
+    // K28: 열기 버튼은 메뉴 시트 안이다 — 먼저 시트를 연다
     document.getElementById('kairo-menu-open').click();
-    const cell = document.querySelector('[data-band-cell="course"]');
-    const open = cell && cell.dataset.bandLocked === 'off'
-      ? cell
-      : document.querySelector('#kairo-goal [data-goal-role="immediate"]');
-    if (!open) return { ok: false, why: '코스 입구가 없다' };
+    const open = document.getElementById('kairo-course-open');
+    if (!open) return { ok: false, why: '코스 버튼이 없다' };
     open.click();
     const panel = document.getElementById('kairo-course');
     if (!panel || panel.hidden) return { ok: false, why: '코스 패널이 안 열린다' };
@@ -5936,17 +5643,11 @@ async function main(): Promise<void> {
   );
   /*
    * K33: 접힘이 기본이다. 예전 패널은 열자마자 화면의 **49%** 를 먹어서 핸들을 끌 자리가
-   * 안 남았다. 접힘 ≤16% 는 HUD 에 쓰는 것과 같은 자다.
-   *
-   * ⚠ 문턱이 **14% → 16%** 로 바뀌었다 (P8). 값이 나빠진 것이 아니라 **정직해졌다** —
-   * 옛 14% 는 `--course-dock-cap: 112px` 에서 나온 수인데, 그 천장이 자연 높이 126 을
-   * 잘라 내고 있었고 잘린 만큼은 `overflow: visible` 로 **상자 밖에 그대로 그려지고 있었다.**
-   * 즉 화면이 먹는 픽셀은 처음부터 126(15%)이었고 상자만 112 라고 말하고 있었다.
-   * 진짜 계약인 **조작 지도 ≥ 620px** 은 그대로다 (실측 725px).
+   * 안 남았다. 접힘 ≤14% 는 HUD 에 쓰는 것과 같은 자다.
    */
   record(
-    '★ 코스 패널은 접힘이 기본 — 화면의 16% 이하 (예전 49%)',
-    (courseUi.collapsedH ?? 999) / (courseUi.vh ?? 1) <= 0.16 ? 'pass' : 'fail',
+    '★ 코스 패널은 접힘이 기본 — 화면의 14% 이하 (예전 49%)',
+    (courseUi.collapsedH ?? 999) / (courseUi.vh ?? 1) <= 0.14 ? 'pass' : 'fail',
     `접힘 ${Math.round(((courseUi.collapsedH ?? 0) / (courseUi.vh ?? 1)) * 100)}% · ` +
       `펼침 ${Math.round(((courseUi.expandedH ?? 0) / (courseUi.vh ?? 1)) * 100)}%`,
   );
@@ -5971,13 +5672,6 @@ async function main(): Promise<void> {
      * create context를 명시한다. info에서 test 확정을 직접 부르면 production UI에는 없는
      * "기존 코스를 제외하고 같은 dock에 새 코스 추가" 경로가 생겨 뒤 절 전체를 오염시킨다.
      */
-    /*
-     * ⚠ 장비 소유는 P3 부터 전제 조건이다 — 새 판은 물려받은 peanut 하나만 갖는다.
-     * 이 절이 재는 것은 코스 기하이지 상점이 아니므로, 사람이 상점에서 사 온 뒤의
-     * 상태를 셋업으로 만든다 (현금을 earn 으로 채우는 것과 같은 자리다).
-     * 게이트 자체는 위 상점 절과 단위 검사가 따로 잰다.
-     */
-    for (const eq of api.COURSE_EQUIPMENT) h.courses.grantEquipment(eq.id);
     const takenBefore = h.courses.all.map((course) => course.dock.x + ',' + course.dock.y);
     panel.hide();
     panel.show();
@@ -6250,8 +5944,7 @@ async function main(): Promise<void> {
       if (!pick) return null;
       h.scene.focusTile(pick.x, pick.y, 160);
       const r = h.scene.tileScreenRect(pick.x, pick.y);
-      // Q10 — dockMarks 항목에 claim 이 붙는다: 비교 대상은 좌표뿐이다
-      return { x: Math.round(cr.left + (r.x + 16) * sx), y: Math.round(cr.top + (r.y + 8) * sy), tile: { x: pick.x, y: pick.y } };
+      return { x: Math.round(cr.left + (r.x + 16) * sx), y: Math.round(cr.top + (r.y + 8) * sy), tile: pick };
     })()`)) as { x: number; y: number; tile: { x: number; y: number } } | null;
     if (other === null) {
       record('선착장을 탭하면 코스가 그쪽으로 옮겨진다 (K33)', 'fail', '다른 후보가 없다');
@@ -6279,8 +5972,6 @@ async function main(): Promise<void> {
      */
     h.coursePanel.hide();
     h.coursePanel.show();
-    // 장비 소유는 P3 부터 전제 조건이다 — 이 절은 코스 기하를 잰다 (위 셋업과 같은 이유)
-    for (const eq of h.courseApi.COURSE_EQUIPMENT) h.courses.grantEquipment(eq.id);
     h.coursePanel.select('shuttle', 'banana');
     // 물 위로 핸들을 옮겨 유효하게 만든다 (여기서는 확정 경로만 본다)
     const t = h.terrain, st = h.coursePanel.state;
@@ -6294,13 +5985,6 @@ async function main(): Promise<void> {
     // 스친다 (실측). 넉넉히 10을 띄운다
     const farFromCourses = (i, j) =>
       occupied.every((o) => Math.abs(i - o.x) + Math.abs(j - o.y) > 10);
-    // Q10 — 루트는 물 위 시설을 못 지난다 (route-blocked). 이 절이 앞에서 놓은
-    // 선착장·잔교 칸을 핸들 후보에서 빼야 확정이 열린다 — 사람도 그렇게 그린다.
-    // 곡선 표본이 스치지 않게 시설에서 2칸 띄운다. (주석에 백틱 금지 — 템플릿 안이다)
-    const waterFacilities = [];
-    for (const it of h.placement.all()) waterFacilities.push({ x: it.i, y: it.j });
-    const farFromFacilities = (i, j) =>
-      waterFacilities.every((o) => Math.abs(i - o.x) + Math.abs(j - o.y) > 2);
     const water = [];
     for (let j = 1; j < 60 && water.length < st.handles.length; j++) {
       for (let i = 1; i < 90; i++) {
@@ -6309,7 +5993,6 @@ async function main(): Promise<void> {
         // 상한 11 — far-from-dock 이 유클리드 12 (DOCK_REACH_TILES+8) 라서, 맨해튼 11 이면 안전
         if (d < 3 || d > 11) continue;
         if (!farFromCourses(i, j)) continue;
-        if (!farFromFacilities(i, j)) continue;
         water.push({ i: i, j: j });
         break;
       }
@@ -6409,13 +6092,7 @@ async function main(): Promise<void> {
     const sx = cr.width / cv.width, sy = cr.height / cv.height;
     const used = {};
     for (const c of h.courses.all) used[c.dock.x + ',' + c.dock.y] = 1;
-    // Q10 — tip 은 선착장 칸이고 코스 dock 은 잔교 끝일 수 있다: claim 영역으로 찾는다
-    const pick = h.scene.dockMarks.find((m) =>
-      (m.claim || [{ x: m.x, y: m.y }]).some((c) =>
-        Object.keys(used).some((k) => {
-          const [ux, uy] = k.split(',').map(Number);
-          return Math.abs(ux - c.x) <= 1 && Math.abs(uy - c.y) <= 1;
-        })));
+    const pick = h.scene.dockMarks.find((m) => used[m.x + ',' + m.y]);
     if (!pick) return null;
     h.scene.focusTile(pick.x, pick.y, 160);
     const r = h.scene.tileScreenRect(pick.x, pick.y);
@@ -6426,93 +6103,6 @@ async function main(): Promise<void> {
   } else {
     await page.touchscreen.tap(takenTap.x, takenTap.y);
     await page.waitForTimeout(400);
-    /*
-     * -- 코스 화면이 화면 밖으로 안 샌다 ------------------------------------
-     *
-     * 자가 없어서 세 가지가 동시에 새고 있었다 (사용자 스크린샷, 2026-08-27):
-     * · 프리셋·장비 줄이 `flex: 0 0 auto` 라 **줄어들지 않아** 377px 줄 안에서 450px 로
-     *   벌어졌다 -- 칩이 화면 밖 566px 까지 나갔다
-     * · 패널이 `bottom: 56px` 라 티커(74~100)를 통째로 덮었다
-     * · 제목·거절 이유가 세로 flex 에서 높이 0/12px 로 눌렸다
-     *
-     * 셋 다 「좌표를 안 재서」 통과하고 있었다. 이제 **스크롤 안쪽을 뺀 모든 블록**이
-     * 뷰포트와 패널 안에 있는지 잰다 -- 스크롤 컨테이너의 자식은 밖으로 나가는 것이 정상이다.
-     */
-    const courseFit = (await page.evaluate(`(() => {
-      const root = document.getElementById('kairo-course');
-      if (!root || root.hidden) return { ok: false, why: '코스 화면이 안 열렸다' };
-      const rb = root.getBoundingClientRect();
-      const all = [...root.querySelectorAll('*')];
-      const scrollers = new Set(all.filter((e) => getComputedStyle(e).overflowX === 'auto'));
-      const inScroller = (e) => {
-        let q = e.parentElement;
-        while (q && q !== root) { if (scrollers.has(q)) return true; q = q.parentElement; }
-        return false;
-      };
-      const leaks = all
-        .filter((e) => e.getBoundingClientRect().height > 0 && !inScroller(e))
-        .map((e) => {
-          const b = e.getBoundingClientRect();
-          return {
-            cls: String(e.className || e.tagName).split(' ')[0],
-            l: Math.round(b.left), r: Math.round(b.right), b2: Math.round(b.bottom),
-            // 바닥 넘침이 몇 px 인가 — 독 천장(course-dock-cap)을 넘으면 양수다
-            over: Math.round(b.bottom - rb.bottom),
-          };
-        })
-        .filter((x) => x.l < -1 || x.r > window.innerWidth + 1 || x.b2 > Math.round(rb.bottom) + 1);
-      const title = root.querySelector('.kcourse-title');
-      const th = title ? Math.round(title.getBoundingClientRect().height) : 0;
-      return {
-        ok: true, leaks: leaks.slice(0, 4), titleH: th,
-        bottom: Math.round(rb.bottom), vh: window.innerHeight,
-      };
-    })()`)) as {
-      ok: boolean;
-      why?: string;
-      leaks?: { cls: string; l: number; r: number; b2: number; over: number }[];
-      titleH?: number;
-      bottom?: number;
-      vh?: number;
-    };
-    /*
-     * -- 독의 천장이 내용을 안 자른다 --------------------------------------
-     *
-     * `.kcourse-dock` 은 max-height + overflow:visible 이라, 자연 높이가 천장을 넘으면
-     * 넘친 만큼이 상자 밖으로 샌다. CSS 주석이 그 상태를 **예언해 두었는데 아무도 재지
-     * 않아서**, 천장 112 가 자연 126 을 14px 자르는 상태로 오래 굳어 있었다.
-     * 여기서 천장을 잠시 풀어 자연 높이를 재고 되돌린다 (측정만, 상태를 안 남긴다).
-     */
-    const dockFit = (await page.evaluate(`(() => {
-      const d = document.querySelector('.kcourse-dock');
-      if (!d) return { ok: false, why: '독이 없다' };
-      const cap = Math.round(parseFloat(getComputedStyle(d).maxHeight) || 0);
-      const prev = d.style.maxHeight;
-      d.style.maxHeight = 'none';
-      const nat = Math.round(d.getBoundingClientRect().height);
-      d.style.maxHeight = prev;
-      return { ok: true, cap: cap, nat: nat };
-    })()`)) as { ok: boolean; why?: string; cap?: number; nat?: number };
-    record(
-      '★ 코스 독의 천장이 내용을 안 자른다 (자연 높이 <= max-height)',
-      dockFit.ok && (dockFit.nat ?? 1) <= (dockFit.cap ?? 0) ? 'pass' : 'fail',
-      dockFit.ok
-        ? `자연 ${String(dockFit.nat)}px · 천장 ${String(dockFit.cap)}px · ` +
-          `잘림 ${String(Math.max(0, (dockFit.nat ?? 0) - (dockFit.cap ?? 0)))}px`
-        : (dockFit.why ?? '실패'),
-    );
-
-    record(
-      '★ 코스 화면이 화면 밖으로 안 샌다 · 제목이 안 눌린다',
-      courseFit.ok && (courseFit.leaks ?? []).length === 0 && (courseFit.titleH ?? 0) >= 18
-        ? 'pass'
-        : 'fail',
-      courseFit.ok
-        ? `샘 ${(courseFit.leaks ?? []).map((x) => `${x.cls}(가로 ${x.l}..${x.r} · 바닥넘침 ${x.over})`).join(' ') || '없음'}` +
-          ` · 제목 ${String(courseFit.titleH)}px · 바닥 ${String(courseFit.bottom)}/${String(courseFit.vh)}`
-        : (courseFit.why ?? '실패'),
-    );
-
     const blocked = (await page.evaluate(`(() => {
       const h = window.__kairo;
       const why = document.querySelector('#kairo-course .kcourse-why');
@@ -6877,33 +6467,17 @@ async function main(): Promise<void> {
     const buttons = [...panel.querySelectorAll('.kairo-menu-ingredient')];
     return {
       visible: !panel.hidden,
-      ingredients: buttons.map((b) => b.dataset.kairoMenuIngredient),
-      facility: panel.dataset.facility ?? '',
+      ingredients: buttons.length,
       minTarget: buttons.length ? Math.min(...buttons.map((b) => Math.round(b.getBoundingClientRect().height))) : 0,
       slots: panel.querySelectorAll('.kairo-menu-slot').length
     };
-  })()`)) as {
-    visible: boolean; ingredients: string[]; facility: string; minTarget: number; slots: number;
-  };
-  /*
-   * ⚠ **개수가 아니라 정체로 잰다** (K47-② 규칙). 예전 판정은 `=== 6` 이었는데 P2 가
-   * 재료를 21종으로 늘리면서 그 숫자가 무엇을 뜻하는지 아무도 알 수 없게 됐다. 지금
-   * 재는 것은 「데이터가 좁힌 후보를 화면이 도로 넓히지 않는다」이고, 그 증거는
-   * **매점 재료가 있고 카페 재료가 없다**는 것이다.
-   */
-  const narrowed =
-    menuSurface.ingredients.includes('rice') &&
-    menuSurface.ingredients.includes('seaweed') &&
-    !menuSurface.ingredients.includes('milk') &&
-    !menuSurface.ingredients.includes('coffee');
+  })()`)) as { visible: boolean; ingredients: number; minTarget: number; slots: number };
   record(
     '★ 매점을 지도에서 터치하면 실제 메뉴 개발 표면이 열린다',
-    menuShop !== null && facilityMenuOpen && menuSurface.visible &&
-      menuSurface.facility === 'shop' && narrowed
+    menuShop !== null && facilityMenuOpen && menuSurface.visible && menuSurface.ingredients === 6
       ? 'pass'
       : 'fail',
-    `시설 ${menuSurface.facility} · 재료 ${menuSurface.ingredients.join(',')} · ` +
-      `슬롯 ${menuSurface.slots}개 · 최소 터치 ${menuSurface.minTarget}px`,
+    `재료 ${menuSurface.ingredients}종 · 슬롯 ${menuSurface.slots}개 · 최소 터치 ${menuSurface.minTarget}px`,
   );
   record(
     '메뉴 재료 터치 타겟은 44px 이상이다',
@@ -6912,10 +6486,8 @@ async function main(): Promise<void> {
   );
 
   if (facilityMenuOpen) {
-    // ⚠ `우유` 는 **카페 재료**다 (P2 의 `facilities` 좁히기) — 매점 칩에 없다.
-    // 매점에서 오답인 쌍으로 바꾼다: 얼음 + 면 은 어떤 매점 요리도 아니다.
     await page.locator('[data-kairo-menu-ingredient="ice"]').tap();
-    await page.locator('[data-kairo-menu-ingredient="noodle"]').tap();
+    await page.locator('[data-kairo-menu-ingredient="milk"]').tap();
     await page.locator('#kairo-menu-develop').tap();
     await page.waitForTimeout(120);
   }
@@ -6934,10 +6506,10 @@ async function main(): Promise<void> {
     `${menuFailed.text} · ${Math.round(Number(menuFailed.progress) * 100)}%`,
   );
 
-  // 선택 해제도 터치로: 얼음·면 → 쌀·김 = 김밥.
+  // 선택 해제도 터치로: 얼음·우유 → 쌀·김 = 김밥.
   if (facilityMenuOpen) {
     await page.locator('[data-kairo-menu-ingredient="ice"]').tap();
-    await page.locator('[data-kairo-menu-ingredient="noodle"]').tap();
+    await page.locator('[data-kairo-menu-ingredient="milk"]').tap();
     await page.locator('[data-kairo-menu-ingredient="rice"]').tap();
     await page.locator('[data-kairo-menu-ingredient="seaweed"]').tap();
     await page.locator('#kairo-menu-develop').tap();
@@ -6951,230 +6523,15 @@ async function main(): Promise<void> {
   }))()`)) as { result: string; text: string; mounted: string[]; saved: { discovered: string[] } } :
     { result: '', text: '', mounted: [], saved: { discovered: [] } };
   record(
-    '★ 정답 조합은 레시피를 발견한다',
+    '★ 정답 조합은 레시피를 발견하고 시설 슬롯에 즉시 장착한다',
     menuDiscovered.result === 'discovered' &&
+      menuDiscovered.mounted.includes('shop_gimbap') &&
       menuDiscovered.saved.discovered.includes('shop_gimbap')
       ? 'pass'
       : 'fail',
-    `${menuDiscovered.result} · 영구 발견 ${menuDiscovered.saved.discovered.length}종`,
+    `${menuDiscovered.result} · 장착 ${menuDiscovered.mounted.join(', ')} · 영구 발견 ${menuDiscovered.saved.discovered.length}종`,
   );
-
-  /*
-   * ── 요리 발견의 **회수와 교체 선택** (P2 · §2.6) ────────────────────────────
-   *
-   * ⚠ 여기가 예전에 **말없이 덮어쓰던** 자리다. 매점은 1단계라 칸이 하나뿐이고 시작
-   * 메뉴가 이미 들어 있으므로, 김밥을 발견하면 옛 코드는 캔음료를 묻지도 않고 지웠다.
-   * 지금은 사건 상자가 뜨고 **무엇과 바꿀지**를 묻는다.
-   *
-   * ⚠ 상자가 열리면 요리 시트는 배타 규칙에 밀려 닫힌다 — 그래서 아래는 시트가 아니라
-   * `#kairo-unlock` 을 읽는다.
-   */
-  const found = facilityMenuOpen ? (await page.evaluate(`(() => {
-    const box = document.getElementById('kairo-unlock');
-    const rows = [...box.querySelectorAll('.kevent-delta')];
-    return {
-      open: !box.hidden,
-      labels: rows.map((r) => r.dataset.deltaLabel),
-      finals: rows.map((r) => r.dataset.deltaFinal),
-      shown: rows.map((r) => r.querySelector('.kevent-delta-to').textContent),
-      choices: [...box.querySelectorAll('[data-celebration-action]')]
-        .map((b) => b.dataset.celebrationAction),
-      labelsText: [...box.querySelectorAll('[data-celebration-action]')]
-        .map((b) => b.textContent),
-      taps: [...box.querySelectorAll('[data-celebration-action]')]
-        .map((b) => Math.round(b.getBoundingClientRect().height)),
-      lab: !document.getElementById('kairo-menu-lab').hidden,
-      mounted: window.__kairo.placement.menuIdsOf(${menuShop?.handle ?? -1})
-    };
-  })()`)) as {
-    open: boolean; labels: string[]; finals: string[]; shown: string[];
-    choices: string[]; labelsText: string[]; taps: number[]; lab: boolean; mounted: string[];
-  } : {
-    open: false, labels: [], finals: [], shown: [], choices: [], labelsText: [], taps: [],
-    lab: false, mounted: [],
-  };
-  record(
-    '★ 발견은 회수 줄로 무엇이 얼마나 좋아졌는지 말한다 (§2.6)',
-    found.open && found.labels.join(',') === '가격,만족,손님층' &&
-      found.finals[0] === '₩1,200' && found.finals.every((v) => (v ?? '').length > 0)
-      ? 'pass'
-      : 'fail',
-    `${found.labels.join('·')} = ${found.finals.join(' / ')}`,
-  );
-  record(
-    '★ 칸이 차 있으면 말없이 안 덮어쓴다 — 무엇과 바꿀지 묻는다',
-    found.open && found.mounted.join(',') === 'shop_can_drink' &&
-      found.choices.some((id) => (id ?? '').startsWith('swap-')) &&
-      found.choices.includes('later')
-      ? 'pass'
-      : 'fail',
-    `장착 ${found.mounted.join(',')} · 선택지 ${found.labelsText.join(' | ')}`,
-  );
-  record(
-    '교체 선택지도 44px 이상이다',
-    found.taps.length > 0 && Math.min(...found.taps) >= 44 ? 'pass' : 'fail',
-    `${found.taps.join(',')}px`,
-  );
-
-  const swapId = found.choices.find((id) => (id ?? '').startsWith('swap-'));
-  if (swapId) {
-    await touchElement(page, cdp, `[data-celebration-action="${swapId}"]`);
-    await page.waitForTimeout(220);
-  }
-  const swapped = (await page.evaluate(`(() => ({
-    mounted: window.__kairo.placement.menuIdsOf(${menuShop?.handle ?? -1}),
-    lab: !document.getElementById('kairo-menu-lab').hidden,
-    box: !document.getElementById('kairo-unlock').hidden
-  }))()`)) as { mounted: string[]; lab: boolean; box: boolean };
-  record(
-    '★ 고른 칸만 바뀌고 요리 화면이 되돌아온다',
-    swapped.mounted.join(',') === 'shop_gimbap' && swapped.lab && !swapped.box ? 'pass' : 'fail',
-    `장착 ${swapped.mounted.join(',')} · 요리 화면 ${swapped.lab ? '열림' : '닫힘'}`,
-  );
-
-  /*
-   * ── 요리 화면은 시설에 안 매인다 (P2 · D8) ──────────────────────────────────
-   *
-   * 지도에서 매점을 찾아 탭하는 것이 유일한 입구였다. craft 가 5종이 되자 그건
-   * "어느 가게였더라"를 지도에서 헤매는 일이 됐다.
-   */
-  await page.evaluate(`(() => {
-    const lab = document.getElementById('kairo-menu-lab');
-    if (!lab.hidden) document.getElementById('kairo-menu-lab-close').click();
-    window.__kairo.openMenuLab(null);
-  })()`);
-  await page.waitForTimeout(200);
-  const kitchen = (await page.evaluate(`(() => {
-    const lab = document.getElementById('kairo-menu-lab');
-    const modes = [...lab.querySelectorAll('[data-menu-mode]')];
-    return {
-      open: !lab.hidden,
-      facility: lab.dataset.facility ?? '',
-      modes: modes.map((b) => b.dataset.menuMode),
-      modeTaps: modes.map((b) => Math.round(b.getBoundingClientRect().height)),
-      title: lab.querySelector('.ksheet-title').textContent
-    };
-  })()`)) as {
-    open: boolean; facility: string; modes: string[]; modeTaps: number[]; title: string;
-  };
-  record(
-    '★ 요리 화면은 시설을 안 고르고도 열린다 (D8)',
-    kitchen.open && kitchen.facility.length > 0 && kitchen.title === '요리' &&
-      kitchen.modes.join(',') === 'combine,enhance' &&
-      (kitchen.modeTaps.length > 0 ? Math.min(...kitchen.modeTaps) >= 44 : false)
-      ? 'pass'
-      : 'fail',
-    `${kitchen.title} · 시설 ${kitchen.facility} · 모드 ${kitchen.modes.join(',')} · ` +
-      `${kitchen.modeTaps.join(',')}px`,
-  );
-
-  /*
-   * 강화 — **가진 요리를 키운다.** 김밥은 계란을 더 넣으면 계란 김밥이 된다.
-   * ⚠ 진짜 터치로 한다: 칩 줄이 납작해져 좌표는 맞는데 터치가 안 먹는 종류의 버그가
-   * 이 프로젝트에 실제로 있었다 (P3-C④).
-   */
-  if (kitchen.open) {
-    /*
-     * ⚠ **Q4 부터 재료는 4종만 시작 해금이다** (`ice`·`seaweed`·`rice`·`noodle`).
-     * 이 절이 재려는 것은 「강화가 진짜 터치로 도나」이지 해금이 아니므로, 필요한 재료를
-     * **하네스가 먼저 푼다** (상태 준비는 하네스의 일이다). 안 하면 `egg` 칩이 DOM 에
-     * 아예 없어서 `scrollIntoViewIfNeeded` 가 30초 타임아웃으로 죽는다 (실측).
-     */
-    await page.evaluate(`(() => {
-      const h = window.__kairo;
-      for (const id of ['egg', 'rice', 'seaweed']) h.menus.unlockIngredient(id);
-      if (h.refreshQuests) h.refreshQuests();
-    })()`);
-    await page.waitForTimeout(120);
-    await touchElement(page, cdp, '[data-menu-mode="enhance"]');
-    await page.waitForTimeout(150);
-    await touchElement(page, cdp, '[data-menu-base="shop_gimbap"]');
-    await page.waitForTimeout(120);
-    await touchElement(page, cdp, '[data-kairo-menu-ingredient="egg"]');
-    await page.waitForTimeout(120);
-    await touchElement(page, cdp, '#kairo-menu-develop');
-    await page.waitForTimeout(260);
-  }
-  const grown = (await page.evaluate(`(() => {
-    const box = document.getElementById('kairo-unlock');
-    const rows = [...box.querySelectorAll('.kevent-delta')];
-    return {
-      open: !box.hidden,
-      kicker: box.querySelector('.kunlock-title').textContent,
-      name: box.querySelector('.kunlock-name').textContent,
-      labels: rows.map((r) => r.dataset.deltaLabel),
-      froms: rows.map((r) => r.querySelector('.kevent-delta-from')?.textContent ?? ''),
-      finals: rows.map((r) => r.dataset.deltaFinal),
-      known: window.__kairo.menus.toSnapshot().discovered.includes('shop_gimbap_egg')
-    };
-  })()`)) as {
-    open: boolean; kicker: string; name: string; labels: string[];
-    froms: string[]; finals: string[]; known: boolean;
-  };
-  record(
-    '★ 강화는 가진 요리를 키우고 회수 줄이 `전 → 후` 를 보여준다',
-    grown.known && grown.open && grown.kicker === '요리 강화' && grown.name === '계란 김밥' &&
-      grown.froms[0] === '1,200' && grown.finals[0] === '1,500'
-      ? 'pass'
-      : 'fail',
-    `${grown.kicker} ${grown.name} · ${grown.labels.join('·')} = ` +
-      `${grown.froms.join('/')} → ${grown.finals.join('/')}`,
-  );
-  /*
-   * ⚠ **첫 선택지를 누르면 안 된다.** 칸이 다 차 있으면 첫 선택지가 `…대신 걸기` 라
-   * 계란 김밥이 그 자리에 걸려 버리고, 그러면 바로 아래 대조군의 방아쇠(아직 아무 데도
-   * 안 걸린 요리)가 사라져 상자가 아예 안 열린다 — 실측으로 두 번 헛돌았다.
-   */
-  await page.evaluate(`(() => {
-    const box = document.getElementById('kairo-unlock');
-    if (box.hidden) return;
-    const later = box.querySelector('[data-celebration-action="later"]');
-    (later ?? box.querySelector('[data-celebration-action]')).click();
-  })()`);
-  await page.waitForTimeout(200);
-  await page.evaluate(`(() => {
-    const lab = document.getElementById('kairo-menu-lab');
-    if (!lab.hidden) document.getElementById('kairo-menu-lab-close').click();
-  })()`);
-  /*
-   * 음성 대조군 — 회수 줄을 비우면 위 두 절(「무엇이 얼마나」·「전 → 후」)이 무너져야 한다.
-   * 안 무너지면 그 절들은 델타가 아니라 상자의 다른 무엇을 재고 있는 것이다.
-   *
-   * ⚠ 방아쇠는 **아직 어디에도 안 걸린** 요리여야 한다. 방금 강화한 계란 김밥이 그렇고,
-   * 매점이 여럿이면 그 전부가 차 있어야 상자가 뜬다 (`autoEquipTarget` 이 빈 칸을 찾으면
-   * 묻지 않고 걸어서 상자 자체가 안 열린다 — 첫 시도가 정확히 그렇게 헛돌았다).
-   */
-  await page.evaluate(`window.__kairo.setCelebrationDeltaFaultForTest('empty')`);
-  const faultArmed = (await page.evaluate(`(() => {
-    const lab = document.getElementById('kairo-menu-lab');
-    if (lab.hidden) window.__kairo.openMenuLab(null);
-    return true;
-  })()`)) as boolean;
-  if (faultArmed) {
-    await page.waitForTimeout(180);
-    await page.locator('[data-recipe="shop_gimbap_egg"]').tap();
-    await page.waitForTimeout(240);
-  }
-  const faulted = (await page.evaluate(`(() => {
-    const box = document.getElementById('kairo-unlock');
-    return {
-      open: !box.hidden,
-      rows: box.querySelectorAll('.kevent-delta').length,
-      hidden: box.querySelector('.kevent-deltas').hidden
-    };
-  })()`)) as { open: boolean; rows: number; hidden: boolean };
-  record(
-    '⚠ 대조군 — 회수 줄을 비우면 그 절이 무너진다',
-    faulted.open && faulted.rows === 0 && faulted.hidden ? 'pass' : 'fail',
-    `상자 ${faulted.open ? '열림' : '닫힘'} · 줄 ${faulted.rows}개`,
-  );
-  await page.evaluate(`window.__kairo.setCelebrationDeltaFaultForTest(null)`);
-  if (faulted.open) await touchElement(page, cdp, '[data-celebration-action="later"]');
-  await page.waitForTimeout(180);
-  await page.evaluate(`(() => {
-    const lab = document.getElementById('kairo-menu-lab');
-    if (!lab.hidden) document.getElementById('kairo-menu-lab-close').click();
-  })()`);
+  if (facilityMenuOpen) await page.locator('#kairo-menu-lab-close').tap();
 
   /*
    * ── 8·직원 (§11) ──
@@ -7187,13 +6544,9 @@ async function main(): Promise<void> {
      * ⚠ UI v4 — 메뉴는 라우터라 직원은 운영 목적지 안이다. 목적지를 먼저 열지 않으면
      * 그 버튼의 rect 가 0×0 이라 44px 검사가 구조적으로 0px 를 읽는다.
      */
-    /*
-     * P1 — 직원은 밴드의 경영 화면 안이다. 그 칸은 첫 심사 통과(또는 5주차)에 열리므로
-     * 하네스는 화면을 직접 띄운다 — 잠금은 위 밴드 절이 따로 잰다.
-     */
     document.getElementById('kairo-menu-open').click();
-    window.__kairo.hud.showMenu();
-    window.__kairo.management.show('manage');
+    const route = document.querySelector('[data-manage-route="operations"]');
+    if (route) route.click();
     const open = document.getElementById('kairo-staff-open');
     if (!open) return { ok: false, why: '직원 버튼이 없다' };
     const openH = Math.round(open.getBoundingClientRect().height);
@@ -7205,26 +6558,16 @@ async function main(): Promise<void> {
     const rows = [...panel.querySelectorAll('div[data-role]')];
     const btns = [...panel.querySelectorAll('button[data-role]')];
     const heights = btns.map((b) => Math.round(b.getBoundingClientRect().height));
-    window.__kairo.week.earn(50000000);
     const before = window.__kairo.staff.total;
-    const queuedBefore = window.__kairo.commissions.pending.length;
-    /*
-     * P6 — **+ 는 구인 발주다.** 누르면 바로 안 늘고 1~2주 뒤에 온다.
-     * − 는 즉시다 (비대칭이 의도).
-     */
+    // + 를 세 번 눌러 실제로 고용되는지
     const plus = btns.filter((b) => b.dataset.delta === '1');
-    plus[0].click();
+    plus[0].click(); plus[1].click(); plus[1].click();
     const after = window.__kairo.staff.total;
-    const queued = window.__kairo.commissions.pending.length;
-    const minus = btns.filter((b) => b.dataset.delta === '-1');
-    minus[0].click();
-    const fired = window.__kairo.staff.total;
     const wage = window.__kairo.staff.weeklyWage();
     return {
       ok: true, openH: openH, rows: rows.length, btns: btns.length,
       minBtn: heights.length ? Math.min.apply(null, heights) : 0,
       before: before, after: after, wage: wage,
-      queuedBefore: queuedBefore, queued: queued, fired: fired,
       overflow: panel.scrollWidth > panel.clientWidth,
       text: panel.textContent.slice(0, 60)
     };
@@ -7238,9 +6581,6 @@ async function main(): Promise<void> {
     before?: number;
     after?: number;
     wage?: number;
-    queuedBefore?: number;
-    queued?: number;
-    fired?: number;
     overflow?: boolean;
   };
 
@@ -7265,11 +6605,9 @@ async function main(): Promise<void> {
     tabs.find((b) => b.dataset.manage === 'upgrade').click();
     const rows = [...panel.querySelectorAll('div[data-upgrade]')];
     const lvBefore = window.__kairo.placement.averageLevel();
-    // P5 — 목록은 **올리지 않고 데려간다**. 누르면 시설 상세 시트가 열려야 한다
-    const btn = rows.length ? rows[0].querySelector('button[data-upgrade-goto]') : null;
+    const btn = rows.length ? rows[0].querySelector('button') : null;
     const enabled = btn ? !btn.disabled : false;
-    if (btn) btn.click();
-    const opened = !document.getElementById('kairo-facility').hidden;
+    if (btn && !btn.disabled) btn.click();
     const lvAfter = window.__kairo.placement.averageLevel();
     // 원상복구 — 뒤 검사들이 정가를 기대한다
     tabs.find((b) => b.dataset.manage === 'price').click();
@@ -7278,7 +6616,7 @@ async function main(): Promise<void> {
     return {
       ok: true, tabs: tabs.length, sliderH: sliderH,
       priceBefore: before, priceAfter: after,
-      upgradeRows: rows.length, enabled: enabled, opened: opened,
+      upgradeRows: rows.length, enabled: enabled,
       lvBefore: lvBefore, lvAfter: lvAfter
     };
   })()`)) as {
@@ -7290,7 +6628,6 @@ async function main(): Promise<void> {
     priceAfter?: number;
     upgradeRows?: number;
     enabled?: boolean;
-    opened?: boolean;
     lvBefore?: number;
     lvAfter?: number;
   };
@@ -7305,20 +6642,14 @@ async function main(): Promise<void> {
     (manage.priceAfter ?? 1) > (manage.priceBefore ?? 1) ? 'pass' : 'fail',
     `${manage.priceBefore} → ${manage.priceAfter}`,
   );
-  /*
-   * ⚠ **P5 에서 계약이 바뀌었다.** 예전에는 이 목록이 직접 올렸는데, 그러면 상위 경계
-   * (강화품 검사)도 `guests.invalidate()` 도 건너뛰는 **두 번째 입구**가 된다.
-   * 이제 목록은 「어느 것부터?」를 보는 자리이고 누르면 **지도의 그 시설로 데려간다** —
-   * 실행 입구는 시설 상세 시트 하나다 (D9). 목록 자체는 안 지웠다.
-   */
   record(
-    '개선 목록이 뜨고 누르면 그 시설로 데려간다 — 실행 입구는 시트 하나 (P5)',
-    (manage.upgradeRows ?? 0) > 0 && manage.opened === true &&
-      (manage.lvAfter ?? 0) === (manage.lvBefore ?? 0)
+    '개선 목록이 뜨고 누르면 단계가 오른다 — 확장이 막힌 뒤의 성장 수단',
+    (manage.upgradeRows ?? 0) > 0 &&
+      (!manage.enabled || (manage.lvAfter ?? 0) > (manage.lvBefore ?? 0))
       ? 'pass'
       : 'fail',
-    `${manage.upgradeRows}개 · 시트 ${manage.opened ? '열림' : '안 열림'} · ` +
-      `평균 단계 ${(manage.lvBefore ?? 0).toFixed(2)} → ${(manage.lvAfter ?? 0).toFixed(2)} (안 오르는 것이 맞다)`,
+    `${manage.upgradeRows}개 · 평균 단계 ${(manage.lvBefore ?? 0).toFixed(2)} → ` +
+      `${(manage.lvAfter ?? 0).toFixed(2)}${manage.enabled ? '' : ' (현금 부족)'}`,
   );
 
   record(
@@ -7331,21 +6662,10 @@ async function main(): Promise<void> {
     (staffUi.openH ?? 0) >= 44 && (staffUi.minBtn ?? 0) >= 44 ? 'pass' : 'fail',
     `열기 ${staffUi.openH ?? 0}px · 증감 최소 ${staffUi.minBtn ?? 0}px`,
   );
-  /*
-   * ⚠ **P6 에서 계약이 바뀌었다.** 고용은 이제 **수배 큐를 지난다** — 누르면 바로 안 늘고
-   * 1~2주 뒤에 온다. 해고는 **즉시**다 (비대칭이 의도 — 고정비를 줄이는 결정에 지연을
-   * 걸면 비수기 감원이 벌이 된다).
-   */
   record(
-    '★ + 는 구인 발주이고 − 는 즉시다 — 비대칭이 의도다 (P6)',
-    (staffUi.after ?? 0) === (staffUi.before ?? 0) &&
-      (staffUi.queued ?? 0) === (staffUi.queuedBefore ?? 0) + 1 &&
-      (staffUi.fired ?? 0) === (staffUi.before ?? 0) - 1 &&
-      (staffUi.wage ?? 0) > 0
-      ? 'pass'
-      : 'fail',
-    `+ 뒤 ${staffUi.before} → ${staffUi.after}명(안 늘어야 한다) · ` +
-      `큐 ${staffUi.queuedBefore} → ${staffUi.queued} · − 뒤 ${staffUi.fired}명 · 주급 ${staffUi.wage}`,
+    '고용하면 인원과 주급이 오른다',
+    (staffUi.after ?? 0) === (staffUi.before ?? 0) + 3 && (staffUi.wage ?? 0) > 0 ? 'pass' : 'fail',
+    `${staffUi.before} → ${staffUi.after}명 · 주급 ${staffUi.wage}`,
   );
   record(
     '직원 시트가 가로로 안 넘친다',
@@ -7815,20 +7135,8 @@ async function main(): Promise<void> {
    * +3.1%p · 가로 +6.6%p)이 영구히 더해진다. 더 내리려면 칩 기둥을 손대야 하고
    * 그건 K40 계약이다 (칩 최대 3장으로 줄이면 세로 ~23 / 가로 ~35 까지 내려간다).
    */
-  /*
-   * ── P1: 예산의 뜻이 바뀌었다 ─────────────────────────────────────────────
-   *
-   * 옛 계약은 「HUD 가 화면의 24%(세로) / 36%(가로) 이하」였다. P1 이 **전용 목표
-   * 밴드 64px 를 없애고 하단 바에 합치면서** 세로 총량은 오히려 줄었지만, 상태 밴드
-   * 세 줄이 바를 56 → 64px 로 밀어 순 −56px 가 됐다.
-   *
-   * 세로 25% 는 그 결과다 — 전보다 **작은데** 옛 문턱 하나를 1%p 넘는다. 문턱을
-   * 그대로 두면 「좋아졌는데 빨간불」이 되므로 25 로 옮기고 **왜** 옮겼는지를 여기 남긴다.
-   * ⚠ 더 늘리지 말 것. 다음에 뭔가를 더하고 싶으면 밴드 안이 제자리인지 먼저 볼 것 —
-   * 밴드는 접혀 있어 예산을 안 먹는다.
-   */
   for (const [vw, vh, tag, budget] of [
-    [393, 852, '세로', 25],
+    [393, 852, '세로', 24],
     [852, 393, '가로', 36],
   ] as const) {
     const cx = await browser.newContext({
@@ -7867,7 +7175,7 @@ async function main(): Promise<void> {
       extra: string[];
     };
     record(
-      `${tag} — 상시 행동 표면 정체 3종 (MENU·즉시 목표·티커) · 각 44px`,
+      `${tag} — 상시 행동 표면 정체 4종 (메뉴·건설·즉시 목표·티커) · 각 44px`,
       identity.missing.length === 0 && identity.small.length === 0 && identity.extra.length === 0
         ? 'pass'
         : 'fail',
@@ -7886,16 +7194,7 @@ async function main(): Promise<void> {
       });
     };
 
-    /*
-     * 시트를 여는 것부터 진짜 터치다. `.click()`이면 덮인 버튼도 조용히 통과한다.
-     * P1 — `건설` 은 밴드 칸이므로 MENU 로 밴드를 먼저 편다 (사람과 같은 경로).
-     */
-    const menuBox = await pg.locator('#kairo-menu-open').boundingBox();
-    if (menuBox) {
-      await pg.touchscreen.tap(menuBox.x + menuBox.width / 2, menuBox.y + menuBox.height / 2);
-      await pg.waitForFunction(`document.getElementById('kairo-band').dataset.bandOpen === 'on'`);
-      await pg.waitForTimeout(200);
-    }
+    // 시트를 여는 것부터 진짜 터치다. `.click()`이면 덮인 버튼도 조용히 통과한다.
     const buildBox = await pg.locator('#kairo-build-open').boundingBox();
     if (buildBox) {
       await pg.touchscreen.tap(buildBox.x + buildBox.width / 2, buildBox.y + buildBox.height / 2);
@@ -8051,19 +7350,8 @@ async function main(): Promise<void> {
         legacy: !!document.querySelector('.kchipcol'),
         visible: !goal.hidden && goal.dataset.goalSurface === 'home',
         bandW: Math.round(band.width),
-        /*
-         * P1 — 상태 밴드는 하단 바 안에서 MENU 를 뺀 나머지를 쓴다. 전폭이 아니라
-         * 왼쪽 끝에 붙고 MENU 직전까지가 계약이고, 바 밖으로 넘치면 티커와 겹친다.
-         */
-        bandFillsBar: (() => {
-          const menu = document.getElementById('kairo-menu-open');
-          const barBox = document.getElementById('kairo-bar');
-          if (!menu || !barBox) return false;
-          const m = menu.getBoundingClientRect();
-          const b = barBox.getBoundingClientRect();
-          return band.left <= 8.5 && band.right >= m.left - 8.5 &&
-            band.top >= b.top - 0.5 && band.bottom <= b.bottom + 0.5;
-        })(),
+        bandFullWidth: band.left <= 8.5 && band.right >= window.innerWidth - 8.5,
+        bandCapped: Math.round(band.width) <= 377,
         sameRow: rows.length === 3 && rows.every((r) => r && Math.abs(r.top - rows[0].top) <= 1),
         primaryShare: ir ? ir.width / band.width : 0,
         belowHeader: band.top >= top.bottom,
@@ -8074,21 +7362,22 @@ async function main(): Promise<void> {
       legacy: boolean;
       visible: boolean;
       bandW: number;
-      bandFillsBar: boolean;
+      bandFullWidth: boolean;
+      bandCapped: boolean;
       sameRow: boolean;
       primaryShare: number;
       belowHeader: boolean;
       fits: boolean;
       minTap: number;
     };
-    const bandOk = goalGeom.bandFillsBar;
+    const bandOk = tag === '세로' ? goalGeom.bandFullWidth : goalGeom.bandCapped;
     /*
      * ⚠ UI v3·v4 — 밴드는 **현재 행동 한 줄**이 통째로 갖는다 (`primaryShare === 1`).
      * 옛 계약은 `A 약 60% · 같은 행에 B/C` 였는데, 그 20% 칸에서 B/C 라벨이 감춰지는
      * 것이 결함의 정체였다. 되돌리면 `primaryShare` 가 0.6 대로 떨어져 빨간불이 된다.
      */
     record(
-      `${tag} — ★ 홈 목표: 현재 행동 한 줄이 바 안 전부 · 제목 무잘림 · 44px`,
+      `${tag} — ★ 홈 목표: 현재 행동 한 줄이 밴드 전부 · 제목 무잘림 · 44px`,
       !goalGeom.legacy && goalGeom.visible && bandOk &&
         goalGeom.primaryShare >= 0.98 &&
         goalGeom.belowHeader && goalGeom.fits && goalGeom.minTap >= 44
@@ -8117,9 +7406,6 @@ async function main(): Promise<void> {
       undefined,
       { timeout: 15000 },
     );
-    // P1 — 건설은 밴드 칸이다. MENU 로 밴드를 먼저 편다
-    await pg.locator('#kairo-menu-open').click();
-    await pg.waitForFunction(`document.getElementById('kairo-band').dataset.bandOpen === 'on'`);
     await pg.locator('#kairo-build-open').click();
     const fallback = (await pg.evaluate(`(() => {
       const car = document.querySelector('#kairo-sheet .kcarousel');
@@ -8378,8 +7664,8 @@ async function main(): Promise<void> {
         `${String(r.previewCost)} · ${String(r.previewCheck)} · 스크린샷 kairo-build-confirm-phase4.png`,
     );
     record(
-      '회전 버튼은 자리만 잡혀 있다 (방향 스프라이트가 생기면 켠다)',
-      r.rotateDisabled === true ? 'pass' : 'fail',
+      '승인된 4방향 시설은 회전 버튼이 실제로 켜진다',
+      r.rotateDisabled === false ? 'pass' : 'fail',
       `disabled ${String(r.rotateDisabled)}`,
     );
     await cx.close();
@@ -8535,13 +7821,8 @@ async function main(): Promise<void> {
       undefined,
       { timeout: 15000 },
     );
-    /*
-     * P1 — 재질은 **상시로 보이는 버튼**에서 잰다. `건설` 은 밴드 칸이 되어 평소 접혀
-     * 있으므로(투명·visibility hidden) 그 자리를 찍으면 지도 픽셀을 재게 된다 —
-     * 실측에서 위아래 밝기 차가 −1 로 나왔고, 그건 "평면"이 아니라 **아무것도 안 잰 것**이다.
-     */
     const box = (await pg.evaluate(`(() => {
-      const el = document.getElementById('kairo-menu-open');
+      const el = document.getElementById('kairo-build-open');
       if (!el) return null;
       const b = el.getBoundingClientRect();
       return { x: Math.round(b.x), y: Math.round(b.y),
@@ -8549,9 +7830,9 @@ async function main(): Promise<void> {
     })()`)) as { x: number; y: number; width: number; height: number } | null;
     if (!box) {
       // 대상이 없으면 clip 이 예외를 던져 런이 통째로 죽는다 — 정직하게 실패로 적는다
-      record('버튼이 평면이 아니다 — 위아래 밝기 차 (K29)', 'fail', '#kairo-menu-open 이 없다');
+      record('버튼이 평면이 아니다 — 위아래 밝기 차 (K29)', 'fail', '#kairo-build-open 이 없다');
       record('아웃라인이 위가 밝고 아래가 어둡다 — 빛은 위에서 (K46 재질 레시피)', 'fail',
-        '#kairo-menu-open 이 없다');
+        '#kairo-build-open 이 없다');
       await cx.close();
     } else {
       const shot = await pg.screenshot({ clip: box });
@@ -8925,7 +8206,7 @@ async function main(): Promise<void> {
     );
     record(
       '회전 뒤 버퍼가 새 방향으로 다시 잡힌다',
-      after.buf[0] === 852 && after.buf[1] === 393 && after.alive ? 'pass' : 'fail',
+      after.buf[0] === 852 * 2 && after.buf[1] === 393 * 2 && after.alive ? 'pass' : 'fail',
       `버퍼 ${after.buf.join('×')} · 루프 ${after.alive}`,
     );
     await cx.close();
@@ -9022,30 +8303,6 @@ async function main(): Promise<void> {
   }
 
   // 길 붓 — 한 칸씩 찍어서는 폰에서 길을 못 깐다 (K32-B)
-  /*
-   * ⚠ **앞 절이 연 것을 닫는다** (하네스 위생). 직원·개선 절이 경영 시트와 메뉴 밴드를
-   * 열어 둔 채 넘어가면 `kairo-build-open` 이 그 아래 깔려 `null` 이 된다 — 잔해 위에서
-   * 재면 원인을 알 수 없다.
-   */
-  await page.evaluate(`(() => {
-    for (const id of ['kairo-staff-close', 'kairo-manage-close', 'kairo-shop-close']) {
-      const b = document.getElementById(id);
-      if (b && b.offsetParent !== null) b.click();
-    }
-    /*
-     * ⚠ **축하 모달을 먼저 치운다** (P6). 수배가 완료되면 아침에 모달이 뜨는데 그건
-     * modal: true 라 **다른 패널을 아예 못 열게** 막는다 — 뒤 절의 건설 시트가
-     * 조용히 안 열리고 null.click() 으로 죽는다. 큐도 비워 다음 아침에 또 안 뜨게 한다.
-     */
-    const box = document.getElementById('kairo-unlock');
-    if (box && !box.hidden) {
-      const btn = box.querySelector('[data-celebration-action]');
-      if (btn) btn.click();
-    }
-    if (window.__kairo.arrivalQueue) window.__kairo.arrivalQueue.length = 0;
-  })()`);
-  await page.waitForTimeout(160);
-
   const roadBrush = (await page.evaluate(`(() => {
     const h = window.__kairo, t = h.terrain;
     document.getElementById('kairo-build-open').click();
@@ -9483,15 +8740,9 @@ async function main(): Promise<void> {
     const panel = h.coursePanel;
     h.week.cash = 500000000;
     const before = h.courses.count;
-    /*
-     * P1 — 코스는 항목이 하나인 그룹이라 **화면을 안 끼운다** (밴드 칸이 곧 입구).
-     * 그래서 옛 열기 버튼이 DOM 에 없다. 이 절이 재는 것은 진입 경로가 아니라
-     * 겹침 판정이므로 행동을 id 로 실행한다.
-     */
-    h.runAction('course');
+    document.getElementById('kairo-course-open').click();
     const tries = [];
     for (const eq of ['banana', 'peanut', 'jetski']) {
-      h.courses.grantEquipment(eq);
       panel.select('shuttle', eq);
       tries.push(panel.confirmForTest());
     }
@@ -10044,8 +9295,6 @@ async function main(): Promise<void> {
     g.width = cv.width; g.height = cv.height;
     const c = g.getContext('2d');
     c.drawImage(cv, 0, 0);
-    const sx = cv.width / cv.getBoundingClientRect().width;
-
     const img = S.tileImageForTest(TI, TJ);
     const src = img.texture.getSourceImage();
     const t = document.createElement('canvas');
@@ -10061,11 +9310,12 @@ async function main(): Promise<void> {
      * 배경이 지도를 덮었다면 이 창 어디에도 그 색이 없다.
      */
     let best = 1e9, got = '';
-    for (let dy = -3; dy <= 3; dy++) {
-      for (let dx = -3; dx <= 3; dx++) {
+    const D = Math.round(r.w / 32);
+    for (let dy = -3 * D; dy <= 3 * D; dy++) {
+      for (let dx = -3 * D; dx <= 3 * D; dx++) {
         const px = c.getImageData(
-          Math.round((r.x + 16 + dx) * sx),
-          Math.round((r.y + 8 + dy) * sx),
+          Math.round(r.x + r.w / 2 + dx),
+          Math.round(r.y + r.h / 2 + dy),
           1, 1,
         ).data;
         const d = Math.abs(px[0] - want[0]) + Math.abs(px[1] - want[1]) + Math.abs(px[2] - want[2]);
@@ -10130,9 +9380,6 @@ async function main(): Promise<void> {
     `${flowT1} → ${flowT2} (1.4초)`,
   );
 
-  // P1 — 건설은 밴드 칸이다. MENU 로 밴드를 먼저 편다 (사람과 같은 경로)
-  await page.click('#kairo-menu-open');
-  await page.waitForFunction(`document.getElementById('kairo-band').dataset.bandOpen === 'on'`);
   await page.click('#kairo-build-open'); // 진짜 클릭 — 시트가 열린다
   await page.waitForTimeout(300);
   const pauseT1 = (await page.evaluate(`window.__kairo.week.liveProgress().tick`)) as number;
@@ -10460,6 +9707,123 @@ async function main(): Promise<void> {
   }
 
   /*
+   * 4방향 시설의 이동 회전 — 새 배치의 ↻만 검사하면 이미 놓인 시설에서 콜백이 빠져도
+   * 전부 통과한다. 미리보기 회전은 원본을 바꾸지 않고, 취소는 d0을 보존하며, 확정만
+   * 선택한 d2를 새 위치에 저장해야 한다.
+   */
+  const moveRotateSetup = (await page.evaluate(`(() => {
+    const h = window.__kairo;
+    if (window.__kairoClearBrush) window.__kairoClearBrush();
+    h.flow.frozen = true;
+    h.week.earn(1000000);
+    if (!h.exam.toolsUnlocked) h.exam.passedCount = 1;
+    h.refreshBuildList();
+    const land = h.land();
+    let pad = null;
+    for (let j = land.j0 + 2; j < land.j0 + land.h - 4 && !pad; j++) {
+      for (let i = land.i0 + 2; i < land.i0 + land.w - 9 && !pad; i++) {
+        let clear = true;
+        for (let dj = 0; dj < 4 && clear; dj++) {
+          for (let di = 0; di < 9 && clear; di++) {
+            const ti = i + di, tj = j + dj;
+            if (h.terrain.isWater(ti, tj) || !h.terrain.isBuildable(ti, tj) ||
+                h.terrain.isIndoor(ti, tj) || h.placement.at(ti, tj)) clear = false;
+          }
+        }
+        if (clear) pad = { i: i, j: j };
+      }
+    }
+    if (!pad) return { ok: false, why: '4방향 이동용 빈 9×4를 못 찾았다' };
+    for (let dj = 0; dj < 4; dj++) {
+      for (let di = 0; di < 9; di++) {
+        h.terrain.paint(pad.i + di, pad.j + dj, 'path_stone');
+        h.scene.refreshTile(pad.i + di, pad.j + dj);
+      }
+    }
+    h.guests.invalidate();
+    const from = { i: pad.i + 1, j: pad.j + 1 };
+    const target = { i: pad.i + 6, j: pad.j + 1 };
+    const placed = h.placement.place(h.terrain, h.walls, h.gate, 'shop', from.i, from.j,
+      { facing: 0 });
+    if (!placed.ok || !placed.placed) {
+      return { ok: false, why: '매점을 못 놓았다: ' + placed.fail };
+    }
+    h.scene.refreshFacility(placed.placed.handle);
+    document.getElementById('kairo-build-open').click();
+    const move = document.querySelector('[data-pick="move:move"]');
+    if (!move) return { ok: false, why: '이동 카드가 없다' };
+    move.click();
+    h.tapTile(from.i, from.j);
+    h.tapTile(target.i, target.j);
+    const rot = document.getElementById('kairo-place-rotate');
+    return { ok: true, from: from, target: target, rotEnabled: !!rot && !rot.disabled };
+  })()`)) as
+    | { ok: false; why: string }
+    | { ok: true; from: { i: number; j: number }; target: { i: number; j: number }; rotEnabled: boolean };
+  if (!moveRotateSetup.ok) {
+    record('★ 이동 회전 — 4방향 시설의 취소·확정이 원자적이다', 'fail', moveRotateSetup.why);
+  } else {
+    await page.click('#kairo-place-rotate');
+    await page.waitForTimeout(150);
+    const preview = (await page.evaluate(`(() => {
+      const h = window.__kairo;
+      const original = h.placement.at(${moveRotateSetup.from.i}, ${moveRotateSetup.from.j});
+      const ghost = h.scene['ghost'];
+      return { originalFacing: original ? (original.facing || 0) : null,
+               ghostTexture: ghost && ghost.texture ? ghost.texture.key : '' };
+    })()`)) as { originalFacing: number | null; ghostTexture: string };
+    await page.click('#kairo-place-cancel');
+    await page.waitForTimeout(150);
+    const cancelledFacing = (await page.evaluate(`(() => {
+      const it = window.__kairo.placement.at(${moveRotateSetup.from.i}, ${moveRotateSetup.from.j});
+      return it ? (it.facing || 0) : null;
+    })()`)) as number | null;
+
+    // UI v3는 취소하면 붓까지 끝낸다. 이동 도구를 다시 골라 d2까지 돌려 확정한다.
+    await page.evaluate(`(() => {
+      const h = window.__kairo;
+      document.getElementById('kairo-build-open').click();
+      const move = document.querySelector('[data-pick="move:move"]');
+      if (move) move.click();
+      h.tapTile(${moveRotateSetup.from.i}, ${moveRotateSetup.from.j});
+      h.tapTile(${moveRotateSetup.target.i}, ${moveRotateSetup.target.j});
+    })()`);
+    await page.click('#kairo-place-rotate');
+    await page.click('#kairo-place-rotate');
+    await page.waitForTimeout(150);
+    await page.click('#kairo-place-confirm');
+    await page.waitForTimeout(200);
+    const moveRotateResult = (await page.evaluate(`(() => {
+      const h = window.__kairo;
+      const target = h.placement.at(${moveRotateSetup.target.i}, ${moveRotateSetup.target.j});
+      const old = h.placement.at(${moveRotateSetup.from.i}, ${moveRotateSetup.from.j});
+      const image = target ? h.scene['facilityImages'].get(target.handle) : null;
+      if (window.__kairoClearBrush) window.__kairoClearBrush();
+      return { targetDef: target ? target.defId : null,
+               targetFacing: target ? (target.facing || 0) : null,
+               oldDef: old ? old.defId : null,
+               texture: image && image.texture ? image.texture.key : '' };
+    })()`)) as {
+      targetDef: string | null;
+      targetFacing: number | null;
+      oldDef: string | null;
+      texture: string;
+    };
+    record(
+      '★ 이동 회전 — 4방향 시설은 취소 시 d0, 확정 시 선택한 d2로 놓인다',
+      moveRotateSetup.rotEnabled && preview.originalFacing === 0 &&
+        preview.ghostTexture === 'facility/shop:d1' && cancelledFacing === 0 &&
+        moveRotateResult.targetDef === 'shop' && moveRotateResult.targetFacing === 2 &&
+        moveRotateResult.oldDef === null && moveRotateResult.texture === 'facility/shop:d2'
+        ? 'pass'
+        : 'fail',
+      `미리보기 ${preview.ghostTexture} (원본 d${preview.originalFacing}) · ` +
+        `취소 d${cancelledFacing} · 확정 ${moveRotateResult.texture} ` +
+        `(facing ${moveRotateResult.targetFacing})`,
+    );
+  }
+
+  /*
    * ⚠ **`⏩ 주 스킵` 절은 K47-② 에서 통째로 지웠다.** 기능이 없어졌다 —
    * 첫 심사 보상은 이제 **이동 붓만**이고, `flow.weekSkipUnlocked`(세이브 `weekSkip`)
    * 도 함께 사라졌다. 스킵을 누르고 싶은 순간은 "할 게 없다"는 신호이므로 스킵으로
@@ -10687,27 +10051,9 @@ async function main(): Promise<void> {
      * 여기 안 잡혀 2가 유지되고, button 으로 만들어졌으면 3이 된다.
      * ⚠ K47-② 로 하루»·리포트·목표접기가 전부 빠져 기대값이 5 → **2** 가 됐다
      */
-    /*
-     * P1 — 크기만 보면 **안 보이는 버튼도 컨트롤로 센다.** 접힌 밴드의 일곱 칸이
-     * 정확히 그 형태다 (opacity 0 · pointer-events none 인데 rect 는 살아 있다).
-     * 보이지 않고 누를 수도 없는 것은 상시 컨트롤이 아니다 — 셋 다 본다.
-     */
     const ctrl = [...document.querySelectorAll('button, select, input, [role="button"]')].filter((b) => {
       const rr = b.getBoundingClientRect();
-      if (rr.width <= 2 || rr.height <= 2) return false;
-      const st = getComputedStyle(b);
-      /*
-       * 자기 자신이 안 눌리면 컨트롤이 아니다.
-       * 조상의 pointer-events none 은 보지 않는다 — 티커가 정확히 그 모양이다
-       * (띠는 탭을 안 먹고 가운데 hit surface 만 다시 켠다).
-       */
-      if (st.pointerEvents === 'none') return false;
-      for (let node = b; node; node = node.parentElement) {
-        const ns = getComputedStyle(node);
-        // 보이지 않는 것은 조상 때문이어도 컨트롤이 아니다 (접힌 밴드가 그 형태다)
-        if (Number(ns.opacity) === 0 || ns.visibility === 'hidden') return false;
-      }
-      return true;
+      return rr.width > 2 && rr.height > 2;
     });
     return {
       exists: !!strip,
@@ -10760,19 +10106,16 @@ async function main(): Promise<void> {
   );
   /*
    * ⚠ **개수가 아니라 정체다** (K47-② 「개수를 세는 검사는 조용히 죽는다」).
-   *
-   * P1 — `건설` 이 밴드 칸으로 옮겨 갔고 밴드는 평소 접혀 있다. 홈에서 **상시로** 보이는
-   * 역할 제어는 셋이다: `MENU` 토글 · 상태 밴드(다음 할 일) · 소식 띠.
-   * ⚠ 숫자(`=== N`)를 판정에 안 쓴다 — 이름이 다 있으면 통과다. 옛 `=== 6`·`=== 4` 가
-   * 정확히 IA 가 바뀔 때마다 죽던 형태다.
+   * 홈의 상시 역할 제어는 넷이다: 메뉴 · 건설 · 즉시 목표 밴드 · 소식 띠.
+   * 옛 `=== 6` 은 A/B/C 세 칩 시절 값이라 지금 구조에서는 **영원히 안 나온다.**
    */
   {
-    const wanted = ['kairo-menu-open', 'kgoal', 'kticker-hit'];
+    const wanted = ['kairo-menu-open', 'kairo-build-open', 'kgoal', 'kticker-hit'];
     const ids = String(tkSetup.controlIds ?? '');
     const missing = wanted.filter((name) => !ids.includes(name));
     record(
-      '상시 행동 감사가 role button을 포함한다 — MENU·즉시 목표·티커 (정체)',
-      missing.length === 0 ? 'pass' : 'fail',
+      '상시 행동 감사가 role button을 포함한다 — 메뉴·건설·즉시 목표·티커 (정체)',
+      missing.length === 0 && tkSetup.controls === 4 ? 'pass' : 'fail',
       `${tkSetup.controls}개 · ${ids}` + (missing.length ? ` · 없음 ${missing.join(',')}` : ''),
     );
   }
@@ -13970,7 +13313,7 @@ async function main(): Promise<void> {
       '아틀라스가 붙었다 — 하이브리드(아틀라스 우선 + 절차 폴백)',
       a.f.provider.indexOf('kairo-atlas') >= 0 ? 'pass' : 'info',
       `${a.f.provider} · 대조군 ${b.f.provider}` +
-        ` (129 중 일부는 ATLAS_HOLDOUT — 그림이 계약을 못 맞춘 종만 절차 유지. 이유는 그 표에)`,
+        ` (189 중 일부는 ATLAS_HOLDOUT — 그림이 계약을 못 맞춘 종만 절차 유지. 이유는 그 표에)`,
     );
     record(
       '★ 아틀라스 그림이 화면에 보인다 — 같은 판을 플레이스홀더로 띄우면 픽셀이 다르다 (Phase G)',
