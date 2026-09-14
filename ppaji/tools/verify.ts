@@ -1949,6 +1949,14 @@ async function main(): Promise<void> {
   page.on('console', (m) => { if (m.type() === 'error' && !m.text().includes('Failed to load resource')) errors.push(m.text()); });
   page.on('pageerror', (e) => errors.push(String(e)));
   const cdp = await ctx.newCDPSession(page);
+  if (process.argv.includes('--arrival-only')) {
+    await verifyApprovedArrival(page);
+    record('콘솔 에러 0', errors.length === 0 ? 'pass' : 'fail', errors.slice(0, 3).join(' | '));
+    await browser.close();
+    const fails = results.filter(r => r.verdict === 'fail');
+    console.log(fails.length ? `❌ ${fails.length} 실패` : `✅ ${results.length} 통과`);
+    process.exit(fails.length ? 1 : 0);
+  }
   // ⚠ addInitScript 로 localStorage 를 비우지 말 것 — 리로드마다 실행돼 세이브 왕복 검사가 빈 판을 읽는다. 첫 로드는 fresh=1 이 비운다
 
   const t0 = Date.now();

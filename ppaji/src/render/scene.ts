@@ -242,11 +242,12 @@ export class WaterparkScene extends Phaser.Scene {
   /** 단이 있는 칸의 텍스처 — 윗면 + 치마 한 장 (`<tileKey>|z<n>`), 없으면 구워 둔다 */
   private columnKey(code: FloorCode, isGate: boolean, i: number, j: number): string {
     const base = this.tileKey(code, isGate);
+    // Flat water/hall tiles also need lazy atlas frames before their first Image is created.
+    if (!this.textures.exists(base)) { const c0 = this.deps.provider.canvas(base); if (c0) this.textures.addCanvas(base, c0); }
     const z = this.noLiftForTest ? 0 : this.deps.grid.levelAt(i, j);
     if (z <= 0) return base;
     const key = `${base}|z${z}`;
     if (!this.textures.exists(key)) {
-      if (!this.textures.exists(base)) { const c0 = this.deps.provider.canvas(base); if (c0) this.textures.addCanvas(base, c0); }
       const top = this.deps.provider.canvas(base);
       if (top) this.textures.addCanvas(key, drawColumn(top, z));
       else return base;
