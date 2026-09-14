@@ -1,0 +1,461 @@
+[
+  {
+    "id": "calendar_y1_spring_pot",
+    "year": 1,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 1660,
+    "from": "president",
+    "title": "개업 첫날 — 서양식 화분",
+    "line": "첫날 영업 고생했어요. 서양식 화분을 보냈으니 풀 옆에 두면 꽃향이 납니다.",
+    "grant": {
+      "kind": "facility",
+      "id": "flower_pot"
+    }
+  },
+  {
+    "id": "calendar_day3",
+    "year": 1,
+    "season": 0,
+    "dayInSeason": 2,
+    "tick": 0,
+    "from": "president",
+    "title": "개업 축하 선물",
+    "line": "개업 사흘째군요. 손님이 배고프면 오래 못 놀아요 — 크레페 가게를 하나 보냈으니 풀 옆에 세워 보세요.",
+    "grant": {
+      "kind": "facility",
+      "id": "creperie"
+    }
+  },
+  {
+    "id": "calendar_y1_spring_weekend",
+    "year": 1,
+    "season": 0,
+    "dayInSeason": 3,
+    "tick": 0,
+    "from": "president",
+    "title": "첫 주말 — 튜브",
+    "line": "첫 주말이에요! 손님이 물 위에서 쉬라고 파란 링 튜브를 보냅니다. SNS 친구에게 선물해 보세요.",
+    "grant": {
+      "kind": "gift",
+      "id": "swim_ring"
+    }
+  },
+  {
+    "id": "calendar_y1_spring_chair",
+    "year": 1,
+    "season": 0,
+    "dayInSeason": 3,
+    "tick": 280,
+    "from": "president",
+    "title": "첫 주말 오전 — 비치체어",
+    "line": "주말 손님이 많죠? 창고에 있던 비치체어를 보냅니다. 풀 옆에 두면 손님이 눕고 갑니다.",
+    "grant": {
+      "kind": "facility",
+      "id": "beach_chair"
+    }
+  },
+  {
+    "id": "calendar_y1_summer_swimsuit",
+    "year": 1,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 540,
+    "from": "president",
+    "title": "여름 첫날 — 수영복",
+    "line": "여름이 왔어요. 학교 수영복을 보냈으니 친구에게 선물하면 만족이 오릅니다.",
+    "grant": {
+      "kind": "gift",
+      "id": "school_swimsuit"
+    }
+  },
+  {
+    "id": "calendar_y1_summer_shop",
+    "year": 1,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 560,
+    "from": "president",
+    "title": "펌킨 프로덕츠 개장",
+    "line": "오후 5시, 펌킨 프로덕츠가 문을 열었어요. 장식·라운지·놀이시설을 팔아요. 첫 장보기 하라고 1,000G 넣어 둡니다.",
+    "grant": {
+      "kind": "money",
+      "amount": 1000
+    }
+  },
+  {
+    "id": "calendar_y1_summer_fireworks",
+    "year": 1,
+    "season": 1,
+    "dayInSeason": 3,
+    "tick": 1540,
+    "from": "president",
+    "title": "여름 주말 불꽃놀이",
+    "line": "여름 주말 저녁엔 강변에서 불꽃놀이가 올라요. 손님들이 하늘을 보느라 더 머물 거예요. 구경값으로 500G!",
+    "grant": {
+      "kind": "money",
+      "amount": 500
+    },
+    "priority": "inbox"
+  },
+  {
+    "id": "calendar_y1_autumn_exam",
+    "year": 1,
+    "season": 2,
+    "dayInSeason": 0,
+    "tick": 0,
+    "from": "president",
+    "title": "가을 — 첫 심사 응원",
+    "line": "가을은 풀 심사의 계절이에요. 레몬을 넣으면 노란 풀에 시트러스 향 — 심사위원이 좋아합니다.",
+    "grant": {
+      "kind": "item",
+      "id": "lemon"
+    }
+  },
+  {
+    "id": "calendar_y1_autumn_move",
+    "year": 1,
+    "season": 2,
+    "dayInSeason": 3,
+    "tick": 0,
+    "from": "president",
+    "title": "이동 도구 선물",
+    "line": "첫 심사를 통과한 지 9일째군요! 이제 시설을 부수지 않고 옮길 수 있는 이동 도구를 드릴게요. 배치를 고쳐 보세요.",
+    "grant": {
+      "kind": "tool",
+      "id": "move"
+    },
+    "when": {
+      "kind": "certPasses",
+      "min": 1
+    },
+    "afterCertDays": 9
+  },
+  {
+    "id": "calendar_y1_winter_lights",
+    "year": 1,
+    "season": 3,
+    "dayInSeason": 0,
+    "tick": 1260,
+    "from": "president",
+    "title": "겨울 조명",
+    "line": "해가 짧아져서 저녁엔 파크에 조명을 켭니다. 얼음 덩어리도 보냈어요 — 겨울엔 차가운 풀도 인기예요.",
+    "grant": {
+      "kind": "item",
+      "id": "ice_block"
+    },
+    "priority": "inbox"
+  },
+  {
+    "id": "calendar_y2_spring_honey",
+    "year": 2,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "2년차 봄 — 사장 방문",
+    "line": "벌써 2년차네요. 올해부터 요리 개발이 열려요. 시골 친척이 꿀을 보내 왔으니 풀에 넣으면 쿠키 향이 나고 물이 따뜻해집니다.",
+    "grant": {
+      "kind": "item",
+      "id": "honey"
+    }
+  },
+  {
+    "id": "calendar_y2_summer_bonus",
+    "year": 2,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "여름 성수기 지원금",
+    "line": "여름은 풀장의 대목이죠. 본사에서 성수기 지원금 3,000G 를 내려보냈어요. 슬라이드 한 대 더 어때요?",
+    "grant": {
+      "kind": "money",
+      "amount": 3000
+    }
+  },
+  {
+    "id": "calendar_y2_autumn_flour",
+    "year": 2,
+    "season": 2,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "가을 — 밀가루",
+    "line": "요리 개발은 해 보셨나요? 밀가루를 보냅니다. 계란·우유와 섞으면 크레페가 될지도.",
+    "grant": {
+      "kind": "ingredient",
+      "id": "flour"
+    }
+  },
+  {
+    "id": "calendar_y2_winter_orca",
+    "year": 2,
+    "season": 3,
+    "dayInSeason": 3,
+    "tick": 280,
+    "from": "president",
+    "title": "겨울 주말 — 범고래 튜브",
+    "line": "연말 선물이에요. 파란 범고래 튜브 — 친구에게 주면 그걸 타고 떠다닐 거예요.",
+    "grant": {
+      "kind": "gift",
+      "id": "blue_orca"
+    }
+  },
+  {
+    "id": "calendar_y3_spring_lavender",
+    "year": 3,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "3년차 봄 — 사장 방문",
+    "line": "3년차 첫날이에요. 봄에는 플로럴 향이 인기라 라벤더를 보냅니다. 보라색 풀로 심사도 노려 보세요.",
+    "grant": {
+      "kind": "item",
+      "id": "lavender"
+    }
+  },
+  {
+    "id": "calendar_y3_summer_kairobot",
+    "year": 3,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "카이로봇이 왔다!",
+    "line": "★3 파크가 됐다고 카이로봇이 놀러 왔어요. 공연비 대신 3,000G 를 두고 갑니다 — 무대(공연 카이로봇)는 소원 보상으로 열려요.",
+    "grant": {
+      "kind": "money",
+      "amount": 3000
+    },
+    "when": {
+      "kind": "rank",
+      "min": 3
+    }
+  },
+  {
+    "id": "calendar_y3_autumn_bonus",
+    "year": 3,
+    "season": 2,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "가을 — 심사 지원금",
+    "line": "올가을 심사도 신청하세요. 준비 자금 5,000G 를 보냅니다.",
+    "grant": {
+      "kind": "money",
+      "amount": 5000
+    }
+  },
+  {
+    "id": "calendar_y4_spring_coffee",
+    "year": 4,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "4년차 봄 — 사장 방문",
+    "line": "4년차예요. 커피 원두를 보냅니다 — 풀에 넣으면 커피 향에 물이 따뜻해져요. 가을 인증에 좋습니다.",
+    "grant": {
+      "kind": "item",
+      "id": "coffee_beans"
+    }
+  },
+  {
+    "id": "calendar_y4_autumn_kayak",
+    "year": 4,
+    "season": 2,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "가을 — 카약 튜브",
+    "line": "단골 친구가 늘었죠? 카약 튜브를 보냅니다. 선물하면 ☆ 이 빨리 찹니다.",
+    "grant": {
+      "kind": "gift",
+      "id": "kayak_float"
+    }
+  },
+  {
+    "id": "calendar_y5_spring_bonus",
+    "year": 5,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "5년차 봄 — 사장 방문",
+    "line": "반환점이에요. 지원금 8,000G — 큰 슬라이드에 투자해 보세요.",
+    "grant": {
+      "kind": "money",
+      "amount": 8000
+    }
+  },
+  {
+    "id": "calendar_y5_autumn_cinnamon",
+    "year": 5,
+    "season": 2,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "가을 — 시나몬",
+    "line": "가을엔 향신료 향이 어울려요. 시나몬을 보냅니다.",
+    "grant": {
+      "kind": "item",
+      "id": "cinnamon"
+    }
+  },
+  {
+    "id": "calendar_y6_spring_bonus",
+    "year": 6,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "6년차 봄 — 사장 방문",
+    "line": "6년차. 지역 개방은 몇 곳이나 하셨나요? 지원금 10,000G 입니다.",
+    "grant": {
+      "kind": "money",
+      "amount": 10000
+    }
+  },
+  {
+    "id": "calendar_y7_spring_salt",
+    "year": 7,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "7년차 봄 — 사장 방문",
+    "line": "7년차예요. 입욕제를 보냅니다 — 40°C 스파 인증에 쓰세요.",
+    "grant": {
+      "kind": "item",
+      "id": "bath_salt"
+    }
+  },
+  {
+    "id": "calendar_y8_spring_final",
+    "year": 8,
+    "season": 0,
+    "dayInSeason": 0,
+    "tick": 280,
+    "from": "president",
+    "title": "마지막 해",
+    "line": "8년차 — 올겨울이 끝나면 본편이 끝납니다. 마지막 지원금 20,000G. 최고의 파크로 마무리해요.",
+    "grant": {
+      "kind": "money",
+      "amount": 20000
+    }
+  },
+  {
+    "id": "calendar_y3_winter_orange",
+    "year": 3,
+    "season": 3,
+    "dayInSeason": 0,
+    "tick": 280,
+    "title": "겨울 — 오렌지",
+    "line": "추운 계절엔 따뜻한 색이 인기예요. 오렌지를 보냅니다 — 주황 풀로 색채 심사도.",
+    "grant": {
+      "kind": "item",
+      "id": "orange"
+    },
+    "from": "president"
+  },
+  {
+    "id": "calendar_y4_summer_banana",
+    "year": 4,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 280,
+    "title": "여름 — 바나나",
+    "line": "트로피컬 향이 여름에 5점이에요. 바나나를 보냅니다.",
+    "grant": {
+      "kind": "item",
+      "id": "banana"
+    },
+    "from": "president"
+  },
+  {
+    "id": "calendar_y4_winter_seaweed",
+    "year": 4,
+    "season": 3,
+    "dayInSeason": 3,
+    "tick": 280,
+    "title": "겨울 주말 — 미역",
+    "line": "바다 향이 나는 미역이에요. 야자수 옆에 두면 열대의 향기 심사에 좋아요.",
+    "grant": {
+      "kind": "item",
+      "id": "seaweed"
+    },
+    "from": "president"
+  },
+  {
+    "id": "calendar_y5_summer_mint",
+    "year": 5,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 280,
+    "title": "여름 — 민트",
+    "line": "물을 시원하게 하는 민트예요. 여름 손님이 오래 놉니다.",
+    "grant": {
+      "kind": "item",
+      "id": "mint"
+    },
+    "from": "president"
+  },
+  {
+    "id": "calendar_y6_summer_grapes",
+    "year": 6,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 280,
+    "title": "여름 — 포도",
+    "line": "보라색 풀은 가을에 인기예요. 미리 포도를 보냅니다.",
+    "grant": {
+      "kind": "item",
+      "id": "grapes"
+    },
+    "from": "president"
+  },
+  {
+    "id": "calendar_y6_winter_milk",
+    "year": 6,
+    "season": 3,
+    "dayInSeason": 0,
+    "tick": 280,
+    "title": "겨울 — 우유",
+    "line": "우유를 넣으면 흰 풀에 우유 향 — 겨울에 4점이에요.",
+    "grant": {
+      "kind": "item",
+      "id": "milk"
+    },
+    "from": "president"
+  },
+  {
+    "id": "calendar_y7_summer_kiwi",
+    "year": 7,
+    "season": 1,
+    "dayInSeason": 0,
+    "tick": 280,
+    "title": "여름 — 키위",
+    "line": "라임색은 여름에 4점. 키위를 보냅니다.",
+    "grant": {
+      "kind": "item",
+      "id": "kiwi"
+    },
+    "from": "president"
+  },
+  {
+    "id": "calendar_y8_summer_final_gift",
+    "year": 8,
+    "season": 1,
+    "dayInSeason": 3,
+    "tick": 280,
+    "title": "마지막 여름 주말",
+    "line": "8년차 여름 주말 — 그동안 고마웠어요. 코코넛을 보냅니다. 남은 두 계절도 최고의 파크로.",
+    "grant": {
+      "kind": "item",
+      "id": "coconut"
+    },
+    "from": "president"
+  }
+]

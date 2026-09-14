@@ -266,7 +266,7 @@ export class KairoScene extends Phaser.Scene {
   private swimGfx: Phaser.GameObjects.Graphics[] = [];
 
   /** 선착장 후보 (K33) — 편집 중에만 채워진다 */
-  private dockTips: { x: number; y: number }[] = [];
+  private dockTips: { x: number; y: number; claim?: { x: number; y: number }[] }[] = [];
   private dockSelected = -1;
   /** 해금된 토지 경계선 (K25) */
   private landGfx: Phaser.GameObjects.Graphics | null = null;
@@ -2479,8 +2479,16 @@ export class KairoScene extends Phaser.Scene {
    * 예전엔 코드가 찾은 **첫 번째** 데크로 고정이라 플레이어가 못 골랐다. 카이로답게
    * 목록이 아니라 **화면에서 직접** 고르게 한다 — 그래서 후보가 지도에 보여야 한다.
    */
-  setDockChoices(tips: readonly { x: number; y: number }[], selected: number): void {
-    this.dockTips = tips.map((t) => ({ ...t }));
+  setDockChoices(
+    tips: readonly { x: number; y: number; claim?: { x: number; y: number }[] }[],
+    selected: number,
+  ): void {
+    // claim (Q10) — 하네스가 「이 후보에 코스가 있나」를 영역으로 재야 한다 (점 비교는 거짓말)
+    this.dockTips = tips.map((t) => ({
+      x: t.x,
+      y: t.y,
+      ...(t.claim === undefined ? {} : { claim: t.claim.map((c) => ({ ...c })) }),
+    }));
     this.dockSelected = selected;
     this.drawCourseOverlay();
   }
@@ -2489,7 +2497,7 @@ export class KairoScene extends Phaser.Scene {
   onCourseDockPick?: (index: number) => void;
 
   /** 지금 표시 중인 선착장 후보 — 검증용 */
-  get dockMarks(): { x: number; y: number }[] {
+  get dockMarks(): { x: number; y: number; claim?: { x: number; y: number }[] }[] {
     return this.dockTips.map((t) => ({ ...t }));
   }
 
@@ -3056,10 +3064,13 @@ export class KairoScene extends Phaser.Scene {
     v.face.setDepth(bodyDepth + faceGap);
     v.face.setVisible(shown && (facing === '+X' || facing === '+Z'));
 
-    // 이름 있는 단골은 일반 1,200명 에이전트와 구분되는 영구 하트 표식을 써다.
-    // 별도 렌더 상태를 저장하지 않고 sim의 `characterId`만 읽는다.
-    if ((g.characterId || g.emote) && shown) {
-      v.emote.setTexture('emote', `e_${g.characterId ? 'love' : g.emote}`);
+    /*
+     * ⚠ **렌더는 고르지 않는다** (P7). 예전에는 여기서 `characterId ? 'love' : g.emote` 로
+     * 직접 골랐고, 그래서 「누구에게 무엇이 뜨나」가 렌더 코드에 숨어 단위 검사가 못 쟀다.
+     * 이제 규칙은 sim (`assignMarks`) 이 갖고 여기는 `g.mark ?? g.emote` 를 그리기만 한다.
+     */
+    if ((g.mark || g.emote) && shown) {
+      v.emote.setTexture('emote', `e_${g.mark ?? g.emote}`);
       v.emote.setPosition(cx, cy - GUEST_H - 4);
       v.emote.setDepth(bodyDepth + emoteGap);
       v.emote.setVisible(true);
@@ -3267,6 +3278,16 @@ export class KairoScene extends Phaser.Scene {
     this.incomeFx ??= new IncomeFx((t) => playFx(this.fxHost(), 'income-pop', t));
     const now = this.time.now;
     for (const e of events) this.incomeFx.add(e.handle, e.i, e.j, e.amount, now);
+  }
+
+  /**
+   * 시설 개선이 적용된 순간의 연출 (P5) — **그 칸 위**에 뜬다.
+   *
+   * 모달은 「무엇이 얼마나」를, FX 는 「어디가」를 말한다 (§2.6 의 분업).
+   * ⚠ 등록부 계약대로 **이름만** 넘긴다 — 여기 tween 을 직접 쓰면 계약이 깨진 채 굳는다.
+   */
+  playUpgradeFx(i: number, j: number, text: string): void {
+    playFx(this.fxHost(), 'facility-upgrade', { i, j, text });
   }
 
   /** 화면에 떠 있는 수입 숫자의 수 — 하네스·검사가 읽는다 */

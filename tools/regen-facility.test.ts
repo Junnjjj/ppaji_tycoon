@@ -329,7 +329,7 @@ describe('재생성 루프가 광원을 판정에 넣는다', () => {
   });
 
   /*
-   * ⚠ 이 절이 4방향 1차가 밟은 함정을 고정한다 (`docs/asset-4dir-order.md` §0-2).
+   * ⚠ 이 절이 4방향 1차가 밟은 함정을 고정한다 (`docs/assets/history/prompt-chain-4dir-retrospective.md` §0-2).
    * 그 도구는 `좌상단` 만 통과로 쳐서, **자기 원본이 평탄한 시설**(arcade·slide_tube)에
    * 만족 불가능한 조건을 걸고 8장을 버렸다. 게임 게이트는 `평탄` 을 위반으로 안 센다.
    */

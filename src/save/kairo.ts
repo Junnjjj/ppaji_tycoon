@@ -17,6 +17,7 @@ import type { StaffCounts } from '../sim/kairo/staff.js';
 import type { CourseSnapshot } from '../sim/kairo/course.js';
 import type { DoorSnapshot } from '../sim/kairo/doors.js';
 import type { MenuSnapshot } from '../sim/kairo/menu.js';
+import type { CommissionSnapshot } from '../sim/kairo/commission.js';
 import { migrateOnboardingSnapshot, type OnboardingSnapshot } from '../sim/kairo/meta.js';
 
 /**
@@ -83,6 +84,8 @@ export interface KairoSaveV8 {
    */
   staff?: Partial<StaffCounts>;
   staffRngState?: number;
+  /** 수배 전용 스트림 (P4) — 없으면 판당 고정 seed 에서 fork 한다 (마이그레이션 없음) */
+  commissionRngState?: number;
   /**
    * 놓인 코스 — 장비값을 치르고 그린 것이라 안 저장하면 새로고침이 곧 전부 철거다.
    * `PlacedCourse.towBoatId?`는 v7 optional이다. 없으면 sim이 작업형을 파생하고 save는
@@ -166,6 +169,14 @@ export interface KairoSaveV8 {
   certs?: CertSnapshot;
   /** Phase 3 영구 재료·레시피·개발 힌트. 수량·재고는 없다. */
   menus?: MenuSnapshot;
+  /**
+   * 맡겨 둔 수배 (P4). **optional 이라 마이그레이션이 없다** — 없으면 빈 큐다.
+   *
+   * ⚠ **연출 큐(`arrivalQueue`)와 다르다.** 저건 세션 전용이고 이건 저장한다 —
+   * 2주짜리 수배가 리로드 한 번에 증발하면 안 된다. 효과는 due tick 에서 확정되고
+   * 연출만 아침 큐로 간다.
+   */
+  commissions?: CommissionSnapshot;
   /** Phase 7 실행형 온보딩. 잠금이 아니라 완료한 production 사건의 커서다. */
   onboarding: OnboardingSnapshot;
 }
@@ -363,6 +374,8 @@ export interface KairoSaveInput {
   cardRngState?: number;
   staff?: StaffCounts;
   staffRngState?: number;
+  /** 수배 전용 스트림 (P4) — 없으면 판당 고정 seed 에서 fork 한다 (마이그레이션 없음) */
+  commissionRngState?: number;
   courses?: CourseSnapshot;
   doors?: DoorSnapshot;
   discovered?: string[];
@@ -382,6 +395,7 @@ export interface KairoSaveInput {
   wishes?: WishSnapshot;
   certs?: CertSnapshot;
   menus?: MenuSnapshot;
+  commissions?: CommissionSnapshot;
   onboarding?: OnboardingSnapshot;
 }
 
@@ -404,6 +418,9 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.cardRngState !== undefined ? { cardRngState: input.cardRngState } : {}),
     ...(input.staff ? { staff: input.staff } : {}),
     ...(input.staffRngState !== undefined ? { staffRngState: input.staffRngState } : {}),
+    ...(input.commissionRngState !== undefined
+      ? { commissionRngState: input.commissionRngState }
+      : {}),
     ...(input.courses ? { courses: input.courses } : {}),
     ...(input.doors ? { doors: input.doors } : {}),
     ...(input.discovered ? { discovered: input.discovered } : {}),
@@ -426,6 +443,13 @@ export function packKairo(input: KairoSaveInput, nowMs: number): LatestKairoSave
     ...(input.certs ? { certs: input.certs } : {}),
     // 메뉴 개발 상태는 legacy optional. 시설별 장착은 placement.items에 있다.
     ...(input.menus ? { menus: input.menus } : {}),
+    /*
+     * ⚠ **비어 있으면 필드를 안 쓴다** — 아무것도 안 맡긴 판이 v7 과 바이트로 같아야 한다
+     * (`CourseSnapshot.owned` 와 같은 규칙).
+     */
+    ...(input.commissions && input.commissions.pending.length > 0
+      ? { commissions: input.commissions }
+      : {}),
     onboarding: input.onboarding ?? { version: 2, step: 'open-course' },
   };
 }
@@ -480,6 +504,10 @@ export interface KairoRestored {
   cardRngState: number;
   staff?: Partial<StaffCounts>;
   staffRngState: number;
+  /** 맡겨 둔 수배 (P4) — 없으면 빈 큐다 */
+  commissions?: CommissionSnapshot;
+  /** 없으면(구 세이브) 호출자가 판당 고정 seed 에서 fork 한다 */
+  commissionRngState?: number;
   courses?: CourseSnapshot;
   doors?: DoorSnapshot;
   discovered?: string[];
@@ -521,6 +549,10 @@ export function restoreKairo(raw: unknown): KairoRestored {
     cardRngState: s.cardRngState ?? 31337,
     ...(s.staff ? { staff: s.staff } : {}),
     staffRngState: s.staffRngState ?? 20260818,
+    ...(s.commissions ? { commissions: s.commissions } : {}),
+    ...(s.commissionRngState !== undefined
+      ? { commissionRngState: s.commissionRngState }
+      : {}),
     ...(s.courses ? { courses: s.courses } : {}),
     ...(s.doors ? { doors: s.doors } : {}),
     ...(s.discovered ? { discovered: s.discovered } : {}),

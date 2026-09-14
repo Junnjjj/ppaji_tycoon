@@ -1,0 +1,961 @@
+/* 픽셀 서체 — Galmuri11 (OFL, quiple/galmuri) 셀프호스트 (G29). 외부 요청 0 · 오프라인 OK */
+@font-face { font-family: 'Galmuri11'; src: url('/fonts/Galmuri11.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Galmuri11'; src: url('/fonts/Galmuri11-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   워터파크 스토리 HUD — 색·크기·재질은 전부 여기가 소유한다.
+   TS 에는 hex 가 0 이고(`tools/check-ui.mjs` S1), 캔버스는 `tokens.ts` 로 여기를 읽는다.
+   레퍼런스: art-reference/competitor/water-park-story-hud.png (세로) · park.jpg (가로)
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── 상단 띠 — 남색 반투명 두 조각, 노랑 픽셀 숫자 (실측) ── */
+  --strip-bg: rgb(18 38 92 / 82%);
+  --strip-ink: #ffffff;
+  --strip-num: #ffe45c;
+  --strip-sub: #9fd4ff;
+  --daypart: #c23fab; /* 실측 #d84cc0 은 흰 글씨 3.67:1 미달 — 한 단 어둡게 (4.57) */
+
+  /* ── 버튼 — 파란 그라디언트 + 흰 안쪽 하이라이트 + 남색 외곽 ── */
+  --btn-blue: linear-gradient(#3f80dc, #2452b8);
+  --btn-blue-press: linear-gradient(#2452b8, #1c3f92);
+  --btn-edge: #0e2a66;
+  --btn-hi: rgb(255 255 255 / 70%);
+  --btn-ink: #ffffff;
+  --btn-locked: #5a6f9a;
+
+  /* ── 창(크림) · 리스트 행 · 제목 띠 ── */
+  --win-bg: linear-gradient(#fbecc8, #f3d9a6);
+  --win-flat: #f7e2b7;
+  --win-border: #6b4720;
+  --win-title: linear-gradient(#6a58d4, #3b2f9c);
+  --win-title-blue: linear-gradient(#4a86e4, #2c58b8);
+  /* 창 색조 (G29) — SNS 분홍 · 상점 초록 · 결산 금색 */
+  --win-title-pink: #d9488f;
+  --ink-soft: #6b6f8a;
+  --win-title-green: #2f9e5b;
+  --win-title-gold: #c98a12;
+  --row-bg: #fbe4b8;
+  --row-edge: #b28244;
+  --row-on: #2b46d4;
+  --ink: #1c2a5c;
+  --ink-dim: #5a5230;
+  --scrim: rgb(10 20 50 / 45%);
+
+  /* ── 말풍선 · 티커 · 바 ── */
+  --bubble-bg: #ffffff;
+  --bubble-ink: #1a2a6a;
+  --ticker-bg: #ffd9e4;
+  --ticker-ink: #2246cc;
+  --bar-bg: rgb(18 38 92 / 88%);
+  --bar-line: rgb(255 255 255 / 25%);
+
+  /* ── 판정 · 표식 ── */
+  --good: #2f8a3a;
+  --warn: #b2660a;
+  --bad: #c9302c;
+  --like: #ef4f8a;
+  --stamp: #d63232;
+  --paper-bg: #f8f2df;
+  --paper-ink: #2a2118;
+  --paper-rule: #5a4632;
+  --badge: #e5322d;
+
+  /* ── 아이콘 팔레트 (icons.ts 가 읽는다) ── */
+  --icon-ink: #1c2a5c;
+  --icon-a: #ffd85a;
+  --icon-b: #3f80dc;
+  --icon-w: #ffffff;
+
+  /* ── 지형 타일 (assets/draw/tiles.ts 가 읽는다) ── */
+  --tile-sand: #e8d5a3;
+  --tile-sand-dot: #d9c28a;
+  --tile-sand-lt: #f3e6c0;
+  --tile-grass: #7ec850;
+  --tile-grass-dot: #5fae3a;
+  --tile-grass-lt: #a4e07a;
+  --tile-path: #dcd4c4;
+  --tile-path-dot: #bfb6a4;
+  --tile-path-lt: #efeadf;
+  --tile-indoor: #eae4d6;
+  --tile-indoor-dot: #d4cbb8;
+  --tile-pool: #d9edff;
+  --tile-pool-dot: #ffffff;
+  --tile-gate: #dcd4c4;
+  --tile-gate-dot: #bfb6a4;
+  --tile-gate-mark: #ffffff;
+  --tile-edge: #b9a77a;
+  --tile-edge-soft: #e0cb98;
+
+  /* ── FX (render/fx 가 읽는다) ── */
+  --fx-coin: #ffe45c;
+  --fx-stroke: #12265c;
+  --fx-ok: #ffffff;
+  --fx-bad: #ff5a5a;
+  --fx-star: #ffe45c;
+  --fx-heart: #ff5d8a;
+  --fx-dust: #e6d2a8;
+  --confetti-1: #ff5d5d;
+  --confetti-2: #ffd23f;
+  --confetti-3: #4fb84a;
+  --confetti-4: #3d7ee0;
+  /* 계절 연출 (G27) — 불꽃 4색 · 봄 꽃잎 · 가을 낙엽 2색 · 겨울 조명 · 겨울 저녁 틴트 */
+  --fw-1: #ff6b8a;
+  --fw-2: #ffd75e;
+  --fw-3: #6fd3ff;
+  --fw-4: #b58cff;
+  --petal: #ffb3cf;
+  --leaf-1: #d9782c;
+  --leaf-2: #a8552a;
+  --lamp-glow: #ffe08a;
+  --tint-winter-night: #1a2a6e;
+  --water-glint: #ffffff;
+  --water-foam: #ffffff;
+  --night: #1c2f66;
+  --dawn: #ffd39a;
+  --rain: #7fb0ff;
+  --snow: #ffffff;
+  --wall: #7fb8e6;
+  --wall-glass: #ffffff;
+  --grass-season-0: #d9ffb0;
+  --grass-season-1: #ffffff;
+  --grass-season-2: #ffd08a;
+  --grass-season-3: #e8f0f4;
+
+  /* ── 시설 절차 도형 (assets/draw/facility.ts) · 풀 색 틴트 (render/scene.ts) ── */
+  /* ── 도트 팔레트 (G14 — 카이로풍 픽셀 맵의 문자 → 색. draw/pix.ts 가 읽는다) ── */
+  --px-ink: #243055;
+  --px-white: #ffffff;
+  --px-cream: #fff3d6;
+  --px-red: #e8453c;
+  --px-red-lt: #ff8a7a;
+  --px-pink: #ff7fb8;
+  --px-pink-lt: #ffc2dd;
+  --px-orange: #ff9a3c;
+  --px-orange-lt: #ffc078;
+  --px-yellow: #ffd23f;
+  --px-yellow-lt: #fff09a;
+  --px-green: #4fb84a;
+  --px-green-lt: #8fe07a;
+  --px-green-dk: #2f7f3a;
+  --px-blue: #3d7ee0;
+  --px-blue-lt: #8cc4ff;
+  --px-blue-dk: #2452b8;
+  --px-water: #5fd0f0;
+  --px-water-lt: #b8ecff;
+  --px-purple: #9a6cf0;
+  --px-purple-lt: #d2bcff;
+  --px-wood: #a86a3c;
+  --px-wood-lt: #d9a06a;
+  --px-wood-dk: #6f4326;
+  --px-tan: #e6c98f;
+  --px-tan-lt: #f5e4bd;
+  --px-gray: #9aa3b2;
+  --px-gray-lt: #d5dbe6;
+  --px-gray-dk: #5c6675;
+  --px-gold: #e0b040;
+  --px-gold-lt: #ffe07a;
+  --px-black: #2b2b3a;
+  --px-aqua: #37c6b0;
+  --px-shadow: rgb(40 30 60 / 13%);
+  --px-red-dk: #a8261f;
+  --px-pink-dk: #c8478a;
+  --px-orange-dk: #c86a1a;
+  --px-yellow-dk: #d9a51a;
+  --px-purple-dk: #6a44b8;
+  --px-water-dk: #2f93c4;
+  --px-cream-dk: #e6d2a8;
+  --px-aqua-dk: #1f8f7e;
+  --px-gold-dk: #a67c1e;
+  --px-sky: #dff6ff;
+  --fac-outline: #1c2a5c;
+  --fac-shadow: #b7a37a;
+  --fac-white: #ffffff;
+  --fac-utility: #b9c3cc;
+  --fac-utility-lit: #e3e9ee;
+  --fac-utility-mark: #3f80dc;
+  --fac-lounging: #f2f2f2;
+  --fac-lounging-lit: #ffffff;
+  --fac-lounging-mark: #3f80dc;
+  --fac-restaurant: #e04848;
+  --fac-restaurant-lit: #ff8a6a;
+  --fac-restaurant-mark: #ffd85a;
+  --fac-attraction: #3f80dc;
+  --fac-attraction-lit: #7fb5f0;
+  --fac-attraction-mark: #ffd85a;
+  --fac-slide: #6fc6ff;
+  --fac-slide-lit: #b6e4ff;
+  --fac-slide-mark: #2452b8;
+  --fac-decor: #58c25a;
+  --fac-decor-lit: #9ae08c;
+  --fac-decor-mark: #2f8a3a;
+  --pool-clear: #a6dcff;
+  --pool-orange: #ffb070;
+  --pool-yellow: #fff08a;
+  --pool-lime: #d6ff8a;
+  --pool-green: #8fe0a0;
+  --pool-blue: #7fb0ff;
+  --pool-purple: #c9a0ff;
+  --pool-pink: #ffb0dc;
+  --pool-red: #ff8a8a;
+  --pool-white: #ffffff;
+  --pool-frost: #dff4ff;
+  --pool-coping: #f8f4e8;
+  --pool-coping-edge: #2f93c4;
+  --tile-pool-diamond: #eaf8ff;
+  --stage-bg: #3b2a7a;
+  --stage-light: rgb(255 236 170 / 0.55);
+  --stage-floor: rgb(255 214 120 / 0.45);
+  --stage-crowd: #1d1540;
+  --bar-hp: #58c25a;
+  --gauge-fill: #ffd23f;
+  --gauge-bg: #4a4a6a;
+  --bar-sat: #ff8ad0;
+  --result-good: #2f7f3a;
+  --result-bad: #c93c3c;
+  --scent-puff: #ffffff;
+  --steam: #ffffff;
+
+  /* ── 손님 팔레트 (assets/draw/guest.ts 가 읽는다) ── */
+  --guest-outline: #2a2140;
+  --guest-eye: #1a1630;
+  --guest-blush: #ff9fb0;
+  --guest-hair-lt: #ffffff;
+  --guest-suit-dk-0: #c93c3c;
+  --guest-suit-dk-1: #2a5cb0;
+  --guest-suit-dk-2: #d9a825;
+  --guest-suit-dk-3: #3a9040;
+  --guest-suit-dk-4: #d060a8;
+  --guest-suit-dk-5: #d47420;
+  --guest-suit-dk-6: #6a3fd0;
+  --guest-suit-dk-7: #cfd6e0;
+  --guest-skin-0: #f6d3b0;
+  --guest-skin-1: #e8b98d;
+  --guest-skin-2: #c98f62;
+  --guest-skin-3: #f9e0c8;
+  --guest-hair-0: #3a2a22;
+  --guest-hair-1: #7a4a2a;
+  --guest-hair-2: #1e2438;
+  --guest-hair-3: #d9a24a;
+  --guest-hair-4: #8c3b3b;
+  --guest-hair-grey: #b9bcc4;
+  /* 튜브 6종 (G26) · 오리 부리 · HP 배터리 */
+  --float-red: #e8483f;
+  --float-blue: #3f8fe8;
+  --float-yellow: #f5cf3a;
+  --float-white: #f6f4ee;
+  --float-orca: #23324a;
+  --float-kayak: #f2a531;
+  --float-beak: #f0902a;
+  --fx-hp: #ef3d3d;
+  /* 버스 (G33) */
+  --bus-body: #f5c400;
+  --bus-body-dk: #d39a00;
+  --bus-top: #3f6fd0;
+  --bus-window: #cfe9ff;
+  --bus-tire: #3a3a44;
+  --guest-suit-0: #ff5d5d;
+  --guest-suit-1: #3f80dc;
+  --guest-suit-2: #ffd85a;
+  --guest-suit-3: #58c25a;
+  --guest-suit-4: #ff8ad0;
+  --guest-suit-5: #ff9a3c;
+  --guest-suit-6: #8c5cf6;
+  --guest-suit-7: #ffffff;
+
+  /* ── 서체 · 스케일 (7단 · 12px 하한) ── */
+  --font-pixel-family: 'Galmuri11', 'DungGeunMo', ui-monospace, monospace;
+  --font-body: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
+  --fs-tiny: 12px;
+  --fs-cap: 13px;
+  --fs-body: 15px;
+  --fs-lead: 17px;
+  --fs-title: 19px;
+  --fs-big: 22px;
+  --fs-hero: 28px;
+
+  /* ── 크기 ── */
+  --tap: 44px;
+  --strip-h: 26px;
+  --square: 48px;
+  --ticker-h: 28px;
+  --bar-h: 64px;
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --row-index: 0;
+  --dur-micro: 120ms;
+  --dur-rise: 260ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+html, body { margin: 0; height: 100%; overflow: hidden; background: var(--tile-sand); }
+body { font-family: var(--font-body); color: var(--ink); -webkit-user-select: none; user-select: none; touch-action: none; }
+#game { position: fixed; inset: 0; overflow: hidden; }
+#game canvas { image-rendering: pixelated; display: block; }
+button { font-family: inherit; }
+
+/* ── 아이콘 — 등록부가 준 데이터 URL 을 배경으로. 크기·정렬은 여기가 소유 ── */
+.kicon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: var(--icon-art);
+  background-size: 100% 100%;
+  image-rendering: pixelated;
+  vertical-align: middle;
+}
+.kicon.lg { width: 24px; height: 24px; }
+
+/* ── 상단 띠 ── */
+#hud-top {
+  position: fixed;
+  top: calc(2px + var(--safe-t));
+  left: 0;
+  right: 0;
+  height: var(--strip-h);
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 6px;
+  padding: 0 4px;
+  pointer-events: none;
+  z-index: 10;
+}
+.kstrip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: var(--strip-bg);
+  color: var(--strip-ink);
+  font-family: var(--font-pixel-family);
+  font-size: var(--fs-cap);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+}
+.kstrip .num { color: var(--strip-num); font-weight: 700; }
+.kstrip .sub { color: var(--strip-sub); font-size: var(--fs-tiny); }
+.kstrip .daypart {
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--daypart);
+  color: var(--strip-ink);
+  font-size: var(--fs-tiny);
+  font-weight: 700;
+}
+
+/* ── 정사각 버튼 · 알약 버튼 — 카이로 재질 ── */
+.kbtn, .ksquare {
+  position: relative;
+  border: 2px solid var(--btn-edge);
+  border-radius: 8px;
+  background: var(--btn-blue);
+  color: var(--btn-ink);
+  box-shadow: inset 0 1px 0 var(--btn-hi), 0 2px 0 var(--btn-edge);
+  text-shadow: 0 1px 0 rgb(0 0 0 / 40%);
+  font-weight: 800;
+  font-size: var(--fs-body);
+  cursor: pointer;
+  transition: transform var(--dur-micro) var(--ease);
+}
+.kbtn { min-width: var(--tap); min-height: var(--tap); padding: 0 14px; border-radius: 999px; }
+.kbtn:active, .ksquare:active { background: var(--btn-blue-press); transform: translateY(1px); box-shadow: inset 0 2px 3px rgb(0 0 0 / 35%); }
+.ksquare {
+  width: var(--square);
+  height: var(--square);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 0;
+  font-size: var(--fs-tiny);
+}
+.ksquare[data-locked] { background: var(--btn-locked); }
+.ksquare .kbadge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--badge);
+  color: var(--btn-ink);
+  font-size: var(--fs-tiny);
+  line-height: 16px;
+  text-align: center;
+}
+.ksquare .kbadge[hidden] { display: none; }
+
+/* ── 우측 세로 열 ── */
+#hud-right {
+  position: fixed;
+  right: 4px;
+  top: calc(60px + var(--safe-t));
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+}
+
+/* ── 티커 (핑크) — 28px 띠, hit surface 44px ── */
+#hud-ticker {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--bar-h) + var(--safe-b));
+  height: var(--ticker-h);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  background: var(--ticker-bg);
+  color: var(--ticker-ink);
+  font-weight: 800;
+  font-size: var(--fs-cap);
+  white-space: nowrap;
+  overflow: hidden;
+  z-index: 10;
+}
+#hud-ticker::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc((var(--ticker-h) - var(--tap)) / 2);
+  height: var(--tap);
+}
+#hud-ticker .kportrait { width: 20px; height: 20px; border-radius: 4px; background: var(--btn-blue); border: 1px solid var(--btn-edge); flex: 0 0 auto; }
+
+/* ── 하단 바 ── */
+#hud-bottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--bar-h) + var(--safe-b));
+  padding: 6px 6px calc(6px + var(--safe-b));
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bar-bg);
+  border-top: 1px solid var(--bar-line);
+  z-index: 10;
+}
+#hud-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: var(--tap);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  border: 1px solid var(--bar-line);
+  background: transparent;
+  color: var(--strip-ink);
+  font-family: var(--font-pixel-family);
+  font-size: var(--fs-cap);
+  cursor: pointer;
+}
+#hud-info .num { color: var(--strip-num); font-weight: 700; font-size: var(--fs-lead); line-height: 1; }
+/* G54 — 원작 「Total Popularity」 캡슐: 작은 라벨 + 큰 노란 숫자 + 별, 사이에 가는 구분선 */
+#hud-info .kpop-label { font-size: var(--fs-tiny); opacity: 0.85; letter-spacing: 0.06em; }
+#hud-info .stars { padding-left: 8px; border-left: 1px solid var(--bar-line); }
+#hud-info .stars { display: inline-flex; gap: 1px; }
+#hud-info .stars .kicon[data-on='0'] { opacity: 0.3; }
+
+/* ── 소유권: home 이 아니면 홈 입력층이 통째로 내려간다 ── */
+html:not([data-ui-surface='home']) #hud-right,
+html:not([data-ui-surface='home']) #hud-ticker,
+html:not([data-ui-surface='home']) #hud-bottom { display: none; }
+/* 배치·풀 편집 중엔 우측 칸이 반투명으로 남는다 — 탭하면 「먼저 마치세요」 (G43, P3) */
+html[data-ui-surface='build'] #hud-right,
+html[data-ui-surface='pool'] #hud-right { display: flex; opacity: 0.45; }
+
+/* ── 디버그 상자 — 하네스가 부팅 판정에 쓴다. DOM 에서 지우지 말 것 ── */
+#wp-debug {
+  position: fixed;
+  left: 4px;
+  top: calc(34px + var(--safe-t));
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--strip-bg);
+  color: var(--strip-ink);
+  font-family: var(--font-pixel-family);
+  font-size: var(--fs-tiny);
+  pointer-events: none;
+  z-index: 11;
+}
+#wp-debug[hidden] { display: none; }
+
+/* ── 토스트 ── */
+#hud-toast {
+  position: fixed;
+  left: 50%;
+  top: calc(36px + var(--safe-t));
+  transform: translate(-50%, 0);
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 2px solid var(--win-border);
+  background: var(--win-flat);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: var(--fs-cap);
+  pointer-events: none;
+  z-index: 15;
+  transition: opacity var(--dur-rise) var(--ease), transform var(--dur-rise) var(--ease);
+}
+#hud-toast[hidden] { display: none; }
+
+/* ═══ G17 — 축하 배너 (랭크업·인증) — transform/opacity 만 ═══ */
+.kbanner {
+  position: fixed;
+  left: 50%;
+  top: calc(140px + var(--safe-t));
+  transform: translate(-50%, 0) scale(1);
+  padding: 10px 22px;
+  border-radius: 12px;
+  border: 3px solid var(--win-border);
+  background: var(--win-bg);
+  color: var(--ink);
+  font-weight: 900;
+  font-size: var(--fs-lead);
+  box-shadow: 0 4px 0 var(--win-border);
+  z-index: 25;
+  pointer-events: none;
+  opacity: 1;
+  transition: transform 220ms ease-out, opacity 220ms ease; /* ⚠ cubic-bezier 의 쉼표를 S6 자가 속성 구분자로 읽는다 — 이름 이징만 */
+}
+.kbanner.kout { opacity: 0; transform: translate(-50%, -12px) scale(0.9); }
+.kbanner.kin { opacity: 0; transform: translate(-50%, 8px) scale(0.6); }
+
+@media (prefers-reduced-motion: reduce) {
+  .kbtn, .ksquare, #hud-toast, .kbanner { transition: none; }
+  .kscore-row { animation: none; }
+  .kwin:not([hidden]) { animation: none; }
+  .kjudge, .kstamp { animation: none; }
+}
+
+/* ═══ G1 — 창 · 독 · 말풍선 ═══════════════════════════════════════════ */
+.kscrim { position: fixed; inset: 0; background: var(--scrim); z-index: 19; }
+.kscrim[hidden] { display: none; }
+.kwin {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  top: calc(64px + var(--safe-t));
+  max-height: calc(100vh - 140px - var(--safe-t) - var(--safe-b));
+  display: flex;
+  flex-direction: column;
+  border: 2px solid var(--win-border);
+  border-radius: 10px;
+  background: var(--win-bg);
+  color: var(--ink);
+  box-shadow: 0 4px 0 var(--win-border), inset 0 1px 0 var(--btn-hi);
+  z-index: 20;
+}
+.kwin[hidden] { display: none; }
+.kwin-head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0 4px 0 12px;
+  border-radius: 8px 8px 0 0;
+  background: var(--win-title-blue);
+  color: var(--btn-ink);
+  text-shadow: 0 1px 0 rgb(0 0 0 / 40%);
+}
+.kwin.purple .kwin-head { background: var(--win-title); }
+.kwin.pink .kwin-head { background: var(--win-title-pink); }
+.kwin.green .kwin-head { background: var(--win-title-green); }
+.kwin.gold .kwin-head { background: var(--win-title-gold); }
+/* 창 열림 (G29) — transform/opacity 만 */
+.kwin:not([hidden]) { animation: kwin-in 160ms ease-out; }
+@keyframes kwin-in { from { transform: translateY(10px) scale(0.98); opacity: 0; } to { transform: none; opacity: 1; } }
+.ktab .kicon { margin-right: 4px; vertical-align: -2px; }
+#hud-time .kicon { width: 11px; height: 11px; vertical-align: -2px; margin: 0 -2px; }
+#hud-time { gap: 4px; padding: 0 6px; }
+.kwin-title { flex: 1 1 auto; font-size: var(--fs-title); font-weight: 800; }
+.kwin-close {
+  width: var(--tap);
+  height: var(--tap);
+  border: 0;
+  background: transparent;
+  color: var(--btn-ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.kwin-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.krows { display: flex; flex-direction: column; gap: 4px; }
+.krow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--row-edge);
+  border-radius: 6px;
+  background: var(--row-bg);
+  font-size: var(--fs-body);
+}
+.krow-k { color: var(--ink-dim); }
+.krow-v { font-weight: 800; }
+.kbtn.primary { background: var(--btn-blue); }
+.kbtn:disabled { background: var(--btn-locked); cursor: default; }
+
+/* 독 — 하단 바 자리를 대신한다 */
+.kdock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 6px 8px calc(6px + var(--safe-b));
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--bar-bg);
+  border-top: 1px solid var(--bar-line);
+  color: var(--strip-ink);
+  z-index: 12;
+}
+.kdock[hidden] { display: none; }
+.kdock-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.kdock-row .kbtn { flex: 1 1 0; }
+.kdock-mode { font-weight: 800; font-size: var(--fs-lead); }
+.kdock-cost { font-family: var(--font-pixel-family); color: var(--strip-num); font-size: var(--fs-body); }
+.ktabs { justify-content: flex-start; }
+.ktab {
+  min-height: var(--tap);
+  padding: 0 8px;
+  border: 2px solid var(--btn-edge);
+  border-radius: 8px 8px 0 0;
+  background: var(--btn-locked);
+  color: var(--btn-ink);
+  font-weight: 800;
+  font-size: var(--fs-tiny);
+  white-space: nowrap; /* G55: 「파/기」 세로 쪼개짐 금지 (밴드 칸 규칙과 같다) */
+  flex: 1 1 auto;
+  cursor: pointer;
+}
+.ktab.on { background: var(--win-flat); color: var(--ink); }
+
+/* 말풍선 */
+#hud-bubbles { position: fixed; inset: 0; pointer-events: none; z-index: 9; }
+.kbubble {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: var(--bubble-bg);
+  color: var(--bubble-ink);
+  font-size: var(--fs-tiny);
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1px solid var(--win-border);
+}
+.kbubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 8px;
+  height: 8px;
+  background: var(--bubble-bg);
+  border-right: 1px solid var(--win-border);
+  border-bottom: 1px solid var(--win-border);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+/* ═══ G3 — 건설 창 행 · 아이템 칩 ══════════════════════════════════════ */
+.kwin-tabs { flex-wrap: wrap; gap: 4px; }
+.kwin-tabs .ktab { border-radius: 8px; }
+.kcard-row { gap: 8px; text-align: left; font-family: inherit; cursor: pointer; min-height: var(--tap); }
+.kcard-row:disabled { opacity: 0.55; cursor: default; }
+.kthumb { width: 40px; height: 40px; flex: 0 0 40px; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; }
+.kthumb canvas { max-width: 40px; max-height: 40px; image-rendering: pixelated; }
+.krow-text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.krow-name { font-weight: 800; }
+.krow-sub { color: var(--ink-dim); font-size: var(--fs-tiny); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kchips { display: flex; gap: 6px; overflow-x: auto; flex: 0 0 auto; padding: 2px 0; }
+.kchip {
+  flex: 0 0 auto;
+  min-height: var(--tap);
+  padding: 0 10px;
+  border: 2px solid var(--btn-edge);
+  border-radius: 999px;
+  background: var(--win-flat);
+  color: var(--ink);
+  font-weight: 800;
+  font-size: var(--fs-cap);
+  cursor: pointer;
+}
+.kchip.on { background: var(--row-on); color: var(--btn-ink); }
+.kchip:disabled { opacity: 0.5; cursor: default; }
+.kdock-status { font-size: var(--fs-tiny); color: var(--strip-sub); }
+
+/* ═══ G4 — SNS ═══════════════════════════════════════════════════════ */
+.klike { display: inline-flex; align-items: center; gap: 2px; }
+.klike.on { background: var(--like); color: var(--btn-ink); border-color: var(--btn-edge); }
+.kwish.done { opacity: 0.7; }
+.kstars { display: inline-flex; gap: 1px; vertical-align: middle; }
+.kstars .kicon[data-on='0'] { opacity: 0.3; }
+
+/* ═══ G5 — 심사 카드 ════════════════════════════════════════════════ */
+.kcert { display: flex; flex-direction: column; gap: 4px; padding: 6px; border: 2px solid var(--win-border); border-radius: 8px; background: var(--win-flat); }
+.kcert .kcond { min-height: 30px; }
+.kcert .kscore .krow-v { color: var(--row-on); }
+.kcert .krow-sub { padding: 0 4px; }
+
+/* ═══ G6·G7 — 메뉴 · 요리 ══════════════════════════════════════════ */
+.khide { display: none !important; }
+.kslots { display: flex; flex-direction: column; gap: 4px; }
+.kchips.kwrap { flex-wrap: wrap; overflow: visible; }
+.kresult[data-outcome='new'] { background: var(--row-on); color: var(--btn-ink); }
+.kresult[data-outcome='fail'] { opacity: 0.85; }
+
+/* ═══ G8 — 메인 메뉴 리스트 (카이로 문법) ═══════════════════════════ */
+.kmenu { display: flex; flex-direction: column; gap: 4px; }
+.kmenu-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 10px;
+  border: 1px solid var(--row-edge);
+  border-radius: 6px;
+  background: var(--row-bg);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: var(--fs-lead);
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+}
+.kmenu-row:active { background: var(--row-on); color: var(--btn-ink); }
+.kmenu-label { flex: 1 1 auto; }
+.kmenu-lock { font-size: var(--fs-tiny); color: var(--ink-dim); font-weight: 700; }
+
+/* ═══ G11 — 엔딩 점수 순차 등장 ═══════════════════════════════════ */
+.kscore-row { animation: krise var(--dur-rise) var(--ease) both; animation-delay: calc(var(--row-index, 0) * 120ms); }
+.kscore-total { background: var(--row-on); color: var(--btn-ink); }
+.kscore-total .krow-name { color: var(--btn-ink); }
+@keyframes krise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ═══ G12 — 튜토리얼 Strip (바닥 흰 대사 띠 + 초상) ═══════════════════ */
+.ktut {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: calc(var(--bar-h) + var(--safe-b) + var(--ticker-h) + 10px); /* 티커 띠 위 */
+  min-height: var(--tap);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 2px solid var(--win-border);
+  border-radius: 10px;
+  background: var(--win-flat);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: var(--fs-body);
+  line-height: 1.35;
+  box-shadow: 0 3px 0 var(--win-border);
+  z-index: 11;
+  cursor: pointer;
+}
+.ktut-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.ktut-name { flex: 0 0 auto; font-size: var(--fs-cap); color: var(--daypart); font-weight: 800; }
+.ktut-name:empty { display: none; }
+.ktut-text { flex: 0 0 auto; min-width: 0; }
+.ktut-hint { flex: 0 0 auto; font-size: var(--fs-cap); color: var(--ink-dim); }
+.ktut .kportrait { width: 36px; height: 36px; border-radius: 6px; background: var(--btn-blue); border: 1px solid var(--btn-edge); flex: 0 0 auto; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.kportrait canvas { image-rendering: pixelated; width: 24px; height: 24px; }
+#hud-ticker .kportrait canvas { width: 18px; height: 18px; }
+.kfriend .kportrait, .kpost .kportrait { width: 28px; height: 28px; border-radius: 6px; background: var(--btn-blue); border: 1px solid var(--btn-edge); flex: 0 0 auto; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+html:not([data-ui-surface='home']) .ktut { display: none; }
+
+/* ═══ G19 — 결산·랭킹·손님 카드 ═══════════════════════════════════════ */
+.kguest-head { display: flex; align-items: center; gap: 10px; padding: 4px 0 8px; }
+.kguest-id { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.kportrait.big { width: 44px; height: 44px; border-radius: 8px; background: var(--btn-blue); border: 2px solid var(--btn-edge); display: flex; align-items: center; justify-content: center; overflow: hidden; flex: 0 0 auto; }
+.kportrait.big canvas { width: 36px; height: 36px; image-rendering: pixelated; }
+.kbar { flex: 1 1 auto; height: 10px; border-radius: 999px; border: 1px solid var(--win-border); background: var(--win-flat); overflow: hidden; margin: 0 8px; }
+.kbar-fill { display: block; height: 100%; border-radius: 999px; background: var(--btn-blue); }
+.kbar-fill.khp { background: var(--bar-hp); }
+.kbar-fill.ksat { background: var(--bar-sat); }
+.kbar-fill.kclean { background: var(--btn-blue); }
+.kresult-head { font-weight: 900; color: var(--daypart); margin-top: 6px; font-size: var(--fs-cap); letter-spacing: 0.02em; }
+.krow.kgood .krow-v { color: var(--result-good); }
+.krow.kbad .krow-v { color: var(--result-bad); }
+.krow.kme { background: var(--win-flat); border-radius: 8px; outline: 2px solid var(--daypart); }
+.krow.kaward .krow-k { color: var(--daypart); font-weight: 900; }
+
+/* ═══ G23 — 되먹임 노출 ═══════════════════════════════════════════════ */
+.kshot { width: 48px; height: 32px; flex: 0 0 48px; border: 1px solid var(--win-border); border-radius: 4px; overflow: hidden; background: var(--win-flat); display: flex; align-items: center; justify-content: center; }
+.kshot canvas { width: 48px; height: 32px; image-rendering: pixelated; }
+.kshot-empty { background: repeating-linear-gradient(45deg, var(--win-flat), var(--win-flat) 4px, var(--win-border) 4px, var(--win-border) 5px); opacity: 0.5; }
+.kpost .kportrait { width: 24px; height: 24px; }
+.kvisitor { display: inline-flex; align-items: center; gap: 4px; margin-right: 6px; }
+.kvisitor canvas { width: 18px; height: 18px; image-rendering: pixelated; border-radius: 4px; border: 1px solid var(--btn-edge); }
+.kvisitor-name { font-size: var(--fs-cap); font-weight: 800; max-width: 64px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#hud-info.has-visitor .kpop-label { display: none; } /* 친구가 있으면 「인기」 글자 대신 초상+이름 — 캡슐 폭 안에서 한 줄 */
+#hud-info .kvisitor, #hud-info .kpop-label { white-space: nowrap; }
+.kstage { position: relative; display: flex; justify-content: center; gap: 10px; padding: 14px 8px 18px; border-radius: 10px; background: var(--stage-bg); border: 2px solid var(--win-border); margin-bottom: 4px; overflow: hidden; }
+/* G53 (v3 잔여): 조명 — 위에서 내려오는 두 줄기 + 무대 바닥 띠 · 관중 — 아래 실루엣 점 줄 */
+.kstage::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--stage-light) 0%, transparent 55%), radial-gradient(ellipse 60% 50% at 50% 100%, var(--stage-floor), transparent 70%); opacity: 0.85; pointer-events: none; }
+.kstage::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 9px; background: radial-gradient(circle at 50% 100%, var(--stage-crowd) 0 3px, transparent 3.5px) 0 0 / 12px 9px repeat-x; opacity: 0.9; pointer-events: none; }
+.kstage .kportrait { position: relative; z-index: 1; }
+.kstage .kportrait { width: 30px; height: 30px; border-radius: 6px; background: var(--btn-blue); border: 1px solid var(--btn-edge); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.kportrait.small { width: 22px; height: 22px; border-radius: 5px; background: var(--btn-blue); border: 1px solid var(--btn-edge); display: inline-flex; align-items: center; justify-content: center; overflow: hidden; flex: 0 0 auto; margin-right: 6px; }
+.kportrait.small canvas { width: 18px; height: 18px; }
+/* 건설 카탈로그 — PSS 카드 격자 (그림 크게 · 이름 · 가격 · 잠김은 자물쇠) */
+.kcatalog { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.kcatalog-card { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 4px; min-height: 110px; border: 2px solid var(--win-border); border-radius: 10px; background: var(--win-flat); color: var(--ink); font-family: inherit; cursor: pointer; text-align: center; }
+.kcatalog-card:disabled { opacity: 0.55; cursor: default; }
+.kcatalog-card .kthumb { width: 64px; height: 56px; flex: 0 0 56px; position: relative; }
+.kcatalog-card .kthumb canvas { max-width: 64px; max-height: 56px; }
+.kcatalog-card .kcard-lock { position: absolute; right: 0; top: 0; }
+.kcatalog-card .krow-text { align-items: center; }
+.kcatalog-card .krow-name { font-size: var(--fs-cap); font-weight: 800; line-height: 1.2; }
+.kcatalog-card .krow-sub { font-size: var(--fs-tiny); line-height: 1.2; color: var(--ink-dim); max-height: 28px; overflow: hidden; }
+.kcard-cost { font-weight: 900; color: var(--daypart); font-size: var(--fs-cap); }
+
+/* 알림함 (G27) */
+.kinbox.unread .krow-name { font-weight: 700; }
+.kinbox .kdot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--win-flat); margin-right: 6px; }
+.kwish .kopen { margin-left: auto; }
+
+/* 좋아요 리셋 경고 칩 (G30) */
+.kchip.warn { border-color: var(--fx-bad); }
+.kchip-sub { color: var(--fx-bad); font-size: var(--fs-tiny); }
+
+/* 세로 고정 (G32) — 가로로 돌리면 지도 대신 안내가 덮는다. 폰 세로 393×852 이 유일한 레이아웃이다 */
+#krotate { display: none; position: fixed; inset: 0; z-index: 90; align-items: center; justify-content: center; background: var(--btn-edge); color: var(--strip-num); font-family: var(--font-pixel-family); font-size: var(--fs-title); text-align: center; padding: 24px; }
+@media (orientation: landscape) and (max-height: 500px) { #krotate { display: flex; } }
+
+/* 심사 결과 창 (G35) — 카드 뒤집기 + 도장. transform/opacity 만 */
+.kjudges { display: flex; gap: 8px; justify-content: center; }
+.kjudge { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 6px; min-width: 88px; border: 2px solid var(--win-border); border-radius: 10px; background: var(--win-flat); animation: kjudge-flip 420ms ease-out both; }
+.kjudge:nth-child(2) { animation-delay: 260ms; }
+.kjudge:nth-child(3) { animation-delay: 520ms; }
+@keyframes kjudge-flip { from { transform: rotateY(90deg) scale(0.9); opacity: 0; } 60% { transform: rotateY(-12deg); opacity: 1; } to { transform: none; opacity: 1; } }
+.kjudge-name { font-size: var(--fs-tiny); color: var(--ink-soft); }
+.kjudge-pt { font-family: var(--font-pixel-family); font-size: var(--fs-title); color: var(--ink); }
+.ktotal { align-items: center; gap: 10px; }
+.kstamp { display: inline-block; padding: 2px 10px; border: 3px solid var(--stamp); border-radius: 6px; color: var(--stamp); font-family: var(--font-pixel-family); font-size: var(--fs-title); font-weight: 800; transform: rotate(-12deg); animation: kstamp-in 260ms ease-out both; animation-delay: 900ms; }
+.kstamp.fail { border-color: var(--ink-soft); color: var(--ink-soft); }
+@keyframes kstamp-in { from { transform: rotate(-12deg) scale(2.2); opacity: 0; } to { transform: rotate(-12deg) scale(1); opacity: 1; } }
+
+/* 사건 선택 창 (G39) */
+.kchoice { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; min-height: var(--tap); }
+.kchoice .krow-sub { font-size: var(--fs-tiny); opacity: 0.9; }
+
+/* 요리 도감 설정 칩 · 실패작 (G41) */
+.kchip.kset { margin-left: auto; }
+.krow.kfail .krow-k { color: var(--strip-sub); }
+
+/* 풀 상세 (G42) */
+.krow.kdetail { cursor: pointer; }
+.kdetail-body { padding: 0 8px 4px 16px; }
+.krow-sub.kfull { color: var(--strip-sub); padding-left: 32px; }
+
+/* ═══ G46 — 카이로식 창 문법: 확인 대화상자 · 축하 팝업 · 숫자 알약 · 결산 타일 · 메뉴 설명 ═══ */
+.kdialog-scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 40; }
+.kwin.kdialog { top: 36%; max-height: none; z-index: 41; }
+.kdialog-body { white-space: normal; }
+.kdialog-cost .krow-v { margin-left: auto; }
+.kwin.kcompact { top: 30%; max-height: 60vh; }
+.kcele-icon { display: flex; justify-content: center; padding: 6px 0 2px; }
+.kicon.xl { width: 48px; height: 48px; }
+.kcele-title { text-align: center; font-size: var(--fs-title); font-weight: 900; }
+.kcele-body { text-align: center; color: var(--ink-dim); white-space: normal; }
+.knum { font-family: var(--font-pixel-family); font-weight: 400; background: var(--strip-bg); color: var(--strip-num); padding: 1px 8px; border-radius: 6px; font-variant-numeric: tabular-nums; }
+.kstats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.kstats.two { grid-template-columns: repeat(2, 1fr); }
+.kstat { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 4px; border: 2px solid var(--win-border); border-radius: 10px; background: var(--win-flat); }
+.kstat-k { color: var(--ink-dim); font-size: var(--fs-tiny); }
+.kstat-v { font-family: var(--font-pixel-family); font-size: var(--fs-title); color: var(--ink); }
+.kstat.kgood .kstat-v { color: var(--result-good); }
+.kstat.kbad .kstat-v { color: var(--result-bad); }
+.krow .kicon { flex: 0 0 auto; margin-right: 6px; }
+.kmenu-group { color: var(--ink-dim); font-size: var(--fs-tiny); letter-spacing: 0.04em; padding: 6px 4px 0; }
+.kmenu-text { flex: 1 1 auto; display: flex; flex-direction: column; min-width: 0; }
+.kmenu-desc { color: var(--ink-dim); font-size: var(--fs-tiny); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kthumb { display: flex; justify-content: center; padding: 4px 0; }
+.kthumb canvas { image-rendering: pixelated; width: auto; height: 64px; }
+
+/* ═══ G47 — 풀 정보 타일 · 시설 페이지 넘김 · 예고 태그 ═══ */
+.kptiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.kptile { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 4px; border: 2px solid var(--win-border); border-radius: 10px; background: var(--win-flat); color: var(--ink); font-family: inherit; cursor: pointer; text-align: center; }
+.kptile.on { outline: 2px solid var(--daypart); }
+.kptile-k { color: var(--ink-dim); font-size: var(--fs-tiny); }
+.kptile-v { font-weight: 800; }
+.kptile-sub { color: var(--ink-dim); font-size: var(--fs-tiny); }
+.kbars { display: inline-flex; gap: 2px; }
+.kbars span { width: 5px; height: 10px; border: 1px solid var(--win-border); background: var(--fac-white); border-radius: 1px; }
+.kbars span[data-on='1'] { background: var(--gauge-fill); }
+.kpool-head { display: flex; gap: 8px; align-items: center; }
+.kpool-thumb { flex: 0 0 auto; width: 96px; height: 64px; border: 2px solid var(--win-border); border-radius: 8px; background: var(--strip-bg); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.kpool-thumb canvas { image-rendering: pixelated; width: 96px; height: 64px; }
+.kpool-pills { flex: 1 1 auto; display: flex; flex-direction: column; gap: 4px; }
+.kfac-nav { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.kfac-nav .kbtn { flex: 0 0 auto; min-width: var(--tap); }
+.kfac-desc { white-space: normal; text-align: center; padding: 4px 6px; }
+.kevent-tag { position: fixed; left: 10px; bottom: calc(var(--bar-h) + var(--safe-b) + 46px); z-index: 12; padding: 2px 10px; border-radius: 6px; background: var(--strip-bg); color: var(--strip-num); font-family: var(--font-pixel-family); font-size: var(--fs-cap); pointer-events: none; }
+.kname-row { display: flex; gap: 6px; }
+.kname-row input { flex: 1 1 auto; min-height: var(--tap); border: 2px solid var(--win-border); border-radius: 8px; padding: 0 8px; font-size: var(--fs-body); font-family: inherit; background: var(--fac-white); color: var(--ink); }
+/* 대화상자 「아니오」는 분홍 (원작: 네 파랑 · 아니오 핑크) */
+.kdialog [data-no] { background: var(--win-title-pink); }
+#hud-info { position: relative; }
+#hud-info .kbadge { position: absolute; top: -6px; right: -4px; }
+
+/* ═══ G50 — 목표 3슬롯: 티커 한 줄 안에 A 글줄 + 오른쪽 B·C 미니 진행바 (면적 예산 그대로) ═══ */
+.kticker-line { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 8px; }
+.kticker-line > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kgoals { flex: 0 0 34%; display: flex; flex-direction: column; gap: 2px; }
+.kgoal { display: flex; align-items: center; gap: 3px; height: 11px; cursor: pointer; }
+.kgoal .kicon { width: 10px; height: 10px; flex: 0 0 auto; }
+.kgoal-bar { flex: 1 1 auto; height: 7px; border: 1px solid var(--win-border); border-radius: 4px; background: var(--gauge-bg); overflow: hidden; }
+.kgoal-fill { display: block; height: 100%; background: var(--gauge-fill); }
+.ksr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ═══ G52 — UI 2차 잔여: 아이템 투입 효과 미리보기 · 신문식 축하 · 시설 이동 ═══ */
+.kpreview { display: flex; flex-direction: column; gap: 4px; padding: 6px 8px; border: 2px solid var(--win-border); border-radius: 10px; background: var(--win-flat); }
+.kprev-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.kprev-title { font-weight: 800; }
+.kprev-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 10px; }
+.kprev-row { display: flex; gap: 6px; font-size: var(--fs-tiny); white-space: nowrap; }
+.kprev-k { color: var(--ink-dim); flex: 0 0 28px; }
+.kprev-from { text-decoration: line-through; color: var(--ink-dim); }
+.kprev-same { color: var(--ink-dim); }
+.kprev-arrow { color: var(--ink-dim); }
+.kprev-foot { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+.kprev-warn { color: var(--stamp); font-size: var(--fs-tiny); white-space: normal; flex: 1 1 auto; }
+.kpaper { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 8px 10px 10px; background: var(--paper-bg); color: var(--paper-ink); border: 2px solid var(--paper-rule); box-shadow: inset 0 0 0 4px var(--paper-bg), inset 0 0 0 5px var(--paper-rule); }
+.kpaper-head { display: flex; flex-direction: column; align-items: center; gap: 2px; padding-bottom: 4px; border-bottom: 3px double var(--paper-rule); }
+.kpaper-mast { font-family: var(--font-pixel-family); font-size: var(--fs-title); font-weight: 900; letter-spacing: 0.08em; }
+.kpaper-date { font-size: var(--fs-tiny); color: var(--paper-rule); letter-spacing: 0.04em; }
+.kpaper-date:empty { display: none; }
+.kpaper-headline.kcele-title { color: var(--paper-ink); font-size: var(--fs-title); line-height: 1.25; text-wrap: balance; padding: 2px 0; }
+.kpaper-photo.kcele-icon { padding: 6px; margin: 0 auto; border: 2px solid var(--paper-rule); background: var(--win-flat); }
+.kpaper-lede.kcele-body { color: var(--paper-ink); border-top: 1px solid var(--paper-rule); padding-top: 6px; text-align: left; }
+.kpaper-stamp.kstamp { position: absolute; top: 4px; right: 6px; font-size: var(--fs-tiny); padding: 1px 6px; animation-delay: 300ms; z-index: 1; }
+.kcollect .kcollect-bar { flex: 1 1 auto; height: 7px; margin: 0 8px; }
+.kwin.kfit { top: 50%; transform: translateY(-50%); max-height: calc(100vh - 140px - var(--safe-t) - var(--safe-b)); }
+.kchips[hidden] { display: none; } /* G55: 아이템 모드에 타일 칩이 새어 나왔다 — flex 가 hidden 을 이겼다 */
+.krow > .krow-k + .krow-v { margin-left: auto; } /* G55: 도감 「(음료)맛 2」 붙음 — 값은 오른쪽 */
+.kchip .kicon { width: 16px; height: 16px; vertical-align: -4px; }
+.kfriend .kportrait, .kpost .kportrait { margin-right: 8px; } /* G55 재플레이 2차: 초상과 이름이 붙어 있었다 */
+.kpool-tiles > .krow-k { flex: 0 0 auto; white-space: nowrap; } /* G56 */
+.kpool-tiles > .kchips { flex: 1 1 auto; min-width: 0; overflow-x: auto; }
+.kcert.kcert-passed { opacity: 0.92; }
+.kcert.kcert-passed .kbtn { min-height: var(--tap); }

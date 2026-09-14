@@ -1,0 +1,819 @@
+[
+  {
+    "id": "grade_f",
+    "name": "간단한 풀장 심사",
+    "family": "grade",
+    "grade": "F",
+    "pass": 15,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "popMin": 60
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 20
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "blue_orca"
+    },
+    "fee": 500
+  },
+  {
+    "id": "grade_d",
+    "name": "초급 노멀 부문",
+    "family": "grade",
+    "grade": "D",
+    "pass": 20,
+    "requires": "grade_f",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "popMin": 100
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 30
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "duck_float"
+    },
+    "fee": 1000
+  },
+  {
+    "id": "grade_b",
+    "name": "중급 노멀 부문",
+    "family": "grade",
+    "grade": "B",
+    "pass": 25,
+    "requires": "grade_d",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "popMin": 150
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 40
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "sandy"
+    },
+    "fee": 2000
+  },
+  {
+    "id": "grade_a",
+    "name": "상급 노멀 부문",
+    "family": "grade",
+    "grade": "A",
+    "pass": 25,
+    "requires": "grade_b",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "popMin": 200
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 50,
+          "tile": "sandy"
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "kayak_float"
+    },
+    "fee": 4000
+  },
+  {
+    "id": "grade_s",
+    "name": "카이로 풀장 부문",
+    "family": "grade",
+    "grade": "S",
+    "pass": 25,
+    "requires": "grade_a",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "likesMin": 2000
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 80
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "golden_kairobot",
+          "adjacentPool": true
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "kairo_float"
+    },
+    "fee": 8000
+  },
+  {
+    "id": "color_f",
+    "name": "초급 색채 부문",
+    "family": "color",
+    "grade": "F",
+    "pass": 15,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "color": "orange"
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "popularity",
+          "min": 100
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "yellow"
+    },
+    "fee": 500
+  },
+  {
+    "id": "color_d",
+    "name": "와인의 마음 심사",
+    "family": "color",
+    "grade": "D",
+    "pass": 20,
+    "requires": "color_f",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "color": "purple"
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "item",
+          "id": "grapes"
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "simple"
+    },
+    "fee": 1000
+  },
+  {
+    "id": "color_b",
+    "name": "상급 색채 부문",
+    "family": "color",
+    "grade": "B",
+    "pass": 25,
+    "requires": "color_d",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "color": "pink",
+          "intensityMin": 40
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "scent": "cookie"
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "colorful"
+    },
+    "fee": 2500
+  },
+  {
+    "id": "scent_f",
+    "name": "초급 향기 부문",
+    "family": "scent",
+    "grade": "F",
+    "pass": 15,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "scent": "berry"
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "popularity",
+          "min": 100
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "pink"
+    },
+    "fee": 500
+  },
+  {
+    "id": "scent_d",
+    "name": "약간 씁쓸한 향기 부문",
+    "family": "scent",
+    "grade": "D",
+    "pass": 20,
+    "requires": "scent_f",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "item",
+          "id": "coffee_beans",
+          "count": 3
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "scent": "coffee"
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "granite"
+    },
+    "fee": 1000
+  },
+  {
+    "id": "scent_b",
+    "name": "열대의 향기 부문",
+    "family": "scent",
+    "grade": "B",
+    "pass": 25,
+    "requires": "scent_d",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "palm_tree",
+          "adjacentPool": true
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "scent": "tropical"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "color": "rainbow"
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "kairo"
+    },
+    "fee": 2500
+  },
+  {
+    "id": "spa_d",
+    "name": "중급 온천 부문",
+    "family": "spa",
+    "grade": "D",
+    "pass": 20,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "tempMin": 40
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "color": "white"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "scent": "floral"
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "stone"
+    },
+    "fee": 1000
+  },
+  {
+    "id": "spa_b",
+    "name": "상급 온천 부문",
+    "family": "spa",
+    "grade": "B",
+    "pass": 25,
+    "requires": "spa_d",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "tempMin": 40,
+          "indoor": true
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "scent": "floral"
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "wooden"
+    },
+    "fee": 2500
+  },
+  {
+    "id": "fruit_e",
+    "name": "초급 과일 부문",
+    "family": "fruit",
+    "grade": "E",
+    "pass": 15,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "item",
+          "id": "apple",
+          "count": 2
+        },
+        "weight": 2
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 16
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "donut_float"
+    },
+    "fee": 700
+  },
+  {
+    "id": "fruit_c",
+    "name": "감귤계 부문",
+    "family": "fruit",
+    "grade": "C",
+    "pass": 22,
+    "requires": "fruit_e",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "item",
+          "id": "lemon"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "item",
+          "id": "grapefruit"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "scent": "citrus"
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "banana_float"
+    },
+    "fee": 1500
+  },
+  {
+    "id": "fruit_a",
+    "name": "상급 과일 부문",
+    "family": "fruit",
+    "grade": "A",
+    "pass": 25,
+    "requires": "fruit_c",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "item",
+          "id": "melon"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "scent": "fruity"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "tempMax": 19
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "watermelon_float"
+    },
+    "fee": 4000
+  },
+  {
+    "id": "stream_d",
+    "name": "중급 유수풀 부문",
+    "family": "stream",
+    "grade": "D",
+    "pass": 20,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "jetted_pool",
+          "adjacentPool": true
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "popMin": 60
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 16
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "blue"
+    },
+    "fee": 1000
+  },
+  {
+    "id": "stream_b",
+    "name": "상급 유수풀 부문",
+    "family": "stream",
+    "grade": "B",
+    "pass": 25,
+    "requires": "stream_d",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "jetted_pool",
+          "adjacentPool": true
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "pool",
+          "sizeMin": 50
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "blue_slide"
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "excellent"
+    },
+    "fee": 2500
+  },
+  {
+    "id": "fun_e",
+    "name": "초급 어트랙션 풀장",
+    "family": "fun",
+    "grade": "E",
+    "pass": 17,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "facilityAdjacent",
+          "ids": [
+            "mini_slide",
+            "mini_slide"
+          ]
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "jetted_pool"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "popularity",
+          "min": 100
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "river_orca"
+    },
+    "fee": 700
+  },
+  {
+    "id": "fun_c",
+    "name": "중급 어트랙션 풀장",
+    "family": "fun",
+    "grade": "C",
+    "pass": 22,
+    "requires": "fun_e",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "any",
+          "of": [
+            {
+              "kind": "facility",
+              "id": "blue_slide"
+            },
+            {
+              "kind": "facility",
+              "id": "tree_house_slide"
+            }
+          ]
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "flowery_shower"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "jetted_pool"
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "tile",
+      "id": "cheerful"
+    },
+    "fee": 1500
+  },
+  {
+    "id": "fun_a",
+    "name": "상급 어트랙션 풀장",
+    "family": "fun",
+    "grade": "A",
+    "pass": 25,
+    "requires": "fun_c",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "surprise_soaker"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "performing_kairobot"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "any",
+          "of": [
+            {
+              "kind": "facility",
+              "id": "blue_slide"
+            },
+            {
+              "kind": "facility",
+              "id": "tree_house_slide"
+            }
+          ]
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "hammock"
+    },
+    "fee": 4000
+  },
+  {
+    "id": "cutesy_d",
+    "name": "초급 팬시 부문",
+    "family": "cutesy",
+    "grade": "D",
+    "pass": 17,
+    "requires": null,
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "color": "pink"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "flowery_shower"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "popularity",
+          "min": 100
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "flamingo_float"
+    },
+    "fee": 1000
+  },
+  {
+    "id": "cutesy_c",
+    "name": "중급 팬시 부문",
+    "family": "cutesy",
+    "grade": "C",
+    "pass": 22,
+    "requires": "cutesy_d",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "color": "pink"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "coral_slide"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "popularity",
+          "min": 200
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "dreaming_orca"
+    },
+    "fee": 1500
+  },
+  {
+    "id": "cutesy_a",
+    "name": "상급 팬시 부문",
+    "family": "cutesy",
+    "grade": "A",
+    "pass": 25,
+    "requires": "cutesy_c",
+    "conditions": [
+      {
+        "cond": {
+          "kind": "pool",
+          "color": "rainbow"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "facility",
+          "id": "cake_shop"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "popularity",
+          "min": 250
+        },
+        "weight": 1
+      }
+    ],
+    "reward": {
+      "kind": "gift",
+      "id": "shell_float"
+    },
+    "fee": 4000
+  }
+]

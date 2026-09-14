@@ -1,0 +1,32 @@
+[
+  {
+    "id": "flyer",
+    "name": "전단지",
+    "cost": 2000,
+    "mul": 1.2,
+    "days": 4,
+    "cooldown": 8,
+    "desc": "동네에 전단지를 돌린다 — 4일 동안 손님 +20%",
+    "kind": "ad"
+  },
+  {
+    "id": "bus",
+    "name": "버스 송영",
+    "cost": 6000,
+    "mul": 1,
+    "days": 2,
+    "cooldown": 4,
+    "desc": "지역을 골라 2일간 매일 아침 버스 한 대 — 그 지역 손님 12명이 내린다",
+    "kind": "bus"
+  },
+  {
+    "id": "tv",
+    "name": "TV 광고",
+    "cost": 30000,
+    "mul": 2.0,
+    "days": 4,
+    "cooldown": 32,
+    "desc": "지역 방송 — 4일 동안 손님 두 배",
+    "kind": "ad"
+  }
+]

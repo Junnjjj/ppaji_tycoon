@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "카이로 전환 시설 75종의 시뮬 정보. 렌더 정보(캔버스·앵커·bodyH)는 assets/kairo-render-contract.json. slots = 손님이 이 시설을 이용할 때 **실제로 서는 발자국 안의 칸**(+ 포즈·방향). ⚠ 렌더 좌표가 아니라 게임플레이다 — 손님이 그 칸 위에 서면 g.i/g.j 가 슬롯 칸이 되고 히트맵·재생 프레임·골든이 그 값을 읽는다. assets/ 에 두면 Phaser 없는 `npm run sim` 이 슬롯을 못 읽어 헤드리스와 브라우저가 다른 손님 위치를 낸다 (불변식 2). ride 와 같은 범주다. slots.length 는 capacity 와 같아야 한다 (validateContracts 가 지킨다). specialties = 개선 3단계에서 고르는 특화 (빈 배열이면 특화가 없다). charge = 과금 방식: included 는 입장권에 포함이라 이용해도 요금 0, sale 은 그 자리에서 따로 산다. ⚠ need 축과 과금 축은 다르다 — 대여소는 need:thrill 인데 sale 이고 카페는 need:rest 인데 sale 이다. 그래서 need 로 가르면 안 되고 시설마다 적는다. desc = 한 줄 설명(무엇/누가 쓰나 — 스탯 요약이 아니다. 정원·요금·수요는 화면이 실측값으로 따로 띄운다). menu = 가게 품목 (표시 전용, K49). ⚠ 평균 price 가 fee 와 정확히 같아야 한다 — 화면이 말하는 값과 sim 이 걷는 값이 갈리면 안 된다. 손님이 무엇을 골랐는지는 아직 시뮬하지 않는다 (P3-E 메뉴 슬롯의 몫).",
+  "note": "카이로 전환 시설 75종의 시뮬 정보. 렌더 정보(캔버스·앵커·bodyH)는 assets/kairo-render-contract.json. slots = 손님이 이 시설을 이용할 때 **실제로 서는 발자국 안의 칸**(+ 포즈·방향). ⚠ 렌더 좌표가 아니라 게임플레이다 — 손님이 그 칸 위에 서면 g.i/g.j 가 슬롯 칸이 되고 히트맵·재생 프레임·골든이 그 값을 읽는다. assets/ 에 두면 Phaser 없는 `npm run sim` 이 슬롯을 못 읽어 헤드리스와 브라우저가 다른 손님 위치를 낸다 (불변식 2). ride 와 같은 범주다. slots.length 는 capacity 와 같아야 한다 (validateContracts 가 지킨다). specialties = 개선 3단계에서 고르는 특화 (빈 배열이면 특화가 없다). charge = 과금 방식: included 는 입장권에 포함이라 이용해도 요금 0, sale 은 그 자리에서 따로 산다. ⚠ need 축과 과금 축은 다르다 — 대여소는 need:thrill 인데 sale 이고 카페는 need:rest 인데 sale 이다. 그래서 need 로 가르면 안 되고 시설마다 적는다. desc = 한 줄 설명(무엇/누가 쓰나 — 스탯 요약이 아니다. 정원·요금·수요는 화면이 실측값으로 따로 띄운다). menu = 가게 품목 (표시 전용, K49). ⚠ 평균 price 가 fee 와 정확히 같아야 한다 — 화면이 말하는 값과 sim 이 걷는 값이 갈리면 안 된다. 손님이 무엇을 골랐는지는 아직 시뮬하지 않는다 (P3-E 메뉴 슬롯의 몫). · P2: 분식·붕어빵·BBQ존을 `menuMode: \"craft\"` 로 승격했다. ⚠ **승격 시설은 반드시 `startingMenu` 를 갖고 그 레시피가 `start: true` 여야 한다** — 없으면 이미 세이브에 서 있는 그 시설이 운영 불가가 되어 손님 목적지·주간 공급·입장 정원에서 통째로 빠지고 판이 조용히 작아진다 (`validateMenuData` 가 지킨다). ⚠ **자판기 2종은 절대 승격 금지** — cap 1 짜리가 \"메뉴를 안 꽂으면 안 도는 시설\"이 되는 것은 부당하다. ⚠ `upgradeRequires` 는 **몇 단계로 올릴 때 무엇이 필요한가**다 (P5). 키는 목표 단계. 비우면 P1.5 이전과 완전히 같은 경로로 돌아간다.",
   "facilities": {
     "shower_row": {
       "id": "shower_row",
@@ -842,7 +842,9 @@
       ],
       "desc": "컵라면·과자·음료. 빠지에서 가장 자주 들르는 곳.",
       "menuMode": "craft",
-      "startingMenu": ["shop_can_drink"],
+      "startingMenu": [
+        "shop_can_drink"
+      ],
       "menu": [
         {
           "name": "컵라면",
@@ -920,6 +922,10 @@
           "name": "라면",
           "price": 1100
         }
+      ],
+      "menuMode": "craft",
+      "startingMenu": [
+        "snack_ramen"
       ]
     },
     "chicken": {
@@ -1088,7 +1094,9 @@
       ],
       "desc": "커피 한 잔과 그늘. 비 오는 날 손님이 몰린다.",
       "menuMode": "craft",
-      "startingMenu": ["cafe_americano"],
+      "startingMenu": [
+        "cafe_americano"
+      ],
       "menu": [
         {
           "name": "아메리카노",
@@ -1810,6 +1818,10 @@
           "name": "쌈채소",
           "price": 900
         }
+      ],
+      "menuMode": "craft",
+      "startingMenu": [
+        "bbq_samgyup"
       ]
     },
     "firepit_row": {
@@ -3469,6 +3481,10 @@
           "name": "어묵",
           "price": 800
         }
+      ],
+      "menuMode": "craft",
+      "startingMenu": [
+        "bung_custard"
       ]
     },
     "footbath": {
@@ -3632,5 +3648,13 @@
       "specialties": [],
       "desc": "강을 등지고 선 무대. 큰 행사의 축이 된다."
     }
+  },
+  "upgradeRequires": {
+    "4": [
+      "parts_basic"
+    ],
+    "5": [
+      "parts_premium"
+    ]
   }
 }

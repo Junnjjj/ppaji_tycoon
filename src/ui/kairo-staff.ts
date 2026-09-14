@@ -99,6 +99,23 @@ export interface ManageDeps {
   setPrice: (v: number) => void;
   cash: () => number;
   spend: (n: number) => boolean;
+  /**
+   * 그 시설을 **지도에서 연다** (P5). 개선의 실행 입구는 시설 상세 시트 **하나**다 —
+   * 여기는 「어느 것부터?」를 보는 자리이고, 누르면 그 시설로 데려간다.
+   *
+   * ⚠ 예전에는 이 목록이 `placement.upgrade()` 를 **직접** 불렀다. 그래서 상위 경계
+   * (강화품 검사)도, `guests.invalidate()` 도 건너뛰었다 — 두 입구가 갈려 있었다.
+   */
+  openFacility: (handle: number) => void;
+  /**
+   * 사람을 **구한다** (P6). 구인은 수배 큐를 지나므로 여기서 바로 늘지 않는다 —
+   * 성공하면 `true`(발주됨), 못 맡기면 `false`.
+   *
+   * ⚠ **해고는 비대칭이다** — 즉시다. 고정비를 줄이는 결정에 지연을 걸면 비수기 감원이
+   * 벌이 되고, 그건 「실패는 내 선택 때문이어야」(v4)에 걸린다.
+   */
+  hire: (role: StaffRoleId) => boolean;
+  fire: (role: StaffRoleId) => void;
 }
 
 export class KairoStaffPanel {
@@ -227,13 +244,20 @@ export class KairoStaffPanel {
     plus.dataset['role'] = role.id;
     plus.dataset['delta'] = '1';
     // ★ 44px — `.kbtn` 이 지킨다 (CLAUDE.md 의 모바일 검증 항목)
-    for (const b of [minus, plus]) {
-      b.addEventListener('click', () => {
-        this.staff?.hire(role.id, Number(b.dataset['delta']));
-        this.refresh();
-        this.onChange?.();
-      });
-    }
+    /*
+     * ⚠ **`+` 는 구인 발주다** (P6) — 누르면 바로 안 는다. `−` 는 즉시다.
+     * 비대칭이 의도이고, 그 이유는 `ManageDeps.hire` 주석에 있다.
+     */
+    minus.addEventListener('click', () => {
+      this.manage?.fire(role.id);
+      this.refresh();
+      this.onChange?.();
+    });
+    plus.addEventListener('click', () => {
+      if (!this.manage?.hire(role.id)) return;
+      this.refresh();
+      this.onChange?.();
+    });
 
     row.append(info, minus, count, plus);
     this.rows.set(role.id, { count, row });
@@ -418,15 +442,18 @@ export class KairoStaffPanel {
         }
         row.append(chips);
       } else if (level < FACILITY_MAX_LEVEL) {
+        /*
+         * ⚠ **여기서 올리지 않는다** (P5). 누르면 지도의 그 시설로 데려가고, 실행은
+         * 시설 상세 시트 **하나**가 한다 — 대상이 지도 위에 있으니 그게 제자리다 (D9).
+         * 목록은 지우지 않았다: 「어느 것부터?」는 지도를 훑어서는 못 푸는 물음이고,
+         * P3-C③ 이 이 목록의 잘림을 고친 지 얼마 안 됐다.
+         */
         const cost = placement.upgradeCost(it.handle);
-        const b = el('button', 'kbtn', won(cost));
-        const poor = !manage || cost > manage.cash();
-        b.disabled = poor;
+        const b = el('button', 'kbtn', `${won(cost)} 〉`);
+        b.dataset['upgradeGoto'] = String(it.handle);
         b.addEventListener('click', () => {
-          if (!manage || !manage.spend(cost)) return;
-          placement.upgrade(it.handle);
-          this.refresh();
-          this.onChange?.();
+          this.hide();
+          manage?.openFacility(it.handle);
         });
         row.append(b);
       }

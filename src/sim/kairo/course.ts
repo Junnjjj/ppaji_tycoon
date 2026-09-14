@@ -56,6 +56,16 @@ export interface CourseEquipment {
   thrillBase: number;
   safeCurvature: number;
   desc: string;
+  /**
+   * 새 판에서 **이미 갖고 있는가** (P3). 물려받은 빠지가 굴리던 **둘**이다.
+   *
+   * ⚠ 처음엔 하나였다. 그러면 초반 내내 요금 900·정원 3 짜리 하나로만 코스를 돌게 되어
+   * **코스 매출이 14% → 9% 로 눌렸다** (`--no-shop` 대조군이 상점이 아니라 이 게이트가
+   * 원인이라고 말했다). 둘째를 **가장 싼 축**(요금 1,000·정원 4)으로 준 것은 게이트를
+   * 열려는 게 아니라 **바닥을 한 칸 올리려는** 것이다 — 좋은 장비는 여전히 사야 한다.
+   * ⚠ 셋 이상 주면 상점의 첫 결정(「무엇부터 살까」)이 첫 주에 사라진다.
+   */
+  start?: boolean;
 }
 
 /** 견인 장비 15종이 공유하는 보트 profile — 장비×프리셋 수제 조합표가 아니다. */
@@ -155,49 +165,139 @@ export function fitBlocked(equipId: string, presetId: string): boolean {
  * 순수 함수다 — 격자도 지형도 안 본다. 데크 좌표 목록과 게이트만 받는다.
  */
 export interface DockChoice {
-  /** 잔교 끝 — 코스 시작점 */
+  /** 코스 시작점 — 앵커 모드에서는 **선착장 시설의 칸**이다 (Q10) */
   tip: Vec2;
   /** 뭍 → 끝 방향 (정규화 안 함. `defaultHandles` 가 정규화한다) */
   dir: Vec2;
-  /** 이 잔교의 칸 수 — UI 가 "3칸" 처럼 보여준다 */
+  /** 이 후보의 칸 수 — UI 가 "3칸" 처럼 보여준다 (앵커 모드: 선착장 + 이어진 잔교) */
   tiles: number;
+  /**
+   * 이 후보의 **영역** (Q10, 앵커 모드만) — 선착장 무리 ∪ 이어진 잔교 칸들.
+   *
+   * ⚠ 왜 필요한가: 코스는 자기 `dock` 좌표를 저장하는데, 물려받은 코스는 그 좌표가
+   * **잔교 끝**이고 새 후보의 `tip` 은 **선착장 칸**이라 정확히 일치하지 않는다.
+   * 「이 후보에 코스가 있나」를 점 하나로 재면 옛 코스가 전부 「빈 후보」로 보인다 —
+   * `dockTaken` 이 이 영역으로 잰다.
+   */
+  claim?: Vec2[];
 }
 
 export function dockCandidates(
   decks: readonly Vec2[],
   gate: Vec2,
   /**
-   * 선착장(견인 스테이션) 시설의 발자국 칸들 (K45). 주어지면 **선착장이 붙은 잔교만**
-   * 후보가 된다 — 코스는 아무 데크 끝이 아니라 견인기구를 설치한 곳에서 시작한다
-   * (dock 시설의 note 가 처음부터 "견인 프리셋 루프 시작점"이었다 — 이제야 배선됐다).
+   * 선착장(견인 스테이션) 시설의 발자국 칸들 (K45 → Q10).
+   *
+   * ## Q10 — **선착장이 곧 시작점이다**
+   *
+   * ⚠ K45 의 배선은 절반이었다: 선착장은 잔교의 **필터**일 뿐이고 코스는 여전히
+   * **잔교 끝**에서 시작했다. 그래서 ① 잔교가 길면 코스가 선착장에서 멀리 떨어진
+   * 데크 끝에서 출발하고, ② 플로팅덱을 이어 붙이면 잔교 무리가 합쳐져 **끝이 옮겨지고**,
+   * ③ 「선착장에서 견인이든 수상기구든 띄운다」는 구조가 화면에서 안 읽혔다
+   * (사용자 지적, 2026-09-01).
+   *
+   * 이제 앵커가 주어지면 **선착장 무리 하나가 후보 하나**다 — `tip` 은 선착장 칸이고,
+   * 잔교는 걸어가는 길일 뿐이다. dock 시설 note("견인 프리셋 루프 시작점")의 원래 뜻이다.
    * 생략하면 예전처럼 모든 잔교가 후보다 (기존 테스트 호환).
    */
   anchors?: readonly Vec2[],
 ): DockChoice[] {
-  if (decks.length === 0) return [];
-  const anchorSet = anchors === undefined ? null : new Set(anchors.map((a) => `${a.x},${a.y}`));
-  /** 이 무리에 선착장이 붙어 있나 — 무리 칸 또는 4-이웃에 앵커가 있으면 참 */
-  const groupAnchored = (group: readonly Vec2[]): boolean => {
-    if (anchorSet === null) return true;
-    for (const g of group) {
-      for (const [dx, dy] of [
-        [0, 0],
-        [1, 0],
-        [-1, 0],
-        [0, 1],
-        [0, -1],
-      ] as const) {
-        if (anchorSet.has(`${g.x + dx},${g.y + dy}`)) return true;
-      }
-    }
-    return false;
-  };
-
   const key = (v: Vec2): string => `${v.x},${v.y}`;
+  const d2 = (v: Vec2): number => (v.x - gate.x) ** 2 + (v.y - gate.y) ** 2;
+
+  if (anchors !== undefined) {
+    // ── 앵커 모드 (production) — 선착장 무리 하나 = 후보 하나 ──
+    const pool = new Map<string, Vec2>();
+    for (const a of anchors) pool.set(key(a), { x: a.x, y: a.y });
+    const deckSet = new Map<string, Vec2>();
+    for (const d of decks) deckSet.set(key(d), { x: d.x, y: d.y });
+
+    const out: DockChoice[] = [];
+    const seen = new Set<string>();
+    for (const start of anchors) {
+      if (seen.has(key(start))) continue;
+      // 선착장 무리 (4-이웃)
+      const group: Vec2[] = [];
+      const stack: Vec2[] = [start];
+      seen.add(key(start));
+      while (stack.length > 0) {
+        const c = stack.pop() as Vec2;
+        group.push(c);
+        for (const [dx, dy] of [
+          [1, 0],
+          [-1, 0],
+          [0, 1],
+          [0, -1],
+        ] as const) {
+          const n = { x: c.x + dx, y: c.y + dy };
+          if (!pool.has(key(n)) || seen.has(key(n))) continue;
+          seen.add(key(n));
+          stack.push(n);
+        }
+      }
+      // 이어진 잔교 — 무리에 붙은 데크에서 flood (claim 과 방향에 쓴다)
+      const pier: Vec2[] = [];
+      const pierSeen = new Set<string>();
+      const pierStack: Vec2[] = [];
+      for (const g of group) {
+        for (const [dx, dy] of [
+          [1, 0],
+          [-1, 0],
+          [0, 1],
+          [0, -1],
+        ] as const) {
+          const n = { x: g.x + dx, y: g.y + dy };
+          const k = key(n);
+          // ⚠ 선착장 자신(layer water)도 decks 목록에 섞여 온다 — 앵커는 잔교가 아니다
+          if (!deckSet.has(k) || pool.has(k) || pierSeen.has(k)) continue;
+          pierSeen.add(k);
+          pierStack.push(n);
+        }
+      }
+      while (pierStack.length > 0) {
+        const c = pierStack.pop() as Vec2;
+        pier.push(c);
+        for (const [dx, dy] of [
+          [1, 0],
+          [-1, 0],
+          [0, 1],
+          [0, -1],
+        ] as const) {
+          const n = { x: c.x + dx, y: c.y + dy };
+          const k = key(n);
+          if (!deckSet.has(k) || pool.has(k) || pierSeen.has(k)) continue;
+          pierSeen.add(k);
+          pierStack.push(n);
+        }
+      }
+
+      let tip = group[0] as Vec2;
+      for (const g of group) if (d2(g) > d2(tip)) tip = g;
+      /*
+       * 방향 — **게이트 반대쪽** 하나다 (예전 「한 칸 잔교」 규칙의 일반화).
+       *
+       * ⚠ 처음엔 「잔교에서 멀어지는 쪽」으로 했다가 되돌렸다: 선착장은 잔교 **옆면**에도
+       * 붙는다 (시작 킷이 실제로 di=±1~5 로 옆에 놓는다). 그때 「잔교 반대쪽」은 물이
+       * 아니라 **강기슭과 나란한 방향**이라, 제안 핸들이 뭍에 떨어져 `물 위가 아닙니다`
+       * 가 났다 (게이트 실측). 게이트는 언제나 뭍에 있으므로 그 반대가 곧 물이다.
+       */
+      const dir = { x: tip.x - gate.x, y: tip.y - gate.y };
+      out.push({
+        tip: { ...tip },
+        dir: dir.x === 0 && dir.y === 0 ? { x: 0, y: 1 } : dir,
+        tiles: group.length + pier.length,
+        claim: [...group, ...pier].map((v) => ({ ...v })),
+      });
+    }
+    out.sort((a, b) => d2(a.tip) - d2(b.tip) || a.tip.x - b.tip.x || a.tip.y - b.tip.y);
+    return out;
+  }
+
+  // ── 잔교 모드 (앵커 생략 — 기존 테스트 호환) ──
+  if (decks.length === 0) return [];
+  const groupAnchored = (_group: readonly Vec2[]): boolean => true;
   const pool = new Map<string, Vec2>();
   for (const d of decks) pool.set(key(d), { x: d.x, y: d.y });
-
-  const d2 = (v: Vec2): number => (v.x - gate.x) ** 2 + (v.y - gate.y) ** 2;
 
   const out: DockChoice[] = [];
   const seen = new Set<string>();
@@ -306,7 +406,11 @@ export type CourseIssueKind =
   | 'blocked-combo'
   | 'locked-preset'
   | 'no-equipment'
+  /** 산 적 없는 장비 (P3) — 고를 수는 있어도 확정은 못 한다 */
+  | 'not-owned'
   | 'dock-taken'
+  /** 루트가 물 위 시설(덱·선착장…)을 가로지른다 (Q10) */
+  | 'route-blocked'
   | 'overlap';
 
 /**
@@ -320,7 +424,9 @@ export const COURSE_ISSUE_TEXT: Record<CourseIssueKind, string> = {
   'blocked-combo': '이 장비로는 이 형태를 못 탑니다',
   'locked-preset': '아직 안 열린 형태입니다',
   'no-equipment': '장비를 고르세요',
+  'not-owned': '아직 없는 장비입니다 — 상점에서 사세요',
   'dock-taken': '이 잔교에 이미 코스가 있습니다 — 다른 잔교를 고르세요',
+  'route-blocked': '루트가 물 위 시설을 지나갑니다 — 핸들을 옮겨 피하세요',
   overlap: '기존 코스와 너무 가깝습니다 — 핸들을 옮겨 떨어뜨리세요',
 };
 
@@ -349,9 +455,28 @@ function sameTile(a: Vec2, b: Vec2): boolean {
   return Math.round(a.x) === Math.round(b.x) && Math.round(a.y) === Math.round(b.y);
 }
 
-/** 그 잔교에서 시작하는 코스가 이미 있는가 */
-export function dockTaken(tip: Vec2, others: readonly PlacedCourse[]): boolean {
-  return others.some((o) => sameTile(o.dock, tip));
+/**
+ * 그 후보에서 시작하는 코스가 이미 있는가.
+ *
+ * ⚠ **Q10 부터 `claim` 영역으로 잰다.** 앵커 모드의 `tip` 은 선착장 칸인데, 물려받은
+ * 코스의 저장된 `dock` 은 **잔교 끝 좌표**라 점 비교로는 절대 안 맞는다 — 옛 코스가
+ * 전부 「빈 후보」로 보여 제안이 찬 잔교를 다시 가리킨다 (K37 이 고친 그 버그의 재발 형태).
+ * `claim`(선착장 ∪ 이어진 잔교) 안이거나 그 8-이웃이면 「이 후보의 코스」로 본다.
+ * `claim` 이 없으면(잔교 모드) 예전처럼 점 비교다.
+ */
+export function dockTaken(
+  tip: Vec2,
+  others: readonly PlacedCourse[],
+  claim?: readonly Vec2[],
+): boolean {
+  if (claim === undefined || claim.length === 0) {
+    return others.some((o) => sameTile(o.dock, tip));
+  }
+  return others.some((o) =>
+    claim.some(
+      (c) => Math.abs(o.dock.x - c.x) <= 1 && Math.abs(o.dock.y - c.y) <= 1,
+    ),
+  );
 }
 
 /** 코스가 없는 첫 잔교. 전부 찼으면 −1. `docks()` 는 게이트에서 가까운 순이다 */
@@ -361,7 +486,7 @@ export function firstFreeDock(
 ): number {
   for (let k = 0; k < docks.length; k++) {
     const d = docks[k] as DockChoice;
-    if (!dockTaken(d.tip, others)) return k;
+    if (!dockTaken(d.tip, others, d.claim)) return k;
   }
   return -1;
 }
@@ -440,12 +565,38 @@ export function validateCourse(
   others: readonly PlacedCourse[] = [],
   /** 기존 코스 편집 때 자기 자신을 비교 대상에서 빼는 stable handle */
   excludeHandle?: number,
+  /**
+   * 지금 **가진** 장비 (P3). 안 넘기면 소유를 안 본다 — 옛 호출부와 지형 단위 검사가
+   * 그대로 돌아야 하기 때문이다.
+   *
+   * ⚠ **production 은 반드시 넘긴다.** 안 넘기면 「산 적 없는 장비로 코스를 세운다」가
+   * 조용히 돌아온다 — 그래서 `course-ownership.test.ts` 의 정적 검사가 호출부를 지킨다.
+   */
+  owned?: ReadonlySet<string>,
+  /**
+   * **갈 수 없는 물 칸** (Q10) — 물 위 시설(플로팅덱·선착장·트램펄린…)의 발자국.
+   *
+   * ⚠ 안 넘기면 안 본다 (지형 단위 검사 호환). **production 은 반드시 넘긴다** —
+   * 안 넘기면 코스가 덱 위를 지나가고 보트가 시설을 뚫는다 (사용자 지적: 플로팅덱으로
+   * 루트를 막을 수 있었다). 정적 검사가 호출부를 지킨다.
+   */
+  blocked?: ReadonlySet<string>,
+  /**
+   * 지금 고른 후보의 영역 (Q10, `DockChoice.claim`). 물려받은 코스는 `dock` 이 잔교 끝이라
+   * 후보 tip(선착장 칸)과 점으로는 안 맞는다 — 영역으로 재야 `dock-taken` 이 제 이름으로
+   * 나온다 (안 재면 `overlap` 으로 흘러 처방이 「핸들을 옮겨라」가 된다 — 실측).
+   */
+  dockClaim?: readonly Vec2[],
 ): CourseValidation {
   const issues: CourseIssueKind[] = [];
   const badHandles: number[] = [];
 
   if (equipId === null) issues.push('no-equipment');
-  else if (fitBlocked(equipId, preset.id)) issues.push('blocked-combo');
+  else {
+    if (fitBlocked(equipId, preset.id)) issues.push('blocked-combo');
+    // 소유는 적합도와 **다른 축**이다 — 맞는 장비인데 아직 없을 수 있다
+    if (owned !== undefined && !owned.has(equipId)) issues.push('not-owned');
+  }
   if (grade < preset.grade) issues.push('locked-preset');
 
   for (let k = 0; k < handles.length; k++) {
@@ -494,7 +645,7 @@ export function validateCourse(
   const comparisonCourses =
     excludeHandle === undefined ? others : others.filter((course) => course.handle !== excludeHandle);
   if (comparisonCourses.length > 0) {
-    if (dockTaken(dock, comparisonCourses)) issues.push('dock-taken');
+    if (dockTaken(dock, comparisonCourses, dockClaim)) issues.push('dock-taken');
     else {
       const near = courseGap(dock, handles, comparisonCourses);
       if (near.gap < COURSE_CLEAR_TILES) {
@@ -505,7 +656,55 @@ export function validateCourse(
     }
   }
 
+  /*
+   * ── 루트 차단 (Q10) — 표본이 물 위 시설을 지나면 안 된다 ──
+   *
+   * ⚠ 핸들만 보면 안 된다: 핸들 둘이 다 물인데 그 **사이 곡선**이 덱을 가로지를 수 있다.
+   * 그래서 겹침 검사와 같은 표본(`sampleCourse`)으로 잰다.
+   * ⚠ 시작점 주변(1.6칸)은 건너뛴다 — 출발지가 곧 선착장 칸이다.
+   */
+  if (blocked !== undefined && blocked.size > 0) {
+    const samples = sampleCourse(dock, handles);
+    let hit = false;
+    for (const sample of samples) {
+      const sp = sample.pos;
+      if (Math.hypot(sp.x - dock.x, sp.y - dock.y) < 1.6) continue;
+      if (!blocked.has(`${Math.round(sp.x)},${Math.round(sp.y)}`)) continue;
+      hit = true;
+      // 가장 가까운 핸들을 빨갛게 — 어느 쪽을 옮길지 화면이 말할 수 있어야 한다
+      let bestK = 0;
+      let bestD = Infinity;
+      for (let k = 0; k < handles.length; k++) {
+        const h = handles[k] as Vec2;
+        const dd = (h.x - sp.x) ** 2 + (h.y - sp.y) ** 2;
+        if (dd < bestD) {
+          bestD = dd;
+          bestK = k;
+        }
+      }
+      if (!badHandles.includes(bestK)) badHandles.push(bestK);
+    }
+    if (hit) {
+      issues.push('route-blocked');
+      badHandles.sort((a, b) => a - b);
+    }
+  }
+
   return { ok: issues.length === 0, issues, badHandles, waterTiles };
+}
+
+/**
+ * 놓인 코스들의 **루트 칸** (Q10) — 배치가 코스를 막지 못하게 `placement.check` 에 넘긴다.
+ * 겹침·차단 검사와 같은 표본을 쓴다 — 자가 둘이면 반드시 어긋난다.
+ */
+export function courseRouteTiles(courses: readonly PlacedCourse[]): ReadonlySet<string> {
+  const out = new Set<string>();
+  for (const c of courses) {
+    for (const sample of sampleCourse(c.dock, c.handles)) {
+      out.add(`${Math.round(sample.pos.x)},${Math.round(sample.pos.y)}`);
+    }
+  }
+  return out;
 }
 
 /** 스플라인 표본. 선착장을 시작점으로 넣어 "선착장에서 출발한다"가 형태에 반영된다 */
@@ -772,6 +971,12 @@ export interface CourseEditResult {
 export interface CourseSnapshot {
   courses: PlacedCourse[];
   nextHandle: number;
+  /**
+   * 산 장비 (P3). **optional 이라 마이그레이션이 없다** — `visitorsTotal`·`specialty` 선례다.
+   * 없으면 `fromSnapshot` 이 **지금 놓인 코스의 장비 ∪ `start` 장비**로 채운다:
+   * 안 그러면 바나나보트로 돌던 코스가 로드 직후 무효가 된다.
+   */
+  owned?: string[];
 }
 
 /**
@@ -781,6 +986,13 @@ export interface CourseSnapshot {
 export class CourseStore {
   private readonly items: PlacedCourse[] = [];
   private nextHandle = 1;
+  /**
+   * 산 장비 (P3). **`UnlockStore` 에 얹지 않는다** — 그 파일은 「시설의 해금 상태」이고
+   * `unlock-graph.test.ts` 가 「없는 시설:」로 장비 id 를 잡을 위험이 있다.
+   */
+  private readonly owned = new Set<string>(
+    COURSE_EQUIPMENT.filter((e) => e.start === true).map((e) => e.id),
+  );
 
   get all(): readonly PlacedCourse[] {
     return this.items;
@@ -788,6 +1000,18 @@ export class CourseStore {
 
   get count(): number {
     return this.items.length;
+  }
+
+  /** 지금 가진 장비 — `validateCourse` 가 이걸 받아 `not-owned` 를 낸다 */
+  get ownedEquipment(): ReadonlySet<string> {
+    return this.owned;
+  }
+
+  /** 상점이 부른다. 이미 가진 것이면 `false` (돈이 두 번 나가면 안 된다) */
+  grantEquipment(id: string): boolean {
+    if (!courseEquipment(id) || this.owned.has(id)) return false;
+    this.owned.add(id);
+    return true;
   }
 
   add(c: Omit<PlacedCourse, 'handle'>): PlacedCourse {
@@ -869,9 +1093,21 @@ export class CourseStore {
   }
 
   toSnapshot(): CourseSnapshot {
+    /*
+     * ⚠ **파생 가능하면 안 쓴다.** `owned` 가 `start` 장비 ∪ 놓인 코스의 장비와 같으면
+     * `fromSnapshot` 이 그대로 복원하므로 필드를 넣을 이유가 없다 — 그리고 넣으면
+     * 아무것도 안 산 옛 v7 세이브가 **바이트 보존을 잃는다** (검사가 그걸 고정한다).
+     * `visitorsTotal`·`specialty` 가 optional 인 것과 같은 규칙이다.
+     */
+    const derived = new Set<string>(
+      COURSE_EQUIPMENT.filter((e) => e.start === true).map((e) => e.id),
+    );
+    for (const c of this.items) derived.add(c.equipId);
+    const extra = [...this.owned].some((id) => !derived.has(id));
     return {
       courses: this.items.map((c) => ({ ...c, dock: { ...c.dock }, handles: c.handles.map((h) => ({ ...h })) })),
       nextHandle: this.nextHandle,
+      ...(extra ? { owned: [...this.owned].sort() } : {}),
     };
   }
 
@@ -881,6 +1117,14 @@ export class CourseStore {
       st.items.push({ ...c, dock: { ...c.dock }, handles: c.handles.map((h) => ({ ...h })) });
     }
     st.nextHandle = s.nextHandle;
+    /*
+     * 옛 세이브 방어 — `owned` 가 없으면 **지금 놓인 코스의 장비**를 전부 넣는다.
+     * 안 하면 바나나보트로 돌던 코스가 로드 직후 `not-owned` 로 무효가 된다.
+     * (`start` 장비는 생성자가 이미 넣었다.)
+     */
+    for (const id of s.owned ?? st.items.map((c) => c.equipId)) {
+      if (courseEquipment(id)) st.owned.add(id);
+    }
     return st;
   }
 }

@@ -17,8 +17,23 @@ import { audio } from '../audio/index.js';
 import {
   createEventShell,
   renderEventShell,
+  type CelebrationDelta,
   type EventShellNodes,
 } from './kairo-event-shell.js';
+
+export type { CelebrationDelta } from './kairo-event-shell.js';
+
+/**
+ * 음성 대조군 (§2.6) — 켜면 **델타 줄을 통째로 비운다.**
+ *
+ * 「회수가 보인다」를 재는 검사들이 이 스위치 하나로 전부 빨간불이 되어야 한다.
+ * 안 빨개지는 검사는 델타가 아니라 다른 것을 재고 있는 것이다.
+ */
+let deltaFault: 'empty' | null = null;
+
+export function setCelebrationDeltaFaultForTest(fault: 'empty' | null): void {
+  deltaFault = fault;
+}
 
 export interface Celebration {
   /** '새 시설 해금!' · 'N등급 승급!' 같은 머리 */
@@ -31,6 +46,8 @@ export interface Celebration {
   sprite?: string;
   /** 첫 엔딩처럼 확인 뒤 갈림길이 필요한 큰 사건. 없으면 기존 `좋아!` 한 버튼이다. */
   actions?: readonly CelebrationAction[];
+  /** **무엇이 얼마나 좋아졌나** (§2.6). sim 실효값에서 읽는다 — 글로 적지 않는다 */
+  deltas?: readonly CelebrationDelta[];
 }
 
 export interface CelebrationAction {
@@ -106,6 +123,7 @@ export class KairoUnlockView implements Panel {
       kicker: c.title,
       title: c.name,
       ...(c.sub !== undefined && c.sub.length > 0 ? { body: c.sub } : {}),
+      deltas: deltaFault === 'empty' ? [] : (c.deltas ?? []),
       figure,
       choices: actions.map((action) => ({
         id: action.id,

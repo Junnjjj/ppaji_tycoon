@@ -1,5 +1,11 @@
-import { MANAGEMENT_GROUPS, type ManagementAction, type TodayRecommendation } from '../sim/kairo/meta.js';
+import {
+  MANAGEMENT_GROUPS,
+  type ManagementAction,
+  type ManagementGroup,
+  type TodayRecommendation,
+} from '../sim/kairo/meta.js';
 import { el } from './dom.js';
+import { icon } from './icons.js';
 import type { GoalChip, GoalRole } from './kairo-hud.js';
 import type { GrowthEvent, GrowthList, GrowthRow } from './kairo-growth.js';
 
@@ -29,54 +35,92 @@ export interface ManagementMenuState {
  * 화면 하나의 정체.
  *
  * ⚠ **개수가 아니라 이름이 계약이다** (K47-② 「개수를 세는 검사는 조용히 죽는다」).
- * 게이트는 `data-manage-screen` · `data-manage-route` 를 이름으로 읽는다.
+ * 게이트는 `data-manage-screen` · `data-band-cell` 을 이름으로 읽는다.
  */
-export type ManageRouteId = 'operations' | 'growth' | 'records' | 'settings';
+export type ManageRouteId = ManagementGroup;
 export type ManageListId = 'quests' | 'wishes' | 'certs' | 'regulars';
-export type ManageScreenId = 'index' | ManageRouteId | ManageListId;
+/** 시트가 보여 줄 수 있는 화면. **인덱스가 없다** — 밴드가 그 자리다 (P1) */
+export type ManageScreenId = ManagementGroup | 'settings';
 
 interface ScreenDef {
   id: ManageScreenId;
   title: string;
-  /** `‹ 뒤로` 가 가는 곳. `null` 이면 뒤로가 없다 (인덱스) */
+  /** `‹ 뒤로` 가 가는 곳. `null` 이면 뒤로가 없다 (밴드에서 바로 온 화면) */
   back: ManageScreenId | null;
 }
 
 /**
- * 화면 지도 — **깊이는 최대 3이다** (`홈 → 메뉴 인덱스 → 목적지 → 목록`).
+ * 화면 지도 — **깊이는 최대 2다** (`홈 → 밴드 → 목적지`).
  *
- * 목록 넷(의뢰·소원·인증·단골)만 3단이고, 그 셋은 전부 `성장` 아래다.
- * 4단이 필요해지면 그 상세는 잘못된 자리에 있는 것이다.
+ * ## 왜 3에서 2로 줄었나 (P1)
+ *
+ * 옛 구조는 `홈 → 메뉴 인덱스 → 목적지 → 목록` 4단이었고, 목록 넷(의뢰·소원·인증·단골)이
+ * 그 4단째였다. 넷은 **문법이 같다**("조건 N/M → 보상") — 같은 문법을 화면 넷으로 쪼개니
+ * "어디에 있었더라"가 생겼다. 이제 `목표` 한 화면의 **섹션 넷**이다.
+ *
+ * 그리고 메뉴 인덱스 한 장이 **밴드로 대체**됐다. 인덱스는 "목적지를 고르는 화면"이었는데,
+ * 밴드가 지도 위에서 같은 일을 하면서 화면을 하나도 안 먹는다.
+ *
+ * ⚠ `설정` 만 3단이다 (`정보 → 설정`). 파괴적 행동(새 게임)이라 **한 겹 더 안쪽**이
+ * 맞고, 그 위계가 곧 안전장치다.
  */
 export const MANAGE_SCREENS: readonly ScreenDef[] = [
-  { id: 'index', title: '메뉴', back: null },
-  { id: 'operations', title: '운영', back: 'index' },
-  { id: 'growth', title: '성장', back: 'index' },
-  { id: 'records', title: '기록', back: 'index' },
-  { id: 'settings', title: '설정', back: 'index' },
-  { id: 'quests', title: '의뢰', back: 'growth' },
-  { id: 'wishes', title: '소원', back: 'growth' },
-  { id: 'certs', title: '인증', back: 'growth' },
-  { id: 'regulars', title: '단골', back: 'growth' },
+  { id: 'store', title: '상점', back: null },
+  { id: 'manage', title: '경영', back: null },
+  { id: 'goals', title: '목표', back: null },
+  { id: 'records', title: '정보', back: null },
+  { id: 'settings', title: '설정', back: 'records' },
 ];
 
 export function manageScreen(id: ManageScreenId): ScreenDef {
   return MANAGE_SCREENS.find((s) => s.id === id) ?? MANAGE_SCREENS[0]!;
 }
 
-/** L1 라우터 네 줄. `설정` 은 **마지막**이다 — 예측 가능한 자리여야 찾는다 */
-export const MANAGE_ROUTES: readonly { id: ManageRouteId; label: string; hint: string }[] = [
-  { id: 'operations', label: '운영', hint: '지금 돌아가는 것을 조정합니다' },
-  { id: 'growth', label: '성장', hint: '다음 목표와 진행을 봅니다' },
-  { id: 'records', label: '기록', hint: '지난 일과 성취를 다시 봅니다' },
-  { id: 'settings', label: '설정', hint: '판 자체를 다룹니다' },
+/** 밴드 한 칸의 정체. `build` 만 그룹 밖의 **네이티브 칸**이다 */
+export interface BandCell {
+  id: 'build' | ManagementGroup;
+  label: string;
+  hint: string;
+  /**
+   * 이 칸이 **화면을 열지 않고 바로 행동을 실행**하는가.
+   * 항목이 하나인 그룹(코스·요리)은 한 줄짜리 목록을 한 겹 끼우지 않는다.
+   */
+  direct: ManagementAction | null;
+}
+
+/**
+ * 오른쪽 밴드 일곱 칸 — **위→아래가 곧 읽는 순서**다 (P1).
+ *
+ * ⚠ 순서는 **영구 고정**이다. 진행에 따라 열리고 잠기지만 자리는 안 바뀐다 —
+ * 근육 기억이 자리에 붙기 때문이고, 잠긴 칸을 숨기는 대신 `?` 로 남기는 이유도 그것이다.
+ * `?` 는 가림막이 아니라 **예고**이고, 그게 이 게임의 튜토리얼이다.
+ */
+export const BAND_CELLS: readonly BandCell[] = [
+  { id: 'build', label: '건설', hint: '시설·바닥·건물을 놓습니다', direct: 'build' },
+  { id: 'course', label: '코스', hint: '견인 코스를 조정합니다', direct: 'course' },
+  { id: 'kitchen', label: '요리', hint: '재료를 조합하고 메뉴를 겁니다', direct: 'recipe' },
+  { id: 'store', label: '상점', hint: '지금 사거나, 구해 오게 시킵니다', direct: null },
+  { id: 'manage', label: '경영', hint: '요금·직원·심사를 다룹니다', direct: null },
+  { id: 'goals', label: '목표', hint: '지금 걸려 있는 조건을 봅니다', direct: null },
+  { id: 'records', label: '정보', hint: '지난 일과 판 설정을 봅니다', direct: null },
 ];
 
 /**
- * `성장` 아래 목록 넷의 라우터 줄.
+ * 옛 이름 보존 — 라우터 줄을 읽는 곳이 아직 있다.
+ * ⚠ 새 코드는 `BAND_CELLS` 를 쓴다.
+ */
+export const MANAGE_ROUTES: readonly { id: ManageRouteId; label: string; hint: string }[] =
+  BAND_CELLS.filter((c): c is BandCell & { id: ManagementGroup } => c.id !== 'build').map((c) => ({
+    id: c.id,
+    label: c.label,
+    hint: c.hint,
+  }));
+
+/**
+ * `목표` 화면 안의 섹션 넷.
  *
- * ⚠ **`설정` 을 `MANAGEMENT_GROUPS` 에 넣지 않는다** — 넣으면 `todayRecommendation` 이
- * "새 게임을 시작하세요"를 추천할 수 있다. 설정은 표현 계층의 네 번째 행이다.
+ * ⚠ 화면이 아니라 **섹션**이다 (P1). 머리 id(`kairo-quests-list` 등)는 그대로 살아 있어
+ * 하네스가 닫힌 상태에서도 읽는다 — 잃으면 조용히 빈 문자열을 읽는다.
  */
 export const MANAGE_LISTS: readonly { id: ManageListId; label: string }[] = [
   { id: 'quests', label: '의뢰' },
@@ -84,6 +128,12 @@ export const MANAGE_LISTS: readonly { id: ManageListId; label: string }[] = [
   { id: 'certs', label: '인증' },
   { id: 'regulars', label: '단골' },
 ];
+
+/**
+ * `목표` 화면에서 **버튼으로 안 내는** 행동 — 아래 섹션이 유일한 입구다.
+ * 버튼과 섹션이 같은 것을 두 번 내면 "어느 쪽이 진짜인가"가 생긴다.
+ */
+const GOAL_LIST_ACTIONS = new Set<ManagementAction>(['quests', 'regular', 'certs', 'wishes']);
 
 /**
  * 어느 경영 행동이 어느 목적지에 사는가.
@@ -97,7 +147,9 @@ export function actionsForRoute(
 ): ManagementMenuAction[] {
   const group = MANAGEMENT_GROUPS.find((g) => g.id === route);
   if (!group) return [];
-  const order = new Map(group.items.map((id, index) => [id, index]));
+  const order = new Map<ManagementAction, number>(
+    group.items.map((id, index) => [id as ManagementAction, index]),
+  );
   return actions
     .filter((a) => order.has(a.id))
     .sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
@@ -191,11 +243,20 @@ export interface ManagementTodayPresentation {
   reason: string;
   label: string;
   detail: string;
+  /** 누가 말하나 (Q8) — 없으면 화자 없는 안내다 */
+  speaker?: string;
 }
 
+/**
+ * 행동 하나의 표식.
+ *
+ * ⚠ **P1.5-A 가 여기를 아이콘 등록부로 갈아 끼운다** — 이모지는 기기·OS 마다 다르게 그려져
+ * 게임 아트와 재질이 안 맞는다 (실측: `src/ui/*.ts` 에 이모지 40곳). 지금은 자리만 지킨다.
+ */
 const ACTION_ICONS: Record<ManagementAction, string> = {
-  price: '◎', staff: '👥', course: '🚤', exam: '⭐', regular: '♥', quests: '✓',
-  codex: '▣', report: '▤', view: '◉', certs: '◆', ending: '🏁',
+  build: icon('build'), course: icon('course'), recipe: icon('recipe'), shop: icon('shop'), commission: icon('commission'),
+  price: '◎', staff: icon('visitors'), exam: icon('grade'), quests: icon('check'), regular: icon('regular'), certs: '◆',
+  wishes: icon('wishes'), codex: '▣', report: '▤', view: '◉', ending: icon('ending'),
 };
 
 const SOURCE_REASONS: Record<TodayRecommendation['source'], string> = {
@@ -213,6 +274,8 @@ export function managementTodayPresentation(today: TodayRecommendation): Managem
     reason: SOURCE_REASONS[today.source],
     label: today.label,
     detail: today.detail,
+    // 화자 (Q8) — sim 이 정하고 화면은 나르기만 한다
+    ...(today.speaker === undefined ? {} : { speaker: today.speaker }),
   };
 }
 
@@ -259,6 +322,14 @@ export interface ManagementMenuOptions {
    * 목록은 훑는 곳이고 상세는 장면으로 읽는다 — 발견 · 수락 · 완료가 전부 같은 상자다.
    */
   onRowOpen?: (list: ManageListId, event: GrowthEvent) => void;
+  /**
+   * 지금 화면의 이름을 **시트 머리에** 올린다 (P8).
+   *
+   * ⚠ 이 콜백이 없으면 머리가 둘이 된다 — 시트 머리가 `메뉴`(P1 이 지운 인덱스의 잔재)
+   * 를 말하고 그 아래 `.kmanage-head` 가 진짜 제목을 다시 말했다. 실측으로 목표 화면이
+   * `메뉴`(58px) + `목표`(31px) 두 줄이었다. 제목의 정본은 **하나**여야 한다.
+   */
+  onScreenTitle?: (title: string) => void;
 }
 
 /**
@@ -298,7 +369,7 @@ export class KairoManagementMenu {
   private readonly titleEl: HTMLDivElement;
   private readonly countEl: HTMLDivElement;
   private readonly opts: ManagementMenuOptions;
-  private current: ManageScreenId = 'index';
+  private current: ManageScreenId = 'goals';
   private readonly versionLine: HTMLElement;
   private readonly headEl: HTMLDivElement;
   private lists = new Map<ManageListId, GrowthList>();
@@ -333,69 +404,72 @@ export class KairoManagementMenu {
     this.countEl = el('div', 'kmanage-count');
     head.append(this.backBtn, this.titleEl, this.countEl);
 
-    // ── 인덱스 ───────────────────────────────────────────────────────────
-    const index = el('section', 'kmanage-screen');
-    index.dataset['manageScreen'] = 'index';
+    /*
+     * ⚠ **인덱스 화면이 없다** (P1). 목적지를 고르는 일은 지도 위 **밴드**가 한다 —
+     * 화면을 하나도 안 먹고 같은 일을 하므로 깊이가 3 → 2 로 줄었다.
+     *
+     * 인덱스가 갖고 있던 셋의 행선지:
+     *   · `오늘 할 일` → **HUD 하단 상태 밴드** (진행 바가 없을 때의 얼굴)
+     *   · 경고        → `목표` 화면 (경고도 "지금 걸린 것"이다)
+     *   · 판 설정 한 줄 → `정보` 화면
+     */
     this.contextLine = el('div', 'kmanage-context');
-    const today = el('div', 'kmanage-today');
-    today.append(el('div', 'kmanage-kicker', '오늘 할 일'));
-    this.todayButton = el('button', 'kmanage-action primary') as HTMLButtonElement;
-    today.append(this.todayButton);
     this.warningBox = el('div', 'kmanage-warnings');
     this.warningBox.setAttribute('aria-live', 'polite');
-    const routes = el('div', 'kmanage-routes');
-    for (const route of MANAGE_ROUTES) {
-      routes.append(this.routeButton(route.id, route.label, route.hint));
-    }
-    index.append(this.contextLine, today, this.warningBox, routes);
-    this.screens.set('index', index);
+    /*
+     * `오늘 할 일` 버튼은 **여기서 안 그린다.** 하네스와 접근성이 읽는 손잡이는 HUD 로
+     * 옮겼다. 이 노드는 `refresh()` 가 계속 갱신하지만 DOM 에는 안 붙는다 —
+     * ⚠ 붙이면 홈 밴드의 **복창**이 되고, 그게 티커 폴백이 이미 밟은 실패다.
+     */
+    this.todayButton = el('button', 'kmanage-action primary') as HTMLButtonElement;
 
-    // ── L2 넷 ────────────────────────────────────────────────────────────
+    // ── 목표 절 (옛 성장) ────────────────────────────────────────────────
     this.goalSection = el('div', 'kmanage-subgroup');
     this.goalSection.dataset['manageSub'] = 'goals';
-    this.goalSection.append(el('h4', undefined, '목표'));
+    this.goalSection.append(el('h4', undefined, '중·장기 목표'));
     this.goalBox = el('div', 'kmanage-goals');
     this.goalSection.append(this.goalBox);
     this.goalSection.hidden = true;
 
-    for (const route of MANAGE_ROUTES) {
+    // ── 목적지 화면들 ────────────────────────────────────────────────────
+    for (const def of MANAGE_SCREENS) {
       const screen = el('section', 'kmanage-screen');
-      screen.dataset['manageScreen'] = route.id;
-      /*
-       * `data-manage-group` 을 남긴다 — 이 목적지가 `MANAGEMENT_GROUPS` 의 어느 그룹인지
-       * 계속 이름으로 읽혀야 한다 (게이트·접근성 둘 다).
-       */
-      screen.dataset['manageGroup'] = route.id;
-      if (route.id === 'settings') {
+      screen.dataset['manageScreen'] = def.id;
+      if (def.id !== 'settings') {
+        /*
+         * `data-manage-group` 을 남긴다 — 이 목적지가 `MANAGEMENT_GROUPS` 의 어느 그룹인지
+         * 계속 이름으로 읽혀야 한다 (게이트·접근성 둘 다).
+         */
+        screen.dataset['manageGroup'] = def.id;
+      }
+
+      if (def.id === 'settings') {
         for (const section of settings) screen.append(this.settingsSection(section));
         screen.append(this.versionLine);
-      } else {
-        if (route.id === 'growth') screen.append(this.goalSection);
-        const list = el('div', 'kmanage-list');
-        for (const action of actionsForRoute(route.id, actions)) {
-          // 의뢰·단골·인증은 바로 아래 전용 목록 라우터가 유일한 입구다.
-          if (route.id === 'growth' && ['quests', 'regular', 'certs'].includes(action.id)) continue;
-          list.append(this.actionButton(action));
+      } else if (def.id === 'goals') {
+        screen.append(this.warningBox, this.goalSection);
+        for (const action of actionsForRoute('goals', actions)) {
+          // 목록 넷은 아래 섹션이 유일한 입구다 — 버튼으로 또 내지 않는다
+          if (GOAL_LIST_ACTIONS.has(action.id)) continue;
+          screen.append(this.actionButton(action));
         }
+      } else {
+        const list = el('div', 'kmanage-list');
+        for (const action of actionsForRoute(def.id, actions)) list.append(this.actionButton(action));
         screen.append(list);
-        if (route.id === 'growth') screen.append(this.growthRoutes());
+        if (def.id === 'records') {
+          screen.append(this.contextLine);
+          screen.append(this.settingsEntry());
+        }
       }
-      this.screens.set(route.id, screen);
-    }
-
-    // ── L3 목록 넷 ───────────────────────────────────────────────────────
-    for (const list of MANAGE_LISTS) {
-      const screen = el('section', 'kmanage-screen kmanage-listscreen');
-      screen.dataset['manageScreen'] = list.id;
-      this.screens.set(list.id, screen);
+      this.screens.set(def.id, screen);
     }
 
     const body = el('div', 'kmanage-body');
     for (const screen of this.screens.values()) body.append(screen);
     /*
      * 목록 호스트(`#kairo-quests`)는 **한 곳에만** 산다 — 화면마다 옮기면 id 가 순간
-     * 사라지고 하네스가 그 프레임을 읽으면 조용히 실패한다. 대신 목록 화면이 열릴 때
-     * 이 노드를 보이게만 한다.
+     * 사라지고 하네스가 그 프레임을 읽으면 조용히 실패한다. `목표` 화면이 열릴 때만 보인다.
      */
     if (this.listHost) {
       this.listHost.classList.add('kgrowth');
@@ -406,58 +480,33 @@ export class KairoManagementMenu {
         this.listSections.set(list.id, section);
         this.listHost.append(section);
       }
-      body.append(this.listHost);
+      this.screens.get('goals')?.append(this.listHost);
     }
 
     host.append(head, body);
-    this.show('index');
+    this.show('goals');
   }
 
-  private routeButton(id: ManageRouteId, label: string, hint: string): HTMLButtonElement {
+  /**
+   * `정보` 화면 아래의 **설정 입구** 한 줄.
+   *
+   * ⚠ 설정은 밴드에 칸을 안 준다 — 거의 안 가는 곳이고, 파괴적 행동(새 게임)이라
+   * **한 겹 더 안쪽**이 맞다. 그 위계가 곧 안전장치다.
+   */
+  private settingsEntry(): HTMLButtonElement {
     const button = el('button', 'kmanage-action kmanage-route') as HTMLButtonElement;
-    button.dataset['manageRoute'] = id;
-    button.id = `kairo-manage-${id}`;
-    button.append(el('span', 'kmanage-label', label));
-    const detail = el('span', 'kmanage-detail', hint) as HTMLSpanElement;
-    this.routeDetailById.set(id, detail);
+    button.dataset['manageRoute'] = 'settings';
+    button.id = 'kairo-manage-settings';
+    button.append(el('span', 'kmanage-label', '설정'));
+    const detail = el('span', 'kmanage-detail', '배속 · 소리 · 새 게임') as HTMLSpanElement;
     button.append(detail, el('span', 'kmanage-chev', '〉'));
-    button.setAttribute('aria-label', `${label}, ${hint}`);
+    button.setAttribute('aria-label', '설정, 배속 · 소리 · 새 게임');
     button.addEventListener('click', (event) => {
-      // 라우터는 시트 안에서 화면만 바꾼다 — 시트를 닫으면 목적지가 사라진다
       event.stopPropagation();
-      this.show(id);
+      this.show('settings');
     });
     return button;
   }
-
-  /** `성장` 아래 목록 넷으로 가는 줄. 여기가 의뢰·소원·인증·단골의 유일한 입구다 */
-  private growthRoutes(): HTMLElement {
-    const box = el('div', 'kmanage-subgroup');
-    box.dataset['manageSub'] = 'lists';
-    box.append(el('h4', undefined, '진행 목록'));
-    const list = el('div', 'kmanage-list');
-    for (const item of MANAGE_LISTS) {
-      const button = el('button', 'kmanage-action kmanage-route') as HTMLButtonElement;
-      button.dataset['manageRoute'] = item.id;
-      button.id = `kairo-manage-${item.id}`;
-      button.append(el('span', 'kmanage-label', item.label));
-      const detail = el('span', 'kmanage-detail', '') as HTMLSpanElement;
-      button.append(detail, el('span', 'kmanage-chev', '〉'));
-      button.addEventListener('click', (event) => {
-        event.stopPropagation();
-        this.show(item.id);
-      });
-      this.listRouteDetails.set(item.id, { button, detail, label: item.label });
-      list.append(button);
-    }
-    box.append(list);
-    return box;
-  }
-
-  private readonly listRouteDetails = new Map<
-    ManageListId,
-    { button: HTMLButtonElement; detail: HTMLSpanElement; label: string }
-  >();
 
   private settingsSection(section: ManagementSettingsSection): HTMLElement {
     const sub = el('div', 'kmanage-subgroup');
@@ -553,21 +602,36 @@ export class KairoManagementMenu {
     const def = manageScreen(id);
     this.current = def.id;
     for (const [screenId, node] of this.screens) node.hidden = screenId !== def.id;
-    const list = MANAGE_LISTS.find((item) => item.id === def.id);
+    /*
+     * 목록 넷은 이제 **화면이 아니라 `목표` 화면의 섹션**이다 (P1). 그래서 호스트는
+     * `목표` 에서만 보이고, 그 안의 네 섹션은 **전부 같이** 보인다 — 종류로 갈라 놓으면
+     * "어디에 있었더라"가 다시 생긴다. 문법이 같은 넷이라 한 흐름으로 읽는 것이 맞다.
+     */
     if (this.listHost) {
-      this.listHost.hidden = list === undefined;
-      for (const [sectionId, node] of this.listSections) node.hidden = sectionId !== def.id;
+      this.listHost.hidden = def.id !== 'goals';
+      for (const node of this.listSections.values()) node.hidden = false;
     }
     /*
      * 인덱스에서는 **머리를 안 그린다** — 시트 머리가 이미 `메뉴` + `닫기` 를 갖고 있고
      * 뒤로도 없다. 두 머리를 겹치면 가로(852×393)에서 244px 시트의 **118px** 이 머리가
      * 되어 본문이 116px 만 남는다 (실측). 목적지로 들어가야 `‹ 뒤로 · 제목` 이 필요하다.
      */
-    this.headEl.hidden = def.id === 'index';
+    /*
+     * P8 — **제목은 시트 머리 하나가 말한다.** `.kmanage-title` 은 DOM 에 남기되
+     * (하네스가 textContent 를 읽는다) 화면에서는 접는다. 그러고 나면 이 머리에 남는 것은
+     * `‹ 뒤로` 와 개수뿐이라, 둘 다 없으면 머리 자체를 접는다 — 밴드에서 바로 온 화면이
+     * 늘 그 경우다.
+     *
+     * ⚠ `.kmanage-head` 를 **DOM 에서 빼지 말 것** — 게이트가
+     * `semantic[0] === 'kmanage-head'` 를 className 목록으로 읽는다 (`hidden` 은 무시된다).
+     */
     this.backBtn.hidden = def.back === null;
     this.titleEl.textContent = def.title;
-    this.countEl.textContent = list ? (this.lists.get(list.id)?.count ?? '') : '';
-    this.countEl.hidden = this.countEl.textContent === '';
+    this.titleEl.hidden = true;
+    this.countEl.textContent = '';
+    this.countEl.hidden = true;
+    this.headEl.hidden = this.backBtn.hidden && this.countEl.hidden;
+    this.opts.onScreenTitle?.(def.title);
     /*
      * 화면을 바꾸면 **본문 스크롤을 처음으로** 되돌린다. 안 그러면 앞 화면에서 내려간
      * 위치가 남아 새 화면이 중간부터 보인다 — 옛 메뉴가 `scrollIntoView` 로 1,000px 를
@@ -583,9 +647,14 @@ export class KairoManagementMenu {
     if (def.back) this.show(def.back);
   }
 
-  /** 시트를 다시 열 때 인덱스로 되돌린다 — 목적지에서 시작하면 "어디였지"가 된다 */
+  /**
+   * 시트를 다시 열 때의 기본 화면.
+   *
+   * ⚠ 인덱스가 없어졌으므로(P1) 밴드가 목적지를 **매번 지정**한다. `reset()` 은 밴드를
+   * 안 거치고 시트만 여는 경로(하네스·복구)의 폴백이다.
+   */
   reset(): void {
-    this.show('index');
+    this.show('goals');
   }
 
   /**
@@ -623,15 +692,11 @@ export class KairoManagementMenu {
           );
         }
       }
-      const route = this.listRouteDetails.get(list.id);
-      if (route) {
-        route.detail.textContent = list.rows.length === 0 ? list.empty.fact : list.count;
-        route.button.setAttribute('aria-label', `${route.label}, ${route.detail.textContent}`);
-      }
-    }
-    if (this.current in LIST_HEAD_ID) {
-      this.countEl.textContent = this.lists.get(this.current as ManageListId)?.count ?? '';
-      this.countEl.hidden = this.countEl.textContent === '';
+      /*
+       * 섹션 머리 옆의 개수 — 옛 라우터 줄이 갖고 있던 자리다 (P1 에서 라우터가 사라졌다).
+       * 빈 목록도 **사실 한 줄**을 내야 한다: `없음` 한 단어를 안 쓴다 (§8.1 규격).
+       */
+      head.append(el('span', 'kgrowth-count', list.rows.length === 0 ? list.empty.fact : list.count));
     }
   }
 
@@ -693,7 +758,7 @@ export class KairoManagementMenu {
       entry.node.textContent = settingsItemView(entry.item).detail;
     }
     this.warningBox.replaceChildren(
-      ...state.warnings.map((warning) => el('div', 'kmanage-warning', `⚠ ${warning}`)),
+      ...state.warnings.map((warning) => el('div', 'kmanage-warning', `${icon('warn')} ${warning}`)),
     );
     this.warningBox.hidden = state.warnings.length === 0;
   }

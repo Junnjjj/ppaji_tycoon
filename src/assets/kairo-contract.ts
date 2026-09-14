@@ -378,7 +378,7 @@ export function kairoAssetSizes(): Map<string, readonly [number, number]> {
 }
 
 /**
- * 생성물 파일명 ↔ 논리 ID. `docs/asset-prompts.md` 가 정한 규칙이 정본이고
+ * 생성물 파일명 ↔ 논리 ID. `docs/assets/maintenance/legacy-sheet-prompts.md` 가 정한 규칙이 정본이고
  * **여기가 그 규칙의 유일한 구현**이다.
  *
  *   `facility/shop`     ↔ `facility__shop.png`

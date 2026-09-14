@@ -28,7 +28,7 @@ describe('생성물 파일명 ↔ 논리 ID — 규칙의 유일한 구현', () 
     }
   });
 
-  it('docs/asset-prompts.md 가 든 예시 셋이 그대로 성립한다', () => {
+  it('docs/assets/maintenance/legacy-sheet-prompts.md 가 든 예시 셋이 그대로 성립한다', () => {
     expect(assetIdToFile('facility/shop')).toBe('facility__shop.png');
     expect(assetIdToFile('ground/lawn:a0')).toBe('ground__lawn__a0.png');
     expect(assetIdToFile('ui/icon-coin')).toBe('ui__icon-coin.png');

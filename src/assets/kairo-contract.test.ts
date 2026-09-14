@@ -219,7 +219,15 @@ describe('손님 계약', () => {
   it('셀 14×24, 포즈 7, 이모트 6, 방향 4', () => {
     expect(KAIRO.guest.cellTexels).toEqual([14, 24]);
     expect(KAIRO.guest.poses).toHaveLength(7);
-    expect(KAIRO.guest.emotes).toHaveLength(6);
+    /*
+     * ⚠ P7 — **`alert` 를 지우고 `ask`·`wish` 를 더했다** (6 → 7).
+     * `alert` 는 호출부가 **0** 이었다: 계약에만 있고 화면에 한 번도 안 뜬 프레임은
+     * 아틀라스 한 칸을 낭비하고, 「있다고 주장하는데 없다」의 반대 판본이다.
+     */
+    expect(KAIRO.guest.emotes).toHaveLength(7);
+    expect(KAIRO.guest.emotes).not.toContain('alert');
+    expect(KAIRO.guest.emotes).toContain('ask');
+    expect(KAIRO.guest.emotes).toContain('wish');
     expect(KAIRO.guest.facings).toBe(4);
     expect(KAIRO.guest.facingNames).toHaveLength(4);
   });

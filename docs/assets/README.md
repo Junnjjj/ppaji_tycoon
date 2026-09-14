@@ -16,6 +16,7 @@
 | 구형 V2 시설을 유지보수 | [구형 재생성 지시서](maintenance/legacy-v2-regeneration.md), [구형 시트 프롬프트](maintenance/legacy-sheet-prompts.md) | 신규 제작에는 사용 금지 |
 | 토큰 절감 방식을 별도 실험 | [토큰 절감 실험안](operations/token-efficiency-experiment.md) | 현재 파이프라인 미적용 |
 | UI 아이콘 44종 제작·반입 | [UI 아이콘 파이프라인](pipelines/ui-icons.md) | `$ppaji-kairo-assets` |
+| **빠지 스토리 그림 시트 342장**(재료·요리·부품·기구·소품·선물·팔찌 아이콘) — ChatGPT 주문서 | [그림 시트 주문서](pipelines/ppaji-picture-sheet.md) · 계획 `docs/plan-ppaji-picture-ui.md` | (외부 세션) |
 | 사건 배경 삽화 9종 제작 | [사건 배경 파이프라인](pipelines/event-art.md) | `$ppaji-kairo-assets` |
 
 ## 폴더 구조

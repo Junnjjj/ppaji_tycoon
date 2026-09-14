@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
 import {
   GUEST_W,
   GUEST_H,
@@ -66,7 +67,15 @@ describe('손님 스프라이트 계약 — 나중에 아틀라스로 갈아끼�
 
   it('표정 4종 · 이모트 6종', () => {
     expect(FACES).toEqual(['calm', 'happy', 'annoyed', 'tired']);
-    expect(KAIRO.guest.emotes).toHaveLength(6);
+    /*
+     * ⚠ P7 — **`alert` 를 지우고 `ask`·`wish` 를 더했다** (6 → 7).
+     * `alert` 는 호출부가 **0** 이었다: 계약에만 있고 화면에 한 번도 안 뜬 프레임은
+     * 아틀라스 한 칸을 낭비하고, 「있다고 주장하는데 없다」의 반대 판본이다.
+     */
+    expect(KAIRO.guest.emotes).toHaveLength(7);
+    expect(KAIRO.guest.emotes).not.toContain('alert');
+    expect(KAIRO.guest.emotes).toContain('ask');
+    expect(KAIRO.guest.emotes).toContain('wish');
   });
 
   it('프레임 이름이 유일하다 — 겹치면 조용히 잘못된 셀을 그린다', () => {
@@ -164,5 +173,41 @@ describe('슬롯 포즈 — 그림이 있는 것만 (75종 전부)', () => {
     expect(drawn('idle', '+Z')).toBe(true);
     expect(drawn('dance', '+Z')).toBe(false); // 굽지 않는 포즈
     expect(drawn('float', '-X')).toBe(false); // 있는 포즈인데 그 방향 셀이 없다
+  });
+});
+
+/*
+ * ── P7 표식 두 장 — **계약과 그림은 `assets/` 소관이다** ──────────────────
+ *
+ * ⚠ 이 블록은 원래 `src/sim/kairo/guest-mark.test.ts` 에 있었고 거기서
+ * `assets/kairo-contract.js` 를 import 해 **불변식 1 을 위반**했다 (ESLint 가 잡았다).
+ * `Guest.mark` 를 sim 이 정한다는 것과, 그 표식의 **프레임 계약·절차 폴백**은 다른 층이다.
+ */
+describe('표식 두 장은 그림 없이도 뜬다 (P7 · 절차 폴백)', () => {
+  it('계약이 `ask`·`wish` 를 갖고 `alert` 는 없다', () => {
+    expect(KAIRO.guest.emotes).toContain('ask');
+    expect(KAIRO.guest.emotes).toContain('wish');
+    // ⚠ `alert` 는 호출부가 0 이었다 — 계약에만 있고 안 뜨는 프레임은 한 칸 낭비다
+    expect(KAIRO.guest.emotes).not.toContain('alert');
+  });
+
+  it('절차 도형이 계약을 먼저 채운다 — 그림이 없어도 화면이 안 깨진다', () => {
+    const sprite = readFileSync(
+      new URL('./kairo-guest-sprite.ts', import.meta.url), 'utf8',
+    );
+    expect(sprite).toMatch(/name === 'ask'/);
+    expect(sprite).toMatch(/name === 'wish'/);
+  });
+
+  it('⚠ 색만으로 안 가른다 — 모양이 먼저다 (색약·흑백)', () => {
+    const sprite = readFileSync(
+      new URL('./kairo-guest-sprite.ts', import.meta.url), 'utf8',
+    );
+    const ask = sprite.slice(sprite.indexOf("name === 'ask'"), sprite.indexOf("name === 'wish'"));
+    const wish = sprite.slice(sprite.indexOf("name === 'wish'"));
+    // 컵은 사각, 별은 뾰족 — 그리는 사각형 수가 달라야 실루엣이 갈린다
+    const boxes = (t: string): number => (t.match(/g\.fillRect\(/g) ?? []).length;
+    expect(boxes(ask)).toBeGreaterThan(0);
+    expect(boxes(wish.slice(0, wish.indexOf('} else {')))).not.toBe(boxes(ask));
   });
 });

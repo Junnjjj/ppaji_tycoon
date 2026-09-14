@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import { resolveFontSize } from './type-scale.js';
 import { describe, expect, it } from 'vitest';
 import { BuildSession, type BuildSessionHost } from './kairo-build-flow.js';
 
@@ -333,10 +334,26 @@ describe('확정 바가 연속 설치를 글자로 보여 준다', () => {
     );
     expect(confirm).toContain('color: var(--text-on-solid)');
     expect(confirm).toContain('text-shadow: var(--sk-emboss-on-solid)');
-    expect(cssSource).toMatch(/\.kconfirm-name\s*\{[^}]*font-size:\s*15px/s);
-    expect(cssSource).toMatch(/\.kconfirm-cost\s*\{[^}]*font-size:\s*13px/s);
-    expect(cssSource).toMatch(/\.kconfirm-check\s*\{[^}]*font-size:\s*13px/s);
-    expect(cssSource).toMatch(/\.kconfirm \.place-btn\s*\{[^}]*font-size:\s*16px/s);
+    /*
+     * ⚠ **크기는 스케일 토큰이다** (P1.5-A). 리터럴 px 대조는 토큰화에 깨지고,
+     * 토큰만 읽으면 리터럴이 숨는다 — `resolveFontSize` 가 둘을 같은 자로 푼다.
+     * ⚠ 그리고 **font-size 를 실제로 가진 규칙**을 찾아야 한다: 같은 이름이 더 긴
+     * 선택자에 먼저 나오면(`.kcourse[...] .kcourse-title`) 그 빈 규칙을 집는다.
+     * 계약은 "이만큼보다 작지 않다"이지 "정확히 N px"가 아니므로 **하한**으로 잰다.
+     */
+    const fs = (selector: string): number => {
+      const escaped = selector.replace(/[.[\]]/g, (ch) => `\\${ch}`);
+      const re = new RegExp(`${escaped}\\s*\\{([^}]*)\\}`, 'gs');
+      for (const m of cssSource.matchAll(re)) {
+        const px = resolveFontSize(m[1] ?? '');
+        if (px !== null) return px;
+      }
+      return 0;
+    };
+    expect(fs('.kconfirm-name')).toBeGreaterThanOrEqual(15);
+    expect(fs('.kconfirm-cost')).toBeGreaterThanOrEqual(13);
+    expect(fs('.kconfirm-check')).toBeGreaterThanOrEqual(13);
+    expect(fs('.kconfirm .place-btn')).toBeGreaterThanOrEqual(16);
   });
 
   it('조준 중에는 홈 입력층이 화면을 안 가진다 (mode ownership)', () => {

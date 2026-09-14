@@ -1,0 +1,232 @@
+[
+  {
+    "id": "residential",
+    "name": "주택가",
+    "order": 0,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "strawberry"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350
+  },
+  {
+    "id": "school",
+    "name": "학교",
+    "order": 1,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "apple"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350
+  },
+  {
+    "id": "forest",
+    "name": "숲",
+    "order": 2,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "mint"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350
+  },
+  {
+    "id": "shopping",
+    "name": "상가",
+    "order": 3,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "chocolate"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350
+  },
+  {
+    "id": "office",
+    "name": "오피스",
+    "order": 4,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "coffee_beans"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350
+  },
+  {
+    "id": "station",
+    "name": "역",
+    "order": 5,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "lemon"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350
+  },
+  {
+    "id": "downtown",
+    "name": "번화가",
+    "order": 6,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "grapes"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350
+  },
+  {
+    "id": "specialty",
+    "name": "전문가",
+    "order": 7,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "lavender"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350
+  },
+  {
+    "id": "airport",
+    "name": "공항",
+    "order": 8,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "pineapple"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350
+  },
+  {
+    "id": "kairo_island",
+    "name": "카이로 섬",
+    "order": 9,
+    "likesToUnlockNext": 1000,
+    "likeRewards": [
+      {
+        "at": 350,
+        "grant": {
+          "kind": "item",
+          "id": "honey"
+        }
+      },
+      {
+        "at": 700,
+        "grant": {
+          "kind": "money",
+          "amount": 1500
+        }
+      }
+    ],
+    "busEvery": 350
+  }
+]

@@ -5,7 +5,7 @@ import { WallGrid } from './walls.js';
 import { PlacementGrid } from './placement.js';
 import { GuestStore, OPEN_GATE_DEFAULTS } from './guests.js';
 import { WeekRunner } from './week.js';
-import { assessRisk, accidentChance } from './risk.js';
+import { assessRisk, accidentChance, setAccidentTargetFaultForTest } from './risk.js';
 import { triggerCard, CardStore } from './cards.js';
 
 /**
@@ -32,6 +32,18 @@ function park(defId: string, n: number): {
   return { t, p, g };
 }
 
+/**
+ * 이 파일의 두 절은 **100주를 실제로 돌린다** — 단독 실행에서 4.5초로 vitest 기본 5초에
+ * 붙어 있어서, 전체 병렬 실행에서 스케줄링 한 번만 밀려도 타임아웃으로 죽었다
+ * (`docs/ui-management-redesign-decisions.md` §9.4 가 그 이력을 기록해 뒀다).
+ *
+ * ⚠ **느려서 늘리는 것이 아니라 게이트를 믿을 수 있게 하려고 늘린다.** 페이즈 게이트가
+ * "실패가 정확히 2건인가"로 새 실패를 잡는데, 여기가 랜덤하게 3건을 만들면 그 판정이
+ * 매번 늑대를 부른다. 100주를 줄이면 사고 확률 검정의 표본이 줄어 검사가 약해지므로,
+ * 표본이 아니라 **제한 시간**을 옮긴다.
+ */
+const WEEK_HEAVY = { timeout: 20_000 };
+
 describe('사고는 위험할 때만 난다', () => {
   it('안전한 공원은 확률이 0 이다 — RNG 세금을 안 만든다', () => {
     const { p, g } = park('lifering', 6); // 안전 시설만
@@ -40,7 +52,7 @@ describe('사고는 위험할 때만 난다', () => {
     expect(accidentChance(risk)).toBe(0);
   });
 
-  it('확률이 0 이면 100주를 돌려도 사고가 없다', () => {
+  it('확률이 0 이면 100주를 돌려도 사고가 없다', WEEK_HEAVY, () => {
     const f = park('shop', 6);
     const runner = new WeekRunner(f.t, f.p, f.g);
     let hits = 0;
@@ -50,7 +62,7 @@ describe('사고는 위험할 때만 난다', () => {
     expect(hits).toBe(0);
   });
 
-  it('확률이 있으면 사고가 나고, 시설 하나가 1~3주 닫힌다', () => {
+  it('확률이 있으면 사고가 나고, 시설 하나가 1~3주 닫힌다', WEEK_HEAVY, () => {
     const f = park('shop', 6);
     const runner = new WeekRunner(f.t, f.p, f.g);
     let hits = 0;
@@ -176,5 +188,63 @@ describe('사고 대응 카드 (§12.1)', () => {
         expect(Math.abs(e.cash ?? 0)).toBeLessThan(3_000_000);
       }
     }
+  });
+});
+
+/**
+ * ── Q1: 사고가 **어디에** 나나 — `week.ts` 가 가중치를 실제로 쓰나 ─────────────
+ *
+ * `risk.test.ts` 는 가중치 **함수**를 재고, 여기서는 **주 루프가 그걸 쓰는지**를 잰다.
+ * 함수만 재면 「값은 맞는데 아무도 안 쓴다」가 조용히 통과한다 (이 저장소가 여러 번 밟았다:
+ * `permitArea` 는 정의만 있고 소비처가 0 이었고, `capacityOf` 는 `week.ts` 에 안 닿았다).
+ */
+describe('Q1 — 사고는 위험한 시설에서 난다', () => {
+  /** 위험 시설 하나 + 안전하지 않은 평범한 시설 여럿을 섞은 판 */
+  function mixed(): { t: KairoTerrain; p: PlacementGrid; g: GuestStore; risky: number } {
+    const t = new KairoTerrain(40, 32);
+    for (let i = 0; i < 40; i++) for (let j = 0; j < 32; j++) t.paint(i, j, 'path_stone');
+    const w = new WallGrid(40, 32);
+    const p = new PlacementGrid(40, 32);
+    // 평범한 시설 여럿 — 예전 균일 추첨이라면 이쪽이 훨씬 자주 맞는다
+    for (let k = 0; k < 8; k++) p.place(t, w, GATE, 'pyeongsang_row', 6 + k * 3, 8);
+    const r = p.place(t, w, GATE, 'pingpong', 6, 20);
+    const g = new GuestStore(t, w, p, GATE, OPEN_GATE_DEFAULTS);
+    g.invalidate();
+    return { t, p, g, risky: r.ok && r.placed ? r.placed.handle : -1 };
+  }
+
+  function hitRate(uniform: boolean): number {
+    setAccidentTargetFaultForTest(uniform ? 'uniform' : null);
+    try {
+      let risky = 0;
+      let total = 0;
+      for (let k = 0; k < 60; k++) {
+        const { t, p, g, risky: handle } = mixed();
+        const runner = new WeekRunner(t, p, g);
+        // 확률 1 — 「언제 나나」가 아니라 「어디에 나나」만 잰다
+        const rep = runner.run(new Rng(1000 + k), { season: 'summer', accidentChance: 1 });
+        if (!rep.accident) continue;
+        total += 1;
+        if (rep.accident.handle === handle) risky += 1;
+      }
+      return total === 0 ? 0 : risky / total;
+    } finally {
+      setAccidentTargetFaultForTest(null);
+    }
+  }
+
+  it('★ 위험 시설이 아홉 중 하나인데 사고는 거기 몰린다', WEEK_HEAVY, () => {
+    const weighted = hitRate(false);
+    /*
+     * 위험 시설은 **아홉 중 하나**다. 균일이면 1/9 ≈ 0.11 이고, 가중치가 살아 있으면
+     * 평상(위험 0)들은 후보에서 빠지므로 **1.0** 에 가까워야 한다.
+     */
+    expect(weighted).toBeGreaterThan(0.9);
+  });
+
+  it('⚠ 음성 대조군 — `uniform` 이면 예전처럼 아무 데나 난다', WEEK_HEAVY, () => {
+    const uniform = hitRate(true);
+    // 1/9 ≈ 0.11 — 「위험한 곳에 몰린다」가 성립하지 않는다
+    expect(uniform).toBeLessThan(0.5);
   });
 });

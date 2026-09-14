@@ -32,9 +32,24 @@
  * 이는 "시트 = 정지" 규칙과 일관된 **의도된 동작**이다. 티커 띠 자체는 비차단이다.
  */
 import { el } from './dom.js';
+import { icon } from './icons.js';
 import { panelHost, type Panel } from './panels.js';
 
+/**
+ * 피드의 종류 (P7). **종류 탭을 만들지 않는다** — 시간 역순 하나다.
+ *
+ * ⚠ 탭을 만들면 「어디서 봤더라」가 생기고, 그건 P1 이 성장 목록 넷을 `목표` 한 장으로
+ * 합친 것과 정확히 같은 실수다. 종류는 **아이콘과 문구**로 읽히면 충분하다.
+ *
+ * · `news` — 내가 안 했는데 일어난 일 (하루 마감·날씨·마일스톤)
+ * · `request` — 누가 나에게 말을 건다 (단골 요청·소원)
+ * · `review` — 손님이 남긴 평 (퇴장 만족)
+ */
+export type FeedKind = 'news' | 'request' | 'review';
+
 export interface TickerItem {
+  /** 무엇의 소식인가 (P7). 안 주면 `news` 다 — 옛 호출부가 그대로 돈다 */
+  kind?: FeedKind;
   /** 임시 이모지 글리프 — ui/* 에셋 슬롯이 채워지면 교체 (계약 uiIcons 와 같은 운명) */
   icon: string;
   text: string;
@@ -86,6 +101,8 @@ export class KairoTicker implements Panel {
   private readonly inboxList: HTMLDivElement;
   private readonly items: TickerItem[] = [];
   private brushLabel: string | null = null;
+  /** 진행 중인 일의 한 줄 (P1) — 없으면 뉴스가 그 자리를 쓴다 */
+  private progressLabel: string | null = null;
   private fallback = tickerFallbackText('리조트를 살펴보세요');
   /** 새 뉴스 강조 — 붓 라벨이 덮고 있어도 뉴스가 오면 잠깐 이긴다 */
   private newsHold = 0;
@@ -105,7 +122,7 @@ export class KairoTicker implements Panel {
      * 아이콘은 **하나**다 (알려진 항목 15번 · UX 감사 P2-29). 고정 `📰` 와 항목 아이콘이
      * 겹쳐 둘로 보였다 — 이제 항목이 있으면 그 아이콘이, 없으면 `📰` 가 그 자리에 온다.
      */
-    this.icon = el('span', 'kticker-ico', '📰');
+    this.icon = el('span', 'kticker-ico', icon('news'));
     visual.append(this.icon, this.line);
     const hit = el('div', 'kticker-hit');
     hit.setAttribute('role', 'button');
@@ -174,8 +191,16 @@ export class KairoTicker implements Panel {
    *
    * `onOpen` 을 주면 알림함 행이 눌린다 (K47-②) — 결산처럼 **다시 열 수 있는** 사건만.
    */
-  push(icon: string, text: string, stamp: string, onOpen?: () => void): void {
-    this.items.unshift({ icon, text, stamp, ...(onOpen ? { onOpen } : {}) });
+  /**
+   * @param kind 무엇으로 온 소식인가 (Q9). 안 주면 `'news'` 다.
+   *
+   * ⚠ **예전에는 이 인자가 아예 없었다.** `FeedKind` 에 `'review'`(손님 말)라는 이름은
+   * P7 부터 있었는데 `push()` 가 받지를 않아 **모든 항목이 `'news'` 로 떨어졌고**
+   * `'review'` 를 넣는 곳은 **0곳**이었다 (실측 2026-09-01) —
+   * 「슬롯이 있다」와 「슬롯이 돈다」는 다르다 (P7).
+   */
+  push(icon: string, text: string, stamp: string, onOpen?: () => void, kind?: FeedKind): void {
+    this.items.unshift({ icon, text, stamp, ...(onOpen ? { onOpen } : {}), ...(kind ? { kind } : {}) });
     if (this.items.length > INBOX_MAX) this.items.pop();
     this.renderInbox();
     // 새 뉴스는 붓 라벨보다 6초 우선 — 붓을 든 채로도 사건은 보여야 한다
@@ -204,6 +229,37 @@ export class KairoTicker implements Panel {
   }
 
   /**
+   * 진행 중인 일의 **진행률**을 띠 배경으로 그린다 (P1).
+   *
+   * ## 왜 티커인가
+   *
+   * 채널 계약(K47-①)은 티커를 「내가 안 했는데 일어난 일」로 못박았다. 진행률은
+   * **내가 시킨 일의 상태**라 엄밀히는 그 정의 밖이지만, 성질이 같다 — **비차단이고,
+   * 지금 무슨 일이 일어나는 중인지를 말한다.** 그래서 계약을 명시적으로 확장한다
+   * (`docs/plan-commission-axis.md` §2.5). ⚠ **진행 중은 티커에만, 완료는 모달에만** —
+   * 한 사건을 두 채널에 넣지 않는다는 규칙은 그대로다.
+   *
+   * ⚠ **픽셀을 하나도 더 안 쓴다.** 26px 띠의 배경이 채워질 뿐이라 화면 예산이 그대로다.
+   *
+   * @param ratio 0~1. `null` 이면 배경을 지운다
+   */
+  setProgress(ratio: number | null, label?: string): void {
+    this.progressLabel = ratio === null ? null : (label ?? null);
+    if (ratio === null) {
+      delete this.strip.dataset['progress'];
+      this.strip.style.removeProperty('--ticker-progress');
+    } else {
+      this.strip.dataset['progress'] = 'on';
+      // 폭은 **데이터**라 인라인으로 남는다 — 색·모양은 여전히 style.css 가 소유한다
+      this.strip.style.setProperty(
+        '--ticker-progress',
+        `${Math.round(Math.max(0, Math.min(1, ratio)) * 100)}%`,
+      );
+    }
+    this.renderLine();
+  }
+
+  /**
    * 빈 띠 문구를 다시 그린다.
    *
    * 뉴스가 없을 때의 다음 행동은 홈의 즉시 목표에서 받는다. 뉴스가 생기면 뉴스가 우선한다.
@@ -218,13 +274,22 @@ export class KairoTicker implements Panel {
     const newsFirst = Date.now() < this.newsHold;
     if (this.brushLabel !== null && !newsFirst) {
       this.strip.classList.add('brush');
-      this.icon.textContent = '🖌';
+      this.icon.textContent = icon('brush');
       this.line.textContent = this.brushLabel;
       return;
     }
     this.strip.classList.remove('brush');
+    /*
+     * 진행 중인 일이 있으면 뉴스보다 먼저다 — 뉴스는 지나간 일이고 진행은 **지금**이다.
+     * ⚠ 방금 도착한 뉴스(`newsHold`)만은 진행을 이긴다: 그건 내가 방금 만든 결과다.
+     */
+    if (this.progressLabel !== null && !newsFirst) {
+      this.icon.textContent = '⏳';
+      this.line.textContent = this.progressLabel;
+      return;
+    }
     if (!latest) {
-      this.icon.textContent = '📰';
+      this.icon.textContent = icon('news');
       this.line.textContent = this.fallback;
       return;
     }
@@ -247,13 +312,23 @@ export class KairoTicker implements Panel {
       empty.dataset['emptyFor'] = 'inbox';
       empty.append(
         el('div', 'kgrowth-empty-fact', '아직 소식이 없습니다'),
-        el('div', 'kgrowth-empty-how', '해금 · 승급 · 결산 도착 같은 소식이 여기 쌓입니다 (최근 50건)'),
+        el(
+          'div',
+          'kgrowth-empty-how',
+          '해금 · 승급 · 결산 · 손님 요청이 시간 역순으로 여기 쌓입니다 (최근 50건)',
+        ),
       );
       this.inboxList.append(empty);
       return;
     }
     for (const it of this.items) {
       const row = el('div', `kinbox-row${it.onOpen ? ' open' : ''}`);
+      /*
+       * ⚠ **종류 탭을 안 만든다** (P7) — 시간 역순 하나다. 종류는 `data-feed-kind` 로만
+       * 남겨 검사와 CSS 가 읽는다. 탭을 만들면 「어디서 봤더라」가 생기고, 그건 P1 이
+       * 성장 목록 넷을 `목표` 한 장으로 합친 것과 같은 실수다.
+       */
+      row.dataset['feedKind'] = it.kind ?? 'news';
       row.append(
         el('span', 'kinbox-ico', it.icon),
         el('span', 'kinbox-text', it.text),

@@ -41,10 +41,18 @@ describe('독립 리뷰 문서 정합성', () => {
     expect(source).not.toMatch(/30초[^\n]{0,80}(사람|사용자)[^\n]{0,40}(통과|승인 완료)/);
   });
 
-  it('CLAUDE 현재 HUD 계약은 6 role-controls와 A/B/C 한 밴드를 쓰고 옛 칩 기둥을 지운다', () => {
+  /*
+   * ⚠ P1 이 HUD 계약을 통째로 바꿨다. 옛 문장(`상시 역할 제어는 **6개**` · `A/B/C 한 밴드`)은
+   * **코드와 어긋난 채로 남아 있던 것**이고, 이 검사가 그 옛 문장을 붙들고 있었다.
+   * 이제 새 계약을 붙든다 — 문서가 코드보다 뒤처지면 다음 사람이 되돌리기 때문이다.
+   */
+  it('CLAUDE 현재 HUD 계약은 MENU 토글·밴드 일곱 칸을 쓰고 옛 A/B/C 를 지운다', () => {
     const source = read('CLAUDE.md');
-    expect(source).toContain('상시 역할 제어는 **6개**');
-    expect(source).toContain('A/B/C 한 밴드');
+    expect(source).toContain('밴드가 곧 메뉴다');
+    expect(source).toContain('잠긴 칸은 숨기지 않고 `?` 로 남는다');
+    // 옛 계약이 남아 있으면 다음 사람이 그것을 믿고 되돌린다
+    expect(source).not.toContain('상시 역할 제어는 **6개**');
+    expect(source).not.toContain('A/B/C 한 밴드');
     expect(source).not.toContain('목표 칩 기둥');
     expect(source).not.toContain('의뢰 칩 기둥');
   });

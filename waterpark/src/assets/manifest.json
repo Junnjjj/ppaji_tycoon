@@ -1,0 +1,86 @@
+{
+  "$comment": "논리 ID 계약. draw 는 provider.ts 의 등록부 키. G0 는 지형 타일뿐이다 — 풀·손님·시설은 G1~G3 이 더한다.",
+  "version": 1,
+  "tile": {
+    "w": 32,
+    "h": 16
+  },
+  "sprites": [
+    {
+      "id": "tile/sand",
+      "w": 32,
+      "h": 16,
+      "ax": 16,
+      "ay": 0,
+      "source": "procedural",
+      "draw": "tile"
+    },
+    {
+      "id": "tile/grass",
+      "w": 32,
+      "h": 16,
+      "ax": 16,
+      "ay": 0,
+      "source": "procedural",
+      "draw": "tile"
+    },
+    {
+      "id": "tile/path",
+      "w": 32,
+      "h": 16,
+      "ax": 16,
+      "ay": 0,
+      "source": "procedural",
+      "draw": "tile"
+    },
+    {
+      "id": "tile/indoor",
+      "w": 32,
+      "h": 16,
+      "ax": 16,
+      "ay": 0,
+      "source": "procedural",
+      "draw": "tile"
+    },
+    {
+      "id": "tile/pool",
+      "w": 32,
+      "h": 16,
+      "ax": 16,
+      "ay": 0,
+      "source": "procedural",
+      "draw": "tile"
+    },
+    {
+      "id": "tile/gate",
+      "w": 32,
+      "h": 16,
+      "ax": 16,
+      "ay": 0,
+      "source": "procedural",
+      "draw": "tile"
+    },
+    {
+      "id": "guest/body",
+      "family": true,
+      "w": 18,
+      "h": 32,
+      "ax": 9,
+      "ay": 30,
+      "source": "art",
+      "draw": "guest",
+      "note": "패밀리 — guest/body:{palette}[:{build}][:f{n}]/{pose}/{frame}/{mood} 전부 이 한 줄이 덮는다 (18×32 · 앵커 9,30 = draw/guest.ts 의 GUEST_*). 나중에 그림으로 교체"
+    },
+    {
+      "id": "fac",
+      "family": true,
+      "w": 0,
+      "h": 0,
+      "ax": 0,
+      "ay": 0,
+      "source": "art",
+      "draw": "facility",
+      "note": "패밀리 — fac/{id}/{facing}. 크기는 발자국에서 유도(footprintCanvas), 앵커 bottom-center"
+    }
+  ]
+}

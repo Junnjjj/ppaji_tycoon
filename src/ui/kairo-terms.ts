@@ -158,3 +158,28 @@ export function ingredientName(
   if (need !== undefined) return `${need} 시설`;
   return facilityName(token) ?? token;
 }
+
+/**
+ * 한국어 조사를 **낱말에서 고른다** (P9).
+ *
+ * 화면 문구가 시설·요리 이름을 받아 문장을 만드는데, 그때마다 `을(를)` 로 도망가면
+ * 게임이 아니라 안내문이 된다 (실측: `매점 을(를) 지으세요 — 캔음료 이(가) 함께`).
+ *
+ * 판정은 **마지막 글자의 종성**이다 — 한글 음절은 `가(0xAC00)` 부터 28자씩 묶여 있으므로
+ * `(코드 − 0xAC00) % 28` 이 0 이면 받침이 없다.
+ *
+ * ⚠ 한글이 아닌 글자(숫자·영문)로 끝나면 **받침 있음으로 본다** — 이 게임의 이름은
+ * 전부 한글이라 실제로 안 걸리지만, 조용히 틀리기보다 한쪽으로 고정하는 편이 낫다.
+ */
+export function hasFinalConsonant(word: string): boolean {
+  const last = word.trim().slice(-1);
+  if (last === '') return true;
+  const code = last.charCodeAt(0);
+  if (code < 0xac00 || code > 0xd7a3) return true;
+  return (code - 0xac00) % 28 !== 0;
+}
+
+/** `매점을` · `캔음료를` — 받침에 맞는 조사를 붙여 돌려준다 */
+export function withJosa(word: string, withBatchim: string, withoutBatchim: string): string {
+  return `${word}${hasFinalConsonant(word) ? withBatchim : withoutBatchim}`;
+}

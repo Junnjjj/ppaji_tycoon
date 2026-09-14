@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import { resolveFontSize } from './type-scale.js';
 import { describe, expect, it } from 'vitest';
 import {
   courseAppliedLines,
@@ -224,16 +225,23 @@ describe('Task 6 — 표면', () => {
   });
 
   it('영수증 글씨는 12px 미만이 아니다 (계획 §1.3)', () => {
-    const sizes = [
-      ...(`${rule('.kcourse-receipt')}${rule('.kcourse-receipt-line')}${rule('.kcourse-receipt-head')}`)
-        .matchAll(/font-size:\s*([\d.]+)px/g),
-    ].map((m) => Number(m[1]));
+    // ⚠ 스케일 토큰을 풀어 잰다 (P1.5-A) — 리터럴만 읽으면 토큰화한 순간 표본이 0이 된다
+    const sizes = ['.kcourse-receipt', '.kcourse-receipt-line', '.kcourse-receipt-head']
+      .map((sel) => resolveFontSize(rule(sel)))
+      .filter((px): px is number => px !== null);
     expect(sizes.length).toBeGreaterThan(0);
     for (const size of sizes) expect(size).toBeGreaterThanOrEqual(12);
   });
 
   it('독 천장은 토큰 하나가 소유하고 적용 완료만 더 높다', () => {
-    expect(css).toMatch(/--course-dock-cap:\s*112px/);
+    /*
+     * ⚠ 값이 **112 → 132** 로 바뀌었다 (P8). 112 는 유도된 값이 아니라 관측값이었고,
+     * 실측 자연 높이 **126** 을 14px 잘라 내고 있었다 (`overflow: visible` 이라 잘린 만큼이
+     * 상자 밖으로 샜다). 132 는 내용에서 유도한다 —
+     * 제목 27 + 지표 42 + 버튼 44(터치 타깃 하한) + 패딩 10 + 간격 8 = 131.
+     * 반대편 계약인 **조작 지도 620px** 은 그대로 지켜진다 (실측 지도 725px).
+     */
+    expect(css).toMatch(/--course-dock-cap:\s*132px/);
     expect(rule('.kcourse-dock')).toMatch(/max-height:\s*var\(--course-dock-cap\)/);
     expect(css).toMatch(
       /\.kcourse\[data-course-phase='applied'\]\s+\.kcourse-dock\s*\{[^}]*max-height:\s*var\(--course-dock-cap-applied\)/s,
@@ -293,8 +301,13 @@ describe('Task 6 — 브라우저 게이트', () => {
     expect(harnessCode).toMatch(
       /'#kairo-course-close'\);[\s\S]{0,200}?getElementById\('kairo-course'\)\.hidden/,
     );
-    // 재열기는 홈 목표 상태에 안 기댄다 — 경영 메뉴의 코스 행동으로 연다
-    expect(harnessCode).toContain('[data-manage-action="course"]');
+    /*
+     * 재열기는 홈 목표 상태에 안 기댄다.
+     * ⚠ P1 — 코스는 **밴드의 자기 칸**이고 항목이 하나라 화면을 안 끼운다. 그래서 옛
+     * `[data-manage-action="course"]` 버튼이 DOM 에 없다. 하네스는 밴드 칸으로 열되,
+     * 첫 주에는 잠겨 있을 수 있어 같은 행동을 여는 홈의 즉시 목표를 폴백으로 쓴다.
+     */
+    expect(harnessCode).toContain('[data-band-cell="course"]');
     expect(harnessCode).toMatch(/coursePage\.reload\(/);
   });
 

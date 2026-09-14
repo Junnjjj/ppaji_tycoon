@@ -1,0 +1,316 @@
+{
+  "$comment": "구입 상점 (P3) — **지금 있는 것을 즉시 산다.** 기다려서 오는 것은 수배(P4)이고, 그 경계는 `days` 필드의 유무로 기계적으로 갈린다 (D2).",
+  "version": 1,
+  "note": "⚠ 어떤 항목도 `days` 를 가질 수 없다. 가지면 그건 수배다 — `shop.test.ts` 가 잡는다.",
+  "tabs": [
+    {
+      "id": "ingredient",
+      "label": "재료"
+    },
+    {
+      "id": "fitting",
+      "label": "강화품"
+    },
+    {
+      "id": "decor",
+      "label": "화단·나무"
+    },
+    {
+      "id": "equipment",
+      "label": "보트·장비"
+    }
+  ],
+  "items": [
+    {
+      "id": "eq_flyduck",
+      "kind": "equipment",
+      "target": "flyduck",
+      "cost": 416000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_banana",
+      "kind": "equipment",
+      "target": "banana",
+      "cost": 480000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_honeycomb",
+      "kind": "equipment",
+      "target": "honeycomb",
+      "cost": 560000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_turbo_turtle",
+      "kind": "equipment",
+      "target": "turbo_turtle",
+      "cost": 640000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_hexa",
+      "kind": "equipment",
+      "target": "hexa",
+      "cost": 680000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_lotus",
+      "kind": "equipment",
+      "target": "lotus",
+      "cost": 704000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_swing",
+      "kind": "equipment",
+      "target": "swing",
+      "cost": 800000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_wakeboard",
+      "kind": "equipment",
+      "target": "wakeboard",
+      "cost": 880000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_spinpang",
+      "kind": "equipment",
+      "target": "spinpang",
+      "cost": 920000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_wagon",
+      "kind": "equipment",
+      "target": "wagon",
+      "cost": 960000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_dancing",
+      "kind": "equipment",
+      "target": "dancing",
+      "cost": 1040000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_waterski",
+      "kind": "equipment",
+      "target": "waterski",
+      "cost": 1040000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_twinpang",
+      "kind": "equipment",
+      "target": "twinpang",
+      "cost": 1120000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_jetski",
+      "kind": "equipment",
+      "target": "jetski",
+      "cost": 1120000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_flyfish",
+      "kind": "equipment",
+      "target": "flyfish",
+      "cost": 1360000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_skyfly",
+      "kind": "equipment",
+      "target": "skyfly",
+      "cost": 1520000,
+      "tab": "equipment"
+    },
+    {
+      "id": "eq_jetboat",
+      "kind": "equipment",
+      "target": "jetboat",
+      "cost": 1600000,
+      "tab": "equipment"
+    },
+    {
+      "id": "ing_cheese",
+      "kind": "ingredient",
+      "target": "cheese",
+      "cost": 120000,
+      "tab": "ingredient"
+    },
+    {
+      "id": "decor_maple_walk",
+      "kind": "decor",
+      "target": "maple_walk",
+      "cost": 686400,
+      "minGrade": 1,
+      "tab": "decor"
+    },
+    {
+      "id": "decor_stage_river",
+      "kind": "decor",
+      "target": "stage_river",
+      "cost": 3024000,
+      "minGrade": 2,
+      "tab": "decor"
+    },
+    {
+      "id": "fit_parts_basic",
+      "kind": "fitting",
+      "target": "parts_basic",
+      "cost": 180000,
+      "tab": "fitting"
+    },
+    {
+      "id": "fit_parts_premium",
+      "kind": "fitting",
+      "target": "parts_premium",
+      "cost": 420000,
+      "tab": "fitting"
+    },
+    {
+      "id": "fit_safety_kit",
+      "kind": "fitting",
+      "target": "safety_kit",
+      "cost": 260000,
+      "tab": "fitting"
+    },
+    {
+      "id": "fit_deco_kit",
+      "kind": "fitting",
+      "target": "deco_kit",
+      "cost": 150000,
+      "tab": "fitting"
+    },
+    {
+      "id": "ing_coffee",
+      "kind": "ingredient",
+      "target": "coffee",
+      "cost": 140000,
+      "tab": "ingredient",
+      "minGrade": 2
+    },
+    {
+      "id": "ing_milk",
+      "kind": "ingredient",
+      "target": "milk",
+      "cost": 140000,
+      "tab": "ingredient",
+      "minGrade": 2
+    },
+    {
+      "id": "ing_broth",
+      "kind": "ingredient",
+      "target": "broth",
+      "cost": 90000,
+      "tab": "ingredient"
+    },
+    {
+      "id": "ing_redbean",
+      "kind": "ingredient",
+      "target": "redbean",
+      "cost": 90000,
+      "tab": "ingredient"
+    },
+    {
+      "id": "ing_tteok",
+      "kind": "ingredient",
+      "target": "tteok",
+      "cost": 110000,
+      "tab": "ingredient"
+    },
+    {
+      "id": "ing_gochujang",
+      "kind": "ingredient",
+      "target": "gochujang",
+      "cost": 110000,
+      "tab": "ingredient"
+    },
+    {
+      "id": "ing_oil",
+      "kind": "ingredient",
+      "target": "oil",
+      "cost": 110000,
+      "tab": "ingredient"
+    },
+    {
+      "id": "ing_potato",
+      "kind": "ingredient",
+      "target": "potato",
+      "cost": 110000,
+      "tab": "ingredient"
+    },
+    {
+      "id": "ing_flour",
+      "kind": "ingredient",
+      "target": "flour",
+      "cost": 140000,
+      "tab": "ingredient",
+      "minGrade": 2
+    },
+    {
+      "id": "ing_custard",
+      "kind": "ingredient",
+      "target": "custard",
+      "cost": 140000,
+      "tab": "ingredient",
+      "minGrade": 2
+    },
+    {
+      "id": "ing_fishcake",
+      "kind": "ingredient",
+      "target": "fishcake",
+      "cost": 140000,
+      "tab": "ingredient",
+      "minGrade": 2
+    },
+    {
+      "id": "ing_bungeo_milk",
+      "kind": "ingredient",
+      "target": "bungeo_milk",
+      "cost": 140000,
+      "tab": "ingredient",
+      "minGrade": 2
+    },
+    {
+      "id": "ing_pork",
+      "kind": "ingredient",
+      "target": "pork",
+      "cost": 190000,
+      "tab": "ingredient",
+      "minGrade": 3
+    },
+    {
+      "id": "ing_charcoal",
+      "kind": "ingredient",
+      "target": "charcoal",
+      "cost": 190000,
+      "tab": "ingredient",
+      "minGrade": 3
+    },
+    {
+      "id": "ing_ssam",
+      "kind": "ingredient",
+      "target": "ssam",
+      "cost": 190000,
+      "tab": "ingredient",
+      "minGrade": 3
+    },
+    {
+      "id": "ing_egg",
+      "kind": "ingredient",
+      "target": "egg",
+      "cost": 90000,
+      "tab": "ingredient"
+    }
+  ]
+}

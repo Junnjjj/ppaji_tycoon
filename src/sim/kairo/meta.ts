@@ -2,15 +2,43 @@ import type { ScenarioStatus } from './scenario.js';
 import type { KairoFacilityDef } from './placement.js';
 import type { MenuFacilityOperability } from './menu.js';
 
-/** Phase 7 경영 시트의 정보 구조. 이 순서가 모바일의 읽기 순서다. */
+/**
+ * 밴드의 정보 구조 (P1). 이 순서가 곧 화면 오른쪽 밴드의 위→아래 순서다.
+ *
+ * ## 왜 「운영/성장/기록」에서 바뀌었나
+ *
+ * 옛 넷은 **"어떤 종류의 것인가"** 로 나눈 것이라 "지금 뭘 할지"가 안 읽혔다 (사용자 판정).
+ * 회전초밥스토리의 메뉴 골격(건설/요리/구입/컨설/경영/정보/시스템)을 빠지로 번역해
+ * **"무슨 동사인가"** 로 다시 나눴다 — 정본은 `docs/plan-commission-axis.md` §2.2.
+ *
+ * ⚠ **`설정` 은 여기 없다.** 넣으면 `todayRecommendation` 이 "새 게임을 시작하세요"를
+ * 오늘 할 일로 고를 수 있다. 설정은 `정보` 화면의 마지막 줄이고 표현 계층의 것이다.
+ * `건설` 도 없다 — 밴드의 **네이티브 칸**이라 그룹에 안 들어간다 (아래 `ManagementAction` 참고).
+ *
+ * ⚠ **항목이 하나인 그룹은 밴드에서 바로 그 행동을 연다** (코스·요리). 한 줄짜리 목록
+ * 화면을 한 겹 끼우면 탭이 공짜로 하나 는다.
+ */
 export const MANAGEMENT_GROUPS = [
-  { id: 'operations', label: '운영', items: ['price', 'staff', 'course'] },
-  { id: 'growth', label: '성장', items: ['exam', 'regular', 'quests', 'codex'] },
-  { id: 'records', label: '기록', items: ['report', 'view', 'certs', 'ending'] },
+  { id: 'course', label: '코스', items: ['course'] },
+  { id: 'kitchen', label: '요리', items: ['recipe'] },
+  { id: 'store', label: '상점', items: ['shop', 'commission'] },
+  { id: 'manage', label: '경영', items: ['price', 'staff', 'exam'] },
+  { id: 'goals', label: '목표', items: ['quests', 'regular', 'certs', 'wishes'] },
+  { id: 'records', label: '정보', items: ['report', 'codex', 'view', 'ending'] },
 ] as const;
 
 export type ManagementGroup = (typeof MANAGEMENT_GROUPS)[number]['id'];
-export type ManagementAction = (typeof MANAGEMENT_GROUPS)[number]['items'][number];
+
+/**
+ * 밴드 그룹 밖에 사는 **네이티브 행동**.
+ *
+ * `build` 를 유니언에 더하는 이유: 온보딩의 `build-food` 단계가 `action: 'quests'` 인데 실제
+ * `run` 은 건설 시트를 열었다 — **이름과 행동이 갈려 있었다.** 여기서 맞춘다.
+ * `actionsForRoute` 는 그룹의 `items` 만 보므로 어느 목적지에도 안 뜬다.
+ */
+export type ManagementAction =
+  | (typeof MANAGEMENT_GROUPS)[number]['items'][number]
+  | 'build';
 
 export type OnboardingStep =
   | 'open-course'
@@ -172,6 +200,69 @@ export function observeOnboardingMenu(
     onboarding.observe('menu-equipped');
 }
 
+/** 밴드 한 칸의 id — `build` 만 그룹 밖의 네이티브 칸이다 */
+export type BandCellId = 'build' | ManagementGroup;
+
+export interface BandUnlockState {
+  onboardingStep: OnboardingStep;
+  /** 진행 중인 주차 (1부터) */
+  week: number;
+  /** craft 시설을 하나라도 지었나 */
+  craftBuilt: boolean;
+  /** 심사를 한 번이라도 통과했나 */
+  examPassed: boolean;
+  /** 열린 의뢰가 있나 */
+  questsOpen: boolean;
+}
+
+/**
+ * 밴드 칸이 언제 열리나 (P1).
+ *
+ * ## 왜 잠그나
+ *
+ * 카이로는 튜토리얼을 따로 만들지 않고 **메뉴 칸을 잠가 뒀다가 하나씩 열어서** 가르친다.
+ * 우리는 정반대였다 — 온보딩 8단계가 `OnboardingStore` 커서로만 존재하고 **화면에는 아무
+ * 흔적이 없으며** 메뉴는 처음부터 전부 열려 있었다. 첫 플레이어가 일곱 칸을 다 보고도
+ * 뭘 눌러야 할지 모른다.
+ *
+ * ## ⚠ 주차 안전망이 반드시 있어야 한다
+ *
+ * 각 조건에 **주차 폴백**을 OR 로 건다. 온보딩은 비차단 관찰자라 플레이어가 그 순서를
+ * 무시할 수 있는데, 해금을 온보딩에만 걸면 그 사람은 **영원히 못 여는 칸**이 생긴다.
+ * PSS 의 재료 입수 경로 넷 중 하나가 「연차 도달 — 무조건 진행」인 것과 같은 장치다.
+ *
+ * ⚠ `build` 와 `records` 는 **언제나 열려 있다.** 첫 판에서 아무 데도 못 가면 판이 잠긴다.
+ */
+export function bandUnlocks(state: BandUnlockState): BandCellId[] {
+  const past = (step: OnboardingStep): boolean => {
+    const order = ONBOARDING_STEPS.indexOf(state.onboardingStep);
+    const at = ONBOARDING_STEPS.indexOf(step);
+    return order > at;
+  };
+  const open: BandCellId[] = ['build', 'records'];
+  if (past('apply-course') || state.week >= 2) open.push('course');
+  if (state.craftBuilt || state.week >= 3) open.push('kitchen');
+  if (state.questsOpen || state.week >= 2) open.push('goals');
+  if (state.week >= 2) open.push('store');
+  if (state.examPassed || state.week >= 5) open.push('manage');
+  return open;
+}
+
+/**
+ * 잠긴 칸을 눌렀을 때의 **여는 방법**.
+ *
+ * ⚠ 이유에서 끝내지 않는다 — 「잠김 문구는 방법까지 말한다」가 이 저장소의 규칙이다.
+ */
+export const BAND_UNLOCK_HINTS: Record<BandCellId, string> = {
+  build: '',
+  records: '',
+  course: '물려받은 코스를 한 번 적용하면 열립니다',
+  kitchen: '매점이나 카페를 지으면 열립니다',
+  goals: '첫 의뢰가 도착하면 열립니다',
+  store: '첫 주 결산을 보면 열립니다',
+  manage: '첫 등급 심사를 통과하면 열립니다',
+};
+
 export interface ManagementState {
   onboardingStep: OnboardingStep;
   reportUnread: boolean;
@@ -187,10 +278,29 @@ export interface TodayRecommendation {
   label: string;
   detail: string;
   source: 'onboarding' | 'milestone' | 'operation' | 'growth' | 'record';
+  /**
+   * **누가 말하나** (Q8) — 없으면 화자 없는 안내다.
+   *
+   * ## 왜 모달이 아니라 화자인가
+   *
+   * 사용자 요청은 *"처음에 들어올 때, 사용자에게 뭘 시킬지 시키는 것도 하나의 방법일 것
+   * 같아 카이로소프트처럼"* 이었다. 처음엔 **부팅 모달**로 만들었다가 **되돌렸다**:
+   *
+   * · 이 저장소의 사건 채널 계약은 **모달 = 축하**(시간 멈춤) · 티커 = 뉴스 ·
+   *   토스트 = 내 행동의 대답 셋이고, 「다음에 뭘 해라」는 그 셋 중 어디도 아니다.
+   *   그건 **상태 밴드**의 자리다 (P1).
+   * · 실측이 그 계약을 숫자로 확인해 줬다 — 부팅 모달을 두니 **하네스 컨텍스트 넷이
+   *   연달아 죽었다** (홈 셸 3건 · 코스 절 · 캔버스 터치 절 · HUD 예산 절). 모달이 지도를
+   *   덮기 때문이고, 그건 사람에게도 똑같이 일어난다.
+   *
+   * 그래서 **밴드에 화자를 붙인다** — 모달 없이 「사람이 시킨다」가 된다.
+   */
+  speaker?: string;
 }
 
 const ONBOARDING_RECOMMENDATIONS: Record<Exclude<OnboardingStep, 'done'>, TodayRecommendation> = {
   'open-course': {
+    speaker: '민지',
     action: 'course',
     label: '물려받은 코스 시험 운행',
     detail: '물려받은 코스를 열어 보세요',
@@ -215,7 +325,8 @@ const ONBOARDING_RECOMMENDATIONS: Record<Exclude<OnboardingStep, 'done'>, TodayR
     source: 'onboarding',
   },
   'build-food': {
-    action: 'quests',
+    speaker: '민지',
+    action: 'build',
     label: '먹거리 시설 짓기',
     detail: '건설에서 1등급 매점을 놓으세요',
     source: 'onboarding',
@@ -256,7 +367,7 @@ export function todayRecommendation(state: ManagementState): TodayRecommendation
     return { action: 'report', label: '새 결산 보기', detail: '지난주의 결과와 병목을 확인하세요', source: 'record' };
   }
   if (state.staffShortages > 0) {
-    return { action: 'staff', label: '직원 배치 점검', detail: `${state.staffShortages}개 역할이 부족합니다`, source: 'operation' };
+    return { action: 'staff', label: '직원 배치 점검', detail: `역할 ${state.staffShortages}개가 부족합니다`, source: 'operation' };
   }
   if (state.examReady) {
     return { action: 'exam', label: '등급 심사 확인', detail: '조건과 예상 점수를 확인하세요', source: 'growth' };
@@ -272,7 +383,7 @@ export function managementWarnings(state: ManagementState): string[] {
   const warnings: string[] = [];
   if (state.risk === 'danger') warnings.push('위험도가 위험입니다');
   else if (state.risk === 'caution') warnings.push('위험도가 주의입니다');
-  if (state.staffShortages > 0) warnings.push(`직원 ${state.staffShortages}개 역할이 부족합니다`);
+  if (state.staffShortages > 0) warnings.push(`직원 역할 ${state.staffShortages}개가 부족합니다`);
   if (state.reportUnread) warnings.push('새 결산이 도착했습니다');
   return warnings;
 }

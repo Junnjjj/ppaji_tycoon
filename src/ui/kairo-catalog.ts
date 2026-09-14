@@ -1,4 +1,5 @@
 import { COMBOS, CONFLICTS, evaluateCombos, type ComboTier } from '../sim/kairo/combos.js';
+import { icon } from './icons.js';
 import { allFacilityDefs } from '../sim/kairo/placement.js';
 import { COURSE_EQUIPMENT } from '../sim/kairo/course.js';
 import type { PlacementGrid } from '../sim/kairo/placement.js';
@@ -122,7 +123,7 @@ export class KairoCatalog {
     detail: string,
     key: string,
     /** 앞머리 표식. 기본은 발견 여부(✅/🔒) — 감점 줄만 ⚠ 로 갈린다 (P4) */
-    icon?: string,
+    mark?: string,
   ): HTMLElement {
     /*
      * ★ 56px — 스펙이 정한 한 항목 높이. `.kitem.wide` 가 지킨다.
@@ -134,7 +135,7 @@ export class KairoCatalog {
     d.dataset['found'] = found ? '1' : '0';
     d.disabled = !found;
     d.append(
-      el('div', 'kitem-name', `${icon ?? (found ? '✅' : '🔒')} ${title}`),
+      el('div', 'kitem-name', `${mark ?? (found ? icon('found') : icon('locked'))} ${title}`),
       el('div', 'kitem-sub', detail),
     );
     return d;
@@ -178,7 +179,9 @@ export class KairoCatalog {
       }
     }
 
-    this.filterBtn.textContent = this.undiscoveredOnly ? '🔍 미발견만' : '🔍 전체 보기';
+    this.filterBtn.textContent = this.undiscoveredOnly
+      ? `${icon('search')} 미발견만`
+      : `${icon('search')} 전체 보기`;
 
     this.listEl.replaceChildren();
     if (this.tab === 'combo') this.renderCombos();
@@ -207,7 +210,7 @@ export class KairoCatalog {
         .join(' · ');
       this.listEl.append(
         // `상성`(相性)은 일본어 차용이라 한국어 게임에서 잘 안 쓴다 (UX 감사 P2-33)
-        this.row(true, c.name, `궁합 감점 · ${cost} · 두 칸 띄우면 꺼집니다`, c.id, '⚠'),
+        this.row(true, c.name, `궁합 감점 · ${cost} · 두 칸 띄우면 꺼집니다`, c.id, icon('warn')),
       );
     }
   }

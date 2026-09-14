@@ -1,4 +1,5 @@
 import { MAP_TYPES, unlockedScenarios, type MapType, type ScenarioDef } from '../sim/kairo/scenario.js';
+import { icon } from './icons.js';
 import { el, button } from './dom.js';
 import { panelHost } from './panels.js';
 import {
@@ -193,7 +194,7 @@ export class KairoNewGame {
       b.dataset['scenario'] = s.id;
       b.disabled = locked;
       b.append(
-        el('div', 'kitem-name', locked ? `🔒 ${s.name}` : s.name),
+        el('div', 'kitem-name', locked ? `${icon('locked')} ${s.name}` : s.name),
         el('div', 'kitem-sub', locked ? `${s.grade}등급에 열립니다` : s.desc),
       );
       if (!locked) {

@@ -1,0 +1,43 @@
+{
+  "name": "waterpark-story",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "워터파크 스토리 — Pool Slide Story 클론 (빠지 타이쿤 하위 프로젝트)",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "check:ui": "node tools/check-ui.mjs && node tools/check-ui.mjs --selftest",
+    "bot": "tsx tools/bot.ts",
+    "verify:browser": "tsx tools/verify.ts",
+    "gate": "tsx tools/gate.ts",
+    "shot": "tsx tools/shot.ts",
+    "verify": "npm run typecheck && npm run lint && npm run test && npm run check:ui",
+    "gallery": "node tools/gallery.mjs",
+    "prerender": "tsx tools/prerender.ts",
+    "scene": "node tools/scene-sample.mjs"
+  },
+  "dependencies": {
+    "phaser": "3.90.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@types/node": "^26.2.0",
+    "@types/pngjs": "^6.0.5",
+    "@types/three": "^0.170.0",
+    "eslint": "^9.39.0",
+    "playwright": "^1.62.1",
+    "pngjs": "^7.0.0",
+    "three": "^0.170.0",
+    "tsx": "^4.20.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.38.0",
+    "vite": "^7.3.0",
+    "vitest": "^3.2.0"
+  }
+}

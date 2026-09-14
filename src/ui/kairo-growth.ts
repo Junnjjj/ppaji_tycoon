@@ -21,6 +21,7 @@
  * · **잠긴 것을 회색으로 죽이지 않는다** (K48): 자격이 없을수록 더 보여야 한다.
  */
 import type { QuestCondition } from '../sim/kairo/progress.js';
+import { icon } from './icons.js';
 import { conditionLine, rewardLine } from './kairo-terms.js';
 import { won } from './money.js';
 
@@ -99,7 +100,7 @@ export function questList(items: readonly QuestInput[], nextGradeName: string): 
     .sort((a, b) => Number(a.claimed) - Number(b.claimed) || b.progress - a.progress)
     .map((q) => ({
       id: q.id,
-      icon: q.claimed || q.done ? '✓' : '📜',
+      icon: q.claimed || q.done ? icon('check') : icon('scroll'),
       name: q.name,
       lines: [q.desc, conditionLine(q.cond, q.detail)].filter((line) => line.length > 0),
       reward: q.reward > 0
@@ -115,7 +116,7 @@ export function questList(items: readonly QuestInput[], nextGradeName: string): 
           : `${q.desc}\n조건 — ${conditionLine(q.cond, q.detail)}` +
             (q.reward > 0 ? `\n보상 — ${won(q.reward)}` : ''),
         mood: q.claimed || q.done ? ('celebrate' as const) : ('quest' as const),
-        figure: q.claimed || q.done ? '✓' : '📜',
+        figure: q.claimed || q.done ? icon('check') : icon('scroll'),
       },
     }));
   const doneCount = items.filter((q) => q.claimed || q.done).length;
@@ -148,7 +149,7 @@ export function wishList(items: readonly WishInput[]): GrowthList {
     count: `${items.length}건`,
     rows: items.map((w) => ({
       id: w.id,
-      icon: '💬',
+      icon: icon('talk'),
       name: w.character,
       lines: [`“${w.line}”`, w.detail].filter((line) => line.length > 0),
       reward: '',
@@ -159,7 +160,7 @@ export function wishList(items: readonly WishInput[]): GrowthList {
         title: w.character,
         body: `“${w.line}”\n${w.detail}`,
         mood: 'quest' as const,
-        figure: '💬',
+        figure: icon('talk'),
       },
     })),
     empty: {
@@ -190,11 +191,11 @@ export function certList(items: readonly CertInput[], nearestHint: string): Grow
     .sort((a, b) => Number(a.earned) - Number(b.earned) || b.progress - a.progress)
     .map((c) => ({
       id: c.id,
-      icon: c.earned ? '✓' : '🏅',
+      icon: c.earned ? icon('check') : icon('medal'),
       name: c.name,
       lines: c.earned
         ? [c.desc]
-        : c.reqs.map((r) => `${r.done ? '✓' : '·'} ${conditionLine(r.cond, r.detail)}`),
+        : c.reqs.map((r) => `${r.done ? icon('check') : '·'} ${conditionLine(r.cond, r.detail)}`),
       reward: rewardLine(c.reward),
       percent: c.earned ? 100 : pct(c.progress),
       done: c.earned,
@@ -204,10 +205,10 @@ export function certList(items: readonly CertInput[], nearestHint: string): Grow
         body: c.earned
           ? `${c.desc}\n받은 것 — ${rewardLine(c.reward)}`
           : `${c.desc}\n` +
-            c.reqs.map((r) => `${r.done ? '✓' : '·'} ${conditionLine(r.cond, r.detail)}`).join('\n') +
+            c.reqs.map((r) => `${r.done ? icon('check') : '·'} ${conditionLine(r.cond, r.detail)}`).join('\n') +
             `\n보상 — ${rewardLine(c.reward)}`,
         mood: c.earned ? ('celebrate' as const) : ('quest' as const),
-        figure: c.earned ? '🎖' : '🏅',
+        figure: c.earned ? icon('medal-earned') : icon('medal'),
       },
     }));
   const earned = items.filter((c) => c.earned).length;
@@ -233,6 +234,15 @@ export interface RegularInput {
   stages: number;
   /** 지금 무엇을 원하나 — 없으면 빈 문자열 */
   want: string;
+  /**
+   * **그것을 어떻게 이루나** (P9) — 없으면 빈 문자열.
+   *
+   * ⚠ 요청이 조건만 말하고 방법을 안 말해서, 새 판의 첫 요청(`시원한 캔음료를 마시고
+   * 싶어!`)이 **무엇을 해야 하는지 화면 어디에도 없었다.** 시작 킷에 craft 시설이
+   * 하나도 없으므로 그 요청은 매점을 짓기 전엔 구조적으로 불가능한데도 그랬다.
+   * 「못 놓는 이유는 방법까지 말한다」를 요청에도 건다.
+   */
+  how: string;
   done: boolean;
 }
 
@@ -251,9 +261,10 @@ export function regularList(items: readonly RegularInput[]): GrowthList {
     count: `${met} / ${items.length}`,
     rows: items.map((r) => ({
       id: r.id,
-      icon: r.done ? '✓' : r.met ? '♥' : '·',
+      icon: r.done ? icon('check') : r.met ? icon('regular') : '·',
       name: r.met ? `${r.name} ${r.stage}/${r.stages}단계` : `${r.name} — 아직 안 만났습니다`,
-      lines: [r.met ? r.want : '먹거리 시설을 지으면 찾아옵니다'].filter((l) => l.length > 0),
+      lines: [r.met ? r.want : '먹거리 시설을 지으면 찾아옵니다', r.how]
+        .filter((l) => l.length > 0),
       reward: '',
       percent: r.stages <= 0 ? 0 : pct(r.stage / r.stages),
       done: r.done,
@@ -261,10 +272,12 @@ export function regularList(items: readonly RegularInput[]): GrowthList {
         kicker: r.done ? '사슬을 끝낸 단골' : r.met ? '단골 진행 중' : '아직 안 만난 인물',
         title: r.name,
         body: r.met
-          ? `친밀도 ${r.stage}/${r.stages}단계\n${r.want}`
-          : '아직 안 만났습니다.\n먹거리 시설을 지어 메뉴를 갖추면 찾아옵니다.',
+          ? `친밀도 ${r.stage}/${r.stages}단계\n${r.want}${r.how ? `\n${r.how}` : ''}`
+          : `아직 안 만났습니다.\n먹거리 시설을 지어 메뉴를 갖추면 찾아옵니다.${
+              r.how ? `\n${r.how}` : ''
+            }`,
         mood: r.done ? ('celebrate' as const) : ('quest' as const),
-        figure: r.met ? '♥' : '·',
+        figure: r.met ? icon('regular') : '·',
       },
     })),
     empty: {

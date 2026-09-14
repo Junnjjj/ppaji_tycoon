@@ -1,0 +1,128 @@
+[
+  {
+    "id": "red_tube",
+    "name": "빨간 튜브",
+    "kind": "float",
+    "price": 300,
+    "unlock": "start"
+  },
+  {
+    "id": "duck_float",
+    "name": "오리 튜브",
+    "kind": "float",
+    "price": 600,
+    "unlock": "cert"
+  },
+  {
+    "id": "blue_orca",
+    "name": "바다 범고래 튜브",
+    "kind": "float",
+    "price": 900,
+    "unlock": "cert"
+  },
+  {
+    "id": "striped_swimsuit",
+    "name": "줄무늬 수영복",
+    "kind": "swimsuit",
+    "price": 400,
+    "unlock": "start"
+  },
+  {
+    "id": "school_swimsuit",
+    "name": "학교 수영복",
+    "kind": "swimsuit",
+    "price": 500,
+    "unlock": "shop"
+  },
+  {
+    "id": "retro_swimsuit",
+    "name": "레트로 수영복",
+    "kind": "swimsuit",
+    "price": 800,
+    "unlock": "wish"
+  },
+  {
+    "id": "flower_pants",
+    "name": "꽃무늬 팬츠",
+    "kind": "swimsuit",
+    "price": 700,
+    "unlock": "wish"
+  },
+  {
+    "id": "kayak_float",
+    "name": "카약 튜브",
+    "kind": "float",
+    "price": 1500,
+    "unlock": "cert"
+  },
+  {
+    "id": "kairo_float",
+    "name": "카이로군 튜브",
+    "kind": "float",
+    "price": 1500,
+    "unlock": "cert"
+  },
+  {
+    "id": "donut_float",
+    "name": "도넛 튜브",
+    "kind": "float",
+    "price": 600,
+    "unlock": "cert"
+  },
+  {
+    "id": "banana_float",
+    "name": "바나나 튜브",
+    "kind": "float",
+    "price": 700,
+    "unlock": "cert"
+  },
+  {
+    "id": "watermelon_float",
+    "name": "수박 튜브",
+    "kind": "float",
+    "price": 700,
+    "unlock": "cert"
+  },
+  {
+    "id": "river_orca",
+    "name": "강 범고래 튜브",
+    "kind": "float",
+    "price": 900,
+    "unlock": "cert"
+  },
+  {
+    "id": "hammock",
+    "name": "해먹 튜브",
+    "kind": "float",
+    "price": 1200,
+    "unlock": "cert"
+  },
+  {
+    "id": "flamingo_float",
+    "name": "홍학 튜브",
+    "kind": "float",
+    "price": 900,
+    "unlock": "cert"
+  },
+  {
+    "id": "dreaming_orca",
+    "name": "꿈꾸는 범고래 튜브",
+    "kind": "float",
+    "price": 1100,
+    "unlock": "cert"
+  },
+  {
+    "id": "shell_float",
+    "name": "조개 튜브",
+    "kind": "float",
+    "price": 1300,
+    "unlock": "cert"
+  },
+  {
+    "id": "swim_ring",
+    "name": "파란 링 튜브",
+    "kind": "float",
+    "price": 400,
+    "unlock": "wish"
+  }
+]

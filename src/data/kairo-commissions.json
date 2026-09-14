@@ -1,0 +1,250 @@
+{
+  "$comment": "수배 (P4) — **없는 걸 구해 오게 시킨다.** 지금 있는 걸 즉시 사는 것은 구입(P3)이고, 그 경계는 `days` 로 기계적으로 갈린다 (D2).",
+  "version": 1,
+  "note": "⚠ 모든 항목이 `days >= 2` 를 가져야 한다. 0~1 이면 그건 구입이다 — `commission.test.ts` 가 잡는다. ⚠ 분류별 개수(조달 6 · 홍보 4 · 특수 6 = 16)는 의뢰 16 과 같은 눈금에서 왔다 (§8-1). ⚠ **구인(P6)은 리드타임 1~2주**다 — 다른 분류(2~7일)보다 길다. 사람을 구하는 일이라서다 (D4).",
+  "slotsByGrade": [
+    1,
+    1,
+    2,
+    2,
+    3
+  ],
+  "commissions": [
+    {
+      "id": "sup_parts_marine",
+      "category": "supply",
+      "name": "선외기 부품 수배",
+      "desc": "선외기 부품를 구해 옵니다",
+      "cost": 380000,
+      "days": 3,
+      "chance": 0.9,
+      "minGrade": 1,
+      "item": "parts_marine"
+    },
+    {
+      "id": "sup_parts_hull",
+      "category": "supply",
+      "name": "선체 보강재 수배",
+      "desc": "선체 보강재를 구해 옵니다",
+      "cost": 520000,
+      "days": 4,
+      "chance": 0.85,
+      "minGrade": 2,
+      "item": "parts_hull"
+    },
+    {
+      "id": "sup_kit_lifeline",
+      "category": "supply",
+      "name": "인명구조 장비 수배",
+      "desc": "인명구조 장비를 구해 옵니다",
+      "cost": 460000,
+      "days": 3,
+      "chance": 0.9,
+      "minGrade": 2,
+      "item": "kit_lifeline"
+    },
+    {
+      "id": "sup_kit_filter",
+      "category": "supply",
+      "name": "수질 정화 장비 수배",
+      "desc": "수질 정화 장비를 구해 옵니다",
+      "cost": 640000,
+      "days": 5,
+      "chance": 0.8,
+      "minGrade": 3,
+      "item": "kit_filter"
+    },
+    {
+      "id": "sup_kit_night",
+      "category": "supply",
+      "name": "야간 조명 세트 수배",
+      "desc": "야간 조명 세트를 구해 옵니다",
+      "cost": 720000,
+      "days": 5,
+      "chance": 0.8,
+      "minGrade": 3,
+      "item": "kit_night"
+    },
+    {
+      "id": "sup_parts_import",
+      "category": "supply",
+      "name": "수입 특수 부품 수배",
+      "desc": "수입 특수 부품를 구해 옵니다",
+      "cost": 980000,
+      "days": 7,
+      "chance": 0.7,
+      "minGrade": 4,
+      "item": "parts_import"
+    },
+    {
+      "id": "pub_flyer",
+      "category": "publicity",
+      "name": "전단지 배포",
+      "desc": "방문객이 늘어납니다",
+      "cost": 180000,
+      "days": 2,
+      "chance": 1.0,
+      "minGrade": 1,
+      "visitorMult": 1.06,
+      "weeks": 1
+    },
+    {
+      "id": "pub_banner",
+      "category": "publicity",
+      "name": "강변 현수막",
+      "desc": "방문객이 늘어납니다",
+      "cost": 420000,
+      "days": 3,
+      "chance": 1.0,
+      "minGrade": 2,
+      "visitorMult": 1.12,
+      "weeks": 2
+    },
+    {
+      "id": "pub_radio",
+      "category": "publicity",
+      "name": "지역 라디오",
+      "desc": "방문객이 늘어납니다",
+      "cost": 760000,
+      "days": 4,
+      "chance": 0.9,
+      "minGrade": 3,
+      "visitorMult": 1.18,
+      "weeks": 2
+    },
+    {
+      "id": "pub_influencer",
+      "category": "publicity",
+      "name": "인플루언서 초청",
+      "desc": "방문객이 늘어납니다",
+      "cost": 1400000,
+      "days": 6,
+      "chance": 0.75,
+      "minGrade": 4,
+      "visitorMult": 1.3,
+      "weeks": 3
+    },
+    {
+      "id": "spc_safety_audit",
+      "category": "special",
+      "name": "안전 점검 의뢰",
+      "desc": "위험도를 낮춥니다",
+      "cost": 260000,
+      "days": 2,
+      "chance": 1.0,
+      "minGrade": 1,
+      "effect": "safety",
+      "weeks": 1
+    },
+    {
+      "id": "spc_deep_clean",
+      "category": "special",
+      "name": "전문 청소",
+      "desc": "청결이 오릅니다",
+      "cost": 220000,
+      "days": 2,
+      "chance": 1.0,
+      "minGrade": 1,
+      "effect": "clean",
+      "weeks": 1
+    },
+    {
+      "id": "spc_dock_repair",
+      "category": "special",
+      "name": "잔교 보수",
+      "desc": "시설 고장을 줄입니다",
+      "cost": 340000,
+      "days": 3,
+      "chance": 0.95,
+      "minGrade": 2,
+      "effect": "repair",
+      "weeks": 1
+    },
+    {
+      "id": "spc_water_test",
+      "category": "special",
+      "name": "수질 검사",
+      "desc": "청결이 오릅니다",
+      "cost": 300000,
+      "days": 3,
+      "chance": 0.95,
+      "minGrade": 2,
+      "effect": "clean",
+      "weeks": 1
+    },
+    {
+      "id": "spc_rescue_drill",
+      "category": "special",
+      "name": "인명구조 훈련",
+      "desc": "위험도를 낮춥니다",
+      "cost": 480000,
+      "days": 4,
+      "chance": 0.9,
+      "minGrade": 3,
+      "effect": "safety",
+      "weeks": 1
+    },
+    {
+      "id": "spc_overhaul",
+      "category": "special",
+      "name": "정기 정비",
+      "desc": "시설 고장을 줄입니다",
+      "cost": 860000,
+      "days": 5,
+      "chance": 0.85,
+      "minGrade": 4,
+      "effect": "repair",
+      "weeks": 1
+    },
+    {
+      "id": "hire_lifeguard",
+      "category": "hire",
+      "name": "안전요원 구인",
+      "desc": "안전요원 한 명을 뽑습니다",
+      "cost": 48000,
+      "days": 14,
+      "chance": 0.85,
+      "role": "lifeguard"
+    },
+    {
+      "id": "hire_operator",
+      "category": "hire",
+      "name": "운영요원 구인",
+      "desc": "운영요원 한 명을 뽑습니다",
+      "cost": 44000,
+      "days": 10,
+      "chance": 0.92,
+      "role": "operator"
+    },
+    {
+      "id": "hire_cleaner",
+      "category": "hire",
+      "name": "청소부 구인",
+      "desc": "청소부 한 명을 뽑습니다",
+      "cost": 32000,
+      "days": 7,
+      "chance": 0.92,
+      "role": "cleaner"
+    },
+    {
+      "id": "hire_mechanic",
+      "category": "hire",
+      "name": "정비공 구인",
+      "desc": "정비공 한 명을 뽑습니다",
+      "cost": 40000,
+      "days": 10,
+      "chance": 0.92,
+      "role": "mechanic"
+    },
+    {
+      "id": "hire_clerk",
+      "category": "hire",
+      "name": "매점직원 구인",
+      "desc": "매점직원 한 명을 뽑습니다",
+      "cost": 36000,
+      "days": 7,
+      "chance": 0.92,
+      "role": "clerk"
+    }
+  ]
+}

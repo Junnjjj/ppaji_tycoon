@@ -12,6 +12,8 @@ import { GROUPS, needWeight, type GroupId } from './groups.js';
 import type { GuestStore } from './guests.js';
 import type { MenuPurchase, RegularVisit } from './menu.js';
 import { realizeCourseWeek, type CourseWeekPotential } from './course.js';
+/* 사고 대상 가중치 (Q1) — 확률은 `accidentChance` 가, **어디에 떨어지나**는 이쪽이 정한다 */
+import { facilityRiskWeights } from './risk.js';
 /*
  * ⚠ 입장 상한의 **정본은 `progress.ts` 의 `admissionLimit`** 이다. 여기서 규칙
  * (`min(등급 상한, 공급×1.5)`)을 다시 쓰지 않는다 — 두 벌이 되면 결산이 "더 지으세요"라고
@@ -287,17 +289,32 @@ export function summarizeWeek(report: WeekReport): WeekSummary {
   };
 }
 
-export type InvestmentKind = 'building' | 'upgrades' | 'menuDevelopment';
+export type InvestmentKind =
+  | 'building'
+  | 'upgrades'
+  | 'menuDevelopment'
+  /**
+   * **돈을 내고 시간이 지나야 결과가 나오는 지출** (P3). 이 정의가 수배 수수료와
+   * **심사 수수료를 정확히 같이** 덮는다 — 둘 다 「샀다 → 기다린다 → 회수한다」이고
+   * 심사는 통과하면 등급으로 돌아온다.
+   */
+  | 'commission'
+  /** 상점에서 **즉시** 산 것 (P3) — 기다림이 없다는 점이 `commission` 과의 경계다 */
+  | 'shopping';
 
 /** 영업 손익 밖의 자산/성장 지출. 현금에는 이미 반영돼 있고 결산은 분류만 보여 준다. */
 export interface InvestmentBreakdown {
   building: number;
   upgrades: number;
   menuDevelopment: number;
+  /** 수배·심사 수수료 (P3) — 기다림이 있는 지출 */
+  commission: number;
+  /** 상점에서 즉시 산 것 (P3) */
+  shopping: number;
 }
 
 function emptyInvestment(): InvestmentBreakdown {
-  return { building: 0, upgrades: 0, menuDevelopment: 0 };
+  return { building: 0, upgrades: 0, menuDevelopment: 0, commission: 0, shopping: 0 };
 }
 
 export interface WeekReport extends WeekSummary {
@@ -628,6 +645,16 @@ export class WeekRunner {
     return this.weekNo;
   }
 
+  /**
+   * **주 경계를 넘어 이어지는 절대 tick** (P4). 수배의 마감 시각이 이 눈금 위에 있다.
+   *
+   * ⚠ 주 안의 `live.tick` 만 쓰면 주가 넘어갈 때 0 으로 돌아가 「2주 뒤」를 표현할 수 없다.
+   * ⚠ 진행 중인 주가 없으면 그 주의 **시작점**이다 — `begin()` 전후로 값이 튀면 안 된다.
+   */
+  get absTick(): number {
+    return this.weekNo * TICKS_PER_WEEK + (this.live?.tick ?? 0);
+  }
+
   get cash(): number {
     return this.money;
   }
@@ -664,10 +691,13 @@ export class WeekRunner {
   restore(s: WeekSnapshot): void {
     this.weekNo = s.week;
     this.money = s.cash;
+    // ⚠ `?? 0` 이라 옛 세이브에 없는 축은 0 으로 열린다 — 세이브 버전을 안 올린다
     this.investment = {
       building: s.investment?.building ?? 0,
       upgrades: s.investment?.upgrades ?? 0,
       menuDevelopment: s.investment?.menuDevelopment ?? 0,
+      commission: s.investment?.commission ?? 0,
+      shopping: s.investment?.shopping ?? 0,
     };
   }
 
@@ -878,7 +908,37 @@ export class WeekRunner {
     if (chance > 0 && arng.next() < chance) {
       const pool = this.placement.all();
       if (pool.length > 0) {
-        const hit = pool[arng.int(pool.length)] as { handle: number; defId: string };
+        /*
+         * ⚠ **사고는 위험한 곳에서 난다** (Q1). 예전에는 `pool[arng.int(pool.length)]` —
+         * 놓인 시설 **전체에서 균일 무작위**였다. 그래서 슬라이드 옆에 구명함을 지어도
+         * 화장실이 닫힐 확률이 똑같았고, 「내가 한 일」과 「일어난 일」이 안 이어졌다.
+         *
+         * ⚠ **뽑기 횟수는 그대로 정확히 1회다** — `arng.int(pool.length)` 를
+         * `arng.next()` 하나로 바꿨다. 횟수가 달라지면 사고 스트림이 밀려 「사고만 다른
+         * 두 판」을 못 만든다 (K36-B③ 이 정확히 그 버그였다).
+         * ⚠ 확률(총량)도 안 바꾼다 — 바뀌는 것은 **어디에 떨어지나**뿐이다.
+         */
+        const weights = facilityRiskWeights(this.placement);
+        const total = weights.reduce((sum: number, x) => sum + x.weight, 0);
+        let hit: { handle: number; defId: string };
+        if (total <= 0) {
+          // 위험한 시설이 하나도 없으면 예전처럼 균일 — 그래야 「위험 0 인 판」이 안 잠긴다
+          hit = pool[Math.min(pool.length - 1, Math.floor(arng.next() * pool.length))] as {
+            handle: number;
+            defId: string;
+          };
+        } else {
+          let roll = arng.next() * total;
+          let picked = weights[weights.length - 1] as { handle: number; defId: string };
+          for (const w of weights) {
+            roll -= w.weight;
+            if (roll < 0) {
+              picked = w;
+              break;
+            }
+          }
+          hit = picked;
+        }
         accident = { handle: hit.handle, defId: hit.defId, weeks: 1 + arng.int(3) };
       }
     }
@@ -940,6 +1000,8 @@ export class WeekRunner {
         // ── 하루 열기 ────────────────────────────────────────────────────
         const dayNo = Math.floor(lw.tick / TICKS_PER_DAY);
         const weather = rng.weather.pick(lw.profile.weather);
+        // ⚠ 손님은 날씨를 모른다 (P7) — 러너가 넣어 준다. 줄 선 손님의 `hot` 표식이 이걸 쓴다
+        this.guests.setHeat(weather === 'heat');
         const weekendBoost = WEEKEND.includes(dayNo) ? 1.6 : 1.0;
         // 시설이 조금 끌어당기고, 나머지는 평판이 결정한다
         const facilityPull = 1 + Math.min(0.6, this.placement.count * 0.015);

@@ -1,0 +1,3678 @@
+[
+  {
+    "friendId": "kiddie",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 20
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapefruit"
+    },
+    "line": "풀을 20칸 넘게 넓혀 줘!"
+  },
+  {
+    "friendId": "kiddie",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 40
+    },
+    "reward": {
+      "kind": "gift",
+      "id": "swim_ring"
+    },
+    "line": "더 커다란 풀! 40칸은 돼야 해!"
+  },
+  {
+    "friendId": "kiddie",
+    "idx": 2,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 60
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "sunflower"
+    },
+    "line": "60칸짜리 풀이면 하루 종일 헤엄칠 수 있어!"
+  },
+  {
+    "friendId": "art_master",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "color": "orange"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "orange"
+    },
+    "line": "노을처럼 주황빛 풀을 그려 줘!"
+  },
+  {
+    "friendId": "art_master",
+    "idx": 1,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "color": "orange"
+        },
+        {
+          "kind": "pool",
+          "scent": "berry"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "blueberry"
+    },
+    "line": "주황 풀에서 베리 향이 나면 딱이야!"
+  },
+  {
+    "friendId": "art_master",
+    "idx": 2,
+    "condition": {
+      "kind": "pool",
+      "color": "rainbow"
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "parasol_set"
+    },
+    "line": "무지개색 풀! 그건 진짜 걸작이 될 거야!"
+  },
+  {
+    "friendId": "illustrator",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "creperie"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "pineapple"
+    },
+    "line": "크레페 가게가 있으면 매일 올 텐데…"
+  },
+  {
+    "friendId": "illustrator",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "color": "pink"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "peach"
+    },
+    "line": "분홍색 풀 그려 보고 싶어! 만들어 줘!"
+  },
+  {
+    "friendId": "illustrator",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "color": "pink",
+          "scent": "tropical"
+        },
+        {
+          "kind": "pool",
+          "likesMin": 100
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "coffee_tree"
+    },
+    "line": "트로피컬 향 분홍 풀에 좋아요 100개! 내 그림 소재로 완벽해!"
+  },
+  {
+    "friendId": "brat",
+    "idx": 0,
+    "condition": {
+      "kind": "item",
+      "id": "lemon"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "kiwi"
+    },
+    "line": "풀에 레몬 좀 던져 줘! 시큼하게!"
+  },
+  {
+    "friendId": "brat",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "mini_slide",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "honey"
+    },
+    "line": "미니 슬라이드 하나로는 부족해! 두 개 놔 줘!"
+  },
+  {
+    "friendId": "brat",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "color": "red"
+        },
+        {
+          "kind": "facility",
+          "id": "surprise_soaker"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "fish_fountain"
+    },
+    "line": "새빨간 풀에 서프라이즈 소커! 다들 흠뻑 젖게 해 줘!"
+  },
+  {
+    "friendId": "housewife",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "deck_chair",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "chocolate"
+    },
+    "line": "데크체어가 두 개는 있어야 편히 쉬지."
+  },
+  {
+    "friendId": "housewife",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "scent": "coffee"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "coffee_beans"
+    },
+    "line": "커피 향이 나는 풀이라니, 상상만 해도 좋네."
+  },
+  {
+    "friendId": "housewife",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "color": "red",
+          "scent": "coffee"
+        },
+        {
+          "kind": "facility",
+          "id": "coffee_tree"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "cafe"
+    },
+    "line": "빨간 풀에 커피 향, 옆엔 커피나무. 그럼 내가 카페를 소개해 줄게."
+  },
+  {
+    "friendId": "helicopter_mom",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "toilet",
+      "count": 2
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "shower"
+    },
+    "line": "화장실이 두 개는 있어야 아이를 데려오죠!"
+  },
+  {
+    "friendId": "helicopter_mom",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "tempMin": 32
+    },
+    "reward": {
+      "kind": "item",
+      "id": "bath_salt"
+    },
+    "line": "물이 차면 감기 걸려요. 32도는 넘게 해 줘요."
+  },
+  {
+    "friendId": "helicopter_mom",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "color": "purple",
+          "scent": "spices"
+        },
+        {
+          "kind": "facility",
+          "id": "mini_shower"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "hydrangea"
+    },
+    "line": "보라색 풀에 스파이스 향, 미니 샤워까지. 그래야 안심이죠."
+  },
+  {
+    "friendId": "rich_lady",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "parasol_set"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "melon"
+    },
+    "line": "햇빛은 질색이에요. 파라솔 세트를 놓아 줘요."
+  },
+  {
+    "friendId": "rich_lady",
+    "idx": 1,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "color": "green"
+        },
+        {
+          "kind": "pool",
+          "scent": "cookie"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "mint"
+    },
+    "line": "초코민트 같은 풀이 좋겠어요. 초록빛에 쿠키 향으로."
+  },
+  {
+    "friendId": "rich_lady",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "facility",
+          "id": "cabana"
+        },
+        {
+          "kind": "pool",
+          "likesMin": 300
+        },
+        {
+          "kind": "popularity",
+          "min": 150
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "sushi_bar"
+    },
+    "line": "카바나에 좋아요 300짜리 풀, 인기 150. 그 정도면 초밥집을 붙여 드리죠."
+  },
+  {
+    "friendId": "ping_ponger",
+    "idx": 0,
+    "condition": {
+      "kind": "item",
+      "id": "apple"
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 500
+    },
+    "line": "풀에 사과 넣어 줘! 사과 향 좋아해!"
+  },
+  {
+    "friendId": "ping_ponger",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "scent": "pine",
+      "outdoor": true
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapes"
+    },
+    "line": "야외 풀에서 솔 향! 산에서 헤엄치는 기분!"
+  },
+  {
+    "friendId": "ping_ponger",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "color": "lime"
+        },
+        {
+          "kind": "facility",
+          "id": "jetted_pool",
+          "count": 2
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "aloe"
+    },
+    "line": "라임색 풀에 제트풀 두 개! 물살 타고 랠리하자!"
+  },
+  {
+    "friendId": "rabbit_keeper",
+    "idx": 0,
+    "condition": {
+      "kind": "item",
+      "id": "milk"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "coconut"
+    },
+    "line": "풀에 우유 넣어 줘. 토끼도 좋아할 것 같아."
+  },
+  {
+    "friendId": "rabbit_keeper",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "color": "white"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapefruit"
+    },
+    "line": "새하얀 풀! 토끼 털 같아서 좋아."
+  },
+  {
+    "friendId": "rabbit_keeper",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "color": "white",
+          "scent": "milky"
+        },
+        {
+          "kind": "facility",
+          "id": "flower_pot",
+          "count": 3
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "rose"
+    },
+    "line": "우유 향 하얀 풀 둘레에 화분 세 개. 토끼 정원 같겠지?"
+  },
+  {
+    "friendId": "student_councilor",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "juice_stand"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapes"
+    },
+    "line": "주스 판매대가 있어야 학생회 회의를 열지!"
+  },
+  {
+    "friendId": "student_councilor",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "color": "yellow"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "melon"
+    },
+    "line": "우리 학교 색은 노랑이야. 노란 풀 부탁해!"
+  },
+  {
+    "friendId": "student_councilor",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "color": "yellow",
+          "scent": "tropical"
+        },
+        {
+          "kind": "likes",
+          "min": 300
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "pineapple_plant"
+    },
+    "line": "트로피컬 향 노란 풀에 좋아요 300! 학교 신문에 실을게!"
+  },
+  {
+    "friendId": "phd_student",
+    "idx": 0,
+    "condition": {
+      "kind": "item",
+      "id": "banana"
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 600
+    },
+    "line": "바나나를 풀에 넣으면 어떻게 되는지 관찰하고 싶어."
+  },
+  {
+    "friendId": "phd_student",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "sauna"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "peach"
+    },
+    "line": "사우나가 있으면 밤샘 연구 피로가 풀릴 텐데."
+  },
+  {
+    "friendId": "phd_student",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "tempMin": 36,
+          "scent": "spices",
+          "indoor": true
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "seaweed"
+    },
+    "line": "실내 36도 스파이스 풀. 완벽한 실험 조건이야."
+  },
+  {
+    "friendId": "high_schooler",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "vending_machine",
+      "count": 2
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 500
+    },
+    "line": "자판기 두 대는 있어야 줄 안 서지."
+  },
+  {
+    "friendId": "high_schooler",
+    "idx": 1,
+    "condition": {
+      "kind": "gift",
+      "id": "school_swimsuit"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "blueberry"
+    },
+    "line": "학교 수영복 하나만 줘. 체육 시간에 쓸게."
+  },
+  {
+    "friendId": "high_schooler",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "color": "green",
+          "scent": "citrus"
+        },
+        {
+          "kind": "facility",
+          "id": "stripy_slide"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "lavender"
+    },
+    "line": "시트러스 향 초록 풀에 줄무늬 슬라이드. 친구들 다 데려올게."
+  },
+  {
+    "friendId": "baseball_kid",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "mini_slide"
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 700
+    },
+    "line": "미니 슬라이드! 슬라이딩 연습하게!"
+  },
+  {
+    "friendId": "baseball_kid",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "color": "blue",
+      "sizeMin": 30
+    },
+    "reward": {
+      "kind": "item",
+      "id": "banana"
+    },
+    "line": "파란 풀을 30칸 넘게! 야구장만큼 넓게!"
+  },
+  {
+    "friendId": "baseball_kid",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "color": "blue"
+        },
+        {
+          "kind": "facility",
+          "id": "blue_slide"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "rocket_slide"
+    },
+    "line": "파란 풀에 블루 슬라이드! 그럼 로켓 슬라이드 얘기 해 줄게!"
+  },
+  {
+    "friendId": "vice_principal",
+    "idx": 0,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "facility",
+          "id": "toilet"
+        },
+        {
+          "kind": "facility",
+          "id": "shower"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 800
+    },
+    "line": "화장실과 샤워실. 기본이 되어야 학생을 보내지."
+  },
+  {
+    "friendId": "vice_principal",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "scent": "floral"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "kiwi"
+    },
+    "line": "꽃 향이 나는 풀이면 좋겠군. 마음이 편해지니."
+  },
+  {
+    "friendId": "vice_principal",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "color": "purple",
+          "scent": "floral",
+          "tempMin": 38
+        },
+        {
+          "kind": "facility",
+          "id": "hot_tub"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "performing_kairobot"
+    },
+    "line": "38도 꽃 향 보라 풀에 핫텁까지. 그럼 공연 카이로봇을 소개해 주지."
+  },
+  {
+    "friendId": "daydreaming_girl",
+    "idx": 0,
+    "condition": {
+      "kind": "item",
+      "id": "apple"
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "ice_cream_van"
+    },
+    "line": "풀에 사과 띄워 줘. 멍하니 보고 있으면 예쁠 거야…"
+  },
+  {
+    "friendId": "daydreaming_girl",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "color": "pink",
+      "scent": "tropical"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "peach"
+    },
+    "line": "트로피컬 향 분홍 풀… 꿈속 같을 거야. 만들어 줘!"
+  },
+  {
+    "friendId": "daydreaming_girl",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "pink",
+          "likesMin": 150
+        },
+        {
+          "kind": "facility",
+          "id": "ice_cream_van"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "honey_jar"
+    },
+    "line": "분홍 풀에 좋아요 150, 옆엔 아이스크림 밴. 그럼 꿈이 이루어져!"
+  },
+  {
+    "friendId": "dancer",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "color": "purple"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapes"
+    },
+    "line": "보라색 풀! 무대 조명처럼 만들어 줘!"
+  },
+  {
+    "friendId": "dancer",
+    "idx": 1,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "scent": "fruity",
+          "outdoor": true
+        },
+        {
+          "kind": "facility",
+          "id": "jetted_pool"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "burger_joint"
+    },
+    "line": "야외 과일 향 풀에 제트풀! 물살 위에서 춤추게 해 줘!"
+  },
+  {
+    "friendId": "dancer",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "purple",
+          "scent": "fruity",
+          "intensityMin": 40
+        },
+        {
+          "kind": "popularity",
+          "min": 120
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "banana_fruit"
+    },
+    "line": "보라 풀을 더 진하게, 인기는 120! 그럼 여기서 공연을 열게!"
+  },
+  {
+    "friendId": "trumpeter",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "color": "yellow",
+      "outdoor": true
+    },
+    "reward": {
+      "kind": "item",
+      "id": "banana"
+    },
+    "line": "야외 노란 풀! 트럼펫 소리처럼 환하게 해 줘!"
+  },
+  {
+    "friendId": "trumpeter",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "vending_machine",
+      "count": 3
+    },
+    "reward": {
+      "kind": "item",
+      "id": "mint"
+    },
+    "line": "자판기 세 대 놔 줘! 연습 뒤엔 목이 마르거든."
+  },
+  {
+    "friendId": "trumpeter",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "yellow",
+          "scent": "cookie"
+        },
+        {
+          "kind": "facility",
+          "id": "burger_joint"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "honey"
+    },
+    "line": "쿠키 향 노란 풀에 버거집. 연주 뒤 최고의 한 끼야!"
+  },
+  {
+    "friendId": "woodcutter",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "cypress",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "mint"
+    },
+    "line": "사이프러스 두 그루 심어 줘. 숲 냄새가 그리워."
+  },
+  {
+    "friendId": "woodcutter",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "outdoor": true,
+      "scent": "pine",
+      "color": "green"
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "bakery"
+    },
+    "line": "야외 솔 향 초록 풀. 숲속 호수 같으면 빵집을 알려 주지."
+  },
+  {
+    "friendId": "woodcutter",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
+        },
+        {
+          "kind": "poolTotalSize",
+          "min": 80
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "hazelnut"
+    },
+    "line": "장식 여섯 개에 풀 합계 80칸. 그게 진짜 숲이지."
+  },
+  {
+    "friendId": "florist",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "scent": "floral",
+      "outdoor": true
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "donut_shop"
+    },
+    "line": "야외 꽃 향 풀! 그럼 도넛 가게를 소개할게."
+  },
+  {
+    "friendId": "florist",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "flower_bed",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "rose"
+    },
+    "line": "꽃밭 두 개! 풀 옆이 꽃으로 가득하면 좋겠어."
+  },
+  {
+    "friendId": "florist",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "lime",
+          "scent": "floral",
+          "outdoor": true
+        },
+        {
+          "kind": "facilityAdjacent",
+          "ids": [
+            "flower_pot",
+            "hydrangea"
+          ]
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "lavender"
+    },
+    "line": "라임빛 야외 꽃 풀, 화분 옆엔 수국. 완벽한 정원이야!"
+  },
+  {
+    "friendId": "bunbun",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "sauna"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "orange"
+    },
+    "line": "사우나가 있으면 털이 보송보송해질 텐데. 지어 줘!"
+  },
+  {
+    "friendId": "bunbun",
+    "idx": 1,
+    "condition": {
+      "kind": "item",
+      "id": "orange",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "pineapple"
+    },
+    "line": "오렌지 두 개 띄워 줘! 새콤한 게 좋아!"
+  },
+  {
+    "friendId": "bunbun",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "green",
+          "scent": "coffee"
+        },
+        {
+          "kind": "facility",
+          "id": "cafe"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "coffee_beans"
+    },
+    "line": "커피 향 초록 풀에 카페까지. 그럼 매일 올게!"
+  },
+  {
+    "friendId": "kappappa",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "scent": "marine",
+      "popMin": 30
+    },
+    "reward": {
+      "kind": "item",
+      "id": "seaweed"
+    },
+    "line": "바다 향 풀에 인기 30! 캇파는 바다가 그리워."
+  },
+  {
+    "friendId": "kappappa",
+    "idx": 1,
+    "condition": {
+      "kind": "item",
+      "id": "kiwi"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "coffee_beans"
+    },
+    "line": "키위를 풀에 넣어 줘. 초록빛이 마음에 들어."
+  },
+  {
+    "friendId": "kappappa",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "blue",
+          "scent": "floral",
+          "tempMax": 24
+        },
+        {
+          "kind": "facility",
+          "id": "fish_fountain"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "matcha"
+    },
+    "line": "24도 이하 파란 꽃 풀에 물고기 분수! 시원하게 해 줘!"
+  },
+  {
+    "friendId": "grizzly_bearington",
+    "idx": 0,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "facility",
+          "id": "creperie"
+        },
+        {
+          "kind": "item",
+          "id": "apple"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "ramen_stall"
+    },
+    "line": "크레페 가게에 사과 풀. 그럼 라멘 가게를 소개하지."
+  },
+  {
+    "friendId": "grizzly_bearington",
+    "idx": 1,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "white",
+          "scent": "marine"
+        },
+        {
+          "kind": "facility",
+          "id": "sushi_bar"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "coconut"
+    },
+    "line": "하얀 바다 향 풀에 초밥집. 연어가 먹고 싶군."
+  },
+  {
+    "friendId": "grizzly_bearington",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "white",
+          "likesMin": 200
+        },
+        {
+          "kind": "facilityClass",
+          "class": "restaurant",
+          "count": 5
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "coconut"
+    },
+    "line": "하얀 풀에 좋아요 200, 식당은 다섯 곳. 곰도 배가 부르지."
+  },
+  {
+    "friendId": "cheeky_brat",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "white_wooden_chair"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "cinnamon"
+    },
+    "line": "하얀 나무 의자 놓아 줘! 거기서 팝콘 먹을래!"
+  },
+  {
+    "friendId": "cheeky_brat",
+    "idx": 1,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "blue",
+          "scent": "spices"
+        },
+        {
+          "kind": "facility",
+          "id": "mini_slide",
+          "count": 2
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "popcorn_stall"
+    },
+    "line": "스파이스 향 파란 풀에 미니 슬라이드 둘! 그럼 팝콘 가게를 알려 줄게!"
+  },
+  {
+    "friendId": "cheeky_brat",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "facility",
+          "id": "white_comfy_chair"
+        },
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "blue",
+          "likesMin": 150
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "melon_fruit"
+    },
+    "line": "하얀 푹신 의자에 좋아요 150 파란 풀! 나 진짜 매일 올 거야!"
+  },
+  {
+    "friendId": "movie_editor",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "snow_cone_shop"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapefruit"
+    },
+    "line": "빙수 가게 지어 줘! 편집 마감 뒤엔 레몬 빙수지."
+  },
+  {
+    "friendId": "movie_editor",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "likesMin": 150
+    },
+    "reward": {
+      "kind": "item",
+      "id": "honey"
+    },
+    "line": "좋아요 150짜리 풀. 그 장면을 찍어 두고 싶어."
+  },
+  {
+    "friendId": "movie_editor",
+    "idx": 2,
+    "condition": {
+      "kind": "certPassed",
+      "id": "grade_f"
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "monstera"
+    },
+    "line": "입문 인증을 통과한 워터파크를 찍고 싶어. 심사에 도전해 줘!"
+  },
+  {
+    "friendId": "lunchbox_seller",
+    "idx": 0,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "facility",
+          "id": "juice_stand"
+        },
+        {
+          "kind": "item",
+          "id": "lemon"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "rice_ball_shop"
+    },
+    "line": "주스 판매대에 레몬 풀. 그럼 주먹밥 가게를 열어 줄게!"
+  },
+  {
+    "friendId": "lunchbox_seller",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "color": "orange",
+      "scent": "milky"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "cinnamon"
+    },
+    "line": "우유 향 주황 풀. 도시락 색깔 같아서 좋네."
+  },
+  {
+    "friendId": "lunchbox_seller",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "facilityClass",
+          "class": "restaurant",
+          "count": 6
+        },
+        {
+          "kind": "popularity",
+          "min": 150
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "pineapple"
+    },
+    "line": "식당 여섯 곳에 인기 150! 장사가 잘돼야 나도 신나지."
+  },
+  {
+    "friendId": "greengrocer",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "scent": "fruity",
+      "color": "purple"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapes"
+    },
+    "line": "과일 향 보라 풀! 포도밭 같겠지?"
+  },
+  {
+    "friendId": "greengrocer",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "sunflower",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "rose"
+    },
+    "line": "해바라기 두 그루! 노랗게 활짝 피워 줘!"
+  },
+  {
+    "friendId": "greengrocer",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "yellow",
+          "scent": "citrus",
+          "outdoor": true
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 8
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "melon"
+    },
+    "line": "시트러스 향 노란 야외 풀에 장식 여덟 개. 채소밭처럼 풍성하게!"
+  },
+  {
+    "friendId": "chef",
+    "idx": 0,
+    "condition": {
+      "kind": "item",
+      "id": "melon"
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "fried_noodle_stall"
+    },
+    "line": "멜론을 풀에! 그럼 볶음면 가게를 알려 주지."
+  },
+  {
+    "friendId": "chef",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "outdoor": true,
+      "scent": "floral"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "honey"
+    },
+    "line": "야외 꽃 향 풀. 요리 영감이 떠오르겠어."
+  },
+  {
+    "friendId": "chef",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "lime",
+          "scent": "cookie"
+        },
+        {
+          "kind": "facilityClass",
+          "class": "restaurant",
+          "count": 7
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "peach_fruit"
+    },
+    "line": "쿠키 향 라임 풀에 식당 일곱! 요리사의 천국이군."
+  },
+  {
+    "friendId": "cook",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "outdoor": true,
+      "popMin": 90
+    },
+    "reward": {
+      "kind": "item",
+      "id": "seaweed"
+    },
+    "line": "인기 90짜리 야외 풀! 그래야 손님이 오지."
+  },
+  {
+    "friendId": "cook",
+    "idx": 1,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "red",
+          "scent": "marine"
+        },
+        {
+          "kind": "facility",
+          "id": "fried_noodle_stall"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "hot_pot_stall"
+    },
+    "line": "바다 향 빨간 풀에 볶음면 가게. 그럼 핫팟 가게도 열자."
+  },
+  {
+    "friendId": "cook",
+    "idx": 2,
+    "condition": {
+      "kind": "recipe",
+      "id": "banana_milk",
+      "served": true
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "hibiscus"
+    },
+    "line": "바나나 우유를 메뉴에 걸어 줘! 내가 제일 좋아하는 맛이야"
+  },
+  {
+    "friendId": "doctor",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "hot_tub"
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "salad_bar"
+    },
+    "line": "핫텁이 있으면 건강에 좋아요. 그럼 샐러드 바를 소개하죠."
+  },
+  {
+    "friendId": "doctor",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "mini_shower",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "bath_salt"
+    },
+    "line": "미니 샤워 두 개 놔 줘요. 위생이 첫째예요."
+  },
+  {
+    "friendId": "doctor",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "blue",
+          "scent": "tropical",
+          "tempMin": 34
+        },
+        {
+          "kind": "facility",
+          "id": "sauna"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "bath_salt"
+    },
+    "line": "34도 트로피컬 향 파란 풀에 사우나. 처방입니다."
+  },
+  {
+    "friendId": "part_timer",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "scent": "citrus",
+      "popMin": 80
+    },
+    "reward": {
+      "kind": "item",
+      "id": "orange"
+    },
+    "line": "인기 80 시트러스 풀! 근무 끝나고 뛰어들래!"
+  },
+  {
+    "friendId": "part_timer",
+    "idx": 1,
+    "condition": {
+      "kind": "gift",
+      "id": "retro_swimsuit"
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "noodle_stall"
+    },
+    "line": "레트로 수영복 하나만! 그럼 국수 가게를 알려 줄게."
+  },
+  {
+    "friendId": "part_timer",
+    "idx": 2,
+    "condition": {
+      "kind": "recipe",
+      "id": "honey_toast",
+      "served": true
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 2000
+    },
+    "line": "허니 토스트를 팔아 줘! 알바 끝나고 먹을 거야"
+  },
+  {
+    "friendId": "rookie_employee",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "white_wooden_chair",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "chocolate"
+    },
+    "line": "하얀 나무 의자 두 개. 점심시간에 쉬고 싶어요."
+  },
+  {
+    "friendId": "rookie_employee",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "black_rattan_chair"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "blueberry"
+    },
+    "line": "검은 라탄 의자! 상사 몰래 낮잠 자게 해 줘요."
+  },
+  {
+    "friendId": "rookie_employee",
+    "idx": 2,
+    "condition": {
+      "kind": "cookingLevel",
+      "min": 5
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "coffee_bean"
+    },
+    "line": "요리 레벨 5! 그 정도면 신입 환영회를 여기서 해도 되겠어"
+  },
+  {
+    "friendId": "office_clerk_m",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "scent": "pine",
+      "tempMin": 30
+    },
+    "reward": {
+      "kind": "item",
+      "id": "coffee_beans"
+    },
+    "line": "30도 솔 향 풀. 퇴근 뒤 몸 좀 녹이게 해 줘."
+  },
+  {
+    "friendId": "office_clerk_m",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "burger_joint"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "seaweed"
+    },
+    "line": "버거집 지어 줘! 야근엔 햄버거지."
+  },
+  {
+    "friendId": "office_clerk_m",
+    "idx": 2,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "outdoor": true,
+      "scent": "marine",
+      "color": "blue"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "blueberry"
+    },
+    "line": "야외 바다 향 파란 풀. 휴가 온 기분이겠지."
+  },
+  {
+    "friendId": "office_clerk_f",
+    "idx": 0,
+    "condition": {
+      "kind": "gift",
+      "id": "striped_swimsuit"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "rose"
+    },
+    "line": "줄무늬 수영복 하나 줘요. 새로 산 걸로!"
+  },
+  {
+    "friendId": "office_clerk_f",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "color": "pink",
+      "scent": "floral"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "banana"
+    },
+    "line": "꽃 향 분홍 풀. 사진 찍어 올릴래요."
+  },
+  {
+    "friendId": "office_clerk_f",
+    "idx": 2,
+    "condition": {
+      "kind": "recipe",
+      "id": "matcha_latte",
+      "served": true
+    },
+    "reward": {
+      "kind": "gift",
+      "id": "flower_pants"
+    },
+    "line": "말차 라떼를 메뉴에 올려 줘! 점심시간의 낙이야"
+  },
+  {
+    "friendId": "office_worker",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "stripy_slide"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "pineapple"
+    },
+    "line": "줄무늬 슬라이드! 스트레스 날려 버리게 해 줘!"
+  },
+  {
+    "friendId": "office_worker",
+    "idx": 1,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "yellow",
+          "scent": "pine"
+        },
+        {
+          "kind": "facility",
+          "id": "parasol_set"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "chocolate"
+    },
+    "line": "솔 향 노란 풀에 파라솔 세트. 그늘에서 케밥 먹자."
+  },
+  {
+    "friendId": "office_worker",
+    "idx": 2,
+    "condition": {
+      "kind": "certPasses",
+      "min": 3
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "vanilla"
+    },
+    "line": "인증 3개쯤 있는 곳이라야 상사한테 자랑하지. 심사를 더 통과해 줘"
+  },
+  {
+    "friendId": "tax_advisor",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "jetted_pool",
+      "count": 2
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "curry_restaurant"
+    },
+    "line": "제트풀 두 개. 그럼 카레 식당을 소개하죠."
+  },
+  {
+    "friendId": "tax_advisor",
+    "idx": 1,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "lime",
+          "scent": "marine"
+        },
+        {
+          "kind": "facility",
+          "id": "curry_restaurant"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "melon"
+    },
+    "line": "바다 향 라임 풀에 카레 식당. 절세처럼 딱 떨어지네요."
+  },
+  {
+    "friendId": "tax_advisor",
+    "idx": 2,
+    "condition": {
+      "kind": "recipe",
+      "id": "hazelnut_chocolate",
+      "served": true
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 2500
+    },
+    "line": "헤이즐넛 초콜릿을 메뉴에 걸어 줘. 계산이 잘 풀리는 맛이지"
+  },
+  {
+    "friendId": "ceo",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "outdoor": true,
+      "scent": "coffee"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "coffee_beans"
+    },
+    "line": "야외 커피 향 풀. 회의는 거기서 하지."
+  },
+  {
+    "friendId": "ceo",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "tempMin": 35
+    },
+    "reward": {
+      "kind": "item",
+      "id": "lavender"
+    },
+    "line": "35도 이상 풀을 만들어 주게. 사장 어깨는 늘 굳어 있거든."
+  },
+  {
+    "friendId": "ceo",
+    "idx": 2,
+    "condition": {
+      "kind": "cookingLevel",
+      "min": 3
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "waterfall"
+    },
+    "line": "요리 레벨 3 은 돼야 접대할 맛이 나지. 요리 개발을 더 해 줘"
+  },
+  {
+    "friendId": "chairman",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "color": "red",
+      "scent": "berry"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "blueberry"
+    },
+    "line": "베리 향 빨간 풀. 회장도 취향이 있네."
+  },
+  {
+    "friendId": "chairman",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "table_4",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "orange"
+    },
+    "line": "4인 테이블 두 개. 임원 회의를 열어야지."
+  },
+  {
+    "friendId": "chairman",
+    "idx": 2,
+    "condition": {
+      "kind": "recipeCount",
+      "min": 15
+    },
+    "reward": {
+      "kind": "gift",
+      "id": "retro_swimsuit"
+    },
+    "line": "레시피 15종 정도는 갖춰야 파티가 되지 않겠나. 도감을 채워 줘"
+  },
+  {
+    "friendId": "fashionista",
+    "idx": 0,
+    "condition": {
+      "kind": "item",
+      "id": "lemon",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "peach"
+    },
+    "line": "레몬 두 개 띄워 줘! 상큼한 게 유행이야."
+  },
+  {
+    "friendId": "fashionista",
+    "idx": 1,
+    "condition": {
+      "kind": "gift",
+      "id": "flower_pants"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapes"
+    },
+    "line": "꽃무늬 팬츠 줘! 올여름 트렌드거든."
+  },
+  {
+    "friendId": "fashionista",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "yellow",
+          "scent": "berry"
+        },
+        {
+          "kind": "facility",
+          "id": "snow_cone_shop",
+          "count": 2
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "chicken"
+    },
+    "line": "베리 향 노란 풀에 빙수 가게 둘. 화보 찍자!"
+  },
+  {
+    "friendId": "movie_director",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "blue_parasol"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "cinnamon"
+    },
+    "line": "파란 파라솔! 촬영 현장엔 그늘이 필요해."
+  },
+  {
+    "friendId": "movie_director",
+    "idx": 1,
+    "condition": {
+      "kind": "gift",
+      "id": "retro_swimsuit"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapefruit"
+    },
+    "line": "레트로 수영복 하나 주게. 내 영화에 딱이야."
+  },
+  {
+    "friendId": "movie_director",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "white",
+          "scent": "spices",
+          "indoor": true
+        },
+        {
+          "kind": "facility",
+          "id": "waterfall"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "beef"
+    },
+    "line": "실내 스파이스 향 하얀 풀에 폭포. 그림이 나오는군."
+  },
+  {
+    "friendId": "comedian",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "color": "blue",
+      "scent": "spices"
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "taqueria"
+    },
+    "line": "스파이스 향 파란 풀! 그럼 타코 가게를 알려 줄게!"
+  },
+  {
+    "friendId": "comedian",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "noodle_stall"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapes"
+    },
+    "line": "국수 가게! 후루룩 소리로 개그 하나 짜 볼게."
+  },
+  {
+    "friendId": "comedian",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "white",
+          "likesMin": 250
+        },
+        {
+          "kind": "facility",
+          "id": "taqueria"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "tea_leaf"
+    },
+    "line": "좋아요 250 하얀 풀에 타코 가게. 무대는 준비됐어!"
+  },
+  {
+    "friendId": "perfumer",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "scent": "citrus"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "orange"
+    },
+    "line": "시트러스 향 풀. 첫 향은 상큼하게 해 줘."
+  },
+  {
+    "friendId": "perfumer",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "scent": "pine",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "mint"
+    },
+    "line": "솔 향 풀을 두 개. 향을 겹쳐 봐야지."
+  },
+  {
+    "friendId": "perfumer",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "orange",
+          "scent": "milky"
+        },
+        {
+          "kind": "facility",
+          "id": "coffee_tree",
+          "count": 2
+        }
+      ]
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 2200
+    },
+    "line": "우유 향 주황 풀에 커피나무 둘. 향의 완성이야."
+  },
+  {
+    "friendId": "famous_painter",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "popMin": 90
+    },
+    "reward": {
+      "kind": "item",
+      "id": "banana"
+    },
+    "line": "인기 90 풀. 그림 소재가 되겠어."
+  },
+  {
+    "friendId": "famous_painter",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "outdoor": true,
+      "color": "purple"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "peach"
+    },
+    "line": "야외 보라 풀. 황혼과 어울리지."
+  },
+  {
+    "friendId": "famous_painter",
+    "idx": 2,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "color": "rainbow"
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 2500
+    },
+    "line": "무지개 풀! 팔레트 그 자체야!"
+  },
+  {
+    "friendId": "master_artist",
+    "idx": 0,
+    "condition": {
+      "kind": "facilityAdjacent",
+      "ids": [
+        "juice_stand",
+        "deck_chair"
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "honey"
+    },
+    "line": "주스 판매대 옆에 데크체어. 구도란 그런 것이지."
+  },
+  {
+    "friendId": "master_artist",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "outdoor": true,
+      "scent": "citrus",
+      "color": "orange"
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "bbq_restaurant"
+    },
+    "line": "야외 시트러스 향 주황 풀. 그럼 바비큐 식당을 소개하지."
+  },
+  {
+    "friendId": "master_artist",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "scent": "pine",
+          "color": "green",
+          "likesMin": 300
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 10
+        }
+      ]
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 2800
+    },
+    "line": "좋아요 300 솔 향 초록 풀에 장식 열 개. 걸작이군."
+  },
+  {
+    "friendId": "shop_clerk",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "likesMin": 100
+    },
+    "reward": {
+      "kind": "item",
+      "id": "chocolate"
+    },
+    "line": "좋아요 100짜리 풀! 손님이 많아야 장사가 되지."
+  },
+  {
+    "friendId": "shop_clerk",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "creperie"
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "cake_shop"
+    },
+    "line": "크레페 가게가 있으면 케이크 가게를 알려 줄게!"
+  },
+  {
+    "friendId": "shop_clerk",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "green",
+          "scent": "coffee"
+        },
+        {
+          "kind": "facility",
+          "id": "cake_shop"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 2000
+    },
+    "line": "커피 향 초록 풀에 케이크 가게. 디저트 타임!"
+  },
+  {
+    "friendId": "student",
+    "idx": 0,
+    "condition": {
+      "kind": "item",
+      "id": "lemon"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapefruit"
+    },
+    "line": "레몬 풀! 시험 끝났으니 상큼하게!"
+  },
+  {
+    "friendId": "student",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "flowery_shower"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "mint"
+    },
+    "line": "꽃 샤워 놓아 줘! 사진 찍어 올리게."
+  },
+  {
+    "friendId": "student",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "blue",
+          "scent": "floral",
+          "outdoor": true
+        },
+        {
+          "kind": "facility",
+          "id": "flowery_shower",
+          "count": 2
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "tuna"
+    },
+    "line": "야외 꽃 향 파란 풀에 꽃 샤워 둘. 인스타 각이야."
+  },
+  {
+    "friendId": "racer",
+    "idx": 0,
+    "condition": {
+      "kind": "gift",
+      "id": "blue_orca"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "mint"
+    },
+    "line": "파란 범고래 튜브! 속도감이 있잖아."
+  },
+  {
+    "friendId": "racer",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "mini_slide",
+      "count": 3
+    },
+    "reward": {
+      "kind": "item",
+      "id": "coffee_beans"
+    },
+    "line": "미니 슬라이드 셋! 레이스 코스로 쓰게 해 줘."
+  },
+  {
+    "friendId": "racer",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "purple",
+          "scent": "pine",
+          "intensityMin": 50
+        },
+        {
+          "kind": "facilityClass",
+          "class": "slide",
+          "count": 3
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "salmon"
+    },
+    "line": "진한 보라 솔 향 풀에 슬라이드 셋. 출발!"
+  },
+  {
+    "friendId": "beautician",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "shower",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "rose"
+    },
+    "line": "샤워실 두 개. 머릿결이 생명이거든."
+  },
+  {
+    "friendId": "beautician",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "color": "pink",
+      "scent": "berry"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "melon"
+    },
+    "line": "베리 향 분홍 풀. 피부에 좋을 것 같아."
+  },
+  {
+    "friendId": "beautician",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "pink",
+          "tempMin": 36
+        },
+        {
+          "kind": "facility",
+          "id": "sauna",
+          "count": 2
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "bath_salt"
+    },
+    "line": "36도 분홍 풀에 사우나 둘. 미용은 땀부터야."
+  },
+  {
+    "friendId": "columnist",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "outdoor": true,
+      "color": "purple"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "lavender"
+    },
+    "line": "야외 보라 풀. 칼럼 첫 줄이 떠오르네."
+  },
+  {
+    "friendId": "columnist",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "likesMin": 180
+    },
+    "reward": {
+      "kind": "item",
+      "id": "pineapple"
+    },
+    "line": "좋아요 180 풀. 기사감이야."
+  },
+  {
+    "friendId": "columnist",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "red",
+          "scent": "coffee",
+          "likesMin": 350
+        },
+        {
+          "kind": "facilityClass",
+          "class": "restaurant",
+          "count": 8
+        }
+      ]
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 2500
+    },
+    "line": "좋아요 350 커피 향 빨간 풀에 식당 여덟. 특집 기사 내지."
+  },
+  {
+    "friendId": "ex_celebrity",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "water_fountain",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "pineapple"
+    },
+    "line": "음수대 두 개. 스타는 목을 아껴야 해."
+  },
+  {
+    "friendId": "ex_celebrity",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "scent": "spices"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "coconut"
+    },
+    "line": "스파이스 향 풀. 왕년의 향기랄까."
+  },
+  {
+    "friendId": "ex_celebrity",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "orange",
+          "scent": "tropical"
+        },
+        {
+          "kind": "gift",
+          "id": "kayak_float"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "shrimp"
+    },
+    "line": "트로피컬 향 주황 풀에 카약 튜브. 컴백 무대야!"
+  },
+  {
+    "friendId": "fitness_coach",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "jetted_pool",
+      "count": 3
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "pizzeria"
+    },
+    "line": "제트풀 셋! 물살 훈련 뒤엔 피자집을 알려 줄게!"
+  },
+  {
+    "friendId": "fitness_coach",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "scent": "citrus",
+      "color": "yellow",
+      "tempMax": 30
+    },
+    "reward": {
+      "kind": "item",
+      "id": "kiwi"
+    },
+    "line": "30도 이하 시트러스 향 노란 풀. 쿨다운!"
+  },
+  {
+    "friendId": "fitness_coach",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "facilityClass",
+          "class": "slide",
+          "count": 3
+        },
+        {
+          "kind": "facility",
+          "id": "three_lane_slide"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 2500
+    },
+    "line": "슬라이드 셋에 3레인 슬라이드까지. 그게 진짜 운동이지!"
+  },
+  {
+    "friendId": "boxer",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "tempMax": 18,
+      "color": "yellow",
+      "scent": "citrus"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapefruit"
+    },
+    "line": "18도 이하 시트러스 노란 풀! 얼음물 훈련이다!"
+  },
+  {
+    "friendId": "boxer",
+    "idx": 1,
+    "condition": {
+      "kind": "item",
+      "id": "strawberry",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "kiwi"
+    },
+    "line": "딸기 두 개 풀에! 시합 전엔 달달하게."
+  },
+  {
+    "friendId": "boxer",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "red",
+          "tempMin": 35
+        },
+        {
+          "kind": "facility",
+          "id": "hot_tub",
+          "count": 2
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "pork"
+    },
+    "line": "35도 빨간 풀에 핫텁 둘. 근육을 풀어야지."
+  },
+  {
+    "friendId": "sassy_girl",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "flowery_shower"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "peach"
+    },
+    "line": "꽃 샤워 놓아 줘. 안 놔 주면 안 올 거야."
+  },
+  {
+    "friendId": "sassy_girl",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "color": "red",
+      "scent": "floral"
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "kebab_stall"
+    },
+    "line": "꽃 향 빨간 풀. 흥, 그럼 케밥 가게를 알려 줄게."
+  },
+  {
+    "friendId": "sassy_girl",
+    "idx": 2,
+    "condition": {
+      "kind": "facility",
+      "id": "tree_house_slide"
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 2600
+    },
+    "line": "트리하우스 슬라이드! 그 정도는 돼야 인정."
+  },
+  {
+    "friendId": "sales_staff",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "fried_noodle_stall"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "cinnamon"
+    },
+    "line": "볶음면 가게! 영업 뒤엔 든든하게."
+  },
+  {
+    "friendId": "sales_staff",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "color": "blue",
+      "scent": "floral"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "lavender"
+    },
+    "line": "꽃 향 파란 풀. 고객 접대에 좋겠는데요."
+  },
+  {
+    "friendId": "sales_staff",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "facility",
+          "id": "ice_slide"
+        },
+        {
+          "kind": "popularity",
+          "min": 250
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "corn"
+    },
+    "line": "얼음 슬라이드에 인기 250. 계약 성사!"
+  },
+  {
+    "friendId": "foodie",
+    "idx": 0,
+    "condition": {
+      "kind": "facilityClass",
+      "class": "restaurant",
+      "count": 8
+    },
+    "reward": {
+      "kind": "item",
+      "id": "honey"
+    },
+    "line": "식당 여덟 곳! 그래야 미식이라 하지."
+  },
+  {
+    "friendId": "foodie",
+    "idx": 1,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "purple",
+          "scent": "spices"
+        },
+        {
+          "kind": "facility",
+          "id": "snow_cone_shop"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "octopus_fritter_stall"
+    },
+    "line": "스파이스 향 보라 풀에 빙수 가게. 그럼 타코야키 가게를 알려 주지."
+  },
+  {
+    "friendId": "foodie",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "facilityClass",
+          "class": "restaurant",
+          "count": 10
+        },
+        {
+          "kind": "popularity",
+          "min": 300
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "mayonnaise"
+    },
+    "line": "식당 열 곳에 인기 300. 미식가의 낙원이군."
+  },
+  {
+    "friendId": "cosmetician",
+    "idx": 0,
+    "condition": {
+      "kind": "item",
+      "id": "milk",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "coconut"
+    },
+    "line": "우유 두 팩 풀에! 피부가 좋아지거든."
+  },
+  {
+    "friendId": "cosmetician",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "jetted_pool",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "cinnamon"
+    },
+    "line": "제트풀 두 개. 마사지 효과가 있죠."
+  },
+  {
+    "friendId": "cosmetician",
+    "idx": 2,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "scent": "milky",
+      "color": "white",
+      "tempMin": 30
+    },
+    "reward": {
+      "kind": "item",
+      "id": "bath_salt"
+    },
+    "line": "30도 우유 향 하얀 풀. 최고의 팩이에요."
+  },
+  {
+    "friendId": "chocolatier",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "outdoor": true,
+      "popMin": 50,
+      "tempMin": 34
+    },
+    "reward": {
+      "kind": "item",
+      "id": "chocolate"
+    },
+    "line": "34도 인기 50 야외 풀. 초콜릿이 녹는 온도죠."
+  },
+  {
+    "friendId": "chocolatier",
+    "idx": 1,
+    "condition": {
+      "kind": "item",
+      "id": "chocolate",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "rose"
+    },
+    "line": "초콜릿 두 개 풀에! 달콤하게!"
+  },
+  {
+    "friendId": "chocolatier",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "red",
+          "scent": "cookie",
+          "likesMin": 300
+        },
+        {
+          "kind": "facility",
+          "id": "cake_shop"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "seaweed"
+    },
+    "line": "좋아요 300 쿠키 향 빨간 풀에 케이크 가게. 걸작 초콜릿을 만들게요."
+  },
+  {
+    "friendId": "acupuncturist",
+    "idx": 0,
+    "condition": {
+      "kind": "gift",
+      "id": "blue_orca"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "lavender"
+    },
+    "line": "파란 범고래 튜브 주게. 등에 좋아."
+  },
+  {
+    "friendId": "acupuncturist",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "sauna",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "bath_salt"
+    },
+    "line": "사우나 두 개. 혈이 뚫리지."
+  },
+  {
+    "friendId": "acupuncturist",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "orange",
+          "scent": "floral",
+          "tempMin": 38
+        },
+        {
+          "kind": "facility",
+          "id": "hot_tub",
+          "count": 3
+        }
+      ]
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 2800
+    },
+    "line": "38도 꽃 향 주황 풀에 핫텁 셋. 침보다 낫군."
+  },
+  {
+    "friendId": "homemaker",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "color": "green",
+      "popMin": 90
+    },
+    "reward": {
+      "kind": "item",
+      "id": "melon"
+    },
+    "line": "인기 90 초록 풀. 살림도 이렇게 알뜰하게."
+  },
+  {
+    "friendId": "homemaker",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "salad_bar"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "honey"
+    },
+    "line": "샐러드 바 지어 줘요! 가족 건강이 우선이죠."
+  },
+  {
+    "friendId": "homemaker",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "rainbow",
+          "tempMin": 30
+        },
+        {
+          "kind": "facilityClass",
+          "class": "lounging",
+          "count": 8
+        }
+      ]
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 2900
+    },
+    "line": "30도 무지개 풀에 라운지 여덟. 온 가족이 쉬어 가요."
+  },
+  {
+    "friendId": "fashion_designer",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "scent": "spices"
+    },
+    "reward": {
+      "kind": "facility",
+      "id": "dim_sum_stall"
+    },
+    "line": "스파이스 향 풀. 그럼 딤섬 가게를 소개하지."
+  },
+  {
+    "friendId": "fashion_designer",
+    "idx": 1,
+    "condition": {
+      "kind": "gift",
+      "id": "kayak_float"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "seaweed"
+    },
+    "line": "카약 튜브 하나. 다음 컬렉션 소재야."
+  },
+  {
+    "friendId": "fashion_designer",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "lime",
+          "scent": "marine",
+          "likesMin": 400
+        },
+        {
+          "kind": "areas",
+          "min": 8
+        }
+      ]
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 3000
+    },
+    "line": "좋아요 400 바다 향 라임 풀에 지역 여덟. 런웨이를 열지."
+  },
+  {
+    "friendId": "rising_celeb",
+    "idx": 0,
+    "condition": {
+      "kind": "item",
+      "id": "melon"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapefruit"
+    },
+    "line": "멜론 풀! 팬들이 좋아할 거야."
+  },
+  {
+    "friendId": "rising_celeb",
+    "idx": 1,
+    "condition": {
+      "kind": "gift",
+      "id": "school_swimsuit"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapes"
+    },
+    "line": "학교 수영복 줘! 데뷔 전 추억이거든."
+  },
+  {
+    "friendId": "rising_celeb",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "green",
+          "scent": "coffee",
+          "likesMin": 300
+        },
+        {
+          "kind": "facility",
+          "id": "octopus_fritter_stall"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "octopus"
+    },
+    "line": "좋아요 300 커피 향 초록 풀에 타코야키. 팬미팅 열게!"
+  },
+  {
+    "friendId": "car_dealer",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "scent": "floral",
+      "tempMin": 34
+    },
+    "reward": {
+      "kind": "item",
+      "id": "bath_salt"
+    },
+    "line": "34도 꽃 향 풀. 시승 뒤엔 여기서 쉬지."
+  },
+  {
+    "friendId": "car_dealer",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "brown_round_sofa"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "banana"
+    },
+    "line": "갈색 원형 소파. 계약은 편한 자리에서."
+  },
+  {
+    "friendId": "car_dealer",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "blue",
+          "scent": "citrus"
+        },
+        {
+          "kind": "facility",
+          "id": "cabana",
+          "count": 2
+        }
+      ]
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 2800
+    },
+    "line": "시트러스 향 파란 풀에 카바나 둘. VIP 대접이군."
+  },
+  {
+    "friendId": "famous_model",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "salad_bar"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "blueberry"
+    },
+    "line": "샐러드 바! 몸매 관리는 필수야."
+  },
+  {
+    "friendId": "famous_model",
+    "idx": 1,
+    "condition": {
+      "kind": "item",
+      "id": "coconut",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "seaweed"
+    },
+    "line": "코코넛 두 개 풀에. 화보 느낌이야."
+  },
+  {
+    "friendId": "famous_model",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "purple",
+          "scent": "berry",
+          "likesMin": 350
+        },
+        {
+          "kind": "facilityClass",
+          "class": "lounging",
+          "count": 10
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "noodle"
+    },
+    "line": "좋아요 350 베리 향 보라 풀에 라운지 열 개. 화보 촬영 가자."
+  },
+  {
+    "friendId": "pilot",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "color": "blue",
+      "scent": "berry"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "blueberry"
+    },
+    "line": "베리 향 파란 풀. 하늘색 같군."
+  },
+  {
+    "friendId": "pilot",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "rocket_slide"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "peach"
+    },
+    "line": "로켓 슬라이드! 이륙 준비!"
+  },
+  {
+    "friendId": "pilot",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "blue",
+          "scent": "tropical",
+          "outdoor": true
+        },
+        {
+          "kind": "facilityClass",
+          "class": "slide",
+          "count": 4
+        }
+      ]
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 2900
+    },
+    "line": "야외 트로피컬 파란 풀에 슬라이드 넷. 착륙 허가!"
+  },
+  {
+    "friendId": "tv_personality",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "tempMax": 17
+    },
+    "reward": {
+      "kind": "item",
+      "id": "peach"
+    },
+    "line": "17도 이하 풀. 방송 전 정신 차리게 해 줘."
+  },
+  {
+    "friendId": "tv_personality",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "cake_shop"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapefruit"
+    },
+    "line": "케이크 가게! 치즈케이크 리뷰 찍을게."
+  },
+  {
+    "friendId": "tv_personality",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "pink",
+          "scent": "fruity",
+          "likesMin": 400
+        },
+        {
+          "kind": "friends",
+          "min": 50
+        }
+      ]
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 2900
+    },
+    "line": "좋아요 400 과일 향 분홍 풀에 SNS 친구 50명! 생방송 갑니다!"
+  },
+  {
+    "friendId": "magnate",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "outdoor": true,
+      "color": "yellow"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "honey"
+    },
+    "line": "야외 노란 풀. 금빛이면 더 좋고."
+  },
+  {
+    "friendId": "magnate",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "antique_pillar",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "blueberry"
+    },
+    "line": "앤티크 기둥 둘. 격이 있어야지."
+  },
+  {
+    "friendId": "magnate",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "likesMin": 1000
+        },
+        {
+          "kind": "facility",
+          "id": "golden_kairobot"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "squid"
+    },
+    "line": "좋아요 1000 풀에 골든 카이로봇. 그럼 투자하지."
+  },
+  {
+    "friendId": "bossy_lady",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "outdoor": true,
+      "popMin": 170
+    },
+    "reward": {
+      "kind": "item",
+      "id": "cinnamon"
+    },
+    "line": "인기 170 야외 풀! 그 정도는 해야지!"
+  },
+  {
+    "friendId": "bossy_lady",
+    "idx": 1,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "lime",
+          "scent": "spices"
+        },
+        {
+          "kind": "facility",
+          "id": "curry_restaurant"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "orange"
+    },
+    "line": "스파이스 향 라임 풀에 카레 식당! 빨리!"
+  },
+  {
+    "friendId": "bossy_lady",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "rainbow",
+          "outdoor": true
+        },
+        {
+          "kind": "rank",
+          "min": 4
+        }
+      ]
+    },
+    "reward": {
+      "kind": "ingredient",
+      "id": "cabbage"
+    },
+    "line": "야외 무지개 풀에 랭크 ★4! 당장!"
+  },
+  {
+    "friendId": "king_ackbar",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "scent": "money",
+      "popMin": 60
+    },
+    "reward": {
+      "kind": "item",
+      "id": "grapes"
+    },
+    "line": "머니 향 인기 60 풀. 왕의 풀이로다."
+  },
+  {
+    "friendId": "king_ackbar",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "cabana",
+      "count": 3
+    },
+    "reward": {
+      "kind": "item",
+      "id": "chocolate"
+    },
+    "line": "카바나 셋. 왕족은 그늘에서 쉬는 법."
+  },
+  {
+    "friendId": "king_ackbar",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "yellow",
+          "scent": "cookie",
+          "likesMin": 500
+        },
+        {
+          "kind": "gift",
+          "id": "kayak_float"
+        }
+      ]
+    },
+    "reward": {
+      "kind": "money",
+      "amount": 3000
+    },
+    "line": "좋아요 500 쿠키 향 노란 풀에 카약 튜브. 왕의 항해다."
+  },
+  {
+    "friendId": "kairobot",
+    "idx": 0,
+    "condition": {
+      "kind": "facility",
+      "id": "three_lane_slide"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "orange"
+    },
+    "line": "3레인 슬라이드. 카이로봇 정비 완료."
+  },
+  {
+    "friendId": "kairobot",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "color": "red",
+      "scent": "citrus",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "kiwi"
+    },
+    "line": "시트러스 향 빨간 풀을 두 개. 연산 결과다."
+  },
+  {
+    "friendId": "kairobot",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "red",
+          "likesMin": 500
+        },
+        {
+          "kind": "facilityClass",
+          "class": "attraction",
+          "count": 10
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "banana"
+    },
+    "line": "좋아요 500 빨간 풀에 놀이 시설 열 개. 최종 검증 통과."
+  },
+  {
+    "friendId": "sally_prin",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "likesMin": 200
+    },
+    "reward": {
+      "kind": "item",
+      "id": "peach"
+    },
+    "line": "좋아요 200 풀! 공주님이 인정해 줄게."
+  },
+  {
+    "friendId": "sally_prin",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "sushi_bar",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "pineapple"
+    },
+    "line": "초밥집 둘. 초밥 세트가 먹고 싶어."
+  },
+  {
+    "friendId": "sally_prin",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "pink",
+          "scent": "cookie",
+          "likesMin": 600
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 12
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "seaweed"
+    },
+    "line": "좋아요 600 쿠키 향 분홍 풀에 장식 열둘. 궁전이야!"
+  },
+  {
+    "friendId": "wairobot",
+    "idx": 0,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "outdoor": true,
+      "tempMax": 17,
+      "color": "purple"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "lavender"
+    },
+    "line": "17도 이하 야외 보라 풀. 냉각 필요."
+  },
+  {
+    "friendId": "wairobot",
+    "idx": 1,
+    "condition": {
+      "kind": "pool",
+      "sizeMin": 6,
+      "scent": "money",
+      "color": "purple"
+    },
+    "reward": {
+      "kind": "item",
+      "id": "coconut"
+    },
+    "line": "머니 향 보라 풀. 데이터 수집 중."
+  },
+  {
+    "friendId": "wairobot",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "facility",
+          "id": "cabana",
+          "count": 2
+        },
+        {
+          "kind": "popularity",
+          "min": 400
+        },
+        {
+          "kind": "year",
+          "min": 3
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "chocolate"
+    },
+    "line": "카바나 둘에 인기 400, 3년차. 정복 완료."
+  },
+  {
+    "friendId": "chimpan_z",
+    "idx": 0,
+    "condition": {
+      "kind": "item",
+      "id": "banana",
+      "count": 2
+    },
+    "reward": {
+      "kind": "item",
+      "id": "banana"
+    },
+    "line": "바나나 두 개 풀에! 우끼!"
+  },
+  {
+    "friendId": "chimpan_z",
+    "idx": 1,
+    "condition": {
+      "kind": "facility",
+      "id": "juice_stand",
+      "count": 3
+    },
+    "reward": {
+      "kind": "item",
+      "id": "melon"
+    },
+    "line": "주스 판매대 셋! 바나나주스 무한!"
+  },
+  {
+    "friendId": "chimpan_z",
+    "idx": 2,
+    "condition": {
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "color": "green",
+          "scent": "tropical",
+          "likesMin": 800
+        },
+        {
+          "kind": "friends",
+          "min": 60
+        }
+      ]
+    },
+    "reward": {
+      "kind": "item",
+      "id": "orange"
+    },
+    "line": "좋아요 800 트로피컬 초록 풀에 친구 60명! 정글 파티다!"
+  }
+]

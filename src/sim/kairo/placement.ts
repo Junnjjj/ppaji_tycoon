@@ -399,6 +399,11 @@ export interface PlacedFacility {
    * 옛 세이브에는 없다 — 없으면 0. **v7 그대로다**: `0 = w×d`, `1 = d×w` 의 뜻을
    * 그대로 두고 2·3 을 덧붙였으므로 `facing: 1` 인 옛 스냅샷이 같은 발자국으로 열린다.
    */
+  /**
+   * 붙은 강화품 (P3). **풀 재고를 안 만든다** — 산 순간 이 시설에 붙고, P5 의 개선이
+   * 이것을 요구한다. optional 이라 마이그레이션이 없다 (`specialty` 선례).
+   */
+  fittings?: string[];
   facing?: FacilityFacing;
   /**
    * 개선 단계 1~3 (§15.9 시설 상세의 [업그레이드]).
@@ -437,6 +442,8 @@ export type PlaceFail =
   | 'blocks-door'
   | 'would-strand'
   | 'blocks-gate'
+  /** 놓인 코스의 루트를 가로막는다 (Q10) */
+  | 'blocks-course'
   | 'wrong-terrain'
   | 'occupied'
   | 'blocked-by-wall'
@@ -468,6 +475,16 @@ export interface PlaceOptions {
    * 안 주면 무제한 — 기존 검사·도구가 그대로 돈다.
    */
   permitArea?: number;
+  /**
+   * 놓인 코스들의 **루트 칸** (Q10, `courseRouteTiles` 의 출력). 발자국이 겹치면
+   * `blocks-course` 로 거절한다 — 플로팅덱으로 운행 중인 코스를 막으면 보트가 시설을
+   * 뚫거나 코스가 조용히 죽는다 (사용자 지적: "플로팅덱으로 막으면 안 되잖아").
+   *
+   * ⚠ **placement 는 코스를 모른다** (모듈 경계) — 칸 집합만 받는다. `blocks-gate` 가
+   * `guestWalkable` 술어만 받는 것과 같은 자리다. 안 주면 안 본다 (기존 검사 호환).
+   * production 은 main·봇 둘 다 넘긴다 — 정적 검사가 지킨다.
+   */
+  courseTiles?: ReadonlySet<string>;
 }
 
 export interface PlaceOutcome {
@@ -597,6 +614,7 @@ export const PLACE_FAIL_MESSAGES: Record<PlaceFail, string> = {
    */
   'level-mixed': '경사입니다 — 단이 고른 평지에 놓으세요',
   'blocks-door': '문 앞은 비워야 합니다',
+  'blocks-course': '보트 코스가 지나가는 물입니다 — 코스를 옮기거나 비켜서 놓으세요',
   'would-strand': '이 자리에 놓으면 실내 일부에 못 가게 됩니다',
   /*
    * P3-B: `would-strand`/`blocks-door` 의 **입구 판**. 처방이 "길을 한 칸 남기라"여야
@@ -651,6 +669,19 @@ export interface PlacementSnapshot {
 /** 물 위에 놓는 층 — 나머지는 걸을 수 있는 땅을 요구한다 */
 function wantsWater(layer: KairoFacilityDef['layer']): boolean {
   return layer === 'water';
+}
+
+/**
+ * 그 단계로 올리려면 무엇이 필요한가 (P5). **데이터가 정한다** (불변식 3).
+ *
+ * ⚠ 비우면 P1.5 이전과 **완전히 같은 경로**로 돌아간다 — 그게 이 페이즈의 되돌리기다.
+ * ⚠ `defId` 를 받는 것은 **나중에 시설마다 다르게** 하려는 자리다. 지금 데이터는 단계만
+ * 보지만, 인자를 안 받아 두면 그때 시그니처를 바꿔야 하고 호출부가 전부 흔들린다.
+ */
+export function upgradeRequirement(_defId: string, toLevel: number): readonly string[] {
+  const table = (rawFacilities as unknown as { upgradeRequires?: Record<string, string[]> })
+    .upgradeRequires;
+  return table?.[String(toLevel)] ?? [];
 }
 
 export class PlacementGrid {
@@ -1008,6 +1039,15 @@ export class PlacementGrid {
      * 도시 띠(도로·보도·가로수)에는 못 짓는다 (K36). **토지 검사 다음, 지형 검사 앞**이다 —
      * "내 땅 밖"과 "내 땅 안이지만 도로"는 처방이 다르므로 사유를 갈라야 한다.
      */
+    /*
+     * 코스 루트 (Q10) — 지형 판정보다 먼저다. "물이 아니라서"보다 "코스가 지나가서"가
+     * 더 바깥 제약이다 (판정 순서 규칙: 가장 바깥 제약부터 말해야 처방이 맞는다).
+     */
+    if (opts?.courseTiles !== undefined && opts.courseTiles.size > 0) {
+      for (const [ti, tj] of tiles) {
+        if (opts.courseTiles.has(`${ti},${tj}`)) return { ok: false, fail: 'blocks-course' };
+      }
+    }
     for (const [ti, tj] of tiles) {
       if (!terrain.isBuildable(ti, tj)) return { ok: false, fail: 'not-buildable' };
     }
@@ -1240,6 +1280,52 @@ export class PlacementGrid {
     return { ok: true, placed };
   }
 
+  /**
+   * **자리만 옮긴다** (P5 — §8-9). 같은 시설이므로 개선 단계·특화·메뉴·강화품을 **보존한다.**
+   *
+   * ⚠ 예전에는 부르는 쪽이 `remove()` + `place()` 를 이어 붙였고, `place()` 는 **새 시설을
+   * 만드므로** 수수료를 내고 5단계 시설이 1단계로 돌아왔다. 계약이 아니라 버그였다
+   * (이동 수수료는 `'upgrades'` — 「이미 있는 자산에 쓰는 돈」이라고 회계까지 적어 뒀는데
+   * 실제로는 자산을 버리고 있었다).
+   *
+   * ⚠ **철거는 여전히 전부 잃는다** — 그게 규칙이다. 강화품만 환불하면 규칙이 두 벌이 되고
+   * 「철거 → 재설치」가 이득이 된다.
+   *
+   * 실패하면 **아무것도 안 바뀐다** (원본이 그대로 남는다).
+   */
+  relocate(
+    terrain: KairoTerrain,
+    walls: WallGrid,
+    gate: { i: number; j: number },
+    handle: number,
+    i: number,
+    j: number,
+    opts?: PlaceOptions,
+  ): PlaceOutcome {
+    const from = this.items.get(handle);
+    if (!from) return { ok: false, fail: 'unknown-def' };
+    const carry: Partial<PlacedFacility> = {
+      ...(from.level !== undefined ? { level: from.level } : {}),
+      ...(from.specialty !== undefined ? { specialty: from.specialty } : {}),
+      ...(from.menuIds !== undefined ? { menuIds: [...from.menuIds] } : {}),
+      ...(from.fittings !== undefined ? { fittings: [...from.fittings] } : {}),
+    };
+    const back = { ...from };
+    this.remove(handle);
+    const moved = this.place(terrain, walls, gate, from.defId, i, j, opts);
+    if (!moved.ok || !moved.placed) {
+      // 되돌린다 — 반쯤 옮겨진 상태가 최악이다
+      const undo = this.place(terrain, walls, gate, back.defId, back.i, back.j, {
+        ...opts,
+        ...(back.facing !== undefined ? { facing: back.facing } : {}),
+      });
+      if (undo.ok && undo.placed) Object.assign(undo.placed, carry);
+      return moved;
+    }
+    Object.assign(moved.placed, carry);
+    return moved;
+  }
+
   remove(handle: number): boolean {
     const item = this.items.get(handle);
     if (!item) return false;
@@ -1330,13 +1416,80 @@ export class PlacementGrid {
     return Math.round(def.cost * (0.6 + level * 0.5));
   }
 
+  /** 이 시설에 붙은 강화품 (P3) */
+  fittingsOf(handle: number): readonly string[] {
+    return this.items.get(handle)?.fittings ?? [];
+  }
+
+  /**
+   * 강화품을 붙인다 (P3). **같은 것을 여러 번 붙일 수 있다** — 소유가 아니라 소모품이고,
+   * P5 의 개선이 하나씩 쓴다.
+   */
+  addFitting(id: string, handle: number): boolean {
+    const item = this.items.get(handle);
+    if (!item) return false;
+    item.fittings = [...(item.fittings ?? []), id];
+    return true;
+  }
+
   /** 한 단계 올린다. 이미 최고면 false */
+  /**
+   * 한 단계 올린다. 이미 최고면 false.
+   *
+   * ⚠ **시그니처를 바꾸지 말 것** — 골든이 직접 부른다. 강화품 요구는 **상위 경계**
+   * (`tryUpgrade`)가 지고, 여기는 그대로 「올린다」만 한다. 재고 검사를 여기 넣으면
+   * 골든이 통째로 다른 세계가 된다.
+   */
   upgrade(handle: number): boolean {
     const item = this.items.get(handle);
     if (!item) return false;
     const level = item.level ?? 1;
     if (level >= FACILITY_MAX_LEVEL) return false;
     item.level = level + 1;
+    return true;
+  }
+
+  /**
+   * **상위 경계** — 재고 검사 → 결제 → 소비 → 올리기를 한 동기 경계에서 한다 (P5).
+   *
+   * ⚠ **원자성**: 재고가 없으면 **현금도 재고도 안 움직인다** (`CourseStore.confirmEdit` 과
+   * 같은 규약). 결제가 거절돼도 강화품이 사라지면 안 되므로 **소비는 결제 뒤**다.
+   *
+   * ⚠ `main.ts`·`tools/kairo-sim.ts` 는 `placement.upgrade(` 를 **직접 안 부른다** —
+   * 정적 검사가 지킨다. 직접 부르면 이 경계가 우회되어 강화품 축이 조용히 사라진다.
+   */
+  tryUpgrade(
+    handle: number,
+    spend: (amount: number) => boolean,
+  ): { ok: boolean; missing: readonly string[] } {
+    const item = this.items.get(handle);
+    if (!item) return { ok: false, missing: [] };
+    const level = item.level ?? 1;
+    if (level >= FACILITY_MAX_LEVEL) return { ok: false, missing: [] };
+    const need = upgradeRequirement(item.defId, level + 1);
+    const have = [...(item.fittings ?? [])];
+    const missing: string[] = [];
+    for (const id of need) {
+      const at = have.indexOf(id);
+      if (at < 0) missing.push(id);
+      else have.splice(at, 1);
+    }
+    if (missing.length > 0) return { ok: false, missing };
+    if (!spend(this.upgradeCost(handle))) return { ok: false, missing: [] };
+    for (const id of need) this.consumeFitting(handle, id);
+    this.upgrade(handle);
+    return { ok: true, missing: [] };
+  }
+
+  /** 그 시설에서 강화품 하나를 쓴다 (P5) — 개선이 소비한다 */
+  consumeFitting(handle: number, id: string): boolean {
+    const item = this.items.get(handle);
+    const at = item?.fittings?.indexOf(id) ?? -1;
+    if (!item || at < 0) return false;
+    const next = [...(item.fittings ?? [])];
+    next.splice(at, 1);
+    if (next.length > 0) item.fittings = next;
+    else delete item.fittings;
     return true;
   }
 

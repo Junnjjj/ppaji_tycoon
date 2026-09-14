@@ -12,6 +12,7 @@ import {
   evaluateCourse,
   realizeCourseWeek,
   COURSE_ISSUE_TEXT,
+  dockTaken,
   TOW_BOATS,
   type CourseEdit,
   type CourseEditDraft,
@@ -21,6 +22,7 @@ import {
   type Vec2,
 } from '../sim/kairo/course.js';
 import { GROUPS, type GroupId } from '../sim/kairo/groups.js';
+import { icon } from './icons.js';
 import type { KairoTerrain } from '../sim/kairo/terrain.js';
 import type { KairoScene } from '../render/scenes/KairoScene.js';
 import { el } from './dom.js';
@@ -60,7 +62,7 @@ import { won } from './money.js';
  * 클래스만 쓰고, 그 클래스가 검사 안에 들어와 있다.
  */
 
-const FIT_BADGE: Record<string, string> = { best: '◎', ok: '○', poor: '△', no: '✕' };
+const FIT_BADGE: Record<string, string> = { best: '◎', ok: '○', poor: '△', no: icon('cross') };
 
 export interface CourseProjectedMetric {
   thrill: number;
@@ -428,6 +430,12 @@ export interface CoursePanelDeps {
    * 맵에서는 코스가 육지로 뻗었다.
    */
   docks: () => DockChoice[];
+  /**
+   * 갈 수 없는 물 칸 (Q10) — 물 위 시설(덱·선착장…)의 발자국. `validateCourse` 의
+   * `blocked` 로 흘러가 루트가 시설을 못 지나가게 한다. **열 때마다 새로 묻는다** —
+   * 캐시하면 덱을 방금 지운 직후가 틀리다.
+   */
+  blockedWater: () => ReadonlySet<string>;
   grade: () => number;
   cash: () => number;
   /** 이번 주 코스를 원한 입장객. 없으면 실제 탑승/매출도 0이다. */
@@ -871,7 +879,7 @@ export class KairoCoursePanel {
       const badge = el(
         'div',
         `kcourse-badge ${fit}`,
-        grade < p.grade ? `★${p.grade} 필요` : (FIT_BADGE[fit] ?? ''),
+        grade < p.grade ? `${icon('star')}${p.grade} 필요` : (FIT_BADGE[fit] ?? ''),
       );
       b.append(nm, badge);
       b.addEventListener('click', () => {
@@ -947,7 +955,9 @@ export class KairoCoursePanel {
     const dock = this.dock();
     const editing = this.phase === 'create' || this.phase === 'edit';
     this.deps.scene.setDockChoices(
-      this.selectedHandle === null && editing ? docks.map((d) => d.tip) : [],
+      this.selectedHandle === null && editing
+        ? docks.map((d) => ({ ...d.tip, ...(d.claim === undefined ? {} : { claim: d.claim }) }))
+        : [],
       this.selectedHandle === null && docks.length > 0 ? Math.min(this.dockIndex, docks.length - 1) : -1,
     );
 
@@ -978,6 +988,11 @@ export class KairoCoursePanel {
       this.deps.grade(),
       this.others(),
       this.selectedHandle ?? undefined,
+      // 소유는 코스 화면이 **판정 시점에** 묻는다 (P3) — 캐시하면 상점에서 산 직후가 틀린다
+      this.deps.courses.ownedEquipment,
+      // 물 위 시설 (Q10) — 루트가 덱·선착장을 못 지나간다
+      this.deps.blockedWater(),
+      this.claimAt(dock),
     );
     this.deps.scene.setCourseOverlay(this.handles, v.badHandles, dock, {
       interactive: editing,
@@ -1000,9 +1015,66 @@ export class KairoCoursePanel {
      * 적용 완료도 같은 이유로 현재값이다. 다만 여기서는 그 값이 **방금 갱신된 정본**이라
      * (확정 뒤 `selectedHandle` 이 확정된 코스를 가리킨다) 화살표가 아니라 결과다.
      */
-    const showDelta = this.phase !== 'info' && this.phase !== 'applied';
+    /*
+     * 처방은 **가능한 것**을 말해야 한다 (K37).
+     *
+     * `dock-taken` 의 기본 문구는 "다른 잔교를 고르세요"인데, 잔교가 하나뿐인 새 판에서는
+     * 그게 **막다른 길**이다 (실측: 시작 킷이 유일한 잔교에 코스를 하나 놓고 시작하므로
+     * 새 판의 두 번째 코스는 언제나 이 상태다). 고를 잔교가 없으면 지으라고 말한다.
+     */
+    const docksAll = this.deps.docks();
+    /*
+     * ⚠ **claim 으로 잰다** (Q10). 앵커 모드의 tip 은 선착장 칸이고 물려받은 코스의
+     * `dock` 은 잔교 끝이라, 점 비교면 찬 후보가 「빈 잔교」로 세어져 처방이 거짓말이 된다.
+     */
+    const freeDocks = docksAll.filter((d) => !dockTaken(d.tip, this.others(), d.claim)).length;
+    /*
+     * ⚠ **규칙과 방법을 같이 말한다** (Q8/C1). 사용자가 *"코스는 선착장에서부터만 시작할
+     * 수 있어"* 라고 한 것은 규칙이 틀렸다는 말이 아니라 **그 규칙이 화면에 없다**는 말이다
+     * (K45 가 정한 계약: 코스는 아무 데크 끝이 아니라 **견인기구를 설치한 곳**에서 시작한다).
+     *
+     * 잔교가 다 찼으면 「다른 잔교를 고르세요」는 막다른 길이므로 **어디서 짓는지**까지 적는다 —
+     * 「거절 메시지는 방법까지 말한다」의 코스 판이다.
+     */
+    const issues = v.issues.map((i) =>
+      i === 'dock-taken' && freeDocks === 0
+        ? '코스는 선착장이 붙은 잔교에서만 시작합니다 — 건설 ▸ 시설 ▸ 선착장을 더 지으세요'
+        : i === 'far-from-dock'
+          ? '선착장에서 너무 멉니다 — 코스는 선착장이 붙은 잔교에서 시작합니다'
+          : COURSE_ISSUE_TEXT[i],
+    );
+    if (cost > this.deps.cash()) issues.push(`변경비 ${won(cost)} — 현금이 부족합니다`);
+    /*
+     * 선착장이 하나도 없으면 (K45 — 코스는 선착장이 붙은 잔교에서만) 다른 처방은
+     * 전부 소음이다 — 첫 걸음 하나만 말한다.
+     */
+    if (docksAll.length === 0) {
+      issues.length = 0;
+      issues.push('선착장이 없습니다 — 잔교 옆에 선착장 시설을 지으세요');
+    }
+    /*
+     * 적용 완료에서는 이유 줄을 비운다 — 그 자리의 주인은 영수증이고, 방금 확정한
+     * 코스에 대고 "변경비가 부족합니다" 를 말하면 무엇이 끝났는지가 흐려진다.
+     */
+    this.whyEl.textContent = this.phase === 'applied' ? '' : issues.join(' · ');
+
+    /*
+     * ⚠ **거절 이유가 있으면 예상 지표를 안 낸다** (P8).
+     *
+     * 두 가지 이유가 겹친다:
+     * · **못 이룰 값을 약속하지 않는다** — `이 잔교에 이미 코스가 있습니다` 옆에
+     *   `스릴 18 → 24` 가 서면 화살표가 거짓말이 된다
+     * · **독은 천장이 있다** (`--course-dock-cap` 112px, `overflow: visible`). 제목 27 +
+     *   델타 42 + 이유 + 버튼 44 + 패딩 10 이 천장을 넘으면 내용이 상자 밖으로 새어
+     *   **하단 바와 티커를 덮는다** — `.kcourse-dock` 주석이 예언해 둔 그 상태다
+     *   (실측: 게이트가 `kcourse-acts` 바닥 넘침으로 잡았다, 2026-08-27).
+     *   그 주석의 지시는 **"여기를 늘리지 말고 무엇을 뺄지부터 고를 것"** 이고,
+     *   지금 못 쓰는 줄이 바로 그 델타다
+     */
+    const blockedNow = issues.length > 0;
+    const showDelta = this.phase !== 'info' && this.phase !== 'applied' && !blockedNow;
     this.deltasEl.replaceChildren(
-      ...courseDeltaCells(projection, showDelta).map((c) => {
+      ...(blockedNow ? [] : courseDeltaCells(projection, showDelta)).map((c) => {
         const d = el('div', 'kcourse-delta');
         d.dataset['metric'] = c.key;
         d.append(
@@ -1028,35 +1100,6 @@ export class KairoCoursePanel {
       cell('유지비', projection.current.upkeep, r.upkeep, '원'),
     );
 
-    /*
-     * 처방은 **가능한 것**을 말해야 한다 (K37).
-     *
-     * `dock-taken` 의 기본 문구는 "다른 잔교를 고르세요"인데, 잔교가 하나뿐인 새 판에서는
-     * 그게 **막다른 길**이다 (실측: 시작 킷이 유일한 잔교에 코스를 하나 놓고 시작하므로
-     * 새 판의 두 번째 코스는 언제나 이 상태다). 고를 잔교가 없으면 지으라고 말한다.
-     */
-    const docksAll = this.deps.docks();
-    const used = new Set(this.others().map((c) => `${c.dock.x},${c.dock.y}`));
-    const freeDocks = docksAll.filter((d) => !used.has(`${d.tip.x},${d.tip.y}`)).length;
-    const issues = v.issues.map((i) =>
-      i === 'dock-taken' && freeDocks === 0
-        ? '이 잔교에 이미 코스가 있습니다 — 선착장을 더 지으세요'
-        : COURSE_ISSUE_TEXT[i],
-    );
-    if (cost > this.deps.cash()) issues.push(`변경비 ${won(cost)} — 현금이 부족합니다`);
-    /*
-     * 선착장이 하나도 없으면 (K45 — 코스는 선착장이 붙은 잔교에서만) 다른 처방은
-     * 전부 소음이다 — 첫 걸음 하나만 말한다.
-     */
-    if (docksAll.length === 0) {
-      issues.length = 0;
-      issues.push('선착장이 없습니다 — 잔교 옆에 선착장 시설을 지으세요');
-    }
-    /*
-     * 적용 완료에서는 이유 줄을 비운다 — 그 자리의 주인은 영수증이고, 방금 확정한
-     * 코스에 대고 "변경비가 부족합니다" 를 말하면 무엇이 끝났는지가 흐려진다.
-     */
-    this.whyEl.textContent = this.phase === 'applied' ? '' : issues.join(' · ');
     const canPlace = v.ok && cost <= this.deps.cash();
     this.renderDock(canPlace, courseDraftUnchanged(this.current(), draft));
     if (this.phase === 'info') {
@@ -1214,6 +1257,14 @@ export class KairoCoursePanel {
     if (this.phase === 'create' || this.phase === 'edit') this.startTrial();
   }
 
+  /** 이 잔교(tip)가 속한 후보의 claim (Q10) — 물려받은 코스의 dock 은 잔교 끝이라 영역으로 잰다 */
+  private claimAt(dock: Vec2): Vec2[] | undefined {
+    const cand = this.deps
+      .docks()
+      .find((d) => Math.round(d.tip.x) === Math.round(dock.x) && Math.round(d.tip.y) === Math.round(dock.y));
+    return cand?.claim;
+  }
+
   private validation(): ReturnType<typeof validateCourse> | null {
     const preset = presetDef(this.presetId);
     const dock = this.dock();
@@ -1227,6 +1278,10 @@ export class KairoCoursePanel {
       this.deps.grade(),
       this.others(),
       this.selectedHandle ?? undefined,
+      // 소유는 코스 화면이 **판정 시점에** 묻는다 (P3) — 캐시하면 상점에서 산 직후가 틀린다
+      this.deps.courses.ownedEquipment,
+      this.deps.blockedWater(),
+      this.claimAt(dock),
     );
   }
 

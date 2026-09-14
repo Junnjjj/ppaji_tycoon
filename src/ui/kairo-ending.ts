@@ -1,4 +1,6 @@
+import { attachSheetHandle } from './kairo-sheet-handle.js';
 import type { EndingMilestone } from '../sim/kairo/meta.js';
+import { icon } from './icons.js';
 import { el } from './dom.js';
 import { panelHost } from './panels.js';
 
@@ -47,6 +49,7 @@ export class KairoEndingPanel {
     close.id = 'kairo-ending-close';
     close.addEventListener('click', () => this.hide());
     head.append(close);
+    attachSheetHandle(this.root, head, () => this.hide());
     this.body = el('div', 'ksheet-body kstack');
     this.root.append(head, this.body);
     parent.append(this.root);
@@ -64,9 +67,9 @@ export class KairoEndingPanel {
     title.textContent = milestone.ready ? state.title : '첫 엔딩까지';
     const requirements = el('div', 'kstack compact');
     requirements.append(
-      el('div', milestone.gradeReady ? 'done' : undefined, `${milestone.gradeReady ? '✓' : '·'} 5등급 (현재 ${state.grade})`),
-      el('div', milestone.certReady ? 'done' : undefined, `${milestone.certReady ? '✓' : '·'} 인증 6종 (현재 ${state.certs})`),
-      el('div', milestone.scenarioReady ? 'done' : 'warn', `${milestone.scenarioReady ? '✓' : '·'} 시나리오 비실패`),
+      el('div', milestone.gradeReady ? 'done' : undefined, `${milestone.gradeReady ? icon('check') : '·'} 5등급 (현재 ${state.grade})`),
+      el('div', milestone.certReady ? 'done' : undefined, `${milestone.certReady ? icon('check') : '·'} 인증 6종 (현재 ${state.certs})`),
+      el('div', milestone.scenarioReady ? 'done' : 'warn', `${milestone.scenarioReady ? icon('check') : '·'} 시나리오 비실패`),
     );
     const progress = el('div', 'kprog');
     const fill = document.createElement('i');

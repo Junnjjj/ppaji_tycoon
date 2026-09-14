@@ -9,19 +9,34 @@ import {
   migrateOnboardingSnapshot,
   observeOnboardingBuild,
   observeOnboardingMenu,
+  onboardingRecommendation,
   todayRecommendation,
 } from './meta.js';
 import { menuFacilityOperability } from './menu.js';
-import { facilityDef } from './placement.js';
+import { allFacilityDefs, facilityDef } from './placement.js';
 import { requiredGrade } from './progress.js';
 
 describe('Phase 7 경영 IA', () => {
-  it('운영·성장·기록을 요구된 순서와 항목으로만 묶는다', () => {
+  it('밴드 여섯 그룹을 요구된 순서와 항목으로만 묶는다 (P1)', () => {
     expect(MANAGEMENT_GROUPS.map((group) => [group.id, group.items])).toEqual([
-      ['operations', ['price', 'staff', 'course']],
-      ['growth', ['exam', 'regular', 'quests', 'codex']],
-      ['records', ['report', 'view', 'certs', 'ending']],
+      ['course', ['course']],
+      ['kitchen', ['recipe']],
+      ['store', ['shop', 'commission']],
+      ['manage', ['price', 'staff', 'exam']],
+      ['goals', ['quests', 'regular', 'certs', 'wishes']],
+      ['records', ['report', 'codex', 'view', 'ending']],
     ]);
+  });
+
+  it('설정과 건설은 그룹에 없다 — 추천이 파괴적 행동을 오늘 할 일로 고르면 안 된다', () => {
+    const items = MANAGEMENT_GROUPS.flatMap((g) => [...g.items] as string[]);
+    // `새 게임` 이 사는 설정은 추천 대상이 아니고, 건설은 밴드의 네이티브 칸이다
+    expect(items).not.toContain('settings');
+    expect(items).not.toContain('build');
+  });
+
+  it('먹거리 건설 추천의 이름과 행동이 같다 — 예전에는 quests 라 부르고 건설을 열었다', () => {
+    expect(onboardingRecommendation('build-food')?.action).toBe('build');
   });
 
   it('오늘의 추천은 정확히 하나이고 경고는 별도 보조 목록이다', () => {
@@ -37,7 +52,7 @@ describe('Phase 7 경영 IA', () => {
     expect(todayRecommendation(state)).toMatchObject({ action: 'course', source: 'onboarding' });
     expect(managementWarnings(state)).toEqual([
       '위험도가 위험입니다',
-      '직원 2개 역할이 부족합니다',
+      '직원 역할 2개가 부족합니다',
       '새 결산이 도착했습니다',
     ]);
   });
@@ -84,7 +99,16 @@ describe('Phase 7 실행형 온보딩', () => {
       regularReady: false,
     }).detail).not.toContain('카페');
 
-    expect(observeOnboardingBuild(onboarding, facilityDef('snackbar'))).toBe(false);
+    /*
+     * ⚠ **P2 에서 분식이 craft 가 됐다** — 고정 판매의 예로 못 쓴다.
+     * 지금 고정 판매는 자판기·치킨·아이스크림·화로대·식혜다 (`menuMode` 가 정본이고,
+     * 여기 id 를 박아 두면 다음 승격 때 또 깨진다 — 데이터에서 고른다).
+     */
+    const fixedFood = allFacilityDefs().find(
+      (d) => d.need === 'food' && (d as { menuMode?: string }).menuMode !== 'craft',
+    );
+    expect(fixedFood, '고정 판매 먹거리 시설이 하나는 있어야 이 검사가 성립한다').toBeDefined();
+    expect(observeOnboardingBuild(onboarding, fixedFood)).toBe(false);
     expect(observeOnboardingBuild(onboarding, facilityDef('vending_out'))).toBe(false);
     expect(onboarding.step).toBe('build-food');
     expect(observeOnboardingBuild(onboarding, facilityDef('shop'))).toBe(true);
@@ -108,8 +132,14 @@ describe('Phase 7 실행형 온보딩', () => {
     }
   });
 
-  it('고정 판매 snackbar와 vending은 operable이어도 craft 온보딩을 전진시키지 않는다', () => {
-    for (const facilityId of ['snackbar', 'vending_out'] as const) {
+  it('고정 판매 시설은 operable이어도 craft 온보딩을 전진시키지 않는다', () => {
+    /* ⚠ id 를 박지 않는다 — P2 에서 분식이 craft 로 승격되며 이 검사가 깨졌다 */
+    const fixedIds = allFacilityDefs()
+      .filter((d) => (d as { menuMode?: string }).menuMode !== 'craft')
+      .map((d) => d.id)
+      .filter((id) => id === 'vending_out' || id === 'chicken' || id === 'icecream');
+    expect(fixedIds.length).toBeGreaterThan(0);
+    for (const facilityId of fixedIds) {
       const def = facilityDef(facilityId);
       const build = new OnboardingStore('build-food');
       expect(observeOnboardingBuild(build, def), facilityId).toBe(false);

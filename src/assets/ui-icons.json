@@ -1,0 +1,672 @@
+{
+  "$comment": "UI 아이콘·사건 배경 계약 (P1.5-B). `prompt` 가 작업 지시서를 겸한다 — manifest.json 의 source:ai 규약과 같다.",
+  "version": 1,
+  "style": "flat pixel art · 크림 팔레트 · 따뜻한 갈색 윤곽 · 투명 배경 · 글자 없음",
+  "styleReference": "art-reference/ui-concept/concept-30-ppaji-target.png",
+  "iconDir": "public/assets/ui-icons",
+  "artDir": "public/assets/event-art",
+  "icons": [
+    {
+      "id": "ui/check",
+      "name": "완료",
+      "size": [
+        48,
+        48
+      ],
+      "source": "procedural",
+      "note": "기하 기호로 뜻이 완결된다 — 영구히 도형이다 (AI 생성 대상 아님)"
+    },
+    {
+      "id": "ui/cross",
+      "name": "닫기",
+      "size": [
+        48,
+        48
+      ],
+      "source": "procedural",
+      "note": "기하 기호로 뜻이 완결된다 — 영구히 도형이다 (AI 생성 대상 아님)"
+    },
+    {
+      "id": "ui/warn",
+      "name": "주의",
+      "size": [
+        48,
+        48
+      ],
+      "source": "procedural",
+      "note": "기하 기호로 뜻이 완결된다 — 영구히 도형이다 (AI 생성 대상 아님)"
+    },
+    {
+      "id": "ui/locked",
+      "name": "잠김",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a closed brass padlock, shackle up — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/found",
+      "name": "발견",
+      "size": [
+        48,
+        48
+      ],
+      "source": "procedural",
+      "note": "기하 기호로 뜻이 완결된다 — 영구히 도형이다 (AI 생성 대상 아님)"
+    },
+    {
+      "id": "ui/search",
+      "name": "찾기",
+      "size": [
+        48,
+        48
+      ],
+      "source": "procedural",
+      "note": "기하 기호로 뜻이 완결된다 — 영구히 도형이다 (AI 생성 대상 아님)"
+    },
+    {
+      "id": "ui/dot",
+      "name": "구분점",
+      "size": [
+        48,
+        48
+      ],
+      "source": "procedural",
+      "note": "기하 기호로 뜻이 완결된다 — 영구히 도형이다 (AI 생성 대상 아님)"
+    },
+    {
+      "id": "ui/weather-clear",
+      "name": "맑음",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a bright sun with short rays — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/weather-cloudy",
+      "name": "흐림",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a single rounded cloud — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/weather-rain",
+      "name": "비",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a cloud with three falling raindrops — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/weather-heat",
+      "name": "폭염",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a sun with heat shimmer lines rising — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/weather-cold",
+      "name": "추위",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a six-point snowflake — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/mood",
+      "name": "평판",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a smiling round face, no outline eyes — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/visitors",
+      "name": "방문객",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "two overlapping person silhouettes, front view — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/grade",
+      "name": "등급",
+      "size": [
+        48,
+        48
+      ],
+      "source": "procedural",
+      "note": "기하 기호로 뜻이 완결된다 — 영구히 도형이다 (AI 생성 대상 아님)"
+    },
+    {
+      "id": "ui/cash",
+      "name": "현금",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a folded Korean won banknote seen at a slight angle — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/star",
+      "name": "별",
+      "size": [
+        48,
+        48
+      ],
+      "source": "procedural",
+      "note": "기하 기호로 뜻이 완결된다 — 영구히 도형이다 (AI 생성 대상 아님)"
+    },
+    {
+      "id": "ui/build",
+      "name": "건설",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a claw hammer, head to the upper right — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/course",
+      "name": "코스",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a small towed water-sports boat seen from the side, wake behind — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/recipe",
+      "name": "요리",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a Korean earthenware pot with a lid and rising steam — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/shop",
+      "name": "상점",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a shop awning over a small counter — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/commission",
+      "name": "수배",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a clipboard with a pencil — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/staff",
+      "name": "직원",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a person in a staff cap and vest, front view — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/quests",
+      "name": "의뢰",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a rolled paper scroll tied with a ribbon — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/regular",
+      "name": "단골",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a heart with a small sparkle at the upper right — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/certs",
+      "name": "인증",
+      "size": [
+        48,
+        48
+      ],
+      "source": "procedural",
+      "note": "기하 기호로 뜻이 완결된다 — 영구히 도형이다 (AI 생성 대상 아님)"
+    },
+    {
+      "id": "ui/wishes",
+      "name": "소원",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a thought bubble with three dots — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/codex",
+      "name": "도감",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "an open book showing two pages — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/report",
+      "name": "결산",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a ledger sheet with a bar chart on it — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/view",
+      "name": "감상",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a framed landscape photo, riverside — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/ending",
+      "name": "엔딩",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a checkered finish flag on a pole — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/gift",
+      "name": "선물",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a wrapped gift box with a ribbon bow — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/scroll",
+      "name": "두루마리",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "an unrolled paper scroll with lines of writing — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/ask",
+      "name": "물음",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a question mark on a rounded speech bubble — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/news",
+      "name": "뉴스",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a folded newspaper — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/brush",
+      "name": "붓",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a wide paint brush, bristles down — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/talk",
+      "name": "말풍선",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a rounded speech bubble, tail lower left — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/medal",
+      "name": "훈장",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a circular medal on a short ribbon — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/medal-earned",
+      "name": "획득 훈장",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a circular medal on a ribbon with a star on the disc — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/exam",
+      "name": "심사",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a two-pan balance scale — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/combo",
+      "name": "콤보",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "three four-point sparkles of different sizes — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/weather-storm",
+      "name": "폭풍",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a dark cloud with rain and one lightning bolt — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/celebrate",
+      "name": "축하",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a party popper bursting with confetti — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/milestone",
+      "name": "이정표",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a stone milestone marker on grass — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/trophy",
+      "name": "트로피",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a two-handled cup trophy on a base — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/weekend",
+      "name": "주말",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a beach parasol beside a lounger — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/affection",
+      "name": "친밀도",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "two small hearts, one behind the other — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/profit-up",
+      "name": "수익 상승",
+      "size": [
+        48,
+        48
+      ],
+      "source": "procedural",
+      "note": "기하 기호로 뜻이 완결된다 — 영구히 도형이다 (AI 생성 대상 아님)"
+    },
+    {
+      "id": "ui/profit-down",
+      "name": "수익 하락",
+      "size": [
+        48,
+        48
+      ],
+      "source": "procedural",
+      "note": "기하 기호로 뜻이 완결된다 — 영구히 도형이다 (AI 생성 대상 아님)"
+    },
+    {
+      "id": "ui/chart",
+      "name": "표",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a bar chart of three rising bars — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/recipe-book",
+      "name": "레시피 노트",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a cookbook standing open, a spoon resting on it — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/note",
+      "name": "메모",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a memo sheet with a pencil writing on it — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/flag",
+      "name": "깃발",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a triangular pennant flag on a pole — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/ingredient",
+      "name": "재료",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a small salt shaker with a few grains — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    },
+    {
+      "id": "ui/erase",
+      "name": "철거",
+      "size": [
+        48,
+        48
+      ],
+      "source": "procedural",
+      "note": "기하 기호로 뜻이 완결된다 — 영구히 도형이다 (AI 생성 대상 아님)"
+    },
+    {
+      "id": "ui/move",
+      "name": "이동",
+      "size": [
+        48,
+        48
+      ],
+      "source": "procedural",
+      "note": "기하 기호로 뜻이 완결된다 — 영구히 도형이다 (AI 생성 대상 아님)"
+    },
+    {
+      "id": "ui/camera",
+      "name": "사진",
+      "size": [
+        48,
+        48
+      ],
+      "source": "ai",
+      "prompt": "a compact camera, lens facing forward — a single object, centred, filling most of the 48x48 frame, flat pixel art, transparent background, warm dark-brown outline, no text, no shadow on the ground"
+    }
+  ],
+  "art": [
+    {
+      "id": "event/crowd",
+      "name": "crowd",
+      "size": [
+        480,
+        160
+      ],
+      "source": "ai",
+      "prompt": "a crowded floating deck, guests queueing at the rail — BACKGROUND ONLY, no people or objects in the front third, wide 3:1 landscape band, flat pixel art, Korean riverside water-leisure resort, no text"
+    },
+    {
+      "id": "event/weather",
+      "name": "weather",
+      "size": [
+        480,
+        160
+      ],
+      "source": "ai",
+      "prompt": "rain falling on a wide river, mist over the far mountains — BACKGROUND ONLY, no people or objects in the front third, wide 3:1 landscape band, flat pixel art, Korean riverside water-leisure resort, no text"
+    },
+    {
+      "id": "event/safety",
+      "name": "safety",
+      "size": [
+        480,
+        160
+      ],
+      "source": "ai",
+      "prompt": "a lifeguard watchtower beside the water, a life ring on its rail — BACKGROUND ONLY, no people or objects in the front third, wide 3:1 landscape band, flat pixel art, Korean riverside water-leisure resort, no text"
+    },
+    {
+      "id": "event/publicity",
+      "name": "publicity",
+      "size": [
+        480,
+        160
+      ],
+      "source": "ai",
+      "prompt": "a riverside banner strung between poles, a bus arriving on the road behind — BACKGROUND ONLY, no people or objects in the front third, wide 3:1 landscape band, flat pixel art, Korean riverside water-leisure resort, no text"
+    },
+    {
+      "id": "event/staff",
+      "name": "staff",
+      "size": [
+        480,
+        160
+      ],
+      "source": "ai",
+      "prompt": "the back area behind a snack stall, uniforms on a rail — BACKGROUND ONLY, no people or objects in the front third, wide 3:1 landscape band, flat pixel art, Korean riverside water-leisure resort, no text"
+    },
+    {
+      "id": "event/market",
+      "name": "market",
+      "size": [
+        480,
+        160
+      ],
+      "source": "ai",
+      "prompt": "a small delivery truck parked by a storage shed — BACKGROUND ONLY, no people or objects in the front third, wide 3:1 landscape band, flat pixel art, Korean riverside water-leisure resort, no text"
+    },
+    {
+      "id": "event/facility",
+      "name": "facility",
+      "size": [
+        480,
+        160
+      ],
+      "source": "ai",
+      "prompt": "a wooden deck under construction, planks and timber stacked — BACKGROUND ONLY, no people or objects in the front third, wide 3:1 landscape band, flat pixel art, Korean riverside water-leisure resort, no text"
+    },
+    {
+      "id": "event/environment",
+      "name": "environment",
+      "size": [
+        480,
+        160
+      ],
+      "source": "ai",
+      "prompt": "a river at dawn, mountain ridge behind, mist on the water — BACKGROUND ONLY, no people or objects in the front third, wide 3:1 landscape band, flat pixel art, Korean riverside water-leisure resort, no text"
+    },
+    {
+      "id": "event/celebrate",
+      "name": "celebrate",
+      "size": [
+        480,
+        160
+      ],
+      "source": "ai",
+      "prompt": "a whole riverside ppaji resort at sunset, floating decks lit — BACKGROUND ONLY, no people or objects in the front third, wide 3:1 landscape band, flat pixel art, Korean riverside water-leisure resort, no text"
+    }
+  ]
+}

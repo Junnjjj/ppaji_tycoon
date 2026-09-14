@@ -115,6 +115,81 @@ export interface RiskExtras {
   courseRisk?: number;
 }
 
+/**
+ * 사고가 **어느 시설에** 나나 — 시설별 위험 가중치 (Q1).
+ *
+ * ## 왜 필요한가
+ *
+ * ⚠ 실측(2026-08-28): `week.ts` 가 사고 시설을 **놓인 것 전체에서 균일 무작위**로 골랐다
+ * (`pool[arng.int(pool.length)]`). 그래서 슬라이드 옆에 구명함을 지어도 **화장실이 닫힐
+ * 확률이 똑같았다.** 「내가 한 일」과 「일어난 일」이 안 이어지고, 그것이 사용자가 말한
+ * *"뭐가 많지만 연결되어 있다는 느낌이 안 든다"* 의 기계적 정체였다.
+ *
+ * ⚠ 이건 v4 결정의 **취지와 반대**였다 — *"안전도 78인데 RNG로 폐쇄면 억울하다.
+ * 실패는 **내 선택 때문**이어야"*.
+ *
+ * `assessRisk` 는 이미 시설마다 위험 점수를 매기고 있었다 — **합계만 쓰고 분포를
+ * 버리고 있었다.** 이 함수는 그 분포를 그대로 낸다.
+ *
+ * ## 무엇을 바꾸고 무엇을 안 바꾸나
+ *
+ * · **사고 확률(총량)은 안 바꾼다** — `accidentChance` 는 그대로다.
+ * · 바꾸는 것은 **어디에 떨어지나**뿐이다. 그래야 밸런스가 안 흔들리고 「연결」만 생긴다.
+ *
+ * ## 인접 안전 시설
+ *
+ * 반경은 **콤보의 `adjacent` 와 같은 2**다 (새 눈금을 만들지 않는다 — 이 게임에서
+ * 「두 시설이 붙어 있다」는 이미 그 값이다). 안전 시설 하나가 가중치를 절반으로 줄이고,
+ * 하한(`MIN_RISK_WEIGHT`)이 있어 **0 이 되지는 않는다** — 0 이면 「구명함 하나로 영원히
+ * 안전」이 되어 위험 축이 다시 죽는다.
+ */
+export interface FacilityRiskWeight {
+  handle: number;
+  defId: string;
+  /** 0 이면 사고 대상이 아니다 (안전 시설·위험하지 않은 종류) */
+  weight: number;
+}
+
+/** 인접 안전 시설이 아무리 많아도 이 아래로는 안 내려간다 */
+export const MIN_RISK_WEIGHT = 0.25;
+
+/** 안전 시설 한 채가 곱하는 값 — 두 채면 0.25 로 하한에 닿는다 */
+const SAFETY_NEAR_MULT = 0.5;
+
+/** 「붙어 있다」의 반경 — 콤보 `adjacent` 기본값과 같다 */
+const SAFETY_NEAR_RADIUS = 2;
+
+let accidentTargetFault: 'uniform' | null = null;
+
+/**
+ * 음성 대조군 (Q1) — 켜면 **전부 같은 가중치**가 되어 예전(균일 무작위)으로 돌아간다.
+ * 「사고가 위험한 곳에서 난다」를 재는 검사가 이 스위치 하나로 무너져야 한다.
+ */
+export function setAccidentTargetFaultForTest(fault: 'uniform' | null): void {
+  accidentTargetFault = fault;
+}
+
+export function facilityRiskWeights(placement: PlacementGrid): FacilityRiskWeight[] {
+  const all = placement.all();
+  const safety = all.filter((x) => SAFETY_FACILITIES.has(x.defId));
+  return all.map((item) => {
+    const def = facilityDef(item.defId) as { need?: NeedKind; id: string } | undefined;
+    if (accidentTargetFault === 'uniform') {
+      return { handle: item.handle, defId: item.defId, weight: 1 };
+    }
+    if (!def || SAFETY_FACILITIES.has(def.id) || !def.need || !RISKY_NEEDS.has(def.need)) {
+      return { handle: item.handle, defId: item.defId, weight: 0 };
+    }
+    // 위험은 **동시에 타는 인원**이다 — `assessRisk` 와 같은 식을 쓴다 (규칙이 두 벌이 되면 안 된다)
+    let weight = Math.max(1, placement.capacityOf(item.handle));
+    for (const s of safety) {
+      const d = Math.abs(s.i - item.i) + Math.abs(s.j - item.j);
+      if (d <= SAFETY_NEAR_RADIUS) weight *= SAFETY_NEAR_MULT;
+    }
+    return { handle: item.handle, defId: item.defId, weight: Math.max(MIN_RISK_WEIGHT, weight) };
+  });
+}
+
 export function assessRisk(
   placement: PlacementGrid,
   guests: GuestStore,

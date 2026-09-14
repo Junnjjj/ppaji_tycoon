@@ -1,0 +1,33 @@
+{
+  "$comment": "랜덤 이벤트 (G21) — 카이로의 「사건과 선택」. 하루 개장에 25% 확률, 최소 2일 간격, 같은 것 연속 금지. season 은 0봄 1여름 2가을 3겨울. 효과: arrivalMul(days) · popBonus(days) · likes · money · clean",
+  "events": [
+    { "id": "tv_crew", "name": "TV 취재 요청", "text": "방송국에서 워터파크를 취재하고 싶대요. 촬영 협조비 2,000G 가 들어요.", "weight": 3, "minYear": 1, "choices": [
+      { "label": "수락 (−2,000G)", "cost": 2000, "effect": { "arrivalMul": 1.4, "days": 3, "likes": 200 } },
+      { "label": "거절", "effect": {} } ] },
+    { "id": "festival", "name": "지역 축제", "text": "동네 축제날! 오늘은 손님이 평소보다 많이 와요.", "weight": 3, "weekend": true, "choices": [ { "label": "좋아요!", "effect": { "arrivalMul": 1.5, "days": 1 } } ] },
+    { "id": "heatwave", "name": "폭염", "text": "폭염 경보예요. 사흘 동안 손님이 몰려요.", "weight": 3, "season": [1], "choices": [ { "label": "물을 더 채우자", "effect": { "arrivalMul": 1.3, "days": 3 } } ] },
+    { "id": "rainy", "name": "장마", "text": "장마가 시작됐어요. 이틀은 발길이 뜸해요.", "weight": 2, "season": [1], "choices": [ { "label": "어쩔 수 없지", "effect": { "arrivalMul": 0.7, "days": 2 } } ] },
+    { "id": "influencer", "name": "인플루언서 방문", "text": "팔로워 10만 명의 인플루언서가 초대를 기다려요. 초대비 1,500G.", "weight": 2, "minYear": 2, "choices": [
+      { "label": "초대 (−1,500G)", "cost": 1500, "effect": { "likes": 400 } },
+      { "label": "거절", "effect": {} } ] },
+    { "id": "inspection", "name": "위생 점검", "text": "보건소 위생 점검이 있어요. 청소 용역을 부르면 800G.", "weight": 2, "choices": [
+      { "label": "용역 부르기 (−800G)", "cost": 800, "effect": { "clean": 40 } },
+      { "label": "우리끼리 하자", "effect": { "clean": -10 } } ] },
+    { "id": "group_booking", "name": "단체 손님 예약", "text": "회사 야유회 40명이 오고 싶대요. 단체 요금으로 받을까요?", "weight": 2, "choices": [
+      { "label": "받는다 (+1,500G)", "effect": { "money": 1500, "arrivalMul": 1.6, "days": 1 } },
+      { "label": "정원이 걱정돼", "effect": {} } ] },
+    { "id": "souvenir", "name": "기념품 업체 제안", "text": "기념품 업체가 팝업 매대를 열고 싶대요. 자릿세 1,000G 를 받고 홍보 효과를 얻어요.", "weight": 2, "minYear": 2, "choices": [
+      { "label": "열어 준다 (+1,000G)", "effect": { "money": 1000, "likes": 150 } },
+      { "label": "거절", "effect": {} } ] },
+    { "id": "rival_sale", "name": "라이벌 파크 세일", "text": "옆 동네 워터파크가 반값 세일을 해요. 이틀은 손님이 줄어요.", "weight": 2, "choices": [ { "label": "우리도 힘내자", "effect": { "arrivalMul": 0.8, "days": 2 } } ] },
+    { "id": "cherry", "name": "벚꽃 축제", "text": "벚꽃이 만개했어요. 이틀 동안 나들이 손님이 늘어요.", "weight": 3, "season": [0], "choices": [ { "label": "좋아요!", "effect": { "arrivalMul": 1.3, "days": 2 } } ] },
+    { "id": "first_snow", "name": "첫눈", "text": "첫눈이 왔어요. 사진 찍는 손님이 늘어요.", "weight": 3, "season": [3], "choices": [ { "label": "예쁘다", "effect": { "likes": 80, "arrivalMul": 0.9, "days": 1 } } ] },
+    { "id": "newspaper", "name": "지역 신문 특집", "text": "지역 신문이 우리 워터파크 특집을 실었어요. 나흘 동안 인기가 올라요.", "weight": 2, "minYear": 2, "choices": [ { "label": "고마워요", "effect": { "popBonus": 30, "days": 4 } } ] },
+    { "id": "lost_item", "name": "분실물 소동", "text": "손님이 반지를 잃어버렸대요. 사례금 500G 를 걸고 찾을까요?", "weight": 2, "choices": [
+      { "label": "찾아 준다 (−500G)", "cost": 500, "effect": { "likes": 80 } },
+      { "label": "모른 척", "effect": { "clean": -5 } } ] },
+    { "id": "charity", "name": "자선 행사", "text": "어린이 재단이 무료 개방일을 부탁해요. 2,000G 를 기부하면 뉴스에 실려요.", "weight": 2, "minYear": 3, "choices": [
+      { "label": "기부 (−2,000G)", "cost": 2000, "effect": { "likes": 300, "popBonus": 20, "days": 3 } },
+      { "label": "다음에", "effect": {} } ] }
+  ]
+}

@@ -16,6 +16,111 @@
  */
 import { readFile, readdir } from 'node:fs/promises';
 
+/*
+ * ── 음성 대조군 (`--selftest`) ────────────────────────────────────────────
+ *
+ * ⚠ **이 자들은 정적이다.** 계획(P1.5-A)이 대조군을 `setIconFaultForTest('emoji')` 라는
+ * **런타임 스위치**로 적어 뒀는데, 런타임 스위치는 소스 텍스트를 읽는 자를 빨갛게 만들 수
+ * 없다 — 모양이 안 맞는 계약이었다. 그래서 `seam --selftest` 와 **같은 모양**으로 만든다:
+ * 소스 사본에 위반을 **주입**하고 이 검사를 다시 돌려, 이름 붙은 그 자가 실제로 빨간불이
+ * 되는지 본다.
+ *
+ * 손으로 켜 본 것은 다음 사람에게 안 남는다 (게이트 D 규칙). 그래서 코드에 둔다.
+ */
+const SELFTEST = process.argv.includes('--selftest');
+
+if (SELFTEST) {
+  const { cp, mkdtemp, readFile: rf, writeFile } = await import('node:fs/promises');
+  const { spawnSync } = await import('node:child_process');
+  const { tmpdir } = await import('node:os');
+  const { join, resolve } = await import('node:path');
+
+  /** 이 검사가 읽는 것은 `src/ui/**` 와 `src/main.ts` 뿐이다 — 그 둘만 복제하면 된다 */
+  const FAULTS = [
+    {
+      id: 'emoji',
+      why: '등록부를 우회해 이모지 리터럴을 되돌린다',
+      expect: '아이콘은 등록부 밖에 없다',
+      file: 'src/ui/kairo-ticker.ts',
+      edit: (t) => `const __fault = '📰';\n${t}`,
+    },
+    {
+      id: 'literal-px',
+      why: '스케일 토큰 하나를 리터럴 px 로 되돌린다',
+      expect: 'font-size 는 스케일 토큰만',
+      file: 'src/ui/style.css',
+      edit: (t) => t.replace('font-size: var(--fs-body);', 'font-size: 14px;'),
+    },
+    {
+      id: 'scale-steps',
+      why: '서로 다른 크기를 여럿 더해 스케일을 무너뜨린다',
+      expect: '타이포 스케일이 계단이다',
+      file: 'src/ui/style.css',
+      edit: (t) => `${t}\n.kfault-a { font-size: 17px; }\n.kfault-b { font-size: 21px; }\n` +
+        '.kfault-c { font-size: 27px; }\n.kfault-d { font-size: 33px; }\n',
+    },
+    {
+      id: 'floor-band',
+      why: '바닥 단(12px)에 선택자를 몰아넣는다',
+      expect: '위계가 바닥에 안 쏠린다',
+      file: 'src/ui/style.css',
+      edit: (t) => t + Array.from({ length: 90 }, (_, i) =>
+        `.kfault-floor-${i} { font-size: var(--fs-tiny); }`).join('\n') + '\n',
+    },
+    {
+      id: 'hex',
+      why: 'HUD 블록에 하드코딩 hex 를 되돌린다',
+      expect: 'HUD 블록에 하드코딩 hex 가 없다',
+      file: 'src/ui/style.css',
+      edit: (t) => `${t}\n.kfault-hex { background: #ff00aa; }\n`,
+    },
+    {
+      id: 'contrast',
+      why: '토큰 하나를 대비가 안 나오는 색으로 바꾼다',
+      expect: '글씨가 읽힌다 — 대비비',
+      file: 'src/ui/style.css',
+      edit: (t) => t.replace(/(--good:\s*)#[0-9a-fA-F]{3,8}/, '$1#cfd8c0'),
+    },
+    {
+      id: 'reduced-motion',
+      why: '모션 가드를 지운다',
+      expect: 'prefers-reduced-motion 가드가 있다',
+      file: 'src/ui/style.css',
+      edit: (t) => t.replace('@media (prefers-reduced-motion: reduce)', '@media (min-width: 1px)'),
+    },
+  ];
+
+  const self = resolve(process.argv[1]);
+  const caught = [];
+  const missed = [];
+  for (const fault of FAULTS) {
+    const dir = await mkdtemp(join(tmpdir(), 'ui-surface-'));
+    await cp('src/ui', join(dir, 'src/ui'), { recursive: true });
+    await cp('src/main.ts', join(dir, 'src/main.ts'));
+    const target = join(dir, fault.file);
+    const before = await rf(target, 'utf8');
+    const after = fault.edit(before);
+    if (after === before) {
+      missed.push(`${fault.id} (주입 자체가 안 됐다 — 자리를 못 찾음)`);
+      continue;
+    }
+    await writeFile(target, after);
+    const run = spawnSync(process.execPath, [self], { cwd: dir, encoding: 'utf8' });
+    const red = run.status !== 0 &&
+      run.stdout.split('\n').some((line) => line.includes('✕') && line.includes(fault.expect));
+    (red ? caught : missed).push(`${fault.id} — ${fault.why}`);
+  }
+  console.log('HUD 표면 정적 검사 — 음성 대조군');
+  for (const c of caught) console.log(`  ✓ 잡힘: ${c}`);
+  for (const m of missed) console.log(`  ✕ 안 잡힘: ${m}`);
+  if (missed.length > 0) {
+    console.log(`\n❌ ${caught.length}/${FAULTS.length} — 안 잡히는 자는 아무것도 안 재고 있다`);
+    process.exit(1);
+  }
+  console.log(`\n✅ 대조군 ${caught.length}/${FAULTS.length} 전부 잡힘`);
+  process.exit(0);
+}
+
 const CSS = 'src/ui/style.css';
 const MARK = '카이로 HUD (K28)';
 
@@ -84,7 +189,14 @@ check(rule('ksheet') !== null && /animation/.test(rule('ksheet')), '.ksheet 에 
  * 바를 통째로 가렸다 — `.ksheet`·`.kconfirm` 과 같은 자리에 얹혔는지 본다.
  */
 check(
-  rule('kcourse') !== null && /bottom:\s*calc\(56px \+ var\(--safe-b\)\)/.test(rule('kcourse')),
+  /*
+   * ⚠ **리터럴 56px 를 박아 두면 자가 옛 숫자를 지킨다.** P1 이 바를 56 → 64, 티커를
+   * 56 → 74 로 올렸는데 이 줄이 **56 을 계속 요구해서** 코스 패널이 티커를 통째로 덮는
+   * 동안에도 초록이었다 (실측 패널 683~796 · 티커 752~778). 이제 **토큰**을 요구한다 —
+   * 높이가 바뀌면 토큰 한 곳만 고치면 되고, 자는 자동으로 따라온다.
+   */
+  rule('kcourse') !== null &&
+    /bottom:\s*calc\(var\(--bottom-stack\) \+ var\(--safe-b\)\)/.test(rule('kcourse')),
   '.kcourse 가 하단 바 위에 얹힌다 (바를 안 덮는다)',
 );
 
@@ -185,6 +297,28 @@ check(
  *   확인함 — `.kcard-meta` 를 10px 로 되돌려 실패를 재현했다.
  */
 const TYPO_EXEMPT = [/\.kdebug/, /\.boot-error/];
+/*
+ * ⚠ **토큰을 풀어서 잰다.** px 를 `var(--fs-*)` 로 바꾸는 순간 `font-size:\s*Npx` 정규식이
+ * 아무것도 못 찾아 아래 세 자가 **전부 공허하게 초록**이 된다 — 「검사가 조용히 통과」의
+ * 교과서적 형태다. `:root` 의 선언에서 값을 읽어 같은 숫자를 계속 잰다.
+ */
+const FS_TOKENS = new Map();
+{
+  const rootBlock = /:root\s*\{([\s\S]*?)\}/.exec(css);
+  const decl = /(--fs-[\w-]+):\s*([\d.]+)px/g;
+  let t;
+  while (rootBlock && (t = decl.exec(rootBlock[1])) !== null) {
+    FS_TOKENS.set(t[1], Number(t[2]));
+  }
+}
+/** `font-size` 선언 하나를 px 숫자로. 토큰도 리터럴도 같은 자로 잰다 */
+const fontSizeOf = (body) => {
+  const lit = /font-size:\s*([\d.]+)px/.exec(body);
+  if (lit) return { px: Number(lit[1]), literal: true };
+  const tok = /font-size:\s*var\((--fs-[\w-]+)\)/.exec(body);
+  if (tok && FS_TOKENS.has(tok[1])) return { px: FS_TOKENS.get(tok[1]), literal: false };
+  return null;
+};
 const tiny = [];
 {
   // 선택자 { … font-size: Npx … } 를 통째로 훑는다 — 주석은 이미 뺀 `hudNoComments` 를 안 쓴다
@@ -195,15 +329,118 @@ const tiny = [];
     const selector = m[1].replace(/\/\*[\s\S]*?\*\//g, '').trim();
     if (selector.startsWith('@') || selector.length === 0) continue;
     if (TYPO_EXEMPT.some((re) => re.test(selector))) continue;
-    const size = /font-size:\s*([\d.]+)px/.exec(m[2]);
+    const size = fontSizeOf(m[2]);
     if (!size) continue;
-    if (Number(size[1]) < 12) tiny.push(`${selector.split('\n').join(' ')} ${size[1]}px`);
+    if (size.px < 12) tiny.push(`${selector.split('\n').join(' ')} ${size.px}px`);
   }
 }
 check(
   tiny.length === 0,
   '결정에 쓰는 글씨가 12px 이상이다 (디버그·부팅 오류 제외)',
   tiny.length ? tiny.slice(0, 8).join(' · ') : 'HUD 블록 전부 12px 이상',
+);
+
+/*
+ * ── 타이포 위계 (P1.5-A) ─────────────────────────────────────────────────
+ *
+ * "매력적이지 않다"를 자로 옮긴 것이다. 팔레트가 원인이 아니었다 (실측 2026-08-27):
+ * 색상환 사용 9/12칸 · 평균 채도 0.55 · `box-shadow` 44곳 — 색도 재질도 이미 있다.
+ * **1순위는 위계**였다: `font-size` 78개 값 중 **45개가 13~15px** 이라 모든 글자가
+ * 비슷한 크기다. 화면이 **어디를 봐야 할지 안 정해 준다.**
+ *
+ * 자는 둘이다.
+ *   ① **단수** — 서로 다른 크기가 몇 개인가. 12단은 "스케일이 없다"는 뜻이다
+ *   ② **바닥 쏠림** — 가장 작은 두 단(12·13px)에 몇 %가 몰려 있는가
+ *
+ * ⚠ **처음 잰 자리가 틀렸다.** 「13~15px 구간」으로 쟀더니 36% 로 **초록으로 태어났다** —
+ * 문턱을 낮춰 빨간불을 만드는 대신 분포를 다시 봤고, 진짜 쏠림은 **바닥**이었다:
+ * 12px×50 · 13px×22 = **63%**, 반대로 20px 이상은 **6%**(7/114)뿐. 모든 글자가 하한에
+ * 붙어 있으니 화면이 어디를 봐야 할지 안 정해 준다.
+ *
+ * 문턱 45% 의 유도: 7단 스케일에서 고르게 쓰면 한 단이 ~14% 이고 바닥 두 단은 ~29% 다.
+ * 본문이 많은 것은 정상이므로 고른 몫의 **1.5배**까지 허용한다 (29 × 1.5 ≈ 45).
+ *
+ * ⚠ 12px 하한(위 검사)은 그대로다. 이건 **위를 올리는 자**이지 아래를 내리는 자가 아니다.
+ * ⚠ 음성 대조군: 스케일 토큰 하나를 리터럴 px 로 되돌리면 ① 이 빨간불이 된다.
+ */
+const TYPO_STEP_MAX = 8;
+const TYPO_MIDBAND_MAX = 0.45;
+const sizes = [];
+const literalSizes = [];
+{
+  const ruleRe = /([^{}]+)\{([^}]*)\}/g;
+  let m;
+  while ((m = ruleRe.exec(hud)) !== null) {
+    const selector = m[1].replace(/\/\*[\s\S]*?\*\//g, '').trim();
+    if (selector.startsWith('@') || selector.length === 0) continue;
+    if (TYPO_EXEMPT.some((re) => re.test(selector))) continue;
+    const size = fontSizeOf(m[2]);
+    if (size) {
+      sizes.push(size.px);
+      if (size.literal) {
+        const last = selector.split('\n').pop().trim();
+        literalSizes.push(`${last} ${size.px}px`);
+      }
+    }
+  }
+}
+/*
+ * 스케일은 **토큰만** 쓴다. 리터럴 px 가 하나라도 있으면 그것이 곧 12단이 되던 경로다.
+ * ⚠ 이 검사가 위 두 자의 **음성 대조군**이기도 하다 — 토큰 하나를 리터럴로 되돌리면 잡힌다.
+ */
+check(
+  literalSizes.length === 0,
+  'font-size 는 스케일 토큰만 쓴다 (리터럴 px 0)',
+  literalSizes.length ? literalSizes.slice(0, 6).join(' · ') : '전부 --fs-* 토큰',
+);
+const steps = [...new Set(sizes)].sort((a, b) => a - b);
+check(
+  steps.length <= TYPO_STEP_MAX,
+  `타이포 스케일이 계단이다 — 서로 다른 크기 ≤ ${TYPO_STEP_MAX}단`,
+  `${steps.length}단 (${steps.join('/')})`,
+);
+const floorBand = sizes.filter((v) => v <= 13).length;
+const floorShare = sizes.length === 0 ? 0 : floorBand / sizes.length;
+check(
+  floorShare <= TYPO_MIDBAND_MAX,
+  `위계가 바닥에 안 쏠린다 — 12~13px 가 ${Math.round(TYPO_MIDBAND_MAX * 100)}% 이하`,
+  `${floorBand}/${sizes.length} = ${Math.round(floorShare * 100)}%`,
+);
+
+/*
+ * ── 아이콘은 등록부가 소유한다 (P1.5-A) ──────────────────────────────────
+ *
+ * 이모지는 기기·OS 마다 **다른 그림**이 나온다. 게임 아트와 재질이 안 맞고, 크기·정렬도
+ * 폰트에 달려 있어 우리가 못 정한다 (실측: `src/ui/*.ts` 에 40곳).
+ *
+ * 규칙은 「FX 는 등록부, 오디오는 큐」와 같은 형태다 — **이름 한 줄 + 그리기 한 줄**이고
+ * 호출부는 이름만 안다. 그래야 P1.5-B 에서 AI 픽셀아트로 갈아 끼울 때 호출부가 안 바뀐다.
+ *
+ * ⚠ 예외는 등록부 자신(`icons.ts`)뿐이다. 거기가 이모지 → 도형의 대응표를 갖는다.
+ */
+/*
+ * 예외 둘.
+ *   · `icons.ts` — 등록부 자신. 여기가 이름 → 글리프 표를 갖는다
+ *   · `hud.ts` — **폐기된 v1 씬의 HUD** (`?v1=1` 뒤). 카이로가 기본 씬이 된 K13 부터
+ *     화면에 안 나오고, 그 파일의 표식을 옮기는 것은 죽은 코드를 손보는 일이다
+ *     (같은 이유로 v1 CSS 도 위 타이포 자의 범위 밖이다)
+ */
+const ICON_EXEMPT = ['src/ui/icons.ts', 'src/ui/hud.ts'];
+// ⚠ 결합 문자(VS16 등)를 클래스에 넣으면 ESLint 가 잡는다 — 범위만 쓴다
+const EMOJI_RE = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}]/gu;
+const emojiLeaks = [];
+for (const f of uiFiles) {
+  if (ICON_EXEMPT.includes(f)) continue;
+  const src = await readFile(f, 'utf8');
+  // 주석은 뺀다 — 문서에 이모지를 못 쓰게 하는 규칙이 아니다
+  const body = src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');
+  const hits = body.match(EMOJI_RE);
+  if (hits) emojiLeaks.push(`${f.replace('src/ui/', '')}:${hits.length}`);
+}
+check(
+  emojiLeaks.length === 0,
+  '아이콘은 등록부 밖에 없다 — 이모지 리터럴 0 (icons.ts 제외)',
+  emojiLeaks.length ? emojiLeaks.slice(0, 8).join(' · ') : '이모지 리터럴 없음',
 );
 
 /*
@@ -349,6 +586,17 @@ const PAIRS = [
    * 같은 색이라 **두 채널이 서로 안 갈렸다** (실측 크롭).
    */
   ['바닥 화살표 칠 · 테두리', '--ride-ink', '--ride-entry-edge', 3],
+  /*
+   * §2.6 회수 줄 — 델타 숫자는 **가라앉은 면** 위에 앉는다. 이 면은 여태
+   * `--text-dim`·`--text-mute` 두 쌍만 재고 있었는데, 회수 줄은 그 위에 **본문 굵기의
+   * 숫자**와 **방향색**을 얹는다. 「같은 색을 표면마다 다시 재라」(K47-①) 그대로다.
+   *
+   * ⚠ 방향색 두 쌍이 이 줄의 유일한 색 단서는 아니다 — `→` 와 부호가 첫째 채널이다.
+   * 그래도 3:1 을 지켜야 색약·흑백에서 위/아래가 회색으로 같아지지 않는다.
+   */
+  ['회수 숫자 · 가라앉은면', '--text', '--panel-sunk', 4.5],
+  ['오름 · 가라앉은면', '--good', '--panel-sunk', 3],
+  ['내림 · 가라앉은면', '--bad', '--panel-sunk', 3],
 ];
 
 const bad = [];

@@ -52,6 +52,9 @@
  * | 방 만들기 시도 | 60회 | **비용.** ①② 가 실패한 뒤의 마지막 수단이다 |
  * | 매표소 포장 시도 | 256곳 | **비용** — `ensurePath` 가 후보마다 격자 전체를 BFS 한다 |
  * | 선착장 자리 시도 | 400곳 | **비용** — `p.check` 가 물가·도달을 본다. 가까운 쪽부터 보므로 못 찾으면 근처가 찬 것 |
+ * | 주당 메뉴 개발 시도 | **2회** | **박자.** 한 주에 열다섯 조합을 섞어 보는 사람은 없다. 상한이 아니라 속도다 — 후보를 다 훑는 데 몇 주가 걸리고 그 사이 실패 비용이 실제로 나간다. ⚠ 0 으로 두면 P2 의 음식 축(재료 21·레시피 26)이 헤드리스에 **통째로 안 재진다** |
+ * | 한 주에 키우는 시설 | **1채** | 같은 박자. 발견하면 그 시설은 그 주에 끝낸다 |
+ * | 성향(persona) | 판당 **1회 뽑기** | **사람의 모델 + 계측 요건.** 플레이어는 매번 주사위를 던지지 않고 "나는 수익형으로 간다"를 한 번 고른다. 그리고 결정마다 뽑으면 뽑기 횟수가 결정 수에 비례해 스트림이 밀려 **A/B 자체가 불가능**해진다 (P2-B 실측). 끄려면 `--persona 0` — 그때 출력은 도입 전과 **비트 단위로 같다** |
  * | 방향 후보 | 2개 | **비용 + 사람의 모델.** 화면의 회전 버튼이 주는 선택지가 곧 이 수다 (`main.ts` → `canRotate`). ⚠ **4방향 배선은 K53 에 이미 들어왔다** — 다만 `kairo-facilities.json` 이 아직 아무 시설도 `facings: 4` 로 안 켰다(75종 전부 미선언)라 지금은 둘이 같은 답이다. **첫 시설을 켜는 사람이 `aimFacings` 도 같이 4로 옮겨야 한다** (K36: 봇과 골든은 실제 게임으로 돈다) |
  *
  * ## ⚠ 봇은 **입구를 겨눈다** (K52)
@@ -115,7 +118,12 @@ import { CardStore, CARD_RNG_SALT, optionCash, triggerCard } from '../src/sim/ka
 import { assessRisk, accidentChance } from '../src/sim/kairo/risk.js';
 import { mapType, shiftedShares, MAP_TYPES } from '../src/sim/kairo/scenario.js';
 import { seasonShares } from '../src/sim/kairo/groups.js';
-import { StaffStore, STAFF_ROLES, neededFor } from '../src/sim/kairo/staff.js';
+import {
+  StaffStore,
+  STAFF_ROLES,
+  neededFor,
+  type StaffRoleId,
+} from '../src/sim/kairo/staff.js';
 import {
   CourseStore,
   PRESETS,
@@ -125,6 +133,7 @@ import {
   fitOf,
   dockCandidates,
   firstFreeDock,
+  courseRouteTiles,
 } from '../src/sim/kairo/course.js';
 import {
   questStatuses,
@@ -148,7 +157,25 @@ import {
   EXAM_PASS_RATIO,
 } from '../src/sim/kairo/exam.js';
 import { WishStore } from '../src/sim/kairo/wishes.js';
-import { MenuStore, recipeDef } from '../src/sim/kairo/menu.js';
+import { grantShopItem, shopCost, shopStock } from '../src/sim/kairo/shop.js';
+import {
+  COMMISSIONS,
+  COMMISSION_RNG_SALT,
+  hireJobFor,
+  hireJobsAvailable,
+  pendingIn,
+  CommissionStore,
+  commissionSlots,
+  commissionVisitorMult,
+} from '../src/sim/kairo/commission.js';
+import {
+  INGREDIENTS,
+  MenuStore,
+  enhancementsOf,
+  pairKey,
+  recipeDef,
+  ingredientsForFacility,
+} from '../src/sim/kairo/menu.js';
 import { CERTS, CERT_CAPACITY_TOTAL, CertStore, certStatuses, effectiveGrade } from '../src/sim/kairo/certs.js';
 import { COMBOS } from '../src/sim/kairo/combos.js';
 import { ENDING_CERT_THRESHOLD, ENDING_GRADE_THRESHOLD } from '../src/sim/kairo/meta.js';
@@ -178,6 +205,31 @@ const SWIM_TICKS = flag('swim', 0);
 const CHARGE_ALL = args.includes('--charge-all');
 /** 입장료를 갈아 끼운다 (`--adm 1000`) — A/B 대조 전용. 0 이면 기본값 */
 const ADMISSION = flag('adm', 0);
+/**
+ * 판 성향을 **끄고** 돌린다 (`--persona 0`) — P0 이전 세계다. **영구 대조군**이다.
+ *
+ * `--swim`·`--charge-all`·`--entry-fault` 와 같은 자리: 같은 바이너리로 한 축만 갈아
+ * 끼워야 전후 표가 같은 도구의 것이 된다.
+ *
+ * ⚠ 이 플래그의 판정 기준은 "비슷하다" 가 아니라 **비트 단위로 같다** 이다. 성향은
+ * 전용 salt 에서 판당 한 번만 뽑으므로, 끄면 어떤 스트림도 안 밀려 출력이 완전히 같아야
+ * 한다. 하나라도 다르면 성향이 스트림을 오염시킨 것이고 그건 P0 의 실패다.
+ */
+const PERSONA_OFF = args.includes('--persona') && flag('persona', 1) === 0;
+/**
+ * `--no-shop` — 상점을 **끈 세계**를 잰다 (P3 음성 대조군).
+ *
+ * 계획의 되돌리기(`items: []`)와 같은 상태다. 「상점이 무엇을 바꿨나」를 A/B 로 가르는
+ * 유일한 방법이고, 안 두면 「코스가 줄었다」의 원인이 상점인지 소유 게이트인지 못 가른다.
+ */
+const NO_SHOP = process.argv.includes('--no-shop');
+/**
+ * `--no-commission` — 수배를 **끈 세계**를 잰다 (P4 음성 대조군).
+ *
+ * 계획의 되돌리기(`commissions: []`)와 같은 상태다. 「수배가 무엇을 바꿨나」를 A/B 로
+ * 가르는 유일한 방법이고, 안 두면 「후반 지출이 늘었다」의 원인을 상점과 못 가른다.
+ */
+const NO_COMMISSION = process.argv.includes('--no-commission');
 /**
  * 거리장 목적지 좁히기(K52 4단계)를 **되돌린 채** 돌린다 (`--entry-fault`).
  *
@@ -239,6 +291,76 @@ const BUILD_RESERVE = 1_500_000;
 
 /** 가장 싼 시설 — 이보다 예산이 적으면 "자리"가 아니라 "돈"이 문제다 */
 const CHEAPEST_FACILITY = Math.min(...allFacilityDefs().map((d) => d.cost));
+
+/**
+ * 봇의 지출 분류 (P0) — 결산 장부의 `InvestmentKind` 와 **같은 이름**을 쓴다.
+ *
+ * ⚠ 봇은 `WeekRunner.spend()` 를 안 쓰고 자기 지갑(`cash`)을 직접 셈한다. 그래서 분류도
+ * 손으로 붙여야 하는데, 이름이 갈라지면 화면의 결산 장부와 헤드리스 요약이 **다른 축**을
+ * 말하게 된다. 이름을 맞춰 두면 나중에 둘을 대조할 수 있다.
+ */
+type SimSpendKind =
+  | 'building'
+  | 'upgrades'
+  | 'menuDevelopment'
+  | 'commission'
+  | 'shopping';
+
+const SIM_SPEND_KINDS: readonly SimSpendKind[] = [
+  'building',
+  'upgrades',
+  'menuDevelopment',
+  'commission',
+  'shopping',
+];
+
+/** 특화 세 갈래 — 요약에서 「어느 갈래가 안 재지고 있나」를 셀 때 쓴다 */
+const SIM_SPECIALTY_AXES: readonly FacilitySpecialty[] = ['capacity', 'revenue', 'reputation'];
+
+function emptySpendByKind(): Record<SimSpendKind, number> {
+  return { building: 0, upgrades: 0, menuDevelopment: 0, commission: 0, shopping: 0 };
+}
+
+/**
+ * 판의 성향 (P0) — **`runOne` 시작에서 정확히 한 번** 뽑는다.
+ *
+ * ## 왜 필요한가 (실측)
+ *
+ * 52주 × 24시드에서 특화 선택이 **평판 255 : 수익 6 : 회전 2** 로 97.5% 쏠렸다.
+ * 원인은 `chooseSpecialties` 의 결정론 분기가 후반 상태에서 언제나 같은 가지를 타기
+ * 때문이다 (만석 0% → 병목이 약하고, 등급 3~4 의 다음 문턱이 75/85 라 `reputation < nextReq`
+ * 가 항상 참). 그러면 헤드리스가 **세 갈래 중 하나만** 재고, 나머지 둘은 밸런싱에 안 실린다.
+ *
+ * ## 왜 판당 한 번인가
+ *
+ * ⚠ 결정마다 난수를 뽑으면 **뽑기 횟수가 결정 수에 비례해 스트림이 밀린다.** P2-B 가
+ * "자리 4번 뽑아 비교"에서 이미 밟았다 — 콤보 선호를 끈 대조군에서도 돈 부족이 판당
+ * 12 → 23 으로 똑같이 뛰어서, 그 설계로는 효과 자체를 잴 수 없었다. 한 번만 뽑으면
+ * 스트림이 그대로고 바뀌는 것은 **우선순위 순열**뿐이다.
+ *
+ * 사람의 모델이기도 하다 — 플레이어는 매번 주사위를 던지지 않고 "나는 수익형으로 간다" 를
+ * 한 번 고른다.
+ *
+ * ⚠ **축마다 따로 뽑지 말 것.** 특화 3 × 수배 4 × 구입 2 = 24 조합이 되어 24시드가 각
+ * 조합을 1판씩만 재고, 그러면 **어느 축의 효과인지 못 가른다.** 하나의 성향이 세 축을
+ * 일관되게 움직여야 한다.
+ */
+type SimPersona = 'legacy' | 'throughput' | 'revenue' | 'reputation';
+
+/** `--persona 0` 대조군을 뺀 실제 성향 셋 */
+const SIM_PERSONAS: readonly SimPersona[] = ['throughput', 'revenue', 'reputation'];
+
+/**
+ * 성향 전용 스트림 (불변식 2). 주 4스트림·카드·직원·코스와 같은 자리다.
+ * ⚠ 이 상수는 **판당 한 번만** 소비된다 — `runOne` 의 첫 줄에서 `int(3)` 하나.
+ */
+const PERSONA_RNG_SALT = 0x9e0;
+
+/**
+ * 주당 메뉴 개발 시도 (P2). **사람의 박자**다 — 한 주에 열다섯 조합을 섞어 보는 사람은 없다.
+ * ⚠ 0 으로 두면 음식 축이 헤드리스에 통째로 안 재진다 (그 상태가 P2 직후의 실측이었다).
+ */
+const MENU_TRIES_PER_WEEK = 2;
 
 interface RunResult {
   seed: number;
@@ -397,6 +519,61 @@ interface RunResult {
   upkeepByWeek: number[];
   cashByWeek: number[];
   buildSpendByWeek: number[];
+  /**
+   * 그 주에 지갑에서 나간 **모든 투자 지출** (P0) — 건설·바닥·방·선착장·코스 장비·개선·
+   * 심사 수수료·메뉴 개발, 그리고 앞으로 붙을 수배·구입.
+   *
+   * ⚠ `buildSpendByWeek` 를 **대체하지 않고 나란히** 둔다. 둘이 갈라지는 폭이 곧 새 축의
+   * 몫이다. 후반 공백 판정이 건설만 보면, 축을 넣고도 성공을 못 재는 상태가 된다 —
+   * 「계측기를 게임보다 먼저 고친다」의 실물이다.
+   */
+  outflowByWeek: number[];
+  /**
+   * 축별 누계 (P0). **결산 장부(`InvestmentBreakdown`)와 같은 분류**여야 화면과 헤드리스가
+   * 안 갈라진다. 아직 없는 축은 0 으로 남고, 그 0 이 곧 기준선이다.
+   */
+  spendByKind: Record<SimSpendKind, number>;
+  /** 수배 큐 (P4~) — 주별 진행 중 작업 수. 0 이면 축이 죽었고, 늘 만석이면 슬롯이 상한이다 */
+  commissionBusyByWeek: number[];
+  /** 큐가 완전히 빈 주 수 (P4~) */
+  commissionIdleWeeks: number;
+  /** 카테고리별 착수 횟수 (P4~) — 하나가 0 이면 그 카테고리는 목록에 있으되 없는 것이다 */
+  commissionByCategory: Record<string, number>;
+  /** 구인 의뢰 → 실제 채용까지 걸린 주 (P6~). 중앙값으로 본다 */
+  hireLatency: number[];
+  /** 어떤 역할이든 coverage < 1 이었던 주 수 — 구인 지연이 만든 **구멍**의 정체 */
+  staffGapWeeks: number;
+  /** 필요 인원이 오른 주 수 (§8-20) — 문턱 유도의 빠진 항 */
+  staffNeedSteps: number;
+  /** **봇 자신의 목표**에도 못 미친 주 (§8-20) — 구인 지연이 만든 진짜 구멍 */
+  staffWantedShortWeeks: number;
+  /** 봇이 **발견한** 레시피 수 (P2) — 0 이면 음식 축이 헤드리스에 안 재진 것이다 */
+  menuDeveloped: number;
+  /** 상점에서 산 횟수 (P3) — 0 이면 새 출구가 헤드리스에 안 재진 것이다 */
+  shopBought: number;
+  /** 끝난 수배 수 (P4) — 0 이면 수배 축이 헤드리스에 안 재진 것이다 */
+  commissionDone: number;
+  /** 봇이 **키운** 요리 수 (P2, 2단 강화 사슬) — 0 이면 「키운다」 축이 안 재진다 */
+  menuEnhanced: number;
+  /** 봇이 **바꿔 건** 횟수 (P2) — 칸이 차 있을 때 교체가 실제로 도는지 */
+  menuSwapped: number;
+  /** 강화품이 없어 개선을 못 한 횟수 (P5~) — 강화품이 개선 축을 조용히 죽였는지 */
+  upgradeBlockedByItem: number;
+  /**
+   * 마지막 주 craft 시설 중 **운영 가능** 비율 (P2 가드).
+   * 빈 그릇은 시설이 아니다 — `menuFacilityOperability` 가 false 면 손님 목적지·주간 공급·
+   * 입장 정원에서 통째로 빠지고, 그만큼 판이 조용히 작아진다.
+   */
+  craftOperableRatio: number;
+  /** 운영 정원 / 총 정원 (P2 가드) */
+  operationalRatio: number;
+  /** 두 번째 메뉴 칸이 열린 craft 시설 비율 (P2) — 0 이면 음식 축이 개선 축 뒤에 잠겼다 */
+  craftSlotsOpenRatio: number;
+  /**
+   * 이 판의 성향 (P0). 판당 **한 번** 뽑는다 — 결정마다 뽑으면 스트림이 밀려 A/B 가 불가능해진다.
+   * `--persona 0` 이면 언제나 `legacy` 이고, 그때 출력은 성향 도입 이전과 **비트 단위로 같아야** 한다.
+   */
+  persona: SimPersona;
   /** Phase 3: 실제 guest-agent 구매와 이름 있는 단골 사슬이 헤드리스에서도 도는지. */
   menuPurchases: number;
   regularPurchases: number;
@@ -1050,6 +1227,22 @@ const MIN_COURSE_SPEND = Math.min(...COURSE_EQUIPMENT.map((e) => e.vehicleCost))
  * 발자국 전체를 넘기면 봇이 UI 와 다른 후보를 보게 되고, 그게 이 파일이 격자·토지·해금에서
  * 이미 세 번 겪은 divergence 다).
  */
+/**
+ * 갈 수 없는 물 칸 (Q10) — 물 위 시설의 발자국. UI(`blockedWater`)와 **같은 규칙**이다 —
+ * 갈라지면 봇은 통과하는 코스를 사람은 못 만든다 (divergence 의 전형).
+ */
+function blockedWaterOf(p: PlacementGrid): ReadonlySet<string> {
+  const out = new Set<string>();
+  for (const it of p.all()) {
+    const def = facilityDef(it.defId);
+    if (def?.layer !== 'water' && def?.walkOn !== true) continue;
+    for (const [ti, tj] of PlacementGrid.footprintTiles(def, it.i, it.j, it.facing ?? 0)) {
+      out.add(`${ti},${tj}`);
+    }
+  }
+  return out;
+}
+
 function docksOf(p: PlacementGrid): ReturnType<typeof dockCandidates> {
   return dockCandidates(
     p
@@ -1093,10 +1286,12 @@ function ensureDock(
   permitArea: number,
   /** 이 잔교 끝에서 코스가 성립하나 — 성립하면 그 핸들 (안 되면 null) */
   plan: (tip: { x: number; y: number }, dir: { x: number; y: number }) => { x: number; y: number }[] | null,
+  /** 놓인 코스의 루트 칸 (Q10) — 새 선착장이 남의 코스 물 위에 앉으면 안 된다 */
+  courseTiles?: ReadonlySet<string>,
 ): { spent: number; tip: { x: number; y: number }; handles: { x: number; y: number }[] } | null {
   const def = allFacilityDefs().find((d) => d.id === DOCK_DEF_ID);
   if (!def || def.cost > cash) return null;
-  const opts = { land, permitArea };
+  const opts = { land, permitArea, ...(courseTiles === undefined ? {} : { courseTiles }) };
   /** 이미 잔교인 칸 — 여기에 4-이웃으로 붙으면 같은 무리가 된다 */
   const deck = new Set<number>();
   for (const it of p.all()) {
@@ -1189,17 +1384,36 @@ function chooseSpecialties(
   /** 다음 등급이 요구하는 퇴장 만족도. 최고 등급이면 더 오를 곳이 없으므로 0 */
   nextReq: number,
   tally: Map<FacilitySpecialty, number>,
+  /**
+   * 판의 성향 (P0). `legacy` 면 **예전 분기 그대로**다 — `--persona 0` 이 비트 단위로
+   * 같아야 하므로 이 갈래는 한 글자도 안 바꾼다.
+   */
+  persona: SimPersona = 'legacy',
 ): void {
   const bottleneck = last?.bottleneck?.need ?? null;
   for (const it of p.all()) {
     if (!p.canChooseSpecialty(it.handle)) continue;
     const need = (facilityDef(it.defId) as { need?: NeedKind } | undefined)?.need;
+    /*
+     * 병목이 **이 시설의 종류**를 가리키면 성향과 무관하게 회전이다 — 그건 성향이 아니라
+     * 지금 판이 내는 신호이고, 사람도 그럴 때는 자기 취향을 접는다.
+     *
+     * 그 밖에는 성향이 정한다. 예전에는 여기가 `reputation < nextReq` 삼항이었는데,
+     * 후반 상태에서 그 조건이 **항상 참**이라 24판이 전부 평판으로 쏠렸다
+     * (실측 평판 255 : 수익 6 : 회전 2). 성향이 없으면 헤드리스가 세 갈래 중 하나만 잰다.
+     */
     const want: FacilitySpecialty =
       bottleneck !== null && need === bottleneck
         ? 'capacity'
-        : reputation < nextReq
-          ? 'reputation'
-          : 'revenue';
+        : persona === 'throughput'
+          ? 'capacity'
+          : persona === 'revenue'
+            ? 'revenue'
+            : persona === 'reputation'
+              ? 'reputation'
+              : reputation < nextReq
+                ? 'reputation'
+                : 'revenue';
     const allowed = PlacementGrid.specialtiesFor(it.defId);
     const pick = allowed.includes(want) ? want : allowed[0];
     if (!pick) continue;
@@ -1342,8 +1556,14 @@ function buildOne(
   permitArea?: number,
   /** Phase 3 단골 B 목표처럼 특정 시설을 겨냥할 때만. 없으면 기존 후보 정책 그대로다. */
   onlyId?: string,
+  /** 놓인 코스의 루트 칸 (Q10) — **게임과 같은 제약.** 안 넘기면 봇이 코스 위에 짓는다 */
+  courseTiles?: ReadonlySet<string>,
 ): number {
-  const opts = permitArea === undefined ? { land } : { land, permitArea };
+  const opts = {
+    land,
+    ...(permitArea === undefined ? {} : { permitArea }),
+    ...(courseTiles === undefined ? {} : { courseTiles }),
+  };
   /** 손님 판정 — 방향 고르기(K52)가 "여기 이미 길이 있나"를 이걸로 본다 */
   const stand = guestWalkable(t, p);
   const cands = allFacilityDefs()
@@ -1549,6 +1769,13 @@ function buildOne(
 
 function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const rng = new Rng(seed);
+  /*
+   * 성향은 **여기서 정확히 한 번** 뽑는다 (P0). 전용 salt 라 주 4스트림·카드·직원·코스
+   * 어느 것도 안 민다. `--persona 0` 이면 아예 안 뽑으므로 도입 전과 비트 단위로 같다.
+   */
+  const persona: SimPersona = PERSONA_OFF
+    ? 'legacy'
+    : (SIM_PERSONAS[rng.fork(PERSONA_RNG_SALT).int(SIM_PERSONAS.length)] ?? 'legacy');
   const map = mapType(mapId);
   const t = KairoTerrain.generate(GRID_W, GRID_H, rng.fork(1), map);
   const w = new WallGrid(GRID_W, GRID_H);
@@ -1564,6 +1791,13 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       : GUEST_DEFAULTS;
   const g = new GuestStore(t, w, p, GATE, tunables);
   const menus = new MenuStore();
+  /*
+   * ⚠ **전용 스트림**이다 (P4). 주 rng 를 같이 쓰면 수배 하나가 날씨 시퀀스를 통째로
+   * 민다 — main 과 **같은 salt** 로 fork 해야 헤드리스와 실제 판이 같은 세계를 잰다.
+   */
+  const commissions = new CommissionStore();
+  const commissionRng = new Rng(seed).fork(COMMISSION_RNG_SALT);
+  let activePublicity: { defId: string; weeksLeft: number }[] = [];
   g.setMenuStore(menus);
   const week = new WeekRunner(t, p, g);
   /** 날씨·일반 손님·단골·사고는 봇의 건설 RNG와도, 서로와도 소비량을 공유하지 않는다. */
@@ -1639,6 +1873,13 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const buildFailWhy = new Map<string, number>();
   let buildCapped = 0;
   let upgradeSpend = 0;
+  /** 이번 판에서 봇이 **발견한** 레시피 수 (P2) — 0 이면 음식 축이 안 재진 것이다 */
+  let menuDeveloped = 0;
+  let commissionDone = 0;
+  const hireOrderedAt = new Map<string, number>();
+  let shopBought = 0;
+  let menuEnhanced = 0;
+  let menuSwapped = 0;
   /* 심사 계측 (진단) — 위 RunResult 주석 참고 */
   let examApplied = 0;
   let examPassed = 0;
@@ -1671,6 +1912,28 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
   const upkeepByWeek: number[] = [];
   const cashByWeek: number[] = [];
   const buildSpendByWeek: number[] = [];
+  /* P0 계측 — 지갑에서 나간 전부와 그 분류. 아직 없는 축은 0 으로 남고 그 0 이 기준선이다 */
+  const outflowByWeek: number[] = [];
+  const spendByKind = emptySpendByKind();
+  let weekOutflow = 0;
+  /** 지갑에서 나가는 모든 곳이 이 하나를 지난다 — 새 지출을 넣고 여기를 안 부르면 계측이 조용히 샌다 */
+  const pay = (amount: number, kind: SimSpendKind): number => {
+    if (amount <= 0) return 0;
+    spendByKind[kind] += amount;
+    weekOutflow += amount;
+    return amount;
+  };
+  const commissionBusyByWeek: number[] = [];
+  let commissionIdleWeeks = 0;
+  const commissionByCategory: Record<string, number> = {};
+  const hireLatency: number[] = [];
+  let staffGapWeeks = 0;
+  let staffNeedSteps = 0;
+  let staffWantedShortWeeks = 0;
+  let wantedShort = false;
+  let lastNeed = 0;
+  /** ⚠ P5 에서 강화품 게이트가 들어오면 `let` 으로 바꾸고 세기 시작한다. 지금은 0 이 기준선이다 */
+  let upgradeBlockedByItem = 0;
   let menuPurchases = 0;
   let regularPurchases = 0;
   let regularAffinity = 0;
@@ -1695,7 +1958,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     // 빈 실내 칸이 8 미만이면 미리 넓힌다 — 8 은 실내 시설 최대 발자국(2×2=4)의 두 배다
     if (freeIndoor < 8) {
       const grade0 = gradeNow();
-      cash -= ensureRoom(t, w, p, landRect(grade0), rng, { w: 4, h: 1 });
+      cash -= pay(ensureRoom(t, w, p, landRect(grade0), rng, { w: 4, h: 1 }), 'building');
     }
 
     /*
@@ -1767,7 +2030,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       g.invalidate();
       const spent = ensureTicket(t, w, p, g, landRect(gradeNow()), cash);
       if (spent > 0) ticketRebuilds++;
-      cash -= spent;
+      cash -= pay(spent, 'building');
       buildSpend += spent;
     }
     /*
@@ -1791,7 +2054,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       );
       if (spent > 0) {
         g.invalidate();
-        cash -= spent;
+        cash -= pay(spent, 'building');
         buildSpend += spent;
       }
     }
@@ -1882,8 +2145,9 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         b === 0 && requestedMenuFacility && p.instancesOf(requestedMenuFacility).length === 0
           ? requestedMenuFacility
           : undefined,
+        courseRouteTiles(courses.all),
       );
-      cash -= spent;
+      cash -= pay(spent, 'building');
       buildSpend += spent;
       weekBudget -= spent;
       if (spent === 0) {
@@ -1975,16 +2239,47 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
          * 개선비는 단계와 함께 가팔라지므로(`upgradeCost`) 싼 것부터 사도 한 시설만
          * 독주하지 않는다 — 올라간 만큼 뒤로 밀린다. 사람도 예산 안에서 살 수 있는 것을 산다.
          */
+        /*
+         * ⚠ **수익 성향은 메뉴 칸을 노린다** (P2).
+         *
+         * 싼 것부터 골고루 올리면 아무것도 레벨 3 에 못 닿는다 — 실측 52주에
+         * **2칸 열린 craft 0%** 였고, 그래서 레시피를 스물여섯 종 넣어도 시설마다
+         * **파는 것은 한 종**이었다 (별도 구매 28% → 28% 로 안 움직였다).
+         *
+         * 사람이라면 메뉴를 늘리려고 **한 시설에 집중**한다. 그게 이 축의 결정
+         * (「넓힐까 키울까」)이고, 성향이 그것을 표현하는 자리다.
+         * ⚠ **예산을 안 바꾼다** — 순서만 바꾼다. 「낼 수 있는 것부터」 규칙은 그대로다.
+         */
+        const wantsSlot = (handle: number, defId: string): boolean => {
+          if (persona !== 'revenue') return false;
+          const def = facilityDef(defId) as { menuMode?: string } | undefined;
+          if (def?.menuMode !== 'craft') return false;
+          return p.menuIdsOf(handle).length >= p.menuSlotCount(handle);
+        };
         const targets = p
           .all()
           .filter((it) => p.levelOf(it.handle) < FACILITY_MAX_LEVEL)
-          .sort((a, b) => p.upgradeCost(a.handle) - p.upgradeCost(b.handle) || a.handle - b.handle);
+          .sort(
+            (a, b) =>
+              Number(wantsSlot(b.handle, b.defId)) - Number(wantsSlot(a.handle, a.defId)) ||
+              p.upgradeCost(a.handle) - p.upgradeCost(b.handle) ||
+              a.handle - b.handle,
+          );
         const t0 = targets[0];
         if (!t0) break;
         const cost = p.upgradeCost(t0.handle);
         if (cost <= 0 || cost > upBudget) break;
-        p.upgrade(t0.handle);
-        cash -= cost;
+        /*
+         * ⚠ **상위 경계로 올린다** (P5). `p.upgrade()` 를 직접 부르면 강화품 검사가
+         * 우회되어 헤드리스가 **게이트 없는 세계**를 잰다 — P3-A·P3-D·K52 의 함정이다.
+         * 정적 검사가 이 규칙을 지킨다.
+         */
+        const up = p.tryUpgrade(t0.handle, () => true);
+        if (!up.ok) {
+          if (up.missing.length > 0) upgradeBlockedByItem++;
+          break;
+        }
+        cash -= pay(cost, 'upgrades');
         upBudget -= cost;
         upgradeSpend += cost;
       }
@@ -2000,6 +2295,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       reputation.value,
       GRADES[gradeNo]?.reqExitSatisfaction ?? 0, // 다음 등급 (없으면 최고 등급이라 0)
       specialtyTally,
+      persona,
     );
     g.invalidate();
 
@@ -2021,7 +2317,11 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       examDemotions += gradeNo - downTo;
       gradeNo = downTo;
     }
-    const elig = exam.eligible(gradeNo, reputation.value);
+    /*
+     * ⚠ **봇도 같은 창구를 본다** (Q5). 안 넘기면 헤드리스가 「무제한 응시」 세계를 재고
+     * 템포 변경이 숫자에 안 나타난다 — 「봇이 안 쓰는 축은 헤드리스에 안 재진다」의 거울상이다.
+     */
+    const elig = exam.eligible(gradeNo, reputation.value, week.week);
     if (elig) {
       const fee = elig.examFee ?? 0;
       const reqs = elig.examReqs ?? [];
@@ -2052,7 +2352,8 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
       }
       else if (cash < fee) examBlockedByFee++;
       else {
-        cash -= fee;
+        // 심사 수수료는 「돈을 내고 시간이 지나야 결과가 나오는 지출」이라 수배와 같은 분류다 (P0)
+        cash -= pay(fee, 'commission');
         exam.apply(elig.grade, k + 1, 0); // 주 시작에 신청 — 이번 주말 판정
         examApplied++;
       }
@@ -2118,8 +2419,16 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
      */
     if (cash - BUILD_RESERVE > MIN_COURSE_SPEND) {
       const land = landRect(gr);
+      /*
+       * ⚠ **가진 장비만 고른다** (P3). 안 그러면 헤드리스가 「소유 게이트가 없는 세계」를
+       * 재고, 그건 P3-A·P3-D·K52 가 세 번 밟은 함정이다 — 봇이 게임에 없는 힘을 쓰면
+       * 밸런싱이 게임이 아니라 봇을 잰다.
+       *
+       * 안 가진 것은 **상점에서 산다** (아래 `buyEquipment`). 「들여오기 → 대수」 두 단계가
+       * 곧 이 축의 결정이다.
+       */
       const affordable = COURSE_EQUIPMENT.filter(
-        (e) => e.vehicleCost * 2 <= cash - BUILD_RESERVE,
+        (e) => courses.ownedEquipment.has(e.id) && e.vehicleCost * 2 <= cash - BUILD_RESERVE,
       );
       if (affordable.length > 0) {
         const eq = affordable[Math.floor(courseRng.next() * affordable.length)] as
@@ -2154,7 +2463,8 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
               dockIndex: 0,
               pinned: true,
             });
-            const v = validateCourse(t, sug.handles, tip, pick, eq.id, gr.grade, courses.all);
+            const v = validateCourse(t, sug.handles, tip, pick, eq.id, gr.grade, courses.all,
+              undefined, courses.ownedEquipment, blockedWaterOf(p));
             if (v.ok) return sug.handles;
             if (courseFail === '') courseFail = v.issues.join(',') + ' @' + tip.x + ',' + tip.y;
             return null;
@@ -2191,9 +2501,10 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
               cash - BUILD_RESERVE - eq.vehicleCost * 2,
               gr.permitArea,
               plan,
+              courseRouteTiles(courses.all),
             );
             if (made !== null) {
-              cash -= made.spent;
+              cash -= pay(made.spent, 'building');
               /*
                * 선착장은 **격자에 놓는 시설**이다 — 매표소와 같은 줄에 센다 (K49).
                * 안 세면 "건설 0원인 주"가 실제보다 많아진다: 옛 봇은 잔교를 아예 안 지어서
@@ -2206,7 +2517,7 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
             }
           }
           if (at !== null) {
-            cash -= eq.vehicleCost * 2;
+            cash -= pay(eq.vehicleCost * 2, 'building');
             courses.add({
               presetId: pick.id,
               equipId: eq.id,
@@ -2221,18 +2532,75 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     }
     const courseWeek = courses.weekly();
 
-    const staffSeasonMult = season === 'summer' ? 1 : season === 'winter' ? 0.5 : 0.75;
+    /*
+     * ⚠ **구인이 1~2주 걸리게 된 뒤로 계절 감원을 덜 한다** (P6). 즉시 고용 시절에는
+     * 겨울에 절반으로 자르고 여름에 도로 채우는 것이 공짜였는데, 이제 다시 뽑는 데
+     * 1~2주와 8주치 임금이 든다 — 사람이라면 그걸 알고 덜 자른다.
+     * ⚠ 이건 게임 문제를 봇으로 가리는 것이 아니라, **새 규칙에 맞게 행동을 바꾼 것**이다
+     * (실측: 감원을 그대로 두면 직원 평균 13.0 → 7.8 로 무너졌다).
+     */
+    const staffSeasonMult = season === 'summer' ? 1 : season === 'winter' ? 0.8 : 0.9;
+    /*
+     * ⚠ **늘리는 것은 구인 큐를 지나고 줄이는 것은 즉시다** (P6). 봇이 `staff.set` 으로
+     * 양방향을 즉시 처리하면 헤드리스가 **리드타임 없는 세계**를 재고, 그러면 H5 가
+     * 아무것도 안 재는 문턱이 된다.
+     */
     for (const role of STAFF_ROLES) {
       const need = Math.ceil(neededFor(role, p) * staffSeasonMult);
       // 8주치 인건비를 낼 수 있을 만큼만 뽑는다 — 사람의 "두 달은 버틸 만큼" (봇의 값)
       const canPay = Math.floor(Math.max(0, cash - BUILD_RESERVE) / (role.wage * 8));
-      staff.set(role.id, Math.min(need, Math.max(0, canPay)));
+      const have = staff.count(role.id);
+      // §8-20 — **원한 만큼도 못 뽑은** 역할 (구인 지연이 만든 구멍). 100% 필요치가 아니다
+      if (have < need) wantedShort = true;
+      /*
+       * ⚠ **해고는 `need` 만 본다. 현금은 안 본다** (P6).
+       *
+       * 예전 규칙(`min(need, canPay)`)은 고용이 공짜일 때 쓴 것이다. 채용비가 생긴 순간
+       * 그것이 **죽음의 나선**이 됐다: 사람을 뽑으면 현금이 줄고 → `canPay` 가 줄고 →
+       * 방금 뽑은 사람을 자른다 (실측 직원 평균 13.0 → **6.1**). 사람은 물건을 하나 샀다고
+       * 직원을 자르지 않는다.
+       *
+       * 현금은 **뽑을 수 있나**만 정한다 (아래 `canPay`).
+       */
+      if (need < have) {
+        staff.set(role.id, need); // 해고는 즉시 — 비대칭이 의도다
+        continue;
+      }
+      if (need <= have) continue;
+      if (canPay <= have) continue;
+      /*
+       * ⚠ **폴백은 main 과 같아야 한다** (P6, `hireJobsAvailable()`). 수배가 꺼진 세계에서
+       * 봇만 「아무도 못 뽑는다」가 되면 대조군이 **다른 게임**을 잰다 — 실측으로 직원
+       * 평균 **0.0명**이 나왔다. 규칙이 두 벌이 되면 그 둘은 언제나 갈라진다.
+       */
+      if (NO_COMMISSION || !hireJobsAvailable()) {
+        staff.hire(role.id, 1);
+        continue;
+      }
+      const job = hireJobFor(role.id);
+      if (!job || commissions.busy(job.id)) continue;
+      if (pendingIn(commissions, true) >= commissionSlots(gr.grade)) continue;
+      if (cash - BUILD_RESERVE <= job.cost) continue;
+      if (commissions.enqueue(job, week.absTick, commissionRng)) {
+        cash -= pay(job.cost, 'commission');
+        commissionByCategory['hire'] = (commissionByCategory['hire'] ?? 0) + 1;
+        hireOrderedAt.set(job.id, k);
+      }
     }
     const staffEff = staff.effects(p);
     staffWeeks += staff.total;
 
     // 카드 선택이 끝난 뒤에 상한을 정한다 — 혼잡 배율이 이번 주에 반영되어야 한다
     const mods = cards.modifiers();
+    /*
+     * ⚠ 홍보는 **`modifiers` 로 합성한다** — main 과 **같은 방식**이어야 한다.
+     * `WeekOptions` 에 전용 필드를 만들면 불변식 3 이 무너지고 두 세계가 갈린다.
+     */
+    mods.crowdMult *= commissionVisitorMult(
+      activePublicity
+        .map((x) => COMMISSIONS.find((c) => c.id === x.defId))
+        .filter((x): x is (typeof COMMISSIONS)[number] => x !== undefined),
+    );
     g.setMaxGuests(admissionLimit(gr, p.totalCapacity(), mods.crowdMult));
     /*
      * 요금 정책: 만족도가 여유 있으면 올리고, 빠듯하면 내린다.
@@ -2266,11 +2634,227 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
         if (!menus.hasRecipe(request.id)) {
           menus.develop(request.facilityId, request.ingredients, (cost) => {
             if (cash < cost) return false;
-            cash -= cost;
+            cash -= pay(cost, 'menuDevelopment');
             return true;
           });
         }
         if (menus.hasRecipe(request.id)) menus.equip(p, target.handle, request.id, 0);
+      }
+    }
+
+    /*
+     * ── 메뉴 개발 (P2) — **봇이 이 축을 안 쓰면 헤드리스가 못 잰다** ────────────
+     *
+     * P2 가 재료 8 → 21 · 레시피 8 → 26 · craft 2 → 5 로 늘렸는데, 봇은 **단골 요청 하나만**
+     * 개발했다. 그래서 데이터를 일곱 배로 늘려도 수입 구성이 **28% → 28%** 로 안 움직였다 —
+     * 게임이 아니라 **봇의 습관**을 잰 것이다. P0·P3-A·P3-D·K52 에 이은 다섯 번째다.
+     *
+     * ## 정책 — 사람처럼 섞어 본다, 정답표는 안 본다
+     *
+     * 후보 재료를 **데이터 순서대로** 짝지어 시도한다. 이미 실패한 짝은 건너뛴다
+     * (게임이 그 정보를 화면에 준다 — `failureEntries`). ⚠ **정답을 미리 고르지 않는다**:
+     * 그러면 봇의 영리함을 재게 되고, PSS 매뉴얼도 *"이것저것 섞어서 알아내라"* 다.
+     *
+     * ⚠ 상한 둘 다 **박자**이지 천장이 아니다 — 왜 남는지는 머리말 표에 적었다.
+     */
+    if (cash > BUILD_RESERVE) {
+      const buy = (cost: number): boolean => {
+        if (cash < cost) return false;
+        cash -= pay(cost, 'menuDevelopment');
+        return true;
+      };
+      /**
+       * 새 요리를 **어디에 걸까**. 빈 칸이 있으면 거기고, 없으면 지금 걸린 것 중 **가장
+       * 약한 것**과 바꾼다 — 다만 새것이 더 나을 때만이다.
+       *
+       * ⚠ 이것이 게임이 화면에서 묻는 것과 **같은 선택**이다 (§2.6 의 교체 모달). 봇이
+       * "칸이 차면 포기"하면 헤드리스는 **1단계 시설만 있는 세계**를 재게 된다 — 실측으로
+       * `2칸 열린 craft 0%` 라 봇의 발견이 중앙 0종이었다 (P3-A·K52 와 같은 함정).
+       * ⚠ 정답표는 여전히 안 본다 — 이미 **발견한** 것 중에서만 고른다.
+       */
+      const worth = (id: string | undefined): number => {
+        const r = recipeDef(id);
+        return r ? r.price * r.satisfaction : -1;
+      };
+      const hang = (handle: number, recipeId: string): void => {
+        const slots = p.menuSlotCount(handle);
+        const now = p.menuIdsOf(handle);
+        if (now.includes(recipeId)) return;
+        if (now.length < slots) {
+          menus.equip(p, handle, recipeId, now.length);
+          return;
+        }
+        let weakest = 0;
+        for (let i = 1; i < now.length; i++) if (worth(now[i]) < worth(now[weakest])) weakest = i;
+        if (worth(recipeId) <= worth(now[weakest])) return;
+        menus.equip(p, handle, recipeId, weakest);
+        menuSwapped++;
+      };
+
+      let tries = MENU_TRIES_PER_WEEK;
+      /*
+       * 「넓힌다」와 「키운다」를 **주마다 번갈아** 쓴다. 한쪽만 하면 다른 축이 헤드리스에
+       * 안 재진다 — 결정론을 지키려고 RNG 대신 주차 홀짝을 쓴다 (불변식 2).
+       */
+      const growFirst = k % 2 === 1;
+      const crafts = p.all().filter((it) => {
+        const def = facilityDef(it.defId) as { menuMode?: string } | undefined;
+        return def?.menuMode === 'craft';
+      });
+
+      const tryGrow = (): void => {
+        for (const it of crafts) {
+          if (tries <= 0) return;
+          for (const mountedId of p.menuIdsOf(it.handle)) {
+            if (tries <= 0) return;
+            const next = enhancementsOf(mountedId).find((x) => !menus.hasRecipe(x.id));
+            if (!next || next.add === undefined) continue;
+            tries--;
+            const got = menus.enhance(mountedId, next.add, buy);
+            if (got.kind === 'discovered' && got.recipe) {
+              menuEnhanced++;
+              hang(it.handle, got.recipe.id);
+              return; // 한 주에 한 시설만 키운다 (사람의 박자)
+            }
+          }
+        }
+      };
+      const tryCombine = (): void => {
+        for (const it of crafts) {
+          if (tries <= 0) return;
+          const pool = INGREDIENTS.filter((x) => (x.facilities ?? []).includes(it.defId))
+            .filter((x) => menus.hasIngredient(x.id))
+            .map((x) => x.id);
+          const failed = new Set(menus.failureEntries(it.defId).map((f) => f.key));
+          /*
+           * ⚠ **이미 아는 조합은 다시 안 섞는다.** 실패는 `failureEntries` 로 기억되는데
+           * `known` 은 아무 데도 안 남아서, 시작 메뉴의 쌍(`얼음+김` = 캔음료)을 봇이
+           * **매주 다시 시도**하며 두 번의 기회 중 하나를 영원히 버리고 있었다 (실측:
+           * 12주 동안 발견 0종). 이건 정답표를 보는 것이 아니라 **도감을 보는 것**이다 —
+           * 플레이어에게도 그 화면이 있다.
+           */
+          const knownPairs = new Set(
+            menus
+              .discoveredIds()
+              .map((id) => recipeDef(id))
+              .filter((r) => r !== undefined && r.facilityId === it.defId && r.base === undefined)
+              .map((r) => pairKey(...r!.ingredients)),
+          );
+          for (let a = 0; a < pool.length && tries > 0; a++) {
+            for (let b = a + 1; b < pool.length && tries > 0; b++) {
+              const pair = pairKey(pool[a]!, pool[b]!);
+              if (failed.has(`${it.defId}|${pair}`) || knownPairs.has(pair)) continue;
+              const before = menus.discoveredIds().length;
+              tries--;
+              const got = menus.develop(it.defId, [pool[a]!, pool[b]!], buy);
+              if (menus.discoveredIds().length > before) {
+                menuDeveloped++;
+                if (got.recipe) hang(it.handle, got.recipe.id);
+                return; // 이 주는 여기까지
+              }
+            }
+          }
+        }
+      };
+      if (growFirst) { tryGrow(); tryCombine(); } else { tryCombine(); tryGrow(); }
+    }
+
+    /*
+     * ⚠ **상점은 코스·건설 **뒤**다.** 먼저 짓고 남으면 산다 — 앞에 두면 매주 상점이
+     * 예비비 위 현금을 먼저 훑어 잔교를 못 짓는다 (실측: 코스 5개 → **3개**).
+     * 순서는 게임 규칙이 아니라 **내가 임의로 정한 것**이었고, 그래서 봇 쪽에서 고친다.
+     */
+    /*
+     * ── 구입 상점 (P3) — **잉여 현금의 출구** ───────────────────────────────
+     *
+     * 봇이 안 사면 헤드리스가 상점 없는 세계를 잰다. 정책은 **사람의 박자**다:
+     *   · 예비비 위로 **여유가 넉넉할 때만** (장비 하나 값의 두 배가 남을 때)
+     *   · 한 주에 **하나** — 한 주에 열 개를 사는 사람은 없다
+     *   · **싼 것부터** (개선 루프의 「낼 수 있는 것부터」와 같은 절제)
+     *
+     * ⚠ 강화품은 **안 산다** — P5 의 개선이 아직 그것을 요구하지 않으므로 사면
+     * 죽은 지출이 되고, 그러면 봇이 「쓸모없는 데 돈을 쓰는 세계」를 잰다.
+     */
+    if (!NO_SHOP) {
+      /*
+       * ⚠ **봇도 「이번 주 진열」을 본다** (Q3). 전량 목록을 보게 두면 헤드리스가
+       * **게임에 없는 상점**을 재게 된다 — 「봇이 안 쓰는 축은 헤드리스에 안 재진다」의
+       * 거울상이다. `prefer` 도 main 과 같은 규칙으로 넘긴다 (지은 craft 의 재료).
+       */
+      const shopPrefer: string[] = [];
+      for (const f of p.all()) {
+        for (const ing of ingredientsForFacility(f.defId)) shopPrefer.push(ing.id);
+      }
+      const affordableShop = shopStock(
+        {
+          grade: gr.grade,
+          cash: Math.max(0, cash - BUILD_RESERVE),
+          hasIngredient: (id) => menus.hasIngredient(id),
+          hasRecipe: (id) => menus.hasRecipe(id),
+          ownsEquipment: (id) => courses.ownedEquipment.has(id),
+          facilityUnlocked: (id) => unlocks.isUnlocked(id, gr.grade),
+          meets: () => true,
+        },
+        week.week,
+        seed,
+        shopPrefer,
+      )
+        .filter((st) => st.blocked === null)
+        .sort((a, b) => shopCost(a.item, a.sale) - shopCost(b.item, b.sale));
+      /*
+       * ⚠ **강화품도 산다** (P5). P4 까지는 붙여 봐야 아무것도 안 해서 뺐지만, 이제
+       * 개선이 그걸 요구하므로 안 사면 봇이 4단계 위로 못 간다 — 헤드리스가
+       * 「강화품 없는 세계」를 재게 된다.
+       */
+      const buy = affordableShop[0];
+      if (buy && cash - BUILD_RESERVE > shopCost(buy.item, buy.sale) * 2) {
+        // 붙일 곳 — **개선이 가장 임박한 시설**. 사람도 올릴 것에 붙인다
+        const at = p.all()
+          .filter((it) => p.levelOf(it.handle) < FACILITY_MAX_LEVEL)
+          .sort((a, b) => p.levelOf(b.handle) - p.levelOf(a.handle))[0];
+        const ok = grantShopItem(buy.item, {
+          unlockIngredient: (id) => menus.unlockIngredient(id),
+          unlockRecipe: (id) => menus.unlockRecipe(id),
+          grantEquipment: (id) => courses.grantEquipment(id),
+          grantFacility: (id) => unlocks.grant(id),
+          addFitting: (id, h2) => p.addFitting(id, h2),
+        }, at?.handle);
+        if (ok) {
+          cash -= pay(shopCost(buy.item), 'shopping');
+          shopBought++;
+        }
+      }
+    }
+
+    /*
+     * ── 수배 (P4) — **맡기고 기다린다** ──────────────────────────────────
+     *
+     * 정책은 사람의 박자다: 예비비 위로 여유가 있을 때 **주당 한 건**, 슬롯 안에서,
+     * **싼 것부터**. ⚠ 상점 **뒤**다 — 즉시 오는 것을 먼저 사고 남으면 맡긴다.
+     *
+     * ⚠ 봇이 안 맡기면 헤드리스가 **수배 없는 세계**를 잰다 (P3-A·P3-D·K52 의 함정).
+     */
+    if (!NO_COMMISSION && cash > BUILD_RESERVE) {
+      const slots = commissionSlots(gr.grade);
+      /*
+       * ⚠ **분류를 돌아가며 고른다.** 값만 보고 고르면 가장 싼 홍보(전단지 18만)를
+       * 52주 내내 되풀이해서 조달·특수가 헤드리스에 **한 번도 안 재진다** (실측:
+       * 홍보 757 · 조달 0 · 특수 0). 사람도 전단지만 52주 뿌리지 않는다.
+       * 결정론을 지키려 RNG 대신 **주차 나머지**를 쓴다 (불변식 2).
+       */
+      const order = ['supply', 'publicity', 'special'] as const;
+      const want = order[k % order.length];
+      const affordable = COMMISSIONS
+        .filter((def) => !commissions.busy(def.id) && gr.grade >= (def.minGrade ?? 1))
+        .filter((def) => cash - BUILD_RESERVE > def.cost * 2)
+        .sort((a, b) => a.cost - b.cost);
+      const pick = affordable.find((def) => def.category === want) ?? affordable[0];
+      // 구인은 별도 창구다 (P6) — 물자 통만 센다
+      if (pick && pendingIn(commissions, false) < slots) {
+        if (commissions.enqueue(pick, week.absTick, commissionRng)) {
+          cash -= pay(pick.cost, 'commission');
+          commissionByCategory[pick.category] = (commissionByCategory[pick.category] ?? 0) + 1;
+        }
       }
     }
 
@@ -2356,6 +2940,69 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     revenueByWeek.push(rep.revenue);
     upkeepByWeek.push(rep.upkeep);
     buildSpendByWeek.push(buildSpend);
+    /*
+     * ⚠ 건설만 세는 줄 **바로 옆**에 전 지출을 나란히 둔다 (P0). 후반 공백 판정이
+     * `buildSpendByWeek` 만 보면, 새 축을 넣고도 "여전히 50% 비었다"고 말하게 된다.
+     */
+    outflowByWeek.push(weekOutflow);
+    weekOutflow = 0;
+    /* 직원 구멍 — 어떤 역할이든 필요 인원을 못 채운 주 (P6 의 H5 를 지금부터 잰다) */
+    if (STAFF_ROLES.some((r) => staff.count(r.id) < neededFor(r, p))) staffGapWeeks++;
+    /*
+     * ⚠ **두 지표는 다른 것을 잰다** (§8-20).
+     * · `staffGapWeeks` — 100% 필요치 대비. 봇이 비수기에 **의도적으로** 80~90% 를
+     *   목표하므로 이 값의 대부분은 **정책**이지 지연이 아니다
+     * · `staffWantedShortWeeks` — **봇 자신의 목표** 대비. 이게 구인 지연이 만든 구멍이다
+     */
+    if (wantedShort) staffWantedShortWeeks++;
+    wantedShort = false;
+    /*
+     * ⚠ **필요 인원이 몇 번 계단을 올랐나** (P6 → §8-20). `staffGapWeeks` 문턱의 유도가
+     * 「계절 전환 4회 × 리드타임」만 세고 **시설 성장 항을 빠뜨렸다** — 필요 인원은
+     * 시설이 늘 때마다 오르고, 그 계단마다 1~2주 구멍이 생긴다. 그 계단 수를 **직접 센다**:
+     * 유도에 넣을 값을 추정하지 않고 실측으로 쓰기 위해서다.
+     */
+    {
+      const need = STAFF_ROLES.reduce((a, r) => a + neededFor(r, p), 0);
+      if (need > lastNeed) staffNeedSteps++;
+      lastNeed = need;
+    }
+    /*
+     * 수배 시계 (P4) — 주 눈금 하나로 감는다. `advanceTo` 가 멱등이라 안전하고,
+     * 봇은 주 단위로만 도므로 하루 눈금이 따로 없다 (main 은 둘 다 부른다).
+     */
+    /*
+     * ⚠ **감기 전에 잰다.** 봇은 주 단위로만 도는데 리드타임이 2~7일이라 주 끝에서
+     * 감으면 큐가 **언제나 비어 있다** — 실측으로 「큐 빈 주 52/52 인데 완료 34건」이라는
+     * 모순이 나왔다. 「이번 주에 기다린 것이 있었나」를 재려면 감기 전 길이를 봐야 한다.
+     */
+    commissionBusyByWeek.push(commissions.pending.length);
+    if (commissions.pending.length === 0) commissionIdleWeeks++;
+    for (const done of commissions.advanceTo(week.absTick, commissionRng)) {
+      if (!done.ok) continue;
+      if (done.def.category === 'publicity') {
+        activePublicity.push({ defId: done.def.id, weeksLeft: done.def.weeks ?? 1 });
+      } else if (done.def.category === 'hire' && done.def.role !== undefined) {
+        staff.hire(done.def.role as StaffRoleId, 1);
+        const at = hireOrderedAt.get(done.def.id);
+        // 리드타임을 **실측한다** — 데이터와 어긋나면 재시도가 숨은 배수다 (H5)
+        if (at !== undefined) hireLatency.push(k - at);
+        hireOrderedAt.delete(done.def.id);
+      } else if (done.def.category === 'supply' && done.def.item !== undefined) {
+        /*
+         * ⚠ **도착한 강화품을 실제로 붙인다** (P5). 안 붙이면 조달이 헤드리스에서
+         * 「돈만 나가는 축」이 되고, 개선 게이트가 영원히 막힌 세계를 재게 된다.
+         */
+        const at = p.all()
+          .filter((it) => p.levelOf(it.handle) < FACILITY_MAX_LEVEL)
+          .sort((a, b) => p.levelOf(b.handle) - p.levelOf(a.handle))[0];
+        if (at) p.addFitting(done.def.item, at.handle);
+      }
+      commissionDone++;
+    }
+    activePublicity = activePublicity
+      .map((x) => ({ ...x, weeksLeft: x.weeksLeft - 1 }))
+      .filter((x) => x.weeksLeft > 0);
     cashByWeek.push(cash);
 
     const claimed = progress.claim(questStatuses(p, rep, g.swimZones()));
@@ -2461,6 +3108,41 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     for (const r of rows) console.log(`  ${r}`);
   }
 
+  /*
+   * craft 시설이 **실제로 도는가** (P2 가드, P0 에서 미리 잰다).
+   *
+   * ⚠ 빈 그릇은 시설이 아니다 — `menuFacilityOperability` 가 false 면 손님 목적지·주간
+   * 공급·병목의 built 공급·입장 정원 넷에서 통째로 빠진다. craft 가 2종일 때는 무해했지만
+   * 여러 종이 되면 이것이 **후반 공백을 더 키우는 방향**으로 작동한다. 그래서 craft 를
+   * 늘리기 **전에** 기준선을 찍어 둔다.
+   */
+  const craftOperable = ((): { ratio: number; capacityRatio: number; slotsOpenRatio: number } => {
+    let craft = 0;
+    let operable = 0;
+    let total = 0;
+    /*
+     * ⚠ **두 번째 메뉴 칸이 열린 craft 시설의 비율** (P2). 슬롯은 `menuSlotsForLevel` 이
+     * 시설 개선 단계에 묶어 놨다(레벨 3 에 2칸 · 5 에 3칸) — 그래서 레시피를 스물여섯 종
+     * 넣어도 **칸이 하나면 파는 것은 한 종**이다. 이 값이 0 이면 음식 축이 통째로
+     * 개선 축 뒤에 잠겨 있다는 뜻이고, 그건 콘텐츠가 아니라 **게이트**의 문제다.
+     */
+    let slotsOpen = 0;
+    for (const it of p.all()) {
+      const def = facilityDef(it.defId) as { menuMode?: string } | undefined;
+      total += p.capacityOf(it.handle);
+      if (def?.menuMode !== 'craft') continue;
+      craft++;
+      if (p.menuSlotCount(it.handle) >= 2) slotsOpen++;
+      if (p.menuOperabilityOf(it.handle, (id) => menus.hasRecipe(id)).operable) operable++;
+    }
+    const opCap = p.operationalCapacity((id) => menus.hasRecipe(id));
+    return {
+      ratio: craft === 0 ? 1 : operable / craft,
+      capacityRatio: total === 0 ? 1 : opCap / total,
+      slotsOpenRatio: craft === 0 ? 0 : slotsOpen / craft,
+    };
+  })();
+
   return {
     seed,
     weeks,
@@ -2550,6 +3232,25 @@ function runOne(seed: number, weeks: number, mapId = 'bukhan'): RunResult {
     menuPurchases,
     regularPurchases,
     regularAffinity,
+    outflowByWeek,
+    spendByKind,
+    commissionBusyByWeek,
+    commissionIdleWeeks,
+    commissionByCategory,
+    hireLatency,
+    staffGapWeeks,
+    staffNeedSteps,
+    staffWantedShortWeeks,
+    menuDeveloped,
+    shopBought,
+    commissionDone,
+    menuEnhanced,
+    menuSwapped,
+    upgradeBlockedByItem,
+    craftOperableRatio: craftOperable.ratio,
+    operationalRatio: craftOperable.capacityRatio,
+    craftSlotsOpenRatio: craftOperable.slotsOpenRatio,
+    persona,
     regularStages: Object.fromEntries(
       ['minji', 'sooyeon'].map((id) => [id, wishes.regularStatus(id)?.stage ?? 0]),
     ),
@@ -2659,6 +3360,11 @@ function main(): void {
      * 눈에는 안 잡혔다. 특화(3단계)가 이 값 뒤에 있으므로 같이 본다.
      */
     ['평균 개선 단계', runs.map((r) => r.avgLevel), (n) => n.toFixed(2)],
+    /*
+     * ⚠ **강화품이 개선 축을 조용히 죽였는지** (P5, H3 셋째 문턱). 개선 단계만 보면
+     * 「느려졌다」와 「막혔다」를 못 가른다 — 막힌 횟수를 나란히 둔다.
+     */
+    ['강화품 없어 개선 못 함', runs.map((r) => r.upgradeBlockedByItem), (n) => String(n)],
     ['콤보 발동', runs.map((r) => r.combos), (n) => String(n)],
     ['콤보 원점수(만족)', runs.map((r) => r.comboSatRaw), (n) => n.toFixed(0)],
     ['콤보 만족 보너스', runs.map((r) => r.comboSatApplied), (n) => `+${n.toFixed(1)}`],
@@ -2762,6 +3468,30 @@ function main(): void {
         `코스 ${share((r) => r.courseTotal).toFixed(0)}% · 총수입 중앙 ${fmt(totMed)}` +
         (CHARGE_ALL ? '  ⚠ --charge-all (P6 이전 대조군)' : ''),
     );
+    /*
+     * ⚠ **성향별로 갈라서 본다** (P2). 「별도 구매」는 메뉴 칸이 몇 개 열렸나에 붙어
+     * 있는데 칸을 노리는 것은 `revenue` 성향뿐이다 — 전체 중앙값은 나머지 세 성향의
+     * 값에 덮여 **음식 축이 죽은 것처럼** 보인다 (`2칸 열린 craft` 가 중앙 0% · 최대
+     * 100% 였던 것과 같은 착시). 성향은 판당 하나이므로 갈래마다 표본이 1/4 이다.
+     */
+    const byPersona = new Map<SimPersona, RunResult[]>();
+    for (const r of runs) {
+      const list = byPersona.get(r.persona) ?? [];
+      list.push(r);
+      byPersona.set(r.persona, list);
+    }
+    const parts = [...byPersona]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([name, list]) => {
+        const med = stats(
+          list.map((r) => {
+            const tot = r.admissionTotal + r.salesTotal + r.courseTotal;
+            return tot > 0 ? (r.salesTotal / tot) * 100 : 0;
+          }),
+        ).med;
+        return `${name} ${med.toFixed(0)}% (${list.length}판)`;
+      });
+    console.log(`  별도 구매 성향별 중앙: ${parts.join(' · ')}`);
   }
   /*
    * ── 후반 공백 (P3-E) ─────────────────────────────────────────────────
@@ -2923,10 +3653,136 @@ function main(): void {
     const ran = runs.filter((r) => r.specialtyTotal > 0).length;
     const sum = (k: FacilitySpecialty): number =>
       runs.reduce((a, r) => a + r.specialties[k], 0);
+    /*
+     * ⚠ **갈래별 판 수**를 같이 낸다 (P0). 합계만 보면 "갈래 쏠림"인지 "판 쏠림"인지
+     * 못 가른다 — 한 판이 한 갈래를 60번 고른 것과 60판이 한 번씩 고른 것이 같은 숫자다.
+     * 실측 평판 255 : 수익 6 : 회전 2 가 정확히 그 구분이 안 되던 상태였다.
+     */
+    const plays = (k: FacilitySpecialty): number =>
+      runs.filter((r) => r.specialties[k] > 0).length;
+    const thin = SIM_SPECIALTY_AXES.filter((k) => plays(k) * 5 < SEEDS);
     console.log(
       `특화 선택: ${ran}/${SEEDS}판에서 골랐다 · 합계 회전 ${sum('capacity')} · ` +
         `수익 ${sum('revenue')} · 평판 ${sum('reputation')} (판당 최대 ${tot.max}개)` +
         (tot.max === 0 ? '  ⚠ 특화가 헤드리스에서 안 쓰인다 — 실제 판과 갈라진다' : ''),
+    );
+    console.log(
+      `   갈래별 판 수: 회전 ${plays('capacity')} · 수익 ${plays('revenue')} · ` +
+        `평판 ${plays('reputation')} / ${SEEDS}판` +
+        (thin.length > 0
+          ? `  ⚠ ${thin.join('·')} 갈래가 20% 미만 — 그 갈래는 밸런싱에 안 실려 있다`
+          : ''),
+    );
+  }
+  {
+    /*
+     * 투자 구성 (P0) — **건설만 세는 옛 줄로는 새 축의 몫이 안 보인다.**
+     * 아직 없는 축은 0 이고, 그 0 이 곧 기준선이다.
+     */
+    const kindTotal = (k: SimSpendKind): number =>
+      runs.reduce((a, r) => a + r.spendByKind[k], 0);
+    const grand = SIM_SPEND_KINDS.reduce((a, k) => a + kindTotal(k), 0);
+    const pct = (k: SimSpendKind): string =>
+      grand === 0 ? '0%' : `${Math.round((kindTotal(k) / grand) * 100)}%`;
+    const outMed = stats(runs.map((r) => r.outflowByWeek.reduce((a, b) => a + b, 0)));
+    console.log(
+      `투자 구성: 건설 ${pct('building')} · 개선 ${pct('upgrades')} · ` +
+        `메뉴 ${pct('menuDevelopment')} · 수배 ${pct('commission')} · 구입 ${pct('shopping')}` +
+        ` · 판당 총 ${fmt(outMed.med)}`,
+    );
+    /*
+     * ⚠ **구입 %만 보면 「샀나」를 못 가른다** — 장비 하나가 비싸서 한 번만 사도 %가 뜬다.
+     * 횟수를 같이 낸다. 0 이면 새 출구가 헤드리스에 아예 안 재진 것이다.
+     */
+    const bought = stats(runs.map((r) => r.shopBought));
+    console.log(
+      `  구입 횟수: 중앙 ${bought.med}회 · p75 ${bought.p75} · 최대 ${bought.max}` +
+        (bought.max === 0 ? '  ⚠ 봇이 아무것도 안 산다 — 상점이 헤드리스에 안 재진다' : ''),
+    );
+  }
+  {
+    /*
+     * 후반 공백을 **전 지출**로 다시 잰다 (P0).
+     *
+     * ⚠ 바로 위 `dryRatioIn` 은 `buildSpendByWeek` 만 본다. 그것은 그대로 두고 여기에
+     * 나란히 둔다 — 둘이 갈라지는 폭이 곧 새 축이 메운 몫이다. 한쪽으로 합치면
+     * "축을 넣었더니 건설 공백이 줄었다"와 "다른 걸 할 수 있게 됐다"를 못 가른다.
+     */
+    const from = Math.floor(WEEKS / 2);
+    const dryAll = stats(
+      runs.map((r) => {
+        const a = r.outflowByWeek.slice(from);
+        return a.length === 0 ? 0 : (a.filter((v) => v === 0).length / a.length) * 100;
+      }),
+    );
+    /*
+     * ⚠ **0원 세기만으로는 안 된다** (P0 실측). 봇의 개선 루프가 매주 돌아 후반 0원 주가
+     * 구조적으로 0% 다 — 그건 게임이 아니라 봇의 습관이다. 그래서 **얼마나 쓰는가**를
+     * 같이 낸다: "지출이 있는가"가 아니라 금액이 움직여야 새 축이 실린 것이다.
+     */
+    const lateSpend = stats(
+      runs.map((r) => {
+        const a = r.outflowByWeek.slice(from);
+        return a.length === 0 ? 0 : a.reduce((x, y) => x + y, 0) / a.length;
+      }),
+    );
+    console.log(
+      `후반 공백(전 지출): ${from + 1}~${WEEKS}주 아무 지출도 없는 주 ` +
+        `${Math.round(dryAll.med)}% (p25 ${Math.round(dryAll.p25)} · p75 ${Math.round(dryAll.p75)})` +
+        ` · 주당 지출 중앙 ${fmt(lateSpend.med)}`,
+    );
+  }
+  {
+    /* 수배 큐 (P4~) — 지금은 축이 없어 전부 0 이고, 그 0 이 기준선이다 */
+    const idle = stats(runs.map((r) => r.commissionIdleWeeks));
+    const catTotal = (k: string): number =>
+      runs.reduce((a, r) => a + (r.commissionByCategory[k] ?? 0), 0);
+    const latAll = runs.flatMap((r) => r.hireLatency);
+    const lat = latAll.length > 0 ? `${stats(latAll).med}주` : '—';
+    const gap = stats(runs.map((r) => r.staffGapWeeks));
+    console.log(
+      /*
+       * ⚠ 분류 이름은 **데이터와 같아야 한다** (`supply`/`publicity`/`special`).
+       * 예전 이름(`procure`/`promote`)은 P4 전에 손으로 적어 둔 것이라 언제나 0 이었다 —
+       * 「검사가 조용히 통과」의 계측 판본이다.
+       */
+      `수배: 큐 빈 주 중앙 ${idle.med}/${WEEKS} · 완료 중앙 ${stats(runs.map((r) => r.commissionDone)).med}건 · ` +
+        `조달 ${catTotal('supply')} · 홍보 ${catTotal('publicity')} · 특수 ${catTotal('special')}` +
+        ` · 구인 ${catTotal('hire')} · 리드타임 중앙 ${lat} · 직원 구멍 중앙 ${gap.med}/${WEEKS}주` +
+        ` · 필요 인원 계단 중앙 ${stats(runs.map((r) => r.staffNeedSteps)).med}회` +
+        ` · **목표 미달 중앙 ${stats(runs.map((r) => r.staffWantedShortWeeks)).med}주**` +
+        (stats(runs.map((r) => r.commissionDone)).max === 0
+          ? '  ⚠ 봇이 아무것도 안 맡긴다 — 수배가 헤드리스에 안 재진다'
+          : ''),
+    );
+  }
+  {
+    /* craft 운영 가능성 (P2 가드) — 빈 그릇은 정원에서 빠진다 */
+    const ratio = stats(runs.map((r) => r.craftOperableRatio));
+    const opCap = stats(runs.map((r) => r.operationalRatio));
+    const dev = stats(runs.map((r) => r.menuDeveloped));
+    const grow = stats(runs.map((r) => r.menuEnhanced));
+    const swap = stats(runs.map((r) => r.menuSwapped));
+    const slot = stats(runs.map((r) => r.craftSlotsOpenRatio));
+    console.log(
+      `메뉴 개발: 발견 중앙 ${dev.med}종/판 (최대 ${dev.max}) · ` +
+        `강화 중앙 ${grow.med}종 · 교체 중앙 ${swap.med}회 · ` +
+        /*
+         * ⚠ **중앙값만 보면 이 축이 영원히 0% 로 보인다.** 메뉴 칸을 노리는 것은 `revenue`
+         * 성향뿐인데 성향은 판당 하나라 24판 중 여섯 남짓이다 — 나머지 열여덟 판의 0 이
+         * 중앙값을 덮는다. 「합계로 재고 다수 조건도 같이 볼 것」(K47-③)을 분위에 적용한다.
+         */
+        `2칸 열린 craft 중앙 ${(slot.med * 100).toFixed(0)}% · ` +
+        `p75 ${(slot.p75 * 100).toFixed(0)}% · 최대 ${(slot.max * 100).toFixed(0)}%` +
+        (slot.max === 0 ? '  ⚠ 어느 판에서도 메뉴 칸이 안 열린다 — 음식 축이 개선 축 뒤에 잠겼다' : '') +
+        (dev.med === 0 ? '  ⚠ 봇이 메뉴를 안 만든다 — 음식 축이 헤드리스에 안 재진다' : '') +
+        // ⚠ 「넓힌다」와 「키운다」는 다른 축이다 — 하나만 돌면 나머지가 안 재진다
+        (grow.med === 0 ? '  ⚠ 봇이 요리를 안 키운다 — 강화 사슬이 헤드리스에 안 재진다' : ''),
+    );
+    console.log(
+      `메뉴 운영: craft 운영 가능 중앙 ${(ratio.med * 100).toFixed(0)}% · ` +
+        `운영 정원 / 총 정원 ${(opCap.med * 100).toFixed(0)}%` +
+        (ratio.med < 0.85 ? '  ⚠ 빈 그릇이 정원을 깎고 있다' : ''),
     );
   }
   {

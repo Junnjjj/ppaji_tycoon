@@ -17,6 +17,8 @@ import { evaluateCombos } from './combos.js';
 import type { PlacementGrid } from './placement.js';
 import type { WeekSummary } from './week.js';
 import type { GroupId } from './groups.js';
+/* 표식 슬롯 수 — 단골 방문 상한이 여기서 나온다 (Q7) */
+import { MAX_GUEST_MARKS } from './guests.js';
 import type { MenuPurchase, RegularVisit, TasteTag } from './menu.js';
 
 export interface WishDef {
@@ -105,6 +107,14 @@ export interface OpenWish {
   detail: string;
 }
 
+/**
+ * 한 주에 오는 단골 수의 상한 (Q7).
+ *
+ * **지도 표식 슬롯 수에서 유도한다** (`MAX_GUEST_MARKS`) — 동시에 3개까지만 뜨므로
+ * 그보다 많이 부르면 부른 만큼 안 보인다. 두 상한이 어긋나면 한쪽이 거짓말이 된다.
+ */
+export const REGULAR_VISITS_PER_WEEK = MAX_GUEST_MARKS;
+
 export class WishStore {
   private exp: Partial<Record<GroupId, number>> = {};
   private readonly active = new Set<string>();
@@ -133,22 +143,36 @@ export class WishStore {
    */
   regularVisitsForWeek(week: number): RegularVisit[] {
     if (REGULAR_CHARACTERS.length === 0) return [];
+    /*
+     * ── Q7(G2): 단골이 더 자주 온다 ──────────────────────────────────────
+     *
+     * ⚠ 실측(2026-08-28): 예전에는 **주당 정확히 1명**만 왔다 (첫 후보에서 early return).
+     * 그래서 손님 15명 중 **이름 있는 손님이 0명**인 주가 흔했고, P7 의 지도 표식이
+     * **사실상 안 뜨는 기능**이었다 (사용자 지적: *"말풍선 단 손님이 안 보이고"*).
+     *
+     * 이제 **사슬이 안 끝난 인물이 전부** 온다 — 다만 **`MAX_GUEST_MARKS` 만큼**만.
+     * ⚠ 상한을 새로 발명하지 않았다: 지도에 동시에 뜰 수 있는 표식이 3개이므로
+     * 그보다 많이 부르면 **부른 만큼 안 보인다.** 두 상한이 어긋나면 한쪽이 거짓말이 된다.
+     *
+     * ⚠ 순서는 여전히 **주차로 회전**한다 — 인물이 늘어 상한을 넘겨도 특정 인물이
+     * 영영 안 오는 일이 없다 (상점 진열의 「창을 민다」와 같은 이유).
+     */
+    const open: RegularVisit[] = [];
     for (let offset = 0; offset < REGULAR_CHARACTERS.length; offset++) {
       const idx = (Math.max(1, week) - 1 + offset) % REGULAR_CHARACTERS.length;
       const char = REGULAR_CHARACTERS[idx] as WishCharacter;
       const status = this.regularStatus(char.id);
       if (!status || status.done || !char.regular) continue;
-      return [
-        {
-          characterId: char.id,
-          group: char.group,
-          requestedRecipeId: status.request.recipeId,
-          prefer: [...char.regular.prefer],
-          avoid: [...char.regular.avoid],
-        },
-      ];
+      open.push({
+        characterId: char.id,
+        group: char.group,
+        requestedRecipeId: status.request.recipeId,
+        prefer: [...char.regular.prefer],
+        avoid: [...char.regular.avoid],
+      });
+      if (open.length >= REGULAR_VISITS_PER_WEEK) break;
     }
-    return [];
+    return open;
   }
 
   /** 요청한 메뉴를 실제 agent가 산 사건만 친밀도와 다음 요청으로 바꾼다. */

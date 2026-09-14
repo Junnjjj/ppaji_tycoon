@@ -18,6 +18,11 @@ export type SfxCue =
   | 'sfx/exam-fail' // 심사 탈락 (K42)
   | 'sfx/discover' // 숨은 콤보 발견 (K43)
   | 'sfx/course-trial' // 코스 시험 운행 시작
-  | 'sfx/course-record'; // 코스 시험 신기록
+  | 'sfx/course-record' // 코스 시험 신기록
+  // ── P4~P7 의 새 축 ──────────────────────────────────────────────────────
+  | 'sfx/agency-start' // 수배 발주 (P4)
+  | 'sfx/agency-done' // 수배 도착 (P4)
+  | 'sfx/buy' // 상점 구입 (P3)
+  | 'sfx/equip'; // 메뉴를 걸었다 (P2)
 
 export type MusicId = 'bgm/summer' | 'bgm/offseason';

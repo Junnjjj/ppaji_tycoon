@@ -80,6 +80,33 @@
   --sky-chip: linear-gradient(#5b9ada, #3f7ecb);
   --sky-edge-top: #7fb5e8;
   --sky-edge-bottom: #2b5a94;
+  /*
+   * **하단 층의 총 높이** — 바(64) + 티커 띠(74 오프셋 + 26 높이 = 100 까지).
+   * 위에 얹히는 표면(코스 패널·확정 바)은 이 값을 `bottom` 으로 쓴다.
+   *
+   * ⚠ 예전에는 세 곳이 **`56px` 를 손으로** 적고 있었다. P1 이 바를 56 → 64, 티커를
+   * 56 → 74 로 올렸는데 그 셋은 안 따라와서, **코스 패널이 티커를 통째로 덮었다**
+   * (실측 패널 683~796 · 티커 752~778). 숫자를 세 곳에 적으면 반드시 갈라진다.
+   */
+  --bottom-stack: 100px;
+  /*
+   * 시트 머리의 리듬 (P8) — **한 값이다.**
+   *
+   * ⚠ 실측으로 셋이었다: 건설·상점·엔딩 58 · 도감 46 · 목표/경영 31(중첩 머리).
+   * 머리는 내용(탭이 있나·닫기뿐인가)에 따라 자라던 것이라, 화면마다 제목 줄의 높이가
+   * 달라 "정형화되어 있지 않다"로 읽혔다 (사용자 지적, 2026-08-27). 44px 터치 타깃 +
+   * 위아래 7px 패딩에서 유도한 값이고, 내용이 더 크면 `min-height` 라 밀려 커진다.
+   */
+  --sheet-head: 58px;
+  /*
+   * 순차 등장의 박자 (P8). 요일 7칸 × 46ms = **322ms** 로 결산 첫 화면 안에서 끝난다 —
+   * 더 길면 「기다린다」가 되고, 더 짧으면 순서가 안 읽혀 그냥 한꺼번에 뜬 것처럼 보인다.
+   */
+  --stagger: 46ms;
+  --dur-rise: 260ms;
+  /** 코스 화면의 프리셋·장비 칸 폭 — 전부 같아야 줄이 정렬돼 보인다 */
+  --course-chip: 92px;
+
   /* 트레이 안 항목 구분선 — 캡슐을 쪼개는 대신 한 면 위에 금을 긋는다 */
   --tray-divider: rgb(160 110 50 / 35%);
 
@@ -234,13 +261,46 @@
   --safe-t: env(safe-area-inset-top);
   /* 목표 밴드 — 폰 세로 393px 에서 좌우 8px 을 뺀 폭, 높이는 카드 한 장 */
   --goal-col: 377px;
+  /*
+   * ── 타이포 스케일 (P1.5-A) ────────────────────────────────────────────
+   *
+   * 실측(2026-08-27): HUD 의 `font-size` 가 **12단**이었고 그중 **63%가 12~13px** 이었다.
+   * 모든 글자가 하한에 붙어 있으니 화면이 **어디를 봐야 할지 안 정해 준다** —
+   * 「매력적이지 않다」의 1순위가 색이 아니라 여기였다 (색상환 9/12칸 · 채도 0.55 ·
+   * box-shadow 44곳으로 색과 재질은 이미 있었다).
+   *
+   * 인접 단 비율 **1.25** 로 벌린다. 12 를 바닥으로 12 · 15 · 19 · 23 · 29 · 36.
+   * ⚠ 12px 하한은 그대로다 — 이 스케일은 **위를 올리는 것**이지 아래를 내리는 게 아니다.
+   * ⚠ 여덟째 단을 더하지 말 것. 단이 늘어나는 순간 스케일이 아니라 목록이 된다
+   * (`check-ui-surface.mjs` 가 ≤ 8단을 지킨다).
+   */
+  --fs-tiny: 12px;
+  --fs-body: 15px;
+  --fs-lead: 19px;
+  --fs-title: 23px;
+  --fs-num: 29px;
+  --fs-hero: 36px;
   --goal-band: 64px;
   /*
    * 코스 독 천장 (Task 6) — **토스트 리프트가 같은 자를 쓴다.**
    * 두 곳에 따로 적으면 보조 채널이 언젠가 본체(적용 완료 영수증)를 덮는다.
    * 적용 완료만 더 높다: 영수증 네 줄이 들어가야 하고, 그때는 조작할 지도가 없다.
    */
-  --course-dock-cap: 112px;
+  /*
+   * 코스 독의 천장 — **내용에서 유도한다** (P8).
+   *
+   *   제목 27 + 지표 4칸 42 + 버튼 44(터치 타깃 하한) + 패딩 10 + 간격 8 = **131**
+   *
+   * ⚠ 옛 값 **112px 는 처음부터 안 맞았다** — 자연 높이 126 을 14px 잘라 내고 있었고,
+   * `overflow: visible` 이라 잘린 만큼이 **상자 밖으로 새어** 하단 바 자리를 덮었다.
+   * 바가 숨는 모드(`data-home-input='off'`)에서 독이 바닥으로 내려오자 그 넘침이
+   * **화면 밖으로 나가 버튼이 잘려 보였다** (실측 스크린샷).
+   * 지도 예산도 확인했다 — 헤더 80 + 독 132 = 212 → 지도 **640px** ≥ 620 계약.
+   *
+   * ⚠ 천장은 여전히 **천장이지 목표가 아니다.** 줄을 더할 일이 생기면 여기를 늘리지 말고
+   * 무엇을 뺄지부터 고를 것 — 이제 게이트가 「자연 높이 ≤ 천장」을 재므로 늘리면 빨간불이다.
+   */
+  --course-dock-cap: 132px;
   --course-dock-cap-applied: 176px;
 }
 
@@ -784,7 +844,7 @@ body {
     linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
   box-shadow: var(--sk-lift), var(--sk-inset);
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 600;
   text-shadow: var(--sk-emboss);
   white-space: nowrap;
@@ -822,7 +882,7 @@ body {
     linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
   box-shadow: var(--sk-lift), var(--sk-inset);
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 700;
   text-shadow: var(--sk-emboss);
   white-space: nowrap;
@@ -853,7 +913,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: var(--fs-lead);
   border: 1px solid transparent;
   border-radius: 9px;
   background:
@@ -888,18 +948,45 @@ body {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   padding: 2px 10px 2px 4px;
   border-right: 1px solid var(--tray-divider);
 }
 
+/*
+ * 표식 자리 (P1.5-A 배선 · P1.5-B 반입). 크기·정렬을 **여기가 소유**하므로 글리프 폭
+ * 편차가 레이아웃을 안 흔든다 — 이모지를 직접 넣던 자리의 실제 문제였다.
+ *
+ * 그림이 걸리면 `data-art='on'` 이 붙고 배경으로 그린다. ⚠ 글리프 텍스트는 **남겨 둔다** —
+ * 배경이 못 뜨면 자리가 비는데, 그건 「아이콘이 없다」보다 나쁘다.
+ */
+.kicon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15em;
+  height: 1.15em;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.kicon[data-art='on'] {
+  /* ⚠ 기본값을 준다 — `--ticker-progress` 와 같은 **데이터 토큰**이라 `:root` 에 선언이 없다 */
+  background-image: var(--icon-art, none);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* 그림이 떴으면 글리프는 겹치면 안 된다 — 지우지 않고 감춘다 */
+  color: transparent;
+}
+
 .kico-s {
-  font-size: 14px;
+  font-size: var(--fs-body);
 }
 
 .kstat-v {
   font-weight: 800;
-  font-size: 13px;
+  font-size: var(--fs-body);
 }
 
 /*
@@ -916,7 +1003,7 @@ body {
   border-radius: 8px;
   box-shadow: var(--sk-inset);
   color: var(--text-on-solid);
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 700;
   text-shadow: var(--sk-emboss-on-solid);
   white-space: nowrap;
@@ -957,16 +1044,100 @@ body {
  * 가로에서는 `--goal-col` 로 캡한다 — 852px 현수막은 화면의 14%p 를 먹고 읽기도 나쁘다
  * (K47-① 이 헤더에서 이미 배운 것: 전폭 밴드는 폭이 넓어질수록 비싸지기만 한다).
  */
-.kgoals {
+/*
+ * 상태 밴드 (P1) — **하단 바 안**으로 들어왔다.
+ *
+ * 예전에는 티커 위에 뜨는 전용 밴드(64px)였다. 하단 바가 `메뉴`·`건설` 둘만 갖고 있어서
+ * 그 옆이 비어 있었는데, 버튼을 밴드로 옮기면서 이 자리가 났다 — 밴드를 하나 없애고
+ * 하나를 합쳐 **지도가 74% → 81.5%** 로 넓어진다.
+ */
+/*
+ * ── 오른쪽 밴드 (P1) ──────────────────────────────────────────────────────
+ *
+ * `MENU` 로 여닫는 목적지 일곱 칸. **평소엔 접혀 있다** — 상시로 띄우면 오른쪽 48px 를
+ * 영구히 먹어 지도가 지금보다 좁아진다 (실측 71.7% vs 81.5%).
+ *
+ * ⚠ 전환은 `transform`/`opacity` 만 쓴다. 레이아웃 속성을 애니메이트하면 프레임이 떨어진다.
+ */
+.kband {
   position: fixed;
   z-index: 9;
-  left: 8px;
   right: 8px;
-  max-width: var(--goal-col);
-  /* 중앙 티커의 44px 손가락 면과 1px도 겹치지 않는다 (시각 띠는 그대로 26px). */
-  bottom: calc(92px + var(--safe-b));
-  height: var(--goal-band);
+  bottom: calc(104px + var(--safe-b)); /* 티커(74+26) 위 — 밴드가 소식 띠를 덮지 않는다 */
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  transition:
+    transform var(--dur-ui) var(--ease),
+    opacity var(--dur-ui) var(--ease);
+}
+
+.kband[data-band-open='off'] {
+  /*
+   * 안 보이는 것과 없는 것은 다르다 — 손가락도 **보조기술도** 안 닿아야 한다.
+   * ⚠ `opacity: 0` 만으로는 부족했다: rect 가 살아 있어 「상시 컨트롤」 감사가 일곱 칸을
+   * 계약 밖 컨트롤로 셌다 (실측). `display: none` 은 전환을 죽이므로 `visibility` 를 쓴다.
+   */
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateX(12px);
+}
+
+.kband-cell {
+  /*
+   * ⚠ **글자가 세로로 쪼개지면 안 된다** (실측: `건/설` · `상/점` · `목/표` · `정/보`).
+   * 원인은 폭이 아니라 **`.kbtn` 의 좌우 패딩 13px** 이었다 — 44px 칸에서 글자 자리가
+   * 18px 만 남아 12px 한글 두 자(24px)가 줄바꿈됐다.
+   *
+   * 그래서 **폭은 내용이 정하고** 44px 는 하한으로만 둔다. 터치 타깃은 그대로 44px 이고,
+   * 두 자짜리 이름이 한 줄에 선다.
+   */
+  min-width: var(--tap);
+  width: auto;
+  height: var(--tap);
+  padding: 0 6px;
+  white-space: nowrap;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+}
+
+.kband-label {
+  font-size: var(--fs-tiny);
+  font-weight: 800;
+  line-height: 1;
+}
+
+/*
+ * 잠긴 칸은 **숨기지 않고 `?` 로 남는다.** 가림막이 아니라 예고이고, 그것이 이 게임의
+ * 튜토리얼이다. ⚠ `disabled` 로 만들지 않는다 — 눌러서 여는 방법을 들을 수 있어야 한다.
+ */
+.kband-cell[data-band-locked='on'] {
+  background: var(--panel-sunk) padding-box,
+    linear-gradient(var(--sk-edge-top), var(--sk-edge-bottom)) border-box;
+  color: var(--text-dim);
+  box-shadow: var(--sk-inset);
+}
+
+.kband-cell[data-band-locked='on'] .kband-label {
+  font-size: var(--fs-lead);
+}
+
+/* 가로에서는 두 열로 접는다 — 일곱 칸 288px 는 393px 높이의 73% 다 */
+@media (orientation: landscape) and (max-height: 460px) {
+  .kband {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.kgoals {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
   gap: 6px;
 }
 
@@ -1001,8 +1172,14 @@ body {
   transition: transform var(--dur-micro) var(--ease);
 }
 
+/*
+ * ⚠ **바 안에 들어가야 한다** (P1). 예전 전용 밴드 시절의 64px(`--goal-band`)를 그대로
+ * 두었더니 56px 바를 위아래로 넘쳐, 그 위 3px 이 티커의 44px hit surface 와 겹쳤다
+ * (실측 칩 793~857 vs 바 796~852). 겹침을 `z-index` 로 덮으면 「소유권은 한 값이
+ * 정한다」가 무너지므로 **높이로** 푼다 — 44px 는 터치 하한 그대로다.
+ */
 .kgoal-primary .kgoal {
-  min-height: var(--goal-band);
+  min-height: var(--tap);
   height: 100%;
   padding-inline: 10px;
 }
@@ -1023,7 +1200,7 @@ body {
 
 .kgoal-ico {
   flex: 0 0 auto;
-  font-size: 20px;
+  font-size: var(--fs-title);
   line-height: 1;
 }
 
@@ -1039,7 +1216,7 @@ body {
 
 /* 카이로의 직원 메시지 바처럼 "이건 지시다"를 먼저 말한다 */
 .kgoal-kicker {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 800;
   color: var(--text-dim);
   line-height: 1.2;
@@ -1047,7 +1224,7 @@ body {
 }
 
 .kgoal-label {
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 800;
   color: var(--text);
   line-height: 1.25;
@@ -1057,7 +1234,7 @@ body {
 }
 
 .kgoal-detail {
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 600;
   color: var(--text-dim);
   line-height: 1.2;
@@ -1070,7 +1247,7 @@ body {
 .kgoal-go {
   flex: 0 0 auto;
   color: var(--text-dim);
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 900;
 }
 
@@ -1080,7 +1257,7 @@ body {
 
 /* 메뉴 상단의 판 설정 줄 — 목표란에서 옮겨 온 맵·시나리오 이름 */
 .kcontext {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   color: var(--text-dim);
   padding: 2px 4px 6px;
 }
@@ -1095,10 +1272,18 @@ body {
   z-index: 10;
   display: flex;
   align-items: center;
-  /* 둘뿐이라 좌우로 벌린다 (K47-②) — 왼쪽에 몰아 두면 오른손 엄지가 건설에 안 닿는다 */
+  /*
+   * 상태 밴드가 남는 폭을 먹고 `MENU` 가 오른쪽 끝에 붙는다 (P1).
+   * 오른손 엄지가 가장 잘 닿는 자리가 오른쪽 아래이고, 밴드가 그 위로 펼쳐진다.
+   */
   justify-content: space-between;
   gap: 6px;
-  height: calc(56px + var(--safe-b));
+  /*
+   * 56 → **64px** (P1). 상태 밴드가 바 안으로 들어오면서 세 줄(할 일 · 이름 · 상세)이
+   * 59px 를 요구한다. 56 이면 위아래로 3px 씩 넘쳐 티커의 44px hit surface 와 겹친다.
+   * ⚠ 그래도 **전체는 줄었다** — 옛 구조는 전용 목표 밴드 64 + 바 56 = 120px 이었다.
+   */
+  height: calc(64px + var(--safe-b));
   padding: 0 8px var(--safe-b);
   background: var(--bar-bg);
   border-top: 1px solid var(--panel-border);
@@ -1126,7 +1311,7 @@ body {
   box-shadow: var(--sk-lift), var(--sk-inset);
   color: var(--text);
   font-family: inherit;
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 700;
   text-shadow: var(--sk-emboss);
   cursor: pointer;
@@ -1191,7 +1376,7 @@ body {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: calc(56px + var(--safe-b));
+  bottom: calc(var(--bottom-stack) + var(--safe-b));
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -1233,12 +1418,56 @@ body {
 
 /*
  * 시트는 하단 바 **위에 얹는 것이 아니라 그 자리를 대신한다** (계획 §1.2).
- * 소유권을 잃은 바는 사라지므로, 시트가 그 56px 를 그대로 넘겨받지 않으면
- * 화면 아래에 죽은 띠가 남는다.
+ * 소유권을 잃은 바는 사라지므로, 시트가 그 자리(`--bottom-stack`)를 그대로 넘겨받지
+ * 않으면 화면 아래에 죽은 띠가 남는다.
+ *
+ * ⚠ **`.ksheet` 만 넘겨받고 있었다** (P8 실측). 코스 독·확정 바는 `data-home-input='off'`
+ * 에서도 `bottom: var(--bottom-stack)` 에 붙어 있어 아래에 **빈 띠 100px** 가 남았다
+ * (바·티커가 `display: none` 인데 그 자리를 아무도 안 쓴다). 셋이 같은 자리를 쓰므로
+ * 규칙도 셋이 같이 받는다.
  */
-[data-home-input='off'] .ksheet {
+[data-home-input='off'] .ksheet,
+[data-home-input='off'] .kcourse,
+[data-home-input='off'] .kconfirm {
   bottom: 0;
   padding-bottom: var(--safe-b);
+}
+
+/*
+ * 바텀시트 손잡이 (P8) — **실제로 내려서 닫힌다** (`kairo-sheet-handle.ts`).
+ *
+ * ⚠ 보이기만 하는 손잡이를 만들지 말 것 — P7 의 「슬롯이 있다와 슬롯이 돈다는 다르다」와
+ * 같은 자리다. 당길 수 없는 손잡이는 「당길 수 있다」고 거짓말한다.
+ *
+ * 띠 자체는 4px 이지만 **잡는 면은 22px** 이다 (머리 위 여백을 다 먹는다) —
+ * 26px 티커 띠에 44px hit surface 를 준 것과 같은 수법이다.
+ */
+.ksheet-grip {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.ksheet-grip::before {
+  content: '';
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--tray-divider);
+}
+
+.ksheet-grip:active {
+  cursor: grabbing;
+}
+
+/* 끄는 동안은 전환을 끈다 — 안 그러면 손가락보다 늦게 따라온다 */
+.ksheet.dragging,
+.kcourse.dragging {
+  transition: none;
 }
 
 .ksheet-head {
@@ -1247,6 +1476,8 @@ body {
   align-items: center;
   gap: 8px;
   padding: 7px 8px;
+  /* P8 — 머리는 시트마다 같은 높이다. 탭이 없는 시트(도감)가 46px 로 낮았다 */
+  min-height: var(--sheet-head);
 }
 
 /* 제목은 밀리고 탭·닫기가 자리를 갖는다 */
@@ -1272,7 +1503,7 @@ body {
   flex: 0 0 auto;
   min-height: var(--tap);
   padding: 0 16px;
-  font-size: 13px;
+  font-size: var(--fs-body);
   /*
    * ⚠ v1 의 `.tab-btn.on` 은 `linear-gradient(#2b4a63,#1d3648)` — **어두운 팔레트 전용**
    * 이다 (마커 위라 정적 검사가 안 본다). 밝은 팔레트에서는 선택된 탭만 시커멓게 남는다
@@ -1304,7 +1535,7 @@ body {
 
 .ksheet-title {
   color: var(--text);
-  font-size: 18px;
+  font-size: var(--fs-lead);
   font-weight: 900;
 }
 
@@ -1321,7 +1552,7 @@ body {
 .ksheet-group {
   margin: 9px 0 4px;
   color: var(--text-dim);
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 700;
 }
 
@@ -1338,7 +1569,7 @@ body {
   gap: 10px;
 }
 .kunlock-title {
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 800;
   color: var(--accent);
 }
@@ -1348,7 +1579,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 34px;
+  font-size: var(--fs-num);
 }
 .kunlock-thumb canvas {
   max-width: 72px;
@@ -1356,7 +1587,7 @@ body {
   image-rendering: pixelated;
 }
 .kunlock-name {
-  font-size: 17px;
+  font-size: var(--fs-lead);
   font-weight: 800;
 }
 .kunlock-actions {
@@ -1397,7 +1628,7 @@ body {
 .kcar-nav {
   min-width: var(--tap);
   flex: 0 0 auto;
-  font-size: 14px;
+  font-size: var(--fs-body);
 }
 .kcarousel {
   display: flex;
@@ -1453,7 +1684,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: var(--fs-title);
   color: var(--text-dim);
   overflow: hidden;
 }
@@ -1463,7 +1694,7 @@ body {
   image-rendering: pixelated;
 }
 .kcard-name {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 700;
   text-align: center;
   line-height: 1.15;
@@ -1479,7 +1710,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   line-height: 1.2;
 }
 .kcard-cost {
@@ -1498,7 +1729,7 @@ body {
   white-space: nowrap;
 }
 .kcard-sub {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   color: var(--text-dim);
   text-align: center;
   line-height: 1.2;
@@ -1506,7 +1737,7 @@ body {
 /* 잠김 이유는 카드에서 **가장 긴 문장**이고 가장 의미 있는 문장이다 (UI v4 §1.2-③) */
 .kcard-block,
 .kcard-unlock {
-  font-size: 13px;
+  font-size: var(--fs-body);
   text-align: center;
   line-height: 1.2;
 }
@@ -1585,12 +1816,12 @@ body {
 }
 
 .kitem-name {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 700;
 }
 
 .kitem-sub {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   color: var(--text-dim);
 }
 
@@ -1602,7 +1833,7 @@ body {
 .kquests {
   margin-top: 12px;
   color: var(--text-dim);
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   line-height: 1.45;
 }
 
@@ -1633,6 +1864,33 @@ body {
   .kticker-line.fresh {
     animation: none;
   }
+
+  /* 밴드의 슬라이드 인 (P1) — ⚠ 반드시 **이 블록 안**이다. 별도 블록은 정적 검사가 안 읽는다 */
+  .kband {
+    transition: none;
+  }
+
+  /*
+   * 결산의 요일 막대 순차 등장 (P8) — ⚠ 같은 이유로 **이 블록 안**이다.
+   * 막대는 그대로 서 있고 올라오는 동작만 없앤다 (숫자·높이는 그대로 읽힌다).
+   */
+  .kday {
+    animation: none;
+  }
+
+  /* 등급 도장 (P8) — 찍히는 동작만 없앤다. 도장 자체는 그대로 있다 */
+  .kgrade-stamp {
+    animation: none;
+  }
+
+  /*
+   * 회수 줄 (§2.6) — **줄이 흘러드는 것만** 없앤다. 숫자는 TS 가 카운트업을 건너뛰고
+   * 최종값을 바로 쓰므로 여기서 `animation: none` 이면 줄이 즉시 제자리에 뜬다.
+   * ⚠ 줄 자체를 숨기면 이 줄의 존재 이유가 사라진다 (FX 계약과 같은 규칙).
+   */
+  .kevent-delta {
+    animation: none;
+  }
 }
 
 /* ── 배치 확정 바 (K32) ──────────────────────────────────────────────────
@@ -1648,7 +1906,7 @@ body {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: calc(56px + var(--safe-b));
+  bottom: calc(var(--bottom-stack) + var(--safe-b));
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -1669,7 +1927,7 @@ body {
 }
 
 .kconfirm .place-btn {
-  font-size: 16px;
+  font-size: var(--fs-lead);
 }
 
 /*
@@ -1705,7 +1963,7 @@ body {
   min-width: 0;
   overflow: hidden;
   color: var(--text);
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 800;
   text-overflow: ellipsis;
   text-shadow: var(--sk-emboss);
@@ -1716,7 +1974,7 @@ body {
 .kconfirm-repeat {
   flex: 0 0 auto;
   min-height: var(--tap);
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 800;
 }
 
@@ -1747,7 +2005,7 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  font-size: 22px;
+  font-size: var(--fs-title);
 }
 .kconfirm-thumb canvas {
   max-width: 48px;
@@ -1762,17 +2020,17 @@ body {
 }
 .kconfirm-name {
   overflow: hidden;
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 800;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .kconfirm-cost {
   color: var(--text-dim);
-  font-size: 13px;
+  font-size: var(--fs-body);
 }
 .kconfirm-check {
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 700;
   line-height: 1.2;
 }
@@ -1820,7 +2078,7 @@ body {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: calc(56px + var(--safe-b));
+  bottom: calc(var(--bottom-stack) + var(--safe-b));
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -1849,12 +2107,26 @@ body {
   gap: 2px;
   padding: 5px 8px;
   /*
-   * ⚠ 이건 **천장이지 목표가 아니다.** 자연 높이가 이 값에 닿으면 내용이 상자 밖으로
-   * 새어 하단 바를 덮는다 (`overflow` 는 visible 이다). 줄을 더할 일이 생기면
-   * 여기를 늘리지 말고 무엇을 뺄지부터 고를 것 — 조작 지도 620px 계약이 그 반대편이다.
+   * ⚠ 이건 **천장이지 목표가 아니다.** 자연 높이가 이 값을 넘으면 넘친 만큼이 상자 밖으로
+   * 새어 나간다 (`overflow` 는 visible 이다). 줄을 더할 일이 생기면 여기를 늘리지 말고
+   * 무엇을 뺄지부터 고를 것 — 조작 지도 620px 계약이 그 반대편이다.
+   *
+   * ⚠ 이 주석은 **그 상태를 예언해 두었는데 아무도 재지 않았다** (P8 실측: 자연 126 vs
+   * 천장 112). 이제 게이트가 둘을 대조한다 — 예언을 자로 바꿨다.
    */
   max-height: var(--course-dock-cap);
+  /*
+   * ⚠ **버튼 줄은 절대 안 잘린다** (P8). 예전에는 `overflow: visible` 이라 천장을 넘은
+   * 만큼이 상자 밖으로 샜고, 독이 화면 바닥에 붙는 모드(`data-home-input='off'`)에서는
+   * 그 넘침이 **화면 밖으로 나가 `.kcourse-acts` 를 통째로 못 누르게** 했다
+   * (하네스가 「적용 완료 → 다시 조정」에서 30초 타임아웃, 실측 2026-08-27).
+   *
+   * 값을 키워 맞추는 것은 답이 아니다 — 영수증 줄 수는 상태마다 다르다.
+   * **구조로 막는다**: 넘치는 것은 가운데(지표·영수증)가 흡수하고, 제목과 버튼은 안 준다.
+   */
+  overflow: hidden;
 }
+
 
 /*
  * 적용 완료 (Task 6) — 여기서는 조작할 지도가 없다. 그 대신 **무엇이 적용됐는가**가
@@ -1871,7 +2143,16 @@ body {
 }
 
 .kcourse-title {
-  font-size: 18px;
+  /* P8 — 독이 천장에 닿아도 **안 준다.** 양보는 지표·영수증이 한다 */
+  flex: 0 0 auto;
+  /*
+   * ⚠ **`flex: 0 0 auto` 가 없으면 눌린다** (실측 19px 글씨가 높이 **12px** 로 잘렸다 —
+   * 제목 위아래가 잘려 아래 지표 줄과 겹쳐 보였다). `.kcourse` 가 세로 flex 라 자식이
+   * 기본으로 줄어드는데, 글자는 줄어들 여지가 없어 **글리프가 잘린다.**
+   * `.kchips` 가 2px 로 납작해졌던 것(P3-C④)과 같은 계열이다.
+   */
+  flex: 0 0 auto;
+  font-size: var(--fs-lead);
   font-weight: 900;
   white-space: nowrap;
   overflow: hidden;
@@ -1884,6 +2165,11 @@ body {
  * 잘린 지표는 "안 보이는 것"과 같은데, 여기서는 그게 곧 결정 불가다.
  */
 .kcourse-deltas {
+  /* P8 — 넘치면 **여기가 양보한다.** 제목·버튼은 안 준다 (버튼이 잘리면 화면이 막힌다) */
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 4px;
@@ -1898,12 +2184,12 @@ body {
 }
 
 .kcourse-delta-label {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   color: var(--text-dim);
 }
 
 .kcourse-delta-value {
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 800;
   white-space: nowrap;
 }
@@ -1927,6 +2213,11 @@ body {
  * 그것이 "무엇을 적용했는가"의 유일한 정본이다 — 토스트는 보조 채널일 뿐이다.
  */
 .kcourse-receipt {
+  /* P8 — 넘치면 **여기가 양보한다.** 제목·버튼은 안 준다 (버튼이 잘리면 화면이 막힌다) */
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
   display: flex;
   flex-direction: column;
   gap: 1px;
@@ -1948,14 +2239,14 @@ body {
 }
 
 .kcourse-receipt-head {
-  font-size: 18px;
+  font-size: var(--fs-lead);
   font-weight: 900;
   color: var(--text);
   text-shadow: var(--sk-emboss);
 }
 
 .kcourse-receipt-line {
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 700;
   color: var(--text);
   white-space: nowrap;
@@ -1964,8 +2255,18 @@ body {
 }
 
 /* 못 만드는 이유 — 있을 때만 자리를 차지한다 */
+/*
+ * ⚠ **글자 줄은 눌리면 안 된다** — 세로 flex 안에서 `flex-shrink` 기본값(1)이면 공간이
+ * 모자랄 때 **높이 0 으로 접힌다.** 글씨는 줄어들 여지가 없어 그냥 사라지고, 좌표를 재는
+ * 검사만 「보인다」로 통과한다 (`.kchips` 2px · 코스 제목 12px 과 같은 계열, P3-C④).
+ *
+ * ⚠ 이 줄은 **거절 이유**다 — 사라지면 플레이어는 왜 확정이 잠겼는지 알 길이 없다.
+ */
 .kcourse-why {
-  font-size: 12px;
+  /* P8 — 독이 천장에 닿아도 **안 준다.** 양보는 지표·영수증이 한다 */
+  flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: var(--fs-tiny);
   color: var(--accent);
   white-space: nowrap;
   overflow: hidden;
@@ -1987,7 +2288,7 @@ body {
   min-height: var(--tap);
   flex: 1 1 0;
   min-width: 0;
-  font-size: 16px;
+  font-size: var(--fs-lead);
 }
 
 .kcourse-acts .kbtn.primary {
@@ -2036,31 +2337,40 @@ body {
  *
  * 좌표만 재는 검사는 44px 로 통과한다 — 실제로 그려진 높이를 재야 잡힌다.
  */
-.kcourse-presets {
-  flex: 0 0 auto;
+/*
+ * ⚠ **가로 스크롤 줄은 `flex: 1 1 0` 이다.** `flex: 0 0 auto` 는 세로 축에서 「눌리지
+ * 마라」였는데, **가로 축에서는 정반대로 「줄어들지 마라」**가 되어 내용만큼 넓어지고
+ * 부모 밖으로 새어 나간다 (실측 377px 줄 안에서 **450px**, 칩이 화면 밖 566px 까지).
+ *
+ * 세로로 접히는 것은 `min-height` 로 막고, 가로는 `min-width: 0` + `flex: 1 1 0` 으로
+ * 부모 폭에 맞춘 뒤 **안에서** 스크롤한다.
+ */
+.kcourse-presets,
+.kcourse-options {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: calc(var(--tap) + 4px);
   display: flex;
   gap: 6px;
   overflow-x: auto;
   padding-bottom: 2px;
+  scrollbar-width: none;
+}
+
+.kcourse-presets::-webkit-scrollbar,
+.kcourse-options::-webkit-scrollbar {
+  display: none;
 }
 
 .kcourse-section {
   margin-top: 2px;
   color: var(--text-dim);
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 800;
   letter-spacing: 0.04em;
 }
 
-.kcourse-options {
-  /* 위 `.kcourse-presets` 와 같은 이유 — 스크롤 컨테이너의 자동 최소 크기 0 을 막는다 */
-  flex: 0 0 auto;
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  min-width: 0;
-  padding-bottom: 2px;
-}
+
 
 .kcourse-item.compact {
   min-width: 108px;
@@ -2069,7 +2379,7 @@ body {
 .kcourse-note,
 .kcourse-trial {
   color: var(--text-dim);
-  font-size: 12px;
+  font-size: var(--fs-tiny);
 }
 
 .kcourse-trial:not(:empty) {
@@ -2079,9 +2389,14 @@ body {
 }
 
 /* 프리셋 버튼 — .kitem 과 같은 재질. 정적 검사가 이 이름을 본다 */
+/*
+ * ⚠ **칸은 전부 같은 폭이다** (사용자 지적: 「정형화되어 있지 않다」). 내용대로 늘리면
+ * `왕복`(2자)과 `급선회 콤보`(6자)가 두 배 차이가 나 줄이 들쭉날쭉해진다 — 가로로 훑는
+ * 줄에서 그건 「몇 개가 있나」를 눈으로 못 세게 만든다.
+ */
 .kcourse-item {
-  flex: 0 0 auto;
-  min-width: 88px;
+  flex: 0 0 var(--course-chip);
+  width: var(--course-chip);
   min-height: var(--tap);
   padding: 5px 10px;
   border: 1px solid transparent;
@@ -2125,13 +2440,18 @@ body {
   cursor: default;
 }
 
+/* 칸 폭이 같으니 긴 이름은 말줄임한다 — 줄바꿈하면 칸 높이가 제각각이 된다 */
 .kcourse-item-name {
-  font-size: 12px;
+  max-width: 100%;
+  font-size: var(--fs-tiny);
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .kcourse-badge {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
 }
 
 .kcourse-badge.best {
@@ -2169,7 +2489,7 @@ body {
   box-shadow: var(--sk-inset);
   color: var(--text);
   font-family: inherit;
-  font-size: 13px;
+  font-size: var(--fs-body);
 }
 
 .kcourse-veh {
@@ -2196,13 +2516,13 @@ body {
 }
 
 .kcourse-metric-label {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   color: var(--text-dim);
 }
 
 .kcourse-metric-value {
   font-weight: 700;
-  font-size: 13px;
+  font-size: var(--fs-body);
 }
 
 .kcourse-metric-value.good {
@@ -2236,7 +2556,7 @@ body {
   background: var(--panel-sunk);
   border-radius: 8px;
   padding: 4px 4px 4px 8px;
-  font-size: 12px;
+  font-size: var(--fs-tiny);
 }
 
 .kcourse-listrow > span {
@@ -2249,7 +2569,7 @@ body {
 
 /* 선착장 안내 — 지도에서 고른다는 걸 말로도 한 번 한다 */
 .kcourse-hint {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   color: var(--text-dim);
 }
 
@@ -2298,6 +2618,52 @@ body {
 /* 결산 — 지도가 살짝 비쳐야 "내 리조트의 한 주"라는 게 남는다 */
 .kover.scrim {
   background: var(--scrim);
+}
+
+/*
+ * 등급 도장 (P8) — 결산 머리 오른쪽. 「이 주가 어느 등급에서 돌았나」를 **기록**처럼 찍는다.
+ *
+ * ⚠ 숫자 칩이 아니라 도장인 이유: 결산은 지나간 주의 기록이고, 도장은 그 성격을 말한다.
+ * 색은 전부 토큰이고 기울기·테두리만 여기서 정한다 (TS 하드코딩 hex 0 계약).
+ */
+.kgrade-stamp {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 3px 9px;
+  border: 2px solid var(--accent);
+  border-radius: 5px;
+  color: var(--accent);
+  transform: rotate(-6deg);
+  animation: kstamp-in var(--dur-rise) var(--ease) backwards;
+  /* 도장은 KPI 가 굴러오기 **전에** 찍힌다 — 「어느 등급의 주였나」가 숫자의 전제다 */
+  animation-delay: 60ms;
+}
+
+.kgrade-stamp-num {
+  font-size: var(--fs-body);
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.kgrade-stamp-name {
+  font-size: var(--fs-tiny);
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+@keyframes kstamp-in {
+  from {
+    transform: rotate(-6deg) scale(1.6);
+    opacity: 0;
+  }
+
+  to {
+    transform: rotate(-6deg) scale(1);
+    opacity: 1;
+  }
 }
 
 /* 카드 — 스크림 위에 가운데 상자 하나. 화면을 통째로 채우지 않는다 */
@@ -2463,7 +2829,7 @@ body {
   bottom: 10px;
   z-index: 1;
   color: var(--event-ink);
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 800;
   letter-spacing: 0.08em;
 }
@@ -2478,15 +2844,110 @@ body {
 
 .kcard-choice {
   min-width: 0;
-  min-height: var(--tap);
-  padding: 7px 5px;
+  /*
+   * P8 — 선택지를 **크게**. 이 버튼은 그 주의 유일한 결정이고 시간이 멈춰 있으므로,
+   * 44px 하한이 아니라 **두 배**를 준다 (터치 타깃이 아니라 **읽는 상자**다).
+   * ⚠ `min-height` 라 내용(미리보기 칩)이 많으면 밀려 커진다.
+   */
+  min-height: calc(var(--tap) * 2);
+  padding: 9px 7px;
+  align-content: start;
+}
+
+/*
+ * 손님 말 줄 (Q9) — 결산의 「손님들이 한 말」.
+ *
+ * ⚠ **처방과 다른 무게**여야 한다. 처방은 「해라」이고 이건 「그러더라」다 —
+ * 같은 무게로 그리면 지시가 둘이 되어 어느 쪽을 따를지 흐려진다.
+ */
+.kvoice {
+  padding: 4px 9px;
+  border-left: 3px solid var(--tray-divider);
+  color: var(--text-dim);
+  font-size: var(--fs-body);
+}
+
+.kvoice.bad {
+  border-left-color: var(--bad);
+}
+
+.kvoice.good {
+  border-left-color: var(--good);
+}
+
+/* 밴드의 화자 (Q8) — 이름이 먼저 읽혀야 「사람이 시킨다」가 된다 */
+.kgoal-speaker {
+  color: var(--accent);
+  font-weight: 900;
+}
+
+/* 재료 궁합 한 줄 (Q2) — 색은 방향만 말하고 낱말이 뜻을 말한다 */
+.kmenu-affinity.good {
+  color: var(--good);
+}
+
+.kmenu-affinity.bad {
+  color: var(--bad);
+}
+
+/* 결과 미리보기 — 무엇이 얼마나 바뀌나 (P8) */
+.kcard-effects {
+  /*
+   * ⚠ 한 줄에 여러 칩을 늘어놓으면 **라벨이 줄바꿈된다** (실측: 103px 열에서
+   * `방문/수요` 로 쪼개졌다). 카드가 2~3열이라 열 하나가 좁으므로 **칩을 세로로 쌓고**
+   * 칩 안에서 라벨과 값을 위아래로 둔다 — 둘 다 `nowrap` 이면 93px 안에 넉넉히 든다.
+   */
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 4px;
+  width: 100%;
+}
+
+.kcard-effect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 2px 5px;
+  border-radius: 4px;
+  /* 가라앉은 면 — 회수 줄과 같은 재질을 쓴다 (새 재질을 안 짓는다) */
+  background: var(--panel-sunk);
+  font-size: var(--fs-tiny);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.kcard-effect-label,
+.kcard-effect-value {
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kcard-effect-label {
+  color: var(--text-dim);
+}
+
+.kcard-effect.up .kcard-effect-value {
+  color: var(--good);
+}
+
+.kcard-effect.down .kcard-effect-value {
+  color: var(--bad);
+}
+
+/* 확률은 방향이 없다 — 「이 전부가 확률이다」를 먼저 말하는 줄이다 */
+.kcard-effect.chance {
+  color: var(--accent);
 }
 
 .kcard-choice .kitem-name {
   display: -webkit-box;
   max-width: 100%;
   overflow: hidden;
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   line-height: 1.25;
   overflow-wrap: anywhere;
   -webkit-box-orient: vertical;
@@ -2497,7 +2958,7 @@ body {
   display: -webkit-box;
   max-width: 100%;
   overflow: hidden;
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   line-height: 1.25;
   overflow-wrap: anywhere;
   -webkit-box-orient: vertical;
@@ -2517,13 +2978,22 @@ body {
   pointer-events: none;
 }
 
-.kband {
+/*
+ * 감상 화면의 위·아래 띠 (P8 에서 이름을 갈랐다).
+ *
+ * ⚠ 예전 이름은 `.kband` 였는데 **P1 이 메뉴 밴드에 같은 이름을 쓰면서 충돌**했다 —
+ * 메뉴 밴드의 `position: fixed; right: 8px; bottom: 104px` 가 감상의 두 띠에 그대로
+ * 걸려 **위 띠가 아래 띠 위에 겹쳐 앉았다** (실측 y 665 vs 666, 2026-08-27).
+ * 감상은 이미 `.kshowcase-*` 를 쓰고 있었으므로 그쪽으로 맞춘다.
+ */
+.kshowcase-band {
   pointer-events: auto;
   padding: calc(14px + var(--safe-t)) 14px 18px;
   background: linear-gradient(rgb(var(--band-scrim) / 82%), rgb(var(--band-scrim) / 0%));
+  color: var(--text-on-solid);
 }
 
-.kband.bottom {
+.kshowcase-band.bottom {
   display: flex;
   gap: 8px;
   justify-content: flex-end;
@@ -2536,19 +3006,17 @@ body {
  * 밝은 팔레트로 가도 여기만은 흰 글씨여야 한다 — `--text` 를 쓰면 진한 남색 글씨가
  * 어두운 띠에 묻힌다.
  */
-.kband {
-  color: var(--text-on-solid);
-}
 
-.kband-title {
-  font-size: 19px;
+
+.kshowcase-band-title {
+  font-size: var(--fs-lead);
   font-weight: 800;
   letter-spacing: -0.2px;
   text-shadow: var(--sk-emboss-on-solid);
 }
 
-.kband-sub {
-  font-size: 12px;
+.kshowcase-band-sub {
+  font-size: var(--fs-tiny);
   color: rgb(255 255 255 / 82%);
   margin-top: 2px;
 }
@@ -2558,7 +3026,7 @@ body {
   min-height: 48px;
   min-width: 88px;
   border-radius: 12px;
-  font-size: 15px;
+  font-size: var(--fs-body);
 }
 
 /* 세로 스택 — gap 만 다른 컨테이너가 일곱 군데 있었다 */
@@ -2570,7 +3038,7 @@ body {
 
 /* 흐린 글씨 — 다섯 철자를 하나로 */
 .kcaption {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   color: var(--text-dim);
 }
 
@@ -2605,7 +3073,7 @@ body {
 .kbtn.step {
   min-width: var(--tap);
   padding: 0;
-  font-size: 20px;
+  font-size: var(--fs-title);
   line-height: 1;
 }
 
@@ -2662,6 +3130,40 @@ body {
   flex: 0 0 auto;
 }
 
+/*
+ * 2차 필터 줄 (Q6) — **탭보다 가볍다.**
+ *
+ * ⚠ 실측으로 탭 줄(58px)과 필터 줄(52px)이 거의 같은 무게라 **컨트롤 8개가 2줄**로
+ * 읽혔다 (사용자 지적). 계층은 색이 아니라 **크기와 낱말**로 말한다 —
+ * 채움 색 계약(노랑 = 메인 · 파랑 = 2차)은 그대로 두고 **무게만** 낮춘다.
+ * ⚠ 칩 자체의 44px 터치 타깃은 **안 줄인다** — 줄의 여백만 줄인다.
+ */
+.kchips.sub {
+  align-items: center;
+  gap: 5px;
+  padding-top: 2px;
+}
+
+.kchips.sub .kbtn {
+  font-size: var(--fs-tiny);
+  padding: 0 9px;
+  /*
+   * ⚠ **폭 하한이 필요하다.** 글씨를 한 급 줄이고 패딩을 9px 로 좁혔더니 한글 두 자가
+   * **42.8px** 이 되어 터치 타깃 44px 검사에 걸렸다 (실측 — 높이가 아니라 **폭**이었다).
+   * ⚠ `width` 로 고정하면 한글 두 자가 세로로 쪼개진다 (밴드 칸에서 겪었다) —
+   * **하한**이라 내용이 크면 넘어간다.
+   */
+  min-width: var(--tap);
+}
+
+/* 「이건 두 번째 층」을 낱말로 — 색만으로는 계층이 안 읽힌다 */
+.kchips-label {
+  flex: 0 0 auto;
+  color: var(--text-dim);
+  font-size: var(--fs-tiny);
+  font-weight: 700;
+}
+
 .kchips.wrap {
   flex-wrap: wrap;
   overflow-x: visible;
@@ -2695,7 +3197,7 @@ body {
 }
 
 .kover > .ksheet-head .ksheet-title {
-  font-size: 18px;
+  font-size: var(--fs-lead);
   font-weight: 900;
 }
 
@@ -2713,22 +3215,22 @@ body {
 }
 
 .kitem.wide .kitem-name {
-  font-size: 13px;
+  font-size: var(--fs-body);
 }
 
 .kitem.wide .kitem-sub {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
 }
 
 /* 카드 — 제목과 설명. 대화상자 안에서만 쓴다 */
 .kcard-title {
-  font-size: 19px;
+  font-size: var(--fs-lead);
   font-weight: 700;
   text-shadow: var(--sk-emboss);
 }
 
 .kcard-desc {
-  font-size: 14px;
+  font-size: var(--fs-body);
   color: var(--text-dim);
   margin-bottom: 6px;
 }
@@ -2748,13 +3250,13 @@ body {
 }
 
 .kstat-label {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   color: var(--text-dim);
 }
 
 .kstat-value {
   font-weight: 700;
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-variant-numeric: tabular-nums;
 }
 
@@ -2776,7 +3278,7 @@ body {
   border-radius: 10px;
   background: rgb(var(--shortage) / 16%);
   padding: 8px 10px;
-  font-size: 12px;
+  font-size: var(--fs-tiny);
 }
 
 /* ── 결산 (K54 · Phase 5) ───────────────────────────────────────────────
@@ -2813,13 +3315,13 @@ body {
 .kkpi-label,
 .kkpi-delta {
   color: var(--text-dim);
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   white-space: nowrap;
 }
 
 .kkpi-value {
   overflow: hidden;
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   text-overflow: ellipsis;
@@ -2851,7 +3353,7 @@ body {
 }
 
 .kreport-prescription-text {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
 }
 
 .kreport-prescription .kbtn {
@@ -2888,6 +3390,26 @@ body {
   justify-content: flex-end;
   gap: 3px;
   height: 100%;
+  /*
+   * P8 — 막대가 **월→일 순서로** 올라온다. 순서(`--day-index`)는 TS 가 데이터로 주고,
+   * 지연·이징은 여기가 정한다 (색과 시간은 CSS 소유).
+   * ⚠ `transform` 만 애니메이트한다 — `height` 를 굴리면 매 프레임 레이아웃이 돈다.
+   */
+  transform-origin: 50% 100%;
+  animation: kday-rise var(--dur-rise) var(--ease) backwards;
+  animation-delay: calc(var(--day-index, 0) * var(--stagger));
+}
+
+@keyframes kday-rise {
+  from {
+    transform: scaleY(0.04);
+    opacity: 0;
+  }
+
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
 }
 
 /* 막대 바탕 = 만석으로 돌려보낸 몫 (빗금). 그 위에 들어온 몫을 덮는다 */
@@ -2915,12 +3437,12 @@ body {
 }
 
 .kday-num {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   color: var(--text-dim);
 }
 
 .kday-label {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   white-space: pre;
   text-align: center;
   line-height: 1.2;
@@ -2938,7 +3460,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 700;
   color: var(--on-light);
 }
@@ -2964,7 +3486,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   color: var(--text-dim);
 }
 
@@ -2972,7 +3494,7 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 6px 12px;
-  font-size: 13px;
+  font-size: var(--fs-body);
 }
 
 .knum-key {
@@ -3025,14 +3547,14 @@ body {
 
 .kledger-title {
   margin-bottom: 6px;
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 800;
 }
 
 .kledger-card .knums {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 4px 6px;
-  font-size: 12px;
+  font-size: var(--fs-tiny);
 }
 
 .kledger-operating {
@@ -3046,7 +3568,7 @@ body {
   display: flex;
   justify-content: space-between;
   gap: 8px;
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 800;
 }
 
@@ -3085,11 +3607,30 @@ body {
 }
 
 /* ── 뉴스 티커 (K47-①) — 하단 바 바로 위 얇은 띠 + 중앙 알림함 손잡이 ── */
+/*
+ * 진행 바를 겸하는 티커 (P1) — **픽셀을 하나도 더 안 쓴다.**
+ *
+ * 26px 띠의 배경이 진행률만큼 채워질 뿐이라 화면 예산이 그대로다. 폭은 인라인
+ * `--ticker-progress`(데이터)이고 색은 여기가 소유한다.
+ */
+.kticker[data-progress='on'] .kticker-visual {
+  background-image: linear-gradient(
+    to right,
+    var(--select-fill) 0 var(--ticker-progress, 0%),
+    transparent var(--ticker-progress, 0%)
+  );
+}
+
 .kticker {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: calc(56px + var(--safe-b));
+  /*
+   * ⚠ 바 위로 **10px 더** 띄운다 (P1). 44px hit surface 는 26px 띠의 위아래로 9px 씩
+   * 삐져나오는데, 상태 밴드가 바 안으로 들어오면서 그 9px 이 목표 칩과 3px 겹쳤다.
+   * 겹침을 `z-index` 로 덮으면 「소유권은 한 값이 정한다」가 무너지므로 **기하로** 푼다.
+   */
+  bottom: calc(74px + var(--safe-b));
   /* hit surface가 목표/바의 빈 면 아래로 숨지 않게 하되, 부모 자체는 탭을 먹지 않는다. */
   z-index: 11;
   height: 26px;
@@ -3113,7 +3654,7 @@ body {
   border-top: 1px solid var(--tray-divider);
   background: var(--bar-bg);
   color: var(--text);
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 600;
   text-shadow: var(--sk-emboss);
   text-align: left;
@@ -3149,7 +3690,7 @@ body {
 
 .kticker-ico {
   flex: 0 0 auto;
-  font-size: 12px;
+  font-size: var(--fs-tiny);
 }
 
 .kticker-line {
@@ -3298,7 +3839,7 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 }
 
 .kquest-detail {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   color: var(--text-mute);
 }
 
@@ -3354,7 +3895,7 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 .kmanage-group > h3 {
   margin: 0 0 5px;
   color: var(--text-dim);
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 900;
   letter-spacing: .04em;
 }
@@ -3367,7 +3908,7 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 .kmanage-subgroup > h4 {
   margin: 0 0 4px;
   color: var(--text-dim);
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 800;
   letter-spacing: .03em;
 }
@@ -3376,7 +3917,19 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
   display: none;
 }
 
-.kmanage-list,
+/*
+ * 목적지 화면의 행동 목록 (P1) — 열 수는 **폭이 정한다.**
+ *
+ * ⚠ 방향별 미디어 쿼리를 두 벌 만들지 않는다. `auto-fit` 하나면 393px 에서 1~2열,
+ * 852px 에서 자연히 늘어난다 — 옛 메뉴가 가로에서 세로보다 두 배 나빴던 이유가
+ * 폭 조건 없는 고정 2열이었다 (실측 11.8화면).
+ */
+.kmanage-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  gap: 5px;
+}
+
 .kmanage-goals {
   display: flex;
   flex-direction: column;
@@ -3410,7 +3963,7 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
   gap: 8px;
   padding: 7px 10px;
   border-color: var(--primary-edge);
-  font-size: 16px;
+  font-size: var(--fs-lead);
   box-shadow: var(--sk-lift), var(--sk-inset);
 }
 
@@ -3435,7 +3988,7 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
   border-radius: 10px;
   background: var(--select-sub);
   color: var(--text-on-solid);
-  font-size: 20px;
+  font-size: var(--fs-title);
   text-shadow: var(--sk-emboss-on-solid);
 }
 
@@ -3448,25 +4001,25 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 
 .kmanage-reason {
   color: var(--text-dim);
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 800;
   letter-spacing: .03em;
 }
 
 .kmanage-label {
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 800;
   line-height: 1.25;
 }
 
 .kmanage-action.primary .kmanage-label {
-  font-size: 16px;
+  font-size: var(--fs-lead);
   font-weight: 900;
 }
 
 .kmanage-detail {
   color: var(--text-dim);
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 600;
   line-height: 1.25;
 }
@@ -3479,7 +4032,7 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 
 .kmanage-warning {
   color: var(--warn);
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 700;
 }
 
@@ -3502,7 +4055,7 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
   border-radius: 6px;
   background: var(--select-sub);
   color: var(--text-on-solid);
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 800;
   text-shadow: var(--sk-emboss-on-solid);
 }
@@ -3529,7 +4082,7 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 }
 
 .kending-title {
-  font-size: 17px;
+  font-size: var(--fs-lead);
   font-weight: 900;
 }
 
@@ -3600,7 +4153,7 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 
 .kmanage-title {
   flex: 1 1 auto;
-  font-size: 16px;
+  font-size: var(--fs-lead);
   font-weight: 900;
   color: var(--text);
   text-shadow: var(--sk-emboss);
@@ -3608,7 +4161,7 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 
 .kmanage-count {
   flex: 0 0 auto;
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 800;
   color: var(--text-dim);
 }
@@ -3654,29 +4207,12 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
   align-self: flex-start;
 }
 
-/*
- * 목적지 쪽에 폭을 더 준다 — 가로에서 이 열이 340px 를 넘으면 라우터가 **2열**이 되어
- * 네 줄이 두 줄로 접힌다 (가로 본문이 116px 뿐이라 이게 첫 폴드를 가른다).
- */
-.kmanage-screen[data-manage-screen='index'] > .kmanage-routes {
-  flex: 2 1 340px;
-  align-self: flex-start;
-}
-
-/*
- * ⚠ 경고에 **전폭을 주지 않는다.** 전폭이면 오늘 할 일과 목적지 사이를 갈라 가로에서
- * 목적지 넷이 통째로 폴드 밖으로 밀린다 (실측 852×393: 39/41 → 36/41).
- */
-.kmanage-screen[data-manage-screen='index'] > .kmanage-warnings {
-  flex: 1 1 240px;
-}
-
 .kmanage-screen[hidden] {
   display: none;
 }
 
 .kmanage-context {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 700;
   color: var(--text-dim);
 }
@@ -3720,7 +4256,7 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
   right: 9px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 900;
   color: var(--text-dim);
 }
@@ -3747,10 +4283,26 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 }
 
 .kgrowth-head {
-  font-size: 13px;
+  /*
+   * ⚠ 개수(`.kgrowth-count`)가 **규칙이 없어** 제목 글자에 그대로 붙어 있었다 —
+   * `달성 여부와 보상 시점1 / 16` (실측, P8). 머리는 「이름 ← → 개수」 한 줄이다.
+   */
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: var(--fs-body);
   font-weight: 900;
   color: var(--text-dim);
   margin-bottom: 6px;
+}
+
+/* 개수는 오른쪽 끝에 붙고 제목보다 약하다 — 훑을 때 이름이 먼저 읽혀야 한다 */
+.kgrowth-count {
+  flex: 0 0 auto;
+  font-size: var(--fs-tiny);
+  font-weight: 700;
+  color: var(--text-dim);
 }
 
 .kgrowth-row {
@@ -3777,11 +4329,11 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 
 .kgrowth-icon {
   flex: 0 0 auto;
-  font-size: 14px;
+  font-size: var(--fs-body);
 }
 
 .kgrowth-name {
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 800;
   color: var(--text);
 }
@@ -3791,13 +4343,13 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 }
 
 .kgrowth-line {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   color: var(--text-mute);
 }
 
 .kgrowth-reward {
   margin-top: 2px;
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 800;
   color: var(--accent);
 }
@@ -3818,13 +4370,13 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 }
 
 .kgrowth-empty-fact {
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 800;
   color: var(--text);
 }
 
 .kgrowth-empty-how {
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 700;
   color: var(--text-dim);
 }
@@ -3875,7 +4427,7 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
   background: var(--panel);
   color: var(--text);
   font: inherit;
-  font-size: 16px;
+  font-size: var(--fs-lead);
 }
 
 .kevent-stage {
@@ -3950,7 +4502,7 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 .kevent-figure {
   position: relative;
   margin-bottom: 10px;
-  font-size: 40px;
+  font-size: var(--fs-hero);
   line-height: 1;
   filter: drop-shadow(0 3px 0 rgb(96 62 20 / 35%));
 }
@@ -3966,7 +4518,7 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 }
 
 .kevent-kicker {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 800;
   letter-spacing: .04em;
   color: var(--text-dim);
@@ -3974,20 +4526,21 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 
 .kevent-kicker[hidden],
 .kevent-body[hidden],
+.kevent-deltas[hidden],
 .kevent-note[hidden],
 .kevent-choices[hidden] {
   display: none;
 }
 
 .kevent-title {
-  font-size: 18px;
+  font-size: var(--fs-lead);
   font-weight: 900;
   color: var(--text);
   text-shadow: var(--sk-emboss);
 }
 
 .kevent-body {
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 600;
   line-height: 1.45;
   white-space: pre-line;
@@ -3995,10 +4548,76 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 }
 
 .kevent-note {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 700;
   color: var(--text-mute);
 }
+
+/* ── 회수 줄 (§2.6) ──────────────────────────────────────────────────────
+ *
+ * 축하 모달이 여태 **이름만 말한** 자리다. `카페 요금 900 → 1,150` 처럼
+ * **무엇이 얼마나** 좋아졌는지를 본문과 선택지 **사이**에 둔다 — 읽는 순서가
+ * `무슨 일이 났나 → 얼마나 좋아졌나 → 무엇을 할까` 가 되어야 회수가 읽힌다.
+ *
+ * 줄은 위에서 하나씩 흘러든다. 지연은 TS 가 넣은 `--delta-index` **데이터**에서
+ * 계산하고, 애니메이트하는 것은 `transform`/`opacity` 뿐이다 (기존 계약).
+ */
+.kevent-deltas {
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--panel-sunk);
+  border: 1px solid var(--tray-divider);
+}
+
+.kevent-delta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  animation: kevent-delta-in 260ms ease-out both;
+  animation-delay: calc(500ms + var(--delta-index, 0) * 70ms);
+}
+
+@keyframes kevent-delta-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.kevent-delta-label {
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.kevent-delta-value {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.kevent-delta-from {
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--text-mute);
+}
+
+.kevent-delta-arrow {
+  font-size: var(--fs-tiny);
+  font-weight: 900;
+  color: var(--text-mute);
+}
+
+.kevent-delta-to {
+  font-size: var(--fs-lead);
+  font-weight: 900;
+  color: var(--text);
+}
+
+.kevent-delta[data-delta-tone='up'] .kevent-delta-to { color: var(--good); }
+.kevent-delta[data-delta-tone='down'] .kevent-delta-to { color: var(--bad); }
 
 /*
  * 선택지는 **아래 버튼 줄**이다. 폭이 좁으면 세로로 쌓이고 넓으면 나란히 선다 —
@@ -4021,18 +4640,18 @@ body:has(.kcourse[data-course-phase='applied']) .ktoast {
 }
 
 .kevent-choice-label {
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 800;
 }
 
 .kevent-choice-meta {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 700;
   opacity: .92;
 }
 
 .kevent-choice-why {
-  font-size: 12px;
+  font-size: var(--fs-tiny);
   font-weight: 700;
   opacity: .92;
 }

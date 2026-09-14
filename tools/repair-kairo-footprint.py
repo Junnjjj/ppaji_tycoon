@@ -42,7 +42,7 @@ next to the candidate before replacing the pack image.
 
 **요약: 접지 게이트는 기하만 본다. 사람은 그림을 본다. 게이트 숫자로 그림을 덮지 말 것.**
 정본 다이아몬드에 안 맞는 그림은 이 도구가 아니라 **재생성**으로 고친다
-(`tools/regen-facility.ts`, `docs/asset-regen-order.md`).
+(`tools/regen-facility.ts`, `docs/assets/maintenance/legacy-v2-regeneration.md`).
 """
 
 from __future__ import annotations

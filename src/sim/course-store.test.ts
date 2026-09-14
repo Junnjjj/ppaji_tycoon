@@ -69,6 +69,17 @@ function courseNear(dockX: number, r = 9): Vec2[] {
   return circle(4, r, dockX + 1, 13 + r + 2);
 }
 
+/**
+ * ⚠ **주를 실제로 돌리는 절들이라 5초 기본값에 붙어 있다.** Q7 이 단골 방문을 주당 1명 →
+ * 최대 3명으로 늘리면서 이 절들이 전체 병렬 실행에서 **타임아웃**으로 죽기 시작했다
+ * (단독 실행은 1.0~1.1초로 여유롭다 — 스케줄링이 밀리면 넘어간다).
+ *
+ * ⚠ **느려서 늘리는 것이 아니라 게이트를 믿을 수 있게 하려고 늘린다** —
+ * `accident.test.ts` 의 `WEEK_HEAVY` 와 같은 판단이다. 페이즈 게이트가 「실패가 정확히
+ * 2건인가」로 새 실패를 잡는데 여기가 랜덤하게 3건을 만들면 그 판정이 매번 늑대를 부른다.
+ */
+const SIM_HEAVY = { timeout: 20_000 };
+
 describe('코스 생성', () => {
   it('선착장이 없으면 코스를 만들 수 없다', () => {
     const g = lakeGame();
@@ -132,7 +143,7 @@ describe('실제 처리량이 예측 지표와 맞는가 — 지표가 거짓말
     expect(Math.abs(measured - predicted) / predicted).toBeLessThan(0.2);
   });
 
-  it('장비를 2배로 하면 실측 처리량도 대략 2배가 된다', () => {
+  it('장비를 2배로 하면 실측 처리량도 대략 2배가 된다', SIM_HEAVY, () => {
     const measure = (vehicles: number): number => {
       const g = readyPark(11);
       g.arrivals = { ticksPerGroup: 4, maxGuests: 400 };
@@ -186,7 +197,7 @@ describe('손님이 코스를 탄다', () => {
     for (const v of c.vehicles) expect(v.state).toBe('boarding');
   });
 
-  it('처리량이 충분한 코스는 퇴장 만족도를 올린다', () => {
+  it('처리량이 충분한 코스는 퇴장 만족도를 올린다', SIM_HEAVY, () => {
     // 편의시설이 갖춰진 빠지에서 손님 30명 · 장비 6대 → 공급이 수요를 감당한다
     const withCourse = fullPark(21);
     withCourse.arrivals = { ticksPerGroup: 30, maxGuests: 30 };
@@ -204,7 +215,7 @@ describe('손님이 코스를 탄다', () => {
     );
   });
 
-  it('탑승한 손님이 요금을 내고 코스 매출이 쌓인다', () => {
+  it('탑승한 손님이 요금을 내고 코스 매출이 쌓인다', SIM_HEAVY, () => {
     const g = readyPark(9);
     g.arrivals = { ticksPerGroup: 8, maxGuests: 150 };
     const c = g.createCourse('banana', courseNear(29), 2)!;
@@ -228,7 +239,7 @@ describe('코스 결정론·세이브', () => {
     return g;
   }
 
-  it('같은 시드·같은 코스는 같은 결과를 낸다', () => {
+  it('같은 시드·같은 코스는 같은 결과를 낸다', SIM_HEAVY, () => {
     const a = scenario(42);
     const b = scenario(42);
     expect(a.stats()).toEqual(b.stats());
@@ -237,7 +248,7 @@ describe('코스 결정론·세이브', () => {
     );
   });
 
-  it('세이브 왕복 후에도 코스와 결정론이 유지된다', () => {
+  it('세이브 왕복 후에도 코스와 결정론이 유지된다', SIM_HEAVY, () => {
     const a = scenario(13);
     const snap = JSON.parse(JSON.stringify(a.toSnapshot()));
     const b = Game.fromSnapshot(snap);

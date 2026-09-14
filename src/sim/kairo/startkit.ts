@@ -1,7 +1,7 @@
 import { KairoTerrain } from './terrain.js';
 import type { WallGrid } from './walls.js';
 import { bakeIndoorWalls } from './indoor.js';
-import { PlacementGrid, guestWalkable } from './placement.js';
+import { PlacementGrid, guestWalkable, facilityDef } from './placement.js';
 import {
   CourseStore,
   PRESETS,
@@ -209,7 +209,20 @@ export function applyStartKit(input: StartKitInput): StartKitResult {
     if (preset && equip) {
       const handles = defaultHandles(preset, dockAt, { x: 0, y: 1 });
       // 물려받은 코스는 첫 코스지만, 겹침 판정에 같은 목록을 넘긴다 (K37 — 규칙이 하나다)
-      const v = validateCourse(terrain, handles, dockAt, preset, equip.id, 1, courses.all);
+      /*
+       * 물 위 시설 발자국 (Q10) — production 과 **같은 blocked 규칙**으로 검증한다.
+       * 킷이 느슨한 규칙으로 코스를 물려주면 첫 화면부터 「덱을 뚫는 보트」가 생긴다.
+       */
+      const blockedWater = new Set<string>();
+      for (const it of placement.all()) {
+        const def = facilityDef(it.defId);
+        if (def?.layer !== 'water' && def?.walkOn !== true) continue;
+        for (const [bi, bj] of PlacementGrid.footprintTiles(def, it.i, it.j, it.facing ?? 0)) {
+          blockedWater.add(`${bi},${bj}`);
+        }
+      }
+      const v = validateCourse(terrain, handles, dockAt, preset, equip.id, 1, courses.all,
+        undefined, courses.ownedEquipment, blockedWater);
       if (v.ok) {
         courses.add({ presetId: preset.id, equipId: equip.id, vehicles: 1, dock: dockAt, handles });
         course = true;
