@@ -1,3 +1,4 @@
+import { applyArrivalLayout, canAdoptArrival } from './sim/arrival-layout.js';
 import './compat.js';
 import './ui/style.css';
 import { Game, FACILITY_DEFS, ITEM_DEFS, GIFTS_BY_ID, RANK_DEFS, FEATURES, type FxEvent, CALENDAR_EVENTS, CERT_DEFS } from './sim/game.js';
@@ -78,7 +79,18 @@ const saved = FRESH ? null : load();
 const NO_KIT = new URLSearchParams(location.search).get('kit') === '0';
 /** `?events=0` — 하네스 전용: 랜덤 이벤트 모달이 다른 절을 막지 않게 끈다 (G39 절이 스스로 켠다) */
 if (new URLSearchParams(location.search).get('events') === '0') FEATURES.randomEvents = false;
-let game = saved ? Game.fromSnapshot(saved.game) : new Game(SEED, undefined, { kit: !NO_KIT });
+// Explicit reference layout is retained for historical system regression fixtures.
+const APPROVED_ARRIVAL = params.get('layout') !== 'reference';
+const createGame = (seed: number, kit = !NO_KIT): Game => new Game(seed, undefined, { kit, arrival: APPROVED_ARRIVAL });
+let arrivalAdopted = false;
+let game = saved ? Game.fromSnapshot(saved.game) : createGame(SEED);
+if (saved && APPROVED_ARRIVAL && !NO_KIT && !game.arrivalRevision) {
+  const reference = new Game(game.seed);
+  if (canAdoptArrival(game, reference)) {
+    const candidate = Game.fromSnapshot(game.toSnapshot());
+    try { applyArrivalLayout(candidate); game = candidate; arrivalAdopted = true; } catch (error) { console.warn('초기 배치 보존:', error); }
+  }
+}
 const camera = new Camera();
 registerFacilityDefs(FACILITY_DEFS.values());
 // 아틀라스(프리렌더 PNG)가 있으면 그것을, 없으면 절차 도트 — 같은 ID 라 게임 코드는 모른다 (G15)
@@ -107,7 +119,7 @@ const scene = new WaterparkScene({
   camera,
   rank: () => game.rank,
   // 새 판은 물려받은 풀을 비춘다 (G25) · 저장본은 토지 가운데
-  startTile: (() => { if (!saved) { const gt = game.gate; return { i: gt.i + 4, j: gt.j + 12, bottomInsetCss: 100 }; } /* P43 정문·실내동·산책로 → 2026-09-11 기본 S=2(원작 줌)라 화면이 절반: 출입동 남쪽 광장 + 선착장 + 킷 빠지 수역이 한 화면에 (실측 (−2,+9) 는 복도 안만 보였다) */ const l = game.land; return { i: l.i0 + Math.floor(l.w / 2), j: l.j0 + Math.floor(l.h / 2), bottomInsetCss: 84 }; })(),
+  startTile: (() => { if (!saved || arrivalAdopted) { const gt = game.gate; return game.arrivalRevision ? { i: gt.i + 1, j: gt.j + 5, bottomInsetCss: 100 } : { i: gt.i + 4, j: gt.j + 12, bottomInsetCss: 100 }; } /* P43 정문·실내동·산책로 → 2026-09-11 기본 S=2(원작 줌)라 화면이 절반: 출입동 남쪽 광장 + 선착장 + 킷 빠지 수역이 한 화면에 (실측 (−2,+9) 는 복도 안만 보였다) */ const l = game.land; return { i: l.i0 + Math.floor(l.w / 2), j: l.j0 + Math.floor(l.h / 2), bottomInsetCss: 84 }; })(),
   onFrame: (s) => {
     lastStats = s;
     if (DEBUG) {
@@ -371,7 +383,7 @@ const endingWin = new EndingWindow(document.body, () => game, {
   continueGame: () => { game.endingSeen = true; persist(); hud.showToast('이어하기 — 배속 ×2 가 메뉴에 열렸다'); },
   newGamePlus: (c) => {
     saveProfile(c);
-    game = new Game(SEED + c.runs);
+    game = createGame(SEED + c.runs, true);
     applyCarryover(game, c);
     resetSessionForNewGame();
     syncWorldToScene();
@@ -710,7 +722,7 @@ const api = {
   calendarCount: CALENDAR_EVENTS.length,
   /** n tick 을 즉시 감는다 (하네스 전용) */
   skip: (n: number) => { game.step(n); consumeFx(); refreshHud(); syncWorldToScene(); },
-  newGame: (seed: number) => { game = new Game(seed, undefined, { kit: !NO_KIT }); resetSessionForNewGame(); syncWorldToScene(); refreshHud(); },
+  newGame: (seed: number) => { game = createGame(seed); resetSessionForNewGame(); syncWorldToScene(); refreshHud(); },
   /** P50-b2 하네스 세터 — 목표 슬롯 고정(0 A · 1 B · 2 C · null 회전). `goalSlot` 은 6초 회전이라 직접 대입 금지 */
   pinGoal: (n: number | null) => { pinnedGoal = n; refreshHud(); },
   goalLine: () => goalLine(),

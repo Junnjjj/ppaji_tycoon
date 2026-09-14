@@ -413,7 +413,7 @@ export class WaterparkScene extends Phaser.Scene {
   private guestPose(g: Guest): GuestPose {
     if (g.state === 'swim') return 'swim';
     if (g.state === 'ride') return 'ride';
-    if (g.state === 'walk' || g.state === 'leave') return 'walk';
+    if (g.state === 'walk' || g.state === 'leave' || (g.state === 'enter' && g.arrivalStep !== undefined)) return 'walk';
     if (g.state === 'use' && this.facDefOf) {
       const tg = g.target;
     const f = tg && tg.kind === 'facility' ? this.facilitiesRef.find((x) => x.uid === tg.uid) : undefined;
@@ -587,7 +587,8 @@ export class WaterparkScene extends Phaser.Scene {
     for (const im of this.borderImgs) im.destroy();
     this.borderImgs = [];
     const gt = gate ?? gateTile(this.deps.rank());
-    const keys = ['fac/banana_tree/0', 'fac/pine/0', 'fac/ficus/0'];
+    const approvedTrees = ['fac/env_deciduous/0', 'fac/env_pine/0', 'fac/env_shrubs/0'];
+    const keys = approvedTrees.every(k => this.deps.provider.spec(k)) ? approvedTrees : ['fac/banana_tree/0', 'fac/pine/0', 'fac/ficus/0'];
     for (const k of keys) if (!this.textures.exists(k)) { const c = this.deps.provider.canvas(k); if (c) this.textures.addCanvas(k, c); }
     const grid = this.deps.grid;
     const inLand = (i: number, j: number): boolean => i >= land.i0 && i < land.i0 + land.w && j >= land.j0 && j < land.j0 + land.h;
@@ -628,6 +629,7 @@ export class WaterparkScene extends Phaser.Scene {
     const has = (k: string): boolean => { if (!this.textures.exists(k)) { const c = this.deps.provider.canvas(k); if (c) this.textures.addCanvas(k, c); } return this.textures.exists(k); };
     if (!has('fac/env_street_lamp/0') && !this.textures.exists('lamp/0')) this.textures.addCanvas('lamp/0', drawLamp()); // P57-b: main 가로등이 없으면 절차 가로등
     decor('busstop/0', gt.i + 1, STOP_ROW);
+    decor('fac/env_car/1', gt.i + 8, STOP_ROW + 1);
     for (let i = 4; i < grid.w; i += 8) decor(has('fac/env_street_lamp/0') ? 'fac/env_street_lamp/0' : 'lamp/0', i, STOP_ROW); // 보도 가로등
     // 길 건너(격자 위, 줄 −4~−1 은 Surround 잔디) — 마을 건물 줄: 펜션·복층 펜션·창고·안내소를 번갈아
     // P57-b: main 의 마을 건물 6(단독주택·2층 상가·펜션·소형 호텔·편의점·관리창고)이 있으면 그것, 없으면 옛 빌린 그림

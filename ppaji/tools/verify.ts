@@ -15,7 +15,8 @@ import { mkdirSync } from 'node:fs';
 import { gateTile } from '../src/sim/grid.js';
 
 const BASE = process.env['PJ_URL'] ?? 'http://localhost:5187';
-const URL = `${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`; // tut=0: 튜토리얼 Strip 은 G12 절이 따로 켜서 본다
+// Historical G/P fixtures use their original system starter; the approved layout is tested separately below.
+const URL = `${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`; // tut=0: 튜토리얼 Strip 은 G12 절이 따로 켜서 본다
 const GOAL = process.argv[process.argv.indexOf('--goal') + 1] ?? 'g0';
 /** ⚠ 문자열 비교는 'g11' < 'g3' 이라 절을 건너뛴다 — 숫자로 잰다 */
 /** P0: 빠지 스토리 goal `pN` = 승계 G0~G57 전부 + P 절(100+N). `gN` 은 승계 번호 그대로 */
@@ -193,7 +194,7 @@ async function verifyG1(page: import('playwright').Page, cdp: CDPSession): Promi
   await page.waitForTimeout(200);
   const savedRaw = (await page.evaluate(`localStorage.getItem('pj.save')`)) as string | null;
   const savedGame = savedRaw ? JSON.stringify((JSON.parse(savedRaw) as { game: unknown }).game) : '';
-  await page.goto(`${BASE}/?debug=1&px=1&freeze=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&freeze=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction(`(() => { const b = document.getElementById('wp-debug'); return !!b && (b.textContent || '').includes('FPS'); })()`, undefined, { timeout: 15000 });
   await page.waitForTimeout(400);
   const afterLoad = (await page.evaluate(`JSON.stringify(window.__pj.game.toSnapshot())`)) as string;
@@ -699,7 +700,7 @@ async function verifyG12(page: import('playwright').Page, cdp: CDPSession): Prom
   await page.waitForTimeout(200);
 
   // 튜토리얼 Strip — 새 판에서 뜨고, 탭 3번에 사라지며, 다시 안 뜬다
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction(`(() => { const b = document.getElementById('wp-debug'); return !!b && (b.textContent || '').includes('FPS'); })()`, undefined, { timeout: 15000 });
   await page.waitForTimeout(400);
   const stripUp = (await page.evaluate(`(() => { const s = document.getElementById('tut-strip'); if (!s || getComputedStyle(s).display === 'none') return null; const r = s.getBoundingClientRect(); return { h: r.height, y: r.bottom, text: s.textContent }; })()`)) as { h: number; y: number; text: string } | null;
@@ -714,7 +715,7 @@ async function verifyG12(page: import('playwright').Page, cdp: CDPSession): Prom
   }
   const stripGone = (await page.evaluate(`(() => { const s = document.getElementById('tut-strip'); return { hidden: !s || getComputedStyle(s).display === 'none', seen: localStorage.getItem('pj.tut') }; })()`)) as { hidden: boolean; seen: string | null };
   record('G12 튜토리얼 Strip — 새 판에 뜨고(≥44px) 탭 3번에 닫히며 wp.tut 를 남긴다', stripUp !== null && stripUp.h >= 44 && taps === 3 && stripGone.hidden && stripGone.seen === '1' ? 'pass' : 'fail', JSON.stringify({ up: stripUp?.h, taps, gone: stripGone }));
-  await page.goto(`${BASE}/?debug=1&px=1&freeze=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&freeze=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction(`(() => { const b = document.getElementById('wp-debug'); return !!b && (b.textContent || '').includes('FPS'); })()`, undefined, { timeout: 15000 });
   const again = (await page.evaluate(`(() => { const s = document.getElementById('tut-strip'); return !s || getComputedStyle(s).display === 'none'; })()`)) as boolean;
   record('G12 튜토리얼 — 본 뒤 리로드에 다시 안 뜬다', again ? 'pass' : 'fail');
@@ -727,7 +728,7 @@ async function verifyG19(page: import('playwright').Page, cdp: CDPSession): Prom
   const center = async (sel: string): Promise<{ x: number; y: number } | null> =>
     (await page.evaluate(`(() => { const e = document.querySelector(${JSON.stringify(sel)}); if (!e || e.hidden || e.disabled) return null; const r = e.getBoundingClientRect(); if (r.width < 1 || getComputedStyle(e).display === 'none') return null; return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; })()`)) as { x: number; y: number } | null;
   // 새 판에서 — 잔해 위에서 재면 원인을 모른다
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction(`(() => { const b = document.getElementById('wp-debug'); return !!b && (b.textContent || '').includes('FPS'); })()`, undefined, { timeout: 15000 });
   await page.waitForTimeout(300);
   // 시설 개선 — API 로 화장실을 놓고 카드에서 「개선」 터치
@@ -795,7 +796,7 @@ async function verifyG20(page: import('playwright').Page, cdp: CDPSession): Prom
 async function verifyG23(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
   const center = async (sel: string): Promise<{ x: number; y: number } | null> =>
     (await page.evaluate(`(() => { const e = document.querySelector(${JSON.stringify(sel)}); if (!e || e.hidden || e.disabled) return null; const r = e.getBoundingClientRect(); if (r.width < 1 || getComputedStyle(e).display === 'none') return null; return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; })()`)) as { x: number; y: number } | null;
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction(`(() => { const b = document.getElementById('wp-debug'); return !!b && (b.textContent || '').includes('FPS'); })()`, undefined, { timeout: 15000 });
   await page.waitForTimeout(300);
   // 풀 + 시설을 놓고 이틀을 감는다 → 사진·친구 방문이 생긴다
@@ -844,7 +845,7 @@ async function verifyG24(page: import('playwright').Page, cdp: CDPSession): Prom
 
 /** G26 — 손님 생활: 튜브 6종·체형·포즈 텍스처 · HP 아이콘 · 눕기 · 슬라이드 탑승(climb → ride → 착수) · 구매 라벨 */
 async function verifyG26(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   await page.evaluate(`window.__pj.flatten()`); // P0-B: 이 절은 고정 좌표에 놓는다 — 경사와 무관
   const tex = (await page.evaluate(`(() => { const pv = window.__pj.scene.deps.provider; const ids = ['guest/body:0:f1/swim/0/calm','guest/body:1:f2/swim/1/happy','guest/body:2:f3/ride/0/calm','guest/body:3:f4/swim/0/calm','guest/body:4:f5/ride/1/calm','guest/body:5:f6/swim/0/calm','guest/body:6:kid/walk/0/calm','guest/body:7:old/idle/0/tired','guest/body:0/lie/0/calm','guest/body:1/sit/0/happy']; const ok = ids.filter((id) => { const c = pv.canvas(id); if (!c) return false; const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let k = 3; k < d.length; k += 4) if (d[k] > 0) n++; return n > 60; }); return { ok: ok.length, total: ids.length }; })()`)) as { ok: number; total: number };
@@ -860,7 +861,7 @@ async function verifyG26(page: import('playwright').Page): Promise<void> {
 
 /** G27 — 사건 밀도: 계절 연출(꽃잎·불꽃·낙엽·조명) 카운트 · 첫 방문 대사 · 알림함 창 · 소원 상자 열기 */
 async function verifyG27(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   // 봄 첫날 — 꽃잎
   await page.evaluate(`(() => { window.__pj.flow.frozen = false; })()`);
@@ -896,7 +897,7 @@ async function verifyG27(page: import('playwright').Page): Promise<void> {
 
 /** G29 — UI 마감: Galmuri 셀프호스트 로드 · 탭 아이콘(건설 6 · SNS 3) · 창 색조 · HUD 계절/날씨 아이콘 */
 async function verifyG29(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const font = (await page.evaluate(`(async () => { await document.fonts.load('12px Galmuri11'); await document.fonts.load('bold 12px Galmuri11'); await document.fonts.ready; const faces = [...document.fonts].filter((f) => f.family.replace(/["']/g, '') === 'Galmuri11').map((f) => f.weight + ':' + f.status); return { ok: document.fonts.check('12px Galmuri11'), faces, external: performance.getEntriesByType('resource').filter((r) => !r.name.startsWith(location.origin)).length }; })()`)) as { ok: boolean; faces: string[]; external: number };
   record('G29 픽셀 서체 — Galmuri11 셀프호스트 로드(정체·굵게) · 외부 요청 0', font.ok && font.faces.filter((f) => f.endsWith('loaded')).length >= 2 && font.external === 0 ? 'pass' : 'fail', JSON.stringify(font));
@@ -906,7 +907,7 @@ async function verifyG29(page: import('playwright').Page): Promise<void> {
 
 /** G30 — 밸런스: 좋아요 리셋 경고 칩(R2) · 투입 뒤 토스트 · 랭크 유지비 · 호화 상품 3종이 상점 데이터에 있다 */
 async function verifyG30(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 50000; g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }); /* P49-b: 빠지 20칸 — 딸기 하나로는 색이 안 바뀌므로(농도 1/5) 하나를 먼저 넣어 다음 하나가 색을 바꾸게 한다 */ const p = g.pools.all[0]; g.unlocked.items.add('strawberry'); g.putItem(p.id, 'strawberry'); p.likes = 77; w.dock.enter('item', p.id); const warn = document.querySelectorAll('.kdock [data-item][data-resets]'); const first = warn[0]; const label = first ? first.textContent : ''; const before = g.money; if (first) { first.click(); const put = document.getElementById('dock-pool-put'); if (put) put.click(); } const toast = (document.getElementById('hud-toast') || {}).textContent || ''; const after = { likes: p.likes, money: g.money }; const m0 = g.dailyMaintenance(); g.rank = 4; const m4 = g.dailyMaintenance(); g.rank = 0; const lux = ['crystal_fountain', 'grand_arch', 'moon_tower'].filter((id) => w.facilityDefs.has(id)).length; return { warn: warn.length, label, spent: before - after.money, likes: after.likes, toast, m0, m4, lux }; })()`)) as { warn: number; label: string; spent: number; likes: number; toast: string; m0: number; m4: number; lux: number };
   record('G30 → P49-b R2 — 색 바꾸는 아이템 칩에 「좋아요 77 리셋」 경고 · 넣으면 좋아요 0 + 토스트 (빠지 20칸 · 딸기 1 선투입)', r.warn >= 1 && r.label.includes('77') && r.likes === 0 && r.spent > 0 ? 'pass' : 'fail', JSON.stringify(r));
@@ -915,7 +916,7 @@ async function verifyG30(page: import('playwright').Page): Promise<void> {
 
 /** G31 — 소리: 계절 곡 4 · 징글 3 · 볼륨 저장 · G32 — 가로에서 세로 안내 */
 async function verifyG31(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const snd = (await page.evaluate(`(() => { const s = window.__pj.sfx; const names = []; for (let k = 0; k < 4; k++) { s.setSeason(k); names.push(s.trackName); } s.setSeason(0); let ok = true; try { s.jingle('cert'); s.jingle('result'); s.jingle('ending'); } catch (e) { ok = false; } s.setVolume(0.5); const vol = localStorage.getItem('pj.vol'); s.setVolume(1); return { names: [...new Set(names)].length, ok, vol, running: s.bgmRunning }; })()`)) as { names: number; ok: boolean; vol: string | null; running: boolean };
   record('G31 소리 — 계절 곡 4 (이름이 다 다르다) · 징글 3 예외 0 · 볼륨이 저장된다', snd.names === 4 && snd.ok && snd.vol === '0.5' ? 'pass' : 'fail', JSON.stringify(snd));
@@ -929,7 +930,7 @@ async function verifyG31(page: import('playwright').Page): Promise<void> {
 
 /** G33 — 요리 레벨이 맛·인기에 소급(메뉴 창 표기) · 좋아요가 유입 목표를 올린다 */
 async function verifyG33(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 50000; const gt = g.gate; g.unlocked.facilities.add('cafe'); const rc = g.placeFacility('cafe', gt.i + 2, gt.j + 4, 0); const cafe = g.facilities.all.find((f) => f.defId === 'cafe'); const t0 = g.dailyTarget(); g.sns.totalLikes = 5000; const t1 = g.dailyTarget(); g.cooking.exp = 0; w.menuWin.show(cafe.uid); const lv1 = [...document.querySelectorAll('#win-menu [data-recipe]')].map((e) => e.dataset.stats || '')[0] || ''; document.querySelector('#win-menu-main .kwin-close').click(); g.cooking.exp = 1000000; w.menuWin.show(cafe.uid); const lv10 = [...document.querySelectorAll('#win-menu [data-recipe]')].map((e) => e.dataset.stats || '')[0] || ''; document.querySelector('#win-menu-main .kwin-close').click(); g.cooking.exp = 0; g.sns.totalLikes = 0; const taste = (s) => Number((s.match(/맛 (\\d+)/) || [0, 0])[1]); return { ok: rc.ok, t0, t1, lv1, lv10, up: taste(lv10) > taste(lv1), tag: lv10.includes('Lv10') }; })()`)) as { ok: boolean; t0: number; t1: number; lv1: string; lv10: string; up: boolean; tag: boolean };
   record('G33 좋아요 5,000 → 유입 목표 ↑ · 요리 Lv10 에서 메뉴 창 맛·인기가 오르고 Lv 표기', r.ok && r.t1 > r.t0 && r.up && r.tag ? 'pass' : 'fail', JSON.stringify(r));
@@ -937,7 +938,7 @@ async function verifyG33(page: import('playwright').Page): Promise<void> {
 
 /** G34 — 대기 줄(순번 비켜 서기) · 폐장 1시간 전 퇴장 행렬 · 비 오면 돌아가는 손님 */
 async function verifyG34(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   // A. 줄 — 정원 1 데크체어로 전원을 보낸다. 줄이 2 이상이 되는 순간 멈춘다 (프레임은 아래서 따로 기다린다)
   const q = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; const gt = g.gate; g.unlocked.facilities.add('pyeongsang_row'); g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }); /* P49-b: 빠지 20칸 */ const rc = g.placeFacility('pyeongsang_row', gt.i + 2, gt.j + 4, 0); const chair = g.facilities.all[0]; let maxQ = 0; let n = 0; while (n++ < 900 && maxQ < 2) { for (const gu of g.guests.all) if (gu.state === 'wander' && gu.stateTicks === 0) { gu.target = { kind: 'facility', uid: chair.uid }; gu.state = 'walk'; } w.skip(1); maxQ = Math.max(maxQ, g.guests.queueAt(chair)); } w.flow.frozen = true; /* 아래 250ms 동안 실시간 tick 이 줄 머리를 처리해 버리지 않게 — 화면은 얼린 상태로도 그려진다 */ return { ok: rc.ok, maxQ, n }; })()`)) as { ok: boolean; maxQ: number; n: number };
@@ -953,7 +954,7 @@ async function verifyG34(page: import('playwright').Page): Promise<void> {
 
 /** G35 — 심사 결과 창(심사위원 카드 3 · 도장) · 인증 조건 다양화 */
 async function verifyG35(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; w.resultsCtl.enabled = true; g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }); /* P49-b: 빠지 20칸 = grade_f 의 20칸 이상 */ g.certs.state.applied = { id: 'grade_f', judgeDay: g.day }; g.tick = w.JUDGE_TICK - 1; w.skip(2); })()`);
   await page.waitForTimeout(400);
@@ -964,7 +965,7 @@ async function verifyG35(page: import('playwright').Page): Promise<void> {
 
 /** G36 — 실내 전용 거절 사유 · 계절 벡터가 인기에 반영 · 슬라이드 AB 는 착수 풀만 */
 async function verifyG36(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 200000; const gt = g.gate; g.unlocked.facilities.add('sauna'); g.unlocked.facilities.add('footbath'); const rs = g.canPlace('sauna', gt.i + 2, gt.j + 4, 0); g.placeFacility('footbath', gt.i + 3, gt.j + 3, 0); const d0 = g.day; g.day = 0; const spring = g.parkPopularity(); g.day = 12; const winter = g.parkPopularity(); g.day = d0; w.refreshHud(); return { saunaOk: rs.ok, reason: rs.reason || '', spring, winter }; })()`)) as { saunaOk: boolean; reason: string; spring: number; winter: number };
   record('G36 실내 전용 사우나는 야외 거절(사유에 「실내」) · 핫텁 계절 벡터로 겨울 인기 > 봄', !r.saunaOk && r.reason.includes('실내') && r.winter > r.spring ? 'pass' : 'fail', JSON.stringify(r));
@@ -972,7 +973,7 @@ async function verifyG36(page: import('playwright').Page): Promise<void> {
 
 /** G37 — 비상 자금 (타일 갈기는 P49-a2 에 물빛과 함께 삭제) */
 async function verifyG37(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = -100; g.tick = w.TPD - 1; w.skip(1); return { bailout: g.money, n: g.stats.bailouts }; })()`)) as { bailout: number; n: number };
   record('G37 폐장 잔고 음수 → 비상 자금 2,000G · 횟수 1 (P49-a2: 타일 갈기 칩 절 삭제 — 물빛은 빠지 등급이 대체)', r.bailout === 2000 && r.n === 1 ? 'pass' : 'fail', JSON.stringify(r));
@@ -980,7 +981,7 @@ async function verifyG37(page: import('playwright').Page): Promise<void> {
 
 /** G39 — 랜덤 이벤트 선택 창: 강제 이벤트 → 모달 창 · 선택지 2 · 비용·효과 표기 · 누르면 적용 */
 async function verifyG39(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 10000; w.features.randomEvents = true; g.forceEvent('tv_crew'); w.skip(1); w.features.randomEvents = false; })()`);
   await page.waitForTimeout(250);
@@ -995,7 +996,7 @@ async function verifyG40(page: import('playwright').Page, cdp: import('playwrigh
     if (!r) throw new Error('no element ' + sel);
     await touch(c, r.x, r.y);
   };
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }); /* P49-b: 빠지 20칸 */ w.campaignWin.show(); })()`);
   await page.waitForTimeout(200);
@@ -1017,7 +1018,7 @@ async function verifyG40(page: import('playwright').Page, cdp: import('playwrigh
 
 /** G41 — 요리 = ★2 · 와일드카드(과일 아무거나) · 실패작 · 「설정」 버튼 */
 async function verifyG41(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const lock = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.refreshHud(); w.mainMenu.show(); const cell = document.querySelector('#win-menu-main [data-menu="cook"]'); const locked1 = cell ? !!cell.dataset.locked : null; document.querySelector('#win-menu-main .kwin-close').click(); g.rank = 2; w.refreshHud(); w.mainMenu.show(); const cell2 = document.querySelector('#win-menu-main [data-menu="cook"]'); const locked2 = cell2 ? !!cell2.dataset.locked : null; document.querySelector('#win-menu-main .kwin-close').click(); return { locked1, locked2, open: g.cookingOpen }; })()`)) as { locked1: unknown; locked2: boolean | null; open: boolean };
   record('G41 요리 항목(MENU) — ★1 잠김(사유 ★2) · ★2 가 되면 열린다', !!lock.locked1 && lock.locked2 === false && lock.open ? 'pass' : 'fail', JSON.stringify(lock));
@@ -1027,7 +1028,7 @@ async function verifyG41(page: import('playwright').Page): Promise<void> {
 
 /** G42 — 풀 정보 상세(색·향·온도 탭) · 농도 · 남은 일수 · 심사 창 만점 줄 */
 async function verifyG42(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }); /* P49-b: 빠지 20칸 */ const p = g.pools.all[0]; for (const id of ['strawberry', 'blueberry']) g.unlocked.items.add(id); g.putItem(p.id, 'strawberry'); const bars1 = g.poolState(p.id).detail.intensityBars; g.putItem(p.id, 'blueberry'); const bars2 = g.poolState(p.id).detail.intensityBars; w.poolInfo.show(p.id); const rows = document.querySelectorAll('#win-pool [data-detail]').length; const bodyHidden = document.querySelector('#win-pool [data-detail-body="color"]').classList.contains('khide'); document.querySelector('#win-pool [data-detail="color"]').click(); const bodyShown = !document.querySelector('#win-pool [data-detail-body="color"]').classList.contains('khide'); const text = document.querySelector('#win-pool [data-detail-body="color"]').textContent; const items = [...document.querySelectorAll('#win-pool .krow')].map((r) => r.textContent).find((t2) => t2.startsWith('소품')); const mix = g.poolState(p.id).detail.colorMix; document.querySelector('#win-pool .kwin-close').click(); return { bars1, bars2, rows, bodyHidden, bodyShown, text: text.slice(0, 80), items, mixN: mix.length, top: mix[0] ? mix[0].share : 1 }; })()`)) as { bars1: number; bars2: number; rows: number; bodyHidden: boolean; bodyShown: boolean; text: string; items: string; mixN: number; top: number };
   record('G42 풀 정보 — 색·향·온도 행 3 · 탭하면 상세 · 색이 섞이면 주된 색 비중 < 1 · 아이템 남은 일수', r.rows === 3 && r.bodyHidden && r.bodyShown && r.mixN === 2 && r.top < 1 && r.text.includes('농도') && /남은 \d+일/.test(r.items) ? 'pass' : 'fail', JSON.stringify(r));
@@ -1037,7 +1038,7 @@ async function verifyG42(page: import('playwright').Page): Promise<void> {
 
 /** G43 — 손님 창 선물 버튼 · 배치 중 우측 칸 반투명+토스트 · 첫 주말 비치체어 선물 */
 async function verifyG43(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const gift = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 50000; const f = g.sns.unlockedFriends[0]; const fd = g.sns.friendDef(f.id); const gu = g.guests.spawn({ id: fd.id, palette: fd.palette, favColor: fd.fav.color, favScent: fd.fav.scent, name: fd.name, age: fd.age, gender: fd.gender }); w.guestInfo.show(gu); const btns = [...document.querySelectorAll('#win-guest [data-gift]')]; const enabled = btns.filter((b) => !b.disabled); const before = f.gifts.length; if (enabled[0]) enabled[0].click(); const after = g.sns.friends.get(f.id).gifts.length; const left = document.querySelectorAll('#win-guest [data-gift]').length; document.querySelector('#win-guest .kwin-close').click(); return { btns: btns.length, enabled: enabled.length, before, after, left }; })()`)) as { btns: number; enabled: number; before: number; after: number; left: number };
   record('G43 손님 창 — 친구에게 튜브·수영복 선물 버튼 · 누르면 선물이 늘고 버튼이 준다', gift.btns >= 2 && gift.enabled >= 1 && gift.after === gift.before + 1 && gift.left === gift.btns - 1 ? 'pass' : 'fail', JSON.stringify(gift));
@@ -1049,7 +1050,7 @@ async function verifyG43(page: import('playwright').Page): Promise<void> {
 
 /** G44 — 심사 조건표 24건: 카드마다 심사관 3 = 조건 가중치 합 3 · S 카이로 풀장에 골든 카이로봇 · 튜브 보상 12 */
 async function verifyG44(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&confirm=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.certWin.show(); const out = {}; for (const fam of ['grade', 'color', 'scent', 'spa', 'fruit', 'stream', 'fun', 'cutesy']) { const t = document.querySelector('#win-cert [data-tab="' + fam + '"]'); if (t) t.click(); const cards = [...document.querySelectorAll('#win-cert [data-cert]')]; out[fam] = cards.map((c) => c.querySelectorAll('.kcond').length); } const sCard = document.querySelector('#win-cert [data-cert="grade_s"]'); document.querySelector('#win-cert [data-tab="grade"]').click(); const sTxt = document.querySelector('#win-cert [data-cert="grade_s"]') ? document.querySelector('#win-cert [data-cert="grade_s"]').textContent : ''; document.querySelector('#win-cert .kwin-close').click(); const gifts = [...g.certs.defs.values()].filter((d) => d.reward.kind === 'gift').length; return { out, sTxt: sTxt.slice(0, 200), gifts, total: g.certs.defs.size }; })()`)) as { out: Record<string, number[]>; sTxt: string; gifts: number; total: number };
   const allThree = Object.values(r.out).every((arr) => arr.length > 0 && arr.every((n) => n >= 2 && n <= 3));
@@ -1058,7 +1059,7 @@ async function verifyG44(page: import('playwright').Page): Promise<void> {
 
 /** G46 — 카이로식 창 문법: 확인 대화상자(예/아니오) · 축하 팝업 · 결산 타일 · 메뉴 설명 · 숫자 알약 */
 async function verifyG46(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&tut=0&celebrate=1`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&tut=0&celebrate=1`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const dlg = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 50000; w.investWin.show(); const row = document.querySelector('#win-invest [data-invest]:not([disabled])'); row.click(); const d = document.getElementById('kdialog'); const up1 = !!d && !d.classList.contains('khide'); const cost = d ? d.querySelector('[data-cost]') : null; const costTxt = cost ? cost.textContent : ''; const money0 = g.money; d.querySelector('[data-no]').click(); const stillMoney = g.money === money0; const up2 = !d.classList.contains('khide'); row.click(); d.querySelector('[data-yes]').click(); const spent = money0 - g.money; const up3 = !d.classList.contains('khide'); document.querySelector('#win-invest .kwin-close').click(); return { up1, costTxt, stillMoney, up2, spent, up3 }; })()`)) as { up1: boolean; costTxt: string; stillMoney: boolean; up2: boolean; spent: number; up3: boolean };
   record('G46 확인 대화상자 — 투자 행 → 「지출 −3,000G」 · 아니오는 안 쓰고 닫힘 · 예는 쓰고 닫힘', dlg.up1 && dlg.costTxt.includes('3,000') && dlg.stillMoney && !dlg.up2 && dlg.spent === 3000 && !dlg.up3 ? 'pass' : 'fail', JSON.stringify(dlg));
@@ -1070,7 +1071,7 @@ async function verifyG46(page: import('playwright').Page): Promise<void> {
 
 /** G47 — 원작 창 문법 2차: 풀 정보(썸네일·알약·타일 3+막대·이름 변경) · 시설 정보 페이지 넘김 · 배치 화살표+가격표 · 예고 태그 · 건설 NEW */
 async function verifyG47(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const pool = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }); /* P49-b: 빠지 20칸 */ const p = g.pools.all[0]; w.poolInfo.show(p.id); const win = document.getElementById('win-pool'); const tiles = win.querySelectorAll('.kptile').length; const bars = win.querySelectorAll('.kbars').length; const pills = win.querySelectorAll('.kpool-pills .knum').length; const verdict = [...win.querySelectorAll('.kptile-sub')].map((e) => e.textContent).join('|'); const input = win.querySelector('[data-pool-name]'); input.value = '초록풀장'; win.querySelector('[data-rename]').click(); const title = document.getElementById('win-pool-title').textContent; document.querySelector('#win-pool .kwin-close').click(); return { tiles, bars, pills, verdict, title, name: g.poolName(p.id) }; })()`)) as { tiles: number; bars: number; pills: number; verdict: string; title: string; name: string };
   record('G47 풀 정보 — 색·향·온도 타일 3 + 농도 막대 · 값 알약 3 · 온도 판정 · 이름 변경이 제목에 반영', pool.tiles === 3 && pool.bars >= 2 && pool.pills === 3 && /좋아요|차가워요|뜨거워요/.test(pool.verdict) && pool.title === '초록풀장' && pool.name === '초록풀장' ? 'pass' : 'fail', JSON.stringify(pool));
@@ -1084,7 +1085,7 @@ async function verifyG47(page: import('playwright').Page): Promise<void> {
 
 /** G48 — 리텐션 R1·R3·R6·R7·R8: 모달 대기열 · 만료 토스트 · 티커 뉴스 · 받을 것 배지 · 17시 입고 배지 */
 async function verifyG48(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0&celebrate=1`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0&celebrate=1`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const q = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.interruptBudget.reset(); g.inbox.push({ tick: g.tick, day: g.day, kind: 'system', priority: 'modal', title: '랭크 업! ★1 동네 풀장', body: 'a' }); g.inbox.push({ tick: g.tick, day: g.day, kind: 'system', priority: 'modal', title: '새 지역 개방 — 학교', body: 'b' }); w.skip(1); const c = document.getElementById('win-celebrate'); const first = c.querySelector('.kcele-title').textContent; const queued = w.modalQueue.length; document.getElementById('win-celebrate-ok').click(); w.interruptBudget.reset(); w.skip(1); const second = !c.hidden ? c.querySelector('.kcele-title').textContent : null; if (!c.hidden) document.getElementById('win-celebrate-ok').click(); return { first, queued, second }; })()`)) as { first: string; queued: number; second: string | null };
   record('G48 모달 대기열 — 같은 틱 모달 2건: 첫 창 뒤에 둘째 창 (버려지지 않는다)', q.first.includes('랭크 업') && q.queued === 1 && (q.second ?? '').includes('새 지역') ? 'pass' : 'fail', JSON.stringify(q));
@@ -1098,7 +1099,7 @@ async function verifyG48(page: import('playwright').Page): Promise<void> {
 
 /** G49 — R2 소원 보상 돈 → 콘텐츠: 메시지 탭 소원 카드(초상 · ★ · 보상 이름 · 새 손님 실루엣) · 돈 보상 ≤ 10% */
 async function verifyG49(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const all = [...g.sns.wishesByFriend.values()].flat(); const money = all.filter((x) => x.reward.kind === 'money').length; const f = g.sns.unlockedFriends[0]; f.activeWish = 1; f.windowUntilDay = g.day + 8; w.snsWin.show('messages'); const row = document.querySelector('#win-sns [data-wish]'); const face = row ? !!row.querySelector('.kportrait') : false; const name = row ? String(row.querySelectorAll('.krow-name .kicon[data-on="1"]').length) + '/' + String(row.querySelectorAll('.krow-name .kicon').length) : ''; const reward = row ? row.querySelector('.krow-v').textContent : ''; document.querySelector('#win-sns .kwin-close').click(); return { total: all.length, money, face, name, reward }; })()`)) as { total: number; money: number; face: boolean; name: string; reward: string };
   record('G49 소원 카드 — 초상 · 별 2/3 · 보상이 이름으로(돈 아님) · 돈 보상 ≤ 10%', r.face && r.name === '2/3' && !/G$/.test(r.reward) && r.money / r.total <= 0.1 ? 'pass' : 'fail', JSON.stringify(r));
@@ -1106,7 +1107,7 @@ async function verifyG49(page: import('playwright').Page): Promise<void> {
 
 /** G50 — R5 목표 3슬롯: 티커 A + 랭크·인증 진행바 동시 · 진행바 탭 → 창 · HUD 면적 ≤ 18% 유지 */
 async function verifyG50(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; w.refreshHud(); const bars = [...document.querySelectorAll('#hud-ticker .kgoal:not(.khide)')]; const info = bars.map((b) => [b.dataset.goal, b.querySelector('.kgoal-label').textContent, b.dataset.pct]); const rect = document.getElementById('hud-ticker').getBoundingClientRect(); const fill = bars.map((b) => b.querySelector('.kgoal-fill').style.width); bars[0].click(); const rankUp = !document.getElementById('win-rank').hidden; document.querySelector('#win-rank .kwin-close').click(); const cert = bars.find((b) => b.dataset.goal === 'cert'); if (cert) cert.click(); const certUp = !document.getElementById('win-cert').hidden; if (certUp) document.querySelector('#win-cert .kwin-close').click(); return { info, fill, h: rect.height, rankUp, certUp }; })()`)) as { info: string[][]; fill: string[]; h: number; rankUp: boolean; certUp: boolean };
   record('G50 목표 3슬롯 — 랭크·인증 진행바 2 (라벨·%) · 탭하면 랭크/심사 창 · 티커 ≤ 32px', r.info.length === 2 && r.fill.every((f) => /%$/.test(f)) && r.rankUp && r.certUp && r.h <= 32 ? 'pass' : 'fail', JSON.stringify(r));
@@ -1114,7 +1115,7 @@ async function verifyG50(page: import('playwright').Page): Promise<void> {
 
 /** G51 — R4 인증 사다리: 티커의 인증 진행바는 「아직 안 넘은」 인증을 가리키고, 그것을 통과하면 다음 칸으로 옮겨 간다 */
 async function verifyG51(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const label = () => { w.refreshHud(); const b = document.querySelector('#hud-ticker .kgoal[data-goal="cert"]'); return b && !b.classList.contains('khide') ? b.querySelector('.kgoal-label').textContent : null; }; const l0 = label(); const target = [...g.certs.defs.values()].find((d) => l0 && l0.endsWith(d.name)); const passedBefore = target ? (g.certs.state.passed[target.id] ?? 0) : -1; if (target) g.certs.state.passed[target.id] = 1; const l1 = label(); const distinct = Object.values(g.certs.state.passed).filter((n) => n > 0).length; return { l0, l1, passedBefore, distinct, defs: g.certs.defs.size }; })()`)) as { l0: string | null; l1: string | null; passedBefore: number; distinct: number; defs: number };
   record('G51 인증 사다리 — 진행바가 미통과 인증을 가리키고, 통과하면 다른 인증으로 옮겨 간다 (24종)', r.l0 && r.l1 && r.l0 !== r.l1 && r.passedBefore === 0 && r.defs === 24 ? 'pass' : 'fail', JSON.stringify(r));
@@ -1122,7 +1123,7 @@ async function verifyG51(page: import('playwright').Page): Promise<void> {
 
 /** G52 — UI 2차 잔여: 미리보기 내용(색 전→후) · 신문식 축하(제호·날짜·도장) · 시설 이동(도구 필요 → 이동 → uid·단계 보존) */
 async function verifyG52(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0&celebrate=1`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0&celebrate=1`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const pv = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }); /* P49-b: 빠지 20칸 */ const p = g.pools.all[0]; w.dock.enter('item', p.id); document.querySelector('#dock-pool [data-item="strawberry"]').click(); const pre = document.getElementById('dock-pool-preview'); const shown = !pre.classList.contains('khide'); const rows = [...pre.querySelectorAll('.kprev-row')].map((r) => r.textContent); const before = p.items.length; document.getElementById('dock-pool-put').click(); const after = p.items.length; const hidden = pre.classList.contains('khide'); w.dock.exit(); return { shown, rows, before, after, hidden }; })()`)) as { shown: boolean; rows: string[]; before: number; after: number; hidden: boolean };
   record('G52 미리보기 — 「색 맑음 0/5 → 핑크 n/5」 · 향 베리 · 넣기 전 0 → 뒤 1 · 넣은 뒤 미리보기 접힘', pv.shown && /맑음.*→.*핑크/.test(pv.rows[0] ?? '') && /베리/.test(pv.rows[1] ?? '') && pv.before === 0 && pv.after === 1 && pv.hidden ? 'pass' : 'fail', JSON.stringify(pv));
@@ -1134,7 +1135,7 @@ async function verifyG52(page: import('playwright').Page): Promise<void> {
 
 /** G53 — 리텐션 5차(조사 D11·D17) + v3 잔여: 수집 분모 6줄 · 친구 글 좋아요 → 소원 EXP · 실패작 메뉴 · 심사 무대 조명 */
 async function verifyG53(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const col = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.rankWin.show(); const rows = [...document.querySelectorAll('#win-rank .kcollect')].map((r) => [r.dataset.collect, r.querySelector('.krow-v').textContent, r.querySelector('.kgoal-fill').style.width]); document.querySelector('#win-rank .kwin-close').click(); return { rows, recipes: g.cooking.recipes.size, facilities: g.facilities.defsCount }; })()`)) as { rows: string[][]; recipes: number; facilities: number };
   const denom = Object.fromEntries(col.rows.map((r) => [r[0], Number((r[1] ?? '').split('/')[1])]));
@@ -1147,7 +1148,7 @@ async function verifyG53(page: import('playwright').Page): Promise<void> {
 
 /** G54 — G46 잔여 소품: 재료 칩 아이콘 9계열 · 인기 캡슐 라벨/숫자 위계 · 짧은 창은 가운데(긴 창은 위) */
 async function verifyG54(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.cooking.exp = 99999; w.cookWin.show(); const chips = [...document.querySelectorAll('#win-cook [data-ingredient]')]; const icons = chips.filter((c) => c.querySelector('.kpic[data-pic], .kicon[data-icon]')).length; const kinds = new Set(chips.map((c) => { const e = c.querySelector('.kpic[data-pic], .kicon[data-icon]'); return e ? (e.dataset.pic || e.dataset.icon) : ''; })); /* P56-b: 그림이 오면 계열 아이콘 대신 시트 그림(.kpic) — 종류는 그림 id 로 센다 */ document.querySelector('#win-cook .kwin-close').click(); const info = document.getElementById('hud-info'); const lab = getComputedStyle(info.querySelector('.kpop-label')).fontSize; const num = getComputedStyle(info.querySelector('.num')).fontSize; const gu = g.guests.all[0]; if (gu) w.guestInfo.show(gu); const gi = document.getElementById('win-guest'); const shortFit = gu && gi && !gi.hidden ? gi.classList.contains('kfit') : null; if (gi && !gi.hidden) document.querySelector('#win-guest .kwin-close').click(); w.rankWin.show(); return { chips: chips.length, icons, kinds: [...kinds].filter(Boolean).length, lab: parseFloat(lab), num: parseFloat(num), shortFit }; })()`)) as { chips: number; icons: number; kinds: number; lab: number; num: number; shortFit: boolean | null };
   await page.waitForTimeout(80);
@@ -1158,7 +1159,7 @@ async function verifyG54(page: import('playwright').Page): Promise<void> {
 
 /** G55 — 5189 재플레이 후속: 독 탭 한 줄 · 아이템 모드에 타일 칩 없음 · 「핑크까지 N개」 힌트 · 이동 고스트 「이동 · 무료」 · 같은 자리 거절 */
 async function verifyG55(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const p = g.pools.all[0]; w.dock.enter('item', p.id); const tabs = [...document.querySelectorAll('#dock-pool .ktab')]; const tabH = Math.max(...tabs.map((t) => t.getBoundingClientRect().height)); const tabOneLine = tabs.every((t) => t.getBoundingClientRect().height <= 48 && t.scrollWidth <= t.clientWidth + 1); const tileChip = document.querySelector('#dock-pool [data-tile]'); const tileVisible = tileChip ? tileChip.getBoundingClientRect().height > 0 : false; document.querySelector('#dock-pool [data-item="strawberry"]').click(); const colorRow = (document.querySelector('#dock-pool-preview .kprev-row') || {}).textContent || ''; w.dock.exit(); const gt = g.gate; const f = g.facilities.all[0]; g.tools.add('move'); const same = g.canMoveFacility(f.uid, f.i, f.j, f.facing); w.facilityInfo.show(f.uid); document.getElementById('win-facility-move').click(); const label = w.scene.aimForTest().label; const why = document.querySelector('#dock-place .kdock-cost').textContent; w.placeDock.exit(); return { tabH, tabOneLine, tileVisible, colorRow, same: same.ok ? 'ok' : same.reason, label, why, pool: p.tiles.length }; })()`)) as { tabH: number; tabOneLine: boolean; tileVisible: boolean; colorRow: string; same: string; label: string | null; why: string; pool: number };
   record('G55 재플레이 후속 — 탭 한 줄 · 타일 칩 숨김 · 「핑크까지 N개」 · 이동 고스트 「이동 · 무료」 · 같은 자리 거절', r.tabOneLine && !r.tileVisible && /핑크빛?까지 \d개/.test(r.colorRow) && r.same.includes('같은 자리') && r.label === '이동 · 무료' && r.why.includes('같은 자리') ? 'pass' : 'fail', JSON.stringify(r));
@@ -1166,7 +1167,7 @@ async function verifyG55(page: import('playwright').Page): Promise<void> {
 
 /** G56 — 후반(8년차) 재플레이 후속: 통과 인증 접기 · 배지 99+ · 부표 줄 한 줄 · 인기도 천 단위 */
 async function verifyG56(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.certs.state.passed['grade_f'] = 1; w.certWin.show(); const f = document.querySelector('#win-cert [data-cert="grade_f"]'); const d = document.querySelector('#win-cert [data-cert="grade_d"]'); const fPassed = f.classList.contains('kcert-passed') && !f.querySelector('.kstage') && !!f.querySelector('[data-apply]'); const dFull = !d.classList.contains('kcert-passed') && !!d.querySelector('.kstage') && !!d.querySelector('[data-expected]'); const fH = f.getBoundingClientRect().height; const dH = d.getBoundingClientRect().height; document.querySelector('#win-cert .kwin-close').click(); w.hud.setInfoBadge(207); const badge = document.querySelector('#hud-info .kbadge').textContent; w.hud.setInfoBadge(7); const p = g.pools.all[0]; w.poolInfo.show(p.id); const lab = document.querySelector('#win-pool .kpool-tiles > .krow-k'); const labH = lab ? lab.getBoundingClientRect().height : 0; document.querySelector('#win-pool .kwin-close').click(); return { fPassed, dFull, fH, dH, badge, labH }; })()`)) as { fPassed: boolean; dFull: boolean; fH: number; dH: number; badge: string; labH: number };
   record('G56 후반 후속 — 통과한 F 는 접힘(무대 없음 · 신청 남음 · 높이 < D 의 절반) · 정보 배지 207 → 「99+」 (부표 라벨은 P49-a2 물빛 삭제로 없음)', r.fPassed && r.dFull && r.fH < r.dH / 2 && r.badge === '99+' ? 'pass' : 'fail', JSON.stringify(r));
@@ -1174,7 +1175,7 @@ async function verifyG56(page: import('playwright').Page): Promise<void> {
 
 /** G57 — 버그 감사 수정: 결산 카드가 삼킨 사건 선택 창 재개 · 하루+시즌 카드 줄 세우기 · 새 판이 씬 격자를 갈아끼움 */
 async function verifyG57(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.resultsCtl.enabled = true; w.features.randomEvents = true; g.day = 3; g.tick = w.TPD - 2; const forced = g.forceEvent('festival'); w.skip(3); const res = document.getElementById('win-results'); const choice = document.getElementById('win-choice'); const choiceFirst = !choice.hidden && res.hidden; const pending0 = g.events.pending; const b = document.querySelector('#win-choice [data-choice]'); if (b) b.click(); const t1 = !res.hidden ? document.getElementById('win-results-title').textContent : null; document.getElementById('win-results-ok').click(); const t2 = !res.hidden ? document.getElementById('win-results-title').textContent : null; if (!res.hidden) document.getElementById('win-results-ok').click(); const pending1 = g.events.pending; w.resultsCtl.enabled = false; w.newGame(9); const sameGrid = w.scene.gridForTest() === w.game.grid; return { forced, choiceFirst, pending0, t1, t2, pending1, sameGrid }; })()`)) as { forced: boolean; choiceFirst: boolean; pending0: string | null; t1: string | null; t2: string | null; pending1: string | null; sameGrid: boolean };
   record('G57 사건 창이 떠 있어도 결산 카드가 버려지지 않는다 — 답하면 하루 카드 → 시즌 카드 · 새 판이 씬 격자를 갈아끼움', r.forced && r.choiceFirst && !!r.pending0 && (r.t1 ?? '').includes('마감') && (r.t2 ?? '').includes('결산') && r.pending1 === null && r.sameGrid ? 'pass' : 'fail', JSON.stringify(r));
@@ -1182,7 +1183,7 @@ async function verifyG57(page: import('playwright').Page): Promise<void> {
 
 /** P48-b2 — 만(灣)·허가·킷: 굽이 물은 「내 물」(inMyWater) · 킷 수역 20 은 만 안 · 허가 ★0 40칸 = 킷 20 + 20 · 넘치면 「수면 허가」 거절 · 선착장은 본류 잔교 끝 · 후보 1 · 야외 식당은 실내 거절(회귀) */
 async function verifyP48b2(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; const grid = g.grid; let bay = 0, mine = 0; for (let j = 9; j < 50; j++) for (let i = g.land.i0; i < g.land.i0 + g.land.w; i++) { const c = grid.at(i, j); if (c === 5 || c === 6) { bay++; if (g.inMyWater(i, j)) mine++; } } const p = g.pools.all[0]; const rows = p ? [...new Set(p.tiles.map((k) => Math.floor(k / grid.w)))].sort((a, b) => a - b) : []; const dock = g.facilities.all.find((f) => f.defId === 'dock'); g.money = 1000000; const mk = (c, w, top) => { const r = []; for (let x = c; x <= c + w + 1; x++) r.push({ i: x, j: top }); for (let j = top + 1; j <= top + 6; j++) { r.push({ i: c, j }); r.push({ i: c + w + 1, j }); } for (let x = c + 1; x <= c + w; x++) r.push({ i: x, j: top + 6 }); return r; }; /* P48-b3: 편평한 물가(행 24)에 윗줄까지 두른 링 — 킷 링 서쪽 4×5 · 잔교 동쪽 3×5 */ const ring = mk(gt.i - 4, 4, 24); let okN = 0; for (const t of ring) if (g.paintDeck([t]).ok) okN++; const used = g.permitUsed, max = g.permitMax; const ring2 = mk(gt.i + 11, 3, 24); let last = null; for (const t of ring2) last = g.paintDeck([t]); const shop = g.canPlace('shop', gt.i - 6, gt.j + 10, 0); return { bay, mine, pool: p ? p.tiles.length : 0, rows, dock: dock ? [dock.i, dock.j] : null, choices: g.dockChoices().length, okN, used, max, lastOk: last ? last.ok : null, lastReason: last && !last.ok ? last.reason : '', shopOk: shop.ok, shopReason: shop.ok ? '' : shop.reason }; })()`)) as { bay: number; mine: number; pool: number; rows: number[]; dock: number[] | null; choices: number; okN: number; used: number; max: number; lastOk: boolean | null; lastReason: string; shopOk: boolean; shopReason: string };
   record('P48-b2 만 — 내 앞 수면(물가 깊이 7) ≥250칸 · 본류 물은 그보다 많다 · 킷 수역 20 은 링 안 행 24~28 · 선착장 (gt.i+10, 26) · 후보 1', r.mine >= 250 && r.bay > r.mine && r.pool === 20 && r.rows.join(',') === '24,25,26,27,28' && r.dock?.[0] === 58 && r.dock[1] === 26 && r.choices === 1 ? 'pass' : 'fail', JSON.stringify({ bay: r.bay, mine: r.mine, pool: r.pool, rows: r.rows, dock: r.dock, choices: r.choices }));
@@ -1191,7 +1192,7 @@ async function verifyP48b2(page: import('playwright').Page): Promise<void> {
 
 /** P52-b — 확정 바 위험 라벨: 깊은 물 기구(블롭)를 조준하면 「위험 …」 칩(토큰 색) · 알바 있는 망루를 세우면 한 단 하강 · 알바 없으면 그대로 */
 async function verifyP52b(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 1e6; for (const id of ['rig_blob', 'watchtower']) g.unlocked.facilities.add(id); const chip = () => { const e = document.getElementById('dock-place-risk'); return e ? { hidden: e.classList.contains('khide'), text: e.textContent, cls: e.className, risk: e.dataset.risk, bg: getComputedStyle(e).backgroundColor, h: e.getBoundingClientRect().height } : null; }; w.place.enter(w.game.facilities.defById('rig_blob')); w.place.aimAt(51, 27); const c0 = chip(); const t = g.placeFacility('watchtower', 50, 26, 0); w.place.aimAt(51, 27); const c1 = chip(); g.setStaffed(t.uid, true); w.place.aimAt(51, 27); const c2 = chip(); const lvl = (c) => Number(c && c.risk); w.place.exit(); return { c0, c1, c2, drop: lvl(c0) - lvl(c2), same: lvl(c0) === lvl(c1) }; })()`)) as { c0: { hidden: boolean; text: string; cls: string; risk: string; bg: string; h: number } | null; c1: unknown; c2: { risk: string } | null; drop: number; same: boolean };
   record('P52-b 확정 바 위험 라벨 — 블롭(깊은 물·스릴 3)을 조준하면 「위험 …」 칩이 보이고 44px · 알바 없는 망루는 그대로 · 알바를 두면 한 단 하강', !!r.c0 && !r.c0.hidden && r.c0.text.startsWith('위험') && r.c0.h >= 44 && r.same && r.drop >= 1 ? 'pass' : 'fail', JSON.stringify(r));
@@ -1199,7 +1200,7 @@ async function verifyP52b(page: import('playwright').Page): Promise<void> {
 
 /** P56-a — 그림 우선 UI 골격(그림 0): 요리·공방·개조 창이 한 순서(슬롯·행동 버튼·보유 격자·결과 장면 카드·도감 격자)이고 글자 칩이 0 · 장날은 17시 전에도 잠금 카드 · 심사위원 말풍선 · 개조 전→후 카드 · 조준 값 팝 */
 async function verifyP56a(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   await page.evaluate(`window.__pj.scene.setUpscale(1)`);
   // ① 요리 창 — 카드 수 = 보유 재료 + 상점 재료 · 도감 카드 = 실패작 뺀 레시피 · 글자 칩 0 · 재료 탭 → 슬롯에 그림 · 개발 → 결과 장면 카드(축 3 · 게이지)
@@ -1224,7 +1225,7 @@ async function verifyP56a(page: import('playwright').Page): Promise<void> {
 
 /** P57-a — main 아틀라스 반입: 4방향 시설의 facing 1 이 뒤집기가 아니라 옆면(:d1) · ppaji 시설 중 레거시 프레임 ≥49 · 발자국 바뀐 카페(3×2)가 실제로 3×2 로 놓인다 · 아틀라스 PNG(v15) 로드 */
 async function verifyP57a(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(async () => { const w = window.__pj; const g = w.game; const p = w.provider; const ids = [...w.facilityDefs.values()].map((d) => d.id); const atlas = await (await fetch('/assets/kairo-atlas.json', { cache: 'no-store' })).json(); const legacy = ids.filter((id) => atlas['facility/' + id + ':d0'] || atlas['facility/' + id]); const fourDir = ids.filter((id) => atlas['facility/' + id + ':d1']); const diffPx = (a, b) => { if (!a || !b || a.width !== b.width || a.height !== b.height) return -1; const x = a.getContext('2d').getImageData(0, 0, a.width, a.height).data, y = b.getContext('2d').getImageData(0, 0, b.width, b.height).data; let d = 0; for (let i = 0; i < x.length; i += 4) if (x[i] !== y[i] || x[i + 1] !== y[i + 1] || x[i + 2] !== y[i + 2]) d++; return d; }; const flipped = (a) => { const c = document.createElement('canvas'); c.width = a.width; c.height = a.height; const cx = c.getContext('2d'); cx.translate(a.width, 0); cx.scale(-1, 1); cx.drawImage(a, 0, 0); return c; }; const cafe0 = p.canvas('fac/cafe/0'), cafe1 = p.canvas('fac/cafe/1'); const out = { legacy: legacy.length, fourDir: fourDir.length, cafeSide: diffPx(cafe1, flipped(cafe0)), cafeSize: cafe0 ? cafe0.width + 'x' + cafe0.height : null, png: (await fetch('/assets/kairo-atlas.png?v=15', { cache: 'no-store' })).ok }; g.money = 1e6; g.unlocked.facilities.add('cafe'); const gt = g.gate; let placed = null; for (let dj = 3; dj < 40 && !placed; dj++) for (let di = -14; di <= 14 && !placed; di++) { const i = gt.i + di, j = gt.j + dj; const c = g.canPlace('cafe', i, j, 0, {}); if (c && c.ok) { const rr = g.placeFacility('cafe', i, j, 0); if (rr.ok) placed = rr.uid; } } out.placed = placed !== null; if (placed !== null) { const f = g.facilities.byUid(placed); const fp = w.facilityDefs.get('cafe'); out.fp = [fp.w, fp.d]; out.occ = g.facilities.all.filter((x) => x.uid === placed).length; } return out; })()`)) as Record<string, number | boolean | string | number[] | null>;
   record('P57-a main 아틀라스 — ppaji 시설 중 레거시 프레임 ≥49 · 4방향 ≥26 · 카페 facing 1 은 뒤집기가 아닌 옆면(뒤집은 앞면과 다른 픽셀 ≥ 500) · 카페 발자국 3×2 로 놓인다 · PNG v15 로드', (r['legacy'] as number) >= 49 && (r['fourDir'] as number) >= 26 && (r['cafeSide'] as number) >= 500 && r['png'] === true && r['placed'] === true && JSON.stringify(r['fp']) === '[3,2]' ? 'pass' : 'fail', JSON.stringify(r));
@@ -1232,13 +1233,13 @@ async function verifyP57a(page: import('playwright').Page): Promise<void> {
 
 /** P57-b — main 병합 M3: 북쪽 바깥 풍경 띠(먼 산 7 + 가까운 숲 7) · 바깥 장식이 main env 그림(가로등·마을 줄·이웃 건물) · 도로 버스 = env_bus · env 장식 29 가 건설 「장식」 탭(시작 18) · 생울타리를 마당 잔디에 놓는다 · `?scenery=0` 이면 풍경 0(대조군) */
 async function verifyP57b(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   await page.waitForTimeout(500);
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; g.money = 50000; w.buildWin.show(); const tab = [...document.querySelectorAll('#win-build .ktab')].find((x) => x.dataset.tab === 'decor'); if (tab) tab.click(); const cards = [...document.querySelectorAll('#win-build .kpcard')].map((x) => x.dataset.facility); w.buildWin.hide(); const envStart = [...g.unlocked.facilities].filter((id) => id.startsWith('env_')).length; const ok = g.placeFacility('env_hedge', gt.i - 18, gt.j + 19, 0); const ok2 = g.placeFacility('env_wood_fence', gt.i - 16, gt.j + 19, 1); /* P46 과 같은 북서 잔디 — 동쪽 열은 S 자 본류가 북으로 굽어 강 건너다 */ w.syncWorldToScene(); const tex = w.scene.textures.exists('fac/env_hedge/0') && w.scene.textures.exists('fac/env_wood_fence/1'); return { landscape: w.scene.landscapeCountForTest(), borderEnv: w.scene.borderEnvCountForTest(), border: w.scene.borderCountForTest(), bus: w.scene.busTextureKeyForTest(), cards: cards.length, hasFence: cards.includes('env_wood_fence'), hasHedge: cards.includes('env_hedge'), envStart, hedge: ok.ok, hedgeWhy: ok.ok ? '' : ok.reason, fence: ok2.ok, tex, defs: g.facilities.defsCount }; })()`)) as { landscape: number; borderEnv: number; border: number; bus: string; cards: number; hasFence: boolean; hasHedge: boolean; envStart: number; hedge: boolean; hedgeWhy: string; fence: boolean; tex: boolean; defs: number };
   record('P57-b 풍경·바깥 장식 — 북쪽 풍경 띠 14(먼 산 7 · 숲 7) · 바깥 장식 중 main env 그림 ≥ 20(가로등 12 · 마을 줄 8 · 이웃 4) · 도로 버스 = env_bus', r.landscape === 14 && r.borderEnv >= 20 && r.bus === 'fac/env_bus/1' ? 'pass' : 'fail', JSON.stringify({ landscape: r.landscape, borderEnv: r.borderEnv, border: r.border, bus: r.bus }));
   record('P57-b env 장식 29 — 시설 정의 177 · 새 판 시작 해금 env 18 · 「장식」 탭에 울타리·생울타리 카드 · 마당 잔디에 생울타리(0)·울타리(1) 배치 → 아틀라스 텍스처', r.defs === 177 && r.envStart === 18 && r.hasFence && r.hasHedge && r.cards >= 21 && r.hedge && r.fence && r.tex ? 'pass' : 'fail', JSON.stringify({ defs: r.defs, envStart: r.envStart, cards: r.cards, hedge: r.hedge, hedgeWhy: r.hedgeWhy, fence: r.fence, tex: r.tex }));
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0&scenery=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0&scenery=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   await page.waitForTimeout(300);
   const z = (await page.evaluate(`(() => { const w = window.__pj; return { landscape: w.scene.landscapeCountForTest(), borderEnv: w.scene.borderEnvCountForTest() }; })()`)) as { landscape: number; borderEnv: number };
@@ -1247,7 +1248,7 @@ async function verifyP57b(page: import('playwright').Page): Promise<void> {
 
 /** P56-b — 그림 반입: 등록부에 그림 ≥300 · 요리 창 재료 카드가 폴백 아이콘이 아니라 시트 그림(`.kpic`)이고 폴백 0 · 도감(아는 요리)도 그림 · 시트 PNG 가 실제로 로드된다 */
 async function verifyP56b(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 50000; g.rank = 2; w.cookWin.show(); const q = (s) => document.querySelectorAll('#win-cook ' + s); const out = { count: w.pictureCount ? w.pictureCount() : -1, cards: q('[data-grid="win-cook-ingredients"] .kpcard').length, pics: q('[data-grid="win-cook-ingredients"] .kpcard .kpcard-art .kpic').length, fallbacks: q('[data-grid="win-cook-ingredients"] .kpcard .kpcard-art .kpic-fb').length, codexPics: q('[data-grid="win-cook-codex"] .kpcard:not(.silhouette) .kpcard-art .kpic').length, codexKnown: q('[data-grid="win-cook-codex"] .kpcard:not(.silhouette)').length }; const pic = document.querySelector('#win-cook .kpcard-art .kpic'); if (pic) { const cs = getComputedStyle(pic); out.bg = cs.backgroundImage; out.w = pic.getBoundingClientRect().width; } document.querySelector('#win-cook .kwin-close').click(); w.rigWin.show(); out.partPics = document.querySelectorAll('#win-rig [data-grid="win-rig-ingredients"] .kpcard .kpcard-art .kpic').length; out.partFb = document.querySelectorAll('#win-rig [data-grid="win-rig-ingredients"] .kpcard .kpcard-art .kpic-fb').length; document.querySelector('#win-rig .kwin-close').click(); return out; })()`)) as Record<string, number | string>;
   const loaded = await page.evaluate(`(async () => { const r = await fetch('/assets/pictures.png', { cache: 'no-store' }); return r.ok ? (await r.arrayBuffer()).byteLength : 0; })()`) as number;
@@ -1262,7 +1263,7 @@ async function verifyP56b(page: import('playwright').Page): Promise<void> {
 
 /** P56-c — 재고(U1): 요리 창 카드의 `×N` 이 진짜 재고다(시작 재료 ∞ · 장날 재료 ×N) · 사면 +1 · 개발이 슬롯당 −1 · 재고 0 카드는 잠기지 않고 탭 = 구입(자동 승인) · 부품 창도 같은 문법 */
 async function verifyP56c(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 50000; g.rank = 2; const c = g.cooking; const shop = [...c.ingredients.values()].find((i) => i.unlock === 'shop'); const start = [...c.ingredients.values()].find((i) => i.unlock === 'start'); w.cookWin.show(); const q = (s) => document.querySelector('#win-cook ' + s); const n = (id) => { const e = q('[data-ingredient="' + id + '"] .kpcard-n'); return e ? e.textContent : null; }; const out = { inf: n(start.id), lockedBefore: !!q('[data-buyIngredient="' + shop.id + '"]') || !!q('[data-buy-ingredient="' + shop.id + '"]') }; const lockCard = q('[data-card="' + shop.id + '"]'); out.lockedDisabled = lockCard ? lockCard.disabled : null; lockCard.click(); out.stock1 = c.stockOf(shop.id); out.n1 = n(shop.id); q('[data-card="' + shop.id + '"]').click(); out.stock2 = c.stockOf(shop.id); out.n2 = n(shop.id); out.slots1 = document.querySelectorAll('#win-cook .kpslot.on').length; q('[data-card="' + shop.id + '"]').click(); out.stock2b = c.stockOf(shop.id); out.slots = document.querySelectorAll('#win-cook .kpslot.on').length; q('[data-card="' + start.id + '"]').click(); out.slots2 = document.querySelectorAll('#win-cook .kpslot.on').length; document.getElementById('win-cook-go').click(); out.stock3 = c.stockOf(shop.id); out.n3 = n(shop.id); out.infAfter = n(start.id); const zero = q('[data-card="' + shop.id + '"]'); out.zeroDisabled = zero ? zero.disabled : null; out.zeroBadge = zero ? (zero.querySelector('.kpcard-badge') || {}).textContent : null; out.foot = q('[data-grid="win-cook-ingredients"] .kpfoot-count') ? q('[data-grid="win-cook-ingredients"] .kpfoot-count').textContent : ''; zero.click(); out.stock4 = c.stockOf(shop.id); out.n4 = n(shop.id); q('.kwin-close').click(); return out; })()`)) as Record<string, unknown>;
   record('P56-c 요리 창 재고 — 시작 재료 ×∞ · 잠긴 장날 재료 탭 = 구입 ×1 → 카드 ×1 · 다시 탭 = 슬롯에(재고 그대로) · 슬롯에 든 채 또 탭 = 구입 ×2 · 시작 재료도 슬롯 → 개발 → ×1(−1) · 카드는 잠기지 않는다', r['inf'] === '×∞' && r['stock1'] === 1 && r['n1'] === '×1' && r['stock2'] === 1 && r['slots1'] === 1 && r['stock2b'] === 2 && r['slots'] === 1 && r['slots2'] === 2 && r['stock3'] === 1 && r['n3'] === '×1' && r['infAfter'] === '×∞' && r['zeroDisabled'] === false ? 'pass' : 'fail', JSON.stringify(r));
@@ -1276,7 +1277,7 @@ async function verifyP56c(page: import('playwright').Page): Promise<void> {
 
 /** P56-a2 — 그림 문법 나머지: 건설 카드 격자(`PictureGrid` 통일) · 캠페인 카드 · 소품 카드 격자(독) · 팔찌 카드 4 + 등급 게이지 · 소원 보상 그림 · 편지 위 물건 · FX buy-pop/band-strip */
 async function verifyP56a2(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const b = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.buildWin.show(); const q = (s) => document.querySelectorAll('#win-build ' + s); const tab = document.querySelector('#win-build .ktab.on').dataset.tab; const defs = [...w.facilityDefs.values()].filter((d) => w.buildTabs.find((t) => t.id === tab).match(d)).length; const out = { tab, defs, cards: q('.kpcard').length, old: q('.kcatalog-card').length, arts: q('.kpcard .kpcard-art canvas, .kpcard .kpcard-art .kpic-fb').length, counts: q('.kpcard .kpcard-n').length, prices: q('.kpcard .kpcard-cost').length, locked: q('.kpcard.locked').length, lockBadges: q('.kpcard .kpcard-badge.lock').length, foot: !!document.querySelector('#win-build .kpfoot') }; const first = document.querySelector('#win-build .kpcard:not([disabled])'); first.click(); out.picked = w.place.isActive && document.getElementById('win-build').hidden ? 1 : 0; w.place.exit(); w.buildWin.hide(); return out; })()`)) as Record<string, number | string | boolean>;
   record('P56-a2 건설 카드 격자 — `.kpcard` 로 통일(옛 `.kcatalog-card` 0) · 카드 수 = 탭 정의 수 · 그림·×N·값 카드마다 · 잠긴 카드 = 잠금 배지 · 아래 두 줄 · 탭 = 배치로', b['old'] === 0 && b['cards'] === b['defs'] && (b['cards'] as number) >= 6 && b['arts'] === b['cards'] && b['counts'] === b['cards'] && b['prices'] === b['cards'] && b['locked'] === b['lockBadges'] && b['foot'] === true && b['picked'] === 1 ? 'pass' : 'fail', JSON.stringify(b));
@@ -1292,7 +1293,7 @@ async function verifyP56a2(page: import('playwright').Page): Promise<void> {
 
 /** P53-c — 목표 HUD 56분 샘플(1년차 = 16일, 1분 = 480 tick): 여름·가을(0~41분) 목표 A 가 바뀌는 최대 간격 ≤3.5분 · 겨울(42~55분) ≤7분 · 첫날 세 샘플 중 「기구/빠지」 ≥2 · B 슬롯 빈 샘플 0 · 봇 4년차 세이브를 열어 10분 재생 — 모달 후보 ≤10 · 큐 ≤5 */
 async function verifyP53c(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const hud = (await page.evaluate(`(() => { const w = window.__pj; const A = [], B = []; const bot = w.botFor(); let day = -1; for (let m = 0; m < 56; m++) { w.pinGoal(0); A.push(w.goalLine()); w.pinGoal(1); B.push(w.goalLine()); w.pinGoal(null); if (w.game.day !== day) { day = w.game.day; bot.decideDay(); } else if (m % 4 === 2) bot.decideMidday(); w.skip(480); } const gaps = (lo, hi) => { let last = lo, mx = 0; for (let m = lo + 1; m < hi; m++) { if (A[m] !== A[m - 1]) { mx = Math.max(mx, m - last); last = m; } } return Math.max(mx, hi - last); }; const hint = (t) => /붙이자|이어 붙여|개조해 보자|신청하자/.test(t); const nonHint = A.map((t, i) => hint(t) ? null : i).filter((x) => x !== null); let nhGap = 0; for (let k = 1; k < nonHint.length; k++) nhGap = Math.max(nhGap, nonHint[k] - nonHint[k - 1]); return { summerGap: gaps(0, 42), winterGap: gaps(42, 56), hintRunMax: gaps(0, 56), firstRig: A.slice(0, 4).filter((t) => /기구|빠지/.test(t)).length, firstTwoDays: A.slice(0, 8).filter((t) => /기구|빠지/.test(t)).length, emptyB: B.filter((t) => !t || !t.trim()).length, distinctA: new Set(A).size, hintShare: A.filter(hint).length / A.length, sampleA: A.slice(0, 3).map((t) => t.slice(0, 24)) }; })()`)) as { summerGap: number; winterGap: number; hintRunMax: number; firstRig: number; firstTwoDays: number; emptyB: number; distinctA: number; hintShare: number; sampleA: string[] };
   // ⚠ 「A 간격 ≤3.5분」은 사람을 기다리는 힌트(①~④ 폴백)엔 정의가 안 맞는다 — 봇은 개조를 엿새에 하나만 해서 「개조해 보자」가 그만큼 남는다. 자는 ① 같은 A 가 6일(24샘플)을 넘게 서 있지 않는다 ② 서로 다른 A ≥ 6 ③ 힌트가 아닌 A(소원·인기)는 3.5분마다 바뀐다 ④ 첫날 「기구/빠지」 ≥2/3 ⑤ B 빈 샘플 0. 이름 있는 사건의 간격은 봇 밴드 `unlockGapMax*` 가 잰다
@@ -1302,7 +1303,7 @@ async function verifyP53c(page: import('playwright').Page): Promise<void> {
   let saved = '';
   save(g.toSnapshot(), { setItem: (_k, v) => { saved = v; } });
   await page.evaluate(`localStorage.setItem(${JSON.stringify(SAVE_KEY)}, ${JSON.stringify(saved)})`);
-  await page.goto(`${BASE}/?debug=1&px=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const replay = (await page.evaluate(`(() => { const w = window.__pj; const day0 = w.game.day; const q = w.modalQueue; let pushed = 0; const p = q.push.bind(q); q.push = (...a) => { pushed += a.length; return p(...a); }; for (let m = 0; m < 10; m++) { w.skip(480); if (w.celebrate && w.celebrate.win && !w.celebrate.win.root.hidden) w.celebrate.win.hide(); } return { day0, day: w.game.day, pushed, queue: q.length, rank: w.game.rank }; })()`)) as { day0: number; day: number; pushed: number; queue: number; rank: number };
   record('P53-c 봇 4년차 세이브 10분 재생 — 모달 후보 ≤10 · 큐 ≤5 (세이브가 4년차에서 열린다)', replay.day0 >= 60 && replay.pushed <= 10 && replay.queue <= 5 ? 'pass' : 'fail', JSON.stringify(replay));
@@ -1311,7 +1312,7 @@ async function verifyP53c(page: import('playwright').Page): Promise<void> {
 
 /** P50-b2 — 첫 3분 스모크(새 판 킷): 기구 둘을 진짜 터치로 → 둘째 확정 tick 에 등급 0→1 모달 1 · 확정 바 칩 세 낱말 · 1,680 tick 안 이용 ≥6 · 목표 A 「기구」 · 모달 ≤2 · 잠긴 이유 ≥4자 · 탭 ≤5 · B 슬롯 DOM · 등급 0 vs 4 히스토그램 */
 async function verifyP50b2(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   await page.evaluate(`window.__pj.scene.setUpscale(1)`);
   const center = async (sel: string): Promise<{ x: number; y: number } | null> =>
@@ -1376,7 +1377,7 @@ async function verifyP50b2(page: import('playwright').Page, cdp: CDPSession): Pr
 
 /** P50-a — 물 위 배치(건설 「빠지」 탭 둘째 · 진짜 터치로 킷 빠지 안 물에 기구) · 켜짐(링 접촉) · 꺼짐(고립) · open */
 async function verifyP50a(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   await page.evaluate(`window.__pj.scene.setUpscale(1)`);
   const center = async (sel: string): Promise<{ x: number; y: number } | null> =>
@@ -1419,7 +1420,7 @@ async function verifyP50a(page: import('playwright').Page, cdp: CDPSession): Pro
 
 /** P49-b — 빠지 = 사각형 붓(두 모서리) · 라인 조각(1×2/4/6 · 회전) · 허가 토스트 · 치기 붓 0 */
 async function verifyP49b(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const tabs = (await page.evaluate(`(() => { const w = window.__pj; w.dock.enter('ppaji'); const ts = [...document.querySelectorAll('#dock-pool .ktab')].filter((t) => !t.classList.contains('khide')); const r = ts.map((t) => ({ m: t.dataset.mode, h: t.getBoundingClientRect().height, on: t.classList.contains('on') })); const st = document.querySelector('#dock-pool .kdock-status').textContent; w.dock.exit(); return { r, st }; })()`)) as { r: { m: string; h: number; on: boolean }[]; st: string };
   record('P49-b 독 — 보이는 탭의 첫 둘이 「빠지」「라인」(dig·fill 은 숨김) · 전부 44px 이상 · 빠지 탭 상태 줄이 첫 모서리를 청한다', tabs.r[0]?.m === 'ppaji' && tabs.r[1]?.m === 'line' && tabs.r.every((t) => t.h >= 44) && !tabs.r.some((t) => t.m === 'dig' || t.m === 'fill') && tabs.st.includes('첫 모서리') ? 'pass' : 'fail', JSON.stringify(tabs));
@@ -1436,7 +1437,7 @@ async function verifyP49b(page: import('playwright').Page): Promise<void> {
 
 /** P0 (빠지 스토리) — 곧은 강 띠(8줄, 양끝 여울) · 시작 킷 데크 8 + 선착장 · 우측 5칸 정체(건설·수역·코스·SNS·장날) · 코스 칸 잠김 이유 · 강은 파지 않는다 · 데크 위에는 놓는다 */
 async function verifyP0(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const grid = g.grid; let river = 0, shallow = 0, deck = 0; for (let k = 0; k < grid.floor.length; k++) { const f = grid.floor[k]; if (f === 5) river++; else if (f === 6) shallow++; else if (f === 7) deck++; /* P48-b3: 자연 물 96×22 중 데크 19·수역 20 을 뺀 것이 지금 강·여울 */ } const rows = new Set(); for (let j = 0; j < grid.h; j++) if ([5, 6].includes(grid.at(0, j))) rows.add(j); const dock = g.facilities.all.find((f) => f.defId === 'dock'); const dockOnDeck = dock ? grid.at(dock.i, dock.j) === 7 : false; const cells = [...document.querySelectorAll('#hud-right .ksquare')].map((e) => e.dataset.cell); const courseLocked = document.querySelector('#hud-right [data-cell="course"]').dataset.locked || null; const gt = g.gate; const dig = g.canDig(g.land.i0 - 2, gt.j + 46); const mine = g.canDig(gt.i + 12, gt.j + 18).ok; /* P48-b3: 잔교 동쪽 내 앞 수면 */ /* P32: ★0 토지 24~39 — 킷 데크 링(왼쪽)을 피해 오른쪽 트인 강 */ const water = document.getElementById('hud-time').textContent; return { river, shallow, deck, rows: rows.size, dock: !!dock, dockOnDeck, cells, courseLocked, digRiver: dig.ok ? 'ok' : dig.reason, mine, kit: g.facilities.all.length, pool: g.pools.totalTiles() }; })()`)) as { river: number; shallow: number; deck: number; rows: number; dock: boolean; dockOnDeck: boolean; cells: string[]; courseLocked: string | null; digRiver: string; mine: boolean; kit: number; pool: number };
   record('P0→P15→P43→P48-b3 물 22줄(S 띠, 격자 변은 행 50~71) · 시작 킷 데크 19(링 16 + 본류 잔교 3) + 선착장(잔교 위) · 시설 7(P45-a) · 자동 수역 20(못 안, P48-b2)', r.rows === 22 && r.deck === 19 && r.river + r.shallow === 96 * 22 - 19 - 20 /* P48-b3 */ && r.dock && r.dockOnDeck && r.kit === 7 && r.pool === 20 ? 'pass' : 'fail', JSON.stringify(r));
@@ -1464,7 +1465,7 @@ async function verifyP0(page: import('playwright').Page): Promise<void> {
 
 /** P1 — 수역: 독 탭(치기·걷기·소품·데크·데크 걷기·실내 2) · 강을 실터치로 쳐서 수역이 늘고 · 데크를 이어 깔고 · 여울은 걷지 않으며 · 킷 수역이 강 위이고 손님이 입수한다 */
 async function verifyP1(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const center = async (sel: string): Promise<{ x: number; y: number } | null> => (await page.evaluate(`(() => { const e = document.querySelector(${JSON.stringify(sel)}); if (!e) return null; const r = e.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`)) as { x: number; y: number } | null;
   const tabs = (await page.evaluate(`(() => { const w = window.__pj; w.dock.enter('dig'); return [...document.querySelectorAll('#dock-pool .ktab')].map((t) => t.textContent); })()`)) as string[];
@@ -1511,7 +1512,7 @@ async function verifyP1(page: import('playwright').Page, cdp: CDPSession): Promi
 /** P27 — 욕구의 위치성(D33): 첫날 걸어온 손님이 팀(2~4명) · 자리를 잡는다 · 물에서 나온 손님은 배고픔 ≥ 25 · 가까운 먹거리로 간다 */
 /** P29 D37 — 새 판의 자리는 미완성: 킷 평상 둘 등급 3(물·뷰) · 고기 패키지 미발견 · 평상 반경에 매점을 놓으면 등급 4 + 고기 패키지 발견(알림함) */
 async function verifyP29(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const seats = g.facilities.all.filter((f) => f.defId === 'pyeongsang_row'); const before = seats.map((f) => g.seatGradeOf(f.uid).grade); const seen0 = [...g.packagesSeen]; const seat = seats[0]; let placed = false; for (let dj = -3; dj <= 3 && !placed; dj++) for (let di = -3; di <= 6 && !placed; di++) { const rr = g.placeFacility('vending_out', seat.i + di, seat.j + dj, 0); if (rr.ok) placed = true; } const after = g.seatGradeOf(seat.uid).grade; const seen1 = [...g.packagesSeen]; const items = g.inbox.items ?? g.inbox.all ?? []; const found = items.some((x) => /고기/.test(x.title + x.body)); return { before, seen0, placed, after, seen1, found }; })()`)) as { before: number[]; seen0: string[]; placed: boolean; after: number; seen1: string[]; found: boolean };
   record('P29 킷 미완성 — 평상 둘 등급 3 · 고기 패키지 없음(수영만) → 반경에 자판기를 놓으면 등급 4 · 고기 패키지 발견 알림', r.before.every((x) => x === 3) && !r.seen0.includes('meat') && r.seen0.includes('swim') && r.placed && r.after === 4 && r.seen1.includes('meat') && r.found ? 'pass' : 'fail', JSON.stringify(r));
@@ -1520,7 +1521,7 @@ async function verifyP29(page: import('playwright').Page, cdp: CDPSession): Prom
 
 /** P30 D38 — 탭 오버레이: 평상 정보 창을 열면 반경 3 이 지도에 켜지고 「빠진 것」 행 · 매점 정보 창은 먹여 주는 자리를 켠다 · 닫으면 걷힌다 */
 async function verifyP30(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const seat = g.facilities.all.find((f) => f.defId === 'pyeongsang_row'); w.facilityInfo.show(seat.uid); const seatSel = w.scene.selectionCountForTest(); const rows = [...document.querySelectorAll('#win-facility .krow')].map((x) => x.textContent); const miss = rows.find((x) => x.startsWith('빠진 것')) ?? ''; w.facilityInfo.win.hide(); const afterHide = w.scene.selectionCountForTest(); w.facilityInfo.clearOverlayForTest(); let placed = false; let uid = 0; for (let dj = -3; dj <= 3 && !placed; dj++) for (let di = -3; di <= 6 && !placed; di++) { const rr = g.placeFacility('vending_out', seat.i + di, seat.j + dj, 0); if (rr.ok) { placed = true; uid = rr.uid; } } w.facilityInfo.show(uid); const shopSel = w.scene.selectionCountForTest(); w.facilityInfo.win.hide(); const toilet = g.facilities.all.find((f) => f.defId === 'toilet'); w.facilityInfo.show(toilet.uid); const toiletSel = w.scene.selectionCountForTest(); w.facilityInfo.win.hide(); w.facilityInfo.clearOverlayForTest(); return { seatSel, miss, afterHide, placed, shopSel, toiletSel }; })()`)) as { seatSel: number; miss: string; afterHide: number; placed: boolean; shopSel: number; toiletSel: number };
   await page.waitForTimeout(200);
@@ -1534,7 +1535,7 @@ async function verifyP30(page: import('playwright').Page, cdp: CDPSession): Prom
 
 /** P34 D43 — 실내동: 매표소 하나 더 → 정원 +8 · 비 오는 날 「비 오네 — 안으로」 손님이 실내 시설로 간다 */
 async function verifyP34(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; g.unlocked.facilities.add('ticket'); const cap0 = g.maxGuests(); const gt = g.gate; const b = { i0: gt.i + 12, j0: gt.j + 8 }; { const tl = []; for (let j = b.j0; j < b.j0 + 4; j++) for (let i = b.i0; i < b.i0 + 5; i++) tl.push({ i, j }); g.paintIndoor(tl); } const t = g.placeFacility('ticket', b.i0 + 1, b.j0 + 1, 0); const cap1 = g.maxGuests(); g.weather = 'rain'; w.refreshHud(); w.skip(1500); const refuge = g.stats.rainRefuge ?? 0; /* say 는 씬이 말풍선으로 소비한다 — 집계로 잰다 */ const indoorUse = g.facilities.all.filter((f) => g.grid.at(f.i, f.j) === 3).reduce((n, f) => n + f.usesToday, 0); return { cap0, cap1, placed: t.ok, refuge, indoorUse }; })()`)) as { cap0: number; cap1: number; placed: boolean; refuge: number; indoorUse: number };
   record('P34 실내동 — 정원 40 → 건물 바닥을 깔고 매표소 하나 더 48 · 비 오는 날 「비 오네 — 안으로」 ≥ 1 · 실내 시설 이용 > 0', r.cap0 === 40 && r.placed && r.cap1 === 48 && r.refuge >= 1 && r.indoorUse > 0 ? 'pass' : 'fail', JSON.stringify(r));
@@ -1543,7 +1544,7 @@ async function verifyP34(page: import('playwright').Page, cdp: CDPSession): Prom
 
 /** P39 D49 — 벽·문: 새 판 실내동 12×6 · 문 1(거리 쪽) · 손님이 문으로 들어가 매표소를 쓴다 · 길 없는 건물엔 문이 없다가 길을 이으면 난다 */
 async function verifyP39(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; let indoor = 0; for (let j = 0; j < g.grid.h; j++) for (let i = 0; i < g.grid.w; i++) if (g.grid.at(i, j) === 3) indoor++; const doors0 = g.grid.doors(); const drawn0 = w.scene.doorCountForTest(); w.skip(600); const ticket = g.facilities.all.find((f) => f.defId === 'ticket'); const used = ticket ? ticket.usesToday : -1; g.money = 100000; g.unlocked.facilities.add('office'); const b = { i0: gt.i - 18, j0: gt.j + 14 /* P48-b3: 서쪽 잔디(열 30~33 · 행 22~25) — 둘레가 잔디뿐 */ }; const t = []; for (let j = b.j0; j < b.j0 + 4; j++) for (let i = b.i0; i < b.i0 + 4; i++) t.push({ i, j }); g.paintIndoor(t); const blob = g.grid.blobAt(b.i0 + 1, b.j0 + 1); const doorBefore = g.grid.doors().some((d) => g.grid.blobAt(d.i, d.j) === blob); const path = []; for (let i = b.i0; i < gt.i; i++) path.push({ i, j: b.j0 - 1 }); /* 건물 북변을 따라 입구 열까지 */ g.paintPath(path); w.syncWorldToScene(); const doorAfter = g.grid.doors().some((d) => g.grid.blobAt(d.i, d.j) === blob); return { indoor, doors0: doors0.length, door0: doors0[0], drawn0, used, doorBefore, doorAfter, drawn1: w.scene.doorCountForTest(), gateI: gt.i }; })()`)) as { indoor: number; doors0: number; door0: { oi: number }; drawn0: number; used: number; doorBefore: boolean; doorAfter: boolean; drawn1: number; gateI: number };
   record('P39 벽·문 — 출입동 실내 247칸 + 복도 12(P48-b1 20×13) · 문 2(정문 변·마당 변, 복도 양 끝) · 표식 2 · 손님이 문으로 들어가 매표소 이용 > 0 · 잔디 위 새 건물은 길을 이어야 문이 난다(표식 2 → 3)', r.indoor === 247 && r.doors0 === 2 && r.door0.oi === r.gateI && r.drawn0 === 2 && r.used > 0 && !r.doorBefore && r.doorAfter && r.drawn1 === 3 ? 'pass' : 'fail' /* P44-c: 통로가 닿기 전엔 문이 없다 */, JSON.stringify(r));
@@ -1552,7 +1553,7 @@ async function verifyP39(page: import('playwright').Page, cdp: CDPSession): Prom
 
 /** P41·P42 — 확장 사건(★1: 마당이 넓어지고 사장 대사 · 「입구」 해금) · 입구를 건물 가장자리에 놓으면 문이 옮겨 간다(표식 위치) */
 async function verifyP42(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const w0 = g.land.w; g.money = 100000; g.openLand(1); g.unlocked.facilities.add('entrance'); w.syncWorldToScene(); const w1 = g.land.w; const unlocked = g.isUnlocked('entrance'); const d0 = g.grid.doors()[0]; const gt = g.gate; const ei = gt.i - 10, ej = gt.j + 6; /* P45-a: 출입동 서쪽 가장자리 */ const bad = g.canPlace('entrance', gt.i - 5, gt.j + 4, 0); /* 안쪽 칸 */ const r = g.placeFacility('entrance', ei, ej, 0); w.syncWorldToScene(); const d1 = g.grid.doors().find((x) => x.i === ei && x.j === ej); return { w0, w1, unlocked, d0, gateI: gt.i, badReason: bad.ok ? '' : bad.reason, placed: r.ok, d1, drawn: w.scene.doorCountForTest() }; })()`)) as { w0: number; w1: number; unlocked: boolean; d0: { oi: number }; gateI: number; badReason: string; placed: boolean; d1: { i: number } | undefined; drawn: number };
   record('P41·P42 확장·입구 — ★1 에 마당 40 → 44(P45-a) · 「입구」 해금 · 안쪽 칸 거절 「가장자리」 · 서쪽 가장자리에 놓으면 문이 하나 더(표식 3)', r.w0 === 40 && r.w1 === 44 && r.unlocked && r.d0.oi === r.gateI && /가장자리/.test(r.badReason) && r.placed && !!r.d1 && r.drawn === 3 ? 'pass' : 'fail', JSON.stringify(r));
@@ -1561,7 +1562,7 @@ async function verifyP42(page: import('playwright').Page, cdp: CDPSession): Prom
 
 /** P43 — 레거시 크기의 맵: 96×72 · 도시 띠(차도 2줄 · 정류장) · 마당 ★0 32×42 · 킷 실내동 128 · 옛 64×48 세이브는 새 판 · 버스는 차도 위 · 벽·울타리는 한 그리기(유리 선 0) */
 async function verifyP43(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; const grid = g.grid; let road = 0, stop = 0, indoor = 0, grass = 0; for (let j = 0; j < grid.h; j++) for (let i = 0; i < grid.w; i++) { const c = grid.at(i, j); if (c === 13) road++; else if (c === 9 && j === 3) stop++; else if (c === 3) indoor++; else if (c === 1) grass++; } const walkBand = g.guests.walkable(gt.i, gt.j - 1) || g.guests.walkable(gt.i, 2); const own = g.ownsTile(gt.i, 5) || g.ownsTile(gt.i, 60); w.skip(200); const bus = w.scene.busForTest(); const road2 = w.scene.busRoadForTest(); const roadRect = w.scene.tileScreenRect(gt.i, 2); const guests = g.guests.count; return { w: grid.w, h: grid.h, land: g.land, gate: gt, road, stop, indoor, grass, walkBand, own, bus, road2, roadY: roadRect ? roadRect.y : null, guests, doors: w.scene.doorCountForTest() }; })()`)) as { w: number; h: number; land: { i0: number; j0: number; w: number; h: number }; gate: { i: number; j: number }; road: number; stop: number; indoor: number; grass: number; walkBand: boolean; own: boolean; bus: { y: number; phase: string } | null; road2: { j: number; i0: number; i1: number } | null; roadY: number | null; guests: number; doors: number };
   const okMap = r.w === 96 && r.h === 72 && r.land.i0 === 28 && r.land.j0 === 8 && r.land.w === 40 && r.land.h === 42 && r.gate.i === 48 && r.gate.j === 8;
@@ -1569,7 +1570,7 @@ async function verifyP43(page: import('playwright').Page, cdp: CDPSession): Prom
   record('P43 버스는 차도(줄 2, 지도 전폭) 위를 달리고 손님이 든다 · 문 표식 2', !!r.road2 && r.road2.j === 2 && r.road2.i0 < 0 && r.road2.i1 > 95 && (!r.bus || (r.roadY !== null && Math.abs(r.bus.y - (r.roadY + 16)) <= 40)) && r.guests > 0 && r.doors === 2 ? 'pass' : 'fail', JSON.stringify({ bus: r.bus, road2: r.road2, roadY: r.roadY, guests: r.guests, doors: r.doors }));
   // 옛 64×48 세이브 → 새 판 (세이브 v3)
   await page.evaluate(`(() => { const g = window.__pj.game; const s = g.toSnapshot(); s.grid = { w: 64, h: 48, floor: new Array(64 * 48).fill(1) }; localStorage.setItem('pj.save', JSON.stringify({ version: 2, savedAt: 'x', game: s })); })()`);
-  await page.goto(`${BASE}/?debug=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const m = (await page.evaluate(`(() => { const g = window.__pj.game; return { w: g.grid.w, h: g.grid.h, day: g.day, kit: g.facilities.all.length }; })()`)) as { w: number; h: number; day: number; kit: number };
   record('P43 세이브 v3 — 옛 64×48 판은 새 판으로(96×72 · 킷 7)', m.w === 96 && m.h === 72 && m.kit === 7 ? 'pass' : 'fail', JSON.stringify(m));
@@ -1578,7 +1579,7 @@ async function verifyP43(page: import('playwright').Page, cdp: CDPSession): Prom
 
 /** P44 — 마당 밖: 들판(잔디)·숲·능선(가장자리 0)·암반 테두리 · 울타리가 이동을 막는다 · 지도 바깥 띠 5 · 도시 띠 가로수·정류장 · 장식 차량 · 첫 화면에 모래 사막이 없다 */
 async function verifyP44(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   await page.waitForTimeout(600);
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; const grid = g.grid; const land = g.land; let outGrass = 0, outSand = 0, rock = 0, maxZ = 0, edgeZ = 0; for (let j = 8; j < grid.h; j++) for (let i = 0; i < grid.w; i++) { const c = grid.at(i, j); const inL = i >= land.i0 && i < land.i0 + land.w && j >= land.j0 && j < land.j0 + land.h; if (!inL && j < 50) { if (c === 1 || c === 14) outGrass++; else if (c === 0) outSand++; } if (c === 14) rock++; const z = grid.levelAt(i, j); maxZ = Math.max(maxZ, z); if (i === 0 || i === grid.w - 1) edgeZ = Math.max(edgeZ, z); } w.skip(300); const outside = g.guests.all.filter((x) => !(x.i >= land.i0 - 0.5 && x.i < land.i0 + land.w - 0.5 && x.j >= land.j0 - 0.5)).length; return { outGrass, outSand, rock, maxZ, edgeZ, guests: g.guests.count, outside, surround: w.scene.surroundCountForTest(), trees: w.scene.borderCountForTest(), walls: w.scene.wallLayerCountForTest(), traffic: w.scene.trafficCountForTest() }; })()`)) as { outGrass: number; outSand: number; rock: number; maxZ: number; edgeZ: number; guests: number; outside: number; surround: number; trees: number; walls: number; traffic: number };
@@ -1594,7 +1595,7 @@ async function verifyP44(page: import('playwright').Page, cdp: CDPSession): Prom
 
 /** P45-a D63 — 출입동: 정문 칸을 감싼 20×30 건물 · 복도(hall) 한 줄 · 문 둘(정문 변·마당 변) · 손님 전원이 복도를 지나 마당으로 · 마당 문 밖 통로를 걷어내면 「끊긴다」 거절 · 부표 줄은 트인 강 쪽 변에만 */
 async function verifyP45(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; const grid = g.grid; let hall = 0, indoor = 0; for (let j = 0; j < grid.h; j++) for (let i = 0; i < grid.w; i++) { const c = grid.at(i, j); if (c === 15) hall++; else if (c === 3) indoor++; } const doors = grid.doors(); const gateFloor = grid.at(gt.i, gt.j); const blobGate = grid.blobAt(gt.i, gt.j); const blobHall = grid.blobAt(gt.i, gt.j + 5); const blobWest = grid.blobAt(gt.i - 9, gt.j + 10) /* P48-b1 20×13 */; w.skip(700); const guests = g.guests.all; const inBuilding = guests.filter((x) => grid.blobAt(Math.round(x.i), Math.round(x.j)) === blobHall).length; const inYard = guests.filter((x) => Math.round(x.j) >= gt.j + 13 && Math.round(x.j) < 50).length; const cut = g.unpaintPath([{ i: gt.i, j: gt.j + 13 } /* P48-b1: 마당 문 밖 (48,21) */]); const kit = g.facilities.all.map((f) => f.defId).sort().join(','); return { hall, indoor, doors, gateFloor, blobGate, blobHall, blobWest, guests: guests.length, inBuilding, inYard, cutOk: cut.ok, cutWhy: cut.ok ? '' : cut.reason, kit, drawn: w.scene.doorCountForTest() }; })()`)) as { hall: number; indoor: number; doors: { i: number; j: number; oi: number; oj: number }[]; gateFloor: number; blobGate: number; blobHall: number; blobWest: number; guests: number; inBuilding: number; inYard: number; cutOk: boolean; cutWhy: string; kit: string; drawn: number };
   const main = r.doors.some((d) => d.i === 48 && d.j === 9 && d.oi === 48 && d.oj === 8), yard = r.doors.some((d) => d.i === 48 && d.j === 20 && d.oi === 48 && d.oj === 21);
@@ -1605,7 +1606,7 @@ async function verifyP45(page: import('playwright').Page, cdp: CDPSession): Prom
   record('P45-b 지나가며 산다 — 킷 실내 매점이 복도 곁(입장·퇴장 집합) · 야외 매점은 실내 거절 「야외」 · 복도 곁 샤워실 · 정오까지 복도 구매 > 0 · 온보딩 「복도 곁 가게」 비트', b.shopIn && /야외/.test(b.badWhy) && b.showerOk && b.sales > 0 && b.story.includes('first_hall_sale') ? 'pass' : 'fail', JSON.stringify({ enter: b.enter, leave: b.leave, shopIn: b.shopIn, badWhy: b.badWhy, sales: b.sales, story: b.story.filter((x) => x.includes('hall')) }));
   record('P45-b → P50-a 건설 분류 9 — 실내·빠지·자리·숙박·먹거리·놀이·슬라이드·편의·장식, 실내 탭 첫 네 줄에 입장 점포(대여소·락커)', b.tabs.join(',') === 'indoor,ppaji,seat,lodging,food,play,slide,utility,decor' && b.firstRows.slice(0, 4).includes('rental_tube') && b.firstRows.slice(0, 4).includes('locker_row') ? 'pass' : 'fail', JSON.stringify({ tabs: b.tabs, firstRows: b.firstRows }));
   // P45-c D63 밤 분기 — 실내 객실·찜질방을 두고 하루를 돌리면 팀이 묵고 밤 이용이 난다 · 거치대에서 빌리면 기구 패키지
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const n = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; g.money = 200000; g.rank = 2; g.openLand(2); for (const id of ['room_ondol', 'jjimjilbang', 'gear_rack']) g.unlocked.facilities.add(id); const r1 = g.placeFacility('room_ondol', gt.i - 8, gt.j + 3, 0).ok; const r2 = g.placeFacility('room_ondol', gt.i - 8, gt.j + 6, 0).ok; const jj = g.placeFacility('jjimjilbang', gt.i + 6, gt.j + 8, 0).ok /* P48-b1: 20×13 안, 킷 화장실 오른쪽 · P57-a: 4×4 가 되며 (5,9) 는 이 시드에서 밤 이용 0(3×3 도 시드 1 에서 0 — 잡음) → (6,8) */; const gr = g.placeFacility('gear_rack', gt.i + 1, gt.j + 6, 0).ok; w.skip(1700); return { r1, r2, jj, gr, night: g.nightForTest().length, overnight: g.stats.overnight ?? 0, nightUses: g.stats.nightUses ?? 0, gear: g.stats.gearRentals ?? 0, story: g.story.toSnapshot().filter((x) => x.includes('hall')) }; })()`)) as { r1: boolean; r2: boolean; jj: boolean; gr: boolean; night: number; overnight: number; nightUses: number; gear: number; story: string[] };
   record('P45-c 밤 분기 — 실내 객실 2·찜질방·거치대 배치 · 하루 뒤 1박 > 0 · 밤 이용 > 0 · 기구 대여 > 0', n.r1 && n.r2 && n.jj && n.gr && n.night === 1 && n.overnight > 0 && n.nightUses > 0 && n.gear > 0 ? 'pass' : 'fail', JSON.stringify(n));
@@ -1617,7 +1618,7 @@ async function verifyP45(page: import('playwright').Page, cdp: CDPSession): Prom
 
 /** P28 — 공간 소원·목표: 조건 DSL seatGrade·seatsFed 가 킷에서 평가되고 소원 18건이 자리 조건 · 결산 요약 「붐빈 자리 …(등급 n) m명」 */
 async function verifyP28(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const a = g.evaluateCondition({ kind: 'seatGrade', min: 3, count: 2 }); const b0 = g.evaluateCondition({ kind: 'seatsFed', id: 'vending_out', count: 1 }); const gt = g.gate; const placed = g.placeFacility('vending_out', gt.i + 4, gt.j + 13, 0).ok; /* P48-b2: 만 북안 평상(gt.i+3, j+14) 반경 3 */ /* 물가 블록(4,3) 안 — 왼쪽 평상 반경 3 (P33: 거리엔 못 놓아 둘을 한 자판기가 못 먹인다) */ const b = g.evaluateCondition({ kind: 'seatsFed', id: 'vending_out', count: 1 }); const c = g.evaluateCondition({ kind: 'seatGrade', min: 5, count: 3 }); w.skip(w.TPD + 2); const items = g.inbox.items ?? g.inbox.all ?? []; const sum = items.filter((x) => x.kind === 'day-summary').slice(-1)[0]; return { a: a.met, b0: b0.met, placed, b: b.met, bLabel: b.label, cMet: c.met, cProgress: c.progress, body: sum ? sum.body : '' }; })()`)) as { a: boolean; b0: boolean; placed: boolean; b: boolean; bLabel: string; cMet: boolean; cProgress: number; body: string };
   record('P28 공간 조건 — 킷: 등급 3 자리 둘 ✓ · 자판기 반경 자리 하나는 킷에서 ✗(P29) → 평상 옆에 놓으면 ✓ · 등급 5 셋은 부분 점수 · 결산 「붐빈 자리 …(등급 n) m명」', r.a && !r.b0 && r.placed && r.b && r.bLabel.includes('자판기') && !r.cMet && r.cProgress < 1 && /* 둘 이상 요구는 found/need — 킷엔 등급 5 가 없어 0 */ /붐빈 자리 .+\(등급 \d\) \d+명/.test(r.body) ? 'pass' : 'fail', JSON.stringify(r));
@@ -1625,7 +1626,7 @@ async function verifyP28(page: import('playwright').Page, cdp: CDPSession): Prom
 }
 
 async function verifyP27(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.skip(900); const teams = new Map(); for (const x of g.guests.all) if (x.teamId !== null) teams.set(x.teamId, (teams.get(x.teamId) ?? 0) + 1); const sizes = [...teams.values()]; const hungry = g.guests.all.filter((x) => x.hunger >= 25).length; let foodN = 0, hungryN = 0; for (let k = 0; k < 30; k++) { w.skip(20); for (const x of g.guests.all) if (x.state === 'use' && x.target && x.target.kind === 'facility' && (g.facilities.defOf(g.facilities.byUid(x.target.uid))?.menuSlots ?? 0) > 0) { foodN++; if (x.hunger >= 25) hungryN++; } } /* P40: 걷는 손님이 아니라 **매점을 쓰는 순간**의 손님을 센다(마당을 어디든 걷자 지나가는 표본이 흐려졌다) · 600tick 창 */ /* 문턱 25 = pickTarget 의 hungry 규칙과 같은 값(전엔 40 이라 규칙과 자가 어긋났다 · 고기 패키지 손님은 배가 안 고파도 매점에 간다) */ /* P28-b: 한 순간이 아니라 200tick 창으로 센다 — D35 뒤 자리 잡은 팀이 늘어 순간 표본이 0 이 됐다 */ const foodTargets = { length: foodN }; const hungryAmongFood = hungryN; return { teamGuests: g.stats.teamGuests, seated: g.stats.teamSeated, teams: teams.size, maxTeam: Math.max(0, ...sizes), hungry, foodTargets: foodTargets.length, hungryAmongFood, food: g.stats.food }; })()`)) as { teamGuests: number; seated: number; teams: number; maxTeam: number; hungry: number; foodTargets: number; hungryAmongFood: number; food: number };
   record('P27 걸어온 팀 — 첫날 낮 팀 손님 ≥ 10 · 무리 ≤ 4명 · 자리 잡은 팀 손님 > 0', r.teamGuests >= 10 && r.maxTeam <= 4 && r.teams >= 3 && r.seated > 0 ? 'pass' : 'fail', JSON.stringify(r));
@@ -1634,7 +1635,7 @@ async function verifyP27(page: import('playwright').Page, cdp: CDPSession): Prom
 }
 
 async function verifyP26(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; g.rank = 2; g.openLand(2); const gt = g.gate; const sd = w.facilityDefs.get('shop'); const shop = g.placeFacility('shop', gt.i + 20, gt.j + 10, 0); const pop0 = g.parkPopularity(); const sc0 = g.sceneryOf(shop.uid); const a = g.placeFacility('sunflower', gt.i + 18, gt.j + 10, 0); const b = g.placeFacility('aloe', gt.i + 20 + sd.w + 1, gt.j + 10, 0); const sc = g.sceneryOf(shop.uid); const pop1 = g.parkPopularity(); w.facilityInfo.show(shop.uid); const row = [...document.querySelectorAll('#win-facility .krow')].map((x) => x.textContent).find((t) => t.startsWith('경관')) ?? ''; w.facilityInfo.win.hide(); return { ok: shop.ok && a.ok && b.ok, sc0, sc, pop0, pop1, row }; })()`)) as { ok: boolean; sc0: number; sc: number; pop0: number; pop1: number; row: string };
   record('P26 경관 전염 — 매점 옆 장식 둘 → 경관 0 → 13 이상 · 인기 상승 · 정보 창 「경관 +n — 인기 +k · 판매가 +m%」', r.ok && r.sc0 === 0 && r.sc >= 13 && r.pop1 > r.pop0 && /^경관\+\d+ — 인기 \+\d+ · 판매가 \+\d+%/.test(r.row) ? 'pass' : 'fail', JSON.stringify(r));
@@ -1642,7 +1643,7 @@ async function verifyP26(page: import('playwright').Page, cdp: CDPSession): Prom
 }
 
 async function verifyP25(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; const seat = g.facilities.all.find((f) => f.defId === 'pyeongsang_row'); const pk = g.seatPackages(seat.uid).map((p) => p.id).sort(); const seen = [...g.packagesSeen].sort(); w.facilityInfo.show(seat.uid); const row = [...document.querySelectorAll('#win-facility .krow')].map((x) => x.textContent).find((t) => t.startsWith('패키지')) ?? ''; w.facilityInfo.win.hide(); w.placeDock.enter(w.facilityDefs.get('pyeongsang_row')); w.placeDock.aimAt(gt.i + 6, gt.j + 39); const label = w.scene.ghostLabelForTest(); w.placeDock.exit(); const vr = g.placeFacility('vending_out', gt.i + 4, gt.j + 13, 0); /* P48-b2: 첫 평상은 만 북안(gt.i+3, j+14) */ const pkNear = g.seatPackages(seat.uid).map((p) => p.id).sort(); const seenNear = [...g.packagesSeen].sort(); const rm = vr.ok && g.removeFacility(vr.uid).ok; const items = g.inbox.items ?? g.inbox.all ?? []; const gone = items.some((x) => x.title.includes('고기 패키지 가 사라졌다')); const after = g.seatPackages(seat.uid).map((p) => p.id); return { pk, seen, row, label, pkNear, seenNear, rm, gone, after }; })()`)) as { pk: string[]; seen: string[]; row: string; label: string; pkNear: string[]; seenNear: string[]; rm: boolean; gone: boolean; after: string[] };
   record('P25 킷 평상 패키지는 수영만(P29) · 정보 창 「패키지 수영 패키지」 → 반경에 자판기를 놓으면 고기·수영 · 발견 2종', r.pk.join(',') === 'swim' && r.seen.join(',') === 'swim' && /패키지수영 패키지/.test(r.row) && r.pkNear.join(',') === 'meat,swim' && r.seenNear.join(',') === 'meat,swim' ? 'pass' : 'fail', JSON.stringify({ pk: r.pk, seen: r.seen, row: r.row, pkNear: r.pkNear }));
@@ -1651,7 +1652,7 @@ async function verifyP25(page: import('playwright').Page, cdp: CDPSession): Prom
 }
 
 async function verifyP24(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; const seats = g.facilities.all.filter((f) => f.defId === 'pyeongsang_row').map((f) => g.seatGradeOf(f.uid).grade).sort(); w.placeDock.enter(w.facilityDefs.get('pyeongsang_row')); w.placeDock.aimAt(gt.i - 8, gt.j + 14); /* P48-b3: 서쪽 물가(열 40 · 행 22 — 물이 반경 3 안) */ const label1 = w.scene.ghostLabelForTest ? w.scene.ghostLabelForTest() : (document.querySelector('#dock-place .kdock-cost')?.textContent ?? ''); const ring1 = w.scene.selectionCountForTest ? w.scene.selectionCountForTest() : -1; w.placeDock.aimAt(gt.i - 18, gt.j + 14) /* P48-b3: 북서 잔디 — 물 반경 밖 */; /* 블록(5,2) — 접한 블록에 매점 없음(P35) */ const label2 = w.scene.ghostLabelForTest ? w.scene.ghostLabelForTest() : ''; w.placeDock.exit(); const ring0 = w.scene.selectionCountForTest ? w.scene.selectionCountForTest() : -1; w.placeDock.enter(w.facilityDefs.get('shop')); w.placeDock.aimAt(gt.i - 14, gt.j + 16); const label3 = w.scene.ghostLabelForTest ? w.scene.ghostLabelForTest() : ''; w.placeDock.exit(); const seat = g.facilities.all.find((f) => f.defId === 'pyeongsang_row'); w.facilityInfo.show(seat.uid); const row = [...document.querySelectorAll('#win-facility .krow')].find((x) => x.textContent.startsWith('등급')); const stars = row ? row.querySelectorAll('.kstars svg, .kstars canvas, .kstars *:not(.kdim)').length : -1; const text = row ? row.textContent : ''; w.facilityInfo.win.hide(); return { seats, label1, ring1, label2, ring0, label3, text, stars }; })()`)) as { seats: number[]; label1: string; ring1: number; label2: string; ring0: number; label3: string; text: string; stars: number };
   record('P24 킷 평상 등급 3·3 (물 +2 · 뷰 — P29 미완성: 먹거리·그늘·조경은 플레이어가)', r.seats.length === 2 && r.seats[0] === 3 && r.seats[1] === 3 ? 'pass' : 'fail', JSON.stringify(r.seats));
@@ -1661,7 +1662,7 @@ async function verifyP24(page: import('playwright').Page, cdp: CDPSession): Prom
 }
 
 async function verifyP23(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const vend = g.facilities.all.find((f) => f.defId === 'vending_out'); const slots = g.menus.slotsOf(vend.uid).filter((x) => x !== null).length; w.skip(w.TPD + 2); const items = g.inbox.items ?? g.inbox.all ?? []; const first = items.filter((x) => x.title.startsWith('첫 판매')).length; const sum = items.filter((x) => x.kind === 'day-summary').slice(-1)[0]; return { slots, food: g.stats.food, first, body: sum ? sum.body : '' }; })()`)) as { slots: number; food: number; first: number; body: string };
   record('P23 기본 메뉴 — 새 판 자판기 메뉴 3 · 첫날 매출 > 0 · 첫 판매 토스트 1 · 요약 「매점 n건 (최다 …)」', r.slots === 3 && r.food > 0 && r.first === 1 && /매점 \d+건 \(최다 /.test(r.body) ? 'pass' : 'fail', JSON.stringify(r));
@@ -1669,7 +1670,7 @@ async function verifyP23(page: import('playwright').Page, cdp: CDPSession): Prom
 }
 
 async function verifyP22(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const un = (await page.evaluate(`(() => { const g = window.__pj.game; return { n: g.unlocked.facilities.size, shop: g.isUnlocked('shop'), fire: g.isUnlocked('firepit_row'), stage: g.isUnlocked('stage_river') }; })()`)) as { n: number; shop: boolean; fire: boolean; stage: boolean };
   record('P21 해금 재배치 — 새 판 시설 45종(P45-b 대여소·실내 매점 +2 · P49-a1 시작 기구 8 · P57-b env 장식 18) · 매점·화로대는 시작 · 강변 스테이지는 아직 소원', un.n === 45 && un.shop && un.fire && !un.stage ? 'pass' : 'fail', JSON.stringify(un));
@@ -1688,7 +1689,7 @@ async function verifyP22(page: import('playwright').Page, cdp: CDPSession): Prom
 }
 
 async function verifyP18(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const eve = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 200000; g.rank = 2; g.openLand(2); g.unlocked.facilities.add('camp_site'); const gt = g.gate; const r = g.placeFacility('camp_site', gt.i - 14, gt.j + 19, 0); /* P48-b3: 서쪽 물가 */ const s = g.guests.spawn(); s.teamId = 999; /* 걸어온 팀 시퀀스(1,2,3…)와 겹치지 않게 */ s.target = { kind: 'facility', uid: r.uid }; s.state = 'walk'; s.stateTicks = 0; w.skip(300); const stays = s.stays; const lodging = g.stats.lodging; w.skip(g.tick < 1450 ? 1450 - g.tick : 0); w.refreshHud(); const daypart = document.querySelector('.daypart').textContent; const clock = g.clock.clock; const tintA = w.scene.tint ? w.scene.tint.fillAlpha : -1; const lights = w.scene.illuminationOn(); w.facilityInfo.show(r.uid); const rows = [...document.querySelectorAll('#win-facility .krow')].map((x) => x.textContent); w.facilityInfo.win.hide(); return { ok: r.ok, stays, lodging, daypart, clock, tintA, lights, lodgeRow: rows.find((x) => x.startsWith('숙박')) ?? '' }; })()`)) as { ok: boolean; stays: boolean; lodging: number; daypart: string; clock: string; tintA: number; lights: boolean; lodgeRow: string };
   record('P18 저녁 구간 — 18시 넘으면 헤더 「… · 저녁」 · 밤 틴트 > 0 · 조명 켜짐 · 시계 PM 06:xx', eve.daypart.includes('저녁') && eve.tintA > 0 && eve.lights && /^PM 06/.test(eve.clock) ? 'pass' : 'fail', JSON.stringify({ daypart: eve.daypart, clock: eve.clock, tintA: eve.tintA, lights: eve.lights }));
@@ -1699,12 +1700,12 @@ async function verifyP18(page: import('playwright').Page, cdp: CDPSession): Prom
 }
 
 async function verifyP17(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const team = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; g.busState = { areaId: 'residential', seatsLeft: 0, phase: 'stop', t: 0, source: 'likes', team: 999 }; for (let k = 0; k < 4; k++) g.spawnBusGuest('residential'); g.busState = null; const kit = g.facilities.all.find((f) => g.facilities.defOf(f).class === 'lounging' && g.facilities.defOf(f).usageFee > 0); const team = g.guests.all.filter((x) => x.teamId === 999); for (const t of team) { t.target = { kind: 'facility', uid: kit.uid }; t.state = 'walk'; t.stateTicks = 0; } g.step(400); const seated = team.filter((t) => t.seatUid === kit.uid); w.facilityInfo.show(kit.uid); const rows = [...document.querySelectorAll('#win-facility .krow')].map((r) => r.textContent); w.facilityInfo.win.hide(); return { n: team.length, rented: kit.rentedBy, seated: seated.length, pkg: g.stats.pkg, teamSeated: g.stats.teamSeated, pkgs: seated.map((t) => t.pkg), seatRow: rows.find((r) => r.startsWith('등급')) ?? '', feeRow: rows.find((r) => r.startsWith('이용료')) ?? '' }; })()`)) as { n: number; rented: number; seated: number; pkg: number; teamSeated: number; pkgs: string[]; seatRow: string; feeRow: string };
   record('P17 버스 팀 4명 — 같은 팀 · 유료 평상이 팀 열쇠(−1000)로 대여 · 둘 이상 앉음 · 패키지는 대표 1명(P27) · 매출 > 0', team.n === 4 && team.rented === -1000 && team.seated >= 2 && team.pkg > 0 && team.teamSeated >= team.seated && team.pkgs.filter((p) => p !== null).length === 1 && team.pkgs.every((p) => p === null || p === 'meat' || p === 'swim') ? 'pass' : 'fail' /* P27: 패키지는 팀 대표 한 명만 */, JSON.stringify(team));
   record('P17 정보 창 — 「등급 … n/5」 행(P24) · 「이용료 … 팀 #999 자리」', /등급.*\d\/5/.test(team.seatRow) && team.feeRow.includes('팀 #999 자리') ? 'pass' : 'fail', JSON.stringify({ seatRow: team.seatRow, feeRow: team.feeRow }));
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0&kit=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&events=0&kit=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const none = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.busState = { areaId: 'residential', seatsLeft: 0, phase: 'stop', t: 0, source: 'likes', team: 3 }; for (let k = 0; k < 3; k++) g.spawnBusGuest('residential'); g.busState = null; let said = false; for (let k = 0; k < 40 && !said; k++) { g.step(4); said = g.guests.all.some((x) => x.say === '자리가 없네…' || (x.teamId === 3 && x.emote === 'grr')); } return { seatless: g.stats.seatless, said, lounges: g.facilities.all.filter((f) => g.facilities.defOf(f).class === 'lounging').length }; })()`)) as { seatless: number; said: boolean; lounges: number };
   record('P17 자리 없으면 서성임 — 평상 0 인 판에서 팀 손님이 「자리가 없네…」 · seatless 집계 > 0', none.lounges === 0 && none.seatless > 0 ? 'pass' : 'fail', JSON.stringify(none));
@@ -1712,7 +1713,7 @@ async function verifyP17(page: import('playwright').Page, cdp: CDPSession): Prom
 }
 
 async function verifyP16(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   // 길 붓 실터치: 입구 열 오른쪽 잔디 두 칸
   await page.evaluate(`(() => { const w = window.__pj; w.game.money = 50000; w.dock.enter('path'); const gt = w.game.gate; w.scene.focusTile(gt.i + 16, gt.j + 12, 150); })()`);
@@ -1733,7 +1734,7 @@ async function verifyP16(page: import('playwright').Page, cdp: CDPSession): Prom
 
 /** P15 — 방향·수영 구역·코스 물: 입구가 위(j=0)·물이 아래 · 데크로 둘러싸면 자동 수역(실터치) · 치기 탭 숨김 · 코스 제안은 트인 강 · 허가 줄은 랭크마다 +3 */
 async function verifyP15(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const lay = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; const hidden = [...document.querySelectorAll('#dock-pool .ktab')].filter((b) => ['dig', 'fill'].includes(b.dataset.mode)).every((b) => b.classList.contains('khide')); const s = g.suggestCourse(); const open = s.ok ? s.draft.handles.every((h) => [5, 6].includes(g.grid.at(Math.round(h.x), Math.round(h.y)))) : false; return { gateJ: gt.j, bottom: g.grid.at(gt.i, gt.j + 30), top: g.grid.at(gt.i, gt.j + 1), /* P43 → P48-b3: 입구 열 행 38 은 강 · 입구 아래 한 칸은 포장 */ pools: g.pools.all.length, tiles: g.pools.totalTiles(), hidden, open, waterMax0: g.permitDepth }; })()`)) as { gateJ: number; bottom: number; top: number; pools: number; tiles: number; hidden: boolean; open: boolean; waterMax0: number };
   record('P15 방향 — 입구가 도시 띠 아래(j=8, P43) · 아래는 강 · 킷 수역 20(데크 링 자동) · 치기/걷기 탭 숨김 · 코스 제안은 트인 강 · 허가 깊이 7', lay.gateJ === 8 && lay.bottom === 5 && (lay.top === 2 || lay.top === 15) && lay.tiles === 20 && lay.hidden && lay.open && lay.waterMax0 === 7 ? 'pass' : 'fail', JSON.stringify(lay));
@@ -1753,12 +1754,12 @@ async function verifyP15(page: import('playwright').Page, cdp: CDPSession): Prom
 
 /** P14 — 레거시 구조: 아틀라스 프레임이 실제로 뜬다(지면·시설 source art, 레거시 프레임 크기) · 물 22줄 · `?legacy=0` 이면 절차로 떨어진다 */
 async function verifyP14(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&px=1`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&px=1`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const on = (await page.evaluate(`(() => { const w = window.__pj; const pr = w.provider; const g = w.game; let water = 0; for (let j = 0; j < g.grid.h; j++) if ([5, 6].includes(g.grid.at(0, j))) water++; const dock = g.facilities.all.find((f) => f.defId === 'dock'); const key = 'fac/dock/0'; const tex = w.scene.textures.exists(key); return { grass: pr.spec('tile/grass'), river: pr.spec('tile/river:0'), dock: pr.spec(key), water, land: g.land, docked: !!dock, tex }; })()`)) as { grass: { source: string; w: number; h: number } | null; river: { source: string } | null; dock: { source: string; w: number; h: number } | null; water: number; land: { j0: number; h: number; w: number }; docked: boolean; tex: boolean };
   const okOn = on.grass?.source === 'art' && on.grass.w === 32 && on.grass.h === 16 && on.river?.source === 'art' && on.dock?.source === 'art' && on.dock.w === 32 && on.dock.h === 28 && on.water === 22 && on.land.j0 === 8 && on.land.h === 42 && on.docked && on.tex;
   record('P14 레거시 아틀라스 — 잔디·강 타일과 선착장이 art(레거시 프레임 크기 32×16 · 32×28) · 물 22줄 · 뭍 토지 42줄 고정(P43)', okOn ? 'pass' : 'fail', JSON.stringify({ grass: on.grass, dock: on.dock, water: on.water, land: on.land, tex: on.tex }));
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&legacy=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0&legacy=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const off = (await page.evaluate(`(() => { const pr = window.__pj.provider; return { grass: pr.spec('tile/grass'), dock: pr.spec('fac/dock/0') }; })()`)) as { grass: { source: string } | null; dock: { source: string; w: number } | null };
   record('P14 대조군 ?legacy=0 — 잔디가 절차 도트로 떨어진다', off.grass?.source !== 'art' || (off.dock?.w ?? 0) !== 28 ? 'pass' : 'fail', JSON.stringify(off));
@@ -1767,7 +1768,7 @@ async function verifyP14(page: import('playwright').Page, cdp: CDPSession): Prom
 
 /** P11 — 엔딩 이월 문구에 기구 · 사건이 끼어들기 예산을 탄다(연속 두 사건 중 둘째는 미뤄진다) */
 async function verifyP11(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.endingWin.show(); const txt = [...document.querySelectorAll('#win-ending .krow-sub')].map((e) => e.textContent).join(' '); w.endingWin.win.hide(); return { txt }; })()`)) as { txt: string };
   record('P11 엔딩 창 이월 문구에 「기구」(부표는 P49-a2 물빛 삭제로 없음)', r.txt.includes('기구') && !r.txt.includes('부표') ? 'pass' : 'fail', r.txt.slice(0, 120));
@@ -1778,7 +1779,7 @@ async function verifyP11(page: import('playwright').Page, cdp: CDPSession): Prom
 
 /** P9 — 사계절·출신지: 눈 연출 등록(겨울) · 손님이 출신지 취향을 안고 있다 · 손님 카드에 출신지 */
 async function verifyP9(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const r = (await page.evaluate(`(() => { const w = window.__pj; const before = w.fxFired['snow-fall'] || 0; w.scene.fx('snow-fall', { x: 100, y: -4, amount: 1 }); w.scene.fx('petal-fall', { x: 120, y: -4, amount: 0 }); w.skip(600); const gs = w.game.guests.all; const tasted = gs.filter((g) => g.taste).length; return { snow: (w.fxFired['snow-fall'] || 0) - before, guests: gs.length, tasted, homes: [...new Set(gs.map((g) => g.home))].slice(0, 4) }; })()`)) as { snow: number; guests: number; tasted: number; homes: string[] };
   record('P9 겨울 눈 연출 등록부 · 손님이 출신지 취향을 안고 있다 · 출신지 이름이 한국식', r.snow >= 1 && r.guests > 0 && r.tasted === r.guests && r.homes.every((h) => /[가-힣]/.test(h)) ? 'pass' : 'fail', JSON.stringify(r));
@@ -1787,7 +1788,7 @@ async function verifyP9(page: import('playwright').Page, cdp: CDPSession): Promi
 
 /** P8 — 알바 슬롯 (D14): 시설 정보 창의 버튼 하나 실터치 → 알바 · 유지비 +임금 · 청결 행 · 놀 수 없는 시설엔 버튼 없음 */
 async function verifyP8(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const opened = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 30000; const shop = g.facilities.all.find((f) => g.facilities.defOf(f).class === 'restaurant'); w.facilityInfo.show(shop.uid); const b = document.getElementById('win-facility-staff'); const r = b.getBoundingClientRect(); return { uid: shop.uid, hidden: b.classList.contains('khide'), x: r.left + r.width / 2, y: r.top + r.height / 2, label: b.textContent, m0: g.dailyMaintenance() }; })()`)) as { uid: number; hidden: boolean; x: number; y: number; label: string; m0: number };
   await touch(cdp, opened.x, opened.y);
@@ -1798,7 +1799,7 @@ async function verifyP8(page: import('playwright').Page, cdp: CDPSession): Promi
 
 /** P7 — 기구 공방: MENU 항목 · 창 실터치(부품 칩 2 → 개발하기) → 결과 줄 · 발견이면 코스 독 기구가 는다 · 요리 창은 그대로(레시피 180) */
 async function verifyP7(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const center = async (sel: string): Promise<{ x: number; y: number } | null> => (await page.evaluate(`(() => { const e = document.querySelector(${JSON.stringify(sel)}); if (!e) return null; e.scrollIntoView({ block: 'center' }); const r = e.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`)) as { x: number; y: number } | null;
   const menu = (await page.evaluate(`(() => { const w = window.__pj; w.mainMenu.show(); const has = !!document.querySelector('#win-menu-main [data-menu="workshop"]'); const cook = !!document.querySelector('#win-menu-main [data-menu="cook"]'); w.mainMenu.hide(); return { has, cook }; })()`)) as { has: boolean; cook: boolean };
@@ -1821,7 +1822,7 @@ async function verifyP7(page: import('playwright').Page, cdp: CDPSession): Promi
 
 /** P6 — 빠지 심사: 계열 탭 8 이 빠지식 라벨 · 심사위원 셋 이름(군청 공무원·해경·유튜버) · 편향 0(세 점수 동일) · 장날 창 제목 */
 async function verifyP6(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const tabs = (await page.evaluate(`(() => { const w = window.__pj; w.certWin.show(); const t = [...document.querySelectorAll('#win-cert .ktab')].map((b) => b.textContent.trim()); const title = document.querySelector('#win-cert .kwin-title').textContent; w.certWin.win.hide(); return { t, title }; })()`)) as { t: string[]; title: string };
   const want = ['물놀이', '경관', '핫플', '사철', '맛집', '스릴', '안전', '청결'];
@@ -1839,7 +1840,7 @@ async function verifyP6(page: import('playwright').Page, cdp: CDPSession): Promi
 
 /** P5 — SNS 친구 탭: 출신지 소개 + 버스 이름 · 다음 출신지 · 소원 문장이 한국어 빠지 어휘 */
 async function verifyP5(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const cellAt = (await page.evaluate(`(() => { const e = document.querySelector('#hud-right [data-cell="sns"]'); const r = e.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`)) as { x: number; y: number };
   await touch(cdp, cellAt.x, cellAt.y);
@@ -1855,7 +1856,7 @@ async function verifyP5(page: import('playwright').Page, cdp: CDPSession): Promi
 
 /** P4 — 코스: 선착장이 있으면 코스 칸이 열린다 · 독 진입 → 핸들·선착장 표식 · 핸들을 실제 드래그 → 판정 갱신 · 적용 → 코스 1 · 시험 운행 반응 · 손님 탑승·요금 */
 async function verifyP4(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const center = async (sel: string): Promise<{ x: number; y: number } | null> => (await page.evaluate(`(() => { const e = document.querySelector(${JSON.stringify(sel)}); if (!e) return null; const r = e.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`)) as { x: number; y: number } | null;
   const cell = (await page.evaluate(`(() => { const w = window.__pj; w.refreshHud(); const c = document.querySelector('#hud-right [data-cell="course"]'); return { locked: c.dataset.locked || null }; })()`)) as { locked: string | null };
@@ -1885,7 +1886,7 @@ async function verifyP4(page: import('playwright').Page, cdp: CDPSession): Promi
 
 /** G25 — 시작 킷(풀 12칸 · 시설 7) · 물 비율 · 경계 나무 · 코핑 */
 async function verifyG25(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&events=0&tut=0`, { waitUntil: 'load' });
+  await page.goto(`${BASE}/?layout=reference&debug=1&px=1&fresh=1&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction(`(() => { const b = document.getElementById('wp-debug'); return !!b && (b.textContent || '').includes('FPS'); })()`, undefined, { timeout: 15000 });
   await page.waitForTimeout(600);
   const kit = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; return { tiles: g.pools.totalTiles(), pools: g.pools.all.length, facs: g.facilities.all.length, money: g.money, trees: w.scene.borderCountForTest() }; })()`)) as { tiles: number; pools: number; facs: number; money: number; trees: number };
@@ -1894,6 +1895,48 @@ async function verifyG25(page: import('playwright').Page): Promise<void> {
   const water = (await page.evaluate(`(async () => { const c = document.querySelector('canvas'); const gl = c.getContext('webgl2') || c.getContext('webgl'); if (!gl) return -1; const w = c.width, h = c.height; const buf = new Uint8Array(w * h * 4); gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, buf); let n = 0; for (let i = 0; i < buf.length; i += 16) { const r = buf[i], g = buf[i + 1], b = buf[i + 2]; if (g > 150 && g > r + 30 && g > b + 40) n++; } return n / (buf.length / 16); })()`)) as number;
   const blue = (await page.evaluate(`(async () => { const c = document.querySelector('canvas'); const gl = c.getContext('webgl2') || c.getContext('webgl'); if (!gl) return -1; const w = c.width, h = c.height; const buf = new Uint8Array(w * h * 4); gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, buf); let n = 0; for (let i = 0; i < buf.length; i += 16) { const r = buf[i], g = buf[i + 1], b = buf[i + 2]; if (b > 150 && b > r + 40 && b > g + 10) n++; } return n / (buf.length / 16); })()`)) as number;
   record('G25→P43→S2 첫 화면 — 기본 S=2(원작 줌, 2026-09-11)라 화면이 절반: 광장+선착장+킷 빠지 — 물 ≥ 15% · 잔디 ≥ 2% (옛 「마당 ≥ 20%」 는 S1·강이 마당 아래이던 P43 기준)', blue >= 0.15 && water >= 0.02 ? 'pass' : 'fail', `물 ${Math.round(blue * 1000) / 10}% · 잔디 ${Math.round(water * 1000) / 10}%`);
+}
+
+/** Current player default, separate from historical G/P map fixtures above. */
+async function verifyApprovedArrival(page: import('playwright').Page): Promise<void> {
+  const check = (name: string, ok: boolean, detail = ''): void => record(name, ok ? 'pass' : 'fail', detail);
+  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&events=0&confirm=0`, { waitUntil: 'load' });
+  await page.waitForFunction('!!window.__pj');
+  const layout = await page.evaluate<{ revision: number; indoor: number; doors: unknown[]; removed: number; decor: number; ticket: { i: number; j: number; passage: unknown[] }; lane: boolean; blocked: boolean; trees: number; missing: number }>(`(() => {
+    const w = window.__pj, g = w.game; w.flow.frozen = true;
+    return { revision:g.arrivalRevision, indoor:[...g.grid.floor].filter(c => c === 3 || c === 15).length,
+      doors:g.grid.doors(), removed:g.facilities.all.filter(f => ['pyeongsang_row','pingpong'].includes(f.defId)).length,
+      decor:g.facilities.all.filter(f => f.defId.startsWith('env_')).length,
+      ticket:g.facilities.all.find(f => f.defId === 'ticket'),
+      lane:[9,10,11,18,19].every(j => g.guests.walkable(48,j)), blocked:g.canPlace('env_flower_pot',48,12).ok,
+      trees:w.scene.borderImgs.filter(i => ['fac/env_pine/0','fac/env_deciduous/0','fac/env_shrubs/0'].includes(i.texture.key)).length,
+      missing:w.scene.children.list.filter(o => o.texture && o.texture.key === '__MISSING').length };
+  })()`);
+  check('통합 초기 맵 — 기본값 승인 13×8 실내 · 북문/남문 · 시작 평상/탁구대 0 · 벽밖 장식 22',
+    layout.revision === 2 && layout.indoor === 104 && layout.doors.length === 2 && layout.removed === 0 && layout.decor === 22, JSON.stringify(layout));
+  check('통합 매표소 — (46,9) 통과 칸 2 · 입구/복도/남문 연결 · 통로를 막는 건설 거절',
+    layout.ticket.i === 46 && layout.ticket.j === 9 && layout.ticket.passage.length === 2 && layout.lane && !layout.blocked);
+  check('통합 바깥 나무 — 승인 환경 그림 ≥12 · 누락 텍스처 0', layout.trees >= 12 && layout.missing === 0);
+  const motion = await page.evaluate<{ maxStep: number; seen: number[]; keys: string[]; flips: boolean[] }>(`(() => {
+    const w=window.__pj, g=w.game, p=g.guests.spawn(); p.age=25;p.float=0;
+    const seen=[]; let maxStep=0, before=[p.i,p.j];
+    for(let k=0;k<200&&p.state!=='wander';k++) {g.guests.step(); maxStep=Math.max(maxStep,Math.abs(p.i-before[0])+Math.abs(p.j-before[1]));
+      if(p.progress===1&&seen[seen.length-1]!==p.j)seen.push(p.j);before=[p.i,p.j];}
+    p.state='walk'; const keys=[];const flips=[];
+    for(let facing=0;facing<4;facing++){p.facing=facing;w.syncWorldToScene();w.scene.syncGuests();const im=w.scene.guestImgs.get(p.uid);keys.push(im.texture.key);flips.push(im.flipX);}
+    return {maxStep,seen,keys,flips};
+  })()`);
+  check('통합 입장 이동 — 매표소→실내→남문 순서 · 한 번에 최대 1칸', motion.maxStep <= 1 && motion.seen.join(',') === '9,10,11,12,13,14,15,16,17,18,19', JSON.stringify(motion));
+  check('통합 NPC V8 — 실제 손님 이미지 앞/뒤/반전 4방향 · 중복 반전 없음',
+    motion.keys.every((k: string) => k.startsWith('guest/v8/')) && motion.keys[0]!.includes('/front_walk/0/') && motion.keys[1]!.includes('/front_walk/1/')
+    && motion.keys[2]!.includes('/back_walk/1/') && motion.keys[3]!.includes('/back_walk/0/') && motion.flips.every((f: boolean) => !f));
+  await page.evaluate('window.__pj.game.money = 12345');
+  await page.locator('#hud-save').click();
+  await page.goto(`${BASE}/?debug=1&px=1&tut=0&events=0&confirm=0`, { waitUntil: 'load' });
+  await page.waitForFunction('!!window.__pj');
+  const restored = await page.evaluate<{ revision: number; money: number; pass: boolean; decor: number }>(`(() => {const w=window.__pj;w.flow.frozen=true;return {revision:w.game.arrivalRevision,money:w.game.money,pass:w.game.guests.walkable(48,9),decor:w.game.facilities.all.filter(f=>f.defId.startsWith('env_')).length};})()`);
+  check('통합 저장 — SAVE 후 재접속에 배치 버전·돈·매표 통로·장식 유지', restored.revision === 2 && restored.money === 12345 && restored.pass && restored.decor === 22, JSON.stringify(restored));
+  await page.screenshot({ path: `${SHOT_DIR}/approved-arrival-mobile.png` });
 }
 
 async function main(): Promise<void> {
@@ -2061,6 +2104,7 @@ async function main(): Promise<void> {
   if (G >= 37) await verifyG37(page);
   if (G >= 39) await verifyG39(page);
 
+  if (G >= 157.2) await verifyApprovedArrival(page);
   record('콘솔 에러 0', errors.length === 0 ? 'pass' : 'fail', errors.slice(0, 3).join(' | '));
 
   await browser.close();

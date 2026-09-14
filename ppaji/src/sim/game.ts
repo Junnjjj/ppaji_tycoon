@@ -1,3 +1,4 @@
+import { applyArrivalLayout, arrivalRoute } from './arrival-layout.js';
 /**
  * 세계 조립 — 시계·격자·풀·시설·손님·돈·인박스를 한 곳에서 tick 한다.
  * 바깥(렌더·UI·봇)은 **명령 메서드**로만 쓴다. 전부 `{ok}|{ok:false, reason}` 를 돌려
@@ -181,6 +182,7 @@ export interface PeriodReport {
 }
 
 export interface GameSnapshot {
+  arrivalRevision?: number;
   version: 1;
   seed: number;
   rng: Record<RngStream, number>;
@@ -259,6 +261,12 @@ export interface GameSnapshot {
 export const MAX_PRESETS = 4;
 
 export class Game {
+  arrivalRevision = 0;
+  finalizeArrivalLayout(): void {
+    this.guests.setArrivalRoute(arrivalRoute(this.gate));
+    this.popCache = null;
+    this.afterWorldChange();
+  }
   readonly grid: Grid;
   readonly pools: PoolStore;
   readonly facilities: FacilityStore;
@@ -350,7 +358,7 @@ export class Game {
   constructor(
     readonly seed: number,
     readonly b: Balance = defaultBalance,
-    opts: { kit?: boolean } = {},
+    opts: { kit?: boolean; arrival?: boolean } = {},
   ) {
     const root = new Rng(seed);
     this.rng = Object.fromEntries(Object.entries(RNG_SALTS).map(([k, salt]) => [k, root.fork(salt)])) as Record<RngStream, Rng>;
@@ -374,7 +382,7 @@ export class Game {
     this.planFriendVisits();
     this.planBuses();
     // 시작 킷 (G25) — 물려받은 작은 파크. 스냅샷 복원은 kit:false 로 부른다 (덮어쓸 것이라 무의미하다)
-    if (opts.kit !== false) applyStartKit(this);
+    if (opts.kit !== false) { applyStartKit(this); if (opts.arrival) applyArrivalLayout(this); }
   }
 
   /** 오늘 바깥 기온 — 계절 기본 + 날씨 */
@@ -2321,6 +2329,7 @@ export class Game {
   canPlace(defId: string, i: number, j: number, facing: 0 | 1 = 0, opts: { inherited?: boolean; frontage?: boolean } = {}): Result {
     const def = FACILITY_DEFS.get(defId);
     if (!def) return { ok: false, reason: FACILITY_FAIL_KO.unknown };
+    if (this.arrivalRevision && FacilityStore.footprint(def, i, j, facing).some(t => arrivalRoute(this.gate).some(a => a.i === t.i && a.j === t.j))) return { ok: false, reason: '매표소와 실내를 잇는 출입 통로입니다' };
     if (!opts.inherited && !this.isUnlocked(defId)) return { ok: false, reason: '아직 해금되지 않은 시설입니다' };
     const r = this.facilities.check(defId, i, j, facing, this.land, this.gate, 0, this.permitDepth, this.waterRules);
     if (!r.ok) return { ok: false, reason: FACILITY_FAIL_KO[r.fail] };
@@ -2365,8 +2374,10 @@ export class Game {
     const f = this.facilities.byUid(uid);
     if (!f) return { ok: false, reason: '시설이 없습니다' };
     if (!this.tools.has('move')) return { ok: false, reason: '이동 도구가 없습니다 — 첫 심사 합격 뒤 사장이 보낸다' };
+    if (f.passage) return { ok: false, reason: '정문 매표소는 출입 통로에 연결되어 있습니다' };
     if (f.i === i && f.j === j && f.facing === facing) return { ok: false, reason: '같은 자리입니다 — 지도를 탭해 옮길 곳을 고르세요' };
     const def = this.facilities.defOf(f);
+    if (this.arrivalRevision && FacilityStore.footprint(def, i, j, facing).some(t => arrivalRoute(this.gate).some(a => a.i === t.i && a.j === t.j))) return { ok: false, reason: '매표소와 실내를 잇는 출입 통로입니다' };
     const r = this.facilities.check(def.id, i, j, facing, this.land, this.gate, uid, this.permitDepth, this.waterRules);
     if (!r.ok) return { ok: false, reason: FACILITY_FAIL_KO[r.fail] };
     if (def.outdoorOnly && FacilityStore.footprint(def, i, j, facing).some((t) => isIndoorCode(this.grid.at(t.i, t.j)))) return { ok: false, reason: '야외 식당은 실내에 못 놓습니다 — 복도 곁엔 실내 매점·포장 창구를' }; // P45-b D63
@@ -3241,6 +3252,7 @@ export class Game {
   toSnapshot(): GameSnapshot {
     return {
       version: 1,
+      ...(this.arrivalRevision ? { arrivalRevision: this.arrivalRevision } : {}),
       seed: this.seed,
       rng: Object.fromEntries(Object.entries(this.rng).map(([k, r]) => [k, r.state])) as Record<RngStream, number>,
       clock: { day: this.day, tick: this.tick },
@@ -3351,6 +3363,8 @@ export class Game {
     if (s.courses) g.courses.fromSnapshot(s.courses);
     g.refreshRigs(); // P50-a: 켜짐·walkOn·blocked 는 파생 — 로드 뒤 다시 센다
     g.primePackageCache(); // P50-b1: 자리 패키지 대조 캐시(파생)
+    g.arrivalRevision = s.arrivalRevision ?? 0;
+    if (g.arrivalRevision) g.guests.setArrivalRoute(arrivalRoute(g.gate));
     g.recomputePassBy(); // P45-b: 복도 곁 점포 집합은 저장하지 않는다 — 복원 때 다시 센다(하루 중간 저장·복원이 같아야 한다, G57)
     return g;
   }
