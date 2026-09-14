@@ -61,6 +61,7 @@ export class ResultsWindow {
     this.row('입장료', G(d.tickets));
     if (d.food) this.row('식당 매출', G(d.food));
     if (d.fees) this.row('라운지 대여', G(d.fees));
+    if (d.nightOn) this.row('밤 빠지 파티', `야간권 ${G(d.nightPkg ?? 0)} · 링 매점 ${G(d.nightFood ?? 0)} · 자리 ${G(d.nightFee ?? 0)}`, 'kgood'); // P54 — 열린 날만
     this.row('유지비' + (d.salary ? ' · 월급' : ''), `−${G(d.maintenance)}`);
     if (d.cleanliness !== undefined) this.row('청결', `${d.cleanliness} / 100`);
     this.row('순이익', `${d.net >= 0 ? '+' : ''}${G(d.net)}`, d.net >= 0 ? 'kgood' : 'kbad');

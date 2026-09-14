@@ -66,7 +66,7 @@ export function buildField(grid: Grid, targets: readonly { i: number; j: number 
     for (const [di, dj] of NEIGHBORS) {
       const ni = i + di;
       const nj = j + dj;
-      if (!grid.inside(ni, nj) || !walkable(ni, nj) || !grid.levelPassable(i, j, ni, nj)) continue; // P0-B: 단차 2 이상은 벽
+      if (!grid.inside(ni, nj) || !walkable(ni, nj) || !grid.canCross(i, j, ni, nj)) continue; // P0-B: 단차 2 이상은 벽 · P39: 실내 벽은 문으로만
       const nk = nj * grid.w + ni;
       if (f.dist[nk] !== UNREACHABLE) continue;
       f.dist[nk] = d + 1;

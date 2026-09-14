@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { Game } from './game.js';
-import { FLOOR } from './grid.js';
+import { FLOOR, shoreRow } from './grid.js';
 import { runBot } from './bot.js';
+import { makeTestPpaji } from './test-helpers.js';
 import {
   validateCourseData, validateCourse, defaultHandles, presetDef, courseEquipment, dockCandidates, suggestCourse, evaluateCourse,
   COURSE_EQUIPMENT, PRESETS, COURSE_CLEAR_TILES, DOCK_REACH_TILES, startEquipmentIds,
@@ -118,8 +119,8 @@ describe('D12 개정(P15) — 코스는 부표 밖 트인 강, 수역은 막힘'
     const g = new Game(1);
     const docks = g.dockChoices();
     expect(docks.length).toBe(1);
-    expect(docks[0]!.tip).toEqual({ x: g.gate.i - 2, y: g.gate.j + 28 }); // P15: 데크 링 오른쪽 열 위
-    expect(docks[0]!.claim?.length).toBe(9);
+    expect(docks[0]!.tip).toEqual({ x: g.gate.i + 10, y: shoreRow(g.gate.i + 10) + 2 }); // P15→P43→P48-b3: 본류 잔교(3칸) 끝 — 링 동쪽 물가에서 강 쪽으로
+    expect(docks[0]!.claim?.length).toBe(3); // 잔교 3칸 전부(선착장 + 위아래 데크)
   });
   it('시작 킷에서 기본 제안은 유효하다 — 핸들 전부가 수역 칸 위', () => {
     const g = new Game(1);
@@ -164,8 +165,10 @@ describe('D12 개정(P15) — 코스는 부표 밖 트인 강, 수역은 막힘'
     expect(g.courses.count).toBe(0);
   });
   it('코스가 있는 수역은 스릴을 얻고, 하루 유지비에 기구 유지비가 더해진다', () => {
-    const g = new Game(1);
-    const zone = g.pools.all[0]!;
+    const g = new Game(1); g.money = 100000;
+    makeTestPpaji(g, 3, 5, 11); // P48-b3: 킷 빠지는 코스에서 2칸 밖 — 잔교(gt.i+10) 동쪽 곁(열 59~63, 3×5 — 물가가 편평한 열만)에 빠지를 하나 더 두고 그것을 잰다
+    const zone = g.pools.all.find((p) => p.tiles.length === 15 && p.tiles.every((k) => (k % g.grid.w) >= g.gate.i + 11))!;
+    expect(zone).toBeDefined();
     expect(g.courseThrill(zone.id)).toBe(0);
     const before = g.dailyMaintenance();
     const s = g.suggestCourse();

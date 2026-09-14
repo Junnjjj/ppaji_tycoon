@@ -34,11 +34,24 @@ export const LEVEL_MULT = 0.05;
 export const EXP_DISCOVER = 30;
 export const EXP_FAIL = 4;
 
+/**
+ * P56-c 재고(U1, D10) — 재료·부품은 **열쇠(owned)** 와 **재고(stock)** 둘이다.
+ *   시작(`unlock:'start'`) 재료는 무한(재고 없음 · 카드에 ∞) · 장날에서 사면 +1 · 소원·인증·달력·연차 보상은 ×3 ·
+ *   조합·투입은 슬롯당 −1(돈을 낸 시도만 — 개조 「미발견」은 돈도 재고도 안 든다) ·
+ *   한 번 얻은 보상 재료는 장날 값(`price`)으로 다시 산다(열쇠가 진열을 연다 — 아니면 ×3 을 다 쓴 레시피가 영영 막힌다).
+ */
+export const REWARD_STOCK = 3;
+export const BUY_STOCK = 1;
+/** 옛 세이브(`stock` 없음)의 보유 재료에 주는 재고 — 보상 한 번 몫 */
+export const LEGACY_STOCK = 3;
+
 export interface CookingSnapshot {
   exp: number;
   known: string[];
   owned: string[];
   attempts: number;
+  /** P56-c — 시작 재료는 안 싣는다(무한). 없으면 옛 세이브: 보유 재료마다 `LEGACY_STOCK` */
+  stock?: Record<string, number>;
 }
 
 export type CookResultOf<R extends RecipeLike> =
@@ -65,7 +78,10 @@ export class CookingStore<R extends RecipeLike = RecipeDef, I extends Ingredient
   readonly ingredients: ReadonlyMap<string, I>;
   exp = 0;
   readonly known = new Set<string>();
+  /** 열쇠 — 한 번이라도 얻은 재료(장날 진열·카드 자리). 쓸 수 있는지는 `has()` 가 재고로 답한다 */
   readonly owned = new Set<string>();
+  /** P56-c 재고 — 시작 재료는 안 든다(무한) */
+  readonly stock = new Map<string, number>();
   attempts = 0;
 
   constructor(recipes: readonly R[], ingredients: readonly I[], private readonly rng: Rng, readonly words: DiscoveryWords = COOK_WORDS, private readonly failPick: FailPicker = COOK_FAIL_PICK) {
@@ -93,10 +109,51 @@ export class CookingStore<R extends RecipeLike = RecipeDef, I extends Ingredient
     return { cur: this.exp - (LEVEL_EXP[lv - 1] as number), need: (LEVEL_EXP[lv] as number) - (LEVEL_EXP[lv - 1] as number) };
   }
 
-  grantIngredient(id: string): boolean {
-    if (!this.ingredients.has(id) || this.owned.has(id)) return false;
+  /** 시작 재료인가 — 무한이라 재고를 안 센다 */
+  infinite(id: string): boolean {
+    return this.ingredients.get(id)?.unlock === 'start';
+  }
+
+  /** 재고 — 무한이면 null · 모르는 id 는 0 */
+  stockOf(id: string): number | null {
+    if (!this.ingredients.has(id)) return 0;
+    if (this.infinite(id)) return null;
+    return this.stock.get(id) ?? 0;
+  }
+
+  /** `n` 개를 쓸 수 있나 (무한은 열쇠만 있으면 된다) */
+  has(id: string, n = 1): boolean {
+    if (!this.owned.has(id)) return false;
+    const s = this.stockOf(id);
+    return s === null || s >= n;
+  }
+
+  /**
+   * 재료를 얻는다 — 열쇠를 켜고 재고 `n` 을 더한다(무한 재료는 열쇠만). 돌려주는 값은 **처음 얻었나**
+   * (연차 지급·이월이 「새로 얻은 것」 목록에 쓴다 — 이미 있어도 재고는 더해진다)
+   */
+  grantIngredient(id: string, n = REWARD_STOCK): boolean {
+    if (!this.ingredients.has(id)) return false;
+    const first = !this.owned.has(id);
     this.owned.add(id);
-    return true;
+    if (!this.infinite(id)) this.stock.set(id, (this.stock.get(id) ?? 0) + Math.max(0, n));
+    return first;
+  }
+
+  /** 조합·투입이 슬롯당 하나씩 쓴다 — 돈을 낸 호출부(`Game.cook/craft/craftRig`)만 부른다 */
+  consume(ids: readonly string[]): void {
+    for (const id of ids) {
+      if (this.infinite(id)) continue;
+      const left = (this.stock.get(id) ?? 0) - 1;
+      if (left > 0) this.stock.set(id, left); else this.stock.delete(id);
+    }
+  }
+
+  /** 넣은 재료의 개수표 — 같은 재료를 둘 넣으면 재고 2 가 있어야 한다 */
+  private static tally(ids: readonly string[]): Map<string, number> {
+    const m = new Map<string, number>();
+    for (const id of ids) m.set(id, (m.get(id) ?? 0) + 1);
+    return m;
   }
 
   /** 레벨 게이트 — `level:N` 레시피는 N 이상에서만 발견된다 */
@@ -153,9 +210,12 @@ export class CookingStore<R extends RecipeLike = RecipeDef, I extends Ingredient
     if (!r || r.unlock === 'fail') return null;
     const out: string[] = [];
     const ownedSorted = [...this.owned].sort();
+    // P56-c: 재고를 센다 — 같은 재료가 두 번 들면 재고 2 · 와일드카드는 재고가 남은 것에서 (`has(id, n)`)
+    const used = new Map<string, number>();
+    const take = (id: string): boolean => { const n = (used.get(id) ?? 0) + 1; if (!this.has(id, n)) return false; used.set(id, n); out.push(id); return true; };
     for (const p of r.key.split('+')) {
-      if (isWildcard(p)) { const hit = ownedSorted.find((id) => this.classOf(id) === p.slice(1)); if (!hit) return null; out.push(hit); }
-      else { if (!this.owned.has(p)) return null; out.push(p); }
+      if (isWildcard(p)) { const hit = ownedSorted.find((id) => this.classOf(id) === p.slice(1) && this.has(id, (used.get(id) ?? 0) + 1)); if (!hit) return null; take(hit); }
+      else if (!take(p)) return null;
     }
     return out;
   }
@@ -165,7 +225,11 @@ export class CookingStore<R extends RecipeLike = RecipeDef, I extends Ingredient
     if (rank < w.unlockRank) return { ok: false, reason: `${w.unlockLabel}은 ★${w.unlockRank} 부터` };
     if (ids.length < w.minCount) return { ok: false, reason: `${w.item}는 ${w.minCount}개 이상` };
     if (ids.length > w.maxCount) return { ok: false, reason: `${w.item}는 ${w.maxCount}개까지` };
-    for (const id of ids) if (!this.owned.has(id)) return { ok: false, reason: `${this.ingredients.get(id)?.name ?? id} 은 아직 없다` };
+    for (const [id, n] of CookingStore.tally(ids)) {
+      const name = this.ingredients.get(id)?.name ?? id;
+      if (!this.owned.has(id)) return { ok: false, reason: `${name} 은 아직 없다` };
+      if (!this.has(id, n)) return { ok: false, reason: `${name} 재고가 모자란다 — ×${this.stockOf(id) ?? 0} 뿐, ${n} 필요` }; // P56-c
+    }
     if (money < w.cost) return { ok: false, reason: `개발비 ${w.cost}G 가 부족합니다` };
     return { ok: true };
   }
@@ -220,7 +284,9 @@ export class CookingStore<R extends RecipeLike = RecipeDef, I extends Ingredient
   }
 
   toSnapshot(): CookingSnapshot {
-    return { exp: this.exp, known: [...this.known].sort(), owned: [...this.owned].sort(), attempts: this.attempts };
+    const stock: Record<string, number> = {};
+    for (const id of [...this.stock.keys()].sort()) { const n = this.stock.get(id) ?? 0; if (n > 0) stock[id] = n; }
+    return { exp: this.exp, known: [...this.known].sort(), owned: [...this.owned].sort(), attempts: this.attempts, stock };
   }
 
   fromSnapshot(s: CookingSnapshot): void {
@@ -229,6 +295,9 @@ export class CookingStore<R extends RecipeLike = RecipeDef, I extends Ingredient
     for (const id of s.known) if (this.recipes.has(id)) this.known.add(id);
     this.owned.clear();
     for (const id of s.owned) if (this.ingredients.has(id)) this.owned.add(id);
+    this.stock.clear();
+    if (s.stock) { for (const [id, n] of Object.entries(s.stock)) if (this.ingredients.has(id) && !this.infinite(id) && n > 0) this.stock.set(id, n); }
+    else for (const id of this.owned) if (!this.infinite(id)) this.stock.set(id, LEGACY_STOCK); // 옛 세이브 — 보유 재료마다 보상 한 번 몫
     this.attempts = s.attempts;
   }
 }

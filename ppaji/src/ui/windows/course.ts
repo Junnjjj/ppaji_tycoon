@@ -5,6 +5,7 @@
  */
 import { el } from '../dom.js';
 import { iconEl } from '../icons.js';
+import { pictureEl, pictureId } from '../pictures.js';
 import { setUiSurface } from '../panels.js';
 import type { Game } from '../../sim/game.js';
 import { PRESETS, COURSE_EQUIPMENT, fitOf, presetDef, courseEquipment, type CourseEditDraft, type DockChoice } from '../../sim/course/course.js';
@@ -33,6 +34,8 @@ export class CourseDock {
   private readonly list = el('div', 'kchips');
   private readonly applyBtn: HTMLButtonElement;
   private readonly trialBtn: HTMLButtonElement;
+  /** P52-b — 안전 브리핑 토글(보는 코스에서만) */
+  private readonly briefBtn: HTMLButtonElement;
   private readonly removeBtn: HTMLButtonElement;
   private draft: CourseEditDraft | null = null;
   private docks: DockChoice[] = [];
@@ -50,7 +53,8 @@ export class CourseDock {
     this.trialBtn = el('button', 'kbtn', '시험 운행'); this.trialBtn.type = 'button'; this.trialBtn.id = 'dock-course-trial'; this.trialBtn.addEventListener('click', () => this.trial());
     this.removeBtn = el('button', 'kbtn', '철거'); this.removeBtn.type = 'button'; this.removeBtn.id = 'dock-course-remove'; this.removeBtn.addEventListener('click', () => this.remove());
     this.applyBtn = el('button', 'kbtn primary', ''); this.applyBtn.append(iconEl('check'), el('span', undefined, ' 적용')); this.applyBtn.type = 'button'; this.applyBtn.id = 'dock-course-apply'; this.applyBtn.addEventListener('click', () => this.apply());
-    actions.append(cancel, this.trialBtn, this.removeBtn, this.applyBtn);
+    this.briefBtn = el('button', 'kbtn khide', '브리핑'); this.briefBtn.type = 'button'; this.briefBtn.id = 'dock-course-brief'; this.briefBtn.addEventListener('click', () => { if (this.viewing === null) return; const g = this.game(); const c = g.courses.byHandle(this.viewing); const r = g.setCourseBriefing(this.viewing, !(c?.safetyBriefing === true)); this.host.toast(r.ok ? (c?.safetyBriefing ? '브리핑 켜짐 — 사고 ×0.7' : '브리핑 끔') : (r.reason ?? ''), r.ok); this.refresh(); }); // P52-b
+    actions.append(cancel, this.trialBtn, this.briefBtn, this.removeBtn, this.applyBtn);
     this.root.append(row1, this.status, this.list, this.presets, this.equips, actions);
     parent.append(this.root);
   }
@@ -144,7 +148,7 @@ export class CourseDock {
     for (const e of COURSE_EQUIPMENT) {
       const owned = g.courses.ownedEquipment.has(e.id);
       const fit = fitOf(e.id, d.presetId);
-      const b = el('button', `kchip${e.id === d.equipId ? ' on' : ''}${!owned ? ' warn' : ''}`, `${FIT_MARK[fit] ?? ''} ${e.name}${owned ? '' : ` ${e.vehicleCost.toLocaleString('ko-KR')}G`}`); b.type = 'button'; b.dataset['equip'] = e.id; b.disabled = !editing || fit === 'no';
+      const b = el('button', `kchip kchip-pic${e.id === d.equipId ? ' on' : ''}${!owned ? ' warn' : ''}`, ''); b.append(pictureEl(pictureId('gear', e.id), 'attraction'), el('span', undefined, `${FIT_MARK[fit] ?? ''} ${e.name}${owned ? '' : ` ${e.vehicleCost.toLocaleString('ko-KR')}G`}`)); b.type = 'button'; b.dataset['equip'] = e.id; b.disabled = !editing || fit === 'no'; // P56-b3: 기구 칩에 그림
       b.addEventListener('click', () => { if (!owned) { const r = g.buyEquipment(e.id); this.host.toast(r.ok ? `${e.name} 구입 · −${e.vehicleCost.toLocaleString('ko-KR')}G` : r.reason, r.ok); if (!r.ok) return; this.host.onChanged(); } this.newDraft(d.presetId, e.id, { i: d.dock.x, j: d.dock.y }); });
       this.equips.append(b);
     }
@@ -153,6 +157,7 @@ export class CourseDock {
     const eq = courseEquipment(d.equipId);
     this.modeLabel.textContent = editing ? `코스 그리기 · ${presetDef(d.presetId)?.name ?? ''}` : `코스 #${this.viewing}`;
     this.costLabel.textContent = editing && eq ? `${(eq.vehicleCost * d.vehicles).toLocaleString('ko-KR')}G` : eq ? `요금 ${eq.fee}G` : '';
+    if (!editing && this.viewing !== null) { const c = g.courses.byHandle(this.viewing); this.briefBtn.classList.remove('khide'); this.briefBtn.textContent = c?.safetyBriefing ? '브리핑 켜짐 (사고 ×0.7)' : '브리핑 끄기 → 켜기'; this.briefBtn.classList.toggle('on', c?.safetyBriefing === true); } else this.briefBtn.classList.add('khide'); // P52-b
     const can = editing ? g.canPlaceCourse(d) : { ok: true as const };
     if (!can.ok) this.status.textContent = can.reason;
     else if (res) this.status.textContent = `길이 ${Math.round(res.length)}칸 · 스릴 ${Math.round(res.thrill)} · 요금 ${eq?.fee ?? 0}G · 하루 예상 ${Math.round(res.potentialDailyRiders)}명 / ${Math.round(res.potentialDailyRevenue).toLocaleString('ko-KR')}G · 유지 ${Math.round(res.dailyUpkeep)}G/일${editing ? ' — 지도의 핸들을 끌어 모양을 바꾼다' : ''}`;

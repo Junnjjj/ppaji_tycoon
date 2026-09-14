@@ -19,7 +19,7 @@ describe('G27 첫 방문 대사', () => {
 
 describe('G27 달력 24건', () => {
   it('봇 128일에 달력 사건이 전부 발동한다 (조건부 2건 포함)', () => {
-    expect(CALENDAR_EVENTS.length).toBe(32);
+    expect(CALENDAR_EVENTS.length).toBe(40); // P53-a 연차 폴백 8
     const g = new Game(1);
     runBot(g, 128);
     const missing = CALENDAR_EVENTS.filter((e) => !g.calendarGiven.has(e.id));
@@ -27,5 +27,5 @@ describe('G27 달력 24건', () => {
     // P0-B 경사 지형에서 시드 1 의 ★3 이 3년차 여름 첫날을 넘겨 카이로봇이 안 왔다 (밴드 rank3Year 중앙 3 은 그대로)
     expect(missing.filter((e) => !('when' in e && e.when)).map((e) => e.id)).toEqual([]);
     expect(missing.length).toBeLessThanOrEqual(1);
-  }, 30000);
+  }, 120000); // 128일 봇 — 혼자 44초, 병렬 워커·다른 프로세스 아래 60초를 넘긴다(2026-09-13 실측)
 });

@@ -23,8 +23,6 @@ export interface PoolView {
   adjacentFacilities: readonly string[];
   /** 지금 들어 있는 아이템 id 들 */
   items: readonly string[];
-  /** 타일 종류별 칸 수 (G35) — 없으면 전부 표준으로 본다 */
-  tiles?: Readonly<Record<string, number>>;
 }
 
 export interface FacilityView {
@@ -36,6 +34,9 @@ export interface FacilityView {
   /** 인접한 다른 시설 id 들 */
   adjacentFacilities: readonly string[];
 }
+
+/** P49-a1 — 조건 DSL 이 보는 기구 한 줄 */
+export interface RigView { id: string; depth: 'shallow' | 'deep' | 'any'; chain: string | null; guarded: boolean }
 
 export interface ConditionWorld {
   pools(): readonly PoolView[];
@@ -56,6 +57,13 @@ export interface ConditionWorld {
   year(): number;
   /** 놓인 코스들의 스릴 (P6) */
   courseThrills(): readonly number[];
+  /** P49-a1 — 수역별 빠지 등급 0~4 · 수역별 최장 사슬(a1 은 0) · 기구 목록 */
+  ppajiGrades(): readonly number[];
+  rigChains(): readonly number[];
+  rigs(): readonly RigView[];
+  /** P28 자리 등급들 (0~5) · 시설 id 가 먹여 주는 자리 수의 최대값 */
+  seatGrades(): readonly number[];
+  seatsFedMax(id: string): number;
 }
 
 export interface Verdict {
@@ -70,9 +78,8 @@ export interface Verdict {
 }
 
 const COLOR_KO: Record<string, string> = { orange: '주황', yellow: '노랑', lime: '라임', green: '초록', blue: '파랑', purple: '보라', pink: '핑크', red: '빨강', white: '흰', rainbow: '무지개' };
-const TILE_KO: Record<string, string> = { standard: '표준', pink: '핑크', yellow: '노랑', blue: '파랑', wooden: '나무', stone: '돌', sandy: '모래', simple: '심플', granite: '화강암', cheerful: '명랑', excellent: '최고급', colorful: '컬러풀', kairo: '카이로' };
 const SCENT_KO: Record<string, string> = { citrus: '시트러스', floral: '꽃', pine: '솔', fruity: '과일', tropical: '트로피컬', berry: '베리', marine: '바다', cookie: '쿠키', spices: '향신료', milky: '우유', coffee: '커피', money: '머니' };
-const CLASS_KO: Record<FacilityClass, string> = { utility: '편의', lounging: '라운지', restaurant: '식당', attraction: '놀이', slide: '슬라이드', decor: '장식' };
+const CLASS_KO: Record<FacilityClass, string> = { utility: '편의', lounging: '라운지', restaurant: '식당', attraction: '놀이', slide: '슬라이드', decor: '장식', rig: '기구' };
 
 const ratio = (actual: number, need: number): number => (need <= 0 ? 1 : Math.max(0, Math.min(1, actual / need)));
 
@@ -88,7 +95,6 @@ function poolMatches(p: PoolView, c: Extract<Condition, { kind: 'pool' }>): bool
   if (c.popMin !== undefined && p.popularity < c.popMin) return false;
   if (c.outdoor === true && p.indoor) return false;
   if (c.indoor === true && !p.indoor) return false;
-  if (c.tile !== undefined && ((p.tiles ?? {})[c.tile] ?? 0) * 2 < p.size) return false;
   return true;
 }
 
@@ -128,7 +134,6 @@ function poolLabel(c: Extract<Condition, { kind: 'pool' }>): string {
   if (c.likesMin !== undefined) parts.push(`좋아요 ${c.likesMin}+`);
   if (c.intensityMin !== undefined) parts.push(`강도 ${c.intensityMin}+`);
   if (c.popMin !== undefined) parts.push(`인기 ${c.popMin}+`);
-  if (c.tile !== undefined) parts.push(`${TILE_KO[c.tile] ?? c.tile} 타일 절반 이상`);
   const body = parts.length ? parts.join(' · ') : '풀';
   return (c.count ?? 1) > 1 ? `${body} ×${c.count}` : body;
 }
@@ -231,6 +236,24 @@ export function evaluate(c: Condition, w: ConditionWorld, names: { facility: (id
       const a = w.year();
       return { met: a >= c.min, progress: ratio(a, c.min), actual: a, need: c.min, label: `${c.min}년차` };
     }
+    case 'rigGrade': {
+      const need = c.count ?? 1; const gs = w.ppajiGrades(); const found = gs.filter((g) => g >= c.min).length; const best = gs.length ? Math.max(...gs) : 0;
+      return { met: found >= need, progress: found >= need ? 1 : need === 1 ? ratio(best, c.min) : found / need, actual: found, need, label: `등급 ${c.min} 빠지 ${need}곳` };
+    }
+    case 'rigChain': {
+      const need = c.count ?? 1; const cs = w.rigChains(); const found = cs.filter((n) => n >= c.min).length; const best = cs.length ? Math.max(...cs) : 0;
+      return { met: found >= need, progress: found >= need ? 1 : need === 1 ? ratio(best, c.min) : found / need, actual: found, need, label: `기구 ${c.min}개 이어진 사슬 ${need}개` };
+    }
+    case 'rigCount': {
+      const rs = w.rigs().filter((r) => !c.depth || c.depth === 'any' || r.depth === c.depth || r.depth === 'any');
+      const kinds = new Set(rs.map((r) => r.id)).size; const okKinds = c.kinds === undefined || kinds >= c.kinds;
+      return { met: rs.length >= c.min && okKinds, progress: Math.min(ratio(rs.length, c.min), c.kinds ? ratio(kinds, c.kinds) : 1), actual: rs.length, need: c.min, label: `${c.depth === 'shallow' ? '여울 ' : c.depth === 'deep' ? '깊은 물 ' : ''}기구 ${c.min}개${c.kinds ? ` · ${c.kinds}종` : ''}` };
+    }
+    case 'rigGuarded': {
+      const rs = w.rigs(); const g = rs.filter((r) => r.guarded).length; const need = c.min ?? 1; const rat = rs.length ? g / rs.length : 0;
+      const met = c.ratioMin !== undefined ? rat >= c.ratioMin && rs.length > 0 : g >= need;
+      return { met, progress: c.ratioMin !== undefined ? ratio(rat, c.ratioMin) : ratio(g, need), actual: g, need: c.ratioMin !== undefined ? Math.ceil(c.ratioMin * Math.max(1, rs.length)) : need, label: c.ratioMin !== undefined ? `기구 ${Math.round(c.ratioMin * 100)}% 가 안전 반경 안` : `안전 반경 안 기구 ${need}개` };
+    }
     case 'courseThrill': {
       const need = c.count ?? 1;
       const ts = w.courseThrills();
@@ -239,6 +262,18 @@ export function evaluate(c: Condition, w: ConditionWorld, names: { facility: (id
       // 개수가 모자라면 「가장 스릴 있는 코스가 문턱에 얼마나 가까운가」로 부분 점수를 준다
       const progress = found >= need ? 1 : need === 1 ? ratio(best, c.min) : found / need;
       return { met: found >= need, progress, actual: found, need, label: `스릴 ${c.min} 이상 코스 ${need}개` };
+    }
+    case 'seatGrade': {
+      const need = c.count ?? 1;
+      const gs = w.seatGrades();
+      const found = gs.filter((g) => g >= c.min).length;
+      const best = gs.length ? Math.max(...gs) : 0;
+      const progress = found >= need ? 1 : need === 1 ? ratio(best, c.min) : found / need;
+      return { met: found >= need, progress, actual: found, need, label: `등급 ${c.min} 이상 자리 ${need}곳` };
+    }
+    case 'seatsFed': {
+      const have = w.seatsFedMax(c.id);
+      return { met: have >= c.count, progress: ratio(have, c.count), actual: have, need: c.count, label: `${names.facility(c.id)} 반경에 자리 ${c.count}곳` };
     }
     case 'all': {
       const vs = c.of.map((x) => evaluate(x, w, names));

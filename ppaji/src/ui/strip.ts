@@ -1,5 +1,5 @@
 import { el } from './dom.js';
-import { drawPortrait } from '../assets/draw/portrait.js';
+import { portraitEl } from './portraits.js'; // P56-b2: 스토리 인물은 그림 초상(없으면 코드 초상)
 
 /**
  * 대사 Strip (G16) — 바닥 흰 대사 띠 + 초상 + 화자 이름. 카이로 문법의 「인물이 말을 건다」.
@@ -67,7 +67,7 @@ export class DialogueStrip {
     this.cur = this.queue.shift() ?? null;
     this.at = 0;
     if (!this.cur) { this.finish(); return; }
-    this.portrait.replaceChildren(drawPortrait(this.cur.palette, this.cur.hair, 'happy'));
+    this.portrait.replaceChildren(portraitEl(this.cur.speakerId, 'happy', { palette: this.cur.palette, hair: this.cur.hair }));
     this.who.textContent = this.cur.name;
     this.root.classList.remove('khide');
     this.render();

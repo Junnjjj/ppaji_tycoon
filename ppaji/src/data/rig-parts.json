@@ -1,0 +1,100 @@
+[
+  {
+    "id": "pump_motor",
+    "name": "펌프 모터",
+    "unlock": "shop",
+    "class": "motor",
+    "price": 1200,
+    "rank": 1
+  },
+  {
+    "id": "waterproof_canvas",
+    "name": "방수 캔버스",
+    "unlock": "shop",
+    "class": "fabric",
+    "price": 700
+  },
+  {
+    "id": "anchor_chain",
+    "name": "앵커 체인",
+    "unlock": "shop",
+    "class": "anchor",
+    "price": 900
+  },
+  {
+    "id": "safety_net",
+    "name": "안전 그물",
+    "unlock": "shop",
+    "class": "net",
+    "price": 800
+  },
+  {
+    "id": "twin_saddle",
+    "name": "2인 안장",
+    "unlock": "shop",
+    "class": "seat",
+    "price": 1000
+  },
+  {
+    "id": "slip_wax",
+    "name": "미끄럼 왁스",
+    "unlock": "shop",
+    "class": "wax",
+    "price": 500
+  },
+  {
+    "id": "led_strip_buoy",
+    "name": "LED 스트립 부표",
+    "unlock": "shop",
+    "class": "light",
+    "price": 1100,
+    "rank": 2
+  },
+  {
+    "id": "float_drum",
+    "name": "부력 드럼",
+    "unlock": "shop",
+    "class": "float",
+    "price": 600
+  },
+  {
+    "id": "spray_nozzle",
+    "name": "스프레이 노즐",
+    "unlock": "shop",
+    "class": "nozzle",
+    "price": 900,
+    "rank": 3
+  },
+  {
+    "id": "speaker_horn",
+    "name": "스피커 혼",
+    "unlock": "year",
+    "class": "audio",
+    "price": 1300,
+    "year": 5
+  },
+  {
+    "id": "mooring_rope",
+    "name": "계류 로프",
+    "unlock": "year",
+    "class": "rope",
+    "price": 900,
+    "year": 5
+  },
+  {
+    "id": "ramp_deck",
+    "name": "램프 데크",
+    "unlock": "year",
+    "class": "deck",
+    "price": 1500,
+    "year": 6
+  },
+  {
+    "id": "spin_bearing",
+    "name": "회전 베어링",
+    "unlock": "year",
+    "class": "bearing",
+    "price": 1600,
+    "year": 7
+  }
+]

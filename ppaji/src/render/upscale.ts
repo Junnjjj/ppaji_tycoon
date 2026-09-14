@@ -31,7 +31,9 @@
 export const UPSCALE_STEPS = [1, 2] as const;
 export type Upscale = (typeof UPSCALE_STEPS)[number];
 
-export const UPSCALE_DEFAULT: Upscale = 1;
+/** 2026-09-11 배율 실측(플레이 영상 3편 + 실기 스크린샷): 원작 기본 줌은 폰 세로 폭에 ≈ 7 타일(손님 ≈ 45 CSS px).
+ *  S=1 은 12.3 타일이라 원작보다 두 배 축소돼 보였다(사용자 지적) → 기본 S=2(6.1 타일). 핀치로 1 로 내릴 수 있다 */
+export const UPSCALE_DEFAULT: Upscale = 2;
 
 export interface Viewport {
   /** 렌더 버퍼 = 캔버스 내부 해상도 (텍셀) */

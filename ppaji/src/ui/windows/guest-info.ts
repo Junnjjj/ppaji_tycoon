@@ -4,6 +4,8 @@ import { confirmDialog } from '../dialog.js';
 import { WindowPanel } from '../window.js';
 import { iconEl } from '../icons.js';
 import { drawPortrait } from '../../assets/draw/portrait.js';
+import { pictureEl, pictureId } from '../pictures.js';
+import { PictureGrid, type PictureCard } from '../picture-grid.js';
 import type { Guest } from '../../sim/guest.js';
 import { PACKAGES, type Game } from '../../sim/game.js';
 
@@ -32,21 +34,27 @@ export class GuestInfoWindow {
     // 원작: 손님 정보 화면 왼쪽 아래 「수영복」「튜브」로 바로 선물 (G43) — 친구만, 해금된 선물만
     if (friend && g.friendId) {
       const fid = g.friendId;
+      // P56-b3 — 선물은 그림 카드 격자(장날과 같은 문법): 그림 · 값 · 못 구한 것은 잠금 · 돈이 모자라면 가라앉음. 탭 = 확인 뒤 선물
+      const cards: PictureCard[] = [];
       for (const d of game.giftDefs) {
         if (friend.gifts.includes(d.id)) continue;
-        const b = el('button', 'kchip kgift', `${d.kind === 'float' ? '튜브' : '수영복'} 선물 · ${d.name} ${d.price.toLocaleString('ko-KR')}G`);
-        b.type = 'button';
-        b.dataset['gift'] = d.id;
-        const can = game.unlocked.gifts.has(d.id) && d.price <= game.money;
-        b.disabled = !can;
-        if (!game.unlocked.gifts.has(d.id)) b.title = '아직 구할 수 없는 선물';
-        b.addEventListener('click', () => confirmDialog({ title: `${g.name}에게 ${d.name}을 줄까요?`, body: `만족 +${Math.round(d.price / 8)}`, cost: d.price, onYes: () => {
+        const unlocked = game.unlocked.gifts.has(d.id);
+        const can = unlocked && d.price <= game.money;
+        const card: PictureCard = { id: d.id, name: d.name, art: pictureEl(pictureId('gift', d.id), 'gift'), price: `${d.price.toLocaleString('ko-KR')}G`, sub: d.kind === 'float' ? '튜브' : '수영복', desc: !unlocked ? '아직 구할 수 없는 선물' : d.price > game.money ? '돈이 모자란다' : `탭하면 선물 — 만족 +${Math.round(d.price / 8)}`, disabled: !can, data: { gift: d.id } };
+        if (!unlocked) card.badge = 'lock';
+        cards.push(card);
+      }
+      const grid = new PictureGrid({ name: 'guest-gifts', countLabel: '선물', onTap: (c) => {
+        const d = game.giftDefs.find((x) => x.id === c.id);
+        if (!d) return;
+        confirmDialog({ title: `${g.name}에게 ${d.name}을 줄까요?`, body: `만족 +${Math.round(d.price / 8)}`, cost: d.price, onYes: () => {
           const r = game.giveGift(fid, d.id);
           this.host?.toast(r.ok ? `${g.name}에게 ${d.name} 선물 · −${d.price.toLocaleString('ko-KR')}G` : r.reason, r.ok);
           if (r.ok) { this.host?.onChanged(); this.show(g); }
-        } }));
-        this.gifts.append(b);
-      }
+        } });
+      } });
+      grid.render(cards);
+      this.gifts.append(grid.root);
     }
     const face = el('span', 'kportrait big');
     face.append(drawPortrait(g.palette, g.palette % 5, g.sat >= 60 ? 'happy' : 'calm'));

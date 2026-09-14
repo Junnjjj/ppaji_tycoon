@@ -16,10 +16,10 @@ describe('P18 1박·밤', () => {
   });
 
   function withLodge(g: Game): { g: Game; uid: number } {
-    g.money = 200000; g.rank = 2; g.grid.openLand(2);
+    g.money = 200000; g.rank = 2; g.openLand(2);
     g.unlocked.facilities.add('camp_site');
     const gt = g.gate;
-    const r = g.placeFacility('camp_site', gt.i + 6, gt.j + 4, 0);
+    const r = g.placeFacility('camp_site', gt.i - 14, gt.j + 19, 0); // P24: 1박은 등급 ≥ 2 — 물가(+2)에 둔다. P48-b3: 서쪽 물가(열 35 · 행 27)
     expect(r.ok).toBe(true);
     return { g, uid: r.uid! };
   }
@@ -28,7 +28,7 @@ describe('P18 1박·밤', () => {
     expect(['pension', 'pension_duplex', 'glamping', 'caravan', 'camp_site', 'bungalow'].every((id) => FACILITY_DEFS.get(id)!.lodging === true)).toBe(true);
     expect(FACILITY_DEFS.get('pyeongsang_row')!.lodging).toBeUndefined();
     const { g, uid } = withLodge(new Game(18));
-    const s = g.guests.spawn(); s.teamId = 5; // 팀(버스) 손님만 잔다
+    const s = g.guests.spawn(); s.teamId = 999; // 걸어온 팀 시퀀스(1,2,3…)와 겹치지 않게 // 팀(버스) 손님만 잔다
     s.target = { kind: 'facility', uid }; s.state = 'walk'; s.stateTicks = 0;
     const money0 = g.money;
     g.step(300);
@@ -43,7 +43,7 @@ describe('P18 1박·밤', () => {
 
   it('폐장에 숙박 손님은 남고(overnight) 낮 손님은 나간다 · 다음 날 일어나 이어서 논다 · 스냅샷 왕복', () => {
     const { g, uid } = withLodge(new Game(18));
-    const s = g.guests.spawn(); s.teamId = 5; s.target = { kind: 'facility', uid }; s.state = 'walk'; s.stateTicks = 0;
+    const s = g.guests.spawn(); s.teamId = 999; s.target = { kind: 'facility', uid }; s.state = 'walk'; s.stateTicks = 0;
     const d = g.guests.spawn(); // 낮 손님
     g.step(300);
     expect(s.stays).toBe(true);
@@ -57,13 +57,15 @@ describe('P18 1박·밤', () => {
     expect(w.hp).toBe(100); expect(w.state).toBe('wander'); expect(w.spentToday).toBe(0);
     expect(g.stats.days[g.stats.days.length - 1]!.overnight).toBeGreaterThanOrEqual(1);
     const h = Game.fromSnapshot(g.toSnapshot());
-    expect(h.guests.all.find((x) => x.uid === s.uid)!.stays).toBe(true);
+    // D36: 아침에 체크아웃 — stays 는 내려가고 slept 가 스냅샷을 건너 남아 다시 체크인하지 않는다 (안 그러면 매일 자며 영원히 안 나간다)
+    expect(w.stays).toBe(false); expect(w.slept).toBe(true);
+    expect(h.guests.all.find((x) => x.uid === s.uid)!.slept).toBe(true);
     expect(h.stats.overnight).toBe(g.stats.overnight);
   });
 
   it('저녁 구간 — 18시 넘어 숙박 손님이 있으면 fire FX 가 나온다', () => {
     const { g, uid } = withLodge(new Game(18));
-    const s = g.guests.spawn(); s.teamId = 5; s.target = { kind: 'facility', uid }; s.state = 'walk'; s.stateTicks = 0;
+    const s = g.guests.spawn(); s.teamId = 999; s.target = { kind: 'facility', uid }; s.state = 'walk'; s.stateTicks = 0;
     g.step(300);
     g.step(EVENING_TICK - g.tick + 1);
     let fire = false;

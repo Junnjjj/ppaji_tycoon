@@ -284,10 +284,12 @@
           }
         },
         {
-          "label": "수역 반나절 폐쇄",
+          "label": "수역 하루 폐쇄",
           "effect": {
             "arrivalMul": 0.5,
-            "days": 1
+            "days": 1,
+            "rigLoss": 0.1,
+            "waterClosedDays": 1
           }
         }
       ]
@@ -389,7 +391,7 @@
     {
       "id": "typhoon",
       "name": "태풍 북상",
-      "text": "태풍이 올라와요. 부표를 보강하지 않으면 이틀은 손님이 끊겨요.",
+      "text": "태풍이 올라와요. 부표를 보강하지 않으면 이틀은 손님이 끊기고 기구가 떠내려가요.",
       "weight": 2,
       "season": [
         1,
@@ -399,14 +401,17 @@
         {
           "label": "부표 보강 (−1,500G)",
           "cost": 1500,
-          "effect": {}
+          "effect": {
+            "rigLoss": 0
+          }
         },
         {
           "label": "그냥 버티기",
           "effect": {
             "arrivalMul": 0.4,
             "popBonus": -2,
-            "days": 2
+            "days": 2,
+            "rigLoss": 0.25
           }
         }
       ]

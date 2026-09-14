@@ -165,7 +165,52 @@ const waterfall: FacTemplate = {
   ],
 };
 
-export const TEMPLATES: Record<string, FacTemplate> = { pottedPlant, flowerPot, bush, palm, roundTree, conifer, sunflower, floatyTower, pillar, waterfall };
+/** P48-c — 플로팅 패드: 물 위 기구의 기본 그림. 널(WOOD) 위에 주제색(1·2·3) 상자, 가장자리에 부표 띠. 그림 계약(P55)이 오기 전 절차 폴백 */
+const floatPad: FacTemplate = {
+  rows: [
+    '......kkkk......',
+    '....kk1111kk....',
+    '...k12222221k...',
+    '...k12222221k...',
+    '..kM13333331Mk..',
+    '.kMMMMMMMMMMMMk.',
+    '.kmMmMmMmMmMmMk.',
+    '..kkkkkkkkkkkk..',
+  ],
+  dy: 2,
+};
+/** P55 — 탑형 폴백: 망루·다이빙대·점프 타워처럼 높은 기구. 부표 띠 위에 기둥 둘과 꼭대기 상자 */
+const tower: FacTemplate = {
+  rows: [
+    '.....kkkkkk.....',
+    '....k122221k....',
+    '....k133331k....',
+    '.....k1111k.....',
+    '......kMMk......',
+    '......kMMk......',
+    '......kMMk......',
+    '......kMMk......',
+    '.....kkMMkk.....',
+    '..kkkk1MM1kkkk..',
+    '.kMMMMMMMMMMMMk.',
+    '.kmMmMmMmMmMmMk.',
+    '..kkkkkkkkkkkk..',
+  ],
+  dy: 2,
+};
+/** P55 — 긴 판형 폴백: 슬라이드·다리·빔처럼 가로로 긴 기구. 부표 띠 위에 낮고 긴 판 */
+const plank: FacTemplate = {
+  rows: [
+    'kkkkkkkkkkkkkkkkkkkkkkkk',
+    'k1222222222222222222221k',
+    'k1333333333333333333331k',
+    'kMMMMMMMMMMMMMMMMMMMMMMk',
+    'kmMmMmMmMmMmMmMmMmMmMmMk',
+    '.kkkkkkkkkkkkkkkkkkkkkk.',
+  ],
+  dy: 2,
+};
+export const TEMPLATES: Record<string, FacTemplate> = { pottedPlant, flowerPot, bush, palm, roundTree, conifer, sunflower, floatyTower, pillar, waterfall, floatPad, tower, plank };
 
 export const ART: Record<string, FacArt> = {
   pothos: { tpl: 'pottedPlant', slots: { '1': 'g', '2': 'M' } }, flower_pot: { tpl: 'flowerPot', slots: RED }, hydrangea: { tpl: 'bush', slots: { '1': 'B' } }, palm_tree: { tpl: 'palm' },

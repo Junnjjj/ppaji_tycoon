@@ -106,10 +106,10 @@ describe('앵커', () => {
 });
 
 describe('격자·마스크', () => {
-  it('64×48 은 1792×896 텍셀, 2:1 가로형', () => {
-    expect(gridExtent()).toEqual({ x: 1792, y: 896 });
-    expect(inGrid(63, 47)).toBe(true);
-    expect(inGrid(64, 0)).toBe(false);
+  it('96×72 는 2688×1344 텍셀, 2:1 가로형 (P43)', () => {
+    expect(gridExtent()).toEqual({ x: 2688, y: 1344 });
+    expect(inGrid(95, 71)).toBe(true);
+    expect(inGrid(96, 0)).toBe(false);
   });
   it('스냅', () => {
     expect(snapCamera({ x: 10.4, y: -3.6 })).toEqual({ x: 10, y: -4 });

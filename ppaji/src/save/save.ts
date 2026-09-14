@@ -3,9 +3,10 @@
  * 마이그레이션은 **한 단계씩** 올린다 — 건너뛰면 중간 버전이 영영 못 열린다.
  */
 import type { GameSnapshot } from '../sim/game.js';
+import { GRID_W, GRID_H } from '../sim/grid.js';
 
 export const SAVE_KEY = 'pj.save';
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 4;
 
 export interface SaveFile {
   version: number;
@@ -21,6 +22,15 @@ export const MIGRATIONS: readonly Migration[] = [
     const game = (raw['game'] ?? {}) as Record<string, unknown>;
     return { ...raw, version: 2, game: { ...game, ticketBonus: game['ticketBonus'] ?? 0, endingSeen: game['endingSeen'] ?? false } };
   },
+  // v2 → v3: P43 격자 64×48 → 96×72 (도시 띠·마당·강). 옛 판의 좌표는 전부 물가·입구 기준이 갈려 옮길 수 없다 — 크기가 다르면 새 판(game: null → load 가 null)
+  (raw) => {
+    const game = raw['game'] as { grid?: { w?: number; h?: number } } | null | undefined;
+    const grid = game?.grid;
+    const fits = !!grid && grid.w === GRID_W && grid.h === GRID_H;
+    return { ...raw, version: 3, game: fits ? game : null };
+  },
+  // v3 → v4: P48-b1 물굽이 — 지형이 첫날부터 다르다(마당 가운데가 물). 옛 판의 자연 바닥·시설 좌표를 옮길 수 없다 → 새 판(W8)
+  () => ({ version: 4, game: null }),
 ];
 
 export function migrate(raw: Record<string, unknown>): SaveFile | null {
@@ -33,6 +43,7 @@ export function migrate(raw: Record<string, unknown>): SaveFile | null {
     cur = m(cur);
     v++;
   }
+  if (!cur['game']) return null; // 옮길 수 없는 판
   return cur as unknown as SaveFile;
 }
 

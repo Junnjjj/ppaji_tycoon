@@ -1,0 +1,7 @@
+[
+  { "id": "president", "name": "이 사장", "palette": 5, "hair": 2, "hint": "가평 빠지 조합 이사장 — 50대 남자, 흰 셔츠에 밀짚모자, 넉넉한 웃음" },
+  { "id": "nana", "name": "알바 은지", "palette": 4, "hair": 1, "hint": "20대 여자 알바 — 갈색 포니테일, 노란 스태프 티셔츠" },
+  { "id": "judge", "name": "박 주무관", "palette": 1, "hair": 0, "hint": "군청 수상레저 담당 공무원 — 30대 남자, 안경, 반팔 셔츠와 서류철" },
+  { "id": "coastguard", "name": "해경", "palette": 4, "hair": 4, "hint": "해양경찰 심사위원 — 40대 남자, 흰 제모와 남색 제복" },
+  { "id": "youtuber", "name": "유튜버", "palette": 6, "hair": 1, "hint": "여행 유튜버 심사위원 — 20대 여자, 선글라스를 머리에 얹고 카메라를 든" }
+]

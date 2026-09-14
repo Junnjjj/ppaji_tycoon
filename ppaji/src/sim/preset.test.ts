@@ -1,19 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { TICKS_PER_DAY } from './clock.js';
 import { Game, ITEM_DEFS, MAX_PRESETS } from './game.js';
-import { landRect } from './grid.js';
-
-const sq = (i: number, j: number, n = 2) => {
-  const out: { i: number; j: number }[] = [];
-  for (let a = 0; a < n; a++) for (let b = 0; b < n; b++) out.push({ i: i + a, j: j + b });
-  return out;
-};
+import { makeTestPpaji } from './test-helpers.js';
 
 const setup = () => {
   const g = new Game(1, undefined, { kit: false });
-  const l = landRect(0);
-  g.digPool(sq(l.i0 + 4, l.j0 + 4));
-  const id = g.pools.all[0]!.id;
+  const pp = makeTestPpaji(g); // P49-b D59: 뭍 풀 금지 — 빠지(데크 링)로
+  const id = pp.id!;
   return { g, id };
 };
 

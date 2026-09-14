@@ -4,12 +4,13 @@
  *   tile/<kind>[:frame] → ground/<legacy>:a{frame} (모래→path_sand · 잔디→lawn · 포장→path_stone · 실내→floor_indoor · 강/여울→water_edge · 데크→path_deck · 수역→pool_water)
  * 없는 ID 는 null → HybridProvider 가 다음 공급자(3D 프리렌더 → 절차 도트)로 떨어진다. 두 프로젝트는 투영(2:1, 타일 32×16)과 앵커(아래 가운데)가 같다.
  */
+import { cssVar } from '../ui/tokens.js';
 import type { AssetProvider, SpriteSpec } from './types.js';
 
 type Frame = { x: number; y: number; w: number; h: number };
 export type KairoAtlasJson = Record<string, Frame>;
 
-const TILE_TO_GROUND: Record<string, string> = { sand: 'path_sand', grass: 'lawn', path: 'path_stone', indoor: 'floor_indoor', river: 'water_edge', shallow: 'water_edge', deck: 'path_deck', gate: 'path_stone' }; // 수역(pool)은 뺀다 — 물빛 tint 를 받는 흰빛 절차 베이스가 정본(레거시 pool_water 는 어두워 핑크가 안 뜬다)
+const TILE_TO_GROUND: Record<string, string> = { sand: 'path_sand', grass: 'lawn', path: 'path_stone', indoor: 'floor_indoor', river: 'water_edge', shallow: 'water_edge', deck: 'path_deck', gate: 'path_stone', sandpath: 'path_sand', sidewalk: 'sidewalk', woodpath: 'path_deck', flowerbed: 'verge', gravel: 'mountain_rock', road: 'road', rock: 'mountain_rock', hall: 'path_stone' }; // P43 도시 띠 차도 · P44 암반 · P45-a 복도 // P22 지면 5종 // 수역(pool)은 뺀다 — 물빛 tint 를 받는 흰빛 절차 베이스가 정본(레거시 pool_water 는 어두워 핑크가 안 뜬다)
 
 /** ppaji ID → 레거시 프레임 이름 (없으면 null) */
 export function kairoFrameFor(id: string): { frame: string; flip: boolean } | null {
@@ -51,6 +52,7 @@ export class KairoAtlasProvider implements AssetProvider {
         ctx.imageSmoothingEnabled = false;
         if (m.flip) { ctx.translate(f.w, 0); ctx.scale(-1, 1); }
         ctx.drawImage(this.image, f.x, f.y, f.w, f.h, 0, 0, f.w, f.h);
+        if (id === 'tile/flowerbed') drawFlowers(ctx, f.w, f.h); // P22: 레거시에 꽃밭 프레임이 없다 — verge(풀띠) 위에 꽃 도트를 코드로 얹는다 (움직임처럼 그림 위에 코드)
       }
     }
     this.cache.set(id, out);
@@ -71,4 +73,15 @@ export function loadKairoAtlas(base = './assets/kairo-atlas'): Promise<KairoAtla
       img.src = `${base}.png?v=14`;
     }))
     .catch(() => null);
+}
+
+/** 꽃밭 도트 — 마름모 안쪽 고정 자리 7곳에 세 가지 꽃색 (결정론, 프레임마다 같다) */
+function drawFlowers(ctx: CanvasRenderingContext2D, w: number, h: number): void {
+  const colors = [cssVar('--tile-flowerbed-dot'), cssVar('--tile-flowerbed-lt'), cssVar('--tile-flowerbed-white')].filter((c) => c.length > 0);
+  if (colors.length === 0) return;
+  const spots: [number, number][] = [[0.5, 0.25], [0.32, 0.45], [0.68, 0.45], [0.5, 0.6], [0.4, 0.78], [0.62, 0.8], [0.5, 0.42]];
+  spots.forEach(([fx, fy], k) => {
+    ctx.fillStyle = colors[k % colors.length] as string;
+    ctx.fillRect(Math.round(fx * w), Math.round(fy * h), 1, 1);
+  });
 }

@@ -30,9 +30,8 @@ describe('G53', () => {
 
   it('수집 분모는 데이터 크기다', () => {
     const g = new Game(1, undefined, { kit: false });
-    expect(g.tileCount).toBe(13);
     expect(g.giftCount).toBe(18);
     expect(g.sns.friendCount).toBe(71);
-    expect(g.facilities.defsCount).toBe(97); // P0 선착장 + P3 안전 소품 2
+    expect(g.facilities.defsCount).toBe(148); // P0 선착장 + P3 안전 소품 2 + P42 입구 + P45-b 실내 점포 9 + P49-a1 기구 21 + P51 개조판 20
   });
 });

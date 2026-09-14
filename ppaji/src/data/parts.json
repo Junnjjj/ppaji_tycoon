@@ -25,14 +25,16 @@
     "name": "제트펌프",
     "unlock": "year",
     "class": "engine",
-    "year": 4
+    "year": 4,
+    "price": 1000
   },
   {
     "id": "engine_twin",
     "name": "트윈엔진",
     "unlock": "year",
     "class": "engine",
-    "year": 6
+    "year": 6,
+    "price": 1200
   },
   {
     "id": "tube_small",
@@ -66,14 +68,16 @@
     "name": "공기주머니",
     "unlock": "year",
     "class": "tube",
-    "year": 3
+    "year": 3,
+    "price": 900
   },
   {
     "id": "tube_giant",
     "name": "대형튜브",
     "unlock": "year",
     "class": "tube",
-    "year": 5
+    "year": 5,
+    "price": 1100
   },
   {
     "id": "rope_nylon",
@@ -100,7 +104,8 @@
     "name": "케블라로프",
     "unlock": "year",
     "class": "rope",
-    "year": 6
+    "year": 6,
+    "price": 1200
   },
   {
     "id": "grip_handle",
@@ -134,7 +139,8 @@
     "name": "파워그립",
     "unlock": "year",
     "class": "handle",
-    "year": 5
+    "year": 5,
+    "price": 1100
   },
   {
     "id": "seat_cushion",
@@ -161,7 +167,8 @@
     "name": "슬링시트",
     "unlock": "year",
     "class": "seat",
-    "year": 4
+    "year": 4,
+    "price": 1000
   },
   {
     "id": "life_strap",
@@ -195,7 +202,8 @@
     "name": "에어백패드",
     "unlock": "year",
     "class": "safety",
-    "year": 7
+    "year": 7,
+    "price": 1300
   },
   {
     "id": "fin_plate",
@@ -236,7 +244,8 @@
     "name": "카본데크",
     "unlock": "year",
     "class": "board",
-    "year": 7
+    "year": 7,
+    "price": 1300
   },
   {
     "id": "flag_small",
@@ -277,6 +286,7 @@
     "name": "미러볼",
     "unlock": "year",
     "class": "fun",
-    "year": 3
+    "year": 3,
+    "price": 900
   }
 ]

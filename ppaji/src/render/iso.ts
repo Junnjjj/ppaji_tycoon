@@ -51,6 +51,9 @@ export const Z_BAND = 4096;
 export const Z_GROUND = 0;
 export const Z_WATER = 1;
 export const Z_FACILITY = 2;
+/** P44-b 벽 (레거시 K37 띠): 뒤벽(북·서)은 시설 뒤, 앞벽(남·동)은 시설 앞·손님 뒤 — 벽은 손님보다 낮다 */
+export const Z_WALL_BACK = 1.5;
+export const Z_WALL_FRONT = 3;
 export const Z_GUEST = 4;
 export const Z_FACE = 5;
 export const Z_EMOTE = 6;

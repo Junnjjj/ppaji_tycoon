@@ -7,7 +7,7 @@ import { Game } from './game.js';
 const world = (thrills: number[]): ConditionWorld => ({
   pools: () => [], facilities: () => [], popularity: () => 0, likes: () => 0, certPasses: () => 0, certPassed: () => false,
   friends: () => 0, areas: () => 0, rank: () => 0, hasGift: () => false, recipeKnown: () => false, recipeCount: () => 0,
-  cookingLevel: () => 0, visitors: () => 0, money: () => 0, year: () => 1, courseThrills: () => thrills,
+  cookingLevel: () => 0, visitors: () => 0, money: () => 0, year: () => 1, courseThrills: () => thrills, seatGrades: () => [], ppajiGrades: () => [], rigChains: () => [], rigs: () => [], /* P49-a1 */ seatsFedMax: () => 0,
 });
 
 /** P6 — 스릴 조건 kind · 심사 편향 0(D15) · 실제 판의 코스가 조건 세계에 닿는다 */
@@ -26,7 +26,7 @@ describe('P6 인증', () => {
   it('심사 편향은 0 이고 심사는 cert 스트림을 한 번도 안 뽑는다 — 세 심사위원 점수가 같다', () => {
     expect(JUDGE_BIAS).toBe(0);
     const rng = new Rng(7);
-    const def = { id: 'x', name: 'x', family: 'grade' as const, grade: 'F' as const, pass: 15, requires: null, fee: 500, conditions: [{ cond: { kind: 'year' as const, min: 1 }, weight: 1 as const }], reward: { kind: 'tile' as const, id: 'pink' } };
+    const def = { id: 'x', name: 'x', family: 'grade' as const, grade: 'F' as const, pass: 15, requires: null, fee: 500, conditions: [{ cond: { kind: 'year' as const, min: 1 }, weight: 1 as const }], reward: { kind: 'rigPart' as const, id: 'slip_wax' } };
     const s = new CertStore([def], rng);
     const before = rng.state;
     expect(s.canApply('x', 0, 1000).ok).toBe(true);

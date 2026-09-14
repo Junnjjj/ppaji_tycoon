@@ -71,7 +71,6 @@ export class RankWindow {
       collect.append(r);
     };
     col('시설 해금', g.unlocked.facilities.size, g.facilities.defsCount);
-    col('부표', g.unlocked.tiles.size, g.tileCount);
     col('수영복·튜브', g.unlocked.gifts.size, g.giftCount);
     col('SNS 친구', g.sns.unlockedFriends.length, g.sns.friendCount);
     col('인증 (종류)', Object.values(g.certs.state.passed).filter((n) => n > 0).length, g.certs.defs.size);

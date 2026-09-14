@@ -6,7 +6,7 @@
  * 겹침/잔교 점유/루트 차단 · 기본 제안 · 지표(`evaluateCourse`) · `CourseStore` 와 편집 트랜잭션
  * (`confirmEdit` — 검증 → 결제 → 교체 한 경계).
  *
- * ## 무엇이 바뀌었나 (D12 「코스는 수역(부표) 안에만」)
+ * ## 무엇이 바뀌었나 (D12 「수역 안에만」 → **P15 D22 「트인 강만」**: `Game.courseTerrain` 이 강·여울 중 수역(부표 안)·데크가 아닌 칸만 물로 준다 — 아래 D12 문장의 「수역」은 그 트인 강으로 읽는다)
  * - 지형은 `KairoTerrain` 이 아니라 **`CourseTerrain` 셋 인터페이스**다. `Game` 이 붙이는 어댑터는
  *   `isWater(i,j) = grid.at(i,j) === FLOOR.pool` — **부표로 친 수역 칸만 물**이다. 부표 밖 강은
  *   코스가 지날 수 없다 (`not-water`). 부표가 곧 허가 면적이라 코스와 수역 상태가 같은 회계를 쓴다.
@@ -347,8 +347,8 @@ export type CourseIssueKind =
 
 /** 거절 메시지는 **방법까지** 말한다 — "안 됩니다"만 주면 플레이어는 무엇을 고쳐야 하는지 모른다 */
 export const COURSE_ISSUE_TEXT: Record<CourseIssueKind, string> = {
-  'not-water': '수역 위가 아닙니다 — 부표로 친 물 안에만 그릴 수 있습니다',
-  'too-narrow': '이 형태를 놓기엔 수역이 좁습니다 — 부표를 더 치세요',
+  'not-water': '트인 강 위가 아닙니다 — 수역(부표 안)·데크와 겹칠 수 없어요, 강 쪽으로 옮기세요',
+  'too-narrow': '이 형태를 놓기엔 트인 강이 좁습니다 — 수역·데크에서 더 떨어진 강으로 옮기세요',
   'far-from-dock': '선착장에서 너무 멉니다',
   'blocked-combo': '이 기구로는 이 형태를 못 탑니다',
   'locked-preset': '아직 안 열린 형태입니다 — 랭크를 올리세요',
@@ -794,6 +794,8 @@ export interface PlacedCourse {
   handles: Vec2[];
   /** 견인 기구의 보트 profile. 없으면 작업형이며, 자체동력 기구는 무시한다 */
   towBoatId?: string;
+  /** P52-b — 안전 브리핑(사고 ×0.7). optional · 저장 */
+  safetyBriefing?: boolean;
 }
 
 export type CourseEditDraft = Omit<PlacedCourse, 'handle'>;

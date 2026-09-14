@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { makeTestPpaji } from './test-helpers.js';
 import { Game, FACILITY_DEFS } from './game.js';
 import { FacilityStore } from './facility.js';
 import { buildOf, FLOAT_KINDS, type Guest } from './guest.js';
@@ -20,17 +21,20 @@ describe('G26 슬라이드 탑승', () => {
   it('climb → ride 가 활강로 칸을 전부 지나 출구 다음 풀에 착수한다', () => {
     const g = fresh();
     const gt = g.gate;
-    // 슬라이드 (facing 0, 활강로 +I) 와 그 출구 앞 풀 — P16: 레인이 입구 열(유일한 길)을 끊지 않게 토지를 열고 오른쪽에 둔다
-    g.rank = 2; g.grid.openLand(2);
-    const si = gt.i + 2, sj = gt.j + 8;
+    // P49-b D59: 뭍 풀 금지 — 빠지(데크 링)로. 착수 풀은 강 위 빠지이고, 슬라이드는 facing 1(활강로 +J) 로 뭍에서 링 윗줄(데크)까지 내려와
+    // 출구 다음 칸이 안 물이 되게 둔다 — 탑은 링 윗줄 위 (1 + 활강로 길이) 줄, 활강로 열은 입구 열 옆(gt.i−1)이라 입구 열(유일한 길)을 안 끊는다
+    g.rank = 2; g.openLand(2);
     const def = FACILITY_DEFS.get('stripy_slide')!;
-    expect(g.placeFacility('stripy_slide', si, sj, 0).ok).toBe(true);
+    const pp = makeTestPpaji(g);
+    expect(pp.id).not.toBeNull();
+    const top = pp.ring[0]!.j; // 링 윗줄(물가 행)
+    const si = gt.i - 2, sj = top - 1 - def.slide!.length;
+    expect(g.placeFacility('stripy_slide', si, sj, 1).ok).toBe(true);
     const fac = g.facilities.all[0]!;
-    const lane = FacilityStore.lane(def, si, sj, 0);
+    const lane = FacilityStore.lane(def, si, sj, 1);
     const exit = lane[lane.length - 1]!;
-    const pool = [] as { i: number; j: number }[];
-    for (let b = -1; b <= 1; b++) for (let a = 1; a <= 2; a++) pool.push({ i: exit.i + a, j: exit.j + b });
-    expect(g.digPool(pool).ok).toBe(true);
+    expect(exit).toEqual({ i: si + 1, j: top });
+    expect(pp.tiles.some((t) => t.i === exit.i && t.j === exit.j + 1)).toBe(true); // 출구 다음 칸이 빠지 안 물
     // 손님을 슬라이드로 강제 유도하고 활강 칸을 기록한다
     const visited = new Set<string>();
     let rider: Guest | null = null;
@@ -52,7 +56,7 @@ describe('G26 슬라이드 탑승', () => {
 describe('G26 튜브·체형·사서 앉기', () => {
   it('튜브는 0~6 · 체형은 나이에서 파생 · 스냅샷 왕복 보존', () => {
     const g = fresh(9);
-    g.digPool([{ i: g.gate.i - 2, j: g.gate.j + 4 }, { i: g.gate.i - 1, j: g.gate.j + 4 }, { i: g.gate.i - 2, j: g.gate.j + 5 }, { i: g.gate.i - 1, j: g.gate.j + 5 }]);
+    makeTestPpaji(g);
     // 작은 풀 판은 동시 손님이 5명 안팎 — 시간에 걸쳐 본 손님 전원의 튜브를 모은다
     const seen = new Map<number, number>();
     runUntil(g, () => { for (const x of g.guests.all) seen.set(x.uid, x.float); return seen.size >= 20; }, 4000);

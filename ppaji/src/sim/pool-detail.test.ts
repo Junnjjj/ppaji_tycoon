@@ -1,16 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import { Game } from './game.js';
 import { TICKS_PER_DAY } from './clock.js';
+import { makeTestPpaji } from './test-helpers.js';
 
 /** G42 — 풀 상세(농도·부족한 색·이상 온도) · 아이템 7일 규칙 · 색·향 심사 만점 = 농도 */
 function withPool(seed = 41, n = 2): { g: Game; id: number } {
   const g = new Game(seed, undefined, { kit: false });
   g.money = 200000;
-  const gt = g.gate; const t = [];
-  for (let a = 0; a < n; a++) for (let b = 0; b < n; b++) t.push({ i: gt.i - 4 + a, j: gt.j + 6 + b });
-  g.digPool(t);
+  const pp = makeTestPpaji(g, n, n); // P49-b D59: 뭍 풀 금지 — 빠지(데크 링)로. 안 물 n×n 이라 크기(농도 분모)는 옛 뭍 풀과 같다
   for (const id of ['strawberry', 'blueberry', 'lemon', 'apple', 'grapes', 'grapefruit', 'melon', 'kiwi', 'pineapple']) g.unlocked.items.add(id);
-  return { g, id: g.pools.all[0]!.id };
+  return { g, id: pp.id! };
 }
 
 describe('G42 풀 상세', () => {

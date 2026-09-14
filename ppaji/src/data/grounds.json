@@ -1,0 +1,47 @@
+[
+  {
+    "id": "sandpath",
+    "name": "모래길",
+    "art": "path_sand",
+    "cost": 20,
+    "walk": true,
+    "pop": 1,
+    "desc": "강변 모래를 다진 길 — 손님이 걷는다. 빠지의 기본 산책길"
+  },
+  {
+    "id": "sidewalk",
+    "name": "보도블록",
+    "art": "sidewalk",
+    "cost": 25,
+    "walk": true,
+    "pop": 1,
+    "desc": "블록 포장 — 손님이 걷는다"
+  },
+  {
+    "id": "woodpath",
+    "name": "나무 데크길",
+    "art": "path_deck",
+    "cost": 35,
+    "walk": true,
+    "pop": 1,
+    "desc": "뭍 위 나무 널판길 — 손님이 걷는다. 강변 산책로에 어울린다"
+  },
+  {
+    "id": "flowerbed",
+    "name": "꽃밭",
+    "art": "verge",
+    "cost": 40,
+    "walk": false,
+    "pop": 2,
+    "desc": "꽃과 풀 — 손님은 못 걷지만 옆 평상의 자리 값을 올린다(조경)"
+  },
+  {
+    "id": "gravel",
+    "name": "자갈밭",
+    "art": "mountain_rock",
+    "cost": 15,
+    "walk": false,
+    "pop": 1,
+    "desc": "강돌 자갈 — 손님은 못 걷는다. 물가 분위기(조경)"
+  }
+]

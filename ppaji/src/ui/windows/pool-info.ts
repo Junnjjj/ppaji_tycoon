@@ -2,8 +2,12 @@ import { el } from '../dom.js';
 import { WindowPanel } from '../window.js';
 import type { Game } from '../../sim/game.js';
 import { COLOR_KO, SCENT_KO } from '../../sim/lines.js';
+import { PPAJI_GRADE_NAMES } from '../../sim/rig.js';
 import { iconEl, type IconName } from '../icons.js';
 import { confirmDialog } from '../dialog.js';
+import { PictureGrid, gaugeEl, type PictureCard } from '../picture-grid.js';
+import { pictureEl, pictureId } from '../pictures.js';
+import { WRISTBANDS, bandPrice } from '../../sim/wristband.js';
 
 export interface PoolInfoHost {
   onEdit(poolId: number): void;
@@ -20,6 +24,9 @@ export class PoolInfoWindow {
   private readonly editBtn: HTMLButtonElement;
   private readonly saveBtn: HTMLButtonElement;
   private readonly presetRows = el('div', 'krows');
+  /** P56-a2 — 팔찌 카드 넷 (정보만 · 탭 없음) */
+  private readonly bandGrid = new PictureGrid({ name: 'bands', cols: 4, noFooter: true });
+  private readonly bandRows = el('div', 'krows');
   private poolId: number | null = null;
 
   constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: PoolInfoHost) {
@@ -43,7 +50,7 @@ export class PoolInfoWindow {
     });
     const actions = el('div', 'kdock-row');
     actions.append(this.editBtn, this.saveBtn);
-    this.win.body.append(this.rows, actions, this.presetRows);
+    this.win.body.append(this.rows, actions, this.presetRows, this.bandRows); // P56-a2: 팔찌 카드는 맨 아래 — 행동 버튼(편집·프리셋)을 화면 밖으로 밀지 않는다(G12 실터치)
   }
 
   private renderPresets(): void {
@@ -132,25 +139,27 @@ export class PoolInfoWindow {
     row('좋아요', `${p.likes}`, 'heart');
     const left = g.itemDaysLeft(p.id);
     row('소품', `${p.items.length}개${left !== null ? ` · 남은 ${left}일` : ''}`, 'shop');
-    // 타일 갈기 (G37) — 해금한 타일 중 인기 높은 순으로 칩. 지금 타일은 표시만
-    // G57: 섞인 풀은 「섞임」 이고 표준 칩도 남긴다 (표준으로 되돌릴 길이 없었다)
-    const uniform = [...new Set(p.tiles.map((k) => g.grid.poolTile[k] ?? 0))].length === 1;
-    const cur = uniform ? g.tileDef(g.tileDefs[g.grid.poolTile[p.tiles[0] ?? 0] ?? 0]?.id ?? 'standard') : null;
-    const tileRow = el('div', 'krow kpool-tiles'); // G56: 라벨이 세로로 쪼개지지 않게 (94칸 풀 실측)
-    tileRow.append(el('span', 'krow-k', `부표 · ${cur?.name ?? '섞임'}`));
-    const chips = el('div', 'kchips');
-    for (const t of [...g.unlocked.tiles].map((id) => g.tileDef(id)).filter((t): t is NonNullable<typeof t> => !!t).sort((a, b) => b.pop - a.pop)) {
-      if (cur && t.id === cur.id) continue;
-      const cost = g.retileCost(p.id, t.id);
-      const b = el('button', 'kchip', `${t.name} 인기 ${t.pop} · ${cost.toLocaleString('ko-KR')}G`);
-      b.type = 'button';
-      b.dataset['retile'] = t.id;
-      b.disabled = cost > g.money;
-      b.addEventListener('click', () => confirmDialog({ title: `${t.name} 타일로 갈까요?`, body: `${g.poolName(p.id)} ${p.tiles.length}칸 전부 · 인기 ${t.pop}`, cost, onYes: () => { const r = g.retilePool(p.id, t.id); this.host.toast(r.ok ? `${t.name} 타일로 갈았다 · −${cost.toLocaleString('ko-KR')}G` : r.reason, r.ok); if (r.ok) { this.host.onChanged(); this.show(p.id); } } }));
-      chips.append(b);
-    }
-    tileRow.append(chips);
-    this.rows.append(tileRow);
+    // P50-b2 §3.9 정보창 다섯 줄 — 등급 · 기구 · 연결 · 허가 · 어제 수입(P51 배선 전까지 「—」)
+    { const grade = g.ppajiGradeOf(p.id); const lit = g.facilities.all.filter((f) => { const d = g.facilities.defOf(f); return d.class === 'rig' && d.onRing !== true && g.rigState.lit.has(f.uid) && (g.rigState.byPool.get(p.id) ?? []).includes(f.uid); }); const onRing = g.facilities.all.filter((f) => g.facilities.defOf(f).onRing === true && g.poolOfFacility(f.uid) === p.id);
+      row('빠지 등급', `${grade} ${PPAJI_GRADE_NAMES[grade] ?? ''} · 인기 ×${g.b.ppajiGradePopMul[grade] ?? 1}`, 'star');
+      row('기구', `켜진 기구 ${lit.length} · 링 시설 ${onRing.length} · 종 ${new Set([...lit, ...onRing].map((f) => f.defId)).size}`, 'attraction');
+      row('연결', `최장 사슬 ${Math.max(0, ...lit.map((f) => g.rigState.chainLen.get(f.uid) ?? 1))} (정원 × 최대 2.0)`, 'build');
+      row('허가', `${p.tiles.length}칸 · 남은 허가 ${Math.max(0, g.permitLeft)}칸`, 'pool');
+      row('어제 수입', '— (팔찌·플로팅 바 배선은 P51·P52-a)', 'coin'); }
+    // P56-a2 D8 — 팔찌 카드 넷(그림 · 값 · 열린/잠긴) + 빠지 등급 게이지. 값은 `bandPrice(등급)` — 확정 바·정보창과 같은 함수
+    { const grade = g.ppajiGradeOf(p.id);
+      const gr = el('div', 'krow');
+      gr.append(el('span', 'krow-k', '팔찌 · 빠지 등급'), gaugeEl(grade, 4, 'kband-gauge'), el('span', 'krow-v', `${grade}/4`));
+      this.bandRows.replaceChildren(gr);
+      const cards: PictureCard[] = WRISTBANDS.map((t) => {
+        const open = t.grade <= grade;
+        const c: PictureCard = { id: t.id, name: t.name, art: pictureEl(pictureId('band', t.id), 'check'), sub: t.rides >= 99 ? '종일 무제한' : t.rides > 0 ? `${t.rides}회` : '조끼만', disabled: !open, data: { band: t.id, open: open ? '1' : '0' } };
+        c.price = t.base > 0 ? `${bandPrice(t, grade).toLocaleString('ko-KR')}G` : '0G';
+        if (!open) c.badge = 'lock';
+        return c;
+      });
+      this.bandGrid.render(cards);
+      this.bandRows.append(this.bandGrid.root); }
     // 이름 변경 (원작 「이름 변경」)
     const nameRow = el('div', 'kname-row');
     const input = document.createElement('input');

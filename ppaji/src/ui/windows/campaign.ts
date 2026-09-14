@@ -2,16 +2,25 @@ import { el } from '../dom.js';
 import { confirmDialog } from '../dialog.js';
 import { WindowPanel } from '../window.js';
 import type { Game } from '../../sim/game.js';
-import { iconEl } from '../icons.js';
+import { iconEl, type IconName } from '../icons.js';
+import { pictureEl } from '../pictures.js';
+import { PictureGrid, type PictureCard } from '../picture-grid.js';
 
-/** 캠페인 창 — 카드 셋: 효과·비용·쿨다운 바 · 실행 */
+/** 캠페인 종류 → 계열 아이콘 폴백 (그림 등록부 id `pic/campaign/<id>` 가 오면 그것) */
+const KIND_ICON: Record<string, IconName> = { bus: 'friends', ad: 'sns', event: 'star', sale: 'coin' };
+
+/** 캠페인 창 (P56-a2) — 카드 격자: 효과·비용·쿨다운 · 탭 = 확인 뒤 실행. 버스는 지역 고르기 행이 아래에 선다 */
 export class CampaignWindow {
   private readonly win: WindowPanel;
-  private readonly body = el('div', 'krows');
+  private readonly head = el('div', 'krow');
+  private readonly grid: PictureGrid;
+  private readonly areas = el('div', 'krows');
+  private pickArea: string | null = null;
 
   constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: { toast(t: string, ok: boolean): void; onChanged(): void }) {
     this.win = new WindowPanel(parent, 'win-campaign', '캠페인', 'blue');
-    this.win.body.append(this.body);
+    this.grid = new PictureGrid({ name: 'campaign', onTap: (c) => this.tap(c) });
+    this.win.body.append(this.head, this.grid.root, this.areas);
   }
 
   show(): void {
@@ -21,36 +30,39 @@ export class CampaignWindow {
 
   render(): void {
     const g = this.game();
-    this.body.replaceChildren();
+    this.head.replaceChildren();
     const a = g.campaigns.state.active;
-    const head = el('div', 'krow');
-    head.append(el('span', 'krow-k', '진행 중'), el('span', 'krow-v', a && g.day < a.untilDay ? `${g.campaigns.defs.get(a.id)?.name ?? a.id} · ${a.untilDay - g.day}일 남음 (×${g.campaigns.mul(g.day)})` : '없음'));
-    this.body.append(head);
+    this.head.append(el('span', 'krow-k', '진행 중'), el('span', 'krow-v', a && g.day < a.untilDay ? `${g.campaigns.defs.get(a.id)?.name ?? a.id} · ${a.untilDay - g.day}일 남음 (×${g.campaigns.mul(g.day)})` : '없음'));
+    const cards: PictureCard[] = [];
     for (const d of g.campaigns.defs.values()) {
-      const can = g.campaigns.canStart(d.id, g.day, g.money);
-      const row = el('button', 'krow kcard-row');
-      row.type = 'button';
-      row.dataset['campaign'] = d.id;
-      row.disabled = !can.ok;
-      const text = el('span', 'krow-text');
-      text.append(el('span', 'krow-name', d.name), el('span', 'krow-sub', can.ok ? d.desc : can.reason));
-      row.append(text, el('span', 'krow-v', `${d.cost.toLocaleString('ko-KR')}G`));
-      row.addEventListener('click', () => {
-        if (d.kind === 'bus') { this.pickArea = this.pickArea === d.id ? null : d.id; this.render(); return; }
-        confirmDialog({ title: `${d.name}을 시작할까요?`, body: d.desc, cost: d.cost, onYes: () => {
-          const r = g.campaign(d.id);
-          this.host.toast(r.ok ? `${d.name} 시작!` : r.reason, r.ok);
-          if (r.ok) this.host.onChanged();
-          this.render();
-        } });
-      });
-      if (d.kind === 'bus') row.disabled = !g.campaigns.canStart(d.id, g.day, g.money, g.sns.areas[0]).ok;
-      this.body.append(row);
-      if (d.kind === 'bus' && this.pickArea === d.id) this.renderAreas(d.id);
+      const can = d.kind === 'bus' ? g.campaigns.canStart(d.id, g.day, g.money, g.sns.areas[0]) : g.campaigns.canStart(d.id, g.day, g.money);
+      const card: PictureCard = {
+        id: d.id, name: d.name, art: pictureEl(`pic/campaign/${d.id}`, KIND_ICON[d.kind ?? ''] ?? 'sns'),
+        price: `${d.cost.toLocaleString('ko-KR')}G`, sub: d.kind === 'bus' ? '버스 · 지역 고르기' : '캠페인',
+        desc: can.ok ? d.desc : can.reason, disabled: !can.ok, data: { campaign: d.id },
+      };
+      if (!can.ok) card.badge = 'lock';
+      if (this.pickArea === d.id) card.badge = { text: '지역 선택' };
+      cards.push(card);
     }
+    this.grid.render(cards);
+    if (this.pickArea !== null) this.grid.select(this.pickArea);
+    this.areas.replaceChildren();
+    if (this.pickArea !== null) this.renderAreas(this.pickArea);
   }
 
-  private pickArea: string | null = null;
+  private tap(c: PictureCard): void {
+    const g = this.game();
+    const d = g.campaigns.defs.get(c.id);
+    if (!d) return;
+    if (d.kind === 'bus') { this.pickArea = this.pickArea === d.id ? null : d.id; this.render(); return; }
+    confirmDialog({ title: `${d.name}을 시작할까요?`, body: d.desc, cost: d.cost, onYes: () => {
+      const r = g.campaign(d.id);
+      this.host.toast(r.ok ? `${d.name} 시작!` : r.reason, r.ok);
+      if (r.ok) this.host.onChanged();
+      this.render();
+    } });
+  }
 
   /** 버스를 보낼 지역 (G33) — 열린 지역마다 친구 수 · 열린 소원 · 내일 올 버스 수 (원작 지역 선택 화면) */
   private renderAreas(campaignId: string): void {
@@ -72,7 +84,7 @@ export class CampaignWindow {
         if (r.ok) { this.pickArea = null; this.host.onChanged(); }
         this.render();
       } }));
-      this.body.append(b);
+      this.areas.append(b);
     }
   }
 }

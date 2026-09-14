@@ -22,6 +22,10 @@ describe('업스케일 — 비정수 배율을 표현 불가능하게', () => {
     for (const s of UPSCALE_STEPS) for (const [w, h] of [[393, 852], [390, 844], [360, 800], [412, 915]] as const)
       for (const dpr of [1, 2, 2.625, 2.75, 3]) expect(violatesDotGrid(viewport(w, h, s, dpr), s)).toEqual([]);
   });
+  it('기본 배율은 S=2 — 원작 기본 줌(폰 세로 폭 ≈ 7 타일)과 같은 눈금 (2026-09-11 실측: S=1 은 12.3 타일로 두 배 축소)', () => {
+    expect(UPSCALE_DEFAULT).toBe(2);
+    expect(new Camera().upscale).toBe(2);
+  });
   it('사다리 밖으로 안 나간다', () => {
     expect(stepUpscale(1, -1)).toBe(1);
     expect(stepUpscale(2, 1)).toBe(2);
@@ -35,18 +39,18 @@ describe('월드 경계', () => {
     expect(b.maxX).toBe(GRID_W * STEP_X);
     expect(b.minY).toBe(-BACKDROP_ABOVE);
     expect(b.maxY).toBe((GRID_W + GRID_H) * STEP_Y + BACKDROP_BELOW);
-    expect(b.maxX - b.minX).toBe(1792);
+    expect(b.maxX - b.minX).toBe(2688); // P43: (96+72)×16
     expect(b.maxY - b.minY).toBeGreaterThan(852); // 세로도 팬한다
   });
 });
 
 describe('카메라', () => {
   const mk = (): Camera => {
-    const c = new Camera();
+    const c = new Camera(); c.setUpscale(1); // 검사는 S=1 눈금 — 기본은 2 (2026-09-11 배율 실측)
     c.setScreenSize(393, 852);
     return c;
   };
-  it('기본 배율 1', () => expect(mk().upscale).toBe(UPSCALE_DEFAULT));
+  it('새 카메라의 배율은 UPSCALE_DEFAULT (S=2, 2026-09-11) — mk() 는 검사 눈금 S=1 로 내린다', () => { expect(new Camera().upscale).toBe(UPSCALE_DEFAULT); expect(mk().upscale).toBe(1); });
   it('view 는 항상 정수', () => {
     const c = mk();
     for (let k = 0; k < 40; k++) {
@@ -96,7 +100,7 @@ describe('카메라', () => {
     expect(c.bufferSize()).toEqual({ w: 197, h: 426 });
   });
   it('뷰가 월드보다 커도 튀지 않는다', () => {
-    const c = new Camera(4, 4);
+    const c = new Camera(4, 4); c.setUpscale(1);
     c.setScreenSize(1600, 1200);
     c.pan(999, 999);
     c.release();

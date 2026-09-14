@@ -33,6 +33,8 @@ if (SELFTEST) {
     { id: 'reduced-motion', expect: 'S6', file: 'src/ui/style.css', edit: (t) => t.replace('@media (prefers-reduced-motion: reduce)', '@media (min-width: 1px)') },
     { id: 'material', expect: 'S7', file: 'src/ui/style.css', edit: (t) => t.replace('.kbtn:active, .ksquare:active', '.kfault-none') },
     { id: 'hidden-outside', expect: 'S8', file: 'src/render/scene.ts', edit: (t) => `${t}\nexport function __fault(e: HTMLElement): void { e.hidden = true; }\n` },
+    { id: 'rig-dim-hardcoded', expect: 'S1', file: 'src/render/scene.ts', edit: (t) => t.replace("cssColorInt('--rig-dim') || 0x55697c", "Number('0x' + '#55697c'.slice(1))") }, // P50-b2: 꺼짐 틴트를 hex 로 되돌리면 S1 빨강
+    { id: 'risk-contrast', expect: 'S3', file: 'src/ui/style.css', edit: (t) => t.replace('--risk-1: #7d5c05;', '--risk-1: #ffd27a;') }, // P52-b: 위험 칩 면을 밝게 되돌리면 흰 글씨 4.5:1 미달 → S3 빨강
     { id: 'tween-outside', expect: 'S9', file: 'src/render/scene.ts', edit: (t) => `${t}\nexport function __fault2(s: Phaser.Scene): void { s.tweens.add({ targets: [], duration: 1 }); }\n` },
   ];
   const self = resolve(process.argv[1]);
@@ -139,6 +141,14 @@ console.log('UI 정적 검사');
     ['--strip-ink', barBg, 4.5, '하단 바'],
     ['--strip-num', barBg, 4.5, '하단 바 숫자'],
     ['--btn-ink', hexOf(tok('--badge'))[0], 3, '배지'],
+    ['--rig-dim', hexOf(tok('--pool-clear'))[0], 3, 'P50-b2 꺼진 기구 틴트 대 물(면끼리 3:1 — 색약·흑백에서 켜짐/꺼짐이 갈려야 한다)'],
+    ['--btn-ink', hexOf(tok('--risk-0'))[0], 4.5, 'P52-b 위험 칩 안전'],
+    ['--btn-ink', hexOf(tok('--risk-1'))[0], 4.5, 'P52-b 위험 칩 주의'],
+    ['--btn-ink', hexOf(tok('--risk-2'))[0], 4.5, 'P52-b 위험 칩 경계'],
+    ['--btn-ink', hexOf(tok('--risk-3'))[0], 4.5, 'P52-b 위험 칩 위험'],
+    ['--ink', hexOf(tok('--card-on'))[0], 4.5, 'P56-a 카드 선택 노란 채움 위 진갈 글씨'],
+    ['--card-price', hexOf(tok('--win-flat'))[0], 4.5, 'P56-a 카드 우하 가격'],
+    ['--btn-ink', hexOf(tok('--badge'))[0], 3, 'P56-a SOLD OUT 띠(면끼리 3:1)'],
   ];
   const bad = [];
   for (const [fg, bg, need, name] of PAIRS) {

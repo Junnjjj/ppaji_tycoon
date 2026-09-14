@@ -7,10 +7,10 @@ import type { FacilityDef } from '../../data/schema.js';
 import { footprintCanvas, tileOffsetInCanvas, tileRowSpan, TILE_H } from '../../render/iso.js';
 import { cssVar } from '../../ui/tokens.js';
 import { blit, flipX, mapWidth, type PixMap } from './pix.js';
-import { ART, DEFAULT_BY_CLASS, ICONS, TEMPLATES, type FacTemplate } from './fac-sprites.js';
+import { ART, DEFAULT_BY_CLASS, ICONS, TEMPLATES, type FacTemplate , rigTemplate } from './fac-sprites.js';
 
 /** 캔버스 높이 예산 (docs/pixel-style.md 실측: 1×1 시설은 타일 폭의 0.8~1.2 높이) */
-export const BODY_H: Record<FacilityDef['class'], number> = { utility: 28, lounging: 16, restaurant: 34, attraction: 30, slide: 64, decor: 30 };
+export const BODY_H: Record<FacilityDef['class'], number> = { utility: 28, lounging: 16, restaurant: 34, attraction: 30, slide: 64, decor: 30, rig: 20 }; // P48-c: 기구는 물 위 낮은 그림(플로팅 패드 위)
 
 export function facilityCanvasSize(def: FacilityDef, facing: 0 | 1): { w: number; h: number } {
   const w = facing === 1 ? def.d : def.w;
@@ -54,7 +54,7 @@ export function drawFacility(def: FacilityDef, facing: 0 | 1): HTMLCanvasElement
       }
     }
   }
-  const art = ART[def.id] ?? DEFAULT_BY_CLASS[def.class] ?? { tpl: 'bush' };
+  const art = ART[def.id] ?? (def.class === 'rig' ? rigTemplate(def) : DEFAULT_BY_CLASS[def.class]) ?? { tpl: 'bush' }; // P55: 기구는 모양(높이·길이)으로 폴백 셋
   const tpl = TEMPLATES[art.tpl] ?? TEMPLATES['bush'] as FacTemplate;
   let rows = composeRows(tpl.rows, art.icon ? ICONS[art.icon] : undefined, tpl.icon);
   if (facing === 1) rows = flipX(rows);

@@ -37,3 +37,29 @@ export function drawBus(): HTMLCanvasElement {
   ROWS.forEach((row, j) => [...row].forEach((ch, i) => { const col = color[ch]; if (!col) return; g.fillStyle = col; g.fillRect(i, j + 3, 1, 1); }));
   return c;
 }
+
+
+/** P44-d — 정류장 표지 10×22: 기둥 + 네모 표지 */
+export function drawBusStop(): HTMLCanvasElement {
+  const c = document.createElement('canvas');
+  c.width = 10; c.height = 22;
+  const g = c.getContext('2d');
+  if (!g) return c;
+  g.fillStyle = cssVar('--guest-outline'); g.fillRect(0, 0, 10, 9);
+  g.fillStyle = cssVar('--bus-top'); g.fillRect(1, 1, 8, 7);
+  g.fillStyle = cssVar('--bus-window'); g.fillRect(2, 3, 6, 2);
+  g.fillStyle = cssVar('--wall-top'); g.fillRect(4, 9, 2, 13);
+  return c;
+}
+
+/** P44-d — 가로등 8×26: 기둥 + 갓 */
+export function drawLamp(): HTMLCanvasElement {
+  const c = document.createElement('canvas');
+  c.width = 8; c.height = 26;
+  const g = c.getContext('2d');
+  if (!g) return c;
+  g.fillStyle = cssVar('--wall-top'); g.fillRect(3, 4, 2, 22);
+  g.fillStyle = cssVar('--guest-outline'); g.fillRect(1, 0, 6, 5);
+  g.fillStyle = cssVar('--lamp-glow'); g.fillRect(2, 1, 4, 3);
+  return c;
+}

@@ -53,7 +53,7 @@
     },
     {
       "id": "honeycomb",
-      "name": "벌집튜브",
+      "name": "단군",
       "kind": "tow",
       "sprite": "vehicle/honeycomb",
       "speed": 0.21,
@@ -149,7 +149,7 @@
     },
     {
       "id": "swing",
-      "name": "좌우그네",
+      "name": "마블",
       "kind": "tow",
       "sprite": "vehicle/swing",
       "speed": 0.28,
@@ -325,7 +325,7 @@
     },
     {
       "id": "flycarpet",
-      "name": "플라잉카펫",
+      "name": "UFO 튜브",
       "kind": "tow",
       "sprite": "vehicle/flycarpet",
       "speed": 0.18,
@@ -373,7 +373,7 @@
     },
     {
       "id": "blobjump",
-      "name": "블롭점프",
+      "name": "점프 튜브",
       "kind": "tow",
       "sprite": "vehicle/blobjump",
       "speed": 0.15,
@@ -389,7 +389,7 @@
     },
     {
       "id": "water_roller",
-      "name": "워터롤러",
+      "name": "롤링 튜브",
       "kind": "tow",
       "sprite": "vehicle/water_roller",
       "speed": 0.22,
@@ -437,7 +437,7 @@
     },
     {
       "id": "air_chair",
-      "name": "에어체어",
+      "name": "바이퍼",
       "kind": "tow",
       "sprite": "vehicle/air_chair",
       "speed": 0.3,
@@ -453,7 +453,7 @@
     },
     {
       "id": "marine_jet",
-      "name": "마린제트",
+      "name": "샤크 제트보트",
       "kind": "power",
       "sprite": "vehicle/marine_jet",
       "speed": 0.32,
@@ -469,7 +469,7 @@
     },
     {
       "id": "hydrofoil",
-      "name": "하이드로포일",
+      "name": "플라이보드",
       "kind": "power",
       "sprite": "vehicle/hydrofoil",
       "speed": 0.34,

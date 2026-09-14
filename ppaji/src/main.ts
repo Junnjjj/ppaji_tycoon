@@ -1,6 +1,6 @@
 import './compat.js';
 import './ui/style.css';
-import { Game, FACILITY_DEFS, ITEM_DEFS, TILE_DEFS, GIFTS_BY_ID, RANK_DEFS, FEATURES, type FxEvent, CALENDAR_EVENTS, CERT_DEFS } from './sim/game.js';
+import { Game, FACILITY_DEFS, ITEM_DEFS, GIFTS_BY_ID, RANK_DEFS, FEATURES, type FxEvent, CALENDAR_EVENTS, CERT_DEFS } from './sim/game.js';
 import type { GameEvent } from './sim/events.js';
 import { TICKS_PER_DAY, JUDGE_TICK, clockView, EVENING_HOUR } from './sim/clock.js';
 import { FLOOR } from './sim/grid.js';
@@ -27,7 +27,7 @@ import { cssVar } from './ui/tokens.js';
 import { loadAtlas, HybridProvider } from './assets/atlas-provider.js';
 import { loadKairoAtlas } from './assets/kairo-atlas.js';
 import { GuestInfoWindow } from './ui/windows/guest-info.js';
-import { BuildWindow } from './ui/windows/build.js';
+import { BuildWindow, BUILD_TABS } from './ui/windows/build.js';
 import { PlaceDock } from './ui/windows/place.js';
 import { CourseDock } from './ui/windows/course.js';
 import { FacilityInfoWindow } from './ui/windows/facility-info.js';
@@ -43,6 +43,7 @@ import { fxFired } from './render/fx/registry.js';
 import { ShopWindow } from './ui/windows/shop.js';
 import { MenuEditWindow } from './ui/windows/menu-edit.js';
 import { CookWindow, type DiscoverySpec } from './ui/windows/cook.js';
+import { canvasPictureEl, pictureCount } from './ui/pictures.js';
 import type { CookingStore, RecipeLike, IngredientLike, CookResultOf } from './sim/cooking.js';
 import { MenuWindow } from './ui/windows/menu.js';
 import { InvestWindow } from './ui/windows/invest.js';
@@ -50,6 +51,7 @@ import { CampaignWindow } from './ui/windows/campaign.js';
 import { clear as clearSave } from './save/save.js';
 import { EndingWindow } from './ui/windows/ending.js';
 import { applyCarryover } from './sim/endgame.js';
+import { Bot, BOT_DEFAULTS } from './sim/bot.js'; // P53-c 하네스 — 페이지 안에서 봇이 판을 굴린다(목표 HUD 샘플)
 import { loadProfile, saveProfile } from './save/profile.js';
 import { Bubbles } from './ui/bubbles.js';
 import { load, save } from './save/save.js';
@@ -100,7 +102,7 @@ const scene = new WaterparkScene({
   camera,
   rank: () => game.rank,
   // 새 판은 물려받은 풀을 비춘다 (G25) · 저장본은 토지 가운데
-  startTile: (() => { if (!saved) { const gt = game.gate; return { i: gt.i - 2, j: gt.j + 5, bottomInsetCss: 100 }; } const l = game.land; return { i: l.i0 + Math.floor(l.w / 2), j: l.j0 + Math.floor(l.h / 2), bottomInsetCss: 84 }; })(),
+  startTile: (() => { if (!saved) { const gt = game.gate; return { i: gt.i + 4, j: gt.j + 12, bottomInsetCss: 100 }; } /* P43 정문·실내동·산책로 → 2026-09-11 기본 S=2(원작 줌)라 화면이 절반: 출입동 남쪽 광장 + 선착장 + 킷 빠지 수역이 한 화면에 (실측 (−2,+9) 는 복도 안만 보였다) */ const l = game.land; return { i: l.i0 + Math.floor(l.w / 2), j: l.j0 + Math.floor(l.h / 2), bottomInsetCss: 84 }; })(),
   onFrame: (s) => {
     lastStats = s;
     if (DEBUG) {
@@ -118,6 +120,18 @@ sfx.unlockOnGesture();
 // ── 화면 동기화 ────────────────────────────────────────────────────
 const poolTilesFlat = (): number[] => game.pools.all.flatMap((p) => p.tiles);
 
+/** P50-b2 — 꺼진 기구·등급 폰툰 색·이음쇠. 링 칸 = 수역 타일에 4이웃으로 닿은 데크 */
+const syncRigLook = (): void => {
+  const dim = new Set<number>();
+  for (const f of game.facilities.all) { const d = game.facilities.defOf(f); if (d.class === 'rig' && d.onRing !== true && !game.rigState.lit.has(f.uid)) dim.add(f.uid); }
+  const ring = new Map<number, number>();
+  const w = game.grid.w;
+  for (const p of game.pools.all) {
+    const grade = game.ppajiGradeOf(p.id);
+    for (const k of p.tiles) { const i = k % w, j = Math.floor(k / w); for (const [a, b] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) if (game.grid.inside(i + a, j + b) && game.grid.at(i + a, j + b) === FLOOR.deck) { const kk = (j + b) * w + i + a; ring.set(kk, Math.max(ring.get(kk) ?? 0, grade)); } }
+  }
+  scene.setRigLook(dim, ring, game.rigLinkEdges());
+};
 const syncPoolLook = (): void => {
   const m = new Map<number, { color: string; tiles: readonly number[]; temp: number; scent: string | null }>();
   for (const p of game.pools.all) {
@@ -139,17 +153,21 @@ const syncWorldToScene = (): void => {
   scene.setBus(game.busState);
   scene.setFacilities(game.facilities.all, (f) => game.facilities.defOf(f));
   syncPoolLook();
+  syncRigLook(); // P50-b2
   for (let j = 0; j < game.grid.h; j++) for (let i = 0; i < game.grid.w; i++) scene.refreshTile(i, j);
   scene.drawWalls();
+  scene.drawDoors(); // P39
   scene.drawCoping();
-  scene.drawBorder(game.land);
+  scene.drawBorder(game.land, game.gate);
+  scene.drawFence(game.land, game.gate); // P40 D50 울타리
 };
 
 /** 목표 3슬롯 (G23, PSS 리서치) — A 지금 할 일 · B 다음 랭크 조건 · C 가장 가까운 인증. 6초마다 돌아간다 */
 let goalSlot = 0;
+let pinnedGoal: number | null = null;
 setInterval(() => { goalSlot = (goalSlot + 1) % 3; refreshHud(); }, 6000);
 const goalLine = (): string => {
-  const a = game.pools.all.length === 0 ? '수역에서 강에 부표를 쳐 보자! 손님이 찾아온다' : game.facilities.all.length === 0 ? '건설에서 화장실·평상 연립을 놓아 보자' : null;
+  const a = game.pools.all.length === 0 ? '수역에서 강에 부표를 쳐 보자! 손님이 찾아온다' : game.facilities.all.length === 0 ? '건설에서 화장실·평상 연립을 놓아 보자' : game.rigGoalHint(); // P50-b2 목표 A 폴백 ①②(sim 이 낸다)
   const wishes = [...game.sns.activeWishes()].sort((x, y) => x.friend.windowUntilDay - y.friend.windowUntilDay);
   const wish = wishes[0];
   // R3 (G48): 창이 2일 남은 소원은 진행률과 함께 먼저 — 근접 실패가 보인다
@@ -162,7 +180,7 @@ const goalLine = (): string => {
   const certs = [...game.certs.defs.values()].map((d) => ({ d, ex: game.expectedCert(d.id) })).filter((x) => x.ex && !(game.certs.state.passed[x.d.id] ?? 0)).sort((x, y) => (y.ex?.base ?? 0) - (x.ex?.base ?? 0));
   const c0 = certs[0];
   const C = c0 && c0.ex ? `인증 ${c0.d.name}: 예상 ${c0.ex.base}/30 (합격선 ${c0.d.pass})` : B;
-  return a ?? [A, B, C][goalSlot] ?? A;
+  return [a ?? A, B, C][pinnedGoal ?? goalSlot] ?? A; // P50-b2 슬롯 구조 — A 폴백이 켜져도 B·C 가 회전에서 안 사라진다 · `pinGoal` 은 하네스 세터
 };
 
 const refreshHud = (): void => {
@@ -188,7 +206,7 @@ const refreshHud = (): void => {
 };
 
 // ── 창 · 독 ────────────────────────────────────────────────────────
-const dock = new PoolEditDock(document.body, () => game, [...ITEM_DEFS.values()], TILE_DEFS, {
+const dock = new PoolEditDock(document.body, () => game, [...ITEM_DEFS.values()], {
   showSelection: (tiles, mode) => scene.setSelection(tiles, mode === 'fill'),
   toast: (text, ok) => {
     hud.showToast(text);
@@ -245,6 +263,8 @@ const rankingsWin = new RankingsWindow(document.body, () => game);
 const staffWin = new StaffWindow(document.body, () => game, { toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); syncWorldToScene(); refreshHud(); persist(); } });
 const place = new PlaceDock(document.body, () => game, {
   showGhost: (def, i, j, facing, ok, label) => scene.setGhost(def, i, j, facing, ok, label),
+  showRing: (tiles) => scene.setSelection(tiles, false), // P24 조준 반경 — 수역 독의 선택 표시를 재사용
+  pricePop: (i, j, text) => { if (text === null) return; const c = tileCenter(i, j); scene.fx('price-pop', { x: c.x, y: c.y - 26, text, key: 'aim' }); }, // P56-a D7
   toast: (text, ok) => { hud.showToast(text); sfx.play(ok ? 'coin' : 'error'); },
   onPlaced: (uid) => { consumeFx(); syncWorldToScene(); refreshHud(); persist(); const f = game.facilities.byUid(uid); if (f) { const c = tileCenter(f.i, f.j); scene.fx('money-pop', { x: c.x, y: c.y - 20, text: '설치 완료!', key: `placed:${uid}` }); } },
 });
@@ -262,13 +282,15 @@ const buildWin = new BuildWindow(
 );
 const snsWin = new SnsWindow(document.body, () => game, {
   thumb: (post) => thumbFor(post),
+  sprite: (id) => provider.canvas(`fac/${id}/0`), // P56-a2 D8: 소원 보상 그림
   toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); },
   celebrate: (text) => { sfx.play('wish'); scene.fx('confetti', { x: window.innerWidth / 2, y: 120 }); hud.showBanner(`받았다! ${text}`); },
   onChanged: () => { consumeFx(); refreshHud(); persist(); },
 });
-const certWin = new CertWindow(document.body, () => game, { toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); refreshHud(); persist(); } });
+const certWin = new CertWindow(document.body, () => game, { sprite: (id) => provider.canvas(`fac/${id}/0`), toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); refreshHud(); persist(); } });
 const rankWin = new RankWindow(document.body, () => game, () => certWin.show());
 const shopWin = new ShopWindow(document.body, () => game, {
+  sprite: (id) => provider.canvas(`fac/${id}/0`), // P56-a: 진열 카드의 시설 그림
   toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); },
   onChanged: () => { consumeFx(); refreshHud(); persist(); },
   name: (kind, ref) => kind === 'facility' ? (FACILITY_DEFS.get(ref)?.name ?? ref) : kind === 'item' ? (ITEM_DEFS.get(ref)?.name ?? ref) : (GIFTS_BY_ID.get(ref)?.name ?? ref),
@@ -287,20 +309,44 @@ const WORKSHOP_SPEC: DiscoverySpec = {
   run: (g, ids) => g.craft(ids) as CookResultOf<RecipeLike>,
   buy: (g, id) => g.buyPart(id),
   stats: (r) => { const x = r as unknown as { taste: number; look: number; pop: number }; return `스릴 ${x.taste} 외관 ${x.look} 인기 ${x.pop}`; },
+  picKind: 'part', resultPicKind: 'gear', axisLabels: ['스릴', '외관', '인기'], verb: '조합', sceneBg: 'convert', // P56-a: 부품·기구 그림(등록부, 없으면 계열 아이콘) · P56-b2 장면 배경(정비 잔교)
 };
 const workshopWin = new CookWindow(document.body, () => game, { toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); syncWorldToScene(); refreshHud(); persist(); } }, WORKSHOP_SPEC);
-const investWin = new InvestWindow(document.body, () => game, { toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); refreshHud(); persist(); } });
+// P51 — 기구 개조: 요리·공방과 같은 창, 셋째 낱말·저장소(실패작 없음 · 결과는 놓인 기구의 개조판 — 적용은 시설 창 「개조」)
+const RIG_SPEC: DiscoverySpec = {
+  winId: 'win-rig', title: '기구 개조', codexLabel: '개조 도감', shopLabel: '부품 사기',
+  catKo: { slide: '슬라이드', obstacle: '장애물', rest: '휴식', jump: '점프', ring: '링 위' },
+  icon: { motor: 'attraction', fabric: 'decor', anchor: 'build', net: 'check', seat: 'lounge', wax: 'slide', light: 'star', float: 'pool', nozzle: 'pool', audio: 'sns', rope: 'build', deck: 'build', bearing: 'attraction' },
+  fallbackIcon: 'build',
+  store: (g) => g.rigs as unknown as CookingStore<RecipeLike, IngredientLike>,
+  open: () => true,
+  can: (g, ids) => g.canCraftRig(ids),
+  run: (g, ids) => g.craftRig(ids) as CookResultOf<RecipeLike>,
+  buy: (g, id) => g.buyRigPart(id),
+  stats: (r) => { const x = r as unknown as { from: string; to: string }; const to = FACILITY_DEFS.get(x.to); const from = FACILITY_DEFS.get(x.from); return to && from ? `${from.name} → 스릴 ${to.thrill ?? 0} 정원 ${to.capacity} 안전 ${to.safe ?? 0}` : ''; },
+  picKind: 'part', verb: '개조 발견', sceneBg: 'convert',
+  // P56-a D4: 개조판은 시설 스프라이트가 이미 있다 — 결과 장면 카드에 「전 → 후」 없이 후 그림, 축은 스릴·정원·안전
+  resultArt: (_g, r) => { const x = r as unknown as { to: string }; return canvasPictureEl(provider.canvas(`fac/${x.to}/0`), 'build'); },
+  axes: (_g, r) => { const x = r as unknown as { from: string; to: string }; const to = FACILITY_DEFS.get(x.to); const from = FACILITY_DEFS.get(x.from); if (!to) return []; const d = (a: number, b: number): string => a === b ? '' : `${b - a > 0 ? '+' : ''}${b - a} UP`; return [
+    { label: '스릴', icon: 'attraction', value: String(to.thrill ?? 0), gauge: Math.min(5, to.thrill ?? 0), note: from ? d(from.thrill ?? 0, to.thrill ?? 0) : '' },
+    { label: '정원', icon: 'friends', value: `${to.capacity}인`, gauge: Math.min(5, Math.ceil(to.capacity / 2)), note: from ? d(from.capacity, to.capacity) : '' },
+    { label: '안전', icon: 'check', value: String(to.safe ?? 0), gauge: Math.min(5, to.safe ?? 0), note: from ? d(from.safe ?? 0, to.safe ?? 0) : '' },
+  ]; },
+};
+const rigWin = new CookWindow(document.body, () => game, { toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); syncWorldToScene(); refreshHud(); persist(); } }, RIG_SPEC);
+const investWin = new InvestWindow(document.body, () => game, { sprite: (id) => provider.canvas(`fac/${id}/0`), toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); refreshHud(); persist(); } });
 const campaignWin = new CampaignWindow(document.body, () => game, { toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); refreshHud(); persist(); } });
 const inboxWin = new InboxWindow(document.body, () => game, () => refreshHud());
-const celebrate = new CelebrateWindow(document.body, () => { consumeFx(); refreshHud(); pumpModals(); });
+const celebrate = new CelebrateWindow(document.body, () => { consumeFx(); refreshHud(); pumpModals(); }, (id) => provider.canvas(`fac/${id}/0`)); // P56-a2 D8: 편지 위 물건 그림
 const certResultWin = new CertResultWindow(document.body, () => game, () => pumpModals());
 const choiceWin = new ChoiceWindow(document.body, () => game, { toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); refreshHud(); persist(); }, onClosed: () => pumpModals() });
 const mainMenu = new MenuWindow(document.body, () => [
-  { id: 'build', label: '건설', icon: 'build', group: '운영', desc: '시설을 짓는다 · 6분류', run: () => buildWin.show() },
+  { id: 'build', label: '건설', icon: 'build', group: '운영', desc: '시설을 짓는다 · 8분류', run: () => buildWin.show() },
   { id: 'pool', label: '수역 편집', icon: 'pool', desc: '부표를 치고 데크를 깔고 소품을 넣는다', run: () => dock.enter('dig') },
   { id: 'sns', label: 'SNS', icon: 'sns', desc: `타임라인 · 소원 · 친구${game.sns.unseenPosts ? ` · 새 글 ${game.sns.unseenPosts}` : ''}`, run: () => snsWin.show() },
   { id: 'cook', label: '요리 개발', icon: 'cook', desc: '재료를 섞어 새 메뉴', locked: game.cookingOpen ? null : '★2', run: () => cookWin.show() },
   { id: 'workshop', label: '기구 공방', icon: 'attraction', desc: '부품을 섞어 새 견인 기구', locked: null, run: () => workshopWin.show() },
+  { id: 'rig', label: '기구 개조', icon: 'slide', desc: '부품을 섞어 개조 레시피 · 시설 창 「개조」로 같은 자리에서 바꾼다', locked: null, run: () => rigWin.show() }, // P51
   { id: 'shop', label: '장날', icon: 'shop', desc: '17시에 새 물건이 선다', run: () => shopWin.show() },
   { id: 'invest', label: '투자', icon: 'coin', group: '경제 활동', desc: '물놀이 기구 · 평상·방갈로 다음 단계를 연다', run: () => investWin.show() },
   { id: 'campaign', label: '캠페인', icon: 'heart', desc: '읍내 현수막 · 전세버스 · 유튜브 광고', run: () => campaignWin.show() },
@@ -329,7 +375,8 @@ const endingWin = new EndingWindow(document.body, () => game, {
     hud.showToast(`뉴게임+ ${c.runs + 1}회차 — 이월 적용`);
   },
 });
-const facilityInfo = new FacilityInfoWindow(document.body, () => game, () => { consumeFx(); syncWorldToScene(); refreshHud(); persist(); }, (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, (uid) => menuWin.show(uid), (defId) => provider.canvas(`fac/${defId}/0`), (uid) => { const f = game.facilities.byUid(uid); if (f) { place.enterMove(f); sfx.play('open'); } });
+const facilityInfo = new FacilityInfoWindow(document.body, () => game, () => { consumeFx(); syncWorldToScene(); refreshHud(); persist(); }, (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, (uid) => menuWin.show(uid), (defId) => provider.canvas(`fac/${defId}/0`), (uid) => { const f = game.facilities.byUid(uid); if (f) { place.enterMove(f); sfx.play('open'); } }, (tiles) => scene.setSelection(tiles, false)); // P30 D38 탭 오버레이
+facilityInfo.sprite = (id) => provider.canvas(`fac/${id}/0`); // P56-a 개조 전→후 그림
 
 function onTapTile(i: number, j: number): void {
   if (courseDock.isActive) return;
@@ -430,7 +477,7 @@ const pumpModals = (): void => {
   if (!interruptBudget.request()) return;
   const ev = modalQueue.shift();
   if (!ev) return;
-  const cv = clockView(game.day, game.tick); if (!celebrate.show({ title: ev.title, body: ev.body }, `${cv.year}년차 ${cv.seasonName} · ${cv.isWeekend ? '주말' : '평일'}`)) { modalQueue.unshift(ev); return; }
+  const cv = clockView(game.day, game.tick); if (!celebrate.show({ title: ev.title, body: ev.body, ...(ev.pic ? { pic: ev.pic } : {}) }, `${cv.year}년차 ${cv.seasonName} · ${cv.isWeekend ? '주말' : '평일'}`)) { modalQueue.unshift(ev); return; }
   sfx.play(ev.title.includes('불합격') ? 'error' : 'rankup');
 };
 const consumeFx = (): void => {
@@ -454,7 +501,7 @@ const consumeFx = (): void => {
       continue;
     } // tut=0: 하네스 — 대사 전부 끈다 (홈 상시 컨트롤 감사가 띠를 센다)
     if (ev.kind === 'system' && /합격/.test(ev.title) && certResultWin.visible) { ev.read = true; continue; } // 결과 창이 이미 말했다
-    if (ev.priority === 'modal' && CELEBRATE_ON && celebrate.show({ title: ev.title, body: ev.body })) { ev.read = true; sfx.play(ev.title.includes('불합격') ? 'error' : 'rankup'); continue; }
+    if (ev.priority === 'modal' && CELEBRATE_ON && celebrate.show({ title: ev.title, body: ev.body, ...(ev.pic ? { pic: ev.pic } : {}) })) { ev.read = true; sfx.play(ev.title.includes('불합격') ? 'error' : 'rankup'); continue; }
     if (ev.priority === 'toast' || ev.priority === 'modal') { hud.showToast(`${ev.title} — ${ev.body}`, 3200); ev.read = true; }
     if (ev.priority === 'modal') sfx.play('coin');
   }
@@ -493,9 +540,13 @@ function applyFx(fx: FxEvent): void {
   } else if (fx.kind === 'like') {
     sfx.play('like');
   } else if (fx.kind === 'buy') {
-    scene.fx('money-pop', { x: c.x, y: c.y - 8, amount: fx.amount ?? 0, key: `buy:${fx.i},${fx.j}`, ...(fx.label ? { text: `${fx.label} +${(fx.amount ?? 0).toLocaleString('ko-KR')}G` } : {}) });
+    scene.fx('money-pop', { x: c.x, y: c.y - 8, amount: fx.amount ?? 0, key: `buy:${fx.i},${fx.j}` });
+    if (fx.label) scene.fx('buy-pop', { x: c.x, y: c.y - 22, text: fx.label.includes('×') ? fx.label : `${fx.label} ×1` }); // P56-a2 D7: 손님 머리 위 「이름 ×1」 카드 — 돈은 money-pop 이, 물건은 buy-pop 이
+  } else if (fx.kind === 'band') {
+    scene.fx('band-strip', { x: c.x, y: c.y - 8, text: fx.label ?? '팔찌', amount: fx.amount ?? 0 }); // P56-a2 D7: 팔찌 발급 띠
   } else if (fx.kind === 'discover') {
     sfx.play('coin');
+    scene.fx('got-item', { x: c.x, y: c.y - 8, text: fx.label ? `${fx.label} 획득!` : '획득!' }); // P56-a D7 「You got the Lemon!」
   } else if (fx.kind === 'cert' || fx.kind === 'rankup') {
     if (fx.kind === 'rankup') sfx.play('rankup'); else sfx.jingle('cert');
     if (fx.kind === 'rankup' || game.certs.state.last?.pass) scene.fx('confetti', { x: window.innerWidth / 2, y: 140 });
@@ -598,6 +649,7 @@ const api = {
   staffWin,
   guestInfo,
   facilityInfo,
+  syncWorldToScene,
   tutorial,
   speak,
   refreshHud,
@@ -628,6 +680,7 @@ const api = {
   menuWin,
   cookWin,
   workshopWin,
+  rigWin, // P51
   investWin,
   campaignWin,
   mainMenu,
@@ -635,6 +688,8 @@ const api = {
   bubbles,
   flow,
   build,
+  buildTabs: BUILD_TABS, // P56-a2 하네스 — 건설 탭의 정의 수를 센다
+  pictureCount, // P56-b 하네스 — 반입된 그림 수(「폴백 0」 행)
   stats: () => lastStats,
   frameMs,
   fxFired,
@@ -651,5 +706,10 @@ const api = {
   /** n tick 을 즉시 감는다 (하네스 전용) */
   skip: (n: number) => { game.step(n); consumeFx(); refreshHud(); syncWorldToScene(); },
   newGame: (seed: number) => { game = new Game(seed, undefined, { kit: !NO_KIT }); resetSessionForNewGame(); syncWorldToScene(); refreshHud(); },
+  /** P50-b2 하네스 세터 — 목표 슬롯 고정(0 A · 1 B · 2 C · null 회전). `goalSlot` 은 6초 회전이라 직접 대입 금지 */
+  pinGoal: (n: number | null) => { pinnedGoal = n; refreshHud(); },
+  goalLine: () => goalLine(),
+  /** P53-c 하네스 — 페이지의 판을 굴릴 봇(결정만, 시간은 `skip`) */
+  botFor: () => new Bot(game, BOT_DEFAULTS, game.seed ^ 0x5eed),
 };
 (window as unknown as { __pj: unknown }).__pj = api;

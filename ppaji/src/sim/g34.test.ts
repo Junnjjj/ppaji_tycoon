@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { Game } from './game.js';
 import { CLOSING_TICK } from './clock.js';
 import { QUEUE_MAX, QUEUE_PATIENCE } from './guest.js';
+import { makeTestPpaji } from './test-helpers.js';
 
 function fresh(seed: number): Game {
   const g = new Game(seed, undefined, { kit: false });
@@ -36,7 +37,7 @@ describe('G34 대기 줄', () => {
 describe('G34 폐장·비', () => {
   it('폐장 1시간 전부터 새 손님이 안 오고, 남은 손님은 입구로 간다', () => {
     const g = fresh(32);
-    g.digPool([{ i: g.gate.i - 2, j: g.gate.j + 4 }, { i: g.gate.i - 1, j: g.gate.j + 4 }, { i: g.gate.i - 2, j: g.gate.j + 5 }, { i: g.gate.i - 1, j: g.gate.j + 5 }]);
+    makeTestPpaji(g); // P49-b D59: 뭍 풀 금지 — 빠지(데크 링)로
     for (let n = 0; n < 600; n++) g.step();
     expect(g.guests.count).toBeGreaterThan(0);
     g.tick = CLOSING_TICK;
@@ -47,7 +48,7 @@ describe('G34 폐장·비', () => {
   });
   it('비 오는 날엔 「비 오네…」 하고 돌아가는 손님이 생긴다', () => {
     const g = fresh(33);
-    g.digPool([{ i: g.gate.i - 2, j: g.gate.j + 4 }, { i: g.gate.i - 1, j: g.gate.j + 4 }, { i: g.gate.i - 2, j: g.gate.j + 5 }, { i: g.gate.i - 1, j: g.gate.j + 5 }]);
+    makeTestPpaji(g); // P49-b D59: 뭍 풀 금지 — 빠지(데크 링)로
     g.weather = 'rain';
     let rainy = 0;
     for (let n = 0; n < 900; n++) { g.step(); for (const gu of g.guests.all) if (gu.say === '비 오네…') { rainy++; gu.say = null; } }

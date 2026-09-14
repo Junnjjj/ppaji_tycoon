@@ -1,0 +1,265 @@
+[
+  {
+    "id": "up_slide2",
+    "name": "난리 슬라이드",
+    "cat": "slide",
+    "from": "rig_slide",
+    "to": "rig_slide2",
+    "key": "float_drum+slip_wax",
+    "add": [
+      "slip_wax",
+      "float_drum"
+    ],
+    "unlock": "start"
+  },
+  {
+    "id": "up_slide_spiral",
+    "name": "스파이럴 바이퍼",
+    "cat": "slide",
+    "from": "rig_slide2",
+    "to": "rig_slide3",
+    "key": "float_drum+pump_motor+slip_wax",
+    "add": [
+      "slip_wax",
+      "pump_motor",
+      "float_drum"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_tramp_double",
+    "name": "더블 팡팡",
+    "cat": "jump",
+    "from": "trampoline_w",
+    "to": "rig_tramp_double",
+    "key": "float_drum+twin_saddle",
+    "add": [
+      "twin_saddle",
+      "float_drum"
+    ],
+    "unlock": "start"
+  },
+  {
+    "id": "up_tramp_tower",
+    "name": "팡팡 타워",
+    "cat": "jump",
+    "from": "rig_tramp_double",
+    "to": "rig_tramp_tower",
+    "key": "float_drum+ramp_deck+safety_net",
+    "add": [
+      "ramp_deck",
+      "safety_net",
+      "float_drum"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_bridge_swing",
+    "name": "흔들다리 닌자",
+    "cat": "obstacle",
+    "from": "rig_bridge",
+    "to": "rig_bridge_swing",
+    "key": "anchor_chain+waterproof_canvas",
+    "add": [
+      "anchor_chain",
+      "waterproof_canvas"
+    ],
+    "unlock": "start"
+  },
+  {
+    "id": "up_iceberg_wall",
+    "name": "빅마블 월",
+    "cat": "jump",
+    "from": "rig_iceberg",
+    "to": "rig_iceberg_wall",
+    "key": "float_drum+safety_net",
+    "add": [
+      "safety_net",
+      "float_drum"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_blob_big",
+    "name": "와일드 블롭",
+    "cat": "jump",
+    "from": "rig_blob",
+    "to": "rig_blob_big",
+    "key": "pump_motor+waterproof_canvas",
+    "add": [
+      "pump_motor",
+      "waterproof_canvas"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_roller_double",
+    "name": "더블 롤러",
+    "cat": "obstacle",
+    "from": "rig_roller",
+    "to": "rig_roller_double",
+    "key": "slip_wax+twin_saddle",
+    "add": [
+      "twin_saddle",
+      "slip_wax"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_seesaw_spin",
+    "name": "팽이 시소",
+    "cat": "obstacle",
+    "from": "rig_seesaw",
+    "to": "rig_seesaw_spin",
+    "key": "anchor_chain+twin_saddle",
+    "add": [
+      "anchor_chain",
+      "twin_saddle"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_beam_zigzag",
+    "name": "지그재그 빔",
+    "cat": "obstacle",
+    "from": "rig_beam",
+    "to": "rig_beam_zigzag",
+    "key": "anchor_chain+slip_wax",
+    "add": [
+      "anchor_chain",
+      "slip_wax"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_hammock_parasol",
+    "name": "파라솔 해먹",
+    "cat": "rest",
+    "from": "rig_hammock",
+    "to": "rig_hammock_parasol",
+    "key": "float_drum+waterproof_canvas",
+    "add": [
+      "waterproof_canvas",
+      "float_drum"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_sunbed_led",
+    "name": "LED 선베드",
+    "cat": "rest",
+    "from": "rig_sunbed",
+    "to": "rig_sunbed_led",
+    "key": "float_drum+led_strip_buoy",
+    "add": [
+      "led_strip_buoy",
+      "float_drum"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_kids_watergun",
+    "name": "물총 놀이터",
+    "cat": "rest",
+    "from": "rig_kids_park",
+    "to": "rig_kids_watergun",
+    "key": "pump_motor+spray_nozzle",
+    "add": [
+      "spray_nozzle",
+      "pump_motor"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_mini_double",
+    "name": "도넛 슬라이더",
+    "cat": "slide",
+    "from": "rig_mini_slide",
+    "to": "rig_mini_double",
+    "key": "safety_net+slip_wax",
+    "add": [
+      "slip_wax",
+      "safety_net"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_diving_tower",
+    "name": "다이빙 타워",
+    "cat": "ring",
+    "from": "diving",
+    "to": "diving_tower",
+    "key": "ramp_deck+safety_net",
+    "add": [
+      "ramp_deck",
+      "safety_net"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_totem_spin",
+    "name": "스핀 토템",
+    "cat": "jump",
+    "from": "rig_totem",
+    "to": "rig_totem_spin",
+    "key": "anchor_chain+spin_bearing",
+    "add": [
+      "spin_bearing",
+      "anchor_chain"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_dock_wax",
+    "name": "왁스 도크",
+    "cat": "ring",
+    "from": "rig_slidedock",
+    "to": "rig_slidedock_wax",
+    "key": "slip_wax+waterproof_canvas",
+    "add": [
+      "slip_wax",
+      "waterproof_canvas"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_disc_motor",
+    "name": "디스코 원반",
+    "cat": "jump",
+    "from": "rig_disc",
+    "to": "rig_disc_motor",
+    "key": "pump_motor+safety_net+spin_bearing",
+    "add": [
+      "spin_bearing",
+      "pump_motor",
+      "safety_net"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_watch_horn",
+    "name": "혼 망루",
+    "cat": "ring",
+    "from": "watchtower",
+    "to": "watchtower_horn",
+    "key": "led_strip_buoy+speaker_horn",
+    "add": [
+      "speaker_horn",
+      "led_strip_buoy"
+    ],
+    "unlock": "craft"
+  },
+  {
+    "id": "up_bridge_long",
+    "name": "단군 롱브릿지",
+    "cat": "obstacle",
+    "from": "rig_bridge_swing",
+    "to": "rig_bridge_long",
+    "key": "anchor_chain+mooring_rope",
+    "add": [
+      "mooring_rope",
+      "anchor_chain"
+    ],
+    "unlock": "craft"
+  }
+]

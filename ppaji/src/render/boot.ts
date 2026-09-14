@@ -15,7 +15,7 @@ export function bootPhaser(parent: HTMLElement | string, scene: Phaser.Scene): P
   return new Phaser.Game({
     type: Phaser.AUTO,
     parent,
-    backgroundColor: cssVar('--tile-sand'),
+    backgroundColor: cssVar('--tile-grass'), // P44: 지도 바깥은 들판(Surround 가 덮는다 — 이 색은 안전망)
     pixelArt: true,
     roundPixels: true,
     scale: { mode: Phaser.Scale.NONE, width: v.bufferW, height: v.bufferH, zoom: 1 },

@@ -5,6 +5,7 @@
 import { el } from '../dom.js';
 import { iconEl, type IconName } from '../icons.js';
 import { WindowPanel } from '../window.js';
+import { rewardArt, type SpriteFn } from '../reward-art.js';
 
 export class CelebrateWindow {
   private readonly win: WindowPanel;
@@ -15,7 +16,7 @@ export class CelebrateWindow {
   private readonly stamp = el('div', 'kstamp kpaper-stamp', '속보');
   private readonly ok: HTMLButtonElement;
 
-  constructor(parent: HTMLElement, private readonly onClosed: () => void = () => undefined) {
+  constructor(parent: HTMLElement, private readonly onClosed: () => void = () => undefined, private readonly sprite?: SpriteFn) {
     this.win = new WindowPanel(parent, 'win-celebrate', '축하', 'gold', { modal: true });
     this.win.root.classList.add('kcompact');
     this.ok = el('button', 'kbtn primary', '확인');
@@ -45,12 +46,13 @@ export class CelebrateWindow {
     return 'gift';
   }
 
-  /** `date` — 「3년차 여름 · 주말」 같은 날짜 줄 (main 이 시계에서 만든다) */
-  show(ev: { title: string; body: string }, date = ''): boolean {
+  /** `date` — 「3년차 여름 · 주말」 같은 날짜 줄 (main 이 시계에서 만든다). `pic` — P56-a2 D8: 받은 물건 그림이 사진 자리에 선다(사장 편지 = 장면 위 물건) */
+  show(ev: { title: string; body: string; pic?: { kind: string; id: string } }, date = ''): boolean {
     this.date.textContent = date;
     this.stamp.textContent = ev.title.includes('불합격') ? '아쉽' : '속보';
     this.win.setTitle(ev.title.includes('랭크') ? '랭크 업!' : ev.title.includes('합격') ? '심사 결과' : ev.title.includes('지역') ? '새 지역' : '소식');
-    this.icon.replaceChildren(iconEl(CelebrateWindow.iconFor(ev.title), 'xl'));
+    if (ev.pic) { const art = rewardArt(ev.pic, this.sprite); art.classList.add('kcele-pic'); art.dataset['celePic'] = `${ev.pic.kind}/${ev.pic.id}`; this.icon.replaceChildren(art); this.icon.dataset['bg'] = 'letter'; this.icon.style.setProperty('--scene-bg', 'url("assets/scenes/scene_letter.png")'); } // P56-b2: 사장 편지 = 장면 위 물건(원작 gift-letter)
+    else { this.icon.replaceChildren(iconEl(CelebrateWindow.iconFor(ev.title), 'xl')); delete this.icon.dataset['bg']; this.icon.style.removeProperty('--scene-bg'); }
     this.title.textContent = ev.title;
     this.body.textContent = ev.body;
     return this.win.show();

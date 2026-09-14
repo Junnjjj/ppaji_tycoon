@@ -23,6 +23,7 @@ describe('P7 기구 공방', () => {
     expect(g.courses.ownedEquipment.has(target.id)).toBe(true);
     expect(g.courses.ownedEquipment.size).toBe(before + 1);
     expect(courseEquipment(target.id)).toBeTruthy();
+    for (const id of new Set(ids)) g.workshop.grantIngredient(id, 5); // P56-c: 조합이 부품 재고를 썼다 — 다시 만들려면 채운다
     const again = g.craft(ids);
     expect(again.ok && !again.first).toBe(true);
     const h = Game.fromSnapshot(JSON.parse(JSON.stringify(g.toSnapshot())));

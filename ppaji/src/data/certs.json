@@ -16,8 +16,8 @@
       },
       {
         "cond": {
-          "kind": "pool",
-          "sizeMin": 20
+          "kind": "rigCount",
+          "min": 2
         },
         "weight": 1
       }
@@ -41,12 +41,21 @@
           "kind": "pool",
           "popMin": 100
         },
-        "weight": 2
+        "weight": 1
       },
       {
         "cond": {
-          "kind": "pool",
-          "sizeMin": 30
+          "kind": "rigCount",
+          "min": 2,
+          "depth": "shallow"
+        },
+        "weight": 1
+      },
+      {
+        "cond": {
+          "kind": "rigCount",
+          "min": 2,
+          "depth": "deep"
         },
         "weight": 1
       }
@@ -74,15 +83,15 @@
       },
       {
         "cond": {
-          "kind": "pool",
-          "sizeMin": 40
+          "kind": "rigGuarded",
+          "ratioMin": 0.5
         },
         "weight": 1
       }
     ],
     "reward": {
-      "kind": "tile",
-      "id": "sandy"
+      "kind": "facility",
+      "id": "rig_iceberg"
     },
     "fee": 2000
   },
@@ -103,9 +112,8 @@
       },
       {
         "cond": {
-          "kind": "pool",
-          "sizeMin": 50,
-          "tile": "sandy"
+          "kind": "rigGrade",
+          "min": 3
         },
         "weight": 1
       }
@@ -133,8 +141,8 @@
       },
       {
         "cond": {
-          "kind": "pool",
-          "sizeMin": 80
+          "kind": "rigGrade",
+          "min": 4
         },
         "weight": 1
       },
@@ -178,8 +186,8 @@
       }
     ],
     "reward": {
-      "kind": "tile",
-      "id": "yellow"
+      "kind": "rigPart",
+      "id": "waterproof_canvas"
     },
     "fee": 500
   },
@@ -216,8 +224,8 @@
       }
     ],
     "reward": {
-      "kind": "tile",
-      "id": "simple"
+      "kind": "rigPart",
+      "id": "float_drum"
     },
     "fee": 1000
   },
@@ -255,8 +263,8 @@
       }
     ],
     "reward": {
-      "kind": "tile",
-      "id": "colorful"
+      "kind": "facility",
+      "id": "rig_led_buoy"
     },
     "fee": 2500
   },
@@ -284,8 +292,8 @@
       }
     ],
     "reward": {
-      "kind": "tile",
-      "id": "pink"
+      "kind": "rigPart",
+      "id": "slip_wax"
     },
     "fee": 500
   },
@@ -320,8 +328,8 @@
       }
     ],
     "reward": {
-      "kind": "tile",
-      "id": "granite"
+      "kind": "facility",
+      "id": "rig_kids_park"
     },
     "fee": 1000
   },
@@ -356,8 +364,8 @@
       }
     ],
     "reward": {
-      "kind": "tile",
-      "id": "kairo"
+      "kind": "rigPart",
+      "id": "spray_nozzle"
     },
     "fee": 2500
   },
@@ -387,8 +395,8 @@
       }
     ],
     "reward": {
-      "kind": "tile",
-      "id": "stone"
+      "kind": "rigPart",
+      "id": "pump_motor"
     },
     "fee": 1000
   },
@@ -428,8 +436,8 @@
       }
     ],
     "reward": {
-      "kind": "tile",
-      "id": "wooden"
+      "kind": "rigPart",
+      "id": "led_strip_buoy"
     },
     "fee": 2500
   },
@@ -561,15 +569,16 @@
       },
       {
         "cond": {
-          "kind": "pool",
-          "sizeMin": 20
+          "kind": "rigCount",
+          "min": 5,
+          "kinds": 3
         },
         "weight": 1
       }
     ],
     "reward": {
-      "kind": "tile",
-      "id": "blue"
+      "kind": "rigPart",
+      "id": "twin_saddle"
     },
     "fee": 1000
   },
@@ -599,15 +608,15 @@
       },
       {
         "cond": {
-          "kind": "pool",
-          "sizeMin": 40
+          "kind": "rigChain",
+          "min": 4
         },
         "weight": 1
       }
     ],
     "reward": {
-      "kind": "tile",
-      "id": "excellent"
+      "kind": "rigPart",
+      "id": "anchor_chain"
     },
     "fee": 2500
   },
@@ -690,15 +699,15 @@
       },
       {
         "cond": {
-          "kind": "popularity",
-          "min": 250
+          "kind": "rigGuarded",
+          "min": 2
         },
         "weight": 1
       }
     ],
     "reward": {
-      "kind": "tile",
-      "id": "cheerful"
+      "kind": "rigPart",
+      "id": "safety_net"
     },
     "fee": 1500
   },
@@ -732,8 +741,8 @@
       },
       {
         "cond": {
-          "kind": "popularity",
-          "min": 400
+          "kind": "rigGuarded",
+          "ratioMin": 0.167
         },
         "weight": 1
       }

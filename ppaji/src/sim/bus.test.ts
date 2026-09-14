@@ -7,7 +7,7 @@ function fresh(seed = 21): Game {
   const g = new Game(seed, undefined, { kit: false });
   g.money = 200000;
   const gt = g.gate;
-  g.digPool([{ i: gt.i - 2, j: gt.j + 4 }, { i: gt.i - 1, j: gt.j + 4 }, { i: gt.i - 2, j: gt.j + 5 }, { i: gt.i - 1, j: gt.j + 5 }]);
+  g.digPool([{ i: gt.i - 2, j: gt.j + 4 }, { i: gt.i - 1, j: gt.j + 4 }, { i: gt.i - 2, j: gt.j + 5 }, { i: gt.i - 1, j: gt.j + 5 }]); // P48-a 허용목록: 풀 좌표를 아래서 다시 읽는다 — P49-b 에서 물로
   return g;
 }
 

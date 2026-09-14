@@ -7,7 +7,7 @@
 import { TILE_W, TILE_H, tileRowSpan } from '../../render/iso.js';
 import { cssVar } from '../../ui/tokens.js';
 
-export type TileId = 'sand' | 'grass' | 'path' | 'indoor' | 'pool' | 'gate' | 'river' | 'shallow' | 'deck';
+export type TileId = 'sand' | 'grass' | 'path' | 'indoor' | 'pool' | 'gate' | 'river' | 'shallow' | 'deck' | 'road' | 'rock' | 'hall';
 
 /** 결정론적 점 — 좌표 해시. Math.random 을 쓰면 굽을 때마다 무늬가 달라져 스크린샷 대조가 깨진다 */
 function hash(x: number, y: number, salt: number): number {
@@ -31,7 +31,7 @@ export function drawTile(kindId: string): HTMLCanvasElement {
   const base = cssVar(`--tile-${kind}`);
   const dot = cssVar(`--tile-${kind}-dot`);
   // 모래·풀은 경계선을 거의 안 그린다 — 넓은 면에 격자가 그물처럼 보인다 (G14 실측)
-  const edge = cssVar(kind === 'sand' || kind === 'pool' || kind === 'river' || kind === 'shallow' ? '--tile-edge-soft' : '--tile-edge');
+  const edge = cssVar(kind === 'sand' || kind === 'pool' || kind === 'river' || kind === 'shallow' || kind === 'road' ? '--tile-edge-soft' : '--tile-edge');
   for (let y = 0; y < TILE_H; y++) {
     const s = tileRowSpan(y);
     g.fillStyle = base;
@@ -47,7 +47,7 @@ export function drawTile(kindId: string): HTMLCanvasElement {
         else if ((x + 3 + y * 3) % 7 === 0 && hash(x, y + 1, 7) < 0.22) want = cssVar('--tile-grass-lt');
       } else if (kind === 'sand') {
         want = r < 0.05 ? dot : r > 0.93 ? cssVar('--tile-sand-lt') : null;
-      } else if (kind === 'path') {
+      } else if (kind === 'path' || kind === 'hall') {
         const cell = ((x >> 3) + (y >> 2)) % 2 === 0;
         want = (x % 8 === 0 || y % 4 === 0) ? dot : cell && r < 0.08 ? cssVar('--tile-path-lt') : null;
       } else if (kind === 'indoor') {
@@ -66,6 +66,12 @@ export function drawTile(kindId: string): HTMLCanvasElement {
       } else if (kind === 'shallow') {
         // 여울 — 모래빛 바닥 위 옅은 물 · 물가 거품 점
         want = r < 0.06 ? dot : hash(x >> 2, y, 17) < 0.12 ? cssVar('--tile-shallow-lt') : null;
+      } else if (kind === 'rock') {
+        // 암반 (P44 절벽 테두리) — 회색 바탕에 거친 결
+        want = r < 0.12 ? dot : hash(x >> 1, y, 19) < 0.08 ? cssVar('--tile-rock-lt') : null;
+      } else if (kind === 'road') {
+        // 차도 (P43 도시 띠) — 아스팔트 알갱이 + 드문 밝은 점. 차선은 없다(두 줄이라 버스가 그 위에 선다)
+        want = r < 0.06 ? dot : r > 0.97 ? cssVar('--tile-road-lt') : null;
       } else if (kind === 'deck') {
         // 데크 — 널판 결 (실내 널판보다 굵고 어둡다)
         want = y % 5 === 0 || (x + (y / 5 | 0) * 7) % 14 === 0 ? dot : r < 0.04 ? cssVar('--tile-deck-lt') : null;

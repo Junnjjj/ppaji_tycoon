@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { Game } from './game.js';
 import { runBot, BOT_PERSONAS } from './bot.js';
 import { dockCandidates, firstFreeDock, PIER_CLAIM_RADIUS, type PlacedCourse } from './course/course.js';
-import { FLOOR } from './grid.js';
+import { FLOOR, shoreRow } from './grid.js';
 
 /** P20 — 봇의 둘째 코스: 데크 링이 이어져도 선착장 claim 은 3칸까지 · 선착장은 트인 강 옆 · 빈 선착장을 전부 시도 */
 describe('P20 코스 축(봇 계측기 수리)', () => {
@@ -23,8 +23,8 @@ describe('P20 코스 축(봇 계측기 수리)', () => {
     const k = pool.tiles[0]!;
     expect(g.grid.at(k % g.grid.w, Math.floor(k / g.grid.w))).toBe(FLOOR.pool);
     expect(g.isOpenWater(k % g.grid.w, Math.floor(k / g.grid.w))).toBe(false);
-    expect(g.isOpenWater(gt.i, gt.j + 30)).toBe(true); // 킷 선착장 아래 트인 강
-    expect(g.isOpenWater(gt.i, 47)).toBe(false); // 허가 밖(랭크 0 → 33줄까지)
+    expect(g.isOpenWater(gt.i + 10, shoreRow(gt.i + 10) + 5)).toBe(true); // 킷 선착장 아래 트인 강 (P48-b3)
+    expect(g.isOpenWater(gt.i - 10, gt.j + 13)).toBe(false); // 뭍
   });
 
   it('봇 128일 — 코스 2 이상 · 선착장 ≤ 코스 + 2 (전: 8시드 전부 코스 1 · 선착장 3~4)', () => {
@@ -32,5 +32,5 @@ describe('P20 코스 축(봇 계측기 수리)', () => {
     runBot(g, 128, BOT_PERSONAS.balanced);
     expect(g.courses.count).toBeGreaterThanOrEqual(2);
     expect(g.facilities.all.filter((f) => f.defId === 'dock').length).toBeLessThanOrEqual(g.courses.count + 2);
-  }, 30000);
+  }, 120000); // 128일 봇 — 혼자 44초, 병렬 워커·다른 프로세스 아래 60초를 넘긴다(2026-09-13 실측, 전 30.0초)
 });

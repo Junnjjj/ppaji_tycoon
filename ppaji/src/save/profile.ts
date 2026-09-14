@@ -7,7 +7,7 @@ export function loadProfile(storage: Pick<Storage, 'getItem'> = localStorage): C
     const raw = storage.getItem(PROFILE_KEY);
     if (!raw) return null;
     const c = JSON.parse(raw) as Carryover;
-    return c.version === 1 ? c : null;
+    return c.version === 1 || c.version === 2 ? c : null; // P53-b: v2(개조 도감·부품) — v1 은 그대로 읽는다(`tiles` 는 읽고 버린다)
   } catch {
     return null;
   }

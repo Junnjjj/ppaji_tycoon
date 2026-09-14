@@ -1,0 +1,2382 @@
+{
+  "sheet": "assets/pictures.png",
+  "cell": 24,
+  "entries": {
+    "pic/band/allday": {
+      "x": 0,
+      "y": 0,
+      "w": 24,
+      "h": 24
+    },
+    "pic/band/big3": {
+      "x": 32,
+      "y": 0,
+      "w": 24,
+      "h": 24
+    },
+    "pic/band/big5": {
+      "x": 64,
+      "y": 0,
+      "w": 24,
+      "h": 24
+    },
+    "pic/band/vest_only": {
+      "x": 96,
+      "y": 0,
+      "w": 24,
+      "h": 24
+    },
+    "pic/campaign/bus": {
+      "x": 128,
+      "y": 0,
+      "w": 24,
+      "h": 24
+    },
+    "pic/campaign/flyer": {
+      "x": 160,
+      "y": 0,
+      "w": 24,
+      "h": 24
+    },
+    "pic/campaign/tv": {
+      "x": 192,
+      "y": 0,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gear/air_chair": {
+      "x": 224,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/banana": {
+      "x": 256,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/blobjump": {
+      "x": 288,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/dancing": {
+      "x": 320,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/discopang": {
+      "x": 352,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/flat_tube": {
+      "x": 384,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/flycarpet": {
+      "x": 416,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/flyduck": {
+      "x": 448,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/flyfish": {
+      "x": 480,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/hexa": {
+      "x": 512,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/honeycomb": {
+      "x": 544,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/hydrofoil": {
+      "x": 576,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/jetboat": {
+      "x": 608,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/jetski": {
+      "x": 0,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/jjinppang": {
+      "x": 32,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/kneeboard": {
+      "x": 64,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/lotus": {
+      "x": 96,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/marine_jet": {
+      "x": 128,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/peanut": {
+      "x": 160,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/rocket_tube": {
+      "x": 192,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/skyfly": {
+      "x": 224,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/sofa_boat": {
+      "x": 256,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/spinpang": {
+      "x": 288,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/sunk_board": {
+      "x": 320,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/swing": {
+      "x": 352,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/tangled_rope": {
+      "x": 384,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/turbo_turtle": {
+      "x": 416,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/twinpang": {
+      "x": 448,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/wagon": {
+      "x": 480,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/wakeboard": {
+      "x": 512,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/water_roller": {
+      "x": 544,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/waterski": {
+      "x": 576,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gear/watersled": {
+      "x": 608,
+      "y": 32,
+      "w": 32,
+      "h": 32
+    },
+    "pic/gift/banana_float": {
+      "x": 0,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/blue_orca": {
+      "x": 32,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/donut_float": {
+      "x": 64,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/dreaming_orca": {
+      "x": 96,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/duck_float": {
+      "x": 128,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/flamingo_float": {
+      "x": 160,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/flower_pants": {
+      "x": 192,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/hammock": {
+      "x": 224,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/kairo_float": {
+      "x": 256,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/kayak_float": {
+      "x": 288,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/red_tube": {
+      "x": 320,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/retro_swimsuit": {
+      "x": 352,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/river_orca": {
+      "x": 384,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/school_swimsuit": {
+      "x": 416,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/shell_float": {
+      "x": 448,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/striped_swimsuit": {
+      "x": 480,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/swim_ring": {
+      "x": 512,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/gift/watermelon_float": {
+      "x": 544,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/almond": {
+      "x": 576,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/banana_fruit": {
+      "x": 608,
+      "y": 64,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/bbq_sauce": {
+      "x": 0,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/beef": {
+      "x": 32,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/blueberry_fruit": {
+      "x": 64,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/butter": {
+      "x": 96,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/cabbage": {
+      "x": 128,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/caramel": {
+      "x": 160,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/charcoal": {
+      "x": 192,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/cheese": {
+      "x": 224,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/chestnut": {
+      "x": 256,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/chicken": {
+      "x": 288,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/chocolate_bar": {
+      "x": 320,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/coconut_milk": {
+      "x": 352,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/coffee_bean": {
+      "x": 384,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/corn": {
+      "x": 416,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/cream": {
+      "x": 448,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/curry_powder": {
+      "x": 480,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/dragonfruit": {
+      "x": 512,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/egg": {
+      "x": 544,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/fish_cake": {
+      "x": 576,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/flour": {
+      "x": 608,
+      "y": 96,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/gochujang": {
+      "x": 0,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/gold_leaf": {
+      "x": 32,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/grape_fruit": {
+      "x": 64,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/grapefruit_fruit": {
+      "x": 96,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/hazelnut": {
+      "x": 128,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/honey_jar": {
+      "x": 160,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/ice": {
+      "x": 192,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/kiwi_fruit": {
+      "x": 224,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/lemon_fruit": {
+      "x": 256,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/malt": {
+      "x": 288,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/mango": {
+      "x": 320,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/matcha": {
+      "x": 352,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/mayonnaise": {
+      "x": 384,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/melon_fruit": {
+      "x": 416,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/milk": {
+      "x": 448,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/misugaru": {
+      "x": 480,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/noodle": {
+      "x": 512,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/octopus": {
+      "x": 544,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/olive_oil": {
+      "x": 576,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/orange_fruit": {
+      "x": 608,
+      "y": 128,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/papaya": {
+      "x": 0,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/peach_fruit": {
+      "x": 32,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/persimmon": {
+      "x": 64,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/pineapple_fruit": {
+      "x": 96,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/pork": {
+      "x": 128,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/potato": {
+      "x": 160,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/ramyeon": {
+      "x": 192,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/raspberry_fruit": {
+      "x": 224,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/red_bean": {
+      "x": 256,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/rice": {
+      "x": 288,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/salmon": {
+      "x": 320,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/seaweed": {
+      "x": 352,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/shrimp": {
+      "x": 384,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/silkworm": {
+      "x": 416,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/smelt": {
+      "x": 448,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/soda_water": {
+      "x": 480,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/soy_sauce": {
+      "x": 512,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/squid": {
+      "x": 544,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/strawberry_fruit": {
+      "x": 576,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/sugar": {
+      "x": 608,
+      "y": 160,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/tea_leaf": {
+      "x": 0,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/tomato": {
+      "x": 32,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/truffle": {
+      "x": 64,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/tteok": {
+      "x": 96,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/tuna": {
+      "x": 128,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/vanilla": {
+      "x": 160,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/water": {
+      "x": 192,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/ingredient/watermelon_fruit": {
+      "x": 224,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/apple": {
+      "x": 256,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/banana": {
+      "x": 288,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/bath_salt": {
+      "x": 320,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/blueberry": {
+      "x": 352,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/chocolate": {
+      "x": 384,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/cinnamon": {
+      "x": 416,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/coconut": {
+      "x": 448,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/coffee_beans": {
+      "x": 480,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/grapefruit": {
+      "x": 512,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/grapes": {
+      "x": 544,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/honey": {
+      "x": 576,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/ice_block": {
+      "x": 608,
+      "y": 192,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/kiwi": {
+      "x": 0,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/lavender": {
+      "x": 32,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/lemon": {
+      "x": 64,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/melon": {
+      "x": 96,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/milk": {
+      "x": 128,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/mint": {
+      "x": 160,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/orange": {
+      "x": 192,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/peach": {
+      "x": 224,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/pineapple": {
+      "x": 256,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/rose": {
+      "x": 288,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/seaweed": {
+      "x": 320,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/item/strawberry": {
+      "x": 352,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/air_chamber": {
+      "x": 384,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/airbag_pad": {
+      "x": 416,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/anchor_chain": {
+      "x": 448,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/bar_handle": {
+      "x": 480,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/bubble_maker": {
+      "x": 512,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/carbon_deck": {
+      "x": 544,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/deck_board": {
+      "x": 576,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/engine_twin": {
+      "x": 608,
+      "y": 224,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/fin_plate": {
+      "x": 0,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/flag_small": {
+      "x": 32,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/float_drum": {
+      "x": 64,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/foot_strap": {
+      "x": 96,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/grip_handle": {
+      "x": 128,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/harness_belt": {
+      "x": 160,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/honey_cell": {
+      "x": 192,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/hydro_wing": {
+      "x": 224,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/jet_pump": {
+      "x": 256,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/keel_fin": {
+      "x": 288,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/led_strip": {
+      "x": 320,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/led_strip_buoy": {
+      "x": 352,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/life_strap": {
+      "x": 384,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/mirror_ball": {
+      "x": 416,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/mooring_rope": {
+      "x": 448,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/motor_electric": {
+      "x": 480,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/motor_outboard": {
+      "x": 512,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/motor_turbo": {
+      "x": 544,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/power_grip": {
+      "x": 576,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/pump_motor": {
+      "x": 608,
+      "y": 256,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/ramp_deck": {
+      "x": 0,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/rope_bungee": {
+      "x": 32,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/rope_kevlar": {
+      "x": 64,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/rope_nylon": {
+      "x": 96,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/rope_steel": {
+      "x": 128,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/safety_bar": {
+      "x": 160,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/safety_net": {
+      "x": 192,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/seat_bench": {
+      "x": 224,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/seat_bucket": {
+      "x": 256,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/seat_cushion": {
+      "x": 288,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/seat_sling": {
+      "x": 320,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/ski_blade": {
+      "x": 352,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/slip_wax": {
+      "x": 384,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/speaker_box": {
+      "x": 416,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/speaker_horn": {
+      "x": 448,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/spin_bearing": {
+      "x": 480,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/spray_nozzle": {
+      "x": 512,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/tube_donut": {
+      "x": 544,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/tube_giant": {
+      "x": 576,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/tube_round": {
+      "x": 608,
+      "y": 288,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/tube_small": {
+      "x": 0,
+      "y": 320,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/twin_bar": {
+      "x": 32,
+      "y": 320,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/twin_saddle": {
+      "x": 64,
+      "y": 320,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/water_gun": {
+      "x": 96,
+      "y": 320,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/waterproof_canvas": {
+      "x": 128,
+      "y": 320,
+      "w": 24,
+      "h": 24
+    },
+    "pic/part/wing_grip": {
+      "x": 160,
+      "y": 320,
+      "w": 24,
+      "h": 24
+    },
+    "pic/portrait/coastguard_calm": {
+      "x": 192,
+      "y": 320,
+      "w": 32,
+      "h": 32
+    },
+    "pic/portrait/coastguard_happy": {
+      "x": 224,
+      "y": 320,
+      "w": 32,
+      "h": 32
+    },
+    "pic/portrait/judge_calm": {
+      "x": 256,
+      "y": 320,
+      "w": 32,
+      "h": 32
+    },
+    "pic/portrait/judge_happy": {
+      "x": 288,
+      "y": 320,
+      "w": 32,
+      "h": 32
+    },
+    "pic/portrait/nana_calm": {
+      "x": 320,
+      "y": 320,
+      "w": 32,
+      "h": 32
+    },
+    "pic/portrait/nana_happy": {
+      "x": 352,
+      "y": 320,
+      "w": 32,
+      "h": 32
+    },
+    "pic/portrait/president_calm": {
+      "x": 384,
+      "y": 320,
+      "w": 32,
+      "h": 32
+    },
+    "pic/portrait/president_happy": {
+      "x": 416,
+      "y": 320,
+      "w": 32,
+      "h": 32
+    },
+    "pic/portrait/youtuber_calm": {
+      "x": 448,
+      "y": 320,
+      "w": 32,
+      "h": 32
+    },
+    "pic/portrait/youtuber_happy": {
+      "x": 480,
+      "y": 320,
+      "w": 32,
+      "h": 32
+    },
+    "pic/recipe/affogato": {
+      "x": 512,
+      "y": 320,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/almond_cookie": {
+      "x": 544,
+      "y": 320,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/banana_juice": {
+      "x": 576,
+      "y": 320,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/banana_milk": {
+      "x": 608,
+      "y": 320,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/bbq_kebab": {
+      "x": 0,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/beef_veg_rice": {
+      "x": 32,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/beefsteak": {
+      "x": 64,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/beondegi": {
+      "x": 96,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/bibim_guksu": {
+      "x": 128,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/blue_hawaii_snow_cone": {
+      "x": 160,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/blueberry_juice": {
+      "x": 192,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/boiled_noodles": {
+      "x": 224,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/bone_in_roast": {
+      "x": 256,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/bungeoppang": {
+      "x": 288,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/burnt_bread": {
+      "x": 320,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/butter_cookie": {
+      "x": 352,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/caesar_salad": {
+      "x": 384,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/cafe_latte": {
+      "x": 416,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/canned_coffee": {
+      "x": 448,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/caramel_popcorn": {
+      "x": 480,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/cheese_stick": {
+      "x": 512,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/cheeseburger": {
+      "x": 544,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/cheesecake": {
+      "x": 576,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/chestnut_cream_cake": {
+      "x": 608,
+      "y": 352,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/chicken_crepe": {
+      "x": 0,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/chicken_kebab": {
+      "x": 32,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/chicken_nugget": {
+      "x": 64,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/choco_mint_ice_cream": {
+      "x": 96,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/chocolate_cake": {
+      "x": 128,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/chocolate_crepe": {
+      "x": 160,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/chocolate_donut": {
+      "x": 192,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/chocolate_ice_cream": {
+      "x": 224,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/churros": {
+      "x": 256,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/coconut_water": {
+      "x": 288,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/coffee_soft_serve": {
+      "x": 320,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/corn_dog": {
+      "x": 352,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/corn_ice_bar": {
+      "x": 384,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/corn_on_cob": {
+      "x": 416,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/corn_tea": {
+      "x": 448,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/cream_soda": {
+      "x": 480,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/crepe": {
+      "x": 512,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/croissant": {
+      "x": 544,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/cup_ramyeon": {
+      "x": 576,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/curry_bun": {
+      "x": 608,
+      "y": 384,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/curry_rice": {
+      "x": 0,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/dakgalbi": {
+      "x": 32,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/dalgona": {
+      "x": 64,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/dalgona_latte": {
+      "x": 96,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/deluxe_crepe": {
+      "x": 128,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/donut": {
+      "x": 160,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/dragonfruit_juice": {
+      "x": 192,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/dragonfruit_sorbet": {
+      "x": 224,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/egg_bread": {
+      "x": 256,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/egg_crepe": {
+      "x": 288,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/egg_sandwich": {
+      "x": 320,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/fish_cake_skewer": {
+      "x": 352,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/french_toast": {
+      "x": 384,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/fried_calamari": {
+      "x": 416,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/fried_chicken": {
+      "x": 448,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/fried_noodles": {
+      "x": 480,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/fries": {
+      "x": 512,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/fruit_crepe": {
+      "x": 544,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/fruit_popsicle": {
+      "x": 576,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/fruit_salad": {
+      "x": 608,
+      "y": 416,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/fruit_soda": {
+      "x": 0,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/fruit_sorbet": {
+      "x": 32,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/gimbap": {
+      "x": 64,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/grape_juice": {
+      "x": 96,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/grape_soda": {
+      "x": 128,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/grapefruit_ade": {
+      "x": 160,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/grapefruit_juice": {
+      "x": 192,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/green_smoothie": {
+      "x": 224,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/grilled_squid": {
+      "x": 256,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/hamburger": {
+      "x": 288,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/hazelnut_bun": {
+      "x": 320,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/hazelnut_chocolate": {
+      "x": 352,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/honey_toast": {
+      "x": 384,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/hot_dog": {
+      "x": 416,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/hot_pot": {
+      "x": 448,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/hotbar": {
+      "x": 480,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/hotteok": {
+      "x": 512,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/ice_persimmon": {
+      "x": 544,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/ice_water": {
+      "x": 576,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/iced_americano": {
+      "x": 608,
+      "y": 448,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/iced_coffee": {
+      "x": 0,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/injeolmi_bingsu": {
+      "x": 32,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/kairo_bun": {
+      "x": 64,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/kairobot_parfait": {
+      "x": 96,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/kairobot_pudding": {
+      "x": 128,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/kairobot_toast": {
+      "x": 160,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/kiwi_juice": {
+      "x": 192,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/kumax_bun": {
+      "x": 224,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/lemon_shaved_ice": {
+      "x": 256,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/lemonade": {
+      "x": 288,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/maeuntang": {
+      "x": 320,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/mango_shaved_ice": {
+      "x": 352,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/margherita_pizza": {
+      "x": 384,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/matcha_hazelnut_crepe": {
+      "x": 416,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/matcha_ice_cream": {
+      "x": 448,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/matcha_latte": {
+      "x": 480,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/matcha_shaved_ice": {
+      "x": 512,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/meat_pie": {
+      "x": 544,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/melon_bun": {
+      "x": 576,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/melon_ice_bar": {
+      "x": 608,
+      "y": 480,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/melon_soda": {
+      "x": 0,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/milk_pudding": {
+      "x": 32,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/milk_tea": {
+      "x": 64,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/milkshake": {
+      "x": 96,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/misugaru_shake": {
+      "x": 128,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/mixed_fruit_juice": {
+      "x": 160,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/mulhoe": {
+      "x": 192,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/mystery_juice": {
+      "x": 224,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/octopus_fritters": {
+      "x": 256,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/octopus_sushi": {
+      "x": 288,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/omelet": {
+      "x": 320,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/omurice": {
+      "x": 352,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/orange_ade": {
+      "x": 384,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/orange_juice": {
+      "x": 416,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/orange_sorbet": {
+      "x": 448,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/oriental_sundae": {
+      "x": 480,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/pain_au_chocolat": {
+      "x": 512,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/pajeon": {
+      "x": 544,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/pancake": {
+      "x": 576,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/papaya_juice": {
+      "x": 608,
+      "y": 512,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/patbingsu": {
+      "x": 0,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/peach_juice": {
+      "x": 32,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/peach_tart": {
+      "x": 64,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/persimmon_smoothie": {
+      "x": 96,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/pineapple_juice": {
+      "x": 128,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/popcorn": {
+      "x": 160,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/potato_pancake": {
+      "x": 192,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/rainbow_snow_cone": {
+      "x": 224,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/ramune": {
+      "x": 256,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/ramyeon_soup": {
+      "x": 288,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/raspberry_juice": {
+      "x": 320,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/raspberry_tart": {
+      "x": 352,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/red_bean_porridge": {
+      "x": 384,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/salmon_rice_ball": {
+      "x": 416,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/salmon_sushi": {
+      "x": 448,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/samgyeopsal": {
+      "x": 480,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/sandwich": {
+      "x": 512,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/seafood_curry": {
+      "x": 544,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/seafood_fried_rice": {
+      "x": 576,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/seafood_pizza": {
+      "x": 608,
+      "y": 544,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/seafood_tempura": {
+      "x": 0,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/sikhye": {
+      "x": 32,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/slush": {
+      "x": 64,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/smelt_fry": {
+      "x": 96,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/snow_cone": {
+      "x": 128,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/soda_popsicle": {
+      "x": 160,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/sotteok": {
+      "x": 192,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/soy_chicken": {
+      "x": 224,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/soy_ramen": {
+      "x": 256,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/squid_sushi": {
+      "x": 288,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/steamed_pork_bun": {
+      "x": 320,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/stir_fry_rice": {
+      "x": 352,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/strawberry_cake": {
+      "x": 384,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/strawberry_milk": {
+      "x": 416,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/strawberry_mochi": {
+      "x": 448,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/strawberry_smoothie": {
+      "x": 480,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/strawberry_sorbet": {
+      "x": 512,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/strawberry_sundae": {
+      "x": 544,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/sujebi": {
+      "x": 576,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/sujeonggwa": {
+      "x": 608,
+      "y": 576,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/sushi_set": {
+      "x": 0,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/taco": {
+      "x": 32,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/tonkatsu": {
+      "x": 64,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/tropical_juice": {
+      "x": 96,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/tropical_pizza": {
+      "x": 128,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/truffle_risotto": {
+      "x": 160,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/tsukune": {
+      "x": 192,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/tteokbokki": {
+      "x": 224,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/tuna_mayo_crepe": {
+      "x": 256,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/tuna_sushi": {
+      "x": 288,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/vanilla_ice_cream": {
+      "x": 320,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/veg_scraps": {
+      "x": 352,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/watermelon_hwachae": {
+      "x": 384,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/watermelon_juice": {
+      "x": 416,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/watermelon_soda": {
+      "x": 448,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    },
+    "pic/recipe/yakgwa": {
+      "x": 480,
+      "y": 608,
+      "w": 24,
+      "h": 24
+    }
+  }
+}

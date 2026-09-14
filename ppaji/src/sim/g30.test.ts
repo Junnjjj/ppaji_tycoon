@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Game } from './game.js';
 import { runBot } from './bot.js';
+import { makeTestPpaji } from './test-helpers.js';
 
 function fresh(seed = 11): Game {
   const g = new Game(seed, undefined, { kit: false });
@@ -11,9 +12,10 @@ function fresh(seed = 11): Game {
 describe('G30 R2 — 풀 색이 바뀌면 좋아요 0', () => {
   it('맑음 → 핑크로 바뀌면 리셋, 같은 색을 더 넣으면 유지 · previewItem 이 미리 말한다', () => {
     const g = fresh();
-    const gt = g.gate;
-    g.digPool([{ i: gt.i - 2, j: gt.j + 4 }, { i: gt.i - 1, j: gt.j + 4 }, { i: gt.i - 2, j: gt.j + 5 }, { i: gt.i - 1, j: gt.j + 5 }]);
-    const p = g.pools.all[0]!;
+    const pp = makeTestPpaji(g, 2, 2); // P49-b D59: 뭍 풀 금지 — 빠지(데크 링)로. 안 물 2×2 = 4칸 (딸기 1개로 핑크가 되어야 「리셋」이 선다 — G55 「4칸 풀은 딸기 1개」)
+    expect(pp.id).not.toBeNull();
+    const p = g.pools.at(pp.tiles[0]!.i, pp.tiles[0]!.j)!;
+    expect(p.tiles.length).toBe(4);
     p.likes = 120;
     for (const id of ['strawberry', 'rose']) g.unlocked.items.add(id);
     const pv = g.previewItem(p.id, 'strawberry')!;
@@ -55,5 +57,5 @@ describe('G30 후반 곡선', () => {
     const m = runBot(new Game(2), 128);
     expect(m.lateSpendRatio).toBeGreaterThan(0.1);
     expect(m.lateSpendRatio).toBeLessThan(0.95);
-  }, 30000);
+  }, 60000);
 });

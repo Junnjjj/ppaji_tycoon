@@ -6,7 +6,8 @@
     "name": "물놀이 시설 투자 1",
     "cost": 3000,
     "unlocks": [
-      "parasol"
+      "parasol",
+      "gear_rack"
     ]
   },
   {
@@ -27,7 +28,8 @@
     "name": "물놀이 시설 투자 3",
     "cost": 3000,
     "unlocks": [
-      "jjimjilbang"
+      "jjimjilbang",
+      "stage_hall"
     ]
   },
   {
@@ -110,7 +112,8 @@
     "name": "편의·숙박 투자 1",
     "cost": 3000,
     "unlocks": [
-      "nursing"
+      "nursing",
+      "dry_room"
     ]
   },
   {
@@ -120,7 +123,8 @@
     "name": "편의·숙박 투자 2",
     "cost": 5000,
     "unlocks": [
-      "info"
+      "info",
+      "souvenir"
     ]
   },
   {
@@ -130,7 +134,8 @@
     "name": "편의·숙박 투자 3",
     "cost": 4000,
     "unlocks": [
-      "storage"
+      "storage",
+      "takeout"
     ]
   },
   {
@@ -140,7 +145,8 @@
     "name": "편의·숙박 투자 4",
     "cost": 7000,
     "unlocks": [
-      "parking"
+      "parking",
+      "room_ondol"
     ]
   },
   {
@@ -161,7 +167,8 @@
     "name": "편의·숙박 투자 6",
     "cost": 10000,
     "unlocks": [
-      "pool_warm"
+      "pool_warm",
+      "room_tatami"
     ]
   },
   {

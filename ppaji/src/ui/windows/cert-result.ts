@@ -2,7 +2,7 @@
 const JUDGE_NAMES = ['군청 공무원', '해경', '유튜버'] as const;
 import { el } from '../dom.js';
 import { WindowPanel } from '../window.js';
-import { drawPortrait } from '../../assets/draw/portrait.js';
+import { portraitEl, JUDGE_IDS } from '../portraits.js'; // P56-b2
 import type { Game } from '../../sim/game.js';
 
 /**
@@ -35,7 +35,7 @@ export class CertResultWindow {
       const card = el('div', 'kjudge');
       card.dataset['judge'] = String(k);
       const face = el('span', 'kportrait');
-      face.append(drawPortrait(5 + k, (k + 2) % 5, pt >= 7 ? 'happy' : 'calm'));
+      face.append(portraitEl(JUDGE_IDS[k] ?? 'judge', pt >= 7 ? 'happy' : 'calm', { palette: 5 + k, hair: (k + 2) % 5 }));
       card.append(face, el('span', 'kjudge-name', JUDGE_NAMES[k] ?? `심사위원 ${k + 1}`), el('span', 'kjudge-pt', `${pt}점`));
       cards.append(card);
     });

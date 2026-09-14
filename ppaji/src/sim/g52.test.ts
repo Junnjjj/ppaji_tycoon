@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { Game } from './game.js';
+import { makeTestPpaji } from './test-helpers.js';
 
 /** G52 — 시설 이동(원작 이동 도구)과 아이템 투입 효과 미리보기 */
 describe('G52', () => {
@@ -30,7 +31,7 @@ describe('G52', () => {
     expect(g.facilities.at(gt.i + 2, gt.j + 4)).toBeUndefined();
     expect(g.facilities.at(gt.i + 4, gt.j + 4)?.uid).toBe(uid);
     // 옛 자리에 다른 시설을 놓을 수 있다 (occ 가 비었다)
-    expect(g.canPlace('toilet', gt.i + 2, gt.j + 4, 0).ok).toBe(true);
+    expect(g.canPlace('sunflower', gt.i + 2, gt.j + 4, 0).ok).toBe(true); // P46: 건물류는 옆 건물과 한 칸 — 옛 자리가 비었는지는 장식으로 본다
     // 다른 시설 위로는 못 옮긴다
     const r2 = g.placeFacility('toilet', gt.i - 3, gt.j + 4, 0);
     expect(r2.ok).toBe(true);
@@ -40,9 +41,10 @@ describe('G52', () => {
   it('미리보기는 전후 풀 상태를 함께 주고, 실제 상태는 바꾸지 않는다', () => {
     const g = new Game(7, undefined, { kit: false });
     g.money = 100000;
-    const gt = g.gate;
-    expect(g.digPool([{ i: gt.i - 2, j: gt.j + 4 }, { i: gt.i - 1, j: gt.j + 4 }, { i: gt.i - 2, j: gt.j + 5 }, { i: gt.i - 1, j: gt.j + 5 }]).ok).toBe(true);
-    const p = g.pools.all[0]!;
+    const pp = makeTestPpaji(g, 2, 2); // P49-b D59: 뭍 풀 금지 — 빠지(데크 링)로. 안 물 2×2 = 4칸 (아래 「4칸 풀은 딸기 1개」가 칸 수에 걸려 있다)
+    expect(pp.id).not.toBeNull();
+    const p = g.pools.at(pp.tiles[0]!.i, pp.tiles[0]!.j)!;
+    expect(p.tiles.length).toBe(4);
     const pv = g.previewItem(p.id, 'strawberry')!;
     expect(pv.states.before.color).toBe('clear');
     expect(pv.states.after.color).toBe('pink');

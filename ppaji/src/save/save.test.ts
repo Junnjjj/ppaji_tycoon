@@ -3,21 +3,31 @@ import { TICKS_PER_DAY } from '../sim/clock.js';
 import { migrate, MIGRATIONS, SAVE_VERSION, save, load } from './save.js';
 import { Game } from '../sim/game.js';
 import { scoreOf, carryoverOf, applyCarryover } from '../sim/endgame.js';
+import { loadProfile, saveProfile } from './profile.js';
 
 const mem = (): Pick<Storage, 'getItem' | 'setItem' | 'removeItem'> => { const m = new Map<string, string>(); return { getItem: (k) => m.get(k) ?? null, setItem: (k, v) => { m.set(k, v); }, removeItem: (k) => { m.delete(k); } }; };
 
 describe('세이브 마이그레이션', () => {
-  it('체인 길이 = 버전 − 1, v1 세이브가 v2 로 올라오며 새 필드가 기본값', () => {
+  it('체인 길이 = 버전 − 1, v1 → v2 단계가 새 필드를 기본값으로 채운다 · v3 이하는 P48-b1(지형이 다르다)에서 새 판(null)', () => {
     expect(MIGRATIONS.length).toBe(SAVE_VERSION - 1);
     const g = new Game(1);
     const v1 = { version: 1, savedAt: 'x', game: { ...g.toSnapshot() } } as unknown as Record<string, unknown>;
     delete (v1['game'] as Record<string, unknown>)['ticketBonus'];
     delete (v1['game'] as Record<string, unknown>)['endingSeen'];
-    const out = migrate(v1);
-    expect(out?.version).toBe(2);
-    expect(out?.game.ticketBonus).toBe(0);
-    expect(out?.game.endingSeen).toBe(false);
-    expect(Game.fromSnapshot(out!.game).toSnapshot().ticketBonus).toBe(0);
+    const step = MIGRATIONS[0]!(v1) as { version: number; game: { ticketBonus: number; endingSeen: boolean } };
+    expect(step.version).toBe(2);
+    expect(step.game.ticketBonus).toBe(0);
+    expect(step.game.endingSeen).toBe(false);
+    expect(migrate(v1)).toBeNull(); // v3 → v4 가 새 판
+  });
+  it('P43 — 격자 크기가 다른 옛 세이브(64×48)는 null(새 판)', () => {
+    const g = new Game(1);
+    const old = { version: 2, savedAt: 'x', game: { ...g.toSnapshot(), grid: { w: 64, h: 48, floor: new Array(64 * 48).fill(1) } } } as unknown as Record<string, unknown>;
+    expect(migrate(old)).toBeNull();
+    const cur = { version: 2, savedAt: 'x', game: g.toSnapshot() } as unknown as Record<string, unknown>;
+    expect(migrate(cur)).toBeNull(); // P48-b1: v3 이하는 전부 새 판
+    const now = { version: SAVE_VERSION, savedAt: 'x', game: g.toSnapshot() } as unknown as Record<string, unknown>;
+    expect(migrate(now)?.version).toBe(SAVE_VERSION);
   });
   it('모르는 버전은 null', () => {
     expect(migrate({ version: 99 })).toBeNull();
@@ -79,5 +89,20 @@ describe('엔딩 · 뉴게임+', () => {
     const c2 = carryoverOf(n, c);
     expect(c2.runs).toBe(2);
     expect(c2.bestScore).toBeGreaterThanOrEqual(c.bestScore);
+  });
+});
+
+describe('프로필 v2 (P53-b)', () => {
+  it('저장소 왕복 — 로더가 v2 를 버리면 엔딩 뒤 배속·NG+ 가 조용히 죽는다(하네스 G11 이 잡았다) · v1 도 그대로 읽는다', () => {
+    const g = new Game(7); g.money = 1e6;
+    const c = carryoverOf(g, null);
+    expect(c.version).toBe(2);
+    const store = new Map<string, string>();
+    saveProfile(c, { setItem: (k, v) => { store.set(k, v); } });
+    expect(loadProfile({ getItem: (k) => store.get(k) ?? null })).toEqual(c);
+    store.set('pj.profile', JSON.stringify({ version: 1, recipes: [], cookingExp: 0, facilities: [], gifts: [], tiles: ['pink'], ticketBase: 200, bestScore: 0, runs: 1 }));
+    expect(loadProfile({ getItem: (k) => store.get(k) ?? null })?.version).toBe(1);
+    store.set('pj.profile', JSON.stringify({ version: 9 }));
+    expect(loadProfile({ getItem: (k) => store.get(k) ?? null })).toBeNull();
   });
 });

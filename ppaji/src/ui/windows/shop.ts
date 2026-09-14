@@ -1,18 +1,28 @@
+/**
+ * 장날(Pumpkin Products) — 17:00 입고 6칸. 사면 종류가 해금된다.
+ * P56-a D6 (원작 G5): **빈 상태가 없다** — 17시 전엔 오늘 올 수 있는 후보가 전부 잠긴 카드로 서고, 진열된 것만 살 수 있다.
+ * 카드 = 그림(시설 스프라이트 · 아이템/선물 등록부) + 가격 + 잠금/SOLD OUT. 탭 = 확인 대화 → 구입.
+ */
 import { el } from '../dom.js';
 import { confirmDialog } from '../dialog.js';
 import { WindowPanel } from '../window.js';
+import { PictureGrid, type PictureCard } from '../picture-grid.js';
+import { canvasPictureEl, pictureEl, pictureId } from '../pictures.js';
 import type { Game } from '../../sim/game.js';
+import type { ShopEntry } from '../../data/schema.js';
 
-const KIND_KO = { facility: '시설', item: '아이템', gift: '선물' } as const;
+const KIND_KO = { facility: '시설', item: '소품', gift: '선물' } as const;
 
-/** 상점(Pumpkin Products) — 17:00 입고 6칸. 사면 종류가 해금된다 */
 export class ShopWindow {
   private readonly win: WindowPanel;
-  private readonly body = el('div', 'krows');
+  private readonly head = el('div', 'krow');
+  private readonly grid: PictureGrid;
+  private readonly sold = new Set<string>();
 
-  constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: { toast(t: string, ok: boolean): void; onChanged(): void; name(kind: 'facility' | 'item' | 'gift', ref: string): string }) {
+  constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: { toast(t: string, ok: boolean): void; onChanged(): void; name(kind: 'facility' | 'item' | 'gift', ref: string): string; sprite(facId: string): HTMLCanvasElement | null }) {
     this.win = new WindowPanel(parent, 'win-shop', '장날', 'green');
-    this.win.body.append(this.body);
+    this.grid = new PictureGrid({ name: 'shop', onTap: (c) => this.tap(c) });
+    this.win.body.append(this.head, this.grid.root);
   }
 
   show(): void {
@@ -20,33 +30,47 @@ export class ShopWindow {
     this.win.show();
   }
 
+  private art(e: ShopEntry): HTMLElement {
+    if (e.kind === 'facility') return canvasPictureEl(this.host.sprite(e.ref), 'build');
+    return pictureEl(pictureId(e.kind === 'item' ? 'item' : 'gift', e.ref), e.kind === 'item' ? 'pool' : 'gift');
+  }
+
   render(): void {
     const g = this.game();
-    this.body.replaceChildren();
-    const head = el('div', 'krow');
-    head.append(el('span', 'krow-k', '입고'), el('span', 'krow-v', g.shop.state.restockDay < 0 ? '첫 입고는 17:00' : `${g.shop.state.restockDay + 1}일차 17:00 · 랭크 ${g.rank} 진열`));
-    this.body.append(head);
+    this.head.replaceChildren();
+    const stocked = g.shop.state.restockDay >= 0;
+    this.head.append(el('span', 'krow-k', '입고'), el('span', 'krow-v', !stocked ? '첫 입고는 17:00 — 잠긴 카드가 오늘의 후보' : `${g.shop.state.restockDay + 1}일차 17:00 · 랭크 ${g.rank} 진열`));
     const stock = g.shopStock();
-    if (stock.length === 0) {
-      const empty = el('div', 'krow');
-      empty.append(el('span', 'krow-k', '진열이 비었다 — 17시에 새로 들어온다'));
-      this.body.append(empty);
-    }
+    const stockIds = new Set(stock.map((e) => e.id));
+    const cards: PictureCard[] = [];
     for (const e of stock) {
-      const row = el('button', 'krow kcard-row');
-      row.type = 'button';
-      row.dataset['shop'] = e.id;
-      row.disabled = e.price > g.money;
-      const text = el('span', 'krow-text');
-      text.append(el('span', 'krow-name', this.host.name(e.kind, e.ref)), el('span', 'krow-sub', `${KIND_KO[e.kind]} · 티어 ${e.tier}`));
-      row.append(text, el('span', 'krow-v', `${e.price.toLocaleString('ko-KR')}G`));
-      row.addEventListener('click', () => confirmDialog({ title: `${this.host.name(e.kind, e.ref)} 을 살까요?`, body: `${KIND_KO[e.kind]} · 티어 ${e.tier}`, cost: e.price, onYes: () => {
-        const r = g.buyShop(e.id);
-        this.host.toast(r.ok ? `${this.host.name(e.kind, e.ref)} 구입 · −${e.price.toLocaleString('ko-KR')}G` : r.reason, r.ok);
-        if (r.ok) this.host.onChanged();
-        this.render();
-      } }));
-      this.body.append(row);
+      const name = this.host.name(e.kind, e.ref);
+      cards.push({ id: e.id, name, art: this.art(e), sub: `${KIND_KO[e.kind]} · 티어 ${e.tier}`, price: `${e.price.toLocaleString('ko-KR')}G`, desc: e.price > g.money ? '돈이 모자란다' : '탭하면 산다 — 사면 종류가 열린다', disabled: e.price > g.money, data: { shop: e.id } });
     }
+    for (const id of this.sold) {
+      const e = g.shop.entries.get(id);
+      if (!e || stockIds.has(id)) continue;
+      cards.push({ id: e.id, name: this.host.name(e.kind, e.ref), art: this.art(e), sub: `${KIND_KO[e.kind]} · 티어 ${e.tier}`, price: `${e.price.toLocaleString('ko-KR')}G`, badge: 'soldout', disabled: true, desc: '오늘 산 것', data: { shopSold: e.id } });
+    }
+    // 잠긴 후보 — 진열에 없는 랭크 이하 후보 전부 (G5: 빈 상태 대신 「입고 대기」)
+    for (const e of g.shopCandidates()) {
+      if (stockIds.has(e.id) || this.sold.has(e.id)) continue;
+      cards.push({ id: e.id, name: this.host.name(e.kind, e.ref), art: this.art(e), sub: `${KIND_KO[e.kind]} · 티어 ${e.tier}`, price: `${e.price.toLocaleString('ko-KR')}G`, badge: 'lock', disabled: true, desc: stocked ? '오늘 진열엔 없다 — 내일 17시 뽑기' : '17시 입고를 기다린다', data: { shopLocked: e.id } });
+    }
+    this.grid.render(cards);
+  }
+
+  private tap(c: PictureCard): void {
+    const g = this.game();
+    if (!c.data?.['shop']) return;
+    const e = g.shop.entries.get(c.id);
+    if (!e) return;
+    const name = this.host.name(e.kind, e.ref);
+    confirmDialog({ title: `${name} 을 살까요?`, body: `${KIND_KO[e.kind]} · 티어 ${e.tier}`, cost: e.price, onYes: () => {
+      const r = g.buyShop(e.id);
+      this.host.toast(r.ok ? `${name} 구입 · −${e.price.toLocaleString('ko-KR')}G` : r.reason, r.ok);
+      if (r.ok) { this.sold.add(e.id); this.host.onChanged(); }
+      this.render();
+    } });
   }
 }

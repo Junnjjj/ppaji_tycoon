@@ -5,7 +5,7 @@
 import eventsJson from '../data/events.json';
 import type { Rng } from './rng.js';
 
-export interface EventEffect { arrivalMul?: number; popBonus?: number; days?: number; likes?: number; money?: number; clean?: number }
+export interface EventEffect { arrivalMul?: number; popBonus?: number; days?: number; likes?: number; money?: number; clean?: number; /** P52-c 장마 유실 — 물 위 기구마다 이 확률로 떠내려간다(앵커 개조판 면제) */ rigLoss?: number; /** P52-c — 야외 수역 폐쇄 일수(입수 0) */ waterClosedDays?: number }
 export interface EventChoice { label: string; cost?: number; effect: EventEffect }
 export interface RandomEventDef { id: string; name: string; text: string; weight: number; season?: number[]; minYear?: number; weekend?: boolean; choices: EventChoice[] }
 export interface Buff { arrivalMul: number; popBonus: number; until: number }

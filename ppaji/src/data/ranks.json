@@ -15,7 +15,21 @@
     "reward": {
       "kind": "facility",
       "id": "diving"
-    }
+    },
+    "unlocks": [
+      "entrance",
+      "bbq_zone",
+      "chicken",
+      "footvolley",
+      "rent_kayak",
+      "locker_row",
+      "hydrangea",
+      "playground",
+      "rig_blob",
+      "rig_roller",
+      "rig_sunbed",
+      "rig_rack"
+    ]
   },
   {
     "star": 2,
@@ -31,13 +45,25 @@
       },
       {
         "kind": "friends",
-        "min": 10
+        "min": 9
       }
     ],
     "reward": {
       "kind": "unlock",
       "id": "cooking"
-    }
+    },
+    "unlocks": [
+      "cafe",
+      "karaoke",
+      "arcade",
+      "rent_sup",
+      "fishing",
+      "hibiscus",
+      "minigolf",
+      "rig_slidedock",
+      "rig_float_bar",
+      "rescue_dock"
+    ]
   },
   {
     "star": 3,
@@ -53,7 +79,12 @@
       },
       {
         "kind": "friends",
-        "min": 18
+        "min": 14
+      },
+      {
+        "kind": "seatGrade",
+        "min": 3,
+        "count": 3
       }
     ],
     "reward": {
@@ -75,13 +106,16 @@
       },
       {
         "kind": "friends",
-        "min": 30
+        "min": 26
       }
     ],
     "reward": {
       "kind": "money",
       "amount": 15000
-    }
+    },
+    "unlocks": [
+      "rig_jump_tower"
+    ]
   },
   {
     "star": 5,
@@ -89,7 +123,7 @@
     "conditions": [
       {
         "kind": "popularity",
-        "min": 4200
+        "min": 4000
       },
       {
         "kind": "certPasses",
@@ -97,7 +131,7 @@
       },
       {
         "kind": "friends",
-        "min": 44
+        "min": 38
       },
       {
         "kind": "areas",
@@ -107,6 +141,9 @@
     "reward": {
       "kind": "facility",
       "id": "golden_kairobot"
-    }
+    },
+    "unlocks": [
+      "rig_disc"
+    ]
   }
 ]

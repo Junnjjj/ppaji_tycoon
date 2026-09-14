@@ -37,6 +37,9 @@
   --row-bg: #fae8c2;
   --row-edge: #a98a4c;
   --row-on: #1f6f77;
+  --card-on: #ffd95a; /* P56-a 카드 선택 = 노란 채움(원작 카탈로그) — 진갈 글씨 --ink 와 4.5:1 이상 */
+  --card-price: #8a3417; /* P56-a 카드 우하 가격 — 크림 카드 위 4.5:1 (--daypart 는 3.9 라 못 쓴다) */
+  --pic-sheet: none; --pic-x: 0px; --pic-y: 0px; --pic-w: 24px; --pic-h: 24px; /* P56-a 그림 등록부 — 값은 pictureEl 이 인라인으로 준다(데이터) */
   --ink: #16323a; /* P12 청록-남색 잉크 */
   --ink-dim: #5a5030;
   --scrim: rgb(8 30 36 / 45%);
@@ -67,6 +70,11 @@
   --icon-w: #ffffff;
 
   /* ── 지형 타일 (assets/draw/tiles.ts 가 읽는다) ── */
+  --wall-door: #8c5e2b; /* P39 문 표식 */
+  --wall-face: #f4ead6; /* P43 벽면 — 크림 회벽. P44-b: 북·남 변(빛 받는 면) */
+  --wall-face-dark: #d9c9a8; /* P44-b 서·동 변(그늘 면) — 두 톤이라야 입체로 읽힌다 */
+  --lamp-glow: #ffe9a8;
+  --wall-top: #6b5330; /* 벽 윗선·문기둥 */
   --tile-sand: #e8d5a3;
   --tile-sand-dot: #d9c28a;
   --tile-sand-lt: #f3e6c0;
@@ -89,6 +97,33 @@
   --tile-deck: #c9975a;
   --tile-deck-dot: #a0733d;
   --tile-deck-lt: #dcb079;
+  /* P22 지면 5종 — 절차 폴백 색 (아틀라스가 있으면 안 쓰인다) */
+  --tile-sandpath: #b9b3a6;
+  --tile-sandpath-dot: #8f887a;
+  --tile-sandpath-lt: #d6d0c4;
+  --tile-hall: #e3dccb; /* P45-a 실내 복도(절차 폴백) */
+  --tile-hall-dot: #c4bba6;
+  --tile-hall-lt: #f3efe4;
+  --tile-rock: #a39a8c; /* P44 암반 */
+  --tile-rock-dot: #857c6f;
+  --tile-rock-lt: #bdb4a6;
+  --tile-road: #6f7079; /* P43 도시 띠 차도 */
+  --tile-road-dot: #5b5c65;
+  --tile-road-lt: #8b8c96;
+  --tile-sidewalk: #d9c8b0;
+  --tile-sidewalk-dot: #b39c7c;
+  --tile-sidewalk-lt: #ece0cd;
+  --tile-woodpath: #b98552;
+  --tile-woodpath-dot: #8d6238;
+  --tile-woodpath-lt: #d5a473;
+  --tile-flowerbed: #6fb84a;
+  --tile-flowerbed-dot: #e85d8a;
+  --tile-flowerbed-lt: #f5c04a;
+  --tile-flowerbed-white: #fff7f0;
+  --star-dim: #b9ab90;
+  --tile-gravel: #a9a59c;
+  --tile-gravel-dot: #7f7b73;
+  --tile-gravel-lt: #c8c4bb;
   --buoy-line: #f28c28;
   --buoy-line-alt: #ffffff;
   --course-route: #247faa;
@@ -111,6 +146,15 @@
   --fx-coin: #ffe45c;
   --fx-stroke: #0f3038;
   --fx-ok: #ffffff;
+  /* P56-a2 D7 — 구매 카드·팔찌 띠 (지도 위 FX) */
+  --fx-card: #fff3d6;
+  --scene-bg: none; /* P56-b2 장면 배경 — 각 무대가 인라인으로 url 을 준다(경로는 데이터) */
+  --fx-ink: #3a2410;
+  --band-0: #9aa8b0;
+  --band-1: #4fb36a;
+  --band-2: #3f8fd8;
+  --band-3: #b04fd8;
+  --band-4: #e6a11c;
   --fx-bad: #ff5a5a;
   --fx-star: #ffe45c;
   --fx-heart: #ff5d8a;
@@ -137,7 +181,6 @@
   --rain: #7fb0ff;
   --snow: #ffffff;
   --wall: #7fb8e6;
-  --wall-glass: #ffffff;
   --grass-season-0: #d9ffb0;
   --grass-season-1: #ffffff;
   --grass-season-2: #ffd08a;
@@ -210,6 +253,19 @@
   --fac-decor: #58c25a;
   --fac-decor-lit: #9ae08c;
   --fac-decor-mark: #2f8a3a;
+  /* P52-b 위험 4단 — 확정 바 칩 면(흰 글씨 4.5:1) */
+  --risk-0: #1f6f2c;
+  --risk-1: #7d5c05;
+  --risk-2: #9c4116;
+  --risk-3: #b3261e;
+  /* P50-b2 빠지 — 꺼진 기구 틴트(회색 물때 아니라 청회) · 등급별 폰툰 색 0~4 · 이음쇠 */
+  --rig-dim: #55697c;
+  --rig-link: #ffd35a;
+  --pontoon-g0: #ffffff;
+  --pontoon-g1: #fff2b0;
+  --pontoon-g2: #ffd680;
+  --pontoon-g3: #ff9a2e;
+  --pontoon-g4: #ff6a3d;
   --pool-clear: #a6dcff;
   --pool-orange: #ffb070;
   --pool-yellow: #fff08a;
@@ -724,6 +780,10 @@ html[data-ui-surface='pool'] #hud-right { display: flex; opacity: 0.45; }
   cursor: pointer;
 }
 .kchip.on { background: var(--row-on); color: var(--btn-ink); }
+.kchip.krisk-0 { background: var(--risk-0); color: var(--btn-ink); }
+.kchip.krisk-1 { background: var(--risk-1); color: var(--btn-ink); }
+.kchip.krisk-2 { background: var(--risk-2); color: var(--btn-ink); }
+.kchip.krisk-3 { background: var(--risk-3); color: var(--btn-ink); }
 .kchip:disabled { opacity: 0.5; cursor: default; }
 .kdock-status { font-size: var(--fs-tiny); color: var(--strip-sub); }
 
@@ -744,7 +804,9 @@ html[data-ui-surface='pool'] #hud-right { display: flex; opacity: 0.45; }
 .khide { display: none !important; }
 .kslots { display: flex; flex-direction: column; gap: 4px; }
 .kchips.kwrap { flex-wrap: wrap; overflow: visible; }
+.kresult { display: block; flex: 0 0 auto; padding: 6px; border-radius: 10px; }
 .kresult[data-outcome='new'] { background: var(--row-on); color: var(--btn-ink); }
+.kresult[data-outcome='new'] .kscene-title { color: var(--btn-ink); }
 .kresult[data-outcome='fail'] { opacity: 0.85; }
 
 /* ═══ G8 — 메인 메뉴 리스트 (카이로 문법) ═══════════════════════════ */
@@ -987,3 +1049,86 @@ html:not([data-ui-surface='home']) .ktut { display: none; }
 #dock-course .kchips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
 #dock-course .kchips::-webkit-scrollbar { display: none; }
 #dock-course .kchip { flex: 0 0 auto; min-width: var(--tap); }
+
+/* P24 자리 등급 별 — 채운 별은 --accent, 빈 별은 흐리게 */
+.kstars { display: inline-flex; gap: 2px; vertical-align: middle; }
+.kstars .kdim { opacity: 0.3; }
+
+/* ── P56-a 그림 우선 — 등록부 그림 · 카드 격자 · 결과 장면 카드 (원작 카탈로그 문법, docs/plan-ppaji-picture-ui.md D1~D5) ── */
+.kpic { display: inline-block; width: var(--pic-w); height: var(--pic-h); background-image: var(--pic-sheet); background-position: var(--pic-x) var(--pic-y); background-repeat: no-repeat; image-rendering: pixelated; }
+.kpic.kpic-canvas { width: auto; height: auto; display: inline-flex; align-items: flex-end; justify-content: center; background: none; }
+.kpic.kpic-canvas canvas { max-width: 64px; max-height: 56px; image-rendering: pixelated; }
+.kpic-fb { width: 24px; height: 24px; } /* 폴백 계열 아이콘 — 그림 자리와 같은 크기 */
+.kpgrid-wrap { display: flex; flex-direction: column; gap: 6px; flex: 0 0 auto; }
+.kpgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.kpgrid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.kpgrid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.kpcard { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; min-height: 96px; padding: 6px 4px 4px; border: 2px solid var(--win-border); border-radius: 10px; background: var(--win-flat); color: var(--ink); font-family: inherit; font-size: var(--fs-tiny); cursor: pointer; overflow: hidden; }
+.kpcard.on { background: var(--card-on); border-color: var(--btn-edge); }
+.kpcard.locked, .kpcard:disabled { opacity: 0.55; cursor: default; }
+.kpcard.silhouette .kpcard-art { filter: brightness(0) opacity(0.35); }
+.kpcard-art { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; flex: 1 1 auto; min-height: 52px; }
+.kpcard-art .kpic, .kpcard-art .kpic-fb { transform: scale(2); transform-origin: center; } /* 24텍셀 → 48px: 카드 안에서 크게 */
+.kpcard-art .kpic-canvas { transform: none; }
+.kpcard-name { font-weight: 800; line-height: 1.15; text-align: center; max-height: 2.3em; overflow: hidden; }
+.kpcard-n { position: absolute; left: 0; bottom: 0; font-weight: 900; color: var(--ink-dim); }
+.kpcard-cost { position: absolute; right: 0; bottom: 0; font-weight: 900; color: var(--card-price); }
+.kpcard-badge { position: absolute; right: 3px; top: 3px; padding: 1px 5px; border-radius: 6px; background: var(--row-on); color: var(--btn-ink); font-weight: 800; }
+.kpcard-badge.new { background: var(--badge); }
+.kpcard-ribbon { position: absolute; left: -22px; top: 12px; width: 120px; transform: rotate(-20deg); background: var(--badge); color: var(--btn-ink); font-weight: 900; text-align: center; letter-spacing: 0.04em; }
+.kpfoot { display: flex; flex-direction: column; gap: 2px; padding: 6px 8px; border: 2px solid var(--win-border); border-radius: 8px; background: var(--row-bg); min-height: calc(var(--tap) + 8px); }
+.kpfoot-line { display: flex; align-items: center; gap: 8px; min-height: 22px; }
+.kpfoot-name { font-weight: 900; flex: 0 1 auto; }
+.kpfoot-sub { color: var(--ink-dim); font-size: var(--fs-tiny); flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kpfoot-count { font-weight: 800; color: var(--row-on); flex: 0 0 auto; }
+.kpfoot-desc { color: var(--ink-dim); font-size: var(--fs-tiny); min-height: 1.2em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kpfoot.empty .kpfoot-desc { color: var(--ink-soft); }
+.kpslots { display: flex; gap: 6px; flex: 0 0 auto; }
+.kpslot { flex: 1 1 0; min-width: 0; min-height: var(--tap); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 2px dashed var(--row-edge); border-radius: 8px; background: var(--row-bg); color: var(--ink-dim); font-family: inherit; font-size: var(--fs-tiny); cursor: pointer; }
+.kpslot.on { border-style: solid; border-color: var(--win-border); background: var(--win-flat); color: var(--ink); }
+.kpslot .kpic, .kpslot .kpic-fb { transform: scale(1.5); transform-origin: center; margin: 4px 0; }
+.kgauge { display: inline-flex; gap: 2px; }
+.kgauge-cell { width: 8px; height: 12px; border-radius: 2px; background: var(--row-edge); }
+.kgauge-cell.on { background: var(--row-on); }
+.kscene { display: flex; flex-direction: column; gap: 6px; flex: 0 0 auto; }
+.kscene-title { font-weight: 900; }
+.kscene-stage { position: relative; display: flex; align-items: flex-end; justify-content: center; gap: 12px; padding: 14px 8px 12px; border-radius: 10px; border: 2px solid var(--win-border); background: linear-gradient(180deg, var(--tile-pool) 0%, var(--tile-sand-lt) 100%); overflow: hidden; }
+.kscene-stage .kportrait { width: 30px; height: 30px; border-radius: 6px; background: var(--btn-blue); border: 1px solid var(--btn-edge); display: flex; align-items: center; justify-content: center; overflow: hidden; flex: 0 0 auto; }
+.kscene-art { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 56px; }
+.kscene-art .kpic, .kscene-art .kpic-fb { transform: scale(3); transform-origin: center; margin: 24px 20px; }
+.kscene-arrow { font-weight: 900; color: var(--ink); }
+.kscene-score { position: absolute; right: 8px; bottom: 8px; display: inline-flex; gap: 6px; align-items: baseline; padding: 2px 8px; border-radius: 999px; background: var(--row-on); color: var(--btn-ink); font-weight: 900; }
+.kscene-score-k { font-size: var(--fs-tiny); }
+.kscene-axes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.kaxis { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 4px; border: 2px solid var(--win-border); border-radius: 8px; background: var(--win-flat); }
+.kaxis-head { display: inline-flex; align-items: center; gap: 4px; color: var(--ink-dim); font-size: var(--fs-tiny); }
+.kaxis-value { font-weight: 900; font-size: var(--fs-lead); color: var(--ink); }
+.kaxis-note { font-size: var(--fs-tiny); color: var(--row-on); font-weight: 800; }
+.kpconvert { display: flex; flex-direction: column; gap: 6px; padding: 6px; border: 2px solid var(--win-border); border-radius: 10px; background: var(--win-flat); }
+.kpconvert-diff { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.kcond-say { position: relative; flex: 1 1 auto; min-width: 0; padding: 4px 8px; border-radius: 10px; background: var(--bubble-bg); color: var(--bubble-ink); border: 1px solid var(--win-border); font-size: var(--fs-tiny); }
+
+/* ═══ P56-a2 — 그림 문법 나머지: 보상 그림 · 편지 위 물건 · 소품 격자(독) · 팔찌 카드 ═══ */
+.kreward-art { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; flex: 0 0 32px; }
+.kcele-pic { transform: scale(2); transform-origin: center; }
+.kcele-pic.kpic-canvas { transform: none; }
+#dock-pool .kitem-grid { display: block; max-height: 38vh; overflow-y: auto; }
+#dock-pool .kitem-grid .kpgrid { grid-template-columns: repeat(4, 1fr); }
+#dock-pool .kitem-grid .kpcard-art { min-height: 40px; }
+.kband-gauge { margin-left: auto; margin-right: 8px; }
+[data-grid="bands"] .kpcard-art { min-height: 44px; }
+
+/* ═══ P56-b2 — 장면 배경 · 인물 초상 그림 ═══════════════════════════ */
+.kscene-stage[data-bg] { background-image: var(--scene-bg); background-size: cover; background-position: center; image-rendering: pixelated; }
+.kscene-stage[data-bg] .kscene-score { background: var(--row-on); }
+.kpaper-photo[data-bg] { background-image: var(--scene-bg); background-size: cover; background-position: center; image-rendering: pixelated; }
+.kprev-head[data-bg] { background-image: var(--scene-bg); background-size: cover; background-position: center; image-rendering: pixelated; border-radius: 8px; padding: 6px 8px; }
+.kprev-head[data-bg] .kprev-title, .kprev-head[data-bg] .knum { background: var(--win-flat); border-radius: 6px; padding: 1px 6px; }
+.kportrait .kpic.kportrait-pic { transform: scale(0.75); transform-origin: center; }
+.kscene-stage .kportrait .kpic.kportrait-pic { transform: scale(0.9); }
+.kportrait.small .kpic.kportrait-pic { transform: scale(0.56); }
+.kportrait.big .kpic.kportrait-pic { transform: scale(1.1); }
+.kchip.kchip-pic { display: inline-flex; align-items: center; gap: 4px; }
+.kchip.kchip-pic .kpic, .kchip.kchip-pic .kpic-fb { transform: scale(0.75); transform-origin: center; margin: -4px -2px; } /* P56-b3 코스 독 기구 칩 그림(32px → 24px 자리) */
+.kmenu-pics { display: inline-flex; gap: 2px; margin-right: 6px; vertical-align: middle; }
+.kmenu-pic { display: inline-flex; width: 24px; height: 24px; align-items: center; justify-content: center; } /* P56-b3 시설 정보 걸린 메뉴 그림 — 같은 줄 안(새 줄 금지: 아래 버튼이 화면 밖으로) */

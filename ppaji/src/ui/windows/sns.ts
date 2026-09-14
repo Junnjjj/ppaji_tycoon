@@ -8,6 +8,9 @@ import { confirmDialog } from '../dialog.js';
 import { drawPortrait } from '../../assets/draw/portrait.js';
 import { iconEl } from '../icons.js';
 import { WindowPanel } from '../window.js';
+import { rewardArt, type SpriteFn } from '../reward-art.js';
+import { pictureEl, pictureId } from '../pictures.js';
+import { PictureGrid, type PictureCard } from '../picture-grid.js';
 import type { Game } from '../../sim/game.js';
 import { ITEM_DEFS } from '../../sim/game.js';
 import type { Post } from '../../sim/sns.js';
@@ -26,7 +29,7 @@ export class SnsWindow {
   /** 검사용 — 아직 안 연 상자 수 */
   unopenedForTest(): number { const g = this.game(); let n = 0; for (const st of g.sns.unlockedFriends) for (const idx of st.done) if (!this.opened.has(`${st.id}:${idx}`)) n++; return n; }
 
-  constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: { thumb(post: Post): HTMLCanvasElement | null; toast(t: string, ok: boolean): void; onChanged(): void; celebrate?(text: string): void }) {
+  constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: { thumb(post: Post): HTMLCanvasElement | null; toast(t: string, ok: boolean): void; onChanged(): void; celebrate?(text: string): void; sprite?: SpriteFn }) {
     this.win = new WindowPanel(parent, 'win-sns', 'SNS', 'pink');
     for (const [id, label] of [['timeline', '타임라인'], ['messages', '메시지'], ['friends', '친구']] as const) {
       const b = el('button', 'ktab');
@@ -124,7 +127,8 @@ export class SnsWindow {
       text.append(nameEl);
       text.append(el('span', 'krow-sub', `${v.label} · ${v.met ? '충족 (오늘 마감에 달성)' : `진행 ${Math.round(v.progress * 100)}%`} · 창 ${Math.max(0, friend.windowUntilDay - g.day)}일 남음`));
       const reward = el('span', 'krow-v', rewardLabel(g, wish.reward) + invitedLabel(g, friend.id, wish.idx + 1));
-      row.append(face, text, reward);
+      const art = el('span', 'kreward-art'); art.append(rewardArt(wish.reward, this.host.sprite)); // P56-a2 D8: 보상은 그림 카드
+      row.append(face, text, art, reward);
       this.body.append(row);
     }
     // 완료된 소원 (기록)
@@ -134,7 +138,8 @@ export class SnsWindow {
         if (!wish) continue;
         const row = el('div', 'krow kwish done');
         const key = `${st.id}:${idx}`;
-        row.append(el('span', 'krow-k', `${g.sns.friendDef(st.id)?.name ?? st.id} 소원 ${idx + 1}단계 달성`), el('span', 'krow-v', rewardLabel(g, wish.reward)));
+        const doneArt = el('span', 'kreward-art'); doneArt.append(rewardArt(wish.reward, this.host.sprite));
+        row.append(el('span', 'krow-k', `${g.sns.friendDef(st.id)?.name ?? st.id} 소원 ${idx + 1}단계 달성`), doneArt, el('span', 'krow-v', rewardLabel(g, wish.reward)));
         if (!this.opened.has(key)) {
           // 「받기」 연출 (G27) — 보상은 이미 sim 이 줬다. 상자를 여는 것은 표현이다 (모달 아님)
           const b = el('button', 'kbtn primary kopen', '상자 열기');
@@ -199,29 +204,32 @@ export class SnsWindow {
     this.body.append(back);
     const name = g.sns.friendDef(friendId)?.name ?? friendId;
     const st = g.sns.friends.get(friendId);
+    // P56-b3 — 선물 고르기는 그림 카드 격자(손님 창과 같은 문법)
+    const cards: PictureCard[] = [];
     for (const gift of g.sns.giftsById.values()) {
       if (!g.unlocked.gifts.has(gift.id)) continue;
-      const row = el('button', 'krow kcard-row');
-      row.type = 'button';
-      row.dataset['giftId'] = gift.id;
       const given = st?.gifts.includes(gift.id) ?? false;
-      row.disabled = given || gift.price > g.money;
-      const text = el('span', 'krow-text');
-      text.append(el('span', 'krow-name', gift.name), el('span', 'krow-sub', given ? '이미 줬다' : `${gift.kind === 'float' ? '튜브' : '수영복'} · 만족 +${Math.round(gift.price / 8)}`));
-      row.append(text, el('span', 'krow-v', `${gift.price}G`));
-      row.addEventListener('click', () => confirmDialog({ title: `${name}에게 ${gift.name}을 줄까요?`, body: `만족 +${Math.round(gift.price / 8)} · 소원이 빨리 열린다`, cost: gift.price, onYes: () => {
+      const card: PictureCard = { id: gift.id, name: gift.name, art: pictureEl(pictureId('gift', gift.id), 'gift'), price: `${gift.price}G`, sub: gift.kind === 'float' ? '튜브' : '수영복', desc: given ? '이미 줬다' : gift.price > g.money ? '돈이 모자란다' : `탭하면 선물 — 만족 +${Math.round(gift.price / 8)} · 소원이 빨리 열린다`, disabled: given || gift.price > g.money, data: { giftId: gift.id } };
+      if (given) card.badge = { text: '줬음' };
+      cards.push(card);
+    }
+    const grid = new PictureGrid({ name: 'sns-gifts', countLabel: '선물', onTap: (c) => {
+      const gift = g.sns.giftsById.get(c.id);
+      if (!gift) return;
+      confirmDialog({ title: `${name}에게 ${gift.name}을 줄까요?`, body: `만족 +${Math.round(gift.price / 8)} · 소원이 빨리 열린다`, cost: gift.price, onYes: () => {
         const r = g.giveGift(friendId, gift.id);
         this.host.toast(r.ok ? `${name}에게 ${gift.name} 선물 · −${gift.price}G` : r.reason, r.ok);
         if (r.ok) this.host.onChanged();
         this.tab = 'friends';
         this.render();
-      } }));
-      this.body.append(row);
-    }
+      } });
+    } });
+    grid.render(cards);
+    this.body.append(grid.root);
   }
 }
 
-function rewardLabel(g: Game, r: { kind: string; id?: string; amount?: number }): string {
+export function rewardLabel(g: Game, r: { kind: string; id?: string; amount?: number }): string {
   if (r.kind === 'money') return `${(r.amount ?? 0).toLocaleString('ko-KR')}G`;
   if (r.kind === 'facility') return `시설: ${g.facilities.def(r.id ?? '')?.name ?? r.id}`;
   if (r.kind === 'gift') return `선물: ${g.sns.giftsById.get(r.id ?? '')?.name ?? r.id}`;

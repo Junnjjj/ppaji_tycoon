@@ -8,14 +8,15 @@
  */
 import Phaser from 'phaser';
 import type { AssetProvider } from '../assets/types.js';
-import { Grid, FLOOR, FLOOR_NAMES, gateTile, type FloorCode, isRiverRow, isWaterCode } from '../sim/grid.js';
+import { Grid, FLOOR, FLOOR_NAMES, ROAD_ROWS, STOP_ROW, CITY_BAND, GRID_W as GW, gateTile, landRect, isIndoorCode, type FloorCode, isWaterCode } from '../sim/grid.js';
 import { Camera } from './camera.js';
-import { gridToScreen, screenToTile, depthKey, spanDepthKey, inGrid, tileCenter, Z_GROUND, Z_GUEST, Z_FACILITY, Z_GHOST, DEPTH_AIM_MARK, DEPTH_SCREEN_FX, TILE_W, TILE_H, GRID_W, GRID_H , lift, DEPTH_COURSE_MARK } from './iso.js';
+import { gridToScreen, screenToTile, depthKey, spanDepthKey, inGrid, tileCenter, Z_GROUND, Z_GUEST, Z_FACILITY, Z_WALL_BACK, Z_WALL_FRONT, Z_GHOST, DEPTH_AIM_MARK, DEPTH_SCREEN_FX, TILE_W, TILE_H, GRID_W, GRID_H , lift, DEPTH_COURSE_MARK } from './iso.js';
 import { drawColumn } from './column.js';
 import { WaterGlint } from './water.js';
 import { GUEST_ANCHOR, GUEST_FRAMES, GUEST_H, GUEST_W, guestTextureKey, type GuestPose } from '../assets/draw/guest.js';
 import { drawEmote, drawBattery } from '../assets/draw/emote.js';
-import { drawBus, BUS_W, BUS_H } from '../assets/draw/bus.js';
+import { drawBus, BUS_W, BUS_H, drawBusStop, drawLamp } from '../assets/draw/bus.js';
+import { Surround } from './surround.js';
 import type { BusState } from '../sim/game.js';
 import type { Staff } from '../sim/staff.js';
 import { drawGauge } from '../assets/draw/emote.js';
@@ -57,6 +58,9 @@ export interface SceneDeps {
 const TAP_MOVE_PX = 12;
 const DOUBLE_TAP_MS = 320;
 
+/** P39/P40 — 벽·울타리 높이(텍셀). 손님(24)보다 낮다 — 부모 K25 「벽은 손님보다 낮다」 */
+const WALL_H = 12;
+
 export class WaterparkScene extends Phaser.Scene {
   private readonly tiles: Phaser.GameObjects.Image[] = [];
   private violations: string[] = [];
@@ -78,13 +82,21 @@ export class WaterparkScene extends Phaser.Scene {
   private tint: Phaser.GameObjects.Rectangle | null = null;
   private weatherGfx: Phaser.GameObjects.Graphics | null = null;
   private laneGfx: Phaser.GameObjects.Graphics | null = null;
-  private wallGfx: Phaser.GameObjects.Graphics | null = null;
+  /** P44-b — 벽·울타리·문은 칸마다 뒤/앞 층 하나씩(깊이 띠 Z_WALL_BACK/FRONT). 한 Graphics 에 다 그리면 어떤 깊이든 틀린다(P43: 전부 위에 떠서 「쌓인 띠」로 보였다) */
+  private wallLayers = new Map<string, Phaser.GameObjects.Graphics>();
+  private wallsReady = false;
+
   private season = 0;
   private rainbowTiles: number[] = [];
   private weatherKind: 'rain' | 'snow' | null = null;
   private drops: { x: number; y: number; v: number }[] = [];
   private animFrame = 0;
   readonly facImgs = new Map<number, Phaser.GameObjects.Image>();
+  /** P50-b2 — 꺼진 물 위 기구 uid(틴트 `--rig-dim`) · 링 데크 칸 → 등급 폰툰 색 · 이음쇠 변 */
+  private dimUids = new Set<number>();
+  private ringTint = new Map<number, number>();
+  private rigLinkGfx: Phaser.GameObjects.Graphics | null = null;
+  private rigLinks: readonly { i: number; j: number; dir: 0 | 1 }[] = [];
   private facilitiesRef: readonly PlacedFacility[] = [];
   private staffRef: readonly Staff[] = [];
   private readonly staffImgs = new Map<number, Phaser.GameObjects.Image>();
@@ -133,7 +145,10 @@ export class WaterparkScene extends Phaser.Scene {
     this.tint = this.add.rectangle(0, 0, 4, 4, 0, 0).setOrigin(0, 0).setScrollFactor(0).setDepth(DEPTH_SCREEN_FX - 1);
     this.weatherGfx = this.add.graphics().setScrollFactor(0).setDepth(DEPTH_SCREEN_FX - 2);
     this.laneGfx = this.add.graphics().setDepth(DEPTH_LAND_MARK - 3);
-    this.wallGfx = this.add.graphics().setDepth(DEPTH_LAND_MARK - 4);
+    this.wallsReady = true;
+    this.surround = new Surround(this, (id) => this.deps.provider.canvas(id), -100); // P44 지도 바깥
+    this.surround.build();
+    this.buildTraffic();
     this.applyScale(this.cam.upscale);
     const bootAt = performance.now();
     const st = this.deps.startTile;
@@ -150,6 +165,7 @@ export class WaterparkScene extends Phaser.Scene {
 
   private lastUpdateAt = 0;
   override update(): void {
+    this.stepTraffic(this.game.loop.delta); // P44-d 도로 위 버스 한 대(장식)
     this.frames++;
     { const now = this.time.now; const dt = this.lastUpdateAt ? Math.min(100, now - this.lastUpdateAt) : 16; this.lastUpdateAt = now; this.tickCourseTrial(dt); this.tickCourseBoats(dt); } // P4-B 시험 운행 · P4-C 보트 시계 (트윈 대신)
     this.animFrame++;
@@ -268,7 +284,7 @@ export class WaterparkScene extends Phaser.Scene {
         const p = gridToScreen(i, j);
         // PSS 코핑 = 흰 타일 띠(굵게) + 물 쪽 진한 선 (R6)
         // P1: 강 위 수역은 코핑이 아니라 **부표 줄**(주황·흰 점선). 뭍의 인공 풀은 흰 코핑 그대로
-        const buoy = isRiverRow(j);
+        const buoy = isWaterCode(grid.naturalAt(i, j)); // P48-b1: 자연 바닥이 물이면(본류든 굽이든) 부표 줄, 뭍 풀만 코핑
         const lz = this.liftAt(i, j);
         const edge = (x0: number, y0: number, x1: number, y1: number): void => {
           if (buoy) {
@@ -280,10 +296,12 @@ export class WaterparkScene extends Phaser.Scene {
           g.lineStyle(3, cssColorInt('--pool-coping'), 1); g.beginPath(); g.moveTo(x0, y0 + lz); g.lineTo(x1, y1 + lz); g.strokePath();
           g.lineStyle(1, cssColorInt('--pool-coping-edge'), 0.9); g.beginPath(); g.moveTo(x0, y0 + 1 + lz); g.lineTo(x1, y1 + 1 + lz); g.strokePath();
         };
-        if (!isPool(i - 1, j)) edge(p.x, p.y, p.x - TILE_W / 2, p.y + TILE_H / 2);
-        if (!isPool(i, j - 1)) edge(p.x, p.y, p.x + TILE_W / 2, p.y + TILE_H / 2);
-        if (!isPool(i + 1, j)) edge(p.x + TILE_W / 2, p.y + TILE_H / 2, p.x, p.y + TILE_H);
-        if (!isPool(i, j + 1)) edge(p.x - TILE_W / 2, p.y + TILE_H / 2, p.x, p.y + TILE_H);
+        // P45-a 부표 정리: 강 위 수역의 부표 줄은 **트인 강·여울과 만나는 변에만** — 데크 변은 데크가 곧 경계라 그리면 두 겹으로 겹친다(사용자). 뭍 인공 풀의 코핑은 그대로 네 변
+        const open = (a: number, b: number): boolean => !isPool(a, b) && (!buoy || grid.at(a, b) === FLOOR.river || grid.at(a, b) === FLOOR.shallow);
+        if (open(i - 1, j)) edge(p.x, p.y, p.x - TILE_W / 2, p.y + TILE_H / 2);
+        if (open(i, j - 1)) edge(p.x, p.y, p.x + TILE_W / 2, p.y + TILE_H / 2);
+        if (open(i + 1, j)) edge(p.x + TILE_W / 2, p.y + TILE_H / 2, p.x, p.y + TILE_H);
+        if (open(i, j + 1)) edge(p.x - TILE_W / 2, p.y + TILE_H / 2, p.x, p.y + TILE_H);
       }
     }
   }
@@ -298,8 +316,10 @@ export class WaterparkScene extends Phaser.Scene {
     const tint = this.poolTint.get(j * this.deps.grid.w + i);
     const floor = this.deps.grid.at(i, j);
     if (tint !== undefined && floor === FLOOR.pool) img.setTint(tint);
+    else if (floor === FLOOR.deck && this.ringTint.has(j * this.deps.grid.w + i)) img.setTint(this.ringTint.get(j * this.deps.grid.w + i) as number); // P50-b2 등급별 폰툰 색
     else if (floor === FLOOR.grass) img.setTint(cssColorInt(`--grass-season-${this.season}`) || 0xffffff);
     else img.clearTint();
+    { const land = this.landForTint ?? landRect(this.deps.rank()); const out = j >= CITY_BAND && !isWaterCode(floor) && floor !== FLOOR.deck && !(i >= land.i0 && i < land.i0 + land.w && j >= land.j0 && j < land.j0 + land.h); if (out) { const t = img.tintTopLeft; const r = Math.round(((t >> 16) & 255) * 0.82), g2 = Math.round(((t >> 8) & 255) * 0.82), b = Math.round((t & 255) * 0.82); img.setTint((r << 16) | (g2 << 8) | b); } }
   }
 
   /** 이 칸의 시설 uid — 탭 판정 */
@@ -485,7 +505,7 @@ export class WaterparkScene extends Phaser.Scene {
   private busRoad: { i0: number; i1: number; iStop: number; j: number } | null = null;
   /** 도로 띠 — 토지 아래 두 칸, 게이트 앞에 선다 (G33). 토지가 바뀌면 다시 준다 */
   setBusRoad(gate: { i: number; j: number }, land: { i0: number; w: number }): void {
-    this.busRoad = { i0: land.i0 - 8, i1: land.i0 + land.w + 8, iStop: gate.i, j: gate.j - 2 }; // P15: 도로는 입구 위
+    void land; this.busRoad = { i0: -3, i1: GW + 2, iStop: gate.i, j: ROAD_ROWS[1] as number }; // P43: 도시 띠의 차도(둘째 줄) — 지도 전폭을 달린다
   }
   setBus(state: BusState | null): void {
     this.busRef = state;
@@ -503,6 +523,8 @@ export class WaterparkScene extends Phaser.Scene {
     this.busImg.setDepth(depthKey(Math.round(fi), road.j) + Z_GUEST);
     void BUS_W;
   }
+  /** 검사용 — 차도 줄 (P43: 도시 띠 둘째 차도) */
+  busRoadForTest(): { j: number; i0: number; i1: number } | null { return this.busRoad ? { j: this.busRoad.j, i0: this.busRoad.i0, i1: this.busRoad.i1 } : null; }
   /** 검사용 — 도로 위 버스 위치 */
   busForTest(): { x: number; y: number; phase: string } | null { return this.busImg && this.busRef ? { x: this.busImg.x, y: this.busImg.y, phase: this.busRef.phase } : null; }
 
@@ -542,24 +564,69 @@ export class WaterparkScene extends Phaser.Scene {
   }
 
   private borderImgs: Phaser.GameObjects.Image[] = [];
-  /** 토지 밖 나무 띠 (G25) — PSS 의 「파크 밖 수목」. 토지가 바뀌면 다시 심는다 */
-  drawBorder(land: { i0: number; j0: number; w: number; h: number }): void {
+  private surround: Surround | null = null;
+  surroundCountForTest(): number { return this.surround?.count() ?? 0; }
+  /**
+   * 마당 밖 (G25 → P44): ① 토지 밖 한 줄 나무 띠 ② 들판의 숲(해시로 드문드문, 암반·물·도시 띠 제외) ③ 도시 띠 가로수(0 줄 · 5·7 줄)
+   * ④ 토지 밖 타일을 어둡게(레거시 setLand — 도시 띠·물은 예외: 영원히 못 사는 땅이지 아직 못 산 땅이 아니다) ⑤ 임시 바깥 장식(P44-d). 토지가 바뀌면 다시 심는다 — 새 마당 안의 숲은 사라진다(땅을 넓히면 밭이 된다)
+   */
+  drawBorder(land: { i0: number; j0: number; w: number; h: number }, gate?: { i: number; j: number }): void {
     for (const im of this.borderImgs) im.destroy();
     this.borderImgs = [];
+    const gt = gate ?? gateTile(this.deps.rank());
     const keys = ['fac/banana_tree/0', 'fac/pine/0', 'fac/ficus/0'];
     for (const k of keys) if (!this.textures.exists(k)) { const c = this.deps.provider.canvas(k); if (c) this.textures.addCanvas(k, c); }
+    const grid = this.deps.grid;
+    const inLand = (i: number, j: number): boolean => i >= land.i0 && i < land.i0 + land.w && j >= land.j0 && j < land.j0 + land.h;
     const put = (i: number, j: number, n: number): void => {
       const key = keys[n % keys.length] as string;
-      if (!this.textures.exists(key) || i < 0 || j < 0 || i >= this.deps.grid.w || j >= this.deps.grid.h) return;
-      if (isWaterCode(this.deps.grid.at(i, j)) || this.deps.grid.at(i, j) === FLOOR.deck) return; // P2: 경계 나무는 물·데크 위에 안 선다 (P1 재플레이 실측)
+      if (!this.textures.exists(key) || i < 0 || j < 0 || i >= grid.w || j >= grid.h) return;
+      const c0 = grid.at(i, j);
+      if (isWaterCode(c0) || c0 === FLOOR.deck || c0 === FLOOR.road || c0 === FLOOR.sidewalk) return; // P2: 경계 나무는 물·데크 위에 안 선다
       const c = tileCenter(i, j);
       const img = this.add.image(c.x, c.y + TILE_H / 2 + this.liftAt(i, j), key).setOrigin(0.5, 1).setDepth(depthKey(i, j) + Z_GUEST - 1);
       this.borderImgs.push(img);
     };
     let n = 0;
+    // ① 울타리 밖 나무 띠
     for (let i = land.i0 - 1; i <= land.i0 + land.w; i += 2) { put(i, land.j0 - 2, n++); }
     for (let j = land.j0 - 1; j < land.j0 + land.h; j += 2) { put(land.i0 - 2, j, n++); put(land.i0 + land.w + 1, j, n++); }
+    // ② 들판의 숲 — 마당·띠·물 밖 잔디에 해시로 7%. 울타리 띠와 겹치지 않게 두 칸 띄운다
+    const hash = (i: number, j: number): number => { let x = (i * 73856093) ^ (j * 19349663); x = (x ^ (x >>> 13)) * 1274126177; return ((x ^ (x >>> 16)) >>> 0) / 4294967296; };
+    for (let j = CITY_BAND; j < grid.h; j++) for (let i = 0; i < grid.w; i++) {
+      if (inLand(i, j) || (i >= land.i0 - 2 && i < land.i0 + land.w + 2 && j >= land.j0 - 3 && j < land.j0 + land.h)) continue;
+      const c0 = grid.at(i, j);
+      if (c0 !== FLOOR.grass && c0 !== FLOOR.rock) continue;
+      if (hash(i, j) < 0.07) put(i, j, Math.floor(hash(j, i) * 3));
+    }
+    // ③ 도시 띠 가로수 — 0 줄은 두 칸마다, 광장(5·7 줄)은 세 칸마다 엇갈려. 입구 열 둘레 세 칸은 비운다(정류장에서 정문까지의 시야)
+    for (let i = 0; i < grid.w; i += 2) put(i, 0, n++);
+    for (let i = 1; i < grid.w; i += 3) { if (Math.abs(i - gt.i) <= 3) continue; put(i, STOP_ROW + 2, n++); }
+    for (let i = 2; i < grid.w; i += 3) { if (Math.abs(i - gt.i) <= 3) continue; put(i, STOP_ROW + 4, n++); }
+    // ⑤ P44-d 임시 바깥 장식(sim 밖, 그림은 기존 시설 스프라이트를 빌린다 — 에셋이 오면 교체): 정류장 표지, 가로등, 길 건너 건물 줄, 들판의 이웃 숙소 (주차장은 뺐다 — 사용자)
+    const decor = (key: string, i: number, j: number, oy = 1, dz = Z_GUEST - 1): void => {
+      if (!this.textures.exists(key)) { const c = this.deps.provider.canvas(key); if (c) this.textures.addCanvas(key, c); }
+      if (!this.textures.exists(key)) return;
+      const c = tileCenter(i, j);
+      const img = this.add.image(c.x, c.y + TILE_H / 2 + (this.deps.grid.inside(i, j) ? this.liftAt(i, j) : 0), key).setOrigin(0.5, oy).setDepth(depthKey(i, j) + dz);
+      this.borderImgs.push(img);
+    };
+    if (!this.textures.exists('busstop/0')) this.textures.addCanvas('busstop/0', drawBusStop());
+    if (!this.textures.exists('lamp/0')) this.textures.addCanvas('lamp/0', drawLamp());
+    decor('busstop/0', gt.i + 1, STOP_ROW);
+    for (let i = 4; i < grid.w; i += 8) decor('lamp/0', i, STOP_ROW); // 보도 가로등
+    // 길 건너(격자 위, 줄 −4~−1 은 Surround 잔디) — 마을 건물 줄: 펜션·복층 펜션·창고·안내소를 번갈아
+    const town = ['fac/pension/0', 'fac/storage/0', 'fac/pension_duplex/0', 'fac/info/0', 'fac/bungalow/0'];
+    let tn = 0;
+    for (let i = 4; i < grid.w - 4; i += 11) { decor(town[tn % town.length] as string, i, -3); tn++; }
+    // 들판의 이웃 빠지·펜션(마당 좌우 멀찍이) — 확장하면 마당이 삼킨다(그림뿐이라 충돌 없음)
+    const side = [['fac/caravan/0', land.i0 - 10, land.j0 + 6], ['fac/camp_site/0', land.i0 - 8, land.j0 + 22], ['fac/bungalow/0', land.i0 + land.w + 7, land.j0 + 8], ['fac/glamping/0', land.i0 + land.w + 9, land.j0 + 26]] as const;
+    for (const [k, i, j] of side) if (i > 0 && i < grid.w - 1 && grid.at(i, j) === FLOOR.grass) decor(k, i, j);
+    this.landForTint = land;
+    for (let j = 0; j < grid.h; j++) for (let i = 0; i < grid.w; i++) this.refreshTile(i, j); // P44-c 토지 밖 어둡게(레거시 setLand)
   }
+  private landForTint: { i0: number; j0: number; w: number; h: number } | null = null;
+
 
   /** 검사용 — 경계 나무 수 */
   borderCountForTest(): number { return this.borderImgs.length; }
@@ -669,6 +736,7 @@ export class WaterparkScene extends Phaser.Scene {
         this.facImgs.set(f.uid, img);
       } else if (img.texture.key !== key) img.setTexture(key);
       this.placeFacilityImage(img, def, f.i, f.j, f.facing);
+      if (this.dimUids.has(f.uid)) img.setTint(cssColorInt('--rig-dim') || 0x55697c); else if (img.isTinted) img.clearTint(); // P50-b2 꺼짐 틴트 — 색은 토큰
     }
     for (const [uid, img] of this.facImgs) {
       if (seen.has(uid)) continue;
@@ -717,27 +785,90 @@ export class WaterparkScene extends Phaser.Scene {
     }
   }
 
-  /** 실내 벽 — 실내 칸과 비실내 칸이 만나는 변에 유리벽 선 (G12). 지면이 바뀔 때만 다시 그린다 */
-  drawWalls(): void {
-    const g = this.wallGfx;
-    if (!g) return;
-    g.clear();
+  private wallLayer(i: number, j: number, front: boolean): Phaser.GameObjects.Graphics {
+    const key = `${j * this.deps.grid.w + i}|${front ? 'f' : 'b'}`;
+    let g = this.wallLayers.get(key);
+    if (!g) { g = this.add.graphics().setDepth(depthKey(i, j) + (front ? Z_WALL_FRONT : Z_WALL_BACK)); this.wallLayers.set(key, g); }
+    return g;
+  }
+  private clearWallLayers(): void { for (const g of this.wallLayers.values()) g.destroy(); this.wallLayers.clear(); }
+  /**
+   * P44-b — 벽면 하나: 변(x0,y0)→(x1,y1) 위로 h 텍셀. 북·남 변은 빛 받는 면(`--wall-face`), 서·동 변은 그늘 면(`--wall-face-dark`) —
+   * 한 톤이면 리본으로 읽힌다. 앞면(남·동)은 안이 비치게 반투명. 칸의 단(lift)을 같이 탄다
+   */
+  private wallFace(g: Phaser.GameObjects.Graphics, x0: number, y0: number, x1: number, y1: number, dark: boolean, front: boolean, h: number): void {
+    g.fillStyle(cssColorInt(dark ? '--wall-face-dark' : '--wall-face'), front ? 0.6 : 1);
+    g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.lineTo(x1, y1 - h); g.lineTo(x0, y0 - h); g.closePath(); g.fillPath();
+    g.lineStyle(1, cssColorInt('--wall-top'), 0.95); g.beginPath(); g.moveTo(x0, y0 - h); g.lineTo(x1, y1 - h); g.strokePath();
+    g.lineStyle(1, cssColorInt('--wall-top'), 0.5); g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.strokePath();
+  }
+  private wallPost(g: Phaser.GameObjects.Graphics, x: number, y: number, h: number): void { g.fillStyle(cssColorInt('--wall-top'), 1); g.fillRect(x - 1, y - h - 1, 3, h + 2); }
+
+  /** 벽·울타리·문 전부 다시 그린다 — 세 진입점(drawWalls·drawFence·drawDoors)이 다 여기로 온다(층을 지우고 다시 세우므로 따로 그릴 수 없다) */
+  private redrawWalls(): void {
+    if (!this.wallsReady) return;
+    this.clearWallLayers();
     const grid = this.deps.grid;
-    g.lineStyle(2, cssColorInt('--wall-glass'), 0.55);
+    const H = WALL_H;
+    const doors = grid.doors();
+    const isDoor = (i: number, j: number, a: number, b: number): boolean => doors.some((d) => d.i === i && d.j === j && d.oi === a && d.oj === b);
     for (let j = 0; j < grid.h; j++) {
       for (let i = 0; i < grid.w; i++) {
-        if (grid.at(i, j) !== FLOOR.indoor) continue;
-        const p = gridToScreen(i, j);
-        // 이웃이 실내(또는 실내 풀)가 아니면 그 변에 선
-        const inside = (a: number, b: number): boolean => grid.at(a, b) === FLOOR.indoor || (grid.at(a, b) === FLOOR.pool && this.indoorPool(a, b));
-        if (!inside(i - 1, j)) { g.beginPath(); g.moveTo(p.x, p.y); g.lineTo(p.x - TILE_W / 2, p.y + TILE_H / 2); g.strokePath(); g.fillStyle(cssColorInt('--wall-glass'), 0.35); g.fillRect(p.x - TILE_W / 2, p.y - 6, 1, 1); }
-        if (!inside(i, j - 1)) { g.beginPath(); g.moveTo(p.x, p.y); g.lineTo(p.x + TILE_W / 2, p.y + TILE_H / 2); g.strokePath(); }
-        if (!inside(i + 1, j)) { g.beginPath(); g.moveTo(p.x + TILE_W / 2, p.y + TILE_H / 2); g.lineTo(p.x, p.y + TILE_H); g.strokePath(); }
-        if (!inside(i, j + 1)) { g.beginPath(); g.moveTo(p.x - TILE_W / 2, p.y + TILE_H / 2); g.lineTo(p.x, p.y + TILE_H); g.strokePath(); }
+        if (!isIndoorCode(grid.at(i, j))) continue;
+        const p = gridToScreen(i, j); const lz = this.liftAt(i, j);
+        const inside = (a: number, b: number): boolean => isIndoorCode(grid.at(a, b)) || (grid.at(a, b) === FLOOR.pool && this.indoorPool(a, b));
+        const back = this.wallLayer(i, j, false), front = this.wallLayer(i, j, true);
+        // 네 변: 서(−i) · 북(−j) 는 뒤, 동(+i) · 남(+j) 은 앞. 북·남 = 빛, 서·동 = 그늘
+        if (!inside(i - 1, j)) { if (isDoor(i, j, i - 1, j)) { this.wallPost(back, p.x, p.y + lz, H); this.wallPost(back, p.x - TILE_W / 2, p.y + TILE_H / 2 + lz, H); } else this.wallFace(back, p.x, p.y + lz, p.x - TILE_W / 2, p.y + TILE_H / 2 + lz, true, false, H); }
+        if (!inside(i, j - 1)) { if (isDoor(i, j, i, j - 1)) { this.wallPost(back, p.x, p.y + lz, H); this.wallPost(back, p.x + TILE_W / 2, p.y + TILE_H / 2 + lz, H); } else this.wallFace(back, p.x, p.y + lz, p.x + TILE_W / 2, p.y + TILE_H / 2 + lz, false, false, H); }
+        if (!inside(i + 1, j)) { if (isDoor(i, j, i + 1, j)) { this.wallPost(front, p.x + TILE_W / 2, p.y + TILE_H / 2 + lz, H); this.wallPost(front, p.x, p.y + TILE_H + lz, H); } else this.wallFace(front, p.x + TILE_W / 2, p.y + TILE_H / 2 + lz, p.x, p.y + TILE_H + lz, true, true, H); }
+        if (!inside(i, j + 1)) { if (isDoor(i, j, i, j + 1)) { this.wallPost(front, p.x - TILE_W / 2, p.y + TILE_H / 2 + lz, H); this.wallPost(front, p.x, p.y + TILE_H + lz, H); } else this.wallFace(front, p.x - TILE_W / 2, p.y + TILE_H / 2 + lz, p.x, p.y + TILE_H + lz, false, true, H); }
       }
     }
+    // 문 표식 — 문 변의 가운데에 작은 마름모, 그 문이 난 층에
+    this.doorCount = 0;
+    for (const d of doors) {
+      const front = d.oi > d.i || d.oj > d.j;
+      const g = this.wallLayer(d.i, d.j, front);
+      const a = gridToScreen(d.i, d.j), b = gridToScreen(d.oi, d.oj); const lz = this.liftAt(d.i, d.j);
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2 + TILE_H / 2 + lz;
+      g.fillStyle(cssColorInt('--wall-door'), 0.95);
+      g.beginPath(); g.moveTo(mx, my - 4); g.lineTo(mx + 6, my); g.lineTo(mx, my + 4); g.lineTo(mx - 6, my); g.closePath(); g.fillPath();
+      this.doorCount++;
+    }
   }
-
+  /** P39 D49 — 벽: 실내 덩어리의 외곽 변마다 벽면(부모 K25). 문 변은 기둥 둘 */
+  drawWalls(): void { this.redrawWalls(); }
+  /** P45-a — 마당 경계 그림은 없다(사용자: 좌우로 계속 넓어지는 마당에 경계를 그리면 「저기 밖엔 못 놓는다」로 읽힌다). 토지 밖은 어둡게(레거시)만 */
+  drawFence(land: { i0: number; j0: number; w: number; h: number }, gate: { i: number; j: number }): void { void land; void gate; }
+  /** P39 — 문 표식 */
+  drawDoors(): void { this.redrawWalls(); }
+  /** P44-d — 도로 위 시내버스 한 대(장식, sim 밖). 시간이 멈춰도 돈다 — 도시는 내 빠지와 무관하게 산다 */
+  private traffic: { img: Phaser.GameObjects.Image; row: number; fi: number; speed: number }[] = [];
+  private buildTraffic(): void {
+    for (const t of this.traffic) t.img.destroy();
+    this.traffic = [];
+    if (!this.textures.exists('bus/0')) this.textures.addCanvas('bus/0', drawBus());
+    const img = this.add.image(0, 0, 'bus/0').setOrigin(0.5, (BUS_H - 2) / BUS_H);
+    this.traffic.push({ img, row: ROAD_ROWS[0] as number, fi: -20, speed: 4.5 });
+    this.stepTraffic(0);
+  }
+  private stepTraffic(dtMs: number): void {
+    for (const t of this.traffic) {
+      t.fi += t.speed * (dtMs / 1000);
+      if (t.fi > GW + 24) t.fi = -24;
+      const a = tileCenter(Math.floor(t.fi), t.row); const b = tileCenter(Math.floor(t.fi) + 1, t.row);
+      const f = t.fi - Math.floor(t.fi);
+      t.img.setPosition(Math.round(a.x + (b.x - a.x) * f), Math.round(a.y + (b.y - a.y) * f + TILE_H / 2));
+      t.img.setDepth(depthKey(Math.max(0, Math.min(GW - 1, Math.round(t.fi))), t.row) + Z_GUEST);
+      t.img.setVisible(t.fi > -22 && t.fi < GW + 22);
+    }
+  }
+  trafficCountForTest(): number { return this.traffic.filter((t) => t.img.visible).length; }
+  /** 검사용 — 벽 층 수 */
+  wallLayerCountForTest(): number { return this.wallLayers.size; }
+  doorCount = 0;
+  doorCountForTest(): number { return this.doorCount; }
   private indoorPool(i: number, j: number): boolean {
     const k = j * this.deps.grid.w + i;
     return this.poolTint.has(k) && this.indoorPoolTiles.has(k);
@@ -762,6 +893,7 @@ export class WaterparkScene extends Phaser.Scene {
   /** 고스트 — 배치 미리보기. null 이면 지운다 */
   /** `labelText` — 가격표 대신 쓸 글 (G55: 이동 중 「이동 · 무료」) */
   setGhost(def: FacilityDef | null, i: number, j: number, facing: 0 | 1, ok: boolean, labelText?: string): void {
+    this.lastGhostLabel = def ? (labelText ?? '') : '';
     if (!this.selection) return;
     if (!def) {
       this.ghost?.destroy();
@@ -811,6 +943,30 @@ export class WaterparkScene extends Phaser.Scene {
   /** 검사용 — 조준 화살표·가격표가 떠 있나 */
   aimForTest(): { arrows: boolean; label: string | null } { return { arrows: !!this.aimGfx, label: this.aimLabel ? this.aimLabel.text : null }; }
 
+  /** P50-b2 — 빠지 모습: 꺼진 기구 uid · 링 데크 칸의 등급 · 이음쇠 변. 값은 sim 이 내고 여기선 칠하기만 */
+  setRigLook(dimUids: ReadonlySet<number>, ringGrades: ReadonlyMap<number, number>, links: readonly { i: number; j: number; dir: 0 | 1 }[]): void {
+    this.dimUids = new Set(dimUids);
+    const prev = this.ringTint; this.ringTint = new Map();
+    for (const [k, grade] of ringGrades) this.ringTint.set(k, cssColorInt(`--pontoon-g${Math.max(0, Math.min(4, grade))}`) || 0xffffff);
+    for (const k of new Set([...prev.keys(), ...this.ringTint.keys()])) this.refreshTile(k % this.deps.grid.w, Math.floor(k / this.deps.grid.w));
+    this.rigLinks = links;
+    this.drawRigLinks();
+    this.syncFacilities();
+  }
+  private drawRigLinks(): void {
+    if (!this.rigLinkGfx) this.rigLinkGfx = this.add.graphics().setDepth(DEPTH_LAND_MARK - 3.5);
+    const g = this.rigLinkGfx; g.clear();
+    if (this.rigLinks.length === 0) return;
+    g.lineStyle(3, cssColorInt('--rig-link') || 0xffd35a, 1);
+    for (const e of this.rigLinks) {
+      const a = gridToScreen(e.i, e.j), b = gridToScreen(e.i + (e.dir === 0 ? 1 : 0), e.j + (e.dir === 1 ? 1 : 0));
+      const lz = this.liftAt(e.i, e.j);
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2 + lz;
+      // 변에 걸친 짧은 고리 — 두 칸 중심을 잇는 선의 가운데 6텍셀
+      const dx = (b.x - a.x) / 2, dy = (b.y - a.y) / 2, len = Math.hypot(dx, dy) || 1;
+      g.beginPath(); g.moveTo(mx - (dx / len) * 6, my - (dy / len) * 6); g.lineTo(mx + (dx / len) * 6, my + (dy / len) * 6); g.strokePath();
+    }
+  }
   /** 풀 색 틴트 — 풀 id → 색 이름. 타일 이미지에 setTint 한다 */
   setPoolColors(colors: ReadonlyMap<number, { color: string; tiles: readonly number[]; temp: number; scent: string | null }>): void {
     this.poolTint.clear();
@@ -867,9 +1023,16 @@ export class WaterparkScene extends Phaser.Scene {
   }
 
   /** 편집 선택 표시 — 파기는 흰, 메우기는 붉은 윤곽 */
+  /** 검사용 (P24) — 마지막 고스트 라벨 · 선택 표시 칸 수 */
+  ghostLabelForTest(): string { return this.lastGhostLabel; }
+  selectionCountForTest(): number { return this.selectionCount; }
+  private lastGhostLabel = '';
+  private selectionCount = 0;
+
   setSelection(tiles: readonly { i: number; j: number }[], bad = false): void {
     if (!this.selection) return; // 씬이 아직 안 만들어졌다 — 독이 부팅 중에 부른다
     this.selection.clear();
+    this.selectionCount = tiles.length;
     if (tiles.length === 0) return;
     this.selection.lineStyle(1, cssColorInt(bad ? '--fx-bad' : '--fx-ok'), 1);
     this.selection.fillStyle(cssColorInt('--tile-pool'), 0.45);

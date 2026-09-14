@@ -11,14 +11,20 @@ import type { PlacedFacility } from '../../sim/facility.js';
 
 export interface PlaceHost {
   showGhost(def: FacilityDef | null, i: number, j: number, facing: 0 | 1, ok: boolean, label?: string): void;
+  /** P24 반경 링 — 빈 배열이면 지운다 */
+  showRing(tiles: readonly { i: number; j: number }[]): void;
   toast(text: string, ok: boolean): void;
   onPlaced(uid: number): void;
+  /** P56-a D7 — 조준 칸 위 값 팝 「800G ×1」(원작). 같은 자리에 갈아 끼운다 */
+  pricePop?(i: number, j: number, text: string | null): void;
 }
 
 export class PlaceDock {
   readonly root: HTMLDivElement;
   private readonly modeLabel = el('span', 'kdock-mode', '배치 중');
   private readonly why = el('span', 'kdock-cost', '어디에 설치할까요? (다른 메뉴는 취소 뒤에)');
+  /** P52-b 위험 칩 — 기구·선착장을 조준할 때만 · 4단 색은 토큰(`--risk-*`) */
+  private readonly riskChip = el('span', 'kchip krisk-0 khide', '안전');
   private readonly rotateBtn: HTMLButtonElement;
   private readonly doneBtn: HTMLButtonElement;
   private def: FacilityDef | null = null;
@@ -32,7 +38,8 @@ export class PlaceDock {
     this.root.id = 'dock-place';
     this.root.hidden = true;
     const row1 = el('div', 'kdock-row');
-    row1.append(this.modeLabel, this.why);
+    row1.append(this.modeLabel, this.why, this.riskChip);
+    this.riskChip.id = 'dock-place-risk';
     const row2 = el('div', 'kdock-row');
     const cancel = el('button', 'kbtn', '취소');
     cancel.type = 'button';
@@ -90,6 +97,7 @@ export class PlaceDock {
   }
 
   exit(): void {
+    this.host.showRing([]); // P24 원복 — 취소·확정·붓 교체·패널 열림 전부 exit 를 지난다
     if (!this.def) return;
     this.def = null;
     this.moveUid = null;
@@ -107,30 +115,50 @@ export class PlaceDock {
 
   private refresh(): void {
     if (!this.def) return;
+    this.riskChip.classList.add('khide');
     if (!this.at) {
       this.why.textContent = '어디에 설치할까요? (다른 메뉴는 취소 뒤에)';
       this.doneBtn.disabled = true;
       this.host.showGhost(this.def, 0, 0, this.facing, false);
       return;
     }
-    const r = this.moveUid !== null ? this.game().canMoveFacility(this.moveUid, this.at.i, this.at.j, this.facing) : this.game().canPlace(this.def.id, this.at.i, this.at.j, this.facing);
+    const r = this.moveUid !== null ? this.game().canMoveFacility(this.moveUid, this.at.i, this.at.j, this.facing, { frontage: true }) : this.game().canPlace(this.def.id, this.at.i, this.at.j, this.facing, { frontage: true }); // P31 D39 접면
     this.why.textContent = r.ok ? (this.moveUid !== null ? '여기로 옮깁니다 (무료)' : '놓을 수 있습니다') : r.reason;
     this.doneBtn.disabled = !r.ok;
-    this.host.showGhost(this.def, this.at.i, this.at.j, this.facing, r.ok, this.moveUid !== null ? '이동 · 무료' : undefined);
+    // P24 D30: 자리면 반경 링 + 「등급 n」, 먹거리·샤워면 「자리 n곳」 — 놓기 전에 보인다
+    const g = this.game();
+    let label: string | undefined = this.moveUid !== null ? '이동 · 무료' : undefined;
+    if (this.def.class === 'lounging') { const sg = g.seatGradeAt(this.def, this.at.i, this.at.j, this.facing, this.moveUid ?? 0); label = `${label ? `${label} · ` : ''}등급 ${sg.grade}${[sg.water ? '물' : null, sg.shade ? '그늘' : null, sg.view ? '뷰' : null, sg.garden ? '조경' : null, sg.food ? '먹거리' : null].filter(Boolean).map((x) => ` · ${x}`).join('')}${sg.dirty ? ' · 화장실−' : ''}${sg.loud ? ' · 소음−' : ''}${(() => { const pk = g.seatPackagesAt(this.def, this.at.i, this.at.j, this.facing, this.moveUid ?? 0); return pk.length ? ` · ${pk.map((p) => p.name.replace(' 패키지', '')).join('·')}` : ''; })()}`; this.host.showRing(g.seatRadiusTiles(this.def, this.at.i, this.at.j, this.facing)); }
+    else if (this.def.class === 'rig' || this.def.onRing === true) { // P50-b2 확정 바 칩 — 이번 확정으로 실제로 바뀌는 값을 앞에(등급이 바뀌면 그것이 첫 칸) · 거절이면 칩 없음
+      const pv = r.ok ? g.aimPreview(this.def.id, this.at.i, this.at.j, this.facing) : null;
+      if (pv) {
+        const chips: string[] = [];
+        if (pv.gradeNext !== pv.gradeNow) chips.push(`등급 ${pv.gradeNow} → ${pv.gradeNext}`);
+        if (this.def.class === 'rig' && this.def.onRing !== true) { chips.push(pv.lit ? `정원 ${this.def.capacity} → ${pv.capNext}` : '꺼짐 — 링·켜진 기구에 닿게'); chips.push(`연결 ${pv.chainNext}`); }
+        chips.push(pv.pkgNext !== pv.pkgNow ? `자유이용권 ${pv.pkgNow} → ${pv.pkgNext}G` : `자유이용권 ${pv.pkgNext}G`);
+        if ((this.def.thrill ?? 0) > 0) { this.riskChip.textContent = `위험 ${pv.riskLabel}`; this.riskChip.className = `kchip krisk-${pv.risk}`; this.riskChip.dataset['risk'] = String(pv.risk); } // P52-b: 위험 모양(스릴 > 0)에만
+        label = `${label ? `${label} · ` : ''}${chips.join(' · ')}`;
+      }
+      this.host.showRing([]);
+    }
+    else if (this.def.menuSlots > 0 || this.def.id === 'shower_row') { const n = g.seatsFedAt(this.def, this.at.i, this.at.j, this.facing, this.moveUid ?? 0); label = `${label ? `${label} · ` : ''}자리 ${n}곳`; this.host.showRing(g.seatRadiusTiles(this.def, this.at.i, this.at.j, this.facing)); }
+    else this.host.showRing([]);
+    this.host.showGhost(this.def, this.at.i, this.at.j, this.facing, r.ok, label);
+    this.host.pricePop?.(this.at.i, this.at.j, r.ok ? (this.moveUid !== null ? '이동 · 무료' : `${this.def.cost.toLocaleString('ko-KR')}G ×1`) : null);
   }
 
   private apply(): void {
     if (!this.def || !this.at) return;
     if (this.moveUid !== null) {
       const uid = this.moveUid;
-      const r = this.game().moveFacility(uid, this.at.i, this.at.j, this.facing, { autoPath: false }); // P16: 플레이어 독은 길을 안 깐다
+      const r = this.game().moveFacility(uid, this.at.i, this.at.j, this.facing, { autoPath: false, frontage: true }); // P16: 플레이어 독은 길을 안 깐다 · P31 접면
       if (!r.ok) { this.host.toast(r.reason, false); this.refresh(); return; }
       this.host.toast(`${this.def.name} 이동 완료`, true);
       this.exit();
       this.host.onPlaced(uid);
       return;
     }
-    const r = this.game().placeFacility(this.def.id, this.at.i, this.at.j, this.facing, { autoPath: false }); // P16: 길은 플레이어가 낸다
+    const r = this.game().placeFacility(this.def.id, this.at.i, this.at.j, this.facing, { autoPath: false, frontage: true }); // P16: 길은 플레이어가 낸다 · P31 D39: 길에 붙어야 놓인다
     if (!r.ok) {
       this.host.toast(r.reason, false);
       this.refresh();

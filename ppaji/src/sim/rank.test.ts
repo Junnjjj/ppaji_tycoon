@@ -5,6 +5,7 @@ import { landRect } from './grid.js';
 import { Shop } from './shop.js';
 import { Rng } from './rng.js';
 import { eventDay } from './calendar.js';
+import { makeTestPpaji } from './test-helpers.js';
 
 describe('랭크 · 상점 · 달력 (Game 통합)', () => {
   it('랭크업은 폐장에 조건 전부 만족일 때 — 토지가 넓어지고 새 땅이 잔디가 된다', () => {
@@ -13,9 +14,8 @@ describe('랭크 · 상점 · 달력 (Game 통합)', () => {
     // 조건을 강제로 채운다: 인증 1 · 인기 80
     g.certs.state.passed['grade_f'] = 1;
     g.money = 100000;
-    const tiles: { i: number; j: number }[] = [];
-    for (let a = 0; a < 6; a++) for (let b = 0; b < 4; b++) tiles.push({ i: l0.i0 + 3 + a, j: l0.j0 + 12 + b }); // P15: 킷 시설(탁구대·평상)을 피해 아래쪽
-    expect(g.digPool(tiles).ok).toBe(true);
+    const pp = makeTestPpaji(g); // P49-b D59: 뭍 풀 금지 — 빠지(데크 링)로. 킷 링 서쪽에 4×5 — 허가 ★0 40 = 킷 20 + 20
+    expect(pp.id).not.toBeNull();
     g.step(TICKS_PER_DAY);
     expect(g.rank).toBe(1);
     const l1 = landRect(1);

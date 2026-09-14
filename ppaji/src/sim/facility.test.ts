@@ -34,17 +34,15 @@ describe('시설', () => {
     const g = new Game(1, undefined, { kit: false });
     const l = landRect(0);
     const gate = g.gate;
-    // 입구 바로 위 칸을 좌우 벽으로 막는 대신, 입구 앞 한 줄을 1×1 시설(구명함)로 채워 본다 — 마지막 하나가 거절돼야 한다
+    // P32: 거리는 4칸(30~33). 입구 앞 줄의 거리 칸을 1×1 시설(구명함)로 하나씩 채운다 — 입구 열(32)만 남기면 아직 길이 있고, 마지막 하나가 공원 전체를 봉쇄하므로 거절
     g.money = 1_000_000;
+    void l;
+    // P40 D52: 마당은 어디든 걷는다 — 입구 칸(32,0)의 세 이웃(31,0)(33,0)(32,1)을 다 막아야 봉쇄다. 앞의 둘은 되고 마지막이 거절
     let rejected = 0;
-    for (let di = -l.w; di <= l.w; di++) {
-      const i = gate.i + di;
-      if (i < l.i0 || i >= l.i0 + l.w) continue;
-      if (i === gate.i) continue;
-      const r = g.placeFacility('lifering', i, gate.j + 1, 0, { autoPath: false }); // P16: 길은 안 깐다 — 봉쇄 판정만 본다
+    for (const [i, j] of [[gate.i - 1, gate.j], [gate.i + 1, gate.j]] as const) {
+      const r = g.placeFacility('lifering', i, j, 0, { autoPath: false });
       if (!r.ok) rejected++;
     }
-    // 입구 열은 비어 있으므로 아직 길이 있다 — 마지막 하나는 공원 전체를 봉쇄하므로 거절
     expect(rejected).toBe(0);
     expect(g.placeFacility('lifering', gate.i, gate.j + 1, 0, { autoPath: false }).ok).toBe(false);
   });

@@ -9,11 +9,14 @@ export interface StoryCharacter { id: string; name: string; palette: number; hai
 export type StoryTrigger =
   | { kind: 'newGame' }
   | { kind: 'ended' }
-  | { kind: 'pools' | 'poolTiles' | 'visitors' | 'likes' | 'wishes' | 'certs' | 'rank' | 'year' | 'areas' | 'recipes' | 'money'; min: number };
+  | { kind: 'pools' | 'poolTiles' | 'visitors' | 'likes' | 'wishes' | 'certs' | 'rank' | 'year' | 'areas' | 'recipes' | 'money' | 'hallSales'
+    | 'rigs' | 'rigChain' | 'rigGrade' | 'gearsKnown' | 'vestRentals' | 'rigUpgrades'; min: number }; // P53-b §4.5: 빠지 축 트리거 6
 export interface StoryBeat { id: string; trigger: StoryTrigger; speaker: string; lines: string[] }
 
 export interface StoryState {
-  pools: number; poolTiles: number; visitors: number; likes: number; wishes: number; certs: number; rank: number; year: number; areas: number; recipes: number; money: number; ended: boolean;
+  pools: number; poolTiles: number; visitors: number; likes: number; wishes: number; certs: number; rank: number; year: number; areas: number; recipes: number; money: number; hallSales: number; ended: boolean;
+  /** P53-b — 켜진 기구 수 · 최장 사슬 · 최고 빠지 등급 · 공방 도감 · 팔찌 대여 누적 · 개조 누적(`stats.converts`) */
+  rigs: number; rigChain: number; rigGrade: number; gearsKnown: number; vestRentals: number; rigUpgrades: number;
 }
 
 const DATA = storyJson as { characters: StoryCharacter[]; beats: StoryBeat[] };

@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { Game, FACILITY_DEFS } from './game.js';
 import { FacilityStore } from './facility.js';
 import { DAYS_PER_SEASON } from './clock.js';
+import { makeTestPpaji } from './test-helpers.js';
 
 function fresh(seed: number): Game { const g = new Game(seed, undefined, { kit: false }); g.money = 500000; return g; }
 
@@ -34,26 +35,33 @@ describe('G36 계절 벡터 · 실내 전용 · AB 출구', () => {
     const g = fresh(53);
     g.grid.levels.fill(0); // P0-B: 이 검사는 착수 규칙만 본다 — 경사는 평탄화
     const gt = g.gate;
-    g.rank = 2; g.grid.openLand(2); g.unlocked.facilities.add('stripy_slide'); // P16: 레인이 입구 열(유일한 길)을 끊지 않게 오른쪽에 둔다
+    g.rank = 2; g.openLand(2); g.unlocked.facilities.add('stripy_slide');
     const def = FACILITY_DEFS.get('stripy_slide')!;
-    const si = gt.i + 2, sj = gt.j + 9;
-    expect(g.placeFacility('stripy_slide', si, sj, 0).ok).toBe(true);
+    const L = def.slide!.length;
+    // P49-b D59: 뭍 풀 금지 — 빠지(데크 링)로. 풀은 강 위 데크 링 안에만 있으므로 두 빠지를 나란히 두고 슬라이드를 그 데크 위에 놓는다:
+    //  · 착수 빠지(pp1): 링 서쪽 열이 입구 열(gt.i) — 활강로(+I, 길이 L) 의 출구가 그 열의 데크에 서고, 출구 다음 칸(+I) 이 pp1 의 안 물이다
+    //  · 옆 빠지(pp2): 링 윗줄(물가 행)이 활강로가 달리는 줄 — 안 물이 활강로 바로 아래 줄이라 인접하지만 출구 다음 칸은 아니다
+    //  탑(2×2)은 pp2 윗줄 위 뭍 한 줄 + 윗줄 데크 한 줄에 걸친다. (pp2 윗줄·pp1 서쪽 열·뭍 사이의 물도 저절로 밀폐돼 셋째 수역이 하나 더 생긴다 — 이 검사와 무관)
+    const pp1 = makeTestPpaji(g, 4, 5, L - 8);
+    const pp2 = makeTestPpaji(g, L - 1, 2, -9);
+    expect(pp1.id).not.toBeNull(); expect(pp2.id).not.toBeNull(); expect(pp1.id).not.toBe(pp2.id);
+    const laneRow = pp2.ring[0]!.j; // pp2 링 윗줄 = 활강로 줄
+    const si = gt.i - 9, sj = laneRow - 1;
+    const placed = g.placeFacility('stripy_slide', si, sj, 0);
+    expect(placed.ok).toBe(true);
     const lane = FacilityStore.lane(def, si, sj, 0);
     const exit = lane[lane.length - 1]!;
-    // 착수 풀 (출구 다음 칸 포함)
-    const land = [] as { i: number; j: number }[];
-    for (let a = 1; a <= 2; a++) for (let b = 0; b <= 1; b++) land.push({ i: exit.i + a, j: exit.j + b });
-    expect(g.digPool(land).ok).toBe(true);
-    // 활강로 옆에 붙은 풀 (착수 아님)
-    const side = [] as { i: number; j: number }[];
-    for (let k = 1; k <= 2; k++) side.push({ i: lane[k]!.i, j: lane[k]!.j - 2 }, { i: lane[k]!.i, j: lane[k]!.j - 3 });
-    // 활강로 j = sj+1 이므로 j-2 = sj-1 은 활강로와 인접하지 않는다 → 인접하게 j-1
-    const side2 = side.map((t) => ({ i: t.i, j: t.j + 1 }));
-    expect(g.digPool(side2).ok).toBe(true);
-    const pools = g.pools.all;
-    const landing = pools.find((p) => p.tiles.includes(land[0]!.j * g.grid.w + land[0]!.i))!;
-    const beside = pools.find((p) => p.tiles.includes(side2[0]!.j * g.grid.w + side2[0]!.i))!;
+    expect(lane.every((t) => t.j === laneRow)).toBe(true);
+    // 착수: 출구 다음 칸(+I) 이 pp1 안 물 — 옆: pp2 안 물이 활강로 칸 바로 아래(+J) 라 인접하되 출구 다음 칸은 아니다
+    expect(pp1.tiles.some((t) => t.i === exit.i + 1 && t.j === exit.j)).toBe(true);
+    expect(pp2.tiles.some((t) => t.i === exit.i + 1 && t.j === exit.j)).toBe(false);
+    expect(lane.some((l) => pp2.tiles.some((t) => t.i === l.i && t.j === l.j + 1))).toBe(true);
+    const landing = g.pools.at(pp1.tiles[0]!.i, pp1.tiles[0]!.j)!;
+    const beside = g.pools.at(pp2.tiles[0]!.i, pp2.tiles[0]!.j)!;
     expect(landing.id).not.toBe(beside.id);
+    // 인접 판정이 실제로 둘 다 슬라이드를 보고 있어야 「옆은 0」이 공허하지 않다
+    expect(g.facilities.adjacentTo(new Set(landing.tiles)).some((f) => f.uid === placed.uid)).toBe(true);
+    expect(g.facilities.adjacentTo(new Set(beside.tiles)).some((f) => f.uid === placed.uid)).toBe(true);
     expect(g.poolState(landing.id)!.ab).toBeGreaterThan(0);
     expect(g.poolState(beside.id)!.ab).toBe(0);
   });

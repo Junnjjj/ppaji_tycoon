@@ -4,7 +4,7 @@
  *   sizeScale = min(6, √size)                        (SE·AB 는 풀 크기에 비례 — 위키 "1×1 기준값")
  *   popularity = Σ tilePop + (colorBonus + scentBonus)[season] · size/4 + se·sizeScale + ab·sizeScale
  *   maintenance = base + popularity · perPop
- *   temp = ambient[season] + Σ item.tempDelta + Σ 인접 heat
+ *   temp = ambient[season] + Σ item.tempDelta × min(1, 4/size) + Σ 인접 heat   (P52-c: 아이템 온도는 농도로)
  */
 import type { FacilityDef, ItemDef, SeasonTables, Scent } from '../data/schema.js';
 import type { Pool } from './pool.js';
@@ -72,7 +72,9 @@ export function poolState(pool: Pool, ctx: PoolContext): PoolState {
     ...ctx.adjacent.map((f) => ({ scent: f.scent, power: f.scentPower, fromItem: false })),
   ]);
   const ambient = ctx.indoor ? ctx.tables.ambientIndoor : (ctx.tables.ambientOutdoor[ctx.season] ?? 24);
-  const temp = Math.max(0, Math.min(50, ambient + defs.reduce((s, d) => s + d.tempDelta, 0) + ctx.adjacent.reduce((s, f) => s + f.heat, 0)));
+  // P52-c: 아이템 온도는 농도(4칸당 1개 = 원작 규격)로 — 20칸에 딸기 5개는 4칸에 1개와 같은 −2. 칸 수와 무관한 합이면 큰 빠지의 색을 맞추는 순간 물이 14°C 가 돼 아무도 사진을 안 찍었다(G4 실측)
+  const tempScale = Math.min(1, 4 / Math.max(1, size));
+  const temp = Math.max(0, Math.min(50, ambient + defs.reduce((s, d) => s + d.tempDelta, 0) * tempScale + ctx.adjacent.reduce((s, f) => s + f.heat, 0)));
   const scale = sizeScale(size);
   const sun = ctx.indoor ? 0 : (ctx.tables.sun[ctx.season] ?? 0);
   // 좋아요 → SE 는 제곱근에 상한 10 — 선형이면 「좋아요 → 인기 → 글 좋아요」 고리가 폭주한다 (봇 실측 1,690만)

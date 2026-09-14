@@ -78,19 +78,22 @@
     "id": "vanilla",
     "name": "바닐라",
     "unlock": "wish",
-    "class": "sweet"
+    "class": "sweet",
+    "price": 500
   },
   {
     "id": "coffee_bean",
     "name": "원두",
     "unlock": "wish",
-    "class": "base"
+    "class": "base",
+    "price": 500
   },
   {
     "id": "tea_leaf",
     "name": "찻잎",
     "unlock": "wish",
-    "class": "base"
+    "class": "base",
+    "price": 500
   },
   {
     "id": "cheese",
@@ -103,37 +106,43 @@
     "id": "chicken",
     "name": "닭고기",
     "unlock": "wish",
-    "class": "meat"
+    "class": "meat",
+    "price": 500
   },
   {
     "id": "beef",
     "name": "소고기",
     "unlock": "wish",
-    "class": "meat"
+    "class": "meat",
+    "price": 500
   },
   {
     "id": "pork",
     "name": "돼지고기",
     "unlock": "wish",
-    "class": "meat"
+    "class": "meat",
+    "price": 500
   },
   {
     "id": "shrimp",
     "name": "새우",
     "unlock": "wish",
-    "class": "seafood"
+    "class": "seafood",
+    "price": 500
   },
   {
     "id": "salmon",
     "name": "연어",
     "unlock": "wish",
-    "class": "seafood"
+    "class": "seafood",
+    "price": 500
   },
   {
     "id": "tuna",
     "name": "참치",
     "unlock": "wish",
-    "class": "seafood"
+    "class": "seafood",
+    "price": 500
   },
   {
     "id": "rice",
@@ -146,7 +155,8 @@
     "id": "seaweed",
     "name": "김",
     "unlock": "wish",
-    "class": "veg"
+    "class": "veg",
+    "price": 500
   },
   {
     "id": "tomato",
@@ -166,215 +176,249 @@
     "id": "honey_jar",
     "name": "꿀",
     "unlock": "wish",
-    "class": "sweet"
+    "class": "sweet",
+    "price": 500
   },
   {
     "id": "matcha",
     "name": "말차",
     "unlock": "wish",
-    "class": "base"
+    "class": "base",
+    "price": 500
   },
   {
     "id": "hazelnut",
     "name": "헤이즐넛",
     "unlock": "wish",
-    "class": "nut"
+    "class": "nut",
+    "price": 500
   },
   {
     "id": "banana_fruit",
     "name": "바나나",
     "unlock": "wish",
-    "class": "fruit"
+    "class": "fruit",
+    "price": 500
   },
   {
     "id": "melon_fruit",
     "name": "멜론",
     "unlock": "wish",
-    "class": "fruit"
+    "class": "fruit",
+    "price": 500
   },
   {
     "id": "peach_fruit",
     "name": "복숭아",
     "unlock": "wish",
-    "class": "fruit"
+    "class": "fruit",
+    "price": 500
   },
   {
     "id": "grapefruit_fruit",
     "name": "자몽",
     "unlock": "cert",
-    "class": "fruit"
+    "class": "fruit",
+    "price": 800
   },
   {
     "id": "kiwi_fruit",
     "name": "키위",
     "unlock": "cert",
-    "class": "fruit"
+    "class": "fruit",
+    "price": 800
   },
   {
     "id": "mango",
     "name": "망고",
     "unlock": "cert",
-    "class": "fruit"
+    "class": "fruit",
+    "price": 800
   },
   {
     "id": "coconut_milk",
     "name": "코코넛밀크",
     "unlock": "cert",
-    "class": "dairy"
+    "class": "dairy",
+    "price": 800
   },
   {
     "id": "soda_water",
     "name": "탄산수",
     "unlock": "year",
     "year": 2,
-    "class": "base"
+    "class": "base",
+    "price": 700
   },
   {
     "id": "curry_powder",
     "name": "카레가루",
     "unlock": "year",
     "year": 3,
-    "class": "base"
+    "class": "base",
+    "price": 800
   },
   {
     "id": "soy_sauce",
     "name": "간장",
     "unlock": "year",
     "year": 4,
-    "class": "base"
+    "class": "base",
+    "price": 900
   },
   {
     "id": "truffle",
     "name": "트러플",
     "unlock": "year",
     "year": 5,
-    "class": "base"
+    "class": "base",
+    "price": 1000
   },
   {
     "id": "mayonnaise",
     "name": "마요네즈",
     "unlock": "wish",
-    "class": "base"
+    "class": "base",
+    "price": 500
   },
   {
     "id": "corn",
     "name": "옥수수",
     "unlock": "wish",
-    "class": "grain"
+    "class": "grain",
+    "price": 500
   },
   {
     "id": "cabbage",
     "name": "양배추",
     "unlock": "wish",
-    "class": "veg"
+    "class": "veg",
+    "price": 500
   },
   {
     "id": "noodle",
     "name": "생면",
     "unlock": "wish",
-    "class": "grain"
+    "class": "grain",
+    "price": 500
   },
   {
     "id": "squid",
     "name": "오징어",
     "unlock": "wish",
-    "class": "seafood"
+    "class": "seafood",
+    "price": 500
   },
   {
     "id": "octopus",
     "name": "문어",
     "unlock": "wish",
-    "class": "seafood"
+    "class": "seafood",
+    "price": 500
   },
   {
     "id": "watermelon_fruit",
     "name": "수박",
     "unlock": "cert",
-    "class": "fruit"
+    "class": "fruit",
+    "price": 800
   },
   {
     "id": "dragonfruit",
     "name": "용과",
     "unlock": "cert",
-    "class": "fruit"
+    "class": "fruit",
+    "price": 800
   },
   {
     "id": "papaya",
     "name": "파파야",
     "unlock": "cert",
-    "class": "fruit"
+    "class": "fruit",
+    "price": 800
   },
   {
     "id": "pineapple_fruit",
     "name": "파인애플",
     "unlock": "cert",
-    "class": "fruit"
+    "class": "fruit",
+    "price": 800
   },
   {
     "id": "blueberry_fruit",
     "name": "블루베리",
     "unlock": "cert",
-    "class": "fruit"
+    "class": "fruit",
+    "price": 800
   },
   {
     "id": "raspberry_fruit",
     "name": "라즈베리",
     "unlock": "cert",
-    "class": "fruit"
+    "class": "fruit",
+    "price": 800
   },
   {
     "id": "grape_fruit",
     "name": "포도",
     "unlock": "cert",
-    "class": "fruit"
+    "class": "fruit",
+    "price": 800
   },
   {
     "id": "chestnut",
     "name": "밤",
     "unlock": "cert",
-    "class": "nut"
+    "class": "nut",
+    "price": 800
   },
   {
     "id": "olive_oil",
     "name": "올리브유",
     "unlock": "year",
     "year": 2,
-    "class": "base"
+    "class": "base",
+    "price": 700
   },
   {
     "id": "caramel",
     "name": "캐러멜",
     "unlock": "year",
     "year": 3,
-    "class": "sweet"
+    "class": "sweet",
+    "price": 800
   },
   {
     "id": "bbq_sauce",
     "name": "바비큐소스",
     "unlock": "year",
     "year": 4,
-    "class": "base"
+    "class": "base",
+    "price": 900
   },
   {
     "id": "charcoal",
     "name": "숯",
     "unlock": "year",
     "year": 5,
-    "class": "base"
+    "class": "base",
+    "price": 1000
   },
   {
     "id": "almond",
     "name": "아몬드",
     "unlock": "year",
     "year": 6,
-    "class": "nut"
+    "class": "nut",
+    "price": 1100
   },
   {
     "id": "gold_leaf",
     "name": "금박",
     "unlock": "year",
     "year": 8,
-    "class": "base"
+    "class": "base",
+    "price": 1300
   },
   {
     "id": "fish_cake",
@@ -437,13 +481,15 @@
     "name": "빙어",
     "unlock": "year",
     "year": 3,
-    "class": "seafood"
+    "class": "seafood",
+    "price": 800
   },
   {
     "id": "persimmon",
     "name": "홍시",
     "unlock": "year",
     "year": 4,
-    "class": "fruit"
+    "class": "fruit",
+    "price": 900
   }
 ]

@@ -7,7 +7,6 @@ import areasJson from './areas.json';
 import friendsJson from './friends.json';
 import wishesJson from './wishes.json';
 import giftsJson from './gifts.json';
-import tilesJson from './tiles.json';
 import certsJson from './certs.json';
 import ranksJson from './ranks.json';
 import shopJson from './shop.json';
@@ -15,9 +14,11 @@ import calendarJson from './calendar.json';
 import ingredientsJson from './ingredients.json';
 import recipesJson from './recipes.json';
 import compatJson from './compat.json';
+import rigPartsJson from './rig-parts.json';
+const rigPartIds = new Set((rigPartsJson as { id: string }[]).map((p) => p.id));
 import type {
   AreaDef, CalendarEvent, CertDef, CertFamily, CertGrade, CompatDef, Condition, FacilityClass, FacilityDef, FoodCategory, FriendDef,
-  GiftDef, IngredientDef, ItemDef, PoolColor, RankDef, RecipeDef, Scent, SeasonTables, ShopEntry, TileDef, WishDef,
+  GiftDef, IngredientDef, ItemDef, PoolColor, RankDef, RecipeDef, Scent, SeasonTables, ShopEntry, WishDef,
 } from './schema';
 
 /**
@@ -25,7 +26,7 @@ import type {
  * `schema.ts` 는 타입만 두므로 열거값의 런타임 목록은 여기서 들고, `satisfies` + `expectTypeOf` 로
  * 타입과 목록이 갈라지면 컴파일이 깨지게 묶는다.
  */
-const CLASSES = ['utility', 'lounging', 'restaurant', 'attraction', 'slide', 'decor'] as const satisfies readonly FacilityClass[];
+const CLASSES = ['utility', 'lounging', 'restaurant', 'attraction', 'slide', 'decor', 'rig'] as const satisfies readonly FacilityClass[];
 const POOL_COLORS = ['orange', 'yellow', 'lime', 'green', 'blue', 'purple', 'pink', 'red', 'white'] as const satisfies readonly PoolColor[];
 const SCENTS = [
   'citrus', 'floral', 'pine', 'fruity', 'tropical', 'berry', 'marine', 'cookie', 'spices', 'milky', 'coffee', 'money',
@@ -44,7 +45,6 @@ const areas = areasJson as unknown as AreaDef[];
 const friends = friendsJson as unknown as FriendDef[];
 const wishes = wishesJson as unknown as WishDef[];
 const gifts = giftsJson as unknown as GiftDef[];
-const tiles = tilesJson as unknown as TileDef[];
 const certs = certsJson as unknown as CertDef[];
 const ranks = ranksJson as unknown as RankDef[];
 const shop = shopJson as unknown as ShopEntry[];
@@ -61,6 +61,7 @@ const COST_POP_BAND: Record<FacilityClass, [number, number]> = {
   attraction: [60, 140],
   slide: [60, 140],
   decor: [60, 140],
+  rig: [60, 140], // P48-c — 정의는 P49-a1 부터, 띠는 놀이와 같다
 };
 /**
  * 회귀 밖에 있는 것 (전부 §1.4 위키 실측값 그대로 — 데이터를 맞추지 말고 여기 적는다):
@@ -71,7 +72,7 @@ const COST_POP_BAND: Record<FacilityClass, [number, number]> = {
  * ×0.01 이면 pop 합이 3.3배가 되어 좋아요·버스 몫이 밴드를 벗어났다 (봇 8시드 실측).
  * 지금 스케일은 교체된 75종의 pop 합이 2,020 → 2,000 이라 옛 세트와 사실상 같다.
  */
-const EXCEPTIONS = new Set<string>(['golden_kairobot']);
+const EXCEPTIONS = new Set<string>(['golden_kairobot', 'entrance']); // entrance: P42 0G 도구형 시설(문 자리) — 값·인기·유지비·정원 회귀 밖
 const MAINT_PER_POP = 5.3;
 const MAINT_PER_POP_SLIDE = 7.2;
 const MAINT_TOLERANCE = 0.3;
@@ -99,6 +100,7 @@ describe('facilities.json', () => {
 
   it('maint ≈ pop × 5.3 (slides × 7.2) ± 30%', () => {
     for (const f of facilities) {
+      if (EXCEPTIONS.has(f.id)) continue;
       const k = f.class === 'slide' ? MAINT_PER_POP_SLIDE : MAINT_PER_POP;
       const ratio = f.maint / (f.pop * k);
       expect(inBand(ratio, [1 - MAINT_TOLERANCE, 1 + MAINT_TOLERANCE]), `${f.id} maint/(pop×${k})=${ratio.toFixed(2)}`).toBe(true);
@@ -157,6 +159,7 @@ describe('facilities.json', () => {
 
   it('paid lounging heals more than free lounging; decor is not usable', () => {
     for (const f of facilities) {
+      if (EXCEPTIONS.has(f.id)) continue;
       if (f.class === 'lounging') expect(f.hpDelta, f.id).toBe(f.usageFee > 0 ? 50 : 25);
       else expect(f.usageFee, f.id).toBe(0);
       if (f.class === 'decor') expect(f.capacity, f.id).toBe(0);
@@ -234,7 +237,8 @@ describe('seasons.json', () => {
 const CONDITION_KINDS = [
   'pool', 'poolTotalSize', 'facility', 'facilityAdjacent', 'facilityClass', 'item', 'recipe', 'recipeCount', 'popularity',
   'likes', 'certPasses', 'certPassed', 'friends', 'areas', 'rank', 'gift', 'cookingLevel', 'visitors', 'money', 'year',
-  'all', 'any', 'courseThrill',
+  'all', 'any', 'courseThrill', 'seatGrade', 'seatsFed',
+  'rigGrade', 'rigChain', 'rigCount', 'rigGuarded', // P49-a1
 ] as const satisfies readonly Condition['kind'][];
 expectTypeOf<Exclude<Condition['kind'], (typeof CONDITION_KINDS)[number]>>().toBeNever();
 
@@ -407,6 +411,9 @@ describe('wishes.json', () => {
           expect(ingredients.some((i) => i.id === r.id), `${where} reward ingredient ${r.id}`).toBe(true);
           expect(ingredients.find((i) => i.id === r.id)!.unlock, `${where} rewarded ingredient must be unlock:'wish'`).toBe('wish');
           break;
+        case 'rigPart': // P53-a: 소원 둘이 부품을 준다 (float_drum · slip_wax)
+          expect(rigPartIds.has(r.id), `${where} reward rig part ${r.id}`).toBe(true);
+          break;
         default:
           // tile 은 인증 보상이다 (PSS: 타일 13종 전부 인증) — 소원이 주면 인증의 유일한 보상이 헐값이 된다
           expect.fail(`${where} reward kind ${(r as { kind: string }).kind} is not a wish reward`);
@@ -493,37 +500,11 @@ expectTypeOf<Exclude<CertGrade, (typeof CERT_GRADES)[number]>>().toBeNever();
 /** 합격선 (§1.7) */
 const CERT_PASS = [15, 17, 20, 22, 25];
 /** 인증이 안 주는 타일 — 24종이 되며 A·S 몫(excellent·colorful·kairo)도 배정됐다 (§1.7 "타일 13종은 전부 인증 보상") */
-const TILES_RESERVED = new Set<string>([]);
 import { TICKS_PER_DAY } from '../sim/clock.js';
 
-const tileIds = new Set(tiles.map((t) => t.id));
 const certIds = new Set(certs.map((c) => c.id));
 const gradeIndex = (g: CertGrade) => CERT_GRADES.indexOf(g);
 
-describe('tiles.json', () => {
-  it('has 13 unique ids; only standard is a start tile; look === id', () => {
-    expect(tiles).toHaveLength(13);
-    expect(tileIds.size).toBe(13);
-    for (const t of tiles) {
-      expect(t.id).toMatch(/^[a-z][a-z0-9_]*$/);
-      expect(t.unlock, t.id).toBe(t.id === 'standard' ? 'start' : 'cert');
-      expect(t.look, t.id).toBe(t.id);
-      expect(t.name, t.id).toMatch(/[가-힣]/);
-    }
-  });
-
-  it('standard is 100G/pop 4 and every other tile beats it on pop (§1.4 100~400G · 인기 4~16)', () => {
-    const std = tiles.find((t) => t.id === 'standard')!;
-    expect(std.cost).toBe(100);
-    expect(std.pop).toBe(4);
-    for (const t of tiles) {
-      expect(inBand(t.cost, [100, 400]), `${t.id} cost=${t.cost}`).toBe(true);
-      expect(inBand(t.pop, [4, 16]), `${t.id} pop=${t.pop}`).toBe(true);
-      if (t.id !== 'standard') expect(t.pop, t.id).toBeGreaterThan(std.pop);
-    }
-    expect(tiles.find((t) => t.id === 'kairo')!.pop).toBe(16);
-  });
-});
 
 describe('certs.json', () => {
   it('has 24 unique ids with a known family/grade, pass ∈ {15,17,20,22,25}, fee 500~8000', () => {
@@ -590,11 +571,12 @@ describe('certs.json', () => {
       expect(judges, `${c.id} judges`).toBe(3);
     }
     const s = certs.find((c) => c.id === 'grade_s')!;
-    expect(s.conditions.map((w) => w.cond.kind)).toEqual(['pool', 'pool', 'facility']);
+    expect(s.conditions.map((w) => w.cond.kind)).toEqual(['pool', 'rigGrade', 'facility']); // P53-a: 수역 → 기구 등급 4
     const fc = certs.find((c) => c.id === 'fun_c')!;
     expect(fc.conditions[0]!.cond.kind).toBe('any');
     expect(certs.filter((c) => c.reward.kind === 'gift').length).toBe(12); // 튜브 12 (원작 표)
-    expect(certs.filter((c) => c.reward.kind === 'tile').length).toBe(12); // 타일 12 = 13 − 표준
+    expect(certs.filter((c) => c.reward.kind === 'rigPart').length).toBe(9); // P49-a2: 물빛 12 → 부품 9 + 기구 3
+    expect(certs.filter((c) => c.reward.kind === 'facility').length).toBeGreaterThanOrEqual(3);
   });
 
   it('rewards reference existing ids; tiles at most once each; cert-gifts exactly once; items are shop-tier', () => {
@@ -602,10 +584,8 @@ describe('certs.json', () => {
     for (const c of certs) {
       const r = c.reward;
       switch (r.kind) {
-        case 'tile':
-          expect(tileIds.has(r.id), `${c.id} reward tile ${r.id}`).toBe(true);
-          expect(tiles.find((t) => t.id === r.id)!.unlock, `${c.id} rewards a start tile`).toBe('cert');
-          tileHits.set(r.id, [...(tileHits.get(r.id) ?? []), c.id]);
+        case 'rigPart':
+          expect(rigPartIds.has(r.id), `${c.id} reward rig part ${r.id}`).toBe(true);
           break;
         case 'gift':
           expect(giftIds.has(r.id), `${c.id} reward gift ${r.id}`).toBe(true);
@@ -630,19 +610,13 @@ describe('certs.json', () => {
     }
   });
 
-  it('every cert tile (13 종 전부) is rewarded by exactly one cert', () => {
-    for (const t of tiles.filter((t) => t.unlock === 'cert')) {
-      const hits = certs.filter((c) => c.reward.kind === 'tile' && c.reward.id === t.id);
-      expect(hits.length, `${t.id} rewarded by ${hits.map((c) => c.id).join(',') || 'nobody'}`).toBe(TILES_RESERVED.has(t.id) ? 0 : 1);
-    }
-  });
 
-  it('the entry cert (grade_f) asks for a popular pool 60 (2x) + pool 20 and is reachable from the start kit', () => {
+  it('the entry cert (grade_f) asks for a popular pool 60 (2x) + rigs 2 (P53-a) and is reachable from the start kit', () => {
     const f = certs.find((c) => c.id === 'grade_f')!;
     expect(f.requires).toBeNull();
     expect(f.conditions).toEqual([
       { cond: { kind: 'pool', popMin: 60 }, weight: 2 },
-      { cond: { kind: 'pool', sizeMin: 20 }, weight: 1 },
+      { cond: { kind: 'rigCount', min: 2 }, weight: 1 }, // P53-a: 수역 20칸 → 기구 2
     ]);
     // 조건에 나오는 시설·아이템은 상점 없이도 손에 들어와야 한다 — 상점은 1년차 여름에 열린다
     for (const c of certs.filter((c) => c.grade === 'F')) {
@@ -681,7 +655,7 @@ describe('ranks.json', () => {
       expect(pop[i], `★${i + 1} popularity`).toBeGreaterThan(pop[i - 1]!);
       expect(cert[i], `★${i + 1} certPasses`).toBeGreaterThan(cert[i - 1]!);
     }
-    expect(pop).toEqual([200, 1000, 1400, 2600, 4200]) // G45: 실측 인기 곡선(Y1 800 → Y8 6,400)에 맞춘 문턱;
+    expect(pop).toEqual([200, 1000, 1400, 2600, 4000]) // P55 밸런스 스윕: ★5 인기 4200 → 4000 (봇 6~7년차 3,812~4,095 로 문턱에 걸렸다) // G45: 실측 인기 곡선(Y1 800 → Y8 6,400)에 맞춘 문턱;
     expect(cert).toEqual([1, 2, 4, 7, 10]);
   });
 
@@ -708,7 +682,7 @@ describe('ranks.json', () => {
     expect(ranks.find((r) => r.star === 5)!.reward).toEqual({ kind: 'facility', id: 'golden_kairobot' });
     // 반대 방향: rank-source 시설은 전부 그 랭크가 준다
     for (const f of facilities.filter((f) => f.unlock.source === 'rank')) {
-      const hit = ranks.find((r) => r.reward?.kind === 'facility' && r.reward.id === f.id);
+      const hit = ranks.find((r) => (r.reward?.kind === 'facility' && r.reward.id === f.id) || (r.unlocks ?? []).includes(f.id)); // P21: `unlocks` 로 여럿
       expect(hit?.star, `${f.id} rank reward`).toBe(f.unlock.rank);
     }
   });
@@ -800,6 +774,9 @@ describe('calendar.json', () => {
         case 'ingredient':
           expect(calendarIngredientIds.has(g.id!), `${e.id} ingredient ${g.id}`).toBe(true);
           break;
+        case 'rigPart': // P53-a: 연차 폴백 (겨울 택배)
+          expect(rigPartIds.has(g.id!), `${e.id} rig part ${g.id}`).toBe(true);
+          break;
         default:
           expect.fail(`${e.id} grant kind ${(g as { kind: string }).kind}`);
       }
@@ -815,7 +792,7 @@ describe('calendar.json', () => {
     }
     // 반대 방향: 달력이 주는 시설은 전부 gift-source 다
     for (const e of calendar) {
-      if (e.grant.kind === 'facility') expect(facilities.find((f) => f.id === e.grant.id)!.unlock.source, e.id).toBe('gift');
+      if (e.grant.kind === 'facility' && e.priority !== 'strip') expect(facilities.find((f) => f.id === e.grant.id)!.unlock.source, e.id).toBe('gift'); // P53-a: 연차 폴백(strip)은 안전망이라 인증·랭크 시설도 준다
     }
   });
 
@@ -861,12 +838,13 @@ describe('ingredients.json', () => {
     }
   });
 
-  it('`year` is present iff unlock === "year" (2..8); `price` iff unlock === "shop" (300~900)', () => {
+  it('`year` is present iff unlock === "year" (2..8); `price` iff unlock !== "start" (P56-c 재고 — 장날 300~900 · 보상 재료는 재구매 값 500~1,300, 시작 재료는 무한이라 값이 없다)', () => {
     for (const i of ingredients) {
       expect(i.year !== undefined, `${i.id} year`).toBe(i.unlock === 'year');
       if (i.year !== undefined) expect(inBand(i.year, [2, 8]), `${i.id} year=${i.year}`).toBe(true);
-      expect(i.price !== undefined, `${i.id} price`).toBe(i.unlock === 'shop');
-      if (i.price !== undefined) expect(inBand(i.price, [300, 900]), `${i.id} price=${i.price}`).toBe(true);
+      expect(i.price !== undefined, `${i.id} price`).toBe(i.unlock !== 'start');
+      if (i.price !== undefined) expect(inBand(i.price, i.unlock === 'shop' ? [300, 900] : [500, 1300]), `${i.id} price=${i.price}`).toBe(true);
+      if (i.unlock === 'year') expect(i.price, `${i.id} 연차 재료 값 = 500 + 100×연차`).toBe(500 + 100 * (i.year ?? 0));
     }
   });
 
@@ -1065,11 +1043,12 @@ describe('parts.json / gears.json', () => {
     for (const c of PART_CLASSES) expect(parts.some((p) => p.class === c), c).toBe(true);
   });
 
-  it('`price` 는 shop 일 때만 (200~1,500G) · `year` 는 year 일 때만 (2~8) · 시작 부품 6~8', async () => {
+  it('`price` 는 start 가 아닐 때(P56-c 재고 — 장날 200~1,500G · 연차 부품은 재구매 값 600+100×연차) · `year` 는 year 일 때만 (2~8) · 시작 부품 6~8', async () => {
     const { parts } = await load();
     for (const p of parts) {
-      expect(p.price !== undefined, `${p.id} price`).toBe(p.unlock === 'shop');
+      expect(p.price !== undefined, `${p.id} price`).toBe(p.unlock !== 'start');
       if (p.price !== undefined) expect(inBand(p.price, [200, 1500]), `${p.id} price=${p.price}`).toBe(true);
+      if (p.unlock === 'year') expect(p.price, `${p.id} 연차 부품 값`).toBe(600 + 100 * (p.year ?? 0));
       expect(p.year !== undefined, `${p.id} year`).toBe(p.unlock === 'year');
       if (p.year !== undefined) expect(inBand(p.year, [2, 8]), `${p.id} year=${p.year}`).toBe(true);
     }
@@ -1209,5 +1188,26 @@ describe('parts.json / gears.json', () => {
       if (WORKSHOP_GEARS.has(g.id)) expect(presetIds.filter((p) => row![p] === 'no').length, `${g.id} — no 가 3개 이상`).toBeLessThanOrEqual(2);
     }
     expect([...WORKSHOP_GEARS].every((id) => gears.some((g) => g.id === id)), '공방 기구 목록이 데이터와 갈라졌다').toBe(true);
+  });
+});
+
+// ── P49-a1 §4.0 validateRigData — class:'rig' 정의역 전부 ──
+describe('validateRigData (P49-a1)', () => {
+  const rigs = facilities.filter((f) => f.class === 'rig');
+  it('rig ⇒ depth 필수 · slide null · menuSlots 0 · indoorOnly false · usageFee 0 · capacity ≥ 1 · needsVest ⇔ deep · buildable:false ⇒ craft · maxPerPark 정확히 1종', () => {
+    expect(rigs.length).toBeGreaterThanOrEqual(17);
+    for (const f of rigs) {
+      expect(['shallow', 'deep', 'any'], f.id).toContain(f.depth);
+      expect(f.slide, f.id).toBeNull(); expect(f.menuSlots, f.id).toBe(0); expect(f.indoorOnly, f.id).toBe(false); expect(f.usageFee, f.id).toBe(0); expect(f.capacity, f.id).toBeGreaterThanOrEqual(1);
+      expect(f.needsVest === true, f.id).toBe(f.depth === 'deep');
+      if (f.buildable === false) expect(f.unlock.source, f.id).toBe('craft');
+      expect(f.thrill, f.id).toBeGreaterThanOrEqual(0); expect(f.thrill, f.id).toBeLessThanOrEqual(4);
+    }
+    expect(rigs.filter((f) => f.maxPerPark !== undefined).length).toBe(1);
+    expect(rigs.filter((f) => f.bandCost === 2).length).toBeLessThanOrEqual(1);
+  });
+  it('링 위 비-rig 는 자기 class 띠를 따른다(watchtower·rig_rack·rescue_dock utility · rig_float_bar restaurant)', () => {
+    for (const id of ['watchtower', 'rig_rack', 'rescue_dock']) expect(facilities.find((f) => f.id === id)!.class, id).toBe('utility');
+    expect(facilities.find((f) => f.id === 'rig_float_bar')!.class).toBe('restaurant');
   });
 });

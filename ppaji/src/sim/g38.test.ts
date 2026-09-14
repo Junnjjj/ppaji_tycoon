@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { makeTestPpaji } from './test-helpers.js';
 import { Game } from './game.js';
 import { carryoverOf, applyCarryover, NG_TICKET_STEP } from './endgame.js';
 
@@ -20,7 +21,7 @@ describe('G38 NG+ 누적 · 활성 아이템만', () => {
   it('조건 평가의 풀 아이템은 만료된 것을 빼고 센다', () => {
     const g = new Game(73, undefined, { kit: false });
     g.money = 10000;
-    g.digPool([{ i: g.gate.i - 2, j: g.gate.j + 4 }, { i: g.gate.i - 1, j: g.gate.j + 4 }, { i: g.gate.i - 2, j: g.gate.j + 5 }, { i: g.gate.i - 1, j: g.gate.j + 5 }]);
+    makeTestPpaji(g);
     const p = g.pools.all[0]!;
     g.unlocked.items.add('strawberry');
     expect(g.putItem(p.id, 'strawberry').ok).toBe(true);

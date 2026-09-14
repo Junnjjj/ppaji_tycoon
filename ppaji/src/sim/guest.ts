@@ -8,7 +8,8 @@ import type { Rng } from './rng.js';
 import { capacityOf } from './facility.js';
 import { TICK_SCALE } from './clock.js';
 import type { Grid } from './grid.js';
-import { FLOOR } from './grid.js';
+import { guestWalkable } from './facility.js';
+import { swimSkill } from './wristband.js';
 import type { PoolStore, Pool } from './pool.js';
 import { FacilityStore, type PlacedFacility } from './facility.js';
 import type { FacilityDef } from '../data/schema.js';
@@ -23,6 +24,8 @@ export const QUEUE_PATIENCE = 48;
 export const FLOAT_KINDS = 6;
 export const FLOAT_BY_GIFT: Record<string, number> = { red_tube: 1, swim_ring: 2, duck_float: 4, blue_orca: 5, kayak_float: 6, kairo_float: 3, donut_float: 1, banana_float: 6, watermelon_float: 3, river_orca: 5, hammock: 2, flamingo_float: 1, dreaming_orca: 5, shell_float: 2 };
 export type GuestBuild = 'adult' | 'kid' | 'old';
+/** P52-a ⑤ — 기구 끌림: 기운이 있으면 1.0, 지쳤으면 0.6 (수영 뒤 배고픔·매점 사슬로 돌아가게). P52-b 실측: 팔찌가 딥 기구를 열자 1.2 로는 기구 이용 몫 0.604 로 상한(0.6)을 넘겼다 */
+export const swimUrgeRig = (g: { hp: number }): number => (g.hp >= 50 ? 1.0 : 0.6);
 /** 체형은 나이에서 파생한다 — 저장하지 않는다 (≤12 어린이 · ≥58 노인) */
 export function buildOf(g: { age: number }): GuestBuild {
   return g.age <= 12 ? 'kid' : g.age >= 58 ? 'old' : 'adult';
@@ -104,8 +107,24 @@ export interface Guest {
   /** P17 패키지 — 자리를 잡을 때 산 것 · 썼는가 */
   pkg: string | null;
   pkgUsed: boolean;
+  /** P28-b D36: 이미 한 번 잤다 — 1박은 한 번. 아침에 `stays` 를 내리고 이 표지를 올려 다시 체크인하지 않는다(안 그러면 매일 자며 영원히 안 나간다 — 실측 overnight 596 → 6052) */
+  slept: boolean;
+  /** P45-b — 지금 목표가 「지나가며 사는」 것인가(입장·퇴장) · 퇴장 중(복도 점포에 들른 뒤 반드시 나간다) */
+  passBy: 'enter' | 'leave' | null;
+  /** P52-a G2 — 팔찌(자유이용권) 칸 id · 남은 회수. 없으면 조끼도 없다(`hasVest = band != null`) */
+  band?: string;
+  bandLeft?: number;
+  /** 「팔찌가 없네…」 는 손님당 한 번(저장 0) */
+  bandSaid?: boolean;
+  leaving: boolean;
+  /** P45-c — 오늘 밤 시설에 들렀다(하룻밤 한 번) */
+  nightDone: boolean;
+  /** P45-c — 지금 목표가 밤 분기로 고른 시설(집계용) */
+  nightPick: boolean;
   /** P18 1박 — 숙박 자리를 잡았다. 폐장에 나가지 않고 자리로 가서 자고 다음 날 이어서 논다 */
   stays: boolean;
+  /** P27 D33 배고픔 0~100 — 물놀이·탑승마다 오르고 식당에서 0. 체력(hp)과 다르다: 체력은 떠나는 조건, 배고픔은 목표 선택 */
+  hunger: number;
 }
 
 /** P17 대여 열쇠 — 팀은 팀 번호(음수)로, 혼자면 자기 uid. 같은 버스 손님이 같은 자리를 쓴다 */
@@ -118,7 +137,7 @@ export function tasteWeight(cls: string, menuSlots: number, taste: AreaTaste | u
   if (!taste) return 1;
   if (menuSlots > 0 || cls === 'restaurant') return taste.food;
   if (cls === 'lounging') return taste.rest;
-  if (cls === 'attraction' || cls === 'slide') return taste.thrill;
+  if (cls === 'attraction' || cls === 'slide' || cls === 'rig') return taste.thrill; // P48-c: 기구도 스릴 취향
   return 1;
 }
 
@@ -134,16 +153,45 @@ export interface GuestBalance {
   guestHpSwim: number;
   guestHpLeave: number;
   swimTicks: number;
+  /** P27 배고픔 — 수영 1회 · 탑승 1회에 오르는 양, 배고플 때 식당 거리 감쇠 */
+  hungerPerSwim: number;
+  hungerPerRide: number;
+  hungerFalloff: number;
+  walkinTeamMin: number;
+  walkinTeamMax: number;
   walkTicksPerTile: number;
   wanderTicks: number;
   /** 수온이 선호와 이만큼 벗어나면 조기 퇴수 + HP 두 배 */
   tempTolerance: number;
+  /** P45-b D63 「지나가며 산다」 — 입장 때 복도 곁 점포 가중 · 퇴장 때 복도 곁 점포에 들를 확률 · 오늘 쓴 돈 상한 */
+  passByEnterMul?: number;
+  passByLeaveChance?: number;
+  passBySpendCap?: number;
+  /** P45-c D63 밤 분기 — 폐장 뒤 남는 팀 손님이 자리로 가기 전에 밤 시설(찜질·사우나·무대·노래방·오락기)에 들를 확률 */
+  nightChance?: number;
 }
 
 export interface GuestHooks {
   onSwimEnter?: (g: Guest) => void;
   /** P17 자리 값 (그늘·뷰·매점 거리) — 평상 이용 만족에 곱한다 */
   seatValue?: (f: PlacedFacility) => number;
+  /** P35 D44 — 이 손님의 자리 블록과 그 시설의 블록이 같거나 접했나 */
+  blockNear?: (g: Guest, f: PlacedFacility) => boolean;
+  /** P34 D43 — 비 오는 날 피할 실내 시설 uid 들 · 피할 확률 */
+  indoorRefuge?: () => number[];
+  rainRefuge?: () => number;
+  onRainRefuge?: () => void;
+  /** P45-b D63 — 복도 곁 점포 uid 집합(입장·퇴장) · 늦은 오후인가 · 지나가며 산 것을 센다 */
+  passBy?: () => { enter: ReadonlySet<number>; leave: ReadonlySet<number> };
+  lateDay?: () => boolean;
+  onPassBy?: (g: Guest, f: PlacedFacility, kind: 'enter' | 'leave') => void;
+  /** P45-c — 밤 시설 uid 집합(실내 놀이) · 밤 이용 집계 */
+  nightSet?: () => ReadonlySet<number>;
+  /** P45-c — 저녁(18시 뒤)인가: 남는 팀 손님은 저녁부터 밤 시설에 들를 수 있다 */
+  evening?: () => boolean;
+  onNightUse?: (g: Guest, f: PlacedFacility) => void;
+  /** P28-b D35: 이 손님의 팀이 이미 빌렸거나 앉은 자리(uid). 팀은 한 줄만 쓴다 — 실측 새 판에서 한 팀이 킷 평상 두 줄을 다 빌려 14팀이 서성였다 */
+  teamSeatUid?: (g: Guest) => number | null;
   /** P17 팀 손님이 앉을 자리를 못 찾아 서성인다 */
   onSeatless?: (g: Guest) => void;
   /** 풀 수온 — Game 이 파생 상태에서 준다 */
@@ -163,6 +211,8 @@ export interface GuestHooks {
   /** 오늘 날씨 (G34) — 비면 야외 풀을 피하고 일부는 돌아간다 */
   weather?: () => string;
   poolIndoor?: (poolId: number) => boolean;
+  /** P52-c — 수온 → 야외 입수 배수(실내 1 · 폐쇄 0 · 겨울 바닥) */
+  swimUrge?: (poolId: number) => number;
   /** 직원·청결 배율 (G20) — 풀 체력 소모 · 만족 증가 · 사진 확률 */
   hpMul?: () => number;
   satMul?: () => number;
@@ -206,9 +256,8 @@ export class GuestStore {
 
   /** 손님이 설 수 있는 칸 — 잔디·포장·실내이고 시설이 안 점유한 곳 (풀은 못 선다) */
   walkable = (i: number, j: number): boolean => {
-    const f = this.grid.at(i, j);
-    // P16 D24: 손님은 **포장한 길·데크·실내**만 걷는다 — 잔디는 못 걷는다(레거시 K32-B 「길이 곧 동선 설계」). 여울도 안 걷는다(P1)
-    return (f === FLOOR.path || f === FLOOR.indoor || f === FLOOR.deck) && !this.facilities.occupied(i, j);
+    // P16 D24: 손님은 **포장한 길·데크·실내**만 걷는다 — 잔디는 못 걷는다(레거시 K32-B 「길이 곧 동선 설계」). 여울도 안 걷는다(P1) · P50-a: 켜진 물 위 기구 발자국도 선다 — 술어는 `guestWalkable` 하나
+    return guestWalkable(this.grid, this.facilities, i, j);
   };
 
   invalidate(): void {
@@ -246,7 +295,7 @@ export class GuestStore {
         for (const [di, dj] of NEIGHBORS) {
           const ni = i + di;
           const nj = j + dj;
-          if (!this.walkable(ni, nj)) continue;
+          if (!this.walkable(ni, nj) || !this.grid.canCross(i, j, ni, nj)) continue; // P39 벽
           const nk = nj * this.grid.w + ni;
           if (seen.has(nk)) continue;
           seen.add(nk);
@@ -307,8 +356,9 @@ export class GuestStore {
       gender: friend?.gender ?? gender,
       home: friend?.home ?? home,
       spentToday: 0,
-      teamId: null, seatUid: null, pkg: null, pkgUsed: false, // P17
+      teamId: null, seatUid: null, pkg: null, pkgUsed: false, slept: false, passBy: null, leaving: false, nightDone: false, nightPick: false, // P17 · P28-b · P45-b · P45-c
       stays: false, // P18
+      hunger: 0, // P27
       ...(taste ? { taste } : {}),
     };
     this.list.push(g);
@@ -336,8 +386,9 @@ export class GuestStore {
     for (const g of this.list) {
       if (!g.stays) continue;
       n++;
+      g.stays = false; g.slept = true; // D36: 1박은 한 번 — 오늘은 놀다가 평소처럼 나간다
       g.state = 'wander'; g.stateTicks = 0; g.target = null; g.carry = false; g.queuePos = -1; g.rideIdx = -1; g.swimTile = null;
-      g.hp = 100; g.sat = Math.min(100, g.sat + 10); g.photos = 0; g.spentToday = 0; g.progress = 1;
+      g.hp = 100; g.sat = Math.min(100, g.sat + 10); g.photos = 0; g.spentToday = 0; g.progress = 1; g.passBy = null; g.leaving = false; g.nightDone = false; g.nightPick = false;
       const back = this.adjacentWalkable(g);
       if (back) { g.fromI = back.i; g.fromJ = back.j; g.i = back.i; g.j = back.j; }
       else { g.fromI = this.gate.i; g.fromJ = this.gate.j; g.i = this.gate.i; g.j = this.gate.j; }
@@ -364,17 +415,27 @@ export class GuestStore {
         case 'wander': {
           if (hooks?.closing?.()) {
             // P18 숙박 손님은 나가지 않고 제 자리로 가서 잔다
-            if (g.stays && g.seatUid !== null && this.facilities.byUid(g.seatUid)) { g.target = { kind: 'facility', uid: g.seatUid }; g.state = 'walk'; g.stateTicks = 0; g.say = this.rng.chance(0.3) ? '불멍하다 자야지' : null; break; }
+            if (g.stays && g.seatUid !== null && this.facilities.byUid(g.seatUid)) {
+              // P45-c D63 밤 분기: 자리로 가기 전에 밤 시설(실내 놀이) 하나 — 확률 nightChance, 한 번만(nightDone)
+              if (!g.nightDone && this.tryNight(g, hooks)) break;
+              g.target = { kind: 'facility', uid: g.seatUid }; g.state = 'walk'; g.stateTicks = 0; g.say = this.rng.chance(0.3) ? '불멍하다 자야지' : null; break;
+            }
             g.state = 'leave'; g.stateTicks = 0; g.say = this.rng.chance(0.3) ? '문 닫을 시간이네' : null; break;
           }
+          if (g.leaving) { g.state = 'leave'; g.stateTicks = 0; break; } // P45-b: 걷기 실패·줄 포기로 되돌아온 퇴장 손님
+          if (g.stays && !g.nightDone && hooks?.evening?.() && this.tryNight(g, hooks)) break; // P45-c: 저녁부터 밤 시설 한 번
           if (g.stateTicks < this.b.wanderTicks) break;
           // P17 자리 없으면 서성임 — 팀 손님이 앉을 평상이 하나도 안 닿으면 만족이 깎이고 말한다
           if (g.teamId !== null && g.seatUid === null && g.stateTicks === this.b.wanderTicks && !this.nearestLounge(g)) { g.sat = Math.max(0, g.sat - 1); g.say = '자리가 없네…'; setEmote(g, 'grr'); hooks?.onSeatless?.(g); }
-          if (hooks?.weather?.() === 'rain' && this.rng.chance(0.12)) { g.state = 'leave'; g.stateTicks = 0; g.say = '비 오네…'; setEmote(g, 'grr'); break; }
+          if (hooks?.weather?.() === 'rain' && this.rng.chance(0.12)) {
+            // P34 D43 — 실내가 있으면 나가는 대신 피한다(확률 rainRefuge). 실내동이 곧 비 오는 날의 매출이다
+            const refuge = hooks?.indoorRefuge?.() ?? [];
+            if (refuge.length > 0 && this.rng.chance(hooks?.rainRefuge?.() ?? 0)) { const uid = refuge[this.rng.int(refuge.length)] as number; g.target = { kind: 'facility', uid }; g.state = 'walk'; g.stateTicks = 0; g.say = '비 오네 — 안으로'; hooks?.onRainRefuge?.(); break; }
+            this.leaveOrRetreat(g, hooks); g.say = '비 오네…'; setEmote(g, 'grr'); break;
+          }
           const t = this.pickTarget(g, hooks);
           if (!t) {
-            g.state = 'leave';
-            g.stateTicks = 0;
+            this.leaveOrRetreat(g, hooks);
             g.say = this.pools.all.length === 0 ? '풀이 없네…' : null;
             break;
           }
@@ -505,10 +566,11 @@ export class GuestStore {
           }
           // 착수 — 출구 다음 칸이 풀이면 그 풀로 뛰어든다, 아니면 뭍으로 내려온다
           g.rideIdx = -1;
+          g.hunger = Math.min(100, g.hunger + this.b.hungerPerRide); // P27
           this.finishUse(g, f, hooks);
           const beyond = f.facing === 0 ? { i: g.i + 1, j: g.j } : { i: g.i, j: g.j + 1 };
           const bk = beyond.j * this.grid.w + beyond.i;
-          const pool = this.pools.all.find((p) => p.tiles.includes(bk));
+          const pool = this.pools.isOpenAt(beyond.i, beyond.j) ? this.pools.at(beyond.i, beyond.j) : undefined; // P50-a: 기구 밑(open 아님)은 착수 못 한다
           if (pool && g.hp >= this.b.guestHpLeave) {
             g.target = { kind: 'pool', id: pool.id };
             g.swimTile = bk;
@@ -528,7 +590,7 @@ export class GuestStore {
         case 'queue': {
           const t = g.target;
           const f = t && t.kind === 'facility' ? this.facilities.byUid(t.uid) : undefined;
-          if (!f || hooks?.closing?.()) { g.queuePos = -1; g.target = null; g.state = hooks?.closing?.() ? 'leave' : 'wander'; g.stateTicks = 0; break; }
+          if (!f || hooks?.closing?.()) { g.queuePos = -1; g.target = null; if (hooks?.closing?.()) this.leaveOrRetreat(g, hooks); else { g.state = 'wander'; g.stateTicks = 0; } break; }
           const def = this.facilities.defOf(f);
           if (g.queuePos === 0 && this.busyAt(f) < capacityOf(def, f)) {
             // 내 차례 — 뒤 사람들이 한 칸씩 당겨진다
@@ -548,7 +610,7 @@ export class GuestStore {
         case 'eat': {
           if (g.stateTicks < EAT_TICKS) break;
           g.carry = false;
-          g.state = g.hp < this.b.guestHpLeave ? 'leave' : 'wander';
+          if (g.hp < this.b.guestHpLeave) this.leaveOrRetreat(g, hooks); else g.state = 'wander';
           g.stateTicks = 0;
           break;
         }
@@ -559,7 +621,7 @@ export class GuestStore {
           if (g.stateTicks % DRIFT_EVERY === 0 && g.progress >= 1) {
             const pool = poolId === null ? undefined : this.pools.byId(poolId);
             if (pool) {
-              const opts = NEIGHBORS.map(([di, dj]) => (g.j + dj) * this.grid.w + (g.i + di)).filter((k) => pool.tiles.includes(k));
+              const opts = NEIGHBORS.map(([di, dj]) => (g.j + dj) * this.grid.w + (g.i + di)).filter((k) => this.pools.ownerIdK(k) === pool.id && this.pools.isOpenK(k)); // P50-a R7: 기구 밑으론 안 떠간다
               const k = opts[this.rng.int(Math.max(1, opts.length))];
               if (k !== undefined) { g.fromI = g.i; g.fromJ = g.j; g.i = k % this.grid.w; g.j = Math.floor(k / this.grid.w); g.progress = 0; g.swimTile = k; }
             }
@@ -592,7 +654,8 @@ export class GuestStore {
           }
           g.swimTile = null;
           g.target = null;
-          g.state = g.hp < this.b.guestHpLeave || hooks?.closing?.() ? 'leave' : 'wander';
+          g.hunger = Math.min(100, g.hunger + this.b.hungerPerSwim); // P27: 물에서 나오면 배가 고프다 — 출구 가까운 먹거리가 먼저 팔린다
+          if (g.hp < this.b.guestHpLeave || hooks?.closing?.()) this.leaveOrRetreat(g, hooks); else g.state = 'wander';
           g.stateTicks = 0;
           break;
         }
@@ -631,6 +694,8 @@ export class GuestStore {
   }
 
   /** 지금 시설을 쓰는 인원 (use·climb·ride) */
+  /** P52-b — 사고 확률의 혼잡(busy/cap) 읽기 표면 */
+  busyCount(f: PlacedFacility): number { return this.busyAt(f); }
   private busyAt(f: PlacedFacility): number {
     return this.list.filter((o) => (o.state === 'use' || o.state === 'climb' || o.state === 'ride') && o.target?.kind === 'facility' && o.target.uid === f.uid).length;
   }
@@ -644,11 +709,14 @@ export class GuestStore {
   private finishUse(g: Guest, f: PlacedFacility, hooks?: GuestHooks): void {
     const def = this.facilities.defOf(f);
     g.hp = Math.max(0, Math.min(100, g.hp + def.hpDelta));
-    g.sat = Math.min(100, g.sat + def.pop * 0.15 * (hooks?.satMul?.() ?? 1) * (def.class === 'lounging' ? 1 + 0.1 * ((hooks?.seatValue?.(f) ?? 1) - 1) : 1)); // P17 자리 값
+    if (def.menuSlots > 0) g.hunger = 0; // P27 먹었다
+    g.sat = Math.min(100, g.sat + def.pop * 0.15 * (hooks?.satMul?.() ?? 1) * (def.class === 'lounging' ? 1 + 0.1 * (hooks?.seatValue?.(f) ?? 0) : 1)); // P17 자리 값
     g.uses++;
-    setEmote(g, def.class === 'lounging' ? 'zz' : def.menuSlots > 0 ? 'note' : def.class === 'slide' || def.class === 'attraction' ? 'star' : 'heart');
+    setEmote(g, def.class === 'lounging' ? 'zz' : def.menuSlots > 0 ? 'note' : def.class === 'slide' || def.class === 'attraction' || def.class === 'rig' ? 'star' : 'heart'); // P48-c: 기구는 별
     f.usesToday++;
     hooks?.onFacilityUse?.(g, f);
+    if (g.passBy) { hooks?.onPassBy?.(g, f, g.passBy); g.passBy = null; } // P45-b
+    if (g.nightPick) { g.nightPick = false; if (hooks?.nightSet?.().has(f.uid)) hooks?.onNightUse?.(g, f); } // P45-c: 밤 분기로 고른 것만 센다(대조군 0)
     if (g.sat >= 50 && g.photos < 1 && def.pop >= 10 && this.rng.chance(Math.min(0.5, 0.12 * (hooks?.photoMul?.() ?? 1)))) {
       g.photos++;
       g.say = '찰칵!';
@@ -661,8 +729,9 @@ export class GuestStore {
   private afterUse(g: Guest, hooks?: GuestHooks): void {
     g.target = null;
     g.stateTicks = 0;
-    if (hooks?.closing?.() && g.stays && g.seatUid !== null && this.facilities.byUid(g.seatUid)) { g.target = { kind: 'facility', uid: g.seatUid }; g.state = 'walk'; return; } // P18
-    if (g.hp < this.b.guestHpLeave || hooks?.closing?.()) { g.state = 'leave'; return; }
+    if (g.leaving) { g.state = 'leave'; return; } // P45-b: 복도 점포에 들른 뒤엔 곧장 나간다
+    if (hooks?.closing?.() && g.stays && g.seatUid !== null && this.facilities.byUid(g.seatUid)) { if (!g.nightDone && this.tryNight(g, hooks)) return; g.target = { kind: 'facility', uid: g.seatUid }; g.state = 'walk'; return; } // P18 · P45-c
+    if (g.hp < this.b.guestHpLeave || hooks?.closing?.()) { this.leaveOrRetreat(g, hooks); return; }
     if (g.carry) {
       const seat = this.nearestLounge(g);
       if (seat) { g.target = { kind: 'facility', uid: seat.uid }; g.state = 'walk'; return; }
@@ -695,45 +764,117 @@ export class GuestStore {
   }
 
   /** 목표 고르기 — 풀과 시설을 한 통에 넣고 인기·거리·필요(HP)로 가중 추첨한다 */
+  /** P28-b D36 — 나갈 순간(비·목표 없음·체력·폐장)에 1박 손님은 나가지 않고 제 자리로 간다. 실측: 숙박비를 내고 정오에 「비 오네…」 하며 나갔다 */
+  private leaveOrRetreat(g: Guest, hooks?: GuestHooks): void {
+    if (g.stays && g.seatUid !== null && this.facilities.byUid(g.seatUid)) { g.target = { kind: 'facility', uid: g.seatUid }; g.state = 'walk'; g.stateTicks = 0; return; }
+    if (!g.leaving && this.tryPassByLeave(g, hooks)) return; // P45-b: 나가는 길에 복도 곁 점포
+    g.state = 'leave'; g.stateTicks = 0;
+  }
+
   private pickTarget(g: Guest, hooks?: GuestHooks): GuestTarget | undefined {
     const cands: { t: GuestTarget; w: number }[] = [];
     const rain = hooks?.weather?.() === 'rain';
+    // P45-b D63 「지나가며 산다」(입장): 아직 아무것도 안 한 손님(막 들어온)이 복도 곁 점포에 끌린다 — 백화점 스토리의 동선 위 점포
+    const fresh = g.uses === 0 && g.swims === 0 && !g.carry && !(hooks?.lateDay?.()) && g.spentToday < (this.b.passBySpendCap ?? 1200);
+    const enterSet = fresh && (this.b.passByEnterMul ?? 3) > 1 ? hooks?.passBy?.().enter : undefined; // 배수 1 이하 = 끔(대조군)
     for (const p of this.pools.all) {
+      if (this.pools.openTilesOf(p).length === 0) continue; // P50-a R7: 기구가 다 덮은 수역은 유영 목적지가 아니다
       const d = this.fieldTo(p).at(g.i, g.j);
       if (d >= 0xffff) continue;
       let w = (1 + p.tiles.length * 0.1) / (1 + d * DIST_FALLOFF) * (g.taste?.water ?? 1); // P9 출신지 취향
       // 비 오는 날 (G34) — 실내 풀로 몰리고 야외 풀은 피한다 (매뉴얼: 실내는 날씨 무관)
       if (rain) w *= hooks?.poolIndoor?.(p.id) ? 2.5 : 0.4;
+      w *= hooks?.swimUrge?.(p.id) ?? 1; // P52-c 수온
       if (g.pkg === 'swim' && !g.pkgUsed) w *= 3; // P17 수영 패키지
       cands.push({ t: { kind: 'pool', id: p.id }, w });
     }
     for (const f of this.facilities.all) {
       const def = this.facilities.defOf(f);
       if (capacityOf(def, f) <= 0) continue;
+      if (def.guardRadius !== undefined) continue; // P52-b: 망루는 손님 시설이 아니다(알바 자리라 정원 1 이 붙어 있을 뿐) — 실측 128일 망루 「이용」 1,715 이 기구 몫을 0.05 부풀렸다
       if (def.usageFee > 0 && f.rentedBy !== null && f.rentedBy !== rentKey(g)) continue;
       const full = this.busyAt(f) >= capacityOf(def, f);
       if (full && this.queueAt(f) >= QUEUE_MAX) continue; // 줄도 찼다
       const d = this.fieldToFacility(f).at(g.i, g.j);
       if (d >= 0xffff) continue;
-      let w = (0.6 + def.pop * 0.02) / (1 + d * DIST_FALLOFF);
+      // P27 D33 (RCT): 먹는 것은 욕구가 정한다 — 배고프면 식당 ×3 에 거리 감쇠를 좁히고(가까운 먹거리), 안 배고프면 ×0.3
+      const hungry = g.hunger >= 25 && def.menuSlots > 0; // 수영 한 번(+25)이면 배고프다
+      // P52-a G3 — 딥 기구는 팔찌 회수가 있어야(하드) · 어린이 딥 금지 · 팀 기구는 팀만 · 수영 실력이 깊이 선호를 대칭으로 기울인다 · 슬라이드는 팔찌 없으면 ×0.3(소프트)
+      let rigMul = 1;
+      if (def.class === 'rig') {
+        const deep = def.depth === 'deep', s = swimSkill(g.taste?.thrill);
+        if (deep && (g.band === undefined || (g.bandLeft ?? 0) < (def.bandCost ?? 1))) { if (!g.bandSaid) { g.bandSaid = true; g.say = '팔찌가 없네…'; } continue; } // ①
+        if (deep && buildOf(g) === 'kid') continue; // ②
+        if (def.team === true && g.teamId === null) continue; // ③
+        rigMul = (deep ? s : 2 - s) * swimUrgeRig(g); // ④ ⑤
+      } else if (def.class === 'slide' && g.band === undefined) rigMul = 0.3;
+      let w = rigMul * (0.6 + def.pop * 0.02) / (1 + d * (hungry ? this.b.hungerFalloff : DIST_FALLOFF));
+      if (def.menuSlots > 0) w *= hungry ? 3 : 0.5; // ×0.3 은 매점 몫을 0.21 로 눌렀다 — 군것질은 남긴다
+      if (def.menuSlots > 0 && hooks?.blockNear?.(g, f)) w *= 1.5; // P35 D44: 내 자리 블록·접한 블록의 매점
       if (full) w *= 0.5; // 줄 서야 한다 — 절반만 끌린다 (G34)
       w *= tasteWeight(def.class, def.menuSlots, g.taste); // P9 출신지 취향
       // P17 팀 자리 — 자리가 없는 팀 손님은 평상부터, 자리가 있으면 제 자리로 돌아온다 · 패키지는 그 시설을 먼저
-      if (def.class === 'lounging' && g.teamId !== null) w *= g.seatUid === null ? 5 : f.uid === g.seatUid ? 4 : 0.3;
-      if (g.pkg && !g.pkgUsed) { if (g.pkg === 'meat' && def.menuSlots > 0) w *= 4; if (g.pkg === 'gear' && def.id === 'dock') w *= 4; }
+      if (def.class === 'lounging' && g.teamId !== null) { const ts = g.seatUid ?? hooks?.teamSeatUid?.(g) ?? null; w *= ts === null ? 5 * (1 + 0.5 * (hooks?.seatValue?.(f) ?? 0)) : f.uid === ts ? 4 : 0.3; } // P24: 좋은 자리부터 · P28-b: 팀이 잡은 줄로 모인다
+      if (g.pkg && !g.pkgUsed) { if (g.pkg === 'meat' && def.menuSlots > 0) w *= 4; if (g.pkg === 'gear' && def.id === 'dock') w *= 4; if (g.pkg === 'stay' && def.lodging === true) w *= 4; }
       if (g.carry) w *= def.class === 'lounging' ? 6 : 0.2; // 산 것을 들고 있으면 앉을 곳부터 (R3)
       if (g.hp < 40 && def.hpDelta > 0) w *= 3;
       if (g.hp >= 70 && def.hpDelta > 0) w *= 0.3;
+      if (enterSet?.has(f.uid)) w *= this.b.passByEnterMul ?? 3; // P45-b 복도 곁
       cands.push({ t: { kind: 'facility', uid: f.uid }, w });
     }
     if (cands.length === 0) return undefined;
     const total = cands.reduce((s, c) => s + c.w, 0);
     let r = this.rng.next() * total;
+    let chosen: GuestTarget | undefined = cands[cands.length - 1]?.t;
     for (const c of cands) {
       r -= c.w;
-      if (r <= 0) return c.t;
+      if (r <= 0) { chosen = c.t; break; }
     }
-    return cands[cands.length - 1]?.t;
+    g.passBy = chosen && chosen.kind === 'facility' && enterSet?.has(chosen.uid) ? 'enter' : null;
+    return chosen;
+  }
+
+  /** P45-c D63 밤 분기: 폐장 뒤 남는 팀 손님이 밤 시설(실내 놀이 — 찜질·사우나·무대·노래방·오락기) 하나에 들른다. 손님 rng 만 */
+  private tryNight(g: Guest, hooks?: GuestHooks): boolean {
+    const set = hooks?.nightSet?.(); if (!set || set.size === 0) return false;
+    if (!this.rng.chance(this.b.nightChance ?? 0.5)) { g.nightDone = true; return false; }
+    const cands: { uid: number; w: number }[] = [];
+    for (const uid of set) {
+      const f = this.facilities.byUid(uid); if (!f) continue;
+      const def = this.facilities.defOf(f);
+      if (capacityOf(def, f) <= 0 || this.busyAt(f) >= capacityOf(def, f)) continue;
+      const d = this.fieldToFacility(f).at(g.i, g.j); if (d >= 0xffff) continue;
+      cands.push({ uid, w: (1 + def.pop * 0.02) / (1 + d * 0.05) });
+    }
+    g.nightDone = true;
+    if (cands.length === 0) return false;
+    const total = cands.reduce((a, c) => a + c.w, 0);
+    let r = this.rng.next() * total; let pick = cands[cands.length - 1]!.uid;
+    for (const c of cands) { r -= c.w; if (r <= 0) { pick = c.uid; break; } }
+    g.target = { kind: 'facility', uid: pick }; g.state = 'walk'; g.stateTicks = 0; g.nightPick = true; g.say = this.rng.chance(0.4) ? '밤엔 실내지' : null;
+    return true;
+  }
+  /** P45-b D63 「지나가며 산다」(퇴장): 나가려는 손님이 복도 곁 퇴장 점포(샤워·드라이룸·기념품·포장)에 들른다 — 지갑·확률(늦은 오후 ×1.5). 손님 rng 만 쓴다(결정론) */
+  private tryPassByLeave(g: Guest, hooks?: GuestHooks): boolean {
+    if (g.stays || g.leaving || hooks?.closing?.() || g.spentToday >= (this.b.passBySpendCap ?? 1200)) return false;
+    const set = hooks?.passBy?.().leave; if (!set || set.size === 0) return false;
+    const cands: { uid: number; w: number }[] = [];
+    for (const uid of set) {
+      const f = this.facilities.byUid(uid); if (!f) continue;
+      const def = this.facilities.defOf(f);
+      if (capacityOf(def, f) <= 0) continue;
+      const full = this.busyAt(f) >= capacityOf(def, f);
+      if (full && this.queueAt(f) >= QUEUE_MAX) continue;
+      const d = this.fieldToFacility(f).at(g.i, g.j); if (d >= 0xffff) continue;
+      cands.push({ uid, w: 1 / (1 + d * 0.05) });
+    }
+    if (cands.length === 0) return false;
+    if (!this.rng.chance(Math.min(1, (this.b.passByLeaveChance ?? 0.3) * (hooks?.lateDay?.() ? 1.5 : 1)))) return false;
+    const total = cands.reduce((a, c) => a + c.w, 0);
+    let r = this.rng.next() * total; let pick = cands[cands.length - 1]!.uid;
+    for (const c of cands) { r -= c.w; if (r <= 0) { pick = c.uid; break; } }
+    g.target = { kind: 'facility', uid: pick }; g.state = 'walk'; g.stateTicks = 0; g.leaving = true; g.passBy = 'leave';
+    return true;
   }
 
   /** 거리장을 따라 한 tick 전진. 목표에 이미 있으면 false */
@@ -757,7 +898,7 @@ export class GuestStore {
   private adjacentPoolTile(g: Guest, pool: Pool): number | null {
     for (const [di, dj] of NEIGHBORS) {
       const k = (g.j + dj) * this.grid.w + (g.i + di);
-      if (pool.tiles.includes(k)) return k;
+      if (this.pools.ownerIdK(k) === pool.id && this.pools.isOpenK(k)) return k; // P50-a R7: 입수는 open 물로만
     }
     return null;
   }
@@ -772,7 +913,7 @@ export class GuestStore {
       // P14: 발자국이 2×2 이상이면 「옆 칸」도 발자국 안일 수 있다 — 발자국 밖으로만 민다
       const out = (t: { i: number; j: number } | null): { i: number; j: number } | null => (t && !set.has(`${t.i},${t.j}`) ? t : null);
       let to = out(this.adjacentWalkable(g));
-      if (!to) for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]] as const) { const c = { i: g.i + di, j: g.j + dj }; if (!set.has(`${c.i},${c.j}`) && this.walkable(c.i, c.j)) { to = c; break; } }
+      if (!to) for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]] as const) { const c = { i: g.i + di, j: g.j + dj }; if (this.grid.wallBetween(g.i, g.j, c.i, c.j)) continue; /* P39 */ if (!set.has(`${c.i},${c.j}`) && this.walkable(c.i, c.j)) { to = c; break; } }
       if (!to) to = out(this.nearestWalkable(g, 6)) ?? this.nearestWalkable(g, 8) ?? { i: this.gate.i, j: this.gate.j }; // P16: 길만 걷는 세계라 근처에 없을 수 있다 — 입구로
       if (!to) continue;
       g.i = to.i; g.j = to.j; g.fromI = to.i; g.fromJ = to.j;
@@ -798,9 +939,9 @@ export class GuestStore {
   private adjacentWalkable(g: Guest): { i: number; j: number } | null {
     // 들어온 방향을 우선 — 없으면 아무 뭍
     const back = { i: g.fromI, j: g.fromJ };
-    if (this.walkable(back.i, back.j)) return back;
+    if (this.walkable(back.i, back.j) && this.grid.canCross(g.i, g.j, back.i, back.j)) return back;
     for (const [di, dj] of NEIGHBORS) {
-      if (this.walkable(g.i + di, g.j + dj)) return { i: g.i + di, j: g.j + dj };
+      if (this.walkable(g.i + di, g.j + dj) && this.grid.canCross(g.i, g.j, g.i + di, g.j + dj)) return { i: g.i + di, j: g.j + dj }; // P39 벽
     }
     return null;
   }
@@ -811,7 +952,7 @@ export class GuestStore {
 
   fromSnapshot(s: GuestSnapshot): void {
     this.nextUid = s.nextUid;
-    this.list = s.guests.map((g) => ({ ...g, teamId: g.teamId ?? null, seatUid: g.seatUid ?? null, pkg: g.pkg ?? null, pkgUsed: g.pkgUsed ?? false, stays: g.stays ?? false, name: g.name ?? '손님', age: g.age ?? 20, gender: g.gender ?? 'M', home: g.home ?? '이 동네', spentToday: g.spentToday ?? 0, emote: g.emote ?? null, emoteTtl: g.emoteTtl ?? 0, float: g.float ?? 0, rideIdx: g.rideIdx ?? -1, carry: g.carry ?? false, queuePos: g.queuePos ?? -1 }));
+    this.list = s.guests.map((g) => ({ ...g, passBy: g.passBy ?? null, leaving: g.leaving ?? false, nightDone: g.nightDone ?? false, nightPick: g.nightPick ?? false, teamId: g.teamId ?? null, seatUid: g.seatUid ?? null, pkg: g.pkg ?? null, pkgUsed: g.pkgUsed ?? false, slept: g.slept ?? false, stays: g.stays ?? false, hunger: g.hunger ?? 0, name: g.name ?? '손님', age: g.age ?? 20, gender: g.gender ?? 'M', home: g.home ?? '이 동네', spentToday: g.spentToday ?? 0, emote: g.emote ?? null, emoteTtl: g.emoteTtl ?? 0, float: g.float ?? 0, rideIdx: g.rideIdx ?? -1, carry: g.carry ?? false, queuePos: g.queuePos ?? -1 }));
     this.invalidate();
   }
 }

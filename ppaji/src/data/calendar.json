@@ -457,5 +457,125 @@
       "id": "coconut"
     },
     "from": "president"
+  },
+  {
+    "id": "calendar_y1_winter_rigpart_pump_motor",
+    "year": 1,
+    "season": 3,
+    "dayInSeason": 2,
+    "tick": 280,
+    "title": "겨울 택배 — 펌프 모터",
+    "line": "1년차 겨울이 깊었네요. 봄에 쓸 펌프 모터을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
+    "grant": {
+      "kind": "rigPart",
+      "id": "pump_motor"
+    },
+    "from": "president",
+    "priority": "strip"
+  },
+  {
+    "id": "calendar_y2_winter_rigpart_slip_wax",
+    "year": 2,
+    "season": 3,
+    "dayInSeason": 2,
+    "tick": 280,
+    "title": "겨울 택배 — 미끄럼 왁스",
+    "line": "2년차 겨울이 깊었네요. 봄에 쓸 미끄럼 왁스을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
+    "grant": {
+      "kind": "rigPart",
+      "id": "slip_wax"
+    },
+    "from": "president",
+    "priority": "strip"
+  },
+  {
+    "id": "calendar_y3_winter_rigpart_led_strip_buoy",
+    "year": 3,
+    "season": 3,
+    "dayInSeason": 2,
+    "tick": 280,
+    "title": "겨울 택배 — LED 부표 띠",
+    "line": "3년차 겨울이 깊었네요. 봄에 쓸 LED 부표 띠을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
+    "grant": {
+      "kind": "rigPart",
+      "id": "led_strip_buoy"
+    },
+    "from": "president",
+    "priority": "strip"
+  },
+  {
+    "id": "calendar_y4_winter_rig_iceberg",
+    "year": 4,
+    "season": 3,
+    "dayInSeason": 2,
+    "tick": 280,
+    "title": "겨울 택배 — 아이스버그",
+    "line": "4년차 겨울이 깊었네요. 봄에 쓸 아이스버그을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
+    "grant": {
+      "kind": "facility",
+      "id": "rig_iceberg"
+    },
+    "from": "president",
+    "priority": "strip"
+  },
+  {
+    "id": "calendar_y5_winter_rigpart_spray_nozzle",
+    "year": 5,
+    "season": 3,
+    "dayInSeason": 2,
+    "tick": 280,
+    "title": "겨울 택배 — 분사 노즐",
+    "line": "5년차 겨울이 깊었네요. 봄에 쓸 분사 노즐을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
+    "grant": {
+      "kind": "rigPart",
+      "id": "spray_nozzle"
+    },
+    "from": "president",
+    "priority": "strip"
+  },
+  {
+    "id": "calendar_y6_winter_rig_kids_park",
+    "year": 6,
+    "season": 3,
+    "dayInSeason": 2,
+    "tick": 280,
+    "title": "겨울 택배 — 키즈 워터 놀이터",
+    "line": "6년차 겨울이 깊었네요. 봄에 쓸 키즈 워터 놀이터을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
+    "grant": {
+      "kind": "facility",
+      "id": "rig_kids_park"
+    },
+    "from": "president",
+    "priority": "strip"
+  },
+  {
+    "id": "calendar_y7_winter_rig_led_buoy",
+    "year": 7,
+    "season": 3,
+    "dayInSeason": 2,
+    "tick": 280,
+    "title": "겨울 택배 — LED 부표",
+    "line": "7년차 겨울이 깊었네요. 봄에 쓸 LED 부표을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
+    "grant": {
+      "kind": "facility",
+      "id": "rig_led_buoy"
+    },
+    "from": "president",
+    "priority": "strip"
+  },
+  {
+    "id": "calendar_y8_winter_rig_jump_tower",
+    "year": 8,
+    "season": 3,
+    "dayInSeason": 2,
+    "tick": 280,
+    "title": "겨울 택배 — 점프 타워",
+    "line": "8년차 겨울이 깊었네요. 봄에 쓸 점프 타워을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
+    "grant": {
+      "kind": "facility",
+      "id": "rig_jump_tower"
+    },
+    "from": "president",
+    "priority": "strip"
   }
 ]

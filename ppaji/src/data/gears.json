@@ -31,7 +31,7 @@
   },
   {
     "id": "honeycomb",
-    "name": "벌집튜브",
+    "name": "단군",
     "cat": "tube",
     "key": "honey_cell+rope_nylon+tube_round",
     "taste": 4,
@@ -91,7 +91,7 @@
   },
   {
     "id": "swing",
-    "name": "좌우그네",
+    "name": "마블",
     "cat": "special",
     "key": "rope_kevlar+safety_bar+seat_bucket+twin_bar",
     "taste": 6,
@@ -217,7 +217,7 @@
   },
   {
     "id": "flycarpet",
-    "name": "플라잉카펫",
+    "name": "UFO 튜브",
     "cat": "tube",
     "key": "deck_board+rope_nylon+seat_bench+seat_cushion+tube_giant",
     "taste": 3,
@@ -278,7 +278,7 @@
   },
   {
     "id": "blobjump",
-    "name": "블롭점프",
+    "name": "점프 튜브",
     "cat": "special",
     "key": "air_chamber+life_strap+safety_bar+tube_round",
     "taste": 7,
@@ -288,7 +288,7 @@
   },
   {
     "id": "water_roller",
-    "name": "워터롤러",
+    "name": "롤링 튜브",
     "cat": "special",
     "key": "harness_belt+honey_cell+life_strap+safety_bar+tube_giant",
     "taste": 6,
@@ -326,7 +326,7 @@
   },
   {
     "id": "air_chair",
-    "name": "에어체어",
+    "name": "바이퍼",
     "cat": "board",
     "key": "bar_handle+deck_board+foot_strap+rope_steel+seat_sling",
     "taste": 8,
@@ -344,7 +344,7 @@
   },
   {
     "id": "marine_jet",
-    "name": "마린제트",
+    "name": "샤크 제트보트",
     "cat": "ski",
     "key": "jet_pump+motor_outboard+power_grip+seat_bucket+twin_bar",
     "taste": 9,
@@ -362,7 +362,7 @@
   },
   {
     "id": "hydrofoil",
-    "name": "하이드로포일",
+    "name": "플라이보드",
     "cat": "ski",
     "key": "carbon_deck+deck_board+foot_strap+grip_handle+keel_fin",
     "taste": 10,

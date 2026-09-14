@@ -1,17 +1,40 @@
 /**
  * 풀 심사 창 — PSS 무대 창 문법: 계열 탭 · 인증마다 조건 행(진행률·현재값) · **예상 점수 / 합격선** · 신청.
  * 자격 미달이어도 표는 보여 준다 — 「지금 몇 점」이 곧 다음 목표다 (부정 리뷰 1 처방).
+ * P56-a D8: 심사위원 셋이 **말풍선으로 자기 조건을 말한다**(조건 라벨에서 파생, 데이터 0줄) · 조건 옆에 대상 그림 · 합격 보상은 그림 카드.
  */
 import { el } from '../dom.js';
 import { confirmDialog } from '../dialog.js';
-import { drawPortrait } from '../../assets/draw/portrait.js';
+import { portraitEl, JUDGE_IDS } from '../portraits.js'; // P56-b2: 심사위원 셋은 그림 초상(없으면 코드 초상)
 import { WindowPanel } from '../window.js';
+import { canvasPictureEl, pictureEl, pictureId } from '../pictures.js';
+import { iconEl, type IconName } from '../icons.js';
+import { rewardLabel } from './sns.js';
+import { rewardArt } from '../reward-art.js';
 import type { Game } from '../../sim/game.js';
-import type { CertDef, CertFamily } from '../../data/schema.js';
+import type { CertDef, CertFamily, Condition } from '../../data/schema.js';
 
 /** 계열 8 (P6 재편, 키는 코드·id 호환을 위해 그대로): 물놀이(수역) · 경관(물빛·장식) · 핫플(분위기·좋아요) · 사철(온수·실내) · 맛집(요리) · 스릴(코스) · 안전(해경) · 청결(위생) */
 const FAMILY_KO: Record<CertFamily, string> = { grade: '물놀이', color: '경관', scent: '핫플', spa: '사철', fruit: '맛집', stream: '스릴', fun: '안전', cutesy: '청결' };
 const GRADE_ORDER = ['F', 'E', 'D', 'C', 'B', 'A', 'S'];
+/** 심사위원 셋 — 초상 팔레트와 말투 (원작: 셋이 각자 기준을 말한다) */
+const JUDGES: readonly { pal: number; say: (label: string, met: boolean) => string }[] = [
+  { pal: 1, say: (l, met) => met ? `「${l}」 — 됐네요, 통과!` : `「${l}」 이면 좋겠는데요.` },
+  { pal: 4, say: (l, met) => met ? `${l}, 확인했습니다.` : `${l}… 아직이군요.` },
+  { pal: 6, say: (l, met) => met ? `${l}! 문제없어요.` : `${l}까지 가 봅시다.` },
+];
+
+/** 조건의 대상 그림 — 시설 id 는 스프라이트, 재료·아이템은 등록부, 나머지는 종류 아이콘 */
+function condArt(c: Condition, sprite: (id: string) => HTMLCanvasElement | null): HTMLElement {
+  const leaf = (c.kind === 'all' || c.kind === 'any') ? c.of[0] : c;
+  if (!leaf) return iconEl('star', 'kpic-fb');
+  const kind = leaf.kind as string;
+  const id = (leaf as { id?: string }).id;
+  if (kind === 'facility' && id) return canvasPictureEl(sprite(id), 'build');
+  if (kind === 'item' && id) return pictureEl(pictureId('item', id), 'pool');
+  const icon: IconName = /^rig/.test(kind) ? 'attraction' : kind === 'pool' ? 'pool' : kind === 'recipe' || kind === 'menu' ? 'restaurant' : kind === 'likes' ? 'heart' : kind === 'course' || kind === 'courseThrill' ? 'slide' : 'star';
+  return iconEl(icon, 'kpic-fb');
+}
 
 export class CertWindow {
   private readonly win: WindowPanel;
@@ -19,7 +42,7 @@ export class CertWindow {
   private readonly body = el('div', 'krows');
   private family: CertFamily = 'grade';
 
-  constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: { toast(t: string, ok: boolean): void; onChanged(): void }) {
+  constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: { toast(t: string, ok: boolean): void; onChanged(): void; sprite(facId: string): HTMLCanvasElement | null }) {
     this.win = new WindowPanel(parent, 'win-cert', '빠지 심사', 'purple');
     const fams = [...new Set([...this.game().certs.defs.values()].map((d) => d.family))];
     for (const f of fams) {
@@ -57,6 +80,11 @@ export class CertWindow {
     for (const def of defs) this.body.append(this.certCard(def));
   }
 
+  /** P56-a2 — 보상 그림은 `reward-art.ts` 하나(소원·달력·편지와 같은 함수) */
+  private rewardArt(def: CertDef): HTMLElement {
+    return rewardArt(def.reward as { kind: string; id?: string }, this.host.sprite);
+  }
+
   private certCard(def: CertDef): HTMLElement {
     const g = this.game();
     const card = el('div', 'kcert');
@@ -68,7 +96,7 @@ export class CertWindow {
     if (!compact) {
       // 무대 — 심사위원 셋 (PSS 심사 창의 문법, G23)
       const stage = el('div', 'kstage');
-      for (const pal of [1, 4, 6]) { const f = el('span', 'kportrait'); f.append(drawPortrait(pal, pal % 5, 'calm')); stage.append(f); }
+      JUDGES.forEach((j, k) => { const f = el('span', 'kportrait'); f.append(portraitEl(JUDGE_IDS[k] ?? 'judge', 'calm', { palette: j.pal, hair: j.pal % 5 })); stage.append(f); });
       card.append(stage);
     }
     const head = el('div', 'krow');
@@ -78,12 +106,21 @@ export class CertWindow {
     if (ex && compact) {
       card.append(el('div', 'krow-sub', `재수상 = 재료 3 · 예상 ${ex.base}/30`));
     } else if (ex) {
+      let judgeIx = 0;
       ex.parts.forEach((p, k) => {
-        const r = el('div', 'krow kcond');
-        const judge = el('span', 'kportrait small'); judge.append(drawPortrait([1, 4, 6][k % 3] as number, ([1, 4, 6][k % 3] as number) % 5, p.verdict.met ? 'happy' : 'calm'));
-        r.append(judge);
-        r.append(el('span', 'krow-k', `${p.verdict.label}${p.weight === 2 ? ' (×2)' : ''}`), el('span', 'krow-v', `${p.verdict.met ? '충족' : `${Math.round(p.verdict.progress * 100)}%`}`));
-        card.append(r);
+        // 심사위원 한 명 = 조건 한 줄. 가중치 2 는 같은 조건을 둘이 말한다(원작 표)
+        for (let w = 0; w < p.weight; w++) {
+          const judge = JUDGES[judgeIx % JUDGES.length] as (typeof JUDGES)[number];
+          judgeIx++;
+          const r = el('div', 'krow kcond');
+          r.dataset['judge'] = String(judgeIx);
+          const face = el('span', 'kportrait small'); face.append(portraitEl(JUDGE_IDS[(judgeIx - 1) % JUDGES.length] ?? 'judge', p.verdict.met ? 'happy' : 'calm', { palette: judge.pal, hair: judge.pal % 5 }));
+          const bubble = el('span', 'kcond-say', judge.say(p.verdict.label, p.verdict.met));
+          bubble.dataset['line'] = '1';
+          const art = el('span', 'kcond-art'); art.append(condArt(def.conditions[k]?.cond ?? { kind: 'all', of: [] } as Condition, this.host.sprite));
+          r.append(face, bubble, art, el('span', 'krow-v', p.verdict.met ? '충족' : `${Math.round(p.verdict.progress * 100)}%`));
+          card.append(r);
+        }
         if (p.verdict.full) {
           // 만점 조건 (G42) — 색·향은 농도 5칸이라야 만점
           const f = el('div', 'krow-sub kfull');
@@ -96,6 +133,11 @@ export class CertWindow {
       sc.dataset['expected'] = String(ex.base);
       sc.append(el('span', 'krow-k', '예상 점수'), el('span', 'krow-v', `${ex.base} / 30${ex.base >= def.pass ? ' — 합격권' : ` — ${def.pass - ex.base}점 부족`}`));
       card.append(sc);
+      // 합격 보상 — 그림 카드 (원작 「합격 상품 미리 표시」)
+      const rew = el('div', 'krow kreward');
+      const art = el('span', 'kreward-art'); art.append(this.rewardArt(def));
+      rew.append(el('span', 'krow-k', '합격 상품'), art, el('span', 'krow-v', rewardLabel(g, def.reward)));
+      card.append(rew);
     }
     const can = g.certs.canApply(def.id, g.day, g.money);
     const btn = el('button', 'kbtn primary', `신청 · ${def.fee.toLocaleString('ko-KR')}G`);

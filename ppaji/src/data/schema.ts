@@ -6,7 +6,7 @@
  * 근거는 `../docs/plan-waterpark-clone.md` §1.3(계절표) · §1.4(시설 전표) · §2.2(코어 모델) · §2.6(플레이스홀더).
  */
 
-export type FacilityClass = 'utility' | 'lounging' | 'restaurant' | 'attraction' | 'slide' | 'decor';
+export type FacilityClass = 'utility' | 'lounging' | 'restaurant' | 'attraction' | 'slide' | 'decor' | 'rig'; // P48-c R3: 빠지 기구 — 물 위(링) 전용, 정의는 P49-a1 부터
 
 /** 12향 (§1.3). `money` 는 골든 카이로봇·공연 카이로봇만 낸다 */
 export type Scent =
@@ -29,7 +29,7 @@ export type PoolColor = 'orange' | 'yellow' | 'lime' | 'green' | 'blue' | 'purpl
 /** 봄·여름·가을·겨울 순 (`season = floor(day/4)%4`, §2.2) */
 export type SeasonVec = [number, number, number, number];
 
-export type UnlockSource = 'start' | 'shop' | 'wish' | 'cert' | 'invest' | 'rank' | 'gift';
+export type UnlockSource = 'start' | 'shop' | 'wish' | 'cert' | 'invest' | 'rank' | 'gift' | 'craft'; // P49-a1: 'craft' = 개조판(공방에서 만든다, 건설 목록에 없다)
 
 export interface FacilityUnlock {
   source: UnlockSource;
@@ -79,11 +79,49 @@ export interface FacilityDef {
   /** 나오는 칸이 입구와 다른 시설만 (슬라이드·에어바운스). 없으면 입구로 나온다 */
   exit?: { i: number; j: number } | null;
   indoorOnly: boolean;
+  /** P45-b D63 — 야외 식당: 실내 바닥 위엔 못 놓는다(복도 점포는 실내 전용만) */
+  outdoorOnly?: boolean;
+  /** P45-b D63 — 복도 곁이면 지나가는 손님이 산다: 입장(enter)·퇴장(leave)·둘 다 */
+  passBy?: 'enter' | 'leave' | 'both';
   /** P17 그늘 — 자리 값 +1 (파라솔·그늘막·정자·방갈로 …) */
   shade?: boolean;
   /** P18 숙박 — 자리로 잡으면 손님이 밤을 지내고 다음 날 이어서 논다 (1박 요금 = usageFee/인) */
   lodging?: boolean;
+  /** P24 D32 — 반경 안 자리 등급을 깎는다: dirty(화장실) · loud(무대·노래방·오락기; 슬라이드는 class 로) */
+  noisy?: 'dirty' | 'loud';
+  /** P25 — 불(화로대·BBQ): 1박 패키지의 재료 */
+  fire?: boolean;
+  /** P26 D32 — 경관(장식 시설, 4~16, 온천 스토리 눈금): 반경 2 안 시설 전부의 인기·판매가에 붙는다 */
+  scenery?: number;
   unlock: FacilityUnlock;
+  // ── P49-a1 §14 R3 — 빠지 기구 필드 13 (전부 optional; class:'rig' 은 depth 필수 — validateRigData) ──
+  /** 링(데크) 위에 놓는 시설 — 물 위 기구가 아니라 링 위 시설(망루·거치대·플로팅 바·구조정·선착장·대여소) */
+  onRing?: boolean;
+  /** 물 위 기구가 서는 깊이 — 여울(shallow)·강(deep)·둘 다(any). needsVest ⇔ deep */
+  depth?: 'shallow' | 'deep' | 'any';
+  /** 계열 — 같은 계열을 이어 붙이면 정원이 는다(P50-b1 chainScale). null 이면 단독 */
+  chain?: string | null;
+  /** 스릴 0~4 · 안전 0~4 (safe = 2 − floor(thrill/2)) */
+  thrill?: number;
+  safe?: number;
+  /** 깊은 물 기구 — 구명조끼 팔찌가 있어야 탄다(P52-a) */
+  needsVest?: boolean;
+  /** 둘이 타는 기구 — 팀 손님 우선 */
+  team?: boolean;
+  /** 밤 조명 — 시그니처 빠지(등급 4) 조건 */
+  lights?: boolean;
+  /** P55 — 그림 폴백 실루엣: 높은 물체(망루·다이빙대·점프 타워·토템·빙산) → `tower` */
+  tall?: boolean;
+  /** 안전 시설의 반경 — 그 안 기구의 사고율을 줄인다(P52-b) */
+  guardRadius?: number;
+  /** 대여 종류 — 패키지(pkg) · 탑승(ride) */
+  rentKind?: 'pkg' | 'ride';
+  /** false = 건설 목록에 없다(개조판, unlock.source 'craft') */
+  buildable?: boolean;
+  /** 빠지마다 최대 개수 */
+  maxPerPark?: number;
+  /** 팔찌 값 1|2 */
+  bandCost?: 1 | 2;
   /** 대형 슬라이드만 — 층수·길이 (§1.4) */
   slide: { levels: number; length: number } | null;
   /** 식당 5 · 나머지 0 (§2.2) */
@@ -138,6 +176,11 @@ export type Condition =
   | { kind: 'popularity'; min: number }
   | { kind: 'likes'; min: number; scope?: 'total' | 'area'; area?: string }
   | { kind: 'certPasses'; min: number }
+  // P49-a1 §4.5 — 빠지 조건 DSL 4 (a1 은 스텁 평가: rigChain 0 · rigGuarded 는 망루 반경 데이터로)
+  | { kind: 'rigGrade'; min: number; count?: number }
+  | { kind: 'rigChain'; min: number; count?: number }
+  | { kind: 'rigCount'; min: number; kinds?: number; depth?: 'shallow' | 'deep' | 'any' }
+  | { kind: 'rigGuarded'; min?: number; ratioMin?: number }
   | { kind: 'certPassed'; id: string }
   | { kind: 'friends'; min: number }
   | { kind: 'areas'; min: number }
@@ -149,6 +192,10 @@ export type Condition =
   | { kind: 'year'; min: number }
   /** 스릴이 min 이상인 견인 코스가 count(기본 1)개 (P6 — 인증 「스릴」 계열) */
   | { kind: 'courseThrill'; min: number; count?: number }
+  /** P28 D29 — 등급이 min 이상인 자리가 count(기본 1)개 */
+  | { kind: 'seatGrade'; min: number; count?: number }
+  /** P28 D33 — 시설 id 가 반경 3 안에 자리를 count 개 이상 먹여 준다(그 시설 하나 기준, 최대값) */
+  | { kind: 'seatsFed'; id: string; count: number }
   | { kind: 'all'; of: Condition[] }
   | { kind: 'any'; of: Condition[] };
 
@@ -200,7 +247,7 @@ export type WishReward =
   | { kind: 'gift'; id: string }
   | { kind: 'money'; amount: number }
   | { kind: 'ingredient'; id: string }
-  | { kind: 'tile'; id: string };
+  | { kind: 'rigPart'; id: string }; // P49-a1 (P49-a2: 'tile' 삭제 — 물빛은 빠지 등급이 대체)
 
 export interface WishDef {
   friendId: string;
@@ -238,7 +285,7 @@ export interface CertDef {
   /** 2~3개. weight 2 = 「(2x)」 */
   conditions: { cond: Condition; weight: 1 | 2 }[];
   /** 첫 통과 보상 */
-  reward: { kind: 'tile' | 'gift' | 'facility' | 'item'; id: string };
+  reward: { kind: 'gift' | 'facility' | 'item' | 'rigPart'; id: string }; // P49-a2: 'tile' 삭제
   /** 신청료 */
   fee: number;
 }
@@ -249,6 +296,8 @@ export interface RankDef {
   conditions: Condition[];
   /** 랭크업 보상 (시설 해금 등) */
   reward?: { kind: 'facility' | 'gift' | 'item' | 'money' | 'unlock'; id?: string; amount?: number };
+  /** P21 D27 — 이 랭크에 도달하면 열리는 시설들 (reward 와 별개, 여럿) */
+  unlocks?: string[];
 }
 
 export interface ShopEntry {
@@ -275,26 +324,15 @@ export interface CalendarEvent {
   from: 'president' | 'judge';
   title: string;
   line: string;
-  grant: { kind: 'facility' | 'gift' | 'item' | 'money' | 'tool' | 'ingredient'; id?: string; amount?: number };
+  grant: { kind: 'facility' | 'gift' | 'item' | 'money' | 'tool' | 'ingredient' | 'rigPart'; id?: string; amount?: number };
   /** 사건 채널 — 기본 modal. 연출용(불꽃·조명)은 inbox (G27) */
-  priority?: 'modal' | 'inbox';
+  priority?: 'modal' | 'inbox' | 'strip'; // P49-a1: 'strip' = 연차 폴백(티커 한 줄, P53-a 가 쓴다)
   /** 첫 인증 합격일 + N일에 온다 (G43, 원작: 「배치 전환 = 첫 합격 후 9일째」). 있으면 year/season/dayInSeason 은 안 본다 */
   afterCertDays?: number;
   /** 조건 — 있으면 이때까지 충족돼야 온다 (첫 인증 뒤 등) */
   when?: Condition;
 }
 
-export interface TileDef {
-  id: string;
-  name: string;
-  /** 타일당 인기 */
-  pop: number;
-  /** 타일당 비용 */
-  cost: number;
-  unlock: 'start' | 'cert';
-  /** CSS 토큰 접미 (`--tile-pool-<look>`) */
-  look: string;
-}
 
 // ── G6·G7: 식당 메뉴 · 레시피 · 재료 · 궁합 ───────────────────────────────
 
@@ -312,7 +350,7 @@ export interface IngredientDef {
   year?: number;
   /** 재료 등급 — 레시피 와일드카드 `@fruit` 가 이걸로 맞춘다 (G41, 원작 「과일」 슬롯) */
   class?: IngredientClass;
-  /** 상점 해금가 */
+  /** 장날 값(재고 1개, P56-c) — `shop` 은 언제나, 보상 재료(wish·cert·year)는 한 번 얻은 뒤 다시 살 때. `start` 는 무한이라 없다 */
   price?: number;
 }
 
@@ -410,12 +448,40 @@ export interface CampaignDef {
 export interface PackageDef {
   id: string;
   name: string;
-  needs: 'restaurant' | 'course' | 'pool';
-  /** 1인 값 (G) — `course` 는 기구 요금 × feeMul */
+  /** P25 D31 — 자리 반경 3 안에 있어야 하는 것들(전부): food(먹거리) · dock(코스 있는 선착장) · water(물·선착장·샤워) · lodging(숙박 자리) · fire(화로대·BBQ) */
+  needsInRadius: ('food' | 'dock' | 'water' | 'lodging' | 'fire' | 'ppaji')[]; // P48-c: 'ppaji' = 반경 안에 빠지(수역)가 있다 — 쓰는 패키지는 P52-a 부터
+  /** 1인 값 (G) — `dock` 은 기구 요금 × feeMul 을 더한다 */
   price: number;
   feeMul?: number;
-  taste: 'food' | 'thrill' | 'water';
+  taste: 'food' | 'thrill' | 'water' | 'rest';
   sat: number;
   hp: number;
   desc: string;
+}
+
+/** P22 D28 — 지면(바닥) 종류: 잔디 위에 값을 내고 깐다. `walk` 면 길처럼 손님이 걷고, 아니면 조경(옆 평상 자리 값 +1) */
+export interface GroundDef {
+  id: string;
+  name: string;
+  /** 레거시 아틀라스 ground/<art> 프레임 */
+  art: string;
+  cost: number;
+  walk: boolean;
+  /** 인기 — 6칸마다 pop 합을 더한다 (상한 20) */
+  pop: number;
+  desc: string;
+}
+
+/** P49-a1 §4.2 — 빠지 기구 부품 (`rig-parts.json`, `parts.json` 무수정). `RigStore` 의 재료 */
+export interface RigPartDef {
+  id: string;
+  name: string;
+  unlock: 'start' | 'shop' | 'cert' | 'year';
+  /** 부품 계열 — 개조 레시피 키의 재료 */
+  class: string;
+  price: number;
+  /** shop 진열 랭크 */
+  rank?: number;
+  /** year 전용 — 연차 폴백으로만 온다 */
+  year?: number;
 }

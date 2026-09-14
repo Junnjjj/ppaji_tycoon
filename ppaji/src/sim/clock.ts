@@ -29,6 +29,8 @@ export type Season = 0 | 1 | 2 | 3;
 
 /** 상점 입고 17:00 · 심사 15:00 · 손님 유입 창 — 전부 tick 으로 */
 export const SHOP_RESTOCK_TICK = (17 - OPEN_HOUR) * TICKS_PER_HOUR;
+/** P45-b D63 — 퇴장 동선 점포(샤워·기념품·포장)가 더 끌리는 늦은 오후 시작(17시) */
+export const LATE_DAY_TICK = (17 - OPEN_HOUR) * TICKS_PER_HOUR;
 export const JUDGE_TICK = (15 - OPEN_HOUR) * TICKS_PER_HOUR;
 export const ARRIVAL_FROM_TICK = (9 - OPEN_HOUR) * TICKS_PER_HOUR;
 export const ARRIVAL_TO_TICK = (18 - OPEN_HOUR) * TICKS_PER_HOUR;

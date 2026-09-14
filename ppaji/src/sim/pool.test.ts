@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { Grid, FLOOR } from './grid.js';
 import { PoolStore } from './pool.js';
 
-const B = { poolMaintBase: 6, poolMaintPerPop: 0.5, tilePopStandard: 4 };
 const dig = (g: Grid, cells: [number, number][]) => cells.forEach(([i, j]) => g.set(i, j, FLOOR.pool));
 const fill = (g: Grid, cells: [number, number][]) => cells.forEach(([i, j]) => g.set(i, j, FLOOR.grass));
 
@@ -49,8 +48,8 @@ describe('풀 = 연결 컴포넌트', () => {
     const ps = new PoolStore(g);
     dig(g, [[30, 40], [31, 40], [30, 41], [31, 41]]);
     ps.recompute();
-    expect(ps.state(ps.all[0]!, B)).toEqual({ size: 4, popularity: 16, maintenance: 14 });
-    expect(ps.at(30, 40)?.id).toBe(ps.all[0]!.id);
+    expect(ps.all[0]!.tiles.length).toBe(4); // P49-b: `PoolStore.state` 삭제(production 호출부 0) — 상태는 `poolState()` 하나
+    expect(ps.at(30, 40)?.id).toBe(ps.all[0]!.id); expect(ps.ownerIdAt(30, 40)).toBe(ps.all[0]!.id); expect(ps.ownerIdAt(0, 0)).toBe(-1);
     expect(ps.at(0, 0)).toBeUndefined();
   });
   it('스냅샷 왕복 — 앵커 하나로 타일 집합이 되살아난다', () => {

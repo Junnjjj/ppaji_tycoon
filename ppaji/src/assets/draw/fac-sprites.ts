@@ -45,7 +45,14 @@ const MODS = [utility, lounging, restaurant, attraction, slide, decor];
 export const TEMPLATES: Record<string, FacTemplate> = Object.assign({}, ...MODS.map((m) => m.TEMPLATES));
 export const ART: Record<string, FacArt> = Object.assign({}, ...MODS.map((m) => m.ART));
 
+/** P55 — 그림 없는 기구의 폴백 실루엣 셋: 데이터 `tall` 이면 `tower` · 긴 판(max(w,d) ≥ 3 ∧ min(w,d) ≤ 1)이면 `plank` · 나머지 `floatPad`. 하나면 21종이 같은 덩어리로 보인다(H44) */
+export function rigTemplate(def: { w: number; d: number; tall?: boolean }): FacArt {
+  const tpl = def.tall ? 'tower' : Math.max(def.w, def.d) >= 3 && Math.min(def.w, def.d) <= 1 ? 'plank' : 'floatPad';
+  return { tpl, slots: { '1': 'b', '2': 'B', '3': 'n' } };
+}
+
 export const DEFAULT_BY_CLASS: Record<string, FacArt> = {
   utility: { tpl: 'toilet', slots: { '1': 's', '2': 'S', '3': 'x' } }, lounging: { tpl: 'deckChair', slots: { '1': 'w', '2': 'w', '3': 'S' } }, restaurant: { tpl: 'stall', slots: { '1': 'r', '2': 'R', '3': '!' }, icon: 'cup' },
   attraction: { tpl: 'tub', slots: { '1': 'b', '2': 'B', '3': 'n' } }, slide: { tpl: 'bigSlide', slots: { '1': 'b', '2': 'B', '3': 'n' } }, decor: { tpl: 'bush', slots: { '1': 'r' } },
+  rig: { tpl: 'floatPad', slots: { '1': 'b', '2': 'B', '3': 'n' } }, // P48-c: 그림 없는 기구는 플로팅 패드(부표 띠 + 널) 위에 주제색 상자
 };

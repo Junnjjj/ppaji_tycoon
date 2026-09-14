@@ -1,0 +1,6 @@
+[
+  { "id": "vest_only", "name": "구명조끼", "rides": 0, "base": 0, "grade": 0 },
+  { "id": "big3", "name": "3종 팔찌", "rides": 3, "base": 300, "grade": 1 },
+  { "id": "big5", "name": "5종 팔찌", "rides": 5, "base": 400, "grade": 2 },
+  { "id": "allday", "name": "종일 무제한", "rides": 99, "base": 500, "grade": 4 }
+]

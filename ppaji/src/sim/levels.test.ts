@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Grid, FLOOR, RIVER, MAX_LEVEL, landRect, gateTile } from './grid.js';
+import { Grid, FLOOR, MAX_LEVEL, landRect, gateTile, isLandFloor, isWaterCode, shoreRow } from './grid.js';
 import { Game, FACILITY_DEFS } from './game.js';
 
 /** P0-B — 높이: 강 계곡 · 단차 ≤1 · 물 0 · 경사 배치 거절 · 왕복 */
@@ -20,11 +20,11 @@ describe('P0-B 높이', () => {
   it('강·여울은 언제나 0 이고 입구 열은 강까지 평지다', () => {
     const g = Grid.newPark(0);
     const gate = gateTile(0);
-    for (let j = RIVER.j0; j < RIVER.j0 + RIVER.h; j++) for (let i = 0; i < g.w; i++) expect(g.levelAt(i, j)).toBe(0);
-    for (let j = RIVER.j0 + RIVER.h; j <= gate.j; j++) expect(g.levelAt(gate.i, j)).toBe(0);
+    for (let j = 0; j < g.h; j++) for (let i = 0; i < g.w; i++) if (isWaterCode(g.naturalAt(i, j))) expect(g.levelAt(i, j)).toBe(0); // P48-b3: 본류가 S 라 행이 아니라 물 칸 전부
+    for (let j = gate.j; j < shoreRow(gate.i); j++) expect(g.levelAt(gate.i, j)).toBe(0); // 입구 열은 물가까지 평지
     // 물을 칠하면 단이 0 으로 내려간다
     const land = landRect(0);
-    const i = 1, j = land.j0 + land.h - 2; // P14: 단은 지도 양옆 산기슭(열 0~17) — 토지 가운데는 평지
+    const i = 3, j = land.j0 + 6; // P44: 능선(열 3 부근 · 위쪽) — 가장자리 열 0 은 평지, 토지 가운데도 평지
     expect(g.levelAt(i, j)).toBeGreaterThan(0);
     g.set(i, j, FLOOR.pool);
     expect(g.levelAt(i, j)).toBe(0);
@@ -35,12 +35,12 @@ describe('P0-B 높이', () => {
     g.money = 100000;
     const grid = g.grid;
     // 2×2 자리 중 단이 섞인 첫 자리를 찾는다 (토지 안, 잔디)
-    g.rank = 5; g.grid.openLand(5); // P14: 산기슭(지도 양옆)이 토지 안에 들어오게 5랭크로 연다
+    g.rank = 5; g.openLand(5); // P14: 산기슭(지도 양옆)이 토지 안에 들어오게 5랭크로 연다
     const land = landRect(5);
     let found: { i: number; j: number } | null = null;
     for (let j = land.j0 + 2; j < land.j0 + land.h - 2 && !found; j++) for (let i = land.i0; i < land.i0 + land.w - 2 && !found; i++) {
       const tiles = [[i, j], [i + 1, j], [i, j + 1], [i + 1, j + 1]] as const;
-      if (tiles.every(([a, b]) => grid.at(a, b) === FLOOR.grass && !g.facilities.occupied(a, b)) && !grid.levelUniform(i, j, 2, 2)) found = { i, j };
+      if (tiles.every(([a, b]) => isLandFloor(grid.at(a, b)) && !g.facilities.occupied(a, b)) && !grid.levelUniform(i, j, 2, 2)) found = { i, j }; // P44: 절벽 테두리는 암반(잔디와 같은 성질)
     }
     expect(found).not.toBeNull();
     const sq = [...FACILITY_DEFS.values()].find((d) => d.w === 2 && d.d === 2 && !d.indoorOnly)!;
@@ -66,7 +66,7 @@ describe('P0-B 높이', () => {
 
   it('시작 킷 시설은 전부 놓이고 입구에서 닿는다', () => {
     const g = new Game(1);
-    expect(g.facilities.all.length).toBe(7);
+    expect(g.facilities.all.length).toBe(7); // P45-a D57: 매표 창구·분식·화장실(실내) · 자판기 · 평상 2 · 선착장 — 킷은 거의 안 준다
     g.step(600);
     expect(g.guests.all.length).toBeGreaterThan(0);
   });

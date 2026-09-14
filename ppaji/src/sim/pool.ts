@@ -63,10 +63,30 @@ export class PoolStore {
     return this.list.find((p) => p.id === id);
   }
 
+  /** P49-b §3.7 — 칸 → 수역 id (−1 = 수역 아님). `recompute()` 가 채운다 — `at()`·손님 유영이 O(1) 로 본다 */
+  private tileOwner = new Int32Array(0);
+  /** P50-a R7 — 기구가 덮은 물(k → 1). `isOpenAt`·`totalOpenTiles`(유영·입수·유입)에만 쓰고 `recompute` 의 컴포넌트 탐색은 보지 않는다 — 인기·허가·유지비는 `tiles` */
+  private blocked = new Uint8Array(0);
+  setBlocked(ks: Iterable<number>): void {
+    const n = this.grid.w * this.grid.h;
+    if (this.blocked.length !== n) this.blocked = new Uint8Array(n); else this.blocked.fill(0);
+    for (const k of ks) if (k >= 0 && k < n) this.blocked[k] = 1;
+  }
+  ownerIdK(k: number): number { return this.tileOwner.length === this.grid.w * this.grid.h ? (this.tileOwner[k] ?? -1) : -1; }
+  isOpenK(k: number): boolean { return this.ownerIdK(k) >= 0 && this.blocked[k] !== 1; }
+  isOpenAt(i: number, j: number): boolean { return this.grid.inside(i, j) && this.isOpenK(j * this.grid.w + i); }
+  openTilesOf(p: Pool): number[] { return p.tiles.filter((k) => this.blocked[k] !== 1); }
+  totalOpenTiles(): number { let n = 0; for (const p of this.list) for (const k of p.tiles) if (this.blocked[k] !== 1) n++; return n; }
+  ownerIdAt(i: number, j: number): number {
+    if (!this.grid.inside(i, j)) return -1;
+    return this.tileOwner.length === this.grid.w * this.grid.h ? (this.tileOwner[j * this.grid.w + i] ?? -1) : (this.at(i, j)?.id ?? -1);
+  }
+  ownerAt(i: number, j: number): Pool | undefined { const id = this.ownerIdAt(i, j); return id < 0 ? undefined : this.byId(id); }
   /** 이 타일이 속한 풀 */
   at(i: number, j: number): Pool | undefined {
     if (this.grid.at(i, j) !== FLOOR.pool) return undefined;
     const k = j * this.grid.w + i;
+    if (this.tileOwner.length === this.grid.w * this.grid.h) { const id = this.tileOwner[k] ?? -1; return id < 0 ? undefined : this.byId(id); }
     return this.list.find((p) => p.tiles.includes(k));
   }
 
@@ -74,14 +94,8 @@ export class PoolStore {
     return this.list.reduce((n, p) => n + p.tiles.length, 0);
   }
 
-  state(p: Pool, b: PoolBalance): PoolState {
-    const size = p.tiles.length;
-    const popularity = size * b.tilePopStandard;
-    return { size, popularity, maintenance: b.poolMaintBase + popularity * b.poolMaintPerPop };
-  }
-
-  /** 격자의 풀 타일에서 컴포넌트를 다시 찾아 기존 풀에 잇는다 */
-  recompute(): void {
+  /** 격자의 풀 타일에서 컴포넌트를 다시 찾아 기존 풀에 잇는다. P49-b: 병합이 있었으면 `{ keptId, keptName, goneNames }` 를 돌려준다(토스트 「‘◯’ 를 ‘△’ 에 합쳤습니다」) */
+  recompute(): { keptId: number; keptName: string; goneNames: string[] }[] {
     const g = this.grid;
     const seen = new Uint8Array(g.w * g.h);
     const comps: number[][] = [];
@@ -125,6 +139,7 @@ export class PoolStore {
     }
     pairs.sort((a, b) => b.overlap - a.overlap || a.pool.id - b.pool.id);
     const assigned = new Map<number[], Pool>();
+    const merges: { keptId: number; keptName: string; goneNames: string[] }[] = [];
     for (const pr of pairs) {
       if (assigned.has(pr.comp)) {
         // 병합 — 이미 다른 풀을 승계한 컴포넌트에 또 겹치면 아이템을 합치고 likes 는 max
@@ -133,6 +148,8 @@ export class PoolStore {
         host.items = host.items.concat(pr.pool.items);
         host.likes = Math.max(host.likes, pr.pool.likes);
         used.add(pr.pool.id);
+        const m = merges.find((x) => x.keptId === host.id) ?? (merges.push({ keptId: host.id, keptName: host.name ?? `수역 #${host.id}`, goneNames: [] }), merges[merges.length - 1]!);
+        m.goneNames.push(pr.pool.name ?? `수역 #${pr.pool.id}`);
         continue;
       }
       if (used.has(pr.pool.id)) continue;
@@ -148,6 +165,10 @@ export class PoolStore {
     next.sort((a, b) => a.id - b.id);
     this.list = next;
     this.version++;
+    if (this.tileOwner.length !== g.w * g.h) this.tileOwner = new Int32Array(g.w * g.h);
+    this.tileOwner.fill(-1);
+    for (const p of this.list) for (const k of p.tiles) this.tileOwner[k] = p.id;
+    return merges;
   }
 
   /** 타일 종류만 바뀌었을 때 캐시를 무효화한다 (G37) */

@@ -233,15 +233,16 @@
       "revenue": 4
     },
     {
-      "id": "small_slide_diving",
-      "name": "슬라이드와 다이빙대",
+      "id": "small_slide_slidedock",
+      "name": "슬라이드와 슬라이드 독",
       "pair": [
         "slide_large",
-        "diving"
+        "rig_slidedock"
       ],
       "radius": 2,
       "sat": 3,
-      "revenue": 4
+      "revenue": 4,
+      "$comment": "P53-b: 「슬라이드와 다이빙대」는 성립 불가였다 — 큰 슬라이드(뭍 4×5)는 물가에, 다이빙대(deep)는 물가에서 먼 깊은 물 링에만 서서 반경 2 안에 못 든다. 깊이 any 인 링 위 기구로 재지정"
     },
     {
       "id": "small_island_junglegym",

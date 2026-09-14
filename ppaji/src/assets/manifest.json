@@ -79,6 +79,86 @@
       "draw": "tile"
     },
     {
+      "id": "tile/sandpath",
+      "w": 32,
+      "h": 16,
+      "ax": 16,
+      "ay": 0,
+      "source": "procedural",
+      "draw": "tile",
+      "note": "P22 지면 붓 — 아틀라스 ground/* 프레임을 KairoAtlasProvider 가 덮는다; 없으면 절차 도트"
+    },
+    {
+      "id": "tile/hall",
+      "w": 32,
+      "h": 16,
+      "ax": 16,
+      "ay": 0,
+      "source": "procedural",
+      "draw": "tile",
+      "note": "P45-a 실내 복도 — 아틀라스 ground/path_stone 을 KairoAtlasProvider 가 덮는다; 없으면 절차 돌길"
+    },
+    {
+      "id": "tile/rock",
+      "w": 32,
+      "h": 16,
+      "ax": 16,
+      "ay": 0,
+      "source": "procedural",
+      "draw": "tile",
+      "note": "P44 절벽 테두리 암반 — 아틀라스 ground/mountain_rock 을 KairoAtlasProvider 가 덮는다; 없으면 절차 회색"
+    },
+    {
+      "id": "tile/road",
+      "w": 32,
+      "h": 16,
+      "ax": 16,
+      "ay": 0,
+      "source": "procedural",
+      "draw": "tile",
+      "note": "P43 도시 띠 차도 — 아틀라스 ground/road 를 KairoAtlasProvider 가 덮는다; 없으면 절차 아스팔트"
+    },
+    {
+      "id": "tile/sidewalk",
+      "w": 32,
+      "h": 16,
+      "ax": 16,
+      "ay": 0,
+      "source": "procedural",
+      "draw": "tile",
+      "note": "P22 지면 붓 — 아틀라스 ground/* 프레임을 KairoAtlasProvider 가 덮는다; 없으면 절차 도트"
+    },
+    {
+      "id": "tile/woodpath",
+      "w": 32,
+      "h": 16,
+      "ax": 16,
+      "ay": 0,
+      "source": "procedural",
+      "draw": "tile",
+      "note": "P22 지면 붓 — 아틀라스 ground/* 프레임을 KairoAtlasProvider 가 덮는다; 없으면 절차 도트"
+    },
+    {
+      "id": "tile/flowerbed",
+      "w": 32,
+      "h": 16,
+      "ax": 16,
+      "ay": 0,
+      "source": "procedural",
+      "draw": "tile",
+      "note": "P22 지면 붓 — 아틀라스 ground/* 프레임을 KairoAtlasProvider 가 덮는다; 없으면 절차 도트"
+    },
+    {
+      "id": "tile/gravel",
+      "w": 32,
+      "h": 16,
+      "ax": 16,
+      "ay": 0,
+      "source": "procedural",
+      "draw": "tile",
+      "note": "P22 지면 붓 — 아틀라스 ground/* 프레임을 KairoAtlasProvider 가 덮는다; 없으면 절차 도트"
+    },
+    {
       "id": "tile/gate",
       "w": 32,
       "h": 16,

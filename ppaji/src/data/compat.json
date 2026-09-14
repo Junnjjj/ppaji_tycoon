@@ -90,7 +90,7 @@
       "tteokbokki",
       "fried_noodles",
       "stir_fry_rice",
-      "bibim_guksu",
+      "pancake",
       "boiled_noodles",
       "potato_pancake",
       "sotteok",
@@ -229,6 +229,70 @@
       "strawberry_cake",
       "truffle_risotto",
       "sushi_set"
+    ]
+  },
+  {
+    "restaurant": "indoor_shop",
+    "good": [
+      "vanilla_ice_cream",
+      "choco_mint_ice_cream",
+      "strawberry_sorbet",
+      "fruit_sorbet",
+      "milkshake",
+      "chocolate_ice_cream",
+      "matcha_ice_cream",
+      "melon_ice_bar",
+      "corn_ice_bar",
+      "strawberry_sundae"
+    ],
+    "bad": [
+      "tonkatsu",
+      "curry_rice",
+      "salmon_sushi",
+      "fried_noodles"
+    ]
+  },
+  {
+    "restaurant": "takeout",
+    "good": [
+      "maeuntang",
+      "hot_pot",
+      "seafood_curry",
+      "mulhoe",
+      "pajeon",
+      "beefsteak",
+      "meat_pie",
+      "tonkatsu",
+      "ice_water",
+      "smelt_fry"
+    ],
+    "bad": [
+      "snow_cone",
+      "strawberry_sorbet",
+      "vanilla_ice_cream",
+      "lemon_shaved_ice",
+      "dragonfruit_sorbet"
+    ]
+  },
+  {
+    "restaurant": "rig_float_bar",
+    "good": [
+      "vanilla_ice_cream",
+      "choco_mint_ice_cream",
+      "strawberry_sorbet",
+      "fruit_sorbet",
+      "milkshake",
+      "chocolate_ice_cream",
+      "matcha_ice_cream",
+      "melon_ice_bar",
+      "corn_ice_bar",
+      "strawberry_sundae"
+    ],
+    "bad": [
+      "tonkatsu",
+      "curry_rice",
+      "salmon_sushi",
+      "fried_noodles"
     ]
   }
 ]

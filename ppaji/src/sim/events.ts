@@ -18,6 +18,8 @@ export interface GameEvent {
   speaker?: string;
   /** 결산 사건 — 구조화된 표 (UI 가 카드로 그린다). 평문 JSON 이어야 한다 */
   data?: unknown;
+  /** P56-a2 D8 — 이 사건이 준 물건 하나(합격 상품·랭크 보상·달력 선물). UI 가 편지 장면 위에 그림으로 그린다. sim 은 그림을 모른다 — 종류·id 만 */
+  pic?: { kind: string; id: string };
 }
 
 export const INBOX_KEEP = 100;

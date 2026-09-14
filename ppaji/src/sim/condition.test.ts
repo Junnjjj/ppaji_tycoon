@@ -20,7 +20,7 @@ const world = (o: Partial<{ pools: PoolView[]; facilities: FacilityView[]; pop: 
   cookingLevel: () => 0,
   visitors: () => 0,
   money: () => o.money ?? 0,
-  year: () => o.year ?? 1, courseThrills: () => [],
+  year: () => o.year ?? 1, courseThrills: () => [], seatGrades: () => [], ppajiGrades: () => [], rigChains: () => [], rigs: () => [], /* P49-a1 */ seatsFedMax: () => 0,
 });
 
 describe('조건 DSL — 한 평가기', () => {

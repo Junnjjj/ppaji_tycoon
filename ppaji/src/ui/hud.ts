@@ -7,6 +7,7 @@
  */
 import { el } from './dom.js';
 import { drawPortrait } from '../assets/draw/portrait.js';
+import { portraitEl } from './portraits.js'; // P56-b2: 사장 초상은 그림
 import { iconEl, type IconName } from './icons.js';
 import { setUiSurface, type UiSurface } from './panels.js';
 
@@ -122,7 +123,7 @@ export class Hud {
     ticker.setAttribute('aria-label', '현재 목표');
     ticker.tabIndex = 0;
     const face = el('span', 'kportrait');
-    face.append(drawPortrait(5, 2, 'happy')); // 이 사장 (story.json 의 president)
+    face.append(portraitEl('president', 'happy', { palette: 5, hair: 2 })); // 이 사장 (story.json 의 president) — P56-b2 그림 초상
     const line = el('div', 'kticker-line');
     line.append(face, this.tickerText);
     // R5 (G50): 목표 3슬롯 동시 노출 — 첫 줄 A(즉시), 둘째 줄 B(랭크)·C(인증) 진행바. 탭하면 그 창

@@ -5,15 +5,16 @@ import { dueEvents } from './calendar.js';
 
 /** G43 — 사장 선물 실물(비치체어·화분) · 시작 시설 원작 구성 · 첫 합격 뒤 9일째 이동 도구 */
 describe('G43 사장 선물 · 시작 시설', () => {
-  it('비치체어·화분은 gift 출처, 샤워는 소원, 유수풀은 ★1, 주스 가게는 상점 — 시작 해금이 아니다', () => {
+  it('비치체어·화분은 gift 출처, 강변 스테이지는 소원, 유수풀은 ★1, 주스 가게는 상점 — 시작 해금이 아니다 (P21 D27: 샤워실은 시작 해금으로 옮겼다)', () => {
     expect(FACILITY_DEFS.get('shade_net')!.unlock).toEqual({ source: 'gift', ref: 'calendar_y1_spring_chair' });
     expect(FACILITY_DEFS.get('photozone')!.unlock).toEqual({ source: 'gift', ref: 'calendar_y1_spring_pot' });
-    expect(FACILITY_DEFS.get('shower_row')!.unlock.source).toBe('wish');
+    expect(FACILITY_DEFS.get('stage_river')!.unlock.source).toBe('wish');
+    expect(FACILITY_DEFS.get('shower_row')!.unlock.source).toBe('start'); // P21
     expect(FACILITY_DEFS.get('diving')!.unlock).toEqual({ source: 'rank', rank: 1 });
     expect(FACILITY_DEFS.get('sikhye')!.unlock).toEqual({ source: 'shop', rank: 1 });
     expect(RANK_DEFS[0]!.reward).toEqual({ kind: 'facility', id: 'diving' });
     const g = new Game(51, undefined, { kit: false });
-    for (const id of ['shower_row', 'diving', 'sikhye', 'shade_net', 'photozone']) expect(g.unlocked.facilities.has(id), id).toBe(false);
+    for (const id of ['stage_river', 'diving', 'sikhye', 'shade_net', 'photozone']) expect(g.unlocked.facilities.has(id), id).toBe(false);
   });
   it('첫날 폐장 직전 화분, 첫 주말 10시 비치체어가 온다', () => {
     const g = new Game(52, undefined, { kit: false });

@@ -11,7 +11,9 @@ import { cssVar, cssColorInt } from '../../ui/tokens.js';
 
 export type FxName = 'money-pop' | 'splash-enter' | 'place-ok' | 'place-bad' | 'item-sparkle' | 'scent-puff' | 'temp-steam' | 'temp-frost' | 'photo-flash' | 'like-float'
   | 'splash-land' | 'wish-burst' | 'heart-float' | 'confetti' | 'fountain-spray' | 'dust-puff'
-  | 'fireworks' | 'petal-fall' | 'leaf-fall' | 'lamp-twinkle' | 'snow-fall' | 'ember';
+  | 'fireworks' | 'petal-fall' | 'leaf-fall' | 'lamp-twinkle' | 'snow-fall' | 'ember'
+  | 'price-pop' | 'got-item' // P56-a D7: 조준 중 값 팝(같은 key 는 갈아 끼운다) · 「재료 획득!」 한 줄
+  | 'buy-pop' | 'band-strip'; // P56-a2 D7: 손님 머리 위 구매 카드 「이름 ×1」(그림이 오면 그림) · 팔찌 발급 띠(등급 색이 손님 위를 지나간다)
 
 /** 이름별 재생 횟수 (G27 검사용 — 「슬롯이 돈다」를 센다) */
 export const fxFired: Record<string, number> = {};
@@ -78,6 +80,56 @@ function diamond(g: Phaser.GameObjects.Graphics, x: number, y: number): void {
 const live: Live[] = [];
 
 const IMPL: Record<FxName, (host: FxHost, t: FxTarget) => Live> = {
+  // P56-a D7 — 원작 「800G ×1」: 조준 칸 위에 값 한 줄. 같은 key 의 이전 것은 즉시 지우고 갈아 끼운다(누적 아님)
+  'price-pop': (host, t) => {
+    const { scene } = host;
+    for (const l of [...live]) if (l.name === 'price-pop' && l.key !== null && l.key === (t.key ?? null)) l.kill();
+    const text = scene.add.text(t.x, t.y, t.text ?? '', {
+      fontFamily: cssVar('--font-pixel-family') || 'monospace', fontSize: '11px', color: cssVar('--fx-coin'), stroke: cssVar('--fx-stroke'), strokeThickness: 3,
+    });
+    text.setOrigin(0.5, 1).setDepth(DEPTH_SCREEN_FX);
+    const h: Live = { name: 'price-pop', key: t.key ?? null, amount: 0, text, born: scene.time.now, alive: true, kill() { if (!this.alive) return; this.alive = false; text.destroy(); const at = live.indexOf(this); if (at >= 0) live.splice(at, 1); } };
+    if (host.reduced) scene.time.delayedCall(1400, () => h.kill());
+    else scene.tweens.add({ targets: text, alpha: { from: 1, to: 0 }, delay: 900, duration: 500, onComplete: () => h.kill() });
+    return h;
+  },
+  // 「You got the Lemon!」 — 모달이 아니라 지도 위 한 줄
+  'got-item': (host, t) => {
+    const { scene } = host;
+    const text = scene.add.text(t.x, t.y - 12, t.text ?? '획득!', {
+      fontFamily: cssVar('--font-pixel-family') || 'monospace', fontSize: '11px', color: cssVar('--fx-ok'), stroke: cssVar('--fx-stroke'), strokeThickness: 3,
+    });
+    text.setOrigin(0.5, 1).setDepth(DEPTH_SCREEN_FX);
+    const h: Live = { name: 'got-item', key: t.key ?? null, amount: 0, text, born: scene.time.now, alive: true, kill() { if (!this.alive) return; this.alive = false; text.destroy(); const at = live.indexOf(this); if (at >= 0) live.splice(at, 1); } };
+    if (host.reduced) scene.time.delayedCall(1200, () => h.kill());
+    else scene.tweens.add({ targets: text, y: t.y - 34, alpha: { from: 1, to: 0 }, duration: 1200, ease: 'Quad.easeOut', onComplete: () => h.kill() });
+    return h;
+  },
+  // P56-a2 D7 — 손님 머리 위 구매 카드 「크레페 ×1」: 작은 크림 카드 + 글씨가 떠오른다 (그림 시트가 오면 텍스처를 앉힐 자리 — 지금은 글씨)
+  'buy-pop': (host, t) => {
+    const { scene } = host;
+    const label = t.text ?? '×1';
+    const text = scene.add.text(0, 0, label, { fontFamily: cssVar('--font-pixel-family') || 'monospace', fontSize: '10px', color: cssVar('--fx-ink') || cssVar('--fx-ok'), stroke: cssVar('--fx-card') || cssVar('--fx-stroke'), strokeThickness: 2 }).setOrigin(0.5, 0.5);
+    const card = scene.add.rectangle(0, 0, text.width + 8, text.height + 4, cssColorInt('--fx-card'), 0.95).setStrokeStyle(1, cssColorInt('--fx-stroke'));
+    const box = scene.add.container(t.x, t.y - 14, [card, text]).setDepth(DEPTH_SCREEN_FX);
+    const h: Live = { name: 'buy-pop', key: t.key ?? null, amount: 0, text, born: scene.time.now, alive: true, kill() { if (!this.alive) return; this.alive = false; box.destroy(); const at = live.indexOf(this); if (at >= 0) live.splice(at, 1); } };
+    if (host.reduced) scene.time.delayedCall(1100, () => h.kill());
+    else scene.tweens.add({ targets: box, y: t.y - 34, alpha: { from: 1, to: 0 }, duration: 1100, ease: 'Quad.easeOut', onComplete: () => h.kill() });
+    return h;
+  },
+  // P56-a2 D7 — 팔찌 발급 띠: 등급 색 띠가 손님 위를 왼쪽에서 오른쪽으로 지나가며 이름을 단다
+  'band-strip': (host, t) => {
+    const { scene } = host;
+    const grade = Math.max(0, Math.min(4, t.amount ?? 0));
+    const color = cssColorInt(`--band-${grade}`);
+    const strip = scene.add.rectangle(0, 0, 26, 5, color, 1).setStrokeStyle(1, cssColorInt('--fx-stroke'));
+    const text = scene.add.text(0, -9, t.text ?? '팔찌', { fontFamily: cssVar('--font-pixel-family') || 'monospace', fontSize: '9px', color: cssVar('--fx-ok'), stroke: cssVar('--fx-stroke'), strokeThickness: 2 }).setOrigin(0.5, 1);
+    const box = scene.add.container(t.x - 10, t.y - 20, [strip, text]).setDepth(DEPTH_SCREEN_FX);
+    const h: Live = { name: 'band-strip', key: t.key ?? null, amount: 0, text, born: scene.time.now, alive: true, kill() { if (!this.alive) return; this.alive = false; box.destroy(); const at = live.indexOf(this); if (at >= 0) live.splice(at, 1); } };
+    if (host.reduced) scene.time.delayedCall(1000, () => h.kill());
+    else scene.tweens.add({ targets: box, x: t.x + 10, alpha: { from: 1, to: 0 }, duration: 1000, ease: 'Sine.easeInOut', onComplete: () => h.kill() });
+    return h;
+  },
   'money-pop': (host, t) => {
     const { scene } = host;
     const amount = t.amount ?? 0;

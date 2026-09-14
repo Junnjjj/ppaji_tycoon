@@ -12,3 +12,6 @@ tmp-shots/
 assets/generated/
 # 판정용 스크린샷 (79M). 근거 샷 목록은 docs/shots-index.md.
 prototype-3d/shots/
+
+# P56-b 그림 원본(Codex image_gen 1254px, 장당 1.5MB) — 24/32px 결과만 git 에
+ppaji/assets/pictures/raw/
