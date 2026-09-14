@@ -4,6 +4,7 @@
  * 시간은 멈추지 않는다: 청구는 완료 순간의 현금으로 판정하므로 결산과 경쟁하지 않는다.
  */
 import { el } from '../dom.js';
+import { assetUrl } from '../asset-url.js';
 import { COLOR_KO, SCENT_KO } from '../../sim/lines.js'; // P3: 물빛·분위기 낱말은 한 곳
 import { setUiSurface } from '../panels.js';
 import { PATH_COST, type Game, type Result, GROUNDS, GROUND_BY_ID } from '../../sim/game.js';
@@ -294,7 +295,7 @@ export class PoolEditDock {
     };
     const dPop = b.popularity - a.popularity;
     const head = el('div', 'kprev-head');
-    head.dataset['bg'] = 'item'; head.style.setProperty('--scene-bg', 'url("assets/scenes/scene_item.png")'); // P56-b2: 원작 「아이템 투입 효과」 위 일러스트
+    head.dataset['bg'] = 'item'; head.style.setProperty('--scene-bg', `url("${assetUrl('assets/scenes/scene_item.png')}")`); // P56-b2: 원작 「아이템 투입 효과」 위 일러스트
     head.append(el('span', 'kprev-title', `${it.name} 투입 효과`), el('span', 'knum', `${it.price}G · ${it.days}일`));
     const put = el('button', 'kbtn primary', '넣기');
     put.type = 'button';

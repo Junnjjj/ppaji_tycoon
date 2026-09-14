@@ -6,6 +6,7 @@
  *   id 형식: `pic/<kind>/<defId>` — kind = ingredient · recipe · part · gear · item · gift · band (주문서 `docs/assets/pipelines/ppaji-picture-sheet.md`)
  */
 import picturesJson from '../data/pictures.json';
+import { assetUrl } from './asset-url.js';
 import { iconEl, type IconName } from './icons.js';
 
 export interface PictureEntry { x: number; y: number; w?: number; h?: number }
@@ -44,7 +45,7 @@ export function pictureEl(id: string, fallback: IconName, extraClass?: string): 
   span.className = extraClass ? `kpic ${extraClass}` : 'kpic';
   span.dataset['pic'] = id;
   span.setAttribute('aria-hidden', 'true');
-  span.style.setProperty('--pic-sheet', `url("${PICTURES.sheet}")`);
+  span.style.setProperty('--pic-sheet', `url("${assetUrl(PICTURES.sheet)}")`); // P57-c: dist 에서 CSS 위치 기준으로 풀리던 상대 경로
   span.style.setProperty('--pic-x', `${-e.x}px`);
   span.style.setProperty('--pic-y', `${-e.y}px`);
   span.style.setProperty('--pic-w', `${e.w ?? PICTURES.cell}px`);

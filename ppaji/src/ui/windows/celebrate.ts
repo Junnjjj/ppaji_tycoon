@@ -3,6 +3,7 @@
  * 모달 예산(분당 1)은 main 이 지킨다 — 여기는 그리기만.
  */
 import { el } from '../dom.js';
+import { assetUrl } from '../asset-url.js';
 import { iconEl, type IconName } from '../icons.js';
 import { WindowPanel } from '../window.js';
 import { rewardArt, type SpriteFn } from '../reward-art.js';
@@ -51,7 +52,7 @@ export class CelebrateWindow {
     this.date.textContent = date;
     this.stamp.textContent = ev.title.includes('불합격') ? '아쉽' : '속보';
     this.win.setTitle(ev.title.includes('랭크') ? '랭크 업!' : ev.title.includes('합격') ? '심사 결과' : ev.title.includes('지역') ? '새 지역' : '소식');
-    if (ev.pic) { const art = rewardArt(ev.pic, this.sprite); art.classList.add('kcele-pic'); art.dataset['celePic'] = `${ev.pic.kind}/${ev.pic.id}`; this.icon.replaceChildren(art); this.icon.dataset['bg'] = 'letter'; this.icon.style.setProperty('--scene-bg', 'url("assets/scenes/scene_letter.png")'); } // P56-b2: 사장 편지 = 장면 위 물건(원작 gift-letter)
+    if (ev.pic) { const art = rewardArt(ev.pic, this.sprite); art.classList.add('kcele-pic'); art.dataset['celePic'] = `${ev.pic.kind}/${ev.pic.id}`; this.icon.replaceChildren(art); this.icon.dataset['bg'] = 'letter'; this.icon.style.setProperty('--scene-bg', `url("${assetUrl('assets/scenes/scene_letter.png')}")`); } // P56-b2: 사장 편지 = 장면 위 물건(원작 gift-letter)
     else { this.icon.replaceChildren(iconEl(CelebrateWindow.iconFor(ev.title), 'xl')); delete this.icon.dataset['bg']; this.icon.style.removeProperty('--scene-bg'); }
     this.title.textContent = ev.title;
     this.body.textContent = ev.body;

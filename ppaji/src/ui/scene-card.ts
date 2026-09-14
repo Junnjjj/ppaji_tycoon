@@ -3,6 +3,7 @@
  * 새 그림 0 — 대상 그림(등록부·스프라이트)과 있는 초상으로 합성한다. 요리(맛·외관·인기) · 기구(스릴·외관·인기) · 개조(스릴·정원·안전) · 수역(수온·인기·등급)이 같이 쓴다.
  */
 import { el } from './dom.js';
+import { assetUrl } from './asset-url.js';
 import { drawPortrait } from '../assets/draw/portrait.js';
 import { iconEl, type IconName } from './icons.js';
 import { gaugeEl } from './picture-grid.js';
@@ -41,7 +42,7 @@ export function sceneCard(spec: SceneCardSpec): HTMLDivElement {
   const root = el('div', 'kscene');
   if (spec.data) for (const [k, v] of Object.entries(spec.data)) root.dataset[k] = v;
   const stage = el('div', 'kscene-stage');
-  if (spec.bg) { stage.dataset['bg'] = spec.bg; stage.style.setProperty('--scene-bg', `url("assets/scenes/scene_${spec.bg}.png")`); } // 경로는 데이터 — 색·크기는 style.css
+  if (spec.bg) { stage.dataset['bg'] = spec.bg; stage.style.setProperty('--scene-bg', `url("${assetUrl(`assets/scenes/scene_${spec.bg}.png`)}")`); } // 경로는 데이터 — 색·크기는 style.css
   const [a, b] = spec.guests ?? [1, 4];
   const gl = el('span', 'kportrait'); gl.append(drawPortrait(a, a % 5, spec.mood ?? 'happy'));
   const gr = el('span', 'kportrait'); gr.append(drawPortrait(b, b % 5, spec.mood ?? 'happy'));
