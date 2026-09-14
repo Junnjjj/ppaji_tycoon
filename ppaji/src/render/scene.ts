@@ -807,13 +807,26 @@ export class WaterparkScene extends Phaser.Scene {
     }
   }
 
+  /** P57-d — 벽·문 그림(main 유리벽 4방향). 변마다 한 장: 서(−i) d1 · 북(−j) d0 · 동(+i) d3 · 남(+j) d2 (main `drawWallEdge` 의 `[3,2,1,0][dir]` 와 같다). 없으면 절차 면(P44-b) */
+  private wallImgs: Phaser.GameObjects.Image[] = [];
+  private wallArtKey(kind: 'glass_wall' | 'glass_door', d: 0 | 1 | 2 | 3): string | null {
+    const slug = `${kind}-d${d}` as const; const img = this.deps.landscape?.get(slug); if (!img) return null;
+    const key = `landscape/${slug}`; if (!this.textures.exists(key)) this.textures.addImage(key, img); return key;
+  }
+  private wallArt(i: number, j: number, front: boolean, kind: 'glass_wall' | 'glass_door', d: 0 | 1 | 2 | 3): boolean {
+    const key = this.wallArtKey(kind, d); if (!key) return false;
+    const c = tileCenter(i, j);
+    this.wallImgs.push(this.add.image(c.x, c.y + this.liftAt(i, j), key).setOrigin(0.5, (96 + 11.7575626373291) / 192).setDepth(depthKey(i, j) + (front ? Z_WALL_FRONT : Z_WALL_BACK)));
+    return true;
+  }
+  wallArtCountForTest(): number { return this.wallImgs.length; }
   private wallLayer(i: number, j: number, front: boolean): Phaser.GameObjects.Graphics {
     const key = `${j * this.deps.grid.w + i}|${front ? 'f' : 'b'}`;
     let g = this.wallLayers.get(key);
     if (!g) { g = this.add.graphics().setDepth(depthKey(i, j) + (front ? Z_WALL_FRONT : Z_WALL_BACK)); this.wallLayers.set(key, g); }
     return g;
   }
-  private clearWallLayers(): void { for (const g of this.wallLayers.values()) g.destroy(); this.wallLayers.clear(); }
+  private clearWallLayers(): void { for (const g of this.wallLayers.values()) g.destroy(); this.wallLayers.clear(); for (const im of this.wallImgs) im.destroy(); this.wallImgs = []; }
   /**
    * P44-b — 벽면 하나: 변(x0,y0)→(x1,y1) 위로 h 텍셀. 북·남 변은 빛 받는 면(`--wall-face`), 서·동 변은 그늘 면(`--wall-face-dark`) —
    * 한 톤이면 리본으로 읽힌다. 앞면(남·동)은 안이 비치게 반투명. 칸의 단(lift)을 같이 탄다
@@ -841,15 +854,17 @@ export class WaterparkScene extends Phaser.Scene {
         const inside = (a: number, b: number): boolean => isIndoorCode(grid.at(a, b)) || (grid.at(a, b) === FLOOR.pool && this.indoorPool(a, b));
         const back = this.wallLayer(i, j, false), front = this.wallLayer(i, j, true);
         // 네 변: 서(−i) · 북(−j) 는 뒤, 동(+i) · 남(+j) 은 앞. 북·남 = 빛, 서·동 = 그늘
-        if (!inside(i - 1, j)) { if (isDoor(i, j, i - 1, j)) { this.wallPost(back, p.x, p.y + lz, H); this.wallPost(back, p.x - TILE_W / 2, p.y + TILE_H / 2 + lz, H); } else this.wallFace(back, p.x, p.y + lz, p.x - TILE_W / 2, p.y + TILE_H / 2 + lz, true, false, H); }
-        if (!inside(i, j - 1)) { if (isDoor(i, j, i, j - 1)) { this.wallPost(back, p.x, p.y + lz, H); this.wallPost(back, p.x + TILE_W / 2, p.y + TILE_H / 2 + lz, H); } else this.wallFace(back, p.x, p.y + lz, p.x + TILE_W / 2, p.y + TILE_H / 2 + lz, false, false, H); }
-        if (!inside(i + 1, j)) { if (isDoor(i, j, i + 1, j)) { this.wallPost(front, p.x + TILE_W / 2, p.y + TILE_H / 2 + lz, H); this.wallPost(front, p.x, p.y + TILE_H + lz, H); } else this.wallFace(front, p.x + TILE_W / 2, p.y + TILE_H / 2 + lz, p.x, p.y + TILE_H + lz, true, true, H); }
-        if (!inside(i, j + 1)) { if (isDoor(i, j, i, j + 1)) { this.wallPost(front, p.x - TILE_W / 2, p.y + TILE_H / 2 + lz, H); this.wallPost(front, p.x, p.y + TILE_H + lz, H); } else this.wallFace(front, p.x - TILE_W / 2, p.y + TILE_H / 2 + lz, p.x, p.y + TILE_H + lz, false, true, H); }
+        if (!inside(i - 1, j)) { if (this.wallArt(i, j, false, isDoor(i, j, i - 1, j) ? 'glass_door' : 'glass_wall', 1)) { /* 그림 */ } else if (isDoor(i, j, i - 1, j)) { this.wallPost(back, p.x, p.y + lz, H); this.wallPost(back, p.x - TILE_W / 2, p.y + TILE_H / 2 + lz, H); } else this.wallFace(back, p.x, p.y + lz, p.x - TILE_W / 2, p.y + TILE_H / 2 + lz, true, false, H); }
+        if (!inside(i, j - 1)) { if (this.wallArt(i, j, false, isDoor(i, j, i, j - 1) ? 'glass_door' : 'glass_wall', 0)) { /* 그림 */ } else if (isDoor(i, j, i, j - 1)) { this.wallPost(back, p.x, p.y + lz, H); this.wallPost(back, p.x + TILE_W / 2, p.y + TILE_H / 2 + lz, H); } else this.wallFace(back, p.x, p.y + lz, p.x + TILE_W / 2, p.y + TILE_H / 2 + lz, false, false, H); }
+        if (!inside(i + 1, j)) { if (this.wallArt(i, j, true, isDoor(i, j, i + 1, j) ? 'glass_door' : 'glass_wall', 3)) { /* 그림 */ } else if (isDoor(i, j, i + 1, j)) { this.wallPost(front, p.x + TILE_W / 2, p.y + TILE_H / 2 + lz, H); this.wallPost(front, p.x, p.y + TILE_H + lz, H); } else this.wallFace(front, p.x + TILE_W / 2, p.y + TILE_H / 2 + lz, p.x, p.y + TILE_H + lz, true, true, H); }
+        if (!inside(i, j + 1)) { if (this.wallArt(i, j, true, isDoor(i, j, i, j + 1) ? 'glass_door' : 'glass_wall', 2)) { /* 그림 */ } else if (isDoor(i, j, i, j + 1)) { this.wallPost(front, p.x - TILE_W / 2, p.y + TILE_H / 2 + lz, H); this.wallPost(front, p.x, p.y + TILE_H + lz, H); } else this.wallFace(front, p.x - TILE_W / 2, p.y + TILE_H / 2 + lz, p.x, p.y + TILE_H + lz, false, true, H); }
       }
     }
-    // 문 표식 — 문 변의 가운데에 작은 마름모, 그 문이 난 층에
+    // 문 표식 — 문 변의 가운데에 작은 마름모, 그 문이 난 층에 (P57-d: 유리문 그림이 있으면 마름모는 안 그린다 — 수는 그대로 센다)
     this.doorCount = 0;
+    const artDoors = this.wallArtKey('glass_door', 0) !== null;
     for (const d of doors) {
+      if (artDoors) { this.doorCount++; continue; }
       const front = d.oi > d.i || d.oj > d.j;
       const g = this.wallLayer(d.i, d.j, front);
       const a = gridToScreen(d.i, d.j), b = gridToScreen(d.oi, d.oj); const lz = this.liftAt(d.i, d.j);

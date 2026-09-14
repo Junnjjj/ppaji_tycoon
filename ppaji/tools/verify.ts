@@ -1244,6 +1244,14 @@ async function verifyP57b(page: import('playwright').Page): Promise<void> {
   await page.waitForTimeout(300);
   const z = (await page.evaluate(`(() => { const w = window.__pj; return { landscape: w.scene.landscapeCountForTest(), borderEnv: w.scene.borderEnvCountForTest() }; })()`)) as { landscape: number; borderEnv: number };
   record('P57-b 대조군 — `?scenery=0` 이면 풍경 띠 0(바깥 env 장식은 아틀라스라 그대로)', z.landscape === 0 && z.borderEnv >= 20 ? 'pass' : 'fail', JSON.stringify(z));
+  // P57-d — 유리벽·유리문 그림 · deco 별칭
+  const wz = (await page.evaluate(`(() => { const w = window.__pj; return { art: w.scene.wallArtCountForTest(), layers: w.scene.wallLayerCountForTest(), doors: w.scene.doorCountForTest() }; })()`)) as { art: number; layers: number; doors: number };
+  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
+  await page.waitForTimeout(300);
+  const wa = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; g.money = 50000; const chair = g.placeFacility('lifeguard_chair', gt.i - 18, gt.j + 9, 0).ok; w.syncWorldToScene(); const spec = w.provider.spec('fac/lifeguard_chair/0'); const spec2 = w.provider.spec('fac/antique_pillar/1'); return { art: w.scene.wallArtCountForTest(), doors: w.scene.doorCountForTest(), keys: w.scene.textures.getTextureKeys().filter((k) => k.startsWith('landscape/glass')).length, chair, chairSrc: spec ? spec.source + ':' + spec.w + 'x' + spec.h : null, pillarSrc: spec2 ? spec2.source : null }; })()`)) as { art: number; doors: number; keys: number; chair: boolean; chairSrc: string | null; pillarSrc: string | null };
+  record('P57-d 유리벽 — 출입동 20×13 둘레 변 68장(66 + 정문 칸 홈 2)이 main 유리벽·유리문 그림(텍스처 ≥ 2) · 문 2 · `?scenery=0` 이면 그림 0 · 절차 벽 층 > 0', wa.art === 68 && wa.doors === 2 && wa.keys >= 2 && wz.art === 0 && wz.layers > 0 && wz.doors === 2 ? 'pass' : 'fail', JSON.stringify({ ...wa, control: wz }));
+  record('P57-d deco 별칭 — 안전요원 의자 = `deco/guard_stand`(art 32×36) · 장승 facing 1 = `deco/sculpture` 뒤집기(art)', wa.chair && wa.chairSrc === 'art:32x36' && wa.pillarSrc === 'art' ? 'pass' : 'fail', JSON.stringify({ chairSrc: wa.chairSrc, pillarSrc: wa.pillarSrc }));
 }
 
 /** P56-b — 그림 반입: 등록부에 그림 ≥300 · 요리 창 재료 카드가 폴백 아이콘이 아니라 시트 그림(`.kpic`)이고 폴백 0 · 도감(아는 요리)도 그림 · 시트 PNG 가 실제로 로드된다 */

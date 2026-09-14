@@ -18,9 +18,14 @@ const TILE_TO_GROUND: Record<string, string> = { sand: 'path_sand', grass: 'lawn
  * facing 0 = `:d0`, facing 1 = `:d1`(진짜 옆면, 뒤집기 아님). 2방향 시설은 옛 키 + facing 1 뒤집기 그대로.
  * `json` 을 주면 있는 것을 고르고, 안 주면(검사) 첫 후보를 낸다.
  */
+/** P57-d — main `deco/` 소품 중 ppaji 시설과 1:1 인 것(둘 다 1×1 · 32 폭). 방향 그림이 없으니 facing 1 은 뒤집기 */
+const DECO_ALIAS: Record<string, string> = { lifeguard_chair: 'deco/guard_stand', antique_pillar: 'deco/sculpture' };
+
 export function kairoFrameFor(id: string, json?: KairoAtlasJson): { frame: string; flip: boolean } | null {
   const fac = id.match(/^fac\/([a-z0-9_]+)\/([01])$/);
   if (fac) {
+    const alias = DECO_ALIAS[fac[1] as string];
+    if (alias && (!json || json[alias])) return { frame: alias, flip: fac[2] === '1' };
     const dir = `facility/${fac[1]}:d${fac[2]}`;
     if (!json || json[dir]) return { frame: dir, flip: false };
     return { frame: `facility/${fac[1]}`, flip: fac[2] === '1' };
