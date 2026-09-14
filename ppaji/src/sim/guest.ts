@@ -54,6 +54,8 @@ export function moodOf(g: { hp: number; sat: number; say: string | null }): Gues
 
 export interface Guest {
   uid: number;
+  arrivalStep?: number;
+  departureStep?: number;
   palette: number;
   i: number;
   j: number;
@@ -230,6 +232,24 @@ export class GuestStore {
   private fields = new Map<number, DistanceField>();
   private fieldsVersion = -1;
   private gateField: DistanceField | null = null;
+  private arrivalRoute: readonly { i: number; j: number }[] = [];
+  private arrivalFields = new Map<number, DistanceField>();
+  setArrivalRoute(route: readonly { i: number; j: number }[]): void { this.arrivalRoute = route; this.arrivalFields.clear(); }
+  private followArrival(g: Guest, leaving = false): boolean {
+    const prop = leaving ? 'departureStep' : 'arrivalStep';
+    const step = g[prop] ?? 0;
+    const index = leaving ? this.arrivalRoute.length - 1 - step : step;
+    const target = this.arrivalRoute[index];
+    if (!target) return false;
+    g[prop] = step;
+    if (g.i === target.i && g.j === target.j && g.progress >= 1) { g[prop] = step + 1; return this.followArrival(g, leaving); }
+    // buildField seeds blocked targets too; never walk into a newly obstructed passage.
+    if (!this.walkable(target.i, target.j)) return true;
+    let field = this.arrivalFields.get(index);
+    if (!field) { field = buildField(this.grid, [target], this.walkable); this.arrivalFields.set(index, field); }
+    this.advance(g, field);
+    return true;
+  }
   /** 오늘 나간 손님 수 · 입장 수 (일일 집계용) */
   leftToday = 0;
   enteredToday = 0;
@@ -264,6 +284,7 @@ export class GuestStore {
     this.fields.clear();
     this.facilityFields.clear();
     this.gateField = null;
+    this.arrivalFields.clear();
     this.fieldsVersion = this.pools.version;
     this.facilitiesVersion = this.facilities.version;
   }
@@ -409,6 +430,7 @@ export class GuestStore {
       if (g.emoteTtl > 0 && --g.emoteTtl === 0) g.emote = null;
       switch (g.state) {
         case 'enter':
+          if (this.followArrival(g)) break;
           g.state = 'wander';
           g.stateTicks = 0;
           break;
@@ -660,6 +682,7 @@ export class GuestStore {
           break;
         }
         case 'leave': {
+          if (this.followArrival(g, true)) break;
           const f = this.fieldToGate();
           if (!this.advance(g, f)) {
             g.state = 'gone';

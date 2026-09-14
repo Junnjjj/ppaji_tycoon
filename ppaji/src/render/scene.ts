@@ -1,3 +1,4 @@
+import { npcV8Key } from '../assets/npc-v8.js';
 /**
  * 워터파크 씬 — 지면 타일·(G1 부터) 풀·손님·FX 를 한 `i+j` 깊이 축 위에 그린다.
  * 타일 하나에 Image 하나 (3,072). 타일맵을 안 쓰는 이유는 지면·시설·손님이 **같은 깊이 축**을
@@ -241,11 +242,12 @@ export class WaterparkScene extends Phaser.Scene {
   /** 단이 있는 칸의 텍스처 — 윗면 + 치마 한 장 (`<tileKey>|z<n>`), 없으면 구워 둔다 */
   private columnKey(code: FloorCode, isGate: boolean, i: number, j: number): string {
     const base = this.tileKey(code, isGate);
+    // Flat water/hall tiles also need lazy atlas frames before their first Image is created.
+    if (!this.textures.exists(base)) { const c0 = this.deps.provider.canvas(base); if (c0) this.textures.addCanvas(base, c0); }
     const z = this.noLiftForTest ? 0 : this.deps.grid.levelAt(i, j);
     if (z <= 0) return base;
     const key = `${base}|z${z}`;
     if (!this.textures.exists(key)) {
-      if (!this.textures.exists(base)) { const c0 = this.deps.provider.canvas(base); if (c0) this.textures.addCanvas(base, c0); }
       const top = this.deps.provider.canvas(base);
       if (top) this.textures.addCanvas(key, drawColumn(top, z));
       else return base;
@@ -412,7 +414,7 @@ export class WaterparkScene extends Phaser.Scene {
   private guestPose(g: Guest): GuestPose {
     if (g.state === 'swim') return 'swim';
     if (g.state === 'ride') return 'ride';
-    if (g.state === 'walk' || g.state === 'leave') return 'walk';
+    if (g.state === 'walk' || g.state === 'leave' || (g.state === 'enter' && g.arrivalStep !== undefined)) return 'walk';
     if (g.state === 'use' && this.facDefOf) {
       const tg = g.target;
     const f = tg && tg.kind === 'facility' ? this.facilitiesRef.find((x) => x.uid === tg.uid) : undefined;
@@ -424,6 +426,12 @@ export class WaterparkScene extends Phaser.Scene {
 
   private guestKey(g: Guest): string {
     const pose = this.guestPose(g);
+    // V8 has adult poses, but no authored child/elderly bodies or rental equipment.
+    // Keep those existing presentations until corresponding approved art is available.
+    if (buildOf(g) === 'adult' && !((pose === 'swim' || pose === 'ride') && g.float)) {
+      const native = npcV8Key(g.uid, g.facing, pose, this.time.now, moodOf(g));
+      if (this.deps.provider.spec(native)) return native;
+    }
     const frames = GUEST_FRAMES[pose];
     const frame = frames === 1 ? 0 : Math.floor(this.animFrame / (pose === 'swim' ? 14 : pose === 'ride' ? 5 : 7)) % frames;
     return guestTextureKey(g.palette, buildOf(g), pose === 'swim' || pose === 'ride' ? g.float : 0, pose, frame, moodOf(g));
@@ -468,11 +476,14 @@ export class WaterparkScene extends Phaser.Scene {
       } else if (img.texture.key !== key) {
         img.setTexture(key);
       }
+      const native = key.startsWith('guest/v8/');
+      const spec = native ? this.deps.provider.spec(key) : null;
+      img.setOrigin(spec ? spec.ax / spec.w : GUEST_ANCHOR.x / GUEST_W, spec ? spec.ay / spec.h : GUEST_ANCHOR.y / GUEST_H);
       const p = this.guestWorld(g);
       // 대기 줄 (G34) — 같은 칸에 선 사람들을 뒤로 한 명씩 비켜 세운다
       const qx = g.state === 'queue' ? -6 * g.queuePos : 0; const qy = g.state === 'queue' ? 4 * g.queuePos : 0;
-      img.setPosition(Math.round(p.x + qx), Math.round(p.y + qy + (g.state === 'swim' ? 4 : g.state === 'use' && g.progress >= 1 ? -2 : 0)));
-      img.setFlipX(g.facing === 1 || g.facing === 2);
+      img.setPosition(Math.round(p.x + qx), Math.round(p.y + qy + (native ? 0 : g.state === 'swim' ? 4 : g.state === 'use' && g.progress >= 1 ? -2 : 0)));
+      img.setFlipX(!native && (g.facing === 1 || g.facing === 2));
       img.setDepth(spanDepthKey(g.fromI, g.fromJ, g.i, g.j) + Z_GUEST + (g.state === 'climb' || g.state === 'ride' ? 1 : 0));
     }
     for (const [uid, img] of this.guestImgs) {
@@ -577,7 +588,8 @@ export class WaterparkScene extends Phaser.Scene {
     for (const im of this.borderImgs) im.destroy();
     this.borderImgs = [];
     const gt = gate ?? gateTile(this.deps.rank());
-    const keys = ['fac/banana_tree/0', 'fac/pine/0', 'fac/ficus/0'];
+    const approvedTrees = ['fac/env_deciduous/0', 'fac/env_pine/0', 'fac/env_shrubs/0'];
+    const keys = approvedTrees.every(k => this.deps.provider.spec(k)) ? approvedTrees : ['fac/banana_tree/0', 'fac/pine/0', 'fac/ficus/0'];
     for (const k of keys) if (!this.textures.exists(k)) { const c = this.deps.provider.canvas(k); if (c) this.textures.addCanvas(k, c); }
     const grid = this.deps.grid;
     const inLand = (i: number, j: number): boolean => i >= land.i0 && i < land.i0 + land.w && j >= land.j0 && j < land.j0 + land.h;
@@ -618,6 +630,7 @@ export class WaterparkScene extends Phaser.Scene {
     const has = (k: string): boolean => { if (!this.textures.exists(k)) { const c = this.deps.provider.canvas(k); if (c) this.textures.addCanvas(k, c); } return this.textures.exists(k); };
     if (!has('fac/env_street_lamp/0') && !this.textures.exists('lamp/0')) this.textures.addCanvas('lamp/0', drawLamp()); // P57-b: main 가로등이 없으면 절차 가로등
     decor('busstop/0', gt.i + 1, STOP_ROW);
+    decor('fac/env_car/1', gt.i + 8, STOP_ROW + 1);
     for (let i = 4; i < grid.w; i += 8) decor(has('fac/env_street_lamp/0') ? 'fac/env_street_lamp/0' : 'lamp/0', i, STOP_ROW); // 보도 가로등
     // 길 건너(격자 위, 줄 −4~−1 은 Surround 잔디) — 마을 건물 줄: 펜션·복층 펜션·창고·안내소를 번갈아
     // P57-b: main 의 마을 건물 6(단독주택·2층 상가·펜션·소형 호텔·편의점·관리창고)이 있으면 그것, 없으면 옛 빌린 그림

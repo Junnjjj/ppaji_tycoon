@@ -3,9 +3,10 @@
  * dev 서버를 자식으로 띄우고 브라우저 실터치 검증. 하나라도 빨간불이면 종료 코드 1.
  */
 import { spawn, spawnSync } from 'node:child_process';
+import { sourceDigest } from './build-identity.js';
 
 const goal = process.argv[2] ?? 'g0';
-const PORT = 5187;
+const PORT = Number(new URL(process.env['PJ_URL'] ?? 'http://localhost:5187').port || 80);
 import { goalNum } from './goal-num.js';
 
 function run(name: string, cmd: string, args: string[]): void {
@@ -58,6 +59,11 @@ async function main(): Promise<void> {
       child.kill();
       process.exit(1);
     }
+  }
+  const served = await (await fetch(`http://localhost:${PORT}/__pj_build`)).json() as { sourceDigest?: string };
+  if (served.sourceDigest !== sourceDigest(process.cwd())) {
+    child?.kill();
+    throw new Error(`포트 ${PORT}는 현재 체크아웃과 다른 소스입니다. 현재 서버를 재시작하거나 PJ_URL로 별도 검증 포트를 지정하세요.`);
   }
   const r = spawnSync('npx', ['tsx', 'tools/verify.ts', '--goal', goal], { stdio: 'inherit', env: process.env });
   child?.kill();

@@ -14,6 +14,8 @@ export interface PlacedFacility {
   facing: 0 | 1;
   /** 유료 라운지 — 오늘 대여한 손님 uid */
   rentedBy: number | null;
+  /** Authored local passage cells; occupancy still reserves the building footprint. */
+  passage?: [number, number][];
   /** 오늘 이용 횟수 (정보 창) */
   usesToday: number;
   /** 개선 단계 1..MAX_LEVEL (G19) — 인기 +15%/단, 정원 +1 (3단·5단) */
@@ -83,7 +85,7 @@ export interface WaterRules {
 }
 /** P50-a §3.6 — 「손님이 설 수 있는 칸」 술어 **하나**. 켜진 물 위 기구 발자국(`walkOn`)이거나, 걷는 바닥이고 시설이 안 점유한 곳. 세 호출부(guest·game×2)가 같은 문자열로 부른다(정적 검사) */
 export function guestWalkable(grid: Grid, fs: FacilityStore, i: number, j: number): boolean {
-  return fs.isWalkOn(i, j) || (isWalkFloor(grid.at(i, j)) && !fs.occupied(i, j));
+  return fs.isWalkOn(i, j) || (isWalkFloor(grid.at(i, j)) && (!fs.occupied(i, j) || fs.isPassage(i, j)));
 }
 
 export class FacilityStore {
@@ -139,6 +141,14 @@ export class FacilityStore {
 
   occupied(i: number, j: number): boolean {
     return this.grid.inside(i, j) && (this.occ[j * this.grid.w + i] as number) !== 0;
+  }
+  isPassage(i: number, j: number): boolean {
+    const f = this.at(i, j);
+    if (!f?.passage) return false;
+    const def = this.defOf(f);
+    return f.passage.some(([x, y]) => f.facing === 0
+      ? i === f.i + x && j === f.j + y
+      : i === f.i + def.d - 1 - y && j === f.j + x);
   }
   isWalkOn(i: number, j: number): boolean {
     return this.grid.inside(i, j) && this.walkOn.length === this.grid.w * this.grid.h && this.walkOn[j * this.grid.w + i] === 1;
