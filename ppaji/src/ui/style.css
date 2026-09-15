@@ -357,6 +357,8 @@
   --square: 48px;
   --ticker-h: 28px;
   --bar-h: 64px;
+  --ui-max: 520px; /* P57-e 태블릿·가로 — UI 면(창·독·바·확정 바)의 최대 폭. 폰(393)에선 --ui-side 가 0 이라 그대로, 넓은 화면에선 가운데 폰 폭 열에 모인다(카이로 태블릿 UI 처럼 비례 유지). HUD 도 그 열 가장자리에 붙는다 */
+  --ui-side: max(0px, calc((100vw - var(--ui-max)) / 2));
   --safe-t: env(safe-area-inset-top, 0px);
   --safe-b: env(safe-area-inset-bottom, 0px);
   --row-index: 0;
@@ -387,8 +389,8 @@ button { font-family: inherit; }
 #hud-top {
   position: fixed;
   top: calc(2px + var(--safe-t));
-  left: 0;
-  right: 0;
+  left: var(--ui-side);
+  right: var(--ui-side);
   height: var(--strip-h);
   display: flex;
   justify-content: space-between;
@@ -471,7 +473,7 @@ button { font-family: inherit; }
 /* ── 우측 세로 열 ── */
 #hud-right {
   position: fixed;
-  right: 4px;
+  right: calc(var(--ui-side) + 4px);
   top: calc(60px + var(--safe-t));
   display: flex;
   flex-direction: column;
@@ -482,8 +484,8 @@ button { font-family: inherit; }
 /* ── 티커 (핑크) — 28px 띠, hit surface 44px ── */
 #hud-ticker {
   position: fixed;
-  left: 0;
-  right: 0;
+  left: var(--ui-side);
+  right: var(--ui-side);
   bottom: calc(var(--bar-h) + var(--safe-b));
   height: var(--ticker-h);
   display: flex;
@@ -511,8 +513,8 @@ button { font-family: inherit; }
 /* ── 하단 바 ── */
 #hud-bottom {
   position: fixed;
-  left: 0;
-  right: 0;
+  left: var(--ui-side);
+  right: var(--ui-side);
   bottom: 0;
   height: calc(var(--bar-h) + var(--safe-b));
   padding: 6px 6px calc(6px + var(--safe-b));
@@ -624,8 +626,8 @@ html[data-ui-surface='pool'] #hud-right { display: flex; opacity: 0.45; }
 .kscrim[hidden] { display: none; }
 .kwin {
   position: fixed;
-  left: 8px;
-  right: 8px;
+  left: calc(var(--ui-side) + 8px);
+  right: calc(var(--ui-side) + 8px);
   top: calc(64px + var(--safe-t));
   max-height: calc(100vh - 140px - var(--safe-t) - var(--safe-b));
   display: flex;
@@ -692,8 +694,8 @@ html[data-ui-surface='pool'] #hud-right { display: flex; opacity: 0.45; }
 /* 독 — 하단 바 자리를 대신한다 */
 .kdock {
   position: fixed;
-  left: 0;
-  right: 0;
+  left: var(--ui-side);
+  right: var(--ui-side);
   bottom: 0;
   padding: 6px 8px calc(6px + var(--safe-b));
   display: flex;
@@ -840,8 +842,8 @@ html[data-ui-surface='pool'] #hud-right { display: flex; opacity: 0.45; }
 /* ═══ G12 — 튜토리얼 Strip (바닥 흰 대사 띠 + 초상) ═══════════════════ */
 .ktut {
   position: fixed;
-  left: 8px;
-  right: 8px;
+  left: calc(var(--ui-side) + 8px);
+  right: calc(var(--ui-side) + 8px);
   bottom: calc(var(--bar-h) + var(--safe-b) + var(--ticker-h) + 10px); /* 티커 띠 위 */
   min-height: var(--tap);
   display: flex;
@@ -997,7 +999,7 @@ html:not([data-ui-surface='home']) .ktut { display: none; }
 .kfac-nav { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
 .kfac-nav .kbtn { flex: 0 0 auto; min-width: var(--tap); }
 .kfac-desc { white-space: normal; text-align: center; padding: 4px 6px; }
-.kevent-tag { position: fixed; left: 10px; bottom: calc(var(--bar-h) + var(--safe-b) + 46px); z-index: 12; padding: 2px 10px; border-radius: 6px; background: var(--strip-bg); color: var(--strip-num); font-family: var(--font-pixel-family); font-size: var(--fs-cap); pointer-events: none; }
+.kevent-tag { position: fixed; left: calc(var(--ui-side) + 10px); bottom: calc(var(--bar-h) + var(--safe-b) + 46px); z-index: 12; padding: 2px 10px; border-radius: 6px; background: var(--strip-bg); color: var(--strip-num); font-family: var(--font-pixel-family); font-size: var(--fs-cap); pointer-events: none; }
 .kname-row { display: flex; gap: 6px; }
 .kname-row input { flex: 1 1 auto; min-height: var(--tap); border: 2px solid var(--win-border); border-radius: 8px; padding: 0 8px; font-size: var(--fs-body); font-family: inherit; background: var(--fac-white); color: var(--ink); }
 /* 대화상자 「아니오」는 분홍 (원작: 네 파랑 · 아니오 핑크) */
