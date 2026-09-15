@@ -27,15 +27,15 @@ describe('P48-a 자연 바닥 평면', () => {
     for (let j = 0; j < g.h; j++) for (let i = 0; i < g.w; i += 3) { const c = g.naturalAt(i, j); if (!isWaterCode(c)) continue; const land4 = ([[1, 0], [-1, 0], [0, 1], [0, -1]] as const).some(([a, b]) => g.inside(i + a, j + b) && !isWaterCode(g.naturalAt(i + a, j + b))); expect(c).toBe(land4 || j === shoreRow(i) + 1 ? FLOOR.shallow : FLOOR.river); }
   });
 
-  it('자연 바닥은 포장 앞에 찍힌다 — 입구 열·물가 산책로의 자연 바닥은 잔디이고, 암반 칸 위 포장의 자연 바닥은 암반', () => {
+  it('자연 바닥은 포장 앞에 찍힌다 — 입구 열·물가 산책로의 자연 바닥은 잔디 (P57-h: 평지라 암반 0)', () => {
     const g = Grid.newPark(0);
     const gate = { i: 48, j: 8 };
     expect(g.at(gate.i, gate.j + 5)).toBe(FLOOR.path);
     expect(g.naturalAt(gate.i, gate.j + 5)).toBe(FLOOR.grass);
     let rockUnderPath = 0, rock = 0;
     for (let j = 0; j < g.h; j++) for (let i = 0; i < g.w; i++) { if (g.naturalAt(i, j) === FLOOR.rock) { rock++; if (g.at(i, j) === FLOOR.path) rockUnderPath++; } }
-    expect(rock).toBeGreaterThan(0);
-    void rockUnderPath; // 0 이어도 된다 — 있으면 걷었을 때 암반으로 돌아간다(아래 검사)
+    expect(rock).toBe(0); // P57-h: 능선을 껐으니 자연 암반은 0 — 「암반 칸 위 포장의 자연 바닥은 암반」 규칙은 코드에 남아 있고(HILLS_ENABLED) 여기선 잴 대상이 없다
+    void rockUnderPath;
   });
 
   it('길을 걷으면 그 자리의 자연 바닥으로 돌아간다 — 잔디 위 길은 잔디, 암반 위 길은 암반 (실버그 수정)', () => {

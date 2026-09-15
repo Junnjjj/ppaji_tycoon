@@ -206,6 +206,8 @@ export const TERRACE_COLS = 5;
 /** P44 언덕 봉우리 — 지도 양옆 바깥 조금 · 위쪽(도시 띠 근처)에 두어 강가는 평평한 모래밭이 된다. `HILL_TOP` 안쪽은 최고 단 · 세로로 `HILL_STRETCH` 배 늘인 타원 */
 export const HILL_PEAKS: readonly { i: number; j: number }[] = [{ i: -12, j: 18 }, { i: GRID_W + 11, j: 18 }];
 export const HILL_TOP = 12;
+/** P57-h(2026-09-15, 사용자 결정) — 능선 단·암반을 **끈다**. 원작은 평지이고, 북쪽 바깥의 main 먼 산·숲 그림(P57-b)이 「산자락」을 대신한다. 회색 절벽 띠가 들판을 사선으로 가로질러 화면에서 가장 시끄러웠다(실측: 단 1,150칸·암반 270). 켜면 P44 능선이 그대로 돌아온다 */
+export const HILLS_ENABLED = false;
 export const HILL_STRETCH = 2.4;
 /** @deprecated P0-B 이름 — 지금은 열 기준 */
 export const TERRACE_ROWS = TERRACE_COLS;
@@ -429,6 +431,7 @@ export class Grid {
    * 언덕이 능선이 되고, 지도 바깥의 평평한 들판으로 내려간다 — 절벽으로 잘린 섬이 아니다.
    */
   static raiseHills(g: Grid, gateI: number): void {
+    if (!HILLS_ENABLED) return; // P57-h: 평지
     const raw = new Uint8Array(g.w * g.h);
     const dist = new Int32Array(g.w * g.h).fill(-1);
     const queue: number[] = [];

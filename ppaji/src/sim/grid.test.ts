@@ -45,13 +45,13 @@ describe('격자·토지', () => {
     expect(g.at(-1, 0)).toBe(FLOOR.sand); // 격자 밖은 모래로 답한다
   });
 
-  it('P44 언덕은 능선(가장자리 0 · 최고 3 · 암반 테두리 있음) — 울타리는 없다(P44-c, 사용자: 굳이 없애도 된다)', () => {
+  it('P44 언덕 → P57-h 평지(능선 끔: 암반 0 · 최고 단 0) — 울타리는 없다(P44-c)', () => {
     const g = Grid.newPark(0);
     const land = landRect(0);
     expect(g.canCross(land.i0, land.j0 + 5, land.i0 - 1, land.j0 + 5)).toBe(true);
     let rock = 0, maxZ = 0;
     for (let j = 0; j < g.h; j++) for (let i = 0; i < g.w; i++) { if (g.at(i, j) === FLOOR.rock) rock++; maxZ = Math.max(maxZ, g.levelAt(i, j)); expect(g.levelAt(i, j) * (i === 0 || i === g.w - 1 ? 1 : 0)).toBe(0); }
-    expect(rock).toBeGreaterThan(20);
-    expect(maxZ).toBe(3);
+    expect(rock).toBe(0); // P57-h
+    expect(maxZ).toBe(0);
   });
 });

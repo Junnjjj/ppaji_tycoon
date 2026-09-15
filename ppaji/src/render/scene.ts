@@ -603,16 +603,17 @@ export class WaterparkScene extends Phaser.Scene {
       this.borderImgs.push(img);
     };
     let n = 0;
-    // ① 울타리 밖 나무 띠
-    for (let i = land.i0 - 1; i <= land.i0 + land.w; i += 2) { put(i, land.j0 - 2, n++); }
-    for (let j = land.j0 - 1; j < land.j0 + land.h; j += 2) { put(land.i0 - 2, j, n++); put(land.i0 + land.w + 1, j, n++); }
-    // ② 들판의 숲 — 마당·띠·물 밖 잔디에 해시로 7%. 울타리 띠와 겹치지 않게 두 칸 띄운다
+    // ① 마당 둘레 나무 띠 — P57-h: 세 칸마다 한 그루(예전 두 칸)
+    for (let i = land.i0 - 1; i <= land.i0 + land.w; i += 3) { put(i, land.j0 - 2, n++); }
+    for (let j = land.j0 - 1; j < land.j0 + land.h; j += 3) { put(land.i0 - 2, j, n++); put(land.i0 + land.w + 1, j, n++); }
+    // ② 들판의 숲 — P57-h: 무작위 7% 산포(370그루, 사용자 「무질서」) 대신 **8×8 블록마다 무리 하나**(확률 0.4 · 2~3그루 · 활엽수 둘 + 관목 하나) — 원작처럼 드물고 덩어리로 선다
     const hash = (i: number, j: number): number => { let x = (i * 73856093) ^ (j * 19349663); x = (x ^ (x >>> 13)) * 1274126177; return ((x ^ (x >>> 16)) >>> 0) / 4294967296; };
-    for (let j = CITY_BAND; j < grid.h; j++) for (let i = 0; i < grid.w; i++) {
-      if (inLand(i, j) || (i >= land.i0 - 2 && i < land.i0 + land.w + 2 && j >= land.j0 - 3 && j < land.j0 + land.h)) continue;
-      const c0 = grid.at(i, j);
-      if (c0 !== FLOOR.grass && c0 !== FLOOR.rock) continue;
-      if (hash(i, j) < 0.07) put(i, j, Math.floor(hash(j, i) * 3));
+    const free = (i: number, j: number): boolean => { if (inLand(i, j) || (i >= land.i0 - 2 && i < land.i0 + land.w + 2 && j >= land.j0 - 3 && j < land.j0 + land.h)) return false; const c0 = grid.at(i, j); return c0 === FLOOR.grass || c0 === FLOOR.rock; };
+    for (let bj = CITY_BAND; bj < grid.h; bj += 8) for (let bi = 0; bi < grid.w; bi += 8) {
+      if (hash(bi, bj) > 0.4) continue;
+      const oi = 1 + Math.floor(hash(bj, bi) * 4), oj = 1 + Math.floor(hash(bi + 7, bj + 3) * 4);
+      const spots: [number, number, number][] = [[bi + oi, bj + oj, 0], [bi + oi + 1, bj + oj + 1, 1], [bi + oi + 2, bj + oj, 2]];
+      for (const [si, sj, kind] of spots) if (free(si, sj)) put(si, sj, kind === 2 ? 2 : kind);
     }
     // ③ 도시 띠 가로수 — 0 줄은 두 칸마다, 광장(5·7 줄)은 세 칸마다 엇갈려. 입구 열 둘레 세 칸은 비운다(정류장에서 정문까지의 시야)
     for (let i = 0; i < grid.w; i += 2) put(i, 0, n++);
@@ -639,9 +640,7 @@ export class WaterparkScene extends Phaser.Scene {
     let tn = 0;
     for (let i = 4; i < grid.w - 4; i += 11) { decor(town[tn % town.length] as string, i, -3); tn++; }
     // 들판의 이웃 빠지·펜션(마당 좌우 멀찍이) — 확장하면 마당이 삼킨다(그림뿐이라 충돌 없음)
-    const envSide = has('fac/env_pension/0') && has('fac/env_small_hotel/0');
-    const side = (envSide ? [['fac/env_pension/1', land.i0 - 10, land.j0 + 6], ['fac/env_village_house/1', land.i0 - 8, land.j0 + 22], ['fac/env_small_hotel/0', land.i0 + land.w + 7, land.j0 + 8], ['fac/env_maintenance_shed/0', land.i0 + land.w + 9, land.j0 + 26]] : [['fac/caravan/0', land.i0 - 10, land.j0 + 6], ['fac/camp_site/0', land.i0 - 8, land.j0 + 22], ['fac/bungalow/0', land.i0 + land.w + 7, land.j0 + 8], ['fac/glamping/0', land.i0 + land.w + 9, land.j0 + 26]]) as readonly (readonly [string, number, number])[];
-    for (const [k, i, j] of side) if (i > 0 && i < grid.w - 1 && grid.at(i, j) === FLOOR.grass) decor(k, i, j);
+    // P57-h: 들판의 이웃 건물 4채(펜션·단독주택·호텔·창고)는 뺀다 — 마을 건물은 길 건너 한 줄이면 충분(사용자 「복잡함」 원인 D)
     this.landForTint = land;
     for (let j = 0; j < grid.h; j++) for (let i = 0; i < grid.w; i++) this.refreshTile(i, j); // P44-c 토지 밖 어둡게(레거시 setLand)
   }
@@ -902,9 +901,10 @@ export class WaterparkScene extends Phaser.Scene {
     }
   }
   landscapeCountForTest(): number { return this.landscapeImgs.length; }
-  /** 버스 그림 — main 아틀라스의 지역 버스(`env_bus`, +I 를 보는 d1)가 있으면 그것, 없으면 절차 상자. 둘 다 원점은 발자국 아래 꼭짓점 */
+  /** 버스 그림 — main 아틀라스의 지역 버스(`env_bus`)가 있으면 그것, 없으면 절차 상자. 둘 다 원점은 발자국 아래 꼭짓점.
+   * ⚠ 도로(+I, 화면 ↘)와 나란한 면은 **d2**(앞이 오른쪽 아래)다 — d1 은 앞이 왼쪽 아래(+J)라 버스가 도로를 가로질러 서 있었다(P57-h 실측, 사용자 「버스가 가로로 온다」) */
   private busTexture(): string {
-    const k = 'fac/env_bus/1';
+    const k = 'fac/env_bus/2';
     if (!this.textures.exists(k)) { const c = this.deps.provider.canvas(k); if (c) this.textures.addCanvas(k, c); }
     if (this.textures.exists(k)) return k;
     if (!this.textures.exists('bus/0')) this.textures.addCanvas('bus/0', drawBus());

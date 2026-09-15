@@ -4,7 +4,7 @@ import { Game, FACILITY_DEFS } from './game.js';
 
 /** P0-B — 높이: 강 계곡 · 단차 ≤1 · 물 0 · 경사 배치 거절 · 왕복 */
 describe('P0-B 높이', () => {
-  it('새 판의 모든 4이웃 단차는 1 이하이고, 최고 단이 존재한다', () => {
+  it('새 판의 모든 4이웃 단차는 1 이하 · P57-h 부터 새 판은 평지(능선 끔 — 최고 단 0; HILLS_ENABLED 로 되돌린다)', () => {
     for (const rank of [0, 3, 5]) {
       const g = Grid.newPark(rank);
       let maxZ = 0;
@@ -13,8 +13,9 @@ describe('P0-B 높이', () => {
         if (i + 1 < g.w) expect(Math.abs(z - g.levelAt(i + 1, j))).toBeLessThanOrEqual(1);
         if (j + 1 < g.h) expect(Math.abs(z - g.levelAt(i, j + 1))).toBeLessThanOrEqual(1);
       }
-      expect(maxZ).toBe(MAX_LEVEL);
+      expect(maxZ).toBe(0); // P57-h
     }
+    expect(MAX_LEVEL).toBe(3); // 단 체계 자체는 남아 있다(setLevel·level-mixed)
   });
 
   it('강·여울은 언제나 0 이고 입구 열은 강까지 평지다', () => {
@@ -24,7 +25,7 @@ describe('P0-B 높이', () => {
     for (let j = gate.j; j < shoreRow(gate.i); j++) expect(g.levelAt(gate.i, j)).toBe(0); // 입구 열은 물가까지 평지
     // 물을 칠하면 단이 0 으로 내려간다
     const land = landRect(0);
-    const i = 3, j = land.j0 + 6; // P44: 능선(열 3 부근 · 위쪽) — 가장자리 열 0 은 평지, 토지 가운데도 평지
+    const i = 3, j = land.j0 + 6; g.setLevel(i, j, 1); // P57-h: 새 판이 평지라 단을 하나 만들어 잰다
     expect(g.levelAt(i, j)).toBeGreaterThan(0);
     g.set(i, j, FLOOR.pool);
     expect(g.levelAt(i, j)).toBe(0);
@@ -37,6 +38,7 @@ describe('P0-B 높이', () => {
     // 2×2 자리 중 단이 섞인 첫 자리를 찾는다 (토지 안, 잔디)
     g.rank = 5; g.openLand(5); // P14: 산기슭(지도 양옆)이 토지 안에 들어오게 5랭크로 연다
     const land = landRect(5);
+    grid.setLevel(land.i0 + 4, land.j0 + 6, 1); // P57-h: 새 판이 평지라 2×2 안에 단차를 하나 만든다
     let found: { i: number; j: number } | null = null;
     for (let j = land.j0 + 2; j < land.j0 + land.h - 2 && !found; j++) for (let i = land.i0; i < land.i0 + land.w - 2 && !found; i++) {
       const tiles = [[i, j], [i + 1, j], [i, j + 1], [i + 1, j + 1]] as const;

@@ -10,7 +10,7 @@ import type { AssetProvider, SpriteSpec } from './types.js';
 type Frame = { x: number; y: number; w: number; h: number };
 export type KairoAtlasJson = Record<string, Frame>;
 
-const TILE_TO_GROUND: Record<string, string> = { sand: 'path_sand', grass: 'lawn', path: 'path_stone', indoor: 'floor_indoor', river: 'water_edge', shallow: 'water_edge', deck: 'path_deck', gate: 'path_stone', sandpath: 'path_sand', sidewalk: 'sidewalk', woodpath: 'path_deck', flowerbed: 'verge', gravel: 'mountain_rock', road: 'road', rock: 'mountain_rock', hall: 'path_stone' }; // P43 도시 띠 차도 · P44 암반 · P45-a 복도 // P22 지면 5종 // 수역(pool)은 뺀다 — 물빛 tint 를 받는 흰빛 절차 베이스가 정본(레거시 pool_water 는 어두워 핑크가 안 뜬다)
+const TILE_TO_GROUND: Record<string, string> = { sand: 'path_sand', grass: 'lawn', path: 'path_stone', indoor: 'floor_indoor', river: 'pool_water', shallow: 'water_edge', deck: 'path_deck', gate: 'path_stone', sandpath: 'path_sand', sidewalk: 'sidewalk', woodpath: 'path_deck', flowerbed: 'verge', gravel: 'mountain_rock', road: 'road', rock: 'mountain_rock', hall: 'path_stone' }; // P43 도시 띠 차도 · P44 암반 · P45-a 복도 // P22 지면 5종 // 수역(pool)은 뺀다 — 물빛 tint 를 받는 흰빛 절차 베이스가 정본(레거시 pool_water 는 어두워 핑크가 안 뜬다) // P57-h: 강 안쪽은 `pool_water`(선 없는 물) — `water_edge` 는 가로 밝은 선이 든 물가 타일이라 강 전체에 깔면 격자무늬 대시가 된다(실측, 「복잡함」의 한 원인). 여울(shallow)만 물가 타일
 
 /**
  * ppaji ID → 레거시 프레임 이름 후보 (없으면 null).
@@ -22,19 +22,19 @@ const TILE_TO_GROUND: Record<string, string> = { sand: 'path_sand', grass: 'lawn
 const DECO_ALIAS: Record<string, string> = { lifeguard_chair: 'deco/guard_stand', antique_pillar: 'deco/sculpture' };
 
 export function kairoFrameFor(id: string, json?: KairoAtlasJson): { frame: string; flip: boolean } | null {
-  const fac = id.match(/^fac\/([a-z0-9_]+)\/([01])$/);
+  const fac = id.match(/^fac\/([a-z0-9_]+)\/([0-3])$/); // P57-h: 2·3 은 main 4방향 프레임 전용(장식 버스처럼 씬이 직접 고른다) — ppaji 시설은 여전히 0·1
   if (fac) {
     const alias = DECO_ALIAS[fac[1] as string];
     if (alias && (!json || json[alias])) return { frame: alias, flip: fac[2] === '1' };
     const dir = `facility/${fac[1]}:d${fac[2]}`;
     if (!json || json[dir]) return { frame: dir, flip: false };
-    return { frame: `facility/${fac[1]}`, flip: fac[2] === '1' };
+    return { frame: `facility/${fac[1]}`, flip: fac[2] === '1' || fac[2] === '3' };
   }
   const tile = id.match(/^tile\/([a-z]+)(?::(\d+))?$/);
   if (tile) {
     const g = TILE_TO_GROUND[tile[1] as string];
     if (!g) return null;
-    const alt = tile[1] === 'shallow' ? 1 : tile[1] === 'gate' ? 2 : Number(tile[2] ?? 0) % 3;
+    const alt = tile[1] === 'shallow' ? 1 : tile[1] === 'gate' ? 2 : tile[1] === 'river' ? Number(tile[2] ?? 0) % 2 : Number(tile[2] ?? 0) % 3; // pool_water 는 a0·a1 둘
     return { frame: `ground/${g}:a${alt}`, flip: false };
   }
   return null;
