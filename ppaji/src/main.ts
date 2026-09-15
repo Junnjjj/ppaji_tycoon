@@ -159,6 +159,7 @@ const syncPoolLook = (): void => {
   }
   scene.setPoolColors(m);
   scene.setIndoorPoolTiles(game.pools.all.filter((p) => game.poolIndoor(p.id)).flatMap((p) => p.tiles));
+  scene.setFoodCourtTiles(game.foodcourts.tileKeys(game.grid.w)); // P58-a
 };
 
 const syncWorldToScene = (): void => {

@@ -323,6 +323,7 @@ export class WaterparkScene extends Phaser.Scene {
     const floor = this.deps.grid.at(i, j);
     if (tint !== undefined && floor === FLOOR.pool) img.setTint(tint);
     else if (floor === FLOOR.deck && this.ringTint.has(j * this.deps.grid.w + i)) img.setTint(this.ringTint.get(j * this.deps.grid.w + i) as number); // P50-b2 등급별 폰툰 색
+    else if (floor === FLOOR.indoor && this.courtTiles.has(j * this.deps.grid.w + i)) img.setTint(cssColorInt('--tile-foodcourt-tint') || 0xffffff); // P58-a: 식탁 영역은 실내 바닥에 아주 연하게 칠한 느낌
     else if (floor === FLOOR.grass) img.setTint(cssColorInt(`--grass-season-${this.season}`) || 0xffffff);
     else img.clearTint();
     { const land = this.landForTint ?? landRect(this.deps.rank()); const out = j >= CITY_BAND && !isWaterCode(floor) && floor !== FLOOR.deck && !(i >= land.i0 && i < land.i0 + land.w && j >= land.j0 && j < land.j0 + land.h); if (out) { const t = img.tintTopLeft; const r = Math.round(((t >> 16) & 255) * 0.82), g2 = Math.round(((t >> 8) & 255) * 0.82), b = Math.round((t & 255) * 0.82); img.setTint((r << 16) | (g2 << 8) | b); } }
@@ -944,6 +945,10 @@ export class WaterparkScene extends Phaser.Scene {
   }
 
   private indoorPoolTiles = new Set<number>();
+  /** P58-a — 푸드코트 칸(아주 연한 틴트) */
+  private courtTiles = new Set<number>();
+  setFoodCourtTiles(keys: ReadonlySet<number>): void { const before = this.courtTiles; this.courtTiles = new Set(keys); const w = this.deps.grid.w; for (const k of new Set([...before, ...this.courtTiles])) this.refreshTile(k % w, Math.floor(k / w)); }
+  foodCourtTileCountForTest(): number { return this.courtTiles.size; }
   private lastFacCount = -1;
 
   /** 실내 풀 타일 집합 (벽을 풀 둘레로 안 긋게) */

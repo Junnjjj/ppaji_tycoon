@@ -109,8 +109,8 @@ describe('P51 개조', () => {
   });
 
   it('봇 — 기본 봇은 64일에 개조 ≥ 1 · 부품 구매 ≥ 1 · `--no-convert` 대조군은 개조 0·부품 0 이고 현금이 ±25% 안(P55 뒤)', () => {
-    const on = runBot(new Game(2), 64, BOT_DEFAULTS);
-    const off = runBot(new Game(2), 64, { ...BOT_DEFAULTS, noConvert: true });
+    const on = runBot(new Game(2), 64, { ...BOT_DEFAULTS, noNight: true }); // P57-i(2026-09-15): 밤 빠지 파티(P54)는 기구 ★4 뒤에 잠겨 64일 안엔 개조 봇만 연다 — 유입을 절반으로 줄이자 그 야간 매출(240k)이 현금의 1/3 이 되어 대조가 「밤 유무」를 재고 있었다(실측 0.71/0.73/0.25). 양쪽 밤을 꺼서 개조 효과만 잰다(실측 0.22/0.01/0.13)
+    const off = runBot(new Game(2), 64, { ...BOT_DEFAULTS, noNight: true, noConvert: true });
     expect(on.rigUpgrades).toBeGreaterThanOrEqual(1);
     expect(on.rigPartsBought).toBeGreaterThanOrEqual(1);
     expect(off.rigUpgrades).toBe(0); expect(off.rigPartsBought).toBe(0);

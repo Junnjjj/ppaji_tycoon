@@ -55,3 +55,9 @@
 2. 식탁·의자 스프라이트 — 기구처럼 사용자 캡처인지, Codex 생성인지.
 3. 푸드코트가 **야외**(마당·물가)에도 가능한지 — 이 기획은 실내만(D2). 야외는 §14 야외 영역(펜션·빠지 준비 구역)과 같이.
 4. 좌석 확장이 매점 매출을 얼마나 밀어 올리는지 — 밴드 `foodShare`(P57-c 0.15 하한)를 다시 조일 근거가 된다.
+
+## 5. 이력
+- **2026-09-15 사용자 결정**: 영역이 맞다 — 실내 바닥에 **아주 연하게 칠해진** 느낌 · 식탁 에셋은 사용자가 새로 만든다(그때까지 절차 폴백) · 건물 짓듯 하지 않고 영역을 만들면 식탁이 나타난다 · NPC 수는 제안대로(확장 여지 유지) · 둘 다 진행.
+- **P58-a 구현**(같은 날): `src/sim/foodcourt.ts`(사각형·3×2 블록 파생·확장 = 통째로 덮기 대체·`crossedBy` 거절) · 파생 시설 `foodcourt_seat`(lounging·정원 2·무료·`derived: true` — 해금 목록·건설 창·봇에 안 뜨고 `facilities.place` 로만) · `Game.canMakeFoodCourt/makeFoodCourt/removeFoodCourt/foodCourtOfSeat` · 배치·바닥 지우기 가드 · 스냅샷 optional `foodcourts` · 통계 `courtEats` · 킷 3×4(매표소 오른쪽 아래) · 수역 독 「식탁」 모드(두 모서리) · 시설 정보는 파생이면 「푸드코트 지우기」만 · 씬 틴트 `--tile-foodcourt-tint` · 검사 `foodcourt.test.ts` 6(손님이 하루 안에 식탁에서 먹는다 포함) · 하네스 P58-a 3행 · 시설 수 재박기(킷 23·정의 178). 에셋 id `fac/foodcourt_seat/0|1`(3×2, 식탁 1 + 의자 2) — 사용자 캡처 대상.
+- **D4 검증(같은 날, 봇 밴드 실측)**: 식탁을 넣은 첫 밴드에서 `teamSeatShare 1.02`·`teamSeatY1 1.04`(비율이 1 을 넘음)·`decorGround 0`·`rank3Year 4` 넷이 빨갰다. 원인 둘 — ① `Game.claimSeat` 호출부가 lounging 이면 전부 팀 자리로 잡아 식탁에 앉은 팀이 「자리 잡은 팀」에 들어가고 그 뒤 평상을 안 찾았다(D4 위반) → `def.derived !== true` 가드 · ② 봇 `ensureGarden` 이 식탁(실내)을 평상으로 골라 잔디 후보 0 → 파생 제외. 둘을 고치니 52/52 초록(`teamSeatShare 0.91 · teamSeatY1 0.69 · decorGround 16 · rank3Year 3 · rank5Year 7`) — ★3 지연도 식탁이 팀 자리를 대신하던 부작용이었다. 교훈: **파생 시설은 「lounging 이면 자리」류 술어마다 제외를 물어야 한다** — 술어가 class 하나로 묶여 있어 새 class 없이 넣은 대가.
+- **P57-i NPC 수**(같은 날): `arrivalBase 6 · arrivalPerPoolTile 0.3 · arrivalPerPop 0.06 · maxGuests 12`(랭크 +12·매표 +8 유지 → ★0 20 · ★5 80) → 첫날 동시 20·방문 20. 좋아요 페이싱(친구·출신지 → 랭크)이 손님 수에 딸려 늦어져 `photoChance`(새 balance, 옛 0.12 고정) 0.2 로 보상.

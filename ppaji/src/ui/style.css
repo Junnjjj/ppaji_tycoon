@@ -358,6 +358,7 @@
   --ticker-h: 28px;
   --bar-h: 64px;
   --ui-max: 520px; /* P57-e 태블릿·가로 — UI 면(창·독·바·확정 바)의 최대 폭. 폰(393)에선 --ui-side 가 0 이라 그대로, 넓은 화면에선 가운데 폰 폭 열에 모인다(카이로 태블릿 UI 처럼 비례 유지). HUD 도 그 열 가장자리에 붙는다 */
+  --tile-foodcourt-tint: #f3e6cf; /* P58-a 식탁 영역 — 실내 바닥에 아주 연한 크림 틴트(곱하기) */
   --ui-zoom: 1; /* P57-g — UI 배율(`ui-scale.ts` 가 화면 크기로 정한다). 폰 1 · 아이패드 ≈ 1.36 · 상한 2 */
   --ui-side: max(0px, calc((100vw / var(--ui-zoom) - var(--ui-max)) / 2)); /* 배율 안에서 쓰이므로 100vw 를 배율로 나눈다 */
   --safe-t: env(safe-area-inset-top, 0px);

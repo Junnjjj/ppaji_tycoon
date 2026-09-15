@@ -6573,5 +6573,41 @@
     "desc": "가로등. 밤 빠지 파티 때 분위기.",
     "scenery": 5,
     "facings": 4
+  },
+  {
+    "id": "foodcourt_seat",
+    "name": "푸드코트 자리",
+    "class": "lounging",
+    "w": 3,
+    "d": 2,
+    "cost": 0,
+    "pop": 4,
+    "maint": 0,
+    "shopPrice": 0,
+    "capacity": 2,
+    "useTicks": 8,
+    "hpDelta": 25,
+    "scent": null,
+    "scentPower": 0,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "indoorOnly": true,
+    "unlock": {
+      "source": "start"
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "푸드코트의 식탁 하나와 의자 둘. 영역을 그리면 3×2 마다 자동으로 놓인다 — 매점에서 산 손님이 앉아 먹는다.",
+    "scenery": 4,
+    "derived": true
   }
 ]

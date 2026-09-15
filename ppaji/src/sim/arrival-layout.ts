@@ -73,6 +73,8 @@ export function applyArrivalLayout(g: Game): void {
     put('pine', edge + side * 5, bottom + 1);
     put('rocks', edge + side * 4, bottom + 4);
   }
+  // P58-a D8: 킷 푸드코트 3×4(식탁 2 · 좌석 4) — 출입동 안, 매표소 오른쪽 아래. 돈은 아래에서 되돌린다
+  { const r = g.makeFoodCourt({ i0: gate.i + 4, j0: gate.j + 2, w: 3, h: 4 }); if (!r.ok) throw new Error(`킷 푸드코트: ${r.reason}`); }
   g.arrivalRevision = ARRIVAL_REVISION;
   g.money = money;
   g.finalizeArrivalLayout();

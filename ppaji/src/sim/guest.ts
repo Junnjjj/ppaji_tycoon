@@ -157,6 +157,8 @@ export interface GuestBalance {
   swimTicks: number;
   /** P27 배고픔 — 수영 1회 · 탑승 1회에 오르는 양, 배고플 때 식당 거리 감쇠 */
   hungerPerSwim: number;
+  /** P57-i — 시설 이용 뒤 사진(좋아요) 확률 (옛 0.12 고정) */
+  photoChance?: number;
   hungerPerRide: number;
   hungerFalloff: number;
   walkinTeamMin: number;
@@ -740,7 +742,7 @@ export class GuestStore {
     hooks?.onFacilityUse?.(g, f);
     if (g.passBy) { hooks?.onPassBy?.(g, f, g.passBy); g.passBy = null; } // P45-b
     if (g.nightPick) { g.nightPick = false; if (hooks?.nightSet?.().has(f.uid)) hooks?.onNightUse?.(g, f); } // P45-c: 밤 분기로 고른 것만 센다(대조군 0)
-    if (g.sat >= 50 && g.photos < 1 && def.pop >= 10 && this.rng.chance(Math.min(0.5, 0.12 * (hooks?.photoMul?.() ?? 1)))) {
+    if (g.sat >= 50 && g.photos < 1 && def.pop >= 10 && this.rng.chance(Math.min(0.5, (this.b.photoChance ?? 0.12) * (hooks?.photoMul?.() ?? 1)))) { // P57-i: 손님 수를 줄인 만큼(≈0.6) 한 명의 사진 확률을 올려 좋아요 속도(친구·출신지·랭크 페이싱)를 지킨다
       g.photos++;
       g.say = '찰칵!';
       setEmote(g, 'camera');

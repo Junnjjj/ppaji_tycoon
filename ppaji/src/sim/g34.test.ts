@@ -3,9 +3,12 @@ import { Game } from './game.js';
 import { CLOSING_TICK } from './clock.js';
 import { QUEUE_MAX, QUEUE_PATIENCE } from './guest.js';
 import { makeTestPpaji } from './test-helpers.js';
+import defaultBalance from '../data/balance.json';
 
+/** P57-i(2026-09-15): 유입 재조정(기본 6·정원 12)으로 첫날 동시 손님이 적어 정원 1 자리에 둘이 동시에 서지 않는다 — 이 검사는 줄 규칙을 재므로 유입만 옛 값으로 올린다 */
+const BUSY = { ...defaultBalance, arrivalBase: 20, maxGuests: 40 };
 function fresh(seed: number): Game {
-  const g = new Game(seed, undefined, { kit: false });
+  const g = new Game(seed, BUSY, { kit: false });
   g.money = 200000;
   return g;
 }

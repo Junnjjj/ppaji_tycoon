@@ -79,6 +79,8 @@ export interface FacilityDef {
   /** 나오는 칸이 입구와 다른 시설만 (슬라이드·에어바운스). 없으면 입구로 나온다 */
   exit?: { i: number; j: number } | null;
   indoorOnly: boolean;
+  /** P58-a — 파생 시설: 영역(푸드코트)이 자동으로 놓는다. 건설 창·봇·해금 목록에 안 뜨고 `facilities.place` 로만 생긴다 */
+  derived?: boolean;
   /** P45-b D63 — 야외 식당: 실내 바닥 위엔 못 놓는다(복도 점포는 실내 전용만) */
   outdoorOnly?: boolean;
   /** P45-b D63 — 복도 곁이면 지나가는 손님이 산다: 입장(enter)·퇴장(leave)·둘 다 */

@@ -561,7 +561,7 @@ export class Bot {
   }
   private ensureGarden(g: Game, spendable: () => number): void {
     if (spendable() < 8000) return; // P27: 자리·숙박에 돈이 먼저 가서 2만 문턱이면 조경이 굶었다(실측 중앙 2칸)
-    const seat = g.facilities.all.filter((f) => g.facilities.defOf(f).class === 'lounging' && !g.seatValueOf(f.uid).landscaped).sort((a, b) => b.usesTotal - a.usesTotal || a.uid - b.uid)[0];
+    const seat = g.facilities.all.filter((f) => g.facilities.defOf(f).class === 'lounging' && g.facilities.defOf(f).derived !== true && !g.seatValueOf(f.uid).landscaped) /* P58-a: 식탁(실내·파생)은 꽃밭 대상이 아니다 — 잡으면 잔디 후보 0 으로 조경이 영영 안 된다 */.sort((a, b) => b.usesTotal - a.usesTotal || a.uid - b.uid)[0];
     if (!seat) return;
     const def = g.facilities.defOf(seat);
     const cands: { i: number; j: number }[] = [];

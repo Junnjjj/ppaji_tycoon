@@ -18,6 +18,7 @@ export class FacilityInfoWindow {
   private readonly win: WindowPanel;
   private readonly rows = el('div', 'krows');
   private readonly removeBtn: HTMLButtonElement;
+  private readonly courtBtn: HTMLButtonElement;
   private uid: number | null = null;
 
   private readonly menuBtn: HTMLButtonElement;
@@ -33,6 +34,8 @@ export class FacilityInfoWindow {
     // P30 D38: 창이 지도를 덮으므로 링은 창을 닫은 뒤에 보인다 — 닫고 나서 OVERLAY_LINGER_MS 동안 남기고 걷는다 (그 사이 다른 선택이 오면 그쪽이 이긴다)
     this.win.onClose = () => { const tok = ++this.overlaySeq; window.setTimeout(() => { if (tok === this.overlaySeq) this.onSelect([]); }, FacilityInfoWindow.OVERLAY_LINGER_MS); };
     this.removeBtn = el('button', 'kbtn', '철거');
+    this.courtBtn = el('button', 'kbtn', '푸드코트 지우기'); this.courtBtn.id = 'win-facility-court-remove'; // P58-a: 파생 시설(식탁)은 영역째 지운다
+    this.courtBtn.addEventListener('click', () => { const g = this.game(); if (this.uid === null) return; const id = g.foodCourtOfSeat(this.uid); if (id === null) return; const r = g.removeFoodCourt(id); this.toast(r.ok ? '푸드코트를 지웠다' : r.reason, r.ok); if (r.ok) { this.onRemoved(); this.win.hide(); } });
     this.removeBtn.type = 'button';
     this.removeBtn.id = 'win-facility-remove';
     this.removeBtn.addEventListener('click', () => {
@@ -73,7 +76,7 @@ export class FacilityInfoWindow {
       if (r.ok) { this.onRemoved(); this.show(this.uid); }
     });
     const actions = el('div', 'kdock-row kwrap'); // P57-f: 버튼 5개 — 글자 대신 행이 접힌다
-    actions.append(this.upBtn, this.staffBtn, this.moveBtn, this.menuBtn, this.removeBtn);
+    actions.append(this.upBtn, this.staffBtn, this.moveBtn, this.menuBtn, this.removeBtn, this.courtBtn);
     this.win.body.append(this.thumb, this.rows);
     const foot = el('div', 'kwin-foot'); foot.append(actions); this.win.root.append(foot); // P57-f: 버튼 행은 스크롤 본문 밖 하단 고정 — 두 줄로 접혀도 화면 밖으로 안 밀린다(「버튼 줄은 절대 안 잘린다」)
   }
@@ -186,6 +189,7 @@ export class FacilityInfoWindow {
     }
     this.rows.append(el('div', 'krow-sub kfac-desc', def.desc));
     this.menuBtn.classList.toggle('khide', def.menuSlots === 0);
+    { const derived = def.derived === true; this.courtBtn.classList.toggle('khide', !derived); this.removeBtn.classList.toggle('khide', derived); this.moveBtn.classList.toggle('khide', derived); this.upBtn.classList.toggle('khide', derived); this.staffBtn.classList.toggle('khide', derived); } // P58-a: 식탁은 영역이 놓은 것 — 개별 이동·철거·개선·알바 없음
     const canStaff = staffable(def);
     this.staffBtn.classList.toggle('khide', !canStaff);
     this.staffBtn.textContent = f.staff ? '알바 해고' : `알바 고용 · ${PART_TIMER_WAGE}G/일`;

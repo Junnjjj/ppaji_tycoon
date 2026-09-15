@@ -72,7 +72,7 @@ const COST_POP_BAND: Record<FacilityClass, [number, number]> = {
  * ×0.01 이면 pop 합이 3.3배가 되어 좋아요·버스 몫이 밴드를 벗어났다 (봇 8시드 실측).
  * 지금 스케일은 교체된 75종의 pop 합이 2,020 → 2,000 이라 옛 세트와 사실상 같다.
  */
-const EXCEPTIONS = new Set<string>(['golden_kairobot', 'entrance']); // entrance: P42 0G 도구형 시설(문 자리) — 값·인기·유지비·정원 회귀 밖
+const EXCEPTIONS = new Set<string>(['golden_kairobot', 'entrance', 'foodcourt_seat']); // foodcourt_seat: P58-a 파생 시설(0G·유지 0 — 영역이 값을 낸다) // entrance: P42 0G 도구형 시설(문 자리) — 값·인기·유지비·정원 회귀 밖
 const MAINT_PER_POP = 5.3;
 const MAINT_PER_POP_SLIDE = 7.2;
 const MAINT_TOLERANCE = 0.3;

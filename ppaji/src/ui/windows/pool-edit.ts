@@ -13,7 +13,7 @@ import type { ItemDef } from '../../data/schema.js';
 import { PictureGrid, type PictureCard } from '../picture-grid.js';
 import { pictureEl, pictureId } from '../pictures.js';
 
-export type PoolEditMode = 'dig' | 'fill' | 'item' | 'deck' | 'undeck' | 'indoor' | 'unindoor' | 'path' | 'unpath' | 'ground' | 'ppaji' | 'line'; // P49-b: 빠지(두 모서리 사각형) · 라인(1×2/4/6 조각)
+export type PoolEditMode = 'dig' | 'fill' | 'item' | 'deck' | 'undeck' | 'indoor' | 'unindoor' | 'path' | 'unpath' | 'ground' | 'ppaji' | 'line' | 'foodcourt'; // P58-a: 실내 바닥 위 식탁 영역(두 모서리) // P49-b: 빠지(두 모서리 사각형) · 라인(1×2/4/6 조각)
 
 export interface PoolEditHost {
   showSelection(tiles: readonly { i: number; j: number }[], mode: PoolEditMode): void;
@@ -60,7 +60,7 @@ export class PoolEditDock {
     const row1 = el('div', 'kdock-row');
     row1.append(this.modeLabel, this.costLabel);
     const tabs = el('div', 'kdock-row ktabs');
-    for (const [m, label] of [['ppaji', '빠지'], ['line', '라인'], ['dig', '치기'], ['fill', '걷기'], ['path', '길'], ['ground', '지면'], ['unpath', '바닥 걷기'], ['deck', '데크'], ['undeck', '데크 걷기'], ['item', '소품'], ['indoor', '건물 바닥'], ['unindoor', '건물 지우기']] as const) {
+    for (const [m, label] of [['ppaji', '빠지'], ['line', '라인'], ['foodcourt', '식탁'], ['dig', '치기'], ['fill', '걷기'], ['path', '길'], ['ground', '지면'], ['unpath', '바닥 걷기'], ['deck', '데크'], ['undeck', '데크 걷기'], ['item', '소품'], ['indoor', '건물 바닥'], ['unindoor', '건물 지우기']] as const) {
       const b = el('button', 'ktab', label);
       b.type = 'button';
       b.dataset['mode'] = m;
@@ -131,7 +131,7 @@ export class PoolEditDock {
   setMode(m: PoolEditMode): void {
     if (this.mode !== m) this.clearSelection();
     this.mode = m;
-    this.modeLabel.textContent = m === 'ppaji' ? '빠지 두르기' : m === 'line' ? '라인 놓기' : m === 'dig' ? '수역 치기' : m === 'fill' ? '수역 걷기' : m === 'path' ? '길 깔기' : m === 'ground' ? '지면 깔기' : m === 'unpath' ? '바닥 걷기' : m === 'item' ? '소품 넣기' : m === 'deck' ? '데크 깔기' : m === 'undeck' ? '데크 걷기' : m === 'indoor' ? '실내 바닥 깔기' : '실내 지우기';
+    this.modeLabel.textContent = m === 'foodcourt' ? '식탁 영역 그리기' : m === 'ppaji' ? '빠지 두르기' : m === 'line' ? '라인 놓기' : m === 'dig' ? '수역 치기' : m === 'fill' ? '수역 걷기' : m === 'path' ? '길 깔기' : m === 'ground' ? '지면 깔기' : m === 'unpath' ? '바닥 걷기' : m === 'item' ? '소품 넣기' : m === 'deck' ? '데크 깔기' : m === 'undeck' ? '데크 걷기' : m === 'indoor' ? '실내 바닥 깔기' : '실내 지우기';
     for (const [k, b] of this.tabs) b.classList.toggle('on', k === m);
     this.chips.hidden = m !== 'item';
     this.groundChips.hidden = m !== 'ground';
@@ -150,6 +150,17 @@ export class PoolEditDock {
   /** 지도 탭 — 파기/메우기는 칸 토글, 아이템은 풀 고르기 · P49-b 빠지는 두 모서리, 라인은 자리 하나 */
   toggleTile(i: number, j: number): void {
     if (!this.active) return;
+    if (this.mode === 'foodcourt') {
+      if (!this.corner || this.rect) { this.corner = { i, j }; this.rect = null; this.selected.clear(); this.selected.set(j * this.game().grid.w + i, { i, j }); this.refresh(); return; }
+      const i0 = Math.min(this.corner.i, i), j0 = Math.min(this.corner.j, j);
+      this.rect = { i0, j0, w: Math.abs(i - this.corner.i) + 1, h: Math.abs(j - this.corner.j) + 1 };
+      this.selected.clear();
+      for (let b = this.rect.j0; b < this.rect.j0 + this.rect.h; b++) for (let a = this.rect.i0; a < this.rect.i0 + this.rect.w; a++) this.selected.set(b * this.game().grid.w + a, { i: a, j: b });
+      const c = this.game().canMakeFoodCourt(this.rect);
+      if (!c.ok) this.host.toast(c.reason, false);
+      this.refresh();
+      return;
+    }
     if (this.mode === 'ppaji') {
       if (!this.corner || this.rect) { this.corner = { i, j }; this.rect = null; this.selected.clear(); this.selected.set(j * this.game().grid.w + i, { i, j }); this.refresh(); return; }
       const i0 = Math.min(this.corner.i, i), j0 = Math.min(this.corner.j, j);
@@ -205,6 +216,7 @@ export class PoolEditDock {
 
   private cost(): number {
     const tiles = this.selection;
+    if (this.mode === 'foodcourt') { const c = this.rect ? this.game().canMakeFoodCourt(this.rect) : null; return c && c.ok ? c.cost ?? 0 : 0; }
     if (this.mode === 'ppaji') { const c = this.rect ? this.game().canMakePpaji(this.rect) : null; return c && c.ok ? c.cost ?? 0 : 0; }
     if (this.mode === 'line') { const c = this.lineAt ? this.game().canPlaceLine(this.lineLen, this.lineAt.i, this.lineAt.j, this.lineFacing) : null; return c && c.ok ? c.cost ?? 0 : 0; }
     if (this.mode === 'indoor') return tiles.length * 40;
@@ -223,6 +235,7 @@ export class PoolEditDock {
     }
     const n = this.selected.size;
     this.costLabel.textContent = `${n}칸 · ${this.cost().toLocaleString('ko-KR')}G`;
+    if (this.mode === 'foodcourt') { const c = this.rect ? this.game().canMakeFoodCourt(this.rect) : null; this.status.textContent = !this.corner ? '식탁 — 실내 바닥 위에 사각형의 첫 모서리를 탭하세요 (3×2 마다 식탁 하나, 좌석 둘)' : !this.rect ? '맞은편 모서리를 탭하세요 — 최소 3×2 · 기존 영역을 통째로 덮으면 넓어집니다' : c && c.ok ? `식탁 ${(c.seats ?? 0) / 2} · 좌석 ${c.seats ?? 0} · ${(c.cost ?? 0).toLocaleString('ko-KR')}G` : c ? c.reason : ''; }
     if (this.mode === 'ppaji') { const c = this.rect ? this.game().canMakePpaji(this.rect) : null; this.status.textContent = !this.corner ? '빠지 — 물 위에 사각형의 첫 모서리를 탭하세요 (둘레는 폰툰, 안은 물)' : !this.rect ? '맞은편 모서리를 탭하세요 — 안쪽은 최소 4×5' : c && c.ok ? `링 ${this.selected.size}칸 · 물 위 폰툰 ${c.ringWater ?? 0}칸 × 60G · 새 수역 +${c.enclose ?? 0}칸 (남은 허가 ${Math.max(0, this.game().permitLeft)}칸)` : (c ? c.reason : ''); this.doneBtn.disabled = !(c && c.ok) || this.cost() > this.game().money; this.host.showSelection(this.selection, this.mode); this.costLabel.textContent = `${this.selected.size}칸 · ${this.cost().toLocaleString('ko-KR')}G`; return; }
     if (this.mode === 'line') { const c = this.lineAt ? this.game().canPlaceLine(this.lineLen, this.lineAt.i, this.lineAt.j, this.lineFacing) : null; this.status.textContent = !this.lineAt ? `라인 1×${this.lineLen} — 자리를 탭하세요 (↻ 로 회전)` : c && c.ok ? `1×${this.lineLen} ${this.lineFacing ? '세로' : '가로'} · ${(c.cost ?? 0).toLocaleString('ko-KR')}G` : (c ? c.reason : ''); this.doneBtn.disabled = !(c && c.ok) || this.cost() > this.game().money; this.host.showSelection(this.selection, this.mode); this.costLabel.textContent = `${this.selected.size}칸 · ${this.cost().toLocaleString('ko-KR')}G`; return; }
     this.status.textContent = this.mode === 'ground' ? `${GROUND_BY_ID.get(this.groundId)?.desc ?? ''} — 잔디·길 위 칸을 고르세요 (완료에서 일괄 청구)` : this.mode === 'dig' ? '강을 탭해 부표로 칠 칸을 고르세요 — 잔디면 인공 풀 (완료에서 일괄 청구)' : this.mode === 'fill' ? '수역 칸을 탭해 걷을 칸을 고르세요' : this.mode === 'path' ? '손님은 길·데크·실내만 걷는다 — 입구에서 시설까지 잔디를 탭해 길을 이으세요' : this.mode === 'unpath' ? '걷을 길 칸을 고르세요 (어딘가로 가는 유일한 길은 못 걷는다)' : this.mode === 'deck' ? '데크로 물을 둘러싸면 안쪽이 수영 구역이 된다 — 뭍이나 데크에 이어서 깔 칸을 고르세요 (손님이 서는 발판)' : this.mode === 'undeck' ? '걷을 데크 칸을 고르세요' : this.mode === 'indoor' ? '실내로 만들 칸을 고르세요 — 풀을 둘러싸면 실내 풀 (계절 무관, 26°C)' : '지울 실내 칸을 고르세요';
@@ -327,6 +340,13 @@ export class PoolEditDock {
   }
 
   private apply(): void {
+    if (this.mode === 'foodcourt') {
+      if (!this.rect) return;
+      const r = this.game().makeFoodCourt(this.rect);
+      if (!r.ok) { this.host.toast(r.reason, false); return; }
+      this.host.toast(`식탁 영역 완성 — 좌석 ${r.seats ?? 0} · −${(r.cost ?? 0).toLocaleString('ko-KR')}G`, true);
+      this.host.onApplied(); this.exit(); return;
+    }
     if (this.mode === 'ppaji') {
       if (!this.rect) return;
       const r = this.game().makePpaji(this.rect);
