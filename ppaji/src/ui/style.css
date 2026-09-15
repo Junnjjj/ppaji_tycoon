@@ -358,7 +358,8 @@
   --ticker-h: 28px;
   --bar-h: 64px;
   --ui-max: 520px; /* P57-e 태블릿·가로 — UI 면(창·독·바·확정 바)의 최대 폭. 폰(393)에선 --ui-side 가 0 이라 그대로, 넓은 화면에선 가운데 폰 폭 열에 모인다(카이로 태블릿 UI 처럼 비례 유지). HUD 도 그 열 가장자리에 붙는다 */
-  --ui-side: max(0px, calc((100vw - var(--ui-max)) / 2));
+  --ui-zoom: 1; /* P57-g — UI 배율(`ui-scale.ts` 가 화면 크기로 정한다). 폰 1 · 아이패드 ≈ 1.36 · 상한 2 */
+  --ui-side: max(0px, calc((100vw / var(--ui-zoom) - var(--ui-max)) / 2)); /* 배율 안에서 쓰이므로 100vw 를 배율로 나눈다 */
   --safe-t: env(safe-area-inset-top, 0px);
   --safe-b: env(safe-area-inset-bottom, 0px);
   --row-index: 0;
@@ -370,6 +371,8 @@
 html, body { margin: 0; height: 100%; overflow: hidden; background: var(--tile-sand); }
 body { font-family: var(--font-body); color: var(--ink); -webkit-user-select: none; user-select: none; touch-action: none; }
 #game { position: fixed; inset: 0; overflow: hidden; }
+/* P57-g — DOM UI 뿌리는 통째로 배율을 탄다. 지도에 붙는 말풍선(#hud-bubbles)·스크림·회전 안내는 제외 */
+#hud-top, #hud-right, #hud-ticker, #hud-bottom, #hud-toast, .kbanner, .kwin, .kdock, .ktut, .kevent-tag { zoom: var(--ui-zoom); }
 #game canvas { image-rendering: pixelated; display: block; }
 button { font-family: inherit; }
 
@@ -631,7 +634,7 @@ html[data-ui-surface='pool'] #hud-right { display: flex; opacity: 0.45; }
   left: calc(var(--ui-side) + 8px);
   right: calc(var(--ui-side) + 8px);
   top: calc(64px + var(--safe-t));
-  max-height: calc(100vh - 140px - var(--safe-t) - var(--safe-b));
+  max-height: calc(100vh / var(--ui-zoom) - 140px - var(--safe-t) - var(--safe-b)); /* P57-g: 배율 안에선 vh 도 배율을 타므로 나눈다 */
   display: flex;
   flex-direction: column;
   border: 2px solid var(--win-border);
@@ -965,7 +968,7 @@ html:not([data-ui-surface='home']) .ktut { display: none; }
 .kwin.kdialog { top: 36%; max-height: none; z-index: 41; }
 .kdialog-body { white-space: normal; }
 .kdialog-cost .krow-v { margin-left: auto; }
-.kwin.kcompact { top: 30%; max-height: 60vh; }
+.kwin.kcompact { top: 30%; max-height: calc(60vh / var(--ui-zoom)); }
 .kcele-icon { display: flex; justify-content: center; padding: 6px 0 2px; }
 .kicon.xl { width: 48px; height: 48px; }
 .kcele-title { text-align: center; font-size: var(--fs-title); font-weight: 900; }
@@ -1042,7 +1045,7 @@ html:not([data-ui-surface='home']) .ktut { display: none; }
 .kpaper-lede.kcele-body { color: var(--paper-ink); border-top: 1px solid var(--paper-rule); padding-top: 6px; text-align: left; }
 .kpaper-stamp.kstamp { position: absolute; top: 4px; right: 6px; font-size: var(--fs-tiny); padding: 1px 6px; animation-delay: 300ms; z-index: 1; }
 .kcollect .kcollect-bar { flex: 1 1 auto; height: 7px; margin: 0 8px; }
-.kwin.kfit { top: 50%; transform: translateY(-50%); max-height: calc(100vh - 140px - var(--safe-t) - var(--safe-b)); }
+.kwin.kfit { top: 50%; transform: translateY(-50%); max-height: calc(100vh / var(--ui-zoom) - 140px - var(--safe-t) - var(--safe-b)); }
 .kchips[hidden] { display: none; } /* G55: 아이템 모드에 타일 칩이 새어 나왔다 — flex 가 hidden 을 이겼다 */
 .krow > .krow-k + .krow-v { margin-left: auto; } /* G55: 도감 「(음료)맛 2」 붙음 — 값은 오른쪽 */
 .kchip .kicon { width: 16px; height: 16px; vertical-align: -4px; }
@@ -1120,7 +1123,7 @@ html:not([data-ui-surface='home']) .ktut { display: none; }
 .kreward-art { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; flex: 0 0 32px; }
 .kcele-pic { transform: scale(2); transform-origin: center; }
 .kcele-pic.kpic-canvas { transform: none; }
-#dock-pool .kitem-grid { display: block; max-height: 38vh; overflow-y: auto; }
+#dock-pool .kitem-grid { display: block; max-height: calc(38vh / var(--ui-zoom)); overflow-y: auto; }
 #dock-pool .kitem-grid .kpgrid { grid-template-columns: repeat(3, 1fr); } /* P57-f: 4열(85px)에선 「유자향 노란 향초」가 두 줄 — 건설 창과 같은 3열 */
 #dock-pool .kitem-grid .kpcard-art { min-height: 40px; }
 .kband-gauge { margin-left: auto; margin-right: 8px; }

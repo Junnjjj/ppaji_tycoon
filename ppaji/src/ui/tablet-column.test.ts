@@ -13,7 +13,8 @@ const block = (sel: string): string => { const i = css.indexOf(`\n${sel} {`); ex
 describe('P57-e 태블릿 열', () => {
   it('토큰 --ui-max 520px · --ui-side = max(0, (100vw − ui-max)/2)', () => {
     expect(css).toMatch(/--ui-max: 520px;/);
-    expect(css).toMatch(/--ui-side: max\(0px, calc\(\(100vw - var\(--ui-max\)\) \/ 2\)\);/);
+    expect(css).toMatch(/--ui-side: max\(0px, calc\(\(100vw \/ var\(--ui-zoom\) - var\(--ui-max\)\) \/ 2\)\);/); // P57-g: 배율 안에서 쓰이므로 100vw 를 --ui-zoom 으로 나눈다
+    expect(css).toMatch(/--ui-zoom: 1;/);
   });
   it('전폭 표면 8곳이 좌우에 --ui-side 를 쓴다', () => {
     for (const sel of ['#hud-top', '#hud-ticker', '#hud-bottom', '.kwin', '.kdock', '.ktut']) { const b = block(sel); expect(b, sel).toMatch(/left: (var\(--ui-side\)|calc\(var\(--ui-side\))/); expect(b, sel).toMatch(/right: (var\(--ui-side\)|calc\(var\(--ui-side\))/); }

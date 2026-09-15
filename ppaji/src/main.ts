@@ -29,6 +29,7 @@ import { loadAtlas, HybridProvider } from './assets/atlas-provider.js';
 import { loadNpcV8 } from './assets/npc-v8.js';
 import { loadKairoAtlas } from './assets/kairo-atlas.js';
 import { loadLandscape } from './assets/landscape.js';
+import { applyUiScale } from './ui/ui-scale.js';
 import { GuestInfoWindow } from './ui/windows/guest-info.js';
 import { BuildWindow, BUILD_TABS } from './ui/windows/build.js';
 import { PlaceDock } from './ui/windows/place.js';
@@ -103,6 +104,7 @@ const provider = new HybridProvider(npc, new HybridProvider(kairo, new HybridPro
 const missing = ProceduralProvider.missingDrawers();
 if (missing.length > 0) console.error('매니페스트에 그리는 함수가 없는 id:', missing);
 
+applyUiScale(); window.addEventListener('resize', () => applyUiScale()); // P57-g: 태블릿·데스크톱에서 DOM UI 를 키운다
 const hud = new Hud(document.body);
 hud.debug.hidden = !DEBUG;
 const bubbles = new Bubbles(document.body);
