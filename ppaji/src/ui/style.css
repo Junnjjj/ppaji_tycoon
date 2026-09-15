@@ -440,7 +440,8 @@ button { font-family: inherit; }
   cursor: pointer;
   transition: transform var(--dur-micro) var(--ease);
 }
-.kbtn { min-width: var(--tap); min-height: var(--tap); padding: 0 14px; border-radius: 999px; }
+.kbtn { min-width: var(--tap); min-height: var(--tap); padding: 0 14px; border-radius: 999px; white-space: nowrap; } /* P57-f: 버튼 글자는 안 접는다 — 줄이 모자라면 행(.kwrap)이 접힌다 */
+.kwrap { flex-wrap: wrap; } /* P57-f: 버튼 여럿인 행 — 버튼 안 글자 대신 행이 접힌다 */
 .kbtn:active, .ksquare:active { background: var(--btn-blue-press); transform: translateY(1px); box-shadow: inset 0 2px 3px rgb(0 0 0 / 35%); }
 .ksquare {
   width: var(--square);
@@ -1072,7 +1073,7 @@ html:not([data-ui-surface='home']) .ktut { display: none; }
 .kpcard-art { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; flex: 1 1 auto; min-height: 52px; }
 .kpcard-art .kpic, .kpcard-art .kpic-fb { transform: scale(2); transform-origin: center; } /* 24텍셀 → 48px: 카드 안에서 크게 */
 .kpcard-art .kpic-canvas { transform: none; }
-.kpcard-name { font-weight: 800; line-height: 1.15; text-align: center; max-height: 2.3em; overflow: hidden; }
+.kpcard-name { font-weight: 800; line-height: 1.15; text-align: center; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } /* P57-f: 카드 이름은 한 줄 — 두 줄(2.3em)이던 것을 말줄임으로. 긴 이름은 데이터를 줄인다(슬라이드 꼬리는 sub 로) */
 .kpcard-n { position: absolute; left: 0; bottom: 0; font-weight: 900; color: var(--ink-dim); }
 .kpcard-cost { position: absolute; right: 0; bottom: 0; font-weight: 900; color: var(--card-price); }
 .kpcard-badge { position: absolute; right: 3px; top: 3px; padding: 1px 5px; border-radius: 6px; background: var(--row-on); color: var(--btn-ink); font-weight: 800; }
@@ -1089,6 +1090,9 @@ html:not([data-ui-surface='home']) .ktut { display: none; }
 .kpslot { flex: 1 1 0; min-width: 0; min-height: var(--tap); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 2px dashed var(--row-edge); border-radius: 8px; background: var(--row-bg); color: var(--ink-dim); font-family: inherit; font-size: var(--fs-tiny); cursor: pointer; }
 .kpslot.on { border-style: solid; border-color: var(--win-border); background: var(--win-flat); color: var(--ink); }
 .kpslot .kpic, .kpslot .kpic-fb { transform: scale(1.5); transform-origin: center; margin: 4px 0; }
+.kpslot > span:last-child { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } /* P57-f: 슬롯 이름 한 줄 */
+.kfac-menu-row .krow-v { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kfac-menu-row .krow-k { flex: 0 0 auto; white-space: nowrap; } /* P57-f: 값이 min-width 0 이 되며 열쇠 「메뉴」가 글자 사이로 쪼개졌다 */ /* P57-f: 걸린 메뉴 이름 나열은 한 줄 + 말줄임(그림이 나머지를 말한다) */
 .kgauge { display: inline-flex; gap: 2px; }
 .kgauge-cell { width: 8px; height: 12px; border-radius: 2px; background: var(--row-edge); }
 .kgauge-cell.on { background: var(--row-on); }
@@ -1108,14 +1112,14 @@ html:not([data-ui-surface='home']) .ktut { display: none; }
 .kaxis-note { font-size: var(--fs-tiny); color: var(--row-on); font-weight: 800; }
 .kpconvert { display: flex; flex-direction: column; gap: 6px; padding: 6px; border: 2px solid var(--win-border); border-radius: 10px; background: var(--win-flat); }
 .kpconvert-diff { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-.kcond-say { position: relative; flex: 1 1 auto; min-width: 0; padding: 4px 8px; border-radius: 10px; background: var(--bubble-bg); color: var(--bubble-ink); border: 1px solid var(--win-border); font-size: var(--fs-tiny); }
+.kcond-say { position: relative; flex: 1 1 auto; min-width: 0; padding: 4px 8px; border-radius: 10px; background: var(--bubble-bg); color: var(--bubble-ink); border: 1px solid var(--win-border); font-size: var(--fs-tiny);  word-break: keep-all; /* P57-f: 말풍선은 단어 사이에서만 접는다 */ }
 
 /* ═══ P56-a2 — 그림 문법 나머지: 보상 그림 · 편지 위 물건 · 소품 격자(독) · 팔찌 카드 ═══ */
 .kreward-art { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; flex: 0 0 32px; }
 .kcele-pic { transform: scale(2); transform-origin: center; }
 .kcele-pic.kpic-canvas { transform: none; }
 #dock-pool .kitem-grid { display: block; max-height: 38vh; overflow-y: auto; }
-#dock-pool .kitem-grid .kpgrid { grid-template-columns: repeat(4, 1fr); }
+#dock-pool .kitem-grid .kpgrid { grid-template-columns: repeat(3, 1fr); } /* P57-f: 4열(85px)에선 「유자향 노란 향초」가 두 줄 — 건설 창과 같은 3열 */
 #dock-pool .kitem-grid .kpcard-art { min-height: 40px; }
 .kband-gauge { margin-left: auto; margin-right: 8px; }
 [data-grid="bands"] .kpcard-art { min-height: 44px; }

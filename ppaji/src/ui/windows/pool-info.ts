@@ -145,7 +145,7 @@ export class PoolInfoWindow {
       row('기구', `켜진 기구 ${lit.length} · 링 시설 ${onRing.length} · 종 ${new Set([...lit, ...onRing].map((f) => f.defId)).size}`, 'attraction');
       row('연결', `최장 사슬 ${Math.max(0, ...lit.map((f) => g.rigState.chainLen.get(f.uid) ?? 1))} (정원 × 최대 2.0)`, 'build');
       row('허가', `${p.tiles.length}칸 · 남은 허가 ${Math.max(0, g.permitLeft)}칸`, 'pool');
-      row('어제 수입', '— (팔찌·플로팅 바 배선은 P51·P52-a)', 'coin'); }
+      row('어제 수입', '—', 'coin'); /* P57-f: 수역별 수입은 안 센다(시설별만) — 개발용 문구는 화면에서 뺀다 */ }
     // P56-a2 D8 — 팔찌 카드 넷(그림 · 값 · 열린/잠긴) + 빠지 등급 게이지. 값은 `bandPrice(등급)` — 확정 바·정보창과 같은 함수
     { const grade = g.ppajiGradeOf(p.id);
       const gr = el('div', 'krow');

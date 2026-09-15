@@ -90,11 +90,11 @@ export class BuildWindow {
         : `잠김 · ${UNLOCK_KO[def.unlock.source]}${def.unlock.rank !== undefined ? ` ${def.unlock.rank}` : ''}`;
       const card: PictureCard = {
         id: def.id,
-        name: def.slide ? `${def.name} · ${def.slide.levels}층 ${def.slide.length}칸` : def.name,
+        name: def.name, // P57-f: 슬라이드의 「N층 M칸」은 아래 줄로 — 카드 이름은 한 줄(줄바꿈 금지)
         art: canvasPictureEl(this.thumb(def), 'build'),
         count: placed,
         price: `${def.cost.toLocaleString('ko-KR')}G`,
-        sub,
+        sub: def.slide ? `${def.slide.levels}층 ${def.slide.length}칸 · ${sub}` : sub,
         desc: def.desc ?? (unlocked ? '탭하면 배치 모드로 — 지도를 팬해 자리를 맞춘다' : '아직 못 짓는다'),
         disabled: !unlocked,
         data: { facility: def.id, placed: String(placed) },

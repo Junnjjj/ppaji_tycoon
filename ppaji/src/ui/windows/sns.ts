@@ -164,13 +164,15 @@ export class SnsWindow {
     const cur = prog ? g.sns.areasById.get(prog.areaId) : undefined;
     const intro = el('div', 'krow');
     intro.id = 'sns-area-intro';
-    intro.append(el('span', 'krow-k', cur ? `${cur.name} — ${cur.desc ?? ''}` : ''), el('span', 'krow-v', cur?.bus ? `${cur.bus} · 좋아요 ${(cur.busEvery ?? 0).toLocaleString('ko-KR')}마다` : ''));
+    intro.append(el('span', 'krow-k', cur ? cur.name : ''), el('span', 'krow-v', cur?.bus ? `${cur.bus} · 좋아요 ${(cur.busEvery ?? 0).toLocaleString('ko-KR')}마다` : '')); // P57-f: 설명은 아래 줄로 — 열쇠에 붙이면 값이 두 줄로 밀린다
     this.body.append(intro);
+    if (cur?.desc) this.body.append(el('div', 'krow-sub', cur.desc)); // 행 밖 한 줄 — 행 안에 두면 열쇠·값을 민다
     if (next) {
       const nx = el('div', 'krow');
       nx.id = 'sns-area-next';
-      nx.append(el('span', 'krow-k', `다음 출신지 · ${next.name} — ${next.desc ?? ''}`), el('span', 'krow-v', next.bus ?? ''));
+      nx.append(el('span', 'krow-k', `다음 출신지 · ${next.name}`), el('span', 'krow-v', next.bus ?? '')); // P57-f
       this.body.append(nx);
+      if (next.desc) this.body.append(el('div', 'krow-sub', next.desc));
     }
     for (const st of g.sns.unlockedFriends) {
       const def = g.sns.friendDef(st.id);

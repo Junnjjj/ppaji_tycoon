@@ -72,7 +72,7 @@ export class FacilityInfoWindow {
       this.toast(r.ok ? (f.staff ? `알바 고용 · ${PART_TIMER_WAGE}G/일` : '알바를 내보냈다') : r.reason, r.ok);
       if (r.ok) { this.onRemoved(); this.show(this.uid); }
     });
-    const actions = el('div', 'kdock-row');
+    const actions = el('div', 'kdock-row kwrap'); // P57-f: 버튼 5개 — 글자 대신 행이 접힌다
     actions.append(this.upBtn, this.staffBtn, this.moveBtn, this.menuBtn, this.removeBtn);
     this.win.body.append(this.thumb, this.rows, actions);
   }
@@ -181,7 +181,7 @@ export class FacilityInfoWindow {
     if (def.menuSlots > 0) {
       const eq = this.game().menus.equipped(uid);
       row('메뉴', eq.length ? `${eq.map((r) => r.name).join(' · ')} (+${this.game().menus.menuPopularity(uid, def.id)})` : '비어 있다');
-      if (eq.length) { const pics = el('span', 'kmenu-pics'); for (const r of eq) { const a = el('span', 'kmenu-pic'); a.append(pictureEl(pictureId('recipe', r.id), 'cook')); a.dataset['menuPic'] = r.id; pics.append(a); } this.rows.lastElementChild?.querySelector('.krow-v')?.prepend(pics); } // P56-b3: 걸린 메뉴 그림은 같은 줄 안에 — 새 줄을 끼우면 아래 버튼(메뉴 편집·알바)이 화면 밖으로 밀려 실터치가 빗나간다(G6·P8 실측)
+      if (eq.length) { const pics = el('span', 'kmenu-pics'); for (const r of eq) { const a = el('span', 'kmenu-pic'); a.append(pictureEl(pictureId('recipe', r.id), 'cook')); a.dataset['menuPic'] = r.id; pics.append(a); } this.rows.lastElementChild?.querySelector('.krow-v')?.prepend(pics); this.rows.lastElementChild?.classList.add('kfac-menu-row'); } // P56-b3: 걸린 메뉴 그림은 같은 줄 안에 — 새 줄을 끼우면 아래 버튼(메뉴 편집·알바)이 화면 밖으로 밀려 실터치가 빗나간다(G6·P8 실측)
     }
     this.rows.append(el('div', 'krow-sub kfac-desc', def.desc));
     this.menuBtn.classList.toggle('khide', def.menuSlots === 0);
