@@ -47,7 +47,7 @@ export class EndingWindow {
     const carry = el('div', 'krow-sub');
     carry.textContent = `뉴게임+ 이월: 레시피 ${c.recipes.length} · 요리 EXP ${c.cookingExp} · 시설 종류 ${c.facilities.length} · 선물 ${c.gifts.length} · 기구 ${(c.gears ?? []).length} · 개조 도감 ${(c.rigUpgrades ?? []).length} · 부품 ${(c.rigParts ?? []).length} · 티켓 ${c.ticketBase}G (돈·수역·손님·출신지는 새로 — 개조판 한 채는 킷 빠지에)`;
     this.body.append(carry);
-    const row = el('div', 'kdock-row');
+    const row = el('div', 'kdock-row kwrap'); // P57-f
     const cont = el('button', 'kbtn', '이어하기');
     cont.type = 'button';
     cont.id = 'win-ending-continue';

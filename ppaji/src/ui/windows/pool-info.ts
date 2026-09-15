@@ -48,7 +48,7 @@ export class PoolInfoWindow {
       host.toast(r.ok ? '지금 소품 구성을 프리셋으로 저장했습니다' : r.reason, r.ok);
       if (r.ok) { host.onChanged(); this.show(this.poolId); }
     });
-    const actions = el('div', 'kdock-row');
+    const actions = el('div', 'kdock-row kwrap'); // P57-f
     actions.append(this.editBtn, this.saveBtn);
     this.win.body.append(this.rows, actions, this.presetRows, this.bandRows); // P56-a2: 팔찌 카드는 맨 아래 — 행동 버튼(편집·프리셋)을 화면 밖으로 밀지 않는다(G12 실터치)
   }

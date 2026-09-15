@@ -74,7 +74,8 @@ export class FacilityInfoWindow {
     });
     const actions = el('div', 'kdock-row kwrap'); // P57-f: 버튼 5개 — 글자 대신 행이 접힌다
     actions.append(this.upBtn, this.staffBtn, this.moveBtn, this.menuBtn, this.removeBtn);
-    this.win.body.append(this.thumb, this.rows, actions);
+    this.win.body.append(this.thumb, this.rows);
+    const foot = el('div', 'kwin-foot'); foot.append(actions); this.win.root.append(foot); // P57-f: 버튼 행은 스크롤 본문 밖 하단 고정 — 두 줄로 접혀도 화면 밖으로 안 밀린다(「버튼 줄은 절대 안 잘린다」)
   }
 
   /** 하네스 전용 — 남은 링을 즉시 걷는다 (타이머를 기다리지 않게) */
