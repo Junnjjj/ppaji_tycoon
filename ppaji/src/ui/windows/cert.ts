@@ -38,7 +38,7 @@ function condArt(c: Condition, sprite: (id: string) => HTMLCanvasElement | null)
 
 export class CertWindow {
   private readonly win: WindowPanel;
-  private readonly tabs = el('div', 'ktabs kwin-tabs');
+  private readonly tabs = el('div', 'ktabs kwin-tabs kgrid4'); // W-1: 8 → 4+4, 각 ≥ 44
   private readonly body = el('div', 'krows');
   private family: CertFamily = 'grade';
 

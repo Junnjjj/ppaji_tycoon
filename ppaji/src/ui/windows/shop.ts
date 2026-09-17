@@ -15,7 +15,7 @@ const KIND_KO = { facility: '시설', item: '소품', gift: '선물' } as const;
 
 export class ShopWindow {
   private readonly win: WindowPanel;
-  private readonly head = el('div', 'krow');
+  private readonly head = el('div', 'krow-sub kfac-hint'); // W-4: 행이 아니라 한 줄
   private readonly grid: PictureGrid;
   private readonly sold = new Set<string>();
 
@@ -39,7 +39,7 @@ export class ShopWindow {
     const g = this.game();
     this.head.replaceChildren();
     const stocked = g.shop.state.restockDay >= 0;
-    this.head.append(el('span', 'krow-k', '입고'), el('span', 'krow-v', !stocked ? '첫 입고는 17:00 — 잠긴 카드가 오늘의 후보' : `${g.shop.state.restockDay + 1}일차 17:00 · 랭크 ${g.rank} 진열`));
+    this.head.textContent = !stocked ? '17:00 입고 — 잠긴 카드가 오늘의 후보' : `${g.shop.state.restockDay + 1}일차 17:00 입고 · 랭크 ${g.rank} 진열`;
     const stock = g.shopStock();
     const stockIds = new Set(stock.map((e) => e.id));
     const cards: PictureCard[] = [];

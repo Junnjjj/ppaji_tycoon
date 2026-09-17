@@ -55,7 +55,7 @@ export class Hud {
   private goalBar(id: 'rank' | 'cert'): HTMLElement {
     const root = el('div', 'kgoal');
     root.dataset['goal'] = id;
-    const label = el('span', 'kgoal-label ksr', '');
+    const label = el('span', 'kgoal-label', ''); // H-2: 라벨이 보인다(무표시 게이지 금지)
     root.append(iconEl(id === 'rank' ? 'star' : 'check'));
     const bar = el('span', 'kgoal-bar');
     const fill = el('span', 'kgoal-fill');
@@ -131,7 +131,8 @@ export class Hud {
     const line = el('div', 'kticker-line');
     line.append(face, this.tickerText);
     // R5 (G50): 목표 3슬롯 동시 노출 — 첫 줄 A(즉시), 둘째 줄 B(랭크)·C(인증) 진행바. 탭하면 그 창
-    this.goals.append(this.goalBar('rank'), this.goalBar('cert'));
+    const certBar = this.goalBar('cert'); certBar.classList.add('kgoal-off'); // H-2: 화면엔 랭크 하나 — 인증 바는 DOM 에만(하네스 G51 사다리 검사가 라벨을 읽는다)
+    this.goals.append(this.goalBar('rank'), certBar);
     ticker.append(line, this.goals);
     ticker.addEventListener('click', () => this.handlers.get('ticker')?.());
 
@@ -202,6 +203,7 @@ export class Hud {
     this.popularity.textContent = Math.round(pop).toLocaleString('ko-KR');
     const n = Math.max(0, Math.min(5, Math.round(stars)));
     this.starIcons.forEach((s, k) => { s.dataset['on'] = k < n ? '1' : '0'; });
+    this.stars.classList.toggle('khide', n === 0); // H-4: 랭크 0 이면 회색 별 5 개가 자리만 먹는다
   }
 
   /** 지금 파크에 있는 SNS 친구 (G23, PSS 하단 바) — 없으면 숨긴다 */

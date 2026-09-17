@@ -39,6 +39,8 @@ export interface PictureGridOptions {
   cols?: 2 | 3 | 4;
   /** 「No.」 대신 쓸 낱말(「보유」·「놓음」) */
   countLabel?: string;
+  /** D69(K40): 잠긴 카드(`badge: 'lock'`)는 앞 N 장만 — 티저. 없으면 전부 */
+  teaser?: number;
 }
 
 export class PictureGrid {
@@ -70,10 +72,13 @@ export class PictureGrid {
 
   get selected(): string | null { return this.selectedId; }
 
-  render(cards: readonly PictureCard[]): void {
-    this.cards = [...cards];
+  render(input: readonly PictureCard[]): void {
+    let cards = [...input];
+    if (this.opts.teaser !== undefined) { let left = this.opts.teaser; cards = cards.filter((c) => c.badge !== 'lock' || left-- > 0); } // D69: 해금분 + 티저 N
+    this.cards = cards;
     this.grid.replaceChildren();
     if (this.selectedId !== null && !cards.some((c) => c.id === this.selectedId)) this.selectedId = null;
+    if (this.selectedId === null && cards.length > 0 && !this.opts.noFooter) this.selectedId = cards[0]?.id ?? null; // D69: 아래 줄은 비지 않는다 — 원작처럼 첫 카드가 골라져 있다
     for (const c of cards) {
       const b = el('button', 'kpcard');
       b.type = 'button';
@@ -114,8 +119,8 @@ export class PictureGrid {
     this.footName.textContent = c ? c.name : '';
     this.footSub.textContent = c?.sub ?? '';
     this.footCount.textContent = c && c.count !== undefined ? `${this.opts.countLabel ?? 'No.'} ${c.count}` : '';
-    this.footDesc.textContent = c?.desc ?? (c ? '' : '카드를 골라 보세요');
-    this.foot.classList.toggle('empty', !c);
+    this.footDesc.textContent = c?.desc ?? '';
+    this.foot.classList.toggle('khide', !c); // D69: 고른 것이 없으면(카드 0) 줄 자체를 안 그린다
   }
 
   get count(): number { return this.cards.length; }

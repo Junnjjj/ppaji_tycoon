@@ -22,7 +22,7 @@ export interface PlaceHost {
 export class PlaceDock {
   readonly root: HTMLDivElement;
   private readonly modeLabel = el('span', 'kdock-mode', '배치 중');
-  private readonly why = el('span', 'kdock-cost', '어디에 설치할까요? (다른 메뉴는 취소 뒤에)');
+  private readonly why = el('span', 'kdock-cost', ''); // W-15: 거절 이유만 — 비면 안 그린다
   /** P52-b 위험 칩 — 기구·선착장을 조준할 때만 · 4단 색은 토큰(`--risk-*`) */
   private readonly riskChip = el('span', 'kchip krisk-0 khide', '안전');
   private readonly rotateBtn: HTMLButtonElement;
@@ -72,7 +72,7 @@ export class PlaceDock {
     this.facing = 0;
     this.at = at ?? null;
     this.root.hidden = false;
-    this.modeLabel.textContent = `배치 중: ${def.name} · ${def.cost.toLocaleString('ko-KR')}G`;
+    this.modeLabel.textContent = `${def.name} · ${def.cost.toLocaleString('ko-KR')}G`; // W-15: 한 줄(원작 「Select location」)
     this.rotateBtn.hidden = def.w === def.d;
     setUiSurface('build');
     this.refresh();
@@ -117,7 +117,7 @@ export class PlaceDock {
     if (!this.def) return;
     this.riskChip.classList.add('khide');
     if (!this.at) {
-      this.why.textContent = '어디에 설치할까요? (다른 메뉴는 취소 뒤에)';
+      this.why.textContent = '';
       this.doneBtn.disabled = true;
       this.host.showGhost(this.def, 0, 0, this.facing, false);
       return;

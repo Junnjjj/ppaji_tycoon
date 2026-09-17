@@ -27,24 +27,31 @@ export class RankWindow {
     stars.append(el('span', 'krow-k', `랭크 ${g.rank}`), starBox);
     this.body.append(stars);
     const { next, verdicts } = g.rankProgress();
-    if (next) {
+    if (next) { // W-13: 다음 랭크 블록은 카드 하나
+      const card = el('div', 'kcert krank-next');
       const h = el('div', 'krow');
       h.append(el('span', 'krow-name', `다음: ${next.name}`));
-      this.body.append(h);
+      card.append(h);
       verdicts.forEach((v, k) => {
         const r = el('div', 'krow kcond');
         r.dataset['rankcond'] = String(k);
         r.append(el('span', 'krow-k', v.label), el('span', 'krow-v', v.met ? '충족' : `${v.actual} / ${v.need}`));
-        this.body.append(r);
+        card.append(r);
       });
+      this.body.append(card);
     }
     const ICON: Record<string, IconName> = { '인기도': 'star', '누적 방문': 'friends', '좋아요': 'heart', 'SNS 친구': 'friends', '인증 통과': 'check', '열린 지역': 'inbox', '토지': 'build', '청결 · 직원': 'utility' };
+    const stats = el('div', 'kstats two'); // W-13: 지표 8 은 2열 타일 — 행 19 개가 같은 무게로 나열되던 것을 끊는다
+    this.body.append(stats);
     const row = (k: string, v: string): void => {
-      const r = el('div', 'krow');
+      const t = el('div', 'kstat');
+      t.dataset['stat'] = k;
+      const head = el('span', 'kstat-k');
       const ic = ICON[k];
-      if (ic) r.append(iconEl(ic));
-      r.append(el('span', 'krow-k', k), el('span', 'krow-v knum', v));
-      this.body.append(r);
+      if (ic) head.append(iconEl(ic));
+      head.append(el('span', undefined, k));
+      t.append(head, el('span', 'kstat-v', v));
+      stats.append(t);
     };
     row('인기도', `${g.parkPopularity().toLocaleString('ko-KR')}`);
     row('청결 · 알바', `${Math.round(g.cleanliness)} · ${g.staffedCount()}명`);

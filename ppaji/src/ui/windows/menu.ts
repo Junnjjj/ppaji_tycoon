@@ -14,6 +14,8 @@ export interface MenuEntry {
   desc?: string;
   /** 구분 머리 — 이 항목 앞에 그린다 */
   group?: string;
+  /** W-14: 실행 뒤 창을 닫지 않고 다시 그린다(토글 항목) */
+  stay?: boolean;
   run: () => void;
 }
 
@@ -21,8 +23,8 @@ export class MenuWindow {
   private readonly win: WindowPanel;
   private readonly list = el('div', 'kmenu');
 
-  constructor(parent: HTMLElement, private readonly entries: () => MenuEntry[]) {
-    this.win = new WindowPanel(parent, 'win-menu-main', '메뉴', 'blue');
+  constructor(parent: HTMLElement, private readonly entries: () => MenuEntry[], opts?: { id?: string; title?: string }) {
+    this.win = new WindowPanel(parent, opts?.id ?? 'win-menu-main', opts?.title ?? '메뉴', 'blue');
     this.win.body.append(this.list);
   }
 
@@ -46,7 +48,7 @@ export class MenuWindow {
         b.append(el('span', 'kmenu-lock', e.locked));
         b.addEventListener('click', () => { /* 잠김 — 이유만 보여 준다 */ });
       } else {
-        b.addEventListener('click', () => { this.win.hide(); e.run(); });
+        b.addEventListener('click', () => { if (e.stay) { e.run(); this.show(); return; } this.win.hide(); e.run(); });
       }
       this.list.append(b);
     }

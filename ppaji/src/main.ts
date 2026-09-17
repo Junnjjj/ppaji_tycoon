@@ -247,7 +247,7 @@ const speak = (speakerId: string, lines: readonly string[]): void => {
 };
 const NO_TUT = params.get('tut') === '0';
 /** 건설 NEW 배지 — 마지막으로 건설 창을 열었을 때의 해금 수 (표현 상태라 localStorage) */
-const seenFacilityCount = (): number => { try { return Number(localStorage.getItem('pj.seenFac') ?? '0'); } catch { return 0; } };
+const seenFacilityCount = (): number => { try { const v = localStorage.getItem('pj.seenFac'); if (v === null) { localStorage.setItem('pj.seenFac', String(game.unlocked.facilities.size)); return game.unlocked.facilities.size; } return Number(v); } catch { return 0; } }; // H-6: 새 판의 시작 해금 45 는 「새 것」이 아니다 — 처음 잰 값을 본 것으로 친다
 const shopSeenDay = (): number => { try { return Number(localStorage.getItem('pj.shopSeen') ?? '-1'); } catch { return -1; } };
 const markShopSeen = (): void => { try { localStorage.setItem('pj.shopSeen', String(game.shop.state.restockDay)); } catch { /* 저장 불가 */ } };
 const markFacilitiesSeen = (): void => { try { localStorage.setItem('pj.seenFac', String(game.unlocked.facilities.size)); } catch { /* 저장 불가 */ } };
@@ -375,12 +375,15 @@ const mainMenu = new MenuWindow(document.body, () => [
   { id: 'rankings', label: '랭킹', icon: 'star', group: '정보', desc: '전국 빠지 순위', run: () => rankingsWin.show() },
   { id: 'rank', label: '정보 · 랭크', icon: 'check', desc: `★${game.rank} · 다음 랭크 조건`, run: () => rankWin.show() },
   { id: 'inbox', label: game.inbox.unread > 0 ? `알림함 (${game.inbox.unread})` : '알림함', icon: 'inbox', desc: '지난 소식 50건', run: () => inboxWin.show() },
-  { id: 'sound', label: sfx.muted ? '소리 켜기' : '소리 끄기', icon: 'star' as const, group: '시스템', run: () => { sfx.setMuted(!sfx.muted); hud.showToast(sfx.muted ? '소리 끔' : '소리 켬'); } },
-  { id: 'bgm', label: sfx.bgmOn ? `BGM 끄기 (${sfx.trackName})` : 'BGM 켜기', icon: 'star' as const, run: () => { sfx.setBgm(!sfx.bgmOn); hud.showToast(sfx.bgmOn ? `BGM 켬 — ${sfx.trackName}` : 'BGM 끔'); } },
-  { id: 'volume', label: `볼륨 ${Math.round(sfx.volume * 100)}%`, icon: 'star' as const, run: () => { const next = sfx.volume <= 0.25 ? 1 : Math.round((sfx.volume - 0.25) * 100) / 100; sfx.setVolume(next); sfx.play('coin'); hud.showToast(`볼륨 ${Math.round(sfx.volume * 100)}%`); } },
+  { id: 'settings', label: '설정', icon: 'star', group: '시스템', desc: '소리 · BGM · 볼륨 · 배속 · 새 게임', run: () => settingsMenu.show() }, // W-14: 설정은 운영 리스트 밖
+]);
+const settingsMenu = new MenuWindow(document.body, () => [
+  { id: 'sound', label: sfx.muted ? '소리 켜기' : '소리 끄기', icon: 'star' as const, stay: true, run: () => { sfx.setMuted(!sfx.muted); hud.showToast(sfx.muted ? '소리 끔' : '소리 켬'); } },
+  { id: 'bgm', label: sfx.bgmOn ? `BGM 끄기 (${sfx.trackName})` : 'BGM 켜기', icon: 'star' as const, stay: true, run: () => { sfx.setBgm(!sfx.bgmOn); hud.showToast(sfx.bgmOn ? `BGM 켬 — ${sfx.trackName}` : 'BGM 끔'); } },
+  { id: 'volume', label: `볼륨 ${Math.round(sfx.volume * 100)}%`, icon: 'star' as const, stay: true, run: () => { const next = sfx.volume <= 0.25 ? 1 : Math.round((sfx.volume - 0.25) * 100) / 100; sfx.setVolume(next); sfx.play('coin'); hud.showToast(`볼륨 ${Math.round(sfx.volume * 100)}%`); } },
   { id: 'speed', label: flow.speed === 2 ? '배속 ×2 끄기' : '배속 ×2', icon: 'star', locked: game.endingSeen || (loadProfile()?.runs ?? 0) > 0 ? null : '엔딩 뒤', run: () => { flow.speed = flow.speed === 2 ? 1 : 2; hud.showToast(`배속 ×${flow.speed}`); } },
   { id: 'newgame', label: '새 게임 (저장 삭제)', icon: 'close', run: () => { clearSave(); location.href = `${location.pathname}?fresh=1`; } },
-]);
+], { id: 'win-settings', title: '설정' });
 const endingWin = new EndingWindow(document.body, () => game, {
   profile: () => loadProfile(),
   continueGame: () => { game.endingSeen = true; persist(); hud.showToast('이어하기 — 배속 ×2 가 메뉴에 열렸다'); },

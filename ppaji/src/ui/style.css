@@ -395,8 +395,8 @@ button, input { font-family: inherit; font-size: inherit; } /* D64: 폼 컨트�
 #hud-top {
   position: fixed;
   top: calc(2px + var(--safe-t));
-  left: var(--ui-side);
-  right: var(--ui-side);
+  left: 0; /* H-7: HUD 띠·티커·바는 전폭(태블릿), 창·독만 가운데 열 */
+  right: 0;
   height: var(--strip-h);
   display: flex;
   justify-content: space-between;
@@ -481,7 +481,7 @@ button, input { font-family: inherit; font-size: inherit; } /* D64: 폼 컨트�
 /* ── 우측 세로 열 ── */
 #hud-right {
   position: fixed;
-  right: calc(var(--ui-side) + 4px);
+  right: 4px; /* H-7 */
   top: calc(var(--strip-h) + 14px + var(--safe-t));
   display: flex;
   flex-direction: column;
@@ -492,8 +492,8 @@ button, input { font-family: inherit; font-size: inherit; } /* D64: 폼 컨트�
 /* ── 티커 (핑크) — 28px 띠, hit surface 44px ── */
 #hud-ticker {
   position: fixed;
-  left: var(--ui-side);
-  right: var(--ui-side);
+  left: 0;
+  right: 0;
   bottom: calc(var(--bar-h) + var(--safe-b));
   height: var(--ticker-h);
   display: flex;
@@ -521,8 +521,8 @@ button, input { font-family: inherit; font-size: inherit; } /* D64: 폼 컨트�
 /* ── 하단 바 ── */
 #hud-bottom {
   position: fixed;
-  left: var(--ui-side);
-  right: var(--ui-side);
+  left: 0;
+  right: 0;
   bottom: 0;
   height: calc(var(--bar-h) + var(--safe-b));
   padding: 6px 6px calc(6px + var(--safe-b));
@@ -728,6 +728,7 @@ html[data-ui-surface='pool'] #hud-right { display: flex; opacity: 0.45; }
 .kdock-row .kbtn { flex: 1 1 0; }
 .kdock-mode { font-weight: 800; font-size: var(--fs-body); }
 .kdock-cost { font-family: var(--font-pixel-family); color: var(--strip-num); font-size: var(--fs-body); }
+.kdock-cost:empty { display: none; } /* W-15 */
 .ktabs { justify-content: flex-start; flex: 0 0 auto; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; min-height: var(--tap); align-items: stretch; } /* P1: 탭 7 — 줄바꿈 대신 가로 스크롤, 높이 44 유지. 스크롤바(3px)가 탭을 41 로 누르므로 숨긴다 */
 .ktabs::-webkit-scrollbar { display: none; }
 .ktab {
@@ -777,8 +778,13 @@ html[data-ui-surface='pool'] #hud-right { display: flex; opacity: 0.45; }
 }
 
 /* ═══ G3 — 건설 창 행 · 아이템 칩 ══════════════════════════════════════ */
-.kwin-tabs { flex-wrap: wrap; gap: 4px; }
-.kwin-tabs .ktab { border-radius: var(--r-in); }
+.kwin-tabs { display: flex; flex-wrap: nowrap; gap: 4px; } /* W-1: 창 탭은 고른 줄 — ⚠ .ktabs 는 block 이었다(탭이 inline-block 로 줄바꿈) */
+.kwin-tabs .ktab { border-radius: var(--r-in); min-width: 0; flex: 1 1 0; padding: 0 2px; }
+.kwin-tabs.kgrid5 { display: grid; grid-template-columns: repeat(5, 1fr); } /* 건설 9 → 5+4 (9 개를 한 줄에 넣으면 폭 35 로 터치 44 미달 — G12) */
+.kwin-tabs.kgrid4 { display: grid; grid-template-columns: repeat(4, 1fr); } /* 심사 8 → 4+4 */
+.kwin-tabs.kicon-tabs .ktab > span:not(.kicon) { display: none; } /* 아이콘 탭 — 이름은 아래 제목 줄이 말한다 (.kicon 도 span 이라 빼야 한다) */
+.kwin-tabs.kicon-tabs .ktab .kicon { margin: 0; width: 20px; height: 20px; }
+.ktabs-title { text-align: center; font-weight: 800; color: var(--ink-dim); font-size: var(--fs-cap); flex: 0 0 auto; }
 .kcard-row { gap: 8px; text-align: left; font-family: inherit; cursor: pointer; min-height: var(--tap); }
 .kcard-row:disabled { opacity: 0.55; cursor: default; }
 .kthumb { width: 40px; height: 40px; flex: 0 0 40px; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; }
@@ -863,7 +869,7 @@ html[data-ui-surface='pool'] #hud-right { display: flex; opacity: 0.45; }
   position: fixed;
   left: calc(var(--ui-side) + 8px);
   right: calc(var(--ui-side) + 8px);
-  bottom: calc(var(--bar-h) + var(--safe-b) + var(--ticker-h) + 10px); /* 티커 띠 위 */
+  bottom: calc(var(--bar-h) + var(--safe-b) + 2px); /* W-5(H-5): 티커 **자리**에 — 원작 배너 자리. 떠 있는 동안 티커는 숨긴다 */
   min-height: var(--tap);
   display: flex;
   align-items: center;
@@ -890,6 +896,7 @@ html[data-ui-surface='pool'] #hud-right { display: flex; opacity: 0.45; }
 #hud-ticker .kportrait canvas { width: 18px; height: 18px; }
 .kfriend .kportrait, .kpost .kportrait { width: 28px; height: 28px; border-radius: var(--r-in); background: var(--btn-blue); border: 1px solid var(--btn-edge); flex: 0 0 auto; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 html:not([data-ui-surface='home']) .ktut { display: none; }
+html[data-tut='1'] #hud-ticker { visibility: hidden; } /* H-5 */
 
 /* ═══ G19 — 결산·랭킹·손님 카드 ═══════════════════════════════════════ */
 .kguest-head { display: flex; align-items: center; gap: 10px; padding: 4px 0 8px; }
@@ -917,7 +924,7 @@ html:not([data-ui-surface='home']) .ktut { display: none; }
 .kvisitor-name { font-size: var(--fs-cap); font-weight: 800; max-width: 64px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #hud-info.has-visitor .kpop-label { display: none; } /* 친구가 있으면 「인기」 글자 대신 초상+이름 — 캡슐 폭 안에서 한 줄 */
 #hud-info .kvisitor, #hud-info .kpop-label { white-space: nowrap; }
-.kstage { position: relative; display: flex; justify-content: center; gap: 10px; padding: 14px 8px 18px; border-radius: var(--r-win); background: var(--stage-bg); border: 2px solid var(--win-border); margin-bottom: 4px; overflow: hidden; }
+.kstage { position: relative; display: flex; justify-content: center; gap: 10px; padding: 6px 8px 8px; /* W-18: 무대 90 → 48 — 위 60% 가 비어 있었다 */ border-radius: var(--r-win); background: var(--stage-bg); border: 2px solid var(--win-border); margin-bottom: 4px; overflow: hidden; }
 /* G53 (v3 잔여): 조명 — 위에서 내려오는 두 줄기 + 무대 바닥 띠 · 관중 — 아래 실루엣 점 줄 */
 .kstage::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--stage-light) 0%, transparent 55%), radial-gradient(ellipse 60% 50% at 50% 100%, var(--stage-floor), transparent 70%); opacity: 0.85; pointer-events: none; }
 .kstage::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 9px; background: radial-gradient(circle at 50% 100%, var(--stage-crowd) 0 3px, transparent 3.5px) 0 0 / 12px 9px repeat-x; opacity: 0.9; pointer-events: none; }
@@ -1016,6 +1023,9 @@ html:not([data-ui-surface='home']) .ktut { display: none; }
 .kpool-thumb canvas { image-rendering: pixelated; width: 96px; height: 64px; }
 .kpool-pills { flex: 1 1 auto; display: flex; flex-direction: column; gap: 4px; }
 .kfac-nav { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.kfac-nav .kthumb { width: auto; height: auto; flex: 0 0 auto; padding: 0; } /* W-10: 큰 그림 + 이름 + ◀▶ 한 줄 */
+.kfac-nav .kthumb canvas { max-width: none; max-height: none; height: 64px; width: auto; }
+.kfac-nav .krow-name { flex: 1 1 auto; text-align: center; font-size: var(--fs-title); }
 .kfac-nav .kbtn { flex: 0 0 auto; min-width: var(--tap); }
 .kfac-desc { white-space: normal; text-align: center; padding: 4px 6px; }
 .kfac-hint { white-space: normal; padding: 2px 6px; color: var(--row-on); font-weight: 700; } /* D68·W-11: 행의 값은 숫자, 문장은 여기 */
@@ -1030,8 +1040,11 @@ html:not([data-ui-surface='home']) .ktut { display: none; }
 /* ═══ G50 — 목표 3슬롯: 티커 한 줄 안에 A 글줄 + 오른쪽 B·C 미니 진행바 (면적 예산 그대로) ═══ */
 .kticker-line { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 8px; }
 .kticker-line > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.kgoals { flex: 0 0 34%; display: flex; flex-direction: column; gap: 2px; }
-.kgoal { display: flex; align-items: center; gap: 3px; height: 11px; cursor: pointer; }
+.kgoals { flex: 0 0 auto; max-width: 44%; display: flex; flex-direction: column; gap: 2px; } /* H-2: 랭크 진행 하나 — 라벨이 보인다 */
+.kgoal { display: flex; align-items: center; gap: 4px; height: 16px; cursor: pointer; }
+.kgoal-label { font-size: var(--fs-cap); white-space: nowrap; }
+.kgoal-bar { min-width: 48px; }
+.kgoal.kgoal-off { display: none; } /* H-2: 인증 바는 DOM 에만 남긴다(하네스 G51 이 라벨을 읽는다) */
 .kgoal .kicon { width: 10px; height: 10px; flex: 0 0 auto; }
 .kgoal-bar { flex: 1 1 auto; height: 7px; border: 1px solid var(--win-border); border-radius: var(--r-in); background: var(--gauge-bg); overflow: hidden; }
 .kgoal-fill { display: block; height: 100%; background: var(--gauge-fill); }
@@ -1068,6 +1081,8 @@ html:not([data-ui-surface='home']) .ktut { display: none; }
 .kcert.kcert-passed { opacity: 0.92; }
 .kcert.kcert-passed .kbtn { min-height: var(--tap); }
 #dock-course .kchips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+#dock-course [data-grid="course-gear"] { max-height: calc(26vh / var(--ui-zoom)); overflow-y: auto; } /* W-17: 기구 30 장 = 세로 스크롤 격자(소품 독과 같다) — 독이 1250px 로 자라던 것 */
+#dock-course [data-grid="course-gear"] .kpcard-art { min-height: 40px; }
 #dock-course .kchips::-webkit-scrollbar { display: none; }
 #dock-course .kchip { flex: 0 0 auto; min-width: var(--tap); }
 
@@ -1137,6 +1152,7 @@ html:not([data-ui-surface='home']) .ktut { display: none; }
 .kcele-pic { transform: scale(2); transform-origin: center; }
 .kcele-pic.kpic-canvas { transform: none; }
 #dock-pool .kitem-grid { display: block; max-height: calc(38vh / var(--ui-zoom)); overflow-y: auto; }
+#dock-pool .kitem-grid[hidden] { display: none; } /* W-16: display:block 이 hidden 을 이겨 빈 크림 박스 100px 가 떠 있었다 */
 #dock-pool .kitem-grid .kpgrid { grid-template-columns: repeat(3, 1fr); } /* P57-f: 4열(85px)에선 「유자향 노란 향초」가 두 줄 — 건설 창과 같은 3열 */
 #dock-pool .kitem-grid .kpcard-art { min-height: 40px; }
 .kband-gauge { margin-left: auto; margin-right: 8px; }

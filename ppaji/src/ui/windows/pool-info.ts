@@ -90,7 +90,8 @@ export class PoolInfoWindow {
     const head = el('div', 'kpool-head');
     const thumb = el('div', 'kpool-thumb');
     thumb.dataset['thumb'] = '1';
-    this.host.thumb?.(p, (c) => { if (c && this.poolId === poolId) thumb.replaceChildren(c); });
+    thumb.classList.add('khide'); // W-8: 그림이 오기 전엔 빈 사각형을 그리지 않는다
+    this.host.thumb?.(p, (c) => { if (c && this.poolId === poolId) { thumb.replaceChildren(c); thumb.classList.remove('khide'); } });
     const pills = el('div', 'kpool-pills');
     const pill = (k: string, v: string, icon: IconName): void => { const r = el('div', 'krow'); r.append(iconEl(icon), el('span', 'krow-k', k), el('span', 'krow-v knum', v)); pills.append(r); };
     pill('넓이', `${st.size}칸`, 'pool');
@@ -141,11 +142,13 @@ export class PoolInfoWindow {
     row('소품', `${p.items.length}개${left !== null ? ` · 남은 ${left}일` : ''}`, 'shop');
     // P50-b2 §3.9 정보창 다섯 줄 — 등급 · 기구 · 연결 · 허가 · 어제 수입(P51 배선 전까지 「—」)
     { const grade = g.ppajiGradeOf(p.id); const lit = g.facilities.all.filter((f) => { const d = g.facilities.defOf(f); return d.class === 'rig' && d.onRing !== true && g.rigState.lit.has(f.uid) && (g.rigState.byPool.get(p.id) ?? []).includes(f.uid); }); const onRing = g.facilities.all.filter((f) => g.facilities.defOf(f).onRing === true && g.poolOfFacility(f.uid) === p.id);
-      row('빠지 등급', `${grade} ${PPAJI_GRADE_NAMES[grade] ?? ''} · 인기 ×${g.b.ppajiGradePopMul[grade] ?? 1}`, 'star');
-      row('기구', `켜진 기구 ${lit.length} · 링 시설 ${onRing.length} · 종 ${new Set([...lit, ...onRing].map((f) => f.defId)).size}`, 'attraction');
-      row('연결', `최장 사슬 ${Math.max(0, ...lit.map((f) => g.rigState.chainLen.get(f.uid) ?? 1))} (정원 × 최대 2.0)`, 'build');
-      row('허가', `${p.tiles.length}칸 · 남은 허가 ${Math.max(0, g.permitLeft)}칸`, 'pool');
-      row('어제 수입', '—', 'coin'); /* P57-f: 수역별 수입은 안 센다(시설별만) — 개발용 문구는 화면에서 뺀다 */ }
+      const hints: string[] = []; // W-9(D68): 값은 숫자, 문장은 힌트 줄
+      row('빠지 등급', `${grade}`, 'star'); hints.push(`${PPAJI_GRADE_NAMES[grade] ?? ''} · 인기 ×${g.b.ppajiGradePopMul[grade] ?? 1}`);
+      row('기구', `${lit.length}`, 'attraction'); hints.push(`링 시설 ${onRing.length} · 종 ${new Set([...lit, ...onRing].map((f) => f.defId)).size}`);
+      row('연결', `${Math.max(0, ...lit.map((f) => g.rigState.chainLen.get(f.uid) ?? 1))}`, 'build'); hints.push('최장 사슬 — 정원 × 최대 2.0');
+      row('허가', `${p.tiles.length}/${p.tiles.length + Math.max(0, g.permitLeft)}칸`, 'pool'); hints.push(`남은 허가 ${Math.max(0, g.permitLeft)}칸`);
+      row('어제 수입', '—', 'coin'); /* P57-f: 수역별 수입은 안 센다(시설별만) — 개발용 문구는 화면에서 뺀다 */
+      this.rows.append(el('div', 'krow-sub kfac-hint', hints.join(' · '))); }
     // P56-a2 D8 — 팔찌 카드 넷(그림 · 값 · 열린/잠긴) + 빠지 등급 게이지. 값은 `bandPrice(등급)` — 확정 바·정보창과 같은 함수
     { const grade = g.ppajiGradeOf(p.id);
       const gr = el('div', 'krow');

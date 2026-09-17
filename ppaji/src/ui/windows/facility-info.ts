@@ -77,7 +77,7 @@ export class FacilityInfoWindow {
     });
     const actions = el('div', 'kdock-row kwrap'); // P57-f: 버튼 5개 — 글자 대신 행이 접힌다
     actions.append(this.upBtn, this.staffBtn, this.moveBtn, this.menuBtn, this.removeBtn, this.courtBtn);
-    this.win.body.append(this.thumb, this.rows);
+    this.win.body.append(this.rows); // W-10: 그림은 이름 줄 안에
     const foot = el('div', 'kwin-foot'); foot.append(actions); this.win.root.append(foot); // P57-f: 버튼 행은 스크롤 본문 밖 하단 고정 — 두 줄로 접혀도 화면 밖으로 안 밀린다(「버튼 줄은 절대 안 잘린다」)
   }
 
@@ -100,7 +100,7 @@ export class FacilityInfoWindow {
     prev.disabled = all.length < 2; next.disabled = all.length < 2;
     prev.addEventListener('click', () => { const t = all[(idx - 1 + all.length) % all.length]; if (t) this.show(t.uid); });
     next.addEventListener('click', () => { const t = all[(idx + 1) % all.length]; if (t) this.show(t.uid); });
-    nav.append(prev, el('span', 'krow-name', FEATURES.facilityLevels ? `${def.name} Lv${f.level}` : def.name), next);
+    nav.append(prev, this.thumb, el('span', 'krow-name', FEATURES.facilityLevels ? `${def.name} Lv${f.level}` : def.name), next); // W-10: [◀][그림 64][이름][▶]
     this.rows.append(nav);
     const ICON: Record<string, IconName> = { '인기': 'star', '정원': 'friends', '유지비': 'coin', '오늘 이용 · 수입': 'coin', '누적 이용 · 수입': 'coin', '이용료': 'coin', '메뉴': 'restaurant' };
     const hints: string[] = []; // D68·W-11: 행 값은 숫자·상태 ≤ 10자, 설명·처방은 아래 힌트 줄 하나
@@ -198,6 +198,7 @@ export class FacilityInfoWindow {
     const canMove = this.game().tools.has('move');
     this.moveBtn.disabled = !canMove;
     this.moveBtn.textContent = canMove ? '이동' : '이동 · 도구 필요';
+    if (!canMove) this.moveBtn.classList.add('khide'); // W-12: 도구가 없으면 비활성 버튼이 자리를 먹지 않는다(이유는 거절 토스트가 말한다)
     this.win.show();
   }
 }

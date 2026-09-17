@@ -48,6 +48,7 @@ export class SnsWindow {
 
   show(tab?: SnsTab): void {
     if (tab) this.tab = tab;
+    else if (this.tab === 'timeline' && this.game().sns.allPosts.length === 0) this.tab = 'friends'; // W-19: 새 판의 빈 타임라인 대신 내용이 있는 탭으로
     this.render();
     this.win.show();
   }
@@ -73,7 +74,7 @@ export class SnsWindow {
     this.body.append(head);
     if (posts.length === 0) {
       const empty = el('div', 'krow');
-      empty.append(el('span', 'krow-k', '아직 글이 없다 — 손님이 놀고 나면 사진을 올린다'));
+      empty.append(el('span', 'krow-k', '손님이 놀고 나면 사진이 올라온다'));
       this.body.append(empty);
       return;
     }

@@ -60,6 +60,8 @@ export class PoolEditDock {
     const row1 = el('div', 'kdock-row');
     row1.append(this.modeLabel, this.costLabel);
     const tabs = el('div', 'kdock-row ktabs');
+    const sub = el('div', 'kdock-row ktabs ksub'); // W-16: 붓(그리는 것) 6 은 윗줄, 걷기·소품·건물은 아랫줄 — 13 탭 가로 스크롤 폐기
+    const BRUSH = new Set<PoolEditMode>(['ppaji', 'line', 'foodcourt', 'path', 'ground', 'deck']);
     for (const [m, label] of [['ppaji', '빠지'], ['line', '라인'], ['foodcourt', '식탁'], ['dig', '치기'], ['fill', '걷기'], ['path', '길'], ['ground', '지면'], ['unpath', '바닥 걷기'], ['deck', '데크'], ['undeck', '데크 걷기'], ['item', '소품'], ['indoor', '건물 바닥'], ['unindoor', '건물 지우기']] as const) {
       const b = el('button', 'ktab', label);
       b.type = 'button';
@@ -67,7 +69,7 @@ export class PoolEditDock {
       if (m === 'dig' || m === 'fill') b.classList.add('khide'); // P15 D22: 수영 구역은 데크로 둘러싸서 만든다 — 치기 붓은 하네스·봇 전용
       b.addEventListener('click', () => this.setMode(m));
       this.tabs.set(m, b);
-      tabs.append(b);
+      (BRUSH.has(m) ? tabs : sub).append(b);
     }
     this.chips.hidden = true;
     this.chips.classList.add('kitem-grid'); // P56-a2: 소품은 글자 칩이 아니라 그림 카드 격자 — `.kchips` 가로 스크롤 대신 세로 격자
@@ -89,7 +91,7 @@ export class PoolEditDock {
     this.actions.append(cancel, this.undoBtn, this.doneBtn);
     this.groundChips.hidden = true;
     this.lineChips.hidden = true;
-    this.root.append(row1, this.status, tabs, this.groundChips, this.lineChips, this.chips, this.preview, this.actions);
+    this.root.append(row1, this.status, tabs, sub, this.groundChips, this.lineChips, this.chips, this.preview, this.actions);
     parent.append(this.root);
     this.setMode('deck');
   }

@@ -41,7 +41,8 @@ const UNLOCK_KO: Record<FacilityDef['unlock']['source'], string> = {
 
 export class BuildWindow {
   private readonly win: WindowPanel;
-  private readonly tabs = el('div', 'ktabs kwin-tabs');
+  private readonly tabs = el('div', 'ktabs kwin-tabs kicon-tabs kgrid5'); // W-1: 아이콘 탭 한 줄(9) + 아래 제목 줄
+  private readonly tabTitle = el('div', 'ktabs-title', '');
   /** P56-a2 — 카드 격자 하나(요리·장날·투자와 같은 문법). 아래 두 줄(이름 · 분류 · 놓음 N / 설명)은 격자가 낸다 */
   private readonly grid: PictureGrid;
   private tab: BuildTabId = 'indoor';
@@ -62,8 +63,8 @@ export class BuildWindow {
       b.addEventListener('click', () => { this.tab = t.id; this.render(); });
       this.tabs.append(b);
     }
-    this.grid = new PictureGrid({ name: 'build', countLabel: '놓음', onTap: (c) => this.pick(c) });
-    this.win.body.append(this.tabs, this.grid.root);
+    this.grid = new PictureGrid({ name: 'build', countLabel: '놓음', onTap: (c) => this.pick(c), teaser: 2 }); // W-2(D69·K40): 해금분 + 티저 2
+    this.win.body.append(this.tabs, this.tabTitle, this.grid.root);
   }
 
   show(tab?: BuildTabId): void {
@@ -80,6 +81,7 @@ export class BuildWindow {
     for (const b of this.tabs.querySelectorAll<HTMLButtonElement>('.ktab')) b.classList.toggle('on', b.dataset['tab'] === this.tab);
     const g = this.game();
     const cur = BUILD_TABS.find((t) => t.id === this.tab);
+    this.tabTitle.textContent = cur?.label ?? '';
     const rows = this.defs.filter((d) => cur?.match(d) ?? false);
     if (this.tab === 'indoor') rows.sort((a, b) => hallGroup(a) - hallGroup(b));
     const cards: PictureCard[] = rows.map((def) => {

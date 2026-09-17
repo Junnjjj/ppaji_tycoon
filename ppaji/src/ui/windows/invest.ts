@@ -24,7 +24,7 @@ export class InvestWindow {
       b.addEventListener('click', () => { this.track = id; this.render(); });
       this.tabs.append(b);
     }
-    this.grid = new PictureGrid({ name: 'invest', onTap: (c) => this.tap(c) });
+    this.grid = new PictureGrid({ name: 'invest', onTap: (c) => this.tap(c), teaser: 2 }); // W-2: 다음 단계 둘만 보인다
     this.win.body.append(this.tabs, this.grid.root);
   }
 

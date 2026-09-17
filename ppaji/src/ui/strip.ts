@@ -70,6 +70,7 @@ export class DialogueStrip {
     this.portrait.replaceChildren(portraitEl(this.cur.speakerId, 'happy', { palette: this.cur.palette, hair: this.cur.hair }));
     this.who.textContent = this.cur.name;
     this.root.classList.remove('khide');
+    document.documentElement.dataset['tut'] = '1'; // H-5: 띠가 떠 있는 동안 티커를 숨긴다(같은 자리)
     this.render();
   }
 
@@ -82,6 +83,7 @@ export class DialogueStrip {
 
   finish(): void {
     this.root.classList.add('khide');
+    delete document.documentElement.dataset['tut'];
     this.cur = null;
     try { localStorage.setItem(TUT_KEY, '1'); } catch { /* 저장 불가 환경 */ }
     this.onDone?.();

@@ -57,14 +57,12 @@ export class ResultsWindow {
     this.body.replaceChildren();
     const income = d.tickets + d.fees + d.food;
     this.tiles([{ k: '방문', v: `${d.visitors}명` }, { k: '순이익', v: `${d.net >= 0 ? '+' : ''}${G(d.net)}`, cls: d.net >= 0 ? 'kgood' : 'kbad' }]);
-    this.row('방문', `${d.visitors}명`);
-    this.row('입장료', G(d.tickets));
+    this.row('입장료', G(d.tickets)); // W-7: 방문·순이익은 위 타일이 말한다 — 행 중복 삭제
     if (d.food) this.row('식당 매출', G(d.food));
     if (d.fees) this.row('라운지 대여', G(d.fees));
     if (d.nightOn) this.row('밤 빠지 파티', `야간권 ${G(d.nightPkg ?? 0)} · 링 매점 ${G(d.nightFood ?? 0)} · 자리 ${G(d.nightFee ?? 0)}`, 'kgood'); // P54 — 열린 날만
     this.row('유지비' + (d.salary ? ' · 월급' : ''), `−${G(d.maintenance)}`);
     if (d.cleanliness !== undefined) this.row('청결', `${d.cleanliness} / 100`);
-    this.row('순이익', `${d.net >= 0 ? '+' : ''}${G(d.net)}`, d.net >= 0 ? 'kgood' : 'kbad');
     this.row('퇴장 만족', `${d.satisfaction ?? 0} / 100`);
     this.row('좋아요', `+${d.likes ?? 0}`);
     this.row('파크 인기', d.rankPos > 0 ? `${d.popularity} · 전국 ${d.rankPos}위` : `${d.popularity}`);
@@ -80,9 +78,6 @@ export class ResultsWindow {
     this.body.replaceChildren();
     this.tiles([{ k: '방문', v: `${p.visitors.toLocaleString('ko-KR')}명` }, { k: '수입', v: G(p.income) }, { k: '순이익', v: `${p.net >= 0 ? '+' : ''}${G(p.net)}`, cls: p.net >= 0 ? 'kgood' : 'kbad' }]);
     this.head(p.kind === 'year' ? '올해의 성적' : '이번 계절');
-    this.row('방문', `${p.visitors.toLocaleString('ko-KR')}명`);
-    this.row('수입', G(p.income));
-    this.row('순이익', `${p.net >= 0 ? '+' : ''}${G(p.net)}`, p.net >= 0 ? 'kgood' : 'kbad');
     this.row('좋아요', `+${p.likes.toLocaleString('ko-KR')}`);
     this.row('퇴장 만족 평균', `${p.satisfaction} / 100`);
     if (p.topFacilities.length) { this.head('시설 수입 TOP'); p.topFacilities.forEach((f, k) => this.row(`${k + 1}. ${f.name}`, `${G(f.income)} · ${f.uses.toLocaleString('ko-KR')}명`)); }

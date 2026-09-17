@@ -120,7 +120,7 @@ export class CookWindow {
       const id = this.sel[k];
       const ing = id ? c.ingredients.get(id) : undefined;
       const b = el('button', `kpslot${id ? ' on' : ''}`, '');
-      if (ing) b.append(this.ingArt(ing), el('span', undefined, ing.name)); else b.textContent = `빈 칸 ${k + 1}`;
+      if (ing) b.append(this.ingArt(ing), el('span', undefined, ing.name)); else b.textContent = '+'; // W-5: 빈 슬롯은 점선 「+」(메뉴 편집과 같다)
       b.type = 'button';
       b.dataset['picked'] = String(k);
       b.addEventListener('click', () => { if (id) { this.sel.splice(k, 1); this.render(); } });
@@ -136,7 +136,7 @@ export class CookWindow {
       const priceText = price !== undefined ? `${price.toLocaleString('ko-KR')}G` : undefined;
       const cat = CAT[ing.class ?? ''] ?? ing.class ?? '';
       if (!owned) {
-        const locked: PictureCard = { id: ing.id, name: ing.name, art: this.ingArt(ing), sub: cat, badge: 'lock', desc: (price ?? 0) > g.money ? '돈이 모자란다' : '탭하면 산다 — 재고 ×1', data: { buyIngredient: ing.id } };
+        const locked: PictureCard = { id: ing.id, name: ing.name, art: this.ingArt(ing), sub: cat, badge: { text: '구입' }, desc: (price ?? 0) > g.money ? '돈이 모자란다' : '탭하면 산다 — 재고 ×1', data: { buyIngredient: ing.id } };
         if (priceText !== undefined) locked.price = priceText;
         cards.push(locked);
         continue;

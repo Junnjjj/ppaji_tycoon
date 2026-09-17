@@ -6,6 +6,7 @@
 import { el } from '../dom.js';
 import { iconEl } from '../icons.js';
 import { pictureEl, pictureId } from '../pictures.js';
+import { PictureGrid, type PictureCard } from '../picture-grid.js'; // W-17
 import { setUiSurface } from '../panels.js';
 import type { Game } from '../../sim/game.js';
 import { PRESETS, COURSE_EQUIPMENT, fitOf, presetDef, courseEquipment, type CourseEditDraft, type DockChoice } from '../../sim/course/course.js';
@@ -30,7 +31,9 @@ export class CourseDock {
   private readonly costLabel = el('span', 'kdock-cost', '');
   private readonly status = el('div', 'kdock-status', '');
   private readonly presets = el('div', 'kchips');
-  private readonly equips = el('div', 'kchips');
+  private readonly equipGrid = new PictureGrid({ name: 'course-gear', onTap: (c) => this.tapEquip(c), noFooter: true, cols: 4 }); // W-17: 튜브는 카드 격자(팔찌 창과 같은 문법) — 칩 33 가로 스크롤 폐기
+  private readonly equips = this.equipGrid.root;
+  private equipCtx: { d: { presetId: string; equipId: string; dock: { x: number; y: number } }; editing: boolean } | null = null;
   private readonly list = el('div', 'kchips');
   private readonly applyBtn: HTMLButtonElement;
   private readonly trialBtn: HTMLButtonElement;
@@ -115,6 +118,15 @@ export class CourseDock {
     this.refresh(false);
   }
 
+  /** W-17 — 기구 카드 탭: 안 가진 것은 사고 나서 고른다 */
+  private tapEquip(c: PictureCard): void {
+    const ctx = this.equipCtx; if (!ctx || !ctx.editing) return;
+    const g = this.game();
+    const e = COURSE_EQUIPMENT.find((x) => x.id === c.id); if (!e) return;
+    if (!g.courses.ownedEquipment.has(e.id)) { const r = g.buyEquipment(e.id); this.host.toast(r.ok ? `${e.name} 구입 · −${e.vehicleCost.toLocaleString('ko-KR')}G` : r.reason, r.ok); if (!r.ok) return; this.host.onChanged(); }
+    this.newDraft(ctx.d.presetId, e.id, { i: ctx.d.dock.x, j: ctx.d.dock.y });
+  }
+
   /** 씬이 부른다 — 선착장 표식을 탭했다 */
   onDockPick(index: number): void {
     const d = this.docks[index];
@@ -134,7 +146,6 @@ export class CourseDock {
     }
     const fresh = el('button', `kchip${this.viewing === null ? ' on' : ''}`, '+ 새 코스'); fresh.type = 'button'; fresh.id = 'dock-course-new'; fresh.addEventListener('click', () => this.newDraft()); this.list.append(fresh);
     this.presets.replaceChildren();
-    this.equips.replaceChildren();
     this.removeBtn.classList.toggle('khide', this.viewing === null);
     this.applyBtn.classList.toggle('khide', this.viewing !== null);
     if (!d) { this.modeLabel.textContent = '코스 그리기'; this.costLabel.textContent = ''; this.trialBtn.disabled = true; this.applyBtn.disabled = true; return; }
@@ -145,13 +156,16 @@ export class CourseDock {
       b.addEventListener('click', () => this.newDraft(p.id, d.equipId, { i: d.dock.x, j: d.dock.y }));
       this.presets.append(b);
     }
-    for (const e of COURSE_EQUIPMENT) {
+    this.equipCtx = { d: { presetId: d.presetId, equipId: d.equipId, dock: { x: d.dock.x, y: d.dock.y } }, editing };
+    const gearCards: PictureCard[] = COURSE_EQUIPMENT.map((e) => {
       const owned = g.courses.ownedEquipment.has(e.id);
       const fit = fitOf(e.id, d.presetId);
-      const b = el('button', `kchip kchip-pic${e.id === d.equipId ? ' on' : ''}${!owned ? ' warn' : ''}`, ''); b.append(pictureEl(pictureId('gear', e.id), 'attraction'), el('span', undefined, `${FIT_MARK[fit] ?? ''} ${e.name}${owned ? '' : ` ${e.vehicleCost.toLocaleString('ko-KR')}G`}`)); b.type = 'button'; b.dataset['equip'] = e.id; b.disabled = !editing || fit === 'no'; // P56-b3: 기구 칩에 그림
-      b.addEventListener('click', () => { if (!owned) { const r = g.buyEquipment(e.id); this.host.toast(r.ok ? `${e.name} 구입 · −${e.vehicleCost.toLocaleString('ko-KR')}G` : r.reason, r.ok); if (!r.ok) return; this.host.onChanged(); } this.newDraft(d.presetId, e.id, { i: d.dock.x, j: d.dock.y }); });
-      this.equips.append(b);
-    }
+      const card: PictureCard = { id: e.id, name: `${FIT_MARK[fit] ?? ''} ${e.name}`, art: pictureEl(pictureId('gear', e.id), 'attraction'), disabled: !editing || fit === 'no', data: { equip: e.id } };
+      if (!owned) { card.price = `${e.vehicleCost.toLocaleString('ko-KR')}G`; card.badge = { text: '구입' }; }
+      return card;
+    });
+    this.equipGrid.render(gearCards);
+    this.equipGrid.select(d.equipId);
     const v = g.courseValidation(d, this.viewing ?? undefined);
     const res = g.evaluateDraft(d);
     const eq = courseEquipment(d.equipId);

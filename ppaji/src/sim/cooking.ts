@@ -223,7 +223,7 @@ export class CookingStore<R extends RecipeLike = RecipeDef, I extends Ingredient
   canCook(ids: readonly string[], rank: number, money: number): { ok: true } | { ok: false; reason: string } {
     const w = this.words;
     if (rank < w.unlockRank) return { ok: false, reason: `${w.unlockLabel}은 ★${w.unlockRank} 부터` };
-    if (ids.length < w.minCount) return { ok: false, reason: `${w.item}는 ${w.minCount}개 이상` };
+    if (ids.length < w.minCount) return { ok: false, reason: `${w.item} ${w.minCount}개 이상` }; // W-6: 조사 없이(「부품는」)
     if (ids.length > w.maxCount) return { ok: false, reason: `${w.item}는 ${w.maxCount}개까지` };
     for (const [id, n] of CookingStore.tally(ids)) {
       const name = this.ingredients.get(id)?.name ?? id;
