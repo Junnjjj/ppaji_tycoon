@@ -3,7 +3,7 @@ import { COLOR_KO, SCENT_KO } from '../../sim/lines.js'; // P3: 물빛·분위�
 import { confirmDialog } from '../dialog.js';
 import { WindowPanel } from '../window.js';
 import { iconEl } from '../icons.js';
-import { drawPortrait } from '../../assets/draw/portrait.js';
+import { npcPortrait } from '../portraits.js'; // 과제 B: 손님 초상 = 지도 위 같은 v8 룩(uid)
 import { pictureEl, pictureId } from '../pictures.js';
 import { PictureGrid, type PictureCard } from '../picture-grid.js';
 import type { Guest } from '../../sim/guest.js';
@@ -57,7 +57,7 @@ export class GuestInfoWindow {
       this.gifts.append(grid.root);
     }
     const face = el('span', 'kportrait big');
-    face.append(drawPortrait(g.palette, g.palette % 5, g.sat >= 60 ? 'happy' : 'calm'));
+    face.append(npcPortrait(g.uid, g.sat >= 60 ? 'happy' : 'calm'));
     const info = el('div', 'kguest-id');
     info.append(el('div', 'krow-name', `${g.name} · ${g.age}세 ${g.gender === 'F' ? '여' : '남'}`));
     info.append(el('div', 'krow-sub', `${g.home}에서 왔다 · ${STATE_KO[g.state]}`));

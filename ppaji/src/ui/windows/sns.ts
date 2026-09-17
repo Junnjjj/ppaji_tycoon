@@ -5,7 +5,7 @@
 import { el } from '../dom.js';
 import { COLOR_KO, SCENT_KO } from '../../sim/lines.js';
 import { confirmDialog } from '../dialog.js';
-import { drawPortrait } from '../../assets/draw/portrait.js';
+import { npcPortrait } from '../portraits.js'; // 과제 B: 손님·친구 초상은 v8 머리
 import { iconEl } from '../icons.js';
 import { WindowPanel } from '../window.js';
 import { rewardArt, type SpriteFn } from '../reward-art.js';
@@ -86,7 +86,7 @@ export class SnsWindow {
       const tc = this.host.thumb(p);
       if (tc) shot.append(tc); else shot.classList.add('kshot-empty');
       const face = el('span', 'kportrait');
-      face.append(drawPortrait(p.palette ?? 0, (p.palette ?? 0) % 5, 'happy'));
+      face.append(npcPortrait(p.palette ?? 0, 'happy'));
       const text = el('span', 'krow-text');
       text.append(el('span', 'krow-name', `${who} · ${g.sns.areasById.get(p.areaId)?.name ?? p.areaId}`));
       text.append(el('span', 'krow-sub', `${p.subject.name} 에서 · ${p.day + 1}일차`));
@@ -120,7 +120,7 @@ export class SnsWindow {
       row.dataset['wish'] = `${friend.id}:${wish.idx}`;
       const fd = g.sns.friendDef(friend.id);
       const face = el('span', 'kportrait');
-      face.append(drawPortrait(fd?.palette ?? 0, (fd?.palette ?? 0) % 5, 'calm'));
+      face.append(npcPortrait(fd?.palette ?? 0, 'calm'));
       const text = el('span', 'krow-text');
       const nameEl = el('span', 'krow-name', `${fd?.name ?? friend.id} `);
       for (let k = 0; k < 3; k++) { const ic = iconEl('star'); ic.dataset['on'] = k <= wish.idx ? '1' : '0'; nameEl.append(ic); }
@@ -181,7 +181,7 @@ export class SnsWindow {
       const row = el('div', 'krow kfriend');
       row.dataset['friend'] = st.id;
       const face = el('span', 'kportrait');
-      face.append(drawPortrait(def.palette, def.palette % 5, st.stars >= 2 ? 'happy' : 'calm'));
+      face.append(npcPortrait(def.palette, st.stars >= 2 ? 'happy' : 'calm'));
       const text = el('span', 'krow-text');
       const nameRow = el('span', 'krow-name', `${def.name} `);
       const stars = el('span', 'kstars');

@@ -5,7 +5,7 @@
 import { el } from '../dom.js';
 import { WindowPanel } from '../window.js';
 import { iconEl } from '../icons.js';
-import { drawPortrait } from '../../assets/draw/portrait.js';
+import { npcPortrait } from '../portraits.js'; // 과제 B
 import { FEATURES, type Game } from '../../sim/game.js';
 
 type Tab = 'facility' | 'menu' | 'guest' | 'rival' | 'record';
@@ -64,7 +64,7 @@ export class RankingsWindow {
         const def = g.sns.friendDef(st.id);
         if (!def) return;
         const face = el('span', 'kportrait');
-        face.append(drawPortrait(def.palette, def.palette % 5, st.stars >= 2 ? 'happy' : 'calm'));
+        face.append(npcPortrait(def.palette, st.stars >= 2 ? 'happy' : 'calm'));
         const stars = el('span', 'kstars');
         for (let s = 0; s < 3; s++) { const ic = iconEl('star'); ic.dataset['on'] = s < st.stars ? '1' : '0'; stars.append(ic); }
         const r = el('div', 'krow kfriend');

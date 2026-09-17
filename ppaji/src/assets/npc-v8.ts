@@ -62,3 +62,10 @@ export async function loadNpcV8(): Promise<NpcV8Provider | null> {
     return new NpcV8Provider(image, atlas);
   } catch { return null; }
 }
+
+/** 직원 역할 순번 — 역할마다 v8 룩이 고정된다 (같은 역할 = 같은 얼굴). 씬(`syncStaff`)과 직원 창 초상이 같은 seed 를 쓴다 */
+export const STAFF_ROLE_ORDER: readonly string[] = ['lifeguard', 'cleaner', 'mascot', 'cook'];
+export function staffNpcSeed(role: string): number {
+  const ix = STAFF_ROLE_ORDER.indexOf(role);
+  return 1000 + (ix < 0 ? STAFF_ROLE_ORDER.length : ix) * 7 + 1;
+}

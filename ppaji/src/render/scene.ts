@@ -1,4 +1,4 @@
-import { npcV8Key } from '../assets/npc-v8.js';
+import { npcV8Key, staffNpcSeed } from '../assets/npc-v8.js';
 /**
  * 워터파크 씬 — 지면 타일·(G1 부터) 풀·손님·FX 를 한 `i+j` 깊이 축 위에 그린다.
  * 타일 하나에 Image 하나 (3,072). 타일맵을 안 쓰는 이유는 지면·시설·손님이 **같은 깊이 축**을
@@ -52,6 +52,11 @@ export interface SceneDeps {
   startTile?: { i: number; j: number; bottomInsetCss?: number };
   onFrame?: (s: SceneStats) => void;
   onTapTile?: (i: number, j: number) => void;
+  /**
+   * 조준 배치(레거시 K47-③) — `setAimCenter(true)` 인 동안 화면 중앙(확정 바 위 영역의 가운데) 칸이
+   * **바뀔 때마다** 부른다. 팬하면 고스트가 그 칸을 따라간다 — 손가락이 고스트를 안 가린다
+   */
+  onAimCenter?: (i: number, j: number) => void;
   /** P4-B: 핸들을 끌 때마다 (지표 실시간 갱신 신호) · 선착장 후보 탭 */
   onCourseHandleMove?: (index: number, i: number, j: number) => void;
   onCourseDockPick?: (index: number) => void;
@@ -78,6 +83,11 @@ export class WaterparkScene extends Phaser.Scene {
   private fps = 0;
   /** 검증 도구가 화면을 얼릴 때 내린다 — 시간 흐름이 이걸 본다 */
   tickingEnabled = true;
+  /** 조준 배치 켜짐 — 켜진 동안 카메라가 움직이면 화면 중앙 칸을 `onAimCenter` 로 보낸다 (K47-③) */
+  aimCenterOn = false;
+  private aimInsetCss = 0;
+  private aimLastView: { scrollX: number; scrollY: number; scale: Upscale } | null = null;
+  private aimLastTile: { i: number; j: number } | null = null;
   private water: WaterGlint | null = null;
   private pendingPoolTiles: readonly number[] = [];
   readonly guestImgs = new Map<number, Phaser.GameObjects.Image>();
@@ -108,7 +118,7 @@ export class WaterparkScene extends Phaser.Scene {
   ghost: Phaser.GameObjects.Image | null = null;
   /** 조준 화살표 4 + 가격표 (G47, 원작 배치 화면) */
   private aimGfx: Phaser.GameObjects.Graphics | null = null;
-  private aimLabel: Phaser.GameObjects.Text | null = null;
+  private aimLabelText: string | null = null;
   private poolTint = new Map<number, number>();
   private readonly ambient: { i: number; j: number; kind: 'scent' | 'steam' | 'frost' | 'spray'; nextAt: number }[] = [];
   private readonly emoteImgs = new Map<number, Phaser.GameObjects.Image>();
@@ -197,6 +207,7 @@ export class WaterparkScene extends Phaser.Scene {
       this.fpsAt = now;
     }
     const v = this.cam.view();
+    if (this.aimCenterOn && (!this.aimLastView || this.aimLastView.scrollX !== v.scrollX || this.aimLastView.scrollY !== v.scrollY || this.aimLastView.scale !== v.scale)) this.pushAimCenter(v); // 카메라가 움직인 프레임에만 (칸이 바뀔 때만 콜백)
     this.deps.onFrame?.({
       fps: this.fps,
       sprites: this.children.length,
@@ -205,6 +216,31 @@ export class WaterparkScene extends Phaser.Scene {
       scrollY: v.scrollY,
       violations: this.violations,
     });
+  }
+
+  /**
+   * 조준 배치(레거시 K47-③) 켜기/끄기. 켜면 곧바로 한 번 화면 중앙 칸을 계산해 `onAimCenter` 를 부르고,
+   * 그 뒤로는 `update()` 가 카메라 scroll·scale 이 지난 프레임과 다를 때만 다시 센다.
+   * `bottomInsetCss` — 확정 바(#dock-place)가 가린 아래쪽 높이. 중앙은 그 위 영역의 가운데다
+   */
+  setAimCenter(on: boolean, bottomInsetCss: number): void {
+    this.aimCenterOn = on;
+    this.aimInsetCss = bottomInsetCss;
+    this.aimLastView = null;
+    this.aimLastTile = null;
+    if (on) this.pushAimCenter(this.cam.view());
+  }
+
+  /** 화면 중앙(css) → 월드 텍셀 → 칸. 격자 안이고 지난 칸과 다를 때만 콜백 */
+  private pushAimCenter(v: { scrollX: number; scrollY: number; scale: Upscale }): void {
+    this.aimLastView = { scrollX: v.scrollX, scrollY: v.scrollY, scale: v.scale };
+    const css = this.cam.screenCss;
+    const p = this.cam.screenToTexel(css.w / 2, (css.h - this.aimInsetCss) / 2);
+    const t = screenToTile(p.x, p.y);
+    if (!inGrid(t.i, t.j)) return;
+    if (this.aimLastTile && this.aimLastTile.i === t.i && this.aimLastTile.j === t.j) return;
+    this.aimLastTile = t;
+    this.deps.onAimCenter?.(t.i, t.j);
   }
 
   /** 지면 전부. 타일 텍스처 키는 `tile/<kind>`, 입구 칸만 `tile/gate` */
@@ -386,22 +422,26 @@ export class WaterparkScene extends Phaser.Scene {
     this.staffRef = list;
   }
 
-  /** 직원 (G20) — 손님 도트를 역할 팔레트로 빌려 그린다 (걷기 프레임). 머리 위엔 별 배지 */
+  /** 직원 (G20) — v8 손님 도트를 **역할마다 고정 룩**(`staffNpcSeed`)으로 빌려 그린다 (걷기/서기). 머리 위엔 별 배지. v8 이 없으면 옛 절차 도트 */
   private syncStaff(): void {
     const keep = new Set<number>();
     const palOf: Record<string, number> = { lifeguard: 0, cleaner: 3, mascot: 2, cook: 7 };
     for (const s of this.staffRef) {
       keep.add(s.uid);
       const moving = s.progress < 1;
+      const v8 = npcV8Key(staffNpcSeed(s.role), s.facing, moving ? 'walk' : 'idle', this.time.now, 'happy');
       const frame = moving ? Math.floor(this.animFrame / 7) % 2 : 0;
-      const key = `guest/body:${palOf[s.role] ?? 1}/${moving ? 'walk' : 'idle'}/${frame}/happy`;
+      const key = this.deps.provider.spec(v8) ? v8 : `guest/body:${palOf[s.role] ?? 1}/${moving ? 'walk' : 'idle'}/${frame}/happy`;
       if (!this.textures.exists(key)) { const c = this.deps.provider.canvas(key); if (c) this.textures.addCanvas(key, c); }
       let img = this.staffImgs.get(s.uid);
       if (!img) { img = this.add.image(0, 0, key).setOrigin(GUEST_ANCHOR.x / GUEST_W, GUEST_ANCHOR.y / GUEST_H); this.staffImgs.set(s.uid, img); }
       else if (img.texture.key !== key) img.setTexture(key);
+      const native = key.startsWith('guest/v8/');
+      const spec = native ? this.deps.provider.spec(key) : null; // v8 프레임은 원점이 spec.ax/ay — GUEST_ANCHOR 고정 원점이 아니다
+      img.setOrigin(spec ? spec.ax / spec.w : GUEST_ANCHOR.x / GUEST_W, spec ? spec.ay / spec.h : GUEST_ANCHOR.y / GUEST_H);
       const a = tileCenter(s.fromI, s.fromJ); const b = tileCenter(s.i, s.j);
       img.setPosition(Math.round(a.x + (b.x - a.x) * s.progress), Math.round(a.y + (b.y - a.y) * s.progress + this.liftAt(s.i, s.j)));
-      img.setFlipX(s.facing === 1 || s.facing === 2);
+      img.setFlipX(!native && (s.facing === 1 || s.facing === 2)); // v8 키는 mirror 를 키에 담는다
       img.setDepth(spanDepthKey(s.fromI, s.fromJ, s.i, s.j) + Z_GUEST);
     }
     for (const [uid, img] of this.staffImgs) { if (keep.has(uid)) continue; img.destroy(); this.staffImgs.delete(uid); }
@@ -973,7 +1013,7 @@ export class WaterparkScene extends Phaser.Scene {
       this.ghost?.destroy();
       this.ghost = null;
       this.aimGfx?.destroy(); this.aimGfx = null;
-      this.aimLabel?.destroy(); this.aimLabel = null;
+      this.aimLabelText = null;
       this.setSelection([]);
       return;
     }
@@ -1009,13 +1049,10 @@ export class WaterparkScene extends Phaser.Scene {
     }
     // 가격표 — 고스트 위 「1,200G ×1」
     const label = labelText ?? `${def.cost.toLocaleString('ko-KR')}G ×1`;
-    if (!this.aimLabel) this.aimLabel = this.add.text(0, 0, label, { fontFamily: cssVar('--font-pixel-family') || 'monospace', fontSize: '11px', color: cssVar('--strip-num'), stroke: cssVar('--fx-stroke'), strokeThickness: 3 }).setOrigin(0.5, 1).setDepth(DEPTH_AIM_MARK + 2);
-    else this.aimLabel.setText(label);
-    const size = facilityCanvasSize(def, facing);
-    this.aimLabel.setPosition(Math.round(cx), Math.round(top.y - size.h + TILE_H - 4));
+    this.aimLabelText = label; // P59-c 후속(2026-09-18): 고정 가격표 Text 는 그리지 않는다 — P56-a D7 의 `price-pop` FX(지도 위 「N G ×1」)와 같은 문구가 두 번 떴고, 고정 라벨은 캔버스 높이만큼 위에 떠 있었다. 하네스는 텍스트만 읽는다
   }
   /** 검사용 — 조준 화살표·가격표가 떠 있나 */
-  aimForTest(): { arrows: boolean; label: string | null } { return { arrows: !!this.aimGfx, label: this.aimLabel ? this.aimLabel.text : null }; }
+  aimForTest(): { arrows: boolean; label: string | null } { return { arrows: !!this.aimGfx, label: this.aimLabelText }; }
 
   /** P50-b2 — 빠지 모습: 꺼진 기구 uid · 링 데크 칸의 등급 · 이음쇠 변. 값은 sim 이 내고 여기선 칠하기만 */
   setRigLook(dimUids: ReadonlySet<number>, ringGrades: ReadonlyMap<number, number>, links: readonly { i: number; j: number; dir: 0 | 1 }[]): void {

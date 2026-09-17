@@ -4,7 +4,7 @@
  */
 import { el } from './dom.js';
 import { assetUrl } from './asset-url.js';
-import { drawPortrait } from '../assets/draw/portrait.js';
+import { npcPortrait } from './portraits.js'; // 과제 B: 장면 손님 둘은 v8 머리
 import { iconEl, type IconName } from './icons.js';
 import { gaugeEl } from './picture-grid.js';
 
@@ -44,8 +44,8 @@ export function sceneCard(spec: SceneCardSpec): HTMLDivElement {
   const stage = el('div', 'kscene-stage');
   if (spec.bg) { stage.dataset['bg'] = spec.bg; stage.style.setProperty('--scene-bg', `url("${assetUrl(`assets/scenes/scene_${spec.bg}.png`)}")`); } // 경로는 데이터 — 색·크기는 style.css
   const [a, b] = spec.guests ?? [1, 4];
-  const gl = el('span', 'kportrait'); gl.append(drawPortrait(a, a % 5, spec.mood ?? 'happy'));
-  const gr = el('span', 'kportrait'); gr.append(drawPortrait(b, b % 5, spec.mood ?? 'happy'));
+  const gl = el('span', 'kportrait'); gl.append(npcPortrait(a, spec.mood ?? 'happy'));
+  const gr = el('span', 'kportrait'); gr.append(npcPortrait(b, spec.mood ?? 'happy'));
   const center = el('span', 'kscene-art');
   center.append(spec.art);
   if (spec.artAfter) {

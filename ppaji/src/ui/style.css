@@ -647,6 +647,10 @@ html[data-ui-surface='pool'] #hud-right { display: flex; opacity: 0.45; }
   box-shadow: inset 0 0 0 2px var(--win-inner), 0 3px 0 var(--btn-edge);
   z-index: 20;
 }
+/* P59-c 후속(2026-09-18): 모바일 크롬 내비 바 — dvh. 100vh 는 내비 바 뒤까지 재서 창 아래가 끝까지 안 내려갔다. 위 vh 규칙은 폴백 */
+@supports (height: 100dvh) {
+  .kwin { max-height: calc(100dvh / var(--ui-zoom) - 140px - var(--safe-t) - var(--safe-b)); }
+}
 .kwin[hidden] { display: none; }
 .kwin-head {
   flex: 0 0 auto;
@@ -989,6 +993,7 @@ html[data-tut='1'] #hud-ticker { visibility: hidden; } /* H-5 */
 .kdialog-body { white-space: normal; }
 .kdialog-cost .krow-v { margin-left: auto; }
 .kwin.kcompact { top: 30%; max-height: calc(60vh / var(--ui-zoom)); }
+@supports (height: 100dvh) { .kwin.kcompact { max-height: calc(60dvh / var(--ui-zoom)); } } /* P59-c 후속(2026-09-18): 모바일 크롬 내비 바 — dvh */
 .kcele-icon { display: flex; justify-content: center; padding: 6px 0 2px; }
 .kicon.xl { width: 48px; height: 48px; }
 .kcele-title { text-align: center; font-size: var(--fs-title); font-weight: 900; }
@@ -1082,6 +1087,7 @@ html[data-tut='1'] #hud-ticker { visibility: hidden; } /* H-5 */
 .kcert.kcert-passed .kbtn { min-height: var(--tap); }
 #dock-course .kchips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
 #dock-course [data-grid="course-gear"] { max-height: calc(26vh / var(--ui-zoom)); overflow-y: auto; } /* W-17: 기구 30 장 = 세로 스크롤 격자(소품 독과 같다) — 독이 1250px 로 자라던 것 */
+@supports (height: 100dvh) { #dock-course [data-grid="course-gear"] { max-height: calc(26dvh / var(--ui-zoom)); } } /* P59-c 후속(2026-09-18): 모바일 크롬 내비 바 — dvh */
 #dock-course [data-grid="course-gear"] .kpcard-art { min-height: 40px; }
 #dock-course .kchips::-webkit-scrollbar { display: none; }
 #dock-course .kchip { flex: 0 0 auto; min-width: var(--tap); }
@@ -1152,6 +1158,7 @@ html[data-tut='1'] #hud-ticker { visibility: hidden; } /* H-5 */
 .kcele-pic { transform: scale(2); transform-origin: center; }
 .kcele-pic.kpic-canvas { transform: none; }
 #dock-pool .kitem-grid { display: block; max-height: calc(38vh / var(--ui-zoom)); overflow-y: auto; }
+@supports (height: 100dvh) { #dock-pool .kitem-grid { max-height: calc(38dvh / var(--ui-zoom)); } } /* P59-c 후속(2026-09-18): 모바일 크롬 내비 바 — dvh */
 #dock-pool .kitem-grid[hidden] { display: none; } /* W-16: display:block 이 hidden 을 이겨 빈 크림 박스 100px 가 떠 있었다 */
 #dock-pool .kitem-grid .kpgrid { grid-template-columns: repeat(3, 1fr); } /* P57-f: 4열(85px)에선 「유자향 노란 향초」가 두 줄 — 건설 창과 같은 3열 */
 #dock-pool .kitem-grid .kpcard-art { min-height: 40px; }

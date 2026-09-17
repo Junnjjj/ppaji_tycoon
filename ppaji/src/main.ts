@@ -48,6 +48,7 @@ import { ShopWindow } from './ui/windows/shop.js';
 import { MenuEditWindow } from './ui/windows/menu-edit.js';
 import { CookWindow, type DiscoverySpec } from './ui/windows/cook.js';
 import { canvasPictureEl, pictureCount } from './ui/pictures.js';
+import { setNpcFrameSource, npcPortrait } from './ui/portraits.js'; // 과제 B: 손님·친구 초상은 v8 도트의 머리
 import type { CookingStore, RecipeLike, IngredientLike, CookResultOf } from './sim/cooking.js';
 import { MenuWindow } from './ui/windows/menu.js';
 import { InvestWindow } from './ui/windows/invest.js';
@@ -101,6 +102,7 @@ const landscape = await loadLandscape(); // P57-b: 북쪽 바깥 풍경 띠(main
 if (!saved) game.checkStory(true);
 const npc = await loadNpcV8();
 const provider = new HybridProvider(npc, new HybridProvider(kairo, new HybridProvider(atlas, new ProceduralProvider())));
+setNpcFrameSource((id) => provider.canvas(id)); // 과제 B: 초상(`npcPortrait`)이 씬과 같은 v8 프레임을 읽는다
 const missing = ProceduralProvider.missingDrawers();
 if (missing.length > 0) console.error('매니페스트에 그리는 함수가 없는 id:', missing);
 
@@ -132,6 +134,8 @@ const scene = new WaterparkScene({
     }
   },
   onTapTile: (i, j) => onTapTile(i, j),
+  // 조준 배치(K47-③): 배치 중 지도를 팬하면 화면 중앙 칸이 고스트 자리다 — 탭은 호환(그 칸으로 옮길 뿐)
+  onAimCenter: (i, j) => { if (place.isActive) aimPlaceAt(i, j); },
 });
 const phaser = bootPhaser(parent, scene);
 sfx.unlockOnGesture();
@@ -267,8 +271,8 @@ const thumbFor = (post: { id: number; subject: { kind: 'pool' | 'facility'; ref:
     const sprite = post.subject.kind === 'pool' ? provider.canvas('tile/pool') : (() => { const f = game.facilities.byUid(post.subject.ref); return f ? provider.canvas(`fac/${f.defId}/0`) : null; })();
     g2.imageSmoothingEnabled = false;
     if (sprite) { const sc = Math.min(1, 44 / sprite.width, 30 / sprite.height); const w = Math.round(sprite.width * sc); const h = Math.round(sprite.height * sc); g2.drawImage(sprite, Math.round(24 - w / 2), Math.round(31 - h), w, h); }
-    const face = provider.canvas(`guest/body:${post.palette ?? 0}/idle/0/happy`);
-    if (face) g2.drawImage(face, 2, 6);
+    const face = npcPortrait(post.palette ?? 0, 'happy'); // 과제 B: v8 머리 초상 (32×32 → 24×24)
+    g2.drawImage(face, 2, 6, 24, 24);
   }
   thumbs.set(post.id, out);
   return out;
@@ -281,8 +285,10 @@ const results = new ResultsWindow(document.body, () => { consumeFx(); refreshHud
 const resultsCtl = { enabled: !NO_TUT };
 const rankingsWin = new RankingsWindow(document.body, () => game);
 const staffWin = new StaffWindow(document.body, () => game, { toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); syncWorldToScene(); refreshHud(); persist(); } });
+/** 확정 바(#dock-place)가 가린 아래 높이 — 조준 중앙은 그 위 영역의 가운데다 (K47-③) */
+const PLACE_DOCK_INSET_CSS = 84;
 const place = new PlaceDock(document.body, () => game, {
-  showGhost: (def, i, j, facing, ok, label) => scene.setGhost(def, i, j, facing, ok, label),
+  showGhost: (def, i, j, facing, ok, label) => { if (def === null) scene.setAimCenter(false, 0); /* exit() 만 null 을 보낸다 — 취소·확정·붓 교체 전부 여기를 지난다 */ scene.setGhost(def, i, j, facing, ok, label); },
   showRing: (tiles) => scene.setSelection(tiles, false), // P24 조준 반경 — 수역 독의 선택 표시를 재사용
   pricePop: (i, j, text) => { if (text === null) return; const c = tileCenter(i, j); scene.fx('price-pop', { x: c.x, y: c.y - 26, text, key: 'aim' }); }, // P56-a D7
   toast: (text, ok) => { hud.showToast(text); sfx.play(ok ? 'coin' : 'error'); },
@@ -298,7 +304,7 @@ const buildWin = new BuildWindow(
   () => game,
   [...FACILITY_DEFS.values()],
   (def) => provider.canvas(`fac/${def.id}/0`),
-  (def) => place.enter(def),
+  (def) => { place.enter(def); scene.setAimCenter(true, PLACE_DOCK_INSET_CSS); }, // K47-③ 조준: 고스트는 화면 중앙 칸에 붙고 팬을 따라간다
 );
 const snsWin = new SnsWindow(document.body, () => game, {
   thumb: (post) => thumbFor(post),
@@ -398,8 +404,13 @@ const endingWin = new EndingWindow(document.body, () => game, {
     hud.showToast(`뉴게임+ ${c.runs + 1}회차 — 이월 적용`);
   },
 });
-const facilityInfo = new FacilityInfoWindow(document.body, () => game, () => { consumeFx(); syncWorldToScene(); refreshHud(); persist(); }, (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, (uid) => menuWin.show(uid), (defId) => provider.canvas(`fac/${defId}/0`), (uid) => { const f = game.facilities.byUid(uid); if (f) { place.enterMove(f); sfx.play('open'); } }, (tiles) => scene.setSelection(tiles, false)); // P30 D38 탭 오버레이
+const facilityInfo = new FacilityInfoWindow(document.body, () => game, () => { consumeFx(); syncWorldToScene(); refreshHud(); persist(); }, (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, (uid) => menuWin.show(uid), (defId) => provider.canvas(`fac/${defId}/0`), (uid) => { const f = game.facilities.byUid(uid); if (f) { place.enterMove(f); scene.focusTile(f.i, f.j, PLACE_DOCK_INSET_CSS); scene.setAimCenter(true, PLACE_DOCK_INSET_CSS); /* K47-③ 조준: 카메라를 그 시설에 맞춰 중앙 칸 = 지금 자리에서 시작 */ sfx.play('open'); } }, (tiles) => scene.setSelection(tiles, false)); // P30 D38 탭 오버레이
 facilityInfo.sprite = (id) => provider.canvas(`fac/${id}/0`); // P56-a 개조 전→후 그림
+
+// P50-b2 계약: `place.aimAt` 호출부는 main.ts 에 하나 — 탭(호환)과 조준 중앙(K47-③) 둘 다 이 문을 지난다
+function aimPlaceAt(i: number, j: number): void {
+  place.aimAt(i, j);
+}
 
 function onTapTile(i: number, j: number): void {
   if (courseDock.isActive) return;
@@ -408,7 +419,7 @@ function onTapTile(i: number, j: number): void {
     return;
   }
   if (place.isActive) {
-    place.aimAt(i, j);
+    aimPlaceAt(i, j);
     return;
   }
   if (uiSurface() !== 'home') return;

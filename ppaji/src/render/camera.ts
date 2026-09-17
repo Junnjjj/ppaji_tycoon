@@ -62,6 +62,11 @@ export class Camera {
     return { w: this.viewW, h: this.viewH };
   }
 
+  /** 화면 CSS 크기(`setScreenSize` 로 받은 값) — 조준 배치가 화면 중앙 칸을 셀 때 쓴다 */
+  get screenCss(): { w: number; h: number } {
+    return { w: this.cssW, h: this.cssH };
+  }
+
   get upscale(): Upscale {
     return this.scale;
   }

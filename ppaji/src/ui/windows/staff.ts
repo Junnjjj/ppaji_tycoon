@@ -3,7 +3,8 @@
  */
 import { el } from '../dom.js';
 import { WindowPanel } from '../window.js';
-import { drawPortrait } from '../../assets/draw/portrait.js';
+import { npcPortrait } from '../portraits.js'; // 과제 B
+import { staffNpcSeed } from '../../assets/npc-v8.js'; // 역할 seed — 씬 `syncStaff` 와 같은 얼굴
 import { STAFF_ROLES, STAFF_EXP_PER_LEVEL, STAFF_MAX_LEVEL } from '../../sim/staff.js';
 import type { Game } from '../../sim/game.js';
 
@@ -49,7 +50,7 @@ export class StaffWindow {
         row.type = 'button';
         row.dataset['hire'] = role.id;
         const face = el('span', 'kportrait');
-        face.append(drawPortrait(role.palette, role.palette % 5, 'happy'));
+        face.append(npcPortrait(staffNpcSeed(role.id), 'happy'));
         const text = el('span', 'krow-text');
         text.append(el('span', 'krow-name', `${role.name} — 고용 ${role.hireCost.toLocaleString('ko-KR')}G`));
         text.append(el('span', 'krow-sub', `월급 ${role.salary}G/일 · ${role.desc}`));
@@ -69,7 +70,7 @@ export class StaffWindow {
         const row = el('div', 'krow kfriend');
         row.dataset['staff'] = String(st.uid);
         const face = el('span', 'kportrait');
-        face.append(drawPortrait(role.palette, st.uid % 5, 'calm'));
+        face.append(npcPortrait(staffNpcSeed(role.id), 'calm'));
         const text = el('span', 'krow-text');
         text.append(el('span', 'krow-name', `${st.name} · ${role.name} Lv${st.level}`));
         const need = STAFF_EXP_PER_LEVEL * st.level;
