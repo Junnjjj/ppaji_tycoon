@@ -75,7 +75,7 @@ export class CookWindow {
   private sel: string[] = [];
 
   constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: { toast(t: string, ok: boolean): void; onChanged(): void }, private readonly spec: DiscoverySpec = COOK_SPEC) {
-    this.win = new WindowPanel(parent, spec.winId, spec.title, 'purple');
+    this.win = new WindowPanel(parent, spec.winId, spec.title, 'blue');
     this.cookBtn = el('button', 'kbtn primary', `${spec.verb ?? '개발'}하기`);
     this.cookBtn.type = 'button';
     this.cookBtn.id = `${spec.winId}-go`;

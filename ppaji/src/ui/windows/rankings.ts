@@ -21,7 +21,7 @@ export class RankingsWindow {
   private tab: Tab = 'facility';
 
   constructor(parent: HTMLElement, private readonly game: () => Game) {
-    this.win = new WindowPanel(parent, 'win-rankings', '랭킹', 'purple');
+    this.win = new WindowPanel(parent, 'win-rankings', '랭킹', 'blue');
     for (const t of TABS) {
       const b = el('button', 'ktab', t.label);
       b.type = 'button';

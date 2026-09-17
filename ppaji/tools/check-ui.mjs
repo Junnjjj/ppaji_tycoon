@@ -6,11 +6,13 @@
  *   S2 CSS 가 쓰는 var(--x) 가 전부 :root 에 선언
  *   S3 대비비 — 본문 4.5 · 보조 3 (표 `PAIRS`)
  *   S4 이모지 리터럴 0 (icons.ts 도 예외 아님 — 캔버스 아이콘이라 예외가 필요 없다)
- *   S5 font-size 는 --fs-* 토큰만 · 12px 하한 · 7단 이하
+ *   S5 font-size 는 --fs-* 토큰만 · 12px 하한 · **4단**(P59-a D64: cap·body·title·num)
  *   S6 transition/animation 은 transform·opacity·box-shadow·background 만 · 모션 가드 존재
  *   S7 .kbtn/.ksquare 에 재질(그라디언트·inset 하이라이트·:active)
  *   S8 `hidden =` 대입은 panelHost 를 아는 파일 또는 hud/토스트뿐
  *   S9 FX 등록부 밖에서 tweens.add / add.particles 호출 0
+ *   S10 border-radius 는 --r-win · --r-in · 999px 셋뿐 (P59-a D65)
+ *   S11 창 톤은 blue·gold 둘뿐 · kfit 0 (P59-a D67) — CSS·TS 양쪽
  *
  * `--selftest` 는 소스 사본에 위반을 주입해 이름 붙은 자가 **실제로 빨간불**이 되는지 본다 —
  * 안 잡히는 자는 아무것도 안 재고 있다.
@@ -36,6 +38,10 @@ if (SELFTEST) {
     { id: 'rig-dim-hardcoded', expect: 'S1', file: 'src/render/scene.ts', edit: (t) => t.replace("cssColorInt('--rig-dim') || 0x55697c", "Number('0x' + '#55697c'.slice(1))") }, // P50-b2: 꺼짐 틴트를 hex 로 되돌리면 S1 빨강
     { id: 'risk-contrast', expect: 'S3', file: 'src/ui/style.css', edit: (t) => t.replace('--risk-1: #7d5c05;', '--risk-1: #ffd27a;') }, // P52-b: 위험 칩 면을 밝게 되돌리면 흰 글씨 4.5:1 미달 → S3 빨강
     { id: 'tween-outside', expect: 'S9', file: 'src/render/scene.ts', edit: (t) => `${t}\nexport function __fault2(s: Phaser.Scene): void { s.tweens.add({ targets: [], duration: 1 }); }\n` },
+    { id: 'font-steps', expect: 'S5', file: 'src/ui/style.css', edit: (t) => t.replace('--r-win: 8px;', '--r-win: 8px; --fs-lead: 17px;') }, // P59-a D64: 5단이 되면 빨강
+    { id: 'radius-literal', expect: 'S10', file: 'src/ui/style.css', edit: (t) => `${t}\n.kfault { border-radius: 7px; }\n` }, // P59-a D65
+    { id: 'win-tone', expect: 'S11', file: 'src/ui/style.css', edit: (t) => `${t}\n.kwin.purple .kwin-head { background: red; }\n` }, // P59-a D67
+    { id: 'kfit-back', expect: 'S11', file: 'src/ui/window.ts', edit: (t) => `${t}\nexport function __fault3(e: HTMLElement): void { e.classList.add('kfit'); }\n` },
   ];
   const self = resolve(process.argv[1]);
   const caught = [];
@@ -149,6 +155,12 @@ console.log('UI 정적 검사');
     ['--ink', hexOf(tok('--card-on'))[0], 4.5, 'P56-a 카드 선택 노란 채움 위 진갈 글씨'],
     ['--card-price', hexOf(tok('--win-flat'))[0], 4.5, 'P56-a 카드 우하 가격'],
     ['--btn-ink', hexOf(tok('--badge'))[0], 3, 'P56-a SOLD OUT 띠(면끼리 3:1)'],
+    ['--btn-ink', hexOf(tok('--win-title-blue'))[0], 4.5, 'P59-a 창 머리 제목(타일 띠 바탕)'],
+    ['--btn-ink', hexOf(tok('--win-title-gold'))[0], 3, 'P59-a 금 머리(결산) — 보조'],
+    ['--ink', hexOf(tok('--win-flat'))[0], 4.5, 'P59-a 카드·행 위 글씨'],
+    ['--ink', hexOf(tok('--row-bg'))[0], 4.5, 'P59-a 행 위 글씨'],
+    ['--ink-dim', hexOf(tok('--row-bg'))[0], 3, 'P59-a 행 보조'],
+    ['--btn-ink', hexOf(tok('--ticker-bg'))[0], 4.5, 'P59-a 핑크 배너 흰 글씨'],
   ];
   const bad = [];
   for (const [fg, bg, need, name] of PAIRS) {
@@ -174,12 +186,29 @@ console.log('UI 정적 검사');
 // S5 font-size
 {
   const sizes = [...cssCode.matchAll(/font-size\s*:\s*([^;]+);/g)].map((m) => m[1].trim());
-  const literal = sizes.filter((s) => !/^var\(--fs-[a-z]+\)$/.test(s));
+  const literal = sizes.filter((s) => !/^(var\(--fs-[a-z]+\)|inherit)$/.test(s)); // P59-a: 폼 컨트롤은 inherit 로 토큰을 물려받는다
   const root = cssCode.match(/:root\s*{([\s\S]*?)}/)?.[1] ?? '';
   const steps = [...root.matchAll(/--fs-[a-z]+\s*:\s*(\d+)px/g)].map((m) => Number(m[1]));
   const under = steps.filter((n) => n < 12);
-  ok('S5', 'font-size 토큰만 · ≥12px · ≤7단', literal.length === 0 && under.length === 0 && steps.length <= 7 && steps.length > 0,
+  ok('S5', 'font-size 토큰만 · ≥12px · 4단(D64)', literal.length === 0 && under.length === 0 && steps.length === 4,
     `리터럴 ${literal.length} · 단 ${steps.length} · 12 미만 ${under.length}`);
+}
+
+// S10 border-radius — 셋뿐 (P59-a D65)
+{
+  const vals = [...cssCode.matchAll(/border-radius\s*:\s*([^;]+);/g)].map((m) => m[1].trim());
+  const okPart = (p) => p === 'var(--r-win)' || p === 'var(--r-in)' || p === '999px' || p === '0' || /^calc\(var\(--r-win\) - 3px\)$/.test(p);
+  const bad = vals.filter((v) => !v.split(/\s+/).every(okPart));
+  ok('S10', 'border-radius 는 --r-win · --r-in · 999px 만 (D65)', bad.length === 0 && vals.length > 0, bad.slice(0, 5).join(' · '));
+}
+
+// S11 창 톤 2 · kfit 0 (P59-a D67)
+{
+  const toneCss = (cssCode.match(/\.kwin\.(purple|pink|green)\b/g) ?? []).length;
+  const kfitCss = (cssCode.match(/\.kfit\b/g) ?? []).length;
+  let kfitTs = 0; let toneTs = 0;
+  for (const p of uiTs) { const t = strip(await readFile(p, 'utf8')); kfitTs += (t.match(/['"`]kfit['"`]|classList\.add\('kfit'\)/g) ?? []).length; toneTs += (t.match(/WindowPanel\([^\n]*'(purple|pink|green)'/g) ?? []).length; }
+  ok('S11', '창 톤 blue·gold 둘뿐 · kfit 0 (D67)', toneCss + toneTs + kfitCss + kfitTs === 0, `톤 css ${toneCss} ts ${toneTs} · kfit css ${kfitCss} ts ${kfitTs}`);
 }
 
 // S6 모션

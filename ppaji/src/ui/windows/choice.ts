@@ -22,7 +22,7 @@ export class ChoiceWindow {
   private readonly body = el('div', 'krows');
 
   constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: { toast(t: string, ok: boolean): void; onChanged(): void; onClosed?(): void }) {
-    this.win = new WindowPanel(parent, 'win-choice', '사건', 'purple', { modal: true });
+    this.win = new WindowPanel(parent, 'win-choice', '사건', 'blue', { modal: true });
     this.win.onClose = () => this.host.onClosed?.(); // G57: 닫히면 줄 선 결산 카드·모달을 펌프
     this.win.body.append(this.body);
   }

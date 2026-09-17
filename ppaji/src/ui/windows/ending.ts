@@ -14,7 +14,7 @@ export class EndingWindow {
   private readonly body = el('div', 'krows');
 
   constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: { continueGame(): void; newGamePlus(c: Carryover): void; profile(): Carryover | null }) {
-    this.win = new WindowPanel(parent, 'win-ending', '8년차 겨울 — 본편 종료', 'purple', { modal: true });
+    this.win = new WindowPanel(parent, 'win-ending', '8년차 겨울 — 본편 종료', 'blue', { modal: true });
     this.win.body.append(this.body);
   }
 

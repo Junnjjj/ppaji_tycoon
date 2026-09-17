@@ -30,7 +30,7 @@ export class SnsWindow {
   unopenedForTest(): number { const g = this.game(); let n = 0; for (const st of g.sns.unlockedFriends) for (const idx of st.done) if (!this.opened.has(`${st.id}:${idx}`)) n++; return n; }
 
   constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: { thumb(post: Post): HTMLCanvasElement | null; toast(t: string, ok: boolean): void; onChanged(): void; celebrate?(text: string): void; sprite?: SpriteFn }) {
-    this.win = new WindowPanel(parent, 'win-sns', 'SNS', 'pink');
+    this.win = new WindowPanel(parent, 'win-sns', 'SNS', 'blue');
     for (const [id, label] of [['timeline', '타임라인'], ['messages', '메시지'], ['friends', '친구']] as const) {
       const b = el('button', 'ktab');
       b.append(iconEl(id === 'timeline' ? 'timeline' : id === 'messages' ? 'message' : 'friends'), el('span', undefined, label));

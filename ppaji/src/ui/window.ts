@@ -1,5 +1,6 @@
 /**
- * 창 — 크림 몸통 + 제목 띠(보라/파랑) + 우상단 닫기. PSS 의 창 문법 하나로 모든 화면이 선다.
+ * 창 — 흰 몸통 + 파란 틀 + 타일 무늬 제목 띠 + 우상단 닫기 (D70 원작 문법). 톤은 둘(D67): blue(기본) · gold(결산·축하·심사 결과).
+ * 자리는 늘 같다(D67) — 내용이 짧으면 높이만 준다. 옛 `kfit`(짧은 창을 가운데로)는 폐기.
  * `PanelHost` 를 거치므로 한 번에 하나, 열리면 소유권이 `window` 로 넘어가 홈 입력층이 내려간다.
  */
 import { el } from './dom.js';
@@ -12,9 +13,8 @@ export class WindowPanel implements Panel {
   private readonly titleEl: HTMLDivElement;
   private readonly scrim: HTMLDivElement;
   onClose?: () => void;
-  private fitObserver: MutationObserver | null = null;
 
-  constructor(parent: HTMLElement, id: string, title: string, tone: 'purple' | 'blue' | 'pink' | 'green' | 'gold' = 'blue', opts?: { modal?: boolean }) {
+  constructor(parent: HTMLElement, id: string, title: string, tone: 'blue' | 'gold' = 'blue', opts?: { modal?: boolean }) {
     this.scrim = el('div', 'kscrim');
     this.scrim.hidden = true;
     this.scrim.addEventListener('click', () => this.hide());
@@ -51,20 +51,7 @@ export class WindowPanel implements Panel {
     this.root.hidden = false;
     this.scrim.hidden = false;
     setUiSurface('window');
-    this.fit();
-    requestAnimationFrame(() => { if (!this.root.hidden) this.fit(); });
-    // 내용이 show() 뒤에 채워지는 창(건설·SNS…)도 다음 프레임에 다시 잰다
-    if (!this.fitObserver) { this.fitObserver = new MutationObserver(() => { if (!this.root.hidden) requestAnimationFrame(() => { if (!this.root.hidden) this.fit(); }); }); this.fitObserver.observe(this.body, { childList: true, subtree: true }); }
     return true;
-  }
-
-  /** G54 — 내용이 짧은 창은 위에 붙이지 않고 가운데에 (카이로 창은 내용 크기다). `kcompact`/`kdialog` 는 제 자리 규칙이 있다 */
-  private fit(): void {
-    if (this.root.classList.contains('kcompact') || this.root.classList.contains('kdialog')) return;
-    this.root.classList.remove('kfit');
-    const h = this.root.getBoundingClientRect().height;
-    const avail = window.innerHeight - 140;
-    if (h > 0 && h < avail * 0.55) this.root.classList.add('kfit');
   }
 
   hide(): void {

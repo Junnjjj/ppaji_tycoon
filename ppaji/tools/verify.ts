@@ -902,7 +902,7 @@ async function verifyG29(page: import('playwright').Page): Promise<void> {
   const font = (await page.evaluate(`(async () => { await document.fonts.load('12px Galmuri11'); await document.fonts.load('bold 12px Galmuri11'); await document.fonts.ready; const faces = [...document.fonts].filter((f) => f.family.replace(/["']/g, '') === 'Galmuri11').map((f) => f.weight + ':' + f.status); return { ok: document.fonts.check('12px Galmuri11'), faces, external: performance.getEntriesByType('resource').filter((r) => !r.name.startsWith(location.origin)).length }; })()`)) as { ok: boolean; faces: string[]; external: number };
   record('G29 픽셀 서체 — Galmuri11 셀프호스트 로드(정체·굵게) · 외부 요청 0', font.ok && font.faces.filter((f) => f.endsWith('loaded')).length >= 2 && font.external === 0 ? 'pass' : 'fail', JSON.stringify(font));
   const ui = (await page.evaluate(`(() => { const w = window.__pj; w.buildWin.show(); const build = document.querySelectorAll('#win-build .ktab .kicon').length; document.querySelector('#win-build .kwin-close').click(); w.snsWin.show(); const sns = document.querySelectorAll('#win-sns .ktab .kicon').length; const pink = document.getElementById('win-sns').classList.contains('pink'); document.querySelector('#win-sns .kwin-close').click(); w.shopWin.show(); const green = document.getElementById('win-shop').classList.contains('green'); document.querySelector('#win-shop .kwin-close').click(); const hud = document.querySelectorAll('#hud-time .kicon').length; return { build, sns, pink, green, hud }; })()`)) as { build: number; sns: number; pink: boolean; green: boolean; hud: number };
-  record('G29 → P50-a 탭 아이콘(건설 9 — 「빠지」 탭 추가 · SNS 3) · 창 색조(SNS 분홍 · 상점 초록) · HUD 계절+날씨 아이콘 2', ui.build === 9 && ui.sns === 3 && ui.pink && ui.green && ui.hud === 2 ? 'pass' : 'fail', JSON.stringify(ui));
+  record('G29 → P50-a 탭 아이콘(건설 9 — 「빠지」 탭 추가 · SNS 3) · 창 색조 없음(P59-a D67 톤 2 — SNS 분홍·상점 초록 폐기) · HUD 계절+날씨 아이콘 2', ui.build === 9 && ui.sns === 3 && !ui.pink && !ui.green && ui.hud === 2 ? 'pass' : 'fail', JSON.stringify(ui));
 }
 
 /** G30 — 밸런스: 좋아요 리셋 경고 칩(R2) · 투입 뒤 토스트 · 랭크 유지비 · 호화 상품 3종이 상점 데이터에 있다 */
@@ -1154,7 +1154,7 @@ async function verifyG54(page: import('playwright').Page): Promise<void> {
   await page.waitForTimeout(80);
   const bw = (await page.evaluate(`(() => { const w = window.__pj; const bw = document.getElementById('win-rank'); const longFit = bw.classList.contains('kfit'); const top = bw.getBoundingClientRect().top; const h = bw.getBoundingClientRect().height; document.querySelector('#win-rank .kwin-close').click(); w.buildWin.show(); const bd = document.getElementById('win-build'); const buildH = bd.getBoundingClientRect().height; const buildFit = bd.classList.contains('kfit'); document.querySelector('#win-build .kwin-close').click(); return { longFit, top, h, buildH, buildFit }; })()`)) as { longFit: boolean; top: number; h: number; buildH: number; buildFit: boolean };
   const r2 = { ...r, ...bw };
-  record('G54 재료 칩 아이콘(전 칩 · 계열 ≥3) · 인기 캡슐 라벨 < 숫자 · 정보 창(긴 창)은 위에 붙고 kfit 아님 · 건설 창(새 판, 짧음)은 가운데', r2.chips > 0 && r2.icons === r2.chips && r2.kinds >= 3 && r2.lab < r2.num && !r2.longFit && r2.top < 120 && r2.buildFit === (r2.buildH < (852 - 140) * 0.55) ? 'pass' : 'fail', JSON.stringify(r2));
+  record('G54 재료 칩 아이콘(전 칩 · 계열 ≥3) · 인기 캡슐 라벨 < 숫자 · 정보 창·건설 창 둘 다 위(64)에 붙고 kfit 없음(P59-a D67 — 짧은 창을 가운데 두던 G54 규칙 폐기)', r2.chips > 0 && r2.icons === r2.chips && r2.kinds >= 3 && r2.lab < r2.num && !r2.longFit && r2.top < 120 && !r2.buildFit && r2.buildH > 0 ? 'pass' : 'fail', JSON.stringify(r2));
 }
 
 /** G55 — 5189 재플레이 후속: 독 탭 한 줄 · 아이템 모드에 타일 칩 없음 · 「핑크까지 N개」 힌트 · 이동 고스트 「이동 · 무료」 · 같은 자리 거절 */
@@ -1264,6 +1264,29 @@ async function verifyP57b(page: import('playwright').Page): Promise<void> {
 }
 
 /** P58-a — 푸드코트: 킷 식탁 2 · 틴트 칸 12 · 독 「식탁」 모드 실터치로 6×4 그리면 좌석 8 · 식탁 정보 창은 「푸드코트 지우기」만(이동·철거·개선·알바 숨김) · 지우면 좌석 0 · 하루 뒤 식탁에서 먹은 손님 > 0 */
+/** P59-a (2026-09-18, docs/plan-ppaji-ui-polish.md D64~D67·D70) — 규격: 창 자리 64 고정·kfit 0 · 버튼 높이 집합 · 글자 크기 4단 · HUD 2줄 · 배지 캡슐 · 창 틀(파란 3px + 타일 머리) · 톤 2 */
+async function verifyP59a(page: import('playwright').Page): Promise<void> {
+  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
+  await page.waitForTimeout(400);
+  const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.flow.frozen = true;
+    const vis = (e) => { const cs = getComputedStyle(e); return !e.hidden && cs.display !== 'none' && cs.visibility !== 'hidden' && e.getBoundingClientRect().height > 0; };
+    const opens = { build: () => w.buildWin.show(), sns: () => w.snsWin.show(), shop: () => w.shopWin.show(), inbox: () => w.inboxWin.show(), invest: () => w.investWin.show(), campaign: () => w.campaignWin.show(), rankings: () => w.rankingsWin.show(), rank: () => w.rankWin.show(), cert: () => w.certWin.show(), staff: () => { w.features.staff = true; w.staffWin.show('hire'); }, workshop: () => w.workshopWin.show(), rig: () => w.rigWin.show(), cook: () => w.cookWin.show(), facility: () => w.facilityInfo.show(g.facilities.all[0].uid), pool: () => w.poolInfo.show(g.pools.all[0].id), menu: () => w.mainMenu.show() };
+    const ys = {}; const kfit = []; const tones = []; const badBtn = []; const fonts = new Set(); let frame = null; let heads = 0;
+    const scan = (root) => { for (const e of root.querySelectorAll('*')) { if (!vis(e)) continue; const cs = getComputedStyle(e); if ([...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) fonts.add(cs.fontSize); if (e.tagName === 'BUTTON') { const h = Math.round(e.getBoundingClientRect().height); const c = e.classList; const want = c.contains('ksquare') ? 48 : (c.contains('kbtn') || c.contains('ktab') || c.contains('kchip') || c.contains('kwin-close')) ? 44 : null; if (want !== null ? h !== want : h < 44) badBtn.push((e.id || [...c].slice(0, 2).join('.')) + ':' + h); } } };
+    for (const [name, fn] of Object.entries(opens)) { try { fn(); } catch (err) { ys[name] = 'err ' + err.message; continue; } const win = [...document.querySelectorAll('.kwin')].filter(vis)[0]; if (!win) { ys[name] = 'nowin'; continue; } const rc = win.getBoundingClientRect(); ys[name] = Math.round(rc.y); if (win.classList.contains('kfit')) kfit.push(name); for (const t of ['purple', 'pink', 'green']) if (win.classList.contains(t)) tones.push(name + ':' + t); const head = win.querySelector('.kwin-head'); if (head) { heads++; const hs = getComputedStyle(head); const ws = getComputedStyle(win); if (!frame) frame = { border: ws.borderTopWidth, tile: hs.backgroundImage.includes('linear-gradient'), inner: ws.boxShadow.includes('inset'), titleCenter: getComputedStyle(win.querySelector('.kwin-title')).textAlign }; } scan(win); win.querySelector('.kwin-close')?.click(); }
+    scan(document.getElementById('hud-top')); scan(document.getElementById('hud-bottom')); scan(document.getElementById('hud-ticker')); scan(document.getElementById('hud-right'));
+    const time = document.getElementById('hud-time'); const clock = time.querySelector('.kstrip-l2 .num'); const info = document.getElementById('hud-info'); w.hud.setInfoBadge(3); const badge = info.querySelector('.kbadge'); const badgeBg = getComputedStyle(badge).backgroundColor; const want = getComputedStyle(document.documentElement).getPropertyValue('--badge').trim(); const probe = document.createElement('span'); probe.style.color = want; document.body.append(probe); const wantRgb = getComputedStyle(probe).color; probe.remove(); w.hud.setInfoBadge(0);
+    return { ys, kfit, tones, badBtn: badBtn.slice(0, 8), badBtnN: badBtn.length, fonts: [...fonts].sort(), frame, heads, timeH: Math.round(time.getBoundingClientRect().height), timeLines: time.querySelectorAll('.kstrip-l1, .kstrip-l2').length, clockFs: clock ? getComputedStyle(clock).fontSize : null, badgeOk: badgeBg === wantRgb, badgeRadius: getComputedStyle(badge).borderRadius }; })()`)) as { ys: Record<string, number | string>; kfit: string[]; tones: string[]; badBtn: string[]; badBtnN: number; fonts: string[]; frame: { border: string; tile: boolean; inner: boolean; titleCenter: string } | null; heads: number; timeH: number; timeLines: number; clockFs: string | null; badgeOk: boolean; badgeRadius: string };
+  const yVals = Object.values(r.ys);
+  record('P59-a D67 창 자리 — 창 16 개 전부 y = 64 · kfit 0', yVals.length === 16 && yVals.every((y) => y === 64) && r.kfit.length === 0 ? 'pass' : 'fail', JSON.stringify({ ys: r.ys, kfit: r.kfit }));
+  record('P59-a D67 톤 2 — purple/pink/green 클래스 0 · 창 틀 파란 3px + 안쪽 흰 선 + 타일 머리 + 제목 가운데(D70)', r.tones.length === 0 && r.frame !== null && r.frame.border === '3px' && r.frame.tile && r.frame.inner && r.frame.titleCenter === 'center' && r.heads === 16 ? 'pass' : 'fail', JSON.stringify({ tones: r.tones, frame: r.frame, heads: r.heads }));
+  record('P59-a D66 버튼 높이 — .kbtn/.ktab/.kchip/.kwin-close 44 · .ksquare 48 · 카드·행 ≥ 44 (창 16 + HUD)', r.badBtnN === 0 ? 'pass' : 'fail', r.badBtn.join(' · ') || '0');
+  const allowed = new Set(['12px', '15px', '19px', '24px']);
+  record('P59-a D64 글자 크기 — 보이는 글자의 font-size 집합 ⊆ {12, 15, 19, 24}px (창 16 + HUD)', r.fonts.length > 0 && r.fonts.every((f) => allowed.has(f)) ? 'pass' : 'fail', r.fonts.join(','));
+  record('P59-a D70 HUD — 상단 띠 2줄(44px) · 시각 24px 픽셀 숫자 · 알림 배지가 캡슐(--badge 채움 · 999px)', r.timeH === 44 && r.timeLines === 2 && r.clockFs === '24px' && r.badgeOk && r.badgeRadius === '999px' ? 'pass' : 'fail', JSON.stringify({ timeH: r.timeH, lines: r.timeLines, clockFs: r.clockFs, badgeOk: r.badgeOk, badgeRadius: r.badgeRadius }));
+}
+
 async function verifyP58a(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
   const center = async (sel: string): Promise<{ x: number; y: number } | null> =>
     (await page.evaluate(`(() => { const e = document.querySelector(${JSON.stringify(sel)}); if (!e || e.hidden) return null; const r = e.getBoundingClientRect(); if (r.width < 1) return null; return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; })()`)) as { x: number; y: number } | null;
@@ -1678,8 +1701,8 @@ async function verifyP27(page: import('playwright').Page, cdp: CDPSession): Prom
 async function verifyP26(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
   await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
-  const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; g.rank = 2; g.openLand(2); const gt = g.gate; const sd = w.facilityDefs.get('shop'); const shop = g.placeFacility('shop', gt.i + 20, gt.j + 10, 0); const pop0 = g.parkPopularity(); const sc0 = g.sceneryOf(shop.uid); const a = g.placeFacility('sunflower', gt.i + 18, gt.j + 10, 0); const b = g.placeFacility('aloe', gt.i + 20 + sd.w + 1, gt.j + 10, 0); const sc = g.sceneryOf(shop.uid); const pop1 = g.parkPopularity(); w.facilityInfo.show(shop.uid); const row = [...document.querySelectorAll('#win-facility .krow')].map((x) => x.textContent).find((t) => t.startsWith('경관')) ?? ''; w.facilityInfo.win.hide(); return { ok: shop.ok && a.ok && b.ok, sc0, sc, pop0, pop1, row }; })()`)) as { ok: boolean; sc0: number; sc: number; pop0: number; pop1: number; row: string };
-  record('P26 경관 전염 — 매점 옆 장식 둘 → 경관 0 → 13 이상 · 인기 상승 · 정보 창 「경관 +n — 인기 +k · 판매가 +m%」', r.ok && r.sc0 === 0 && r.sc >= 13 && r.pop1 > r.pop0 && /^경관\+\d+ — 인기 \+\d+ · 판매가 \+\d+%/.test(r.row) ? 'pass' : 'fail', JSON.stringify(r));
+  const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; g.rank = 2; g.openLand(2); const gt = g.gate; const sd = w.facilityDefs.get('shop'); const shop = g.placeFacility('shop', gt.i + 20, gt.j + 10, 0); const pop0 = g.parkPopularity(); const sc0 = g.sceneryOf(shop.uid); const a = g.placeFacility('sunflower', gt.i + 18, gt.j + 10, 0); const b = g.placeFacility('aloe', gt.i + 20 + sd.w + 1, gt.j + 10, 0); const sc = g.sceneryOf(shop.uid); const pop1 = g.parkPopularity(); w.facilityInfo.show(shop.uid); const row = [...document.querySelectorAll('#win-facility .krow')].map((x) => x.textContent).find((t) => t.startsWith('경관')) ?? ''; const hint = document.querySelector('#win-facility .kfac-hint')?.textContent ?? ''; w.facilityInfo.win.hide(); return { ok: shop.ok && a.ok && b.ok, sc0, sc, pop0, pop1, row, hint }; })()`)) as { ok: boolean; sc0: number; sc: number; pop0: number; pop1: number; row: string; hint: string };
+  record('P26 경관 전염 — 매점 옆 장식 둘 → 경관 0 → 13 이상 · 인기 상승 · 정보 창 「경관 +n · 인기 +k」 + 힌트 줄 「판매가 +m%」(P59-a D68: 값은 짧게)', r.ok && r.sc0 === 0 && r.sc >= 13 && r.pop1 > r.pop0 && /^경관\+\d+ · 인기 \+\d+$/.test(r.row) && /판매가 \+\d+%/.test(r.hint) ? 'pass' : 'fail', JSON.stringify(r));
   void cdp;
 }
 
@@ -1768,7 +1791,7 @@ async function verifyP16(page: import('playwright').Page, cdp: CDPSession): Prom
   record('P16 길 탭 실터치 2칸 → 포장(2) · 40G', path.tabShown && path.a === 2 && path.b === 2 && path.money === 50000 - 40 ? 'pass' : 'fail', JSON.stringify(path));
   // 배치(플레이어 경로 = autoPath false)로 잔디 한가운데 놓으면 길이 안 닿는다 → 정보 창 「길」 행 · 자동 길 뒤 닿음 · 뷰 행
   const info = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; g.unlocked.facilities.add('pyeongsang_row'); const r = g.placeFacility('pyeongsang_row', gt.i - 7, gt.j + 14, 0, { autoPath: false }); /* P32: 거리·산책로에서 떨어진 잔디 */ if (!r.ok) return { err: r.reason }; w.facilityInfo.show(r.uid); const rows = () => [...document.querySelectorAll('#win-facility .krow')].map((x) => x.textContent); const before = rows().find((t) => t.startsWith('길')); const view = rows().find((t) => t.startsWith('뷰')); const paved = g.ensurePath(r.uid); w.facilityInfo.show(r.uid); const after = rows().find((t) => t.startsWith('길')); w.facilityInfo.win.hide(); return { before, after, view, paved }; })()`)) as { err?: string; before?: string; after?: string; view?: string; paved?: number };
-  record('P16 정보 창 — 마당은 어디든 걷는다(P40): 길 없이도 「입구에서 닿는다」 · 자동 길은 정면 보도만 · 「뷰」 행', !info.err && !!info.before && info.before.includes('닿는다') && !info.before.includes('안 닿는다') && !!info.after && info.after.includes('닿는다') && !!info.view ? 'pass' : 'fail', JSON.stringify(info));
+  record('P16 정보 창 — 마당은 어디든 걷는다(P40): 길 없이도 「길 닿음」(P59-a D68: 값은 짧게, 처방은 힌트 줄) · 자동 길은 정면 보도만 · 「뷰」 행', !info.err && !!info.before && info.before.includes('닿음') && !info.before.includes('안 닿음') && !!info.after && info.after.includes('닿음') && !info.after.includes('안 닿음') && !!info.view ? 'pass' : 'fail', JSON.stringify(info));
   const combo = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; g.unlocked.facilities.add('shop'); const a = g.placeFacility('shop', gt.i - 18, gt.j + 16, 0); const b = g.placeFacility('pyeongsang_row', gt.i - 18, gt.j + 19, 0); /* P48-b3: 서쪽 잔디 */ w.rankWin.show(); const row = [...document.querySelectorAll('#win-rank .krow')].map((x) => x.textContent).find((t) => t.startsWith('콤보')); w.rankWin.win.hide(); return { a: a.ok, b: b.ok, active: g.combos().map((c) => c.def.name), row }; })()`)) as { a: boolean; b: boolean; active: string[]; row?: string };
   record('P16 콤보 — 매점 + 평상 2칸 안 → 「매점 앞 평상」 발동 · 수집 「콤보 n / 40」(P40 킷의 「매표소 주차장」이 하나 더)', combo.a && combo.b && combo.active.includes('매점 앞 평상') && !!combo.row && /콤보\s*[12] \/ 40/.test(combo.row.replace(/\s+/g, ' ')) ? 'pass' : 'fail', JSON.stringify(combo));
 }
@@ -1984,7 +2007,7 @@ async function main(): Promise<void> {
   mkdirSync(SHOT_DIR, { recursive: true });
   console.log(`워터파크 검증 — ${URL} · ${GOAL}`);
   const browser = await chromium.launch({ channel: 'chrome', headless: !HEADED });
-  const ctx = await browser.newContext(DEVICE);
+  const ctx = await browser.newContext(DEVICE); // ⚠ reducedMotion: 'reduce' 를 넣지 말 것 — FX 등록부가 트윙클을 빼서 G27 이 빨개진다 (P59-a 실측). 창 열림은 opacity 만 움직여(P59-a) 기하가 첫 프레임부터 정확하다
   const page = await ctx.newPage();
   const errors: string[] = [];
   page.on('console', (m) => { if (m.type() === 'error' && !m.text().includes('Failed to load resource')) errors.push(m.text()); });
@@ -2024,7 +2047,7 @@ async function main(): Promise<void> {
   record('홈 상시 컨트롤 — 정체 9 · ≥44px · 자리에서 눌림', home.missing.length + home.small.length + home.stolen.length === 0 ? 'pass' : 'fail',
     `missing ${home.missing.join(',') || '-'} small ${home.small.join(',') || '-'} stolen ${home.stolen.join(',') || '-'}`);
   record('홈에 계약 밖 컨트롤 없음', home.extra.length === 0 ? 'pass' : 'fail', home.extra.join(',') || '-');
-  record('HUD 면적 ≤ 18%', home.hudPct <= 18 ? 'pass' : 'fail', `${home.hudPct}%`);
+  record('HUD 면적 ≤ 20% (P59-a D70 상단 띠 2줄 44px 로 18 → 20 — 원작 띠의 몫 +2.1%p · K47 세로 예산 24% 안)', home.hudPct <= 20 ? 'pass' : 'fail', `${home.hudPct}%`);
   await page.screenshot({ path: `${SHOT_DIR}/g0-home.png` });
 
   // 팬 — 진짜 터치
@@ -2146,6 +2169,7 @@ async function main(): Promise<void> {
   if (G >= 157.1) await verifyP57a(page);
   if (G >= 157.2) await verifyP57b(page);
   if (G >= 158.1) await verifyP58a(page, cdp);
+  if (G >= 159.1) await verifyP59a(page);
   if (G >= 31) await verifyG31(page);
   if (G >= 33) await verifyG33(page);
   if (G >= 34) await verifyG34(page);

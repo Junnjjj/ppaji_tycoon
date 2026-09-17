@@ -103,6 +103,7 @@ export class FacilityInfoWindow {
     nav.append(prev, el('span', 'krow-name', FEATURES.facilityLevels ? `${def.name} Lv${f.level}` : def.name), next);
     this.rows.append(nav);
     const ICON: Record<string, IconName> = { '인기': 'star', '정원': 'friends', '유지비': 'coin', '오늘 이용 · 수입': 'coin', '누적 이용 · 수입': 'coin', '이용료': 'coin', '메뉴': 'restaurant' };
+    const hints: string[] = []; // D68·W-11: 행 값은 숫자·상태 ≤ 10자, 설명·처방은 아래 힌트 줄 하나
     const row = (k: string, v: string): void => {
       const r = el('div', 'krow');
       const ic = ICON[k];
@@ -117,17 +118,17 @@ export class FacilityInfoWindow {
     row('인기', `${g.facilityPop(f)}${f.level > 1 ? ` (기본 ${def.pop})` : ''}`);
     if (def.capacity > 0) row('정원', `${g.facilityCapacity(f)}명`);
     row('유지비', `${def.maint + (f.staff ? PART_TIMER_WAGE : 0)}G / 일${f.staff ? ` (알바 ${PART_TIMER_WAGE} 포함)` : ''}`);
-    { const v = g.viewOf(f); if (['lounging', 'restaurant', 'attraction'].includes(def.class)) row('뷰', v > 0 ? `${v}/4 · 강이 보인다 (인기 +${g.viewBonusOf(f)})` : '0/4 · 강이 안 보인다 — 물가 쪽에 두면 인기가 오른다'); } // S4: 글리프 리터럴 대신 숫자
+    { const v = g.viewOf(f); if (['lounging', 'restaurant', 'attraction'].includes(def.class)) row('뷰', v > 0 ? `${v}/4 · +${g.viewBonusOf(f)}` : '0/4'); if (v === 0) hints.push('물가 쪽에 두면 강이 보여 인기가 오른다'); } // S4: 글리프 리터럴 대신 숫자
     { const cs = g.combosOf(uid); if (cs.length) row('콤보', cs.map((c) => c.def.name).join(' · ')); }
-    if (def.class !== 'decor') { const sc = g.sceneryOf(uid); row('경관', sc > 0 ? `+${sc} — 인기 +${Math.min(20, Math.floor(sc / 6))}${def.menuSlots > 0 ? ` · 판매가 +${Math.min(10, Math.floor(sc / 4))}%` : ''}` : '0 — 반경 2 에 꽃·나무·지면을 두면 오른다'); } // P26 D32
+    if (def.class !== 'decor') { const sc = g.sceneryOf(uid); row('경관', sc > 0 ? `+${sc} · 인기 +${Math.min(20, Math.floor(sc / 6))}` : '0'); if (sc === 0) hints.push('반경 2 에 꽃·나무·지면을 두면 경관이 오른다'); else if (def.menuSlots > 0) hints.push(`경관으로 판매가 +${Math.min(10, Math.floor(sc / 4))}%`); } // P26 D32
     if (def.class === 'rig' && def.onRing !== true) { // P50-b2 facility-info 3행 + 오버레이(같은 사슬 발자국)
       const lit = g.rigState.lit.has(uid), len = g.rigState.chainLen.get(uid) ?? 0, kinds = g.rigState.chainKinds.get(uid) ?? 0;
-      row('켜짐', lit ? '켜짐 — 링에 이어져 손님이 탄다' : '꺼짐 — 링(데크)이나 켜진 기구에 4이웃으로 닿아야 켜진다');
-      row('사슬', lit && def.chain ? `${def.chain} 계열 ${len}개 · 종 ${kinds} · 정원 ×${Math.min(2, Math.max(1, Math.sqrt(len / 2))).toFixed(2)}` : def.chain ? `${def.chain} 계열 — 켜지면 잇는다` : '계열 없음(정원 ×1)');
+      row('켜짐', lit ? '켜짐' : '꺼짐'); if (!lit) hints.push('링(데크)이나 켜진 기구에 4이웃으로 닿아야 켜진다');
+      row('사슬', lit && def.chain ? `${len}개 · 종 ${kinds}` : '—'); if (lit && def.chain) hints.push(`${def.chain} 계열 사슬 — 정원 ×${Math.min(2, Math.max(1, Math.sqrt(len / 2))).toFixed(2)}`); else if (def.chain) hints.push(`${def.chain} 계열 — 켜지면 잇는다`);
       { const pid = g.poolOfFacility(uid); row('소속 빠지', pid === null ? '—' : `${g.pools.byId(pid)?.name ?? `수역 #${pid}`} · 등급 ${g.ppajiGradeOf(pid)}`); }
       if (lit) { const tiles: { i: number; j: number }[] = []; for (const o of g.facilities.all) { const od = g.facilities.defOf(o); if (od.class === 'rig' && od.onRing !== true && g.rigState.lit.has(o.uid) && (od.chain ?? null) === (def.chain ?? null) && def.chain && (g.rigState.chainLen.get(o.uid) ?? 0) === len) tiles.push(...FacilityStore.footprint(od, o.i, o.j, o.facing)); } this.onSelect(tiles); }
-    } else row('길', g.facilityHasPath(uid) ? '입구에서 닿는다' : '길이 안 닿는다 — 수역 독 「길」 탭으로 잔디에 길을 이으세요'); // P16 · P50-a: 기구는 자동 길 면제
-    if (staffable(def)) row('알바', f.staff ? (def.class === 'restaurant' ? '있음 — 손님 만족·기운 +20%' : def.class === 'utility' ? '있음 — 청결 +10/일' : '있음 — 안전요원, 덜 지친다') : '없음');
+    } else { const has = g.facilityHasPath(uid); row('길', has ? '닿음' : '안 닿음'); if (!has) hints.push('수역 독 「길」 탭으로 잔디에 길을 이으세요'); } // P16 · P50-a: 기구는 자동 길 면제
+    if (staffable(def)) { row('알바', f.staff ? '있음' : '없음'); if (f.staff) hints.push(def.class === 'restaurant' ? '알바 — 손님 만족·기운 +20%' : def.class === 'utility' ? '알바 — 청결 +10/일' : '알바 — 안전요원, 손님이 덜 지친다'); }
     row('오늘 이용 · 수입', `${f.usesToday}명 · ${f.incomeToday.toLocaleString('ko-KR')}G`);
     row('누적 이용 · 수입', `${f.usesTotal.toLocaleString('ko-KR')}명 · ${f.incomeTotal.toLocaleString('ko-KR')}G`);
     if (def.class === 'rig' || def.onRing === true) { // P51 개조 — 아는 레시피마다 버튼 하나(미리보기 네 값 + 개조비) · 모르면 「기구 개조」 안내
@@ -187,6 +188,7 @@ export class FacilityInfoWindow {
       row('메뉴', eq.length ? `${eq.map((r) => r.name).join(' · ')} (+${this.game().menus.menuPopularity(uid, def.id)})` : '비어 있다');
       if (eq.length) { const pics = el('span', 'kmenu-pics'); for (const r of eq) { const a = el('span', 'kmenu-pic'); a.append(pictureEl(pictureId('recipe', r.id), 'cook')); a.dataset['menuPic'] = r.id; pics.append(a); } this.rows.lastElementChild?.querySelector('.krow-v')?.prepend(pics); this.rows.lastElementChild?.classList.add('kfac-menu-row'); } // P56-b3: 걸린 메뉴 그림은 같은 줄 안에 — 새 줄을 끼우면 아래 버튼(메뉴 편집·알바)이 화면 밖으로 밀려 실터치가 빗나간다(G6·P8 실측)
     }
+    if (hints.length) this.rows.append(el('div', 'krow-sub kfac-hint', hints.join(' · '))); // 처방·효과는 한 줄에 「 · 」로
     this.rows.append(el('div', 'krow-sub kfac-desc', def.desc));
     this.menuBtn.classList.toggle('khide', def.menuSlots === 0);
     { const derived = def.derived === true; this.courtBtn.classList.toggle('khide', !derived); this.removeBtn.classList.toggle('khide', derived); this.moveBtn.classList.toggle('khide', derived); this.upBtn.classList.toggle('khide', derived); this.staffBtn.classList.toggle('khide', derived); } // P58-a: 식탁은 영역이 놓은 것 — 개별 이동·철거·개선·알바 없음

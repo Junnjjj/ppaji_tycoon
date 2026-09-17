@@ -20,7 +20,7 @@ export class ShopWindow {
   private readonly sold = new Set<string>();
 
   constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: { toast(t: string, ok: boolean): void; onChanged(): void; name(kind: 'facility' | 'item' | 'gift', ref: string): string; sprite(facId: string): HTMLCanvasElement | null }) {
-    this.win = new WindowPanel(parent, 'win-shop', '장날', 'green');
+    this.win = new WindowPanel(parent, 'win-shop', '장날', 'blue');
     this.grid = new PictureGrid({ name: 'shop', onTap: (c) => this.tap(c) });
     this.win.body.append(this.head, this.grid.root);
   }

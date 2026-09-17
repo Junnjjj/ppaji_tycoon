@@ -1,5 +1,5 @@
 /**
- * HUD — PSS 세로 문법 그대로: 상단 남색 띠 두 조각(좌 시간·우 돈) · 우측 정사각 열 5 ·
+ * HUD — PSS 세로 문법 그대로: 상단 남색 띠 두 조각(좌 시간 **2줄**(D70: 1줄 연도·계절·날씨 / 2줄 요일 알약 + 큰 시각)·우 돈) · 우측 정사각 열 5 ·
  * 핑크 목표 티커 · 하단 바(SAVE · 정보 캡슐 · MENU). 헤더에는 버튼이 0개다(엄지 사각지대).
  *
  * 홈의 상시 컨트롤 정체: `#hud-save` · `#hud-info` · `#hud-menu` · `#hud-right .ksquare` ×5 ·
@@ -46,7 +46,7 @@ export class Hud {
   private weatherShown = '';
   private readonly temp = el('span', 'sub', '16°C');
   private readonly daypart = el('span', 'daypart', '평일 1/3');
-  private readonly clock = el('span', undefined, 'AM 08:00');
+  private readonly clock = el('span', 'num', 'AM 08:00');
   private readonly money = el('span', undefined, '0');
   private readonly tickerText = el('span', undefined, '');
   private readonly eventTag = el('div', 'kevent-tag');
@@ -89,7 +89,11 @@ export class Hud {
     top.id = 'hud-top';
     const left = el('div', 'kstrip');
     left.id = 'hud-time';
-    left.append(this.year, el('span', undefined, '년'), this.seasonIcon, this.season, this.weatherIcon, this.weather, this.temp, this.daypart, this.clock);
+    const l1 = el('div', 'kstrip-l1');
+    l1.append(this.year, el('span', undefined, '년'), this.seasonIcon, this.season, this.weatherIcon, this.weather, this.temp);
+    const l2 = el('div', 'kstrip-l2');
+    l2.append(this.daypart, this.clock);
+    left.append(l1, l2); // D70 원작: 연도·계절·날씨 작게 / 요일·시각 크게
     const right = el('div', 'kstrip');
     right.id = 'hud-money';
     right.append(iconEl('coin'), this.money, el('span', undefined, 'G'));

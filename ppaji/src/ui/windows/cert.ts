@@ -43,7 +43,7 @@ export class CertWindow {
   private family: CertFamily = 'grade';
 
   constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: { toast(t: string, ok: boolean): void; onChanged(): void; sprite(facId: string): HTMLCanvasElement | null }) {
-    this.win = new WindowPanel(parent, 'win-cert', '빠지 심사', 'purple');
+    this.win = new WindowPanel(parent, 'win-cert', '빠지 심사', 'blue');
     const fams = [...new Set([...this.game().certs.defs.values()].map((d) => d.family))];
     for (const f of fams) {
       const b = el('button', 'ktab', FAMILY_KO[f]);

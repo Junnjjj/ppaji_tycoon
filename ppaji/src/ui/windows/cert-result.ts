@@ -14,7 +14,7 @@ export class CertResultWindow {
   private readonly body = el('div', 'krows kcert-result');
 
   constructor(parent: HTMLElement, private readonly game: () => Game, onClosed: () => void = () => undefined) {
-    this.win = new WindowPanel(parent, 'win-cert-result', '빠지 심사 결과', 'purple', { modal: true });
+    this.win = new WindowPanel(parent, 'win-cert-result', '빠지 심사 결과', 'blue', { modal: true });
     this.win.onClose = () => onClosed();
     this.win.body.append(this.body);
   }
