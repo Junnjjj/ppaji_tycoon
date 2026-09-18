@@ -31,9 +31,18 @@ export const swimUrgeRig = (g: { hp: number }): number => (g.hp >= 50 ? 1.0 : 0.
 export function buildOf(g: { age: number }): GuestBuild {
   return g.age <= 12 ? 'kid' : g.age >= 58 ? 'old' : 'adult';
 }
-/** 활강로 한 칸을 지나는 tick (G26) · 서서 먹는 tick · 물 위에서 자리를 옮기는 주기 */
+/** 활강로 한 칸을 지나는 tick (G26) · 먹는 tick(앉을 때 참고값 — 실제 앉은 식사는 자리의 useTicks) · 물 위에서 자리를 옮기는 주기 */
 export const RIDE_TICKS_PER_TILE = 4;
 export const EAT_TICKS = 12;
+/** P60-e B2 — 서서 먹는 tick(앉으면 12 눈금 · 만족 +5, 서면 8 · +0). 반경 밖 좌석은 안 잡는다 */
+export const STAND_EAT_TICKS = 8;
+/**
+ * P60-e B2 — 산 곳에서 좌석을 찾는 반경(칸). `Game.SEAT_RADIUS`(3)와 같은 값이어야 한다 — sim 안에서 guest 가 game 을 import 할 수 없어 여기 둔다(p60e.test 가 둘을 대조).
+ * 거리 단위는 `fieldToFacility`(BFS 걷기 칸, 손님 칸 → 좌석 입구 칸)이고 상한은 `SEAT_REACH × 3` = 9: 반경 3 상자의 먼 모서리 = 맨해튼 6 + 좌석 입구 우회 ≤ 3.
+ * 킷 실측(P57-c 승인 배치): 실내 매점 입구 → 식탁 4~8 이라 킷 식탁은 잡고, 「먼 좌석(>6칸)」 = 걷기 12+ 는 잡지 않는다(왕복 감점)
+ */
+export const SEAT_REACH = 3;
+export const SEAT_REACH_STEPS = SEAT_REACH * 3;
 export const DRIFT_EVERY = 31;
 export type GuestTarget = { kind: 'pool'; id: number } | { kind: 'facility'; uid: number };
 export type GuestFacing = 0 | 1 | 2 | 3; // +I, +J, −I, −J
@@ -201,6 +210,8 @@ export interface GuestHooks {
   teamSeatUid?: (g: Guest) => number | null;
   /** P17 팀 손님이 앉을 자리를 못 찾아 서성인다 */
   onSeatless?: (g: Guest) => void;
+  /** P60-e B2 — 산 것을 들고 나와 자리를 정한 순간(그날 식사 수 `eats`) · `standing` 이면 산 곳 걷기 9 안에 빈 좌석이 없어 서서 먹는다(`standEats`). 사서 곧장 나가는 손님(복도 점포 퇴장·폐장)은 안 센다 */
+  onEat?: (g: Guest, from: PlacedFacility, standing: boolean) => void;
   /** 풀 수온 — Game 이 파생 상태에서 준다 */
   poolTemp?: (poolId: number) => number;
   /** 계절 이상 수온에 얼마나 가까운가 0..1 (G42) — 체류 = swimTicks × (0.85 + 0.3·fit): 이상이면 +15%, 멀면 −15% (총량 중립) */
@@ -552,7 +563,7 @@ export class GuestStore {
             if (back) { g.fromI = g.i; g.fromJ = g.j; g.i = back.i; g.j = back.j; g.progress = 0; }
             if (wasCarrying) { g.carry = false; g.sat = Math.min(100, g.sat + 5); setEmote(g, 'note'); }
           }
-          this.afterUse(g, hooks);
+          this.afterUse(g, hooks, wasCarrying ? undefined : f); // P60-e: 산 곳(매점)을 넘긴다 — 좌석은 그 반경 안에서만
           break;
         }
         case 'climb': {
@@ -631,9 +642,14 @@ export class GuestStore {
           break;
         }
         case 'eat': {
-          if (g.stateTicks < EAT_TICKS) break;
+          if (g.stateTicks < STAND_EAT_TICKS) break; // P60-e: `eat` 상태는 서서 먹기뿐(앉은 식사는 자리 `use`)
           g.carry = false;
-          if (g.hp < this.b.guestHpLeave) this.leaveOrRetreat(g, hooks); else g.state = 'wander';
+          if (g.hp < this.b.guestHpLeave) this.leaveOrRetreat(g, hooks);
+          else {
+            g.state = 'wander';
+            // P60-e B2 × P27: 자리 없는 팀 손님은 다 먹고 나서(빈손으로) 자리를 잡으러 간다 — 옛 「들고 판 끝까지」가 팀 착석의 주 경로였다(실측 teamSeatShare 0.93 → 0.58). 먹는 자리는 반경 안, 자리 잡기 걸음은 P27 그대로
+            if (g.teamId !== null && g.seatUid === null && (hooks?.teamSeatUid?.(g) ?? null) === null) { const seat = this.nearestLounge(g); if (seat) { g.target = { kind: 'facility', uid: seat.uid }; g.state = 'walk'; } }
+          }
           g.stateTicks = 0;
           break;
         }
@@ -750,25 +766,33 @@ export class GuestStore {
     }
   }
 
-  /** 이용 뒤 다음 상태 — 들고 있는 게 있으면 앉을 곳을 찾고(R3), 없으면 서서 먹는다 */
-  private afterUse(g: Guest, hooks?: GuestHooks): void {
+  /** 이용 뒤 다음 상태 — 들고 있는 게 있으면 산 곳 반경 안의 앉을 곳을 찾고(R3 · P60-e B2), 없으면 서서 먹는다 */
+  private afterUse(g: Guest, hooks?: GuestHooks, from?: PlacedFacility): void {
     g.target = null;
     g.stateTicks = 0;
     if (g.leaving) { g.state = 'leave'; return; } // P45-b: 복도 점포에 들른 뒤엔 곧장 나간다
     if (hooks?.closing?.() && g.stays && g.seatUid !== null && this.facilities.byUid(g.seatUid)) { if (!g.nightDone && this.tryNight(g, hooks)) return; g.target = { kind: 'facility', uid: g.seatUid }; g.state = 'walk'; return; } // P18 · P45-c
     if (g.hp < this.b.guestHpLeave || hooks?.closing?.()) { this.leaveOrRetreat(g, hooks); return; }
     if (g.carry) {
-      const seat = this.nearestLounge(g);
+      // P60-e B2: 좌석은 산 곳에서 걷기 SEAT_REACH_STEPS 안에서만 — `nearestLounge` 는 판 끝까지 찾아가 왕복 감점을 먹였다. 산 곳을 모르면(복원 경로) 옛 규칙
+      const seat = from ? this.nearestLoungeWithin(g, SEAT_REACH_STEPS) : this.nearestLounge(g);
+      if (from) hooks?.onEat?.(g, from, seat === null);
       if (seat) { g.target = { kind: 'facility', uid: seat.uid }; g.state = 'walk'; return; }
       g.state = 'eat';
-      setEmote(g, 'note', EAT_TICKS);
+      setEmote(g, 'note', STAND_EAT_TICKS);
       return;
     }
     g.state = 'wander';
   }
 
   /** 자리가 빈 가장 가까운 라운지 (도달 가능한 것만). 없으면 null */
-  private nearestLounge(g: Guest): PlacedFacility | null {
+  private nearestLounge(g: Guest): PlacedFacility | null { return this.nearestLoungeWithin(g, 0xffff); }
+
+  /**
+   * P60-e B2 — 손님 칸에서 걷기 거리 ≤ maxD 인 빈 라운지 중 가장 가까운 것(파생 식탁 포함 — 「먹는 자리」이지 팀 자리가 아니다).
+   * `nearestLounge`(팀 자리 서성임 판정)는 상한 없음. 검사용 공개 표면 `seatWithinForTest`
+   */
+  private nearestLoungeWithin(g: Guest, maxD: number): PlacedFacility | null {
     let best: PlacedFacility | null = null;
     let bestD = 0xffff;
     for (const f of this.facilities.all) {
@@ -777,10 +801,14 @@ export class GuestStore {
       if (def.usageFee > 0 && f.rentedBy !== null && f.rentedBy !== rentKey(g)) continue;
       if (this.busyAt(f) >= capacityOf(def, f) && this.queueAt(f) >= QUEUE_MAX) continue;
       const d = this.fieldToFacility(f).at(g.i, g.j);
+      if (d > maxD) continue;
       if (d < bestD) { bestD = d; best = f; }
     }
     return best;
   }
+  /** 검사용 — 이 손님이 지금 칸에서 산 뒤 잡을 좌석 (null 이면 서서 먹는다) · 좌석까지 걷기 거리 */
+  seatWithinForTest(g: Guest): PlacedFacility | null { return this.nearestLoungeWithin(g, SEAT_REACH_STEPS); }
+  seatDistForTest(g: Guest, f: PlacedFacility): number { return this.fieldToFacility(f).at(g.i, g.j); }
 
   /** 검사용·렌더용 — 손님이 서 있는 시설 (use·climb·ride 중) */
   usingFacility(g: Guest): PlacedFacility | null {

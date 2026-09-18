@@ -1294,6 +1294,58 @@ async function verifyP60d(page: import('playwright').Page): Promise<void> {
   record('P60-d 조준 중 — 확정 바 경로/완성 칩 ≤ 1칸 · pathNext > 0 · FX path-walk ≥ 1(칸 바뀌면 다시) · entry-mark ≥ 1 · exit 에서 둘 다 진다', r4['ok'] === true && Number(r4['pathNext']) > 0 && Number(r4['pathChips']) <= 1 && Number(r4['walkFired']) >= 1 && Number(r4['walkFired2']) >= 2 && Number(r4['markFired']) >= 1 && r4['walkAlive'] === true && r4['markAlive'] === true && r4['walkAfter'] === false && r4['markAfter'] === false ? 'pass' : 'fail', JSON.stringify(r4));
 }
 
+/** P60-e (2026-09-18, docs/plan-ppaji-rig-foodcourt.md §10.5 · §4.1 B2·B4·B5) — 좌석 vs 서서 + 구색: 킷 식탁 정보창 4행 · 좌석 0 이면 서서 · 4 카테고리 → 구색 4 · 자리 등급 +2 · 발견 1 · 결산 「서서」 행 + 힌트 실터치 */
+async function verifyP60e(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
+  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
+  await page.waitForTimeout(300);
+  // 행 1 — 킷: 영역 1 · 좌석 4 · 파생 식탁 정보창이 「좌석·오늘 식사·서서·메뉴」 4행(캡슐 값 ≤ 10자)이고 시설 고유 행(인기·유지비)은 없다
+  const r1 = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.flow.frozen = true; const out = {}; out.courts = g.foodcourts.all.length; out.seats = g.foodcourts.totalSeats();
+    const seat = g.facilities.all.find((f) => f.defId === 'foodcourt_seat'); if (!seat) return { ...out, noSeat: true };
+    w.facilityInfo.show(seat.uid); const rows = [...document.querySelectorAll('#win-facility .krow')].map((r) => ({ k: (r.querySelector('.krow-k') || {}).textContent || '', v: ((r.querySelector('.krow-v') || {}).textContent || '').trim() }));
+    out.keys = rows.map((r) => r.k.trim()); const want = ['좌석', '오늘 식사', '서서', '메뉴']; out.vals = want.map((k) => (rows.find((r) => r.k.trim() === k) || { v: null }).v); out.longV = rows.map((r) => r.v).filter((v) => v.length > 10);
+    out.hint = ((document.querySelector('#win-facility .kfac-hint') || {}).textContent || '').slice(0, 60); out.courtBtn = !document.getElementById('win-facility-court-remove').classList.contains('khide');
+    document.querySelector('#win-facility .kwin-close').click(); return out; })()`)) as Record<string, unknown>;
+  const keys1 = (r1['keys'] as string[] | undefined) ?? [];
+  const vals1 = (r1['vals'] as (string | null)[] | undefined) ?? [];
+  record('P60-e 킷 — 영역 1 · 좌석 4 · 파생 식탁 정보창 4행(좌석 「4석」 · 오늘 식사 · 서서 「n%」 · 메뉴 「k/4」, 값 ≤ 10자) · 인기·유지비 행 0 · 「푸드코트 지우기」 보임', Number(r1['courts']) === 1 && Number(r1['seats']) === 4 && ['좌석', '오늘 식사', '서서', '메뉴'].every((k) => keys1.includes(k)) && vals1[0] === '4석' && /^\d+명$/.test(String(vals1[1])) && /^\d+%$/.test(String(vals1[2])) && /^[0-4]\/4$/.test(String(vals1[3])) && (r1['longV'] as string[]).length === 0 && !keys1.includes('인기') && !keys1.includes('유지비') && r1['courtBtn'] === true ? 'pass' : 'fail', JSON.stringify(r1));
+  // 행 2 — 좌석 0 인 판(removeFoodCourt): 손님 하나를 킷 실내 매점으로 걸려 보내면(선례: g.target/g.state 직접 대입) 사서 든 채 반경 3 안 좌석이 없어 서서 먹는다 → stats.standEats ≥ 1
+  const r2 = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const out = {}; for (const c of [...g.foodcourts.all]) out.removed = g.removeFoodCourt(c.id).ok; out.seats = g.foodcourts.totalSeats();
+    const shop = g.facilities.all.find((f) => f.defId === 'indoor_shop') || g.facilities.all.find((f) => g.facilities.defOf(f).menuSlots > 0); if (!shop) return { ...out, noShop: true };
+    if (g.menus.equipped(shop.uid).length === 0) { const rid = [...g.cooking.known][0]; out.menuSet = g.setMenu(shop.uid, 0, rid).ok; } out.menu = g.menus.equipped(shop.uid).length;
+    const s0 = g.stats.standEats || 0; const e0 = g.stats.eats || 0; const gu = g.guests.spawn(); gu.target = { kind: 'facility', uid: shop.uid }; gu.state = 'walk'; gu.stateTicks = 0; const uid = gu.uid;
+    let seenEat = false; for (let k = 0; k < 40; k++) { w.skip(10); const x = g.guests.all.find((q) => q.uid === uid); if (x && x.state === 'eat') seenEat = true; if ((g.stats.standEats || 0) > s0) break; }
+    out.stand = (g.stats.standEats || 0) - s0; out.eats = (g.stats.eats || 0) - e0; out.shopUses = shop.usesToday; out.seenEat = seenEat; const x = g.guests.all.find((q) => q.uid === uid); out.state = x ? x.state : 'gone'; return out; })()`)) as Record<string, unknown>;
+  record('P60-e 좌석 0(removeFoodCourt) — 손님 하나를 매점으로 보내면 사서 서서 먹는다: stats.standEats ≥ 1 · 매점 이용 ≥ 1', r2['removed'] === true && Number(r2['seats']) === 0 && Number(r2['stand']) >= 1 && Number(r2['shopUses']) >= 1 ? 'pass' : 'fail', JSON.stringify(r2));
+  // 행 3 — 새 판: 킷 영역 반경 3 안에 점포 하나를 놓고(indoor_shop → vending_out 순으로 첫 자리) 4 카테고리(drink·snack·meal·dessert) 레시피를 하나씩 건다(모르는 것은 cooking.known 에 넣고 setMenu) → courtMenuKindsOf 4 · courtMenuKindsMax 4 · 식탁 자리 등급 +2(점포 전 → 4종 후, seatGradeOf 정본 + seatGradeAt 직접) · foodKinds 4 · 「풀코스」 발견 편지 1(인박스 목록 또는 축하 큐)
+  const r3 = (await page.evaluate(`(() => { const w = window.__pj; w.newGame(777); const g = w.game; w.flow.frozen = true; g.money = 1e6; const out = {}; const court = g.foodcourts.all[0]; if (!court) return { noCourt: true };
+    const seat = g.facilities.all.find((f) => f.defId === 'foodcourt_seat'); const sd = g.facilities.defOf(seat); const grade = () => ({ of: g.seatGradeOf(seat.uid).grade, at: g.seatGradeAt(sd, seat.i, seat.j, seat.facing, seat.uid).grade });
+    out.kinds0 = g.courtMenuKindsOf(court.id); out.g0 = grade();
+    let placed = null; for (const id of ['indoor_shop', 'vending_out']) { for (let j = court.j0 - 3; j <= court.j0 + court.h + 2 && !placed; j++) for (let i = court.i0 - 3; i <= court.i0 + court.w + 2 && !placed; i++) { if (g.foodcourts.ownerAt(i, j) !== null) continue; const r = g.placeFacility(id, i, j, 0); if (r.ok) placed = { id, i, j, uid: r.uid }; } if (placed) break; }
+    if (!placed) return { ...out, noPlace: true }; out.placed = placed; out.kinds1 = g.courtMenuKindsOf(court.id); out.g1 = grade();
+    const byCat = {}; for (const r of g.menus.recipes.values()) if (!byCat[r.cat] || (r.unlock === 'start' && g.menus.recipes.get(byCat[r.cat]).unlock !== 'start')) byCat[r.cat] = r.id; out.cats = Object.keys(byCat).sort();
+    out.set = Object.values(byCat).map((rid, k) => { g.cooking.known.add(rid); const r = g.setMenu(placed.uid, k, rid); return r.ok ? 1 : r.reason; });
+    out.kinds4 = g.courtMenuKindsOf(court.id); out.max = g.courtMenuKindsMax(); out.g4 = grade(); out.foodKinds = g.seatGradeAt(sd, seat.i, seat.j, seat.facing, seat.uid).foodKinds; out.total = g.courtSeatsTotal();
+    w.skip(1); const hit = (e) => /풀코스/.test(e.title || ''); out.inbox = g.inbox.all.filter(hit).length; out.modal = w.modalQueue.filter(hit).length; out.celeUp = !!document.getElementById('win-celebrate') && !document.getElementById('win-celebrate').hidden;
+    w.facilityInfo.show(seat.uid); out.rowKinds = ((document.querySelector('#win-facility [data-court-kinds] .krow-v') || {}).textContent || '').trim(); out.hint = ((document.querySelector('#win-facility .kfac-hint') || {}).textContent || '').slice(0, 40); document.querySelector('#win-facility .kwin-close').click();
+    return out; })()`)) as Record<string, unknown>;
+  const g0 = (r3['g0'] as { of: number; at: number } | undefined) ?? { of: -9, at: -9 }, g4 = (r3['g4'] as { of: number; at: number } | undefined) ?? { of: -9, at: -9 };
+  record('P60-e 구색 — 영역 반경 3 점포에 4 카테고리 → courtMenuKindsOf 4 · courtMenuKindsMax 4 · foodKinds 4 · 식탁 자리 등급 +2(seatGradeOf 정본 · seatGradeAt) · 정보창 「4/4」 · 「풀코스 푸드코트」 발견 1(인박스/축하)', (r3['set'] as unknown[] | undefined)?.every((x) => x === 1) === true && (r3['cats'] as string[] | undefined)?.length === 4 && Number(r3['kinds4']) === 4 && Number(r3['max']) === 4 && Number(r3['foodKinds']) === 4 && g4.of - g0.of === 2 && g4.at - g0.at === 2 && r3['rowKinds'] === '4/4' && Number(r3['inbox']) + Number(r3['modal']) >= 1 && Number(r3['total']) === 4 ? 'pass' : 'fail', JSON.stringify(r3));
+  // 행 4 — 결산: showDay(standEats 3 · eats 10) → 「서서 먹은 손님」 행 값 「30%」 + 힌트 「식탁 4석 더」 를 **실터치**(pointerdown 이 힌트 요소에 닿는다 — P3-C④: 좌표만 재면 납작한 줄을 못 잡는다) · eats 0 이면 행 0 · 20% 면 행은 있고 힌트 0
+  const r4 = (await page.evaluate(`(() => { const w = window.__pj; const out = {}; for (const b of document.querySelectorAll('.kwin-close')) b.click();
+    const base = { day: 1, visitors: 12, target: 12, tickets: 1000, fees: 0, food: 300, maintenance: 100, net: 1200, satisfaction: 50, likes: 2, popularity: 100, rankPos: 0 };
+    const q = () => ({ row: document.querySelector('#win-results .krow[data-stand]'), hint: document.querySelector('#win-results [data-hint="stand"]') });
+    w.results.showDay('하네스 0', { ...base, eats: 0, standEats: 0 }); { const s = q(); out.zeroRow = !!s.row; out.zeroHint = !!s.hint; } document.getElementById('win-results-ok').click();
+    w.results.showDay('하네스 20', { ...base, eats: 10, standEats: 2 }); { const s = q(); out.lowRow = s.row ? s.row.querySelector('.krow-v').textContent : null; out.lowHint = !!s.hint; } document.getElementById('win-results-ok').click();
+    w.results.showDay('하네스 30', { ...base, eats: 10, standEats: 3 }); const s = q(); out.val = s.row ? s.row.querySelector('.krow-v').textContent : null; out.valLen = out.val ? out.val.length : -1; out.hintText = s.hint ? s.hint.textContent : null;
+    window.__p60eHit = null; document.addEventListener('pointerdown', (e) => { window.__p60eHit = e.target && e.target.closest ? (e.target.closest('[data-hint="stand"]') ? 'hint' : (e.target.id || e.target.className || e.target.tagName)) : 'none'; }, { once: true, capture: true });
+    if (!s.hint) return { ...out, at: null }; const r = s.hint.getBoundingClientRect(); out.hintH = Math.round(r.height); return { ...out, at: { x: r.x + r.width / 2, y: r.y + r.height / 2 } }; })()`)) as Record<string, unknown>;
+  const at = r4['at'] as { x: number; y: number } | null;
+  if (at) { await touch(cdp, at.x, at.y); await page.waitForTimeout(150); }
+  const hit = (await page.evaluate(`(() => { const h = window.__p60eHit; const up = !document.getElementById('win-results').hidden; document.getElementById('win-results-ok').click(); return { hit: h, up }; })()`)) as { hit: string | null; up: boolean };
+  record('P60-e 결산 — eats 0 이면 「서서」 행 0 · 20% 면 행 「20%」 + 힌트 0 · 30% 면 행 「30%」(≤ 10자) + 힌트 「식탁 4석 더 — 수역 독 「식탁」」 · 힌트 실터치가 힌트 요소에 닿는다(높이 ≥ 12)', r4['zeroRow'] === false && r4['zeroHint'] === false && r4['lowRow'] === '20%' && r4['lowHint'] === false && r4['val'] === '30%' && /식탁 4석 더/.test(String(r4['hintText'])) && Number(r4['hintH']) >= 12 && hit.hit === 'hint' && hit.up === true ? 'pass' : 'fail', JSON.stringify({ ...r4, ...hit }));
+}
+
 /** P58-a — 푸드코트: 킷 식탁 2 · 틴트 칸 12 · 독 「식탁」 모드 실터치로 6×4 그리면 좌석 8 · 식탁 정보 창은 「푸드코트 지우기」만(이동·철거·개선·알바 숨김) · 지우면 좌석 0 · 하루 뒤 식탁에서 먹은 손님 > 0 */
 /** P59-a (2026-09-18, docs/plan-ppaji-ui-polish.md D64~D67·D70) — 규격: 창 자리 64 고정·kfit 0 · 버튼 높이 집합 · 글자 크기 4단 · HUD 2줄 · 배지 캡슐 · 창 틀(파란 3px + 타일 머리) · 톤 2 */
 async function verifyP59a(page: import('playwright').Page): Promise<void> {
@@ -1758,8 +1810,8 @@ async function verifyP45(page: import('playwright').Page, cdp: CDPSession): Prom
   // P45-c D63 밤 분기 — 실내 객실·찜질방을 두고 하루를 돌리면 팀이 묵고 밤 이용이 난다 · 거치대에서 빌리면 기구 패키지
   await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
-  const n = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; g.money = 200000; g.rank = 2; g.openLand(2); for (const id of ['room_ondol', 'jjimjilbang', 'gear_rack']) g.unlocked.facilities.add(id); const r1 = g.placeFacility('room_ondol', gt.i - 8, gt.j + 3, 0).ok; const r2 = g.placeFacility('room_ondol', gt.i - 8, gt.j + 6, 0).ok; const jj = g.placeFacility('jjimjilbang', gt.i + 6, gt.j + 8, 0).ok /* P48-b1: 20×13 안, 킷 화장실 오른쪽 · P57-a: 4×4 가 되며 (5,9) 는 이 시드에서 밤 이용 0(3×3 도 시드 1 에서 0 — 잡음) → (6,8) */; const gr = g.placeFacility('gear_rack', gt.i + 1, gt.j + 6, 0).ok; w.skip(1700); return { r1, r2, jj, gr, night: g.nightForTest().length, overnight: g.stats.overnight ?? 0, nightUses: g.stats.nightUses ?? 0, gear: g.stats.gearRentals ?? 0, story: g.story.toSnapshot().filter((x) => x.includes('hall')) }; })()`)) as { r1: boolean; r2: boolean; jj: boolean; gr: boolean; night: number; overnight: number; nightUses: number; gear: number; story: string[] };
-  record('P45-c 밤 분기 — 실내 객실 2·찜질방·거치대 배치 · 하루 뒤 1박 > 0 · 밤 이용 > 0 · 기구 대여 > 0', n.r1 && n.r2 && n.jj && n.gr && n.night === 1 && n.overnight > 0 && n.nightUses > 0 && n.gear > 0 ? 'pass' : 'fail', JSON.stringify(n));
+  const n = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; g.money = 200000; g.rank = 2; g.openLand(2); for (const id of ['room_ondol', 'jjimjilbang', 'gear_rack']) g.unlocked.facilities.add(id); const r1 = g.placeFacility('room_ondol', gt.i - 8, gt.j + 3, 0).ok; const r2 = g.placeFacility('room_ondol', gt.i - 8, gt.j + 6, 0).ok; const jj = g.placeFacility('jjimjilbang', gt.i + 6, gt.j + 8, 0).ok /* P48-b1: 20×13 안, 킷 화장실 오른쪽 · P57-a: 4×4 가 되며 (5,9) 는 이 시드에서 밤 이용 0(3×3 도 시드 1 에서 0 — 잡음) → (6,8) */; const gr = g.placeFacility('gear_rack', gt.i + 1, gt.j + 6, 0).ok; w.skip(1700); return { r1, r2, jj, gr, night: g.nightForTest().length, nightSeats: g.nightForTest().filter((u) => g.facilities.byUid(u).defId === 'foodcourt_seat').length, overnight: g.stats.overnight ?? 0, nightUses: g.stats.nightUses ?? 0, gear: g.stats.gearRentals ?? 0, story: g.story.toSnapshot().filter((x) => x.includes('hall')) }; })()`)) as { r1: boolean; r2: boolean; jj: boolean; gr: boolean; night: number; nightSeats: number; overnight: number; nightUses: number; gear: number; story: string[] };
+  record('P45-c 밤 분기 — 실내 객실 2·찜질방·거치대 배치 · 밤 집합 = 찜질방 1 + 킷 파생 식탁 2(P60-e B5) · 하루 뒤 1박 > 0 · 밤 이용 > 0 · 기구 대여 > 0', n.r1 && n.r2 && n.jj && n.gr && n.night - n.nightSeats === 1 && n.nightSeats === 2 && n.overnight > 0 && n.nightUses > 0 && n.gear > 0 ? 'pass' : 'fail', JSON.stringify(n));
   // P46 D58 — 간격 규칙 실터치: 야외 화장실 옆에 매점을 조준하면 거절 이유 「한 칸 띄우세요」
   const sp = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; g.money = 100000; g.unlocked.facilities.add('shop'); const t = g.placeFacility('toilet', gt.i - 18, gt.j + 8, 0) /* P48-b3 → P57-c: 북서 잔디 줄 16 (줄 24 는 킷 바위와 겹친다) */; const bad = g.canPlace('shop', gt.i - 16, gt.j + 8, 0); const ok = g.canPlace('shop', gt.i - 15, gt.j + 8, 0); return { t: t.ok, badWhy: bad.ok ? '' : bad.reason, ok: ok.ok }; })()`)) as { t: boolean; badWhy: string; ok: boolean };
   record('P46 간격 규칙 — 야외 화장실 옆 매점은 「한 칸 띄우세요」 · 한 칸 띄우면 허용', sp.t && /한 칸/.test(sp.badWhy) && sp.ok ? 'pass' : 'fail', JSON.stringify(sp));
@@ -2259,6 +2311,7 @@ async function main(): Promise<void> {
   if (G >= 160.1) await verifyP60a(page);
   if (G >= 160.3) await verifyP60c(page);
   if (G >= 160.4) await verifyP60d(page);
+  if (G >= 160.5) await verifyP60e(page, cdp);
   if (G >= 31) await verifyG31(page);
   if (G >= 33) await verifyG33(page);
   if (G >= 34) await verifyG34(page);

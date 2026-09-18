@@ -33,6 +33,8 @@ export interface BotOptions {
   noSet?: boolean;
   /** P60-d — `--no-path` 대조군: `attachRigs` 의 「입수구 거리 오름차순 · 휴식 계열 마지막」 정렬을 끈다(세트 우선은 그대로) */
   noPath?: boolean;
+  /** P60-e — `--no-court` 대조군: `growFoodCourt`(서서 > 0.3 이면 식탁 +1 블록) · 「반경 안 카테고리 다양성」 한 줄을 끈다 */
+  noCourt?: boolean;
   /** 예비비 — 이 아래로는 안 쓴다 */
   reserve: number;
   /** 하루에 파는 최대 칸 */
@@ -76,6 +78,8 @@ export class Bot {
     return best;
   }
   private readonly rng: Rng;
+  /** P60-e — 마지막으로 푸드코트를 넓힌 날(주 1회 = 4일 상한) */
+  private courtGrowDay = -99;
   constructor(
     private readonly game: Game,
     private opts: BotOptions = BOT_DEFAULTS,
@@ -104,6 +108,7 @@ export class Bot {
     this.ensureLodging(g, spendable); // P18: 랭크 2 부터 숙박 시설을 하나, 32일마다 하나 더
     this.ensureGarden(g, spendable); // P22: 평상 옆에 꽃밭 두 칸 — 조경 자리 값
     this.ensureHallShops(g, spendable); // P45-b D63: 복도 곁 점포 — 랭크마다 하나씩(최대 4)
+    if (!this.opts.noCourt) this.growFoodCourt(g, spendable); // P60-e B2: 어제 서서 먹은 몫 > 0.3 이면 식탁 3×2 블록 하나(주 1회)
     this.ensureUpgrades(g, spendable); // 후반 소비처 진단용 — `features.facilityLevels` 가 켜져 있을 때만 (기본 OFF, G22)
     // P15 D22 — 수영 구역은 데크로 둘러싸서 만든다(플레이어와 같은 규칙). 목표 칸 수까지 물가에 데크 링을 하나씩
     // 큰 수역 하나(인증 「수역 50·80칸」)가 먼저 — 가장 큰 링을 두 열 넓히고, 안 되면 새 링
@@ -183,6 +188,7 @@ export class Bot {
     }
     // 메뉴 — 식당마다 빈 칸 하나씩 (P23: 점수는 Game.autoEquipMenus 가 갖는다 — 봇과 플레이어가 같은 규칙)
     for (const f of g.facilities.all) if (g.facilities.defOf(f).menuSlots > 0) g.autoEquipMenus(f.uid, 1);
+    if (!this.opts.noCourt) this.diversifyCourtMenus(g); // P60-e B4: 영역 반경 안 점포가 같은 카테고리만 걸었으면 빠진 카테고리 하나를 건다(하루 하나)
     // 요리 — 2년차부터 하루 한 번, 가진 재료로 아직 안 해 본 조합 (도감의 미발견 키를 그대로 노리지 않고 재료 2~4개 무작위)
     if (g.cookingOpen && spendable() > 2000) {
       const owned = [...g.cooking.owned].filter((id) => g.cooking.has(id)).sort(); // P56-c: 재고가 있는 것만(시작 재료는 무한)
@@ -508,6 +514,39 @@ export class Bot {
       if (spendable() < d.cost + 3000) return;
       const sp = this.hallSpot(d.id); if (!sp) continue;
       if (g.placeFacility(d.id, sp.i, sp.j, 0).ok) return;
+    }
+  }
+  /**
+   * P60-e B2 — 어제 결산(`stats.days` 끝)의 서서 먹은 몫 > 0.3 이면 푸드코트를 3×2 블록 하나만큼 넓힌다(기존 영역을 통째로 덮는 확장 → 안 되면 새 3×2). 주 1회(4일) · 60G/칸.
+   * 새 영역은 점포(menuSlots>0)가 반경 3 안에 있는 실내 바닥부터 — 반경 밖 식탁은 손님이 안 잡는다(`SEAT_REACH`)
+   */
+  private growFoodCourt(g: Game, spendable: () => number): void {
+    const y = g.stats.days[g.stats.days.length - 1]; if (!y || !(y.eats ?? 0)) return;
+    if ((y.standEats ?? 0) / (y.eats ?? 1) <= 0.3) return;
+    if (g.day - this.courtGrowDay < 4) return;
+    const tryRect = (r: { i0: number; j0: number; w: number; h: number }): boolean => { const c = g.canMakeFoodCourt(r); if (!c.ok || (c.cost ?? 0) > spendable()) return false; if (!g.makeFoodCourt(r).ok) return false; this.courtGrowDay = g.day; return true; };
+    for (const c of [...g.foodcourts.all]) {
+      for (const r of [{ i0: c.i0, j0: c.j0, w: c.w + 3, h: c.h }, { i0: c.i0 - 3, j0: c.j0, w: c.w + 3, h: c.h }, { i0: c.i0, j0: c.j0, w: c.w, h: c.h + 2 }, { i0: c.i0, j0: c.j0 - 2, w: c.w, h: c.h + 2 }]) if (tryRect(r)) return;
+    }
+    // 새 영역 — 점포 반경 3 안 실내 바닥 3×2 부터(점포 수 내림차순), 없으면 아무 실내 바닥
+    const shops = g.facilities.all.filter((f) => g.facilities.defOf(f).menuSlots > 0);
+    const cands: { i: number; j: number; n: number }[] = [];
+    for (let j = 0; j < g.grid.h - 1; j++) for (let i = 0; i < g.grid.w - 2; i++) {
+      if (g.grid.at(i, j) !== FLOOR.indoor || !g.canMakeFoodCourt({ i0: i, j0: j, w: 3, h: 2 }).ok) continue;
+      cands.push({ i, j, n: shops.filter((f) => Math.max(Math.abs(f.i - (i + 1)), Math.abs(f.j - j)) <= Game.SEAT_RADIUS + 1).length });
+    }
+    cands.sort((a, b) => b.n - a.n || a.j - b.j || a.i - b.i);
+    for (const c of cands.slice(0, 4)) if (tryRect({ i0: c.i, j0: c.j, w: 3, h: 2 })) return;
+  }
+  /** P60-e B4 — 영역 반경 안 점포에 빈 칸이 있고 구색이 4 미만이면, 아는 레시피 중 빠진 카테고리(인기 순 · 궁합 △ 제외) 하나를 건다. 하루 하나 */
+  private diversifyCourtMenus(g: Game): void {
+    for (const c of g.foodcourts.all) {
+      const have = g.courtMenuCatsOf(c.id); if (have.size >= 4) continue;
+      for (const f of g.courtShopsOf(c.id)) {
+        const slots = g.menus.slotsOf(f.uid); const empty = slots.indexOf(null); if (empty < 0) continue;
+        const pick = [...g.cooking.known].sort().map((id) => g.menus.recipes.get(id)).filter((r): r is NonNullable<typeof r> => !!r && !have.has(r.cat) && !slots.includes(r.id) && g.menus.compatOf(f.defId, r.id) !== 'bad').sort((a, b) => b.pop - a.pop || a.id.localeCompare(b.id))[0];
+        if (pick && g.setMenu(f.uid, empty, pick.id).ok) return;
+      }
     }
   }
   private ensureGarden(g: Game, spendable: () => number): void {
@@ -934,6 +973,10 @@ export interface RunMetrics {
   unlocksByYear: { year: number; rank: number; cert: number; calendar: number }[];
   /** 5~8년차 지출 / 전체 지출 (G30 — 후반에도 돈을 쓰는가) */
   lateSpendRatio: number;
+  /** P60-e B2·B4 — 128일 서서 먹은 몫(standEats ÷ eats) · 푸드코트 총 좌석 · 3년차 말(48일) 영역 구색 최댓값(0~4) */
+  standShare: number;
+  courtSeats: number;
+  courtMenuKindsY3: number;
   /** 128일 뒤 놓인 견인 코스 수 (P4-A 밴드) */
   courses: number;
   /** 소유 기구 수 (P7 공방) — 시작 2, 공방·구입으로 는다 */
@@ -969,6 +1012,7 @@ export function runBot(game: Game, days: number, opts: BotOptions = BOT_DEFAULTS
   let convertsY4 = 0; // P51 — 4년차 시점 개조 수
   let seatGradeY4 = 0; // P24 — 4년차 자리 등급 중앙
   let teamSeatY1 = 1; // P27 — 1년차 팀 자리 비율
+  let courtMenuKindsY3 = 0; // P60-e — 3년차 말 구색
   const ticksPerDay = TICKS_PER_DAY;
   let area2Day = -1;
   const wishesDone = (): number => game.sns.unlockedFriends.reduce((n, f) => n + f.done.length, 0);
@@ -989,6 +1033,7 @@ export function runBot(game: Game, days: number, opts: BotOptions = BOT_DEFAULTS
     game.drainEvents();
     if (area2Day < 0 && game.sns.areas.length >= 2) area2Day = game.day;
     if (game.day === 16) teamSeatY1 = game.teamSeq > 0 ? (game.stats.teamsSeated ?? 0) / game.teamSeq : 1;
+    if (game.day === 48) courtMenuKindsY3 = game.courtMenuKindsMax(); // P60-e
     if (game.day === 64) { convertsY4 = game.stats.converts ?? 0; gearsKnownY4 = game.workshop.known.size; const gr = game.facilities.all.filter((f) => game.facilities.defOf(f).class === 'lounging').map((f) => game.seatGradeOf(f.uid).grade).sort((x, y) => x - y); seatGradeY4 = gr.length ? (gr[Math.floor(gr.length / 2)] as number) : 0; }
     if (game.day % 16 === 0) { unlocksByYear.push({ year: game.day / 16, rank: game.rank - lastRank, cert: game.certs.passes() - lastCerts, calendar: game.calendarGiven.size - lastCal }); lastRank = game.rank; lastCerts = game.certs.passes(); lastCal = game.calendarGiven.size; }
     if (game.day % 16 === 0) perYear.push({ year: game.day / 16, money: game.money, visitors: game.stats.visitors, poolTiles: game.pools.totalTiles(), wishes: wishesDone(), likes: game.sns.totalLikes, spent: game.stats.spent ?? 0, rank: game.rank });
@@ -1071,6 +1116,9 @@ export function runBot(game: Game, days: number, opts: BotOptions = BOT_DEFAULTS
     score: scoreOf(game).total,
     perYear,
     lateSpendRatio: ((): number => { const total = game.stats.spent ?? 0; const y4 = perYear.find((p) => p.year === 4)?.spent ?? total; return total > 0 ? (total - y4) / total : 0; })(),
+    standShare: (game.stats.eats ?? 0) > 0 ? (game.stats.standEats ?? 0) / (game.stats.eats ?? 1) : 0, // P60-e
+    courtSeats: game.courtSeatsTotal(),
+    courtMenuKindsY3,
     courses: game.courses.count,
     gearsDistinct: game.courses.ownedEquipment.size,
     staffed: game.staffedCount(),

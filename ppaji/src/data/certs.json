@@ -261,9 +261,17 @@
     "conditions": [
       {
         "cond": {
-          "kind": "facilityClass",
-          "class": "restaurant",
-          "count": 2
+          "kind": "all",
+          "of": [
+            {
+              "kind": "courtSeats",
+              "min": 4
+            },
+            {
+              "kind": "courtMenuKinds",
+              "min": 2
+            }
+          ]
         },
         "weight": 2
       },
@@ -291,9 +299,17 @@
     "conditions": [
       {
         "cond": {
-          "kind": "facilityClass",
-          "class": "restaurant",
-          "count": 4
+          "kind": "all",
+          "of": [
+            {
+              "kind": "courtSeats",
+              "min": 8
+            },
+            {
+              "kind": "courtMenuKinds",
+              "min": 3
+            }
+          ]
         },
         "weight": 1
       },
@@ -328,9 +344,17 @@
     "conditions": [
       {
         "cond": {
-          "kind": "facilityClass",
-          "class": "restaurant",
-          "count": 6
+          "kind": "all",
+          "of": [
+            {
+              "kind": "courtSeats",
+              "min": 12
+            },
+            {
+              "kind": "courtMenuKinds",
+              "min": 4
+            }
+          ]
         },
         "weight": 1
       },

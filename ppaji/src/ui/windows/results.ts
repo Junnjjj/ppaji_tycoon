@@ -6,7 +6,7 @@ import { el } from '../dom.js';
 import { WindowPanel } from '../window.js';
 import type { DayReport, PeriodReport } from '../../sim/game.js';
 
-export type DayCard = DayReport & { popularity: number; rankPos: number; cleanliness?: number; salary?: number };
+export type DayCard = DayReport & { popularity: number; rankPos: number; cleanliness?: number; salary?: number }; // P60-e B2: eats·standEats 는 DayReport 가 이미 든다(sim 이 채운다 — eats 0/없음이면 행을 안 그린다)
 
 const G = (n: number): string => `${n.toLocaleString('ko-KR')}G`;
 
@@ -29,10 +29,11 @@ export class ResultsWindow {
 
   get visible(): boolean { return this.win.visible; }
 
-  private row(k: string, v: string, cls = ''): void {
+  private row(k: string, v: string, cls = ''): HTMLElement {
     const r = el('div', `krow${cls ? ` ${cls}` : ''}`);
     r.append(el('span', 'krow-k', k), el('span', 'krow-v', v));
     this.body.append(r);
+    return r;
   }
 
   private head(t: string): void {
@@ -68,6 +69,12 @@ export class ResultsWindow {
     this.row('파크 인기', d.rankPos > 0 ? `${d.popularity} · 전국 ${d.rankPos}위` : `${d.popularity}`);
     if (d.topFacility) this.row('오늘의 시설', `${d.topFacility.name} · ${G(d.topFacility.income)} · ${d.topFacility.uses}명`);
     if (d.topMenu) this.row('오늘의 메뉴', `${d.topMenu.name} · ${d.topMenu.sales}개`);
+    if (d.eats) { // P60-e B2(§4.3): 「서서 먹은 손님 s%」 — 값은 캡슐(≤ 10자), 처방은 힌트 줄. 문턱 0.3 아래면 힌트 없음 · 식사 0 이면 행 자체가 없다
+      const s = Math.round((100 * (d.standEats ?? 0)) / d.eats);
+      const r = this.row('서서 먹은 손님', `${s}%`, s >= 30 ? 'kbad' : '');
+      r.dataset['stand'] = String(s);
+      if (s >= 30) { const h = el('div', 'krow-sub kfac-hint', '식탁 4석 더 — 수역 독 「식탁」'); h.dataset['hint'] = 'stand'; this.body.append(h); }
+    }
     void income;
     this.win.show();
   }

@@ -152,6 +152,9 @@ export interface DayReport {
   likes?: number;
   topFacility?: { name: string; income: number; uses: number } | null;
   topMenu?: { name: string; sales: number } | null;
+  /** P60-e B2 — 그날 식사 수(사서 들고 자리를 정한 손님 — 사서 곧장 나간 손님은 밖) · 그중 산 곳 걷기 9 안에 빈 좌석이 없어 서서 먹은 수 (없으면 0) */
+  eats?: number;
+  standEats?: number;
 }
 
 /** 기능 스위치 (G22) — PSS 에 없는 축. 런타임에 바꿀 수 있다(하네스·설정) */
@@ -234,6 +237,8 @@ export interface GameSnapshot {
   teamSeq?: number;
   /** P23 첫 판매 토스트 여부 */
   firstSaleSeen?: boolean;
+  /** P60-e B4 「풀코스 푸드코트」(반경 3 점포 카테고리 4/4) 발견 여부 — optional, 참일 때만 싣는다(구 세이브·새 판은 없음) */
+  fullCourtSeen?: boolean;
   /** P27 걸어온 팀 묶음 진행 상태 — 없으면 새 무리부터 */
   walkin?: { team: number; left: number };
   weather?: Weather;
@@ -247,7 +252,7 @@ export interface GameSnapshot {
   randomEvents?: RandomEventsSnapshot;
   /** 하루 안의 결산 누적 (G19) — 없으면 0 에서 시작 (왕복이 하루 중간이면 필요하다) */
   dayAccum?: { satSum: number; satN: number; menuSalesToday: Record<string, number>; likesAtDayStart: number; ticketsToday?: number; feesToday?: number; foodToday?: number; enteredToday?: number; leftToday?: number };
-  stats: { visitors: number; tickets: number; fees: number; /* P49-a1 optional (전부 0/미기록 — 배선은 P51·P52-a) */ converts?: number; pkgPpaji?: number; vestRentals?: number; /** P54 밤 빠지 파티 — 밤이 열린 날 수 · 야간권 · 링 위 매점 저녁 매출 · 빠지 자리 이용료(저녁) */ nightNights?: number; nightPkg?: number; nightFood?: number; nightFee?: number; food?: number; spent?: number; bailouts?: number; busGuests?: number; wishDone?: number; wishExpired?: number; courseRevenue?: number; courseRiders?: number; pkg?: number; teamGuests?: number; teamSeated?: number; seatless?: number; lodging?: number; overnight?: number; teamsSeated?: number; /** P34 — 비 오는 날 실내로 피한 손님 수 */ rainRefuge?: number; passByEnter?: number; passByLeave?: number; nightUses?: number; gearRentals?: number; /** P50-b1 — 빠지 지출 구성 */ spentDeck?: number; spentRig?: number; spentConvert?: number; /** P51 measure — 기구 이용 · 그날 기구를 탄 손님 수(재탑승 비율) */ rigUses?: number; rigRiderDays?: number; rigRepeats?: number; rigPartsBought?: number; /** P56-c — 재료·부품 재고 구입 수(요리·공방·개조 합) */ stockBuys?: number; /** P58-a — 푸드코트 자리에서 먹은 수 */ courtEats?: number; /** P52-a — 팔찌를 낀 기구 이용 */ rigUsesBand?: number; /** P52-b — 사고 수 */ accidents?: number; /** P52-c — 계절별 야외 입수 [봄,여름,가을,겨울] */ swimsBySeason?: number[]; days: DayReport[]; menuSales?: Record<string, number> };
+  stats: { visitors: number; tickets: number; fees: number; /* P49-a1 optional (전부 0/미기록 — 배선은 P51·P52-a) */ converts?: number; pkgPpaji?: number; vestRentals?: number; /** P54 밤 빠지 파티 — 밤이 열린 날 수 · 야간권 · 링 위 매점 저녁 매출 · 빠지 자리 이용료(저녁) */ nightNights?: number; nightPkg?: number; nightFood?: number; nightFee?: number; food?: number; spent?: number; bailouts?: number; busGuests?: number; wishDone?: number; wishExpired?: number; courseRevenue?: number; courseRiders?: number; pkg?: number; teamGuests?: number; teamSeated?: number; seatless?: number; lodging?: number; overnight?: number; teamsSeated?: number; /** P34 — 비 오는 날 실내로 피한 손님 수 */ rainRefuge?: number; passByEnter?: number; passByLeave?: number; nightUses?: number; gearRentals?: number; /** P50-b1 — 빠지 지출 구성 */ spentDeck?: number; spentRig?: number; spentConvert?: number; /** P51 measure — 기구 이용 · 그날 기구를 탄 손님 수(재탑승 비율) */ rigUses?: number; rigRiderDays?: number; rigRepeats?: number; rigPartsBought?: number; /** P56-c — 재료·부품 재고 구입 수(요리·공방·개조 합) */ stockBuys?: number; /** P58-a — 푸드코트 자리에서 먹은 수 */ courtEats?: number; /** P60-e B2 — 식사 수(사서 든 손님) · 서서 먹은 수 (optional — 구 세이브는 0) */ eats?: number; standEats?: number; /** P52-a — 팔찌를 낀 기구 이용 */ rigUsesBand?: number; /** P52-b — 사고 수 */ accidents?: number; /** P52-c — 계절별 야외 입수 [봄,여름,가을,겨울] */ swimsBySeason?: number[]; days: DayReport[]; menuSales?: Record<string, number> };
   prevSatAvg?: number;
   /** 해금된 시설·선물 id (start 는 언제나 포함). P60-a: 옛 세이브의 `items` 는 읽지 않는다(마이그레이션은 save/ 가 v5 로) */
   unlocked: { facilities: string[]; gifts?: string[]; tiles?: string[] };
@@ -324,6 +329,8 @@ export class Game {
   /** 견인 코스 (P4-A, §2.2 「코스 = RCT 식 루트」) — 수역 안에만 (D12) */
   readonly courses = new CourseStore();
   private foodToday = 0;
+  /** P60-e B2 — 그날 식사 수 · 서서 먹은 수 (DayReport 로 나가고 자정에 0) */
+  private eatsToday = 0; private standEatsToday = 0;
   private menuVersion = 0;
   readonly rng: Record<RngStream, Rng>;
   /** 오늘 오기로 한 친구 id (아직 안 온 것) */
@@ -332,7 +339,7 @@ export class Game {
   tick = 0;
   money: number;
   rank = 0;
-  stats = { visitors: 0, tickets: 0, fees: 0, food: 0, spent: 0, spentDeck: 0, spentRig: 0, spentConvert: 0, converts: 0, rigUses: 0, rigRiderDays: 0, rigRepeats: 0, rigPartsBought: 0, stockBuys: 0, courtEats: 0, rigUsesBand: 0, pkgPpaji: 0, vestRentals: 0, nightNights: 0, nightPkg: 0, nightFood: 0, nightFee: 0, accidents: 0, swimsBySeason: [0, 0, 0, 0], bailouts: 0, busGuests: 0, wishDone: 0, wishExpired: 0, courseRevenue: 0, courseRiders: 0, pkg: 0, teamGuests: 0, teamSeated: 0, seatless: 0, lodging: 0, overnight: 0, teamsSeated: 0, rainRefuge: 0, days: [] as DayReport[], menuSales: {} as Record<string, number>, passByEnter: 0, passByLeave: 0, nightUses: 0, gearRentals: 0 };
+  stats = { visitors: 0, tickets: 0, fees: 0, food: 0, spent: 0, spentDeck: 0, spentRig: 0, spentConvert: 0, converts: 0, rigUses: 0, rigRiderDays: 0, rigRepeats: 0, rigPartsBought: 0, stockBuys: 0, courtEats: 0, eats: 0, standEats: 0, rigUsesBand: 0, pkgPpaji: 0, vestRentals: 0, nightNights: 0, nightPkg: 0, nightFood: 0, nightFee: 0, accidents: 0, swimsBySeason: [0, 0, 0, 0], bailouts: 0, busGuests: 0, wishDone: 0, wishExpired: 0, courseRevenue: 0, courseRiders: 0, pkg: 0, teamGuests: 0, teamSeated: 0, seatless: 0, lodging: 0, overnight: 0, teamsSeated: 0, rainRefuge: 0, days: [] as DayReport[], menuSales: {} as Record<string, number>, passByEnter: 0, passByLeave: 0, nightUses: 0, gearRentals: 0 };
   /** 오늘 퇴장 만족 합·수 (결산용, 저장 안 함 — 하루 안에서만 쓴다) */
   private satSum = 0;
   /** 어제 퇴장 만족 평균 (G30 티켓 레벨). 저장 optional */
@@ -450,6 +457,8 @@ export class Game {
       rigs: () => this.facilities.all.filter((f) => this.facilities.defOf(f).class === 'rig').map((f) => { const d = this.facilities.defOf(f); return { id: d.id, depth: d.depth ?? 'any', chain: d.chain ?? null, guarded: this.rigGuardedAt(f) }; }),
       seatGrades: () => this.facilities.all.filter((f) => this.facilities.defOf(f).class === 'lounging').map((f) => this.seatGradeOf(f.uid).grade), // P28
       seatsFedMax: (id) => Math.max(0, ...this.facilities.all.filter((f) => f.defId === id).map((f) => this.seatsFedAt(this.facilities.defOf(f), f.i, f.j, f.facing, f.uid))),
+      courtSeats: () => this.courtSeatsTotal(), // P60-e 인증 court_f/d/b
+      courtMenuKinds: () => this.courtMenuKindsMax(),
     };
     this.worldCache = { key, world };
     return world;
@@ -611,6 +620,7 @@ export class Game {
     if (recipeId !== null && !this.cooking.known.has(recipeId)) return { ok: false, reason: '아직 모르는 레시피입니다' };
     if (!this.menus.setSlot(uid, slot, recipeId)) return { ok: false, reason: '칸이 없습니다' };
     this.menuVersion++;
+    this.noteFullCourt(); // P60-e B4: 구색은 메뉴로도 바뀐다
     return { ok: true };
   }
 
@@ -814,7 +824,8 @@ export class Game {
   /** P24 자리 반경 */
   static readonly SEAT_RADIUS = 3;
   /** 반경 안 발자국(가상 배치도 가능) — 등급 항목별 판정. 파생값, 저장 안 함 */
-  seatGradeAt(def: FacilityDef, i: number, j: number, facing: 0 | 1, selfUid = 0): { grade: number; shade: boolean; view: boolean; garden: boolean; food: boolean; water: boolean; dirty: boolean; loud: boolean } {
+  /** P60-e B4 — `food` 는 반경 안 점포에 걸린 메뉴 카테고리(음료·간식·식사·디저트) 수 `foodKinds` 에서 파생한다(k > 0). 등급은 +1 이 아니라 +⌊k/2⌋ — 구색이 곧 자리 값 */
+  seatGradeAt(def: FacilityDef, i: number, j: number, facing: 0 | 1, selfUid = 0): { grade: number; shade: boolean; view: boolean; garden: boolean; food: boolean; foodKinds: number; water: boolean; dirty: boolean; loud: boolean } {
     const fp = FacilityStore.footprint(def, i, j, facing);
     const i0 = Math.min(...fp.map((t) => t.i)) - Game.SEAT_RADIUS, i1 = Math.max(...fp.map((t) => t.i)) + Game.SEAT_RADIUS;
     const j0 = Math.min(...fp.map((t) => t.j)) - Game.SEAT_RADIUS, j1 = Math.max(...fp.map((t) => t.j)) + Game.SEAT_RADIUS;
@@ -826,12 +837,12 @@ export class Game {
       if (DECOR_GROUNDS.has(c)) garden++;
       if (isWaterCode(c)) water = true;
     }
-    let food = false, dirty = false, loud = false;
+    const cats = new Set<string>(); let dirty = false, loud = false;
     for (const o of this.facilities.all) {
       if (o.uid === selfUid) continue;
       const od = this.facilities.defOf(o);
       if (!FacilityStore.footprint(od, o.i, o.j, o.facing).some((t) => inR(t.i, t.j))) continue;
-      if (od.menuSlots > 0) food = true;
+      if (od.menuSlots > 0) for (const r of this.menus.equipped(o.uid)) cats.add(r.cat); // P60-e B4: 걸린 메뉴의 카테고리 — 빈 점포는 0
       if (od.id === 'dock' || od.id === 'shower_row') water = true;
       if (od.class === 'decor') garden += 2;
       if (od.noisy === 'dirty') dirty = true;
@@ -839,15 +850,16 @@ export class Game {
     }
     const shade = def.shade === true || isIndoorCode(this.grid.at(i, j)); // P45-c: 실내(지붕)는 그늘
     const view = this.viewAt(def, i, j) >= 1;
-    const g = (shade ? 1 : 0) + (view ? 1 : 0) + (garden >= 2 ? 1 : 0) + (food ? 1 : 0) + (water ? 2 : 0) - (dirty ? 1 : 0) - (loud ? 1 : 0);
-    return { grade: Math.max(0, Math.min(5, g)), shade, view, garden: garden >= 2, food, water, dirty, loud };
+    const foodKinds = cats.size, food = foodKinds > 0;
+    const g = (shade ? 1 : 0) + (view ? 1 : 0) + (garden >= 2 ? 1 : 0) + Math.floor(foodKinds / 2) + (water ? 2 : 0) - (dirty ? 1 : 0) - (loud ? 1 : 0);
+    return { grade: Math.max(0, Math.min(5, g)), shade, view, garden: garden >= 2, food, foodKinds, water, dirty, loud };
   }
   private seatGradeCache = new Map<number, { key: string; v: ReturnType<Game['seatGradeAt']> }>();
   /** 자리 등급 0~5 (D29) — 그늘·뷰·조경·먹거리 +1 · 물 +2 · 화장실·소음 −1. 평상 만족·팀 선택·1박·패키지 값이 이걸 본다 */
   seatGradeOf(uid: number): ReturnType<Game['seatGradeAt']> {
     const f = this.facilities.byUid(uid);
-    if (!f) return { grade: 0, shade: false, view: false, garden: false, food: false, water: false, dirty: false, loud: false };
-    const key = `${this.facilities.version}|${this.groundVersion}|${this.pools.version}`;
+    if (!f) return { grade: 0, shade: false, view: false, garden: false, food: false, foodKinds: 0, water: false, dirty: false, loud: false };
+    const key = `${this.facilities.version}|${this.groundVersion}|${this.pools.version}|${this.menuVersion}`; // P60-e: 구색(메뉴)도 등급을 바꾼다
     const hit = this.seatGradeCache.get(uid);
     if (hit && hit.key === key) return hit.v;
     const v = this.seatGradeAt(this.facilities.defOf(f), f.i, f.j, f.facing, uid);
@@ -1561,6 +1573,7 @@ export class Game {
       food: this.foodToday,
       lodging: this.lodgingToday,
       overnight,
+      eats: this.eatsToday, standEats: this.standEatsToday, // P60-e B2
       ...(this.nightOn ? { nightOn: true, nightPkg: this.nightPkgToday, nightFood: this.nightFoodToday, nightFee: this.nightFeeToday } : {}), // P54
       maintenance: maint,
       net: this.ticketsToday + this.feesToday + this.foodToday + this.lodgingToday - maint,
@@ -1651,6 +1664,7 @@ export class Game {
     this.ticketsToday = 0;
     this.feesToday = 0;
     this.foodToday = 0;
+    this.eatsToday = 0; this.standEatsToday = 0; // P60-e
     this.lodgingToday = 0;
     if (this.nightOn) { this.nightOn = false; this.nightPool = null; this.syncNightSet(); } // P54 래치는 하루 안에서만
     this.nightPkgToday = 0; this.nightFoodToday = 0; this.nightFeeToday = 0; this.nightBandTeams.clear();
@@ -1879,6 +1893,31 @@ export class Game {
   }
   /** 파생 시설(식탁)에서 영역 id — 정보 창 「푸드코트 지우기」 */
   foodCourtOfSeat(uid: number): number | null { const f = this.facilities.byUid(uid); return f && f.defId === FOODCOURT_SEAT_DEF ? this.foodcourts.ownerAt(f.i, f.j) : null; }
+  /** P60-e B4 구색 — 영역 사각형 ±SEAT_RADIUS 상자에 걸친 점포(menuSlots>0)에 걸린 메뉴의 카테고리 수 0~4 (음료·간식·식사·디저트, `recipes.json` 분류). 매출엔 안 닿는다 — 자리 등급(`seatGradeAt`)·인증·발견만 */
+  courtMenuKindsOf(courtId: number): number { return this.courtMenuCatsOf(courtId).size; }
+  /** 영역 반경 안 점포(menuSlots>0)의 uid 들 · 그 점포들에 걸린 카테고리 집합 — 봇의 「다양성」 한 줄이 빠진 카테고리를 건다 */
+  courtShopsOf(courtId: number): PlacedFacility[] {
+    const c = this.foodcourts.byId(courtId); if (!c) return [];
+    const i0 = c.i0 - Game.SEAT_RADIUS, i1 = c.i0 + c.w - 1 + Game.SEAT_RADIUS, j0 = c.j0 - Game.SEAT_RADIUS, j1 = c.j0 + c.h - 1 + Game.SEAT_RADIUS;
+    return this.facilities.all.filter((o) => { const od = this.facilities.defOf(o); return od.menuSlots > 0 && FacilityStore.footprint(od, o.i, o.j, o.facing).some((t) => t.i >= i0 && t.i <= i1 && t.j >= j0 && t.j <= j1); });
+  }
+  courtMenuCatsOf(courtId: number): Set<string> {
+    const cats = new Set<string>();
+    for (const o of this.courtShopsOf(courtId)) for (const r of this.menus.equipped(o.uid)) cats.add(r.cat);
+    return cats;
+  }
+  /** 영역별 구색의 최댓값 (인증 `courtMenuKinds`) · 총 좌석(인증 `courtSeats` — 영역에서 파생한 식탁 × 2) */
+  courtMenuKindsMax(): number { return Math.max(0, ...this.foodcourts.all.map((c) => this.courtMenuKindsOf(c.id))); }
+  courtSeatsTotal(): number { return this.foodcourts.totalSeats(); }
+  /** P60-e B4 발견 채널 — 구색 4/4 인 영역이 처음 생기면 축하 모달 1회(+ 「획득」 fx). 호출부 둘: 세계 변경 꼬리 · 메뉴 편집(구색은 메뉴로도 바뀐다) */
+  fullCourtSeen = false;
+  private noteFullCourt(): void {
+    if (this.fullCourtSeen) return;
+    const c = this.foodcourts.all.find((x) => this.courtMenuKindsOf(x.id) >= 4); if (!c) return;
+    this.fullCourtSeen = true;
+    this.inbox.push({ tick: this.tick, day: this.day, kind: 'system', priority: 'modal', title: '풀코스 푸드코트 발견', body: `${c.name ?? `푸드코트 #${c.id}`} 반경 ${Game.SEAT_RADIUS} 안 점포에 음료·간식·식사·디저트가 다 있다 — 식탁 자리 등급 +2` });
+    this.fx.push({ kind: 'discover', i: c.i0 + 1, j: c.j0, amount: 1, label: '풀코스 푸드코트' });
+  }
   makePpaji(r: PpajiRect): Result & { merged?: { keptId: number; keptName: string; goneNames: string[] }[]; cost?: number } {
     const c = this.canMakePpaji(r);
     if (!c.ok) return c;
@@ -2537,6 +2576,7 @@ export class Game {
         seatValue: (f) => this.seatGradeOf(f.uid).grade,
         teamSeatUid: (g) => this.teamSeatUid(g),
         onSeatless: () => { this.stats.seatless = (this.stats.seatless ?? 0) + 1; },
+        onEat: (_g, _f, standing) => { this.stats.eats = (this.stats.eats ?? 0) + 1; this.eatsToday++; if (standing) { this.stats.standEats = (this.stats.standEats ?? 0) + 1; this.standEatsToday++; } }, // P60-e B2: 식사 = 사서 들고 자리를 정한 손님(분모) · 서서 = 산 곳 걷기 9 안에 빈 좌석이 없었다
         closing: () => this.tick >= CLOSING_TICK,
         weather: () => this.weather,
         // P34 D43 — 비 오는 날 실내 피난: 실내 구역 안의 정원 있는 시설 uid 들 (손님이 자기 rng 로 고른다)
@@ -2604,7 +2644,7 @@ export class Game {
               const staffMul = f.staff ? 1.2 : 1; // P8 알바: 친절한 매점
               g.hp = Math.min(100, g.hp + rec.taste * 2 * this.cooking.mult * staffMul);
               g.sat = Math.min(100, g.sat + rec.pop * 0.3 * this.cooking.mult * staffMul);
-              g.carry = true; // 들고 나가 앉을 자리를 찾는다 (R3)
+              g.carry = true; // 들고 나가 앉을 자리를 찾는다 (R3 · P60-e B2: 자리를 정하는 순간 `onEat` 이 식사 수를 센다)
               if (free) { g.pkgUsed = true; const pk = PACKAGES.find((x) => x.id === 'meat'); if (pk) { g.sat = Math.min(100, g.sat + pk.sat); g.hp = Math.min(100, g.hp + pk.hp); } }
               this.fx.push({ kind: 'buy', i: g.i, j: g.j, amount: price, label: `${rec.name} ×1` });
             }
@@ -3021,7 +3061,7 @@ export class Game {
   bandTopForTest(): WristbandDef { return bandTop(this.rank); }
   /** 밤 시설 집합 — 실내 놀이(P45-c) + 밤이 열린 수역의 켜진 기구·링 위 매점. 호출부 둘: 세계 변경 꼬리 · 저녁 래치 */
   private syncNightSet(): void {
-    const set = new Set(this.facilities.all.filter((f) => { const d = this.facilities.defOf(f); return d.indoorOnly && d.class === 'attraction' && d.capacity > 0; }).map((f) => f.uid));
+    const set = new Set(this.facilities.all.filter((f) => { const d = this.facilities.defOf(f); return (d.indoorOnly && d.class === 'attraction' && d.capacity > 0) || f.defId === FOODCOURT_SEAT_DEF; }).map((f) => f.uid)); // P60-e B5: 밤 식탁(D7) — 파생 식탁도 밤 집합에(팀 자리는 아니다 · claimSeat 는 derived 제외)
     if (this.nightOn && this.nightPool !== null) {
       for (const f of this.nightRigsOf(this.nightPool)) set.add(f.uid);
       const ring = this.pools.byId(this.nightPool);
@@ -3137,6 +3177,7 @@ export class Game {
       if (now > before) this.inbox.push({ tick: this.tick, day: this.day, kind: 'system', priority: 'modal', title: `${p.name ?? `수역 #${p.id}`} — ${PPAJI_GRADE_NAMES[now] ?? ''}!`, body: `빠지 등급 ${before} → ${now} · 수역 인기 ×${this.b.ppajiGradePopMul[now] ?? 1}${bandTop(now).base > 0 ? ` · 자유이용권 ${bandTop(now).name} ${this.bandPriceAt(p.id, bandTop(now), now).toLocaleString('ko-KR')}G` : ''}` });
     }
     this.noteSets(); // P60-c: 첫 성립 = 축하 1회(+ 편지), 나머지는 편지
+    this.noteFullCourt(); // P60-e B4: 구색 4/4 영역이 처음이면 축하 1회
     this.rigLinkCache = null;
     this.guests.invalidate();
     this.poolCache.clear();
@@ -3259,6 +3300,7 @@ export class Game {
       busState: this.busState ? { ...this.busState } : null,
       teamSeq: this.teamSeq,
       firstSaleSeen: this.firstSaleSeen,
+      ...(this.fullCourtSeen ? { fullCourtSeen: true } : {}), // P60-e: 참일 때만 (해시 불변)
       walkin: { team: this.walkinTeam, left: this.walkinLeft },
       weather: this.weather,
       ticketBonus: this.ticketBonus,
@@ -3269,7 +3311,7 @@ export class Game {
       // G57: 하루 중간 왕복에서 그날 결산이 줄어들던 결손 — 오늘 누적 셋 + 손님 입퇴장 수도 같이
       dayAccum: { satSum: this.satSum, satN: this.satN, menuSalesToday: { ...this.menuSalesToday }, likesAtDayStart: this.likesAtDayStart, ticketsToday: this.ticketsToday, feesToday: this.feesToday, foodToday: this.foodToday, enteredToday: this.guests.enteredToday, leftToday: this.guests.leftToday },
       prevSatAvg: this.prevSatAvg,
-      stats: { visitors: this.stats.visitors, tickets: this.stats.tickets, fees: this.stats.fees, food: this.stats.food, spent: this.stats.spent, spentDeck: this.stats.spentDeck, spentRig: this.stats.spentRig, spentConvert: this.stats.spentConvert, converts: this.stats.converts, nightNights: this.stats.nightNights ?? 0, nightPkg: this.stats.nightPkg ?? 0, nightFood: this.stats.nightFood ?? 0, nightFee: this.stats.nightFee ?? 0, rigUses: this.stats.rigUses, rigRiderDays: this.stats.rigRiderDays, rigRepeats: this.stats.rigRepeats, rigPartsBought: this.stats.rigPartsBought, courtEats: this.stats.courtEats ?? 0, rigUsesBand: this.stats.rigUsesBand, pkgPpaji: this.stats.pkgPpaji, vestRentals: this.stats.vestRentals, accidents: this.stats.accidents, swimsBySeason: this.stats.swimsBySeason, bailouts: this.stats.bailouts, busGuests: this.stats.busGuests, wishDone: this.stats.wishDone, wishExpired: this.stats.wishExpired, courseRevenue: this.stats.courseRevenue, courseRiders: this.stats.courseRiders, pkg: this.stats.pkg, teamGuests: this.stats.teamGuests, teamSeated: this.stats.teamSeated, seatless: this.stats.seatless, lodging: this.stats.lodging, overnight: this.stats.overnight, teamsSeated: this.stats.teamsSeated, rainRefuge: this.stats.rainRefuge, passByEnter: this.stats.passByEnter ?? 0, passByLeave: this.stats.passByLeave ?? 0, nightUses: this.stats.nightUses ?? 0, gearRentals: this.stats.gearRentals ?? 0, days: this.stats.days.map((d) => ({ ...d })), menuSales: { ...this.stats.menuSales } },
+      stats: { visitors: this.stats.visitors, tickets: this.stats.tickets, fees: this.stats.fees, food: this.stats.food, spent: this.stats.spent, spentDeck: this.stats.spentDeck, spentRig: this.stats.spentRig, spentConvert: this.stats.spentConvert, converts: this.stats.converts, nightNights: this.stats.nightNights ?? 0, nightPkg: this.stats.nightPkg ?? 0, nightFood: this.stats.nightFood ?? 0, nightFee: this.stats.nightFee ?? 0, rigUses: this.stats.rigUses, rigRiderDays: this.stats.rigRiderDays, rigRepeats: this.stats.rigRepeats, rigPartsBought: this.stats.rigPartsBought, courtEats: this.stats.courtEats ?? 0, eats: this.stats.eats ?? 0, standEats: this.stats.standEats ?? 0, rigUsesBand: this.stats.rigUsesBand, pkgPpaji: this.stats.pkgPpaji, vestRentals: this.stats.vestRentals, accidents: this.stats.accidents, swimsBySeason: this.stats.swimsBySeason, bailouts: this.stats.bailouts, busGuests: this.stats.busGuests, wishDone: this.stats.wishDone, wishExpired: this.stats.wishExpired, courseRevenue: this.stats.courseRevenue, courseRiders: this.stats.courseRiders, pkg: this.stats.pkg, teamGuests: this.stats.teamGuests, teamSeated: this.stats.teamSeated, seatless: this.stats.seatless, lodging: this.stats.lodging, overnight: this.stats.overnight, teamsSeated: this.stats.teamsSeated, rainRefuge: this.stats.rainRefuge, passByEnter: this.stats.passByEnter ?? 0, passByLeave: this.stats.passByLeave ?? 0, nightUses: this.stats.nightUses ?? 0, gearRentals: this.stats.gearRentals ?? 0, days: this.stats.days.map((d) => ({ ...d })), menuSales: { ...this.stats.menuSales } },
       unlocked: { facilities: [...this.unlocked.facilities].sort(), gifts: [...this.unlocked.gifts].sort() },
       friendsToday: [...this.friendsToday],
       courses: this.courses.toSnapshot(),
@@ -3293,7 +3335,7 @@ export class Game {
     g.foodcourts.fromSnapshot(s.foodcourts);
     g.guests.fromSnapshot(s.guests);
     g.inbox.fromSnapshot(s.inbox);
-    g.stats = { visitors: s.stats.visitors, tickets: s.stats.tickets, fees: s.stats.fees ?? 0, food: s.stats.food ?? 0, spent: s.stats.spent ?? 0, spentDeck: s.stats.spentDeck ?? 0, spentRig: s.stats.spentRig ?? 0, spentConvert: s.stats.spentConvert ?? 0, converts: s.stats.converts ?? 0, nightNights: s.stats.nightNights ?? 0, nightPkg: s.stats.nightPkg ?? 0, nightFood: s.stats.nightFood ?? 0, nightFee: s.stats.nightFee ?? 0, rigUses: s.stats.rigUses ?? 0, rigRiderDays: s.stats.rigRiderDays ?? 0, rigRepeats: s.stats.rigRepeats ?? 0, rigPartsBought: s.stats.rigPartsBought ?? 0, stockBuys: s.stats.stockBuys ?? 0, courtEats: s.stats.courtEats ?? 0, rigUsesBand: s.stats.rigUsesBand ?? 0, pkgPpaji: s.stats.pkgPpaji ?? 0, vestRentals: s.stats.vestRentals ?? 0, accidents: s.stats.accidents ?? 0, swimsBySeason: s.stats.swimsBySeason ?? [0, 0, 0, 0], bailouts: s.stats.bailouts ?? 0, busGuests: s.stats.busGuests ?? 0, wishDone: s.stats.wishDone ?? 0, wishExpired: s.stats.wishExpired ?? 0, days: s.stats.days.map((d) => ({ ...d })), menuSales: { ...(s.stats.menuSales ?? {}) } , courseRevenue: s.stats.courseRevenue ?? 0, courseRiders: s.stats.courseRiders ?? 0, pkg: s.stats.pkg ?? 0, teamGuests: s.stats.teamGuests ?? 0, teamSeated: s.stats.teamSeated ?? 0, seatless: s.stats.seatless ?? 0, lodging: s.stats.lodging ?? 0, overnight: s.stats.overnight ?? 0, teamsSeated: s.stats.teamsSeated ?? 0, rainRefuge: s.stats.rainRefuge ?? 0 , passByEnter: s.stats.passByEnter ?? 0, passByLeave: s.stats.passByLeave ?? 0, nightUses: s.stats.nightUses ?? 0, gearRentals: s.stats.gearRentals ?? 0};
+    g.stats = { visitors: s.stats.visitors, tickets: s.stats.tickets, fees: s.stats.fees ?? 0, food: s.stats.food ?? 0, spent: s.stats.spent ?? 0, spentDeck: s.stats.spentDeck ?? 0, spentRig: s.stats.spentRig ?? 0, spentConvert: s.stats.spentConvert ?? 0, converts: s.stats.converts ?? 0, nightNights: s.stats.nightNights ?? 0, nightPkg: s.stats.nightPkg ?? 0, nightFood: s.stats.nightFood ?? 0, nightFee: s.stats.nightFee ?? 0, rigUses: s.stats.rigUses ?? 0, rigRiderDays: s.stats.rigRiderDays ?? 0, rigRepeats: s.stats.rigRepeats ?? 0, rigPartsBought: s.stats.rigPartsBought ?? 0, stockBuys: s.stats.stockBuys ?? 0, courtEats: s.stats.courtEats ?? 0, eats: s.stats.eats ?? 0, standEats: s.stats.standEats ?? 0, rigUsesBand: s.stats.rigUsesBand ?? 0, pkgPpaji: s.stats.pkgPpaji ?? 0, vestRentals: s.stats.vestRentals ?? 0, accidents: s.stats.accidents ?? 0, swimsBySeason: s.stats.swimsBySeason ?? [0, 0, 0, 0], bailouts: s.stats.bailouts ?? 0, busGuests: s.stats.busGuests ?? 0, wishDone: s.stats.wishDone ?? 0, wishExpired: s.stats.wishExpired ?? 0, days: s.stats.days.map((d) => ({ ...d })), menuSales: { ...(s.stats.menuSales ?? {}) } , courseRevenue: s.stats.courseRevenue ?? 0, courseRiders: s.stats.courseRiders ?? 0, pkg: s.stats.pkg ?? 0, teamGuests: s.stats.teamGuests ?? 0, teamSeated: s.stats.teamSeated ?? 0, seatless: s.stats.seatless ?? 0, lodging: s.stats.lodging ?? 0, overnight: s.stats.overnight ?? 0, teamsSeated: s.stats.teamsSeated ?? 0, rainRefuge: s.stats.rainRefuge ?? 0 , passByEnter: s.stats.passByEnter ?? 0, passByLeave: s.stats.passByLeave ?? 0, nightUses: s.stats.nightUses ?? 0, gearRentals: s.stats.gearRentals ?? 0};
     for (const id of s.unlocked?.facilities ?? []) g.unlocked.facilities.add(id);
     for (const id of s.unlocked?.gifts ?? []) g.unlocked.gifts.add(id);
     g.sns.fromSnapshot(s.sns);
@@ -3321,6 +3363,7 @@ export class Game {
     g.busState = s.busState ? { ...s.busState } : null;
     g.teamSeq = s.teamSeq ?? 0;
     g.firstSaleSeen = s.firstSaleSeen ?? false;
+    g.fullCourtSeen = s.fullCourtSeen ?? false; // P60-e
     g.walkinTeam = s.walkin?.team ?? 0; g.walkinLeft = s.walkin?.left ?? 0;
     if (s.weather) g.weather = s.weather;
     g.ticketBonus = s.ticketBonus ?? 0;

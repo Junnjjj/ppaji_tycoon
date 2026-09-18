@@ -61,6 +61,9 @@ export interface ConditionWorld {
   /** P28 자리 등급들 (0~5) · 시설 id 가 먹여 주는 자리 수의 최대값 */
   seatGrades(): readonly number[];
   seatsFedMax(id: string): number;
+  /** P60-e — 푸드코트 총 좌석 · 영역별 구색(반경 3 점포의 메뉴 카테고리 수 0~4) 최댓값 (optional: 검사용 가짜 세계는 안 낸다 → 0) */
+  courtSeats?(): number;
+  courtMenuKinds?(): number;
 }
 
 export interface Verdict {
@@ -250,6 +253,14 @@ export function evaluate(c: Condition, w: ConditionWorld, names: { facility: (id
       const best = gs.length ? Math.max(...gs) : 0;
       const progress = found >= need ? 1 : need === 1 ? ratio(best, c.min) : found / need;
       return { met: found >= need, progress, actual: found, need, label: `등급 ${c.min} 이상 자리 ${need}곳` };
+    }
+    case 'courtSeats': { // P60-e 인증 court_f/d/b
+      const a = w.courtSeats?.() ?? 0;
+      return { met: a >= c.min, progress: ratio(a, c.min), actual: a, need: c.min, label: `푸드코트 좌석 ${c.min}석` };
+    }
+    case 'courtMenuKinds': {
+      const a = w.courtMenuKinds?.() ?? 0;
+      return { met: a >= c.min, progress: ratio(a, c.min), actual: a, need: c.min, label: `푸드코트 구색 ${c.min}/4` };
     }
     case 'seatsFed': {
       const have = w.seatsFedMax(c.id);

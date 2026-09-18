@@ -165,6 +165,9 @@ export type Condition =
   | { kind: 'seatGrade'; min: number; count?: number }
   /** P28 D33 — 시설 id 가 반경 3 안에 자리를 count 개 이상 먹여 준다(그 시설 하나 기준, 최대값) */
   | { kind: 'seatsFed'; id: string; count: number }
+  /** P60-e — 푸드코트 총 좌석 ≥ min · 영역 반경 3 점포의 메뉴 카테고리 수(0~4) 최댓값 ≥ min */
+  | { kind: 'courtSeats'; min: number }
+  | { kind: 'courtMenuKinds'; min: number }
   | { kind: 'all'; of: Condition[] }
   | { kind: 'any'; of: Condition[] };
 

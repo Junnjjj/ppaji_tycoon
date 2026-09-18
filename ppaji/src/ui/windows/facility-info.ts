@@ -9,6 +9,7 @@ import { FACILITY_MAX_LEVEL } from '../../sim/facility.js';
 import { PART_TIMER_WAGE, staffable } from '../../sim/facility.js';
 import { FEATURES } from '../../sim/game.js';
 import { canvasPictureEl, pictureEl, pictureId } from '../pictures.js';
+import { FOODCOURT_SEAT_DEF, courtContains, courtSeats } from '../../sim/foodcourt.js';
 import { sceneCard } from '../scene-card.js';
 
 /** 시설 정보 카드 — 지도에서 시설 탭. 지표 + `철거` */
@@ -116,6 +117,20 @@ export class FacilityInfoWindow {
     const tc = this.thumbOf(def.id);
     if (tc) this.thumb.append(tc);
     const g = this.game();
+    if (def.derived === true) { // P60-e §4.3 — 파생 식탁은 영역의 값 4행뿐: 「좌석 n · 오늘 식사 m · 서서 s% · 메뉴 k/4」 (캡슐 값 ≤ 10자, 처방은 힌트 줄). 시설 고유 행(인기·유지비·등급·패키지…)은 영역이 놓은 것이라 뜻이 없다
+      const cid = g.foodCourtOfSeat(uid); const court = cid === null ? undefined : g.foodcourts.byId(cid);
+      const seats = court ? courtSeats(court) : 0;
+      const eatsToday = court ? g.facilities.all.filter((o) => o.defId === FOODCOURT_SEAT_DEF && courtContains(court, o.i, o.j)).reduce((n, o) => n + o.usesToday, 0) : 0;
+      const st = g.stats as { eats?: number; standEats?: number }; const eats = st.eats ?? 0; const stand = eats > 0 ? Math.round((100 * (st.standEats ?? 0)) / eats) : 0; // B2 — 서서 먹은 비율(판 누적, sim 이 센다)
+      const k = cid === null ? 0 : g.courtMenuKindsOf(cid); // B4 — 반경 3 안 점포에 걸린 메뉴 카테고리 수(음료·간식·식사·디저트)
+      row('좌석', `${seats}석`); this.rows.lastElementChild?.setAttribute('data-court-seats', String(seats));
+      row('오늘 식사', `${eatsToday}명`);
+      row('서서', `${stand}%`); this.rows.lastElementChild?.setAttribute('data-court-stand', String(stand));
+      row('메뉴', `${k}/4`); this.rows.lastElementChild?.setAttribute('data-court-kinds', String(k));
+      if (stand >= 30) hints.push('식탁 4석 더 — 수역 독 「식탁」');
+      hints.push(k >= 4 ? '풀코스 푸드코트 — 자리 등급 +2' : `반경 ${Game.SEAT_RADIUS} 안 점포에 음료·간식·식사·디저트를 골고루 걸면 자리 등급 +${Math.floor(k / 2)} → 최대 +2`);
+      this.onSelect(g.seatRadiusTiles(def, f.i, f.j, f.facing)); // 구색을 재는 반경을 지도에
+    } else {
     row('인기', `${g.facilityPop(f)}${f.level > 1 ? ` (기본 ${def.pop})` : ''}`);
     if (def.capacity > 0) row('정원', `${g.facilityCapacity(f)}명`);
     row('유지비', `${def.maint + (f.staff ? PART_TIMER_WAGE : 0)}G / 일${f.staff ? ` (알바 ${PART_TIMER_WAGE} 포함)` : ''}`);
@@ -190,6 +205,7 @@ export class FacilityInfoWindow {
       row('메뉴', eq.length ? `${eq.map((r) => r.name).join(' · ')} (+${this.game().menus.menuPopularity(uid, def.id)})` : '비어 있다');
       if (eq.length) { const pics = el('span', 'kmenu-pics'); for (const r of eq) { const a = el('span', 'kmenu-pic'); a.append(pictureEl(pictureId('recipe', r.id), 'cook')); a.dataset['menuPic'] = r.id; pics.append(a); } this.rows.lastElementChild?.querySelector('.krow-v')?.prepend(pics); this.rows.lastElementChild?.classList.add('kfac-menu-row'); } // P56-b3: 걸린 메뉴 그림은 같은 줄 안에 — 새 줄을 끼우면 아래 버튼(메뉴 편집·알바)이 화면 밖으로 밀려 실터치가 빗나간다(G6·P8 실측)
     }
+    } // P60-e: 파생 식탁 분기 끝
     if (hints.length) this.rows.append(el('div', 'krow-sub kfac-hint', hints.join(' · '))); // 처방·효과는 한 줄에 「 · 」로
     this.rows.append(el('div', 'krow-sub kfac-desc', def.desc));
     this.menuBtn.classList.toggle('khide', def.menuSlots === 0);

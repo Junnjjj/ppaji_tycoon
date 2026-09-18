@@ -185,6 +185,7 @@ const CONDITION_KINDS = [
   'rigGrade', 'rigPath', 'rigCount', 'rigGuarded', // P49-a1 · P60-d: rigChain → rigPath(경로 길이)
   'rigSet', // P60-c
   'rigPathComplete', // P60-d
+  'courtSeats', 'courtMenuKinds', // P60-e
 ] as const satisfies readonly Condition['kind'][];
 expectTypeOf<Exclude<Condition['kind'], (typeof CONDITION_KINDS)[number]>>().toBeNever();
 
@@ -605,8 +606,11 @@ describe('certs.json', () => {
     expect([setMin('set_f').min, setMin('set_d').min, setMin('set_b').min]).toEqual([1, 2, 3]); // P60-c §10.3: P60-a 임시 rigCount 2/4/6 → rigSet 1/2/3 (다른 조건·보상은 바이트 그대로)
     for (const id of ['set_f', 'set_d', 'set_b']) expect(certs.find((c) => c.id === id)!.conditions.map((w) => w.weight), id).toEqual([2, 1]);
     expect(certs.filter((c) => c.conditions.some((w) => w.cond.kind === 'rigSet')).map((c) => c.id)).toEqual(['set_f', 'set_d', 'set_b']);
-    const restaurants = (id: string) => certs.find((c) => c.id === id)!.conditions.find((w) => w.cond.kind === 'facilityClass' && (w.cond as { class: string }).class === 'restaurant')!.cond as { count: number };
-    expect([restaurants('court_f').count, restaurants('court_d').count, restaurants('court_b').count]).toEqual([2, 4, 6]);
+    // P60-e §10.5: P60-a 임시 restaurant 2/4/6 → `all[courtSeats, courtMenuKinds]` 4·2 / 8·3 / 12·4 (한 조건 자리에 한 조건 — 개수 2~3 유지 · 다른 조건·보상은 바이트 그대로 · restaurant 조건 0)
+    const court = (id: string) => { const c = certs.find((x) => x.id === id)!; const w = c.conditions.find((x) => x.cond.kind === 'all')!; const of = (w.cond as { of: Condition[] }).of; return { w: w.weight, seats: (of.find((x) => x.kind === 'courtSeats') as { min: number }).min, kinds: (of.find((x) => x.kind === 'courtMenuKinds') as { min: number }).min, n: c.conditions.length, rest: c.conditions.some((x) => x.cond.kind === 'facilityClass' && (x.cond as { class: string }).class === 'restaurant') }; };
+    expect([court('court_f'), court('court_d'), court('court_b')]).toEqual([{ w: 2, seats: 4, kinds: 2, n: 2, rest: false }, { w: 1, seats: 8, kinds: 3, n: 3, rest: false }, { w: 1, seats: 12, kinds: 4, n: 3, rest: false }]);
+    expect(certs.filter((c) => c.conditions.some((w) => w.cond.kind === 'all' && (w.cond as { of: Condition[] }).of.some((x) => x.kind === 'courtSeats'))).map((c) => c.id)).toEqual(['court_f', 'court_d', 'court_b']);
+    expect(certs.find((c) => c.id === 'court_f')!.reward).toEqual({ kind: 'rigPart', id: 'slip_wax' });
     // spa 는 수온 조건이 그대로 (계절 수온은 남는다)
     expect(certs.find((c) => c.id === 'spa_d')!.conditions[0]!.cond).toEqual({ kind: 'pool', tempMin: 32 });
     expect(certs.find((c) => c.id === 'spa_b')!.conditions[0]!.cond).toEqual({ kind: 'pool', tempMin: 40, indoor: true });

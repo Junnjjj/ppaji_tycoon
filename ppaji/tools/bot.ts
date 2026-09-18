@@ -72,6 +72,9 @@ const BANDS: { key: keyof RunMetrics; lo: number; hi: number; why: string }[] = 
   { key: 'ppajiDeckShare', lo: 0.12, hi: 0.55, why: 'P50-b1 — 빠지 지출 중 데크 몫 · P56-c 재고: 부품 재구매가 개조 몫을 0.25 → 0.35 로 올려 데크 몫이 0.17 → 0.149(문턱 위에 붙어 있었다). 셋의 합 = 1 이라 하한 0.12 — 데크 절대 지출은 봇 `growPpaji` 그대로' },
   { key: 'ppajiRigShare', lo: 0.2, hi: 0.6, why: 'P50-b1 → P51 — 빠지 지출 중 기구 몫. 개조 몫이 들어와 셋의 합 = 1(상한 0.6 복귀)' },
   { key: 'poolTilesY1', lo: 20, hi: 160, why: 'P49-b — 1년차 말 수역 칸: 킷 20 + 봇 `growPpaji` 가 링을 두른 만큼, 허가 ★2 예산(160) 안 (P48-b2 「허가 밴드는 새 봇이 서는 P49-b 가 잰다」)' },
+  { key: 'standShare', lo: 0.1, hi: 0.5, why: 'P60-e 게이트 실측 8시드 0.21~0.46(중앙 0.35) — 상한 0.4 는 시드 7 이 붙어 0.5 로. P60-e B2 §4.4 — 128일 서서 먹은 몫(산 곳에서 걷기 9 안 빈 좌석이 없던 식사 ÷ 사서 자리를 정한 식사). 실측(2026-09-18 8시드) 0.35/0.35/0.29/0.43/0.31/0.21/0.46/0.30 — 중앙 0.35: 봇이 서서 > 0.3 마다 블록을 더해도(좌석 26~40) 매점이 마당·링에 흩어져 있어 셋 중 하나는 선다. 0.1 아래면 좌석이 남아돌아 「서서」 축이 안 산 것, 0.4 넘으면 `growFoodCourt` 가 안 도는 것' },
+  { key: 'courtSeats', lo: 16, hi: 120, why: 'P60-e §10.5 — 128일 푸드코트 총 좌석. 실측(8시드) 40/38/40/32/40/26/36/40(킷 4 + `growFoodCourt` 주 1회 3×2 블록, 실내 바닥이 자리를 정한다). 16 아래면 봇이 안 넓힌 것, 120 넘으면 실내가 식탁으로 덮인 것' },
+  { key: 'courtMenuKindsY3', lo: 3, hi: 4, why: 'P60-e B4 §4.4 — 3년차 말(48일) 영역 구색(반경 3 점포 카테고리 수) 최댓값 ≥ 3. 실측(8시드) 전부 4 — 새 영역을 점포 곁 실내 바닥에 두고(`growFoodCourt`) `diversifyCourtMenus` 가 빠진 카테고리를 건다. 3 아래면 다양성 한 줄이 봇 세계에 없다' },
   { key: 'courses', lo: 2, hi: 6, why: 'P4-A — 선착장이 있으면 봇이 견인 코스를 ≥1 놓는다 (수역 60칸마다 하나 · 최대 3, 상한 6 은 「코스가 판 전체가 된다」 경보) · P20: 8시드 전부 1 이었다(선착장 claim 이 데크 링 전체 · 부표 안 옆 선착장) → 2~3' },
 ];
 
@@ -86,7 +89,7 @@ const json = process.argv.includes('--json');
 const sweep = arg('sweep', '');
 // P49-a1 — `--warn k1,k2` 는 그 밴드를 빨강 대신 ⚠ 로(exit 0) · `--no-rig|--no-convert|--no-vest|--no-night|--no-set|--no-path` 는 축 스위치(대조군, 읽는 페이즈가 뒤에 온다)
 const warnKeys = new Set(arg('warn', '').split(',').filter(Boolean));
-const axisOff = { noRig: process.argv.includes('--no-rig'), noConvert: process.argv.includes('--no-convert'), noVest: process.argv.includes('--no-vest'), noNight: process.argv.includes('--no-night'), noSet: process.argv.includes('--no-set'), noPath: process.argv.includes('--no-path') }; // P60-c `--no-set` · P60-d `--no-path`
+const axisOff = { noRig: process.argv.includes('--no-rig'), noConvert: process.argv.includes('--no-convert'), noVest: process.argv.includes('--no-vest'), noNight: process.argv.includes('--no-night'), noSet: process.argv.includes('--no-set'), noPath: process.argv.includes('--no-path'), noCourt: process.argv.includes('--no-court') }; // P60-e `--no-court` // P60-c `--no-set` · P60-d `--no-path`
 const personaArg = arg('persona', 'balanced');
 const bands = process.argv.includes('--bands');
 const personas: BotPersona[] = personaArg === 'all' ? ['balanced', 'pool', 'restaurant', 'cert', 'course'] : [personaArg as BotPersona];
@@ -154,6 +157,7 @@ if (json) {
   console.log(`  좋아요 중앙 ${median(runs.map((r) => r.likes))} · 지역 ${median(runs.map((r) => r.areas))} · 친구 ${median(runs.map((r) => r.friends))} · 소원 달성 ${median(runs.map((r) => r.wishes))} · 지역2 개방일 ${runs.map((r) => r.area2Day).join('/')}`);
   console.log(`  해금 8×3 (연차: 랭크/인증/달력 중앙) — ${(runs[0]?.unlocksByYear ?? []).map((_, y) => `${y + 1}년 ${median(runs.map((r) => r.unlocksByYear[y]?.rank ?? 0))}/${median(runs.map((r) => r.unlocksByYear[y]?.cert ?? 0))}/${median(runs.map((r) => r.unlocksByYear[y]?.calendar ?? 0))}`).join(' · ')} · 최대 공백 1~4년차 ${median(runs.map((r) => r.unlockGapMaxY1_4))}일 · 5~8년차 ${median(runs.map((r) => r.unlockGapMaxY5_8))}일 (P53-c)`);
   console.log(`  밤 빠지 파티 — 열린 날 중앙 ${median(runs.map((r) => r.nightNights))} (${runs.map((r) => r.nightNights).join('/')}) · 밤 매출 몫 중앙 ${median(runs.map((r) => r.nightRevShare)).toFixed(3)} (P54)`);
+  console.log(`  푸드코트 — 서서 몫 ${runs.map((r) => r.standShare.toFixed(2)).join('/')} · 좌석 ${runs.map((r) => r.courtSeats).join('/')} · 3년차 구색 ${runs.map((r) => r.courtMenuKindsY3).join('/')} (P60-e)`);
   console.log(`  입수 경로 — 최장 경로 ${runs.map((r) => r.rigPathLen).join('/')} · 완성 몫 ${runs.map((r) => r.rigPathCompleteShare.toFixed(2)).join('/')} · 입수구 중앙 ${runs.map((r) => r.ringEntries).join('/')} (P60-d)`);
   const years = runs[0]?.perYear.length ?? 0;
   for (let y = 0; y < years; y++) {
