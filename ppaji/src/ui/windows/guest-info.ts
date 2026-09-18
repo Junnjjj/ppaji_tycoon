@@ -2,7 +2,7 @@ import { el } from '../dom.js';
 import { confirmDialog } from '../dialog.js';
 import { WindowPanel } from '../window.js';
 import { iconEl } from '../icons.js';
-import { npcPortrait } from '../portraits.js'; // 과제 B: 손님 초상 = 지도 위 같은 v8 룩(uid)
+import { npcPortrait } from '../portraits.js'; // NPC v8(2026-09-18): 손님 초상 = 지도 위 같은 v8 룩(uid)
 import { pictureEl, pictureId } from '../pictures.js';
 import { PictureGrid, type PictureCard } from '../picture-grid.js';
 import type { Guest } from '../../sim/guest.js';

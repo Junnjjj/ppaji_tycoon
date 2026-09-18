@@ -5,7 +5,7 @@
 import { el } from '../dom.js';
 import { WindowPanel } from '../window.js';
 import { iconEl } from '../icons.js';
-import { npcPortrait } from '../portraits.js'; // 과제 B
+import { npcPortrait } from '../portraits.js'; // NPC v8(2026-09-18): 옛 코드 얼굴 대신 v8 머리 초상
 import { FEATURES, type Game } from '../../sim/game.js';
 
 type Tab = 'facility' | 'menu' | 'guest' | 'rival' | 'record';

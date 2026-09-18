@@ -6,7 +6,7 @@
  * `#hud-ticker`(role=button, 띠 28px + hit 44px). 하네스는 **개수가 아니라 이 이름들**로 잰다.
  */
 import { el } from './dom.js';
-import { portraitEl, npcPortrait } from './portraits.js'; // P56-b2: 사장 초상은 그림 · 과제 B: 방문 친구는 v8 머리
+import { portraitEl, npcPortrait } from './portraits.js'; // P56-b2: 사장 초상은 그림 · NPC v8: 방문 친구는 v8 머리
 import { iconEl, type IconName } from './icons.js';
 import { setUiSurface, type UiSurface } from './panels.js';
 

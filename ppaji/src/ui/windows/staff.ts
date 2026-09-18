@@ -3,7 +3,7 @@
  */
 import { el } from '../dom.js';
 import { WindowPanel } from '../window.js';
-import { npcPortrait } from '../portraits.js'; // 과제 B
+import { npcPortrait } from '../portraits.js'; // NPC v8(2026-09-18): 옛 코드 얼굴 대신 v8 머리 초상
 import { staffNpcSeed } from '../../assets/npc-v8.js'; // 역할 seed — 씬 `syncStaff` 와 같은 얼굴
 import { STAFF_ROLES, STAFF_EXP_PER_LEVEL, STAFF_MAX_LEVEL } from '../../sim/staff.js';
 import type { Game } from '../../sim/game.js';

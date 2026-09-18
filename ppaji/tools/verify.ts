@@ -1245,7 +1245,7 @@ async function verifyP60c(page: import('playwright').Page): Promise<void> {
  * P60-d (D72 A+C) 입수구·경로 — 킷 입수구 1 · 새 링 1 → 라인 조각(뭍 ↔ 링, 다른 변) 뒤 2 · 링 위 기구 3 을 입수구에서 먼 순으로 스릴 오름 + 끝 휴식 → `pathCompleteOf` true + 정보창 「경로 3/완성」 ·
  * 역순(입수구 옆에 스릴 2, 그 뒤 1)이면 미완성 — 벌점 0(팔찌 값·등급 불변) · 조준 중 확정 바 칩 ≤ 1칸 추가 · FX `path-walk`·`entry-mark` 등록부 이름 1 · 조준하면 fxFired ≥ 1, exit 에서 진다 ·
  * `ppajiGradeThresholds` 는 balance.json 키(정적). 링은 P60-c 선례 `makePpaji({ i0: 41, j0: 24, w: 6, h: 7 })`(안쪽 물 42~45 × 25~29, 입수구는 북변 43~46,24 · 서변 41,25), 기구는 `game.placeFacility`.
- * ⚠ sim API 는 과제 S 의 이름(`entriesOf`·`pathOf`·`pathCompleteOf`·`aimPreview().pathNext/completeNext`)을 가정한다.
+ * sim API: `entriesOf`·`pathOf`·`pathCompleteOf`·`aimPreview().pathNext/completeNext`(P60-d).
  */
 async function verifyP60d(page: import('playwright').Page): Promise<void> {
   // 행 5 — 정적: 등급 문턱이 데이터(`ppajiGradeThresholds`)로 옮겨졌고 rig.ts 가 그 키를 읽는다 · FX 등록부에 path-walk · entry-mark 각 1

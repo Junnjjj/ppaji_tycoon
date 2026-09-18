@@ -4,7 +4,7 @@
  */
 import { el } from '../dom.js';
 import { confirmDialog } from '../dialog.js';
-import { npcPortrait } from '../portraits.js'; // 과제 B: 손님·친구 초상은 v8 머리
+import { npcPortrait } from '../portraits.js'; // NPC v8(2026-09-18): 손님·친구 초상은 v8 머리
 import { iconEl } from '../icons.js';
 import { WindowPanel } from '../window.js';
 import { rewardArt, type SpriteFn } from '../reward-art.js';

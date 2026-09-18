@@ -48,7 +48,7 @@ import { ShopWindow } from './ui/windows/shop.js';
 import { MenuEditWindow } from './ui/windows/menu-edit.js';
 import { CookWindow, type DiscoverySpec } from './ui/windows/cook.js';
 import { canvasPictureEl, pictureCount } from './ui/pictures.js';
-import { setNpcFrameSource, npcPortrait } from './ui/portraits.js'; // 과제 B: 손님·친구 초상은 v8 도트의 머리
+import { setNpcFrameSource, npcPortrait } from './ui/portraits.js'; // NPC v8(2026-09-18): 손님·친구 초상은 v8 도트의 머리
 import type { CookingStore, RecipeLike, IngredientLike, CookResultOf } from './sim/cooking.js';
 import { MenuWindow } from './ui/windows/menu.js';
 import { InvestWindow } from './ui/windows/invest.js';
@@ -102,7 +102,7 @@ const landscape = await loadLandscape(); // P57-b: 북쪽 바깥 풍경 띠(main
 if (!saved) game.checkStory(true);
 const npc = await loadNpcV8();
 const provider = new HybridProvider(npc, new HybridProvider(kairo, new HybridProvider(atlas, new ProceduralProvider())));
-setNpcFrameSource((id) => provider.canvas(id)); // 과제 B: 초상(`npcPortrait`)이 씬과 같은 v8 프레임을 읽는다
+setNpcFrameSource((id) => provider.canvas(id)); // NPC v8(2026-09-18): 초상(`npcPortrait`)이 씬과 같은 v8 프레임을 읽는다
 const missing = ProceduralProvider.missingDrawers();
 if (missing.length > 0) console.error('매니페스트에 그리는 함수가 없는 id:', missing);
 
@@ -271,7 +271,7 @@ const thumbFor = (post: { id: number; subject: { kind: 'pool' | 'facility'; ref:
     const sprite = post.subject.kind === 'pool' ? provider.canvas('tile/pool') : (() => { const f = game.facilities.byUid(post.subject.ref); return f ? provider.canvas(`fac/${f.defId}/0`) : null; })();
     g2.imageSmoothingEnabled = false;
     if (sprite) { const sc = Math.min(1, 44 / sprite.width, 30 / sprite.height); const w = Math.round(sprite.width * sc); const h = Math.round(sprite.height * sc); g2.drawImage(sprite, Math.round(24 - w / 2), Math.round(31 - h), w, h); }
-    const face = npcPortrait(post.palette ?? 0, 'happy'); // 과제 B: v8 머리 초상 (32×32 → 24×24)
+    const face = npcPortrait(post.palette ?? 0, 'happy'); // NPC v8(2026-09-18): v8 머리 초상 (32×32 → 24×24)
     g2.drawImage(face, 2, 6, 24, 24);
   }
   thumbs.set(post.id, out);

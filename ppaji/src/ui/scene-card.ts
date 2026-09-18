@@ -4,7 +4,7 @@
  */
 import { el } from './dom.js';
 import { assetUrl } from './asset-url.js';
-import { npcPortrait } from './portraits.js'; // 과제 B: 장면 손님 둘은 v8 머리
+import { npcPortrait } from './portraits.js'; // NPC v8(2026-09-18): 장면 손님 둘은 v8 머리
 import { iconEl, type IconName } from './icons.js';
 import { gaugeEl } from './picture-grid.js';
 
