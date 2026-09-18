@@ -7,7 +7,7 @@ import { Game } from './game.js';
 const world = (thrills: number[]): ConditionWorld => ({
   pools: () => [], facilities: () => [], popularity: () => 0, likes: () => 0, certPasses: () => 0, certPassed: () => false,
   friends: () => 0, areas: () => 0, rank: () => 0, hasGift: () => false, recipeKnown: () => false, recipeCount: () => 0,
-  cookingLevel: () => 0, visitors: () => 0, money: () => 0, year: () => 1, courseThrills: () => thrills, seatGrades: () => [], ppajiGrades: () => [], rigChains: () => [], rigs: () => [], /* P49-a1 */ seatsFedMax: () => 0,
+  cookingLevel: () => 0, visitors: () => 0, money: () => 0, year: () => 1, courseThrills: () => thrills, seatGrades: () => [], ppajiGrades: () => [], rigPaths: () => [], rigs: () => [], /* P49-a1 */ seatsFedMax: () => 0,
 });
 
 /** P6 — 스릴 조건 kind · 심사 편향 0(D15) · 실제 판의 코스가 조건 세계에 닿는다 */

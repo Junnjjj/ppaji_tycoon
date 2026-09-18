@@ -3,6 +3,7 @@ import { iconEl, type IconName } from '../icons.js';
 import { WindowPanel } from '../window.js';
 import { FacilityStore } from '../../sim/facility.js';
 import { RIG_UPGRADES } from '../../sim/rig-upgrade.js';
+import { chainScale } from '../../sim/rig.js';
 import { Game } from '../../sim/game.js';
 import { FACILITY_MAX_LEVEL } from '../../sim/facility.js';
 import { PART_TIMER_WAGE, staffable } from '../../sim/facility.js';
@@ -121,12 +122,14 @@ export class FacilityInfoWindow {
     { const v = g.viewOf(f); if (['lounging', 'restaurant', 'attraction'].includes(def.class)) row('뷰', v > 0 ? `${v}/4 · +${g.viewBonusOf(f)}` : '0/4'); if (v === 0) hints.push('물가 쪽에 두면 강이 보여 인기가 오른다'); } // S4: 글리프 리터럴 대신 숫자
     { const cs = g.combosOf(uid); if (cs.length) row('콤보', cs.map((c) => c.def.name).join(' · ')); }
     if (def.class !== 'decor') { const sc = g.sceneryOf(uid); row('경관', sc > 0 ? `+${sc} · 인기 +${Math.min(20, Math.floor(sc / 6))}` : '0'); if (sc === 0) hints.push('반경 2 에 꽃·나무·지면을 두면 경관이 오른다'); else if (def.menuSlots > 0) hints.push(`경관으로 판매가 +${Math.min(10, Math.floor(sc / 4))}%`); } // P26 D32
-    if (def.class === 'rig' && def.onRing !== true) { // P50-b2 facility-info 3행 + 오버레이(같은 사슬 발자국)
+    if (def.class === 'rig' && def.onRing !== true) { // P50-b2 facility-info 3행 + 오버레이 · P60-d: 사슬 → 경로(입수구에서 몇 번째 · 그 수역의 경로 기구 발자국을 하이라이트)
       const lit = g.rigState.lit.has(uid), len = g.rigState.chainLen.get(uid) ?? 0, kinds = g.rigState.chainKinds.get(uid) ?? 0;
+      const pid = g.poolOfFacility(uid), path = pid === null ? [] : g.pathOf(pid), onPath = path.includes(uid);
       row('켜짐', lit ? '켜짐' : '꺼짐'); if (!lit) hints.push('링(데크)이나 켜진 기구에 4이웃으로 닿아야 켜진다');
-      row('사슬', lit && def.chain ? `${len}개 · 종 ${kinds}` : '—'); if (lit && def.chain) hints.push(`${def.chain} 계열 사슬 — 정원 ×${Math.min(2, Math.max(1, Math.sqrt(len / 2))).toFixed(2)}`); else if (def.chain) hints.push(`${def.chain} 계열 — 켜지면 잇는다`);
-      { const pid = g.poolOfFacility(uid); row('소속 빠지', pid === null ? '—' : `${g.pools.byId(pid)?.name ?? `수역 #${pid}`} · 등급 ${g.ppajiGradeOf(pid)}`); }
-      if (lit) { const tiles: { i: number; j: number }[] = []; for (const o of g.facilities.all) { const od = g.facilities.defOf(o); if (od.class === 'rig' && od.onRing !== true && g.rigState.lit.has(o.uid) && (od.chain ?? null) === (def.chain ?? null) && def.chain && (g.rigState.chainLen.get(o.uid) ?? 0) === len) tiles.push(...FacilityStore.footprint(od, o.i, o.j, o.facing)); } this.onSelect(tiles); }
+      row('경로', lit && onPath ? `${len}번째 / ${path.length} · 종 ${kinds}${pid !== null && g.pathCompleteOf(pid) ? ' · 완성' : ''}` : lit ? '경로 밖' : '—');
+      if (lit && onPath) hints.push(`입수구에서 ${len}번째 — 정원 ×${chainScale(len).toFixed(2)}${def.chain ? ` · ${def.chain} 계열` : ''}`); else if (lit) hints.push('입수구(사다리)에서 기구를 따라 닿아야 경로에 든다'); else if (def.chain) hints.push(`${def.chain} 계열 — 켜지면 경로에 든다`);
+      row('소속 빠지', pid === null ? '—' : `${g.pools.byId(pid)?.name ?? `수역 #${pid}`} · 등급 ${g.ppajiGradeOf(pid)}`);
+      if (lit && onPath) { const tiles: { i: number; j: number }[] = []; for (const ou of path) { const o = g.facilities.byUid(ou); if (!o) continue; tiles.push(...FacilityStore.footprint(g.facilities.defOf(o), o.i, o.j, o.facing)); } this.onSelect(tiles); }
     } else { const has = g.facilityHasPath(uid); row('길', has ? '닿음' : '안 닿음'); if (!has) hints.push('수역 독 「길」 탭으로 잔디에 길을 이으세요'); } // P16 · P50-a: 기구는 자동 길 면제
     if (staffable(def)) { row('알바', f.staff ? '있음' : '없음'); if (f.staff) hints.push(def.class === 'restaurant' ? '알바 — 손님 만족·기운 +20%' : def.class === 'utility' ? '알바 — 청결 +10/일' : '알바 — 안전요원, 손님이 덜 지친다'); }
     row('오늘 이용 · 수입', `${f.usesToday}명 · ${f.incomeToday.toLocaleString('ko-KR')}G`);

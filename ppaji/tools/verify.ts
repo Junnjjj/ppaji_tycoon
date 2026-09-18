@@ -1241,6 +1241,59 @@ async function verifyP60c(page: import('playwright').Page): Promise<void> {
   record('P60-c 건설 카드 「세트」 배지 ≥ 3 · 정보창 「세트」 행(값 ≤ 10자) + 힌트에 세트 이름', Number(r4['badges']) >= 3 && r4['setRow'] !== null && /세트/.test(String(r4['setRow'])) && String(r4['setVal'] ?? '').length <= 10 && Number(r4['setVal']) >= 1 && /세트 /.test(String(r4['hint'])) ? 'pass' : 'fail', JSON.stringify({ badges: r4['badges'], badgeIds: r4['badgeIds'], setRow: r4['setRow'], setVal: r4['setVal'], hint: String(r4['hint']).slice(0, 80) }));
 }
 
+/**
+ * P60-d (D72 A+C) 입수구·경로 — 킷 입수구 1 · 새 링 1 → 라인 조각(뭍 ↔ 링, 다른 변) 뒤 2 · 링 위 기구 3 을 입수구에서 먼 순으로 스릴 오름 + 끝 휴식 → `pathCompleteOf` true + 정보창 「경로 3/완성」 ·
+ * 역순(입수구 옆에 스릴 2, 그 뒤 1)이면 미완성 — 벌점 0(팔찌 값·등급 불변) · 조준 중 확정 바 칩 ≤ 1칸 추가 · FX `path-walk`·`entry-mark` 등록부 이름 1 · 조준하면 fxFired ≥ 1, exit 에서 진다 ·
+ * `ppajiGradeThresholds` 는 balance.json 키(정적). 링은 P60-c 선례 `makePpaji({ i0: 41, j0: 24, w: 6, h: 7 })`(안쪽 물 42~45 × 25~29, 입수구는 북변 43~46,24 · 서변 41,25), 기구는 `game.placeFacility`.
+ * ⚠ sim API 는 과제 S 의 이름(`entriesOf`·`pathOf`·`pathCompleteOf`·`aimPreview().pathNext/completeNext`)을 가정한다.
+ */
+async function verifyP60d(page: import('playwright').Page): Promise<void> {
+  // 행 5 — 정적: 등급 문턱이 데이터(`ppajiGradeThresholds`)로 옮겨졌고 rig.ts 가 그 키를 읽는다 · FX 등록부에 path-walk · entry-mark 각 1
+  {
+    let detail = ''; let ok = false;
+    try {
+      const bal = JSON.parse(readFileSync('src/data/balance.json', 'utf8')) as Record<string, unknown>;
+      const rig = readFileSync('src/sim/rig.ts', 'utf8');
+      const reg = readFileSync('src/render/fx/registry.ts', 'utf8');
+      const th = bal['ppajiGradeThresholds'];
+      const walk = (reg.match(/'path-walk': \(host, t\)/g) ?? []).length, mark = (reg.match(/'entry-mark': \(host, t\)/g) ?? []).length;
+      ok = th !== undefined && rig.includes('ppajiGradeThresholds') && walk === 1 && mark === 1 && /\| 'path-walk'/.test(reg) && /'entry-mark';/.test(reg);
+      detail = JSON.stringify({ thresholds: th, rigReads: rig.includes('ppajiGradeThresholds'), walk, mark });
+    } catch (e) { detail = `읽기 실패 ${String(e).slice(0, 80)}`; }
+    record('P60-d ppajiGradeThresholds 가 balance.json 키 + rig.ts 가 읽는다 · FX 등록부 path-walk 1 · entry-mark 1 (정적)', ok ? 'pass' : 'fail', detail);
+  }
+  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
+  await page.waitForTimeout(300);
+  // 행 1 — 킷 빠지(50~55 × 23~29, 북변이 뭍) 입수구 1 · 새 링(41~46 × 24~30, 북변+서변 한 구간) 입수구 1 → 라인 조각 1×2 를 (39,27)~(40,27) 가로로((38,27) 뭍에 닿고 (41,27) 링에 이어진다 · 북변 구간과 8이웃으로 안 닿는다) → 2.
+  //   ⚠ 킷 자체에 둘째 구간을 내는 라인은 없다 — 킷의 뭍은 북변뿐이라 어느 라인도 기존 구간에 붙는다(실측). 허가는 랭크 2 로(6×7 링 42칸 + 라인 2칸)
+  const r1 = (await page.evaluate(`(() => { const w = window.__pj; w.newGame(777); const g = w.game; w.flow.frozen = true; g.money = 1e6; g.rank = 2; g.openLand(2); const out = {}; const kit = g.pools.all[0]; out.kit = g.entriesOf(kit.id);
+    out.ring = g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }).ok; const pid = g.pools.ownerIdAt(42, 26); out.pid = pid; out.before = g.entriesOf(pid);
+    const lr = g.placeLine(2, 39, 27, 0); out.line = lr.ok ? 1 : (lr.reason || 'x'); w.skip(1); out.after = g.entriesOf(pid); out.kitAfter = g.entriesOf(kit.id); return out; })()`)) as Record<string, unknown>;
+  record('P60-d 킷 입수구 1 · 새 링 입수구 1 → 라인 조각(뭍 ↔ 링, 다른 변) 하나 뒤 2 · 킷은 그대로 1', Number(r1['kit']) === 1 && r1['ring'] === true && Number(r1['before']) === 1 && r1['line'] === 1 && Number(r1['after']) === 2 && Number(r1['kitAfter']) === 1 ? 'pass' : 'fail', JSON.stringify(r1));
+  // 행 2 — 새 링 · 입수구(북변)에서 먼 순으로 징검(스릴 1, 43,25) → 롤러(스릴 2, 43,26) → 선베드(휴식, 43,27~28) → 완성 · 정보창 「입수구 · 경로」 행 값 「e · 3/✓」(≤ 10자) + 힌트 · 팔찌 값·등급을 적어 둔다(행 3 대조)
+  const build = async (order: readonly [string, number, number][]): Promise<Record<string, unknown>> => (await page.evaluate(`(() => { const w = window.__pj; w.newGame(777); const g = w.game; w.flow.frozen = true; g.money = 1e6; const out = {}; for (const id of ['rig_roller', 'rig_sunbed']) g.unlocked.facilities.add(id);
+    out.ring = g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }).ok; const pid = g.pools.ownerIdAt(43, 25); out.pid = pid;
+    out.placed = ${JSON.stringify(order)}.map(([id, i, j]) => { const r = g.placeFacility(id, i, j, 0); return r.ok ? 1 : (r.reason || 'x'); }); w.skip(1);
+    out.entries = g.entriesOf(pid); out.path = g.pathOf(pid).map((uid) => (g.facilities.byUid(uid) || {}).defId); out.complete = g.pathCompleteOf(pid);
+    const pv = g.aimPreview('rig_stepstone', 44, 27, 0); out.pkg = pv ? pv.pkgNow : null; out.grade = pv ? pv.gradeNow : null;
+    w.poolInfo.show(pid); const pw = document.getElementById('win-pool'); const pr = pw.querySelector('[data-path]'); out.rowText = pr ? pr.textContent : null; out.rowVal = pr ? (pr.querySelector('.krow-v') || {}).textContent : null; out.rowState = pr ? pr.dataset.path : null; out.hint = (pw.querySelector('.kfac-hint') || {}).textContent || ''; document.querySelector('#win-pool .kwin-close').click();
+    return out; })()`)) as Record<string, unknown>;
+  const r2 = await build([['rig_stepstone', 43, 25], ['rig_roller', 43, 26], ['rig_sunbed', 43, 27]]);
+  record('P60-d 링 위 기구 3 — 입수구에서 먼 순으로 스릴 1→2 + 끝 휴식 → pathCompleteOf true · 경로 = [징검, 롤러, 선베드] · 정보창 「입수구 · 경로」 값 「e · 3/완성」(≤ 10자) + 힌트 「입수구」', (r2['placed'] as unknown[]).every((p) => p === 1) && r2['complete'] === true && JSON.stringify(r2['path']) === JSON.stringify(['rig_stepstone', 'rig_roller', 'rig_sunbed']) && /· 3\/완성$/.test(String(r2['rowVal'] ?? '')) && String(r2['rowVal'] ?? '').length <= 10 && r2['rowState'] === 'done' && /입수구에서 멀수록/.test(String(r2['hint'])) ? 'pass' : 'fail', JSON.stringify({ placed: r2['placed'], entries: r2['entries'], path: r2['path'], complete: r2['complete'], rowVal: r2['rowVal'], rowState: r2['rowState'], pkg: r2['pkg'], grade: r2['grade'], hint: String(r2['hint']).slice(0, 60) }));
+  // 행 3 — 역순: 입수구 옆에 롤러(스릴 2), 그 뒤 징검(스릴 1), 끝 선베드 → 미완성 · 벌점 0: 같은 판의 팔찌 값·등급이 행 2 와 같다 · 정보창 값 「e · 3」(✓ 없음)
+  const r3 = await build([['rig_roller', 43, 25], ['rig_stepstone', 43, 26], ['rig_sunbed', 43, 27]]);
+  record('P60-d 역순(입수구 옆에 스릴 2 → 1)이면 미완성 — 벌점 0(팔찌 값·등급이 완성 판과 같다) · 정보창 「e · 3」(완성 없음)', (r3['placed'] as unknown[]).every((p) => p === 1) && r3['complete'] === false && r3['pkg'] === r2['pkg'] && r3['grade'] === r2['grade'] && /· 3$/.test(String(r3['rowVal'] ?? '')) && r3['rowState'] === 'open' ? 'pass' : 'fail', JSON.stringify({ placed: r3['placed'], path: r3['path'], complete: r3['complete'], rowVal: r3['rowVal'], pkg: r3['pkg'], grade: r3['grade'], pkgDone: r2['pkg'], gradeDone: r2['grade'] }));
+  // 행 4 — 행 3 판에서 다리(1×2)를 (44,25) 에 조준: 확정 바 칩 중 경로/완성 칩 ≤ 1 · aimPreview.pathNext > 0 · FX path-walk·entry-mark 가 돈다(fxFired · 씬 핸들) · exit 에서 둘 다 진다
+  const r4 = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const out = {}; const f0 = { walk: w.fxFired['path-walk'] || 0, mark: w.fxFired['entry-mark'] || 0 };
+    const def = w.facilityDefs.get('rig_bridge'); w.place.enter(def); w.place.aimAt(44, 25); const pv = g.aimPreview('rig_bridge', 44, 25, 0); out.pathNext = pv ? pv.pathNext : null; out.completeNext = pv ? pv.completeNext : null; out.ok = g.canPlace('rig_bridge', 44, 25, 0, { frontage: true }).ok;
+    const chips = (w.scene.ghostLabelForTest() || '').split(' · '); out.chips = chips; out.pathChips = chips.filter((c) => /^경로 |^코스 완성/.test(c)).length;
+    out.walkFired = (w.fxFired['path-walk'] || 0) - f0.walk; out.markFired = (w.fxFired['entry-mark'] || 0) - f0.mark; out.walkAlive = w.scene.pathWalkForTest().alive; out.markAlive = w.scene.entryMarkForTest();
+    w.place.aimAt(44, 26); out.walkFired2 = (w.fxFired['path-walk'] || 0) - f0.walk; // 조준 칸이 바뀌면 다시 걷는다
+    w.place.exit(); out.walkAfter = w.scene.pathWalkForTest().alive; out.markAfter = w.scene.entryMarkForTest(); return out; })()`)) as Record<string, unknown>;
+  record('P60-d 조준 중 — 확정 바 경로/완성 칩 ≤ 1칸 · pathNext > 0 · FX path-walk ≥ 1(칸 바뀌면 다시) · entry-mark ≥ 1 · exit 에서 둘 다 진다', r4['ok'] === true && Number(r4['pathNext']) > 0 && Number(r4['pathChips']) <= 1 && Number(r4['walkFired']) >= 1 && Number(r4['walkFired2']) >= 2 && Number(r4['markFired']) >= 1 && r4['walkAlive'] === true && r4['markAlive'] === true && r4['walkAfter'] === false && r4['markAfter'] === false ? 'pass' : 'fail', JSON.stringify(r4));
+}
+
 /** P58-a — 푸드코트: 킷 식탁 2 · 틴트 칸 12 · 독 「식탁」 모드 실터치로 6×4 그리면 좌석 8 · 식탁 정보 창은 「푸드코트 지우기」만(이동·철거·개선·알바 숨김) · 지우면 좌석 0 · 하루 뒤 식탁에서 먹은 손님 > 0 */
 /** P59-a (2026-09-18, docs/plan-ppaji-ui-polish.md D64~D67·D70) — 규격: 창 자리 64 고정·kfit 0 · 버튼 높이 집합 · 글자 크기 4단 · HUD 2줄 · 배지 캡슐 · 창 틀(파란 3px + 타일 머리) · 톤 2 */
 async function verifyP59a(page: import('playwright').Page): Promise<void> {
@@ -2205,6 +2258,7 @@ async function main(): Promise<void> {
   if (G >= 159.3) await verifyP59c(page);
   if (G >= 160.1) await verifyP60a(page);
   if (G >= 160.3) await verifyP60c(page);
+  if (G >= 160.4) await verifyP60d(page);
   if (G >= 31) await verifyG31(page);
   if (G >= 33) await verifyG33(page);
   if (G >= 34) await verifyG34(page);

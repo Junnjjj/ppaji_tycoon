@@ -113,7 +113,7 @@ describe('P49-a1 골격', () => {
     expect(g.placeFacility('rig_stepstone', 51, 26, 0).ok).toBe(true);
     expect(g.evaluateCondition({ kind: 'rigCount', min: 1 }).met).toBe(true);
     expect(g.evaluateCondition({ kind: 'rigGrade', min: 1 }).met).toBe(false);
-    expect(g.evaluateCondition({ kind: 'rigChain', min: 1 }).met).toBe(false);
+    expect(g.evaluateCondition({ kind: 'rigPath', min: 1 }).met).toBe(false);
     expect(g.evaluateCondition({ kind: 'rigGuarded', min: 1 }).met).toBe(false);
     makeTestPpaji(g); // 서쪽 헬퍼 빠지(열 44~49) — 윗줄이 뭍에 붙어 있어 망루를 세워도 링이 안 끊긴다
     expect(g.placeFacility('watchtower', 45, 24, 0).ok).toBe(true); // 징검다리(51,26)까지 체비셰프 6 — 반경 안

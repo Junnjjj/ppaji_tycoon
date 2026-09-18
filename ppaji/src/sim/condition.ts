@@ -50,9 +50,11 @@ export interface ConditionWorld {
   year(): number;
   /** 놓인 코스들의 스릴 (P6) */
   courseThrills(): readonly number[];
-  /** P49-a1 — 수역별 빠지 등급 0~4 · 수역별 최장 사슬(a1 은 0) · 기구 목록 */
+  /** P49-a1 — 수역별 빠지 등급 0~4 · P60-d 수역별 경로 길이(입수구에서 이어진 켜진 기구 수) · 기구 목록 */
   ppajiGrades(): readonly number[];
-  rigChains(): readonly number[];
+  rigPaths(): readonly number[];
+  /** P60-d — 수역별 코스 완성 여부 (optional: 검사용 가짜 세계는 안 낸다 → 전부 미완성) */
+  rigPathComplete?(): readonly boolean[];
   rigs(): readonly RigView[];
   /** P60-c — 수역별 성립 세트 수 (optional: 검사용 가짜 세계는 안 낸다 → 0) */
   rigSets?(): readonly number[];
@@ -210,9 +212,13 @@ export function evaluate(c: Condition, w: ConditionWorld, names: { facility: (id
       const need = c.count ?? 1; const gs = w.ppajiGrades(); const found = gs.filter((g) => g >= c.min).length; const best = gs.length ? Math.max(...gs) : 0;
       return { met: found >= need, progress: found >= need ? 1 : need === 1 ? ratio(best, c.min) : found / need, actual: found, need, label: `등급 ${c.min} 빠지 ${need}곳` };
     }
-    case 'rigChain': {
-      const need = c.count ?? 1; const cs = w.rigChains(); const found = cs.filter((n) => n >= c.min).length; const best = cs.length ? Math.max(...cs) : 0;
-      return { met: found >= need, progress: found >= need ? 1 : need === 1 ? ratio(best, c.min) : found / need, actual: found, need, label: `기구 ${c.min}개 이어진 사슬 ${need}개` };
+    case 'rigPath': {
+      const need = c.count ?? 1; const cs = w.rigPaths(); const found = cs.filter((n) => n >= c.min).length; const best = cs.length ? Math.max(...cs) : 0;
+      return { met: found >= need, progress: found >= need ? 1 : need === 1 ? ratio(best, c.min) : found / need, actual: found, need, label: `입수구에서 기구 ${c.min}개 이어진 경로 ${need}개` };
+    }
+    case 'rigPathComplete': {
+      const done = (w.rigPathComplete?.() ?? []).filter(Boolean).length;
+      return { met: done >= c.min, progress: ratio(done, c.min), actual: done, need: c.min, label: `코스 완성 빠지 ${c.min}곳` };
     }
     case 'rigCount': {
       const rs = w.rigs().filter((r) => !c.depth || c.depth === 'any' || r.depth === c.depth || r.depth === 'any');

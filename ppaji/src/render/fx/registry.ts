@@ -14,7 +14,8 @@ export type FxName = 'money-pop' | 'splash-enter' | 'place-ok' | 'place-bad' | '
   | 'fireworks' | 'petal-fall' | 'leaf-fall' | 'lamp-twinkle' | 'snow-fall' | 'ember'
   | 'price-pop' | 'got-item' // P56-a D7: 조준 중 값 팝(같은 key 는 갈아 끼운다) · 「재료 획득!」 한 줄
   | 'buy-pop' | 'band-strip' // P56-a2 D7: 손님 머리 위 구매 카드 「이름 ×1」(그림이 오면 그림) · 팔찌 발급 띠(등급 색이 손님 위를 지나간다)
-  | 'set-star'; // P60-c D72 B: 조준 중 세트가 성립할 이웃 기구 위 작은 별(같은 key 는 갈아 끼운다 — price-pop 과 같은 표)
+  | 'set-star' // P60-c D72 B: 조준 중 세트가 성립할 이웃 기구 위 작은 별(같은 key 는 갈아 끼운다 — price-pop 과 같은 표)
+  | 'path-walk' | 'entry-mark'; // P60-d D72 A: 조준 중 v8 손님 하나가 입수구 → 경로 → 고스트 칸을 1.2초에 걷는다(`path`) · 링의 입수구 칸 표식 ▽(절차 폴백 — 사용자 에셋이 오면 텍스처로). 둘 다 씬이 핸들을 쥐고 exit 에서 지운다(key 합치기 안 씀)
 
 /** 이름별 재생 횟수 (G27 검사용 — 「슬롯이 돈다」를 센다) */
 export const fxFired: Record<string, number> = {};
@@ -32,6 +33,11 @@ export interface FxTarget {
   /** 합치기 키 — 같은 키가 `MERGE_MS` 안에 오면 숫자를 더한다 */
   key?: string;
   amount?: number;
+  /** P60-d `path-walk`: 걸을 월드 점열(입수구 → 경로 기구 → 고스트) · `entry-mark`: 표식을 찍을 점열 — 한 핸들이 전부 그린다(동시 상한 12 를 안 먹는다) */
+  path?: readonly { x: number; y: number }[];
+  /** P60-d `path-walk`: 손님 텍스처 키(씬이 provider 에서 등록해 넘긴다) + 원점(v8 은 spec.ax/ay) */
+  texture?: string;
+  origin?: { x: number; y: number };
 }
 
 export interface FxHandle {
@@ -108,6 +114,49 @@ const IMPL: Record<FxName, (host: FxHost, t: FxTarget) => Live> = {
     const h: Live = { name: 'set-star', key: t.key ?? null, amount: 0, text: null, born: scene.time.now, alive: true, kill() { if (!this.alive) return; this.alive = false; g.destroy(); const at = live.indexOf(this); if (at >= 0) live.splice(at, 1); } };
     if (host.reduced) scene.time.delayedCall(2400, () => h.kill());
     else scene.tweens.add({ targets: g, scaleX: { from: 0.7, to: 1.25 }, scaleY: { from: 0.7, to: 1.25 }, duration: 400, yoyo: true, repeat: 2, ease: 'Sine.easeInOut', onComplete: () => h.kill() });
+    return h;
+  },
+  // P60-d D72 A — 고스트 손님 주행: v8 손님 하나가 `path`(입수구 → 기존 경로 기구 → 고스트 칸)를 1.2초에 걷는다. 구간마다 x/y 트윈을 chain 으로 잇는다(등록부 안 · S9). reduced 면 고스트 칸에 서 있다 1.2초 뒤 진다
+  'path-walk': (host, t) => {
+    const { scene } = host;
+    const path = t.path && t.path.length ? t.path : [{ x: t.x, y: t.y }];
+    const first = path[0] as { x: number; y: number };
+    const img = scene.add.image(first.x, first.y, t.texture ?? '__MISSING');
+    img.setOrigin(t.origin?.x ?? 0.5, t.origin?.y ?? 1).setDepth(DEPTH_SCREEN_FX).setAlpha(0.9);
+    const h: Live = { name: 'path-walk', key: null, amount: 0, text: null, born: scene.time.now, alive: true, kill() { if (!this.alive) return; this.alive = false; img.destroy(); const at = live.indexOf(this); if (at >= 0) live.splice(at, 1); } };
+    const total = 1200;
+    let dist = 0; for (let k = 1; k < path.length; k++) { const a = path[k - 1] as { x: number; y: number }, b = path[k] as { x: number; y: number }; dist += Math.hypot(b.x - a.x, b.y - a.y); }
+    if (host.reduced || path.length < 2 || dist === 0) {
+      const last = path[path.length - 1] as { x: number; y: number };
+      img.setPosition(last.x, last.y);
+      scene.time.delayedCall(total, () => h.kill());
+      return h;
+    }
+    const tweens: Record<string, unknown>[] = [];
+    for (let k = 1; k < path.length; k++) {
+      const a = path[k - 1] as { x: number; y: number }, b = path[k] as { x: number; y: number };
+      const seg = Math.hypot(b.x - a.x, b.y - a.y);
+      if (seg === 0) continue;
+      img.setFlipX(false);
+      tweens.push({ x: b.x, y: b.y, duration: Math.max(40, Math.round(total * seg / dist)), ease: 'Linear', onStart: () => img.setFlipX(b.x < a.x) });
+    }
+    scene.tweens.chain({ targets: img, tweens, onComplete: () => { if (!h.alive) return; scene.tweens.add({ targets: img, alpha: { from: 0.9, to: 0 }, duration: 260, onComplete: () => h.kill() }); } });
+    return h;
+  },
+  // P60-d D72 A — 입수구 표식: 링의 입수구 칸마다 작은 ▽(사다리 자리). 절차 폴백 — 사용자 에셋이 오면 텍스처로 갈아 끼운다. 한 Graphics 가 `path` 전부를 그리고, 숨쉬기는 alpha 트윈만(반복) · 씬이 kill 할 때까지 산다
+  'entry-mark': (host, t) => {
+    const { scene } = host;
+    const pts = t.path && t.path.length ? t.path : [{ x: t.x, y: t.y }];
+    const g = scene.add.graphics();
+    g.setDepth(DEPTH_SCREEN_FX);
+    for (const p of pts) {
+      g.fillStyle(cssColorInt('--fx-ok'), 0.95);
+      g.fillTriangle(p.x - 5, p.y - 12, p.x + 5, p.y - 12, p.x, p.y - 4);
+      g.lineStyle(1, cssColorInt('--fx-stroke'), 0.9);
+      g.strokeTriangle(p.x - 5, p.y - 12, p.x + 5, p.y - 12, p.x, p.y - 4);
+    }
+    const h: Live = { name: 'entry-mark', key: null, amount: 0, text: null, born: scene.time.now, alive: true, kill() { if (!this.alive) return; this.alive = false; g.destroy(); const at = live.indexOf(this); if (at >= 0) live.splice(at, 1); } };
+    if (!host.reduced) scene.tweens.add({ targets: g, alpha: { from: 0.55, to: 1 }, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     return h;
   },
   // 「You got the Lemon!」 — 모달이 아니라 지도 위 한 줄

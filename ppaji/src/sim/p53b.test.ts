@@ -8,13 +8,13 @@ import { makeTestPpaji } from './test-helpers.js';
 import { FLOOR } from './grid.js';
 
 const fresh = (seed = 1): Game => { const g = new Game(seed); g.money = 1e6; for (const d of FACILITY_DEFS.values()) if (d.buildable !== false) g.unlocked.facilities.add(d.id); return g; };
-const base = (): StoryState => ({ pools: 1, poolTiles: 20, visitors: 0, likes: 0, wishes: 0, certs: 0, rank: 0, year: 1, areas: 1, recipes: 0, money: 0, hallSales: 0, ended: false, rigs: 0, rigChain: 0, rigGrade: 0, gearsKnown: 0, vestRentals: 0, rigUpgrades: 0 });
+const base = (): StoryState => ({ pools: 1, poolTiles: 20, visitors: 0, likes: 0, wishes: 0, certs: 0, rank: 0, year: 1, areas: 1, recipes: 0, money: 0, hallSales: 0, ended: false, rigs: 0, rigPath: 0, rigGrade: 0, gearsKnown: 0, vestRentals: 0, rigUpgrades: 0 });
 
 describe('P53-b 스토리·이월·엔딩', () => {
   it('비트 33 — 빠지 축 트리거 6종이 데이터에 있고(9 비트) `first_pool` 은 28 · 화자는 셋 안에서', () => {
     expect(STORY_BEATS.length).toBe(33);
     const kinds = new Set(STORY_BEATS.map((b) => b.trigger.kind));
-    for (const k of ['rigs', 'rigChain', 'rigGrade', 'gearsKnown', 'vestRentals', 'rigUpgrades']) expect(kinds.has(k as never), k).toBe(true);
+    for (const k of ['rigs', 'rigPath', 'rigGrade', 'gearsKnown', 'vestRentals', 'rigUpgrades']) expect(kinds.has(k as never), k).toBe(true);
     expect(STORY_BEATS.find((b) => b.id === 'first_pool')!.trigger).toEqual({ kind: 'poolTiles', min: 28 });
     const rigBeats = ['first_rig', 'rig_chain2', 'vest_first', 'first_workshop', 'first_convert', 'rig_grade2', 'rig_chain4', 'signature', 'rigs12'];
     for (const id of rigBeats) expect(STORY_BEATS.some((b) => b.id === id), id).toBe(true);
@@ -25,8 +25,8 @@ describe('P53-b 스토리·이월·엔딩', () => {
     const d = new StoryDirector();
     d.check(base()); // intro 소비
     expect(d.check({ ...base(), rigs: 1 }).map((b) => b.id)).toEqual(['first_rig']);
-    expect(d.check({ ...base(), rigs: 1, rigChain: 2 }).map((b) => b.id)).toEqual(['rig_chain2']);
-    expect(d.check({ ...base(), rigs: 1, rigChain: 4 }).map((b) => b.id)).toEqual(['rig_chain4']);
+    expect(d.check({ ...base(), rigs: 1, rigPath: 2 }).map((b) => b.id)).toEqual(['rig_chain2']);
+    expect(d.check({ ...base(), rigs: 1, rigPath: 4 }).map((b) => b.id)).toEqual(['rig_chain4']);
     expect(d.check({ ...base(), gearsKnown: 3 }).map((b) => b.id)).toEqual(['first_workshop']);
     expect(d.check({ ...base(), vestRentals: 1 }).map((b) => b.id)).toEqual(['vest_first']);
     expect(d.check({ ...base(), rigUpgrades: 1 }).map((b) => b.id)).toEqual(['first_convert']);

@@ -83,6 +83,13 @@
   "nightSalesMax": 0.4,
   "ppajiChainBase": 2,
   "ppajiChainCap": 2.0,
+  "ppajiGradeThresholds": {
+    "n": [2, 5, 9, 14],
+    "kinds": [0, 3, 5, 6],
+    "pathLen": 4,
+    "pathKinds": 3,
+    "lights": 1
+  },
   "rigRemoveRefund": 0.5,
   "accidentMul": {
     "noVest": 3.0,

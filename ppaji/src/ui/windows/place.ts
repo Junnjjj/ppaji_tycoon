@@ -20,6 +20,10 @@ export interface PlaceHost {
   pricePop?(i: number, j: number, text: string | null): void;
   /** P60-c D72 B — 이 자리에 놓으면 성립하는 세트(`aimPreview.setNext`) — main 이 그 세트의 켜진 멤버 칸을 찾아 `scene.showSetStar` 를 부른다. null = 지운다 */
   setStar?(hit: { poolId: number; setId: string } | null): void;
+  /** P60-d D72 A — 조준 중 `aimPreview.pathNext > 0` 이면 고스트 손님 주행: main 이 수역의 입수구 칸 → 기존 경로 기구 칸 → 고스트 칸을 이어 `scene.showPathWalk` 를 부른다. null = 지운다 */
+  pathWalk?(hit: { poolId: number; at: { i: number; j: number } } | null): void;
+  /** P60-d D72 A — 기구를 조준하는 동안 그 수역 링의 입수구 칸 표식(`scene.showEntryMarks`). null = 지운다 */
+  entryMarks?(poolId: number | null): void;
 }
 
 export class PlaceDock {
@@ -102,6 +106,7 @@ export class PlaceDock {
   exit(): void {
     this.host.showRing([]); // P24 원복 — 취소·확정·붓 교체·패널 열림 전부 exit 를 지난다
     this.host.setStar?.(null); // P60-c 별도 같이 진다
+    this.host.pathWalk?.(null); this.host.entryMarks?.(null); // P60-d 주행·입수구 표식도
     if (!this.def) return;
     this.def = null;
     this.moveUid = null;
@@ -121,6 +126,7 @@ export class PlaceDock {
     if (!this.def) return;
     this.riskChip.classList.add('khide');
     this.host.setStar?.(null); // P60-c: 기본은 없음 — 기구 가지에서 세트가 잡히면 다시 켠다
+    this.host.pathWalk?.(null); this.host.entryMarks?.(null); // P60-d: 같은 규칙 — 기구 가지에서 다시 켠다
     if (!this.at) {
       this.why.textContent = '';
       this.doneBtn.disabled = true;
@@ -143,6 +149,14 @@ export class PlaceDock {
         chips.push(pv.pkgNext !== pv.pkgNow ? `자유이용권 ${pv.pkgNow} → ${pv.pkgNext}G` : `자유이용권 ${pv.pkgNext}G`);
         if (pv.setNext) chips.push(`+${rigSetLabel(pv.setNext, g.setsSeen)}`); // P60-c D72 B: 이 자리에 놓으면 성립하는 세트 — 칩 1칸, 값이 있을 때만 · hidden 미발견은 「+?」
         if (pv.setNext && pv.poolId !== null) this.host.setStar?.({ poolId: pv.poolId, setId: pv.setNext });
+        if (pv.poolId !== null) { // P60-d D72 A — 경로 칩은 값이 바뀔 때만 · 완성이 되는 배치면 「코스 완성」 하나(S4: 체크 문자 금지 — 글자로)(칩 ≤ 1칸 추가) · 입수구 표식은 기구를 조준하는 동안 · 주행은 경로가 생길 때만
+          this.host.entryMarks?.(pv.poolId);
+          if (this.def.class === 'rig' && this.def.onRing !== true && pv.lit) {
+            const pathNow = g.pathOf(pv.poolId).length; // `pathNext` 는 놓으면 경로에서 몇 번째인가(0 = 경로 밖) — 경로에 들면 길이가 pathNow → pathNow+1 로 바뀐다(그 순번은 「연결 n」 칩이 말한다)
+            if (pv.completeNext && !g.pathCompleteOf(pv.poolId)) chips.push('코스 완성'); else if (pv.pathNext > 0) chips.push(`경로 ${pathNow} → ${pathNow + 1}`);
+            if (pv.pathNext > 0) this.host.pathWalk?.({ poolId: pv.poolId, at: { i: this.at.i, j: this.at.j } });
+          }
+        }
         if ((this.def.thrill ?? 0) > 0) { this.riskChip.textContent = `위험 ${pv.riskLabel}`; this.riskChip.className = `kchip krisk-${pv.risk}`; this.riskChip.dataset['risk'] = String(pv.risk); } // P52-b: 위험 모양(스릴 > 0)에만
         label = `${label ? `${label} · ` : ''}${chips.join(' · ')}`;
       }

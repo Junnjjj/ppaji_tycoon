@@ -304,7 +304,7 @@
     {
       "id": "rig_chain2",
       "trigger": {
-        "kind": "rigChain",
+        "kind": "rigPath",
         "min": 2
       },
       "speaker": "nana",
@@ -364,7 +364,7 @@
     {
       "id": "rig_chain4",
       "trigger": {
-        "kind": "rigChain",
+        "kind": "rigPath",
         "min": 4
       },
       "speaker": "nana",

@@ -182,8 +182,9 @@ const CONDITION_KINDS = [
   'pool', 'poolTotalSize', 'facility', 'facilityAdjacent', 'facilityClass', 'recipe', 'recipeCount', 'popularity', // P60-a: 'item' 삭제
   'likes', 'certPasses', 'certPassed', 'friends', 'areas', 'rank', 'gift', 'cookingLevel', 'visitors', 'money', 'year',
   'all', 'any', 'courseThrill', 'seatGrade', 'seatsFed',
-  'rigGrade', 'rigChain', 'rigCount', 'rigGuarded', // P49-a1
+  'rigGrade', 'rigPath', 'rigCount', 'rigGuarded', // P49-a1 · P60-d: rigChain → rigPath(경로 길이)
   'rigSet', // P60-c
+  'rigPathComplete', // P60-d
 ] as const satisfies readonly Condition['kind'][];
 expectTypeOf<Exclude<Condition['kind'], (typeof CONDITION_KINDS)[number]>>().toBeNever();
 

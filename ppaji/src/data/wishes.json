@@ -804,7 +804,7 @@
     "friendId": "dancer",
     "idx": 0,
     "condition": {
-      "kind": "rigChain",
+      "kind": "rigPath",
       "min": 4
     },
     "reward": {
@@ -999,7 +999,7 @@
     "friendId": "florist",
     "idx": 0,
     "condition": {
-      "kind": "rigChain",
+      "kind": "rigPath",
       "min": 4
     },
     "reward": {
@@ -1548,7 +1548,7 @@
     "friendId": "cook",
     "idx": 0,
     "condition": {
-      "kind": "rigChain",
+      "kind": "rigPath",
       "min": 4
     },
     "reward": {
@@ -2293,7 +2293,7 @@
     "friendId": "famous_painter",
     "idx": 0,
     "condition": {
-      "kind": "rigChain",
+      "kind": "rigPath",
       "min": 4
     },
     "reward": {
@@ -2306,7 +2306,7 @@
     "friendId": "famous_painter",
     "idx": 1,
     "condition": {
-      "kind": "rigChain",
+      "kind": "rigPath",
       "min": 4
     },
     "reward": {
@@ -2716,7 +2716,7 @@
     "friendId": "ex_celebrity",
     "idx": 1,
     "condition": {
-      "kind": "rigChain",
+      "kind": "rigPath",
       "min": 4
     },
     "reward": {
@@ -3238,7 +3238,7 @@
     "friendId": "fashion_designer",
     "idx": 0,
     "condition": {
-      "kind": "rigChain",
+      "kind": "rigPath",
       "min": 4
     },
     "reward": {

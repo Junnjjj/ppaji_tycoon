@@ -191,7 +191,7 @@ let goalSlot = 0;
 let pinnedGoal: number | null = null;
 setInterval(() => { goalSlot = (goalSlot + 1) % 3; refreshHud(); }, 6000);
 const goalLine = (): string => {
-  const a = game.pools.all.length === 0 ? '수역에서 강에 부표를 쳐 보자! 손님이 찾아온다' : game.facilities.all.length === 0 ? '건설에서 화장실·평상 연립을 놓아 보자' : game.rigGoalHint(); // P50-b2 목표 A 폴백 ①②(sim 이 낸다)
+  const a = game.pools.all.length === 0 ? '수역에서 강에 부표를 쳐 보자! 손님이 찾아온다' : game.facilities.all.length === 0 ? '건설에서 화장실·평상 연립을 놓아 보자' : game.rigGoalHint() ?? null; // P50-b2 목표 A 폴백 ①②(sim 이 낸다) · P60-d 폴백 ① 문구(사다리 옆)는 game.ts 가 정본
   const wishes = [...game.sns.activeWishes()].sort((x, y) => x.friend.windowUntilDay - y.friend.windowUntilDay);
   const wish = wishes[0];
   // R3 (G48): 창이 2일 남은 소원은 진행률과 함께 먼저 — 근접 실패가 보인다
@@ -287,11 +287,23 @@ const rankingsWin = new RankingsWindow(document.body, () => game);
 const staffWin = new StaffWindow(document.body, () => game, { toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); syncWorldToScene(); refreshHud(); persist(); } });
 /** 확정 바(#dock-place)가 가린 아래 높이 — 조준 중앙은 그 위 영역의 가운데다 (K47-③) */
 const PLACE_DOCK_INSET_CSS = 84;
+/** P60-d — 수역 링의 입수구 칸 (i, j) 목록. `rigState.entryTiles` 는 k = j*w+i 키 */
+const entryTilesOf = (pid: number): { i: number; j: number }[] => { const w = game.grid.w; return (game.rigState.entryTiles.get(pid) ?? []).map((k) => ({ i: k % w, j: Math.floor(k / w) })); };
 const place = new PlaceDock(document.body, () => game, {
   showGhost: (def, i, j, facing, ok, label) => { if (def === null) scene.setAimCenter(false, 0); /* exit() 만 null 을 보낸다 — 취소·확정·붓 교체 전부 여기를 지난다 */ scene.setGhost(def, i, j, facing, ok, label); },
   showRing: (tiles) => scene.setSelection(tiles, false), // P24 조준 반경 — 수역 독의 선택 표시를 재사용
   pricePop: (i, j, text) => { if (text === null) return; const c = tileCenter(i, j); scene.fx('price-pop', { x: c.x, y: c.y - 26, text, key: 'aim' }); }, // P56-a D7
   setStar: (hit) => scene.showSetStar(hit ? game.setMemberTiles(hit.poolId, hit.setId) : []), // P60-c D72 B: 놓으면 세트가 성립하는 자리 — 그 세트의 켜진 멤버 위에 별. exit·거절·붓 교체는 place.ts 가 null 을 보낸다
+  // P60-d D72 A: 입수구 칸(`rigState.entryTiles`, 키 k = j*w+i) 과 경로 기구 칸(`pathOf` 의 uid 순)은 sim 파생값 — 저장 0. exit·refresh 첫머리에서 place.ts 가 null 을 보낸다
+  entryMarks: (pid) => scene.showEntryMarks(pid === null ? [] : entryTilesOf(pid)),
+  pathWalk: (hit) => {
+    if (hit === null) { scene.showPathWalk([]); return; }
+    const entries = entryTilesOf(hit.poolId);
+    const rigs = game.pathOf(hit.poolId).map((uid) => game.facilities.byUid(uid)).filter((f): f is NonNullable<typeof f> => f !== undefined).map((f) => ({ i: f.i, j: f.j }));
+    const head = rigs[0] ?? hit.at; // 출발 입수구 = 첫 경로 기구(없으면 고스트)에 가장 가까운 구간 칸
+    const start = entries.length === 0 ? null : entries.reduce((a, b) => (Math.abs(b.i - head.i) + Math.abs(b.j - head.j) < Math.abs(a.i - head.i) + Math.abs(a.j - head.j) ? b : a));
+    scene.showPathWalk([...(start ? [start] : []), ...rigs, hit.at]);
+  },
   toast: (text, ok) => { hud.showToast(text); sfx.play(ok ? 'coin' : 'error'); },
   onPlaced: (uid) => { consumeFx(); syncWorldToScene(); refreshHud(); persist(); const f = game.facilities.byUid(uid); if (f) { const c = tileCenter(f.i, f.j); scene.fx('money-pop', { x: c.x, y: c.y - 20, text: '설치 완료!', key: `placed:${uid}` }); } },
 });

@@ -81,7 +81,10 @@ export class PoolInfoWindow {
       const hints: string[] = []; // W-9(D68): 값은 숫자, 문장은 힌트 줄
       row('빠지 등급', `${grade}`, 'star'); hints.push(`${PPAJI_GRADE_NAMES[grade] ?? ''} · 인기 ×${g.b.ppajiGradePopMul[grade] ?? 1}`);
       row('기구', `${lit.length}`, 'attraction'); hints.push(`링 시설 ${onRing.length} · 종 ${new Set([...lit, ...onRing].map((f) => f.defId)).size}`);
-      row('연결', `${Math.max(0, ...lit.map((f) => g.rigState.chainLen.get(f.uid) ?? 1))}`, 'build'); hints.push('최장 사슬 — 정원 × 최대 2.0');
+      { const entries = g.entriesOf(p.id), pathLen = g.pathOf(p.id).length, done = g.pathCompleteOf(p.id); // P60-d D72 A: 입수구 수 · 경로 길이 · 완성 — 값 ≤ 10자(「1 · 4/완성」 — S4 체크 문자 금지), 문장은 힌트 줄
+        const pr = row('입수구 · 경로', done ? `${entries} · ${pathLen}/완성` : `${entries} · ${pathLen}`, 'build'); pr.dataset['path'] = done ? 'done' : 'open'; pr.dataset['entries'] = String(entries); pr.dataset['pathLen'] = String(pathLen);
+        hints.push('입수구에서 멀수록 스릴, 끝이 휴식이면 코스 완성(만족 ×1.25)'); }
+      row('연결', `${Math.max(0, ...lit.map((f) => g.rigState.chainLen.get(f.uid) ?? 1))}`, 'build'); hints.push('입수구에서 가장 먼 자리 — 정원 × 최대 2.0'); // P60-d: chainLen = 경로에서 몇 번째
       row('허가', `${p.tiles.length}/${p.tiles.length + Math.max(0, g.permitLeft)}칸`, 'pool'); hints.push(`남은 허가 ${Math.max(0, g.permitLeft)}칸`);
       { const sets = g.setsOf(p.id); const sr = row('세트', `${sets.length}`, 'star'); sr.dataset['sets'] = String(sets.length); // P60-c D72 B: 성립한 세트 수(값 ≤ 10자) — 이름은 힌트 줄, hidden 미발견은 「?」
         hints.push(sets.length ? `세트 ${sets.map((id) => rigSetLabel(id, g.setsSeen)).join('·')} · 팔찌 +50G/세트` : '세트 0 — 서로 다른 기구 셋을 이어 붙이면 이름이 생긴다'); }

@@ -34,6 +34,9 @@ import { cssColorInt, cssVar } from '../ui/tokens.js';
 import { viewport, violatesDotGrid, type Upscale } from './upscale.js';
 import { playFx, type FxName, type FxTarget, type FxHandle } from './fx/registry.js';
 
+/** P60-d — 고스트 손님 주행의 v8 룩 씨앗(직원 `staffNpcSeed` 와 겹치지 않는 값) */
+const PATH_WALK_SEED = 4242;
+
 export interface SceneStats {
   fps: number;
   sprites: number;
@@ -120,6 +123,10 @@ export class WaterparkScene extends Phaser.Scene {
   private aimLabelText: string | null = null;
   /** P60-c D72 B — 조준 중 세트가 성립할 이웃 기구 위 별(FX `set-star` 핸들). 고스트가 지워지면 같이 지운다 */
   private setStars: FxHandle[] = [];
+  /** P60-d D72 A — 조준 중 고스트 손님 주행(FX `path-walk`) 핸들 + 마지막 점열 키(같은 조준 칸이면 다시 안 걷는다) · 링 입수구 표식(FX `entry-mark`) 핸들. 고스트가 지워지면 같이 지운다 */
+  private pathWalk: FxHandle | null = null;
+  private pathWalkKey = '';
+  private entryMark: FxHandle | null = null;
   private poolTint = new Map<number, number>();
   private readonly ambient: { i: number; j: number; kind: 'steam' | 'frost' | 'spray'; nextAt: number }[] = [];
   private readonly emoteImgs = new Map<number, Phaser.GameObjects.Image>();
@@ -1007,6 +1014,7 @@ export class WaterparkScene extends Phaser.Scene {
       this.aimGfx?.destroy(); this.aimGfx = null;
       this.aimLabelText = null;
       this.showSetStar([]); // P60-c: 세트 별도 고스트와 함께 진다
+      this.showPathWalk([]); this.showEntryMarks([]); // P60-d: 주행·입수구 표식도 exit 에서 진다
       this.setSelection([]);
       return;
     }
@@ -1060,6 +1068,39 @@ export class WaterparkScene extends Phaser.Scene {
   }
   /** 검사용 — 살아 있는 세트 별 수 */
   setStarCountForTest(): number { return this.setStars.filter((h) => h.alive).length; }
+
+  /** P60-d 고스트 손님 텍스처 — v8 손님 도트(`npcV8Key`, 고정 씨앗)를 빌린다. v8 이 없으면 옛 절차 도트 */
+  private pathWalkerTexture(): { key: string; origin: { x: number; y: number } } {
+    const v8 = npcV8Key(PATH_WALK_SEED, 0, 'walk', 0, 'happy');
+    const key = this.deps.provider.spec(v8) ? v8 : 'guest/body:1/walk/0/happy';
+    if (!this.textures.exists(key)) { const c = this.deps.provider.canvas(key); if (c) this.textures.addCanvas(key, c); }
+    const spec = key.startsWith('guest/v8/') ? this.deps.provider.spec(key) : null;
+    return { key, origin: spec ? { x: spec.ax / spec.w, y: spec.ay / spec.h } : { x: GUEST_ANCHOR.x / GUEST_W, y: GUEST_ANCHOR.y / GUEST_H } };
+  }
+  /** P60-d D72 A — 고스트 손님 주행: `tiles` = 입수구 칸 → 기존 경로 기구 칸들 → 고스트 칸(main 이 sim 에서 받아 넘긴다). 빈 배열이면 지운다. 같은 점열(= 같은 조준 칸)이면 다시 걷지 않고, 조준 칸이 바뀌면 처음부터 다시 */
+  showPathWalk(tiles: readonly { i: number; j: number }[]): void {
+    const key = tiles.map((t) => `${t.i},${t.j}`).join(';');
+    if (tiles.length > 0 && key === this.pathWalkKey && this.pathWalk !== null) return;
+    this.pathWalk?.kill(); this.pathWalk = null; this.pathWalkKey = key;
+    if (tiles.length === 0) return;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const tex = this.pathWalkerTexture();
+    const path = tiles.map((t) => { const c = tileCenter(t.i, t.j); return { x: c.x, y: c.y + this.liftAt(t.i, t.j) }; });
+    const first = path[0] as { x: number; y: number };
+    this.pathWalk = playFx({ scene: this, reduced }, 'path-walk', { x: first.x, y: first.y, path, texture: tex.key, origin: tex.origin });
+  }
+  /** P60-d D72 A — 링의 입수구 칸 표식(FX `entry-mark` 한 핸들이 전부 그린다). 빈 배열이면 지운다. 부를 때마다 다시 그린다(조준마다 갱신) */
+  showEntryMarks(tiles: readonly { i: number; j: number }[]): void {
+    this.entryMark?.kill(); this.entryMark = null;
+    if (tiles.length === 0) return;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const path = tiles.map((t) => { const c = tileCenter(t.i, t.j); return { x: c.x, y: c.y + this.liftAt(t.i, t.j) }; });
+    const first = path[0] as { x: number; y: number };
+    this.entryMark = playFx({ scene: this, reduced }, 'entry-mark', { x: first.x, y: first.y, path });
+  }
+  /** 검사용 — 주행 손님이 살아 있나 · 표식이 찍힌 칸 수 */
+  pathWalkForTest(): { alive: boolean; key: string } { return { alive: this.pathWalk?.alive === true, key: this.pathWalkKey }; }
+  entryMarkForTest(): boolean { return this.entryMark?.alive === true; }
 
   /** P50-b2 — 빠지 모습: 꺼진 기구 uid · 링 데크 칸의 등급 · 이음쇠 변. 값은 sim 이 내고 여기선 칠하기만 */
   setRigLook(dimUids: ReadonlySet<number>, ringGrades: ReadonlyMap<number, number>, links: readonly { i: number; j: number; dir: 0 | 1 }[]): void {

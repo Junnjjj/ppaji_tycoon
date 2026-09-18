@@ -592,7 +592,7 @@
       },
       {
         "cond": {
-          "kind": "rigChain",
+          "kind": "rigPath",
           "min": 4
         },
         "weight": 1

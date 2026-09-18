@@ -5,7 +5,7 @@
  */
 import { FACILITY_DEFS, INVEST_DEFS, FEATURES, Game } from './game.js';
 import { FLOOR, isIndoorCode, shoreRow } from './grid.js';
-import { CHAIN_BASE, CHAIN_CAP, RIG_SETS } from './rig.js';
+import { CHAIN_BASE, CHAIN_CAP, RIG_SETS, isShore } from './rig.js';
 import { FacilityStore } from './facility.js';
 import { RIG_UPGRADES } from './rig-upgrade.js';
 import { Rng } from './rng.js';
@@ -16,7 +16,7 @@ import { courseEquipment, firstFreeDock } from './course/course.js';
 import type { Condition } from '../data/schema.js';
 
 /** P53-a — 기구 조건 종류. 인증 9 · 소원 20 이 이것을 든다 */
-export const RIG_COND_KINDS: ReadonlySet<string> = new Set(['rigCount', 'rigChain', 'rigGrade', 'rigGuarded', 'rigSet']); // P60-c: 세트(set_f/d/b)
+export const RIG_COND_KINDS: ReadonlySet<string> = new Set(['rigCount', 'rigPath', 'rigGrade', 'rigGuarded', 'rigSet', 'rigPathComplete']); // P60-c: 세트(set_f/d/b) · P60-d: rigChain → rigPath(경로 길이) + rigPathComplete
 export function hasRigCond(c: Condition | undefined): boolean {
   if (!c) return false;
   if (c.kind === 'all' || c.kind === 'any') return c.of.some(hasRigCond);
@@ -31,6 +31,8 @@ export interface BotOptions {
   noRig?: boolean; noConvert?: boolean; noVest?: boolean; noNight?: boolean;
   /** P60-c — `--no-set` 대조군: `attachRigs` 의 「세트 완성 후보 우선」을 끈다 */
   noSet?: boolean;
+  /** P60-d — `--no-path` 대조군: `attachRigs` 의 「입수구 거리 오름차순 · 휴식 계열 마지막」 정렬을 끈다(세트 우선은 그대로) */
+  noPath?: boolean;
   /** 예비비 — 이 아래로는 안 쓴다 */
   reserve: number;
   /** 하루에 파는 최대 칸 */
@@ -579,9 +581,15 @@ export class Bot {
     const completes = this.opts.noSet ? new Map<string, { near2: Set<number>; near1: Set<number> }>() : this.setCompleters(g);
     const done = (id: string): boolean => (completes.get(id)?.near2.size ?? 0) > 0; // 놓으면 성립
     // 순서: 성립 후보 → 새 종(값 순) → 세트를 쌓는 둘째 사본(값 순). 둘째 사본은 세트 멤버 곁에만 서므로 8세트 × 2 가 상한이고, 새 종보다 뒤라 종 수를 안 깎는다
+    // P60-d §10.4 — 새 종 안에서는 **휴식 계열을 마지막에**(코스의 끝), 그 앞은 스릴 오름차순(경로의 스릴이 비감소여야 완성). 세트 완성 > 입수구 거리 — 우선순위 둘을 합친 것. `--no-path` 는 옛 값 순
     const tier = (d: { id: string }): number => (done(d.id) ? 0 : !have.has(d.id) ? 1 : 2);
-    const defs = [...FACILITY_DEFS.values()].filter((d) => g.isUnlocked(d.id) && ((d.class === 'rig' && d.onRing !== true && (!have.has(d.id) || completes.has(d.id))) || (d.onRing === true && completes.has(d.id)))).sort((a, b) => tier(a) - tier(b) || a.cost - b.cost); // 링 위 종은 세트 자리에서만
+    const restLast = (d: { chain?: string | null; thrill?: number }): number => (this.opts.noPath ? 0 : d.chain === 'rest' ? 100 : (d.thrill ?? 0));
+    const defs = [...FACILITY_DEFS.values()].filter((d) => g.isUnlocked(d.id) && ((d.class === 'rig' && d.onRing !== true && (!have.has(d.id) || completes.has(d.id))) || (d.onRing === true && completes.has(d.id)))).sort((a, b) => tier(a) - tier(b) || restLast(a) - restLast(b) || a.cost - b.cost); // 링 위 종은 세트 자리에서만 · P60-d: 휴식 계열은 새 종 중 맨 뒤·먼 자리(⚠ 휴식을 `capCourse` 에만 맡겨 봤다 — 초반 값싼 기구 둘이 빠져 밤 파티가 94 → 17~44 일로 늦어져 되돌렸다)
     const spots0 = this.litWaterSpots(g);
+    const usePath = !this.opts.noPath; // P60-d: 입수구 거리(경로 BFS 거리) — 가까운 자리부터(휴식은 먼 자리부터)
+    if (usePath && this.capCourse(g, spendable, spots0)) return true; // P60-d: 경로 ≥3 이 스릴 순으로 서 있는데 끝이 휴식이 아니면 휴식 하나를 끝에 — 「마지막엔 rest」
+    // P60-d 자리 값 — ① 세트 자리 ② 켜진 기구가 많은 수역부터(등급 3·밤 파티가 「한 수역에 9~14」를 요구한다 — 입수구 거리만 보면 수역마다 흩어져 밤이 0 이었다, 실측) ③ 스릴 순서 벌점(그 수역에서 스릴이 더 낮은 기구보다 입수구에 가까우면 뒤로 — 경로의 스릴 비감소) ④ 입수구 거리
+    const poolPri = (pid: number): number => -(g.rigState.byPool.get(pid)?.length ?? 0);
     for (const d of defs) {
       if (spendable() < d.cost) continue;
       let tried = 0;
@@ -592,11 +600,79 @@ export class Bot {
       }
       // 세트 자리부터(성립 자리 → 쌓는 자리 → 나머지) — 이미 다른 수역에 있는 종은 **성립 자리에만**(아무 데나 두면 세트 없는 중복이 되어 종 수·기구 지출이 무너진다: 실측 rigsDistinct 18 → 12)
       const rankOf = (sp: { i: number; j: number }): number => { const k = sp.j * g.grid.w + sp.i; return near?.near2.has(k) ? 0 : near?.near1.has(k) ? 1 : 2; };
-      const spots = near ? (have.has(d.id) ? spots0.filter((sp) => rankOf(sp) <= (done(d.id) ? 0 : 1)) : [...spots0].sort((x, y) => rankOf(x) - rankOf(y))) : spots0;
+      const levelOf = (sp: { i: number; j: number }): number => (usePath ? this.pathLevelAt(g, sp.i, sp.j) : Infinity);
+      const distOf = (sp: { i: number; j: number }): number => { const v = levelOf(sp); return d.chain === 'rest' && Number.isFinite(v) ? -v : v; }; // 휴식은 먼 자리부터(경로 끝), 경로에 안 닿는 자리는 맨 뒤
+      const keyOf = (sp: { i: number; j: number }): number[] => {
+        if (!usePath) return [rankOf(sp)];
+        const pid = g.pools.ownerIdAt(sp.i, sp.j);
+        return [rankOf(sp), poolPri(pid), distOf(sp)]; // 세트 자리 > 큰 수역(입수구 거리만 보면 수역마다 흩어져 밤 파티(한 수역 9)가 0 이 됐다 — 실측) > 입수구 거리. ⚠ 「스릴 순서가 맞는 자리」(pathFit) 벌점도 재 봤다 — 완성 몫이 대조군과 같은 0.20 이고 밤만 94 → 56 으로 줄어 뺐다
+      };
+      const cmp = (x: { i: number; j: number }, y: { i: number; j: number }): number => { const a = keyOf(x), b = keyOf(y); for (let k = 0; k < a.length; k++) if ((a[k] as number) !== (b[k] as number)) return (a[k] as number) - (b[k] as number); return 0; };
+      const spots = near ? (have.has(d.id) ? spots0.filter((sp) => rankOf(sp) <= (done(d.id) ? 0 : 1)) : [...spots0].sort(cmp)) : usePath ? [...spots0].sort(cmp) : spots0;
       for (const sp of spots) {
         if (tried >= 60) break; // 발자국이 큰 종(거북섬 8×6·해먹 3×2)은 자리가 드물다 — 후보를 넉넉히(킷 빠지가 차면 봇의 다음 빠지까지 훑는다)
         for (const facing of [0, 1] as const) { const r = g.placeFacility(d.id, sp.i, sp.j, facing); if (r.ok) return true; }
         tried++;
+      }
+    }
+    return false;
+  }
+  /**
+   * P60-d — 코스 마감: 경로가 3 이상이고 끝의 휴식을 뺀 앞부분이 스릴 비감소인데 마지막이 휴식이 아닌 수역에, 값싼 휴식 기구 하나를 마지막 기구 곁(입수구에서 더 먼 쪽)에 붙인다.
+   * 경로 긴 수역부터 하루 하나. 이미 완성이거나 끝이 휴식이면(경로가 그 뒤로 자란 것) 안 붙인다 — 휴식 도배 방지
+   */
+  private capCourse(g: Game, spendable: () => number, spots0: { i: number; j: number }[]): boolean {
+    const have = new Set(g.facilities.all.map((f) => baseKind(f.defId)));
+    const rests = [...FACILITY_DEFS.values()].filter((d) => d.class === 'rig' && d.onRing !== true && d.chain === 'rest' && g.isUnlocked(d.id)).sort((a, b) => Number(have.has(a.id)) - Number(have.has(b.id)) || a.cost - b.cost); // 아직 없는 휴식 종부터(종 수), 그다음 값
+    if (rests.length === 0) return false;
+    const w = g.grid.w;
+    for (const p of [...g.pools.all].sort((a, b) => g.pathOf(b.id).length - g.pathOf(a.id).length || a.id - b.id)) {
+      const path = g.pathOf(p.id);
+      if (path.length < 3 || g.pathCompleteOf(p.id)) continue;
+      const defs = path.map((u) => g.facilities.defOf(g.facilities.byUid(u)!));
+      if (defs.some((d) => d.chain === 'rest')) continue; // 휴식이 이미 있는데 완성이 아니면(뒤로 자랐거나 중간에 끼었다) 더 안 붙인다 — 휴식 도배 방지
+      let mono = true; for (let k = 1; k < defs.length; k++) if ((defs[k]!.thrill ?? 0) < (defs[k - 1]!.thrill ?? 0)) { mono = false; break; }
+      if (!mono) continue;
+      const last = g.facilities.byUid(path[path.length - 1]!)!, lastFp = FacilityStore.footprint(defs[defs.length - 1]!, last.i, last.j, last.facing);
+      const maxDist = Math.max(...path.map((u) => g.rigState.pathDist.get(u) ?? 0));
+      const adj = new Set<number>(); for (const t of lastFp) for (const [a, b] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) adj.add((t.j + b) * w + t.i + a);
+      const spots = spots0.filter((sp) => adj.has(sp.j * w + sp.i) && this.pathLevelAt(g, sp.i, sp.j) >= maxDist).sort((x, y) => this.pathLevelAt(g, y.i, y.j) - this.pathLevelAt(g, x.i, x.j)); // 마지막 기구 곁 · 모든 기구보다 멀거나 같은 거리(같으면 uid 로 뒤)
+      for (const d of rests) {
+        if (spendable() < d.cost) continue;
+        for (const sp of spots) for (const facing of [0, 1] as const) if (g.placeFacility(d.id, sp.i, sp.j, facing).ok) return true;
+      }
+    }
+    return false;
+  }
+  /**
+   * P60-d — 후보 칸에 기구를 놓으면 경로에서 어느 BFS 거리에 서는가: 입수구 칸에 4이웃으로 닿으면 0, 경로 위 기구에 닿으면 그 거리 +1, 아니면 ∞(켜져도 경로 밖).
+   * 경로 순서는 (거리, uid) 라 같은 거리의 기존 기구 뒤에 선다 — `pathFit` 이 이 가정으로 잰다
+   */
+  private pathLevelAt(g: Game, i: number, j: number): number {
+    const w = g.grid.w, entry = new Set(g.rigState.entryTiles.get(g.pools.ownerIdAt(i, j)) ?? []);
+    let best = Infinity;
+    for (const [a, b] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
+      if (entry.has((j + b) * w + i + a)) return 0;
+      const f = g.facilities.at(i + a, j + b); const d = f ? g.rigState.pathDist.get(f.uid) : undefined;
+      if (d !== undefined) best = Math.min(best, d + 1);
+    }
+    return best;
+  }
+  /** P60-d — 입수구가 0 인 수역(뭍에 안 닿은 링)이 있으면 라인 조각 하나로 링을 뭍에 잇는다. 링 데크 칸마다 네 방향 × 길이 셋을 `canPlaceLine` 으로 훑어 조각이 뭍에 4이웃으로 닿는 첫 자리 */
+  private ensureEntry(g: Game, spendable: () => number): boolean {
+    const w = g.grid.w, N4 = [[1, 0], [-1, 0], [0, 1], [0, -1]] as const;
+    for (const p of g.pools.all) {
+      if (g.entriesOf(p.id) > 0) continue;
+      const ring = new Set<number>();
+      for (const k of p.tiles) { const i = k % w, j = Math.floor(k / w); for (const [a, b] of N4) if (g.grid.at(i + a, j + b) === FLOOR.deck) ring.add((j + b) * w + i + a); }
+      for (const k of [...ring].sort((x, y) => x - y)) {
+        const i = k % w, j = Math.floor(k / w);
+        for (const len of g.b.ppajiLineLens) for (const [i0, j0, facing] of [[i + 1, j, 0], [i - len, j, 0], [i, j + 1, 1], [i, j - len, 1]] as const) {
+          const c = g.canPlaceLine(len, i0, j0, facing);
+          if (!c.ok || (c.cost ?? 0) > spendable()) continue;
+          if (!g.lineTiles(len, i0, j0, facing).some((t) => N4.some(([a, b]) => isShore(g.grid, g.facilities, t.i + a, t.j + b)))) continue;
+          if (g.placeLine(len, i0, j0, facing).ok) return true;
+        }
       }
     }
     return false;
@@ -693,22 +769,30 @@ export class Bot {
     let placed = 0;
     const kinds = new Map<string, { i: number; j: number }[]>();
     const CHAIN_FULL = CHAIN_BASE * CHAIN_CAP * CHAIN_CAP; // 8 — 그 위로는 정원이 안 는다(chainScale 상한). 게임 값에서 유도(POOL_TARGET_TILES 선례)
+    const usePath = !this.opts.noPath; // P60-d: 수역 경로가 8 이면 더 안 잇는다(정원 배율 상한)
     for (const f of g.facilities.all) {
       const d = g.facilities.defOf(f); if (d.class !== 'rig' || d.onRing === true || !d.chain || !g.rigState.lit.has(f.uid)) continue;
       if ((g.rigState.chainLen.get(f.uid) ?? 1) >= CHAIN_FULL) continue; // 사슬 도배 방지 — 실측 21
+      const pid = g.poolOfFacility(f.uid);
+      if (usePath && pid !== null && g.pathOf(pid).length >= CHAIN_FULL) continue; // P60-d: chainLen 이 경로 순번이라 앞쪽 기구는 언제나 8 미만 — 수역 경로 길이로 막는다(실측: 징검돌 11 도배)
       const arr = kinds.get(d.chain) ?? []; arr.push({ i: f.i, j: f.j }); kinds.set(d.chain, arr);
     }
     // P60-c — 세트 자리 예약: 쌓다 만 세트의 빠진 종이 설 칸(멤버 곁)은 사슬로 덮지 않는다(사슬이 수역을 다 채워 셋째 멤버가 설 자리가 없었다 — 실측 20칸 수역에 기구 15). `--no-set` 대조군은 예약 0
     const reserved = new Set<number>(); if (!this.opts.noSet) for (const e of this.setCompleters(g).values()) { for (const k of e.near2) reserved.add(k); for (const k of e.near1) reserved.add(k); }
     for (const [chain, ends] of kinds) {
-      const defs = [...FACILITY_DEFS.values()].filter((d) => d.class === 'rig' && d.onRing !== true && d.chain === chain && g.isUnlocked(d.id)).sort((a, b) => a.cost - b.cost);
+      const defs0 = [...FACILITY_DEFS.values()].filter((d) => d.class === 'rig' && d.onRing !== true && d.chain === chain && g.isUnlocked(d.id)).sort((a, b) => a.cost - b.cost);
       for (const e of ends) {
         if (placed >= 3) return placed;
+        const defs = defs0;
         for (const d of defs) {
           if (spendable() < d.cost) continue;
           let ok = false;
           for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1], [2, 0], [-2, 0], [0, 2], [0, -2]] as const) {
-            for (const facing of [0, 1] as const) { if (FacilityStore.footprint(d, e.i + di, e.j + dj, facing).some((t) => reserved.has(t.j * g.grid.w + t.i))) continue; if (g.placeFacility(d.id, e.i + di, e.j + dj, facing).ok) { ok = true; break; } }
+            for (const facing of [0, 1] as const) {
+              const fp = FacilityStore.footprint(d, e.i + di, e.j + dj, facing);
+              if (fp.some((t) => reserved.has(t.j * g.grid.w + t.i))) continue;
+              if (g.placeFacility(d.id, e.i + di, e.j + dj, facing).ok) { ok = true; break; }
+            }
             if (ok) break;
           }
           if (ok) { placed++; break; }
@@ -723,6 +807,7 @@ export class Bot {
    */
   private growPpaji(spendable: () => number): boolean {
     const g = this.game, land = g.land;
+    if (this.ensureEntry(g, spendable)) return true; // P60-d: 뭍에 안 닿은 링부터 잇는다 — 입수구 0 이면 경로가 없고 기구가 전부 「경로 밖」
     const sizes: [number, number][] = g.permitLeft >= 48 ? [[10, 8], [6, 7], [8, 7], [6, 9]] : [[6, 7], [8, 7], [6, 9]]; // P51: 허가가 넉넉하면 안 8×6(거북섬 8×6 이 들어간다 — 종 수 밴드) 먼저
     for (const [w, h] of sizes) {
       for (let c = land.i0; c + w <= land.i0 + land.w; c++) {
@@ -763,7 +848,12 @@ export interface RunMetrics {
   rigRepeatRatio: number;
   /** P50-b1 밴드 7 — 기구 종 수 · 최장 사슬 · 최고 등급 · 이용 몫 · 빠지 지출 몫 · 데크/기구 지출 구성 */
   rigsDistinct: number;
+  /** P60-d — 뜻이 경로 순번: 128일 끝 최장 경로(= 어느 기구의 chainLen 최대) */
   rigChainMax: number;
+  /** P60-d — 128일 끝 수역별 최장 경로 길이 · 경로 있는 수역 중 코스 완성 몫 · 수역별 입수구 수 중앙 */
+  rigPathLen: number;
+  rigPathCompleteShare: number;
+  ringEntries: number;
   /** P60-c — 128일 동안 발견한 세트 수(`setsSeen`) / 8 */
   rigSetsFound: number;
   rigGradeMax: number;
@@ -918,6 +1008,9 @@ export function runBot(game: Game, days: number, opts: BotOptions = BOT_DEFAULTS
     poolTilesY1: perYear[0]?.poolTiles ?? game.pools.totalTiles(),
     rigsDistinct: new Set(game.facilities.all.filter((f) => game.facilities.defOf(f).class === 'rig').map((f) => baseKind(f.defId))).size, // P51: 개조판은 원래 종
     rigChainMax: Math.max(0, ...game.facilities.all.map((f) => game.rigState.chainLen.get(f.uid) ?? 0)),
+    rigPathLen: Math.max(0, ...game.pools.all.map((p) => game.pathOf(p.id).length)), // P60-d
+    rigPathCompleteShare: (() => { const withPath = game.pools.all.filter((p) => game.pathOf(p.id).length > 0); return withPath.length > 0 ? withPath.filter((p) => game.pathCompleteOf(p.id)).length / withPath.length : 0; })(),
+    ringEntries: (() => { const xs = game.pools.all.map((p) => game.entriesOf(p.id)).sort((a, b) => a - b); return xs[Math.floor(xs.length / 2)] ?? 0; })(),
     rigSetsFound: game.setsSeen.size, // P60-c
     rigGradeMax: Math.max(0, ...game.pools.all.map((p) => game.ppajiGradeOf(p.id))),
     rigUseShare: (() => { let rig = 0, all = 0; for (const f of game.facilities.all) { const d = game.facilities.defOf(f); all += f.usesTotal; if (d.class === 'rig' || d.onRing === true) rig += f.usesTotal; } return all > 0 ? rig / all : 0; })(),

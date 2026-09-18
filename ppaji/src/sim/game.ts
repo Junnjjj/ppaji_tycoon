@@ -444,7 +444,8 @@ export class Game {
       year: () => this.clock.year,
       courseThrills: () => this.courses.all.map((c) => this.evaluateCourse(c.handle)?.thrill ?? 0),
       ppajiGrades: () => this.pools.all.map((p) => this.ppajiGradeOf(p.id)), // P49-a1
-      rigChains: () => this.pools.all.map(() => 0), // P50-b1 이 사슬을 낸다
+      rigPaths: () => this.pools.all.map((p) => this.pathOf(p.id).length), // P60-d: 입수구에서 이어진 경로 길이
+      rigPathComplete: () => this.pools.all.map((p) => this.pathCompleteOf(p.id)), // P60-d
       rigSets: () => this.pools.all.map((p) => this.setsOf(p.id).length), // P60-c
       rigs: () => this.facilities.all.filter((f) => this.facilities.defOf(f).class === 'rig').map((f) => { const d = this.facilities.defOf(f); return { id: d.id, depth: d.depth ?? 'any', chain: d.chain ?? null, guarded: this.rigGuardedAt(f) }; }),
       seatGrades: () => this.facilities.all.filter((f) => this.facilities.defOf(f).class === 'lounging').map((f) => this.seatGradeOf(f.uid).grade), // P28
@@ -2047,7 +2048,7 @@ export class Game {
       wishes: this.sns.unlockedFriends.reduce((n, f) => n + f.done.length, 0), certs: this.certs.passes(), rank: this.rank,
       year: this.clock.year, areas: this.sns.areas.length, recipes: this.cooking.known.size, money: this.money, ended: this.clock.ended, hallSales: (this.stats.passByEnter ?? 0) + (this.stats.passByLeave ?? 0),
       // P53-b 빠지 축 6 — 켜진 기구 · 최장 사슬 · 최고 등급 · 공방 도감 · 팔찌 · 개조
-      rigs: this.rigState.lit.size, rigChain: Math.max(0, ...this.rigState.chainLen.values()), rigGrade: Math.max(0, ...this.pools.all.map((p) => this.ppajiGradeOf(p.id))),
+      rigs: this.rigState.lit.size, rigPath: Math.max(0, ...this.pools.all.map((p) => this.pathOf(p.id).length)), rigGrade: Math.max(0, ...this.pools.all.map((p) => this.ppajiGradeOf(p.id))),
       gearsKnown: this.workshop.known.size, vestRentals: this.stats.vestRentals ?? 0, rigUpgrades: this.stats.converts ?? 0,
     });
     for (const b of beats) this.inbox.push({ tick: this.tick, day: this.day, kind: 'story', priority: 'strip', title: b.speaker, body: b.lines.join('\n'), speaker: b.speaker });
@@ -2477,6 +2478,10 @@ export class Game {
   parkPpajiPool(): number | null { let best: number | null = null, bg: PpajiGrade = 0; for (const p of this.pools.all) { const x = this.ppajiGradeOf(p.id); if (x > bg || (x === bg && x > 0 && best !== null && p.id < best)) { best = p.id; bg = x; } } return best; }
   /** P60-c §10.3 — 수역의 성립 세트 id (`RIG_SETS` 순 · 같은 세트는 한 번) */
   setsOf(poolId: number): readonly string[] { return this.rigState.sets.get(poolId) ?? []; }
+  /** P60-d §10.4 — 수역의 입수구 수(뭍에 닿은 링 칸의 연속 구간) · 경로(켜진 기구 uid, 입수구에서 BFS 순) · 코스 완성(스릴 비감소 ∧ 끝 휴식). 전부 `rigState` 파생 — 저장 0 */
+  entriesOf(poolId: number): number { return this.rigState.entries.get(poolId) ?? 0; }
+  pathOf(poolId: number): readonly number[] { return this.rigState.path.get(poolId) ?? []; }
+  pathCompleteOf(poolId: number): boolean { return this.rigState.pathComplete.get(poolId) ?? false; }
   /** P60-c D72 B 고스트 별 — 그 수역에서 세트 `setId` 의 멤버(원종 또는 그 id)인 켜진 물 위 기구·링 위 시설의 발자국 가운데 칸 하나씩. UI 가 「어느 이웃이 세트를 완성하나」를 따로 세지 않도록 sim 이 낸다. `computeRigs` 와 같은 멤버 규칙, 수역은 `byPool`(물 위)·`poolOfFacility`(링 위) */
   setMemberTiles(poolId: number, setId: string): { i: number; j: number }[] {
     const def = RIG_SETS.find((s) => s.id === setId);
@@ -2542,6 +2547,7 @@ export class Game {
         nightSet: () => this.nightSet,
         evening: () => this.tick >= EVENING_TICK,
         onNightUse: () => { this.stats.nightUses = (this.stats.nightUses ?? 0) + 1; },
+        pathComplete: (pid) => this.pathCompleteOf(pid), // P60-d: 코스 완성 수역의 기구 이용 만족 ×1.25
         lateDay: () => this.tick >= LATE_DAY_TICK,
         onPassBy: (_g, _f, kind) => { if (kind === 'enter') this.stats.passByEnter = (this.stats.passByEnter ?? 0) + 1; else this.stats.passByLeave = (this.stats.passByLeave ?? 0) + 1; },
         poolIndoor: (id) => this.poolIndoor(id),
@@ -2908,7 +2914,7 @@ export class Game {
    * P50-b2 §3.7 조준 미리보기 — 가짜 인스턴스를 **저장소에 넣지 않고** `computeRigs` 오버레이로 넘겨 등급·사슬·팔찌 값을 그대로 돌린다(미리보기 전용 산식 0줄).
    * `wouldEnclose` 와 같은 제약: nextUid·occ·grid.rev·pools.version 불변.
    */
-  aimPreview(defId: string, i: number, j: number, facing: 0 | 1): { poolId: number | null; gradeNow: PpajiGrade; gradeNext: PpajiGrade; chainNext: number; lit: boolean; capNext: number; pkgNow: number; pkgNext: number; risk: RiskLevel; riskLabel: string; /** P60-c — 놓으면 새로 성립하는 세트 id (없으면 null) */ setNext: string | null } | null {
+  aimPreview(defId: string, i: number, j: number, facing: 0 | 1): { poolId: number | null; gradeNow: PpajiGrade; gradeNext: PpajiGrade; chainNext: number; lit: boolean; capNext: number; pkgNow: number; pkgNext: number; risk: RiskLevel; riskLabel: string; /** P60-c — 놓으면 새로 성립하는 세트 id (없으면 null) */ setNext: string | null; /** P60-d — 놓으면 경로에서 몇 번째인가(0 = 경로 밖) · 놓으면 그 수역이 코스 완성인가 */ pathNext: number; completeNext: boolean } | null {
     const def = FACILITY_DEFS.get(defId);
     if (!def || !(def.class === 'rig' || def.onRing === true)) return null;
     const overlayUid = -1;
@@ -2933,11 +2939,13 @@ export class Game {
       gradeNext = ppajiGrade({ n, kinds, chain, chainKinds, lights });
       chainNext = lit ? (st.chainLen.get(overlayUid) ?? 1) : 0;
     }
-    const capNext = def.capacity <= 0 ? 0 : Math.round(def.capacity * Math.min(CHAIN_CAP, Math.max(1, Math.sqrt(Math.max(1, chainNext) / CHAIN_BASE))));
+    const capNext = def.capacity <= 0 ? 0 : Math.round(def.capacity * Math.min(CHAIN_CAP, Math.max(1, Math.sqrt(Math.max(1, chainNext) / CHAIN_BASE)))); // P60-d: chainNext 는 경로 순번(사슬 개념 흡수) — 같은 식이 「경로가 길수록 정원」이 된다
+    const pathNext = poolId === null ? 0 : (st.path.get(poolId) ?? []).indexOf(overlayUid) + 1; // P60-d: 오버레이가 경로에 들면 순번(1부터), 아니면 0
+    const completeNext = poolId === null ? false : (st.pathComplete.get(poolId) ?? false);
     const risk = this.riskOf(def, i, j, facing); // P52-b
     const setsNow = poolId === null ? [] : this.setsOf(poolId), setsNext = poolId === null ? [] : (st.sets.get(poolId) ?? []); // P60-c: 오버레이 상태의 세트 — 저장소·setsSeen 무변경
     const setNext = setsNext.find((id) => !setsNow.includes(id)) ?? null;
-    return { poolId, gradeNow, gradeNext, chainNext, lit, capNext, pkgNow: this.bandPriceAt(poolId, bandTop(gradeNow), gradeNow, setsNow.length), pkgNext: this.bandPriceAt(poolId, bandTop(gradeNext), gradeNext, setsNext.length), risk: risk.level, riskLabel: risk.label, setNext };
+    return { poolId, gradeNow, gradeNext, chainNext, lit, capNext, pkgNow: this.bandPriceAt(poolId, bandTop(gradeNow), gradeNow, setsNow.length), pkgNext: this.bandPriceAt(poolId, bandTop(gradeNext), gradeNext, setsNext.length), risk: risk.level, riskLabel: risk.label, setNext, pathNext, completeNext };
   }
   private rigLinkCache: { key: string; edges: { i: number; j: number; dir: 0 | 1 }[] } | null = null;
   /** P50-b2 상시 이음쇠 — 켜진 기구끼리·기구와 링 데크가 맞닿은 변 (i,j 칸에서 dir 0 = +I 쪽 이웃, 1 = +J 쪽). 씬은 그리기만. 프레임당 1회 캐시 */
@@ -2965,10 +2973,10 @@ export class Game {
   /** P50-b2 목표 A 폴백 사슬 ①② — 켜진 기구 0 → 붙이자 · 사슬 ≤1 ∧ 장애물 계열 ≥2 → 이어 붙이자 (③ 개조는 P51 · ④ 가을 심사는 기존) */
   rigGoalHint(): string | null {
     if (this.pools.all.length === 0) return null;
-    if (this.rigState.lit.size === 0) return '빠지에 기구를 하나 붙이자 — 건설 「빠지」 탭, 링(데크)에 닿게';
+    if (this.rigState.lit.size === 0) return '사다리 옆에 기구를 붙이자 — 건설 「빠지」 탭, 입수구(사다리) 곁 링에 닿게'; // P60-d D72 A: 첫 기구는 입수구 옆이어야 경로가 생긴다 — 「기구」 낱말은 남긴다(P50-b2 하네스)
     let chainMax = 0, obstacles = 0;
     for (const f of this.facilities.all) { const d = this.facilities.defOf(f); if (d.class !== 'rig' || d.onRing === true || !this.rigState.lit.has(f.uid)) continue; chainMax = Math.max(chainMax, this.rigState.chainLen.get(f.uid) ?? 1); if (d.chain === 'obstacle') obstacles++; }
-    if (chainMax <= 1 && obstacles >= 2) return '기구를 이어 붙여 보자 — 같은 계열이 닿으면 정원이 는다';
+    if (chainMax <= 1 && obstacles >= 2) return '기구를 이어 붙여 보자 — 입수구에서 멀수록 정원이 는다'; // P60-d: chainLen = 경로 순번
     if ((this.stats.converts ?? 0) === 0 && this.facilities.all.some((f) => this.rigs.upgradesFor(f.defId).length > 0)) return '기구를 개조해 보자 — 시설 창의 「개조」, 같은 자리에서 바뀐다'; // P51 폴백 ③
     return null;
   }

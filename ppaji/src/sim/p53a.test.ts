@@ -15,10 +15,10 @@ describe('P53-a 인증·소원·달력 재배선 — 조건 4종 · 교착 0 · 
     for (const c of rigCerts) for (const w of c.conditions) for (const l of leaves(w.cond)) if (RIG_COND_KINDS.has(l.kind)) {
       kinds.add(l.kind);
       if (l.kind === 'rigGrade') expect(l.min, c.id).toBeLessThanOrEqual(4);
-      if (l.kind === 'rigChain') expect(l.min, c.id).toBeLessThanOrEqual(8);
+      if (l.kind === 'rigPath') expect(l.min, c.id).toBeLessThanOrEqual(8); // P60-d: rigChain → rigPath(경로 길이)
       if (l.kind === 'rigCount') { expect(l.min, c.id).toBeLessThanOrEqual(20); if (l.kinds !== undefined) expect(l.kinds, c.id).toBeLessThanOrEqual(l.min); }
     }
-    expect([...kinds].sort()).toEqual(['rigChain', 'rigCount', 'rigGrade', 'rigGuarded', 'rigSet']); // P60-c: set_f/d/b 가 rigSet(한 빠지에 세트 n) 으로
+    expect([...kinds].sort()).toEqual(['rigCount', 'rigGrade', 'rigGuarded', 'rigPath', 'rigSet']); // P60-c: set_f/d/b 가 rigSet(한 빠지에 세트 n) 으로 · P60-d: rigChain → rigPath
     // 교착 0 — 진입 인증은 시작 해금 기구만으로 (grade_f: rigCount 2)
     const startRigs = [...FACILITY_DEFS.values()].filter((d) => d.class === 'rig' && d.buildable !== false && d.unlock.source === 'start');
     expect(startRigs.length).toBeGreaterThanOrEqual(2);
@@ -30,22 +30,22 @@ describe('P53-a 인증·소원·달력 재배선 — 조건 4종 · 교착 0 · 
     expect(early.filter((d) => d.depth === 'deep' || d.depth === 'any').length).toBeGreaterThanOrEqual(2);
   });
 
-  it('소원 — 기구 조건 소원 102 (P53-a 원 20: rigChain 7 · rigGrade 5 · rigCount 8 + P60-a 재배선 82: 소품·물빛·농도 조건 → rigCount/rigGrade) · 대사에 기구/이어/등급 · 부품 보상은 shop-tier 안 · 키디의 수역 소원은 그대로', () => {
+  it('소원 — 기구 조건 소원 102 (P53-a 원 20: rigPath(옛 rigChain) 7 · rigGrade 5 · rigCount 8 + P60-a 재배선 82: 소품·물빛·농도 조건 → rigCount/rigGrade) · 대사에 기구/이어/등급 · 부품 보상은 shop-tier 안 · 키디의 수역 소원은 그대로', () => {
     const rig = WISH_DEFS.filter((w) => hasRigCond(w.condition));
     expect(rig.length).toBe(102); // P60-a §10.1: item 18 + pool.color 64 + intensityMin 2 (일부는 같은 소원) 가 기구 조건으로 — 실측 (tools/migrate-wishes.mjs 요약)
-    const tally = { rigCount: 0, rigChain: 0, rigGrade: 0, all: 0 } as Record<string, number>;
-    const leafTally = { rigCount: 0, rigChain: 0, rigGrade: 0 } as Record<string, number>;
+    const tally = { rigCount: 0, rigPath: 0, rigGrade: 0, all: 0 } as Record<string, number>;
+    const leafTally = { rigCount: 0, rigPath: 0, rigGrade: 0 } as Record<string, number>;
     for (const w of rig) {
       tally[w.condition.kind] = (tally[w.condition.kind] ?? 0) + 1;
       for (const l of leaves(w.condition)) if (RIG_COND_KINDS.has(l.kind)) {
         leafTally[l.kind] = (leafTally[l.kind] ?? 0) + 1;
-        const word = l.kind === 'rigCount' ? '기구' : l.kind === 'rigChain' ? '이어' : '등급';
+        const word = l.kind === 'rigCount' ? '기구' : l.kind === 'rigPath' ? '이어' : '등급';
         expect(w.line, `${w.friendId}/${w.idx}`).toContain(word);
       }
       expect(w.friendId).not.toBe('kiddie');
     }
-    expect(tally).toEqual({ rigCount: 29, rigChain: 7, rigGrade: 5, all: 61 }); // P53-a 의 rigChain 7 · rigGrade 5 는 그대로 · rigCount 8 → 29 · 복합(all) 61 은 전부 P60-a
-    expect(leafTally).toEqual({ rigCount: 90, rigChain: 7, rigGrade: 7 });
+    expect(tally).toEqual({ rigCount: 29, rigPath: 7, rigGrade: 5, all: 61 }); // P53-a 의 rigChain(→ P60-d rigPath) 7 · rigGrade 5 는 그대로 · rigCount 8 → 29 · 복합(all) 61 은 전부 P60-a
+    expect(leafTally).toEqual({ rigCount: 90, rigPath: 7, rigGrade: 7 });
     const byFriend = new Map<string, typeof rig>();
     for (const w of rig) byFriend.set(w.friendId, [...(byFriend.get(w.friendId) ?? []), w]);
     for (const [f, ws] of byFriend) expect(ws.length, f).toBeLessThanOrEqual(3); // P53-a 는 친구당 ≤2 였다 — P60-a 가 소원 자리(idx)를 지키며 조건만 갈아 끼워 셋까지 온다. 친구 안 난이도 오름차순은 그래서 더 이상 성립하지 않는다(옛 소품 「1개」 조건이 rigCount 1 로 들어온다)

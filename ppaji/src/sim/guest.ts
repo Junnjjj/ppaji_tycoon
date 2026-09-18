@@ -10,6 +10,7 @@ import { TICK_SCALE } from './clock.js';
 import type { Grid } from './grid.js';
 import { guestWalkable } from './facility.js';
 import { swimSkill } from './wristband.js';
+import { PATH_COMPLETE_SAT_MUL } from './rig.js';
 import type { PoolStore, Pool } from './pool.js';
 import { FacilityStore, type PlacedFacility } from './facility.js';
 import type { FacilityDef } from '../data/schema.js';
@@ -194,6 +195,8 @@ export interface GuestHooks {
   /** P45-c — 저녁(18시 뒤)인가: 남는 팀 손님은 저녁부터 밤 시설에 들를 수 있다 */
   evening?: () => boolean;
   onNightUse?: (g: Guest, f: PlacedFacility) => void;
+  /** P60-d — 그 수역의 입수 경로가 코스 완성(스릴 비감소 ∧ 끝 휴식)인가: 기구 이용 만족 가산 × PATH_COMPLETE_SAT_MUL */
+  pathComplete?: (poolId: number) => boolean;
   /** P28-b D35: 이 손님의 팀이 이미 빌렸거나 앉은 자리(uid). 팀은 한 줄만 쓴다 — 실측 새 판에서 한 팀이 킷 평상 두 줄을 다 빌려 14팀이 서성였다 */
   teamSeatUid?: (g: Guest) => number | null;
   /** P17 팀 손님이 앉을 자리를 못 찾아 서성인다 */
@@ -730,7 +733,9 @@ export class GuestStore {
     g.hp = Math.max(0, Math.min(100, g.hp + def.hpDelta));
     if (def.class === 'rig' || def.class === 'slide') g.hunger = Math.min(100, g.hunger + this.b.hungerPerRig * Math.max(1, def.thrill ?? 1)); // P60-b B1: 기구·슬라이드도 배를 곯린다(스릴 ×) — 수영(30)·탑승(25)과 같은 축, 링 위 먹거리가 먼저 팔린다
     if (def.menuSlots > 0) g.hunger = 0; // P27 먹었다
-    g.sat = Math.min(100, g.sat + def.pop * 0.15 * (hooks?.satMul?.() ?? 1) * (def.class === 'lounging' ? 1 + 0.1 * (hooks?.seatValue?.(f) ?? 0) : 1)); // P17 자리 값
+    let pathMul = 1; // P60-d: 코스 완성 수역의 물 위 기구만 — `pop × 0.15` 항에만 곱한다(스릴·배고픔·사진엔 안 곱는다)
+    if (def.class === 'rig' && def.onRing !== true && hooks?.pathComplete) for (const t of FacilityStore.footprint(def, f.i, f.j, f.facing)) { const pid = this.pools.ownerIdAt(t.i, t.j); if (pid >= 0) { if (hooks.pathComplete(pid)) pathMul = PATH_COMPLETE_SAT_MUL; break; } }
+    g.sat = Math.min(100, g.sat + def.pop * 0.15 * pathMul * (hooks?.satMul?.() ?? 1) * (def.class === 'lounging' ? 1 + 0.1 * (hooks?.seatValue?.(f) ?? 0) : 1)); // P17 자리 값
     g.uses++;
     setEmote(g, def.class === 'lounging' ? 'zz' : def.menuSlots > 0 ? 'note' : def.class === 'slide' || def.class === 'attraction' || def.class === 'rig' ? 'star' : 'heart'); // P48-c: 기구는 별
     f.usesToday++;

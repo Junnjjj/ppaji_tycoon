@@ -140,9 +140,12 @@ export type Condition =
   | { kind: 'popularity'; min: number }
   | { kind: 'likes'; min: number; scope?: 'total' | 'area'; area?: string }
   | { kind: 'certPasses'; min: number }
-  // P49-a1 §4.5 — 빠지 조건 DSL 4 (a1 은 스텁 평가: rigChain 0 · rigGuarded 는 망루 반경 데이터로)
+  // P49-a1 §4.5 — 빠지 조건 DSL 4 (rigGuarded 는 망루 반경 데이터로)
   | { kind: 'rigGrade'; min: number; count?: number }
-  | { kind: 'rigChain'; min: number; count?: number }
+  /** P60-d — 입수구에서 이어진 경로 길이가 min 이상인 수역이 count(기본 1)곳 (옛 `rigChain` — 뜻만 사슬 → 경로) */
+  | { kind: 'rigPath'; min: number; count?: number }
+  /** P60-d — 코스 완성(스릴 비감소 ∧ 끝 휴식) 수역이 min 곳 */
+  | { kind: 'rigPathComplete'; min: number }
   | { kind: 'rigCount'; min: number; kinds?: number; depth?: 'shallow' | 'deep' | 'any' }
   | { kind: 'rigGuarded'; min?: number; ratioMin?: number }
   /** P60-c §10.3 — 어느 수역이든 성립한 세트(`rig-sets.json`) 수가 min 이상 (인증 set_f/d/b) */
