@@ -13,7 +13,8 @@ export type FxName = 'money-pop' | 'splash-enter' | 'place-ok' | 'place-bad' | '
   | 'splash-land' | 'wish-burst' | 'heart-float' | 'confetti' | 'fountain-spray' | 'dust-puff'
   | 'fireworks' | 'petal-fall' | 'leaf-fall' | 'lamp-twinkle' | 'snow-fall' | 'ember'
   | 'price-pop' | 'got-item' // P56-a D7: 조준 중 값 팝(같은 key 는 갈아 끼운다) · 「재료 획득!」 한 줄
-  | 'buy-pop' | 'band-strip'; // P56-a2 D7: 손님 머리 위 구매 카드 「이름 ×1」(그림이 오면 그림) · 팔찌 발급 띠(등급 색이 손님 위를 지나간다)
+  | 'buy-pop' | 'band-strip' // P56-a2 D7: 손님 머리 위 구매 카드 「이름 ×1」(그림이 오면 그림) · 팔찌 발급 띠(등급 색이 손님 위를 지나간다)
+  | 'set-star'; // P60-c D72 B: 조준 중 세트가 성립할 이웃 기구 위 작은 별(같은 key 는 갈아 끼운다 — price-pop 과 같은 표)
 
 /** 이름별 재생 횟수 (G27 검사용 — 「슬롯이 돈다」를 센다) */
 export const fxFired: Record<string, number> = {};
@@ -91,6 +92,22 @@ const IMPL: Record<FxName, (host: FxHost, t: FxTarget) => Live> = {
     const h: Live = { name: 'price-pop', key: t.key ?? null, amount: 0, text, born: scene.time.now, alive: true, kill() { if (!this.alive) return; this.alive = false; text.destroy(); const at = live.indexOf(this); if (at >= 0) live.splice(at, 1); } };
     if (host.reduced) scene.time.delayedCall(1400, () => h.kill());
     else scene.tweens.add({ targets: text, alpha: { from: 1, to: 0 }, delay: 900, duration: 500, onComplete: () => h.kill() });
+    return h;
+  },
+  // P60-c D72 B — 조준 중 세트가 성립할 이웃 기구 위 작은 별(4갈래 + 가운데 점). 같은 key 의 이전 것은 즉시 지우고 갈아 끼운다 · 반짝임은 scale 트윈만
+  'set-star': (host, t) => {
+    const { scene } = host;
+    for (const l of [...live]) if (l.name === 'set-star' && l.key !== null && l.key === (t.key ?? null)) l.kill();
+    const g = scene.add.graphics();
+    g.setDepth(DEPTH_SCREEN_FX);
+    g.fillStyle(cssColorInt('--fx-star'), 1);
+    g.fillRect(-1, -4, 2, 8); g.fillRect(-4, -1, 8, 2); g.fillRect(-2, -2, 4, 4);
+    g.fillStyle(cssColorInt('--fx-stroke'), 0.9);
+    g.fillRect(-1, -1, 1, 1);
+    g.setPosition(t.x, t.y);
+    const h: Live = { name: 'set-star', key: t.key ?? null, amount: 0, text: null, born: scene.time.now, alive: true, kill() { if (!this.alive) return; this.alive = false; g.destroy(); const at = live.indexOf(this); if (at >= 0) live.splice(at, 1); } };
+    if (host.reduced) scene.time.delayedCall(2400, () => h.kill());
+    else scene.tweens.add({ targets: g, scaleX: { from: 0.7, to: 1.25 }, scaleY: { from: 0.7, to: 1.25 }, duration: 400, yoyo: true, repeat: 2, ease: 'Sine.easeInOut', onComplete: () => h.kill() });
     return h;
   },
   // 「You got the Lemon!」 — 모달이 아니라 지도 위 한 줄

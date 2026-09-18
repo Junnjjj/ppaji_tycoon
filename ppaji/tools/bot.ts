@@ -47,6 +47,7 @@ const BANDS: { key: keyof RunMetrics; lo: number; hi: number; why: string }[] = 
   { key: 'gearsKnownY4', lo: 8, hi: 20, why: 'P19 — 4년차(64일)까지 공방 레시피 발견 8~20 / 30 (실측 26: 연차 부품이 레시피에 안 쓰여 4년차에 다 찾았다 → 11종을 3~7년차 부품으로. 부품값 ×2 는 지렛대가 아니었다 — 4년차 안에 41종을 어차피 다 산다)' },
   { key: 'rigsDistinct', lo: 14, hi: 22, why: 'P50-b1 §6 — 128일 기구 종 수 14~22 / 33 (봇이 종 우선으로 붙인다 — 등급은 종 수로 오른다)' },
   { key: 'rigChainMax', lo: 3, hi: 20, why: 'P50-b1 R5 — 최장 같은 계열 사슬 ≥3 (정원 × sqrt(len/2), 20 넘으면 사슬 도배)' },
+  { key: 'rigSetsFound', lo: 3, hi: 8, why: 'P60-c §3.6 — 128일 발견 세트 3~8 / 8. 실측(8시드) 중앙 3(ninja·roll·night — 문턱에 붙어 있다): 「세트 완성 후보 우선」만으론 1 이었다(종을 수역마다 하나씩 흩어 셋째가 설 자리가 없다) → 둘째 사본을 멤버 곁에 + 사슬이 세트 자리를 안 덮게(`chainRigs` 예약) + 링 위 멤버(플로팅 바·도크)를 멤버 곁 데크에. `--no-set` 대조군은 0(킷엔 기구 0). 키즈존은 여울 전용 멤버라 봇 수역(강)엔 못 선다 · 8 은 hidden 4 까지 다 찾은 것' },
   { key: 'rigGradeMax', lo: 3, hi: 4, why: 'P50-b1 R6 — 128일에 대형 빠지(3) 이상 하나' },
   { key: 'rigUseShare', lo: 0.15, hi: 0.65, why: 'P50-b1 — 시설 이용 중 기구·링 시설 몫. 0.15 아래면 기구가 장식, 0.6 넘으면 뭍이 죽는다 · P57-c: main 승인 킷(평상 0)에서 중앙 0.61 → 상한 0.65(뭍 자리는 봇이 뒤에 짓는다)' },
   { key: 'offSeasonSwim', lo: 0.2, hi: 0.55, why: 'P52-c §3.8 — 가을 야외 입수 ÷ 여름(날씨 가중 기대 여름 0.905 · 가을 0.24). 0.55 넘으면 수온이 안 무는 것, 0.2 아래면 비수기가 죽는다' },
@@ -80,9 +81,9 @@ const days = Number(arg('days', '128'));
 const determinism = process.argv.includes('--determinism');
 const json = process.argv.includes('--json');
 const sweep = arg('sweep', '');
-// P49-a1 — `--warn k1,k2` 는 그 밴드를 빨강 대신 ⚠ 로(exit 0) · `--no-rig|--no-convert|--no-vest|--no-night` 는 축 스위치(대조군, 읽는 페이즈가 뒤에 온다)
+// P49-a1 — `--warn k1,k2` 는 그 밴드를 빨강 대신 ⚠ 로(exit 0) · `--no-rig|--no-convert|--no-vest|--no-night|--no-set` 는 축 스위치(대조군, 읽는 페이즈가 뒤에 온다)
 const warnKeys = new Set(arg('warn', '').split(',').filter(Boolean));
-const axisOff = { noRig: process.argv.includes('--no-rig'), noConvert: process.argv.includes('--no-convert'), noVest: process.argv.includes('--no-vest'), noNight: process.argv.includes('--no-night') };
+const axisOff = { noRig: process.argv.includes('--no-rig'), noConvert: process.argv.includes('--no-convert'), noVest: process.argv.includes('--no-vest'), noNight: process.argv.includes('--no-night'), noSet: process.argv.includes('--no-set') }; // P60-c `--no-set`
 const personaArg = arg('persona', 'balanced');
 const bands = process.argv.includes('--bands');
 const personas: BotPersona[] = personaArg === 'all' ? ['balanced', 'pool', 'restaurant', 'cert', 'course'] : [personaArg as BotPersona];

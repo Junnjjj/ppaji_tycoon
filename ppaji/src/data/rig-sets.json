@@ -1,0 +1,10 @@
+[
+  { "id": "ninja", "name": "닌자 코스", "members": ["rig_bridge", "rig_beam", "rig_stepstone"], "hidden": false },
+  { "id": "kids", "name": "키즈존", "members": ["rig_mini_slide", "rig_kids_park", "rig_hammock"], "hidden": false },
+  { "id": "jump", "name": "점프존", "members": ["rig_blob", "rig_iceberg", "rig_totem"], "hidden": true },
+  { "id": "slide3", "name": "슬라이드 트리오", "members": ["rig_slide", "rig_slidedock", "rig_mini_slide"], "hidden": false },
+  { "id": "lounge", "name": "라운지", "members": ["rig_hammock", "rig_sunbed", "rig_float_bar"], "hidden": false },
+  { "id": "night", "name": "밤빠지", "members": ["rig_led_buoy", "rig_sunbed_led", "rig_float_bar"], "hidden": true },
+  { "id": "roll", "name": "굴림존", "members": ["rig_roller", "waterwalk", "rig_seesaw"], "hidden": true },
+  { "id": "trio", "name": "빅 트리오", "members": ["trampoline_w", "airbounce", "turtle_island"], "hidden": true }
+]

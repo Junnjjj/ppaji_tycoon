@@ -5,6 +5,7 @@
 import { el } from '../dom.js';
 import { iconEl } from '../icons.js';
 import { setUiSurface } from '../panels.js';
+import { rigSetLabel } from '../rig-sets.js';
 import type { Game } from '../../sim/game.js';
 import type { FacilityDef } from '../../data/schema.js';
 import type { PlacedFacility } from '../../sim/facility.js';
@@ -17,6 +18,8 @@ export interface PlaceHost {
   onPlaced(uid: number): void;
   /** P56-a D7 — 조준 칸 위 값 팝 「800G ×1」(원작). 같은 자리에 갈아 끼운다 */
   pricePop?(i: number, j: number, text: string | null): void;
+  /** P60-c D72 B — 이 자리에 놓으면 성립하는 세트(`aimPreview.setNext`) — main 이 그 세트의 켜진 멤버 칸을 찾아 `scene.showSetStar` 를 부른다. null = 지운다 */
+  setStar?(hit: { poolId: number; setId: string } | null): void;
 }
 
 export class PlaceDock {
@@ -98,6 +101,7 @@ export class PlaceDock {
 
   exit(): void {
     this.host.showRing([]); // P24 원복 — 취소·확정·붓 교체·패널 열림 전부 exit 를 지난다
+    this.host.setStar?.(null); // P60-c 별도 같이 진다
     if (!this.def) return;
     this.def = null;
     this.moveUid = null;
@@ -116,6 +120,7 @@ export class PlaceDock {
   private refresh(): void {
     if (!this.def) return;
     this.riskChip.classList.add('khide');
+    this.host.setStar?.(null); // P60-c: 기본은 없음 — 기구 가지에서 세트가 잡히면 다시 켠다
     if (!this.at) {
       this.why.textContent = '';
       this.doneBtn.disabled = true;
@@ -136,6 +141,8 @@ export class PlaceDock {
         if (pv.gradeNext !== pv.gradeNow) chips.push(`등급 ${pv.gradeNow} → ${pv.gradeNext}`);
         if (this.def.class === 'rig' && this.def.onRing !== true) { chips.push(pv.lit ? `정원 ${this.def.capacity} → ${pv.capNext}` : '꺼짐 — 링·켜진 기구에 닿게'); chips.push(`연결 ${pv.chainNext}`); }
         chips.push(pv.pkgNext !== pv.pkgNow ? `자유이용권 ${pv.pkgNow} → ${pv.pkgNext}G` : `자유이용권 ${pv.pkgNext}G`);
+        if (pv.setNext) chips.push(`+${rigSetLabel(pv.setNext, g.setsSeen)}`); // P60-c D72 B: 이 자리에 놓으면 성립하는 세트 — 칩 1칸, 값이 있을 때만 · hidden 미발견은 「+?」
+        if (pv.setNext && pv.poolId !== null) this.host.setStar?.({ poolId: pv.poolId, setId: pv.setNext });
         if ((this.def.thrill ?? 0) > 0) { this.riskChip.textContent = `위험 ${pv.riskLabel}`; this.riskChip.className = `kchip krisk-${pv.risk}`; this.riskChip.dataset['risk'] = String(pv.risk); } // P52-b: 위험 모양(스릴 > 0)에만
         label = `${label ? `${label} · ` : ''}${chips.join(' · ')}`;
       }

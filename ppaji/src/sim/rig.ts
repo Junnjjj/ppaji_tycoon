@@ -7,7 +7,19 @@ import { Grid, FLOOR } from './grid.js';
 import { FacilityStore, type PlacedFacility } from './facility.js';
 import type { PoolStore } from './pool.js';
 import balanceJson from '../data/balance.json';
+import rigsJson from '../data/rigs.json';
+import rigSetsJson from '../data/rig-sets.json';
+import type { RigSetDef } from '../data/schema.js';
 export type PpajiGrade = 0 | 1 | 2 | 3 | 4;
+
+/** P60-c §10.3 — 기구 세트 8 (`rig-sets.json`, 불변식 3). 값 둘은 계획서 §3.2 초안(팔찌 +50G/세트 = round50 눈금 · 인기 +6/세트 = tilePopStandard 4 의 1.5칸분) — 같은 세트 둘째부터 0, 등급 판정엔 안 넣는다 */
+export const RIG_SETS: readonly RigSetDef[] = rigSetsJson as RigSetDef[];
+export const SET_BAND_BONUS = 50;
+export const SET_POP_BONUS = 6;
+const UPGRADE_FROM: ReadonlyMap<string, string> = new Map((rigsJson as { from: string; to: string }[]).map((r) => [r.to, r.from]));
+/** 개조판 → 원종 (`rigs.json` from/to 사슬을 거슬러 오른다, 봇 `baseKind` 와 같은 규칙) — 세트 멤버는 원종으로 센다 */
+export function rigBaseKind(defId: string): string { let id = defId; for (let k = 0; k < 4; k++) { const f = UPGRADE_FROM.get(id); if (f === undefined) break; id = f; } return id; }
+const SET_MEMBER_KINDS: ReadonlySet<string> = new Set(RIG_SETS.flatMap((s) => s.members.flatMap((m) => [m, rigBaseKind(m)])));
 
 /** 등급 3 의 최장 사슬 종 수 — 시작 `obstacle` 계열이 정확히 3종이라 「시작 해금만으로 도달 가능·도배로는 못 넘는」 최대값 */
 export const CHAIN_KINDS_FOR_GRADE3 = 3;
@@ -29,6 +41,8 @@ export interface RigState {
   chainKinds: Map<number, number>;
   walkOn: Uint8Array;
   byPool: Map<number, number[]>;
+  /** P60-c — 수역 id → 성립한 세트 id(`RIG_SETS` 순, 중복 없음). 켜진 기구(+ 링 위 멤버)의 4이웃 컴포넌트 하나에 세 멤버가 다 있으면 성립 */
+  sets: Map<number, string[]>;
 }
 /** 조준 미리보기용 가짜 인스턴스 — 저장소에 넣지 않는다 (uid 는 음수) */
 export interface RigOverlay { uid: number; defId: string; i: number; j: number; facing: 0 | 1 }
@@ -42,7 +56,7 @@ export function chainScale(len: number, base: number = CHAIN_BASE, cap: number =
 /** 계열 셋 — 시작 기구 8 중 6 이 어느 계열에 든다 (`facilities.json` 의 `chain`) */
 export const CHAIN_KINDS: readonly string[] = ['obstacle', 'slide', 'rest'];
 
-export const EMPTY_RIG_STATE = (): RigState => ({ lit: new Set(), chainLen: new Map(), chainKinds: new Map(), walkOn: new Uint8Array(0), byPool: new Map() });
+export const EMPTY_RIG_STATE = (): RigState => ({ lit: new Set(), chainLen: new Map(), chainKinds: new Map(), walkOn: new Uint8Array(0), byPool: new Map(), sets: new Map() });
 
 /**
  * R4 **켜짐 = 연결**: 링(데크)에 4이웃으로 닿은 물 위 기구가 씨앗, 켜진 기구끼리 4이웃 BFS. 안 닿으면 꺼짐(회색·이용 0).
@@ -51,9 +65,12 @@ export const EMPTY_RIG_STATE = (): RigState => ({ lit: new Set(), chainLen: new 
 export function computeRigs(grid: Grid, facilities: FacilityStore, pools: Pick<PoolStore, 'ownerIdAt'>, overlay?: RigOverlay): RigState {
   const w = grid.w;
   const rigs: { uid: number; defId: string; chain: string | null; fp: { i: number; j: number }[] }[] = [];
+  const ringNodes: { uid: number; defId: string; fp: { i: number; j: number }[] }[] = []; // P60-c: 링 위 세트 멤버(플로팅 바·슬라이드 도크) — 켜짐·사슬엔 안 들고 세트 그래프의 노드로만
   const consider = (f: Pick<PlacedFacility, 'uid' | 'defId' | 'i' | 'j' | 'facing'>): void => {
     const def = facilities.defById(f.defId);
-    if (!def || def.class !== 'rig' || def.onRing === true) return;
+    if (!def) return;
+    if (def.onRing === true) { if (SET_MEMBER_KINDS.has(rigBaseKind(f.defId))) ringNodes.push({ uid: f.uid, defId: f.defId, fp: FacilityStore.footprint(def, f.i, f.j, f.facing) }); return; }
+    if (def.class !== 'rig') return;
     rigs.push({ uid: f.uid, defId: f.defId, chain: def.chain ?? null, fp: FacilityStore.footprint(def, f.i, f.j, f.facing) });
   };
   for (const f of facilities.all) consider(f);
@@ -95,6 +112,7 @@ export function computeRigs(grid: Grid, facilities: FacilityStore, pools: Pick<P
     compLen.set(id, members.length);
     compKinds.set(id, new Set(members.map((m) => (rigs[m] as { defId: string }).defId)).size);
   }
+  const poolOfNode = new Map<number, number>(); // P60-c: 노드 → 소속 수역
   for (const idx of litIdx) {
     const r = rigs[idx] as { uid: number; fp: { i: number; j: number }[] };
     const cid = comp.get(idx) as number;
@@ -107,7 +125,37 @@ export function computeRigs(grid: Grid, facilities: FacilityStore, pools: Pick<P
     for (const t of r.fp) { const id = pools.ownerIdAt(t.i, t.j); if (id >= 0) cnt.set(id, (cnt.get(id) ?? 0) + 1); }
     let best = -1, bestN = 0;
     for (const [id, n] of cnt) if (n > bestN || (n === bestN && id < best)) { best = id; bestN = n; }
-    if (best >= 0) { const arr = st.byPool.get(best) ?? []; arr.push(r.uid); st.byPool.set(best, arr); }
+    if (best >= 0) { const arr = st.byPool.get(best) ?? []; arr.push(r.uid); st.byPool.set(best, arr); poolOfNode.set(idx, best); }
+  }
+  // P60-c §10.3 세트 — 노드 = 켜진 물 위 기구 + 링 위 세트 멤버(수역은 4이웃 물의 소유 최다), 변 = 같은 수역 안 4이웃 접촉. 컴포넌트 하나에 세 멤버(원종)가 다 있으면 성립. 수역마다 같은 세트는 한 번(둘째부터 0)
+  const nodeTile = new Map<number, number>(); // k → 노드 번호 (물 위 기구 idx · 링 노드는 rigs.length + r)
+  for (const idx of litIdx) for (const t of (rigs[idx] as { fp: { i: number; j: number }[] }).fp) nodeTile.set(t.j * w + t.i, idx);
+  ringNodes.forEach((r, k) => {
+    const cnt = new Map<number, number>();
+    for (const t of r.fp) for (const [a, b] of N4) { const id = pools.ownerIdAt(t.i + a, t.j + b); if (id >= 0) cnt.set(id, (cnt.get(id) ?? 0) + 1); }
+    let best = -1, bestN = 0;
+    for (const [id, n] of cnt) if (n > bestN || (n === bestN && id < best)) { best = id; bestN = n; }
+    if (best < 0) return;
+    const node = rigs.length + k;
+    poolOfNode.set(node, best);
+    for (const t of r.fp) nodeTile.set(t.j * w + t.i, node);
+  });
+  const fpOf = (node: number): { i: number; j: number }[] => (node < rigs.length ? (rigs[node] as { fp: { i: number; j: number }[] }).fp : (ringNodes[node - rigs.length] as { fp: { i: number; j: number }[] }).fp);
+  const defIdOf = (node: number): string => (node < rigs.length ? (rigs[node] as { defId: string }).defId : (ringNodes[node - rigs.length] as { defId: string }).defId);
+  const seenNode = new Set<number>();
+  for (const s0 of [...poolOfNode.keys()].sort((a, b) => a - b)) {
+    if (seenNode.has(s0)) continue;
+    const pool = poolOfNode.get(s0) as number;
+    const members: number[] = [s0]; seenNode.add(s0);
+    for (let q = 0; q < members.length; q++) for (const t of fpOf(members[q] as number)) for (const [a, b] of N4) {
+      const o = nodeTile.get((t.j + b) * w + t.i + a);
+      if (o === undefined || seenNode.has(o) || poolOfNode.get(o) !== pool) continue;
+      seenNode.add(o); members.push(o);
+    }
+    const kinds = new Set<string>(); for (const m of members) { const id = defIdOf(m); kinds.add(id); kinds.add(rigBaseKind(id)); } // 개조판은 원종으로도 센다(밤빠지의 LED 선베드처럼 멤버가 개조판이면 그 id 그대로)
+    const have = st.sets.get(pool) ?? [];
+    for (const def of RIG_SETS) if (!have.includes(def.id) && def.members.every((m) => kinds.has(m))) have.push(def.id);
+    if (have.length) st.sets.set(pool, have.sort((x, y) => RIG_SETS.findIndex((d) => d.id === x) - RIG_SETS.findIndex((d) => d.id === y)));
   }
   return st;
 }

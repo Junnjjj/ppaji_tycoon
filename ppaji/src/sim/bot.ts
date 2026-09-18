@@ -5,7 +5,8 @@
  */
 import { FACILITY_DEFS, INVEST_DEFS, FEATURES, Game } from './game.js';
 import { FLOOR, isIndoorCode, shoreRow } from './grid.js';
-import { CHAIN_BASE, CHAIN_CAP } from './rig.js';
+import { CHAIN_BASE, CHAIN_CAP, RIG_SETS } from './rig.js';
+import { FacilityStore } from './facility.js';
 import { RIG_UPGRADES } from './rig-upgrade.js';
 import { Rng } from './rng.js';
 import { TICKS_PER_DAY, TICKS_PER_HOUR } from './clock.js';
@@ -15,7 +16,7 @@ import { courseEquipment, firstFreeDock } from './course/course.js';
 import type { Condition } from '../data/schema.js';
 
 /** P53-a — 기구 조건 종류. 인증 9 · 소원 20 이 이것을 든다 */
-export const RIG_COND_KINDS: ReadonlySet<string> = new Set(['rigCount', 'rigChain', 'rigGrade', 'rigGuarded']);
+export const RIG_COND_KINDS: ReadonlySet<string> = new Set(['rigCount', 'rigChain', 'rigGrade', 'rigGuarded', 'rigSet']); // P60-c: 세트(set_f/d/b)
 export function hasRigCond(c: Condition | undefined): boolean {
   if (!c) return false;
   if (c.kind === 'all' || c.kind === 'any') return c.of.some(hasRigCond);
@@ -28,6 +29,8 @@ export function certHasRigCond(def: { conditions: { cond: Condition }[] } | unde
 export interface BotOptions {
   /** P49-a1 — 축 스위치(대조군). a1 은 파싱만 하고 축을 내는 페이즈(P50-a·P51·P52-a·P54)가 읽는다 */
   noRig?: boolean; noConvert?: boolean; noVest?: boolean; noNight?: boolean;
+  /** P60-c — `--no-set` 대조군: `attachRigs` 의 「세트 완성 후보 우선」을 끈다 */
+  noSet?: boolean;
   /** 예비비 — 이 아래로는 안 쓴다 */
   reserve: number;
   /** 하루에 파는 최대 칸 */
@@ -572,11 +575,24 @@ export class Bot {
   private attachRigs(g: Game, spendable: () => number): boolean {
     const have = new Set(g.facilities.all.map((f) => baseKind(f.defId))); // 개조판은 원래 종으로 센다 — 아니면 개조 뒤 같은 종을 또 놓는다(실측 종 4·개조 118)
     // 아직 안 놓은 종만 — 종이 다 놓였으면 붙이지 않는다(붙이기가 곧 사슬 도배가 됐다: 실측 최장 사슬 21~28). 사슬은 `chainRigs` 가 계열 값으로만 늘린다
-    const defs = [...FACILITY_DEFS.values()].filter((d) => d.class === 'rig' && d.onRing !== true && g.isUnlocked(d.id) && !have.has(d.id)).sort((a, b) => a.cost - b.cost);
-    const spots = this.litWaterSpots(g);
+    // P60-c §3.6 — 「멤버 2/3 이 이미 켜진 세트를 완성하는 후보 우선」: 그 종은 이미 다른 수역에 있어도 다시 후보에 들고(세트는 수역 단위다) 앞에 서며, 그 자리는 켜진 멤버 발자국의 4이웃부터(안 그러면 헤드리스가 세트 축을 안 잰다 — K36·P2-C·K52 와 같은 함정). `--no-set` 대조군은 종 우선·값 순 그대로
+    const completes = this.opts.noSet ? new Map<string, { near2: Set<number>; near1: Set<number> }>() : this.setCompleters(g);
+    const done = (id: string): boolean => (completes.get(id)?.near2.size ?? 0) > 0; // 놓으면 성립
+    // 순서: 성립 후보 → 새 종(값 순) → 세트를 쌓는 둘째 사본(값 순). 둘째 사본은 세트 멤버 곁에만 서므로 8세트 × 2 가 상한이고, 새 종보다 뒤라 종 수를 안 깎는다
+    const tier = (d: { id: string }): number => (done(d.id) ? 0 : !have.has(d.id) ? 1 : 2);
+    const defs = [...FACILITY_DEFS.values()].filter((d) => g.isUnlocked(d.id) && ((d.class === 'rig' && d.onRing !== true && (!have.has(d.id) || completes.has(d.id))) || (d.onRing === true && completes.has(d.id)))).sort((a, b) => tier(a) - tier(b) || a.cost - b.cost); // 링 위 종은 세트 자리에서만
+    const spots0 = this.litWaterSpots(g);
     for (const d of defs) {
       if (spendable() < d.cost) continue;
       let tried = 0;
+      const near = completes.get(d.id);
+      if (d.onRing === true && near) { // 링 위 멤버 — 켜진 멤버 곁의 데크 칸에만
+        for (const k of [...near.near2, ...(have.has(d.id) ? [] : [...near.near1])]) { const i = k % g.grid.w, j = Math.floor(k / g.grid.w); if (g.grid.at(i, j) !== FLOOR.deck) continue; for (const facing of [0, 1] as const) if (g.placeFacility(d.id, i, j, facing).ok) return true; }
+        continue;
+      }
+      // 세트 자리부터(성립 자리 → 쌓는 자리 → 나머지) — 이미 다른 수역에 있는 종은 **성립 자리에만**(아무 데나 두면 세트 없는 중복이 되어 종 수·기구 지출이 무너진다: 실측 rigsDistinct 18 → 12)
+      const rankOf = (sp: { i: number; j: number }): number => { const k = sp.j * g.grid.w + sp.i; return near?.near2.has(k) ? 0 : near?.near1.has(k) ? 1 : 2; };
+      const spots = near ? (have.has(d.id) ? spots0.filter((sp) => rankOf(sp) <= (done(d.id) ? 0 : 1)) : [...spots0].sort((x, y) => rankOf(x) - rankOf(y))) : spots0;
       for (const sp of spots) {
         if (tried >= 60) break; // 발자국이 큰 종(거북섬 8×6·해먹 3×2)은 자리가 드물다 — 후보를 넉넉히(킷 빠지가 차면 봇의 다음 빠지까지 훑는다)
         for (const facing of [0, 1] as const) { const r = g.placeFacility(d.id, sp.i, sp.j, facing); if (r.ok) return true; }
@@ -584,6 +600,33 @@ export class Bot {
       }
     }
     return false;
+  }
+  /**
+   * P60-c — 세트 친화 자리: 어느 수역에 켜진 멤버가 있는 세트의 **빠진 종** → 그 멤버 발자국의 4이웃 칸 키. `near2` 는 멤버 둘이 켜진 수역(놓으면 성립),
+   * `near1` 은 하나뿐인 수역(둘째 멤버 — 세트를 쌓는 자리). 종을 수역마다 하나씩 흩어 놓으면 셋째가 설 자리가 없다(실측 128일 세트 1) — 그래서 둘째부터 곁에 둔다
+   */
+  private setCompleters(g: Game): Map<string, { near2: Set<number>; near1: Set<number> }> {
+    const out = new Map<string, { near2: Set<number>; near1: Set<number> }>();
+    const w = g.grid.w;
+    for (const [pid, uids] of g.rigState.byPool) {
+      const lit = uids.map((u) => g.facilities.byUid(u)).filter((f): f is NonNullable<typeof f> => !!f);
+      const kinds = new Set(lit.flatMap((f) => [f.defId, baseKind(f.defId)])); // 개조판은 원종으로도(`computeRigs` 와 같은 규칙)
+      for (const s of RIG_SETS) {
+        if ((g.rigState.sets.get(pid) ?? []).includes(s.id)) continue;
+        const missing = s.members.filter((m) => !kinds.has(m));
+        if (missing.length === 0 || missing.length === 3) continue;
+        const keys = new Set<number>();
+        for (const f of lit) { if (!s.members.includes(baseKind(f.defId)) && !s.members.includes(f.defId)) continue; for (const t of FacilityStore.footprint(g.facilities.defOf(f), f.i, f.j, f.facing)) for (const [a, b] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) keys.add((t.j + b) * w + t.i + a); }
+        for (const m of missing) {
+          const def = FACILITY_DEFS.get(m);
+          if (!def || !(def.class === 'rig' || def.onRing === true)) continue; // 링 위 멤버(플로팅 바·슬라이드 도크)도 — 그 자리는 같은 4이웃 중 데크 칸
+          const e = out.get(m) ?? { near2: new Set<number>(), near1: new Set<number>() };
+          for (const k of keys) (missing.length === 1 ? e.near2 : e.near1).add(k);
+          out.set(m, e);
+        }
+      }
+    }
+    return out;
   }
   /** P51 `upgradeRig` — ① 가진 부품으로 닿는 미발견 개조를 하나 찾고(도감을 본다 — 아는 조합은 다시 안 섞는다) ② 아는 개조를 놓인 `from` 기구 하나에 적용. 하루 하나씩 */
   private upgradeRig(g: Game, spendable: () => number): void {
@@ -655,6 +698,8 @@ export class Bot {
       if ((g.rigState.chainLen.get(f.uid) ?? 1) >= CHAIN_FULL) continue; // 사슬 도배 방지 — 실측 21
       const arr = kinds.get(d.chain) ?? []; arr.push({ i: f.i, j: f.j }); kinds.set(d.chain, arr);
     }
+    // P60-c — 세트 자리 예약: 쌓다 만 세트의 빠진 종이 설 칸(멤버 곁)은 사슬로 덮지 않는다(사슬이 수역을 다 채워 셋째 멤버가 설 자리가 없었다 — 실측 20칸 수역에 기구 15). `--no-set` 대조군은 예약 0
+    const reserved = new Set<number>(); if (!this.opts.noSet) for (const e of this.setCompleters(g).values()) { for (const k of e.near2) reserved.add(k); for (const k of e.near1) reserved.add(k); }
     for (const [chain, ends] of kinds) {
       const defs = [...FACILITY_DEFS.values()].filter((d) => d.class === 'rig' && d.onRing !== true && d.chain === chain && g.isUnlocked(d.id)).sort((a, b) => a.cost - b.cost);
       for (const e of ends) {
@@ -663,7 +708,7 @@ export class Bot {
           if (spendable() < d.cost) continue;
           let ok = false;
           for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1], [2, 0], [-2, 0], [0, 2], [0, -2]] as const) {
-            for (const facing of [0, 1] as const) { if (g.placeFacility(d.id, e.i + di, e.j + dj, facing).ok) { ok = true; break; } }
+            for (const facing of [0, 1] as const) { if (FacilityStore.footprint(d, e.i + di, e.j + dj, facing).some((t) => reserved.has(t.j * g.grid.w + t.i))) continue; if (g.placeFacility(d.id, e.i + di, e.j + dj, facing).ok) { ok = true; break; } }
             if (ok) break;
           }
           if (ok) { placed++; break; }
@@ -719,6 +764,8 @@ export interface RunMetrics {
   /** P50-b1 밴드 7 — 기구 종 수 · 최장 사슬 · 최고 등급 · 이용 몫 · 빠지 지출 몫 · 데크/기구 지출 구성 */
   rigsDistinct: number;
   rigChainMax: number;
+  /** P60-c — 128일 동안 발견한 세트 수(`setsSeen`) / 8 */
+  rigSetsFound: number;
   rigGradeMax: number;
   rigUseShare: number;
   ppajiSpendShare: number;
@@ -871,6 +918,7 @@ export function runBot(game: Game, days: number, opts: BotOptions = BOT_DEFAULTS
     poolTilesY1: perYear[0]?.poolTiles ?? game.pools.totalTiles(),
     rigsDistinct: new Set(game.facilities.all.filter((f) => game.facilities.defOf(f).class === 'rig').map((f) => baseKind(f.defId))).size, // P51: 개조판은 원래 종
     rigChainMax: Math.max(0, ...game.facilities.all.map((f) => game.rigState.chainLen.get(f.uid) ?? 0)),
+    rigSetsFound: game.setsSeen.size, // P60-c
     rigGradeMax: Math.max(0, ...game.pools.all.map((p) => game.ppajiGradeOf(p.id))),
     rigUseShare: (() => { let rig = 0, all = 0; for (const f of game.facilities.all) { const d = game.facilities.defOf(f); all += f.usesTotal; if (d.class === 'rig' || d.onRing === true) rig += f.usesTotal; } return all > 0 ? rig / all : 0; })(),
     ppajiSpendShare: (game.stats.spent ?? 0) > 0 ? ((game.stats.spentDeck ?? 0) + (game.stats.spentRig ?? 0) + (game.stats.spentConvert ?? 0)) / (game.stats.spent ?? 1) : 0,

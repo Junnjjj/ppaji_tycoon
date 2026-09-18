@@ -32,7 +32,7 @@ import { FacilityStore } from '../sim/facility.js';
 import { BODY_H } from '../assets/draw/facility.js';
 import { cssColorInt, cssVar } from '../ui/tokens.js';
 import { viewport, violatesDotGrid, type Upscale } from './upscale.js';
-import { playFx, type FxName, type FxTarget } from './fx/registry.js';
+import { playFx, type FxName, type FxTarget, type FxHandle } from './fx/registry.js';
 
 export interface SceneStats {
   fps: number;
@@ -118,6 +118,8 @@ export class WaterparkScene extends Phaser.Scene {
   /** 조준 화살표 4 + 가격표 (G47, 원작 배치 화면) */
   private aimGfx: Phaser.GameObjects.Graphics | null = null;
   private aimLabelText: string | null = null;
+  /** P60-c D72 B — 조준 중 세트가 성립할 이웃 기구 위 별(FX `set-star` 핸들). 고스트가 지워지면 같이 지운다 */
+  private setStars: FxHandle[] = [];
   private poolTint = new Map<number, number>();
   private readonly ambient: { i: number; j: number; kind: 'steam' | 'frost' | 'spray'; nextAt: number }[] = [];
   private readonly emoteImgs = new Map<number, Phaser.GameObjects.Image>();
@@ -1004,6 +1006,7 @@ export class WaterparkScene extends Phaser.Scene {
       this.ghost = null;
       this.aimGfx?.destroy(); this.aimGfx = null;
       this.aimLabelText = null;
+      this.showSetStar([]); // P60-c: 세트 별도 고스트와 함께 진다
       this.setSelection([]);
       return;
     }
@@ -1043,6 +1046,20 @@ export class WaterparkScene extends Phaser.Scene {
   }
   /** 검사용 — 조준 화살표·가격표가 떠 있나 */
   aimForTest(): { arrows: boolean; label: string | null } { return { arrows: !!this.aimGfx, label: this.aimLabelText }; }
+
+  /** P60-c D72 B — 세트가 성립할 이웃 기구 위 작은 별 (FX 등록부 `set-star`, 칸마다 key 하나라 같은 자리는 갈아 끼운다). 빈 배열이면 지운다. 어느 칸인지는 main 이 sim 에서 받아 넘긴다 */
+  showSetStar(tiles: readonly { i: number; j: number }[]): void {
+    for (const h of this.setStars) h.kill();
+    this.setStars = [];
+    if (tiles.length === 0) return;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    for (const t of tiles) {
+      const c = tileCenter(t.i, t.j);
+      this.setStars.push(playFx({ scene: this, reduced }, 'set-star', { x: c.x, y: c.y + this.liftAt(t.i, t.j) - 22, key: `set-star:${t.i},${t.j}` }));
+    }
+  }
+  /** 검사용 — 살아 있는 세트 별 수 */
+  setStarCountForTest(): number { return this.setStars.filter((h) => h.alive).length; }
 
   /** P50-b2 — 빠지 모습: 꺼진 기구 uid · 링 데크 칸의 등급 · 이음쇠 변. 값은 sim 이 내고 여기선 칠하기만 */
   setRigLook(dimUids: ReadonlySet<number>, ringGrades: ReadonlyMap<number, number>, links: readonly { i: number; j: number; dir: 0 | 1 }[]): void {

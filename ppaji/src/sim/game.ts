@@ -34,7 +34,7 @@ import { MenuStore, recipePrice, type MenuSnapshot } from './restaurant.js';
 import { CookingStore, COOK_COST, COOK_UNLOCK_RANK, REWARD_STOCK, BUY_STOCK, type CookingSnapshot, type CookResult, type CookResultOf } from './cooking.js';
 import { WorkshopStore, GEAR_DEFS, PART_DEFS, WORKSHOP_WORDS, GEAR_FAIL_PICK } from './workshop.js';
 import { RIG_UPGRADES, type RigUpgradeDef, RigStore } from './rig-upgrade.js'; // P49-a1
-import { computeRigs, EMPTY_RIG_STATE, type RigState, CHAIN_BASE, CHAIN_CAP, PPAJI_GRADE_NAMES, ppajiGrade, type PpajiGrade } from './rig.js';
+import { computeRigs, EMPTY_RIG_STATE, type RigState, CHAIN_BASE, CHAIN_CAP, PPAJI_GRADE_NAMES, ppajiGrade, type PpajiGrade, RIG_SETS, SET_BAND_BONUS, SET_POP_BONUS, rigBaseKind } from './rig.js';
 import { bandTop, bandPrice, bandFor, WRISTBANDS, type WristbandDef } from './wristband.js';
 import { accidentChance, riskLevel, RISK_LABELS, type RiskLevel } from './accident.js';
 import rigPartsJson from '../data/rig-parts.json';
@@ -221,6 +221,8 @@ export interface GameSnapshot {
   combosSeen?: string[];
   /** P25 발견한 패키지 */
   packagesSeen?: string[];
+  /** P60-c 발견한 기구 세트 id (optional · 없으면 빈 집합 — 세이브 v5 그대로) */
+  setsSeen?: string[];
   invest?: string[];
   investPending?: { id: string; day: number }[];
   campaigns?: CampaignState;
@@ -316,6 +318,8 @@ export class Game {
   cleanliness = 100;
   /** 발견한 콤보 (P16) — 누적, 첫 발동에 알림 */
   readonly combosSeen = new Set<string>();
+  /** P60-c 발견한 기구 세트 — 누적, 첫 성립에 축하 모달(한 tick 에 여럿이면 첫 하나만) + 나머지는 인박스 편지 */
+  readonly setsSeen = new Set<string>();
   private comboCache: { key: string; list: ActiveCombo[] } | null = null;
   /** 견인 코스 (P4-A, §2.2 「코스 = RCT 식 루트」) — 수역 안에만 (D12) */
   readonly courses = new CourseStore();
@@ -441,6 +445,7 @@ export class Game {
       courseThrills: () => this.courses.all.map((c) => this.evaluateCourse(c.handle)?.thrill ?? 0),
       ppajiGrades: () => this.pools.all.map((p) => this.ppajiGradeOf(p.id)), // P49-a1
       rigChains: () => this.pools.all.map(() => 0), // P50-b1 이 사슬을 낸다
+      rigSets: () => this.pools.all.map((p) => this.setsOf(p.id).length), // P60-c
       rigs: () => this.facilities.all.filter((f) => this.facilities.defOf(f).class === 'rig').map((f) => { const d = this.facilities.defOf(f); return { id: d.id, depth: d.depth ?? 'any', chain: d.chain ?? null, guarded: this.rigGuardedAt(f) }; }),
       seatGrades: () => this.facilities.all.filter((f) => this.facilities.defOf(f).class === 'lounging').map((f) => this.seatGradeOf(f.uid).grade), // P28
       seatsFedMax: (id) => Math.max(0, ...this.facilities.all.filter((f) => f.defId === id).map((f) => this.seatsFedAt(this.facilities.defOf(f), f.i, f.j, f.facing, f.uid))),
@@ -998,7 +1003,7 @@ export class Game {
     if (this.guests.all.some((o) => o !== g && o.teamId === g.teamId && o.seatUid === f.uid && o.pkg !== null)) return;
     const pk0 = this.packageFor(g, f.uid);
     if (!pk0 || g.pkg) return;
-    if (pk0.def.id === 'ppaji') { const pid = this.nearestPpajiPool(f); const grade = pid === null ? 0 : this.ppajiGradeOf(pid); const opened = WRISTBANDS.filter((t) => t.grade <= grade); this.issueBand(g, bandFor(g.taste?.thrill ?? 1, opened, 0), grade, f); return; } // P52-a 창구 ⓑ — 자리 배수·결제 다섯 줄을 통째로 건너뛴다(값은 그 빠지 등급)
+    if (pk0.def.id === 'ppaji') { const pid = this.nearestPpajiPool(f); const grade = pid === null ? 0 : this.ppajiGradeOf(pid); const opened = WRISTBANDS.filter((t) => t.grade <= grade); this.issueBand(g, bandFor(g.taste?.thrill ?? 1, opened, 0), grade, f, { poolId: pid }); return; } // P52-a 창구 ⓑ — 자리 배수·결제 다섯 줄을 통째로 건너뛴다(값은 그 빠지 등급)
     const pk = { def: pk0.def, price: Math.round(pk0.price * (1 + 0.1 * this.seatGradeOf(f.uid).grade)) }; // P24: 좋은 자리의 패키지가 더 비싸다
     g.pkg = pk.def.id; g.pkgUsed = false;
     this.money += pk.price;
@@ -1358,7 +1363,7 @@ export class Game {
       return { ...d, landsHere };
     });
     // P49-a1 §3.7 인기 교체 — 물빛 칸값 합이 아니라 「칸 수 × 표준 × 빠지 등급 배율」. 등급 0 은 배율 1 이라 기구 0개 판은 옛 표준 타일 판과 같다(항등 게이트)
-    const tilePopSum = p.tiles.length * this.b.tilePopStandard * (this.b.ppajiGradePopMul[this.ppajiGradeOf(p.id)] ?? 1) * (1 - (this.accidentCut.get(p.id) ?? 0)); // P52-b: 사고 뒤 감쇠(반감)
+    const tilePopSum = p.tiles.length * this.b.tilePopStandard * (this.b.ppajiGradePopMul[this.ppajiGradeOf(p.id)] ?? 1) * (1 - (this.accidentCut.get(p.id) ?? 0)) + SET_POP_BONUS * this.setsOf(p.id).length; // P52-b: 사고 뒤 감쇠(반감) · P60-c: 세트마다 인기 +6(tilePopStandard 눈금 — 등급 배율·감쇠 밖)
     const tables = this.weather === 'rain' || this.weather === 'cloudy' ? { ...SEASON_TABLES, sun: [0, 0, 0, 0] as [number, number, number, number], ambientOutdoor: SEASON_TABLES.ambientOutdoor.map((t) => t + WEATHER_TEMP[this.weather]) as [number, number, number, number] } : SEASON_TABLES;
     return poolState(p, { adjacent: adj, season: seasonOf(this.day), tables, balance: this.b, indoor: this.poolIndoor(p.id), tilePopSum });
   }
@@ -2468,15 +2473,40 @@ export class Game {
   isAnchored(defId: string): boolean { return RIG_UPGRADES.some((r) => r.to === defId && r.add.includes('anchor_chain')); }
   /** 파크 최고 빠지 등급 — 창구 ⓐ 의 값 기준 */
   parkPpajiGrade(): PpajiGrade { let g: PpajiGrade = 0; for (const p of this.pools.all) { const x = this.ppajiGradeOf(p.id); if (x > g) g = x; } return g; }
+  /** P60-c — 파크 최고 등급 수역(동점은 id 작은 쪽) · 없으면 null. 하루권(창구 ⓐ)의 세트 가산이 이 수역 값을 따른다 */
+  parkPpajiPool(): number | null { let best: number | null = null, bg: PpajiGrade = 0; for (const p of this.pools.all) { const x = this.ppajiGradeOf(p.id); if (x > bg || (x === bg && x > 0 && best !== null && p.id < best)) { best = p.id; bg = x; } } return best; }
+  /** P60-c §10.3 — 수역의 성립 세트 id (`RIG_SETS` 순 · 같은 세트는 한 번) */
+  setsOf(poolId: number): readonly string[] { return this.rigState.sets.get(poolId) ?? []; }
+  /** P60-c D72 B 고스트 별 — 그 수역에서 세트 `setId` 의 멤버(원종 또는 그 id)인 켜진 물 위 기구·링 위 시설의 발자국 가운데 칸 하나씩. UI 가 「어느 이웃이 세트를 완성하나」를 따로 세지 않도록 sim 이 낸다. `computeRigs` 와 같은 멤버 규칙, 수역은 `byPool`(물 위)·`poolOfFacility`(링 위) */
+  setMemberTiles(poolId: number, setId: string): { i: number; j: number }[] {
+    const def = RIG_SETS.find((s) => s.id === setId);
+    if (!def) return [];
+    const mine = this.rigState.byPool.get(poolId) ?? [];
+    const out: { i: number; j: number }[] = [];
+    for (const f of this.facilities.all) {
+      const d = this.facilities.defOf(f);
+      const onRing = d.onRing === true;
+      if (!onRing && (d.class !== 'rig' || !this.rigState.lit.has(f.uid) || !mine.includes(f.uid))) continue;
+      if (onRing && this.poolOfFacility(f.uid) !== poolId) continue;
+      if (!def.members.includes(f.defId) && !def.members.includes(rigBaseKind(f.defId))) continue;
+      const fp = FacilityStore.footprint(d, f.i, f.j, f.facing);
+      const t = fp[Math.floor(fp.length / 2)] ?? { i: f.i, j: f.j };
+      out.push({ i: t.i, j: t.j });
+    }
+    return out;
+  }
+  /** P60-c — 팔찌 값 관문 하나: `bandPrice` + 50G × 그 수역 세트 수(조끼만(값 0)엔 안 붙는다). `aimPreview`·`issueBand`·정보창이 전부 이것을 읽는다 */
+  bandPriceAt(poolId: number | null, tier: WristbandDef, grade: PpajiGrade, sets: number = poolId === null ? 0 : this.setsOf(poolId).length): number { const base = bandPrice(tier, grade); return base > 0 ? base + SET_BAND_BONUS * sets : base; }
   /** 자리 반경 3 안의 켜진 빠지(등급 ≥ 1) 중 등급 최고 */
   private nearestPpajiPool(f: PlacedFacility): number | null { const def = this.facilities.defOf(f); const i0 = f.i - 3, i1 = f.i + def.w + 2, j0 = f.j - 3, j1 = f.j + def.d + 2; let best: number | null = null, bg = 0; for (const p of this.pools.all) { const gr = this.ppajiGradeOf(p.id); if (gr < 1 || gr <= bg) continue; if (p.tiles.some((k) => { const a = k % this.grid.w, b = Math.floor(k / this.grid.w); return a >= i0 && a <= i1 && b >= j0 && b <= j1; })) { best = p.id; bg = gr; } } return best; }
   private bandKey(g: Guest): number { return g.teamId !== null ? g.teamId : -g.uid; }
   /** P52-a G2 — **결제 소유자 하나**: 낮 1회(팀 한 장) · 팀 전원에 배급 · `stats.pkgPpaji`·`f.incomeToday` 누적. 조끼만(값 0)도 「발급」이다(`hasVest`) */
-  issueBand(buyer: Guest, tier: WristbandDef, grade: PpajiGrade, f?: PlacedFacility, opts: { night?: boolean } = {}): { ok: boolean; price: number } {
+  issueBand(buyer: Guest, tier: WristbandDef, grade: PpajiGrade, f?: PlacedFacility, opts: { night?: boolean; /** P60-c — 값을 매기는 수역(세트 +50G/세트). 없으면 세트 가산 0 */ poolId?: number | null } = {}): { ok: boolean; price: number } {
     const key = this.bandKey(buyer);
     if (opts.night) { if (this.nightBandTeams.has(key)) return { ok: false, price: 0 }; this.nightBandTeams.add(key); } // P54 야간권 — 낮 1회 규칙(`bandPaid`)과 별개, 저장 0(저녁 한 번뿐)
     else { if (this.bandPaid.get(key) === this.day) return { ok: false, price: 0 }; this.bandPaid.set(key, this.day); }
-    const price = opts.night ? Math.round(bandPrice(tier, grade) * this.nightSalesMul() / 10) * 10 : bandPrice(tier, grade);
+    const base = this.bandPriceAt(opts.poolId ?? null, tier, grade); // P60-c: 팔찌 값 관문 하나
+    const price = opts.night ? Math.round(base * this.nightSalesMul() / 10) * 10 : base;
     if (opts.night) { this.nightPkgToday += price; this.stats.nightPkg = (this.stats.nightPkg ?? 0) + price; }
     const team = buyer.teamId === null ? [buyer] : this.guests.all.filter((o) => o.teamId === buyer.teamId);
     for (const o of team) { o.band = tier.id; o.bandLeft = tier.rides; }
@@ -2538,7 +2568,7 @@ export class Game {
           const def = this.facilities.defOf(f);
           f.usesTotal++;
           if (def.id === 'gear_rack' && g.pkg === null) { g.pkg = 'gear'; g.pkgUsed = false; this.stats.gearRentals = (this.stats.gearRentals ?? 0) + 1; }
-          if (def.id === 'rental_tube') { const grade = this.parkPpajiGrade(); const opened = WRISTBANDS.filter((t) => t.grade <= grade); this.issueBand(g, bandFor(g.taste?.thrill ?? 1, opened, 0), grade, f); } // P52-a 창구 ⓐ — 하루권 정본(파크 최고 등급)
+          if (def.id === 'rental_tube') { const grade = this.parkPpajiGrade(); const opened = WRISTBANDS.filter((t) => t.grade <= grade); this.issueBand(g, bandFor(g.taste?.thrill ?? 1, opened, 0), grade, f, { poolId: this.parkPpajiPool() }); } // P52-a 창구 ⓐ — 하루권 정본(파크 최고 등급 · P60-c: 그 등급의 수역 세트 값)
           if (def.class === 'rig' && def.depth === 'deep' && g.band !== undefined) g.bandLeft = Math.max(0, (g.bandLeft ?? 0) - (def.bandCost ?? 1)); // P52-a 회수 소모(여울·풀·식당·코스는 안 깎는다)
         if (def.class === 'rig' && (def.thrill ?? 0) > 0) { // P52-b 뽑기 자리 ① — 기구 가지 정확히 1회(전용 스트림)
           const cx = this.accidentContext(def, f.i, f.j, f.facing, f.uid);
@@ -2878,11 +2908,11 @@ export class Game {
    * P50-b2 §3.7 조준 미리보기 — 가짜 인스턴스를 **저장소에 넣지 않고** `computeRigs` 오버레이로 넘겨 등급·사슬·팔찌 값을 그대로 돌린다(미리보기 전용 산식 0줄).
    * `wouldEnclose` 와 같은 제약: nextUid·occ·grid.rev·pools.version 불변.
    */
-  aimPreview(defId: string, i: number, j: number, facing: 0 | 1): { poolId: number | null; gradeNow: PpajiGrade; gradeNext: PpajiGrade; chainNext: number; lit: boolean; capNext: number; pkgNow: number; pkgNext: number; risk: RiskLevel; riskLabel: string } | null {
+  aimPreview(defId: string, i: number, j: number, facing: 0 | 1): { poolId: number | null; gradeNow: PpajiGrade; gradeNext: PpajiGrade; chainNext: number; lit: boolean; capNext: number; pkgNow: number; pkgNext: number; risk: RiskLevel; riskLabel: string; /** P60-c — 놓으면 새로 성립하는 세트 id (없으면 null) */ setNext: string | null } | null {
     const def = FACILITY_DEFS.get(defId);
     if (!def || !(def.class === 'rig' || def.onRing === true)) return null;
     const overlayUid = -1;
-    const st = def.class === 'rig' && def.onRing !== true ? computeRigs(this.grid, this.facilities, this.pools, { uid: overlayUid, defId, i, j, facing }) : this.rigState;
+    const st = computeRigs(this.grid, this.facilities, this.pools, { uid: overlayUid, defId, i, j, facing }); // P60-c: 링 시설도 오버레이로 — 켜짐·사슬엔 안 들고(`consider` 가 거른다) 세트 그래프의 노드로만 든다
     // 소속 수역 — 발자국(물 위) 또는 4이웃(링 위)의 소유 수역 최다
     const cnt = new Map<number, number>();
     for (const t of FacilityStore.footprint(def, i, j, facing)) {
@@ -2905,7 +2935,9 @@ export class Game {
     }
     const capNext = def.capacity <= 0 ? 0 : Math.round(def.capacity * Math.min(CHAIN_CAP, Math.max(1, Math.sqrt(Math.max(1, chainNext) / CHAIN_BASE))));
     const risk = this.riskOf(def, i, j, facing); // P52-b
-    return { poolId, gradeNow, gradeNext, chainNext, lit, capNext, pkgNow: bandPrice(bandTop(gradeNow), gradeNow), pkgNext: bandPrice(bandTop(gradeNext), gradeNext), risk: risk.level, riskLabel: risk.label };
+    const setsNow = poolId === null ? [] : this.setsOf(poolId), setsNext = poolId === null ? [] : (st.sets.get(poolId) ?? []); // P60-c: 오버레이 상태의 세트 — 저장소·setsSeen 무변경
+    const setNext = setsNext.find((id) => !setsNow.includes(id)) ?? null;
+    return { poolId, gradeNow, gradeNext, chainNext, lit, capNext, pkgNow: this.bandPriceAt(poolId, bandTop(gradeNow), gradeNow, setsNow.length), pkgNext: this.bandPriceAt(poolId, bandTop(gradeNext), gradeNext, setsNext.length), risk: risk.level, riskLabel: risk.label, setNext };
   }
   private rigLinkCache: { key: string; edges: { i: number; j: number; dir: 0 | 1 }[] } | null = null;
   /** P50-b2 상시 이음쇠 — 켜진 기구끼리·기구와 링 데크가 맞닿은 변 (i,j 칸에서 dir 0 = +I 쪽 이웃, 1 = +J 쪽). 씬은 그리기만. 프레임당 1회 캐시 */
@@ -2999,7 +3031,7 @@ export class Game {
     for (const leader of teams.values()) {
       const roll = this.rng.night.next();
       if (roll >= (this.b.nightChance ?? 0.5)) continue;
-      const r = this.issueBand(leader, bandTop(grade), grade, undefined, { night: true });
+      const r = this.issueBand(leader, bandTop(grade), grade, undefined, { night: true, poolId: this.nightPool });
       if (r.ok) n++;
     }
     return n;
@@ -3094,14 +3126,31 @@ export class Game {
     if (dark.length) this.guests.evictFrom(dark); // 꺼진 기구 위에 서 있던 손님은 뭍으로(수영 중은 안 건드린다)
     for (const p of this.pools.all) {
       const before = gradesBefore.get(p.id) ?? 0, now = this.ppajiGradeOf(p.id);
-      if (now > before) this.inbox.push({ tick: this.tick, day: this.day, kind: 'system', priority: 'modal', title: `${p.name ?? `수역 #${p.id}`} — ${PPAJI_GRADE_NAMES[now] ?? ''}!`, body: `빠지 등급 ${before} → ${now} · 수역 인기 ×${this.b.ppajiGradePopMul[now] ?? 1}${bandTop(now).base > 0 ? ` · 자유이용권 ${bandTop(now).name} ${bandPrice(bandTop(now), now).toLocaleString('ko-KR')}G` : ''}` });
+      if (now > before) this.inbox.push({ tick: this.tick, day: this.day, kind: 'system', priority: 'modal', title: `${p.name ?? `수역 #${p.id}`} — ${PPAJI_GRADE_NAMES[now] ?? ''}!`, body: `빠지 등급 ${before} → ${now} · 수역 인기 ×${this.b.ppajiGradePopMul[now] ?? 1}${bandTop(now).base > 0 ? ` · 자유이용권 ${bandTop(now).name} ${this.bandPriceAt(p.id, bandTop(now), now).toLocaleString('ko-KR')}G` : ''}` });
     }
+    this.noteSets(); // P60-c: 첫 성립 = 축하 1회(+ 편지), 나머지는 편지
     this.rigLinkCache = null;
     this.guests.invalidate();
     this.poolCache.clear();
     this.notePackages(); // P25: 배치가 바뀌면 자리 패키지를 다시 재고 발견·소실을 알린다
   }
 
+  /** P60-c §10.3 발견 채널 — 새로 성립한 세트(`setsSeen` 에 없음)마다 기록. 같은 tick 의 첫 하나만 축하 모달(`pic` = 첫 멤버 시설 그림), 나머지는 인박스 편지. 등급 판정엔 안 넣는다 */
+  private noteSets(): void {
+    let modal = false;
+    for (const p of this.pools.all) for (const id of this.setsOf(p.id)) {
+      if (this.setsSeen.has(id)) continue;
+      this.setsSeen.add(id);
+      const def = RIG_SETS.find((d) => d.id === id); if (!def) continue;
+      const names = def.members.map((m) => FACILITY_DEFS.get(m)?.name ?? m).join(' · ');
+      const body = `${p.name ?? `수역 #${p.id}`}에서 ${names}이 이어졌다 — 이 빠지 팔찌 값 +${SET_BAND_BONUS}G · 인기 +${SET_POP_BONUS}`;
+      const pic = { kind: 'facility', id: def.members[0] };
+      this.inbox.push({ tick: this.tick, day: this.day, kind: 'system', priority: modal ? 'inbox' : 'modal', title: `세트 발견 · ${def.name}`, body, pic });
+      modal = true;
+      const at = this.facilities.all.find((f) => def.members.includes(f.defId) && this.poolOfFacility(f.uid) === p.id);
+      if (at) this.fx.push({ kind: 'discover', i: at.i, j: at.j, amount: 1, label: def.name });
+    }
+  }
   /**
    * 변경을 적용해 보고 되돌린다 — 입구에서 **닿지 않게 되는** 풀·시설이 생기거나, 걸을 수 있는 땅이
    * 발자국보다 더 많이 끊기면(= 어딘가를 봉쇄) true. "지금 안 닿는다" 가 아니라 **전후 비교**다:
@@ -3193,6 +3242,7 @@ export class Game {
       cleanliness: this.cleanliness,
       combosSeen: [...this.combosSeen].sort(),
       packagesSeen: [...this.packagesSeen].sort(),
+      ...(this.setsSeen.size ? { setsSeen: [...this.setsSeen].sort() } : {}), // P60-c (optional — 빈 집합이면 옛 스냅샷과 바이트 같다)
       invest: [...this.investDone].sort(),
       investPending: this.investPending.map((p) => ({ ...p })),
       campaigns: this.campaigns.toSnapshot(),
@@ -3254,6 +3304,7 @@ export class Game {
     g.cleanliness = s.cleanliness ?? 100;
     for (const id of s.combosSeen ?? []) g.combosSeen.add(id);
     for (const id of s.packagesSeen ?? []) g.packagesSeen.add(id);
+    for (const id of s.setsSeen ?? []) g.setsSeen.add(id); // P60-c
     for (const id of s.invest ?? []) g.investDone.add(id);
     g.investPending = (s.investPending ?? []).map((p) => ({ ...p }));
     if (s.campaigns) g.campaigns.fromSnapshot(s.campaigns);

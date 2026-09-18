@@ -54,6 +54,8 @@ export interface ConditionWorld {
   ppajiGrades(): readonly number[];
   rigChains(): readonly number[];
   rigs(): readonly RigView[];
+  /** P60-c — 수역별 성립 세트 수 (optional: 검사용 가짜 세계는 안 낸다 → 0) */
+  rigSets?(): readonly number[];
   /** P28 자리 등급들 (0~5) · 시설 id 가 먹여 주는 자리 수의 최대값 */
   seatGrades(): readonly number[];
   seatsFedMax(id: string): number;
@@ -216,6 +218,10 @@ export function evaluate(c: Condition, w: ConditionWorld, names: { facility: (id
       const rs = w.rigs().filter((r) => !c.depth || c.depth === 'any' || r.depth === c.depth || r.depth === 'any');
       const kinds = new Set(rs.map((r) => r.id)).size; const okKinds = c.kinds === undefined || kinds >= c.kinds;
       return { met: rs.length >= c.min && okKinds, progress: Math.min(ratio(rs.length, c.min), c.kinds ? ratio(kinds, c.kinds) : 1), actual: rs.length, need: c.min, label: `${c.depth === 'shallow' ? '여울 ' : c.depth === 'deep' ? '깊은 물 ' : ''}기구 ${c.min}개${c.kinds ? ` · ${c.kinds}종` : ''}` };
+    }
+    case 'rigSet': {
+      const ss = w.rigSets?.() ?? []; const best = ss.length ? Math.max(...ss) : 0;
+      return { met: best >= c.min, progress: ratio(best, c.min), actual: best, need: c.min, label: `한 빠지에 기구 세트 ${c.min}개` };
     }
     case 'rigGuarded': {
       const rs = w.rigs(); const g = rs.filter((r) => r.guarded).length; const need = c.min ?? 1; const rat = rs.length ? g / rs.length : 0;

@@ -8,9 +8,9 @@ import type { Condition } from '../data/schema.js';
 const leaves = (c: Condition): Condition[] => (c.kind === 'all' || c.kind === 'any') ? c.of.flatMap(leaves) : [c];
 
 describe('P53-a 인증·소원·달력 재배선 — 조건 4종 · 교착 0 · 연차 폴백', () => {
-  it('인증 — 기구 조건을 든 인증 9 + P60-a 세트 3(set_f/d/b: 옛 물빛 조건 → rigCount 2/4/6) · 종류 4 전부 쓰인다 · 등급 ≤4 · 사슬 ≤8(봇 상한) · 개수 ≤20 · 진입 인증(grade_f)은 시작 기구 2종으로 닫힌다', () => {
+  it('인증 — 기구 조건을 든 인증 9 + P60-a 세트 3(set_f/d/b: 옛 물빛 조건 → P60-c 부터 rigSet 1/2/3) · 종류 5 전부 쓰인다 · 등급 ≤4 · 사슬 ≤8(봇 상한) · 개수 ≤20 · 진입 인증(grade_f)은 시작 기구 2종으로 닫힌다', () => {
     const rigCerts = CERT_DEFS.filter(certHasRigCond);
-    expect(rigCerts.map((c) => c.id).sort()).toEqual(['fun_a', 'fun_c', 'grade_a', 'grade_b', 'grade_d', 'grade_f', 'grade_s', 'set_b', 'set_d', 'set_f', 'stream_b', 'stream_d']); // 9 (§4.5) + 3 (P60-a §10.1: color_* → set_*, pool.color → rigCount)
+    expect(rigCerts.map((c) => c.id).sort()).toEqual(['fun_a', 'fun_c', 'grade_a', 'grade_b', 'grade_d', 'grade_f', 'grade_s', 'set_b', 'set_d', 'set_f', 'stream_b', 'stream_d']); // 9 (§4.5) + 3 (P60-a §10.1: color_* → set_*, pool.color → rigCount → P60-c rigSet)
     const kinds = new Set<string>();
     for (const c of rigCerts) for (const w of c.conditions) for (const l of leaves(w.cond)) if (RIG_COND_KINDS.has(l.kind)) {
       kinds.add(l.kind);
@@ -18,7 +18,7 @@ describe('P53-a 인증·소원·달력 재배선 — 조건 4종 · 교착 0 · 
       if (l.kind === 'rigChain') expect(l.min, c.id).toBeLessThanOrEqual(8);
       if (l.kind === 'rigCount') { expect(l.min, c.id).toBeLessThanOrEqual(20); if (l.kinds !== undefined) expect(l.kinds, c.id).toBeLessThanOrEqual(l.min); }
     }
-    expect([...kinds].sort()).toEqual(['rigChain', 'rigCount', 'rigGrade', 'rigGuarded']);
+    expect([...kinds].sort()).toEqual(['rigChain', 'rigCount', 'rigGrade', 'rigGuarded', 'rigSet']); // P60-c: set_f/d/b 가 rigSet(한 빠지에 세트 n) 으로
     // 교착 0 — 진입 인증은 시작 해금 기구만으로 (grade_f: rigCount 2)
     const startRigs = [...FACILITY_DEFS.values()].filter((d) => d.class === 'rig' && d.buildable !== false && d.unlock.source === 'start');
     expect(startRigs.length).toBeGreaterThanOrEqual(2);

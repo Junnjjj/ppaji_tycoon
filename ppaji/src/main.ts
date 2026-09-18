@@ -291,6 +291,7 @@ const place = new PlaceDock(document.body, () => game, {
   showGhost: (def, i, j, facing, ok, label) => { if (def === null) scene.setAimCenter(false, 0); /* exit() 만 null 을 보낸다 — 취소·확정·붓 교체 전부 여기를 지난다 */ scene.setGhost(def, i, j, facing, ok, label); },
   showRing: (tiles) => scene.setSelection(tiles, false), // P24 조준 반경 — 수역 독의 선택 표시를 재사용
   pricePop: (i, j, text) => { if (text === null) return; const c = tileCenter(i, j); scene.fx('price-pop', { x: c.x, y: c.y - 26, text, key: 'aim' }); }, // P56-a D7
+  setStar: (hit) => scene.showSetStar(hit ? game.setMemberTiles(hit.poolId, hit.setId) : []), // P60-c D72 B: 놓으면 세트가 성립하는 자리 — 그 세트의 켜진 멤버 위에 별. exit·거절·붓 교체는 place.ts 가 null 을 보낸다
   toast: (text, ok) => { hud.showToast(text); sfx.play(ok ? 'coin' : 'error'); },
   onPlaced: (uid) => { consumeFx(); syncWorldToScene(); refreshHud(); persist(); const f = game.facilities.byUid(uid); if (f) { const c = tileCenter(f.i, f.j); scene.fx('money-pop', { x: c.x, y: c.y - 20, text: '설치 완료!', key: `placed:${uid}` }); } },
 });
@@ -353,6 +354,7 @@ const RIG_SPEC: DiscoverySpec = {
   picKind: 'part', verb: '개조 발견', sceneBg: 'convert',
   // P56-a D4: 개조판은 시설 스프라이트가 이미 있다 — 결과 장면 카드에 「전 → 후」 없이 후 그림, 축은 스릴·정원·안전
   resultArt: (_g, r) => { const x = r as unknown as { to: string }; return canvasPictureEl(provider.canvas(`fac/${x.to}/0`), 'build'); },
+  setCodex: (id) => canvasPictureEl(provider.canvas(`fac/${id}/0`), 'build'), // P60-c: 개조 도감 아래 「세트 n/8」 격자 — 카드 그림은 첫 멤버 시설 스프라이트
   axes: (_g, r) => { const x = r as unknown as { from: string; to: string }; const to = FACILITY_DEFS.get(x.to); const from = FACILITY_DEFS.get(x.from); if (!to) return []; const d = (a: number, b: number): string => a === b ? '' : `${b - a > 0 ? '+' : ''}${b - a} UP`; return [
     { label: '스릴', icon: 'attraction', value: String(to.thrill ?? 0), gauge: Math.min(5, to.thrill ?? 0), note: from ? d(from.thrill ?? 0, to.thrill ?? 0) : '' },
     { label: '정원', icon: 'friends', value: `${to.capacity}인`, gauge: Math.min(5, Math.ceil(to.capacity / 2)), note: from ? d(from.capacity, to.capacity) : '' },

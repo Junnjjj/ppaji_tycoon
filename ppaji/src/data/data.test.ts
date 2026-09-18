@@ -14,11 +14,12 @@ import ingredientsJson from './ingredients.json';
 import recipesJson from './recipes.json';
 import compatJson from './compat.json';
 import rigPartsJson from './rig-parts.json';
+import rigSetsJson from './rig-sets.json';
 const rigParts = rigPartsJson as { id: string; unlock: string }[];
 const rigPartIds = new Set(rigParts.map((p) => p.id));
 import type {
   AreaDef, CalendarEvent, CertDef, CertFamily, CertGrade, CompatDef, Condition, FacilityClass, FacilityDef, FoodCategory, FriendDef,
-  GiftDef, IngredientDef, RankDef, RecipeDef, SeasonTables, ShopEntry, WishDef,
+  GiftDef, IngredientDef, RankDef, RecipeDef, RigSetDef, SeasonTables, ShopEntry, WishDef,
 } from './schema';
 
 /**
@@ -182,6 +183,7 @@ const CONDITION_KINDS = [
   'likes', 'certPasses', 'certPassed', 'friends', 'areas', 'rank', 'gift', 'cookingLevel', 'visitors', 'money', 'year',
   'all', 'any', 'courseThrill', 'seatGrade', 'seatsFed',
   'rigGrade', 'rigChain', 'rigCount', 'rigGuarded', // P49-a1
+  'rigSet', // P60-c
 ] as const satisfies readonly Condition['kind'][];
 expectTypeOf<Exclude<Condition['kind'], (typeof CONDITION_KINDS)[number]>>().toBeNever();
 
@@ -587,7 +589,7 @@ describe('certs.json', () => {
     }
   });
 
-  it('P60-a: 24 유지 · 조건에 item/색/향 0 · 보상 kind 집합 {gift, facility, rigPart} · color/scent 계열은 임시로 rigCount/식당 수 (P60-c/e 가 set/court 로 재배선)', () => {
+  it('P60-a: 24 유지 · 조건에 item/색/향 0 · 보상 kind 집합 {gift, facility, rigPart} · set 계열은 P60-c 세트(rigSet 1/2/3) · court 계열은 임시로 식당 수 (P60-e 가 재배선)', () => {
     expect(certs).toHaveLength(24);
     expect([...new Set(certs.map((c) => c.reward.kind as string))].sort()).toEqual(['facility', 'gift', 'rigPart']);
     for (const c of certs) {
@@ -598,13 +600,47 @@ describe('certs.json', () => {
         });
       }
     }
-    const rigMin = (id: string) => certs.find((c) => c.id === id)!.conditions.find((w) => w.cond.kind === 'rigCount')!.cond as { min: number };
-    expect([rigMin('set_f').min, rigMin('set_d').min, rigMin('set_b').min]).toEqual([2, 4, 6]);
+    const setMin = (id: string) => certs.find((c) => c.id === id)!.conditions.find((w) => w.cond.kind === 'rigSet')!.cond as { min: number };
+    expect([setMin('set_f').min, setMin('set_d').min, setMin('set_b').min]).toEqual([1, 2, 3]); // P60-c §10.3: P60-a 임시 rigCount 2/4/6 → rigSet 1/2/3 (다른 조건·보상은 바이트 그대로)
+    for (const id of ['set_f', 'set_d', 'set_b']) expect(certs.find((c) => c.id === id)!.conditions.map((w) => w.weight), id).toEqual([2, 1]);
+    expect(certs.filter((c) => c.conditions.some((w) => w.cond.kind === 'rigSet')).map((c) => c.id)).toEqual(['set_f', 'set_d', 'set_b']);
     const restaurants = (id: string) => certs.find((c) => c.id === id)!.conditions.find((w) => w.cond.kind === 'facilityClass' && (w.cond as { class: string }).class === 'restaurant')!.cond as { count: number };
     expect([restaurants('court_f').count, restaurants('court_d').count, restaurants('court_b').count]).toEqual([2, 4, 6]);
     // spa 는 수온 조건이 그대로 (계절 수온은 남는다)
     expect(certs.find((c) => c.id === 'spa_d')!.conditions[0]!.cond).toEqual({ kind: 'pool', tempMin: 32 });
     expect(certs.find((c) => c.id === 'spa_b')!.conditions[0]!.cond).toEqual({ kind: 'pool', tempMin: 40, indoor: true });
+  });
+});
+
+// ── P60-c §10.3 rig-sets.json — 기구 세트 8 ──
+describe('rig-sets.json (P60-c)', () => {
+  const sets = rigSetsJson as unknown as RigSetDef[];
+  const byId = new Map(facilities.map((f) => [f.id, f]));
+  it('8종 · id 유일 · 이름 ≤ 10자 · 멤버 정확히 3 · 서로 다른 · 전부 존재하고 class rig(링 위 onRing 포함) · hidden 정확히 4(jump·night·roll·trio)', () => {
+    expect(sets).toHaveLength(8);
+    expect(new Set(sets.map((s) => s.id)).size).toBe(8);
+    for (const s of sets) {
+      expect(s.id).toMatch(/^[a-z][a-z0-9_]*$/);
+      expect(s.name.length, s.id).toBeLessThanOrEqual(10);
+      expect(s.members, s.id).toHaveLength(3);
+      expect(new Set(s.members).size, s.id).toBe(3);
+      for (const m of s.members) { const f = byId.get(m); expect(f, `${s.id} ${m}`).toBeDefined(); expect(f!.class === 'rig' || f!.onRing === true, `${s.id} ${m}`).toBe(true); }
+      expect(typeof s.hidden, s.id).toBe('boolean');
+    }
+    expect(sets.filter((s) => s.hidden).map((s) => s.id).sort()).toEqual(['jump', 'night', 'roll', 'trio']);
+    expect(sets.filter((s) => !s.hidden).map((s) => s.id)).toEqual(['ninja', 'kids', 'slide3', 'lounge']);
+  });
+  it('시작 해금(unlock.source start) 7종만으로 최소 1 세트(ninja) 성립 가능 · 밤빠지는 lights 기구 둘 + 플로팅 바 · 라운지는 링 위 메뉴 시설을 든다 · 멤버 셋이 같은 세트는 둘 없다', () => {
+    const start = new Set(facilities.filter((f) => f.class === 'rig' && f.buildable !== false && f.unlock.source === 'start').map((f) => f.id));
+    expect(start.size).toBe(7);
+    const startSets = sets.filter((s) => s.members.every((m) => start.has(m)));
+    expect(startSets.map((s) => s.id)).toContain('ninja');
+    const night = sets.find((s) => s.id === 'night')!;
+    expect(night.members.filter((m) => byId.get(m)!.lights === true)).toHaveLength(2);
+    expect(night.members.some((m) => byId.get(m)!.onRing === true && byId.get(m)!.menuSlots > 0)).toBe(true);
+    const lounge = sets.find((s) => s.id === 'lounge')!;
+    expect(lounge.members.some((m) => byId.get(m)!.onRing === true && byId.get(m)!.menuSlots > 0)).toBe(true);
+    expect(new Set(sets.map((s) => [...s.members].sort().join('+'))).size).toBe(8);
   });
 });
 

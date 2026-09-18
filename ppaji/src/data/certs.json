@@ -171,8 +171,8 @@
     "conditions": [
       {
         "cond": {
-          "kind": "rigCount",
-          "min": 2
+          "kind": "rigSet",
+          "min": 1
         },
         "weight": 2
       },
@@ -201,8 +201,8 @@
     "conditions": [
       {
         "cond": {
-          "kind": "rigCount",
-          "min": 4
+          "kind": "rigSet",
+          "min": 2
         },
         "weight": 2
       },
@@ -231,8 +231,8 @@
     "conditions": [
       {
         "cond": {
-          "kind": "rigCount",
-          "min": 6
+          "kind": "rigSet",
+          "min": 3
         },
         "weight": 2
       },

@@ -38,6 +38,7 @@ export class CelebrateWindow {
   /** 제목으로 아이콘을 고른다 — sim 은 아이콘을 모른다 */
   static iconFor(title: string): IconName {
     if (title.includes('랭크')) return 'star';
+    if (title.includes('세트 발견')) return 'attraction'; // P60-c D72 B: 첫 세트 성립 — `pic`(첫 멤버 시설)이 오면 그 그림이 우선
     if (title.includes('합격!') || title.includes('통과')) return 'check';
     if (title.includes('불합격')) return 'close';
     if (title.includes('지역')) return 'friends';
@@ -51,7 +52,7 @@ export class CelebrateWindow {
   show(ev: { title: string; body: string; pic?: { kind: string; id: string } }, date = ''): boolean {
     this.date.textContent = date;
     this.stamp.textContent = ev.title.includes('불합격') ? '아쉽' : '속보';
-    this.win.setTitle(ev.title.includes('랭크') ? '랭크 업!' : ev.title.includes('합격') ? '심사 결과' : ev.title.includes('지역') ? '새 지역' : '소식');
+    this.win.setTitle(ev.title.includes('랭크') ? '랭크 업!' : ev.title.includes('합격') ? '심사 결과' : ev.title.includes('지역') ? '새 지역' : ev.title.includes('세트 발견') ? '세트 발견' : '소식');
     if (ev.pic) { const art = rewardArt(ev.pic, this.sprite); art.classList.add('kcele-pic'); art.dataset['celePic'] = `${ev.pic.kind}/${ev.pic.id}`; this.icon.replaceChildren(art); this.icon.dataset['bg'] = 'letter'; this.icon.style.setProperty('--scene-bg', `url("${assetUrl('assets/scenes/scene_letter.png')}")`); } // P56-b2: 사장 편지 = 장면 위 물건(원작 gift-letter)
     else { this.icon.replaceChildren(iconEl(CelebrateWindow.iconFor(ev.title), 'xl')); delete this.icon.dataset['bg']; this.icon.style.removeProperty('--scene-bg'); }
     this.title.textContent = ev.title;

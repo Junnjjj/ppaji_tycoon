@@ -11,7 +11,7 @@
  * - 픽셀 검사는 `?px=1` 없이는 검은색이 돌아와 **조용히 통과**한다
  */
 import { chromium, type CDPSession } from 'playwright';
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 import { gateTile } from '../src/sim/grid.js';
 
 const BASE = process.env['PJ_URL'] ?? 'http://localhost:5187';
@@ -1047,7 +1047,7 @@ async function verifyG53(page: import('playwright').Page): Promise<void> {
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const col = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.rankWin.show(); const rows = [...document.querySelectorAll('#win-rank .kcollect')].map((r) => [r.dataset.collect, r.querySelector('.krow-v').textContent, r.querySelector('.kgoal-fill').style.width]); document.querySelector('#win-rank .kwin-close').click(); return { rows, recipes: g.cooking.recipes.size, facilities: g.facilities.defsCount }; })()`)) as { rows: string[][]; recipes: number; facilities: number };
   const denom = Object.fromEntries(col.rows.map((r) => [r[0], Number((r[1] ?? '').split('/')[1])]));
-  record('G53 수집 완성률 — 정보 창에 「n / N」 6줄(시설 N · 수영복 18 · 친구 71 · 인증 24 · 레시피 144 · 콤보 40 — P49-a2 물빛 줄 삭제) + 진행 막대', col.rows.length === 6 && denom['콤보'] === 40 && denom['시설 해금'] === col.facilities && denom['수영복·튜브'] === 18 && denom['SNS 친구'] === 71 && denom['인증 (종류)'] === 24 && denom['레시피'] === col.recipes && col.rows.every((r) => /%$/.test(r[2] ?? '')) ? 'pass' : 'fail', JSON.stringify(col));
+  record('G53 수집 완성률 — 정보 창에 「n / N」 7줄(시설 N · 수영복 18 · 친구 71 · 인증 24 · 레시피 144 · 콤보 40 · 세트 8 — P49-a2 물빛 줄 삭제 · P60-c 세트 줄 추가) + 진행 막대', col.rows.length === 7 && denom['세트'] === 8 && denom['콤보'] === 40 && denom['시설 해금'] === col.facilities && denom['수영복·튜브'] === 18 && denom['SNS 친구'] === 71 && denom['인증 (종류)'] === 24 && denom['레시피'] === col.recipes && col.rows.every((r) => /%$/.test(r[2] ?? '')) ? 'pass' : 'fail', JSON.stringify(col));
   const like = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const f = g.sns.unlockedFriends[0]; const fd = g.sns.friendsById.get(f.id); const areaId = fd.area || fd.areaId || g.sns.areas[0].id; const exp0 = f.exp; g.sns.posts.push({ id: 99991, day: g.day, tick: g.tick, friendId: f.id, areaId, subject: { kind: 'facility', ref: 1, name: '화장실' }, likes: 3, playerLiked: false, growUntilDay: g.day + 2, palette: 1 }); w.snsWin.show('timeline'); const btn = document.querySelector('#win-sns [data-like="99991"]'); if (btn) btn.click(); const toast = (document.getElementById('hud-toast') || {}).textContent || ''; document.querySelector('#win-sns .kwin-close').click(); return { had: !!btn, gained: f.exp - exp0, toast, name: fd.name }; })()`)) as { had: boolean; gained: number; toast: string; name: string };
   record('G53 플레이어 좋아요 — 친구 글에 누르면 그 친구 소원 EXP +12 · 토스트 「좋아요 +5 · 이름 소원 진행 +12」', like.had && like.gained === 12 && like.toast.includes(like.name) && like.toast.includes('+12') ? 'pass' : 'fail', JSON.stringify(like));
   const fail = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; const gt = g.gate; const r = g.placeFacility('vending_out', gt.i + 3, gt.j + 6, 0); g.cooking.known.add('burnt_bread'); w.menuWin.show(r.uid); const row = document.querySelector('#win-menu [data-recipe="burnt_bread"]'); const text = row ? row.textContent : ''; const stage = document.querySelector('#win-cert .kstage'); document.querySelector('#win-menu-main .kwin-close').click(); w.certWin.show(); const st = document.querySelector('#win-cert .kstage'); const cs = st ? getComputedStyle(st) : null; const before = st ? getComputedStyle(st, '::before').content : ''; document.querySelector('#win-cert .kwin-close').click(); return { text, padTop: cs ? parseFloat(cs.paddingTop) : 0, lit: before !== 'none' && before !== '' }; })()`)) as { text: string; padTop: number; lit: boolean };
@@ -1186,6 +1186,59 @@ async function verifyP60a(page: import('playwright').Page): Promise<void> {
   record('P60-a 수역 정보 — 수온 행 1(「수온 N°C」 + 판정) · 색·향·온도 타일 0 · 소품/물빛/분위기/프리셋/농도 문자열 0 · 프리셋 버튼 0 · 편집 버튼 「편집」', n('tempRows') === 1 && n('tiles') === 0 && (r['badWords'] as string[]).length === 0 && /수온/.test(String(r['tempText'])) && /\d+°C/.test(String(r['tempText'])) && /딱 좋아요|차가워요|뜨거워요/.test(String(r['tempText'])) && r['presetBtn'] === false && r['editBtn'] === '편집' ? 'pass' : 'fail', JSON.stringify({ tempRows: r['tempRows'], tiles: r['tiles'], badWords: r['badWords'], tempText: r['tempText'], presetBtn: r['presetBtn'], editBtn: r['editBtn'] }));
   record('P60-a 수역 독 — 붓 6 + 행동 4(치기·걷기는 숨김 · 탭 12) · 소품 탭 0 · 미리보기 0 · 카드 격자 0 · 소품/물빛/분위기 문자열 0', n('brush') === 6 && n('sub') === 4 && n('tabsAll') === 12 && n('itemTab') === 0 && r['preview'] === false && r['itemGrid'] === false && (r['dockBad'] as string[]).length === 0 ? 'pass' : 'fail', JSON.stringify({ brush: r['brush'], sub: r['sub'], tabsAll: r['tabsAll'], itemTab: r['itemTab'], preview: r['preview'], itemGrid: r['itemGrid'], dockBad: r['dockBad'] }));
   record('P60-a 인증 24 유지 · 보상 kind 집합 {facility, gift, rigPart} 그대로 · 조건에 item/색/향/농도 0', n('certs') === 24 && r['rewardKinds'] === 'facility,gift,rigPart' && (r['badConds'] as string[]).length === 0 ? 'pass' : 'fail', JSON.stringify({ certs: r['certs'], rewardKinds: r['rewardKinds'], badConds: r['badConds'] }));
+}
+
+/**
+ * P60-c (D72 B) 세트 — 데이터 8(hidden 4) · 링 위 ninja 셋을 API 로 인접 배치하면 `setsOf` 에 ninja + 발견 채널(축하 모달 또는 인박스) + 수집 「세트 1/8」 ·
+ * 같은 세트 둘째(등급이 안 바뀌는 판)는 팔찌 값 변화 0 · 건설 카드 「세트」 배지 ≥ 3 · 수역 정보창 「세트」 행.
+ * 배치 API 는 `game.placeFacility(id, i, j, facing)` · 링은 G5 선례 `makePpaji({ i0: 41, j0: 24, w: 6, h: 7 })`(안쪽 물 42~45 × 25~29).
+ */
+async function verifyP60c(page: import('playwright').Page): Promise<void> {
+  // 행 1 — 데이터(노드 쪽): RIG_SETS 8 · hidden 4 · 멤버 3 서로 다름 · 시작 해금 기구만으로 ≥ 1 세트 성립
+  {
+    let detail = '';
+    let ok = false;
+    try {
+      const sets = JSON.parse(readFileSync('src/data/rig-sets.json', 'utf8')) as { id: string; name: string; members: string[]; hidden?: boolean }[];
+      const facs = JSON.parse(readFileSync('src/data/facilities.json', 'utf8')) as { id: string; class: string; onRing?: boolean; unlock: { source: string } }[];
+      const start = new Set(facs.filter((d) => (d.class === 'rig' || d.onRing === true) && d.unlock.source === 'start').map((d) => d.id));
+      const hidden = sets.filter((s) => s.hidden).length;
+      const wellFormed = sets.every((s) => s.members.length === 3 && new Set(s.members).size === 3 && s.name.length > 0);
+      const startable = sets.filter((s) => s.members.every((m) => start.has(m))).map((s) => s.id);
+      ok = sets.length === 8 && hidden === 4 && wellFormed && startable.length >= 1;
+      detail = JSON.stringify({ sets: sets.length, hidden, wellFormed, startable });
+    } catch (e) { detail = `읽기 실패 ${String(e).slice(0, 80)}`; }
+    record('P60-c RIG_SETS 8 · hidden 4 · 멤버 3 서로 다름 · 시작 해금 7종만으로 세트 ≥ 1', ok ? 'pass' : 'fail', detail);
+  }
+  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0&celebrate=1`, { waitUntil: 'load' });
+  await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
+  await page.waitForTimeout(300);
+  // 행 2 — 새 판(777) · 링 · ninja 셋을 42열에 세로로: 빔(여울 전용 1×2) (42,25)~(42,26) 여울 · 다리 (42,27)~(42,28) · 징검 (42,29) — 빔이 링 41열에 닿고 셋이 서로 닿는다. ⚠ `g` 는 newGame 뒤에 잡는다(앞에 잡으면 옛 판에 놓는다 — 실측)
+  const r = (await page.evaluate(`(() => { const w = window.__pj; w.newGame(777); const g = w.game; const out = {}; w.flow.frozen = true; g.money = 1e6; for (const id of ['rig_bridge', 'rig_stepstone', 'rig_beam']) g.unlocked.facilities.add(id); out.ring = g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }).ok;
+    const pid = g.pools.ownerIdAt(42, 25); out.pid = pid; out.seenBefore = g.setsSeen ? g.setsSeen.size : -1;
+    const placed = [g.placeFacility('rig_beam', 42, 25, 0), g.placeFacility('rig_bridge', 42, 27, 0), g.placeFacility('rig_stepstone', 42, 29, 0)]; out.placed = placed.map((p) => p.ok ? 1 : (p.reason || 'x')); w.skip(1);
+    out.sets = g.setsOf ? g.setsOf(pid) : null; out.seen = g.setsSeen ? [...g.setsSeen] : null; out.celebrate = !!(w.celebrate && w.celebrate.visible); out.celeTitle = (document.querySelector('#win-celebrate .kcele-title') || {}).textContent || ''; out.inbox = g.inbox.all.filter((e) => /세트/.test(e.title)).length; out.inboxPic = g.inbox.all.filter((e) => /세트/.test(e.title) && e.pic).length;
+    const okBtn = document.getElementById('win-celebrate-ok'); if (out.celebrate && okBtn) okBtn.click();
+    w.rankWin.show(); const cr = document.querySelector('#win-rank [data-collect="세트"] .krow-v'); out.collect = cr ? cr.textContent : null; document.querySelector('#win-rank .kwin-close').click();
+    return out; })()`)) as Record<string, unknown>;
+  const sets = (r['sets'] as string[] | null) ?? [];
+  record('P60-c 링 위 ninja 셋 인접 배치 → setsOf 에 ninja · 축하 모달 또는 인박스 편지(pic) ≥ 1 · 수집 「세트 1 / 8」', (r['placed'] as unknown[]).every((p) => p === 1) && sets.includes('ninja') && ((r['celebrate'] === true && /세트/.test(String(r['celeTitle']))) || Number(r['inbox']) >= 1) && r['collect'] === '1 / 8' ? 'pass' : 'fail', JSON.stringify({ placed: r['placed'], sets: r['sets'], seen: r['seen'], celebrate: r['celebrate'], celeTitle: r['celeTitle'], inbox: r['inbox'], inboxPic: r['inboxPic'], collect: r['collect'] }));
+  // 행 3 — 같은 세트 둘째(첫 사슬과 안 닿는 45열): 빔 가로 (44,25)~(45,25) 여울 · 다리 (45,26)~(45,27) 을 먼저 채워 n 5 · 종 3 → 등급 2 로 고정하고, 징검 (45,28) 로 둘째 ninja 를 완성((43,25)·43~44열이 비어 두 사슬은 따로다) — 팔찌 값(aimPreview.pkgNow)이 0 움직여야 한다
+  const r3 = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const out = {}; const pid = g.pools.ownerIdAt(42, 25);
+    out.fill = [g.placeFacility('rig_beam', 44, 25, 1), g.placeFacility('rig_bridge', 45, 26, 0)].map((p) => p.ok ? 1 : (p.reason || 'x')); w.skip(1);
+    const probe = () => { const pv = g.aimPreview('rig_stepstone', 43, 27, 0); return pv ? { pkg: pv.pkgNow, grade: pv.gradeNow, pool: pv.poolId } : null; };
+    out.before = probe(); out.setsBefore = g.setsOf ? g.setsOf(pid).length : -1;
+    out.second = (g.placeFacility('rig_stepstone', 45, 28, 0).ok ? 1 : 0); w.skip(1);
+    out.after = probe(); out.setsAfter = g.setsOf ? g.setsOf(pid).length : -1; out.seen = g.setsSeen ? g.setsSeen.size : -1;
+    return out; })()`)) as Record<string, unknown>;
+  const b = r3['before'] as { pkg: number; grade: number; pool: number } | null; const a = r3['after'] as { pkg: number; grade: number; pool: number } | null;
+  record('P60-c 같은 세트 둘째 배치 → 팔찌 값 변화 0 (등급 2 고정 · 세트 수도 늘지 않는다)', (r3['fill'] as unknown[]).every((p) => p === 1) && r3['second'] === 1 && !!b && !!a && b.grade === 2 && a.grade === 2 && b.pkg === a.pkg && Number(r3['setsAfter']) === Number(r3['setsBefore']) ? 'pass' : 'fail', JSON.stringify({ fill: r3['fill'], second: r3['second'], before: b, after: a, setsBefore: r3['setsBefore'], setsAfter: r3['setsAfter'], seen: r3['seen'] }));
+  // 행 4 — 건설 「빠지」 탭 카드 「세트」 배지 ≥ 3(hidden 세트의 멤버는 배지 없음) · 수역 정보창 「세트」 행 1(값 ≤ 10자) + 힌트에 세트 이름
+  const r4 = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const out = {}; const pid = g.pools.ownerIdAt(42, 25);
+    w.buildWin.show('ppaji'); const win = document.getElementById('win-build'); const badges = [...win.querySelectorAll('.kpcard-badge')].map((e) => e.textContent); out.badges = badges.filter((t) => t === '세트').length; out.badgeIds = [...win.querySelectorAll('.kpcard[data-set]')].map((e) => e.dataset.facility); document.querySelector('#win-build .kwin-close').click();
+    w.poolInfo.show(pid); const pw = document.getElementById('win-pool'); const sr = pw.querySelector('[data-sets]'); out.setRow = sr ? sr.textContent : null; out.setVal = sr ? (sr.querySelector('.krow-v') || {}).textContent : null; out.hint = (pw.querySelector('.kfac-hint') || {}).textContent || ''; document.querySelector('#win-pool .kwin-close').click();
+    return out; })()`)) as Record<string, unknown>;
+  record('P60-c 건설 카드 「세트」 배지 ≥ 3 · 정보창 「세트」 행(값 ≤ 10자) + 힌트에 세트 이름', Number(r4['badges']) >= 3 && r4['setRow'] !== null && /세트/.test(String(r4['setRow'])) && String(r4['setVal'] ?? '').length <= 10 && Number(r4['setVal']) >= 1 && /세트 /.test(String(r4['hint'])) ? 'pass' : 'fail', JSON.stringify({ badges: r4['badges'], badgeIds: r4['badgeIds'], setRow: r4['setRow'], setVal: r4['setVal'], hint: String(r4['hint']).slice(0, 80) }));
 }
 
 /** P58-a — 푸드코트: 킷 식탁 2 · 틴트 칸 12 · 독 「식탁」 모드 실터치로 6×4 그리면 좌석 8 · 식탁 정보 창은 「푸드코트 지우기」만(이동·철거·개선·알바 숨김) · 지우면 좌석 0 · 하루 뒤 식탁에서 먹은 손님 > 0 */
@@ -1869,8 +1922,8 @@ async function verifyP6(page: import('playwright').Page, cdp: CDPSession): Promi
   await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const tabs = (await page.evaluate(`(() => { const w = window.__pj; w.certWin.show(); const t = [...document.querySelectorAll('#win-cert .ktab')].map((b) => b.textContent.trim()); const title = document.querySelector('#win-cert .kwin-title').textContent; w.certWin.win.hide(); return { t, title }; })()`)) as { t: string[]; title: string };
-  const want = ['물놀이', '경관', '핫플', '사철', '맛집', '스릴', '안전', '청결'];
-  record('P6 빠지 심사 창 — 계열 탭 8 = 물놀이·경관·핫플·사철·맛집·스릴·안전·청결', tabs.title.includes('빠지 심사') && want.every((k) => tabs.t.includes(k)) ? 'pass' : 'fail', JSON.stringify(tabs));
+  const want = ['물놀이', '세트', '먹거리', '사철', '맛집', '스릴', '안전', '청결']; /* P60-a·c: 색·향 계열 → 세트·먹거리 */
+  record('P6 빠지 심사 창 — 계열 탭 8 = 물놀이·세트·먹거리·사철·맛집·스릴·안전·청결 (P60-c)', tabs.title.includes('빠지 심사') && want.every((k) => tabs.t.includes(k)) ? 'pass' : 'fail', JSON.stringify(tabs));
   // 신청 → 심사일까지 감기 → 결과 창: 심사위원 이름 · 편향 0 이라 세 점수가 같다
   await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 30000; const r = g.applyCert('grade_f'); if (!r.ok) throw new Error(r.reason); const target = g.certs.state.applied.judgeDay; while (g.day < target) w.skip(w.TPD - g.tick); w.skip(w.JUDGE_TICK + 1 - g.tick); })()`);
   await page.waitForTimeout(500);
@@ -2151,6 +2204,7 @@ async function main(): Promise<void> {
   if (G >= 159.1) await verifyP59a(page);
   if (G >= 159.3) await verifyP59c(page);
   if (G >= 160.1) await verifyP60a(page);
+  if (G >= 160.3) await verifyP60c(page);
   if (G >= 31) await verifyG31(page);
   if (G >= 33) await verifyG33(page);
   if (G >= 34) await verifyG34(page);

@@ -1,6 +1,7 @@
 import { el } from '../dom.js';
 import { iconEl, type IconName } from '../icons.js';
 import { WindowPanel } from '../window.js';
+import { RIG_SETS } from '../rig-sets.js';
 import type { Game } from '../../sim/game.js';
 
 /** 랭킹·정보 창 — 현재 ★ · 다음 랭크 조건 진행 · 통계(엔딩 점수식 6항목) · 풀 심사 입구 */
@@ -83,6 +84,7 @@ export class RankWindow {
     col('인증 (종류)', Object.values(g.certs.state.passed).filter((n) => n > 0).length, g.certs.defs.size);
     col('레시피', g.cooking.known.size, g.cooking.recipes.size);
     col('콤보', g.combosSeen.size, g.comboCount); // P16
+    col('세트', g.setsSeen.size, RIG_SETS.length); // P60-c D72 B: 세트 도감 분모(G53 「n/N 6줄」 → 7줄)
     const certBtn = el('button', 'kbtn primary', '빠지 심사');
     certBtn.type = 'button';
     certBtn.id = 'win-rank-cert';

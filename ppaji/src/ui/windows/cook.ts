@@ -10,7 +10,8 @@ import { pictureEl, pictureId, type PictureKind } from '../pictures.js';
 import { PictureGrid, type PictureCard } from '../picture-grid.js';
 import { sceneCard, type SceneAxis } from '../scene-card.js';
 import { WindowPanel } from '../window.js';
-import type { Game } from '../../sim/game.js';
+import { RIG_SETS, HIDDEN_SET_LABEL } from '../rig-sets.js';
+import { FACILITY_DEFS, type Game } from '../../sim/game.js';
 import type { CookingStore, CookResultOf, RecipeLike, IngredientLike } from '../../sim/cooking.js';
 
 const CAT_KO: Record<string, string> = { drink: '음료', snack: '스낵', meal: '식사', dessert: '디저트' };
@@ -46,6 +47,8 @@ export interface DiscoverySpec {
   verb?: string;
   /** P56-b2 — 결과 장면 카드의 배경(`scenes.json` id: cook · convert · item · letter) */
   sceneBg?: string;
+  /** P60-c D72 B — 세트 도감(기구 개조 창만): 있으면 도감 격자 **아래**에 「세트 n/N」 3열 격자를 낸다. 값 = 멤버 시설 스프라이트를 그리는 법 */
+  setCodex?(facilityId: string): HTMLElement | null;
 }
 
 export const COOK_SPEC: DiscoverySpec = {
@@ -72,6 +75,9 @@ export class CookWindow {
   private readonly codexGrid: PictureGrid;
   private readonly failHead = el('div', 'krow-name', '실패작');
   private readonly failGrid: PictureGrid;
+  /** P60-c — 세트 도감(spec.setCodex 가 있을 때만 붙는다). 카드 = 첫 멤버 스프라이트 · 미발견은 실루엣 · hidden 미발견은 「?」 */
+  private readonly setsHead = el('div', 'krow-name');
+  private readonly setsGrid: PictureGrid;
   private sel: string[] = [];
 
   constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: { toast(t: string, ok: boolean): void; onChanged(): void }, private readonly spec: DiscoverySpec = COOK_SPEC) {
@@ -84,7 +90,24 @@ export class CookWindow {
     this.ingGrid = new PictureGrid({ name: `${spec.winId}-ingredients`, countLabel: '보유', onTap: (c) => this.tapIngredient(c) });
     this.codexGrid = new PictureGrid({ name: `${spec.winId}-codex`, onTap: (c) => this.tapCodex(c) });
     this.failGrid = new PictureGrid({ name: `${spec.winId}-fails`, noFooter: true });
-    this.win.body.append(this.head, this.slots, this.cookBtn, this.result, el('div', 'krow-name', `보유 ${wordOf(spec)}`), this.ingGrid.root, this.codexHead, this.codexGrid.root, this.failHead, this.failGrid.root);
+    this.setsGrid = new PictureGrid({ name: `${spec.winId}-sets`, cols: 3 });
+    this.win.body.append(this.head, this.slots, this.cookBtn, this.result, el('div', 'krow-name', `보유 ${wordOf(spec)}`), this.ingGrid.root, this.codexHead, this.codexGrid.root);
+    if (spec.setCodex) this.win.body.append(this.setsHead, this.setsGrid.root); // P60-c: 새 창 0 — 개조 도감 아래 「세트 n/N」
+    this.win.body.append(this.failHead, this.failGrid.root);
+  }
+
+  /** P60-c D72 B — 세트 도감 카드. 순수(발견 집합 + 그림 함수) — 검사가 DOM 없이 카드 값을 잰다 */
+  static setCards(seen: ReadonlySet<string>, art: (facilityId: string) => HTMLElement | null, sets = RIG_SETS, fallback: () => HTMLElement = () => iconEl('attraction', 'kpic-fb')): PictureCard[] {
+    return sets.map((s) => {
+      const has = seen.has(s.id);
+      const names = s.members.map((id) => FACILITY_DEFS.get(id)?.name ?? id);
+      const first = s.members[0];
+      const own = has || !s.hidden ? (first ? art(first) : null) : null; // hidden 미발견은 멤버 그림도 안 새게 — 실루엣 아이콘
+      const card: PictureCard = { id: s.id, name: has || !s.hidden ? s.name : HIDDEN_SET_LABEL, art: own ?? fallback(), disabled: !has, data: { set: s.id, seen: has ? '1' : '0', hidden: s.hidden ? '1' : '0' } };
+      if (has) { card.sub = names.join(' · '); card.desc = '발견 — 팔찌 +50G · 인기 +6 (같은 세트 둘째부터 0)'; }
+      else { card.silhouette = true; card.sub = ''; card.desc = s.hidden ? '아직 모른다' : `${names.join(' · ')} 를 한 빠지에 이어 붙이면`; }
+      return card;
+    });
   }
 
   private ingIcon(cls: string | undefined): IconName { return this.spec.icon[cls ?? ''] ?? this.spec.fallbackIcon; }
@@ -169,6 +192,12 @@ export class CookWindow {
         : { id: r.id, name: '???', art, silhouette: true, disabled: true, sub: '', desc: '아직 모른다', data: { codex: r.id } };
     });
     this.codexGrid.render(codex);
+    // P60-c 세트 도감 — 개조 도감 아래 「세트 n/N」(spec.setCodex 가 있는 창만). 정보 카드 · 탭 없음
+    if (this.spec.setCodex) {
+      const art = this.spec.setCodex.bind(this.spec);
+      this.setsHead.textContent = `세트 ${[...RIG_SETS].filter((s) => g.setsSeen.has(s.id)).length}/${RIG_SETS.length}`;
+      this.setsGrid.render(CookWindow.setCards(g.setsSeen, art));
+    }
     // 실패작 절 — 만들어 본 것만 (원작 「카이로봇 레시피」: 야채 찌꺼기·탄 빵)
     const fails = c.failDishes.filter((r) => c.known.has(r.id));
     this.failHead.classList.toggle('khide', fails.length === 0);

@@ -14,8 +14,8 @@ import { rewardArt } from '../reward-art.js';
 import type { Game } from '../../sim/game.js';
 import type { CertDef, CertFamily, Condition } from '../../data/schema.js';
 
-/** 계열 8 (P6 재편, 키는 코드·id 호환을 위해 그대로): 물놀이(수역) · 경관 · 핫플 · 사철(온수·실내) · 맛집(요리) · 스릴(코스) · 안전(해경) · 청결(위생). P60-a: 경관·핫플의 조건은 세트·먹거리로 갈아 끼웠고 이름은 P60-c 에서 바꾼다 */
-const FAMILY_KO: Record<CertFamily, string> = { grade: '물놀이', set: '경관', court: '핫플', spa: '사철', fruit: '맛집', stream: '스릴', fun: '안전', cutesy: '청결' }; // P60-a: 옛 색·향 계열 키 → set·court(조건이 세트·먹거리로 바뀜) — 이름은 P60-c 에서 「세트」「먹거리」로
+/** 계열 8 (P6 재편, 키는 코드·id 호환을 위해 그대로): 물놀이(수역) · 세트(기구 세트) · 먹거리(푸드코트) · 사철(온수·실내) · 맛집(요리) · 스릴(코스) · 안전(해경) · 청결(위생). P60-a 가 조건을 세트·먹거리로 갈아 끼웠고 P60-c 가 이름을 맞췄다 */
+const FAMILY_KO: Record<CertFamily, string> = { grade: '물놀이', set: '세트', court: '먹거리', spa: '사철', fruit: '맛집', stream: '스릴', fun: '안전', cutesy: '청결' }; // P60-c D72 B: 옛 「경관」「핫플」 → 「세트」「먹거리」
 const GRADE_ORDER = ['F', 'E', 'D', 'C', 'B', 'A', 'S'];
 /** 심사위원 셋 — 초상 팔레트와 말투 (원작: 셋이 각자 기준을 말한다) */
 const JUDGES: readonly { pal: number; say: (label: string, met: boolean) => string }[] = [

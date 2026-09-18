@@ -6,6 +6,7 @@ import { iconEl, type IconName } from '../icons.js';
 import { PictureGrid, gaugeEl, type PictureCard } from '../picture-grid.js';
 import { pictureEl, pictureId } from '../pictures.js';
 import { WRISTBANDS, bandPrice } from '../../sim/wristband.js';
+import { rigSetLabel } from '../rig-sets.js';
 
 export interface PoolInfoHost {
   onEdit(poolId: number): void;
@@ -82,6 +83,8 @@ export class PoolInfoWindow {
       row('기구', `${lit.length}`, 'attraction'); hints.push(`링 시설 ${onRing.length} · 종 ${new Set([...lit, ...onRing].map((f) => f.defId)).size}`);
       row('연결', `${Math.max(0, ...lit.map((f) => g.rigState.chainLen.get(f.uid) ?? 1))}`, 'build'); hints.push('최장 사슬 — 정원 × 최대 2.0');
       row('허가', `${p.tiles.length}/${p.tiles.length + Math.max(0, g.permitLeft)}칸`, 'pool'); hints.push(`남은 허가 ${Math.max(0, g.permitLeft)}칸`);
+      { const sets = g.setsOf(p.id); const sr = row('세트', `${sets.length}`, 'star'); sr.dataset['sets'] = String(sets.length); // P60-c D72 B: 성립한 세트 수(값 ≤ 10자) — 이름은 힌트 줄, hidden 미발견은 「?」
+        hints.push(sets.length ? `세트 ${sets.map((id) => rigSetLabel(id, g.setsSeen)).join('·')} · 팔찌 +50G/세트` : '세트 0 — 서로 다른 기구 셋을 이어 붙이면 이름이 생긴다'); }
       row('어제 수입', '—', 'coin'); /* P57-f: 수역별 수입은 안 센다(시설별만) — 개발용 문구는 화면에서 뺀다 */
       hints.push(`이 계절 이상 수온 ${st.detail.idealTemp}°C · 체류 ${Math.round((0.85 + 0.3 * st.detail.tempFit) * 100)}%`);
       this.rows.append(el('div', 'krow-sub kfac-hint', hints.join(' · '))); }

@@ -12,7 +12,7 @@ const fnv = (a: Uint8Array): number => { let h = 2166136261; for (let i = 0; i <
 /** 삭제 전 원본(`src/sim/grid.ts:76`, 2026-09-07) — production 에 자가 대조 대상을 남기지 않는다 */
 
 describe('P48-a 자연 바닥 평면', () => {
-  it('★ 바닥·단 배열이 골든 3시드×16일 전 구간에서 fixture 와 바이트 동일 — P48-a 는 변경 전과 대조해 「동작 0」을 증명했고(통과), P48-b1 부터는 지형 회귀 방어(굽이가 든 fixture 를 페이즈마다 사유와 함께 다시 뜬다) · P57-i·P58-a(2026-09-15) 재생성: 단 배열 3시드 동일, 바닥만 3일차부터 — 유입 재조정·킷 식탁으로 봇 건설 순서가 바뀐 몫 · P60-a(2026-09-18) 재생성: 소품 삭제로 봇 지출 순서가 바뀐 몫(단 배열 동일) · P60-b 재생성: 기구 배고픔으로 매점 매출·지출 순서가 바뀐 몫', () => {
+  it('★ 바닥·단 배열이 골든 3시드×16일 전 구간에서 fixture 와 바이트 동일 — P48-a 는 변경 전과 대조해 「동작 0」을 증명했고(통과), P48-b1 부터는 지형 회귀 방어(굽이가 든 fixture 를 페이즈마다 사유와 함께 다시 뜬다) · P57-i·P58-a(2026-09-15) 재생성: 단 배열 3시드 동일, 바닥만 3일차부터 — 유입 재조정·킷 식탁으로 봇 건설 순서가 바뀐 몫 · P60-a(2026-09-18) 재생성: 소품 삭제로 봇 지출 순서가 바뀐 몫(단 배열 동일) · P60-b 재생성: 기구 배고픔으로 매점 매출·지출 순서가 바뀐 몫 · P60-c 재생성: 세트 후보 우선·사슬 예약으로 봇 배치 순서(시드 1 바닥 4일차부터, 단 배열 동일)', () => {
     const base = JSON.parse(readFileSync(new URL('./__fixtures__/p48a-floor.json', import.meta.url), 'utf8')) as Record<string, { floor: number[]; levels: number[] }>;
     for (const seed of [1, 2, 3]) {
       const g = new Game(seed); const fl: number[] = [fnv(g.grid.floor)], lv: number[] = [fnv(g.grid.levels)];

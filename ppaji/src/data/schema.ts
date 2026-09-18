@@ -145,6 +145,8 @@ export type Condition =
   | { kind: 'rigChain'; min: number; count?: number }
   | { kind: 'rigCount'; min: number; kinds?: number; depth?: 'shallow' | 'deep' | 'any' }
   | { kind: 'rigGuarded'; min?: number; ratioMin?: number }
+  /** P60-c §10.3 — 어느 수역이든 성립한 세트(`rig-sets.json`) 수가 min 이상 (인증 set_f/d/b) */
+  | { kind: 'rigSet'; min: number }
   | { kind: 'certPassed'; id: string }
   | { kind: 'friends'; min: number }
   | { kind: 'areas'; min: number }
@@ -449,4 +451,13 @@ export interface RigPartDef {
   rank?: number;
   /** year 전용 — 연차 폴백으로만 온다 */
   year?: number;
+}
+
+/** P60-c §10.3 — 기구 세트 (`rig-sets.json` 8). 한 빠지에서 세 멤버(개조판은 원종으로)가 켜진 채 4이웃 사슬로 이어지면 성립. `hidden` 은 도감에 「?」로만 */
+export interface RigSetDef {
+  id: string;
+  name: string;
+  /** 서로 다른 시설 id 셋 — 전부 class rig(링 위 `onRing` 포함) */
+  members: [string, string, string];
+  hidden: boolean;
 }

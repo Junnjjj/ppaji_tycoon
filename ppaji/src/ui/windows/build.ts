@@ -8,6 +8,7 @@ import { iconEl, type IconName } from '../icons.js';
 import { canvasPictureEl } from '../pictures.js';
 import { PictureGrid, type PictureCard } from '../picture-grid.js';
 import { WindowPanel } from '../window.js';
+import { setsByMember, visibleSetsOf } from '../rig-sets.js';
 import type { Game } from '../../sim/game.js';
 import type { FacilityDef } from '../../data/schema.js';
 
@@ -83,8 +84,10 @@ export class BuildWindow {
     this.tabTitle.textContent = cur?.label ?? '';
     const rows = this.defs.filter((d) => cur?.match(d) ?? false);
     if (this.tab === 'indoor') rows.sort((a, b) => hallGroup(a) - hallGroup(b));
+    const setIndex = setsByMember(); // P60-c D72 B: 카드 배지 「세트」 = 이 시설이 어떤 (hidden 아닌) 세트의 멤버인가 — 자리별 「+닌자 코스」는 확정 바 칩
     const cards: PictureCard[] = rows.map((def) => {
       const unlocked = g.isUnlocked(def.id);
+      const memberOf = visibleSetsOf(def.id, setIndex);
       const placed = g.facilities.all.filter((f) => f.defId === def.id).length; // 원작 카드의 좌하 `×N` = 놓인 수
       const sub = unlocked
         ? `인기 ${def.pop} · 유지 ${def.maint}G/일${def.usageFee ? ` · 이용료 ${def.usageFee}G` : ''}`
@@ -98,9 +101,10 @@ export class BuildWindow {
         sub: def.slide ? `${def.slide.levels}층 ${def.slide.length}칸 · ${sub}` : sub,
         desc: def.desc ?? (unlocked ? '탭하면 배치 모드로 — 지도를 팬해 자리를 맞춘다' : '아직 못 짓는다'),
         disabled: !unlocked,
-        data: { facility: def.id, placed: String(placed) },
+        data: { facility: def.id, placed: String(placed), ...(memberOf.length ? { set: memberOf.map((s) => s.id).join(',') } : {}) },
       };
       if (!unlocked) card.badge = 'lock';
+      else if (memberOf.length) card.badge = { text: '세트' }; // hidden 세트의 멤버는 배지 없음 — 잠금 배지가 우선
       return card;
     });
     this.grid.render(cards);
