@@ -47,6 +47,7 @@
   "tempFitRange": 10,
   "hungerPerSwim": 30,
   "hungerPerRide": 25,
+  "hungerPerRig": 12,
   "hungerFalloff": 0.25,
   "walkinTeamMin": 2,
   "walkinTeamMax": 4,

@@ -158,6 +158,8 @@ export interface GuestBalance {
   /** P57-i — 시설 이용 뒤 사진(좋아요) 확률 (옛 0.12 고정) */
   photoChance?: number;
   hungerPerRide: number;
+  /** P60-b(D73 B1) — 물 위 기구·슬라이드 1회에 오르는 양 × 스릴(1~4). 옛 값은 0 이었다: 「기구를 많이 탈수록 매점이 산다」가 성립하지 않았다 */
+  hungerPerRig: number;
   hungerFalloff: number;
   walkinTeamMin: number;
   walkinTeamMax: number;
@@ -726,6 +728,7 @@ export class GuestStore {
   private finishUse(g: Guest, f: PlacedFacility, hooks?: GuestHooks): void {
     const def = this.facilities.defOf(f);
     g.hp = Math.max(0, Math.min(100, g.hp + def.hpDelta));
+    if (def.class === 'rig' || def.class === 'slide') g.hunger = Math.min(100, g.hunger + this.b.hungerPerRig * Math.max(1, def.thrill ?? 1)); // P60-b B1: 기구·슬라이드도 배를 곯린다(스릴 ×) — 수영(30)·탑승(25)과 같은 축, 링 위 먹거리가 먼저 팔린다
     if (def.menuSlots > 0) g.hunger = 0; // P27 먹었다
     g.sat = Math.min(100, g.sat + def.pop * 0.15 * (hooks?.satMul?.() ?? 1) * (def.class === 'lounging' ? 1 + 0.1 * (hooks?.seatValue?.(f) ?? 0) : 1)); // P17 자리 값
     g.uses++;
