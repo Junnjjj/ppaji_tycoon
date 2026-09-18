@@ -5,9 +5,9 @@ import type { AreaDef, FriendDef, WishDef, GiftDef } from '../data/schema.js';
 
 const areas: AreaDef[] = [{ id: 'a', name: 'A', order: 0, likesToUnlockNext: 100 }, { id: 'b', name: 'B', order: 1, likesToUnlockNext: 100 }];
 const friends: FriendDef[] = [
-  { id: 'f1', name: '하나', area: 'a', age: 10, gender: 'F', fav: { color: 'pink', scent: 'berry', food: 'x' }, start: true, invitedBy: null, palette: 0 },
-  { id: 'f2', name: '둘', area: 'a', age: 20, gender: 'M', fav: { color: 'blue', scent: 'pine', food: 'x' }, start: false, invitedBy: { friend: 'f1', star: 1 }, palette: 1 },
-  { id: 'f3', name: '셋', area: 'b', age: 20, gender: 'M', fav: { color: 'red', scent: 'citrus', food: 'x' }, start: true, invitedBy: null, palette: 2 },
+  { id: 'f1', name: '하나', area: 'a', age: 10, gender: 'F', fav: { food: 'x' }, start: true, invitedBy: null, palette: 0 },
+  { id: 'f2', name: '둘', area: 'a', age: 20, gender: 'M', fav: { food: 'x' }, start: false, invitedBy: { friend: 'f1', star: 1 }, palette: 1 },
+  { id: 'f3', name: '셋', area: 'b', age: 20, gender: 'M', fav: { food: 'x' }, start: true, invitedBy: null, palette: 2 },
 ];
 const wishes: WishDef[] = [
   { friendId: 'f1', idx: 0, condition: { kind: 'pool', sizeMin: 4 }, reward: { kind: 'money', amount: 100 }, line: '풀!' },
@@ -57,20 +57,20 @@ describe('SNS', () => {
   });
   it('좋아요가 지역 문턱을 넘으면 다음 지역이 열리고 그 지역 시작 친구가 온다', () => {
     const s = mk();
-    for (let k = 0; k < 6; k++) s.post(0, 0, 'f1', 'a', { kind: 'pool', ref: 1, name: '풀' }, 100, 0); // 글당 24~29 → 6장이면 문턱 100 을 넘는다
+    for (let k = 0; k < 6; k++) s.post(0, 0, 'f1', 'a', { kind: 'pool', ref: 1, name: '풀' }, 100); // 글당 24~29 → 6장이면 문턱 100 을 넘는다
     expect(s.checkAreas(1)?.area.id).toBe('b');
     expect(s.unlockedFriends.map((f) => f.id)).toContain('f3');
     expect(s.checkAreas(1)).toBeNull();
   });
   it('플레이어 좋아요는 하루 3번 +5', () => {
     const s = mk();
-    const p = s.post(0, 0, null, 'a', { kind: 'pool', ref: 1, name: '풀' }, 10, 0);
+    const p = s.post(0, 0, null, 'a', { kind: 'pool', ref: 1, name: '풀' }, 10);
     const before = p.likes;
     expect(s.likePost(p.id).ok).toBe(true);
     expect(p.likes).toBe(before + 5);
     expect(s.likePost(p.id).ok).toBe(false);
-    for (let k = 0; k < 2; k++) s.likePost(s.post(0, 0, null, 'a', { kind: 'pool', ref: 1, name: '풀' }, 10, 0).id);
-    expect(s.likePost(s.post(0, 0, null, 'a', { kind: 'pool', ref: 1, name: '풀' }, 10, 0).id).ok).toBe(false);
+    for (let k = 0; k < 2; k++) s.likePost(s.post(0, 0, null, 'a', { kind: 'pool', ref: 1, name: '풀' }, 10).id);
+    expect(s.likePost(s.post(0, 0, null, 'a', { kind: 'pool', ref: 1, name: '풀' }, 10).id).ok).toBe(false);
   });
   it('선물은 EXP 를 올리고 같은 선물은 두 번 못 준다 · 스냅샷 왕복', () => {
     const s = mk();

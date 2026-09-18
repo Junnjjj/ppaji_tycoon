@@ -101,7 +101,6 @@ export class WaterparkScene extends Phaser.Scene {
   private wallsReady = false;
 
   private season = 0;
-  private rainbowTiles: number[] = [];
   private weatherKind: 'rain' | 'snow' | null = null;
   private drops: { x: number; y: number; v: number }[] = [];
   private animFrame = 0;
@@ -120,7 +119,7 @@ export class WaterparkScene extends Phaser.Scene {
   private aimGfx: Phaser.GameObjects.Graphics | null = null;
   private aimLabelText: string | null = null;
   private poolTint = new Map<number, number>();
-  private readonly ambient: { i: number; j: number; kind: 'scent' | 'steam' | 'frost' | 'spray'; nextAt: number }[] = [];
+  private readonly ambient: { i: number; j: number; kind: 'steam' | 'frost' | 'spray'; nextAt: number }[] = [];
   private readonly emoteImgs = new Map<number, Phaser.GameObjects.Image>();
   private readonly gaugeImgs = new Map<number, Phaser.GameObjects.Image>();
   /** HP 배터리 (G26) — hp < 30 인 손님 */
@@ -191,15 +190,6 @@ export class WaterparkScene extends Phaser.Scene {
     this.syncFacilities();
     if (!reduced) this.tickAmbient();
     this.drawWeather(reduced);
-    if (this.rainbowTiles.length && this.animFrame % 4 === 0) {
-      for (const k of this.rainbowTiles) {
-        const img = this.tiles[k];
-        if (!img) continue;
-        const hue = reduced ? ((k * 37) % 360) : ((k * 37) + this.animFrame * 2) % 360;
-        const c = Phaser.Display.Color.HSVToRGB(hue / 360, 0.35, 1) as { r: number; g: number; b: number };
-        img.setTint((c.r << 16) | (c.g << 8) | c.b);
-      }
-    }
     const now = this.time.now;
     if (now - this.fpsAt >= 500) {
       this.fps = Math.round((this.frames * 1000) / (now - this.fpsAt));
@@ -1078,32 +1068,29 @@ export class WaterparkScene extends Phaser.Scene {
       g.beginPath(); g.moveTo(mx - (dx / len) * 6, my - (dy / len) * 6); g.lineTo(mx + (dx / len) * 6, my + (dy / len) * 6); g.strokePath();
     }
   }
-  /** 풀 색 틴트 — 풀 id → 색 이름. 타일 이미지에 setTint 한다 */
-  setPoolColors(colors: ReadonlyMap<number, { color: string; tiles: readonly number[]; temp: number; scent: string | null }>): void {
+  /** 수역 룩 — 풀 id → 칸·수온. P60-a(D71): 물 틴트는 하나(`--pool-clear`)다 — 색 이름 토큰·무지개는 뺐다. 수온은 김·서리 앰비언트만 */
+  setPoolLook(pools: ReadonlyMap<number, { tiles: readonly number[]; temp: number }>): void {
     this.poolTint.clear();
-    this.rainbowTiles = [];
-    for (const [, v] of colors) {
-      if (v.color === 'rainbow') this.rainbowTiles.push(...v.tiles);
-      const tint = cssColorInt(`--pool-${v.color}`) || cssColorInt('--pool-clear');
+    const tint = cssColorInt('--pool-clear') || 0xffffff;
+    for (const [, v] of pools) {
       for (const k of v.tiles) {
         this.poolTint.set(k, tint);
         const img = this.tiles[k];
         if (img) img.setTint(tint);
       }
     }
-    this.rebuildAmbient(colors);
+    this.rebuildAmbient(pools);
   }
 
-  private lastColors: ReadonlyMap<number, { color: string; tiles: readonly number[]; temp: number; scent: string | null }> | null = null;
+  private lastPools: ReadonlyMap<number, { tiles: readonly number[]; temp: number }> | null = null;
 
-  /** 향 퍼프·김·서리 자리 — 풀마다 몇 칸에서 주기적으로 뜬다 */
-  private rebuildAmbient(colors?: ReadonlyMap<number, { color: string; tiles: readonly number[]; temp: number; scent: string | null }>): void {
-    if (colors) this.lastColors = colors;
+  /** 김·서리 자리 — 풀마다 몇 칸에서 주기적으로 뜬다 */
+  private rebuildAmbient(pools?: ReadonlyMap<number, { tiles: readonly number[]; temp: number }>): void {
+    if (pools) this.lastPools = pools;
     this.ambient.length = 0;
-    if (!this.lastColors) return;
-    for (const [, v] of this.lastColors) {
-      const kinds: ('scent' | 'steam' | 'frost')[] = [];
-      if (v.scent) kinds.push('scent');
+    if (!this.lastPools) return;
+    for (const [, v] of this.lastPools) {
+      const kinds: ('steam' | 'frost')[] = [];
       if (v.temp >= 35) kinds.push('steam');
       if (v.temp <= 15) kinds.push('frost');
       if (kinds.length === 0) continue;
@@ -1127,9 +1114,9 @@ export class WaterparkScene extends Phaser.Scene {
     const now = this.time.now;
     for (const a of this.ambient) {
       if (now < a.nextAt) continue;
-      a.nextAt = now + (a.kind === 'scent' ? 2000 : a.kind === 'spray' ? 900 : 1600);
+      a.nextAt = now + (a.kind === 'spray' ? 900 : 1600);
       const c = tileCenter(a.i, a.j);
-      this.fx(a.kind === 'scent' ? 'scent-puff' : a.kind === 'steam' ? 'temp-steam' : a.kind === 'spray' ? 'fountain-spray' : 'temp-frost', { x: c.x, y: c.y });
+      this.fx(a.kind === 'steam' ? 'temp-steam' : a.kind === 'spray' ? 'fountain-spray' : 'temp-frost', { x: c.x, y: c.y });
     }
   }
 

@@ -108,8 +108,8 @@
     "title": "가을 — 첫 심사 응원",
     "line": "가을은 빠지 심사철이에요. 유자향 노란 향초를 넣으면 물빛이 노랗고 분위기가 상큼해집니다.",
     "grant": {
-      "kind": "item",
-      "id": "lemon"
+      "kind": "rigPart",
+      "id": "slip_wax"
     }
   },
   {
@@ -141,8 +141,8 @@
     "title": "겨울 저녁 조명",
     "line": "해가 짧아 저녁엔 빠지에 조명을 켭니다. 얼음 덩어리도 보냈어요 — 한여름 무더위에 꺼내 쓰세요.",
     "grant": {
-      "kind": "item",
-      "id": "ice_block"
+      "kind": "rigPart",
+      "id": "float_drum"
     },
     "priority": "inbox"
   },
@@ -156,8 +156,9 @@
     "title": "2년차 봄 — 사장 인사",
     "line": "벌써 2년차네요. 꿀단지 향로를 보냅니다 — 봄엔 군것질 분위기가 5점이고 물도 따뜻해져요.",
     "grant": {
-      "kind": "item",
-      "id": "honey"
+      "kind": "ingredient",
+      "id": "honey_jar",
+      "amount": 3
     }
   },
   {
@@ -212,8 +213,8 @@
     "title": "3년차 봄 — 사장 인사",
     "line": "3년차 첫날이에요. 보라 라벤더 화환을 보냅니다 — 꽃내음은 봄에 4점, 보랏빛은 가을에 4점.",
     "grant": {
-      "kind": "item",
-      "id": "lavender"
+      "kind": "rigPart",
+      "id": "waterproof_canvas"
     }
   },
   {
@@ -258,8 +259,9 @@
     "title": "4년차 봄 — 사장 인사",
     "line": "4년차예요. 커피 트럭 스피커를 보냅니다 — 커피향은 가을에 4점이고 물도 데워 줘요.",
     "grant": {
-      "kind": "item",
-      "id": "coffee_beans"
+      "kind": "ingredient",
+      "id": "coffee_bean",
+      "amount": 3
     }
   },
   {
@@ -300,8 +302,8 @@
     "title": "가을 — 계피향 화로",
     "line": "밤바람이 차죠. 계피향 빨간 화로를 보냅니다 — 물을 데우고 붉은빛은 겨울에 4점이에요.",
     "grant": {
-      "kind": "item",
-      "id": "cinnamon"
+      "kind": "rigPart",
+      "id": "slip_wax"
     }
   },
   {
@@ -328,8 +330,8 @@
     "title": "7년차 봄 — 온수관",
     "line": "7년차예요. 온수관을 보냅니다 — 물을 8도나 데워서 사철 부문 심사에 딱 맞아요.",
     "grant": {
-      "kind": "item",
-      "id": "bath_salt"
+      "kind": "rigPart",
+      "id": "float_drum"
     }
   },
   {
@@ -355,8 +357,8 @@
     "title": "겨울 — 오렌지향 등불",
     "line": "긴 밤에는 불빛이 좋아요. 오렌지향 등불을 보냅니다 — 물빛이 노을빛으로 곱게 물듭니다.",
     "grant": {
-      "kind": "item",
-      "id": "orange"
+      "kind": "rigPart",
+      "id": "waterproof_canvas"
     },
     "from": "president"
   },
@@ -369,8 +371,9 @@
     "title": "여름 — 바나나 보트",
     "line": "노란 바나나 보트를 보냅니다. 트로피컬 분위기는 여름에 5점이라 손님이 몰려요.",
     "grant": {
-      "kind": "item",
-      "id": "banana"
+      "kind": "ingredient",
+      "id": "banana_fruit",
+      "amount": 3
     },
     "from": "president"
   },
@@ -383,8 +386,9 @@
     "title": "겨울 주말 — 물레방아",
     "line": "옛 방앗간에서 물레방아를 얻었어요. 강바람 분위기가 돌고 물빛도 초록으로 물듭니다.",
     "grant": {
-      "kind": "item",
-      "id": "seaweed"
+      "kind": "ingredient",
+      "id": "seaweed",
+      "amount": 3
     },
     "from": "president"
   },
@@ -397,8 +401,8 @@
     "title": "여름 — 솔잎 얼음",
     "line": "솔잎 얼음 바구니를 보냅니다. 물을 4도 식히고 솔내음은 여름에 4점이에요.",
     "grant": {
-      "kind": "item",
-      "id": "mint"
+      "kind": "rigPart",
+      "id": "slip_wax"
     },
     "from": "president"
   },
@@ -411,8 +415,9 @@
     "title": "여름 — 야간 조명",
     "line": "보랏빛 야간 조명을 미리 보냅니다. 보랏빛은 가을에 4점이니 지금 달아 두세요.",
     "grant": {
-      "kind": "item",
-      "id": "grapes"
+      "kind": "ingredient",
+      "id": "grape_fruit",
+      "amount": 3
     },
     "from": "president"
   },
@@ -425,8 +430,8 @@
     "title": "겨울 — 안개 분무기",
     "line": "우윳빛 안개 분무기예요. 김이 서린 듯한 우유빛 분위기는 겨울에 4점입니다.",
     "grant": {
-      "kind": "item",
-      "id": "milk"
+      "kind": "rigPart",
+      "id": "float_drum"
     },
     "from": "president"
   },
@@ -439,8 +444,9 @@
     "title": "여름 — 초록 염료",
     "line": "키위향 초록 염료를 보냅니다. 초록빛은 여름에 4점이라 강물이 시원해 보여요.",
     "grant": {
-      "kind": "item",
-      "id": "kiwi"
+      "kind": "ingredient",
+      "id": "kiwi_fruit",
+      "amount": 3
     },
     "from": "president"
   },
@@ -453,8 +459,9 @@
     "title": "마지막 여름 주말",
     "line": "8년차 여름 주말이네요. 하얀 야자잎 매트를 보냅니다. 남은 두 계절도 잘 부탁해요.",
     "grant": {
-      "kind": "item",
-      "id": "coconut"
+      "kind": "ingredient",
+      "id": "coconut_milk",
+      "amount": 3
     },
     "from": "president"
   },

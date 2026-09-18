@@ -5,24 +5,17 @@
  * `progress` 는 0..1 — 인증의 부분 점수와 소원 화면의 진행률이 쓴다. 수치형은 `min(1, actual/need)`,
  * 존재형은 0/1, `count` 형은 `found/count`.
  */
-import type { Condition, FacilityClass, PoolColor, Scent } from '../data/schema.js';
+import type { Condition, FacilityClass } from '../data/schema.js';
 
 export interface PoolView {
   id: number;
   size: number;
-  color: PoolColor | 'rainbow' | 'clear';
-  scent: Scent | null;
   temp: number;
   likes: number;
-  intensity: number;
-  /** 농도 5칸 (G42) — 없으면 intensity 로 센다 */
-  bars?: number;
   popularity: number;
   indoor: boolean;
   /** 인접한 시설 id 들 */
   adjacentFacilities: readonly string[];
-  /** 지금 들어 있는 아이템 id 들 */
-  items: readonly string[];
 }
 
 export interface FacilityView {
@@ -73,12 +66,8 @@ export interface Verdict {
   need: number;
   /** 사람이 읽는 조건 한 줄 (한국어) */
   label: string;
-  /** 만점 조건 (G42, 원작: 색·향은 농도 100% 라야 만점) — 충족해도 농도만큼만 점수가 난다 */
-  full?: { actual: number; need: number; label: string };
 }
 
-const COLOR_KO: Record<string, string> = { orange: '주황', yellow: '노랑', lime: '라임', green: '초록', blue: '파랑', purple: '보라', pink: '핑크', red: '빨강', white: '흰', rainbow: '무지개' };
-const SCENT_KO: Record<string, string> = { citrus: '시트러스', floral: '꽃', pine: '솔', fruity: '과일', tropical: '트로피컬', berry: '베리', marine: '바다', cookie: '쿠키', spices: '향신료', milky: '우유', coffee: '커피', money: '머니' };
 const CLASS_KO: Record<FacilityClass, string> = { utility: '편의', lounging: '라운지', restaurant: '식당', attraction: '놀이', slide: '슬라이드', decor: '장식', rig: '기구' };
 
 const ratio = (actual: number, need: number): number => (need <= 0 ? 1 : Math.max(0, Math.min(1, actual / need)));
@@ -86,12 +75,9 @@ const ratio = (actual: number, need: number): number => (need <= 0 ? 1 : Math.ma
 function poolMatches(p: PoolView, c: Extract<Condition, { kind: 'pool' }>): boolean {
   if (c.sizeMin !== undefined && p.size < c.sizeMin) return false;
   if (c.sizeMax !== undefined && p.size > c.sizeMax) return false;
-  if (c.color !== undefined && p.color !== c.color) return false;
-  if (c.scent !== undefined && p.scent !== c.scent) return false;
   if (c.tempMin !== undefined && p.temp < c.tempMin) return false;
   if (c.tempMax !== undefined && p.temp > c.tempMax) return false;
   if (c.likesMin !== undefined && p.likes < c.likesMin) return false;
-  if (c.intensityMin !== undefined && p.intensity < c.intensityMin) return false;
   if (c.popMin !== undefined && p.popularity < c.popMin) return false;
   if (c.outdoor === true && p.indoor) return false;
   if (c.indoor === true && !p.indoor) return false;
@@ -103,12 +89,9 @@ function poolProgress(pools: readonly PoolView[], c: Extract<Condition, { kind: 
   const checks: ((p: PoolView) => number)[] = [];
   if (c.sizeMin !== undefined) checks.push((p) => ratio(p.size, c.sizeMin as number));
   if (c.sizeMax !== undefined) checks.push((p) => (p.size <= (c.sizeMax as number) ? 1 : 0));
-  if (c.color !== undefined) checks.push((p) => (p.color === c.color ? 1 : 0));
-  if (c.scent !== undefined) checks.push((p) => (p.scent === c.scent ? 1 : 0));
   if (c.tempMin !== undefined) checks.push((p) => ratio(p.temp, c.tempMin as number));
   if (c.tempMax !== undefined) checks.push((p) => (p.temp <= (c.tempMax as number) ? 1 : 0));
   if (c.likesMin !== undefined) checks.push((p) => ratio(p.likes, c.likesMin as number));
-  if (c.intensityMin !== undefined) checks.push((p) => ratio(p.intensity, c.intensityMin as number));
   if (c.popMin !== undefined) checks.push((p) => ratio(p.popularity, c.popMin as number));
   if (c.outdoor === true) checks.push((p) => (p.indoor ? 0 : 1));
   if (c.indoor === true) checks.push((p) => (p.indoor ? 1 : 0));
@@ -125,35 +108,25 @@ function poolLabel(c: Extract<Condition, { kind: 'pool' }>): string {
   const parts: string[] = [];
   if (c.outdoor) parts.push('야외');
   if (c.indoor) parts.push('실내');
-  if (c.color) parts.push(`${COLOR_KO[c.color] ?? c.color} 풀`);
-  if (c.scent) parts.push(`${SCENT_KO[c.scent] ?? c.scent} 향`);
   if (c.sizeMin !== undefined) parts.push(`${c.sizeMin}칸 이상`);
   if (c.sizeMax !== undefined) parts.push(`${c.sizeMax}칸 이하`);
   if (c.tempMin !== undefined) parts.push(`${c.tempMin}°C 이상`);
   if (c.tempMax !== undefined) parts.push(`${c.tempMax}°C 이하`);
   if (c.likesMin !== undefined) parts.push(`좋아요 ${c.likesMin}+`);
-  if (c.intensityMin !== undefined) parts.push(`강도 ${c.intensityMin}+`);
   if (c.popMin !== undefined) parts.push(`인기 ${c.popMin}+`);
   const body = parts.length ? parts.join(' · ') : '풀';
   return (c.count ?? 1) > 1 ? `${body} ×${c.count}` : body;
 }
 
-export function evaluate(c: Condition, w: ConditionWorld, names: { facility: (id: string) => string; item: (id: string) => string; gift: (id: string) => string } = { facility: (s) => s, item: (s) => s, gift: (s) => s }): Verdict {
+export function evaluate(c: Condition, w: ConditionWorld, names: { facility: (id: string) => string; gift: (id: string) => string } = { facility: (s) => s, gift: (s) => s }): Verdict {
   switch (c.kind) {
     case 'pool': {
       const need = c.count ?? 1;
       const pools = w.pools();
       const matching = pools.filter((p) => poolMatches(p, c));
       const found = matching.length;
-      let progress = found >= need ? 1 : Math.max(found / need, poolProgress(pools, c) * (need === 1 ? 1 : 1 / need) + found / need);
-      // 색·향 조건: 충족해도 농도(0~5칸)가 만점을 정한다 — 원작 「濃度を100%にすると満点」
-      let full: Verdict['full'];
-      if (c.color !== undefined || c.scent !== undefined) {
-        const bars = found > 0 ? Math.max(...matching.map((p) => p.bars ?? Math.max(0, Math.min(5, Math.round(p.intensity / 20))))) : 0;
-        full = { actual: bars, need: 5, label: '농도' };
-        if (found >= need) progress = 0.6 + 0.4 * (bars / 5);
-      }
-      return full ? { met: found >= need, progress: Math.min(1, progress), actual: found, need, label: poolLabel(c), full } : { met: found >= need, progress: Math.min(1, progress), actual: found, need, label: poolLabel(c) };
+      const progress = found >= need ? 1 : Math.max(found / need, poolProgress(pools, c) * (need === 1 ? 1 : 1 / need) + found / need);
+      return { met: found >= need, progress: Math.min(1, progress), actual: found, need, label: poolLabel(c) };
     }
     case 'poolTotalSize': {
       const actual = w.pools().reduce((s, p) => s + p.size, 0);
@@ -174,11 +147,6 @@ export function evaluate(c: Condition, w: ConditionWorld, names: { facility: (id
       const need = c.count ?? 1;
       const found = w.facilities().filter((f) => f.class === c.class).length;
       return { met: found >= need, progress: ratio(found, need), actual: found, need, label: `${CLASS_KO[c.class]} 시설 ${need}개` };
-    }
-    case 'item': {
-      const need = c.count ?? 1;
-      const found = w.pools().reduce((s, p) => s + p.items.filter((it) => it === c.id).length, 0);
-      return { met: found >= need, progress: ratio(found, need), actual: found, need, label: `풀에 ${names.item(c.id)}${need > 1 ? ` ×${need}` : ''}` };
     }
     case 'recipe': {
       const ok = w.recipeKnown(c.id, c.served ?? false);
@@ -292,6 +260,6 @@ export function evaluate(c: Condition, w: ConditionWorld, names: { facility: (id
 
 /** 데이터 검사용 — 이 평가기가 아는 kind 전부 */
 export const CONDITION_KINDS: readonly Condition['kind'][] = [
-  'pool', 'poolTotalSize', 'facility', 'facilityAdjacent', 'facilityClass', 'item', 'recipe', 'recipeCount', 'popularity', 'likes',
+  'pool', 'poolTotalSize', 'facility', 'facilityAdjacent', 'facilityClass', 'recipe', 'recipeCount', 'popularity', 'likes',
   'certPasses', 'certPassed', 'friends', 'areas', 'rank', 'gift', 'cookingLevel', 'visitors', 'money', 'year', 'all', 'any',
 ];

@@ -20,6 +20,8 @@ const MIN_IMPORT = 300;
 
 const data = (f) => JSON.parse(readFileSync(resolve(PKG, 'src/data', f), 'utf8'));
 const ids = (arr, kind) => arr.map((e) => `pic/${kind}/${e.id}`);
+/** P60-a — 옛 소품 그림: 시트 폴더의 `item_*.png` 가 곧 목록(정의 파일이 없다) */
+function legacyItemIds() { try { return readdirSync(DIR).filter((f) => /^item_.+\.png$/.test(f)).map((f) => `pic/item/${f.slice(5, -4)}`); } catch { return []; } }
 export function expectedIds() {
   return new Map([
     ...ids(data('ingredients.json'), 'ingredient').map((id) => [id, 24]),
@@ -27,7 +29,7 @@ export function expectedIds() {
     ...ids(data('rig-parts.json'), 'part').map((id) => [id, 24]),
     ...ids(data('parts.json'), 'part').map((id) => [id, 24]), // 공방 부품 41 (주문서 초안엔 없었다 — 383 = 342 + 41)
     ...ids(data('gears.json'), 'gear').map((id) => [id, 32]),
-    ...ids(data('items.json'), 'item').map((id) => [id, 24]),
+    ...legacyItemIds().map((id) => [id, 24]), // P60-a(2026-09-18): 소품 정의(items.json)는 지웠지만 그림 24 는 자산으로 남는다(미결 ⑤ — 부품·장식으로 재지정 전까지) — 기대 목록은 파일에서 센다
     ...ids(data('gifts.json'), 'gift').map((id) => [id, 24]),
     ...ids(data('wristbands.json'), 'band').map((id) => [id, 24]),
     ...ids(data('campaigns.json'), 'campaign').map((id) => [id, 24]), // P56-b2 캠페인 3

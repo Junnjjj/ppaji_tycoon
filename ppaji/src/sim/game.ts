@@ -48,10 +48,9 @@ import {
 } from './course/course.js';
 import {
   clockView, isWeekend, seasonOf, yearOf, TICKS_PER_DAY, LATE_DAY_TICK, TOTAL_DAYS, ARRIVAL_FROM_TICK, ARRIVAL_TO_TICK, TICKS_PER_HOUR, SHOP_RESTOCK_TICK, type ClockView, CLOSING_TICK, EVENING_TICK } from './clock.js';
-import type { FacilityDef, ItemDef, SeasonTables, AreaDef, FriendDef, WishDef, GiftDef, Condition, CertDef, RankDef, ShopEntry, CalendarEvent, RecipeDef, CompatDef, IngredientDef, InvestDef, CampaignDef } from '../data/schema.js';
+import type { FacilityDef, SeasonTables, AreaDef, FriendDef, WishDef, GiftDef, Condition, CertDef, RankDef, ShopEntry, CalendarEvent, RecipeDef, CompatDef, IngredientDef, InvestDef, CampaignDef } from '../data/schema.js';
 import defaultBalance from '../data/balance.json';
 import facilitiesJson from '../data/facilities.json';
-import itemsJson from '../data/items.json';
 import seasonsJson from '../data/seasons.json';
 import areasJson from '../data/areas.json';
 import friendsJson from '../data/friends.json';
@@ -70,9 +69,7 @@ import campaignsJson from '../data/campaigns.json';
 export type Balance = typeof defaultBalance;
 
 export const FACILITY_DEFS: ReadonlyMap<string, FacilityDef> = new Map((facilitiesJson as unknown as FacilityDef[]).map((d) => [d.id, d]));
-export const ITEM_DEFS: ReadonlyMap<string, ItemDef> = new Map((itemsJson as unknown as ItemDef[]).map((d) => [d.id, d]));
 export const SEASON_TABLES = seasonsJson as unknown as SeasonTables;
-export const POOL_ITEM_CAP = 20;
 /** 재통과 위로금 — 재료는 G7 에서 */
 export const CONSOLATION = 300;
 /** 폐장 잔고가 음수면 여기까지 채워 준다 (G37) */
@@ -126,7 +123,7 @@ export const GROUNDS: readonly GroundDef[] = groundsJson as GroundDef[];
 export const GROUND_BY_ID: ReadonlyMap<string, GroundDef> = new Map(GROUNDS.map((g) => [g.id, g]));
 
 export interface FxEvent {
-  kind: 'splash' | 'coin' | 'dig' | 'fill' | 'place' | 'remove' | 'item' | 'photo' | 'like' | 'cert' | 'rankup' | 'buy' | 'discover' | 'land' | 'wish' | 'rest' | 'bus' | 'fire' | 'band'; // P56-a2: 'band' = 팔찌 발급 띠(label = 팔찌 이름 · amount = 등급)
+  kind: 'splash' | 'coin' | 'dig' | 'fill' | 'place' | 'remove' | 'photo' | 'like' | 'cert' | 'rankup' | 'buy' | 'discover' | 'land' | 'wish' | 'rest' | 'bus' | 'fire' | 'band'; // P56-a2: 'band' = 팔찌 발급 띠(label = 팔찌 이름 · amount = 등급)
   i: number;
   j: number;
   amount?: number;
@@ -240,8 +237,6 @@ export interface GameSnapshot {
   weather?: Weather;
   ticketBonus?: number;
   endingSeen?: boolean;
-  /** 풀 아이템 프리셋 (G12 — 소원이 완성 풀을 부수게 하는 것에 대한 대응: 저장해 뒀다 한 번에 복원) */
-  presets?: { name: string; items: string[] }[];
   /** 본 시나리오 비트 id (G16) */
   story?: string[];
   /** 직원·청결 (G20) */
@@ -249,19 +244,16 @@ export interface GameSnapshot {
   /** 랜덤 이벤트 (G21) */
   randomEvents?: RandomEventsSnapshot;
   /** 하루 안의 결산 누적 (G19) — 없으면 0 에서 시작 (왕복이 하루 중간이면 필요하다) */
-  dayAccum?: { satSum: number; satN: number; menuSalesToday: Record<string, number>; likesAtDayStart: number; ticketsToday?: number; feesToday?: number; foodToday?: number; presetSerial?: number; enteredToday?: number; leftToday?: number };
+  dayAccum?: { satSum: number; satN: number; menuSalesToday: Record<string, number>; likesAtDayStart: number; ticketsToday?: number; feesToday?: number; foodToday?: number; enteredToday?: number; leftToday?: number };
   stats: { visitors: number; tickets: number; fees: number; /* P49-a1 optional (전부 0/미기록 — 배선은 P51·P52-a) */ converts?: number; pkgPpaji?: number; vestRentals?: number; /** P54 밤 빠지 파티 — 밤이 열린 날 수 · 야간권 · 링 위 매점 저녁 매출 · 빠지 자리 이용료(저녁) */ nightNights?: number; nightPkg?: number; nightFood?: number; nightFee?: number; food?: number; spent?: number; bailouts?: number; busGuests?: number; wishDone?: number; wishExpired?: number; courseRevenue?: number; courseRiders?: number; pkg?: number; teamGuests?: number; teamSeated?: number; seatless?: number; lodging?: number; overnight?: number; teamsSeated?: number; /** P34 — 비 오는 날 실내로 피한 손님 수 */ rainRefuge?: number; passByEnter?: number; passByLeave?: number; nightUses?: number; gearRentals?: number; /** P50-b1 — 빠지 지출 구성 */ spentDeck?: number; spentRig?: number; spentConvert?: number; /** P51 measure — 기구 이용 · 그날 기구를 탄 손님 수(재탑승 비율) */ rigUses?: number; rigRiderDays?: number; rigRepeats?: number; rigPartsBought?: number; /** P56-c — 재료·부품 재고 구입 수(요리·공방·개조 합) */ stockBuys?: number; /** P58-a — 푸드코트 자리에서 먹은 수 */ courtEats?: number; /** P52-a — 팔찌를 낀 기구 이용 */ rigUsesBand?: number; /** P52-b — 사고 수 */ accidents?: number; /** P52-c — 계절별 야외 입수 [봄,여름,가을,겨울] */ swimsBySeason?: number[]; days: DayReport[]; menuSales?: Record<string, number> };
   prevSatAvg?: number;
-  /** 해금된 시설·아이템·선물 id (start 는 언제나 포함) */
-  unlocked: { facilities: string[]; items: string[]; gifts?: string[]; tiles?: string[] };
+  /** 해금된 시설·선물 id (start 는 언제나 포함). P60-a: 옛 세이브의 `items` 는 읽지 않는다(마이그레이션은 save/ 가 v5 로) */
+  unlocked: { facilities: string[]; gifts?: string[]; tiles?: string[] };
   /** 오늘 방문하기로 한 친구 (스냅샷 복원 때 다시 안 뽑게) */
   friendsToday?: string[];
   /** 견인 코스 + 산 기구 (P4-A). optional — 없으면 코스 0·물려받은 기구 둘. 버전은 안 올린다 */
   courses?: CourseSnapshot;
 }
-
-/** 풀 프리셋 상한 — 창 한 장에 들어가는 줄 수 */
-export const MAX_PRESETS = 4;
 
 export class Game {
   arrivalRevision = 0;
@@ -291,9 +283,6 @@ export class Game {
   ticketBonus = 0;
   /** 엔딩을 봤다 (계속하기 중) — 배속 ×2 해금 */
   endingSeen = false;
-  /** 풀 아이템 프리셋 — 최대 MAX_PRESETS, 오래된 것부터 밀린다 */
-  presets: { name: string; items: string[] }[] = [];
-  private presetSerial = 1;
   /** 시나리오 (G16) — 비트 판정·적재 */
   readonly story = new StoryDirector();
   /** 직원·청결 (G20) */
@@ -347,7 +336,7 @@ export class Game {
   private satN = 0;
   private menuSalesToday: Record<string, number> = {};
   private likesAtDayStart = 0;
-  readonly unlocked = { facilities: new Set<string>(), items: new Set<string>(), gifts: new Set<string>(), tiles: new Set<string>() };
+  readonly unlocked = { facilities: new Set<string>(), gifts: new Set<string>(), tiles: new Set<string>() };
   private fx: FxEvent[] = [];
   private ticketsToday = 0;
   private feesToday = 0;
@@ -355,7 +344,7 @@ export class Game {
   private lodgingToday = 0;
   /** P23 첫 판매 토스트를 한 번만 */
   firstSaleSeen = false;
-  /** 풀 파생 상태 캐시 — 편집·아이템·시간(계절)·인접 시설이 바뀌면 비운다 */
+  /** 풀 파생 상태 캐시 — 편집·시간(계절)·인접 시설이 바뀌면 비운다 */
   private poolCache = new Map<number, { key: string; state: PoolState }>();
 
   constructor(
@@ -380,7 +369,6 @@ export class Game {
     this.workshop = new WorkshopStore(GEAR_DEFS, PART_DEFS, this.rng.workshop, WORKSHOP_WORDS, GEAR_FAIL_PICK);
     this.rigs = new RigStore(RIG_UPGRADES, RIG_PART_DEFS, this.rng.rig); // P51: 개조 레시피 20(rigs.json)
     for (const d of FACILITY_DEFS.values()) if (d.unlock.source === 'start' && d.derived !== true) this.unlocked.facilities.add(d.id); // P58-a: 파생 시설은 해금 목록에 안 든다(건설 창·봇에 안 뜬다)
-    for (const d of ITEM_DEFS.values()) if (d.unlock === 'start') this.unlocked.items.add(d.id);
     for (const d of GIFT_DEFS) if (d.unlock === 'start') this.unlocked.gifts.add(d.id);
     this.weather = rollWeather(this.rng.world, seasonOf(0));
     this.planFriendVisits();
@@ -424,7 +412,7 @@ export class Game {
     const pools = () => poolsMemo ?? (poolsMemo = this.pools.all.map((p) => {
       const st = this.poolState(p.id);
       const adj = this.facilities.adjacentTo(new Set(p.tiles)).map((f) => f.defId);
-      return { id: p.id, size: p.tiles.length, color: st?.color ?? 'clear', scent: st?.scent ?? null, temp: st?.temp ?? 0, likes: p.likes, intensity: st?.intensity ?? 0, bars: st?.detail.intensityBars ?? 0, popularity: st?.popularity ?? 0, indoor: this.poolIndoor(p.id), adjacentFacilities: adj, items: p.items.filter((it) => it.expiresTick > this.absTick).map((it) => it.itemId) };
+      return { id: p.id, size: p.tiles.length, temp: st?.temp ?? 0, likes: p.likes, popularity: st?.popularity ?? 0, indoor: this.poolIndoor(p.id), adjacentFacilities: adj };
     }));
     const facilities = () => facMemo ?? (facMemo = this.facilities.all.map((f) => {
       const def = this.facilities.defOf(f);
@@ -464,7 +452,6 @@ export class Game {
   evaluateCondition(c: Condition): Verdict {
     return evaluate(c, this.conditionWorld(), {
       facility: (id) => FACILITY_DEFS.get(id)?.name ?? id,
-      item: (id) => ITEM_DEFS.get(id)?.name ?? id,
       gift: (id) => GIFTS_BY_ID.get(id)?.name ?? id,
     });
   }
@@ -474,7 +461,6 @@ export class Game {
   grant(r: { kind: string; id?: string; amount?: number }): string {
     switch (r.kind) {
       case 'facility': if (r.id) this.unlocked.facilities.add(r.id); return `${FACILITY_DEFS.get(r.id ?? '')?.name ?? r.id} 해금`;
-      case 'item': if (r.id) this.unlocked.items.add(r.id); return `${ITEM_DEFS.get(r.id ?? '')?.name ?? r.id} 해금`;
       case 'gift': if (r.id) this.unlocked.gifts.add(r.id); return `${GIFTS_BY_ID.get(r.id ?? '')?.name ?? r.id} 해금`;
       case 'tool': if (r.id) this.tools.add(r.id); return `${r.id === 'move' ? '이동 도구' : r.id} 획득`;
       case 'ingredient': if (r.id) this.cooking.grantIngredient(r.id, r.amount ?? REWARD_STOCK); return `재료 ${INGREDIENTS_BY_ID.get(r.id ?? '')?.name ?? r.id} ×${r.amount ?? REWARD_STOCK}`; // P56-c 보상 = 열쇠 + ×3
@@ -490,7 +476,6 @@ export class Game {
     const r = w.reward;
     switch (r.kind) {
       case 'facility': this.unlocked.facilities.add(r.id); return `${FACILITY_DEFS.get(r.id)?.name ?? r.id} 해금`;
-      case 'item': this.unlocked.items.add(r.id); return `${ITEM_DEFS.get(r.id)?.name ?? r.id} 해금`;
       case 'gift': this.unlocked.gifts.add(r.id); return `${GIFTS_BY_ID.get(r.id)?.name ?? r.id} 해금`;
       case 'rigPart': return this.grant(r); // P49-a1 → P56-c: 열쇠 + ×3 (요리 재료와 같은 길)
       case 'money': this.money += r.amount; return `${r.amount.toLocaleString('ko-KR')}G`;
@@ -587,7 +572,7 @@ export class Game {
 
   private shopOwned(e: ShopEntry): boolean {
     if (e.kind === 'facility') return this.unlocked.facilities.has(e.ref);
-    if (e.kind === 'item') return this.unlocked.items.has(e.ref);
+    if (e.kind === 'ingredient') return false; // P60-a: 장날 재료는 재고 3 묶음 — 언제나 다시 산다 (P56-c 「보상 재료는 장날 값으로 재구매」)
     return this.unlocked.gifts.has(e.ref);
   }
 
@@ -800,7 +785,7 @@ export class Game {
     if (fdef) { const at = this.friendsToday.indexOf(fdef.id); if (at >= 0) this.friendsToday.splice(at, 1); }
     const owned = fdef ? (this.sns.friends.get(fdef.id)?.gifts ?? []) : [];
     const ownFloat = owned.map((id) => FLOAT_BY_GIFT[id] ?? 0).find((n) => n > 0) ?? 0;
-    const g = this.guests.spawn(fdef ? { id: fdef.id, palette: fdef.palette, favColor: fdef.fav.color, favScent: fdef.fav.scent, name: fdef.name, age: fdef.age, gender: fdef.gender, home: areaName, float: ownFloat } : undefined, areaName, this.sns.areasById.get(areaId)?.taste);
+    const g = this.guests.spawn(fdef ? { id: fdef.id, palette: fdef.palette, name: fdef.name, age: fdef.age, gender: fdef.gender, home: areaName, float: ownFloat } : undefined, areaName, this.sns.areasById.get(areaId)?.taste);
     g.teamId = this.busState?.team ?? null; this.stats.teamGuests = (this.stats.teamGuests ?? 0) + 1; // P17 팀
     if (fdef) { const st = this.sns.friends.get(fdef.id); if (st) { st.visits++; if (st.visits === 1) g.say = firstVisitLine(fdef); } }
     const ticket = this.ticketFor(fdef ? { id: fdef.id } : null);
@@ -1352,7 +1337,7 @@ export class Game {
     const p = this.pools.byId(id);
     if (!p) return null;
     // 인접 시설은 버전이 같으면 안 변한다 — 키에 넣지 말고 miss 때만 센다 (tick 마다 부르면 비용이 붙는다)
-    const key = `${this.pools.version}|${this.facilities.version}|${seasonOf(this.day)}|${p.items.length}|${p.likes}|${this.weather}`;
+    const key = `${this.pools.version}|${this.facilities.version}|${seasonOf(this.day)}|${p.likes}|${this.weather}`;
     const hit = this.poolCache.get(id);
     if (hit && hit.key === key) return hit.state;
     const state = this.computePoolState(p);
@@ -1360,7 +1345,7 @@ export class Game {
     return state;
   }
 
-  /** 캐시 없는 순수 계산 — `previewItem` 이 가상의 풀에도 쓴다 */
+  /** 캐시 없는 순수 계산 */
   private computePoolState(p: Pool): PoolState {
     const tiles = new Set(p.tiles);
     // 슬라이드의 AB 는 **출구 다음 칸이 이 풀일 때만** (§2.2 「출구 칸이 풀이면 착수」, G36) — 활강로 옆에 붙어 있다고 튀지 않는다
@@ -1375,7 +1360,7 @@ export class Game {
     // P49-a1 §3.7 인기 교체 — 물빛 칸값 합이 아니라 「칸 수 × 표준 × 빠지 등급 배율」. 등급 0 은 배율 1 이라 기구 0개 판은 옛 표준 타일 판과 같다(항등 게이트)
     const tilePopSum = p.tiles.length * this.b.tilePopStandard * (this.b.ppajiGradePopMul[this.ppajiGradeOf(p.id)] ?? 1) * (1 - (this.accidentCut.get(p.id) ?? 0)); // P52-b: 사고 뒤 감쇠(반감)
     const tables = this.weather === 'rain' || this.weather === 'cloudy' ? { ...SEASON_TABLES, sun: [0, 0, 0, 0] as [number, number, number, number], ambientOutdoor: SEASON_TABLES.ambientOutdoor.map((t) => t + WEATHER_TEMP[this.weather]) as [number, number, number, number] } : SEASON_TABLES;
-    return poolState(p, { items: ITEM_DEFS, adjacent: adj, season: seasonOf(this.day), tables, balance: this.b, indoor: this.poolIndoor(p.id), tilePopSum });
+    return poolState(p, { adjacent: adj, season: seasonOf(this.day), tables, balance: this.b, indoor: this.poolIndoor(p.id), tilePopSum });
   }
 
   /** 실내 풀 = 모든 타일의 4이웃이 실내 바닥이거나 풀 (지붕 아래) */
@@ -1395,9 +1380,9 @@ export class Game {
 
   private popCache: { key: string; value: number } | null = null;
 
-  /** 파크 인기 = 풀 인기 합 + 시설 인기 합 (버전·계절·아이템 수가 같으면 캐시) */
+  /** 파크 인기 = 풀 인기 합 + 시설 인기 합 (버전·계절이 같으면 캐시) */
   parkPopularity(): number {
-    const key = `${this.groundVersion}|${this.pools.version}|${this.facilities.version}|${seasonOf(this.day)}|${this.pools.all.reduce((n, p) => n + p.items.length, 0)}|${this.menuVersion}|${this.staff.all.length}|${this.day}|${this.sns.totalLikes}`; // G57: 좋아요(풀 SE)도 키에
+    const key = `${this.groundVersion}|${this.pools.version}|${this.facilities.version}|${seasonOf(this.day)}|${this.menuVersion}|${this.staff.all.length}|${this.day}|${this.sns.totalLikes}`; // G57: 좋아요(풀 SE)도 키에
     if (this.popCache && this.popCache.key === key) return this.popCache.value;
     let n = this.facilities.totalPopularity(seasonOf(this.day));
     const cook = this.staff.mul('menuMul');
@@ -1435,47 +1420,6 @@ export class Game {
     return Math.round((this.b.ticketBase * (1 + step * level)) / 10) * 10 + this.ticketBonus;
   }
 
-  /** 아이템 만료 (G42, 원작): 넣은 시점부터 `days`일의 폐장 — 이미 살아 있는 아이템이 있으면 **그 만료를 물려받는다**(개수와 무관, 안 늘어난다) */
-  private itemExpiry(p: { items: readonly { expiresTick: number }[] }, d: ItemDef): number {
-    const alive = p.items.filter((it) => it.expiresTick > this.absTick);
-    if (alive.length > 0) return Math.min(...alive.map((it) => it.expiresTick));
-    return (this.day + d.days) * TICKS_PER_DAY + CLOSING_TICK;
-  }
-
-  /** 풀 아이템이 며칠 남았나 (풀 정보 창) — 없으면 null */
-  itemDaysLeft(poolId: number): number | null {
-    const p = this.pools.byId(poolId);
-    const alive = p ? p.items.filter((it) => it.expiresTick > this.absTick) : [];
-    if (alive.length === 0) return null;
-    return Math.max(0, Math.ceil((Math.min(...alive.map((it) => it.expiresTick)) - this.absTick) / TICKS_PER_DAY));
-  }
-
-  /** 아이템을 넣으면 색이 바뀌나 — 바뀌면 그 풀의 좋아요가 0 이 된다 (R2). UI 가 경고에 쓴다 */
-  previewItem(poolId: number, itemId: string): { before: string; after: string; likes: number; resets: boolean; states: { before: PoolState; after: PoolState } } | null {
-    const p = this.pools.byId(poolId);
-    const d = ITEM_DEFS.get(itemId);
-    const cur = this.poolState(poolId);
-    if (!p || !d || !cur) return null;
-    const before = cur.color;
-    const fake = { ...p, items: [...p.items, { itemId, placedTick: this.absTick, expiresTick: this.itemExpiry(p, d) }] };
-    const afterState = this.computePoolState(fake);
-    // G52: 원작 「아이템 투입 효과」 — 넣기 전에 색·농도·향·온도·인기의 전후를 같이 준다
-    return { before, after: afterState.color, likes: p.likes, resets: before !== afterState.color && p.likes > 0, states: { before: cur, after: afterState } };
-  }
-
-  /** 이 아이템을 몇 개 넣어야 색이 붙나 (G55 — 「맑음 1/5」 힌트). 색 없는 아이템이면 null, `max` 안에 안 붙으면 max+1 */
-  itemsToColor(poolId: number, itemId: string, max = 6): number | null {
-    const p = this.pools.byId(poolId);
-    const d = ITEM_DEFS.get(itemId);
-    if (!p || !d || !d.color) return null;
-    for (let n = 1; n <= max; n++) {
-      const items = [...p.items];
-      for (let k = 0; k < n; k++) items.push({ itemId, placedTick: this.absTick, expiresTick: this.itemExpiry(p, d) });
-      if (this.computePoolState({ ...p, items }).color !== 'clear') return n;
-    }
-    return max + 1;
-  }
-
   /** 동시 손님 상한 — 랭크마다 +12 (G24: ★0 40 → ★5 100). 화면 밀도가 곧 보상이다 */
   /** P34 D43 — 매표소가 정원이다: 기본 + 랭크 + 매표소 수 × ticketCap. 실내동을 넓혀 매표소를 더 두면 손님이 더 들어온다 (기본 40 → 32 + 킷 매표소 1×8, 킷 세계는 그대로) */
   maxGuests(): number {
@@ -1495,10 +1439,6 @@ export class Game {
 
   isUnlocked(defId: string): boolean {
     return this.unlocked.facilities.has(defId);
-  }
-
-  isItemUnlocked(itemId: string): boolean {
-    return this.unlocked.items.has(itemId);
   }
 
   // ── tick ──────────────────────────────────────────────────────────
@@ -1533,7 +1473,7 @@ export class Game {
         const homeId = homes[this.rng.guest.int(Math.max(1, homes.length))];
         const owned = fdef ? (this.sns.friends.get(fdef.id)?.gifts ?? []) : [];
         const ownFloat = owned.map((id) => FLOAT_BY_GIFT[id] ?? 0).find((n) => n > 0) ?? 0;
-        const g = this.guests.spawn(fdef ? { id: fdef.id, palette: fdef.palette, favColor: fdef.fav.color, favScent: fdef.fav.scent, name: fdef.name, age: fdef.age, gender: fdef.gender, home: areaName(fdef.area), float: ownFloat } : undefined, areaName(homeId ?? ''), this.sns.areasById.get(fdef ? fdef.area : (homeId ?? ''))?.taste);
+        const g = this.guests.spawn(fdef ? { id: fdef.id, palette: fdef.palette, name: fdef.name, age: fdef.age, gender: fdef.gender, home: areaName(fdef.area), float: ownFloat } : undefined, areaName(homeId ?? ''), this.sns.areasById.get(fdef ? fdef.area : (homeId ?? ''))?.taste);
         // P27 D33: 걸어온 손님도 팀이다 — 2~4명이 한 무리(teamSeq). 팀 자리·패키지·1박이 첫날부터 돈다 (전: 버스 손님만 팀이라 3년차까지 자리가 비었다)
         if (this.walkinLeft <= 0) { this.teamSeq++; this.walkinTeam = this.teamSeq; this.walkinLeft = this.b.walkinTeamMin + this.rng.spawn.int(this.b.walkinTeamMax - this.b.walkinTeamMin + 1); }
         g.teamId = this.walkinTeam; this.walkinLeft--; this.stats.teamGuests = (this.stats.teamGuests ?? 0) + 1;
@@ -1572,23 +1512,13 @@ export class Game {
       if (a && a.judgeDay === this.day) this.inbox.push({ tick: 0, day: this.day, kind: 'system', priority: 'inbox', title: '오늘 15시 풀 심사', body: `${this.certs.defs.get(a.id)?.name ?? a.id} — 심사위원이 온다. 풀을 정돈하자` });
       if (this.clock.isWeekend) this.inbox.push({ tick: 0, day: this.day, kind: 'system', priority: 'inbox', title: '주말 — 손님이 몰린다', body: '입장이 평일의 1.6배. 라운지·매점을 채우자' });
     }
-    // 아이템 만료 — 매 시간 정각에만 훑는다 (720 tick 마다 20개 × 풀 수는 싸지만 매 tick 은 낭비)
+    // 매 시간 정각에만 훑는다 (매 tick 은 낭비)
     if (this.tick % TICKS_PER_HOUR === 0) {
-      // 소원은 창 안에 **한 번** 충족되면 성립 — 아이템이 사라지기 전에 매시간 표시해 둔다
+      // 소원은 창 안에 **한 번** 충족되면 성립 — 조건이 사라지기 전에 매시간 표시해 둔다
       if (this.sns.activeWishes().length > 0) this.sns.markMet((w) => this.evaluateCondition(w.condition).met);
-      this.expireItems();
     }
     this.tick++;
     if (this.tick >= TICKS_PER_DAY) this.closeDay();
-  }
-
-  private expireItems(): void {
-    const now = this.absTick;
-    for (const p of this.pools.all) {
-      const before = p.items.length;
-      p.items = p.items.filter((it) => it.expiresTick > now);
-      if (p.items.length !== before) this.poolCache.delete(p.id);
-    }
   }
 
   /** 친구가 나간다 — 그날의 만족이 곧 EXP (방문 2~3번에 ☆ 하나) */
@@ -1824,7 +1754,7 @@ export class Game {
 
   /**
    * 수역 치기 / 풀 파기 (P1). 강·여울 칸은 **부표로 친다**(수역 — 주력), 잔디·포장은 인공 풀을 판다(승계).
-   * 둘 다 `FLOOR.pool` 이라 풀 모델(연결·상태·아이템)은 하나다.
+   * 둘 다 `FLOOR.pool` 이라 풀 모델(연결·상태)은 하나다.
    */
   canDig(i: number, j: number): Result {
     if (!this.grid.inside(i, j)) return { ok: false, reason: '격자 밖' };
@@ -2102,42 +2032,6 @@ export class Game {
     return { ok: true };
   }
 
-  // ── 명령: 아이템 ──────────────────────────────────────────────────
-
-  canPutItem(poolId: number, itemId: string): Result {
-    const p = this.pools.byId(poolId);
-    const d = ITEM_DEFS.get(itemId);
-    if (!p) return { ok: false, reason: '풀이 없습니다' };
-    if (!d) return { ok: false, reason: '알 수 없는 아이템' };
-    if (!this.isItemUnlocked(itemId)) return { ok: false, reason: '아직 구할 수 없는 아이템입니다' };
-    if (p.items.length >= POOL_ITEM_CAP) return { ok: false, reason: `아이템은 풀당 ${POOL_ITEM_CAP}개까지` };
-    if (d.price > this.money) return { ok: false, reason: `돈이 부족합니다 — ${d.price.toLocaleString('ko-KR')}G 필요` };
-    return { ok: true };
-  }
-
-  putItem(poolId: number, itemId: string): Result {
-    const r = this.canPutItem(poolId, itemId);
-    if (!r.ok) return r;
-    const p = this.pools.byId(poolId) as NonNullable<ReturnType<PoolStore['byId']>>;
-    const d = ITEM_DEFS.get(itemId) as ItemDef;
-    const colorBefore = this.poolState(poolId)?.color ?? 'clear';
-    this.spend(d.price);
-    p.items.push({ itemId, placedTick: this.absTick, expiresTick: this.itemExpiry(p, d) });
-    this.poolCache.delete(poolId);
-    // R2 (G30): 색이 바뀌면 그 풀의 좋아요가 0 — 「완성 풀을 갈아엎는 비용」. 만료·병합으로 바뀌는 것은 안 센다
-    const colorAfter = this.poolState(poolId)?.color ?? 'clear';
-    if (colorAfter !== colorBefore && p.likes > 0) {
-      const lost = p.likes;
-      p.likes = 0;
-      this.poolCache.delete(poolId);
-      this.inbox.push({ tick: this.tick, day: this.day, kind: 'system', priority: 'toast', title: `수역 #${poolId} 물빛이 바뀌었다`, body: `좋아요 ${lost.toLocaleString('ko-KR')} 이 0 으로 — 프리셋으로 되돌릴 수 있다` });
-    }
-    const k = p.tiles[0] ?? 0;
-    this.fx.push({ kind: 'item', i: k % this.grid.w, j: Math.floor(k / this.grid.w), poolId });
-    if (this.sns.activeWishes().length > 0) this.sns.markMet((w) => this.evaluateCondition(w.condition).met);
-    return { ok: true };
-  }
-
   // ── 시나리오 (G16) ────────────────────────────────────────────────────
   /** 판 상태로 비트를 판정해 Strip 사건으로 적재. 30tick 마다 + 명령 뒤에 부른다 */
   checkStory(force = false): void {
@@ -2318,46 +2212,6 @@ export class Game {
   }
   private topMenus(sales: Record<string, number>, n: number): { name: string; sales: number }[] {
     return Object.entries(sales).sort((a, b) => b[1] - a[1]).slice(0, n).map(([id, c]) => ({ name: this.menus.recipes.get(id)?.name ?? id, sales: c }));
-  }
-
-  // ── 명령: 풀 프리셋 (G12) ────────────────────────────────────────────
-  // 지금 풀에 살아 있는 아이템 목록을 이름 붙여 저장 → 나중에 한 번에 다시 산다.
-  // 소원·인증이 풀을 바꾸게 만들어도 「원래 풀」로 돌아오는 비용이 탭 하나가 된다.
-
-  savePreset(poolId: number): Result {
-    const p = this.pools.byId(poolId);
-    if (!p) return { ok: false, reason: '풀이 없습니다' };
-    const items = p.items.filter((it) => it.expiresTick > this.absTick).map((it) => it.itemId);
-    if (items.length === 0) return { ok: false, reason: '넣어 둔 아이템이 없습니다' };
-    if (this.presets.length >= MAX_PRESETS) this.presets.shift();
-    this.presets.push({ name: `프리셋 ${this.presetSerial++}`, items });
-    return { ok: true };
-  }
-
-  presetCost(idx: number): number {
-    const p = this.presets[idx];
-    if (!p) return 0;
-    return p.items.reduce((a, id) => a + (ITEM_DEFS.get(id)?.price ?? 0), 0);
-  }
-
-  /** 프리셋의 아이템을 순서대로 다시 넣는다. 도중에 막히면 거기까지만 넣고 이유를 돌려준다 */
-  applyPreset(poolId: number, idx: number): Result {
-    const p = this.presets[idx];
-    if (!p) return { ok: false, reason: '프리셋이 없습니다' };
-    if (!this.pools.byId(poolId)) return { ok: false, reason: '풀이 없습니다' };
-    const cost = this.presetCost(idx);
-    if (cost > this.money) return { ok: false, reason: `돈이 부족합니다 — ${cost.toLocaleString('ko-KR')}G 필요` };
-    let placed = 0;
-    for (const id of p.items) {
-      const r = this.putItem(poolId, id);
-      if (!r.ok) return { ok: false, reason: placed > 0 ? `${placed}개 넣고 중단 — ${r.reason}` : r.reason };
-      placed++;
-    }
-    return { ok: true };
-  }
-
-  removePreset(idx: number): void {
-    this.presets.splice(idx, 1);
   }
 
   // ── 명령: 시설 ────────────────────────────────────────────────────
@@ -2664,15 +2518,13 @@ export class Game {
       swimUrge: (id) => this.swimUrgeOf(id), // P52-c 수온 → 야외 입수 확률
         poolTemp: (id) => this.poolState(id)?.temp ?? 26,
         poolTempFit: (id) => this.poolState(id)?.detail.tempFit ?? 1,
-        poolLook: (id) => { const st = this.poolState(id); return { color: st?.color ?? 'clear', scent: st?.scent ?? null }; },
         onPhoto: (g, subject) => {
           const areaId = g.friendId ? (this.sns.friendDef(g.friendId)?.area ?? this.sns.areas[0] ?? 'residential') : (this.sns.areas[this.rng.sns.int(this.sns.areas.length)] ?? 'residential');
           let basePop = 0;
           let name = '';
           if (subject.kind === 'pool') { basePop = this.poolState(subject.ref)?.popularity ?? 0; name = `수역 #${subject.ref}`; }
           else { const f = this.facilities.byUid(subject.ref); if (f) { basePop = this.facilities.defOf(f).pop; name = this.facilities.defOf(f).name; } }
-          const fav = g.favColor !== null && subject.kind === 'pool' && this.poolState(subject.ref)?.color === g.favColor ? 20 : 0;
-          const post = this.sns.post(this.day, this.tick, g.friendId, areaId, { ...subject, name }, basePop, fav, g.palette);
+          const post = this.sns.post(this.day, this.tick, g.friendId, areaId, { ...subject, name }, basePop, g.palette);
           if (subject.kind === 'pool') { const p = this.pools.byId(subject.ref); if (p) { p.likes += post.likes; this.poolCache.delete(p.id); } }
           this.fx.push({ kind: 'photo', i: g.i, j: g.j, amount: post.likes });
         },
@@ -3353,15 +3205,14 @@ export class Game {
       weather: this.weather,
       ticketBonus: this.ticketBonus,
       endingSeen: this.endingSeen,
-      presets: this.presets.map((p) => ({ name: p.name, items: [...p.items] })),
       story: this.story.toSnapshot(),
       staff: this.staff.toSnapshot(),
       randomEvents: this.events.toSnapshot(),
-      // G57: 하루 중간 왕복에서 그날 결산이 줄어들던 결손 — 오늘 누적 셋 + 프리셋 번호 + 손님 입퇴장 수도 같이
-      dayAccum: { satSum: this.satSum, satN: this.satN, menuSalesToday: { ...this.menuSalesToday }, likesAtDayStart: this.likesAtDayStart, ticketsToday: this.ticketsToday, feesToday: this.feesToday, foodToday: this.foodToday, presetSerial: this.presetSerial, enteredToday: this.guests.enteredToday, leftToday: this.guests.leftToday },
+      // G57: 하루 중간 왕복에서 그날 결산이 줄어들던 결손 — 오늘 누적 셋 + 손님 입퇴장 수도 같이
+      dayAccum: { satSum: this.satSum, satN: this.satN, menuSalesToday: { ...this.menuSalesToday }, likesAtDayStart: this.likesAtDayStart, ticketsToday: this.ticketsToday, feesToday: this.feesToday, foodToday: this.foodToday, enteredToday: this.guests.enteredToday, leftToday: this.guests.leftToday },
       prevSatAvg: this.prevSatAvg,
       stats: { visitors: this.stats.visitors, tickets: this.stats.tickets, fees: this.stats.fees, food: this.stats.food, spent: this.stats.spent, spentDeck: this.stats.spentDeck, spentRig: this.stats.spentRig, spentConvert: this.stats.spentConvert, converts: this.stats.converts, nightNights: this.stats.nightNights ?? 0, nightPkg: this.stats.nightPkg ?? 0, nightFood: this.stats.nightFood ?? 0, nightFee: this.stats.nightFee ?? 0, rigUses: this.stats.rigUses, rigRiderDays: this.stats.rigRiderDays, rigRepeats: this.stats.rigRepeats, rigPartsBought: this.stats.rigPartsBought, courtEats: this.stats.courtEats ?? 0, rigUsesBand: this.stats.rigUsesBand, pkgPpaji: this.stats.pkgPpaji, vestRentals: this.stats.vestRentals, accidents: this.stats.accidents, swimsBySeason: this.stats.swimsBySeason, bailouts: this.stats.bailouts, busGuests: this.stats.busGuests, wishDone: this.stats.wishDone, wishExpired: this.stats.wishExpired, courseRevenue: this.stats.courseRevenue, courseRiders: this.stats.courseRiders, pkg: this.stats.pkg, teamGuests: this.stats.teamGuests, teamSeated: this.stats.teamSeated, seatless: this.stats.seatless, lodging: this.stats.lodging, overnight: this.stats.overnight, teamsSeated: this.stats.teamsSeated, rainRefuge: this.stats.rainRefuge, passByEnter: this.stats.passByEnter ?? 0, passByLeave: this.stats.passByLeave ?? 0, nightUses: this.stats.nightUses ?? 0, gearRentals: this.stats.gearRentals ?? 0, days: this.stats.days.map((d) => ({ ...d })), menuSales: { ...this.stats.menuSales } },
-      unlocked: { facilities: [...this.unlocked.facilities].sort(), items: [...this.unlocked.items].sort(), gifts: [...this.unlocked.gifts].sort() },
+      unlocked: { facilities: [...this.unlocked.facilities].sort(), gifts: [...this.unlocked.gifts].sort() },
       friendsToday: [...this.friendsToday],
       courses: this.courses.toSnapshot(),
     };
@@ -3386,7 +3237,6 @@ export class Game {
     g.inbox.fromSnapshot(s.inbox);
     g.stats = { visitors: s.stats.visitors, tickets: s.stats.tickets, fees: s.stats.fees ?? 0, food: s.stats.food ?? 0, spent: s.stats.spent ?? 0, spentDeck: s.stats.spentDeck ?? 0, spentRig: s.stats.spentRig ?? 0, spentConvert: s.stats.spentConvert ?? 0, converts: s.stats.converts ?? 0, nightNights: s.stats.nightNights ?? 0, nightPkg: s.stats.nightPkg ?? 0, nightFood: s.stats.nightFood ?? 0, nightFee: s.stats.nightFee ?? 0, rigUses: s.stats.rigUses ?? 0, rigRiderDays: s.stats.rigRiderDays ?? 0, rigRepeats: s.stats.rigRepeats ?? 0, rigPartsBought: s.stats.rigPartsBought ?? 0, stockBuys: s.stats.stockBuys ?? 0, courtEats: s.stats.courtEats ?? 0, rigUsesBand: s.stats.rigUsesBand ?? 0, pkgPpaji: s.stats.pkgPpaji ?? 0, vestRentals: s.stats.vestRentals ?? 0, accidents: s.stats.accidents ?? 0, swimsBySeason: s.stats.swimsBySeason ?? [0, 0, 0, 0], bailouts: s.stats.bailouts ?? 0, busGuests: s.stats.busGuests ?? 0, wishDone: s.stats.wishDone ?? 0, wishExpired: s.stats.wishExpired ?? 0, days: s.stats.days.map((d) => ({ ...d })), menuSales: { ...(s.stats.menuSales ?? {}) } , courseRevenue: s.stats.courseRevenue ?? 0, courseRiders: s.stats.courseRiders ?? 0, pkg: s.stats.pkg ?? 0, teamGuests: s.stats.teamGuests ?? 0, teamSeated: s.stats.teamSeated ?? 0, seatless: s.stats.seatless ?? 0, lodging: s.stats.lodging ?? 0, overnight: s.stats.overnight ?? 0, teamsSeated: s.stats.teamsSeated ?? 0, rainRefuge: s.stats.rainRefuge ?? 0 , passByEnter: s.stats.passByEnter ?? 0, passByLeave: s.stats.passByLeave ?? 0, nightUses: s.stats.nightUses ?? 0, gearRentals: s.stats.gearRentals ?? 0};
     for (const id of s.unlocked?.facilities ?? []) g.unlocked.facilities.add(id);
-    for (const id of s.unlocked?.items ?? []) g.unlocked.items.add(id);
     for (const id of s.unlocked?.gifts ?? []) g.unlocked.gifts.add(id);
     g.sns.fromSnapshot(s.sns);
     if (s.certs) g.certs.fromSnapshot(s.certs);
@@ -3417,11 +3267,10 @@ export class Game {
     g.ticketBonus = s.ticketBonus ?? 0;
     g.prevSatAvg = s.prevSatAvg ?? 0;
     g.endingSeen = s.endingSeen ?? false;
-    g.presets = (s.presets ?? []).map((p) => ({ name: p.name, items: [...p.items] }));
     g.story.fromSnapshot(s.story);
     g.staff.fromSnapshot(s.staff);
     g.events.fromSnapshot(s.randomEvents);
-    if (s.dayAccum) { g.satSum = s.dayAccum.satSum; g.satN = s.dayAccum.satN; g.menuSalesToday = { ...s.dayAccum.menuSalesToday }; g.likesAtDayStart = s.dayAccum.likesAtDayStart; g.ticketsToday = s.dayAccum.ticketsToday ?? 0; g.feesToday = s.dayAccum.feesToday ?? 0; g.foodToday = s.dayAccum.foodToday ?? 0; g.presetSerial = s.dayAccum.presetSerial ?? g.presets.length + 1; g.guests.enteredToday = s.dayAccum.enteredToday ?? 0; g.guests.leftToday = s.dayAccum.leftToday ?? 0; }
+    if (s.dayAccum) { g.satSum = s.dayAccum.satSum; g.satN = s.dayAccum.satN; g.menuSalesToday = { ...s.dayAccum.menuSalesToday }; g.likesAtDayStart = s.dayAccum.likesAtDayStart; g.ticketsToday = s.dayAccum.ticketsToday ?? 0; g.feesToday = s.dayAccum.feesToday ?? 0; g.foodToday = s.dayAccum.foodToday ?? 0; g.guests.enteredToday = s.dayAccum.enteredToday ?? 0; g.guests.leftToday = s.dayAccum.leftToday ?? 0; }
     g.friendsToday = [...(s.friendsToday ?? [])];
     if (s.courses) g.courses.fromSnapshot(s.courses);
     g.refreshRigs(); // P50-a: 켜짐·walkOn·blocked 는 파생 — 로드 뒤 다시 센다

@@ -180,7 +180,6 @@ export class FacilityInfoWindow {
     } else this.onSelect([]);
     if (def.class === 'lounging') { const pks = g.seatPackages(uid); row('패키지', pks.length ? pks.map((p) => p.name).join(' · ') : '없음 — 반경 3 에 먹거리·물·선착장을 두면 생긴다'); } // P25 D31
     if (def.menuSlots > 0 || def.id === 'shower_row') row('먹여 주는 자리', `${g.seatsFedAt(def, f.i, f.j, f.facing, uid)}곳 (반경 ${Game.SEAT_RADIUS})`); // P24 D33
-    if (def.scent) row('향', `${def.scent} (${def.scentPower})`);
     if (def.heat) row('열', `${def.heat > 0 ? '+' : ''}${def.heat}°C`);
     if (def.se || def.ab) row('풀 보너스', `SE ${def.se} · AB ${def.ab}`);
     if (def.menuSlots > 0) {

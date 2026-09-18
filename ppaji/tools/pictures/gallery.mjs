@@ -10,7 +10,7 @@ const groups = [
   ['개조 부품', 'part', d('rig-parts.json').map((x) => [x.id, x.name, x.class ?? ''])],
   ['공방 부품', 'part', d('parts.json').map((x) => [x.id, x.name, x.class ?? ''])],
   ['견인 기구', 'gear', d('gears.json').map((x) => [x.id, x.name, (x.cat ?? '') + (x.unlock === 'fail' ? ' · 실패작' : '')])],
-  ['수역 소품', 'item', d('items.json').map((x) => [x.id, x.name, [x.color, x.scent].filter(Boolean).join(' · ')])],
+  ['수역 소품 (P60-a: 정의는 지웠고 그림 24 만 남았다)', 'item', Object.keys(d('pictures.json').entries).filter((k) => k.startsWith('pic/item/')).map((k) => { const id = k.slice('pic/item/'.length); return [id, id, '']; })],
   ['선물', 'gift', d('gifts.json').map((x) => [x.id, x.name, x.kind === 'float' ? '튜브' : '수영복'])],
   ['팔찌', 'band', d('wristbands.json').map((x) => [x.id, x.name, `등급 ${x.grade}`])],
   ['캠페인', 'campaign', d('campaigns.json').map((x) => [x.id, x.name, x.kind ?? ''])],

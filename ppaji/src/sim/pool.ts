@@ -2,22 +2,15 @@
  * 풀 — **4이웃으로 이어진 풀 타일 컴포넌트 하나 = 풀 하나.** 타일로 이으면 합쳐진다 (PSS 그대로).
  *
  * `recompute()` 가 편집마다 컴포넌트를 다시 찾고 기존 풀과 **타일 겹침 최대**로 매칭한다:
- * 병합 = 아이템 합집합 · likes 는 max, 분할 = 가장 큰 조각이 승계하고 나머지는 빈 풀.
- * 파생 상태(크기·인기·유지비, G3 부터 색·향·온도)는 저장하지 않고 여기서 다시 센다.
+ * 병합 = likes 는 max, 분할 = 가장 큰 조각이 승계하고 나머지는 빈 풀.
+ * 파생 상태(크기·인기·유지비·온도)는 저장하지 않고 여기서 다시 센다. P60-a: 소품(items)은 게임에서 뺐다.
  */
 import { Grid, FLOOR } from './grid.js';
-
-export interface PoolItem {
-  itemId: string;
-  placedTick: number;
-  expiresTick: number;
-}
 
 export interface Pool {
   id: number;
   /** 타일 인덱스 (j*w+i), 정렬 상태 */
   tiles: number[];
-  items: PoolItem[];
   likes: number;
   /** 플레이어가 붙인 이름 (G47, 원작 「이름 변경」) — 없으면 「풀 #id」 */
   name?: string;
@@ -25,7 +18,7 @@ export interface Pool {
 
 export interface PoolSnapshot {
   nextId: number;
-  pools: { id: number; anchor: number; items: PoolItem[]; likes: number; name?: string }[];
+  pools: { id: number; anchor: number; likes: number; name?: string }[];
 }
 
 export interface PoolBalance {
@@ -142,10 +135,9 @@ export class PoolStore {
     const merges: { keptId: number; keptName: string; goneNames: string[] }[] = [];
     for (const pr of pairs) {
       if (assigned.has(pr.comp)) {
-        // 병합 — 이미 다른 풀을 승계한 컴포넌트에 또 겹치면 아이템을 합치고 likes 는 max
+        // 병합 — 이미 다른 풀을 승계한 컴포넌트에 또 겹치면 likes 는 max
         if (used.has(pr.pool.id)) continue;
         const host = assigned.get(pr.comp) as Pool;
-        host.items = host.items.concat(pr.pool.items);
         host.likes = Math.max(host.likes, pr.pool.likes);
         used.add(pr.pool.id);
         const m = merges.find((x) => x.keptId === host.id) ?? (merges.push({ keptId: host.id, keptName: host.name ?? `수역 #${host.id}`, goneNames: [] }), merges[merges.length - 1]!);
@@ -154,13 +146,13 @@ export class PoolStore {
       }
       if (used.has(pr.pool.id)) continue;
       used.add(pr.pool.id);
-      const p: Pool = { id: pr.pool.id, tiles: pr.comp, items: [...pr.pool.items], likes: pr.pool.likes, ...(pr.pool.name ? { name: pr.pool.name } : {}) };
+      const p: Pool = { id: pr.pool.id, tiles: pr.comp, likes: pr.pool.likes, ...(pr.pool.name ? { name: pr.pool.name } : {}) };
       assigned.set(pr.comp, p);
       next.push(p);
     }
     for (const comp of comps) {
       if (assigned.has(comp)) continue;
-      next.push({ id: this.nextId++, tiles: comp, items: [], likes: 0 });
+      next.push({ id: this.nextId++, tiles: comp, likes: 0 });
     }
     next.sort((a, b) => a.id - b.id);
     this.list = next;
@@ -177,14 +169,14 @@ export class PoolStore {
   toSnapshot(): PoolSnapshot {
     return {
       nextId: this.nextId,
-      pools: this.list.map((p) => ({ id: p.id, anchor: p.tiles[0] ?? -1, items: p.items.map((it) => ({ ...it })), likes: p.likes, ...(p.name ? { name: p.name } : {}) })),
+      pools: this.list.map((p) => ({ id: p.id, anchor: p.tiles[0] ?? -1, likes: p.likes, ...(p.name ? { name: p.name } : {}) })),
     };
   }
 
-  /** 격자(`floor`)가 먼저 복원돼 있어야 한다 — 타일 집합은 격자에서 다시 찾는다 */
+  /** 격자(`floor`)가 먼저 복원돼 있어야 한다 — 타일 집합은 격자에서 다시 찾는다. 옛 스냅샷의 `items` 는 읽지 않는다 (P60-a) */
   fromSnapshot(s: PoolSnapshot): void {
     this.nextId = s.nextId;
-    this.list = s.pools.map((p) => ({ id: p.id, tiles: p.anchor >= 0 ? [p.anchor] : [], items: p.items.map((it) => ({ ...it })), likes: p.likes, ...(p.name ? { name: p.name } : {}) }));
+    this.list = s.pools.map((p) => ({ id: p.id, tiles: p.anchor >= 0 ? [p.anchor] : [], likes: p.likes, ...(p.name ? { name: p.name } : {}) }));
     this.recompute();
   }
 }

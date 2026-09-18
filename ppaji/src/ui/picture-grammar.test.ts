@@ -4,19 +4,20 @@ import { resolve } from 'node:path';
 
 /**
  * P56-a2 — 그림 문법이 계획서 §3 의 화면 11 을 전부 덮는지 **정적으로** 센다 (하네스는 화면에서, 여기는 소스에서).
- * 건설·캠페인·소품(독)은 `PictureGrid`, 보상은 `reward-art.ts` 하나, 편지는 `pic`, 지도 FX 넷(price-pop·got-item·buy-pop·band-strip)은 등록부에.
+ * 건설·캠페인은 `PictureGrid`(P60-a: 소품 독은 삭제), 보상은 `reward-art.ts` 하나, 편지는 `pic`, 지도 FX 넷(price-pop·got-item·buy-pop·band-strip)은 등록부에.
  */
 const src = (rel: string): string => readFileSync(resolve(__dirname, rel), 'utf8');
 
 describe('P56-a2 그림 문법 — 화면 전수', () => {
-  it('카드 격자 `PictureGrid` 를 쓰는 창: 요리(공방·개조 포함)·장날·투자·건설·캠페인·소품 독·팔찌(수역 정보)', () => {
-    for (const f of ['windows/cook.ts', 'windows/shop.ts', 'windows/invest.ts', 'windows/build.ts', 'windows/campaign.ts', 'windows/pool-edit.ts', 'windows/pool-info.ts']) {
+  it('카드 격자 `PictureGrid` 를 쓰는 창: 요리(공방·개조 포함)·장날·투자·건설·캠페인·팔찌(수역 정보) — P60-a: 수역 독은 카드 격자 0(소품 삭제)', () => {
+    for (const f of ['windows/cook.ts', 'windows/shop.ts', 'windows/invest.ts', 'windows/build.ts', 'windows/campaign.ts', 'windows/pool-info.ts']) {
       expect(src(f).includes('new PictureGrid('), f).toBe(true);
     }
-    // 건설·캠페인·소품에 옛 글자 행·칩이 남아 있지 않다
+    // 건설·캠페인에 옛 글자 행·칩이 남아 있지 않다 · 수역 독에는 카드 격자·소품 모드가 없다(P60-a)
     expect(src('windows/build.ts').includes('kcatalog-card')).toBe(false);
     expect(src('windows/campaign.ts').includes("'krow kcard-row')")).toBe(false);
-    expect(/el\('button', `kchip\$\{this\.pick === it\.id/.test(src('windows/pool-edit.ts'))).toBe(false);
+    expect(src('windows/pool-edit.ts').includes('new PictureGrid(')).toBe(false);
+    expect(src('windows/pool-edit.ts').includes("'item'")).toBe(false);
   });
 
   it('보상 그림은 `reward-art.ts` 하나 — 심사·소원·편지(축하 창)가 같은 함수를 부른다 · 편지는 사건의 `pic` 을 그린다', () => {

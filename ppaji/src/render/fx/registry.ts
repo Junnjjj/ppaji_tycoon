@@ -9,7 +9,7 @@ import type Phaser from 'phaser';
 import { DEPTH_SCREEN_FX, TILE_W, TILE_H } from '../iso.js';
 import { cssVar, cssColorInt } from '../../ui/tokens.js';
 
-export type FxName = 'money-pop' | 'splash-enter' | 'place-ok' | 'place-bad' | 'item-sparkle' | 'scent-puff' | 'temp-steam' | 'temp-frost' | 'photo-flash' | 'like-float'
+export type FxName = 'money-pop' | 'splash-enter' | 'place-ok' | 'place-bad' | 'temp-steam' | 'temp-frost' | 'photo-flash' | 'like-float'
   | 'splash-land' | 'wish-burst' | 'heart-float' | 'confetti' | 'fountain-spray' | 'dust-puff'
   | 'fireworks' | 'petal-fall' | 'leaf-fall' | 'lamp-twinkle' | 'snow-fall' | 'ember'
   | 'price-pop' | 'got-item' // P56-a D7: 조준 중 값 팝(같은 key 는 갈아 끼운다) · 「재료 획득!」 한 줄
@@ -177,27 +177,6 @@ const IMPL: Record<FxName, (host: FxHost, t: FxTarget) => Live> = {
     g.lineStyle(1, cssColorInt('--fx-ok'), 1);
     diamond(g, t.x, t.y);
     return oneShot(host, 'place-ok', g, 240, { alpha: { from: 1, to: 0 }, scaleX: 1.1, scaleY: 1.1 });
-  },
-  'item-sparkle': (host, t) => {
-    const g = host.scene.add.graphics();
-    g.setDepth(DEPTH_SCREEN_FX);
-    g.fillStyle(cssColorInt('--water-glint'), 1);
-    for (let k = 0; k < 6; k++) {
-      const x = t.x - 12 + k * 5;
-      const y = t.y - 4 + (k % 2) * 6;
-      g.fillRect(x - 1, y - 3, 1, 7);
-      g.fillRect(x - 4, y, 7, 1);
-    }
-    return oneShot(host, 'item-sparkle', g, 500, { alpha: { from: 1, to: 0 }, scaleX: 1.2, scaleY: 1.2 });
-  },
-  'scent-puff': (host, t) => {
-    const g = host.scene.add.graphics();
-    g.setDepth(DEPTH_SCREEN_FX);
-    g.fillStyle(cssColorInt('--scent-puff'), 0.8);
-    g.fillRect(t.x - 2, t.y - 6, 4, 4);
-    g.fillRect(t.x - 4, t.y - 3, 8, 2);
-    g.fillRect(t.x - 1, t.y - 8, 2, 2);
-    return oneShot(host, 'scent-puff', g, 1400, { alpha: { from: 0.9, to: 0 }, y: '-=10' });
   },
   'temp-steam': (host, t) => {
     const g = host.scene.add.graphics();

@@ -1,10 +1,8 @@
 import { el } from '../dom.js';
 import { WindowPanel } from '../window.js';
 import type { Game } from '../../sim/game.js';
-import { COLOR_KO, SCENT_KO } from '../../sim/lines.js';
 import { PPAJI_GRADE_NAMES } from '../../sim/rig.js';
 import { iconEl, type IconName } from '../icons.js';
-import { confirmDialog } from '../dialog.js';
 import { PictureGrid, gaugeEl, type PictureCard } from '../picture-grid.js';
 import { pictureEl, pictureId } from '../pictures.js';
 import { WRISTBANDS, bandPrice } from '../../sim/wristband.js';
@@ -17,13 +15,11 @@ export interface PoolInfoHost {
   thumb?(pool: { id: number; tiles: number[] }, cb: (c: HTMLCanvasElement | null) => void): void;
 }
 
-/** 풀 정보 카드 — 지도에서 풀 탭. 지표 + `편집` + 프리셋 저장/복원 (G12) */
+/** 풀 정보 카드 — 지도에서 풀 탭. 지표 + `편집`. P60-a(D71): 색·향 타일과 저장 구성은 뺐다 — 남는 물성은 계절 수온 한 행 */
 export class PoolInfoWindow {
   private readonly win: WindowPanel;
   private readonly rows = el('div', 'krows');
   private readonly editBtn: HTMLButtonElement;
-  private readonly saveBtn: HTMLButtonElement;
-  private readonly presetRows = el('div', 'krows');
   /** P56-a2 — 팔찌 카드 넷 (정보만 · 탭 없음) */
   private readonly bandGrid = new PictureGrid({ name: 'bands', cols: 4, noFooter: true });
   private readonly bandRows = el('div', 'krows');
@@ -31,7 +27,7 @@ export class PoolInfoWindow {
 
   constructor(parent: HTMLElement, private readonly game: () => Game, private readonly host: PoolInfoHost) {
     this.win = new WindowPanel(parent, 'win-pool', '풀', 'blue');
-    this.editBtn = el('button', 'kbtn primary', '소품 넣기 · 편집');
+    this.editBtn = el('button', 'kbtn primary', '편집');
     this.editBtn.type = 'button';
     this.editBtn.id = 'win-pool-edit';
     this.editBtn.addEventListener('click', () => {
@@ -39,42 +35,9 @@ export class PoolInfoWindow {
       this.win.hide();
       if (id !== null) host.onEdit(id);
     });
-    this.saveBtn = el('button', 'kbtn', '프리셋 저장');
-    this.saveBtn.type = 'button';
-    this.saveBtn.id = 'win-pool-preset-save';
-    this.saveBtn.addEventListener('click', () => {
-      if (this.poolId === null) return;
-      const r = this.game().savePreset(this.poolId);
-      host.toast(r.ok ? '지금 소품 구성을 프리셋으로 저장했습니다' : r.reason, r.ok);
-      if (r.ok) { host.onChanged(); this.show(this.poolId); }
-    });
     const actions = el('div', 'kdock-row kwrap'); // P57-f
-    actions.append(this.editBtn, this.saveBtn);
-    this.win.body.append(this.rows, actions, this.presetRows, this.bandRows); // P56-a2: 팔찌 카드는 맨 아래 — 행동 버튼(편집·프리셋)을 화면 밖으로 밀지 않는다(G12 실터치)
-  }
-
-  private renderPresets(): void {
-    const g = this.game();
-    this.presetRows.replaceChildren();
-    this.presetRows.classList.toggle('khide', g.presets.length === 0);
-    g.presets.forEach((p, idx) => {
-      const cost = g.presetCost(idx);
-      const b = el('button', 'kchip', `${p.name} 복원 · ${p.items.length}개 · ${cost.toLocaleString('ko-KR')}G`);
-      b.type = 'button';
-      b.dataset['preset'] = String(idx);
-      b.disabled = cost > g.money;
-      b.addEventListener('click', () => {
-        if (this.poolId === null) return;
-        const pid = this.poolId;
-        confirmDialog({ title: `${p.name} 을 복원할까요?`, body: `소품 ${p.items.length}개를 다시 산다 · 물빛이 바뀌면 좋아요가 0`, cost, onYes: () => {
-          const r = g.applyPreset(pid, idx);
-          this.host.toast(r.ok ? `${p.name} 복원 완료 · −${cost.toLocaleString('ko-KR')}G` : r.reason, r.ok);
-          this.host.onChanged();
-          this.show(pid);
-        } });
-      });
-      this.presetRows.append(b);
-    });
+    actions.append(this.editBtn);
+    this.win.body.append(this.rows, actions, this.bandRows); // P56-a2: 팔찌 카드는 맨 아래 — 행동 버튼(편집)을 화면 밖으로 밀지 않는다(G12 실터치)
   }
 
   show(poolId: number): void {
@@ -85,7 +48,6 @@ export class PoolInfoWindow {
     this.poolId = poolId;
     this.win.setTitle(g.poolName(poolId));
     this.rows.replaceChildren();
-    const d = st.detail;
     // 머리: 썸네일 + 값 알약 3 (원작 풀 정보 창: 그림 · 넓이 · 인기 · 유지비)
     const head = el('div', 'kpool-head');
     const thumb = el('div', 'kpool-thumb');
@@ -99,47 +61,20 @@ export class PoolInfoWindow {
     pill('유지비', `${Math.round(st.maintenance)}G/일`, 'coin');
     head.append(thumb, pills);
     this.rows.append(head);
-    // 색 · 향 · 온도 타일 (원작: 아이콘 · 값 · 농도 막대 5 · 판정) — 탭하면 상세 (G42 의 data-detail 계약 유지)
-    const tiles = el('div', 'kptiles');
-    const bars = (n: number): HTMLElement => { const b = el('span', 'kbars'); for (let k = 0; k < 5; k++) { const x = el('span'); x.dataset['on'] = k < n ? '1' : '0'; b.append(x); } return b; };
-    const bodies: Record<string, HTMLElement> = {};
-    const tile = (key: 'color' | 'scent' | 'temp', k: string, icon: IconName, v: string, sub: HTMLElement | string, detail: string[]): void => {
-      const b = el('button', 'kptile');
-      b.type = 'button';
-      b.dataset['detail'] = key;
-      b.append(iconEl(icon), el('span', 'kptile-k', k), el('span', 'kptile-v', v));
-      if (typeof sub === 'string') b.append(el('span', 'kptile-sub', sub)); else b.append(sub);
-      const box = el('div', 'krows kdetail-body khide');
-      box.dataset['detailBody'] = key;
-      for (const line of detail) box.append(el('div', 'krow-sub', line));
-      bodies[key] = box;
-      b.addEventListener('click', () => { const open = box.classList.toggle('khide'); b.classList.toggle('on', !open); });
-      tiles.append(b);
-    };
-    const tempVerdict = d.tempFit >= 0.8 ? '딱 좋아요' : st.temp < d.idealTemp ? '차가워요' : '뜨거워요';
-    tile('color', '물빛', 'pool', COLOR_KO[st.color] ?? st.color, bars(d.intensityBars), [
-      d.colorMix.length ? `섞임: ${d.colorMix.map((m) => `${COLOR_KO[m.color] ?? m.color} ${Math.round(m.share * 100)}%`).join(' · ')}` : '아이템 색이 없다',
-      `농도 ${d.intensityBars}/5 — 같은 색만 넣으면 오르고, 다른 색이 섞이면 내려간다 (심사 만점은 5)`,
-      d.missingForRainbow.length ? `무지개까지 부족: ${d.missingForRainbow.map((c) => COLOR_KO[c] ?? c).join(' · ')}` : '무지개 조건 충족',
-    ]);
-    tile('scent', '분위기', 'decor', st.scent ? (SCENT_KO[st.scent] ?? st.scent) : '조용함', bars(st.scent ? Math.min(5, st.scentPower) : 0), [
-      st.scent ? `출처: ${d.scentSource === 'item' ? '넣은 아이템' : '풀 옆 시설(1칸 이내)'} · 세기 ${st.scentPower}` : '아이템이나 옆 시설(화분·나무)이 향을 준다',
-      '동점이면 소품이 이긴다',
-    ]);
-    tile('temp', '온도', 'sun', `${Math.round(st.temp)}°C`, tempVerdict, [
-      `이 계절의 이상 수온 ${d.idealTemp}°C → 손님 체류 ${Math.round((0.85 + 0.3 * d.tempFit) * 100)}%`,
-      '얼음 덩어리(−6) · 온수관(+8) · 모닥불 장작(+4) 로 맞춘다 · 온수 족욕·사우나가 옆에 있으면 오른다',
-    ]);
-    this.rows.append(tiles, bodies['color'] as HTMLElement, bodies['scent'] as HTMLElement, bodies['temp'] as HTMLElement);
-    const row = (k: string, v: string, icon?: IconName): void => {
+    const row = (k: string, v: string, icon?: IconName): HTMLElement => {
       const r = el('div', 'krow');
       if (icon) r.append(iconEl(icon));
       r.append(el('span', 'krow-k', k), el('span', icon ? 'krow-v knum' : 'krow-v', v));
       this.rows.append(r);
+      return r;
     };
+    // P60-a: 수온 행 하나 — 계절 파생(실내 26°C · 족욕·사우나 heat). 판정은 값 옆 보조 글(W-9: 값은 ≤ 10자)
+    { const tempFit = st.detail.tempFit; const ideal = st.detail.idealTemp;
+      const tempVerdict = tempFit >= 0.8 ? '딱 좋아요' : st.temp < ideal ? '차가워요' : '뜨거워요';
+      const tr = row('수온', `${Math.round(st.temp)}°C`, 'sun');
+      tr.dataset['temp'] = '1';
+      tr.append(el('span', 'krow-sub', tempVerdict)); }
     row('좋아요', `${p.likes}`, 'heart');
-    const left = g.itemDaysLeft(p.id);
-    row('소품', `${p.items.length}개${left !== null ? ` · 남은 ${left}일` : ''}`, 'shop');
     // P50-b2 §3.9 정보창 다섯 줄 — 등급 · 기구 · 연결 · 허가 · 어제 수입(P51 배선 전까지 「—」)
     { const grade = g.ppajiGradeOf(p.id); const lit = g.facilities.all.filter((f) => { const d = g.facilities.defOf(f); return d.class === 'rig' && d.onRing !== true && g.rigState.lit.has(f.uid) && (g.rigState.byPool.get(p.id) ?? []).includes(f.uid); }); const onRing = g.facilities.all.filter((f) => g.facilities.defOf(f).onRing === true && g.poolOfFacility(f.uid) === p.id);
       const hints: string[] = []; // W-9(D68): 값은 숫자, 문장은 힌트 줄
@@ -148,6 +83,7 @@ export class PoolInfoWindow {
       row('연결', `${Math.max(0, ...lit.map((f) => g.rigState.chainLen.get(f.uid) ?? 1))}`, 'build'); hints.push('최장 사슬 — 정원 × 최대 2.0');
       row('허가', `${p.tiles.length}/${p.tiles.length + Math.max(0, g.permitLeft)}칸`, 'pool'); hints.push(`남은 허가 ${Math.max(0, g.permitLeft)}칸`);
       row('어제 수입', '—', 'coin'); /* P57-f: 수역별 수입은 안 센다(시설별만) — 개발용 문구는 화면에서 뺀다 */
+      hints.push(`이 계절 이상 수온 ${st.detail.idealTemp}°C · 체류 ${Math.round((0.85 + 0.3 * st.detail.tempFit) * 100)}%`);
       this.rows.append(el('div', 'krow-sub kfac-hint', hints.join(' · '))); }
     // P56-a2 D8 — 팔찌 카드 넷(그림 · 값 · 열린/잠긴) + 빠지 등급 게이지. 값은 `bandPrice(등급)` — 확정 바·정보창과 같은 함수
     { const grade = g.ppajiGradeOf(p.id);
@@ -174,7 +110,6 @@ export class PoolInfoWindow {
     nameBtn.addEventListener('click', () => { const r = g.renamePool(p.id, input.value); this.host.toast(r.ok ? `이름: ${g.poolName(p.id)}` : r.reason, r.ok); if (r.ok) { this.host.onChanged(); this.show(p.id); } });
     nameRow.append(input, nameBtn);
     this.rows.append(nameRow);
-    this.renderPresets();
     this.win.show();
   }
 

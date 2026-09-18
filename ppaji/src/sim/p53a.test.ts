@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Game, CERT_DEFS, WISH_DEFS, CALENDAR_EVENTS, FACILITY_DEFS } from './game.js';
+import { Game, CERT_DEFS, WISH_DEFS, CALENDAR_EVENTS, FACILITY_DEFS, RIG_PART_DEFS } from './game.js';
 import { hasRigCond, certHasRigCond, RIG_COND_KINDS } from './bot.js';
 import { eventDay } from './calendar.js';
 import { DAYS_PER_YEAR, TICKS_PER_DAY } from './clock.js';
@@ -8,9 +8,9 @@ import type { Condition } from '../data/schema.js';
 const leaves = (c: Condition): Condition[] => (c.kind === 'all' || c.kind === 'any') ? c.of.flatMap(leaves) : [c];
 
 describe('P53-a 인증·소원·달력 재배선 — 조건 4종 · 교착 0 · 연차 폴백', () => {
-  it('인증 — 기구 조건을 든 인증 9 · 종류 4 전부 쓰인다 · 등급 ≤4 · 사슬 ≤8(봇 상한) · 개수 ≤20 · 진입 인증(grade_f)은 시작 기구 2종으로 닫힌다', () => {
+  it('인증 — 기구 조건을 든 인증 9 + P60-a 세트 3(set_f/d/b: 옛 물빛 조건 → rigCount 2/4/6) · 종류 4 전부 쓰인다 · 등급 ≤4 · 사슬 ≤8(봇 상한) · 개수 ≤20 · 진입 인증(grade_f)은 시작 기구 2종으로 닫힌다', () => {
     const rigCerts = CERT_DEFS.filter(certHasRigCond);
-    expect(rigCerts.map((c) => c.id).sort()).toEqual(['fun_a', 'fun_c', 'grade_a', 'grade_b', 'grade_d', 'grade_f', 'grade_s', 'stream_b', 'stream_d']); // 9 (§4.5)
+    expect(rigCerts.map((c) => c.id).sort()).toEqual(['fun_a', 'fun_c', 'grade_a', 'grade_b', 'grade_d', 'grade_f', 'grade_s', 'set_b', 'set_d', 'set_f', 'stream_b', 'stream_d']); // 9 (§4.5) + 3 (P60-a §10.1: color_* → set_*, pool.color → rigCount)
     const kinds = new Set<string>();
     for (const c of rigCerts) for (const w of c.conditions) for (const l of leaves(w.cond)) if (RIG_COND_KINDS.has(l.kind)) {
       kinds.add(l.kind);
@@ -30,26 +30,29 @@ describe('P53-a 인증·소원·달력 재배선 — 조건 4종 · 교착 0 · 
     expect(early.filter((d) => d.depth === 'deep' || d.depth === 'any').length).toBeGreaterThanOrEqual(2);
   });
 
-  it('소원 — 기구 조건 소원 20 (rigCount 8 · rigChain 7 · rigGrade 5) · 대사에 기구/이어/등급 · 친구 안에서 난이도가 내려가지 않는다 · 부품 보상 둘 · 키디의 수역 소원은 그대로', () => {
+  it('소원 — 기구 조건 소원 102 (P53-a 원 20: rigChain 7 · rigGrade 5 · rigCount 8 + P60-a 재배선 82: 소품·물빛·농도 조건 → rigCount/rigGrade) · 대사에 기구/이어/등급 · 부품 보상은 shop-tier 안 · 키디의 수역 소원은 그대로', () => {
     const rig = WISH_DEFS.filter((w) => hasRigCond(w.condition));
-    expect(rig.length).toBe(20);
-    const tally = { rigCount: 0, rigChain: 0, rigGrade: 0 } as Record<string, number>;
+    expect(rig.length).toBe(102); // P60-a §10.1: item 18 + pool.color 64 + intensityMin 2 (일부는 같은 소원) 가 기구 조건으로 — 실측 (tools/migrate-wishes.mjs 요약)
+    const tally = { rigCount: 0, rigChain: 0, rigGrade: 0, all: 0 } as Record<string, number>;
+    const leafTally = { rigCount: 0, rigChain: 0, rigGrade: 0 } as Record<string, number>;
     for (const w of rig) {
       tally[w.condition.kind] = (tally[w.condition.kind] ?? 0) + 1;
-      const word = w.condition.kind === 'rigCount' ? '기구' : w.condition.kind === 'rigChain' ? '이어' : '등급';
-      expect(w.line, `${w.friendId}/${w.idx}`).toContain(word);
+      for (const l of leaves(w.condition)) if (RIG_COND_KINDS.has(l.kind)) {
+        leafTally[l.kind] = (leafTally[l.kind] ?? 0) + 1;
+        const word = l.kind === 'rigCount' ? '기구' : l.kind === 'rigChain' ? '이어' : '등급';
+        expect(w.line, `${w.friendId}/${w.idx}`).toContain(word);
+      }
       expect(w.friendId).not.toBe('kiddie');
     }
-    expect(tally).toEqual({ rigCount: 8, rigChain: 7, rigGrade: 5 });
-    const tier = (c: Condition): number => c.kind === 'rigCount' ? (c.min <= 2 ? 0 : 1) : c.kind === 'rigChain' ? 2 : 3;
+    expect(tally).toEqual({ rigCount: 29, rigChain: 7, rigGrade: 5, all: 61 }); // P53-a 의 rigChain 7 · rigGrade 5 는 그대로 · rigCount 8 → 29 · 복합(all) 61 은 전부 P60-a
+    expect(leafTally).toEqual({ rigCount: 90, rigChain: 7, rigGrade: 7 });
     const byFriend = new Map<string, typeof rig>();
     for (const w of rig) byFriend.set(w.friendId, [...(byFriend.get(w.friendId) ?? []), w]);
-    for (const [f, ws] of byFriend) {
-      expect(ws.length, f).toBeLessThanOrEqual(2);
-      const ts = ws.sort((a, b) => a.idx - b.idx).map((w) => tier(w.condition));
-      expect(ts, f).toEqual([...ts].sort((a, b) => a - b));
-    }
-    expect(rig.filter((w) => w.reward.kind === 'rigPart').map((w) => w.reward.kind === 'rigPart' ? w.reward.id : '').sort()).toEqual(['float_drum', 'slip_wax']);
+    for (const [f, ws] of byFriend) expect(ws.length, f).toBeLessThanOrEqual(3); // P53-a 는 친구당 ≤2 였다 — P60-a 가 소원 자리(idx)를 지키며 조건만 갈아 끼워 셋까지 온다. 친구 안 난이도 오름차순은 그래서 더 이상 성립하지 않는다(옛 소품 「1개」 조건이 rigCount 1 로 들어온다)
+    const shopTier = new Set(RIG_PART_DEFS.filter((p) => p.unlock === 'shop').map((p) => p.id));
+    const parts = rig.filter((w) => w.reward.kind === 'rigPart').map((w) => w.reward.kind === 'rigPart' ? w.reward.id : '');
+    for (const id of parts) expect(shopTier.has(id), id).toBe(true); // P53-a 의 float_drum·slip_wax 둘을 포함해 shop-tier 9종 안에서만 (연차 부품은 소원 보상이 아니다 — data.test 가 같은 규칙을 wishes 전체에 건다)
+    expect(new Set(parts).has('float_drum') && new Set(parts).has('slip_wax')).toBe(true);
     const kid = WISH_DEFS.filter((w) => w.friendId === 'kiddie' && w.condition.kind === 'pool').map((w) => w.condition.kind === 'pool' ? w.condition.sizeMin : 0);
     expect(kid).toEqual([20, 40, 60]);
   });

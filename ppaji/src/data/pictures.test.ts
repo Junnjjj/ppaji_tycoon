@@ -6,7 +6,6 @@ import ingredientsJson from './ingredients.json';
 import recipesJson from './recipes.json';
 import rigPartsJson from './rig-parts.json';
 import gearsJson from './gears.json';
-import itemsJson from './items.json';
 import giftsJson from './gifts.json';
 import wristbandsJson from './wristbands.json';
 import partsJson from './parts.json';
@@ -14,12 +13,14 @@ import campaignsJson from './campaigns.json';
 import portraitsJson from './portraits.json';
 
 const ids = (arr: unknown, kind: string): string[] => (arr as { id: string }[]).map((e) => `pic/${kind}/${e.id}`);
+/** P60-a: items.json 은 지웠지만 `pic/item/*` 24 는 그림 자산이라 남는다(§10.1 미결 ⑤) — 등록부 자신의 키에서 센다(주문서 대조는 아래 it 가 한다) */
+const itemPics = Object.keys((picturesJson as { entries: Record<string, unknown> }).entries).filter((k) => k.startsWith('pic/item/'));
 
 /** P56-a D1 — 그림 등록부: 정의 id 하나에 그림 하나. 시트가 오기 전엔 비어 있고, 온 뒤에도 주문서 밖 id 는 못 든다 */
 describe('pictures.json — 그림 등록부 (P56-a)', () => {
   const all = new Set([
     ...ids(ingredientsJson, 'ingredient'), ...ids(recipesJson, 'recipe'), ...ids(rigPartsJson, 'part'), ...ids(partsJson, 'part'), ...ids(gearsJson, 'gear'),
-    ...ids(itemsJson, 'item'), ...ids(giftsJson, 'gift'), ...ids(wristbandsJson, 'band'),
+    ...itemPics, ...ids(giftsJson, 'gift'), ...ids(wristbandsJson, 'band'),
     ...ids(campaignsJson, 'campaign'), // P56-b2 캠페인 3
     ...(portraitsJson as { id: string }[]).flatMap((p) => ['calm', 'happy'].map((m) => `pic/portrait/${p.id}_${m}`)), // P56-b2 인물 초상 5×2
   ]); // P56-b: 공방 부품 41(parts.json)을 더했다 — 초안 342 는 개조 부품 13 만 세어 공방 창 카드가 전부 폴백이었다

@@ -133,137 +133,60 @@
     "tier": 5
   },
   {
-    "id": "shop_chocolate",
-    "kind": "item",
-    "ref": "chocolate",
-    "price": 2250,
-    "tier": 2
-  },
-  {
-    "id": "shop_blueberry",
-    "kind": "item",
-    "ref": "blueberry",
-    "price": 1980,
-    "tier": 2
-  },
-  {
-    "id": "shop_peach",
-    "kind": "item",
-    "ref": "peach",
-    "price": 1620,
+    "id": "shop_butter",
+    "kind": "ingredient",
+    "ref": "butter",
+    "price": 1200,
     "tier": 1
   },
   {
-    "id": "shop_grapes",
-    "kind": "item",
-    "ref": "grapes",
+    "id": "shop_cream",
+    "kind": "ingredient",
+    "ref": "cream",
+    "price": 1200,
+    "tier": 1
+  },
+  {
+    "id": "shop_rice",
+    "kind": "ingredient",
+    "ref": "rice",
+    "price": 900,
+    "tier": 1
+  },
+  {
+    "id": "shop_tomato",
+    "kind": "ingredient",
+    "ref": "tomato",
+    "price": 900,
+    "tier": 1
+  },
+  {
+    "id": "shop_chocolate_bar",
+    "kind": "ingredient",
+    "ref": "chocolate_bar",
+    "price": 1500,
+    "tier": 2
+  },
+  {
+    "id": "shop_cheese",
+    "kind": "ingredient",
+    "ref": "cheese",
+    "price": 1500,
+    "tier": 2
+  },
+  {
+    "id": "shop_fish_cake",
+    "kind": "ingredient",
+    "ref": "fish_cake",
+    "price": 1200,
+    "tier": 2
+  },
+  {
+    "id": "shop_malt",
+    "kind": "ingredient",
+    "ref": "malt",
     "price": 1800,
-    "tier": 2
-  },
-  {
-    "id": "shop_grapefruit",
-    "kind": "item",
-    "ref": "grapefruit",
-    "price": 1440,
-    "tier": 1
-  },
-  {
-    "id": "shop_melon",
-    "kind": "item",
-    "ref": "melon",
-    "price": 2340,
     "tier": 3
-  },
-  {
-    "id": "shop_kiwi",
-    "kind": "item",
-    "ref": "kiwi",
-    "price": 1620,
-    "tier": 1
-  },
-  {
-    "id": "shop_pineapple",
-    "kind": "item",
-    "ref": "pineapple",
-    "price": 2160,
-    "tier": 2
-  },
-  {
-    "id": "shop_coconut",
-    "kind": "item",
-    "ref": "coconut",
-    "price": 1980,
-    "tier": 2
-  },
-  {
-    "id": "shop_coffee_beans",
-    "kind": "item",
-    "ref": "coffee_beans",
-    "price": 2520,
-    "tier": 3
-  },
-  {
-    "id": "shop_mint",
-    "kind": "item",
-    "ref": "mint",
-    "price": 1350,
-    "tier": 1
-  },
-  {
-    "id": "shop_bath_salt",
-    "kind": "item",
-    "ref": "bath_salt",
-    "price": 3600,
-    "tier": 3
-  },
-  {
-    "id": "shop_rose",
-    "kind": "item",
-    "ref": "rose",
-    "price": 2700,
-    "tier": 3
-  },
-  {
-    "id": "shop_cinnamon",
-    "kind": "item",
-    "ref": "cinnamon",
-    "price": 2340,
-    "tier": 3
-  },
-  {
-    "id": "shop_honey",
-    "kind": "item",
-    "ref": "honey",
-    "price": 1800,
-    "tier": 2
-  },
-  {
-    "id": "shop_lavender",
-    "kind": "item",
-    "ref": "lavender",
-    "price": 2160,
-    "tier": 2
-  },
-  {
-    "id": "shop_orange",
-    "kind": "item",
-    "ref": "orange",
-    "price": 1260,
-    "tier": 1
-  },
-  {
-    "id": "shop_banana",
-    "kind": "item",
-    "ref": "banana",
-    "price": 1440,
-    "tier": 1
-  },
-  {
-    "id": "shop_seaweed",
-    "kind": "item",
-    "ref": "seaweed",
-    "price": 1620,
-    "tier": 1
   },
   {
     "id": "shop_school_swimsuit",

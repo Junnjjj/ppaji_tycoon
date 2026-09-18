@@ -34,6 +34,7 @@ async function main(): Promise<void> {
   run('check-ui', 'node', ['tools/check-ui.mjs']);
   run('check-ui --selftest', 'node', ['tools/check-ui.mjs', '--selftest']);
   if (goalNum(goal) >= goalNum('p49a2')) { run('check-tiles-dead', 'node', ['tools/check-tiles-dead.mjs']); run('check-tiles-dead --selftest', 'node', ['tools/check-tiles-dead.mjs', '--selftest']); } // P49-a2 §4.4: 물빛 참조 0건 + 자가 대조군
+  if (goalNum(goal) >= goalNum('p60a')) { run('check-items-dead', 'node', ['tools/check-items-dead.mjs']); run('check-items-dead --selftest', 'node', ['tools/check-items-dead.mjs', '--selftest']); } // P60-a §10.1(D71): 색·향·소품 참조 0건 + 자가 대조군
   if ((goalNum(goal)) >= 2) run('bot 8×16 --determinism', 'npx', ['tsx', 'tools/bot.ts', '--seeds', '8', '--days', '16', '--determinism']);
   // G10 데이터 전량 · G13 밸런스 — 128일 중앙값이 목표 밴드(tools/bot.ts BANDS: 지역 ≥6 · 인증 ≥10 · 레시피 ≥40 · ★3+ · 계절/주말 곡선) 안
   // P49-a1 §14 — 물빛 인기가 빠지 등급으로 바뀌었는데 봇은 P50-a 전까지 기구를 물 위에 못 놓는다(인기 중앙 10110 → 3430, ★5 미달). 그 사이 ★5 밴드는 ⚠ 로 둔다 — 되돌리는 페이즈는 P50-b2(등급 인기가 봇 세계에 산다)

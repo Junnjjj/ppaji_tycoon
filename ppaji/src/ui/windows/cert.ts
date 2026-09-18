@@ -7,15 +7,15 @@ import { el } from '../dom.js';
 import { confirmDialog } from '../dialog.js';
 import { portraitEl, JUDGE_IDS } from '../portraits.js'; // P56-b2: 심사위원 셋은 그림 초상(없으면 코드 초상)
 import { WindowPanel } from '../window.js';
-import { canvasPictureEl, pictureEl, pictureId } from '../pictures.js';
+import { canvasPictureEl } from '../pictures.js';
 import { iconEl, type IconName } from '../icons.js';
 import { rewardLabel } from './sns.js';
 import { rewardArt } from '../reward-art.js';
 import type { Game } from '../../sim/game.js';
 import type { CertDef, CertFamily, Condition } from '../../data/schema.js';
 
-/** 계열 8 (P6 재편, 키는 코드·id 호환을 위해 그대로): 물놀이(수역) · 경관(물빛·장식) · 핫플(분위기·좋아요) · 사철(온수·실내) · 맛집(요리) · 스릴(코스) · 안전(해경) · 청결(위생) */
-const FAMILY_KO: Record<CertFamily, string> = { grade: '물놀이', color: '경관', scent: '핫플', spa: '사철', fruit: '맛집', stream: '스릴', fun: '안전', cutesy: '청결' };
+/** 계열 8 (P6 재편, 키는 코드·id 호환을 위해 그대로): 물놀이(수역) · 경관 · 핫플 · 사철(온수·실내) · 맛집(요리) · 스릴(코스) · 안전(해경) · 청결(위생). P60-a: 경관·핫플의 조건은 세트·먹거리로 갈아 끼웠고 이름은 P60-c 에서 바꾼다 */
+const FAMILY_KO: Record<CertFamily, string> = { grade: '물놀이', set: '경관', court: '핫플', spa: '사철', fruit: '맛집', stream: '스릴', fun: '안전', cutesy: '청결' }; // P60-a: 옛 색·향 계열 키 → set·court(조건이 세트·먹거리로 바뀜) — 이름은 P60-c 에서 「세트」「먹거리」로
 const GRADE_ORDER = ['F', 'E', 'D', 'C', 'B', 'A', 'S'];
 /** 심사위원 셋 — 초상 팔레트와 말투 (원작: 셋이 각자 기준을 말한다) */
 const JUDGES: readonly { pal: number; say: (label: string, met: boolean) => string }[] = [
@@ -24,14 +24,13 @@ const JUDGES: readonly { pal: number; say: (label: string, met: boolean) => stri
   { pal: 6, say: (l, met) => met ? `${l}! 문제없어요.` : `${l}까지 가 봅시다.` },
 ];
 
-/** 조건의 대상 그림 — 시설 id 는 스프라이트, 재료·아이템은 등록부, 나머지는 종류 아이콘 */
+/** 조건의 대상 그림 — 시설 id 는 스프라이트, 나머지는 종류 아이콘 */
 function condArt(c: Condition, sprite: (id: string) => HTMLCanvasElement | null): HTMLElement {
   const leaf = (c.kind === 'all' || c.kind === 'any') ? c.of[0] : c;
   if (!leaf) return iconEl('star', 'kpic-fb');
   const kind = leaf.kind as string;
   const id = (leaf as { id?: string }).id;
   if (kind === 'facility' && id) return canvasPictureEl(sprite(id), 'build');
-  if (kind === 'item' && id) return pictureEl(pictureId('item', id), 'pool');
   const icon: IconName = /^rig/.test(kind) ? 'attraction' : kind === 'pool' ? 'pool' : kind === 'recipe' || kind === 'menu' ? 'restaurant' : kind === 'likes' ? 'heart' : kind === 'course' || kind === 'courseThrill' ? 'slide' : 'star';
   return iconEl(icon, 'kpic-fb');
 }
@@ -120,13 +119,6 @@ export class CertWindow {
           const art = el('span', 'kcond-art'); art.append(condArt(def.conditions[k]?.cond ?? { kind: 'all', of: [] } as Condition, this.host.sprite));
           r.append(face, bubble, art, el('span', 'krow-v', p.verdict.met ? '충족' : `${Math.round(p.verdict.progress * 100)}%`));
           card.append(r);
-        }
-        if (p.verdict.full) {
-          // 만점 조건 (G42) — 색·향은 농도 5칸이라야 만점
-          const f = el('div', 'krow-sub kfull');
-          f.dataset['full'] = String(k);
-          f.textContent = `만점: ${p.verdict.full.label} ${p.verdict.full.need}/5 · 지금 ${p.verdict.full.actual}/5`;
-          card.append(f);
         }
       });
       const sc = el('div', 'krow kscore');

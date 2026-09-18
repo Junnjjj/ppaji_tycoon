@@ -3,10 +3,10 @@ import { Game, CERT_DEFS } from './game.js';
 import { makeTestPpaji } from './test-helpers.js';
 
 describe('G35 인증 조건', () => {
-  it('인증 24종이 강도·좋아요·인기·실내 조건을 각각 하나 이상 쓴다', () => {
+  it('인증 24종이 좋아요·인기·실내 조건을 각각 하나 이상 쓴다 (P60-a: 강도 조건 삭제)', () => {
     const keys = new Set<string>();
     for (const c of CERT_DEFS) for (const x of c.conditions) if (x.cond.kind === 'pool') for (const k of Object.keys(x.cond)) keys.add(k);
-    for (const k of ['intensityMin', 'likesMin', 'popMin', 'indoor']) /* P49-a2: 'tile' 삭제 */ expect(keys.has(k), k).toBe(true);
+    for (const k of ['likesMin', 'popMin', 'indoor']) /* P49-a2: 'tile' 삭제 */ expect(keys.has(k), k).toBe(true);
   });
 });
 

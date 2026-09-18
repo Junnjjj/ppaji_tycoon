@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
 import { TICKS_PER_DAY } from '../sim/clock.js';
 import { migrate, MIGRATIONS, SAVE_VERSION, save, load } from './save.js';
 import { Game } from '../sim/game.js';
@@ -8,6 +9,23 @@ import { loadProfile, saveProfile } from './profile.js';
 const mem = (): Pick<Storage, 'getItem' | 'setItem' | 'removeItem'> => { const m = new Map<string, string>(); return { getItem: (k) => m.get(k) ?? null, setItem: (k, v) => { m.set(k, v); }, removeItem: (k) => { m.delete(k); } }; };
 
 describe('세이브 마이그레이션', () => {
+  it('P60-a — v4 fixture(소품이 든 풀 3 · unlocked.items 7 · presets)는 v5 로 올라가고 같은 판이 로드된다(새 판 아님) · items/presets 는 읽고 버린다', () => {
+    const fx = JSON.parse(readFileSync(new URL('./__fixtures__/v4-p48b.json', import.meta.url), 'utf8')) as Record<string, unknown>;
+    const pools = (fx['pools'] as { pools: Record<string, unknown>[] }).pools;
+    expect(pools.some((p) => Array.isArray(p['items']) && (p['items'] as unknown[]).length > 0)).toBe(true); // fixture 에 소품이 실제로 있다 — 없으면 이 검사는 아무것도 안 잰다
+    expect(((fx['unlocked'] as Record<string, unknown>)['items'] as unknown[]).length).toBeGreaterThan(0);
+    const f = migrate({ version: 4, savedAt: 'x', game: fx });
+    expect(f?.version).toBe(SAVE_VERSION);
+    const game = f!.game as unknown as Record<string, unknown>;
+    expect(game['presets']).toBeUndefined();
+    expect((game['unlocked'] as Record<string, unknown>)['items']).toBeUndefined();
+    for (const p of (game['pools'] as { pools: Record<string, unknown>[] }).pools) expect(p['items']).toBeUndefined();
+    expect(game['money']).toBe(fx['money']); // 판은 그대로 — 새 판이 아니다
+    const g = Game.fromSnapshot(f!.game);
+    expect(g.pools.all.length).toBe(pools.length);
+    expect(g.money).toBe(fx['money']);
+    expect(pools.some((p) => Array.isArray(p['items']))).toBe(true); // 원본 객체는 안 건드린다(사본으로 버린다)
+  });
   it('체인 길이 = 버전 − 1, v1 → v2 단계가 새 필드를 기본값으로 채운다 · v3 이하는 P48-b1(지형이 다르다)에서 새 판(null)', () => {
     expect(MIGRATIONS.length).toBe(SAVE_VERSION - 1);
     const g = new Game(1);

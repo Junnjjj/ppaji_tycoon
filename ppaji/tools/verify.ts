@@ -211,7 +211,7 @@ async function verifyG1(page: import('playwright').Page, cdp: CDPSession): Promi
 }
 
 /**
- * G3 — 건설 창에서 화장실을 골라 진짜 터치로 배치하고, 풀에 딸기를 넣어 수면 픽셀이 핑크 계열이 된다.
+ * G3 — 건설 창에서 화장실을 골라 진짜 터치로 배치한다 (P60-a: 딸기 투입·수면 픽셀 절은 소품 삭제로 뺐다).
  * 세이브 왕복 뒤라 페이지는 freeze=1 상태 — 풀 하나가 있다.
  */
 async function verifyG3(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
@@ -263,71 +263,11 @@ async function verifyG3(page: import('playwright').Page, cdp: CDPSession): Promi
   const fclose = await center('#win-facility .kwin-close');
   if (fclose) await touch(cdp, fclose.x, fclose.y);
   await page.waitForTimeout(200);
-  // 아이템 — 풀 편집 → 아이템 탭 → 딸기 칩
-  const poolCell = await center('#hud-right [data-cell="zone"]');
-  if (poolCell) await touch(cdp, poolCell.x, poolCell.y);
-  await page.waitForTimeout(250);
-  await page.evaluate(`document.querySelector('#dock-pool .ktab[data-mode="item"]').click()`);
-  await page.waitForTimeout(200);
-  const chip = await center('#dock-pool [data-item="strawberry"]');
-  record('G3 아이템 탭 — 딸기 칩이 있고 풀이 자동 선택', chip !== null ? 'pass' : 'fail');
-  if (chip) await touch(cdp, chip.x, chip.y);
-  await page.waitForTimeout(300);
-  // G52: 첫 탭은 투입이 아니라 미리보기 — 「넣기」 를 눌러야 들어간다
-  const put = await center('#dock-pool-put');
-  const pvRows = (await page.evaluate(`document.querySelectorAll('#dock-pool-preview .kprev-row').length`)) as number;
-  record('G52 아이템 미리보기 — 딸기 칩 탭 → 전후 4줄(색·향·온도·인기) + 넣기 버튼', put !== null && pvRows === 4 ? 'pass' : 'fail', JSON.stringify({ put: put !== null, pvRows }));
-  if (put) await touch(cdp, put.x, put.y);
-  await page.waitForTimeout(400);
-  // P49-b: 빠지는 20칸이라 농도 = 개수/칸 — 옛 4칸 풀의 딸기 1 = 지금 5. 독은 넣은 뒤 열린 채 칩만 풀리므로 칩 → 넣기 를 네 번 더 진짜 터치한다
-  let taps = 1;
-  for (let k = 0; k < 4; k++) {
-    const chipK = await center('#dock-pool [data-item="strawberry"]');
-    if (!chipK) break;
-    await touch(cdp, chipK.x, chipK.y);
-    await page.waitForTimeout(250);
-    const putK = await center('#dock-pool-put');
-    if (!putK) break;
-    await touch(cdp, putK.x, putK.y);
-    await page.waitForTimeout(300);
-    taps++;
-  }
-  const st = (await page.evaluate(`(() => { const g = window.__pj.game; const p = g.pools.all[0]; const s = g.poolState(p.id); return { items: p.items.length, tiles: p.tiles.length, color: s.color, bars: s.detail.intensityBars, scent: s.scent, status: document.querySelector('#dock-pool .kdock-status').textContent }; })()`)) as { items: number; tiles: number; color: string; bars: number; scent: string; status: string };
-  record('G3 → P49-b 딸기 투입 × 5 (20칸 — 개수/칸 이 옛 4칸의 1개와 같다 · 상태 줄 농도 3/5) → 핑크 · 베리 · 상태 줄', taps === 5 && st.items === 5 && st.tiles === 20 && st.color === 'pink' && st.scent === 'berry' && /핑크/.test(st.status) ? 'pass' : 'fail', JSON.stringify({ taps, ...st }));
-  const cancel = await center('#dock-pool-cancel');
-  if (cancel) await touch(cdp, cancel.x, cancel.y);
-  await page.waitForTimeout(300);
-  // 수면 픽셀 — 부표 중앙의 캔버스 픽셀이 핑크 계열 (?px=1)
-  const pk = (await page.evaluate(`(() => { const g = window.__pj.game; const k = g.pools.all[0].tiles[0]; return { i: k % g.grid.w, j: Math.floor(k / g.grid.w) }; })()`)) as { i: number; j: number };
-  await page.evaluate(`window.__pj.scene.focusTile(${pk.i}, ${pk.j}, 160)`);
-  await page.waitForTimeout(300);
-  // ⚠ WebGL readPixels 는 상태에 따라 옛 프레임/다른 버퍼를 돌려줬다 (실측) — 화면 스크린샷을 페이지에 다시 올려 읽는다.
-  //   한 점만 찍으면 수영 중인 손님을 읽으므로 네 타일 여러 점 중 가장 붉은 점을 본다
-  const rects = (await page.evaluate(`(() => { const s = window.__pj.scene; const g = window.__pj.game; return g.pools.all[0].tiles.map((k) => s.tileScreenRect(k % g.grid.w, Math.floor(k / g.grid.w))); })()`)) as { x: number; y: number; w: number; h: number }[];
-  const shot = await page.screenshot({ type: 'png' });
-  const dataUrl = `data:image/png;base64,${shot.toString('base64')}`;
-  const px = (await page.evaluate(`(async (url, rects) => {
-    const img = new Image(); img.src = url; await img.decode();
-    const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
-    const g = c.getContext('2d'); g.drawImage(img, 0, 0);
-    const k = img.width / innerWidth; // DPR
-    let best = [0, 0, 0], bestScore = -999;
-    for (const r of rects) for (const [fx, fy] of [[0.5, 0.5], [0.3, 0.5], [0.7, 0.5], [0.5, 0.3], [0.5, 0.7]]) {
-      const d = g.getImageData(Math.round((r.x + r.w * fx) * k), Math.round((r.y + r.h * fy) * k), 1, 1).data;
-      // 핑크 틴트 × 푸른 수면 = 라벤더 — 「초록이 빨강·파랑보다 낮다」로 잰다 (모래·잔디·피부는 파랑이 낮다)
-      const score = Math.min(d[0], d[2]) - d[1];
-      if (score > bestScore) { bestScore = score; best = [d[0], d[1], d[2]]; }
-    }
-    return best;
-  })(${JSON.stringify(dataUrl)}, ${JSON.stringify(rects)})`)) as [number, number, number];
-  const pinkish = Math.min(px[0], px[2]) > 190 && Math.min(px[0], px[2]) - px[1] > 12;
-  record('G3 → P49-b 수면 픽셀이 핑크 계열 (스크린샷 · 딸기 × 5, 20칸 농도 3/5)', pinkish ? 'pass' : 'fail', `rgb(${px.join(',')})`);
-  await page.screenshot({ path: `${SHOT_DIR}/g3-pink.png` });
 }
 
 /**
  * G4 — SNS 창 3탭 · 글에 좋아요 터치 · 소원 진행률 · 선물 · 모달 예산.
- * 앞 절의 판(풀 하나·화장실·딸기) 위에서 시간을 감아 글이 생기게 한 뒤 본다.
+ * 앞 절의 판(풀 하나·화장실) 위에서 시간을 감아 글이 생기게 한 뒤 본다.
  */
 async function verifyG4(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
   const center = async (sel: string): Promise<{ x: number; y: number } | null> =>
@@ -435,11 +375,11 @@ async function verifyG5(page: import('playwright').Page, cdp: CDPSession): Promi
   const shop = (await page.evaluate(`(() => ({ up: !document.getElementById('win-shop').hidden, rows: document.querySelectorAll('#win-shop [data-shop]').length, stock: window.__pj.game.shop.state.stock.length }))()`)) as { up: boolean; rows: number; stock: number };
   record('G5 상점 창 — 17시 입고 6칸', shop.up && shop.rows === shop.stock && shop.stock > 0 ? 'pass' : 'fail', JSON.stringify(shop));
   const row = await center('#win-shop [data-shop]');
-  const before = (await page.evaluate(`(() => { const g = window.__pj.game; return { money: g.money, n: g.unlocked.facilities.size + g.unlocked.items.size + g.unlocked.gifts.size }; })()`)) as { money: number; n: number };
+  const before = (await page.evaluate(`(() => { const g = window.__pj.game; return { money: g.money, n: g.unlocked.facilities.size + g.unlocked.gifts.size }; })()`)) as { money: number; n: number };
   if (row) await touch(cdp, row.x, row.y);
   await page.waitForTimeout(300);
-  const after = (await page.evaluate(`(() => { const g = window.__pj.game; return { money: g.money, n: g.unlocked.facilities.size + g.unlocked.items.size + g.unlocked.gifts.size, rows: document.querySelectorAll('#win-shop [data-shop]').length }; })()`)) as { money: number; n: number; rows: number };
-  record('G5 구입 → 해금 +1 · 돈 지출 · 진열에서 빠짐', after.n === before.n + 1 && after.money < before.money && after.rows === shop.rows - 1 ? 'pass' : 'fail', JSON.stringify({ before, after }));
+  const after = (await page.evaluate(`(() => { const g = window.__pj.game; return { money: g.money, n: g.unlocked.facilities.size + g.unlocked.gifts.size + [...g.cooking.ingredients.keys()].reduce((s, id) => s + (g.cooking.stockOf(id) ?? 0), 0), rows: document.querySelectorAll('#win-shop [data-shop]').length }; })()`)) as { money: number; n: number; rows: number }; /* P60-a: 진열에 재료(재고 ×N)도 서므로 「해금」 대신 「해금 + 재고」가 는다 */
+  record('G5 구입 → 해금 또는 재고 +1(P60-a: 소품 대신 재료 진열) · 돈 지출 · 진열에서 빠짐', after.n > before.n && after.money < before.money && after.rows === shop.rows - 1 ? 'pass' : 'fail', JSON.stringify({ before, after }));
   await page.screenshot({ path: `${SHOT_DIR}/g5-shop.png` });
   const sclose = await center('#win-shop .kwin-close');
   if (sclose) await touch(cdp, sclose.x, sclose.y);
@@ -680,25 +620,6 @@ async function verifyG12(page: import('playwright').Page, cdp: CDPSession): Prom
   }
   record(`G12 화면 ${routes.length}개 — 보이는 컨트롤 ${total}개 전부 ≥44px · 제자리에서 눌림`, bad.length === 0 ? 'pass' : 'fail', bad.join(' | '));
 
-  // 풀 프리셋 — 아이템이 든 풀을 API 로 만들고, 저장·복원은 진짜 터치
-  const prep = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.flow.frozen = true;
-    let p = g.pools.all[0]; if (!p) { g.money += 5000; g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }); /* P49-b: 빠지 20칸 */ p = g.pools.all[0]; }
-    if (!p) return null; g.money += 5000; g.unlocked.items.add('strawberry'); g.putItem(p.id, 'strawberry'); g.putItem(p.id, 'strawberry');
-    const n0 = g.presets.length; w.poolInfo.show(p.id); return { id: p.id, n0, items: p.items.length, money: g.money }; })()`)) as { id: number; n0: number; items: number; money: number } | null;
-  const saveC = await center('#win-pool-preset-save');
-  if (saveC) await touch(cdp, saveC.x, saveC.y);
-  await page.waitForTimeout(300);
-  const afterSave = (await page.evaluate(`(() => { const g = window.__pj.game; return { n: g.presets.length, chip: !!document.querySelector('#win-pool [data-preset="0"]') }; })()`)) as { n: number; chip: boolean };
-  record('G12 풀 프리셋 저장 — 터치 한 번에 프리셋 +1 · 복원 칩이 뜬다', prep !== null && afterSave.n === prep.n0 + 1 && afterSave.chip ? 'pass' : 'fail', JSON.stringify({ prep, afterSave }));
-  const loadC = await center('#win-pool [data-preset="0"]');
-  if (loadC) await touch(cdp, loadC.x, loadC.y);
-  await page.waitForTimeout(300);
-  const afterLoad = (await page.evaluate(`(() => { const g = window.__pj.game; const p = g.pools.byId(${prep?.id ?? -1}); return { items: p ? p.items.length : -1, money: g.money }; })()`)) as { items: number; money: number };
-  record('G12 풀 프리셋 복원 — 아이템 +2 · 돈이 준다', prep !== null && afterLoad.items === prep.items + 2 && afterLoad.money < prep.money ? 'pass' : 'fail', JSON.stringify({ before: prep?.items, after: afterLoad }));
-  const closeC = await center('#win-pool .kwin-close');
-  if (closeC) await touch(cdp, closeC.x, closeC.y);
-  await page.waitForTimeout(200);
-
   // 튜토리얼 Strip — 새 판에서 뜨고, 탭 3번에 사라지며, 다시 안 뜬다
   await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0`, { waitUntil: 'load' });
   await page.waitForFunction(`(() => { const b = document.getElementById('wp-debug'); return !!b && (b.textContent || '').includes('FPS'); })()`, undefined, { timeout: 15000 });
@@ -879,7 +800,7 @@ async function verifyG27(page: import('playwright').Page): Promise<void> {
   record('G27 계절 연출 — 봄 꽃잎 · 여름 주말 저녁 불꽃 · 겨울 저녁 조명+트윙클 (FX 등록부 카운트)', spring > 0 && summer > 0 && winter.lights && winter.twinkle > 0 ? 'pass' : 'fail', JSON.stringify({ spring, summer, ...winter }));
 
   // 첫 방문 대사 — 시작 친구를 강제로 입장시키면 say 가 템플릿 문장이다
-  const line = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const f = g.sns.unlockedFriends[0]; const st = g.sns.friends.get(f.id); const before = st.visits; st.visits = 0; const fd = g.sns.friendDef(f.id); const gu = g.guests.spawn({ id: fd.id, palette: fd.palette, favColor: fd.fav.color, favScent: fd.fav.scent, name: fd.name, age: fd.age, gender: fd.gender }); st.visits = before; return { name: fd.name, hasSay: typeof gu.say === 'string' || gu.say === null, friends: g.sns.unlockedFriends.length }; })()`)) as { name: string; hasSay: boolean; friends: number };
+  const line = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const f = g.sns.unlockedFriends[0]; const st = g.sns.friends.get(f.id); const before = st.visits; st.visits = 0; const fd = g.sns.friendDef(f.id); const gu = g.guests.spawn({ id: fd.id, palette: fd.palette, name: fd.name, age: fd.age, gender: fd.gender }); st.visits = before; return { name: fd.name, hasSay: typeof gu.say === 'string' || gu.say === null, friends: g.sns.unlockedFriends.length }; })()`)) as { name: string; hasSay: boolean; friends: number };
   const calendar = (await page.evaluate(`(() => { const g = window.__pj.game; return { n: g.calendarGiven.size, total: window.__pj.calendarCount }; })()`)) as { n: number; total: number };
   record('G27 → P53-a 달력 40건(연차 폴백 8) · 친구 목록', calendar.total === 40 && line.friends > 0 ? 'pass' : 'fail', JSON.stringify({ ...calendar, ...line }));
 
@@ -905,12 +826,11 @@ async function verifyG29(page: import('playwright').Page): Promise<void> {
   record('G29 → P50-a 탭 아이콘(건설 9 — 「빠지」 탭 추가 · SNS 3) · 창 색조 없음(P59-a D67 톤 2 — SNS 분홍·상점 초록 폐기) · HUD 계절+날씨 아이콘 2', ui.build === 9 && ui.sns === 3 && !ui.pink && !ui.green && ui.hud === 2 ? 'pass' : 'fail', JSON.stringify(ui));
 }
 
-/** G30 — 밸런스: 좋아요 리셋 경고 칩(R2) · 투입 뒤 토스트 · 랭크 유지비 · 호화 상품 3종이 상점 데이터에 있다 */
+/** G30 — 밸런스: 랭크 유지비 · 호화 상품 3종이 상점 데이터에 있다 (P60-a: 좋아요 리셋 경고 절은 소품 삭제로 뺐다) */
 async function verifyG30(page: import('playwright').Page): Promise<void> {
   await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&events=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
-  const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 50000; g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }); /* P49-b: 빠지 20칸 — 딸기 하나로는 색이 안 바뀌므로(농도 1/5) 하나를 먼저 넣어 다음 하나가 색을 바꾸게 한다 */ const p = g.pools.all[0]; g.unlocked.items.add('strawberry'); g.putItem(p.id, 'strawberry'); p.likes = 77; w.dock.enter('item', p.id); const warn = document.querySelectorAll('.kdock [data-item][data-resets]'); const first = warn[0]; const label = first ? first.textContent : ''; const before = g.money; if (first) { first.click(); const put = document.getElementById('dock-pool-put'); if (put) put.click(); } const toast = (document.getElementById('hud-toast') || {}).textContent || ''; const after = { likes: p.likes, money: g.money }; const m0 = g.dailyMaintenance(); g.rank = 4; const m4 = g.dailyMaintenance(); g.rank = 0; const lux = ['crystal_fountain', 'grand_arch', 'moon_tower'].filter((id) => w.facilityDefs.has(id)).length; return { warn: warn.length, label, spent: before - after.money, likes: after.likes, toast, m0, m4, lux }; })()`)) as { warn: number; label: string; spent: number; likes: number; toast: string; m0: number; m4: number; lux: number };
-  record('G30 → P49-b R2 — 색 바꾸는 아이템 칩에 「좋아요 77 리셋」 경고 · 넣으면 좋아요 0 + 토스트 (빠지 20칸 · 딸기 1 선투입)', r.warn >= 1 && r.label.includes('77') && r.likes === 0 && r.spent > 0 ? 'pass' : 'fail', JSON.stringify(r));
+  const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; { const gt = g.gate; g.placeFacility('vending_out', gt.i + 2, gt.j + 4, 0); } /* P60-a: kit=0 판이라 소품 유지비가 유일한 유지비였다 — 시설 하나를 놓고 잰다 */ const m0 = g.dailyMaintenance(); g.rank = 4; const m4 = g.dailyMaintenance(); g.rank = 0; const lux = ['crystal_fountain', 'grand_arch', 'moon_tower'].filter((id) => w.facilityDefs.has(id)).length; return { m0, m4, lux }; })()`)) as { m0: number; m4: number; lux: number };
   record('G30 후반 곡선 — ★4 유지비 > ★0 · 호화 상품 3종', r.m4 > r.m0 && r.lux === 3 ? 'pass' : 'fail', JSON.stringify({ m0: r.m0, m4: r.m4, lux: r.lux }));
 }
 
@@ -960,7 +880,7 @@ async function verifyG35(page: import('playwright').Page): Promise<void> {
   await page.waitForTimeout(400);
   const r = (await page.evaluate(`(() => { const win = document.getElementById('win-cert-result'); const g = window.__pj.game; return { up: !!win && !win.hidden, judges: document.querySelectorAll('#win-cert-result [data-judge]').length, stamp: (document.querySelector('#win-cert-result [data-stamp]') || {}).textContent || '', last: g.certs.state.last ? g.certs.state.last.score : -1, kinds: [...new Set(window.__pj.certDefs.flatMap((c) => c.conditions.filter((x) => x.cond.kind === 'pool').flatMap((x) => Object.keys(x.cond))))].filter((k) => ['intensityMin','likesMin','popMin','indoor','tile'].includes(k)).length }; })()`)) as { up: boolean; judges: number; stamp: string; last: number; kinds: number };
   await page.evaluate(`(() => { document.querySelector('#win-cert-result .kwin-close')?.click(); window.__pj.resultsCtl.enabled = false; })()`);
-  record('G35 → P49-b 심사 결과 창 — 심사위원 카드 3 · 합격/불합격 도장 · 인증 조건 4축 사용(타일 축은 P49-a2 삭제) (빠지 20칸)', r.up && r.judges === 3 && /합격/.test(r.stamp) && r.last >= 0 && r.kinds === 4 ? 'pass' : 'fail', JSON.stringify(r));
+  record('G35 → P49-b 심사 결과 창 — 심사위원 카드 3 · 합격/불합격 도장 · 인증 조건 3축 사용(타일 축은 P49-a2 · 소품 축은 P60-a 삭제) (빠지 20칸)', r.up && r.judges === 3 && /합격/.test(r.stamp) && r.last >= 0 && r.kinds === 3 ? 'pass' : 'fail', JSON.stringify(r));
 }
 
 /** G36 — 실내 전용 거절 사유 · 계절 벡터가 인기에 반영 · 슬라이드 AB 는 착수 풀만 */
@@ -1026,21 +946,11 @@ async function verifyG41(page: import('playwright').Page): Promise<void> {
   record('G41 요리 창 — 밀가루+달걀+우유+레몬 → 과일 크레페 · 「설정」이 칩 4개를 채운다 · 채소만 → 야채 찌꺼기(실패작 절)', r.t1.includes('과일 크레페') && r.hasSet && r.picked === 4 && r.t2.includes('야채 찌꺼기') && r.failRows >= 1 && r.known ? 'pass' : 'fail', JSON.stringify(r));
 }
 
-/** G42 — 풀 정보 상세(색·향·온도 탭) · 농도 · 남은 일수 · 심사 창 만점 줄 */
-async function verifyG42(page: import('playwright').Page): Promise<void> {
-  await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&tut=0`, { waitUntil: 'load' });
-  await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
-  const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }); /* P49-b: 빠지 20칸 */ const p = g.pools.all[0]; for (const id of ['strawberry', 'blueberry']) g.unlocked.items.add(id); g.putItem(p.id, 'strawberry'); const bars1 = g.poolState(p.id).detail.intensityBars; g.putItem(p.id, 'blueberry'); const bars2 = g.poolState(p.id).detail.intensityBars; w.poolInfo.show(p.id); const rows = document.querySelectorAll('#win-pool [data-detail]').length; const bodyHidden = document.querySelector('#win-pool [data-detail-body="color"]').classList.contains('khide'); document.querySelector('#win-pool [data-detail="color"]').click(); const bodyShown = !document.querySelector('#win-pool [data-detail-body="color"]').classList.contains('khide'); const text = document.querySelector('#win-pool [data-detail-body="color"]').textContent; const items = [...document.querySelectorAll('#win-pool .krow')].map((r) => r.textContent).find((t2) => t2.startsWith('소품')); const mix = g.poolState(p.id).detail.colorMix; document.querySelector('#win-pool .kwin-close').click(); return { bars1, bars2, rows, bodyHidden, bodyShown, text: text.slice(0, 80), items, mixN: mix.length, top: mix[0] ? mix[0].share : 1 }; })()`)) as { bars1: number; bars2: number; rows: number; bodyHidden: boolean; bodyShown: boolean; text: string; items: string; mixN: number; top: number };
-  record('G42 풀 정보 — 색·향·온도 행 3 · 탭하면 상세 · 색이 섞이면 주된 색 비중 < 1 · 아이템 남은 일수', r.rows === 3 && r.bodyHidden && r.bodyShown && r.mixN === 2 && r.top < 1 && r.text.includes('농도') && /남은 \d+일/.test(r.items) ? 'pass' : 'fail', JSON.stringify(r));
-  const cert = (await page.evaluate(`(() => { const w = window.__pj; w.certWin.show(); const tab = document.querySelector('#win-cert [data-tab="color"]'); if (tab) tab.click(); const full = document.querySelectorAll('#win-cert [data-full]'); const txt = full.length ? full[0].textContent : ''; document.querySelector('#win-cert .kwin-close').click(); return { n: full.length, txt }; })()`)) as { n: number; txt: string };
-  record('G42 심사 창 — 색·향 조건에 「만점: 농도 5/5 · 지금 N/5」 줄', cert.n >= 1 && cert.txt.includes('만점') ? 'pass' : 'fail', JSON.stringify(cert));
-}
-
 /** G43 — 손님 창 선물 버튼 · 배치 중 우측 칸 반투명+토스트 · 첫 주말 비치체어 선물 */
 async function verifyG43(page: import('playwright').Page): Promise<void> {
   await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
-  const gift = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 50000; const f = g.sns.unlockedFriends[0]; const fd = g.sns.friendDef(f.id); const gu = g.guests.spawn({ id: fd.id, palette: fd.palette, favColor: fd.fav.color, favScent: fd.fav.scent, name: fd.name, age: fd.age, gender: fd.gender }); w.guestInfo.show(gu); const btns = [...document.querySelectorAll('#win-guest [data-gift]')]; const enabled = btns.filter((b) => !b.disabled); const before = f.gifts.length; if (enabled[0]) enabled[0].click(); const after = g.sns.friends.get(f.id).gifts.length; const left = document.querySelectorAll('#win-guest [data-gift]').length; document.querySelector('#win-guest .kwin-close').click(); return { btns: btns.length, enabled: enabled.length, before, after, left }; })()`)) as { btns: number; enabled: number; before: number; after: number; left: number };
+  const gift = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 50000; const f = g.sns.unlockedFriends[0]; const fd = g.sns.friendDef(f.id); const gu = g.guests.spawn({ id: fd.id, palette: fd.palette, name: fd.name, age: fd.age, gender: fd.gender }); w.guestInfo.show(gu); const btns = [...document.querySelectorAll('#win-guest [data-gift]')]; const enabled = btns.filter((b) => !b.disabled); const before = f.gifts.length; if (enabled[0]) enabled[0].click(); const after = g.sns.friends.get(f.id).gifts.length; const left = document.querySelectorAll('#win-guest [data-gift]').length; document.querySelector('#win-guest .kwin-close').click(); return { btns: btns.length, enabled: enabled.length, before, after, left }; })()`)) as { btns: number; enabled: number; before: number; after: number; left: number };
   record('G43 손님 창 — 친구에게 튜브·수영복 선물 버튼 · 누르면 선물이 늘고 버튼이 준다', gift.btns >= 2 && gift.enabled >= 1 && gift.after === gift.before + 1 && gift.left === gift.btns - 1 ? 'pass' : 'fail', JSON.stringify(gift));
   const dock = (await page.evaluate(`(() => { const w = window.__pj; w.dock.enter('dig'); const col = document.getElementById('hud-right'); const cs = getComputedStyle(col); const shown = cs.display !== 'none'; const op = Number(cs.opacity); document.querySelector('#hud-right .ksquare[data-cell="build"]').click(); const toast = document.getElementById('hud-toast'); const t = toast && !toast.hidden ? toast.textContent : ''; const surf = document.documentElement.dataset.uiSurface; w.dock.exit(); return { shown, op, t, surf }; })()`)) as { shown: boolean; op: number; t: string; surf: string };
   record('G43 배치 중 — 우측 칸이 반투명으로 남고, 탭하면 「먼저 배치를 마치세요」 토스트 · 표면은 그대로', dock.shown && dock.op < 1 && dock.t.includes('먼저') && dock.surf === 'pool' ? 'pass' : 'fail', JSON.stringify(dock));
@@ -1052,7 +962,7 @@ async function verifyG43(page: import('playwright').Page): Promise<void> {
 async function verifyG44(page: import('playwright').Page): Promise<void> {
   await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&confirm=0&tut=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
-  const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.certWin.show(); const out = {}; for (const fam of ['grade', 'color', 'scent', 'spa', 'fruit', 'stream', 'fun', 'cutesy']) { const t = document.querySelector('#win-cert [data-tab="' + fam + '"]'); if (t) t.click(); const cards = [...document.querySelectorAll('#win-cert [data-cert]')]; out[fam] = cards.map((c) => c.querySelectorAll('.kcond').length); } const sCard = document.querySelector('#win-cert [data-cert="grade_s"]'); document.querySelector('#win-cert [data-tab="grade"]').click(); const sTxt = document.querySelector('#win-cert [data-cert="grade_s"]') ? document.querySelector('#win-cert [data-cert="grade_s"]').textContent : ''; document.querySelector('#win-cert .kwin-close').click(); const gifts = [...g.certs.defs.values()].filter((d) => d.reward.kind === 'gift').length; return { out, sTxt: sTxt.slice(0, 200), gifts, total: g.certs.defs.size }; })()`)) as { out: Record<string, number[]>; sTxt: string; gifts: number; total: number };
+  const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.certWin.show(); const out = {}; for (const fam of ['grade', 'set', 'court', 'spa', 'fruit', 'stream', 'fun', 'cutesy']) { const t = document.querySelector('#win-cert [data-tab="' + fam + '"]'); if (t) t.click(); const cards = [...document.querySelectorAll('#win-cert [data-cert]')]; out[fam] = cards.map((c) => c.querySelectorAll('.kcond').length); } const sCard = document.querySelector('#win-cert [data-cert="grade_s"]'); document.querySelector('#win-cert [data-tab="grade"]').click(); const sTxt = document.querySelector('#win-cert [data-cert="grade_s"]') ? document.querySelector('#win-cert [data-cert="grade_s"]').textContent : ''; document.querySelector('#win-cert .kwin-close').click(); const gifts = [...g.certs.defs.values()].filter((d) => d.reward.kind === 'gift').length; return { out, sTxt: sTxt.slice(0, 200), gifts, total: g.certs.defs.size }; })()`)) as { out: Record<string, number[]>; sTxt: string; gifts: number; total: number };
   const allThree = Object.values(r.out).every((arr) => arr.length > 0 && arr.every((n) => n >= 2 && n <= 3));
   record('G44 심사 창 — 8계열 24건 · 카드마다 조건 2~3행(심사관 3) · S 카이로 풀장에 골든 카이로봇 · 튜브 보상 12', r.total === 24 && allThree && r.sTxt.includes('황금 해태상') && r.gifts === 12 ? 'pass' : 'fail', JSON.stringify(r).slice(0, 400));
 }
@@ -1073,8 +983,8 @@ async function verifyG46(page: import('playwright').Page): Promise<void> {
 async function verifyG47(page: import('playwright').Page): Promise<void> {
   await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
-  const pool = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }); /* P49-b: 빠지 20칸 */ const p = g.pools.all[0]; w.poolInfo.show(p.id); const win = document.getElementById('win-pool'); const tiles = win.querySelectorAll('.kptile').length; const bars = win.querySelectorAll('.kbars').length; const pills = win.querySelectorAll('.kpool-pills .knum').length; const verdict = [...win.querySelectorAll('.kptile-sub')].map((e) => e.textContent).join('|'); const input = win.querySelector('[data-pool-name]'); input.value = '초록풀장'; win.querySelector('[data-rename]').click(); const title = document.getElementById('win-pool-title').textContent; document.querySelector('#win-pool .kwin-close').click(); return { tiles, bars, pills, verdict, title, name: g.poolName(p.id) }; })()`)) as { tiles: number; bars: number; pills: number; verdict: string; title: string; name: string };
-  record('G47 풀 정보 — 색·향·온도 타일 3 + 농도 막대 · 값 알약 3 · 온도 판정 · 이름 변경이 제목에 반영', pool.tiles === 3 && pool.bars >= 2 && pool.pills === 3 && /좋아요|차가워요|뜨거워요/.test(pool.verdict) && pool.title === '초록풀장' && pool.name === '초록풀장' ? 'pass' : 'fail', JSON.stringify(pool));
+  const pool = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }); /* P49-b: 빠지 20칸 */ const p = g.pools.all[0]; w.poolInfo.show(p.id); const win = document.getElementById('win-pool'); const tiles = win.querySelectorAll('.kptile, .kbars').length; const tempRows = win.querySelectorAll('[data-temp]').length; const pills = win.querySelectorAll('.kpool-pills .knum').length; const verdict = [...win.querySelectorAll('[data-temp]')].map((e) => e.textContent).join('|'); const input = win.querySelector('[data-pool-name]'); input.value = '초록풀장'; win.querySelector('[data-rename]').click(); const title = document.getElementById('win-pool-title').textContent; document.querySelector('#win-pool .kwin-close').click(); return { tiles, tempRows, pills, verdict, title, name: g.poolName(p.id) }; })()`)) as { tiles: number; tempRows: number; pills: number; verdict: string; title: string; name: string };
+  record('G47 → P60-a 풀 정보 — 수온 행 1(타일 0) · 값 알약 3 · 온도 판정 · 이름 변경이 제목에 반영', pool.tiles === 0 && pool.tempRows === 1 && pool.pills === 3 && /수온/.test(pool.verdict) && /좋아요|차가워요|뜨거워요/.test(pool.verdict) && pool.title === '초록풀장' && pool.name === '초록풀장' ? 'pass' : 'fail', JSON.stringify(pool));
   const fac = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; g.placeFacility('toilet', gt.i + 2, gt.j + 4, 0); g.placeFacility('vending_out', gt.i + 4, gt.j + 7, 0); /* P46: 건물류끼리 한 칸 */ const f = g.facilities.all[0]; w.facilityInfo.show(f.uid); const t1 = document.getElementById('win-facility-title').textContent; document.querySelector('#win-facility [data-next]').click(); const t2 = document.getElementById('win-facility-title').textContent; const desc = !!document.querySelector('#win-facility .kfac-desc'); const thumb = !!document.querySelector('#win-facility .kthumb canvas'); document.querySelector('#win-facility .kwin-close').click(); return { t1, t2, desc, thumb }; })()`)) as { t1: string; t2: string; desc: boolean; thumb: boolean };
   record('G47 시설 정보 — 「시설 정보 1/2」 · ▶ 로 2/2 · 그림 · 설명', fac.t1.includes('1/2') && fac.t2.includes('2/2') && fac.desc && fac.thumb ? 'pass' : 'fail', JSON.stringify(fac));
   const aim = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.buildWin.show(); document.querySelector('#win-build [data-facility="shower_row"], #win-build [data-facility="washbasin_row"], #win-build [data-facility]').click(); const gt = g.gate; const d = w.placeDock; d.enter(w.facilityDefs.get('washbasin_row'), { i: gt.i - 4, j: gt.j + 8 }); const a = w.scene.aimForTest(); const done = document.getElementById('dock-place-done').textContent; d.exit(); return { ...a, done }; })()`)) as { arrows: boolean; label: string | null; done: string };
@@ -1121,12 +1031,10 @@ async function verifyG51(page: import('playwright').Page): Promise<void> {
   record('G51 인증 사다리 — 진행바가 미통과 인증을 가리키고, 통과하면 다른 인증으로 옮겨 간다 (24종)', r.l0 && r.l1 && r.l0 !== r.l1 && r.passedBefore === 0 && r.defs === 24 ? 'pass' : 'fail', JSON.stringify(r));
 }
 
-/** G52 — UI 2차 잔여: 미리보기 내용(색 전→후) · 신문식 축하(제호·날짜·도장) · 시설 이동(도구 필요 → 이동 → uid·단계 보존) */
+/** G52 — UI 2차 잔여: 신문식 축하(제호·날짜·도장) · 시설 이동(도구 필요 → 이동 → uid·단계 보존) (P60-a: 미리보기 절은 소품 삭제로 뺐다) */
 async function verifyG52(page: import('playwright').Page): Promise<void> {
   await page.goto(`${BASE}/?debug=1&px=1&fresh=1&kit=0&tut=0&confirm=0&celebrate=1`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
-  const pv = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 100000; g.makePpaji({ i0: 41, j0: 24, w: 6, h: 7 }); /* P49-b: 빠지 20칸 */ const p = g.pools.all[0]; w.dock.enter('item', p.id); document.querySelector('#dock-pool [data-item="strawberry"]').click(); const pre = document.getElementById('dock-pool-preview'); const shown = !pre.classList.contains('khide'); const rows = [...pre.querySelectorAll('.kprev-row')].map((r) => r.textContent); const before = p.items.length; document.getElementById('dock-pool-put').click(); const after = p.items.length; const hidden = pre.classList.contains('khide'); w.dock.exit(); return { shown, rows, before, after, hidden }; })()`)) as { shown: boolean; rows: string[]; before: number; after: number; hidden: boolean };
-  record('G52 미리보기 — 「색 맑음 0/5 → 핑크 n/5」 · 향 베리 · 넣기 전 0 → 뒤 1 · 넣은 뒤 미리보기 접힘', pv.shown && /맑음.*→.*핑크/.test(pv.rows[0] ?? '') && /베리/.test(pv.rows[1] ?? '') && pv.before === 0 && pv.after === 1 && pv.hidden ? 'pass' : 'fail', JSON.stringify(pv));
   const paper = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.interruptBudget.reset(); g.inbox.push({ tick: g.tick, day: g.day, kind: 'system', priority: 'modal', title: '랭크 업! ★1 동네 풀장', body: '손님이 늘어난다' }); w.skip(1); const c = document.getElementById('win-celebrate'); const up = !c.hidden; const mast = c.querySelector('.kpaper-mast') ? c.querySelector('.kpaper-mast').textContent : ''; const date = c.querySelector('.kpaper-date') ? c.querySelector('.kpaper-date').textContent : ''; const stamp = c.querySelector('.kpaper-stamp') ? c.querySelector('.kpaper-stamp').textContent : ''; const head = c.querySelector('.kcele-title').textContent; document.getElementById('win-celebrate-ok').click(); return { up, mast, date, stamp, head }; })()`)) as { up: boolean; mast: string; date: string; stamp: string; head: string };
   record('G52 신문식 축하 — 제호 「빠지 타임스」 · 날짜 줄 「1년차 봄 · 평일」 · 「속보」 도장 · 헤드라인', paper.up && paper.mast === '빠지 타임스' && /^1년차 봄 · (평일|주말)$/.test(paper.date) && paper.stamp === '속보' && paper.head.includes('랭크 업') ? 'pass' : 'fail', JSON.stringify(paper));
   const mv = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; const r0 = g.placeFacility('toilet', gt.i + 12, gt.j + 4, 0); const uid = r0.uid; const f = g.facilities.byUid(uid); f.level = 3; w.facilityInfo.show(uid); const btn = document.getElementById('win-facility-move'); const lockedText = btn.textContent; const locked = btn.disabled && btn.classList.contains('khide'); /* P59-c W-12: 도구 없으면 숨김 */ document.querySelector('#win-facility .kwin-close').click(); const denied = g.canMoveFacility(uid, gt.i + 14, gt.j + 4, 0); g.tools.add('move'); const tb = { i0: gt.i - 20, j0: gt.j + 18 }; /* P48-b3: 북서 잔디(열 28~31 · 행 26~29) */ { const t = []; for (let j = tb.j0; j < tb.j0 + 4; j++) for (let i = tb.i0; i < tb.i0 + 4; i++) if (g.grid.at(i, j) !== 3) t.push({ i, j }); if (t.length) { g.money += t.length * 40; g.paintIndoor(t); } } /* P38: 화장실은 실내 전용 — 바닥을 깐 곳으로 옮긴다 */ const ti = tb.i0 + 1, tj = tb.j0 + 1; g.autoPathFor('toilet', ti, tj, 0); /* P31 접면: 옮길 자리에도 길이 닿아야 한다 */ w.facilityInfo.show(uid); const openText = btn.textContent; const enabled = !btn.disabled; btn.click(); const mode = document.querySelector('#dock-place .kdock-mode').textContent; const moving = w.placeDock.movingUid; w.placeDock.aimAt(ti, tj); const why = document.querySelector('#dock-place .kdock-cost').textContent; const money0 = g.money; document.getElementById('dock-place-done').click(); const f2 = g.facilities.byUid(uid); const at = g.facilities.at(ti, tj); const old = g.facilities.at(gt.i + 12, gt.j + 4); return { lockedText, locked, denied: denied.ok ? 'ok' : denied.reason, openText, enabled, mode, moving, why, spent: money0 - g.money, level: f2 ? f2.level : -1, atNew: at ? at.uid : 0, oldEmpty: !old, dockHidden: document.getElementById('dock-place').hidden, uid }; })()`)) as { lockedText: string; locked: boolean; denied: string; openText: string; enabled: boolean; mode: string; moving: number | null; why: string; spent: number; level: number; atNew: number; oldEmpty: boolean; dockHidden: boolean; uid: number };
@@ -1157,12 +1065,12 @@ async function verifyG54(page: import('playwright').Page): Promise<void> {
   record('G54 재료 칩 아이콘(전 칩 · 계열 ≥3) · 인기 캡슐 라벨 < 숫자 · 정보 창·건설 창 둘 다 위(64)에 붙고 kfit 없음(P59-a D67 — 짧은 창을 가운데 두던 G54 규칙 폐기)', r2.chips > 0 && r2.icons === r2.chips && r2.kinds >= 3 && r2.lab < r2.num && !r2.longFit && r2.top < 120 && !r2.buildFit && r2.buildH > 0 ? 'pass' : 'fail', JSON.stringify(r2));
 }
 
-/** G55 — 5189 재플레이 후속: 독 탭 한 줄 · 아이템 모드에 타일 칩 없음 · 「핑크까지 N개」 힌트 · 이동 고스트 「이동 · 무료」 · 같은 자리 거절 */
+/** G55 — 5189 재플레이 후속: 독 탭 한 줄 · 타일 칩 없음 · 이동 고스트 「이동 · 무료」 · 같은 자리 거절 */
 async function verifyG55(page: import('playwright').Page): Promise<void> {
   await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
-  const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const p = g.pools.all[0]; w.dock.enter('item', p.id); const tabs = [...document.querySelectorAll('#dock-pool .ktab')]; const tabH = Math.max(...tabs.map((t) => t.getBoundingClientRect().height)); const tabOneLine = tabs.every((t) => t.getBoundingClientRect().height <= 48 && t.scrollWidth <= t.clientWidth + 1); const tileChip = document.querySelector('#dock-pool [data-tile]'); const tileVisible = tileChip ? tileChip.getBoundingClientRect().height > 0 : false; document.querySelector('#dock-pool [data-item="strawberry"]').click(); const colorRow = (document.querySelector('#dock-pool-preview .kprev-row') || {}).textContent || ''; w.dock.exit(); const gt = g.gate; const f = g.facilities.all.find((x) => x.defId === 'indoor_shop'); /* P57-c: [0] 은 이제 매표소인데 main 규칙이 매표소 이동을 막는다 */ g.tools.add('move'); const same = g.canMoveFacility(f.uid, f.i, f.j, f.facing); w.facilityInfo.show(f.uid); document.getElementById('win-facility-move').click(); const label = w.scene.aimForTest().label; const why = document.querySelector('#dock-place .kdock-cost').textContent; w.placeDock.exit(); return { tabH, tabOneLine, tileVisible, colorRow, same: same.ok ? 'ok' : same.reason, label, why, pool: p.tiles.length }; })()`)) as { tabH: number; tabOneLine: boolean; tileVisible: boolean; colorRow: string; same: string; label: string | null; why: string; pool: number };
-  record('G55 재플레이 후속 — 탭 한 줄 · 타일 칩 숨김 · 「핑크까지 N개」 · 이동 고스트 「이동 · 무료」 · 같은 자리 거절', r.tabOneLine && !r.tileVisible && /핑크빛?까지 \d개/.test(r.colorRow) && r.same.includes('같은 자리') && (r.label ?? '').startsWith('이동 · 무료') /* P57-c: 실내 매점은 「· 자리 N곳」이 붙는다 */ && r.why.includes('같은 자리') ? 'pass' : 'fail', JSON.stringify(r));
+  const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const p = g.pools.all[0]; w.dock.enter('deck', p.id); const tabs = [...document.querySelectorAll('#dock-pool .ktab')]; const tabH = Math.max(...tabs.map((t) => t.getBoundingClientRect().height)); const tabOneLine = tabs.every((t) => t.getBoundingClientRect().height <= 48 && t.scrollWidth <= t.clientWidth + 1); const tileChip = document.querySelector('#dock-pool [data-tile]'); const tileVisible = tileChip ? tileChip.getBoundingClientRect().height > 0 : false; w.dock.exit(); const gt = g.gate; const f = g.facilities.all.find((x) => x.defId === 'indoor_shop'); /* P57-c: [0] 은 이제 매표소인데 main 규칙이 매표소 이동을 막는다 */ g.tools.add('move'); const same = g.canMoveFacility(f.uid, f.i, f.j, f.facing); w.facilityInfo.show(f.uid); document.getElementById('win-facility-move').click(); const label = w.scene.aimForTest().label; const why = document.querySelector('#dock-place .kdock-cost').textContent; w.placeDock.exit(); return { tabH, tabOneLine, tileVisible, same: same.ok ? 'ok' : same.reason, label, why, pool: p.tiles.length }; })()`)) as { tabH: number; tabOneLine: boolean; tileVisible: boolean; same: string; label: string | null; why: string; pool: number };
+  record('G55 재플레이 후속 — 탭 한 줄 · 타일 칩 숨김 · 이동 고스트 「이동 · 무료」 · 같은 자리 거절 (P60-a: 「핑크까지 N개」 힌트는 소품 삭제로 뺐다)', r.tabOneLine && !r.tileVisible && r.same.includes('같은 자리') && (r.label ?? '').startsWith('이동 · 무료') /* P57-c: 실내 매점은 「· 자리 N곳」이 붙는다 */ && r.why.includes('같은 자리') ? 'pass' : 'fail', JSON.stringify(r));
 }
 
 /** G56 — 후반(8년차) 재플레이 후속: 통과 인증 접기 · 배지 99+ · 부표 줄 한 줄 · 인기도 천 단위 */
@@ -1259,8 +1167,25 @@ async function verifyP57b(page: import('playwright').Page): Promise<void> {
     w.buildWin.show(); for (const t of [...document.querySelectorAll('#win-build .ktab')]) { t.click(); await wait(40); scan('build/' + t.dataset.tab, out); } closeAll(); w.buildWin.hide?.();
     w.snsWin.show(); const ft = [...document.querySelectorAll('.ktab')].find((x) => x.dataset.tab === 'friends'); ft && ft.click(); await wait(60); scan('sns', out); closeAll(); w.snsWin.hide?.();
     const rest = g.facilities.all.find((x) => g.facilities.defOf(x).class === 'restaurant'); w.facilityInfo.show(rest.uid); await wait(60); scan('facility', out); closeAll(); w.menuWin.show(rest.uid); await wait(60); scan('menu', out); closeAll(); w.poolInfo.show(g.pools.all[0].id); await wait(60); scan('pool', out); closeAll();
-    w.dock.enter('item', g.pools.all[0].id); await wait(60); scan('dock', out); w.dock.exit(); return out; })()`)) as string[];
-  record('P57-f 한 줄 텍스트 — 건설 9탭·SNS 친구·시설 정보·메뉴 편집·수역 정보·소품 독에서 버튼·탭·칩·카드 이름·슬롯·행 열쇠/값의 두 줄 접힘 0 · nowrap 글자 넘침 0 (말풍선 제외, 말줄임 허용)', wr.length === 0 ? 'pass' : 'fail', wr.slice(0, 8).join(' | ') || '0');
+    w.dock.enter('deck', g.pools.all[0].id); await wait(60); scan('dock', out); w.dock.exit(); return out; })()`)) as string[];
+  record('P57-f 한 줄 텍스트 — 건설 9탭·SNS 친구·시설 정보·메뉴 편집·수역 정보·수역 독에서 버튼·탭·칩·카드 이름·슬롯·행 열쇠/값의 두 줄 접힘 0 · nowrap 글자 넘침 0 (말풍선 제외, 말줄임 허용)', wr.length === 0 ? 'pass' : 'fail', wr.slice(0, 8).join(' | ') || '0');
+}
+
+/** P60-a (D71, docs/plan-ppaji-rig-foodcourt.md §10.1) — 색·향·소품 삭제: 수역 정보 = 수온 행 1 · 타일 0 · 소품/물빛/분위기/프리셋 문자열 0 · 수역 독 = 붓 6 + 행동 4(소품 탭 0 · 미리보기 0) · 인증 24 · 보상 kind 집합 유지 · 조건에 item/색/향 0 */
+async function verifyP60a(page: import('playwright').Page): Promise<void> {
+  await page.goto(`${BASE}/?debug=1&fresh=1&tut=0&confirm=0&events=0`, { waitUntil: 'load' });
+  await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
+  await page.waitForTimeout(300);
+  const r = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.flow.frozen = true; const p = g.pools.all[0]; const out = {};
+    const vis = (e) => !!e && !e.hidden && !e.classList.contains('khide') && e.getBoundingClientRect().height > 0;
+    w.poolInfo.show(p.id); const win = document.getElementById('win-pool'); out.tempRows = win.querySelectorAll('[data-temp]').length; out.tiles = win.querySelectorAll('.kptile, .kbars, [data-detail], [data-detail-body]').length; const txt = win.innerText; out.badWords = ['소품', '물빛', '분위기', '프리셋', '넣기', '농도'].filter((s) => txt.includes(s)); out.tempText = (win.querySelector('[data-temp]') || {}).textContent || ''; out.presetBtn = !!document.getElementById('win-pool-preset-save'); out.editBtn = (document.getElementById('win-pool-edit') || {}).textContent || ''; document.querySelector('#win-pool .kwin-close').click();
+    w.dock.enter('deck'); const d = document.getElementById('dock-pool'); out.brush = [...d.querySelectorAll('.ktabs:not(.ksub) .ktab')].filter(vis).length; out.sub = [...d.querySelectorAll('.ktabs.ksub .ktab')].filter(vis).length; out.tabsAll = d.querySelectorAll('.ktab').length; out.itemTab = d.querySelectorAll('.ktab[data-mode="item"]').length; out.preview = !!document.getElementById('dock-pool-preview'); out.itemGrid = !!d.querySelector('.kitem-grid, [data-grid="pool-items"]'); out.dockBad = ['소품', '물빛', '분위기'].filter((s) => d.innerText.includes(s)); w.dock.exit();
+    const defs = [...g.certs.defs.values()]; out.certs = defs.length; out.rewardKinds = [...new Set(defs.map((c) => c.reward.kind))].sort().join(','); const kinds = new Set(); const walk = (c) => { if (!c) return; if (c.kind === 'all' || c.kind === 'any') { c.of.forEach(walk); return; } kinds.add(c.kind); if (c.kind === 'pool') for (const k of Object.keys(c)) kinds.add('pool.' + k); }; for (const c of defs) for (const cc of c.conditions) walk(cc.cond); out.badConds = [...kinds].filter((k) => k === 'item' || k === 'pool.color' || k === 'pool.scent' || k === 'pool.intensityMin');
+    return out; })()`)) as Record<string, unknown>;
+  const n = (k: string): number => Number(r[k]);
+  record('P60-a 수역 정보 — 수온 행 1(「수온 N°C」 + 판정) · 색·향·온도 타일 0 · 소품/물빛/분위기/프리셋/농도 문자열 0 · 프리셋 버튼 0 · 편집 버튼 「편집」', n('tempRows') === 1 && n('tiles') === 0 && (r['badWords'] as string[]).length === 0 && /수온/.test(String(r['tempText'])) && /\d+°C/.test(String(r['tempText'])) && /딱 좋아요|차가워요|뜨거워요/.test(String(r['tempText'])) && r['presetBtn'] === false && r['editBtn'] === '편집' ? 'pass' : 'fail', JSON.stringify({ tempRows: r['tempRows'], tiles: r['tiles'], badWords: r['badWords'], tempText: r['tempText'], presetBtn: r['presetBtn'], editBtn: r['editBtn'] }));
+  record('P60-a 수역 독 — 붓 6 + 행동 4(치기·걷기는 숨김 · 탭 12) · 소품 탭 0 · 미리보기 0 · 카드 격자 0 · 소품/물빛/분위기 문자열 0', n('brush') === 6 && n('sub') === 4 && n('tabsAll') === 12 && n('itemTab') === 0 && r['preview'] === false && r['itemGrid'] === false && (r['dockBad'] as string[]).length === 0 ? 'pass' : 'fail', JSON.stringify({ brush: r['brush'], sub: r['sub'], tabsAll: r['tabsAll'], itemTab: r['itemTab'], preview: r['preview'], itemGrid: r['itemGrid'], dockBad: r['dockBad'] }));
+  record('P60-a 인증 24 유지 · 보상 kind 집합 {facility, gift, rigPart} 그대로 · 조건에 item/색/향/농도 0', n('certs') === 24 && r['rewardKinds'] === 'facility,gift,rigPart' && (r['badConds'] as string[]).length === 0 ? 'pass' : 'fail', JSON.stringify({ certs: r['certs'], rewardKinds: r['rewardKinds'], badConds: r['badConds'] }));
 }
 
 /** P58-a — 푸드코트: 킷 식탁 2 · 틴트 칸 12 · 독 「식탁」 모드 실터치로 6×4 그리면 좌석 8 · 식탁 정보 창은 「푸드코트 지우기」만(이동·철거·개선·알바 숨김) · 지우면 좌석 0 · 하루 뒤 식탁에서 먹은 손님 > 0 */
@@ -1324,8 +1249,8 @@ async function verifyP59c(page: import('playwright').Page): Promise<void> {
     w.mainMenu.show(); out.menuRows = q('#win-menu-main [data-menu]').length; out.menuSettings = q('#win-menu-main [data-menu="settings"]').length; document.querySelector('#win-menu-main [data-menu="settings"]')?.click(); out.settingsUp = vis(document.getElementById('win-settings')); out.settingsRows = q('#win-settings [data-menu]').length; close('win-settings'); close('win-menu-main');
     // W-15 배치 바 한 줄
     { const def = [...w.facilityDefs.values()].find((d) => g.isUnlocked(d.id)); w.place.enter(def); const d = document.getElementById('dock-place'); out.placeRowH = Math.round(d.querySelector('.kdock-row').getBoundingClientRect().height); out.placeText = d.innerText.replace(/\\s+/g, ' ').slice(0, 60); out.placeNoHint = !d.innerText.includes('어디에'); w.place.exit(); }
-    // W-16 수역 독 — 붓 6 한 줄 + 행동 줄 · 빈 박스 0
-    w.dock.enter('deck'); { const d = document.getElementById('dock-pool'); out.dockH = Math.round(d.getBoundingClientRect().height); out.dockBrush = q('#dock-pool .ktabs:not(.ksub) .ktab').length; out.dockSub = q('#dock-pool .ktabs.ksub .ktab').length; const t = d.querySelector('.ktabs:not(.ksub)'); out.dockTabScroll = t.scrollWidth <= t.clientWidth + 1; out.dockEmptyGrid = vis(d.querySelector('.kitem-grid')); } w.dock.exit();
+    // W-16 수역 독 — 붓 6 한 줄 + 행동 줄 (P60-a: 소품 격자·빈 박스 검사는 삭제)
+    w.dock.enter('deck'); { const d = document.getElementById('dock-pool'); out.dockH = Math.round(d.getBoundingClientRect().height); out.dockBrush = q('#dock-pool .ktabs:not(.ksub) .ktab').length; out.dockSub = q('#dock-pool .ktabs.ksub .ktab').length; const t = d.querySelector('.ktabs:not(.ksub)'); out.dockTabScroll = t.scrollWidth <= t.clientWidth + 1; } w.dock.exit();
     // W-17 코스 독 — 기구 카드 격자
     w.courseDock.enter(); { out.gearCards = q('#dock-course [data-grid="course-gear"] .kpcard').length; out.courseChips = q('#dock-course .kchip').length; } w.courseDock.exit();
     // W-18 심사 무대 높이 · W-19 SNS 첫 열기
@@ -1340,7 +1265,7 @@ async function verifyP59c(page: import('playwright').Page): Promise<void> {
   record('P59-c W-7·W-8·W-9 — 결산 타일 2 + 방문·순이익 행 0 · 수역 빈 썸네일 0 · 수역 행 값 ≤ 10자 + 힌트 줄', n('resultsTiles') === 2 && n('resultsDup') === 0 && r['poolThumbOk'] === true && (r['poolLongV'] as string[]).length === 0 && r['poolHint'] === true ? 'pass' : 'fail', JSON.stringify({ resultsTiles: r['resultsTiles'], resultsDup: r['resultsDup'], poolThumbOk: r['poolThumbOk'], poolLongV: r['poolLongV'], poolHint: r['poolHint'] }));
   record('P59-c W-10·W-12 시설 정보 — 그림 ≥ 48px 이 이름 줄 안 · 도구 없으면 이동 버튼 숨김 · 행 값 ≤ 10자', n('facThumbH') >= 48 && r['facMoveHidden'] === true && (r['facLongV'] as string[]).length === 0 ? 'pass' : 'fail', JSON.stringify({ facThumbH: r['facThumbH'], facMoveHidden: r['facMoveHidden'], facBtns: r['facBtns'], facLongV: r['facLongV'] }));
   record('P59-c W-13·W-14 — 정보 창 타일 8 · 행(수집 제외) ≤ 5 · 다음 랭크 카드 1 · 메뉴 행 ≤ 14 + 「설정」 → 설정 창 5행', n('rankStats') === 8 && n('rankRows') <= 5 && n('rankNext') === 1 && n('menuRows') <= 14 && n('menuSettings') === 1 && r['settingsUp'] === true && n('settingsRows') === 5 ? 'pass' : 'fail', JSON.stringify({ rankStats: r['rankStats'], rankRows: r['rankRows'], rankNext: r['rankNext'], menuRows: r['menuRows'], settingsUp: r['settingsUp'], settingsRows: r['settingsRows'] }));
-  record('P59-c W-15·W-16·W-17 독 — 배치 바 한 줄 ≤ 24px(「어디에」 0) · 수역 독 붓 6 한 줄(스크롤 0) + 행동 5 · 높이 ≤ 240 · 빈 소품 박스 0 · 코스 독 기구 카드 ≥ 6 · 칩 ≤ 8', n('placeRowH') <= 24 && r['placeNoHint'] === true && n('dockBrush') === 6 && n('dockSub') === 5 && r['dockTabScroll'] === true && n('dockH') <= 240 && r['dockEmptyGrid'] === false && n('gearCards') >= 6 && n('courseChips') <= 8 ? 'pass' : 'fail', JSON.stringify({ placeRowH: r['placeRowH'], placeText: r['placeText'], dockBrush: r['dockBrush'], dockSub: r['dockSub'], dockTabScroll: r['dockTabScroll'], dockH: r['dockH'], dockEmptyGrid: r['dockEmptyGrid'], gearCards: r['gearCards'], courseChips: r['courseChips'] }));
+  record('P59-c W-15·W-16·W-17 독 — 배치 바 한 줄 ≤ 24px(「어디에」 0) · 수역 독 붓 6 한 줄(스크롤 0) + 행동 4(P60-a: 소품 탭 삭제) · 높이 ≤ 240 · 코스 독 기구 카드 ≥ 6 · 칩 ≤ 8', n('placeRowH') <= 24 && r['placeNoHint'] === true && n('dockBrush') === 6 && n('dockSub') === 4 && r['dockTabScroll'] === true && n('dockH') <= 240 && n('gearCards') >= 6 && n('courseChips') <= 8 ? 'pass' : 'fail', JSON.stringify({ placeRowH: r['placeRowH'], placeText: r['placeText'], dockBrush: r['dockBrush'], dockSub: r['dockSub'], dockTabScroll: r['dockTabScroll'], dockH: r['dockH'], gearCards: r['gearCards'], courseChips: r['courseChips'] }));
   record('P59-c W-18·W-19 — 심사 무대 ≤ 52px · 새 판 SNS 는 글 0 이면 친구 탭으로', n('stageH') <= 52 && (n('snsPosts') > 0 || r['snsTab'] === 'friends') ? 'pass' : 'fail', JSON.stringify({ stageH: r['stageH'], snsTab: r['snsTab'], snsPosts: r['snsPosts'] }));
 }
 
@@ -1396,7 +1321,7 @@ async function verifyP56c(page: import('playwright').Page): Promise<void> {
   record('P56-c 개조 창 부품 — 잠긴 장날 부품 카드는 disabled 가 아니다(탭 = 구입) → 카드 ×1 · owned', p['lockedBefore'] === false && p['stock'] === 1 && p['n'] === '×1' && p['owned'] === '1' ? 'pass' : 'fail', JSON.stringify(p));
 }
 
-/** P56-a2 — 그림 문법 나머지: 건설 카드 격자(`PictureGrid` 통일) · 캠페인 카드 · 소품 카드 격자(독) · 팔찌 카드 4 + 등급 게이지 · 소원 보상 그림 · 편지 위 물건 · FX buy-pop/band-strip */
+/** P56-a2 — 그림 문법 나머지: 건설 카드 격자(`PictureGrid` 통일) · 캠페인 카드 · 팔찌 카드 4 + 등급 게이지 · 소원 보상 그림 · 편지 위 물건 · FX buy-pop/band-strip (P60-a: 소품 카드 격자 절은 삭제) */
 async function verifyP56a2(page: import('playwright').Page): Promise<void> {
   await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
@@ -1404,8 +1329,6 @@ async function verifyP56a2(page: import('playwright').Page): Promise<void> {
   record('P56-a2 건설 카드 격자 — `.kpcard` 로 통일(옛 `.kcatalog-card` 0) · 카드 수 = 해금 + 티저 2(P59-c D69) · 그림·×N·값 카드마다 · 잠긴 카드 = 잠금 배지 · 아래 두 줄 · 탭 = 배치로', b['old'] === 0 && b['cards'] === b['defs'] && (b['cards'] as number) >= 6 && b['arts'] === b['cards'] && b['counts'] === b['cards'] && b['prices'] === b['cards'] && b['locked'] === b['lockBadges'] && b['foot'] === true && b['picked'] === 1 ? 'pass' : 'fail', JSON.stringify(b));
   const c = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.campaignWin.show(); const q = (s) => document.querySelectorAll('#win-campaign ' + s); const out = { defs: g.campaigns.defs.size, cards: q('.kpcard[data-campaign]').length, prices: q('.kpcard .kpcard-cost').length, arts: q('.kpcard .kpcard-art .kpic, .kpcard .kpcard-art .kpic-fb').length, rows: q('.kcard-row[data-campaign]').length }; document.querySelector('#win-campaign .kwin-close').click(); return out; })()`)) as Record<string, number>;
   record('P56-a2 캠페인 카드 — 카드 수 = 정의 수 · 값·그림 카드마다 · 옛 행 0', c['cards'] === c['defs'] && (c['cards'] as number) >= 2 && c['prices'] === c['cards'] && c['arts'] === c['cards'] && c['rows'] === 0 ? 'pass' : 'fail', JSON.stringify(c));
-  const it = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; g.money = 50000; const pool = g.pools.all[0]; w.dock.enter('item', pool ? pool.id : undefined); const q = (s) => document.querySelectorAll('#dock-pool ' + s); const out = { pool: !!pool, cards: q('[data-grid="pool-items"] .kpcard[data-item]').length, chips: q('.kchip[data-item]').length, prices: q('[data-grid="pool-items"] .kpcard .kpcard-cost').length, arts: q('[data-grid="pool-items"] .kpcard .kpcard-art .kpic, [data-grid="pool-items"] .kpcard .kpcard-art .kpic-fb').length }; const first = document.querySelector('#dock-pool [data-grid="pool-items"] .kpcard:not([disabled])'); if (first) { first.click(); out.preview = !document.getElementById('dock-pool-preview').classList.contains('khide'); out.selected = first.classList.contains('on') || !!document.querySelector('#dock-pool .kpcard.on'); const n0 = pool.items.length; document.querySelector('#dock-pool [data-grid="pool-items"] .kpcard.on').click(); out.put = pool.items.length - n0; } document.getElementById('dock-pool-cancel').click(); return out; })()`)) as Record<string, number | boolean>;
-  record('P56-a2 소품 카드 격자(독) — 글자 칩 0 · 카드마다 그림·값 · 첫 탭 = 미리보기+선택 · 같은 카드 다시 탭 = 투입 1', it['pool'] === true && (it['cards'] as number) >= 1 && it['chips'] === 0 && it['prices'] === it['cards'] && it['arts'] === it['cards'] && it['preview'] === true && it['selected'] === true && it['put'] === 1 ? 'pass' : 'fail', JSON.stringify(it));
   const bd = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; const p = g.pools.all[0]; w.poolInfo.show(p.id); const q = (s) => document.querySelectorAll('#win-pool ' + s); const grade = g.ppajiGradeOf(p.id); const out = { grade, cards: q('[data-grid="bands"] .kpcard[data-band]').length, open: q('[data-grid="bands"] .kpcard[data-open="1"]').length, locked: q('[data-grid="bands"] .kpcard[data-open="0"][disabled]').length, gauge: q('.kband-gauge').length, gaugeOn: q('.kband-gauge .kgauge-cell.on').length, prices: q('[data-grid="bands"] .kpcard .kpcard-cost').length }; document.querySelector('#win-pool .kwin-close').click(); return out; })()`)) as Record<string, number>;
   record('P56-a2 팔찌 카드 4 — 열린 것 = 등급 이하 · 잠긴 것은 disabled+자물쇠 · 등급 게이지 칸 = 등급 · 값 4', bd['cards'] === 4 && (bd['open'] ?? 0) + (bd['locked'] ?? 0) === 4 && bd['open'] === ([1, 2, 3, 3, 4][bd['grade'] as number] ?? -1) && bd['gauge'] === 1 && bd['gaugeOn'] === bd['grade'] && bd['prices'] === 4 ? 'pass' : 'fail', JSON.stringify(bd));
   const rw = (await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.snsWin.show('messages'); const q = (s) => document.querySelectorAll('#win-sns ' + s); const out = { wishes: q('[data-wish]').length, arts: q('[data-wish] .kreward-art .kpic, [data-wish] .kreward-art .kpic-fb, [data-wish] .kreward-art .kpic-canvas').length }; document.querySelector('#win-sns .kwin-close').click(); const ok = w.celebrate.show({ title: '테스트 편지', body: '물건', pic: { kind: 'facility', id: 'shop' } }, '1년차'); out.cele = ok; out.celePic = !!document.querySelector('#win-celebrate .kcele-pic canvas'); document.getElementById('win-celebrate-ok').click(); const ok2 = w.celebrate.show({ title: '테스트 편지 2', body: '재료', pic: { kind: 'ingredient', id: 'butter' } }, '1년차'); out.celePic2 = !!document.querySelector('#win-celebrate .kcele-pic[data-pic]'); document.getElementById('win-celebrate-ok').click(); const f0 = { buy: w.fxFired['buy-pop'] || 0, band: w.fxFired['band-strip'] || 0 }; w.scene.fx('buy-pop', { x: 100, y: 100, text: '크레페 ×1' }); w.scene.fx('band-strip', { x: 100, y: 100, text: '3종 팔찌', amount: 1 }); out.buyFx = (w.fxFired['buy-pop'] || 0) - f0.buy; out.bandFx = (w.fxFired['band-strip'] || 0) - f0.band; return out; })()`)) as Record<string, number | boolean>;
@@ -1584,13 +1507,13 @@ async function verifyP0(page: import('playwright').Page): Promise<void> {
   record('P0-B 높이 — 단 체계(P57-h: 새 판은 평지라 한 칸을 올려 잰다) · 타일이 8×단 위로 뜬다(결함 주입이면 0) · 단 섞인 2×2 는 「경사」 거절', lv.z >= 1 && lv.drop === lv.z * 8 && lv.mixed && (lv.reason ?? '').includes('경사') ? 'pass' : 'fail', JSON.stringify(lv));
 }
 
-/** P1 — 수역: 독 탭(치기·걷기·소품·데크·데크 걷기·실내 2) · 강을 실터치로 쳐서 수역이 늘고 · 데크를 이어 깔고 · 여울은 걷지 않으며 · 킷 수역이 강 위이고 손님이 입수한다 */
+/** P1 — 수역: 독 탭(치기·걷기·데크·데크 걷기·실내 2) · 강을 실터치로 쳐서 수역이 늘고 · 데크를 이어 깔고 · 여울은 걷지 않으며 · 킷 수역이 강 위이고 손님이 입수한다 */
 async function verifyP1(page: import('playwright').Page, cdp: CDPSession): Promise<void> {
   await page.goto(`${BASE}/?debug=1&px=1&fresh=1&tut=0&confirm=0`, { waitUntil: 'load' });
   await page.waitForFunction('!!window.__pj', null, { timeout: 15000 });
   const center = async (sel: string): Promise<{ x: number; y: number } | null> => (await page.evaluate(`(() => { const e = document.querySelector(${JSON.stringify(sel)}); if (!e) return null; const r = e.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`)) as { x: number; y: number } | null;
   const tabs = (await page.evaluate(`(() => { const w = window.__pj; w.dock.enter('dig'); return [...document.querySelectorAll('#dock-pool .ktab')].map((t) => t.textContent); })()`)) as string[];
-  record('P1 → P49-b 수역 독 — 탭 13(빠지·라인·식탁(P58-a) + 치기·걷기·길·지면·바닥 걷기·데크·데크 걷기·소품·건물 바닥·건물 지우기 — P16 길 · P22 지면 · P40 건물 · P49-b 빠지·라인 앞에)', tabs.join(',') === '빠지,라인,식탁,길,지면,데크,치기,걷기,바닥 걷기,데크 걷기,소품,건물 바닥,건물 지우기' /* P59-c W-16: 붓 6 윗줄 · 행동 아랫줄 */ ? 'pass' : 'fail', tabs.join(','));
+  record('P1 → P60-a 수역 독 — 탭 12(빠지·라인·식탁(P58-a) + 치기·걷기·길·지면·바닥 걷기·데크·데크 걷기·건물 바닥·건물 지우기 — P16 길 · P22 지면 · P40 건물 · P49-b 빠지·라인 앞에 · P60-a 소품 삭제)', tabs.join(',') === '빠지,라인,식탁,길,지면,데크,치기,걷기,바닥 걷기,데크 걷기,건물 바닥,건물 지우기' /* P59-c W-16: 붓 6 윗줄 · 행동 아랫줄 */ ? 'pass' : 'fail', tabs.join(','));
   // 강 칸을 진짜 터치 — 킷 수역 왼쪽 옆 강 칸 두 개 (수역에 이어져 닿는다)
   await page.evaluate(`window.__pj.dock.enter('dig')`); // P15: 치기 붓은 숨김 — 하네스가 직접 연다
   const spots = (await page.evaluate(`(() => { const w = window.__pj; const gt = w.game.gate; w.scene.focusTile(gt.i + 11, gt.j + 16, 160); const r1 = w.scene.tileScreenRect(gt.i + 11, gt.j + 16); const r2 = w.scene.tileScreenRect(gt.i + 11, gt.j + 17); /* P48-b3: 본류 잔교(gt.i+10, 행 24~26) 동쪽 옆 — 수역은 뭍·데크에 닿아야 한다 */ return [r1, r2].map((r) => ({ x: r.x + r.w / 2, y: r.y + r.h / 2 })); })()`)) as { x: number; y: number }[];
@@ -2169,7 +2092,6 @@ async function main(): Promise<void> {
   if (G >= 30) await verifyG30(page);
   if (G >= 40) await verifyG40(page, cdp);
   if (G >= 41) await verifyG41(page);
-  if (G >= 42) await verifyG42(page);
   if (G >= 43) await verifyG43(page);
   if (G >= 44) await verifyG44(page);
   if (G >= 46) await verifyG46(page);
@@ -2228,6 +2150,7 @@ async function main(): Promise<void> {
   if (G >= 158.1) await verifyP58a(page, cdp);
   if (G >= 159.1) await verifyP59a(page);
   if (G >= 159.3) await verifyP59c(page);
+  if (G >= 160.1) await verifyP60a(page);
   if (G >= 31) await verifyG31(page);
   if (G >= 33) await verifyG33(page);
   if (G >= 34) await verifyG34(page);

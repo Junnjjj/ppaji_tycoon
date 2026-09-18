@@ -78,7 +78,7 @@ describe('P50-b1 사슬·등급 값', () => {
   });
 
   it('봇 — `--no-rig` 대조군은 기구 0 (rigsDistinct 0 → 밴드 빨강), 기본 봇은 32일에 기구 ≥ 3종 · 사슬 ≥ 2', () => {
-    const off = runBot(new Game(2), 32, { reserve: 3000, digPerDay: 4, poolTarget: 24, facilityPerTiles: 3, useItems: true, persona: 'balanced', noRig: true });
+    const off = runBot(new Game(2), 32, { reserve: 3000, digPerDay: 4, poolTarget: 24, facilityPerTiles: 3, persona: 'balanced', noRig: true });
     expect(off.rigsDistinct).toBe(0);
     const on = runBot(new Game(2), 32);
     expect(on.rigsDistinct).toBeGreaterThanOrEqual(3);

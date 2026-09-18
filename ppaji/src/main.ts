@@ -1,7 +1,7 @@
 import { applyArrivalLayout, canAdoptArrival } from './sim/arrival-layout.js';
 import './compat.js';
 import './ui/style.css';
-import { Game, FACILITY_DEFS, ITEM_DEFS, GIFTS_BY_ID, RANK_DEFS, FEATURES, type FxEvent, CALENDAR_EVENTS, CERT_DEFS } from './sim/game.js';
+import { Game, FACILITY_DEFS, INGREDIENTS_BY_ID, GIFTS_BY_ID, RANK_DEFS, FEATURES, type FxEvent, CALENDAR_EVENTS, CERT_DEFS } from './sim/game.js';
 import type { GameEvent } from './sim/events.js';
 import { TICKS_PER_DAY, JUDGE_TICK, clockView, EVENING_HOUR } from './sim/clock.js';
 import { FLOOR } from './sim/grid.js';
@@ -156,12 +156,12 @@ const syncRigLook = (): void => {
   scene.setRigLook(dim, ring, game.rigLinkEdges());
 };
 const syncPoolLook = (): void => {
-  const m = new Map<number, { color: string; tiles: readonly number[]; temp: number; scent: string | null }>();
+  const m = new Map<number, { tiles: readonly number[]; temp: number }>(); // P60-a: 색·향 삭제 — 수온만 씬으로
   for (const p of game.pools.all) {
     const st = game.poolState(p.id);
-    if (st) m.set(p.id, { color: st.color, tiles: p.tiles, temp: st.temp, scent: st.scent });
+    if (st) m.set(p.id, { tiles: p.tiles, temp: st.temp });
   }
-  scene.setPoolColors(m);
+  scene.setPoolLook(m);
   scene.setIndoorPoolTiles(game.pools.all.filter((p) => game.poolIndoor(p.id)).flatMap((p) => p.tiles));
   scene.setFoodCourtTiles(game.foodcourts.tileKeys(game.grid.w)); // P58-a
 };
@@ -230,7 +230,7 @@ const refreshHud = (): void => {
 };
 
 // ── 창 · 독 ────────────────────────────────────────────────────────
-const dock = new PoolEditDock(document.body, () => game, [...ITEM_DEFS.values()], {
+const dock = new PoolEditDock(document.body, () => game, {
   showSelection: (tiles, mode) => scene.setSelection(tiles, mode === 'fill'),
   toast: (text, ok) => {
     hud.showToast(text);
@@ -278,7 +278,7 @@ const thumbFor = (post: { id: number; subject: { kind: 'pool' | 'facility'; ref:
   return out;
 };
 const poolInfo = new PoolInfoWindow(document.body, () => game, {
-  thumb: (p, cb) => { const k = p.tiles[Math.floor(p.tiles.length / 2)] ?? p.tiles[0] ?? 0; scene.snapshotAt(k % game.grid.w, Math.floor(k / game.grid.w), cb); }, onEdit: (id) => dock.enter('item', id), toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); refreshHud(); persist(); } });
+  thumb: (p, cb) => { const k = p.tiles[Math.floor(p.tiles.length / 2)] ?? p.tiles[0] ?? 0; scene.snapshotAt(k % game.grid.w, Math.floor(k / game.grid.w), cb); }, onEdit: (id) => dock.enter('deck', id), toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); refreshHud(); persist(); } });
 const guestInfo = new GuestInfoWindow(document.body, () => game, { toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); refreshHud(); persist(); } });
 /** 결산 카드 (G19) — 하루·시즌·연말. 하네스(`tut=0`)에서는 `results.enabled` 를 켜기 전엔 인박스로만 */
 const results = new ResultsWindow(document.body, () => { consumeFx(); refreshHud(); pumpModals(); });
@@ -319,7 +319,7 @@ const shopWin = new ShopWindow(document.body, () => game, {
   sprite: (id) => provider.canvas(`fac/${id}/0`), // P56-a: 진열 카드의 시설 그림
   toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); },
   onChanged: () => { consumeFx(); refreshHud(); persist(); },
-  name: (kind, ref) => kind === 'facility' ? (FACILITY_DEFS.get(ref)?.name ?? ref) : kind === 'item' ? (ITEM_DEFS.get(ref)?.name ?? ref) : (GIFTS_BY_ID.get(ref)?.name ?? ref),
+  name: (kind, ref) => kind === 'facility' ? (FACILITY_DEFS.get(ref)?.name ?? ref) : kind === 'ingredient' ? (INGREDIENTS_BY_ID.get(ref)?.name ?? ref) : (GIFTS_BY_ID.get(ref)?.name ?? ref),
 });
 const menuWin = new MenuEditWindow(document.body, () => game, { toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { refreshHud(); persist(); } });
 const cookWin = new CookWindow(document.body, () => game, { toast: (t, ok) => { hud.showToast(t); sfx.play(ok ? 'coin' : 'error'); }, onChanged: () => { consumeFx(); refreshHud(); persist(); } });
@@ -562,9 +562,6 @@ function applyFx(fx: FxEvent): void {
     scene.fx('place-ok', { x: p.x, y: p.y });
     if (fx.kind === 'place') { scene.fx('dust-puff', { x: c.x, y: c.y }); sfx.play('build'); }
     scene.refreshTile(fx.i, fx.j);
-  } else if (fx.kind === 'item') {
-    scene.fx('item-sparkle', { x: c.x, y: c.y });
-    syncPoolLook();
   } else if (fx.kind === 'photo') {
     const last = game.sns.allPosts[game.sns.allPosts.length - 1];
     if (last && !thumbs.has(last.id)) scene.snapshotAt(fx.i, fx.j, (cv) => { if (cv) thumbs.set(last.id, cv); });
@@ -612,7 +609,7 @@ const flowTick = (dtMs: number): void => {
   refreshHud();
   if (game.day !== lastDay) {
     lastDay = game.day;
-    syncPoolLook(); // 계절이 바뀌면 색·향 보너스와 수온이 바뀐다
+    syncPoolLook(); // 계절이 바뀌면 수온이 바뀐다 (P60-a: 색·향 삭제)
     scene.setSeason(game.clock.season);
     sfx.setSeason(game.clock.season);
     persist();

@@ -4,7 +4,6 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import facilitiesJson from './facilities.json';
-import itemsJson from './items.json';
 import ingredientsJson from './ingredients.json';
 import partsJson from './parts.json';
 import gearsJson from './gears.json';
@@ -20,7 +19,6 @@ import equipmentJson from './equipment.json';
 
 /** P10 — 데이터 전량: 모든 콘텐츠가 어딘가에서 열리고(막다른 것 0), 이름은 한글이며 원작 낱말이 없다 */
 const facilities = facilitiesJson as unknown as { id: string; unlock: { source: string; ref?: string; rank?: number } }[];
-const items = itemsJson as unknown as { id: string; unlock: string }[];
 const ingredients = ingredientsJson as unknown as { id: string; unlock: string }[];
 const parts = partsJson as unknown as { id: string; unlock: string }[];
 const gears = gearsJson as unknown as { id: string; unlock: string }[];
@@ -52,9 +50,9 @@ describe('P10 도달성 — 막다른 콘텐츠 0', () => {
       expect(ok, `${f.id} unlock ${JSON.stringify(u)}`).toBe(true);
     }
   });
-  it('소품·부표·재료·부품·선물 전부가 열리는 출처를 갖는다', () => {
+  it('부표·재료·부품·선물 전부가 열리는 출처를 갖는다 (P60-a: 소품 삭제)', () => {
     const openBy = (id: string, unlock: string): boolean => unlock === 'start' || unlock === 'shop' || unlock === 'year' || unlock === 'cook' || unlock === 'cert' || grantedIds.has(id); // cert = 재수상 때 무작위 지급(game.ts)
-    for (const x of [...items, ...ingredients, ...parts, ...gifts]) expect(openBy(x.id, x.unlock), `${x.id} (${x.unlock})`).toBe(true);
+    for (const x of [...ingredients, ...parts, ...gifts]) expect(openBy(x.id, x.unlock), `${x.id} (${x.unlock})`).toBe(true);
   });
   it('기구 전부가 시작이거나 공방 레시피로 만들 수 있다', () => {
     const gearIds = new Set(gears.filter((g) => g.unlock !== 'fail').map((g) => g.id));

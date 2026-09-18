@@ -4,7 +4,6 @@
  * 아래 두 줄이 해금 출처를 말한다.
  */
 import { el } from '../dom.js';
-import { SCENT_KO } from '../../sim/lines.js';
 import { iconEl, type IconName } from '../icons.js';
 import { canvasPictureEl } from '../pictures.js';
 import { PictureGrid, type PictureCard } from '../picture-grid.js';
@@ -88,7 +87,7 @@ export class BuildWindow {
       const unlocked = g.isUnlocked(def.id);
       const placed = g.facilities.all.filter((f) => f.defId === def.id).length; // 원작 카드의 좌하 `×N` = 놓인 수
       const sub = unlocked
-        ? `인기 ${def.pop} · 유지 ${def.maint}G/일${def.usageFee ? ` · 이용료 ${def.usageFee}G` : ''}${def.scent ? ` · 분위기 ${SCENT_KO[def.scent] ?? def.scent}` : ''}`
+        ? `인기 ${def.pop} · 유지 ${def.maint}G/일${def.usageFee ? ` · 이용료 ${def.usageFee}G` : ''}`
         : `잠김 · ${UNLOCK_KO[def.unlock.source]}${def.unlock.rank !== undefined ? ` ${def.unlock.rank}` : ''}`;
       const card: PictureCard = {
         id: def.id,

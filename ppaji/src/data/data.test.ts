@@ -1,7 +1,6 @@
 import { INGREDIENT_CLASSES } from './schema.js';
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import facilitiesJson from './facilities.json';
-import itemsJson from './items.json';
 import seasonsJson from './seasons.json';
 import areasJson from './areas.json';
 import friendsJson from './friends.json';
@@ -15,10 +14,11 @@ import ingredientsJson from './ingredients.json';
 import recipesJson from './recipes.json';
 import compatJson from './compat.json';
 import rigPartsJson from './rig-parts.json';
-const rigPartIds = new Set((rigPartsJson as { id: string }[]).map((p) => p.id));
+const rigParts = rigPartsJson as { id: string; unlock: string }[];
+const rigPartIds = new Set(rigParts.map((p) => p.id));
 import type {
   AreaDef, CalendarEvent, CertDef, CertFamily, CertGrade, CompatDef, Condition, FacilityClass, FacilityDef, FoodCategory, FriendDef,
-  GiftDef, IngredientDef, ItemDef, PoolColor, RankDef, RecipeDef, Scent, SeasonTables, ShopEntry, WishDef,
+  GiftDef, IngredientDef, RankDef, RecipeDef, SeasonTables, ShopEntry, WishDef,
 } from './schema';
 
 /**
@@ -27,19 +27,12 @@ import type {
  * 타입과 목록이 갈라지면 컴파일이 깨지게 묶는다.
  */
 const CLASSES = ['utility', 'lounging', 'restaurant', 'attraction', 'slide', 'decor', 'rig'] as const satisfies readonly FacilityClass[];
-const POOL_COLORS = ['orange', 'yellow', 'lime', 'green', 'blue', 'purple', 'pink', 'red', 'white'] as const satisfies readonly PoolColor[];
-const SCENTS = [
-  'citrus', 'floral', 'pine', 'fruity', 'tropical', 'berry', 'marine', 'cookie', 'spices', 'milky', 'coffee', 'money',
-] as const satisfies readonly Scent[];
 // 목록이 타입보다 짧으면 여기서 컴파일이 깨진다 (런타임 no-op)
 expectTypeOf<Exclude<FacilityClass, (typeof CLASSES)[number]>>().toBeNever();
-expectTypeOf<Exclude<PoolColor, (typeof POOL_COLORS)[number]>>().toBeNever();
-expectTypeOf<Exclude<Scent, (typeof SCENTS)[number]>>().toBeNever();
 
 // JSON import 는 `season` 을 `number[]` 로 추론해 4-튜플(`SeasonVec`)과 직접 캐스트가 안 된다 (TS2352).
 // 모양은 아래 검사가 런타임으로 잰다 — `unknown` 경유는 여기 한 번뿐이다.
 const facilities = facilitiesJson as unknown as FacilityDef[];
-const items = itemsJson as unknown as ItemDef[];
 const seasons = seasonsJson as unknown as SeasonTables;
 const areas = areasJson as unknown as AreaDef[];
 const friends = friendsJson as unknown as FriendDef[];
@@ -123,13 +116,11 @@ describe('facilities.json', () => {
     }
   });
 
-  it('scent ∈ Scent|null and scentPower matches', () => {
-    for (const f of facilities) {
-      if (f.scent === null) expect(f.scentPower, f.id).toBe(0);
-      else {
-        expect(SCENTS, f.id).toContain(f.scent);
-        expect(f.scentPower, f.id).toBeGreaterThan(0);
-      }
+  it('P60-a: 색·향 필드가 없다 — 남는 물성은 heat(계절 수온)뿐', () => {
+    for (const f of facilities as unknown as Record<string, unknown>[]) {
+      expect('scent' in f, f['id'] as string).toBe(false);
+      expect('scentPower' in f, f['id'] as string).toBe(false);
+      expect(typeof f['heat'], f['id'] as string).toBe('number');
     }
   });
 
@@ -168,63 +159,15 @@ describe('facilities.json', () => {
   });
 });
 
-describe('items.json', () => {
-  it('has exactly 24 unique ids', () => {
-    expect(items).toHaveLength(24);
-    expect(new Set(items.map((i) => i.id)).size).toBe(24);
-  });
-
-  it('color ∈ PoolColor|null with matching weight', () => {
-    for (const i of items) {
-      if (i.color === null) expect(i.colorWeight, i.id).toBe(0);
-      else {
-        expect(POOL_COLORS, i.id).toContain(i.color);
-        expect(i.colorWeight, i.id).toBeGreaterThan(0);
-      }
-    }
-  });
-
-  it('scent ∈ Scent|null with matching power', () => {
-    for (const i of items) {
-      if (i.scent === null) expect(i.scentPower, i.id).toBe(0);
-      else {
-        expect(SCENTS, i.id).toContain(i.scent);
-        expect(i.scentPower, i.id).toBeGreaterThan(0);
-      }
-    }
-  });
-
-  it('price 300~1200G (7일 지속이라 ×3, G42), days = 7 (원작 규칙), some start items', () => {
-    for (const i of items) {
-      expect(inBand(i.price, [300, 1200]), `${i.id} price=${i.price}`).toBe(true);
-      expect(i.days, `${i.id} days=${i.days}`).toBe(7);
-    }
-    expect(items.filter((i) => i.unlock === 'start').length).toBeGreaterThanOrEqual(3);
-  });
-
-  it('the rainbow recipe (8 distinct colors, §1.3) is reachable from items', () => {
-    const distinct = new Set(items.map((i) => i.color).filter((c): c is PoolColor => c !== null));
-    expect(distinct.size).toBeGreaterThanOrEqual(8);
-  });
-});
-
 describe('seasons.json', () => {
-  it('colors cover every PoolColor + rainbow + clear, 4 entries each', () => {
-    const keys = Object.keys(seasons.colors).sort();
-    expect(keys).toEqual([...POOL_COLORS, 'rainbow', 'clear'].sort());
-    for (const row of Object.values(seasons.colors)) expect(row).toHaveLength(4);
-  });
-
-  it('scents cover every Scent, 4 entries each', () => {
-    const keys = Object.keys(seasons.scents).sort();
-    expect(keys).toEqual([...SCENTS].sort());
-    for (const row of Object.values(seasons.scents)) expect(row).toHaveLength(4);
+  it('P60-a: 색·향 표가 없다 — 수온·햇빛·이상 수온만 남는다', () => {
+    expect('colors' in seasons).toBe(false);
+    expect('scents' in seasons).toBe(false);
+    expect(seasons.idealTemp).toHaveLength(4);
+    expect(typeof seasons.idealIndoor).toBe('number');
   });
 
   it('§1.3 values are copied verbatim', () => {
-    expect(seasons.colors.rainbow).toEqual([5, 5, 5, 5]);
-    expect(seasons.colors.orange).toEqual([0, 0, 0, 0]);
-    expect(seasons.scents.money).toEqual([5, 5, 5, 5]);
     expect(seasons.ambientOutdoor).toEqual([24, 30, 22, 14]);
     expect(seasons.ambientIndoor).toBe(26);
     expect(seasons.sun).toHaveLength(4);
@@ -235,7 +178,7 @@ describe('seasons.json', () => {
 
 /** `Condition['kind']` 의 런타임 목록 — 타입에 kind 가 늘면 아래 `expectTypeOf` 가 컴파일을 깨뜨린다 */
 const CONDITION_KINDS = [
-  'pool', 'poolTotalSize', 'facility', 'facilityAdjacent', 'facilityClass', 'item', 'recipe', 'recipeCount', 'popularity',
+  'pool', 'poolTotalSize', 'facility', 'facilityAdjacent', 'facilityClass', 'recipe', 'recipeCount', 'popularity', // P60-a: 'item' 삭제
   'likes', 'certPasses', 'certPassed', 'friends', 'areas', 'rank', 'gift', 'cookingLevel', 'visitors', 'money', 'year',
   'all', 'any', 'courseThrill', 'seatGrade', 'seatsFed',
   'rigGrade', 'rigChain', 'rigCount', 'rigGuarded', // P49-a1
@@ -251,7 +194,6 @@ const KINDS_NOT_IN_BUILD = new Set<Condition['kind']>([]);
 const KINDS_NOT_IN_BUILD_G5 = KINDS_NOT_IN_BUILD;
 
 const facilityIds = new Set(facilities.map((f) => f.id));
-const itemIds = new Set(items.map((i) => i.id));
 const giftIds = new Set(gifts.map((g) => g.id));
 const friendIds = new Set(friends.map((f) => f.id));
 const areaIds = new Set(areas.map((a) => a.id));
@@ -266,7 +208,7 @@ function walkCondition(c: Condition, visit: (leaf: Condition) => void): void {
   visit(c);
 }
 
-/** 잎 조건이 참조하는 id 가 실재하는지 (facility · item · gift · area). `forbidden` 은 그 데이터가 아직 못 쓰는 kind */
+/** 잎 조건이 참조하는 id 가 실재하는지 (facility · gift · area). `forbidden` 은 그 데이터가 아직 못 쓰는 kind */
 function checkLeaf(c: Condition, where: string, forbidden: Set<Condition['kind']> = KINDS_NOT_IN_BUILD): void {
   expect(CONDITION_KINDS, `${where} kind=${(c as { kind: string }).kind}`).toContain(c.kind);
   expect(forbidden.has(c.kind), `${where} uses ${c.kind} which this build cannot evaluate`).toBe(false);
@@ -280,9 +222,6 @@ function checkLeaf(c: Condition, where: string, forbidden: Set<Condition['kind']
     case 'facilityClass':
       expect(CLASSES, where).toContain(c.class);
       break;
-    case 'item':
-      expect(itemIds.has(c.id), `${where} item ${c.id}`).toBe(true);
-      break;
     case 'gift':
       expect(giftIds.has(c.id), `${where} gift ${c.id}`).toBe(true);
       if (c.friendId !== undefined) expect(friendIds.has(c.friendId), `${where} friend ${c.friendId}`).toBe(true);
@@ -290,10 +229,12 @@ function checkLeaf(c: Condition, where: string, forbidden: Set<Condition['kind']
     case 'likes':
       if (c.area !== undefined) expect(areaIds.has(c.area), `${where} area ${c.area}`).toBe(true);
       break;
-    case 'pool':
-      if (c.color !== undefined) expect([...POOL_COLORS, 'rainbow'], where).toContain(c.color);
-      if (c.scent !== undefined) expect(SCENTS, where).toContain(c.scent);
+    case 'pool': {
+      // P60-a: 색·향·농도 하위 조건은 없다 — 수온·크기·좋아요·인기·실내외만
+      const keys = Object.keys(c);
+      for (const k of ['color', 'scent', 'intensityMin']) expect(keys, `${where} pool.${k}`).not.toContain(k);
       break;
+    }
     default:
       break;
   }
@@ -328,10 +269,9 @@ describe('friends.json', () => {
     for (const [area, n] of Object.entries(want)) expect(friends.filter((f) => f.area === area), area).toHaveLength(n);
   });
 
-  it('fav color/scent are enum values, palette 0..7, gender M|F', () => {
+  it('fav is food only (P60-a: 색·향 취향 삭제), palette 0..7, gender M|F', () => {
     for (const f of friends) {
-      expect(POOL_COLORS, f.id).toContain(f.fav.color);
-      expect(SCENTS, f.id).toContain(f.fav.scent);
+      expect(Object.keys(f.fav).sort(), f.id).toEqual(['food']);
       expect(f.fav.food, f.id).toBeTruthy();
       expect(inBand(f.palette, [0, 7]), `${f.id} palette=${f.palette}`).toBe(true);
       expect(['M', 'F'], f.id).toContain(f.gender);
@@ -396,10 +336,6 @@ describe('wishes.json', () => {
         case 'facility':
           expect(facilityIds.has(r.id), `${where} reward facility ${r.id}`).toBe(true);
           break;
-        case 'item':
-          expect(itemIds.has(r.id), `${where} reward item ${r.id}`).toBe(true);
-          expect(items.find((i) => i.id === r.id)!.unlock, `${where} rewarded item must be shop-tier`).toBe('shop');
-          break;
         case 'gift':
           expect(giftIds.has(r.id), `${where} reward gift ${r.id}`).toBe(true);
           expect(gifts.find((g) => g.id === r.id)!.unlock, `${where} rewarded gift must unlock via wish`).toBe('wish');
@@ -411,8 +347,10 @@ describe('wishes.json', () => {
           expect(ingredients.some((i) => i.id === r.id), `${where} reward ingredient ${r.id}`).toBe(true);
           expect(ingredients.find((i) => i.id === r.id)!.unlock, `${where} rewarded ingredient must be unlock:'wish'`).toBe('wish');
           break;
-        case 'rigPart': // P53-a: 소원 둘이 부품을 준다 (float_drum · slip_wax)
+        case 'rigPart': // P53-a: 소원 둘이 부품을 준다 (float_drum · slip_wax) · P60-a: 소품 보상 재배분으로 ~46
           expect(rigPartIds.has(r.id), `${where} reward rig part ${r.id}`).toBe(true);
+          // 연차 부품(`year`)은 연차 폴백으로만 온다 — 소원은 장날 부품만 준다
+          expect(rigParts.find((p) => p.id === r.id)!.unlock, `${where} rewarded rig part must be shop-tier`).toBe('shop');
           break;
         default:
           // tile 은 인증 보상이다 (PSS: 타일 13종 전부 인증) — 소원이 주면 인증의 유일한 보상이 헐값이 된다
@@ -421,17 +359,42 @@ describe('wishes.json', () => {
     }
   });
 
-  it('소원 보상 중 돈은 10% 이하 — 원작: 보상은 시설·재료·튜브·새 손님이지 돈이 아니다 (G49 R2)', () => {
+  it('소원 보상 중 돈은 1/3 이하 — 원작: 보상은 시설·재료·튜브·새 손님이지 돈이 아니다 (G49 R2 · P60-a 재배분)', () => {
+    // P60-a: 소품 보상 151 을 rigPart/ingredient/money 로 재배분했다. 같은 친구 안 종류 중복 금지가 「소원 셋이 다 소품이던 친구」마다
+    // 돈 하나를 강제해 10% 는 못 지킨다 — 실측 65/213(30.5%). wish-source 시설이 생기면 스크립트가 먼저 시설로 보낸다
     const money = wishes.filter((w) => w.reward.kind === 'money').length;
-    expect(money / wishes.length).toBeLessThanOrEqual(0.1);
-    expect(wishes.filter((w) => w.idx >= 1 && w.reward.kind === 'money').length).toBeLessThanOrEqual(16);
+    expect(money / wishes.length).toBeLessThanOrEqual(1 / 3);
+    expect(wishes.filter((w) => w.idx >= 1 && w.reward.kind === 'money').length).toBeLessThanOrEqual(wishes.length / 4);
   });
 
-  it('every unlock:"wish" ingredient is rewarded by exactly one wish (otherwise its recipes are unreachable forever)', () => {
+  it('every unlock:"wish" ingredient is rewarded by at least one wish (otherwise its recipes are unreachable forever); rewards are wish-tier only', () => {
+    // P60-a: 한 재료를 여러 소원이 준다 — 두 번째부터는 재고 ×3 (P56-c 문법). 「정확히 하나」는 첫 열쇠의 유일성이었고 도달 가능성은 ≥1 로 지켜진다
     for (const ing of ingredients.filter((i) => i.unlock === 'wish')) {
       const hits = wishes.filter((w) => w.reward.kind === 'ingredient' && w.reward.id === ing.id);
-      expect(hits.length, `${ing.id} rewarded by ${hits.map((w) => `${w.friendId}/${w.idx}`).join(',') || 'nobody'}`).toBe(1);
+      expect(hits.length, `${ing.id} rewarded by nobody`).toBeGreaterThanOrEqual(1);
     }
+  });
+
+  it('P60-a: 보상에 item 0 · 조건에 item/color/scent 0 · 보상 kind 집합은 {facility, gift, money, ingredient, rigPart}', () => {
+    const kinds = new Set(wishes.map((w) => w.reward.kind as string));
+    expect(kinds.has('item')).toBe(false);
+    expect([...kinds].sort()).toEqual(['facility', 'gift', 'ingredient', 'money', 'rigPart']);
+    for (const w of wishes) {
+      walkCondition(w.condition, (leaf) => {
+        expect((leaf as { kind: string }).kind, `${w.friendId}/${w.idx}`).not.toBe('item');
+        if (leaf.kind === 'pool') for (const k of ['color', 'scent', 'intensityMin']) expect(k in leaf, `${w.friendId}/${w.idx} pool.${k}`).toBe(false);
+      });
+    }
+    // 같은 친구 안에서 보상 **id** 가 겹치지 않는다 (3차 재배분 규칙 — 종류 중복 금지는 돈 65 를 강제해 G49 「돈 ≤ 10%」와 충돌했다)
+    for (const f of friends) {
+      const idsOf = wishes.filter((w) => w.friendId === f.id).map((w) => (w.reward as { id?: string }).id ?? w.reward.kind + JSON.stringify(w.reward));
+      expect(new Set(idsOf).size, `${f.id} rewards ${idsOf.join(',')}`).toBe(idsOf.length);
+    }
+    // 종류별 수 — 재배분 결과의 대략 (스크립트 요약과 같다). 밴드는 넓게: 소원을 손으로 고쳐도 축이 사라지지 않게
+    const count = (k: string) => wishes.filter((w) => w.reward.kind === k).length;
+    expect(count('ingredient')).toBeGreaterThanOrEqual(40);
+    expect(count('rigPart')).toBeGreaterThanOrEqual(25);
+    expect(count('facility')).toBe(facilities.filter((f) => f.unlock.source === 'wish').length);
   });
 
   it('every unlock.source === "wish" facility is rewarded by exactly one wish, at exactly its unlock.ref', () => {
@@ -492,7 +455,7 @@ describe('gifts.json', () => {
 
 // ── G5: 풀 타일 · 인증 · 랭크 · 상점 · 사장 달력 ─────────────────────────────
 
-const CERT_FAMILIES = ['grade', 'color', 'scent', 'spa', 'fruit', 'stream', 'fun', 'cutesy'] as const satisfies readonly CertFamily[];
+const CERT_FAMILIES = ['grade', 'set', 'court', 'spa', 'fruit', 'stream', 'fun', 'cutesy'] as const satisfies readonly CertFamily[];
 const CERT_GRADES = ['F', 'E', 'D', 'C', 'B', 'A', 'S'] as const satisfies readonly CertGrade[];
 expectTypeOf<Exclude<CertFamily, (typeof CERT_FAMILIES)[number]>>().toBeNever();
 expectTypeOf<Exclude<CertGrade, (typeof CERT_GRADES)[number]>>().toBeNever();
@@ -579,7 +542,7 @@ describe('certs.json', () => {
     expect(certs.filter((c) => c.reward.kind === 'facility').length).toBeGreaterThanOrEqual(3);
   });
 
-  it('rewards reference existing ids; tiles at most once each; cert-gifts exactly once; items are shop-tier', () => {
+  it('rewards reference existing ids; tiles at most once each; cert-gifts exactly once', () => {
     const tileHits = new Map<string, string[]>();
     for (const c of certs) {
       const r = c.reward;
@@ -590,10 +553,6 @@ describe('certs.json', () => {
         case 'gift':
           expect(giftIds.has(r.id), `${c.id} reward gift ${r.id}`).toBe(true);
           expect(gifts.find((g) => g.id === r.id)!.unlock, `${c.id} rewarded gift must unlock via cert`).toBe('cert');
-          break;
-        case 'item':
-          expect(itemIds.has(r.id), `${c.id} reward item ${r.id}`).toBe(true);
-          expect(items.find((i) => i.id === r.id)!.unlock, `${c.id} rewarded item must be shop-tier`).toBe('shop');
           break;
         case 'facility':
           expect(facilityIds.has(r.id), `${c.id} reward facility ${r.id}`).toBe(true);
@@ -618,15 +577,34 @@ describe('certs.json', () => {
       { cond: { kind: 'pool', popMin: 60 }, weight: 2 },
       { cond: { kind: 'rigCount', min: 2 }, weight: 1 }, // P53-a: 수역 20칸 → 기구 2
     ]);
-    // 조건에 나오는 시설·아이템은 상점 없이도 손에 들어와야 한다 — 상점은 1년차 여름에 열린다
+    // 조건에 나오는 시설은 상점 없이도 손에 들어와야 한다 — 상점은 1년차 여름에 열린다
     for (const c of certs.filter((c) => c.grade === 'F')) {
       for (const w of c.conditions) {
         walkCondition(w.cond, (leaf) => {
           if (leaf.kind === 'facility') expect(facilities.find((f) => f.id === leaf.id)!.unlock.source, `${c.id} ${leaf.id}`).toBe('start');
-          if (leaf.kind === 'item') expect(items.find((i) => i.id === leaf.id)!.unlock, `${c.id} ${leaf.id}`).toBe('start');
         });
       }
     }
+  });
+
+  it('P60-a: 24 유지 · 조건에 item/색/향 0 · 보상 kind 집합 {gift, facility, rigPart} · color/scent 계열은 임시로 rigCount/식당 수 (P60-c/e 가 set/court 로 재배선)', () => {
+    expect(certs).toHaveLength(24);
+    expect([...new Set(certs.map((c) => c.reward.kind as string))].sort()).toEqual(['facility', 'gift', 'rigPart']);
+    for (const c of certs) {
+      for (const w of c.conditions) {
+        walkCondition(w.cond, (leaf) => {
+          expect((leaf as { kind: string }).kind, `${c.id}`).not.toBe('item');
+          if (leaf.kind === 'pool') for (const k of ['color', 'scent', 'intensityMin']) expect(k in leaf, `${c.id} pool.${k}`).toBe(false);
+        });
+      }
+    }
+    const rigMin = (id: string) => certs.find((c) => c.id === id)!.conditions.find((w) => w.cond.kind === 'rigCount')!.cond as { min: number };
+    expect([rigMin('set_f').min, rigMin('set_d').min, rigMin('set_b').min]).toEqual([2, 4, 6]);
+    const restaurants = (id: string) => certs.find((c) => c.id === id)!.conditions.find((w) => w.cond.kind === 'facilityClass' && (w.cond as { class: string }).class === 'restaurant')!.cond as { count: number };
+    expect([restaurants('court_f').count, restaurants('court_d').count, restaurants('court_b').count]).toEqual([2, 4, 6]);
+    // spa 는 수온 조건이 그대로 (계절 수온은 남는다)
+    expect(certs.find((c) => c.id === 'spa_d')!.conditions[0]!.cond).toEqual({ kind: 'pool', tempMin: 32 });
+    expect(certs.find((c) => c.id === 'spa_b')!.conditions[0]!.cond).toEqual({ kind: 'pool', tempMin: 40, indoor: true });
   });
 });
 
@@ -671,9 +649,6 @@ describe('ranks.json', () => {
         case 'gift':
           expect(giftIds.has(r.reward.id!), w).toBe(true);
           break;
-        case 'item':
-          expect(itemIds.has(r.reward.id!), w).toBe(true);
-          break;
         case 'money':
           expect(r.reward.amount, w).toBeGreaterThan(0);
           break;
@@ -693,32 +668,38 @@ describe('shop.json', () => {
     expect(new Set(shop.map((s) => s.id)).size).toBe(shop.length);
     for (const s of shop) {
       expect(s.id, s.id).toBe(`shop_${s.ref}`);
-      expect(['facility', 'item', 'gift'], s.id).toContain(s.kind);
-      const pool = s.kind === 'facility' ? facilityIds : s.kind === 'item' ? itemIds : giftIds;
+      expect(['facility', 'ingredient', 'gift'], s.id).toContain(s.kind); // P60-a: 'item' → 'ingredient'
+      const pool = s.kind === 'facility' ? facilityIds : s.kind === 'ingredient' ? new Set(ingredients.map((i) => i.id)) : giftIds;
       expect(pool.has(s.ref), `${s.id} ref ${s.ref}`).toBe(true);
       expect(s.price, s.id).toBeGreaterThan(0);
       expect(inBand(s.tier, [1, 5]), `${s.id} tier=${s.tier}`).toBe(true);
     }
   });
 
-  it('covers every shop-unlock facility / item / gift exactly once, and nothing else', () => {
+  it('covers every shop-unlock facility / gift exactly once, and nothing else; ingredient rows are 6~8 shop-tier ingredients, each at most once', () => {
     const want = [
       ...facilities.filter((f) => f.unlock.source === 'shop').map((f) => `facility:${f.id}`),
-      ...items.filter((i) => i.unlock === 'shop').map((i) => `item:${i.id}`),
       ...gifts.filter((g) => g.unlock === 'shop').map((g) => `gift:${g.id}`),
     ].sort();
-    const have = shop.map((s) => `${s.kind}:${s.ref}`).sort();
+    const have = shop.filter((s) => s.kind !== 'ingredient').map((s) => `${s.kind}:${s.ref}`).sort();
     expect(have).toEqual(want);
+    // P60-a: 소품 19 자리에 장날 재료 진열 (전부가 아니라 골라 담는다 — 재료 카드 자체는 요리 창의 장날이 판다)
+    const ing = shop.filter((s) => s.kind === 'ingredient');
+    expect(ing.length).toBeGreaterThanOrEqual(6);
+    expect(ing.length).toBeLessThanOrEqual(8);
+    expect(new Set(ing.map((s) => s.ref)).size).toBe(ing.length);
+    for (const s of ing) expect(ingredients.find((i) => i.id === s.ref)!.unlock, s.id).toBe('shop');
+    expect(shop.some((s) => (s.kind as string) === 'item')).toBe(false);
   });
 
-  it('facilities sell at shopPrice on their unlock rank; items and gifts at 3× list price (§1.8)', () => {
+  it('facilities sell at shopPrice on their unlock rank; ingredients (3-pack) and gifts at 3× list price (§1.8)', () => {
     for (const s of shop) {
       if (s.kind === 'facility') {
         const f = facilities.find((f) => f.id === s.ref)!;
         expect(s.price, s.id).toBe(f.shopPrice);
         expect(s.tier, s.id).toBe(f.unlock.rank ?? 1);
       } else {
-        const list = s.kind === 'item' ? items.find((i) => i.id === s.ref)!.price : gifts.find((g) => g.id === s.ref)!.price;
+        const list = s.kind === 'ingredient' ? ingredients.find((i) => i.id === s.ref)!.price! : gifts.find((g) => g.id === s.ref)!.price;
         expect(s.price, s.id).toBe(list * 3);
       }
     }
@@ -762,9 +743,6 @@ describe('calendar.json', () => {
         case 'gift':
           expect(giftIds.has(g.id!), `${e.id} gift ${g.id}`).toBe(true);
           break;
-        case 'item':
-          expect(itemIds.has(g.id!), `${e.id} item ${g.id}`).toBe(true);
-          break;
         case 'money':
           expect(g.amount, `${e.id} money`).toBeGreaterThan(0);
           break;
@@ -773,6 +751,8 @@ describe('calendar.json', () => {
           break;
         case 'ingredient':
           expect(calendarIngredientIds.has(g.id!), `${e.id} ingredient ${g.id}`).toBe(true);
+          // P60-a: 소품 → 재료는 ×3 (P56-c 보상 문법)
+          expect(g.amount ?? 1, `${e.id} ingredient amount`).toBeGreaterThanOrEqual(1);
           break;
         case 'rigPart': // P53-a: 연차 폴백 (겨울 택배)
           expect(rigPartIds.has(g.id!), `${e.id} rig part ${g.id}`).toBe(true);

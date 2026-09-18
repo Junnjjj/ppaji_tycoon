@@ -13,10 +13,10 @@ describe('P49-a2 물빛 삭제', () => {
     const s = spawnSync('node', ['tools/check-tiles-dead.mjs', '--selftest'], { encoding: 'utf8' });
     expect(s.status, s.stdout).toBe(0);
   }, 30000);
-  it('인증 보상 12 — 기구 3(grade_b·scent_d·color_b) + 부품 9, 대상이 전부 존재 · grade_a 조건은 rigGrade 3', () => {
+  it('인증 보상 12 — 기구 3(grade_b·court_d·set_b) + 부품 9, 대상이 전부 존재 · grade_a 조건은 rigGrade 3', () => {
     const cs = certs as { id: string; reward: { kind: string; id: string }; conditions: { cond: { kind: string; min?: number } }[] }[];
     const byId = new Map(cs.map((c) => [c.id, c]));
-    for (const [id, fac] of [['grade_b', 'rig_iceberg'], ['scent_d', 'rig_kids_park'], ['color_b', 'rig_led_buoy']]) expect(byId.get(id!)!.reward, id).toEqual({ kind: 'facility', id: fac });
+    for (const [id, fac] of [['grade_b', 'rig_iceberg'], ['court_d', 'rig_kids_park'], ['set_b', 'rig_led_buoy']] /* P60-a: scent_d → court_d · color_b → set_b (보상 불변) */) expect(byId.get(id!)!.reward, id).toEqual({ kind: 'facility', id: fac });
     const parts = cs.filter((c) => c.reward.kind === 'rigPart');
     expect(parts.length).toBe(9);
     for (const c of parts) expect(RIG_PART_DEFS.some((p) => p.id === c.reward.id), c.id).toBe(true);

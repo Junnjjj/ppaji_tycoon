@@ -18,17 +18,6 @@ describe('G57', () => {
     expect(b.money).toBe(a.money);
   });
 
-  it('프리셋 번호는 왕복 뒤에도 이어진다', () => {
-    const g = new Game(7);
-    g.money = 100000;
-    const p = g.pools.all[0]!;
-    g.savePreset(p.id);
-    const h = Game.fromSnapshot(JSON.parse(JSON.stringify(g.toSnapshot())));
-    h.savePreset(p.id);
-    const names = h.presets.map((x) => x.name);
-    expect(new Set(names).size).toBe(names.length);
-  });
-
   it('시설 아래 실내 바닥은 지울 수 없다', () => {
     const g = new Game(52, undefined, { kit: false });
     g.grid.levels.fill(0); // 사우나 3×3 이 테라스에 걸린다

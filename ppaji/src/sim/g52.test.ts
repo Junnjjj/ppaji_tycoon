@@ -1,8 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Game } from './game.js';
-import { makeTestPpaji } from './test-helpers.js';
 
-/** G52 — 시설 이동(원작 이동 도구)과 아이템 투입 효과 미리보기 */
+/** G52 — 시설 이동(원작 이동 도구). 아이템 투입 효과 미리보기 절은 P60-a 에서 삭제 */
 describe('G52', () => {
   it('이동은 도구가 있어야 하고, 자리만 바꾸며 uid·단계·메뉴를 보존한다 (0G)', () => {
     const g = new Game(52, undefined, { kit: false });
@@ -36,28 +35,5 @@ describe('G52', () => {
     const r2 = g.placeFacility('toilet', gt.i - 3, gt.j + 4, 0);
     expect(r2.ok).toBe(true);
     expect(g.canMoveFacility(uid, gt.i - 3, gt.j + 4, 0).ok).toBe(false);
-  });
-
-  it('미리보기는 전후 풀 상태를 함께 주고, 실제 상태는 바꾸지 않는다', () => {
-    const g = new Game(7, undefined, { kit: false });
-    g.money = 100000;
-    const pp = makeTestPpaji(g, 2, 2); // P49-b D59: 뭍 풀 금지 — 빠지(데크 링)로. 안 물 2×2 = 4칸 (아래 「4칸 풀은 딸기 1개」가 칸 수에 걸려 있다)
-    expect(pp.id).not.toBeNull();
-    const p = g.pools.at(pp.tiles[0]!.i, pp.tiles[0]!.j)!;
-    expect(p.tiles.length).toBe(4);
-    const pv = g.previewItem(p.id, 'strawberry')!;
-    expect(pv.states.before.color).toBe('clear');
-    expect(pv.states.after.color).toBe('pink');
-    expect(pv.states.after.scent).toBe('berry');
-    expect(pv.states.after.detail.intensityBars).toBeGreaterThan(0);
-    expect(g.poolState(p.id)!.color).toBe('clear');
-    expect(p.items.length).toBe(0);
-    // G55: 4칸 풀은 딸기 1개로 핑크, 12칸 시작 킷 풀은 2개 이상 — 힌트 「핑크까지 N개」의 근거
-    expect(g.itemsToColor(p.id, 'strawberry')).toBe(1);
-    expect(g.itemsToColor(p.id, 'ice_block')).toBeNull();
-    const g2 = new Game(7);
-    const big = g2.pools.all[0]!;
-    expect(big.tiles.length).toBeGreaterThanOrEqual(12);
-    expect(g2.itemsToColor(big.id, 'strawberry')).toBeGreaterThanOrEqual(2);
   });
 });

@@ -1,37 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { Game } from './game.js';
 import { runBot } from './bot.js';
-import { makeTestPpaji } from './test-helpers.js';
 
 function fresh(seed = 11): Game {
   const g = new Game(seed, undefined, { kit: false });
   g.money = 200000;
   return g;
 }
-
-describe('G30 R2 — 풀 색이 바뀌면 좋아요 0', () => {
-  it('맑음 → 핑크로 바뀌면 리셋, 같은 색을 더 넣으면 유지 · previewItem 이 미리 말한다', () => {
-    const g = fresh();
-    const pp = makeTestPpaji(g, 2, 2); // P49-b D59: 뭍 풀 금지 — 빠지(데크 링)로. 안 물 2×2 = 4칸 (딸기 1개로 핑크가 되어야 「리셋」이 선다 — G55 「4칸 풀은 딸기 1개」)
-    expect(pp.id).not.toBeNull();
-    const p = g.pools.at(pp.tiles[0]!.i, pp.tiles[0]!.j)!;
-    expect(p.tiles.length).toBe(4);
-    p.likes = 120;
-    for (const id of ['strawberry', 'rose']) g.unlocked.items.add(id);
-    const pv = g.previewItem(p.id, 'strawberry')!;
-    expect(pv.before).toBe('clear');
-    expect(pv.resets).toBe(true);
-    expect(g.putItem(p.id, 'strawberry').ok).toBe(true);
-    expect(p.likes).toBe(0);
-    p.likes = 40;
-    const color = g.poolState(p.id)!.color;
-    const pv2 = g.previewItem(p.id, 'strawberry')!;
-    expect(pv2.after).toBe(color);
-    expect(pv2.resets).toBe(false);
-    expect(g.putItem(p.id, 'strawberry').ok).toBe(true);
-    expect(p.likes).toBe(40);
-  });
-});
 
 describe('G30 후반 곡선', () => {
   it('유지비는 랭크마다 ×maintRankMul · 티켓은 만족 레벨로 오른다 · 지출이 누적된다', () => {

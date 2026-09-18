@@ -6,7 +6,7 @@ import type { GameSnapshot } from '../sim/game.js';
 import { GRID_W, GRID_H } from '../sim/grid.js';
 
 export const SAVE_KEY = 'pj.save';
-export const SAVE_VERSION = 4;
+export const SAVE_VERSION = 5;
 
 export interface SaveFile {
   version: number;
@@ -31,6 +31,18 @@ export const MIGRATIONS: readonly Migration[] = [
   },
   // v3 → v4: P48-b1 물굽이 — 지형이 첫날부터 다르다(마당 가운데가 물). 옛 판의 자연 바닥·시설 좌표를 옮길 수 없다 → 새 판(W8)
   () => ({ version: 4, game: null }),
+  // v4 → v5: P60-a(D71) 색·향·소품 삭제 — `pools.pools[].items` · `presets` · `unlocked.items` 를 **읽고 버린다**. 판은 그대로 산다(새 판 아님) — 지형·시설·돈은 소품과 무관하다
+  (raw) => {
+    const game = raw['game'] as Record<string, unknown> | null | undefined;
+    if (!game) return { ...raw, version: 5, game: null };
+    const next: Record<string, unknown> = { ...game };
+    delete next['presets'];
+    const pools = game['pools'] as { pools?: Record<string, unknown>[] } | undefined;
+    if (pools && Array.isArray(pools.pools)) next['pools'] = { ...pools, pools: pools.pools.map((p) => { const q = { ...p }; delete q['items']; return q; }) };
+    const unlocked = game['unlocked'] as Record<string, unknown> | undefined;
+    if (unlocked) { const u = { ...unlocked }; delete u['items']; next['unlocked'] = u; }
+    return { ...raw, version: 5, game: next };
+  },
 ];
 
 export function migrate(raw: Record<string, unknown>): SaveFile | null {

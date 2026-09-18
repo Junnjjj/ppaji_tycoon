@@ -1,5 +1,4 @@
 import { el } from '../dom.js';
-import { COLOR_KO, SCENT_KO } from '../../sim/lines.js'; // P3: 물빛·분위기 낱말은 한 곳
 import { confirmDialog } from '../dialog.js';
 import { WindowPanel } from '../window.js';
 import { iconEl } from '../icons.js';
@@ -90,7 +89,6 @@ export class GuestInfoWindow {
     if (g.pkg) row('패키지', `${PACKAGES.find((p) => p.id === g.pkg)?.name ?? g.pkg}${g.pkgUsed ? ' · 사용' : ' · 아직'}`);
     row('수영 · 시설', `${g.swims}회 · ${g.uses}회`);
     row('좋아하는 수온', `${g.prefTemp}°C`);
-    if (g.favColor || g.favScent) row('취향', `${g.favColor ? COLOR_KO[g.favColor] ?? g.favColor : '-'} 풀 · ${g.favScent ? SCENT_KO[g.favScent] ?? g.favScent : '-'} 향`);
     if (friend) {
       const w = friend.activeWish !== null ? game.sns.wishesByFriend.get(friend.id)?.[friend.activeWish] ?? null : null;
       row('소원', w ? w.line : friend.stars >= 3 ? '전부 들어줬다' : '다음 소원을 준비 중');

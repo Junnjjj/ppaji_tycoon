@@ -7,8 +7,8 @@
       "sizeMin": 20
     },
     "reward": {
-      "kind": "item",
-      "id": "grapefruit"
+      "kind": "ingredient",
+      "id": "vanilla"
     },
     "line": "형아! 수역 20칸은 돼야 헤엄치지! 좀 넓혀 줘!"
   },
@@ -33,8 +33,8 @@
       "sizeMin": 60
     },
     "reward": {
-      "kind": "item",
-      "id": "kiwi"
+      "kind": "rigPart",
+      "id": "pump_motor"
     },
     "line": "수역 60칸이면 하루 종일 안 나올 거야! 만들어 줘!"
   },
@@ -42,14 +42,14 @@
     "friendId": "art_master",
     "idx": 0,
     "condition": {
-      "kind": "pool",
-      "color": "orange"
+      "kind": "rigCount",
+      "min": 1
     },
     "reward": {
-      "kind": "item",
-      "id": "orange"
+      "kind": "ingredient",
+      "id": "coffee_bean"
     },
-    "line": "노을빛 수역 하나만 만들어 줘! 그림으로 그릴 거야!"
+    "line": "물 위 기구 1개만 갖춰 줘!"
   },
   {
     "friendId": "art_master",
@@ -58,33 +58,35 @@
       "kind": "all",
       "of": [
         {
-          "kind": "pool",
-          "color": "orange"
+          "kind": "rigCount",
+          "min": 2
         },
         {
-          "kind": "pool",
-          "scent": "berry"
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 4
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "blueberry"
+      "kind": "rigPart",
+      "id": "waterproof_canvas"
     },
-    "line": "노을빛 수역에서 베리향까지 나면 진짜 걸작이야, 해 줘!"
+    "line": "물 위 기구 2개, 장식 4개까지 갖춰 줘!"
   },
   {
     "friendId": "art_master",
     "idx": 2,
     "condition": {
-      "kind": "pool",
-      "color": "rainbow"
+      "kind": "rigCount",
+      "min": 3,
+      "kinds": 3
     },
     "reward": {
       "kind": "facility",
       "id": "stage_river"
     },
-    "line": "오색빛 수역! 그건 내 인생 그림이 될 거야, 꼭 만들어 줘!"
+    "line": "물 위 기구 3개 (3종류)까지! 꼭 해 줘!"
   },
   {
     "friendId": "illustrator",
@@ -94,8 +96,8 @@
       "id": "bungeoppang"
     },
     "reward": {
-      "kind": "item",
-      "id": "pineapple"
+      "kind": "ingredient",
+      "id": "tea_leaf"
     },
     "line": "붕어빵 하나 놔 주세요. 마감 때 먹으러 올게요."
   },
@@ -103,14 +105,14 @@
     "friendId": "illustrator",
     "idx": 1,
     "condition": {
-      "kind": "pool",
-      "color": "pink"
+      "kind": "rigCount",
+      "min": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "peach"
+      "kind": "ingredient",
+      "id": "chicken"
     },
-    "line": "핑크빛 수역 하나만 만들어 주세요. 배경으로 그려 둘게요."
+    "line": "물 위 기구 2개까지 갖춰 주세요."
   },
   {
     "friendId": "illustrator",
@@ -120,12 +122,16 @@
       "of": [
         {
           "kind": "pool",
-          "color": "pink",
-          "scent": "tropical"
+          "likesMin": 100
         },
         {
-          "kind": "pool",
-          "likesMin": 100
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -133,20 +139,20 @@
       "kind": "facility",
       "id": "maple_walk"
     },
-    "line": "트로피컬 핑크빛 수역에 좋아요 100까지 채워 주세요!"
+    "line": "수역 좋아요 100, 물 위 기구 3개, 장식 6개까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "brat",
     "idx": 0,
     "condition": {
-      "kind": "item",
-      "id": "lemon"
+      "kind": "rigCount",
+      "min": 1
     },
     "reward": {
-      "kind": "item",
-      "id": "kiwi"
+      "kind": "rigPart",
+      "id": "anchor_chain"
     },
-    "line": "유자향 노란 향초 하나 띄워 줘! 물에서 냄새 나게!"
+    "line": "물 위 기구 1개만 갖춰 줘!"
   },
   {
     "friendId": "brat",
@@ -157,8 +163,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "honey"
+      "kind": "ingredient",
+      "id": "beef"
     },
     "line": "탁구대 두 개! 하나로는 재미없어, 놔 줘!"
   },
@@ -169,20 +175,20 @@
       "kind": "all",
       "of": [
         {
-          "kind": "pool",
-          "color": "red"
-        },
-        {
           "kind": "facility",
           "id": "jump_cushion"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "cinnamon"
+      "kind": "ingredient",
+      "id": "pork"
     },
-    "line": "붉은빛 수역에 점프쿠션까지! 다 젖게 만들어 줘!"
+    "line": "점프쿠션, 물 위 기구 3개까지! 꼭 해 줘!"
   },
   {
     "friendId": "housewife",
@@ -193,8 +199,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "chocolate"
+      "kind": "rigPart",
+      "id": "safety_net"
     },
     "line": "평상 연립 두 개는 놓아 주세요. 앉을 데가 있어야죠."
   },
@@ -202,14 +208,15 @@
     "friendId": "housewife",
     "idx": 1,
     "condition": {
-      "kind": "pool",
-      "scent": "coffee"
+      "kind": "facilityClass",
+      "class": "decor",
+      "count": 4
     },
     "reward": {
-      "kind": "item",
-      "id": "coffee_beans"
+      "kind": "ingredient",
+      "id": "shrimp"
     },
-    "line": "커피향 나는 수역이라니, 상상만 해도 좋네요. 만들어 주세요."
+    "line": "장식 4개까지 갖춰 주세요."
   },
   {
     "friendId": "housewife",
@@ -218,21 +225,25 @@
       "kind": "all",
       "of": [
         {
-          "kind": "pool",
-          "color": "red",
-          "scent": "coffee"
-        },
-        {
           "kind": "facility",
           "id": "maple_walk"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "coconut"
+      "kind": "rigPart",
+      "id": "twin_saddle"
     },
-    "line": "붉은빛 커피향 수역 옆에 단풍 산책로까지 놓아 주세요."
+    "line": "단풍 산책로, 물 위 기구 3개, 장식 6개까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "helicopter_mom",
@@ -243,8 +254,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "coffee_beans"
+      "kind": "ingredient",
+      "id": "salmon"
     },
     "line": "화장실이 두 개는 있어야 애를 데려오죠. 지어 주세요."
   },
@@ -256,8 +267,8 @@
       "tempMin": 32
     },
     "reward": {
-      "kind": "item",
-      "id": "bath_salt"
+      "kind": "ingredient",
+      "id": "tuna"
     },
     "line": "물이 차면 애가 감기 걸려요. 32도는 넘게 데워 주세요."
   },
@@ -268,21 +279,25 @@
       "kind": "all",
       "of": [
         {
-          "kind": "pool",
-          "color": "purple",
-          "scent": "spices"
-        },
-        {
           "kind": "facility",
           "id": "parasol"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "mint"
+      "kind": "rigPart",
+      "id": "slip_wax"
     },
-    "line": "매콤한 보랏빛 수역에 파라솔까지 두세요. 그래야 안심이죠."
+    "line": "파라솔, 물 위 기구 3개, 장식 6개까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "rich_lady",
@@ -292,8 +307,8 @@
       "id": "stage_river"
     },
     "reward": {
-      "kind": "item",
-      "id": "melon"
+      "kind": "ingredient",
+      "id": "seaweed"
     },
     "line": "햇볕은 질색이에요. 공연 무대부터 하나 놓아 주세요."
   },
@@ -304,20 +319,21 @@
       "kind": "all",
       "of": [
         {
-          "kind": "pool",
-          "color": "green"
+          "kind": "rigCount",
+          "min": 2
         },
         {
-          "kind": "pool",
-          "scent": "cookie"
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 4
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "mint"
+      "kind": "ingredient",
+      "id": "honey_jar"
     },
-    "line": "초록빛 수역에 군것질 냄새라니, 그 조합으로 해 주세요."
+    "line": "물 위 기구 2개, 장식 4개까지 갖춰 주세요."
   },
   {
     "friendId": "rich_lady",
@@ -340,8 +356,8 @@
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "rose"
+      "kind": "rigPart",
+      "id": "led_strip_buoy"
     },
     "line": "방갈로에 좋아요 300 수역, 인기 150까지 올려 주세요."
   },
@@ -349,28 +365,37 @@
     "friendId": "ping_ponger",
     "idx": 0,
     "condition": {
-      "kind": "item",
-      "id": "apple"
+      "kind": "rigCount",
+      "min": 1
     },
     "reward": {
       "kind": "money",
       "amount": 500
     },
-    "line": "수역에 빨간 과일향 풍선 좀 띄워 줘! 분위기 살게!"
+    "line": "물 위 기구 1개만 갖춰 줘!"
   },
   {
     "friendId": "ping_ponger",
     "idx": 1,
     "condition": {
-      "kind": "pool",
-      "scent": "pine",
-      "outdoor": true
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "outdoor": true
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 4
+        }
+      ]
     },
     "reward": {
-      "kind": "item",
-      "id": "grapes"
+      "kind": "ingredient",
+      "id": "matcha"
     },
-    "line": "야외 수역에서 솔내음! 산에서 헤엄치는 기분 나게 해 줘!"
+    "line": "야외 수역, 장식 4개까지 갖춰 줘!"
   },
   {
     "friendId": "ping_ponger",
@@ -379,47 +404,47 @@
       "kind": "all",
       "of": [
         {
-          "kind": "pool",
-          "color": "lime"
-        },
-        {
           "kind": "facility",
           "id": "diving",
           "count": 2
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "banana"
+      "kind": "rigPart",
+      "id": "float_drum"
     },
-    "line": "연둣빛 수역에 다이빙대 두 대! 물살 타게 해 줘!"
+    "line": "다이빙대 2개, 물 위 기구 3개까지! 꼭 해 줘!"
   },
   {
     "friendId": "rabbit_keeper",
     "idx": 0,
     "condition": {
-      "kind": "item",
-      "id": "milk"
+      "kind": "rigCount",
+      "min": 1
     },
     "reward": {
-      "kind": "item",
-      "id": "coconut"
+      "kind": "ingredient",
+      "id": "hazelnut"
     },
-    "line": "우윳빛 안개 분무기 하나 놔 줘. 사진이 예쁘게 나오거든."
+    "line": "물 위 기구 1개만 갖춰 줘!"
   },
   {
     "friendId": "rabbit_keeper",
     "idx": 1,
     "condition": {
-      "kind": "pool",
-      "color": "white"
+      "kind": "rigCount",
+      "min": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "grapefruit"
+      "kind": "ingredient",
+      "id": "banana_fruit"
     },
-    "line": "은빛 수역 하나만 만들어 줘. 새벽 강 같아서 좋더라."
+    "line": "물 위 기구 2개까지 갖춰 줘!"
   },
   {
     "friendId": "rabbit_keeper",
@@ -428,22 +453,26 @@
       "kind": "all",
       "of": [
         {
-          "kind": "pool",
-          "color": "white",
-          "scent": "milky"
-        },
-        {
           "kind": "facility",
           "id": "photozone",
           "count": 3
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "rose"
+      "kind": "rigPart",
+      "id": "spray_nozzle"
     },
-    "line": "우유빛 은빛 수역 둘레에 포토존 세 개만 놔 줘."
+    "line": "포토존 3개, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "student_councilor",
@@ -453,8 +482,8 @@
       "id": "sikhye"
     },
     "reward": {
-      "kind": "item",
-      "id": "grapes"
+      "kind": "ingredient",
+      "id": "melon_fruit"
     },
     "line": "식혜·계란 코너 하나 열어 줘! 회의는 음료가 있어야 돌아가!"
   },
@@ -462,14 +491,14 @@
     "friendId": "student_councilor",
     "idx": 1,
     "condition": {
-      "kind": "pool",
-      "color": "yellow"
+      "kind": "rigCount",
+      "min": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "melon"
+      "kind": "ingredient",
+      "id": "peach_fruit"
     },
-    "line": "우리 과 색은 노랑이야. 햇살빛 수역으로 만들어 줘!"
+    "line": "물 위 기구 2개까지 갖춰 줘!"
   },
   {
     "friendId": "student_councilor",
@@ -478,13 +507,17 @@
       "kind": "all",
       "of": [
         {
-          "kind": "pool",
-          "color": "yellow",
-          "scent": "tropical"
-        },
-        {
           "kind": "likes",
           "min": 300
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -492,20 +525,20 @@
       "kind": "facility",
       "id": "ice_fishing"
     },
-    "line": "트로피컬 햇살빛 수역에 좋아요 300! 과 단톡에 올릴게!"
+    "line": "좋아요 300, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "phd_student",
     "idx": 0,
     "condition": {
-      "kind": "item",
-      "id": "banana"
+      "kind": "rigCount",
+      "min": 1
     },
     "reward": {
       "kind": "money",
       "amount": 600
     },
-    "line": "노란 바나나 보트 하나 띄워 줘. 관측 자료로 쓸게."
+    "line": "물 위 기구 1개만 갖춰 줘!"
   },
   {
     "friendId": "phd_student",
@@ -515,8 +548,8 @@
       "id": "sauna"
     },
     "reward": {
-      "kind": "item",
-      "id": "peach"
+      "kind": "rigPart",
+      "id": "pump_motor"
     },
     "line": "사우나 하나만 지어 줘. 밤샘한 몸이 좀 풀리게."
   },
@@ -529,16 +562,20 @@
         {
           "kind": "pool",
           "tempMin": 36,
-          "scent": "spices",
           "indoor": true
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "seaweed"
+      "kind": "ingredient",
+      "id": "mayonnaise"
     },
-    "line": "실내 36도 매콤한 수역. 딱 그 조건으로 맞춰 줘."
+    "line": "실내 36도 넘는 수역, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "high_schooler",
@@ -562,8 +599,8 @@
       "id": "school_swimsuit"
     },
     "reward": {
-      "kind": "item",
-      "id": "blueberry"
+      "kind": "rigPart",
+      "id": "waterproof_canvas"
     },
     "line": "MT 수영복 하나만 주세요. 아직 수영복이 없어서요."
   },
@@ -574,21 +611,25 @@
       "kind": "all",
       "of": [
         {
-          "kind": "pool",
-          "color": "green",
-          "scent": "citrus"
-        },
-        {
           "kind": "facility",
           "id": "stripy_slide"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "lavender"
+      "kind": "ingredient",
+      "id": "corn"
     },
-    "line": "상큼한 초록빛 수역에 강변 대슬라이드까지 세워 주세요!"
+    "line": "강변 대슬라이드, 물 위 기구 3개, 장식 6개까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "baseball_kid",
@@ -623,12 +664,12 @@
       "kind": "all",
       "of": [
         {
-          "kind": "pool",
-          "color": "blue"
-        },
-        {
           "kind": "facility",
           "id": "blue_slide"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
         }
       ]
     },
@@ -636,7 +677,7 @@
       "kind": "facility",
       "id": "rocket_slide"
     },
-    "line": "쪽빛 수역에 블루 튜브 슬라이드! 그거면 완벽해, 세워 줘!"
+    "line": "블루 튜브 슬라이드, 물 위 기구 3개까지! 꼭 해 줘!"
   },
   {
     "friendId": "vice_principal",
@@ -664,14 +705,15 @@
     "friendId": "vice_principal",
     "idx": 1,
     "condition": {
-      "kind": "pool",
-      "scent": "floral"
+      "kind": "facilityClass",
+      "class": "decor",
+      "count": 4
     },
     "reward": {
-      "kind": "item",
-      "id": "kiwi"
+      "kind": "ingredient",
+      "id": "cabbage"
     },
-    "line": "꽃내음 나는 수역이면 좋겠군요. 하나 만들어 주십시오."
+    "line": "장식 4개까지 갖춰 주십시오."
   },
   {
     "friendId": "vice_principal",
@@ -681,13 +723,20 @@
       "of": [
         {
           "kind": "pool",
-          "color": "purple",
-          "scent": "floral",
           "tempMin": 38
         },
         {
           "kind": "facility",
           "id": "footbath"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -695,20 +744,20 @@
       "kind": "facility",
       "id": "performing_kairobot"
     },
-    "line": "38도 꽃내음 보랏빛 수역에 온수 족욕까지 놓아 주십시오."
+    "line": "38도 넘는 수역, 온수 족욕, 물 위 기구 3개, 장식 6개까지! 꼭 부탁드립니다."
   },
   {
     "friendId": "daydreaming_girl",
     "idx": 0,
     "condition": {
-      "kind": "item",
-      "id": "apple"
+      "kind": "rigCount",
+      "min": 1
     },
     "reward": {
-      "kind": "item",
-      "id": "bath_salt"
+      "kind": "rigPart",
+      "id": "anchor_chain"
     },
-    "line": "수역에 빨간 과일향 풍선 띄워 줘. 멍하니 보고 싶어."
+    "line": "물 위 기구 1개만 갖춰 줘!"
   },
   {
     "friendId": "daydreaming_girl",
@@ -719,8 +768,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "peach"
+      "kind": "ingredient",
+      "id": "noodle"
     },
     "line": "등급 3 자리가 둘은 있어야 친구랑 같이 눕지!"
   },
@@ -733,12 +782,15 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "pink",
           "likesMin": 150
         },
         {
           "kind": "facility",
           "id": "shop"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
         }
       ]
     },
@@ -746,7 +798,7 @@
       "kind": "ingredient",
       "id": "honey_jar"
     },
-    "line": "좋아요 150 핑크빛 수역 옆에 매점도 세워 줘!"
+    "line": "6칸 넘는 수역 좋아요 150, 매점, 물 위 기구 3개까지! 꼭 해 줘!"
   },
   {
     "friendId": "dancer",
@@ -756,8 +808,8 @@
       "min": 4
     },
     "reward": {
-      "kind": "item",
-      "id": "grapes"
+      "kind": "ingredient",
+      "id": "squid"
     },
     "line": "징검다리처럼 이어 붙인 기구 넷! 이어진 사슬을 건너고 싶어."
   },
@@ -770,20 +822,24 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "scent": "fruity",
           "outdoor": true
         },
         {
           "kind": "facility",
           "id": "diving"
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 4
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "chocolate"
+      "kind": "rigPart",
+      "id": "safety_net"
     },
-    "line": "야외 과일향 수역에 다이빙대! 물살 위에서 춤추게 해 줘!"
+    "line": "야외 6칸 넘는 수역, 다이빙대, 장식 4개까지 갖춰 줘!"
   },
   {
     "friendId": "dancer",
@@ -793,14 +849,24 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "purple",
-          "scent": "fruity",
-          "intensityMin": 40
+          "sizeMin": 6
         },
         {
           "kind": "popularity",
           "min": 120
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
+        },
+        {
+          "kind": "rigGrade",
+          "min": 2
         }
       ]
     },
@@ -808,22 +874,30 @@
       "kind": "ingredient",
       "id": "banana_fruit"
     },
-    "line": "진한 보랏빛 과일향 수역에 인기 120! 여기서 공연할게!"
+    "line": "6칸 넘는 수역, 인기 120, 물 위 기구 3개, 장식 6개, 2등급 빠지까지! 꼭 해 줘!"
   },
   {
     "friendId": "trumpeter",
     "idx": 0,
     "condition": {
-      "kind": "pool",
-      "sizeMin": 6,
-      "color": "yellow",
-      "outdoor": true
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "outdoor": true
+        },
+        {
+          "kind": "rigCount",
+          "min": 1
+        }
+      ]
     },
     "reward": {
-      "kind": "item",
-      "id": "banana"
+      "kind": "ingredient",
+      "id": "octopus"
     },
-    "line": "야외 햇살빛 수역! 나팔 소리처럼 환하게 만들어 줘!"
+    "line": "야외 6칸 넘는 수역, 물 위 기구 1개만 갖춰 줘!"
   },
   {
     "friendId": "trumpeter",
@@ -834,8 +908,8 @@
       "count": 3
     },
     "reward": {
-      "kind": "item",
-      "id": "mint"
+      "kind": "ingredient",
+      "id": "vanilla"
     },
     "line": "자판기(야외) 세 대만 놔 줘! 연습 끝나면 목이 타거든."
   },
@@ -847,21 +921,28 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "yellow",
-          "scent": "cookie"
+          "sizeMin": 6
         },
         {
           "kind": "facility",
           "id": "footvolley"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "honey"
+      "kind": "rigPart",
+      "id": "twin_saddle"
     },
-    "line": "군것질 냄새 나는 햇살빛 수역에 족구장까지 열어 줘!"
+    "line": "6칸 넘는 수역, 족구장, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "woodcutter",
@@ -872,8 +953,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "mint"
+      "kind": "ingredient",
+      "id": "coffee_bean"
     },
     "line": "잣나무 두 그루만 심어 주게. 숲 냄새가 그립구먼."
   },
@@ -886,8 +967,8 @@
       "count": 1
     },
     "reward": {
-      "kind": "item",
-      "id": "lavender"
+      "kind": "rigPart",
+      "id": "slip_wax"
     },
     "line": "물가에 그늘 있는 진짜 좋은 자리 하나 만들어 줘."
   },
@@ -936,8 +1017,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "rose"
+      "kind": "ingredient",
+      "id": "tea_leaf"
     },
     "line": "분수 두 개만 놓아 주세요. 물가가 환해질 거예요."
   },
@@ -950,8 +1031,6 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "lime",
-          "scent": "floral",
           "outdoor": true
         },
         {
@@ -960,14 +1039,23 @@
             "photozone",
             "hydrangea"
           ]
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "lavender"
+      "kind": "ingredient",
+      "id": "chicken"
     },
-    "line": "연둣빛 야외 꽃내음 수역, 포토존 옆엔 수국을 놓아 주세요."
+    "line": "야외 6칸 넘는 수역, 포토존 옆에 수국, 물 위 기구 3개, 장식 6개까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "bunbun",
@@ -977,8 +1065,8 @@
       "id": "sauna"
     },
     "reward": {
-      "kind": "item",
-      "id": "orange"
+      "kind": "rigPart",
+      "id": "led_strip_buoy"
     },
     "line": "사우나 지어 줘! 물놀이하고 나면 너무 춥단 말이야!"
   },
@@ -986,15 +1074,14 @@
     "friendId": "bunbun",
     "idx": 1,
     "condition": {
-      "kind": "item",
-      "id": "orange",
-      "count": 2
+      "kind": "rigCount",
+      "min": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "pineapple"
+      "kind": "ingredient",
+      "id": "beef"
     },
-    "line": "오렌지향 등불 두 개 띄워 줘! 밤에 반짝이면 좋잖아!"
+    "line": "물 위 기구 2개까지 갖춰 줘!"
   },
   {
     "friendId": "bunbun",
@@ -1004,21 +1091,28 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "green",
-          "scent": "coffee"
+          "sizeMin": 6
         },
         {
           "kind": "facility",
           "id": "cafe"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "coffee_beans"
+      "kind": "ingredient",
+      "id": "pork"
     },
-    "line": "커피향 초록빛 수역에 카페까지! 그럼 매일 올게, 만들어 줘!"
+    "line": "6칸 넘는 수역, 카페, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "kappappa",
@@ -1028,8 +1122,8 @@
       "min": 3
     },
     "reward": {
-      "kind": "item",
-      "id": "seaweed"
+      "kind": "rigPart",
+      "id": "float_drum"
     },
     "line": "대형 빠지 등급 3 은 돼야 소문이 나지 — 등급을 올려 줘."
   },
@@ -1037,14 +1131,14 @@
     "friendId": "kappappa",
     "idx": 1,
     "condition": {
-      "kind": "item",
-      "id": "kiwi"
+      "kind": "rigCount",
+      "min": 1
     },
     "reward": {
-      "kind": "item",
-      "id": "coffee_beans"
+      "kind": "ingredient",
+      "id": "shrimp"
     },
-    "line": "키위향 초록 염료 좀 풀어 주세요. 물빛이 살거든요."
+    "line": "물 위 기구 1개까지 갖춰 주세요."
   },
   {
     "friendId": "kappappa",
@@ -1055,13 +1149,20 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "blue",
-          "scent": "floral",
           "tempMax": 24
         },
         {
           "kind": "facility",
           "id": "playground"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -1069,7 +1170,7 @@
       "kind": "ingredient",
       "id": "matcha"
     },
-    "line": "24도 이하 쪽빛 꽃내음 수역에 놀이터까지 놓아 주세요."
+    "line": "6칸 넘는 24도 아래 수역, 놀이터, 물 위 기구 3개, 장식 6개까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "grizzly_bearington",
@@ -1082,8 +1183,8 @@
           "id": "bungeoppang"
         },
         {
-          "kind": "item",
-          "id": "apple"
+          "kind": "rigCount",
+          "min": 1
         }
       ]
     },
@@ -1091,7 +1192,7 @@
       "kind": "facility",
       "id": "vending_in"
     },
-    "line": "붕어빵에 빨간 과일향 풍선까지. 그 둘은 갖춰 주게."
+    "line": "붕어빵, 물 위 기구 1개만 갖춰 주게."
   },
   {
     "friendId": "grizzly_bearington",
@@ -1101,21 +1202,28 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "white",
-          "scent": "marine"
+          "sizeMin": 6
         },
         {
           "kind": "facility",
           "id": "rent_sup"
+        },
+        {
+          "kind": "rigCount",
+          "min": 2
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 4
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "coconut"
+      "kind": "rigPart",
+      "id": "spray_nozzle"
     },
-    "line": "은빛 강바람 수역 옆에 SUP 대여소. 연어가 당기는군, 열어 주게."
+    "line": "6칸 넘는 수역, SUP 대여소, 물 위 기구 2개, 장식 4개까지 갖춰 주게."
   },
   {
     "friendId": "grizzly_bearington",
@@ -1126,21 +1234,24 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "white",
           "likesMin": 200
         },
         {
           "kind": "facilityClass",
           "class": "restaurant",
           "count": 5
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "coconut"
+      "kind": "ingredient",
+      "id": "salmon"
     },
-    "line": "은빛 수역 좋아요 200에 식당 다섯. 곰도 배불러야지, 해 주게."
+    "line": "6칸 넘는 수역 좋아요 200, 식당 5개, 물 위 기구 3개까지 갖춰 주게. 그럼 됐네."
   },
   {
     "friendId": "cheeky_brat",
@@ -1150,8 +1261,8 @@
       "id": "massage_row"
     },
     "reward": {
-      "kind": "item",
-      "id": "cinnamon"
+      "kind": "ingredient",
+      "id": "tuna"
     },
     "line": "안마의자 열 하나 놔 줘. 거기서 팝콘이나 먹게."
   },
@@ -1163,22 +1274,29 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "blue",
-          "scent": "spices"
+          "sizeMin": 6
         },
         {
           "kind": "facility",
           "id": "pingpong",
           "count": 2
+        },
+        {
+          "kind": "rigCount",
+          "min": 2
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 4
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "melon"
+      "kind": "rigPart",
+      "id": "pump_motor"
     },
-    "line": "매콤한 쪽빛 수역에 탁구대 두 개! 놔 줘!"
+    "line": "6칸 넘는 수역, 탁구대 2개, 물 위 기구 2개, 장식 4개까지 갖춰 줘!"
   },
   {
     "friendId": "cheeky_brat",
@@ -1193,8 +1311,11 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "blue",
           "likesMin": 150
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
         }
       ]
     },
@@ -1202,7 +1323,7 @@
       "kind": "ingredient",
       "id": "melon_fruit"
     },
-    "line": "수유실에 좋아요 150 쪽빛 수역! 그럼 매일 온다니까!"
+    "line": "수유실, 6칸 넘는 수역 좋아요 150, 물 위 기구 3개까지! 꼭 해 줘!"
   },
   {
     "friendId": "movie_editor",
@@ -1212,8 +1333,8 @@
       "id": "icecream"
     },
     "reward": {
-      "kind": "item",
-      "id": "grapefruit"
+      "kind": "ingredient",
+      "id": "seaweed"
     },
     "line": "아이스크림 하나 열어 주세요. 마감 끝나면 그거부터 찾아요."
   },
@@ -1226,8 +1347,8 @@
       "likesMin": 150
     },
     "reward": {
-      "kind": "item",
-      "id": "honey"
+      "kind": "ingredient",
+      "id": "honey_jar"
     },
     "line": "좋아요 150짜리 수역. 그 장면 한 컷 찍게 만들어 주세요."
   },
@@ -1239,8 +1360,8 @@
       "id": "grade_f"
     },
     "reward": {
-      "kind": "item",
-      "id": "pineapple"
+      "kind": "rigPart",
+      "id": "waterproof_canvas"
     },
     "line": "첫 심사부터 통과한 빠지를 찍고 싶어요. 도전해 주세요."
   },
@@ -1255,16 +1376,16 @@
           "id": "sikhye"
         },
         {
-          "kind": "item",
-          "id": "lemon"
+          "kind": "rigCount",
+          "min": 1
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "seaweed"
+      "kind": "ingredient",
+      "id": "matcha"
     },
-    "line": "식혜·계란 코너에 유자향 노란 향초까지. 그 둘만 갖춰 주세요."
+    "line": "식혜·계란 코너, 물 위 기구 1개만 갖춰 주세요."
   },
   {
     "friendId": "lunchbox_seller",
@@ -1275,8 +1396,8 @@
       "count": 3
     },
     "reward": {
-      "kind": "item",
-      "id": "cinnamon"
+      "kind": "rigPart",
+      "id": "anchor_chain"
     },
     "line": "매점 반경에 자리 셋 — 사러 가기 귀찮단 말이야."
   },
@@ -1298,8 +1419,8 @@
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "pineapple"
+      "kind": "ingredient",
+      "id": "hazelnut"
     },
     "line": "식당 여섯 곳에 인기 150! 장사가 잘돼야 저도 신나요."
   },
@@ -1312,8 +1433,8 @@
       "count": 4
     },
     "reward": {
-      "kind": "item",
-      "id": "grapes"
+      "kind": "ingredient",
+      "id": "banana_fruit"
     },
     "line": "네 팀이 앉을 만한 자리 네 곳."
   },
@@ -1326,8 +1447,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "rose"
+      "kind": "rigPart",
+      "id": "safety_net"
     },
     "line": "해바라기 두 그루만 심어 줘요. 그거면 값어치 하죠."
   },
@@ -1340,35 +1461,42 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "yellow",
-          "scent": "citrus",
           "outdoor": true
         },
         {
           "kind": "facilityClass",
           "class": "decor",
           "count": 8
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "restaurant",
+          "count": 3
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "melon"
+      "kind": "ingredient",
+      "id": "melon_fruit"
     },
-    "line": "상큼한 햇살빛 야외 수역에 장식 여덟 개까지 놓아 줘요."
+    "line": "야외 6칸 넘는 수역, 장식 8개, 물 위 기구 3개, 식당 3개까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "chef",
     "idx": 0,
     "condition": {
-      "kind": "item",
-      "id": "melon"
+      "kind": "rigCount",
+      "min": 1
     },
     "reward": {
-      "kind": "item",
-      "id": "blueberry"
+      "kind": "ingredient",
+      "id": "mayonnaise"
     },
-    "line": "멜론향 연두 부표 하나 띄워 줘요. 영감이 좀 오게."
+    "line": "물 위 기구 1개만 갖춰 주세요."
   },
   {
     "friendId": "chef",
@@ -1379,8 +1507,8 @@
       "kinds": 3
     },
     "reward": {
-      "kind": "item",
-      "id": "honey"
+      "kind": "rigPart",
+      "id": "twin_saddle"
     },
     "line": "기구가 종류별로 있어야 재밌지 — 세 종류, 다섯 개는 붙여 줘."
   },
@@ -1392,14 +1520,21 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "lime",
-          "scent": "cookie"
+          "sizeMin": 6
         },
         {
           "kind": "facilityClass",
           "class": "restaurant",
           "count": 7
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -1407,7 +1542,7 @@
       "kind": "ingredient",
       "id": "peach_fruit"
     },
-    "line": "군것질 냄새 연둣빛 수역에 식당 일곱. 요리사 천국이죠!"
+    "line": "6칸 넘는 수역, 식당 7개, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "cook",
@@ -1417,8 +1552,8 @@
       "min": 4
     },
     "reward": {
-      "kind": "item",
-      "id": "seaweed"
+      "kind": "ingredient",
+      "id": "corn"
     },
     "line": "징검다리처럼 이어 붙인 기구 넷! 이어진 사슬을 건너고 싶어."
   },
@@ -1430,21 +1565,28 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "red",
-          "scent": "marine"
+          "sizeMin": 6
         },
         {
           "kind": "facility",
           "id": "firepit_row"
+        },
+        {
+          "kind": "rigCount",
+          "min": 2
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 4
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "grapefruit"
+      "kind": "ingredient",
+      "id": "cabbage"
     },
-    "line": "강바람 붉은빛 수역에 화로대 열까지 열어 줘요."
+    "line": "6칸 넘는 수역, 화로대 열, 물 위 기구 2개, 장식 4개까지 갖춰 주세요."
   },
   {
     "friendId": "cook",
@@ -1455,8 +1597,8 @@
       "served": true
     },
     "reward": {
-      "kind": "item",
-      "id": "grapes"
+      "kind": "rigPart",
+      "id": "slip_wax"
     },
     "line": "바나나우유를 메뉴에 걸어 줘요. 제일 좋아하는 맛이거든요."
   },
@@ -1482,8 +1624,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "bath_salt"
+      "kind": "ingredient",
+      "id": "noodle"
     },
     "line": "파라솔 두 개는 두세요. 위생이 제일 중요하니까요."
   },
@@ -1496,36 +1638,52 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "blue",
-          "scent": "tropical",
           "tempMin": 34
         },
         {
           "kind": "facility",
           "id": "sauna"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "bath_salt"
+      "kind": "rigPart",
+      "id": "led_strip_buoy"
     },
-    "line": "34도 트로피컬 쪽빛 수역에 사우나까지. 처방입니다, 해 주세요."
+    "line": "6칸 넘는 34도 넘는 수역, 사우나, 물 위 기구 3개, 장식 6개까지! 꼭 부탁드립니다."
   },
   {
     "friendId": "part_timer",
     "idx": 0,
     "condition": {
-      "kind": "pool",
-      "sizeMin": 6,
-      "scent": "citrus",
-      "popMin": 80
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "popMin": 80
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 2
+        }
+      ]
     },
     "reward": {
-      "kind": "item",
-      "id": "orange"
+      "kind": "ingredient",
+      "id": "squid"
     },
-    "line": "인기 80 넘는 상큼한 수역 하나만요. 알바 끝나고 뛰어들래요."
+    "line": "6칸 넘는 수역 인기 80, 장식 2개만 갖춰 주세요."
   },
   {
     "friendId": "part_timer",
@@ -1535,8 +1693,8 @@
       "id": "retro_swimsuit"
     },
     "reward": {
-      "kind": "item",
-      "id": "honey"
+      "kind": "ingredient",
+      "id": "octopus"
     },
     "line": "레트로 수영복 하나만 주세요! 코인락커 열 자리 알려 드릴게요."
   },
@@ -1563,8 +1721,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "chocolate"
+      "kind": "rigPart",
+      "id": "float_drum"
     },
     "line": "안마의자 열 두 개만 놔 주십시오. 점심시간에 눈 좀 붙이게요."
   },
@@ -1576,8 +1734,8 @@
       "id": "info"
     },
     "reward": {
-      "kind": "item",
-      "id": "blueberry"
+      "kind": "ingredient",
+      "id": "vanilla"
     },
     "line": "안내소 하나요! 과장님 몰래 늘어져 보고 싶습니다."
   },
@@ -1598,16 +1756,25 @@
     "friendId": "office_clerk_m",
     "idx": 0,
     "condition": {
-      "kind": "pool",
-      "sizeMin": 6,
-      "scent": "pine",
-      "tempMin": 30
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "tempMin": 30
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 2
+        }
+      ]
     },
     "reward": {
-      "kind": "item",
-      "id": "coffee_beans"
+      "kind": "ingredient",
+      "id": "coffee_bean"
     },
-    "line": "30도 솔내음 수역 하나 만들어 줘. 야근으로 굳은 어깨 좀 풀게."
+    "line": "6칸 넘는 30도 넘는 수역, 장식 2개만 갖춰 줘!"
   },
   {
     "friendId": "office_clerk_m",
@@ -1617,8 +1784,8 @@
       "id": "footvolley"
     },
     "reward": {
-      "kind": "item",
-      "id": "seaweed"
+      "kind": "rigPart",
+      "id": "spray_nozzle"
     },
     "line": "족구장 하나 지어 줘. 회식 자리보다 그게 훨씬 낫더라."
   },
@@ -1631,8 +1798,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "blueberry"
+      "kind": "ingredient",
+      "id": "tea_leaf"
     },
     "line": "화로대 옆에 자리 둘 — 불멍은 여럿이 해야지."
   },
@@ -1644,8 +1811,8 @@
       "id": "striped_swimsuit"
     },
     "reward": {
-      "kind": "item",
-      "id": "rose"
+      "kind": "rigPart",
+      "id": "pump_motor"
     },
     "line": "줄무늬 수영복 하나 주세요. 새로 산 걸로 자랑 좀 하게요."
   },
@@ -1658,8 +1825,8 @@
       "count": 1
     },
     "reward": {
-      "kind": "item",
-      "id": "banana"
+      "kind": "ingredient",
+      "id": "chicken"
     },
     "line": "등급 5 자리 — 물·그늘·꽃·먹거리·뷰 다 있는 데."
   },
@@ -1685,8 +1852,8 @@
       "id": "stripy_slide"
     },
     "reward": {
-      "kind": "item",
-      "id": "pineapple"
+      "kind": "ingredient",
+      "id": "beef"
     },
     "line": "강변 대슬라이드 하나 세워 줘. 쌓인 스트레스 좀 날려 보게."
   },
@@ -1698,21 +1865,28 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "yellow",
-          "scent": "pine"
+          "sizeMin": 6
         },
         {
           "kind": "facility",
           "id": "stage_river"
+        },
+        {
+          "kind": "rigCount",
+          "min": 2
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 4
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "chocolate"
+      "kind": "rigPart",
+      "id": "waterproof_canvas"
     },
-    "line": "햇살빛 솔내음 수역에 공연 무대까지. 그늘에서 꼬치 먹자고."
+    "line": "6칸 넘는 수역, 공연 무대, 물 위 기구 2개, 장식 4개까지 갖춰 줘!"
   },
   {
     "friendId": "office_worker",
@@ -1749,21 +1923,28 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "lime",
-          "scent": "marine"
+          "sizeMin": 6
         },
         {
           "kind": "facility",
           "id": "office"
+        },
+        {
+          "kind": "rigCount",
+          "min": 2
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 4
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "melon"
+      "kind": "ingredient",
+      "id": "pork"
     },
-    "line": "연둣빛 강바람 수역에 사무실까지. 장부처럼 딱 떨어지네요."
+    "line": "6칸 넘는 수역, 사무실, 물 위 기구 2개, 장식 4개까지 갖춰 주세요."
   },
   {
     "friendId": "tax_advisor",
@@ -1787,8 +1968,8 @@
       "min": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "coffee_beans"
+      "kind": "ingredient",
+      "id": "shrimp"
     },
     "line": "기구를 둘은 붙여 놔야 놀지! 빠지에 기구 2개 부탁해."
   },
@@ -1800,8 +1981,8 @@
       "min": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "lavender"
+      "kind": "rigPart",
+      "id": "anchor_chain"
     },
     "line": "기구를 둘은 붙여 놔야 놀지! 빠지에 기구 2개 부탁해."
   },
@@ -1827,8 +2008,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "blueberry"
+      "kind": "ingredient",
+      "id": "salmon"
     },
     "line": "BBQ존 반경에 자리 둘."
   },
@@ -1841,8 +2022,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "orange"
+      "kind": "rigPart",
+      "id": "safety_net"
     },
     "line": "카라반 두 개면 되네. 거기 임원들 모아 놓고 한잔하지."
   },
@@ -1863,15 +2044,14 @@
     "friendId": "fashionista",
     "idx": 0,
     "condition": {
-      "kind": "item",
-      "id": "lemon",
-      "count": 2
+      "kind": "rigCount",
+      "min": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "peach"
+      "kind": "ingredient",
+      "id": "tuna"
     },
-    "line": "유자향 노란 향초 두 개만 띄워 주십쇼. 상큼한 게 최고 말입니다."
+    "line": "물 위 기구 2개만 갖춰 주십시오."
   },
   {
     "friendId": "fashionista",
@@ -1881,8 +2061,8 @@
       "id": "flower_pants"
     },
     "reward": {
-      "kind": "item",
-      "id": "grapes"
+      "kind": "ingredient",
+      "id": "seaweed"
     },
     "line": "꽃무늬 팬츠 하나 주십쇼. 휴가 때만이라도 사복 입고 싶습니다."
   },
@@ -1894,14 +2074,21 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "yellow",
-          "scent": "berry"
+          "sizeMin": 6
         },
         {
           "kind": "facility",
           "id": "icecream",
           "count": 2
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -1909,7 +2096,7 @@
       "kind": "ingredient",
       "id": "chicken"
     },
-    "line": "햇살빛 베리향 수역에 아이스크림 둘. 인생 사진 찍겠습니다!"
+    "line": "6칸 넘는 수역, 아이스크림 2개, 물 위 기구 3개, 장식 6개까지! 꼭 부탁드립니다."
   },
   {
     "friendId": "movie_director",
@@ -1919,8 +2106,8 @@
       "id": "camp_site"
     },
     "reward": {
-      "kind": "item",
-      "id": "cinnamon"
+      "kind": "rigPart",
+      "id": "twin_saddle"
     },
     "line": "캠핑 사이트 하나 세워라. 부대에서도 그늘이 제일 급한 법이다."
   },
@@ -1932,8 +2119,8 @@
       "id": "retro_swimsuit"
     },
     "reward": {
-      "kind": "item",
-      "id": "grapefruit"
+      "kind": "ingredient",
+      "id": "honey_jar"
     },
     "line": "레트로 수영복 한 벌 주게. 나 때는 저런 걸 입고 물에 뛰었지."
   },
@@ -1946,13 +2133,20 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "white",
-          "scent": "spices",
           "indoor": true
         },
         {
           "kind": "facility",
           "id": "waterfall"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -1960,7 +2154,7 @@
       "kind": "ingredient",
       "id": "beef"
     },
-    "line": "실내에 은빛 매콤 수역과 바위 폭포. 그 정도면 정비 끝이다."
+    "line": "실내 6칸 넘는 수역, 바위 폭포, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "comedian",
@@ -1971,8 +2165,8 @@
       "count": 4
     },
     "reward": {
-      "kind": "item",
-      "id": "orange"
+      "kind": "ingredient",
+      "id": "matcha"
     },
     "line": "등급 3 자리 네 곳이면 단체도 오겠다."
   },
@@ -1984,8 +2178,8 @@
       "id": "locker_row"
     },
     "reward": {
-      "kind": "item",
-      "id": "grapes"
+      "kind": "rigPart",
+      "id": "slip_wax"
     },
     "line": "코인락커 열 하나만! 면치기 소리로 후임들 웃겨 보겠습니다."
   },
@@ -1998,12 +2192,15 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "white",
           "likesMin": 250
         },
         {
           "kind": "facility",
           "id": "karaoke"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
         }
       ]
     },
@@ -2011,36 +2208,54 @@
       "kind": "ingredient",
       "id": "tea_leaf"
     },
-    "line": "좋아요 250 은빛 수역에 노래방. 말년 무대는 그걸로 갑니다."
+    "line": "6칸 넘는 수역 좋아요 250, 노래방, 물 위 기구 3개까지! 꼭 해 줘!"
   },
   {
     "friendId": "perfumer",
     "idx": 0,
     "condition": {
-      "kind": "pool",
-      "sizeMin": 6,
-      "scent": "citrus"
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 2
+        }
+      ]
     },
     "reward": {
-      "kind": "item",
-      "id": "orange"
+      "kind": "ingredient",
+      "id": "hazelnut"
     },
-    "line": "상큼한 향 도는 수역 하나 만들어 주십쇼. 소독약 냄새 좀 지우게요."
+    "line": "6칸 넘는 수역, 장식 2개만 갖춰 주십시오."
   },
   {
     "friendId": "perfumer",
     "idx": 1,
     "condition": {
-      "kind": "pool",
-      "sizeMin": 6,
-      "scent": "pine",
-      "count": 2
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "count": 2
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 4
+        }
+      ]
     },
     "reward": {
-      "kind": "item",
-      "id": "mint"
+      "kind": "rigPart",
+      "id": "led_strip_buoy"
     },
-    "line": "솔내음 수역을 두 군데 만들어 주십쇼. 향은 겹쳐야 오래갑니다."
+    "line": "6칸 넘는 수역 2곳, 장식 4개까지 갖춰 주십시오."
   },
   {
     "friendId": "perfumer",
@@ -2050,14 +2265,21 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "orange",
-          "scent": "milky"
+          "sizeMin": 6
         },
         {
           "kind": "facility",
           "id": "maple_walk",
           "count": 2
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -2065,7 +2287,7 @@
       "kind": "money",
       "amount": 2200
     },
-    "line": "노을빛 우유빛 수역에 단풍 산책로 둘. 그럼 향이 완성됩니다."
+    "line": "6칸 넘는 수역, 단풍 산책로 2개, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "famous_painter",
@@ -2075,8 +2297,8 @@
       "min": 4
     },
     "reward": {
-      "kind": "item",
-      "id": "banana"
+      "kind": "ingredient",
+      "id": "banana_fruit"
     },
     "line": "징검다리처럼 이어 붙인 기구 넷! 이어진 사슬을 건너고 싶어."
   },
@@ -2088,8 +2310,8 @@
       "min": 4
     },
     "reward": {
-      "kind": "item",
-      "id": "peach"
+      "kind": "ingredient",
+      "id": "melon_fruit"
     },
     "line": "징검다리처럼 이어 붙인 기구 넷! 이어진 사슬을 건너고 싶어."
   },
@@ -2097,15 +2319,24 @@
     "friendId": "famous_painter",
     "idx": 2,
     "condition": {
-      "kind": "pool",
-      "sizeMin": 6,
-      "color": "rainbow"
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6
+        },
+        {
+          "kind": "rigCount",
+          "min": 3,
+          "kinds": 3
+        }
+      ]
     },
     "reward": {
       "kind": "facility",
       "id": "rig_totem"
     },
-    "line": "오색빛 수역을 보고 싶습니다! 그건 편지에 꼭 써야겠습니다. 워터 토템을 그려 줄게!"
+    "line": "6칸 넘는 수역, 물 위 기구 3개 (3종류)까지! 꼭 부탁드립니다."
   },
   {
     "friendId": "master_artist",
@@ -2118,8 +2349,8 @@
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "honey"
+      "kind": "rigPart",
+      "id": "float_drum"
     },
     "line": "식혜·계란 코너 옆에 평상 연립을 붙여라. 동선이란 그런 것이다."
   },
@@ -2146,14 +2377,21 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "scent": "pine",
-          "color": "green",
           "likesMin": 300
         },
         {
           "kind": "facilityClass",
           "class": "decor",
           "count": 10
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "restaurant",
+          "count": 3
         }
       ]
     },
@@ -2161,7 +2399,7 @@
       "kind": "money",
       "amount": 2800
     },
-    "line": "좋아요 300 솔내음 초록빛 수역에 장식 열. 그쯤이면 합격이다."
+    "line": "6칸 넘는 수역 좋아요 300, 장식 10개, 물 위 기구 3개, 식당 3개까지! 꼭 해 줘!"
   },
   {
     "friendId": "shop_clerk",
@@ -2172,8 +2410,8 @@
       "likesMin": 100
     },
     "reward": {
-      "kind": "item",
-      "id": "chocolate"
+      "kind": "ingredient",
+      "id": "peach_fruit"
     },
     "line": "좋아요 100 넘는 수역 하나 만들어 주세요. 손님이 몰려야 저도 살죠."
   },
@@ -2198,13 +2436,20 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "green",
-          "scent": "coffee"
+          "sizeMin": 6
         },
         {
           "kind": "facility",
           "id": "rent_duck"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -2212,20 +2457,20 @@
       "kind": "money",
       "amount": 2000
     },
-    "line": "초록빛 커피향 수역에 오리배 선착장요. 셔틀 끊기기 전 디저트 타임!"
+    "line": "6칸 넘는 수역, 오리배 선착장, 물 위 기구 3개, 장식 6개까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "student",
     "idx": 0,
     "condition": {
-      "kind": "item",
-      "id": "lemon"
+      "kind": "rigCount",
+      "min": 1
     },
     "reward": {
-      "kind": "item",
-      "id": "grapefruit"
+      "kind": "ingredient",
+      "id": "mayonnaise"
     },
-    "line": "유자향 노란 향초 하나 띄워 줘. 시험 끝났으니 상큼하게 가자."
+    "line": "물 위 기구 1개만 갖춰 줘!"
   },
   {
     "friendId": "student",
@@ -2235,8 +2480,8 @@
       "id": "mongol_tent"
     },
     "reward": {
-      "kind": "item",
-      "id": "mint"
+      "kind": "rigPart",
+      "id": "spray_nozzle"
     },
     "line": "몽골텐트 하나 놔 줘! 단체 사진 배경으로 딱이거든."
   },
@@ -2249,14 +2494,21 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "blue",
-          "scent": "floral",
           "outdoor": true
         },
         {
           "kind": "facility",
           "id": "mongol_tent",
           "count": 2
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -2264,7 +2516,7 @@
       "kind": "ingredient",
       "id": "tuna"
     },
-    "line": "야외 쪽빛 꽃내음 수역에 몽골텐트 둘. 인생샷 각이라니까."
+    "line": "야외 6칸 넘는 수역, 몽골텐트 2개, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "racer",
@@ -2274,8 +2526,8 @@
       "id": "blue_orca"
     },
     "reward": {
-      "kind": "item",
-      "id": "mint"
+      "kind": "ingredient",
+      "id": "corn"
     },
     "line": "바다 범고래 튜브 하나 줘. 물살 가르는 맛이 운전이랑 똑같아."
   },
@@ -2288,8 +2540,8 @@
       "count": 3
     },
     "reward": {
-      "kind": "item",
-      "id": "coffee_beans"
+      "kind": "ingredient",
+      "id": "cabbage"
     },
     "line": "탁구대 세 개만. 애들 레이스 시켜 놓고 좀 쉬게."
   },
@@ -2301,15 +2553,25 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "purple",
-          "scent": "pine",
-          "intensityMin": 50
+          "sizeMin": 6
         },
         {
           "kind": "facilityClass",
           "class": "slide",
           "count": 3
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
+        },
+        {
+          "kind": "rigGrade",
+          "min": 2
         }
       ]
     },
@@ -2317,7 +2579,7 @@
       "kind": "ingredient",
       "id": "salmon"
     },
-    "line": "진한 보랏빛 솔내음 수역에 슬라이드 셋. 그럼 출발해 볼까!"
+    "line": "6칸 넘는 수역, 슬라이드 3개, 물 위 기구 3개, 장식 6개, 2등급 빠지까지! 꼭 해 줘!"
   },
   {
     "friendId": "beautician",
@@ -2328,8 +2590,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "rose"
+      "kind": "rigPart",
+      "id": "pump_motor"
     },
     "line": "샤워실 연립 두 개만 놔 줘. 머릿결이 우리 밥줄이거든."
   },
@@ -2342,8 +2604,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "melon"
+      "kind": "ingredient",
+      "id": "noodle"
     },
     "line": "좋은 자리 둘."
   },
@@ -2356,21 +2618,24 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "pink",
           "tempMin": 36
         },
         {
           "kind": "facility",
           "id": "sauna",
           "count": 2
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "bath_salt"
+      "kind": "rigPart",
+      "id": "waterproof_canvas"
     },
-    "line": "36도 핑크빛 수역에 사우나 둘. 미용은 땀부터 빼야 하는 거야."
+    "line": "6칸 넘는 36도 넘는 수역, 사우나 2개, 물 위 기구 3개까지! 꼭 해 줘!"
   },
   {
     "friendId": "columnist",
@@ -2381,8 +2646,8 @@
       "kinds": 3
     },
     "reward": {
-      "kind": "item",
-      "id": "lavender"
+      "kind": "ingredient",
+      "id": "squid"
     },
     "line": "기구가 종류별로 있어야 재밌지 — 세 종류, 다섯 개는 붙여 줘."
   },
@@ -2395,8 +2660,8 @@
       "kinds": 3
     },
     "reward": {
-      "kind": "item",
-      "id": "pineapple"
+      "kind": "ingredient",
+      "id": "octopus"
     },
     "line": "기구가 종류별로 있어야 재밌지 — 세 종류, 다섯 개는 붙여 줘."
   },
@@ -2409,14 +2674,21 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "red",
-          "scent": "coffee",
           "likesMin": 350
         },
         {
           "kind": "facilityClass",
           "class": "restaurant",
           "count": 8
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -2424,7 +2696,7 @@
       "kind": "money",
       "amount": 2500
     },
-    "line": "좋아요 350 붉은빛 커피향 수역에 식당 여덟. 특집으로 올릴게요."
+    "line": "6칸 넘는 수역 좋아요 350, 식당 8개, 물 위 기구 3개, 장식 6개까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "ex_celebrity",
@@ -2435,8 +2707,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "pineapple"
+      "kind": "rigPart",
+      "id": "anchor_chain"
     },
     "line": "세면대 열 두 개만 놔 줘요. 우리 손님들 목이 금방 마르거든."
   },
@@ -2448,8 +2720,8 @@
       "min": 4
     },
     "reward": {
-      "kind": "item",
-      "id": "coconut"
+      "kind": "ingredient",
+      "id": "vanilla"
     },
     "line": "징검다리처럼 이어 붙인 기구 넷! 이어진 사슬을 건너고 싶어."
   },
@@ -2461,13 +2733,20 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "orange",
-          "scent": "tropical"
+          "sizeMin": 6
         },
         {
           "kind": "gift",
           "id": "kayak_float"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -2475,7 +2754,7 @@
       "kind": "ingredient",
       "id": "shrimp"
     },
-    "line": "노을빛 트로피컬 수역에 카약 튜브까지. 그럼 우리 펜션 만실이지."
+    "line": "6칸 넘는 수역, gift, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "fitness_coach",
@@ -2500,8 +2779,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "kiwi"
+      "kind": "ingredient",
+      "id": "coffee_bean"
     },
     "line": "치킨집 반경에 자리 둘."
   },
@@ -2537,8 +2816,8 @@
       "count": 6
     },
     "reward": {
-      "kind": "item",
-      "id": "grapefruit"
+      "kind": "rigPart",
+      "id": "safety_net"
     },
     "line": "자리 여섯 곳, 다 등급 3 이상으로."
   },
@@ -2546,15 +2825,14 @@
     "friendId": "boxer",
     "idx": 1,
     "condition": {
-      "kind": "item",
-      "id": "strawberry",
-      "count": 2
+      "kind": "rigCount",
+      "min": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "kiwi"
+      "kind": "ingredient",
+      "id": "tea_leaf"
     },
-    "line": "분홍 랜턴 부표 두 개만 띄워 주세요. 밤 훈련에 딱이거든요."
+    "line": "물 위 기구 2개까지 갖춰 주세요."
   },
   {
     "friendId": "boxer",
@@ -2565,13 +2843,16 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "red",
           "tempMin": 35
         },
         {
           "kind": "facility",
           "id": "footbath",
           "count": 2
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
         }
       ]
     },
@@ -2579,7 +2860,7 @@
       "kind": "ingredient",
       "id": "pork"
     },
-    "line": "35도 붉은빛 수역에 온수 족욕 둘이요. 근육 풀고 자야 하니까요."
+    "line": "6칸 넘는 35도 넘는 수역, 온수 족욕 2개, 물 위 기구 3개까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "sassy_girl",
@@ -2589,8 +2870,8 @@
       "id": "mongol_tent"
     },
     "reward": {
-      "kind": "item",
-      "id": "peach"
+      "kind": "rigPart",
+      "id": "twin_saddle"
     },
     "line": "몽골텐트 하나 놔 줘. 안 놔 주면 나 다시는 안 올 거야."
   },
@@ -2629,8 +2910,8 @@
       "id": "firepit_row"
     },
     "reward": {
-      "kind": "item",
-      "id": "cinnamon"
+      "kind": "ingredient",
+      "id": "chicken"
     },
     "line": "화로대 열 하나 열어 주세요. 낚시 끝나면 다들 배가 고파서요."
   },
@@ -2643,8 +2924,8 @@
       "count": 3
     },
     "reward": {
-      "kind": "item",
-      "id": "lavender"
+      "kind": "ingredient",
+      "id": "beef"
     },
     "line": "등급 4 자리 셋."
   },
@@ -2679,8 +2960,8 @@
       "count": 8
     },
     "reward": {
-      "kind": "item",
-      "id": "honey"
+      "kind": "rigPart",
+      "id": "slip_wax"
     },
     "line": "식당 여덟 곳은 있어야지. 낚시보다 먹는 게 먼저 아닌가."
   },
@@ -2692,21 +2973,28 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "purple",
-          "scent": "spices"
+          "sizeMin": 6
         },
         {
           "kind": "facility",
           "id": "icecream"
+        },
+        {
+          "kind": "rigCount",
+          "min": 2
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 4
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "peach"
+      "kind": "ingredient",
+      "id": "pork"
     },
-    "line": "매콤한 보랏빛 수역에 아이스크림까지. 그럼 BBQ존를 알려 주지."
+    "line": "6칸 넘는 수역, 아이스크림, 물 위 기구 2개, 장식 4개까지 갖춰 줘!"
   },
   {
     "friendId": "foodie",
@@ -2735,15 +3023,14 @@
     "friendId": "cosmetician",
     "idx": 0,
     "condition": {
-      "kind": "item",
-      "id": "milk",
-      "count": 2
+      "kind": "rigCount",
+      "min": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "coconut"
+      "kind": "ingredient",
+      "id": "shrimp"
     },
-    "line": "우윳빛 안개 분무기를 두 대 놔 주세요. 피부에 그렇게 좋답니다."
+    "line": "물 위 기구 2개만 갖춰 주세요."
   },
   {
     "friendId": "cosmetician",
@@ -2754,8 +3041,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "cinnamon"
+      "kind": "rigPart",
+      "id": "led_strip_buoy"
     },
     "line": "다이빙대를 두 대만 놔 주세요. 어깨 뭉친 게 싹 풀리거든요."
   },
@@ -2768,8 +3055,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "bath_salt"
+      "kind": "ingredient",
+      "id": "salmon"
     },
     "line": "선착장 옆 자리 둘 — 기구 타고 바로 눕게."
   },
@@ -2782,8 +3069,8 @@
       "kinds": 3
     },
     "reward": {
-      "kind": "item",
-      "id": "chocolate"
+      "kind": "rigPart",
+      "id": "float_drum"
     },
     "line": "기구가 종류별로 있어야 재밌지 — 세 종류, 다섯 개는 붙여 줘."
   },
@@ -2791,15 +3078,14 @@
     "friendId": "chocolatier",
     "idx": 1,
     "condition": {
-      "kind": "item",
-      "id": "chocolate",
-      "count": 2
+      "kind": "rigCount",
+      "min": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "rose"
+      "kind": "ingredient",
+      "id": "tuna"
     },
-    "line": "모닥불 장작을 두 개 넣어 주세요. 밤에는 역시 불멍이잖아요."
+    "line": "물 위 기구 2개까지 갖춰 주세요."
   },
   {
     "friendId": "chocolatier",
@@ -2810,13 +3096,20 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "red",
-          "scent": "cookie",
           "likesMin": 300
         },
         {
           "kind": "facility",
           "id": "rent_duck"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -2824,7 +3117,7 @@
       "kind": "ingredient",
       "id": "seaweed"
     },
-    "line": "좋아요 300 군것질 붉은빛 수역에 오리배 선착장. 걸작을 만들어 볼게요."
+    "line": "6칸 넘는 수역 좋아요 300, 오리배 선착장, 물 위 기구 3개, 장식 6개까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "acupuncturist",
@@ -2834,8 +3127,8 @@
       "id": "blue_orca"
     },
     "reward": {
-      "kind": "item",
-      "id": "lavender"
+      "kind": "ingredient",
+      "id": "seaweed"
     },
     "line": "바다 범고래 튜브 하나 주게. 허리 받치기에 그만이라네."
   },
@@ -2848,8 +3141,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "bath_salt"
+      "kind": "rigPart",
+      "id": "spray_nozzle"
     },
     "line": "사우나을 두 곳으로 늘려 주게. 낚시 뒤에는 혈이 뚫려야지."
   },
@@ -2862,14 +3155,21 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "orange",
-          "scent": "floral",
           "tempMin": 38
         },
         {
           "kind": "facility",
           "id": "footbath",
           "count": 3
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -2877,7 +3177,7 @@
       "kind": "money",
       "amount": 2800
     },
-    "line": "38도 꽃내음 노을빛 수역에 온수 족욕 셋. 침보다 낫겠구먼."
+    "line": "6칸 넘는 38도 넘는 수역, 온수 족욕 3개, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "homemaker",
@@ -2887,8 +3187,8 @@
       "min": 3
     },
     "reward": {
-      "kind": "item",
-      "id": "melon"
+      "kind": "ingredient",
+      "id": "honey_jar"
     },
     "line": "대형 빠지 등급 3 은 돼야 소문이 나지 — 등급을 올려 줘."
   },
@@ -2900,8 +3200,8 @@
       "id": "infirmary"
     },
     "reward": {
-      "kind": "item",
-      "id": "honey"
+      "kind": "ingredient",
+      "id": "matcha"
     },
     "line": "의무실 하나 놔 줘요. 회원들 건강도 챙겨 가면서 놀아야죠."
   },
@@ -2914,13 +3214,17 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "rainbow",
           "tempMin": 30
         },
         {
           "kind": "facilityClass",
           "class": "lounging",
           "count": 8
+        },
+        {
+          "kind": "rigCount",
+          "min": 3,
+          "kinds": 3
         }
       ]
     },
@@ -2928,7 +3232,7 @@
       "kind": "money",
       "amount": 2900
     },
-    "line": "30도 오색빛 수역에 평상 여덟. 온 식구가 쉬어 갈 만하겠네요."
+    "line": "6칸 넘는 30도 넘는 수역, 쉼터 8개, 물 위 기구 3개 (3종류)까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "fashion_designer",
@@ -2938,8 +3242,8 @@
       "min": 4
     },
     "reward": {
-      "kind": "item",
-      "id": "kiwi"
+      "kind": "rigPart",
+      "id": "pump_motor"
     },
     "line": "징검다리처럼 이어 붙인 기구 넷! 이어진 사슬을 건너고 싶어."
   },
@@ -2951,8 +3255,8 @@
       "id": "kayak_float"
     },
     "reward": {
-      "kind": "item",
-      "id": "seaweed"
+      "kind": "ingredient",
+      "id": "hazelnut"
     },
     "line": "카약 튜브 하나만 건네줘. 다음 낚시 조끼 디자인에 쓸 거야."
   },
@@ -2965,13 +3269,20 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "lime",
-          "scent": "marine",
           "likesMin": 400
         },
         {
           "kind": "areas",
           "min": 8
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -2979,20 +3290,20 @@
       "kind": "money",
       "amount": 3000
     },
-    "line": "좋아요 400 강바람 연둣빛 수역에 출신지 여덟. 런웨이를 열어 주지."
+    "line": "6칸 넘는 수역 좋아요 400, areas, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "rising_celeb",
     "idx": 0,
     "condition": {
-      "kind": "item",
-      "id": "melon"
+      "kind": "rigCount",
+      "min": 1
     },
     "reward": {
-      "kind": "item",
-      "id": "grapefruit"
+      "kind": "ingredient",
+      "id": "banana_fruit"
     },
-    "line": "멜론향 연두 부표 띄워 주세요! 사진 아주 예쁘게 나와요!"
+    "line": "물 위 기구 1개만 갖춰 주세요."
   },
   {
     "friendId": "rising_celeb",
@@ -3002,8 +3313,8 @@
       "id": "school_swimsuit"
     },
     "reward": {
-      "kind": "item",
-      "id": "grapes"
+      "kind": "rigPart",
+      "id": "waterproof_canvas"
     },
     "line": "MT 수영복 저 주세요! 한국 대학 MT가 그렇게 로망이었거든요!"
   },
@@ -3016,13 +3327,20 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "green",
-          "scent": "coffee",
           "likesMin": 300
         },
         {
           "kind": "facility",
           "id": "bbq_zone"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -3030,7 +3348,7 @@
       "kind": "ingredient",
       "id": "octopus"
     },
-    "line": "좋아요 300 커피향 초록빛 수역에 BBQ존! 팬미팅 열래요!"
+    "line": "6칸 넘는 수역 좋아요 300, BBQ존, 물 위 기구 3개, 장식 6개까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "car_dealer",
@@ -3040,8 +3358,8 @@
       "min": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "bath_salt"
+      "kind": "ingredient",
+      "id": "melon_fruit"
     },
     "line": "기구를 둘은 붙여 놔야 놀지! 빠지에 기구 2개 부탁해."
   },
@@ -3053,8 +3371,8 @@
       "id": "pavilion"
     },
     "reward": {
-      "kind": "item",
-      "id": "banana"
+      "kind": "rigPart",
+      "id": "anchor_chain"
     },
     "line": "정자 하나 놔 줘요. 계약은 편한 자리에서 하는 겁니다."
   },
@@ -3066,14 +3384,21 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "blue",
-          "scent": "citrus"
+          "sizeMin": 6
         },
         {
           "kind": "facility",
           "id": "bungalow",
           "count": 2
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -3081,7 +3406,7 @@
       "kind": "money",
       "amount": 2800
     },
-    "line": "상큼한 쪽빛 수역에 방갈로 둘. 그게 진짜 VIP 대접이죠."
+    "line": "6칸 넘는 수역, 방갈로 2개, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "famous_model",
@@ -3091,8 +3416,8 @@
       "id": "infirmary"
     },
     "reward": {
-      "kind": "item",
-      "id": "blueberry"
+      "kind": "ingredient",
+      "id": "peach_fruit"
     },
     "line": "의무실가 꼭 필요해요. 몸매 관리는 쉬는 날에도 하는 거예요."
   },
@@ -3100,15 +3425,14 @@
     "friendId": "famous_model",
     "idx": 1,
     "condition": {
-      "kind": "item",
-      "id": "coconut",
-      "count": 2
+      "kind": "rigCount",
+      "min": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "seaweed"
+      "kind": "ingredient",
+      "id": "mayonnaise"
     },
-    "line": "하얀 야자잎 매트를 두 장 깔아 주세요. 화보 느낌이 확 나잖아요."
+    "line": "물 위 기구 2개까지 갖춰 주세요."
   },
   {
     "friendId": "famous_model",
@@ -3119,14 +3443,21 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "purple",
-          "scent": "berry",
           "likesMin": 350
         },
         {
           "kind": "facilityClass",
           "class": "lounging",
           "count": 10
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -3134,7 +3465,7 @@
       "kind": "ingredient",
       "id": "noodle"
     },
-    "line": "좋아요 350 베리향 보랏빛 수역에 평상 열 개. 촬영하러 올게요."
+    "line": "6칸 넘는 수역 좋아요 350, 쉼터 10개, 물 위 기구 3개, 장식 6개까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "pilot",
@@ -3145,8 +3476,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "blueberry"
+      "kind": "rigPart",
+      "id": "safety_net"
     },
     "line": "등급 5 자리 둘."
   },
@@ -3158,8 +3489,8 @@
       "id": "rocket_slide"
     },
     "reward": {
-      "kind": "item",
-      "id": "peach"
+      "kind": "ingredient",
+      "id": "corn"
     },
     "line": "로켓 슬라이드 세워 줘요. 이륙 준비는 몇 번을 해도 설레거든요."
   },
@@ -3172,14 +3503,21 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "blue",
-          "scent": "tropical",
           "outdoor": true
         },
         {
           "kind": "facilityClass",
           "class": "slide",
           "count": 4
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -3187,7 +3525,7 @@
       "kind": "money",
       "amount": 2900
     },
-    "line": "트로피컬 쪽빛 야외 수역에 슬라이드 넷. 그럼 착륙 허가입니다."
+    "line": "야외 6칸 넘는 수역, 슬라이드 4개, 물 위 기구 3개, 장식 6개까지! 꼭 부탁드립니다."
   },
   {
     "friendId": "tv_personality",
@@ -3198,8 +3536,8 @@
       "tempMax": 17
     },
     "reward": {
-      "kind": "item",
-      "id": "peach"
+      "kind": "ingredient",
+      "id": "cabbage"
     },
     "line": "17도 아래로 차가운 수역 부탁해요. 방송 전에 정신 번쩍 들게요."
   },
@@ -3211,8 +3549,8 @@
       "id": "rent_duck"
     },
     "reward": {
-      "kind": "item",
-      "id": "grapefruit"
+      "kind": "rigPart",
+      "id": "twin_saddle"
     },
     "line": "오리배 선착장 하나 열어 주세요. 여기서 먹방 코너 찍어 볼게요."
   },
@@ -3225,13 +3563,20 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "pink",
-          "scent": "fruity",
           "likesMin": 400
         },
         {
           "kind": "friends",
           "min": 50
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -3239,7 +3584,7 @@
       "kind": "money",
       "amount": 2900
     },
-    "line": "좋아요 400 과일향 핑크빛 수역에 친구 쉰 명! 생방송 갑니다!"
+    "line": "6칸 넘는 수역 좋아요 400, friends, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "magnate",
@@ -3249,8 +3594,8 @@
       "min": 3
     },
     "reward": {
-      "kind": "item",
-      "id": "honey"
+      "kind": "ingredient",
+      "id": "noodle"
     },
     "line": "대형 빠지 등급 3 은 돼야 소문이 나지 — 등급을 올려 줘."
   },
@@ -3263,8 +3608,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "blueberry"
+      "kind": "rigPart",
+      "id": "slip_wax"
     },
     "line": "장승을 두 기 세워 두게. 들어서는 길목엔 격이 있어야 하는 법."
   },
@@ -3312,21 +3657,28 @@
       "of": [
         {
           "kind": "pool",
-          "sizeMin": 6,
-          "color": "lime",
-          "scent": "spices"
+          "sizeMin": 6
         },
         {
           "kind": "facility",
           "id": "office"
+        },
+        {
+          "kind": "rigCount",
+          "min": 2
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 4
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "orange"
+      "kind": "ingredient",
+      "id": "squid"
     },
-    "line": "매콤한 연둣빛 수역에 사무실까지! 서둘러 주세요, 급하다고요!"
+    "line": "6칸 넘는 수역, 사무실, 물 위 기구 2개, 장식 4개까지 갖춰 주세요."
   },
   {
     "friendId": "bossy_lady",
@@ -3337,12 +3689,16 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "rainbow",
           "outdoor": true
         },
         {
           "kind": "rank",
           "min": 4
+        },
+        {
+          "kind": "rigCount",
+          "min": 3,
+          "kinds": 3
         }
       ]
     },
@@ -3350,7 +3706,7 @@
       "kind": "ingredient",
       "id": "cabbage"
     },
-    "line": "야외 오색빛 수역에 별 넷 등급! 지금 당장 해내라고요!"
+    "line": "야외 6칸 넘는 수역, rank, 물 위 기구 3개 (3종류)까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "king_ackbar",
@@ -3360,8 +3716,8 @@
       "min": 3
     },
     "reward": {
-      "kind": "item",
-      "id": "grapes"
+      "kind": "ingredient",
+      "id": "octopus"
     },
     "line": "대형 빠지 등급 3 은 돼야 소문이 나지 — 등급을 올려 줘."
   },
@@ -3374,8 +3730,8 @@
       "count": 3
     },
     "reward": {
-      "kind": "item",
-      "id": "chocolate"
+      "kind": "rigPart",
+      "id": "led_strip_buoy"
     },
     "line": "방갈로를 셋 두어라. 왕족은 그늘에서 쉬는 법이니라."
   },
@@ -3388,13 +3744,20 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "yellow",
-          "scent": "cookie",
           "likesMin": 500
         },
         {
           "kind": "gift",
           "id": "kayak_float"
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
@@ -3402,7 +3765,7 @@
       "kind": "money",
       "amount": 3000
     },
-    "line": "좋아요 500 군것질 햇살빛 수역에 카약 튜브. 왕의 항해로다."
+    "line": "6칸 넘는 수역 좋아요 500, gift, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
   {
     "friendId": "kairobot",
@@ -3412,8 +3775,8 @@
       "id": "airbounce"
     },
     "reward": {
-      "kind": "item",
-      "id": "orange"
+      "kind": "ingredient",
+      "id": "vanilla"
     },
     "line": "에어바운스 파크 지어 주세요! 첫 영상은 그걸로 찍을래요!"
   },
@@ -3426,8 +3789,8 @@
       "count": 5
     },
     "reward": {
-      "kind": "item",
-      "id": "kiwi"
+      "kind": "ingredient",
+      "id": "coffee_bean"
     },
     "line": "매점 반경에 자리 다섯."
   },
@@ -3440,21 +3803,24 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "red",
           "likesMin": 500
         },
         {
           "kind": "facilityClass",
           "class": "attraction",
           "count": 10
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "banana"
+      "kind": "rigPart",
+      "id": "float_drum"
     },
-    "line": "좋아요 500 붉은빛 수역에 놀이 시설 열 개! 최종화 찍을게요!"
+    "line": "6칸 넘는 수역 좋아요 500, 놀이 시설 10개, 물 위 기구 3개까지 갖춰 주세요. 그럼 완벽해요!"
   },
   {
     "friendId": "sally_prin",
@@ -3465,8 +3831,8 @@
       "likesMin": 200
     },
     "reward": {
-      "kind": "item",
-      "id": "peach"
+      "kind": "ingredient",
+      "id": "tea_leaf"
     },
     "line": "좋아요 200 넘는 수역 하나 보여 줘. 그래야 영상이 살거든."
   },
@@ -3479,8 +3845,8 @@
       "count": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "pineapple"
+      "kind": "rigPart",
+      "id": "spray_nozzle"
     },
     "line": "SUP 대여소을 두 곳으로 늘려 줘. 모둠초밥 먹방을 찍고 싶단 말이야."
   },
@@ -3493,38 +3859,53 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "pink",
-          "scent": "cookie",
           "likesMin": 600
         },
         {
           "kind": "facilityClass",
           "class": "decor",
           "count": 12
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "restaurant",
+          "count": 3
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "seaweed"
+      "kind": "ingredient",
+      "id": "chicken"
     },
-    "line": "좋아요 600 군것질 핑크빛 수역에 장식 열둘. 궁전 같겠는데!"
+    "line": "6칸 넘는 수역 좋아요 600, 장식 12개, 물 위 기구 3개, 식당 3개까지! 꼭 해 줘!"
   },
   {
     "friendId": "wairobot",
     "idx": 0,
     "condition": {
-      "kind": "pool",
-      "sizeMin": 6,
-      "outdoor": true,
-      "tempMax": 17,
-      "color": "purple"
+      "kind": "all",
+      "of": [
+        {
+          "kind": "pool",
+          "sizeMin": 6,
+          "outdoor": true,
+          "tempMax": 17
+        },
+        {
+          "kind": "rigCount",
+          "min": 1
+        }
+      ]
     },
     "reward": {
-      "kind": "item",
-      "id": "lavender"
+      "kind": "ingredient",
+      "id": "beef"
     },
-    "line": "17도 아래 야외 보랏빛 수역 부탁해. 냉탕 리뷰를 찍어야 하거든."
+    "line": "야외 6칸 넘는 17도 아래 수역, 물 위 기구 1개만 갖춰 줘!"
   },
   {
     "friendId": "wairobot",
@@ -3535,8 +3916,8 @@
       "count": 4
     },
     "reward": {
-      "kind": "item",
-      "id": "coconut"
+      "kind": "rigPart",
+      "id": "pump_motor"
     },
     "line": "등급 4 자리 네 곳."
   },
@@ -3562,8 +3943,8 @@
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "chocolate"
+      "kind": "ingredient",
+      "id": "pork"
     },
     "line": "방갈로 둘에 인기 400, 3년차까지. 그럼 정복 완료야."
   },
@@ -3571,15 +3952,14 @@
     "friendId": "chimpan_z",
     "idx": 0,
     "condition": {
-      "kind": "item",
-      "id": "banana",
-      "count": 2
+      "kind": "rigCount",
+      "min": 2
     },
     "reward": {
-      "kind": "item",
-      "id": "banana"
+      "kind": "ingredient",
+      "id": "shrimp"
     },
-    "line": "노란 바나나 보트 두 척 띄워 줘! 우끼끼, 그게 최고라니까!"
+    "line": "물 위 기구 2개만 갖춰 줘!"
   },
   {
     "friendId": "chimpan_z",
@@ -3590,8 +3970,8 @@
       "count": 3
     },
     "reward": {
-      "kind": "item",
-      "id": "melon"
+      "kind": "rigPart",
+      "id": "waterproof_canvas"
     },
     "line": "식혜·계란 코너 세 곳 열어 줘! 바나나주스 무한 먹방이다, 우끼!"
   },
@@ -3604,20 +3984,27 @@
         {
           "kind": "pool",
           "sizeMin": 6,
-          "color": "green",
-          "scent": "tropical",
           "likesMin": 800
         },
         {
           "kind": "friends",
           "min": 60
+        },
+        {
+          "kind": "rigCount",
+          "min": 3
+        },
+        {
+          "kind": "facilityClass",
+          "class": "decor",
+          "count": 6
         }
       ]
     },
     "reward": {
-      "kind": "item",
-      "id": "orange"
+      "kind": "ingredient",
+      "id": "salmon"
     },
-    "line": "좋아요 800 트로피컬 초록빛 수역에 친구 예순! 정글 파티다!"
+    "line": "6칸 넘는 수역 좋아요 800, friends, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   }
 ]

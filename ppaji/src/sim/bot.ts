@@ -3,16 +3,16 @@
  * (예비비·하루 한 번 결정) 이고, 게임 값에서 유도할 수 있는 것은 유도한다.
  * Phaser 없이 Node 에서 돈다 (불변식 1 의 실증). 골든 테스트와 `tools/bot.ts` 가 같은 정책을 쓴다.
  */
-import { FACILITY_DEFS, ITEM_DEFS, SEASON_TABLES, INVEST_DEFS, FEATURES, Game } from './game.js';
+import { FACILITY_DEFS, INVEST_DEFS, FEATURES, Game } from './game.js';
 import { FLOOR, isIndoorCode, shoreRow } from './grid.js';
 import { CHAIN_BASE, CHAIN_CAP } from './rig.js';
 import { RIG_UPGRADES } from './rig-upgrade.js';
 import { Rng } from './rng.js';
-import { seasonOf, TICKS_PER_DAY, TICKS_PER_HOUR } from './clock.js';
+import { TICKS_PER_DAY, TICKS_PER_HOUR } from './clock.js';
 import { scoreOf } from './endgame.js';
 import { EVENT_DEFS } from './random-events.js';
 import { courseEquipment, firstFreeDock } from './course/course.js';
-import type { PoolColor, Condition } from '../data/schema.js';
+import type { Condition } from '../data/schema.js';
 
 /** P53-a — 기구 조건 종류. 인증 9 · 소원 20 이 이것을 든다 */
 export const RIG_COND_KINDS: ReadonlySet<string> = new Set(['rigCount', 'rigChain', 'rigGrade', 'rigGuarded']);
@@ -36,8 +36,6 @@ export interface BotOptions {
   poolTarget: number;
   /** 풀 타일 이만큼마다 시설 하나 (G3) */
   facilityPerTiles: number;
-  /** 계절에 맞는 아이템을 넣는가 */
-  useItems: boolean;
   /** 성향 (G13) — 판당 하나. 결정마다 뽑지 않는다(스트림이 밀린다) */
   persona: BotPersona;
 }
@@ -45,7 +43,7 @@ export interface BotOptions {
 /**
  * 봇 성향 3종 — 「어떤 플레이어든 128일을 살아남고 콘텐츠에 닿는가」를 재는 눈.
  * balanced 가 골든·게이트의 정본이고, 나머지는 밸런스 스윕 대조군이다.
- *  · pool       풀만 키운다 — 시설은 드문드문, 아이템은 풀마다 10개, 투자 안 함
+ *  · pool       풀만 키운다 — 시설은 드문드문, 투자 안 함
  *  · restaurant 식당 위주 — 풀 4칸마다 시설 하나, 식당 먼저, 하루 두 번 요리, 재료를 먼저 산다
  *  · cert       인증 사냥 — 신청 가능한 인증의 부족 조건을 소원처럼 좇고, 예비비를 낮춘다
  */
@@ -53,7 +51,7 @@ export type BotPersona = 'balanced' | 'pool' | 'restaurant' | 'cert' | 'course';
 
 /** 데크 링 16칸 값 (P15) — 봇이 수역 하나를 만드는 데 드는 돈 */
 const DECK_RING_COST = 16 * 60;
-export const BOT_DEFAULTS: BotOptions = { reserve: 3000, digPerDay: 4, poolTarget: 24, facilityPerTiles: 3, /* P47: 6 → 3 — 8년차 마당이 비어 보였다(재플레이). 수역 447칸이면 목표 149채, 돈은 남는다 */ useItems: true, persona: 'balanced' };
+export const BOT_DEFAULTS: BotOptions = { reserve: 3000, digPerDay: 4, poolTarget: 24, facilityPerTiles: 3, /* P47: 6 → 3 — 8년차 마당이 비어 보였다(재플레이). 수역 447칸이면 목표 149채, 돈은 남는다 */ persona: 'balanced' };
 
 export const BOT_PERSONAS: Record<BotPersona, BotOptions> = {
   balanced: BOT_DEFAULTS,
@@ -223,7 +221,6 @@ export class Bot {
     }
     // 소원 추적 — 열린 소원의 조건을 하나씩 노린다 (PSS 의 핵심 루프: 소원을 들어줘야 친구·지역이 는다)
     // R3 (G48): 창이 임박한 소원부터 — 만료 3:1 을 학습으로 바꾼다
-    this.wishPools.clear(); // P21: 오늘 소원이 노리는 풀 — 계절 아이템 투입이 그 풀의 색을 덮지 않게
     for (const { friend, wish } of [...g.sns.activeWishes()].sort((a, b) => a.friend.windowUntilDay - b.friend.windowUntilDay)) this.pursue(wish.condition, spendable, friend.id);
     // 선물 — 예비비 위 여유가 크면 별이 낮은 친구에게 시작 선물 하나 (돈 → 진행 교환창)
     if (spendable() > 5000) {
@@ -231,38 +228,14 @@ export class Bot {
       const gift = [...g.unlocked.gifts].map((id) => g.sns.giftsById.get(id)).filter((x): x is NonNullable<typeof x> => !!x && !!target && !target.gifts.includes(x.id)).sort((a, b) => a.price - b.price)[0];
       if (target && gift && spendable() >= gift.price) g.giveGift(target.id, gift.id);
     }
-    // 아이템 — 계절 보너스가 가장 큰 색을 가진 해금 아이템을 풀마다 하나
-    if (this.opts.useItems) this.itemPass(spendable, 1);
   }
 
-  /** 아이템 넣기 — 풀마다 `perPool` 개까지 (G37: 낮에 다시 채운다 — 아이템은 2~4시간이면 사라지니 원작의 상시 지출이 이것이다) */
-  itemPass(spendable: () => number, perPool: number): void {
-    const g = this.game;
-    const season = seasonOf(g.day);
-    const cap = this.opts.persona === 'pool' ? 10 : 6;
-    for (const p of g.pools.all) {
-      if (this.wishPools.has(p.id)) continue; // P21 소원 풀은 소원 색을 지킨다
-      const st = g.poolState(p.id);
-      if (!st) continue;
-      const best = [...ITEM_DEFS.values()]
-        .filter((d) => g.isItemUnlocked(d.id) && d.color !== null)
-        .map((d) => ({ d, bonus: SEASON_TABLES.colors[d.color as PoolColor]?.[season] ?? 0 }))
-        .sort((a, b) => b.bonus - a.bonus)[0];
-      if (!best || best.bonus <= 0) continue;
-      for (let k = 0; k < perPool && p.items.length < cap && spendable() >= best.d.price; k++) if (!g.putItem(p.id, best.d.id).ok) break;
-    }
-  }
-
-  /** 낮 보충 (G37) — 돈이 남으면 12시·15시에 풀마다 셋까지 다시 넣는다. 사람이 하는 「풀 색 유지」 */
+  /** 낮 결정 (12시 · 15시) — 사건 답만. P60-a: 소품 보충은 없다(소품 삭제, D71) */
   decideMidday(): void {
     this.answerEvent(() => this.game.money - this.opts.reserve);
-    if (!this.opts.useItems) return;
-    const spendable = (): number => this.game.money - this.opts.reserve - 20000;
-    if (spendable() <= 0) return;
-    this.itemPass(spendable, 3);
   }
 
-  /** 조건 하나를 향해 오늘 할 수 있는 일 하나 — 색·향·온도는 아이템, 시설은 배치, 크기는 파기 목표 상향 */
+  /** 조건 하나를 향해 오늘 할 수 있는 일 하나 — 시설은 배치, 크기는 파기 목표 상향 */
   /** P21 — 잠긴 시설을 열어 본다: 장날에 진열돼 있으면 사고, 투자로 열리는 것이면 그 단계에 투자한다 (둘 다 예비비 위에서만). 열렸으면 true */
   private unlockFacility(id: string, spendable: () => number): boolean {
     const g = this.game;
@@ -278,9 +251,6 @@ export class Bot {
     return false;
   }
 
-  /** P21 — 소원 조건(색·향·온도)을 채우는 중인 풀. `itemPass` 가 건너뛴다 (실측: 핑크·트로피컬 소원 76건 성립 0 — 계절 색이 덮었다) */
-  private readonly wishPools = new Set<number>();
-
   private pursue(c: Condition, spendable: () => number, friendId?: string): void {
     const g = this.game;
     if (c.kind === 'all' || c.kind === 'any') {
@@ -289,36 +259,12 @@ export class Bot {
     }
     if (g.evaluateCondition(c).met) return;
     const biggest = [...g.pools.all].sort((a, b) => b.tiles.length - a.tiles.length)[0];
-    // 색·향·온도 조건은 **작은 풀**에서 채운다 (원작 팁: 큰 풀은 농도가 안 오른다 — 1칸 풀로 소원을 채운다). 크기 조건이 있으면 그 이상 중 가장 작은 풀
-    const needSize = c.kind === 'pool' ? (c.sizeMin ?? 1) : 1;
-    const target = [...g.pools.all].filter((p) => p.tiles.length >= needSize).sort((a, b) => a.tiles.length - b.tiles.length)[0] ?? biggest;
-    const items = [...ITEM_DEFS.values()].filter((d) => g.isItemUnlocked(d.id));
-    const put = (pick: (d: (typeof items)[number]) => boolean, n = 2): void => {
-      if (!target) return;
-      this.wishPools.add(target.id);
-      const cands = items.filter(pick).sort((a, b) => a.price - b.price);
-      const d = cands[0];
-      if (!d) return;
-      // 농도는 강도 × 주된 색 비중 — 풀이 클수록 더 넣어야 한다 (강도 = 100·Σw / (2√size))
-      const need = Math.max(n, Math.ceil(0.5 * Math.sqrt(target.tiles.length)));
-      for (let k = 0; k < need && spendable() >= d.price && g.canPutItem(target.id, d.id).ok; k++) g.putItem(target.id, d.id);
-    };
     switch (c.kind) {
       case 'pool': {
         if (c.sizeMin !== undefined && (biggest?.tiles.length ?? 0) < c.sizeMin) this.opts = { ...this.opts, poolTarget: Math.max(this.opts.poolTarget, c.sizeMin + 2) };
-        const st = target ? g.poolState(target.id) : null;
-        if (c.color !== undefined && st?.color !== c.color) {
-          if (c.color === 'rainbow') put((d) => d.color !== null, 8);
-          else put((d) => d.color === c.color, 3);
-        }
-        if (c.scent !== undefined && st?.scent !== c.scent) put((d) => d.scent === c.scent, 2);
-        if (c.tempMin !== undefined && (st?.temp ?? 0) < c.tempMin) put((d) => d.tempDelta > 0, 3);
-        if (c.tempMax !== undefined && (st?.temp ?? 99) > c.tempMax) put((d) => d.tempDelta < 0, 3);
+        // P60-a: 색·향은 사라졌고 수온은 계절·인접 시설(족욕·사우나 heat)에서 파생 — 소품으로 맞출 수 없다
         break;
       }
-      case 'item':
-        put((d) => d.id === c.id, c.count ?? 1);
-        break;
       case 'facility': {
         const def = FACILITY_DEFS.get(c.id);
         if (def && this.unlockFacility(c.id, spendable) && spendable() >= def.cost) this.tryPlace(c.id); // P21: 잠겨 있으면 먼저 연다
@@ -895,7 +841,7 @@ export function runBot(game: Game, days: number, opts: BotOptions = BOT_DEFAULTS
   let lastRank = game.rank, lastCerts = game.certs.passes(), lastCal = game.calendarGiven.size;
   for (let d = 0; d < days && !game.clock.ended; d++) {
     bot.decideDay();
-    // 낮 보충 두 번 (12시 · 15시) — 아이템이 사라지는 박자에 맞춘 상시 지출
+    // 낮 결정 두 번 (12시 · 15시) — 사건 답(P60-a: 소품 보충은 없다)
     game.step(TICKS_PER_HOUR * 4);
     bot.decideMidday();
     game.step(TICKS_PER_HOUR * 3);

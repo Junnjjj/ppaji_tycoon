@@ -4,7 +4,7 @@ const b = await chromium.launch({ channel: 'chrome' });
 const p = await b.newPage({ viewport: { width: 393, height: 852 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
 await p.goto('http://localhost:5187/?debug=1&fresh=1&tut=0', { waitUntil: 'load' });
 await p.waitForFunction(`(() => (document.getElementById('wp-debug')?.textContent || '').includes('FPS'))()`, undefined, { timeout: 15000 });
-await p.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; g.money += 300000; for (const id of w.facilityDefs.keys()) g.unlocked.facilities.add(id); g.unlocked.items.add('strawberry');
+await p.evaluate(`(() => { const w = window.__pj; const g = w.game; const gt = g.gate; g.money += 300000; for (const id of w.facilityDefs.keys()) g.unlocked.facilities.add(id);
   const t = []; for (let a = 0; a < 5; a++) for (let c = 0; c < 4; c++) t.push({ i: gt.i - 6 + a, j: gt.j - 8 + c }); g.digPool(t);
   const put = (id, di, dj, f = 0) => g.placeFacility(id, gt.i + di, gt.j + dj, f);
   put('toilet', 3, -3); put('shower_row', 4, -3); put('pyeongsang_row', -8, -7); put('pyeongsang_row', -8, -6); put('ticket', -8, -5); put('cafe', 2, -9); put('vending_in', 4, -9); put('shop', 6, -9);

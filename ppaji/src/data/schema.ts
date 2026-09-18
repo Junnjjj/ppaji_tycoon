@@ -1,5 +1,8 @@
 /**
- * 데이터 계약 — `src/data/*.json` 의 모양 (불변식 3: 시설·아이템·계절표는 코드가 아니라 데이터다).
+ * 데이터 계약 — `src/data/*.json` 의 모양 (불변식 3: 시설·재료·계절표는 코드가 아니라 데이터다).
+ *
+ * P60-a (D71): 풀 색·향·소품 정의(세 타입)·프리셋·색/향 취향은 게임에서 뺐다 — 남는 물성은 **계절 수온**
+ * (`SeasonTables.ambient*`·`idealTemp`, 시설 `heat`) 하나다. 이관 스크립트 `tools/migrate-wishes.mjs`.
  *
  * 이 파일은 **타입만** 둔다 (런타임 코드 0). 열거값의 런타임 목록이 필요하면
  * `data.test.ts` 처럼 `satisfies` 로 이 타입에 묶어서 각자 들 것.
@@ -7,24 +10,6 @@
  */
 
 export type FacilityClass = 'utility' | 'lounging' | 'restaurant' | 'attraction' | 'slide' | 'decor' | 'rig'; // P48-c R3: 빠지 기구 — 물 위(링) 전용, 정의는 P49-a1 부터
-
-/** 12향 (§1.3). `money` 는 골든 카이로봇·공연 카이로봇만 낸다 */
-export type Scent =
-  | 'citrus'
-  | 'floral'
-  | 'pine'
-  | 'fruity'
-  | 'tropical'
-  | 'berry'
-  | 'marine'
-  | 'cookie'
-  | 'spices'
-  | 'milky'
-  | 'coffee'
-  | 'money';
-
-/** 9색 (§1.3). `rainbow`·`clear` 는 파생 상태라 아이템은 못 낸다 — 계절표에만 있다 */
-export type PoolColor = 'orange' | 'yellow' | 'lime' | 'green' | 'blue' | 'purple' | 'pink' | 'red' | 'white';
 
 /** 봄·여름·가을·겨울 순 (`season = floor(day/4)%4`, §2.2) */
 export type SeasonVec = [number, number, number, number];
@@ -59,9 +44,6 @@ export interface FacilityDef {
   useTicks: number;
   /** 이용 뒤 손님 HP 변화 — 라운지 +25(유료 +50) · 식당 0(음식이 따로 준다) · 나머지 음수 */
   hpDelta: number;
-  /** 인접 풀에 주는 향 (§1.3 "아이템 + 인접 시설 중 가장 센 것 하나") */
-  scent: Scent | null;
-  scentPower: number;
   /** 풀 SE 기여 (제트풀·핫텁만) */
   se: number;
   /** 풀 AB 기여 — `sprays` 인 것만 > 0 */
@@ -131,27 +113,8 @@ export interface FacilityDef {
   desc: string;
 }
 
-/** 풀 아이템 (§2.6 플레이스홀더 24종). 색·향·온도를 바꾸고 `hours` 뒤 소멸한다 */
-export interface ItemDef {
-  id: string;
-  name: string;
-  color: PoolColor | null;
-  /** 색 가중치 — 색이 없으면 0, 진한 것(포도·블루베리)은 2 */
-  colorWeight: number;
-  scent: Scent | null;
-  scentPower: number;
-  /** 풀 온도 Δ (°C) */
-  tempDelta: number;
-  /** 지속 일수 (G42, 원작: 「넣은 시점부터 2계절+1일 = 7일, 개수 무관」) — 같은 풀에 또 넣어도 만료가 안 늘어난다 */
-  days: number;
-  price: number;
-  unlock: 'start' | 'shop' | 'wish' | 'cert';
-}
-
-/** §1.3 계절표 — 값을 옮겨 적은 것이므로 손으로 바꾸지 말 것 */
+/** §1.3 계절표 — 값을 옮겨 적은 것이므로 손으로 바꾸지 말 것. P60-a: 색·향 표는 뺐다(수온·햇빛만) */
 export interface SeasonTables {
-  colors: Record<PoolColor | 'rainbow' | 'clear', SeasonVec>;
-  scents: Record<Scent, SeasonVec>;
   /** 야외 풀 기본 수온 (봄·여름·가을·겨울) */
   ambientOutdoor: SeasonVec;
   /** 실내 풀 기본 수온 (계절 무관) */
@@ -167,12 +130,11 @@ export interface SeasonTables {
 
 /** 소원·인증·랭크가 공유하는 조건. 한 평가기(`sim/condition.ts`)가 전부 안다 */
 export type Condition =
-  | { kind: 'pool'; count?: number; sizeMin?: number; sizeMax?: number; color?: PoolColor | 'rainbow'; scent?: Scent; tempMin?: number; tempMax?: number; likesMin?: number; intensityMin?: number; outdoor?: boolean; indoor?: boolean; popMin?: number; /** 풀 타일의 절반 이상이 이 종류 (G35, §2.3 `pool{tile}`) */ tile?: string }
+  | { kind: 'pool'; count?: number; sizeMin?: number; sizeMax?: number; tempMin?: number; tempMax?: number; likesMin?: number; outdoor?: boolean; indoor?: boolean; popMin?: number; /** 풀 타일의 절반 이상이 이 종류 (G35, §2.3 `pool{tile}`) */ tile?: string }
   | { kind: 'poolTotalSize'; min: number }
   | { kind: 'facility'; id: string; count?: number; adjacentPool?: boolean }
   | { kind: 'facilityAdjacent'; ids: [string, string]; count?: number }
   | { kind: 'facilityClass'; class: FacilityClass; count?: number }
-  | { kind: 'item'; id: string; count?: number; /** §2.3 `item{active}` — 풀 뷰가 이미 살아 있는 아이템만 담으므로 언제나 참 (G38) */ active?: boolean }
   | { kind: 'recipe'; id: string; served?: boolean }
   | { kind: 'recipeCount'; min: number }
   | { kind: 'popularity'; min: number }
@@ -225,7 +187,7 @@ export interface AreaDef {
   /** 좋아요가 이만큼 쌓일 때마다 다음날 아침 그 지역에서 버스 1대 (G40, 원작: 「いいねが一定になると翌朝バス」 — 계속 온다) */
   busEvery?: number;
   /** 좋아요 문턱 보상 — 주민들의 감사 선물 (G33) */
-  likeRewards?: { at: number; grant: { kind: 'item' | 'money' | 'gift' | 'facility'; id?: string; amount?: number } }[];
+  likeRewards?: { at: number; grant: { kind: 'ingredient' | 'rigPart' | 'money' | 'gift' | 'facility'; id?: string; amount?: number } }[]; // P60-a: 'item' → ingredient(×amount)/rigPart
 }
 
 export interface FriendDef {
@@ -234,7 +196,8 @@ export interface FriendDef {
   area: string;
   age: number;
   gender: 'M' | 'F';
-  fav: { color: PoolColor; scent: Scent; food: string };
+  /** P60-a: 색·향 취향은 뺐다 — 남는 취향은 음식 하나 */
+  fav: { food: string };
   /** 처음부터 오는 친구 */
   start: boolean;
   /** 앞 친구의 ★ 단계(1~3) 달성으로 초대된다 */
@@ -245,11 +208,10 @@ export interface FriendDef {
 
 export type WishReward =
   | { kind: 'facility'; id: string }
-  | { kind: 'item'; id: string }
   | { kind: 'gift'; id: string }
   | { kind: 'money'; amount: number }
   | { kind: 'ingredient'; id: string }
-  | { kind: 'rigPart'; id: string }; // P49-a1 (P49-a2: 'tile' 삭제 — 물빛은 빠지 등급이 대체)
+  | { kind: 'rigPart'; id: string }; // P49-a1 (P49-a2: 'tile' 삭제 — 물빛은 빠지 등급이 대체 · P60-a: 'item' 삭제 — 소품 151 은 rigPart/ingredient/money 로)
 
 export interface WishDef {
   friendId: string;
@@ -272,7 +234,7 @@ export interface GiftDef {
 
 // ── G5: 인증 · 랭크 · 상점 · 사장 달력 · 풀 타일 ───────────────────────────
 
-export type CertFamily = 'grade' | 'color' | 'scent' | 'spa' | 'fruit' | 'stream' | 'fun' | 'cutesy';
+export type CertFamily = 'grade' | 'set' | 'court' | 'spa' | 'fruit' | 'stream' | 'fun' | 'cutesy';
 export type CertGrade = 'F' | 'E' | 'D' | 'C' | 'B' | 'A' | 'S';
 
 export interface CertDef {
@@ -287,7 +249,7 @@ export interface CertDef {
   /** 2~3개. weight 2 = 「(2x)」 */
   conditions: { cond: Condition; weight: 1 | 2 }[];
   /** 첫 통과 보상 */
-  reward: { kind: 'gift' | 'facility' | 'item' | 'rigPart'; id: string }; // P49-a2: 'tile' 삭제
+  reward: { kind: 'gift' | 'facility' | 'rigPart'; id: string }; // P49-a2: 'tile' 삭제 · P60-a: 'item' 삭제
   /** 신청료 */
   fee: number;
 }
@@ -297,16 +259,17 @@ export interface RankDef {
   name: string;
   conditions: Condition[];
   /** 랭크업 보상 (시설 해금 등) */
-  reward?: { kind: 'facility' | 'gift' | 'item' | 'money' | 'unlock'; id?: string; amount?: number };
+  reward?: { kind: 'facility' | 'gift' | 'money' | 'unlock'; id?: string; amount?: number }; // P60-a: 'item' 삭제
   /** P21 D27 — 이 랭크에 도달하면 열리는 시설들 (reward 와 별개, 여럿) */
   unlocks?: string[];
 }
 
 export interface ShopEntry {
   id: string;
-  kind: 'facility' | 'item' | 'gift';
+  /** P60-a: 'item' → 'ingredient' — 장날 재료 진열(재고 3개 묶음, 값 = `IngredientDef.price` ×3) */
+  kind: 'facility' | 'ingredient' | 'gift';
   ref: string;
-  /** 해금 가격 (시설은 shopPrice, 아이템·선물은 정가×3) */
+  /** 해금 가격 (시설은 shopPrice, 재료·선물은 정가×3) */
   price: number;
   /** 이 랭크부터 진열 */
   tier: number;
@@ -326,7 +289,7 @@ export interface CalendarEvent {
   from: 'president' | 'judge';
   title: string;
   line: string;
-  grant: { kind: 'facility' | 'gift' | 'item' | 'money' | 'tool' | 'ingredient' | 'rigPart'; id?: string; amount?: number };
+  grant: { kind: 'facility' | 'gift' | 'money' | 'tool' | 'ingredient' | 'rigPart'; id?: string; amount?: number }; // P60-a: 'item' 삭제 (재료 ×amount 또는 부품)
   /** 사건 채널 — 기본 modal. 연출용(불꽃·조명)은 inbox (G27) */
   priority?: 'modal' | 'inbox' | 'strip'; // P49-a1: 'strip' = 연차 폴백(티커 한 줄, P53-a 가 쓴다)
   /** 첫 인증 합격일 + N일에 온다 (G43, 원작: 「배치 전환 = 첫 합격 후 9일째」). 있으면 year/season/dayInSeason 은 안 본다 */

@@ -156,10 +156,10 @@ export class SnsStore {
     return { areaId: last, likes: this.areaLikes.get(last) ?? 0, need: this.areasById.get(last)?.likesToUnlockNext ?? this.b.likesPerArea };
   }
 
-  /** 글 하나 — 초기 좋아요는 인기 비례 + 취향 일치 보너스 + 편차 */
-  post(day: number, tick: number, friendId: string | null, areaId: string, subject: Post['subject'], basePop: number, favBonus: number, palette = 0): Post {
+  /** 글 하나 — 초기 좋아요는 인기 비례 + 편차 (P60-a: 색·향 취향 일치 보너스 삭제) */
+  post(day: number, tick: number, friendId: string | null, areaId: string, subject: Post['subject'], basePop: number, palette = 0): Post {
     // 인기 기여는 상한 — 글 하나가 수십 개 이상을 가져오면 지역 문턱(1,000)이 며칠에 열린다
-    const likes = Math.max(1, Math.round(Math.min(24, basePop * 0.3) + favBonus + this.rng.int(6)));
+    const likes = Math.max(1, Math.round(Math.min(24, basePop * 0.3) + this.rng.int(6)));
     const p: Post = { id: this.nextPostId++, day, tick, friendId, areaId, subject, likes, playerLiked: false, growUntilDay: day + this.b.postGrowDays, palette };
     this.posts.push(p);
     if (this.posts.length > POSTS_KEEP) { const drop = this.posts.length - POSTS_KEEP; this.posts.splice(0, drop); this.droppedPosts += drop; }
@@ -289,7 +289,7 @@ export class SnsStore {
 
   /** 좋아요 사다리를 새로 넘긴 지역들 (G33) — 넘긴 문턱마다 한 항목. 호출할 때마다 기록되므로 하루에 한 번만 부른다 */
   crossedBusThresholds(): { areaId: string; at: number; reward: AreaDef['likeRewards'] extends (infer T)[] | undefined ? T | undefined : never }[] {
-    const out: { areaId: string; at: number; reward: { at: number; grant: { kind: 'item' | 'money' | 'gift' | 'facility'; id?: string; amount?: number } } | undefined }[] = [];
+    const out: { areaId: string; at: number; reward: NonNullable<AreaDef['likeRewards']>[number] | undefined }[] = [];
     for (const areaId of this.openAreas) {
       const def = this.areasById.get(areaId);
       const every = def?.busEvery ?? 0;

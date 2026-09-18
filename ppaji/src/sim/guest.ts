@@ -75,10 +75,8 @@ export interface Guest {
   uses: number;
   /** 취향 — 선호 수온 (G3) */
   prefTemp: number;
-  /** 친구(이름 있는 손님)면 id, 취향 색·향 */
+  /** 친구(이름 있는 손님)면 id */
   friendId: string | null;
-  favColor: string | null;
-  favScent: string | null;
   /** 오늘 올린 사진 수 (하루 최대 2) */
   photos: number;
   /** 최근 대사 (렌더가 읽고 지운다) */
@@ -206,8 +204,6 @@ export interface GuestHooks {
   onFacilityUse?: (g: Guest, f: PlacedFacility) => void;
   /** 놀고 난 뒤 만족이 높으면 사진을 올린다 (G4 SNS) — Game 이 글로 만든다 */
   onPhoto?: (g: Guest, subject: { kind: 'pool' | 'facility'; ref: number }) => void;
-  /** 풀의 색·향 — 취향 일치 판정 */
-  poolLook?: (poolId: number) => { color: string; scent: string | null };
   /** 손님이 나갈 때 (만족을 친구 EXP 로) */
   onLeave?: (g: Guest) => void;
   /** 폐장 1시간 전인가 (G34) — 새 목표를 안 잡고 입구로 간다 */
@@ -338,7 +334,7 @@ export class GuestStore {
   }
 
   /** 입구에서 손님 하나 — 입장료는 부르는 쪽이 받는다. `friend` 를 주면 이름 있는 손님 */
-  spawn(friend?: { id: string; palette: number; favColor: string; favScent: string; name?: string; age?: number; gender?: 'M' | 'F'; home?: string; float?: number }, home = '이 동네', taste?: AreaTaste): Guest {
+  spawn(friend?: { id: string; palette: number; name?: string; age?: number; gender?: 'M' | 'F'; home?: string; float?: number }, home = '이 동네', taste?: AreaTaste): Guest {
     const nameIdx = this.rng.int(GUEST_NAMES.length);
     const age = 6 + this.rng.int(54); // 6~59 — 어린이(≤12) 13% · 노인(≥58) 4%
     const gender: 'M' | 'F' = this.rng.chance(0.5) ? 'M' : 'F';
@@ -364,8 +360,6 @@ export class GuestStore {
       uses: 0,
       prefTemp: 24 + this.rng.int(9) + (taste?.tempBias ?? 0), // 24~32 (+ 출신지 치우침, P9)
       friendId: friend ? friend.id : null,
-      favColor: friend ? friend.favColor : null,
-      favScent: friend ? friend.favScent : null,
       photos: 0,
       say: null,
       emote: null,
@@ -656,14 +650,12 @@ export class GuestStore {
           const stay = Math.floor((off ? this.b.swimTicks / 2 : this.b.swimTicks) * (0.85 + 0.3 * fit));
           if (g.stateTicks < stay) break;
           g.hp -= this.b.guestHpSwim * (off ? 2 : 1) * (hooks?.hpMul?.() ?? 1);
-          const look = poolId === null ? null : (hooks?.poolLook?.(poolId) ?? null);
-          const favHit = look !== null && ((g.favColor !== null && look.color === g.favColor) || (g.favScent !== null && look.scent === g.favScent));
           const satBefore = g.sat;
-          g.sat = Math.min(100, g.sat + ((off ? 3 : 10) + (favHit ? 10 : 0)) * (hooks?.satMul?.() ?? 1));
-          if (favHit) g.say = '내 취향이야!';
-          else if (satBefore < 100 && g.sat >= 100) g.say = '최고의 하루!';
+          g.sat = Math.min(100, g.sat + (off ? 3 : 10) * (hooks?.satMul?.() ?? 1));
+          if (satBefore < 100 && g.sat >= 100) g.say = '최고의 하루!';
           setEmote(g, off ? 'grr' : 'heart');
-          if (!off && g.sat >= 50 && g.photos < 1 && poolId !== null && this.rng.chance(Math.min(0.6, (favHit ? 0.3 : 0.12) * (hooks?.photoMul?.() ?? 1)))) {
+          // P60-a: 색·향 취향 일치(favHit 0.3) 삭제 — 수영 뒤 사진 확률은 0.12 고정
+          if (!off && g.sat >= 50 && g.photos < 1 && poolId !== null && this.rng.chance(Math.min(0.6, 0.12 * (hooks?.photoMul?.() ?? 1)))) {
             g.photos++;
             hooks?.onPhoto?.(g, { kind: 'pool', ref: poolId });
           }

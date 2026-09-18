@@ -3,7 +3,6 @@
  * PSS 의 SNS 화면 문법 그대로. 좋아요·소원 도착은 **절대 모달이 아니다** — 여기서 읽는다.
  */
 import { el } from '../dom.js';
-import { COLOR_KO, SCENT_KO } from '../../sim/lines.js';
 import { confirmDialog } from '../dialog.js';
 import { npcPortrait } from '../portraits.js'; // 과제 B: 손님·친구 초상은 v8 머리
 import { iconEl } from '../icons.js';
@@ -12,7 +11,6 @@ import { rewardArt, type SpriteFn } from '../reward-art.js';
 import { pictureEl, pictureId } from '../pictures.js';
 import { PictureGrid, type PictureCard } from '../picture-grid.js';
 import type { Game } from '../../sim/game.js';
-import { ITEM_DEFS } from '../../sim/game.js';
 import type { Post } from '../../sim/sns.js';
 
 export type SnsTab = 'timeline' | 'messages' | 'friends';
@@ -188,7 +186,7 @@ export class SnsWindow {
       for (let k = 0; k < 3; k++) { const ic = iconEl('star'); ic.dataset['on'] = k < st.stars ? '1' : '0'; stars.append(ic); }
       nameRow.append(stars);
       text.append(nameRow);
-      text.append(el('span', 'krow-sub', `${g.sns.areasById.get(def.area)?.name ?? def.area} · ${def.age}대 · 좋아하는 물빛 ${COLOR_KO[def.fav.color] ?? def.fav.color} · 분위기 ${SCENT_KO[def.fav.scent] ?? def.fav.scent} · 방문 ${st.visits}`));
+      text.append(el('span', 'krow-sub', `${g.sns.areasById.get(def.area)?.name ?? def.area} · ${def.age}대 · 좋아하는 음식 ${def.fav.food} · 방문 ${st.visits}`));
       const giftBtn = el('button', 'kchip', '선물');
       giftBtn.type = 'button';
       giftBtn.dataset['gift'] = st.id;
@@ -237,7 +235,6 @@ export function rewardLabel(g: Game, r: { kind: string; id?: string; amount?: nu
   if (r.kind === 'facility') return `시설: ${g.facilities.def(r.id ?? '')?.name ?? r.id}`;
   if (r.kind === 'gift') return `선물: ${g.sns.giftsById.get(r.id ?? '')?.name ?? r.id}`;
   if (r.kind === 'ingredient') return `재료: ${g.cooking.ingredients.get(r.id ?? '')?.name ?? r.id}`;
-  if (r.kind === 'item') return `아이템: ${ITEM_DEFS.get(r.id ?? '')?.name ?? r.id}`;
   return `${r.kind}: ${r.id ?? ''}`;
 }
 

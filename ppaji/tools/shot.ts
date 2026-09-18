@@ -15,7 +15,7 @@ await page.goto(`${BASE}/?debug=1&fresh=1&tut=0`, { waitUntil: 'load' });
 await page.waitForFunction(`(() => (document.getElementById('wp-debug')?.textContent || '').includes('FPS'))()`, undefined, { timeout: 15000 });
 await page.waitForTimeout(800);
 // 볼 게 있는 판 — 풀 하나·아이템·시설 몇 개 (API). 시간은 얼린다
-await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.flow.frozen = true; const gt = g.gate; const t = []; for (let a = 0; a < 4; a++) for (let b = 0; b < 3; b++) t.push({ i: gt.i - 6 + a, j: gt.j - 5 + b }); g.money += 20000; g.digPool(t); const p = g.pools.all[0]; if (p) { g.unlocked.items.add('strawberry'); g.putItem(p.id, 'strawberry'); } g.placeFacility('toilet', gt.i + 3, gt.j - 4, 0); g.placeFacility('pyeongsang_row', gt.i - 8, gt.j - 2, 0); w.skip(1); w.refreshHud(); })()`);
+await page.evaluate(`(() => { const w = window.__pj; const g = w.game; w.flow.frozen = true; const gt = g.gate; const t = []; for (let a = 0; a < 4; a++) for (let b = 0; b < 3; b++) t.push({ i: gt.i - 6 + a, j: gt.j - 5 + b }); g.money += 20000; g.digPool(t); g.placeFacility('toilet', gt.i + 3, gt.j - 4, 0); g.placeFacility('pyeongsang_row', gt.i - 8, gt.j - 2, 0); w.skip(1); w.refreshHud(); })()`);
 await page.waitForTimeout(400);
 
 const routes: { id: string; open: string[]; close: string }[] = [

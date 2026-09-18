@@ -8,8 +8,8 @@
       {
         "at": 350,
         "grant": {
-          "kind": "item",
-          "id": "strawberry"
+          "kind": "rigPart",
+          "id": "waterproof_canvas"
         }
       },
       {
@@ -40,8 +40,8 @@
       {
         "at": 350,
         "grant": {
-          "kind": "item",
-          "id": "apple"
+          "kind": "rigPart",
+          "id": "slip_wax"
         }
       },
       {
@@ -72,8 +72,8 @@
       {
         "at": 350,
         "grant": {
-          "kind": "item",
-          "id": "mint"
+          "kind": "rigPart",
+          "id": "float_drum"
         }
       },
       {
@@ -104,8 +104,9 @@
       {
         "at": 350,
         "grant": {
-          "kind": "item",
-          "id": "chocolate"
+          "kind": "ingredient",
+          "id": "chocolate_bar",
+          "amount": 3
         }
       },
       {
@@ -136,8 +137,9 @@
       {
         "at": 350,
         "grant": {
-          "kind": "item",
-          "id": "coffee_beans"
+          "kind": "ingredient",
+          "id": "coffee_bean",
+          "amount": 3
         }
       },
       {
@@ -168,8 +170,8 @@
       {
         "at": 350,
         "grant": {
-          "kind": "item",
-          "id": "lemon"
+          "kind": "rigPart",
+          "id": "waterproof_canvas"
         }
       },
       {
@@ -200,8 +202,9 @@
       {
         "at": 350,
         "grant": {
-          "kind": "item",
-          "id": "grapes"
+          "kind": "ingredient",
+          "id": "grape_fruit",
+          "amount": 3
         }
       },
       {
@@ -232,8 +235,8 @@
       {
         "at": 350,
         "grant": {
-          "kind": "item",
-          "id": "lavender"
+          "kind": "rigPart",
+          "id": "slip_wax"
         }
       },
       {
@@ -264,8 +267,9 @@
       {
         "at": 350,
         "grant": {
-          "kind": "item",
-          "id": "pineapple"
+          "kind": "ingredient",
+          "id": "pineapple_fruit",
+          "amount": 3
         }
       },
       {
@@ -296,8 +300,9 @@
       {
         "at": 350,
         "grant": {
-          "kind": "item",
-          "id": "honey"
+          "kind": "ingredient",
+          "id": "honey_jar",
+          "amount": 3
         }
       },
       {
