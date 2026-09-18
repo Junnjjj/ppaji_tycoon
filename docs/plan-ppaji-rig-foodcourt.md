@@ -19,6 +19,9 @@
 
 ---
 
+
+> ⚠ **2026-09-18 사용자 결정: 「다이어트판」으로 간다.** §3·§4·§6 의 초안 중 §10 이 「보류」로 표시한 항목(역순 벌점 · 동시 입수 정원 · 어린이 2칸 · `rigAt` 소원 · `fav.chain` · 점심 휴식 토글 · 식권 · 철거 −25%)은 **이번에 넣지 않는다.** 구현은 §10 의 지도를 따른다 — §3·§4 는 근거·수치 참고용으로 남긴다. 새 개념: 기구 3(입수구·경로·세트) + 푸드코트 1(구색), 기존 「사슬」은 「경로」에 합친다(8 → 9).
+
 ## §1 현황 (R1 요약)
 
 | 축 | 지금 상태 | 결정(플레이어가 고르는 것) | 값이 되는 곳 | 봇·밴드 | 근거 |
@@ -275,6 +278,166 @@ D. 일자 잔교 → 끝의 워터파크 섬
 
 ---
 
+## §10 다이어트판 구현 지도 (2026-09-18 확정 — 코드 어디서부터 어디까지 · UI 추가/삭제)
+
+실측 기준(2026-09-18 HEAD `aeba9f5`). 줄 번호는 그 시점이라 흐른다 — 함수 이름으로 찾을 것. **D74 다이어트판**: 새 플레이어 개념은 입수구·경로(코스 완성)·세트·구색 넷, 벌점 0, 새 창 0, 새 저장 상태는 `setsSeen` 하나(optional).
+
+### §10.0 데이터 실측 — 삭제가 닿는 수
+
+| 데이터 | 수 | 무엇 |
+|---|---|---|
+| `src/data/items.json` | 24 | 소품(색 19 · 향 23 · 온도 3: ice_block·bath_salt·honey 등 `tempDelta`) |
+| `wishes.json` 213 중 조건 `item` | 18 | + 조건 `pool`(83) 안의 `color/scent` 하위 조건(64·53) |
+| `wishes.json` 보상 `item` | **151** | 가장 큰 덩어리 — 보상을 `rigPart/ingredient/money/facility` 로 재배분해야 한다(`grantWishReward` 분기는 이미 있다 `game.ts` ~490) |
+| `certs.json` 24 중 색·향 계열 | 6 (`color_f/d/b` · `scent_f/d/b`) + `spa_d/b` 의 `item` 조건 2 | 보상(부품 4 · 시설 2 · 선물) 은 **바이트 그대로** 옮긴다 |
+| `calendar.json` 40 중 `item` 보상 | 15 | 달력 폴백 8년 페이싱의 재료 |
+| `shop.json` 43 중 `kind:'item'` | 19 | 장날 진열 |
+| `friends.json` 71 `fav.{color,scent,food}` | 71×2 | `fav.food` 는 남는다 — 색·향 취향은 **삭제**(`favHit` 소비자 `guest.ts:660` 하나) |
+| `story.json` `rigChain` | 2 | `rigPath` 로 뜻만 |
+| 하네스 행 | 12 | §10.6 |
+| 단위 검사 파일 | 13 | §10.6 |
+
+### §10.1 P60-a 삭제 (D71) — 파일·함수 단위
+
+**sim (지운다)**
+| 파일 | 어디 | 무엇 |
+|---|---|---|
+| `src/sim/pool-state.ts` (103줄) | 전체 | `color/scent/intensityBars/colorMix/missingForRainbow/scentSource` 를 지우고 **`temp`·`idealTemp`·`tempFit`·`seasonBonus` 만** 남긴다(계절 수온은 P52-c 의 뿌리). `PoolState` 타입에서 색·향 필드 삭제 |
+| `src/sim/scent.ts` (20줄) | 파일째 | 삭제. `lines.ts` 의 `COLOR_KO/SCENT_KO` 도 |
+| `src/sim/game.ts` | `putItem`(2118) · `removeItem` · `itemDaysLeft`(1446) · `previewItem`(1454) · `isItemUnlocked`(1500) · `poolState` 캐시 안 색 계산(1363~) · `poolLook`(2667) · 사진 `fav` 가산(2674) · `p.likes = 0` 리셋(2131) · `unlocked.items` · 스냅샷 `pools[].items`·`presets` | 전부 삭제. `Pool.items` 필드 삭제, `ItemDef` import 삭제 |
+| `src/sim/preset.ts` | 파일째 | 삭제(프리셋은 소품 묶음이었다). `Game.presets` 필드·`savePreset/loadPreset` 삭제 |
+| `src/sim/guest.ts` | `favColor/favScent`(80·81·341·367·368) · `favHit`(660~666) | 필드·판정 삭제. 사진 확률의 `favHit ? 0.3 : 0.12` 는 0.12 로. `spawn()` 시그니처에서 두 인자 제거 → `game.ts:803·1536` 호출부 |
+| `src/sim/condition.ts` | `case 'item'`(178) · `pool` 조건의 `color/scent/intensity` 하위(143~157) | 삭제. `ConditionKind` 유니언에서 제거 → 타입이 데이터 오류를 잡는다 |
+| `src/sim/bot.ts` | `useItems`(40·56) · `itemPass`(235~262) | 삭제. `BotOptions` 에서 필드 제거 → `tools/bot.ts` 옵션 파서·밴드 `itemPass` 삭제 |
+| `src/sim/sns.ts` | 사진 글의 색 문구·`favHit` 좋아요 가산 | 삭제 |
+| `src/data/schema.ts` | `ItemDef` · `PoolColor` · `Scent` · `FriendDef.fav.color/scent` · `WishCondition.item` · `Reward.kind 'item'` | 타입에서 지운다 — 남은 참조를 컴파일러가 전부 짚는다(손으로 세지 않는다) |
+| `src/save/` | `SAVE_VERSION` 4 → **5** | 마이그레이션: `game.pools[].items`·`game.presets`·`unlocked.items` 를 **읽고 버림**(새 판 아님). 검사 `save.test.ts` 에 v4 fixture 왕복 1건 |
+
+**data (바꾼다)**
+| 파일 | 무엇 → 무엇 |
+|---|---|
+| `items.json` | 파일째 삭제 · `manifest`/`pictures.json` 의 `pic/item/*` 24 는 그림 자산이라 **남긴다**(장식·부품 재지정은 미결 ⑤) |
+| `certs.json` | `color_f/d/b` → **`set_f/d/b`**(조건 `rigSet` min 1·2·3, 이름 「빠지 세트 심사」 계열, 보상 바이트 동일) · `scent_f/d/b` → **`court_f/d/b`**(조건 `courtSeats`≥4·8·12 + `courtMenuKinds`≥2·3·4, 보상 동일) · `spa_d/b` 는 `item` 조건만 빼고 `facilityAdjacent`(족욕·사우나) 유지. `CertFamily` 유니언 `color→set`, `scent→court`. `FAMILY_KO`(`cert.ts:18`) 「경관」→「세트」, 「핫플」→「먹거리」 |
+| `wishes.json` | 조건 `item` 18 → `rigSet`/`rigPath`/`courtSeats` 중 문맥에 맞게 · `pool.color/scent` 하위 조건 → `pool.size` 또는 `rigGrade` · **보상 `item` 151 → `rigPart` 40 · `ingredient` 70 · `money` 30 · `facility` 11**(초안 배분 — 재료 70 은 P56-c 재고 ×3 문법과 맞고, 부품 40 은 공방·개조 소비처가 있다). 스크립트 `tools/migrate-wishes.mjs` 한 번 돌리고 diff 검토 |
+| `calendar.json` | `item` 15 → `ingredient`(같은 이름의 재료가 있는 것: lemon·honey·orange·banana·kiwi·grapes·milk·mint·coconut·cinnamon·coffee_beans) · 나머지(ice_block·bath_salt·lavender·seaweed) → `rigPart` |
+| `shop.json` | `kind:'item'` 19 → 삭제(장날 43 → 24). 빈 자리는 P56-c 재고 문법대로 `ingredient` 진열 8 추가(초안) |
+| `friends.json` | `fav.color/scent` 제거, `fav.food` 유지 |
+| `story.json` | `rigChain` 2 → `rigPath` |
+| `balance.json` | `ppajiChainBase/Cap` 는 P60-d 까지 유지 |
+
+**UI (삭제)**
+| 파일 | 무엇 |
+|---|---|
+| `src/ui/windows/pool-info.ts` | 타일 3(물빛·분위기·온도 `kptiles`, 101~129)과 그 상세 `kdetail-body` 3 · 「소품 n개 · 남은 일수」 행 · 「이름 변경」은 유지 · 버튼 「소품 넣기 · 편집」→ 삭제 · 「프리셋 저장」 삭제. 온도는 **행 하나**(「수온 24°C · 차가워요」, 계절 파생)로 남긴다 |
+| `src/ui/windows/pool-edit.ts` | 모드 `'item'`(타입 유니언 16 · 탭 65 · `itemGrid` 33·77 · `preview` 35·78·94 · `renderItems` 248~273 · `tapItem` · `setMode` 의 item 분기 138~148 · `apply` 의 item 분기) 전부 삭제 → 붓 6 + 행동 **4**(소품 탭 없어짐). `#dock-pool .kitem-grid` CSS 삭제 |
+| `src/ui/windows/cert.ts` | 「만점: 농도 n/5」 줄(125~128) 삭제 · `FAMILY_KO` 갱신 |
+| `src/ui/windows/sns.ts:191` | 친구 행 「좋아하는 색·향」 → 「좋아하는 음식」만 |
+| `src/ui/windows/build.ts` | `SCENT_KO` 분위기 문구(카드 sub) 삭제 |
+| `src/ui/windows/facility-info.ts` | `scent` 행이 있으면 삭제 |
+| `src/ui/style.css` | `--tile-pool-*` 물빛 토큰 중 색 이름 토큰 · `.kbars`·`.kptile*`·`.kpreview*`·`.kdetail-body` 규칙 삭제(S2 자가 미사용을 안 잡으니 손으로) |
+| `src/ui/pictures.ts` | `pictureId('item', …)` 호출부가 0 이 되면 계열 `item` 은 등록부에 남겨도 된다(그림 자산) |
+
+**tests·하네스 (P60-a 에서 함께)**
+- 삭제: `color.test.ts` · `pool-detail.test.ts` · `preset.test.ts` · `g30.test.ts`(좋아요 리셋) · `g52.test.ts`(미리보기) · `p49a2.test.ts` 중 물빛 절 · `pool-state.test.ts` 색·향 절(온도 절은 유지) · `condition.test.ts` item 절 · `sns.test.ts` favHit 절 · `cooking-g41.test.ts` 는 요리라 무관(이름만 겹침, 확인) · `data.test.ts` 의 items 검사.
+- 하네스 `tools/verify.ts` 행 12 삭제·치환: G3 아이템 탭(273) · G52 미리보기(279) · G3→P49-b 딸기 ×5(296) · 핑크 픽셀(324) · G12 프리셋 저장/복원(692·697) · G30 좋아요 리셋(913) · G42 풀 정보 3행/심사 만점(1034·1036) · G47 타일 3(1077) · G52 미리보기 문구(1129) · P56-a2 소품 카드 격자(1408) · P57-f 의 「소품 독」 화면 목록. 대신 **P60-a 행 3**: 「수역 정보 = 온도 행 1 · 타일 0」 · 「수역 독 탭 = 붓 6 + 행동 4」 · 「인증 24 유지 · set/court 계열 이름 · 보상 바이트 동일」.
+- 새 자: `tools/check-items-dead.mjs`(`item`·`scent`·`PoolColor` 문자열이 `src/` 에 0, 그림 등록부 제외) + `--selftest`.
+- 골든 재베이크 1(봇의 소품 구매가 사라져 돈 흐름이 바뀐다 — 사유 줄 「P60-a 소품 삭제」).
+
+### §10.2 P60-b 기구도 배를 곯린다 (B1) — 가장 작은 페이즈
+
+| 파일 | 어디 | 무엇 |
+|---|---|---|
+| `src/data/balance.json` | `hungerPerRig` 신설(초안 12 — `hungerPerSwim 30`·`hungerPerRide 25` 아래, 스릴 ×) | 데이터 |
+| `src/sim/guest.ts` | `finishUse`(734) 첫 줄 뒤 | `if (def.class === 'rig' || def.class === 'slide') g.hunger = Math.min(100, g.hunger + this.b.hungerPerRig * Math.max(1, def.thrill ?? 1));` — `menuSlots > 0` 리셋보다 **앞** |
+| `src/sim/guest.ts` | `GuestBalance` 타입(159) | 키 추가 |
+| 검사 | `guest.test.ts` 신규 절 | 기구 1회 뒤 `hunger ≥ hungerPerRig` · `hungerPerRig=0` 이면 P60-a 골든과 바이트 동일(대조군) |
+| 밴드 | `tools/bot.ts` | `foodShare` 중앙이 P60-a 보다 오른쪽(자동 검사는 「이동 > 0」 한 줄) |
+UI 변경 0. 골든 재베이크 1.
+
+### §10.3 P60-c 세트 (D72 B) — 데이터 + `computeRigs` + 카드 배지 + 도감
+
+**sim**
+| 파일 | 어디 | 무엇 |
+|---|---|---|
+| `src/data/rig-sets.json` 신설 | — | 8종 초안: `ninja`(rig_bridge·rig_beam·rig_stepstone) · `kids`(rig_mini_slide·rig_kids_park·rig_hammock) · `jump`(rig_blob·rig_iceberg·rig_totem) · `slide3`(rig_slide·rig_slidedock·rig_mini_slide) · `lounge`(rig_hammock·rig_sunbed·floating_bar) · `night`(led_buoy·led_sunbed·floating_bar) · `roll`(rig_roller·waterwalk·rig_seesaw) · `tow3`(선착장 코스 3종 — 견인 축 접점, `courses` 로 판정). 각 `{ id, name, members[3], hidden: boolean }`, `hidden` 4 |
+| `src/data/schema.ts` | `RigSetDef` | 타입 + `data.test.ts` 「멤버 3 · 서로 다른 id · 시작 해금 7종으로 ≥1 성립」 |
+| `src/sim/rig.ts` | `RigState` 에 `sets: Map<poolId, string[]>` · `computeRigs` 끝(107~112 뒤) | 켜진 기구의 `defId` 집합(개조판은 `baseKind`)과 4이웃 인접 그래프에서 **세 멤버가 서로 인접(경로로 이어짐)** 이면 성립. 같은 세트 둘째부터 무시 |
+| `src/sim/game.ts` | `ppajiGradeOf` 옆 `setsOf(poolId)` · 팔찌 `bandPrice` 호출부(`aimPreview` 3053 · `issueBand`) 에 `+50 × sets` · `tilePopSum`(1376) 에 `+6 × sets` · `afterWorldChange`(3230~3250) 의 등급 모달 옆에 **첫 발견**(`setsSeen` 에 없으면 `celebrate` 큐 + 인박스 `pic`) | 값 둘 + 발견 채널 |
+| `src/sim/game.ts` | `aimPreview` 반환에 `setNext: string | null` | 카드 배지·확정 바 칩 재료. `computeRigs(overlay)` 가 이미 있으니 한 줄 |
+| `src/sim/condition.ts` | `case 'rigSet'`(min = 성립 세트 수) | 인증 `set_f/d/b`·소원 |
+| `src/sim/game.ts` 스냅샷 | `setsSeen?: string[]` optional | 세이브 v5 그대로(optional 규칙) |
+| `src/sim/bot.ts` | `attachRigs` 후보 정렬 | 「세트 완성 후보(멤버 2/3 이 이미 켜져 있는 것) 우선」 한 줄 · `--no-set` 옵션(대조군) |
+| `tools/bot.ts` | 밴드 `rigSetsFound 3~8` | |
+
+**UI (추가)**
+| 파일 | 무엇 |
+|---|---|
+| `src/ui/windows/build.ts` 카드 | `aimPreview` 는 자리를 알아야 하니 카드 배지는 **「이 카드가 어떤 세트의 멤버인지」**만(`rig-sets.json` 역색인) — 배지 텍스트 `세트`(`PictureCard.badge {text}`). 자리별 「+닌자 코스」는 확정 바 칩 |
+| `src/ui/windows/place.ts` `refresh` | `aimPreview.setNext` 가 있으면 `.kdock-cost` 칩 「+닌자 코스」(기존 등급/팔찌 칩 옆, 칸 1) |
+| `src/render/scene.ts` 고스트 | 세트가 성립할 이웃 기구 위에 별 1개(FX 등록부 이름 `set-star`, 기존 `price-pop` 과 같은 표) |
+| `src/ui/windows/rank.ts` 수집 블록 | `col('세트', setsSeen.size, RIG_SETS.length)` 한 줄(G53 「n/N 6줄」 행 → 7줄) |
+| 도감 | 새 창 없음 — `rigWin`(기구 개조 창, `cook.ts` `RIG_SPEC`)의 도감 격자 **아래에** 「세트 n/8」 `PictureGrid` 3열(멤버 3 스프라이트 합성은 `canvasPictureEl` 로 첫 멤버 그림, 미발견은 실루엣·`hidden` 은 「?」) |
+| `src/ui/windows/celebrate.ts` | 기존 축하 창 재사용(제목 「세트 발견 · 닌자 코스」 + 멤버 그림 3) |
+| `src/ui/windows/pool-info.ts` | 행 「세트 k」 1행(타일 3 이 빠진 자리) |
+| 하네스 P60-c 행 4 | 「세트마다 성립 배치 존재」(단위) · 「배지 뜬 카드를 놓아 성립 → 축하 1회 + 수집 +1」 · 「새 판 0~5분 모달 ≤ 2」(G11 자 재확인) · 「같은 세트 둘째 값 0」 |
+골든 재베이크 1(봇 순서가 바뀐다).
+
+### §10.4 P60-d 입수구 · 경로 (D72 A+C) — `computeRigs` 확장 + 정보창 2행 + 고스트 주행
+
+**sim**
+| 파일 | 어디 | 무엇 |
+|---|---|---|
+| `src/sim/rig.ts` `computeRigs` | 씨앗 판정(63~66) | 씨앗 = 링 접점은 그대로. **입수구** = 링(`FLOOR.deck`) 칸 중 뭍(`guestWalkable` 이고 물·데크가 아닌 칸)에 4이웃으로 닿은 칸들의 **연속 구간 수**를 수역별로 센다 → `RigState.entries: Map<poolId, number>` |
+| 같은 함수 | 사슬 컴포넌트(75~99) 자리 | **경로** = 켜진 기구를 입수구 칸에서 BFS 거리 순으로 정렬한 배열(수역별). `RigState.path: Map<poolId, number[]>`(uid 순서) · `pathComplete: Map<poolId, boolean>`(스릴 비감소 ∧ 마지막 `chain==='rest'`) |
+| 같은 함수 | `chainLen/chainKinds` | **유지하되 뜻만**: `chainLen` = 그 기구까지의 경로 길이(입수구에서 몇 번째) — `chainScale(len)` 정원 배율이 그대로 「경로가 길수록 정원」이 된다(사슬 개념 흡수, 코드 변경 최소). `chainKinds` = 경로 안 종 수. 등급 함수 `ppajiGrade` 는 **안 바꾼다**(문턱만 `balance.json` 으로: `ppajiGradeThresholds`) |
+| `src/sim/game.ts` | `aimPreview` | `pathNext: number`(놓으면 몇 번째) · `completeNext: boolean` 추가 |
+| `src/sim/guest.ts` | `finishUse` rig 가지(P60-b 뒤) | 경로 완성 수역의 기구면 `sat` 가산 ×1.25 (`hooks.pathComplete?.(poolId)`) |
+| `src/sim/condition.ts` | `rigChain` 뜻 → `rigPath`(경로 길이 min) · 새 `rigPathComplete`(수역 ≥1) | 인증 `stream_b`·소원 7·story 2 의 `rigChain` 키 이름을 `rigPath` 로 일괄 치환 |
+| `src/sim/bot.ts` | `attachRigs` | 후보를 「입수구 거리 오름차순」으로, 마지막엔 `rest` 계열 · `growPpaji` 가 입수구 0 이면 라인 조각 1 시도 |
+| `tools/bot.ts` | 밴드 `rigPathLen 4~10` · `rigPathCompleteShare ≥ 0.3`(3년차) · `ringEntries ≥ 1` · `rigChainMax` 상한 20 → 10 | |
+
+**UI (추가 · 변경)**
+| 파일 | 무엇 |
+|---|---|
+| `src/ui/windows/pool-info.ts` | 「기구 n」 행 옆에 **「입수구 e · 경로 m/완성 ✓」 1행**(캡슐 값 ≤ 10자 유지: 「1 · 4/✓」) — P59-c 힌트 줄에 「입수구에서 멀수록 스릴, 끝은 휴식이면 완성」 |
+| `src/ui/windows/place.ts` | 확정 바 칩 「경로 3→4」(값이 바뀔 때만) · 완성이 되는 배치면 「코스 완성 ✓」 |
+| `src/render/scene.ts` | **고스트 손님 주행**: 조준 중 `aimPreview.pathNext` 가 있으면 v8 손님 하나가 입수구 칸 → 기존 경로 → 고스트 칸을 1.2초에 걷는 FX(등록부 이름 `path-walk`, 트윈은 등록부 안에서만 — S9). 조준 칸이 바뀌면 다시 |
+| `src/render/scene.ts` | 입수구 칸 표시: 배치 중 링의 입수구 칸에 작은 사다리 표식(FX `entry-mark`, 아이콘은 사용자 에셋 자리 — 없으면 절차 폴백 「▽」) |
+| `src/ui/hud.ts` 목표 A 문구 | 「빠지에 기구를 하나 붙이자」 → 「사다리 옆에 기구를 붙이자」(`goalLine` 폴백 문자열, `main.ts`) |
+| 결산 `results.ts` | 병목 처방에 「입수구가 하나 — 라인 조각으로 늘리자」는 **넣지 않는다**(동시 입수 정원을 보류했으므로 근거가 없다) |
+| 하네스 P60-d 행 5 | 「킷 입수구 1 · 라인 조각 하나 뒤 2」 · 「경로 = BFS 순서(단위 항등)」 · 「스릴 비감소 + 끝 rest = 완성」 · 「확정 바 칩 ≤ 1칸 · 정보창 +1행」(브라우저) · 「FX `path-walk` 등록부 이름 1」(정적) · **사람 확인 H71**: 고스트 주행만 보고 순서를 알겠나 — 아니면 경로를 접고 세트만 남긴다 |
+골든 재베이크 1.
+
+### §10.5 P60-e 좌석 vs 서서 + 구색 (D73 B2·B4) — 푸드코트 P58-b/c 닫기
+
+| 파일 | 어디 | 무엇 |
+|---|---|---|
+| `src/sim/guest.ts` `afterUse`(756~764) | `carry` 가지 | `nearestLounge` 를 **반경 3(`Game.SEAT_RADIUS`) 안**으로 먼저 찾고, 없으면 `standEats` 훅 + `EAT_TICKS` 12 → 8 + 만족 가산 0. 먼 좌석(>6칸) 은 잡지 않는다(왕복 감점 방지) |
+| `src/sim/game.ts` | `stats.standEats` · `onStandEat` 훅 · `seatGradeAt`(826) 의 `food` 불리언 → **카테고리 수 k**(`menuSlots>0` 시설의 걸린 메뉴 `recipes.json` 분류 집합) · `grade += Math.floor(k/2)` | 구색. 킷은 2/4 |
+| `src/sim/game.ts` `afterWorldChange` | 「풀코스 푸드코트」(k=4 인 푸드코트 영역이 처음) → `celebrate` 1회 + 인박스 | 발견 채널 |
+| `src/sim/condition.ts` | `courtSeats`(총 좌석) · `courtMenuKinds`(최대 k) | 인증 `court_f/d/b` |
+| `src/sim/foodcourt.ts` | `seatsOf(courtId)` 는 있음 · `menuKindsOf(courtId, facilities)` 추가 | 정보창 값 |
+| `src/sim/bot.ts` | `growFoodCourt`: 어제 `standEats/eats > 0.3` 이면 3×2 블록 +1(주 1회) · 식당 자리 정책에 「카테고리 다양성」 한 줄 | |
+| `tools/bot.ts` | 밴드 `standShare 0.1~0.4` · `courtSeats`(RunMetrics) · `courtMenuKinds ≥ 3`(3년차) | |
+| **UI** `src/ui/windows/results.ts` `showDay` | 「서서 먹은 손님 s% — 식탁 4석 더」 1행(문턱 0.3, 처방 문구는 `kfac-hint` 스타일이 아니라 `.krow` 값 ≤ 10자 + 힌트 줄) | 결산 |
+| **UI** 푸드코트 정보창(`facility-info.ts` 의 파생 식탁 분기, P58-a) | 「좌석 n · 오늘 식사 m · 서서 s% · 메뉴 k/4」 4행(캡슐 값) | |
+| **UI** 밤 식탁(D7) | `syncNightSet`(`game.ts:3132`) 필터에 `FOODCOURT_SEAT_DEF` 한 항 | P60-f 에서 옮겨 온다(한 줄) |
+| 하네스 P60-e 행 4 | 「좌석 0 이면 서서 100%」 · 「킷 4석 첫날 서서 ≥ 1」 · 「k=4 → 등급 +2」 · 「결산 줄 실터치」(P3-C④ 규칙) · 파생 좌석 `derived` 술어 제외 유지(단위) |
+골든 재베이크 1.
+
+### §10.6 페이즈 순서·게이트 번호·시간 (다이어트판)
+
+| P | 게이트 | 재베이크 | 예상 |
+|---|---|---|---|
+| P60-a 삭제 | `p60a` 160.1 | 1 | 1.5일(대부분 데이터 이관 + 하네스 12행) |
+| P60-b 배고픔 | `p60b` 160.2 | 1 | 0.5일 |
+| P60-c 세트 | `p60c` 160.3 | 1 | 1일 |
+| P60-d 입수구·경로 | `p60d` 160.4 | 1 | 1.5일(고스트 주행 FX 포함) |
+| P60-e 좌석·구색 | `p60e` 160.5 | 1 | 1일 |
+| (보류 바구니) | — | — | 밴드 실측 뒤: 점심 휴식 토글 · 동시 입수 정원 · 역순 벌 · 식권 · 철거 −25% · `rigAt` 소원 · 어린이 2칸 |
+
+순서줄: `P60-a → P60-b → P60-c → P60-d → P60-e`. H71(고스트 주행 가독) 이 ✗ 면 P60-d 의 경로를 접고 세트만 남긴다 — 그때 `chainLen` 뜻은 옛 「같은 계열 사슬」로 되돌린다(코드 한 함수).
+
 ## §7 미결 (사용자)
 
 | # | 물음 | 권고 | 언제까지 |
@@ -307,6 +470,8 @@ D. 일자 잔교 → 끝의 워터파크 섬
 ---
 
 ## §9 이력
+
+- 2026-09-18 사용자 「다이어트판이 낫다」 → D74 다이어트판 확정, §10 구현 지도 추가(파일·함수 단위 · UI 추가/삭제 · 데이터 이관 수 실측: 소원 보상 `item` 151 이 가장 큰 덩어리). 보류 바구니 8.
 
 - **2026-09-18 초안**: 사용자 요청(「풀 색은 빼고 · 기구×플로팅덱 조합과 푸드코트로 · 게임적·타이쿤적·카이로적 요소 · 에셋은 만들고 있다」)을 받아 조사 다섯(R1 현황 실측 · R2 카이로 12작품 조합 문법 · R3 가평·청평 실지 5형 + 타이쿤 8종 규칙 · R4 실지 음식 문화 + 게임 8종 + 규칙 6 · R5 설계 비평 + 채점표 4)을 통합했다. 결정 후보 D71~D73 · 페이즈 P60-a~f · 게이트 6절 · 미결 8. 코드 0줄 · 그림 제안 0.
   ⚠ 조사 간 불일치 셋을 그대로 남겼다: ① 소원 조건 수(75 / 74 / 32 — §5) ② 상성 감점 필요 여부(R5 vs R2·R3 — 미결 ③) ③ 향의 후계(R2 「최다 기구 종」 vs 본 계획 「푸드코트 구색」 — 향은 시설 34종이 계속 주므로 「향 인증」 이름을 살릴 이유가 없어 후자를 택했다).
