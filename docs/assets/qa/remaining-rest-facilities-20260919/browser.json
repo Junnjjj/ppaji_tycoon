@@ -1,0 +1,250 @@
+{
+  "rows": [
+    {
+      "id": "pavilion",
+      "tab": "seat",
+      "size": [
+        3,
+        3
+      ],
+      "locked": true,
+      "native": true
+    },
+    {
+      "id": "authored_parasol",
+      "tab": "seat",
+      "size": [
+        2,
+        2
+      ],
+      "locked": true,
+      "native": true
+    },
+    {
+      "id": "authored_sunbed_row",
+      "tab": "seat",
+      "size": [
+        4,
+        2
+      ],
+      "locked": true,
+      "native": true
+    },
+    {
+      "id": "authored_pyeongsang_row",
+      "tab": "seat",
+      "size": [
+        4,
+        2
+      ],
+      "locked": false,
+      "native": true
+    },
+    {
+      "id": "authored_massage_row",
+      "tab": "seat",
+      "size": [
+        3,
+        2
+      ],
+      "locked": true,
+      "native": true
+    },
+    {
+      "id": "caravan",
+      "tab": "lodging",
+      "size": [
+        4,
+        2
+      ],
+      "locked": true,
+      "native": true
+    },
+    {
+      "id": "glamping",
+      "tab": "lodging",
+      "size": [
+        4,
+        3
+      ],
+      "locked": true,
+      "native": true
+    },
+    {
+      "id": "authored_bbq_zone",
+      "tab": "food",
+      "size": [
+        4,
+        3
+      ],
+      "locked": true,
+      "native": true
+    },
+    {
+      "id": "authored_footbath",
+      "tab": "play",
+      "size": [
+        3,
+        2
+      ],
+      "locked": true,
+      "native": true
+    }
+  ],
+  "simulationUnchanged": true,
+  "placed": [
+    {
+      "uid": 34,
+      "defId": "pavilion",
+      "i": 20,
+      "j": 8,
+      "facing": 0,
+      "rentedBy": null,
+      "usesToday": 0,
+      "level": 1,
+      "usesTotal": 0,
+      "incomeToday": 0,
+      "incomeTotal": 0,
+      "size": [
+        3,
+        3
+      ]
+    },
+    {
+      "uid": 36,
+      "defId": "authored_parasol",
+      "i": 23,
+      "j": 8,
+      "facing": 1,
+      "rentedBy": null,
+      "usesToday": 0,
+      "level": 1,
+      "usesTotal": 0,
+      "incomeToday": 0,
+      "incomeTotal": 0,
+      "size": [
+        2,
+        2
+      ]
+    },
+    {
+      "uid": 38,
+      "defId": "authored_sunbed_row",
+      "i": 25,
+      "j": 8,
+      "facing": 0,
+      "rentedBy": null,
+      "usesToday": 0,
+      "level": 1,
+      "usesTotal": 0,
+      "incomeToday": 0,
+      "incomeTotal": 0,
+      "size": [
+        4,
+        2
+      ]
+    },
+    {
+      "uid": 40,
+      "defId": "authored_pyeongsang_row",
+      "i": 29,
+      "j": 8,
+      "facing": 1,
+      "rentedBy": null,
+      "usesToday": 0,
+      "level": 1,
+      "usesTotal": 0,
+      "incomeToday": 0,
+      "incomeTotal": 0,
+      "size": [
+        4,
+        2
+      ]
+    },
+    {
+      "uid": 42,
+      "defId": "authored_massage_row",
+      "i": 31,
+      "j": 8,
+      "facing": 0,
+      "rentedBy": null,
+      "usesToday": 0,
+      "level": 1,
+      "usesTotal": 0,
+      "incomeToday": 0,
+      "incomeTotal": 0,
+      "size": [
+        3,
+        2
+      ]
+    },
+    {
+      "uid": 44,
+      "defId": "caravan",
+      "i": 38,
+      "j": 8,
+      "facing": 1,
+      "rentedBy": null,
+      "usesToday": 0,
+      "level": 1,
+      "usesTotal": 0,
+      "incomeToday": 0,
+      "incomeTotal": 0,
+      "size": [
+        4,
+        2
+      ]
+    },
+    {
+      "uid": 46,
+      "defId": "glamping",
+      "i": 40,
+      "j": 8,
+      "facing": 0,
+      "rentedBy": null,
+      "usesToday": 0,
+      "level": 1,
+      "usesTotal": 0,
+      "incomeToday": 0,
+      "incomeTotal": 0,
+      "size": [
+        4,
+        3
+      ]
+    },
+    {
+      "uid": 48,
+      "defId": "authored_bbq_zone",
+      "i": 63,
+      "j": 8,
+      "facing": 1,
+      "rentedBy": null,
+      "usesToday": 0,
+      "level": 1,
+      "usesTotal": 0,
+      "incomeToday": 0,
+      "incomeTotal": 0,
+      "size": [
+        4,
+        3
+      ]
+    },
+    {
+      "uid": 51,
+      "defId": "authored_footbath",
+      "i": 49,
+      "j": 8,
+      "facing": 0,
+      "rentedBy": null,
+      "usesToday": 0,
+      "level": 1,
+      "usesTotal": 0,
+      "incomeToday": 0,
+      "incomeTotal": 0,
+      "size": [
+        3,
+        2
+      ]
+    }
+  ]
+}

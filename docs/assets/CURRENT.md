@@ -1,5 +1,10 @@
 # 에셋 작업 현재 상태
 
+## 2026-09-19 Remaining rest facilities
+
+Nine more authored facilities are now connected: pavilion/glamping/caravan replace existing art; six `authored_*` construction variants preserve original placed sizes. All nine appear before unlock. [Applied list, sizes, system boundaries and reproduction](handovers/2026-09-19-remaining-rest-facilities.md). MAIN review: `/asset-reviews/rest-facilities-20260919.html` on port 5189. These facilities retain existing guest behavior; dedicated authored seat-contact animations are not yet connected.
+
+
 ## 2026-09-19 MAIN asset integration
 
 The active latest-system game is `ppaji/`, port **5189**. The September 14 note below about a separate system adapter describes the earlier state.

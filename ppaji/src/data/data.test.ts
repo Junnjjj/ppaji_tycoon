@@ -713,7 +713,7 @@ describe('ranks.json', () => {
     expect(ranks.find((r) => r.star === 5)!.reward).toEqual({ kind: 'facility', id: 'golden_kairobot' });
     // 반대 방향: rank-source 시설은 전부 그 랭크가 준다
     for (const f of facilities.filter((f) => f.unlock.source === 'rank')) {
-      const hit = ranks.find((r) => (r.reward?.kind === 'facility' && r.reward.id === f.id) || (r.unlocks ?? []).includes(f.id)); // P21: `unlocks` 로 여럿
+      const hit = ranks.find((r) => (r.reward?.kind === 'facility' && r.reward.id === (f.variantOf ?? f.id)) || (r.unlocks ?? []).includes(f.variantOf ?? f.id)); // P21: `unlocks` 로 여럿
       expect(hit?.star, `${f.id} rank reward`).toBe(f.unlock.rank);
     }
   });
@@ -734,7 +734,7 @@ describe('shop.json', () => {
 
   it('covers every shop-unlock facility / gift exactly once, and nothing else; ingredient rows are 6~8 shop-tier ingredients, each at most once', () => {
     const want = [
-      ...facilities.filter((f) => f.unlock.source === 'shop').map((f) => `facility:${f.id}`),
+      ...facilities.filter((f) => f.unlock.source === 'shop' && !f.variantOf).map((f) => `facility:${f.id}`),
       ...gifts.filter((g) => g.unlock === 'shop').map((g) => `gift:${g.id}`),
     ].sort();
     const have = shop.filter((s) => s.kind !== 'ingredient').map((s) => `${s.kind}:${s.ref}`).sort();

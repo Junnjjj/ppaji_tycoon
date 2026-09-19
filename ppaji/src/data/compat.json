@@ -294,5 +294,26 @@
       "salmon_sushi",
       "fried_noodles"
     ]
+  },
+  {
+    "restaurant": "authored_bbq_zone",
+    "good": [
+      "fish_cake_skewer",
+      "hotbar",
+      "octopus_fritters",
+      "fried_calamari",
+      "seafood_tempura",
+      "potato_pancake",
+      "octopus_sushi",
+      "beondegi",
+      "ramune",
+      "fries"
+    ],
+    "bad": [
+      "vanilla_ice_cream",
+      "strawberry_cake",
+      "cafe_latte",
+      "chestnut_cream_cake"
+    ]
   }
 ]

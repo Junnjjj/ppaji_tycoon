@@ -26,6 +26,8 @@ export interface FacilityUnlock {
 
 export interface FacilityDef {
   id: string;
+  /** Authored footprint variant: shares the base unlock; old placed instances retain their ID and size. */
+  variantOf?: string;
   name: string;
   class: FacilityClass;
   /** 발자국 (타일) */

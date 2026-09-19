@@ -398,7 +398,7 @@ export class Game {
     this.workshop = new WorkshopStore(GEAR_DEFS, PART_DEFS, this.rng.workshop, WORKSHOP_WORDS, GEAR_FAIL_PICK);
     this.rigs = new RigStore(RIG_UPGRADES, RIG_PART_DEFS, this.rng.rig); // P51: 개조 레시피 20(rigs.json)
     this.rides = new CourseRideStore(this.rideHost());
-    for (const d of FACILITY_DEFS.values()) if (d.unlock.source === 'start' && d.derived !== true) this.unlocked.facilities.add(d.id); // P58-a: 파생 시설은 해금 목록에 안 든다(건설 창·봇에 안 뜬다)
+    for (const d of FACILITY_DEFS.values()) if (d.unlock.source === 'start' && d.derived !== true && !d.variantOf) this.unlocked.facilities.add(d.id); // P58-a: 파생 시설은 해금 목록에 안 든다(건설 창·봇에 안 뜬다)
     for (const d of GIFT_DEFS) if (d.unlock === 'start') this.unlocked.gifts.add(d.id);
     this.weather = rollWeather(this.rng.world, seasonOf(0));
     this.planFriendVisits();
@@ -1475,7 +1475,8 @@ export class Game {
   }
 
   isUnlocked(defId: string): boolean {
-    return this.unlocked.facilities.has(defId);
+    const source = FACILITY_DEFS.get(defId)?.variantOf;
+    return this.unlocked.facilities.has(defId) || (source !== undefined && this.unlocked.facilities.has(source));
   }
 
   // ── tick ──────────────────────────────────────────────────────────

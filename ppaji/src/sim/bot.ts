@@ -70,6 +70,7 @@ export const BOT_PERSONAS: Record<BotPersona, BotOptions> = {
   course: { ...BOT_DEFAULTS, digPerDay: 6, poolTarget: 32, persona: 'course' },
 };
 
+// Authored footprint variants stay player-buildable while automated balance runs use the original catalog.
 export class Bot {
   private busArea(g: Game): string | undefined {
     const count = new Map<string, number>();
@@ -128,7 +129,7 @@ export class Bot {
     // P47: 하루 하나(옛 박자)는 128일에 100채가 상한이라 8년차 마당이 비었다 — 돈이 넉넉하면(예비비 위 3만) 하루 둘. 사람의 박자 상한은 둘
     for (let round = 0; round < 2 && g.facilities.all.length < want; round++) {
       if (round === 1 && spendable() < 30000) break;
-      const defs = [...FACILITY_DEFS.values()].filter((d) => d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id) && d.capacity > 0 && d.class !== 'rig' && d.onRing !== true).sort((a, b) => a.cost - b.cost); // P50-b1: 기구·링 시설은 `attachRigs`/`chainRigs` 가 놓는다(뭍 시설 박자와 섞이면 기구가 판을 덮었다 — 실측 이용 몫 0.73) · `--no-rig` 는 그 둘을 끈다
+      const defs = [...FACILITY_DEFS.values()].filter((d) => !d.variantOf && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id) && d.capacity > 0 && d.class !== 'rig' && d.onRing !== true).sort((a, b) => a.cost - b.cost); // P50-b1: 기구·링 시설은 `attachRigs`/`chainRigs` 가 놓는다(뭍 시설 박자와 섞이면 기구가 판을 덮었다 — 실측 이용 몫 0.73) · `--no-rig` 는 그 둘을 끈다
       // 식당 성향: 식당이 열려 있으면 둘에 하나는 식당
       // 식당 성향은 둘에 하나, 나머지 성향도 셋에 하나는 식당 (P16: 길만 걷는 세계에서 원작의 「입장료 + 매점」 비율을 지키려면 식당이 더 촘촘해야 한다 — 매점 몫 0.21 → 0.25 실측)
       const every = this.opts.persona === 'restaurant' ? 2 : 3;
@@ -301,20 +302,20 @@ export class Bot {
         break;
       }
       case 'facilityClass': {
-        const def = [...FACILITY_DEFS.values()].filter((d) => d.class === c.class && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id)).sort((a, b) => a.cost - b.cost)[0];
+        const def = [...FACILITY_DEFS.values()].filter((d) => d.class === c.class && !d.variantOf && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id)).sort((a, b) => a.cost - b.cost)[0];
         if (def && spendable() >= def.cost) this.tryPlace(def.id);
         break;
       }
       case 'seatGrade': {
         // P28: 등급 높은 자리를 하나 더 — 평상류 후보 중 등급 순 (tryPlace 의 lounging 분기가 그렇게 고른다)
-        const def = [...FACILITY_DEFS.values()].filter((d) => d.class === 'lounging' && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id) && d.lodging !== true).sort((a, b) => a.cost - b.cost)[0];
+        const def = [...FACILITY_DEFS.values()].filter((d) => d.class === 'lounging' && !d.variantOf && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id) && d.lodging !== true).sort((a, b) => a.cost - b.cost)[0];
         if (def && spendable() >= def.cost) this.tryPlace(def.id);
         break;
       }
       case 'seatsFed': {
         // P28: 그 시설을 자리 곁에 — 있으면 평상을 그 옆에, 없으면 시설을 자리 옆에
         const have = g.facilities.all.find((f) => f.defId === c.id);
-        if (have) { const seat = [...FACILITY_DEFS.values()].filter((d) => d.class === 'lounging' && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id) && d.lodging !== true).sort((a, b) => a.cost - b.cost)[0]; if (seat && spendable() >= seat.cost) this.tryPlace(seat.id, c.id); }
+        if (have) { const seat = [...FACILITY_DEFS.values()].filter((d) => d.class === 'lounging' && !d.variantOf && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id) && d.lodging !== true).sort((a, b) => a.cost - b.cost)[0]; if (seat && spendable() >= seat.cost) this.tryPlace(seat.id, c.id); }
         else { const def = FACILITY_DEFS.get(c.id); if (def && this.unlockFacility(c.id, spendable) && spendable() >= def.cost) this.tryPlace(c.id, 'pyeongsang_row'); }
         break;
       }
@@ -510,7 +511,7 @@ export class Bot {
   private ensureHallShops(g: Game, spendable: () => number): void {
     const have = g.facilities.all.filter((f) => FACILITY_DEFS.get(f.defId)?.passBy).length;
     if (have >= Math.min(4, 1 + g.rank)) return;
-    const defs = [...FACILITY_DEFS.values()].filter((d) => d.passBy && d.indoorOnly && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id) && !g.facilities.all.some((f) => f.defId === d.id) && !(this.opts.noVest && d.id === 'rental_tube')).sort((a, b) => (a.id === 'rental_tube' ? -1 : b.id === 'rental_tube' ? 1 : 0) || a.cost - b.cost || a.id.localeCompare(b.id)); // P52-a: 대여소가 먼저(하루권 정본) · `--no-vest` 대조군은 대여소 없이(창구 ⓑ 만)
+    const defs = [...FACILITY_DEFS.values()].filter((d) => d.passBy && d.indoorOnly && !d.variantOf && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id) && !g.facilities.all.some((f) => f.defId === d.id) && !(this.opts.noVest && d.id === 'rental_tube')).sort((a, b) => (a.id === 'rental_tube' ? -1 : b.id === 'rental_tube' ? 1 : 0) || a.cost - b.cost || a.id.localeCompare(b.id)); // P52-a: 대여소가 먼저(하루권 정본) · `--no-vest` 대조군은 대여소 없이(창구 ⓑ 만)
     for (const d of defs) {
       if (spendable() < d.cost + 3000) return;
       const sp = this.hallSpot(d.id); if (!sp) continue;
@@ -574,7 +575,7 @@ export class Bot {
     if (g.rank < 2) return;
     const have = g.facilities.all.filter((f) => g.facilities.defOf(f).lodging === true).length;
     if (have >= 1 + Math.floor(g.day / 32)) return;
-    const defs = [...FACILITY_DEFS.values()].filter((d) => d.lodging === true && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id)).sort((a, b) => a.cost - b.cost);
+    const defs = [...FACILITY_DEFS.values()].filter((d) => d.lodging === true && !d.variantOf && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id)).sort((a, b) => a.cost - b.cost);
     const pick = defs[0];
     if (!pick || spendable() < pick.cost) return;
     // P27: 1박은 등급 ≥ 2 자리에서만 성립한다(P24) — 물가(아래 8줄)에서 등급이 2 이상인 칸을 고른다. 아무 데나 놓으면 0박(실측 camp_site 등급 0)
@@ -595,7 +596,7 @@ export class Bot {
     const seats = g.facilities.all.filter((f) => g.facilities.defOf(f).class === 'lounging').length;
     const target = Math.max(2, Math.round(teamsYesterday * 0.8));
     if (seats >= target) return;
-    const defs = [...FACILITY_DEFS.values()].filter((d) => d.class === 'lounging' && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id) && d.capacity > 0 && d.lodging !== true).sort((a, b) => b.capacity / b.cost - a.capacity / a.cost || a.cost - b.cost);
+    const defs = [...FACILITY_DEFS.values()].filter((d) => d.class === 'lounging' && !d.variantOf && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id) && d.capacity > 0 && d.lodging !== true).sort((a, b) => b.capacity / b.cost - a.capacity / a.cost || a.cost - b.cost);
     const pick = defs[0];
     if (!pick) return;
     for (let k = 0; k < 3 && seats + k < target && spendable() >= pick.cost; k++) if (!this.tryPlace(pick.id)) break;
@@ -624,7 +625,7 @@ export class Bot {
     // P60-d §10.4 — 새 종 안에서는 **휴식 계열을 마지막에**(코스의 끝), 그 앞은 스릴 오름차순(경로의 스릴이 비감소여야 완성). 세트 완성 > 입수구 거리 — 우선순위 둘을 합친 것. `--no-path` 는 옛 값 순
     const tier = (d: { id: string }): number => (done(d.id) ? 0 : !have.has(d.id) ? 1 : 2);
     const restLast = (d: { chain?: string | null; thrill?: number }): number => (this.opts.noPath ? 0 : d.chain === 'rest' ? 100 : (d.thrill ?? 0));
-    const defs = [...FACILITY_DEFS.values()].filter((d) => d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id) && ((d.class === 'rig' && d.onRing !== true && (!have.has(d.id) || completes.has(d.id))) || (d.onRing === true && completes.has(d.id)))).sort((a, b) => tier(a) - tier(b) || restLast(a) - restLast(b) || a.cost - b.cost); // 링 위 종은 세트 자리에서만 · P60-d: 휴식 계열은 새 종 중 맨 뒤·먼 자리(⚠ 휴식을 `capCourse` 에만 맡겨 봤다 — 초반 값싼 기구 둘이 빠져 밤 파티가 94 → 17~44 일로 늦어져 되돌렸다)
+    const defs = [...FACILITY_DEFS.values()].filter((d) => !d.variantOf && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id) && ((d.class === 'rig' && d.onRing !== true && (!have.has(d.id) || completes.has(d.id))) || (d.onRing === true && completes.has(d.id)))).sort((a, b) => tier(a) - tier(b) || restLast(a) - restLast(b) || a.cost - b.cost); // 링 위 종은 세트 자리에서만 · P60-d: 휴식 계열은 새 종 중 맨 뒤·먼 자리(⚠ 휴식을 `capCourse` 에만 맡겨 봤다 — 초반 값싼 기구 둘이 빠져 밤 파티가 94 → 17~44 일로 늦어져 되돌렸다)
     const spots0 = this.litWaterSpots(g);
     const usePath = !this.opts.noPath; // P60-d: 입수구 거리(경로 BFS 거리) — 가까운 자리부터(휴식은 먼 자리부터)
     if (usePath && this.capCourse(g, spendable, spots0)) return true; // P60-d: 경로 ≥3 이 스릴 순으로 서 있는데 끝이 휴식이 아니면 휴식 하나를 끝에 — 「마지막엔 rest」
@@ -663,7 +664,7 @@ export class Bot {
    */
   private capCourse(g: Game, spendable: () => number, spots0: { i: number; j: number }[]): boolean {
     const have = new Set(g.facilities.all.map((f) => baseKind(f.defId)));
-    const rests = [...FACILITY_DEFS.values()].filter((d) => d.class === 'rig' && d.onRing !== true && d.chain === 'rest' && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id)).sort((a, b) => Number(have.has(a.id)) - Number(have.has(b.id)) || a.cost - b.cost); // 아직 없는 휴식 종부터(종 수), 그다음 값
+    const rests = [...FACILITY_DEFS.values()].filter((d) => d.class === 'rig' && d.onRing !== true && d.chain === 'rest' && !d.variantOf && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id)).sort((a, b) => Number(have.has(a.id)) - Number(have.has(b.id)) || a.cost - b.cost); // 아직 없는 휴식 종부터(종 수), 그다음 값
     if (rests.length === 0) return false;
     const w = g.grid.w;
     for (const p of [...g.pools.all].sort((a, b) => g.pathOf(b.id).length - g.pathOf(a.id).length || a.id - b.id)) {
@@ -820,7 +821,7 @@ export class Bot {
     // P60-c — 세트 자리 예약: 쌓다 만 세트의 빠진 종이 설 칸(멤버 곁)은 사슬로 덮지 않는다(사슬이 수역을 다 채워 셋째 멤버가 설 자리가 없었다 — 실측 20칸 수역에 기구 15). `--no-set` 대조군은 예약 0
     const reserved = new Set<number>(); if (!this.opts.noSet) for (const e of this.setCompleters(g).values()) { for (const k of e.near2) reserved.add(k); for (const k of e.near1) reserved.add(k); }
     for (const [chain, ends] of kinds) {
-      const defs0 = [...FACILITY_DEFS.values()].filter((d) => d.class === 'rig' && d.onRing !== true && d.chain === chain && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id)).sort((a, b) => a.cost - b.cost);
+      const defs0 = [...FACILITY_DEFS.values()].filter((d) => d.class === 'rig' && d.onRing !== true && d.chain === chain && !d.variantOf && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id)).sort((a, b) => a.cost - b.cost);
       for (const e of ends) {
         if (placed >= 3) return placed;
         const defs = defs0;
@@ -857,7 +858,7 @@ export class Bot {
      * `--no-path` 대조군은 옛 크기 순 그대로다(이 줄이 그 축의 음성 대조군이다).
      */
     if (!this.opts.noPath) {
-      const rest = [...FACILITY_DEFS.values()].filter((d) => d.class === 'rig' && d.onRing !== true && d.chain === 'rest' && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id)).sort((a, b) => a.w * a.d - b.w * b.d)[0];
+      const rest = [...FACILITY_DEFS.values()].filter((d) => d.class === 'rig' && d.onRing !== true && d.chain === 'rest' && !d.variantOf && d.deprecated !== true && d.buildable !== false && g.isUnlocked(d.id)).sort((a, b) => a.w * a.d - b.w * b.d)[0];
       // 「지금 어디에도 못 놓는다」를 **canPlace 로 직접** 묻는다 — 칸 수로 어림하면 모양 때문에 안 들어가는 수역을 「있다」고 센다
       const fits = rest !== undefined && this.litWaterSpots(g).slice(0, 80).some((sp) => ([0, 1] as const).some((facing) => g.canPlace(rest.id, sp.i, sp.j, facing).ok));
       if (rest && !fits && g.permitLeft >= (rest.w + 2) * (rest.d + 2)) sizes.unshift([rest.w + 4, rest.d + 4]);

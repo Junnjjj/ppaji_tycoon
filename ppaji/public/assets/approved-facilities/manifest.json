@@ -6050,6 +6050,960 @@
    },
    "note": "Selected building art only; existing simulation access and use behavior preserved.",
    "visualSource": "shop"
+  },
+  "pavilion": {
+   "name": "정자",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    3,
+    3
+   ],
+   "artSize": [
+    3,
+    3
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "pavilion/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "1e75b1ca82774000e09f40742b7da1e785d23677ad20964c2a6fef622dcdf41e"
+    },
+    "d1": {
+     "file": "pavilion/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "688df277c97fc49d29a0391fcd02b72a63ef41dcfddd9fc560f10ac21172d2c1"
+    },
+    "d2": {
+     "file": "pavilion/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "bfa3b272b326a24ba835d83d9449c8c0180aaa4daa3426c726181c1762b12ca8"
+    },
+    "d3": {
+     "file": "pavilion/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "49b8f8d8285140c93a8bac25f43c38a12d00f38097bd59cf021cf4f0ec9ab15a"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "glamping": {
+   "name": "글램핑",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    4,
+    3
+   ],
+   "artSize": [
+    4,
+    3
+   ],
+   "footprintOrigin": [
+    -2.0,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     2.0,
+     1.5
+    ],
+    [
+     1.5,
+     2.0
+    ],
+    [
+     2.0,
+     1.5
+    ],
+    [
+     1.5,
+     2.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     4,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "glamping/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "a346482bca1585e6d394a107b26253a7ccc690df870d9494577ef5f5e40e1d46"
+    },
+    "d1": {
+     "file": "glamping/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "e2b4f029cf0e6ec7d21fd84c40f308d716842d6bc38867a20389fad288be886c"
+    },
+    "d2": {
+     "file": "glamping/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "7e8d0da31175b334e73b3ecc2606647f441182580f3bab43e29bfae73a4812fa"
+    },
+    "d3": {
+     "file": "glamping/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "e73897dfdd5f505acbdc30f3b00693059da285d0a5b0e1c2741dc490591ea00c"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "caravan": {
+   "name": "카라반",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    4,
+    2
+   ],
+   "artSize": [
+    4,
+    2
+   ],
+   "footprintOrigin": [
+    -2.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     2.0,
+     1.0
+    ],
+    [
+     1.0,
+     2.0
+    ],
+    [
+     2.0,
+     1.0
+    ],
+    [
+     1.0,
+     2.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     4,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "caravan/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "d15b2567e62fa7e6d1b00ac765ab0e43b0ae00371699f52c9c2253881a126950"
+    },
+    "d1": {
+     "file": "caravan/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "cb665851ce672c033e51645fd19308ff87e7e0feb20787eae2197655f6ce41f7"
+    },
+    "d2": {
+     "file": "caravan/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "0386e5aed2d5facf134d73cc31e98dff6e853deda3b133368f85dee33dd1a08a"
+    },
+    "d3": {
+     "file": "caravan/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "d2470b4289d336326d0b6b93928e90233734dc8c9a68d798389399a59d0c6cfe"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "authored_parasol": {
+   "name": "파라솔 (제작본)",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "authored_parasol/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "356921eb9b2ab3d8cd48a763a39324cd8f61ea7016e68fd760016ff6598b1e5d"
+    },
+    "d1": {
+     "file": "authored_parasol/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "1f41272ec86bbcd62b2a64db590f01fb0fbfd7bfdb7b5d25b7e721cfe0ab4b0b"
+    },
+    "d2": {
+     "file": "authored_parasol/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "4f2d8da72ae8c0dcd7a1a4494a0ddd3df7f7cce44c7e6977876e755541de2ee3"
+    },
+    "d3": {
+     "file": "authored_parasol/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "794426d438edcdc68ec94373e9cea231e6e33246f0f92e6eae312c8d8062be37"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "authored_bbq_zone": {
+   "name": "BBQ존 (제작본)",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    4,
+    3
+   ],
+   "artSize": [
+    4,
+    3
+   ],
+   "footprintOrigin": [
+    -2.0,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     2.0,
+     1.5
+    ],
+    [
+     1.5,
+     2.0
+    ],
+    [
+     2.0,
+     1.5
+    ],
+    [
+     1.5,
+     2.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     4,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "authored_bbq_zone/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "22b151e1f9206d587c4ff9ed0f57e78da0711aea6c63e454bffc9704be3c0fc3"
+    },
+    "d1": {
+     "file": "authored_bbq_zone/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "238c1b1e924f14520d1f1d1de7c8b1e76132d495c93f2808ce939aa314db7023"
+    },
+    "d2": {
+     "file": "authored_bbq_zone/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "f63e29465309121a88ee997a3c1d29de4ef7ee43bd1ad644ad2f4b6aa5f2d6d4"
+    },
+    "d3": {
+     "file": "authored_bbq_zone/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "1788ddcef9594dea85bda9894c64f1f948820c1e14d3d09318d6f86d3981dfb6"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "authored_sunbed_row": {
+   "name": "선베드 열 (제작본)",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    4,
+    2
+   ],
+   "artSize": [
+    4,
+    2
+   ],
+   "footprintOrigin": [
+    -2.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     2.0,
+     1.0
+    ],
+    [
+     1.0,
+     2.0
+    ],
+    [
+     2.0,
+     1.0
+    ],
+    [
+     1.0,
+     2.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     4,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "authored_sunbed_row/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "f0b54cdf94d1578b3b59c0021ffe078f7d8fb4c6c7726b2c4ba7bf1ebd4802a3"
+    },
+    "d1": {
+     "file": "authored_sunbed_row/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "3697cf2dd2d1e982380918d400a0d84942562518af16157217ea368dab58bdc9"
+    },
+    "d2": {
+     "file": "authored_sunbed_row/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "757d5c378fc89344d9f8300d752622b216ecb736ed75a8377062a18b6ce5ce86"
+    },
+    "d3": {
+     "file": "authored_sunbed_row/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "7babda14261e2761559905669e66dfa94fd236e5d30f88465f1b266eac08993b"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "authored_pyeongsang_row": {
+   "name": "평상 연립 (제작본)",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    4,
+    2
+   ],
+   "artSize": [
+    4,
+    2
+   ],
+   "footprintOrigin": [
+    -2.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     2.0,
+     1.0
+    ],
+    [
+     1.0,
+     2.0
+    ],
+    [
+     2.0,
+     1.0
+    ],
+    [
+     1.0,
+     2.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     4,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "authored_pyeongsang_row/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "c024a65581011bb283d01b511a726e4a441030a7c24a25f6931bea58b224261e"
+    },
+    "d1": {
+     "file": "authored_pyeongsang_row/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "7b2309f612bd0d484315091e0fa1cf776a01f56656986275fccd9b336301d6c0"
+    },
+    "d2": {
+     "file": "authored_pyeongsang_row/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "15a9487fe444a4de16745d5ee751350355735b809c500bc3e32e9c6a4e893db1"
+    },
+    "d3": {
+     "file": "authored_pyeongsang_row/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "f04ef28c6a038bc129be65cf24add3469445facef27f853d84e6ae59b43ed20e"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "authored_massage_row": {
+   "name": "안마의자 열 (제작본)",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    3,
+    2
+   ],
+   "artSize": [
+    3,
+    2
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ],
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "authored_massage_row/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "1b8f63ec46bf1742ff80a6d0f5373f3ccb98446137780125abc3a2a4a20fee8d"
+    },
+    "d1": {
+     "file": "authored_massage_row/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "30cbf18eb05a4de4573561e091ca0c968a84b7214fa8ec92c4c88785ee686e2f"
+    },
+    "d2": {
+     "file": "authored_massage_row/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "864c5b4a5bf1fca60f9029d0a681d2a647a6f3f1079fee48dbf834a28c5e7f0f"
+    },
+    "d3": {
+     "file": "authored_massage_row/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "daa0b7a1235673917e906f62837684ef2bb32bed2e17f09f8f8a1d40d4f1eee4"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "authored_footbath": {
+   "name": "온수 족욕 (제작본)",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    3,
+    2
+   ],
+   "artSize": [
+    3,
+    2
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ],
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "authored_footbath/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "3706bdccfb4aee5660ac985f0516ed2c5119c41dffe65ca1145e8abf46b7ceb5"
+    },
+    "d1": {
+     "file": "authored_footbath/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "629c9998af7cba00232286371fd46bc212286c8e3a0d0127f5fdcc7fb1b2c338"
+    },
+    "d2": {
+     "file": "authored_footbath/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "0a92f0811377c5c940df98c654c54b0d3f8a732f5000d1160b06df632ab7e9cd"
+    },
+    "d3": {
+     "file": "authored_footbath/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "70316e33e888ee6aeb74bdcd92b767a3f0e722324ece56cc79d1a8c4d8c8f830"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
   }
  },
  "deckTileRule": "footprint-local integer tiles at facing 0 (i to +I, j to +J from the placed corner); a tile is deck when authored deck rectangles cover >= 50% of it. Rotate with the same R:(I,J)->(J,-I) as the footprint."

@@ -20,7 +20,7 @@
 import modules from '../data/ppaji-modules.json';
 import type { AssetProvider, SpriteSpec } from './types.js';
 
-export const SELECTED_BUILDING_IDS = ['shop', 'infirmary', 'storage', 'toilet', 'nursing', 'snackbar', 'cafe', 'karaoke', 'info', 'office', 'sauna', 'jjimjilbang', 'bungalow', 'shade_net', 'mongol_tent'] as const;
+export const SELECTED_BUILDING_IDS = ['shop', 'infirmary', 'storage', 'toilet', 'nursing', 'snackbar', 'cafe', 'karaoke', 'info', 'office', 'sauna', 'jjimjilbang', 'bungalow', 'shade_net', 'mongol_tent', 'pavilion', 'glamping', 'caravan', 'authored_parasol', 'authored_bbq_zone', 'authored_sunbed_row', 'authored_pyeongsang_row', 'authored_massage_row', 'authored_footbath'] as const;
 
 export const APPROVED_FACILITY_IDS = ['ppaji_slide', 'ppaji_playground', 'boarding_dock', 'float_deck', 'diving', 'rig_bridge', 'rig_stepstone', 'rig_blob', 'rig_iceberg', 'rig_jump_tower', 'rig_bridge_swing', 'rig_bridge_long', 'rig_iceberg_wall', 'rig_blob_big', 'diving_tower', ...modules.map(m => m.id), ...SELECTED_BUILDING_IDS, 'indoor_shop'] as const;
 export type ApprovedFacilityId = (typeof APPROVED_FACILITY_IDS)[number];
