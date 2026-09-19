@@ -17,7 +17,7 @@
  * `--selftest` 는 소스 사본에 위반을 주입해 이름 붙은 자가 **실제로 빨간불**이 되는지 본다 —
  * 안 잡히는 자는 아무것도 안 재고 있다.
  */
-import { readFile, readdir, cp, mkdtemp, writeFile } from 'node:fs/promises';
+import { readFile, readdir, cp, mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -52,9 +52,10 @@ if (SELFTEST) {
     const target = join(dir, f.file);
     const before = await readFile(target, 'utf8');
     const after = f.edit(before);
-    if (after === before) { missed.push(`${f.id} (주입 자체가 안 됐다)`); continue; }
+    if (after === before) { await rm(dir, { recursive: true, force: true }); missed.push(`${f.id} (주입 자체가 안 됐다)`); continue; }
     await writeFile(target, after);
     const run = spawnSync(process.execPath, [self], { cwd: dir, encoding: 'utf8' });
+    await rm(dir, { recursive: true, force: true });
     const red = run.status !== 0 && run.stdout.split('\n').some((l) => l.includes('✕') && l.includes(f.expect));
     (red ? caught : missed).push(f.id);
   }

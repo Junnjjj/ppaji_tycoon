@@ -58,6 +58,24 @@ export function pictureEl(id: string, fallback: IconName, extraClass?: string): 
   return span;
 }
 
+// Native authored frames include transparent camera guards. Crop only DOM thumbnails,
+// keeping provider pixels and world anchors untouched.
+const thumbnailBounds = new WeakMap<HTMLCanvasElement, { x: number; y: number; w: number; h: number }>();
+function visibleBounds(canvas: HTMLCanvasElement): { x: number; y: number; w: number; h: number } {
+  const cached = thumbnailBounds.get(canvas); if (cached) return cached;
+  const ctx = canvas.getContext('2d');
+  let x0 = canvas.width, y0 = canvas.height, x1 = -1, y1 = -1;
+  if (ctx) {
+    const rgba = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    for (let y = 0; y < canvas.height; y++) for (let x = 0; x < canvas.width; x++) {
+      if (!rgba[(y * canvas.width + x) * 4 + 3]) continue;
+      x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y);
+    }
+  }
+  const bounds = x1 < 0 ? { x: 0, y: 0, w: canvas.width, h: canvas.height } : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
+  thumbnailBounds.set(canvas, bounds); return bounds;
+}
+
 /** 캔버스(시설 스프라이트)를 그림 자리에 앉힌다 — 개조판·건설·투자·심사 보상은 그림이 이미 있다 */
 export function canvasPictureEl(canvas: HTMLCanvasElement | null, fallback: IconName, extraClass?: string): HTMLSpanElement {
   if (!canvas) return iconEl(fallback, extraClass ? `kpic-fb ${extraClass}` : 'kpic-fb');
@@ -65,8 +83,9 @@ export function canvasPictureEl(canvas: HTMLCanvasElement | null, fallback: Icon
   span.className = extraClass ? `kpic kpic-canvas ${extraClass}` : 'kpic kpic-canvas';
   span.setAttribute('aria-hidden', 'true');
   // Providers cache canvases; a DOM thumbnail must never steal another card's node.
-  const copy = document.createElement('canvas'); copy.width = canvas.width; copy.height = canvas.height;
-  copy.getContext('2d')?.drawImage(canvas, 0, 0);
+  const b = visibleBounds(canvas);
+  const copy = document.createElement('canvas'); copy.width = b.w; copy.height = b.h;
+  copy.getContext('2d')?.drawImage(canvas, b.x, b.y, b.w, b.h, 0, 0, b.w, b.h);
   span.append(copy);
   return span;
 }

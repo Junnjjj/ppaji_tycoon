@@ -1,0 +1,80 @@
+[
+  {
+    "id": "module_rig_slide",
+    "actors": 1,
+    "cycle": 18.193636363636355,
+    "maxPositionError": 2.9976021664879227e-15
+  },
+  {
+    "id": "module_trampoline_w",
+    "actors": 1,
+    "cycle": 17.963636363636365,
+    "maxPositionError": 2.9976021664879227e-15
+  },
+  {
+    "id": "module_rig_beam",
+    "actors": 1,
+    "cycle": 21.199999999999992,
+    "maxPositionError": 2.9976021664879227e-15
+  },
+  {
+    "id": "module_rig_roller",
+    "actors": 1,
+    "cycle": 20.999999999999993,
+    "maxPositionError": 2.7478019859472624e-15
+  },
+  {
+    "id": "module_rig_seesaw",
+    "actors": 2,
+    "cycle": 11.799999999999999,
+    "maxPositionError": 1.4432899320127035e-15
+  },
+  {
+    "id": "module_rig_totem",
+    "actors": 1,
+    "cycle": 23.299999999999986,
+    "maxPositionError": 3.3306690738754696e-15
+  },
+  {
+    "id": "module_rig_disc",
+    "actors": 1,
+    "cycle": 5.2,
+    "maxPositionError": 9.036560719766055e-16
+  },
+  {
+    "id": "module_rig_mini_slide",
+    "actors": 1,
+    "cycle": 15.803333333333335,
+    "maxPositionError": 1.854074528635992e-15
+  },
+  {
+    "id": "module_rig_slidedock",
+    "actors": 1,
+    "cycle": 17.533333333333335,
+    "maxPositionError": 2.220446049250313e-15
+  },
+  {
+    "id": "module_rig_kids_park",
+    "actors": 1,
+    "cycle": 18.150000000000002,
+    "maxPositionError": 2.6645352591003757e-15
+  },
+  {
+    "id": "module_waterwalk",
+    "actors": 1,
+    "cycle": 14,
+    "maxPositionError": 1.3334236103572998e-15
+  },
+  {
+    "id": "module_rig_hammock",
+    "actors": 1,
+    "cycle": 15.2,
+    "maxPositionError": 1.7763568394002505e-15
+  },
+  {
+    "id": "module_rig_sunbed",
+    "actors": 1,
+    "cycle": 12.2,
+    "maxPositionError": 5.23691153334427e-16
+  }
+]

@@ -1,3 +1,4 @@
+import modules from '../../data/ppaji-modules.json';
 import { describe, it, expect } from 'vitest';
 import { BUILD_TABS, hallGroup } from './build.js';
 import { FACILITY_DEFS } from '../../sim/game.js';
@@ -11,7 +12,7 @@ describe('건설 분류', () => {
     expect([...FACILITY_DEFS.values()].filter((d) => BUILD_TABS[1]!.match(d)).map((d) => d.id)).toEqual([
       'boarding_dock', 'rent_sup', 'diving', 'rent_duck', 'rent_pedal', 'rent_kayak', 'slide_tube', 'turtle_island',
       'ppaji_slide', 'airbounce', 'float_deck', 'rig_bridge', 'rig_stepstone', 'watchtower', 'rig_blob', 'rig_rack',
-      'rig_float_bar', 'rescue_dock', 'rig_iceberg', 'rig_jump_tower', 'ppaji_playground',
+      'rig_float_bar', 'rescue_dock', 'rig_iceberg', 'rig_jump_tower', 'ppaji_playground', ...modules.map(m => m.id),
     ]);
     for (const d of [...FACILITY_DEFS.values()].filter((x) => BUILD_TABS[1]!.match(x))) expect(d.deprecated, d.id).toBeUndefined();
     const defs = [...FACILITY_DEFS.values()];

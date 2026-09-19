@@ -12,7 +12,7 @@ import { goalNum } from '../../tools/goal-num.js';
 describe('P48-c rig 유니언', () => {
   it('유니언은 닫혀 있고 rig 가 들어 있다 · 기구 정의 22(P49-a1 뒤) · 조합 2(2026-09-19)', () => {
     expectTypeOf<'rig'>().toMatchTypeOf<FacilityClass>();
-    expect([...FACILITY_DEFS.values()].filter((d) => d.class === 'rig').length).toBe(43); // P48-c 시점 0 → P49-a1 이 새 17 + 이전 5 를 넣었다 · P51 개조판 19(망루 개조판은 utility) · 2026-09-19 승인 조합 2(빠지 슬라이드·빠지 놀이터). 폐기된 9종은 **정의가 남는다**(옛 세이브 호환)
+    expect([...FACILITY_DEFS.values()].filter((d) => d.class === 'rig').length).toBe(56); // P48-c 시점 0 → P49-a1 이 새 17 + 이전 5 를 넣었다 · P51 개조판 19(망루 개조판은 utility) · 2026-09-19 승인 조합 2(빠지 슬라이드·빠지 놀이터). 폐기된 9종은 **정의가 남는다**(옛 세이브 호환)
   });
   it('기구는 알바를 안 쓰고(staffable false) 건물 간격 규칙 밖이다(isBuildingClass false)', () => {
     const rig = { class: 'rig', capacity: 4 } as Pick<FacilityDef, 'class' | 'capacity'>;

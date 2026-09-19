@@ -1,0 +1,159 @@
+{
+  "indoorLocked": 2,
+  "cards": [
+    {
+      "id": "float_deck",
+      "locked": true
+    },
+    {
+      "id": "boarding_dock",
+      "locked": false
+    },
+    {
+      "id": "ppaji_slide",
+      "locked": false
+    },
+    {
+      "id": "ppaji_playground",
+      "locked": true
+    },
+    {
+      "id": "module_rig_slide",
+      "locked": false
+    },
+    {
+      "id": "module_trampoline_w",
+      "locked": true
+    },
+    {
+      "id": "module_rig_beam",
+      "locked": false
+    },
+    {
+      "id": "module_rig_roller",
+      "locked": true
+    },
+    {
+      "id": "module_rig_seesaw",
+      "locked": false
+    },
+    {
+      "id": "module_rig_totem",
+      "locked": true
+    },
+    {
+      "id": "module_rig_disc",
+      "locked": true
+    },
+    {
+      "id": "module_rig_mini_slide",
+      "locked": false
+    },
+    {
+      "id": "module_rig_slidedock",
+      "locked": true
+    },
+    {
+      "id": "module_rig_kids_park",
+      "locked": true
+    },
+    {
+      "id": "module_waterwalk",
+      "locked": true
+    },
+    {
+      "id": "module_rig_hammock",
+      "locked": false
+    },
+    {
+      "id": "module_rig_sunbed",
+      "locked": true
+    },
+    {
+      "id": "module_rig_led_buoy",
+      "locked": true
+    },
+    {
+      "id": "diving",
+      "locked": true
+    },
+    {
+      "id": "rig_bridge",
+      "locked": false
+    },
+    {
+      "id": "rig_stepstone",
+      "locked": false
+    },
+    {
+      "id": "rig_blob",
+      "locked": true
+    },
+    {
+      "id": "rig_iceberg",
+      "locked": true
+    },
+    {
+      "id": "rig_jump_tower",
+      "locked": true
+    },
+    {
+      "id": "rent_sup",
+      "locked": true
+    },
+    {
+      "id": "rent_duck",
+      "locked": true
+    },
+    {
+      "id": "rent_pedal",
+      "locked": true
+    },
+    {
+      "id": "rent_kayak",
+      "locked": true
+    },
+    {
+      "id": "slide_tube",
+      "locked": true
+    },
+    {
+      "id": "turtle_island",
+      "locked": true
+    },
+    {
+      "id": "airbounce",
+      "locked": true
+    },
+    {
+      "id": "watchtower",
+      "locked": false
+    },
+    {
+      "id": "rig_rack",
+      "locked": true
+    },
+    {
+      "id": "rig_float_bar",
+      "locked": true
+    },
+    {
+      "id": "rescue_dock",
+      "locked": true
+    }
+  ],
+  "placement": [
+    "game",
+    "host",
+    "root",
+    "modeLabel",
+    "why",
+    "riskChip",
+    "rotateBtn",
+    "doneBtn",
+    "def",
+    "at",
+    "facing",
+    "moveUid"
+  ]
+}

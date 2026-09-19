@@ -1,0 +1,156 @@
+[
+  {
+    "id": "module_rig_slide",
+    "source": "rig_slide",
+    "name": "플로팅 슬라이드",
+    "size": [
+      2,
+      3
+    ],
+    "group": "core",
+    "rank": 0
+  },
+  {
+    "id": "module_trampoline_w",
+    "source": "trampoline_w",
+    "name": "수상 트램폴린",
+    "size": [
+      3,
+      3
+    ],
+    "group": "core",
+    "rank": 2
+  },
+  {
+    "id": "module_rig_beam",
+    "source": "rig_beam",
+    "name": "밸런스 빔",
+    "size": [
+      1,
+      3
+    ],
+    "group": "traversal",
+    "rank": 0
+  },
+  {
+    "id": "module_rig_roller",
+    "source": "rig_roller",
+    "name": "워터 롤러",
+    "size": [
+      2,
+      2
+    ],
+    "group": "traversal",
+    "rank": 1
+  },
+  {
+    "id": "module_rig_seesaw",
+    "source": "rig_seesaw",
+    "name": "시소 플로트",
+    "size": [
+      3,
+      2
+    ],
+    "group": "traversal",
+    "rank": 0
+  },
+  {
+    "id": "module_rig_totem",
+    "source": "rig_totem",
+    "name": "워터 토템",
+    "size": [
+      2,
+      2
+    ],
+    "group": "traversal",
+    "rank": 3
+  },
+  {
+    "id": "module_rig_disc",
+    "source": "rig_disc",
+    "name": "회전 원반",
+    "size": [
+      3,
+      3
+    ],
+    "group": "waterplay",
+    "rank": 5
+  },
+  {
+    "id": "module_rig_mini_slide",
+    "source": "rig_mini_slide",
+    "name": "미니 슬라이드",
+    "size": [
+      2,
+      2
+    ],
+    "group": "waterplay",
+    "rank": 0
+  },
+  {
+    "id": "module_rig_slidedock",
+    "source": "rig_slidedock",
+    "name": "미끄럼 도크",
+    "size": [
+      3,
+      1
+    ],
+    "group": "waterplay",
+    "rank": 2
+  },
+  {
+    "id": "module_rig_kids_park",
+    "source": "rig_kids_park",
+    "name": "키즈 워터 놀이터",
+    "size": [
+      3,
+      3
+    ],
+    "group": "waterplay",
+    "rank": 2
+  },
+  {
+    "id": "module_waterwalk",
+    "source": "waterwalk",
+    "name": "워터워크볼",
+    "size": [
+      2,
+      3
+    ],
+    "group": "leisure",
+    "rank": 3
+  },
+  {
+    "id": "module_rig_hammock",
+    "source": "rig_hammock",
+    "name": "해먹 라운지",
+    "size": [
+      2,
+      3
+    ],
+    "group": "leisure",
+    "rank": 0
+  },
+  {
+    "id": "module_rig_sunbed",
+    "source": "rig_sunbed",
+    "name": "선베드 플로트",
+    "size": [
+      1,
+      2
+    ],
+    "group": "leisure",
+    "rank": 1
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "source": "rig_led_buoy",
+    "name": "LED 조명 부표",
+    "size": [
+      1,
+      1
+    ],
+    "group": "leisure",
+    "rank": 3
+  }
+]

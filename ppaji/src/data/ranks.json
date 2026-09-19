@@ -29,7 +29,9 @@
       "rig_rack",
       "env_pine",
       "env_deciduous",
-      "env_willow"
+      "env_willow",
+      "module_rig_roller",
+      "module_rig_sunbed"
     ]
   },
   {
@@ -70,7 +72,10 @@
       "env_convenience_store",
       "env_maintenance_shed",
       "env_bus",
-      "env_car"
+      "env_car",
+      "module_trampoline_w",
+      "module_rig_slidedock",
+      "module_rig_kids_park"
     ]
   },
   {
@@ -100,7 +105,10 @@
       "amount": 8000
     },
     "unlocks": [
-      "ppaji_playground"
+      "ppaji_playground",
+      "module_rig_totem",
+      "module_waterwalk",
+      "module_rig_led_buoy"
     ]
   },
   {
@@ -153,6 +161,8 @@
       "kind": "facility",
       "id": "golden_kairobot"
     },
-    "unlocks": []
+    "unlocks": [
+      "module_rig_disc"
+    ]
   }
 ]

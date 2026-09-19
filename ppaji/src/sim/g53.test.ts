@@ -32,6 +32,6 @@ describe('G53', () => {
     const g = new Game(1, undefined, { kit: false });
     expect(g.giftCount).toBe(18);
     expect(g.sns.friendCount).toBe(71);
-    expect(g.facilities.defsCount).toBe(181); // P58-a 푸드코트 자리(파생) 1 + P57-b env 장식 29 + P0 선착장 + P3 안전 소품 2 + P42 입구 + P45-b 실내 점포 9 + P49-a1 기구 21 + P51 개조판 20 + 2026-09-19 승인 조합 2 + 승하선 데크 1 (폐기 9종은 정의가 남는다 — 옛 세이브 호환)
+    expect(g.facilities.defsCount).toBe(195); // P58-a 푸드코트 자리(파생) 1 + P57-b env 장식 29 + P0 선착장 + P3 안전 소품 2 + P42 입구 + P45-b 실내 점포 9 + P49-a1 기구 21 + P51 개조판 20 + 2026-09-19 승인 조합 2 + 승하선 데크 1 (폐기 9종은 정의가 남는다 — 옛 세이브 호환)
   });
 });

@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji
+
+ ✓ src/sim/ppaji-modules.test.ts (1 test) 314ms
+   ✓ standalone authored ppaji modules > all 14 unlock, place in both game facings and survive a save without changing legacy footprints  313ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  21:52:13
+   Duration  940ms (transform 321ms, setup 0ms, collect 449ms, tests 314ms, environment 0ms, prepare 32ms)

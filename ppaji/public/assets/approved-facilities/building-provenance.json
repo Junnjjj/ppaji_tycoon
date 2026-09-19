@@ -1,0 +1,4265 @@
+{
+  "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3",
+  "selection": "USER_SELECTED_REVIEW_PACK",
+  "facilities": {
+    "shop": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "shop",
+        "size": [
+          2,
+          2
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shop/roof-diversity-v1/review/native-d0.png",
+            "sha256": "53e051a441344baf84fcba5354601f325b93483349f7e59d83d7e99edacdcacd"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shop/roof-diversity-v1/review/native-d1.png",
+            "sha256": "852803dbe2b0ad0984901e9279485eb17803303c8406a891048c26019821e862"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shop/roof-diversity-v1/review/native-d2.png",
+            "sha256": "9e9080a0870da28756f2210203568bc6b4b6abf104d6342f7ce0f50127b9b27f"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shop/roof-diversity-v1/review/native-d3.png",
+            "sha256": "5820bba659eb6f12263670a5dd79acbbd807e7847c51681b67c3da5931cdfc7e"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shop/roof-diversity-v1/review/color-d0.png",
+            "sha256": "56b504a72188390c19caa81492163abf800c5206cf3b35647c625fa5ef4fb354"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shop/roof-diversity-v1/review/color-d1.png",
+            "sha256": "9b0c0fb0672b7c263ecf2e2a812e7ef970ac1d446f24618e79567e62b412f5f0"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shop/roof-diversity-v1/review/color-d2.png",
+            "sha256": "f4839b234829c5b828bb03f21aded85364b3be43f7f3acc413ff4822539758d8"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shop/roof-diversity-v1/review/color-d3.png",
+            "sha256": "b34aff9fc694ad1508b5c3bfa0dd206c4c9743d8707a44a624d7a3f7ed8c9ba8"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/shop/roof-diversity-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/shop/roof-diversity-v1/concept.png",
+        "root": "SHOP_TILE_ROOT",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 1800,
+        "inventory": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ],
+            "count": 1
+          },
+          "walls": {
+            "names": [
+              "rear_wall",
+              "left_wall",
+              "right_wall",
+              "front_pier-0p835",
+              "front_pier0p835",
+              "front_below",
+              "front_header"
+            ],
+            "count": 7
+          },
+          "roof_components": {
+            "names": [
+              "Roof_shed_plane",
+              "Roof_seam_1",
+              "Roof_seam_2",
+              "Roof_seam_3",
+              "Roof_seam_4",
+              "Roof_seam_5",
+              "Roof_seam_6",
+              "Roof_seam_7",
+              "Roof_edge_front",
+              "Roof_edge_rear",
+              "Roof_edge_left",
+              "Roof_edge_right"
+            ],
+            "count": 12
+          },
+          "counter_top": {
+            "names": [
+              "counter_top"
+            ],
+            "count": 1
+          },
+          "staff_door": {
+            "names": [
+              "staff_door"
+            ],
+            "count": 1
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ]
+          },
+          "body": {
+            "names": [
+              "rear_wall",
+              "left_wall",
+              "right_wall",
+              "front_pier-0p835",
+              "front_pier0p835",
+              "front_below",
+              "front_header"
+            ]
+          },
+          "roof": {
+            "names": [
+              "Roof_shed_plane",
+              "Roof_seam_1",
+              "Roof_seam_2",
+              "Roof_seam_3",
+              "Roof_seam_4",
+              "Roof_seam_5",
+              "Roof_seam_6",
+              "Roof_seam_7",
+              "Roof_edge_front",
+              "Roof_edge_rear",
+              "Roof_edge_left",
+              "Roof_edge_right"
+            ]
+          }
+        },
+        "landmarks": {
+          "front": [
+            0,
+            -1,
+            0.065
+          ],
+          "side_window": [
+            0.95,
+            0.12,
+            1.1
+          ],
+          "roof_rear": [
+            0,
+            1,
+            1.7796428199482248
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "feb326a4fd658bb690c3dacfaccaedbbc62aa67a0b127e29566be62496fa37f1",
+          "concept": "87b1d37abb46e8e41fbcbb939ff817d95565a6b0c12e2982925dc9438431fa9a"
+        },
+        "projection": {
+          "d0": "FAIL",
+          "d1": "PASS",
+          "d2": "FAIL",
+          "d3": "PASS"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/shop/roof-diversity-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/shop/roof-diversity-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    },
+    "infirmary": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "infirmary",
+        "size": [
+          2,
+          2
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/infirmary/roof-diversity-v1/review/native-d0.png",
+            "sha256": "26c4ff504e313fdea66f4b6bdd145a7fa3fc311b79ea8eb3ae800249834d76f3"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/infirmary/roof-diversity-v1/review/native-d1.png",
+            "sha256": "f1a7856a5b54ee3488706b423c6f229c2ae8b1dd9974ab0d06866dc23070d878"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/infirmary/roof-diversity-v1/review/native-d2.png",
+            "sha256": "72de946c6641cb45d79fcd0ebbff894d02c7caab6a365fe04dae7560896e97b6"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/infirmary/roof-diversity-v1/review/native-d3.png",
+            "sha256": "829547a2aab87493d029638a6679563d6514ddbe4583443ae94989a9a397597d"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/infirmary/roof-diversity-v1/review/color-d0.png",
+            "sha256": "1e6207d47d6575841c46bd7543327463388081f43de437eb0c024f42caccee2a"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/infirmary/roof-diversity-v1/review/color-d1.png",
+            "sha256": "df0b4573573513186f939ceb7ade3fcb1a5d29cc20304c8da6844ddd28e00799"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/infirmary/roof-diversity-v1/review/color-d2.png",
+            "sha256": "9b8633196f2315685f8be1985e96e8ac8b8fb9d3a760a4604474a474681472a8"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/infirmary/roof-diversity-v1/review/color-d3.png",
+            "sha256": "83fd40c4523f6fc3d0746abc7e6464de7e380a817d48ac88662e925ec5d90e75"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/infirmary/roof-diversity-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/infirmary/roof-diversity-v1/concept.png",
+        "root": "INFIRMARY_TILE_ROOT",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 1800,
+        "inventory": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ],
+            "count": 1
+          },
+          "walls": {
+            "names": [
+              "identity_rear_wall",
+              "identity_left_wall",
+              "identity_right_wall",
+              "front_wall_left",
+              "front_wall_right",
+              "door_lintel"
+            ],
+            "count": 6
+          },
+          "roof_components": {
+            "names": [
+              "Roof_hip_face_0",
+              "Roof_course_0_1",
+              "Roof_course_0_2",
+              "Roof_course_0_3",
+              "Roof_tile_seam_0_0_1",
+              "Roof_tile_seam_0_0_2",
+              "Roof_tile_seam_0_0_3",
+              "Roof_tile_seam_0_0_4",
+              "Roof_tile_seam_0_0_5",
+              "Roof_tile_seam_0_1_1",
+              "Roof_tile_seam_0_1_2",
+              "Roof_tile_seam_0_1_3",
+              "Roof_tile_seam_0_1_4",
+              "Roof_tile_seam_0_1_5",
+              "Roof_tile_seam_0_2_1",
+              "Roof_tile_seam_0_2_2",
+              "Roof_tile_seam_0_2_3",
+              "Roof_tile_seam_0_2_4",
+              "Roof_tile_seam_0_2_5",
+              "Roof_tile_seam_0_3_1",
+              "Roof_tile_seam_0_3_2",
+              "Roof_tile_seam_0_3_3",
+              "Roof_tile_seam_0_3_4",
+              "Roof_tile_seam_0_3_5",
+              "Roof_hip_face_1",
+              "Roof_course_1_1",
+              "Roof_course_1_2",
+              "Roof_course_1_3",
+              "Roof_tile_seam_1_0_1",
+              "Roof_tile_seam_1_0_2",
+              "Roof_tile_seam_1_0_3",
+              "Roof_tile_seam_1_0_4",
+              "Roof_tile_seam_1_0_5",
+              "Roof_tile_seam_1_1_1",
+              "Roof_tile_seam_1_1_2",
+              "Roof_tile_seam_1_1_3",
+              "Roof_tile_seam_1_1_4",
+              "Roof_tile_seam_1_1_5",
+              "Roof_tile_seam_1_2_1",
+              "Roof_tile_seam_1_2_2",
+              "Roof_tile_seam_1_2_3",
+              "Roof_tile_seam_1_2_4",
+              "Roof_tile_seam_1_2_5",
+              "Roof_tile_seam_1_3_1",
+              "Roof_tile_seam_1_3_2",
+              "Roof_tile_seam_1_3_3",
+              "Roof_tile_seam_1_3_4",
+              "Roof_tile_seam_1_3_5",
+              "Roof_hip_face_2",
+              "Roof_course_2_1",
+              "Roof_course_2_2",
+              "Roof_course_2_3",
+              "Roof_tile_seam_2_0_1",
+              "Roof_tile_seam_2_0_2",
+              "Roof_tile_seam_2_0_3",
+              "Roof_tile_seam_2_0_4",
+              "Roof_tile_seam_2_0_5",
+              "Roof_tile_seam_2_1_1",
+              "Roof_tile_seam_2_1_2",
+              "Roof_tile_seam_2_1_3",
+              "Roof_tile_seam_2_1_4",
+              "Roof_tile_seam_2_1_5",
+              "Roof_tile_seam_2_2_1",
+              "Roof_tile_seam_2_2_2",
+              "Roof_tile_seam_2_2_3",
+              "Roof_tile_seam_2_2_4",
+              "Roof_tile_seam_2_2_5",
+              "Roof_tile_seam_2_3_1",
+              "Roof_tile_seam_2_3_2",
+              "Roof_tile_seam_2_3_3",
+              "Roof_tile_seam_2_3_4",
+              "Roof_tile_seam_2_3_5",
+              "Roof_hip_face_3",
+              "Roof_course_3_1",
+              "Roof_course_3_2",
+              "Roof_course_3_3",
+              "Roof_tile_seam_3_0_1",
+              "Roof_tile_seam_3_0_2",
+              "Roof_tile_seam_3_0_3",
+              "Roof_tile_seam_3_0_4",
+              "Roof_tile_seam_3_0_5",
+              "Roof_tile_seam_3_1_1",
+              "Roof_tile_seam_3_1_2",
+              "Roof_tile_seam_3_1_3",
+              "Roof_tile_seam_3_1_4",
+              "Roof_tile_seam_3_1_5",
+              "Roof_tile_seam_3_2_1",
+              "Roof_tile_seam_3_2_2",
+              "Roof_tile_seam_3_2_3",
+              "Roof_tile_seam_3_2_4",
+              "Roof_tile_seam_3_2_5",
+              "Roof_tile_seam_3_3_1",
+              "Roof_tile_seam_3_3_2",
+              "Roof_tile_seam_3_3_3",
+              "Roof_tile_seam_3_3_4",
+              "Roof_tile_seam_3_3_5",
+              "Roof_hip_edge_0",
+              "Roof_hip_edge_1",
+              "Roof_hip_edge_2",
+              "Roof_hip_edge_3",
+              "Roof_short_ridge",
+              "Roof_eave_0",
+              "Roof_eave_1",
+              "Roof_eave_2",
+              "Roof_eave_3"
+            ],
+            "count": 105
+          },
+          "entry_door": {
+            "names": [
+              "entry_door"
+            ],
+            "count": 1
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ]
+          },
+          "body": {
+            "names": [
+              "identity_rear_wall",
+              "identity_left_wall",
+              "identity_right_wall",
+              "front_wall_left",
+              "front_wall_right",
+              "door_lintel"
+            ]
+          },
+          "roof": {
+            "names": [
+              "Roof_hip_face_0",
+              "Roof_course_0_1",
+              "Roof_course_0_2",
+              "Roof_course_0_3",
+              "Roof_tile_seam_0_0_1",
+              "Roof_tile_seam_0_0_2",
+              "Roof_tile_seam_0_0_3",
+              "Roof_tile_seam_0_0_4",
+              "Roof_tile_seam_0_0_5",
+              "Roof_tile_seam_0_1_1",
+              "Roof_tile_seam_0_1_2",
+              "Roof_tile_seam_0_1_3",
+              "Roof_tile_seam_0_1_4",
+              "Roof_tile_seam_0_1_5",
+              "Roof_tile_seam_0_2_1",
+              "Roof_tile_seam_0_2_2",
+              "Roof_tile_seam_0_2_3",
+              "Roof_tile_seam_0_2_4",
+              "Roof_tile_seam_0_2_5",
+              "Roof_tile_seam_0_3_1",
+              "Roof_tile_seam_0_3_2",
+              "Roof_tile_seam_0_3_3",
+              "Roof_tile_seam_0_3_4",
+              "Roof_tile_seam_0_3_5",
+              "Roof_hip_face_1",
+              "Roof_course_1_1",
+              "Roof_course_1_2",
+              "Roof_course_1_3",
+              "Roof_tile_seam_1_0_1",
+              "Roof_tile_seam_1_0_2",
+              "Roof_tile_seam_1_0_3",
+              "Roof_tile_seam_1_0_4",
+              "Roof_tile_seam_1_0_5",
+              "Roof_tile_seam_1_1_1",
+              "Roof_tile_seam_1_1_2",
+              "Roof_tile_seam_1_1_3",
+              "Roof_tile_seam_1_1_4",
+              "Roof_tile_seam_1_1_5",
+              "Roof_tile_seam_1_2_1",
+              "Roof_tile_seam_1_2_2",
+              "Roof_tile_seam_1_2_3",
+              "Roof_tile_seam_1_2_4",
+              "Roof_tile_seam_1_2_5",
+              "Roof_tile_seam_1_3_1",
+              "Roof_tile_seam_1_3_2",
+              "Roof_tile_seam_1_3_3",
+              "Roof_tile_seam_1_3_4",
+              "Roof_tile_seam_1_3_5",
+              "Roof_hip_face_2",
+              "Roof_course_2_1",
+              "Roof_course_2_2",
+              "Roof_course_2_3",
+              "Roof_tile_seam_2_0_1",
+              "Roof_tile_seam_2_0_2",
+              "Roof_tile_seam_2_0_3",
+              "Roof_tile_seam_2_0_4",
+              "Roof_tile_seam_2_0_5",
+              "Roof_tile_seam_2_1_1",
+              "Roof_tile_seam_2_1_2",
+              "Roof_tile_seam_2_1_3",
+              "Roof_tile_seam_2_1_4",
+              "Roof_tile_seam_2_1_5",
+              "Roof_tile_seam_2_2_1",
+              "Roof_tile_seam_2_2_2",
+              "Roof_tile_seam_2_2_3",
+              "Roof_tile_seam_2_2_4",
+              "Roof_tile_seam_2_2_5",
+              "Roof_tile_seam_2_3_1",
+              "Roof_tile_seam_2_3_2",
+              "Roof_tile_seam_2_3_3",
+              "Roof_tile_seam_2_3_4",
+              "Roof_tile_seam_2_3_5",
+              "Roof_hip_face_3",
+              "Roof_course_3_1",
+              "Roof_course_3_2",
+              "Roof_course_3_3",
+              "Roof_tile_seam_3_0_1",
+              "Roof_tile_seam_3_0_2",
+              "Roof_tile_seam_3_0_3",
+              "Roof_tile_seam_3_0_4",
+              "Roof_tile_seam_3_0_5",
+              "Roof_tile_seam_3_1_1",
+              "Roof_tile_seam_3_1_2",
+              "Roof_tile_seam_3_1_3",
+              "Roof_tile_seam_3_1_4",
+              "Roof_tile_seam_3_1_5",
+              "Roof_tile_seam_3_2_1",
+              "Roof_tile_seam_3_2_2",
+              "Roof_tile_seam_3_2_3",
+              "Roof_tile_seam_3_2_4",
+              "Roof_tile_seam_3_2_5",
+              "Roof_tile_seam_3_3_1",
+              "Roof_tile_seam_3_3_2",
+              "Roof_tile_seam_3_3_3",
+              "Roof_tile_seam_3_3_4",
+              "Roof_tile_seam_3_3_5",
+              "Roof_hip_edge_0",
+              "Roof_hip_edge_1",
+              "Roof_hip_edge_2",
+              "Roof_hip_edge_3",
+              "Roof_short_ridge",
+              "Roof_eave_0",
+              "Roof_eave_1",
+              "Roof_eave_2",
+              "Roof_eave_3"
+            ]
+          }
+        },
+        "landmarks": {
+          "front": [
+            0,
+            -1,
+            0.065
+          ],
+          "side_window": [
+            0.95,
+            0.12,
+            1.1
+          ],
+          "roof_rear": [
+            0,
+            1,
+            1.7796428199482248
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "577aa2c066ec9837ec6c7532341094665cfe565692eef67eb07103708e134f5a",
+          "concept": "87b1d37abb46e8e41fbcbb939ff817d95565a6b0c12e2982925dc9438431fa9a"
+        },
+        "projection": {
+          "d0": "PASS",
+          "d1": "PASS",
+          "d2": "PASS",
+          "d3": "PASS"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/infirmary/roof-diversity-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/infirmary/roof-diversity-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    },
+    "storage": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "storage",
+        "size": [
+          2,
+          2
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/storage/roof-diversity-v1/review/native-d0.png",
+            "sha256": "911351287dc2e3f0461a9c95df4422390c38517c71b42baef7d2e548f9951d47"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/storage/roof-diversity-v1/review/native-d1.png",
+            "sha256": "cb903ee78bd161162a481ee8fcae17529262e799b058ef706caf975d6ed4c02e"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/storage/roof-diversity-v1/review/native-d2.png",
+            "sha256": "e59a0eb1bafda56497feb38dec8bb6c636d9149c0c8b1ff04f5c882de2bc5e1e"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/storage/roof-diversity-v1/review/native-d3.png",
+            "sha256": "dd3ed4d5af3ac7aed2e884a0dc4fec899a981434a1350eebc75eee6acd6a9b7c"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/storage/roof-diversity-v1/review/color-d0.png",
+            "sha256": "72bd207091177f3fe3b7869584e591dd611cc725ebeb652ba7cd5f6522a52bb1"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/storage/roof-diversity-v1/review/color-d1.png",
+            "sha256": "ffa46ee709972d1e13f34384433f296b77b5a7002579f094f5832e7c083f253e"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/storage/roof-diversity-v1/review/color-d2.png",
+            "sha256": "0117673054c3f443d092802869ba82f23381e8dad10f64d602abc112e6f2c935"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/storage/roof-diversity-v1/review/color-d3.png",
+            "sha256": "b54ce53d391b34b03fb21f264fed9886694d886da9afe98f0934236cd380bf57"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/storage/roof-diversity-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/storage/roof-diversity-v1/concept.png",
+        "root": "STORAGE_TILE_ROOT",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 1800,
+        "inventory": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ],
+            "count": 1
+          },
+          "walls": {
+            "names": [
+              "identity_rear_wall",
+              "identity_left_wall",
+              "identity_right_wall",
+              "front_wall_left",
+              "front_wall_right",
+              "door_lintel"
+            ],
+            "count": 6
+          },
+          "roof_components": {
+            "names": [
+              "Roof_flat_deck",
+              "Roof_parapet_y0",
+              "Roof_parapet_y1",
+              "Roof_parapet_x0",
+              "Roof_parapet_x1",
+              "Roof_vent_base",
+              "Roof_vent_stem",
+              "Roof_vent_cap"
+            ],
+            "count": 8
+          },
+          "entry_door": {
+            "names": [
+              "entry_door"
+            ],
+            "count": 1
+          },
+          "roller_shutter": {
+            "names": [
+              "roller_shutter"
+            ],
+            "count": 1
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ]
+          },
+          "body": {
+            "names": [
+              "identity_rear_wall",
+              "identity_left_wall",
+              "identity_right_wall",
+              "front_wall_left",
+              "front_wall_right",
+              "door_lintel"
+            ]
+          },
+          "roof": {
+            "names": [
+              "Roof_flat_deck",
+              "Roof_parapet_y0",
+              "Roof_parapet_y1",
+              "Roof_parapet_x0",
+              "Roof_parapet_x1",
+              "Roof_vent_base",
+              "Roof_vent_stem",
+              "Roof_vent_cap"
+            ]
+          }
+        },
+        "landmarks": {
+          "front": [
+            0,
+            -1,
+            0.065
+          ],
+          "side_window": [
+            0.95,
+            0.12,
+            1.1
+          ],
+          "roof_rear": [
+            0,
+            1,
+            1.7796428199482248
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "af3004fb3d4613d4be74748d9a59f9c68f1e0fbff61d6cc839ea67174599d8a1",
+          "concept": "87b1d37abb46e8e41fbcbb939ff817d95565a6b0c12e2982925dc9438431fa9a"
+        },
+        "projection": {
+          "d0": "PASS",
+          "d1": "PASS",
+          "d2": "PASS",
+          "d3": "PASS"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/storage/roof-diversity-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/storage/roof-diversity-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    },
+    "toilet": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "toilet",
+        "size": [
+          2,
+          2
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/toilet/concept-return-v1/review/native-d0.png",
+            "sha256": "a0a999ba784e465f4a428006c689b9ce10650ce1121790f7df7666835e439ca5"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/toilet/concept-return-v1/review/native-d1.png",
+            "sha256": "8a5dbca1cc72b27786d00d2a4e55f77077ee9f2e0f389cd22dfe37b67d37ff40"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/toilet/concept-return-v1/review/native-d2.png",
+            "sha256": "c9fde8011583e19e5967063d5e30e7110d1b39016108a25d98a0d28c098e728c"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/toilet/concept-return-v1/review/native-d3.png",
+            "sha256": "66ed3a713e2fe7e3fd93ae9fb710485544a262dc37d86f56590d3fd330f4a0a1"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/toilet/concept-return-v1/review/color-d0.png",
+            "sha256": "56756dfbc883e2eb86cf6f2af85df778477b1fa1ad1956febc2100657ff2e058"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/toilet/concept-return-v1/review/color-d1.png",
+            "sha256": "612d4312ff75afbee1f2fba5dac5d4cac5b49042527c148ec646f2c3ab941ac4"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/toilet/concept-return-v1/review/color-d2.png",
+            "sha256": "fc120bd4cf4f470c91cb2868bad28be381a8652100e875ec204815b6e3de26cc"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/toilet/concept-return-v1/review/color-d3.png",
+            "sha256": "8f529a6300ab4c8d35030480c9d105a705ffc643672f085fe3dbc6134383a72d"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/toilet/concept-return-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/toilet/concept-return-v1/concept.png",
+        "root": "TOILET_TILE_ROOT",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 1800,
+        "inventory": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ],
+            "count": 1
+          },
+          "body": {
+            "names": [
+              "rear_wall",
+              "left_wall",
+              "right_wall",
+              "front_wall"
+            ],
+            "count": 4
+          },
+          "roof": {
+            "names": [
+              "Roof_gable_wood",
+              "Roof_gable_wood.001",
+              "Roof_gable_wood.002",
+              "Roof_gable_wood.003",
+              "Roof_gable_plane",
+              "Roof_individual_tile",
+              "Roof_individual_tile.001",
+              "Roof_individual_tile.002",
+              "Roof_individual_tile.003",
+              "Roof_individual_tile.004",
+              "Roof_individual_tile.005",
+              "Roof_individual_tile.006",
+              "Roof_individual_tile.007",
+              "Roof_individual_tile.008",
+              "Roof_individual_tile.009",
+              "Roof_individual_tile.010",
+              "Roof_individual_tile.011",
+              "Roof_individual_tile.012",
+              "Roof_individual_tile.013",
+              "Roof_individual_tile.014",
+              "Roof_individual_tile.015",
+              "Roof_individual_tile.016",
+              "Roof_individual_tile.017",
+              "Roof_individual_tile.018",
+              "Roof_individual_tile.019",
+              "Roof_individual_tile.020",
+              "Roof_individual_tile.021",
+              "Roof_individual_tile.022",
+              "Roof_individual_tile.023",
+              "Roof_individual_tile.024",
+              "Roof_individual_tile.025",
+              "Roof_individual_tile.026",
+              "Roof_individual_tile.027",
+              "Roof_individual_tile.028",
+              "Roof_individual_tile.029",
+              "Roof_individual_tile.030",
+              "Roof_individual_tile.031",
+              "Roof_individual_tile.032",
+              "Roof_individual_tile.033",
+              "Roof_individual_tile.034",
+              "Roof_individual_tile.035",
+              "Roof_individual_tile.036",
+              "Roof_individual_tile.037",
+              "Roof_individual_tile.038",
+              "Roof_individual_tile.039",
+              "Roof_individual_tile.040",
+              "Roof_individual_tile.041",
+              "Roof_individual_tile.042",
+              "Roof_individual_tile.043",
+              "Roof_individual_tile.044",
+              "Roof_gable_plane.001",
+              "Roof_individual_tile.045",
+              "Roof_individual_tile.046",
+              "Roof_individual_tile.047",
+              "Roof_individual_tile.048",
+              "Roof_individual_tile.049",
+              "Roof_individual_tile.050",
+              "Roof_individual_tile.051",
+              "Roof_individual_tile.052",
+              "Roof_individual_tile.053",
+              "Roof_individual_tile.054",
+              "Roof_individual_tile.055",
+              "Roof_individual_tile.056",
+              "Roof_individual_tile.057",
+              "Roof_individual_tile.058",
+              "Roof_individual_tile.059",
+              "Roof_individual_tile.060",
+              "Roof_individual_tile.061",
+              "Roof_individual_tile.062",
+              "Roof_individual_tile.063",
+              "Roof_individual_tile.064",
+              "Roof_individual_tile.065",
+              "Roof_individual_tile.066",
+              "Roof_individual_tile.067",
+              "Roof_individual_tile.068",
+              "Roof_individual_tile.069",
+              "Roof_individual_tile.070",
+              "Roof_individual_tile.071",
+              "Roof_individual_tile.072",
+              "Roof_individual_tile.073",
+              "Roof_individual_tile.074",
+              "Roof_individual_tile.075",
+              "Roof_individual_tile.076",
+              "Roof_individual_tile.077",
+              "Roof_individual_tile.078",
+              "Roof_individual_tile.079",
+              "Roof_individual_tile.080",
+              "Roof_individual_tile.081",
+              "Roof_individual_tile.082",
+              "Roof_individual_tile.083",
+              "Roof_individual_tile.084",
+              "Roof_individual_tile.085",
+              "Roof_individual_tile.086",
+              "Roof_individual_tile.087",
+              "Roof_individual_tile.088",
+              "Roof_individual_tile.089",
+              "Roof_ridge_cap",
+              "Roof_ridge_cap.001",
+              "Roof_ridge_cap.002",
+              "Roof_ridge_cap.003",
+              "Roof_ridge_cap.004",
+              "Roof_ridge_cap.005"
+            ],
+            "count": 102
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ]
+          },
+          "body": {
+            "names": [
+              "rear_wall",
+              "left_wall",
+              "right_wall",
+              "front_wall"
+            ]
+          },
+          "roof": {
+            "names": [
+              "Roof_gable_wood",
+              "Roof_gable_wood.001",
+              "Roof_gable_wood.002",
+              "Roof_gable_wood.003",
+              "Roof_gable_plane",
+              "Roof_individual_tile",
+              "Roof_individual_tile.001",
+              "Roof_individual_tile.002",
+              "Roof_individual_tile.003",
+              "Roof_individual_tile.004",
+              "Roof_individual_tile.005",
+              "Roof_individual_tile.006",
+              "Roof_individual_tile.007",
+              "Roof_individual_tile.008",
+              "Roof_individual_tile.009",
+              "Roof_individual_tile.010",
+              "Roof_individual_tile.011",
+              "Roof_individual_tile.012",
+              "Roof_individual_tile.013",
+              "Roof_individual_tile.014",
+              "Roof_individual_tile.015",
+              "Roof_individual_tile.016",
+              "Roof_individual_tile.017",
+              "Roof_individual_tile.018",
+              "Roof_individual_tile.019",
+              "Roof_individual_tile.020",
+              "Roof_individual_tile.021",
+              "Roof_individual_tile.022",
+              "Roof_individual_tile.023",
+              "Roof_individual_tile.024",
+              "Roof_individual_tile.025",
+              "Roof_individual_tile.026",
+              "Roof_individual_tile.027",
+              "Roof_individual_tile.028",
+              "Roof_individual_tile.029",
+              "Roof_individual_tile.030",
+              "Roof_individual_tile.031",
+              "Roof_individual_tile.032",
+              "Roof_individual_tile.033",
+              "Roof_individual_tile.034",
+              "Roof_individual_tile.035",
+              "Roof_individual_tile.036",
+              "Roof_individual_tile.037",
+              "Roof_individual_tile.038",
+              "Roof_individual_tile.039",
+              "Roof_individual_tile.040",
+              "Roof_individual_tile.041",
+              "Roof_individual_tile.042",
+              "Roof_individual_tile.043",
+              "Roof_individual_tile.044",
+              "Roof_gable_plane.001",
+              "Roof_individual_tile.045",
+              "Roof_individual_tile.046",
+              "Roof_individual_tile.047",
+              "Roof_individual_tile.048",
+              "Roof_individual_tile.049",
+              "Roof_individual_tile.050",
+              "Roof_individual_tile.051",
+              "Roof_individual_tile.052",
+              "Roof_individual_tile.053",
+              "Roof_individual_tile.054",
+              "Roof_individual_tile.055",
+              "Roof_individual_tile.056",
+              "Roof_individual_tile.057",
+              "Roof_individual_tile.058",
+              "Roof_individual_tile.059",
+              "Roof_individual_tile.060",
+              "Roof_individual_tile.061",
+              "Roof_individual_tile.062",
+              "Roof_individual_tile.063",
+              "Roof_individual_tile.064",
+              "Roof_individual_tile.065",
+              "Roof_individual_tile.066",
+              "Roof_individual_tile.067",
+              "Roof_individual_tile.068",
+              "Roof_individual_tile.069",
+              "Roof_individual_tile.070",
+              "Roof_individual_tile.071",
+              "Roof_individual_tile.072",
+              "Roof_individual_tile.073",
+              "Roof_individual_tile.074",
+              "Roof_individual_tile.075",
+              "Roof_individual_tile.076",
+              "Roof_individual_tile.077",
+              "Roof_individual_tile.078",
+              "Roof_individual_tile.079",
+              "Roof_individual_tile.080",
+              "Roof_individual_tile.081",
+              "Roof_individual_tile.082",
+              "Roof_individual_tile.083",
+              "Roof_individual_tile.084",
+              "Roof_individual_tile.085",
+              "Roof_individual_tile.086",
+              "Roof_individual_tile.087",
+              "Roof_individual_tile.088",
+              "Roof_individual_tile.089",
+              "Roof_ridge_cap",
+              "Roof_ridge_cap.001",
+              "Roof_ridge_cap.002",
+              "Roof_ridge_cap.003",
+              "Roof_ridge_cap.004",
+              "Roof_ridge_cap.005"
+            ]
+          }
+        },
+        "landmarks": {
+          "front": [
+            0,
+            -0.94,
+            0.065
+          ],
+          "ridge": [
+            0,
+            0,
+            2.202642819948225
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "b7914de21c593aab4390ac9492dd7c941689fc862617a82f53c0815be9bedbc4",
+          "concept": "687e9063e5e866b83c9274bdd4b06313167c8747b3e13778d1f7ab1157880ff1"
+        },
+        "projection": {
+          "d0": "PASS",
+          "d1": "PASS",
+          "d2": "PASS",
+          "d3": "PASS"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/toilet/concept-return-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/toilet/concept-return-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    },
+    "nursing": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "nursing",
+        "size": [
+          2,
+          2
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/nursing/concept-return-v1/review/native-d0.png",
+            "sha256": "d3fdcf38ccd00860e635f63b082dbe25876729ec420f4ddf484a5f7633dc2731"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/nursing/concept-return-v1/review/native-d1.png",
+            "sha256": "c80ab517a9d742f227b9c3c39c3bf0699648356b521a9a6da2ef946b3a637798"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/nursing/concept-return-v1/review/native-d2.png",
+            "sha256": "fbf1ab80e18d32de0663728a591a27bdde5446f7aa66282d0a2d2a2ef6a6d725"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/nursing/concept-return-v1/review/native-d3.png",
+            "sha256": "3311288551085be2fdf6431d4ea44ce0b3a16f56bc8751be2e23411783e7244f"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/nursing/concept-return-v1/review/color-d0.png",
+            "sha256": "83ea2383a2925823e9a2c734077761c63618aece80ffb31bcd2f2aae1d455329"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/nursing/concept-return-v1/review/color-d1.png",
+            "sha256": "014bc56b5b87f565778c59bf0ce4d4e0f9e7dabb7e995c3b665f4eaa6bb07fc8"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/nursing/concept-return-v1/review/color-d2.png",
+            "sha256": "986af973f85c5b9892629237ffd1206d2c4505db7a161c18bf5fe874c8cb7ec9"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/nursing/concept-return-v1/review/color-d3.png",
+            "sha256": "f970448e2728d3df13cc26774a81f4718283565cb06b29394b792047fe5a3de9"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nursing/concept-return-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nursing/concept-return-v1/concept.png",
+        "root": "NURSING_TILE_ROOT",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 1800,
+        "inventory": {
+          "floor": {
+            "names": [
+              "REPAIR_INTEGRAL_FOOTPRINT_FLOOR"
+            ],
+            "count": 1
+          },
+          "body": {
+            "names": [
+              "geometry_0",
+              "REPAIR_PLAIN_LEFT_WALL_FIELD",
+              "REPAIR_PLAIN_REAR_WALL_FIELD"
+            ],
+            "count": 3
+          },
+          "roof": {
+            "names": [
+              "Roof_gable_wood",
+              "Roof_gable_wood.001",
+              "Roof_gable_wood.002",
+              "Roof_gable_wood.003",
+              "Roof_gable_plane",
+              "Roof_individual_tile",
+              "Roof_individual_tile.001",
+              "Roof_individual_tile.002",
+              "Roof_individual_tile.003",
+              "Roof_individual_tile.004",
+              "Roof_individual_tile.005",
+              "Roof_individual_tile.006",
+              "Roof_individual_tile.007",
+              "Roof_individual_tile.008",
+              "Roof_individual_tile.009",
+              "Roof_individual_tile.010",
+              "Roof_individual_tile.011",
+              "Roof_individual_tile.012",
+              "Roof_individual_tile.013",
+              "Roof_individual_tile.014",
+              "Roof_individual_tile.015",
+              "Roof_individual_tile.016",
+              "Roof_individual_tile.017",
+              "Roof_individual_tile.018",
+              "Roof_individual_tile.019",
+              "Roof_individual_tile.020",
+              "Roof_individual_tile.021",
+              "Roof_individual_tile.022",
+              "Roof_individual_tile.023",
+              "Roof_individual_tile.024",
+              "Roof_individual_tile.025",
+              "Roof_individual_tile.026",
+              "Roof_individual_tile.027",
+              "Roof_individual_tile.028",
+              "Roof_individual_tile.029",
+              "Roof_individual_tile.030",
+              "Roof_individual_tile.031",
+              "Roof_individual_tile.032",
+              "Roof_individual_tile.033",
+              "Roof_individual_tile.034",
+              "Roof_individual_tile.035",
+              "Roof_individual_tile.036",
+              "Roof_individual_tile.037",
+              "Roof_individual_tile.038",
+              "Roof_individual_tile.039",
+              "Roof_individual_tile.040",
+              "Roof_individual_tile.041",
+              "Roof_individual_tile.042",
+              "Roof_individual_tile.043",
+              "Roof_individual_tile.044",
+              "Roof_gable_plane.001",
+              "Roof_individual_tile.045",
+              "Roof_individual_tile.046",
+              "Roof_individual_tile.047",
+              "Roof_individual_tile.048",
+              "Roof_individual_tile.049",
+              "Roof_individual_tile.050",
+              "Roof_individual_tile.051",
+              "Roof_individual_tile.052",
+              "Roof_individual_tile.053",
+              "Roof_individual_tile.054",
+              "Roof_individual_tile.055",
+              "Roof_individual_tile.056",
+              "Roof_individual_tile.057",
+              "Roof_individual_tile.058",
+              "Roof_individual_tile.059",
+              "Roof_individual_tile.060",
+              "Roof_individual_tile.061",
+              "Roof_individual_tile.062",
+              "Roof_individual_tile.063",
+              "Roof_individual_tile.064",
+              "Roof_individual_tile.065",
+              "Roof_individual_tile.066",
+              "Roof_individual_tile.067",
+              "Roof_individual_tile.068",
+              "Roof_individual_tile.069",
+              "Roof_individual_tile.070",
+              "Roof_individual_tile.071",
+              "Roof_individual_tile.072",
+              "Roof_individual_tile.073",
+              "Roof_individual_tile.074",
+              "Roof_individual_tile.075",
+              "Roof_individual_tile.076",
+              "Roof_individual_tile.077",
+              "Roof_individual_tile.078",
+              "Roof_individual_tile.079",
+              "Roof_individual_tile.080",
+              "Roof_individual_tile.081",
+              "Roof_individual_tile.082",
+              "Roof_individual_tile.083",
+              "Roof_individual_tile.084",
+              "Roof_individual_tile.085",
+              "Roof_individual_tile.086",
+              "Roof_individual_tile.087",
+              "Roof_individual_tile.088",
+              "Roof_individual_tile.089",
+              "Roof_ridge_cap",
+              "Roof_ridge_cap.001",
+              "Roof_ridge_cap.002",
+              "Roof_ridge_cap.003",
+              "Roof_ridge_cap.004",
+              "Roof_ridge_cap.005"
+            ],
+            "count": 102
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "REPAIR_INTEGRAL_FOOTPRINT_FLOOR"
+            ]
+          },
+          "body": {
+            "names": [
+              "geometry_0",
+              "REPAIR_PLAIN_LEFT_WALL_FIELD",
+              "REPAIR_PLAIN_REAR_WALL_FIELD"
+            ]
+          },
+          "roof": {
+            "names": [
+              "Roof_gable_wood",
+              "Roof_gable_wood.001",
+              "Roof_gable_wood.002",
+              "Roof_gable_wood.003",
+              "Roof_gable_plane",
+              "Roof_individual_tile",
+              "Roof_individual_tile.001",
+              "Roof_individual_tile.002",
+              "Roof_individual_tile.003",
+              "Roof_individual_tile.004",
+              "Roof_individual_tile.005",
+              "Roof_individual_tile.006",
+              "Roof_individual_tile.007",
+              "Roof_individual_tile.008",
+              "Roof_individual_tile.009",
+              "Roof_individual_tile.010",
+              "Roof_individual_tile.011",
+              "Roof_individual_tile.012",
+              "Roof_individual_tile.013",
+              "Roof_individual_tile.014",
+              "Roof_individual_tile.015",
+              "Roof_individual_tile.016",
+              "Roof_individual_tile.017",
+              "Roof_individual_tile.018",
+              "Roof_individual_tile.019",
+              "Roof_individual_tile.020",
+              "Roof_individual_tile.021",
+              "Roof_individual_tile.022",
+              "Roof_individual_tile.023",
+              "Roof_individual_tile.024",
+              "Roof_individual_tile.025",
+              "Roof_individual_tile.026",
+              "Roof_individual_tile.027",
+              "Roof_individual_tile.028",
+              "Roof_individual_tile.029",
+              "Roof_individual_tile.030",
+              "Roof_individual_tile.031",
+              "Roof_individual_tile.032",
+              "Roof_individual_tile.033",
+              "Roof_individual_tile.034",
+              "Roof_individual_tile.035",
+              "Roof_individual_tile.036",
+              "Roof_individual_tile.037",
+              "Roof_individual_tile.038",
+              "Roof_individual_tile.039",
+              "Roof_individual_tile.040",
+              "Roof_individual_tile.041",
+              "Roof_individual_tile.042",
+              "Roof_individual_tile.043",
+              "Roof_individual_tile.044",
+              "Roof_gable_plane.001",
+              "Roof_individual_tile.045",
+              "Roof_individual_tile.046",
+              "Roof_individual_tile.047",
+              "Roof_individual_tile.048",
+              "Roof_individual_tile.049",
+              "Roof_individual_tile.050",
+              "Roof_individual_tile.051",
+              "Roof_individual_tile.052",
+              "Roof_individual_tile.053",
+              "Roof_individual_tile.054",
+              "Roof_individual_tile.055",
+              "Roof_individual_tile.056",
+              "Roof_individual_tile.057",
+              "Roof_individual_tile.058",
+              "Roof_individual_tile.059",
+              "Roof_individual_tile.060",
+              "Roof_individual_tile.061",
+              "Roof_individual_tile.062",
+              "Roof_individual_tile.063",
+              "Roof_individual_tile.064",
+              "Roof_individual_tile.065",
+              "Roof_individual_tile.066",
+              "Roof_individual_tile.067",
+              "Roof_individual_tile.068",
+              "Roof_individual_tile.069",
+              "Roof_individual_tile.070",
+              "Roof_individual_tile.071",
+              "Roof_individual_tile.072",
+              "Roof_individual_tile.073",
+              "Roof_individual_tile.074",
+              "Roof_individual_tile.075",
+              "Roof_individual_tile.076",
+              "Roof_individual_tile.077",
+              "Roof_individual_tile.078",
+              "Roof_individual_tile.079",
+              "Roof_individual_tile.080",
+              "Roof_individual_tile.081",
+              "Roof_individual_tile.082",
+              "Roof_individual_tile.083",
+              "Roof_individual_tile.084",
+              "Roof_individual_tile.085",
+              "Roof_individual_tile.086",
+              "Roof_individual_tile.087",
+              "Roof_individual_tile.088",
+              "Roof_individual_tile.089",
+              "Roof_ridge_cap",
+              "Roof_ridge_cap.001",
+              "Roof_ridge_cap.002",
+              "Roof_ridge_cap.003",
+              "Roof_ridge_cap.004",
+              "Roof_ridge_cap.005"
+            ]
+          }
+        },
+        "landmarks": {
+          "front": [
+            0,
+            -0.94,
+            0.065
+          ],
+          "ridge": [
+            0,
+            0,
+            1.4798865626742403
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "eef7c0f28db1b028bd79986fb3d8cf1ad2c4616f137d20b51ede8e21c5e62e2e",
+          "concept": "687e9063e5e866b83c9274bdd4b06313167c8747b3e13778d1f7ab1157880ff1"
+        },
+        "projection": {
+          "d0": "PASS",
+          "d1": "PASS",
+          "d2": "FAIL",
+          "d3": "WARN"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nursing/concept-return-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nursing/concept-return-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    },
+    "snackbar": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "snackbar",
+        "size": [
+          2,
+          2
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/snackbar/concept-return-v1/review/native-d0.png",
+            "sha256": "f5d653c074b615a53e1631c0411b3777cd0367c41f051230c6cb98867e784ea0"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/snackbar/concept-return-v1/review/native-d1.png",
+            "sha256": "b1e1a83131bc8b69d0d707b6a069c585fcb01b1a8d1c8a9e282433134d5a7aee"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/snackbar/concept-return-v1/review/native-d2.png",
+            "sha256": "6fb106b1136fd748f54a1a5a0c31581cca7a29acb290c2927b69ddc09c0c8973"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/snackbar/concept-return-v1/review/native-d3.png",
+            "sha256": "0c17247bfd332c994ab222a35f20e1ae034c1ec74ca6207b4d8f14fdcbd33e26"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/snackbar/concept-return-v1/review/color-d0.png",
+            "sha256": "57c7e475952b983ab8fc69f1c0de047118c9a82a8b4ba6944916f927051c16cd"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/snackbar/concept-return-v1/review/color-d1.png",
+            "sha256": "285ae36eb47311717ce4e0abb9d0ac5cb627e0bd364dca6968c6130116b5c5d2"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/snackbar/concept-return-v1/review/color-d2.png",
+            "sha256": "6376921ea1ee6a8141de295dc2ac126a31d016ee6f9cb59f109c44b8ccf55453"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/snackbar/concept-return-v1/review/color-d3.png",
+            "sha256": "a81cad410df3183aa4861a62ca9129de18c2e1e17535a353d1bf3e785f1f6791"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/snackbar/concept-return-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/snackbar/concept-return-v1/concept.png",
+        "root": "SNACKBAR_TILE_ROOT",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 1800,
+        "inventory": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ],
+            "count": 1
+          },
+          "body": {
+            "names": [
+              "identity_rear_wall",
+              "identity_left_wall",
+              "right_front_return",
+              "right_rear_return",
+              "staff_portal_header",
+              "service_support_-0p835",
+              "service_support_0p835",
+              "service_apron",
+              "service_header"
+            ],
+            "count": 9
+          },
+          "roof": {
+            "names": [
+              "Roof_gable_wood",
+              "Roof_gable_wood.001",
+              "Roof_gable_wood.002",
+              "Roof_gable_wood.003",
+              "Roof_gable_plane",
+              "Roof_individual_tile",
+              "Roof_individual_tile.001",
+              "Roof_individual_tile.002",
+              "Roof_individual_tile.003",
+              "Roof_individual_tile.004",
+              "Roof_individual_tile.005",
+              "Roof_individual_tile.006",
+              "Roof_individual_tile.007",
+              "Roof_individual_tile.008",
+              "Roof_individual_tile.009",
+              "Roof_individual_tile.010",
+              "Roof_individual_tile.011",
+              "Roof_individual_tile.012",
+              "Roof_individual_tile.013",
+              "Roof_individual_tile.014",
+              "Roof_individual_tile.015",
+              "Roof_individual_tile.016",
+              "Roof_individual_tile.017",
+              "Roof_individual_tile.018",
+              "Roof_individual_tile.019",
+              "Roof_individual_tile.020",
+              "Roof_individual_tile.021",
+              "Roof_individual_tile.022",
+              "Roof_individual_tile.023",
+              "Roof_individual_tile.024",
+              "Roof_individual_tile.025",
+              "Roof_individual_tile.026",
+              "Roof_individual_tile.027",
+              "Roof_individual_tile.028",
+              "Roof_individual_tile.029",
+              "Roof_individual_tile.030",
+              "Roof_individual_tile.031",
+              "Roof_individual_tile.032",
+              "Roof_individual_tile.033",
+              "Roof_individual_tile.034",
+              "Roof_individual_tile.035",
+              "Roof_individual_tile.036",
+              "Roof_individual_tile.037",
+              "Roof_individual_tile.038",
+              "Roof_individual_tile.039",
+              "Roof_individual_tile.040",
+              "Roof_individual_tile.041",
+              "Roof_individual_tile.042",
+              "Roof_individual_tile.043",
+              "Roof_individual_tile.044",
+              "Roof_gable_plane.001",
+              "Roof_individual_tile.045",
+              "Roof_individual_tile.046",
+              "Roof_individual_tile.047",
+              "Roof_individual_tile.048",
+              "Roof_individual_tile.049",
+              "Roof_individual_tile.050",
+              "Roof_individual_tile.051",
+              "Roof_individual_tile.052",
+              "Roof_individual_tile.053",
+              "Roof_individual_tile.054",
+              "Roof_individual_tile.055",
+              "Roof_individual_tile.056",
+              "Roof_individual_tile.057",
+              "Roof_individual_tile.058",
+              "Roof_individual_tile.059",
+              "Roof_individual_tile.060",
+              "Roof_individual_tile.061",
+              "Roof_individual_tile.062",
+              "Roof_individual_tile.063",
+              "Roof_individual_tile.064",
+              "Roof_individual_tile.065",
+              "Roof_individual_tile.066",
+              "Roof_individual_tile.067",
+              "Roof_individual_tile.068",
+              "Roof_individual_tile.069",
+              "Roof_individual_tile.070",
+              "Roof_individual_tile.071",
+              "Roof_individual_tile.072",
+              "Roof_individual_tile.073",
+              "Roof_individual_tile.074",
+              "Roof_individual_tile.075",
+              "Roof_individual_tile.076",
+              "Roof_individual_tile.077",
+              "Roof_individual_tile.078",
+              "Roof_individual_tile.079",
+              "Roof_individual_tile.080",
+              "Roof_individual_tile.081",
+              "Roof_individual_tile.082",
+              "Roof_individual_tile.083",
+              "Roof_individual_tile.084",
+              "Roof_individual_tile.085",
+              "Roof_individual_tile.086",
+              "Roof_individual_tile.087",
+              "Roof_individual_tile.088",
+              "Roof_individual_tile.089",
+              "Roof_ridge_cap",
+              "Roof_ridge_cap.001",
+              "Roof_ridge_cap.002",
+              "Roof_ridge_cap.003",
+              "Roof_ridge_cap.004",
+              "Roof_ridge_cap.005"
+            ],
+            "count": 102
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ]
+          },
+          "body": {
+            "names": [
+              "identity_rear_wall",
+              "identity_left_wall",
+              "right_front_return",
+              "right_rear_return",
+              "staff_portal_header",
+              "service_support_-0p835",
+              "service_support_0p835",
+              "service_apron",
+              "service_header"
+            ]
+          },
+          "roof": {
+            "names": [
+              "Roof_gable_wood",
+              "Roof_gable_wood.001",
+              "Roof_gable_wood.002",
+              "Roof_gable_wood.003",
+              "Roof_gable_plane",
+              "Roof_individual_tile",
+              "Roof_individual_tile.001",
+              "Roof_individual_tile.002",
+              "Roof_individual_tile.003",
+              "Roof_individual_tile.004",
+              "Roof_individual_tile.005",
+              "Roof_individual_tile.006",
+              "Roof_individual_tile.007",
+              "Roof_individual_tile.008",
+              "Roof_individual_tile.009",
+              "Roof_individual_tile.010",
+              "Roof_individual_tile.011",
+              "Roof_individual_tile.012",
+              "Roof_individual_tile.013",
+              "Roof_individual_tile.014",
+              "Roof_individual_tile.015",
+              "Roof_individual_tile.016",
+              "Roof_individual_tile.017",
+              "Roof_individual_tile.018",
+              "Roof_individual_tile.019",
+              "Roof_individual_tile.020",
+              "Roof_individual_tile.021",
+              "Roof_individual_tile.022",
+              "Roof_individual_tile.023",
+              "Roof_individual_tile.024",
+              "Roof_individual_tile.025",
+              "Roof_individual_tile.026",
+              "Roof_individual_tile.027",
+              "Roof_individual_tile.028",
+              "Roof_individual_tile.029",
+              "Roof_individual_tile.030",
+              "Roof_individual_tile.031",
+              "Roof_individual_tile.032",
+              "Roof_individual_tile.033",
+              "Roof_individual_tile.034",
+              "Roof_individual_tile.035",
+              "Roof_individual_tile.036",
+              "Roof_individual_tile.037",
+              "Roof_individual_tile.038",
+              "Roof_individual_tile.039",
+              "Roof_individual_tile.040",
+              "Roof_individual_tile.041",
+              "Roof_individual_tile.042",
+              "Roof_individual_tile.043",
+              "Roof_individual_tile.044",
+              "Roof_gable_plane.001",
+              "Roof_individual_tile.045",
+              "Roof_individual_tile.046",
+              "Roof_individual_tile.047",
+              "Roof_individual_tile.048",
+              "Roof_individual_tile.049",
+              "Roof_individual_tile.050",
+              "Roof_individual_tile.051",
+              "Roof_individual_tile.052",
+              "Roof_individual_tile.053",
+              "Roof_individual_tile.054",
+              "Roof_individual_tile.055",
+              "Roof_individual_tile.056",
+              "Roof_individual_tile.057",
+              "Roof_individual_tile.058",
+              "Roof_individual_tile.059",
+              "Roof_individual_tile.060",
+              "Roof_individual_tile.061",
+              "Roof_individual_tile.062",
+              "Roof_individual_tile.063",
+              "Roof_individual_tile.064",
+              "Roof_individual_tile.065",
+              "Roof_individual_tile.066",
+              "Roof_individual_tile.067",
+              "Roof_individual_tile.068",
+              "Roof_individual_tile.069",
+              "Roof_individual_tile.070",
+              "Roof_individual_tile.071",
+              "Roof_individual_tile.072",
+              "Roof_individual_tile.073",
+              "Roof_individual_tile.074",
+              "Roof_individual_tile.075",
+              "Roof_individual_tile.076",
+              "Roof_individual_tile.077",
+              "Roof_individual_tile.078",
+              "Roof_individual_tile.079",
+              "Roof_individual_tile.080",
+              "Roof_individual_tile.081",
+              "Roof_individual_tile.082",
+              "Roof_individual_tile.083",
+              "Roof_individual_tile.084",
+              "Roof_individual_tile.085",
+              "Roof_individual_tile.086",
+              "Roof_individual_tile.087",
+              "Roof_individual_tile.088",
+              "Roof_individual_tile.089",
+              "Roof_ridge_cap",
+              "Roof_ridge_cap.001",
+              "Roof_ridge_cap.002",
+              "Roof_ridge_cap.003",
+              "Roof_ridge_cap.004",
+              "Roof_ridge_cap.005"
+            ]
+          }
+        },
+        "landmarks": {
+          "front": [
+            0,
+            -0.94,
+            0.065
+          ],
+          "ridge": [
+            0,
+            0,
+            2.202642819948225
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "c0f6b666e64e2c93a2a3641620a22b7ab6b52ff3390200671868dcc1512addb4",
+          "concept": "687e9063e5e866b83c9274bdd4b06313167c8747b3e13778d1f7ab1157880ff1"
+        },
+        "projection": {
+          "d0": "PASS",
+          "d1": "PASS",
+          "d2": "PASS",
+          "d3": "PASS"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/snackbar/concept-return-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/snackbar/concept-return-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    },
+    "cafe": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "cafe",
+        "size": [
+          3,
+          2
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/cafe/concept-return-v1/review/native-d0.png",
+            "sha256": "10e3f0164983efad4d2b4f83e71220f5e47aa29390258f69eb7e568ce8624e26"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/cafe/concept-return-v1/review/native-d1.png",
+            "sha256": "871f0e365b25b4725d02331cf58950439b269fbca38fed7d764790ea774d0964"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/cafe/concept-return-v1/review/native-d2.png",
+            "sha256": "0ad209037c834bec02b06cf5649db3769c7eadba7430f4c9f1524e6ba7ea94d5"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/cafe/concept-return-v1/review/native-d3.png",
+            "sha256": "e087a8bdc75150c0e1ed27cd8115977d461c9ed0aa30b9711a3febd473b204fd"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/cafe/concept-return-v1/review/color-d0.png",
+            "sha256": "b8389450be9846b97513efd66ae258c859cd07c28cecada9a0b97c0c052e5a2d"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/cafe/concept-return-v1/review/color-d1.png",
+            "sha256": "bf02df45fc79ebcaee0cf92ccf2c1c55c115d3559a3406069ad8f3f434ff48ec"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/cafe/concept-return-v1/review/color-d2.png",
+            "sha256": "7e4e691f3f9fcb8f4643637fffcbbe2a804dd038aefabbdadeee16eb020a21fe"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/cafe/concept-return-v1/review/color-d3.png",
+            "sha256": "b56588616c29b8db492eff1463ab97437ea185ebc2a3e77b43a7cb39972f1ef1"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe/concept-return-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe/concept-return-v1/concept.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          3,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 3500,
+        "inventory": {
+          "front_door": {
+            "names": [
+              "FrontDoor"
+            ],
+            "count": 1
+          },
+          "service_counter": {
+            "names": [
+              "ServiceCounter"
+            ],
+            "count": 1
+          },
+          "coffee_machine": {
+            "names": [
+              "CoffeeMachine"
+            ],
+            "count": 1
+          },
+          "pastry_case": {
+            "names": [
+              "PastryCase"
+            ],
+            "count": 1
+          },
+          "side_window": {
+            "names": [
+              "SideWindow"
+            ],
+            "count": 1
+          },
+          "front_awning": {
+            "names": [
+              "FrontAwning"
+            ],
+            "count": 1
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "Foundation"
+            ]
+          },
+          "body": {
+            "names": [
+              "Body_Back",
+              "Body_Side",
+              "Body_Side.001",
+              "Body_FrontLeft",
+              "Body_DoorServicePier",
+              "Body_FrontBase",
+              "Body_FrontLintel"
+            ]
+          },
+          "roof": {
+            "prefix": "Roof_"
+          }
+        },
+        "landmarks": {
+          "door": [
+            -0.8164718309859156,
+            -0.826153846153846,
+            0.7714062337273484
+          ],
+          "service": [
+            0.40591549295774654,
+            -0.8630769230769231,
+            0.5796673988584968
+          ],
+          "coffee_machine": [
+            0.7628873239436621,
+            -0.78,
+            0.9601176133087972
+          ],
+          "pastry_case": [
+            -0.052359154929577476,
+            -0.8446153846153845,
+            0.7814977513520249
+          ],
+          "side_window": [
+            1.4285915492957748,
+            0.17076923076923073,
+            1.0236941743442587
+          ],
+          "ridge": [
+            0.02,
+            0.06,
+            2.1
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "a0e1ff895981dc0333c0c101a4289201aab29e4d822c86f6ad5f20b824223b42",
+          "concept": "b1cd01568f1f600314f47131a85aa2deb7a7878e44b8a2cb8225884061df074a"
+        },
+        "projection": {
+          "d0": "FAIL",
+          "d1": "PASS",
+          "d2": "PASS",
+          "d3": "FAIL"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe/concept-return-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/cafe/concept-return-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    },
+    "karaoke": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "karaoke",
+        "size": [
+          2,
+          2
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/karaoke/concept-return-v1/review/native-d0.png",
+            "sha256": "5c8693afcd63d50b55c0056d9cddd1fb1e7653b3a3877e951e9365665c1b5e0b"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/karaoke/concept-return-v1/review/native-d1.png",
+            "sha256": "273b228b483a8360d95161789fe1cafb81cefcf638676c9883c452c239eb1770"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/karaoke/concept-return-v1/review/native-d2.png",
+            "sha256": "b0df1bee8e299e248c23e7036cf3599da7c8b4767fccb361115e35d489ebebb9"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/karaoke/concept-return-v1/review/native-d3.png",
+            "sha256": "5eb22369118e223ef020205f94f67fd47e9bea25c301f07a731b684106df6c36"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/karaoke/concept-return-v1/review/color-d0.png",
+            "sha256": "4e03716d58b00ba750a00b2ba399229274357d3335b3730fdec1e111b06b6641"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/karaoke/concept-return-v1/review/color-d1.png",
+            "sha256": "4a53ac61dfff15550609c8ad01803bf1b714ede2194446f834b2a0a2e0cb0ac8"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/karaoke/concept-return-v1/review/color-d2.png",
+            "sha256": "f9e3a893ab324b26262bbb99141118c8b0ba6e8a91733df76201d1078363ba11"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/karaoke/concept-return-v1/review/color-d3.png",
+            "sha256": "d0899ff2d9da391bb6210a35348162f1d43a5eedfb6fc8bc91acc970c77aa77f"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/karaoke/concept-return-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/karaoke/concept-return-v1/concept.png",
+        "root": "KARAOKE_TILE_ROOT",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 1800,
+        "inventory": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ],
+            "count": 1
+          },
+          "body": {
+            "names": [
+              "identity_rear_wall",
+              "identity_left_wall",
+              "identity_right_wall",
+              "front_wall_left",
+              "front_wall_right",
+              "door_lintel"
+            ],
+            "count": 6
+          },
+          "roof": {
+            "names": [
+              "Roof_gable_wood",
+              "Roof_gable_wood.001",
+              "Roof_gable_wood.002",
+              "Roof_gable_wood.003",
+              "Roof_gable_plane",
+              "Roof_individual_tile",
+              "Roof_individual_tile.001",
+              "Roof_individual_tile.002",
+              "Roof_individual_tile.003",
+              "Roof_individual_tile.004",
+              "Roof_individual_tile.005",
+              "Roof_individual_tile.006",
+              "Roof_individual_tile.007",
+              "Roof_individual_tile.008",
+              "Roof_individual_tile.009",
+              "Roof_individual_tile.010",
+              "Roof_individual_tile.011",
+              "Roof_individual_tile.012",
+              "Roof_individual_tile.013",
+              "Roof_individual_tile.014",
+              "Roof_individual_tile.015",
+              "Roof_individual_tile.016",
+              "Roof_individual_tile.017",
+              "Roof_individual_tile.018",
+              "Roof_individual_tile.019",
+              "Roof_individual_tile.020",
+              "Roof_individual_tile.021",
+              "Roof_individual_tile.022",
+              "Roof_individual_tile.023",
+              "Roof_individual_tile.024",
+              "Roof_individual_tile.025",
+              "Roof_individual_tile.026",
+              "Roof_individual_tile.027",
+              "Roof_individual_tile.028",
+              "Roof_individual_tile.029",
+              "Roof_individual_tile.030",
+              "Roof_individual_tile.031",
+              "Roof_individual_tile.032",
+              "Roof_individual_tile.033",
+              "Roof_individual_tile.034",
+              "Roof_individual_tile.035",
+              "Roof_individual_tile.036",
+              "Roof_individual_tile.037",
+              "Roof_individual_tile.038",
+              "Roof_individual_tile.039",
+              "Roof_individual_tile.040",
+              "Roof_individual_tile.041",
+              "Roof_individual_tile.042",
+              "Roof_individual_tile.043",
+              "Roof_individual_tile.044",
+              "Roof_gable_plane.001",
+              "Roof_individual_tile.045",
+              "Roof_individual_tile.046",
+              "Roof_individual_tile.047",
+              "Roof_individual_tile.048",
+              "Roof_individual_tile.049",
+              "Roof_individual_tile.050",
+              "Roof_individual_tile.051",
+              "Roof_individual_tile.052",
+              "Roof_individual_tile.053",
+              "Roof_individual_tile.054",
+              "Roof_individual_tile.055",
+              "Roof_individual_tile.056",
+              "Roof_individual_tile.057",
+              "Roof_individual_tile.058",
+              "Roof_individual_tile.059",
+              "Roof_individual_tile.060",
+              "Roof_individual_tile.061",
+              "Roof_individual_tile.062",
+              "Roof_individual_tile.063",
+              "Roof_individual_tile.064",
+              "Roof_individual_tile.065",
+              "Roof_individual_tile.066",
+              "Roof_individual_tile.067",
+              "Roof_individual_tile.068",
+              "Roof_individual_tile.069",
+              "Roof_individual_tile.070",
+              "Roof_individual_tile.071",
+              "Roof_individual_tile.072",
+              "Roof_individual_tile.073",
+              "Roof_individual_tile.074",
+              "Roof_individual_tile.075",
+              "Roof_individual_tile.076",
+              "Roof_individual_tile.077",
+              "Roof_individual_tile.078",
+              "Roof_individual_tile.079",
+              "Roof_individual_tile.080",
+              "Roof_individual_tile.081",
+              "Roof_individual_tile.082",
+              "Roof_individual_tile.083",
+              "Roof_individual_tile.084",
+              "Roof_individual_tile.085",
+              "Roof_individual_tile.086",
+              "Roof_individual_tile.087",
+              "Roof_individual_tile.088",
+              "Roof_individual_tile.089",
+              "Roof_ridge_cap",
+              "Roof_ridge_cap.001",
+              "Roof_ridge_cap.002",
+              "Roof_ridge_cap.003",
+              "Roof_ridge_cap.004",
+              "Roof_ridge_cap.005"
+            ],
+            "count": 102
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ]
+          },
+          "body": {
+            "names": [
+              "identity_rear_wall",
+              "identity_left_wall",
+              "identity_right_wall",
+              "front_wall_left",
+              "front_wall_right",
+              "door_lintel"
+            ]
+          },
+          "roof": {
+            "names": [
+              "Roof_gable_wood",
+              "Roof_gable_wood.001",
+              "Roof_gable_wood.002",
+              "Roof_gable_wood.003",
+              "Roof_gable_plane",
+              "Roof_individual_tile",
+              "Roof_individual_tile.001",
+              "Roof_individual_tile.002",
+              "Roof_individual_tile.003",
+              "Roof_individual_tile.004",
+              "Roof_individual_tile.005",
+              "Roof_individual_tile.006",
+              "Roof_individual_tile.007",
+              "Roof_individual_tile.008",
+              "Roof_individual_tile.009",
+              "Roof_individual_tile.010",
+              "Roof_individual_tile.011",
+              "Roof_individual_tile.012",
+              "Roof_individual_tile.013",
+              "Roof_individual_tile.014",
+              "Roof_individual_tile.015",
+              "Roof_individual_tile.016",
+              "Roof_individual_tile.017",
+              "Roof_individual_tile.018",
+              "Roof_individual_tile.019",
+              "Roof_individual_tile.020",
+              "Roof_individual_tile.021",
+              "Roof_individual_tile.022",
+              "Roof_individual_tile.023",
+              "Roof_individual_tile.024",
+              "Roof_individual_tile.025",
+              "Roof_individual_tile.026",
+              "Roof_individual_tile.027",
+              "Roof_individual_tile.028",
+              "Roof_individual_tile.029",
+              "Roof_individual_tile.030",
+              "Roof_individual_tile.031",
+              "Roof_individual_tile.032",
+              "Roof_individual_tile.033",
+              "Roof_individual_tile.034",
+              "Roof_individual_tile.035",
+              "Roof_individual_tile.036",
+              "Roof_individual_tile.037",
+              "Roof_individual_tile.038",
+              "Roof_individual_tile.039",
+              "Roof_individual_tile.040",
+              "Roof_individual_tile.041",
+              "Roof_individual_tile.042",
+              "Roof_individual_tile.043",
+              "Roof_individual_tile.044",
+              "Roof_gable_plane.001",
+              "Roof_individual_tile.045",
+              "Roof_individual_tile.046",
+              "Roof_individual_tile.047",
+              "Roof_individual_tile.048",
+              "Roof_individual_tile.049",
+              "Roof_individual_tile.050",
+              "Roof_individual_tile.051",
+              "Roof_individual_tile.052",
+              "Roof_individual_tile.053",
+              "Roof_individual_tile.054",
+              "Roof_individual_tile.055",
+              "Roof_individual_tile.056",
+              "Roof_individual_tile.057",
+              "Roof_individual_tile.058",
+              "Roof_individual_tile.059",
+              "Roof_individual_tile.060",
+              "Roof_individual_tile.061",
+              "Roof_individual_tile.062",
+              "Roof_individual_tile.063",
+              "Roof_individual_tile.064",
+              "Roof_individual_tile.065",
+              "Roof_individual_tile.066",
+              "Roof_individual_tile.067",
+              "Roof_individual_tile.068",
+              "Roof_individual_tile.069",
+              "Roof_individual_tile.070",
+              "Roof_individual_tile.071",
+              "Roof_individual_tile.072",
+              "Roof_individual_tile.073",
+              "Roof_individual_tile.074",
+              "Roof_individual_tile.075",
+              "Roof_individual_tile.076",
+              "Roof_individual_tile.077",
+              "Roof_individual_tile.078",
+              "Roof_individual_tile.079",
+              "Roof_individual_tile.080",
+              "Roof_individual_tile.081",
+              "Roof_individual_tile.082",
+              "Roof_individual_tile.083",
+              "Roof_individual_tile.084",
+              "Roof_individual_tile.085",
+              "Roof_individual_tile.086",
+              "Roof_individual_tile.087",
+              "Roof_individual_tile.088",
+              "Roof_individual_tile.089",
+              "Roof_ridge_cap",
+              "Roof_ridge_cap.001",
+              "Roof_ridge_cap.002",
+              "Roof_ridge_cap.003",
+              "Roof_ridge_cap.004",
+              "Roof_ridge_cap.005"
+            ]
+          }
+        },
+        "landmarks": {
+          "front": [
+            0,
+            -0.94,
+            0.065
+          ],
+          "ridge": [
+            0,
+            0,
+            2.202642819948225
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "eedff0c462c0e3356b0e9e4243648d5e3d0aaad8c289497fc71056eb7e35e2e6",
+          "concept": "687e9063e5e866b83c9274bdd4b06313167c8747b3e13778d1f7ab1157880ff1"
+        },
+        "projection": {
+          "d0": "PASS",
+          "d1": "PASS",
+          "d2": "PASS",
+          "d3": "PASS"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/karaoke/concept-return-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/karaoke/concept-return-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    },
+    "info": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "info",
+        "size": [
+          2,
+          2
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/info/concept-return-v1/review/native-d0.png",
+            "sha256": "c995086587d1017e9b16e1e4dd87d10b34b38644a034019d0a23f0026f97d790"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/info/concept-return-v1/review/native-d1.png",
+            "sha256": "048b1197c9d56b5434a5ab1468bcb8f098fe961ecb50b534b1c0d0a36426f62d"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/info/concept-return-v1/review/native-d2.png",
+            "sha256": "bb12e0f0feb3bc8ab0a1ae8416b8c1b6dd67c73ecf741a20083e61aa0dba1632"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/info/concept-return-v1/review/native-d3.png",
+            "sha256": "d8e786d9ebb8e347029b5b9ede696b1f7c7b124f29abca4e6cc0c48e4abfb784"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/info/concept-return-v1/review/color-d0.png",
+            "sha256": "66a5de883e7200f030f76d3d8b829be5dcee906f6bc9f9331f7445bf71bc3de1"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/info/concept-return-v1/review/color-d1.png",
+            "sha256": "0daf2ce841fe596d1abc7c715e1a2be45cf824e203d8b085db1734f46e3ffd75"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/info/concept-return-v1/review/color-d2.png",
+            "sha256": "c0040ef1505826f0f0267108278bf7415ed642a0016a8a6449abeb9a8ca9f034"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/info/concept-return-v1/review/color-d3.png",
+            "sha256": "5c562cc795d198b86f24302bd8a09490314e4c8ac1dc8fbd1d551a05b5c95941"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/info/concept-return-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/info/concept-return-v1/concept.png",
+        "root": "INFO_TILE_ROOT",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 1800,
+        "inventory": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ],
+            "count": 1
+          },
+          "body": {
+            "names": [
+              "identity_rear_wall",
+              "identity_left_wall",
+              "right_front_return",
+              "right_rear_return",
+              "staff_portal_header",
+              "service_support_-0p835",
+              "service_support_0p835",
+              "service_apron",
+              "service_header"
+            ],
+            "count": 9
+          },
+          "roof": {
+            "names": [
+              "Roof_gable_wood",
+              "Roof_gable_wood.001",
+              "Roof_gable_wood.002",
+              "Roof_gable_wood.003",
+              "Roof_gable_plane",
+              "Roof_individual_tile",
+              "Roof_individual_tile.001",
+              "Roof_individual_tile.002",
+              "Roof_individual_tile.003",
+              "Roof_individual_tile.004",
+              "Roof_individual_tile.005",
+              "Roof_individual_tile.006",
+              "Roof_individual_tile.007",
+              "Roof_individual_tile.008",
+              "Roof_individual_tile.009",
+              "Roof_individual_tile.010",
+              "Roof_individual_tile.011",
+              "Roof_individual_tile.012",
+              "Roof_individual_tile.013",
+              "Roof_individual_tile.014",
+              "Roof_individual_tile.015",
+              "Roof_individual_tile.016",
+              "Roof_individual_tile.017",
+              "Roof_individual_tile.018",
+              "Roof_individual_tile.019",
+              "Roof_individual_tile.020",
+              "Roof_individual_tile.021",
+              "Roof_individual_tile.022",
+              "Roof_individual_tile.023",
+              "Roof_individual_tile.024",
+              "Roof_individual_tile.025",
+              "Roof_individual_tile.026",
+              "Roof_individual_tile.027",
+              "Roof_individual_tile.028",
+              "Roof_individual_tile.029",
+              "Roof_individual_tile.030",
+              "Roof_individual_tile.031",
+              "Roof_individual_tile.032",
+              "Roof_individual_tile.033",
+              "Roof_individual_tile.034",
+              "Roof_individual_tile.035",
+              "Roof_individual_tile.036",
+              "Roof_individual_tile.037",
+              "Roof_individual_tile.038",
+              "Roof_individual_tile.039",
+              "Roof_individual_tile.040",
+              "Roof_individual_tile.041",
+              "Roof_individual_tile.042",
+              "Roof_individual_tile.043",
+              "Roof_individual_tile.044",
+              "Roof_gable_plane.001",
+              "Roof_individual_tile.045",
+              "Roof_individual_tile.046",
+              "Roof_individual_tile.047",
+              "Roof_individual_tile.048",
+              "Roof_individual_tile.049",
+              "Roof_individual_tile.050",
+              "Roof_individual_tile.051",
+              "Roof_individual_tile.052",
+              "Roof_individual_tile.053",
+              "Roof_individual_tile.054",
+              "Roof_individual_tile.055",
+              "Roof_individual_tile.056",
+              "Roof_individual_tile.057",
+              "Roof_individual_tile.058",
+              "Roof_individual_tile.059",
+              "Roof_individual_tile.060",
+              "Roof_individual_tile.061",
+              "Roof_individual_tile.062",
+              "Roof_individual_tile.063",
+              "Roof_individual_tile.064",
+              "Roof_individual_tile.065",
+              "Roof_individual_tile.066",
+              "Roof_individual_tile.067",
+              "Roof_individual_tile.068",
+              "Roof_individual_tile.069",
+              "Roof_individual_tile.070",
+              "Roof_individual_tile.071",
+              "Roof_individual_tile.072",
+              "Roof_individual_tile.073",
+              "Roof_individual_tile.074",
+              "Roof_individual_tile.075",
+              "Roof_individual_tile.076",
+              "Roof_individual_tile.077",
+              "Roof_individual_tile.078",
+              "Roof_individual_tile.079",
+              "Roof_individual_tile.080",
+              "Roof_individual_tile.081",
+              "Roof_individual_tile.082",
+              "Roof_individual_tile.083",
+              "Roof_individual_tile.084",
+              "Roof_individual_tile.085",
+              "Roof_individual_tile.086",
+              "Roof_individual_tile.087",
+              "Roof_individual_tile.088",
+              "Roof_individual_tile.089",
+              "Roof_ridge_cap",
+              "Roof_ridge_cap.001",
+              "Roof_ridge_cap.002",
+              "Roof_ridge_cap.003",
+              "Roof_ridge_cap.004",
+              "Roof_ridge_cap.005"
+            ],
+            "count": 102
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ]
+          },
+          "body": {
+            "names": [
+              "identity_rear_wall",
+              "identity_left_wall",
+              "right_front_return",
+              "right_rear_return",
+              "staff_portal_header",
+              "service_support_-0p835",
+              "service_support_0p835",
+              "service_apron",
+              "service_header"
+            ]
+          },
+          "roof": {
+            "names": [
+              "Roof_gable_wood",
+              "Roof_gable_wood.001",
+              "Roof_gable_wood.002",
+              "Roof_gable_wood.003",
+              "Roof_gable_plane",
+              "Roof_individual_tile",
+              "Roof_individual_tile.001",
+              "Roof_individual_tile.002",
+              "Roof_individual_tile.003",
+              "Roof_individual_tile.004",
+              "Roof_individual_tile.005",
+              "Roof_individual_tile.006",
+              "Roof_individual_tile.007",
+              "Roof_individual_tile.008",
+              "Roof_individual_tile.009",
+              "Roof_individual_tile.010",
+              "Roof_individual_tile.011",
+              "Roof_individual_tile.012",
+              "Roof_individual_tile.013",
+              "Roof_individual_tile.014",
+              "Roof_individual_tile.015",
+              "Roof_individual_tile.016",
+              "Roof_individual_tile.017",
+              "Roof_individual_tile.018",
+              "Roof_individual_tile.019",
+              "Roof_individual_tile.020",
+              "Roof_individual_tile.021",
+              "Roof_individual_tile.022",
+              "Roof_individual_tile.023",
+              "Roof_individual_tile.024",
+              "Roof_individual_tile.025",
+              "Roof_individual_tile.026",
+              "Roof_individual_tile.027",
+              "Roof_individual_tile.028",
+              "Roof_individual_tile.029",
+              "Roof_individual_tile.030",
+              "Roof_individual_tile.031",
+              "Roof_individual_tile.032",
+              "Roof_individual_tile.033",
+              "Roof_individual_tile.034",
+              "Roof_individual_tile.035",
+              "Roof_individual_tile.036",
+              "Roof_individual_tile.037",
+              "Roof_individual_tile.038",
+              "Roof_individual_tile.039",
+              "Roof_individual_tile.040",
+              "Roof_individual_tile.041",
+              "Roof_individual_tile.042",
+              "Roof_individual_tile.043",
+              "Roof_individual_tile.044",
+              "Roof_gable_plane.001",
+              "Roof_individual_tile.045",
+              "Roof_individual_tile.046",
+              "Roof_individual_tile.047",
+              "Roof_individual_tile.048",
+              "Roof_individual_tile.049",
+              "Roof_individual_tile.050",
+              "Roof_individual_tile.051",
+              "Roof_individual_tile.052",
+              "Roof_individual_tile.053",
+              "Roof_individual_tile.054",
+              "Roof_individual_tile.055",
+              "Roof_individual_tile.056",
+              "Roof_individual_tile.057",
+              "Roof_individual_tile.058",
+              "Roof_individual_tile.059",
+              "Roof_individual_tile.060",
+              "Roof_individual_tile.061",
+              "Roof_individual_tile.062",
+              "Roof_individual_tile.063",
+              "Roof_individual_tile.064",
+              "Roof_individual_tile.065",
+              "Roof_individual_tile.066",
+              "Roof_individual_tile.067",
+              "Roof_individual_tile.068",
+              "Roof_individual_tile.069",
+              "Roof_individual_tile.070",
+              "Roof_individual_tile.071",
+              "Roof_individual_tile.072",
+              "Roof_individual_tile.073",
+              "Roof_individual_tile.074",
+              "Roof_individual_tile.075",
+              "Roof_individual_tile.076",
+              "Roof_individual_tile.077",
+              "Roof_individual_tile.078",
+              "Roof_individual_tile.079",
+              "Roof_individual_tile.080",
+              "Roof_individual_tile.081",
+              "Roof_individual_tile.082",
+              "Roof_individual_tile.083",
+              "Roof_individual_tile.084",
+              "Roof_individual_tile.085",
+              "Roof_individual_tile.086",
+              "Roof_individual_tile.087",
+              "Roof_individual_tile.088",
+              "Roof_individual_tile.089",
+              "Roof_ridge_cap",
+              "Roof_ridge_cap.001",
+              "Roof_ridge_cap.002",
+              "Roof_ridge_cap.003",
+              "Roof_ridge_cap.004",
+              "Roof_ridge_cap.005"
+            ]
+          }
+        },
+        "landmarks": {
+          "front": [
+            0,
+            -0.94,
+            0.065
+          ],
+          "ridge": [
+            0,
+            0,
+            2.202642819948225
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "f8926f3067bbf7272f56736e181b8e7e340e7a6111726d62820c343182703dca",
+          "concept": "687e9063e5e866b83c9274bdd4b06313167c8747b3e13778d1f7ab1157880ff1"
+        },
+        "projection": {
+          "d0": "PASS",
+          "d1": "PASS",
+          "d2": "PASS",
+          "d3": "PASS"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/info/concept-return-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/info/concept-return-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    },
+    "office": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "office",
+        "size": [
+          2,
+          2
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/office/concept-return-v1/review/native-d0.png",
+            "sha256": "4fbc305f669488aabe235f688b454adb7c70ad5ce78bcc43906fec788c6b6834"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/office/concept-return-v1/review/native-d1.png",
+            "sha256": "b3c8a8410696c6606f644ae6f7f6c5cce7442bf3b08c8ab96ebdd881ba482918"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/office/concept-return-v1/review/native-d2.png",
+            "sha256": "36501c5fc81361a5d4c7cb423cd547f1cf306b54e2e5d5de47168a6d6e153dc7"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/office/concept-return-v1/review/native-d3.png",
+            "sha256": "7602ce5923bd456b0d14abdd2ae6396c8742390a15419fe23836cf71f8a36083"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/office/concept-return-v1/review/color-d0.png",
+            "sha256": "0f0a5b0e7c51bec8612e85afcfd6004e0b2ee78d0fbe5a8b645f18a166c5d3c3"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/office/concept-return-v1/review/color-d1.png",
+            "sha256": "3af09fb336163fcb5c9bbd224ab723317a89299325145eb51b55419bac581cf8"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/office/concept-return-v1/review/color-d2.png",
+            "sha256": "88e42f42f0e5c14c1c77b466fd96f22ee7b1e2b9b5441e7a5bc1660ac701acc2"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/office/concept-return-v1/review/color-d3.png",
+            "sha256": "3d534d293e0488497f241cf21c4c4bcb055b11fb2ab5a8cf5eee66559c7c59f9"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/office/concept-return-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/office/concept-return-v1/concept.png",
+        "root": "OFFICE_TILE_ROOT",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 1800,
+        "inventory": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ],
+            "count": 1
+          },
+          "body": {
+            "names": [
+              "identity_rear_wall",
+              "identity_left_wall",
+              "identity_right_wall",
+              "front_wall_left",
+              "front_wall_right",
+              "door_lintel"
+            ],
+            "count": 6
+          },
+          "roof": {
+            "names": [
+              "Roof_gable_wood",
+              "Roof_gable_wood.001",
+              "Roof_gable_wood.002",
+              "Roof_gable_wood.003",
+              "Roof_gable_plane",
+              "Roof_individual_tile",
+              "Roof_individual_tile.001",
+              "Roof_individual_tile.002",
+              "Roof_individual_tile.003",
+              "Roof_individual_tile.004",
+              "Roof_individual_tile.005",
+              "Roof_individual_tile.006",
+              "Roof_individual_tile.007",
+              "Roof_individual_tile.008",
+              "Roof_individual_tile.009",
+              "Roof_individual_tile.010",
+              "Roof_individual_tile.011",
+              "Roof_individual_tile.012",
+              "Roof_individual_tile.013",
+              "Roof_individual_tile.014",
+              "Roof_individual_tile.015",
+              "Roof_individual_tile.016",
+              "Roof_individual_tile.017",
+              "Roof_individual_tile.018",
+              "Roof_individual_tile.019",
+              "Roof_individual_tile.020",
+              "Roof_individual_tile.021",
+              "Roof_individual_tile.022",
+              "Roof_individual_tile.023",
+              "Roof_individual_tile.024",
+              "Roof_individual_tile.025",
+              "Roof_individual_tile.026",
+              "Roof_individual_tile.027",
+              "Roof_individual_tile.028",
+              "Roof_individual_tile.029",
+              "Roof_individual_tile.030",
+              "Roof_individual_tile.031",
+              "Roof_individual_tile.032",
+              "Roof_individual_tile.033",
+              "Roof_individual_tile.034",
+              "Roof_individual_tile.035",
+              "Roof_individual_tile.036",
+              "Roof_individual_tile.037",
+              "Roof_individual_tile.038",
+              "Roof_individual_tile.039",
+              "Roof_individual_tile.040",
+              "Roof_individual_tile.041",
+              "Roof_individual_tile.042",
+              "Roof_individual_tile.043",
+              "Roof_individual_tile.044",
+              "Roof_gable_plane.001",
+              "Roof_individual_tile.045",
+              "Roof_individual_tile.046",
+              "Roof_individual_tile.047",
+              "Roof_individual_tile.048",
+              "Roof_individual_tile.049",
+              "Roof_individual_tile.050",
+              "Roof_individual_tile.051",
+              "Roof_individual_tile.052",
+              "Roof_individual_tile.053",
+              "Roof_individual_tile.054",
+              "Roof_individual_tile.055",
+              "Roof_individual_tile.056",
+              "Roof_individual_tile.057",
+              "Roof_individual_tile.058",
+              "Roof_individual_tile.059",
+              "Roof_individual_tile.060",
+              "Roof_individual_tile.061",
+              "Roof_individual_tile.062",
+              "Roof_individual_tile.063",
+              "Roof_individual_tile.064",
+              "Roof_individual_tile.065",
+              "Roof_individual_tile.066",
+              "Roof_individual_tile.067",
+              "Roof_individual_tile.068",
+              "Roof_individual_tile.069",
+              "Roof_individual_tile.070",
+              "Roof_individual_tile.071",
+              "Roof_individual_tile.072",
+              "Roof_individual_tile.073",
+              "Roof_individual_tile.074",
+              "Roof_individual_tile.075",
+              "Roof_individual_tile.076",
+              "Roof_individual_tile.077",
+              "Roof_individual_tile.078",
+              "Roof_individual_tile.079",
+              "Roof_individual_tile.080",
+              "Roof_individual_tile.081",
+              "Roof_individual_tile.082",
+              "Roof_individual_tile.083",
+              "Roof_individual_tile.084",
+              "Roof_individual_tile.085",
+              "Roof_individual_tile.086",
+              "Roof_individual_tile.087",
+              "Roof_individual_tile.088",
+              "Roof_individual_tile.089",
+              "Roof_ridge_cap",
+              "Roof_ridge_cap.001",
+              "Roof_ridge_cap.002",
+              "Roof_ridge_cap.003",
+              "Roof_ridge_cap.004",
+              "Roof_ridge_cap.005"
+            ],
+            "count": 102
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "integral_floor"
+            ]
+          },
+          "body": {
+            "names": [
+              "identity_rear_wall",
+              "identity_left_wall",
+              "identity_right_wall",
+              "front_wall_left",
+              "front_wall_right",
+              "door_lintel"
+            ]
+          },
+          "roof": {
+            "names": [
+              "Roof_gable_wood",
+              "Roof_gable_wood.001",
+              "Roof_gable_wood.002",
+              "Roof_gable_wood.003",
+              "Roof_gable_plane",
+              "Roof_individual_tile",
+              "Roof_individual_tile.001",
+              "Roof_individual_tile.002",
+              "Roof_individual_tile.003",
+              "Roof_individual_tile.004",
+              "Roof_individual_tile.005",
+              "Roof_individual_tile.006",
+              "Roof_individual_tile.007",
+              "Roof_individual_tile.008",
+              "Roof_individual_tile.009",
+              "Roof_individual_tile.010",
+              "Roof_individual_tile.011",
+              "Roof_individual_tile.012",
+              "Roof_individual_tile.013",
+              "Roof_individual_tile.014",
+              "Roof_individual_tile.015",
+              "Roof_individual_tile.016",
+              "Roof_individual_tile.017",
+              "Roof_individual_tile.018",
+              "Roof_individual_tile.019",
+              "Roof_individual_tile.020",
+              "Roof_individual_tile.021",
+              "Roof_individual_tile.022",
+              "Roof_individual_tile.023",
+              "Roof_individual_tile.024",
+              "Roof_individual_tile.025",
+              "Roof_individual_tile.026",
+              "Roof_individual_tile.027",
+              "Roof_individual_tile.028",
+              "Roof_individual_tile.029",
+              "Roof_individual_tile.030",
+              "Roof_individual_tile.031",
+              "Roof_individual_tile.032",
+              "Roof_individual_tile.033",
+              "Roof_individual_tile.034",
+              "Roof_individual_tile.035",
+              "Roof_individual_tile.036",
+              "Roof_individual_tile.037",
+              "Roof_individual_tile.038",
+              "Roof_individual_tile.039",
+              "Roof_individual_tile.040",
+              "Roof_individual_tile.041",
+              "Roof_individual_tile.042",
+              "Roof_individual_tile.043",
+              "Roof_individual_tile.044",
+              "Roof_gable_plane.001",
+              "Roof_individual_tile.045",
+              "Roof_individual_tile.046",
+              "Roof_individual_tile.047",
+              "Roof_individual_tile.048",
+              "Roof_individual_tile.049",
+              "Roof_individual_tile.050",
+              "Roof_individual_tile.051",
+              "Roof_individual_tile.052",
+              "Roof_individual_tile.053",
+              "Roof_individual_tile.054",
+              "Roof_individual_tile.055",
+              "Roof_individual_tile.056",
+              "Roof_individual_tile.057",
+              "Roof_individual_tile.058",
+              "Roof_individual_tile.059",
+              "Roof_individual_tile.060",
+              "Roof_individual_tile.061",
+              "Roof_individual_tile.062",
+              "Roof_individual_tile.063",
+              "Roof_individual_tile.064",
+              "Roof_individual_tile.065",
+              "Roof_individual_tile.066",
+              "Roof_individual_tile.067",
+              "Roof_individual_tile.068",
+              "Roof_individual_tile.069",
+              "Roof_individual_tile.070",
+              "Roof_individual_tile.071",
+              "Roof_individual_tile.072",
+              "Roof_individual_tile.073",
+              "Roof_individual_tile.074",
+              "Roof_individual_tile.075",
+              "Roof_individual_tile.076",
+              "Roof_individual_tile.077",
+              "Roof_individual_tile.078",
+              "Roof_individual_tile.079",
+              "Roof_individual_tile.080",
+              "Roof_individual_tile.081",
+              "Roof_individual_tile.082",
+              "Roof_individual_tile.083",
+              "Roof_individual_tile.084",
+              "Roof_individual_tile.085",
+              "Roof_individual_tile.086",
+              "Roof_individual_tile.087",
+              "Roof_individual_tile.088",
+              "Roof_individual_tile.089",
+              "Roof_ridge_cap",
+              "Roof_ridge_cap.001",
+              "Roof_ridge_cap.002",
+              "Roof_ridge_cap.003",
+              "Roof_ridge_cap.004",
+              "Roof_ridge_cap.005"
+            ]
+          }
+        },
+        "landmarks": {
+          "front": [
+            0,
+            -0.94,
+            0.065
+          ],
+          "ridge": [
+            0,
+            0,
+            2.202642819948225
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "72118df482bdd6af4b35caf17bc91960e99e34da2f3d1b0bb1d0252eb610ce69",
+          "concept": "687e9063e5e866b83c9274bdd4b06313167c8747b3e13778d1f7ab1157880ff1"
+        },
+        "projection": {
+          "d0": "PASS",
+          "d1": "PASS",
+          "d2": "PASS",
+          "d3": "PASS"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/office/concept-return-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/office/concept-return-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    },
+    "sauna": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "sauna",
+        "size": [
+          3,
+          3
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/sauna/mixed-shelter-v1/review/native-d0.png",
+            "sha256": "93aee10cc6483c0e1340d4a5c299f7d7f544819ca3830ebde535b2563d5ddc92"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/sauna/mixed-shelter-v1/review/native-d1.png",
+            "sha256": "0f82b47f6ddcfa988374ef15bb4ce3f3fdd55f7fcc62dab81dc4828aa2f4213a"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/sauna/mixed-shelter-v1/review/native-d2.png",
+            "sha256": "840643ce54601530d981bdd8edb69437cd60e9ae60f5571617cad33df2b1d830"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/sauna/mixed-shelter-v1/review/native-d3.png",
+            "sha256": "26d7297107cb5bad31d6acf909338f8131441556e29c06b5e9f0d99bcda04e02"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/sauna/mixed-shelter-v1/review/color-d0.png",
+            "sha256": "eac1d1c9fd0fddeae281c6c25ad3495b3ef47f4622c765dd8fdb7481fb438ab3"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/sauna/mixed-shelter-v1/review/color-d1.png",
+            "sha256": "021ae61bcef8544fcc199292627bc2edfdaf63f7216bd7185b94dc70667e0ce3"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/sauna/mixed-shelter-v1/review/color-d2.png",
+            "sha256": "bf3492fb20767fa37504db6f120deaaeecfd030d9646736dab3b1406a4d3a55c"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/sauna/mixed-shelter-v1/review/color-d3.png",
+            "sha256": "0c157e8ae201d4f78153b50c50fb85a2633e07bbb767d2960a325e7f21b3d52e"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna/mixed-shelter-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna/mixed-shelter-v1/concept.png",
+        "root": "SAUNA_TILE_ROOT",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          3,
+          3
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 500,
+        "groups": {
+          "floor": {
+            "names": [
+              "Foundation"
+            ]
+          },
+          "body": {
+            "names": [
+              "Shell",
+              "Post",
+              "Post.001",
+              "Post.002",
+              "Post.003"
+            ]
+          },
+          "roof": {
+            "names": [
+              "Roof_gable",
+              "Roof_tile",
+              "Roof_tile.001",
+              "Roof_tile.002",
+              "Roof_tile.003",
+              "Roof_tile.004",
+              "Roof_tile.005",
+              "Roof_tile.006",
+              "Roof_tile.007",
+              "Roof_tile.008",
+              "Roof_tile.009",
+              "Roof_tile.010",
+              "Roof_tile.011",
+              "Roof_tile.012",
+              "Roof_tile.013",
+              "Roof_tile.014",
+              "Roof_tile.015",
+              "Roof_tile.016",
+              "Roof_tile.017",
+              "Roof_tile.018",
+              "Roof_tile.019",
+              "Roof_tile.020",
+              "Roof_tile.021",
+              "Roof_tile.022",
+              "Roof_tile.023",
+              "Roof_tile.024",
+              "Roof_tile.025",
+              "Roof_tile.026",
+              "Roof_tile.027",
+              "Roof_tile.028",
+              "Roof_tile.029",
+              "Roof_tile.030",
+              "Roof_tile.031",
+              "Roof_tile.032",
+              "Roof_tile.033",
+              "Roof_tile.034",
+              "Roof_tile.035",
+              "Roof_tile.036",
+              "Roof_tile.037",
+              "Roof_tile.038",
+              "Roof_tile.039",
+              "Roof_tile.040",
+              "Roof_tile.041",
+              "Roof_tile.042",
+              "Roof_tile.043",
+              "Roof_tile.044",
+              "Roof_tile.045",
+              "Roof_tile.046",
+              "Roof_tile.047",
+              "Roof_tile.048",
+              "Roof_tile.049",
+              "Roof_tile.050",
+              "Roof_tile.051",
+              "Roof_tile.052",
+              "Roof_tile.053",
+              "Roof_tile.054",
+              "Roof_tile.055",
+              "Roof_tile.056",
+              "Roof_tile.057",
+              "Roof_tile.058",
+              "Roof_tile.059",
+              "Roof_gable.001",
+              "Roof_tile.060",
+              "Roof_tile.061",
+              "Roof_tile.062",
+              "Roof_tile.063",
+              "Roof_tile.064",
+              "Roof_tile.065",
+              "Roof_tile.066",
+              "Roof_tile.067",
+              "Roof_tile.068",
+              "Roof_tile.069",
+              "Roof_tile.070",
+              "Roof_tile.071",
+              "Roof_tile.072",
+              "Roof_tile.073",
+              "Roof_tile.074",
+              "Roof_tile.075",
+              "Roof_tile.076",
+              "Roof_tile.077",
+              "Roof_tile.078",
+              "Roof_tile.079",
+              "Roof_tile.080",
+              "Roof_tile.081",
+              "Roof_tile.082",
+              "Roof_tile.083",
+              "Roof_tile.084",
+              "Roof_tile.085",
+              "Roof_tile.086",
+              "Roof_tile.087",
+              "Roof_tile.088",
+              "Roof_tile.089",
+              "Roof_tile.090",
+              "Roof_tile.091",
+              "Roof_tile.092",
+              "Roof_tile.093",
+              "Roof_tile.094",
+              "Roof_tile.095",
+              "Roof_tile.096",
+              "Roof_tile.097",
+              "Roof_tile.098",
+              "Roof_tile.099",
+              "Roof_tile.100",
+              "Roof_tile.101",
+              "Roof_tile.102",
+              "Roof_tile.103",
+              "Roof_tile.104",
+              "Roof_tile.105",
+              "Roof_tile.106",
+              "Roof_tile.107",
+              "Roof_tile.108",
+              "Roof_tile.109",
+              "Roof_tile.110",
+              "Roof_tile.111",
+              "Roof_tile.112",
+              "Roof_tile.113",
+              "Roof_tile.114",
+              "Roof_tile.115",
+              "Roof_tile.116",
+              "Roof_tile.117",
+              "Roof_tile.118",
+              "Roof_tile.119",
+              "Roof_ridge"
+            ]
+          }
+        },
+        "inventory": {
+          "doors": {
+            "names": [
+              "DoorLeaf"
+            ],
+            "count": 1
+          }
+        },
+        "landmarks": {
+          "entry": [
+            0,
+            -1.5,
+            0.065
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "7236808cd0ad9a263c3a6189bb87c5f859fd4c4707872c46d05e788152cca4d9",
+          "concept": "d4324b66065a632ac049ef1b72febcfa147a73efaf43d9a87e503b6f38cf58e3"
+        },
+        "projection": {
+          "d0": "WARN",
+          "d1": "PASS",
+          "d2": "PASS",
+          "d3": "FAIL"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna/mixed-shelter-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna/mixed-shelter-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    },
+    "jjimjilbang": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "jjimjilbang",
+        "size": [
+          4,
+          4
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/jjimjilbang/mixed-shelter-v1/review/native-d0.png",
+            "sha256": "ccd365b58ab54faa38c67b9001961cf711425ade25a98200921441d4f258cd60"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/jjimjilbang/mixed-shelter-v1/review/native-d1.png",
+            "sha256": "95299e6648b990319c848cb6445211f8648e14d98ae305f730c12f31f5743cae"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/jjimjilbang/mixed-shelter-v1/review/native-d2.png",
+            "sha256": "4aeb1d688f1c434fec2e95a363adb03fdf3d11985b022e14c47b9c84b353d03d"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/jjimjilbang/mixed-shelter-v1/review/native-d3.png",
+            "sha256": "932f606d7d46f51791f8f0e0c31aaae0e16a3a4cd40c1dc179bc5774fdbdfb36"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/jjimjilbang/mixed-shelter-v1/review/color-d0.png",
+            "sha256": "3a3e159a4a373a96bcccb293cc57e3b0746d58e5fab154c34ace996683c6cd8a"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/jjimjilbang/mixed-shelter-v1/review/color-d1.png",
+            "sha256": "e2515aa8a7dbe3b032441dd926dd279d16fec244b1d64001901aaac91f96cf70"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/jjimjilbang/mixed-shelter-v1/review/color-d2.png",
+            "sha256": "1c947f2482e173326b8a1a45fe8559392138c710016e3b8861e2eaa16b12c1de"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/jjimjilbang/mixed-shelter-v1/review/color-d3.png",
+            "sha256": "9dbe9e644e8805ec92814e5c6f60a7a16105d7417534bdbea1c5d0ee1de20606"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/jjimjilbang/mixed-shelter-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/jjimjilbang/mixed-shelter-v1/concept.png",
+        "root": "JJIMJILBANG_TILE_ROOT",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          4,
+          4
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 500,
+        "groups": {
+          "floor": {
+            "names": [
+              "Foundation"
+            ]
+          },
+          "body": {
+            "names": [
+              "Shell",
+              "Post",
+              "Post.001",
+              "Post.002",
+              "Post.003",
+              "Post.004",
+              "Post.005"
+            ]
+          },
+          "roof": {
+            "names": [
+              "Roof_gable",
+              "Roof_tile",
+              "Roof_tile.001",
+              "Roof_tile.002",
+              "Roof_tile.003",
+              "Roof_tile.004",
+              "Roof_tile.005",
+              "Roof_tile.006",
+              "Roof_tile.007",
+              "Roof_tile.008",
+              "Roof_tile.009",
+              "Roof_tile.010",
+              "Roof_tile.011",
+              "Roof_tile.012",
+              "Roof_tile.013",
+              "Roof_tile.014",
+              "Roof_tile.015",
+              "Roof_tile.016",
+              "Roof_tile.017",
+              "Roof_tile.018",
+              "Roof_tile.019",
+              "Roof_tile.020",
+              "Roof_tile.021",
+              "Roof_tile.022",
+              "Roof_tile.023",
+              "Roof_tile.024",
+              "Roof_tile.025",
+              "Roof_tile.026",
+              "Roof_tile.027",
+              "Roof_tile.028",
+              "Roof_tile.029",
+              "Roof_tile.030",
+              "Roof_tile.031",
+              "Roof_tile.032",
+              "Roof_tile.033",
+              "Roof_tile.034",
+              "Roof_tile.035",
+              "Roof_tile.036",
+              "Roof_tile.037",
+              "Roof_tile.038",
+              "Roof_tile.039",
+              "Roof_tile.040",
+              "Roof_tile.041",
+              "Roof_tile.042",
+              "Roof_tile.043",
+              "Roof_tile.044",
+              "Roof_tile.045",
+              "Roof_tile.046",
+              "Roof_tile.047",
+              "Roof_tile.048",
+              "Roof_tile.049",
+              "Roof_tile.050",
+              "Roof_tile.051",
+              "Roof_tile.052",
+              "Roof_tile.053",
+              "Roof_tile.054",
+              "Roof_tile.055",
+              "Roof_tile.056",
+              "Roof_tile.057",
+              "Roof_tile.058",
+              "Roof_tile.059",
+              "Roof_gable.001",
+              "Roof_tile.060",
+              "Roof_tile.061",
+              "Roof_tile.062",
+              "Roof_tile.063",
+              "Roof_tile.064",
+              "Roof_tile.065",
+              "Roof_tile.066",
+              "Roof_tile.067",
+              "Roof_tile.068",
+              "Roof_tile.069",
+              "Roof_tile.070",
+              "Roof_tile.071",
+              "Roof_tile.072",
+              "Roof_tile.073",
+              "Roof_tile.074",
+              "Roof_tile.075",
+              "Roof_tile.076",
+              "Roof_tile.077",
+              "Roof_tile.078",
+              "Roof_tile.079",
+              "Roof_tile.080",
+              "Roof_tile.081",
+              "Roof_tile.082",
+              "Roof_tile.083",
+              "Roof_tile.084",
+              "Roof_tile.085",
+              "Roof_tile.086",
+              "Roof_tile.087",
+              "Roof_tile.088",
+              "Roof_tile.089",
+              "Roof_tile.090",
+              "Roof_tile.091",
+              "Roof_tile.092",
+              "Roof_tile.093",
+              "Roof_tile.094",
+              "Roof_tile.095",
+              "Roof_tile.096",
+              "Roof_tile.097",
+              "Roof_tile.098",
+              "Roof_tile.099",
+              "Roof_tile.100",
+              "Roof_tile.101",
+              "Roof_tile.102",
+              "Roof_tile.103",
+              "Roof_tile.104",
+              "Roof_tile.105",
+              "Roof_tile.106",
+              "Roof_tile.107",
+              "Roof_tile.108",
+              "Roof_tile.109",
+              "Roof_tile.110",
+              "Roof_tile.111",
+              "Roof_tile.112",
+              "Roof_tile.113",
+              "Roof_tile.114",
+              "Roof_tile.115",
+              "Roof_tile.116",
+              "Roof_tile.117",
+              "Roof_tile.118",
+              "Roof_tile.119",
+              "Roof_ridge",
+              "Veranda_canvas"
+            ]
+          }
+        },
+        "inventory": {
+          "doors": {
+            "names": [
+              "DoorLeaf"
+            ],
+            "count": 1
+          }
+        },
+        "landmarks": {
+          "entry": [
+            0,
+            -2.0,
+            0.065
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "71d2ae11fa04a5d09af5f4664b5c4c3dcea2c10143a11da58c972082637aa211",
+          "concept": "d4324b66065a632ac049ef1b72febcfa147a73efaf43d9a87e503b6f38cf58e3"
+        },
+        "projection": {
+          "d0": "PASS",
+          "d1": "WARN",
+          "d2": "PASS",
+          "d3": "PASS"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/jjimjilbang/mixed-shelter-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/jjimjilbang/mixed-shelter-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    },
+    "bungalow": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "bungalow",
+        "size": [
+          3,
+          3
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/bungalow/mixed-shelter-v1/review/native-d0.png",
+            "sha256": "2de344283dc52b1da92adbbe83b06a3477a6cf938470d77d6b2251b59811896b"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/bungalow/mixed-shelter-v1/review/native-d1.png",
+            "sha256": "f1a196db6120995d3b00c36bfa3df1b15d004552b563860f09ec2bf4634fcebe"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/bungalow/mixed-shelter-v1/review/native-d2.png",
+            "sha256": "87d4334fc0149efb29e5d285a2b3b585be20f38dcc0121f412ec0d1e33ca3364"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/bungalow/mixed-shelter-v1/review/native-d3.png",
+            "sha256": "1c403aea4b7ce5f6e1f88f0ff0b2cf17929329041c49db3fdcc24d434f08a7d4"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/bungalow/mixed-shelter-v1/review/color-d0.png",
+            "sha256": "342ac84542cdbff7b31863f5c8ae927596c1ecf424bad846155c05d800f2dc48"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/bungalow/mixed-shelter-v1/review/color-d1.png",
+            "sha256": "e7dab21925c3224088ba3e495c1c270fc8c84ad81f251cdc10a902970e182ee3"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/bungalow/mixed-shelter-v1/review/color-d2.png",
+            "sha256": "4cc24f07a83dbf2854506d29a94cbd9333bb99bf37f99b91998fd8d8852cdd52"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/bungalow/mixed-shelter-v1/review/color-d3.png",
+            "sha256": "5c54588030475957defcd7815e408731db72b87e59500a111c0167c8b29d15d9"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bungalow/mixed-shelter-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bungalow/mixed-shelter-v1/concept.png",
+        "root": "BUNGALOW_TILE_ROOT",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          3,
+          3
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 500,
+        "groups": {
+          "floor": {
+            "names": [
+              "Foundation"
+            ]
+          },
+          "body": {
+            "names": [
+              "Shell",
+              "Post",
+              "Post.001",
+              "Post.002",
+              "Post.003",
+              "Post.004",
+              "Post.005"
+            ]
+          },
+          "roof": {
+            "names": [
+              "Roof_shed",
+              "Roof_panel_seam",
+              "Roof_panel_seam.001",
+              "Roof_panel_seam.002",
+              "Roof_panel_seam.003",
+              "Roof_panel_seam.004",
+              "Roof_panel_seam.005",
+              "Roof_panel_seam.006",
+              "Roof_panel_seam.007",
+              "Roof_panel_seam.008",
+              "Roof_panel_seam.009",
+              "Roof_panel_seam.010"
+            ]
+          }
+        },
+        "inventory": {
+          "doors": {
+            "names": [
+              "DoorLeaf"
+            ],
+            "count": 1
+          }
+        },
+        "landmarks": {
+          "entry": [
+            0,
+            -1.5,
+            0.065
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "42155c0eda588c51b2c5c7ee601e32776a11b0b1b8369ef689f1a945e4327187",
+          "concept": "d4324b66065a632ac049ef1b72febcfa147a73efaf43d9a87e503b6f38cf58e3"
+        },
+        "projection": {
+          "d0": "PASS",
+          "d1": "PASS",
+          "d2": "PASS",
+          "d3": "PASS"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bungalow/mixed-shelter-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bungalow/mixed-shelter-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    },
+    "shade_net": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "shade_net",
+        "size": [
+          2,
+          2
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shade_net/mixed-shelter-v1/review/native-d0.png",
+            "sha256": "1c395be2e7f4ce6fc236632a39b1b1566002fb8f77902fa7f2345ed75fd4ee28"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shade_net/mixed-shelter-v1/review/native-d1.png",
+            "sha256": "1e8e85727bb5deeda4acb5c6d20eef4f5588e060920cb6d5437aab79f5b22d92"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shade_net/mixed-shelter-v1/review/native-d2.png",
+            "sha256": "36a1ecca07ece8e9477a61160e6f49b5da1449be4efe096deabfbd75ea1dfcdc"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shade_net/mixed-shelter-v1/review/native-d3.png",
+            "sha256": "bb3332c8f52d00ba53217cc9a118b53d62c5958af6bff24d747b0e2a042d8b09"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shade_net/mixed-shelter-v1/review/color-d0.png",
+            "sha256": "78569cda05f1cc58795336475e801dda250629ab73aefb3151910d78945bc0fb"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shade_net/mixed-shelter-v1/review/color-d1.png",
+            "sha256": "d9290e093fb42cfe4e2b945c50f24edaaa5e94b1a03edad6f22127c4068e39db"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shade_net/mixed-shelter-v1/review/color-d2.png",
+            "sha256": "69ed1621497b6134215cbb141cb1ca8af6458c2267ab22e72873e213ce90e91f"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/shade_net/mixed-shelter-v1/review/color-d3.png",
+            "sha256": "5fc4c0e7e805eaba906577a9cc08f10e60dcfe6f6af124f0fea224ddd1f12734"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/shade_net/mixed-shelter-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/shade_net/mixed-shelter-v1/concept.png",
+        "root": "SHADE_NET_TILE_ROOT",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 500,
+        "groups": {
+          "floor": {
+            "names": [
+              "Foundation"
+            ]
+          },
+          "body": {
+            "names": [
+              "Post",
+              "Post.001",
+              "Post.002",
+              "Post.003"
+            ]
+          },
+          "roof": {
+            "names": [
+              "Roof_fabric",
+              "CanopyEdge",
+              "CanopyEdge.001",
+              "CanopyEdge.002",
+              "CanopyEdge.003"
+            ]
+          }
+        },
+        "inventory": {
+          "doors": {
+            "names": [],
+            "count": 0
+          }
+        },
+        "landmarks": {
+          "entry": [
+            0,
+            -1.0,
+            0.065
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "2877519bc4410466d5383af915b48595e65df64279a67b1d10dc8ed58d926d55",
+          "concept": "d4324b66065a632ac049ef1b72febcfa147a73efaf43d9a87e503b6f38cf58e3"
+        },
+        "projection": {
+          "d0": "PASS",
+          "d1": "PASS",
+          "d2": "PASS",
+          "d3": "PASS"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/shade_net/mixed-shelter-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/shade_net/mixed-shelter-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    },
+    "mongol_tent": {
+      "selection": {
+        "status": "USER_SELECTED_REVIEW_PACK",
+        "asset_id": "mongol_tent",
+        "size": [
+          3,
+          3
+        ],
+        "live_adopted": false,
+        "provenance": [
+          {
+            "kind": "native",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/mongol_tent/mixed-shelter-v1/review/native-d0.png",
+            "sha256": "494145c05296cb31dc29bd8109c530dff35c188280db9c3e5e82209949855939"
+          },
+          {
+            "kind": "native",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/mongol_tent/mixed-shelter-v1/review/native-d1.png",
+            "sha256": "807c8b92ca88d8911f7e0da5cca46ffea21cd6cdbd3abe4764cce5ee3e6ed488"
+          },
+          {
+            "kind": "native",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/mongol_tent/mixed-shelter-v1/review/native-d2.png",
+            "sha256": "106ed50742e61681b5205a19bf192f1f2c7552035efa62a61e6d696ef99e6336"
+          },
+          {
+            "kind": "native",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/mongol_tent/mixed-shelter-v1/review/native-d3.png",
+            "sha256": "5efb70b64c41072c6f49f2f68582bb989ba1e3f16decc9d9ddc96db53ff3d80f"
+          },
+          {
+            "kind": "color",
+            "direction": 0,
+            "source": "/assets/generated/kairo-v4-simple-pilot/mongol_tent/mixed-shelter-v1/review/color-d0.png",
+            "sha256": "7747b5d0ef14e8a568f30446cd5e72c5ef43eed4b9b571bd7a5400e4d58aa634"
+          },
+          {
+            "kind": "color",
+            "direction": 1,
+            "source": "/assets/generated/kairo-v4-simple-pilot/mongol_tent/mixed-shelter-v1/review/color-d1.png",
+            "sha256": "99ea5dcea0d958a080f16c43a1df15f74dbce7ec51a518549b63d84924380ebe"
+          },
+          {
+            "kind": "color",
+            "direction": 2,
+            "source": "/assets/generated/kairo-v4-simple-pilot/mongol_tent/mixed-shelter-v1/review/color-d2.png",
+            "sha256": "1a53c6b5250e0279a6082092de9b5598f0d1f79598111861b439e3d8249be412"
+          },
+          {
+            "kind": "color",
+            "direction": 3,
+            "source": "/assets/generated/kairo-v4-simple-pilot/mongol_tent/mixed-shelter-v1/review/color-d3.png",
+            "sha256": "c4e03c4d35785290322d4c9b416a027bf48641cd4fd6433e9686073165556325"
+          }
+        ]
+      },
+      "contract": {
+        "blend": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/mongol_tent/mixed-shelter-v1/facility.blend",
+        "concept": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/mongol_tent/mixed-shelter-v1/concept.png",
+        "root": "MONGOL_TENT_TILE_ROOT",
+        "tile_world": 22.62741699796952,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          3,
+          3
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 500,
+        "groups": {
+          "floor": {
+            "names": [
+              "Foundation"
+            ]
+          },
+          "body": {
+            "names": [
+              "Post",
+              "Post.001",
+              "Post.002",
+              "Post.003"
+            ]
+          },
+          "roof": {
+            "names": [
+              "Roof_canvas",
+              "Canopy_edge",
+              "Canopy_seam",
+              "Roof_canvas.001",
+              "Canopy_edge.001",
+              "Canopy_seam.001",
+              "Roof_canvas.002",
+              "Canopy_edge.002",
+              "Canopy_seam.002",
+              "Roof_canvas.003",
+              "Canopy_edge.003",
+              "Canopy_seam.003"
+            ]
+          }
+        },
+        "inventory": {
+          "doors": {
+            "names": [],
+            "count": 0
+          }
+        },
+        "landmarks": {
+          "entry": [
+            0,
+            -1.5,
+            0.065
+          ]
+        }
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "7ec20d0b721adfcfa618557966e818118e9613ebde8d4e54bec9190fb8bb284b",
+          "concept": "d4324b66065a632ac049ef1b72febcfa147a73efaf43d9a87e503b6f38cf58e3"
+        },
+        "projection": {
+          "d0": "FAIL",
+          "d1": "PASS",
+          "d2": "PASS",
+          "d3": "PASS"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/mongol_tent/mixed-shelter-v1/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/mongol_tent/mixed-shelter-v1/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "cameraExact": true,
+      "rootYawDegrees": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "sizeUnchanged": true,
+      "nativePixelsUnchanged": true,
+      "anchor": {
+        "ax": 96.0,
+        "ay": 107.75755076535926
+      }
+    }
+  },
+  "aliases": {
+    "indoor_shop": "shop"
+  }
+}

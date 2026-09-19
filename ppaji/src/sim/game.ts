@@ -3145,7 +3145,7 @@ export class Game {
       gradeNext = ppajiGrade({ n, kinds, chain, chainKinds, lights });
       chainNext = lit ? (st.chainLen.get(overlayUid) ?? 1) : 0;
     }
-    const capNext = def.capacity <= 0 ? 0 : Math.round(def.capacity * Math.min(CHAIN_CAP, Math.max(1, Math.sqrt(Math.max(1, chainNext) / CHAIN_BASE)))); // P60-d: chainNext 는 경로 순번(사슬 개념 흡수) — 같은 식이 「경로가 길수록 정원」이 된다
+    const capNext = def.id.startsWith('module_') ? def.capacity : def.capacity <= 0 ? 0 : Math.round(def.capacity * Math.min(CHAIN_CAP, Math.max(1, Math.sqrt(Math.max(1, chainNext) / CHAIN_BASE)))); // P60-d: chainNext 는 경로 순번(사슬 개념 흡수) — 같은 식이 「경로가 길수록 정원」이 된다
     const pathNext = poolId === null ? 0 : (st.path.get(poolId) ?? []).indexOf(overlayUid) + 1; // P60-d: 오버레이가 경로에 들면 순번(1부터), 아니면 0
     const completeNext = poolId === null ? false : (st.pathComplete.get(poolId) ?? false);
     const risk = this.riskOf(def, i, j, facing); // P52-b
@@ -3205,10 +3205,13 @@ export class Game {
     for (const p of this.pools.all) {
       if (this.ppajiGradeOf(p.id) < 3) continue;
       const rigs = this.nightRigsOf(p.id);
-      if (rigs.length < 9 || !rigs.some((f) => this.facilities.defOf(f).lights === true)) continue;
+      if (rigs.length < 9 || this.nightLightsOf(p.id) === 0) continue;
       return p.id;
     }
     return null;
+  }
+  private nightLightsOf(poolId: number): number {
+    return this.facilities.all.filter(f => { const d = this.facilities.defOf(f); return d.lights === true && this.poolOfFacility(f.uid) === poolId && (d.onRing === true || this.rigState.lit.has(f.uid)); }).length;
   }
   /** 그 수역의 켜진 물 위 기구 */
   private nightRigsOf(poolId: number): PlacedFacility[] {
@@ -3218,7 +3221,7 @@ export class Game {
   /** 밤 매출 배수 = 1 + step × min(cap, 켜진 조명) — 손잡이는 LED 부표 (balance `nightLightStep`·`nightSalesMax`) */
   nightSalesMul(): number {
     if (!this.nightOn || this.nightPool === null) return 1;
-    const lights = this.nightRigsOf(this.nightPool).filter((f) => this.facilities.defOf(f).lights === true).length;
+    const lights = this.nightLightsOf(this.nightPool);
     return 1 + Math.min(this.b.nightSalesMax ?? 0.4, (this.b.nightLightStep ?? 0.1) * lights);
   }
   /** 저녁이고 밤이 열렸나 — 곱하는 자리 셋(야간권·링 위 매점·빠지 자리 이용료)의 게이트 */

@@ -17,15 +17,25 @@
  *   게임 좌표는 I = X, J = −Y 이므로 16*(X+Y) = 16*(I−J), 8*(X−Y) = 8*(I+J) — `iso.ts` 와 같다.
  *   그래서 피벗(0,0,0)의 캔버스 자리는 (n/2, n/2 + 0.65*√512*cos30°) 다.
  */
+import modules from '../data/ppaji-modules.json';
 import type { AssetProvider, SpriteSpec } from './types.js';
 
-export const APPROVED_FACILITY_IDS = ['ppaji_slide', 'ppaji_playground', 'boarding_dock', 'float_deck', 'diving', 'rig_bridge', 'rig_stepstone', 'rig_blob', 'rig_iceberg', 'rig_jump_tower', 'rig_bridge_swing', 'rig_bridge_long', 'rig_iceberg_wall', 'rig_blob_big', 'diving_tower'] as const;
+export const SELECTED_BUILDING_IDS = ['shop', 'infirmary', 'storage', 'toilet', 'nursing', 'snackbar', 'cafe', 'karaoke', 'info', 'office', 'sauna', 'jjimjilbang', 'bungalow', 'shade_net', 'mongol_tent'] as const;
+
+export const APPROVED_FACILITY_IDS = ['ppaji_slide', 'ppaji_playground', 'boarding_dock', 'float_deck', 'diving', 'rig_bridge', 'rig_stepstone', 'rig_blob', 'rig_iceberg', 'rig_jump_tower', 'rig_bridge_swing', 'rig_bridge_long', 'rig_iceberg_wall', 'rig_blob_big', 'diving_tower', ...modules.map(m => m.id), ...SELECTED_BUILDING_IDS, 'indoor_shop'] as const;
 export type ApprovedFacilityId = (typeof APPROVED_FACILITY_IDS)[number];
 
 export interface ApprovedFacilitySpec {
   name: string;
+  /** Buildings retain simulation use behavior and have no watercraft depth/ride route. */
+  renderOnly?: boolean;
+  cameraTargetZTiles?: number;
   /** System upgrades share an approved base until distinct art is authored. */
   visualSource?: string;
+  poseMasks?: Record<string, string>;
+  depthModes?: string[];
+  frontOverlay?: boolean;
+  emptyBase?: boolean;
   /** 예약 발자국 (칸) — 열린 수면을 포함한다 */
   size: [number, number];
   /** 실제 그림이 덮는 칸 (참고용) */

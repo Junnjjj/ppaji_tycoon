@@ -18,8 +18,8 @@ describe('P50-b1 사슬·등급 값', () => {
     const g0 = new Game(1);
     // 2026-09-19 조합 채택: 밸런스 빔이 빠지 놀이터에 흡수돼 **시작** obstacle 계열이 3 → 2 종이다 (에어바운스는 뒤에 열린다).
     // 계열 자체(obstacle·slide·rest)는 그대로 셋이고 시작부터 obstacle·slide 둘이 열려 있다 — 값을 줄이는 대신 그 구성을 못박는다
-    expect([...FACILITY_DEFS.values()].filter((d) => d.chain === 'obstacle' && g0.isUnlocked(d.id)).map((d) => d.id)).toEqual(['rig_bridge', 'rig_stepstone']);
-    expect([...new Set([...FACILITY_DEFS.values()].filter((d) => d.chain && g0.isUnlocked(d.id) && d.deprecated !== true).map((d) => d.chain))].sort()).toEqual(['obstacle', 'slide']);
+    expect([...FACILITY_DEFS.values()].filter((d) => d.chain === 'obstacle' && g0.isUnlocked(d.id)).map((d) => d.id)).toEqual(['rig_bridge', 'rig_stepstone', 'module_rig_beam']);
+    expect([...new Set([...FACILITY_DEFS.values()].filter((d) => d.chain && g0.isUnlocked(d.id) && d.deprecated !== true).map((d) => d.chain))].sort()).toEqual(['obstacle', 'rest', 'slide']);
     // 등급 문턱 — 값은 데이터(`ppajiGradeThresholds`), 규칙은 코드. p60d.test 가 옛 상수와의 회귀를 잰다
     expect(ppajiGrade({ n: 1, kinds: 1, chain: 0, chainKinds: 0, lights: 0 })).toBe(0);
     expect(ppajiGrade({ n: 2, kinds: 1, chain: 0, chainKinds: 0, lights: 0 })).toBe(1);

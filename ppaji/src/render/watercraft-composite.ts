@@ -2,7 +2,7 @@
 import type { WatercraftProvider } from '../assets/watercraft.js';
 import type { AssetProvider } from '../assets/types.js';
 import { npcV8Key, type NpcV8Pose } from '../assets/npc-v8.js';
-export interface CraftRider { uid:number; di:number; dj:number; z:number; heading:number; pose:NpcV8Pose }
+export interface CraftRider { surfacePose?:string; uid:number; di:number; dj:number; z:number; heading:number; pose:NpcV8Pose }
 const TW=Math.sqrt(512), COS=Math.cos(Math.PI/6);
 export function riderDepth(di:number,dj:number,z:number):number {return 250+(-.612372435696*(di+dj)-.5*(z-.65))*TW;}
 export function craftFacing(h:number):number { return [1,0,3,2][Math.round(h/4)%4]!; }
@@ -15,7 +15,7 @@ export class CraftComposite {
     this.canvas.width=size+96; this.canvas.height=size+96;
     const ctx=this.canvas.getContext('2d');if(!ctx)throw Error('Craft composite unavailable');this.ctx=ctx;
   }
-  draw(id:string,h:number,riders:readonly CraftRider[],timeMs:number,slideMask?:Float32Array):{ax:number;ay:number;visible:number[]} {
+  draw(id:string,h:number,riders:readonly CraftRider[],timeMs:number,slideMask?:Float32Array,poseMasks?:ReadonlyMap<string,Float32Array>,frontOverlay?:ImageData):{ax:number;ay:number;visible:number[]} {
     const key=`watercraft/${id}/${h}`,base=this.art.pixels.get(key),mask=this.art.depths.get(key),spec=this.art.spec(key);
     if(!base||!mask||!spec)throw Error(`Missing authored craft ${key}`);
     const w=this.canvas.width,ht=this.canvas.height,margin=48;
@@ -46,13 +46,19 @@ export class CraftComposite {
         const p=(y*pix.width+x)*4,a=pix.data[p+3]!;if(!a)continue;
         const xx=left+x,yy=top+y;if(xx<0||yy<0||xx>=w||yy>=ht)continue;
         const k=yy*w+xx,z=zero+.5*(yy+.5-qy)/COS-.35;
-        const mx=xx-margin,my=yy-margin, override=rider.pose==='ride'&&slideMask&&mx>=0&&my>=0&&mx<base.width&&my<base.height ? slideMask[my*base.width+mx]! : depth[k]!;
+        const mx=xx-margin,my=yy-margin, support=poseMasks?.get(`${key}/${rider.surfacePose??rider.pose}`)??(rider.pose==='ride'?slideMask:undefined), override=support&&mx>=0&&my>=0&&mx<base.width&&my<base.height ? support[my*base.width+mx]! : depth[k]!;
         if(z>Math.min(override,actorDepth[k]!)+.08)continue;
         const alpha=a/255,old=out.data[k*4+3]!/255,total=alpha+old*(1-alpha);
         for(let ch=0;ch<3;ch++)out.data[k*4+ch]=Math.round((pix.data[p+ch]!*alpha+out.data[k*4+ch]!*old*(1-alpha))/total);
         out.data[k*4+3]=Math.round(total*255);actorDepth[k]=z;count++;
       }
       visible.push(count);
+    }
+    if(frontOverlay)for(let y=0;y<frontOverlay.height;y++)for(let x=0;x<frontOverlay.width;x++){
+      const src=(y*frontOverlay.width+x)*4,a=frontOverlay.data[src+3]!/255;if(!a)continue;
+      const dst=((y+margin)*w+x+margin)*4,old=out.data[dst+3]!/255,total=a+old*(1-a);
+      for(let ch=0;ch<3;ch++)out.data[dst+ch]=Math.round((frontOverlay.data[src+ch]!*a+out.data[dst+ch]!*old*(1-a))/total);
+      out.data[dst+3]=Math.round(total*255);
     }
     this.ctx.putImageData(out,0,0);return {ax,ay,visible};
   }

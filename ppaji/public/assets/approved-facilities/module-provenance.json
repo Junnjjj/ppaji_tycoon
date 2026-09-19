@@ -1,0 +1,424 @@
+[
+  {
+    "id": "module_rig_slide",
+    "source": "rig_slide",
+    "name": "플로팅 슬라이드",
+    "size": [
+      2,
+      3
+    ],
+    "group": "core",
+    "rank": 0,
+    "sourceReview": "core/rig_slide",
+    "sourceRootSha256": "e75f76e84db74a22089565efa8a61618d8bec8a087834ec598aea2bee028076b",
+    "legacySize": [
+      2,
+      3
+    ],
+    "files": {
+      "full-d0.bin": "8db86d4bb18e91050e8027d5e948fbe009c5be08973c197ca233b26f8ace43fc",
+      "full-d1.bin": "0651f0d400217067920f1c67d9d4f2c54d3d18b2b03b4ccd4a1481e46e6792a6",
+      "full-d2.bin": "4294812a1ce99b4ccdd07c26b8d6e7e58d32001773c08e8f2a49f0d6c0d0f042",
+      "full-d3.bin": "d3eaa2fc8580d0f45d5e60e0402b14ef20b6b15232d44c933602168ba74b2ab3",
+      "native-d0.png": "89f12305d444e3f9838feda5b855d476f824255a33a4fe95851f6c27429ccc09",
+      "native-d1.png": "96fd5442ed99e700e00f1f63d33317e2a6953d5688a074d879d9d1d739f6a435",
+      "native-d2.png": "ec26f9ba2da79d6c08e5dbe28e359161bc5823ebd941e4e3f01bc5f5e6e3a498",
+      "native-d3.png": "1af21e7be0099591f8a24fceb224978de5c04a248081e8e6ad0990a480e6c75a",
+      "support_slide-d0.bin": "b5afbda32a10b074973518e69918a5fd377f2f346d8730487515a805b73a6593",
+      "support_slide-d1.bin": "855f7f372cd86062c36d1287ce0adb4521d544b18ae08b5acd97474994e85aa9",
+      "support_slide-d2.bin": "7da5cea18ca845a4072bd0ef97c8b5b42b63eeaca356b267e537e44b8254ce41",
+      "support_slide-d3.bin": "9147d67c1d004ca0ce758d1decd22c358f6a476f6043ae371e48ecf560d63850"
+    }
+  },
+  {
+    "id": "module_trampoline_w",
+    "source": "trampoline_w",
+    "name": "수상 트램폴린",
+    "size": [
+      3,
+      3
+    ],
+    "group": "core",
+    "rank": 2,
+    "sourceReview": "core/trampoline_w",
+    "sourceRootSha256": "51ee4c6c5d8e9af6ae3a180eda13415681cdef84f4ad508a6d3faa9496800931",
+    "legacySize": [
+      3,
+      3
+    ],
+    "files": {
+      "full-d0.bin": "71485ac5e0208590825dfa0195c32fda18972ba16a544726cb3dc3f84cc47262",
+      "full-d1.bin": "64c17f29c5d6e86bd583dde843f54b7678abb673364a71b1575bb779000b086e",
+      "full-d2.bin": "44403312ee66761c74c16c60d95ce12d27c241e1d0d952e97683a57b0fafe336",
+      "full-d3.bin": "3e67677787377b1a25903c98b30821a3dbb3f9b3afb320a5773ad4cf0e9586c0",
+      "native-d0.png": "016eaa1389b975111ec087c191a334d91eaf155d37fb07fd3cb37ed51d2aa312",
+      "native-d1.png": "820e07a9d99752156b3163662927238ba1ac9bda35f2468f9488455efffa8457",
+      "native-d2.png": "95e0afe2426c11d1c12d6607f06f0de53b7f7340c123c0fffa85d086b8ed8844",
+      "native-d3.png": "16cd5116ebac6eb952a1ba5fa4e8bb205ad4c7026d43685ba36da05daa133697"
+    }
+  },
+  {
+    "id": "module_rig_beam",
+    "source": "rig_beam",
+    "name": "밸런스 빔",
+    "size": [
+      1,
+      3
+    ],
+    "group": "traversal",
+    "rank": 0,
+    "sourceReview": "traversal/rig_beam/review",
+    "sourceRootSha256": "81af44bb73c06da70c4a4342bf262a924f0dd6b355f7b16b9b456abee615b90a",
+    "legacySize": [
+      1,
+      2
+    ],
+    "files": {
+      "full-d0.bin": "b4360ed94fad0ec60500da18e3a6266f0a6195b873815803ced3792682807de1",
+      "full-d1.bin": "185ece817ccd98bcddfeeb0aea19ea8288e146225b90a2f9adfdf6fc992c50c7",
+      "full-d2.bin": "3c2abfe98016e3fb67db830d02fb5c36fd602a8b4977753a91f6fd09764f3d54",
+      "full-d3.bin": "7769f992794d2d5efdfbb3506e1dd510685fb38fa52b235a3e9498a2d79d0095",
+      "native-d0.png": "e422f236a79e9bda9e87965e61ed8666ee6e1a9f20ed41341b0c5acd356448ed",
+      "native-d1.png": "cc2e7853759007fefaf8abcb3c4aef16e068546e9e782c3fdcb0675b6bb3290d",
+      "native-d2.png": "e6ef75ba8b83db6fd150e7d00ba79d5bdb55c35dcf949e46f54a263f06fda3fc",
+      "native-d3.png": "7d9848e0f45c2c594155b44ff78c8dfa96fce9e550775d168e66dbd69231a132"
+    }
+  },
+  {
+    "id": "module_rig_roller",
+    "source": "rig_roller",
+    "name": "워터 롤러",
+    "size": [
+      2,
+      2
+    ],
+    "group": "traversal",
+    "rank": 1,
+    "sourceReview": "traversal/rig_roller/review",
+    "sourceRootSha256": "42ce485f8164a4b2559ccb2eff7d3f6a582713e6950a42ac84551d1a305c8dfd",
+    "legacySize": [
+      1,
+      1
+    ],
+    "files": {
+      "full-d0.bin": "60aca53ec6fe4fc8bb8a64d2b84efab1f2e70a482f3d5dd7548dabc17950086d",
+      "full-d1.bin": "904b8f862142d1e2066f59729748ab2b6ddf202c5fc721827cc69b149de7ea1d",
+      "full-d2.bin": "e5b12ecb9d3bfd8eb0c9bb6efd4a3a5dba456945fd5cf6a74aad12e7b74b2429",
+      "full-d3.bin": "5ca3bd20a96477bbc41b1eec62653cc2f439a82305ee6d6ad153f044e7e5bccc",
+      "native-d0.png": "b70f76fc8011459f1c8a92d7cbb0db68cd126a2f8149551fa682078635985342",
+      "native-d1.png": "233f46b8d6a1911d5718531ae90b958de954915dec70ed2397b8dac281335100",
+      "native-d2.png": "cca88beea76a7f2068f106a8b6e516eaa851f8505a5084e67eb7f7ef5229bf4b",
+      "native-d3.png": "626648e831a76d96717d8d5122094a3deeeef82b46c8d0be0471583fc5717536"
+    }
+  },
+  {
+    "id": "module_rig_seesaw",
+    "source": "rig_seesaw",
+    "name": "시소 플로트",
+    "size": [
+      3,
+      2
+    ],
+    "group": "traversal",
+    "rank": 0,
+    "sourceReview": "traversal/rig_seesaw/review-fixed",
+    "sourceRootSha256": "8393e5bb83b916effab0b09a1eed566e96c0804770b1c507b82265fb17fb66e0",
+    "legacySize": [
+      2,
+      1
+    ],
+    "files": {
+      "full-d0.bin": "2052e5982ac3969e3432385de94ad1ea9f3d8b1d41458546ef083f10f64bd8e7",
+      "full-d1.bin": "684648db6e3350fb5c557e655d3e103fcd13c7a97e02793be2171378bdddf749",
+      "full-d2.bin": "05a8f1000b7c521bc9aeee83711e2fcd18c6c9ae3de53d82be883e9ba11975a7",
+      "full-d3.bin": "3aaac693a91f985b5c11deb08b272c09be3e98397429bd13cf63cc81426196c0",
+      "native-d0.png": "9d62e4fdb1d25987f39eb3efc0ce05a5a39561d05ef313817cc73f173b668c86",
+      "native-d1.png": "b7d50ab5693b4885fb50b4a20bff977b6e167b19febec84981c28e70db90c3e6",
+      "native-d2.png": "7e15656f07cab40ca7468c3f6032f99c55b67e69a673b91e5972fbf64a37dc17",
+      "native-d3.png": "88dcfcdce7c33dda17cc5250ddd0f1e0c14dccde9acbd1c4bcd0b4fb7b41ddf5",
+      "support_sit-d0.bin": "9badb1c06cb6ab8f384bda06aa707d60bae8fba9ee8bcaa101a42115283295c2",
+      "support_sit-d1.bin": "06a7450b2e0a3aceaf2f8738a4631fc8d00ce4ec68704249a5314ea1987361df",
+      "support_sit-d2.bin": "f9037b4f4fed40c73af4cdf707d5edc6862f8f0190a3d1cae44e29cc7674040e",
+      "support_sit-d3.bin": "e7cf100a7db576b1fc4f920c820cb8d402250ed45e4761554170c951984ab386"
+    }
+  },
+  {
+    "id": "module_rig_totem",
+    "source": "rig_totem",
+    "name": "워터 토템",
+    "size": [
+      2,
+      2
+    ],
+    "group": "traversal",
+    "rank": 3,
+    "sourceReview": "traversal/rig_totem/review",
+    "sourceRootSha256": "99deefbb3021121e9f2f914bfcc1defc049c2945c6c6262190d2b0097a575b2f",
+    "legacySize": [
+      1,
+      1
+    ],
+    "files": {
+      "full-d0.bin": "f2c1a62b84e3de0d0e3fe7d2cc83832605dc9135e0d8334412a70d057a4e3314",
+      "full-d1.bin": "86d882377dc4a1f53cea11db4fcff5190f69b3759a71391a10f1ee2054d6a12f",
+      "full-d2.bin": "580a860d75040966da30ed9fc4f5b98d9fed716b121e0a6255822df7f0050bce",
+      "full-d3.bin": "4b9a5639a33471ed21eb006a39938484d418e903ddec849273f7a587bdc8763b",
+      "native-d0.png": "a9690dc1d05eaf586fdb3c9aef94a5a81f8559241e6f59956ac963b27519558d",
+      "native-d1.png": "195a08d52046dab36161afc87353d82b55d2104e7aff8d5eaf6df17c1c4c0cc8",
+      "native-d2.png": "1b0150c4eb56b3069bfffda99b80a940d95c2c3ac938777bbe2a1df5ec122329",
+      "native-d3.png": "775d559f87ba0df521f7bd086184a321a0c8f733e7053a2a27b5ef89928d1bf9"
+    }
+  },
+  {
+    "id": "module_rig_disc",
+    "source": "rig_disc",
+    "name": "회전 원반",
+    "size": [
+      3,
+      3
+    ],
+    "group": "waterplay",
+    "rank": 5,
+    "sourceReview": "waterplay/rig_disc/review",
+    "sourceRootSha256": "f091d234bb4a421f1f07f81d01371a61a0367b277c51f73245ca20e82d78b594",
+    "legacySize": [
+      2,
+      2
+    ],
+    "files": {
+      "full-d0.bin": "ea7e33eccbc5d1a04eaebeb7b3fe58af5fb7d0a82f53ad03e25a71e0f3d28c5e",
+      "full-d1.bin": "29a8db0762b4c74eb93bd046a1a0b4fa366193a3b81d44bd17ef821fa614f026",
+      "full-d2.bin": "e419163a01f0055f221572a617905f057866b0a241f8a47111434905716b1ae8",
+      "full-d3.bin": "4b7f7bcafc8a02de3e3cc8d8dbc8a583984c1d6aa6d33a02d828da8d9bd2d155",
+      "native-d0.png": "f0775c2366552ec95d80cdea5ceff233518630eeb1eed1c693822bca38c98acf",
+      "native-d1.png": "1ccd62d3c0b1ed1e80968d772e7adef221c3d074c2d698b1eaa42d1f48108335",
+      "native-d2.png": "c26fa769ca6fd770d3900f7a63312a564b7b2f8922fd794eb4fe1550b6af8ab6",
+      "native-d3.png": "0991b02b54fd1c069d351cff2f0ec5663510722c3c487101c94fd867777af774"
+    }
+  },
+  {
+    "id": "module_rig_mini_slide",
+    "source": "rig_mini_slide",
+    "name": "미니 슬라이드",
+    "size": [
+      2,
+      2
+    ],
+    "group": "waterplay",
+    "rank": 0,
+    "sourceReview": "waterplay/rig_mini_slide/review",
+    "sourceRootSha256": "7faa7b11152d961ab4302070cccafbaab12e781a2d928bfca10ece7d2ca46926",
+    "legacySize": [
+      2,
+      2
+    ],
+    "files": {
+      "full-d0.bin": "d23c4a055be9063f56be103b9f245c26f27d338d0e1123af927d0cc4fa131547",
+      "full-d1.bin": "07c09bbcb8aa4690317b833fbcf1399049b9998d67856380f5e52583da9542a3",
+      "full-d2.bin": "c05ab111dea1de9467f8422293fcb5e07c0eef2401b1878b9f9b6d33a852dfc5",
+      "full-d3.bin": "a75f5b6c2360b5aa6568df7b659af635f822995d89e5ba854362ecc317a91a2d",
+      "native-d0.png": "973a9236170bd7230269a7753d990925e450558c5e5be6fd92690f7945e88a5b",
+      "native-d1.png": "aabed20e052dd172a7c27c654304789db43db69fb56a438734c7d71358f478a5",
+      "native-d2.png": "deada3ddadf6295d3b993734c2dee9dc864e661077480a97cf4d0fb7050f4222",
+      "native-d3.png": "92d197c7df586db010d0885749f8eed528c947d1a1470871432235c9382f130c",
+      "support_slide-d0.bin": "30f2d06182f04f37b2fcf21c6546e8722b8c3ba149b4b5f3bb4b0f618b50bf90",
+      "support_slide-d1.bin": "e39e32146286c418ba8eff555ad24bc17a3a455ed528395b654a4a6485c84e7a",
+      "support_slide-d2.bin": "a01b9652f6c95681acb107f6b9a26c253dc150ed4e5e58d9994c598fd6d2148a",
+      "support_slide-d3.bin": "7dcb17f0e29e82fc8d5b0978199de781caa169b7dea716308201365b5ad602d7"
+    }
+  },
+  {
+    "id": "module_rig_slidedock",
+    "source": "rig_slidedock",
+    "name": "미끄럼 도크",
+    "size": [
+      3,
+      1
+    ],
+    "group": "waterplay",
+    "rank": 2,
+    "sourceReview": "waterplay/rig_slidedock/review",
+    "sourceRootSha256": "cdedfcc5e60724d98e70931c5c6a55d232ed66bcf69276d4034d6eab0f76f59a",
+    "legacySize": [
+      2,
+      1
+    ],
+    "files": {
+      "full-d0.bin": "298d505cad7efec9756ff7eb0debf9b350044946bddf022f67aa5293f0619b91",
+      "full-d1.bin": "d086b159d0ff1f19d34a6ecf6d837b03dfbb406669acd831cd7af0dd3f4e7cca",
+      "full-d2.bin": "5e3380dd50acc843b0bbb41b76aa9992dd67af4edb2a4ee52cbd82035caa4a4f",
+      "full-d3.bin": "56bea0b432e81dc6c67da0f9ff431bc422de7291d5185b15b7bb7c10c394fe11",
+      "native-d0.png": "945f5d75b1e7b375d9eae4b45cbd7222e32bf2db90bbbb8cfaf6f64f7d1d3b4a",
+      "native-d1.png": "a321fae41cf0978c154c268663d1ffed4f12977d605124f0af86a7a51ef5a4a0",
+      "native-d2.png": "5ea8ebf7d3e6763848a2354ae283d05a6729997fad01622c617c90bdba72e55d",
+      "native-d3.png": "f2b33b071ba15438ba96f1c4eb4abc88615dec81b8cbee285124e09d73940ad8",
+      "support_slide-d0.bin": "611cfc4d8ba1ec05dd79454499331818d6a7f78713495e8b739831b4a17a318a",
+      "support_slide-d1.bin": "3636829f7182bf5d707cea07dc26d140c13f7c7c4d0d67c27b0b8eadc367b459",
+      "support_slide-d2.bin": "9efa3dc0834cf1664a3eb20d983492eab27cae366083bef153e1a32a5c754249",
+      "support_slide-d3.bin": "8efe2ac79d9138146e6f156680f6474020a23aa4820aaa28b0046e9e41a10878"
+    }
+  },
+  {
+    "id": "module_rig_kids_park",
+    "source": "rig_kids_park",
+    "name": "키즈 워터 놀이터",
+    "size": [
+      3,
+      3
+    ],
+    "group": "waterplay",
+    "rank": 2,
+    "sourceReview": "waterplay/rig_kids_park/review",
+    "sourceRootSha256": "34a5b83eef6c9f20b2e5bf5dd547f4c2c6f9cbb7f01ad35f01ddb88634a2151c",
+    "legacySize": [
+      3,
+      2
+    ],
+    "files": {
+      "full-d0.bin": "2b4e75c924ba65c3bccd446e0313756bcbbd622929b279dd731b1e49ea47f781",
+      "full-d1.bin": "b8649d47a7f2079666666f52b3a49f7836a40e3b412a6810ab87cfee7e9e6ce5",
+      "full-d2.bin": "53ed9ea58df964befdedf1eae65c56e4c6713729a007a675cbf2f022acbc13de",
+      "full-d3.bin": "e582abadccc74d6d51e6e4045bf3ac7e3f71f5810be91a30eaa38dd41a19728f",
+      "native-d0.png": "4ccddaa350a1cf721087a1719ef70e9fbac010506b0910d8bcdc027a7269d86c",
+      "native-d1.png": "fe79d09b6d5b05e87eec0722b7982983e902a0fc24f8dd020193d389aa61752c",
+      "native-d2.png": "a5be998bb8d0f395707b21f53ced11919545bd4c06b9821c328a8ca1bfa0a491",
+      "native-d3.png": "f0b5d9c93216892cff646ea9a15ecd453d7d67bee03adf42b752466b7916d066"
+    }
+  },
+  {
+    "id": "module_waterwalk",
+    "source": "waterwalk",
+    "name": "워터워크볼",
+    "size": [
+      2,
+      3
+    ],
+    "group": "leisure",
+    "rank": 3,
+    "sourceReview": "leisure/waterwalk/review-final",
+    "sourceRootSha256": "4f616876b6c89cbbde9ec18f3f1c07100bc870be30b31eab4e63ed52ac48eba9",
+    "legacySize": [
+      2,
+      2
+    ],
+    "files": {
+      "base-d0.png": "6b362e79d2e6a001a660fef3e0047d0806ed70df6c0c902cc5f5c0c5c2b67d51",
+      "base-d1.png": "03a77a6110a142aedbead063cad93c27d4a723c85b945644ae03d1e62a729ace",
+      "base-d2.png": "dd780e2294ee08415788cb3a7aca6fb2ae42fb56ff1fd5d38e4b559f4e1f6584",
+      "base-d3.png": "fd8908fafd33cefdf3d087c8ae15779c23ff9977c06a4c348253e5cd4af9235f",
+      "full-d0.bin": "25662dc0e85efdb1d0880afd279c81367d89e320393ad89ef30e51e29c809f7c",
+      "full-d1.bin": "bdab9ba21c2774d75311fdd3397ce7086137d80233ae6425e964c0e694e29773",
+      "full-d2.bin": "41b52cdc2b17130e3fdcb48b53d80d944d50a562ece69d026970b7abc123b250",
+      "full-d3.bin": "236b04518d7e68a5a50d0f0c082eb2f7582f972c8f3e8dcb4f5c4a9b13dac7b6",
+      "native-d0.png": "634f72532ff8207c13b322b93a74b0fbd5deaa63fd7c08a5e4adf9725014b985",
+      "native-d1.png": "acc932bb317524b5263f9370d3e2e2720bea80cc33e744ef2781dce256ff68c6",
+      "native-d2.png": "a80fb92879e8ba52f57c52ad9d2e27dd8ddd03b689f3c0abea9569f5243d3bef",
+      "native-d3.png": "3be732237cc72289d5373050f413b29a84a3c62c2e68fc7be27e3e4f0096bffe",
+      "overlay-d0.png": "40184b063ac09a4c608ac38d827e7d482f769d0b4c3ee4098e19645958d59d22",
+      "overlay-d1.png": "07e0929de9d26e449b6119190b10be630744ca4567ecd91d3a61490bd5119664",
+      "overlay-d2.png": "e2d0119e57c085e52804453f036e829f0504e59faa2280e0aeaedddfbee0bd91",
+      "overlay-d3.png": "4cba8e1ffd181882a10b0babed601e0670829124632f96407ae3cc4b8e0025df",
+      "support_idle-d0.bin": "091a9626717aee2747d361c3c73e48b0261cc53df089a43183ce09108e7f7f63",
+      "support_idle-d1.bin": "9ef5a558fd2838411fb0b07bd03845024838f5f9a28d2afdbafea3ea14ca11c5",
+      "support_idle-d2.bin": "695f9226dfa0cb5bc58fbced8d81b87b5ffca7c6415e95ca0921d25ec1576b87",
+      "support_idle-d3.bin": "216e092f8bedc00a143d7e9d647aa5a3df6ccc80d42a729c07059d3105a4cd45",
+      "support_jump-d0.bin": "c3b079905e036645b075d6f56f07d3538911b7767b3f3b6f56933d407c72feb7",
+      "support_jump-d1.bin": "17f267472b0f359daa12eab4d01c1db0e43468e4cfc559609a3b5af3323a5536",
+      "support_jump-d2.bin": "6026cf22af85228ee64ead0fbbb9365286e04100e87a8d9d9b7ceb41aee2da8d",
+      "support_jump-d3.bin": "4aa8c66d47da6a3dd26a5d20920ca790394dac38b8d09fb407aab502debf088f"
+    }
+  },
+  {
+    "id": "module_rig_hammock",
+    "source": "rig_hammock",
+    "name": "해먹 라운지",
+    "size": [
+      2,
+      3
+    ],
+    "group": "leisure",
+    "rank": 0,
+    "sourceReview": "leisure/rig_hammock/review",
+    "sourceRootSha256": "9c1997df728cfdeb0af79a7326c17d2bb984abd1aa8c7c740b6c3748aed545e2",
+    "legacySize": [
+      2,
+      3
+    ],
+    "files": {
+      "full-d0.bin": "f947322f575ee69c841c4accf23af09d7f95710d56cff7d21c3e9a2ea381fcb0",
+      "full-d1.bin": "578381a5bf1e3920bce98fd0997c2671c1bbad70381333a42711356b83fcd40c",
+      "full-d2.bin": "72333a5509639e6e8d9b719d1d1cd9536ffba43cb93136ee7b67b0ef9e0df7f1",
+      "full-d3.bin": "090ea1baea75eef80fa2f249adf8591dded97ed62d9fb298f895d789dc94c882",
+      "native-d0.png": "101839a775a15721e85aa3502743ae2ceaf3bc20f331bddcd9a35c6a979e65dc",
+      "native-d1.png": "d69acf02fa7bf14dff7a1f05736df5fd895d854cf033ca7a8769cfa1f61c7d7d",
+      "native-d2.png": "9252dc4b48bb0640743d6bfb7b234642b9382a4bbd1b3258bd3267d06ed95207",
+      "native-d3.png": "4f97c2ffa863edbf05854c31c081d7d8a4ac083125e125df307cb0daa7880b1c",
+      "support_sit-d0.bin": "223da005f085c37d079e3050d1e3867ff74a2eb6c528def65f3e6f28287f753e",
+      "support_sit-d1.bin": "d6e1a3d290d2e13bb131a0520c073d176612e558fdcc543de2921966747ba49e",
+      "support_sit-d2.bin": "54844335db9a0506dbaf7497ea59ddca493b713dd3cd0b286609e28e01e2dede",
+      "support_sit-d3.bin": "f54552131cba6f1936a137c279bd24a9d0da9810926d558928df554fc5a1549f"
+    }
+  },
+  {
+    "id": "module_rig_sunbed",
+    "source": "rig_sunbed",
+    "name": "선베드 플로트",
+    "size": [
+      1,
+      2
+    ],
+    "group": "leisure",
+    "rank": 1,
+    "sourceReview": "leisure/rig_sunbed/review",
+    "sourceRootSha256": "bcf24ee630de6cc40ffbd64e7e78e8e947a3a3e946875e31114f0e0d80aa02b5",
+    "legacySize": [
+      1,
+      2
+    ],
+    "files": {
+      "full-d0.bin": "adc56d91f2458ecfece6b2d617ccd937d991a8e1923e16ab84d2312d7200f29d",
+      "full-d1.bin": "db8302179957b1427fe34d82a48fc878720d73f14b64a2fe13b5c70566f07fbc",
+      "full-d2.bin": "837c9aa3c6cf39861f4ae15c3ae9a0ca566456fb02e924bcb2b65492211f2218",
+      "full-d3.bin": "aaa80cc11254f531d38feb6c102cc4809b0edcc43c5b7bf7b1cfbaa180dd8253",
+      "native-d0.png": "24be9b14d6ff8dd4eb3efcfee96d4222d8273f7627709804365b94ab4df24102",
+      "native-d1.png": "70675eca644040801eed48b75e134157a0b703f41c20c1822b0c59dce7513180",
+      "native-d2.png": "9a1b4b9dcb6bf7c1c44a87d33c9083732101707105d5b0f739ddb6c8540159ba",
+      "native-d3.png": "2a605f77f4f25bf257c092b196c967932156a338753d0f44ee8dcc94f976563c",
+      "support_lie-d0.bin": "ab19a9a96cf21d6dacb73c0d9e88e1b2c6730d08d90401e17c27ea5a9f1ffb87",
+      "support_lie-d1.bin": "faed5f582613d722040856d4573d38b2473e417c4fb4a15409df300a8fceb59d",
+      "support_lie-d2.bin": "a9072305f04cf5eee82fcc01818080dcd9be15712e0b1a715db3eea854e60593",
+      "support_lie-d3.bin": "854dbffbf49821da28f89f2ebf39cce1afb7707bf4bf64889d3b8830f2308c55",
+      "support_sit-d0.bin": "8b34c46d4670020624b5ce22f1b58a3ac2455950d67bef25ac2aa1a03b4c1409",
+      "support_sit-d1.bin": "50515a8df30218d2784064c6f6ee3cf47a5b9a021e65563bd84d7548e7c1c4a3",
+      "support_sit-d2.bin": "37d949b9220d09ce4c4c428633a837fc4150cfe6f1e2d04513dcbe82e2709219",
+      "support_sit-d3.bin": "bcc9ea32f80022b93e50113fbb2796b30c5738bbc19a7441884f577aa9ef26d8"
+    }
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "source": "rig_led_buoy",
+    "name": "LED 조명 부표",
+    "size": [
+      1,
+      1
+    ],
+    "group": "leisure",
+    "rank": 3,
+    "sourceReview": "leisure/rig_led_buoy/review",
+    "sourceRootSha256": "31475c0644bb3fc2f5a931e36dd0c5d62693c84724aaa48534a85cfa2424668c",
+    "legacySize": [
+      1,
+      1
+    ],
+    "files": {
+      "full-d0.bin": "8591e98a1a6bbbd2e1f522069dc25f00e5828afb238095383eff53d3b4bb9e59",
+      "full-d1.bin": "c1037e0ea2b74b5176e0c78fc9624f72bc80f848d1c38377f708c2a26f907941",
+      "full-d2.bin": "3d2efd117bb6851fca27b7ecadf56a906bf20860dd91abf473b72eff87d7dcc9",
+      "full-d3.bin": "f0ec06298a5600c19bf96b97b5788bad405cd1e523abcf3a1ac36144557d197e",
+      "native-d0.png": "e9bbc390e6997d92ce08692319492e1253d32f8394a78a2ec66c7a6c3b907f4d",
+      "native-d1.png": "d8ab1c966eb450d3c1c1ac62f2440afc3813e98c26d17f7fbd34aa403e34c701",
+      "native-d2.png": "7caf44e887546071de7450908e73cd394f162655b0094f1f93f03d180518c95f",
+      "native-d3.png": "743cd88f797cb71138ff446947b1000a910638c2472d245f48184286f31b4872"
+    }
+  }
+]

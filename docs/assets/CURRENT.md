@@ -1,5 +1,14 @@
 # 에셋 작업 현재 상태
 
+## 2026-09-19 MAIN asset integration
+
+The active latest-system game is `ppaji/`, port **5189**. The September 14 note below about a separate system adapter describes the earlier state.
+Authored composites, floating decks, standalone core facilities, 29 passenger equipment types and ride effects are connected. All 14 small modules can also be built individually.
+[Standalone construction and save compatibility](handovers/2026-09-19-standalone-ppaji-construction.md).
+The selected 15 roofed facilities use their native camera anchors; the indoor shop shares selected shop art.
+[Selected buildings: findings, applied list, reproduction](handovers/2026-09-19-selected-building-adoption.md).
+
+
 ## 2026-09-14 메인 통합 — 현재 적용 기준
 
 [통합 계획·시스템 워크트리 충돌 목록](plans/2026-09-14-main-integration.md).

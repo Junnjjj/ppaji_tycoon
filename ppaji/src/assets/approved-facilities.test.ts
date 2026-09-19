@@ -35,8 +35,10 @@ describe('승인 조합 시설 — 계약', () => {
         expect(bytes.readUInt32BE(20), `${id}/${d} h`).toBe(f.h);
         expect(f.w, `${id}/${d}`).toBe(s!.logicalSize);
         expect(createHash('sha256').update(bytes).digest('hex'), `${id}/${d} pixels`).toBe(f.sha256);
-        const depth = readFileSync(`${BASE}/${s!.visualSource ?? id}/full-${d}.bin`);
-        expect(depth.length, `${id}/${d} native depth`).toBe(f.w * f.h * 4);
+        if (!s!.renderOnly) {
+          const depth = readFileSync(`${BASE}/${s!.visualSource ?? id}/full-${d}.bin`);
+          expect(depth.length, `${id}/${d} native depth`).toBe(f.w * f.h * 4);
+        }
       }
       expect(approvedFrameId(id, 1)).toBe(`fac/${id}/1`);
     }
@@ -59,7 +61,7 @@ describe('승인 조합 시설 — 계약', () => {
       const s = manifest.facilities[id]!;
       const a = approvedAnchor(id, manifest)!;
       expect(a.ax).toBe(s.logicalSize / 2);
-      expect(a.ay).toBeCloseTo(s.logicalSize / 2 + manifest.projection.cameraTargetZTiles * TILE_WORLD * Math.cos(Math.PI / 6), 3);
+      expect(a.ay).toBeCloseTo(s.logicalSize / 2 + (s.cameraTargetZTiles ?? manifest.projection.cameraTargetZTiles) * TILE_WORLD * Math.cos(Math.PI / 6), 3);
       // 발자국 중심이 아니다 — 놀이터는 피벗이 중심에서 +I 로 한 칸 (나머지 한 칸은 예약한 접근 수면)
       expect(a.ax / (TILE_W / 2) * 0).toBe(0); // 눈금 확인용 (TILE_W 32 · TILE_H 16)
       expect(TILE_W).toBe(32); expect(TILE_H).toBe(16);
@@ -125,9 +127,10 @@ describe('승인 조합 시설 — 계약', () => {
   it('동선 — 입구에서 시작해 입구로 끝난다 (순간이동 없음) · 구간이 이어져 있다 · 표본기가 끝에서 감긴다', () => {
     for (const id of APPROVED_FACILITY_IDS) {
       const r = (routes as unknown as Record<string, FacilityRoutes>)[id];
-      if (!r) { expect(['boarding_dock', 'float_deck']).toContain(id); continue; }
-      const entry = r.entry;
+      if (manifest.facilities[id]!.renderOnly) { expect(r).toBeUndefined(); continue; }
+      if (!r) { expect(['boarding_dock', 'float_deck', 'module_rig_led_buoy']).toContain(id); continue; }
       for (const track of [r.tour, ...r.visits]) {
+        const entry = id.startsWith('module_') ? track.segments[0]!.from : r.entry;
         const segs = track.segments;
         expect(segs.length, id).toBeGreaterThan(1);
         expect(segs[0]!.from.slice(0, 2), `${id} 시작`).toEqual(entry.slice(0, 2));

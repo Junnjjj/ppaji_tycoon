@@ -3,6 +3,7 @@
  * 카드를 고르면 창이 닫히고 **배치 모드**로. 잠긴 시설은 숨기지 않고 잠긴 카드로 남긴다 (가림막이 아니라 예고) —
  * 아래 두 줄이 해금 출처를 말한다.
  */
+import modules from '../../data/ppaji-modules.json';
 import { el } from '../dom.js';
 import { iconEl, type IconName } from '../icons.js';
 import { canvasPictureEl } from '../pictures.js';
@@ -15,6 +16,7 @@ import type { FacilityDef } from '../../data/schema.js';
 /** P45-b D63 — 건설 분류: 「어디에 놓나」로 가른다. 실내(복도 점포 — 입장·퇴장·밤 순) · 자리 · 숙박 · 먹거리(야외) · 놀이(야외) · 슬라이드 · 편의(야외) · 장식 */
 export type BuildTabId = 'indoor' | 'ppaji' | 'seat' | 'lodging' | 'food' | 'play' | 'slide' | 'utility' | 'decor'; // P50-a R9: 「빠지」 탭을 실내 다음 둘째로
 const TAB_ICON: Record<BuildTabId, IconName> = { indoor: 'utility', ppaji: 'attraction', seat: 'lounge', lodging: 'lounge', food: 'restaurant', play: 'attraction', slide: 'slide', utility: 'utility', decor: 'decor' };
+const PPAJI_ORDER = new Map(['float_deck', 'boarding_dock', 'ppaji_slide', 'ppaji_playground', ...modules.map(m => m.id), 'diving', 'rig_bridge', 'rig_stepstone', 'rig_blob', 'rig_iceberg', 'rig_jump_tower'].map((id, i) => [id, i]));
 const HALL_ORDER: Record<string, number> = { enter: 0, both: 1, leave: 2 };
 /** 실내 탭 정렬 — 입장(대여·거치대·자판기) → 둘 다(매점) → 퇴장(샤워·드라이·기념품·포장) → 밤(객실·무대·노래방·오락기) → 나머지 편의 */
 export function hallGroup(d: FacilityDef): number {
@@ -83,6 +85,7 @@ export class BuildWindow {
     const cur = BUILD_TABS.find((t) => t.id === this.tab);
     this.tabTitle.textContent = cur?.label ?? '';
     const rows = this.defs.filter((d) => cur?.match(d) ?? false);
+    if (this.tab === 'ppaji') rows.sort((a, b) => (PPAJI_ORDER.get(a.id) ?? 100) - (PPAJI_ORDER.get(b.id) ?? 100));
     if (this.tab === 'indoor') rows.sort((a, b) => hallGroup(a) - hallGroup(b));
     const setIndex = setsByMember(); // P60-c D72 B: 카드 배지 「세트」 = 이 시설이 어떤 (hidden 아닌) 세트의 멤버인가 — 자리별 「+닌자 코스」는 확정 바 칩
     const cards: PictureCard[] = rows.map((def) => {
@@ -107,7 +110,8 @@ export class BuildWindow {
       else if (memberOf.length) card.badge = { text: '세트' }; // hidden 세트의 멤버는 배지 없음 — 잠금 배지가 우선
       return card;
     });
-    this.grid.render(cards);
+    // The ppaji tab is the complete facility catalog, including future unlocks.
+    this.grid.render(cards, { showAllLocked: this.tab === 'ppaji' });
   }
 
   private pick(card: PictureCard): void {

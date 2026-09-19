@@ -1,0 +1,782 @@
+[
+  {
+    "id": "shop",
+    "facing": 0,
+    "legacyCanvas": [
+      74,
+      76
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "shop",
+    "facing": 1,
+    "legacyCanvas": [
+      74,
+      76
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "shop",
+    "facing": 2,
+    "legacyCanvas": [
+      74,
+      76
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "shop",
+    "facing": 3,
+    "legacyCanvas": [
+      74,
+      76
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "infirmary",
+    "facing": 0,
+    "legacyCanvas": [
+      68,
+      78
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "infirmary",
+    "facing": 1,
+    "legacyCanvas": [
+      68,
+      78
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "infirmary",
+    "facing": 2,
+    "legacyCanvas": [
+      68,
+      78
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "infirmary",
+    "facing": 3,
+    "legacyCanvas": [
+      68,
+      78
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "storage",
+    "facing": 0,
+    "legacyCanvas": [
+      64,
+      71
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "storage",
+    "facing": 1,
+    "legacyCanvas": [
+      64,
+      71
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "storage",
+    "facing": 2,
+    "legacyCanvas": [
+      64,
+      71
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "storage",
+    "facing": 3,
+    "legacyCanvas": [
+      64,
+      71
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "toilet",
+    "facing": 0,
+    "legacyCanvas": [
+      64,
+      68
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "toilet",
+    "facing": 1,
+    "legacyCanvas": [
+      64,
+      68
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "toilet",
+    "facing": 2,
+    "legacyCanvas": [
+      64,
+      68
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "toilet",
+    "facing": 3,
+    "legacyCanvas": [
+      64,
+      68
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "nursing",
+    "facing": 0,
+    "legacyCanvas": [
+      72,
+      60
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "nursing",
+    "facing": 1,
+    "legacyCanvas": [
+      72,
+      60
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "nursing",
+    "facing": 2,
+    "legacyCanvas": [
+      72,
+      60
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "nursing",
+    "facing": 3,
+    "legacyCanvas": [
+      72,
+      60
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "snackbar",
+    "facing": 0,
+    "legacyCanvas": [
+      72,
+      74
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "snackbar",
+    "facing": 1,
+    "legacyCanvas": [
+      72,
+      74
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "snackbar",
+    "facing": 2,
+    "legacyCanvas": [
+      72,
+      74
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "snackbar",
+    "facing": 3,
+    "legacyCanvas": [
+      72,
+      74
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "cafe",
+    "facing": 0,
+    "legacyCanvas": [
+      106,
+      78
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "cafe",
+    "facing": 1,
+    "legacyCanvas": [
+      106,
+      78
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "cafe",
+    "facing": 2,
+    "legacyCanvas": [
+      106,
+      78
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "cafe",
+    "facing": 3,
+    "legacyCanvas": [
+      106,
+      78
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "karaoke",
+    "facing": 0,
+    "legacyCanvas": [
+      70,
+      75
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "karaoke",
+    "facing": 1,
+    "legacyCanvas": [
+      70,
+      75
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "karaoke",
+    "facing": 2,
+    "legacyCanvas": [
+      70,
+      75
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "karaoke",
+    "facing": 3,
+    "legacyCanvas": [
+      70,
+      75
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "info",
+    "facing": 0,
+    "legacyCanvas": [
+      66,
+      71
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "info",
+    "facing": 1,
+    "legacyCanvas": [
+      66,
+      71
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "info",
+    "facing": 2,
+    "legacyCanvas": [
+      66,
+      71
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "info",
+    "facing": 3,
+    "legacyCanvas": [
+      66,
+      71
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "office",
+    "facing": 0,
+    "legacyCanvas": [
+      68,
+      73
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "office",
+    "facing": 1,
+    "legacyCanvas": [
+      68,
+      73
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "office",
+    "facing": 2,
+    "legacyCanvas": [
+      68,
+      73
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "office",
+    "facing": 3,
+    "legacyCanvas": [
+      68,
+      73
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "sauna",
+    "facing": 0,
+    "legacyCanvas": [
+      104,
+      108
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "sauna",
+    "facing": 1,
+    "legacyCanvas": [
+      104,
+      108
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "sauna",
+    "facing": 2,
+    "legacyCanvas": [
+      104,
+      108
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "sauna",
+    "facing": 3,
+    "legacyCanvas": [
+      104,
+      108
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "jjimjilbang",
+    "facing": 0,
+    "legacyCanvas": [
+      136,
+      124
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "jjimjilbang",
+    "facing": 1,
+    "legacyCanvas": [
+      136,
+      124
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "jjimjilbang",
+    "facing": 2,
+    "legacyCanvas": [
+      136,
+      124
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "jjimjilbang",
+    "facing": 3,
+    "legacyCanvas": [
+      136,
+      124
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "bungalow",
+    "facing": 0,
+    "legacyCanvas": [
+      104,
+      108
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "bungalow",
+    "facing": 1,
+    "legacyCanvas": [
+      104,
+      108
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "bungalow",
+    "facing": 2,
+    "legacyCanvas": [
+      104,
+      108
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "bungalow",
+    "facing": 3,
+    "legacyCanvas": [
+      104,
+      108
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "shade_net",
+    "facing": 0,
+    "legacyCanvas": [
+      72,
+      92
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "shade_net",
+    "facing": 1,
+    "legacyCanvas": [
+      72,
+      92
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "shade_net",
+    "facing": 2,
+    "legacyCanvas": [
+      72,
+      92
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "shade_net",
+    "facing": 3,
+    "legacyCanvas": [
+      72,
+      92
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "mongol_tent",
+    "facing": 0,
+    "legacyCanvas": [
+      104,
+      108
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "mongol_tent",
+    "facing": 1,
+    "legacyCanvas": [
+      104,
+      108
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "mongol_tent",
+    "facing": 2,
+    "legacyCanvas": [
+      104,
+      108
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  },
+  {
+    "id": "mongol_tent",
+    "facing": 3,
+    "legacyCanvas": [
+      104,
+      108
+    ],
+    "selectedCanvas": [
+      192,
+      192
+    ],
+    "sameOpaquePixels": true
+  }
+]

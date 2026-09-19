@@ -8,7 +8,7 @@ describe('P60-b 기구 배고픔', () => {
   it('balance.hungerPerRig 가 있고(12) 0 이면 동작 0 — 골든 시드 1 의 16일 해시가 배고픔 없는 판의 고정값과 같다(대조군)', () => {
     expect(defaultBalance.hungerPerRig).toBe(12);
     const off = runBot(new Game(1, { ...defaultBalance, hungerPerRig: 0 }, { arrival: true }), 16);
-    expect(off.snapshotHash).toBe(3674765354); // 2026-09-19 승인 조합·실제 운항·봇 대응 후 배고픔 0 대조군 재계측
+    expect(off.snapshotHash).toBe(2711473840); // 2026-09-19: standalone module catalog, hunger-off control remeasured.
   }, 20000);
   it('16일 뒤 매점 매출 몫이 늘거나 같다 — 기구를 탄 손님이 배고파진다 (3시드 합계)', () => {
     let on = 0, off = 0;

@@ -24,6 +24,7 @@ describe('approved moving assets',()=>{
   it('every live capacity has authored seats and native 16-heading pixels/depth',()=>{
     const root=new URL('../../public/assets/approved-watercraft/',import.meta.url);
     const manifest=JSON.parse(readFileSync(new URL('manifest.json',root),'utf8')) as {equipment:Record<string,CraftSpec>};
+    expect(COURSE_EQUIPMENT.map(e => e.id).sort()).toEqual(Object.keys(manifest.equipment).filter(id => id !== 'tow_work').sort());
     expect(seats).toEqual(Object.fromEntries(Object.entries(manifest.equipment).map(([id,s])=>[id,s.seats])));
     for(const e of equipment.equipment){
       const spec=manifest.equipment[e.id]!;expect(spec,e.id).toBeDefined();expect(spec.seats,e.id).toHaveLength(e.capacity);

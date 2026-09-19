@@ -67,6 +67,7 @@ export function popOf(def: FacilityDef, f: { level: number }): number {
 }
 /** 개선 단계가 반영된 정원 — 3단·5단에서 +1 · P50-b1 R5: 계열 사슬은 **여기에만** `× chainScale(chainLen)` (스릴·인기엔 안 곱한다) */
 export function capacityOf(def: FacilityDef, f: { level: number; chainLen?: number }): number {
+  if (def.id.startsWith('module_')) return def.capacity; // Authored physical seats do not multiply with chains or upgrades.
   return def.capacity <= 0 ? 0 : Math.round((def.capacity + (f.level >= 3 ? 1 : 0) + (f.level >= 5 ? 1 : 0)) * chainScale(f.chainLen ?? 1));
 }
 /** 개선 비용 — 건설비 × 0.5 × 현재 단계 */

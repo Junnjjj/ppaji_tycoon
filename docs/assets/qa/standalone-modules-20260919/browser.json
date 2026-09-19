@@ -1,0 +1,341 @@
+{
+  "catalog": [
+    "boarding_dock",
+    "rent_sup",
+    "diving",
+    "rent_duck",
+    "rent_pedal",
+    "rent_kayak",
+    "slide_tube",
+    "turtle_island",
+    "ppaji_slide",
+    "airbounce",
+    "float_deck",
+    "rig_bridge",
+    "rig_stepstone",
+    "watchtower",
+    "rig_blob",
+    "rig_rack",
+    "rig_float_bar",
+    "rescue_dock",
+    "rig_iceberg",
+    "rig_jump_tower",
+    "ppaji_playground",
+    "module_rig_slide",
+    "module_trampoline_w",
+    "module_rig_beam",
+    "module_rig_roller",
+    "module_rig_seesaw",
+    "module_rig_totem",
+    "module_rig_disc",
+    "module_rig_mini_slide",
+    "module_rig_slidedock",
+    "module_rig_kids_park",
+    "module_waterwalk",
+    "module_rig_hammock",
+    "module_rig_sunbed",
+    "module_rig_led_buoy"
+  ],
+  "equipment": [
+    {
+      "id": "peanut",
+      "source": "approved-asset"
+    },
+    {
+      "id": "jjinppang",
+      "source": "approved-asset"
+    },
+    {
+      "id": "banana",
+      "source": "approved-asset"
+    },
+    {
+      "id": "honeycomb",
+      "source": "approved-asset"
+    },
+    {
+      "id": "flyduck",
+      "source": "approved-asset"
+    },
+    {
+      "id": "hexa",
+      "source": "approved-asset"
+    },
+    {
+      "id": "lotus",
+      "source": "approved-asset"
+    },
+    {
+      "id": "wagon",
+      "source": "approved-asset"
+    },
+    {
+      "id": "swing",
+      "source": "approved-asset"
+    },
+    {
+      "id": "spinpang",
+      "source": "approved-asset"
+    },
+    {
+      "id": "twinpang",
+      "source": "approved-asset"
+    },
+    {
+      "id": "dancing",
+      "source": "approved-asset"
+    },
+    {
+      "id": "flyfish",
+      "source": "approved-asset"
+    },
+    {
+      "id": "skyfly",
+      "source": "approved-asset"
+    },
+    {
+      "id": "jetski",
+      "source": "approved-asset"
+    },
+    {
+      "id": "jetboat",
+      "source": "approved-asset"
+    },
+    {
+      "id": "wakeboard",
+      "source": "approved-asset"
+    },
+    {
+      "id": "waterski",
+      "source": "approved-asset"
+    },
+    {
+      "id": "sofa_boat",
+      "source": "approved-asset"
+    },
+    {
+      "id": "flycarpet",
+      "source": "approved-asset"
+    },
+    {
+      "id": "rocket_tube",
+      "source": "approved-asset"
+    },
+    {
+      "id": "discopang",
+      "source": "approved-asset"
+    },
+    {
+      "id": "blobjump",
+      "source": "approved-asset"
+    },
+    {
+      "id": "water_roller",
+      "source": "approved-asset"
+    },
+    {
+      "id": "watersled",
+      "source": "approved-asset"
+    },
+    {
+      "id": "kneeboard",
+      "source": "approved-asset"
+    },
+    {
+      "id": "air_chair",
+      "source": "approved-asset"
+    },
+    {
+      "id": "marine_jet",
+      "source": "approved-asset"
+    },
+    {
+      "id": "hydrofoil",
+      "source": "approved-asset"
+    }
+  ],
+  "occupied": [
+    {
+      "id": "module_rig_slide",
+      "facing": 0,
+      "maxVisible": 219,
+      "minVisible": 164,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_slide",
+      "facing": 1,
+      "maxVisible": 193,
+      "minVisible": 164,
+      "samples": 7
+    },
+    {
+      "id": "module_trampoline_w",
+      "facing": 0,
+      "maxVisible": 219,
+      "minVisible": 164,
+      "samples": 7
+    },
+    {
+      "id": "module_trampoline_w",
+      "facing": 1,
+      "maxVisible": 180,
+      "minVisible": 133,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_beam",
+      "facing": 0,
+      "maxVisible": 180,
+      "minVisible": 153,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_beam",
+      "facing": 1,
+      "maxVisible": 180,
+      "minVisible": 153,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_roller",
+      "facing": 0,
+      "maxVisible": 180,
+      "minVisible": 165,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_roller",
+      "facing": 1,
+      "maxVisible": 186,
+      "minVisible": 165,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_seesaw",
+      "facing": 0,
+      "maxVisible": 180,
+      "minVisible": 132,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_seesaw",
+      "facing": 1,
+      "maxVisible": 175,
+      "minVisible": 142,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_totem",
+      "facing": 0,
+      "maxVisible": 180,
+      "minVisible": 104,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_totem",
+      "facing": 1,
+      "maxVisible": 180,
+      "minVisible": 104,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_disc",
+      "facing": 0,
+      "maxVisible": 184,
+      "minVisible": 148,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_disc",
+      "facing": 1,
+      "maxVisible": 183,
+      "minVisible": 147,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_mini_slide",
+      "facing": 0,
+      "maxVisible": 207,
+      "minVisible": 107,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_mini_slide",
+      "facing": 1,
+      "maxVisible": 183,
+      "minVisible": 120,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_slidedock",
+      "facing": 0,
+      "maxVisible": 219,
+      "minVisible": 179,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_slidedock",
+      "facing": 1,
+      "maxVisible": 219,
+      "minVisible": 136,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_kids_park",
+      "facing": 0,
+      "maxVisible": 219,
+      "minVisible": 86,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_kids_park",
+      "facing": 1,
+      "maxVisible": 175,
+      "minVisible": 85,
+      "samples": 7
+    },
+    {
+      "id": "module_waterwalk",
+      "facing": 0,
+      "maxVisible": 188,
+      "minVisible": 98,
+      "samples": 7
+    },
+    {
+      "id": "module_waterwalk",
+      "facing": 1,
+      "maxVisible": 188,
+      "minVisible": 98,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_hammock",
+      "facing": 0,
+      "maxVisible": 202,
+      "minVisible": 91,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_hammock",
+      "facing": 1,
+      "maxVisible": 205,
+      "minVisible": 118,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_sunbed",
+      "facing": 0,
+      "maxVisible": 163,
+      "minVisible": 115,
+      "samples": 7
+    },
+    {
+      "id": "module_rig_sunbed",
+      "facing": 1,
+      "maxVisible": 163,
+      "minVisible": 115,
+      "samples": 7
+    }
+  ]
+}

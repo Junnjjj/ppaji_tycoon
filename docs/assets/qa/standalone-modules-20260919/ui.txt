@@ -1,0 +1,37 @@
+
+> ppaji-story@0.0.1 check:ui
+> node tools/check-ui.mjs && node tools/check-ui.mjs --selftest
+
+UI 정적 검사
+  ✓ S1 TS 에 hex 리터럴 0 (색은 style.css 가 소유)
+  ✓ S2 :root 에 없는 토큰 사용 0
+  ✓ S3 대비비 28쌍
+  ✓ S4 이모지 리터럴 0 (등록부는 캔버스 아이콘)
+  ✓ S5 font-size 토큰만 · ≥12px · 4단(D64) — 리터럴 0 · 단 4 · 12 미만 0
+  ✓ S10 border-radius 는 --r-win · --r-in · 999px 만 (D65)
+  ✓ S11 창 톤 blue·gold 둘뿐 · kfit 0 (D67) — 톤 css 0 ts 0 · kfit css 0 ts 0
+  ✓ S6 transition 은 transform/opacity 계열 + reduced-motion 가드
+  ✓ S7 버튼 재질 — 그라디언트 · inset 하이라이트 · 눌림
+  ✓ S8 `hidden =` 대입은 panelHost 를 아는 파일뿐
+  ✓ S9 tweens.add / particles 는 render/fx 안에서만
+
+✅ UI 정적 검사 통과
+UI 정적 검사 — 음성 대조군
+  ✓ 잡힘: hex
+  ✓ 잡힘: undeclared-var
+  ✓ 잡힘: contrast
+  ✓ 잡힘: emoji
+  ✓ 잡힘: literal-px
+  ✓ 잡힘: layout-anim
+  ✓ 잡힘: reduced-motion
+  ✓ 잡힘: material
+  ✓ 잡힘: hidden-outside
+  ✓ 잡힘: rig-dim-hardcoded
+  ✓ 잡힘: risk-contrast
+  ✓ 잡힘: tween-outside
+  ✓ 잡힘: font-steps
+  ✓ 잡힘: radius-literal
+  ✓ 잡힘: win-tone
+  ✓ 잡힘: kfit-back
+
+✅ 대조군 16/16 전부 잡힘

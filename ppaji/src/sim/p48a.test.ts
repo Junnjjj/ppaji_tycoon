@@ -1,3 +1,4 @@
+// 2026-09-19 standalone modules: initial floor and all heights retained; later bot construction remeasured.
 // 2026-09-19 승인 에셋/운항/봇 재계측: 초기 바닥과 전 기간 단 배열은 이전 fixture와 동일임을 확인하고 이후 봇 건설 바닥만 갱신.
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';

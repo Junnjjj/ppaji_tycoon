@@ -647,7 +647,7 @@ describe('rig-sets.json (P60-c)', () => {
     // 2026-09-19 조합 채택: 시작 기구 7 중 5(플로팅 슬라이드·밸런스 빔·시소·해먹·미니 슬라이드)가 조합의 구성품이 되어 폐기됐다.
     // 그 자리를 **빠지 슬라이드 조합**이 시작 해금으로 메운다 — 초반 세트(ninja) 성립 경로는 그대로 산다.
     const start = new Set(facilities.filter((f) => f.class === 'rig' && f.buildable !== false && f.unlock.source === 'start').map((f) => f.id));
-    expect(start.size).toBe(3);
+    expect(start.size).toBe(8);
     const startSets = sets.filter((s) => s.members.every((m) => start.has(m)));
     expect(startSets.map((s) => s.id)).toContain('ninja');
     const night = sets.find((s) => s.id === 'night')!;
@@ -655,7 +655,7 @@ describe('rig-sets.json (P60-c)', () => {
     // 그래서 「조명 둘」은 이제 성립 불가능한 조건이다. 뜻(밤빠지는 조명을 든다)은 지키고, 살아 있는 조명 수를
     // 같이 못박아 둔다 — 누가 조명 시설을 늘리면 이 줄이 먼저 빨개져서 세트를 다시 보게 된다.
     const liveLights = facilities.filter((f) => f.lights === true && f.buildable !== false && f.deprecated !== true);
-    expect(liveLights.map((f) => f.id)).toEqual(['ppaji_playground']);
+    expect(liveLights.map((f) => f.id)).toEqual(['ppaji_playground', 'module_rig_led_buoy']);
     expect(night.members.filter((m) => byId.get(m)!.lights === true).length).toBeGreaterThanOrEqual(1);
     expect(night.members.some((m) => byId.get(m)!.onRing === true && byId.get(m)!.menuSlots > 0)).toBe(true);
     const lounge = sets.find((s) => s.id === 'lounge')!;

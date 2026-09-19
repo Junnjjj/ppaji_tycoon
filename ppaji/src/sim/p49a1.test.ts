@@ -1,3 +1,4 @@
+import modules from '../data/ppaji-modules.json';
 import { describe, it, expect } from 'vitest';
 import { Game, FACILITY_DEFS, RIG_PART_DEFS, RNG_SALTS } from './game.js';
 import { ppajiGrade, CHAIN_KINDS_FOR_GRADE3 } from './rig.js';
@@ -21,12 +22,12 @@ describe('P49-a1 골격', () => {
   // 거기 걸려 있던 개조판 14종과 옛 선착장(`dock`, 승하선 데크로 대체)이 같이 내려갔다 = 29.
   // 정의는 남는다 — 옛 세이브의 인스턴스가 조용히 사라지면 지도가 깨진다.
   it('기구 — 살아 있는 rig 10 · buildable:false 35(개조판 6 + 폐기 29) · 링 위 비-rig 11(승하선 데크 포함) · deep 4 전부 needsVest (⇔)', () => {
-    expect(rigs.map((d) => d.id)).toEqual(['diving', 'turtle_island', 'ppaji_slide', 'airbounce', 'rig_bridge', 'rig_stepstone', 'rig_blob', 'rig_iceberg', 'rig_jump_tower', 'ppaji_playground']);
+    expect(rigs.map((d) => d.id)).toEqual(['diving', 'turtle_island', 'ppaji_slide', 'airbounce', 'rig_bridge', 'rig_stepstone', 'rig_blob', 'rig_iceberg', 'rig_jump_tower', 'ppaji_playground', ...modules.filter(m => m.source !== 'rig_led_buoy').map(m => m.id)]);
     expect(defs.filter((d) => d.deprecated === true).length).toBe(29);
     expect(converted.length).toBe(35); // 살아 있는 개조판 6 + 폐기 29 — 둘 다 건설 목록 밖
-    expect(ring.map((d) => d.id)).toEqual(['boarding_dock', 'rent_sup', 'rent_duck', 'rent_pedal', 'rent_kayak', 'slide_tube', 'float_deck', 'watchtower', 'rig_rack', 'rig_float_bar', 'rescue_dock']);
+    expect(ring.map((d) => d.id)).toEqual(['boarding_dock', 'rent_sup', 'rent_duck', 'rent_pedal', 'rent_kayak', 'slide_tube', 'float_deck', 'watchtower', 'rig_rack', 'rig_float_bar', 'rescue_dock', 'module_rig_led_buoy']);
     const deep = rigs.filter((d) => d.depth === 'deep');
-    expect(deep.map((d) => d.id)).toEqual(['diving', 'rig_blob', 'rig_iceberg', 'rig_jump_tower']);
+    expect(deep.map((d) => d.id)).toEqual(['diving', 'rig_blob', 'rig_iceberg', 'rig_jump_tower', 'module_trampoline_w', 'module_rig_totem', 'module_rig_disc']);
     for (const d of rigs) expect(d.needsVest === true, d.id).toBe(d.depth === 'deep');
   });
   it('해금 분포 — `rig_*`/망루/구조정 9종: 시작 3 · 랭크 5(ranks.json unlocks 와 일치) · 인증 1(id 존재) · 소원 0 · craft 35', () => {

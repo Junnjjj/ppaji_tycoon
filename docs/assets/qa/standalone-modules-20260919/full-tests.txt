@@ -1,0 +1,155 @@
+
+ RUN  v3.2.7 /Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji
+
+ ✓ src/sim/p3.test.ts (1 test) 34974ms
+   ✓ P3 > 봇은 128일 동안 수역을 넓히고(≥40칸) 데크를 늘린다 — P14 뒤 건너편 둑·다리는 없다  34973ms
+ ✓ src/sim/p13.test.ts (3 tests) 36484ms
+   ✓ P13 코스 성향 > 시드 1: 64일 뒤 코스 수가 course 성향 > balanced  18624ms
+   ✓ P13 코스 성향 > 시드 2: 64일 뒤 코스 수가 course 성향 > balanced  17858ms
+ ✓ src/sim/p48b2.test.ts (8 tests) 33065ms
+   ✓ P48-b2 만·허가·킷 > 봇 — 링은 뭍 위 칸에서 시작한다(굽이 어귀에서 매일 거절당하지 않는다): 128일 수역 ≥60 · 코스 ≥2 (전: 36 · 1)  32573ms
+ ✓ src/sim/p20.test.ts (3 tests) 32724ms
+   ✓ P20 코스 축(봇 계측기 수리) > 봇 128일 — 코스 2 이상 · 선착장 ≤ 코스 + 2 (전: 8시드 전부 코스 1 · 선착장 3~4)  32641ms
+ ✓ src/sim/g30.test.ts (2 tests) 31868ms
+   ✓ G30 후반 곡선 > 봇 128일 — 후반(5~8년차) 지출 비율이 잡힌다  31838ms
+ ✓ src/sim/lines.test.ts (2 tests) 32449ms
+   ✓ G27 달력 24건 > 봇 128일에 달력 사건이 전부 발동한다 (조건부 2건 포함)  32446ms
+ ✓ src/sim/p60d.test.ts (8 tests) 16561ms
+   ✓ P60-d bot course completion > small rest modules let the course-aware bot complete paths without an oversized pool  16409ms
+ ✓ src/sim/p51.test.ts (6 tests) 16588ms
+   ✓ P51 개조 > 봇 — 기본 봇은 64일에 개조 ≥ 1 · 부품 구매 ≥ 1 · `--no-convert` 대조군은 개조 0·부품 0 이고 현금이 ±25% 안(P55 뒤)  16374ms
+ ✓ src/sim/p52c.test.ts (4 tests) 16321ms
+   ✓ P52-c 계절 — 수온·장마 > 봇 64일(네 계절 한 바퀴) — offSeasonSwim(가을÷여름) 0.2~0.55 · `--sweep swimUrgeMin=1` 대조군은 그보다 크다  16159ms
+ ✓ src/sim/p56c.test.ts (7 tests) 15871ms
+   ✓ P56-c 재고(U1) > 봇 — 64일 판에서 재고 구입이 있고(restock 이 돈다) 레시피 발견이 산다 · 결정론  15706ms
+ ✓ src/sim/golden.test.ts (3 tests) 12893ms
+   ✓ 골든 시나리오 > 같은 시드는 두 번 돌려도 같은 해시 (결정론)  7574ms
+   ✓ 골든 시나리오 > 스냅샷 왕복 뒤 이어 돌려도 같은 해시  1854ms
+   ✓ 골든 시나리오 > 골든 표와 일치한다 (표가 0 이면 아직 안 박은 것 — 값을 출력한다)  3464ms
+ ✓ src/sim/p52a.test.ts (5 tests) 15937ms
+   ✓ P52-a 손님·팔찌 > 봇 A/B 64일 — 대여소 있는 판(기본) vs 없는 판(--no-vest, 창구 ⓑ 만): 있는 판 ppajiRevShare ≥ 0.05 · 없는 판 > 0 · 있는 판이 팔찌 매출·팔찌 이용 몫 ×3 이상  15819ms
+ ✓ src/sim/p60b.test.ts (2 tests) 8805ms
+   ✓ P60-b 기구 배고픔 > balance.hungerPerRig 가 있고(12) 0 이면 동작 0 — 골든 시드 1 의 16일 해시가 배고픔 없는 판의 고정값과 같다(대조군)  1535ms
+   ✓ P60-b 기구 배고픔 > 16일 뒤 매점 매출 몫이 늘거나 같다 — 기구를 탄 손님이 배고파진다 (3시드 합계)  7268ms
+ ✓ src/sim/course.test.ts (17 tests) 8393ms
+   ✓ D12 개정(P15) — 코스는 부표 밖 트인 강, 수역은 막힘 > 봇은 시드 1 에서 64일 안에 코스를 하나 이상 놓는다  8151ms
+ ✓ src/sim/p21.test.ts (4 tests) 6612ms
+   ✓ P21 해금 재배치 > 봇 64일 — 랭크 2 에 닿으면 BBQ존·카페가 열려 있다  6537ms
+ ✓ src/sim/g39.test.ts (2 tests) 6084ms
+   ✓ G39 랜덤 이벤트 > 봇 64일 — 사건이 뜨고, 뜬 사건은 (마지막 하나를 빼면) 전부 답했다  6079ms
+ ✓ src/sim/p50b1.test.ts (5 tests) 5115ms
+   ✓ P50-b1 사슬·등급 값 > 봇 — `--no-rig` 대조군은 기구 0 (rigsDistinct 0 → 밴드 빨강), 기본 봇은 32일에 기구 ≥ 3종 · 사슬 ≥ 2  4920ms
+ ✓ src/sim/p52b.test.ts (5 tests) 4808ms
+   ✓ P52-b 사고 > 봇 32일 — accidentBase·Floor 0 대조군은 사고 0 · 스트림은 소비된다(뽑기는 하고 결과를 버린다) · 기본은 사고가 난다  4673ms
+ ✓ src/sim/p54.test.ts (6 tests) 3472ms
+   ✓ P54 밤 빠지 파티 > 현재 승인 놀이터와 활성 기구만으로 기존 지형에서 등급 4·야간 파티를 연다  315ms
+   ✓ P54 밤 빠지 파티 > --no-night 대조군 — 밤이 안 서는 판(16일·★0)은 스위치와 무관하게 비트 동일 · 스냅샷 왕복  2729ms
+ ✓ src/sim/p48a.test.ts (8 tests) 4472ms
+   ✓ P48-a 자연 바닥 평면 > ★ 바닥·단 배열이 골든 3시드×16일 전 구간에서 fixture 와 바이트 동일 — P48-a 는 변경 전과 대조해 「동작 0」을 증명했고(통과), P48-b1 부터는 지형 회귀 방어(굽이가 든 fixture 를 페이즈마다 사유와 함께 다시 뜬다) · P57-i·P58-a(2026-09-15) 재생성: 단 배열 3시드 동일, 바닥만 3일차부터 — 유입 재조정·킷 식탁으로 봇 건설 순서가 바뀐 몫 · P60-a(2026-09-18) 재생성: 소품 삭제로 봇 지출 순서가 바뀐 몫(단 배열 동일) · P60-b 재생성: 기구 배고픔으로 매점 매출·지출 순서가 바뀐 몫 · P60-c 재생성: 세트 후보 우선·사슬 예약으로 봇 배치 순서(시드 1 바닥 4일차부터, 단 배열 동일) · P60-d 재생성: 입수구 거리 정렬로 봇 배치 순서 · P60-e 재생성: 서서 먹기·growFoodCourt 로 봇 지출 순서(시드 1 바닥 6일차부터)  4257ms
+ ✓ src/sim/p60c.test.ts (10 tests) 1755ms
+   ✓ P60-c 세트 — 봇 > noSet 대조군이 골든과 다르다 — 봇이 「세트 완성 후보」를 실제로 겨눈다 (시드 1 · 8일 해시) · 세트 우선이 128일 발견 수를 늘린다(측정치는 tools/bot 밴드)  1317ms
+ ✓ src/sim/p53b.test.ts (5 tests) 2756ms
+   ✓ P53-b 스토리·이월·엔딩 > 콤보 — 기구·링 시설이 든 쌍마다 성립하는 배치가 존재한다 (반경 안에 둘을 놓으면 activeCombos 에 뜬다)  2591ms
+ ✓ src/sim/p60e.test.ts (10 tests) 1642ms
+   ✓ P60-e 봇·밴드 > noCourt 대조군 — 8일 해시가 기본 봇과 다르고 좌석은 킷 4 그대로 · 기본 봇은 서서 > 0.3 에 블록을 더해 좌석 > 4 · RunMetrics 에 standShare/courtSeats/courtMenuKindsY3  1329ms
+ ✓ src/sim/course/ride.test.ts (26 tests) 1049ms
+   ✓ P61-a 실제 운항 — 낙수와 부상 > 낙수는 주행 0.35~0.70 · 최고 속도의 70% 이상에서만 — 출발 직후는 **절대** 아니다  322ms
+ ✓ src/sim/invariants.test.ts (9 tests) 387ms
+   ✓ 불변식 1 — sim/ 은 렌더러를 모른다 > sim/ 에서 phaser import 를 막는다  341ms
+ ✓ src/sim/p50b2.test.ts (4 tests) 843ms
+   ✓ P50-b2 화면·돈 칸 값 > aimPreview — 기구·링 시설 전수: 미리보기 등급·연결·팔찌 값 == 확정 뒤 실값 · 호출 전후 nextUid·occHash·grid.rev·pools.version 불변  813ms
+ ✓ src/sim/p53a.test.ts (4 tests) 359ms
+   ✓ P53-a 인증·소원·달력 재배선 — 조건 4종 · 교착 0 · 연차 폴백 > 멈춘 판 — 랭크를 ★0 에 묶어도 1·2년차 겨울 택배가 온다 (rankCapForTest) · 폴백 소식은 티커(strip)  354ms
+ ✓ src/sim/arrival-layout.test.ts (6 tests) 316ms
+ ✓ src/sim/levels.test.ts (5 tests) 319ms
+ ✓ src/sim/p27.test.ts (3 tests) 389ms
+ ✓ src/sim/ppaji-modules.test.ts (1 test) 358ms
+   ✓ standalone authored ppaji modules > all 14 unlock, place in both game facings and survive a save without changing legacy footprints  357ms
+ ✓ src/save/save.test.ts (9 tests) 279ms
+ ✓ src/sim/rank.test.ts (5 tests) 289ms
+ ✓ src/sim/game.test.ts (6 tests) 268ms
+ ✓ src/sim/p45c.test.ts (2 tests) 241ms
+ ✓ src/sim/p49b.test.ts (6 tests) 255ms
+ ✓ src/sim/foodcourt.test.ts (6 tests) 231ms
+ ✓ src/sim/p28.test.ts (6 tests) 236ms
+ ✓ src/sim/p18.test.ts (4 tests) 218ms
+ ✓ src/sim/p49a1.test.ts (9 tests) 228ms
+ ✓ src/sim/p49a2.test.ts (5 tests) 227ms
+ ✓ src/sim/p4c.test.ts (2 tests) 201ms
+ ✓ src/sim/p8.test.ts (2 tests) 209ms
+ ✓ src/sim/g57.test.ts (3 tests) 182ms
+ ✓ src/sim/d63.test.ts (1 test) 183ms
+ ✓ src/sim/p50a.test.ts (6 tests) 188ms
+ ✓ src/sim/composite.test.ts (3 tests) 178ms
+ ✓ src/sim/composite-access.test.ts (1 test) 166ms
+ ✓ src/sim/p17.test.ts (4 tests) 163ms
+ ✓ src/sim/guest-life.test.ts (3 tests) 153ms
+ ✓ src/sim/p24.test.ts (4 tests) 166ms
+ ✓ src/sim/p34.test.ts (2 tests) 169ms
+ ✓ src/sim/g36.test.ts (3 tests) 102ms
+ ✓ src/sim/p23.test.ts (2 tests) 137ms
+ ✓ src/sim/p16.test.ts (4 tests) 129ms
+ ✓ src/sim/p7.test.ts (3 tests) 140ms
+ ✓ src/sim/p25.test.ts (3 tests) 129ms
+ ✓ src/sim/p39.test.ts (2 tests) 182ms
+ ✓ src/assets/npc-v8.test.ts (4 tests) 123ms
+ ✓ src/sim/zone.test.ts (3 tests) 118ms
+ ✓ src/sim/p22.test.ts (4 tests) 136ms
+ ✓ src/data/data.test.ts (86 tests) 126ms
+ ✓ src/sim/p11.test.ts (2 tests) 121ms
+ ✓ src/sim/approved-docks.test.ts (4 tests) 108ms
+ ✓ src/sim/g34.test.ts (3 tests) 113ms
+ ✓ src/sim/pool-name.test.ts (2 tests) 115ms
+ ✓ src/sim/facility.test.ts (6 tests) 105ms
+ ✓ src/sim/p26.test.ts (3 tests) 119ms
+ ✓ src/sim/p48c.test.ts (5 tests) 102ms
+ ✓ src/save/p48b1.test.ts (2 tests) 101ms
+ ✓ src/sim/pool-state.test.ts (3 tests) 86ms
+ ✓ src/sim/p9.test.ts (3 tests) 99ms
+ ✓ src/sim/p46.test.ts (1 test) 91ms
+ ✓ src/sim/p6.test.ts (3 tests) 86ms
+ ✓ src/sim/p42.test.ts (1 test) 86ms
+ ✓ src/sim/bus.test.ts (4 tests) 81ms
+ ✓ src/sim/g35.test.ts (2 tests) 71ms
+ ✓ src/sim/g33.test.ts (2 tests) 56ms
+ ✓ src/assets/approved-facilities.test.ts (9 tests) 60ms
+ ✓ src/sim/g43.test.ts (3 tests) 50ms
+ ✓ src/sim/g37.test.ts (1 test) 40ms
+ ✓ src/sim/grid.test.ts (4 tests) 43ms
+ ✓ src/assets/watercraft.test.ts (4 tests) 50ms
+ ✓ src/render/iso.test.ts (20 tests) 47ms
+ ✓ src/sim/g52.test.ts (1 test) 42ms
+ ✓ src/sim/p48b1.test.ts (5 tests) 40ms
+ ✓ src/sim/watercraft-core/core.test.ts (10 tests) 36ms
+ ✓ src/sim/cooking-g41.test.ts (7 tests) 22ms
+ ✓ src/data/p5.test.ts (3 tests) 16ms
+ ✓ src/sim/pool.test.ts (4 tests) 13ms
+ ✓ src/data/p10.test.ts (4 tests) 14ms
+ ✓ src/sim/cooking.test.ts (7 tests) 11ms
+ ✓ src/sim/cert.test.ts (4 tests) 11ms
+ ✓ src/sim/g38.test.ts (1 test) 9ms
+ ✓ src/sim/g53.test.ts (3 tests) 9ms
+ ✓ src/data/pictures.test.ts (2 tests) 10ms
+ ✓ src/assets/p57a.test.ts (3 tests) 2ms
+ ✓ src/ui/picture-grammar.test.ts (3 tests) 3ms
+ ✓ src/data/p19.test.ts (3 tests) 2ms
+ ✓ src/data/p57b.test.ts (3 tests) 4ms
+ ✓ src/sim/condition.test.ts (5 tests) 7ms
+ ✓ src/render/camera.test.ts (16 tests) 4ms
+ ✓ src/ui/asset-url.test.ts (1 test) 3ms
+ ✓ src/ui/windows/build.test.ts (1 test) 3ms
+ ✓ src/assets/manifest.test.ts (2 tests) 4ms
+ ✓ src/sim/sns.test.ts (7 tests) 4ms
+ ✓ src/ui/rig-sets.test.ts (4 tests) 2ms
+ ✓ src/sim/clock.test.ts (3 tests) 2ms
+ ✓ src/ui/panels.test.ts (4 tests) 2ms
+ ✓ src/assets/p55.test.ts (3 tests) 2ms
+ ✓ src/ui/tablet-column.test.ts (2 tests) 2ms
+ ✓ src/ui/bubbles.test.ts (2 tests) 3ms
+ ✓ src/ui/ui-scale.test.ts (1 test) 1ms
+ ✓ src/sim/g56.test.ts (1 test) 1ms
+
+ Test Files  114 passed (114)
+      Tests  589 passed (589)
+   Start at  21:51:06
+   Duration  193.65s (transform 989ms, setup 0ms, collect 6.78s, tests 361.54s, environment 13ms, prepare 3.67s)
