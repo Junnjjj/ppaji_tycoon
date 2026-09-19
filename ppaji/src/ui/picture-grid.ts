@@ -72,9 +72,9 @@ export class PictureGrid {
 
   get selected(): string | null { return this.selectedId; }
 
-  render(input: readonly PictureCard[], options: { showAllLocked?: boolean } = {}): void {
+  render(input: readonly PictureCard[], options: { showAllLocked?: boolean; visibleLockedIds?: ReadonlySet<string> } = {}): void {
     let cards = [...input];
-    if (!options.showAllLocked && this.opts.teaser !== undefined) { let left = this.opts.teaser; cards = cards.filter((c) => c.badge !== 'lock' || left-- > 0); } // D69: 해금분 + 티저 N
+    if (!options.showAllLocked && this.opts.teaser !== undefined) { let left = this.opts.teaser; cards = cards.filter((c) => c.badge !== 'lock' || options.visibleLockedIds?.has(c.id) || left-- > 0); } // D69: 해금분 + 티저 N
     this.cards = cards;
     this.grid.replaceChildren();
     if (this.selectedId !== null && !cards.some((c) => c.id === this.selectedId)) this.selectedId = null;

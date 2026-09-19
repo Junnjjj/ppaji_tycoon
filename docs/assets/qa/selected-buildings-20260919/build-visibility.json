@@ -1,0 +1,102 @@
+{
+  "rows": [
+    {
+      "id": "indoor_shop",
+      "tab": "indoor",
+      "locked": false,
+      "art": true
+    },
+    {
+      "id": "sauna",
+      "tab": "indoor",
+      "locked": true,
+      "art": true
+    },
+    {
+      "id": "jjimjilbang",
+      "tab": "indoor",
+      "locked": true,
+      "art": true
+    },
+    {
+      "id": "karaoke",
+      "tab": "indoor",
+      "locked": true,
+      "art": true
+    },
+    {
+      "id": "infirmary",
+      "tab": "indoor",
+      "locked": true,
+      "art": true
+    },
+    {
+      "id": "office",
+      "tab": "indoor",
+      "locked": true,
+      "art": true
+    },
+    {
+      "id": "nursing",
+      "tab": "indoor",
+      "locked": true,
+      "art": true
+    },
+    {
+      "id": "storage",
+      "tab": "indoor",
+      "locked": true,
+      "art": true
+    },
+    {
+      "id": "info",
+      "tab": "indoor",
+      "locked": true,
+      "art": true
+    },
+    {
+      "id": "shade_net",
+      "tab": "seat",
+      "locked": true,
+      "art": true
+    },
+    {
+      "id": "mongol_tent",
+      "tab": "seat",
+      "locked": true,
+      "art": true
+    },
+    {
+      "id": "bungalow",
+      "tab": "lodging",
+      "locked": true,
+      "art": true
+    },
+    {
+      "id": "cafe",
+      "tab": "food",
+      "locked": true,
+      "art": true
+    },
+    {
+      "id": "shop",
+      "tab": "food",
+      "locked": false,
+      "art": true
+    },
+    {
+      "id": "snackbar",
+      "tab": "food",
+      "locked": false,
+      "art": true
+    },
+    {
+      "id": "toilet",
+      "tab": "utility",
+      "locked": false,
+      "art": true
+    }
+  ],
+  "missing": [],
+  "simulationUnchanged": true
+}

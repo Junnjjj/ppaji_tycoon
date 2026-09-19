@@ -15,7 +15,7 @@ describe('standalone authored ppaji modules', () => {
       let placed: number | undefined;
       const reasons = new Set<string>();
       for (let j = 30; j <= 44 && placed === undefined; j++) for (let i = 36; i <= 59 && placed === undefined; i++) {
-        if (m.id === 'module_rig_led_buoy' && g.aimPreview(m.id, i, j, facing)?.poolId == null) continue;
+        if (m.id === 'module_rig_led_buoy' && (g.aimPreview(m.id, i, j, facing)?.poolId ?? null) === null) continue;
         const r = g.placeFacility(m.id, i, j, facing);
         if (r.ok) placed = r.uid; else if(r.reason) reasons.add(r.reason);
       }

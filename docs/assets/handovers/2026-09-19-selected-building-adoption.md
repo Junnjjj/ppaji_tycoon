@@ -50,3 +50,7 @@ Evidence: `docs/assets/qa/selected-buildings-20260919/`.
 - Build includes TypeScript validation. Full simulation regression, lint and UI checks are recorded with the standalone-module evidence.
 
 Final validation: **114 test files / 589 tests passed**, TypeScript, ESLint, UI checks and 16 negative controls passed; production build passed and is served by MAIN 5189. `git diff --check` passed. Browser evidence uses the active MAIN server and isolated fresh state.
+
+## Follow-up: show selected buildings before unlock
+
+At the user's request, all 15 selected building IDs bypass the two-locked-card teaser limit in their existing build tabs. Other facilities retain the existing teaser policy. Locked cards remain disabled; no unlock, economy, placement or map data changes. MAIN browser checked all 15 plus the indoor-shop alias: none missing, every lock state matches isUnlocked, and opening all tabs leaves the simulation snapshot unchanged. Evidence: build-visibility.json/png. Build/typecheck, lint, UI controls and the two relevant test files pass.
