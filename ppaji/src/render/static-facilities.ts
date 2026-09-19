@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { approvedPivot, approvedSampleToTile, type ApprovedFacilityProvider, approvedSampleAt, approvedVisitForGuest, useTicksToSeconds, type RouteTrack, type RouteSample, type FacilityRoutes } from '../assets/approved-facilities.js';
+import { approvedPivot, approvedSampleToTile, type ApprovedFacilityProvider, approvedSampleAt, approvedVisitForGuest, useTicksToSeconds, type RouteTrack, type RouteSample } from '../assets/approved-facilities.js';
 import type { AssetProvider } from '../assets/types.js';
 import type { Guest } from '../sim/guest.js';
 import type { FacilityDef } from '../data/schema.js';
@@ -17,7 +17,7 @@ export async function loadStaticDepth(art:ApprovedFacilityProvider,base='./asset
     const canvas=art.canvas(`fac/${id}/${d}`),ctx=canvas?.getContext('2d');if(!canvas||!ctx)throw Error('Approved static frame '+id);
     const key=`watercraft/${id}/${d}`;data.pixels.set(key,ctx.getImageData(0,0,canvas.width,canvas.height));
     for(const mode of (id==='ppaji_slide'?['full','slide']:['full'])){
-      const response=await fetch(`${base}/${id}/${mode}-d${d}.bin`);if(!response.ok)throw Error(`Static depth ${id}/${mode}/${d}`);
+      const response=await fetch(`${base}/${s.visualSource??id}/${mode}-d${d}.bin`);if(!response.ok)throw Error(`Static depth ${id}/${mode}/${d}`);
       const z=new Float32Array(await response.arrayBuffer());if(z.length!==s.logicalSize*s.logicalSize)throw Error('Static depth size '+id);
       (mode==='full'?data.depths:data.slides).set(key,z);
     }
@@ -39,7 +39,7 @@ export class StaticFacilityRenderer{
     for(const f of facilities){
       const spec=this.art.manifest.facilities[f.defId];if(!spec)continue;
       const visitors=guests.filter(g=>g.state==='use'&&g.target?.kind==='facility'&&g.target.uid===f.uid);if(!visitors.length)continue;
-      const routes=(f.defId==='ppaji_slide'?this.art.routes?.ppaji_slide:f.defId==='ppaji_playground'?this.art.routes?.ppaji_playground:undefined) as FacilityRoutes|undefined;if(!routes?.tour)continue;
+      const routes=this.art.routesOf(f.defId);if(!routes?.tour)continue;
       const pivot=approvedPivot(f.defId,f.facing,this.art.manifest)!;
       let fx=this.waterEffects.get(f.uid);if(!fx){fx=this.scene.add.graphics();this.waterEffects.set(f.uid,fx);}fx.clear();
       const riders:CraftRider[]=visitors.map(g=>{

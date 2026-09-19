@@ -19,11 +19,13 @@
  */
 import type { AssetProvider, SpriteSpec } from './types.js';
 
-export const APPROVED_FACILITY_IDS = ['ppaji_slide', 'ppaji_playground', 'boarding_dock'] as const;
+export const APPROVED_FACILITY_IDS = ['ppaji_slide', 'ppaji_playground', 'boarding_dock', 'float_deck', 'diving', 'rig_bridge', 'rig_stepstone', 'rig_blob', 'rig_iceberg', 'rig_jump_tower', 'rig_bridge_swing', 'rig_bridge_long', 'rig_iceberg_wall', 'rig_blob_big', 'diving_tower'] as const;
 export type ApprovedFacilityId = (typeof APPROVED_FACILITY_IDS)[number];
 
 export interface ApprovedFacilitySpec {
   name: string;
+  /** System upgrades share an approved base until distinct art is authored. */
+  visualSource?: string;
   /** 예약 발자국 (칸) — 열린 수면을 포함한다 */
   size: [number, number];
   /** 실제 그림이 덮는 칸 (참고용) */
@@ -185,13 +187,18 @@ export class ApprovedFacilityProvider implements AssetProvider {
   ids(): readonly string[] { return [...this.frames.keys()]; }
 
   spec(id: string): SpriteSpec | null {
+    if (id === 'tile/deck') {
+      const s = this.spec('fac/float_deck/0');
+      // Ground anchor is at the back corner, eight pixels above the tile centre.
+      return s ? { ...s, id, ay: s.ay - 8 } : null;
+    }
     const m = /^fac\/([a-z0-9_]+)\/([0-3])$/.exec(id);
     const f = m ? this.manifest.facilities[m[1] as string] : undefined;
     if (!f) return null;
     return { id, w: f.logicalSize, h: f.logicalSize, ax: f.anchor.ax, ay: f.anchor.ay, source: 'art' };
   }
 
-  canvas(id: string): HTMLCanvasElement | null { return this.frames.get(id) ?? null; }
+  canvas(id: string): HTMLCanvasElement | null { return this.frames.get(id === 'tile/deck' ? 'fac/float_deck/0' : id) ?? null; }
 
   /** 시뮬 facing 은 0·1 뿐이라 그림 4장 중 둘만 쓰이지만 넷 다 싣는다 (씬이 장식·미리보기에 쓴다) */
   async load(base: string): Promise<void> {

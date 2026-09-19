@@ -265,10 +265,16 @@ export class WaterparkScene extends Phaser.Scene {
       for (let i = 0; i < g.w; i++) {
         const p = gridToScreen(i, j);
         const img = this.add.image(p.x, p.y + this.liftAt(i, j), this.columnKey(g.at(i, j), i === gate.i && j === gate.j, i, j));
-        img.setOrigin(0.5, 0).setDepth(depthKey(i, j) + Z_GROUND);
+        this.setGroundOrigin(img, g.at(i, j));
+        img.setDepth(depthKey(i, j) + Z_GROUND);
         this.tiles[j * g.w + i] = img;
       }
     }
+  }
+
+  private setGroundOrigin(img: Phaser.GameObjects.Image, floor: FloorCode): void {
+    const s = floor === FLOOR.deck && this.deps.approved?.spec('tile/deck');
+    img.setOrigin(s ? s.ax / s.w : .5, s ? s.ay / s.h : 0);
   }
 
   private waterFrame = 0;
@@ -371,8 +377,9 @@ export class WaterparkScene extends Phaser.Scene {
     img.setY(gridToScreen(i, j).y + this.liftAt(i, j)); // P0-B: 풀을 파면 단이 0 으로 내려간다
     const tint = this.poolTint.get(j * this.deps.grid.w + i);
     const floor = this.deps.grid.at(i, j);
+    this.setGroundOrigin(img, floor);
     if (tint !== undefined && floor === FLOOR.pool) img.setTint(tint);
-    else if (floor === FLOOR.deck && this.ringTint.has(j * this.deps.grid.w + i)) img.setTint(this.ringTint.get(j * this.deps.grid.w + i) as number); // P50-b2 등급별 폰툰 색
+    else if (floor === FLOOR.deck && !this.deps.approved?.spec('tile/deck') && this.ringTint.has(j * this.deps.grid.w + i)) img.setTint(this.ringTint.get(j * this.deps.grid.w + i) as number); // P50-b2 등급별 폰툰 색
     else if (floor === FLOOR.indoor && this.courtTiles.has(j * this.deps.grid.w + i)) img.setTint(cssColorInt('--tile-foodcourt-tint') || 0xffffff); // P58-a: 식탁 영역은 실내 바닥에 아주 연하게 칠한 느낌
     else if (floor === FLOOR.grass) img.setTint(cssColorInt(`--grass-season-${this.season}`) || 0xffffff);
     else img.clearTint();
@@ -511,7 +518,8 @@ export class WaterparkScene extends Phaser.Scene {
     const a = tileCenter(g.fromI, g.fromJ);
     const b = tileCenter(g.i, g.j);
     const t = g.progress;
-    const lz = this.liftAt(g.fromI, g.fromJ) + (this.liftAt(g.i, g.j) - this.liftAt(g.fromI, g.fromJ)) * t; // P0-B: 두 칸 사이 보간
+    const contactLift = (i: number, j: number): number => this.liftAt(i, j) - (this.deps.approved?.spec('tile/deck') && this.deps.grid.at(i, j) === FLOOR.deck ? .22 * Math.sqrt(512) * Math.cos(Math.PI / 6) : 0);
+    const lz = contactLift(g.fromI, g.fromJ) + (contactLift(g.i, g.j) - contactLift(g.fromI, g.fromJ)) * t; // P0-B: 두 칸 사이 보간
     return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t - this.slideLift(g) + lz };
   }
 

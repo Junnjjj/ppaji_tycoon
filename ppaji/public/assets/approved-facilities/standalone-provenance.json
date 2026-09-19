@@ -1,0 +1,202 @@
+{
+  "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1",
+  "files": [
+    {
+      "id": "float_deck",
+      "facing": 0,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/reuse/connector_deck/native-d0.png",
+      "sha256": "bebad8aaa7de710e1f8f3a933cf29599333198aa73330738b6c4699826319d8f",
+      "depth_sha256": "332f2958418b86c283183847d5337297edfbae2699887aadc62098f24641ece1"
+    },
+    {
+      "id": "float_deck",
+      "facing": 1,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/reuse/connector_deck/native-d1.png",
+      "sha256": "9e36487b6d167fbaf4e08858d46c33e443538b6310614ef301f54c3d2e4d83f1",
+      "depth_sha256": "7c4cf542e26d1331bc2fccbb732f4c6e3695a1cb0e0b9cbc9dbb81594a0d22e7"
+    },
+    {
+      "id": "float_deck",
+      "facing": 2,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/reuse/connector_deck/native-d2.png",
+      "sha256": "838df3600b70dc67477d62c5541113ce92fb9c9ff9b99fedd179f51c4eca162a",
+      "depth_sha256": "9a8b88c7f6c16cdbefceb6fa46db1697bebdfd9d1b73f8457ffba94240887d49"
+    },
+    {
+      "id": "float_deck",
+      "facing": 3,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/reuse/connector_deck/native-d3.png",
+      "sha256": "10ee33995b0412d54db82e0a44a0432d21f63c134f7950202de1bac25ac57a97",
+      "depth_sha256": "4328cf8d9bba5c8f7dc44ec28bd6ca744cacfff108a0d4abee2768381de7459b"
+    },
+    {
+      "id": "rig_blob",
+      "facing": 0,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_blob/native-d0.png",
+      "sha256": "fe8216a0bd150d21b809156e442dd6327088a2519e9f18e806bb81ee87dd5735",
+      "depth_sha256": "07c2870c7c8844a1d6aed1f97b2056ddc82fe1dc56cd128c8c2b0a04fcec9acc"
+    },
+    {
+      "id": "rig_blob",
+      "facing": 1,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_blob/native-d1.png",
+      "sha256": "714173623814c0c785a67ec17cd3e8649ee075c4a45e5730a756ef3023badbf3",
+      "depth_sha256": "d7491084a389c24c07cb17d52d1bfe96c4126847a7b3a84d7f75d9bfa4eea7b3"
+    },
+    {
+      "id": "rig_blob",
+      "facing": 2,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_blob/native-d2.png",
+      "sha256": "4607ee695b4096610ba286bd83c5013f0da1dee63aca50590b0ba4df3fc05d6e",
+      "depth_sha256": "3208ba5444be373bac8e45b21e306eabd62ee1ac764b8a0eb577a2a378cde87e"
+    },
+    {
+      "id": "rig_blob",
+      "facing": 3,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_blob/native-d3.png",
+      "sha256": "2d5f1a8a4ac32f08731e6e06730cb1672ed310d76eebbc16515a37cb5d8b02ef",
+      "depth_sha256": "0c85a168227f5a1e699a0b077e4b4238c40c8167f4476392c5905bf46f4d5ee1"
+    },
+    {
+      "id": "rig_jump_tower",
+      "facing": 0,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_jump_tower/native-d0.png",
+      "sha256": "a350d650ea13fe8ef562f442e06838a19ec829dfd7c7a3785ee8fb75a3b2f244",
+      "depth_sha256": "f585db107d1a7b576aa239e7a518e31c864ab4ebbd0e7bff14cfb9158bcb4dca"
+    },
+    {
+      "id": "rig_jump_tower",
+      "facing": 1,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_jump_tower/native-d1.png",
+      "sha256": "f0b018a603dda1fde3b0dd38f34570c3f05c0cfdfc96e79f541ef58166f7f48b",
+      "depth_sha256": "e0d4fb8dda02f5770c522022b9c3f20735e83e7714c69d8db1970a6b3d9e1578"
+    },
+    {
+      "id": "rig_jump_tower",
+      "facing": 2,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_jump_tower/native-d2.png",
+      "sha256": "773b7d1c140a3b29d046035b52ef14a57ebbe920a96a789a37a749fb42fc2f54",
+      "depth_sha256": "3e6af08f1dd6abc6a83787d2530a053f2570e1aed323d4001569b350495073cd"
+    },
+    {
+      "id": "rig_jump_tower",
+      "facing": 3,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_jump_tower/native-d3.png",
+      "sha256": "dbf776320ebc4475cfd461f3837ac284da7a416b80cd23f81fd2f6c6281faaa5",
+      "depth_sha256": "475f68715993709fb57107990fa6c998dc38246ea286cc7e88c1e1e520fb7da0"
+    },
+    {
+      "id": "diving",
+      "facing": 0,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/diving/native-d0.png",
+      "sha256": "0f5f1535cc83311d1c0b9db4161fd88fb0e802294f6ad7f909197c5930e668cd",
+      "depth_sha256": "492ba675d8f410ce2d7372833f1e00ab62b114431702d51f96bcf17a99d98e0b"
+    },
+    {
+      "id": "diving",
+      "facing": 1,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/diving/native-d1.png",
+      "sha256": "177014bebe2fe2f5ed53266dde20ef279eb55e92cf670c321fd339da3cc629b4",
+      "depth_sha256": "372086979702995b9aa4f3fdb1c1067091818f8041397e2df73be8e7f24f380c"
+    },
+    {
+      "id": "diving",
+      "facing": 2,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/diving/native-d2.png",
+      "sha256": "930dea58bbbd9e444c8336923154120ccae86203aab8ea69c20075f7f185c681",
+      "depth_sha256": "1d0b06c627e871d30aff1c63c238c17a08e418afe2fabada045a29b4c29bfb94"
+    },
+    {
+      "id": "diving",
+      "facing": 3,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/diving/native-d3.png",
+      "sha256": "19049a73ea72311040cccfd8c796a9e4e1f6d89787d9e3239ea63b6b17df75e7",
+      "depth_sha256": "8d709ac8659110c163efb27900cb732bca4c9f6478ec73e6bd9d5878dc7c8ae5"
+    },
+    {
+      "id": "rig_iceberg",
+      "facing": 0,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_iceberg/native-d0.png",
+      "sha256": "ed16c7f0e66eeff7d561c5367cb8c11da4f8b277570cbbe4e4347725ae0be67d",
+      "depth_sha256": "f07f5913689f6ef0e9d78b93bc0b325f1acf40efe454c7597bf2123fab20a849"
+    },
+    {
+      "id": "rig_iceberg",
+      "facing": 1,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_iceberg/native-d1.png",
+      "sha256": "fd571dff0b6aac4765708a8993ffe07cb15700e7498e381b43ba31460d663a07",
+      "depth_sha256": "4924f6e3a4d91c202651e9b7b66c20b48a51abdb0ca4df9fcab042453f3c1209"
+    },
+    {
+      "id": "rig_iceberg",
+      "facing": 2,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_iceberg/native-d2.png",
+      "sha256": "23be216d02eb77e1a14b9dacf823328405c8dfec131ee2364fdebe883d65e59d",
+      "depth_sha256": "9b7a84343d5df94f9ea3506dcd8b6f468a5e535841e3c3cbc9d143c345e26718"
+    },
+    {
+      "id": "rig_iceberg",
+      "facing": 3,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_iceberg/native-d3.png",
+      "sha256": "9658655542e16b2ce9e8f03d5909f4784a5485b10148d9913a49f54b7c63be6f",
+      "depth_sha256": "bb0079aed99cc93b21cc980166769024b4b6c74173fd2d5a88413a8e4fb97227"
+    },
+    {
+      "id": "rig_bridge",
+      "facing": 0,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_bridge/native-d0.png",
+      "sha256": "e350048c8f31ba5319d0b19dfed5081f34add05806b10153464f0603fd557449",
+      "depth_sha256": "8ec587d0118a35b880705ae4de4926108c1125e88c6484db8876aef2e9c90640"
+    },
+    {
+      "id": "rig_bridge",
+      "facing": 1,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_bridge/native-d1.png",
+      "sha256": "6604bff6a17c43379bc80cf46d0f5fe568e73eccf8591ac4d9db2121d710ec0f",
+      "depth_sha256": "a21b20a09991bd3cd4d3cb7fca7a72bfb17df375453404b54b4fd42858faaa48"
+    },
+    {
+      "id": "rig_bridge",
+      "facing": 2,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_bridge/native-d2.png",
+      "sha256": "a213271eb2ee75f803e6d088ffad4f64f9046ecb04b41c873e31d14eb7b2028a",
+      "depth_sha256": "be63c46e2eff321ae2a3fc9f9eefb8e9f3fb2cd570f89d5161b2f239789bc80d"
+    },
+    {
+      "id": "rig_bridge",
+      "facing": 3,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_bridge/native-d3.png",
+      "sha256": "b00e14a50a6242f5c4093d494c6746e56658d002865490fba904d7d6ae87a716",
+      "depth_sha256": "97cff404a3e5ef8536f87700abe1ae25302ab14b6842b950c94095fc1e310a51"
+    },
+    {
+      "id": "rig_stepstone",
+      "facing": 0,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_stepstone/native-d0.png",
+      "sha256": "e057ffbe95ca55c271e760485096283d1597445f76c6e8bb78bdd306228b0673",
+      "depth_sha256": "e9e9ce83ef6c9f87443471a3c44677b1ed5cc9b7b4cfd5169157493a69af2b6c"
+    },
+    {
+      "id": "rig_stepstone",
+      "facing": 1,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_stepstone/native-d1.png",
+      "sha256": "a643f3215c6fa85e0f65abec213a9c01365da2e1ba7b08f265ec7db596bae5ae",
+      "depth_sha256": "c9f532d1ee1c259c4f51fc2e24f9834729525f4a8d10b0e7cd6ae5981b1ac17d"
+    },
+    {
+      "id": "rig_stepstone",
+      "facing": 2,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_stepstone/native-d2.png",
+      "sha256": "7548853b61c19464bd3d9daee06ee2942ebc986aa2529984b05cae1e98cbba47",
+      "depth_sha256": "9b7a83b205ccf05094760d44f2e0c432cd06d19357c393d50f08d92a2de25531"
+    },
+    {
+      "id": "rig_stepstone",
+      "facing": 3,
+      "source": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_stepstone/native-d3.png",
+      "sha256": "ff0021756ae29b301e6119b5092fe19834b02ddc8560f556bbf3a10fc3c6891f",
+      "depth_sha256": "5a50c45fd690c279e0b182638f9395eac1ddda472620ee09ebce1ebdee7099a8"
+    }
+  ],
+  "scope": "Native pixels and depth, no resizing or terrain change"
+}

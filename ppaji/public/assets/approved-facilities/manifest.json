@@ -893,6 +893,1509 @@
     }
    },
    "note": "ppaji-boarding-2x1-v1 full deck variant. The fittings-only variant stays HOLD (native foreground 34/35 below the 35 gate) and is NOT adopted. Queue waits on the rear deck; one guest boards at a time (access.json flow)."
+  },
+  "float_deck": {
+   "name": "플로팅덱",
+   "size": [
+    1,
+    1
+   ],
+   "artSize": [
+    1,
+    1
+   ],
+   "footprintOrigin": [
+    -0.5,
+    -0.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0.22
+   ],
+   "exit": [
+    0,
+    0,
+    0.22
+   ],
+   "landmarks": {
+    "east": [
+     0.5,
+     0,
+     0.22
+    ],
+    "west": [
+     -0.5,
+     0,
+     0.22
+    ],
+    "north": [
+     0,
+     0.5,
+     0.22
+    ],
+    "south": [
+     0,
+     -0.5,
+     0.22
+    ],
+    "corner_cap": [
+     -0.435,
+     -0.435,
+     0.22
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/reuse/connector_deck",
+   "deckTiles": [
+    [
+     0,
+     0
+    ]
+   ],
+   "frames": {
+    "d0": {
+     "file": "float_deck/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "bebad8aaa7de710e1f8f3a933cf29599333198aa73330738b6c4699826319d8f"
+    },
+    "d1": {
+     "file": "float_deck/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "9e36487b6d167fbaf4e08858d46c33e443538b6310614ef301f54c3d2e4d83f1"
+    },
+    "d2": {
+     "file": "float_deck/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "838df3600b70dc67477d62c5541113ce92fb9c9ff9b99fedd179f51c4eca162a"
+    },
+    "d3": {
+     "file": "float_deck/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "10ee33995b0412d54db82e0a44a0432d21f63c134f7950202de1bac25ac57a97"
+    }
+   }
+  },
+  "rig_blob": {
+   "name": "블롭 점프",
+   "size": [
+    3,
+    1
+   ],
+   "artSize": [
+    3,
+    1
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -0.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.5,
+     0.5
+    ],
+    [
+     0.5,
+     1.5
+    ],
+    [
+     1.5,
+     0.5
+    ],
+    [
+     0.5,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     1
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     1,
+     3
+    ]
+   ],
+   "entry": [
+    -1.49,
+    0,
+    0.22
+   ],
+   "exit": [
+    -1.49,
+    0,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     -1.49,
+     0,
+     0.22
+    ],
+    "launch": [
+     -0.72,
+     0,
+     1.28
+    ],
+    "impact": [
+     -0.35,
+     0,
+     0.67
+    ],
+    "rider": [
+     1.12,
+     0,
+     0.68
+    ],
+    "landing": [
+     1.95,
+     0,
+     0
+    ],
+    "return": [
+     -1.5,
+     0,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_blob",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_blob/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "fe8216a0bd150d21b809156e442dd6327088a2519e9f18e806bb81ee87dd5735"
+    },
+    "d1": {
+     "file": "rig_blob/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "714173623814c0c785a67ec17cd3e8649ee075c4a45e5730a756ef3023badbf3"
+    },
+    "d2": {
+     "file": "rig_blob/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "4607ee695b4096610ba286bd83c5013f0da1dee63aca50590b0ba4df3fc05d6e"
+    },
+    "d3": {
+     "file": "rig_blob/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "2d5f1a8a4ac32f08731e6e06730cb1672ed310d76eebbc16515a37cb5d8b02ef"
+    }
+   }
+  },
+  "rig_jump_tower": {
+   "name": "점프 타워",
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    -0.12,
+    -0.96,
+    0.22
+   ],
+   "exit": [
+    -0.12,
+    -0.96,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     -0.12,
+     -0.96,
+     0.22
+    ],
+    "launch": [
+     -0.12,
+     0.69,
+     1.8
+    ],
+    "landing": [
+     -0.12,
+     1.56,
+     0
+    ],
+    "return": [
+     0.76,
+     -1.0,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_jump_tower",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_jump_tower/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a350d650ea13fe8ef562f442e06838a19ec829dfd7c7a3785ee8fb75a3b2f244"
+    },
+    "d1": {
+     "file": "rig_jump_tower/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "f0b018a603dda1fde3b0dd38f34570c3f05c0cfdfc96e79f541ef58166f7f48b"
+    },
+    "d2": {
+     "file": "rig_jump_tower/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "773b7d1c140a3b29d046035b52ef14a57ebbe920a96a789a37a749fb42fc2f54"
+    },
+    "d3": {
+     "file": "rig_jump_tower/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "dbf776320ebc4475cfd461f3837ac284da7a416b80cd23f81fd2f6c6281faaa5"
+    }
+   }
+  },
+  "diving": {
+   "name": "다이빙대",
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    -0.12,
+    -0.96,
+    0.22
+   ],
+   "exit": [
+    -0.12,
+    -0.96,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     -0.12,
+     -0.96,
+     0.22
+    ],
+    "launch": [
+     -0.12,
+     0.97,
+     0.95
+    ],
+    "landing": [
+     -0.12,
+     1.56,
+     0
+    ],
+    "return": [
+     0.76,
+     -1.0,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/diving",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "diving/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "0f5f1535cc83311d1c0b9db4161fd88fb0e802294f6ad7f909197c5930e668cd"
+    },
+    "d1": {
+     "file": "diving/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "177014bebe2fe2f5ed53266dde20ef279eb55e92cf670c321fd339da3cc629b4"
+    },
+    "d2": {
+     "file": "diving/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "930dea58bbbd9e444c8336923154120ccae86203aab8ea69c20075f7f185c681"
+    },
+    "d3": {
+     "file": "diving/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "19049a73ea72311040cccfd8c796a9e4e1f6d89787d9e3239ea63b6b17df75e7"
+    }
+   }
+  },
+  "rig_iceberg": {
+   "name": "아이스버그",
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0.96,
+    0.22
+   ],
+   "exit": [
+    0,
+    0.96,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     0.96,
+     0.22
+    ],
+    "climb": [
+     0,
+     0.59,
+     0.45
+    ],
+    "launch": [
+     0,
+     -0.3,
+     1.76
+    ],
+    "landing": [
+     0,
+     -1.55,
+     0
+    ],
+    "return": [
+     0.67,
+     0.96,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_iceberg",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_iceberg/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "ed16c7f0e66eeff7d561c5367cb8c11da4f8b277570cbbe4e4347725ae0be67d"
+    },
+    "d1": {
+     "file": "rig_iceberg/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "fd571dff0b6aac4765708a8993ffe07cb15700e7498e381b43ba31460d663a07"
+    },
+    "d2": {
+     "file": "rig_iceberg/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "23be216d02eb77e1a14b9dacf823328405c8dfec131ee2364fdebe883d65e59d"
+    },
+    "d3": {
+     "file": "rig_iceberg/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "9658655542e16b2ce9e8f03d5909f4784a5485b10148d9913a49f54b7c63be6f"
+    }
+   }
+  },
+  "rig_bridge": {
+   "name": "장애물 다리",
+   "size": [
+    1,
+    2
+   ],
+   "artSize": [
+    1,
+    2
+   ],
+   "footprintOrigin": [
+    -0.5,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     0.5,
+     1.0
+    ],
+    [
+     1.0,
+     0.5
+    ],
+    [
+     0.5,
+     1.0
+    ],
+    [
+     1.0,
+     0.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ]
+   ],
+   "entry": [
+    0,
+    -1,
+    0.25
+   ],
+   "exit": [
+    0,
+    -1,
+    0.25
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -1,
+     0.25
+    ],
+    "exit": [
+     0,
+     1,
+     0.25
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_bridge",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_bridge/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "e350048c8f31ba5319d0b19dfed5081f34add05806b10153464f0603fd557449"
+    },
+    "d1": {
+     "file": "rig_bridge/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "6604bff6a17c43379bc80cf46d0f5fe568e73eccf8591ac4d9db2121d710ec0f"
+    },
+    "d2": {
+     "file": "rig_bridge/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a213271eb2ee75f803e6d088ffad4f64f9046ecb04b41c873e31d14eb7b2028a"
+    },
+    "d3": {
+     "file": "rig_bridge/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "b00e14a50a6242f5c4093d494c6746e56658d002865490fba904d7d6ae87a716"
+    }
+   }
+  },
+  "rig_stepstone": {
+   "name": "징검다리",
+   "size": [
+    1,
+    1
+   ],
+   "artSize": [
+    1,
+    1
+   ],
+   "footprintOrigin": [
+    -0.5,
+    -0.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "entry": [
+    0,
+    -0.5,
+    0.22
+   ],
+   "exit": [
+    0,
+    -0.5,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -0.5,
+     0.22
+    ],
+    "use": [
+     0,
+     0,
+     0.48
+    ],
+    "exit": [
+     0,
+     0.5,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_stepstone",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_stepstone/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "e057ffbe95ca55c271e760485096283d1597445f76c6e8bb78bdd306228b0673"
+    },
+    "d1": {
+     "file": "rig_stepstone/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a643f3215c6fa85e0f65abec213a9c01365da2e1ba7b08f265ec7db596bae5ae"
+    },
+    "d2": {
+     "file": "rig_stepstone/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "7548853b61c19464bd3d9daee06ee2942ebc986aa2529984b05cae1e98cbba47"
+    },
+    "d3": {
+     "file": "rig_stepstone/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "ff0021756ae29b301e6119b5092fe19834b02ddc8560f556bbf3a10fc3c6891f"
+    }
+   }
+  },
+  "rig_bridge_swing": {
+   "name": "흔들다리 닌자",
+   "size": [
+    1,
+    2
+   ],
+   "artSize": [
+    1,
+    2
+   ],
+   "footprintOrigin": [
+    -0.5,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     0.5,
+     1.0
+    ],
+    [
+     1.0,
+     0.5
+    ],
+    [
+     0.5,
+     1.0
+    ],
+    [
+     1.0,
+     0.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ]
+   ],
+   "entry": [
+    0,
+    -1,
+    0.25
+   ],
+   "exit": [
+    0,
+    -1,
+    0.25
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -1,
+     0.25
+    ],
+    "exit": [
+     0,
+     1,
+     0.25
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_bridge",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_bridge/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "e350048c8f31ba5319d0b19dfed5081f34add05806b10153464f0603fd557449"
+    },
+    "d1": {
+     "file": "rig_bridge/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "6604bff6a17c43379bc80cf46d0f5fe568e73eccf8591ac4d9db2121d710ec0f"
+    },
+    "d2": {
+     "file": "rig_bridge/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a213271eb2ee75f803e6d088ffad4f64f9046ecb04b41c873e31d14eb7b2028a"
+    },
+    "d3": {
+     "file": "rig_bridge/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "b00e14a50a6242f5c4093d494c6746e56658d002865490fba904d7d6ae87a716"
+    }
+   },
+   "visualSource": "rig_bridge",
+   "note": "System upgrade reuses the approved base geometry; no separate authored upgrade model exists."
+  },
+  "rig_bridge_long": {
+   "name": "단군 롱브릿지",
+   "size": [
+    1,
+    2
+   ],
+   "artSize": [
+    1,
+    2
+   ],
+   "footprintOrigin": [
+    -0.5,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     0.5,
+     1.0
+    ],
+    [
+     1.0,
+     0.5
+    ],
+    [
+     0.5,
+     1.0
+    ],
+    [
+     1.0,
+     0.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ]
+   ],
+   "entry": [
+    0,
+    -1,
+    0.25
+   ],
+   "exit": [
+    0,
+    -1,
+    0.25
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -1,
+     0.25
+    ],
+    "exit": [
+     0,
+     1,
+     0.25
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_bridge",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_bridge/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "e350048c8f31ba5319d0b19dfed5081f34add05806b10153464f0603fd557449"
+    },
+    "d1": {
+     "file": "rig_bridge/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "6604bff6a17c43379bc80cf46d0f5fe568e73eccf8591ac4d9db2121d710ec0f"
+    },
+    "d2": {
+     "file": "rig_bridge/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a213271eb2ee75f803e6d088ffad4f64f9046ecb04b41c873e31d14eb7b2028a"
+    },
+    "d3": {
+     "file": "rig_bridge/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "b00e14a50a6242f5c4093d494c6746e56658d002865490fba904d7d6ae87a716"
+    }
+   },
+   "visualSource": "rig_bridge",
+   "note": "System upgrade reuses the approved base geometry; no separate authored upgrade model exists."
+  },
+  "rig_iceberg_wall": {
+   "name": "빅마블 월",
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0.96,
+    0.22
+   ],
+   "exit": [
+    0,
+    0.96,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     0.96,
+     0.22
+    ],
+    "climb": [
+     0,
+     0.59,
+     0.45
+    ],
+    "launch": [
+     0,
+     -0.3,
+     1.76
+    ],
+    "landing": [
+     0,
+     -1.55,
+     0
+    ],
+    "return": [
+     0.67,
+     0.96,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_iceberg",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_iceberg/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "ed16c7f0e66eeff7d561c5367cb8c11da4f8b277570cbbe4e4347725ae0be67d"
+    },
+    "d1": {
+     "file": "rig_iceberg/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "fd571dff0b6aac4765708a8993ffe07cb15700e7498e381b43ba31460d663a07"
+    },
+    "d2": {
+     "file": "rig_iceberg/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "23be216d02eb77e1a14b9dacf823328405c8dfec131ee2364fdebe883d65e59d"
+    },
+    "d3": {
+     "file": "rig_iceberg/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "9658655542e16b2ce9e8f03d5909f4784a5485b10148d9913a49f54b7c63be6f"
+    }
+   },
+   "visualSource": "rig_iceberg",
+   "note": "System upgrade reuses the approved base geometry; no separate authored upgrade model exists."
+  },
+  "rig_blob_big": {
+   "name": "와일드 블롭",
+   "size": [
+    3,
+    1
+   ],
+   "artSize": [
+    3,
+    1
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -0.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.5,
+     0.5
+    ],
+    [
+     0.5,
+     1.5
+    ],
+    [
+     1.5,
+     0.5
+    ],
+    [
+     0.5,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     1
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     1,
+     3
+    ]
+   ],
+   "entry": [
+    -1.49,
+    0,
+    0.22
+   ],
+   "exit": [
+    -1.49,
+    0,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     -1.49,
+     0,
+     0.22
+    ],
+    "launch": [
+     -0.72,
+     0,
+     1.28
+    ],
+    "impact": [
+     -0.35,
+     0,
+     0.67
+    ],
+    "rider": [
+     1.12,
+     0,
+     0.68
+    ],
+    "landing": [
+     1.95,
+     0,
+     0
+    ],
+    "return": [
+     -1.5,
+     0,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_blob",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_blob/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "fe8216a0bd150d21b809156e442dd6327088a2519e9f18e806bb81ee87dd5735"
+    },
+    "d1": {
+     "file": "rig_blob/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "714173623814c0c785a67ec17cd3e8649ee075c4a45e5730a756ef3023badbf3"
+    },
+    "d2": {
+     "file": "rig_blob/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "4607ee695b4096610ba286bd83c5013f0da1dee63aca50590b0ba4df3fc05d6e"
+    },
+    "d3": {
+     "file": "rig_blob/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "2d5f1a8a4ac32f08731e6e06730cb1672ed310d76eebbc16515a37cb5d8b02ef"
+    }
+   },
+   "visualSource": "rig_blob",
+   "note": "System upgrade reuses the approved base geometry; no separate authored upgrade model exists."
+  },
+  "diving_tower": {
+   "name": "다이빙 타워",
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    -0.12,
+    -0.96,
+    0.22
+   ],
+   "exit": [
+    -0.12,
+    -0.96,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     -0.12,
+     -0.96,
+     0.22
+    ],
+    "launch": [
+     -0.12,
+     0.97,
+     0.95
+    ],
+    "landing": [
+     -0.12,
+     1.56,
+     0
+    ],
+    "return": [
+     0.76,
+     -1.0,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/diving",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "diving/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "0f5f1535cc83311d1c0b9db4161fd88fb0e802294f6ad7f909197c5930e668cd"
+    },
+    "d1": {
+     "file": "diving/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "177014bebe2fe2f5ed53266dde20ef279eb55e92cf670c321fd339da3cc629b4"
+    },
+    "d2": {
+     "file": "diving/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "930dea58bbbd9e444c8336923154120ccae86203aab8ea69c20075f7f185c681"
+    },
+    "d3": {
+     "file": "diving/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "19049a73ea72311040cccfd8c796a9e4e1f6d89787d9e3239ea63b6b17df75e7"
+    }
+   },
+   "visualSource": "diving",
+   "note": "System upgrade reuses the approved base geometry; no separate authored upgrade model exists."
   }
  },
  "deckTileRule": "footprint-local integer tiles at facing 0 (i to +I, j to +J from the placed corner); a tile is deck when authored deck rectangles cover >= 50% of it. Rotate with the same R:(I,J)->(J,-I) as the footprint."

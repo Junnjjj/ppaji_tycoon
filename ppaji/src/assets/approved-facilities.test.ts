@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import {
-  APPROVED_FACILITY_IDS, approvedAnchor, approvedPivot, approvedFootprint, approvedFrameId,
+  ApprovedFacilityProvider, APPROVED_FACILITY_IDS, approvedAnchor, approvedPivot, approvedFootprint, approvedFrameId,
   approvedSampleAt, approvedSampleToTile, rotateTile,
   type ApprovedFacilityManifest, type ApprovedRoutes, type FacilityRoutes,
 } from './approved-facilities.js';
@@ -22,7 +23,7 @@ const TILE_WORLD = Math.sqrt(512);
 
 describe('승인 조합 시설 — 계약', () => {
   it('ID 둘 · 프레임 넉 장씩 · 선언한 크기·해시가 실제 PNG 와 같다', () => {
-    expect([...APPROVED_FACILITY_IDS]).toEqual(['ppaji_slide', 'ppaji_playground', 'boarding_dock']);
+    expect([...APPROVED_FACILITY_IDS].sort()).toEqual(Object.keys(manifest.facilities).sort());
     for (const id of APPROVED_FACILITY_IDS) {
       const s = manifest.facilities[id];
       expect(s, id).toBeDefined();
@@ -33,8 +34,23 @@ describe('승인 조합 시설 — 계약', () => {
         expect(bytes.readUInt32BE(16), `${id}/${d} w`).toBe(f.w);
         expect(bytes.readUInt32BE(20), `${id}/${d} h`).toBe(f.h);
         expect(f.w, `${id}/${d}`).toBe(s!.logicalSize);
+        expect(createHash('sha256').update(bytes).digest('hex'), `${id}/${d} pixels`).toBe(f.sha256);
+        const depth = readFileSync(`${BASE}/${s!.visualSource ?? id}/full-${d}.bin`);
+        expect(depth.length, `${id}/${d} native depth`).toBe(f.w * f.h * 4);
       }
       expect(approvedFrameId(id, 1)).toBe(`fac/${id}/1`);
+    }
+  });
+
+  it('painted deck uses the same native pontoon, with a corner anchor; every approved size matches live data', () => {
+    const provider = new ApprovedFacilityProvider(manifest, routes);
+    const tile = provider.spec('tile/deck')!, fac = provider.spec('fac/float_deck/0')!;
+    expect(tile.source).toBe('art'); expect(tile.w).toBe(128);
+    expect(tile.ax).toBe(fac.ax); expect(tile.ay + 8).toBe(fac.ay);
+    for (const [id, s] of Object.entries(manifest.facilities)) {
+      const def = facilities.find(f => f.id === id)!;
+      expect([def.w, def.d], id).toEqual(s.size);
+      if (s.visualSource) expect(s.frames).toEqual(manifest.facilities[s.visualSource]!.frames);
     }
   });
 
@@ -67,7 +83,7 @@ describe('승인 조합 시설 — 계약', () => {
         expect(pj, `${id}/d${f} j`).toBeGreaterThanOrEqual(0); expect(pj).toBeLessThanOrEqual(fp[1]);
       }
       // 음성 대조군 — 회전이 실제로 다른 값을 낸다 (항등이면 아무것도 안 잰다)
-      expect(approvedPivot(id, 1, manifest)).not.toEqual(approvedPivot(id, 0, manifest));
+      if (s.size[0] !== s.size[1]) expect(approvedPivot(id, 1, manifest)).not.toEqual(approvedPivot(id, 0, manifest));
     }
     expect(rotateTile(3, 1, 0)).toEqual([3, 1]);
     expect(rotateTile(3, 1, 1)).toEqual([1, -3]);
@@ -109,7 +125,7 @@ describe('승인 조합 시설 — 계약', () => {
   it('동선 — 입구에서 시작해 입구로 끝난다 (순간이동 없음) · 구간이 이어져 있다 · 표본기가 끝에서 감긴다', () => {
     for (const id of APPROVED_FACILITY_IDS) {
       const r = (routes as unknown as Record<string, FacilityRoutes>)[id];
-      if (!r) { expect(id, '동선이 없는 것은 승하선 데크뿐이다 (단일 모듈 — 저자 동선은 검토 하네스 전용)').toBe('boarding_dock'); continue; }
+      if (!r) { expect(['boarding_dock', 'float_deck']).toContain(id); continue; }
       const entry = r.entry;
       for (const track of [r.tour, ...r.visits]) {
         const segs = track.segments;

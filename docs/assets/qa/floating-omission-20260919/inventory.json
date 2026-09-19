@@ -1,0 +1,213 @@
+{
+  "static": [
+    {
+      "id": "rig_beam",
+      "name": "밸런스 빔",
+      "where": "빠지 놀이터 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "rig_roller",
+      "name": "워터 롤러",
+      "where": "빠지 놀이터 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "rig_seesaw",
+      "name": "시소 플로트",
+      "where": "빠지 놀이터 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "rig_totem",
+      "name": "워터 토템",
+      "where": "빠지 놀이터 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "rig_disc",
+      "name": "회전 원반",
+      "where": "빠지 놀이터 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "rig_mini_slide",
+      "name": "미니 슬라이드",
+      "where": "빠지 놀이터 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "rig_slidedock",
+      "name": "미끄럼 도크",
+      "where": "빠지 놀이터 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "rig_kids_park",
+      "name": "키즈 워터 놀이터",
+      "where": "빠지 놀이터 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "waterwalk",
+      "name": "워터워크볼",
+      "where": "빠지 놀이터 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "rig_hammock",
+      "name": "해먹 라운지",
+      "where": "빠지 놀이터 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "rig_sunbed",
+      "name": "선베드 플로트",
+      "where": "빠지 놀이터 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "rig_led_buoy",
+      "name": "LED 조명 부표",
+      "where": "빠지 놀이터 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "connector_deck",
+      "name": "connector_deck",
+      "where": "빠지 놀이터 조합",
+      "before": "조합 안에는 포함, 별도 시설·바닥에서는 누락",
+      "after": "조합 + 별도 플로팅덱 + 바닥 타일"
+    },
+    {
+      "id": "rig_slide",
+      "name": "플로팅 슬라이드",
+      "where": "빠지 슬라이드 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "rig_blob",
+      "name": "블롭 점프",
+      "where": "개별 시설",
+      "before": "누락 — 구형 그림",
+      "after": "개별 네이티브 연결"
+    },
+    {
+      "id": "trampoline_w",
+      "name": "수상 트램폴린",
+      "where": "빠지 놀이터 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "rig_jump_tower",
+      "name": "점프 타워",
+      "where": "개별 시설",
+      "before": "누락 — 구형 그림",
+      "after": "개별 네이티브 연결"
+    },
+    {
+      "id": "diving",
+      "name": "다이빙대",
+      "where": "개별 시설",
+      "before": "누락 — 구형 그림",
+      "after": "개별 네이티브 연결"
+    },
+    {
+      "id": "rig_iceberg",
+      "name": "아이스버그",
+      "where": "개별 시설",
+      "before": "누락 — 구형 그림",
+      "after": "개별 네이티브 연결"
+    },
+    {
+      "id": "rig_bridge",
+      "name": "장애물 다리",
+      "where": "개별 시설",
+      "before": "누락 — 구형 그림",
+      "after": "개별 네이티브 연결"
+    },
+    {
+      "id": "rig_stepstone",
+      "name": "징검다리",
+      "where": "개별 시설",
+      "before": "누락 — 구형 그림",
+      "after": "개별 네이티브 연결"
+    },
+    {
+      "id": "boarding_deck",
+      "name": "승하선 데크",
+      "where": "빠지 놀이터 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "obstacle_module",
+      "name": "장애물 모듈",
+      "where": "빠지 슬라이드 조합",
+      "before": "조합에 포함됨",
+      "after": "조합에 포함됨"
+    },
+    {
+      "id": "boarding_deck_2x1",
+      "name": "승하선 데크 2×1",
+      "where": "boarding_dock",
+      "before": "적용됨",
+      "after": "적용 유지"
+    },
+    {
+      "id": "boarding_fittings_2x1",
+      "name": "데크 없는 승하선 부속",
+      "where": "보류 변형",
+      "before": "HOLD",
+      "after": "HOLD 유지"
+    }
+  ],
+  "watercraft": [
+    "peanut",
+    "jjinppang",
+    "banana",
+    "honeycomb",
+    "flyduck",
+    "hexa",
+    "lotus",
+    "wagon",
+    "swing",
+    "spinpang",
+    "twinpang",
+    "dancing",
+    "flyfish",
+    "skyfly",
+    "jetski",
+    "jetboat",
+    "wakeboard",
+    "waterski",
+    "sofa_boat",
+    "flycarpet",
+    "rocket_tube",
+    "discopang",
+    "blobjump",
+    "water_roller",
+    "watersled",
+    "kneeboard",
+    "air_chair",
+    "marine_jet",
+    "hydrofoil",
+    "tow_work"
+  ],
+  "watercraftFilesVerified": 990,
+  "mismatches": []
+}

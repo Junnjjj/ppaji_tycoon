@@ -1,0 +1,79 @@
+{
+  "staticProfiles": 15,
+  "depthFrames": 60,
+  "movingProfiles": 30,
+  "occupiedSamples": [
+    {
+      "id": "diving",
+      "facing": 0,
+      "changedMax": 179,
+      "changedFrames": 5
+    },
+    {
+      "id": "diving",
+      "facing": 1,
+      "changedMax": 156,
+      "changedFrames": 5
+    },
+    {
+      "id": "rig_bridge",
+      "facing": 0,
+      "changedMax": 179,
+      "changedFrames": 5
+    },
+    {
+      "id": "rig_bridge",
+      "facing": 1,
+      "changedMax": 216,
+      "changedFrames": 5
+    },
+    {
+      "id": "rig_stepstone",
+      "facing": 0,
+      "changedMax": 216,
+      "changedFrames": 5
+    },
+    {
+      "id": "rig_stepstone",
+      "facing": 1,
+      "changedMax": 179,
+      "changedFrames": 5
+    },
+    {
+      "id": "rig_blob",
+      "facing": 0,
+      "changedMax": 216,
+      "changedFrames": 5
+    },
+    {
+      "id": "rig_blob",
+      "facing": 1,
+      "changedMax": 216,
+      "changedFrames": 5
+    },
+    {
+      "id": "rig_iceberg",
+      "facing": 0,
+      "changedMax": 209,
+      "changedFrames": 5
+    },
+    {
+      "id": "rig_iceberg",
+      "facing": 1,
+      "changedMax": 216,
+      "changedFrames": 5
+    },
+    {
+      "id": "rig_jump_tower",
+      "facing": 0,
+      "changedMax": 174,
+      "changedFrames": 5
+    },
+    {
+      "id": "rig_jump_tower",
+      "facing": 1,
+      "changedMax": 168,
+      "changedFrames": 5
+    }
+  ]
+}
