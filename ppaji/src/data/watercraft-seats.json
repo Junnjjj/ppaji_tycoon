@@ -1,0 +1,3852 @@
+{
+  "peanut": [
+    {
+      "key": "seat0",
+      "position": [
+        0,
+        -0.87,
+        0.31
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966
+    },
+    {
+      "key": "seat1",
+      "position": [
+        0,
+        0,
+        0.31
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966
+    },
+    {
+      "key": "seat2",
+      "position": [
+        0,
+        0.87,
+        0.31
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966
+    }
+  ],
+  "jjinppang": [
+    {
+      "key": "seat_1",
+      "position": [
+        -0.61,
+        -0.55,
+        0.42
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_1",
+      "support_dimensions_tiles": [
+        0.44,
+        0.4
+      ],
+      "foot_contacts": [
+        [
+          -0.61,
+          -0.8500000000000001,
+          0.32
+        ]
+      ],
+      "hand_contact": [
+        -0.61,
+        -0.8,
+        0.59
+      ],
+      "transfer_status": "UNRESOLVED_RIM_STEP_OVER_AND_CENTRAL_CROWN_AVOIDANCE",
+      "transfer_proposal": [
+        [
+          1.4,
+          -0.55,
+          0.29
+        ],
+        [
+          1.1,
+          -0.55,
+          0.29
+        ]
+      ],
+      "transfer_note": "Side approach only; no validated continuation past right-side rider stations to left stations"
+    },
+    {
+      "key": "seat_2",
+      "position": [
+        0.61,
+        -0.55,
+        0.42
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_2",
+      "support_dimensions_tiles": [
+        0.44,
+        0.4
+      ],
+      "foot_contacts": [
+        [
+          0.61,
+          -0.8500000000000001,
+          0.32
+        ]
+      ],
+      "hand_contact": [
+        0.61,
+        -0.8,
+        0.59
+      ],
+      "transfer_status": "UNRESOLVED_RIM_STEP_OVER_AND_CENTRAL_CROWN_AVOIDANCE",
+      "transfer_proposal": [
+        [
+          1.4,
+          -0.55,
+          0.29
+        ],
+        [
+          1.1,
+          -0.55,
+          0.29
+        ]
+      ],
+      "transfer_note": "Side approach only; no validated continuation past right-side rider stations to left stations"
+    },
+    {
+      "key": "seat_3",
+      "position": [
+        -0.61,
+        0.55,
+        0.42
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_3",
+      "support_dimensions_tiles": [
+        0.44,
+        0.4
+      ],
+      "foot_contacts": [
+        [
+          -0.61,
+          0.25000000000000006,
+          0.32
+        ]
+      ],
+      "hand_contact": [
+        -0.61,
+        0.30000000000000004,
+        0.59
+      ],
+      "transfer_status": "UNRESOLVED_RIM_STEP_OVER_AND_CENTRAL_CROWN_AVOIDANCE",
+      "transfer_proposal": [
+        [
+          1.4,
+          0.55,
+          0.29
+        ],
+        [
+          1.1,
+          0.55,
+          0.29
+        ]
+      ],
+      "transfer_note": "Side approach only; no validated continuation past right-side rider stations to left stations"
+    },
+    {
+      "key": "seat_4",
+      "position": [
+        0.61,
+        0.55,
+        0.42
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_4",
+      "support_dimensions_tiles": [
+        0.44,
+        0.4
+      ],
+      "foot_contacts": [
+        [
+          0.61,
+          0.25000000000000006,
+          0.32
+        ]
+      ],
+      "hand_contact": [
+        0.61,
+        0.30000000000000004,
+        0.59
+      ],
+      "transfer_status": "UNRESOLVED_RIM_STEP_OVER_AND_CENTRAL_CROWN_AVOIDANCE",
+      "transfer_proposal": [
+        [
+          1.4,
+          0.55,
+          0.29
+        ],
+        [
+          1.1,
+          0.55,
+          0.29
+        ]
+      ],
+      "transfer_note": "Side approach only; no validated continuation past right-side rider stations to left stations"
+    }
+  ],
+  "banana": [
+    {
+      "key": "seat_1",
+      "position": [
+        0,
+        -1.28,
+        0.595
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_1",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.43,
+          -1.28,
+          0.3145
+        ],
+        [
+          0.43,
+          -1.28,
+          0.3145
+        ]
+      ],
+      "hand_contact": [
+        0,
+        -1.53,
+        0.77
+      ],
+      "transfer_proposal": [
+        [
+          0.72,
+          -1.28,
+          0.3145
+        ],
+        [
+          0.43,
+          -1.28,
+          0.3145
+        ],
+        [
+          0,
+          -1.28,
+          0.595
+        ]
+      ],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    },
+    {
+      "key": "seat_2",
+      "position": [
+        0,
+        -0.64,
+        0.595
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_2",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.43,
+          -0.64,
+          0.3145
+        ],
+        [
+          0.43,
+          -0.64,
+          0.3145
+        ]
+      ],
+      "hand_contact": [
+        0,
+        -0.89,
+        0.77
+      ],
+      "transfer_proposal": [
+        [
+          0.72,
+          -0.64,
+          0.3145
+        ],
+        [
+          0.43,
+          -0.64,
+          0.3145
+        ],
+        [
+          0,
+          -0.64,
+          0.595
+        ]
+      ],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    },
+    {
+      "key": "seat_3",
+      "position": [
+        0,
+        0,
+        0.595
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_3",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.43,
+          0,
+          0.3145
+        ],
+        [
+          0.43,
+          0,
+          0.3145
+        ]
+      ],
+      "hand_contact": [
+        0,
+        -0.25,
+        0.77
+      ],
+      "transfer_proposal": [
+        [
+          0.72,
+          0,
+          0.3145
+        ],
+        [
+          0.43,
+          0,
+          0.3145
+        ],
+        [
+          0,
+          0,
+          0.595
+        ]
+      ],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    },
+    {
+      "key": "seat_4",
+      "position": [
+        0,
+        0.64,
+        0.595
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_4",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.43,
+          0.64,
+          0.3145
+        ],
+        [
+          0.43,
+          0.64,
+          0.3145
+        ]
+      ],
+      "hand_contact": [
+        0,
+        0.39,
+        0.77
+      ],
+      "transfer_proposal": [
+        [
+          0.72,
+          0.64,
+          0.3145
+        ],
+        [
+          0.43,
+          0.64,
+          0.3145
+        ],
+        [
+          0,
+          0.64,
+          0.595
+        ]
+      ],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    },
+    {
+      "key": "seat_5",
+      "position": [
+        0,
+        1.28,
+        0.595
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_5",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.43,
+          1.28,
+          0.3145
+        ],
+        [
+          0.43,
+          1.28,
+          0.3145
+        ]
+      ],
+      "hand_contact": [
+        0,
+        1.03,
+        0.77
+      ],
+      "transfer_proposal": [
+        [
+          0.72,
+          1.28,
+          0.3145
+        ],
+        [
+          0.43,
+          1.28,
+          0.3145
+        ],
+        [
+          0,
+          1.28,
+          0.595
+        ]
+      ],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    }
+  ],
+  "honeycomb": [
+    {
+      "key": "seat_1",
+      "position": [
+        1.1,
+        0.08,
+        0.36
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_1",
+      "support_dimensions_tiles": [
+        0.4,
+        0.34
+      ],
+      "foot_contacts": [
+        [
+          1.1,
+          -0.23,
+          0.24
+        ]
+      ],
+      "hand_contact": [
+        1.1,
+        -0.2,
+        0.56
+      ],
+      "transfer_status": "UNRESOLVED_CELL_RIM_STEP_OVER",
+      "transfer_proposal": [],
+      "transfer_note": "Board from +X, then cross inflatable cell rims with a dedicated transfer motion; no certified walk path through occupied cells"
+    },
+    {
+      "key": "seat_2",
+      "position": [
+        0.5500000000000002,
+        1.0326279441628825,
+        0.36
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_2",
+      "support_dimensions_tiles": [
+        0.4,
+        0.34
+      ],
+      "foot_contacts": [
+        [
+          0.5500000000000002,
+          0.7226279441628826,
+          0.24
+        ]
+      ],
+      "hand_contact": [
+        0.5500000000000002,
+        0.7526279441628825,
+        0.56
+      ],
+      "transfer_status": "UNRESOLVED_CELL_RIM_STEP_OVER",
+      "transfer_proposal": [],
+      "transfer_note": "Board from +X, then cross inflatable cell rims with a dedicated transfer motion; no certified walk path through occupied cells"
+    },
+    {
+      "key": "seat_3",
+      "position": [
+        -0.5499999999999998,
+        1.0326279441628827,
+        0.36
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_3",
+      "support_dimensions_tiles": [
+        0.4,
+        0.34
+      ],
+      "foot_contacts": [
+        [
+          -0.5499999999999998,
+          0.7226279441628827,
+          0.24
+        ]
+      ],
+      "hand_contact": [
+        -0.5499999999999998,
+        0.7526279441628827,
+        0.56
+      ],
+      "transfer_status": "UNRESOLVED_CELL_RIM_STEP_OVER",
+      "transfer_proposal": [],
+      "transfer_note": "Board from +X, then cross inflatable cell rims with a dedicated transfer motion; no certified walk path through occupied cells"
+    },
+    {
+      "key": "seat_4",
+      "position": [
+        -1.1,
+        0.08000000000000014,
+        0.36
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_4",
+      "support_dimensions_tiles": [
+        0.4,
+        0.34
+      ],
+      "foot_contacts": [
+        [
+          -1.1,
+          -0.22999999999999987,
+          0.24
+        ]
+      ],
+      "hand_contact": [
+        -1.1,
+        -0.19999999999999987,
+        0.56
+      ],
+      "transfer_status": "UNRESOLVED_CELL_RIM_STEP_OVER",
+      "transfer_proposal": [],
+      "transfer_note": "Board from +X, then cross inflatable cell rims with a dedicated transfer motion; no certified walk path through occupied cells"
+    },
+    {
+      "key": "seat_5",
+      "position": [
+        -0.5500000000000005,
+        -0.8726279441628824,
+        0.36
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_5",
+      "support_dimensions_tiles": [
+        0.4,
+        0.34
+      ],
+      "foot_contacts": [
+        [
+          -0.5500000000000005,
+          -1.1826279441628824,
+          0.24
+        ]
+      ],
+      "hand_contact": [
+        -0.5500000000000005,
+        -1.1526279441628824,
+        0.56
+      ],
+      "transfer_status": "UNRESOLVED_CELL_RIM_STEP_OVER",
+      "transfer_proposal": [],
+      "transfer_note": "Board from +X, then cross inflatable cell rims with a dedicated transfer motion; no certified walk path through occupied cells"
+    },
+    {
+      "key": "seat_6",
+      "position": [
+        0.5500000000000002,
+        -0.8726279441628826,
+        0.36
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_6",
+      "support_dimensions_tiles": [
+        0.4,
+        0.34
+      ],
+      "foot_contacts": [
+        [
+          0.5500000000000002,
+          -1.1826279441628826,
+          0.24
+        ]
+      ],
+      "hand_contact": [
+        0.5500000000000002,
+        -1.1526279441628826,
+        0.56
+      ],
+      "transfer_status": "UNRESOLVED_CELL_RIM_STEP_OVER",
+      "transfer_proposal": [],
+      "transfer_note": "Board from +X, then cross inflatable cell rims with a dedicated transfer motion; no certified walk path through occupied cells"
+    }
+  ],
+  "flyduck": [
+    {
+      "key": "seat_01",
+      "position": [
+        -0.51,
+        -0.52,
+        0.52
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "seat_01_cushion",
+      "foot_contact": [
+        -0.51,
+        -0.98,
+        0.36
+      ],
+      "foot_support_object": "BlueDeck",
+      "back_support": "seat_01_back",
+      "grip_contacts": [
+        [
+          -0.8,
+          -0.72,
+          0.692
+        ],
+        [
+          -0.22000000000000003,
+          -0.72,
+          0.692
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED: +X wing blocks direct seated transfer; no walk-through-solid path asserted"
+    },
+    {
+      "key": "seat_02",
+      "position": [
+        0.51,
+        -0.52,
+        0.52
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "seat_02_cushion",
+      "foot_contact": [
+        0.51,
+        -0.98,
+        0.36
+      ],
+      "foot_support_object": "BlueDeck",
+      "back_support": "seat_02_back",
+      "grip_contacts": [
+        [
+          0.22000000000000003,
+          -0.72,
+          0.692
+        ],
+        [
+          0.8,
+          -0.72,
+          0.692
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED: +X wing blocks direct seated transfer; no walk-through-solid path asserted"
+    },
+    {
+      "key": "seat_03",
+      "position": [
+        -0.51,
+        0.62,
+        0.52
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "seat_03_cushion",
+      "foot_contact": [
+        -0.51,
+        0.15999999999999998,
+        0.36
+      ],
+      "foot_support_object": "BlueDeck",
+      "back_support": "seat_03_back",
+      "grip_contacts": [
+        [
+          -0.8,
+          0.42,
+          0.692
+        ],
+        [
+          -0.22000000000000003,
+          0.42,
+          0.692
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED: +X wing blocks direct seated transfer; no walk-through-solid path asserted"
+    },
+    {
+      "key": "seat_04",
+      "position": [
+        0.51,
+        0.62,
+        0.52
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "seat_04_cushion",
+      "foot_contact": [
+        0.51,
+        0.15999999999999998,
+        0.36
+      ],
+      "foot_support_object": "BlueDeck",
+      "back_support": "seat_04_back",
+      "grip_contacts": [
+        [
+          0.22000000000000003,
+          0.42,
+          0.692
+        ],
+        [
+          0.8,
+          0.42,
+          0.692
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED: +X wing blocks direct seated transfer; no walk-through-solid path asserted"
+    }
+  ],
+  "hexa": [
+    {
+      "key": "seat_01",
+      "role": "passenger",
+      "position": [
+        1.0825317547305484,
+        0.6249999999999999,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 3.665191429188092,
+      "support_object": "seat_01_pad",
+      "foot_contact": [
+        0.5975575286112627,
+        0.3449999999999999,
+        0.23
+      ],
+      "foot_support_object": "seat_01_footrest",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "No walk-through-tube path invented; +X dock-to-rim assisted mount then indexed seat transfer needs mechanics decision."
+    },
+    {
+      "key": "seat_02",
+      "role": "passenger",
+      "position": [
+        7.654042494670958e-17,
+        1.25,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 4.71238898038469,
+      "support_object": "seat_02_pad",
+      "foot_contact": [
+        4.2250314570583685e-17,
+        0.69,
+        0.23
+      ],
+      "foot_support_object": "seat_02_footrest",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "No walk-through-tube path invented; +X dock-to-rim assisted mount then indexed seat transfer needs mechanics decision."
+    },
+    {
+      "key": "seat_03",
+      "role": "passenger",
+      "position": [
+        -1.0825317547305482,
+        0.6250000000000004,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 5.759586531581287,
+      "support_object": "seat_03_pad",
+      "foot_contact": [
+        -0.5975575286112625,
+        0.3450000000000002,
+        0.23
+      ],
+      "foot_support_object": "seat_03_footrest",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "No walk-through-tube path invented; +X dock-to-rim assisted mount then indexed seat transfer needs mechanics decision."
+    },
+    {
+      "key": "seat_04",
+      "role": "passenger",
+      "position": [
+        -1.0825317547305486,
+        -0.6249999999999998,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 6.8067840827778845,
+      "support_object": "seat_04_pad",
+      "foot_contact": [
+        -0.5975575286112628,
+        -0.3449999999999998,
+        0.23
+      ],
+      "foot_support_object": "seat_04_footrest",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "No walk-through-tube path invented; +X dock-to-rim assisted mount then indexed seat transfer needs mechanics decision."
+    },
+    {
+      "key": "seat_05",
+      "role": "passenger",
+      "position": [
+        -2.296212748401287e-16,
+        -1.25,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 7.853981633974483,
+      "support_object": "seat_05_pad",
+      "foot_contact": [
+        -1.2675094371175104e-16,
+        -0.69,
+        0.23
+      ],
+      "foot_support_object": "seat_05_footrest",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "No walk-through-tube path invented; +X dock-to-rim assisted mount then indexed seat transfer needs mechanics decision."
+    },
+    {
+      "key": "seat_06",
+      "role": "passenger",
+      "position": [
+        1.0825317547305486,
+        -0.6249999999999996,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 8.901179185171081,
+      "support_object": "seat_06_pad",
+      "foot_contact": [
+        0.5975575286112628,
+        -0.34499999999999975,
+        0.23
+      ],
+      "foot_support_object": "seat_06_footrest",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "No walk-through-tube path invented; +X dock-to-rim assisted mount then indexed seat transfer needs mechanics decision."
+    }
+  ],
+  "lotus": [
+    {
+      "key": "seat_01",
+      "role": "passenger",
+      "position": [
+        0.5586143571373726,
+        0.5586143571373725,
+        0.57
+      ],
+      "pose": "sit",
+      "heading": 3.9269908169872414,
+      "support_object": "seat_01_pad",
+      "foot_contact": [
+        0.21213203435596426,
+        0.21213203435596423,
+        0.3
+      ],
+      "foot_support_object": "YellowCentralDeck",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "Raised petals enclose the central deck; assisted boarding over +X petal requires a mount decision, not an invented walk-through-petal path."
+    },
+    {
+      "key": "seat_02",
+      "role": "passenger",
+      "position": [
+        -0.5586143571373725,
+        0.5586143571373726,
+        0.57
+      ],
+      "pose": "sit",
+      "heading": 5.497787143782138,
+      "support_object": "seat_02_pad",
+      "foot_contact": [
+        -0.21213203435596423,
+        0.21213203435596426,
+        0.3
+      ],
+      "foot_support_object": "YellowCentralDeck",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "Raised petals enclose the central deck; assisted boarding over +X petal requires a mount decision, not an invented walk-through-petal path."
+    },
+    {
+      "key": "seat_03",
+      "role": "passenger",
+      "position": [
+        -0.5586143571373727,
+        -0.5586143571373725,
+        0.57
+      ],
+      "pose": "sit",
+      "heading": 7.0685834705770345,
+      "support_object": "seat_03_pad",
+      "foot_contact": [
+        -0.2121320343559643,
+        -0.21213203435596423,
+        0.3
+      ],
+      "foot_support_object": "YellowCentralDeck",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "Raised petals enclose the central deck; assisted boarding over +X petal requires a mount decision, not an invented walk-through-petal path."
+    },
+    {
+      "key": "seat_04",
+      "role": "passenger",
+      "position": [
+        0.5586143571373724,
+        -0.5586143571373727,
+        0.57
+      ],
+      "pose": "sit",
+      "heading": 8.63937979737193,
+      "support_object": "seat_04_pad",
+      "foot_contact": [
+        0.2121320343559642,
+        -0.2121320343559643,
+        0.3
+      ],
+      "foot_support_object": "YellowCentralDeck",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "Raised petals enclose the central deck; assisted boarding over +X petal requires a mount decision, not an invented walk-through-petal path."
+    }
+  ],
+  "wagon": [
+    {
+      "key": "passenger-01",
+      "position": [
+        -0.78,
+        -1.6,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 3.141592653589793,
+      "role": "passenger",
+      "support_object": "Seat_passenger-01",
+      "foot_contact": [
+        -1.1,
+        -1.6,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          -1.01,
+          -1.86,
+          0.83
+        ],
+        [
+          -1.01,
+          -1.34,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-02",
+      "position": [
+        -0.78,
+        -0.8,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 3.141592653589793,
+      "role": "passenger",
+      "support_object": "Seat_passenger-02",
+      "foot_contact": [
+        -1.1,
+        -0.8,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          -1.01,
+          -1.06,
+          0.83
+        ],
+        [
+          -1.01,
+          -0.54,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-03",
+      "position": [
+        -0.78,
+        0.0,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 3.141592653589793,
+      "role": "passenger",
+      "support_object": "Seat_passenger-03",
+      "foot_contact": [
+        -1.1,
+        0.0,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          -1.01,
+          -0.26,
+          0.83
+        ],
+        [
+          -1.01,
+          0.26,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-04",
+      "position": [
+        -0.78,
+        0.8,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 3.141592653589793,
+      "role": "passenger",
+      "support_object": "Seat_passenger-04",
+      "foot_contact": [
+        -1.1,
+        0.8,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          -1.01,
+          0.54,
+          0.83
+        ],
+        [
+          -1.01,
+          1.06,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-05",
+      "position": [
+        -0.78,
+        1.6,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 3.141592653589793,
+      "role": "passenger",
+      "support_object": "Seat_passenger-05",
+      "foot_contact": [
+        -1.1,
+        1.6,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          -1.01,
+          1.34,
+          0.83
+        ],
+        [
+          -1.01,
+          1.86,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-06",
+      "position": [
+        0.78,
+        -1.6,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 0,
+      "role": "passenger",
+      "support_object": "Seat_passenger-06",
+      "foot_contact": [
+        1.1,
+        -1.6,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          1.01,
+          -1.86,
+          0.83
+        ],
+        [
+          1.01,
+          -1.34,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-07",
+      "position": [
+        0.78,
+        -0.8,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 0,
+      "role": "passenger",
+      "support_object": "Seat_passenger-07",
+      "foot_contact": [
+        1.1,
+        -0.8,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          1.01,
+          -1.06,
+          0.83
+        ],
+        [
+          1.01,
+          -0.54,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-08",
+      "position": [
+        0.78,
+        0.0,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 0,
+      "role": "passenger",
+      "support_object": "Seat_passenger-08",
+      "foot_contact": [
+        1.1,
+        0.0,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          1.01,
+          -0.26,
+          0.83
+        ],
+        [
+          1.01,
+          0.26,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-09",
+      "position": [
+        0.78,
+        0.8,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 0,
+      "role": "passenger",
+      "support_object": "Seat_passenger-09",
+      "foot_contact": [
+        1.1,
+        0.8,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          1.01,
+          0.54,
+          0.83
+        ],
+        [
+          1.01,
+          1.06,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-10",
+      "position": [
+        0.78,
+        1.6,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 0,
+      "role": "passenger",
+      "support_object": "Seat_passenger-10",
+      "foot_contact": [
+        1.1,
+        1.6,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          1.01,
+          1.34,
+          0.83
+        ],
+        [
+          1.01,
+          1.86,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    }
+  ],
+  "swing": [
+    {
+      "key": "seat_01",
+      "role": "passenger",
+      "position": [
+        0.5939696961966999,
+        0.5939696961966998,
+        0.58
+      ],
+      "pose": "sit",
+      "heading": 3.9269908169872414,
+      "support_object": "seat_01_pad",
+      "back_support_object": "seat_01_bolster",
+      "foot_contact": [
+        0.19798989873223333,
+        0.1979898987322333,
+        0.32
+      ],
+      "foot_support_object": "YellowMarbleDeck",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "Continuous inflated perimeter needs assisted dock-to-deck mount; no path through solid rim is asserted."
+    },
+    {
+      "key": "seat_02",
+      "role": "passenger",
+      "position": [
+        -0.5939696961966998,
+        0.5939696961966999,
+        0.58
+      ],
+      "pose": "sit",
+      "heading": 5.497787143782138,
+      "support_object": "seat_02_pad",
+      "back_support_object": "seat_02_bolster",
+      "foot_contact": [
+        -0.1979898987322333,
+        0.19798989873223333,
+        0.32
+      ],
+      "foot_support_object": "YellowMarbleDeck",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "Continuous inflated perimeter needs assisted dock-to-deck mount; no path through solid rim is asserted."
+    },
+    {
+      "key": "seat_03",
+      "role": "passenger",
+      "position": [
+        -0.5939696961967,
+        -0.5939696961966998,
+        0.58
+      ],
+      "pose": "sit",
+      "heading": 7.0685834705770345,
+      "support_object": "seat_03_pad",
+      "back_support_object": "seat_03_bolster",
+      "foot_contact": [
+        -0.19798989873223338,
+        -0.1979898987322333,
+        0.32
+      ],
+      "foot_support_object": "YellowMarbleDeck",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "Continuous inflated perimeter needs assisted dock-to-deck mount; no path through solid rim is asserted."
+    },
+    {
+      "key": "seat_04",
+      "role": "passenger",
+      "position": [
+        0.5939696961966997,
+        -0.5939696961967,
+        0.58
+      ],
+      "pose": "sit",
+      "heading": 8.63937979737193,
+      "support_object": "seat_04_pad",
+      "back_support_object": "seat_04_bolster",
+      "foot_contact": [
+        0.19798989873223327,
+        -0.19798989873223338,
+        0.32
+      ],
+      "foot_support_object": "YellowMarbleDeck",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "Continuous inflated perimeter needs assisted dock-to-deck mount; no path through solid rim is asserted."
+    }
+  ],
+  "spinpang": [
+    {
+      "key": "rider_0",
+      "role": "rider",
+      "position": [
+        6.184466804078445e-17,
+        -1.0099999904632568,
+        0.45
+      ],
+      "pose": "sit",
+      "heading": 1.5707963267948966,
+      "support_object": "Seat0",
+      "foot_contacts": [
+        [
+          -0.10999999940395355,
+          -0.5799999833106995,
+          0.24
+        ],
+        [
+          0.10999999940395355,
+          -0.5799999833106995,
+          0.24
+        ]
+      ],
+      "grip_contacts": [
+        [
+          -0.2199999988079071,
+          -0.6899999976158142,
+          0.33
+        ],
+        [
+          0.2199999988079071,
+          -0.6899999976158142,
+          0.33
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: rim crossing and low inward grip pose"
+    },
+    {
+      "key": "rider_1",
+      "role": "rider",
+      "position": [
+        0.8746856451034546,
+        -0.5049999952316284,
+        0.45
+      ],
+      "pose": "sit",
+      "heading": 2.617993877991494,
+      "support_object": "Seat1",
+      "foot_contacts": [
+        [
+          0.4472947120666504,
+          -0.38526278734207153,
+          0.24
+        ],
+        [
+          0.5572947263717651,
+          -0.19473719596862793,
+          0.24
+        ]
+      ],
+      "grip_contacts": [
+        [
+          0.4875575304031372,
+          -0.5355255603790283,
+          0.33
+        ],
+        [
+          0.7075575590133667,
+          -0.1544744074344635,
+          0.33
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: rim crossing and low inward grip pose"
+    },
+    {
+      "key": "rider_2",
+      "role": "rider",
+      "position": [
+        0.8746856451034546,
+        0.5049999952316284,
+        0.45
+      ],
+      "pose": "sit",
+      "heading": 3.665191429188092,
+      "support_object": "Seat2",
+      "foot_contacts": [
+        [
+          0.5572947263717651,
+          0.19473719596862793,
+          0.24
+        ],
+        [
+          0.4472947120666504,
+          0.38526278734207153,
+          0.24
+        ]
+      ],
+      "grip_contacts": [
+        [
+          0.7075575590133667,
+          0.1544744074344635,
+          0.33
+        ],
+        [
+          0.4875575304031372,
+          0.5355255603790283,
+          0.33
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: rim crossing and low inward grip pose"
+    },
+    {
+      "key": "rider_3",
+      "role": "rider",
+      "position": [
+        6.184466804078445e-17,
+        1.0099999904632568,
+        0.45
+      ],
+      "pose": "sit",
+      "heading": 4.71238898038469,
+      "support_object": "Seat3",
+      "foot_contacts": [
+        [
+          0.10999999940395355,
+          0.5799999833106995,
+          0.24
+        ],
+        [
+          -0.10999999940395355,
+          0.5799999833106995,
+          0.24
+        ]
+      ],
+      "grip_contacts": [
+        [
+          0.2199999988079071,
+          0.6899999976158142,
+          0.33
+        ],
+        [
+          -0.2199999988079071,
+          0.6899999976158142,
+          0.33
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: rim crossing and low inward grip pose"
+    },
+    {
+      "key": "rider_4",
+      "role": "rider",
+      "position": [
+        -0.8746856451034546,
+        0.5049999952316284,
+        0.45
+      ],
+      "pose": "sit",
+      "heading": 5.759586531581287,
+      "support_object": "Seat4",
+      "foot_contacts": [
+        [
+          -0.4472947120666504,
+          0.38526278734207153,
+          0.24
+        ],
+        [
+          -0.5572947263717651,
+          0.19473719596862793,
+          0.24
+        ]
+      ],
+      "grip_contacts": [
+        [
+          -0.4875575304031372,
+          0.5355255603790283,
+          0.33
+        ],
+        [
+          -0.7075575590133667,
+          0.1544744074344635,
+          0.33
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: rim crossing and low inward grip pose"
+    },
+    {
+      "key": "rider_5",
+      "role": "rider",
+      "position": [
+        -0.8746856451034546,
+        -0.5049999952316284,
+        0.45
+      ],
+      "pose": "sit",
+      "heading": 6.806784082777885,
+      "support_object": "Seat5",
+      "foot_contacts": [
+        [
+          -0.5572947263717651,
+          -0.19473719596862793,
+          0.24
+        ],
+        [
+          -0.4472947120666504,
+          -0.38526278734207153,
+          0.24
+        ]
+      ],
+      "grip_contacts": [
+        [
+          -0.7075575590133667,
+          -0.1544744074344635,
+          0.33
+        ],
+        [
+          -0.4875575304031372,
+          -0.5355255603790283,
+          0.33
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: rim crossing and low inward grip pose"
+    }
+  ],
+  "twinpang": [
+    {
+      "key": "module0_rider00",
+      "role": "rider",
+      "module": 0,
+      "position": [
+        -1.67,
+        -0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module0_rider00_Pad",
+      "foot_contacts": [
+        [
+          -1.76,
+          -0.62,
+          0.3
+        ],
+        [
+          -1.5799999999999998,
+          -0.62,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    },
+    {
+      "key": "module0_rider01",
+      "role": "rider",
+      "module": 0,
+      "position": [
+        -0.87,
+        -0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module0_rider01_Pad",
+      "foot_contacts": [
+        [
+          -0.96,
+          -0.62,
+          0.3
+        ],
+        [
+          -0.78,
+          -0.62,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    },
+    {
+      "key": "module0_rider10",
+      "role": "rider",
+      "module": 0,
+      "position": [
+        -1.67,
+        0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module0_rider10_Pad",
+      "foot_contacts": [
+        [
+          -1.76,
+          0.09999999999999998,
+          0.3
+        ],
+        [
+          -1.5799999999999998,
+          0.09999999999999998,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    },
+    {
+      "key": "module0_rider11",
+      "role": "rider",
+      "module": 0,
+      "position": [
+        -0.87,
+        0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module0_rider11_Pad",
+      "foot_contacts": [
+        [
+          -0.96,
+          0.09999999999999998,
+          0.3
+        ],
+        [
+          -0.78,
+          0.09999999999999998,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    },
+    {
+      "key": "module1_rider00",
+      "role": "rider",
+      "module": 1,
+      "position": [
+        0.87,
+        -0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module1_rider00_Pad",
+      "foot_contacts": [
+        [
+          0.78,
+          -0.62,
+          0.3
+        ],
+        [
+          0.96,
+          -0.62,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    },
+    {
+      "key": "module1_rider01",
+      "role": "rider",
+      "module": 1,
+      "position": [
+        1.67,
+        -0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module1_rider01_Pad",
+      "foot_contacts": [
+        [
+          1.5799999999999998,
+          -0.62,
+          0.3
+        ],
+        [
+          1.76,
+          -0.62,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    },
+    {
+      "key": "module1_rider10",
+      "role": "rider",
+      "module": 1,
+      "position": [
+        0.87,
+        0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module1_rider10_Pad",
+      "foot_contacts": [
+        [
+          0.78,
+          0.09999999999999998,
+          0.3
+        ],
+        [
+          0.96,
+          0.09999999999999998,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    },
+    {
+      "key": "module1_rider11",
+      "role": "rider",
+      "module": 1,
+      "position": [
+        1.67,
+        0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module1_rider11_Pad",
+      "foot_contacts": [
+        [
+          1.5799999999999998,
+          0.09999999999999998,
+          0.3
+        ],
+        [
+          1.76,
+          0.09999999999999998,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    }
+  ],
+  "dancing": [
+    {
+      "key": "rider_01",
+      "role": "passenger",
+      "position": [
+        -0.46,
+        -0.98,
+        0.62
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_01_Cushion",
+      "foot_contacts": [
+        [
+          -0.5800000000000001,
+          -1.31,
+          0.34
+        ],
+        [
+          -0.34,
+          -1.31,
+          0.34
+        ]
+      ],
+      "grip_contacts": [
+        [
+          -0.5900000000000001,
+          -1.48,
+          0.7
+        ],
+        [
+          -0.33,
+          -1.48,
+          0.7
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: side coaming step-over and seated mounting not covered by existing sit"
+    },
+    {
+      "key": "rider_02",
+      "role": "passenger",
+      "position": [
+        0.46,
+        -0.98,
+        0.62
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_02_Cushion",
+      "foot_contacts": [
+        [
+          0.34,
+          -1.31,
+          0.34
+        ],
+        [
+          0.5800000000000001,
+          -1.31,
+          0.34
+        ]
+      ],
+      "grip_contacts": [
+        [
+          0.33,
+          -1.48,
+          0.7
+        ],
+        [
+          0.5900000000000001,
+          -1.48,
+          0.7
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: side coaming step-over and seated mounting not covered by existing sit"
+    },
+    {
+      "key": "rider_03",
+      "role": "passenger",
+      "position": [
+        -0.46,
+        0.26,
+        0.62
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_03_Cushion",
+      "foot_contacts": [
+        [
+          -0.5800000000000001,
+          -0.07,
+          0.34
+        ],
+        [
+          -0.34,
+          -0.07,
+          0.34
+        ]
+      ],
+      "grip_contacts": [
+        [
+          -0.5900000000000001,
+          -0.24,
+          0.7
+        ],
+        [
+          -0.33,
+          -0.24,
+          0.7
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: side coaming step-over and seated mounting not covered by existing sit"
+    },
+    {
+      "key": "rider_04",
+      "role": "passenger",
+      "position": [
+        0.46,
+        0.26,
+        0.62
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_04_Cushion",
+      "foot_contacts": [
+        [
+          0.34,
+          -0.07,
+          0.34
+        ],
+        [
+          0.5800000000000001,
+          -0.07,
+          0.34
+        ]
+      ],
+      "grip_contacts": [
+        [
+          0.33,
+          -0.24,
+          0.7
+        ],
+        [
+          0.5900000000000001,
+          -0.24,
+          0.7
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: side coaming step-over and seated mounting not covered by existing sit"
+    },
+    {
+      "key": "rider_05",
+      "role": "passenger",
+      "position": [
+        -0.46,
+        1.5,
+        0.62
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_05_Cushion",
+      "foot_contacts": [
+        [
+          -0.5800000000000001,
+          1.17,
+          0.34
+        ],
+        [
+          -0.34,
+          1.17,
+          0.34
+        ]
+      ],
+      "grip_contacts": [
+        [
+          -0.5900000000000001,
+          1.0,
+          0.7
+        ],
+        [
+          -0.33,
+          1.0,
+          0.7
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: side coaming step-over and seated mounting not covered by existing sit"
+    },
+    {
+      "key": "rider_06",
+      "role": "passenger",
+      "position": [
+        0.46,
+        1.5,
+        0.62
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_06_Cushion",
+      "foot_contacts": [
+        [
+          0.34,
+          1.17,
+          0.34
+        ],
+        [
+          0.5800000000000001,
+          1.17,
+          0.34
+        ]
+      ],
+      "grip_contacts": [
+        [
+          0.33,
+          1.0,
+          0.7
+        ],
+        [
+          0.5900000000000001,
+          1.0,
+          0.7
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: side coaming step-over and seated mounting not covered by existing sit"
+    }
+  ],
+  "flyfish": [
+    {
+      "key": "station_1",
+      "position": [
+        -0.68,
+        -0.25,
+        0.38
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "KneeSupport_station_1",
+      "support_dimensions_tiles": [
+        0.64,
+        0.72
+      ],
+      "hand_contacts": [
+        [
+          -0.89,
+          -0.54,
+          0.516
+        ],
+        [
+          -0.4700000000000001,
+          -0.54,
+          0.516
+        ]
+      ],
+      "knee_contacts": [
+        [
+          -0.8200000000000001,
+          -0.35,
+          0.38
+        ],
+        [
+          -0.54,
+          -0.35,
+          0.38
+        ]
+      ],
+      "pose_status": "POSE_FIT_UNRESOLVED",
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    },
+    {
+      "key": "station_2",
+      "position": [
+        0.68,
+        -0.25,
+        0.38
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "KneeSupport_station_2",
+      "support_dimensions_tiles": [
+        0.64,
+        0.72
+      ],
+      "hand_contacts": [
+        [
+          0.4700000000000001,
+          -0.54,
+          0.516
+        ],
+        [
+          0.89,
+          -0.54,
+          0.516
+        ]
+      ],
+      "knee_contacts": [
+        [
+          0.54,
+          -0.35,
+          0.38
+        ],
+        [
+          0.8200000000000001,
+          -0.35,
+          0.38
+        ]
+      ],
+      "pose_status": "POSE_FIT_UNRESOLVED",
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    },
+    {
+      "key": "station_3",
+      "position": [
+        -0.68,
+        0.65,
+        0.38
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "KneeSupport_station_3",
+      "support_dimensions_tiles": [
+        0.64,
+        0.72
+      ],
+      "hand_contacts": [
+        [
+          -0.89,
+          0.36000000000000004,
+          0.516
+        ],
+        [
+          -0.4700000000000001,
+          0.36000000000000004,
+          0.516
+        ]
+      ],
+      "knee_contacts": [
+        [
+          -0.8200000000000001,
+          0.55,
+          0.38
+        ],
+        [
+          -0.54,
+          0.55,
+          0.38
+        ]
+      ],
+      "pose_status": "POSE_FIT_UNRESOLVED",
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    },
+    {
+      "key": "station_4",
+      "position": [
+        0.68,
+        0.65,
+        0.38
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "KneeSupport_station_4",
+      "support_dimensions_tiles": [
+        0.64,
+        0.72
+      ],
+      "hand_contacts": [
+        [
+          0.4700000000000001,
+          0.36000000000000004,
+          0.516
+        ],
+        [
+          0.89,
+          0.36000000000000004,
+          0.516
+        ]
+      ],
+      "knee_contacts": [
+        [
+          0.54,
+          0.55,
+          0.38
+        ],
+        [
+          0.8200000000000001,
+          0.55,
+          0.38
+        ]
+      ],
+      "pose_status": "POSE_FIT_UNRESOLVED",
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    }
+  ],
+  "skyfly": [
+    {
+      "key": "passenger-01",
+      "position": [
+        -0.7,
+        0.9,
+        0.5
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "Seat_passenger-01",
+      "foot_contact": [
+        -0.7,
+        0.45,
+        0.38
+      ],
+      "grip_socket": [
+        -0.7,
+        0.66,
+        0.77
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-02",
+      "position": [
+        0,
+        0.9,
+        0.5
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "Seat_passenger-02",
+      "foot_contact": [
+        0,
+        0.45,
+        0.38
+      ],
+      "grip_socket": [
+        0,
+        0.66,
+        0.77
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-03",
+      "position": [
+        0.7,
+        0.9,
+        0.5
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "Seat_passenger-03",
+      "foot_contact": [
+        0.7,
+        0.45,
+        0.38
+      ],
+      "grip_socket": [
+        0.7,
+        0.66,
+        0.77
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    }
+  ],
+  "jetski": [
+    {
+      "key": "driver",
+      "position": [
+        0,
+        -0.16,
+        0.675
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_object": "DriverSaddle",
+      "foot_contacts": [
+        [
+          -0.405,
+          -0.11,
+          0.37
+        ],
+        [
+          0.405,
+          -0.11,
+          0.37
+        ]
+      ],
+      "transfer_status": "POSE_FIT_UNRESOLVED: step from starboard footwell over saddle requires mounting pose"
+    },
+    {
+      "key": "passenger",
+      "position": [
+        0,
+        0.47,
+        0.705
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_object": "PassengerSaddle",
+      "foot_contacts": [
+        [
+          -0.405,
+          0.52,
+          0.37
+        ],
+        [
+          0.405,
+          0.52,
+          0.37
+        ]
+      ],
+      "transfer_status": "POSE_FIT_UNRESOLVED: step from starboard footwell over saddle requires mounting pose"
+    }
+  ],
+  "jetboat": [
+    {
+      "key": "passenger_0_0",
+      "role": "passenger",
+      "position": [
+        -0.57,
+        -0.85,
+        0.64
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "passenger_0_0_Cushion",
+      "foot_contacts": [
+        [
+          -0.7,
+          -1.21,
+          0.28
+        ],
+        [
+          -0.43999999999999995,
+          -1.21,
+          0.28
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: center aisle approach proposed; final sit/stand transfer not animated"
+    },
+    {
+      "key": "driver",
+      "role": "driver",
+      "position": [
+        0.57,
+        -0.85,
+        0.64
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "driver_Cushion",
+      "foot_contacts": [
+        [
+          0.43999999999999995,
+          -1.21,
+          0.28
+        ],
+        [
+          0.7,
+          -1.21,
+          0.28
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: center aisle approach proposed; final sit/stand transfer not animated"
+    },
+    {
+      "key": "passenger_1_0",
+      "role": "passenger",
+      "position": [
+        -0.57,
+        0.15,
+        0.64
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "passenger_1_0_Cushion",
+      "foot_contacts": [
+        [
+          -0.7,
+          -0.21,
+          0.28
+        ],
+        [
+          -0.43999999999999995,
+          -0.21,
+          0.28
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: center aisle approach proposed; final sit/stand transfer not animated"
+    },
+    {
+      "key": "passenger_1_1",
+      "role": "passenger",
+      "position": [
+        0.57,
+        0.15,
+        0.64
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "passenger_1_1_Cushion",
+      "foot_contacts": [
+        [
+          0.43999999999999995,
+          -0.21,
+          0.28
+        ],
+        [
+          0.7,
+          -0.21,
+          0.28
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: center aisle approach proposed; final sit/stand transfer not animated"
+    },
+    {
+      "key": "passenger_2_0",
+      "role": "passenger",
+      "position": [
+        -0.57,
+        1.15,
+        0.64
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "passenger_2_0_Cushion",
+      "foot_contacts": [
+        [
+          -0.7,
+          0.7899999999999999,
+          0.28
+        ],
+        [
+          -0.43999999999999995,
+          0.7899999999999999,
+          0.28
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: center aisle approach proposed; final sit/stand transfer not animated"
+    },
+    {
+      "key": "passenger_2_1",
+      "role": "passenger",
+      "position": [
+        0.57,
+        1.15,
+        0.64
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "passenger_2_1_Cushion",
+      "foot_contacts": [
+        [
+          0.43999999999999995,
+          0.7899999999999999,
+          0.28
+        ],
+        [
+          0.7,
+          0.7899999999999999,
+          0.28
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: center aisle approach proposed; final sit/stand transfer not animated"
+    }
+  ],
+  "wakeboard": [
+    {
+      "key": "rider-01",
+      "position": [
+        0.09,
+        0,
+        0.109
+      ],
+      "pose": "idle",
+      "heading": 0,
+      "role": "board_rider",
+      "support_object": "BindingSole0",
+      "foot_contacts": [
+        [
+          0.09,
+          -0.29,
+          0.109
+        ],
+        [
+          0.09,
+          0.29,
+          0.109
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    }
+  ],
+  "waterski": [
+    {
+      "key": "skier_01",
+      "position": [
+        0,
+        0,
+        0.07
+      ],
+      "pose": "idle",
+      "heading": -1.5707963267948966,
+      "support_object": "yellow_slalom_ski",
+      "foot_contacts": [
+        {
+          "key": "foot_1",
+          "position": [
+            0,
+            -0.28,
+            0.1
+          ],
+          "support_object": "binding_1_sole"
+        },
+        {
+          "key": "foot_2",
+          "position": [
+            0,
+            0.28,
+            0.1
+          ],
+          "support_object": "binding_2_sole"
+        }
+      ],
+      "access_path": [],
+      "access_status": "WATER_START_BINDING_INSERTION_UNRESOLVED",
+      "role": "single skier; not passenger-boat driver"
+    }
+  ],
+  "sofa_boat": [
+    {
+      "key": "seat_01",
+      "position": [
+        -0.88,
+        -0.88,
+        0.56
+      ],
+      "pose": "sit",
+      "heading": 1.5707963267948966,
+      "support_object": "seat_01_cushion",
+      "foot_contact": [
+        -0.88,
+        -0.39,
+        0.36
+      ],
+      "back_support": "seat_01_back",
+      "access_path": [
+        [
+          1.52,
+          0,
+          0.36
+        ],
+        [
+          1.15,
+          0,
+          0.36
+        ],
+        [
+          -0.88,
+          0,
+          0.36
+        ],
+        [
+          -0.88,
+          -0.39,
+          0.36
+        ],
+        [
+          -0.88,
+          -0.88,
+          0.56
+        ]
+      ],
+      "access_status": "PROPOSED_WALK_THEN_SIT_TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "seat_02",
+      "position": [
+        0,
+        -0.88,
+        0.56
+      ],
+      "pose": "sit",
+      "heading": 1.5707963267948966,
+      "support_object": "seat_02_cushion",
+      "foot_contact": [
+        0,
+        -0.39,
+        0.36
+      ],
+      "back_support": "seat_02_back",
+      "access_path": [
+        [
+          1.52,
+          0,
+          0.36
+        ],
+        [
+          1.15,
+          0,
+          0.36
+        ],
+        [
+          0,
+          0,
+          0.36
+        ],
+        [
+          0,
+          -0.39,
+          0.36
+        ],
+        [
+          0,
+          -0.88,
+          0.56
+        ]
+      ],
+      "access_status": "PROPOSED_WALK_THEN_SIT_TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "seat_03",
+      "position": [
+        0.88,
+        -0.88,
+        0.56
+      ],
+      "pose": "sit",
+      "heading": 1.5707963267948966,
+      "support_object": "seat_03_cushion",
+      "foot_contact": [
+        0.88,
+        -0.39,
+        0.36
+      ],
+      "back_support": "seat_03_back",
+      "access_path": [
+        [
+          1.52,
+          0,
+          0.36
+        ],
+        [
+          1.15,
+          0,
+          0.36
+        ],
+        [
+          0.88,
+          0,
+          0.36
+        ],
+        [
+          0.88,
+          -0.39,
+          0.36
+        ],
+        [
+          0.88,
+          -0.88,
+          0.56
+        ]
+      ],
+      "access_status": "PROPOSED_WALK_THEN_SIT_TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "seat_04",
+      "position": [
+        -0.88,
+        0.88,
+        0.56
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "seat_04_cushion",
+      "foot_contact": [
+        -0.88,
+        0.39,
+        0.36
+      ],
+      "back_support": "seat_04_back",
+      "access_path": [
+        [
+          1.52,
+          0,
+          0.36
+        ],
+        [
+          1.15,
+          0,
+          0.36
+        ],
+        [
+          -0.88,
+          0,
+          0.36
+        ],
+        [
+          -0.88,
+          0.39,
+          0.36
+        ],
+        [
+          -0.88,
+          0.88,
+          0.56
+        ]
+      ],
+      "access_status": "PROPOSED_WALK_THEN_SIT_TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "seat_05",
+      "position": [
+        0,
+        0.88,
+        0.56
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "seat_05_cushion",
+      "foot_contact": [
+        0,
+        0.39,
+        0.36
+      ],
+      "back_support": "seat_05_back",
+      "access_path": [
+        [
+          1.52,
+          0,
+          0.36
+        ],
+        [
+          1.15,
+          0,
+          0.36
+        ],
+        [
+          0,
+          0,
+          0.36
+        ],
+        [
+          0,
+          0.39,
+          0.36
+        ],
+        [
+          0,
+          0.88,
+          0.56
+        ]
+      ],
+      "access_status": "PROPOSED_WALK_THEN_SIT_TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "seat_06",
+      "position": [
+        0.88,
+        0.88,
+        0.56
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "seat_06_cushion",
+      "foot_contact": [
+        0.88,
+        0.39,
+        0.36
+      ],
+      "back_support": "seat_06_back",
+      "access_path": [
+        [
+          1.52,
+          0,
+          0.36
+        ],
+        [
+          1.15,
+          0,
+          0.36
+        ],
+        [
+          0.88,
+          0,
+          0.36
+        ],
+        [
+          0.88,
+          0.39,
+          0.36
+        ],
+        [
+          0.88,
+          0.88,
+          0.56
+        ]
+      ],
+      "access_status": "PROPOSED_WALK_THEN_SIT_TRANSFER_UNRESOLVED"
+    }
+  ],
+  "flycarpet": [
+    {
+      "key": "passenger-01",
+      "position": [
+        -1.9250000000000003,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-01",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          -2.075,
+          -0.95,
+          0.52
+        ],
+        [
+          -1.7750000000000004,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    },
+    {
+      "key": "passenger-02",
+      "position": [
+        -1.375,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-02",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          -1.525,
+          -0.95,
+          0.52
+        ],
+        [
+          -1.225,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    },
+    {
+      "key": "passenger-03",
+      "position": [
+        -0.8250000000000001,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-03",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          -0.9750000000000001,
+          -0.95,
+          0.52
+        ],
+        [
+          -0.675,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    },
+    {
+      "key": "passenger-04",
+      "position": [
+        -0.275,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-04",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          -0.42500000000000004,
+          -0.95,
+          0.52
+        ],
+        [
+          -0.12500000000000003,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    },
+    {
+      "key": "passenger-05",
+      "position": [
+        0.275,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-05",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          0.12500000000000003,
+          -0.95,
+          0.52
+        ],
+        [
+          0.42500000000000004,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    },
+    {
+      "key": "passenger-06",
+      "position": [
+        0.8250000000000001,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-06",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          0.675,
+          -0.95,
+          0.52
+        ],
+        [
+          0.9750000000000001,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    },
+    {
+      "key": "passenger-07",
+      "position": [
+        1.375,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-07",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          1.225,
+          -0.95,
+          0.52
+        ],
+        [
+          1.525,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    },
+    {
+      "key": "passenger-08",
+      "position": [
+        1.9250000000000003,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-08",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          1.7750000000000004,
+          -0.95,
+          0.52
+        ],
+        [
+          2.075,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    }
+  ],
+  "rocket_tube": [
+    {
+      "key": "seat_1",
+      "position": [
+        0,
+        -0.75,
+        0.7
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_mesh": "SaddleSupport_seat_1",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.52,
+          -0.75,
+          0.33
+        ],
+        [
+          0.52,
+          -0.75,
+          0.33
+        ]
+      ],
+      "hand_contact": [
+        0,
+        -0.99,
+        0.89
+      ],
+      "access_path": [],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_STRADDLE",
+      "transfer_proposal": [
+        [
+          0.84,
+          -0.75,
+          0.33
+        ],
+        [
+          0.52,
+          -0.75,
+          0.33
+        ],
+        [
+          0,
+          -0.75,
+          0.7
+        ]
+      ],
+      "transfer_note": "Side-mount motion proposal, not a validated walking path through the hull"
+    },
+    {
+      "key": "seat_2",
+      "position": [
+        0,
+        0,
+        0.7
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_mesh": "SaddleSupport_seat_2",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.52,
+          0,
+          0.33
+        ],
+        [
+          0.52,
+          0,
+          0.33
+        ]
+      ],
+      "hand_contact": [
+        0,
+        -0.24,
+        0.89
+      ],
+      "access_path": [],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_STRADDLE",
+      "transfer_proposal": [
+        [
+          0.84,
+          0,
+          0.33
+        ],
+        [
+          0.52,
+          0,
+          0.33
+        ],
+        [
+          0,
+          0,
+          0.7
+        ]
+      ],
+      "transfer_note": "Side-mount motion proposal, not a validated walking path through the hull"
+    },
+    {
+      "key": "seat_3",
+      "position": [
+        0,
+        0.75,
+        0.7
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_mesh": "SaddleSupport_seat_3",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.52,
+          0.75,
+          0.33
+        ],
+        [
+          0.52,
+          0.75,
+          0.33
+        ]
+      ],
+      "hand_contact": [
+        0,
+        0.51,
+        0.89
+      ],
+      "access_path": [],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_STRADDLE",
+      "transfer_proposal": [
+        [
+          0.84,
+          0.75,
+          0.33
+        ],
+        [
+          0.52,
+          0.75,
+          0.33
+        ],
+        [
+          0,
+          0.75,
+          0.7
+        ]
+      ],
+      "transfer_note": "Side-mount motion proposal, not a validated walking path through the hull"
+    }
+  ],
+  "discopang": [
+    {
+      "key": "rider_0",
+      "role": "rider",
+      "position": [
+        6.184466804078445e-17,
+        -1.0099999904632568,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 1.5707963267948966,
+      "support_object": "rider_0_Pad",
+      "foot_contacts": [
+        [
+          -0.10000000149011612,
+          -0.6100000143051147,
+          0.3
+        ],
+        [
+          0.10000000149011612,
+          -0.6100000143051147,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: inward low seat, grip and rim crossing",
+      "heading_note": "inward radial local heading; add displayed travel root yaw"
+    },
+    {
+      "key": "rider_1",
+      "role": "rider",
+      "position": [
+        0.8746856451034546,
+        -0.5049999952316284,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 2.617993877991494,
+      "support_object": "rider_1_Pad",
+      "foot_contacts": [
+        [
+          0.47827547788619995,
+          -0.3916025459766388,
+          0.3
+        ],
+        [
+          0.5782755017280579,
+          -0.21839746832847595,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: inward low seat, grip and rim crossing",
+      "heading_note": "inward radial local heading; add displayed travel root yaw"
+    },
+    {
+      "key": "rider_2",
+      "role": "rider",
+      "position": [
+        0.8746856451034546,
+        0.5049999952316284,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 3.665191429188092,
+      "support_object": "rider_2_Pad",
+      "foot_contacts": [
+        [
+          0.5782755017280579,
+          0.21839746832847595,
+          0.3
+        ],
+        [
+          0.47827547788619995,
+          0.3916025459766388,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: inward low seat, grip and rim crossing",
+      "heading_note": "inward radial local heading; add displayed travel root yaw"
+    },
+    {
+      "key": "rider_3",
+      "role": "rider",
+      "position": [
+        6.184466804078445e-17,
+        1.0099999904632568,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 4.71238898038469,
+      "support_object": "rider_3_Pad",
+      "foot_contacts": [
+        [
+          0.10000000149011612,
+          0.6100000143051147,
+          0.3
+        ],
+        [
+          -0.10000000149011612,
+          0.6100000143051147,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: inward low seat, grip and rim crossing",
+      "heading_note": "inward radial local heading; add displayed travel root yaw"
+    },
+    {
+      "key": "rider_4",
+      "role": "rider",
+      "position": [
+        -0.8746856451034546,
+        0.5049999952316284,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 5.759586531581287,
+      "support_object": "rider_4_Pad",
+      "foot_contacts": [
+        [
+          -0.47827547788619995,
+          0.3916025459766388,
+          0.3
+        ],
+        [
+          -0.5782755017280579,
+          0.21839746832847595,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: inward low seat, grip and rim crossing",
+      "heading_note": "inward radial local heading; add displayed travel root yaw"
+    },
+    {
+      "key": "rider_5",
+      "role": "rider",
+      "position": [
+        -0.8746856451034546,
+        -0.5049999952316284,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 6.806784082777885,
+      "support_object": "rider_5_Pad",
+      "foot_contacts": [
+        [
+          -0.5782755017280579,
+          -0.21839746832847595,
+          0.3
+        ],
+        [
+          -0.47827547788619995,
+          -0.3916025459766388,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: inward low seat, grip and rim crossing",
+      "heading_note": "inward radial local heading; add displayed travel root yaw"
+    }
+  ],
+  "blobjump": [
+    {
+      "key": "station_01",
+      "position": [
+        0,
+        -0.83,
+        0.76
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "station_1_contact_panel",
+      "support_contact": "pelvis; nominal waterborne sit proxy only",
+      "access_path": [],
+      "access_status": "MOUNT_TRANSFER_UNRESOLVED",
+      "role": "receiver",
+      "grip_contacts": [
+        [
+          -0.46,
+          -0.83,
+          0.78
+        ],
+        [
+          0.46,
+          -0.83,
+          0.78
+        ]
+      ]
+    },
+    {
+      "key": "station_02",
+      "position": [
+        0,
+        0.83,
+        0.76
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "station_2_contact_panel",
+      "support_contact": "pelvis; nominal waterborne sit proxy only",
+      "access_path": [],
+      "access_status": "MOUNT_TRANSFER_UNRESOLVED",
+      "role": "compression_participant",
+      "grip_contacts": [
+        [
+          -0.46,
+          0.83,
+          0.78
+        ],
+        [
+          0.46,
+          0.83,
+          0.78
+        ]
+      ]
+    }
+  ],
+  "water_roller": [
+    {
+      "key": "passenger-01",
+      "position": [
+        -0.48,
+        0,
+        0.28
+      ],
+      "pose": "idle",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "SupportPad_passenger-01",
+      "support_extent_tiles": [
+        0.66,
+        0.44
+      ],
+      "grip_sockets": [
+        [
+          -0.48,
+          -0.58,
+          0.68
+        ],
+        [
+          -0.48,
+          0.58,
+          0.68
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "contact_type": "standing_feet_phase_zero"
+    },
+    {
+      "key": "passenger-02",
+      "position": [
+        0.48,
+        0,
+        0.28
+      ],
+      "pose": "idle",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "SupportPad_passenger-02",
+      "support_extent_tiles": [
+        0.66,
+        0.44
+      ],
+      "grip_sockets": [
+        [
+          0.48,
+          -0.58,
+          0.68
+        ],
+        [
+          0.48,
+          0.58,
+          0.68
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "contact_type": "standing_feet_phase_zero"
+    }
+  ],
+  "watersled": [
+    {
+      "key": "rider_0_0",
+      "role": "rider",
+      "position": [
+        -0.43,
+        -0.55,
+        0.29
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_0_0_Pad",
+      "foot_contacts": [
+        [
+          -0.55,
+          -1.08,
+          0.22
+        ],
+        [
+          -0.31,
+          -1.08,
+          0.22
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated extended legs or kneeling and two-hand hold needed"
+    },
+    {
+      "key": "rider_0_1",
+      "role": "rider",
+      "position": [
+        0.43,
+        -0.55,
+        0.29
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_0_1_Pad",
+      "foot_contacts": [
+        [
+          0.31,
+          -1.08,
+          0.22
+        ],
+        [
+          0.55,
+          -1.08,
+          0.22
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated extended legs or kneeling and two-hand hold needed"
+    },
+    {
+      "key": "rider_1_0",
+      "role": "rider",
+      "position": [
+        -0.43,
+        0.62,
+        0.29
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_1_0_Pad",
+      "foot_contacts": [
+        [
+          -0.55,
+          0.08999999999999997,
+          0.22
+        ],
+        [
+          -0.31,
+          0.08999999999999997,
+          0.22
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated extended legs or kneeling and two-hand hold needed"
+    },
+    {
+      "key": "rider_1_1",
+      "role": "rider",
+      "position": [
+        0.43,
+        0.62,
+        0.29
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_1_1_Pad",
+      "foot_contacts": [
+        [
+          0.31,
+          0.08999999999999997,
+          0.22
+        ],
+        [
+          0.55,
+          0.08999999999999997,
+          0.22
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated extended legs or kneeling and two-hand hold needed"
+    }
+  ],
+  "kneeboard": [
+    {
+      "key": "passenger-01",
+      "position": [
+        0,
+        0.16,
+        0.175
+      ],
+      "pose": "sit",
+      "required_pose": "kneeling_tow_grip",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "SupportPad_passenger-01",
+      "support_extent_tiles": [
+        0.66,
+        0.78
+      ],
+      "knee_contacts": [
+        [
+          -0.17,
+          0.08,
+          0.175
+        ],
+        [
+          0.17,
+          0.08,
+          0.175
+        ]
+      ],
+      "grip_sockets": [
+        [
+          0,
+          -0.49,
+          0.22
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "contact_type": "paired_knees_on_EVA_pad",
+      "pose_status": "POSE_FIT_UNRESOLVED: sit is scale-only fallback, not kneeling"
+    }
+  ],
+  "air_chair": [
+    {
+      "key": "passenger-01",
+      "position": [
+        0,
+        0.25,
+        0.44
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "SeatCushion",
+      "foot_contact": [
+        0,
+        -0.37,
+        0.3
+      ],
+      "grip_sockets": [
+        [
+          -0.46,
+          -0.16,
+          0.66
+        ],
+        [
+          0.46,
+          -0.16,
+          0.66
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    }
+  ],
+  "marine_jet": [
+    {
+      "key": "seat_01",
+      "position": [
+        0,
+        -0.42,
+        0.61
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "driver",
+      "support_object": "seat_01_cushion",
+      "foot_contact": [
+        0,
+        -0.88,
+        0.45
+      ],
+      "foot_support_object": "CockpitFloor",
+      "back_support": "seat_01_back",
+      "grip_contacts": [
+        [
+          -0.27,
+          -0.6799999999999999,
+          0.72
+        ],
+        [
+          0.27,
+          -0.6799999999999999,
+          0.72
+        ]
+      ],
+      "access_path": [],
+      "access_status": "MOUNT_TRANSFER_UNRESOLVED over starboard gunwale"
+    },
+    {
+      "key": "seat_02",
+      "position": [
+        0,
+        0.72,
+        0.61
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "seat_02_cushion",
+      "foot_contact": [
+        0,
+        0.25999999999999995,
+        0.45
+      ],
+      "foot_support_object": "CockpitFloor",
+      "back_support": "seat_02_back",
+      "grip_contacts": [
+        [
+          -0.27,
+          0.45999999999999996,
+          0.72
+        ],
+        [
+          0.27,
+          0.45999999999999996,
+          0.72
+        ]
+      ],
+      "access_path": [],
+      "access_status": "MOUNT_TRANSFER_UNRESOLVED over starboard gunwale"
+    }
+  ],
+  "hydrofoil": [
+    {
+      "key": "station_01",
+      "position": [
+        0,
+        -0.015,
+        0.138
+      ],
+      "pose": "idle",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "status": "POSE_FIT_UNRESOLVED",
+      "support_contacts": [
+        "foot_left",
+        "foot_right"
+      ],
+      "posture": "standing in paired bindings"
+    }
+  ],
+  "tow_work": [
+    {
+      "key": "operator",
+      "position": [
+        0,
+        0.3,
+        0.51
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966
+    }
+  ]
+}

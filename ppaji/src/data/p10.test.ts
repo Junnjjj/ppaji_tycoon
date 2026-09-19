@@ -18,7 +18,7 @@ import areasJson from './areas.json';
 import equipmentJson from './equipment.json';
 
 /** P10 — 데이터 전량: 모든 콘텐츠가 어딘가에서 열리고(막다른 것 0), 이름은 한글이며 원작 낱말이 없다 */
-const facilities = facilitiesJson as unknown as { id: string; unlock: { source: string; ref?: string; rank?: number } }[];
+const facilities = facilitiesJson as unknown as { id: string; unlock: { source: string; ref?: string; rank?: number }; buildable?: boolean; deprecated?: boolean }[]; // 2026-09-19: 폐기(조합 흡수) 시설을 가려내려면 두 필드가 필요하다
 const ingredients = ingredientsJson as unknown as { id: string; unlock: string }[];
 const parts = partsJson as unknown as { id: string; unlock: string }[];
 const gears = gearsJson as unknown as { id: string; unlock: string }[];
@@ -42,9 +42,18 @@ const investUnlocks = new Set(invest.flatMap((i) => i.unlocks));
 const shopRefs = new Set(shop.map((s) => s.ref));
 
 describe('P10 도달성 — 막다른 콘텐츠 0', () => {
-  it('시설 전부가 시작·장날·투자·선물·소원·인증·랭크·개조(P51) 중 하나로 열린다', () => {
+  it('시설 전부가 시작·장날·투자·선물·소원·인증·랭크·개조(P51) 중 하나로 열린다 — 폐기(조합에 흡수) 시설은 **일부러** 닫혀 있다', () => {
     const craftTargets = new Set((rigsJson as { to: string }[]).map((r) => r.to));
-    for (const f of facilities) {
+    // 2026-09-19 조합 채택: 흡수된 29종은 옛 세이브 호환으로 정의만 남고 새로 얻을 길이 **없어야** 한다.
+    // 그러니 도달성 검사에서 빼는 것이 아니라, 「닿을 수 없음」을 따로 못박는다 (아래 두 줄이 음성 대조군이다).
+    const retired = facilities.filter((f) => f.deprecated === true);
+    expect(retired.length, '폐기 시설이 하나는 있다').toBeGreaterThan(0);
+    for (const f of retired) {
+      expect(f.buildable, `${f.id} 은 건설 목록에 없다`).toBe(false);
+      expect(f.unlock.source === 'craft' && !craftTargets.has(f.id), `${f.id} 은 개조 레시피로도 못 닿는다`).toBe(true);
+      expect(grantedIds.has(f.id) || investUnlocks.has(f.id) || shopRefs.has(f.id), `${f.id} 은 보상·투자·장날 어디에도 없다`).toBe(false);
+    }
+    for (const f of facilities.filter((x) => x.deprecated !== true)) {
       const u = f.unlock;
       const ok = u.source === 'start' || (u.source === 'craft' && craftTargets.has(f.id)) /* P51: 개조판은 레시피 `to` 로 닿는다 */ || (u.source === 'shop' && (shopRefs.has(f.id) || (u.rank ?? 0) > 0)) || (u.source === 'invest' && investUnlocks.has(f.id)) || grantedIds.has(f.id) || ['gift', 'wish', 'cert', 'rank'].includes(u.source);
       expect(ok, `${f.id} unlock ${JSON.stringify(u)}`).toBe(true);

@@ -32,7 +32,10 @@ describe('approved initial arrival layout', () => {
     const g = create(), old = new Game(g.seed);
     expect(g.grid.natural).toEqual(old.grid.natural); expect(g.grid.levels).toEqual(old.grid.levels);
     expect(g.pools.toSnapshot()).toEqual(old.pools.toSnapshot());
-    expect(g.facilities.all.find(f => f.defId === 'dock')).toEqual(old.facilities.all.find(f => f.defId === 'dock'));
+    const oldDock = old.facilities.all.find(f => f.defId === 'dock')!;
+    const dock = g.facilities.byUid(oldDock.uid)!;
+    expect(dock).toMatchObject({ ...oldDock, defId: 'boarding_dock', i: 58, j: 25, facing: 1 });
+    expect(FacilityStore.footprint(g.facilities.defOf(dock), dock.i, dock.j, dock.facing)).toContainEqual({ i: oldDock.i, j: oldDock.j });
   });
   it('walks every ticket/indoor cell in order on entry and exit without teleporting', () => {
     const g = create(), guest = g.guests.spawn(), visited: string[] = [];

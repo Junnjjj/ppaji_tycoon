@@ -948,10 +948,11 @@ export class CourseStore {
 
   /** 스냅샷을 이 저장소에 싣는다 (다른 스토어와 같은 인스턴스 방식) */
   fromSnapshot(s: CourseSnapshot): void {
-    this.items = s.courses.map(clonePlacedCourse);
+    // 번개거북은 승인 목록에서 제외. 기존 코스의 핸들/경로를 유지하고 땅콩튜브로 이전한다.
+    this.items = s.courses.map(c => clonePlacedCourse(c.equipId === 'turbo_turtle' ? { ...c, equipId: 'peanut' } : c));
     this.nextHandle = s.nextHandle;
     // 옛 세이브 방어 — `owned` 가 없으면 놓인 코스의 기구를 전부 넣는다 (`start` 는 생성자가 이미 넣었다)
-    for (const id of s.owned ?? this.items.map((c) => c.equipId)) if (courseEquipment(id)) this.owned.add(id);
+    for (const oldId of s.owned ?? this.items.map((c) => c.equipId)) { const id = oldId === 'turbo_turtle' ? 'peanut' : oldId; if (courseEquipment(id)) this.owned.add(id); }
     this.version++;
   }
 
@@ -975,7 +976,7 @@ function courseInvestment(course: PlacedCourse): number {
 export function validateCourseData(): string[] {
   const problems: string[] = [];
   if (PRESETS.length !== 6) problems.push(`프리셋이 6종이 아니다: ${PRESETS.length}`);
-  if (COURSE_EQUIPMENT.length !== 30) problems.push(`기구가 30종이 아니다: ${COURSE_EQUIPMENT.length}`);
+  if (COURSE_EQUIPMENT.length !== 29) problems.push(`승인 기구가 29종이 아니다: ${COURSE_EQUIPMENT.length}`);
   if (TOW_BOATS.length !== 2) problems.push(`견인 보트가 2종이 아니다: ${TOW_BOATS.length}`);
   if (!towBoatDef(DEFAULT_TOW_BOAT_ID)) problems.push('기본 견인 보트가 없다');
   for (const boat of TOW_BOATS) {

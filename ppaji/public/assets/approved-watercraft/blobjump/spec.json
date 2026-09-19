@@ -1,0 +1,188 @@
+{
+  "id": "blobjump",
+  "name": "점프 튜브",
+  "capacity": 2,
+  "kind": "tow",
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "source_axis_normalization_degrees": [
+    0,
+    0,
+    0
+  ],
+  "seats": [
+    {
+      "key": "station_01",
+      "position": [
+        0,
+        -0.83,
+        0.76
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "station_1_contact_panel",
+      "support_contact": "pelvis; nominal waterborne sit proxy only",
+      "access_path": [],
+      "access_status": "MOUNT_TRANSFER_UNRESOLVED",
+      "role": "receiver",
+      "grip_contacts": [
+        [
+          -0.46,
+          -0.83,
+          0.78
+        ],
+        [
+          0.46,
+          -0.83,
+          0.78
+        ]
+      ]
+    },
+    {
+      "key": "station_02",
+      "position": [
+        0,
+        0.83,
+        0.76
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "station_2_contact_panel",
+      "support_contact": "pelvis; nominal waterborne sit proxy only",
+      "access_path": [],
+      "access_status": "MOUNT_TRANSFER_UNRESOLVED",
+      "role": "compression_participant",
+      "grip_contacts": [
+        [
+          -0.46,
+          0.83,
+          0.78
+        ],
+        [
+          0.46,
+          0.83,
+          0.78
+        ]
+      ]
+    }
+  ],
+  "boarding": [
+    0.91,
+    0,
+    0.55
+  ],
+  "tow_socket": [
+    0,
+    -1.9,
+    0.3
+  ],
+  "bow": [
+    0,
+    -1.7,
+    0.3
+  ],
+  "stern": [
+    0,
+    1.7,
+    0.3
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    1.7,
+    0
+  ],
+  "hull_bounds_tiles": {
+    "min": [
+      -0.9800000388618544,
+      -1.7000013954692188,
+      -0.1799999598302045
+    ],
+    "max": [
+      0.9799999545681574,
+      1.700002238406189,
+      0.7799999242735327
+    ]
+  },
+  "attachment_bounds_tiles": {
+    "min": [
+      -0.48800002502853973,
+      -1.9219999733441044,
+      0.2695902723777809
+    ],
+    "max": [
+      0.48800002502853973,
+      1.6250000670197187,
+      0.8001174580047526
+    ]
+  },
+  "full_bounds_tiles": {
+    "min": [
+      -0.9800000388618544,
+      -1.9219999733441044,
+      -0.1799999598302045
+    ],
+    "max": [
+      0.9799999545681574,
+      1.700002238406189,
+      0.8001174580047526
+    ]
+  },
+  "native_visible_mass_gate": {
+    "alpha_threshold": 1,
+    "min_foreground_pixels": 700,
+    "min_bbox_width": 30,
+    "min_bbox_height": 18,
+    "zero_border_pixels": true,
+    "declared_before_render": true
+  },
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "waterborne": "Two existing sit proxies may show nominal scale; dynamic grip, mount and compression poses unverified.",
+    "operation": "Equipment description specifies compressing airbag to launch other rider. No validated compression/landing/jumping poses.",
+    "needed": [
+      "two-person grip/contact fit",
+      "side mount/transfer",
+      "compression/landing and airborne receiver posture"
+    ],
+    "visual_findings": "Occupied existing sit proposal shows substantial lower-body occlusion/intersection by the convex bladder. Pelvis support ray hit is not complete anatomical fit; require pressure/receiver kneeling or perched support pose decision before shape iteration."
+  },
+  "physical_state": {
+    "rendered": "unloaded waterborne surface travel",
+    "kind_preserved": "tow",
+    "airborne_claim": false,
+    "additional_states_needed": [
+      "loaded bladder deformation",
+      "compression impulse",
+      "receiver launch and recovery"
+    ],
+    "support_changes": "Current contact planes z=.76; loaded/deformed heights and waterline shifts not solved. Rigid surface travel does not demonstrate launch."
+  },
+  "reference_preflight": {
+    "identity": "gear_blobjump.png: blue broad inflated mound, yellow side end accents, airborne person excluded from empty craft. Equipment desc confirms airbag compression jump function.",
+    "authority": "Low-res identity only; authored hidden underside, longitudinal proportion, panels, grips and tow bridle are proposals, not exact approved geometry.",
+    "model_reuse": false
+  },
+  "approval": {
+    "physical": "UNREVIEWED_USER",
+    "production": false
+  }
+}

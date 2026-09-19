@@ -52,7 +52,9 @@ describe('P53-a 인증·소원·달력 재배선 — 조건 4종 · 교착 0 · 
     const shopTier = new Set(RIG_PART_DEFS.filter((p) => p.unlock === 'shop').map((p) => p.id));
     const parts = rig.filter((w) => w.reward.kind === 'rigPart').map((w) => w.reward.kind === 'rigPart' ? w.reward.id : '');
     for (const id of parts) expect(shopTier.has(id), id).toBe(true); // P53-a 의 float_drum·slip_wax 둘을 포함해 shop-tier 9종 안에서만 (연차 부품은 소원 보상이 아니다 — data.test 가 같은 규칙을 wishes 전체에 건다)
-    expect(new Set(parts).has('float_drum') && new Set(parts).has('slip_wax')).toBe(true);
+    expect(parts).toContain('float_drum');
+    expect(parts).toContain('anchor_chain');
+    expect(parts).not.toContain('slip_wax'); // 전용 개조가 퇴역해 사라진 보상 부품
     const kid = WISH_DEFS.filter((w) => w.friendId === 'kiddie' && w.condition.kind === 'pool').map((w) => w.condition.kind === 'pool' ? w.condition.sizeMin : 0);
     expect(kid).toEqual([20, 40, 60]);
   });

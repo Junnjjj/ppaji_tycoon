@@ -8,6 +8,8 @@ import { makeTestPpaji } from './test-helpers.js';
 import { FLOOR } from './grid.js';
 
 const fresh = (seed = 1): Game => { const g = new Game(seed); g.money = 1e6; for (const d of FACILITY_DEFS.values()) if (d.buildable !== false) g.unlocked.facilities.add(d.id); return g; };
+// Deprecated legacy definitions are not NG+ upgrade rewards.
+const upgradedIds = new Set(RIG_UPGRADES.map((up) => up.to));
 const base = (): StoryState => ({ pools: 1, poolTiles: 20, visitors: 0, likes: 0, wishes: 0, certs: 0, rank: 0, year: 1, areas: 1, recipes: 0, money: 0, hallSales: 0, ended: false, rigs: 0, rigPath: 0, rigGrade: 0, gearsKnown: 0, vestRentals: 0, rigUpgrades: 0 });
 
 describe('P53-b 스토리·이월·엔딩', () => {
@@ -62,7 +64,7 @@ describe('P53-b 스토리·이월·엔딩', () => {
     const known0 = m.rigs.known.size; // 시작 레시피 3 (P51)
     expect(() => applyCarryover(m, v1)).not.toThrow();
     expect(m.rigs.known.size).toBe(known0);
-    expect(m.facilities.all.some((f) => (FACILITY_DEFS.get(f.defId)?.buildable === false))).toBe(false); // 개조 도감이 없으면 개조판도 없다
+    expect(m.facilities.all.some((f) => upgradedIds.has(f.defId))).toBe(false); // 개조 도감이 없으면 개조판도 없다
   });
 
   it('NG+ — 이월한 개조 도감이 있으면 첫 tick 에 개조판 한 채가 킷 빠지에 서 있다 (값 0 · 개조 통계 0)', () => {
@@ -70,7 +72,7 @@ describe('P53-b 스토리·이월·엔딩', () => {
     const c: Carryover = { version: 2, recipes: [], cookingExp: 0, facilities: [], gifts: [], ticketBase: 200, bestScore: 0, runs: 1, rigUpgrades: [RIG_UPGRADES[0]!.id, RIG_UPGRADES[1]!.id] };
     const money = g.money;
     applyCarryover(g, c);
-    const converted = g.facilities.all.filter((f) => FACILITY_DEFS.get(f.defId)?.buildable === false);
+    const converted = g.facilities.all.filter((f) => upgradedIds.has(f.defId));
     expect(converted.length).toBe(1);
     expect(g.money).toBe(money);
     expect(g.stats.converts ?? 0).toBe(0);
@@ -78,7 +80,7 @@ describe('P53-b 스토리·이월·엔딩', () => {
     const f = converted[0]!;
     expect(pool.tiles.includes(f.j * g.grid.w + f.i)).toBe(true);
     g.step(1);
-    expect(g.facilities.all.filter((x) => FACILITY_DEFS.get(x.defId)?.buildable === false).length).toBe(1);
+    expect(g.facilities.all.filter((x) => upgradedIds.has(x.defId)).length).toBe(1);
   });
 
   it('콤보 — 기구·링 시설이 든 쌍마다 성립하는 배치가 존재한다 (반경 안에 둘을 놓으면 activeCombos 에 뜬다)', () => {

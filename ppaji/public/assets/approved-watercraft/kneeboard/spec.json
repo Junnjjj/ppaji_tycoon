@@ -1,0 +1,177 @@
+{
+  "id": "kneeboard",
+  "name": "니보드",
+  "capacity": 1,
+  "kind": "tow",
+  "status": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "camera_target_z_tiles": 0.65,
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "seats": [
+    {
+      "key": "passenger-01",
+      "position": [
+        0,
+        0.16,
+        0.175
+      ],
+      "pose": "sit",
+      "required_pose": "kneeling_tow_grip",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "SupportPad_passenger-01",
+      "support_extent_tiles": [
+        0.66,
+        0.78
+      ],
+      "knee_contacts": [
+        [
+          -0.17,
+          0.08,
+          0.175
+        ],
+        [
+          0.17,
+          0.08,
+          0.175
+        ]
+      ],
+      "grip_sockets": [
+        [
+          0,
+          -0.49,
+          0.22
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "contact_type": "paired_knees_on_EVA_pad",
+      "pose_status": "POSE_FIT_UNRESOLVED: sit is scale-only fallback, not kneeling"
+    }
+  ],
+  "boarding": [
+    0.47,
+    0.16,
+    0.12
+  ],
+  "boarding_status": "TRANSFER_UNRESOLVED: water mount into knees and thigh strap",
+  "tow_socket": [
+    0,
+    -1.015,
+    0.23
+  ],
+  "bow": [
+    0,
+    -0.94,
+    0.18
+  ],
+  "stern": [
+    0,
+    0.77,
+    0.06
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    0.77,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -0.4699999690055847,
+      -1.0329999923706055,
+      -0.044999998062849045
+    ],
+    [
+      0.4699999690055847,
+      0.7699999809265137,
+      0.4150000214576721
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -0.4699999690055847,
+      -0.9399999380111694,
+      -0.044999998062849045
+    ],
+    [
+      0.4699999690055847,
+      0.7699999809265137,
+      0.2295999825000763
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -0.41194021701812744,
+      -1.0329999923706055,
+      0.11368990689516068
+    ],
+    [
+      0.41194021701812744,
+      0.48500001430511475,
+      0.4150000214576721
+    ]
+  ],
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "sit",
+    "requirement": "No kneeling state in approved NPC pose inventory; seated comparison is scale only. Need paired knee contact, thigh strap fit and hand-held tow handle posture; no new NPC art."
+  },
+  "physical_state": {
+    "rendered": "empty_board_handle_stowed_surface_proxy",
+    "dynamic_tow": "Handle is stowed on foredeck for empty art; actual rider-held handle and moving rope socket must be reviewed before occupied towing. Board is not asserted to be directly rope-towed at nose.",
+    "waterline_z_tiles": 0,
+    "support_z_tiles": 0.175,
+    "airborne": "not depicted or approved"
+  },
+  "minimum_mass": {
+    "alpha_threshold": 128,
+    "min_pixels": 210,
+    "min_bbox_width": 15,
+    "min_bbox_height": 15,
+    "scope": "all16 native headings declared before rendering for narrow human-scale board"
+  },
+  "reference_preflight": {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_kneeboard.png",
+    "status": "INSPECTED_LOW_RES_IDENTITY_ONLY",
+    "observation": "Short rounded yellow/orange board with paired blue knee areas and dark transverse strap; broad pad and blue-dominant shared palette are authored departures requiring review",
+    "authored_proposal": "Rocker hull, EVA knee pad, thigh strap with mounts and foredeck stowed tow handle; underside and handle mechanics are proposals"
+  },
+  "inventory": [
+    "BlueRockerHull",
+    "BlueUpperDeck",
+    "HandleBridle-0.23",
+    "HandleBridle0.23",
+    "HandleStorageCradle-0.23",
+    "HandleStorageCradle0.23",
+    "HandleTowEye",
+    "KneePadEdge-0.29",
+    "KneePadEdge0.29",
+    "StowedTowHandle",
+    "StrapMount-0.36",
+    "StrapMount0.36",
+    "SupportPad_passenger-01",
+    "ThighStrap",
+    "YellowDeckRail"
+  ],
+  "approval": {
+    "shape": "UNREVIEWED",
+    "production": false
+  }
+}

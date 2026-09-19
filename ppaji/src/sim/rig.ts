@@ -9,6 +9,7 @@ import type { PoolStore } from './pool.js';
 import balanceJson from '../data/balance.json';
 import rigsJson from '../data/rigs.json';
 import rigSetsJson from '../data/rig-sets.json';
+import compositesJson from '../data/composites.json';
 import type { RigSetDef } from '../data/schema.js';
 export type PpajiGrade = 0 | 1 | 2 | 3 | 4;
 
@@ -20,6 +21,29 @@ const UPGRADE_FROM: ReadonlyMap<string, string> = new Map((rigsJson as { from: s
 /** 개조판 → 원종 (`rigs.json` from/to 사슬을 거슬러 오른다, 봇 `baseKind` 와 같은 규칙) — 세트 멤버는 원종으로 센다 */
 export function rigBaseKind(defId: string): string { let id = defId; for (let k = 0; k < 4; k++) { const f = UPGRADE_FROM.get(id); if (f === undefined) break; id = f; } return id; }
 const SET_MEMBER_KINDS: ReadonlySet<string> = new Set(RIG_SETS.flatMap((s) => s.members.flatMap((m) => [m, rigBaseKind(m)])));
+
+/**
+ * 승인 조합 시설(ppaji-buildable-pair-v2) — 발자국은 **열린 수면까지** 예약하므로 발자국 전체를
+ * `walkOn` 으로 켜면 손님이 물 위를 걷는다. 걸을 수 있는 칸은 저자가 놓은 **데크**뿐이다.
+ * 마스크는 facing 0 기준 발자국 로컬 정수 칸이고, 회전은 발자국과 **같은 규칙**이다 (i,j) → (j, w−1−i).
+ * 데이터(`composites.json`, 불변식 3) — 그림이 바뀌면 코드가 아니라 그 파일이 바뀐다.
+ */
+export interface CompositeDef { id: string; name: string; size: [number, number]; deckTiles: [number, number][]; entry: [number, number, number]; entryTile: [number, number]; routeUseTicks: number; source: string; components: string[] }
+export const COMPOSITES: readonly CompositeDef[] = compositesJson as unknown as CompositeDef[];
+const COMPOSITE_BY_ID: ReadonlyMap<string, CompositeDef> = new Map(COMPOSITES.map((c) => [c.id, c]));
+export function isComposite(defId: string): boolean { return COMPOSITE_BY_ID.has(defId); }
+/** Canonical deck cell nearest the authored route entrance, rotated with the deck mask. */
+export function compositeEntryTile(defId:string,i:number,j:number,facing:0|1):{i:number;j:number}|null {
+  const c=COMPOSITE_BY_ID.get(defId);if(!c)return null;
+  const [a,b]=c.entryTile;return facing===0?{i:i+a,j:j+b}:{i:i+b,j:j+c.size[0]-1-a};
+}
+/** 놓인 조합 시설의 걸을 수 있는 칸 (절대 격자). facing 1 은 발자국과 같이 돈다 */
+export function compositeDeckTiles(defId: string, i: number, j: number, facing: 0 | 1): { i: number; j: number }[] {
+  const c = COMPOSITE_BY_ID.get(defId);
+  if (!c) return [];
+  const [w] = c.size;
+  return c.deckTiles.map(([a, b]) => (facing === 0 ? { i: i + a, j: j + b } : { i: i + b, j: j + (w - 1 - a) }));
+}
 
 /**
  * P60-d §3.2 — 등급 문턱은 **데이터**(`balance.ppajiGradeThresholds`, 불변식 3). 경로를 더하면 6~7차원이라 코드에 두면 밸런싱마다 코드가 바뀐다(R5 §4 ②).
@@ -163,14 +187,14 @@ export function computeEntries(grid: Grid, facilities: FacilityStore, pools: Pic
  */
 export function computeRigs(grid: Grid, facilities: FacilityStore, pools: Pick<PoolStore, 'ownerIdAt'>, overlay?: RigOverlay): RigState {
   const w = grid.w;
-  const rigs: { uid: number; defId: string; chain: string | null; fp: { i: number; j: number }[] }[] = [];
+  const rigs: { uid: number; defId: string; chain: string | null; fp: { i: number; j: number }[]; deck?: { i: number; j: number }[] }[] = [];
   const ringNodes: { uid: number; defId: string; fp: { i: number; j: number }[] }[] = []; // P60-c: 링 위 세트 멤버(플로팅 바·슬라이드 도크) — 켜짐·사슬엔 안 들고 세트 그래프의 노드로만
   const consider = (f: Pick<PlacedFacility, 'uid' | 'defId' | 'i' | 'j' | 'facing'>): void => {
     const def = facilities.defById(f.defId);
     if (!def) return;
     if (def.onRing === true) { if (SET_MEMBER_KINDS.has(rigBaseKind(f.defId))) ringNodes.push({ uid: f.uid, defId: f.defId, fp: FacilityStore.footprint(def, f.i, f.j, f.facing) }); return; }
     if (def.class !== 'rig') return;
-    rigs.push({ uid: f.uid, defId: f.defId, chain: def.chain ?? null, fp: FacilityStore.footprint(def, f.i, f.j, f.facing) });
+    rigs.push({ uid: f.uid, defId: f.defId, chain: def.chain ?? null, fp: FacilityStore.footprint(def, f.i, f.j, f.facing), ...(isComposite(f.defId) ? { deck: compositeDeckTiles(f.defId, f.i, f.j, f.facing) } : {}) });
   };
   for (const f of facilities.all) consider(f);
   if (overlay) consider(overlay);
@@ -238,12 +262,12 @@ export function computeRigs(grid: Grid, facilities: FacilityStore, pools: Pick<P
   }
   const poolOfNode = new Map<number, number>(); // P60-c: 노드 → 소속 수역
   for (const idx of litIdx) {
-    const r = rigs[idx] as { uid: number; fp: { i: number; j: number }[] };
+    const r = rigs[idx] as { uid: number; fp: { i: number; j: number }[]; deck?: { i: number; j: number }[] };
     st.lit.add(r.uid);
     const best = poolOfRig.get(idx) ?? -1;
     st.chainLen.set(r.uid, pathIndex.get(idx) ?? 1); // 경로 순번 — 경로 밖(입수구 0 인 수역 · 입수구에서 안 닿는 기구)은 1
     st.chainKinds.set(r.uid, pathIndex.has(idx) ? (pathKinds.get(best) ?? 1) : 1);
-    for (const t of r.fp) st.walkOn[t.j * w + t.i] = 1;
+    for (const t of (r.deck ?? r.fp)) st.walkOn[t.j * w + t.i] = 1; // 조합 시설은 데크 칸만 (예약한 열린 수면은 못 걷는다)
     if (best >= 0) { const arr = st.byPool.get(best) ?? []; arr.push(r.uid); st.byPool.set(best, arr); poolOfNode.set(idx, best); }
   }
   // P60-c §10.3 세트 — 노드 = 켜진 물 위 기구 + 링 위 세트 멤버(수역은 4이웃 물의 소유 최다), 변 = 같은 수역 안 4이웃 접촉. 컴포넌트 하나에 세 멤버(원종)가 다 있으면 성립. 수역마다 같은 세트는 한 번(둘째부터 0)

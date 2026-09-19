@@ -1,0 +1,226 @@
+{
+  "dancing": {
+    "id": "dancing",
+    "source_sha256": "face15668f0514915f2a46df600321bc40541c223924ce37e38b7c1d28fda015",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "flycarpet": {
+    "id": "flycarpet",
+    "source_sha256": "3d648b0b37caaeb9956ce42f55fdfd0ad04d005e06fa8dfdfe6cfcebc3e24146",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 0,
+    "lateral_error": 2.288818359375e-05
+  },
+  "watersled": {
+    "id": "watersled",
+    "source_sha256": "30d08d540aaf3d555cd8b513774ef3498920828be920f374d43b88bc8732385e",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "flyduck": {
+    "id": "flyduck",
+    "source_sha256": "a5eafbf21889aea1ef61089850d014e255cc7eda44f28934694418021eac9c77",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 0,
+    "lateral_error": 2.288818359375e-05
+  },
+  "water_roller": {
+    "id": "water_roller",
+    "source_sha256": "5d34bc9173a54a2f025da18e5a4c07ae57859123744f94601d2933ae385e85a4",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 0,
+    "lateral_error": 2.288818359375e-05
+  },
+  "spinpang": {
+    "id": "spinpang",
+    "source_sha256": "269f245ef254ffec5fb343778b819411c530068596a177ba25ffc037446311e2",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "rocket_tube": {
+    "id": "rocket_tube",
+    "source_sha256": "8f40ad777da235a10a27afd5facebd392f7e552dc0bdc685c31353a02e9c07e0",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "hexa": {
+    "id": "hexa",
+    "source_sha256": "290fc1d6a5c6412c822efd37b33d5cb0239b18dc09db83f7b28e517de82bf50b",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "waterski": {
+    "id": "waterski",
+    "source_sha256": "b8439fc00702383ee475de78c79c0f0dae24f9317ae4e7c6c02fa0cd185b1a3a",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 0,
+    "lateral_error": 2.288818359375e-05
+  },
+  "jetski": {
+    "id": "jetski",
+    "source_sha256": "014970f501673491d4d2857bc043e4de8aa098bf13211aea47d34baeec59fca3",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "blobjump": {
+    "id": "blobjump",
+    "source_sha256": "50739b431eb020e5f9114040e32dfb51c2680eb8eac88c9c2296a5821ddad4b9",
+    "camera_distance": 220.0,
+    "runtime_camera_distance": 250,
+    "depth_offset": 30.0,
+    "lateral_error": 2.1579186437577746e-05
+  },
+  "marine_jet": {
+    "id": "marine_jet",
+    "source_sha256": "97c98f13e8d2f2b560036319b0234af05c9fc27e377e6b31a39bcfe195b13218",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 0,
+    "lateral_error": 2.288818359375e-05
+  },
+  "lotus": {
+    "id": "lotus",
+    "source_sha256": "b4083bc719a447821c04030e6d9be58330d935d59776cb1c501b3b21155e2b31",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "sofa_boat": {
+    "id": "sofa_boat",
+    "source_sha256": "01952b01b05696cfc411574e8cfd93d97acdc87f71d429063e3713c7b0a51629",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "jjinppang": {
+    "id": "jjinppang",
+    "source_sha256": "cad081004ff88808dae66f70c666ef30f1a711c5d7a261d8d5707e3d02ac015d",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "swing": {
+    "id": "swing",
+    "source_sha256": "ca46201cc47a5d62bb8b25760b84c27fdd94f34718147e248d8e3e427587a1f3",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "discopang": {
+    "id": "discopang",
+    "source_sha256": "0e84bb0536a429784064592798c3c6e5ef4de3e3b0fb43a81f267659e0935173",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "honeycomb": {
+    "id": "honeycomb",
+    "source_sha256": "69a54811ebb0d7e6b6d0852e13bd6e6fd250f10cce83a9f4183069bf50be94ac",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "skyfly": {
+    "id": "skyfly",
+    "source_sha256": "0342e967a26c13b0470298538510eddf63e3a31bba1ad159f181ca6f4b6aa223",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 0,
+    "lateral_error": 2.288818359375e-05
+  },
+  "banana": {
+    "id": "banana",
+    "source_sha256": "23063148a8759f31ba0d6308d6f2efd4dc602ca04ed50d1243566762b61dbe84",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "air_chair": {
+    "id": "air_chair",
+    "source_sha256": "64b6adef90825bea41308fb80781538c6a3f2b7680509204c24bd9ba3617c198",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 0,
+    "lateral_error": 2.288818359375e-05
+  },
+  "wagon": {
+    "id": "wagon",
+    "source_sha256": "fb0c98a70d240e5f3f30eb5c61004ad010fe80592c84b864915ccac21e98c0f5",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 0,
+    "lateral_error": 2.288818359375e-05
+  },
+  "jetboat": {
+    "id": "jetboat",
+    "source_sha256": "113536419ab2b671d6700c91258a8c749781abaedab3b4aab0f8965e87a7bccb",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "wakeboard": {
+    "id": "wakeboard",
+    "source_sha256": "d1238747a7731cbe49b3921f4a5f3083a6c2fb409afeca9556a4bbfbdb44e4c0",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 0,
+    "lateral_error": 2.288818359375e-05
+  },
+  "flyfish": {
+    "id": "flyfish",
+    "source_sha256": "a624a6f5603a0eadc65daa34ee09e87a4a492989670da000a558e5a332a7ce35",
+    "camera_distance": 200.0,
+    "runtime_camera_distance": 250,
+    "depth_offset": 50.0,
+    "lateral_error": 2.1579186437577746e-05
+  },
+  "kneeboard": {
+    "id": "kneeboard",
+    "source_sha256": "a012a6d992e4b215159d8c2421b5bd3ee227b9f6ca075ecb0bebf3def821c5a0",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 0,
+    "lateral_error": 2.288818359375e-05
+  },
+  "twinpang": {
+    "id": "twinpang",
+    "source_sha256": "99610eb5baeeb7c770ad85370a08027b2b30457ff0444ad88bee54c29d0e803d",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 1.52587890625e-05,
+    "lateral_error": 2.288818359375e-05
+  },
+  "hydrofoil": {
+    "id": "hydrofoil",
+    "source_sha256": "c46fce5185932efb8142a2830c63aa4f6c8c72faea168f58f500995e9b1f35ae",
+    "camera_distance": 249.99998474121094,
+    "runtime_camera_distance": 250,
+    "depth_offset": 0,
+    "lateral_error": 2.288818359375e-05
+  }
+}

@@ -1,0 +1,382 @@
+{
+  "id": "dancing",
+  "name": "댄싱보트",
+  "capacity": 6,
+  "driver_count": 0,
+  "kind": "tow",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "seats": [
+    {
+      "key": "rider_01",
+      "role": "passenger",
+      "position": [
+        -0.46,
+        -0.98,
+        0.62
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_01_Cushion",
+      "foot_contacts": [
+        [
+          -0.5800000000000001,
+          -1.31,
+          0.34
+        ],
+        [
+          -0.34,
+          -1.31,
+          0.34
+        ]
+      ],
+      "grip_contacts": [
+        [
+          -0.5900000000000001,
+          -1.48,
+          0.7
+        ],
+        [
+          -0.33,
+          -1.48,
+          0.7
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: side coaming step-over and seated mounting not covered by existing sit"
+    },
+    {
+      "key": "rider_02",
+      "role": "passenger",
+      "position": [
+        0.46,
+        -0.98,
+        0.62
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_02_Cushion",
+      "foot_contacts": [
+        [
+          0.34,
+          -1.31,
+          0.34
+        ],
+        [
+          0.5800000000000001,
+          -1.31,
+          0.34
+        ]
+      ],
+      "grip_contacts": [
+        [
+          0.33,
+          -1.48,
+          0.7
+        ],
+        [
+          0.5900000000000001,
+          -1.48,
+          0.7
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: side coaming step-over and seated mounting not covered by existing sit"
+    },
+    {
+      "key": "rider_03",
+      "role": "passenger",
+      "position": [
+        -0.46,
+        0.26,
+        0.62
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_03_Cushion",
+      "foot_contacts": [
+        [
+          -0.5800000000000001,
+          -0.07,
+          0.34
+        ],
+        [
+          -0.34,
+          -0.07,
+          0.34
+        ]
+      ],
+      "grip_contacts": [
+        [
+          -0.5900000000000001,
+          -0.24,
+          0.7
+        ],
+        [
+          -0.33,
+          -0.24,
+          0.7
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: side coaming step-over and seated mounting not covered by existing sit"
+    },
+    {
+      "key": "rider_04",
+      "role": "passenger",
+      "position": [
+        0.46,
+        0.26,
+        0.62
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_04_Cushion",
+      "foot_contacts": [
+        [
+          0.34,
+          -0.07,
+          0.34
+        ],
+        [
+          0.5800000000000001,
+          -0.07,
+          0.34
+        ]
+      ],
+      "grip_contacts": [
+        [
+          0.33,
+          -0.24,
+          0.7
+        ],
+        [
+          0.5900000000000001,
+          -0.24,
+          0.7
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: side coaming step-over and seated mounting not covered by existing sit"
+    },
+    {
+      "key": "rider_05",
+      "role": "passenger",
+      "position": [
+        -0.46,
+        1.5,
+        0.62
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_05_Cushion",
+      "foot_contacts": [
+        [
+          -0.5800000000000001,
+          1.17,
+          0.34
+        ],
+        [
+          -0.34,
+          1.17,
+          0.34
+        ]
+      ],
+      "grip_contacts": [
+        [
+          -0.5900000000000001,
+          1.0,
+          0.7
+        ],
+        [
+          -0.33,
+          1.0,
+          0.7
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: side coaming step-over and seated mounting not covered by existing sit"
+    },
+    {
+      "key": "rider_06",
+      "role": "passenger",
+      "position": [
+        0.46,
+        1.5,
+        0.62
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "rider_06_Cushion",
+      "foot_contacts": [
+        [
+          0.34,
+          1.17,
+          0.34
+        ],
+        [
+          0.5800000000000001,
+          1.17,
+          0.34
+        ]
+      ],
+      "grip_contacts": [
+        [
+          0.33,
+          1.0,
+          0.7
+        ],
+        [
+          0.5900000000000001,
+          1.0,
+          0.7
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: side coaming step-over and seated mounting not covered by existing sit"
+    }
+  ],
+  "boarding": [
+    0.85,
+    1.83,
+    0.42
+  ],
+  "boarding_status": "POSE_FIT_UNRESOLVED: supported pad exists; coaming crossing and mounting require pose/mechanics decision",
+  "tow_socket": [
+    0,
+    -2.33,
+    0.27
+  ],
+  "bow": [
+    0,
+    -2.38,
+    0.27
+  ],
+  "stern": [
+    0,
+    2.2,
+    0.25
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    2.2,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -1.0699999332427979,
+      -2.379999876022339,
+      -0.11999998986721039
+    ],
+    [
+      1.0699999332427979,
+      2.200000047683716,
+      0.8299680352210999
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -1.0699999332427979,
+      -2.379999876022339,
+      -0.11999998986721039
+    ],
+    [
+      1.0699999332427979,
+      2.200000047683716,
+      0.8299680352210999
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -0.7799999713897705,
+      -2.3519997596740723,
+      0.18299998342990875
+    ],
+    [
+      0.9800000190734863,
+      1.9900000095367432,
+      0.7300000190734863
+    ]
+  ],
+  "pose_requirement": "POSE_FIT_UNRESOLVED: six existing sit overlays only; braced grip, mounting and rolling/rocking body pose absent; no new NPC art",
+  "motion_semantics": {
+    "travel_heading": "root yaw only, h00-h15",
+    "use_state": "rolling/rocking independently unresolved; no roll or pitch rendered",
+    "special_motion_proven": false
+  },
+  "native_visible_mass_gate": {
+    "alpha_threshold": 0,
+    "minimum_foreground_pixels": 1450,
+    "minimum_bbox_width": 40,
+    "minimum_bbox_height": 25,
+    "edge_pixels": 0,
+    "declared_before_render": true
+  },
+  "inventory": [
+    "BowCushion",
+    "BowTowEye",
+    "InflatableLowerHull",
+    "rider_01_Cushion",
+    "rider_01_Grip",
+    "rider_01_GripMount_-0.18",
+    "rider_01_GripMount_0.18",
+    "rider_01_Support",
+    "rider_02_Cushion",
+    "rider_02_Grip",
+    "rider_02_GripMount_-0.18",
+    "rider_02_GripMount_0.18",
+    "rider_02_Support",
+    "rider_03_Cushion",
+    "rider_03_Grip",
+    "rider_03_GripMount_-0.18",
+    "rider_03_GripMount_0.18",
+    "rider_03_Support",
+    "rider_04_Cushion",
+    "rider_04_Grip",
+    "rider_04_GripMount_-0.18",
+    "rider_04_GripMount_0.18",
+    "rider_04_Support",
+    "rider_05_Cushion",
+    "rider_05_Grip",
+    "rider_05_GripMount_-0.18",
+    "rider_05_GripMount_0.18",
+    "rider_05_Support",
+    "rider_06_Cushion",
+    "rider_06_Grip",
+    "rider_06_GripMount_-0.18",
+    "rider_06_GripMount_0.18",
+    "rider_06_Support",
+    "ScallopedSide_-1",
+    "ScallopedSide_1",
+    "StarboardBoardingPad",
+    "SternCushion",
+    "SupportedInteriorDeck",
+    "TowReinforcement"
+  ],
+  "reference_preflight": {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_dancing.png",
+    "observed": "elongated yellow/orange body with three scalloped upper lobes, dark rim, no reliable propulsion or helm",
+    "authority": "identity-only; coordinator clarified six-passenger towable rolling/rocking hull without driver or propulsion",
+    "hidden_geometry": "authored six cushions, deck, underside, grip bars and tow eye; not exact icon reconstruction"
+  },
+  "approval": "candidate only"
+}

@@ -1,0 +1,378 @@
+{
+  "id": "twinpang",
+  "name": "쌍둥이팡",
+  "capacity": 8,
+  "kind": "tow",
+  "kind_resolution": "verified equipment tow overrides copied power boat boilerplate",
+  "logical_size": 160,
+  "canvas_proposal": "160 native / 640 color union, preserving tile/world/rider scale; larger than128 default for two full human-scale modules",
+  "tile_world": 22.627416997969522,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "seats": [
+    {
+      "key": "module0_rider00",
+      "role": "rider",
+      "module": 0,
+      "position": [
+        -1.67,
+        -0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module0_rider00_Pad",
+      "foot_contacts": [
+        [
+          -1.76,
+          -0.62,
+          0.3
+        ],
+        [
+          -1.5799999999999998,
+          -0.62,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    },
+    {
+      "key": "module0_rider01",
+      "role": "rider",
+      "module": 0,
+      "position": [
+        -0.87,
+        -0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module0_rider01_Pad",
+      "foot_contacts": [
+        [
+          -0.96,
+          -0.62,
+          0.3
+        ],
+        [
+          -0.78,
+          -0.62,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    },
+    {
+      "key": "module0_rider10",
+      "role": "rider",
+      "module": 0,
+      "position": [
+        -1.67,
+        0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module0_rider10_Pad",
+      "foot_contacts": [
+        [
+          -1.76,
+          0.09999999999999998,
+          0.3
+        ],
+        [
+          -1.5799999999999998,
+          0.09999999999999998,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    },
+    {
+      "key": "module0_rider11",
+      "role": "rider",
+      "module": 0,
+      "position": [
+        -0.87,
+        0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module0_rider11_Pad",
+      "foot_contacts": [
+        [
+          -0.96,
+          0.09999999999999998,
+          0.3
+        ],
+        [
+          -0.78,
+          0.09999999999999998,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    },
+    {
+      "key": "module1_rider00",
+      "role": "rider",
+      "module": 1,
+      "position": [
+        0.87,
+        -0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module1_rider00_Pad",
+      "foot_contacts": [
+        [
+          0.78,
+          -0.62,
+          0.3
+        ],
+        [
+          0.96,
+          -0.62,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    },
+    {
+      "key": "module1_rider01",
+      "role": "rider",
+      "module": 1,
+      "position": [
+        1.67,
+        -0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module1_rider01_Pad",
+      "foot_contacts": [
+        [
+          1.5799999999999998,
+          -0.62,
+          0.3
+        ],
+        [
+          1.76,
+          -0.62,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    },
+    {
+      "key": "module1_rider10",
+      "role": "rider",
+      "module": 1,
+      "position": [
+        0.87,
+        0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module1_rider10_Pad",
+      "foot_contacts": [
+        [
+          0.78,
+          0.09999999999999998,
+          0.3
+        ],
+        [
+          0.96,
+          0.09999999999999998,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    },
+    {
+      "key": "module1_rider11",
+      "role": "rider",
+      "module": 1,
+      "position": [
+        1.67,
+        0.36,
+        0.39
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "module1_rider11_Pad",
+      "foot_contacts": [
+        [
+          1.5799999999999998,
+          0.09999999999999998,
+          0.3
+        ],
+        [
+          1.76,
+          0.09999999999999998,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: low seated/handhold and ring crossing need dedicated motion"
+    }
+  ],
+  "boarding": [
+    2.18,
+    0.3,
+    0.53
+  ],
+  "boarding_proposal": {
+    "side": "+X",
+    "supported_approach": [],
+    "final_transfer": "rounded ring crossing, low seat transfer and traversing central bridge to far module unresolved; do not invent collision-free walk paths"
+  },
+  "tow_socket": [
+    0,
+    -2.02,
+    0.2
+  ],
+  "bow": [
+    0,
+    -2.02,
+    0.2
+  ],
+  "stern": [
+    0,
+    1.23,
+    0.2
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    1.23,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -2.5,
+      -2.0399999618530273,
+      -0.01000000350177288
+    ],
+    [
+      2.5,
+      1.2299998998641968,
+      0.5349999666213989
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -2.5,
+      -1.2299998998641968,
+      -0.01000000350177288
+    ],
+    [
+      2.5,
+      1.2299998998641968,
+      0.5349999666213989
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -1.9199998378753662,
+      -2.0399999618530273,
+      0.11500000208616257
+    ],
+    [
+      1.9199998378753662,
+      1.2299998998641968,
+      0.5049999356269836
+    ]
+  ],
+  "pose_requirement": "POSE_FIT_UNRESOLVED: existing sit is contact comparison only; low seated posture, grips, crossing rounded ring and bridge require mechanics review",
+  "native_visible_mass_gate": {
+    "alpha_threshold": 0,
+    "minimum_foreground_pixels": 2200,
+    "minimum_bbox_width": 45,
+    "minimum_bbox_height": 26,
+    "edge_pixels": 0,
+    "declared_before_render": true
+  },
+  "inventory": [
+    "BridgeStrap_-0.39",
+    "BridgeStrap_0.39",
+    "Bridle_-1",
+    "Bridle_1",
+    "CentralWebbingBridge",
+    "Module0_BlueFloor",
+    "Module0_InflatableRing",
+    "module0_rider00_Handle",
+    "module0_rider00_HandlePost_-1",
+    "module0_rider00_HandlePost_1",
+    "module0_rider00_Pad",
+    "module0_rider01_Handle",
+    "module0_rider01_HandlePost_-1",
+    "module0_rider01_HandlePost_1",
+    "module0_rider01_Pad",
+    "module0_rider10_Handle",
+    "module0_rider10_HandlePost_-1",
+    "module0_rider10_HandlePost_1",
+    "module0_rider10_Pad",
+    "module0_rider11_Handle",
+    "module0_rider11_HandlePost_-1",
+    "module0_rider11_HandlePost_1",
+    "module0_rider11_Pad",
+    "Module0_YellowBase",
+    "Module1_BlueFloor",
+    "Module1_InflatableRing",
+    "module1_rider00_Handle",
+    "module1_rider00_HandlePost_-1",
+    "module1_rider00_HandlePost_1",
+    "module1_rider00_Pad",
+    "module1_rider01_Handle",
+    "module1_rider01_HandlePost_-1",
+    "module1_rider01_HandlePost_1",
+    "module1_rider01_Pad",
+    "module1_rider10_Handle",
+    "module1_rider10_HandlePost_-1",
+    "module1_rider10_HandlePost_1",
+    "module1_rider10_Pad",
+    "module1_rider11_Handle",
+    "module1_rider11_HandlePost_-1",
+    "module1_rider11_HandlePost_1",
+    "module1_rider11_Pad",
+    "Module1_YellowBase",
+    "RearSeam_-1.27",
+    "RearSeam_1.27",
+    "TowAttachment_-1",
+    "TowAttachment_1",
+    "TowJoinEye"
+  ],
+  "reference_preflight": {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_twinpang.png",
+    "observed": "two side-by-side blue circular lobes/rings with dark central wells and yellow/orange lower accents",
+    "authority": "coordinator identity-only reference; eight pads, bridge and tow bridle are authored hidden-geometry proposals"
+  },
+  "approval": "candidate only"
+}

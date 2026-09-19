@@ -3,13 +3,14 @@ import presentation from '../data/npc-presentation.json';
 import type { GuestPose, GuestMoodId } from './draw/guest.js';
 import type { AssetProvider, SpriteSpec } from './types.js';
 
+export type NpcV8Pose = GuestPose | 'jump';
 export type NpcAtlas = { frames: Record<string, { frame: { x: number; y: number; w: number; h: number } }> };
 const states = presentation.states as Record<string, { frames: number; fps: number; origin: number[] }>;
 const facings = ['+X', '+Z', '-X', '-Z'] as const;
 
-export function npcV8Key(uid: number, facing: number, pose: GuestPose, timeMs: number, mood: GuestMoodId): string {
+export function npcV8Key(uid: number, facing: number, pose: NpcV8Pose, timeMs: number, mood: GuestMoodId): string {
   const direction = presentation.facings[facings[facing] ?? '+X'];
-  const state = `${direction.side}_${presentation.poses[pose]}`;
+  const state = `${direction.side}_${pose === 'jump' ? 'jump' : presentation.poses[pose]}`;
   const timing = states[state]!;
   const frame = Math.floor(Math.max(0, timeMs) * timing.fps / 1000) % timing.frames;
   const look = presentation.looks[Math.abs(uid - 1) % presentation.looks.length];

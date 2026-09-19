@@ -1,0 +1,234 @@
+{
+  "id": "swing",
+  "name": "마블",
+  "capacity": 4,
+  "kind": "tow",
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "source_axis_normalization_degrees": [
+    0,
+    0,
+    0
+  ],
+  "seats": [
+    {
+      "key": "seat_01",
+      "role": "passenger",
+      "position": [
+        0.5939696961966999,
+        0.5939696961966998,
+        0.58
+      ],
+      "pose": "sit",
+      "heading": 3.9269908169872414,
+      "support_object": "seat_01_pad",
+      "back_support_object": "seat_01_bolster",
+      "foot_contact": [
+        0.19798989873223333,
+        0.1979898987322333,
+        0.32
+      ],
+      "foot_support_object": "YellowMarbleDeck",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "Continuous inflated perimeter needs assisted dock-to-deck mount; no path through solid rim is asserted."
+    },
+    {
+      "key": "seat_02",
+      "role": "passenger",
+      "position": [
+        -0.5939696961966998,
+        0.5939696961966999,
+        0.58
+      ],
+      "pose": "sit",
+      "heading": 5.497787143782138,
+      "support_object": "seat_02_pad",
+      "back_support_object": "seat_02_bolster",
+      "foot_contact": [
+        -0.1979898987322333,
+        0.19798989873223333,
+        0.32
+      ],
+      "foot_support_object": "YellowMarbleDeck",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "Continuous inflated perimeter needs assisted dock-to-deck mount; no path through solid rim is asserted."
+    },
+    {
+      "key": "seat_03",
+      "role": "passenger",
+      "position": [
+        -0.5939696961967,
+        -0.5939696961966998,
+        0.58
+      ],
+      "pose": "sit",
+      "heading": 7.0685834705770345,
+      "support_object": "seat_03_pad",
+      "back_support_object": "seat_03_bolster",
+      "foot_contact": [
+        -0.19798989873223338,
+        -0.1979898987322333,
+        0.32
+      ],
+      "foot_support_object": "YellowMarbleDeck",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "Continuous inflated perimeter needs assisted dock-to-deck mount; no path through solid rim is asserted."
+    },
+    {
+      "key": "seat_04",
+      "role": "passenger",
+      "position": [
+        0.5939696961966997,
+        -0.5939696961967,
+        0.58
+      ],
+      "pose": "sit",
+      "heading": 8.63937979737193,
+      "support_object": "seat_04_pad",
+      "back_support_object": "seat_04_bolster",
+      "foot_contact": [
+        0.19798989873223327,
+        -0.19798989873223338,
+        0.32
+      ],
+      "foot_support_object": "YellowMarbleDeck",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "Continuous inflated perimeter needs assisted dock-to-deck mount; no path through solid rim is asserted."
+    }
+  ],
+  "boarding": [
+    1.49,
+    0,
+    0.32
+  ],
+  "tow_socket": [
+    0,
+    -1.61,
+    0.18
+  ],
+  "bow": [
+    0,
+    -1.51,
+    0.2
+  ],
+  "stern": [
+    0,
+    1.51,
+    0.2
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    1.6,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -1.5099999904632568,
+      -1.6413848400115967,
+      -0.05999999865889549
+    ],
+    [
+      1.5099999904632568,
+      1.5099999904632568,
+      0.7249999642372131
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -1.5099999904632568,
+      -1.5099999904632568,
+      -0.05999999865889549
+    ],
+    [
+      1.5099999904632568,
+      1.5099999904632568,
+      0.7249999642372131
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -0.7305382490158081,
+      -1.6413848400115967,
+      0.04699999466538429
+    ],
+    [
+      0.7305382490158081,
+      0.7305382490158081,
+      0.6299721598625183
+    ]
+  ],
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "sit",
+    "reason": "Four seat and central foot contacts exist; grip/diagonal leg posture, lateral swinging motion and assisted mounting remain unvalidated."
+  },
+  "minimum_native_foreground_pixels": 1400,
+  "native_mass_gate": {
+    "alpha_threshold": 0,
+    "min_pixels": 1400,
+    "same_all16": true,
+    "declared_before_render": true
+  },
+  "inventory": [
+    "BlueRoundFloat",
+    "BowTowEye",
+    "BowTowPatch",
+    "RoundedSafetyRim",
+    "seat_01_bolster",
+    "seat_01_grip_-0.21",
+    "seat_01_grip_0.21",
+    "seat_01_pad",
+    "seat_02_bolster",
+    "seat_02_grip_-0.21",
+    "seat_02_grip_0.21",
+    "seat_02_pad",
+    "seat_03_bolster",
+    "seat_03_grip_-0.21",
+    "seat_03_grip_0.21",
+    "seat_03_pad",
+    "seat_04_bolster",
+    "seat_04_grip_-0.21",
+    "seat_04_grip_0.21",
+    "seat_04_pad",
+    "WhiteSwirl_01",
+    "WhiteSwirl_02",
+    "WhiteSwirl_03",
+    "WhiteSwirl_04",
+    "YellowMarbleDeck"
+  ],
+  "reference_preflight": {
+    "identity_icon": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_swing.png",
+    "icon_sha256": "9e50031298d99b1ca81f9aff22d09697b0e1668bbf74a14515256107c22f2d5b",
+    "observed": "Circular marbled/swirl surface in red and cream, dark rim; equipment description is lateral swing (좌우그네).",
+    "geometry_authority": "Icon lacks rider mechanics; new round towable with four inward stations is an honest physical proposal, not exact reference reconstruction.",
+    "palette_note": "Red/cream swirl identity translated to frozen yellow/ivory with blue flotation and pads; no new palette generated.",
+    "reusable_model": "No swing model reused; fresh geometry"
+  },
+  "boarding_note": "Canonical +X docking socket only; continuous inflated rim blocks walking access, so paths stay empty pending assisted mounting mechanics.",
+  "driver_count": 0,
+  "runtime_kind_note": "Current equipment and frozen contract specify tow; generic power-boat instructions do not apply.",
+  "production_approved": false
+}

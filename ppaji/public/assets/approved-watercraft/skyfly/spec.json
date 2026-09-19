@@ -1,0 +1,238 @@
+{
+  "id": "skyfly",
+  "name": "하늘날기",
+  "kind": "tow",
+  "capacity": 3,
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "status": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "seats": [
+    {
+      "key": "passenger-01",
+      "position": [
+        -0.7,
+        0.9,
+        0.5
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "Seat_passenger-01",
+      "foot_contact": [
+        -0.7,
+        0.45,
+        0.38
+      ],
+      "grip_socket": [
+        -0.7,
+        0.66,
+        0.77
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-02",
+      "position": [
+        0,
+        0.9,
+        0.5
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "Seat_passenger-02",
+      "foot_contact": [
+        0,
+        0.45,
+        0.38
+      ],
+      "grip_socket": [
+        0,
+        0.66,
+        0.77
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-03",
+      "position": [
+        0.7,
+        0.9,
+        0.5
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "Seat_passenger-03",
+      "foot_contact": [
+        0.7,
+        0.45,
+        0.38
+      ],
+      "grip_socket": [
+        0.7,
+        0.66,
+        0.77
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    }
+  ],
+  "boarding": [
+    1.22,
+    0.9,
+    0.3
+  ],
+  "boarding_status": "TRANSFER_UNRESOLVED",
+  "tow_socket": [
+    0,
+    -2.09,
+    0.2
+  ],
+  "bow": [
+    0,
+    -1.6,
+    2.4
+  ],
+  "stern": [
+    0,
+    1.45,
+    0.1
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    1.45,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -1.7359040975570679,
+      -2.115000009536743,
+      -0.07999999821186066
+    ],
+    [
+      1.7359040975570679,
+      1.4499999284744263,
+      2.5718679428100586
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -1.209999918937683,
+      -1.4499999284744263,
+      -0.07999999821186066
+    ],
+    [
+      1.209999918937683,
+      1.4499999284744263,
+      0.38181865215301514
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -1.7359040975570679,
+      -2.115000009536743,
+      0.14671768248081207
+    ],
+    [
+      1.7359040975570679,
+      1.2149999141693115,
+      2.5718679428100586
+    ]
+  ],
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "sit",
+    "requirements": [
+      "Suspended harness seat and hand grip posture unapproved",
+      "Mount and transfer motion unresolved",
+      "Wing and suspension occlusion requires occupied depth review; no rider scale reduction"
+    ]
+  },
+  "physical_state": {
+    "rendered": "proposed_waterborne_surface_state",
+    "waterline_z_tiles": 0,
+    "support_z_tiles": 0.5,
+    "lifted_jumping": "NOT_VALIDATED; requires separate pitched/lifted state renders, transformed rider supports and absent hull-water contact; surface motion does not establish flight"
+  },
+  "minimum_mass": {
+    "alpha_threshold": 128,
+    "min_pixels": 650,
+    "min_bbox_width": 35,
+    "min_bbox_height": 25,
+    "scope": "same all16 native RGBA; declared before render"
+  },
+  "reference_preflight": {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_skyfly.png",
+    "status": "INSPECTED_LOW_RES_IDENTITY_ONLY",
+    "observation": "Delta sail with central keel and suspended rider silhouette",
+    "coordinator_decision": "Authorized delta-wing candidate, three supported stations and documented proposed waterborne support; mechanics and flight unapproved",
+    "hidden_geometry_proposal": "Twin flotation skids, three rear suspended seats with feet supports, spars and bridle; not reference-approved engineering"
+  },
+  "inventory": [
+    "Back_passenger-01",
+    "Back_passenger-02",
+    "Back_passenger-03",
+    "Crossbeam-0.4",
+    "Crossbeam0.9",
+    "FlotationSkid-1.05",
+    "FlotationSkid1.05",
+    "Foot_passenger-01",
+    "Foot_passenger-02",
+    "Foot_passenger-03",
+    "Grip_passenger-01-1",
+    "Grip_passenger-011",
+    "Grip_passenger-02-1",
+    "Grip_passenger-021",
+    "Grip_passenger-03-1",
+    "Grip_passenger-031",
+    "Keel",
+    "LeadingSpar-1",
+    "LeadingSpar1",
+    "SailInner-1",
+    "SailInner1",
+    "SailOuter-1",
+    "SailOuter1",
+    "Seat_passenger-01",
+    "Seat_passenger-02",
+    "Seat_passenger-03",
+    "SkidTop-1.05",
+    "SkidTop1.05",
+    "Suspension_passenger-01-1",
+    "Suspension_passenger-011",
+    "Suspension_passenger-02-1",
+    "Suspension_passenger-021",
+    "Suspension_passenger-03-1",
+    "Suspension_passenger-031",
+    "TowBridle-1.05",
+    "TowBridle1.05",
+    "TowEye",
+    "TrailingSpar-1",
+    "TrailingSpar1"
+  ],
+  "approval": {
+    "shape": "UNREVIEWED",
+    "mechanics": "UNREVIEWED",
+    "production": false
+  }
+}

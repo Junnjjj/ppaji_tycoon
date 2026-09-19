@@ -102,6 +102,14 @@ export interface FacilityDef {
   rentKind?: 'pkg' | 'ride';
   /** false = 건설 목록에 없다(개조판, unlock.source 'craft') */
   buildable?: boolean;
+  /**
+   * 폐기 — 승인 조합 시설(`composites.json`)이 이 시설을 **구성품으로 흡수**했다 (2026-09-19).
+   * 정의와 발자국은 **남긴다**: 기존 세이브의 인스턴스가 조용히 사라지면 지도가 망가진다
+   * (`FacilityStore.fromSnapshot` 은 모르는 defId 를 버린다). 대신 새로 얻을 길을 전부 끊는다 —
+   * 건설 목록·개조 레시피·보상/해금 목록에서 뺐고 `unlock.source` 는 레시피 없는 `craft` 다.
+   * 기존 저장을 조합으로 **자동 변환하지 않는다** (발자국이 커져 지도를 덮어쓴다).
+   */
+  deprecated?: boolean;
   /** 빠지마다 최대 개수 */
   maxPerPark?: number;
   /** 팔찌 값 1|2 */

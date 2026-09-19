@@ -57,12 +57,48 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "start"
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
     "desc": "보트가 드나드는 잔교. 코스가 여기서 뻗는다. 물가나 데크에 이어 붙인다. 손님이 밟고 지나간다.",
-    "onRing": true
+    "onRing": true,
+    "deprecated": true,
+    "buildable": false
+  },
+  {
+    "id": "boarding_dock",
+    "name": "승하선 데크",
+    "class": "attraction",
+    "w": 2,
+    "d": 1,
+    "cost": 2900,
+    "pop": 33,
+    "maint": 175,
+    "shopPrice": 6380,
+    "capacity": 2,
+    "useTicks": 8,
+    "hpDelta": -6,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "indoorOnly": false,
+    "unlock": {
+      "source": "start"
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "2칸 파란 데크에 설치하는 승하선장. 여러 손님이 함께 탑승하고 코스로 출항합니다.",
+    "onRing": true,
+    "facings": 4
   },
   {
     "id": "lifering",
@@ -2524,8 +2560,7 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "invest",
-      "ref": "attraction_2"
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
@@ -2535,7 +2570,9 @@
     "safe": 1,
     "needsVest": true,
     "onRing": false,
-    "chain": null
+    "chain": null,
+    "deprecated": true,
+    "buildable": false
   },
   {
     "id": "turtle_island",
@@ -2577,6 +2614,45 @@
     "chain": "rest"
   },
   {
+    "id": "ppaji_slide",
+    "name": "빠지 슬라이드",
+    "class": "rig",
+    "w": 8,
+    "d": 6,
+    "cost": 2700,
+    "pop": 30,
+    "maint": 159,
+    "shopPrice": 5940,
+    "capacity": 7,
+    "useTicks": 146,
+    "hpDelta": -7,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "indoorOnly": false,
+    "unlock": {
+      "source": "start"
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "승하선 데크 → 장애물 → 계단 → 슬라이드 → 착수 → 수영 복귀가 한 덩어리인 조합 빠지. 앞의 열린 수면까지 함께 예약한다.",
+    "depth": "any",
+    "thrill": 2,
+    "safe": 1,
+    "needsVest": false,
+    "onRing": false,
+    "chain": "slide",
+    "facings": 4
+  },
+  {
     "id": "waterwalk",
     "name": "워터워크볼",
     "class": "rig",
@@ -2602,8 +2678,7 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "invest",
-      "ref": "attraction_6"
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
@@ -2613,7 +2688,9 @@
     "safe": 1,
     "needsVest": false,
     "onRing": false,
-    "chain": null
+    "chain": null,
+    "deprecated": true,
+    "buildable": false
   },
   {
     "id": "airbounce",
@@ -3661,7 +3738,7 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "start"
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
@@ -3671,7 +3748,9 @@
     "chain": "slide",
     "thrill": 2,
     "safe": 1,
-    "needsVest": false
+    "needsVest": false,
+    "deprecated": true,
+    "buildable": false
   },
   {
     "id": "rig_bridge",
@@ -3775,7 +3854,7 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "start"
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
@@ -3785,7 +3864,9 @@
     "chain": "obstacle",
     "thrill": 2,
     "safe": 1,
-    "needsVest": false
+    "needsVest": false,
+    "deprecated": true,
+    "buildable": false
   },
   {
     "id": "rig_seesaw",
@@ -3813,7 +3894,7 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "start"
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
@@ -3824,7 +3905,9 @@
     "thrill": 1,
     "safe": 2,
     "needsVest": false,
-    "team": true
+    "team": true,
+    "deprecated": true,
+    "buildable": false
   },
   {
     "id": "rig_hammock",
@@ -3852,7 +3935,7 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "start"
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
@@ -3862,7 +3945,9 @@
     "chain": "rest",
     "thrill": 0,
     "safe": 2,
-    "needsVest": false
+    "needsVest": false,
+    "deprecated": true,
+    "buildable": false
   },
   {
     "id": "rig_mini_slide",
@@ -3890,7 +3975,7 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "start"
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
@@ -3900,7 +3985,9 @@
     "chain": "slide",
     "thrill": 1,
     "safe": 2,
-    "needsVest": false
+    "needsVest": false,
+    "deprecated": true,
+    "buildable": false
   },
   {
     "id": "watchtower",
@@ -4004,8 +4091,7 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "rank",
-      "rank": 1
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
@@ -4015,7 +4101,9 @@
     "chain": null,
     "thrill": 2,
     "safe": 1,
-    "needsVest": false
+    "needsVest": false,
+    "deprecated": true,
+    "buildable": false
   },
   {
     "id": "rig_sunbed",
@@ -4043,8 +4131,7 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "rank",
-      "rank": 1
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
@@ -4054,7 +4141,9 @@
     "chain": "rest",
     "thrill": 0,
     "safe": 2,
-    "needsVest": false
+    "needsVest": false,
+    "deprecated": true,
+    "buildable": false
   },
   {
     "id": "rig_rack",
@@ -4118,8 +4207,7 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "rank",
-      "rank": 2
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
@@ -4129,7 +4217,9 @@
     "chain": "slide",
     "thrill": 1,
     "safe": 2,
-    "needsVest": false
+    "needsVest": false,
+    "deprecated": true,
+    "buildable": false
   },
   {
     "id": "rig_float_bar",
@@ -4229,8 +4319,7 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "wish",
-      "ref": "famous_painter/2"
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
@@ -4241,7 +4330,9 @@
     "thrill": 3,
     "safe": 1,
     "needsVest": true,
-    "tall": true
+    "tall": true,
+    "deprecated": true,
+    "buildable": false
   },
   {
     "id": "rig_iceberg",
@@ -4309,8 +4400,7 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "cert",
-      "ref": "court_d"
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
@@ -4320,7 +4410,9 @@
     "chain": null,
     "thrill": 1,
     "safe": 2,
-    "needsVest": false
+    "needsVest": false,
+    "deprecated": true,
+    "buildable": false
   },
   {
     "id": "rig_jump_tower",
@@ -4388,8 +4480,7 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "rank",
-      "rank": 5
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
@@ -4401,7 +4492,9 @@
     "safe": 0,
     "needsVest": true,
     "maxPerPark": 1,
-    "bandCost": 2
+    "bandCost": 2,
+    "deprecated": true,
+    "buildable": false
   },
   {
     "id": "rig_led_buoy",
@@ -4429,8 +4522,7 @@
     ],
     "indoorOnly": false,
     "unlock": {
-      "source": "cert",
-      "ref": "set_b"
+      "source": "craft"
     },
     "slide": null,
     "menuSlots": 0,
@@ -4441,7 +4533,9 @@
     "thrill": 0,
     "safe": 2,
     "needsVest": false,
-    "lights": true
+    "lights": true,
+    "deprecated": true,
+    "buildable": false
   },
   {
     "id": "rig_slide2",
@@ -4480,7 +4574,8 @@
     "thrill": 2,
     "safe": 1,
     "needsVest": false,
-    "buildable": false
+    "buildable": false,
+    "deprecated": true
   },
   {
     "id": "rig_slide3",
@@ -4519,7 +4614,8 @@
     "thrill": 3,
     "safe": 1,
     "needsVest": false,
-    "buildable": false
+    "buildable": false,
+    "deprecated": true
   },
   {
     "id": "rig_tramp_double",
@@ -4558,7 +4654,8 @@
     "needsVest": true,
     "onRing": false,
     "chain": null,
-    "buildable": false
+    "buildable": false,
+    "deprecated": true
   },
   {
     "id": "rig_tramp_tower",
@@ -4597,7 +4694,8 @@
     "needsVest": true,
     "onRing": false,
     "chain": null,
-    "buildable": false
+    "buildable": false,
+    "deprecated": true
   },
   {
     "id": "rig_bridge_swing",
@@ -4754,7 +4852,8 @@
     "thrill": 2,
     "safe": 1,
     "needsVest": false,
-    "buildable": false
+    "buildable": false,
+    "deprecated": true
   },
   {
     "id": "rig_seesaw_spin",
@@ -4794,7 +4893,8 @@
     "safe": 2,
     "needsVest": false,
     "team": true,
-    "buildable": false
+    "buildable": false,
+    "deprecated": true
   },
   {
     "id": "rig_beam_zigzag",
@@ -4833,7 +4933,8 @@
     "thrill": 3,
     "safe": 1,
     "needsVest": false,
-    "buildable": false
+    "buildable": false,
+    "deprecated": true
   },
   {
     "id": "rig_hammock_parasol",
@@ -4872,7 +4973,8 @@
     "thrill": 0,
     "safe": 3,
     "needsVest": false,
-    "buildable": false
+    "buildable": false,
+    "deprecated": true
   },
   {
     "id": "rig_sunbed_led",
@@ -4912,7 +5014,8 @@
     "safe": 3,
     "needsVest": false,
     "buildable": false,
-    "lights": true
+    "lights": true,
+    "deprecated": true
   },
   {
     "id": "rig_kids_watergun",
@@ -4951,7 +5054,8 @@
     "thrill": 1,
     "safe": 2,
     "needsVest": false,
-    "buildable": false
+    "buildable": false,
+    "deprecated": true
   },
   {
     "id": "rig_mini_double",
@@ -4990,7 +5094,8 @@
     "thrill": 1,
     "safe": 2,
     "needsVest": false,
-    "buildable": false
+    "buildable": false,
+    "deprecated": true
   },
   {
     "id": "diving_tower",
@@ -5068,7 +5173,8 @@
     "thrill": 4,
     "safe": 0,
     "needsVest": true,
-    "buildable": false
+    "buildable": false,
+    "deprecated": true
   },
   {
     "id": "rig_slidedock_wax",
@@ -5107,7 +5213,8 @@
     "thrill": 2,
     "safe": 2,
     "needsVest": false,
-    "buildable": false
+    "buildable": false,
+    "deprecated": true
   },
   {
     "id": "rig_disc_motor",
@@ -5146,7 +5253,8 @@
     "thrill": 4,
     "safe": 0,
     "needsVest": true,
-    "buildable": false
+    "buildable": false,
+    "deprecated": true
   },
   {
     "id": "watchtower_horn",
@@ -6253,5 +6361,49 @@
     "desc": "푸드코트의 식탁 하나와 의자 둘. 영역을 그리면 3×2 마다 자동으로 놓인다 — 매점에서 산 손님이 앉아 먹는다.",
     "scenery": 4,
     "derived": true
+  },
+  {
+    "id": "ppaji_playground",
+    "name": "빠지 놀이터",
+    "class": "rig",
+    "w": 20,
+    "d": 12,
+    "cost": 18600,
+    "pop": 205,
+    "maint": 1086,
+    "shopPrice": 40920,
+    "capacity": 33,
+    "useTicks": 211,
+    "hpDelta": -2,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "indoorOnly": false,
+    "unlock": {
+      "source": "rank",
+      "rank": 3
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "기구 13종을 파란 데크 한 바퀴로 이은 대형 조합 빠지. 밸런스 코스·물놀이·휴식 구역과 가운데 열린 수면을 함께 예약한다.",
+    "depth": "any",
+    "thrill": 2,
+    "safe": 1,
+    "needsVest": false,
+    "onRing": false,
+    "chain": null,
+    "facings": 4,
+    "tall": true,
+    "lights": true,
+    "bandCost": 2,
+    "maxPerPark": 1
   }
 ]

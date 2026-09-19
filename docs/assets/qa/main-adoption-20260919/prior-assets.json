@@ -1,0 +1,30 @@
+[
+  {
+    "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/public/assets/kairo-atlas.png",
+    "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/public/assets/kairo-atlas.png",
+    "source_exists": true,
+    "main_exists": true,
+    "equal": true
+  },
+  {
+    "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/public/assets/kairo-atlas.json",
+    "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/public/assets/kairo-atlas.json",
+    "source_exists": true,
+    "main_exists": true,
+    "equal": true
+  },
+  {
+    "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/public/assets/kairo-npc-v8/atlas.png",
+    "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/public/assets/kairo-npc-v8/atlas.png",
+    "source_exists": true,
+    "main_exists": true,
+    "equal": true
+  },
+  {
+    "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/public/assets/kairo-npc-v8/atlas.json",
+    "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/public/assets/kairo-npc-v8/atlas.json",
+    "source_exists": true,
+    "main_exists": true,
+    "equal": true
+  }
+]

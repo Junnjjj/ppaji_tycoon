@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { Game } from './game.js';
+import { Game, FACILITY_DEFS } from './game.js';
 import { FLOOR } from './grid.js';
 import { computeRigs } from './rig.js';
 import { makeTestPpaji } from './test-helpers.js';
@@ -77,9 +77,17 @@ describe('P50-a 물 위 배치 · 켜짐 · open · 술어 하나', () => {
     expect(g.placeFacility('rig_float_bar', 50, 27, 1).ok).toBe(true); // 2×1 을 facing 1 로 세워 (50,27)(50,28) 링 데크
     expect(g.canPlace('rescue_dock', 55, 27, 0).ok).toBe(true); // 건너편 링 (1×2 는 facing 0 이 세로) — 붙지 않았지만 규칙상 면제라 어디든 된다
     const r2 = g.placeFacility('rescue_dock', 50, 25, 0); expect(r2.ok, JSON.stringify(r2)).toBe(true); // (50,25)(50,26) — 식당(50,27) 과 변이 닿는다 → D58 이면 거절이었을 자리
-    // 랜드마크
-    expect(g.placeFacility('rig_disc', 51, 27, 0).ok).toBe(true); // 2×2 깊은 물 (51~52, 27~28)
-    const dup = g.canPlace('rig_disc', 53, 27, 0); expect(dup.ok).toBe(false); expect(why(dup)).toContain('판에 1개까지');
+    /*
+     * 랜드마크(`maxPerPark`) — 규칙은 `canPlace` 한 줄이고 **id 를 코드에 안 적는다**.
+     * P61-b: 지금 지을 수 있는 랜드마크는 `ppaji_playground`(20×12) 하나라 20칸 킷 수역에 안 들어간다.
+     * 그래서 은퇴한 2×2 `rig_disc` 를 **물려받은 것으로** 세워 그 한 줄만 잰다(은퇴해도 정의는 남고 저장·킷이 쓴다).
+     * 지금 카탈로그 상태도 같이 고정한다 — 작은 랜드마크가 돌아오면 이 줄이 먼저 빨개진다.
+     */
+    const marks = [...FACILITY_DEFS.values()].filter((d) => d.maxPerPark !== undefined && d.deprecated !== true && d.buildable !== false);
+    expect(marks.map((d) => d.id)).toEqual(['ppaji_playground']);
+    expect(g.canPlace('rig_disc', 51, 27, 0).ok).toBe(false); // 은퇴 — 새로는 못 짓는다
+    expect(g.placeFacility('rig_disc', 51, 27, 0, { inherited: true }).ok).toBe(true); // 2×2 깊은 물 (51~52, 27~28)
+    const dup = g.canPlace('rig_disc', 53, 27, 0, { inherited: true }); expect(dup.ok).toBe(false); expect(why(dup)).toContain('판에 1개까지');
     // passBy — 링 위 점포의 진입 칸은 데크·물이라 실내 코드가 아니다 → 집합 밖
     const sets = (g as unknown as { passBySets: { enter: Set<number>; leave: Set<number> } }).passBySets;
     const bar = g.facilities.all.find((f) => f.defId === 'rig_float_bar')!;
@@ -91,7 +99,7 @@ describe('P50-a 물 위 배치 · 켜짐 · open · 술어 하나', () => {
     const game = readFileSync(new URL('./game.ts', import.meta.url), 'utf8');
     const call = 'guestWalkable(this.grid, this.facilities, i, j)';
     expect(guest.split(call).length - 1).toBe(1);
-    expect(game.split(call).length - 1).toBe(2);
+    expect(game.split(call).length - 1).toBe(3); // P61-a: 낙수 복귀가 올라올 뭍 칸(`rideDocks`)도 **같은 술어**로 고른다 — 갈라지면 손님이 못 서는 칸으로 올라온다
     const old = /isWalkFloor\(f\) && !this\.facilities\.occupied\(i, j\)/g;
     expect((guest.match(old) ?? []).length + (game.match(old) ?? []).length).toBe(0);
   });

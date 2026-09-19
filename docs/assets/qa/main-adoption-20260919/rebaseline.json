@@ -1,0 +1,20 @@
+{
+  "golden": {
+    "1": {
+      "hash": 262891794,
+      "visitors": 465
+    },
+    "2": {
+      "hash": 3799923056,
+      "visitors": 472
+    },
+    "3": {
+      "hash": 437146914,
+      "visitors": 496
+    }
+  },
+  "hungerOff": 3674765354,
+  "initialFloorUnchanged": true,
+  "allLevelsUnchanged": true,
+  "deterministicRepeat": true
+}

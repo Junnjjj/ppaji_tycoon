@@ -33,11 +33,11 @@ describe('pictures.json — 그림 등록부 (P56-a)', () => {
       expect(Number.isInteger(e.x) && Number.isInteger(e.y) && e.x >= 0 && e.y >= 0, id).toBe(true);
     }
   });
-  it('주문서(docs/assets/pipelines/ppaji-picture-sheet.md)의 id 목록 = 데이터 396 (손으로 고치면 여기서 깨진다)', () => {
+  it('주문서(docs/assets/pipelines/ppaji-picture-sheet.md)의 id 목록 = 현재 데이터 (손으로 고치면 여기서 깨진다)', () => {
     const doc = readFileSync(resolve(__dirname, '../../../docs/assets/pipelines/ppaji-picture-sheet.md'), 'utf8');
     const listed = new Set([...doc.matchAll(/^\| `(pic\/[a-z]+\/[^`]+)` \|/gm)].map((m) => m[1] as string));
     expect(listed.size).toBe(all.size);
     for (const id of all) expect(listed.has(id), `주문서에 ${id} 가 없다`).toBe(true);
-    expect(all.size).toBe(396);
+    expect(all.size).toBe(390);
   });
 });

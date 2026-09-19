@@ -1,0 +1,34 @@
+{
+  "source": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/playground/assembly/facility.blend",
+  "source_sha256": "1b38caea1fa492e41f26bc604d25b87f3a5b27cd5e44da2e4c908fd2b6ae3bed",
+  "size": 640,
+  "depth_normalization_offset": 749.9999389648438,
+  "hidden_meshes_excluded": [],
+  "directions": [
+    {
+      "d": 0,
+      "sha256": "9d032d2f7f0bfd63e09c5657a13580f1e23d667d08846523ad9f3a649abbdc74",
+      "hits": 41669,
+      "reprojection_error_px": 0.000152587890625
+    },
+    {
+      "d": 1,
+      "sha256": "006e1468acd6916311f0cef44437f1b27ad3b8a44cd9773701b04ab3b51f02b8",
+      "hits": 42068,
+      "reprojection_error_px": 0.000152587890625
+    },
+    {
+      "d": 2,
+      "sha256": "2e929320df51a2fe373e989f17b5e3047c127659ad1ec9ee348586c75cce98ae",
+      "hits": 42774,
+      "reprojection_error_px": 0.000152587890625
+    },
+    {
+      "d": 3,
+      "sha256": "862c00a39b72099b9a8227d2ec6b57e83e74897d3ea1f69c93798873677150bd",
+      "hits": 41687,
+      "reprojection_error_px": 0.000152587890625
+    }
+  ],
+  "source_unchanged": true
+}

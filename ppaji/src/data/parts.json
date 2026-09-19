@@ -206,12 +206,6 @@
     "price": 1300
   },
   {
-    "id": "fin_plate",
-    "name": "핀판",
-    "unlock": "start",
-    "class": "board"
-  },
-  {
     "id": "deck_board",
     "name": "데크판",
     "unlock": "shop",

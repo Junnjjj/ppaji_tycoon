@@ -1,0 +1,1155 @@
+{
+ "schema": "ppaji-composite-asset/v1",
+ "status": "COMPOSITE_ASSET_USER_REVIEW",
+ "category_proposal": "ppaji",
+ "floor_mode": "transparent-no-floor",
+ "tile_screen_px": [
+  32,
+  16
+ ],
+ "human_opaque_px": 22,
+ "deck_top_z": 0.22,
+ "directions": [
+  0,
+  90,
+  180,
+  270
+ ],
+ "coordinate_system": "+X=game +I, +Y=game -J, +Z=height; rotate all components, footprint and contacts around asset pivot",
+ "reservation_policy_proposal": "reserve whole rectangular footprint including open water; water remains transparent in facility art",
+ "capacity": null,
+ "price": null,
+ "live_adoption": false,
+ "upgrade_system_implemented": false,
+ "npc_art_baked_into_facility": false,
+ "id": "ppaji_playground",
+ "name": "빠지 놀이터",
+ "size": [
+  20,
+  12
+ ],
+ "footprint_origin": [
+  -11,
+  -6
+ ],
+ "footprint_center": [
+  -1,
+  0
+ ],
+ "source_blend": "assembly/facility.blend",
+ "source_sha256": "1b38caea1fa492e41f26bc604d25b87f3a5b27cd5e44da2e4c908fd2b6ae3bed",
+ "components": [
+  {
+   "id": "rig_beam",
+   "position": [
+    -3,
+    3,
+    0
+   ],
+   "facing": 1,
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-remaining-v2/traversal/rig_beam/facility.blend",
+   "source_sha256": "81af44bb73c06da70c4a4342bf262a924f0dd6b355f7b16b9b456abee615b90a"
+  },
+  {
+   "id": "rig_roller",
+   "position": [
+    -0.5,
+    3.5,
+    0
+   ],
+   "facing": 0,
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-remaining-v2/traversal/rig_roller/facility.blend",
+   "source_sha256": "42ce485f8164a4b2559ccb2eff7d3f6a582713e6950a42ac84551d1a305c8dfd"
+  },
+  {
+   "id": "rig_totem",
+   "position": [
+    1.5,
+    3.5,
+    0
+   ],
+   "facing": 0,
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-remaining-v2/traversal/rig_totem/facility.blend",
+   "source_sha256": "99deefbb3021121e9f2f914bfcc1defc049c2945c6c6262190d2b0097a575b2f"
+  },
+  {
+   "id": "rig_seesaw",
+   "position": [
+    4,
+    3.5,
+    0
+   ],
+   "facing": 0,
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-remaining-v2/traversal/rig_seesaw/facility.blend",
+   "source_sha256": "8393e5bb83b916effab0b09a1eed566e96c0804770b1c507b82265fb17fb66e0"
+  },
+  {
+   "id": "waterwalk",
+   "position": [
+    -6,
+    1,
+    0
+   ],
+   "facing": 0,
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-remaining-v2/leisure/waterwalk/facility.blend",
+   "source_sha256": "4f616876b6c89cbbde9ec18f3f1c07100bc870be30b31eab4e63ed52ac48eba9"
+  },
+  {
+   "id": "rig_disc",
+   "position": [
+    -3,
+    -1,
+    0
+   ],
+   "facing": 0,
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-remaining-v2/waterplay/rig_disc/facility.blend",
+   "source_sha256": "f091d234bb4a421f1f07f81d01371a61a0367b277c51f73245ca20e82d78b594"
+  },
+  {
+   "id": "rig_kids_park",
+   "position": [
+    2.5,
+    -0.5,
+    0
+   ],
+   "facing": 0,
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-remaining-v2/waterplay/rig_kids_park/facility.blend",
+   "source_sha256": "34a5b83eef6c9f20b2e5bf5dd547f4c2c6f9cbb7f01ad35f01ddb88634a2151c"
+  },
+  {
+   "id": "rig_mini_slide",
+   "position": [
+    6,
+    -1.5,
+    0
+   ],
+   "facing": 0,
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-remaining-v2/waterplay/rig_mini_slide/facility.blend",
+   "source_sha256": "7faa7b11152d961ab4302070cccafbaab12e781a2d928bfca10ece7d2ca46926"
+  },
+  {
+   "id": "rig_slidedock",
+   "position": [
+    4,
+    -3.5,
+    0
+   ],
+   "facing": 0,
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-remaining-v2/waterplay/rig_slidedock/facility.blend",
+   "source_sha256": "cdedfcc5e60724d98e70931c5c6a55d232ed66bcf69276d4034d6eab0f76f59a"
+  },
+  {
+   "id": "trampoline_w",
+   "position": [
+    0,
+    -3.5,
+    0
+   ],
+   "facing": 2,
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-core-v1/trampoline_w/facility.blend",
+   "source_sha256": "51ee4c6c5d8e9af6ae3a180eda13415681cdef84f4ad508a6d3faa9496800931"
+  },
+  {
+   "id": "rig_hammock",
+   "position": [
+    -6,
+    -3,
+    0
+   ],
+   "facing": 0,
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-remaining-v2/leisure/rig_hammock/facility.blend",
+   "source_sha256": "9c1997df728cfdeb0af79a7326c17d2bb984abd1aa8c7c740b6c3748aed545e2"
+  },
+  {
+   "id": "rig_sunbed",
+   "position": [
+    -4.5,
+    -3.5,
+    0
+   ],
+   "facing": 0,
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-remaining-v2/leisure/rig_sunbed/facility.blend",
+   "source_sha256": "bcf24ee630de6cc40ffbd64e7e78e8e947a3a3e946875e31114f0e0d80aa02b5"
+  },
+  {
+   "id": "rig_led_buoy",
+   "position": [
+    -7.5,
+    4,
+    0
+   ],
+   "facing": 0,
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-remaining-v2/leisure/rig_led_buoy/facility.blend",
+   "source_sha256": "31475c0644bb3fc2f5a931e36dd0c5d62693c84724aaa48534a85cfa2424668c"
+  },
+  {
+   "id": "boarding_deck",
+   "position": [
+    -10,
+    -1,
+    0
+   ],
+   "facing": 0,
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/boarding_deck/facility.blend",
+   "source_sha256": "5e6ffece7af0ddaa078a354ad0c88b0be28e2e4625de2e21f8bbcadf7a1c650b"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -8.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -8.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -7.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -7.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -6.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -6.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -5.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -5.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -4.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -4.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -3.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -3.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -2.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -2.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -1.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -1.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -0.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -0.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    0.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    0.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    1.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    1.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    2.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    2.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    3.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    3.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    4.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    4.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    5.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    5.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    6.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    6.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    7.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    7.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    8.5,
+    -5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    8.5,
+    5.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -8.5,
+    -4.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    8.5,
+    -4.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -8.5,
+    -3.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    8.5,
+    -3.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -8.5,
+    -2.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    8.5,
+    -2.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -8.5,
+    -1.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    8.5,
+    -1.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -8.5,
+    -0.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    8.5,
+    -0.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -8.5,
+    0.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    8.5,
+    0.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -8.5,
+    1.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    8.5,
+    1.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -8.5,
+    2.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    8.5,
+    2.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -8.5,
+    3.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    8.5,
+    3.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -8.5,
+    4.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    8.5,
+    4.5,
+    0
+   ],
+   "facing": 0,
+   "role": "perimeter",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -7.5,
+    -4.5,
+    0
+   ],
+   "facing": 0,
+   "role": "arrival_lounge",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -7.5,
+    -3.5,
+    0
+   ],
+   "facing": 0,
+   "role": "arrival_lounge",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -7.5,
+    -2.5,
+    0
+   ],
+   "facing": 0,
+   "role": "arrival_lounge",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -7.5,
+    -1.5,
+    0
+   ],
+   "facing": 0,
+   "role": "arrival_lounge",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -7.5,
+    -0.5,
+    0
+   ],
+   "facing": 0,
+   "role": "arrival_lounge",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -7.5,
+    0.5,
+    0
+   ],
+   "facing": 0,
+   "role": "arrival_lounge",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -7.5,
+    1.5,
+    0
+   ],
+   "facing": 0,
+   "role": "arrival_lounge",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -7.5,
+    2.5,
+    0
+   ],
+   "facing": 0,
+   "role": "arrival_lounge",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -4.5,
+    1.5,
+    0
+   ],
+   "facing": 0,
+   "role": "arrival_lounge",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -3,
+    2,
+    0
+   ],
+   "facing": 0,
+   "role": "balance_spine",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -2,
+    2,
+    0
+   ],
+   "facing": 0,
+   "role": "balance_spine",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -1,
+    2,
+    0
+   ],
+   "facing": 0,
+   "role": "balance_spine",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    0,
+    2,
+    0
+   ],
+   "facing": 0,
+   "role": "balance_spine",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    1,
+    2,
+    0
+   ],
+   "facing": 0,
+   "role": "balance_spine",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    6,
+    2,
+    0
+   ],
+   "facing": 0,
+   "role": "balance_spine",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -5,
+    3.5,
+    0
+   ],
+   "facing": 0,
+   "role": "beam_approach",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    -3,
+    1,
+    0
+   ],
+   "facing": 0,
+   "role": "disc_approach",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    7.5,
+    -1.5,
+    0
+   ],
+   "facing": 0,
+   "role": "slide_approach",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  },
+  {
+   "id": "connector_deck",
+   "position": [
+    2,
+    -3.5,
+    0
+   ],
+   "facing": 0,
+   "role": "jump_to_dock",
+   "source_blend": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "source_sha256": "4883c728bbbd1c9b1f05500f4524f8dddd88746aff2db87e2003a741075ed1c4"
+  }
+ ],
+ "entry": [
+  -11,
+  -1,
+  0.22
+ ],
+ "exit": [
+  -11,
+  -1,
+  0.22
+ ],
+ "npc_routes": {
+  "perimeter": "runtime/rectangle-routes.mjs",
+  "traversal": "traversal/routes.mjs",
+  "waterplay": "waterplay/routes.mjs",
+  "leisure": "leisure/routes.mjs",
+  "trampoline": "runtime/core-routes.mjs",
+  "connected_course": "runtime/rectangle-routes.mjs",
+  "dock_return": "runtime/course-samples.mjs"
+ },
+ "runtime_review": "index.html",
+ "physical_review": "assembly/review/review.html",
+ "interaction": "One continuous beam → roller → totem visitor; individual water/rest loops; six perimeter walkers",
+ "new_wave_facilities": [
+  "rig_beam",
+  "rig_roller",
+  "rig_seesaw",
+  "rig_totem",
+  "rig_disc",
+  "rig_mini_slide",
+  "rig_slidedock",
+  "rig_kids_park",
+  "waterwalk",
+  "rig_hammock",
+  "rig_sunbed",
+  "rig_led_buoy"
+ ],
+ "upgrade_options": [],
+ "groups": {
+  "balance": [
+   "rig_beam",
+   "rig_roller",
+   "rig_totem",
+   "rig_seesaw"
+  ],
+  "water": [
+   "rig_disc",
+   "rig_kids_park",
+   "rig_mini_slide",
+   "rig_slidedock",
+   "trampoline_w"
+  ],
+  "arrival_rest": [
+   "waterwalk",
+   "rig_hammock",
+   "rig_sunbed",
+   "rig_led_buoy"
+  ]
+ }
+}

@@ -109,7 +109,7 @@
     "line": "가을은 빠지 심사철이에요. 유자향 노란 향초를 넣으면 물빛이 노랗고 분위기가 상큼해집니다.",
     "grant": {
       "kind": "rigPart",
-      "id": "slip_wax"
+      "id": "float_drum"
     }
   },
   {
@@ -303,7 +303,7 @@
     "line": "밤바람이 차죠. 계피향 빨간 화로를 보냅니다 — 물을 데우고 붉은빛은 겨울에 4점이에요.",
     "grant": {
       "kind": "rigPart",
-      "id": "slip_wax"
+      "id": "float_drum"
     }
   },
   {
@@ -402,7 +402,7 @@
     "line": "솔잎 얼음 바구니를 보냅니다. 물을 4도 식히고 솔내음은 여름에 4점이에요.",
     "grant": {
       "kind": "rigPart",
-      "id": "slip_wax"
+      "id": "float_drum"
     },
     "from": "president"
   },
@@ -486,11 +486,11 @@
     "season": 3,
     "dayInSeason": 2,
     "tick": 280,
-    "title": "겨울 택배 — 미끄럼 왁스",
-    "line": "2년차 겨울이 깊었네요. 봄에 쓸 미끄럼 왁스을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
+    "title": "겨울 택배 — 부력 드럼",
+    "line": "2년차 겨울이 깊었네요. 봄에 쓸 부력 드럼을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
     "grant": {
       "kind": "rigPart",
-      "id": "slip_wax"
+      "id": "float_drum"
     },
     "from": "president",
     "priority": "strip"
@@ -531,11 +531,11 @@
     "season": 3,
     "dayInSeason": 2,
     "tick": 280,
-    "title": "겨울 택배 — 분사 노즐",
-    "line": "5년차 겨울이 깊었네요. 봄에 쓸 분사 노즐을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
+    "title": "겨울 택배 — 앵커 체인",
+    "line": "5년차 겨울이 깊었네요. 봄에 쓸 앵커 체인을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
     "grant": {
       "kind": "rigPart",
-      "id": "spray_nozzle"
+      "id": "anchor_chain"
     },
     "from": "president",
     "priority": "strip"
@@ -546,11 +546,11 @@
     "season": 3,
     "dayInSeason": 2,
     "tick": 280,
-    "title": "겨울 택배 — 키즈 워터 놀이터",
-    "line": "6년차 겨울이 깊었네요. 봄에 쓸 키즈 워터 놀이터을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
+    "title": "겨울 택배 — 안전망",
+    "line": "6년차 겨울이 깊었네요. 봄에 쓸 안전망을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
     "grant": {
-      "kind": "facility",
-      "id": "rig_kids_park"
+      "kind": "rigPart",
+      "id": "safety_net"
     },
     "from": "president",
     "priority": "strip"
@@ -561,11 +561,11 @@
     "season": 3,
     "dayInSeason": 2,
     "tick": 280,
-    "title": "겨울 택배 — LED 부표",
-    "line": "7년차 겨울이 깊었네요. 봄에 쓸 LED 부표을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
+    "title": "겨울 택배 — 펌프 모터",
+    "line": "7년차 겨울이 깊었네요. 봄에 쓸 펌프 모터을(를) 보냅니다 — 멈춘 판에도 해마다 하나씩은 열립니다.",
     "grant": {
-      "kind": "facility",
-      "id": "rig_led_buoy"
+      "kind": "rigPart",
+      "id": "pump_motor"
     },
     "from": "president",
     "priority": "strip"

@@ -26,8 +26,6 @@
       "hydrangea",
       "playground",
       "rig_blob",
-      "rig_roller",
-      "rig_sunbed",
       "rig_rack",
       "env_pine",
       "env_deciduous",
@@ -63,7 +61,6 @@
       "fishing",
       "hibiscus",
       "minigolf",
-      "rig_slidedock",
       "rig_float_bar",
       "rescue_dock",
       "env_village_house",
@@ -101,7 +98,10 @@
     "reward": {
       "kind": "money",
       "amount": 8000
-    }
+    },
+    "unlocks": [
+      "ppaji_playground"
+    ]
   },
   {
     "star": 4,
@@ -153,8 +153,6 @@
       "kind": "facility",
       "id": "golden_kairobot"
     },
-    "unlocks": [
-      "rig_disc"
-    ]
+    "unlocks": []
   }
 ]

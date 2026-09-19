@@ -1,3 +1,5 @@
+import authoredRideSeats from '../data/watercraft-seats.json';
+import { adoptApprovedDocks } from './approved-docks.js';
 import { applyArrivalLayout, arrivalRoute } from './arrival-layout.js';
 /**
  * 세계 조립 — 시계·격자·풀·시설·손님·돈·인박스를 한 곳에서 tick 한다.
@@ -10,7 +12,7 @@ import { FoodCourtStore, FOODCOURT_SEAT_DEF, FOODCOURT_TILE_COST, courtBlocks, c
 import { PoolStore, type PoolSnapshot } from './pool.js';
 import type { Pool } from './pool.js';
 import { poolState, type PoolState } from './pool-state.js';
-import { GuestStore, type GuestSnapshot, FLOAT_BY_GIFT , rentKey, type Guest , type GuestHooks } from './guest.js';
+import { GuestStore, type GuestSnapshot, FLOAT_BY_GIFT , rentKey, setEmote, type Guest , type GuestHooks } from './guest.js';
 import { firstVisitLine } from './lines.js';
 import { FacilityStore, guestWalkable, type WaterRules, FACILITY_FAIL_KO, popOf, capacityOf, upgradeCost, FACILITY_MAX_LEVEL, type FacilitySnapshot, type PlacedFacility } from './facility.js';
 import { StoryDirector } from './story.js';
@@ -43,11 +45,13 @@ import { activeCombos, COMBO_DEFS, COMBO_POP, type ActiveCombo } from './combos.
 import { PART_TIMER_WAGE, staffable } from './facility.js';
 import type { GearDef , PackageDef, GroundDef } from '../data/schema.js';
 import {
-  CourseStore, dockCandidates, suggestCourse as suggestCourseShape, validateCourse, evaluateCourse, courseEquipment, presetDef, sampleCourse, fitBlocked, PRESETS, COURSE_ISSUE_TEXT,
+  CourseStore, dockCandidates, suggestCourse as suggestCourseShape, validateCourse, evaluateCourse, courseEquipment, presetDef, sampleCourse, fitBlocked, towBoatForEquipment, PRESETS, COURSE_ISSUE_TEXT,
   type CourseSnapshot, type CourseTerrain, type DockChoice, type CourseEditDraft, type CourseResult, type PlacedCourse,
 } from './course/course.js';
+import { CourseRideStore, COURSE_DOCK_IDS, type RideDock, type RideHost, type RideStoreSnapshot, type SeatSpec } from './course/ride.js';
+import type { RideScene, Vec2f } from './course/ride-view.js';
 import {
-  clockView, isWeekend, seasonOf, yearOf, TICKS_PER_DAY, LATE_DAY_TICK, TOTAL_DAYS, ARRIVAL_FROM_TICK, ARRIVAL_TO_TICK, TICKS_PER_HOUR, SHOP_RESTOCK_TICK, type ClockView, CLOSING_TICK, EVENING_TICK } from './clock.js';
+  clockView, isWeekend, seasonOf, yearOf, TICKS_PER_DAY, TICK_MS, LATE_DAY_TICK, TOTAL_DAYS, ARRIVAL_FROM_TICK, ARRIVAL_TO_TICK, TICKS_PER_HOUR, SHOP_RESTOCK_TICK, type ClockView, CLOSING_TICK, EVENING_TICK } from './clock.js';
 import type { FacilityDef, SeasonTables, AreaDef, FriendDef, WishDef, GiftDef, Condition, CertDef, RankDef, ShopEntry, CalendarEvent, RecipeDef, CompatDef, IngredientDef, InvestDef, CampaignDef } from '../data/schema.js';
 import defaultBalance from '../data/balance.json';
 import facilitiesJson from '../data/facilities.json';
@@ -252,7 +256,7 @@ export interface GameSnapshot {
   randomEvents?: RandomEventsSnapshot;
   /** 하루 안의 결산 누적 (G19) — 없으면 0 에서 시작 (왕복이 하루 중간이면 필요하다) */
   dayAccum?: { satSum: number; satN: number; menuSalesToday: Record<string, number>; likesAtDayStart: number; ticketsToday?: number; feesToday?: number; foodToday?: number; enteredToday?: number; leftToday?: number };
-  stats: { visitors: number; tickets: number; fees: number; /* P49-a1 optional (전부 0/미기록 — 배선은 P51·P52-a) */ converts?: number; pkgPpaji?: number; vestRentals?: number; /** P54 밤 빠지 파티 — 밤이 열린 날 수 · 야간권 · 링 위 매점 저녁 매출 · 빠지 자리 이용료(저녁) */ nightNights?: number; nightPkg?: number; nightFood?: number; nightFee?: number; food?: number; spent?: number; bailouts?: number; busGuests?: number; wishDone?: number; wishExpired?: number; courseRevenue?: number; courseRiders?: number; pkg?: number; teamGuests?: number; teamSeated?: number; seatless?: number; lodging?: number; overnight?: number; teamsSeated?: number; /** P34 — 비 오는 날 실내로 피한 손님 수 */ rainRefuge?: number; passByEnter?: number; passByLeave?: number; nightUses?: number; gearRentals?: number; /** P50-b1 — 빠지 지출 구성 */ spentDeck?: number; spentRig?: number; spentConvert?: number; /** P51 measure — 기구 이용 · 그날 기구를 탄 손님 수(재탑승 비율) */ rigUses?: number; rigRiderDays?: number; rigRepeats?: number; rigPartsBought?: number; /** P56-c — 재료·부품 재고 구입 수(요리·공방·개조 합) */ stockBuys?: number; /** P58-a — 푸드코트 자리에서 먹은 수 */ courtEats?: number; /** P60-e B2 — 식사 수(사서 든 손님) · 서서 먹은 수 (optional — 구 세이브는 0) */ eats?: number; standEats?: number; /** P52-a — 팔찌를 낀 기구 이용 */ rigUsesBand?: number; /** P52-b — 사고 수 */ accidents?: number; /** P52-c — 계절별 야외 입수 [봄,여름,가을,겨울] */ swimsBySeason?: number[]; days: DayReport[]; menuSales?: Record<string, number> };
+  stats: { visitors: number; tickets: number; fees: number; /* P49-a1 optional (전부 0/미기록 — 배선은 P51·P52-a) */ converts?: number; pkgPpaji?: number; vestRentals?: number; /** P54 밤 빠지 파티 — 밤이 열린 날 수 · 야간권 · 링 위 매점 저녁 매출 · 빠지 자리 이용료(저녁) */ nightNights?: number; nightPkg?: number; nightFood?: number; nightFee?: number; food?: number; spent?: number; bailouts?: number; busGuests?: number; wishDone?: number; wishExpired?: number; courseRevenue?: number; courseRiders?: number; /** P61-a 실제 운항 — 낙수 · 자리가 없어 못 탄 손님 · 선착장이 없어 구조된 손님 */ courseFalls?: number; courseFull?: number; courseRescues?: number; pkg?: number; teamGuests?: number; teamSeated?: number; seatless?: number; lodging?: number; overnight?: number; teamsSeated?: number; /** P34 — 비 오는 날 실내로 피한 손님 수 */ rainRefuge?: number; passByEnter?: number; passByLeave?: number; nightUses?: number; gearRentals?: number; /** P50-b1 — 빠지 지출 구성 */ spentDeck?: number; spentRig?: number; spentConvert?: number; /** P51 measure — 기구 이용 · 그날 기구를 탄 손님 수(재탑승 비율) */ rigUses?: number; rigRiderDays?: number; rigRepeats?: number; rigPartsBought?: number; /** P56-c — 재료·부품 재고 구입 수(요리·공방·개조 합) */ stockBuys?: number; /** P58-a — 푸드코트 자리에서 먹은 수 */ courtEats?: number; /** P60-e B2 — 식사 수(사서 든 손님) · 서서 먹은 수 (optional — 구 세이브는 0) */ eats?: number; standEats?: number; /** P52-a — 팔찌를 낀 기구 이용 */ rigUsesBand?: number; /** P52-b — 사고 수 */ accidents?: number; /** P52-c — 계절별 야외 입수 [봄,여름,가을,겨울] */ swimsBySeason?: number[]; days: DayReport[]; menuSales?: Record<string, number> };
   prevSatAvg?: number;
   /** 해금된 시설·선물 id (start 는 언제나 포함). P60-a: 옛 세이브의 `items` 는 읽지 않는다(마이그레이션은 save/ 가 v5 로) */
   unlocked: { facilities: string[]; gifts?: string[]; tiles?: string[] };
@@ -260,6 +264,11 @@ export interface GameSnapshot {
   friendsToday?: string[];
   /** 견인 코스 + 산 기구 (P4-A). optional — 없으면 코스 0·물려받은 기구 둘. 버전은 안 올린다 */
   courses?: CourseSnapshot;
+  /**
+   * P61-a 실제 운항 (optional · 세이브 v5 그대로 — 없으면 뜬 운항이 없는 판이다).
+   * ⚠ **모르는 버전은 거절한다** — 조용히 버리면 그 운항의 손님이 영원히 얼어붙는다 (인계 §9).
+   */
+  rides?: RideStoreSnapshot;
 }
 
 export class Game {
@@ -328,6 +337,15 @@ export class Game {
   private comboCache: { key: string; list: ActiveCombo[] } | null = null;
   /** 견인 코스 (P4-A, §2.2 「코스 = RCT 식 루트」) — 수역 안에만 (D12) */
   readonly courses = new CourseStore();
+  /** P61-a — 실제 견인 운항(탑승·주행·낙수·복귀). 요금·사고·통계는 이 `Game` 이 소유한다 */
+  readonly rides: CourseRideStore;
+  /** 표시용 코스 경로 캐시 — `courses.version` 이 바뀔 때만 다시 만든다 (매 프레임 84표본×코스는 낭비다) */
+  private ridePathCache: { version: number; paths: Map<number, readonly Vec2f[]>; revision: number; moored: RideScene['rides'][number][] } | null = null;
+  /** Authored contacts are pure data, shared by headless simulation and the browser. */
+  private rideSeats: ReadonlyMap<string, readonly SeatSpec[]> = new Map(Object.entries(authoredRideSeats));
+  setRideSeatSpecs(table: Readonly<Record<string, readonly SeatSpec[]>>): void {
+    this.rideSeats = new Map(Object.entries(table));
+  }
   private foodToday = 0;
   /** P60-e B2 — 그날 식사 수 · 서서 먹은 수 (DayReport 로 나가고 자정에 0) */
   private eatsToday = 0; private standEatsToday = 0;
@@ -339,7 +357,7 @@ export class Game {
   tick = 0;
   money: number;
   rank = 0;
-  stats = { visitors: 0, tickets: 0, fees: 0, food: 0, spent: 0, spentDeck: 0, spentRig: 0, spentConvert: 0, converts: 0, rigUses: 0, rigRiderDays: 0, rigRepeats: 0, rigPartsBought: 0, stockBuys: 0, courtEats: 0, eats: 0, standEats: 0, rigUsesBand: 0, pkgPpaji: 0, vestRentals: 0, nightNights: 0, nightPkg: 0, nightFood: 0, nightFee: 0, accidents: 0, swimsBySeason: [0, 0, 0, 0], bailouts: 0, busGuests: 0, wishDone: 0, wishExpired: 0, courseRevenue: 0, courseRiders: 0, pkg: 0, teamGuests: 0, teamSeated: 0, seatless: 0, lodging: 0, overnight: 0, teamsSeated: 0, rainRefuge: 0, days: [] as DayReport[], menuSales: {} as Record<string, number>, passByEnter: 0, passByLeave: 0, nightUses: 0, gearRentals: 0 };
+  stats = { visitors: 0, tickets: 0, fees: 0, food: 0, spent: 0, spentDeck: 0, spentRig: 0, spentConvert: 0, converts: 0, rigUses: 0, rigRiderDays: 0, rigRepeats: 0, rigPartsBought: 0, stockBuys: 0, courtEats: 0, eats: 0, standEats: 0, rigUsesBand: 0, pkgPpaji: 0, vestRentals: 0, nightNights: 0, nightPkg: 0, nightFood: 0, nightFee: 0, accidents: 0, swimsBySeason: [0, 0, 0, 0], bailouts: 0, busGuests: 0, wishDone: 0, wishExpired: 0, courseRevenue: 0, courseRiders: 0, courseFalls: 0, courseFull: 0, courseRescues: 0, pkg: 0, teamGuests: 0, teamSeated: 0, seatless: 0, lodging: 0, overnight: 0, teamsSeated: 0, rainRefuge: 0, days: [] as DayReport[], menuSales: {} as Record<string, number>, passByEnter: 0, passByLeave: 0, nightUses: 0, gearRentals: 0 };
   /** 오늘 퇴장 만족 합·수 (결산용, 저장 안 함 — 하루 안에서만 쓴다) */
   private satSum = 0;
   /** 어제 퇴장 만족 평균 (G30 티켓 레벨). 저장 optional */
@@ -379,13 +397,14 @@ export class Game {
     this.cooking = new CookingStore(RECIPE_DEFS, INGREDIENT_DEFS, this.rng.cook);
     this.workshop = new WorkshopStore(GEAR_DEFS, PART_DEFS, this.rng.workshop, WORKSHOP_WORDS, GEAR_FAIL_PICK);
     this.rigs = new RigStore(RIG_UPGRADES, RIG_PART_DEFS, this.rng.rig); // P51: 개조 레시피 20(rigs.json)
+    this.rides = new CourseRideStore(this.rideHost());
     for (const d of FACILITY_DEFS.values()) if (d.unlock.source === 'start' && d.derived !== true) this.unlocked.facilities.add(d.id); // P58-a: 파생 시설은 해금 목록에 안 든다(건설 창·봇에 안 뜬다)
     for (const d of GIFT_DEFS) if (d.unlock === 'start') this.unlocked.gifts.add(d.id);
     this.weather = rollWeather(this.rng.world, seasonOf(0));
     this.planFriendVisits();
     this.planBuses();
     // 시작 킷 (G25) — 물려받은 작은 파크. 스냅샷 복원은 kit:false 로 부른다 (덮어쓸 것이라 무의미하다)
-    if (opts.kit !== false) { applyStartKit(this); if (opts.arrival) applyArrivalLayout(this); }
+    if (opts.kit !== false) { applyStartKit(this); if (opts.arrival) { applyArrivalLayout(this); adoptApprovedDocks(this.facilities,this.grid); this.finalizeArrivalLayout(); } }
   }
 
   /** 오늘 바깥 기온 — 계절 기본 + 날씨 */
@@ -843,7 +862,7 @@ export class Game {
       const od = this.facilities.defOf(o);
       if (!FacilityStore.footprint(od, o.i, o.j, o.facing).some((t) => inR(t.i, t.j))) continue;
       if (od.menuSlots > 0) for (const r of this.menus.equipped(o.uid)) cats.add(r.cat); // P60-e B4: 걸린 메뉴의 카테고리 — 빈 점포는 0
-      if (od.id === 'dock' || od.id === 'shower_row') water = true;
+      if (COURSE_DOCK_IDS.has(od.id) || od.id === 'shower_row') water = true;
       if (od.class === 'decor') garden += 2;
       if (od.noisy === 'dirty') dirty = true;
       if (od.noisy === 'loud' || od.class === 'slide') loud = true;
@@ -926,8 +945,8 @@ export class Game {
       const od = this.facilities.defOf(o);
       if (!FacilityStore.footprint(od, o.i, o.j, o.facing).some((t) => t.i >= i0 && t.i <= i1 && t.j >= j0 && t.j <= j1)) continue;
       if (od.menuSlots > 0) has.food = true;
-      if (od.id === 'dock' && this.courses.all.some((c) => Math.round(c.dock.x) === o.i && Math.round(c.dock.y) === o.j)) has.dock = true;
-      if (od.id === 'dock' || od.id === 'shower_row') has.water = true;
+      if (COURSE_DOCK_IDS.has(od.id) && this.courseAtDock(o) !== undefined) has.dock = true;
+      if (COURSE_DOCK_IDS.has(od.id) || od.id === 'shower_row') has.water = true;
       if (od.lodging === true) has.lodging = true;
       if (od.fire === true) has.fire = true;
     }
@@ -1510,6 +1529,7 @@ export class Game {
     this.stepBus();
     if (FEATURES.staff) this.staff.step();
     this.guests.step(this.guestHooks); // P52-a: 훅 묶음은 getter 로(검사 표면 `simulateUseForTest` 가 같은 훅을 쓴다)
+    this.rides.step(); // P61-a 실제 운항 — 손님 걸음 뒤에 자세를 덮는다 (탑승 중인 손님은 `rideLock` 으로 이미 얼어 있다)
     this.runCalendar();
     if (this.certs.isJudgeTime(this.day, this.tick)) this.judgeCert();
     // P18 저녁 — 숙박 손님이 있는 자리마다 불멍 (매 60tick)
@@ -1547,6 +1567,7 @@ export class Game {
   }
 
   private closeDay(): void {
+    this.rides.endOfDay(); // P61-a: 뜬 운항·복귀를 폐장에 정리한다 — 한 손님의 방문은 하루 안에 끝나야 한다(불변식)
     const overnight = this.guests.all.filter((g) => g.stays && g.seatUid !== null && g.state !== 'gone' && this.facilities.byUid(g.seatUid)).length;
     const keep = (g: Guest): boolean => g.stays && g.seatUid !== null && this.facilities.byUid(g.seatUid) !== undefined;
     for (const g of this.guests.all) if (keep(g) && g.state !== 'gone') this.friendLeaves(g); // P18 자는 친구도 하루 만족을 EXP 로 — 안 하면 소원이 며칠 늦게 열린다
@@ -2287,6 +2308,7 @@ export class Game {
   canPlace(defId: string, i: number, j: number, facing: 0 | 1 = 0, opts: { inherited?: boolean; frontage?: boolean } = {}): Result {
     const def = FACILITY_DEFS.get(defId);
     if (!def) return { ok: false, reason: FACILITY_FAIL_KO.unknown };
+    if (!opts.inherited && def.deprecated) return { ok: false, reason: '새 조합 시설로 통합된 시설입니다' };
     if (this.arrivalRevision && FacilityStore.footprint(def, i, j, facing).some(t => arrivalRoute(this.gate).some(a => a.i === t.i && a.j === t.j))) return { ok: false, reason: '매표소와 실내를 잇는 출입 통로입니다' };
     if (!opts.inherited && !this.isUnlocked(defId)) return { ok: false, reason: '아직 해금되지 않은 시설입니다' };
     if (def.derived !== true && FacilityStore.footprint(def, i, j, facing).some((t) => this.foodcourts.ownerAt(t.i, t.j) !== null)) return { ok: false, reason: '푸드코트 자리입니다 — 영역을 지우거나 옆에 두세요' }; // P58-a
@@ -2333,7 +2355,7 @@ export class Game {
     const f = this.facilities.byUid(uid);
     if (!f) return { ok: false, reason: '시설이 없습니다' };
     if (!this.tools.has('move')) return { ok: false, reason: '이동 도구가 없습니다 — 첫 심사 합격 뒤 사장이 보낸다' };
-    if (f.passage) return { ok: false, reason: '정문 매표소는 출입 통로에 연결되어 있습니다' };
+    if (f.passage && !COURSE_DOCK_IDS.has(f.defId)) return { ok: false, reason: '정문 매표소는 출입 통로에 연결되어 있습니다' };
     if (f.i === i && f.j === j && f.facing === facing) return { ok: false, reason: '같은 자리입니다 — 지도를 탭해 옮길 곳을 고르세요' };
     const def = this.facilities.defOf(f);
     if (this.arrivalRevision && FacilityStore.footprint(def, i, j, facing).some(t => arrivalRoute(this.gate).some(a => a.i === t.i && a.j === t.j))) return { ok: false, reason: '매표소와 실내를 잇는 출입 통로입니다' };
@@ -2488,14 +2510,15 @@ export class Game {
     return { p, level, label: RISK_LABELS[level] ?? '' };
   }
   /** 사고 한 번 — 뽑기는 호출부가 했다. 하루 상한(넘으면 결과를 버린다) · hp −35 · 만족 −20 · 토스트 · 수역 인기 감쇠 · 의무실이 있으면 그리로 */
-  private applyAccident(g: Guest, f: PlacedFacility | null, what: string): boolean {
+  private applyAccident(g: Guest, f: PlacedFacility | null, what: string, deferInfirmary = false): boolean {
     if (this.accidentsToday >= this.b.accidentsPerDay) return false;
     this.accidentsToday++;
     this.stats.accidents = (this.stats.accidents ?? 0) + 1;
     g.hp = Math.max(0, g.hp - this.b.accidentHp); g.sat = Math.max(0, g.sat - this.b.accidentSat); g.say = '아야…';
     const pid = f ? this.poolOfFacility(f.uid) : null;
     if (pid !== null) this.accidentCut.set(pid, Math.min(this.b.accidentPopCutMax, (this.accidentCut.get(pid) ?? 0) + this.b.accidentPopCut));
-    const inf = this.facilities.all.find((o) => o.defId === 'infirmary');
+    // P61-a: 물 위의 손님에게 지금 의무실 목표를 주면 물 위를 걷는다 — 복귀가 끝난 뒤(`onReturn`)에 준다 (인계 §7)
+    const inf = deferInfirmary ? undefined : this.facilities.all.find((o) => o.defId === 'infirmary');
     if (inf) { g.target = { kind: 'facility', uid: inf.uid }; g.state = 'walk'; g.stateTicks = 0; }
     this.inbox.push({ tick: this.tick, day: this.day, kind: 'system', priority: 'toast', title: `사고 — ${what}`, body: `${g.name}이(가) 다쳤다 · 망루 알바·구조정·브리핑·구명조끼가 확률을 낮춘다` });
     this.fx.push({ kind: 'splash', i: g.i, j: g.j });
@@ -2608,6 +2631,7 @@ export class Game {
         hpMul: () => this.staff.mul('hpMul'),
         satMul: () => this.staff.mul('satMul') * this.cleanSatMul(),
         photoMul: () => this.staff.mul('photoMul'),
+        rideLock: (g) => this.rides.isRiding(g.uid), // P61-a: 운항 중이면 일반 이동을 얼린다
         onFacilityUse: (g, f) => {
           if (f.defId === FOODCOURT_SEAT_DEF) this.stats.courtEats = (this.stats.courtEats ?? 0) + 1; // P58-a
           { const d = this.facilities.defOf(f); if (d.class === 'rig') { this.stats.rigUses = (this.stats.rigUses ?? 0) + 1; if (g.band !== undefined) this.stats.rigUsesBand = (this.stats.rigUsesBand ?? 0) + 1; if (!this.rigRidersToday.has(g.uid)) { this.rigRidersToday.add(g.uid); this.stats.rigRiderDays = (this.stats.rigRiderDays ?? 0) + 1; } const pair = g.uid * 100000 + f.uid; if (this.rigPairsToday.has(pair)) this.stats.rigRepeats = (this.stats.rigRepeats ?? 0) + 1; else this.rigPairsToday.add(pair); } } // P51 measure: 재탑승 = 같은 손님이 같은 기구를 그날 다시 탄 것(사슬을 건너는 것은 아니다)
@@ -2649,24 +2673,35 @@ export class Game {
               this.fx.push({ kind: 'buy', i: g.i, j: g.j, amount: price, label: `${rec.name} ×1` });
             }
           }
-          // P4-C: 선착장 이용 = 견인 코스 탑승. 그 선착장에서 시작하는 코스가 있으면 기구 요금을 받고 스릴만큼 만족이 오른다
-          if (def.id === 'dock') {
-            const c = this.courses.all.find((x) => Math.round(x.dock.x) === f.i && Math.round(x.dock.y) === f.j);
+          /*
+           * P4-C → P61-a: 선착장 이용 = **실제 출항**이다.
+           *  · 옛 규칙은 여기서 요금을 받고 `safe: 2` 고정 사고를 즉시 뽑고 끝이었다 — 보트는 장식이었다.
+           *  · 이제 `CourseRideStore` 가 탑승 → 주행 → (낙수) → 하선을 tick 으로 돌린다.
+           *  · 요금은 **출항이 성립할 때 한 번**. 자리가 없으면 한 푼도 안 받는다 (그래서 `vehicles` 가 뜻을 갖는다).
+           *  · 사고 뽑기는 **여기서 하지 않는다** (`legacyDockAccidentPolicy: 'SKIP_FOR_THIS_RIDE'`) —
+           *    운항이 코스의 실제 안전도(0~100 → 0~4)로 `IncidentLedger` 에서 한 번만 결정한다.
+           *  · 만족·체력은 `onDisembark` 에서, 옛 수식 그대로.
+           */
+          if (COURSE_DOCK_IDS.has(def.id)) {
+            const c = this.courseAtDock(f);
             const eq = c ? courseEquipment(c.equipId) : undefined;
-            if (c && eq) {
-              const res = this.evaluateCourse(c.handle);
-              const free = g.pkg === 'gear' && !g.pkgUsed; if (free) g.pkgUsed = true; // P17 기구 패키지
-              const fee = free ? 0 : eq.fee;
-              this.money += fee;
-              this.feesToday += fee;
-              this.stats.fees += fee;
-              this.stats.courseRevenue = (this.stats.courseRevenue ?? 0) + fee;
-              this.stats.courseRiders = (this.stats.courseRiders ?? 0) + 1;
-              { const cx = this.accidentContext(def, f.i, f.j, f.facing, f.uid); const p = accidentChance({ thrill: Math.max(1, Math.round((res?.thrill ?? 20) / 25)), safe: 2, vest: g.band !== undefined, guarded: cx.guarded, rescued: cx.rescued, briefed: c.safetyBriefing === true, cold: cx.cold, busy: cx.busy, cap: cx.cap }, this.b); if (this.rng.accident.next() < p) this.applyAccident(g, f, `코스 ${eq.name}`); } // P52-b 뽑기 자리 ② — 선착장 가지 정확히 1회
-              f.incomeToday += fee; f.incomeTotal += fee; g.spentToday += fee;
-              g.sat = Math.min(100, g.sat + Math.round((res?.thrill ?? 20) * 0.15 * (f.staff ? 1.2 : 1)));
-              g.hp = Math.max(0, g.hp - (f.staff ? 4 : 6)); // P8 알바 = 안전요원: 덜 지친다
-              this.fx.push({ kind: 'coin', i: g.i, j: g.j, amount: fee });
+            const res = c ? this.evaluateCourse(c.handle) : null;
+            const ride = c ? this.rideDocks().find((d) => d.uid === f.uid) : undefined;
+            if (c && eq && res && ride) {
+              if (this.rides.board(g.uid, c, eq, towBoatForEquipment(eq, c.towBoatId), res, ride)) {
+                const free = g.pkg === 'gear' && !g.pkgUsed; if (free) g.pkgUsed = true; // P17 기구 패키지
+                const fee = free ? 0 : eq.fee;
+                this.money += fee;
+                this.feesToday += fee;
+                this.stats.fees += fee;
+                this.stats.courseRevenue = (this.stats.courseRevenue ?? 0) + fee;
+                this.stats.courseRiders = (this.stats.courseRiders ?? 0) + 1;
+                f.incomeToday += fee; f.incomeTotal += fee; g.spentToday += fee;
+                this.fx.push({ kind: 'coin', i: g.i, j: g.j, amount: fee });
+              } else {
+                g.say = '보트가 다 찼네…'; // 대수만큼만 뜬다 — 요금 0
+                this.stats.courseFull = (this.stats.courseFull ?? 0) + 1;
+              }
             }
           }
           if (def.usageFee > 0 && f.rentedBy === null && !(def.class === 'lounging' && g.teamId !== null && this.teamSeatUid(g) !== null && this.teamSeatUid(g) !== f.uid)) { // P28-b D35: 팀은 유료 자리를 한 줄만 빌린다
@@ -2684,6 +2719,135 @@ export class Game {
         },
     };
   }
+
+  // ─────────────────────────────────────────────────────────────
+  // P61-a 실제 운항 — 호스트 계약 (`sim/course/ride.ts`)
+  //
+  // 규칙: 운항은 **상태**만 갖는다. 돈·통계·하루 사고 상한·부상·손님 FSM 은 전부 여기서 한다.
+  // 사고 확률식은 `sim/accident.ts` 하나이고 운항 모듈이 그것을 주입받는다 — 복제가 없다.
+  // ─────────────────────────────────────────────────────────────
+
+  /** 선착장 목록 — 물에서 올라올 수 있는 곳. 물 칸은 선착장 앞 첫 물, 뭍 칸은 손님이 설 수 있는 첫 칸 */
+  private rideDocks(): RideDock[] {
+    const out: RideDock[] = [];
+    for (const f of this.facilities.all) {
+      if (!COURSE_DOCK_IDS.has(f.defId)) continue;
+      let water: { x: number; y: number } | null = null;
+      let land: { x: number; y: number } | null = null;
+      // 발자국 전체를 본다 — 2×1 승선장도 같은 함수로 잡힌다 (`COURSE_DOCK_IDS`)
+      const fp = FacilityStore.footprint(this.facilities.defOf(f), f.i, f.j, f.facing);
+      for (const t of fp) if (!land && guestWalkable(this.grid, this.facilities, t.i, t.j)) land = { x: t.i, y: t.j }; // 선착장은 밟고 지나간다
+      for (const t of fp) {
+        for (const [a, b] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as const) {
+          const i = t.i + a, j = t.j + b;
+          if (!this.grid.inside(i, j)) continue;
+          if (!water && this.rideWater(i, j)) water = { x: i, y: j };
+          if (!land && guestWalkable(this.grid, this.facilities, i, j)) land = { x: i, y: j };
+        }
+      }
+      if (water && land) out.push({ uid: f.uid, tile: { x: f.i, y: f.j }, water, land });
+    }
+    return out;
+  }
+
+  /** 헤엄칠 수 있는 물 — 물 바닥이고 시설(데크 위 기구·잔교)이 안 서 있는 칸 */
+  private rideWater(i: number, j: number): boolean {
+    return this.grid.inside(i, j) && isWaterCode(this.grid.at(i, j)) && this.facilities.at(i, j) === undefined;
+  }
+
+  /** 이 선착장에서 뻗는 코스 — 발자국 안에 코스 시작점이 있으면 그 코스다 (1×1·2×1 둘 다) */
+  private courseAtDock(f: PlacedFacility): PlacedCourse | undefined {
+    const fp = FacilityStore.footprint(this.facilities.defOf(f), f.i, f.j, f.facing);
+    return this.courses.all.find((c) => fp.some((t) => t.i === Math.round(c.dock.x) && t.j === Math.round(c.dock.y)));
+  }
+
+  private rideHost(): RideHost {
+    const facing = (h: number): 0 | 1 | 2 | 3 => (Math.abs(Math.cos(h)) >= Math.abs(Math.sin(h)) ? (Math.cos(h) >= 0 ? 0 : 2) : (Math.sin(h) >= 0 ? 1 : 3));
+    return {
+      seed: () => this.seed,
+      balance: () => this.b,
+      seatSpecs: (equipId) => this.rideSeats.get(equipId) ?? [],
+      gridSize: () => ({ w: this.grid.w, h: this.grid.h }),
+      isWaterTile: (i, j) => this.rideWater(i, j),
+      docks: () => this.rideDocks(),
+      accidentContext: (uid, dockUid) => {
+        const f = this.facilities.byUid(dockUid);
+        const g = this.guests.byUid(uid);
+        const cx = f ? this.accidentContext(this.facilities.defOf(f), f.i, f.j, f.facing, f.uid) : { guarded: false, rescued: false, cold: this.outdoorTemp() < 18, busy: 0, cap: 1 };
+        // 조끼 = 팔찌 (P52-a). 브리핑은 운항이 코스 설정에서 덮어쓴다
+        return { ...cx, vest: g?.band !== undefined, briefed: false };
+      },
+      guestAlive: (uid) => { const g = this.guests.byUid(uid); return g !== undefined && g.state !== 'gone'; },
+      placeGuest: (uid, i, j, heading) => {
+        const g = this.guests.byUid(uid);
+        if (!g) return;
+        const ti = Math.round(i), tj = Math.round(j);
+        g.fromI = g.i; g.fromJ = g.j; g.i = ti; g.j = tj; g.progress = 1;
+        g.facing = facing(heading);
+      },
+      applyInjury: (uid, dockUid, what) => {
+        const g = this.guests.byUid(uid);
+        if (!g) return false;
+        return this.applyAccident(g, this.facilities.byUid(dockUid) ?? null, what, true); // 의무실은 뭍에 오른 뒤
+      },
+      onFall: (uid, _at, injured) => {
+        const g = this.guests.byUid(uid);
+        if (g) { g.say = injured ? '아야…' : '으악!'; setEmote(g, injured ? 'grr' : 'star'); }
+        // Contact splash is drawn from the recovery splash phase, not the airborne start.
+        this.stats.courseFalls = (this.stats.courseFalls ?? 0) + 1;
+      },
+      onReturn: (uid, land, injured) => {
+        const g = this.guests.byUid(uid);
+        if (!g) return;
+        g.i = Math.round(land.x); g.j = Math.round(land.y); g.fromI = g.i; g.fromJ = g.j; g.progress = 1;
+        const inf = injured ? this.facilities.all.find((o) => o.defId === 'infirmary') : undefined;
+        if (inf) { g.target = { kind: 'facility', uid: inf.uid }; g.state = 'walk'; }
+        else { g.target = null; g.state = 'wander'; }
+        g.stateTicks = 0;
+      },
+      onRescueGiveUp: (uid) => {
+        // 닿을 선착장이 끝내 없었다(플레이어가 물에 사람을 둔 채 선착장을 전부 지웠다).
+        // 텔레포트 대신 구조정이 **집으로** 데려간다 — 판에 다시 놓지 않는다. 퇴장 회계는 평소와 같다.
+        const g = this.guests.byUid(uid);
+        if (!g) return;
+        g.sat = Math.max(0, g.sat - this.b.accidentSat);
+        this.guestHooks.onLeave?.(g);
+        g.state = 'gone';
+        this.stats.courseRescues = (this.stats.courseRescues ?? 0) + 1;
+        this.inbox.push({ tick: this.tick, day: this.day, kind: 'system', priority: 'toast', title: '구조 — 선착장이 없다', body: `${g.name}을(를) 구조정이 데려갔다 · 코스가 도는 수역에 선착장을 남겨 두자` });
+      },
+      onDisembark: (uid, dockUid, thrill) => {
+        const g = this.guests.byUid(uid);
+        if (!g) return;
+        const f = this.facilities.byUid(dockUid);
+        g.sat = Math.min(100, g.sat + Math.round(thrill * 0.15 * (f?.staff ? 1.2 : 1)));
+        g.hp = Math.max(0, g.hp - (f?.staff ? 4 : 6)); // P8 알바 = 안전요원: 덜 지친다
+        g.target = null; g.state = 'wander'; g.stateTicks = 0;
+      },
+    };
+  }
+
+  /** 렌더러가 읽는 **표시 전용** 운항 상태. 순수 — 돈·뽑기·손님 생성이 없다 */
+  rideScene(): RideScene {
+    if (!this.ridePathCache || this.ridePathCache.version !== this.courses.version || this.ridePathCache.revision !== this.rides.revision) {
+      const paths = new Map<number, readonly Vec2f[]>(), moored: RideScene['rides'][number][] = [];
+      const docks = this.rideDocks();
+      for (const c of this.courses.all) {
+        const dock = docks.find(d => {
+          const f = this.facilities.byUid(d.uid);
+          return f && this.courseAtDock(f)?.handle === c.handle;
+        });
+        paths.set(c.handle, sampleCourse(dock?.water ?? c.dock, c.handles).map(sample => ({ i: sample.pos.x, j: sample.pos.y })));
+        const equip = courseEquipment(c.equipId);
+        if (dock && equip && c.handles.length >= 2) moored.push(this.rides.mooredView(c,equip,towBoatForEquipment(equip,c.towBoatId),dock));
+      }
+      this.ridePathCache = { version: this.courses.version, revision: this.rides.revision, paths, moored };
+    }
+    const view = this.rides.scene(this.ridePathCache.paths, this.absTick * (TICK_MS / 1000));
+    const active = new Set(view.rides.map(r => r.courseHandle));
+    return { ...view, rides: [...view.rides, ...this.ridePathCache.moored.filter(r => !active.has(r.courseHandle))] };
+  }
+
   /** 검사 전용 — 이용 완료 훅을 직접 부른다(팔찌 회수·창구 ⓐ 검사). 손님 FSM 은 안 건드린다 */
   simulateUseForTest(g: Guest, f: PlacedFacility): void { this.guestHooks.onFacilityUse?.(g, f); }
   canCraftRig(ids: readonly string[]): Result { return this.rigs.canCook(ids, this.rank, this.money); }
@@ -2733,7 +2897,7 @@ export class Game {
   private courseBlockedTiles(): ReadonlySet<string> {
     const out = new Set<string>();
     for (const f of this.facilities.all) {
-      if (f.defId === 'dock') continue;
+      if (COURSE_DOCK_IDS.has(f.defId)) continue;
       for (const t of FacilityStore.footprint(this.facilities.defOf(f), f.i, f.j, f.facing)) out.add(`${t.i},${t.j}`);
     }
     return out;
@@ -2746,7 +2910,7 @@ export class Game {
   dockChoices(): DockChoice[] {
     const anchors: { x: number; y: number }[] = [];
     for (const f of this.facilities.all) {
-      if (f.defId !== 'dock') continue;
+      if (!COURSE_DOCK_IDS.has(f.defId)) continue;
       for (const t of FacilityStore.footprint(this.facilities.defOf(f), f.i, f.j, f.facing)) anchors.push({ x: t.i, y: t.j });
     }
     const decks: { x: number; y: number }[] = [];
@@ -2823,6 +2987,7 @@ export class Game {
     const placed = this.courses.add(draft);
     this.fx.push({ kind: 'place', i: Math.round(draft.dock.x), j: Math.round(draft.dock.y) });
     this.poolCache.clear();
+    this.rides.bumpRevision();
     return { ok: true, handle: placed.handle };
   }
 
@@ -2833,6 +2998,7 @@ export class Game {
     this.courses.remove(handle);
     this.fx.push({ kind: 'remove', i: Math.round(c.dock.x), j: Math.round(c.dock.y) });
     this.poolCache.clear();
+    this.rides.bumpRevision(); // 뜬 운항은 자기 설정을 쥐고 끝까지 간다 — 손님이 물 한가운데서 사라지지 않는다
     return { ok: true };
   }
 
@@ -3166,6 +3332,7 @@ export class Game {
   }
   private afterWorldChange(): void {
     this.gradeCache.clear(); this.accidentStaticCache.clear(); // P52-c 캐시
+    this.rides.bumpRevision(); // P61-a: 물길·선착장이 바뀌었다 — 헤엄치는 손님이 경로를 다시 짠다
     const gradesBefore = new Map(this.pools.all.map((p) => [p.id, this.ppajiGradeOf(p.id)])); // P50-b2: 등급이 오르면 같은 tick 에 모달 하나(축하 채널) — 설치 직후 등급 불변이면 0
     this.recomputePassBy();
     this.grid.setForcedDoors(this.facilities.all.filter((f) => f.defId === 'entrance').map((f) => f.j * this.grid.w + f.i)); // P42 D53
@@ -3315,6 +3482,7 @@ export class Game {
       unlocked: { facilities: [...this.unlocked.facilities].sort(), gifts: [...this.unlocked.gifts].sort() },
       friendsToday: [...this.friendsToday],
       courses: this.courses.toSnapshot(),
+      rides: this.rides.toSnapshot(), // P61-a
     };
   }
 
@@ -3331,12 +3499,15 @@ export class Game {
     // P49-a2: 옛 세이브의 물빛 배열·물빛 해금 목록은 읽고 버린다(물빛 삭제 — 버전은 안 올린다)
     if (s.grid.natural && s.grid.natural.length === g.grid.natural.length) g.grid.natural.set(s.grid.natural); // P48-a (optional — 없으면 newPark 의 자연 바닥, 랭크와 무관)
     g.facilities.fromSnapshot(s.facilities);
+    if (s.arrivalRevision) adoptApprovedDocks(g.facilities,g.grid);
     g.pools.fromSnapshot(s.pools);
     g.foodcourts.fromSnapshot(s.foodcourts);
     g.guests.fromSnapshot(s.guests);
     g.inbox.fromSnapshot(s.inbox);
-    g.stats = { visitors: s.stats.visitors, tickets: s.stats.tickets, fees: s.stats.fees ?? 0, food: s.stats.food ?? 0, spent: s.stats.spent ?? 0, spentDeck: s.stats.spentDeck ?? 0, spentRig: s.stats.spentRig ?? 0, spentConvert: s.stats.spentConvert ?? 0, converts: s.stats.converts ?? 0, nightNights: s.stats.nightNights ?? 0, nightPkg: s.stats.nightPkg ?? 0, nightFood: s.stats.nightFood ?? 0, nightFee: s.stats.nightFee ?? 0, rigUses: s.stats.rigUses ?? 0, rigRiderDays: s.stats.rigRiderDays ?? 0, rigRepeats: s.stats.rigRepeats ?? 0, rigPartsBought: s.stats.rigPartsBought ?? 0, stockBuys: s.stats.stockBuys ?? 0, courtEats: s.stats.courtEats ?? 0, eats: s.stats.eats ?? 0, standEats: s.stats.standEats ?? 0, rigUsesBand: s.stats.rigUsesBand ?? 0, pkgPpaji: s.stats.pkgPpaji ?? 0, vestRentals: s.stats.vestRentals ?? 0, accidents: s.stats.accidents ?? 0, swimsBySeason: s.stats.swimsBySeason ?? [0, 0, 0, 0], bailouts: s.stats.bailouts ?? 0, busGuests: s.stats.busGuests ?? 0, wishDone: s.stats.wishDone ?? 0, wishExpired: s.stats.wishExpired ?? 0, days: s.stats.days.map((d) => ({ ...d })), menuSales: { ...(s.stats.menuSales ?? {}) } , courseRevenue: s.stats.courseRevenue ?? 0, courseRiders: s.stats.courseRiders ?? 0, pkg: s.stats.pkg ?? 0, teamGuests: s.stats.teamGuests ?? 0, teamSeated: s.stats.teamSeated ?? 0, seatless: s.stats.seatless ?? 0, lodging: s.stats.lodging ?? 0, overnight: s.stats.overnight ?? 0, teamsSeated: s.stats.teamsSeated ?? 0, rainRefuge: s.stats.rainRefuge ?? 0 , passByEnter: s.stats.passByEnter ?? 0, passByLeave: s.stats.passByLeave ?? 0, nightUses: s.stats.nightUses ?? 0, gearRentals: s.stats.gearRentals ?? 0};
+    g.stats = { visitors: s.stats.visitors, tickets: s.stats.tickets, fees: s.stats.fees ?? 0, food: s.stats.food ?? 0, spent: s.stats.spent ?? 0, spentDeck: s.stats.spentDeck ?? 0, spentRig: s.stats.spentRig ?? 0, spentConvert: s.stats.spentConvert ?? 0, converts: s.stats.converts ?? 0, nightNights: s.stats.nightNights ?? 0, nightPkg: s.stats.nightPkg ?? 0, nightFood: s.stats.nightFood ?? 0, nightFee: s.stats.nightFee ?? 0, rigUses: s.stats.rigUses ?? 0, rigRiderDays: s.stats.rigRiderDays ?? 0, rigRepeats: s.stats.rigRepeats ?? 0, rigPartsBought: s.stats.rigPartsBought ?? 0, stockBuys: s.stats.stockBuys ?? 0, courtEats: s.stats.courtEats ?? 0, eats: s.stats.eats ?? 0, standEats: s.stats.standEats ?? 0, rigUsesBand: s.stats.rigUsesBand ?? 0, pkgPpaji: s.stats.pkgPpaji ?? 0, vestRentals: s.stats.vestRentals ?? 0, accidents: s.stats.accidents ?? 0, swimsBySeason: s.stats.swimsBySeason ?? [0, 0, 0, 0], bailouts: s.stats.bailouts ?? 0, busGuests: s.stats.busGuests ?? 0, wishDone: s.stats.wishDone ?? 0, wishExpired: s.stats.wishExpired ?? 0, days: s.stats.days.map((d) => ({ ...d })), menuSales: { ...(s.stats.menuSales ?? {}) } , courseRevenue: s.stats.courseRevenue ?? 0, courseRiders: s.stats.courseRiders ?? 0, courseFalls: s.stats.courseFalls ?? 0, courseFull: s.stats.courseFull ?? 0, courseRescues: s.stats.courseRescues ?? 0, pkg: s.stats.pkg ?? 0, teamGuests: s.stats.teamGuests ?? 0, teamSeated: s.stats.teamSeated ?? 0, seatless: s.stats.seatless ?? 0, lodging: s.stats.lodging ?? 0, overnight: s.stats.overnight ?? 0, teamsSeated: s.stats.teamsSeated ?? 0, rainRefuge: s.stats.rainRefuge ?? 0 , passByEnter: s.stats.passByEnter ?? 0, passByLeave: s.stats.passByLeave ?? 0, nightUses: s.stats.nightUses ?? 0, gearRentals: s.stats.gearRentals ?? 0};
     for (const id of s.unlocked?.facilities ?? []) g.unlocked.facilities.add(id);
+    // Newly adopted facilities must unlock for saves that already passed their rank.
+    for (const rank of RANK_DEFS) if (rank.star <= g.rank) for (const id of rank.unlocks ?? []) g.unlocked.facilities.add(id);
     for (const id of s.unlocked?.gifts ?? []) g.unlocked.gifts.add(id);
     g.sns.fromSnapshot(s.sns);
     if (s.certs) g.certs.fromSnapshot(s.certs);
@@ -3375,6 +3546,11 @@ export class Game {
     if (s.dayAccum) { g.satSum = s.dayAccum.satSum; g.satN = s.dayAccum.satN; g.menuSalesToday = { ...s.dayAccum.menuSalesToday }; g.likesAtDayStart = s.dayAccum.likesAtDayStart; g.ticketsToday = s.dayAccum.ticketsToday ?? 0; g.feesToday = s.dayAccum.feesToday ?? 0; g.foodToday = s.dayAccum.foodToday ?? 0; g.guests.enteredToday = s.dayAccum.enteredToday ?? 0; g.guests.leftToday = s.dayAccum.leftToday ?? 0; }
     g.friendsToday = [...(s.friendsToday ?? [])];
     if (s.courses) g.courses.fromSnapshot(s.courses);
+    // P61-a — 운항은 코스 뒤에 (설정에서 경로·속도표를 다시 만든다). 없으면 빈 상태, 모르는 버전이면 던진다
+    g.rides.fromSnapshot(s.rides, (ride) => {
+      const equip = courseEquipment(ride.equipId);
+      return equip ? { equip, boat: towBoatForEquipment(equip, ride.towBoatId ?? undefined) } : undefined;
+    });
     g.refreshRigs(); // P50-a: 켜짐·walkOn·blocked 는 파생 — 로드 뒤 다시 센다
     g.primePackageCache(); // P50-b1: 자리 패키지 대조 캐시(파생)
     g.arrivalRevision = s.arrivalRevision ?? 0;

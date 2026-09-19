@@ -1,0 +1,15 @@
+{
+  "port": 5189,
+  "placed": {
+    "ok": true,
+    "uid": 34
+  },
+  "entry": {
+    "i": 37,
+    "j": 38,
+    "state": "use"
+  },
+  "steps": 85,
+  "originalFacilitiesPreserved": true,
+  "ringTiles": 68
+}

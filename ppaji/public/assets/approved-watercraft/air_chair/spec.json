@@ -1,0 +1,170 @@
+{
+  "id": "air_chair",
+  "name": "바이퍼",
+  "capacity": 1,
+  "kind": "tow",
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "status": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "seats": [
+    {
+      "key": "passenger-01",
+      "position": [
+        0,
+        0.25,
+        0.44
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "SeatCushion",
+      "foot_contact": [
+        0,
+        -0.37,
+        0.3
+      ],
+      "grip_sockets": [
+        [
+          -0.46,
+          -0.16,
+          0.66
+        ],
+        [
+          0.46,
+          -0.16,
+          0.66
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    }
+  ],
+  "boarding": [
+    0.69,
+    0.1,
+    0.44
+  ],
+  "tow_socket": [
+    0,
+    -1.405,
+    0.15
+  ],
+  "bow": [
+    0,
+    -0.96,
+    0.27
+  ],
+  "stern": [
+    0,
+    0.96,
+    0.27
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    0.96,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -0.8399089574813843,
+      -1.4300000667572021,
+      -0.07000000029802322
+    ],
+    [
+      0.8399089574813843,
+      1.1299090385437012,
+      0.9800000190734863
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -0.8399089574813843,
+      -1.1299999952316284,
+      -0.07000000029802322
+    ],
+    [
+      0.8399089574813843,
+      1.1299090385437012,
+      0.5899999737739563
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -0.7600000500679016,
+      -1.4300000667572021,
+      0.1187293529510498
+    ],
+    [
+      0.7600000500679016,
+      0.7949999570846558,
+      0.9800000190734863
+    ]
+  ],
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "sit",
+    "requirement": "Existing sit for scale only; both hands gripping, bent-leg foot placement, bracing and side mount require dedicated fit review",
+    "boarding": "Rim transfer unresolved; no invented walking route"
+  },
+  "physical_state": {
+    "rendered": "waterborne_surface_chair",
+    "waterline_z_tiles": 0,
+    "support_z_tiles": 0.44,
+    "lifted_jumping": "NOT_VALIDATED: equipment description mentions rising over water; separate lift/pitch and contact/waterline state renders required, no hydrofoil mechanism inferred from hidden underside"
+  },
+  "minimum_mass": {
+    "alpha_threshold": 128,
+    "min_pixels": 400,
+    "min_bbox_width": 24,
+    "min_bbox_height": 14,
+    "scope": "all16 native images, fixed before first render"
+  },
+  "reference_preflight": {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_air_chair.png",
+    "status": "INSPECTED_LOW_RES_IDENTITY_ONLY",
+    "observation": "Yellow oblong inflated perimeter, green upper rim/back and blue center; record describes seated rising over water",
+    "authored_proposal": "Single inflatable lounge chair with seat, foot deck, raised back, two grips and front bridle; underwater/airborne mechanism not reference-approved"
+  },
+  "inventory": [
+    "Accent(-1, -0.7)",
+    "Accent(-1, 0.7)",
+    "Accent(1, -0.7)",
+    "Accent(1, 0.7)",
+    "ArmBolster-1",
+    "ArmBolster1",
+    "Backrest",
+    "BackrestInset",
+    "FootDeck",
+    "HandGrip-1",
+    "HandGrip1",
+    "LowerFloat",
+    "PerimeterAirChamber",
+    "SeatCushion",
+    "TowBridle-0.35",
+    "TowBridle0.35",
+    "TowEye"
+  ],
+  "approval": {
+    "shape": "UNREVIEWED",
+    "mechanics": "UNREVIEWED",
+    "production": false
+  }
+}

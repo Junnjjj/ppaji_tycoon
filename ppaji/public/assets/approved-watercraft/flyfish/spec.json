@@ -1,0 +1,348 @@
+{
+  "id": "flyfish",
+  "name": "\ud50c\ub77c\uc774\ud53c\uc26c",
+  "kind": "tow",
+  "capacity": 4,
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "camera_target_z_tiles": 0.65,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "seats": [
+    {
+      "key": "station_1",
+      "position": [
+        -0.68,
+        -0.25,
+        0.38
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "KneeSupport_station_1",
+      "support_dimensions_tiles": [
+        0.64,
+        0.72
+      ],
+      "hand_contacts": [
+        [
+          -0.89,
+          -0.54,
+          0.516
+        ],
+        [
+          -0.4700000000000001,
+          -0.54,
+          0.516
+        ]
+      ],
+      "knee_contacts": [
+        [
+          -0.8200000000000001,
+          -0.35,
+          0.38
+        ],
+        [
+          -0.54,
+          -0.35,
+          0.38
+        ]
+      ],
+      "pose_status": "POSE_FIT_UNRESOLVED",
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    },
+    {
+      "key": "station_2",
+      "position": [
+        0.68,
+        -0.25,
+        0.38
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "KneeSupport_station_2",
+      "support_dimensions_tiles": [
+        0.64,
+        0.72
+      ],
+      "hand_contacts": [
+        [
+          0.4700000000000001,
+          -0.54,
+          0.516
+        ],
+        [
+          0.89,
+          -0.54,
+          0.516
+        ]
+      ],
+      "knee_contacts": [
+        [
+          0.54,
+          -0.35,
+          0.38
+        ],
+        [
+          0.8200000000000001,
+          -0.35,
+          0.38
+        ]
+      ],
+      "pose_status": "POSE_FIT_UNRESOLVED",
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    },
+    {
+      "key": "station_3",
+      "position": [
+        -0.68,
+        0.65,
+        0.38
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "KneeSupport_station_3",
+      "support_dimensions_tiles": [
+        0.64,
+        0.72
+      ],
+      "hand_contacts": [
+        [
+          -0.89,
+          0.36000000000000004,
+          0.516
+        ],
+        [
+          -0.4700000000000001,
+          0.36000000000000004,
+          0.516
+        ]
+      ],
+      "knee_contacts": [
+        [
+          -0.8200000000000001,
+          0.55,
+          0.38
+        ],
+        [
+          -0.54,
+          0.55,
+          0.38
+        ]
+      ],
+      "pose_status": "POSE_FIT_UNRESOLVED",
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    },
+    {
+      "key": "station_4",
+      "position": [
+        0.68,
+        0.65,
+        0.38
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "KneeSupport_station_4",
+      "support_dimensions_tiles": [
+        0.64,
+        0.72
+      ],
+      "hand_contacts": [
+        [
+          0.4700000000000001,
+          0.36000000000000004,
+          0.516
+        ],
+        [
+          0.89,
+          0.36000000000000004,
+          0.516
+        ]
+      ],
+      "knee_contacts": [
+        [
+          0.54,
+          0.55,
+          0.38
+        ],
+        [
+          0.8200000000000001,
+          0.55,
+          0.38
+        ]
+      ],
+      "pose_status": "POSE_FIT_UNRESOLVED",
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    }
+  ],
+  "boarding": [
+    1.55,
+    0.65,
+    0.42
+  ],
+  "tow_socket": [
+    0,
+    -1.85,
+    0.18
+  ],
+  "bow": [
+    0,
+    -1.6,
+    0.25
+  ],
+  "stern": [
+    0,
+    1.22,
+    0.25
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": {
+    "baked": false,
+    "socket": [
+      0,
+      1.22,
+      0
+    ]
+  },
+  "full_bounds_tiles": [
+    [
+      -1.7200000286102295,
+      -1.9479999542236328,
+      0.03999999910593033
+    ],
+    [
+      1.7200000286102295,
+      1.2599998712539673,
+      0.5160000324249268
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -1.7200000286102295,
+      -1.6299998760223389,
+      0.03999999910593033
+    ],
+    [
+      1.7200000286102295,
+      1.2599998712539673,
+      0.4800000786781311
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -0.9350000023841858,
+      -1.9479999542236328,
+      0.14499999582767487
+    ],
+    [
+      0.9350000023841858,
+      0.44599997997283936,
+      0.5160000324249268
+    ]
+  ],
+  "minimum_native_foreground": 850,
+  "minimum_mass_gate": {
+    "metric": "count alpha >= 128",
+    "threshold": 850,
+    "all_headings": true,
+    "declared_before_render": true
+  },
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "sit",
+    "required": "Four kneeling or crouched passengers holding paired grips; generic sit is only an occupied-fit proposal and does not establish knee, hand, mount or restraint fit."
+  },
+  "physical_state": {
+    "rendered": "WATERBORNE_SURFACE_TRAVEL",
+    "lifted_or_jumping": "UNRESOLVED_NOT_RENDERED",
+    "extra_state_renders_needed": true,
+    "reason": "Lifted operation requires independently reviewed pitch, lift height, tow attachment loading and rider contacts; surface travel establishes none of these. Waterborne anchor z=0; airborne water contact would be absent and must not reuse that support claim."
+  },
+  "reference_preflight": {
+    "icon": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/\uc5d0\uc14b\ub9cc\ub4e4\uae30_v3/ppaji/assets/pictures/gear_flyfish.png",
+    "observed": "Low resolution blue winged inflatable with bright edge accents and pointed front; no exact underside or grip authority.",
+    "proposal": "Broad swept wing floor, inflatable perimeter and center keel, four 2x2 support pads and paired handgrips. All hidden structure and dimensions are authored proposals.",
+    "exact_reconstruction": false
+  },
+  "inventory": [
+    "WingFloor",
+    "SweptLeading-1",
+    "SweptLeading-1_cap0",
+    "SweptLeading-1_cap1",
+    "WingTip-1",
+    "WingTip-1_cap0",
+    "WingTip-1_cap1",
+    "Trailing-1",
+    "Trailing-1_cap0",
+    "Trailing-1_cap1",
+    "SweptLeading1",
+    "SweptLeading1_cap0",
+    "SweptLeading1_cap1",
+    "WingTip1",
+    "WingTip1_cap0",
+    "WingTip1_cap1",
+    "Trailing1",
+    "Trailing1_cap0",
+    "Trailing1_cap1",
+    "CenterKeel",
+    "CenterKeel_cap0",
+    "CenterKeel_cap1",
+    "KneeSupport_station_1",
+    "GripFoot_station_1-0.21",
+    "Grip_station_1-0.21",
+    "Grip_station_1-0.21_cap0",
+    "Grip_station_1-0.21_cap1",
+    "GripFoot_station_10.21",
+    "Grip_station_10.21",
+    "Grip_station_10.21_cap0",
+    "Grip_station_10.21_cap1",
+    "KneeSupport_station_2",
+    "GripFoot_station_2-0.21",
+    "Grip_station_2-0.21",
+    "Grip_station_2-0.21_cap0",
+    "Grip_station_2-0.21_cap1",
+    "GripFoot_station_20.21",
+    "Grip_station_20.21",
+    "Grip_station_20.21_cap0",
+    "Grip_station_20.21_cap1",
+    "KneeSupport_station_3",
+    "GripFoot_station_3-0.21",
+    "Grip_station_3-0.21",
+    "Grip_station_3-0.21_cap0",
+    "Grip_station_3-0.21_cap1",
+    "GripFoot_station_30.21",
+    "Grip_station_30.21",
+    "Grip_station_30.21_cap0",
+    "Grip_station_30.21_cap1",
+    "KneeSupport_station_4",
+    "GripFoot_station_4-0.21",
+    "Grip_station_4-0.21",
+    "Grip_station_4-0.21_cap0",
+    "Grip_station_4-0.21_cap1",
+    "GripFoot_station_40.21",
+    "Grip_station_40.21",
+    "Grip_station_40.21_cap0",
+    "Grip_station_40.21_cap1",
+    "TowBridle-0.25",
+    "TowBridle-0.25_cap0",
+    "TowBridle-0.25_cap1",
+    "TowBridle0.25",
+    "TowBridle0.25_cap0",
+    "TowBridle0.25_cap1",
+    "TowEye"
+  ],
+  "production_approval": false
+}

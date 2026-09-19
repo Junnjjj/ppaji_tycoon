@@ -1,0 +1,94 @@
+{
+  "name": "\uc791\uc5c5\ud615 \uacac\uc778\ubcf4\ud2b8",
+  "capacity": 1,
+  "operator_count": 1,
+  "equipment_profile": "work",
+  "body_size_tiles": [
+    1.54,
+    3.18,
+    0.62
+  ],
+  "seats": [
+    {
+      "key": "operator",
+      "position": [
+        0,
+        0.3,
+        0.51
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966
+    }
+  ],
+  "tow_socket": [
+    0,
+    1.14,
+    1.24
+  ],
+  "bow": [
+    0,
+    -1.59,
+    0.38
+  ],
+  "stern": [
+    0,
+    1.35,
+    0.38
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "boarding": [
+    0.74,
+    0.3,
+    0.3
+  ],
+  "wake": [
+    0,
+    1.7,
+    0
+  ],
+  "id": "tow_work",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "camera_target_z_tiles": 0.65,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "full_bounds_tiles": [
+    [
+      -0.7815500010680664,
+      -1.6138500339524646,
+      -0.09000000098852651
+    ],
+    [
+      0.7815500010680664,
+      1.7050000117026107,
+      1.3419999950714994
+    ]
+  ],
+  "inventory": [
+    "BlueHull",
+    "BowDeck",
+    "BowEye",
+    "CockpitFloor",
+    "Console",
+    "DriverSeat",
+    "DriverSeatBack",
+    "GlassTop",
+    "IvoryGunwale",
+    "MotorShaft",
+    "OutboardMotor",
+    "SternTowEye",
+    "TowPylon",
+    "Wheel",
+    "Windshield",
+    "YellowRubRail"
+  ]
+}

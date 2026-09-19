@@ -1,12 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { Game, FACILITY_DEFS, RIG_PART_DEFS, RNG_SALTS } from './game.js';
 import { ppajiGrade, CHAIN_KINDS_FOR_GRADE3 } from './rig.js';
-import { RigStore, RIG_WORDS } from './rig-upgrade.js';
+import { RigStore, RIG_WORDS, RIG_UPGRADES } from './rig-upgrade.js';
 import { makeTestPpaji } from './test-helpers.js';
 import { Rng } from './rng.js';
 import { goalNum } from '../../tools/goal-num.js';
 import ranks from '../data/ranks.json';
-import wishes from '../data/wishes.json';
 import certs from '../data/certs.json';
 
 /**
@@ -18,51 +17,66 @@ const converted = defs.filter((d) => d.buildable === false);
 const ring = defs.filter((d) => d.onRing === true && d.class !== 'rig' && d.buildable !== false);
 
 describe('P49-a1 골격', () => {
-  it('기구 21종 + 이전 12 — rig 22(새 17 + 이전 5) · 링 위 비-rig 4 + 이전 7 · deep 7 전부 needsVest (⇔)', () => {
-    expect(rigs.length).toBe(22); expect(converted.length).toBe(20); // P51 개조판 20(기구 19 + 망루 1)
-    expect(ring.length).toBe(11);
+  // 2026-09-19 승인 조합 채택(정본 29종 폐기): 구성품 14종이 빠지 슬라이드/빠지 놀이터에 흡수되고,
+  // 거기 걸려 있던 개조판 14종과 옛 선착장(`dock`, 승하선 데크로 대체)이 같이 내려갔다 = 29.
+  // 정의는 남는다 — 옛 세이브의 인스턴스가 조용히 사라지면 지도가 깨진다.
+  it('기구 — 살아 있는 rig 10 · buildable:false 35(개조판 6 + 폐기 29) · 링 위 비-rig 11(승하선 데크 포함) · deep 4 전부 needsVest (⇔)', () => {
+    expect(rigs.map((d) => d.id)).toEqual(['diving', 'turtle_island', 'ppaji_slide', 'airbounce', 'rig_bridge', 'rig_stepstone', 'rig_blob', 'rig_iceberg', 'rig_jump_tower', 'ppaji_playground']);
+    expect(defs.filter((d) => d.deprecated === true).length).toBe(29);
+    expect(converted.length).toBe(35); // 살아 있는 개조판 6 + 폐기 29 — 둘 다 건설 목록 밖
+    expect(ring.map((d) => d.id)).toEqual(['boarding_dock', 'rent_sup', 'rent_duck', 'rent_pedal', 'rent_kayak', 'slide_tube', 'float_deck', 'watchtower', 'rig_rack', 'rig_float_bar', 'rescue_dock']);
     const deep = rigs.filter((d) => d.depth === 'deep');
-    expect(deep.length).toBe(7);
+    expect(deep.map((d) => d.id)).toEqual(['diving', 'rig_blob', 'rig_iceberg', 'rig_jump_tower']);
     for (const d of rigs) expect(d.needsVest === true, d.id).toBe(d.depth === 'deep');
   });
-  it('해금 분포 — 시작 8 · 랭크 9(ranks.json unlocks 와 일치) · 인증 3(id 존재) · 소원 1(famous_painter/2 가 준다) · 개조판(craft) 20(P51)', () => {
+  it('해금 분포 — `rig_*`/망루/구조정 9종: 시작 3 · 랭크 5(ranks.json unlocks 와 일치) · 인증 1(id 존재) · 소원 0 · craft 35', () => {
     const news = defs.filter((d) => d.buildable !== false && (d.id.startsWith('rig_') || ['watchtower', 'rescue_dock'].includes(d.id)));
-    expect(news.length).toBe(21);
-    expect(news.filter((d) => d.unlock.source === 'start').length).toBe(8);
+    expect(news.map((d) => d.id)).toEqual(['rig_bridge', 'rig_stepstone', 'watchtower', 'rig_blob', 'rig_rack', 'rig_float_bar', 'rescue_dock', 'rig_iceberg', 'rig_jump_tower']);
+    expect(news.filter((d) => d.unlock.source === 'start').map((d) => d.id)).toEqual(['rig_bridge', 'rig_stepstone', 'watchtower']);
     const byRank = news.filter((d) => d.unlock.source === 'rank');
-    expect(byRank.length).toBe(9);
+    expect(byRank.length).toBe(5);
     for (const d of byRank) { const r = (ranks as { star: number; unlocks?: string[] }[]).find((x) => x.star === d.unlock.rank)!; expect(r.unlocks, d.id).toContain(d.id); }
     const byCert = news.filter((d) => d.unlock.source === 'cert');
-    expect(byCert.length).toBe(3);
+    expect(byCert.map((d) => d.id)).toEqual(['rig_iceberg']);
     for (const d of byCert) expect((certs as { id: string }[]).some((c) => c.id === d.unlock.ref), d.id).toBe(true);
-    const byWish = news.filter((d) => d.unlock.source === 'wish');
-    expect(byWish.map((d) => d.id)).toEqual(['rig_totem']);
-    expect((wishes as { friendId: string; idx: number; reward: { kind: string; id?: string } }[]).find((w) => w.friendId === 'famous_painter' && w.idx === 2)!.reward).toEqual({ kind: 'facility', id: 'rig_totem' });
-    expect(defs.filter((d) => d.unlock.source === 'craft').length).toBe(20); // P51: 개조판 20 은 craft — 건설 목록에 없다
+    // 2026-09-19: 소원이 주던 워터 토템이 빠지 놀이터에 흡수됐다 — 이제 `rig_*` 중 소원 해금은 0 이고,
+    // 그 자리는 조합 둘(시작 · 랭크 3)이 대신한다. 조합이 살아 있는 해금 경로인지도 같이 못박는다.
+    expect(news.filter((d) => d.unlock.source === 'wish').map((d) => d.id)).toEqual([]);
+    for (const [id, want] of [['ppaji_slide', { source: 'start' }], ['ppaji_playground', { source: 'rank', rank: 3 }]] as const) {
+      const c = defs.find((d) => d.id === id)!;
+      expect(c.deprecated, id).toBeUndefined(); expect(c.buildable, id).not.toBe(false); expect(c.unlock, id).toEqual(want);
+    }
+    expect(defs.filter((d) => d.unlock.source === 'craft').length).toBe(35); // 살아 있는 개조판 6 + 폐기 29 — 폐기는 레시피조차 없어 새로 얻을 길이 없다
   });
   it('값 유도 — cost = round100(pop×90) · maint ≈ pop×5.3 · safe = 2 − floor(thrill/2) · 새 기구 hpΔ 규칙', () => {
     for (const d of rigs) {
       expect(d.cost / d.pop, d.id).toBeGreaterThanOrEqual(60); expect(d.cost / d.pop, d.id).toBeLessThanOrEqual(140);
       expect(Math.abs(d.maint - d.pop * 5.3) / (d.pop * 5.3), d.id).toBeLessThanOrEqual(0.3);
       expect(d.safe, d.id).toBe(2 - Math.floor((d.thrill ?? 0) / 2));
-      expect(d.pop / (d.w * d.d), d.id).toBeGreaterThanOrEqual(2.8);
+      // 승인 조합은 **열린 수면까지 예약**하므로 칸당 인기 밀도 규칙 밖이다 (빠지 슬라이드 30/48 · 빠지 놀이터 205/240 — 값은 구성품 합에서 유도했다)
+      if (!d.id.startsWith('ppaji_')) expect(d.pop / (d.w * d.d), d.id).toBeGreaterThanOrEqual(2.8);
       if (d.capacity >= 6) expect(d.w * d.d, d.id).toBeGreaterThanOrEqual(6);
       if (d.id.startsWith('rig_')) { expect(d.cost, d.id).toBe(Math.round((d.pop * 90) / 100) * 100 || d.cost); expect(d.hpDelta, d.id).toBe(d.useTicks >= 12 ? 25 : (d.thrill ?? 0) === 0 ? 0 : -(4 + 2 * (d.thrill ?? 0))); }
     }
-    expect(rigs.filter((d) => d.maxPerPark !== undefined).map((d) => d.id)).toEqual(['rig_disc']);
-    expect(rigs.filter((d) => d.bandCost === 2).length).toBeLessThanOrEqual(1);
+    // 2026-09-19: 「빠지마다 하나」·「팔찌 값 2」가 회전 원반 → **빠지 놀이터**로 옮겼다 (원반은 폐기, 필드는 화석으로 남는다)
+    expect(rigs.filter((d) => d.maxPerPark !== undefined).map((d) => d.id)).toEqual(['ppaji_playground']);
+    expect(rigs.filter((d) => d.bandCost === 2).map((d) => d.id)).toEqual(['ppaji_playground']);
     expect(defs.find((d) => d.id === 'rig_float_bar')!.menuSlots).toBe(5);
     expect(defs.find((d) => d.id === 'gear_rack')!.rentKind).toBe('pkg');
   });
-  it('부품 13 — 연차 전용 4(y5·y5·y6·y7) · 진열 랭크 · RigStore 가 부품을 받고 왕복한다 · rng.rig 스트림이 있다', () => {
-    expect(RIG_PART_DEFS.length).toBe(13);
-    expect(RIG_PART_DEFS.filter((p) => p.unlock === 'year').map((p) => p.year)).toEqual([5, 5, 6, 7]);
+  // 2026-09-19: 개조 레시피가 20 → 6 으로 줄면서 아무 레시피도 안 쓰는 부품 4종(미끄럼 왁스·스프레이 노즐·2인 안장·LED 부표 갈래)이 은퇴해 13 → 9 다.
+  // **죽은 열쇠 0** 은 아래 「쓰이지 않는 부품이 없다」가 지킨다 — 개수를 줄이는 것만으로 검사가 헐거워지지 않게.
+  it('부품 9 — 연차 전용 3(y5·y5·y6) · 죽은 부품 0 · RigStore 가 부품을 받고 왕복한다 · rng.rig 스트림이 있다', () => {
+    expect(RIG_PART_DEFS.length).toBe(9);
+    expect(RIG_PART_DEFS.filter((p) => p.unlock === 'year').map((p) => p.year)).toEqual([5, 5, 6]);
+    const used = new Set(RIG_UPGRADES.flatMap((r) => [...r.key.split('+'), ...r.add]));
+    for (const part of RIG_PART_DEFS) expect(used.has(part.id), `${part.id} 을 쓰는 개조가 없다`).toBe(true);
     expect(RIG_WORDS.item).toBe('부품');
     const s = new RigStore([], RIG_PART_DEFS, new Rng(1));
     expect(s.grantIngredient('pump_motor')).toBe(true);
-    const g = new Game(1); g.grant({ kind: 'rigPart', id: 'slip_wax' });
+    const g = new Game(1); g.grant({ kind: 'rigPart', id: 'float_drum' });
     const h = Game.fromSnapshot(JSON.parse(JSON.stringify(g.toSnapshot())));
-    expect(h.rigs.toSnapshot().owned).toContain('slip_wax');
+    expect(h.rigs.toSnapshot().owned).toContain('float_drum');
     expect(RNG_SALTS.accident).toBe(10); expect(RNG_SALTS.rig).toBe(11); expect(RNG_SALTS.night).toBe(12);
   });
   it('등급 함수 — 문턱 5개 · 사슬 종 3 이 등급 3 의 문턱', () => {

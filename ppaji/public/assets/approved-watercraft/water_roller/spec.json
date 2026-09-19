@@ -1,0 +1,219 @@
+{
+  "id": "water_roller",
+  "name": "롤링 튜브",
+  "capacity": 2,
+  "kind": "tow",
+  "status": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "camera_target_z_tiles": 0.65,
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "seats": [
+    {
+      "key": "passenger-01",
+      "position": [
+        -0.48,
+        0,
+        0.28
+      ],
+      "pose": "idle",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "SupportPad_passenger-01",
+      "support_extent_tiles": [
+        0.66,
+        0.44
+      ],
+      "grip_sockets": [
+        [
+          -0.48,
+          -0.58,
+          0.68
+        ],
+        [
+          -0.48,
+          0.58,
+          0.68
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "contact_type": "standing_feet_phase_zero"
+    },
+    {
+      "key": "passenger-02",
+      "position": [
+        0.48,
+        0,
+        0.28
+      ],
+      "pose": "idle",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "SupportPad_passenger-02",
+      "support_extent_tiles": [
+        0.66,
+        0.44
+      ],
+      "grip_sockets": [
+        [
+          0.48,
+          -0.58,
+          0.68
+        ],
+        [
+          0.48,
+          0.58,
+          0.68
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "contact_type": "standing_feet_phase_zero"
+    }
+  ],
+  "boarding": [
+    1.25,
+    0,
+    0.28
+  ],
+  "boarding_status": "TRANSFER_UNRESOLVED: climb through +X open end and rim; no invented walk path",
+  "tow_socket": [
+    0,
+    -1.68,
+    0.25
+  ],
+  "bow": [
+    0,
+    -0.97,
+    0.96
+  ],
+  "stern": [
+    0,
+    0.97,
+    0.96
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    0.97,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -1.2500001192092896,
+      -1.7049999237060547,
+      -0.010000023990869522
+    ],
+    [
+      1.2500001192092896,
+      0.9700000286102295,
+      1.9300000667572021
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -1.2500001192092896,
+      -0.9700000286102295,
+      -0.010000023990869522
+    ],
+    [
+      1.2500001192092896,
+      0.9700000286102295,
+      1.9300000667572021
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -1.1385499238967896,
+      -1.7049999237060547,
+      0.21586939692497253
+    ],
+    [
+      1.1385499238967896,
+      0.7321640253067017,
+      0.6990918517112732
+    ]
+  ],
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "idle",
+    "requirement": "Two standing scale proposals only; braced balance, grip, rolling and entry poses unresolved; no new NPC art"
+  },
+  "physical_state": {
+    "rendered": "waterborne_neutral_roll_phase_zero",
+    "travel_heading": "root Z yaw only",
+    "use_state": "ROLLING_UNRESOLVED: rotation around local X drum axis is separate from heading; supports and grips rotate with shell but rider gravity contacts must be solved separately",
+    "tow_mechanics": "Proposed bridle is phase-zero only; axle/swivel mechanics needed before rolling under tow can be claimed",
+    "waterline_z_tiles": 0,
+    "support_z_tiles": 0.28
+  },
+  "minimum_mass": {
+    "alpha_threshold": 128,
+    "min_pixels": 850,
+    "min_bbox_width": 35,
+    "min_bbox_height": 30,
+    "scope": "all16 native headings declared before first render"
+  },
+  "reference_preflight": {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_water_roller.png",
+    "status": "INSPECTED_LOW_RES_IDENTITY_ONLY",
+    "observation": "Blue cylindrical roller with light longitudinal detailing and open-looking ends; exact transparency and mechanics cannot be established from icon",
+    "authored_proposal": "Opaque inflatable open cage with two blue end rings, yellow bands, twelve longitudinal ribs and lower curved interior footing; hidden surfaces and tow bridle are proposals"
+  },
+  "inventory": [
+    "CurvedInnerFooting",
+    "EndAirRing-1",
+    "EndAirRing1",
+    "Grip_passenger-01-0.58",
+    "Grip_passenger-010.58",
+    "Grip_passenger-02-0.58",
+    "Grip_passenger-020.58",
+    "GripMount_passenger-01-0.58-0.15",
+    "GripMount_passenger-01-0.580.15",
+    "GripMount_passenger-010.58-0.15",
+    "GripMount_passenger-010.580.15",
+    "GripMount_passenger-02-0.58-0.15",
+    "GripMount_passenger-02-0.580.15",
+    "GripMount_passenger-020.58-0.15",
+    "GripMount_passenger-020.580.15",
+    "LongitudinalAirRib00",
+    "LongitudinalAirRib01",
+    "LongitudinalAirRib02",
+    "LongitudinalAirRib03",
+    "LongitudinalAirRib04",
+    "LongitudinalAirRib05",
+    "LongitudinalAirRib06",
+    "LongitudinalAirRib07",
+    "LongitudinalAirRib08",
+    "LongitudinalAirRib09",
+    "LongitudinalAirRib10",
+    "LongitudinalAirRib11",
+    "SupportPad_passenger-01",
+    "SupportPad_passenger-02",
+    "TowBridle-1.12",
+    "TowBridle1.12",
+    "TowEye",
+    "YellowEndBand-1",
+    "YellowEndBand1"
+  ],
+  "approval": {
+    "shape": "UNREVIEWED",
+    "production": false
+  }
+}

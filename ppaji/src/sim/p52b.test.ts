@@ -63,7 +63,9 @@ describe('P52-b 사고', () => {
 
   it('정적 — 뽑기 자리 둘(기구 가지 · 선착장 가지, `rng.accident.next()` 정확히 2) · guest.ts 의 rng 줄은 안 바뀐다(accident 0건)', () => {
     const game = readFileSync(new URL('./game.ts', import.meta.url), 'utf8');
-    expect((game.match(/this\.rng\.accident\.next\(\)/g) ?? []).length).toBe(3); // 기구 가지 · 선착장 가지 + P52-c 장마 유실(기구마다 1회) — 셋 다 전용 스트림
+    // P61-a: **둘로 줄었다** — 선착장 가지의 `safe: 2` 고정 뽑기는 실제 운항(`sim/course/ride.ts` 의 `IncidentLedger`)이 가져갔다.
+    // 운항은 코스의 실제 안전도(0~100 → 0~4)로 시드 해시에서 결정하므로 `rng.accident` 를 쓰지 않는다 (중복 추첨 금지, 인계 §6).
+    expect((game.match(/this\.rng\.accident\.next\(\)/g) ?? []).length).toBe(2); // 기구 가지 + P52-c 장마 유실(기구마다 1회) — 둘 다 전용 스트림
     const guest = readFileSync(new URL('./guest.ts', import.meta.url), 'utf8');
     expect(guest.includes('accident')).toBe(false);
   });

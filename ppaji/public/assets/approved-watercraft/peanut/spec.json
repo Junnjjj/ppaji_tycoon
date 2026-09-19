@@ -1,0 +1,116 @@
+{
+  "name": "3\uc778 \ub545\ucf69\ud29c\ube0c",
+  "capacity": 3,
+  "equipment_id": "peanut",
+  "body_size_tiles": [
+    1.68,
+    3.32,
+    0.49
+  ],
+  "seats": [
+    {
+      "key": "seat0",
+      "position": [
+        0,
+        -0.87,
+        0.31
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966
+    },
+    {
+      "key": "seat1",
+      "position": [
+        0,
+        0,
+        0.31
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966
+    },
+    {
+      "key": "seat2",
+      "position": [
+        0,
+        0.87,
+        0.31
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966
+    }
+  ],
+  "tow_socket": [
+    0,
+    -1.8,
+    0.14
+  ],
+  "bow": [
+    0,
+    -1.66,
+    0.27
+  ],
+  "stern": [
+    0,
+    1.66,
+    0.27
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "boarding": [
+    -0.83,
+    0,
+    0.22
+  ],
+  "wake": [
+    0,
+    1.66,
+    0
+  ],
+  "id": "peanut_3",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "camera_target_z_tiles": 0.65,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "full_bounds_tiles": [
+    [
+      -0.8308838144807351,
+      -1.8919998465740502,
+      0.014999998847665402
+    ],
+    [
+      0.8308838144807351,
+      1.7268030821994784,
+      0.5120000421508862
+    ]
+  ],
+  "inventory": [
+    "BlueFloor",
+    "Bridle_-1",
+    "Bridle_1",
+    "BridleEye_-1",
+    "BridleEye_1",
+    "FrontTowEye",
+    "HandleBar_0",
+    "HandleBar_1",
+    "HandleBar_2",
+    "HandlePost_0_-1",
+    "HandlePost_0_1",
+    "HandlePost_1_-1",
+    "HandlePost_1_1",
+    "HandlePost_2_-1",
+    "HandlePost_2_1",
+    "InflatableCollar",
+    "SeatPad_0",
+    "SeatPad_1",
+    "SeatPad_2"
+  ]
+}

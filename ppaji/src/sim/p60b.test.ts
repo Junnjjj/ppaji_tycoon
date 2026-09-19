@@ -8,7 +8,7 @@ describe('P60-b 기구 배고픔', () => {
   it('balance.hungerPerRig 가 있고(12) 0 이면 동작 0 — 골든 시드 1 의 16일 해시가 배고픔 없는 판의 고정값과 같다(대조군)', () => {
     expect(defaultBalance.hungerPerRig).toBe(12);
     const off = runBot(new Game(1, { ...defaultBalance, hungerPerRig: 0 }, { arrival: true }), 16);
-    expect(off.snapshotHash).toBe(4117665311); // P60-e 재베이크(2026-09-18, 2037537433 → 4117665311 — 좌석 vs 서서(산 곳에서 걷기 9 안 좌석만·서서 8tick) · 구색 등급 ⌊k/2⌋ · 봇 growFoodCourt/diversifyCourtMenus · 스냅샷 stats.eats/standEats) · P60-d 재베이크(2026-09-18, 775479838 → 2037537433 — 봇 자리 정렬(입수구 거리·휴식 뒤·capCourse)과 코스 완성 수역 만족 ×1.25) · P60-c 재베이크(2026-09-18) — 봇 `attachRigs` 세트 후보 우선·사슬 예약으로 순서가 바뀌어 P60-a 값(2498538397)과는 다르다. 키 0 은 「배고픔이 없는 최종 봇」의 고정값 — 골든 표(키 12)와 달라야 배고픔이 실제로 동작한다
+    expect(off.snapshotHash).toBe(3674765354); // 2026-09-19 승인 조합·실제 운항·봇 대응 후 배고픔 0 대조군 재계측
   }, 20000);
   it('16일 뒤 매점 매출 몫이 늘거나 같다 — 기구를 탄 손님이 배고파진다 (3시드 합계)', () => {
     let on = 0, off = 0;

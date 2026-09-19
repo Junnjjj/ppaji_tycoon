@@ -1,0 +1,75 @@
+{
+  "source_sha256": "75d35de51ffed33dfd415331060dbcd5e175f16860a10188cbf7e153443fff67",
+  "size": 256,
+  "encoding": "Float32 little-endian camera forward depth; Infinity background",
+  "passes": [
+    {
+      "mode": "full",
+      "direction": 0,
+      "file": "full-d0.bin",
+      "sha256": "9c6a7beb4422eb99b8f169032f5311d43ae6e2df711c9449439927ba3adc2029",
+      "finite_hits": 5592,
+      "reprojection_error_px": 4.57763671875e-05
+    },
+    {
+      "mode": "full",
+      "direction": 1,
+      "file": "full-d1.bin",
+      "sha256": "29a2173ae427f869e9260580a9c349e74fc5ba695e6c405518103add7245c15a",
+      "finite_hits": 5660,
+      "reprojection_error_px": 4.57763671875e-05
+    },
+    {
+      "mode": "full",
+      "direction": 2,
+      "file": "full-d2.bin",
+      "sha256": "0b2b99c3162e6e014aa80a4b38b39b313e17b1f78b2c65d99c74bf940b4e4614",
+      "finite_hits": 5389,
+      "reprojection_error_px": 4.57763671875e-05
+    },
+    {
+      "mode": "full",
+      "direction": 3,
+      "file": "full-d3.bin",
+      "sha256": "d6d9763612925e9bd2a9c9d06a6ce9e6f70a9e8d20713489b4a2ca01c48ea28b",
+      "finite_hits": 4498,
+      "reprojection_error_px": 4.57763671875e-05
+    },
+    {
+      "mode": "slide",
+      "direction": 0,
+      "file": "slide-d0.bin",
+      "sha256": "f744fdc16b3fe46135918effe0c1c73894eb2b0e4a9cfc211cc5aad2f4fe7f22",
+      "finite_hits": 5451,
+      "reprojection_error_px": 4.57763671875e-05
+    },
+    {
+      "mode": "slide",
+      "direction": 1,
+      "file": "slide-d1.bin",
+      "sha256": "331cfeb6a998ad20cd170a855feb21a4daafed614c89b73be1906ada7c8050de",
+      "finite_hits": 5217,
+      "reprojection_error_px": 4.57763671875e-05
+    },
+    {
+      "mode": "slide",
+      "direction": 2,
+      "file": "slide-d2.bin",
+      "sha256": "ed26b8945a7f01132122011362722dfc568f64cc75af18ded8f91e833fa36762",
+      "finite_hits": 5356,
+      "reprojection_error_px": 4.57763671875e-05
+    },
+    {
+      "mode": "slide",
+      "direction": 3,
+      "file": "slide-d3.bin",
+      "sha256": "cb979f36a4ec874a4fa8811d98d08ecb63440759e9abed840a13dd898d054d43",
+      "finite_hits": 4472,
+      "reprojection_error_px": 4.57763671875e-05
+    }
+  ],
+  "source_unchanged": true,
+  "slide_only_excluded": [
+    "SlideTrough"
+  ]
+}

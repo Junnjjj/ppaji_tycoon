@@ -15,6 +15,7 @@ import recipesJson from './recipes.json';
 import compatJson from './compat.json';
 import rigPartsJson from './rig-parts.json';
 import rigSetsJson from './rig-sets.json';
+import rigsJson from './rigs.json';
 const rigParts = rigPartsJson as { id: string; unlock: string }[];
 const rigPartIds = new Set(rigParts.map((p) => p.id));
 import type {
@@ -542,8 +543,13 @@ describe('certs.json', () => {
     const fc = certs.find((c) => c.id === 'fun_c')!;
     expect(fc.conditions[0]!.cond.kind).toBe('any');
     expect(certs.filter((c) => c.reward.kind === 'gift').length).toBe(12); // 튜브 12 (원작 표)
-    expect(certs.filter((c) => c.reward.kind === 'rigPart').length).toBe(9); // P49-a2: 물빛 12 → 부품 9 + 기구 3
-    expect(certs.filter((c) => c.reward.kind === 'facility').length).toBeGreaterThanOrEqual(3);
+    // 2026-09-19 조합 채택: set_b·court_d 가 주던 기구 둘(LED 부표·키즈 워터 놀이터)이 빠지 놀이터에 흡수됐다.
+    // 빠지 놀이터는 랭크 3 해금이라 인증 보상으로 줄 수 없어(이미 가진 것을 또 주는 죽은 보상) **쓰이는 부품**으로 옮겼다 — 9 → 11.
+    expect(certs.filter((c) => c.reward.kind === 'rigPart').length).toBe(11); // P49-a2 부품 9 + 2026-09-19 재배치 2
+    expect(certs.filter((c) => c.reward.kind === 'facility').length).toBe(1); // 아이스버그 하나만 남는다 (인증 해금 시설도 그것뿐)
+    // 죽은 보상 0 — 인증이 주는 부품은 전부 살아 있는 개조 레시피가 쓴다
+    const usedParts = new Set((rigsJson as { key: string; add: string[] }[]).flatMap((r) => [...r.key.split('+'), ...r.add]));
+    for (const c of certs) if (c.reward.kind === 'rigPart') expect(usedParts.has(c.reward.id!), `${c.id} 보상 부품 ${c.reward.id}`).toBe(true);
   });
 
   it('rewards reference existing ids; tiles at most once each; cert-gifts exactly once', () => {
@@ -610,7 +616,9 @@ describe('certs.json', () => {
     const court = (id: string) => { const c = certs.find((x) => x.id === id)!; const w = c.conditions.find((x) => x.cond.kind === 'all')!; const of = (w.cond as { of: Condition[] }).of; return { w: w.weight, seats: (of.find((x) => x.kind === 'courtSeats') as { min: number }).min, kinds: (of.find((x) => x.kind === 'courtMenuKinds') as { min: number }).min, n: c.conditions.length, rest: c.conditions.some((x) => x.cond.kind === 'facilityClass' && (x.cond as { class: string }).class === 'restaurant') }; };
     expect([court('court_f'), court('court_d'), court('court_b')]).toEqual([{ w: 2, seats: 4, kinds: 2, n: 2, rest: false }, { w: 1, seats: 8, kinds: 3, n: 3, rest: false }, { w: 1, seats: 12, kinds: 4, n: 3, rest: false }]);
     expect(certs.filter((c) => c.conditions.some((w) => w.cond.kind === 'all' && (w.cond as { of: Condition[] }).of.some((x) => x.kind === 'courtSeats'))).map((c) => c.id)).toEqual(['court_f', 'court_d', 'court_b']);
-    expect(certs.find((c) => c.id === 'court_f')!.reward).toEqual({ kind: 'rigPart', id: 'slip_wax' });
+    // 2026-09-19 조합 채택: 부품 13 → 9 로 줄면서 `slip_wax` 가 은퇴했다 (쓰는 개조 레시피가 0이 됐다). 보상은 살아 있는 부품으로 옮겼다 — 「court_f 는 기구 부품을 준다」는 뜻은 그대로다
+    expect(certs.find((c) => c.id === 'court_f')!.reward).toEqual({ kind: 'rigPart', id: 'float_drum' });
+    expect(rigPartIds.has('float_drum'), 'court_f 보상 부품은 실재한다').toBe(true);
     // spa 는 수온 조건이 그대로 (계절 수온은 남는다)
     expect(certs.find((c) => c.id === 'spa_d')!.conditions[0]!.cond).toEqual({ kind: 'pool', tempMin: 32 });
     expect(certs.find((c) => c.id === 'spa_b')!.conditions[0]!.cond).toEqual({ kind: 'pool', tempMin: 40, indoor: true });
@@ -635,13 +643,20 @@ describe('rig-sets.json (P60-c)', () => {
     expect(sets.filter((s) => s.hidden).map((s) => s.id).sort()).toEqual(['jump', 'night', 'roll', 'trio']);
     expect(sets.filter((s) => !s.hidden).map((s) => s.id)).toEqual(['ninja', 'kids', 'slide3', 'lounge']);
   });
-  it('시작 해금(unlock.source start) 7종만으로 최소 1 세트(ninja) 성립 가능 · 밤빠지는 lights 기구 둘 + 플로팅 바 · 라운지는 링 위 메뉴 시설을 든다 · 멤버 셋이 같은 세트는 둘 없다', () => {
+  it('시작 해금(unlock.source start) 3종만으로 최소 1 세트(ninja) 성립 가능 · 밤빠지는 lights 기구 둘 + 플로팅 바 · 라운지는 링 위 메뉴 시설을 든다 · 멤버 셋이 같은 세트는 둘 없다', () => {
+    // 2026-09-19 조합 채택: 시작 기구 7 중 5(플로팅 슬라이드·밸런스 빔·시소·해먹·미니 슬라이드)가 조합의 구성품이 되어 폐기됐다.
+    // 그 자리를 **빠지 슬라이드 조합**이 시작 해금으로 메운다 — 초반 세트(ninja) 성립 경로는 그대로 산다.
     const start = new Set(facilities.filter((f) => f.class === 'rig' && f.buildable !== false && f.unlock.source === 'start').map((f) => f.id));
-    expect(start.size).toBe(7);
+    expect(start.size).toBe(3);
     const startSets = sets.filter((s) => s.members.every((m) => start.has(m)));
     expect(startSets.map((s) => s.id)).toContain('ninja');
     const night = sets.find((s) => s.id === 'night')!;
-    expect(night.members.filter((m) => byId.get(m)!.lights === true)).toHaveLength(2);
+    // 2026-09-19 조합 채택: 조명 부표·LED 선베드가 빠지 놀이터에 흡수돼 **살아 있는 `lights` 시설이 정확히 하나**다.
+    // 그래서 「조명 둘」은 이제 성립 불가능한 조건이다. 뜻(밤빠지는 조명을 든다)은 지키고, 살아 있는 조명 수를
+    // 같이 못박아 둔다 — 누가 조명 시설을 늘리면 이 줄이 먼저 빨개져서 세트를 다시 보게 된다.
+    const liveLights = facilities.filter((f) => f.lights === true && f.buildable !== false && f.deprecated !== true);
+    expect(liveLights.map((f) => f.id)).toEqual(['ppaji_playground']);
+    expect(night.members.filter((m) => byId.get(m)!.lights === true).length).toBeGreaterThanOrEqual(1);
     expect(night.members.some((m) => byId.get(m)!.onRing === true && byId.get(m)!.menuSlots > 0)).toBe(true);
     const lounge = sets.find((s) => s.id === 'lounge')!;
     expect(lounge.members.some((m) => byId.get(m)!.onRing === true && byId.get(m)!.menuSlots > 0)).toBe(true);
@@ -1224,11 +1239,39 @@ describe('validateRigData (P49-a1)', () => {
       if (f.buildable === false) expect(f.unlock.source, f.id).toBe('craft');
       expect(f.thrill, f.id).toBeGreaterThanOrEqual(0); expect(f.thrill, f.id).toBeLessThanOrEqual(4);
     }
-    expect(rigs.filter((f) => f.maxPerPark !== undefined).length).toBe(1);
-    expect(rigs.filter((f) => f.bandCost === 2).length).toBeLessThanOrEqual(1);
+    // 2026-09-19 조합 채택: 「빠지마다 하나」와 「팔찌 값 2」는 회전 원반에서 **빠지 놀이터**로 옮겼다.
+    // 원반은 폐기(정의만 남는 옛 세이브 호환)라 필드가 화석으로 남아 있다 — 그래서 살아 있는 것만 센다.
+    const liveRigs = rigs.filter((f) => f.buildable !== false && f.deprecated !== true);
+    expect(liveRigs.filter((f) => f.maxPerPark !== undefined).map((f) => f.id)).toEqual(['ppaji_playground']);
+    expect(liveRigs.filter((f) => f.bandCost === 2).map((f) => f.id)).toEqual(['ppaji_playground']);
+    // 폐기 쪽 화석은 「폐기됐다」는 사실로만 허용된다 (살아 있는 채로 둘이 되는 것을 막는다)
+    for (const f of rigs.filter((x) => x.maxPerPark !== undefined || x.bandCost === 2)) expect(f.deprecated === true || f.id === 'ppaji_playground', f.id).toBe(true);
   });
   it('링 위 비-rig 는 자기 class 띠를 따른다(watchtower·rig_rack·rescue_dock utility · rig_float_bar restaurant)', () => {
     for (const id of ['watchtower', 'rig_rack', 'rescue_dock']) expect(facilities.find((f) => f.id === id)!.class, id).toBe('utility');
     expect(facilities.find((f) => f.id === 'rig_float_bar')!.class).toBe('restaurant');
+  });
+});
+
+
+describe('approved asset dependency closure', () => {
+  it('active combo pairs and nested wish/certificate facility conditions never require retired assets', async () => {
+    const retired = new Set(facilities.filter(f => f.deprecated === true).map(f => f.id));
+    const comboData = (await import('./combos.json')).default;
+    for (const combo of comboData.combos) {
+      expect(combo.pair, combo.id).toHaveLength(2);
+      for (const id of combo.pair) {
+        expect(facilities.some(f => f.id === id), combo.id).toBe(true);
+        expect(retired.has(id), `${combo.id}: ${id}`).toBe(false);
+      }
+    }
+    const inspect = (value: unknown, path: string): void => {
+      if (typeof value === 'string') expect(retired.has(value), path).toBe(false);
+      else if (Array.isArray(value)) value.forEach((v, i) => inspect(v, `${path}/${i}`));
+      else if (value && typeof value === 'object') for (const [key, v] of Object.entries(value)) inspect(v, `${path}/${key}`);
+    };
+    inspect((await import('./wishes.json')).default, 'wishes');
+    inspect((await import('./certs.json')).default, 'certs');
+    // packages.needsInRadius uses semantic categories: 'dock' there is not a facility ID.
   });
 });

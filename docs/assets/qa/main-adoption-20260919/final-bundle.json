@@ -1,0 +1,68 @@
+{
+  "port": 5189,
+  "script": [
+    "http://127.0.0.1:5189/assets/main-1zTXP-Zn.js",
+    ""
+  ],
+  "watercraft": [
+    "peanut",
+    "jjinppang",
+    "banana",
+    "honeycomb",
+    "flyduck",
+    "hexa",
+    "lotus",
+    "wagon",
+    "swing",
+    "spinpang",
+    "twinpang",
+    "dancing",
+    "flyfish",
+    "skyfly",
+    "jetski",
+    "jetboat",
+    "wakeboard",
+    "waterski",
+    "sofa_boat",
+    "flycarpet",
+    "rocket_tube",
+    "discopang",
+    "blobjump",
+    "water_roller",
+    "watersled",
+    "kneeboard",
+    "air_chair",
+    "marine_jet",
+    "hydrofoil",
+    "tow_work"
+  ],
+  "static": [
+    "ppaji_slide",
+    "ppaji_playground",
+    "boarding_dock"
+  ],
+  "dock": {
+    "uid": 14,
+    "defId": "boarding_dock",
+    "i": 58,
+    "j": 25,
+    "facing": 1,
+    "rentedBy": null,
+    "usesToday": 0,
+    "level": 1,
+    "usesTotal": 0,
+    "incomeToday": 0,
+    "incomeTotal": 0,
+    "passage": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ]
+    ]
+  },
+  "resourceErrors": []
+}

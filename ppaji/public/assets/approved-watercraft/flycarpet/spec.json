@@ -1,0 +1,401 @@
+{
+  "id": "flycarpet",
+  "name": "UFO 튜브",
+  "capacity": 8,
+  "kind": "tow",
+  "status": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "logical_size": 160,
+  "tile_world": 22.627416997969522,
+  "camera_target_z_tiles": 0.65,
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "seats": [
+    {
+      "key": "passenger-01",
+      "position": [
+        -1.9250000000000003,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-01",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          -2.075,
+          -0.95,
+          0.52
+        ],
+        [
+          -1.7750000000000004,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    },
+    {
+      "key": "passenger-02",
+      "position": [
+        -1.375,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-02",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          -1.525,
+          -0.95,
+          0.52
+        ],
+        [
+          -1.225,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    },
+    {
+      "key": "passenger-03",
+      "position": [
+        -0.8250000000000001,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-03",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          -0.9750000000000001,
+          -0.95,
+          0.52
+        ],
+        [
+          -0.675,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    },
+    {
+      "key": "passenger-04",
+      "position": [
+        -0.275,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-04",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          -0.42500000000000004,
+          -0.95,
+          0.52
+        ],
+        [
+          -0.12500000000000003,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    },
+    {
+      "key": "passenger-05",
+      "position": [
+        0.275,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-05",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          0.12500000000000003,
+          -0.95,
+          0.52
+        ],
+        [
+          0.42500000000000004,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    },
+    {
+      "key": "passenger-06",
+      "position": [
+        0.8250000000000001,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-06",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          0.675,
+          -0.95,
+          0.52
+        ],
+        [
+          0.9750000000000001,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    },
+    {
+      "key": "passenger-07",
+      "position": [
+        1.375,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-07",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          1.225,
+          -0.95,
+          0.52
+        ],
+        [
+          1.525,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    },
+    {
+      "key": "passenger-08",
+      "position": [
+        1.9250000000000003,
+        0.05,
+        0.48
+      ],
+      "pose": "lie",
+      "heading": -1.5707963267948966,
+      "support_object": "SupportPad_passenger-08",
+      "support_extent_tiles": [
+        0.47,
+        1.67
+      ],
+      "grip_sockets": [
+        [
+          1.7750000000000004,
+          -0.95,
+          0.52
+        ],
+        [
+          2.075,
+          -0.95,
+          0.52
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED",
+      "role": "passenger",
+      "contact_type": "prone_body_support_proposal"
+    }
+  ],
+  "boarding": [
+    2.52,
+    0,
+    0.42
+  ],
+  "boarding_status": "TRANSFER_UNRESOLVED: side mount over inflatable rim; no invented walking path",
+  "tow_socket": [
+    0,
+    -2.1,
+    0.12
+  ],
+  "bow": [
+    0,
+    -1.6,
+    0.22
+  ],
+  "stern": [
+    0,
+    1.6,
+    0.22
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    1.6,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -2.7526400089263916,
+      -2.125999927520752,
+      -0.10000000149011612
+    ],
+    [
+      2.7526400089263916,
+      1.6394399404525757,
+      0.5393335819244385
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -2.7526400089263916,
+      -1.6394399404525757,
+      -0.10000000149011612
+    ],
+    [
+      2.7526400089263916,
+      1.6394399404525757,
+      0.47999995946884155
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -2.0999999046325684,
+      -2.125999927520752,
+      0.08622324466705322
+    ],
+    [
+      2.0999999046325684,
+      -0.8154854774475098,
+      0.5393335819244385
+    ]
+  ],
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "lie",
+    "requirement": "Prone tow-grip posture with hands aligned to paired handles; existing lie is a scale-only proposal, not verified tow posture. No new NPC art.",
+    "boarding": "side mount and crawl transfer unresolved"
+  },
+  "physical_state": {
+    "rendered": "waterborne_surface_travel",
+    "waterline_z_tiles": 0,
+    "support_z_tiles": 0.48,
+    "lifted_jumping": "UNREVIEWED: extra pitched/lifted physical state renders and transformed support/waterline needed if requested; surface travel is not airborne evidence"
+  },
+  "minimum_mass": {
+    "alpha_threshold": 128,
+    "min_pixels": 1800,
+    "min_bbox_width": 45,
+    "min_bbox_height": 25,
+    "scope": "each native heading, declared before first render"
+  },
+  "canvas_proposal": "160 square union canvas at unchanged 1 world unit/native texel; accommodates 8 full-size prone stations without per-heading scaling",
+  "reference_preflight": {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_flycarpet.png",
+    "status": "INSPECTED_LOW_RES_IDENTITY_ONLY",
+    "observation": "Wide rounded UFO/carpet tube, raised rim, light upper surfaces; small icon cannot approve exact geometry. Equipment description explicitly specifies one row of lying riders.",
+    "authored_proposal": "Broad oval saucer with eight parallel prone pads, paired grips, underside chamber and bow tow bridle; hidden geometry not reference-approved"
+  },
+  "inventory": [
+    "BlueBodySupportDeck",
+    "Grip_passenger-01-1",
+    "Grip_passenger-011",
+    "Grip_passenger-02-1",
+    "Grip_passenger-021",
+    "Grip_passenger-03-1",
+    "Grip_passenger-031",
+    "Grip_passenger-04-1",
+    "Grip_passenger-041",
+    "Grip_passenger-05-1",
+    "Grip_passenger-051",
+    "Grip_passenger-06-1",
+    "Grip_passenger-061",
+    "Grip_passenger-07-1",
+    "Grip_passenger-071",
+    "Grip_passenger-08-1",
+    "Grip_passenger-081",
+    "LowerBlueAirChamber",
+    "SupportPad_passenger-01",
+    "SupportPad_passenger-02",
+    "SupportPad_passenger-03",
+    "SupportPad_passenger-04",
+    "SupportPad_passenger-05",
+    "SupportPad_passenger-06",
+    "SupportPad_passenger-07",
+    "SupportPad_passenger-08",
+    "TowBridle-0.68",
+    "TowBridle0.68",
+    "TowEye",
+    "YellowPeripheralBumper"
+  ],
+  "approval": {
+    "shape": "UNREVIEWED",
+    "production": false
+  }
+}

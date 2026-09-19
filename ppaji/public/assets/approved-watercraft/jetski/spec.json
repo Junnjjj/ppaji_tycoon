@@ -1,0 +1,204 @@
+{
+  "id": "jetski",
+  "name": "제트스키",
+  "capacity": 2,
+  "kind": "power",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "seats": [
+    {
+      "key": "driver",
+      "position": [
+        0,
+        -0.16,
+        0.675
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_object": "DriverSaddle",
+      "foot_contacts": [
+        [
+          -0.405,
+          -0.11,
+          0.37
+        ],
+        [
+          0.405,
+          -0.11,
+          0.37
+        ]
+      ],
+      "transfer_status": "POSE_FIT_UNRESOLVED: step from starboard footwell over saddle requires mounting pose"
+    },
+    {
+      "key": "passenger",
+      "position": [
+        0,
+        0.47,
+        0.705
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_object": "PassengerSaddle",
+      "foot_contacts": [
+        [
+          -0.405,
+          0.52,
+          0.37
+        ],
+        [
+          0.405,
+          0.52,
+          0.37
+        ]
+      ],
+      "transfer_status": "POSE_FIT_UNRESOLVED: step from starboard footwell over saddle requires mounting pose"
+    }
+  ],
+  "boarding": [
+    0.53,
+    0.9,
+    0.4075
+  ],
+  "boarding_proposal": {
+    "side": "+X",
+    "supported_approach": [
+      [
+        0.405,
+        0.9,
+        0.4075
+      ],
+      [
+        0.405,
+        0.7,
+        0.37
+      ],
+      [
+        0.405,
+        -0.16,
+        0.37
+      ]
+    ],
+    "order": [
+      "driver",
+      "passenger"
+    ],
+    "final_transfer": "unresolved saddle mounting; no walk-through-body path claimed"
+  },
+  "tow_socket": [
+    0,
+    -1.41,
+    0.18
+  ],
+  "tow_socket_role": "bow recovery eye; not towboat stern pulling fitting",
+  "bow": [
+    0,
+    -1.48,
+    0.18
+  ],
+  "stern": [
+    0,
+    1.23,
+    0.05
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    1.23,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -0.5824999809265137,
+      -1.4800000190734863,
+      -0.08999999612569809
+    ],
+    [
+      0.5824999809265137,
+      1.2300000190734863,
+      0.8829028010368347
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -0.5799999833106995,
+      -1.4800000190734863,
+      -0.08999999612569809
+    ],
+    [
+      0.5799999833106995,
+      1.1299999952316284,
+      0.3700000047683716
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -0.5824999809265137,
+      -1.4219999313354492,
+      -0.015000024810433388
+    ],
+    [
+      0.5824999809265137,
+      1.2300000190734863,
+      0.8829028010368347
+    ]
+  ],
+  "pose_requirement": "POSE_FIT_UNRESOLVED: current sit has no verified straddle, steering grip, passenger grab or saddle mounting motion; preserve existing 40px pose scale",
+  "native_visible_mass_gate": {
+    "alpha_threshold": 0,
+    "minimum_foreground_pixels": 500,
+    "minimum_bbox_width": 24,
+    "minimum_bbox_height": 16,
+    "edge_pixels": 0,
+    "declared_before_render": true
+  },
+  "inventory": [
+    "BlueHull",
+    "BowEye",
+    "DriverSaddle",
+    "Footwell_-1",
+    "Footwell_1",
+    "Grip_-1",
+    "Grip_1",
+    "Handlebar",
+    "InstrumentPanel",
+    "JetNozzle",
+    "OuterRail_-1",
+    "OuterRail_1",
+    "PassengerSaddle",
+    "RearBoardingPad",
+    "RearGrab_-1",
+    "RearGrab_1",
+    "SaddlePedestal",
+    "SteeringStem",
+    "YellowBowCowling",
+    "YellowDeck"
+  ],
+  "reference_preflight": {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_jetski.png",
+    "observed": "yellow upper body, blue hull, narrow dark saddle, forward console",
+    "authority": "coordinator frozen contract identity icon; authored hidden-side proposal, not exact reconstruction"
+  },
+  "approval": "candidate only; no production approval",
+  "support_note": "Foot contacts are on actual YellowDeck top at .37 tile; thin dark Footwell inset is below deck by .0025 tile and not claimed as exposed support."
+}

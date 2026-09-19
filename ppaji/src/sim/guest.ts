@@ -1,3 +1,4 @@
+import { COURSE_DOCK_IDS } from './course/ride.js';
 /**
  * 손님 — 개체 에이전트. FSM: enter → wander → walk(풀로) → swim → … → leave.
  * HP 를 쓰며 놀고, 바닥나면 나간다. 위치는 타일 + 진행률(보간은 렌더의 일).
@@ -17,7 +18,8 @@ import type { FacilityDef } from '../data/schema.js';
 import { buildField, type DistanceField, NEIGHBORS } from './nav.js';
 
 /** G26: `climb`(탑 오르기) → `ride`(활강로 타기) → 착수는 `swim` 으로 이어진다 · `eat` 은 앉을 곳이 없어 서서 먹는 중 */
-export type GuestState = 'enter' | 'wander' | 'walk' | 'swim' | 'use' | 'climb' | 'ride' | 'eat' | 'queue' | 'leave' | 'gone';
+/** P61-a `course` — 견인 코스에 탑승 중. 걸음이 **얼어붙고** 자세는 `sim/course/ride.ts` 가 매 tick 준다 (낙수 뒤 복귀도 같다) */
+export type GuestState = 'enter' | 'wander' | 'walk' | 'swim' | 'use' | 'climb' | 'ride' | 'eat' | 'queue' | 'leave' | 'gone' | 'course';
 /** 대기 줄 (G34) — 시설 앞 최대 인원 · 참을성(tick) */
 export const QUEUE_MAX = 3;
 export const QUEUE_PATIENCE = 48;
@@ -218,6 +220,12 @@ export interface GuestHooks {
   poolTempFit?: (poolId: number) => number;
   /** 시설 이용 완료 — 요금이 있으면 돌려준다 (Game 이 돈에 더한다) */
   onFacilityUse?: (g: Guest, f: PlacedFacility) => void;
+  /**
+   * P61-a — 이 손님이 지금 **운항에 묶여 있나** (탑승·주행·하선·낙수 복귀).
+   * 참이면 일반 이동을 전부 건너뛴다: 자세·목표는 `CourseRideStore` 가 소유한다.
+   * ⚠ 손님 쪽에 운항 상태를 복제하지 말 것 — 두 벌이 되면 저장 복원에서 반드시 갈라진다.
+   */
+  rideLock?: (g: Guest) => boolean;
   /** 놀고 난 뒤 만족이 높으면 사진을 올린다 (G4 SNS) — Game 이 글로 만든다 */
   onPhoto?: (g: Guest, subject: { kind: 'pool' | 'facility'; ref: number }) => void;
   /** 손님이 나갈 때 (만족을 친구 EXP 로) */
@@ -706,6 +714,11 @@ export class GuestStore {
           }
           break;
         }
+        case 'course':
+          // P61-a: 운항이 자세를 소유한다. 풀리면(하선·복귀 완료) 제자리에서 다시 논다 —
+          // 부상 손님의 의무실 목표는 `onReturn` 이 이미 `walk` 로 바꿔 놓으므로 여기 안 온다.
+          if (!hooks?.rideLock?.(g)) { g.state = 'wander'; g.stateTicks = 0; g.target = null; }
+          break;
         case 'gone':
           break;
       }
@@ -736,6 +749,11 @@ export class GuestStore {
   busyCount(f: PlacedFacility): number { return this.busyAt(f); }
   private busyAt(f: PlacedFacility): number {
     return this.list.filter((o) => (o.state === 'use' || o.state === 'climb' || o.state === 'ride') && o.target?.kind === 'facility' && o.target.uid === f.uid).length;
+  }
+
+  /** P61-a — uid 로 손님 하나. 운항(`CourseRideStore`)이 자세를 쓸 때만 부른다 */
+  byUid(uid: number): Guest | undefined {
+    return this.list.find((g) => g.uid === uid);
   }
 
   /** 시설 앞에 선 줄 길이 */
@@ -770,6 +788,7 @@ export class GuestStore {
   private afterUse(g: Guest, hooks?: GuestHooks, from?: PlacedFacility): void {
     g.target = null;
     g.stateTicks = 0;
+    if (hooks?.rideLock?.(g)) { g.state = 'course'; return; } // P61-a 선착장에서 배를 탔다 — 다음 목표는 내린 뒤에 고른다
     if (g.leaving) { g.state = 'leave'; return; } // P45-b: 복도 점포에 들른 뒤엔 곧장 나간다
     if (hooks?.closing?.() && g.stays && g.seatUid !== null && this.facilities.byUid(g.seatUid)) { if (!g.nightDone && this.tryNight(g, hooks)) return; g.target = { kind: 'facility', uid: g.seatUid }; g.state = 'walk'; return; } // P18 · P45-c
     if (g.hp < this.b.guestHpLeave || hooks?.closing?.()) { this.leaveOrRetreat(g, hooks); return; }
@@ -868,7 +887,7 @@ export class GuestStore {
       w *= tasteWeight(def.class, def.menuSlots, g.taste); // P9 출신지 취향
       // P17 팀 자리 — 자리가 없는 팀 손님은 평상부터, 자리가 있으면 제 자리로 돌아온다 · 패키지는 그 시설을 먼저
       if (def.class === 'lounging' && g.teamId !== null) { const ts = g.seatUid ?? hooks?.teamSeatUid?.(g) ?? null; w *= ts === null ? 5 * (1 + 0.5 * (hooks?.seatValue?.(f) ?? 0)) : f.uid === ts ? 4 : 0.3; } // P24: 좋은 자리부터 · P28-b: 팀이 잡은 줄로 모인다
-      if (g.pkg && !g.pkgUsed) { if (g.pkg === 'meat' && def.menuSlots > 0) w *= 4; if (g.pkg === 'gear' && def.id === 'dock') w *= 4; if (g.pkg === 'stay' && def.lodging === true) w *= 4; }
+      if (g.pkg && !g.pkgUsed) { if (g.pkg === 'meat' && def.menuSlots > 0) w *= 4; if (g.pkg === 'gear' && COURSE_DOCK_IDS.has(def.id)) w *= 4; if (g.pkg === 'stay' && def.lodging === true) w *= 4; }
       if (g.carry) w *= def.class === 'lounging' ? 6 : 0.2; // 산 것을 들고 있으면 앉을 곳부터 (R3)
       if (g.hp < 40 && def.hpDelta > 0) w *= 3;
       if (g.hp >= 70 && def.hpDelta > 0) w *= 0.3;

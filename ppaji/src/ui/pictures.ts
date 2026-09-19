@@ -12,6 +12,9 @@ import { iconEl, type IconName } from './icons.js';
 export interface PictureEntry { x: number; y: number; w?: number; h?: number }
 export interface PictureSheet { sheet: string; cell: number; entries: Record<string, PictureEntry> }
 
+let approvedPicture: ((id: string) => HTMLCanvasElement | null) | null = null;
+export function setApprovedPictureSource(source: (id: string) => HTMLCanvasElement | null): void { approvedPicture = source; }
+
 export const PICTURES: PictureSheet = picturesJson as PictureSheet;
 
 export type PictureKind = 'ingredient' | 'recipe' | 'part' | 'gear' | 'item' | 'gift' | 'band' | 'campaign' | 'portrait'; // P56-b2: 캠페인 3 · 인물 초상 5×2
@@ -21,7 +24,7 @@ export function pictureId(kind: PictureKind, defId: string): string {
 }
 
 export function hasPicture(id: string): boolean {
-  return Object.prototype.hasOwnProperty.call(PICTURES.entries, id);
+  return Boolean(approvedPicture?.(id)) || Object.prototype.hasOwnProperty.call(PICTURES.entries, id);
 }
 
 /** 반입된 그림 수 — 하네스 「폴백 0」 행이 읽는다 */
@@ -34,6 +37,8 @@ export function pictureCount(): number {
  * 좌표·크기는 데이터라 인라인 변수로 남는다 — 색·정렬은 style.css 의 `.kpic` 이 소유한다.
  */
 export function pictureEl(id: string, fallback: IconName, extraClass?: string): HTMLSpanElement {
+  const art = approvedPicture?.(id);
+  if (art) { const span = canvasPictureEl(art, fallback, extraClass); span.dataset['pic'] = id; span.dataset['picSource'] = 'approved-asset'; return span; }
   const e = PICTURES.entries[id];
   if (!e) {
     const span = iconEl(fallback, extraClass ? `kpic-fb ${extraClass}` : 'kpic-fb');
@@ -59,6 +64,9 @@ export function canvasPictureEl(canvas: HTMLCanvasElement | null, fallback: Icon
   const span = document.createElement('span');
   span.className = extraClass ? `kpic kpic-canvas ${extraClass}` : 'kpic kpic-canvas';
   span.setAttribute('aria-hidden', 'true');
-  span.append(canvas);
+  // Providers cache canvases; a DOM thumbnail must never steal another card's node.
+  const copy = document.createElement('canvas'); copy.width = canvas.width; copy.height = canvas.height;
+  copy.getContext('2d')?.drawImage(canvas, 0, 0);
+  span.append(copy);
   return span;
 }

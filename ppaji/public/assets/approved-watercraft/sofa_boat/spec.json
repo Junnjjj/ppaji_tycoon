@@ -1,0 +1,428 @@
+{
+  "id": "sofa_boat",
+  "name": "소파보트",
+  "capacity": 6,
+  "kind": "tow",
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "source_axis_normalization_degrees": [
+    0,
+    0,
+    0
+  ],
+  "seats": [
+    {
+      "key": "seat_01",
+      "position": [
+        -0.88,
+        -0.88,
+        0.56
+      ],
+      "pose": "sit",
+      "heading": 1.5707963267948966,
+      "support_object": "seat_01_cushion",
+      "foot_contact": [
+        -0.88,
+        -0.39,
+        0.36
+      ],
+      "back_support": "seat_01_back",
+      "access_path": [
+        [
+          1.52,
+          0,
+          0.36
+        ],
+        [
+          1.15,
+          0,
+          0.36
+        ],
+        [
+          -0.88,
+          0,
+          0.36
+        ],
+        [
+          -0.88,
+          -0.39,
+          0.36
+        ],
+        [
+          -0.88,
+          -0.88,
+          0.56
+        ]
+      ],
+      "access_status": "PROPOSED_WALK_THEN_SIT_TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "seat_02",
+      "position": [
+        0,
+        -0.88,
+        0.56
+      ],
+      "pose": "sit",
+      "heading": 1.5707963267948966,
+      "support_object": "seat_02_cushion",
+      "foot_contact": [
+        0,
+        -0.39,
+        0.36
+      ],
+      "back_support": "seat_02_back",
+      "access_path": [
+        [
+          1.52,
+          0,
+          0.36
+        ],
+        [
+          1.15,
+          0,
+          0.36
+        ],
+        [
+          0,
+          0,
+          0.36
+        ],
+        [
+          0,
+          -0.39,
+          0.36
+        ],
+        [
+          0,
+          -0.88,
+          0.56
+        ]
+      ],
+      "access_status": "PROPOSED_WALK_THEN_SIT_TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "seat_03",
+      "position": [
+        0.88,
+        -0.88,
+        0.56
+      ],
+      "pose": "sit",
+      "heading": 1.5707963267948966,
+      "support_object": "seat_03_cushion",
+      "foot_contact": [
+        0.88,
+        -0.39,
+        0.36
+      ],
+      "back_support": "seat_03_back",
+      "access_path": [
+        [
+          1.52,
+          0,
+          0.36
+        ],
+        [
+          1.15,
+          0,
+          0.36
+        ],
+        [
+          0.88,
+          0,
+          0.36
+        ],
+        [
+          0.88,
+          -0.39,
+          0.36
+        ],
+        [
+          0.88,
+          -0.88,
+          0.56
+        ]
+      ],
+      "access_status": "PROPOSED_WALK_THEN_SIT_TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "seat_04",
+      "position": [
+        -0.88,
+        0.88,
+        0.56
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "seat_04_cushion",
+      "foot_contact": [
+        -0.88,
+        0.39,
+        0.36
+      ],
+      "back_support": "seat_04_back",
+      "access_path": [
+        [
+          1.52,
+          0,
+          0.36
+        ],
+        [
+          1.15,
+          0,
+          0.36
+        ],
+        [
+          -0.88,
+          0,
+          0.36
+        ],
+        [
+          -0.88,
+          0.39,
+          0.36
+        ],
+        [
+          -0.88,
+          0.88,
+          0.56
+        ]
+      ],
+      "access_status": "PROPOSED_WALK_THEN_SIT_TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "seat_05",
+      "position": [
+        0,
+        0.88,
+        0.56
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "seat_05_cushion",
+      "foot_contact": [
+        0,
+        0.39,
+        0.36
+      ],
+      "back_support": "seat_05_back",
+      "access_path": [
+        [
+          1.52,
+          0,
+          0.36
+        ],
+        [
+          1.15,
+          0,
+          0.36
+        ],
+        [
+          0,
+          0,
+          0.36
+        ],
+        [
+          0,
+          0.39,
+          0.36
+        ],
+        [
+          0,
+          0.88,
+          0.56
+        ]
+      ],
+      "access_status": "PROPOSED_WALK_THEN_SIT_TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "seat_06",
+      "position": [
+        0.88,
+        0.88,
+        0.56
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "seat_06_cushion",
+      "foot_contact": [
+        0.88,
+        0.39,
+        0.36
+      ],
+      "back_support": "seat_06_back",
+      "access_path": [
+        [
+          1.52,
+          0,
+          0.36
+        ],
+        [
+          1.15,
+          0,
+          0.36
+        ],
+        [
+          0.88,
+          0,
+          0.36
+        ],
+        [
+          0.88,
+          0.39,
+          0.36
+        ],
+        [
+          0.88,
+          0.88,
+          0.56
+        ]
+      ],
+      "access_status": "PROPOSED_WALK_THEN_SIT_TRANSFER_UNRESOLVED"
+    }
+  ],
+  "boarding": [
+    1.52,
+    0,
+    0.36
+  ],
+  "tow_socket": [
+    0,
+    -1.53,
+    0.2
+  ],
+  "bow": [
+    0,
+    -1.45,
+    0.2
+  ],
+  "stern": [
+    0,
+    1.45,
+    0.2
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    1.6,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -1.5599998235702515,
+      -1.5642379522323608,
+      -0.07999999821186066
+    ],
+    [
+      1.5599998235702515,
+      1.4499999284744263,
+      1.0950000286102295
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -1.5599998235702515,
+      -1.4499999284744263,
+      -0.07999999821186066
+    ],
+    [
+      1.5599998235702515,
+      1.4499999284744263,
+      1.0950000286102295
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -1.247999906539917,
+      -1.5642379522323608,
+      0.06400001049041748
+    ],
+    [
+      1.247999906539917,
+      0.7879999876022339,
+      0.6068742871284485
+    ]
+  ],
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "sit",
+    "reason": "Six supported opposing seats provided; existing sit lacks grip contact and validated walk-to-seat transfer. Occupied review is candidate only, coordinator owns browser depth integration."
+  },
+  "minimum_native_foreground_pixels": 1800,
+  "native_mass_gate": {
+    "alpha_threshold": 0,
+    "min_pixels": 1800,
+    "same_all16": true,
+    "declared_before_render": true
+  },
+  "inventory": [
+    "Arm_-1_-0.91",
+    "Arm_-1_0.91",
+    "Arm_1_-0.91",
+    "Arm_1_0.91",
+    "BlueBuoyancyBase",
+    "BowStripe",
+    "BowTowEye",
+    "RecessedWalkDeck",
+    "seat_01_back",
+    "seat_01_back_inset",
+    "seat_01_cushion",
+    "seat_01_grip_-0.28",
+    "seat_01_grip_0.28",
+    "seat_02_back",
+    "seat_02_back_inset",
+    "seat_02_cushion",
+    "seat_02_grip_-0.28",
+    "seat_02_grip_0.28",
+    "seat_03_back",
+    "seat_03_back_inset",
+    "seat_03_cushion",
+    "seat_03_grip_-0.28",
+    "seat_03_grip_0.28",
+    "seat_04_back",
+    "seat_04_back_inset",
+    "seat_04_cushion",
+    "seat_04_grip_-0.28",
+    "seat_04_grip_0.28",
+    "seat_05_back",
+    "seat_05_back_inset",
+    "seat_05_cushion",
+    "seat_05_grip_-0.28",
+    "seat_05_grip_0.28",
+    "seat_06_back",
+    "seat_06_back_inset",
+    "seat_06_cushion",
+    "seat_06_grip_-0.28",
+    "seat_06_grip_0.28",
+    "TowPatch",
+    "YellowPerimeterLayer"
+  ],
+  "reference_preflight": {
+    "identity_icon": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_sofa_boat.png",
+    "icon_sha256": "65a11b312dfb8a49ba14251b143c71bc82afa5545f9205d16cf7b74077547b1d",
+    "observed": "Broad rectangular yellow/blue inflatable sofa with multiple cushion/back shapes. Equipment description explicitly says riders face one another.",
+    "geometry_authority": "Low resolution identity only; new 2x3 opposing seats and underside are authored physical proposals, not exact reconstruction.",
+    "reusable_model": "None reused; fresh geometry"
+  },
+  "boarding_note": "Open +X central aisle; final movement from feet to seated origin is a sit transfer, not a walk-through-cushion segment. All access paths proposed and not runtime approved.",
+  "production_approved": false
+}

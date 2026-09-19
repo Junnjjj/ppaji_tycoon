@@ -9,7 +9,7 @@ import type { Guest } from '../../sim/guest.js';
 import { PACKAGES, type Game } from '../../sim/game.js';
 
 const STATE_KO: Record<Guest['state'], string> = {
-  enter: '입장 중', wander: '둘러보는 중', walk: '풀로 가는 중', swim: '수영 중', use: '시설 이용 중', leave: '나가는 중', climb: '슬라이드 오르는 중', ride: '슬라이드 타는 중', eat: '서서 먹는 중', queue: '줄 서는 중', gone: '떠남',
+  enter: '입장 중', wander: '둘러보는 중', walk: '풀로 가는 중', swim: '수영 중', use: '시설 이용 중', leave: '나가는 중', climb: '슬라이드 오르는 중', ride: '슬라이드 타는 중', eat: '서서 먹는 중', queue: '줄 서는 중', gone: '떠남', course: '코스 타는 중',
 };
 
 /** 손님 카드 (G19) — 초상·이름·나이·동네·체력/만족 게이지·취향·오늘 쓴 돈. 친구면 ☆와 열린 소원 */

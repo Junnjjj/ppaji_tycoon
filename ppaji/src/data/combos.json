@@ -157,14 +157,15 @@
     },
     {
       "id": "small_deck_trampoline",
-      "name": "덱 위 트램폴린",
+      "name": "덱 옆 빠지 슬라이드",
       "pair": [
         "float_deck",
-        "trampoline_w"
+        "ppaji_slide"
       ],
       "radius": 2,
       "sat": 3,
-      "revenue": 4
+      "revenue": 4,
+      "$comment": "조합 채택(2026-09-19): 수상 트램폴린이 빠지 놀이터의 구성품이 되어 건설 목록에서 내려갔다 — 데크에 붙는 같은 크기의 살아 있는 짝으로 재지정"
     },
     {
       "id": "small_deck_cushion",
@@ -192,7 +193,7 @@
       "id": "small_dock_kayak",
       "name": "선착장 카약",
       "pair": [
-        "dock",
+        "boarding_dock",
         "rent_kayak"
       ],
       "radius": 2,
@@ -203,7 +204,7 @@
       "id": "small_dock_sup",
       "name": "선착장 SUP",
       "pair": [
-        "dock",
+        "boarding_dock",
         "rent_sup"
       ],
       "radius": 2,
@@ -214,7 +215,7 @@
       "id": "small_dock_duck",
       "name": "선착장 오리배",
       "pair": [
-        "dock",
+        "boarding_dock",
         "rent_duck"
       ],
       "radius": 2,
@@ -225,24 +226,12 @@
       "id": "small_dock_pedal",
       "name": "선착장 패들보트",
       "pair": [
-        "dock",
+        "boarding_dock",
         "rent_pedal"
       ],
       "radius": 2,
       "sat": 3,
       "revenue": 4
-    },
-    {
-      "id": "small_slide_slidedock",
-      "name": "슬라이드와 슬라이드 독",
-      "pair": [
-        "slide_large",
-        "rig_slidedock"
-      ],
-      "radius": 2,
-      "sat": 3,
-      "revenue": 4,
-      "$comment": "P53-b: 「슬라이드와 다이빙대」는 성립 불가였다 — 큰 슬라이드(뭍 4×5)는 물가에, 다이빙대(deep)는 물가에서 먼 깊은 물 링에만 서서 반경 2 안에 못 든다. 깊이 any 인 링 위 기구로 재지정"
     },
     {
       "id": "small_island_junglegym",

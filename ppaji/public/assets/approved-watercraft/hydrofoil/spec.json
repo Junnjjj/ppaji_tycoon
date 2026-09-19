@@ -1,0 +1,205 @@
+{
+  "id": "hydrofoil",
+  "name": "플라이보드",
+  "capacity": 1,
+  "kind": "power",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "camera_target_z_tiles": 0.65,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "source_axis_normalization_degrees": [
+    0,
+    0,
+    0
+  ],
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "physical_state": "waterborne_unpowered_display_proxy",
+  "seats": [
+    {
+      "key": "station_01",
+      "position": [
+        0,
+        -0.015,
+        0.138
+      ],
+      "pose": "idle",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "status": "POSE_FIT_UNRESOLVED",
+      "support_contacts": [
+        "foot_left",
+        "foot_right"
+      ],
+      "posture": "standing in paired bindings"
+    }
+  ],
+  "boarding": [
+    0.4,
+    0,
+    0.14
+  ],
+  "boarding_status": "TRANSFER_UNRESOLVED: +X side designation only; mount boots while floating requires decision",
+  "tow_socket": null,
+  "supply_socket": [
+    0,
+    0.17,
+    -0.08
+  ],
+  "bow": [
+    0,
+    -0.27,
+    0.055
+  ],
+  "stern": [
+    0,
+    0.27,
+    0.055
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": null,
+  "full_bounds_tiles": [
+    [
+      -0.35999998450279236,
+      -0.27000001072883606,
+      -0.226500004529953
+    ],
+    [
+      0.5450000166893005,
+      1.034999966621399,
+      0.4449999928474426
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -0.35999998450279236,
+      -0.27000001072883606,
+      -0.11499999463558197
+    ],
+    [
+      0.35999998450279236,
+      0.27000001072883606,
+      0.14249998331069946
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -0.23499998450279236,
+      -0.10750000178813934,
+      -0.226500004529953
+    ],
+    [
+      0.5450000166893005,
+      1.034999966621399,
+      0.4449999928474426
+    ]
+  ],
+  "contacts": {
+    "foot_left": [
+      -0.135,
+      -0.015,
+      0.138
+    ],
+    "foot_right": [
+      0.135,
+      -0.015,
+      0.138
+    ],
+    "station_01": [
+      0,
+      -0.015,
+      0.138
+    ],
+    "boarding": [
+      0.4,
+      0,
+      0.14
+    ],
+    "waterline": [
+      0,
+      0,
+      0
+    ],
+    "bow": [
+      0,
+      -0.27,
+      0.055
+    ],
+    "stern": [
+      0,
+      0.27,
+      0.055
+    ],
+    "supply_connection": [
+      0,
+      0.17,
+      -0.08
+    ]
+  },
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_candidate": "idle",
+    "needs": [
+      "paired boot stance and foot separation",
+      "balance arms and knees",
+      "mount/unmount transition",
+      "lifted versus surface contact origin and supply hose dynamics"
+    ],
+    "new_npc_art_created": false
+  },
+  "native_visible_mass_gate": {
+    "alpha_threshold": 128,
+    "minimum_foreground_pixels": 80,
+    "minimum_edge_margin_pixels": 2,
+    "scope": "complete empty craft; same threshold every heading; declared before rendering"
+  },
+  "mechanics": {
+    "surface_preview_kind": "power",
+    "record_preserved": true,
+    "airborne_claim": false,
+    "extra_physical_states_needed": [
+      "lifted board and hose drop configuration",
+      "landing/submerged transition"
+    ],
+    "notes": "Icon flyboard identity and name conflict with generic underwater-wing description. This is an authored twin-nozzle footboard proposal, not a verified hydrofoil wing or autonomous propulsion model; supply source and actual mechanics remain unresolved."
+  },
+  "reference_preflight": {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_hydrofoil.png",
+    "inspected": true,
+    "authority": "low-resolution identity only",
+    "observed": "paired foot platform, tall blue empty boot cuffs, yellow rim and paired dark downward nozzles; no person present",
+    "hidden_geometry": "boot interiors, nozzle bores, manifold and short curved supply hose are authored proposals; icon does not verify hose routing"
+  },
+  "inventory": [
+    "Twin-foot thrust platform",
+    "Forward yellow identity lip",
+    "Rear manifold",
+    "Footbed L",
+    "Heel cup L",
+    "Mount side L-1",
+    "Mount side L1",
+    "Open ankle cuff L",
+    "Toe strap L",
+    "Downward nozzle L",
+    "Nozzle dark outlet L",
+    "Footbed R",
+    "Heel cup R",
+    "Mount side R-1",
+    "Mount side R1",
+    "Open ankle cuff R",
+    "Toe strap R",
+    "Downward nozzle R",
+    "Nozzle dark outlet R",
+    "Supply hose proposal",
+    "Hose end connector"
+  ]
+}

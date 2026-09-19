@@ -1,0 +1,20 @@
+{
+  "date": "2026-09-19",
+  "baseCommit": "da382562a8c7ca563f69c6a66c909d413f39b528",
+  "targetBranch": "main",
+  "testCommand": "npm test -- --poolOptions.forks.maxForks=2",
+  "testFiles": 113,
+  "tests": 587,
+  "failures": 0,
+  "testDurationSeconds": 222.44,
+  "typecheck": true,
+  "lint": true,
+  "uiChecks": true,
+  "uiNegativeControls": 16,
+  "build": true,
+  "mainPort": 5189,
+  "mainBundle": "main-1zTXP-Zn.js",
+  "orchestrationRun": "run_cfb99db9e122",
+  "finalWorkersReleased": true,
+  "temporaryDev5194Stopped": true
+}

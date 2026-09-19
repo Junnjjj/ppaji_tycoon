@@ -98,17 +98,25 @@ describe('P60-d 경로 — BFS 순 · 완성', () => {
     const g = fresh();
     const pid = g.pools.all[0]!.id;
     expect(g.placeFacility('rig_stepstone', 51, 24, 0).ok).toBe(true); // 둑(51,23)·입수구 데크(50,24)에 닿아 1번째
-    expect(g.placeFacility('rig_beam', 52, 24, 0).ok).toBe(true); // 여울 1×2 (52,24)(52,25) — 둑(52,23)에 닿아 씨앗, uid 뒤라 2번째
+    expect(g.placeFacility('rig_bridge', 52, 24, 0).ok).toBe(true); // P61-b: 은퇴한 `rig_beam` 자리 — 살아남은 1×2 장애물(흔들다리). (52,24)(52,25), 둑(52,23)에 닿아 씨앗, uid 뒤라 2번째
     expect(g.pathOf(pid).length).toBe(2); expect(g.pathCompleteOf(pid)).toBe(false);
     expect(g.evaluateCondition({ kind: 'rigPath', min: 2 }).met).toBe(true);
     expect(g.evaluateCondition({ kind: 'rigPath', min: 3 })).toMatchObject({ met: false, actual: 0, need: 1 });
     expect(g.evaluateCondition({ kind: 'rigPathComplete', min: 1 })).toMatchObject({ met: false, actual: 0, need: 1 });
     const before = { ...g.facilities.probeState(), rev: g.grid.rev, pv: g.pools.version };
+    /*
+     * P61-b — 지금 **지을 수 있는** 휴식 기구는 `turtle_island`(8×6 · 투자 해금) 하나뿐이라 20칸 킷 수역에 안 들어간다.
+     * 완성 규칙 자체는 데이터가 정하므로(끝이 `chain: 'rest'`), 은퇴한 1×2 `rig_sunbed` 를 **물려받은 것으로** 세워 Game 층 배선을 잰다.
+     * 카탈로그가 이 상태라는 것도 같이 고정한다 — 작은 휴식 기구가 돌아오면 이 줄이 먼저 빨개진다.
+     */
+    const rests = [...FACILITY_DEFS.values()].filter((d) => d.class === 'rig' && d.onRing !== true && d.chain === 'rest' && d.deprecated !== true && d.buildable !== false);
+    expect(rests.map((d) => d.id)).toEqual(['turtle_island']);
+    expect(rests[0]!.w * rests[0]!.d).toBeGreaterThan(20); // 킷 수역(20칸)보다 크다 — 그래서 아래는 `inherited`
     const pv = g.aimPreview('rig_sunbed', 53, 24, 0)!; // (53,24)(53,25) — 둑(53,23)에 닿아 3번째, 끝이 휴식 → 완성
     expect({ ...g.facilities.probeState(), rev: g.grid.rev, pv: g.pools.version }).toEqual(before);
     expect(pv.pathNext).toBe(3); expect(pv.completeNext).toBe(true); expect(pv.chainNext).toBe(3);
     expect(g.aimPreview('rig_sunbed', 53, 27, 0)!.pathNext).toBe(0); // 안 이어지는 자리(강 행 27, 서쪽 링에도 안 닿는다) — 켜지지 않아 경로 밖
-    const r = g.placeFacility('rig_sunbed', 53, 24, 0); expect(r.ok).toBe(true);
+    const r = g.placeFacility('rig_sunbed', 53, 24, 0, { inherited: true }); expect(r.ok, JSON.stringify(r)).toBe(true);
     expect(g.pathOf(pid).at(-1)).toBe(r.uid); expect(g.rigState.chainLen.get(r.uid!)).toBe(3); expect(g.pathCompleteOf(pid)).toBe(true);
     expect(g.evaluateCondition({ kind: 'rigPathComplete', min: 1 }).met).toBe(true);
     expect(g.conditionWorld().rigPaths()).toEqual([3]); expect(g.conditionWorld().rigPathComplete?.()).toEqual([true]);
@@ -147,10 +155,29 @@ describe('P60-d 등급 문턱 — balance.json', () => {
 });
 
 describe('P60-d 봇', () => {
-  it('noPath 대조군이 8일 골든과 다르다 — 봇이 입수구 거리·휴식 마지막 정렬을 실제로 쓴다(측정치는 tools/bot 밴드 rigPathLen·rigPathCompleteShare·ringEntries)', () => {
-    const on = runBot(new Game(1, undefined, { arrival: true }), 8);
-    const off = runBot(new Game(1, undefined, { arrival: true }), 8, { ...BOT_PERSONAS.balanced, noPath: true });
+  /*
+   * P61-b — 밀레스톤을 **8일 해시**에서 **64일 행동**으로 옮겼다. 사유(코디네이터 승인):
+   *  · 은퇴 카탈로그에서 살아남은 `chain: 'rest'` 기구는 `turtle_island`(8×6 · 투자 해금) 하나뿐이다.
+   *  · 그래서 `--no-path` 가 끄는 실제 동작(`capCourse` = 경로 끝에 휴식 하나)이 **초반에 구조적으로 못 뜬다** —
+   *    킷 수역 20칸에 8×6 이 안 들어간다. 8·12·16·24·32일 해시가 대조군과 바이트 동일했다(실측).
+   *  · 봇 적응(`growPpaji`): usePath 이고 휴식 기구가 열렸는데 **어디에도 못 놓으면** 안 (w+2)×(d+2) 링을 먼저 두른다.
+   *    허가가 모자라면 안 두른다 — 못 놓을 자리를 사지 않는다.
+   *  · 그 결과 64일에 **행동이 갈린다**: 경로 축을 켠 봇은 휴식 기구가 들어갈 수역(80칸)을 만들고, 대조군은 48칸에 머문다.
+   * ⚠ **아직 완성 경로는 0이다** — 넓힌 수역에 장애물 사슬이 안 서서 `capCourse` 가 끝을 못 얹는다.
+   *   해시만 다른 검사로 되돌리지 말고, 완성 > 0 을 만들려면 작은 휴식 기구(데이터)나 빈 수역 씨앗 정책이 필요하다.
+   */
+  it('noPath 대조군 — 64일에 봇이 **휴식 기구가 들어갈 수역**을 만든다 (해시가 아니라 행동으로)', () => {
+    const onGame = new Game(1, undefined, { arrival: true }), offGame = new Game(1, undefined, { arrival: true });
+    const on = runBot(onGame, 64);
+    const off = runBot(offGame, 64, { ...BOT_PERSONAS.balanced, noPath: true });
+    const rest = [...FACILITY_DEFS.values()].find((d) => d.class === 'rig' && d.onRing !== true && d.chain === 'rest' && d.deprecated !== true && d.buildable !== false)!;
+    expect(rest.id).toBe('turtle_island');
+    const need = (rest.w + 2) * (rest.d + 2);
+    const maxPool = (g: Game): number => Math.max(0, ...g.pools.all.map((p) => p.tiles.length));
+    expect(onGame.isUnlocked(rest.id), '64일이면 투자로 열려 있다').toBe(true);
+    expect(maxPool(onGame), '경로 축을 켠 봇은 휴식 기구 자리를 만든다').toBeGreaterThanOrEqual(need);
+    expect(maxPool(offGame), '대조군은 옛 크기(안 8×6 = 48칸)에 머문다').toBeLessThan(need);
     expect(on.snapshotHash).not.toBe(off.snapshotHash);
     expect(on.ringEntries).toBeGreaterThanOrEqual(1);
-  }, 30000);
+  }, 180000);
 });

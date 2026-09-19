@@ -1,0 +1,290 @@
+{
+  "id": "hexa",
+  "name": "육각튜브",
+  "capacity": 6,
+  "kind": "tow",
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "source_axis_normalization_degrees": [
+    0,
+    0,
+    0
+  ],
+  "seats": [
+    {
+      "key": "seat_01",
+      "role": "passenger",
+      "position": [
+        1.0825317547305484,
+        0.6249999999999999,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 3.665191429188092,
+      "support_object": "seat_01_pad",
+      "foot_contact": [
+        0.5975575286112627,
+        0.3449999999999999,
+        0.23
+      ],
+      "foot_support_object": "seat_01_footrest",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "No walk-through-tube path invented; +X dock-to-rim assisted mount then indexed seat transfer needs mechanics decision."
+    },
+    {
+      "key": "seat_02",
+      "role": "passenger",
+      "position": [
+        7.654042494670958e-17,
+        1.25,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 4.71238898038469,
+      "support_object": "seat_02_pad",
+      "foot_contact": [
+        4.2250314570583685e-17,
+        0.69,
+        0.23
+      ],
+      "foot_support_object": "seat_02_footrest",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "No walk-through-tube path invented; +X dock-to-rim assisted mount then indexed seat transfer needs mechanics decision."
+    },
+    {
+      "key": "seat_03",
+      "role": "passenger",
+      "position": [
+        -1.0825317547305482,
+        0.6250000000000004,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 5.759586531581287,
+      "support_object": "seat_03_pad",
+      "foot_contact": [
+        -0.5975575286112625,
+        0.3450000000000002,
+        0.23
+      ],
+      "foot_support_object": "seat_03_footrest",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "No walk-through-tube path invented; +X dock-to-rim assisted mount then indexed seat transfer needs mechanics decision."
+    },
+    {
+      "key": "seat_04",
+      "role": "passenger",
+      "position": [
+        -1.0825317547305486,
+        -0.6249999999999998,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 6.8067840827778845,
+      "support_object": "seat_04_pad",
+      "foot_contact": [
+        -0.5975575286112628,
+        -0.3449999999999998,
+        0.23
+      ],
+      "foot_support_object": "seat_04_footrest",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "No walk-through-tube path invented; +X dock-to-rim assisted mount then indexed seat transfer needs mechanics decision."
+    },
+    {
+      "key": "seat_05",
+      "role": "passenger",
+      "position": [
+        -2.296212748401287e-16,
+        -1.25,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 7.853981633974483,
+      "support_object": "seat_05_pad",
+      "foot_contact": [
+        -1.2675094371175104e-16,
+        -0.69,
+        0.23
+      ],
+      "foot_support_object": "seat_05_footrest",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "No walk-through-tube path invented; +X dock-to-rim assisted mount then indexed seat transfer needs mechanics decision."
+    },
+    {
+      "key": "seat_06",
+      "role": "passenger",
+      "position": [
+        1.0825317547305486,
+        -0.6249999999999996,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 8.901179185171081,
+      "support_object": "seat_06_pad",
+      "foot_contact": [
+        0.5975575286112628,
+        -0.34499999999999975,
+        0.23
+      ],
+      "foot_support_object": "seat_06_footrest",
+      "access_path": [],
+      "access_status": "MOUNT_UNRESOLVED",
+      "mount_note": "No walk-through-tube path invented; +X dock-to-rim assisted mount then indexed seat transfer needs mechanics decision."
+    }
+  ],
+  "boarding": [
+    1.78,
+    0,
+    0.33
+  ],
+  "tow_socket": [
+    0,
+    -1.73,
+    0.2
+  ],
+  "bow": [
+    0,
+    -1.6,
+    0.2
+  ],
+  "stern": [
+    0,
+    1.6,
+    0.2
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    1.8,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -1.802188754081726,
+      -1.7613848447799683,
+      -0.05999999865889549
+    ],
+    [
+      1.802188754081726,
+      1.6021469831466675,
+      0.5899721384048462
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -1.802188754081726,
+      -1.6021469831466675,
+      -0.05999999865889549
+    ],
+    [
+      1.802188754081726,
+      1.6021469831466675,
+      0.5400000214576721
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -1.1272882223129272,
+      -1.7613848447799683,
+      0.06700000166893005
+    ],
+    [
+      1.1272882223129272,
+      1.190999984741211,
+      0.5899721384048462
+    ]
+  ],
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "sit",
+    "reason": "Six radial sit contacts and modeled inward footrests; exact radial leg/grip anatomy and assisted mount unresolved. No valid walking path across inflated ring or center hole is asserted."
+  },
+  "minimum_native_foreground_pixels": 1400,
+  "native_mass_gate": {
+    "alpha_threshold": 0,
+    "min_pixels": 1400,
+    "same_all16": true,
+    "declared_before_render": true
+  },
+  "inventory": [
+    "BowTowEye",
+    "BowTowPatch",
+    "Lobe_1",
+    "Lobe_2",
+    "Lobe_3",
+    "Lobe_4",
+    "Lobe_5",
+    "Lobe_6",
+    "seat_01_footrest",
+    "seat_01_grip_-0.17",
+    "seat_01_grip_0.17",
+    "seat_01_pad",
+    "seat_01_web_-0.17",
+    "seat_01_web_0.17",
+    "seat_02_footrest",
+    "seat_02_grip_-0.17",
+    "seat_02_grip_0.17",
+    "seat_02_pad",
+    "seat_02_web_-0.17",
+    "seat_02_web_0.17",
+    "seat_03_footrest",
+    "seat_03_grip_-0.17",
+    "seat_03_grip_0.17",
+    "seat_03_pad",
+    "seat_03_web_-0.17",
+    "seat_03_web_0.17",
+    "seat_04_footrest",
+    "seat_04_grip_-0.17",
+    "seat_04_grip_0.17",
+    "seat_04_pad",
+    "seat_04_web_-0.17",
+    "seat_04_web_0.17",
+    "seat_05_footrest",
+    "seat_05_grip_-0.17",
+    "seat_05_grip_0.17",
+    "seat_05_pad",
+    "seat_05_web_-0.17",
+    "seat_05_web_0.17",
+    "seat_06_footrest",
+    "seat_06_grip_-0.17",
+    "seat_06_grip_0.17",
+    "seat_06_pad",
+    "seat_06_web_-0.17",
+    "seat_06_web_0.17"
+  ],
+  "reference_preflight": {
+    "identity_icon": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_hexa.png",
+    "icon_sha256": "9c8b0ba4aef7935967eeea0c4020e4615c609fd29ee492a335f209baef03c6a1",
+    "observed": "Low-res blue and ivory segmented hexagonal tube with a real dark central opening.",
+    "geometry_authority": "Identity only, not exact shape approval; six seat pads, attached footrests, mounting mechanics and underside are authored proposals.",
+    "reusable_model": "None reused; fresh geometry"
+  },
+  "boarding_note": "Canonical +X docking point only, not validated mount. Empty paths intentionally require assisted mount mechanics rather than clipping through a solid ring.",
+  "driver_count": 0,
+  "runtime_kind_note": "Equipment and frozen contract say tow; generic power-boat sentence does not apply to hexa.",
+  "production_approved": false
+}

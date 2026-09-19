@@ -134,14 +134,6 @@
       "zigzag": "ok",
       "hairpin": "poor"
     },
-    "turbo_turtle": {
-      "shuttle": "ok",
-      "circle": "ok",
-      "ellipse": "ok",
-      "figure8": "best",
-      "zigzag": "ok",
-      "hairpin": "poor"
-    },
     "lotus": {
       "shuttle": "poor",
       "circle": "best",

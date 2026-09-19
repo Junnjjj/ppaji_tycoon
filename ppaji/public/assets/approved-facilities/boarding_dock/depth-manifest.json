@@ -1,0 +1,43 @@
+{
+  "id": "boarding_deck_2x1",
+  "source_sha256": "b1d63e716c068242dcefb830fd980542e7086093202de8ca6c4d21140b037c4f",
+  "logical_size": 128,
+  "masks": {
+    "full": []
+  },
+  "directions": [
+    {
+      "mode": "full",
+      "d": 0,
+      "file": "full-d0.bin",
+      "sha256": "eb64191221e19662f32ce7697f5a6b4a702b459ab2472380c6ae86560b3758b5",
+      "hits": 707,
+      "reprojection_error_px": 3.814697265625e-05
+    },
+    {
+      "mode": "full",
+      "d": 1,
+      "file": "full-d1.bin",
+      "sha256": "56dd83c8de4aca5ad8c10083a4d9bfa9bfb8fb1be838bcd4fc304ef171ad8b82",
+      "hits": 707,
+      "reprojection_error_px": 3.4332275390625e-05
+    },
+    {
+      "mode": "full",
+      "d": 2,
+      "file": "full-d2.bin",
+      "sha256": "04baa9cde9019f3b30fb844f390090c4a792ddb440e2595fd11d0877b21d5676",
+      "hits": 706,
+      "reprojection_error_px": 3.4332275390625e-05
+    },
+    {
+      "mode": "full",
+      "d": 3,
+      "file": "full-d3.bin",
+      "sha256": "7ce33caf66cef380b58a9ea98e6a0f7188ff4cb2014a0659ea9b7f2b197b1906",
+      "hits": 706,
+      "reprojection_error_px": 3.4332275390625e-05
+    }
+  ],
+  "source_unchanged": true
+}

@@ -1,0 +1,566 @@
+{
+  "id": "spinpang",
+  "name": "회전팡",
+  "capacity": 6,
+  "kind": "tow",
+  "equipment_kind": "tow",
+  "kind_resolution": "Coordinator explicitly requests power only for surface preview; equipment remains tow; no driver on this towable",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "source_axis_normalization_degrees": [
+    0,
+    0,
+    0
+  ],
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "seats": [
+    {
+      "key": "rider_0",
+      "role": "rider",
+      "position": [
+        6.184466804078445e-17,
+        -1.0099999904632568,
+        0.45
+      ],
+      "pose": "sit",
+      "heading": 1.5707963267948966,
+      "support_object": "Seat0",
+      "foot_contacts": [
+        [
+          -0.10999999940395355,
+          -0.5799999833106995,
+          0.24
+        ],
+        [
+          0.10999999940395355,
+          -0.5799999833106995,
+          0.24
+        ]
+      ],
+      "grip_contacts": [
+        [
+          -0.2199999988079071,
+          -0.6899999976158142,
+          0.33
+        ],
+        [
+          0.2199999988079071,
+          -0.6899999976158142,
+          0.33
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: rim crossing and low inward grip pose"
+    },
+    {
+      "key": "rider_1",
+      "role": "rider",
+      "position": [
+        0.8746856451034546,
+        -0.5049999952316284,
+        0.45
+      ],
+      "pose": "sit",
+      "heading": 2.617993877991494,
+      "support_object": "Seat1",
+      "foot_contacts": [
+        [
+          0.4472947120666504,
+          -0.38526278734207153,
+          0.24
+        ],
+        [
+          0.5572947263717651,
+          -0.19473719596862793,
+          0.24
+        ]
+      ],
+      "grip_contacts": [
+        [
+          0.4875575304031372,
+          -0.5355255603790283,
+          0.33
+        ],
+        [
+          0.7075575590133667,
+          -0.1544744074344635,
+          0.33
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: rim crossing and low inward grip pose"
+    },
+    {
+      "key": "rider_2",
+      "role": "rider",
+      "position": [
+        0.8746856451034546,
+        0.5049999952316284,
+        0.45
+      ],
+      "pose": "sit",
+      "heading": 3.665191429188092,
+      "support_object": "Seat2",
+      "foot_contacts": [
+        [
+          0.5572947263717651,
+          0.19473719596862793,
+          0.24
+        ],
+        [
+          0.4472947120666504,
+          0.38526278734207153,
+          0.24
+        ]
+      ],
+      "grip_contacts": [
+        [
+          0.7075575590133667,
+          0.1544744074344635,
+          0.33
+        ],
+        [
+          0.4875575304031372,
+          0.5355255603790283,
+          0.33
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: rim crossing and low inward grip pose"
+    },
+    {
+      "key": "rider_3",
+      "role": "rider",
+      "position": [
+        6.184466804078445e-17,
+        1.0099999904632568,
+        0.45
+      ],
+      "pose": "sit",
+      "heading": 4.71238898038469,
+      "support_object": "Seat3",
+      "foot_contacts": [
+        [
+          0.10999999940395355,
+          0.5799999833106995,
+          0.24
+        ],
+        [
+          -0.10999999940395355,
+          0.5799999833106995,
+          0.24
+        ]
+      ],
+      "grip_contacts": [
+        [
+          0.2199999988079071,
+          0.6899999976158142,
+          0.33
+        ],
+        [
+          -0.2199999988079071,
+          0.6899999976158142,
+          0.33
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: rim crossing and low inward grip pose"
+    },
+    {
+      "key": "rider_4",
+      "role": "rider",
+      "position": [
+        -0.8746856451034546,
+        0.5049999952316284,
+        0.45
+      ],
+      "pose": "sit",
+      "heading": 5.759586531581287,
+      "support_object": "Seat4",
+      "foot_contacts": [
+        [
+          -0.4472947120666504,
+          0.38526278734207153,
+          0.24
+        ],
+        [
+          -0.5572947263717651,
+          0.19473719596862793,
+          0.24
+        ]
+      ],
+      "grip_contacts": [
+        [
+          -0.4875575304031372,
+          0.5355255603790283,
+          0.33
+        ],
+        [
+          -0.7075575590133667,
+          0.1544744074344635,
+          0.33
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: rim crossing and low inward grip pose"
+    },
+    {
+      "key": "rider_5",
+      "role": "rider",
+      "position": [
+        -0.8746856451034546,
+        -0.5049999952316284,
+        0.45
+      ],
+      "pose": "sit",
+      "heading": 6.806784082777885,
+      "support_object": "Seat5",
+      "foot_contacts": [
+        [
+          -0.5572947263717651,
+          -0.19473719596862793,
+          0.24
+        ],
+        [
+          -0.4472947120666504,
+          -0.38526278734207153,
+          0.24
+        ]
+      ],
+      "grip_contacts": [
+        [
+          -0.7075575590133667,
+          -0.1544744074344635,
+          0.33
+        ],
+        [
+          -0.4875575304031372,
+          -0.5355255603790283,
+          0.33
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: rim crossing and low inward grip pose"
+    }
+  ],
+  "boarding": [
+    1.45,
+    0,
+    0.48
+  ],
+  "boarding_proposal": {
+    "side": "+X",
+    "supported_approach": [],
+    "final_transfer": "POSE_FIT_UNRESOLVED: rounded rim crossing then inward low seating"
+  },
+  "tow_socket": [
+    0,
+    -1.96,
+    0.22
+  ],
+  "bow": [
+    0,
+    -1.96,
+    0.22
+  ],
+  "stern": [
+    0,
+    1.58,
+    0.22
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    1.58,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -1.5800000429153442,
+      -1.9759999513626099,
+      0.0
+    ],
+    [
+      1.5800000429153442,
+      1.5800000429153442,
+      0.8199999928474426
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -1.5800000429153442,
+      -1.5800000429153442,
+      0.0
+    ],
+    [
+      1.5800000429153442,
+      1.5800000429153442,
+      0.6599999666213989
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -1.3376150131225586,
+      -1.9759999513626099,
+      0.14399999380111694
+    ],
+    [
+      1.3376150131225586,
+      1.3799999952316284,
+      0.8199999928474426
+    ]
+  ],
+  "pose_requirement": "POSE_FIT_UNRESOLVED: six low inward seated stations; existing sit is static proposal only; gripping, mounting, standing and rotational retention unverified",
+  "motion_semantics": {
+    "travel_heading": "h00-h15 root yaw only",
+    "use_state": "STATIC_SURFACE_CANDIDATE",
+    "spin_phase": "UNRESOLVED separate from travel heading",
+    "rolling": "UNRESOLVED no roll or pitch rendered",
+    "warning": "16 heading renders do not prove rotating or rolling operation"
+  },
+  "native_visible_mass_gate": {
+    "alpha_threshold": 0,
+    "minimum_foreground_pixels": 1800,
+    "minimum_bbox_width": 45,
+    "minimum_bbox_height": 30,
+    "edge_pixels": 0,
+    "declared_before_render": true
+  },
+  "inventory": [
+    "Back0",
+    "Back1",
+    "Back2",
+    "Back3",
+    "Back4",
+    "Back5",
+    "BlueCircularFloor",
+    "BlueUpperBolster",
+    "Bridle-1",
+    "Bridle1",
+    "CentralGrabRing",
+    "Grip0_-1",
+    "Grip0_1",
+    "Grip1_-1",
+    "Grip1_1",
+    "Grip2_-1",
+    "Grip2_1",
+    "Grip3_-1",
+    "Grip3_1",
+    "Grip4_-1",
+    "Grip4_1",
+    "Grip5_-1",
+    "Grip5_1",
+    "Seat0",
+    "Seat1",
+    "Seat2",
+    "Seat3",
+    "Seat4",
+    "Seat5",
+    "TowEye-1",
+    "TowEye1",
+    "TowJoin",
+    "TravelBowMarker",
+    "YellowCentralGripHub",
+    "YellowOuterChamber"
+  ],
+  "sockets": {
+    "BowSocket": [
+      0,
+      -1.96,
+      0.22
+    ],
+    "SternSocket": [
+      0,
+      1.58,
+      0.22
+    ],
+    "TowSocket": [
+      0,
+      -1.96,
+      0.22
+    ],
+    "BoardingSocket": [
+      1.45,
+      0,
+      0.48
+    ],
+    "WaterlineSocket": [
+      0,
+      0,
+      0
+    ],
+    "rider_0_SeatContact": [
+      6.184466804078445e-17,
+      -1.0099999904632568,
+      0.45
+    ],
+    "rider_0_Foot0": [
+      -0.10999999940395355,
+      -0.5799999833106995,
+      0.24
+    ],
+    "rider_0_Foot1": [
+      0.10999999940395355,
+      -0.5799999833106995,
+      0.24
+    ],
+    "rider_0_Grip0": [
+      -0.2199999988079071,
+      -0.6899999976158142,
+      0.33
+    ],
+    "rider_0_Grip1": [
+      0.2199999988079071,
+      -0.6899999976158142,
+      0.33
+    ],
+    "rider_1_SeatContact": [
+      0.8746856451034546,
+      -0.5049999952316284,
+      0.45
+    ],
+    "rider_1_Foot0": [
+      0.4472947120666504,
+      -0.38526278734207153,
+      0.24
+    ],
+    "rider_1_Foot1": [
+      0.5572947263717651,
+      -0.19473719596862793,
+      0.24
+    ],
+    "rider_1_Grip0": [
+      0.4875575304031372,
+      -0.5355255603790283,
+      0.33
+    ],
+    "rider_1_Grip1": [
+      0.7075575590133667,
+      -0.1544744074344635,
+      0.33
+    ],
+    "rider_2_SeatContact": [
+      0.8746856451034546,
+      0.5049999952316284,
+      0.45
+    ],
+    "rider_2_Foot0": [
+      0.5572947263717651,
+      0.19473719596862793,
+      0.24
+    ],
+    "rider_2_Foot1": [
+      0.4472947120666504,
+      0.38526278734207153,
+      0.24
+    ],
+    "rider_2_Grip0": [
+      0.7075575590133667,
+      0.1544744074344635,
+      0.33
+    ],
+    "rider_2_Grip1": [
+      0.4875575304031372,
+      0.5355255603790283,
+      0.33
+    ],
+    "rider_3_SeatContact": [
+      6.184466804078445e-17,
+      1.0099999904632568,
+      0.45
+    ],
+    "rider_3_Foot0": [
+      0.10999999940395355,
+      0.5799999833106995,
+      0.24
+    ],
+    "rider_3_Foot1": [
+      -0.10999999940395355,
+      0.5799999833106995,
+      0.24
+    ],
+    "rider_3_Grip0": [
+      0.2199999988079071,
+      0.6899999976158142,
+      0.33
+    ],
+    "rider_3_Grip1": [
+      -0.2199999988079071,
+      0.6899999976158142,
+      0.33
+    ],
+    "rider_4_SeatContact": [
+      -0.8746856451034546,
+      0.5049999952316284,
+      0.45
+    ],
+    "rider_4_Foot0": [
+      -0.4472947120666504,
+      0.38526278734207153,
+      0.24
+    ],
+    "rider_4_Foot1": [
+      -0.5572947263717651,
+      0.19473719596862793,
+      0.24
+    ],
+    "rider_4_Grip0": [
+      -0.4875575304031372,
+      0.5355255603790283,
+      0.33
+    ],
+    "rider_4_Grip1": [
+      -0.7075575590133667,
+      0.1544744074344635,
+      0.33
+    ],
+    "rider_5_SeatContact": [
+      -0.8746856451034546,
+      -0.5049999952316284,
+      0.45
+    ],
+    "rider_5_Foot0": [
+      -0.5572947263717651,
+      -0.19473719596862793,
+      0.24
+    ],
+    "rider_5_Foot1": [
+      -0.4472947120666504,
+      -0.38526278734207153,
+      0.24
+    ],
+    "rider_5_Grip0": [
+      -0.7075575590133667,
+      -0.1544744074344635,
+      0.33
+    ],
+    "rider_5_Grip1": [
+      -0.4875575304031372,
+      -0.5355255603790283,
+      0.33
+    ]
+  },
+  "reference_preflight": {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_spinpang.png",
+    "observed": "Inspected low-resolution icon: round blue outer craft with yellow accent ring and pale inner details",
+    "authority": "Identity only; exact chamber geometry, six inward stations, hub and bridle are authored proposals"
+  },
+  "approval": "candidate only"
+}

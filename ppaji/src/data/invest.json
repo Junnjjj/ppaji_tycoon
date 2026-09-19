@@ -17,8 +17,7 @@
     "name": "물놀이 시설 투자 2",
     "cost": 5000,
     "unlocks": [
-      "sauna",
-      "trampoline_w"
+      "sauna"
     ]
   },
   {
@@ -60,8 +59,7 @@
     "name": "물놀이 시설 투자 6",
     "cost": 10000,
     "unlocks": [
-      "playground",
-      "waterwalk"
+      "playground"
     ]
   },
   {

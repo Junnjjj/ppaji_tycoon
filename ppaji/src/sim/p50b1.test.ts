@@ -16,7 +16,10 @@ describe('P50-b1 사슬·등급 값', () => {
     const chains = new Set([...FACILITY_DEFS.values()].map((d) => d.chain).filter((c): c is string => !!c));
     expect([...chains].sort()).toEqual([...CHAIN_KINDS].sort());
     const g0 = new Game(1);
-    expect([...FACILITY_DEFS.values()].filter((d) => d.chain === 'obstacle' && g0.isUnlocked(d.id)).length).toBe(3); // **시작** obstacle 계열 정확히 3종(에어바운스는 뒤에 열린다) → CHAIN_KINDS_FOR_GRADE3
+    // 2026-09-19 조합 채택: 밸런스 빔이 빠지 놀이터에 흡수돼 **시작** obstacle 계열이 3 → 2 종이다 (에어바운스는 뒤에 열린다).
+    // 계열 자체(obstacle·slide·rest)는 그대로 셋이고 시작부터 obstacle·slide 둘이 열려 있다 — 값을 줄이는 대신 그 구성을 못박는다
+    expect([...FACILITY_DEFS.values()].filter((d) => d.chain === 'obstacle' && g0.isUnlocked(d.id)).map((d) => d.id)).toEqual(['rig_bridge', 'rig_stepstone']);
+    expect([...new Set([...FACILITY_DEFS.values()].filter((d) => d.chain && g0.isUnlocked(d.id) && d.deprecated !== true).map((d) => d.chain))].sort()).toEqual(['obstacle', 'slide']);
     // 등급 문턱 — 값은 데이터(`ppajiGradeThresholds`), 규칙은 코드. p60d.test 가 옛 상수와의 회귀를 잰다
     expect(ppajiGrade({ n: 1, kinds: 1, chain: 0, chainKinds: 0, lights: 0 })).toBe(0);
     expect(ppajiGrade({ n: 2, kinds: 1, chain: 0, chainKinds: 0, lights: 0 })).toBe(1);
@@ -44,12 +47,14 @@ describe('P50-b1 사슬·등급 값', () => {
     // 같은 계열 다른 종(다리 1×2, facing 1 = 가로) 을 (52,27)(53,27) 에 — (51,27) 뒤라 5번째 · 경로 종 2
     const b = g.placeFacility('rig_bridge', 52, 27, 1); expect(b.ok, JSON.stringify(b)).toBe(true);
     expect(g.rigState.chainLen.get(b.uid!)).toBe(5); expect(g.rigState.chainKinds.get(uids[0]!)).toBe(2);
-    // 다른 계열(rest 해먹 2×3 → facing 1 = 3×2)도 경로에 든다 — 둑(52~54,23)에 닿아 씨앗(거리 0), 동점은 uid 라 (51,24) 다음 2번째. 그 뒤 징검다리는 한 칸씩 밀린다
-    const h = g.placeFacility('rig_hammock', 52, 24, 1); expect(h.ok, JSON.stringify(h)).toBe(true); // (52~54, 24~25) — 여울용이라 행 24~25
+    // 2026-09-19: 해먹(rest)이 조합에 흡수됐다. 살아 있는 rest 는 거북섬 8×6 뿐이라 킷 빠지(안 물 4×5)에 안 들어간다 —
+    // 대신 **계열이 없는**(chain null) 블롭 점프로 잰다. 「계열이 다른 기구도 같은 경로에 든다」는 뜻은 그대로고,
+    // chainKinds 가 3 으로 오르는 것(= 경로 안 종 수)도 그대로다. ⚠ 한계: 시작 근처에서 rest 계열을 섞는 경로는 더 이상 못 만든다
+    const h = g.placeFacility('rig_blob', 52, 26, 0); expect(h.ok, JSON.stringify(h)).toBe(true); // (52~54, 26) — 깊은 물(강) 3×1
     expect(g.rigState.lit.has(h.uid!)).toBe(true);
-    expect(g.pathOf(pid)).toEqual([uids[0], h.uid, uids[1], uids[2], uids[3], b.uid]);
-    expect(g.rigState.chainLen.get(h.uid!)).toBe(2);
-    expect(g.rigState.chainLen.get(uids[3]!)).toBe(5); expect(g.rigState.chainKinds.get(h.uid!)).toBe(3);
+    expect(g.pathOf(pid)).toEqual([uids[0], uids[1], uids[2], uids[3], h.uid, b.uid]);
+    expect(g.rigState.chainLen.get(h.uid!)).toBe(5);
+    expect(g.rigState.chainLen.get(uids[3]!)).toBe(4); expect(g.rigState.chainKinds.get(h.uid!)).toBe(3);
     expect(g.pathCompleteOf(pid)).toBe(false); // 끝이 다리(obstacle)라 미완성
     // 등급: n 6 · 종 3 → 2 · 경로 6
     expect(g.ppajiGradeOf(pid)).toBe(2);
@@ -75,7 +80,7 @@ describe('P50-b1 사슬·등급 값', () => {
     const pid = a.pools.all[0]!.id;
     for (const j of [24, 25, 26, 27]) expect(b.placeFacility('rig_stepstone', 51, j, 0).ok).toBe(true);
     expect(b.placeFacility('rig_bridge', 52, 27, 1).ok).toBe(true); // (51,27) 에 닿아 켜진다
-    expect(b.placeFacility('rig_hammock', 52, 24, 1).ok).toBe(true); // 여울 행 24~25
+    expect(b.placeFacility('rig_blob', 52, 26, 0).ok).toBe(true); // 2026-09-19: 해먹 폐기 → 블롭 점프(깊은 물 3×1, 행 26)
     expect(b.ppajiGradeOf(pid)).toBe(2);
     expect(b.b.ppajiGradePopMul).toEqual([1, 1.4, 1.9, 2.6, 3.5]);
     expect(b.poolState(pid)!.popularity).toBeGreaterThanOrEqual(a.poolState(pid)!.popularity * 1.5);

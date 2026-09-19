@@ -241,7 +241,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "twin_saddle"
+      "id": "anchor_chain"
     },
     "line": "단풍 산책로, 물 위 기구 3개, 장식 6개까지 갖춰 주세요. 그럼 완벽해요!"
   },
@@ -295,7 +295,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "slip_wax"
+      "id": "float_drum"
     },
     "line": "파라솔, 물 위 기구 3개, 장식 6개까지 갖춰 주세요. 그럼 완벽해요!"
   },
@@ -470,7 +470,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "spray_nozzle"
+      "id": "anchor_chain"
     },
     "line": "포토존 3개, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
@@ -940,7 +940,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "twin_saddle"
+      "id": "anchor_chain"
     },
     "line": "6칸 넘는 수역, 족구장, 물 위 기구 3개, 장식 6개까지! 꼭 해 줘!"
   },
@@ -968,7 +968,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "slip_wax"
+      "id": "float_drum"
     },
     "line": "물가에 그늘 있는 진짜 좋은 자리 하나 만들어 줘."
   },
@@ -1221,7 +1221,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "spray_nozzle"
+      "id": "anchor_chain"
     },
     "line": "6칸 넘는 수역, SUP 대여소, 물 위 기구 2개, 장식 4개까지 갖춰 주게."
   },
@@ -1508,7 +1508,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "twin_saddle"
+      "id": "anchor_chain"
     },
     "line": "기구가 종류별로 있어야 재밌지 — 세 종류, 다섯 개는 붙여 줘."
   },
@@ -1598,7 +1598,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "slip_wax"
+      "id": "float_drum"
     },
     "line": "바나나우유를 메뉴에 걸어 줘요. 제일 좋아하는 맛이거든요."
   },
@@ -1785,7 +1785,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "spray_nozzle"
+      "id": "anchor_chain"
     },
     "line": "족구장 하나 지어 줘. 회식 자리보다 그게 훨씬 낫더라."
   },
@@ -2107,7 +2107,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "twin_saddle"
+      "id": "anchor_chain"
     },
     "line": "캠핑 사이트 하나 세워라. 부대에서도 그늘이 제일 급한 법이다."
   },
@@ -2179,7 +2179,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "slip_wax"
+      "id": "float_drum"
     },
     "line": "코인락커 열 하나만! 면치기 소리로 후임들 웃겨 보겠습니다."
   },
@@ -2333,10 +2333,10 @@
       ]
     },
     "reward": {
-      "kind": "facility",
-      "id": "rig_totem"
+      "kind": "rigPart",
+      "id": "safety_net"
     },
-    "line": "6칸 넘는 수역, 물 위 기구 3개 (3종류)까지! 꼭 부탁드립니다."
+    "line": "6칸 넘는 수역, 물 위 기구 3개 (3종류)까지! 그럼 아껴 둔 안전망을 드릴게요."
   },
   {
     "friendId": "master_artist",
@@ -2481,7 +2481,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "spray_nozzle"
+      "id": "anchor_chain"
     },
     "line": "몽골텐트 하나 놔 줘! 단체 사진 배경으로 딱이거든."
   },
@@ -2871,7 +2871,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "twin_saddle"
+      "id": "anchor_chain"
     },
     "line": "몽골텐트 하나 놔 줘. 안 놔 주면 나 다시는 안 올 거야."
   },
@@ -2937,7 +2937,7 @@
       "of": [
         {
           "kind": "facility",
-          "id": "waterwalk"
+          "id": "ppaji_slide"
         },
         {
           "kind": "popularity",
@@ -2949,7 +2949,7 @@
       "kind": "ingredient",
       "id": "corn"
     },
-    "line": "워터워크볼에 인기 250까지 올려 주세요. 그럼 계약 성사입니다."
+    "line": "빠지 슬라이드에 인기 250까지 올려 주세요. 그럼 계약 성사입니다."
   },
   {
     "friendId": "foodie",
@@ -2961,7 +2961,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "slip_wax"
+      "id": "float_drum"
     },
     "line": "식당 여덟 곳은 있어야지. 낚시보다 먹는 게 먼저 아닌가."
   },
@@ -3051,7 +3051,7 @@
     "idx": 2,
     "condition": {
       "kind": "seatsFed",
-      "id": "dock",
+      "id": "boarding_dock",
       "count": 2
     },
     "reward": {
@@ -3142,7 +3142,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "spray_nozzle"
+      "id": "anchor_chain"
     },
     "line": "사우나을 두 곳으로 늘려 주게. 낚시 뒤에는 혈이 뚫려야지."
   },
@@ -3550,7 +3550,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "twin_saddle"
+      "id": "anchor_chain"
     },
     "line": "오리배 선착장 하나 열어 주세요. 여기서 먹방 코너 찍어 볼게요."
   },
@@ -3609,7 +3609,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "slip_wax"
+      "id": "float_drum"
     },
     "line": "장승을 두 기 세워 두게. 들어서는 길목엔 격이 있어야 하는 법."
   },
@@ -3645,7 +3645,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "slip_wax"
+      "id": "float_drum"
     },
     "line": "기구를 둘은 붙여 놔야 놀지! 빠지에 기구 2개 부탁해."
   },
@@ -3846,7 +3846,7 @@
     },
     "reward": {
       "kind": "rigPart",
-      "id": "spray_nozzle"
+      "id": "anchor_chain"
     },
     "line": "SUP 대여소을 두 곳으로 늘려 줘. 모둠초밥 먹방을 찍고 싶단 말이야."
   },

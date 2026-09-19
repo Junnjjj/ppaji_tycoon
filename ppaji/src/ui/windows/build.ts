@@ -22,7 +22,7 @@ export function hallGroup(d: FacilityDef): number {
   if (d.lodging || d.noisy === 'loud' || d.class === 'attraction') return 3;
   return 4;
 }
-const isPpaji = (d: FacilityDef): boolean => (d.class === 'rig' || d.onRing === true) && d.buildable !== false; // P51: 개조판(buildable:false)은 건설 목록에 없다 — 시설 창 「개조」로만
+const isPpaji = (d: FacilityDef): boolean => (d.class === 'rig' || d.onRing === true) && d.buildable !== false && d.deprecated !== true; // P51: 개조판(buildable:false)은 건설 목록에 없다 — 시설 창 「개조」로만 · 2026-09-19: 조합에 흡수된 폐기 시설(deprecated)도 없다 — 옛 세이브 호환으로만 정의가 남는다
 export const BUILD_TABS: readonly { id: BuildTabId; label: string; match: (d: FacilityDef) => boolean }[] = [
   { id: 'indoor', label: '실내', match: (d) => d.indoorOnly },
   { id: 'ppaji', label: '빠지', match: (d) => isPpaji(d) }, // P50-a R9: 물 위 기구 + 링 위 시설(이전 12 포함)

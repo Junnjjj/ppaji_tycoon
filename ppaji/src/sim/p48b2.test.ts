@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { COURSE_DOCK_IDS } from './course/ride.js';
 import { Game, FACILITY_DEFS } from './game.js';
 import { FLOOR, BEND, isWaterCode, shoreRow, permitDepth } from './grid.js';
 import { runBot } from './bot.js';
@@ -62,14 +63,22 @@ describe('P48-b2 만·허가·킷', () => {
     expect(g.pools.all.length).toBe(2); // 안쪽은 트였고 행 24 웅덩이(5)는 남는다
     expect(isWaterCode(g.grid.at(i0, j0))).toBe(true);
   });
-  it('canPlace — 야외 식당은 실내에 못 · 내 땅 밖 뭍은 못 · 자연 바닥이 물인 데크(잔교) 위 선착장은 된다 (회귀: 주석이 return 앞에 붙어 두 판정이 조용히 죽었었다)', () => {
+  it('canPlace — 야외 식당은 실내에 못 · 내 땅 밖 뭍은 못 · 자연 바닥이 물인 데크(잔교) 위 승하선 데크는 된다 (회귀: 주석이 return 앞에 붙어 두 판정이 조용히 죽었었다)', () => {
     const g = new Game(1); g.money = 1000000; g.unlocked.facilities.add('shop');
     const gt = g.gate;
     const r1 = g.canPlace('shop', gt.i - 6, gt.j + 10, 0); expect(r1.ok).toBe(false); if (!r1.ok) expect(r1.reason).toContain('야외');
     const r2 = g.canPlace('sunflower', g.land.i0 - 3, gt.j + 30, 0); expect(r2.ok).toBe(false); if (!r2.ok) expect(r2.reason).toContain('내 땅');
     expect(g.grid.at(gt.i + 10, shoreRow(gt.i + 10)), 'kit 잔교').toBe(FLOOR.deck);
-    expect(g.canPlace('dock', gt.i + 10, shoreRow(gt.i + 10), 0).ok).toBe(true);
-    expect(FACILITY_DEFS.get('dock')).toBeDefined();
+    // P61-b: 1×1 `dock` 은 **은퇴**했고(조합으로 통합) 새 판이 짓는 선착장은 2×1 `boarding_dock` 이다.
+    // 잔교는 세로 한 줄이라 facing 1 (1칸 폭 × 2칸 깊이)로 선다.
+    expect(g.canPlace('boarding_dock', gt.i + 10, shoreRow(gt.i + 10), 1).ok, JSON.stringify(g.canPlace('boarding_dock', gt.i + 10, shoreRow(gt.i + 10), 1))).toBe(true);
+    // 은퇴한 옛 선착장은 **정의는 남고**(킷·저장이 쓴다) 새로 짓지는 못한다 — 그 거절이 canPlace 첫 줄이다
+    const retired = g.canPlace('dock', gt.i + 10, shoreRow(gt.i + 10), 0);
+    expect(retired.ok).toBe(false); if (!retired.ok) expect(retired.reason).toContain('조합');
+    expect(FACILITY_DEFS.get('dock')?.deprecated).toBe(true);
+    expect(g.canPlace('dock', gt.i + 10, shoreRow(gt.i + 10), 0, { inherited: true }).ok).toBe(true); // 물려받은 것으로는 여전히 선다
+    // 코스가 뻗을 수 있는 선착장 종은 `COURSE_DOCK_IDS` 하나가 정본이다 — 새 종이 들어오면 여기서 걸린다
+    for (const d of FACILITY_DEFS.values()) if (d.id.includes('dock') && d.class === 'attraction' && d.deprecated !== true) expect(COURSE_DOCK_IDS.has(d.id), d.id).toBe(true);
   });
   it('봇 — 링은 뭍 위 칸에서 시작한다(굽이 어귀에서 매일 거절당하지 않는다): 128일 수역 ≥60 · 코스 ≥2 (전: 36 · 1)', () => {
     const g = new Game(1);

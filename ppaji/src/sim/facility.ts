@@ -4,7 +4,7 @@
  */
 import type { FacilityDef } from '../data/schema.js';
 import { Grid, FLOOR, type Rect, inLandOrWater, isGround, isWalkFloor } from './grid.js';
-import { chainScale } from './rig.js';
+import { chainScale, compositeEntryTile, compositeDeckTiles, isComposite } from './rig.js';
 
 export interface PlacedFacility {
   uid: number;
@@ -268,6 +268,7 @@ export class FacilityStore {
     const def = this.defs.get(defId);
     if (!def) throw new Error(`시설 정의 없음: ${defId}`);
     const f: PlacedFacility = { uid: this.nextUid++, defId, i, j, facing, rentedBy: null, usesToday: 0, level: 1, usesTotal: 0, incomeToday: 0, incomeTotal: 0 };
+    if (isComposite(def.id) && def.onRing) f.passage=compositeDeckTiles(def.id,0,0,0).map(t=>[t.i,t.j]);
     if (def.id !== 'entrance') for (const t of FacilityStore.footprint(def, i, j, facing)) this.occ[t.j * this.grid.w + t.i] = f.uid; // P42: 입구는 밟고 지나가는 자리 — 점유하지 않는다
     this.list.push(f);
     this.version++;
@@ -309,6 +310,8 @@ export class FacilityStore {
 
   /** 시설 발자국의 앞면(+I·+J 바깥) 칸 중 걸을 수 있는 곳 — 손님이 서는 자리 */
   entryTiles(f: PlacedFacility, walkable: (i: number, j: number) => boolean): { i: number; j: number }[] {
+    const entry=compositeEntryTile(f.defId,f.i,f.j,f.facing);
+    if(entry) return walkable(entry.i,entry.j)?[entry]:[];
     return FacilityStore.ring(this.defOf(f), f.i, f.j, f.facing).filter((t) => walkable(t.i, t.j));
   }
 

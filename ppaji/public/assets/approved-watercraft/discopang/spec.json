@@ -1,0 +1,324 @@
+{
+  "id": "discopang",
+  "name": "디스코팡팡",
+  "capacity": 6,
+  "kind": "tow",
+  "kind_resolution": "verified equipment tow overrides copied power boat boilerplate",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "seats": [
+    {
+      "key": "rider_0",
+      "role": "rider",
+      "position": [
+        6.184466804078445e-17,
+        -1.0099999904632568,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 1.5707963267948966,
+      "support_object": "rider_0_Pad",
+      "foot_contacts": [
+        [
+          -0.10000000149011612,
+          -0.6100000143051147,
+          0.3
+        ],
+        [
+          0.10000000149011612,
+          -0.6100000143051147,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: inward low seat, grip and rim crossing",
+      "heading_note": "inward radial local heading; add displayed travel root yaw"
+    },
+    {
+      "key": "rider_1",
+      "role": "rider",
+      "position": [
+        0.8746856451034546,
+        -0.5049999952316284,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 2.617993877991494,
+      "support_object": "rider_1_Pad",
+      "foot_contacts": [
+        [
+          0.47827547788619995,
+          -0.3916025459766388,
+          0.3
+        ],
+        [
+          0.5782755017280579,
+          -0.21839746832847595,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: inward low seat, grip and rim crossing",
+      "heading_note": "inward radial local heading; add displayed travel root yaw"
+    },
+    {
+      "key": "rider_2",
+      "role": "rider",
+      "position": [
+        0.8746856451034546,
+        0.5049999952316284,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 3.665191429188092,
+      "support_object": "rider_2_Pad",
+      "foot_contacts": [
+        [
+          0.5782755017280579,
+          0.21839746832847595,
+          0.3
+        ],
+        [
+          0.47827547788619995,
+          0.3916025459766388,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: inward low seat, grip and rim crossing",
+      "heading_note": "inward radial local heading; add displayed travel root yaw"
+    },
+    {
+      "key": "rider_3",
+      "role": "rider",
+      "position": [
+        6.184466804078445e-17,
+        1.0099999904632568,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 4.71238898038469,
+      "support_object": "rider_3_Pad",
+      "foot_contacts": [
+        [
+          0.10000000149011612,
+          0.6100000143051147,
+          0.3
+        ],
+        [
+          -0.10000000149011612,
+          0.6100000143051147,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: inward low seat, grip and rim crossing",
+      "heading_note": "inward radial local heading; add displayed travel root yaw"
+    },
+    {
+      "key": "rider_4",
+      "role": "rider",
+      "position": [
+        -0.8746856451034546,
+        0.5049999952316284,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 5.759586531581287,
+      "support_object": "rider_4_Pad",
+      "foot_contacts": [
+        [
+          -0.47827547788619995,
+          0.3916025459766388,
+          0.3
+        ],
+        [
+          -0.5782755017280579,
+          0.21839746832847595,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: inward low seat, grip and rim crossing",
+      "heading_note": "inward radial local heading; add displayed travel root yaw"
+    },
+    {
+      "key": "rider_5",
+      "role": "rider",
+      "position": [
+        -0.8746856451034546,
+        -0.5049999952316284,
+        0.54
+      ],
+      "pose": "sit",
+      "heading": 6.806784082777885,
+      "support_object": "rider_5_Pad",
+      "foot_contacts": [
+        [
+          -0.5782755017280579,
+          -0.21839746832847595,
+          0.3
+        ],
+        [
+          -0.47827547788619995,
+          -0.3916025459766388,
+          0.3
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: inward low seat, grip and rim crossing",
+      "heading_note": "inward radial local heading; add displayed travel root yaw"
+    }
+  ],
+  "boarding": [
+    1.35,
+    0,
+    0.64
+  ],
+  "boarding_proposal": {
+    "side": "+X",
+    "supported_approach": [],
+    "final_transfer": "crossing rounded tube and settling inward into low seats unresolved"
+  },
+  "tow_socket": [
+    0,
+    -2.05,
+    0.2
+  ],
+  "bow": [
+    0,
+    -2.05,
+    0.2
+  ],
+  "stern": [
+    0,
+    1.56,
+    0.2
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    1.56,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -1.559999942779541,
+      -2.065999984741211,
+      -0.01000000350177288
+    ],
+    [
+      1.559999942779541,
+      1.559999942779541,
+      1.0999999046325684
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -1.559999942779541,
+      -1.559999942779541,
+      -0.01000000350177288
+    ],
+    [
+      1.559999942779541,
+      1.559999942779541,
+      0.6399999856948853
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -1.2961437702178955,
+      -2.065999984741211,
+      0.1290000081062317
+    ],
+    [
+      1.2961437702178955,
+      1.334999918937683,
+      1.0999999046325684
+    ]
+  ],
+  "pose_requirement": "POSE_FIT_UNRESOLVED: six inward low sit/grip contacts proposed; standing/mounting and spin/roll-specific rider response unverified",
+  "motion_semantics": {
+    "travel_heading": "h00-h15 root yaw only, no pitch or roll",
+    "use_state": "STATIC_SURFACE_CANDIDATE",
+    "spin_phase": "UNRESOLVED separate state, not equal to travel heading",
+    "roll_pitch": "UNRESOLVED not represented by these renders",
+    "warning": "16 headings do not validate spinning/rolling operation or rider retention"
+  },
+  "native_visible_mass_gate": {
+    "alpha_threshold": 0,
+    "minimum_foreground_pixels": 1800,
+    "minimum_bbox_width": 42,
+    "minimum_bbox_height": 30,
+    "edge_pixels": 0,
+    "declared_before_render": true
+  },
+  "inventory": [
+    "BlueDanceFloor",
+    "BluePeripheralTube",
+    "FrontEye_-1",
+    "FrontEye_1",
+    "rider_0_Backrest",
+    "rider_0_Handle",
+    "rider_0_HandlePost_-1",
+    "rider_0_HandlePost_1",
+    "rider_0_Pad",
+    "rider_1_Backrest",
+    "rider_1_Handle",
+    "rider_1_HandlePost_-1",
+    "rider_1_HandlePost_1",
+    "rider_1_Pad",
+    "rider_2_Backrest",
+    "rider_2_Handle",
+    "rider_2_HandlePost_-1",
+    "rider_2_HandlePost_1",
+    "rider_2_Pad",
+    "rider_3_Backrest",
+    "rider_3_Handle",
+    "rider_3_HandlePost_-1",
+    "rider_3_HandlePost_1",
+    "rider_3_Pad",
+    "rider_4_Backrest",
+    "rider_4_Handle",
+    "rider_4_HandlePost_-1",
+    "rider_4_HandlePost_1",
+    "rider_4_Pad",
+    "rider_5_Backrest",
+    "rider_5_Handle",
+    "rider_5_HandlePost_-1",
+    "rider_5_HandlePost_1",
+    "rider_5_Pad",
+    "SpeakerCabinet_-1",
+    "SpeakerCabinet_1",
+    "SpeakerCone_-1",
+    "SpeakerCone_1",
+    "TowBridle_-1",
+    "TowBridle_1",
+    "TowJoinEye",
+    "YellowInflatableBase"
+  ],
+  "reference_preflight": {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_discopang.png",
+    "observed": "round blue/white party tube with perimeter stations; equipment description explicitly identifies speakers and rotating use",
+    "authority": "coordinator identity-only reference; six inward seats, speakers and bridle are authored hidden-geometry proposals"
+  },
+  "approval": "candidate only"
+}

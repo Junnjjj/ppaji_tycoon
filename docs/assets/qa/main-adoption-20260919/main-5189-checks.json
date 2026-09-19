@@ -1,0 +1,27 @@
+{
+  "port": 5189,
+  "assets": 30,
+  "fall": {
+    "progress": 0.3649721695183008,
+    "speed": 0.23872649551564568,
+    "peakSpeed": 0.2568023187662102
+  },
+  "returned": [
+    {
+      "uid": 1,
+      "land": {
+        "x": 58,
+        "y": 25
+      },
+      "walkable": true
+    }
+  ],
+  "returnTicks": 57,
+  "remainingSwimmers": 0,
+  "restoreEqual": true,
+  "script": [
+    "http://127.0.0.1:5189/assets/main-DKwU4SEw.js",
+    ""
+  ],
+  "resourceErrors": []
+}

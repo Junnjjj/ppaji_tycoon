@@ -1,0 +1,899 @@
+{
+ "schema": "ppaji-approved-facilities/1",
+ "source": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2 (ppaji-buildable-pair-v2, 2026-09-15)",
+ "projection": {
+  "tileScreenPx": [
+   32,
+   16
+  ],
+  "tileWorld": 22.627416997969522,
+  "cameraYawDeg": 45,
+  "cameraElevationDeg": 30,
+  "cameraTargetZTiles": 0.65,
+  "anchorRule": "ax = logicalSize/2 ; ay = logicalSize/2 + cameraTargetZTiles*tileWorld*cos(30deg)"
+ },
+ "coordinates": "asset local +X = game +I, +Y = game -J, +Z = height in tiles. facing f rotates (I,J) -> R^f with R:(I,J)->(J,-I).",
+ "facilities": {
+  "ppaji_slide": {
+   "name": "빠지 슬라이드",
+   "size": [
+    8,
+    6
+   ],
+   "artSize": [
+    7,
+    5
+   ],
+   "footprintOrigin": [
+    -4,
+    -2.5
+   ],
+   "footprintCenter": [
+    0,
+    0.5
+   ],
+   "logicalSize": 256,
+   "anchor": {
+    "ax": 128.0,
+    "ay": 140.7373
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     4,
+     3.5
+    ],
+    [
+     3.5,
+     4
+    ],
+    [
+     4,
+     2.5
+    ],
+    [
+     2.5,
+     4
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     8,
+     6
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     8,
+     6
+    ],
+    [
+     6,
+     8
+    ]
+   ],
+   "entry": [
+    -3,
+    -0.5,
+    0.22
+   ],
+   "exit": [
+    -3,
+    -0.5,
+    0.22
+   ],
+   "landmarks": {
+    "boarding_entry": [
+     -3,
+     -0.5,
+     0.22
+    ],
+    "boarding_to_obstacle": [
+     -1,
+     -0.5,
+     0.22
+    ],
+    "obstacle_to_connector": [
+     1,
+     -0.5,
+     0.22
+    ],
+    "slide_entry": [
+     1.85,
+     0.08,
+     0.22
+    ],
+    "slide_launch": [
+     2.6,
+     2.17,
+     1.6
+    ],
+    "water_landing": [
+     2.6,
+     -0.42,
+     0
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "reserve whole rectangular footprint including open water; water remains transparent in facility art",
+   "blueprint": "ppaji_slide/blueprint.json",
+   "frames": {
+    "d0": {
+     "file": "ppaji_slide/native-d0.png",
+     "w": 256,
+     "h": 256,
+     "sha256": "5109aae5dab3be28bd8653fbfab25be4d162922be86f9f9102d0537a66ebb664"
+    },
+    "d1": {
+     "file": "ppaji_slide/native-d1.png",
+     "w": 256,
+     "h": 256,
+     "sha256": "1b3d813669877f587f8db9cef5cdcddc1fb662b0f43665088ce6ee41655b2149"
+    },
+    "d2": {
+     "file": "ppaji_slide/native-d2.png",
+     "w": 256,
+     "h": 256,
+     "sha256": "19d7f5b04ecfbabff5bef11b0bd67c77f110aa1434aba6542e9b06751319fcc8"
+    },
+    "d3": {
+     "file": "ppaji_slide/native-d3.png",
+     "w": 256,
+     "h": 256,
+     "sha256": "d5e439c497dd5a1ef4c1e60f96eb8e60e2d600a44dec18fe1d536fdc6a2d4d8b"
+    }
+   },
+   "deckTiles": [
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     5,
+     4
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     6,
+     1
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     1
+    ],
+    [
+     7,
+     2
+    ]
+   ],
+   "routes": {
+    "file": "routes.json",
+    "entry": [
+     -3,
+     -0.5,
+     0.22
+    ],
+    "tourCycle": 42.725,
+    "tourUseTicks": 146,
+    "visits": [
+     {
+      "component": "rig_slide",
+      "cycle": 42.725,
+      "useTicks": 146
+     }
+    ],
+    "meanVisitCycle": 42.725,
+    "useTicksRule": "useTicks = cycleSeconds / (TICK_SCALE * TICK_MS/1000) = cycleSeconds / 0.291667"
+   }
+  },
+  "ppaji_playground": {
+   "name": "빠지 놀이터",
+   "size": [
+    20,
+    12
+   ],
+   "artSize": [
+    20,
+    12
+   ],
+   "footprintOrigin": [
+    -11,
+    -6
+   ],
+   "footprintCenter": [
+    -1,
+    0
+   ],
+   "logicalSize": 640,
+   "anchor": {
+    "ax": 320.0,
+    "ay": 332.7373
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     11,
+     6
+    ],
+    [
+     6,
+     9
+    ],
+    [
+     9,
+     6
+    ],
+    [
+     6,
+     11
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     20,
+     12
+    ],
+    [
+     12,
+     20
+    ],
+    [
+     20,
+     12
+    ],
+    [
+     12,
+     20
+    ]
+   ],
+   "entry": [
+    -11,
+    -1,
+    0.22
+   ],
+   "exit": [
+    -11,
+    -1,
+    0.22
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "reserve whole rectangular footprint including open water; water remains transparent in facility art",
+   "blueprint": "ppaji_playground/blueprint.json",
+   "frames": {
+    "d0": {
+     "file": "ppaji_playground/native-d0.png",
+     "w": 640,
+     "h": 640,
+     "sha256": "a244e755e71ddf77009215f59081987ac944f05e5575bbf2d84c5b4ecc24d80f"
+    },
+    "d1": {
+     "file": "ppaji_playground/native-d1.png",
+     "w": 640,
+     "h": 640,
+     "sha256": "6289a79b794ee78348c53ab9d836afd5e8dd453c3e50a61c0a97cb928b3ba198"
+    },
+    "d2": {
+     "file": "ppaji_playground/native-d2.png",
+     "w": 640,
+     "h": 640,
+     "sha256": "27b2640e8a020e04c8c4da2fafb8adaab3488cec123f045410d0b82f026a879a"
+    },
+    "d3": {
+     "file": "ppaji_playground/native-d3.png",
+     "w": 640,
+     "h": 640,
+     "sha256": "c6e67b1dbda368ac9d96c89118294dec5089383858016c700158ce8452fa7cfc"
+    }
+   },
+   "deckTiles": [
+    [
+     0,
+     6
+    ],
+    [
+     0,
+     7
+    ],
+    [
+     1,
+     6
+    ],
+    [
+     1,
+     7
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     2,
+     7
+    ],
+    [
+     2,
+     8
+    ],
+    [
+     2,
+     9
+    ],
+    [
+     2,
+     10
+    ],
+    [
+     2,
+     11
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     3,
+     6
+    ],
+    [
+     3,
+     7
+    ],
+    [
+     3,
+     8
+    ],
+    [
+     3,
+     9
+    ],
+    [
+     3,
+     10
+    ],
+    [
+     3,
+     11
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     4,
+     11
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     11
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     4
+    ],
+    [
+     6,
+     11
+    ],
+    [
+     7,
+     0
+    ],
+    [
+     7,
+     4
+    ],
+    [
+     7,
+     11
+    ],
+    [
+     8,
+     0
+    ],
+    [
+     8,
+     3
+    ],
+    [
+     8,
+     4
+    ],
+    [
+     8,
+     11
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     9,
+     11
+    ],
+    [
+     10,
+     0
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     10,
+     11
+    ],
+    [
+     11,
+     0
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     11,
+     11
+    ],
+    [
+     12,
+     0
+    ],
+    [
+     12,
+     9
+    ],
+    [
+     12,
+     11
+    ],
+    [
+     13,
+     0
+    ],
+    [
+     13,
+     9
+    ],
+    [
+     13,
+     11
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     14,
+     11
+    ],
+    [
+     15,
+     0
+    ],
+    [
+     15,
+     11
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     11
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     11
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     7
+    ],
+    [
+     18,
+     11
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     19,
+     1
+    ],
+    [
+     19,
+     2
+    ],
+    [
+     19,
+     3
+    ],
+    [
+     19,
+     4
+    ],
+    [
+     19,
+     5
+    ],
+    [
+     19,
+     6
+    ],
+    [
+     19,
+     7
+    ],
+    [
+     19,
+     8
+    ],
+    [
+     19,
+     9
+    ],
+    [
+     19,
+     10
+    ],
+    [
+     19,
+     11
+    ]
+   ],
+   "routes": {
+    "file": "routes.json",
+    "entry": [
+     -11,
+     -1,
+     0.22
+    ],
+    "tourCycle": 367.166,
+    "tourUseTicks": 1259,
+    "visits": [
+     {
+      "component": "rig_beam",
+      "cycle": 57.789,
+      "useTicks": 198
+     },
+     {
+      "component": "rig_roller",
+      "cycle": 59.812,
+      "useTicks": 205
+     },
+     {
+      "component": "rig_totem",
+      "cycle": 68.46,
+      "useTicks": 235
+     },
+     {
+      "component": "rig_seesaw",
+      "cycle": 60.789,
+      "useTicks": 208
+     },
+     {
+      "component": "waterwalk",
+      "cycle": 46.09,
+      "useTicks": 158
+     },
+     {
+      "component": "rig_disc",
+      "cycle": 35.676,
+      "useTicks": 122
+     },
+     {
+      "component": "rig_kids_park",
+      "cycle": 66.642,
+      "useTicks": 228
+     },
+     {
+      "component": "rig_mini_slide",
+      "cycle": 119.495,
+      "useTicks": 410
+     },
+     {
+      "component": "rig_slidedock",
+      "cycle": 65.355,
+      "useTicks": 224
+     },
+     {
+      "component": "trampoline_w",
+      "cycle": 70.772,
+      "useTicks": 243
+     },
+     {
+      "component": "rig_hammock",
+      "cycle": 30.642,
+      "useTicks": 105
+     },
+     {
+      "component": "rig_sunbed",
+      "cycle": 57.491,
+      "useTicks": 197
+     }
+    ],
+    "meanVisitCycle": 61.584,
+    "useTicksRule": "useTicks = cycleSeconds / (TICK_SCALE * TICK_MS/1000) = cycleSeconds / 0.291667"
+   }
+  },
+  "boarding_dock": {
+   "name": "승하선 데크",
+   "size": [
+    2,
+    1
+   ],
+   "artSize": [
+    2,
+    1
+   ],
+   "footprintOrigin": [
+    -1,
+    -0.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.7373
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1,
+     0.5
+    ],
+    [
+     0.5,
+     1
+    ],
+    [
+     1,
+     0.5
+    ],
+    [
+     0.5,
+     1
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     1,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0.5,
+    0.22
+   ],
+   "exit": [
+    0,
+    -0.5,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     0.5,
+     0.22
+    ],
+    "board": [
+     0,
+     -0.5,
+     0.22
+    ],
+    "approach": [
+     0,
+     0.42,
+     0.22
+    ],
+    "wait_stop": [
+     0,
+     -0.38,
+     0.22
+    ],
+    "cleat_left": [
+     -0.84,
+     -0.28,
+     0.335
+    ],
+    "cleat_right": [
+     0.84,
+     -0.28,
+     0.335
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "full 2x1 footprint is deck; the water berth is OUTSIDE the footprint (access.json berth_water_not_in_footprint)",
+   "blueprint": "boarding_dock/access.json",
+   "deckTiles": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ]
+   ],
+   "frames": {
+    "d0": {
+     "file": "boarding_dock/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a7ffe90de417d0247a4c3d512244204568747bcb988617563b07bb74c831b84d"
+    },
+    "d1": {
+     "file": "boarding_dock/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "5356321ff23d41a7eb0f8232d4f4d3bde88e7b4928c556e6e59567caa09b3117"
+    },
+    "d2": {
+     "file": "boarding_dock/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "cd0d4449aae15b185e73fd9277914a591917b017d9400ae50884426605e8aa25"
+    },
+    "d3": {
+     "file": "boarding_dock/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "c4f59e37ebaf966e0a7a2b76eb5be7c3f1de97f53063416b2839b210ccb37c88"
+    }
+   },
+   "note": "ppaji-boarding-2x1-v1 full deck variant. The fittings-only variant stays HOLD (native foreground 34/35 below the 35 gate) and is NOT adopted. Queue waits on the rear deck; one guest boards at a time (access.json flow)."
+  }
+ },
+ "deckTileRule": "footprint-local integer tiles at facing 0 (i to +I, j to +J from the placed corner); a tile is deck when authored deck rectangles cover >= 50% of it. Rotate with the same R:(I,J)->(J,-I) as the footprint."
+}

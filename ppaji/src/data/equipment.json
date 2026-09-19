@@ -100,22 +100,6 @@
       "desc": "육각튜브"
     },
     {
-      "id": "turbo_turtle",
-      "name": "번개거북",
-      "kind": "tow",
-      "sprite": "vehicle/turbo_turtle",
-      "speed": 0.3,
-      "capacity": 5,
-      "boardTicks": 38,
-      "fee": 65,
-      "vehicleCost": 6400,
-      "upkeep": 55,
-      "thrillCoef": 1.2,
-      "thrillBase": 35,
-      "safeCurvature": 0.16,
-      "desc": "번개거북"
-    },
-    {
       "id": "lotus",
       "name": "연꽃보트",
       "kind": "tow",

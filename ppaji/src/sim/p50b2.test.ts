@@ -21,17 +21,20 @@ describe('P50-b2 화면·돈 칸 값', () => {
   });
 
   it('aimPreview — 기구·링 시설 전수: 미리보기 등급·연결·팔찌 값 == 확정 뒤 실값 · 호출 전후 nextUid·occHash·grid.rev·pools.version 불변', () => {
-    const defs = [...FACILITY_DEFS.values()].filter((d) => (d.class === 'rig' || d.onRing === true) && d.w * d.d <= 6);
-    expect(defs.length).toBeGreaterThanOrEqual(21);
+    const defs = [...FACILITY_DEFS.values()].filter((d) => (d.class === 'rig' || d.onRing === true) && d.w * d.d <= 6 && d.deprecated !== true && d.buildable !== false);
+    expect(defs.map(d => d.id)).toContain('boarding_dock');
     let checked = 0;
     for (const def of defs) {
       const g = fresh();
+      // 두 칸 폭 링으로 실제 2×2 대여 시설도 미리보기/확정 대조한다.
+      for (let j = 24; j <= 29; j++) g.paintDeck([{ i: 49, j }]);
       // 첫 기구 하나(켜짐)를 두고 둘째 자리를 전수로 찾는다 — 물 위는 킷 빠지 안, 링 위는 서쪽 링 열 50
       expect(g.placeFacility('rig_stepstone', 51, 26, 0).ok).toBe(true);
       const cands: [number, number, 0 | 1][] = [];
-      for (let j = 23; j <= 29; j++) for (let i = 50; i <= 55; i++) for (const f of [0, 1] as const) cands.push([i, j, f]);
-      const at = cands.find(([i, j, f]) => g.canPlace(def.id, i, j, f).ok);
-      if (!at) continue;
+      for (let j = 23; j <= 29; j++) for (let i = 49; i <= 55; i++) for (const f of [0, 1] as const) cands.push([i, j, f]);
+      const at = cands.find(([i, j, f]) => g.canPlace(def.id, i, j, f).ok && Game.fromSnapshot(g.toSnapshot()).placeFacility(def.id, i, j, f).ok);
+      expect(at, `${def.id}: 시작 수역 검사의 배치 후보`).toBeDefined();
+      if (!at) throw new Error(def.id);
       const before = { ...g.facilities.probeState(), rev: g.grid.rev, pv: g.pools.version };
       const pv = g.aimPreview(def.id, at[0], at[1], at[2]);
       const after = { ...g.facilities.probeState(), rev: g.grid.rev, pv: g.pools.version };
@@ -44,7 +47,7 @@ describe('P50-b2 화면·돈 칸 값', () => {
       if (pid !== null) expect(bandPrice(bandTop(g.ppajiGradeOf(pid)), g.ppajiGradeOf(pid))).toBe(pv!.pkgNext);
       checked++;
     }
-    expect(checked).toBeGreaterThanOrEqual(21);
+    expect(checked).toBe(defs.length); // 활성 소형 시설 전부, 조용히 건너뛰는 후보 없음
   });
 
   it('성능 — aimPreview ≤ 0.6ms · rigLinkEdges ≤ 0.3ms(캐시) · 등급 불변 설치 직후 모달 0 · 등급이 오르는 확정 tick 에 모달 정확히 1', () => {

@@ -1,0 +1,44 @@
+{
+  "footprint": [
+    2,
+    1
+  ],
+  "land_entry": [
+    0,
+    0.5,
+    0.22
+  ],
+  "board_edge": [
+    0,
+    -0.5,
+    0.22
+  ],
+  "approach": [
+    0,
+    0.42,
+    0.22
+  ],
+  "wait_stop": [
+    0,
+    -0.38,
+    0.22
+  ],
+  "open_width": 1.44,
+  "cleat_centers": [
+    [
+      -0.84,
+      -0.28,
+      0.335
+    ],
+    [
+      0.84,
+      -0.28,
+      0.335
+    ]
+  ],
+  "queue_on_external_deck": true,
+  "berth_water_not_in_footprint": true,
+  "coordinate_space": "Blender local tiles; +I=+X, +J=-Y",
+  "flow": "one person at a time; waiting queue remains on rear deck",
+  "live_dock_definition_unchanged": true
+}

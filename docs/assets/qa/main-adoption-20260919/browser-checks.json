@@ -1,0 +1,39 @@
+{
+  "server": "http://127.0.0.1:5194",
+  "mode": "isolated browser QA, not user save",
+  "cases": [
+    {
+      "image": "banana-real-guests.png",
+      "setup": "Game.courses.add fixture then actual GuestStore.spawn, simulateUseForTest and Game.step(75). Uses real ride lifecycle; bypasses normal course placement validation for controlled rendering.",
+      "result": "Native boat/banana, original guest UIDs and visible connecting rope; no decorative fake passengers."
+    },
+    {
+      "image": "playground-real-guests.png",
+      "setup": "FacilityStore.place fixture at 37,30 on original water. GuestStore guests assigned use state at middle of their actual UID-selected approved visits. Rendering test, not proof of walk-to-entry reachability.",
+      "result": "Actual guest UIDs displayed on authored sub-facility paths. Deck/rig pixels no longer overpainted by global water glints."
+    },
+    {
+      "image": "playground-legal-placement.png",
+      "setup": "Fresh original map, rank5/money test grant. Public paintDeck builds20×12 interior ring at36,31. Public placeFacility places playground37,32. Actual GuestStore guest walks from48,23 using Game.step; no facility/floor occupancy bypass.",
+      "result": "Entry37,38 reached after85ticks from28-step BFS distance; state use, original guestUID1 retained."
+    },
+    {
+      "image": "boarding-dock-main.png",
+      "setup": "Unmodified fresh arrival layout after safe legacy dock migration.",
+      "result": "Blue2×1 dock at58,25 facing1; canonical passage stays walkable. Terrain unchanged, UID/accounting retained (automated3tests)."
+    },
+    {
+      "image": "peanut-actual-boarding.png",
+      "setup": "Fresh arrival map; public suggestCourse/placeCourse, two real GuestStore guests walk from58,24 to newdock and finish normal use. No simulateUseForTest.",
+      "result": "Both boarded at26ticks; actual r1-1 towing at17.56% after40moreticks, guestUID1/2 statecourse; native seats,operator,rope visible."
+    },
+    {
+      "image": "banana-contact-splash.png",
+      "setup": "Public buyEquipment banana, suggestCourse/placeCourse, two real walking guests. Isolated QA accident probability forced to1; normal live probability unchanged.",
+      "result": "Fall at36.50% progress, speed.2387 of peak.2568; contact ripple then swim. Restored snapshot produced identical ride state through57ticks until swimmer returned to walkable original dock land58,25. No daytime teleport cleanup."
+    }
+  ],
+  "remaining": [
+    "Final5189dist validation"
+  ]
+}

@@ -17,7 +17,7 @@ const groups = [
   ['인물 초상', 'portrait', d('portraits.json').flatMap((x) => [[`${x.id}_calm`, `${x.name} · 차분`, x.id], [`${x.id}_happy`, `${x.name} · 웃음`, x.id]])],
   ['장면 배경 (192×64)', 'scene', d('scenes.json').map((x) => [x.id, x.name, x.hint])],
 ];
-const b64 = (kind, id) => { const p = kind === 'scene' ? `assets/scenes/scene_${id}.png` : `assets/pictures/${kind}_${id}.png`; return existsSync(p) ? 'data:image/png;base64,' + readFileSync(p).toString('base64') : null; };
+const b64 = (kind, id) => { const p = kind === 'gear' && existsSync(`public/assets/approved-watercraft/${id}/B/native-h00.png`) ? `public/assets/approved-watercraft/${id}/B/native-h00.png` : kind === 'scene' ? `assets/scenes/scene_${id}.png` : `assets/pictures/${kind}_${id}.png`; return existsSync(p) ? 'data:image/png;base64,' + readFileSync(p).toString('base64') : null; };
 let total = 0, missing = 0;
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 const sections = groups.map(([label, kind, list]) => {

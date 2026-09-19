@@ -60,16 +60,6 @@
     "unlock": "cook"
   },
   {
-    "id": "turbo_turtle",
-    "name": "번개거북",
-    "cat": "tube",
-    "key": "fin_plate+power_grip+rope_steel+tube_round",
-    "taste": 6,
-    "look": 5,
-    "pop": 5,
-    "unlock": "cook"
-  },
-  {
     "id": "lotus",
     "name": "연꽃보트",
     "cat": "tube",

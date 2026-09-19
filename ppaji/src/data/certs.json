@@ -246,8 +246,8 @@
       }
     ],
     "reward": {
-      "kind": "facility",
-      "id": "rig_led_buoy"
+      "kind": "rigPart",
+      "id": "anchor_chain"
     },
     "fee": 2500
   },
@@ -285,7 +285,7 @@
     ],
     "reward": {
       "kind": "rigPart",
-      "id": "slip_wax"
+      "id": "float_drum"
     },
     "fee": 500
   },
@@ -329,8 +329,8 @@
       }
     ],
     "reward": {
-      "kind": "facility",
-      "id": "rig_kids_park"
+      "kind": "rigPart",
+      "id": "pump_motor"
     },
     "fee": 1000
   },
@@ -375,7 +375,7 @@
     ],
     "reward": {
       "kind": "rigPart",
-      "id": "spray_nozzle"
+      "id": "anchor_chain"
     },
     "fee": 2500
   },
@@ -571,7 +571,7 @@
       {
         "cond": {
           "kind": "facility",
-          "id": "dock"
+          "id": "boarding_dock"
         },
         "weight": 1
       },
@@ -586,7 +586,7 @@
     ],
     "reward": {
       "kind": "rigPart",
-      "id": "twin_saddle"
+      "id": "anchor_chain"
     },
     "fee": 1000
   },
@@ -609,7 +609,7 @@
       {
         "cond": {
           "kind": "facility",
-          "id": "dock",
+          "id": "boarding_dock",
           "count": 2
         },
         "weight": 1

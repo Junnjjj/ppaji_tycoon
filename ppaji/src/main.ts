@@ -1,3 +1,7 @@
+import { loadApprovedFacilities } from './assets/approved-facilities.js';
+import { loadStaticDepth } from './render/static-facilities.js';
+import { COURSE_DOCK_IDS } from './sim/course/ride.js';
+import { loadWatercraft } from './assets/watercraft.js';
 import { applyArrivalLayout, canAdoptArrival } from './sim/arrival-layout.js';
 import './compat.js';
 import './ui/style.css';
@@ -47,7 +51,7 @@ import { fxFired } from './render/fx/registry.js';
 import { ShopWindow } from './ui/windows/shop.js';
 import { MenuEditWindow } from './ui/windows/menu-edit.js';
 import { CookWindow, type DiscoverySpec } from './ui/windows/cook.js';
-import { canvasPictureEl, pictureCount } from './ui/pictures.js';
+import { canvasPictureEl, pictureCount, setApprovedPictureSource } from './ui/pictures.js';
 import { setNpcFrameSource, npcPortrait } from './ui/portraits.js'; // NPC v8(2026-09-18): 손님·친구 초상은 v8 도트의 머리
 import type { CookingStore, RecipeLike, IngredientLike, CookResultOf } from './sim/cooking.js';
 import { MenuWindow } from './ui/windows/menu.js';
@@ -96,12 +100,15 @@ if (saved && APPROVED_ARRIVAL && !NO_KIT && !game.arrivalRevision) {
 const camera = new Camera();
 registerFacilityDefs(FACILITY_DEFS.values());
 // 아틀라스(프리렌더 PNG)가 있으면 그것을, 없으면 절차 도트 — 같은 ID 라 게임 코드는 모른다 (G15)
-const atlas = await loadAtlas();
-const kairo = await loadKairoAtlas(); // P14: 레거시 도트가 먼저, 없으면 3D 프리렌더 → 절차
-const landscape = await loadLandscape(); // P57-b: 북쪽 바깥 풍경 띠(main 그림 2장)
+const [atlas, kairo, landscape, npc, watercraft, approved] = await Promise.all([
+  loadAtlas(), loadKairoAtlas(), loadLandscape(), loadNpcV8(), loadWatercraft(), loadApprovedFacilities(),
+]);
+const rideSeatSpecs = Object.fromEntries(Object.entries(watercraft.manifest.equipment).map(([id,spec])=>[id,spec.seats]));
+game.setRideSeatSpecs(rideSeatSpecs);
+const staticDepth = approved ? await loadStaticDepth(approved) : null;
 if (!saved) game.checkStory(true);
-const npc = await loadNpcV8();
-const provider = new HybridProvider(npc, new HybridProvider(kairo, new HybridProvider(atlas, new ProceduralProvider())));
+setApprovedPictureSource(id => { const match = /^pic\/gear\/([a-z0-9_]+)$/.exec(id); return match ? watercraft.canvas(`watercraft/${match[1]}/0`) : null; });
+const provider = new HybridProvider(approved, new HybridProvider(watercraft, new HybridProvider(npc, new HybridProvider(kairo, new HybridProvider(atlas, new ProceduralProvider())))));
 setNpcFrameSource((id) => provider.canvas(id)); // NPC v8(2026-09-18): 초상(`npcPortrait`)이 씬과 같은 v8 프레임을 읽는다
 const missing = ProceduralProvider.missingDrawers();
 if (missing.length > 0) console.error('매니페스트에 그리는 함수가 없는 id:', missing);
@@ -118,6 +125,11 @@ const scene = new WaterparkScene({
   onCourseHandleMove: (k, i, j) => courseDock.onHandleMove(k, i, j),
   onCourseDockPick: (k) => courseDock.onDockPick(k),
   provider,
+  watercraft,
+  approved,
+  staticDepth,
+  rideScene: () => game.rideScene(),
+  rideTime: () => (game.day * TICKS_PER_DAY + game.tick) * TICK_MS / 1000,
   landscape,
   grid: game.grid,
   camera,
@@ -167,7 +179,7 @@ const syncPoolLook = (): void => {
 };
 
 const syncWorldToScene = (): void => {
-  scene.setCourses(game.courses.all.map((c) => [c.dock, ...c.handles]));
+  scene.setCourses(game.courses.all);
   scene.setSeason(game.clock.season);
   sfx.setSeason(game.clock.season);
   scene.setPoolTiles(poolTilesFlat());
@@ -226,7 +238,7 @@ const refreshHud = (): void => {
   hud.setBadge('sns', game.sns.unseenPosts); // 원작: SNS 배지 = 안 본 새 글 수 (G33)
   hud.setBadge('build', Math.max(0, game.unlocked.facilities.size - seenFacilityCount())); // 원작: 새 시설이 열리면 건설 칸에 NEW (G47)
   hud.setEventTag(game.eventTag());
-  hud.setLocked('course', game.facilities.all.some((f) => f.defId === 'dock') ? null : '선착장');
+  hud.setLocked('course', game.facilities.all.some((f) => COURSE_DOCK_IDS.has(f.defId)) ? null : '선착장');
 };
 
 // ── 창 · 독 ────────────────────────────────────────────────────────
@@ -459,7 +471,7 @@ function onTapTile(i: number, j: number): void {
 }
 
 hud.on('zone', () => { sfx.play('tap'); dock.enter('dig'); });
-hud.setLocked('course', game.facilities.all.some((f) => f.defId === 'dock') ? null : '선착장');
+hud.setLocked('course', game.facilities.all.some((f) => COURSE_DOCK_IDS.has(f.defId)) ? null : '선착장');
 hud.on('build', () => { sfx.play('open'); buildWin.show(); markFacilitiesSeen(); refreshHud(); });
 hud.on('sns', () => { sfx.play('open'); snsWin.show(); });
 hud.on('course', () => { dock.exit(); place.exit(); if (courseDock.enter()) sfx.play('open'); else sfx.play('error'); });
@@ -492,6 +504,7 @@ const newsQueue: string[] = [];
 let newsUntil = 0;
 /** G57: 새 판(뉴게임+·newGame) — 씬 격자·세션 큐·썸네일·「본 것」 기억을 옛 판 것에서 비운다 */
 const resetSessionForNewGame = (): void => {
+  game.setRideSeatSpecs(rideSeatSpecs);
   lastDay = 0;
   scene.setGrid(game.grid);
   modalQueue.length = 0;
@@ -711,6 +724,8 @@ const api = {
   phaser,
   hud,
   provider,
+  watercraft,
+  approved,
   panelHost,
   interruptBudget,
   dock,

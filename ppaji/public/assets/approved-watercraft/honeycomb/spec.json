@@ -1,0 +1,342 @@
+{
+  "id": "honeycomb",
+  "name": "단군",
+  "capacity": 6,
+  "kind": "tow",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "camera_target_z_tiles": 0.65,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "seats": [
+    {
+      "key": "seat_1",
+      "position": [
+        1.1,
+        0.08,
+        0.36
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_1",
+      "support_dimensions_tiles": [
+        0.4,
+        0.34
+      ],
+      "foot_contacts": [
+        [
+          1.1,
+          -0.23,
+          0.24
+        ]
+      ],
+      "hand_contact": [
+        1.1,
+        -0.2,
+        0.56
+      ],
+      "transfer_status": "UNRESOLVED_CELL_RIM_STEP_OVER",
+      "transfer_proposal": [],
+      "transfer_note": "Board from +X, then cross inflatable cell rims with a dedicated transfer motion; no certified walk path through occupied cells"
+    },
+    {
+      "key": "seat_2",
+      "position": [
+        0.5500000000000002,
+        1.0326279441628825,
+        0.36
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_2",
+      "support_dimensions_tiles": [
+        0.4,
+        0.34
+      ],
+      "foot_contacts": [
+        [
+          0.5500000000000002,
+          0.7226279441628826,
+          0.24
+        ]
+      ],
+      "hand_contact": [
+        0.5500000000000002,
+        0.7526279441628825,
+        0.56
+      ],
+      "transfer_status": "UNRESOLVED_CELL_RIM_STEP_OVER",
+      "transfer_proposal": [],
+      "transfer_note": "Board from +X, then cross inflatable cell rims with a dedicated transfer motion; no certified walk path through occupied cells"
+    },
+    {
+      "key": "seat_3",
+      "position": [
+        -0.5499999999999998,
+        1.0326279441628827,
+        0.36
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_3",
+      "support_dimensions_tiles": [
+        0.4,
+        0.34
+      ],
+      "foot_contacts": [
+        [
+          -0.5499999999999998,
+          0.7226279441628827,
+          0.24
+        ]
+      ],
+      "hand_contact": [
+        -0.5499999999999998,
+        0.7526279441628827,
+        0.56
+      ],
+      "transfer_status": "UNRESOLVED_CELL_RIM_STEP_OVER",
+      "transfer_proposal": [],
+      "transfer_note": "Board from +X, then cross inflatable cell rims with a dedicated transfer motion; no certified walk path through occupied cells"
+    },
+    {
+      "key": "seat_4",
+      "position": [
+        -1.1,
+        0.08000000000000014,
+        0.36
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_4",
+      "support_dimensions_tiles": [
+        0.4,
+        0.34
+      ],
+      "foot_contacts": [
+        [
+          -1.1,
+          -0.22999999999999987,
+          0.24
+        ]
+      ],
+      "hand_contact": [
+        -1.1,
+        -0.19999999999999987,
+        0.56
+      ],
+      "transfer_status": "UNRESOLVED_CELL_RIM_STEP_OVER",
+      "transfer_proposal": [],
+      "transfer_note": "Board from +X, then cross inflatable cell rims with a dedicated transfer motion; no certified walk path through occupied cells"
+    },
+    {
+      "key": "seat_5",
+      "position": [
+        -0.5500000000000005,
+        -0.8726279441628824,
+        0.36
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_5",
+      "support_dimensions_tiles": [
+        0.4,
+        0.34
+      ],
+      "foot_contacts": [
+        [
+          -0.5500000000000005,
+          -1.1826279441628824,
+          0.24
+        ]
+      ],
+      "hand_contact": [
+        -0.5500000000000005,
+        -1.1526279441628824,
+        0.56
+      ],
+      "transfer_status": "UNRESOLVED_CELL_RIM_STEP_OVER",
+      "transfer_proposal": [],
+      "transfer_note": "Board from +X, then cross inflatable cell rims with a dedicated transfer motion; no certified walk path through occupied cells"
+    },
+    {
+      "key": "seat_6",
+      "position": [
+        0.5500000000000002,
+        -0.8726279441628826,
+        0.36
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_6",
+      "support_dimensions_tiles": [
+        0.4,
+        0.34
+      ],
+      "foot_contacts": [
+        [
+          0.5500000000000002,
+          -1.1826279441628826,
+          0.24
+        ]
+      ],
+      "hand_contact": [
+        0.5500000000000002,
+        -1.1526279441628826,
+        0.56
+      ],
+      "transfer_status": "UNRESOLVED_CELL_RIM_STEP_OVER",
+      "transfer_proposal": [],
+      "transfer_note": "Board from +X, then cross inflatable cell rims with a dedicated transfer motion; no certified walk path through occupied cells"
+    }
+  ],
+  "boarding": [
+    1.76,
+    0,
+    0.2
+  ],
+  "tow_socket": [
+    0,
+    -2.04,
+    0.12
+  ],
+  "bow": [
+    0,
+    -1.86,
+    0.12
+  ],
+  "stern": [
+    0,
+    1.86,
+    0.12
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": {
+    "baked": false,
+    "socket": [
+      0,
+      1.86,
+      0
+    ]
+  },
+  "full_bounds_tiles": [
+    [
+      -1.6499260663986206,
+      -2.119999647140503,
+      -0.10000000149011612
+    ],
+    [
+      1.6499260663986206,
+      1.8599998950958252,
+      0.5839999914169312
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -1.6499260663986206,
+      -1.8599998950958252,
+      -0.10000000149011612
+    ],
+    [
+      1.6499260663986206,
+      1.8599998950958252,
+      0.4000000059604645
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -1.3000000715255737,
+      -2.119999647140503,
+      0.09500440210103989
+    ],
+    [
+      1.3000000715255737,
+      1.2026278972625732,
+      0.5839999914169312
+    ]
+  ],
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "sit",
+    "required": "Six passengers in outer cells; generic sit grip/foot reach and rim step-over transfer remain unverified. Center cell is structure, not seventh seat."
+  },
+  "minimum_native_foreground": 1500,
+  "minimum_mass_gate": {
+    "metric": "count alpha >= 128",
+    "threshold": 1500,
+    "all_headings": true,
+    "declared_before_render": true
+  },
+  "inventory": [
+    "CentralStructuralCell",
+    "FootSupport_seat_1",
+    "FootSupport_seat_2",
+    "FootSupport_seat_3",
+    "FootSupport_seat_4",
+    "FootSupport_seat_5",
+    "FootSupport_seat_6",
+    "Grip_seat_1",
+    "Grip_seat_2",
+    "Grip_seat_3",
+    "Grip_seat_4",
+    "Grip_seat_5",
+    "Grip_seat_6",
+    "GripPost_seat_1-0.14",
+    "GripPost_seat_10.14",
+    "GripPost_seat_2-0.14",
+    "GripPost_seat_20.14",
+    "GripPost_seat_3-0.14",
+    "GripPost_seat_30.14",
+    "GripPost_seat_4-0.14",
+    "GripPost_seat_40.14",
+    "GripPost_seat_5-0.14",
+    "GripPost_seat_50.14",
+    "GripPost_seat_6-0.14",
+    "GripPost_seat_60.14",
+    "HexagonalInflatableBase",
+    "PassengerCell_seat_1",
+    "PassengerCell_seat_2",
+    "PassengerCell_seat_3",
+    "PassengerCell_seat_4",
+    "PassengerCell_seat_5",
+    "PassengerCell_seat_6",
+    "SaddleSupport_seat_1",
+    "SaddleSupport_seat_2",
+    "SaddleSupport_seat_3",
+    "SaddleSupport_seat_4",
+    "SaddleSupport_seat_5",
+    "SaddleSupport_seat_6",
+    "TowBridle-0.4",
+    "TowBridle0.4",
+    "TowEye"
+  ],
+  "reference_preflight": {
+    "authority": "Frozen contract geometry_reference and dispatched gear_honeycomb.png",
+    "observed": "Yellow/gold honeycomb tube with multiple polygonal dark cell recesses and thick perimeter; 6 capacity and tow kind from equipment",
+    "proposal": "Hexagonal base and seven cell rims, six outer occupied cells plus structural center; explicit hidden floor, pads, grips and bridle proposal",
+    "exact_reconstruction": false
+  },
+  "production_approval": false
+}

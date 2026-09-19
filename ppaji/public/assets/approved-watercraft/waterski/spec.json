@@ -1,0 +1,174 @@
+{
+  "id": "waterski",
+  "name": "수상스키",
+  "capacity": 1,
+  "kind": "power",
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "source_axis_normalization_degrees": [
+    0,
+    0,
+    0
+  ],
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "seats": [
+    {
+      "key": "skier_01",
+      "position": [
+        0,
+        0,
+        0.07
+      ],
+      "pose": "idle",
+      "heading": -1.5707963267948966,
+      "support_object": "yellow_slalom_ski",
+      "foot_contacts": [
+        {
+          "key": "foot_1",
+          "position": [
+            0,
+            -0.28,
+            0.1
+          ],
+          "support_object": "binding_1_sole"
+        },
+        {
+          "key": "foot_2",
+          "position": [
+            0,
+            0.28,
+            0.1
+          ],
+          "support_object": "binding_2_sole"
+        }
+      ],
+      "access_path": [],
+      "access_status": "WATER_START_BINDING_INSERTION_UNRESOLVED",
+      "role": "single skier; not passenger-boat driver"
+    }
+  ],
+  "boarding": [
+    0.2,
+    0,
+    0.07
+  ],
+  "tow_socket": [
+    0,
+    -0.48,
+    0.72
+  ],
+  "tow_socket_semantics": "VIRTUAL_RIDER_HAND_PROPOSAL_NOT_BOARD_ATTACHMENT; unresolved grip, never attach rope to ski",
+  "bow": [
+    0,
+    -1.2,
+    0.2
+  ],
+  "stern": [
+    0,
+    1.12,
+    0.04
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    1.12,
+    0
+  ],
+  "hull_bounds_tiles": {
+    "min": [
+      -0.15000000164754418,
+      -1.2000000131803534,
+      0.015000000164754418
+    ],
+    "max": [
+      0.15000000164754418,
+      1.1199999842037642,
+      0.25500000280082513
+    ]
+  },
+  "attachment_bounds_tiles": {
+    "min": [
+      -0.12286024450866653,
+      -0.8549999883175776,
+      -0.12000000131803534
+    ],
+    "max": [
+      0.12286024450866653,
+      0.9400000665204082,
+      0.3897053978125237
+    ]
+  },
+  "full_bounds_tiles": {
+    "min": [
+      -0.15000000164754418,
+      -1.2000000131803534,
+      -0.12000000131803534
+    ],
+    "max": [
+      0.15000000164754418,
+      1.1199999842037642,
+      0.3897053978125237
+    ]
+  },
+  "native_visible_mass_gate": {
+    "alpha_threshold": 1,
+    "min_foreground_pixels": 90,
+    "min_bbox_width": 6,
+    "min_bbox_height": 10,
+    "zero_border_pixels": true,
+    "declared_before_render": true
+  },
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "idle is a scale-only standing proxy, not inline slalom stance",
+    "needs": [
+      "inline two-foot stance and knee flexion",
+      "two-hand rope grip",
+      "binding insertion and water start"
+    ],
+    "standing_support": "both sole surfaces z=.10; body proxy origin at supported center deck z=.07; existing idle does not prove foot alignment"
+  },
+  "runtime_semantics": {
+    "record_kind": "power",
+    "conflict": "Water ski equipment implies towing by rider-held rope; power is retained from live data, no invented propulsion or motor. Coordinator must resolve runtime semantics.",
+    "surface_preview": "retain kind power if previewed; not evidence of self propulsion"
+  },
+  "physical_state": {
+    "rendered": "unloaded rigid surface-travel proposal",
+    "airborne_claim": false,
+    "additional_states_needed": [
+      "water start and skier-loaded trim"
+    ],
+    "waterline": "z0 proxy, fin below water; no wake or water mask baked"
+  },
+  "reference_preflight": {
+    "identity": "Inspected gear_waterski.png enlarged: one narrow yellow ski silhouette with dark/blue central binding shapes; no exact underside/foot count authority",
+    "proposal": "Single slalom ski, two fore/aft bindings, curved nose and tracking fin authored fresh; not approved reconstruction",
+    "reused_model": false
+  },
+  "production_approved": false,
+  "revision": 2,
+  "revision_history": "revision-01 preserves first failed bbox gate; revision2 adds open ankle cuffs without scaling or threshold changes",
+  "review_result": {
+    "native_gate": "PASS_ALL16_ORIGINAL_THRESHOLDS",
+    "pose_fit": "POSE_FIT_UNRESOLVED",
+    "next_gate": "User single-ski/binding design and true skiing pose review; coordinator power/tow semantics decision"
+  }
+}

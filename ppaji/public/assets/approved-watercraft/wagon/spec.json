@@ -1,0 +1,538 @@
+{
+  "id": "wagon",
+  "name": "마차튜브",
+  "capacity": 10,
+  "kind": "tow",
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "status": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "logical_size": 192,
+  "tile_world": 22.627416997969522,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "seats": [
+    {
+      "key": "passenger-01",
+      "position": [
+        -0.78,
+        -1.6,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 3.141592653589793,
+      "role": "passenger",
+      "support_object": "Seat_passenger-01",
+      "foot_contact": [
+        -1.1,
+        -1.6,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          -1.01,
+          -1.86,
+          0.83
+        ],
+        [
+          -1.01,
+          -1.34,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-02",
+      "position": [
+        -0.78,
+        -0.8,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 3.141592653589793,
+      "role": "passenger",
+      "support_object": "Seat_passenger-02",
+      "foot_contact": [
+        -1.1,
+        -0.8,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          -1.01,
+          -1.06,
+          0.83
+        ],
+        [
+          -1.01,
+          -0.54,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-03",
+      "position": [
+        -0.78,
+        0.0,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 3.141592653589793,
+      "role": "passenger",
+      "support_object": "Seat_passenger-03",
+      "foot_contact": [
+        -1.1,
+        0.0,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          -1.01,
+          -0.26,
+          0.83
+        ],
+        [
+          -1.01,
+          0.26,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-04",
+      "position": [
+        -0.78,
+        0.8,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 3.141592653589793,
+      "role": "passenger",
+      "support_object": "Seat_passenger-04",
+      "foot_contact": [
+        -1.1,
+        0.8,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          -1.01,
+          0.54,
+          0.83
+        ],
+        [
+          -1.01,
+          1.06,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-05",
+      "position": [
+        -0.78,
+        1.6,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 3.141592653589793,
+      "role": "passenger",
+      "support_object": "Seat_passenger-05",
+      "foot_contact": [
+        -1.1,
+        1.6,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          -1.01,
+          1.34,
+          0.83
+        ],
+        [
+          -1.01,
+          1.86,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-06",
+      "position": [
+        0.78,
+        -1.6,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 0,
+      "role": "passenger",
+      "support_object": "Seat_passenger-06",
+      "foot_contact": [
+        1.1,
+        -1.6,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          1.01,
+          -1.86,
+          0.83
+        ],
+        [
+          1.01,
+          -1.34,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-07",
+      "position": [
+        0.78,
+        -0.8,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 0,
+      "role": "passenger",
+      "support_object": "Seat_passenger-07",
+      "foot_contact": [
+        1.1,
+        -0.8,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          1.01,
+          -1.06,
+          0.83
+        ],
+        [
+          1.01,
+          -0.54,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-08",
+      "position": [
+        0.78,
+        0.0,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 0,
+      "role": "passenger",
+      "support_object": "Seat_passenger-08",
+      "foot_contact": [
+        1.1,
+        0.0,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          1.01,
+          -0.26,
+          0.83
+        ],
+        [
+          1.01,
+          0.26,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-09",
+      "position": [
+        0.78,
+        0.8,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 0,
+      "role": "passenger",
+      "support_object": "Seat_passenger-09",
+      "foot_contact": [
+        1.1,
+        0.8,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          1.01,
+          0.54,
+          0.83
+        ],
+        [
+          1.01,
+          1.06,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    },
+    {
+      "key": "passenger-10",
+      "position": [
+        0.78,
+        1.6,
+        0.59
+      ],
+      "pose": "sit",
+      "heading": 0,
+      "role": "passenger",
+      "support_object": "Seat_passenger-10",
+      "foot_contact": [
+        1.1,
+        1.6,
+        0.46
+      ],
+      "grip_sockets": [
+        [
+          1.01,
+          1.34,
+          0.83
+        ],
+        [
+          1.01,
+          1.86,
+          0.83
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    }
+  ],
+  "boarding": [
+    1.48,
+    0,
+    0.45
+  ],
+  "boarding_status": "TRANSFER_UNRESOLVED: side rim and canopy post; no fabricated route",
+  "tow_socket": [
+    0,
+    -3.08,
+    0.18
+  ],
+  "bow": [
+    0,
+    -2.36,
+    0.28
+  ],
+  "stern": [
+    0,
+    2.36,
+    0.28
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    2.36,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -1.5450000762939453,
+      -3.115000009536743,
+      -0.11000001430511475
+    ],
+    [
+      1.5450000762939453,
+      2.379999876022339,
+      2.7908952236175537
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -1.5450000762939453,
+      -2.379999876022339,
+      -0.11000001430511475
+    ],
+    [
+      1.5450000762939453,
+      2.379999876022339,
+      0.6118186712265015
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -1.25,
+      -3.115000009536743,
+      0.13736876845359802
+    ],
+    [
+      1.25,
+      2.1030001640319824,
+      2.7908952236175537
+    ]
+  ],
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "sit",
+    "requirement": "10 physical stations; sideways seated hand-grip/foot fit and opaque canopy occlusion unresolved; retain fixed existing NPC scale",
+    "boarding": "Rim mount, far-row transfer and canopy posts unresolved"
+  },
+  "spacing": {
+    "rows": 2,
+    "seats_per_row": 5,
+    "center_pitch_tiles": 0.8,
+    "seat_width_along_row_tiles": 0.64,
+    "clear_gap_tiles": 0.16,
+    "row_centers_x": [
+      -0.78,
+      0.78
+    ],
+    "canopy_eave_z": 1.95,
+    "canopy_peak_z": 2.75
+  },
+  "canvas_proposal": "192 native union canvas, 1 world unit/native pixel, same camera target and scale; large 10-person hull never resized per heading",
+  "physical_state": {
+    "rendered": "waterborne_surface_tow",
+    "waterline_z_tiles": 0,
+    "support_z_tiles": 0.59,
+    "lifted_jumping": "UNREVIEWED, not requested or claimed"
+  },
+  "minimum_mass": {
+    "alpha_threshold": 128,
+    "min_pixels": 2000,
+    "min_bbox_width": 55,
+    "min_bbox_height": 40,
+    "scope": "same all16 native images, declared before first render"
+  },
+  "reference_preflight": {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_wagon.png",
+    "status": "INSPECTED_LOW_RES_IDENTITY_ONLY",
+    "observation": "Covered wagon with round cream canopy and open end, rounded side wheel forms",
+    "authored_proposal": "Inflatable pontoon wagon, opaque arch cover, side round protective bolsters and ten outward-facing seat stations; underside, capacity layout and hidden parts proposed, not exact reconstruction"
+  },
+  "inventory": [
+    "Back_passenger-01",
+    "Back_passenger-02",
+    "Back_passenger-03",
+    "Back_passenger-04",
+    "Back_passenger-05",
+    "Back_passenger-06",
+    "Back_passenger-07",
+    "Back_passenger-08",
+    "Back_passenger-09",
+    "Back_passenger-10",
+    "CanopyArch0",
+    "CanopyArch1",
+    "CanopyArch2",
+    "CanopyPanel0",
+    "CanopyPanel1",
+    "CanopyPanel10",
+    "CanopyPanel11",
+    "CanopyPanel12",
+    "CanopyPanel13",
+    "CanopyPanel14",
+    "CanopyPanel15",
+    "CanopyPanel16",
+    "CanopyPanel17",
+    "CanopyPanel18",
+    "CanopyPanel19",
+    "CanopyPanel2",
+    "CanopyPanel3",
+    "CanopyPanel4",
+    "CanopyPanel5",
+    "CanopyPanel6",
+    "CanopyPanel7",
+    "CanopyPanel8",
+    "CanopyPanel9",
+    "CanopyPost(0, -1.12)",
+    "CanopyPost(0, 1.12)",
+    "CanopyPost(1, -1.12)",
+    "CanopyPost(1, 1.12)",
+    "CanopyPost(2, -1.12)",
+    "CanopyPost(2, 1.12)",
+    "EndAirChamber-2.18",
+    "EndAirChamber2.18",
+    "FlotationBase",
+    "Foot_passenger-01",
+    "Foot_passenger-02",
+    "Foot_passenger-03",
+    "Foot_passenger-04",
+    "Foot_passenger-05",
+    "Foot_passenger-06",
+    "Foot_passenger-07",
+    "Foot_passenger-08",
+    "Foot_passenger-09",
+    "Foot_passenger-10",
+    "Grip_passenger-01-0.26",
+    "Grip_passenger-010.26",
+    "Grip_passenger-02-0.26",
+    "Grip_passenger-020.26",
+    "Grip_passenger-03-0.26",
+    "Grip_passenger-030.26",
+    "Grip_passenger-04-0.26",
+    "Grip_passenger-040.26",
+    "Grip_passenger-05-0.26",
+    "Grip_passenger-050.26",
+    "Grip_passenger-06-0.26",
+    "Grip_passenger-060.26",
+    "Grip_passenger-07-0.26",
+    "Grip_passenger-070.26",
+    "Grip_passenger-08-0.26",
+    "Grip_passenger-080.26",
+    "Grip_passenger-09-0.26",
+    "Grip_passenger-090.26",
+    "Grip_passenger-10-0.26",
+    "Grip_passenger-100.26",
+    "RoundBumper(-1.48, -1.55)",
+    "RoundBumper(-1.48, 1.55)",
+    "RoundBumper(1.48, -1.55)",
+    "RoundBumper(1.48, 1.55)",
+    "Seat_passenger-01",
+    "Seat_passenger-02",
+    "Seat_passenger-03",
+    "Seat_passenger-04",
+    "Seat_passenger-05",
+    "Seat_passenger-06",
+    "Seat_passenger-07",
+    "Seat_passenger-08",
+    "Seat_passenger-09",
+    "Seat_passenger-10",
+    "SideAirChamber-1.3",
+    "SideAirChamber1.3",
+    "SupportDeck",
+    "TowBridle-0.85",
+    "TowBridle0.85",
+    "TowEye"
+  ],
+  "approval": {
+    "shape": "UNREVIEWED",
+    "production": false
+  }
+}

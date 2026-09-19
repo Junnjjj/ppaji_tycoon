@@ -1,0 +1,131 @@
+{
+ "schema": "ppaji-composite-asset/v1",
+ "status": "COMPOSITE_ASSET_USER_REVIEW",
+ "category_proposal": "ppaji",
+ "floor_mode": "transparent-no-floor",
+ "tile_screen_px": [
+  32,
+  16
+ ],
+ "human_opaque_px": 22,
+ "deck_top_z": 0.22,
+ "directions": [
+  0,
+  90,
+  180,
+  270
+ ],
+ "coordinate_system": "+X=game +I, +Y=game -J, +Z=height; rotate all components, footprint and contacts around asset pivot",
+ "reservation_policy_proposal": "reserve whole rectangular footprint including open water; water remains transparent in facility art",
+ "capacity": null,
+ "price": null,
+ "live_adoption": false,
+ "upgrade_system_implemented": false,
+ "npc_art_baked_into_facility": false,
+ "id": "ppaji_slide",
+ "name": "빠지 슬라이드",
+ "size": [
+  8,
+  6
+ ],
+ "footprint_origin": [
+  -4,
+  -2.5
+ ],
+ "footprint_center": [
+  0,
+  0.5
+ ],
+ "source_blend": "assembly/facility.blend",
+ "source_sha256": "75d35de51ffed33dfd415331060dbcd5e175f16860a10188cbf7e153443fff67",
+ "components": [
+  {
+   "role": "slide",
+   "source": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-core-v1/rig_slide/facility.blend",
+   "origin_tiles": [
+    2.5,
+    1.5,
+    0
+   ]
+  },
+  {
+   "role": "boarding",
+   "source": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/boarding_deck/facility.blend",
+   "origin_tiles": [
+    -2,
+    -0.5,
+    0
+   ]
+  },
+  {
+   "role": "connector",
+   "source": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/docks/connector_deck/facility.blend",
+   "origin_tiles": [
+    1.5,
+    -0.5,
+    0
+   ]
+  },
+  {
+   "role": "obstacle",
+   "source": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2/ppaji-floating-modular-v1/obstacle/facility.blend",
+   "origin_tiles": [
+    0,
+    -0.5,
+    0
+   ]
+  }
+ ],
+ "entry": [
+  -3,
+  -0.5,
+  0.22
+ ],
+ "exit": [
+  -3,
+  -0.5,
+  0.22
+ ],
+ "landmarks": {
+  "boarding_entry": [
+   -3,
+   -0.5,
+   0.22
+  ],
+  "boarding_to_obstacle": [
+   -1,
+   -0.5,
+   0.22
+  ],
+  "obstacle_to_connector": [
+   1,
+   -0.5,
+   0.22
+  ],
+  "slide_entry": [
+   1.85,
+   0.08,
+   0.22
+  ],
+  "slide_launch": [
+   2.6,
+   2.17,
+   1.6
+  ],
+  "water_landing": [
+   2.6,
+   -0.42,
+   0
+  ]
+ },
+ "npc_route": "runtime/route.mjs",
+ "runtime_review": "index.html",
+ "physical_review": "assembly/review/review.html",
+ "interaction": "continuous single-actor boarding → obstacle → stair → slide → splash → swim return loop",
+ "upgrade_options": [],
+ "visual_assembly_size": [
+  7,
+  5
+ ],
+ "size_reason": "Reserve open-water return lane and body clearance without scaling geometry."
+}

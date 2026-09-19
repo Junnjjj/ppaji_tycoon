@@ -3,6 +3,7 @@ import { Game, FACILITY_DEFS, SEASON_TABLES } from './game.js';
 import { WEATHER_TEMP, type Weather } from './weather.js';
 import { runBot, BOT_DEFAULTS } from './bot.js';
 import { EVENT_DEFS } from './random-events.js';
+import { ppajiGrade } from './rig.js';
 import balance from '../data/balance.json';
 
 const fresh = (): Game => { const g = new Game(1); g.money = 1e6; for (const d of FACILITY_DEFS.values()) if ((d.class === 'rig' || d.onRing) && d.buildable !== false) g.unlocked.facilities.add(d.id); return g; };
@@ -31,9 +32,18 @@ describe('P52-c 계절 — 수온·장마', () => {
     const pid = g.pools.all[0]!.id;
     expect(g.swimUrgeOf(pid)).toBeCloseTo(0.5, 6);
     g.waterClosedUntil = g.day; expect(g.swimUrgeOf(pid)).toBe(0); g.waterClosedUntil = -1;
-    // 등급 4 — 기구 14 · 종 6 · 조명
-    for (const [id, i, j, f] of [['rig_stepstone', 51, 24, 0], ['rig_stepstone', 51, 25, 0], ['rig_stepstone', 51, 26, 0], ['rig_stepstone', 51, 27, 0], ['rig_stepstone', 51, 28, 0], ['rig_bridge', 52, 26, 1], ['rig_beam', 52, 24, 1], ['rig_seesaw', 52, 27, 0], ['rig_led_buoy', 52, 25, 0], ['rig_led_buoy', 53, 25, 0], ['rig_slide', 53, 27, 0], ['rig_mini_slide', 52, 28, 1], ['rig_stepstone', 54, 24, 0], ['rig_stepstone', 54, 25, 0], ['rig_stepstone', 54, 26, 0], ['rig_stepstone', 54, 27, 0]] as const) g.placeFacility(id, i, j, f);
+    // 2026-09-19 조합 채택: 빔·시소·조명 부표·플로팅 슬라이드·미니 슬라이드가 전부 빠지 놀이터에 흡수됐다.
+    // 킷 빠지(안 물 4×5)에 들어가는 **살아 있는** 기구 다섯 종으로 다시 채운다 — n 11 · 종 5 → 등급 3.
+    for (const [id, i, j, f] of [
+      ['rig_bridge', 51, 24, 0], ['rig_stepstone', 52, 24, 0], ['rig_stepstone', 53, 24, 0], ['rig_stepstone', 54, 24, 0],
+      ['rig_stepstone', 52, 25, 0], ['rig_stepstone', 53, 25, 0], ['rig_stepstone', 54, 25, 0],
+      ['rig_iceberg', 51, 26, 0], ['rig_jump_tower', 53, 26, 0], ['rig_blob', 51, 28, 0], ['rig_stepstone', 54, 28, 0],
+    ] as const) expect(g.placeFacility(id, i, j, f).ok, `${id} ${i},${j}`).toBe(true);
     expect(g.ppajiGradeOf(pid)).toBeGreaterThanOrEqual(3);
+    // ⚠ 등급 4(시그니처)는 조명이 필요한데 살아 있는 `lights` 시설이 **빠지 놀이터(20×12)** 하나뿐이라
+    // 킷 빠지에서는 구조적으로 못 만든다. 규칙 자체(등급 4 ⇒ max(u, 0.9))는 여기서 순수 함수로 잰다
+    expect(ppajiGrade({ n: 14, kinds: 6, chain: 0, chainKinds: 0, lights: 1 })).toBe(4);
+    expect(ppajiGrade({ n: 14, kinds: 6, chain: 0, chainKinds: 0, lights: 0 })).toBe(3); // 음성 대조군 — 조명이 없으면 4 가 아니다
     if (g.ppajiGradeOf(pid) >= 4) expect(g.swimUrgeOf(pid)).toBe(0.9);
     const snap = JSON.parse(JSON.stringify(g.toSnapshot())); expect(JSON.stringify(snap)).not.toContain('waterClosedUntil'); // −1 이면 필드 없음
   });
@@ -42,8 +52,10 @@ describe('P52-c 계절 — 수온·장마', () => {
     const t = EVENT_DEFS.get('typhoon')!, j = EVENT_DEFS.get('jangma_rapids')!;
     expect(t.choices[0]!.effect.rigLoss).toBe(0); expect(t.choices[1]!.effect.rigLoss).toBe(0.25); expect(j.choices[1]!.effect.rigLoss).toBe(0.1); expect(j.choices[1]!.effect.waterClosedDays).toBe(1);
     const g = fresh();
-    expect(g.isAnchored('rig_bridge_swing')).toBe(true); expect(g.isAnchored('rig_bridge')).toBe(false); expect(g.isAnchored('rig_slide2')).toBe(false);
-    for (const [id, i, j2, f] of [['rig_stepstone', 51, 24, 0], ['rig_stepstone', 51, 25, 0], ['rig_stepstone', 51, 26, 0], ['rig_stepstone', 51, 27, 0], ['rig_bridge', 52, 26, 1], ['rig_seesaw', 52, 27, 0], ['rig_led_buoy', 52, 25, 0]] as const) expect(g.placeFacility(id, i, j2, f).ok).toBe(true);
+    // 앵커(닻줄)를 쓴 개조판만 면제 — 2026-09-19: 난리 슬라이드가 조합에 흡수돼 살아 있는 비-앵커 개조판(빅마블 월)으로 옮겼다
+    expect(g.isAnchored('rig_bridge_swing')).toBe(true); expect(g.isAnchored('rig_bridge')).toBe(false); expect(g.isAnchored('rig_iceberg_wall')).toBe(false);
+    // 2026-09-19: 시소·조명 부표가 조합에 흡수됐다 — 킷 빠지에 들어가는 살아 있는 기구(징검돌·다리·블롭)로 채운다
+    for (const [id, i, j2, f] of [['rig_stepstone', 51, 24, 0], ['rig_stepstone', 51, 25, 0], ['rig_stepstone', 51, 26, 0], ['rig_stepstone', 51, 27, 0], ['rig_bridge', 52, 26, 1], ['rig_blob', 52, 27, 0], ['rig_stepstone', 52, 25, 0]] as const) expect(g.placeFacility(id, i, j2, f).ok, `${id} ${i},${j2}`).toBe(true);
     const bridge = g.facilities.all.find((f) => f.defId === 'rig_bridge')!;
     g.rigs.known.add('up_bridge_swing'); expect(g.convertFacility(bridge.uid, 'rig_bridge_swing').ok).toBe(true); // 앵커
     const floor0 = g.grid.floor.slice(), n0 = g.facilities.all.length;

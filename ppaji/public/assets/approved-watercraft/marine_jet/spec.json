@@ -1,0 +1,219 @@
+{
+  "id": "marine_jet",
+  "name": "\uc0e4\ud06c \uc81c\ud2b8\ubcf4\ud2b8",
+  "capacity": 2,
+  "kind": "power",
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "source_axis_normalization_degrees": [
+    0,
+    0,
+    0
+  ],
+  "seats": [
+    {
+      "key": "seat_01",
+      "position": [
+        0,
+        -0.42,
+        0.61
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "driver",
+      "support_object": "seat_01_cushion",
+      "foot_contact": [
+        0,
+        -0.88,
+        0.45
+      ],
+      "foot_support_object": "CockpitFloor",
+      "back_support": "seat_01_back",
+      "grip_contacts": [
+        [
+          -0.27,
+          -0.6799999999999999,
+          0.72
+        ],
+        [
+          0.27,
+          -0.6799999999999999,
+          0.72
+        ]
+      ],
+      "access_path": [],
+      "access_status": "MOUNT_TRANSFER_UNRESOLVED over starboard gunwale"
+    },
+    {
+      "key": "seat_02",
+      "position": [
+        0,
+        0.72,
+        0.61
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_object": "seat_02_cushion",
+      "foot_contact": [
+        0,
+        0.25999999999999995,
+        0.45
+      ],
+      "foot_support_object": "CockpitFloor",
+      "back_support": "seat_02_back",
+      "grip_contacts": [
+        [
+          -0.27,
+          0.45999999999999996,
+          0.72
+        ],
+        [
+          0.27,
+          0.45999999999999996,
+          0.72
+        ]
+      ],
+      "access_path": [],
+      "access_status": "MOUNT_TRANSFER_UNRESOLVED over starboard gunwale"
+    }
+  ],
+  "boarding": [
+    0.94,
+    0.45,
+    0.45
+  ],
+  "tow_socket": [
+    0.45,
+    1.61,
+    0.53
+  ],
+  "bow": [
+    0,
+    -2.1,
+    0.3
+  ],
+  "stern": [
+    0,
+    1.99,
+    0.05
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    2.1,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -1.2999998331069946,
+      -2.09999942779541,
+      -0.17000000178813934
+    ],
+    [
+      1.2999998331069946,
+      1.9900000095367432,
+      1.0422768592834473
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -0.9599989652633667,
+      -2.09999942779541,
+      -0.17000000178813934
+    ],
+    [
+      0.959999680519104,
+      1.9249975681304932,
+      0.949999988079071
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -1.2999998331069946,
+      -1.6749998331069946,
+      -0.13500000536441803
+    ],
+    [
+      1.2999998331069946,
+      1.9900000095367432,
+      1.0422768592834473
+    ]
+  ],
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "sit",
+    "reason": "Existing sit fit only; steering grip and mount transfer require dedicated review."
+  },
+  "minimum_native_foreground_pixels": 1100,
+  "native_mass_gate": {
+    "alpha_threshold": 0,
+    "min_pixels": 1100,
+    "same_all16": true,
+    "declared_before_render": true
+  },
+  "inventory": [
+    "BlueSharkHull",
+    "PointedSharkNose",
+    "CockpitFloor",
+    "Gunwale_-1",
+    "EyeWhite_-1",
+    "EyePupil_-1",
+    "Gill_-1_0",
+    "Gill_-1_1",
+    "Gill_-1_2",
+    "Gunwale_1",
+    "EyeWhite_1",
+    "EyePupil_1",
+    "Gill_1_0",
+    "Gill_1_1",
+    "Gill_1_2",
+    "PectoralFin_-1",
+    "PectoralFin_1",
+    "RearDorsalFin",
+    "seat_01_cushion",
+    "seat_01_back",
+    "seat_01_grip_-1",
+    "seat_01_grip_1",
+    "seat_02_cushion",
+    "seat_02_back",
+    "seat_02_grip_-1",
+    "seat_02_grip_1",
+    "DriverConsole",
+    "SteeringWheel",
+    "JetDriveHousing",
+    "JetOutlet",
+    "SternMooringEye"
+  ],
+  "reference_preflight": {
+    "identity_icon": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/\uc5d0\uc14b\ub9cc\ub4e4\uae30_v3/ppaji/assets/pictures/gear_marine_jet.png",
+    "observed": "Blue shark-like elongated pointed craft with eye/light facial accents and fin silhouette.",
+    "geometry_authority": "Coordinator supplied low-res identity only; tandem cockpit, hidden hull, steering and jet drive are fresh proposals.",
+    "palette_note": "Frozen boat/peanut recipe and atlas reused exactly."
+  },
+  "physical_state": {
+    "rendered": "WATERBORNE_SURFACE",
+    "airborne_claim": false
+  },
+  "boarding_note": "Canonical +X; transfer over gunwale unresolved; no invented path.",
+  "tow_socket_note": "Stern mooring/service eye, not approved towing mechanics.",
+  "production_approved": false
+}

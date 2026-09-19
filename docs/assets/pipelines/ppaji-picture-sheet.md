@@ -1,6 +1,6 @@
 # 빠지 스토리 — 그림 시트 주문서 (ChatGPT 이미지 생성용, 2026-09-11)
 
-**받는 사람에게**: 아래 표의 **396장**을 픽셀아트 아이콘으로 그린다. 게임은 카이로소프트 풍(워터파크 스토리) 2:1 도트 그래픽이고, 이 그림들은 **창 안 카드 격자와 지도 위 팝**에 쓰인다 — 시설처럼 지면에 놓이는 것이 아니라 **정면 아이콘**이다.
+**받는 사람에게**: 아래 표의 **390장**을 픽셀아트 아이콘으로 그린다. 게임은 카이로소프트 풍(워터파크 스토리) 2:1 도트 그래픽이고, 이 그림들은 **창 안 카드 격자와 지도 위 팝**에 쓰인다 — 시설처럼 지면에 놓이는 것이 아니라 **정면 아이콘**이다.
 정본 계획은 `docs/plan-ppaji-picture-ui.md`(D1 등록부 · P56-b 반입). 이 문서는 목록·규격·판정만 말한다. 무리별 수: 재료 70 · 요리 180 · 기구 부품 13 · 공방 부품 41(2026-09-14 추가 — 초안엔 빠져 공방 창이 폴백이었다) · 견인 기구 33 · 수역 소품 24 · 선물 18 · 팔찌 4 · 캠페인 3 · 인물 초상 10(P56-b2). 시트 밖 장면 배경 4(`src/data/scenes.json`, 192×64 불투명 — `public/assets/scenes/`)은 이 표에 안 든다.
 
 ## 1. 규격 (전부 지킬 것)
@@ -29,7 +29,7 @@
 
 - 글자·숫자를 그림 안에 넣지 말 것(값은 카드가 쓴다) · 배경 장면을 넣지 말 것 · 그림자·광택 과다 금지 · 같은 계열을 색만 바꿔 복제하지 말 것(실루엣이 달라야 한다).
 
-## 5. 목록 — 396장 (`src/data/*.json` 에서 생성, 손으로 고치지 말 것)
+## 5. 목록 — 390장 (`src/data/*.json` 에서 생성, 손으로 고치지 말 것)
 
 | id | 무리 | px | 그릴 것 (이름 · 힌트) |
 |---|---|---|---|
@@ -287,15 +287,11 @@
 | `pic/part/waterproof_canvas` | 기구 부품 | 24 | 방수 캔버스 ·  |
 | `pic/part/anchor_chain` | 기구 부품 | 24 | 앵커 체인 ·  |
 | `pic/part/safety_net` | 기구 부품 | 24 | 안전 그물 ·  |
-| `pic/part/twin_saddle` | 기구 부품 | 24 | 2인 안장 ·  |
-| `pic/part/slip_wax` | 기구 부품 | 24 | 미끄럼 왁스 ·  |
 | `pic/part/led_strip_buoy` | 기구 부품 | 24 | LED 스트립 부표 ·  |
 | `pic/part/float_drum` | 기구 부품 | 24 | 부력 드럼 ·  |
-| `pic/part/spray_nozzle` | 기구 부품 | 24 | 스프레이 노즐 ·  |
 | `pic/part/speaker_horn` | 기구 부품 | 24 | 스피커 혼 ·  |
 | `pic/part/mooring_rope` | 기구 부품 | 24 | 계류 로프 ·  |
 | `pic/part/ramp_deck` | 기구 부품 | 24 | 램프 데크 ·  |
-| `pic/part/spin_bearing` | 기구 부품 | 24 | 회전 베어링 ·  |
 | `pic/part/motor_electric` | 공방 부품 | 24 | 전동모터 · 계열 engine |
 | `pic/part/motor_outboard` | 공방 부품 | 24 | 선외기모터 · 계열 engine |
 | `pic/part/motor_turbo` | 공방 부품 | 24 | 터보모터 · 계열 engine |
@@ -325,7 +321,6 @@
 | `pic/part/safety_bar` | 공방 부품 | 24 | 안전바 · 계열 safety |
 | `pic/part/harness_belt` | 공방 부품 | 24 | 하네스벨트 · 계열 safety |
 | `pic/part/airbag_pad` | 공방 부품 | 24 | 에어백패드 · 계열 safety |
-| `pic/part/fin_plate` | 공방 부품 | 24 | 핀판 · 계열 board |
 | `pic/part/deck_board` | 공방 부품 | 24 | 데크판 · 계열 board |
 | `pic/part/keel_fin` | 공방 부품 | 24 | 킬핀 · 계열 board |
 | `pic/part/ski_blade` | 공방 부품 | 24 | 스키날 · 계열 board |
@@ -343,7 +338,6 @@
 | `pic/gear/honeycomb` | 견인 기구 | 32 | 단군 ·  |
 | `pic/gear/flyduck` | 견인 기구 | 32 | 날아라오리 ·  |
 | `pic/gear/hexa` | 견인 기구 | 32 | 육각튜브 ·  |
-| `pic/gear/turbo_turtle` | 견인 기구 | 32 | 번개거북 ·  |
 | `pic/gear/lotus` | 견인 기구 | 32 | 연꽃보트 ·  |
 | `pic/gear/wagon` | 견인 기구 | 32 | 마차튜브 ·  |
 | `pic/gear/swing` | 견인 기구 | 32 | 마블 ·  |

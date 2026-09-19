@@ -1,0 +1,400 @@
+{
+  "id": "banana",
+  "name": "바나나보트",
+  "capacity": 5,
+  "kind": "tow",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "camera_target_z_tiles": 0.65,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "seats": [
+    {
+      "key": "seat_1",
+      "position": [
+        0,
+        -1.28,
+        0.595
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_1",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.43,
+          -1.28,
+          0.3145
+        ],
+        [
+          0.43,
+          -1.28,
+          0.3145
+        ]
+      ],
+      "hand_contact": [
+        0,
+        -1.53,
+        0.77
+      ],
+      "transfer_proposal": [
+        [
+          0.72,
+          -1.28,
+          0.3145
+        ],
+        [
+          0.43,
+          -1.28,
+          0.3145
+        ],
+        [
+          0,
+          -1.28,
+          0.595
+        ]
+      ],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    },
+    {
+      "key": "seat_2",
+      "position": [
+        0,
+        -0.64,
+        0.595
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_2",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.43,
+          -0.64,
+          0.3145
+        ],
+        [
+          0.43,
+          -0.64,
+          0.3145
+        ]
+      ],
+      "hand_contact": [
+        0,
+        -0.89,
+        0.77
+      ],
+      "transfer_proposal": [
+        [
+          0.72,
+          -0.64,
+          0.3145
+        ],
+        [
+          0.43,
+          -0.64,
+          0.3145
+        ],
+        [
+          0,
+          -0.64,
+          0.595
+        ]
+      ],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    },
+    {
+      "key": "seat_3",
+      "position": [
+        0,
+        0,
+        0.595
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_3",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.43,
+          0,
+          0.3145
+        ],
+        [
+          0.43,
+          0,
+          0.3145
+        ]
+      ],
+      "hand_contact": [
+        0,
+        -0.25,
+        0.77
+      ],
+      "transfer_proposal": [
+        [
+          0.72,
+          0,
+          0.3145
+        ],
+        [
+          0.43,
+          0,
+          0.3145
+        ],
+        [
+          0,
+          0,
+          0.595
+        ]
+      ],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    },
+    {
+      "key": "seat_4",
+      "position": [
+        0,
+        0.64,
+        0.595
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_4",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.43,
+          0.64,
+          0.3145
+        ],
+        [
+          0.43,
+          0.64,
+          0.3145
+        ]
+      ],
+      "hand_contact": [
+        0,
+        0.39,
+        0.77
+      ],
+      "transfer_proposal": [
+        [
+          0.72,
+          0.64,
+          0.3145
+        ],
+        [
+          0.43,
+          0.64,
+          0.3145
+        ],
+        [
+          0,
+          0.64,
+          0.595
+        ]
+      ],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    },
+    {
+      "key": "seat_5",
+      "position": [
+        0,
+        1.28,
+        0.595
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "access_path": [],
+      "support_mesh": "SaddleSupport_seat_5",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.43,
+          1.28,
+          0.3145
+        ],
+        [
+          0.43,
+          1.28,
+          0.3145
+        ]
+      ],
+      "hand_contact": [
+        0,
+        1.03,
+        0.77
+      ],
+      "transfer_proposal": [
+        [
+          0.72,
+          1.28,
+          0.3145
+        ],
+        [
+          0.43,
+          1.28,
+          0.3145
+        ],
+        [
+          0,
+          1.28,
+          0.595
+        ]
+      ],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_NOT_WALK_PATH"
+    }
+  ],
+  "boarding": [
+    0.72,
+    0,
+    0.3145
+  ],
+  "tow_socket": [
+    0,
+    -2.2,
+    0.16
+  ],
+  "bow": [
+    0,
+    -2.07,
+    0.52
+  ],
+  "stern": [
+    0,
+    1.99,
+    0.28
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": {
+    "baked": false,
+    "socket": [
+      0,
+      1.99,
+      0
+    ]
+  },
+  "full_bounds_tiles": [
+    [
+      -0.5899999737739563,
+      -2.2870001792907715,
+      -0.029999999329447746
+    ],
+    [
+      0.5899999737739563,
+      1.9900000095367432,
+      0.793999969959259
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -0.5899999737739563,
+      -2.069999933242798,
+      -0.029999999329447746
+    ],
+    [
+      0.5899999737739563,
+      1.9900000095367432,
+      0.712486982345581
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -0.5450000166893005,
+      -2.2870001792907715,
+      0.13618533313274384
+    ],
+    [
+      0.5450000166893005,
+      1.4799998998641968,
+      0.793999969959259
+    ]
+  ],
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "sit",
+    "required": "Five straddling riders, feet on side supports and hands on grips; generic sit lacks confirmed straddle/hand contact and mount transition. No new poses generated."
+  },
+  "minimum_native_foreground": 450,
+  "minimum_mass_gate": {
+    "metric": "count alpha >= 128",
+    "threshold": 450,
+    "all_headings": true,
+    "declared_before_render": true
+  },
+  "inventory": [
+    "FootSupport_seat_1-0.43",
+    "FootSupport_seat_10.43",
+    "FootSupport_seat_2-0.43",
+    "FootSupport_seat_20.43",
+    "FootSupport_seat_3-0.43",
+    "FootSupport_seat_30.43",
+    "FootSupport_seat_4-0.43",
+    "FootSupport_seat_40.43",
+    "FootSupport_seat_5-0.43",
+    "FootSupport_seat_50.43",
+    "Grip_seat_1",
+    "Grip_seat_2",
+    "Grip_seat_3",
+    "Grip_seat_4",
+    "Grip_seat_5",
+    "GripL_seat_1",
+    "GripL_seat_2",
+    "GripL_seat_3",
+    "GripL_seat_4",
+    "GripL_seat_5",
+    "GripR_seat_1",
+    "GripR_seat_2",
+    "GripR_seat_3",
+    "GripR_seat_4",
+    "GripR_seat_5",
+    "MainBananaChamber",
+    "SaddleSupport_seat_1",
+    "SaddleSupport_seat_2",
+    "SaddleSupport_seat_3",
+    "SaddleSupport_seat_4",
+    "SaddleSupport_seat_5",
+    "StabilizerLeft",
+    "StabilizerRight",
+    "TowBridle-0.2",
+    "TowBridle0.2",
+    "TowEye"
+  ],
+  "reference_preflight": {
+    "authority": "Frozen contract geometry_reference and dispatched gear_banana.png",
+    "observed": "Low resolution yellow elongated inflatable, dark repeated top details, tapered/raised front; 5 capacity from equipment",
+    "proposal": "Single banana chamber, two stabilizers, five blue saddle pads and five grips; hidden underside, bridle and foot supports authored proposals",
+    "exact_reconstruction": false
+  },
+  "production_approval": false
+}

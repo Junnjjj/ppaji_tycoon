@@ -68,12 +68,14 @@ describe('P56-c 재고(U1)', () => {
     const start = PART_DEFS.find((p) => p.unlock === 'start')!;
     g.craft([part.id, start.id]);
     expect(g.workshop.stockOf(part.id)).toBe(1); expect(g.workshop.stockOf(start.id)).toBeNull();
-    for (const id of ['slip_wax', 'float_drum', 'pump_motor', 'safety_net']) g.rigs.grantIngredient(id);
+    // 2026-09-19 조합 채택: 미끄럼 왁스가 은퇴해(쓰는 개조 0) 살아 있는 레시피로 옮겼다 — 빅마블 월(float_drum + safety_net)
+    for (const id of ['waterproof_canvas', 'float_drum', 'pump_motor', 'safety_net']) g.rigs.grantIngredient(id);
     const m0 = g.money;
-    const miss = g.craftRig(['safety_net', 'pump_motor']); expect(miss.ok).toBe(false);
+    const miss = g.craftRig(['safety_net', 'pump_motor']); expect(miss.ok).toBe(false); // 맞는 키가 없다
     expect(g.money).toBe(m0); expect(g.rigs.stockOf('safety_net')).toBe(REWARD_STOCK);
-    const hit = g.craftRig(['slip_wax', 'pump_motor', 'float_drum']); expect(hit.ok).toBe(true);
-    expect(g.rigs.stockOf('slip_wax')).toBe(REWARD_STOCK - 1);
+    const hit = g.craftRig(['float_drum', 'safety_net']); expect(hit.ok).toBe(true);
+    expect(g.rigs.stockOf('float_drum')).toBe(REWARD_STOCK - 1);
+    expect(g.rigs.stockOf('safety_net')).toBe(REWARD_STOCK - 1); // 조합은 쓴 부품마다 −1
     const year = RIG_PART_DEFS.find((p) => p.unlock === 'year')!;
     expect(g.buyRigPart(year.id).ok).toBe(false);
     g.rigs.grantIngredient(year.id);

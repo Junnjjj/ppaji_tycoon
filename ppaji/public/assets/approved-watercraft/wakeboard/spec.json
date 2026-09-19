@@ -1,0 +1,163 @@
+{
+  "id": "wakeboard",
+  "name": "웨이크보드",
+  "capacity": 1,
+  "kind": "power",
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "status": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "seats": [
+    {
+      "key": "rider-01",
+      "position": [
+        0.09,
+        0,
+        0.109
+      ],
+      "pose": "idle",
+      "heading": 0,
+      "role": "board_rider",
+      "support_object": "BindingSole0",
+      "foot_contacts": [
+        [
+          0.09,
+          -0.29,
+          0.109
+        ],
+        [
+          0.09,
+          0.29,
+          0.109
+        ]
+      ],
+      "access_path": [],
+      "access_status": "TRANSFER_UNRESOLVED"
+    }
+  ],
+  "boarding": [
+    0.36,
+    0,
+    0.08
+  ],
+  "tow_socket": [
+    0,
+    -1.1,
+    0.65
+  ],
+  "tow_socket_status": "VIRTUAL_HANDHELD_ROPE_PROXY_UNRESOLVED: no physical tow attachment on board",
+  "bow": [
+    0,
+    -0.98,
+    0.148
+  ],
+  "stern": [
+    0,
+    0.98,
+    0.148
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    0.98,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -0.35999998450279236,
+      -0.9800000190734863,
+      -0.03999999910593033
+    ],
+    [
+      0.35999998450279236,
+      0.9800000190734863,
+      0.24681246280670166
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -0.35999998450279236,
+      -0.9800000190734863,
+      0.017999999225139618
+    ],
+    [
+      0.35999998450279236,
+      0.9800000190734863,
+      0.14799998700618744
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -0.20999997854232788,
+      -0.8749999403953552,
+      -0.03999999910593033
+    ],
+    [
+      0.20999997854232788,
+      0.8749999403953552,
+      0.24681246280670166
+    ]
+  ],
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "idle",
+    "requirement": "Sideways bent-knee wake stance, two binding contacts and held tow handle cannot be verified using existing generic idle; no new pose artwork",
+    "boarding": "Mount and bindings unresolved"
+  },
+  "runtime_semantics": {
+    "record_kind": "power",
+    "surface_preview_kind": "power",
+    "conflict": "Real wakeboard towing differs from data kind; preserve data, coordinator owns interpretation; no motor or boat-driver invented"
+  },
+  "physical_state": {
+    "rendered": "surface_board_geometry",
+    "waterline_z_tiles": 0,
+    "support_z_tiles": 0.109,
+    "lifted_jumping": "UNREVIEWED: separate board pitch/roll and contact/rope state renders required"
+  },
+  "minimum_mass": {
+    "alpha_threshold": 128,
+    "min_pixels": 120,
+    "min_bbox_width": 15,
+    "min_bbox_height": 9,
+    "scope": "same all16 native images; declared before first render"
+  },
+  "reference_preflight": {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_wakeboard.png",
+    "status": "INSPECTED_LOW_RES_IDENTITY_ONLY",
+    "observation": "Narrow yellow elongated board with dark/blue central attachment shapes and contrasting tip details",
+    "authored_proposal": "Rounded twin tip, rocker ends, two transverse empty strap bindings and underside fins; exact hidden geometry unapproved"
+  },
+  "inventory": [
+    "BindingSole0",
+    "BindingSole1",
+    "BindingStrap0",
+    "BindingStrap1",
+    "BlueTipStripe-0.7",
+    "BlueTipStripe0.7",
+    "CenterDeck",
+    "TwinTipHull",
+    "UndersideFin-0.78",
+    "UndersideFin0.78"
+  ],
+  "approval": {
+    "shape": "UNREVIEWED",
+    "production": false
+  }
+}

@@ -1,0 +1,295 @@
+{
+  "id": "rocket_tube",
+  "name": "로켓튜브",
+  "capacity": 3,
+  "kind": "tow",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "camera_target_z_tiles": 0.65,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "seats": [
+    {
+      "key": "seat_1",
+      "position": [
+        0,
+        -0.75,
+        0.7
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_mesh": "SaddleSupport_seat_1",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.52,
+          -0.75,
+          0.33
+        ],
+        [
+          0.52,
+          -0.75,
+          0.33
+        ]
+      ],
+      "hand_contact": [
+        0,
+        -0.99,
+        0.89
+      ],
+      "access_path": [],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_STRADDLE",
+      "transfer_proposal": [
+        [
+          0.84,
+          -0.75,
+          0.33
+        ],
+        [
+          0.52,
+          -0.75,
+          0.33
+        ],
+        [
+          0,
+          -0.75,
+          0.7
+        ]
+      ],
+      "transfer_note": "Side-mount motion proposal, not a validated walking path through the hull"
+    },
+    {
+      "key": "seat_2",
+      "position": [
+        0,
+        0,
+        0.7
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_mesh": "SaddleSupport_seat_2",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.52,
+          0,
+          0.33
+        ],
+        [
+          0.52,
+          0,
+          0.33
+        ]
+      ],
+      "hand_contact": [
+        0,
+        -0.24,
+        0.89
+      ],
+      "access_path": [],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_STRADDLE",
+      "transfer_proposal": [
+        [
+          0.84,
+          0,
+          0.33
+        ],
+        [
+          0.52,
+          0,
+          0.33
+        ],
+        [
+          0,
+          0,
+          0.7
+        ]
+      ],
+      "transfer_note": "Side-mount motion proposal, not a validated walking path through the hull"
+    },
+    {
+      "key": "seat_3",
+      "position": [
+        0,
+        0.75,
+        0.7
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "role": "passenger",
+      "support_mesh": "SaddleSupport_seat_3",
+      "support_dimensions_tiles": [
+        0.38,
+        0.38
+      ],
+      "foot_contacts": [
+        [
+          -0.52,
+          0.75,
+          0.33
+        ],
+        [
+          0.52,
+          0.75,
+          0.33
+        ]
+      ],
+      "hand_contact": [
+        0,
+        0.51,
+        0.89
+      ],
+      "access_path": [],
+      "transfer_status": "UNRESOLVED_SIDE_MOUNT_STRADDLE",
+      "transfer_proposal": [
+        [
+          0.84,
+          0.75,
+          0.33
+        ],
+        [
+          0.52,
+          0.75,
+          0.33
+        ],
+        [
+          0,
+          0.75,
+          0.7
+        ]
+      ],
+      "transfer_note": "Side-mount motion proposal, not a validated walking path through the hull"
+    }
+  ],
+  "boarding": [
+    0.84,
+    0,
+    0.33
+  ],
+  "tow_socket": [
+    0,
+    -2.12,
+    0.12
+  ],
+  "bow": [
+    0,
+    -1.91,
+    0.23
+  ],
+  "stern": [
+    0,
+    1.47,
+    0.23
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": {
+    "baked": false,
+    "socket": [
+      0,
+      1.47,
+      0
+    ]
+  },
+  "full_bounds_tiles": [
+    [
+      -0.9800000190734863,
+      -2.1999998092651367,
+      -0.20000000298023224
+    ],
+    [
+      0.9800000190734863,
+      1.46999990940094,
+      0.9119999408721924
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -0.6899999976158142,
+      -1.9099998474121094,
+      -0.20000000298023224
+    ],
+    [
+      0.6899999976158142,
+      1.46999990940094,
+      0.6599999666213989
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -0.9800000190734863,
+      -2.1999998092651367,
+      0.0981077030301094
+    ],
+    [
+      0.9800000190734863,
+      1.4199999570846558,
+      0.9119999408721924
+    ]
+  ],
+  "pose_requirement": {
+    "status": "POSE_FIT_UNRESOLVED",
+    "existing_pose": "sit",
+    "required": "Three straddling passengers; generic sit does not certify leg separation, grip/foot reach or side mount. No new NPC art."
+  },
+  "minimum_native_foreground": 650,
+  "minimum_mass_gate": {
+    "metric": "count alpha >= 128",
+    "threshold": 650,
+    "all_headings": true,
+    "declared_before_render": true
+  },
+  "inventory": [
+    "FootSupport_seat_1-0.52",
+    "FootSupport_seat_10.52",
+    "FootSupport_seat_2-0.52",
+    "FootSupport_seat_20.52",
+    "FootSupport_seat_3-0.52",
+    "FootSupport_seat_30.52",
+    "Grip_seat_1",
+    "Grip_seat_2",
+    "Grip_seat_3",
+    "GripPost_seat_1-0.14",
+    "GripPost_seat_10.14",
+    "GripPost_seat_2-0.14",
+    "GripPost_seat_20.14",
+    "GripPost_seat_3-0.14",
+    "GripPost_seat_30.14",
+    "RocketInflatableBody",
+    "SaddleSupport_seat_1",
+    "SaddleSupport_seat_2",
+    "SaddleSupport_seat_3",
+    "SideFloat_-0.52",
+    "SideFloat_0.52",
+    "TailFin_-1",
+    "TailFin_1",
+    "TowBridle-0.2",
+    "TowBridle0.2",
+    "TowEye"
+  ],
+  "reference_preflight": {
+    "authority": "Current coordinator dispatch and frozen geometry_reference; gear_rocket_tube.png inspected",
+    "observed": "Pointed rocket nose, narrow body, contrasting bands and lateral tail fins; equipment capacity3, tow",
+    "proposal": "Inflatable white body with blue nose/fins and yellow side floats, three saddles, hand/foot supports and forward bridle; hidden geometry authored",
+    "palette_translation": "Icon red translated to existing shared blue/yellow roles; no claim of exact color reconstruction",
+    "exact_reconstruction": false
+  },
+  "production_approval": false
+}

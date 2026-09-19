@@ -1,0 +1,338 @@
+{
+  "id": "jetboat",
+  "name": "제트보트",
+  "capacity": 6,
+  "capacity_includes_driver": true,
+  "kind": "power",
+  "logical_size": 128,
+  "tile_world": 22.627416997969522,
+  "root": "VehicleRoot",
+  "canonical_forward": [
+    0,
+    -1,
+    0
+  ],
+  "camera_euler_degrees": [
+    60,
+    0,
+    45
+  ],
+  "camera_target_z_tiles": 0.65,
+  "origin": "AUTHORED_B_SHARED_MATERIAL",
+  "state": "SCRIPTED_SHAPE_STYLE_EXPERIMENT_USER_REVIEW",
+  "seats": [
+    {
+      "key": "passenger_0_0",
+      "role": "passenger",
+      "position": [
+        -0.57,
+        -0.85,
+        0.64
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "passenger_0_0_Cushion",
+      "foot_contacts": [
+        [
+          -0.7,
+          -1.21,
+          0.28
+        ],
+        [
+          -0.43999999999999995,
+          -1.21,
+          0.28
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: center aisle approach proposed; final sit/stand transfer not animated"
+    },
+    {
+      "key": "driver",
+      "role": "driver",
+      "position": [
+        0.57,
+        -0.85,
+        0.64
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "driver_Cushion",
+      "foot_contacts": [
+        [
+          0.43999999999999995,
+          -1.21,
+          0.28
+        ],
+        [
+          0.7,
+          -1.21,
+          0.28
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: center aisle approach proposed; final sit/stand transfer not animated"
+    },
+    {
+      "key": "passenger_1_0",
+      "role": "passenger",
+      "position": [
+        -0.57,
+        0.15,
+        0.64
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "passenger_1_0_Cushion",
+      "foot_contacts": [
+        [
+          -0.7,
+          -0.21,
+          0.28
+        ],
+        [
+          -0.43999999999999995,
+          -0.21,
+          0.28
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: center aisle approach proposed; final sit/stand transfer not animated"
+    },
+    {
+      "key": "passenger_1_1",
+      "role": "passenger",
+      "position": [
+        0.57,
+        0.15,
+        0.64
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "passenger_1_1_Cushion",
+      "foot_contacts": [
+        [
+          0.43999999999999995,
+          -0.21,
+          0.28
+        ],
+        [
+          0.7,
+          -0.21,
+          0.28
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: center aisle approach proposed; final sit/stand transfer not animated"
+    },
+    {
+      "key": "passenger_2_0",
+      "role": "passenger",
+      "position": [
+        -0.57,
+        1.15,
+        0.64
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "passenger_2_0_Cushion",
+      "foot_contacts": [
+        [
+          -0.7,
+          0.7899999999999999,
+          0.28
+        ],
+        [
+          -0.43999999999999995,
+          0.7899999999999999,
+          0.28
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: center aisle approach proposed; final sit/stand transfer not animated"
+    },
+    {
+      "key": "passenger_2_1",
+      "role": "passenger",
+      "position": [
+        0.57,
+        1.15,
+        0.64
+      ],
+      "pose": "sit",
+      "heading": -1.5707963267948966,
+      "support_object": "passenger_2_1_Cushion",
+      "foot_contacts": [
+        [
+          0.43999999999999995,
+          0.7899999999999999,
+          0.28
+        ],
+        [
+          0.7,
+          0.7899999999999999,
+          0.28
+        ]
+      ],
+      "access_path": [],
+      "transfer_status": "POSE_FIT_UNRESOLVED: center aisle approach proposed; final sit/stand transfer not animated"
+    }
+  ],
+  "boarding": [
+    0.99,
+    1.85,
+    0.54
+  ],
+  "boarding_proposal": {
+    "side": "+X",
+    "supported_approach": [
+      [
+        0,
+        1.75,
+        0.28
+      ],
+      [
+        0,
+        0.65,
+        0.28
+      ],
+      [
+        0,
+        -0.35,
+        0.28
+      ],
+      [
+        0,
+        -0.85,
+        0.28
+      ]
+    ],
+    "order": "front row first, then middle, then rear",
+    "final_transfer": "gunwale step-over and aisle-to-seat sit transition unresolved; no invented collision-free boarding path"
+  },
+  "tow_socket": [
+    0,
+    -2.28,
+    0.14
+  ],
+  "tow_socket_role": "bow recovery eye",
+  "bow": [
+    0,
+    -2.36,
+    0.3
+  ],
+  "stern": [
+    0,
+    2.29,
+    0.02
+  ],
+  "waterline": [
+    0,
+    0,
+    0
+  ],
+  "wake": [
+    0,
+    2.29,
+    0
+  ],
+  "full_bounds_tiles": [
+    [
+      -1.0800000429153442,
+      -2.359999656677246,
+      -0.11999998986721039
+    ],
+    [
+      1.1349999904632568,
+      2.3550000190734863,
+      1.1319999694824219
+    ]
+  ],
+  "hull_bounds_tiles": [
+    [
+      -1.0800000429153442,
+      -2.359999656677246,
+      -0.11999998986721039
+    ],
+    [
+      1.0800000429153442,
+      2.119999647140503,
+      0.5699999332427979
+    ]
+  ],
+  "attachment_bounds_tiles": [
+    [
+      -0.8937763571739197,
+      -2.292999744415283,
+      -0.055000029504299164
+    ],
+    [
+      1.1349999904632568,
+      2.3550000190734863,
+      1.1319999694824219
+    ]
+  ],
+  "pose_requirement": "POSE_FIT_UNRESOLVED: existing sit suitable only for rough contact proposal; driver wheel grip, passenger grab and step-over/sit transfer unverified",
+  "native_visible_mass_gate": {
+    "alpha_threshold": 0,
+    "minimum_foreground_pixels": 1600,
+    "minimum_bbox_width": 38,
+    "minimum_bbox_height": 26,
+    "edge_pixels": 0,
+    "declared_before_render": true
+  },
+  "inventory": [
+    "BlueDash",
+    "BlueLowerHull",
+    "BowRecoveryEye",
+    "driver_Backrest",
+    "driver_Cushion",
+    "driver_Grab_-1",
+    "driver_Grab_1",
+    "driver_Pedestal",
+    "DriverConsole",
+    "InteriorFloor",
+    "JetOutlet_-0.47",
+    "JetOutlet_0.47",
+    "passenger_0_0_Backrest",
+    "passenger_0_0_Cushion",
+    "passenger_0_0_Grab_-1",
+    "passenger_0_0_Grab_1",
+    "passenger_0_0_Pedestal",
+    "passenger_1_0_Backrest",
+    "passenger_1_0_Cushion",
+    "passenger_1_0_Grab_-1",
+    "passenger_1_0_Grab_1",
+    "passenger_1_0_Pedestal",
+    "passenger_1_1_Backrest",
+    "passenger_1_1_Cushion",
+    "passenger_1_1_Grab_-1",
+    "passenger_1_1_Grab_1",
+    "passenger_1_1_Pedestal",
+    "passenger_2_0_Backrest",
+    "passenger_2_0_Cushion",
+    "passenger_2_0_Grab_-1",
+    "passenger_2_0_Grab_1",
+    "passenger_2_0_Pedestal",
+    "passenger_2_1_Backrest",
+    "passenger_2_1_Cushion",
+    "passenger_2_1_Grab_-1",
+    "passenger_2_1_Grab_1",
+    "passenger_2_1_Pedestal",
+    "RearPlatform",
+    "StarboardStep",
+    "SteeringWheel",
+    "WheelShaft",
+    "WindscreenPost_-1",
+    "WindscreenPost_1",
+    "WindscreenTop",
+    "YellowForedeck",
+    "YellowOpenGunwale"
+  ],
+  "reference_preflight": {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/ppaji/assets/pictures/gear_jetboat.png",
+    "observed": "pointed yellow upper rim, blue lower hull, open passenger cockpit and forward helm",
+    "authority": "coordinator frozen identity-only preflight; six seats and hidden twin jet outlets are authored proposal"
+  },
+  "approval": "candidate only"
+}

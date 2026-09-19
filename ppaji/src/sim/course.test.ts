@@ -30,10 +30,10 @@ const onZone = (g: Game, h: { x: number; y: number }): boolean => g.grid.at(Math
 const openWater = (g: Game, h: { x: number; y: number }): boolean => { const f = g.grid.at(Math.round(h.x), Math.round(h.y)); return f === FLOOR.river || f === FLOOR.shallow; };
 
 describe('코스 데이터 — 승계 그대로, 돈만 G 눈금', () => {
-  it('validateCourseData() 가 빈 목록이다 (프리셋 6 · 기구 30(승계 19 + 공방 11) · 보트 2 · 적합도 180 · 시작 기구 둘)', () => {
+  it('validateCourseData() 가 빈 목록이다 (프리셋 6 · 기구 29(번개거북 제외) · 보트 2 · 적합도 174 · 시작 기구 둘)', () => {
     expect(validateCourseData()).toEqual([]);
     expect(PRESETS.length).toBe(6);
-    expect(COURSE_EQUIPMENT.length).toBe(30);
+    expect(COURSE_EQUIPMENT.length).toBe(29);
     expect(startEquipmentIds().sort()).toEqual(['jjinppang', 'peanut']);
   });
   it('돈은 G 눈금이다 — 가장 싼 기구 ≥1,000G · 요금 30~150G · 유지비는 하루 단위', () => {

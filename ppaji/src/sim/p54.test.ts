@@ -4,21 +4,48 @@ import { resolve } from 'node:path';
 import { Game, FACILITY_DEFS } from './game.js';
 import { EVENING_TICK, TICKS_PER_DAY } from './clock.js';
 import { runBot, hashSnapshot, BOT_DEFAULTS } from './bot.js';
+import { makeTestPpaji } from './test-helpers.js';
 import defaultBalance from '../data/balance.json';
 
-/** 킷 빠지에 기구 16(종 6 · 조명 2) — P52-c 검사와 같은 배치. 등급 ≥ 3 · 켜진 물 위 기구 ≥ 9 · 조명 ≥ 1 */
-const RIGS: readonly [string, number, number, 0 | 1][] = [['rig_stepstone', 51, 24, 0], ['rig_stepstone', 51, 25, 0], ['rig_stepstone', 51, 26, 0], ['rig_stepstone', 51, 27, 0], ['rig_stepstone', 51, 28, 0], ['rig_bridge', 52, 26, 1], ['rig_beam', 52, 24, 1], ['rig_seesaw', 52, 27, 0], ['rig_led_buoy', 52, 25, 0], ['rig_led_buoy', 53, 25, 0], ['rig_slide', 53, 27, 0], ['rig_mini_slide', 52, 28, 1], ['rig_stepstone', 54, 24, 0], ['rig_stepstone', 54, 25, 0], ['rig_stepstone', 54, 26, 0], ['rig_stepstone', 54, 27, 0]];
+/** 구 저장 호환 fixture: 이미 설치된 퇴역 시설을 포함하는 킷 빠지에 기구 14(종 5 · 조명 2) — P52-c 검사와 같은 배치. 등급 ≥ 3 · 켜진 물 위 기구 ≥ 9 · 조명 ≥ 1 */
+const RIGS: readonly [string, number, number, 0 | 1][] = [['rig_stepstone', 51, 24, 0], ['rig_stepstone', 51, 25, 0], ['rig_stepstone', 51, 26, 0], ['rig_stepstone', 51, 27, 0], ['rig_stepstone', 51, 28, 0], ['rig_bridge', 52, 26, 1], ['rig_beam', 52, 24, 1], ['rig_seesaw', 52, 27, 0], ['rig_led_buoy', 52, 25, 0], ['rig_led_buoy', 53, 25, 0], ['rig_stepstone', 54, 24, 0], ['rig_stepstone', 54, 25, 0], ['rig_stepstone', 54, 26, 0], ['rig_stepstone', 54, 27, 0]];
 
 const nightPark = (seed = 1, nightChance = 1): Game => {
   const g = new Game(seed, { ...defaultBalance, nightChance });
   g.money = 1e6;
   for (const d of FACILITY_DEFS.values()) if (d.buildable !== false) g.unlocked.facilities.add(d.id);
   g.rank = 3;
-  for (const [id, i, j, f] of RIGS) g.placeFacility(id, i, j, f);
+  for (const [id, i, j, f] of RIGS) {
+    const placed = g.placeFacility(id, i, j, f, { inherited: true });
+    expect(placed.ok, `${id}: ${JSON.stringify(placed)}`).toBe(true);
+  }
   return g;
 };
 
 describe('P54 밤 빠지 파티', () => {
+  it('현재 승인 놀이터와 활성 기구만으로 기존 지형에서 등급 4·야간 파티를 연다', () => {
+    const g = new Game(1, undefined, { arrival: true });
+    g.money = 1e7; g.rank = 5; g.openLand(5);
+    for (const d of FACILITY_DEFS.values()) if (!d.deprecated) g.unlocked.facilities.add(d.id);
+    const area = makeTestPpaji(g, 22, 12, -12);
+    expect(g.placeFacility('ppaji_playground', 37, 32, 0).ok).toBe(true);
+    const parts: readonly (readonly [string, number, number, 0 | 1])[] = [
+      ['rig_bridge',57,32,0], ['rig_stepstone',58,32,0], ['rig_blob',58,33,1],
+      ['rig_iceberg',57,36,0], ['rig_jump_tower',57,38,0],
+      ...[[57,34],[57,35],[57,40],[58,40],[57,41],[58,41],[57,42],[58,42],[57,43],[58,43]].map(([i,j]) => ['rig_stepstone',i!,j!,0] as const),
+    ];
+    for (const [id,i,j,facing] of parts) expect(g.placeFacility(id,i,j,facing).ok, id).toBe(true);
+    expect(g.ppajiGradeOf(area.id!)).toBe(4);
+    expect(g.nightPartyOn()).toBe(area.id);
+    g.step(EVENING_TICK + 1);
+    expect(g.nightOn).toBe(true);
+    expect(g.nightForTest().filter(uid => g.poolOfFacility(uid) === area.id).length).toBeGreaterThanOrEqual(9);
+    expect(g.nightSalesMul()).toBeCloseTo(1.1); // 현재 놀이터 조명 1
+    const playground = g.facilities.all.find(f => f.defId === 'ppaji_playground')!;
+    expect(g.removeFacility(playground.uid).ok).toBe(true);
+    expect(g.nightPartyOn()).toBeNull(); // 활성 조명 제거 음성 대조군
+  });
+
   it('nightPartyOn 조건 넷 — ★3 · 등급 ≥3 · 조명 ≥1 · 켜진 물 위 기구 ≥9: 하나라도 빠지면 null', () => {
     const g = nightPark();
     const pid = g.pools.all[0]!.id;

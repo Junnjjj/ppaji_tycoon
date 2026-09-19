@@ -1,3 +1,9 @@
+import { approvedPivot, approvedAnchor, type ApprovedFacilityProvider } from '../assets/approved-facilities.js';
+import { StaticFacilityRenderer, type StaticDepth } from './static-facilities.js';
+import { CourseRideRenderer } from './course-rides.js';
+import type { RideScene } from '../sim/course/ride-view.js';
+import type { WatercraftProvider } from '../assets/watercraft.js';
+import type { PlacedCourse } from '../sim/course/course.js';
 import { npcV8Key, staffNpcSeed } from '../assets/npc-v8.js';
 /**
  * 워터파크 씬 — 지면 타일·(G1 부터) 풀·손님·FX 를 한 `i+j` 깊이 축 위에 그린다.
@@ -48,6 +54,11 @@ export interface SceneStats {
 
 export interface SceneDeps {
   provider: AssetProvider;
+  watercraft?: WatercraftProvider;
+  approved?: ApprovedFacilityProvider | null;
+  staticDepth?: StaticDepth | null;
+  rideScene?: () => RideScene;
+  rideTime?: () => number;
   grid: Grid;
   camera: Camera;
   rank: () => number;
@@ -191,6 +202,10 @@ export class WaterparkScene extends Phaser.Scene {
     this.stepTraffic(this.game.loop.delta); // P44-d 도로 위 버스 한 대(장식)
     this.frames++;
     { const now = this.time.now; const dt = this.lastUpdateAt ? Math.min(100, now - this.lastUpdateAt) : 16; this.lastUpdateAt = now; this.tickCourseTrial(dt); this.tickCourseBoats(dt); } // P4-B 시험 운행 · P4-C 보트 시계 (트윈 대신)
+    if (this.deps.approved && this.deps.staticDepth) {
+      this.staticRenderer ??= new StaticFacilityRenderer(this, this.deps.approved, this.deps.provider, this.deps.staticDepth);
+      this.staticRenderer.update(this.facilitiesRef,this.guestsRef,this.deps.rideTime?.() ?? 0,this.facDefOf??undefined);
+    }
     this.animFrame++;
     this.tickWater();
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -503,6 +518,8 @@ export class WaterparkScene extends Phaser.Scene {
   private syncGuests(): void {
     const seen = new Set<number>();
     for (const g of this.guestsRef) {
+      if (this.rideRenderer?.hiddenGuestIds.has(g.uid) || this.staticRenderer?.hiddenGuestIds.has(g.uid)) { seen.add(g.uid); this.guestImgs.get(g.uid)?.setVisible(false); continue; }
+      this.guestImgs.get(g.uid)?.setVisible(true);
       seen.add(g.uid);
       let img = this.guestImgs.get(g.uid);
       const key = this.guestKey(g);
@@ -775,6 +792,16 @@ export class WaterparkScene extends Phaser.Scene {
   private placeFacilityImage(img: Phaser.GameObjects.Image, def: FacilityDef, i: number, j: number, facing: 0 | 1): void {
     const w = facing === 1 ? def.d : def.w;
     const d = facing === 1 ? def.w : def.d;
+    const authored = this.deps.approved;
+    const pivot = authored && approvedPivot(def.id, facing, authored.manifest);
+    const anchor = authored && approvedAnchor(def.id, authored.manifest);
+    const sprite = this.deps.provider.spec(`fac/${def.id}/${facing}`);
+    if (pivot && anchor && sprite) {
+      const p = gridToScreen(i + pivot[0],j + pivot[1]);
+      img.setOrigin(anchor.ax/sprite.w,anchor.ay/sprite.h).setPosition(p.x,p.y+this.liftAt(i,j));
+      img.setDepth(depthKey(i+w-1,j+d-1)+Z_FACILITY);
+      return;
+    }
     const a = footprintAnchor(i, j, w, d);
     const size = facilityCanvasSize(def, facing);
     const ca = canvasAnchor(w, d, BODY_H[def.class]);
@@ -797,6 +824,7 @@ export class WaterparkScene extends Phaser.Scene {
         this.facImgs.set(f.uid, img);
       } else if (img.texture.key !== key) img.setTexture(key);
       this.placeFacilityImage(img, def, f.i, f.j, f.facing);
+      img.setVisible(!this.staticRenderer?.hiddenFacilityIds.has(f.uid));
       if (this.dimUids.has(f.uid)) img.setTint(cssColorInt('--rig-dim') || 0x55697c); else if (img.isTinted) img.clearTint(); // P50-b2 꺼짐 틴트 — 색은 토큰
     }
     for (const [uid, img] of this.facImgs) {
@@ -1380,7 +1408,7 @@ export class WaterparkScene extends Phaser.Scene {
   }
 
   private coursePt(p: { x: number; y: number }): { x: number; y: number } {
-    const c = tileCenter(Math.round(p.x), Math.round(p.y));
+    const c = tileCenter(p.x, p.y);
     return { x: c.x, y: c.y + this.liftAt(Math.round(p.x), Math.round(p.y)) };
   }
 
@@ -1520,36 +1548,14 @@ export class WaterparkScene extends Phaser.Scene {
     g.lineStyle(1, cssColorInt('--course-trial-edge'), 1); g.strokeEllipse(c.x, c.y, r * 2.4, r * 1.3);
   }
 
-  private coursePaths: { x: number; y: number }[][] = [];
-  private courseBoatsGfx: Phaser.GameObjects.Graphics | null = null;
-  private courseBoatT = 0;
-  /** 놓인 코스들 — 보트 하나가 경로를 천천히 돈다 (P4-C, 손님 승선은 선착장 이용으로 센다) */
-  setCourses(paths: readonly (readonly { x: number; y: number }[])[]): void {
-    this.coursePaths = paths.map((p) => p.map((q) => ({ ...q })));
-    if (!this.courseBoatsGfx) this.courseBoatsGfx = this.add.graphics().setDepth(DEPTH_COURSE_MARK - 1);
-    this.drawCourseBoats();
-  }
-  private tickCourseBoats(dtMs: number): void {
-    if (this.coursePaths.length === 0) return;
-    this.courseBoatT = (this.courseBoatT + dtMs / 9000) % 1;
-    this.drawCourseBoats();
-  }
-  private drawCourseBoats(): void {
-    const g = this.courseBoatsGfx; if (!g) return;
-    g.clear();
-    if (this.coursePaths.length === 0) { g.setVisible(false); return; }
-    g.setVisible(true);
-    for (const path of this.coursePaths) {
-      if (path.length < 2) continue;
-      const n = path.length; const f = this.courseBoatT * n; const k = Math.floor(f); const u = f - k;
-      const a = path[k % n] as { x: number; y: number }; const b = path[(k + 1) % n] as { x: number; y: number };
-      const c = this.coursePt({ x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u });
-      const r = 6 / this.cam.upscale;
-      g.fillStyle(cssColorInt('--course-trial-boat'), 1); g.fillEllipse(c.x, c.y, r * 2.2, r * 1.2);
-      g.lineStyle(1, cssColorInt('--course-trial-edge'), 1); g.strokeEllipse(c.x, c.y, r * 2.2, r * 1.2);
-      // 견인선 — 선착장까지 얇은 줄
-      const d0 = this.coursePt(path[0] as { x: number; y: number });
-      g.lineStyle(1, cssColorInt('--course-route'), 0.5); g.beginPath(); g.moveTo(d0.x, d0.y); g.lineTo(c.x, c.y); g.strokePath();
+  private rideRenderer: CourseRideRenderer | null = null;
+  private staticRenderer: StaticFacilityRenderer | null = null;
+  setCourses(_courses: readonly PlacedCourse[]): void { this.tickCourseBoats(0); }
+  private tickCourseBoats(_dtMs: number): void {
+    const view = this.deps.rideScene?.();
+    if (view && this.deps.watercraft) {
+      this.rideRenderer ??= new CourseRideRenderer(this, this.deps.watercraft, this.deps.provider);
+      this.rideRenderer.update(view,this.deps.rideTime?.() ?? 0);
     }
   }
 
