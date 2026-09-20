@@ -156,9 +156,12 @@ export function advanceRecovery(state: RecoveryState, dt: number, world: WaterWo
     if (state.status === 'air' || state.status === 'splash') { state.position = [...state.landing]; state.status = 'swim'; state.pose = 'swim'; }
     const dock = world.docks.find((d) => d.id === state.targetDock && d.active !== false);
     if (state.status === 'climb' && dock) {
+      if(state.revision!==world.revision){state.climbOrigin=[...state.position];state.climbAge=0;state.revision=world.revision;}
       state.climbAge += STEP;
-      const u = Math.min(1, state.climbAge / 1.2);
-      state.position = lerp(dock.water, dock.land, u);
+      const origin=state.climbOrigin ?? dock.water;
+      const u = Math.min(1, state.climbAge / Math.max(1.2, dist(origin,dock.land)/state.swimSpeed));
+      state.heading = Math.atan2(dock.land[1]-origin[1],dock.land[0]-origin[0]);
+      state.position = lerp(origin, dock.land, u);
       state.pose = u < 1 ? 'walk' : 'idle';
       if (u === 1) { state.status = 'done'; state.nextAction = state.injured ? 'infirmary' : 'resume'; }
       continue;

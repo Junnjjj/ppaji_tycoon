@@ -495,6 +495,19 @@ function persist(): void {
 // ── 흐름 ──────────────────────────────────────────────────────────
 // `?freeze=1` — 하네스가 세이브 대조처럼 시간이 멈춘 상태로 부팅할 때
 const flow = { acc: 0, speed: 1, frozen: params.get('freeze') === '1' };
+// Preserve simulation state while the browser restores its drawing context.
+let beforeRenderLoss: boolean | null = null;
+document.addEventListener('webglcontextlost', (event) => {
+  if (event.target !== phaser.canvas || beforeRenderLoss !== null) return;
+  beforeRenderLoss = flow.frozen; flow.frozen = true; flow.acc = 0;
+  hud.showToast('화면 복구 중 · 게임은 잠시 멈춥니다');
+}, true);
+document.addEventListener('webglcontextrestored', (event) => {
+  if (event.target !== phaser.canvas || beforeRenderLoss === null) return;
+  flow.frozen = beforeRenderLoss; beforeRenderLoss = null; flow.acc = 0;
+  hud.showToast('화면이 복구되었습니다');
+}, true);
+
 let lastDay = game.day;
 
 /** R1 (G48): 예산을 넘긴 모달은 버리지 않고 **대기열**에 — 앞 창이 닫히면 다음 창. 예산 시계는 보여 줄 때만 찍는다 */

@@ -216,7 +216,9 @@
     "name": "편의·숙박 투자 11",
     "cost": 28000,
     "unlocks": [
-      "pension"
+      "pension",
+      "pension_1f",
+      "pension_2f"
     ]
   },
   {

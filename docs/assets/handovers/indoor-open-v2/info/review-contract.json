@@ -1,0 +1,93 @@
+{
+  "blend": "facility.blend",
+  "concept": "reference.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 0.6,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    2,
+    2
+  ],
+  "floor_mode": "transparent-no-floor",
+  "minimum_native_foreground": 850,
+  "inventory": {
+    "counter": {
+      "names": [
+        "CounterBody"
+      ],
+      "count": 1
+    },
+    "map_board": {
+      "names": [
+        "MapBoard"
+      ],
+      "count": 1
+    },
+    "map_supports": {
+      "prefix": "MapPost_",
+      "count": 2
+    },
+    "brochures": {
+      "prefix": "Brochure_",
+      "count": 2
+    }
+  },
+  "groups": {
+    "body": {
+      "names": [
+        "CounterBody",
+        "MapBoard"
+      ]
+    },
+    "ground_contact": {
+      "names": [
+        "CounterPlinth",
+        "MapFoot_0",
+        "MapFoot_1"
+      ]
+    },
+    "visual": {
+      "names": [
+        "CounterTop",
+        "CounterPlinth",
+        "MapBoard",
+        "MapFoot_0",
+        "MapFoot_1",
+        "MapFrame_horizontal",
+        "MapFrame_horizontal.001",
+        "MapFrame_vertical",
+        "MapFrame_vertical.001"
+      ]
+    }
+  },
+  "landmarks": {
+    "service": [
+      0,
+      -1.08,
+      0
+    ],
+    "counter": [
+      0,
+      -0.84,
+      0.655
+    ],
+    "map": [
+      0,
+      0.62,
+      1.14
+    ],
+    "locator": [
+      -0.335,
+      0.585,
+      0.985
+    ],
+    "brochures": [
+      0.56,
+      -0.48,
+      0.75
+    ]
+  }
+}

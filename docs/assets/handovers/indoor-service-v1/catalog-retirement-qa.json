@@ -1,0 +1,71 @@
+{
+  "build": {
+    "sha": "5cea8e9bb1677cd023f3d9122419a2b244cc8123",
+    "shortSha": "5cea8e9bb167",
+    "branch": "main",
+    "sourceDigest": "db4bc8688e2b5c43ea8a524662bb022f2799812c82e7d2970b1b2af24669115c",
+    "startedAt": "2026-09-19T17:15:35.357Z"
+  },
+  "rows": [
+    {
+      "id": "rental_tube",
+      "text": "×0\n700G\n구명조끼 대여소"
+    },
+    {
+      "id": "authored_locker_row",
+      "text": "×0\n900G\n잠김\n코인락커 (제작본)"
+    },
+    {
+      "id": "vending_in",
+      "text": "×0\n400G\n잠김\n자판기(실내)"
+    },
+    {
+      "id": "indoor_shop",
+      "text": "×1\n900G\n실내 매점"
+    },
+    {
+      "id": "dry_room",
+      "text": "×0\n800G\n잠김\n드라이룸"
+    },
+    {
+      "id": "authored_shower_row",
+      "text": "×0\n900G\n샤워실 (제작본)"
+    },
+    {
+      "id": "authored_changing_row",
+      "text": "×0\n800G\n탈의실 (제작본)"
+    },
+    {
+      "id": "sauna",
+      "text": "×0\n1,800G\n잠김\n사우나"
+    },
+    {
+      "id": "jjimjilbang",
+      "text": "×0\n1,800G\n잠김\n찜질방"
+    },
+    {
+      "id": "arcade",
+      "text": "×0\n400G\n잠김\n오락기"
+    },
+    {
+      "id": "authored_karaoke",
+      "text": "×0\n900G\n잠김\n노래방 (제작본)"
+    },
+    {
+      "id": "info",
+      "text": "×0\n900G\n잠김\n안내소"
+    },
+    {
+      "id": "entrance",
+      "text": "×0\n0G\n잠김\n입구"
+    },
+    {
+      "id": "foodcourt_seat",
+      "text": "×2\n0G\n잠김\n푸드코트 자리"
+    },
+    {
+      "id": "authored_infirmary",
+      "text": "×0\n900G\n잠김\n의무실 (제작본)"
+    }
+  ]
+}

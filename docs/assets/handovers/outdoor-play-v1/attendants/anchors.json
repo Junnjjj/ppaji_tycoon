@@ -1,0 +1,58 @@
+{
+  "info": {
+    "id": "info",
+    "position": [
+      0,
+      0.12,
+      0
+    ],
+    "heading": -1.5707963267948966,
+    "pose": "idle",
+    "uid": -110001,
+    "role": "attendant",
+    "depthPrefix": "staff",
+    "sourceSHA": "6404e0fcb41107a7187cc4d1c6fb44a2c808d2d5029b2b4d7b952d778635a76e"
+  },
+  "indoor_shop": {
+    "id": "indoor_shop",
+    "position": [
+      0,
+      -0.08,
+      0
+    ],
+    "heading": -1.5707963267948966,
+    "pose": "idle",
+    "uid": -110002,
+    "role": "attendant",
+    "depthPrefix": "staff",
+    "sourceSHA": "05a5922987a8f524303a365bbf6b7c5ee57e06f5ec23f395c9297df93656561e"
+  },
+  "rental_tube": {
+    "id": "rental_tube",
+    "position": [
+      -0.57,
+      0.22,
+      0
+    ],
+    "heading": -1.5707963267948966,
+    "pose": "idle",
+    "uid": -110003,
+    "role": "attendant",
+    "depthPrefix": "staff",
+    "sourceSHA": "91c60ef327d6d9b1320e40afa58283820171348a40e40a9eaa696868a30bbf27"
+  },
+  "watchtower": {
+    "id": "watchtower",
+    "position": [
+      0,
+      -0.05,
+      1.01
+    ],
+    "heading": -1.5707963267948966,
+    "pose": "idle",
+    "uid": -110004,
+    "role": "lifeguard",
+    "depthPrefix": "staff",
+    "sourceSHA": "ed043621e6462789f0c6e81dcabb5c1887cf5e5d5853b502e8d53014a1aa53d7"
+  }
+}

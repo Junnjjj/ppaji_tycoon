@@ -1,0 +1,115 @@
+{
+  "blend": "facility.blend",
+  "concept": "../../lodging-food-v2/pension_1f/review/native-d0.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 1.8,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    3,
+    3
+  ],
+  "floor_mode": "full-footprint-integral",
+  "minimum_native_foreground": 1800,
+  "inventory": {
+    "posts": {
+      "prefix": "Post.",
+      "count": 3
+    },
+    "post_primary": {
+      "names": [
+        "Post"
+      ],
+      "count": 1
+    },
+    "benches": {
+      "names": [
+        "Bench_Rear",
+        "Bench_Right"
+      ],
+      "count": 2
+    },
+    "hip_facets": {
+      "prefix": "Roof_Hip.",
+      "count": 3
+    },
+    "hip_primary": {
+      "names": [
+        "Roof_Hip"
+      ],
+      "count": 1
+    }
+  },
+  "groups": {
+    "floor": {
+      "names": [
+        "Foundation"
+      ]
+    },
+    "body": {
+      "names": [
+        "Post",
+        "Post.001",
+        "Post.002",
+        "Post.003"
+      ]
+    },
+    "roof": {
+      "prefix": "Roof_"
+    }
+  },
+  "landmarks": {
+    "rear_0": [
+      -0.55,
+      0.75,
+      0.18
+    ],
+    "rear_1": [
+      0.55,
+      0.75,
+      0.18
+    ],
+    "right_0": [
+      0.77,
+      -0.5,
+      0.18
+    ],
+    "right_1": [
+      0.77,
+      0.4,
+      0.18
+    ],
+    "entry": [
+      -1.37,
+      -0.65,
+      0.18
+    ],
+    "exit": [
+      0,
+      -1.37,
+      0.18
+    ],
+    "roof_ridge": [
+      0,
+      0,
+      2.345
+    ],
+    "front_left_post": [
+      -1.2,
+      -1.2,
+      0.9
+    ],
+    "rear_bench": [
+      0,
+      0.99,
+      0.56
+    ],
+    "right_bench": [
+      1.01,
+      -0.1,
+      0.56
+    ]
+  }
+}

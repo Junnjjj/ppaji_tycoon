@@ -1,0 +1,34 @@
+{
+  "status": "USER_ACCEPTED_FOR_MAIN_ADOPTION",
+  "prior_version_status": "FAIL_USER_VISUAL_REJECTION",
+  "technical": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+  "projection": {
+    "d0": "FAIL",
+    "d1": "PASS",
+    "d2": "FAIL",
+    "d3": "PASS"
+  },
+  "reviewer": "author-agent; independent process reopen is technical only",
+  "visual_gate": "USER_REVIEW",
+  "native_details": "Main equipment silhouettes read; tiny handles/eyes/grate bars are secondary at native scale.",
+  "known_failures": [
+    "No user art approval yet.",
+    "Image-edge projection diagnostic has FAIL/WARN directions; exact scene camera and positive/negative calibration do not erase that result.",
+    "No real NPC overlay/actual-map occupancy evidence in this worker scope.",
+    "Strict recolor is intentionally not invoked.",
+    "Transparent display front uses optical opening rather than refractive pane; jar fill is stylized opaque."
+  ],
+  "roof_gate": "ROOF_PROPORTION_USER_REVIEW",
+  "projectionSupplement": {
+    "0": "PASS",
+    "1": "PASS",
+    "2": "PASS",
+    "3": "WARN"
+  },
+  "projectionCaution": "Original image diagnostic retained. Chicken original d0-d3 PASS; other candidates contain FAIL/WARN. Magenta compositing sensitivity is diagnostic only, not an override.",
+  "previous_status": "AUTHORED_CANDIDATE_AWAITING_USER_VISUAL_APPROVAL",
+  "user_approval": true,
+  "user_decision": "좋다 적용하자, 다 만족해",
+  "accepted_source_sha256": "e4ed81742e57028afb065c79f740e495e99241238d9401309e30d6c0fd217701",
+  "raw_diagnostics_preserved": true
+}

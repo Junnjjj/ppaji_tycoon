@@ -1,0 +1,290 @@
+{
+  "d0": {
+    "rear_0": {
+      "pixel": [
+        396.79998779296875,
+        469.3816223144531
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "rear_1": {
+      "pixel": [
+        467.20001220703125,
+        504.5816116333008
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_0": {
+      "pixel": [
+        401.2799835205078,
+        551.6216125488281
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_1": {
+      "pixel": [
+        458.88002014160156,
+        522.8216171264648
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "entry": {
+      "pixel": [
+        254.72000885009766,
+        487.9416275024414
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        296.3199920654297,
+        554.8216323852539
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "roof_ridge": {
+      "pixel": [
+        384.0,
+        341.28094482421875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "front_left_post": {
+      "pixel": [
+        230.39998626708984,
+        454.5453643798828
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "rear_bench": {
+      "pixel": [
+        447.3599853515625,
+        449.5158233642578
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_bench": {
+      "pixel": [
+        442.239990234375,
+        516.7158279418945
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d1": {
+    "rear_0": {
+      "pixel": [
+        300.80001068115234,
+        504.5816345214844
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "rear_1": {
+      "pixel": [
+        371.20001220703125,
+        469.3816223144531
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_0": {
+      "pixel": [
+        465.28001403808594,
+        502.34161376953125
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_1": {
+      "pixel": [
+        407.6800231933594,
+        473.54161834716797
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "entry": {
+      "pixel": [
+        337.9199981689453,
+        575.6216354370117
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        471.6800079345703,
+        554.8216323852539
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "roof_ridge": {
+      "pixel": [
+        384.0,
+        341.28094482421875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "front_left_post": {
+      "pixel": [
+        384.0,
+        531.3453598022461
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "rear_bench": {
+      "pixel": [
+        320.6400146484375,
+        449.5158233642578
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_bench": {
+      "pixel": [
+        455.04002380371094,
+        452.07582092285156
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d2": {
+    "rear_0": {
+      "pixel": [
+        371.20001220703125,
+        552.5816116333008
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "rear_1": {
+      "pixel": [
+        300.79998779296875,
+        517.3816223144531
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_0": {
+      "pixel": [
+        366.7199935913086,
+        470.3416213989258
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_1": {
+      "pixel": [
+        309.12000274658203,
+        499.14161682128906
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "entry": {
+      "pixel": [
+        513.2800140380859,
+        534.0216293334961
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        471.6800079345703,
+        467.1416244506836
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "roof_ridge": {
+      "pixel": [
+        384.0,
+        341.28094482421875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "front_left_post": {
+      "pixel": [
+        537.6000366210938,
+        454.5453643798828
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "rear_bench": {
+      "pixel": [
+        320.6400146484375,
+        512.8758316040039
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_bench": {
+      "pixel": [
+        325.760009765625,
+        445.6758270263672
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d3": {
+    "rear_0": {
+      "pixel": [
+        467.20001220703125,
+        517.3816223144531
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "rear_1": {
+      "pixel": [
+        396.79998779296875,
+        552.5816116333008
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_0": {
+      "pixel": [
+        302.72000885009766,
+        519.6216201782227
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_1": {
+      "pixel": [
+        360.3199996948242,
+        548.4216156005859
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "entry": {
+      "pixel": [
+        430.0800018310547,
+        446.3416213989258
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        296.3199920654297,
+        467.1416244506836
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "roof_ridge": {
+      "pixel": [
+        384.0,
+        341.28094482421875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "front_left_post": {
+      "pixel": [
+        384.0,
+        377.7453918457031
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "rear_bench": {
+      "pixel": [
+        447.3599853515625,
+        512.8758316040039
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_bench": {
+      "pixel": [
+        312.95999908447266,
+        510.31583404541016
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "id": "icecream",
+  "sourceSHA": "5ac1641273b1251387a02e6d6d112380c33af0214fd15e7ebcf1f689fdc839a2",
+  "checks": [
+    {
+      "direction": 0,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        79,
+        92,
+        111,
+        138
+      ]
+    },
+    {
+      "direction": 0,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        317,
+        368,
+        444,
+        553
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        81,
+        92,
+        113,
+        138
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        324,
+        367,
+        451,
+        554
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        81,
+        95,
+        113,
+        138
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        325,
+        381,
+        451,
+        552
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        79,
+        95,
+        111,
+        138
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        316,
+        381,
+        444,
+        553
+      ]
+    }
+  ],
+  "method": "Exact physical image reuse; no tagged cutaway surfaces; independent source reopen proves same RGBA. Depth exported from immutable same blend.",
+  "liveModified": false
+}

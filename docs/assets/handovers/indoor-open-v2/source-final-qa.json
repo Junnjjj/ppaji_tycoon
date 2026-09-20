@@ -1,0 +1,354 @@
+{
+  "status": "REVIEW_CANDIDATES_READY_NOT_LIVE_APPROVAL",
+  "facilityCount": 12,
+  "changedOrNew": 10,
+  "preserved": 2,
+  "physicalExactRenders": 96,
+  "presentationExactRenders": 96,
+  "clipping": 0,
+  "priorSourceFilesPreserved": 21,
+  "rows": [
+    {
+      "id": "locker_row",
+      "current": [
+        4,
+        1
+      ],
+      "proposed": [
+        4,
+        2
+      ],
+      "slots": 4,
+      "sourceSHA": "b65de03f9a6ada693dd6e1d46b1032adc9a08ad4768d6fd088944878d5284886",
+      "physicalReopenExact": 8,
+      "presentationReopenExact": 8,
+      "clipping": 0,
+      "rasterProjection": {
+        "d0": "FAIL",
+        "d1": "PASS",
+        "d2": "PASS",
+        "d3": "FAIL"
+      },
+      "cutaway": false
+    },
+    {
+      "id": "sauna",
+      "current": [
+        3,
+        3
+      ],
+      "proposed": [
+        3,
+        3
+      ],
+      "slots": 3,
+      "sourceSHA": "bd13e0e51413d1b894367a306b5520594b983b970b265c29d9557dc9b1b2f08f",
+      "physicalReopenExact": 8,
+      "presentationReopenExact": 8,
+      "clipping": 0,
+      "rasterProjection": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "PASS",
+        "d3": "WARN"
+      },
+      "cutaway": true
+    },
+    {
+      "id": "infirmary",
+      "current": [
+        2,
+        2
+      ],
+      "proposed": [
+        3,
+        2
+      ],
+      "slots": 1,
+      "sourceSHA": "c49c8e020684cb2ba06d1c729eddea82b367304a2d8e791f87fde70586e6e23a",
+      "physicalReopenExact": 8,
+      "presentationReopenExact": 8,
+      "clipping": 0,
+      "rasterProjection": {
+        "d0": "PASS",
+        "d1": "FAIL",
+        "d2": "PASS",
+        "d3": "PASS"
+      },
+      "cutaway": true
+    },
+    {
+      "id": "shower_row",
+      "current": [
+        4,
+        1
+      ],
+      "proposed": [
+        4,
+        2
+      ],
+      "slots": 4,
+      "sourceSHA": "7f3ff4e5b8ac08a03aa7483a1fa17cad00de8102cdfa9c0df788849e243e98f5",
+      "physicalReopenExact": 8,
+      "presentationReopenExact": 8,
+      "clipping": 0,
+      "rasterProjection": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "FAIL",
+        "d3": "FAIL"
+      },
+      "cutaway": true
+    },
+    {
+      "id": "changing_row",
+      "current": [
+        3,
+        1
+      ],
+      "proposed": [
+        3,
+        2
+      ],
+      "slots": 3,
+      "sourceSHA": "bb2d1c5e59c5285bcf7ec48abc225f46b3de5ed4aa4201c7dcfaa179e788b89e",
+      "physicalReopenExact": 8,
+      "presentationReopenExact": 8,
+      "clipping": 0,
+      "rasterProjection": {
+        "d0": "FAIL",
+        "d1": "FAIL",
+        "d2": "PASS",
+        "d3": "FAIL"
+      },
+      "cutaway": false
+    },
+    {
+      "id": "jjimjilbang",
+      "current": [
+        4,
+        4
+      ],
+      "proposed": [
+        4,
+        4
+      ],
+      "slots": 3,
+      "sourceSHA": "b3c60c4d3780d5db25a79741b9718b34e99da22e40b024912a94861ababf2c9a",
+      "physicalReopenExact": 8,
+      "presentationReopenExact": 8,
+      "clipping": 0,
+      "rasterProjection": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "PASS",
+        "d3": "PASS"
+      },
+      "cutaway": true
+    },
+    {
+      "id": "karaoke",
+      "current": [
+        2,
+        2
+      ],
+      "proposed": [
+        3,
+        3
+      ],
+      "slots": 3,
+      "sourceSHA": "14a83ba31ff5a608a1e48a89e9a42c3e18a8dad0165fd4b4ba894474ef648491",
+      "physicalReopenExact": 8,
+      "presentationReopenExact": 8,
+      "clipping": 0,
+      "rasterProjection": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "PASS",
+        "d3": "PASS"
+      },
+      "cutaway": true
+    },
+    {
+      "id": "office",
+      "current": [
+        2,
+        2
+      ],
+      "proposed": [
+        2,
+        2
+      ],
+      "slots": 1,
+      "sourceSHA": "97d3bbffea25791c578072f99b77ff582e41f0383c1a024cc77212b46b2e1507",
+      "physicalReopenExact": 8,
+      "presentationReopenExact": 8,
+      "clipping": 0,
+      "rasterProjection": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "WARN",
+        "d3": "PASS"
+      },
+      "cutaway": true
+    },
+    {
+      "id": "info",
+      "current": [
+        2,
+        2
+      ],
+      "proposed": [
+        2,
+        2
+      ],
+      "slots": 1,
+      "sourceSHA": "6404e0fcb41107a7187cc4d1c6fb44a2c808d2d5029b2b4d7b952d778635a76e",
+      "physicalReopenExact": 8,
+      "presentationReopenExact": 8,
+      "clipping": 0,
+      "rasterProjection": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "FAIL",
+        "d3": "FAIL"
+      },
+      "cutaway": false
+    },
+    {
+      "id": "indoor_shop",
+      "current": [
+        2,
+        2
+      ],
+      "proposed": [
+        2,
+        2
+      ],
+      "slots": 1,
+      "sourceSHA": "05a5922987a8f524303a365bbf6b7c5ee57e06f5ec23f395c9297df93656561e",
+      "physicalReopenExact": 8,
+      "presentationReopenExact": 8,
+      "clipping": 0,
+      "rasterProjection": {
+        "d0": "WARN",
+        "d1": "WARN",
+        "d2": "PASS",
+        "d3": "PASS"
+      },
+      "cutaway": false
+    },
+    {
+      "id": "vending_in",
+      "current": [
+        1,
+        1
+      ],
+      "proposed": [
+        1,
+        1
+      ],
+      "slots": 1,
+      "sourceSHA": "73870ba200f628ba113d115eae7cbd5817e96815a68e54793970cb07268cd1af",
+      "physicalReopenExact": 8,
+      "presentationReopenExact": 8,
+      "clipping": 0,
+      "rasterProjection": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "PASS",
+        "d3": "PASS"
+      },
+      "cutaway": false
+    },
+    {
+      "id": "arcade",
+      "current": [
+        1,
+        1
+      ],
+      "proposed": [
+        1,
+        1
+      ],
+      "slots": 1,
+      "sourceSHA": "64650638cab6b352a4794eff20834c50cde0165b0c0f347c816f8f671f877917",
+      "physicalReopenExact": 8,
+      "presentationReopenExact": 8,
+      "clipping": 0,
+      "rasterProjection": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "PASS",
+        "d3": "PASS"
+      },
+      "cutaway": false
+    }
+  ],
+  "motionPassed": true,
+  "groupMotionPassed": true,
+  "browser": {
+    "facilityCount": 12,
+    "cases": 2592,
+    "invisible": [],
+    "minima": {
+      "locker_row/0": 1,
+      "sauna/0": 0.8809523809523809,
+      "infirmary/0": 0.84375,
+      "shower_row/0": 0.6566265060240963,
+      "changing_row/0": 0.6569767441860465,
+      "jjimjilbang/0": 0.8125,
+      "karaoke/0": 0.7857142857142857,
+      "office/0": 0.7861271676300579,
+      "info/0": 1,
+      "indoor_shop/0": 1,
+      "vending_in/0": 1,
+      "arcade/0": 1,
+      "locker_row/1": 1,
+      "sauna/1": 0.8117647058823529,
+      "infirmary/1": 0.80625,
+      "shower_row/1": 0.6566265060240963,
+      "changing_row/1": 0.4470588235294118,
+      "jjimjilbang/1": 0.8125,
+      "karaoke/1": 0.5449438202247191,
+      "office/1": 0.6235294117647059,
+      "info/1": 1,
+      "indoor_shop/1": 1,
+      "vending_in/1": 1,
+      "arcade/1": 1,
+      "locker_row/2": 0.10674157303370786,
+      "sauna/2": 0.8117647058823529,
+      "infirmary/2": 0.8014184397163121,
+      "shower_row/2": 0.6726190476190477,
+      "changing_row/2": 0.7678571428571429,
+      "jjimjilbang/2": 0.8142857142857143,
+      "karaoke/2": 0.6235294117647059,
+      "office/2": 0.7023809523809523,
+      "info/2": 0.5595238095238095,
+      "indoor_shop/2": 0.10285714285714286,
+      "vending_in/2": 0.19101123595505617,
+      "arcade/2": 0.6629213483146067,
+      "locker_row/3": 0.10674157303370786,
+      "sauna/3": 0.8117647058823529,
+      "infirmary/3": 0.7785714285714286,
+      "shower_row/3": 0.6726190476190477,
+      "changing_row/3": 0.7678571428571429,
+      "jjimjilbang/3": 0.6071428571428571,
+      "karaoke/3": 0.6470588235294118,
+      "office/3": 0.7261904761904762,
+      "info/3": 0.5595238095238095,
+      "indoor_shop/3": 0.10285714285714286,
+      "vending_in/3": 0.4101123595505618,
+      "arcade/3": 0.6685393258426966
+    },
+    "errors": []
+  },
+  "liveModified": false,
+  "limitations": [
+    "Standalone Canvas demo, not main Phaser/GuestStore integration.",
+    "Raw raster warnings/failures preserved; do not equate numeric checks with visual approval.",
+    "Walls are a presentation cutaway of an intact physical root.",
+    "Rear fixture and shop canopy occlusion remains physical; nonzero visible pixels is not full-body visibility.",
+    "Sitting and lying contacts intentionally snap on entry/exit; walking stays continuous, without new articulated transition frames."
+  ]
+}

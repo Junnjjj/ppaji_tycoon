@@ -116,6 +116,19 @@ describe('운항 공통 모듈 (이식 10건)', () => {
     expect(b.status).toBe('done');
   });
 
+  it('long or edited dock climbs keep world speed instead of rushing to the new endpoint', () => {
+    const w = world(), a = recovery();
+    Object.assign(a, { time: 2, status: 'climb', targetDock: 'home', revision: 1, swimSpeed: 1, climbAge: 0, position: [10.5, 2.5, 0], climbOrigin: [10.5, 2.5, 0] });
+    w.docks[0]!.land = [10.5, 10.5, .22];
+    let last = [...a.position];
+    for (let k = 0; k < 40; k++) {
+      if (k === 10) { w.revision = 2; w.docks[0]!.land = [2.5, 10.5, .22]; }
+      advanceRecovery(a, 1 / 8, w);
+      expect(Math.hypot(...a.position.map((v, i) => v - last[i]!))).toBeLessThanOrEqual(1 / 8 + 1 / 60 + 1e-6);
+      last = [...a.position];
+    }
+  });
+
   it('물이 막히면 다시 짜고, 지나가는 보트 앞에서는 멈췄다 풀린다', () => {
     const w = world();
     w.isWater = (x, y) => x >= 0 && y >= 0 && x < 12 && y < 12;

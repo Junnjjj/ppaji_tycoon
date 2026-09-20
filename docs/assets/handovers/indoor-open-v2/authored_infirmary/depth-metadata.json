@@ -1,0 +1,156 @@
+{
+  "id": "infirmary",
+  "sourceSHA": "c49c8e020684cb2ba06d1c729eddea82b367304a2d8e791f87fde70586e6e23a",
+  "presentation": "camera-near exterior wall visibility only; rigid full-root evidence stored separately",
+  "camera": {
+    "C": [
+      183.71173095703125,
+      -183.71173095703125,
+      163.57644653320312
+    ],
+    "R": [
+      0.7071067094802856,
+      0.7071068286895752,
+      2.9802322387695312e-08
+    ],
+    "U": [
+      -0.3535534143447876,
+      0.3535534143447876,
+      0.8660253286361694
+    ],
+    "F": [
+      -0.6123723983764648,
+      0.6123723983764648,
+      -0.5
+    ]
+  },
+  "tileWorld": 22.627416997969522,
+  "native": 192,
+  "supportTopObjects": [
+    "FoldedBlanket",
+    "Mattress",
+    "Pillow"
+  ],
+  "directions": [
+    {
+      "d": 0,
+      "hiddenWalls": [
+        "WallPX",
+        "WallNYLeft",
+        "WallNYRight",
+        "DoorLintel",
+        "DoorJambL",
+        "DoorJambR",
+        "WallBandPX",
+        "WallBandNYL",
+        "WallBandNYR"
+      ],
+      "shownWalls": [
+        "WallNX",
+        "WallPY",
+        "WallBandNX",
+        "WallBandPY",
+        "WallMedicalPanel",
+        "WallMedicalCrossV",
+        "WallMedicalCrossH"
+      ],
+      "imageHashes": {
+        "native": "4834e82cd32fe725ed3f6f36e7099bbb3145daec8cd35866831fbc82a6eb8d8d",
+        "color": "7d219e55495e9362023ef79760070d4a860c93d6d57cc30e569d5c5c18531a75"
+      },
+      "finitePixels": 3567,
+      "supportTopExclusions": 343,
+      "maxReprojectionError": 5.340576171875e-05
+    },
+    {
+      "d": 1,
+      "hiddenWalls": [
+        "WallNX",
+        "WallNYLeft",
+        "WallNYRight",
+        "DoorLintel",
+        "DoorJambL",
+        "DoorJambR",
+        "WallBandNX",
+        "WallBandNYL",
+        "WallBandNYR"
+      ],
+      "shownWalls": [
+        "WallPX",
+        "WallPY",
+        "WallBandPX",
+        "WallBandPY",
+        "WallMedicalPanel",
+        "WallMedicalCrossV",
+        "WallMedicalCrossH"
+      ],
+      "imageHashes": {
+        "native": "8dc9514332b263b35131a106fe563930aad0695340d31b7f351565d9a0be3b60",
+        "color": "1d8eca44dab29eb2aa0a11a04014e851f2ea5b0b145dc7a284b97852f3a20ec7"
+      },
+      "finitePixels": 3567,
+      "supportTopExclusions": 345,
+      "maxReprojectionError": 5.14984130859375e-05
+    },
+    {
+      "d": 2,
+      "hiddenWalls": [
+        "WallNX",
+        "WallPY",
+        "WallBandNX",
+        "WallBandPY",
+        "WallMedicalPanel",
+        "WallMedicalCrossV",
+        "WallMedicalCrossH"
+      ],
+      "shownWalls": [
+        "WallPX",
+        "WallNYLeft",
+        "WallNYRight",
+        "DoorLintel",
+        "DoorJambL",
+        "DoorJambR",
+        "WallBandPX",
+        "WallBandNYL",
+        "WallBandNYR"
+      ],
+      "imageHashes": {
+        "native": "c9f5cd3633705953fa32b3a3c3cc65b5c81e5cc60b8d9e9fcfa02887b34091b5",
+        "color": "674aa091a21df2392e5c424da7af17ff949e898d37d2b075f51475643f924513"
+      },
+      "finitePixels": 3425,
+      "supportTopExclusions": 300,
+      "maxReprojectionError": 4.57763671875e-05
+    },
+    {
+      "d": 3,
+      "hiddenWalls": [
+        "WallPX",
+        "WallPY",
+        "WallBandPX",
+        "WallBandPY",
+        "WallMedicalPanel",
+        "WallMedicalCrossV",
+        "WallMedicalCrossH"
+      ],
+      "shownWalls": [
+        "WallNX",
+        "WallNYLeft",
+        "WallNYRight",
+        "DoorLintel",
+        "DoorJambL",
+        "DoorJambR",
+        "WallBandNX",
+        "WallBandNYL",
+        "WallBandNYR"
+      ],
+      "imageHashes": {
+        "native": "a6ea469c596abaf81077cc37a8350cae8a892b4493919876ba5b795facdae8fa",
+        "color": "7ef424044e56cf54174f8a20f7578b1214d4d40635b030d544d774928bc9dc1a"
+      },
+      "finitePixels": 3418,
+      "supportTopExclusions": 303,
+      "maxReprojectionError": 4.76837158203125e-05
+    }
+  ]
+}

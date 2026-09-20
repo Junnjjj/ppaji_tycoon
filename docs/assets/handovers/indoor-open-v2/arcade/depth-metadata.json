@@ -1,0 +1,80 @@
+{
+  "id": "arcade",
+  "sourceSHA": "64650638cab6b352a4794eff20834c50cde0165b0c0f347c816f8f671f877917",
+  "presentation": "camera-near exterior wall visibility only; rigid full-root evidence stored separately",
+  "camera": {
+    "C": [
+      134.72193908691406,
+      -134.72193908691406,
+      123.57644653320312
+    ],
+    "R": [
+      0.7071067094802856,
+      0.7071068286895752,
+      2.9802322387695312e-08
+    ],
+    "U": [
+      -0.3535534143447876,
+      0.3535534143447876,
+      0.8660253286361694
+    ],
+    "F": [
+      -0.6123723983764648,
+      0.6123723983764648,
+      -0.5
+    ]
+  },
+  "tileWorld": 22.627416997969522,
+  "native": 192,
+  "supportTopObjects": [],
+  "directions": [
+    {
+      "d": 0,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {
+        "native": "03156923e6a4f5d824a2fc89a491a68975101e347cc73026cc04fda9fc5824c0",
+        "color": "2bb9f1ee1b1db7bb06140b62a1c70f2bf974eb68bb1e5c7846c57d84fa12094f"
+      },
+      "finitePixels": 546,
+      "supportTopExclusions": 0,
+      "maxReprojectionError": 4.1961669921875e-05
+    },
+    {
+      "d": 1,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {
+        "native": "8b06222ccff7353c36bf26e872236b360d4957c866ceea7b717fb234b0e2c7ec",
+        "color": "699555e93fe795b605209d5bdd8f525a32f310b1da22350f845e8f82b4eba17f"
+      },
+      "finitePixels": 546,
+      "supportTopExclusions": 0,
+      "maxReprojectionError": 4.1961669921875e-05
+    },
+    {
+      "d": 2,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {
+        "native": "d09f24acec0e064eab1ead8d772fdde32d4acfbfb40c3773ffbb29597b02485b",
+        "color": "fa99ebb764f5934c977589366646886bfbd436c555f17acfa0cc7ab04a40dfbd"
+      },
+      "finitePixels": 523,
+      "supportTopExclusions": 0,
+      "maxReprojectionError": 4.00543212890625e-05
+    },
+    {
+      "d": 3,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {
+        "native": "e55fbc1432fa4daf82bbb39a28b36f4a792b780a1ab389082a024019526961c2",
+        "color": "b2b3d791fa46c13420a96e854c826823143990e674b7fd6381ec840d57fea445"
+      },
+      "finitePixels": 522,
+      "supportTopExclusions": 0,
+      "maxReprojectionError": 4.00543212890625e-05
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+{
+  "d0": {
+    "subject_left": {
+      "pixel": [
+        384.0,
+        505.3678665161133
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "subject_right": {
+      "pixel": [
+        419.8400115966797,
+        523.2878494262695
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "fixed_camera": {
+      "pixel": [
+        348.79998779296875,
+        476.848388671875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "flash": {
+      "pixel": [
+        343.99999237060547,
+        473.64276123046875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "lifebuoy": {
+      "pixel": [
+        355.2000045776367,
+        413.1716537475586
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "flowers": {
+      "pixel": [
+        467.20001220703125,
+        502.1363983154297
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "entry": {
+      "pixel": [
+        323.8400115966797,
+        505.2506790161133
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        423.6800079345703,
+        555.1706771850586
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d1": {
+    "subject_left": {
+      "pixel": [
+        348.1599884033203,
+        523.2878494262695
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "subject_right": {
+      "pixel": [
+        384.0,
+        505.3678665161133
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "fixed_camera": {
+      "pixel": [
+        419.20001220703125,
+        476.848388671875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "flash": {
+      "pixel": [
+        435.52001953125,
+        467.8827667236328
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "lifebuoy": {
+      "pixel": [
+        323.20001220703125,
+        457.9716567993164
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "flowers": {
+      "pixel": [
+        392.9599914550781,
+        456.056396484375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "entry": {
+      "pixel": [
+        344.3199920654297,
+        555.1706771850586
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        444.1599884033203,
+        505.2506790161133
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d2": {
+    "subject_left": {
+      "pixel": [
+        384.0,
+        541.2078552246094
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "subject_right": {
+      "pixel": [
+        348.1599884033203,
+        523.2878494262695
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "fixed_camera": {
+      "pixel": [
+        419.20001220703125,
+        441.64839935302734
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "flash": {
+      "pixel": [
+        423.99998474121094,
+        422.12276458740234
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "lifebuoy": {
+      "pixel": [
+        412.8000183105469,
+        473.97164154052734
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "flowers": {
+      "pixel": [
+        300.80001068115234,
+        493.17640686035156
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "entry": {
+      "pixel": [
+        444.1599884033203,
+        544.9306869506836
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        344.3199920654297,
+        495.0106887817383
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d3": {
+    "subject_left": {
+      "pixel": [
+        419.8400115966797,
+        523.2878494262695
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "subject_right": {
+      "pixel": [
+        384.0,
+        541.2078552246094
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "fixed_camera": {
+      "pixel": [
+        348.79998779296875,
+        441.64839935302734
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "flash": {
+      "pixel": [
+        332.4800033569336,
+        427.8827590942383
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "lifebuoy": {
+      "pixel": [
+        444.79998779296875,
+        429.1716613769531
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "flowers": {
+      "pixel": [
+        375.0400085449219,
+        539.2563858032227
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "entry": {
+      "pixel": [
+        423.6800079345703,
+        495.0106887817383
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        323.8400115966797,
+        544.9306869506836
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  }
+}

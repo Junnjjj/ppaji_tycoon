@@ -1,0 +1,104 @@
+{
+  "id": "firepit_row",
+  "sourceSHA": "2f3560e9fe7b9075040b502913ecdf17d42ac285ea40337c1f3d2b6c4ec026c5",
+  "checks": [
+    {
+      "direction": 0,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        67,
+        102,
+        125,
+        145
+      ]
+    },
+    {
+      "direction": 0,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        266,
+        406,
+        502,
+        582
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        67,
+        102,
+        125,
+        145
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        266,
+        406,
+        502,
+        583
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        67,
+        102,
+        125,
+        145
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        266,
+        406,
+        502,
+        582
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        67,
+        102,
+        125,
+        145
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        266,
+        406,
+        502,
+        583
+      ]
+    }
+  ],
+  "method": "Exact physical image reuse; no tagged cutaway surfaces; independent source reopen proves same RGBA. Depth exported from immutable same blend.",
+  "liveModified": false
+}

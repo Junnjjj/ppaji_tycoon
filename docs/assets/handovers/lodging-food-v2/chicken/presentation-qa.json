@@ -1,0 +1,104 @@
+{
+  "id": "chicken",
+  "sourceSHA": "1323280b9619a4fdde62525af3b0d6f05e2bd879056f86a420813a416fa0df1c",
+  "checks": [
+    {
+      "direction": 0,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        63,
+        82,
+        129,
+        147
+      ]
+    },
+    {
+      "direction": 0,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        251,
+        325,
+        517,
+        590
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        63,
+        82,
+        129,
+        147
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        251,
+        325,
+        518,
+        590
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        63,
+        82,
+        129,
+        147
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        251,
+        325,
+        517,
+        590
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        63,
+        82,
+        129,
+        147
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        250,
+        325,
+        517,
+        590
+      ]
+    }
+  ],
+  "method": "Exact physical image reuse; no tagged cutaway surfaces; independent source reopen proves same RGBA. Depth exported from immutable same blend.",
+  "liveModified": false
+}

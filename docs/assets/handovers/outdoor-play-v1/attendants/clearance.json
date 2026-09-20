@@ -1,0 +1,135 @@
+{
+  "info": {
+    "bodyRadiusAssumptionTiles": 0.18,
+    "obstacleClearances": [
+      {
+        "object": "counter complete",
+        "bodyClearanceTiles": 0.10000000000000003
+      },
+      {
+        "object": "map board and frame",
+        "bodyClearanceTiles": 0.328
+      },
+      {
+        "object": "map foot left",
+        "bodyClearanceTiles": 0.562024258363566
+      },
+      {
+        "object": "map foot right",
+        "bodyClearanceTiles": 0.562024258363566
+      }
+    ],
+    "guestRouteClearances": [
+      {
+        "slot": "s0",
+        "centerDistanceTiles": 1.2000000000000002,
+        "twoBodyClearanceTiles": 0.8400000000000002
+      }
+    ],
+    "feetSupport": {
+      "hit": false,
+      "object": "world terrain",
+      "z": 0,
+      "errorTiles": 0
+    },
+    "headClearance": {
+      "humanHeightTiles": 1.1226827987756232,
+      "ceilingObject": null,
+      "clearanceTiles": null
+    }
+  },
+  "indoor_shop": {
+    "bodyRadiusAssumptionTiles": 0.18,
+    "obstacleClearances": [
+      {
+        "object": "counter including top",
+        "bodyClearanceTiles": 0.15999999999999998
+      },
+      {
+        "object": "freestanding shelving",
+        "bodyClearanceTiles": 0.36999999999999994
+      },
+      {
+        "object": "Post_-0.89_-0.89",
+        "bodyClearanceTiles": 0.9386599125739692
+      },
+      {
+        "object": "Post_-0.89_0.89",
+        "bodyClearanceTiles": 1.051665539016173
+      },
+      {
+        "object": "Post_0.89_-0.89",
+        "bodyClearanceTiles": 0.9386599125739692
+      },
+      {
+        "object": "Post_0.89_0.89",
+        "bodyClearanceTiles": 1.051665539016173
+      }
+    ],
+    "guestRouteClearances": [
+      {
+        "slot": "customer",
+        "centerDistanceTiles": 1.2,
+        "twoBodyClearanceTiles": 0.84
+      }
+    ],
+    "feetSupport": {
+      "hit": true,
+      "object": "Foundation",
+      "z": 0.0,
+      "errorTiles": 0.0
+    },
+    "headClearance": {
+      "humanHeightTiles": 1.1226827987756232,
+      "ceilingObject": "Roof_panel",
+      "clearanceTiles": 0.2799585876955326
+    }
+  },
+  "rental_tube": {
+    "bodyRadiusAssumptionTiles": 0.18,
+    "obstacleClearances": [
+      {
+        "object": "counter",
+        "bodyClearanceTiles": 0.11000000000000004
+      },
+      {
+        "object": "rack",
+        "bodyClearanceTiles": 0.3
+      }
+    ],
+    "guestRouteClearances": [
+      {
+        "slot": "customer",
+        "centerDistanceTiles": 1.0499999999999998,
+        "twoBodyClearanceTiles": 0.6899999999999998
+      }
+    ],
+    "feetSupport": {
+      "hit": false,
+      "object": "world terrain",
+      "z": 0,
+      "errorTiles": 0
+    },
+    "headClearance": {
+      "humanHeightTiles": 1.1226827987756232,
+      "ceilingObject": null,
+      "clearanceTiles": null
+    }
+  },
+  "watchtower": {
+    "bodyRadiusAssumptionTiles": 0.18,
+    "obstacleClearances": [],
+    "guestRouteClearances": [],
+    "feetSupport": {
+      "hit": true,
+      "object": "Platform_1",
+      "z": 1.0099999970445146,
+      "errorTiles": 2.9554854119595575e-09
+    },
+    "headClearance": {
+      "humanHeightTiles": 1.1226827987756232,
+      "ceilingObject": null,
+      "clearanceTiles": null
+    }
+  }
+}

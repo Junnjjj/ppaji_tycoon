@@ -1,0 +1,104 @@
+{
+  "id": "cafe_lv3",
+  "sourceSHA": "5501a33ce2cf022b9520d31f52eaa0064336f74d721cc766487054c6e97d7520",
+  "checks": [
+    {
+      "direction": 0,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        56,
+        48,
+        136,
+        151
+      ]
+    },
+    {
+      "direction": 0,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        223,
+        190,
+        545,
+        606
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        56,
+        48,
+        136,
+        151
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        223,
+        190,
+        545,
+        606
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        56,
+        48,
+        136,
+        151
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        223,
+        190,
+        545,
+        606
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        56,
+        48,
+        136,
+        151
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        223,
+        190,
+        545,
+        606
+      ]
+    }
+  ],
+  "method": "Exact physical image reuse; no tagged cutaway surfaces; independent source reopen proves same RGBA. Depth exported from immutable same blend.",
+  "liveModified": false
+}

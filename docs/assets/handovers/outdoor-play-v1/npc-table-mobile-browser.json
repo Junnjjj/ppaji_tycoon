@@ -1,0 +1,52 @@
+{
+  "bundle": [
+    "http://127.0.0.1:5189/assets/main-35nHaY5e.js",
+    ""
+  ],
+  "initialTextures": 71,
+  "textureMB": 95.67300796508789,
+  "watercraftTextures": 0,
+  "errors": [],
+  "stats": {
+    "fps": 42,
+    "sprites": 7915,
+    "scale": 2,
+    "scrollX": 61,
+    "scrollY": 573,
+    "violations": []
+  },
+  "vehicles": [
+    {
+      "id": "jetski",
+      "phase": "towing"
+    }
+  ],
+  "cacheSizes": [
+    1
+  ],
+  "preLossFrozen": true,
+  "loss": {
+    "lost": true,
+    "frozen": true,
+    "tickHeld": true
+  },
+  "restore": {
+    "lost": false,
+    "frozen": true,
+    "errors": []
+  },
+  "runningLossPaused": true,
+  "runningRestored": true,
+  "mobileViewport": {
+    "w": 393,
+    "h": 730,
+    "stats": {
+      "fps": 38,
+      "sprites": 7911,
+      "scale": 2,
+      "scrollX": 442,
+      "scrollY": 602,
+      "violations": []
+    }
+  }
+}

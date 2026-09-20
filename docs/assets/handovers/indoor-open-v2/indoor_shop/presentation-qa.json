@@ -1,0 +1,103 @@
+{
+  "id": "indoor_shop",
+  "sourceSHA": "05a5922987a8f524303a365bbf6b7c5ee57e06f5ec23f395c9297df93656561e",
+  "checks": [
+    {
+      "direction": 0,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        62,
+        61,
+        130,
+        125
+      ]
+    },
+    {
+      "direction": 0,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        246,
+        241,
+        521,
+        501
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        62,
+        61,
+        130,
+        125
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        246,
+        241,
+        521,
+        501
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        62,
+        63,
+        130,
+        125
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        246,
+        251,
+        521,
+        501
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        62,
+        63,
+        130,
+        125
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        246,
+        250,
+        521,
+        501
+      ]
+    }
+  ],
+  "liveModified": false
+}

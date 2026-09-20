@@ -1,0 +1,38 @@
+{
+  "id": "watchtower",
+  "size": [
+    1,
+    1
+  ],
+  "currentSize": [
+    1,
+    1
+  ],
+  "floorZ": 0,
+  "accessKind": "staff-only",
+  "entry": [
+    0,
+    -0.65,
+    0
+  ],
+  "slots": [],
+  "staffAnchors": [
+    {
+      "id": "lifeguard",
+      "role": "staff",
+      "pose": "idle",
+      "position": [
+        0,
+        0,
+        1.01
+      ],
+      "heading": -1.5707963267948966
+    }
+  ],
+  "obstacles": [],
+  "notes": [
+    "Staff fixed observation anchor, no guest capacity or climb simulation wired.",
+    "Ladder is on negative Y with front rail gap. Ring on positive X.",
+    "Existing blue deck remains world terrain; no duplicate pontoon base."
+  ]
+}

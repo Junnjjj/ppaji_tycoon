@@ -1,0 +1,103 @@
+{
+  "blend": "facility.blend",
+  "concept": "../../lodging-food-v2/icecream/review/native-four-directions.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 256,
+  "camera_target_z_tiles": 3,
+  "logical_size": 256,
+  "density": 4,
+  "size": [
+    4,
+    4
+  ],
+  "floor_mode": "transparent-no-floor",
+  "minimum_native_foreground": 1800,
+  "inventory": {
+    "columns": {
+      "prefix": "Body_Column",
+      "count": 4
+    },
+    "ladder_rungs": {
+      "prefix": "LadderRung",
+      "count": 22
+    },
+    "runway": {
+      "names": [
+        "JumpRunway"
+      ],
+      "count": 1
+    },
+    "recovery": {
+      "names": [
+        "RecoveryPad"
+      ],
+      "count": 1
+    },
+    "anchor": {
+      "names": [
+        "AnchorEye"
+      ],
+      "count": 1
+    }
+  },
+  "groups": {
+    "body": {
+      "prefix": "Body_"
+    },
+    "structural_contact": {
+      "prefix": "Foot"
+    },
+    "elevated_deck": {
+      "names": [
+        "EquipmentDeck",
+        "JumpRunway"
+      ]
+    },
+    "recovery_equipment": {
+      "names": [
+        "RecoveryPad"
+      ]
+    },
+    "gantry": {
+      "prefix": "Gantry"
+    }
+  },
+  "landmarks": {
+    "launch": [
+      0,
+      -0.98,
+      5.8
+    ],
+    "cord_pivot": [
+      0,
+      -1.42,
+      6.85
+    ],
+    "lowest_point": [
+      0,
+      -1.42,
+      0.8
+    ],
+    "recovery": [
+      0,
+      -1.42,
+      0.24
+    ],
+    "ladder_base": [
+      0,
+      0.62,
+      0
+    ],
+    "ladder_top": [
+      0,
+      0.85,
+      5.8
+    ],
+    "winch": [
+      0.57,
+      1.1,
+      6.05
+    ]
+  }
+}

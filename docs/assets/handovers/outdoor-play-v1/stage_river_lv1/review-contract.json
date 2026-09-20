@@ -1,0 +1,130 @@
+{
+  "blend": "facility.blend",
+  "concept": "../../lodging-food-v2/icecream/review/native-four-directions.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 1.8,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    4,
+    3
+  ],
+  "canonical_live_size": [
+    3,
+    2
+  ],
+  "proposed_size": [
+    4,
+    3
+  ],
+  "floor_mode": "transparent-no-floor",
+  "minimum_native_foreground": 1500,
+  "inventory": {
+    "speakers": {
+      "names": [
+        "Speaker_0",
+        "Speaker_1"
+      ],
+      "count": 2
+    },
+    "benches": {
+      "names": [
+        "Bench_0_Seat",
+        "Bench_1_Seat"
+      ],
+      "count": 2
+    },
+    "mic": {
+      "names": [
+        "MicHead"
+      ],
+      "count": 1
+    },
+    "platform": {
+      "names": [
+        "Stage_Deck"
+      ],
+      "count": 1
+    }
+  },
+  "groups": {
+    "body": {
+      "prefix": "Stage_"
+    },
+    "backdrop": {
+      "prefix": "Backdrop_"
+    },
+    "benches": {
+      "prefix": "Bench_"
+    },
+    "intrinsic_platform": {
+      "names": [
+        "Stage_Deck"
+      ]
+    }
+  },
+  "landmarks": {
+    "performer": [
+      0,
+      0.43,
+      0.24
+    ],
+    "audience_0": [
+      -0.5,
+      -0.16,
+      0
+    ],
+    "audience_1": [
+      0.5,
+      -0.16,
+      0
+    ],
+    "audience_2": [
+      -0.5,
+      -0.8300000000000001,
+      0
+    ],
+    "audience_3": [
+      0.5,
+      -0.8300000000000001,
+      0
+    ],
+    "entry": [
+      -1.8,
+      -1.35,
+      0
+    ],
+    "exit": [
+      1.8,
+      -1.35,
+      0
+    ],
+    "microphone": [
+      0.13,
+      0.39,
+      1.18
+    ],
+    "left_speaker": [
+      -1.06,
+      0.43,
+      0.48
+    ],
+    "right_speaker": [
+      1.06,
+      0.43,
+      0.48
+    ],
+    "backdrop": [
+      0,
+      1.27,
+      1.08
+    ],
+    "stair": [
+      -1.56,
+      0.65,
+      0.12
+    ]
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "d0": {
+    "grill_0": {
+      "pixel": [
+        320.00001525878906,
+        430.38372802734375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slot_0": {
+      "pixel": [
+        271.35999298095703,
+        517.4106903076172
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "grill_1": {
+      "pixel": [
+        384.0,
+        462.3837432861328
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slot_1": {
+      "pixel": [
+        335.36000061035156,
+        549.4106826782227
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "grill_2": {
+      "pixel": [
+        447.99998474121094,
+        494.3837356567383
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slot_2": {
+      "pixel": [
+        399.3599853515625,
+        581.4106750488281
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d1": {
+    "grill_0": {
+      "pixel": [
+        320.00001525878906,
+        494.3837356567383
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slot_0": {
+      "pixel": [
+        368.6400146484375,
+        581.4106750488281
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "grill_1": {
+      "pixel": [
+        384.0,
+        462.3837432861328
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slot_1": {
+      "pixel": [
+        432.63999938964844,
+        549.4106826782227
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "grill_2": {
+      "pixel": [
+        447.99998474121094,
+        430.38372802734375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slot_2": {
+      "pixel": [
+        496.6399841308594,
+        517.4106674194336
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d2": {
+    "grill_0": {
+      "pixel": [
+        448.0000305175781,
+        494.3837356567383
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slot_0": {
+      "pixel": [
+        496.6399841308594,
+        532.7706756591797
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "grill_1": {
+      "pixel": [
+        384.0,
+        462.3837432861328
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slot_1": {
+      "pixel": [
+        432.63999938964844,
+        500.7706832885742
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "grill_2": {
+      "pixel": [
+        319.99999237060547,
+        430.38372802734375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slot_2": {
+      "pixel": [
+        368.6399917602539,
+        468.77069091796875
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d3": {
+    "grill_0": {
+      "pixel": [
+        447.99998474121094,
+        430.38372802734375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slot_0": {
+      "pixel": [
+        399.3599853515625,
+        468.77069091796875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "grill_1": {
+      "pixel": [
+        384.0,
+        462.3837432861328
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slot_1": {
+      "pixel": [
+        335.36000061035156,
+        500.7706832885742
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "grill_2": {
+      "pixel": [
+        320.00001525878906,
+        494.3837356567383
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slot_2": {
+      "pixel": [
+        271.35999298095703,
+        532.7706756591797
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  }
+}

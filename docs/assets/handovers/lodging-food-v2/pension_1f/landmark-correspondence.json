@@ -1,0 +1,122 @@
+{
+  "d0": {
+    "entry": {
+      "pixel": [
+        267.1999969482422,
+        566.2462692260742
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "approach": {
+      "pixel": [
+        233.59998321533203,
+        600.2906799316406
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "balcony": {
+      "pixel": [
+        257.92000579833984,
+        450.95924377441406
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "pool": {
+      "pixel": [
+        384.0,
+        347.15972900390625
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d1": {
+    "entry": {
+      "pixel": [
+        500.8000030517578,
+        566.2462692260742
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "approach": {
+      "pixel": [
+        534.3999938964844,
+        600.2906799316406
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "balcony": {
+      "pixel": [
+        510.08001708984375,
+        450.95924377441406
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "pool": {
+      "pixel": [
+        384.0,
+        347.15972900390625
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d2": {
+    "entry": {
+      "pixel": [
+        500.8000030517578,
+        449.4462661743164
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "approach": {
+      "pixel": [
+        534.3999938964844,
+        449.89068603515625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "balcony": {
+      "pixel": [
+        510.08001708984375,
+        324.8792266845703
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "pool": {
+      "pixel": [
+        384.0,
+        347.15972900390625
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d3": {
+    "entry": {
+      "pixel": [
+        267.1999969482422,
+        449.4462661743164
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "approach": {
+      "pixel": [
+        233.60000610351562,
+        449.89068603515625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "balcony": {
+      "pixel": [
+        257.92000579833984,
+        324.8792266845703
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "pool": {
+      "pixel": [
+        384.0,
+        347.15972900390625
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "blend": "facility.blend",
+  "concept": "reference.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 0.6,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    2,
+    1
+  ],
+  "floor_mode": "transparent-no-floor",
+  "minimum_native_foreground": 650,
+  "inventory": {
+    "vests": {
+      "prefix": "VestBack_",
+      "count": 3
+    },
+    "counter": {
+      "names": [
+        "CounterTop"
+      ],
+      "count": 1
+    }
+  },
+  "groups": {
+    "body": {
+      "prefix": "Structure_"
+    }
+  },
+  "landmarks": {
+    "service": [
+      -0.57,
+      -0.83,
+      0
+    ],
+    "counter": [
+      -0.57,
+      -0.28,
+      0.65
+    ],
+    "rack": [
+      0.43,
+      0.24,
+      1.3
+    ]
+  }
+}

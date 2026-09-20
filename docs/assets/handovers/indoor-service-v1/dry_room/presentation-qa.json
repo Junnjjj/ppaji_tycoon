@@ -1,0 +1,103 @@
+{
+  "id": "dry_room",
+  "sourceSHA": "8243ddcf955ae07ac470a36882ec3c4b9db3735b29d2ef58d41bc26c8769b7d9",
+  "checks": [
+    {
+      "direction": 0,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        81,
+        69,
+        119,
+        114
+      ]
+    },
+    {
+      "direction": 0,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        322,
+        276,
+        476,
+        458
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        73,
+        69,
+        111,
+        114
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        292,
+        276,
+        445,
+        458
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        73,
+        76,
+        111,
+        118
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        292,
+        302,
+        445,
+        474
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        81,
+        76,
+        119,
+        118
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        323,
+        302,
+        476,
+        474
+      ]
+    }
+  ],
+  "liveModified": false
+}

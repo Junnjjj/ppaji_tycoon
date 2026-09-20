@@ -1,0 +1,1056 @@
+{
+  "id": "stage_river_lv3",
+  "size": [
+    6,
+    5
+  ],
+  "capacity": 12,
+  "proposalAudienceCount": 12,
+  "proposalPerformerCount": 1,
+  "canonical_live_id": "stage_river",
+  "canonical_live_size": [
+    3,
+    2
+  ],
+  "proposed_size": [
+    6,
+    5
+  ],
+  "new_id": true,
+  "accessKind": "flow",
+  "entry": [
+    -2.65,
+    -2.32,
+    0
+  ],
+  "exit": [
+    2.65,
+    -2.32,
+    0
+  ],
+  "slots": [
+    {
+      "id": "performer",
+      "role": "performer",
+      "position": [
+        0,
+        1.22,
+        0.288
+      ],
+      "pose": "idle",
+      "heading": -1.5707963267948966,
+      "seatObject": null,
+      "supportObjects": [
+        "Stage_Deck",
+        "Stage_Plank_10"
+      ],
+      "approach": [
+        [
+          -2.65,
+          -2.32,
+          0
+        ],
+        [
+          -2.65,
+          1.55,
+          0
+        ],
+        [
+          -2.45,
+          1.55,
+          0.14
+        ],
+        [
+          -2.1,
+          1.55,
+          0.288
+        ],
+        [
+          0,
+          1.55,
+          0.288
+        ],
+        [
+          0,
+          1.22,
+          0.288
+        ]
+      ],
+      "exitApproach": [
+        [
+          0,
+          1.22,
+          0.288
+        ],
+        [
+          0,
+          1.55,
+          0.288
+        ],
+        [
+          -2.1,
+          1.55,
+          0.288
+        ],
+        [
+          -2.45,
+          1.55,
+          0.14
+        ],
+        [
+          -2.65,
+          1.55,
+          0
+        ],
+        [
+          -2.65,
+          -2.32,
+          0
+        ],
+        [
+          2.65,
+          -2.32,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "audience_0",
+      "role": "audience",
+      "position": [
+        -1.65,
+        0.27,
+        0
+      ],
+      "seatContact": [
+        -1.65,
+        0.05,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "seatObject": "Chair_0_Seat",
+      "supportObjects": [
+        "Chair_0_Seat"
+      ],
+      "approach": [
+        [
+          -2.65,
+          -2.32,
+          0
+        ],
+        [
+          -2.5,
+          -2.32,
+          0
+        ],
+        [
+          -2.5,
+          0.53,
+          0
+        ],
+        [
+          -1.65,
+          0.53,
+          0
+        ],
+        [
+          -1.65,
+          0.27,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          -1.65,
+          0.27,
+          0
+        ],
+        [
+          -1.65,
+          0.53,
+          0
+        ],
+        [
+          -2.5,
+          0.53,
+          0
+        ],
+        [
+          -2.5,
+          -2.32,
+          0
+        ],
+        [
+          2.65,
+          -2.32,
+          0
+        ]
+      ],
+      "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+    },
+    {
+      "id": "audience_1",
+      "role": "audience",
+      "position": [
+        -0.75,
+        0.27,
+        0
+      ],
+      "seatContact": [
+        -0.75,
+        0.05,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "seatObject": "Chair_1_Seat",
+      "supportObjects": [
+        "Chair_1_Seat"
+      ],
+      "approach": [
+        [
+          -2.65,
+          -2.32,
+          0
+        ],
+        [
+          0,
+          -2.32,
+          0
+        ],
+        [
+          0,
+          0.53,
+          0
+        ],
+        [
+          -0.75,
+          0.53,
+          0
+        ],
+        [
+          -0.75,
+          0.27,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          -0.75,
+          0.27,
+          0
+        ],
+        [
+          -0.75,
+          0.53,
+          0
+        ],
+        [
+          0,
+          0.53,
+          0
+        ],
+        [
+          0,
+          -2.32,
+          0
+        ],
+        [
+          2.65,
+          -2.32,
+          0
+        ]
+      ],
+      "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+    },
+    {
+      "id": "audience_2",
+      "role": "audience",
+      "position": [
+        0.75,
+        0.27,
+        0
+      ],
+      "seatContact": [
+        0.75,
+        0.05,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "seatObject": "Chair_2_Seat",
+      "supportObjects": [
+        "Chair_2_Seat"
+      ],
+      "approach": [
+        [
+          -2.65,
+          -2.32,
+          0
+        ],
+        [
+          0,
+          -2.32,
+          0
+        ],
+        [
+          0,
+          0.53,
+          0
+        ],
+        [
+          0.75,
+          0.53,
+          0
+        ],
+        [
+          0.75,
+          0.27,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          0.75,
+          0.27,
+          0
+        ],
+        [
+          0.75,
+          0.53,
+          0
+        ],
+        [
+          0,
+          0.53,
+          0
+        ],
+        [
+          0,
+          -2.32,
+          0
+        ],
+        [
+          2.65,
+          -2.32,
+          0
+        ]
+      ],
+      "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+    },
+    {
+      "id": "audience_3",
+      "role": "audience",
+      "position": [
+        1.65,
+        0.27,
+        0
+      ],
+      "seatContact": [
+        1.65,
+        0.05,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "seatObject": "Chair_3_Seat",
+      "supportObjects": [
+        "Chair_3_Seat"
+      ],
+      "approach": [
+        [
+          -2.65,
+          -2.32,
+          0
+        ],
+        [
+          2.5,
+          -2.32,
+          0
+        ],
+        [
+          2.5,
+          0.53,
+          0
+        ],
+        [
+          1.65,
+          0.53,
+          0
+        ],
+        [
+          1.65,
+          0.27,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          1.65,
+          0.27,
+          0
+        ],
+        [
+          1.65,
+          0.53,
+          0
+        ],
+        [
+          2.5,
+          0.53,
+          0
+        ],
+        [
+          2.5,
+          -2.32,
+          0
+        ],
+        [
+          2.65,
+          -2.32,
+          0
+        ]
+      ],
+      "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+    },
+    {
+      "id": "audience_4",
+      "role": "audience",
+      "position": [
+        -1.65,
+        -0.68,
+        0
+      ],
+      "seatContact": [
+        -1.65,
+        -0.9,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "seatObject": "Chair_4_Seat",
+      "supportObjects": [
+        "Chair_4_Seat"
+      ],
+      "approach": [
+        [
+          -2.65,
+          -2.32,
+          0
+        ],
+        [
+          -2.5,
+          -2.32,
+          0
+        ],
+        [
+          -2.5,
+          -0.42,
+          0
+        ],
+        [
+          -1.65,
+          -0.42,
+          0
+        ],
+        [
+          -1.65,
+          -0.68,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          -1.65,
+          -0.68,
+          0
+        ],
+        [
+          -1.65,
+          -0.42,
+          0
+        ],
+        [
+          -2.5,
+          -0.42,
+          0
+        ],
+        [
+          -2.5,
+          -2.32,
+          0
+        ],
+        [
+          2.65,
+          -2.32,
+          0
+        ]
+      ],
+      "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+    },
+    {
+      "id": "audience_5",
+      "role": "audience",
+      "position": [
+        -0.75,
+        -0.68,
+        0
+      ],
+      "seatContact": [
+        -0.75,
+        -0.9,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "seatObject": "Chair_5_Seat",
+      "supportObjects": [
+        "Chair_5_Seat"
+      ],
+      "approach": [
+        [
+          -2.65,
+          -2.32,
+          0
+        ],
+        [
+          0,
+          -2.32,
+          0
+        ],
+        [
+          0,
+          -0.42,
+          0
+        ],
+        [
+          -0.75,
+          -0.42,
+          0
+        ],
+        [
+          -0.75,
+          -0.68,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          -0.75,
+          -0.68,
+          0
+        ],
+        [
+          -0.75,
+          -0.42,
+          0
+        ],
+        [
+          0,
+          -0.42,
+          0
+        ],
+        [
+          0,
+          -2.32,
+          0
+        ],
+        [
+          2.65,
+          -2.32,
+          0
+        ]
+      ],
+      "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+    },
+    {
+      "id": "audience_6",
+      "role": "audience",
+      "position": [
+        0.75,
+        -0.68,
+        0
+      ],
+      "seatContact": [
+        0.75,
+        -0.9,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "seatObject": "Chair_6_Seat",
+      "supportObjects": [
+        "Chair_6_Seat"
+      ],
+      "approach": [
+        [
+          -2.65,
+          -2.32,
+          0
+        ],
+        [
+          0,
+          -2.32,
+          0
+        ],
+        [
+          0,
+          -0.42,
+          0
+        ],
+        [
+          0.75,
+          -0.42,
+          0
+        ],
+        [
+          0.75,
+          -0.68,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          0.75,
+          -0.68,
+          0
+        ],
+        [
+          0.75,
+          -0.42,
+          0
+        ],
+        [
+          0,
+          -0.42,
+          0
+        ],
+        [
+          0,
+          -2.32,
+          0
+        ],
+        [
+          2.65,
+          -2.32,
+          0
+        ]
+      ],
+      "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+    },
+    {
+      "id": "audience_7",
+      "role": "audience",
+      "position": [
+        1.65,
+        -0.68,
+        0
+      ],
+      "seatContact": [
+        1.65,
+        -0.9,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "seatObject": "Chair_7_Seat",
+      "supportObjects": [
+        "Chair_7_Seat"
+      ],
+      "approach": [
+        [
+          -2.65,
+          -2.32,
+          0
+        ],
+        [
+          2.5,
+          -2.32,
+          0
+        ],
+        [
+          2.5,
+          -0.42,
+          0
+        ],
+        [
+          1.65,
+          -0.42,
+          0
+        ],
+        [
+          1.65,
+          -0.68,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          1.65,
+          -0.68,
+          0
+        ],
+        [
+          1.65,
+          -0.42,
+          0
+        ],
+        [
+          2.5,
+          -0.42,
+          0
+        ],
+        [
+          2.5,
+          -2.32,
+          0
+        ],
+        [
+          2.65,
+          -2.32,
+          0
+        ]
+      ],
+      "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+    },
+    {
+      "id": "audience_8",
+      "role": "audience",
+      "position": [
+        -1.65,
+        -1.63,
+        0
+      ],
+      "seatContact": [
+        -1.65,
+        -1.85,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "seatObject": "Chair_8_Seat",
+      "supportObjects": [
+        "Chair_8_Seat"
+      ],
+      "approach": [
+        [
+          -2.65,
+          -2.32,
+          0
+        ],
+        [
+          -2.5,
+          -2.32,
+          0
+        ],
+        [
+          -2.5,
+          -1.37,
+          0
+        ],
+        [
+          -1.65,
+          -1.37,
+          0
+        ],
+        [
+          -1.65,
+          -1.63,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          -1.65,
+          -1.63,
+          0
+        ],
+        [
+          -1.65,
+          -1.37,
+          0
+        ],
+        [
+          -2.5,
+          -1.37,
+          0
+        ],
+        [
+          -2.5,
+          -2.32,
+          0
+        ],
+        [
+          2.65,
+          -2.32,
+          0
+        ]
+      ],
+      "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+    },
+    {
+      "id": "audience_9",
+      "role": "audience",
+      "position": [
+        -0.75,
+        -1.63,
+        0
+      ],
+      "seatContact": [
+        -0.75,
+        -1.85,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "seatObject": "Chair_9_Seat",
+      "supportObjects": [
+        "Chair_9_Seat"
+      ],
+      "approach": [
+        [
+          -2.65,
+          -2.32,
+          0
+        ],
+        [
+          0,
+          -2.32,
+          0
+        ],
+        [
+          0,
+          -1.37,
+          0
+        ],
+        [
+          -0.75,
+          -1.37,
+          0
+        ],
+        [
+          -0.75,
+          -1.63,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          -0.75,
+          -1.63,
+          0
+        ],
+        [
+          -0.75,
+          -1.37,
+          0
+        ],
+        [
+          0,
+          -1.37,
+          0
+        ],
+        [
+          0,
+          -2.32,
+          0
+        ],
+        [
+          2.65,
+          -2.32,
+          0
+        ]
+      ],
+      "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+    },
+    {
+      "id": "audience_10",
+      "role": "audience",
+      "position": [
+        0.75,
+        -1.63,
+        0
+      ],
+      "seatContact": [
+        0.75,
+        -1.85,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "seatObject": "Chair_10_Seat",
+      "supportObjects": [
+        "Chair_10_Seat"
+      ],
+      "approach": [
+        [
+          -2.65,
+          -2.32,
+          0
+        ],
+        [
+          0,
+          -2.32,
+          0
+        ],
+        [
+          0,
+          -1.37,
+          0
+        ],
+        [
+          0.75,
+          -1.37,
+          0
+        ],
+        [
+          0.75,
+          -1.63,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          0.75,
+          -1.63,
+          0
+        ],
+        [
+          0.75,
+          -1.37,
+          0
+        ],
+        [
+          0,
+          -1.37,
+          0
+        ],
+        [
+          0,
+          -2.32,
+          0
+        ],
+        [
+          2.65,
+          -2.32,
+          0
+        ]
+      ],
+      "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+    },
+    {
+      "id": "audience_11",
+      "role": "audience",
+      "position": [
+        1.65,
+        -1.63,
+        0
+      ],
+      "seatContact": [
+        1.65,
+        -1.85,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "seatObject": "Chair_11_Seat",
+      "supportObjects": [
+        "Chair_11_Seat"
+      ],
+      "approach": [
+        [
+          -2.65,
+          -2.32,
+          0
+        ],
+        [
+          2.5,
+          -2.32,
+          0
+        ],
+        [
+          2.5,
+          -1.37,
+          0
+        ],
+        [
+          1.65,
+          -1.37,
+          0
+        ],
+        [
+          1.65,
+          -1.63,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          1.65,
+          -1.63,
+          0
+        ],
+        [
+          1.65,
+          -1.37,
+          0
+        ],
+        [
+          2.5,
+          -1.37,
+          0
+        ],
+        [
+          2.5,
+          -2.32,
+          0
+        ],
+        [
+          2.65,
+          -2.32,
+          0
+        ]
+      ],
+      "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+    }
+  ],
+  "admissionOrder": [
+    "audience_1",
+    "audience_2",
+    "audience_0",
+    "audience_3",
+    "audience_5",
+    "audience_6",
+    "audience_4",
+    "audience_7",
+    "audience_9",
+    "audience_10",
+    "audience_8",
+    "audience_11"
+  ],
+  "exitOrder": [
+    "audience_11",
+    "audience_8",
+    "audience_10",
+    "audience_9",
+    "audience_7",
+    "audience_4",
+    "audience_6",
+    "audience_5",
+    "audience_3",
+    "audience_0",
+    "audience_2",
+    "audience_1"
+  ],
+  "actorPathRadiusTiles": 0.12,
+  "minimumAisleWidthTiles": 0.35,
+  "coordinateUnits": "numeric local XYZ tiles; +X=I, +Y=-J, Z up",
+  "logicalSize": 256,
+  "cameraTargetZTiles": 1.8,
+  "poseContactConvention": "position is actor foot origin; seatContact is separate pelvis support; never substitute seat height for actor origin",
+  "occlusion": "Rear canopy and posts may occlude performer naturally; coordinator owns NPC depth and final occupancy review",
+  "gate": "AUTHORED_NPC_CANDIDATE_USER_REVIEW",
+  "live_files_modified": false,
+  "sourceCandidateId": "stage_river_lv3"
+}

@@ -1,0 +1,73 @@
+{
+  "blend": "facility.blend",
+  "concept": "reference.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 0.6,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    2,
+    2
+  ],
+  "floor_mode": "full-footprint-integral",
+  "minimum_native_foreground": 1700,
+  "inventory": {
+    "posts": {
+      "prefix": "Post_",
+      "count": 4
+    },
+    "counter": {
+      "names": [
+        "Counter_body"
+      ],
+      "count": 1
+    },
+    "shelves": {
+      "prefix": "Shelf_board",
+      "count": 3
+    }
+  },
+  "groups": {
+    "floor": {
+      "names": [
+        "Foundation"
+      ]
+    },
+    "body": {
+      "prefix": "Post_"
+    },
+    "roof": {
+      "prefix": "Roof_"
+    },
+    "counter": {
+      "prefix": "Counter_"
+    },
+    "shelves": {
+      "prefix": "Shelf_"
+    }
+  },
+  "landmarks": {
+    "public_counter": [
+      0,
+      -0.73,
+      0.63
+    ],
+    "rear_shelf": [
+      0,
+      0.66,
+      0.84
+    ],
+    "asymmetric_goods": [
+      -0.43,
+      0.66,
+      0.92
+    ],
+    "customer": [
+      0,
+      -1.35,
+      0
+    ]
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "d0": {
+    "staff_door": {
+      "pixel": [
+        293.1199951171875,
+        530.0523147583008
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "counter": {
+      "pixel": [
+        342.3999938964844,
+        514.7021026611328
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "fryers": {
+      "pixel": [
+        349.4399871826172,
+        481.05850982666016
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "side_window": {
+      "pixel": [
+        451.1999816894531,
+        476.7546844482422
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        321.27999114990234,
+        580.1306762695312
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d1": {
+    "staff_door": {
+      "pixel": [
+        409.6000213623047,
+        562.6923065185547
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "counter": {
+      "pixel": [
+        472.9600067138672,
+        491.02210235595703
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "fryers": {
+      "pixel": [
+        448.0000305175781,
+        466.3385009765625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "side_window": {
+      "pixel": [
+        440.9599914550781,
+        414.67467498779297
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        494.0799865722656,
+        556.4506759643555
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d2": {
+    "staff_door": {
+      "pixel": [
+        474.8800048828125,
+        504.4523162841797
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "counter": {
+      "pixel": [
+        425.6000061035156,
+        425.7420959472656
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "fryers": {
+      "pixel": [
+        418.5600128173828,
+        417.0585021972656
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "side_window": {
+      "pixel": [
+        316.7999954223633,
+        419.79467010498047
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        446.71998596191406,
+        470.0506896972656
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d3": {
+    "staff_door": {
+      "pixel": [
+        358.4000015258789,
+        471.8123245239258
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "counter": {
+      "pixel": [
+        295.0400161743164,
+        449.422119140625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "fryers": {
+      "pixel": [
+        320.00001525878906,
+        431.7785110473633
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "side_window": {
+      "pixel": [
+        327.0400085449219,
+        481.8746795654297
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        273.9200134277344,
+        493.7306900024414
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  }
+}

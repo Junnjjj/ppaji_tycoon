@@ -1,7 +1,9 @@
+import { outdoorCapacity, outdoorGate, outdoorContract, outdoorWorld } from './outdoor-activity.js';
 /**
  * 시설 — 배치·철거·발자국 점유. 손님 길을 막고(`occupied`), 풀에 인접하면 향·SE/AB 를 준다.
  * 규칙은 전부 여기 하나: 토지 안 · 잔디/포장 위 · 풀·입구·다른 시설과 안 겹침 · 입구 도달 유지는 Game 이 전후 비교.
  */
+import { facilityPortal } from './facility-portal.js';
 import type { FacilityDef } from '../data/schema.js';
 import { Grid, FLOOR, type Rect, inLandOrWater, isGround, isWalkFloor } from './grid.js';
 import { chainScale, compositeEntryTile, compositeDeckTiles, isComposite } from './rig.js';
@@ -67,6 +69,8 @@ export function popOf(def: FacilityDef, f: { level: number }): number {
 }
 /** 개선 단계가 반영된 정원 — 3단·5단에서 +1 · P50-b1 R5: 계열 사슬은 **여기에만** `× chainScale(chainLen)` (스릴·인기엔 안 곱한다) */
 export function capacityOf(def: FacilityDef, f: { level: number; chainLen?: number }): number {
+  const physical = outdoorCapacity(def.id);
+  if (physical !== null) return physical;
   if (def.id.startsWith('module_')) return def.capacity; // Authored physical seats do not multiply with chains or upgrades.
   return def.capacity <= 0 ? 0 : Math.round((def.capacity + (f.level >= 3 ? 1 : 0) + (f.level >= 5 ? 1 : 0)) * chainScale(f.chainLen ?? 1));
 }
@@ -311,6 +315,21 @@ export class FacilityStore {
 
   /** 시설 발자국의 앞면(+I·+J 바깥) 칸 중 걸을 수 있는 곳 — 손님이 서는 자리 */
   entryTiles(f: PlacedFacility, walkable: (i: number, j: number) => boolean): { i: number; j: number }[] {
+    const outdoor = outdoorContract(f.defId);
+    if (outdoor) {
+      const entry = outdoorGate(f)!, exit = outdoorGate(f, true)!;
+      const open = (tile: { i: number; j: number }, point: [number, number, number]) => {
+        const inner = outdoorWorld(f, point);
+        return walkable(tile.i, tile.j) && this.grid.canCross(tile.i, tile.j, Math.floor(inner.i), Math.floor(inner.j));
+      };
+      return open(entry, outdoor.entry) && open(exit, outdoor.exit) ? [entry] : [];
+    }
+    const portal = facilityPortal(f);
+    if (portal) {
+      const { i, j } = portal.entry;
+      const inner = f.facing === 0 ? { i, j: j - 1 } : { i: i - 1, j };
+      return walkable(i, j) && this.grid.canCross(i, j, inner.i, inner.j) ? [{ i, j }] : [];
+    }
     const entry=compositeEntryTile(f.defId,f.i,f.j,f.facing);
     if(entry) return walkable(entry.i,entry.j)?[entry]:[];
     return FacilityStore.ring(this.defOf(f), f.i, f.j, f.facing).filter((t) => walkable(t.i, t.j));

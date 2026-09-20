@@ -1,0 +1,69 @@
+{
+  "sourceSHA": "0e23596d75607ea74a64292d3f2b1ad903f464d9b9f0946f6cf7f2fabc659eab",
+  "review": "stage_river_lv3/review",
+  "checks": [
+    {
+      "d": 0,
+      "mode": "native",
+      "sha256": "ddd8f69d327763e0a4c65bea0bc6272e0c86e8d8ee9782af94e21a50d8231f2c",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 0,
+      "mode": "color",
+      "sha256": "6550d32c8e5ed5889e57d94c14e50911fbf589a8f21f328d79f8bbb68fafafc5",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 1,
+      "mode": "native",
+      "sha256": "75d1e143e21564bdd88f5950892a9819d2ef9433f1e391dc566c3356621f2558",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 1,
+      "mode": "color",
+      "sha256": "6c8d6a91dafe3fbe7e98986c64c64b30526d65d0ca338ea328e6c1275a3c8320",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 2,
+      "mode": "native",
+      "sha256": "894bd63172f0cbab44091487ed1c4c374dd583ee16b7b9a0052a516d8a2b78b0",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 2,
+      "mode": "color",
+      "sha256": "b1e10065b9cbd28213d1699408ca8b7b20e0cde386c59393e2467b489b734e34",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 3,
+      "mode": "native",
+      "sha256": "e95af3bd0d8d7b2e8b83d82d58bfa747dff20164b50e88158ad5c7885b1ff099",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 3,
+      "mode": "color",
+      "sha256": "ec44bf0ad1ba7f389a2f56e6c261f079c12e136da44f89a04f0d54e30e3dc8f2",
+      "rgbaEqual": true,
+      "clipped": false
+    }
+  ],
+  "rawProjection": {
+    "d0": "FAIL",
+    "d1": "WARN",
+    "d2": "PASS",
+    "d3": "FAIL"
+  },
+  "liveModified": false
+}

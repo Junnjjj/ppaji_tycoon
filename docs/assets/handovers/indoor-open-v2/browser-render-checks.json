@@ -1,0 +1,218 @@
+[
+  {
+    "id": "info",
+    "facing": 0,
+    "texture": "fac/info/0",
+    "ghost": "fac/info/0",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "info",
+    "facing": 1,
+    "texture": "fac/info/1",
+    "ghost": "fac/info/1",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "office",
+    "facing": 0,
+    "texture": "fac/office/0",
+    "ghost": "fac/office/0",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "office",
+    "facing": 1,
+    "texture": "fac/office/1",
+    "ghost": "fac/office/1",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "sauna",
+    "facing": 0,
+    "texture": "fac/sauna/0",
+    "ghost": "fac/sauna/0",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "sauna",
+    "facing": 1,
+    "texture": "fac/sauna/1",
+    "ghost": "fac/sauna/1",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "jjimjilbang",
+    "facing": 0,
+    "texture": "fac/jjimjilbang/0",
+    "ghost": "fac/jjimjilbang/0",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "jjimjilbang",
+    "facing": 1,
+    "texture": "fac/jjimjilbang/1",
+    "ghost": "fac/jjimjilbang/1",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "indoor_shop",
+    "facing": 0,
+    "texture": "fac/indoor_shop/0",
+    "ghost": "fac/indoor_shop/0",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "indoor_shop",
+    "facing": 1,
+    "texture": "fac/indoor_shop/1",
+    "ghost": "fac/indoor_shop/1",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "authored_locker_row",
+    "facing": 0,
+    "texture": "fac/authored_locker_row/0",
+    "ghost": "fac/authored_locker_row/0",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "authored_locker_row",
+    "facing": 1,
+    "texture": "fac/authored_locker_row/1",
+    "ghost": "fac/authored_locker_row/1",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "authored_infirmary",
+    "facing": 0,
+    "texture": "fac/authored_infirmary/0",
+    "ghost": "fac/authored_infirmary/0",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "authored_infirmary",
+    "facing": 1,
+    "texture": "fac/authored_infirmary/1",
+    "ghost": "fac/authored_infirmary/1",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "authored_shower_row",
+    "facing": 0,
+    "texture": "fac/authored_shower_row/0",
+    "ghost": "fac/authored_shower_row/0",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "authored_shower_row",
+    "facing": 1,
+    "texture": "fac/authored_shower_row/1",
+    "ghost": "fac/authored_shower_row/1",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "authored_changing_row",
+    "facing": 0,
+    "texture": "fac/authored_changing_row/0",
+    "ghost": "fac/authored_changing_row/0",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "authored_changing_row",
+    "facing": 1,
+    "texture": "fac/authored_changing_row/1",
+    "ghost": "fac/authored_changing_row/1",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "authored_karaoke",
+    "facing": 0,
+    "texture": "fac/authored_karaoke/0",
+    "ghost": "fac/authored_karaoke/0",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "authored_karaoke",
+    "facing": 1,
+    "texture": "fac/authored_karaoke/1",
+    "ghost": "fac/authored_karaoke/1",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "vending_in",
+    "facing": 0,
+    "texture": "fac/vending_in/0",
+    "ghost": "fac/vending_in/0",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "vending_in",
+    "facing": 1,
+    "texture": "fac/vending_in/1",
+    "ghost": "fac/vending_in/1",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "arcade",
+    "facing": 0,
+    "texture": "fac/arcade/0",
+    "ghost": "fac/arcade/0",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  },
+  {
+    "id": "arcade",
+    "facing": 1,
+    "texture": "fac/arcade/1",
+    "ghost": "fac/arcade/1",
+    "positionMatch": true,
+    "anchorMatch": true,
+    "scale": 1
+  }
+]

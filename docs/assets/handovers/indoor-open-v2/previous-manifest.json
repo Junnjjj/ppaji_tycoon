@@ -1,0 +1,7010 @@
+{
+ "schema": "ppaji-approved-facilities/1",
+ "source": "assets/generated/kairo-v4-simple-pilot/ppaji-buildable-pair-v2 (ppaji-buildable-pair-v2, 2026-09-15)",
+ "projection": {
+  "tileScreenPx": [
+   32,
+   16
+  ],
+  "tileWorld": 22.627416997969522,
+  "cameraYawDeg": 45,
+  "cameraElevationDeg": 30,
+  "cameraTargetZTiles": 0.65,
+  "anchorRule": "ax = logicalSize/2 ; ay = logicalSize/2 + cameraTargetZTiles*tileWorld*cos(30deg)"
+ },
+ "coordinates": "asset local +X = game +I, +Y = game -J, +Z = height in tiles. facing f rotates (I,J) -> R^f with R:(I,J)->(J,-I).",
+ "facilities": {
+  "ppaji_slide": {
+   "name": "빠지 슬라이드",
+   "size": [
+    8,
+    6
+   ],
+   "artSize": [
+    7,
+    5
+   ],
+   "footprintOrigin": [
+    -4,
+    -2.5
+   ],
+   "footprintCenter": [
+    0,
+    0.5
+   ],
+   "logicalSize": 256,
+   "anchor": {
+    "ax": 128.0,
+    "ay": 140.7373
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     4,
+     3.5
+    ],
+    [
+     3.5,
+     4
+    ],
+    [
+     4,
+     2.5
+    ],
+    [
+     2.5,
+     4
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     8,
+     6
+    ],
+    [
+     6,
+     8
+    ],
+    [
+     8,
+     6
+    ],
+    [
+     6,
+     8
+    ]
+   ],
+   "entry": [
+    -3,
+    -0.5,
+    0.22
+   ],
+   "exit": [
+    -3,
+    -0.5,
+    0.22
+   ],
+   "landmarks": {
+    "boarding_entry": [
+     -3,
+     -0.5,
+     0.22
+    ],
+    "boarding_to_obstacle": [
+     -1,
+     -0.5,
+     0.22
+    ],
+    "obstacle_to_connector": [
+     1,
+     -0.5,
+     0.22
+    ],
+    "slide_entry": [
+     1.85,
+     0.08,
+     0.22
+    ],
+    "slide_launch": [
+     2.6,
+     2.17,
+     1.6
+    ],
+    "water_landing": [
+     2.6,
+     -0.42,
+     0
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "reserve whole rectangular footprint including open water; water remains transparent in facility art",
+   "blueprint": "ppaji_slide/blueprint.json",
+   "frames": {
+    "d0": {
+     "file": "ppaji_slide/native-d0.png",
+     "w": 256,
+     "h": 256,
+     "sha256": "5109aae5dab3be28bd8653fbfab25be4d162922be86f9f9102d0537a66ebb664"
+    },
+    "d1": {
+     "file": "ppaji_slide/native-d1.png",
+     "w": 256,
+     "h": 256,
+     "sha256": "1b3d813669877f587f8db9cef5cdcddc1fb662b0f43665088ce6ee41655b2149"
+    },
+    "d2": {
+     "file": "ppaji_slide/native-d2.png",
+     "w": 256,
+     "h": 256,
+     "sha256": "19d7f5b04ecfbabff5bef11b0bd67c77f110aa1434aba6542e9b06751319fcc8"
+    },
+    "d3": {
+     "file": "ppaji_slide/native-d3.png",
+     "w": 256,
+     "h": 256,
+     "sha256": "d5e439c497dd5a1ef4c1e60f96eb8e60e2d600a44dec18fe1d536fdc6a2d4d8b"
+    }
+   },
+   "deckTiles": [
+    [
+     1,
+     3
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     5,
+     4
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     6,
+     1
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     7,
+     1
+    ],
+    [
+     7,
+     2
+    ]
+   ],
+   "routes": {
+    "file": "routes.json",
+    "entry": [
+     -3,
+     -0.5,
+     0.22
+    ],
+    "tourCycle": 42.725,
+    "tourUseTicks": 146,
+    "visits": [
+     {
+      "component": "rig_slide",
+      "cycle": 42.725,
+      "useTicks": 146
+     }
+    ],
+    "meanVisitCycle": 42.725,
+    "useTicksRule": "useTicks = cycleSeconds / (TICK_SCALE * TICK_MS/1000) = cycleSeconds / 0.291667"
+   }
+  },
+  "ppaji_playground": {
+   "name": "빠지 놀이터",
+   "size": [
+    20,
+    12
+   ],
+   "artSize": [
+    20,
+    12
+   ],
+   "footprintOrigin": [
+    -11,
+    -6
+   ],
+   "footprintCenter": [
+    -1,
+    0
+   ],
+   "logicalSize": 640,
+   "anchor": {
+    "ax": 320.0,
+    "ay": 332.7373
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     11,
+     6
+    ],
+    [
+     6,
+     9
+    ],
+    [
+     9,
+     6
+    ],
+    [
+     6,
+     11
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     20,
+     12
+    ],
+    [
+     12,
+     20
+    ],
+    [
+     20,
+     12
+    ],
+    [
+     12,
+     20
+    ]
+   ],
+   "entry": [
+    -11,
+    -1,
+    0.22
+   ],
+   "exit": [
+    -11,
+    -1,
+    0.22
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "reserve whole rectangular footprint including open water; water remains transparent in facility art",
+   "blueprint": "ppaji_playground/blueprint.json",
+   "frames": {
+    "d0": {
+     "file": "ppaji_playground/native-d0.png",
+     "w": 640,
+     "h": 640,
+     "sha256": "a244e755e71ddf77009215f59081987ac944f05e5575bbf2d84c5b4ecc24d80f"
+    },
+    "d1": {
+     "file": "ppaji_playground/native-d1.png",
+     "w": 640,
+     "h": 640,
+     "sha256": "6289a79b794ee78348c53ab9d836afd5e8dd453c3e50a61c0a97cb928b3ba198"
+    },
+    "d2": {
+     "file": "ppaji_playground/native-d2.png",
+     "w": 640,
+     "h": 640,
+     "sha256": "27b2640e8a020e04c8c4da2fafb8adaab3488cec123f045410d0b82f026a879a"
+    },
+    "d3": {
+     "file": "ppaji_playground/native-d3.png",
+     "w": 640,
+     "h": 640,
+     "sha256": "c6e67b1dbda368ac9d96c89118294dec5089383858016c700158ce8452fa7cfc"
+    }
+   },
+   "deckTiles": [
+    [
+     0,
+     6
+    ],
+    [
+     0,
+     7
+    ],
+    [
+     1,
+     6
+    ],
+    [
+     1,
+     7
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     2,
+     6
+    ],
+    [
+     2,
+     7
+    ],
+    [
+     2,
+     8
+    ],
+    [
+     2,
+     9
+    ],
+    [
+     2,
+     10
+    ],
+    [
+     2,
+     11
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     3,
+     6
+    ],
+    [
+     3,
+     7
+    ],
+    [
+     3,
+     8
+    ],
+    [
+     3,
+     9
+    ],
+    [
+     3,
+     10
+    ],
+    [
+     3,
+     11
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     4,
+     11
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     5,
+     11
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     4
+    ],
+    [
+     6,
+     11
+    ],
+    [
+     7,
+     0
+    ],
+    [
+     7,
+     4
+    ],
+    [
+     7,
+     11
+    ],
+    [
+     8,
+     0
+    ],
+    [
+     8,
+     3
+    ],
+    [
+     8,
+     4
+    ],
+    [
+     8,
+     11
+    ],
+    [
+     9,
+     0
+    ],
+    [
+     9,
+     3
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     9,
+     11
+    ],
+    [
+     10,
+     0
+    ],
+    [
+     10,
+     3
+    ],
+    [
+     10,
+     4
+    ],
+    [
+     10,
+     11
+    ],
+    [
+     11,
+     0
+    ],
+    [
+     11,
+     3
+    ],
+    [
+     11,
+     4
+    ],
+    [
+     11,
+     11
+    ],
+    [
+     12,
+     0
+    ],
+    [
+     12,
+     9
+    ],
+    [
+     12,
+     11
+    ],
+    [
+     13,
+     0
+    ],
+    [
+     13,
+     9
+    ],
+    [
+     13,
+     11
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     14,
+     11
+    ],
+    [
+     15,
+     0
+    ],
+    [
+     15,
+     11
+    ],
+    [
+     16,
+     0
+    ],
+    [
+     16,
+     11
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     17,
+     11
+    ],
+    [
+     18,
+     0
+    ],
+    [
+     18,
+     7
+    ],
+    [
+     18,
+     11
+    ],
+    [
+     19,
+     0
+    ],
+    [
+     19,
+     1
+    ],
+    [
+     19,
+     2
+    ],
+    [
+     19,
+     3
+    ],
+    [
+     19,
+     4
+    ],
+    [
+     19,
+     5
+    ],
+    [
+     19,
+     6
+    ],
+    [
+     19,
+     7
+    ],
+    [
+     19,
+     8
+    ],
+    [
+     19,
+     9
+    ],
+    [
+     19,
+     10
+    ],
+    [
+     19,
+     11
+    ]
+   ],
+   "routes": {
+    "file": "routes.json",
+    "entry": [
+     -11,
+     -1,
+     0.22
+    ],
+    "tourCycle": 367.166,
+    "tourUseTicks": 1259,
+    "visits": [
+     {
+      "component": "rig_beam",
+      "cycle": 57.789,
+      "useTicks": 198
+     },
+     {
+      "component": "rig_roller",
+      "cycle": 59.812,
+      "useTicks": 205
+     },
+     {
+      "component": "rig_totem",
+      "cycle": 68.46,
+      "useTicks": 235
+     },
+     {
+      "component": "rig_seesaw",
+      "cycle": 60.789,
+      "useTicks": 208
+     },
+     {
+      "component": "waterwalk",
+      "cycle": 46.09,
+      "useTicks": 158
+     },
+     {
+      "component": "rig_disc",
+      "cycle": 35.676,
+      "useTicks": 122
+     },
+     {
+      "component": "rig_kids_park",
+      "cycle": 66.642,
+      "useTicks": 228
+     },
+     {
+      "component": "rig_mini_slide",
+      "cycle": 119.495,
+      "useTicks": 410
+     },
+     {
+      "component": "rig_slidedock",
+      "cycle": 65.355,
+      "useTicks": 224
+     },
+     {
+      "component": "trampoline_w",
+      "cycle": 70.772,
+      "useTicks": 243
+     },
+     {
+      "component": "rig_hammock",
+      "cycle": 30.642,
+      "useTicks": 105
+     },
+     {
+      "component": "rig_sunbed",
+      "cycle": 57.491,
+      "useTicks": 197
+     }
+    ],
+    "meanVisitCycle": 61.584,
+    "useTicksRule": "useTicks = cycleSeconds / (TICK_SCALE * TICK_MS/1000) = cycleSeconds / 0.291667"
+   }
+  },
+  "boarding_dock": {
+   "name": "승하선 데크",
+   "size": [
+    2,
+    1
+   ],
+   "artSize": [
+    2,
+    1
+   ],
+   "footprintOrigin": [
+    -1,
+    -0.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.7373
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1,
+     0.5
+    ],
+    [
+     0.5,
+     1
+    ],
+    [
+     1,
+     0.5
+    ],
+    [
+     0.5,
+     1
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     1,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0.5,
+    0.22
+   ],
+   "exit": [
+    0,
+    -0.5,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     0.5,
+     0.22
+    ],
+    "board": [
+     0,
+     -0.5,
+     0.22
+    ],
+    "approach": [
+     0,
+     0.42,
+     0.22
+    ],
+    "wait_stop": [
+     0,
+     -0.38,
+     0.22
+    ],
+    "cleat_left": [
+     -0.84,
+     -0.28,
+     0.335
+    ],
+    "cleat_right": [
+     0.84,
+     -0.28,
+     0.335
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "full 2x1 footprint is deck; the water berth is OUTSIDE the footprint (access.json berth_water_not_in_footprint)",
+   "blueprint": "boarding_dock/access.json",
+   "deckTiles": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ]
+   ],
+   "frames": {
+    "d0": {
+     "file": "boarding_dock/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a7ffe90de417d0247a4c3d512244204568747bcb988617563b07bb74c831b84d"
+    },
+    "d1": {
+     "file": "boarding_dock/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "5356321ff23d41a7eb0f8232d4f4d3bde88e7b4928c556e6e59567caa09b3117"
+    },
+    "d2": {
+     "file": "boarding_dock/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "cd0d4449aae15b185e73fd9277914a591917b017d9400ae50884426605e8aa25"
+    },
+    "d3": {
+     "file": "boarding_dock/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "c4f59e37ebaf966e0a7a2b76eb5be7c3f1de97f53063416b2839b210ccb37c88"
+    }
+   },
+   "note": "ppaji-boarding-2x1-v1 full deck variant. The fittings-only variant stays HOLD (native foreground 34/35 below the 35 gate) and is NOT adopted. Queue waits on the rear deck; one guest boards at a time (access.json flow)."
+  },
+  "float_deck": {
+   "name": "플로팅덱",
+   "size": [
+    1,
+    1
+   ],
+   "artSize": [
+    1,
+    1
+   ],
+   "footprintOrigin": [
+    -0.5,
+    -0.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0.22
+   ],
+   "exit": [
+    0,
+    0,
+    0.22
+   ],
+   "landmarks": {
+    "east": [
+     0.5,
+     0,
+     0.22
+    ],
+    "west": [
+     -0.5,
+     0,
+     0.22
+    ],
+    "north": [
+     0,
+     0.5,
+     0.22
+    ],
+    "south": [
+     0,
+     -0.5,
+     0.22
+    ],
+    "corner_cap": [
+     -0.435,
+     -0.435,
+     0.22
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/reuse/connector_deck",
+   "deckTiles": [
+    [
+     0,
+     0
+    ]
+   ],
+   "frames": {
+    "d0": {
+     "file": "float_deck/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "bebad8aaa7de710e1f8f3a933cf29599333198aa73330738b6c4699826319d8f"
+    },
+    "d1": {
+     "file": "float_deck/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "9e36487b6d167fbaf4e08858d46c33e443538b6310614ef301f54c3d2e4d83f1"
+    },
+    "d2": {
+     "file": "float_deck/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "838df3600b70dc67477d62c5541113ce92fb9c9ff9b99fedd179f51c4eca162a"
+    },
+    "d3": {
+     "file": "float_deck/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "10ee33995b0412d54db82e0a44a0432d21f63c134f7950202de1bac25ac57a97"
+    }
+   }
+  },
+  "rig_blob": {
+   "name": "블롭 점프",
+   "size": [
+    3,
+    1
+   ],
+   "artSize": [
+    3,
+    1
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -0.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.5,
+     0.5
+    ],
+    [
+     0.5,
+     1.5
+    ],
+    [
+     1.5,
+     0.5
+    ],
+    [
+     0.5,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     1
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     1,
+     3
+    ]
+   ],
+   "entry": [
+    -1.49,
+    0,
+    0.22
+   ],
+   "exit": [
+    -1.49,
+    0,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     -1.49,
+     0,
+     0.22
+    ],
+    "launch": [
+     -0.72,
+     0,
+     1.28
+    ],
+    "impact": [
+     -0.35,
+     0,
+     0.67
+    ],
+    "rider": [
+     1.12,
+     0,
+     0.68
+    ],
+    "landing": [
+     1.95,
+     0,
+     0
+    ],
+    "return": [
+     -1.5,
+     0,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_blob",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_blob/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "fe8216a0bd150d21b809156e442dd6327088a2519e9f18e806bb81ee87dd5735"
+    },
+    "d1": {
+     "file": "rig_blob/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "714173623814c0c785a67ec17cd3e8649ee075c4a45e5730a756ef3023badbf3"
+    },
+    "d2": {
+     "file": "rig_blob/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "4607ee695b4096610ba286bd83c5013f0da1dee63aca50590b0ba4df3fc05d6e"
+    },
+    "d3": {
+     "file": "rig_blob/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "2d5f1a8a4ac32f08731e6e06730cb1672ed310d76eebbc16515a37cb5d8b02ef"
+    }
+   }
+  },
+  "rig_jump_tower": {
+   "name": "점프 타워",
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    -0.12,
+    -0.96,
+    0.22
+   ],
+   "exit": [
+    -0.12,
+    -0.96,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     -0.12,
+     -0.96,
+     0.22
+    ],
+    "launch": [
+     -0.12,
+     0.69,
+     1.8
+    ],
+    "landing": [
+     -0.12,
+     1.56,
+     0
+    ],
+    "return": [
+     0.76,
+     -1.0,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_jump_tower",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_jump_tower/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a350d650ea13fe8ef562f442e06838a19ec829dfd7c7a3785ee8fb75a3b2f244"
+    },
+    "d1": {
+     "file": "rig_jump_tower/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "f0b018a603dda1fde3b0dd38f34570c3f05c0cfdfc96e79f541ef58166f7f48b"
+    },
+    "d2": {
+     "file": "rig_jump_tower/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "773b7d1c140a3b29d046035b52ef14a57ebbe920a96a789a37a749fb42fc2f54"
+    },
+    "d3": {
+     "file": "rig_jump_tower/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "dbf776320ebc4475cfd461f3837ac284da7a416b80cd23f81fd2f6c6281faaa5"
+    }
+   }
+  },
+  "diving": {
+   "name": "다이빙대",
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    -0.12,
+    -0.96,
+    0.22
+   ],
+   "exit": [
+    -0.12,
+    -0.96,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     -0.12,
+     -0.96,
+     0.22
+    ],
+    "launch": [
+     -0.12,
+     0.97,
+     0.95
+    ],
+    "landing": [
+     -0.12,
+     1.56,
+     0
+    ],
+    "return": [
+     0.76,
+     -1.0,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/diving",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "diving/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "0f5f1535cc83311d1c0b9db4161fd88fb0e802294f6ad7f909197c5930e668cd"
+    },
+    "d1": {
+     "file": "diving/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "177014bebe2fe2f5ed53266dde20ef279eb55e92cf670c321fd339da3cc629b4"
+    },
+    "d2": {
+     "file": "diving/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "930dea58bbbd9e444c8336923154120ccae86203aab8ea69c20075f7f185c681"
+    },
+    "d3": {
+     "file": "diving/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "19049a73ea72311040cccfd8c796a9e4e1f6d89787d9e3239ea63b6b17df75e7"
+    }
+   }
+  },
+  "rig_iceberg": {
+   "name": "아이스버그",
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0.96,
+    0.22
+   ],
+   "exit": [
+    0,
+    0.96,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     0.96,
+     0.22
+    ],
+    "climb": [
+     0,
+     0.59,
+     0.45
+    ],
+    "launch": [
+     0,
+     -0.3,
+     1.76
+    ],
+    "landing": [
+     0,
+     -1.55,
+     0
+    ],
+    "return": [
+     0.67,
+     0.96,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_iceberg",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_iceberg/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "ed16c7f0e66eeff7d561c5367cb8c11da4f8b277570cbbe4e4347725ae0be67d"
+    },
+    "d1": {
+     "file": "rig_iceberg/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "fd571dff0b6aac4765708a8993ffe07cb15700e7498e381b43ba31460d663a07"
+    },
+    "d2": {
+     "file": "rig_iceberg/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "23be216d02eb77e1a14b9dacf823328405c8dfec131ee2364fdebe883d65e59d"
+    },
+    "d3": {
+     "file": "rig_iceberg/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "9658655542e16b2ce9e8f03d5909f4784a5485b10148d9913a49f54b7c63be6f"
+    }
+   }
+  },
+  "rig_bridge": {
+   "name": "장애물 다리",
+   "size": [
+    1,
+    2
+   ],
+   "artSize": [
+    1,
+    2
+   ],
+   "footprintOrigin": [
+    -0.5,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     0.5,
+     1.0
+    ],
+    [
+     1.0,
+     0.5
+    ],
+    [
+     0.5,
+     1.0
+    ],
+    [
+     1.0,
+     0.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ]
+   ],
+   "entry": [
+    0,
+    -1,
+    0.25
+   ],
+   "exit": [
+    0,
+    -1,
+    0.25
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -1,
+     0.25
+    ],
+    "exit": [
+     0,
+     1,
+     0.25
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_bridge",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_bridge/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "e350048c8f31ba5319d0b19dfed5081f34add05806b10153464f0603fd557449"
+    },
+    "d1": {
+     "file": "rig_bridge/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "6604bff6a17c43379bc80cf46d0f5fe568e73eccf8591ac4d9db2121d710ec0f"
+    },
+    "d2": {
+     "file": "rig_bridge/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a213271eb2ee75f803e6d088ffad4f64f9046ecb04b41c873e31d14eb7b2028a"
+    },
+    "d3": {
+     "file": "rig_bridge/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "b00e14a50a6242f5c4093d494c6746e56658d002865490fba904d7d6ae87a716"
+    }
+   }
+  },
+  "rig_stepstone": {
+   "name": "징검다리",
+   "size": [
+    1,
+    1
+   ],
+   "artSize": [
+    1,
+    1
+   ],
+   "footprintOrigin": [
+    -0.5,
+    -0.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "entry": [
+    0,
+    -0.5,
+    0.22
+   ],
+   "exit": [
+    0,
+    -0.5,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -0.5,
+     0.22
+    ],
+    "use": [
+     0,
+     0,
+     0.48
+    ],
+    "exit": [
+     0,
+     0.5,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_stepstone",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_stepstone/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "e057ffbe95ca55c271e760485096283d1597445f76c6e8bb78bdd306228b0673"
+    },
+    "d1": {
+     "file": "rig_stepstone/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a643f3215c6fa85e0f65abec213a9c01365da2e1ba7b08f265ec7db596bae5ae"
+    },
+    "d2": {
+     "file": "rig_stepstone/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "7548853b61c19464bd3d9daee06ee2942ebc986aa2529984b05cae1e98cbba47"
+    },
+    "d3": {
+     "file": "rig_stepstone/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "ff0021756ae29b301e6119b5092fe19834b02ddc8560f556bbf3a10fc3c6891f"
+    }
+   }
+  },
+  "rig_bridge_swing": {
+   "name": "흔들다리 닌자",
+   "size": [
+    1,
+    2
+   ],
+   "artSize": [
+    1,
+    2
+   ],
+   "footprintOrigin": [
+    -0.5,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     0.5,
+     1.0
+    ],
+    [
+     1.0,
+     0.5
+    ],
+    [
+     0.5,
+     1.0
+    ],
+    [
+     1.0,
+     0.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ]
+   ],
+   "entry": [
+    0,
+    -1,
+    0.25
+   ],
+   "exit": [
+    0,
+    -1,
+    0.25
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -1,
+     0.25
+    ],
+    "exit": [
+     0,
+     1,
+     0.25
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_bridge",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_bridge/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "e350048c8f31ba5319d0b19dfed5081f34add05806b10153464f0603fd557449"
+    },
+    "d1": {
+     "file": "rig_bridge/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "6604bff6a17c43379bc80cf46d0f5fe568e73eccf8591ac4d9db2121d710ec0f"
+    },
+    "d2": {
+     "file": "rig_bridge/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a213271eb2ee75f803e6d088ffad4f64f9046ecb04b41c873e31d14eb7b2028a"
+    },
+    "d3": {
+     "file": "rig_bridge/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "b00e14a50a6242f5c4093d494c6746e56658d002865490fba904d7d6ae87a716"
+    }
+   },
+   "visualSource": "rig_bridge",
+   "note": "System upgrade reuses the approved base geometry; no separate authored upgrade model exists."
+  },
+  "rig_bridge_long": {
+   "name": "단군 롱브릿지",
+   "size": [
+    1,
+    2
+   ],
+   "artSize": [
+    1,
+    2
+   ],
+   "footprintOrigin": [
+    -0.5,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     0.5,
+     1.0
+    ],
+    [
+     1.0,
+     0.5
+    ],
+    [
+     0.5,
+     1.0
+    ],
+    [
+     1.0,
+     0.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ]
+   ],
+   "entry": [
+    0,
+    -1,
+    0.25
+   ],
+   "exit": [
+    0,
+    -1,
+    0.25
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -1,
+     0.25
+    ],
+    "exit": [
+     0,
+     1,
+     0.25
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_bridge",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_bridge/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "e350048c8f31ba5319d0b19dfed5081f34add05806b10153464f0603fd557449"
+    },
+    "d1": {
+     "file": "rig_bridge/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "6604bff6a17c43379bc80cf46d0f5fe568e73eccf8591ac4d9db2121d710ec0f"
+    },
+    "d2": {
+     "file": "rig_bridge/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a213271eb2ee75f803e6d088ffad4f64f9046ecb04b41c873e31d14eb7b2028a"
+    },
+    "d3": {
+     "file": "rig_bridge/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "b00e14a50a6242f5c4093d494c6746e56658d002865490fba904d7d6ae87a716"
+    }
+   },
+   "visualSource": "rig_bridge",
+   "note": "System upgrade reuses the approved base geometry; no separate authored upgrade model exists."
+  },
+  "rig_iceberg_wall": {
+   "name": "빅마블 월",
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0.96,
+    0.22
+   ],
+   "exit": [
+    0,
+    0.96,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     0.96,
+     0.22
+    ],
+    "climb": [
+     0,
+     0.59,
+     0.45
+    ],
+    "launch": [
+     0,
+     -0.3,
+     1.76
+    ],
+    "landing": [
+     0,
+     -1.55,
+     0
+    ],
+    "return": [
+     0.67,
+     0.96,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_iceberg",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_iceberg/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "ed16c7f0e66eeff7d561c5367cb8c11da4f8b277570cbbe4e4347725ae0be67d"
+    },
+    "d1": {
+     "file": "rig_iceberg/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "fd571dff0b6aac4765708a8993ffe07cb15700e7498e381b43ba31460d663a07"
+    },
+    "d2": {
+     "file": "rig_iceberg/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "23be216d02eb77e1a14b9dacf823328405c8dfec131ee2364fdebe883d65e59d"
+    },
+    "d3": {
+     "file": "rig_iceberg/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "9658655542e16b2ce9e8f03d5909f4784a5485b10148d9913a49f54b7c63be6f"
+    }
+   },
+   "visualSource": "rig_iceberg",
+   "note": "System upgrade reuses the approved base geometry; no separate authored upgrade model exists."
+  },
+  "rig_blob_big": {
+   "name": "와일드 블롭",
+   "size": [
+    3,
+    1
+   ],
+   "artSize": [
+    3,
+    1
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -0.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.5,
+     0.5
+    ],
+    [
+     0.5,
+     1.5
+    ],
+    [
+     1.5,
+     0.5
+    ],
+    [
+     0.5,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     1
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     1,
+     3
+    ]
+   ],
+   "entry": [
+    -1.49,
+    0,
+    0.22
+   ],
+   "exit": [
+    -1.49,
+    0,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     -1.49,
+     0,
+     0.22
+    ],
+    "launch": [
+     -0.72,
+     0,
+     1.28
+    ],
+    "impact": [
+     -0.35,
+     0,
+     0.67
+    ],
+    "rider": [
+     1.12,
+     0,
+     0.68
+    ],
+    "landing": [
+     1.95,
+     0,
+     0
+    ],
+    "return": [
+     -1.5,
+     0,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_blob",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "rig_blob/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "fe8216a0bd150d21b809156e442dd6327088a2519e9f18e806bb81ee87dd5735"
+    },
+    "d1": {
+     "file": "rig_blob/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "714173623814c0c785a67ec17cd3e8649ee075c4a45e5730a756ef3023badbf3"
+    },
+    "d2": {
+     "file": "rig_blob/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "4607ee695b4096610ba286bd83c5013f0da1dee63aca50590b0ba4df3fc05d6e"
+    },
+    "d3": {
+     "file": "rig_blob/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "2d5f1a8a4ac32f08731e6e06730cb1672ed310d76eebbc16515a37cb5d8b02ef"
+    }
+   },
+   "visualSource": "rig_blob",
+   "note": "System upgrade reuses the approved base geometry; no separate authored upgrade model exists."
+  },
+  "diving_tower": {
+   "name": "다이빙 타워",
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    -0.12,
+    -0.96,
+    0.22
+   ],
+   "exit": [
+    -0.12,
+    -0.96,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     -0.12,
+     -0.96,
+     0.22
+    ],
+    "launch": [
+     -0.12,
+     0.97,
+     0.95
+    ],
+    "landing": [
+     -0.12,
+     1.56,
+     0
+    ],
+    "return": [
+     0.76,
+     -1.0,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Existing live footprint unchanged",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/diving",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "diving/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "0f5f1535cc83311d1c0b9db4161fd88fb0e802294f6ad7f909197c5930e668cd"
+    },
+    "d1": {
+     "file": "diving/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "177014bebe2fe2f5ed53266dde20ef279eb55e92cf670c321fd339da3cc629b4"
+    },
+    "d2": {
+     "file": "diving/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "930dea58bbbd9e444c8336923154120ccae86203aab8ea69c20075f7f185c681"
+    },
+    "d3": {
+     "file": "diving/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "19049a73ea72311040cccfd8c796a9e4e1f6d89787d9e3239ea63b6b17df75e7"
+    }
+   },
+   "visualSource": "diving",
+   "note": "System upgrade reuses the approved base geometry; no separate authored upgrade model exists."
+  },
+  "module_rig_slide": {
+   "name": "플로팅 슬라이드",
+   "size": [
+    2,
+    3
+   ],
+   "artSize": [
+    2,
+    3
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.5
+    ],
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ],
+    [
+     1.5,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "entry": [
+    -0.65,
+    -1.42,
+    0.22
+   ],
+   "exit": [
+    -0.65,
+    -1.42,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     -0.65,
+     -1.42,
+     0.22
+    ],
+    "launch": [
+     0.1,
+     0.67,
+     1.6
+    ],
+    "exit": [
+     0.1,
+     -1.48,
+     0.28
+    ],
+    "landing": [
+     0.1,
+     -1.92,
+     0
+    ],
+    "return": [
+     -0.76,
+     -1.5,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Authored standalone module; legacy IDs retain previous saved footprint",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/rig_slide",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "module_rig_slide/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "89f12305d444e3f9838feda5b855d476f824255a33a4fe95851f6c27429ccc09"
+    },
+    "d1": {
+     "file": "module_rig_slide/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "96fd5442ed99e700e00f1f63d33317e2a6953d5688a074d879d9d1d739f6a435"
+    },
+    "d2": {
+     "file": "module_rig_slide/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "ec26f9ba2da79d6c08e5dbe28e359161bc5823ebd941e4e3f01bc5f5e6e3a498"
+    },
+    "d3": {
+     "file": "module_rig_slide/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "1af21e7be0099591f8a24fceb224978de5c04a248081e8e6ad0990a480e6c75a"
+    }
+   },
+   "poseMasks": {
+    "slide": "support_slide"
+   },
+   "depthModes": [
+    "support_slide"
+   ],
+   "frontOverlay": false
+  },
+  "module_trampoline_w": {
+   "name": "수상 트램폴린",
+   "size": [
+    3,
+    3
+   ],
+   "artSize": [
+    3,
+    3
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "entry": [
+    0,
+    -1.46,
+    0.22
+   ],
+   "exit": [
+    0,
+    -1.46,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -1.46,
+     0.22
+    ],
+    "use": [
+     0,
+     0.1,
+     0.32
+    ],
+    "landing": [
+     0,
+     0.1,
+     0.32
+    ],
+    "return": [
+     0,
+     -1.46,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Authored standalone module; legacy IDs retain previous saved footprint",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/core/trampoline_w",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "module_trampoline_w/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "016eaa1389b975111ec087c191a334d91eaf155d37fb07fd3cb37ed51d2aa312"
+    },
+    "d1": {
+     "file": "module_trampoline_w/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "820e07a9d99752156b3163662927238ba1ac9bda35f2468f9488455efffa8457"
+    },
+    "d2": {
+     "file": "module_trampoline_w/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "95e0afe2426c11d1c12d6607f06f0de53b7f7340c123c0fffa85d086b8ed8844"
+    },
+    "d3": {
+     "file": "module_trampoline_w/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "16cd5116ebac6eb952a1ba5fa4e8bb205ad4c7026d43685ba36da05daa133697"
+    }
+   },
+   "poseMasks": {},
+   "depthModes": [],
+   "frontOverlay": false
+  },
+  "module_rig_beam": {
+   "name": "밸런스 빔",
+   "size": [
+    1,
+    3
+   ],
+   "artSize": [
+    1,
+    3
+   ],
+   "footprintOrigin": [
+    -0.5,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     0.5,
+     1.5
+    ],
+    [
+     1.5,
+     0.5
+    ],
+    [
+     0.5,
+     1.5
+    ],
+    [
+     1.5,
+     0.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     1,
+     3
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     3,
+     1
+    ]
+   ],
+   "entry": [
+    0,
+    -1.4,
+    0.22
+   ],
+   "exit": [
+    0,
+    -1.4,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -1.4,
+     0.22
+    ],
+    "use": [
+     0,
+     0,
+     0.42
+    ],
+    "exit": [
+     0,
+     1.4,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Authored standalone module; legacy IDs retain previous saved footprint",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/traversal/rig_beam/review",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "module_rig_beam/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "e422f236a79e9bda9e87965e61ed8666ee6e1a9f20ed41341b0c5acd356448ed"
+    },
+    "d1": {
+     "file": "module_rig_beam/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "cc2e7853759007fefaf8abcb3c4aef16e068546e9e782c3fdcb0675b6bb3290d"
+    },
+    "d2": {
+     "file": "module_rig_beam/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "e6ef75ba8b83db6fd150e7d00ba79d5bdb55c35dcf949e46f54a263f06fda3fc"
+    },
+    "d3": {
+     "file": "module_rig_beam/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "7d9848e0f45c2c594155b44ff78c8dfa96fce9e550775d168e66dbd69231a132"
+    }
+   },
+   "poseMasks": {},
+   "depthModes": [],
+   "frontOverlay": false
+  },
+  "module_rig_roller": {
+   "name": "워터 롤러",
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    -0.86,
+    0.22
+   ],
+   "exit": [
+    0,
+    -0.86,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -0.86,
+     0.22
+    ],
+    "use": [
+     0,
+     0.2,
+     1.023
+    ],
+    "exit": [
+     0,
+     -0.86,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Authored standalone module; legacy IDs retain previous saved footprint",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/traversal/rig_roller/review",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "module_rig_roller/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "b70f76fc8011459f1c8a92d7cbb0db68cd126a2f8149551fa682078635985342"
+    },
+    "d1": {
+     "file": "module_rig_roller/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "233f46b8d6a1911d5718531ae90b958de954915dec70ed2397b8dac281335100"
+    },
+    "d2": {
+     "file": "module_rig_roller/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "cca88beea76a7f2068f106a8b6e516eaa851f8505a5084e67eb7f7ef5229bf4b"
+    },
+    "d3": {
+     "file": "module_rig_roller/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "626648e831a76d96717d8d5122094a3deeeef82b46c8d0be0471583fc5717536"
+    }
+   },
+   "poseMasks": {},
+   "depthModes": [],
+   "frontOverlay": false
+  },
+  "module_rig_seesaw": {
+   "name": "시소 플로트",
+   "size": [
+    3,
+    2
+   ],
+   "artSize": [
+    3,
+    2
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ],
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0.22
+   ],
+   "exit": [
+    0,
+    0,
+    0.22
+   ],
+   "landmarks": {
+    "entry_left": [
+     -1.16,
+     -0.8,
+     0.22
+    ],
+    "entry_right": [
+     1.16,
+     -0.8,
+     0.22
+    ],
+    "seat_left": [
+     -0.85,
+     0,
+     0.56
+    ],
+    "seat_right": [
+     0.85,
+     0,
+     0.56
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Authored standalone module; legacy IDs retain previous saved footprint",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/traversal/rig_seesaw/review-fixed",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "module_rig_seesaw/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "9d62e4fdb1d25987f39eb3efc0ce05a5a39561d05ef313817cc73f173b668c86"
+    },
+    "d1": {
+     "file": "module_rig_seesaw/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "b7d50ab5693b4885fb50b4a20bff977b6e167b19febec84981c28e70db90c3e6"
+    },
+    "d2": {
+     "file": "module_rig_seesaw/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "7e15656f07cab40ca7468c3f6032f99c55b67e69a673b91e5972fbf64a37dc17"
+    },
+    "d3": {
+     "file": "module_rig_seesaw/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "88dcfcdce7c33dda17cc5250ddd0f1e0c14dccde9acbd1c4bcd0b4fb7b41ddf5"
+    }
+   },
+   "poseMasks": {
+    "sit": "support_sit"
+   },
+   "depthModes": [
+    "support_sit"
+   ],
+   "frontOverlay": false
+  },
+  "module_rig_totem": {
+   "name": "워터 토템",
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    -0.85,
+    0.22
+   ],
+   "exit": [
+    0,
+    -0.85,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -0.85,
+     0.22
+    ],
+    "first_hold": [
+     0,
+     -0.31,
+     0.38
+    ],
+    "highest_hold": [
+     0,
+     -0.31,
+     1.92
+    ],
+    "exit": [
+     0,
+     -0.85,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Authored standalone module; legacy IDs retain previous saved footprint",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/traversal/rig_totem/review",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "module_rig_totem/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a9690dc1d05eaf586fdb3c9aef94a5a81f8559241e6f59956ac963b27519558d"
+    },
+    "d1": {
+     "file": "module_rig_totem/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "195a08d52046dab36161afc87353d82b55d2104e7aff8d5eaf6df17c1c4c0cc8"
+    },
+    "d2": {
+     "file": "module_rig_totem/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "1b0150c4eb56b3069bfffda99b80a940d95c2c3ac938777bbe2a1df5ec122329"
+    },
+    "d3": {
+     "file": "module_rig_totem/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "775d559f87ba0df521f7bd086184a321a0c8f733e7053a2a27b5ef89928d1bf9"
+    }
+   },
+   "poseMasks": {},
+   "depthModes": [],
+   "frontOverlay": false
+  },
+  "module_rig_disc": {
+   "name": "회전 원반",
+   "size": [
+    3,
+    3
+   ],
+   "artSize": [
+    3,
+    3
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "entry": [
+    0,
+    1.47,
+    0.22
+   ],
+   "exit": [
+    0,
+    1.47,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     1.47,
+     0.22
+    ],
+    "use": [
+     0,
+     0.45,
+     0.44
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Authored standalone module; legacy IDs retain previous saved footprint",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/waterplay/rig_disc/review",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "module_rig_disc/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "f0775c2366552ec95d80cdea5ceff233518630eeb1eed1c693822bca38c98acf"
+    },
+    "d1": {
+     "file": "module_rig_disc/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "1ccd62d3c0b1ed1e80968d772e7adef221c3d074c2d698b1eaa42d1f48108335"
+    },
+    "d2": {
+     "file": "module_rig_disc/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "c26fa769ca6fd770d3900f7a63312a564b7b2f8922fd794eb4fe1550b6af8ab6"
+    },
+    "d3": {
+     "file": "module_rig_disc/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "0991b02b54fd1c069d351cff2f0ec5663510722c3c487101c94fd867777af774"
+    }
+   },
+   "poseMasks": {},
+   "depthModes": [],
+   "frontOverlay": false
+  },
+  "module_rig_mini_slide": {
+   "name": "미니 슬라이드",
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    -0.7,
+    0.96,
+    0.22
+   ],
+   "exit": [
+    -0.7,
+    0.96,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     -0.7,
+     0.96,
+     0.22
+    ],
+    "launch": [
+     0.17,
+     -0.5,
+     0.9
+    ],
+    "landing": [
+     0.17,
+     1.65,
+     0
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Authored standalone module; legacy IDs retain previous saved footprint",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/waterplay/rig_mini_slide/review",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "module_rig_mini_slide/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "973a9236170bd7230269a7753d990925e450558c5e5be6fd92690f7945e88a5b"
+    },
+    "d1": {
+     "file": "module_rig_mini_slide/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "aabed20e052dd172a7c27c654304789db43db69fb56a438734c7d71358f478a5"
+    },
+    "d2": {
+     "file": "module_rig_mini_slide/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "deada3ddadf6295d3b993734c2dee9dc864e661077480a97cf4d0fb7050f4222"
+    },
+    "d3": {
+     "file": "module_rig_mini_slide/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "92d197c7df586db010d0885749f8eed528c947d1a1470871432235c9382f130c"
+    }
+   },
+   "poseMasks": {
+    "slide": "support_slide",
+    "sit": "support_slide"
+   },
+   "depthModes": [
+    "support_slide"
+   ],
+   "frontOverlay": false
+  },
+  "module_rig_slidedock": {
+   "name": "미끄럼 도크",
+   "size": [
+    3,
+    1
+   ],
+   "artSize": [
+    3,
+    1
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -0.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.5,
+     0.5
+    ],
+    [
+     0.5,
+     1.5
+    ],
+    [
+     1.5,
+     0.5
+    ],
+    [
+     0.5,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     1
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     1,
+     3
+    ]
+   ],
+   "entry": [
+    -1.47,
+    0,
+    0.22
+   ],
+   "exit": [
+    -1.47,
+    0,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     -1.47,
+     0,
+     0.22
+    ],
+    "launch": [
+     -0.65,
+     0,
+     0.44
+    ],
+    "landing": [
+     2.1,
+     0,
+     0
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Authored standalone module; legacy IDs retain previous saved footprint",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/waterplay/rig_slidedock/review",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "module_rig_slidedock/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "945f5d75b1e7b375d9eae4b45cbd7222e32bf2db90bbbb8cfaf6f64f7d1d3b4a"
+    },
+    "d1": {
+     "file": "module_rig_slidedock/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a321fae41cf0978c154c268663d1ffed4f12977d605124f0af86a7a51ef5a4a0"
+    },
+    "d2": {
+     "file": "module_rig_slidedock/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "5ea8ebf7d3e6763848a2354ae283d05a6729997fad01622c617c90bdba72e55d"
+    },
+    "d3": {
+     "file": "module_rig_slidedock/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "f2b33b071ba15438ba96f1c4eb4abc88615dec81b8cbee285124e09d73940ad8"
+    }
+   },
+   "poseMasks": {
+    "slide": "support_slide",
+    "sit": "support_slide"
+   },
+   "depthModes": [
+    "support_slide"
+   ],
+   "frontOverlay": false
+  },
+  "module_rig_kids_park": {
+   "name": "키즈 워터 놀이터",
+   "size": [
+    3,
+    3
+   ],
+   "artSize": [
+    3,
+    3
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "entry": [
+    0,
+    1.47,
+    0.22
+   ],
+   "exit": [
+    0,
+    1.47,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     1.47,
+     0.22
+    ],
+    "obstacle": [
+     0,
+     0.19,
+     0.45
+    ],
+    "spray_left": [
+     -0.7,
+     -0.55,
+     0.22
+    ],
+    "spray_right": [
+     0.7,
+     -0.55,
+     0.22
+    ],
+    "exit": [
+     1.46,
+     -0.15,
+     0.22
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Authored standalone module; legacy IDs retain previous saved footprint",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/waterplay/rig_kids_park/review",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "module_rig_kids_park/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "4ccddaa350a1cf721087a1719ef70e9fbac010506b0910d8bcdc027a7269d86c"
+    },
+    "d1": {
+     "file": "module_rig_kids_park/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "fe79d09b6d5b05e87eec0722b7982983e902a0fc24f8dd020193d389aa61752c"
+    },
+    "d2": {
+     "file": "module_rig_kids_park/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a5be998bb8d0f395707b21f53ced11919545bd4c06b9821c328a8ca1bfa0a491"
+    },
+    "d3": {
+     "file": "module_rig_kids_park/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "f0b5d9c93216892cff646ea9a15ecd453d7d67bee03adf42b752466b7916d066"
+    }
+   },
+   "poseMasks": {},
+   "depthModes": [],
+   "frontOverlay": false
+  },
+  "module_waterwalk": {
+   "name": "워터워크볼",
+   "size": [
+    2,
+    3
+   ],
+   "artSize": [
+    2,
+    3
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.5
+    ],
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ],
+    [
+     1.5,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    1.4,
+    0.22
+   ],
+   "exit": [
+    0,
+    1.4,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     1.4,
+     0.22
+    ],
+    "hatch": [
+     0,
+     0.42,
+     0.36
+    ],
+    "interior": [
+     0,
+     -0.3,
+     0.38
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Authored standalone module; legacy IDs retain previous saved footprint",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/leisure/waterwalk/review-final",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "module_waterwalk/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "634f72532ff8207c13b322b93a74b0fbd5deaa63fd7c08a5e4adf9725014b985"
+    },
+    "d1": {
+     "file": "module_waterwalk/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "acc932bb317524b5263f9370d3e2e2720bea80cc33e744ef2781dce256ff68c6"
+    },
+    "d2": {
+     "file": "module_waterwalk/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "a80fb92879e8ba52f57c52ad9d2e27dd8ddd03b689f3c0abea9569f5243d3bef"
+    },
+    "d3": {
+     "file": "module_waterwalk/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "3be732237cc72289d5373050f413b29a84a3c62c2e68fc7be27e3e4f0096bffe"
+    }
+   },
+   "poseMasks": {
+    "idle": "support_idle",
+    "walk": "support_idle",
+    "sit": "support_idle",
+    "jump": "support_jump"
+   },
+   "depthModes": [
+    "support_idle",
+    "support_jump"
+   ],
+   "frontOverlay": true,
+   "emptyBase": true
+  },
+  "module_rig_hammock": {
+   "name": "해먹 라운지",
+   "size": [
+    2,
+    3
+   ],
+   "artSize": [
+    2,
+    3
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.5
+    ],
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ],
+    [
+     1.5,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "entry": [
+    -0.58,
+    1.42,
+    0.22
+   ],
+   "exit": [
+    -0.58,
+    1.42,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     -0.58,
+     1.42,
+     0.22
+    ],
+    "seat": [
+     0.25,
+     0,
+     0.57
+    ],
+    "head": [
+     0.25,
+     -0.55,
+     0.71
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Authored standalone module; legacy IDs retain previous saved footprint",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/leisure/rig_hammock/review",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "module_rig_hammock/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "101839a775a15721e85aa3502743ae2ceaf3bc20f331bddcd9a35c6a979e65dc"
+    },
+    "d1": {
+     "file": "module_rig_hammock/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "d69acf02fa7bf14dff7a1f05736df5fd895d854cf033ca7a8769cfa1f61c7d7d"
+    },
+    "d2": {
+     "file": "module_rig_hammock/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "9252dc4b48bb0640743d6bfb7b234642b9382a4bbd1b3258bd3267d06ed95207"
+    },
+    "d3": {
+     "file": "module_rig_hammock/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "4f97c2ffa863edbf05854c31c081d7d8a4ac083125e125df307cb0daa7880b1c"
+    }
+   },
+   "poseMasks": {
+    "sit": "support_sit",
+    "lie": "support_sit"
+   },
+   "depthModes": [
+    "support_sit"
+   ],
+   "frontOverlay": false
+  },
+  "module_rig_sunbed": {
+   "name": "선베드 플로트",
+   "size": [
+    1,
+    2
+   ],
+   "artSize": [
+    1,
+    2
+   ],
+   "footprintOrigin": [
+    -0.5,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     0.5,
+     1.0
+    ],
+    [
+     1.0,
+     0.5
+    ],
+    [
+     0.5,
+     1.0
+    ],
+    [
+     1.0,
+     0.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     1
+    ]
+   ],
+   "entry": [
+    0,
+    0.88,
+    0.22
+   ],
+   "exit": [
+    0,
+    0.88,
+    0.22
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     0.88,
+     0.22
+    ],
+    "seat": [
+     0,
+     0.46,
+     0.55
+    ],
+    "lie": [
+     0,
+     0.04,
+     0.55
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Authored standalone module; legacy IDs retain previous saved footprint",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/leisure/rig_sunbed/review",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "module_rig_sunbed/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "24be9b14d6ff8dd4eb3efcfee96d4222d8273f7627709804365b94ab4df24102"
+    },
+    "d1": {
+     "file": "module_rig_sunbed/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "70675eca644040801eed48b75e134157a0b703f41c20c1822b0c59dce7513180"
+    },
+    "d2": {
+     "file": "module_rig_sunbed/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "9a1b4b9dcb6bf7c1c44a87d33c9083732101707105d5b0f739ddb6c8540159ba"
+    },
+    "d3": {
+     "file": "module_rig_sunbed/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "2a605f77f4f25bf257c092b196c967932156a338753d0f44ee8dcc94f976563c"
+    }
+   },
+   "poseMasks": {
+    "sit": "support_sit",
+    "lie": "support_lie"
+   },
+   "depthModes": [
+    "support_sit",
+    "support_lie"
+   ],
+   "frontOverlay": false
+  },
+  "module_rig_led_buoy": {
+   "name": "LED 조명 부표",
+   "size": [
+    1,
+    1
+   ],
+   "artSize": [
+    1,
+    1
+   ],
+   "footprintOrigin": [
+    -0.5,
+    -0.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 128,
+   "anchor": {
+    "ax": 64.0,
+    "ay": 76.73734666247253
+   },
+   "deckTopZ": 0.22,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.5,
+     0.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     1
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0.22
+   ],
+   "exit": [
+    0,
+    0,
+    0.22
+   ],
+   "landmarks": {
+    "service": [
+     0,
+     0.18,
+     0.9
+    ]
+   },
+   "floorMode": "transparent-no-floor",
+   "reservation": "Authored standalone module; legacy IDs retain previous saved footprint",
+   "blueprint": "assets/generated/kairo-v4-simple-pilot/ppaji-floating-rectangle-v1/leisure/rig_led_buoy/review",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "module_rig_led_buoy/native-d0.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "e9bbc390e6997d92ce08692319492e1253d32f8394a78a2ec66c7a6c3b907f4d"
+    },
+    "d1": {
+     "file": "module_rig_led_buoy/native-d1.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "d8ab1c966eb450d3c1c1ac62f2440afc3813e98c26d17f7fbd34aa403e34c701"
+    },
+    "d2": {
+     "file": "module_rig_led_buoy/native-d2.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "7caf44e887546071de7450908e73cd394f162655b0094f1f93f03d180518c95f"
+    },
+    "d3": {
+     "file": "module_rig_led_buoy/native-d3.png",
+     "w": 128,
+     "h": 128,
+     "sha256": "743cd88f797cb71138ff446947b1000a910638c2472d245f48184286f31b4872"
+    }
+   },
+   "poseMasks": {},
+   "depthModes": [],
+   "frontOverlay": false
+  },
+  "shop": {
+   "name": "매점",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "front": [
+     0,
+     -1,
+     0.065
+    ],
+    "side_window": [
+     0.95,
+     0.12,
+     1.1
+    ],
+    "roof_rear": [
+     0,
+     1,
+     1.7796428199482248
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "shop/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "53e051a441344baf84fcba5354601f325b93483349f7e59d83d7e99edacdcacd"
+    },
+    "d1": {
+     "file": "shop/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "852803dbe2b0ad0984901e9279485eb17803303c8406a891048c26019821e862"
+    },
+    "d2": {
+     "file": "shop/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "9e9080a0870da28756f2210203568bc6b4b6abf104d6342f7ce0f50127b9b27f"
+    },
+    "d3": {
+     "file": "shop/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "5820bba659eb6f12263670a5dd79acbbd807e7847c51681b67c3da5931cdfc7e"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "infirmary": {
+   "name": "의무실",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "front": [
+     0,
+     -1,
+     0.065
+    ],
+    "side_window": [
+     0.95,
+     0.12,
+     1.1
+    ],
+    "roof_rear": [
+     0,
+     1,
+     1.7796428199482248
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "infirmary/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "26c4ff504e313fdea66f4b6bdd145a7fa3fc311b79ea8eb3ae800249834d76f3"
+    },
+    "d1": {
+     "file": "infirmary/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "f1a7856a5b54ee3488706b423c6f229c2ae8b1dd9974ab0d06866dc23070d878"
+    },
+    "d2": {
+     "file": "infirmary/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "72de946c6641cb45d79fcd0ebbff894d02c7caab6a365fe04dae7560896e97b6"
+    },
+    "d3": {
+     "file": "infirmary/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "829547a2aab87493d029638a6679563d6514ddbe4583443ae94989a9a397597d"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "storage": {
+   "name": "창고",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "front": [
+     0,
+     -1,
+     0.065
+    ],
+    "side_window": [
+     0.95,
+     0.12,
+     1.1
+    ],
+    "roof_rear": [
+     0,
+     1,
+     1.7796428199482248
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "storage/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "911351287dc2e3f0461a9c95df4422390c38517c71b42baef7d2e548f9951d47"
+    },
+    "d1": {
+     "file": "storage/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "cb903ee78bd161162a481ee8fcae17529262e799b058ef706caf975d6ed4c02e"
+    },
+    "d2": {
+     "file": "storage/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "e59a0eb1bafda56497feb38dec8bb6c636d9149c0c8b1ff04f5c882de2bc5e1e"
+    },
+    "d3": {
+     "file": "storage/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "dd3ed4d5af3ac7aed2e884a0dc4fec899a981434a1350eebc75eee6acd6a9b7c"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "toilet": {
+   "name": "화장실",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "front": [
+     0,
+     -0.94,
+     0.065
+    ],
+    "ridge": [
+     0,
+     0,
+     2.202642819948225
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "toilet/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "a0a999ba784e465f4a428006c689b9ce10650ce1121790f7df7666835e439ca5"
+    },
+    "d1": {
+     "file": "toilet/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "8a5dbca1cc72b27786d00d2a4e55f77077ee9f2e0f389cd22dfe37b67d37ff40"
+    },
+    "d2": {
+     "file": "toilet/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "c9fde8011583e19e5967063d5e30e7110d1b39016108a25d98a0d28c098e728c"
+    },
+    "d3": {
+     "file": "toilet/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "66ed3a713e2fe7e3fd93ae9fb710485544a262dc37d86f56590d3fd330f4a0a1"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "nursing": {
+   "name": "수유실",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "front": [
+     0,
+     -0.94,
+     0.065
+    ],
+    "ridge": [
+     0,
+     0,
+     1.4798865626742403
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "nursing/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "d3fdcf38ccd00860e635f63b082dbe25876729ec420f4ddf484a5f7633dc2731"
+    },
+    "d1": {
+     "file": "nursing/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "c80ab517a9d742f227b9c3c39c3bf0699648356b521a9a6da2ef946b3a637798"
+    },
+    "d2": {
+     "file": "nursing/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "fbf1ab80e18d32de0663728a591a27bdde5446f7aa66282d0a2d2a2ef6a6d725"
+    },
+    "d3": {
+     "file": "nursing/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "3311288551085be2fdf6431d4ea44ce0b3a16f56bc8751be2e23411783e7244f"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "snackbar": {
+   "name": "분식",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "front": [
+     0,
+     -0.94,
+     0.065
+    ],
+    "ridge": [
+     0,
+     0,
+     2.202642819948225
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "snackbar/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "f5d653c074b615a53e1631c0411b3777cd0367c41f051230c6cb98867e784ea0"
+    },
+    "d1": {
+     "file": "snackbar/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "b1e1a83131bc8b69d0d707b6a069c585fcb01b1a8d1c8a9e282433134d5a7aee"
+    },
+    "d2": {
+     "file": "snackbar/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "6fb106b1136fd748f54a1a5a0c31581cca7a29acb290c2927b69ddc09c0c8973"
+    },
+    "d3": {
+     "file": "snackbar/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "0c17247bfd332c994ab222a35f20e1ae034c1ec74ca6207b4d8f14fdcbd33e26"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "cafe": {
+   "name": "카페",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    3,
+    2
+   ],
+   "artSize": [
+    3,
+    2
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ],
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "door": [
+     -0.8164718309859156,
+     -0.826153846153846,
+     0.7714062337273484
+    ],
+    "service": [
+     0.40591549295774654,
+     -0.8630769230769231,
+     0.5796673988584968
+    ],
+    "coffee_machine": [
+     0.7628873239436621,
+     -0.78,
+     0.9601176133087972
+    ],
+    "pastry_case": [
+     -0.052359154929577476,
+     -0.8446153846153845,
+     0.7814977513520249
+    ],
+    "side_window": [
+     1.4285915492957748,
+     0.17076923076923073,
+     1.0236941743442587
+    ],
+    "ridge": [
+     0.02,
+     0.06,
+     2.1
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "cafe/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "10e3f0164983efad4d2b4f83e71220f5e47aa29390258f69eb7e568ce8624e26"
+    },
+    "d1": {
+     "file": "cafe/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "871f0e365b25b4725d02331cf58950439b269fbca38fed7d764790ea774d0964"
+    },
+    "d2": {
+     "file": "cafe/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "0ad209037c834bec02b06cf5649db3769c7eadba7430f4c9f1524e6ba7ea94d5"
+    },
+    "d3": {
+     "file": "cafe/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "e087a8bdc75150c0e1ed27cd8115977d461c9ed0aa30b9711a3febd473b204fd"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "karaoke": {
+   "name": "노래방",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "front": [
+     0,
+     -0.94,
+     0.065
+    ],
+    "ridge": [
+     0,
+     0,
+     2.202642819948225
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "karaoke/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "5c8693afcd63d50b55c0056d9cddd1fb1e7653b3a3877e951e9365665c1b5e0b"
+    },
+    "d1": {
+     "file": "karaoke/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "273b228b483a8360d95161789fe1cafb81cefcf638676c9883c452c239eb1770"
+    },
+    "d2": {
+     "file": "karaoke/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "b0df1bee8e299e248c23e7036cf3599da7c8b4767fccb361115e35d489ebebb9"
+    },
+    "d3": {
+     "file": "karaoke/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "5eb22369118e223ef020205f94f67fd47e9bea25c301f07a731b684106df6c36"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "info": {
+   "name": "안내소",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "front": [
+     0,
+     -0.94,
+     0.065
+    ],
+    "ridge": [
+     0,
+     0,
+     2.202642819948225
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "info/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "c995086587d1017e9b16e1e4dd87d10b34b38644a034019d0a23f0026f97d790"
+    },
+    "d1": {
+     "file": "info/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "048b1197c9d56b5434a5ab1468bcb8f098fe961ecb50b534b1c0d0a36426f62d"
+    },
+    "d2": {
+     "file": "info/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "bb12e0f0feb3bc8ab0a1ae8416b8c1b6dd67c73ecf741a20083e61aa0dba1632"
+    },
+    "d3": {
+     "file": "info/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "d8e786d9ebb8e347029b5b9ede696b1f7c7b124f29abca4e6cc0c48e4abfb784"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "office": {
+   "name": "사무실",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "front": [
+     0,
+     -0.94,
+     0.065
+    ],
+    "ridge": [
+     0,
+     0,
+     2.202642819948225
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "office/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "4fbc305f669488aabe235f688b454adb7c70ad5ce78bcc43906fec788c6b6834"
+    },
+    "d1": {
+     "file": "office/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "b3c8a8410696c6606f644ae6f7f6c5cce7442bf3b08c8ab96ebdd881ba482918"
+    },
+    "d2": {
+     "file": "office/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "36501c5fc81361a5d4c7cb423cd547f1cf306b54e2e5d5de47168a6d6e153dc7"
+    },
+    "d3": {
+     "file": "office/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "7602ce5923bd456b0d14abdd2ae6396c8742390a15419fe23836cf71f8a36083"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "sauna": {
+   "name": "사우나",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    3,
+    3
+   ],
+   "artSize": [
+    3,
+    3
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -1.5,
+     0.065
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "sauna/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "93aee10cc6483c0e1340d4a5c299f7d7f544819ca3830ebde535b2563d5ddc92"
+    },
+    "d1": {
+     "file": "sauna/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "0f82b47f6ddcfa988374ef15bb4ce3f3fdd55f7fcc62dab81dc4828aa2f4213a"
+    },
+    "d2": {
+     "file": "sauna/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "840643ce54601530d981bdd8edb69437cd60e9ae60f5571617cad33df2b1d830"
+    },
+    "d3": {
+     "file": "sauna/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "26d7297107cb5bad31d6acf909338f8131441556e29c06b5e9f0d99bcda04e02"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "jjimjilbang": {
+   "name": "찜질방",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    4,
+    4
+   ],
+   "artSize": [
+    4,
+    4
+   ],
+   "footprintOrigin": [
+    -2.0,
+    -2.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     2.0,
+     2.0
+    ],
+    [
+     2.0,
+     2.0
+    ],
+    [
+     2.0,
+     2.0
+    ],
+    [
+     2.0,
+     2.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     4
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -2.0,
+     0.065
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "jjimjilbang/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "ccd365b58ab54faa38c67b9001961cf711425ade25a98200921441d4f258cd60"
+    },
+    "d1": {
+     "file": "jjimjilbang/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "95299e6648b990319c848cb6445211f8648e14d98ae305f730c12f31f5743cae"
+    },
+    "d2": {
+     "file": "jjimjilbang/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "4aeb1d688f1c434fec2e95a363adb03fdf3d11985b022e14c47b9c84b353d03d"
+    },
+    "d3": {
+     "file": "jjimjilbang/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "932f606d7d46f51791f8f0e0c31aaae0e16a3a4cd40c1dc179bc5774fdbdfb36"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "bungalow": {
+   "name": "방갈로",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    3,
+    3
+   ],
+   "artSize": [
+    3,
+    3
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -1.5,
+     0.065
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "bungalow/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "2de344283dc52b1da92adbbe83b06a3477a6cf938470d77d6b2251b59811896b"
+    },
+    "d1": {
+     "file": "bungalow/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "f1a196db6120995d3b00c36bfa3df1b15d004552b563860f09ec2bf4634fcebe"
+    },
+    "d2": {
+     "file": "bungalow/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "87d4334fc0149efb29e5d285a2b3b585be20f38dcc0121f412ec0d1e33ca3364"
+    },
+    "d3": {
+     "file": "bungalow/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "1c403aea4b7ce5f6e1f88f0ff0b2cf17929329041c49db3fdcc24d434f08a7d4"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "shade_net": {
+   "name": "그늘막",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -1.0,
+     0.065
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "shade_net/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "1c395be2e7f4ce6fc236632a39b1b1566002fb8f77902fa7f2345ed75fd4ee28"
+    },
+    "d1": {
+     "file": "shade_net/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "1e8e85727bb5deeda4acb5c6d20eef4f5588e060920cb6d5437aab79f5b22d92"
+    },
+    "d2": {
+     "file": "shade_net/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "36a1ecca07ece8e9477a61160e6f49b5da1449be4efe096deabfbd75ea1dfcdc"
+    },
+    "d3": {
+     "file": "shade_net/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "bb3332c8f52d00ba53217cc9a118b53d62c5958af6bff24d747b0e2a042d8b09"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "mongol_tent": {
+   "name": "몽골텐트",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    3,
+    3
+   ],
+   "artSize": [
+    3,
+    3
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "entry": [
+     0,
+     -1.5,
+     0.065
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "mongol_tent/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "494145c05296cb31dc29bd8109c530dff35c188280db9c3e5e82209949855939"
+    },
+    "d1": {
+     "file": "mongol_tent/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "807c8b92ca88d8911f7e0da5cca46ffea21cd6cdbd3abe4764cce5ee3e6ed488"
+    },
+    "d2": {
+     "file": "mongol_tent/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "106ed50742e61681b5205a19bf192f1f2c7552035efa62a61e6d696ef99e6336"
+    },
+    "d3": {
+     "file": "mongol_tent/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "5efb70b64c41072c6f49f2f68582bb989ba1e3f16decc9d9ddc96db53ff3d80f"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved."
+  },
+  "indoor_shop": {
+   "name": "실내 매점",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.75755076535926
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 22,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": {
+    "front": [
+     0,
+     -1,
+     0.065
+    ],
+    "side_window": [
+     0.95,
+     0.12,
+     1.1
+    ],
+    "roof_rear": [
+     0,
+     1,
+     1.7796428199482248
+    ]
+   },
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "selected-facilities-current",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "shop/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "53e051a441344baf84fcba5354601f325b93483349f7e59d83d7e99edacdcacd"
+    },
+    "d1": {
+     "file": "shop/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "852803dbe2b0ad0984901e9279485eb17803303c8406a891048c26019821e862"
+    },
+    "d2": {
+     "file": "shop/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "9e9080a0870da28756f2210203568bc6b4b6abf104d6342f7ce0f50127b9b27f"
+    },
+    "d3": {
+     "file": "shop/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "5820bba659eb6f12263670a5dd79acbbd807e7847c51681b67c3da5931cdfc7e"
+    }
+   },
+   "note": "Selected building art only; existing simulation access and use behavior preserved.",
+   "visualSource": "shop"
+  },
+  "pavilion": {
+   "name": "정자",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    3,
+    3
+   ],
+   "artSize": [
+    3,
+    3
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ],
+    [
+     1.5,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "pavilion/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "1e75b1ca82774000e09f40742b7da1e785d23677ad20964c2a6fef622dcdf41e"
+    },
+    "d1": {
+     "file": "pavilion/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "688df277c97fc49d29a0391fcd02b72a63ef41dcfddd9fc560f10ac21172d2c1"
+    },
+    "d2": {
+     "file": "pavilion/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "bfa3b272b326a24ba835d83d9449c8c0180aaa4daa3426c726181c1762b12ca8"
+    },
+    "d3": {
+     "file": "pavilion/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "49b8f8d8285140c93a8bac25f43c38a12d00f38097bd59cf021cf4f0ec9ab15a"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "glamping": {
+   "name": "글램핑",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    4,
+    3
+   ],
+   "artSize": [
+    4,
+    3
+   ],
+   "footprintOrigin": [
+    -2.0,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     2.0,
+     1.5
+    ],
+    [
+     1.5,
+     2.0
+    ],
+    [
+     2.0,
+     1.5
+    ],
+    [
+     1.5,
+     2.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     4,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "full-footprint-integral",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "glamping/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "a346482bca1585e6d394a107b26253a7ccc690df870d9494577ef5f5e40e1d46"
+    },
+    "d1": {
+     "file": "glamping/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "e2b4f029cf0e6ec7d21fd84c40f308d716842d6bc38867a20389fad288be886c"
+    },
+    "d2": {
+     "file": "glamping/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "7e8d0da31175b334e73b3ecc2606647f441182580f3bab43e29bfae73a4812fa"
+    },
+    "d3": {
+     "file": "glamping/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "e73897dfdd5f505acbdc30f3b00693059da285d0a5b0e1c2741dc490591ea00c"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "caravan": {
+   "name": "카라반",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    4,
+    2
+   ],
+   "artSize": [
+    4,
+    2
+   ],
+   "footprintOrigin": [
+    -2.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     2.0,
+     1.0
+    ],
+    [
+     1.0,
+     2.0
+    ],
+    [
+     2.0,
+     1.0
+    ],
+    [
+     1.0,
+     2.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     4,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "caravan/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "d15b2567e62fa7e6d1b00ac765ab0e43b0ae00371699f52c9c2253881a126950"
+    },
+    "d1": {
+     "file": "caravan/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "cb665851ce672c033e51645fd19308ff87e7e0feb20787eae2197655f6ce41f7"
+    },
+    "d2": {
+     "file": "caravan/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "0386e5aed2d5facf134d73cc31e98dff6e853deda3b133368f85dee33dd1a08a"
+    },
+    "d3": {
+     "file": "caravan/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "d2470b4289d336326d0b6b93928e90233734dc8c9a68d798389399a59d0c6cfe"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "authored_parasol": {
+   "name": "파라솔 (제작본)",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    2,
+    2
+   ],
+   "artSize": [
+    2,
+    2
+   ],
+   "footprintOrigin": [
+    -1.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "authored_parasol/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "356921eb9b2ab3d8cd48a763a39324cd8f61ea7016e68fd760016ff6598b1e5d"
+    },
+    "d1": {
+     "file": "authored_parasol/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "1f41272ec86bbcd62b2a64db590f01fb0fbfd7bfdb7b5d25b7e721cfe0ab4b0b"
+    },
+    "d2": {
+     "file": "authored_parasol/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "4f2d8da72ae8c0dcd7a1a4494a0ddd3df7f7cce44c7e6977876e755541de2ee3"
+    },
+    "d3": {
+     "file": "authored_parasol/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "794426d438edcdc68ec94373e9cea231e6e33246f0f92e6eae312c8d8062be37"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "authored_bbq_zone": {
+   "name": "BBQ존 (제작본)",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    4,
+    3
+   ],
+   "artSize": [
+    4,
+    3
+   ],
+   "footprintOrigin": [
+    -2.0,
+    -1.5
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     2.0,
+     1.5
+    ],
+    [
+     1.5,
+     2.0
+    ],
+    [
+     2.0,
+     1.5
+    ],
+    [
+     1.5,
+     2.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     4,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "authored_bbq_zone/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "22b151e1f9206d587c4ff9ed0f57e78da0711aea6c63e454bffc9704be3c0fc3"
+    },
+    "d1": {
+     "file": "authored_bbq_zone/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "238c1b1e924f14520d1f1d1de7c8b1e76132d495c93f2808ce939aa314db7023"
+    },
+    "d2": {
+     "file": "authored_bbq_zone/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "f63e29465309121a88ee997a3c1d29de4ef7ee43bd1ad644ad2f4b6aa5f2d6d4"
+    },
+    "d3": {
+     "file": "authored_bbq_zone/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "1788ddcef9594dea85bda9894c64f1f948820c1e14d3d09318d6f86d3981dfb6"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "authored_sunbed_row": {
+   "name": "선베드 열 (제작본)",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    4,
+    2
+   ],
+   "artSize": [
+    4,
+    2
+   ],
+   "footprintOrigin": [
+    -2.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     2.0,
+     1.0
+    ],
+    [
+     1.0,
+     2.0
+    ],
+    [
+     2.0,
+     1.0
+    ],
+    [
+     1.0,
+     2.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     4,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "authored_sunbed_row/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "f0b54cdf94d1578b3b59c0021ffe078f7d8fb4c6c7726b2c4ba7bf1ebd4802a3"
+    },
+    "d1": {
+     "file": "authored_sunbed_row/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "3697cf2dd2d1e982380918d400a0d84942562518af16157217ea368dab58bdc9"
+    },
+    "d2": {
+     "file": "authored_sunbed_row/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "757d5c378fc89344d9f8300d752622b216ecb736ed75a8377062a18b6ce5ce86"
+    },
+    "d3": {
+     "file": "authored_sunbed_row/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "7babda14261e2761559905669e66dfa94fd236e5d30f88465f1b266eac08993b"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "authored_pyeongsang_row": {
+   "name": "평상 연립 (제작본)",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    4,
+    2
+   ],
+   "artSize": [
+    4,
+    2
+   ],
+   "footprintOrigin": [
+    -2.0,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     2.0,
+     1.0
+    ],
+    [
+     1.0,
+     2.0
+    ],
+    [
+     2.0,
+     1.0
+    ],
+    [
+     1.0,
+     2.0
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     4,
+     2
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     2,
+     4
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "authored_pyeongsang_row/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "c024a65581011bb283d01b511a726e4a441030a7c24a25f6931bea58b224261e"
+    },
+    "d1": {
+     "file": "authored_pyeongsang_row/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "7b2309f612bd0d484315091e0fa1cf776a01f56656986275fccd9b336301d6c0"
+    },
+    "d2": {
+     "file": "authored_pyeongsang_row/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "15a9487fe444a4de16745d5ee751350355735b809c500bc3e32e9c6a4e893db1"
+    },
+    "d3": {
+     "file": "authored_pyeongsang_row/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "f04ef28c6a038bc129be65cf24add3469445facef27f853d84e6ae59b43ed20e"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "authored_massage_row": {
+   "name": "안마의자 열 (제작본)",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    3,
+    2
+   ],
+   "artSize": [
+    3,
+    2
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ],
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "authored_massage_row/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "1b8f63ec46bf1742ff80a6d0f5373f3ccb98446137780125abc3a2a4a20fee8d"
+    },
+    "d1": {
+     "file": "authored_massage_row/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "30cbf18eb05a4de4573561e091ca0c968a84b7214fa8ec92c4c88785ee686e2f"
+    },
+    "d2": {
+     "file": "authored_massage_row/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "864c5b4a5bf1fca60f9029d0a681d2a647a6f3f1079fee48dbf834a28c5e7f0f"
+    },
+    "d3": {
+     "file": "authored_massage_row/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "daa0b7a1235673917e906f62837684ef2bb32bed2e17f09f8f8a1d40d4f1eee4"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  },
+  "authored_footbath": {
+   "name": "온수 족욕 (제작본)",
+   "renderOnly": true,
+   "cameraTargetZTiles": 0.6,
+   "size": [
+    3,
+    2
+   ],
+   "artSize": [
+    3,
+    2
+   ],
+   "footprintOrigin": [
+    -1.5,
+    -1.0
+   ],
+   "footprintCenter": [
+    0,
+    0
+   ],
+   "logicalSize": 192,
+   "anchor": {
+    "ax": 96.0,
+    "ay": 107.7575626373291
+   },
+   "deckTopZ": 0,
+   "humanOpaquePx": 21,
+   "pivotByFacing": [
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ],
+    [
+     1.5,
+     1.0
+    ],
+    [
+     1.0,
+     1.5
+    ]
+   ],
+   "footprintByFacing": [
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ]
+   ],
+   "entry": [
+    0,
+    0,
+    0
+   ],
+   "exit": [
+    0,
+    0,
+    0
+   ],
+   "landmarks": null,
+   "floorMode": "transparent-no-floor",
+   "reservation": "existing-facility-footprint",
+   "blueprint": "restored-authored-rest-facilities",
+   "deckTiles": [],
+   "frames": {
+    "d0": {
+     "file": "authored_footbath/native-d0.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "3706bdccfb4aee5660ac985f0516ed2c5119c41dffe65ca1145e8abf46b7ceb5"
+    },
+    "d1": {
+     "file": "authored_footbath/native-d1.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "629c9998af7cba00232286371fd46bc212286c8e3a0d0127f5fdcc7fb1b2c338"
+    },
+    "d2": {
+     "file": "authored_footbath/native-d2.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "0a92f0811377c5c940df98c654c54b0d3f8a732f5000d1160b06df632ab7e9cd"
+    },
+    "d3": {
+     "file": "authored_footbath/native-d3.png",
+     "w": 192,
+     "h": 192,
+     "sha256": "70316e33e888ee6aeb74bdcd92b767a3f0e722324ece56cc79d1a8c4d8c8f830"
+    }
+   },
+   "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
+  }
+ },
+ "deckTileRule": "footprint-local integer tiles at facing 0 (i to +I, j to +J from the placed corner); a tile is deck when authored deck rectangles cover >= 50% of it. Rotate with the same R:(I,J)->(J,-I) as the footprint."
+}

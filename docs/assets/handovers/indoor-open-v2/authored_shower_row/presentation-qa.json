@@ -1,0 +1,103 @@
+{
+  "id": "shower_row",
+  "sourceSHA": "7f3ff4e5b8ac08a03aa7483a1fa17cad00de8102cdfa9c0df788849e243e98f5",
+  "checks": [
+    {
+      "direction": 0,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        48,
+        59,
+        144,
+        132
+      ]
+    },
+    {
+      "direction": 0,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        191,
+        234,
+        577,
+        532
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        48,
+        59,
+        144,
+        132
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        191,
+        234,
+        577,
+        532
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        48,
+        59,
+        144,
+        132
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        191,
+        237,
+        577,
+        532
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        48,
+        60,
+        144,
+        132
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        191,
+        236,
+        577,
+        532
+      ]
+    }
+  ],
+  "liveModified": false
+}

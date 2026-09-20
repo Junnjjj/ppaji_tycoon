@@ -1,0 +1,107 @@
+{
+  "date": "2026-09-20",
+  "instruction": "좋다 적용하자, 다 만족해",
+  "scope": "All11 corrected authored facilities, four facings, ground proportions, NPC review; main adoption authorized",
+  "status": "USER_ACCEPTED",
+  "facilities": {
+    "pension_1f": {
+      "sourceSHA": "a4ee7d215b19494e78a9b33834f7cb8007844235211b1593a826d53f3b936441",
+      "frames": {
+        "0": "05f53b4c94e829896caeabc22cf7cd10636326a839ddf53dfbb982f93ad79f80",
+        "1": "2c82111c88c9bbfd24b33b96d06732e07aab05a6263ef1f111cbb5b673376e12",
+        "2": "0d511fba3ce8c46e80e06e58320a10b505c4332ba78af7231eeb3bf6719cb924",
+        "3": "e55d36a8d5b19637a4254e1022819db29b6d4ece81a84fe6352fff54f568389b"
+      }
+    },
+    "pension_2f": {
+      "sourceSHA": "839ec81f429657c419bed9004dae5a5c620de3753f4b6c27e450a37356769337",
+      "frames": {
+        "0": "a3d97d486040302e5bfad7a76d58fe882d4659594512737c15fe254cc3ee1f3c",
+        "1": "6e2cf1f1e60254ed10de91d348ffa929c17a099c0046b3ea9f4357c6f1a45ed9",
+        "2": "9d0849c99d7a2b411b3fc000f81e95e008c3787ba3f18a010d4ec06bb9a7357b",
+        "3": "4f8325505f03704bd1552b903fb078fbc8b5571e9fbd532dd4eb2c19da153bf1"
+      }
+    },
+    "pension": {
+      "sourceSHA": "8e2f3b0b5cb12738c6194558498c08c3bc04d81da6580ea5d0f907c2b502fbb8",
+      "frames": {
+        "0": "9da3c1673622e5685ce80b3383589c287c40e789333b95526ed60c3988e4fdcb",
+        "1": "2386edccfdc9470b2e79a97c45ea177e9d4310eb95544b1a05012f87734db818",
+        "2": "888a75f1ea3bc2d2a2e5f31ccb356b9cb47eda75df857ede1b3f20cf8f97cb7e",
+        "3": "ccfba831c5f00677af2af7e1d6d7153b7f39c73889a41bd4248641c215689f30"
+      }
+    },
+    "cafe": {
+      "sourceSHA": "8f8a8948d3cbe7fa81578b8951e31c016818fdfd887732d1c3a5751a8501992b",
+      "frames": {
+        "0": "38c89373bad8b32ee2dfb6e02e29845cb214faeb114924592c87ab10491f25a5",
+        "1": "9e9b3629968502c8a792d01a1a4ce97aaf89fba42bef5762ae0864d3b1257ec6",
+        "2": "f6b7d4a219213f5cdd82e1caed97c4fd3d57dda123f54dc1511b4641bbdf402d",
+        "3": "2883000888c9892a37a32f2773515854dcde9cb104f9f7eb39b69f2f9c11da9c"
+      }
+    },
+    "cafe_lv2": {
+      "sourceSHA": "ef35d2e489bae4ffeed945a40657a3c368654f255e29befe583eb6515a311146",
+      "frames": {
+        "0": "cc3814b8efcc4a874cfafdedbb37ba987effef7c1a2eb243cfd16b464e821e08",
+        "1": "78eb5e02655ca4b8dd1a2cc9aa64fc376788959c95a7f6a11f21b6219e9e648b",
+        "2": "08b133777ae40e6e83185feccee27a94eb28c7f7bdd295df7e9258829ea1ddf5",
+        "3": "fd69163ad6869923c1f49ac275ce823bd39edbfb542500d15ae3d13386b3cb08"
+      }
+    },
+    "cafe_lv3": {
+      "sourceSHA": "5501a33ce2cf022b9520d31f52eaa0064336f74d721cc766487054c6e97d7520",
+      "frames": {
+        "0": "8b52118af2cdfb035d23325d69048eba6bd8ea8e5d4f29587762e86c4c22c2e8",
+        "1": "e8b86be22c6c869e7a9fa59c85c075d43e2e9da4a4461a169c95401193bc2105",
+        "2": "88c411217cc43934309feed371ed47b4d3dcd6ae7bfed2a6c403a526658f0aa8",
+        "3": "b9f58ad1db01aacbec57246b7dbc652689411adefc61f8a40d62aeffb6e68dc9"
+      }
+    },
+    "icecream": {
+      "sourceSHA": "5ac1641273b1251387a02e6d6d112380c33af0214fd15e7ebcf1f689fdc839a2",
+      "frames": {
+        "0": "d5eba860b9d69dd7d1f21f14518289cda7d87a85a2fd35ea3d4e7b798154be8f",
+        "1": "be2675c0a000ffc9e599ba96a0013cbd9e922750602555000edc953cab48228f",
+        "2": "3ae0992382c5de717ef13766ea9f52e3cc106dee51d893be12ab855c1aebf566",
+        "3": "ad9b29c2d99ad708ab7ec9750bb2ae41a51da37adfa8f282b48945448234394f"
+      }
+    },
+    "sikhye": {
+      "sourceSHA": "79f719eb99068f44bb340f3bae261938e0cc356d3121d2e6c4693a5a0d80abc5",
+      "frames": {
+        "0": "825eaaca97612bce62c470c0d5182330835628c1f51f41bfdbd77f24a6398c5a",
+        "1": "d8009ec7528be636a22411411e90c7f32667c75fcfac13f28bd6415b8bd5b6b5",
+        "2": "d5630b4caf5680239deb0bd3dc61fde89d70dc6bac5a0f2d9cf6e346b77abafc",
+        "3": "b8dffe7c5cfd45780e703902c5753c488630c4b543c3b1370121295c65bbedea"
+      }
+    },
+    "bungeoppang": {
+      "sourceSHA": "e4ed81742e57028afb065c79f740e495e99241238d9401309e30d6c0fd217701",
+      "frames": {
+        "0": "77aecc49e31555309adec83f830140c4ffe344b42915281401ca615f90625eef",
+        "1": "1fd3f7d0fe6ba7d9c59d7411e7d60c4d751c02d96111d3414a7d64f189865e9a",
+        "2": "7af8a255918b22534d069e32dc5a3d2b917fc1d6a1835f12450fb415e2c28498",
+        "3": "e6db5cc72faec09eee1b585e1ea3a6b69a677e6fd6f60b99688d1956b7a09489"
+      }
+    },
+    "firepit_row": {
+      "sourceSHA": "2f3560e9fe7b9075040b502913ecdf17d42ac285ea40337c1f3d2b6c4ec026c5",
+      "frames": {
+        "0": "f993a87237af3a693336ed17389072519d5807e51090dada0e54c7506479e943",
+        "1": "31d0a3fd50fa221d7993849949d018f5052d51bbd0cc59a22b68614177a94c51",
+        "2": "4acf2d19b331f88ab4dd124cc2faeb03f285edf30825ccb4d13f3dff5e01a7cc",
+        "3": "6eac214a4e059684d8585c11749a426b95c567cf4fe202b96cd14a30be895754"
+      }
+    },
+    "chicken": {
+      "sourceSHA": "1323280b9619a4fdde62525af3b0d6f05e2bd879056f86a420813a416fa0df1c",
+      "frames": {
+        "0": "daef0372d4071f7f4a86af18534273b6ca1e08b6d8ad71e6f3c9b860b6545a63",
+        "1": "444662a740d7bf4a2fcaaac2d6de79ca6050c6a40140e3b71cab9e70570cb1da",
+        "2": "6bccf5d0b27a32d4fb80d6db08f96a0fc7513e6bb2f436b720e52f4b40fc847a",
+        "3": "b6ec611c729b331693e9f894592d8b9a30be8ea49de3a6d3cb3b9c622bff50ac"
+      }
+    }
+  }
+}

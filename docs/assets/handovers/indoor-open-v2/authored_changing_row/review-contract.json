@@ -1,0 +1,109 @@
+{
+  "blend": "facility.blend",
+  "concept": "references/live-d0.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 0.6,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    3,
+    2
+  ],
+  "floor_mode": "transparent-no-floor",
+  "minimum_native_foreground": 900,
+  "inventory": {
+    "dividers": {
+      "prefix": "Divider_",
+      "count": 4
+    },
+    "stations": {
+      "prefix": "BenchSeat_",
+      "count": 3
+    }
+  },
+  "groups": {
+    "body": {
+      "names": [
+        "BackCap",
+        "BenchLeg_0_0",
+        "BenchLeg_0_1",
+        "BenchLeg_1_0",
+        "BenchLeg_1_1",
+        "BenchLeg_2_0",
+        "BenchLeg_2_1",
+        "BenchSeat_0",
+        "BenchSeat_1",
+        "BenchSeat_2",
+        "CurtainEndPost_0",
+        "CurtainEndPost_1",
+        "CurtainEndPost_2",
+        "CurtainFold_0_0",
+        "CurtainFold_0_1",
+        "CurtainFold_0_2",
+        "CurtainFold_1_0",
+        "CurtainFold_1_1",
+        "CurtainFold_1_2",
+        "CurtainFold_2_0",
+        "CurtainFold_2_1",
+        "CurtainFold_2_2",
+        "CurtainPost_0",
+        "CurtainPost_1",
+        "CurtainPost_2",
+        "CurtainRail_0",
+        "CurtainRail_1",
+        "CurtainRail_2",
+        "CurtainRing_0_0",
+        "CurtainRing_0_1",
+        "CurtainRing_0_2",
+        "CurtainRing_1_0",
+        "CurtainRing_1_1",
+        "CurtainRing_1_2",
+        "CurtainRing_2_0",
+        "CurtainRing_2_1",
+        "CurtainRing_2_2",
+        "Divider_0",
+        "Divider_1",
+        "Divider_2",
+        "Divider_3",
+        "DividerCap_0",
+        "DividerCap_1",
+        "DividerCap_2",
+        "DividerCap_3",
+        "Hook_0",
+        "Hook_1",
+        "Hook_2",
+        "LowBack",
+        "MirrorFrame_0",
+        "MirrorFrame_1",
+        "MirrorFrame_2",
+        "MirrorGlass_0",
+        "MirrorGlass_1",
+        "MirrorGlass_2"
+      ]
+    }
+  },
+  "landmarks": {
+    "entry": [
+      0,
+      -1.2,
+      0
+    ],
+    "curtain_0": [
+      -1.3,
+      -0.3,
+      0.69
+    ],
+    "curtain_1": [
+      -0.3,
+      -0.3,
+      0.69
+    ],
+    "curtain_2": [
+      0.7,
+      -0.3,
+      0.69
+    ]
+  }
+}

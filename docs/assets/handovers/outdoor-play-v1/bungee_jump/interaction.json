@@ -1,0 +1,341 @@
+{
+  "id": "bungee_jump",
+  "status": "AUTHORED_NPC_CANDIDATE_USER_REVIEW",
+  "size": [
+    4,
+    4
+  ],
+  "currentSize": null,
+  "proposedSize": [
+    4,
+    4
+  ],
+  "logicalSize": 256,
+  "cameraTargetZTiles": 3.0,
+  "tileWorld": 22.627416997969522,
+  "coordinateUnits": "centered LOCAL XYZ tiles, +X=I, +Y=-J, Z up",
+  "accessKind": "flow",
+  "floorZ": 0,
+  "capacity": 1,
+  "queueCapacity": 2,
+  "entry": [
+    -1.65,
+    -1.65,
+    0
+  ],
+  "exit": [
+    1.65,
+    -1.65,
+    0
+  ],
+  "slots": [
+    {
+      "id": "jumper",
+      "position": [
+        0,
+        -0.98,
+        5.8
+      ],
+      "pose": "cheer_jump",
+      "heading": -1.5707963267948966,
+      "approach": [
+        [
+          0,
+          0.85,
+          5.8
+        ],
+        [
+          0,
+          0.15,
+          5.8
+        ],
+        [
+          0,
+          -0.98,
+          5.8
+        ]
+      ],
+      "supportObjects": [
+        "JumpRunway"
+      ],
+      "role": "jumper"
+    },
+    {
+      "id": "queue0",
+      "position": [
+        -1.55,
+        -0.8,
+        0
+      ],
+      "pose": "stand",
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          -1.65,
+          -1.65,
+          0
+        ],
+        [
+          -1.55,
+          -0.8,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "role": "queue"
+    },
+    {
+      "id": "queue1",
+      "position": [
+        -1.55,
+        -0.05,
+        0
+      ],
+      "pose": "stand",
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          -1.65,
+          -1.65,
+          0
+        ],
+        [
+          -1.55,
+          -0.05,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "role": "queue"
+    }
+  ],
+  "routes": {
+    "entry": [
+      [
+        -1.65,
+        -1.65,
+        0
+      ],
+      [
+        -1.4,
+        -0.75,
+        0
+      ],
+      [
+        -1.35,
+        1.0,
+        0
+      ],
+      [
+        0,
+        0.62,
+        0
+      ]
+    ],
+    "ascent": [
+      [
+        0,
+        0.62,
+        0
+      ],
+      [
+        0,
+        0.85,
+        5.8
+      ]
+    ],
+    "platform": [
+      [
+        0,
+        0.85,
+        5.8
+      ],
+      [
+        0,
+        0.15,
+        5.8
+      ],
+      [
+        0,
+        -0.98,
+        5.8
+      ]
+    ],
+    "jump": [
+      [
+        0,
+        -0.98,
+        5.8
+      ],
+      [
+        0,
+        -1.42,
+        5.25
+      ],
+      [
+        0,
+        -1.42,
+        0.8
+      ]
+    ],
+    "rebound": [
+      [
+        0,
+        -1.42,
+        0.8
+      ],
+      [
+        0,
+        -1.42,
+        3.5
+      ],
+      [
+        0,
+        -1.42,
+        1.2
+      ],
+      [
+        0,
+        -1.42,
+        2.5
+      ],
+      [
+        0,
+        -1.42,
+        1.5
+      ],
+      [
+        0,
+        -1.42,
+        1.9
+      ]
+    ],
+    "recover": [
+      [
+        0,
+        -1.42,
+        1.9
+      ],
+      [
+        0,
+        -1.42,
+        0.24
+      ],
+      [
+        0.65,
+        -1.42,
+        0
+      ],
+      [
+        1.65,
+        -1.65,
+        0
+      ]
+    ]
+  },
+  "rope": {
+    "pivot": [
+      0,
+      -1.42,
+      6.85
+    ],
+    "bodyAttachmentOffset": [
+      0.38,
+      0,
+      0.48
+    ],
+    "bodyAttachmentSpace": "local tiles relative to existing upright NPC feet/root, rotated same as facility",
+    "attachmentType": "visible waist-and-thigh sport harness; outboard carabiner, cheer_jump airborne pose",
+    "restLengthTiles": 2.75,
+    "maximumLengthTiles": 6.1417668467632325,
+    "lowestFeet": [
+      0,
+      -1.42,
+      0.8
+    ],
+    "pickupFeet": [
+      0,
+      -1.42,
+      0.24
+    ],
+    "renderMode": "dynamic line, never baked",
+    "detachAt": "pickupFeet; retract dynamic cable after contact",
+    "maximumElasticLengthTiles": 5.5829472503329285,
+    "maximumWinchPayoutTiles": 6.1417668467632325,
+    "lengthPhaseNote": "Outboard waist-carabiner changes elastic and winch geometric length; derived from lowest/pickup roots and .38X/.48Z attach.",
+    "visualColors": {
+      "cord": [
+        43,
+        135,
+        181
+      ],
+      "harness": [
+        38,
+        205,
+        215
+      ]
+    }
+  },
+  "ascentPortal": {
+    "hideAt": [
+      0,
+      0.62,
+      0
+    ],
+    "showAt": [
+      0,
+      0.85,
+      5.8
+    ],
+    "hiddenSegmentOnly": true,
+    "route": "ascent",
+    "reason": "existing NPC does not supply certified ladder climbing pose; hide only between explicit bottom/top endpoints"
+  },
+  "motion": {
+    "order": [
+      "entry",
+      "ascent",
+      "platform",
+      "jump",
+      "rebound",
+      "recover"
+    ],
+    "reserveWholeRide": true,
+    "releaseReservationAt": "exit",
+    "ascentSeconds": 4,
+    "jumpSeconds": 1.4,
+    "reboundSeconds": 4.0,
+    "recoverSeconds": 3,
+    "interpolation": "continuous smooth segments; damped vertical bungee rebound then controlled winch lowering; no repeated falling/waterfall loop",
+    "airbornePose": "cheer_jump"
+  },
+  "supportObjects": {
+    "platform": [
+      "EquipmentDeck",
+      "JumpRunway"
+    ],
+    "recovery": [
+      "RecoveryPad"
+    ],
+    "ascent": [
+      "LadderRail",
+      "LadderRung"
+    ]
+  },
+  "clearance": {
+    "jumpAxisXY": [
+      0,
+      -1.42
+    ],
+    "actorRadiusTiles": 0.22,
+    "bodyHeightTiles": 1.123,
+    "noBracingBelowLaunchInYLessThan": 0.1,
+    "note": "physical jump motion stays forward of posts/braces; rear camera views can overlap tower pixels and require coordinator depth handling"
+  },
+  "notes": [
+    "All actor centers and radius fit [-2,2] footprint; ground has no facility floor.",
+    "NPC and rope preview is coordinator-owned; no live gameplay or capacity approval.",
+    "Use existing NPC atlas at opaque22px without per-view shrink."
+  ],
+  "sourceCandidateId": "bungee_jump"
+}

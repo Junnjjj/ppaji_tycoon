@@ -1,0 +1,90 @@
+{
+  "state": "ROOF_PROPORTION_USER_REVIEW",
+  "physical_root_sha256": "a268f135dd6c5e370f85e8a7dfefaa220be1e51c2cf889569ce859e34818c662",
+  "canonical_live_size": null,
+  "proposed_size": [
+    5,
+    4
+  ],
+  "existingStageLiveSizeUnchanged": [
+    3,
+    2
+  ],
+  "bodyBoundsTiles": [
+    [
+      -1.7399998903274536,
+      0.6100000739097595,
+      0.23999999463558197
+    ],
+    [
+      1.7399998903274536,
+      1.7799999713897705,
+      2.0774998664855957
+    ]
+  ],
+  "roofBoundsTiles": [
+    [
+      -1.8249999284744263,
+      0.5949999690055847,
+      2.0225000381469727
+    ],
+    [
+      1.8249999284744263,
+      1.8299999237060547,
+      2.1374998092651367
+    ]
+  ],
+  "body_coverage": [
+    0.6959999561309814,
+    0.29249997437000275
+  ],
+  "roof_to_body_ratio": [
+    1.0488505997152542,
+    1.0555556093299312
+  ],
+  "roof_overhang_tiles": {
+    "-x": 0.08500003814697266,
+    "+x": 0.08500003814697266,
+    "-y": 0.015000104904174805,
+    "+y": 0.04999995231628418
+  },
+  "canopyTopZ": 2.1375,
+  "canopyUndersideZ": 2.0725,
+  "frontLipBottomZ": 2.0225,
+  "visualMassTarget": "Open stage canopy over rear platform only; body is steel frame, not enclosed wall shell; no enclosed-room90% coverage target",
+  "wholeRootBoundsTiles": [
+    [
+      -2.120000123977661,
+      -1.6050000190734863,
+      0.0
+    ],
+    [
+      1.8249999284744263,
+      1.8299999237060547,
+      2.1374998092651367
+    ]
+  ],
+  "footprintOverflowTiles": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "family_references": [
+    {
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/\uc5d0\uc14b\ub9cc\ub4e4\uae30_v3/assets/generated/kairo-v4-simple-pilot/outdoor-play-v1/stage_river/facility.blend",
+      "sha256": "f12f70befb351536233a0b3c5a96acbe1e4c70c8896390782eb4e63744a2473c",
+      "referenceRole": "Previous level1 candidate 4x3, not actual live legacy3x2",
+      "orthoScale": 256,
+      "logicalSize": 256,
+      "tileWorld": 22.62741699796952,
+      "targetZTiles": 1.8,
+      "rootYaw": 0,
+      "scaleShrink": false,
+      "sourceModified": false
+    }
+  ],
+  "same_scale_resizing": "NONE",
+  "imagegen_calls": 0,
+  "live_files_modified": false
+}

@@ -1,0 +1,87 @@
+{
+  "id": "rental_tube",
+  "size": [
+    2,
+    1
+  ],
+  "currentSize": [
+    2,
+    1
+  ],
+  "floorZ": 0,
+  "accessKind": "service-face",
+  "entry": [
+    -0.57,
+    -1.3,
+    0
+  ],
+  "slots": [
+    {
+      "id": "customer",
+      "role": "guest",
+      "pose": "stand",
+      "position": [
+        -0.57,
+        -0.83,
+        0
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          -0.57,
+          -1.3,
+          0
+        ],
+        [
+          -0.57,
+          -0.83,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useSeconds": 4
+    }
+  ],
+  "staffAnchors": [
+    {
+      "id": "attendant",
+      "pose": "idle",
+      "position": [
+        -0.57,
+        0.22,
+        0
+      ],
+      "heading": -1.5707963267948966,
+      "note": "Stationary staff proposal, separate from customer capacity; no approach animation."
+    }
+  ],
+  "obstacles": [
+    {
+      "name": "counter",
+      "min": [
+        -0.96,
+        -0.47
+      ],
+      "max": [
+        -0.18,
+        -0.07
+      ]
+    },
+    {
+      "name": "rack",
+      "min": [
+        -0.09,
+        -0.11
+      ],
+      "max": [
+        0.96,
+        0.44
+      ]
+    }
+  ],
+  "notes": [
+    "Centered Blender XY in tile units; game I=X,J=-Y. Rotate all anchors/headings with physical root.",
+    "Base art empty of NPCs. Existing game capacity/economy unchanged.",
+    "Stand uses existing idle pose; no dedicated hand animation supplied."
+  ]
+}

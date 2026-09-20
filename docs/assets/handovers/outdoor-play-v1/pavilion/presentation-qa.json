@@ -1,0 +1,69 @@
+{
+  "sourceSHA": "387a929bc2a6b65319456df690d1c3d9d9c32bd45c2a3b53ae5a06c525fcc848",
+  "review": "pavilion/review",
+  "checks": [
+    {
+      "d": 0,
+      "mode": "native",
+      "sha256": "dc0ab294598f0d4afcc3a468db8ec5e9c7873eaad32650af6db85e94a50cdd55",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 0,
+      "mode": "color",
+      "sha256": "1604b1ef1aea44563fa63586ad85a07f08a70157963d150d924105cfad750d7f",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 1,
+      "mode": "native",
+      "sha256": "6d4e1f1e7e41c684159e3c8e507ac3aab396f28d0e8aa9ba0ce31a89a9e7416d",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 1,
+      "mode": "color",
+      "sha256": "d9ba03fab6d7fcd9f82fba50d2038779f0419d46456d34024f6455cea5e89218",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 2,
+      "mode": "native",
+      "sha256": "a8144e91f39a950c842f6cd81254deb9ff21e57538cfa158c20727f8164bd8df",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 2,
+      "mode": "color",
+      "sha256": "2e31c3e98d345e3d108aaa5a66151e1de05e496975cc77ff3b64f61c8735bedd",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 3,
+      "mode": "native",
+      "sha256": "ce546736d23b692aef6198f70cdc7660037ca23dc9a2d9613d6402101118833d",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 3,
+      "mode": "color",
+      "sha256": "d36e13812598eb9894c47558233011bcaabd82c328e5cfd2af1f97011aac7b94",
+      "rgbaEqual": true,
+      "clipped": false
+    }
+  ],
+  "rawProjection": {
+    "d0": "PASS",
+    "d1": "PASS",
+    "d2": "PASS",
+    "d3": "PASS"
+  },
+  "liveModified": false
+}

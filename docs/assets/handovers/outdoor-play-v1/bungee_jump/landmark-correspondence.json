@@ -1,0 +1,217 @@
+{
+  "projectedEvidence": {
+    "d0": {
+      "launch": {
+        "pixel": [
+          449.2799987792969,
+          323.88580322265625
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "cord_pivot": {
+        "pixel": [
+          421.1199951171875,
+          255.66290283203125
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "lowest_point": {
+        "pixel": [
+          421.1199951171875,
+          729.8841552734375
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "recovery": {
+        "pixel": [
+          421.1199951171875,
+          773.779052734375
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "ladder_base": {
+        "pixel": [
+          551.6799926757812,
+          727.3111267089844
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "ladder_top": {
+        "pixel": [
+          566.4000244140625,
+          265.3258056640625
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "winch": {
+        "pixel": [
+          618.8800048828125,
+          255.9698486328125
+        ],
+        "visibility": "inspect rendered occlusion"
+      }
+    },
+    "d1": {
+      "launch": {
+        "pixel": [
+          574.7200317382812,
+          323.88580322265625
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "cord_pivot": {
+        "pixel": [
+          602.8800048828125,
+          255.66290283203125
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "lowest_point": {
+        "pixel": [
+          602.8800048828125,
+          729.8841552734375
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "recovery": {
+        "pixel": [
+          602.8800048828125,
+          773.7790222167969
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "ladder_base": {
+        "pixel": [
+          472.32000732421875,
+          727.3111267089844
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "ladder_top": {
+        "pixel": [
+          457.6000061035156,
+          265.3258056640625
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "winch": {
+        "pixel": [
+          478.08001708984375,
+          219.4898681640625
+        ],
+        "visibility": "inspect rendered occlusion"
+      }
+    },
+    "d2": {
+      "launch": {
+        "pixel": [
+          574.7200317382812,
+          261.165771484375
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "cord_pivot": {
+        "pixel": [
+          602.8800048828125,
+          164.78289794921875
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "lowest_point": {
+        "pixel": [
+          602.8800048828125,
+          639.0041809082031
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "recovery": {
+        "pixel": [
+          602.8800048828125,
+          682.8990478515625
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "ladder_base": {
+        "pixel": [
+          472.32000732421875,
+          766.9911193847656
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "ladder_top": {
+        "pixel": [
+          457.6000061035156,
+          319.72576904296875
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "winch": {
+        "pixel": [
+          405.1199951171875,
+          289.88983154296875
+        ],
+        "visibility": "inspect rendered occlusion"
+      }
+    },
+    "d3": {
+      "launch": {
+        "pixel": [
+          449.2799987792969,
+          261.165771484375
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "cord_pivot": {
+        "pixel": [
+          421.1200256347656,
+          164.78289794921875
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "lowest_point": {
+        "pixel": [
+          421.1199951171875,
+          639.0041809082031
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "recovery": {
+        "pixel": [
+          421.1199951171875,
+          682.8990478515625
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "ladder_base": {
+        "pixel": [
+          551.6799926757812,
+          766.9911193847656
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "ladder_top": {
+        "pixel": [
+          566.4000244140625,
+          319.72576904296875
+        ],
+        "visibility": "inspect rendered occlusion"
+      },
+      "winch": {
+        "pixel": [
+          545.9200439453125,
+          326.369873046875
+        ],
+        "visibility": "inspect rendered occlusion"
+      }
+    }
+  },
+  "visualObservations": {
+    "d0": "Runway and pickup left; ladder rungs visible between front columns; rear winch at upper right.",
+    "d1": "Runway and pickup right; rear diagonal lattice and ladder share image center; no duplicated runway.",
+    "d2": "Rear winch left, runway behind upper deck, pickup right; natural rear rail/column overlap.",
+    "d3": "Rear winch right, runway behind upper deck, pickup left; ladder lattice visible, no camera-facing relocation."
+  },
+  "overlay": "landmark-overlay.png",
+  "relocations": 0,
+  "runtimeOccupiedReview": "pending coordinator"
+}

@@ -1,0 +1,128 @@
+[
+  {
+    "handle": "term_52758585-e405-46f3-9549-64a35aabcc03",
+    "reason": "unused update prompt",
+    "result": {
+      "id": "0106d4b5-c363-47d4-bf50-b9d54771386c",
+      "ok": true,
+      "result": {
+        "close": {
+          "handle": "term_52758585-e405-46f3-9549-64a35aabcc03",
+          "tabId": "0c9977fb-a61f-4a4d-808d-3554a792e280",
+          "ptyKilled": true
+        }
+      },
+      "_meta": {
+        "runtimeId": "77c08447-eb4a-46c1-90f1-832f4de4fe22"
+      }
+    }
+  },
+  {
+    "handle": "term_98153880-c26e-4912-8546-8bab0b95ed55",
+    "reason": "completed indoor-open-v1 worker; worker_done sent",
+    "result": {
+      "id": "1fbb66fc-1e71-4643-b3ff-0d307f4c4098",
+      "ok": true,
+      "result": {
+        "close": {
+          "handle": "term_98153880-c26e-4912-8546-8bab0b95ed55",
+          "tabId": "4daf25fe-6203-4935-bf2a-5cd7f6094bbb",
+          "ptyKilled": true
+        }
+      },
+      "_meta": {
+        "runtimeId": "77c08447-eb4a-46c1-90f1-832f4de4fe22"
+      }
+    }
+  },
+  {
+    "handle": "term_f8a864f9-8c8c-48b8-9165-2d2dd91bf684",
+    "reason": "unused update prompt",
+    "result": {
+      "id": "a0fd6b50-542a-4cb3-8912-7771447f50a4",
+      "ok": true,
+      "result": {
+        "close": {
+          "handle": "term_f8a864f9-8c8c-48b8-9165-2d2dd91bf684",
+          "tabId": "9629d67d-ef0f-4699-9a74-9843c203d746",
+          "ptyKilled": true
+        }
+      },
+      "_meta": {
+        "runtimeId": "77c08447-eb4a-46c1-90f1-832f4de4fe22"
+      }
+    }
+  },
+  {
+    "handle": "term_0df741e9-f520-497a-8db4-6c4ce7f6ccb2",
+    "reason": "unused update prompt",
+    "result": {
+      "id": "a7eb7e5f-6d2c-446f-b43f-b324d9c60754",
+      "ok": true,
+      "result": {
+        "close": {
+          "handle": "term_0df741e9-f520-497a-8db4-6c4ce7f6ccb2",
+          "tabId": "298b0695-965c-4db2-8036-c734fb82d3f1",
+          "ptyKilled": true
+        }
+      },
+      "_meta": {
+        "runtimeId": "77c08447-eb4a-46c1-90f1-832f4de4fe22"
+      }
+    }
+  },
+  {
+    "handle": "term_ef20c30f-0600-4a66-8a2b-1176f580aa82",
+    "reason": "unused update prompt",
+    "result": {
+      "id": "b60d30f4-a259-4d3f-ace7-c90e4801fbf3",
+      "ok": true,
+      "result": {
+        "close": {
+          "handle": "term_ef20c30f-0600-4a66-8a2b-1176f580aa82",
+          "tabId": "6c44ada6-50bd-4f58-adda-9dfc696c27cc",
+          "ptyKilled": true
+        }
+      },
+      "_meta": {
+        "runtimeId": "77c08447-eb4a-46c1-90f1-832f4de4fe22"
+      }
+    }
+  },
+  {
+    "handle": "term_736033a6-df5c-4340-9e4f-23a5186fa4ab",
+    "reason": "unused update prompt",
+    "result": {
+      "id": "e8aab92f-dcd2-4b60-b8da-0de56158f5df",
+      "ok": true,
+      "result": {
+        "close": {
+          "handle": "term_736033a6-df5c-4340-9e4f-23a5186fa4ab",
+          "tabId": "ded33261-2d35-41f3-9c13-88773d161131",
+          "ptyKilled": true
+        }
+      },
+      "_meta": {
+        "runtimeId": "77c08447-eb4a-46c1-90f1-832f4de4fe22"
+      }
+    }
+  },
+  {
+    "handle": "term_31df8096-bb13-470c-88cf-744605ecfbe2",
+    "reason": "unused update prompt",
+    "result": {
+      "id": "b7605a93-9216-417b-bec8-95184079d157",
+      "ok": true,
+      "result": {
+        "close": {
+          "handle": "term_31df8096-bb13-470c-88cf-744605ecfbe2",
+          "tabId": "335f56fd-2b20-4906-babd-0b340d362025",
+          "ptyKilled": true
+        }
+      },
+      "_meta": {
+        "runtimeId": "77c08447-eb4a-46c1-90f1-832f4de4fe22"
+      }
+    }
+  }
+]

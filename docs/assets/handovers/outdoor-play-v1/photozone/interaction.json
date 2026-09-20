@@ -1,0 +1,326 @@
+{
+  "id": "photozone",
+  "size": [
+    2,
+    2
+  ],
+  "currentSize": [
+    2,
+    2
+  ],
+  "logicalSize": 192,
+  "cameraTargetZTiles": 1.8,
+  "coordinateUnits": "numeric centered LOCAL XYZ tiles; X=I Y=-J Zup; heading0=+X pi/2=+Y",
+  "accessKind": "flow",
+  "entry": [
+    -0.78,
+    -0.16,
+    0
+  ],
+  "exit": [
+    0.78,
+    -0.16,
+    0
+  ],
+  "capacity": 2,
+  "capacityProposal": true,
+  "currentLiveCapacity": 0,
+  "waitingSlotCount": 1,
+  "slots": [
+    {
+      "id": "subject-1",
+      "role": "subject",
+      "position": [
+        -0.28,
+        0.28,
+        0.023
+      ],
+      "pose": "stand",
+      "heading": -1.5707963267948966,
+      "approach": [
+        [
+          -0.78,
+          -0.16,
+          0
+        ],
+        [
+          -0.52,
+          -0.18,
+          0
+        ],
+        [
+          -0.28,
+          -0.18,
+          0
+        ],
+        [
+          -0.28,
+          0.28,
+          0.023
+        ]
+      ],
+      "supportObjects": [
+        "Subject_Mark_0",
+        "Subject_MarkCore_0"
+      ],
+      "contactAnchor": "feet",
+      "motion": "walk -> stop -> idle/photo pose -> flash -> exit; no sliding pose transition"
+    },
+    {
+      "id": "subject-2",
+      "role": "subject",
+      "position": [
+        0.28,
+        0.28,
+        0.023
+      ],
+      "pose": "stand",
+      "heading": -1.5707963267948966,
+      "approach": [
+        [
+          -0.78,
+          -0.16,
+          0
+        ],
+        [
+          -0.52,
+          -0.18,
+          0
+        ],
+        [
+          0.28,
+          -0.18,
+          0
+        ],
+        [
+          0.28,
+          0.28,
+          0.023
+        ]
+      ],
+      "supportObjects": [
+        "Subject_Mark_1",
+        "Subject_MarkCore_1"
+      ],
+      "contactAnchor": "feet",
+      "motion": "walk -> stop -> idle/photo pose -> flash -> exit; no sliding pose transition"
+    },
+    {
+      "id": "waiting-1",
+      "role": "waiting",
+      "position": [
+        -0.72,
+        -0.65,
+        0
+      ],
+      "pose": "stand",
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          -0.78,
+          -0.86,
+          0
+        ],
+        [
+          -0.72,
+          -0.65,
+          0
+        ]
+      ],
+      "supportObjects": []
+    }
+  ],
+  "routes": {
+    "walk_0": [
+      [
+        -0.78,
+        -0.16,
+        0
+      ],
+      [
+        -0.52,
+        -0.18,
+        0
+      ],
+      [
+        -0.28,
+        -0.18,
+        0
+      ],
+      [
+        -0.28,
+        0.28,
+        0.023
+      ]
+    ],
+    "exit_0": [
+      [
+        -0.28,
+        0.28,
+        0.023
+      ],
+      [
+        -0.28,
+        -0.18,
+        0
+      ],
+      [
+        0.78,
+        -0.16,
+        0
+      ]
+    ],
+    "walk_1": [
+      [
+        -0.78,
+        -0.16,
+        0
+      ],
+      [
+        -0.52,
+        -0.18,
+        0
+      ],
+      [
+        0.28,
+        -0.18,
+        0
+      ],
+      [
+        0.28,
+        0.28,
+        0.023
+      ]
+    ],
+    "exit_1": [
+      [
+        0.28,
+        0.28,
+        0.023
+      ],
+      [
+        0.28,
+        -0.18,
+        0
+      ],
+      [
+        0.78,
+        -0.16,
+        0
+      ]
+    ],
+    "waiting_to_entry": [
+      [
+        -0.72,
+        -0.65,
+        0
+      ],
+      [
+        -0.72,
+        -0.35,
+        0
+      ],
+      [
+        -0.78,
+        -0.16,
+        0
+      ]
+    ]
+  },
+  "cameraHead": [
+    0,
+    -0.55,
+    0.84
+  ],
+  "cameraHeadCoordinate": [
+    0,
+    -0.55,
+    0.84
+  ],
+  "flashPosition": [
+    0.09,
+    -0.715,
+    0.985
+  ],
+  "cameraTarget": [
+    0,
+    0.28,
+    0.92
+  ],
+  "photographer": "fixed-camera; no photographer NPC required",
+  "sequence": {
+    "order": [
+      "walk",
+      "pose_idle",
+      "flash",
+      "exit"
+    ],
+    "poseHoldSeconds": 2,
+    "flashSeconds": 0.12,
+    "flashIsRuntimeOverlay": true,
+    "admission": "reserve subject route; enter right subject first then left; exits right subject first then left; wait until traversal cleared",
+    "loop": "Waiting guest enters when previous pair has exited; no teleport between marks"
+  },
+  "obstacles": [
+    {
+      "id": "left-post-buoy",
+      "min": [
+        -0.95,
+        0.19,
+        0
+      ],
+      "max": [
+        -0.58,
+        0.57,
+        1.65
+      ]
+    },
+    {
+      "id": "right-post-flowers",
+      "min": [
+        0.54,
+        0.29,
+        0
+      ],
+      "max": [
+        0.94,
+        0.8,
+        1.65
+      ]
+    },
+    {
+      "id": "camera",
+      "min": [
+        -0.2,
+        -0.89,
+        0
+      ],
+      "max": [
+        0.2,
+        -0.49,
+        1.02
+      ]
+    }
+  ],
+  "actorEnvelope": {
+    "radiusTiles": 0.14,
+    "standingHeightTiles": 1.1226827987756232
+  },
+  "clearance": {
+    "frameInnerX": [
+      -0.6325,
+      0.6325
+    ],
+    "frameInnerTopZ": 1.5,
+    "subjectFootZ": 0.023,
+    "flowerMaxZ": 0.42,
+    "noCrossbarAtFeet": true
+  },
+  "notes": [
+    "Two subjects plus one separate waiting position are preview anchors, not live capacity adoption.",
+    "Low physical cream/blue spot markers are separate small fixtures, not a presentation floor.",
+    "Actual NPC sprite depth and head clearance in all four views are coordinator-owned review gates.",
+    "All approach paths avoid fixed tripod and flower cluster; traverse sequentially to avoid subjects crossing."
+  ],
+  "sourceCandidateId": "photozone"
+}

@@ -150,12 +150,16 @@ describe('facilities.json', () => {
     }
   });
 
-  it('paid lounging heals more than free lounging; decor is not usable', () => {
+  it('paid lounging heals more than free lounging; only authored interactive decor is usable', () => {
     for (const f of facilities) {
       if (EXCEPTIONS.has(f.id)) continue;
       if (f.class === 'lounging') expect(f.hpDelta, f.id).toBe(f.usageFee > 0 ? 50 : 25);
       else expect(f.usageFee, f.id).toBe(0);
-      if (f.class === 'decor') expect(f.capacity, f.id).toBe(0);
+      if (f.class === 'decor') {
+        const authoredCapacity: Record<string, number> = { photozone: 2, stage_river_lv1: 4, stage_river_lv2: 8, stage_river_lv3: 12 };
+        expect(f.capacity, f.id).toBe(authoredCapacity[f.id] ?? 0);
+        if (authoredCapacity[f.id]) expect(f.useTicks, f.id).toBeGreaterThan(0);
+      }
       else expect(f.capacity, f.id).toBeGreaterThanOrEqual(1);
     }
   });
@@ -399,11 +403,11 @@ describe('wishes.json', () => {
     const count = (k: string) => wishes.filter((w) => w.reward.kind === k).length;
     expect(count('ingredient')).toBeGreaterThanOrEqual(40);
     expect(count('rigPart')).toBeGreaterThanOrEqual(25);
-    expect(count('facility')).toBe(facilities.filter((f) => f.unlock.source === 'wish').length);
+    expect(count('facility')).toBe(facilities.filter((f) => f.unlock.source === 'wish' && !f.variantOf).length);
   });
 
   it('every unlock.source === "wish" facility is rewarded by exactly one wish, at exactly its unlock.ref', () => {
-    const wishFacilities = facilities.filter((f) => f.unlock.source === 'wish');
+    const wishFacilities = facilities.filter((f) => f.unlock.source === 'wish' && !f.variantOf);
     expect(wishFacilities.length).toBeGreaterThan(0);
     // 한 소원은 시설 하나만 준다 — 두 시설이 같은 `friend/idx` 를 가리키면 뒤에 오는 친구 작성이 반드시 하나를 버린다
     const refs = wishFacilities.map((f) => f.unlock.ref!);

@@ -1,0 +1,97 @@
+{
+  "id": "chicken",
+  "size": [
+    2,
+    2
+  ],
+  "currentSize": [
+    2,
+    2
+  ],
+  "floorZ": 0,
+  "coordinateUnits": "tiles; +X game I, -Y game J, +Z height; centered FacilityRoot",
+  "accessKind": "service-face",
+  "serviceFace": "-Y",
+  "capacity": 2,
+  "capacitySource": "capacityOf(def, placedFacility)",
+  "baseCapacitySource": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/src/data/facilities.json id=chicken.capacity",
+  "physicalCustomerSlotCount": 1,
+  "entry": [
+    -0.51,
+    -0.91,
+    0.1
+  ],
+  "portal": null,
+  "slots": [
+    {
+      "id": "s0",
+      "role": "guest",
+      "pose": "stand",
+      "position": [
+        0.37,
+        -1.36,
+        0
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0.37,
+          -2.0100000000000002,
+          0
+        ],
+        [
+          0.37,
+          -1.36,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useTicks": 12
+    }
+  ],
+  "staffAnchors": [
+    {
+      "id": "staff-door",
+      "role": "staff-only",
+      "position": [
+        -0.51,
+        -0.91,
+        0.1
+      ],
+      "approach": [
+        -0.51,
+        -1.4,
+        0
+      ],
+      "inside": [
+        -0.51,
+        -0.55,
+        0.07
+      ],
+      "physicalThresholdTopZ": 0.1
+    }
+  ],
+  "obstacles": [
+    {
+      "kind": "aabb",
+      "min": [
+        -1.0,
+        -1.0,
+        0
+      ],
+      "max": [
+        1.0,
+        1.0,
+        0.65
+      ],
+      "purpose": "equipment/building hull; doorway staff traversal resolved by coordinator"
+    }
+  ],
+  "notes": [
+    "Logical capacity from current main definition; physical visible service slots are distinct and may be fewer.",
+    "Customer stays outside counter; no customer portal. No NPC baked in mesh.",
+    "Runtime NPC occupancy/occlusion proof deferred to coordinator."
+  ],
+  "mainDefinitionSha256": "c5650c6f0f68c8ea2931746d96f89d897625c5330369902a10a4499717c919db",
+  "useTicks": 12
+}

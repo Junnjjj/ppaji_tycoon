@@ -1,3 +1,7 @@
+import { createStaticVisit, type StaticVisit } from './static-visit.js';
+import { advanceGuestMovement, movementFacing } from './guest-motion.js';
+import { outdoorContract, outdoorSlots, createOutdoorVisit, advanceOutdoorVisit, outdoorInAisle, type OutdoorVisit } from './outdoor-activity.js';
+import { facilityPortal, portalLength, portalPosition, type PortalVisit } from './facility-portal.js';
 import { COURSE_DOCK_IDS } from './course/ride.js';
 /**
  * 손님 — 개체 에이전트. FSM: enter → wander → walk(풀로) → swim → … → leave.
@@ -66,6 +70,10 @@ export function moodOf(g: { hp: number; sat: number; say: string | null }): Gues
 
 export interface Guest {
   uid: number;
+  /** Serializable portal visit; GuestStore is the sole admission/timing authority. */
+  portal?: PortalVisit;
+  outdoor?: OutdoorVisit;
+  staticVisit?: StaticVisit;
   arrivalStep?: number;
   departureStep?: number;
   palette: number;
@@ -430,7 +438,9 @@ export class GuestStore {
       g.stays = false; g.slept = true; // D36: 1박은 한 번 — 오늘은 놀다가 평소처럼 나간다
       g.state = 'wander'; g.stateTicks = 0; g.target = null; g.carry = false; g.queuePos = -1; g.rideIdx = -1; g.swimTile = null;
       g.hp = 100; g.sat = Math.min(100, g.sat + 10); g.photos = 0; g.spentToday = 0; g.progress = 1; g.passBy = null; g.leaving = false; g.nightDone = false; g.nightPick = false;
-      const back = this.adjacentWalkable(g);
+      const portal = g.portal;
+      if (portal) { portal.phase = 'inside'; portal.waking = true; g.state = 'use'; g.target = { kind: 'facility', uid: portal.uid }; }
+      const back = portal ? { i: g.i, j: g.j } : this.adjacentWalkable(g);
       if (back) { g.fromI = back.i; g.fromJ = back.j; g.i = back.i; g.j = back.j; }
       else { g.fromI = this.gate.i; g.fromJ = this.gate.j; g.i = this.gate.i; g.j = this.gate.j; }
       g.say = this.rng.chance(0.5) ? '잘 잤다!' : null;
@@ -448,6 +458,24 @@ export class GuestStore {
     for (const g of this.list) {
       g.stateTicks++;
       if (g.emoteTtl > 0 && --g.emoteTtl === 0) g.emote = null;
+      if(g.staticVisit){const v=g.staticVisit,f=this.facilities.byUid(v.uid);if(g.state!=='use'||!f||f.i!==v.i||f.j!==v.j||f.facing!==v.facing||f.defId!==v.defId||g.target?.kind!=='facility'||g.target.uid!==v.uid){delete g.staticVisit;this.cancelPortal(g);continue;}}
+      if (g.outdoor && g.state !== 'use') { delete g.outdoor; this.cancelPortal(g); }
+      if (g.outdoor) { this.stepOutdoor(g, hooks); continue; }
+      if (g.state === 'use' && g.target?.kind === 'facility' && outdoorContract(this.facilities.byUid(g.target.uid)?.defId ?? '')) {
+        // Legacy saves have no stable physical reservation: return to navigation, without rewarding.
+        this.cancelPortal(g); continue;
+      }
+      if (g.portal && g.state !== 'use') this.cancelPortal(g);
+      // Old saves used the facility origin for pension and a random side for cafe.
+      if (g.state === 'use' && !g.portal && g.target?.kind === 'facility') {
+        const f = this.facilities.byUid(g.target.uid);
+        const p = f && facilityPortal(f);
+        if (f && p) {
+          g.portal = { ...p, uid: f.uid, phase: 'inside', progress: 1 };
+          g.i = g.fromI = p.entry.i; g.j = g.fromJ = p.entry.j; g.progress = 1;
+        }
+      }
+      if (g.portal) { this.stepPortal(g, hooks); continue; }
       switch (g.state) {
         case 'enter':
           if (this.followArrival(g)) break;
@@ -455,6 +483,7 @@ export class GuestStore {
           g.stateTicks = 0;
           break;
         case 'wander': {
+          if (g.progress < 1) { advanceGuestMovement(g, this.b.walkTicksPerTile); g.stateTicks = 0; break; }
           if (hooks?.closing?.()) {
             // P18 숙박 손님은 나가지 않고 제 자리로 가서 잔다
             if (g.stays && g.seatUid !== null && this.facilities.byUid(g.seatUid)) {
@@ -501,10 +530,15 @@ export class GuestStore {
               g.stateTicks = 0;
               break;
             }
+            if (facilityPortal(f) || outdoorContract(f.defId)) {
+              const field = this.fieldToFacility(f), next = field.next(g.i, g.j);
+              if (next && (!this.walkable(next.i, next.j) || !this.grid.canCross(g.i, g.j, next.i, next.j))) this.invalidate();
+            }
             if (!this.advance(g, this.fieldToFacility(f))) {
               const def = this.facilities.defOf(f);
+              if ((facilityPortal(f) || outdoorContract(f.defId)) && !this.portalArrived(g, f)) { g.target = null; g.state = 'wander'; g.stateTicks = 0; break; }
               g.stateTicks = 0;
-              if (this.busyAt(f) >= capacityOf(def, f)) {
+              if (this.busyAt(f) >= capacityOf(def, f) || this.portalLaneBusy(f)) {
                 // 가득 찼다 — 줄을 선다 (G34). 줄도 찼으면 포기
                 const q = this.queueAt(f);
                 if (q >= QUEUE_MAX) { g.target = null; g.state = 'wander'; setEmote(g, 'grr'); break; }
@@ -540,6 +574,7 @@ export class GuestStore {
             g.j = Math.floor(tile / this.grid.w);
             g.progress = 0;
             g.state = 'swim';
+            g.facing = movementFacing(g.fromI,g.fromJ,g.i,g.j,g.facing);
             g.stateTicks = 0;
             g.swims++;
             const temp = hooks?.poolTemp?.(pool.id) ?? 26;
@@ -560,9 +595,10 @@ export class GuestStore {
             break;
           }
           const def = this.facilities.defOf(f);
-          if (g.progress < 1) g.progress = Math.min(1, g.progress + 0.5);
+          if(!g.staticVisit){const v=createStaticVisit(f,{i:g.i+.5,j:g.j+.5,z:.22},g.uid,def.useTicks*TICK_SCALE/8);if(v){g.staticVisit=v;g.stateTicks=0;g.fromI=g.i;g.fromJ=g.j;g.progress=1;}}
+          if (g.progress < 1) advanceGuestMovement(g,this.b.walkTicksPerTile);
           if (g.stays && f.uid === g.seatUid && hooks?.closing?.()) break; // P18 폐장 뒤엔 자리에서 잔다 — 하루가 닫힐 때까지
-          if (g.stateTicks < def.useTicks * TICK_SCALE) break; // useTicks 는 분 단위 데이터
+          if (g.stateTicks < (g.staticVisit?.totalTicks ?? def.useTicks * TICK_SCALE)) break; // useTicks 는 분 단위 데이터
           const wasCarrying = g.carry;
           this.finishUse(g, f, hooks);
           if (def.class === 'lounging') {
@@ -634,14 +670,18 @@ export class GuestStore {
           const f = t && t.kind === 'facility' ? this.facilities.byUid(t.uid) : undefined;
           if (!f || hooks?.closing?.()) { g.queuePos = -1; g.target = null; if (hooks?.closing?.()) this.leaveOrRetreat(g, hooks); else { g.state = 'wander'; g.stateTicks = 0; } break; }
           const def = this.facilities.defOf(f);
-          if (g.queuePos === 0 && this.busyAt(f) < capacityOf(def, f)) {
+          if ((facilityPortal(f) || outdoorContract(f.defId)) && !this.portalArrived(g, f)) {
+            for (const o of this.list) if (o.state === 'queue' && o.target?.kind === 'facility' && o.target.uid === f.uid && o.queuePos > g.queuePos) o.queuePos--;
+            this.cancelPortal(g); break;
+          }
+          if (g.queuePos === 0 && this.busyAt(f) < capacityOf(def, f) && !this.portalLaneBusy(f)) {
             // 내 차례 — 뒤 사람들이 한 칸씩 당겨진다
             for (const o of this.list) if (o.state === 'queue' && o.target?.kind === 'facility' && o.target.uid === f.uid && o.queuePos > 0) o.queuePos--;
             g.queuePos = -1;
             this.startUse(g, f, def);
             break;
           }
-          if (g.stateTicks >= QUEUE_PATIENCE) {
+          if (g.stateTicks >= (outdoorContract(f.defId) ? 4096 : QUEUE_PATIENCE)) {
             // 참을성이 다했다 — 만족 −3, 뒤 사람들이 당겨진다
             for (const o of this.list) if (o.state === 'queue' && o.target?.kind === 'facility' && o.target.uid === f.uid && o.queuePos > g.queuePos) o.queuePos--;
             g.queuePos = -1; g.target = null; g.sat = Math.max(0, g.sat - 3); g.say = '너무 오래 기다렸어'; setEmote(g, 'grr');
@@ -662,22 +702,33 @@ export class GuestStore {
           break;
         }
         case 'swim': {
-          if (g.progress < 1) g.progress = Math.min(1, g.progress + 0.125);
+          if (g.progress < 1) advanceGuestMovement(g, 8);
           const poolId = g.target && g.target.kind === 'pool' ? g.target.id : null;
-          // 물 위에서 떠다닌다 (G26) — 주기마다 같은 풀의 이웃 칸으로 옮긴다
-          if (g.stateTicks % DRIFT_EVERY === 0 && g.progress >= 1) {
-            const pool = poolId === null ? undefined : this.pools.byId(poolId);
-            if (pool) {
-              const opts = NEIGHBORS.map(([di, dj]) => (g.j + dj) * this.grid.w + (g.i + di)).filter((k) => this.pools.ownerIdK(k) === pool.id && this.pools.isOpenK(k)); // P50-a R7: 기구 밑으론 안 떠간다
-              const k = opts[this.rng.int(Math.max(1, opts.length))];
-              if (k !== undefined) { g.fromI = g.i; g.fromJ = g.j; g.i = k % this.grid.w; g.j = Math.floor(k / this.grid.w); g.progress = 0; g.swimTile = k; }
-            }
-          }
           const temp = poolId === null ? 26 : (hooks?.poolTemp?.(poolId) ?? 26);
           const off = Math.abs(temp - g.prefTemp) > this.b.tempTolerance;
           const fit = poolId === null ? 1 : (hooks?.poolTempFit?.(poolId) ?? 1);
           const stay = Math.floor((off ? this.b.swimTicks / 2 : this.b.swimTicks) * (0.85 + 0.3 * fit));
-          if (g.stateTicks < stay) break;
+          // 물 위에서 떠다닌다 (G26) — 주기마다 같은 풀의 이웃 칸으로 옮긴다
+          if (g.stateTicks % DRIFT_EVERY === 0 && g.progress >= 1 && g.stateTicks < stay) {
+            const pool = poolId === null ? undefined : this.pools.byId(poolId);
+            if (pool) {
+              const opts = NEIGHBORS.map(([di, dj]) => (g.j + dj) * this.grid.w + (g.i + di)).filter((k) => this.pools.ownerIdK(k) === pool.id && this.pools.isOpenK(k)); // P50-a R7: 기구 밑으론 안 떠간다
+              const k = opts[this.rng.int(Math.max(1, opts.length))];
+              if (k !== undefined) { g.fromI = g.i; g.fromJ = g.j; g.i = k % this.grid.w; g.j = Math.floor(k / this.grid.w); g.progress = 0; g.swimTile = k; g.facing = movementFacing(g.fromI,g.fromJ,g.i,g.j,g.facing); }
+            }
+          }
+
+          if (g.stateTicks < stay || g.progress < 1) break;
+          // Reach the shore through adjacent open water tiles before ending the swim.
+          // Never interpolate an entire pool width in one walking step.
+          const shoreStep = this.nextPoolExit(g, poolId);
+          if (shoreStep && !this.walkable(shoreStep.i, shoreStep.j)) {
+            g.fromI=g.i; g.fromJ=g.j; g.i=shoreStep.i; g.j=shoreStep.j; g.progress=0;
+            g.facing=movementFacing(g.fromI,g.fromJ,g.i,g.j,g.facing);
+            g.swimTile=g.j*this.grid.w+g.i;
+            break;
+          }
+          if (!shoreStep) break;
           g.hp -= this.b.guestHpSwim * (off ? 2 : 1) * (hooks?.hpMul?.() ?? 1);
           const satBefore = g.sat;
           g.sat = Math.min(100, g.sat + (off ? 3 : 10) * (hooks?.satMul?.() ?? 1));
@@ -689,7 +740,7 @@ export class GuestStore {
             hooks?.onPhoto?.(g, { kind: 'pool', ref: poolId });
           }
           // 뭍으로 — 떠다니다 풀 안쪽에 있으면 가장 가까운 물가로 헤엄쳐 나온다 (G26: 없으면 손님이 조용히 증발했다)
-          const back = this.adjacentWalkable(g) ?? this.nearestWalkable(g, 6);
+          const back = shoreStep;
           if (back) {
             g.fromI = g.i;
             g.fromJ = g.j;
@@ -722,6 +773,7 @@ export class GuestStore {
         case 'gone':
           break;
       }
+      if (g.progress < 1) g.facing = movementFacing(g.fromI, g.fromJ, g.i, g.j, g.facing);
     }
     this.list = this.list.filter((g) => g.state !== 'gone');
   }
@@ -729,7 +781,23 @@ export class GuestStore {
   /** 시설에 들어간다 — 슬라이드는 탑으로, 라운지는 시설 칸 위로, 나머지는 입구 칸에서 (G26/G34 공용) */
   private startUse(g: Guest, f: PlacedFacility, def: FacilityDef): void {
     g.stateTicks = 0;
-    if (def.slide) {
+    const outdoor = outdoorContract(f.defId);
+    if (outdoor) {
+      const occupied = new Set(this.list.filter(o => o.outdoor?.uid === f.uid).map(o => o.outdoor!.slotId));
+      const slot = outdoorSlots(outdoor).find(s => !occupied.has(s.id));
+      if (!slot) { g.state = 'wander'; g.target = null; return; }
+      g.outdoor = createOutdoorVisit(f, slot.id, Math.ceil(def.useTicks * TICK_SCALE));
+      g.fromI = g.i; g.fromJ = g.j; g.progress = 1; g.state = 'use';
+      return;
+    }
+    const visit=createStaticVisit(f,{i:g.i+.5,j:g.j+.5,z:.22},g.uid,def.useTicks*TICK_SCALE/8,
+      this.list.filter(o=>o.staticVisit?.uid===f.uid).map(o=>o.staticVisit!.routeIndex));
+    if(visit){g.staticVisit=visit;g.fromI=g.i;g.fromJ=g.j;g.progress=1;g.state='use';return;}
+    const portal = facilityPortal(f);
+    if (portal) {
+      g.portal = { ...portal, uid: f.uid, phase: 'entering', progress: 0 };
+      g.fromI = g.i; g.fromJ = g.j; g.progress = 1; g.state = 'use';
+    } else if (def.slide) {
       // 탑 위로 오른다 — 활강로가 시작되는 탑 칸 (drawLanes 의 exitSide 와 같은 칸)
       const top = FacilityStore.slideTop(def, f.i, f.j, f.facing);
       g.fromI = g.i; g.fromJ = g.j; g.i = top.i; g.j = top.j; g.progress = 0;
@@ -744,11 +812,107 @@ export class GuestStore {
     }
   }
 
+  private portalArrived(g: Guest, f: PlacedFacility): boolean {
+    return g.progress >= 1 && this.facilities.entryTiles(f, this.walkable).some(t => t.i === g.i && t.j === g.j);
+  }
+
+  private portalLaneBusy(f: PlacedFacility, except?: Guest): boolean {
+    if (outdoorContract(f.defId)) return this.list.some(g => g !== except && g.outdoor?.uid === f.uid &&
+      (g.outdoor.draining || outdoorInAisle(g.outdoor) || g.outdoor.elapsed >= g.outdoor.segments[g.outdoor.segment]!.ticks - 1));
+    return this.list.some(g => g !== except && g.state === 'use' && g.portal?.uid === f.uid && g.portal.phase !== 'inside');
+  }
+
+  private stepOutdoor(g: Guest, hooks?: GuestHooks): void {
+    const v = g.outdoor!, f = this.facilities.byUid(v.uid);
+    if (!f || f.defId !== v.defId || f.i !== v.i || f.j !== v.j || f.facing !== v.facing ||
+        g.target?.kind !== 'facility' || g.target.uid !== v.uid || !this.facilities.entryTiles(f, this.walkable).length ||
+        !this.walkable(v.exitTile.i, v.exitTile.j)) {
+      delete g.outdoor; this.cancelPortal(g); return;
+    }
+    const segment = v.segments[v.segment]!;
+    if (segment.phase === 'hold' && v.defId !== 'playground') {
+      const peers = this.list.filter(o => o !== g && o.outdoor?.uid === f.uid);
+      // Pause seated hold while the one reserved aisle admits another real visitor.
+      if (peers.some(o => outdoorInAisle(o.outdoor!))) return;
+      if (v.elapsed >= segment.ticks - 1) {
+        v.draining = true;
+        for (const o of peers) o.outdoor!.draining = true;
+        const c = outdoorContract(v.defId)!;
+        const order = c.exitOrder ?? (c.id === 'photozone' ? outdoorSlots(c).map(s => s.id) : outdoorSlots(c).map(s => s.id).reverse());
+        if (peers.some(o => order.indexOf(o.outdoor!.slotId) < order.indexOf(v.slotId))) return;
+      }
+    }
+    if (!advanceOutdoorVisit(v)) return;
+    // Release before hooks; each admitted real visit rewards exactly once, after physical exit.
+    delete g.outdoor;
+    g.i = g.fromI = v.exitTile.i; g.j = g.fromJ = v.exitTile.j; g.progress = 1;
+    this.invalidate();
+    if (this.fieldToGate().at(g.i, g.j) === 0xffff) this.cancelPortal(g);
+    const carrying = g.carry;
+    this.finishUse(g, f, hooks);
+    if (this.facilities.defOf(f).class === 'lounging' && carrying) { g.carry = false; g.sat = Math.min(100, g.sat + 5); setEmote(g, 'note'); }
+    // Outdoor leisure cannot become an overnight sleeping reservation.
+    if (hooks?.closing?.() && g.seatUid === f.uid) { g.seatUid = null; g.stays = false; }
+    this.afterUse(g, hooks, carrying ? undefined : f);
+  }
+
+  /** Cancellation/edited paths recover onto a walkable gate-connected tile, never a blocked footprint. */
+  private cancelPortal(g: Guest): void {
+    delete g.portal;
+    delete g.outdoor;
+    delete g.staticVisit;
+    this.invalidate();
+    const field = this.fieldToGate();
+    if (!this.walkable(g.i, g.j) || field.at(g.i, g.j) === 0xffff) {
+      let best = Infinity, tile = this.gate;
+      for (let j = 0; j < this.grid.h; j++) for (let i = 0; i < this.grid.w; i++) {
+        const d = Math.abs(g.i - i) + Math.abs(g.j - j);
+        if (d < best && this.walkable(i, j) && field.at(i, j) < 0xffff) { best = d; tile = { i, j }; }
+      }
+      g.i = tile.i; g.j = tile.j;
+    }
+    g.fromI = g.i; g.fromJ = g.j; g.progress = 1;
+    g.target = null; g.queuePos = -1; g.state = 'wander'; g.stateTicks = 0;
+  }
+
+  private stepPortal(g: Guest, hooks?: GuestHooks): void {
+    const p = g.portal!;
+    const f = this.facilities.byUid(p.uid);
+    const current = f && facilityPortal(f);
+    if (!f || !current || g.target?.kind !== 'facility' || g.target.uid !== p.uid ||
+        current.threshold.i !== p.threshold.i || current.threshold.j !== p.threshold.j || current.threshold.z !== p.threshold.z ||
+        !this.facilities.entryTiles(f, this.walkable).length) {
+      this.cancelPortal(g); return;
+    }
+    const def = this.facilities.defOf(f);
+    if (p.phase === 'inside') {
+      if (g.stays && f.uid === g.seatUid && hooks?.closing?.()) return;
+      if ((!p.waking && g.stateTicks < def.useTicks * TICK_SCALE) || this.portalLaneBusy(f, g)) return;
+      p.wasCarrying = g.carry;
+      if (!p.waking) this.finishUse(g, f, hooks);
+      if (def.class === 'lounging' && p.wasCarrying) { g.carry = false; g.sat = Math.min(100, g.sat + 5); setEmote(g, 'note'); }
+      p.phase = 'exiting'; p.progress = 0; g.stateTicks = 0;
+      return;
+    }
+    const before = portalPosition(p);
+    p.progress = Math.min(1, p.progress + 1 / Math.max(1, portalLength(p) * this.b.walkTicksPerTile));
+    const after = portalPosition(p), di = after.i - before.i, dj = after.j - before.j;
+    if (Math.abs(di) + Math.abs(dj) > 1e-8) g.facing = Math.abs(di) > Math.abs(dj) ? (di > 0 ? 0 : 2) : (dj > 0 ? 1 : 3);
+    if (p.progress < 1) return;
+    if (p.phase === 'entering') { p.phase = 'inside'; g.stateTicks = 0; return; }
+    delete g.portal;
+    g.fromI = g.i; g.fromJ = g.j; g.progress = 1;
+    // If an edit severed the exterior corridor during the visit, safely release it.
+    this.invalidate();
+    if (this.fieldToGate().at(g.i, g.j) === 0xffff) this.cancelPortal(g);
+    this.afterUse(g, hooks, p.wasCarrying ? undefined : f);
+  }
+
   /** 지금 시설을 쓰는 인원 (use·climb·ride) */
   /** P52-b — 사고 확률의 혼잡(busy/cap) 읽기 표면 */
   busyCount(f: PlacedFacility): number { return this.busyAt(f); }
   private busyAt(f: PlacedFacility): number {
-    return this.list.filter((o) => (o.state === 'use' || o.state === 'climb' || o.state === 'ride') && o.target?.kind === 'facility' && o.target.uid === f.uid).length;
+    return this.list.filter((o) => (o.state === 'use' || o.state === 'climb' || o.state === 'ride') && o.portal?.phase !== 'exiting' && o.target?.kind === 'facility' && o.target.uid === f.uid).length;
   }
 
   /** P61-a — uid 로 손님 하나. 운항(`CourseRideStore`)이 자세를 쓸 때만 부른다 */
@@ -763,6 +927,7 @@ export class GuestStore {
 
   /** 시설 이용 완료 — HP·만족·이모트·사진·훅. `use`(즉시 시설)와 `ride`(슬라이드 착수)가 같이 쓴다 */
   private finishUse(g: Guest, f: PlacedFacility, hooks?: GuestHooks): void {
+    delete g.staticVisit;
     const def = this.facilities.defOf(f);
     g.hp = Math.max(0, Math.min(100, g.hp + def.hpDelta));
     if (def.class === 'rig' || def.class === 'slide') g.hunger = Math.min(100, g.hunger + this.b.hungerPerRig * Math.max(1, def.thrill ?? 1)); // P60-b B1: 기구·슬라이드도 배를 곯린다(스릴 ×) — 수영(30)·탑승(25)과 같은 축, 링 위 먹거리가 먼저 팔린다
@@ -952,7 +1117,7 @@ export class GuestStore {
   /** 거리장을 따라 한 tick 전진. 목표에 이미 있으면 false */
   private advance(g: Guest, f: DistanceField): boolean {
     if (g.progress < 1) {
-      g.progress = Math.min(1, g.progress + 1 / this.b.walkTicksPerTile);
+      advanceGuestMovement(g, this.b.walkTicksPerTile);
       return true;
     }
     if (f.at(g.i, g.j) === 0) return false;
@@ -965,6 +1130,31 @@ export class GuestStore {
     g.j = n.j;
     g.progress = 0;
     return true;
+  }
+
+  /** BFS to a reachable bank; only the next adjacent step is consumed. */
+  private nextPoolExit(g: Guest, poolId: number | null): {i:number;j:number} | null {
+    const key=(i:number,j:number)=>j*this.grid.w+i;
+    const start=key(g.i,g.j), queue=[start], first=new Map<number,number>([[start,start]]);
+    for(let n=0;n<queue.length;n++) {
+      const k=queue[n]!,i=k%this.grid.w,j=Math.floor(k/this.grid.w);
+      for(const [di,dj] of NEIGHBORS) {
+        const x=i+di,y=j+dj,next=key(x,y);
+        if(!this.grid.inside(x,y)||!this.grid.canCross(i,j,x,y)||first.has(next)) continue;
+        const step=k===start?next:first.get(k)!;
+        if(this.walkable(x,y)) return {i:step%this.grid.w,j:Math.floor(step/this.grid.w)};
+        if(poolId!==null && this.pools.ownerIdK(next)===poolId && this.pools.isOpenK(next)) {first.set(next,step);queue.push(next);}
+      }
+    }
+    return null;
+  }
+
+  /** Building edits cancel the visit at its logical contact, without stale interpolation. */
+  releaseFacility(uid:number):void {
+    for(const g of this.list) if(g.target?.kind==='facility' && g.target.uid===uid) {
+      if(g.state==='course') {g.target=null;continue;}
+      this.cancelPortal(g);
+    }
   }
 
   private adjacentPoolTile(g: Guest, pool: Pool): number | null {
@@ -989,6 +1179,9 @@ export class GuestStore {
       if (!to) to = out(this.nearestWalkable(g, 6)) ?? this.nearestWalkable(g, 8) ?? { i: this.gate.i, j: this.gate.j }; // P16: 길만 걷는 세계라 근처에 없을 수 있다 — 입구로
       if (!to) continue;
       g.i = to.i; g.j = to.j; g.fromI = to.i; g.fromJ = to.j;
+      delete g.portal;
+      delete g.outdoor;
+      delete g.staticVisit;
       g.target = null;
       if (g.state !== 'leave') { g.state = 'wander'; g.stateTicks = 0; }
       n++;
@@ -1011,7 +1204,7 @@ export class GuestStore {
   private adjacentWalkable(g: Guest): { i: number; j: number } | null {
     // 들어온 방향을 우선 — 없으면 아무 뭍
     const back = { i: g.fromI, j: g.fromJ };
-    if (this.walkable(back.i, back.j) && this.grid.canCross(g.i, g.j, back.i, back.j)) return back;
+    if (Math.abs(back.i-g.i)+Math.abs(back.j-g.j) === 1 && this.walkable(back.i, back.j) && this.grid.canCross(g.i, g.j, back.i, back.j)) return back;
     for (const [di, dj] of NEIGHBORS) {
       if (this.walkable(g.i + di, g.j + dj) && this.grid.canCross(g.i, g.j, g.i + di, g.j + dj)) return { i: g.i + di, j: g.j + dj }; // P39 벽
     }
@@ -1019,12 +1212,12 @@ export class GuestStore {
   }
 
   toSnapshot(): GuestSnapshot {
-    return { nextUid: this.nextUid, guests: this.list.map((g) => ({ ...g })) };
+    return { nextUid: this.nextUid, guests: this.list.map((g) => ({ ...g, ...(g.portal ? { portal: structuredClone(g.portal) } : {}), ...(g.outdoor ? { outdoor: structuredClone(g.outdoor) } : {}), ...(g.staticVisit ? { staticVisit: structuredClone(g.staticVisit) } : {}) })) };
   }
 
   fromSnapshot(s: GuestSnapshot): void {
     this.nextUid = s.nextUid;
-    this.list = s.guests.map((g) => ({ ...g, passBy: g.passBy ?? null, leaving: g.leaving ?? false, nightDone: g.nightDone ?? false, nightPick: g.nightPick ?? false, teamId: g.teamId ?? null, seatUid: g.seatUid ?? null, pkg: g.pkg ?? null, pkgUsed: g.pkgUsed ?? false, slept: g.slept ?? false, stays: g.stays ?? false, hunger: g.hunger ?? 0, name: g.name ?? '손님', age: g.age ?? 20, gender: g.gender ?? 'M', home: g.home ?? '이 동네', spentToday: g.spentToday ?? 0, emote: g.emote ?? null, emoteTtl: g.emoteTtl ?? 0, float: g.float ?? 0, rideIdx: g.rideIdx ?? -1, carry: g.carry ?? false, queuePos: g.queuePos ?? -1 }));
+    this.list = s.guests.map((g) => ({ ...g, ...(g.portal ? { portal: structuredClone(g.portal) } : {}), ...(g.outdoor ? { outdoor: structuredClone(g.outdoor) } : {}), ...(g.staticVisit ? { staticVisit: structuredClone(g.staticVisit) } : {}), passBy: g.passBy ?? null, leaving: g.leaving ?? false, nightDone: g.nightDone ?? false, nightPick: g.nightPick ?? false, teamId: g.teamId ?? null, seatUid: g.seatUid ?? null, pkg: g.pkg ?? null, pkgUsed: g.pkgUsed ?? false, slept: g.slept ?? false, stays: g.stays ?? false, hunger: g.hunger ?? 0, name: g.name ?? '손님', age: g.age ?? 20, gender: g.gender ?? 'M', home: g.home ?? '이 동네', spentToday: g.spentToday ?? 0, emote: g.emote ?? null, emoteTtl: g.emoteTtl ?? 0, float: g.float ?? 0, rideIdx: g.rideIdx ?? -1, carry: g.carry ?? false, queuePos: g.queuePos ?? -1 }));
     this.invalidate();
   }
 }

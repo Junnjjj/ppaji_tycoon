@@ -1,0 +1,35 @@
+{
+  "status": "USER_ACCEPTED_FOR_MAIN_ADOPTION",
+  "prior_package_status": "FAIL_USER_VISUAL_REJECTION",
+  "initial_pilot_status": "FAIL_USER_VISUAL_REJECTION_SUPERSEDED",
+  "current_physical_root_sha256": "a4ee7d215b19494e78a9b33834f7cb8007844235211b1593a826d53f3b936441",
+  "current_render_directory": "review",
+  "coordinator_d0_review": "Coordinator directly viewed pilot-corrected and confirmed charcoal restoration; not final user approval",
+  "reviewer": "author inspected actual reference, corrected d0 at native/enlarged size, and all four native directions",
+  "semantic_findings": [
+    "One central front door remains on -Y only and is hidden in rear facings",
+    "Windowboxes, balcony and upper terrace rotate with root; rear has no duplicate public entrance",
+    "Lower floors retain consistent human scale across stages",
+    "Third storey, where present, comprises one glazed suite plus one pool terrace only"
+  ],
+  "known_failures_or_limits": [
+    "Not approved for adoption or strict ImageGen",
+    "Native flowers and interior furniture are simplified; not all fine details read individually",
+    "Upper balcony and entry-canopy attachment remains a close join requiring visual approval",
+    "Runtime NPC approach, hiding, reappearance and actual Phaser grid remain coordinator-owned",
+    "Projection edge heuristic WARN for d0/d2 vertical family (3 degrees); exact camera/root and positive/negative calibration pass, warning retained"
+  ],
+  "numerical_checks": {
+    "reopen_RGBA_identical": 8,
+    "native_clipping": 0,
+    "minimum_native_foreground": 9700
+  },
+  "user_art_approval": false,
+  "roof_gate": "ROOF_PROPORTION_USER_REVIEW",
+  "live_files_modified": false,
+  "previous_status": "AUTHORED_FOUR_VIEW_CANDIDATE_AWAITING_USER_APPROVAL",
+  "user_approval": true,
+  "user_decision": "좋다 적용하자, 다 만족해",
+  "accepted_source_sha256": "a4ee7d215b19494e78a9b33834f7cb8007844235211b1593a826d53f3b936441",
+  "raw_diagnostics_preserved": true
+}

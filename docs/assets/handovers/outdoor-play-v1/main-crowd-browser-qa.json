@@ -1,0 +1,157 @@
+{
+  "crowds": [
+    {
+      "id": "pavilion",
+      "facing": 0,
+      "expected": 4,
+      "occupied": 4,
+      "slots": [
+        "rear_0",
+        "rear_1",
+        "right_0",
+        "right_1"
+      ],
+      "composited": 4
+    },
+    {
+      "id": "photozone",
+      "facing": 0,
+      "expected": 2,
+      "occupied": 2,
+      "slots": [
+        "subject-2",
+        "subject-1"
+      ],
+      "composited": 2
+    },
+    {
+      "id": "stage_river_lv1",
+      "facing": 0,
+      "expected": 4,
+      "occupied": 4,
+      "slots": [
+        "audience_0",
+        "audience_1",
+        "audience_2",
+        "audience_3"
+      ],
+      "composited": 4
+    },
+    {
+      "id": "stage_river_lv2",
+      "facing": 0,
+      "expected": 8,
+      "occupied": 8,
+      "slots": [
+        "audience_1",
+        "audience_2",
+        "audience_0",
+        "audience_3",
+        "audience_5",
+        "audience_6",
+        "audience_4",
+        "audience_7"
+      ],
+      "composited": 8
+    },
+    {
+      "id": "stage_river_lv3",
+      "facing": 0,
+      "expected": 12,
+      "occupied": 12,
+      "slots": [
+        "audience_1",
+        "audience_2",
+        "audience_0",
+        "audience_3",
+        "audience_5",
+        "audience_6",
+        "audience_4",
+        "audience_7",
+        "audience_9",
+        "audience_10",
+        "audience_8",
+        "audience_11"
+      ],
+      "composited": 12
+    },
+    {
+      "id": "pavilion",
+      "facing": 1,
+      "expected": 4,
+      "occupied": 4,
+      "slots": [
+        "rear_0",
+        "rear_1",
+        "right_0",
+        "right_1"
+      ],
+      "composited": 4
+    },
+    {
+      "id": "photozone",
+      "facing": 1,
+      "expected": 2,
+      "occupied": 2,
+      "slots": [
+        "subject-2",
+        "subject-1"
+      ],
+      "composited": 2
+    },
+    {
+      "id": "stage_river_lv1",
+      "facing": 1,
+      "expected": 4,
+      "occupied": 4,
+      "slots": [
+        "audience_0",
+        "audience_1",
+        "audience_2",
+        "audience_3"
+      ],
+      "composited": 4
+    },
+    {
+      "id": "stage_river_lv2",
+      "facing": 1,
+      "expected": 8,
+      "occupied": 8,
+      "slots": [
+        "audience_1",
+        "audience_2",
+        "audience_0",
+        "audience_3",
+        "audience_5",
+        "audience_6",
+        "audience_4",
+        "audience_7"
+      ],
+      "composited": 8
+    },
+    {
+      "id": "stage_river_lv3",
+      "facing": 1,
+      "expected": 12,
+      "occupied": 12,
+      "slots": [
+        "audience_1",
+        "audience_2",
+        "audience_0",
+        "audience_3",
+        "audience_5",
+        "audience_6",
+        "audience_4",
+        "audience_7",
+        "audience_9",
+        "audience_10",
+        "audience_8",
+        "audience_11"
+      ],
+      "composited": 12
+    }
+  ],
+  "errors": [],
+  "saveUnchanged": true,
+  "fixture": "Real GuestStore.step with Game hooks, game clock frozen during serial admissions"
+}

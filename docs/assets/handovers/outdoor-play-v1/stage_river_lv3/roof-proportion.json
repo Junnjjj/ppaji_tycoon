@@ -1,0 +1,62 @@
+{
+  "state": "ROOF_PROPORTION_USER_REVIEW",
+  "physical_root_sha256": "0e23596d75607ea74a64292d3f2b1ad903f464d9b9f0946f6cf7f2fabc659eab",
+  "canonical_live_size": [
+    3,
+    2
+  ],
+  "proposed_size": [
+    6,
+    5
+  ],
+  "body_bounds_tiles": [
+    [
+      -2.200000047683716,
+      0.7499999403953552,
+      0.07999999821186066
+    ],
+    [
+      2.200000047683716,
+      2.249999761581421,
+      0.2800000011920929
+    ]
+  ],
+  "body_coverage": [
+    0.7333333333333334,
+    0.3
+  ],
+  "family_visual_mass_target": "Open outdoor stage: canopy only over rear 4.4x1.5 platform, three uncovered chair rows; compact enclosed-room targets do not apply",
+  "roof_bounds_tiles": [
+    [
+      -2.367000102996826,
+      0.7447049617767334,
+      2.1733062267303467
+    ],
+    [
+      2.367000102996826,
+      2.3352949619293213,
+      2.466693878173828
+    ]
+  ],
+  "roof_width_depth_tiles": [
+    4.734000205993652,
+    1.590590000152588
+  ],
+  "roof_to_body_ratio": [
+    1.0759091144061281,
+    1.0603934598438096
+  ],
+  "roof_overhang_tiles": {
+    "-x": 0.16700005531311035,
+    "+x": 0.16700005531311035,
+    "-y": 0.005294978618621826,
+    "+y": 0.08529520034790039
+  },
+  "eave_min_z": 2.1733062267303467,
+  "roof_max_z": 2.466693878173828,
+  "minimum_performer_head_clearance_tiles": 0.4843172012243768,
+  "same_scale_resizing": "NONE",
+  "same_scale_evidence": "same-scale-level1-level3.png",
+  "imagegen_calls": 0,
+  "live_files_modified": false
+}

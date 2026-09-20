@@ -1,0 +1,57 @@
+{
+  "blend": "facility.blend",
+  "concept": "reference.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 0.6,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    2,
+    1
+  ],
+  "floor_mode": "transparent-no-floor",
+  "minimum_native_foreground": 650,
+  "inventory": {
+    "mirrors": {
+      "prefix": "MirrorGlass_",
+      "count": 2
+    },
+    "dryers": {
+      "prefix": "DryerBody_",
+      "count": 2
+    },
+    "handles": {
+      "prefix": "DryerHandle_",
+      "count": 2
+    }
+  },
+  "groups": {
+    "body": {
+      "prefix": "Structure_"
+    }
+  },
+  "landmarks": {
+    "left_station": [
+      -0.48,
+      -0.3,
+      0
+    ],
+    "right_station": [
+      0.48,
+      -0.3,
+      0
+    ],
+    "left_mirror": [
+      -0.48,
+      0.375,
+      1.08
+    ],
+    "right_mirror": [
+      0.48,
+      0.375,
+      1.08
+    ]
+  }
+}

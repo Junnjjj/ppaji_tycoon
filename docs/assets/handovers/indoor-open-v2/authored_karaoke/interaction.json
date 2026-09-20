@@ -1,0 +1,285 @@
+{
+  "id": "karaoke",
+  "currentSize": [
+    2,
+    2
+  ],
+  "size": [
+    3,
+    3
+  ],
+  "floorZ": 0,
+  "accessKind": "portal",
+  "entry": [
+    1.1,
+    -1.75,
+    0
+  ],
+  "slots": [
+    {
+      "id": "seat0",
+      "pose": "sit",
+      "position": [
+        -0.79,
+        0.9,
+        0.33
+      ],
+      "heading": -1.5707963267948966,
+      "approach": [
+        [
+          1.1,
+          -1.75,
+          0
+        ],
+        [
+          1.1,
+          -1.2,
+          0
+        ],
+        [
+          1.1,
+          0.35,
+          0
+        ],
+        [
+          -0.79,
+          0.35,
+          0
+        ]
+      ],
+      "supportObjects": [
+        "SeatCushion_0"
+      ],
+      "useSeconds": 4
+    },
+    {
+      "id": "seat1",
+      "pose": "sit",
+      "position": [
+        0.35000000000000003,
+        0.9,
+        0.33
+      ],
+      "heading": -1.5707963267948966,
+      "approach": [
+        [
+          1.1,
+          -1.75,
+          0
+        ],
+        [
+          1.1,
+          -1.2,
+          0
+        ],
+        [
+          1.1,
+          0.35,
+          0
+        ],
+        [
+          0.35000000000000003,
+          0.35,
+          0
+        ]
+      ],
+      "supportObjects": [
+        "SeatCushion_2"
+      ],
+      "useSeconds": 4
+    },
+    {
+      "id": "singer",
+      "pose": "stand",
+      "position": [
+        0.82,
+        -0.32,
+        0
+      ],
+      "heading": -1.5707963267948966,
+      "approach": [
+        [
+          1.1,
+          -1.75,
+          0
+        ],
+        [
+          1.1,
+          -1.2,
+          0
+        ],
+        [
+          1.1,
+          0.35,
+          0
+        ],
+        [
+          0.82,
+          0.35,
+          0
+        ],
+        [
+          0.82,
+          -0.32,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useSeconds": 4
+    }
+  ],
+  "obstacles": [
+    {
+      "name": "Sofa including arms",
+      "min": [
+        -1.3699999999999999,
+        0.615
+      ],
+      "max": [
+        0.73,
+        1.37
+      ]
+    },
+    {
+      "name": "Small table",
+      "min": [
+        -1.055,
+        -0.295
+      ],
+      "max": [
+        -0.265,
+        0.135
+      ]
+    },
+    {
+      "name": "Screen cabinet",
+      "min": [
+        -0.79,
+        -1.3699999999999999
+      ],
+      "max": [
+        0.49,
+        -1.07
+      ]
+    },
+    {
+      "name": "Speaker left",
+      "min": [
+        -1.255,
+        -1.375
+      ],
+      "max": [
+        -0.905,
+        -1.045
+      ]
+    },
+    {
+      "name": "Speaker right",
+      "min": [
+        0.9450000000000001,
+        0.8250000000000002
+      ],
+      "max": [
+        1.295,
+        1.1550000000000002
+      ]
+    },
+    {
+      "name": "Microphone tripod",
+      "min": [
+        0.53,
+        -0.9199999999999999
+      ],
+      "max": [
+        0.8699999999999999,
+        -0.58
+      ]
+    },
+    {
+      "name": "Wall_px",
+      "min": [
+        1.4,
+        -1.5
+      ],
+      "max": [
+        1.5,
+        1.5
+      ]
+    },
+    {
+      "name": "Wall_nx",
+      "min": [
+        -1.5,
+        -1.5
+      ],
+      "max": [
+        -1.4,
+        1.5
+      ]
+    },
+    {
+      "name": "Wall_py",
+      "min": [
+        -1.4,
+        1.4
+      ],
+      "max": [
+        1.4,
+        1.5
+      ]
+    },
+    {
+      "name": "Wall_ny_left",
+      "min": [
+        -1.5,
+        -1.5
+      ],
+      "max": [
+        0.7,
+        -1.4
+      ]
+    },
+    {
+      "name": "Wall_ny_right",
+      "min": [
+        1.4,
+        -1.5
+      ],
+      "max": [
+        1.5,
+        -1.4
+      ]
+    },
+    {
+      "name": "EntryJamb_left",
+      "min": [
+        0.67,
+        -1.51
+      ],
+      "max": [
+        0.71,
+        -1.39
+      ]
+    },
+    {
+      "name": "EntryJamb_right",
+      "min": [
+        1.39,
+        -1.51
+      ],
+      "max": [
+        1.43,
+        -1.39
+      ]
+    }
+  ],
+  "notes": [
+    "Current live 2x2 versus proposed 3x3 unchanged from v1 proposal; no live modification.",
+    "Entry deliberately revised from right open side to required -Y opening; clear width .68, opening height 1.17 tile.",
+    "Sofa and sit anchors shifted +.08X to clear new left wall; singer shifted +.06Y; microphone shifted -.29X,+.04Y; right speaker relocated rear-right to clear entry.",
+    "Two sit poses retain z=.33 pelvis support and seat cushion names; support contact is separate from collision-free walking approach.",
+    "Route collision uses all four permanent walls even when display cutaway hides near walls.",
+    "One standing singer faces -Y; no room roof and no handlers; furniture untagged.",
+    "Native NPC/depth QA pending coordinator; full shell foreground intentionally occludes interior."
+  ]
+}

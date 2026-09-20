@@ -1,0 +1,72 @@
+{
+  "rows": [
+    {
+      "id": "rental_tube",
+      "facing": 0,
+      "card": true,
+      "blueprint": "indoor-service-v1",
+      "size": [
+        2,
+        1
+      ],
+      "texture": "fac/rental_tube/0",
+      "ghost": "fac/rental_tube/0",
+      "matched": true,
+      "scale": 1,
+      "framesReady": true
+    },
+    {
+      "id": "rental_tube",
+      "facing": 1,
+      "card": true,
+      "blueprint": "indoor-service-v1",
+      "size": [
+        2,
+        1
+      ],
+      "texture": "fac/rental_tube/1",
+      "ghost": "fac/rental_tube/1",
+      "matched": true,
+      "scale": 1,
+      "framesReady": true
+    },
+    {
+      "id": "dry_room",
+      "facing": 0,
+      "card": true,
+      "blueprint": "indoor-service-v1",
+      "size": [
+        2,
+        1
+      ],
+      "texture": "fac/dry_room/0",
+      "ghost": "fac/dry_room/0",
+      "matched": true,
+      "scale": 1,
+      "framesReady": true
+    },
+    {
+      "id": "dry_room",
+      "facing": 1,
+      "card": true,
+      "blueprint": "indoor-service-v1",
+      "size": [
+        2,
+        1
+      ],
+      "texture": "fac/dry_room/1",
+      "ghost": "fac/dry_room/1",
+      "matched": true,
+      "scale": 1,
+      "framesReady": true
+    }
+  ],
+  "removedStillHidden": true,
+  "build": {
+    "sha": "5cea8e9bb1677cd023f3d9122419a2b244cc8123",
+    "shortSha": "5cea8e9bb167",
+    "branch": "main",
+    "sourceDigest": "dd3971406ad0c6f239dc6827e70333cd8078d2001cdbc96febfbf7d8c2d4149a",
+    "startedAt": "2026-09-19T16:49:51.561Z"
+  }
+}

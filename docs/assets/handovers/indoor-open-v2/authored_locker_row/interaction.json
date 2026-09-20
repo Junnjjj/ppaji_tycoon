@@ -1,0 +1,210 @@
+{
+  "id": "locker_row",
+  "currentSize": [
+    4,
+    1
+  ],
+  "size": [
+    4,
+    2
+  ],
+  "floorZ": 0,
+  "accessKind": "service-face",
+  "entry": [
+    0,
+    -1.2,
+    0
+  ],
+  "slots": [
+    {
+      "id": "s0",
+      "pose": "idle",
+      "position": [
+        -1.5,
+        0.05,
+        0
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0,
+          -1.2,
+          0
+        ],
+        [
+          0,
+          -0.62,
+          0
+        ],
+        [
+          -1.5,
+          -0.62,
+          0
+        ],
+        [
+          -1.5,
+          0.05,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useSeconds": 4
+    },
+    {
+      "id": "s1",
+      "pose": "idle",
+      "position": [
+        -0.5,
+        0.05,
+        0
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0,
+          -1.2,
+          0
+        ],
+        [
+          0,
+          -0.62,
+          0
+        ],
+        [
+          -0.5,
+          -0.62,
+          0
+        ],
+        [
+          -0.5,
+          0.05,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useSeconds": 4
+    },
+    {
+      "id": "s2",
+      "pose": "idle",
+      "position": [
+        0.5,
+        0.05,
+        0
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0,
+          -1.2,
+          0
+        ],
+        [
+          0,
+          -0.62,
+          0
+        ],
+        [
+          0.5,
+          -0.62,
+          0
+        ],
+        [
+          0.5,
+          0.05,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useSeconds": 4
+    },
+    {
+      "id": "s3",
+      "pose": "idle",
+      "position": [
+        1.5,
+        0.05,
+        0
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0,
+          -1.2,
+          0
+        ],
+        [
+          0,
+          -0.62,
+          0
+        ],
+        [
+          1.5,
+          -0.62,
+          0
+        ],
+        [
+          1.5,
+          0.05,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useSeconds": 4
+    }
+  ],
+  "obstacles": [
+    {
+      "name": "Cabinet_0",
+      "min": [
+        -1.975,
+        0.4
+      ],
+      "max": [
+        -1.025,
+        0.88
+      ]
+    },
+    {
+      "name": "Cabinet_1",
+      "min": [
+        -0.975,
+        0.4
+      ],
+      "max": [
+        -0.025,
+        0.88
+      ]
+    },
+    {
+      "name": "Cabinet_2",
+      "min": [
+        0.025,
+        0.4
+      ],
+      "max": [
+        0.975,
+        0.88
+      ]
+    },
+    {
+      "name": "Cabinet_3",
+      "min": [
+        1.025,
+        0.4
+      ],
+      "max": [
+        1.975,
+        0.88
+      ]
+    }
+  ],
+  "notes": [
+    "Blender centered XY tile units; heading radians from +X toward +Y.",
+    "All idle poses have foot origin z=0. Visible stations do not modify live economic capacity.",
+    "No baked NPC. Existing pose playback and depth are coordinator-owned.",
+    "Rear views naturally occlude lower bodies; use physical depth, never reorder whole sprite in front.",
+    "Route body clearance tested with 0.12 tile radius; no walking through furniture.",
+    "Changing curtains remain gathered open; this is an interaction/cutaway state, not a closed privacy state."
+  ]
+}

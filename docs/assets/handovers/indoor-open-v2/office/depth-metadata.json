@@ -1,0 +1,158 @@
+{
+  "id": "office",
+  "sourceSHA": "97d3bbffea25791c578072f99b77ff582e41f0383c1a024cc77212b46b2e1507",
+  "presentation": "camera-near exterior wall visibility only; rigid full-root evidence stored separately",
+  "camera": {
+    "C": [
+      183.71173095703125,
+      -183.71173095703125,
+      163.57644653320312
+    ],
+    "R": [
+      0.7071067094802856,
+      0.7071068286895752,
+      2.9802322387695312e-08
+    ],
+    "U": [
+      -0.3535534143447876,
+      0.3535534143447876,
+      0.8660253286361694
+    ],
+    "F": [
+      -0.6123723983764648,
+      0.6123723983764648,
+      -0.5
+    ]
+  },
+  "tileWorld": 22.627416997969522,
+  "native": 192,
+  "supportTopObjects": [
+    "ChairSeat"
+  ],
+  "directions": [
+    {
+      "d": 0,
+      "hiddenWalls": [
+        "WallPX",
+        "WallNYLeft",
+        "WallNYRight",
+        "DoorJambL",
+        "DoorJambR",
+        "DoorLintel",
+        "WallSkirtingpx",
+        "WallSkirtingNYL",
+        "WallSkirtingNYR"
+      ],
+      "shownWalls": [
+        "WallNX",
+        "WallPY",
+        "WallSkirtingnx",
+        "WallSkirtingPY",
+        "WallBoardFrame",
+        "WallBoard",
+        "WallBoardPaperA",
+        "WallBoardPaperB"
+      ],
+      "imageHashes": {
+        "native": "b20602a973fd6f8b9308e310ee6bc6421c1b2889af2eda3896718d1191fd6a17",
+        "color": "458c8608b1a7fcb0c9c32b2ef0434c90a89b6c8da1ef96780dbb6ad041f7f11e"
+      },
+      "finitePixels": 2607,
+      "supportTopExclusions": 18,
+      "maxReprojectionError": 4.76837158203125e-05
+    },
+    {
+      "d": 1,
+      "hiddenWalls": [
+        "WallNX",
+        "WallNYLeft",
+        "WallNYRight",
+        "DoorJambL",
+        "DoorJambR",
+        "DoorLintel",
+        "WallSkirtingnx",
+        "WallSkirtingNYL",
+        "WallSkirtingNYR"
+      ],
+      "shownWalls": [
+        "WallPX",
+        "WallPY",
+        "WallSkirtingpx",
+        "WallSkirtingPY",
+        "WallBoardFrame",
+        "WallBoard",
+        "WallBoardPaperA",
+        "WallBoardPaperB"
+      ],
+      "imageHashes": {
+        "native": "f61b5184e50946fa13d17e85ae6d4e7ab99a12d66cd36d98f9b888f8844491a4",
+        "color": "cca7020c19ec618de1c89cc4ffa658f1bcd357e06d5783d2dc47af76bdda1da1"
+      },
+      "finitePixels": 2607,
+      "supportTopExclusions": 3,
+      "maxReprojectionError": 4.57763671875e-05
+    },
+    {
+      "d": 2,
+      "hiddenWalls": [
+        "WallNX",
+        "WallPY",
+        "WallSkirtingnx",
+        "WallSkirtingPY",
+        "WallBoardFrame",
+        "WallBoard",
+        "WallBoardPaperA",
+        "WallBoardPaperB"
+      ],
+      "shownWalls": [
+        "WallPX",
+        "WallNYLeft",
+        "WallNYRight",
+        "DoorJambL",
+        "DoorJambR",
+        "DoorLintel",
+        "WallSkirtingpx",
+        "WallSkirtingNYL",
+        "WallSkirtingNYR"
+      ],
+      "imageHashes": {
+        "native": "3dce83ceffc44a552fc46dc90f8cdc03e8d76462b962d5786c6dd5e9283b4f21",
+        "color": "c2629120ec8c84b0d4d286f27716638729486f8f980fc15803b70ef4f1e4d6ba"
+      },
+      "finitePixels": 2465,
+      "supportTopExclusions": 23,
+      "maxReprojectionError": 4.57763671875e-05
+    },
+    {
+      "d": 3,
+      "hiddenWalls": [
+        "WallPX",
+        "WallPY",
+        "WallSkirtingpx",
+        "WallSkirtingPY",
+        "WallBoardFrame",
+        "WallBoard",
+        "WallBoardPaperA",
+        "WallBoardPaperB"
+      ],
+      "shownWalls": [
+        "WallNX",
+        "WallNYLeft",
+        "WallNYRight",
+        "DoorJambL",
+        "DoorJambR",
+        "DoorLintel",
+        "WallSkirtingnx",
+        "WallSkirtingNYL",
+        "WallSkirtingNYR"
+      ],
+      "imageHashes": {
+        "native": "1fb1c8d0342df3aaa20c57af4fe0ac74ee208af343b2b5035c7acfabafe59641",
+        "color": "c920bbe0a9f426755b2ed9e533876de60ef05a7da00782d8c2d179794ed5f21b"
+      },
+      "finitePixels": 2414,
+      "supportTopExclusions": 24,
+      "maxReprojectionError": 5.340576171875e-05
+    }
+  ]
+}

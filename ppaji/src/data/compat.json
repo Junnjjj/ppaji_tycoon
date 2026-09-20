@@ -315,5 +315,47 @@
       "cafe_latte",
       "chestnut_cream_cake"
     ]
+  },
+  {
+    "restaurant": "cafe_lv2",
+    "good": [
+      "iced_coffee",
+      "cafe_latte",
+      "milk_tea",
+      "affogato",
+      "cheesecake",
+      "honey_toast",
+      "iced_americano",
+      "dalgona_latte",
+      "matcha_latte",
+      "coffee_soft_serve"
+    ],
+    "bad": [
+      "fries",
+      "hot_dog",
+      "tuna_sushi",
+      "octopus_fritters"
+    ]
+  },
+  {
+    "restaurant": "cafe_lv3",
+    "good": [
+      "iced_coffee",
+      "cafe_latte",
+      "milk_tea",
+      "affogato",
+      "cheesecake",
+      "honey_toast",
+      "iced_americano",
+      "dalgona_latte",
+      "matcha_latte",
+      "coffee_soft_serve"
+    ],
+    "bad": [
+      "fries",
+      "hot_dog",
+      "tuna_sushi",
+      "octopus_fritters"
+    ]
   }
 ]

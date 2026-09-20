@@ -1,0 +1,191 @@
+{
+  "blend": "facility.blend",
+  "concept": "../../lodging-food-v2/icecream/review/native-four-directions.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 256,
+  "camera_target_z_tiles": 1.8,
+  "logical_size": 256,
+  "density": 4,
+  "size": [
+    6,
+    5
+  ],
+  "canonical_live_size": [
+    3,
+    2
+  ],
+  "proposed_size": [
+    6,
+    5
+  ],
+  "floor_mode": "transparent-no-floor",
+  "minimum_native_foreground": 2200,
+  "inventory": {
+    "chairs": {
+      "names": [
+        "Chair_0_Seat",
+        "Chair_1_Seat",
+        "Chair_2_Seat",
+        "Chair_3_Seat",
+        "Chair_4_Seat",
+        "Chair_5_Seat",
+        "Chair_6_Seat",
+        "Chair_7_Seat",
+        "Chair_8_Seat",
+        "Chair_9_Seat",
+        "Chair_10_Seat",
+        "Chair_11_Seat"
+      ],
+      "count": 12
+    },
+    "speakers": {
+      "names": [
+        "Speaker_0",
+        "Speaker_1"
+      ],
+      "count": 2
+    },
+    "lights": {
+      "names": [
+        "Light_0",
+        "Light_1",
+        "Light_2",
+        "Light_3"
+      ],
+      "count": 4
+    },
+    "mic": {
+      "names": [
+        "MicHead"
+      ],
+      "count": 1
+    },
+    "roof": {
+      "names": [
+        "Roof_CreamCanopy"
+      ],
+      "count": 1
+    }
+  },
+  "groups": {
+    "body": {
+      "names": [
+        "Stage_Deck"
+      ]
+    },
+    "roof": {
+      "prefix": "Roof_"
+    },
+    "chairs": {
+      "prefix": "Chair_"
+    },
+    "intrinsic_platform": {
+      "names": [
+        "Stage_Deck"
+      ]
+    }
+  },
+  "landmarks": {
+    "performer": [
+      0,
+      1.22,
+      0.288
+    ],
+    "audience_0": [
+      -1.65,
+      0.27,
+      0
+    ],
+    "audience_1": [
+      -0.75,
+      0.27,
+      0
+    ],
+    "audience_2": [
+      0.75,
+      0.27,
+      0
+    ],
+    "audience_3": [
+      1.65,
+      0.27,
+      0
+    ],
+    "audience_4": [
+      -1.65,
+      -0.68,
+      0
+    ],
+    "audience_5": [
+      -0.75,
+      -0.68,
+      0
+    ],
+    "audience_6": [
+      0.75,
+      -0.68,
+      0
+    ],
+    "audience_7": [
+      1.65,
+      -0.68,
+      0
+    ],
+    "audience_8": [
+      -1.65,
+      -1.63,
+      0
+    ],
+    "audience_9": [
+      -0.75,
+      -1.63,
+      0
+    ],
+    "audience_10": [
+      0.75,
+      -1.63,
+      0
+    ],
+    "audience_11": [
+      1.65,
+      -1.63,
+      0
+    ],
+    "entry": [
+      -2.65,
+      -2.32,
+      0
+    ],
+    "exit": [
+      2.65,
+      -2.32,
+      0
+    ],
+    "microphone": [
+      0.13,
+      1.15,
+      1.23
+    ],
+    "left_speaker": [
+      -1.83,
+      1.2,
+      1.02
+    ],
+    "right_speaker": [
+      1.83,
+      1.2,
+      1.02
+    ],
+    "canopy_front": [
+      0,
+      0.75,
+      2.2
+    ],
+    "stair": [
+      -2.45,
+      1.55,
+      0.14
+    ]
+  }
+}

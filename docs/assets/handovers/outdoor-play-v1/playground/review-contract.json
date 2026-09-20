@@ -1,0 +1,89 @@
+{
+  "blend": "facility.blend",
+  "concept": "../../lodging-food-v2/sikhye/review/native-d0.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 1.8,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    3,
+    3
+  ],
+  "floor_mode": "transparent-no-floor",
+  "minimum_native_foreground": 450,
+  "inventory": {
+    "stairs": {
+      "names": [
+        "Stair_0",
+        "Stair_1",
+        "Stair_2"
+      ],
+      "count": 3
+    },
+    "continuous_chute": {
+      "names": [
+        "Slide_Surface"
+      ],
+      "count": 1
+    },
+    "low_climb_rungs": {
+      "prefix": "LowClimb_Rung",
+      "count": 5
+    }
+  },
+  "groups": {
+    "body": {
+      "prefix": "Body_"
+    },
+    "equipment_platform": {
+      "names": [
+        "Equipment_Deck"
+      ]
+    },
+    "chute": {
+      "prefix": "Slide_"
+    },
+    "low_climb": {
+      "prefix": "LowClimb_"
+    }
+  },
+  "landmarks": {
+    "entry": [
+      -0.6,
+      1.08,
+      0
+    ],
+    "ladder": [
+      -0.6,
+      0.42,
+      0.32
+    ],
+    "sit": [
+      -0.12,
+      -0.3,
+      0.65
+    ],
+    "slide_mid": [
+      0.48,
+      -0.3,
+      0.34
+    ],
+    "landing": [
+      1.18,
+      -0.3,
+      0.09
+    ],
+    "exit": [
+      1.23,
+      0.25,
+      0
+    ],
+    "low_climb": [
+      -1.02,
+      -1.01,
+      0.39
+    ]
+  }
+}

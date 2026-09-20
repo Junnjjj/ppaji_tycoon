@@ -1,0 +1,2835 @@
+{
+  "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-open-v2",
+  "scope": "construction-art-only",
+  "facilities": {
+    "authored_locker_row": {
+      "id": "locker_row",
+      "name": "코인락커",
+      "currentSize": [
+        4,
+        1
+      ],
+      "size": [
+        4,
+        2
+      ],
+      "slots": 4,
+      "sourceSHA": "b65de03f9a6ada693dd6e1d46b1032adc9a08ad4768d6fd088944878d5284886",
+      "note": "기존 승인 형태 유지",
+      "cutaway": false,
+      "gameId": "authored_locker_row",
+      "preservedLegacyId": "locker_row",
+      "frames": {
+        "d0": {
+          "file": "authored_locker_row/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "9057603b3fcc2868c8118466b964bd5ff0b182584242b0164cb9af05847b84ee"
+        },
+        "d1": {
+          "file": "authored_locker_row/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "8dab6e85b082749521e09886357bf055628a4002baa80457a4f7523c7129dba7"
+        },
+        "d2": {
+          "file": "authored_locker_row/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "ad9ec7e5b7241c635ad09eab67a9e5e8f00bb6ee98de571656c4f7cb7154ee39"
+        },
+        "d3": {
+          "file": "authored_locker_row/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "6f9e451fd7a94e7f3a9331abf03390da3242de2f637254ae7e0283ac512e0c48"
+        }
+      },
+      "presentationQA": {
+        "id": "locker_row",
+        "sourceSHA": "b65de03f9a6ada693dd6e1d46b1032adc9a08ad4768d6fd088944878d5284886",
+        "checks": [
+          {
+            "direction": 0,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              71,
+              62,
+              142,
+              120
+            ]
+          },
+          {
+            "direction": 0,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              282,
+              247,
+              568,
+              482
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              50,
+              62,
+              121,
+              120
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              200,
+              246,
+              486,
+              482
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              50,
+              72,
+              121,
+              131
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              200,
+              288,
+              486,
+              523
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              71,
+              72,
+              142,
+              131
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              282,
+              287,
+              568,
+              523
+            ]
+          }
+        ],
+        "liveModified": false
+      },
+      "contract": {
+        "blend": "facility.blend",
+        "concept": "references/live-d0.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.627416997969522,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          4,
+          2
+        ],
+        "floor_mode": "transparent-no-floor",
+        "minimum_native_foreground": 900,
+        "inventory": {
+          "locker_doors": {
+            "prefix": "LockerDoor_",
+            "count": 8
+          },
+          "banks": {
+            "prefix": "Cabinet_",
+            "count": 4
+          }
+        },
+        "groups": {
+          "body": {
+            "names": [
+              "Cabinet_0",
+              "Cabinet_1",
+              "Cabinet_2",
+              "Cabinet_3",
+              "Latch_0_0",
+              "Latch_0_1",
+              "Latch_1_0",
+              "Latch_1_1",
+              "Latch_2_0",
+              "Latch_2_1",
+              "Latch_3_0",
+              "Latch_3_1",
+              "LockerDoor_0_0",
+              "LockerDoor_0_1",
+              "LockerDoor_1_0",
+              "LockerDoor_1_1",
+              "LockerDoor_2_0",
+              "LockerDoor_2_1",
+              "LockerDoor_3_0",
+              "LockerDoor_3_1",
+              "Vent_0_0_0",
+              "Vent_0_0_1",
+              "Vent_0_0_2",
+              "Vent_0_1_0",
+              "Vent_0_1_1",
+              "Vent_0_1_2",
+              "Vent_1_0_0",
+              "Vent_1_0_1",
+              "Vent_1_0_2",
+              "Vent_1_1_0",
+              "Vent_1_1_1",
+              "Vent_1_1_2",
+              "Vent_2_0_0",
+              "Vent_2_0_1",
+              "Vent_2_0_2",
+              "Vent_2_1_0",
+              "Vent_2_1_1",
+              "Vent_2_1_2",
+              "Vent_3_0_0",
+              "Vent_3_0_1",
+              "Vent_3_0_2",
+              "Vent_3_1_0",
+              "Vent_3_1_1",
+              "Vent_3_1_2"
+            ]
+          }
+        },
+        "landmarks": {
+          "entry": [
+            0,
+            -1.2,
+            0
+          ],
+          "bank_0": [
+            -1.5,
+            0.35,
+            0.87
+          ],
+          "bank_1": [
+            -0.5,
+            0.35,
+            0.87
+          ],
+          "bank_2": [
+            0.5,
+            0.35,
+            0.87
+          ],
+          "bank_3": [
+            1.5,
+            0.35,
+            0.87
+          ]
+        }
+      }
+    },
+    "sauna": {
+      "id": "sauna",
+      "name": "사우나",
+      "currentSize": [
+        3,
+        3
+      ],
+      "size": [
+        3,
+        3
+      ],
+      "slots": 3,
+      "sourceSHA": "bd13e0e51413d1b894367a306b5520594b983b970b265c29d9557dc9b1b2f08f",
+      "note": "뒤벽 두 면 표시 · 앞벽은 표시만 생략",
+      "cutaway": true,
+      "gameId": "sauna",
+      "preservedLegacyId": null,
+      "frames": {
+        "d0": {
+          "file": "sauna/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "a8e348a0a002ab46440eec9c545bdf121ec99dbe02d99162df68b6f3f9bc273f"
+        },
+        "d1": {
+          "file": "sauna/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "1e79401778dbe21014c604f63644f6bc531d1c225c64e394f94e042885cc8fce"
+        },
+        "d2": {
+          "file": "sauna/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "3c444b9a5941c2969021655cb8285e35d2c6b55a72cfc6e8ee3842ed02e3f032"
+        },
+        "d3": {
+          "file": "sauna/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "55de9f6e83563b2fcbd01129914b96605185517bb0c80da9d78d93b8f79c33e3"
+        }
+      },
+      "presentationQA": {
+        "id": "sauna",
+        "sourceSHA": "bd13e0e51413d1b894367a306b5520594b983b970b265c29d9557dc9b1b2f08f",
+        "checks": [
+          {
+            "direction": 0,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              48,
+              59,
+              144,
+              133
+            ]
+          },
+          {
+            "direction": 0,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              191,
+              232,
+              577,
+              534
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              48,
+              59,
+              144,
+              133
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              191,
+              232,
+              577,
+              534
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              48,
+              59,
+              144,
+              133
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              191,
+              232,
+              577,
+              534
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              48,
+              59,
+              144,
+              133
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              191,
+              232,
+              577,
+              534
+            ]
+          }
+        ],
+        "liveModified": false
+      },
+      "contract": {
+        "blend": "facility.blend",
+        "concept": "reference.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.627416997969522,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          3,
+          3
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 3000,
+        "inventory": {
+          "supports": {
+            "prefix": "SeatSlat_",
+            "count": 8
+          },
+          "wall_segments": {
+            "prefix": "Wall_",
+            "count": 5
+          },
+          "heater": {
+            "names": [
+              "Heater"
+            ],
+            "count": 1
+          },
+          "stones": {
+            "prefix": "HeaterStone_",
+            "count": 7
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "FacilityFloor"
+            ]
+          },
+          "body": {
+            "prefix": "Wall_"
+          },
+          "visual": {
+            "names": [
+              "FacilityFloor",
+              "Wall_back",
+              "Wall_left",
+              "Wall_right",
+              "Wall_front_left",
+              "Wall_front_right",
+              "DoorLintel",
+              "DoorJamb_left",
+              "DoorJamb_right"
+            ]
+          }
+        },
+        "landmarks": {
+          "entry": [
+            0,
+            -1.5,
+            0
+          ],
+          "s0": [
+            -0.55,
+            1,
+            0.4
+          ],
+          "s1": [
+            0.55,
+            1,
+            0.4
+          ],
+          "s2": [
+            -1.05,
+            -0.3,
+            0.4
+          ],
+          "heater": [
+            0.94,
+            -0.8,
+            0.6
+          ],
+          "door": [
+            0,
+            -1.45,
+            0.59
+          ]
+        }
+      }
+    },
+    "authored_infirmary": {
+      "id": "infirmary",
+      "name": "의무실",
+      "currentSize": [
+        2,
+        2
+      ],
+      "size": [
+        3,
+        2
+      ],
+      "slots": 1,
+      "sourceSHA": "c49c8e020684cb2ba06d1c729eddea82b367304a2d8e791f87fde70586e6e23a",
+      "note": "뒤벽 두 면 표시 · 앞벽은 표시만 생략",
+      "cutaway": true,
+      "gameId": "authored_infirmary",
+      "preservedLegacyId": "infirmary",
+      "frames": {
+        "d0": {
+          "file": "authored_infirmary/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "4834e82cd32fe725ed3f6f36e7099bbb3145daec8cd35866831fbc82a6eb8d8d"
+        },
+        "d1": {
+          "file": "authored_infirmary/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "8dc9514332b263b35131a106fe563930aad0695340d31b7f351565d9a0be3b60"
+        },
+        "d2": {
+          "file": "authored_infirmary/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "c9f5cd3633705953fa32b3a3c3cc65b5c81e5cc60b8d9e9fcfa02887b34091b5"
+        },
+        "d3": {
+          "file": "authored_infirmary/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "a6ea469c596abaf81077cc37a8350cae8a892b4493919876ba5b795facdae8fa"
+        }
+      },
+      "presentationQA": {
+        "id": "infirmary",
+        "sourceSHA": "c49c8e020684cb2ba06d1c729eddea82b367304a2d8e791f87fde70586e6e23a",
+        "checks": [
+          {
+            "direction": 0,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              56,
+              64,
+              136,
+              129
+            ]
+          },
+          {
+            "direction": 0,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              223,
+              252,
+              545,
+              518
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              56,
+              64,
+              136,
+              129
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              223,
+              253,
+              545,
+              518
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              56,
+              64,
+              136,
+              129
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              223,
+              252,
+              545,
+              518
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              56,
+              64,
+              136,
+              129
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              223,
+              253,
+              545,
+              518
+            ]
+          }
+        ],
+        "liveModified": false
+      },
+      "contract": {
+        "blend": "facility.blend",
+        "concept": "reference.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.627416997969522,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          3,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 1800,
+        "inventory": {
+          "bed": {
+            "names": [
+              "Mattress"
+            ],
+            "count": 1
+          },
+          "divider": {
+            "names": [
+              "PrivacyDivider"
+            ],
+            "count": 1
+          },
+          "supplies": {
+            "names": [
+              "SuppliesCabinet"
+            ],
+            "count": 1
+          },
+          "boundarySegments": {
+            "names": [
+              "WallPX",
+              "WallNX",
+              "WallPY",
+              "WallNYLeft",
+              "WallNYRight"
+            ],
+            "count": 5
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "FacilityFloor"
+            ]
+          },
+          "body": {
+            "names": [
+              "WallPX",
+              "WallNX",
+              "WallPY",
+              "WallNYLeft",
+              "WallNYRight",
+              "DoorLintel"
+            ]
+          }
+        },
+        "landmarks": {
+          "bed": [
+            -0.72,
+            0,
+            0.39
+          ],
+          "entry": [
+            0.02,
+            -1.2,
+            0
+          ],
+          "supplies": [
+            0.64,
+            0.52,
+            0.7
+          ],
+          "divider": [
+            -1.29,
+            0,
+            0.47
+          ]
+        }
+      }
+    },
+    "authored_shower_row": {
+      "id": "shower_row",
+      "name": "샤워실",
+      "currentSize": [
+        4,
+        1
+      ],
+      "size": [
+        4,
+        2
+      ],
+      "slots": 4,
+      "sourceSHA": "7f3ff4e5b8ac08a03aa7483a1fa17cad00de8102cdfa9c0df788849e243e98f5",
+      "note": "뒤벽 두 면 표시 · 앞벽은 표시만 생략",
+      "cutaway": true,
+      "gameId": "authored_shower_row",
+      "preservedLegacyId": "shower_row",
+      "frames": {
+        "d0": {
+          "file": "authored_shower_row/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "004bcf321a81381bb17e6b56f5b7846891d6c33debe1d16c86d8765be0d73d26"
+        },
+        "d1": {
+          "file": "authored_shower_row/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "7aecbd18b29ffe1d595dd23a376282773c05c4ab25bbabc04672df548b60ca58"
+        },
+        "d2": {
+          "file": "authored_shower_row/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "8f6c1cce28b9345f55c8170ec57971a1747feccc52c59c74eb77446abfc2f3a6"
+        },
+        "d3": {
+          "file": "authored_shower_row/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "4f2fa96ccc8067e9d202f16d6090bd5cb8270a259cd98b9b2dcb93dc6ebb6ba3"
+        }
+      },
+      "presentationQA": {
+        "id": "shower_row",
+        "sourceSHA": "7f3ff4e5b8ac08a03aa7483a1fa17cad00de8102cdfa9c0df788849e243e98f5",
+        "checks": [
+          {
+            "direction": 0,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              48,
+              59,
+              144,
+              132
+            ]
+          },
+          {
+            "direction": 0,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              191,
+              234,
+              577,
+              532
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              48,
+              59,
+              144,
+              132
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              191,
+              234,
+              577,
+              532
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              48,
+              59,
+              144,
+              132
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              191,
+              237,
+              577,
+              532
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              48,
+              60,
+              144,
+              132
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              191,
+              236,
+              577,
+              532
+            ]
+          }
+        ],
+        "liveModified": false
+      },
+      "contract": {
+        "blend": "facility.blend",
+        "concept": "reference.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.627416997969522,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          4,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 2200,
+        "inventory": {
+          "dividers": {
+            "prefix": "Divider_",
+            "count": 5
+          },
+          "stations": {
+            "prefix": "ShowerHead_",
+            "count": 4
+          },
+          "walls": {
+            "names": [
+              "LowBack",
+              "WallPX",
+              "WallNX",
+              "WallNYLeft",
+              "WallNYRight"
+            ],
+            "count": 5
+          }
+        },
+        "groups": {
+          "body": {
+            "names": [
+              "LowBack",
+              "WallPX",
+              "WallNX",
+              "WallNYLeft",
+              "WallNYRight"
+            ]
+          },
+          "floor": {
+            "names": [
+              "WetFloor"
+            ]
+          }
+        },
+        "landmarks": {
+          "entry": [
+            0,
+            -1.2,
+            0
+          ],
+          "head_0": [
+            -1.5,
+            0.42,
+            1.2
+          ],
+          "head_1": [
+            -0.5,
+            0.42,
+            1.2
+          ],
+          "head_2": [
+            0.5,
+            0.42,
+            1.2
+          ],
+          "head_3": [
+            1.5,
+            0.42,
+            1.2
+          ]
+        }
+      }
+    },
+    "authored_changing_row": {
+      "id": "changing_row",
+      "name": "탈의실",
+      "currentSize": [
+        3,
+        1
+      ],
+      "size": [
+        3,
+        2
+      ],
+      "slots": 3,
+      "sourceSHA": "bb2d1c5e59c5285bcf7ec48abc225f46b3de5ed4aa4201c7dcfaa179e788b89e",
+      "note": "기존 승인 형태 유지",
+      "cutaway": false,
+      "gameId": "authored_changing_row",
+      "preservedLegacyId": "changing_row",
+      "frames": {
+        "d0": {
+          "file": "authored_changing_row/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "cd03de173f6f6c1bdf213d2ed3251fa5fc08670cf16f2733293eeea5a2521ef5"
+        },
+        "d1": {
+          "file": "authored_changing_row/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "74978b4a3134704a7e4bb0f41c2585016d95835024f37b66f983811ead32662c"
+        },
+        "d2": {
+          "file": "authored_changing_row/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "2247f04b593ed807043a93a0e636fc927d42280ecca7293985635eb7fbaad834"
+        },
+        "d3": {
+          "file": "authored_changing_row/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "1ac4488250bb9b97dc48e79629ccf75d07eaee7f13a5437b84be0a93cebf4ea6"
+        }
+      },
+      "presentationQA": {
+        "id": "changing_row",
+        "sourceSHA": "bb2d1c5e59c5285bcf7ec48abc225f46b3de5ed4aa4201c7dcfaa179e788b89e",
+        "checks": [
+          {
+            "direction": 0,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              67,
+              70,
+              136,
+              122
+            ]
+          },
+          {
+            "direction": 0,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              266,
+              277,
+              544,
+              490
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              56,
+              70,
+              125,
+              122
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              224,
+              277,
+              502,
+              490
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              56,
+              71,
+              125,
+              128
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              224,
+              281,
+              502,
+              511
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              67,
+              71,
+              136,
+              128
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              266,
+              281,
+              544,
+              511
+            ]
+          }
+        ],
+        "liveModified": false
+      },
+      "contract": {
+        "blend": "facility.blend",
+        "concept": "references/live-d0.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.627416997969522,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          3,
+          2
+        ],
+        "floor_mode": "transparent-no-floor",
+        "minimum_native_foreground": 900,
+        "inventory": {
+          "dividers": {
+            "prefix": "Divider_",
+            "count": 4
+          },
+          "stations": {
+            "prefix": "BenchSeat_",
+            "count": 3
+          }
+        },
+        "groups": {
+          "body": {
+            "names": [
+              "BackCap",
+              "BenchLeg_0_0",
+              "BenchLeg_0_1",
+              "BenchLeg_1_0",
+              "BenchLeg_1_1",
+              "BenchLeg_2_0",
+              "BenchLeg_2_1",
+              "BenchSeat_0",
+              "BenchSeat_1",
+              "BenchSeat_2",
+              "CurtainEndPost_0",
+              "CurtainEndPost_1",
+              "CurtainEndPost_2",
+              "CurtainFold_0_0",
+              "CurtainFold_0_1",
+              "CurtainFold_0_2",
+              "CurtainFold_1_0",
+              "CurtainFold_1_1",
+              "CurtainFold_1_2",
+              "CurtainFold_2_0",
+              "CurtainFold_2_1",
+              "CurtainFold_2_2",
+              "CurtainPost_0",
+              "CurtainPost_1",
+              "CurtainPost_2",
+              "CurtainRail_0",
+              "CurtainRail_1",
+              "CurtainRail_2",
+              "CurtainRing_0_0",
+              "CurtainRing_0_1",
+              "CurtainRing_0_2",
+              "CurtainRing_1_0",
+              "CurtainRing_1_1",
+              "CurtainRing_1_2",
+              "CurtainRing_2_0",
+              "CurtainRing_2_1",
+              "CurtainRing_2_2",
+              "Divider_0",
+              "Divider_1",
+              "Divider_2",
+              "Divider_3",
+              "DividerCap_0",
+              "DividerCap_1",
+              "DividerCap_2",
+              "DividerCap_3",
+              "Hook_0",
+              "Hook_1",
+              "Hook_2",
+              "LowBack",
+              "MirrorFrame_0",
+              "MirrorFrame_1",
+              "MirrorFrame_2",
+              "MirrorGlass_0",
+              "MirrorGlass_1",
+              "MirrorGlass_2"
+            ]
+          }
+        },
+        "landmarks": {
+          "entry": [
+            0,
+            -1.2,
+            0
+          ],
+          "curtain_0": [
+            -1.3,
+            -0.3,
+            0.69
+          ],
+          "curtain_1": [
+            -0.3,
+            -0.3,
+            0.69
+          ],
+          "curtain_2": [
+            0.7,
+            -0.3,
+            0.69
+          ]
+        }
+      }
+    },
+    "jjimjilbang": {
+      "id": "jjimjilbang",
+      "name": "찜질방",
+      "currentSize": [
+        4,
+        4
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "slots": 3,
+      "sourceSHA": "b3c60c4d3780d5db25a79741b9718b34e99da22e40b024912a94861ababf2c9a",
+      "note": "뒤벽 두 면 표시 · 앞벽은 표시만 생략",
+      "cutaway": true,
+      "gameId": "jjimjilbang",
+      "preservedLegacyId": null,
+      "frames": {
+        "d0": {
+          "file": "jjimjilbang/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "ac7c53e9342144d223ae424a2a85d79a16667ae3e11df47b4ebdd262084f39d2"
+        },
+        "d1": {
+          "file": "jjimjilbang/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "a024531f59b311bb500c6efbdf78ab255876f9407943b3f2524cd718bde0b842"
+        },
+        "d2": {
+          "file": "jjimjilbang/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "7bff30d2a79c3e3a59c39728e9c086861a6bdc9eae777af70cfb14605eeb4667"
+        },
+        "d3": {
+          "file": "jjimjilbang/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "e71906c8a4d4d95bc5da2077755c05687c1aab32381c3eb69e7fc27353ffedd7"
+        }
+      },
+      "presentationQA": {
+        "id": "jjimjilbang",
+        "sourceSHA": "b3c60c4d3780d5db25a79741b9718b34e99da22e40b024912a94861ababf2c9a",
+        "checks": [
+          {
+            "direction": 0,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              32,
+              51,
+              160,
+              141
+            ]
+          },
+          {
+            "direction": 0,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              127,
+              200,
+              641,
+              565
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              32,
+              51,
+              160,
+              141
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              127,
+              200,
+              641,
+              565
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              32,
+              51,
+              160,
+              141
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              127,
+              200,
+              641,
+              565
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              32,
+              51,
+              160,
+              141
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              127,
+              200,
+              641,
+              565
+            ]
+          }
+        ],
+        "liveModified": false
+      },
+      "contract": {
+        "blend": "facility.blend",
+        "concept": "reference.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.627416997969522,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          4,
+          4
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 4200,
+        "inventory": {
+          "supports": {
+            "prefix": "RestMat_",
+            "count": 3
+          },
+          "walls": {
+            "prefix": "Wall_",
+            "count": 5
+          },
+          "heating_panels": {
+            "prefix": "HeatingPanel_",
+            "count": 3
+          },
+          "pillows": {
+            "prefix": "Pillow_",
+            "count": 3
+          },
+          "towels": {
+            "prefix": "FoldedTowel_",
+            "count": 3
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "HeatedFloor"
+            ]
+          },
+          "body": {
+            "prefix": "Wall_"
+          },
+          "visual": {
+            "names": [
+              "HeatedFloor",
+              "Wall_back",
+              "Wall_left",
+              "Wall_right",
+              "Wall_front_left",
+              "Wall_front_right",
+              "DoorJamb_left",
+              "DoorJamb_right",
+              "DoorLintel"
+            ]
+          }
+        },
+        "landmarks": {
+          "entry": [
+            0,
+            -2.0,
+            0
+          ],
+          "s0": [
+            -1.15,
+            0.2,
+            0.07
+          ],
+          "s1": [
+            0,
+            0.2,
+            0.07
+          ],
+          "s2": [
+            1.15,
+            0.2,
+            0.07
+          ],
+          "door": [
+            0,
+            -1.95,
+            0.59
+          ],
+          "heater0": [
+            -1.15,
+            1.73,
+            0.3
+          ],
+          "controller": [
+            1.8,
+            1.35,
+            0.76
+          ],
+          "towels": [
+            -1.65,
+            -1.45,
+            0.65
+          ]
+        }
+      }
+    },
+    "authored_karaoke": {
+      "id": "karaoke",
+      "name": "노래방",
+      "currentSize": [
+        2,
+        2
+      ],
+      "size": [
+        3,
+        3
+      ],
+      "slots": 3,
+      "sourceSHA": "14a83ba31ff5a608a1e48a89e9a42c3e18a8dad0165fd4b4ba894474ef648491",
+      "note": "뒤벽 두 면 표시 · 앞벽은 표시만 생략",
+      "cutaway": true,
+      "gameId": "authored_karaoke",
+      "preservedLegacyId": "karaoke",
+      "frames": {
+        "d0": {
+          "file": "authored_karaoke/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "95ecb644256f7f27789c3aaaaf55ef3e0aeafa59d4f8f981b7211adf6b114db1"
+        },
+        "d1": {
+          "file": "authored_karaoke/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "bf3700a74bcddf51ce9ff600915be77d1b3e8da862950d0d05a459fdf8531395"
+        },
+        "d2": {
+          "file": "authored_karaoke/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "58f1ccd55730ebc872b9abb2521c990ffe71cc2d5b334239a6ed75c5ccdf6860"
+        },
+        "d3": {
+          "file": "authored_karaoke/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "af3aa32f71b5828b10c83256b6aeb5c3b6ced588f18f0c85e1e94474046fc280"
+        }
+      },
+      "presentationQA": {
+        "id": "karaoke",
+        "sourceSHA": "14a83ba31ff5a608a1e48a89e9a42c3e18a8dad0165fd4b4ba894474ef648491",
+        "checks": [
+          {
+            "direction": 0,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              48,
+              60,
+              144,
+              133
+            ]
+          },
+          {
+            "direction": 0,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              191,
+              236,
+              577,
+              533
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              48,
+              60,
+              144,
+              133
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              191,
+              236,
+              577,
+              533
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              48,
+              60,
+              144,
+              133
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              191,
+              236,
+              577,
+              533
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              48,
+              60,
+              144,
+              133
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              191,
+              236,
+              577,
+              533
+            ]
+          }
+        ],
+        "liveModified": false
+      },
+      "contract": {
+        "blend": "facility.blend",
+        "concept": "reference.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.627416997969522,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          3,
+          3
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 3200,
+        "inventory": {
+          "seats": {
+            "prefix": "SeatCushion_",
+            "count": 3
+          },
+          "speakers": {
+            "prefix": "Speaker_",
+            "count": 2
+          },
+          "screen": {
+            "names": [
+              "ScreenGlass"
+            ],
+            "count": 1
+          },
+          "microphones": {
+            "prefix": "Microphone_",
+            "count": 2
+          },
+          "wall_segments": {
+            "prefix": "Wall_",
+            "count": 5
+          },
+          "support_feet": {
+            "prefix": "Support_",
+            "count": 12
+          }
+        },
+        "groups": {
+          "body": {
+            "prefix": "Wall_"
+          },
+          "floor": {
+            "names": [
+              "Foundation"
+            ]
+          },
+          "furniture": {
+            "names": [
+              "SofaBase",
+              "SofaBack",
+              "SofaArm",
+              "SofaArm.001",
+              "TableTop",
+              "ScreenFrame",
+              "Speaker_0",
+              "Speaker_1"
+            ]
+          }
+        },
+        "landmarks": {
+          "sofa": [
+            -0.22,
+            0.94,
+            0.33
+          ],
+          "screen": [
+            -0.15,
+            -1.22,
+            0.85
+          ],
+          "microphone": [
+            0.7,
+            -0.75,
+            0.94
+          ],
+          "entry": [
+            1.05,
+            -1.5,
+            0
+          ]
+        }
+      }
+    },
+    "office": {
+      "id": "office",
+      "name": "사무실",
+      "currentSize": [
+        2,
+        2
+      ],
+      "size": [
+        2,
+        2
+      ],
+      "slots": 1,
+      "sourceSHA": "97d3bbffea25791c578072f99b77ff582e41f0383c1a024cc77212b46b2e1507",
+      "note": "뒤벽 두 면 표시 · 앞벽은 표시만 생략",
+      "cutaway": true,
+      "gameId": "office",
+      "preservedLegacyId": null,
+      "frames": {
+        "d0": {
+          "file": "office/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "b20602a973fd6f8b9308e310ee6bc6421c1b2889af2eda3896718d1191fd6a17"
+        },
+        "d1": {
+          "file": "office/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "f61b5184e50946fa13d17e85ae6d4e7ab99a12d66cd36d98f9b888f8844491a4"
+        },
+        "d2": {
+          "file": "office/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "3dce83ceffc44a552fc46dc90f8cdc03e8d76462b962d5786c6dd5e9283b4f21"
+        },
+        "d3": {
+          "file": "office/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "1fb1c8d0342df3aaa20c57af4fe0ac74ee208af343b2b5035c7acfabafe59641"
+        }
+      },
+      "presentationQA": {
+        "id": "office",
+        "sourceSHA": "97d3bbffea25791c578072f99b77ff582e41f0383c1a024cc77212b46b2e1507",
+        "checks": [
+          {
+            "direction": 0,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              64,
+              68,
+              128,
+              125
+            ]
+          },
+          {
+            "direction": 0,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              255,
+              268,
+              513,
+              501
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              64,
+              68,
+              128,
+              125
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              255,
+              268,
+              513,
+              501
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              64,
+              68,
+              128,
+              125
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              255,
+              268,
+              513,
+              501
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              64,
+              68,
+              128,
+              125
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              255,
+              268,
+              513,
+              501
+            ]
+          }
+        ],
+        "liveModified": false
+      },
+      "contract": {
+        "blend": "facility.blend",
+        "concept": "reference.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.627416997969522,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 1600,
+        "inventory": {
+          "desk": {
+            "names": [
+              "DeskTop"
+            ],
+            "count": 1
+          },
+          "chair": {
+            "names": [
+              "ChairSeat"
+            ],
+            "count": 1
+          },
+          "cabinet": {
+            "names": [
+              "FilingCabinet"
+            ],
+            "count": 1
+          },
+          "walls": {
+            "names": [
+              "WallPX",
+              "WallNX",
+              "WallPY",
+              "WallNYLeft",
+              "WallNYRight"
+            ],
+            "count": 5
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "FacilityFloor"
+            ]
+          },
+          "body": {
+            "names": [
+              "WallPX",
+              "WallNX",
+              "WallPY",
+              "WallNYLeft",
+              "WallNYRight"
+            ]
+          }
+        },
+        "landmarks": {
+          "entry": [
+            0.44,
+            -1.2,
+            0
+          ],
+          "seat": [
+            -0.3,
+            -0.05,
+            0.375
+          ],
+          "desk": [
+            -0.3,
+            0.58,
+            0.6675
+          ],
+          "cabinet": [
+            -0.66,
+            -0.57,
+            0.88
+          ],
+          "monitor": [
+            -0.26,
+            0.69,
+            0.91
+          ]
+        }
+      }
+    },
+    "info": {
+      "id": "info",
+      "name": "안내소",
+      "currentSize": [
+        2,
+        2
+      ],
+      "size": [
+        2,
+        2
+      ],
+      "slots": 1,
+      "sourceSHA": "6404e0fcb41107a7187cc4d1c6fb44a2c808d2d5029b2b4d7b952d778635a76e",
+      "note": "개방형 설비 · 물리 서비스 면 유지",
+      "cutaway": false,
+      "gameId": "info",
+      "preservedLegacyId": null,
+      "frames": {
+        "d0": {
+          "file": "info/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "8b6e7acc92447f7d79ee601469ab8d74f28bd22f45a72ba8853e1ad6dae50705"
+        },
+        "d1": {
+          "file": "info/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "99c8394acd9c729ee9f17a65fbd451120ed0e3d0467b0a4587e021d7090fb6cf"
+        },
+        "d2": {
+          "file": "info/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "567463f3fdc56ce0cebadaee48e16faf272c93958d4052207f09e460e9cdfe33"
+        },
+        "d3": {
+          "file": "info/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "f8d32a1a231267a93a8632c0b1e631c6ba77f6eb89eaf8d05609e6ea01cb9b65"
+        }
+      },
+      "presentationQA": {
+        "id": "info",
+        "sourceSHA": "6404e0fcb41107a7187cc4d1c6fb44a2c808d2d5029b2b4d7b952d778635a76e",
+        "checks": [
+          {
+            "direction": 0,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              68,
+              65,
+              124,
+              121
+            ]
+          },
+          {
+            "direction": 0,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              270,
+              259,
+              498,
+              485
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              68,
+              65,
+              124,
+              121
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              270,
+              259,
+              498,
+              486
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              68,
+              75,
+              124,
+              122
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              270,
+              301,
+              498,
+              488
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              68,
+              75,
+              124,
+              122
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              270,
+              301,
+              498,
+              488
+            ]
+          }
+        ],
+        "liveModified": false
+      },
+      "contract": {
+        "blend": "facility.blend",
+        "concept": "reference.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.627416997969522,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          2
+        ],
+        "floor_mode": "transparent-no-floor",
+        "minimum_native_foreground": 850,
+        "inventory": {
+          "counter": {
+            "names": [
+              "CounterBody"
+            ],
+            "count": 1
+          },
+          "map_board": {
+            "names": [
+              "MapBoard"
+            ],
+            "count": 1
+          },
+          "map_supports": {
+            "prefix": "MapPost_",
+            "count": 2
+          },
+          "brochures": {
+            "prefix": "Brochure_",
+            "count": 2
+          }
+        },
+        "groups": {
+          "body": {
+            "names": [
+              "CounterBody",
+              "MapBoard"
+            ]
+          },
+          "ground_contact": {
+            "names": [
+              "CounterPlinth",
+              "MapFoot_0",
+              "MapFoot_1"
+            ]
+          },
+          "visual": {
+            "names": [
+              "CounterTop",
+              "CounterPlinth",
+              "MapBoard",
+              "MapFoot_0",
+              "MapFoot_1",
+              "MapFrame_horizontal",
+              "MapFrame_horizontal.001",
+              "MapFrame_vertical",
+              "MapFrame_vertical.001"
+            ]
+          }
+        },
+        "landmarks": {
+          "service": [
+            0,
+            -1.08,
+            0
+          ],
+          "counter": [
+            0,
+            -0.84,
+            0.655
+          ],
+          "map": [
+            0,
+            0.62,
+            1.14
+          ],
+          "locator": [
+            -0.335,
+            0.585,
+            0.985
+          ],
+          "brochures": [
+            0.56,
+            -0.48,
+            0.75
+          ]
+        }
+      }
+    },
+    "indoor_shop": {
+      "id": "indoor_shop",
+      "name": "실내 매점",
+      "currentSize": [
+        2,
+        2
+      ],
+      "size": [
+        2,
+        2
+      ],
+      "slots": 1,
+      "sourceSHA": "05a5922987a8f524303a365bbf6b7c5ee57e06f5ec23f395c9297df93656561e",
+      "note": "지붕과 기둥 · 사방 개방",
+      "cutaway": false,
+      "gameId": "indoor_shop",
+      "preservedLegacyId": null,
+      "frames": {
+        "d0": {
+          "file": "indoor_shop/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "37b23ab5fb08562370b1e48c02bbe19c5856ab869d683745e995aecd38689e21"
+        },
+        "d1": {
+          "file": "indoor_shop/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "f62ce6791b3bce0033426c04c51acfbf3288aa1ce8cab8dd0c913c559b1956d5"
+        },
+        "d2": {
+          "file": "indoor_shop/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "21f40711e4090bfec7651b6ce360fec69ca741bcc37414fb4b2212f4576bf088"
+        },
+        "d3": {
+          "file": "indoor_shop/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "0bdf642d25ed2de2d8041af19dcdc7622552840bfda60fa9569dd9f3f06fcfbb"
+        }
+      },
+      "presentationQA": {
+        "id": "indoor_shop",
+        "sourceSHA": "05a5922987a8f524303a365bbf6b7c5ee57e06f5ec23f395c9297df93656561e",
+        "checks": [
+          {
+            "direction": 0,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              62,
+              61,
+              130,
+              125
+            ]
+          },
+          {
+            "direction": 0,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              246,
+              241,
+              521,
+              501
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              62,
+              61,
+              130,
+              125
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              246,
+              241,
+              521,
+              501
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              62,
+              63,
+              130,
+              125
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              246,
+              251,
+              521,
+              501
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              62,
+              63,
+              130,
+              125
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              246,
+              250,
+              521,
+              501
+            ]
+          }
+        ],
+        "liveModified": false
+      },
+      "contract": {
+        "blend": "facility.blend",
+        "concept": "reference.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.627416997969522,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          2
+        ],
+        "floor_mode": "full-footprint-integral",
+        "minimum_native_foreground": 1700,
+        "inventory": {
+          "posts": {
+            "prefix": "Post_",
+            "count": 4
+          },
+          "counter": {
+            "names": [
+              "Counter_body"
+            ],
+            "count": 1
+          },
+          "shelves": {
+            "prefix": "Shelf_board",
+            "count": 3
+          }
+        },
+        "groups": {
+          "floor": {
+            "names": [
+              "Foundation"
+            ]
+          },
+          "body": {
+            "prefix": "Post_"
+          },
+          "roof": {
+            "prefix": "Roof_"
+          },
+          "counter": {
+            "prefix": "Counter_"
+          },
+          "shelves": {
+            "prefix": "Shelf_"
+          }
+        },
+        "landmarks": {
+          "public_counter": [
+            0,
+            -0.73,
+            0.63
+          ],
+          "rear_shelf": [
+            0,
+            0.66,
+            0.84
+          ],
+          "asymmetric_goods": [
+            -0.43,
+            0.66,
+            0.92
+          ],
+          "customer": [
+            0,
+            -1.35,
+            0
+          ]
+        }
+      }
+    },
+    "vending_in": {
+      "id": "vending_in",
+      "name": "실내 자판기",
+      "currentSize": [
+        1,
+        1
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "slots": 1,
+      "sourceSHA": "73870ba200f628ba113d115eae7cbd5817e96815a68e54793970cb07268cd1af",
+      "note": "개방형 설비 · 물리 서비스 면 유지",
+      "cutaway": false,
+      "gameId": "vending_in",
+      "preservedLegacyId": null,
+      "frames": {
+        "d0": {
+          "file": "vending_in/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "8b3a674d00cbd269a489afd8bf1af1dc52bce548eb4ae75a9110d9be80f25254"
+        },
+        "d1": {
+          "file": "vending_in/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "4f89a8fceb6fc1fa32d1d01e956afab5b6f72df23ec1a7a1110739f84f796c2a"
+        },
+        "d2": {
+          "file": "vending_in/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "bf34a38a406b14980b97b90a2790df49c97fcd8cd1da469b4dc0d19a916a537c"
+        },
+        "d3": {
+          "file": "vending_in/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "da99f7877143458b9792797b30bcc5d9181d6f7f4e4e59f36706b8b57cfb2b60"
+        }
+      },
+      "presentationQA": {
+        "id": "vending_in",
+        "sourceSHA": "73870ba200f628ba113d115eae7cbd5817e96815a68e54793970cb07268cd1af",
+        "checks": [
+          {
+            "direction": 0,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              84,
+              76,
+              108,
+              113
+            ]
+          },
+          {
+            "direction": 0,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              336,
+              303,
+              431,
+              455
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              84,
+              76,
+              108,
+              113
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              336,
+              303,
+              431,
+              455
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              84,
+              76,
+              108,
+              113
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              336,
+              303,
+              431,
+              455
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              84,
+              76,
+              108,
+              113
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              336,
+              303,
+              431,
+              455
+            ]
+          }
+        ],
+        "liveModified": false
+      },
+      "contract": {
+        "blend": "facility.blend",
+        "concept": "reference.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.627416997969522,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          1,
+          1
+        ],
+        "floor_mode": "transparent-no-floor",
+        "minimum_native_foreground": 400,
+        "inventory": {
+          "products": {
+            "prefix": "DrinkCan_",
+            "count": 6
+          },
+          "controls": {
+            "prefix": "SelectionButton",
+            "count": 2
+          },
+          "pickup": {
+            "names": [
+              "DispenseBack"
+            ],
+            "count": 1
+          }
+        },
+        "groups": {
+          "footprint_scale": {
+            "names": [
+              "CabinetBase"
+            ]
+          },
+          "body": {
+            "names": [
+              "CabinetBase",
+              "CabinetCore",
+              "SideLeft",
+              "SideRight",
+              "CabinetTop"
+            ]
+          }
+        },
+        "landmarks": {
+          "service": [
+            0,
+            -0.7,
+            0
+          ],
+          "window": [
+            -0.085,
+            -0.32,
+            0.885
+          ],
+          "controls": [
+            0.267,
+            -0.35,
+            0.96
+          ],
+          "pickup": [
+            -0.085,
+            -0.36,
+            0.345
+          ],
+          "rear": [
+            0,
+            0.337,
+            0.62
+          ]
+        }
+      }
+    },
+    "arcade": {
+      "id": "arcade",
+      "name": "오락기",
+      "currentSize": [
+        1,
+        1
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "slots": 1,
+      "sourceSHA": "64650638cab6b352a4794eff20834c50cde0165b0c0f347c816f8f671f877917",
+      "note": "개방형 설비 · 물리 서비스 면 유지",
+      "cutaway": false,
+      "gameId": "arcade",
+      "preservedLegacyId": null,
+      "frames": {
+        "d0": {
+          "file": "arcade/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "03156923e6a4f5d824a2fc89a491a68975101e347cc73026cc04fda9fc5824c0"
+        },
+        "d1": {
+          "file": "arcade/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "8b06222ccff7353c36bf26e872236b360d4957c866ceea7b717fb234b0e2c7ec"
+        },
+        "d2": {
+          "file": "arcade/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "d09f24acec0e064eab1ead8d772fdde32d4acfbfb40c3773ffbb29597b02485b"
+        },
+        "d3": {
+          "file": "arcade/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "e55fbc1432fa4daf82bbb39a28b36f4a792b780a1ab389082a024019526961c2"
+        }
+      },
+      "presentationQA": {
+        "id": "arcade",
+        "sourceSHA": "64650638cab6b352a4794eff20834c50cde0165b0c0f347c816f8f671f877917",
+        "checks": [
+          {
+            "direction": 0,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              85,
+              80,
+              106,
+              113
+            ]
+          },
+          {
+            "direction": 0,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              338,
+              318,
+              424,
+              452
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              86,
+              80,
+              107,
+              113
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              344,
+              318,
+              430,
+              452
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              86,
+              81,
+              107,
+              112
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              344,
+              323,
+              430,
+              451
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              85,
+              81,
+              106,
+              112
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              338,
+              323,
+              424,
+              451
+            ]
+          }
+        ],
+        "liveModified": false
+      },
+      "contract": {
+        "blend": "facility.blend",
+        "concept": "reference.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.627416997969522,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          1,
+          1
+        ],
+        "floor_mode": "transparent-no-floor",
+        "minimum_native_foreground": 300,
+        "inventory": {
+          "side_panels": {
+            "prefix": "Side_",
+            "count": 2
+          },
+          "screen": {
+            "names": [
+              "ScreenGlass"
+            ],
+            "count": 1
+          },
+          "joystick": {
+            "names": [
+              "JoystickKnob"
+            ],
+            "count": 1
+          },
+          "buttons": {
+            "prefix": "Button_",
+            "count": 2
+          }
+        },
+        "groups": {
+          "body": {
+            "names": [
+              "CabinetCore",
+              "Side_left",
+              "Side_right"
+            ]
+          },
+          "controls": {
+            "names": [
+              "ControlDeck",
+              "JoystickKnob",
+              "Button_0",
+              "Button_1"
+            ]
+          }
+        },
+        "landmarks": {
+          "screen": [
+            0,
+            -0.19,
+            0.88
+          ],
+          "joystick": [
+            -0.15,
+            -0.3,
+            0.8
+          ],
+          "coin_slot": [
+            0.14,
+            -0.312,
+            0.44
+          ],
+          "customer": [
+            0,
+            -0.7,
+            0
+          ]
+        }
+      }
+    }
+  }
+}

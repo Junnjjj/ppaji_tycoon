@@ -1,0 +1,39 @@
+{
+  "status": "USER_ACCEPTED_FOR_MAIN_ADOPTION",
+  "prior_package_status": "FAIL_USER_VISUAL_REJECTION",
+  "initial_pilot_status": "FAIL_USER_VISUAL_REJECTION_SUPERSEDED",
+  "current_physical_root_sha256": "8e2f3b0b5cb12738c6194558498c08c3bc04d81da6580ea5d0f907c2b502fbb8",
+  "current_render_directory": "review",
+  "coordinator_d0_review": "Previous charcoal d0 accepted for continuation; current canopy repair awaits final user visual review",
+  "reviewer": "author inspected actual reference, corrected d0 at native/enlarged size, and all four native directions",
+  "semantic_findings": [
+    "One central front door remains on -Y only and is hidden in rear facings",
+    "Windowboxes, balcony and upper terrace rotate with root; rear has no duplicate public entrance",
+    "Lower floors retain consistent human scale across stages",
+    "Third storey, where present, comprises one glazed suite plus one pool terrace only",
+    "Inspected current d0 and d1 enlarged and native: canopy is a separate low shelter beneath balcony; no slab penetration, door remains visible"
+  ],
+  "known_failures_or_limits": [
+    "Not approved for adoption or strict ImageGen",
+    "Native flowers and interior furniture are simplified; not all fine details read individually",
+    "Runtime NPC approach, hiding, reappearance and actual Phaser grid remain coordinator-owned"
+  ],
+  "numerical_checks": {
+    "reopen_RGBA_identical": 8,
+    "native_clipping": 0,
+    "minimum_native_foreground": 14436
+  },
+  "user_art_approval": false,
+  "roof_gate": "ROOF_PROPORTION_USER_REVIEW",
+  "live_files_modified": false,
+  "resolved_geometry_issue": {
+    "status": "CANOPY_BALCONY_INTERSECTION_RESOLVED",
+    "clearance_tiles": 0.05301332473754883,
+    "evidence": "canopy-clearance-audit.json"
+  },
+  "previous_status": "AUTHORED_FOUR_VIEW_CANDIDATE_AWAITING_USER_APPROVAL",
+  "user_approval": true,
+  "user_decision": "좋다 적용하자, 다 만족해",
+  "accepted_source_sha256": "8e2f3b0b5cb12738c6194558498c08c3bc04d81da6580ea5d0f907c2b502fbb8",
+  "raw_diagnostics_preserved": true
+}

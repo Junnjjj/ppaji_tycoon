@@ -1,0 +1,49 @@
+{
+  "date": "2026-09-20",
+  "bundle": "main-kIWj0xll.js",
+  "typecheck": "PASS",
+  "lint": "PASS",
+  "uiStaticChecks": "PASS",
+  "productionBuild": "PASS",
+  "gitDiffCheck": "PASS",
+  "focusedSuites": {
+    "outdoorAndPortal": 89,
+    "outdoorRendererAndNpc": 16,
+    "buildAdoptionAndDecorCount": 8,
+    "updatedDataInvariants": 86
+  },
+  "browser": {
+    "actualGameVisits": 14,
+    "fullAudienceCases": 10,
+    "staffFacings": 16,
+    "resourceErrors": 0,
+    "jsErrors": 0,
+    "saveUnchanged": true
+  },
+  "workers": {
+    "run": "run_d440c50c4fde",
+    "succeeded": 3,
+    "released": 3,
+    "reclaimable": 0
+  },
+  "fullSuite": {
+    "status": "NOT_CLEAN_PASS",
+    "files": 121,
+    "passedFiles": 118,
+    "failedFiles": 3,
+    "passedTests": 695,
+    "failedTests": 3,
+    "workerRpcTimeouts": 5,
+    "durationSeconds": 639.8,
+    "resolvedAssertions": {
+      "data": "Old decor-is-unusable assertion updated to four explicit authored capacities; 86 data tests subsequently passed.",
+      "P3": "Original assertions independently passed: rank5, deck297, water379; 77.127 seconds.",
+      "G30": "Original assertions independently passed: lateSpendRatio0.39162370123155693; 103.936 seconds."
+    },
+    "remaining": "Vitest onTaskUpdate 60-second RPC timeouts; full command is not represented as green. Existing pre-integration run also had RPC timeouts. No test timeout or library internals were changed."
+  },
+  "browserTaskSpace": {
+    "id": 184,
+    "closed": true
+  }
+}

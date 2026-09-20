@@ -1,0 +1,91 @@
+{
+  "blend": "facility.blend",
+  "concept": "reference.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 0.6,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    3,
+    3
+  ],
+  "floor_mode": "full-footprint-integral",
+  "minimum_native_foreground": 3000,
+  "inventory": {
+    "supports": {
+      "prefix": "SeatSlat_",
+      "count": 8
+    },
+    "wall_segments": {
+      "prefix": "Wall_",
+      "count": 5
+    },
+    "heater": {
+      "names": [
+        "Heater"
+      ],
+      "count": 1
+    },
+    "stones": {
+      "prefix": "HeaterStone_",
+      "count": 7
+    }
+  },
+  "groups": {
+    "floor": {
+      "names": [
+        "FacilityFloor"
+      ]
+    },
+    "body": {
+      "prefix": "Wall_"
+    },
+    "visual": {
+      "names": [
+        "FacilityFloor",
+        "Wall_back",
+        "Wall_left",
+        "Wall_right",
+        "Wall_front_left",
+        "Wall_front_right",
+        "DoorLintel",
+        "DoorJamb_left",
+        "DoorJamb_right"
+      ]
+    }
+  },
+  "landmarks": {
+    "entry": [
+      0,
+      -1.5,
+      0
+    ],
+    "s0": [
+      -0.55,
+      1,
+      0.4
+    ],
+    "s1": [
+      0.55,
+      1,
+      0.4
+    ],
+    "s2": [
+      -1.05,
+      -0.3,
+      0.4
+    ],
+    "heater": [
+      0.94,
+      -0.8,
+      0.6
+    ],
+    "door": [
+      0,
+      -1.45,
+      0.59
+    ]
+  }
+}

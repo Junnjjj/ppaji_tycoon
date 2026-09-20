@@ -1,0 +1,150 @@
+{
+  "d0": {
+    "jar_left": {
+      "pixel": [
+        348.1600112915039,
+        422.94781494140625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "jar_right": {
+      "pixel": [
+        380.8000030517578,
+        439.267822265625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "eggs": {
+      "pixel": [
+        405.11997985839844,
+        482.75223541259766
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "curtain": {
+      "pixel": [
+        357.12000274658203,
+        515.0155792236328
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        339.1999969482422,
+        547.4906845092773
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d1": {
+    "jar_left": {
+      "pixel": [
+        344.3200149536133,
+        460.70782470703125
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "jar_right": {
+      "pixel": [
+        376.9600067138672,
+        444.3878173828125
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "eggs": {
+      "pixel": [
+        429.44000244140625,
+        449.4722213745117
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "curtain": {
+      "pixel": [
+        410.88002014160156,
+        515.0155792236328
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        428.8000030517578,
+        547.4906845092773
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d2": {
+    "jar_left": {
+      "pixel": [
+        419.8400115966797,
+        462.62782287597656
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "jar_right": {
+      "pixel": [
+        387.1999969482422,
+        446.3078155517578
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "eggs": {
+      "pixel": [
+        362.87999725341797,
+        437.3122329711914
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "curtain": {
+      "pixel": [
+        410.8799743652344,
+        488.13558197021484
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        428.8000030517578,
+        502.69068145751953
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d3": {
+    "jar_left": {
+      "pixel": [
+        423.6800079345703,
+        424.86781311035156
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "jar_right": {
+      "pixel": [
+        391.0399932861328,
+        441.1878204345703
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "eggs": {
+      "pixel": [
+        338.55999755859375,
+        470.59222412109375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "curtain": {
+      "pixel": [
+        357.12000274658203,
+        488.13558197021484
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        339.1999969482422,
+        502.69068145751953
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  }
+}

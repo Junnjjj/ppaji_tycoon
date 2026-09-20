@@ -1,0 +1,77 @@
+{
+  "blend": "facility.blend",
+  "concept": "reference.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 0.6,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    1,
+    1
+  ],
+  "floor_mode": "transparent-no-floor",
+  "minimum_native_foreground": 300,
+  "inventory": {
+    "side_panels": {
+      "prefix": "Side_",
+      "count": 2
+    },
+    "screen": {
+      "names": [
+        "ScreenGlass"
+      ],
+      "count": 1
+    },
+    "joystick": {
+      "names": [
+        "JoystickKnob"
+      ],
+      "count": 1
+    },
+    "buttons": {
+      "prefix": "Button_",
+      "count": 2
+    }
+  },
+  "groups": {
+    "body": {
+      "names": [
+        "CabinetCore",
+        "Side_left",
+        "Side_right"
+      ]
+    },
+    "controls": {
+      "names": [
+        "ControlDeck",
+        "JoystickKnob",
+        "Button_0",
+        "Button_1"
+      ]
+    }
+  },
+  "landmarks": {
+    "screen": [
+      0,
+      -0.19,
+      0.88
+    ],
+    "joystick": [
+      -0.15,
+      -0.3,
+      0.8
+    ],
+    "coin_slot": [
+      0.14,
+      -0.312,
+      0.44
+    ],
+    "customer": [
+      0,
+      -0.7,
+      0
+    ]
+  }
+}

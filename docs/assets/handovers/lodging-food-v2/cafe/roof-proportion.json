@@ -1,0 +1,79 @@
+{
+  "state": "ROOF_PROPORTION_USER_APPROVED",
+  "physical_root_sha256": "8f8a8948d3cbe7fa81578b8951e31c016818fdfd887732d1c3a5751a8501992b",
+  "canonical_live_size": [
+    3,
+    2
+  ],
+  "proposed_size": [
+    3,
+    2
+  ],
+  "floor_bounds_tiles": [
+    [
+      -1.4999998807907104,
+      -0.9999999403953552,
+      0.0
+    ],
+    [
+      1.4999998807907104,
+      0.9999999403953552,
+      0.10000000149011612
+    ]
+  ],
+  "structural_body_bounds_tiles": [
+    [
+      -1.3499999046325684,
+      -0.9199999570846558,
+      0.09999997168779373
+    ],
+    [
+      1.3524999618530273,
+      0.9149999618530273,
+      2.0199999809265137
+    ]
+  ],
+  "roof_bounds_tiles": [
+    [
+      -1.4850000143051147,
+      -0.9796153903007507,
+      1.635576844215393
+    ],
+    [
+      1.4749999046325684,
+      0.9796153903007507,
+      2.1599998474121094
+    ]
+  ],
+  "body_coverage": [
+    0.9008332888285319,
+    0.9174999594688416
+  ],
+  "declared_body_coverage_target": [
+    0.9,
+    0.9
+  ],
+  "roof_to_body_ratio": [
+    1.0952821702770137,
+    1.0677007450418516
+  ],
+  "roof_overhang_tiles": {
+    "-x": 0.1350001096725464,
+    "+x": 0.12249994277954102,
+    "-y": 0.05961543321609497,
+    "+y": 0.06461542844772339
+  },
+  "family_references": "same-scale-cafe-family.png; no earlier authored model has current visual approval",
+  "before_reference": "same-scale-rejected-comparison.png; prior v1 remains FAIL_USER_VISUAL_REJECTION",
+  "same_scale_resizing": "NONE",
+  "imagegen_calls": 0,
+  "live_files_modified": false,
+  "four_view_hashes": {
+    "0": "d9ebb3d9b4ffbbd0701750fb1c401697a9034f4b34913b4aae6f420a41cdb22c",
+    "1": "f94b9f9f50b4cb7b129b0d7a2c6d130a6873421ecb6575de5180051452366de5",
+    "2": "7d8b0cbf7f64719067ddae6b92e04c4473333581f0d714d2cef70c073cba348f",
+    "3": "8c9653d17162c761a5501562c2ff90be04b645c7ae335b9a1753864a094c7f17"
+  },
+  "previous_state": "ROOF_PROPORTION_USER_REVIEW",
+  "user_decision": "좋다 적용하자, 다 만족해"
+}

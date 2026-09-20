@@ -1,0 +1,101 @@
+{
+  "id": "sikhye",
+  "size": [
+    2,
+    1
+  ],
+  "currentSize": [
+    2,
+    1
+  ],
+  "floorZ": 0,
+  "coordinateUnits": "tiles; +X game I, -Y game J, +Z height; centered FacilityRoot",
+  "accessKind": "service-face",
+  "serviceFace": "-Y",
+  "capacity": 2,
+  "capacitySource": "capacityOf(def, placedFacility)",
+  "baseCapacitySource": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/src/data/facilities.json id=sikhye.capacity",
+  "physicalCustomerSlotCount": 2,
+  "entry": [
+    -0.5,
+    -0.76,
+    0
+  ],
+  "portal": null,
+  "slots": [
+    {
+      "id": "s0",
+      "role": "guest",
+      "pose": "stand",
+      "position": [
+        -0.5,
+        -0.76,
+        0
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          -0.5,
+          -1.4100000000000001,
+          0
+        ],
+        [
+          -0.5,
+          -0.76,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useTicks": 8
+    },
+    {
+      "id": "s1",
+      "role": "guest",
+      "pose": "stand",
+      "position": [
+        0.5,
+        -0.76,
+        0
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0.5,
+          -1.4100000000000001,
+          0
+        ],
+        [
+          0.5,
+          -0.76,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useTicks": 8
+    }
+  ],
+  "staffAnchors": [],
+  "obstacles": [
+    {
+      "kind": "aabb",
+      "min": [
+        -1.0,
+        -0.5,
+        0
+      ],
+      "max": [
+        1.0,
+        0.5,
+        0.65
+      ],
+      "purpose": "equipment/building hull; doorway staff traversal resolved by coordinator"
+    }
+  ],
+  "notes": [
+    "Logical capacity from current main definition; physical visible service slots are distinct and may be fewer.",
+    "Customer stays outside counter; no customer portal. No NPC baked in mesh.",
+    "Runtime NPC occupancy/occlusion proof deferred to coordinator."
+  ],
+  "mainDefinitionSha256": "c5650c6f0f68c8ea2931746d96f89d897625c5330369902a10a4499717c919db",
+  "useTicks": 8
+}

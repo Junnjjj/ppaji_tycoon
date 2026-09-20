@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import { Game } from '/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/src/sim/game.ts';
+import { runBot } from '/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/src/sim/bot.ts';
+import { FLOOR, isWaterCode } from '/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/src/sim/grid.ts';
+const start=Date.now();
+const g=new Game(3);runBot(g,128);
+const deck=Array.from(g.grid.floor).filter(v=>v===FLOOR.deck).length;
+assert.ok(g.rank>=2);assert.ok(deck>=8);assert.ok(g.pools.totalTiles()>=40);
+assert.ok(g.facilities.all.every(f=>!isWaterCode(g.grid.naturalAt(f.i,f.j))||g.grid.at(f.i,f.j)===FLOOR.deck||(g.facilities.defOf(f).class==='rig'&&g.grid.at(f.i,f.j)===FLOOR.pool)));
+assert.ok(g.facilities.all.some(f=>g.facilities.defOf(f).class==='rig'&&g.grid.at(f.i,f.j)===FLOOR.pool));
+console.log(JSON.stringify({test:'P3 original assertions',status:'PASS',rank:g.rank,deck,water:g.pools.totalTiles(),elapsedMs:Date.now()-start}));
+const t=Date.now(),m=runBot(new Game(2),128);assert.ok(m.lateSpendRatio>0.1&&m.lateSpendRatio<0.95);
+console.log(JSON.stringify({test:'G30 original assertions',status:'PASS',lateSpendRatio:m.lateSpendRatio,elapsedMs:Date.now()-t}));

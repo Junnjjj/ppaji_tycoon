@@ -1,0 +1,88 @@
+{
+  "blend": "facility.blend",
+  "concept": "reference.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 0.6,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    3,
+    3
+  ],
+  "floor_mode": "full-footprint-integral",
+  "minimum_native_foreground": 3200,
+  "inventory": {
+    "seats": {
+      "prefix": "SeatCushion_",
+      "count": 3
+    },
+    "speakers": {
+      "prefix": "Speaker_",
+      "count": 2
+    },
+    "screen": {
+      "names": [
+        "ScreenGlass"
+      ],
+      "count": 1
+    },
+    "microphones": {
+      "prefix": "Microphone_",
+      "count": 2
+    },
+    "wall_segments": {
+      "prefix": "Wall_",
+      "count": 5
+    },
+    "support_feet": {
+      "prefix": "Support_",
+      "count": 12
+    }
+  },
+  "groups": {
+    "body": {
+      "prefix": "Wall_"
+    },
+    "floor": {
+      "names": [
+        "Foundation"
+      ]
+    },
+    "furniture": {
+      "names": [
+        "SofaBase",
+        "SofaBack",
+        "SofaArm",
+        "SofaArm.001",
+        "TableTop",
+        "ScreenFrame",
+        "Speaker_0",
+        "Speaker_1"
+      ]
+    }
+  },
+  "landmarks": {
+    "sofa": [
+      -0.22,
+      0.94,
+      0.33
+    ],
+    "screen": [
+      -0.15,
+      -1.22,
+      0.85
+    ],
+    "microphone": [
+      0.7,
+      -0.75,
+      0.94
+    ],
+    "entry": [
+      1.05,
+      -1.5,
+      0
+    ]
+  }
+}

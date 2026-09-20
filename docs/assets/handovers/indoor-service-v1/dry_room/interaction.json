@@ -1,0 +1,89 @@
+{
+  "id": "dry_room",
+  "size": [
+    2,
+    1
+  ],
+  "currentSize": [
+    2,
+    1
+  ],
+  "floorZ": 0,
+  "accessKind": "service-face",
+  "entry": [
+    -0.48,
+    -0.95,
+    0
+  ],
+  "slots": [
+    {
+      "id": "s0",
+      "role": "guest",
+      "pose": "stand",
+      "position": [
+        -0.48,
+        -0.3,
+        0
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          -0.48,
+          -0.95,
+          0
+        ],
+        [
+          -0.48,
+          -0.3,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useSeconds": 4
+    },
+    {
+      "id": "s1",
+      "role": "guest",
+      "pose": "stand",
+      "position": [
+        0.48,
+        -0.3,
+        0
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0.48,
+          -0.95,
+          0
+        ],
+        [
+          0.48,
+          -0.3,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useSeconds": 4
+    }
+  ],
+  "staffAnchors": [],
+  "obstacles": [
+    {
+      "name": "vanity equipment",
+      "min": [
+        -0.96,
+        0.02
+      ],
+      "max": [
+        0.96,
+        0.46
+      ]
+    }
+  ],
+  "notes": [
+    "Centered Blender XY in tile units; game I=X,J=-Y. Rotate all anchors/headings with physical root.",
+    "Base art empty of NPCs. Existing game capacity/economy unchanged.",
+    "Stand uses existing idle pose; no dedicated hand animation supplied."
+  ]
+}

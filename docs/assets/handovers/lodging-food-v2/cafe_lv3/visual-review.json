@@ -1,0 +1,54 @@
+{
+  "status": "USER_ACCEPTED_FOR_MAIN_ADOPTION",
+  "technical": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+  "user_approval": true,
+  "roof_gate": "ROOF_PROPORTION_USER_REVIEW",
+  "independent_reopen_rgba_images": 8,
+  "independent_artist_review": "NOT_PERFORMED_NO_ADDITIONAL_WORKERS",
+  "known_limitations": [
+    "Decorative cups and pastries are not separately legible at every native angle",
+    "Hidden rear/left closures are authored proposals; glazing naturally occludes front in rear views",
+    "Warm concept lighting is represented by painted material values and contained pendant meshes, not bloom",
+    "Stairs are simplified architectural geometry, not NPC navigation geometry",
+    "No actual map/portal admission demonstration in worker scope; coordinator owns integration",
+    "Glass against fully transparent background has low-alpha Cycles sample grain in enlarged rear-quarter views; interior-facing glass remains readable."
+  ],
+  "per_direction": {
+    "d0": {
+      "root_yaw": 0,
+      "clipping": 0,
+      "semantic_state": "AUTHORED_VISUAL_REVIEW_NOT_USER_APPROVAL",
+      "findings": [
+        "Front entrance and cafe equipment visible; glazing preserves interior"
+      ]
+    },
+    "d1": {
+      "root_yaw": 90,
+      "clipping": 0,
+      "semantic_state": "AUTHORED_VISUAL_REVIEW_NOT_USER_APPROVAL",
+      "findings": [
+        "Left closure and entrance retain physical correspondence"
+      ]
+    },
+    "d2": {
+      "root_yaw": 180,
+      "clipping": 0,
+      "semantic_state": "AUTHORED_VISUAL_REVIEW_NOT_USER_APPROVAL",
+      "findings": [
+        "Rear and left closed, no duplicated entrance or counter"
+      ]
+    },
+    "d3": {
+      "root_yaw": 270,
+      "clipping": 0,
+      "semantic_state": "AUTHORED_VISUAL_REVIEW_NOT_USER_APPROVAL",
+      "findings": [
+        "Right glass wall reveals interior naturally; entrance occluded"
+      ]
+    }
+  },
+  "previous_status": "AUTHORED_FOUR_VIEW_CANDIDATE_AWAITING_USER",
+  "user_decision": "좋다 적용하자, 다 만족해",
+  "accepted_source_sha256": "5501a33ce2cf022b9520d31f52eaa0064336f74d721cc766487054c6e97d7520",
+  "raw_diagnostics_preserved": true
+}

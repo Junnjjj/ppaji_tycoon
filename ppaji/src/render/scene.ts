@@ -1,3 +1,4 @@
+import { portalHidden, portalPosition } from '../sim/facility-portal.js';
 import { approvedPivot, approvedAnchor, type ApprovedFacilityProvider } from '../assets/approved-facilities.js';
 import { StaticFacilityRenderer, type StaticDepth } from './static-facilities.js';
 import { CourseRideRenderer } from './course-rides.js';
@@ -167,6 +168,8 @@ export class WaterparkScene extends Phaser.Scene {
 
   create(): void {
     for (const id of this.deps.provider.ids()) {
+      // facilityTexture() uploads a building only when it is placed or previewed.
+      if (id.startsWith('fac/')) continue;
       const c = this.deps.provider.canvas(id);
       if (c && !this.textures.exists(id)) this.textures.addCanvas(id, c);
     }
@@ -199,12 +202,13 @@ export class WaterparkScene extends Phaser.Scene {
 
   private lastUpdateAt = 0;
   override update(): void {
+    if (this.game.renderer instanceof Phaser.Renderer.WebGL.WebGLRenderer && this.game.renderer.contextLost) return;
     this.stepTraffic(this.game.loop.delta); // P44-d 도로 위 버스 한 대(장식)
     this.frames++;
     { const now = this.time.now; const dt = this.lastUpdateAt ? Math.min(100, now - this.lastUpdateAt) : 16; this.lastUpdateAt = now; this.tickCourseTrial(dt); this.tickCourseBoats(dt); } // P4-B 시험 운행 · P4-C 보트 시계 (트윈 대신)
     if (this.deps.approved && this.deps.staticDepth) {
       this.staticRenderer ??= new StaticFacilityRenderer(this, this.deps.approved, this.deps.provider, this.deps.staticDepth);
-      this.staticRenderer.update(this.facilitiesRef,this.guestsRef,this.deps.rideTime?.() ?? 0,this.facDefOf??undefined);
+      this.staticRenderer.update(this.facilitiesRef,this.guestsRef,this.deps.rideTime?.() ?? 0,this.facDefOf??undefined,(i,j)=>this.liftAt(i,j));
     }
     this.animFrame++;
     this.tickWater();
@@ -474,9 +478,10 @@ export class WaterparkScene extends Phaser.Scene {
 
   /** 포즈는 상태 + 서 있는 시설에서 파생한다 (G26): 라운지 = lie(의자류)/sit(테이블·소파) · 슬라이드 = ride · 탑 위 = idle */
   private guestPose(g: Guest): GuestPose {
+    if (g.portal && g.portal.phase !== 'inside') return 'walk';
     if (g.state === 'swim') return 'swim';
     if (g.state === 'ride') return 'ride';
-    if (g.state === 'walk' || g.state === 'leave' || (g.state === 'enter' && g.arrivalStep !== undefined)) return 'walk';
+    if ((g.state === 'wander' && g.progress < 1) || g.state === 'walk' || g.state === 'leave' || (g.state === 'enter' && g.arrivalStep !== undefined)) return 'walk';
     if (g.state === 'use' && this.facDefOf) {
       const tg = g.target;
     const f = tg && tg.kind === 'facility' ? this.facilitiesRef.find((x) => x.uid === tg.uid) : undefined;
@@ -488,12 +493,9 @@ export class WaterparkScene extends Phaser.Scene {
 
   private guestKey(g: Guest): string {
     const pose = this.guestPose(g);
-    // V8 has adult poses, but no authored child/elderly bodies or rental equipment.
-    // Keep those existing presentations until corresponding approved art is available.
-    if (buildOf(g) === 'adult' && !((pose === 'swim' || pose === 'ride') && g.float)) {
-      const native = npcV8Key(g.uid, g.facing, pose, this.time.now, moodOf(g));
-      if (this.deps.provider.spec(native)) return native;
-    }
+    // Keep the approved identity through age, rental equipment and activity changes.
+    const native = npcV8Key(g.uid, g.facing, pose, this.time.now, moodOf(g));
+    if (this.deps.provider.spec(native)) return native;
     const frames = GUEST_FRAMES[pose];
     const frame = frames === 1 ? 0 : Math.floor(this.animFrame / (pose === 'swim' ? 14 : pose === 'ride' ? 5 : 7)) % frames;
     return guestTextureKey(g.palette, buildOf(g), pose === 'swim' || pose === 'ride' ? g.float : 0, pose, frame, moodOf(g));
@@ -515,6 +517,11 @@ export class WaterparkScene extends Phaser.Scene {
   }
 
   private guestWorld(g: Guest): { x: number; y: number } {
+    if (g.portal) {
+      const pose = portalPosition(g.portal), p = gridToScreen(pose.i, pose.j);
+      const f = this.facilitiesRef.find(f => f.uid === g.portal!.uid);
+      return { x: p.x, y: p.y - pose.z * Math.sqrt(512) * Math.cos(Math.PI / 6) + this.liftAt(f?.i ?? g.i, f?.j ?? g.j) };
+    }
     const a = tileCenter(g.fromI, g.fromJ);
     const b = tileCenter(g.i, g.j);
     const t = g.progress;
@@ -523,10 +530,25 @@ export class WaterparkScene extends Phaser.Scene {
     return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t - this.slideLift(g) + lz };
   }
 
+  private guestDepth(g: Guest): number {
+    // The whole facade sorts at the footprint front corner; exterior actors and
+    // their overlays must share that plane until hidden at the door threshold.
+    const f = g.portal && this.facilitiesRef.find(f => f.uid === g.portal!.uid);
+    const def = f && this.facDefOf?.(f);
+    const depth = f && def
+      ? depthKey(f.i + (f.facing ? def.d : def.w) - 1, f.j + (f.facing ? def.w : def.d) - 1)
+      : spanDepthKey(g.fromI, g.fromJ, g.i, g.j);
+    return depth + Z_GUEST;
+  }
+
+  private guestHidden(g: Guest): boolean {
+    return portalHidden(g) || !!this.rideRenderer?.hiddenGuestIds.has(g.uid) || !!this.staticRenderer?.hiddenGuestIds.has(g.uid);
+  }
+
   private syncGuests(): void {
     const seen = new Set<number>();
     for (const g of this.guestsRef) {
-      if (this.rideRenderer?.hiddenGuestIds.has(g.uid) || this.staticRenderer?.hiddenGuestIds.has(g.uid)) { seen.add(g.uid); this.guestImgs.get(g.uid)?.setVisible(false); continue; }
+      if (this.guestHidden(g)) { seen.add(g.uid); this.guestImgs.get(g.uid)?.setVisible(false); continue; }
       this.guestImgs.get(g.uid)?.setVisible(true);
       seen.add(g.uid);
       let img = this.guestImgs.get(g.uid);
@@ -547,9 +569,9 @@ export class WaterparkScene extends Phaser.Scene {
       const p = this.guestWorld(g);
       // 대기 줄 (G34) — 같은 칸에 선 사람들을 뒤로 한 명씩 비켜 세운다
       const qx = g.state === 'queue' ? -6 * g.queuePos : 0; const qy = g.state === 'queue' ? 4 * g.queuePos : 0;
-      img.setPosition(Math.round(p.x + qx), Math.round(p.y + qy + (native ? 0 : g.state === 'swim' ? 4 : g.state === 'use' && g.progress >= 1 ? -2 : 0)));
+      img.setPosition(Math.round(p.x + qx), Math.round(p.y + qy + (native ? 0 : g.state === 'swim' ? 4 : g.state === 'use' && !g.portal && g.progress >= 1 ? -2 : 0)));
       img.setFlipX(!native && (g.facing === 1 || g.facing === 2));
-      img.setDepth(spanDepthKey(g.fromI, g.fromJ, g.i, g.j) + Z_GUEST + (g.state === 'climb' || g.state === 'ride' ? 1 : 0));
+      img.setDepth(this.guestDepth(g) + (g.state === 'climb' || g.state === 'ride' ? 1 : 0));
     }
     for (const [uid, img] of this.guestImgs) {
       if (seen.has(uid)) continue;
@@ -567,7 +589,7 @@ export class WaterparkScene extends Phaser.Scene {
     const keep = new Set<number>();
     const key = 'icon/hp-low';
     for (const g of this.guestsRef) {
-      if (g.hp >= WaterparkScene.HP_ICON_BELOW || g.state === 'leave') continue;
+      if (this.guestHidden(g) || g.hp >= WaterparkScene.HP_ICON_BELOW || g.state === 'leave') continue;
       keep.add(g.uid);
       if (!this.textures.exists(key)) this.textures.addCanvas(key, drawBattery());
       let img = this.hpImgs.get(g.uid);
@@ -575,7 +597,7 @@ export class WaterparkScene extends Phaser.Scene {
       const p = this.guestWorld(g);
       const lift = (g.emote && g.emoteTtl > 0 ? 12 : 0) + (g.friendId ? 8 : 0);
       img.setPosition(Math.round(p.x), Math.round(p.y - GUEST_ANCHOR.y - 2 - lift));
-      img.setDepth(spanDepthKey(g.fromI, g.fromJ, g.i, g.j) + Z_GUEST + 1);
+      img.setDepth(this.guestDepth(g) + 1);
     }
     for (const [uid, img] of this.hpImgs) { if (keep.has(uid)) continue; img.destroy(); this.hpImgs.delete(uid); }
   }
@@ -626,7 +648,7 @@ export class WaterparkScene extends Phaser.Scene {
   private syncGauges(): void {
     const keep = new Set<number>();
     for (const g of this.guestsRef) {
-      if (!g.friendId) continue;
+      if (this.guestHidden(g) || !g.friendId) continue;
       keep.add(g.uid);
       const lvl = Math.max(0, Math.min(10, Math.round(g.sat / 10)));
       const key = `gauge/${lvl}`;
@@ -637,7 +659,7 @@ export class WaterparkScene extends Phaser.Scene {
       const p = this.guestWorld(g);
       const lift = g.emote && g.emoteTtl > 0 ? 12 : 0;
       img.setPosition(Math.round(p.x), Math.round(p.y - GUEST_ANCHOR.y - 2 - lift));
-      img.setDepth(spanDepthKey(g.fromI, g.fromJ, g.i, g.j) + Z_GUEST + 1);
+      img.setDepth(this.guestDepth(g) + 1);
     }
     for (const [uid, img] of this.gaugeImgs) { if (keep.has(uid)) continue; img.destroy(); this.gaugeImgs.delete(uid); }
   }
@@ -747,7 +769,7 @@ export class WaterparkScene extends Phaser.Scene {
     const keep = new Set<number>();
     let n = 0;
     for (const g of this.guestsRef) {
-      if (!g.emote || g.emoteTtl <= 0 || n >= WaterparkScene.MAX_EMOTES) continue;
+      if (this.guestHidden(g) || !g.emote || g.emoteTtl <= 0 || n >= WaterparkScene.MAX_EMOTES) continue;
       n++;
       keep.add(g.uid);
       const key = `emote/${g.emote}`;
@@ -758,7 +780,7 @@ export class WaterparkScene extends Phaser.Scene {
       const p = this.guestWorld(g);
       const bob = Math.floor(this.animFrame / 10) % 2;
       img.setPosition(Math.round(p.x), Math.round(p.y - GUEST_ANCHOR.y - 2 - bob));
-      img.setDepth(spanDepthKey(g.fromI, g.fromJ, g.i, g.j) + Z_GUEST + 1);
+      img.setDepth(this.guestDepth(g) + 1);
     }
     for (const [uid, img] of this.emoteImgs) {
       if (keep.has(uid)) continue;
@@ -770,7 +792,7 @@ export class WaterparkScene extends Phaser.Scene {
   /** 손님의 화면 좌표 (CSS px) — 말풍선이 쓴다. 없으면 null */
   guestScreen(uid: number): { x: number; y: number } | null {
     const g = this.guestsRef.find((x) => x.uid === uid);
-    if (!g) return null;
+    if (!g || this.guestHidden(g)) return null;
     const p = this.guestWorld(g);
     const v = this.cam.view();
     return { x: (p.x - v.scrollX) * v.scale, y: (p.y - 24 - v.scrollY) * v.scale };
@@ -778,7 +800,7 @@ export class WaterparkScene extends Phaser.Scene {
 
   /** 이 칸 위(또는 걸친) 손님 — 탭 판정 */
   guestAt(i: number, j: number): Guest | null {
-    return this.guestsRef.find((g) => (g.i === i && g.j === j) || (g.progress < 1 && g.fromI === i && g.fromJ === j)) ?? null;
+    return this.guestsRef.find((g) => !this.guestHidden(g) && ((g.i === i && g.j === j) || (g.progress < 1 && g.fromI === i && g.fromJ === j))) ?? null;
   }
 
   /** 시설 목록 참조 + 정의 조회 — 프레임마다 스프라이트를 맞춘다 */

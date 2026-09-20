@@ -68,7 +68,7 @@ export class CourseRideRenderer {
       this.drawImpact(g,id,timeSec);
       if(swimmer.status==='swim'){const q=tileCenter(swimmer.pos.i,swimmer.pos.j);g.lineStyle(1,0xc3edf6,.5);g.strokeEllipse(q.x,q.y+2,9+(timeSec%1)*3,4);}
     }
-    for(const [key,c] of this.craft)if(!seen.has(key)){c.image.destroy();this.scene.textures.remove(c.texture.key);this.craft.delete(key);this.motion.delete(key);}
+    for(const [key,c] of this.craft)if(!seen.has(key)){c.image.destroy();this.scene.textures.remove(c.texture.key);c.compositor.destroy();this.craft.delete(key);this.motion.delete(key);}
     for(const [uid,image]of this.actors)if(!actors.has(uid)){image.destroy();this.actors.delete(uid);this.motion.delete(`actor:${uid}`);}
     for(const [key,g]of this.effects)if(!fxSeen.has(key)){g.destroy();this.effects.delete(key);this.impacts.delete(key);this.lastBounce.delete(key);}
     for(const [key,g]of this.rope)if(!ropeSeen.has(key)){g.destroy();this.rope.delete(key);}

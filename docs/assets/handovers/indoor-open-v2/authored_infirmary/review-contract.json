@@ -1,0 +1,85 @@
+{
+  "blend": "facility.blend",
+  "concept": "reference.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 0.6,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    3,
+    2
+  ],
+  "floor_mode": "full-footprint-integral",
+  "minimum_native_foreground": 1800,
+  "inventory": {
+    "bed": {
+      "names": [
+        "Mattress"
+      ],
+      "count": 1
+    },
+    "divider": {
+      "names": [
+        "PrivacyDivider"
+      ],
+      "count": 1
+    },
+    "supplies": {
+      "names": [
+        "SuppliesCabinet"
+      ],
+      "count": 1
+    },
+    "boundarySegments": {
+      "names": [
+        "WallPX",
+        "WallNX",
+        "WallPY",
+        "WallNYLeft",
+        "WallNYRight"
+      ],
+      "count": 5
+    }
+  },
+  "groups": {
+    "floor": {
+      "names": [
+        "FacilityFloor"
+      ]
+    },
+    "body": {
+      "names": [
+        "WallPX",
+        "WallNX",
+        "WallPY",
+        "WallNYLeft",
+        "WallNYRight",
+        "DoorLintel"
+      ]
+    }
+  },
+  "landmarks": {
+    "bed": [
+      -0.72,
+      0,
+      0.39
+    ],
+    "entry": [
+      0.02,
+      -1.2,
+      0
+    ],
+    "supplies": [
+      0.64,
+      0.52,
+      0.7
+    ],
+    "divider": [
+      -1.29,
+      0,
+      0.47
+    ]
+  }
+}

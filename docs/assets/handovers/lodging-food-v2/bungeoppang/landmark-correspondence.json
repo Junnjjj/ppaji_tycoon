@@ -1,0 +1,150 @@
+{
+  "d0": {
+    "mold_left": {
+      "pixel": [
+        334.0800018310547,
+        444.0322265625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "mold_middle": {
+      "pixel": [
+        367.35999298095703,
+        460.67223358154297
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "mold_right": {
+      "pixel": [
+        400.6399841308594,
+        477.31221771240234
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "fish_sign": {
+      "pixel": [
+        467.20001220703125,
+        451.2872543334961
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        339.1999969482422,
+        547.4906845092773
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d1": {
+    "mold_left": {
+      "pixel": [
+        352.00000762939453,
+        484.9922332763672
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "mold_middle": {
+      "pixel": [
+        385.2799987792969,
+        468.3522262573242
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "mold_right": {
+      "pixel": [
+        418.5600128173828,
+        451.71221923828125
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "fish_sign": {
+      "pixel": [
+        433.9199981689453,
+        384.7272491455078
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        428.8000030517578,
+        547.4906845092773
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d2": {
+    "mold_left": {
+      "pixel": [
+        433.9199981689453,
+        476.03221893310547
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "mold_middle": {
+      "pixel": [
+        400.6399841308594,
+        459.3922348022461
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "mold_right": {
+      "pixel": [
+        367.35999298095703,
+        442.7522277832031
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "fish_sign": {
+      "pixel": [
+        300.80001068115234,
+        401.3672561645508
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        428.8000030517578,
+        502.69068145751953
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d3": {
+    "mold_left": {
+      "pixel": [
+        416.00001525878906,
+        435.0722351074219
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "mold_middle": {
+      "pixel": [
+        382.7200012207031,
+        451.71221923828125
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "mold_right": {
+      "pixel": [
+        349.4399871826172,
+        468.3522262573242
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "fish_sign": {
+      "pixel": [
+        334.0800018310547,
+        467.92723846435547
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        339.1999969482422,
+        502.69068145751953
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  }
+}

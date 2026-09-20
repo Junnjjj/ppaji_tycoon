@@ -1,0 +1,122 @@
+{
+  "d0": {
+    "dispenser": {
+      "pixel": [
+        385.9199981689453,
+        445.74700927734375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "glass_case": {
+      "pixel": [
+        363.5199966430664,
+        468.7045440673828
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        340.47999572753906,
+        546.8506851196289
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "cone": {
+      "pixel": [
+        397.4399871826172,
+        381.19921875
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d1": {
+    "dispenser": {
+      "pixel": [
+        382.0800018310547,
+        445.74700927734375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "glass_case": {
+      "pixel": [
+        404.47998046875,
+        468.7045440673828
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        427.52000427246094,
+        546.8506851196289
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "cone": {
+      "pixel": [
+        370.5600128173828,
+        381.19921875
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d2": {
+    "dispenser": {
+      "pixel": [
+        382.0800018310547,
+        447.66700744628906
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "glass_case": {
+      "pixel": [
+        404.47998046875,
+        448.2245635986328
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        427.52000427246094,
+        503.33068084716797
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "cone": {
+      "pixel": [
+        370.5600128173828,
+        394.6392288208008
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d3": {
+    "dispenser": {
+      "pixel": [
+        385.9199981689453,
+        447.66700744628906
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "glass_case": {
+      "pixel": [
+        363.5199966430664,
+        448.2245635986328
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "service": {
+      "pixel": [
+        340.47999572753906,
+        503.33068084716797
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "cone": {
+      "pixel": [
+        397.4399871826172,
+        394.6392288208008
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  }
+}

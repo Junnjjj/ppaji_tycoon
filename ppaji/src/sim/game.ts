@@ -1904,12 +1904,7 @@ export class Game {
   private dropFoodCourt(id: number): void {
     const court = this.foodcourts.byId(id); if (!court) return;
     for (const f of [...this.facilities.all]) if (f.defId === FOODCOURT_SEAT_DEF && courtContains(court, f.i, f.j)) { const uid = f.uid;
-    for (const g of this.guests.all) {
-      if (g.target?.kind === 'facility' && g.target.uid === uid) {
-        g.target = null;
-        if (g.state === 'use' || g.state === 'walk') { g.state = 'wander'; g.stateTicks = 0; }
-      }
-    }
+    this.guests.releaseFacility(uid);
       this.facilities.remove(uid); }
     this.foodcourts.remove(id);
   }
@@ -2384,12 +2379,7 @@ export class Game {
     if (broke) return { ok: false, reason: '손님 길이 막힙니다 — 입구에서 닿지 않는 곳이 생깁니다' };
     this.facilities.move(uid, i, j, facing);
     // 이용 중이던 손님은 놓아준다 (철거와 같은 규칙)
-    for (const g of this.guests.all) {
-      if (g.target?.kind === 'facility' && g.target.uid === uid) {
-        g.target = null;
-        if (g.state === 'use' || g.state === 'walk') { g.state = 'wander'; g.stateTicks = 0; }
-      }
-    }
+    this.guests.releaseFacility(uid);
     this.fx.push({ kind: 'place', i, j });
     this.afterWorldChange();
     this.guests.evictFrom(FacilityStore.footprint(def, i, j, facing));
@@ -2403,12 +2393,7 @@ export class Game {
     const cost = this.b.facilityRemoveCost;
     if (cost > this.money) return { ok: false, reason: `철거비 ${cost}G 가 부족합니다` };
     // 이용 중이던 손님은 놓아준다
-    for (const g of this.guests.all) {
-      if (g.target?.kind === 'facility' && g.target.uid === uid) {
-        g.target = null;
-        if (g.state === 'use' || g.state === 'walk') { g.state = 'wander'; g.stateTicks = 0; }
-      }
-    }
+    this.guests.releaseFacility(uid);
     const rdef = this.facilities.defOf(f);
     const refund = f.paidToday !== undefined ? f.paidToday : (rdef.class === 'rig' || rdef.onRing === true) ? Math.round(rdef.cost * this.b.rigRemoveRefund) : 0; // P51: 그날은 전액, 그 뒤 기구·링 위는 `rigRemoveRefund`(0.5) — 실수한 배치가 벌이 되지 않게
     this.facilities.remove(uid);

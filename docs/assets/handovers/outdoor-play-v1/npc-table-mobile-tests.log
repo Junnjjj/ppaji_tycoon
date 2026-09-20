@@ -1,0 +1,22 @@
+
+ RUN  v3.2.7 /Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji
+
+ ✓ src/sim/guest-life.test.ts (3 tests) 274ms
+ ✓ src/sim/foodcourt.test.ts (6 tests) 379ms
+ ✓ src/sim/outdoor-activity.test.ts (54 tests) 632ms
+ ✓ src/assets/npc-v8.test.ts (4 tests) 160ms
+ ✓ src/assets/approved-facilities.test.ts (9 tests) 90ms
+ ✓ src/sim/facility-portal.test.ts (35 tests) 50ms
+ ✓ src/assets/watercraft.test.ts (4 tests) 60ms
+ ✓ src/sim/watercraft-core/core.test.ts (11 tests) 45ms
+ ✓ src/render/static-visit-sample.test.ts (1 test) 8ms
+ ✓ src/render/camera.test.ts (16 tests) 4ms
+ ✓ src/sim/course/ride.test.ts (26 tests) 1281ms
+   ✓ P61-a 실제 운항 — 낙수와 부상 > 낙수는 주행 0.35~0.70 · 최고 속도의 70% 이상에서만 — 출발 직후는 **절대** 아니다  385ms
+ ✓ src/sim/guest-motion.test.ts (7 tests) 10ms
+
+ Test Files  12 passed (12)
+      Tests  176 passed (176)
+   Start at  04:31:35
+   Duration  2.07s (transform 538ms, setup 0ms, collect 1.79s, tests 2.99s, environment 1ms, prepare 533ms)
+

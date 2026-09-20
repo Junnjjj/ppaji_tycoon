@@ -1,0 +1,131 @@
+{
+  "status": "USER_ACCEPTED",
+  "userMessage": "좋다 게임에 이제 연결해, 메인게임부분 아까 말한부분까지만",
+  "scope": "approved art/build catalog; real upgrades deferred",
+  "facilities": {
+    "playground": {
+      "sourceSHA": "9552d0bcd90b1e0d52a012786d7837d39d959e6a7d0c515703675ddc2f28a1f5",
+      "frames": {
+        "0": "d01aad91cb38cdd420b2c22adc3ed793bc6362a3c066c4142069589abf5179a2",
+        "1": "9a049c95aec9b0762a6f6f698342e306790072b7471d95216c01928cb8014743",
+        "2": "81d501185f92b0e2f2135da76251960f00e9ef176cd4b9b1b1d9b73f7350dbc8",
+        "3": "c832d022f4d3d0aac2b0e973e28003910daf7bd07aee4d628dcf6e047167f978"
+      },
+      "interactionSHA": "57326cff68e04d00d04d4c573d44d3191e1501c8667919a709c3ce1fbde6f353",
+      "rawProjection": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "FAIL",
+        "d3": "FAIL"
+      },
+      "review": "playground/review-v2"
+    },
+    "stage_river": {
+      "sourceSHA": "f12f70befb351536233a0b3c5a96acbe1e4c70c8896390782eb4e63744a2473c",
+      "frames": {
+        "0": "beb2ffa888eedf683ed70b54b9e30a8df5ce8b6bee8af302efa422e6d30816cf",
+        "1": "4f6bfbff851b04a8a3ea47abe3b8b1bef89f0d14bbe434fd7a557947f16a9097",
+        "2": "f6f33daac304019cfbc85a788b827330a36ddbee36c606e58a75a0f70faee72d",
+        "3": "c6e6b8aa326dfbca1e60dc71f6b69473321d916cff791738af92994a584cd80a"
+      },
+      "interactionSHA": "ff78c6e2c0b76d7201368a894aa75904728706c67574f80c0e1ef502022ada19",
+      "rawProjection": {
+        "d0": "FAIL",
+        "d1": "WARN",
+        "d2": "PASS",
+        "d3": "PASS"
+      },
+      "review": "stage_river/review"
+    },
+    "bungee_jump": {
+      "sourceSHA": "b1784c8ee17f911d34392274bae7989a2e5ee3fe15dc933e19af5917f6161d45",
+      "frames": {
+        "0": "589fafb0e580663f535083a729b84399c4a0ed2c3ccb527a152f8be20abe3bb1",
+        "1": "ed498d3f4f64558a9638e36bb02d9597e875cb94de0ca165b959acdd5561948c",
+        "2": "8e5a1912c55859a5906bd3cc0d5b4e248c6c07de1c188071f10fb100d5bcd610",
+        "3": "597b7919ef2441062e3e9117065c55d0cb3a58edc1b2d9c145b2259ab5997a9b"
+      },
+      "interactionSHA": "053bb26a9b6360880af23d67dfbbee4d330b33c46843fd5ae407f274bf3798fc",
+      "rawProjection": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "PASS",
+        "d3": "PASS"
+      },
+      "review": "bungee_jump/review"
+    },
+    "photozone": {
+      "sourceSHA": "44058f926569d2232ba33f5051bbe1e346ecc26f1243702012dc07db38275441",
+      "frames": {
+        "0": "74c13a41c5089d81cf7817c5cd700c81012af058fe148074ae1e7c2150172bea",
+        "1": "73859d495c6b601def84050e17f8c90af8ad68d9601c91c1e4eb20ee0e7f86fd",
+        "2": "bd43a55939f822222d107b4c8d03116b54ab40dfeea6275fdbae34ab50832895",
+        "3": "c7d4f55425b284c898abf10e56393774f4c6cebfa685cee80c310a114d7caa02"
+      },
+      "interactionSHA": "e0cd8dcb8b98489793eb3a6091c6b8308b7b82a60441aaf8aceff73b76712797",
+      "rawProjection": {
+        "d0": "PASS",
+        "d1": "FAIL",
+        "d2": "PASS",
+        "d3": "PASS"
+      },
+      "review": "photozone/review-v2"
+    },
+    "pavilion": {
+      "sourceSHA": "387a929bc2a6b65319456df690d1c3d9d9c32bd45c2a3b53ae5a06c525fcc848",
+      "frames": {
+        "0": "dc0ab294598f0d4afcc3a468db8ec5e9c7873eaad32650af6db85e94a50cdd55",
+        "1": "6d4e1f1e7e41c684159e3c8e507ac3aab396f28d0e8aa9ba0ce31a89a9e7416d",
+        "2": "a8144e91f39a950c842f6cd81254deb9ff21e57538cfa158c20727f8164bd8df",
+        "3": "ce546736d23b692aef6198f70cdc7660037ca23dc9a2d9613d6402101118833d"
+      },
+      "interactionSHA": "5acf7306d065622ec2493da167789b5f7a6a154db44ca3d6122b9e43e15ed6cc",
+      "rawProjection": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "PASS",
+        "d3": "PASS"
+      },
+      "review": "pavilion/review"
+    },
+    "stage_river_lv2": {
+      "sourceSHA": "a268f135dd6c5e370f85e8a7dfefaa220be1e51c2cf889569ce859e34818c662",
+      "frames": {
+        "0": "d01eddaf6cec22cea0b8a5d99553ab83f2b7eccbc2fe00a9d6d95bc280a4171d",
+        "1": "704635a201bc0337f35878cc46159d810d68426cc54dfd2072e3c5778a52b01a",
+        "2": "ce7aa07126db21525c67f0503016fb62aac4e6b809316f75de9da46569ac9ec1",
+        "3": "ea2e494ba3fe37c9e6179a2924f31d115d6c7ffeec5210234529bdd21a70cba9"
+      },
+      "interactionSHA": "82dcce939a8ef1467c4087be55351c33a39de54bcc9e515cdfcca50e6e2f2b8e",
+      "rawProjection": {
+        "d0": "PASS",
+        "d1": "FAIL",
+        "d2": "PASS",
+        "d3": "PASS"
+      },
+      "review": "stage_river_lv2/review-final"
+    },
+    "stage_river_lv3": {
+      "sourceSHA": "0e23596d75607ea74a64292d3f2b1ad903f464d9b9f0946f6cf7f2fabc659eab",
+      "frames": {
+        "0": "ddd8f69d327763e0a4c65bea0bc6272e0c86e8d8ee9782af94e21a50d8231f2c",
+        "1": "75d1e143e21564bdd88f5950892a9819d2ef9433f1e391dc566c3356621f2558",
+        "2": "894bd63172f0cbab44091487ed1c4c374dd583ee16b7b9a0052a516d8a2b78b0",
+        "3": "e95af3bd0d8d7b2e8b83d82d58bfa747dff20164b50e88158ad5c7885b1ff099"
+      },
+      "interactionSHA": "ff20b3c36d4b544810a9195a244e1d1bfc3acbffd74817e1bffe82fdf5f3465e",
+      "rawProjection": {
+        "d0": "FAIL",
+        "d1": "WARN",
+        "d2": "PASS",
+        "d3": "FAIL"
+      },
+      "review": "stage_river_lv3/review"
+    }
+  },
+  "mainRuntimeAuthorization": {
+    "quote": "NPC 실제 이용까지 포함, 레벨업 규칙은 나중에",
+    "fixedStaffQuote": "안내소나 그런부분에서 npc 추가해야하는것들은 추가해줄럐? 조사후에",
+    "scope": "actual visitor use, four fixed station attendants, no new gameplay upgrade rules"
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "blend": "facility.blend",
+  "concept": "../../lodging-food-v2/icecream/review/native-four-directions.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 256,
+  "camera_target_z_tiles": 1.8,
+  "logical_size": 256,
+  "density": 4,
+  "size": [
+    5,
+    4
+  ],
+  "canonical_live_size": null,
+  "proposed_size": [
+    5,
+    4
+  ],
+  "floor_mode": "transparent-no-floor",
+  "minimum_native_foreground": 1900,
+  "inventory": {
+    "speakers": {
+      "names": [
+        "Speaker_0",
+        "Speaker_1"
+      ],
+      "count": 2
+    },
+    "chairs": {
+      "names": [
+        "Chair_0_Seat",
+        "Chair_1_Seat",
+        "Chair_2_Seat",
+        "Chair_3_Seat",
+        "Chair_4_Seat",
+        "Chair_5_Seat",
+        "Chair_6_Seat",
+        "Chair_7_Seat"
+      ],
+      "count": 8
+    },
+    "mic": {
+      "names": [
+        "MicHead"
+      ],
+      "count": 1
+    },
+    "platform": {
+      "names": [
+        "Stage_Deck"
+      ],
+      "count": 1
+    },
+    "posts": {
+      "prefix": "Frame_Post",
+      "count": 4
+    }
+  },
+  "groups": {
+    "body": {
+      "prefix": "Frame_"
+    },
+    "roof": {
+      "prefix": "Roof_"
+    },
+    "chairs": {
+      "prefix": "Chair_"
+    },
+    "intrinsic_platform": {
+      "names": [
+        "Stage_Deck"
+      ]
+    },
+    "equipment": {
+      "prefix": "Stage_"
+    }
+  },
+  "landmarks": {
+    "performer": [
+      0.1,
+      1.05,
+      0.248
+    ],
+    "audience_0": [
+      -1.5,
+      -0.21,
+      0
+    ],
+    "audience_1": [
+      -0.65,
+      -0.21,
+      0
+    ],
+    "audience_2": [
+      0.65,
+      -0.21,
+      0
+    ],
+    "audience_3": [
+      1.5,
+      -0.21,
+      0
+    ],
+    "audience_4": [
+      -1.5,
+      -1.16,
+      0
+    ],
+    "audience_5": [
+      -0.65,
+      -1.16,
+      0
+    ],
+    "audience_6": [
+      0.65,
+      -1.16,
+      0
+    ],
+    "audience_7": [
+      1.5,
+      -1.16,
+      0
+    ],
+    "entry": [
+      -2.25,
+      -1.82,
+      0
+    ],
+    "exit": [
+      2.25,
+      -1.82,
+      0
+    ],
+    "microphone": [
+      0.12,
+      0.91,
+      1.18
+    ],
+    "left_speaker": [
+      -1.42,
+      0.87,
+      0.47
+    ],
+    "right_speaker": [
+      1.42,
+      0.87,
+      0.47
+    ],
+    "canopy": [
+      0,
+      1.23,
+      2.105
+    ],
+    "stair": [
+      -1.96,
+      1.12,
+      0.12
+    ]
+  }
+}

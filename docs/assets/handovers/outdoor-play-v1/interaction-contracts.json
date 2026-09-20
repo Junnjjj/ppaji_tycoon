@@ -1,0 +1,3742 @@
+{
+  "playground": {
+    "id": "playground",
+    "size": [
+      3,
+      3
+    ],
+    "currentSize": [
+      3,
+      3
+    ],
+    "cameraTargetZTiles": 1.8,
+    "logicalSize": 192,
+    "coordinateUnits": "numeric local tile XYZ; X=I Y=-J Z up; centered FacilityRoot",
+    "accessKind": "flow",
+    "entry": [
+      -0.6,
+      1.08,
+      0
+    ],
+    "exit": [
+      1.23,
+      0.25,
+      0
+    ],
+    "capacity": 4,
+    "slots": [
+      {
+        "id": "slide-rider",
+        "position": [
+          -0.12,
+          -0.3,
+          0.65
+        ],
+        "pose": "sit",
+        "heading": 0,
+        "approach": [
+          [
+            -0.6,
+            1.08,
+            0
+          ],
+          [
+            -0.6,
+            0.86,
+            0
+          ],
+          [
+            -0.6,
+            0.64,
+            0.15
+          ],
+          [
+            -0.6,
+            0.42,
+            0.32
+          ],
+          [
+            -0.6,
+            0.2,
+            0.49
+          ],
+          [
+            -0.6,
+            -0.04,
+            0.65
+          ],
+          [
+            -0.6,
+            -0.3,
+            0.65
+          ],
+          [
+            -0.3,
+            -0.3,
+            0.65
+          ],
+          [
+            -0.12,
+            -0.3,
+            0.65
+          ]
+        ],
+        "support": "Slide_Surface",
+        "supportObjects": [
+          "Slide_Surface",
+          "Equipment_Deck",
+          "Stair_0",
+          "Stair_1",
+          "Stair_2"
+        ],
+        "contactAnchor": "seat-bottom"
+      },
+      {
+        "id": "wait-1",
+        "position": [
+          0,
+          1.2,
+          0
+        ],
+        "pose": "stand",
+        "heading": 3.141592653589793,
+        "approach": [
+          [
+            0,
+            0.96,
+            0
+          ],
+          [
+            0,
+            1.2,
+            0
+          ]
+        ],
+        "support": "terrain",
+        "supportObjects": [],
+        "contactAnchor": "feet"
+      },
+      {
+        "id": "wait-2",
+        "position": [
+          0.56,
+          1.2,
+          0
+        ],
+        "pose": "stand",
+        "heading": 3.141592653589793,
+        "approach": [
+          [
+            0.56,
+            0.96,
+            0
+          ],
+          [
+            0.56,
+            1.2,
+            0
+          ]
+        ],
+        "support": "terrain",
+        "supportObjects": [],
+        "contactAnchor": "feet"
+      },
+      {
+        "id": "wait-3",
+        "position": [
+          1.12,
+          1.2,
+          0
+        ],
+        "pose": "stand",
+        "heading": 3.141592653589793,
+        "approach": [
+          [
+            1.12,
+            0.96,
+            0
+          ],
+          [
+            1.12,
+            1.2,
+            0
+          ]
+        ],
+        "support": "terrain",
+        "supportObjects": [],
+        "contactAnchor": "feet"
+      }
+    ],
+    "routes": {
+      "climb": [
+        [
+          -0.6,
+          1.08,
+          0
+        ],
+        [
+          -0.6,
+          0.86,
+          0
+        ],
+        [
+          -0.6,
+          0.64,
+          0.15
+        ],
+        [
+          -0.6,
+          0.42,
+          0.32
+        ],
+        [
+          -0.6,
+          0.2,
+          0.49
+        ],
+        [
+          -0.6,
+          -0.04,
+          0.65
+        ],
+        [
+          -0.6,
+          -0.3,
+          0.65
+        ],
+        [
+          -0.3,
+          -0.3,
+          0.65
+        ],
+        [
+          -0.12,
+          -0.3,
+          0.65
+        ]
+      ],
+      "slide": [
+        [
+          -0.12,
+          -0.3,
+          0.65
+        ],
+        [
+          0.1,
+          -0.3,
+          0.56
+        ],
+        [
+          0.48,
+          -0.3,
+          0.34
+        ],
+        [
+          0.81,
+          -0.3,
+          0.16
+        ],
+        [
+          1.04,
+          -0.3,
+          0.09
+        ],
+        [
+          1.18,
+          -0.3,
+          0.09
+        ]
+      ],
+      "landing": [
+        [
+          1.18,
+          -0.3,
+          0.09
+        ],
+        [
+          1.23,
+          -0.3,
+          0
+        ],
+        [
+          1.23,
+          0.25,
+          0
+        ]
+      ],
+      "return": [
+        [
+          1.23,
+          0.25,
+          0
+        ],
+        [
+          0.95,
+          0.55,
+          0
+        ],
+        [
+          0.15,
+          0.55,
+          0
+        ],
+        [
+          0.15,
+          0.85,
+          0
+        ],
+        [
+          -0.6,
+          0.85,
+          0
+        ],
+        [
+          -0.6,
+          1.08,
+          0
+        ]
+      ]
+    },
+    "routeHeadings": {
+      "climb": -1.5707963267948966,
+      "deckTurn": 0,
+      "slide": 0,
+      "landing": 1.5707963267948966
+    },
+    "supportHeight": {
+      "slide": {
+        "axis": "X",
+        "y": -0.3,
+        "profileXZ": [
+          [
+            -0.3,
+            0.65
+          ],
+          [
+            -0.12,
+            0.65
+          ],
+          [
+            0.1,
+            0.56
+          ],
+          [
+            0.48,
+            0.34
+          ],
+          [
+            0.81,
+            0.16
+          ],
+          [
+            1.04,
+            0.09
+          ],
+          [
+            1.18,
+            0.09
+          ]
+        ],
+        "interpolation": "piecewise-linear",
+        "innerWidth": 0.57,
+        "guardHeightAboveSurface": 0.16,
+        "surfaceThickness": 0.045,
+        "seatBottomOffset": 0
+      },
+      "stairs": {
+        "treads": [
+          {
+            "center": [
+              -0.6,
+              0.64,
+              0.15
+            ],
+            "width": 0.48,
+            "depth": 0.24
+          },
+          {
+            "center": [
+              -0.6,
+              0.42,
+              0.32
+            ],
+            "width": 0.48,
+            "depth": 0.24
+          },
+          {
+            "center": [
+              -0.6,
+              0.2,
+              0.49
+            ],
+            "width": 0.48,
+            "depth": 0.24
+          }
+        ]
+      },
+      "deck": {
+        "bounds": [
+          [
+            -0.93,
+            -0.63,
+            0.56
+          ],
+          [
+            -0.27,
+            0.03,
+            0.65
+          ]
+        ],
+        "topZ": 0.65,
+        "ownedBy": "Equipment_Deck"
+      }
+    },
+    "motion": {
+      "reservation": "one exclusive token covering climb + sit + slide + landing until exit; other 3 guests wait",
+      "slidePose": "sit legs forward +X; seat anchor follows support profile",
+      "standTransition": "stand only after reaching ground at [1.23,-.30,0]",
+      "lowClimb": "decorative usable-scale structure; not an additional occupancy slot in this preview"
+    },
+    "actorEnvelope": {
+      "standingHeightTiles": 1.1226827987756232,
+      "radiusTiles": 0.16,
+      "scope": "numeric footprint envelope; actual pose/depth checks coordinator-owned"
+    },
+    "obstacles": [
+      {
+        "id": "low-climb",
+        "min": [
+          -1.29,
+          -1.33,
+          0
+        ],
+        "max": [
+          -0.75,
+          -0.69,
+          0.44
+        ]
+      },
+      {
+        "id": "stairs-and-deck",
+        "min": [
+          -0.94,
+          -0.64,
+          0
+        ],
+        "max": [
+          -0.26,
+          0.79,
+          1.13
+        ],
+        "exception": "reserved climb route follows support heights"
+      },
+      {
+        "id": "slide",
+        "min": [
+          -0.3,
+          -0.635,
+          0
+        ],
+        "max": [
+          1.18,
+          0.035,
+          0.81
+        ],
+        "exception": "reserved seated slide route"
+      }
+    ],
+    "notes": [
+      "No people baked into facility art.",
+      "Do not interpolate a standing walk down the slide.",
+      "Runtime actual NPC contact, poses and occlusion remain coordinator preview checks; no gameplay adoption."
+    ],
+    "sourceCandidateId": "playground"
+  },
+  "stage_river_lv1": {
+    "id": "stage_river_lv1",
+    "size": [
+      4,
+      3
+    ],
+    "canonical_live_size": [
+      3,
+      2
+    ],
+    "proposed_size": [
+      4,
+      3
+    ],
+    "canonical_live_class": "decor",
+    "canonical_live_capacity": 0,
+    "proposalPerformerCount": 1,
+    "proposalAudienceCount": 4,
+    "coordinateUnits": "numeric local XYZ tiles; +X=I, +Y=-J, Z up; centered FacilityRoot",
+    "cameraTargetZTiles": 1.8,
+    "logicalSize": 192,
+    "accessKind": "flow",
+    "entry": [
+      -1.8,
+      -1.35,
+      0
+    ],
+    "exit": [
+      1.8,
+      -1.35,
+      0
+    ],
+    "slots": [
+      {
+        "id": "performer",
+        "role": "performer",
+        "position": [
+          0,
+          0.43,
+          0.24
+        ],
+        "pose": "stand",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            -1.8,
+            -1.35,
+            0
+          ],
+          [
+            -1.7,
+            0.65,
+            0
+          ],
+          [
+            -1.6,
+            0.65,
+            0.12
+          ],
+          [
+            -1.25,
+            0.8,
+            0.24
+          ],
+          [
+            0,
+            0.8,
+            0.24
+          ],
+          [
+            0,
+            0.43,
+            0.24
+          ]
+        ],
+        "supportObjects": [
+          "Stage_Deck"
+        ],
+        "motion": "idle or minimal reusable gesture; no translation"
+      },
+      {
+        "id": "audience_0",
+        "role": "audience",
+        "position": [
+          -0.5,
+          -0.16,
+          0
+        ],
+        "seatContact": [
+          -0.5,
+          -0.38,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -1.8,
+            -1.35,
+            0
+          ],
+          [
+            -1.7,
+            -1.36,
+            0
+          ],
+          [
+            -1.7,
+            -1.36,
+            0
+          ],
+          [
+            -1.7,
+            -0.16,
+            0
+          ],
+          [
+            -0.5,
+            -0.16,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            -0.5,
+            -0.16,
+            0
+          ],
+          [
+            -1.7,
+            -0.16,
+            0
+          ],
+          [
+            -1.7,
+            -1.36,
+            0
+          ],
+          [
+            1.8,
+            -1.35,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Bench_0_Seat"
+        ],
+        "transition": "reach final foot anchor, switch pose in place; no sliding"
+      },
+      {
+        "id": "audience_1",
+        "role": "audience",
+        "position": [
+          0.5,
+          -0.16,
+          0
+        ],
+        "seatContact": [
+          0.5,
+          -0.38,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -1.8,
+            -1.35,
+            0
+          ],
+          [
+            -1.7,
+            -1.36,
+            0
+          ],
+          [
+            1.7,
+            -1.36,
+            0
+          ],
+          [
+            1.7,
+            -0.16,
+            0
+          ],
+          [
+            0.5,
+            -0.16,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            0.5,
+            -0.16,
+            0
+          ],
+          [
+            1.7,
+            -0.16,
+            0
+          ],
+          [
+            1.7,
+            -1.36,
+            0
+          ],
+          [
+            1.8,
+            -1.35,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Bench_0_Seat"
+        ],
+        "transition": "reach final foot anchor, switch pose in place; no sliding"
+      },
+      {
+        "id": "audience_2",
+        "role": "audience",
+        "position": [
+          -0.5,
+          -0.8300000000000001,
+          0
+        ],
+        "seatContact": [
+          -0.5,
+          -1.05,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -1.8,
+            -1.35,
+            0
+          ],
+          [
+            -1.7,
+            -1.36,
+            0
+          ],
+          [
+            -1.7,
+            -1.36,
+            0
+          ],
+          [
+            -1.7,
+            -0.8300000000000001,
+            0
+          ],
+          [
+            -0.5,
+            -0.8300000000000001,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            -0.5,
+            -0.8300000000000001,
+            0
+          ],
+          [
+            -1.7,
+            -0.8300000000000001,
+            0
+          ],
+          [
+            -1.7,
+            -1.36,
+            0
+          ],
+          [
+            1.8,
+            -1.35,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Bench_1_Seat"
+        ],
+        "transition": "reach final foot anchor, switch pose in place; no sliding"
+      },
+      {
+        "id": "audience_3",
+        "role": "audience",
+        "position": [
+          0.5,
+          -0.8300000000000001,
+          0
+        ],
+        "seatContact": [
+          0.5,
+          -1.05,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -1.8,
+            -1.35,
+            0
+          ],
+          [
+            -1.7,
+            -1.36,
+            0
+          ],
+          [
+            1.7,
+            -1.36,
+            0
+          ],
+          [
+            1.7,
+            -0.8300000000000001,
+            0
+          ],
+          [
+            0.5,
+            -0.8300000000000001,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            0.5,
+            -0.8300000000000001,
+            0
+          ],
+          [
+            1.7,
+            -0.8300000000000001,
+            0
+          ],
+          [
+            1.7,
+            -1.36,
+            0
+          ],
+          [
+            1.8,
+            -1.35,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Bench_1_Seat"
+        ],
+        "transition": "reach final foot anchor, switch pose in place; no sliding"
+      }
+    ],
+    "routes": {
+      "performer_entry": [
+        [
+          -1.8,
+          -1.35,
+          0
+        ],
+        [
+          -1.7,
+          0.65,
+          0
+        ],
+        [
+          -1.6,
+          0.65,
+          0.12
+        ],
+        [
+          -1.25,
+          0.8,
+          0.24
+        ],
+        [
+          0,
+          0.8,
+          0.24
+        ],
+        [
+          0,
+          0.43,
+          0.24
+        ]
+      ],
+      "performer_exit": [
+        [
+          0,
+          0.43,
+          0.24
+        ],
+        [
+          0,
+          0.8,
+          0.24
+        ],
+        [
+          -1.25,
+          0.8,
+          0.24
+        ],
+        [
+          -1.6,
+          0.65,
+          0.12
+        ],
+        [
+          -1.7,
+          0.65,
+          0
+        ],
+        [
+          -1.8,
+          -1.35,
+          0
+        ],
+        [
+          -1.7,
+          -1.36,
+          0
+        ],
+        [
+          1.7,
+          -1.36,
+          0
+        ],
+        [
+          1.8,
+          -1.35,
+          0
+        ]
+      ],
+      "audience_front_crossaisle": [
+        [
+          -1.7,
+          -1.36,
+          0
+        ],
+        [
+          1.7,
+          -1.36,
+          0
+        ]
+      ],
+      "left_aisle": [
+        [
+          -1.7,
+          -1.36,
+          0
+        ],
+        [
+          -1.7,
+          0.65,
+          0
+        ]
+      ],
+      "right_aisle": [
+        [
+          1.7,
+          -1.36,
+          0
+        ],
+        [
+          1.7,
+          0.65,
+          0
+        ]
+      ]
+    },
+    "footprintBounds": [
+      [
+        -2,
+        -1.5,
+        0
+      ],
+      [
+        2,
+        1.5,
+        1.8
+      ]
+    ],
+    "intrinsicPlatform": {
+      "owner": "Stage_Deck",
+      "bounds": [
+        [
+          -1.4,
+          0.15,
+          0.08
+        ],
+        [
+          1.4,
+          1.35,
+          0.24
+        ]
+      ],
+      "meaning": "performer support only, elevated intrinsic stage equipment; not audience presentation floor"
+    },
+    "poseContactConvention": "position is standing foot contact shared by seated pose feet; seatContact is pelvis/support target, coordinator must verify existing sit pose offset",
+    "occlusion": "Rear backdrop naturally hides performer in rear-facing views; coordinator owns depth/layer review",
+    "gate": "AUTHORED_NPC_CANDIDATE_USER_REVIEW",
+    "live_files_modified": false,
+    "actorPathRadiusTiles": 0.12,
+    "notes": [
+      "Cross aisle y=-1.36 gives 0.16 clearance behind bench rear rail; preview actor navigation radius 0.12 tile.",
+      "Front bench audience bodies may overlap rear bench view in some directions; depth validation belongs to combined runtime review."
+    ],
+    "sourceCandidateId": "stage_river"
+  },
+  "bungee_jump": {
+    "id": "bungee_jump",
+    "status": "AUTHORED_NPC_CANDIDATE_USER_REVIEW",
+    "size": [
+      4,
+      4
+    ],
+    "currentSize": null,
+    "proposedSize": [
+      4,
+      4
+    ],
+    "logicalSize": 256,
+    "cameraTargetZTiles": 3.0,
+    "tileWorld": 22.627416997969522,
+    "coordinateUnits": "centered LOCAL XYZ tiles, +X=I, +Y=-J, Z up",
+    "accessKind": "flow",
+    "floorZ": 0,
+    "capacity": 1,
+    "queueCapacity": 2,
+    "entry": [
+      -1.65,
+      -1.65,
+      0
+    ],
+    "exit": [
+      1.65,
+      -1.65,
+      0
+    ],
+    "slots": [
+      {
+        "id": "jumper",
+        "position": [
+          0,
+          -0.98,
+          5.8
+        ],
+        "pose": "cheer_jump",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            0,
+            0.85,
+            5.8
+          ],
+          [
+            0,
+            0.15,
+            5.8
+          ],
+          [
+            0,
+            -0.98,
+            5.8
+          ]
+        ],
+        "supportObjects": [
+          "JumpRunway"
+        ],
+        "role": "jumper"
+      },
+      {
+        "id": "queue0",
+        "position": [
+          -1.55,
+          -0.8,
+          0
+        ],
+        "pose": "stand",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -1.65,
+            -1.65,
+            0
+          ],
+          [
+            -1.55,
+            -0.8,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "role": "queue"
+      },
+      {
+        "id": "queue1",
+        "position": [
+          -1.55,
+          -0.05,
+          0
+        ],
+        "pose": "stand",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -1.65,
+            -1.65,
+            0
+          ],
+          [
+            -1.55,
+            -0.05,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "role": "queue"
+      }
+    ],
+    "routes": {
+      "entry": [
+        [
+          -1.65,
+          -1.65,
+          0
+        ],
+        [
+          -1.4,
+          -0.75,
+          0
+        ],
+        [
+          -1.35,
+          1.0,
+          0
+        ],
+        [
+          0,
+          0.62,
+          0
+        ]
+      ],
+      "ascent": [
+        [
+          0,
+          0.62,
+          0
+        ],
+        [
+          0,
+          0.85,
+          5.8
+        ]
+      ],
+      "platform": [
+        [
+          0,
+          0.85,
+          5.8
+        ],
+        [
+          0,
+          0.15,
+          5.8
+        ],
+        [
+          0,
+          -0.98,
+          5.8
+        ]
+      ],
+      "jump": [
+        [
+          0,
+          -0.98,
+          5.8
+        ],
+        [
+          0,
+          -1.42,
+          5.25
+        ],
+        [
+          0,
+          -1.42,
+          0.8
+        ]
+      ],
+      "rebound": [
+        [
+          0,
+          -1.42,
+          0.8
+        ],
+        [
+          0,
+          -1.42,
+          3.5
+        ],
+        [
+          0,
+          -1.42,
+          1.2
+        ],
+        [
+          0,
+          -1.42,
+          2.5
+        ],
+        [
+          0,
+          -1.42,
+          1.5
+        ],
+        [
+          0,
+          -1.42,
+          1.9
+        ]
+      ],
+      "recover": [
+        [
+          0,
+          -1.42,
+          1.9
+        ],
+        [
+          0,
+          -1.42,
+          0.24
+        ],
+        [
+          0.65,
+          -1.42,
+          0
+        ],
+        [
+          1.65,
+          -1.65,
+          0
+        ]
+      ]
+    },
+    "rope": {
+      "pivot": [
+        0,
+        -1.42,
+        6.85
+      ],
+      "bodyAttachmentOffset": [
+        0.38,
+        0,
+        0.48
+      ],
+      "bodyAttachmentSpace": "local tiles relative to existing upright NPC feet/root, rotated same as facility",
+      "attachmentType": "visible waist-and-thigh sport harness; outboard carabiner, cheer_jump airborne pose",
+      "restLengthTiles": 2.75,
+      "maximumLengthTiles": 6.1417668467632325,
+      "lowestFeet": [
+        0,
+        -1.42,
+        0.8
+      ],
+      "pickupFeet": [
+        0,
+        -1.42,
+        0.24
+      ],
+      "renderMode": "dynamic line, never baked",
+      "detachAt": "pickupFeet; retract dynamic cable after contact",
+      "maximumElasticLengthTiles": 5.5829472503329285,
+      "maximumWinchPayoutTiles": 6.1417668467632325,
+      "lengthPhaseNote": "Outboard waist-carabiner changes elastic and winch geometric length; derived from lowest/pickup roots and .38X/.48Z attach.",
+      "visualColors": {
+        "cord": [
+          43,
+          135,
+          181
+        ],
+        "harness": [
+          38,
+          205,
+          215
+        ]
+      }
+    },
+    "ascentPortal": {
+      "hideAt": [
+        0,
+        0.62,
+        0
+      ],
+      "showAt": [
+        0,
+        0.85,
+        5.8
+      ],
+      "hiddenSegmentOnly": true,
+      "route": "ascent",
+      "reason": "existing NPC does not supply certified ladder climbing pose; hide only between explicit bottom/top endpoints"
+    },
+    "motion": {
+      "order": [
+        "entry",
+        "ascent",
+        "platform",
+        "jump",
+        "rebound",
+        "recover"
+      ],
+      "reserveWholeRide": true,
+      "releaseReservationAt": "exit",
+      "ascentSeconds": 4,
+      "jumpSeconds": 1.4,
+      "reboundSeconds": 4.0,
+      "recoverSeconds": 3,
+      "interpolation": "continuous smooth segments; damped vertical bungee rebound then controlled winch lowering; no repeated falling/waterfall loop",
+      "airbornePose": "cheer_jump"
+    },
+    "supportObjects": {
+      "platform": [
+        "EquipmentDeck",
+        "JumpRunway"
+      ],
+      "recovery": [
+        "RecoveryPad"
+      ],
+      "ascent": [
+        "LadderRail",
+        "LadderRung"
+      ]
+    },
+    "clearance": {
+      "jumpAxisXY": [
+        0,
+        -1.42
+      ],
+      "actorRadiusTiles": 0.22,
+      "bodyHeightTiles": 1.123,
+      "noBracingBelowLaunchInYLessThan": 0.1,
+      "note": "physical jump motion stays forward of posts/braces; rear camera views can overlap tower pixels and require coordinator depth handling"
+    },
+    "notes": [
+      "All actor centers and radius fit [-2,2] footprint; ground has no facility floor.",
+      "NPC and rope preview is coordinator-owned; no live gameplay or capacity approval.",
+      "Use existing NPC atlas at opaque22px without per-view shrink."
+    ],
+    "sourceCandidateId": "bungee_jump"
+  },
+  "photozone": {
+    "id": "photozone",
+    "size": [
+      2,
+      2
+    ],
+    "currentSize": [
+      2,
+      2
+    ],
+    "logicalSize": 192,
+    "cameraTargetZTiles": 1.8,
+    "coordinateUnits": "numeric centered LOCAL XYZ tiles; X=I Y=-J Zup; heading0=+X pi/2=+Y",
+    "accessKind": "flow",
+    "entry": [
+      -0.78,
+      -0.16,
+      0
+    ],
+    "exit": [
+      0.78,
+      -0.16,
+      0
+    ],
+    "capacity": 2,
+    "capacityProposal": true,
+    "currentLiveCapacity": 0,
+    "waitingSlotCount": 1,
+    "slots": [
+      {
+        "id": "subject-1",
+        "role": "subject",
+        "position": [
+          -0.28,
+          0.28,
+          0.023
+        ],
+        "pose": "stand",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            -0.78,
+            -0.16,
+            0
+          ],
+          [
+            -0.52,
+            -0.18,
+            0
+          ],
+          [
+            -0.28,
+            -0.18,
+            0
+          ],
+          [
+            -0.28,
+            0.28,
+            0.023
+          ]
+        ],
+        "supportObjects": [
+          "Subject_Mark_0",
+          "Subject_MarkCore_0"
+        ],
+        "contactAnchor": "feet",
+        "motion": "walk -> stop -> idle/photo pose -> flash -> exit; no sliding pose transition"
+      },
+      {
+        "id": "subject-2",
+        "role": "subject",
+        "position": [
+          0.28,
+          0.28,
+          0.023
+        ],
+        "pose": "stand",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            -0.78,
+            -0.16,
+            0
+          ],
+          [
+            -0.52,
+            -0.18,
+            0
+          ],
+          [
+            0.28,
+            -0.18,
+            0
+          ],
+          [
+            0.28,
+            0.28,
+            0.023
+          ]
+        ],
+        "supportObjects": [
+          "Subject_Mark_1",
+          "Subject_MarkCore_1"
+        ],
+        "contactAnchor": "feet",
+        "motion": "walk -> stop -> idle/photo pose -> flash -> exit; no sliding pose transition"
+      },
+      {
+        "id": "waiting-1",
+        "role": "waiting",
+        "position": [
+          -0.72,
+          -0.65,
+          0
+        ],
+        "pose": "stand",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -0.78,
+            -0.86,
+            0
+          ],
+          [
+            -0.72,
+            -0.65,
+            0
+          ]
+        ],
+        "supportObjects": []
+      }
+    ],
+    "routes": {
+      "walk_0": [
+        [
+          -0.78,
+          -0.16,
+          0
+        ],
+        [
+          -0.52,
+          -0.18,
+          0
+        ],
+        [
+          -0.28,
+          -0.18,
+          0
+        ],
+        [
+          -0.28,
+          0.28,
+          0.023
+        ]
+      ],
+      "exit_0": [
+        [
+          -0.28,
+          0.28,
+          0.023
+        ],
+        [
+          -0.28,
+          -0.18,
+          0
+        ],
+        [
+          0.78,
+          -0.16,
+          0
+        ]
+      ],
+      "walk_1": [
+        [
+          -0.78,
+          -0.16,
+          0
+        ],
+        [
+          -0.52,
+          -0.18,
+          0
+        ],
+        [
+          0.28,
+          -0.18,
+          0
+        ],
+        [
+          0.28,
+          0.28,
+          0.023
+        ]
+      ],
+      "exit_1": [
+        [
+          0.28,
+          0.28,
+          0.023
+        ],
+        [
+          0.28,
+          -0.18,
+          0
+        ],
+        [
+          0.78,
+          -0.16,
+          0
+        ]
+      ],
+      "waiting_to_entry": [
+        [
+          -0.72,
+          -0.65,
+          0
+        ],
+        [
+          -0.72,
+          -0.35,
+          0
+        ],
+        [
+          -0.78,
+          -0.16,
+          0
+        ]
+      ]
+    },
+    "cameraHead": [
+      0,
+      -0.55,
+      0.84
+    ],
+    "cameraHeadCoordinate": [
+      0,
+      -0.55,
+      0.84
+    ],
+    "flashPosition": [
+      0.09,
+      -0.715,
+      0.985
+    ],
+    "cameraTarget": [
+      0,
+      0.28,
+      0.92
+    ],
+    "photographer": "fixed-camera; no photographer NPC required",
+    "sequence": {
+      "order": [
+        "walk",
+        "pose_idle",
+        "flash",
+        "exit"
+      ],
+      "poseHoldSeconds": 2,
+      "flashSeconds": 0.12,
+      "flashIsRuntimeOverlay": true,
+      "admission": "reserve subject route; enter right subject first then left; exits right subject first then left; wait until traversal cleared",
+      "loop": "Waiting guest enters when previous pair has exited; no teleport between marks"
+    },
+    "obstacles": [
+      {
+        "id": "left-post-buoy",
+        "min": [
+          -0.95,
+          0.19,
+          0
+        ],
+        "max": [
+          -0.58,
+          0.57,
+          1.65
+        ]
+      },
+      {
+        "id": "right-post-flowers",
+        "min": [
+          0.54,
+          0.29,
+          0
+        ],
+        "max": [
+          0.94,
+          0.8,
+          1.65
+        ]
+      },
+      {
+        "id": "camera",
+        "min": [
+          -0.2,
+          -0.89,
+          0
+        ],
+        "max": [
+          0.2,
+          -0.49,
+          1.02
+        ]
+      }
+    ],
+    "actorEnvelope": {
+      "radiusTiles": 0.14,
+      "standingHeightTiles": 1.1226827987756232
+    },
+    "clearance": {
+      "frameInnerX": [
+        -0.6325,
+        0.6325
+      ],
+      "frameInnerTopZ": 1.5,
+      "subjectFootZ": 0.023,
+      "flowerMaxZ": 0.42,
+      "noCrossbarAtFeet": true
+    },
+    "notes": [
+      "Two subjects plus one separate waiting position are preview anchors, not live capacity adoption.",
+      "Low physical cream/blue spot markers are separate small fixtures, not a presentation floor.",
+      "Actual NPC sprite depth and head clearance in all four views are coordinator-owned review gates.",
+      "All approach paths avoid fixed tripod and flower cluster; traverse sequentially to avoid subjects crossing."
+    ],
+    "sourceCandidateId": "photozone"
+  },
+  "pavilion": {
+    "id": "pavilion",
+    "size": [
+      3,
+      3
+    ],
+    "canonical_live_size": [
+      3,
+      3
+    ],
+    "proposed_size": [
+      3,
+      3
+    ],
+    "capacity": 4,
+    "canonicalSource": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/src/data/facilities.json",
+    "cameraTargetZTiles": 1.8,
+    "logicalSize": 192,
+    "accessKind": "flow",
+    "entry": [
+      -1.37,
+      -0.65,
+      0.18
+    ],
+    "exit": [
+      0,
+      -1.37,
+      0.18
+    ],
+    "slots": [
+      {
+        "id": "rear_0",
+        "position": [
+          -0.55,
+          0.75,
+          0.18
+        ],
+        "seatContact": [
+          -0.55,
+          0.99,
+          0.56
+        ],
+        "pose": "sit_chair",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            -1.37,
+            -0.65,
+            0.18
+          ],
+          [
+            -0.65,
+            -0.65,
+            0.18
+          ],
+          [
+            -0.55,
+            0,
+            0.18
+          ],
+          [
+            -0.55,
+            0.75,
+            0.18
+          ]
+        ],
+        "supportObjects": [
+          "Bench_Rear"
+        ]
+      },
+      {
+        "id": "rear_1",
+        "position": [
+          0.55,
+          0.75,
+          0.18
+        ],
+        "seatContact": [
+          0.55,
+          0.99,
+          0.56
+        ],
+        "pose": "sit_chair",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            -1.37,
+            -0.65,
+            0.18
+          ],
+          [
+            -0.65,
+            -0.65,
+            0.18
+          ],
+          [
+            0.55,
+            0,
+            0.18
+          ],
+          [
+            0.55,
+            0.75,
+            0.18
+          ]
+        ],
+        "supportObjects": [
+          "Bench_Rear"
+        ]
+      },
+      {
+        "id": "right_0",
+        "position": [
+          0.77,
+          -0.5,
+          0.18
+        ],
+        "seatContact": [
+          1.01,
+          -0.5,
+          0.56
+        ],
+        "pose": "sit_chair",
+        "heading": 3.141592653589793,
+        "approach": [
+          [
+            -1.37,
+            -0.65,
+            0.18
+          ],
+          [
+            -0.65,
+            -0.65,
+            0.18
+          ],
+          [
+            0.25,
+            -0.65,
+            0.18
+          ],
+          [
+            0.25,
+            -0.5,
+            0.18
+          ],
+          [
+            0.77,
+            -0.5,
+            0.18
+          ]
+        ],
+        "supportObjects": [
+          "Bench_Right"
+        ]
+      },
+      {
+        "id": "right_1",
+        "position": [
+          0.77,
+          0.4,
+          0.18
+        ],
+        "seatContact": [
+          1.01,
+          0.4,
+          0.56
+        ],
+        "pose": "sit_chair",
+        "heading": 3.141592653589793,
+        "approach": [
+          [
+            -1.37,
+            -0.65,
+            0.18
+          ],
+          [
+            -0.65,
+            -0.65,
+            0.18
+          ],
+          [
+            0.25,
+            -0.65,
+            0.18
+          ],
+          [
+            0.25,
+            0.4,
+            0.18
+          ],
+          [
+            0.77,
+            0.4,
+            0.18
+          ]
+        ],
+        "supportObjects": [
+          "Bench_Right"
+        ]
+      }
+    ],
+    "routes": {
+      "entry_to_center": [
+        [
+          -1.37,
+          -0.65,
+          0.18
+        ],
+        [
+          -0.65,
+          -0.65,
+          0.18
+        ],
+        [
+          0,
+          0,
+          0.18
+        ]
+      ],
+      "center_to_exit": [
+        [
+          0,
+          0,
+          0.18
+        ],
+        [
+          0,
+          -0.75,
+          0.18
+        ],
+        [
+          0,
+          -1.37,
+          0.18
+        ]
+      ]
+    },
+    "coordinateUnits": "local XYZ tiles; X=I, Y=-J, Zup; heading0=+X pi/2=+Y",
+    "floorZ": 0.18,
+    "actorRadiusTiles": 0.12,
+    "transition": "standing to sit_chair switch at identical foot anchor without sliding",
+    "entryThreshold": {
+      "position": [
+        -1.37,
+        -0.65,
+        0.18
+      ],
+      "supportZ": 0.18,
+      "groundZ": 0,
+      "kind": "single low step onto integral deck; external approach belongs to surrounding map"
+    },
+    "occlusion": "Roof and posts remain physical; coordinator owns roof-aware NPC depth/visibility preview",
+    "gate": "AUTHORED_NPC_CANDIDATE_USER_REVIEW",
+    "roofGate": "ROOF_PROPORTION_USER_REVIEW",
+    "live_files_modified": false,
+    "sourceCandidateId": "pavilion"
+  },
+  "stage_river_lv2": {
+    "id": "stage_river_lv2",
+    "size": [
+      5,
+      4
+    ],
+    "proposed_size": [
+      5,
+      4
+    ],
+    "capacity": 8,
+    "performerCount": 1,
+    "accessKind": "flow",
+    "entry": [
+      -2.25,
+      -1.82,
+      0
+    ],
+    "exit": [
+      2.25,
+      -1.82,
+      0
+    ],
+    "slots": [
+      {
+        "id": "performer",
+        "role": "performer",
+        "position": [
+          0.1,
+          1.05,
+          0.248
+        ],
+        "pose": "stand",
+        "motion": "idle",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            -2.25,
+            1.12,
+            0
+          ],
+          [
+            -1.96,
+            1.12,
+            0.12
+          ],
+          [
+            -1.62,
+            1.12,
+            0.248
+          ],
+          [
+            -0.8,
+            1.35,
+            0.248
+          ],
+          [
+            0,
+            1.35,
+            0.248
+          ],
+          [
+            0.1,
+            1.05,
+            0.248
+          ]
+        ],
+        "exitApproach": [
+          [
+            0.1,
+            1.05,
+            0.248
+          ],
+          [
+            0,
+            1.35,
+            0.248
+          ],
+          [
+            -0.8,
+            1.35,
+            0.248
+          ],
+          [
+            -1.62,
+            1.12,
+            0.248
+          ],
+          [
+            -1.96,
+            1.12,
+            0.12
+          ],
+          [
+            -2.25,
+            1.12,
+            0
+          ],
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Stage_Deck",
+          "Stage_Plank.009"
+        ]
+      },
+      {
+        "id": "audience_0",
+        "role": "audience",
+        "position": [
+          -1.5,
+          -0.21,
+          0
+        ],
+        "seatContact": [
+          -1.5,
+          -0.45,
+          0.38
+        ],
+        "seatObject": "Chair_0_Seat",
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            -2.25,
+            0.15,
+            0
+          ],
+          [
+            -1.5,
+            0.15,
+            0
+          ],
+          [
+            -1.5,
+            -0.21,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            -1.5,
+            -0.21,
+            0
+          ],
+          [
+            -1.5,
+            0.15,
+            0
+          ],
+          [
+            -2.25,
+            0.15,
+            0
+          ],
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Chair_0_Seat"
+        ],
+        "transition": "reach foot anchor then switch pose in place"
+      },
+      {
+        "id": "audience_1",
+        "role": "audience",
+        "position": [
+          -0.65,
+          -0.21,
+          0
+        ],
+        "seatContact": [
+          -0.65,
+          -0.45,
+          0.38
+        ],
+        "seatObject": "Chair_1_Seat",
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            -2.25,
+            0.15,
+            0
+          ],
+          [
+            -0.65,
+            0.15,
+            0
+          ],
+          [
+            -0.65,
+            -0.21,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            -0.65,
+            -0.21,
+            0
+          ],
+          [
+            -0.65,
+            0.15,
+            0
+          ],
+          [
+            -2.25,
+            0.15,
+            0
+          ],
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Chair_1_Seat"
+        ],
+        "transition": "reach foot anchor then switch pose in place"
+      },
+      {
+        "id": "audience_2",
+        "role": "audience",
+        "position": [
+          0.65,
+          -0.21,
+          0
+        ],
+        "seatContact": [
+          0.65,
+          -0.45,
+          0.38
+        ],
+        "seatObject": "Chair_2_Seat",
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            0.15,
+            0
+          ],
+          [
+            0.65,
+            0.15,
+            0
+          ],
+          [
+            0.65,
+            -0.21,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            0.65,
+            -0.21,
+            0
+          ],
+          [
+            0.65,
+            0.15,
+            0
+          ],
+          [
+            2.25,
+            0.15,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Chair_2_Seat"
+        ],
+        "transition": "reach foot anchor then switch pose in place"
+      },
+      {
+        "id": "audience_3",
+        "role": "audience",
+        "position": [
+          1.5,
+          -0.21,
+          0
+        ],
+        "seatContact": [
+          1.5,
+          -0.45,
+          0.38
+        ],
+        "seatObject": "Chair_3_Seat",
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            0.15,
+            0
+          ],
+          [
+            1.5,
+            0.15,
+            0
+          ],
+          [
+            1.5,
+            -0.21,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            1.5,
+            -0.21,
+            0
+          ],
+          [
+            1.5,
+            0.15,
+            0
+          ],
+          [
+            2.25,
+            0.15,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Chair_3_Seat"
+        ],
+        "transition": "reach foot anchor then switch pose in place"
+      },
+      {
+        "id": "audience_4",
+        "role": "audience",
+        "position": [
+          -1.5,
+          -1.16,
+          0
+        ],
+        "seatContact": [
+          -1.5,
+          -1.4,
+          0.38
+        ],
+        "seatObject": "Chair_4_Seat",
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            -2.25,
+            -0.85,
+            0
+          ],
+          [
+            -1.5,
+            -0.85,
+            0
+          ],
+          [
+            -1.5,
+            -1.16,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            -1.5,
+            -1.16,
+            0
+          ],
+          [
+            -1.5,
+            -0.85,
+            0
+          ],
+          [
+            -2.25,
+            -0.85,
+            0
+          ],
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Chair_4_Seat"
+        ],
+        "transition": "reach foot anchor then switch pose in place"
+      },
+      {
+        "id": "audience_5",
+        "role": "audience",
+        "position": [
+          -0.65,
+          -1.16,
+          0
+        ],
+        "seatContact": [
+          -0.65,
+          -1.4,
+          0.38
+        ],
+        "seatObject": "Chair_5_Seat",
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            -2.25,
+            -0.85,
+            0
+          ],
+          [
+            -0.65,
+            -0.85,
+            0
+          ],
+          [
+            -0.65,
+            -1.16,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            -0.65,
+            -1.16,
+            0
+          ],
+          [
+            -0.65,
+            -0.85,
+            0
+          ],
+          [
+            -2.25,
+            -0.85,
+            0
+          ],
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Chair_5_Seat"
+        ],
+        "transition": "reach foot anchor then switch pose in place"
+      },
+      {
+        "id": "audience_6",
+        "role": "audience",
+        "position": [
+          0.65,
+          -1.16,
+          0
+        ],
+        "seatContact": [
+          0.65,
+          -1.4,
+          0.38
+        ],
+        "seatObject": "Chair_6_Seat",
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -0.85,
+            0
+          ],
+          [
+            0.65,
+            -0.85,
+            0
+          ],
+          [
+            0.65,
+            -1.16,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            0.65,
+            -1.16,
+            0
+          ],
+          [
+            0.65,
+            -0.85,
+            0
+          ],
+          [
+            2.25,
+            -0.85,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Chair_6_Seat"
+        ],
+        "transition": "reach foot anchor then switch pose in place"
+      },
+      {
+        "id": "audience_7",
+        "role": "audience",
+        "position": [
+          1.5,
+          -1.16,
+          0
+        ],
+        "seatContact": [
+          1.5,
+          -1.4,
+          0.38
+        ],
+        "seatObject": "Chair_7_Seat",
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -0.85,
+            0
+          ],
+          [
+            1.5,
+            -0.85,
+            0
+          ],
+          [
+            1.5,
+            -1.16,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            1.5,
+            -1.16,
+            0
+          ],
+          [
+            1.5,
+            -0.85,
+            0
+          ],
+          [
+            2.25,
+            -0.85,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ],
+          [
+            2.25,
+            -1.82,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Chair_7_Seat"
+        ],
+        "transition": "reach foot anchor then switch pose in place"
+      }
+    ],
+    "admissionOrder": [
+      "audience_1",
+      "audience_2",
+      "audience_0",
+      "audience_3",
+      "audience_5",
+      "audience_6",
+      "audience_4",
+      "audience_7"
+    ],
+    "exitOrder": [
+      "audience_7",
+      "audience_4",
+      "audience_6",
+      "audience_5",
+      "audience_3",
+      "audience_0",
+      "audience_2",
+      "audience_1"
+    ],
+    "coordinateUnits": "local XYZ tiles; X=I Y=-J Z=up; centered root",
+    "poseContactConvention": "position foot origin; seatContact pelvis support at z=.38 with local y offset -.24",
+    "actorPathRadiusTiles": 0.175,
+    "minimumAisleWidthTiles": 0.35,
+    "aisles": {
+      "left": {
+        "centerX": -2.25,
+        "clearWidth": 0.5
+      },
+      "right": {
+        "centerX": 2.25,
+        "clearWidth": 0.5
+      },
+      "center": {
+        "centerX": 0,
+        "clearWidth": 0.84
+      },
+      "rear": {
+        "centerY": -1.82,
+        "clearWidth": 0.35
+      }
+    },
+    "footprintBounds": [
+      [
+        -2.5,
+        -2,
+        0
+      ],
+      [
+        2.5,
+        2,
+        2.14
+      ]
+    ],
+    "intrinsicPlatform": {
+      "owner": "Stage_Deck",
+      "bounds": [
+        [
+          -1.8,
+          0.54,
+          0.08
+        ],
+        [
+          1.8,
+          1.8,
+          0.248
+        ]
+      ],
+      "meaning": "performer equipment platform only, no audience floor"
+    },
+    "gate": "AUTHORED_NPC_CANDIDATE_USER_REVIEW",
+    "live_files_modified": false,
+    "sourceCandidateId": "stage_river_lv2"
+  },
+  "stage_river_lv3": {
+    "id": "stage_river_lv3",
+    "size": [
+      6,
+      5
+    ],
+    "capacity": 12,
+    "proposalAudienceCount": 12,
+    "proposalPerformerCount": 1,
+    "canonical_live_id": "stage_river",
+    "canonical_live_size": [
+      3,
+      2
+    ],
+    "proposed_size": [
+      6,
+      5
+    ],
+    "new_id": true,
+    "accessKind": "flow",
+    "entry": [
+      -2.65,
+      -2.32,
+      0
+    ],
+    "exit": [
+      2.65,
+      -2.32,
+      0
+    ],
+    "slots": [
+      {
+        "id": "performer",
+        "role": "performer",
+        "position": [
+          0,
+          1.22,
+          0.288
+        ],
+        "pose": "idle",
+        "heading": -1.5707963267948966,
+        "seatObject": null,
+        "supportObjects": [
+          "Stage_Deck",
+          "Stage_Plank_10"
+        ],
+        "approach": [
+          [
+            -2.65,
+            -2.32,
+            0
+          ],
+          [
+            -2.65,
+            1.55,
+            0
+          ],
+          [
+            -2.45,
+            1.55,
+            0.14
+          ],
+          [
+            -2.1,
+            1.55,
+            0.288
+          ],
+          [
+            0,
+            1.55,
+            0.288
+          ],
+          [
+            0,
+            1.22,
+            0.288
+          ]
+        ],
+        "exitApproach": [
+          [
+            0,
+            1.22,
+            0.288
+          ],
+          [
+            0,
+            1.55,
+            0.288
+          ],
+          [
+            -2.1,
+            1.55,
+            0.288
+          ],
+          [
+            -2.45,
+            1.55,
+            0.14
+          ],
+          [
+            -2.65,
+            1.55,
+            0
+          ],
+          [
+            -2.65,
+            -2.32,
+            0
+          ],
+          [
+            2.65,
+            -2.32,
+            0
+          ]
+        ]
+      },
+      {
+        "id": "audience_0",
+        "role": "audience",
+        "position": [
+          -1.65,
+          0.27,
+          0
+        ],
+        "seatContact": [
+          -1.65,
+          0.05,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "seatObject": "Chair_0_Seat",
+        "supportObjects": [
+          "Chair_0_Seat"
+        ],
+        "approach": [
+          [
+            -2.65,
+            -2.32,
+            0
+          ],
+          [
+            -2.5,
+            -2.32,
+            0
+          ],
+          [
+            -2.5,
+            0.53,
+            0
+          ],
+          [
+            -1.65,
+            0.53,
+            0
+          ],
+          [
+            -1.65,
+            0.27,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            -1.65,
+            0.27,
+            0
+          ],
+          [
+            -1.65,
+            0.53,
+            0
+          ],
+          [
+            -2.5,
+            0.53,
+            0
+          ],
+          [
+            -2.5,
+            -2.32,
+            0
+          ],
+          [
+            2.65,
+            -2.32,
+            0
+          ]
+        ],
+        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+      },
+      {
+        "id": "audience_1",
+        "role": "audience",
+        "position": [
+          -0.75,
+          0.27,
+          0
+        ],
+        "seatContact": [
+          -0.75,
+          0.05,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "seatObject": "Chair_1_Seat",
+        "supportObjects": [
+          "Chair_1_Seat"
+        ],
+        "approach": [
+          [
+            -2.65,
+            -2.32,
+            0
+          ],
+          [
+            0,
+            -2.32,
+            0
+          ],
+          [
+            0,
+            0.53,
+            0
+          ],
+          [
+            -0.75,
+            0.53,
+            0
+          ],
+          [
+            -0.75,
+            0.27,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            -0.75,
+            0.27,
+            0
+          ],
+          [
+            -0.75,
+            0.53,
+            0
+          ],
+          [
+            0,
+            0.53,
+            0
+          ],
+          [
+            0,
+            -2.32,
+            0
+          ],
+          [
+            2.65,
+            -2.32,
+            0
+          ]
+        ],
+        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+      },
+      {
+        "id": "audience_2",
+        "role": "audience",
+        "position": [
+          0.75,
+          0.27,
+          0
+        ],
+        "seatContact": [
+          0.75,
+          0.05,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "seatObject": "Chair_2_Seat",
+        "supportObjects": [
+          "Chair_2_Seat"
+        ],
+        "approach": [
+          [
+            -2.65,
+            -2.32,
+            0
+          ],
+          [
+            0,
+            -2.32,
+            0
+          ],
+          [
+            0,
+            0.53,
+            0
+          ],
+          [
+            0.75,
+            0.53,
+            0
+          ],
+          [
+            0.75,
+            0.27,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            0.75,
+            0.27,
+            0
+          ],
+          [
+            0.75,
+            0.53,
+            0
+          ],
+          [
+            0,
+            0.53,
+            0
+          ],
+          [
+            0,
+            -2.32,
+            0
+          ],
+          [
+            2.65,
+            -2.32,
+            0
+          ]
+        ],
+        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+      },
+      {
+        "id": "audience_3",
+        "role": "audience",
+        "position": [
+          1.65,
+          0.27,
+          0
+        ],
+        "seatContact": [
+          1.65,
+          0.05,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "seatObject": "Chair_3_Seat",
+        "supportObjects": [
+          "Chair_3_Seat"
+        ],
+        "approach": [
+          [
+            -2.65,
+            -2.32,
+            0
+          ],
+          [
+            2.5,
+            -2.32,
+            0
+          ],
+          [
+            2.5,
+            0.53,
+            0
+          ],
+          [
+            1.65,
+            0.53,
+            0
+          ],
+          [
+            1.65,
+            0.27,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            1.65,
+            0.27,
+            0
+          ],
+          [
+            1.65,
+            0.53,
+            0
+          ],
+          [
+            2.5,
+            0.53,
+            0
+          ],
+          [
+            2.5,
+            -2.32,
+            0
+          ],
+          [
+            2.65,
+            -2.32,
+            0
+          ]
+        ],
+        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+      },
+      {
+        "id": "audience_4",
+        "role": "audience",
+        "position": [
+          -1.65,
+          -0.68,
+          0
+        ],
+        "seatContact": [
+          -1.65,
+          -0.9,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "seatObject": "Chair_4_Seat",
+        "supportObjects": [
+          "Chair_4_Seat"
+        ],
+        "approach": [
+          [
+            -2.65,
+            -2.32,
+            0
+          ],
+          [
+            -2.5,
+            -2.32,
+            0
+          ],
+          [
+            -2.5,
+            -0.42,
+            0
+          ],
+          [
+            -1.65,
+            -0.42,
+            0
+          ],
+          [
+            -1.65,
+            -0.68,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            -1.65,
+            -0.68,
+            0
+          ],
+          [
+            -1.65,
+            -0.42,
+            0
+          ],
+          [
+            -2.5,
+            -0.42,
+            0
+          ],
+          [
+            -2.5,
+            -2.32,
+            0
+          ],
+          [
+            2.65,
+            -2.32,
+            0
+          ]
+        ],
+        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+      },
+      {
+        "id": "audience_5",
+        "role": "audience",
+        "position": [
+          -0.75,
+          -0.68,
+          0
+        ],
+        "seatContact": [
+          -0.75,
+          -0.9,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "seatObject": "Chair_5_Seat",
+        "supportObjects": [
+          "Chair_5_Seat"
+        ],
+        "approach": [
+          [
+            -2.65,
+            -2.32,
+            0
+          ],
+          [
+            0,
+            -2.32,
+            0
+          ],
+          [
+            0,
+            -0.42,
+            0
+          ],
+          [
+            -0.75,
+            -0.42,
+            0
+          ],
+          [
+            -0.75,
+            -0.68,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            -0.75,
+            -0.68,
+            0
+          ],
+          [
+            -0.75,
+            -0.42,
+            0
+          ],
+          [
+            0,
+            -0.42,
+            0
+          ],
+          [
+            0,
+            -2.32,
+            0
+          ],
+          [
+            2.65,
+            -2.32,
+            0
+          ]
+        ],
+        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+      },
+      {
+        "id": "audience_6",
+        "role": "audience",
+        "position": [
+          0.75,
+          -0.68,
+          0
+        ],
+        "seatContact": [
+          0.75,
+          -0.9,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "seatObject": "Chair_6_Seat",
+        "supportObjects": [
+          "Chair_6_Seat"
+        ],
+        "approach": [
+          [
+            -2.65,
+            -2.32,
+            0
+          ],
+          [
+            0,
+            -2.32,
+            0
+          ],
+          [
+            0,
+            -0.42,
+            0
+          ],
+          [
+            0.75,
+            -0.42,
+            0
+          ],
+          [
+            0.75,
+            -0.68,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            0.75,
+            -0.68,
+            0
+          ],
+          [
+            0.75,
+            -0.42,
+            0
+          ],
+          [
+            0,
+            -0.42,
+            0
+          ],
+          [
+            0,
+            -2.32,
+            0
+          ],
+          [
+            2.65,
+            -2.32,
+            0
+          ]
+        ],
+        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+      },
+      {
+        "id": "audience_7",
+        "role": "audience",
+        "position": [
+          1.65,
+          -0.68,
+          0
+        ],
+        "seatContact": [
+          1.65,
+          -0.9,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "seatObject": "Chair_7_Seat",
+        "supportObjects": [
+          "Chair_7_Seat"
+        ],
+        "approach": [
+          [
+            -2.65,
+            -2.32,
+            0
+          ],
+          [
+            2.5,
+            -2.32,
+            0
+          ],
+          [
+            2.5,
+            -0.42,
+            0
+          ],
+          [
+            1.65,
+            -0.42,
+            0
+          ],
+          [
+            1.65,
+            -0.68,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            1.65,
+            -0.68,
+            0
+          ],
+          [
+            1.65,
+            -0.42,
+            0
+          ],
+          [
+            2.5,
+            -0.42,
+            0
+          ],
+          [
+            2.5,
+            -2.32,
+            0
+          ],
+          [
+            2.65,
+            -2.32,
+            0
+          ]
+        ],
+        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+      },
+      {
+        "id": "audience_8",
+        "role": "audience",
+        "position": [
+          -1.65,
+          -1.63,
+          0
+        ],
+        "seatContact": [
+          -1.65,
+          -1.85,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "seatObject": "Chair_8_Seat",
+        "supportObjects": [
+          "Chair_8_Seat"
+        ],
+        "approach": [
+          [
+            -2.65,
+            -2.32,
+            0
+          ],
+          [
+            -2.5,
+            -2.32,
+            0
+          ],
+          [
+            -2.5,
+            -1.37,
+            0
+          ],
+          [
+            -1.65,
+            -1.37,
+            0
+          ],
+          [
+            -1.65,
+            -1.63,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            -1.65,
+            -1.63,
+            0
+          ],
+          [
+            -1.65,
+            -1.37,
+            0
+          ],
+          [
+            -2.5,
+            -1.37,
+            0
+          ],
+          [
+            -2.5,
+            -2.32,
+            0
+          ],
+          [
+            2.65,
+            -2.32,
+            0
+          ]
+        ],
+        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+      },
+      {
+        "id": "audience_9",
+        "role": "audience",
+        "position": [
+          -0.75,
+          -1.63,
+          0
+        ],
+        "seatContact": [
+          -0.75,
+          -1.85,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "seatObject": "Chair_9_Seat",
+        "supportObjects": [
+          "Chair_9_Seat"
+        ],
+        "approach": [
+          [
+            -2.65,
+            -2.32,
+            0
+          ],
+          [
+            0,
+            -2.32,
+            0
+          ],
+          [
+            0,
+            -1.37,
+            0
+          ],
+          [
+            -0.75,
+            -1.37,
+            0
+          ],
+          [
+            -0.75,
+            -1.63,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            -0.75,
+            -1.63,
+            0
+          ],
+          [
+            -0.75,
+            -1.37,
+            0
+          ],
+          [
+            0,
+            -1.37,
+            0
+          ],
+          [
+            0,
+            -2.32,
+            0
+          ],
+          [
+            2.65,
+            -2.32,
+            0
+          ]
+        ],
+        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+      },
+      {
+        "id": "audience_10",
+        "role": "audience",
+        "position": [
+          0.75,
+          -1.63,
+          0
+        ],
+        "seatContact": [
+          0.75,
+          -1.85,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "seatObject": "Chair_10_Seat",
+        "supportObjects": [
+          "Chair_10_Seat"
+        ],
+        "approach": [
+          [
+            -2.65,
+            -2.32,
+            0
+          ],
+          [
+            0,
+            -2.32,
+            0
+          ],
+          [
+            0,
+            -1.37,
+            0
+          ],
+          [
+            0.75,
+            -1.37,
+            0
+          ],
+          [
+            0.75,
+            -1.63,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            0.75,
+            -1.63,
+            0
+          ],
+          [
+            0.75,
+            -1.37,
+            0
+          ],
+          [
+            0,
+            -1.37,
+            0
+          ],
+          [
+            0,
+            -2.32,
+            0
+          ],
+          [
+            2.65,
+            -2.32,
+            0
+          ]
+        ],
+        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+      },
+      {
+        "id": "audience_11",
+        "role": "audience",
+        "position": [
+          1.65,
+          -1.63,
+          0
+        ],
+        "seatContact": [
+          1.65,
+          -1.85,
+          0.38
+        ],
+        "pose": "sit_chair",
+        "heading": 1.5707963267948966,
+        "seatObject": "Chair_11_Seat",
+        "supportObjects": [
+          "Chair_11_Seat"
+        ],
+        "approach": [
+          [
+            -2.65,
+            -2.32,
+            0
+          ],
+          [
+            2.5,
+            -2.32,
+            0
+          ],
+          [
+            2.5,
+            -1.37,
+            0
+          ],
+          [
+            1.65,
+            -1.37,
+            0
+          ],
+          [
+            1.65,
+            -1.63,
+            0
+          ]
+        ],
+        "exitApproach": [
+          [
+            1.65,
+            -1.63,
+            0
+          ],
+          [
+            1.65,
+            -1.37,
+            0
+          ],
+          [
+            2.5,
+            -1.37,
+            0
+          ],
+          [
+            2.5,
+            -2.32,
+            0
+          ],
+          [
+            2.65,
+            -2.32,
+            0
+          ]
+        ],
+        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
+      }
+    ],
+    "admissionOrder": [
+      "audience_1",
+      "audience_2",
+      "audience_0",
+      "audience_3",
+      "audience_5",
+      "audience_6",
+      "audience_4",
+      "audience_7",
+      "audience_9",
+      "audience_10",
+      "audience_8",
+      "audience_11"
+    ],
+    "exitOrder": [
+      "audience_11",
+      "audience_8",
+      "audience_10",
+      "audience_9",
+      "audience_7",
+      "audience_4",
+      "audience_6",
+      "audience_5",
+      "audience_3",
+      "audience_0",
+      "audience_2",
+      "audience_1"
+    ],
+    "actorPathRadiusTiles": 0.12,
+    "minimumAisleWidthTiles": 0.35,
+    "coordinateUnits": "numeric local XYZ tiles; +X=I, +Y=-J, Z up",
+    "logicalSize": 256,
+    "cameraTargetZTiles": 1.8,
+    "poseContactConvention": "position is actor foot origin; seatContact is separate pelvis support; never substitute seat height for actor origin",
+    "occlusion": "Rear canopy and posts may occlude performer naturally; coordinator owns NPC depth and final occupancy review",
+    "gate": "AUTHORED_NPC_CANDIDATE_USER_REVIEW",
+    "live_files_modified": false,
+    "sourceCandidateId": "stage_river_lv3"
+  }
+}

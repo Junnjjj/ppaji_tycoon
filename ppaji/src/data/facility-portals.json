@@ -1,0 +1,497 @@
+{
+  "pension_1f": {
+    "id": "pension_1f",
+    "size": [
+      5,
+      4
+    ],
+    "currentSize": [
+      5,
+      4
+    ],
+    "floorZ": 0.09,
+    "accessKind": "portal",
+    "entry": [
+      0,
+      -1.825,
+      0.22
+    ],
+    "portal": {
+      "approach": [
+        [
+          0,
+          -2.35,
+          0
+        ],
+        [
+          0,
+          -2.0,
+          0.09
+        ],
+        [
+          0,
+          -1.975,
+          0.15
+        ],
+        [
+          0,
+          -1.94,
+          0.22
+        ],
+        [
+          0,
+          -1.825,
+          0.22
+        ]
+      ],
+      "threshold": [
+        0,
+        -1.825,
+        0.22
+      ],
+      "inside": [
+        0,
+        -1.52,
+        0.22
+      ],
+      "capacity": 6,
+      "capacitySource": "capacityOf(def, placedFacility)",
+      "defaultCapacity": 6,
+      "route": [
+        [
+          0,
+          -2.35,
+          0
+        ],
+        [
+          0,
+          -2.0,
+          0.15
+        ],
+        [
+          0,
+          -1.975,
+          0.15
+        ],
+        [
+          0,
+          -1.94,
+          0.22
+        ],
+        [
+          0,
+          -1.825,
+          0.22
+        ]
+      ],
+      "behavior": "walk to exterior approach, climb front step to physical threshold, hide after admission, reappear at same door",
+      "parentFacilityId": "pension",
+      "definitionSource": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/src/data/facilities.json",
+      "definitionSourceSha256": "c5650c6f0f68c8ea2931746d96f89d897625c5330369902a10a4499717c919db",
+      "defaultUseTicks": 18
+    },
+    "slots": [],
+    "staffAnchors": [],
+    "obstacles": [],
+    "notes": [
+      "Coordinates in centered local tile units: +X=+I, -Y=+J, Z=height; multiply by sqrt(512) for Blender world coordinates",
+      "Threshold top 0.22 tile = 4.978031739553295 world; door leaf bottom same height",
+      "Step top .15; landing/threshold top .22; central route clear width 1.10 tile",
+      "No NPCs baked into facility; runtime pathfinding and occlusion owned by coordinator",
+      "Portal slots empty intentionally; capacity does not derive from doors or displayed slots"
+    ]
+  },
+  "pension_2f": {
+    "id": "pension_2f",
+    "size": [
+      5,
+      4
+    ],
+    "currentSize": [
+      5,
+      4
+    ],
+    "floorZ": 0.09,
+    "accessKind": "portal",
+    "entry": [
+      0,
+      -1.825,
+      0.22
+    ],
+    "portal": {
+      "approach": [
+        [
+          0,
+          -2.35,
+          0
+        ],
+        [
+          0,
+          -2.0,
+          0.09
+        ],
+        [
+          0,
+          -1.975,
+          0.15
+        ],
+        [
+          0,
+          -1.94,
+          0.22
+        ],
+        [
+          0,
+          -1.825,
+          0.22
+        ]
+      ],
+      "threshold": [
+        0,
+        -1.825,
+        0.22
+      ],
+      "inside": [
+        0,
+        -1.52,
+        0.22
+      ],
+      "capacity": 6,
+      "capacitySource": "capacityOf(def, placedFacility)",
+      "defaultCapacity": 6,
+      "route": [
+        [
+          0,
+          -2.35,
+          0
+        ],
+        [
+          0,
+          -2.0,
+          0.15
+        ],
+        [
+          0,
+          -1.975,
+          0.15
+        ],
+        [
+          0,
+          -1.94,
+          0.22
+        ],
+        [
+          0,
+          -1.825,
+          0.22
+        ]
+      ],
+      "behavior": "walk to exterior approach, climb front step to physical threshold, hide after admission, reappear at same door",
+      "parentFacilityId": "pension",
+      "definitionSource": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/src/data/facilities.json",
+      "definitionSourceSha256": "c5650c6f0f68c8ea2931746d96f89d897625c5330369902a10a4499717c919db",
+      "defaultUseTicks": 18
+    },
+    "slots": [],
+    "staffAnchors": [],
+    "obstacles": [],
+    "notes": [
+      "Coordinates in centered local tile units: +X=+I, -Y=+J, Z=height; multiply by sqrt(512) for Blender world coordinates",
+      "Threshold top 0.22 tile = 4.978031739553295 world; door leaf bottom same height",
+      "Step top .15; landing/threshold top .22; central route clear width 1.10 tile",
+      "No NPCs baked into facility; runtime pathfinding and occlusion owned by coordinator",
+      "Portal slots empty intentionally; capacity does not derive from doors or displayed slots"
+    ]
+  },
+  "pension": {
+    "id": "pension",
+    "size": [
+      5,
+      4
+    ],
+    "currentSize": [
+      5,
+      4
+    ],
+    "floorZ": 0.09,
+    "accessKind": "portal",
+    "entry": [
+      0,
+      -1.825,
+      0.22
+    ],
+    "portal": {
+      "approach": [
+        [
+          0,
+          -2.35,
+          0
+        ],
+        [
+          0,
+          -2.0,
+          0.09
+        ],
+        [
+          0,
+          -1.975,
+          0.15
+        ],
+        [
+          0,
+          -1.94,
+          0.22
+        ],
+        [
+          0,
+          -1.825,
+          0.22
+        ]
+      ],
+      "threshold": [
+        0,
+        -1.825,
+        0.22
+      ],
+      "inside": [
+        0,
+        -1.52,
+        0.22
+      ],
+      "capacity": 6,
+      "capacitySource": "capacityOf(def, placedFacility)",
+      "defaultCapacity": 6,
+      "route": [
+        [
+          0,
+          -2.35,
+          0
+        ],
+        [
+          0,
+          -2.0,
+          0.15
+        ],
+        [
+          0,
+          -1.975,
+          0.15
+        ],
+        [
+          0,
+          -1.94,
+          0.22
+        ],
+        [
+          0,
+          -1.825,
+          0.22
+        ]
+      ],
+      "behavior": "walk to exterior approach, climb front step to physical threshold, hide after admission, reappear at same door",
+      "parentFacilityId": "pension",
+      "definitionSource": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/src/data/facilities.json",
+      "definitionSourceSha256": "c5650c6f0f68c8ea2931746d96f89d897625c5330369902a10a4499717c919db",
+      "defaultUseTicks": 18
+    },
+    "slots": [],
+    "staffAnchors": [],
+    "obstacles": [],
+    "notes": [
+      "Coordinates in centered local tile units: +X=+I, -Y=+J, Z=height; multiply by sqrt(512) for Blender world coordinates",
+      "Threshold top 0.22 tile = 4.978031739553295 world; door leaf bottom same height",
+      "Step top .15; landing/threshold top .22; central route clear width 1.10 tile",
+      "No NPCs baked into facility; runtime pathfinding and occlusion owned by coordinator",
+      "Portal slots empty intentionally; capacity does not derive from doors or displayed slots"
+    ]
+  },
+  "cafe": {
+    "id": "cafe",
+    "size": [
+      3,
+      2
+    ],
+    "currentSize": [
+      3,
+      2
+    ],
+    "floorZ": 0.1,
+    "accessKind": "portal",
+    "entry": [
+      -0.9,
+      -0.9,
+      0.1
+    ],
+    "portal": {
+      "approach": [
+        [
+          -0.9,
+          -1.35,
+          0
+        ],
+        [
+          -0.9,
+          -1.04,
+          0
+        ],
+        [
+          -0.9,
+          -0.9,
+          0.1
+        ]
+      ],
+      "threshold": [
+        -0.9,
+        -0.9,
+        0.1
+      ],
+      "inside": [
+        -0.9,
+        -0.6,
+        0.1
+      ],
+      "capacitySource": "capacityOf(def, placedFacility)",
+      "defaultCapacity": 4,
+      "inheritParent": "cafe",
+      "capacityDefinitionSource": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/src/data/facilities.json",
+      "useTicks": 12
+    },
+    "slots": [],
+    "staffAnchors": [],
+    "obstacles": [],
+    "notes": [
+      "All coordinates local tile units; +X=+I, +Y=-J; multiply xyz by sqrt(512) for Blender world.",
+      "No exterior customer counter standing; interior furnishing decorative; no baked NPC.",
+      "Runtime routing and admission demonstration pending coordinator integration.",
+      "Main cafe capacity=4/useTicks=12 are defaults; capacityOf(def, placedFacility) evaluates live level/chainScale; clones inherit cafe parent.",
+      "Physical sill top: 0.1 tiles, world xyz [-20.36467529817257, -20.36467529817257, 2.2627416997969525]. Interior floor is 0.10 tiles; modern frame sill is 0.05 tiles higher.",
+      "Walk along portal approach, reach actual sill, hide while admitted, return at same sill."
+    ]
+  },
+  "cafe_lv2": {
+    "id": "cafe_lv2",
+    "size": [
+      3,
+      2
+    ],
+    "currentSize": [
+      3,
+      2
+    ],
+    "floorZ": 0.1,
+    "accessKind": "portal",
+    "entry": [
+      -0.9,
+      -0.9,
+      0.15
+    ],
+    "portal": {
+      "approach": [
+        [
+          -0.9,
+          -1.35,
+          0
+        ],
+        [
+          -0.9,
+          -1.04,
+          0
+        ],
+        [
+          -0.9,
+          -0.9,
+          0.15
+        ]
+      ],
+      "threshold": [
+        -0.9,
+        -0.9,
+        0.15
+      ],
+      "inside": [
+        -0.9,
+        -0.6,
+        0.1
+      ],
+      "capacitySource": "capacityOf(def, placedFacility)",
+      "defaultCapacity": 4,
+      "inheritParent": "cafe",
+      "capacityDefinitionSource": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/src/data/facilities.json",
+      "useTicks": 12
+    },
+    "slots": [],
+    "staffAnchors": [],
+    "obstacles": [],
+    "notes": [
+      "All coordinates local tile units; +X=+I, +Y=-J; multiply xyz by sqrt(512) for Blender world.",
+      "No exterior customer counter standing; interior furnishing decorative; no baked NPC.",
+      "Runtime routing and admission demonstration pending coordinator integration.",
+      "Main cafe capacity=4/useTicks=12 are defaults; capacityOf(def, placedFacility) evaluates live level/chainScale; clones inherit cafe parent.",
+      "Physical sill top: 0.15 tiles, world xyz [-20.36467529817257, -20.36467529817257, 3.394112549695428]. Interior floor is 0.10 tiles; modern frame sill is 0.05 tiles higher.",
+      "Walk along portal approach, reach actual sill, hide while admitted, return at same sill."
+    ]
+  },
+  "cafe_lv3": {
+    "id": "cafe_lv3",
+    "size": [
+      3,
+      2
+    ],
+    "currentSize": [
+      3,
+      2
+    ],
+    "floorZ": 0.1,
+    "accessKind": "portal",
+    "entry": [
+      -0.9,
+      -0.9,
+      0.15
+    ],
+    "portal": {
+      "approach": [
+        [
+          -0.9,
+          -1.35,
+          0
+        ],
+        [
+          -0.9,
+          -1.04,
+          0
+        ],
+        [
+          -0.9,
+          -0.9,
+          0.15
+        ]
+      ],
+      "threshold": [
+        -0.9,
+        -0.9,
+        0.15
+      ],
+      "inside": [
+        -0.9,
+        -0.6,
+        0.1
+      ],
+      "capacitySource": "capacityOf(def, placedFacility)",
+      "defaultCapacity": 4,
+      "inheritParent": "cafe",
+      "capacityDefinitionSource": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/src/data/facilities.json",
+      "useTicks": 12
+    },
+    "slots": [],
+    "staffAnchors": [],
+    "obstacles": [],
+    "notes": [
+      "All coordinates local tile units; +X=+I, +Y=-J; multiply xyz by sqrt(512) for Blender world.",
+      "No exterior customer counter standing; interior furnishing decorative; no baked NPC.",
+      "Runtime routing and admission demonstration pending coordinator integration.",
+      "Main cafe capacity=4/useTicks=12 are defaults; capacityOf(def, placedFacility) evaluates live level/chainScale; clones inherit cafe parent.",
+      "Physical sill top: 0.15 tiles, world xyz [-20.36467529817257, -20.36467529817257, 3.394112549695428]. Interior floor is 0.10 tiles; modern frame sill is 0.05 tiles higher.",
+      "Walk along portal approach, reach actual sill, hide while admitted, return at same sill."
+    ]
+  }
+}

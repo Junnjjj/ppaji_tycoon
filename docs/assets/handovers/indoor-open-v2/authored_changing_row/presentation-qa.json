@@ -1,0 +1,103 @@
+{
+  "id": "changing_row",
+  "sourceSHA": "bb2d1c5e59c5285bcf7ec48abc225f46b3de5ed4aa4201c7dcfaa179e788b89e",
+  "checks": [
+    {
+      "direction": 0,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        67,
+        70,
+        136,
+        122
+      ]
+    },
+    {
+      "direction": 0,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        266,
+        277,
+        544,
+        490
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        56,
+        70,
+        125,
+        122
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        224,
+        277,
+        502,
+        490
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        56,
+        71,
+        125,
+        128
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        224,
+        281,
+        502,
+        511
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        67,
+        71,
+        136,
+        128
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        266,
+        281,
+        544,
+        511
+      ]
+    }
+  ],
+  "liveModified": false
+}

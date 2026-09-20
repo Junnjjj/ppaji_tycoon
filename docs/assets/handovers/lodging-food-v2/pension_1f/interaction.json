@@ -1,0 +1,102 @@
+{
+  "id": "pension_1f",
+  "size": [
+    5,
+    4
+  ],
+  "currentSize": [
+    5,
+    4
+  ],
+  "floorZ": 0.09,
+  "accessKind": "portal",
+  "entry": [
+    0,
+    -1.825,
+    0.22
+  ],
+  "portal": {
+    "approach": [
+      [
+        0,
+        -2.35,
+        0
+      ],
+      [
+        0,
+        -2.0,
+        0.09
+      ],
+      [
+        0,
+        -1.975,
+        0.15
+      ],
+      [
+        0,
+        -1.94,
+        0.22
+      ],
+      [
+        0,
+        -1.825,
+        0.22
+      ]
+    ],
+    "threshold": [
+      0,
+      -1.825,
+      0.22
+    ],
+    "inside": [
+      0,
+      -1.52,
+      0.22
+    ],
+    "capacity": 6,
+    "capacitySource": "capacityOf(def, placedFacility)",
+    "defaultCapacity": 6,
+    "route": [
+      [
+        0,
+        -2.35,
+        0
+      ],
+      [
+        0,
+        -2.0,
+        0.15
+      ],
+      [
+        0,
+        -1.975,
+        0.15
+      ],
+      [
+        0,
+        -1.94,
+        0.22
+      ],
+      [
+        0,
+        -1.825,
+        0.22
+      ]
+    ],
+    "behavior": "walk to exterior approach, climb front step to physical threshold, hide after admission, reappear at same door",
+    "parentFacilityId": "pension",
+    "definitionSource": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/src/data/facilities.json",
+    "definitionSourceSha256": "c5650c6f0f68c8ea2931746d96f89d897625c5330369902a10a4499717c919db",
+    "defaultUseTicks": 18
+  },
+  "slots": [],
+  "staffAnchors": [],
+  "obstacles": [],
+  "notes": [
+    "Coordinates in centered local tile units: +X=+I, -Y=+J, Z=height; multiply by sqrt(512) for Blender world coordinates",
+    "Threshold top 0.22 tile = 4.978031739553295 world; door leaf bottom same height",
+    "Step top .15; landing/threshold top .22; central route clear width 1.10 tile",
+    "No NPCs baked into facility; runtime pathfinding and occlusion owned by coordinator",
+    "Portal slots empty intentionally; capacity does not derive from doors or displayed slots"
+  ]
+}

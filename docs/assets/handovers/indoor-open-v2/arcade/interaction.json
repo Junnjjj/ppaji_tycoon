@@ -1,0 +1,65 @@
+{
+  "id": "arcade",
+  "currentSize": [
+    1,
+    1
+  ],
+  "size": [
+    1,
+    1
+  ],
+  "floorZ": 0,
+  "accessKind": "service-face",
+  "entry": [
+    0,
+    -1.05,
+    0
+  ],
+  "slots": [
+    {
+      "id": "player",
+      "pose": "stand",
+      "role": "guest",
+      "position": [
+        0,
+        -0.7,
+        0
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0,
+          -1.05,
+          0
+        ],
+        [
+          0,
+          -0.7,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useSeconds": 4
+    }
+  ],
+  "obstacles": [
+    {
+      "name": "Arcade cabinet including control deck",
+      "min": [
+        -0.325,
+        -0.38
+      ],
+      "max": [
+        0.325,
+        0.315
+      ]
+    }
+  ],
+  "notes": [
+    "Centered Blender XY tiles; rotate slot, heading and obstacle with FacilityRoot yaw.",
+    "One customer stands outside -Y control face, no entrance into cabinet.",
+    "Joystick top .87tile, deck .7395tile; human height1.12268tile.",
+    "No floor, roof, room, wall tags, or NPC baked into asset; cabinet itself contacts ground.",
+    "CurrentSize and proposed size are 1x1; live render64x72 differs from required review192 canvas, runtime fitting pending."
+  ]
+}

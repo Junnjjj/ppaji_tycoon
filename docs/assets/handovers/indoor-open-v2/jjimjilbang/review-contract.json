@@ -1,0 +1,103 @@
+{
+  "blend": "facility.blend",
+  "concept": "reference.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 0.6,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    4,
+    4
+  ],
+  "floor_mode": "full-footprint-integral",
+  "minimum_native_foreground": 4200,
+  "inventory": {
+    "supports": {
+      "prefix": "RestMat_",
+      "count": 3
+    },
+    "walls": {
+      "prefix": "Wall_",
+      "count": 5
+    },
+    "heating_panels": {
+      "prefix": "HeatingPanel_",
+      "count": 3
+    },
+    "pillows": {
+      "prefix": "Pillow_",
+      "count": 3
+    },
+    "towels": {
+      "prefix": "FoldedTowel_",
+      "count": 3
+    }
+  },
+  "groups": {
+    "floor": {
+      "names": [
+        "HeatedFloor"
+      ]
+    },
+    "body": {
+      "prefix": "Wall_"
+    },
+    "visual": {
+      "names": [
+        "HeatedFloor",
+        "Wall_back",
+        "Wall_left",
+        "Wall_right",
+        "Wall_front_left",
+        "Wall_front_right",
+        "DoorJamb_left",
+        "DoorJamb_right",
+        "DoorLintel"
+      ]
+    }
+  },
+  "landmarks": {
+    "entry": [
+      0,
+      -2.0,
+      0
+    ],
+    "s0": [
+      -1.15,
+      0.2,
+      0.07
+    ],
+    "s1": [
+      0,
+      0.2,
+      0.07
+    ],
+    "s2": [
+      1.15,
+      0.2,
+      0.07
+    ],
+    "door": [
+      0,
+      -1.95,
+      0.59
+    ],
+    "heater0": [
+      -1.15,
+      1.73,
+      0.3
+    ],
+    "controller": [
+      1.8,
+      1.35,
+      0.76
+    ],
+    "towels": [
+      -1.65,
+      -1.45,
+      0.65
+    ]
+  }
+}

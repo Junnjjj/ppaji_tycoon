@@ -1,0 +1,68 @@
+{
+  "id": "cafe",
+  "sourceSHA": "8f8a8948d3cbe7fa81578b8951e31c016818fdfd887732d1c3a5751a8501992b",
+  "presentation": "Full uncut physical building; depth for exterior NPC and doorway presentation",
+  "camera": {
+    "C": [
+      134.72193908691406,
+      -134.72193908691406,
+      150.72935485839844
+    ],
+    "R": [
+      0.7071067094802856,
+      0.7071068286895752,
+      2.9802322387695312e-08
+    ],
+    "U": [
+      -0.3535534143447876,
+      0.3535534143447876,
+      0.8660253286361694
+    ],
+    "F": [
+      -0.6123723983764648,
+      0.6123723983764648,
+      -0.5
+    ]
+  },
+  "tileWorld": 22.627416997969522,
+  "native": 192,
+  "supportTopObjects": [],
+  "directions": [
+    {
+      "d": 0,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {},
+      "finitePixels": 4136,
+      "supportTopExclusions": 0,
+      "maxReprojectionError": 5.7220458984375e-05
+    },
+    {
+      "d": 1,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {},
+      "finitePixels": 4116,
+      "supportTopExclusions": 0,
+      "maxReprojectionError": 5.340576171875e-05
+    },
+    {
+      "d": 2,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {},
+      "finitePixels": 4127,
+      "supportTopExclusions": 0,
+      "maxReprojectionError": 5.340576171875e-05
+    },
+    {
+      "d": 3,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {},
+      "finitePixels": 4081,
+      "supportTopExclusions": 0,
+      "maxReprojectionError": 5.14984130859375e-05
+    }
+  ]
+}

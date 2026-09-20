@@ -1,0 +1,78 @@
+{
+  "state": "ROOF_PROPORTION_USER_REVIEW",
+  "physical_root_sha256": "387a929bc2a6b65319456df690d1c3d9d9c32bd45c2a3b53ae5a06c525fcc848",
+  "canonical_live_size": [
+    3,
+    3
+  ],
+  "proposed_size": [
+    3,
+    3
+  ],
+  "floor_bounds_tiles": [
+    [
+      -1.4999998807907104,
+      -1.4999998807907104,
+      0.0
+    ],
+    [
+      1.4999998807907104,
+      1.4999998807907104,
+      0.17999999225139618
+    ]
+  ],
+  "body_bounds_tiles": [
+    [
+      -1.2699999809265137,
+      -1.2699999809265137,
+      0.17999999225139618
+    ],
+    [
+      1.2699999809265137,
+      1.2699999809265137,
+      1.6499998569488525
+    ]
+  ],
+  "roof_bounds_tiles": [
+    [
+      -1.5850000381469727,
+      -1.5850000381469727,
+      1.6700000762939453
+    ],
+    [
+      1.5850000381469727,
+      1.5850000381469727,
+      2.3929998874664307
+    ]
+  ],
+  "body_coverage": [
+    0.8466666539510092,
+    0.8466666539510092
+  ],
+  "roof_to_body_ratio": [
+    1.2480315448435317,
+    1.2480315448435317
+  ],
+  "roof_overhang_floor_tiles": {
+    "-x": 0.08500003814697266,
+    "+x": 0.08500003814697266,
+    "-y": 0.08500003814697266,
+    "+y": 0.08500003814697266
+  },
+  "eave_surface_z": 1.76,
+  "corner_tip_z": 1.795,
+  "ridge_cap_top_z": 2.3929998874664307,
+  "open_body_height": 1.47,
+  "declared_target": "Open timber pavilion: column span approximately0.847 of floor, roof width approximately1.06 of floor; room-wall0.90 rule inapplicable to open four-post structure",
+  "family_reference": "lodging-food-v2/pension_1f: approved charcoal roof material/ordinary roof mass reference, not same pavilion type",
+  "same_scale_resizing": "NONE; comparison renders logical256 ortho256",
+  "imagegen_calls": 0,
+  "live_files_modified": false,
+  "same_scale_evidence": "same-scale/comparison-board.png",
+  "render_hashes": {
+    "d0": "1604b1ef1aea44563fa63586ad85a07f08a70157963d150d924105cfad750d7f",
+    "d1": "d9ba03fab6d7fcd9f82fba50d2038779f0419d46456d34024f6455cea5e89218",
+    "d2": "2e31c3e98d345e3d108aaa5a66151e1de05e496975cc77ff3b64f61c8735bedd",
+    "d3": "d36e13812598eb9894c47558233011bcaabd82c328e5cfd2af1f97011aac7b94"
+  }
+}

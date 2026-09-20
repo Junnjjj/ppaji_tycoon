@@ -15,6 +15,7 @@ export class CraftComposite {
     this.canvas.width=size+96; this.canvas.height=size+96;
     const ctx=this.canvas.getContext('2d');if(!ctx)throw Error('Craft composite unavailable');this.ctx=ctx;
   }
+  destroy():void {this.bases.clear();this.npcPixels.clear();this.canvas.width=this.canvas.height=0;}
   draw(id:string,h:number,riders:readonly CraftRider[],timeMs:number,slideMask?:Float32Array,poseMasks?:ReadonlyMap<string,Float32Array>,frontOverlay?:ImageData):{ax:number;ay:number;visible:number[]} {
     const key=`watercraft/${id}/${h}`,base=this.art.pixels.get(key),mask=this.art.depths.get(key),spec=this.art.spec(key);
     if(!base||!mask||!spec)throw Error(`Missing authored craft ${key}`);
@@ -31,6 +32,8 @@ export class CraftComposite {
         if(!Number.isFinite(z))for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const xx=x+dx,yy=y+dy;if(xx>=0&&yy>=0&&xx<base.width&&yy<base.height)z=Math.min(z,mask[yy*base.width+xx]!);}
         depth[d]=z+offset;
       }
+      // Two headings are enough for frame reuse; a full turn must not retain 16 padded buffers per boat.
+      if(this.bases.size>=2)this.bases.delete(this.bases.keys().next().value!);
       cached={rgba,depth};this.bases.set(key,cached);
     }
     out.data.set(cached.rgba);const depth=cached.depth;

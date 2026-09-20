@@ -1,0 +1,164 @@
+{
+  "id": "infirmary",
+  "currentSize": [
+    2,
+    2
+  ],
+  "size": [
+    3,
+    2
+  ],
+  "floorZ": 0,
+  "accessKind": "portal",
+  "entry": [
+    0.02,
+    -1.2,
+    0
+  ],
+  "slots": [
+    {
+      "id": "bed0",
+      "pose": "lie",
+      "position": [
+        -0.72,
+        -0.05,
+        0.39
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0.02,
+          -1.2,
+          0
+        ],
+        [
+          0.02,
+          -0.82,
+          0
+        ],
+        [
+          0.02,
+          -0.05,
+          0
+        ]
+      ],
+      "supportObjects": [
+        "Mattress",
+        "FoldedBlanket",
+        "Pillow"
+      ],
+      "useSeconds": 4
+    }
+  ],
+  "obstacles": [
+    {
+      "name": "Bed assembly",
+      "min": [
+        -1.175,
+        -0.8225
+      ],
+      "max": [
+        -0.265,
+        0.8275
+      ]
+    },
+    {
+      "name": "Privacy divider and feet",
+      "min": [
+        -1.42,
+        -0.825
+      ],
+      "max": [
+        -1.16,
+        0.825
+      ]
+    },
+    {
+      "name": "Supply cabinet",
+      "min": [
+        0.34,
+        0.19
+      ],
+      "max": [
+        0.94,
+        0.85
+      ]
+    },
+    {
+      "name": "WallPX",
+      "min": [
+        1.4,
+        -1
+      ],
+      "max": [
+        1.5,
+        1
+      ],
+      "kind": "boundary-wall",
+      "hiddenCutawayStillCollides": true
+    },
+    {
+      "name": "WallNX",
+      "min": [
+        -1.5,
+        -1
+      ],
+      "max": [
+        -1.4,
+        1
+      ],
+      "kind": "boundary-wall",
+      "hiddenCutawayStillCollides": true
+    },
+    {
+      "name": "WallPY",
+      "min": [
+        -1.4,
+        0.9
+      ],
+      "max": [
+        1.4,
+        1
+      ],
+      "kind": "boundary-wall",
+      "hiddenCutawayStillCollides": true
+    },
+    {
+      "name": "WallNYLeft",
+      "min": [
+        -1.5,
+        -1
+      ],
+      "max": [
+        -0.34,
+        -0.892
+      ],
+      "kind": "boundary-wall",
+      "hiddenCutawayStillCollides": true
+    },
+    {
+      "name": "WallNYRight",
+      "min": [
+        0.38,
+        -1
+      ],
+      "max": [
+        1.5,
+        -0.892
+      ],
+      "kind": "boundary-wall",
+      "hiddenCutawayStillCollides": true
+    }
+  ],
+  "notes": [
+    "Coordinates are centered Blender XY tile units; fixed T=sqrt(512).",
+    "Lying position is proposed pelvis/body midpoint on mattress upper plane, with head toward +Y and feet toward -Y; coordinator MUST adjust current V8 lie image origin (20.40625,27.203125 native40) to actual pelvis contact, not blindly pin its bottom anchor here. No independent sprite scaling.",
+    "Approach ends at the clear right bedside standing transfer point; transfer onto mattress is pose transition, not walking through bed.",
+    "Mattress surface z=.39; pillow top=.46 and folded blanket top=.434. Pillow can remain a physical occluder if head needs it; supportObjects list is only contact-surface exclusion proposal. BedFrame, headboard, footboard and divider retain depth occlusion.",
+    "One visible clinic use station, not a gameplay capacity change. Natural privacy divider occlusion occurs in rear views.",
+    "v2 preserves all v1 slots and approach points; front opening width .72 tile and clear headroom 1.20 tile, versus opaque human height 1.12268 tile.",
+    "Cutaway wall masking is presentation only; intact physical evidence will naturally obscure bed/patient. Coordinator owns occupied V8 and matching depth QA."
+  ],
+  "coordinateSystem": "centered Blender XY tile units",
+  "floorMode": "full-footprint-integral"
+}

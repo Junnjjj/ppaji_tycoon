@@ -1,0 +1,55 @@
+{
+  "state": "ROOF_PROPORTION_USER_APPROVED",
+  "physical_root_sha256": "839ec81f429657c419bed9004dae5a5c620de3753f4b6c27e450a37356769337",
+  "canonical_live_size": [
+    5,
+    4
+  ],
+  "proposed_size": [
+    5,
+    4
+  ],
+  "floor_bounds_tiles": [
+    5,
+    4
+  ],
+  "body_coverage": [
+    0.9,
+    0.8999999761581421
+  ],
+  "roof_bounds_tiles": [
+    [
+      -2.4099998474121094,
+      -1.9700000286102295,
+      2.9149999618530273
+    ],
+    [
+      2.4099998474121094,
+      1.9700000286102295,
+      3.669999837875366
+    ]
+  ],
+  "roof_to_body_ratio": [
+    1.0711110432942708,
+    1.0944444603390164
+  ],
+  "roof_overhang_tiles": {
+    "-x": 0.15999984741210938,
+    "+x": 0.15999984741210938,
+    "-y": 0.17000002861022945,
+    "+y": 0.17000002861022945
+  },
+  "main_ridge_rise_tiles": 0.68,
+  "main_eaves_z_tiles": 2.9899999999999998,
+  "same_scale_resizing": "NONE",
+  "imagegen_calls": 0,
+  "live_files_modified": false,
+  "comparison": "same-scale-before-candidate.png; concept-reference.png is separate art reference",
+  "roof_notes": "Charcoal gable with 8 seams per slope; inset plaster wedge avoids initial coplanar color failure",
+  "canopy_repair": "canopy-clearance-audit.json",
+  "superseded_physical_root_sha256": "f9a51ef7582d38859f25264b0df119012f249be9fb3549c7c85c934930eb6776",
+  "main_roof_geometry_exactly_unchanged": true,
+  "canopy_minimum_clearance_tiles": 0.05301332473754883,
+  "previous_state": "ROOF_PROPORTION_USER_REVIEW",
+  "user_decision": "좋다 적용하자, 다 만족해"
+}

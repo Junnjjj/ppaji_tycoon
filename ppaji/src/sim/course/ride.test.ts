@@ -423,11 +423,23 @@ describe('P61-b 코디네이터 소스 고침 회귀', () => {
     const g = rider(f);
     f.g.step(1);
     let sawSwim = false, checkedPath = false;
+    let previous: { i: number; j: number; status: string } | undefined;
+    let headingsChecked = 0;
     for (let k = 0; k < 900; k++) {
       f.g.step(1);
       const s = f.g.rideScene().swimmers.find((v) => v.guestUid === g.uid);
       if (!s) { if (sawSwim) break; continue; }
       sawSwim = true;
+      if (previous?.status === 'swim' && s.status === 'swim') {
+        const di = s.pos.i - previous.i, dj = s.pos.j - previous.j, distance = Math.hypot(di, dj);
+        expect(distance).toBeLessThanOrEqual(1 / 8 + 1 / 60 + 1e-6);
+        if (distance > 1e-6) {
+          // At corners a tick spans two segments; the final heading must still face forward.
+          expect(di * Math.cos(s.heading) + dj * Math.sin(s.heading)).toBeGreaterThanOrEqual(-1e-6);
+          headingsChecked++;
+        }
+      }
+      previous = { ...s.pos, status: s.status };
       if (s.status === 'swim' && s.path.length > 0 && !checkedPath) {
         checkedPath = true;
         // 물길 격자점은 **타일 중심 = 정수 게임 좌표**여야 한다.
@@ -440,6 +452,7 @@ describe('P61-b 코디네이터 소스 고침 회귀', () => {
     }
     expect(sawSwim, '낙수가 한 번은 나야 한다').toBe(true);
     expect(checkedPath, '헤엄 구간의 물길을 한 번은 봐야 한다').toBe(true);
+    expect(headingsChecked).toBeGreaterThan(0);
     expect(f.g.rides.swimmersForTest().length).toBe(0);
     // 올라온 칸 — 그 선착장의 **뭍 칸**(선착장 자신은 시설이 점유해 설 수 없으므로 붙은 잔교 칸이다)
     expect(Math.max(Math.abs(g.i - f.dock.i), Math.abs(g.j - f.dock.j)), '출발한 선착장 곁으로 올라온다').toBeLessThanOrEqual(1);

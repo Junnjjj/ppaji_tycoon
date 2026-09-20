@@ -1,0 +1,513 @@
+{
+  "id": "stage_river_lv1",
+  "size": [
+    4,
+    3
+  ],
+  "canonical_live_size": [
+    3,
+    2
+  ],
+  "proposed_size": [
+    4,
+    3
+  ],
+  "canonical_live_class": "decor",
+  "canonical_live_capacity": 0,
+  "proposalPerformerCount": 1,
+  "proposalAudienceCount": 4,
+  "coordinateUnits": "numeric local XYZ tiles; +X=I, +Y=-J, Z up; centered FacilityRoot",
+  "cameraTargetZTiles": 1.8,
+  "logicalSize": 192,
+  "accessKind": "flow",
+  "entry": [
+    -1.8,
+    -1.35,
+    0
+  ],
+  "exit": [
+    1.8,
+    -1.35,
+    0
+  ],
+  "slots": [
+    {
+      "id": "performer",
+      "role": "performer",
+      "position": [
+        0,
+        0.43,
+        0.24
+      ],
+      "pose": "stand",
+      "heading": -1.5707963267948966,
+      "approach": [
+        [
+          -1.8,
+          -1.35,
+          0
+        ],
+        [
+          -1.7,
+          0.65,
+          0
+        ],
+        [
+          -1.6,
+          0.65,
+          0.12
+        ],
+        [
+          -1.25,
+          0.8,
+          0.24
+        ],
+        [
+          0,
+          0.8,
+          0.24
+        ],
+        [
+          0,
+          0.43,
+          0.24
+        ]
+      ],
+      "supportObjects": [
+        "Stage_Deck"
+      ],
+      "motion": "idle or minimal reusable gesture; no translation"
+    },
+    {
+      "id": "audience_0",
+      "role": "audience",
+      "position": [
+        -0.5,
+        -0.16,
+        0
+      ],
+      "seatContact": [
+        -0.5,
+        -0.38,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          -1.8,
+          -1.35,
+          0
+        ],
+        [
+          -1.7,
+          -1.36,
+          0
+        ],
+        [
+          -1.7,
+          -1.36,
+          0
+        ],
+        [
+          -1.7,
+          -0.16,
+          0
+        ],
+        [
+          -0.5,
+          -0.16,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          -0.5,
+          -0.16,
+          0
+        ],
+        [
+          -1.7,
+          -0.16,
+          0
+        ],
+        [
+          -1.7,
+          -1.36,
+          0
+        ],
+        [
+          1.8,
+          -1.35,
+          0
+        ]
+      ],
+      "supportObjects": [
+        "Bench_0_Seat"
+      ],
+      "transition": "reach final foot anchor, switch pose in place; no sliding"
+    },
+    {
+      "id": "audience_1",
+      "role": "audience",
+      "position": [
+        0.5,
+        -0.16,
+        0
+      ],
+      "seatContact": [
+        0.5,
+        -0.38,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          -1.8,
+          -1.35,
+          0
+        ],
+        [
+          -1.7,
+          -1.36,
+          0
+        ],
+        [
+          1.7,
+          -1.36,
+          0
+        ],
+        [
+          1.7,
+          -0.16,
+          0
+        ],
+        [
+          0.5,
+          -0.16,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          0.5,
+          -0.16,
+          0
+        ],
+        [
+          1.7,
+          -0.16,
+          0
+        ],
+        [
+          1.7,
+          -1.36,
+          0
+        ],
+        [
+          1.8,
+          -1.35,
+          0
+        ]
+      ],
+      "supportObjects": [
+        "Bench_0_Seat"
+      ],
+      "transition": "reach final foot anchor, switch pose in place; no sliding"
+    },
+    {
+      "id": "audience_2",
+      "role": "audience",
+      "position": [
+        -0.5,
+        -0.8300000000000001,
+        0
+      ],
+      "seatContact": [
+        -0.5,
+        -1.05,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          -1.8,
+          -1.35,
+          0
+        ],
+        [
+          -1.7,
+          -1.36,
+          0
+        ],
+        [
+          -1.7,
+          -1.36,
+          0
+        ],
+        [
+          -1.7,
+          -0.8300000000000001,
+          0
+        ],
+        [
+          -0.5,
+          -0.8300000000000001,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          -0.5,
+          -0.8300000000000001,
+          0
+        ],
+        [
+          -1.7,
+          -0.8300000000000001,
+          0
+        ],
+        [
+          -1.7,
+          -1.36,
+          0
+        ],
+        [
+          1.8,
+          -1.35,
+          0
+        ]
+      ],
+      "supportObjects": [
+        "Bench_1_Seat"
+      ],
+      "transition": "reach final foot anchor, switch pose in place; no sliding"
+    },
+    {
+      "id": "audience_3",
+      "role": "audience",
+      "position": [
+        0.5,
+        -0.8300000000000001,
+        0
+      ],
+      "seatContact": [
+        0.5,
+        -1.05,
+        0.38
+      ],
+      "pose": "sit_chair",
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          -1.8,
+          -1.35,
+          0
+        ],
+        [
+          -1.7,
+          -1.36,
+          0
+        ],
+        [
+          1.7,
+          -1.36,
+          0
+        ],
+        [
+          1.7,
+          -0.8300000000000001,
+          0
+        ],
+        [
+          0.5,
+          -0.8300000000000001,
+          0
+        ]
+      ],
+      "exitApproach": [
+        [
+          0.5,
+          -0.8300000000000001,
+          0
+        ],
+        [
+          1.7,
+          -0.8300000000000001,
+          0
+        ],
+        [
+          1.7,
+          -1.36,
+          0
+        ],
+        [
+          1.8,
+          -1.35,
+          0
+        ]
+      ],
+      "supportObjects": [
+        "Bench_1_Seat"
+      ],
+      "transition": "reach final foot anchor, switch pose in place; no sliding"
+    }
+  ],
+  "routes": {
+    "performer_entry": [
+      [
+        -1.8,
+        -1.35,
+        0
+      ],
+      [
+        -1.7,
+        0.65,
+        0
+      ],
+      [
+        -1.6,
+        0.65,
+        0.12
+      ],
+      [
+        -1.25,
+        0.8,
+        0.24
+      ],
+      [
+        0,
+        0.8,
+        0.24
+      ],
+      [
+        0,
+        0.43,
+        0.24
+      ]
+    ],
+    "performer_exit": [
+      [
+        0,
+        0.43,
+        0.24
+      ],
+      [
+        0,
+        0.8,
+        0.24
+      ],
+      [
+        -1.25,
+        0.8,
+        0.24
+      ],
+      [
+        -1.6,
+        0.65,
+        0.12
+      ],
+      [
+        -1.7,
+        0.65,
+        0
+      ],
+      [
+        -1.8,
+        -1.35,
+        0
+      ],
+      [
+        -1.7,
+        -1.36,
+        0
+      ],
+      [
+        1.7,
+        -1.36,
+        0
+      ],
+      [
+        1.8,
+        -1.35,
+        0
+      ]
+    ],
+    "audience_front_crossaisle": [
+      [
+        -1.7,
+        -1.36,
+        0
+      ],
+      [
+        1.7,
+        -1.36,
+        0
+      ]
+    ],
+    "left_aisle": [
+      [
+        -1.7,
+        -1.36,
+        0
+      ],
+      [
+        -1.7,
+        0.65,
+        0
+      ]
+    ],
+    "right_aisle": [
+      [
+        1.7,
+        -1.36,
+        0
+      ],
+      [
+        1.7,
+        0.65,
+        0
+      ]
+    ]
+  },
+  "footprintBounds": [
+    [
+      -2,
+      -1.5,
+      0
+    ],
+    [
+      2,
+      1.5,
+      1.8
+    ]
+  ],
+  "intrinsicPlatform": {
+    "owner": "Stage_Deck",
+    "bounds": [
+      [
+        -1.4,
+        0.15,
+        0.08
+      ],
+      [
+        1.4,
+        1.35,
+        0.24
+      ]
+    ],
+    "meaning": "performer support only, elevated intrinsic stage equipment; not audience presentation floor"
+  },
+  "poseContactConvention": "position is standing foot contact shared by seated pose feet; seatContact is pelvis/support target, coordinator must verify existing sit pose offset",
+  "occlusion": "Rear backdrop naturally hides performer in rear-facing views; coordinator owns depth/layer review",
+  "gate": "AUTHORED_NPC_CANDIDATE_USER_REVIEW",
+  "live_files_modified": false,
+  "actorPathRadiusTiles": 0.12,
+  "notes": [
+    "Cross aisle y=-1.36 gives 0.16 clearance behind bench rear rail; preview actor navigation radius 0.12 tile.",
+    "Front bench audience bodies may overlap rear bench view in some directions; depth validation belongs to combined runtime review."
+  ],
+  "sourceCandidateId": "stage_river"
+}

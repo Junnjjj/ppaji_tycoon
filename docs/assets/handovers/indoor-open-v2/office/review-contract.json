@@ -1,0 +1,89 @@
+{
+  "blend": "facility.blend",
+  "concept": "reference.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 0.6,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    2,
+    2
+  ],
+  "floor_mode": "full-footprint-integral",
+  "minimum_native_foreground": 1600,
+  "inventory": {
+    "desk": {
+      "names": [
+        "DeskTop"
+      ],
+      "count": 1
+    },
+    "chair": {
+      "names": [
+        "ChairSeat"
+      ],
+      "count": 1
+    },
+    "cabinet": {
+      "names": [
+        "FilingCabinet"
+      ],
+      "count": 1
+    },
+    "walls": {
+      "names": [
+        "WallPX",
+        "WallNX",
+        "WallPY",
+        "WallNYLeft",
+        "WallNYRight"
+      ],
+      "count": 5
+    }
+  },
+  "groups": {
+    "floor": {
+      "names": [
+        "FacilityFloor"
+      ]
+    },
+    "body": {
+      "names": [
+        "WallPX",
+        "WallNX",
+        "WallPY",
+        "WallNYLeft",
+        "WallNYRight"
+      ]
+    }
+  },
+  "landmarks": {
+    "entry": [
+      0.44,
+      -1.2,
+      0
+    ],
+    "seat": [
+      -0.3,
+      -0.05,
+      0.375
+    ],
+    "desk": [
+      -0.3,
+      0.58,
+      0.6675
+    ],
+    "cabinet": [
+      -0.66,
+      -0.57,
+      0.88
+    ],
+    "monitor": [
+      -0.26,
+      0.69,
+      0.91
+    ]
+  }
+}

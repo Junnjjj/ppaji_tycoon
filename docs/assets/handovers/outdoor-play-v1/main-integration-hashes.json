@@ -1,0 +1,30 @@
+{
+  "mainRoot": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji",
+  "bundle": "main-35nHaY5e.js",
+  "files": {
+    "src/data/facilities.json": "67b85f4366904b1237d69a17f26c60d38b4329d40e31e96018911dc403d2e212",
+    "src/data/outdoor-facility-contracts.json": "c194240e9ff4e6415855b26f9c42712e3abe49ff48384ed92d41b5c6854ee3ee",
+    "src/data/facility-attendants.json": "01071302f508ee1d8e86a8e30b78a0806d091415896e8b6b05713eb9734b2487",
+    "src/sim/guest.ts": "1e1be99015773a2dac77ddceb38cc939d34e7019dab5455023456cab481e31b6",
+    "src/sim/facility.ts": "75a7595cf9d36a3b5104dc5fca5d5be4001af74e670c41c41f14a90d6a23cb24",
+    "src/sim/outdoor-activity.ts": "fa24b0aa3c5f0f1e848a3df14d544c6437b8470b4bd2a3cdd99df10a9366a33e",
+    "src/render/outdoor-facilities.ts": "962c79739fbadf982ab5e9df8f581111f620c66f5b40281e37eb3f13c49732a0",
+    "src/render/static-facilities.ts": "575ff5a3c9912366b7ac361659fe5b1c2ea398c76a0ec56ab163f8d288e24460",
+    "src/render/scene.ts": "22c51dfc954bfbf45194b1bc9a3217a1b388ee18636d91e308c4664e436f70c8",
+    "src/assets/npc-v8.ts": "da12120f2518cf23707c57ee78fb554b06b00226d9f2368df8d6ea854b5d800f",
+    "src/assets/approved-facilities.ts": "aa9ee2c32a9cebe1112bc7417caaccfe917cc6062099dec3cf350d95c25f2eff",
+    "src/ui/windows/build.ts": "5f1354744e710002626f1fee9c699ab37ea31ad457e02e593689486579dfabf6",
+    "public/assets/approved-facilities/manifest.json": "27ab99b22065cd4073187a92948d9aac805f7698c961d61cccb38193528462cb",
+    "src/main.ts": "3d8af954029e733a7a9fd03aed4ee0980f96243d1c63aac85511b63f1e9f514d",
+    "src/sim/guest-motion.ts": "7e2249420e105c35aa361b51a884b38f681859e94d65cea771a2b27166f85952",
+    "src/sim/static-visit.ts": "bacbe0bd7369bda1682164cdae6a0fbb1512de15ffcf64db5c0e1a0a05982b0f",
+    "src/data/static-facility-visits.json": "64d3aa3f92b037dfcbe8be2a00c8222e0b4a7ee26c2cda69bc3242c0f2936a38",
+    "src/render/static-visit-sample.ts": "8a31b84b52fd60b34f2a1c0e19adb62d45be3e00ac46c602660e304e33938531",
+    "src/sim/course/ride.ts": "2c21794f9c72ff3cb1cb7e84f903159602a238740017ed584e3325531b0fed89",
+    "src/sim/watercraft-core/recovery.ts": "2c4f22a57481aed8c0891903c37df1f9d526456adca1d9cdeb52c27b18d68d61",
+    "src/assets/watercraft.ts": "7f50d11e18b85b414d153f15b96830ef83e51639df170cabe41208ce03c3f41c",
+    "src/render/watercraft-composite.ts": "bacc990b249bee4230529d8b99b45bc4d0382b09dc06c388d55259103714be76",
+    "src/render/course-rides.ts": "1a1ba0ce7a38a4266b748ad6a25cabcface72f4e773390d9a9c3c2befed5b785",
+    "src/sim/game.ts": "74a4031fea796f52d2c326e03e7e70a4160de0c616389c026e1b7da780dd456a"
+  }
+}

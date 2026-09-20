@@ -1,5 +1,5 @@
 /**
- * 건설 창 — 6분류 탭 + **카드 격자**(`PictureGrid`, P56-a2 D2 통일). 카드 = 스프라이트 + 좌하 `×놓은 수` + 우하 값 + 잠금 배지.
+ * 건설 창 — 7분류 탭 + **카드 격자**(`PictureGrid`, P56-a2 D2 통일). 카드 = 스프라이트 + 좌하 `×놓은 수` + 우하 값 + 잠금 배지.
  * 카드를 고르면 창이 닫히고 **배치 모드**로. 잠긴 시설은 숨기지 않고 잠긴 카드로 남긴다 (가림막이 아니라 예고) —
  * 아래 두 줄이 해금 출처를 말한다.
  */
@@ -14,11 +14,19 @@ import { setsByMember, visibleSetsOf } from '../rig-sets.js';
 import type { Game } from '../../sim/game.js';
 import type { FacilityDef } from '../../data/schema.js';
 
-/** P45-b D63 — 건설 분류: 「어디에 놓나」로 가른다. 실내(복도 점포 — 입장·퇴장·밤 순) · 자리 · 숙박 · 먹거리(야외) · 놀이(야외) · 슬라이드 · 편의(야외) · 장식 */
-export type BuildTabId = 'indoor' | 'ppaji' | 'seat' | 'lodging' | 'food' | 'play' | 'slide' | 'utility' | 'decor'; // P50-a R9: 「빠지」 탭을 실내 다음 둘째로
-const TAB_ICON: Record<BuildTabId, IconName> = { indoor: 'utility', ppaji: 'attraction', seat: 'lounge', lodging: 'lounge', food: 'restaurant', play: 'attraction', slide: 'slide', utility: 'utility', decor: 'decor' };
+/** P45-b D63 — 건설 분류: 「어디에 놓나」로 가른다. 실내(복도 점포 — 입장·퇴장·밤 순) · 자리 · 숙박 · 먹거리(야외) · 놀이(야외) · 장식 */
+export type BuildTabId = 'indoor' | 'ppaji' | 'seat' | 'lodging' | 'food' | 'play' | 'decor'; // P50-a R9: 「빠지」 탭을 실내 다음 둘째로
+const TAB_ICON: Record<BuildTabId, IconName> = { indoor: 'utility', ppaji: 'attraction', seat: 'lounge', lodging: 'lounge', food: 'restaurant', play: 'attraction', decor: 'decor' };
 const PPAJI_ORDER = new Map(['float_deck', 'boarding_dock', 'ppaji_slide', 'ppaji_playground', ...modules.map(m => m.id), 'diving', 'rig_bridge', 'rig_stepstone', 'rig_blob', 'rig_iceberg', 'rig_jump_tower'].map((id, i) => [id, i]));
-const VISIBLE_SELECTED_BUILDINGS = new Set<string>(SELECTED_BUILDING_IDS);
+// Same-footprint visual stages coexist until the upgrade system owns them.
+const COEXISTING_STAGE_IDS = new Set(['pension_1f', 'pension_2f', 'cafe_lv2', 'cafe_lv3', 'stage_river_lv1', 'stage_river_lv2', 'stage_river_lv3', 'bungee_jump']);
+const VISIBLE_SELECTED_BUILDINGS = new Set<string>([...SELECTED_BUILDING_IDS, 'toilet', 'pingpong', 'footbath', 'authored_footbath', 'merlion', 'stage_river']);
+// Catalog-only retirement: old IDs remain valid for saves, unlocks and existing placements.
+const REMOVED_FROM_BUILD = new Set(['nursing', 'storage', 'gear_rack', 'office', 'souvenir', 'room_ondol', 'takeout', 'room_tatami', 'stage_hall', 'entrance', 'rent_sup', 'rent_duck', 'rent_pedal', 'rent_kayak', 'slide_tube', 'rig_rack', 'rig_float_bar', 'rescue_dock', 'airbounce', 'pension_duplex', 'dock', 'lifering', 'lifeguard_chair', 'washbasin_row', 'ticket', 'parking', 'jump_cushion', 'mongol_tent', 'stage_river', 'performing_kairobot', 'footvolley']);
+export function currentBuildCatalog(defs: readonly FacilityDef[]): FacilityDef[] {
+  const replaced = new Set(defs.filter(d => d.variantOf && !COEXISTING_STAGE_IDS.has(d.id) && VISIBLE_SELECTED_BUILDINGS.has(d.id)).map(d => d.variantOf));
+  return defs.filter(d => d.class !== 'slide' && d.derived !== true && !REMOVED_FROM_BUILD.has(d.id) && !replaced.has(d.id));
+}
 const HALL_ORDER: Record<string, number> = { enter: 0, both: 1, leave: 2 };
 /** 실내 탭 정렬 — 입장(대여·거치대·자판기) → 둘 다(매점) → 퇴장(샤워·드라이·기념품·포장) → 밤(객실·무대·노래방·오락기) → 나머지 편의 */
 export function hallGroup(d: FacilityDef): number {
@@ -27,16 +35,21 @@ export function hallGroup(d: FacilityDef): number {
   return 4;
 }
 const isPpaji = (d: FacilityDef): boolean => (d.class === 'rig' || d.onRing === true) && d.buildable !== false && d.deprecated !== true; // P51: 개조판(buildable:false)은 건설 목록에 없다 — 시설 창 「개조」로만 · 2026-09-19: 조합에 흡수된 폐기 시설(deprecated)도 없다 — 옛 세이브 호환으로만 정의가 남는다
+// Catalog grouping is independent of simulation class and placement restrictions.
+const TAB_OVERRIDES: Readonly<Record<string, BuildTabId>> = {
+  toilet: 'indoor', pingpong: 'indoor', footbath: 'seat', authored_footbath: 'seat',
+  merlion: 'decor', stage_river: 'play', stage_river_lv1: 'play', stage_river_lv2: 'play', stage_river_lv3: 'play',
+};
+const inTab = (id: BuildTabId, fallback: (d: FacilityDef) => boolean) =>
+  (d: FacilityDef): boolean => TAB_OVERRIDES[d.id] ? TAB_OVERRIDES[d.id] === id : fallback(d);
 export const BUILD_TABS: readonly { id: BuildTabId; label: string; match: (d: FacilityDef) => boolean }[] = [
-  { id: 'indoor', label: '실내', match: (d) => d.indoorOnly },
-  { id: 'ppaji', label: '빠지', match: (d) => isPpaji(d) }, // P50-a R9: 물 위 기구 + 링 위 시설(이전 12 포함)
-  { id: 'seat', label: '자리', match: (d) => d.class === 'lounging' && !d.lodging && !d.indoorOnly && !isPpaji(d) },
-  { id: 'lodging', label: '숙박', match: (d) => d.class === 'lounging' && d.lodging === true && !d.indoorOnly && !isPpaji(d) },
-  { id: 'food', label: '먹거리', match: (d) => d.class === 'restaurant' && !d.indoorOnly && !isPpaji(d) },
-  { id: 'play', label: '놀이', match: (d) => d.class === 'attraction' && !d.indoorOnly && !isPpaji(d) },
-  { id: 'slide', label: '슬라이드', match: (d) => d.class === 'slide' && !isPpaji(d) },
-  { id: 'utility', label: '편의', match: (d) => d.class === 'utility' && !d.indoorOnly && !isPpaji(d) },
-  { id: 'decor', label: '장식', match: (d) => d.class === 'decor' && !isPpaji(d) },
+  { id: 'indoor', label: '실내', match: inTab('indoor', (d) => d.indoorOnly) },
+  { id: 'ppaji', label: '빠지', match: inTab('ppaji', (d) => isPpaji(d)) }, // P50-a R9: 물 위 기구 + 링 위 시설(이전 12 포함)
+  { id: 'seat', label: '자리', match: inTab('seat', (d) => d.class === 'lounging' && !d.lodging && !d.indoorOnly && !isPpaji(d)) },
+  { id: 'lodging', label: '숙박', match: inTab('lodging', (d) => d.class === 'lounging' && d.lodging === true && !d.indoorOnly && !isPpaji(d)) },
+  { id: 'food', label: '먹거리', match: inTab('food', (d) => d.class === 'restaurant' && !d.indoorOnly && !isPpaji(d)) },
+  { id: 'play', label: '놀이', match: inTab('play', (d) => d.class === 'attraction' && !d.indoorOnly && !isPpaji(d)) },
+  { id: 'decor', label: '장식', match: inTab('decor', (d) => d.class === 'decor' && !isPpaji(d)) },
 ];
 
 const UNLOCK_KO: Record<FacilityDef['unlock']['source'], string> = {
@@ -86,7 +99,7 @@ export class BuildWindow {
     const g = this.game();
     const cur = BUILD_TABS.find((t) => t.id === this.tab);
     this.tabTitle.textContent = cur?.label ?? '';
-    const rows = this.defs.filter((d) => cur?.match(d) ?? false);
+    const rows = currentBuildCatalog(this.defs).filter((d) => cur?.match(d) ?? false);
     if (this.tab === 'ppaji') rows.sort((a, b) => (PPAJI_ORDER.get(a.id) ?? 100) - (PPAJI_ORDER.get(b.id) ?? 100));
     if (this.tab === 'indoor') rows.sort((a, b) => hallGroup(a) - hallGroup(b));
     const setIndex = setsByMember(); // P60-c D72 B: 카드 배지 「세트」 = 이 시설이 어떤 (hidden 아닌) 세트의 멤버인가 — 자리별 「+닌자 코스」는 확정 바 칩

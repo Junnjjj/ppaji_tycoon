@@ -1,0 +1,103 @@
+{
+  "id": "watchtower",
+  "sourceSHA": "ed043621e6462789f0c6e81dcabb5c1887cf5e5d5853b502e8d53014a1aa53d7",
+  "checks": [
+    {
+      "direction": 0,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        83,
+        71,
+        109,
+        114
+      ]
+    },
+    {
+      "direction": 0,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        330,
+        285,
+        438,
+        458
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        83,
+        71,
+        109,
+        114
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        330,
+        285,
+        438,
+        459
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        83,
+        72,
+        109,
+        114
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        330,
+        285,
+        438,
+        458
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        83,
+        72,
+        109,
+        114
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        330,
+        285,
+        438,
+        459
+      ]
+    }
+  ],
+  "liveModified": false
+}

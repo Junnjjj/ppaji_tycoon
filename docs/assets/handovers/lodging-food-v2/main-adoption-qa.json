@@ -1,0 +1,39 @@
+{
+  "status": "MAIN_ADOPTED_VERIFIED",
+  "date": "2026-09-20",
+  "port": 5189,
+  "facilities": 11,
+  "nativeFrames": 44,
+  "definitions": 210,
+  "tests": {
+    "files": 118,
+    "passed": 630,
+    "failed": 0,
+    "command": "npm test -- --poolOptions.forks.maxForks=2",
+    "note": "Initial default4-fork run exposed missing compatibility/unlock data (fixed), plus two60-second timeouts/RPC starvation. Final full2-fork run passes without changing timeouts."
+  },
+  "typecheck": "PASS",
+  "lint": "PASS",
+  "uiStaticAndNegativeControls": "PASS",
+  "build": "PASS",
+  "browserPortalCases": 12,
+  "hiddenActorOrOverlayErrors": 0,
+  "sameDoorExits": 12,
+  "http44FrameHashes": "PASS",
+  "constructionTabs": 8,
+  "catalogFollowup": "catalog-followup-qa.json",
+  "serving": {
+    "bundle": "/assets/main-CxW7hV4e.js",
+    "bundleSHA256": "66554eecf003f20c7db02c74603d4057fe8d9879f2e8e43d4e3ac38889408990",
+    "httpMatchesDist": true,
+    "definitions": 210,
+    "newMenusAndUnlocksLinked": true
+  },
+  "workersReleased": 2,
+  "remaining": [
+    "Stage-specific upgrade rules",
+    "Four-facing construction",
+    "Food service fine anchors/staff/flame integration",
+    "New playground/photozone and audience stage design per docs/assets/plans/2026-09-20-play-photo-stage.md"
+  ]
+}

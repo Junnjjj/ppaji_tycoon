@@ -1,0 +1,80 @@
+{
+  "id": "watchtower",
+  "sourceSHA": "ed043621e6462789f0c6e81dcabb5c1887cf5e5d5853b502e8d53014a1aa53d7",
+  "presentation": "camera-near exterior wall visibility only; rigid full-root evidence stored separately",
+  "camera": {
+    "C": [
+      134.72193908691406,
+      -134.72193908691406,
+      123.57644653320312
+    ],
+    "R": [
+      0.7071067094802856,
+      0.7071068286895752,
+      2.9802322387695312e-08
+    ],
+    "U": [
+      -0.3535534143447876,
+      0.3535534143447876,
+      0.8660253286361694
+    ],
+    "F": [
+      -0.6123723983764648,
+      0.6123723983764648,
+      -0.5
+    ]
+  },
+  "tileWorld": 22.627416997969522,
+  "native": 192,
+  "supportTopObjects": [],
+  "directions": [
+    {
+      "d": 0,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {
+        "native": "3f08926cbca9641eff06f5d0b0f5733a274b43fea5b8683399801e62ffc7f445",
+        "color": "75419c283daf6ef9e91ace2bfd4185ede467ae58b0e5f5fb043e0799d1546f24"
+      },
+      "finitePixels": 678,
+      "supportTopExclusions": 0,
+      "maxReprojectionError": 4.57763671875e-05
+    },
+    {
+      "d": 1,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {
+        "native": "77f13970f1fb029539c33ef5a253e70996e40c22824b480dbe8e7278f44b634b",
+        "color": "8fcfca539cb2174b9a9863fa1cf2739547db674db8ca56b657d3a1e3845a5cab"
+      },
+      "finitePixels": 644,
+      "supportTopExclusions": 0,
+      "maxReprojectionError": 5.340576171875e-05
+    },
+    {
+      "d": 2,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {
+        "native": "3e0adafd275ae665e36bec146007ccb0c4f213b142531d076c396cd3a3a9dd44",
+        "color": "84f2776d1512d406d2e3f1f559a9a035ddde476916bc39bad0db18ae74ae7c70"
+      },
+      "finitePixels": 598,
+      "supportTopExclusions": 0,
+      "maxReprojectionError": 4.9591064453125e-05
+    },
+    {
+      "d": 3,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {
+        "native": "d7dd5619c7368274d272695812ae3fad5d0fed6b38cba1c6b038e15ac41b71a5",
+        "color": "4331ccbbed31a96cb3995c194b547420fd823ffd34dee3757a1c2d9a058014ef"
+      },
+      "finitePixels": 598,
+      "supportTopExclusions": 0,
+      "maxReprojectionError": 4.57763671875e-05
+    }
+  ]
+}

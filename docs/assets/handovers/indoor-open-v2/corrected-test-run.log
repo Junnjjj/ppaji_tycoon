@@ -1,0 +1,16 @@
+
+> ppaji-story@0.0.1 test
+> vitest run src/sim/g53.test.ts src/sim/p21.test.ts
+
+
+ RUN  v3.2.7 /Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji
+
+ ✓ src/sim/g53.test.ts (3 tests) 8ms
+ ✓ src/sim/p21.test.ts (4 tests) 6154ms
+   ✓ P21 해금 재배치 > 봇 64일 — 랭크 2 에 닿으면 BBQ존·카페가 열려 있다  6086ms
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  01:35:11
+   Duration  6.73s (transform 316ms, setup 0ms, collect 778ms, tests 6.16s, environment 0ms, prepare 67ms)
+

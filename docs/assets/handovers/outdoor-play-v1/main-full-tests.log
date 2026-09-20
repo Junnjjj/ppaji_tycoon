@@ -1,0 +1,348 @@
+
+ RUN  v3.2.7 /Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji
+
+ ❯ src/data/data.test.ts (86 tests | 1 failed) 146ms
+   ✓ facilities.json > ids are unique snake_case 2ms
+   ✓ facilities.json > every class is a FacilityClass 5ms
+   ✓ facilities.json > cost/pop stays within the class band (§1.4 회귀) 5ms
+   ✓ facilities.json > maint ≈ pop × 5.3 (slides × 7.2) ± 30% 1ms
+   ✓ facilities.json > restaurants have 5 menu slots, everything else 0 1ms
+   ✓ facilities.json > big slides carry slide geometry, nothing else does 1ms
+   ✓ facilities.json > P60-a: 색·향 필드가 없다 — 남는 물성은 heat(계절 수온)뿐 3ms
+   ✓ facilities.json > every sprays:true facility contributes AB, and AB only comes from sprays or slides 1ms
+   ✓ facilities.json > season vectors have exactly 4 entries 4ms
+   ✓ facilities.json > at least 5 facilities are unlocked from the start 0ms
+   ✓ facilities.json > unlock refs are present where the source needs one 1ms
+   × facilities.json > paid lounging heals more than free lounging; decor is not usable 5ms
+     → stage_river_lv1: expected 4 to be +0 // Object.is equality
+   ✓ seasons.json > P60-a: 색·향 표가 없다 — 수온·햇빛·이상 수온만 남는다 0ms
+   ✓ seasons.json > §1.3 values are copied verbatim 0ms
+   ✓ areas.json > has 10 areas ordered 0..9 with unique ids, in PSS order 0ms
+   ✓ friends.json > ids are unique snake_case and every area exists 1ms
+   ✓ friends.json > covers all 10 areas with §1.6 counts (71 = 7·7·8·7·8·6·8·8·8·4) 0ms
+   ✓ friends.json > fav is food only (P60-a: 색·향 취향 삭제), palette 0..7, gender M|F 2ms
+   ✓ friends.json > each populated area has ≥2 start friends, and start ⇔ invitedBy === null 0ms
+   ✓ friends.json > every invitedBy points at an existing, different friend in the same area with star 1..3 1ms
+   ✓ friends.json > invite chains have no cycles and always end at a start friend 1ms
+   ✓ wishes.json > has exactly 3 wishes per friend with idx 0,1,2 (213 total) 2ms
+   ✓ wishes.json > every condition kind is allowed and every referenced id exists (recursive over all/any) 12ms
+   ✓ wishes.json > rewards reference existing ids and stay in the allowed kinds 2ms
+   ✓ wishes.json > 소원 보상 중 돈은 1/3 이하 — 원작: 보상은 시설·재료·튜브·새 손님이지 돈이 아니다 (G49 R2 · P60-a 재배분) 0ms
+   ✓ wishes.json > every unlock:"wish" ingredient is rewarded by at least one wish (otherwise its recipes are unreachable forever); rewards are wish-tier only 0ms
+   ✓ wishes.json > P60-a: 보상에 item 0 · 조건에 item/color/scent 0 · 보상 kind 집합은 {facility, gift, money, ingredient, rigPart} 5ms
+   ✓ wishes.json > every unlock.source === "wish" facility is rewarded by exactly one wish, at exactly its unlock.ref 1ms
+   ✓ wishes.json > every unlock === "wish" gift is rewarded by exactly one wish 0ms
+   ✓ wishes.json > Kiddie's wishes are pool sizeMin 20 / 40 / 60 (the first wish the player meets) 0ms
+   ✓ wishes.json > lines are Korean, non-empty 1ms
+   ✓ gifts.json > has 18 unique ids (튜브 12 는 심사 보상, G44), kind swimsuit|float, price > 0, valid unlock 1ms
+   ✓ certs.json > has 24 unique ids with a known family/grade, pass ∈ {15,17,20,22,25}, fee 500~8000 1ms
+   ✓ certs.json > every family from §1.7 has at least one cert 0ms
+   ✓ certs.json > carries 2~3 weighted conditions whose kinds are evaluable and whose ids exist 2ms
+   ✓ certs.json > requires points at an existing cert of the same family and a lower grade, with a higher fee and pass 1ms
+   ✓ certs.json > the grade family chains F → D → B → A → S (원작 노멀 부문 표 [S], G44) 0ms
+   ✓ certs.json > 원작 심사관 표 [S] 대로 — 조건 3 = 심사관 3 (가중치 2 는 심사관 둘이 같은 조건) · 시설 조건은 실재 id · 3단 슬라이드는 any 0ms
+   ✓ certs.json > rewards reference existing ids; tiles at most once each; cert-gifts exactly once 0ms
+   ✓ certs.json > the entry cert (grade_f) asks for a popular pool 60 (2x) + rigs 2 (P53-a) and is reachable from the start kit 0ms
+   ✓ certs.json > P60-a: 24 유지 · 조건에 item/색/향 0 · 보상 kind 집합 {gift, facility, rigPart} · set 계열은 P60-c 세트(rigSet 1/2/3) · court 계열은 임시로 식당 수 (P60-e 가 재배선) 1ms
+   ✓ rig-sets.json (P60-c) > 8종 · id 유일 · 이름 ≤ 10자 · 멤버 정확히 3 · 서로 다른 · 전부 존재하고 class rig(링 위 onRing 포함) · hidden 정확히 4(jump·night·roll·trio) 1ms
+   ✓ rig-sets.json (P60-c) > 시작 해금(unlock.source start) 3종만으로 최소 1 세트(ninja) 성립 가능 · 밤빠지는 lights 기구 둘 + 플로팅 바 · 라운지는 링 위 메뉴 시설을 든다 · 멤버 셋이 같은 세트는 둘 없다 0ms
+   ✓ ranks.json > stars 1..5 ascending with Korean names 0ms
+   ✓ ranks.json > every condition is evaluable and references existing ids 0ms
+   ✓ ranks.json > popularity and certPasses thresholds rise with the star (§2.6 placeholders) 0ms
+   ✓ ranks.json > rewards reference existing ids; ★5 hands out the golden kairobot (§1.8) 0ms
+   ✓ shop.json > ids are unique `shop_<ref>`, kinds valid, refs exist, price > 0, tier 1..5 1ms
+   ✓ shop.json > covers every shop-unlock facility / gift exactly once, and nothing else; ingredient rows are 6~8 shop-tier ingredients, each at most once 0ms
+   ✓ shop.json > facilities sell at shopPrice on their unlock rank; ingredients (3-pack) and gifts at 3× list price (§1.8) 0ms
+   ✓ shop.json > tier 1 is not empty and tiers never skip a step (★1 opens something on day one of the shop) 0ms
+   ✓ calendar.json > ids are unique; year 1..8, season 0..3, dayInSeason 0..3, tick 0..TICKS_PER_DAY-1; from ∈ president|judge; Korean title/line 2ms
+   ✓ calendar.json > no two events share a calendar slot (one arrival per moment, §1.8) 0ms
+   ✓ calendar.json > grants reference existing ids (tool ids: move only) and `when` is evaluable 0ms
+   ✓ calendar.json > every gift-source facility is granted by exactly one calendar event whose id is its ref 0ms
+   ✓ calendar.json > the fixed §1.4 beats are in place: creperie on day 3, move tool after the first cert in Y1 autumn 0ms
+   ✓ ingredients.json > has 70 unique snake_case ids with Korean names and a known unlock 1ms
+   ✓ ingredients.json > `year` is present iff unlock === "year" (2..8); `price` iff unlock !== "start" (P56-c 재고 — 장날 300~900 · 보상 재료는 재구매 값 500~1,300, 시작 재료는 무한이라 값이 없다) 3ms
+   ✓ ingredients.json > every source from §1.5 hands out something (start · shop · wish · cert · year) 0ms
+   ✓ ingredients.json > every ingredient is used by at least one recipe (no dead key — wish/cert rewards must matter) 1ms
+   ✓ recipes.json > has 180 unique ids (140 + 실패작 4 + 빠지 먹거리 36), unique keys, Korean names, category ∈ FoodCategory 4ms
+   ✓ recipes.json > key is the sorted multiset of 2~5 existing ingredient ids (or `@class` wildcards, G41) joined with "+" 4ms
+   ✓ recipes.json > 와일드카드 레시피 ≥ 8 · 강화 사슬은 2단까지, 상위 요리 인기 ≤ 기본 +5 · 가격 ≤ 기본 ×1.6 (G41) 1ms
+   ✓ recipes.json > category counts follow §1.5 (drink 35 · snack 40 · meal 30 · dessert 35) 0ms
+   ✓ recipes.json > stats taste/look/pop are integers 1..16 (시작 재료 2~6 · 트러플·8년차 재료 10~16) 5ms
+   ✓ recipes.json > unlock ∈ start | cook | level:N (N 2..10) | fail; at least 20 start recipes and 10 level recipes 1ms
+   ✓ recipes.json > start recipes use only start ingredients (the 1st-year kitchen must not point at the shop) 1ms
+   ✓ recipes.json > every ingredient of every recipe is obtainable (its unlock is one of the five sources) 5ms
+   ✓ recipes.json > the §1.5 signature dishes exist with their canonical keys 0ms
+   ✓ compat.json > has exactly one entry per restaurant in facilities.json 0ms
+   ✓ compat.json > good 5~10 and bad 2~5 recipe ids exist, with no recipe both good and bad in one restaurant 2ms
+   ✓ compat.json > every 1st-year restaurant (start · day-3 gift) has a ⊚ recipe in the start book (it can open with a fit menu) 0ms
+   ✓ G8 — 투자 · 캠페인 > 투자 단계는 트랙별 1..n 연속, 해금 시설은 실재하고 invest 출처 시설은 정확히 한 단계가 연다 5ms
+   ✓ G8 — 투자 · 캠페인 > 캠페인 — 광고는 배율 > 1, 버스는 배율 1(좌석으로 온다, G40) · 쿨다운 ≥ 효과 일수 4ms
+   ✓ parts.json / gears.json > 부품 40± 개 — id 유일 snake_case · 한글 이름 · class 는 8계열 · 출처는 start|shop|year 12ms
+   ✓ parts.json / gears.json > `price` 는 start 가 아닐 때(P56-c 재고 — 장날 200~1,500G · 연차 부품은 재구매 값 600+100×연차) · `year` 는 year 일 때만 (2~8) · 시작 부품 6~8 1ms
+   ✓ parts.json / gears.json > 기구 키는 정렬된 부품 다중집합(2~5) · 부품/와일드카드 실재 · 키 유일 2ms
+   ✓ parts.json / gears.json > unlock ∈ start | cook | level:N (N ≤ 10) | fail — 실패작 3 · 레벨 게이트 4~6 0ms
+   ✓ parts.json / gears.json > 스탯 taste/look/pop 은 1..10 정수 1ms
+   ✓ parts.json / gears.json > 발견 = 그 기구를 갖는다 — 비-fail 기구는 equipment 에 실재하고, 비-start equipment 는 전부 발견 가능 1ms
+   ✓ parts.json / gears.json > 강화 사슬 — base 실재 · 자기 자신 금지 · 순환 없음 · base 부품 + add ≤ 5 (넣을 수 있어야 사슬이다) 1ms
+   ✓ parts.json / gears.json > `fillFor` 논리 — 모든 기구가 부품만으로 도달 가능하다 (막다른 기구 0) 1ms
+   ✓ parts.json / gears.json > 적합도 — 기구 30종 × 프리셋 6종이 다 채워지고 저마다 `best` 형태가 하나는 있다 4ms
+   ✓ validateRigData (P49-a1) > rig ⇒ depth 필수 · slide null · menuSlots 0 · indoorOnly false · usageFee 0 · capacity ≥ 1 · needsVest ⇔ deep · buildable:false ⇒ craft · maxPerPark 정확히 1종 3ms
+   ✓ validateRigData (P49-a1) > 링 위 비-rig 는 자기 class 띠를 따른다(watchtower·rig_rack·rescue_dock utility · rig_float_bar restaurant) 0ms
+   ✓ approved asset dependency closure > active combo pairs and nested wish/certificate facility conditions never require retired assets 14ms
+ ✓ src/render/outdoor-facilities.test.ts (12 tests) 69ms
+ ✓ src/sim/p48b2.test.ts (8 tests) 71301ms
+   ✓ P48-b2 만·허가·킷 > 봇 — 링은 뭍 위 칸에서 시작한다(굽이 어귀에서 매일 거절당하지 않는다): 128일 수역 ≥60 · 코스 ≥2 (전: 36 · 1)  70797ms
+ ✓ src/sim/lines.test.ts (2 tests) 69279ms
+   ✓ G27 달력 24건 > 봇 128일에 달력 사건이 전부 발동한다 (조건부 2건 포함)  69277ms
+ ✓ src/sim/p20.test.ts (3 tests) 69937ms
+   ✓ P20 코스 축(봇 계측기 수리) > 봇 128일 — 코스 2 이상 · 선착장 ≤ 코스 + 2 (전: 8시드 전부 코스 1 · 선착장 3~4)  69862ms
+ ❯ src/sim/p3.test.ts (1 test | 1 failed) 69184ms
+   × P3 > 봇은 128일 동안 수역을 넓히고(≥40칸) 데크를 늘린다 — P14 뒤 건너편 둑·다리는 없다 69183ms
+     → Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/sim/g30.test.ts (2 tests | 1 failed) 86746ms
+   ✓ G30 후반 곡선 > 유지비는 랭크마다 ×maintRankMul · 티켓은 만족 레벨로 오른다 · 지출이 누적된다 39ms
+   × G30 후반 곡선 > 봇 128일 — 후반(5~8년차) 지출 비율이 잡힌다 86706ms
+     → Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ✓ src/sim/p13.test.ts (3 tests) 44414ms
+   ✓ P13 코스 성향 > 시드 1: 64일 뒤 코스 수가 course 성향 > balanced  17558ms
+   ✓ P13 코스 성향 > 시드 2: 64일 뒤 코스 수가 course 성향 > balanced  26854ms
+ ✓ src/sim/p51.test.ts (6 tests) 24639ms
+   ✓ P51 개조 > 봇 — 기본 봇은 64일에 개조 ≥ 1 · 부품 구매 ≥ 1 · `--no-convert` 대조군은 개조 0·부품 0 이고 현금이 ±25% 안(P55 뒤)  24421ms
+ ✓ src/sim/p52a.test.ts (5 tests) 22715ms
+   ✓ P52-a 손님·팔찌 > 봇 A/B 64일 — 대여소 있는 판(기본) vs 없는 판(--no-vest, 창구 ⓑ 만): 있는 판 ppajiRevShare ≥ 0.05 · 없는 판 > 0 · 있는 판이 팔찌 매출·팔찌 이용 몫 ×3 이상  22592ms
+ ✓ src/sim/p52c.test.ts (4 tests) 24253ms
+   ✓ P52-c 계절 — 수온·장마 > 봇 64일(네 계절 한 바퀴) — offSeasonSwim(가을÷여름) 0.2~0.55 · `--sweep swimUrgeMin=1` 대조군은 그보다 크다  24097ms
+ ✓ src/sim/p60d.test.ts (8 tests) 17936ms
+   ✓ P60-d bot course completion > small rest modules let the course-aware bot complete paths without an oversized pool  17788ms
+ ✓ src/sim/p56c.test.ts (7 tests) 22665ms
+   ✓ P56-c 재고(U1) > 봇 — 64일 판에서 재고 구입이 있고(restock 이 돈다) 레시피 발견이 산다 · 결정론  22508ms
+ ✓ src/sim/golden.test.ts (3 tests) 14026ms
+   ✓ 골든 시나리오 > 같은 시드는 두 번 돌려도 같은 해시 (결정론)  8211ms
+   ✓ 골든 시나리오 > 스냅샷 왕복 뒤 이어 돌려도 같은 해시  2149ms
+   ✓ 골든 시나리오 > 골든 표와 일치한다 (표가 0 이면 아직 안 박은 것 — 값을 출력한다)  3663ms
+ ✓ src/sim/p60b.test.ts (2 tests) 9299ms
+   ✓ P60-b 기구 배고픔 > balance.hungerPerRig 가 있고(12) 0 이면 동작 0 — 골든 시드 1 의 16일 해시가 배고픔 없는 판의 고정값과 같다(대조군)  1617ms
+   ✓ P60-b 기구 배고픔 > 16일 뒤 매점 매출 몫이 늘거나 같다 — 기구를 탄 손님이 배고파진다 (3시드 합계)  7681ms
+ ✓ src/sim/course.test.ts (17 tests) 9019ms
+   ✓ D12 개정(P15) — 코스는 부표 밖 트인 강, 수역은 막힘 > 봇은 시드 1 에서 64일 안에 코스를 하나 이상 놓는다  8796ms
+ ✓ src/sim/p21.test.ts (4 tests) 11799ms
+   ✓ P21 해금 재배치 > 봇 64일 — 랭크 2 에 닿으면 BBQ존·카페가 열려 있다  11731ms
+ ✓ src/sim/g39.test.ts (2 tests) 6668ms
+   ✓ G39 랜덤 이벤트 > 봇 64일 — 사건이 뜨고, 뜬 사건은 (마지막 하나를 빼면) 전부 답했다  6659ms
+ ✓ src/sim/p50b1.test.ts (5 tests) 11141ms
+   ✓ P50-b1 사슬·등급 값 > 봇 — `--no-rig` 대조군은 기구 0 (rigsDistinct 0 → 밴드 빨강), 기본 봇은 32일에 기구 ≥ 3종 · 사슬 ≥ 2  10944ms
+ ✓ src/sim/p52b.test.ts (5 tests) 4959ms
+   ✓ P52-b 사고 > 봇 32일 — accidentBase·Floor 0 대조군은 사고 0 · 스트림은 소비된다(뽑기는 하고 결과를 버린다) · 기본은 사고가 난다  4823ms
+ ✓ src/sim/p48a.test.ts (8 tests) 4230ms
+   ✓ P48-a 자연 바닥 평면 > ★ 바닥·단 배열이 골든 3시드×16일 전 구간에서 fixture 와 바이트 동일 — P48-a 는 변경 전과 대조해 「동작 0」을 증명했고(통과), P48-b1 부터는 지형 회귀 방어(굽이가 든 fixture 를 페이즈마다 사유와 함께 다시 뜬다) · P57-i·P58-a(2026-09-15) 재생성: 단 배열 3시드 동일, 바닥만 3일차부터 — 유입 재조정·킷 식탁으로 봇 건설 순서가 바뀐 몫 · P60-a(2026-09-18) 재생성: 소품 삭제로 봇 지출 순서가 바뀐 몫(단 배열 동일) · P60-b 재생성: 기구 배고픔으로 매점 매출·지출 순서가 바뀐 몫 · P60-c 재생성: 세트 후보 우선·사슬 예약으로 봇 배치 순서(시드 1 바닥 4일차부터, 단 배열 동일) · P60-d 재생성: 입수구 거리 정렬로 봇 배치 순서 · P60-e 재생성: 서서 먹기·growFoodCourt 로 봇 지출 순서(시드 1 바닥 6일차부터)  4019ms
+ ✓ src/sim/p54.test.ts (6 tests) 3348ms
+   ✓ P54 밤 빠지 파티 > --no-night 대조군 — 밤이 안 서는 판(16일·★0)은 스위치와 무관하게 비트 동일 · 스냅샷 왕복  2647ms
+ ✓ src/sim/p53b.test.ts (5 tests) 2510ms
+   ✓ P53-b 스토리·이월·엔딩 > 콤보 — 기구·링 시설이 든 쌍마다 성립하는 배치가 존재한다 (반경 안에 둘을 놓으면 activeCombos 에 뜬다)  2363ms
+ ✓ src/sim/p60c.test.ts (10 tests) 1729ms
+   ✓ P60-c 세트 — 봇 > noSet 대조군이 골든과 다르다 — 봇이 「세트 완성 후보」를 실제로 겨눈다 (시드 1 · 8일 해시) · 세트 우선이 128일 발견 수를 늘린다(측정치는 tools/bot 밴드)  1315ms
+ ✓ src/sim/p60e.test.ts (10 tests) 1601ms
+   ✓ P60-e 봇·밴드 > noCourt 대조군 — 8일 해시가 기본 봇과 다르고 좌석은 킷 4 그대로 · 기본 봇은 서서 > 0.3 에 블록을 더해 좌석 > 4 · RunMetrics 에 standShare/courtSeats/courtMenuKindsY3  1287ms
+ ✓ src/sim/course/ride.test.ts (26 tests) 931ms
+ ✓ src/sim/p50b2.test.ts (4 tests) 804ms
+   ✓ P50-b2 화면·돈 칸 값 > aimPreview — 기구·링 시설 전수: 미리보기 등급·연결·팔찌 값 == 확정 뒤 실값 · 호출 전후 nextUid·occHash·grid.rev·pools.version 불변  776ms
+ ✓ src/sim/invariants.test.ts (9 tests) 367ms
+   ✓ 불변식 1 — sim/ 은 렌더러를 모른다 > sim/ 에서 phaser import 를 막는다  327ms
+ ✓ src/sim/p53a.test.ts (4 tests) 368ms
+   ✓ P53-a 인증·소원·달력 재배선 — 조건 4종 · 교착 0 · 연차 폴백 > 멈춘 판 — 랭크를 ★0 에 묶어도 1·2년차 겨울 택배가 온다 (rankCapForTest) · 폴백 소식은 티커(strip)  362ms
+ ✓ src/sim/outdoor-activity.test.ts (54 tests) 357ms
+ ✓ src/sim/arrival-layout.test.ts (6 tests) 289ms
+ ✓ src/sim/levels.test.ts (5 tests) 308ms
+ ✓ src/sim/p27.test.ts (3 tests) 283ms
+ ✓ src/sim/ppaji-modules.test.ts (1 test) 306ms
+   ✓ standalone authored ppaji modules > all 14 unlock, place in both game facings and survive a save without changing legacy footprints  305ms
+ ✓ src/sim/authored-rest-variants.test.ts (1 test) 280ms
+ ✓ src/sim/rank.test.ts (5 tests) 263ms
+ ✓ src/save/save.test.ts (9 tests) 261ms
+ ✓ src/sim/p45c.test.ts (2 tests) 238ms
+ ✓ src/sim/game.test.ts (6 tests) 227ms
+ ✓ src/sim/p49b.test.ts (6 tests) 210ms
+ ✓ src/sim/p28.test.ts (6 tests) 236ms
+ ✓ src/sim/foodcourt.test.ts (6 tests) 216ms
+ ✓ src/sim/p49a1.test.ts (9 tests) 204ms
+ ✓ src/sim/p8.test.ts (2 tests) 192ms
+ ✓ src/sim/p49a2.test.ts (5 tests) 199ms
+ ✓ src/sim/p18.test.ts (4 tests) 196ms
+ ✓ src/sim/p4c.test.ts (2 tests) 181ms
+ ✓ src/sim/g57.test.ts (3 tests) 175ms
+ ✓ src/ui/windows/lodging-food-stages.test.ts (2 tests) 176ms
+ ✓ src/sim/composite.test.ts (3 tests) 156ms
+ ✓ src/sim/d63.test.ts (1 test) 174ms
+ ✓ src/sim/guest-life.test.ts (3 tests) 144ms
+ ✓ src/sim/p50a.test.ts (6 tests) 162ms
+ ✓ src/sim/composite-access.test.ts (1 test) 165ms
+ ✓ src/sim/p24.test.ts (4 tests) 152ms
+ ✓ src/sim/p17.test.ts (4 tests) 151ms
+ ✓ src/sim/p34.test.ts (2 tests) 144ms
+ ✓ src/sim/p16.test.ts (4 tests) 122ms
+ ✓ src/sim/p39.test.ts (2 tests) 123ms
+ ✓ src/sim/p7.test.ts (3 tests) 125ms
+ ✓ src/sim/p22.test.ts (4 tests) 117ms
+ ✓ src/sim/p23.test.ts (2 tests) 137ms
+ ✓ src/sim/p26.test.ts (3 tests) 104ms
+ ✓ src/sim/zone.test.ts (3 tests) 105ms
+ ✓ src/sim/p11.test.ts (2 tests) 115ms
+ ✓ src/sim/p25.test.ts (3 tests) 111ms
+ ✓ src/sim/approved-docks.test.ts (4 tests) 101ms
+ ✓ src/ui/windows/outdoor-asset-adoption.test.ts (2 tests) 124ms
+ ✓ src/sim/g36.test.ts (3 tests) 100ms
+ ✓ src/sim/g34.test.ts (3 tests) 110ms
+ ✓ src/assets/npc-v8.test.ts (4 tests) 107ms
+ ✓ src/sim/facility.test.ts (6 tests) 108ms
+ ✓ src/sim/pool-name.test.ts (2 tests) 91ms
+ ✓ src/sim/p48c.test.ts (5 tests) 101ms
+ ✓ src/sim/pool-state.test.ts (3 tests) 91ms
+ ✓ src/save/p48b1.test.ts (2 tests) 87ms
+ ✓ src/sim/p9.test.ts (3 tests) 97ms
+ ✓ src/sim/p46.test.ts (1 test) 87ms
+ ✓ src/sim/p42.test.ts (1 test) 72ms
+ ✓ src/sim/p6.test.ts (3 tests) 66ms
+ ✓ src/sim/bus.test.ts (4 tests) 82ms
+ ✓ src/assets/approved-facilities.test.ts (9 tests) 71ms
+ ✓ src/sim/g35.test.ts (2 tests) 65ms
+ ✓ src/sim/g33.test.ts (2 tests) 55ms
+ ✓ src/assets/watercraft.test.ts (4 tests) 49ms
+ ✓ src/sim/g43.test.ts (3 tests) 41ms
+ ✓ src/sim/p48b1.test.ts (5 tests) 34ms
+ ✓ src/sim/grid.test.ts (4 tests) 40ms
+ ✓ src/render/iso.test.ts (20 tests) 41ms
+ ✓ src/sim/facility-portal.test.ts (35 tests) 32ms
+ ✓ src/sim/g37.test.ts (1 test) 39ms
+ ✓ src/sim/g52.test.ts (1 test) 36ms
+ ✓ src/sim/watercraft-core/core.test.ts (10 tests) 32ms
+ ✓ src/data/p10.test.ts (4 tests) 11ms
+ ✓ src/sim/cooking-g41.test.ts (7 tests) 24ms
+ ✓ src/data/p5.test.ts (3 tests) 17ms
+ ✓ src/sim/cert.test.ts (4 tests) 12ms
+ ✓ src/sim/cooking.test.ts (7 tests) 11ms
+ ✓ src/sim/pool.test.ts (4 tests) 14ms
+ ✓ src/data/pictures.test.ts (2 tests) 11ms
+ ✓ src/sim/g53.test.ts (3 tests) 8ms
+ ✓ src/data/p57b.test.ts (3 tests) 4ms
+ ✓ src/sim/sns.test.ts (7 tests) 3ms
+ ✓ src/sim/g38.test.ts (1 test) 10ms
+ ✓ src/assets/manifest.test.ts (2 tests) 3ms
+ ✓ src/sim/condition.test.ts (5 tests) 3ms
+ ✓ src/ui/windows/build.test.ts (3 tests) 4ms
+ ✓ src/ui/picture-grammar.test.ts (3 tests) 3ms
+ ✓ src/render/camera.test.ts (16 tests) 3ms
+ ✓ src/ui/rig-sets.test.ts (4 tests) 2ms
+ ✓ src/ui/asset-url.test.ts (1 test) 5ms
+ ✓ src/assets/p57a.test.ts (3 tests) 2ms
+ ✓ src/render/facility-portal.test.ts (1 test) 2ms
+ ✓ src/sim/clock.test.ts (3 tests) 2ms
+ ✓ src/assets/p55.test.ts (3 tests) 2ms
+ ✓ src/data/p19.test.ts (3 tests) 1ms
+ ✓ src/ui/panels.test.ts (4 tests) 2ms
+ ✓ src/ui/bubbles.test.ts (2 tests) 2ms
+ ✓ src/ui/tablet-column.test.ts (2 tests) 1ms
+ ✓ src/ui/ui-scale.test.ts (1 test) 1ms
+ ✓ src/sim/g56.test.ts (1 test) 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/data/data.test.ts > facilities.json > paid lounging heals more than free lounging; decor is not usable
+AssertionError: stage_river_lv1: expected 4 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 4
+
+ ❯ src/data/data.test.ts:158:57
+    157|       else expect(f.usageFee, f.id).toBe(0);
+    158|       if (f.class === 'decor') {
+    159|         const authoredCapacity: Record<string, number> = { photozone: …
+       |                        ^
+    160|         expect(f.capacity, f.id).toBe(authoredCapacity[f.id] ?? 0);
+    161|         if (authoredCapacity[f.id]) expect(f.useTicks, f.id).toBeGreat…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/sim/g30.test.ts > G30 후반 곡선 > 봇 128일 — 후반(5~8년차) 지출 비율이 잡힌다
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/sim/g30.test.ts:31:3
+     29|     expect(h.prevSatAvg).toBe(100);
+     30|   });
+     31|   it('봇 128일 — 후반(5~8년차) 지출 비율이 잡힌다', () => {
+       |   ^
+     32|     const m = runBot(new Game(2), 128);
+     33|     expect(m.lateSpendRatio).toBeGreaterThan(0.1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/sim/p3.test.ts > P3 > 봇은 128일 동안 수역을 넓히고(≥40칸) 데크를 늘린다 — P14 뒤 건너편 둑·다리는 없다
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/sim/p3.test.ts:8:3
+      6| /** P3 — 봇 데크 다리 (물빛/분위기 낱말 절은 P60-a 에서 삭제) */
+      7| describe('P3', () => {
+      8|   it('봇은 128일 동안 수역을 넓히고(≥40칸) 데크를 늘린다 — P14 뒤 건너편 둑·다리는 없다', () => {
+       |   ^
+      9|     const g = new Game(3);
+     10|     runBot(g, 128);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 5 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-worker]: Timeout calling "onTaskUpdate"
+ ❯ Object.onTimeoutError node_modules/vitest/dist/chunks/rpc.-pEldfrD.js:53:10
+ ❯ Timeout._onTimeout node_modules/vitest/dist/chunks/index.B521nVV-.js:59:62
+ ❯ listOnTimeout node:internal/timers:585:17
+ ❯ processTimers node:internal/timers:521:7
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-worker]: Timeout calling "onTaskUpdate"
+ ❯ Object.onTimeoutError node_modules/vitest/dist/chunks/rpc.-pEldfrD.js:53:10
+ ❯ Timeout._onTimeout node_modules/vitest/dist/chunks/index.B521nVV-.js:59:62
+ ❯ listOnTimeout node:internal/timers:585:17
+ ❯ processTimers node:internal/timers:521:7
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-worker]: Timeout calling "onTaskUpdate"
+ ❯ Object.onTimeoutError node_modules/vitest/dist/chunks/rpc.-pEldfrD.js:53:10
+ ❯ Timeout._onTimeout node_modules/vitest/dist/chunks/index.B521nVV-.js:59:62
+ ❯ listOnTimeout node:internal/timers:585:17
+ ❯ processTimers node:internal/timers:521:7
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-worker]: Timeout calling "onTaskUpdate"
+ ❯ Object.onTimeoutError node_modules/vitest/dist/chunks/rpc.-pEldfrD.js:53:10
+ ❯ Timeout._onTimeout node_modules/vitest/dist/chunks/index.B521nVV-.js:59:62
+ ❯ listOnTimeout node:internal/timers:585:17
+ ❯ processTimers node:internal/timers:521:7
+
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-worker]: Timeout calling "onTaskUpdate"
+ ❯ Object.onTimeoutError node_modules/vitest/dist/chunks/rpc.-pEldfrD.js:53:10
+ ❯ Timeout._onTimeout node_modules/vitest/dist/chunks/index.B521nVV-.js:59:62
+ ❯ listOnTimeout node:internal/timers:585:17
+ ❯ processTimers node:internal/timers:521:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  3 failed | 118 passed (121)
+      Tests  3 failed | 695 passed (698)
+     Errors  5 errors
+   Start at  04:03:15
+   Duration  639.80s (transform 946ms, setup 0ms, collect 6.13s, tests 615.31s, environment 10ms, prepare 3.46s)
+

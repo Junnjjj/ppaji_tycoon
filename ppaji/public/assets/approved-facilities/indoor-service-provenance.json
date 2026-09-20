@@ -1,0 +1,419 @@
+{
+  "scope": "approved-art-only",
+  "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-service-v1",
+  "facilities": {
+    "rental_tube": {
+      "frames": {
+        "d0": {
+          "file": "rental_tube/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "e9c7fe220686399e16d0e0a8835dcc2f60ebc9693e5e60433a6de83a8f5520d2"
+        },
+        "d1": {
+          "file": "rental_tube/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "44c860ee99ceb03ec93e1c215e5e485dc90049aadab0b9c366ff914e9045edc6"
+        },
+        "d2": {
+          "file": "rental_tube/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "bf9f2c23aea59871aca2d8f70114d6043932b03b4f7d3cc3ce11ae2488e5e503"
+        },
+        "d3": {
+          "file": "rental_tube/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "ec072b74401daedbd6501fe20a423b8eaf012c0f889e2030688e32a3d090b165"
+        }
+      },
+      "presentationQA": {
+        "id": "rental_tube",
+        "sourceSHA": "91c60ef327d6d9b1320e40afa58283820171348a40e40a9eaa696868a30bbf27",
+        "checks": [
+          {
+            "direction": 0,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              73,
+              78,
+              118,
+              116
+            ]
+          },
+          {
+            "direction": 0,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              291,
+              311,
+              474,
+              464
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              82,
+              71,
+              113,
+              119
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              326,
+              283,
+              451,
+              476
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              74,
+              76,
+              119,
+              114
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              294,
+              302,
+              477,
+              458
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              79,
+              83,
+              110,
+              119
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              317,
+              330,
+              442,
+              477
+            ]
+          }
+        ],
+        "liveModified": false
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "91c60ef327d6d9b1320e40afa58283820171348a40e40a9eaa696868a30bbf27",
+          "concept": "1325c9cd451263d0d5d6dd61ffe206df0959e3dead73e8ca296a4123e184756e"
+        },
+        "projection": {
+          "d0": "FAIL",
+          "d1": "FAIL",
+          "d2": "FAIL",
+          "d3": "WARN"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-service-v1/rental_tube/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-service-v1/rental_tube/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "contract": {
+        "blend": "facility.blend",
+        "concept": "reference.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.627416997969522,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          1
+        ],
+        "floor_mode": "transparent-no-floor",
+        "minimum_native_foreground": 650,
+        "inventory": {
+          "vests": {
+            "prefix": "VestBack_",
+            "count": 3
+          },
+          "counter": {
+            "names": [
+              "CounterTop"
+            ],
+            "count": 1
+          }
+        },
+        "groups": {
+          "body": {
+            "prefix": "Structure_"
+          }
+        },
+        "landmarks": {
+          "service": [
+            -0.57,
+            -0.83,
+            0
+          ],
+          "counter": [
+            -0.57,
+            -0.28,
+            0.65
+          ],
+          "rack": [
+            0.43,
+            0.24,
+            1.3
+          ]
+        }
+      }
+    },
+    "dry_room": {
+      "frames": {
+        "d0": {
+          "file": "dry_room/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "0ff3bb225829502a085bf0a9ff665e06bbdf6387fcd72eb775e5fd494f01832d"
+        },
+        "d1": {
+          "file": "dry_room/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "192dade02fde2a18328232f0f18379acbe6c72cc4a666ca0f52c8a3b7183941e"
+        },
+        "d2": {
+          "file": "dry_room/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "e949325e4f78cf242997a46d534a6e9cb41089a95c491852ac818ceb628a9c25"
+        },
+        "d3": {
+          "file": "dry_room/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "99ed2b633c817a52c8ffd619952f8ee7009baed7e1168e0afb30b549e093e350"
+        }
+      },
+      "presentationQA": {
+        "id": "dry_room",
+        "sourceSHA": "8243ddcf955ae07ac470a36882ec3c4b9db3735b29d2ef58d41bc26c8769b7d9",
+        "checks": [
+          {
+            "direction": 0,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              81,
+              69,
+              119,
+              114
+            ]
+          },
+          {
+            "direction": 0,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              322,
+              276,
+              476,
+              458
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              73,
+              69,
+              111,
+              114
+            ]
+          },
+          {
+            "direction": 1,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              292,
+              276,
+              445,
+              458
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              73,
+              76,
+              111,
+              118
+            ]
+          },
+          {
+            "direction": 2,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              292,
+              302,
+              445,
+              474
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "native",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              81,
+              76,
+              119,
+              118
+            ]
+          },
+          {
+            "direction": 3,
+            "mode": "color",
+            "exactReopen": true,
+            "clipped": false,
+            "alphaBbox": [
+              323,
+              302,
+              476,
+              474
+            ]
+          }
+        ],
+        "liveModified": false
+      },
+      "sourceSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "8243ddcf955ae07ac470a36882ec3c4b9db3735b29d2ef58d41bc26c8769b7d9",
+          "concept": "1325c9cd451263d0d5d6dd61ffe206df0959e3dead73e8ca296a4123e184756e"
+        },
+        "projection": {
+          "d0": "FAIL",
+          "d1": "PASS",
+          "d2": "PASS",
+          "d3": "PASS"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-service-v1/dry_room/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-service-v1/dry_room/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      },
+      "contract": {
+        "blend": "facility.blend",
+        "concept": "reference.png",
+        "root": "FacilityRoot",
+        "tile_world": 22.627416997969522,
+        "ortho_scale": 192,
+        "camera_target_z_tiles": 0.6,
+        "logical_size": 192,
+        "density": 4,
+        "size": [
+          2,
+          1
+        ],
+        "floor_mode": "transparent-no-floor",
+        "minimum_native_foreground": 650,
+        "inventory": {
+          "mirrors": {
+            "prefix": "MirrorGlass_",
+            "count": 2
+          },
+          "dryers": {
+            "prefix": "DryerBody_",
+            "count": 2
+          },
+          "handles": {
+            "prefix": "DryerHandle_",
+            "count": 2
+          }
+        },
+        "groups": {
+          "body": {
+            "prefix": "Structure_"
+          }
+        },
+        "landmarks": {
+          "left_station": [
+            -0.48,
+            -0.3,
+            0
+          ],
+          "right_station": [
+            0.48,
+            -0.3,
+            0
+          ],
+          "left_mirror": [
+            -0.48,
+            0.375,
+            1.08
+          ],
+          "right_mirror": [
+            0.48,
+            0.375,
+            1.08
+          ]
+        }
+      }
+    }
+  }
+}

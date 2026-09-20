@@ -1,0 +1,251 @@
+{
+  "id": "sauna",
+  "currentSize": [
+    3,
+    3
+  ],
+  "size": [
+    3,
+    3
+  ],
+  "floorZ": 0,
+  "accessKind": "portal",
+  "entry": [
+    0,
+    -1.75,
+    0
+  ],
+  "slots": [
+    {
+      "id": "s0",
+      "pose": "sit",
+      "position": [
+        -0.55,
+        1,
+        0.4
+      ],
+      "heading": -1.5707963267948966,
+      "approach": [
+        [
+          0,
+          -1.75,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          -0.55,
+          0.35,
+          0
+        ]
+      ],
+      "supportObjects": [
+        "SeatSlat_back_0",
+        "SeatSlat_back_1",
+        "SeatSlat_back_2",
+        "SeatSlat_back_3"
+      ],
+      "useSeconds": 4
+    },
+    {
+      "id": "s1",
+      "pose": "sit",
+      "position": [
+        0.55,
+        1,
+        0.4
+      ],
+      "heading": -1.5707963267948966,
+      "approach": [
+        [
+          0,
+          -1.75,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0.55,
+          0.35,
+          0
+        ]
+      ],
+      "supportObjects": [
+        "SeatSlat_back_0",
+        "SeatSlat_back_1",
+        "SeatSlat_back_2",
+        "SeatSlat_back_3"
+      ],
+      "useSeconds": 4
+    },
+    {
+      "id": "s2",
+      "pose": "sit",
+      "position": [
+        -1.05,
+        -0.3,
+        0.4
+      ],
+      "heading": 0,
+      "approach": [
+        [
+          0,
+          -1.75,
+          0
+        ],
+        [
+          0,
+          -0.3,
+          0
+        ],
+        [
+          -0.52,
+          -0.3,
+          0
+        ]
+      ],
+      "supportObjects": [
+        "SeatSlat_left_0",
+        "SeatSlat_left_1",
+        "SeatSlat_left_2",
+        "SeatSlat_left_3"
+      ],
+      "useSeconds": 4
+    }
+  ],
+  "obstacles": [
+    {
+      "name": "back bench",
+      "min": [
+        -1.25,
+        0.705
+      ],
+      "max": [
+        1.25,
+        1.27
+      ]
+    },
+    {
+      "name": "left bench",
+      "min": [
+        -1.335,
+        -0.975
+      ],
+      "max": [
+        -0.77,
+        0.375
+      ]
+    },
+    {
+      "name": "heater and complete guard",
+      "min": [
+        0.5149999999999999,
+        -1.225
+      ],
+      "max": [
+        1.365,
+        -0.375
+      ]
+    },
+    {
+      "name": "Wall_back",
+      "min": [
+        -1.5,
+        1.4
+      ],
+      "max": [
+        1.5,
+        1.5
+      ]
+    },
+    {
+      "name": "Wall_left",
+      "min": [
+        -1.5,
+        -1.4
+      ],
+      "max": [
+        -1.4,
+        1.4
+      ]
+    },
+    {
+      "name": "Wall_right",
+      "min": [
+        1.4,
+        -1.4
+      ],
+      "max": [
+        1.5,
+        1.4
+      ]
+    },
+    {
+      "name": "Wall_front_left",
+      "min": [
+        -1.5,
+        -1.5
+      ],
+      "max": [
+        -0.45,
+        -1.4
+      ]
+    },
+    {
+      "name": "Wall_front_right",
+      "min": [
+        0.45,
+        -1.5
+      ],
+      "max": [
+        1.5,
+        -1.4
+      ]
+    },
+    {
+      "name": "DoorJamb_left",
+      "min": [
+        -0.45,
+        -1.51
+      ],
+      "max": [
+        -0.41,
+        -1.39
+      ]
+    },
+    {
+      "name": "DoorJamb_right",
+      "min": [
+        0.41,
+        -1.51
+      ],
+      "max": [
+        0.45,
+        -1.39
+      ]
+    }
+  ],
+  "notes": [
+    "Candidate station count only; existing economic capacity unchanged.",
+    "All approach points use tile units, standing ground z=0, common adult H=1.12268 tile.",
+    "Rotate heading, entry, contacts, obstacles and paths by same full-root yaw.",
+    "Support-only exclusions must not exclude bench legs, guard, partitions or heating equipment.",
+    "Sit position denotes pelvis contact on seat top z=.40; front-facing shins extend toward approach endpoint.",
+    "V2 preserves all V1 seat contacts and approaches; heater and guard shift -0.06 tile in X for new wall clearance.",
+    "Full wall collisions remain active even when cutaway presentation hides a wall.",
+    "Door clear opening X[-0.41,0.41], local -Y; clear height 1.18 tile; lintel is overhead, not a walking ground obstacle.",
+    "Three review seats do not change live capacity 4 or live entryTiles; runtime mapping remains pending."
+  ],
+  "coordinateSystem": "centered Blender local XY in tiles, +Z up; rotate root and semantics together",
+  "floor_mode": "full-footprint-integral",
+  "proposedSize": [
+    3,
+    3
+  ]
+}

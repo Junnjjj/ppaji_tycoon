@@ -1,0 +1,71 @@
+{
+  "state": "ROOF_PROPORTION_USER_APPROVED",
+  "physical_root_sha256": "1323280b9619a4fdde62525af3b0d6f05e2bd879056f86a420813a416fa0df1c",
+  "canonical_live_size": [
+    2,
+    2
+  ],
+  "proposed_size": [
+    2,
+    2
+  ],
+  "floor_mode": "full-footprint-integral",
+  "floor_bounds_tiles": [
+    [
+      -0.9999999403953552,
+      -0.9999999403953552,
+      0.0
+    ],
+    [
+      0.9999999403953552,
+      0.9999999403953552,
+      0.07000000029802322
+    ]
+  ],
+  "body_bounds_tiles": [
+    [
+      -0.8999999761581421,
+      -0.8999999165534973,
+      0.06999999284744263
+    ],
+    [
+      0.8999999761581421,
+      0.8999999165534973,
+      1.53000009059906
+    ]
+  ],
+  "body_coverage": [
+    0.8999999761581421,
+    0.8999999165534973
+  ],
+  "declared_family_target": "Chicken compact enclosed shell coverage 0.90 per axis; kiosks/equipment use functional hull, no universal room roof ratio.",
+  "roof_bounds_tiles": [
+    [
+      -1.064835786819458,
+      -1.059999942779541,
+      1.5329318046569824
+    ],
+    [
+      1.064835786819458,
+      1.059999942779541,
+      2.1000001430511475
+    ]
+  ],
+  "roof_to_body_ratio": [
+    1.1831509055866376,
+    1.1777778234010903
+  ],
+  "roof_overhang_tiles": {
+    "0-": 0.16483581066131592,
+    "0+": 0.16483581066131592,
+    "1-": 0.1600000262260437,
+    "1+": 0.1600000262260437
+  },
+  "same_scale_resizing": "NONE",
+  "imagegen_calls": 0,
+  "live_files_modified": false,
+  "family_references": [],
+  "known_limit": "No already-approved same-family physical reference; concept is appearance authority, v1 is rejected lineage only.",
+  "previous_state": "ROOF_PROPORTION_USER_REVIEW",
+  "user_decision": "좋다 적용하자, 다 만족해"
+}

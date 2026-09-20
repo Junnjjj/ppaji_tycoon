@@ -1,0 +1,103 @@
+{
+  "id": "locker_row",
+  "sourceSHA": "b65de03f9a6ada693dd6e1d46b1032adc9a08ad4768d6fd088944878d5284886",
+  "checks": [
+    {
+      "direction": 0,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        71,
+        62,
+        142,
+        120
+      ]
+    },
+    {
+      "direction": 0,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        282,
+        247,
+        568,
+        482
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        50,
+        62,
+        121,
+        120
+      ]
+    },
+    {
+      "direction": 1,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        200,
+        246,
+        486,
+        482
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        50,
+        72,
+        121,
+        131
+      ]
+    },
+    {
+      "direction": 2,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        200,
+        288,
+        486,
+        523
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "native",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        71,
+        72,
+        142,
+        131
+      ]
+    },
+    {
+      "direction": 3,
+      "mode": "color",
+      "exactReopen": true,
+      "clipped": false,
+      "alphaBbox": [
+        282,
+        287,
+        568,
+        523
+      ]
+    }
+  ],
+  "liveModified": false
+}

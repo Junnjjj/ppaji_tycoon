@@ -1,0 +1,72 @@
+{
+  "status": "REVIEW_CANDIDATES_NOT_ADOPTED",
+  "rows": [
+    {
+      "id": "rental_tube",
+      "presentationChecks": 8,
+      "size": [
+        2,
+        1
+      ],
+      "staffAnchors": 1,
+      "reviewSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "91c60ef327d6d9b1320e40afa58283820171348a40e40a9eaa696868a30bbf27",
+          "concept": "1325c9cd451263d0d5d6dd61ffe206df0959e3dead73e8ca296a4123e184756e"
+        },
+        "projection": {
+          "d0": "FAIL",
+          "d1": "FAIL",
+          "d2": "FAIL",
+          "d3": "WARN"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-service-v1/rental_tube/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-service-v1/rental_tube/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      }
+    },
+    {
+      "id": "dry_room",
+      "presentationChecks": 8,
+      "size": [
+        2,
+        1
+      ],
+      "staffAnchors": 0,
+      "reviewSummary": {
+        "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+        "rgba_equal_images": 8,
+        "clipping": 0,
+        "protected": {
+          "blend": "8243ddcf955ae07ac470a36882ec3c4b9db3735b29d2ef58d41bc26c8769b7d9",
+          "concept": "1325c9cd451263d0d5d6dd61ffe206df0959e3dead73e8ca296a4123e184756e"
+        },
+        "projection": {
+          "d0": "FAIL",
+          "d1": "PASS",
+          "d2": "PASS",
+          "d3": "PASS"
+        },
+        "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-service-v1/dry_room/review/scene-check.json",
+        "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-service-v1/dry_room/review/review.html",
+        "limitations": [
+          "Bounds selectors and count labels require semantic visual review",
+          "Landmark projections do not prove occlusion",
+          "Runtime, access, family scale and artist approval remain separate"
+        ]
+      }
+    }
+  ],
+  "occupiedCombinations": 432,
+  "missingActors": 0,
+  "browserErrors": 0,
+  "staffClearanceRadius": 0.1,
+  "note": "Raw projection diagnostic FAIL/WARN retained; no blanket art approval. Game interaction integration deferred."
+}

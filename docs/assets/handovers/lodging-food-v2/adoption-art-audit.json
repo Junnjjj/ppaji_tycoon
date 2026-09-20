@@ -1,0 +1,3029 @@
+{
+  "schema": "lodging-food-v2-independent-adoption-art-audit-v1",
+  "created_at": "2026-09-19T18:06:53.285921+00:00",
+  "scope": "Read-only audit of current 11 authored facilities / 44 native directions; only these audit JSON/MD files written. No render/regeneration, source metadata, main assets, atlas or gameplay changes.",
+  "outcome": "SOURCE_BASED_ART_ADOPTION_SUPPORTED_WITH_RAW_DIAGNOSTICS_PRESERVED",
+  "blockers": [],
+  "approval_authority": "Dispatch explicitly states user accepted all satisfactory facilities and closed final visual/roof gate; coordinator must persist that acceptance. Historical candidate metadata is preserved by this audit.",
+  "projection_conclusion": "No semantic wrong-camera defect found. Direct read-only opening of all 11 current blends proves ORTHO 192, Euler XYZ 60/0/45 (optical 30 degree elevation, game yaw 45), targetZ 1.8 tiles, native I=(16,8), J=(-16,8), Z=(0,-19.5959187). Raw raster 11 FAIL and 3 WARN remain unchanged, auxiliary for these specifically source-proven directions; this is not a blanket raster PASS or permission for an unknown source.",
+  "methods": [
+    "Viewed all 11 native four-direction boards and final runtime 44-view board.",
+    "Opened every current facility.blend in Blender read-only without saving/rendering; extracted camera, hierarchy, visibility, selected group bounds and inventory.",
+    "Recomputed all source/image SHA-256 and compared current summary/rotation/runtime presentation lineage.",
+    "Compared current 44 native and 44 HD review images against existing independent-reopen renders and runtime copies; compared physical/color RGBA and alpha.",
+    "Read builder and authored review runner: rendering rotates only FacilityRoot at 0/90/180/270, fixed camera; compared all saved rotation matrices.",
+    "Existing positive calibration PASS and deliberately wrong-camera negative FAIL retained."
+  ],
+  "limitations": [
+    "No fresh renders generated: reproducibility here independently compares existing reopen images plus direct current source inspection.",
+    "Raster peak-to-specific-mesh attribution is an inference from geometry/visuals, not per-edge semantic segmentation; exact source camera and analytic basis are directly measured.",
+    "No live Phaser placement, NPC integration or atlas/build certification; main import byte-equality remains pending coordinator write.",
+    "Native tiny cups, eggs, molds, grate bars and flowers collapse to accents; user acceptance covers reviewed appearance, not additional detail fidelity."
+  ],
+  "facilities": [
+    {
+      "id": "bungeoppang",
+      "source_sha256": "e4ed81742e57028afb065c79f740e495e99241238d9401309e30d6c0fd217701",
+      "source_hash_lineage_matches": true,
+      "size": [
+        2,
+        1
+      ],
+      "floor_mode": "transparent-no-floor",
+      "direct_blender_inspection": {
+        "id": "bungeoppang",
+        "mesh_count": 47,
+        "unowned": [],
+        "hidden_meshes": [],
+        "cutaway_tags": [],
+        "camera_type": "ORTHO",
+        "ortho_scale": 192,
+        "camera_euler_deg": [
+          60.000001669652114,
+          0,
+          45.00000125223908
+        ],
+        "camera_target_z_tiles": 1.799999851183136,
+        "basis_native": {
+          "I": [
+            15.999996185302734,
+            7.999998092651367
+          ],
+          "J": [
+            -16.000001907348633,
+            7.999998092651367
+          ],
+          "Z": [
+            0,
+            -19.595918655395508
+          ]
+        },
+        "root_rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1,
+          1
+        ],
+        "groups_bounds_tiles": {
+          "body": [
+            [
+              -0.8799999815676935,
+              -0.36000000395410603,
+              0
+            ],
+            [
+              0.8799999815676935,
+              0.36000000395410603,
+              0.6000000065901767
+            ]
+          ],
+          "roof": [
+            [
+              -0.9800000388618544,
+              -0.5339999805771481,
+              1.2399999855217996
+            ],
+            [
+              0.9800000388618544,
+              0.36749999349977114,
+              1.5299998903644052
+            ]
+          ]
+        },
+        "inventory": {
+          "molds": [
+            "FishMold_0",
+            "FishMold_1",
+            "FishMold_2"
+          ]
+        },
+        "root_animation": false
+      },
+      "physical_yaws_deg": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "semantic_review": "Orange sloping canopy, three fish molds and attached fish pictogram stay fixed; open rear legitimately reveals the same equipment.",
+      "semantic_direction_conclusion": "No moving landmark or unapproved duplicated rear door/front found in d0-d3; same-root ownership, inventory, projected landmarks and existing exact reopen support the visual review.",
+      "native_views": [
+        {
+          "direction": 0,
+          "sha256": {
+            "native": "77aecc49e31555309adec83f830140c4ffe344b42915281401ca615f90625eef",
+            "hd": "37ba3427d20eeb7a6ad120f7a0d43e7890c4fb353f38b1069d8dd32489f60ad3",
+            "physical": "37ba3427d20eeb7a6ad120f7a0d43e7890c4fb353f38b1069d8dd32489f60ad3",
+            "reopen_native": "fed0b8d1285f18e27e636f30181e6b37fff6cf1b9979a2bafc1171472d4a43c0",
+            "reopen_hd": "40f2fb09db955ae655eb68d8d8b17c4127d21908b7fed9ff39d3061e6d6461de",
+            "runtime_native": "77aecc49e31555309adec83f830140c4ffe344b42915281401ca615f90625eef",
+            "runtime_hd": "37ba3427d20eeb7a6ad120f7a0d43e7890c4fb353f38b1069d8dd32489f60ad3"
+          },
+          "alpha_bbox": [
+            72,
+            91,
+            121,
+            142
+          ],
+          "foreground_pixels": 1552,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 1,
+          "sha256": {
+            "native": "1fd3f7d0fe6ba7d9c59d7411e7d60c4d751c02d96111d3414a7d64f189865e9a",
+            "hd": "891f1351ba4236d77617297740f0167f3665ad9ea6119f5836b7cbcfb5fffd06",
+            "physical": "891f1351ba4236d77617297740f0167f3665ad9ea6119f5836b7cbcfb5fffd06",
+            "reopen_native": "1261785b39d59294e7937ef1eeb85e8888579a70398aff0db70a3a912537bb2b",
+            "reopen_hd": "17bd219d066bb545b99640df4e343898df1dfd322226ff7f2c93fa26ee285f07",
+            "runtime_native": "1fd3f7d0fe6ba7d9c59d7411e7d60c4d751c02d96111d3414a7d64f189865e9a",
+            "runtime_hd": "891f1351ba4236d77617297740f0167f3665ad9ea6119f5836b7cbcfb5fffd06"
+          },
+          "alpha_bbox": [
+            74,
+            91,
+            120,
+            142
+          ],
+          "foreground_pixels": 1514,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 2,
+          "sha256": {
+            "native": "7af8a255918b22534d069e32dc5a3d2b917fc1d6a1835f12450fb415e2c28498",
+            "hd": "82ab7530ea7acd62c76d8931a3984f7964923519d92a95dc440bf6bac9f68de3",
+            "physical": "82ab7530ea7acd62c76d8931a3984f7964923519d92a95dc440bf6bac9f68de3",
+            "reopen_native": "0a9d1f90a5e950465b973d7e039437849e7811e774b0e388ba23797dba330cc6",
+            "reopen_hd": "b7189b591b0e3089a539b939c3c1328d560aa40b9d6fa106bbc1e79f31da048e",
+            "runtime_native": "7af8a255918b22534d069e32dc5a3d2b917fc1d6a1835f12450fb415e2c28498",
+            "runtime_hd": "82ab7530ea7acd62c76d8931a3984f7964923519d92a95dc440bf6bac9f68de3"
+          },
+          "alpha_bbox": [
+            71,
+            93,
+            120,
+            142
+          ],
+          "foreground_pixels": 1450,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 3,
+          "sha256": {
+            "native": "e6db5cc72faec09eee1b585e1ea3a6b69a677e6fd6f60b99688d1956b7a09489",
+            "hd": "a9ff1cd009e0d1d55530f18481a2fd2ab842422c13c62383f417c49d1c9cd551",
+            "physical": "a9ff1cd009e0d1d55530f18481a2fd2ab842422c13c62383f417c49d1c9cd551",
+            "reopen_native": "845ea097e82ffd159a2e37cf3f141ef987cb75f781274308945b6bf0b9d87171",
+            "reopen_hd": "91e8b5fd9f04514237d9b2235906c0baf95d851fbeff168e3e28eee667105523",
+            "runtime_native": "e6db5cc72faec09eee1b585e1ea3a6b69a677e6fd6f60b99688d1956b7a09489",
+            "runtime_hd": "a9ff1cd009e0d1d55530f18481a2fd2ab842422c13c62383f417c49d1c9cd551"
+          },
+          "alpha_bbox": [
+            72,
+            93,
+            118,
+            142
+          ],
+          "foreground_pixels": 1408,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        }
+      ],
+      "raw_raster": {
+        "d0": "FAIL",
+        "d1": "PASS",
+        "d2": "FAIL",
+        "d3": "PASS"
+      }
+    },
+    {
+      "id": "cafe",
+      "source_sha256": "8f8a8948d3cbe7fa81578b8951e31c016818fdfd887732d1c3a5751a8501992b",
+      "source_hash_lineage_matches": true,
+      "size": [
+        3,
+        2
+      ],
+      "floor_mode": "full-footprint-integral",
+      "direct_blender_inspection": {
+        "id": "cafe",
+        "mesh_count": 300,
+        "unowned": [],
+        "hidden_meshes": [],
+        "cutaway_tags": [],
+        "camera_type": "ORTHO",
+        "ortho_scale": 192,
+        "camera_euler_deg": [
+          60.000001669652114,
+          0,
+          45.00000125223908
+        ],
+        "camera_target_z_tiles": 1.799999851183136,
+        "basis_native": {
+          "I": [
+            15.999996185302734,
+            7.999998092651367
+          ],
+          "J": [
+            -16.000001907348633,
+            7.999998092651367
+          ],
+          "Z": [
+            0,
+            -19.595918655395508
+          ]
+        },
+        "root_rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1,
+          1
+        ],
+        "groups_bounds_tiles": {
+          "floor": [
+            [
+              -1.4999999321817448,
+              -0.9999999828857289,
+              0
+            ],
+            [
+              1.4999999321817448,
+              0.9999999828857289,
+              0.10000000461060017
+            ]
+          ],
+          "body": [
+            [
+              -1.3499999726810492,
+              -0.9199999539091397,
+              0.09999997300046379
+            ],
+            [
+              1.3525000394410183,
+              0.9149999889765953,
+              2.019999994089029
+            ]
+          ],
+          "roof": [
+            [
+              -1.4850000373841117,
+              -0.9796154067223439,
+              1.6355769029472245
+            ],
+            [
+              1.4749999389316288,
+              0.9796154067223439,
+              2.1599998551372424
+            ]
+          ]
+        },
+        "inventory": {
+          "entrance": [
+            "DoorLeaf_Entrance"
+          ]
+        },
+        "root_animation": false
+      },
+      "physical_yaws_deg": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "semantic_review": "Single storey, charcoal tiled gable, blue awning and one front-left entrance; rear is closed without copied front counter.",
+      "semantic_direction_conclusion": "No moving landmark or unapproved duplicated rear door/front found in d0-d3; same-root ownership, inventory, projected landmarks and existing exact reopen support the visual review.",
+      "native_views": [
+        {
+          "direction": 0,
+          "sha256": {
+            "native": "38c89373bad8b32ee2dfb6e02e29845cb214faeb114924592c87ab10491f25a5",
+            "hd": "d9ebb3d9b4ffbbd0701750fb1c401697a9034f4b34913b4aae6f420a41cdb22c",
+            "physical": "d9ebb3d9b4ffbbd0701750fb1c401697a9034f4b34913b4aae6f420a41cdb22c",
+            "reopen_native": "52794003bd2657f18baf83824e5b2139787f986e8263699fb01962fe015c39b2",
+            "reopen_hd": "49960c635072330eb3748f40e5e116aa32bfeb39116e326ee1bb31f041125391",
+            "runtime_native": "38c89373bad8b32ee2dfb6e02e29845cb214faeb114924592c87ab10491f25a5",
+            "runtime_hd": "d9ebb3d9b4ffbbd0701750fb1c401697a9034f4b34913b4aae6f420a41cdb22c"
+          },
+          "alpha_bbox": [
+            56,
+            77,
+            136,
+            151
+          ],
+          "foreground_pixels": 4136,
+          "minimum_native_foreground": 2000,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 1,
+          "sha256": {
+            "native": "9e9b3629968502c8a792d01a1a4ce97aaf89fba42bef5762ae0864d3b1257ec6",
+            "hd": "f94b9f9f50b4cb7b129b0d7a2c6d130a6873421ecb6575de5180051452366de5",
+            "physical": "f94b9f9f50b4cb7b129b0d7a2c6d130a6873421ecb6575de5180051452366de5",
+            "reopen_native": "0f96033389883b7781e3ea8108d199cc897b3e4534d28d8e1cff96e9a89324e3",
+            "reopen_hd": "4903fdecabbe72866564792ee16d6034ec2d3598dc5594d0ea61981005d4117c",
+            "runtime_native": "9e9b3629968502c8a792d01a1a4ce97aaf89fba42bef5762ae0864d3b1257ec6",
+            "runtime_hd": "f94b9f9f50b4cb7b129b0d7a2c6d130a6873421ecb6575de5180051452366de5"
+          },
+          "alpha_bbox": [
+            56,
+            78,
+            136,
+            151
+          ],
+          "foreground_pixels": 4116,
+          "minimum_native_foreground": 2000,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 2,
+          "sha256": {
+            "native": "f6b7d4a219213f5cdd82e1caed97c4fd3d57dda123f54dc1511b4641bbdf402d",
+            "hd": "7d8b0cbf7f64719067ddae6b92e04c4473333581f0d714d2cef70c073cba348f",
+            "physical": "7d8b0cbf7f64719067ddae6b92e04c4473333581f0d714d2cef70c073cba348f",
+            "reopen_native": "848683afd7e052f874ae259ffed6b0bd42de4a6d9e585931c4b68f71dc391bdb",
+            "reopen_hd": "748b53c1fc88507b48cd1aaa57b33c12f6a362e02ee087f621b84d52e62b1cc7",
+            "runtime_native": "f6b7d4a219213f5cdd82e1caed97c4fd3d57dda123f54dc1511b4641bbdf402d",
+            "runtime_hd": "7d8b0cbf7f64719067ddae6b92e04c4473333581f0d714d2cef70c073cba348f"
+          },
+          "alpha_bbox": [
+            56,
+            78,
+            136,
+            151
+          ],
+          "foreground_pixels": 4127,
+          "minimum_native_foreground": 2000,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 3,
+          "sha256": {
+            "native": "2883000888c9892a37a32f2773515854dcde9cb104f9f7eb39b69f2f9c11da9c",
+            "hd": "8c9653d17162c761a5501562c2ff90be04b645c7ae335b9a1753864a094c7f17",
+            "physical": "8c9653d17162c761a5501562c2ff90be04b645c7ae335b9a1753864a094c7f17",
+            "reopen_native": "bd88f352665213b4118ad68993a604ab2a16479492290926a212e42d831579e9",
+            "reopen_hd": "4971050cf721309826e31aef4384ab36553723e93ceeba5d18417d7c34dc518e",
+            "runtime_native": "2883000888c9892a37a32f2773515854dcde9cb104f9f7eb39b69f2f9c11da9c",
+            "runtime_hd": "8c9653d17162c761a5501562c2ff90be04b645c7ae335b9a1753864a094c7f17"
+          },
+          "alpha_bbox": [
+            56,
+            77,
+            136,
+            151
+          ],
+          "foreground_pixels": 4081,
+          "minimum_native_foreground": 2000,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        }
+      ],
+      "raw_raster": {
+        "d0": "FAIL",
+        "d1": "PASS",
+        "d2": "PASS",
+        "d3": "PASS"
+      }
+    },
+    {
+      "id": "cafe_lv2",
+      "source_sha256": "ef35d2e489bae4ffeed945a40657a3c368654f255e29befe583eb6515a311146",
+      "source_hash_lineage_matches": true,
+      "size": [
+        3,
+        2
+      ],
+      "floor_mode": "full-footprint-integral",
+      "direct_blender_inspection": {
+        "id": "cafe_lv2",
+        "mesh_count": 112,
+        "unowned": [],
+        "hidden_meshes": [],
+        "cutaway_tags": [],
+        "camera_type": "ORTHO",
+        "ortho_scale": 192,
+        "camera_euler_deg": [
+          60.000001669652114,
+          0,
+          45.00000125223908
+        ],
+        "camera_target_z_tiles": 1.799999851183136,
+        "basis_native": {
+          "I": [
+            15.999996185302734,
+            7.999998092651367
+          ],
+          "J": [
+            -16.000001907348633,
+            7.999998092651367
+          ],
+          "Z": [
+            0,
+            -19.595918655395508
+          ]
+        },
+        "root_rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1,
+          1
+        ],
+        "groups_bounds_tiles": {
+          "floor": [
+            [
+              -1.4999999321817448,
+              -0.9999999828857289,
+              0
+            ],
+            [
+              1.4999999321817448,
+              0.9999999828857289,
+              0.10000000461060017
+            ]
+          ],
+          "body": [
+            [
+              -1.3499999726810492,
+              -0.9654999213938634,
+              0.08999999045181438
+            ],
+            [
+              1.3525000394410183,
+              0.9149999889765953,
+              1.6499998916824405
+            ]
+          ],
+          "roof": [
+            [
+              -1.4800000724515674,
+              -0.9800000388618544,
+              1.6349999968848075
+            ],
+            [
+              1.4800000724515674,
+              0.9800000388618544,
+              1.757500149256509
+            ]
+          ]
+        },
+        "inventory": {
+          "entrance": [
+            "DoorLeaf_Entrance"
+          ]
+        },
+        "root_animation": false
+      },
+      "physical_yaws_deg": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "semantic_review": "Single-storey flat-roof glazed cafe; one front-left entrance, rear closed.",
+      "semantic_direction_conclusion": "No moving landmark or unapproved duplicated rear door/front found in d0-d3; same-root ownership, inventory, projected landmarks and existing exact reopen support the visual review.",
+      "native_views": [
+        {
+          "direction": 0,
+          "sha256": {
+            "native": "cc3814b8efcc4a874cfafdedbb37ba987effef7c1a2eb243cfd16b464e821e08",
+            "hd": "88720e848c346b626edb43aa424e7b13716d9a57624ed30942df72b210817176",
+            "physical": "88720e848c346b626edb43aa424e7b13716d9a57624ed30942df72b210817176",
+            "reopen_native": "b7eeaeb5d9de523c919bbfdcc2fc17fb28f3eec4bc280934e746a88f09a852b2",
+            "reopen_hd": "34d69ce02917b8853aa9069b29c5e9017e3156e11c37d1461474e06921b39d8e",
+            "runtime_native": "cc3814b8efcc4a874cfafdedbb37ba987effef7c1a2eb243cfd16b464e821e08",
+            "runtime_hd": "88720e848c346b626edb43aa424e7b13716d9a57624ed30942df72b210817176"
+          },
+          "alpha_bbox": [
+            56,
+            78,
+            136,
+            151
+          ],
+          "foreground_pixels": 4067,
+          "minimum_native_foreground": 2000,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 1,
+          "sha256": {
+            "native": "78eb5e02655ca4b8dd1a2cc9aa64fc376788959c95a7f6a11f21b6219e9e648b",
+            "hd": "0d5b1778fce31aa9dd965090e80385273fecff837c7e97d9f50f08bec62e09ab",
+            "physical": "0d5b1778fce31aa9dd965090e80385273fecff837c7e97d9f50f08bec62e09ab",
+            "reopen_native": "57db564f564aef28fe762a36cb0e1b57d29cf79e2f976ce0405122ccb54eac62",
+            "reopen_hd": "91248a4928109ae0d0bd6da28d49a6075da932370f29cd4456fbdef3a8b8db6a",
+            "runtime_native": "78eb5e02655ca4b8dd1a2cc9aa64fc376788959c95a7f6a11f21b6219e9e648b",
+            "runtime_hd": "0d5b1778fce31aa9dd965090e80385273fecff837c7e97d9f50f08bec62e09ab"
+          },
+          "alpha_bbox": [
+            56,
+            78,
+            136,
+            151
+          ],
+          "foreground_pixels": 4053,
+          "minimum_native_foreground": 2000,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 2,
+          "sha256": {
+            "native": "08b133777ae40e6e83185feccee27a94eb28c7f7bdd295df7e9258829ea1ddf5",
+            "hd": "6798286e7d85bacde6b9554c67331c0df16986d7c541987d1e00bb1bb8c373fb",
+            "physical": "6798286e7d85bacde6b9554c67331c0df16986d7c541987d1e00bb1bb8c373fb",
+            "reopen_native": "7d536009aeb82ab835d8a3b16eb51ae73c0dcd526f1909a67d7280a8cbfe46d2",
+            "reopen_hd": "d72bdc68a4f832f8266e080058ae6ae0de7fa79673ba047fd96d96844a6b73ec",
+            "runtime_native": "08b133777ae40e6e83185feccee27a94eb28c7f7bdd295df7e9258829ea1ddf5",
+            "runtime_hd": "6798286e7d85bacde6b9554c67331c0df16986d7c541987d1e00bb1bb8c373fb"
+          },
+          "alpha_bbox": [
+            56,
+            78,
+            136,
+            151
+          ],
+          "foreground_pixels": 4066,
+          "minimum_native_foreground": 2000,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 3,
+          "sha256": {
+            "native": "fd69163ad6869923c1f49ac275ce823bd39edbfb542500d15ae3d13386b3cb08",
+            "hd": "c2b1e1d2ea60e2831b4bd645666514d60200fa63246c54d01a1e032fad57e3b2",
+            "physical": "c2b1e1d2ea60e2831b4bd645666514d60200fa63246c54d01a1e032fad57e3b2",
+            "reopen_native": "758e36f372b7988a9d6a1169cf494527a6701e9c4adc05cfb573704296614fa7",
+            "reopen_hd": "94a29fb2b7628003b095db560d4413f14180eb8936b6b628ef96f3d8114cf046",
+            "runtime_native": "fd69163ad6869923c1f49ac275ce823bd39edbfb542500d15ae3d13386b3cb08",
+            "runtime_hd": "c2b1e1d2ea60e2831b4bd645666514d60200fa63246c54d01a1e032fad57e3b2"
+          },
+          "alpha_bbox": [
+            56,
+            78,
+            136,
+            151
+          ],
+          "foreground_pixels": 4052,
+          "minimum_native_foreground": 2000,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        }
+      ],
+      "raw_raster": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "PASS",
+        "d3": "PASS"
+      }
+    },
+    {
+      "id": "cafe_lv3",
+      "source_sha256": "5501a33ce2cf022b9520d31f52eaa0064336f74d721cc766487054c6e97d7520",
+      "source_hash_lineage_matches": true,
+      "size": [
+        3,
+        2
+      ],
+      "floor_mode": "full-footprint-integral",
+      "direct_blender_inspection": {
+        "id": "cafe_lv3",
+        "mesh_count": 181,
+        "unowned": [],
+        "hidden_meshes": [],
+        "cutaway_tags": [],
+        "camera_type": "ORTHO",
+        "ortho_scale": 192,
+        "camera_euler_deg": [
+          60.000001669652114,
+          0,
+          45.00000125223908
+        ],
+        "camera_target_z_tiles": 1.799999851183136,
+        "basis_native": {
+          "I": [
+            15.999996185302734,
+            7.999998092651367
+          ],
+          "J": [
+            -16.000001907348633,
+            7.999998092651367
+          ],
+          "Z": [
+            0,
+            -19.595918655395508
+          ]
+        },
+        "root_rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1,
+          1
+        ],
+        "groups_bounds_tiles": {
+          "floor": [
+            [
+              -1.4999999321817448,
+              -0.9999999828857289,
+              0
+            ],
+            [
+              1.4999999321817448,
+              0.9999999828857289,
+              0.10000000461060017
+            ]
+          ],
+          "body": [
+            [
+              -1.3499999726810492,
+              -0.974999989635613,
+              0.08999999045181438
+            ],
+            [
+              1.3525000394410183,
+              0.9149999889765953,
+              3.1999998103644174
+            ]
+          ],
+          "roof": [
+            [
+              -1.4800000724515674,
+              -0.9699999404093715,
+              3.1700000207691508
+            ],
+            [
+              1.4800000724515674,
+              0.9699999404093715,
+              3.3050000854722135
+            ]
+          ]
+        },
+        "inventory": {
+          "entrance": [
+            "DoorLeaf_Entrance"
+          ]
+        },
+        "root_animation": false
+      },
+      "physical_yaws_deg": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "semantic_review": "Exactly two floors, glazed front/side, upstairs seating, skylight; upper panel is fixed glazing, not an unsupported duplicated door.",
+      "semantic_direction_conclusion": "No moving landmark or unapproved duplicated rear door/front found in d0-d3; same-root ownership, inventory, projected landmarks and existing exact reopen support the visual review.",
+      "native_views": [
+        {
+          "direction": 0,
+          "sha256": {
+            "native": "8b52118af2cdfb035d23325d69048eba6bd8ea8e5d4f29587762e86c4c22c2e8",
+            "hd": "cd1b6d6a307d197306e5b1977f9d589a284337ce2214c93517233a3b3479bfaa",
+            "physical": "cd1b6d6a307d197306e5b1977f9d589a284337ce2214c93517233a3b3479bfaa",
+            "reopen_native": "1f509a3680ed7c1e744c7c1d7572ff0e8a25ee206d70675d21611116ec5fb064",
+            "reopen_hd": "e26e5383607ddd1802dd40f5d40c60137e44f55abaaeff3b538610e7ee38a7a9",
+            "runtime_native": "8b52118af2cdfb035d23325d69048eba6bd8ea8e5d4f29587762e86c4c22c2e8",
+            "runtime_hd": "cd1b6d6a307d197306e5b1977f9d589a284337ce2214c93517233a3b3479bfaa"
+          },
+          "alpha_bbox": [
+            56,
+            48,
+            136,
+            151
+          ],
+          "foreground_pixels": 6264,
+          "minimum_native_foreground": 2000,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 1,
+          "sha256": {
+            "native": "e8b86be22c6c869e7a9fa59c85c075d43e2e9da4a4461a169c95401193bc2105",
+            "hd": "cb3281b4f4ee6780ec475ddfa3d739b5987b15aaa4b4f52d036555201f71a953",
+            "physical": "cb3281b4f4ee6780ec475ddfa3d739b5987b15aaa4b4f52d036555201f71a953",
+            "reopen_native": "f1ccecc9d1b25b22c844021e4bd687669fe5499575b5bc0aab402f002cf2c316",
+            "reopen_hd": "b188ac5df93bc8cf50af9f233ed5d6d0772ba777a2a899875859984790e58e93",
+            "runtime_native": "e8b86be22c6c869e7a9fa59c85c075d43e2e9da4a4461a169c95401193bc2105",
+            "runtime_hd": "cb3281b4f4ee6780ec475ddfa3d739b5987b15aaa4b4f52d036555201f71a953"
+          },
+          "alpha_bbox": [
+            56,
+            48,
+            136,
+            151
+          ],
+          "foreground_pixels": 6245,
+          "minimum_native_foreground": 2000,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 2,
+          "sha256": {
+            "native": "88c411217cc43934309feed371ed47b4d3dcd6ae7bfed2a6c403a526658f0aa8",
+            "hd": "87936a4b7a3ff2a24bcb9c66e13c82a67457a9bb987fe31252944551c5b1895e",
+            "physical": "87936a4b7a3ff2a24bcb9c66e13c82a67457a9bb987fe31252944551c5b1895e",
+            "reopen_native": "180074a546e4a00607a574a00297be771289d02bdc824ed14fafdbb001409287",
+            "reopen_hd": "069d3b4e64560f55e69598339d5f4fed741d8b05cc5f1c272543a07b79a4c3d5",
+            "runtime_native": "88c411217cc43934309feed371ed47b4d3dcd6ae7bfed2a6c403a526658f0aa8",
+            "runtime_hd": "87936a4b7a3ff2a24bcb9c66e13c82a67457a9bb987fe31252944551c5b1895e"
+          },
+          "alpha_bbox": [
+            56,
+            48,
+            136,
+            151
+          ],
+          "foreground_pixels": 6263,
+          "minimum_native_foreground": 2000,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 3,
+          "sha256": {
+            "native": "b9f58ad1db01aacbec57246b7dbc652689411adefc61f8a40d62aeffb6e68dc9",
+            "hd": "28b5898e77eb7ba89a5d39b1dd0fe540b2f516577e5116a6373ee3dab708eeff",
+            "physical": "28b5898e77eb7ba89a5d39b1dd0fe540b2f516577e5116a6373ee3dab708eeff",
+            "reopen_native": "16f70cd7228eef1b50c996a8169499e5cf5250d495263ac0aae6bb5457848580",
+            "reopen_hd": "9370ce2ae8843cda22a918f72c4a845563e0cc885a14c31b06fea3b898a282f2",
+            "runtime_native": "b9f58ad1db01aacbec57246b7dbc652689411adefc61f8a40d62aeffb6e68dc9",
+            "runtime_hd": "28b5898e77eb7ba89a5d39b1dd0fe540b2f516577e5116a6373ee3dab708eeff"
+          },
+          "alpha_bbox": [
+            56,
+            48,
+            136,
+            151
+          ],
+          "foreground_pixels": 6243,
+          "minimum_native_foreground": 2000,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        }
+      ],
+      "raw_raster": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "PASS",
+        "d3": "PASS"
+      }
+    },
+    {
+      "id": "chicken",
+      "source_sha256": "1323280b9619a4fdde62525af3b0d6f05e2bd879056f86a420813a416fa0df1c",
+      "source_hash_lineage_matches": true,
+      "size": [
+        2,
+        2
+      ],
+      "floor_mode": "full-footprint-integral",
+      "direct_blender_inspection": {
+        "id": "chicken",
+        "mesh_count": 116,
+        "unowned": [],
+        "hidden_meshes": [],
+        "cutaway_tags": [],
+        "camera_type": "ORTHO",
+        "ortho_scale": 192,
+        "camera_euler_deg": [
+          60.000001669652114,
+          0,
+          45.00000125223908
+        ],
+        "camera_target_z_tiles": 1.799999851183136,
+        "basis_native": {
+          "I": [
+            15.999996185302734,
+            7.999998092651367
+          ],
+          "J": [
+            -16.000001907348633,
+            7.999998092651367
+          ],
+          "Z": [
+            0,
+            -19.595918655395508
+          ]
+        },
+        "root_rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1,
+          1
+        ],
+        "groups_bounds_tiles": {
+          "body": [
+            [
+              -0.9000000098852651,
+              -0.899999925591568,
+              0.06999999374437921
+            ],
+            [
+              0.9000000098852651,
+              0.899999925591568,
+              1.5300000589517992
+            ]
+          ],
+          "floor": [
+            [
+              -0.9999999828857289,
+              -0.9999999828857289,
+              0
+            ],
+            [
+              0.9999999828857289,
+              0.9999999828857289,
+              0.06999999901273526
+            ]
+          ],
+          "roof": [
+            [
+              -1.0648358286491895,
+              -1.0599999835447467,
+              1.532931793734217
+            ],
+            [
+              1.0648358286491895,
+              1.0599999835447467,
+              2.1000002759467096
+            ]
+          ]
+        },
+        "inventory": {
+          "staff_door": [
+            "StaffDoor"
+          ],
+          "fryers": [
+            "FryerTank",
+            "FryerTank.001"
+          ]
+        },
+        "root_animation": false
+      },
+      "physical_yaws_deg": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "semantic_review": "Cream single house with terracotta gable; one left staff door and right service hatch, closed rear without copied door/hatch.",
+      "semantic_direction_conclusion": "No moving landmark or unapproved duplicated rear door/front found in d0-d3; same-root ownership, inventory, projected landmarks and existing exact reopen support the visual review.",
+      "native_views": [
+        {
+          "direction": 0,
+          "sha256": {
+            "native": "daef0372d4071f7f4a86af18534273b6ca1e08b6d8ad71e6f3c9b860b6545a63",
+            "hd": "316b330d454f7605b37fa5a8e52bfdc78eaf6cee7930dd8af0b205fb6f47042d",
+            "physical": "316b330d454f7605b37fa5a8e52bfdc78eaf6cee7930dd8af0b205fb6f47042d",
+            "reopen_native": "979eea20d084b313383b8a109bea18bc0f01d565366d1661bd482b5507532b50",
+            "reopen_hd": "f80e3a353617a1ea9d361c77e9bb3dbf5cfc2d78755db3dc9b3312867c8839c6",
+            "runtime_native": "daef0372d4071f7f4a86af18534273b6ca1e08b6d8ad71e6f3c9b860b6545a63",
+            "runtime_hd": "316b330d454f7605b37fa5a8e52bfdc78eaf6cee7930dd8af0b205fb6f47042d"
+          },
+          "alpha_bbox": [
+            63,
+            82,
+            129,
+            147
+          ],
+          "foreground_pixels": 3127,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 1,
+          "sha256": {
+            "native": "444662a740d7bf4a2fcaaac2d6de79ca6050c6a40140e3b71cab9e70570cb1da",
+            "hd": "665f8a6a1074d3080627933d4ca28a7bf31f79f406e2c771e77c15afff8833db",
+            "physical": "665f8a6a1074d3080627933d4ca28a7bf31f79f406e2c771e77c15afff8833db",
+            "reopen_native": "56d398b1b2a2d6fc6f44374593c95dd020acfe2b9cc859d5acd3123727b0b807",
+            "reopen_hd": "e5bd399cec61aff00ae31724e1aac4bbfd13eea54c19b9881cc1a19431dfde1c",
+            "runtime_native": "444662a740d7bf4a2fcaaac2d6de79ca6050c6a40140e3b71cab9e70570cb1da",
+            "runtime_hd": "665f8a6a1074d3080627933d4ca28a7bf31f79f406e2c771e77c15afff8833db"
+          },
+          "alpha_bbox": [
+            63,
+            82,
+            129,
+            147
+          ],
+          "foreground_pixels": 3145,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 2,
+          "sha256": {
+            "native": "6bccf5d0b27a32d4fb80d6db08f96a0fc7513e6bb2f436b720e52f4b40fc847a",
+            "hd": "2562ffe90da323042e618c3b0519acff2eb6800c96243bc59a1d82d57a14383f",
+            "physical": "2562ffe90da323042e618c3b0519acff2eb6800c96243bc59a1d82d57a14383f",
+            "reopen_native": "11f209138c551afa006ed4de2ffd9e5c6a22adbba68cb67a51263f30daab0933",
+            "reopen_hd": "0dfb389ea51e791dc6ad0dd4f22c7b39094b1c10951fad0c4d978d5125c053f8",
+            "runtime_native": "6bccf5d0b27a32d4fb80d6db08f96a0fc7513e6bb2f436b720e52f4b40fc847a",
+            "runtime_hd": "2562ffe90da323042e618c3b0519acff2eb6800c96243bc59a1d82d57a14383f"
+          },
+          "alpha_bbox": [
+            63,
+            82,
+            129,
+            147
+          ],
+          "foreground_pixels": 3113,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 3,
+          "sha256": {
+            "native": "b6ec611c729b331693e9f894592d8b9a30be8ea49de3a6d3cb3b9c622bff50ac",
+            "hd": "02afddd23c335ca05a7342eaf27f0a2eb8ee616cbf7941a842bffcb0cf03beeb",
+            "physical": "02afddd23c335ca05a7342eaf27f0a2eb8ee616cbf7941a842bffcb0cf03beeb",
+            "reopen_native": "dd8ea1308d2d54f3a95ec497074c7bda757b956734f5ecee9d4cd31bd8c3904a",
+            "reopen_hd": "03d158a1b38403db2f1ea13dbdf57136154db23c7e5a548a46235d5487575cf8",
+            "runtime_native": "b6ec611c729b331693e9f894592d8b9a30be8ea49de3a6d3cb3b9c622bff50ac",
+            "runtime_hd": "02afddd23c335ca05a7342eaf27f0a2eb8ee616cbf7941a842bffcb0cf03beeb"
+          },
+          "alpha_bbox": [
+            63,
+            82,
+            129,
+            147
+          ],
+          "foreground_pixels": 3128,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        }
+      ],
+      "raw_raster": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "PASS",
+        "d3": "PASS"
+      }
+    },
+    {
+      "id": "firepit_row",
+      "source_sha256": "2f3560e9fe7b9075040b502913ecdf17d42ac285ea40337c1f3d2b6c4ec026c5",
+      "source_hash_lineage_matches": true,
+      "size": [
+        3,
+        1
+      ],
+      "floor_mode": "transparent-no-floor",
+      "direct_blender_inspection": {
+        "id": "firepit_row",
+        "mesh_count": 96,
+        "unowned": [],
+        "hidden_meshes": [],
+        "cutaway_tags": [],
+        "camera_type": "ORTHO",
+        "ortho_scale": 192,
+        "camera_euler_deg": [
+          60.000001669652114,
+          0,
+          45.00000125223908
+        ],
+        "camera_target_z_tiles": 1.799999851183136,
+        "basis_native": {
+          "I": [
+            15.999996185302734,
+            7.999998092651367
+          ],
+          "J": [
+            -16.000001907348633,
+            7.999998092651367
+          ],
+          "Z": [
+            0,
+            -19.595918655395508
+          ]
+        },
+        "root_rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1,
+          1
+        ],
+        "groups_bounds_tiles": {
+          "body": [
+            [
+              -1.4300000859513353,
+              -0.4000000184424007,
+              0
+            ],
+            [
+              1.4300000859513353,
+              0.4000000184424007,
+              0.7599999802496582
+            ]
+          ]
+        },
+        "inventory": {
+          "grills": [
+            "Body_Grill_0",
+            "Body_Grill_1",
+            "Body_Grill_2"
+          ],
+          "logs": [
+            "LogBark",
+            "LogBark.001",
+            "LogBark.002",
+            "LogBark.003",
+            "LogBark.004",
+            "LogBark.005",
+            "LogBark.006",
+            "LogBark.007",
+            "LogBark.008",
+            "LogBark.009",
+            "LogBark.010",
+            "LogBark.011",
+            "LogBark.012",
+            "LogBark.013",
+            "LogBark.014"
+          ]
+        },
+        "root_animation": false
+      },
+      "physical_yaws_deg": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "semantic_review": "Three separate grills and log racks with no connected floor slab; visible grate details rotate with their grill.",
+      "semantic_direction_conclusion": "No moving landmark or unapproved duplicated rear door/front found in d0-d3; same-root ownership, inventory, projected landmarks and existing exact reopen support the visual review.",
+      "native_views": [
+        {
+          "direction": 0,
+          "sha256": {
+            "native": "f993a87237af3a693336ed17389072519d5807e51090dada0e54c7506479e943",
+            "hd": "4a80240bf8a033c3b1ca5acacc3a5118287bd0476786bc38cc060b0c247e5ce7",
+            "physical": "4a80240bf8a033c3b1ca5acacc3a5118287bd0476786bc38cc060b0c247e5ce7",
+            "reopen_native": "a3010245b746955162b2e0e9e017891ce7abd959cfbf1e524711686b18af1bda",
+            "reopen_hd": "87f01590cad63b392d885dc6e4c939452d36dbe973bfe99184cbf79f61c30f9d",
+            "runtime_native": "f993a87237af3a693336ed17389072519d5807e51090dada0e54c7506479e943",
+            "runtime_hd": "4a80240bf8a033c3b1ca5acacc3a5118287bd0476786bc38cc060b0c247e5ce7"
+          },
+          "alpha_bbox": [
+            67,
+            102,
+            125,
+            145
+          ],
+          "foreground_pixels": 1226,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 1,
+          "sha256": {
+            "native": "31d0a3fd50fa221d7993849949d018f5052d51bbd0cc59a22b68614177a94c51",
+            "hd": "9b42a4b9319e90d2bf093d4dbc1b25631017c18488ec862a670a93e274b39acb",
+            "physical": "9b42a4b9319e90d2bf093d4dbc1b25631017c18488ec862a670a93e274b39acb",
+            "reopen_native": "fffbb2e951990aa36a0d442e85cae7be546cef640e4c7e62304ddfc91daad4ef",
+            "reopen_hd": "3edc565f73b171c75a9a51071f1099936b955becd0df8cd26acc799530cec3c9",
+            "runtime_native": "31d0a3fd50fa221d7993849949d018f5052d51bbd0cc59a22b68614177a94c51",
+            "runtime_hd": "9b42a4b9319e90d2bf093d4dbc1b25631017c18488ec862a670a93e274b39acb"
+          },
+          "alpha_bbox": [
+            67,
+            102,
+            125,
+            145
+          ],
+          "foreground_pixels": 1228,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 2,
+          "sha256": {
+            "native": "4acf2d19b331f88ab4dd124cc2faeb03f285edf30825ccb4d13f3dff5e01a7cc",
+            "hd": "a8ae6be75c52c7707107ede74972c9fde5f10a857cd0baca5ed8b8508640ba11",
+            "physical": "a8ae6be75c52c7707107ede74972c9fde5f10a857cd0baca5ed8b8508640ba11",
+            "reopen_native": "222c3531d1bca70f827289233c2e5257396ff4f459da86a9f83c12b8d40f090d",
+            "reopen_hd": "70d1e6793545122e9e2b5d455a3ae961ef6541958a9080ba5b525efe706e6dec",
+            "runtime_native": "4acf2d19b331f88ab4dd124cc2faeb03f285edf30825ccb4d13f3dff5e01a7cc",
+            "runtime_hd": "a8ae6be75c52c7707107ede74972c9fde5f10a857cd0baca5ed8b8508640ba11"
+          },
+          "alpha_bbox": [
+            67,
+            102,
+            125,
+            145
+          ],
+          "foreground_pixels": 1263,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 3,
+          "sha256": {
+            "native": "6eac214a4e059684d8585c11749a426b95c567cf4fe202b96cd14a30be895754",
+            "hd": "502ea290536d3b974fdc94f191ac19107711e4d9781b7ba45096d1e4d60d7a72",
+            "physical": "502ea290536d3b974fdc94f191ac19107711e4d9781b7ba45096d1e4d60d7a72",
+            "reopen_native": "7bba2cb2f824e561e38a4cf1acbe3b173ca0bc3b0bc6fbaff0b4cf49244295f9",
+            "reopen_hd": "780e1ccd37a903aa042f1cdd5e9c2509fd26187dd53b24353ccbc40a2e951fa9",
+            "runtime_native": "6eac214a4e059684d8585c11749a426b95c567cf4fe202b96cd14a30be895754",
+            "runtime_hd": "502ea290536d3b974fdc94f191ac19107711e4d9781b7ba45096d1e4d60d7a72"
+          },
+          "alpha_bbox": [
+            67,
+            102,
+            125,
+            145
+          ],
+          "foreground_pixels": 1263,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        }
+      ],
+      "raw_raster": {
+        "d0": "FAIL",
+        "d1": "FAIL",
+        "d2": "PASS",
+        "d3": "PASS"
+      }
+    },
+    {
+      "id": "icecream",
+      "source_sha256": "5ac1641273b1251387a02e6d6d112380c33af0214fd15e7ebcf1f689fdc839a2",
+      "source_hash_lineage_matches": true,
+      "size": [
+        1,
+        1
+      ],
+      "floor_mode": "transparent-no-floor",
+      "direct_blender_inspection": {
+        "id": "icecream",
+        "mesh_count": 43,
+        "unowned": [],
+        "hidden_meshes": [],
+        "cutaway_tags": [],
+        "camera_type": "ORTHO",
+        "ortho_scale": 192,
+        "camera_euler_deg": [
+          60.000001669652114,
+          0,
+          45.00000125223908
+        ],
+        "camera_target_z_tiles": 1.799999851183136,
+        "basis_native": {
+          "I": [
+            15.999996185302734,
+            7.999998092651367
+          ],
+          "J": [
+            -16.000001907348633,
+            7.999998092651367
+          ],
+          "Z": [
+            0,
+            -19.595918655395508
+          ]
+        },
+        "root_rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1,
+          1
+        ],
+        "groups_bounds_tiles": {
+          "body": [
+            [
+              -0.4000000184424007,
+              -0.36000000395410603,
+              0
+            ],
+            [
+              0.4000000184424007,
+              0.36000000395410603,
+              0.6000000065901767
+            ]
+          ],
+          "roof": [
+            [
+              -0.5249999846929804,
+              -0.5339999805771481,
+              1.1099999700449785
+            ],
+            [
+              0.5249999846929804,
+              0.36749999349977114,
+              1.399999959181281
+            ]
+          ]
+        },
+        "inventory": {
+          "dispenser": [
+            "Dispenser"
+          ],
+          "flavors": [
+            "IceCream",
+            "IceCream.001",
+            "IceCream.002"
+          ]
+        },
+        "root_animation": false
+      },
+      "physical_yaws_deg": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "semantic_review": "One dispenser, three flavor details, scalloped teal/cream canopy, sloped case; open stall rear exposes fixed equipment, not a second front.",
+      "semantic_direction_conclusion": "No moving landmark or unapproved duplicated rear door/front found in d0-d3; same-root ownership, inventory, projected landmarks and existing exact reopen support the visual review.",
+      "native_views": [
+        {
+          "direction": 0,
+          "sha256": {
+            "native": "d5eba860b9d69dd7d1f21f14518289cda7d87a85a2fd35ea3d4e7b798154be8f",
+            "hd": "c5c1b41b42928452da88190f67a4e4502778d26e82fac7668be2385cc420ac38",
+            "physical": "c5c1b41b42928452da88190f67a4e4502778d26e82fac7668be2385cc420ac38",
+            "reopen_native": "7aedca1b31dab267bbd2e859f72c0467025c01f13e11a9382dacee1a818e3620",
+            "reopen_hd": "a4c7084180566a7368f4626c7ce555ab812706a14caca1e5fc728a3f57c90a90",
+            "runtime_native": "d5eba860b9d69dd7d1f21f14518289cda7d87a85a2fd35ea3d4e7b798154be8f",
+            "runtime_hd": "c5c1b41b42928452da88190f67a4e4502778d26e82fac7668be2385cc420ac38"
+          },
+          "alpha_bbox": [
+            79,
+            92,
+            111,
+            138
+          ],
+          "foreground_pixels": 920,
+          "minimum_native_foreground": 350,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 1,
+          "sha256": {
+            "native": "be2675c0a000ffc9e599ba96a0013cbd9e922750602555000edc953cab48228f",
+            "hd": "50affffac9919b9746569f4529143dfe2929ce8478a60841219ae70816e8957c",
+            "physical": "50affffac9919b9746569f4529143dfe2929ce8478a60841219ae70816e8957c",
+            "reopen_native": "1633a5820c0cb5b1ad948236aa26f85ded2dba67f58d92fb7f06ff32a3005bf5",
+            "reopen_hd": "27bd6128cfb0561921058aced01cf3a76b406fd2155b22af61d170e557ad85bf",
+            "runtime_native": "be2675c0a000ffc9e599ba96a0013cbd9e922750602555000edc953cab48228f",
+            "runtime_hd": "50affffac9919b9746569f4529143dfe2929ce8478a60841219ae70816e8957c"
+          },
+          "alpha_bbox": [
+            81,
+            92,
+            113,
+            138
+          ],
+          "foreground_pixels": 919,
+          "minimum_native_foreground": 350,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 2,
+          "sha256": {
+            "native": "3ae0992382c5de717ef13766ea9f52e3cc106dee51d893be12ab855c1aebf566",
+            "hd": "4d26993a2da6737e1b93e6ae6e2a4fa3edcc6d88f81e83aeb6776fd1ad779ba4",
+            "physical": "4d26993a2da6737e1b93e6ae6e2a4fa3edcc6d88f81e83aeb6776fd1ad779ba4",
+            "reopen_native": "85d4d220aaf3b3f1d127550cfa934b4fc05062baf502fea04b75fce2ba373fe3",
+            "reopen_hd": "e7a585c441c91e09d10bbc0d7d27b8dce47540e1fc0398489935f28848a91466",
+            "runtime_native": "3ae0992382c5de717ef13766ea9f52e3cc106dee51d893be12ab855c1aebf566",
+            "runtime_hd": "4d26993a2da6737e1b93e6ae6e2a4fa3edcc6d88f81e83aeb6776fd1ad779ba4"
+          },
+          "alpha_bbox": [
+            81,
+            95,
+            113,
+            138
+          ],
+          "foreground_pixels": 856,
+          "minimum_native_foreground": 350,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 3,
+          "sha256": {
+            "native": "ad9b29c2d99ad708ab7ec9750bb2ae41a51da37adfa8f282b48945448234394f",
+            "hd": "92845d39e5a0c260c6f2180d95ec2c36b78fab10bfe1f2c03e213c462afa30c4",
+            "physical": "92845d39e5a0c260c6f2180d95ec2c36b78fab10bfe1f2c03e213c462afa30c4",
+            "reopen_native": "d1c098eef4edaebf2836916a9b0eb28911c35aa1486ce60ba73272212ca2fbff",
+            "reopen_hd": "22faf4a5f2b9d846fb4c2d25671657db84866b5fbfc8e087dc14028c9b1dad4d",
+            "runtime_native": "ad9b29c2d99ad708ab7ec9750bb2ae41a51da37adfa8f282b48945448234394f",
+            "runtime_hd": "92845d39e5a0c260c6f2180d95ec2c36b78fab10bfe1f2c03e213c462afa30c4"
+          },
+          "alpha_bbox": [
+            79,
+            95,
+            111,
+            138
+          ],
+          "foreground_pixels": 855,
+          "minimum_native_foreground": 350,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        }
+      ],
+      "raw_raster": {
+        "d0": "FAIL",
+        "d1": "FAIL",
+        "d2": "PASS",
+        "d3": "FAIL"
+      }
+    },
+    {
+      "id": "pension",
+      "source_sha256": "8e2f3b0b5cb12738c6194558498c08c3bc04d81da6580ea5d0f907c2b502fbb8",
+      "source_hash_lineage_matches": true,
+      "size": [
+        5,
+        4
+      ],
+      "floor_mode": "full-footprint-integral",
+      "direct_blender_inspection": {
+        "id": "pension",
+        "mesh_count": 359,
+        "unowned": [],
+        "hidden_meshes": [],
+        "cutaway_tags": [],
+        "camera_type": "ORTHO",
+        "ortho_scale": 192,
+        "camera_euler_deg": [
+          60.000001669652114,
+          0,
+          45.00000125223908
+        ],
+        "camera_target_z_tiles": 1.799999514008348,
+        "basis_native": {
+          "I": [
+            15.999996185302734,
+            7.999998092651367
+          ],
+          "J": [
+            -16.000001907348633,
+            7.999998092651367
+          ],
+          "Z": [
+            0,
+            -19.595918655395508
+          ]
+        },
+        "root_rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1,
+          1
+        ],
+        "groups_bounds_tiles": {
+          "floor": [
+            [
+              -2.4999999993611706,
+              -1.9999999657714578,
+              0
+            ],
+            [
+              2.4999999993611706,
+              1.9999999657714578,
+              0.09000000098852651
+            ]
+          ],
+          "body": [
+            [
+              -2.2500000668600113,
+              -1.8000000197705301,
+              0.12000000131803534
+            ],
+            [
+              2.2500000668600113,
+              1.8000000197705301,
+              4.1499998910436116
+            ]
+          ],
+          "roof": [
+            [
+              -2.3300000115429036,
+              -0.16999998781826725,
+              4.1300000313134335
+            ],
+            [
+              2.3300000115429036,
+              1.8299999779531906,
+              4.269999723774252
+            ]
+          ]
+        },
+        "inventory": {
+          "doors": [
+            "DoorLeaf_Main"
+          ]
+        },
+        "root_animation": false,
+        "canopy_actual_max_z_tiles": 1.496986769688004,
+        "balcony_objects": {
+          "Balcony_Slab": [
+            1.5500000872693707,
+            1.6500000602698346
+          ]
+        }
+      },
+      "physical_yaws_deg": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "semantic_review": "Exactly two traditional floors plus one glazed suite/pool terrace; pool and suite stay on their physical sides through all four views.",
+      "semantic_direction_conclusion": "No moving landmark or unapproved duplicated rear door/front found in d0-d3; same-root ownership, inventory, projected landmarks and existing exact reopen support the visual review.",
+      "native_views": [
+        {
+          "direction": 0,
+          "sha256": {
+            "native": "9da3c1673622e5685ce80b3383589c287c40e789333b95526ed60c3988e4fdcb",
+            "hd": "c4b93a5ca5c04ca921b5eebfb1ae2985f07bc0726b1c6e8297b70a4c175db7b6",
+            "physical": "c4b93a5ca5c04ca921b5eebfb1ae2985f07bc0726b1c6e8297b70a4c175db7b6",
+            "reopen_native": "ca47d677b7982013ceebd83dd27d211fba0af3c0712788f739b907d4e392d5d4",
+            "reopen_hd": "053d419a1bded4de8e51566b73cc313cc1b93c14eb2df66a76d45d204f6ec642",
+            "runtime_native": "9da3c1673622e5685ce80b3383589c287c40e789333b95526ed60c3988e4fdcb",
+            "runtime_hd": "c4b93a5ca5c04ca921b5eebfb1ae2985f07bc0726b1c6e8297b70a4c175db7b6"
+          },
+          "alpha_bbox": [
+            24,
+            15,
+            168,
+            167
+          ],
+          "foreground_pixels": 15303,
+          "minimum_native_foreground": 4500,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 1,
+          "sha256": {
+            "native": "2386edccfdc9470b2e79a97c45ea177e9d4310eb95544b1a05012f87734db818",
+            "hd": "bbe3124352c3fe794faf7f83f53bf8b0ba3dc7bdd0d2d292408a87b8d1e987aa",
+            "physical": "bbe3124352c3fe794faf7f83f53bf8b0ba3dc7bdd0d2d292408a87b8d1e987aa",
+            "reopen_native": "a33703fc821e51c381c34a39e96ae1dc8bc989410f6beb636022beedead5665e",
+            "reopen_hd": "12543b015f329ac3a85fb56f509f269af579b72d0f84c907a5362750315eacb6",
+            "runtime_native": "2386edccfdc9470b2e79a97c45ea177e9d4310eb95544b1a05012f87734db818",
+            "runtime_hd": "bbe3124352c3fe794faf7f83f53bf8b0ba3dc7bdd0d2d292408a87b8d1e987aa"
+          },
+          "alpha_bbox": [
+            24,
+            15,
+            168,
+            167
+          ],
+          "foreground_pixels": 15306,
+          "minimum_native_foreground": 4500,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 2,
+          "sha256": {
+            "native": "888a75f1ea3bc2d2a2e5f31ccb356b9cb47eda75df857ede1b3f20cf8f97cb7e",
+            "hd": "ca7cd89ad9a8e20855ed392e3458fcfddb5564d7d55729f7bdbc89946115537c",
+            "physical": "ca7cd89ad9a8e20855ed392e3458fcfddb5564d7d55729f7bdbc89946115537c",
+            "reopen_native": "9e72f6f80f372a53f2043ceb415b371699bd31268ce6508016347335388513a0",
+            "reopen_hd": "6f65b14012393323c80339eab4ac1ed8b5e64e5da4d9d2143a97077ad9663326",
+            "runtime_native": "888a75f1ea3bc2d2a2e5f31ccb356b9cb47eda75df857ede1b3f20cf8f97cb7e",
+            "runtime_hd": "ca7cd89ad9a8e20855ed392e3458fcfddb5564d7d55729f7bdbc89946115537c"
+          },
+          "alpha_bbox": [
+            24,
+            28,
+            168,
+            167
+          ],
+          "foreground_pixels": 14436,
+          "minimum_native_foreground": 4500,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 3,
+          "sha256": {
+            "native": "ccfba831c5f00677af2af7e1d6d7153b7f39c73889a41bd4248641c215689f30",
+            "hd": "416b6a4b7e50272bc0d02e98bdf48e6e3215295be59b24944b384c87894c5bae",
+            "physical": "416b6a4b7e50272bc0d02e98bdf48e6e3215295be59b24944b384c87894c5bae",
+            "reopen_native": "e63f1665da3be907b3c9bca41ad021eea03bb7d2557f88506d85130b217bb40a",
+            "reopen_hd": "2c4d89009fb1bdc078c70d4d45da89ca28f69ee0cfe9618272a51b7f913e90ce",
+            "runtime_native": "ccfba831c5f00677af2af7e1d6d7153b7f39c73889a41bd4248641c215689f30",
+            "runtime_hd": "416b6a4b7e50272bc0d02e98bdf48e6e3215295be59b24944b384c87894c5bae"
+          },
+          "alpha_bbox": [
+            24,
+            28,
+            168,
+            167
+          ],
+          "foreground_pixels": 14439,
+          "minimum_native_foreground": 4500,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        }
+      ],
+      "raw_raster": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "PASS",
+        "d3": "PASS"
+      },
+      "canopy_clearance": {
+        "existing_audit": {
+          "status": "CANOPY_BALCONY_INTERSECTION_RESOLVED",
+          "old_root_sha256": "7cdf41d86b6828ad7f2a6de69df2d8382317a5482779914e175747c5382da6a4",
+          "new_root_sha256": "8e2f3b0b5cb12738c6194558498c08c3bc04d81da6580ea5d0f907c2b502fbb8",
+          "unchanged_non_canopy_meshes": 350,
+          "exact_vertex_face_world_matrix_equality": true,
+          "canopy_objects": [
+            "Roof_EntryShed",
+            "Fascia_EntryShed",
+            "Fascia_EntrySide",
+            "Fascia_EntrySide.001",
+            "RoofSeam_EntryShed",
+            "RoofSeam_EntryShed.001",
+            "RoofSeam_EntryShed.002",
+            "RoofSeam_EntryShed.003",
+            "RoofSeam_EntryShed.004"
+          ],
+          "canopy_max_z_tiles": 1.496986746788025,
+          "balcony_slab_min_z_tiles": 1.5500000715255737,
+          "minimum_vertical_clearance_tiles": 0.05301332473754883,
+          "minimum_vertical_clearance_world": 1.1995546052852906,
+          "canopy_roof_bounds_tiles": [
+            [
+              -0.7099999785423279,
+              -2.359999895095825,
+              1.4149999618530273
+            ],
+            [
+              0.7099999785423279,
+              -1.9099998474121094,
+              1.4900000095367432
+            ]
+          ],
+          "door_leaf_top_tiles": 1.399999976158142,
+          "canopy_soffit_above_door_leaf_tiles": 0.014999985694885254,
+          "canopy_back_to_door_frame_gap_tiles": 0.014999866485595703,
+          "support": "Existing timber brackets enter canopy soffit as a supporting connection; canopy has positive clearance below balcony slab",
+          "unchanged": [
+            "all door objects",
+            "portal threshold",
+            "body shell",
+            "main roof",
+            "balcony slab and rail",
+            "pool suite and terrace",
+            "foundation",
+            "windows"
+          ],
+          "archive": "superseded-canopy-v1"
+        },
+        "independent_current_gap_tiles": 0.05301331758136674
+      }
+    },
+    {
+      "id": "pension_1f",
+      "source_sha256": "a4ee7d215b19494e78a9b33834f7cb8007844235211b1593a826d53f3b936441",
+      "source_hash_lineage_matches": true,
+      "size": [
+        5,
+        4
+      ],
+      "floor_mode": "full-footprint-integral",
+      "direct_blender_inspection": {
+        "id": "pension_1f",
+        "mesh_count": 213,
+        "unowned": [],
+        "hidden_meshes": [],
+        "cutaway_tags": [],
+        "camera_type": "ORTHO",
+        "ortho_scale": 192,
+        "camera_euler_deg": [
+          60.000001669652114,
+          0,
+          45.00000125223908
+        ],
+        "camera_target_z_tiles": 1.799999514008348,
+        "basis_native": {
+          "I": [
+            15.999996185302734,
+            7.999998092651367
+          ],
+          "J": [
+            -16.000001907348633,
+            7.999998092651367
+          ],
+          "Z": [
+            0,
+            -19.595918655395508
+          ]
+        },
+        "root_rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1,
+          1
+        ],
+        "groups_bounds_tiles": {
+          "floor": [
+            [
+              -2.4999999993611706,
+              -1.9999999657714578,
+              0
+            ],
+            [
+              2.4999999993611706,
+              1.9999999657714578,
+              0.09000000098852651
+            ]
+          ],
+          "body": [
+            [
+              -2.2500000668600113,
+              -1.8000000197705301,
+              0.12000000131803534
+            ],
+            [
+              2.2500000668600113,
+              1.8000000197705301,
+              2.1899999819072966
+            ]
+          ],
+          "roof": [
+            [
+              -2.409999956225796,
+              -1.9700000075887976,
+              1.5149999955667721
+            ],
+            [
+              2.409999956225796,
+              1.9700000075887976,
+              2.269999926590189
+            ]
+          ]
+        },
+        "inventory": {
+          "doors": [
+            "DoorLeaf_Main"
+          ]
+        },
+        "root_animation": false
+      },
+      "physical_yaws_deg": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "semantic_review": "One traditional floor, charcoal gable, one central entry/canopy; rear windows are fixed windows and no rear entrance is duplicated.",
+      "semantic_direction_conclusion": "No moving landmark or unapproved duplicated rear door/front found in d0-d3; same-root ownership, inventory, projected landmarks and existing exact reopen support the visual review.",
+      "native_views": [
+        {
+          "direction": 0,
+          "sha256": {
+            "native": "05f53b4c94e829896caeabc22cf7cd10636326a839ddf53dfbb982f93ad79f80",
+            "hd": "f6a89e9cf9a90d2a353f9fdf1ccac50594f6ab1f1346af8c45533a2b97024eae",
+            "physical": "f6a89e9cf9a90d2a353f9fdf1ccac50594f6ab1f1346af8c45533a2b97024eae",
+            "reopen_native": "0061424187fd7525231331d1fe88a8db2187af3ff39d3dc8f3b2ea90e13257cd",
+            "reopen_hd": "98e9338a10504c2034fb3269fc70d1af259a458273bec8fe79db86e423c275e7",
+            "runtime_native": "05f53b4c94e829896caeabc22cf7cd10636326a839ddf53dfbb982f93ad79f80",
+            "runtime_hd": "f6a89e9cf9a90d2a353f9fdf1ccac50594f6ab1f1346af8c45533a2b97024eae"
+          },
+          "alpha_bbox": [
+            24,
+            65,
+            168,
+            167
+          ],
+          "foreground_pixels": 9700,
+          "minimum_native_foreground": 4500,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 1,
+          "sha256": {
+            "native": "2c82111c88c9bbfd24b33b96d06732e07aab05a6263ef1f111cbb5b673376e12",
+            "hd": "9131385d41abe942af5559e007765a94f9aa3a2bdeb1c3a381d5bb938ed8ee56",
+            "physical": "9131385d41abe942af5559e007765a94f9aa3a2bdeb1c3a381d5bb938ed8ee56",
+            "reopen_native": "0ef3f45b12060c270ca15a1ea4b5f65676b67d7649ab2a6150717eef2d41ed19",
+            "reopen_hd": "586714f64ee9258fb975a783afa93c225537fbeadc0d4f5880372075ff834415",
+            "runtime_native": "2c82111c88c9bbfd24b33b96d06732e07aab05a6263ef1f111cbb5b673376e12",
+            "runtime_hd": "9131385d41abe942af5559e007765a94f9aa3a2bdeb1c3a381d5bb938ed8ee56"
+          },
+          "alpha_bbox": [
+            24,
+            65,
+            168,
+            167
+          ],
+          "foreground_pixels": 9702,
+          "minimum_native_foreground": 4500,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 2,
+          "sha256": {
+            "native": "0d511fba3ce8c46e80e06e58320a10b505c4332ba78af7231eeb3bf6719cb924",
+            "hd": "11ab08a063f4d96d088545e66c25108b4d178211f27c1bbf5e978b960733c854",
+            "physical": "11ab08a063f4d96d088545e66c25108b4d178211f27c1bbf5e978b960733c854",
+            "reopen_native": "5ca6243afc45d5b764bf3aed57deca17bbe4711e602361e58934a3505c54a45f",
+            "reopen_hd": "25ff9c10b9d1d953fcc743eeae1d491326a80199dcb9e19fb4375182d44c0236",
+            "runtime_native": "0d511fba3ce8c46e80e06e58320a10b505c4332ba78af7231eeb3bf6719cb924",
+            "runtime_hd": "11ab08a063f4d96d088545e66c25108b4d178211f27c1bbf5e978b960733c854"
+          },
+          "alpha_bbox": [
+            24,
+            65,
+            168,
+            167
+          ],
+          "foreground_pixels": 9702,
+          "minimum_native_foreground": 4500,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 3,
+          "sha256": {
+            "native": "e55d36a8d5b19637a4254e1022819db29b6d4ece81a84fe6352fff54f568389b",
+            "hd": "1de09892b97f738ab897b24177c32ff84d2c4245ae3976733f2d3207c7971058",
+            "physical": "1de09892b97f738ab897b24177c32ff84d2c4245ae3976733f2d3207c7971058",
+            "reopen_native": "190d7499a42be3d1df06d9312ac76aba1ccd978920e3dbd0815397a3f7d565a5",
+            "reopen_hd": "176312a70c6d32adf22cc0009f47e45b5f816242ebbbf7680dda501ff74f8ce7",
+            "runtime_native": "e55d36a8d5b19637a4254e1022819db29b6d4ece81a84fe6352fff54f568389b",
+            "runtime_hd": "1de09892b97f738ab897b24177c32ff84d2c4245ae3976733f2d3207c7971058"
+          },
+          "alpha_bbox": [
+            24,
+            65,
+            168,
+            167
+          ],
+          "foreground_pixels": 9702,
+          "minimum_native_foreground": 4500,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        }
+      ],
+      "raw_raster": {
+        "d0": "WARN",
+        "d1": "PASS",
+        "d2": "WARN",
+        "d3": "PASS"
+      }
+    },
+    {
+      "id": "pension_2f",
+      "source_sha256": "839ec81f429657c419bed9004dae5a5c620de3753f4b6c27e450a37356769337",
+      "source_hash_lineage_matches": true,
+      "size": [
+        5,
+        4
+      ],
+      "floor_mode": "full-footprint-integral",
+      "direct_blender_inspection": {
+        "id": "pension_2f",
+        "mesh_count": 319,
+        "unowned": [],
+        "hidden_meshes": [],
+        "cutaway_tags": [],
+        "camera_type": "ORTHO",
+        "ortho_scale": 192,
+        "camera_euler_deg": [
+          60.000001669652114,
+          0,
+          45.00000125223908
+        ],
+        "camera_target_z_tiles": 1.799999514008348,
+        "basis_native": {
+          "I": [
+            15.999996185302734,
+            7.999998092651367
+          ],
+          "J": [
+            -16.000001907348633,
+            7.999998092651367
+          ],
+          "Z": [
+            0,
+            -19.595918655395508
+          ]
+        },
+        "root_rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1,
+          1
+        ],
+        "groups_bounds_tiles": {
+          "floor": [
+            [
+              -2.4999999993611706,
+              -1.9999999657714578,
+              0
+            ],
+            [
+              2.4999999993611706,
+              1.9999999657714578,
+              0.09000000098852651
+            ]
+          ],
+          "body": [
+            [
+              -2.2500000668600113,
+              -1.8000000197705301,
+              0.12000000131803534
+            ],
+            [
+              2.2500000668600113,
+              1.8000000197705301,
+              3.5900001096759717
+            ]
+          ],
+          "roof": [
+            [
+              -2.409999956225796,
+              -1.9700000075887976,
+              2.9150001233354472
+            ],
+            [
+              2.409999956225796,
+              1.9700000075887976,
+              3.6699998857714697
+            ]
+          ]
+        },
+        "inventory": {
+          "doors": [
+            "DoorLeaf_Main"
+          ]
+        },
+        "root_animation": false,
+        "canopy_actual_max_z_tiles": 1.496986769688004,
+        "balcony_objects": {
+          "Balcony_Slab": [
+            1.5500000872693707,
+            1.6500000602698346
+          ]
+        }
+      },
+      "physical_yaws_deg": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "semantic_review": "Two traditional floors, charcoal gable, central entry below balcony; latest lowered canopy has positive slab clearance.",
+      "semantic_direction_conclusion": "No moving landmark or unapproved duplicated rear door/front found in d0-d3; same-root ownership, inventory, projected landmarks and existing exact reopen support the visual review.",
+      "native_views": [
+        {
+          "direction": 0,
+          "sha256": {
+            "native": "a3d97d486040302e5bfad7a76d58fe882d4659594512737c15fe254cc3ee1f3c",
+            "hd": "d717dc112d28456149e93e42036340d7b8454706f47055bab36105c0519245bc",
+            "physical": "d717dc112d28456149e93e42036340d7b8454706f47055bab36105c0519245bc",
+            "reopen_native": "881ff8819205df00a8d89dd5c1674a371fe0e40304f93d6446cd5e8c4bbd00ff",
+            "reopen_hd": "bcb387d75b7502038a350ade26e337cd8a4b0fc4b6b723bb0e7c5d7fa5885993",
+            "runtime_native": "a3d97d486040302e5bfad7a76d58fe882d4659594512737c15fe254cc3ee1f3c",
+            "runtime_hd": "d717dc112d28456149e93e42036340d7b8454706f47055bab36105c0519245bc"
+          },
+          "alpha_bbox": [
+            24,
+            38,
+            168,
+            167
+          ],
+          "foreground_pixels": 13276,
+          "minimum_native_foreground": 4500,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 1,
+          "sha256": {
+            "native": "6e2cf1f1e60254ed10de91d348ffa929c17a099c0046b3ea9f4357c6f1a45ed9",
+            "hd": "5e5a01c840e0065983a921a87c4a5debffa4e52546d5ce63d9d26b8fde92ff8a",
+            "physical": "5e5a01c840e0065983a921a87c4a5debffa4e52546d5ce63d9d26b8fde92ff8a",
+            "reopen_native": "fe1184d92279a5edcce5c87838999ee74d6e815ffa340d22a4aeee758dd66527",
+            "reopen_hd": "74967ba130117c670706cb36f87d84d3ca6323881372a4a7bbe71ca2f6fa9895",
+            "runtime_native": "6e2cf1f1e60254ed10de91d348ffa929c17a099c0046b3ea9f4357c6f1a45ed9",
+            "runtime_hd": "5e5a01c840e0065983a921a87c4a5debffa4e52546d5ce63d9d26b8fde92ff8a"
+          },
+          "alpha_bbox": [
+            24,
+            38,
+            168,
+            167
+          ],
+          "foreground_pixels": 13276,
+          "minimum_native_foreground": 4500,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 2,
+          "sha256": {
+            "native": "9d0849c99d7a2b411b3fc000f81e95e008c3787ba3f18a010d4ec06bb9a7357b",
+            "hd": "4248d30c556d74591ec6d3174df5d982dd3ca2a62542d6364fbc167afff4c824",
+            "physical": "4248d30c556d74591ec6d3174df5d982dd3ca2a62542d6364fbc167afff4c824",
+            "reopen_native": "d7ef35044890baa4f6ebdb1faeec53c787e09323ae242a0e9b752611d0db691c",
+            "reopen_hd": "ffe80aa075cd26080328dbee90aecd64da1badf5b0e8a96a4832135f54cf6b70",
+            "runtime_native": "9d0849c99d7a2b411b3fc000f81e95e008c3787ba3f18a010d4ec06bb9a7357b",
+            "runtime_hd": "4248d30c556d74591ec6d3174df5d982dd3ca2a62542d6364fbc167afff4c824"
+          },
+          "alpha_bbox": [
+            24,
+            38,
+            168,
+            167
+          ],
+          "foreground_pixels": 13278,
+          "minimum_native_foreground": 4500,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 3,
+          "sha256": {
+            "native": "4f8325505f03704bd1552b903fb078fbc8b5571e9fbd532dd4eb2c19da153bf1",
+            "hd": "f6a5200146f4067ea675f2fc235aee77fbe7272894c333046a699626a1ecee3a",
+            "physical": "f6a5200146f4067ea675f2fc235aee77fbe7272894c333046a699626a1ecee3a",
+            "reopen_native": "cc9b74de27581eb8488e4a1e083488f944aa879c980a9ddfced98cbacb822eab",
+            "reopen_hd": "5b61b88c21d780e4fd1974d75a988248877925bbd6d2ab421fa3dcab540bd65d",
+            "runtime_native": "4f8325505f03704bd1552b903fb078fbc8b5571e9fbd532dd4eb2c19da153bf1",
+            "runtime_hd": "f6a5200146f4067ea675f2fc235aee77fbe7272894c333046a699626a1ecee3a"
+          },
+          "alpha_bbox": [
+            24,
+            38,
+            168,
+            167
+          ],
+          "foreground_pixels": 13276,
+          "minimum_native_foreground": 4500,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        }
+      ],
+      "raw_raster": {
+        "d0": "PASS",
+        "d1": "PASS",
+        "d2": "PASS",
+        "d3": "PASS"
+      },
+      "canopy_clearance": {
+        "existing_audit": {
+          "status": "CANOPY_BALCONY_INTERSECTION_RESOLVED",
+          "old_root_sha256": "f9a51ef7582d38859f25264b0df119012f249be9fb3549c7c85c934930eb6776",
+          "new_root_sha256": "839ec81f429657c419bed9004dae5a5c620de3753f4b6c27e450a37356769337",
+          "unchanged_non_canopy_meshes": 310,
+          "exact_vertex_face_world_matrix_equality": true,
+          "canopy_objects": [
+            "Roof_EntryShed",
+            "Fascia_EntryShed",
+            "Fascia_EntrySide",
+            "Fascia_EntrySide.001",
+            "RoofSeam_EntryShed",
+            "RoofSeam_EntryShed.001",
+            "RoofSeam_EntryShed.002",
+            "RoofSeam_EntryShed.003",
+            "RoofSeam_EntryShed.004"
+          ],
+          "canopy_max_z_tiles": 1.496986746788025,
+          "balcony_slab_min_z_tiles": 1.5500000715255737,
+          "minimum_vertical_clearance_tiles": 0.05301332473754883,
+          "minimum_vertical_clearance_world": 1.1995546052852906,
+          "canopy_roof_bounds_tiles": [
+            [
+              -0.7099999785423279,
+              -2.359999895095825,
+              1.4149999618530273
+            ],
+            [
+              0.7099999785423279,
+              -1.9099998474121094,
+              1.4900000095367432
+            ]
+          ],
+          "door_leaf_top_tiles": 1.399999976158142,
+          "canopy_soffit_above_door_leaf_tiles": 0.014999985694885254,
+          "canopy_back_to_door_frame_gap_tiles": 0.014999866485595703,
+          "support": "Existing timber brackets enter canopy soffit as a supporting connection; canopy has positive clearance below balcony slab",
+          "unchanged": [
+            "all door objects",
+            "portal threshold",
+            "body shell",
+            "main roof",
+            "balcony slab and rail",
+            "pool suite and terrace",
+            "foundation",
+            "windows"
+          ],
+          "archive": "superseded-canopy-v1"
+        },
+        "independent_current_gap_tiles": 0.05301331758136674
+      }
+    },
+    {
+      "id": "sikhye",
+      "source_sha256": "79f719eb99068f44bb340f3bae261938e0cc356d3121d2e6c4693a5a0d80abc5",
+      "source_hash_lineage_matches": true,
+      "size": [
+        2,
+        1
+      ],
+      "floor_mode": "transparent-no-floor",
+      "direct_blender_inspection": {
+        "id": "sikhye",
+        "mesh_count": 44,
+        "unowned": [],
+        "hidden_meshes": [],
+        "cutaway_tags": [],
+        "camera_type": "ORTHO",
+        "ortho_scale": 192,
+        "camera_euler_deg": [
+          60.000001669652114,
+          0,
+          45.00000125223908
+        ],
+        "camera_target_z_tiles": 1.799999851183136,
+        "basis_native": {
+          "I": [
+            15.999996185302734,
+            7.999998092651367
+          ],
+          "J": [
+            -16.000001907348633,
+            7.999998092651367
+          ],
+          "Z": [
+            0,
+            -19.595918655395508
+          ]
+        },
+        "root_rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "root_scale": [
+          1,
+          1,
+          1
+        ],
+        "groups_bounds_tiles": {
+          "body": [
+            [
+              -0.9199999539091397,
+              -0.31999998946581143,
+              0
+            ],
+            [
+              0.9199999539091397,
+              0.34999998979532027,
+              0.6000000065901767
+            ]
+          ]
+        },
+        "inventory": {
+          "jars": [
+            "Jar_0",
+            "Jar_1"
+          ],
+          "eggs": [
+            "Egg",
+            "Egg.001",
+            "Egg.002",
+            "Egg.003",
+            "Egg.004",
+            "Egg.005"
+          ]
+        },
+        "root_animation": false
+      },
+      "physical_yaws_deg": [
+        0,
+        90,
+        180,
+        270
+      ],
+      "semantic_review": "Two jars/taps, egg tray/steamer and one front curtain; rear has no duplicated curtain.",
+      "semantic_direction_conclusion": "No moving landmark or unapproved duplicated rear door/front found in d0-d3; same-root ownership, inventory, projected landmarks and existing exact reopen support the visual review.",
+      "native_views": [
+        {
+          "direction": 0,
+          "sha256": {
+            "native": "825eaaca97612bce62c470c0d5182330835628c1f51f41bfdbd77f24a6398c5a",
+            "hd": "d8866ad446d7ab29f048f421ec4513f4389db34b29fafef81a3c75dea5036483",
+            "physical": "d8866ad446d7ab29f048f421ec4513f4389db34b29fafef81a3c75dea5036483",
+            "reopen_native": "6ea0a97c0a8ec21170f596f84b0f42685a78689101ae36f7eed271c25181ad3d",
+            "reopen_hd": "4acf83a47a1dacff8a1356fceb435b091a203b0b12e99e276454fdc9584ebb76",
+            "runtime_native": "825eaaca97612bce62c470c0d5182330835628c1f51f41bfdbd77f24a6398c5a",
+            "runtime_hd": "d8866ad446d7ab29f048f421ec4513f4389db34b29fafef81a3c75dea5036483"
+          },
+          "alpha_bbox": [
+            73,
+            98,
+            118,
+            142
+          ],
+          "foreground_pixels": 1165,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 1,
+          "sha256": {
+            "native": "d8009ec7528be636a22411411e90c7f32667c75fcfac13f28bd6415b8bd5b6b5",
+            "hd": "e068faa0b4c9cac942ebc4cdec85e4c07e0a307287fd742560f9fa62fe40e920",
+            "physical": "e068faa0b4c9cac942ebc4cdec85e4c07e0a307287fd742560f9fa62fe40e920",
+            "reopen_native": "0243d56238e23e7559cf536e75c9feb05701fece92500fc3c3d58a31dc83cc3d",
+            "reopen_hd": "40ddd84dd38ab9605ed96f0c2edbbb390fc660cbabcd46c75896a3c185d9d2fa",
+            "runtime_native": "d8009ec7528be636a22411411e90c7f32667c75fcfac13f28bd6415b8bd5b6b5",
+            "runtime_hd": "e068faa0b4c9cac942ebc4cdec85e4c07e0a307287fd742560f9fa62fe40e920"
+          },
+          "alpha_bbox": [
+            74,
+            101,
+            119,
+            142
+          ],
+          "foreground_pixels": 1151,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 2,
+          "sha256": {
+            "native": "d5630b4caf5680239deb0bd3dc61fde89d70dc6bac5a0f2d9cf6e346b77abafc",
+            "hd": "aa17613fdf8db4c71771a5bc8ac8efdbb10e01d5eb1cdcf28283b700fe508ecc",
+            "physical": "aa17613fdf8db4c71771a5bc8ac8efdbb10e01d5eb1cdcf28283b700fe508ecc",
+            "reopen_native": "a013dd8d567a27a286916b0a25dc6c78bc3828e3313a6f4cf2dbf78438dc6313",
+            "reopen_hd": "44f27ff3ff552300425afc0bada57a7a647884e0bd4782ac89310995b926fe0f",
+            "runtime_native": "d5630b4caf5680239deb0bd3dc61fde89d70dc6bac5a0f2d9cf6e346b77abafc",
+            "runtime_hd": "aa17613fdf8db4c71771a5bc8ac8efdbb10e01d5eb1cdcf28283b700fe508ecc"
+          },
+          "alpha_bbox": [
+            74,
+            104,
+            119,
+            142
+          ],
+          "foreground_pixels": 1129,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        },
+        {
+          "direction": 3,
+          "sha256": {
+            "native": "b8dffe7c5cfd45780e703902c5753c488630c4b543c3b1370121295c65bbedea",
+            "hd": "69bfb226f77bd6594149267f89c587604c301c555c39928106bf1f4942967572",
+            "physical": "69bfb226f77bd6594149267f89c587604c301c555c39928106bf1f4942967572",
+            "reopen_native": "56789468c4a51801541b0e1dadc4477f81a059521ca9f610db44881db256f1d9",
+            "reopen_hd": "01c05af03dd71f5995b5fb1caa5e5bb7c0f641bf1b4124e11beb5af655ccb49f",
+            "runtime_native": "b8dffe7c5cfd45780e703902c5753c488630c4b543c3b1370121295c65bbedea",
+            "runtime_hd": "69bfb226f77bd6594149267f89c587604c301c555c39928106bf1f4942967572"
+          },
+          "alpha_bbox": [
+            73,
+            98,
+            118,
+            142
+          ],
+          "foreground_pixels": 1131,
+          "minimum_native_foreground": 600,
+          "clipping": false,
+          "runtime_and_existing_reopen_RGBA_equal": true,
+          "physical_and_color_RGBA_equal": true,
+          "alpha_IoU": 1.0
+        }
+      ],
+      "raw_raster": {
+        "d0": "FAIL",
+        "d1": "FAIL",
+        "d2": "WARN",
+        "d3": "FAIL"
+      }
+    }
+  ],
+  "affected_directions": [
+    {
+      "id": "bungeoppang",
+      "direction": 0,
+      "source_sha256": "e4ed81742e57028afb065c79f740e495e99241238d9401309e30d6c0fd217701",
+      "physical_png_sha256": "37ba3427d20eeb7a6ad120f7a0d43e7890c4fb353f38b1069d8dd32489f60ad3",
+      "native_png_sha256": "77aecc49e31555309adec83f830140c4ffe344b42915281401ca615f90625eef",
+      "projection_diagnostic_sha256": "f9cea2f48d2853b06b185691c503940423e8eddcae793361bd4fcba20711e987",
+      "raw_status": "FAIL",
+      "raw_families": {
+        "diag_negative": {
+          "target_deg": -26.565,
+          "measured_deg": -14.815,
+          "abs_error_deg": 11.75,
+          "peak_edge_pixels": 69,
+          "score": 15.038,
+          "verdict": "FAIL"
+        },
+        "diag_positive": {
+          "target_deg": 26.565,
+          "measured_deg": 26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 100,
+          "score": 30.251,
+          "verdict": "PASS"
+        },
+        "vertical": {
+          "target_deg": 90.0,
+          "measured_deg": 86.0,
+          "abs_error_deg": 4.0,
+          "peak_edge_pixels": 60,
+          "score": 10.028,
+          "verdict": "WARN"
+        }
+      },
+      "source_based_conclusion": "FIXED_CAMERA_CONFIRMED_RAW_DIAGNOSTIC_RETAINED",
+      "reason": "Sloping orange canopy/scallops and tiny mold/equipment edges compete with the ground family; d0/d2 select -14.815 degrees while positive ground family agrees. Source camera is unchanged."
+    },
+    {
+      "id": "bungeoppang",
+      "direction": 2,
+      "source_sha256": "e4ed81742e57028afb065c79f740e495e99241238d9401309e30d6c0fd217701",
+      "physical_png_sha256": "82ab7530ea7acd62c76d8931a3984f7964923519d92a95dc440bf6bac9f68de3",
+      "native_png_sha256": "7af8a255918b22534d069e32dc5a3d2b917fc1d6a1835f12450fb415e2c28498",
+      "projection_diagnostic_sha256": "f9cea2f48d2853b06b185691c503940423e8eddcae793361bd4fcba20711e987",
+      "raw_status": "FAIL",
+      "raw_families": {
+        "diag_negative": {
+          "target_deg": -26.565,
+          "measured_deg": -14.815,
+          "abs_error_deg": 11.75,
+          "peak_edge_pixels": 64,
+          "score": 10.786,
+          "verdict": "FAIL"
+        },
+        "diag_positive": {
+          "target_deg": 26.565,
+          "measured_deg": 26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 105,
+          "score": 32.363,
+          "verdict": "PASS"
+        },
+        "vertical": {
+          "target_deg": 90.0,
+          "measured_deg": 91.0,
+          "abs_error_deg": 1.0,
+          "peak_edge_pixels": 62,
+          "score": 14.002,
+          "verdict": "PASS"
+        }
+      },
+      "source_based_conclusion": "FIXED_CAMERA_CONFIRMED_RAW_DIAGNOSTIC_RETAINED",
+      "reason": "Sloping orange canopy/scallops and tiny mold/equipment edges compete with the ground family; d0/d2 select -14.815 degrees while positive ground family agrees. Source camera is unchanged."
+    },
+    {
+      "id": "cafe",
+      "direction": 0,
+      "source_sha256": "8f8a8948d3cbe7fa81578b8951e31c016818fdfd887732d1c3a5751a8501992b",
+      "physical_png_sha256": "d9ebb3d9b4ffbbd0701750fb1c401697a9034f4b34913b4aae6f420a41cdb22c",
+      "native_png_sha256": "38c89373bad8b32ee2dfb6e02e29845cb214faeb114924592c87ab10491f25a5",
+      "projection_diagnostic_sha256": "133126d1c9497c7dc88ebb5d1f089e7a9a374b7c9ce270f243f4a058a5eb6141",
+      "raw_status": "FAIL",
+      "raw_families": {
+        "diag_negative": {
+          "target_deg": -26.565,
+          "measured_deg": -16.065,
+          "abs_error_deg": 10.5,
+          "peak_edge_pixels": 85,
+          "score": 15.37,
+          "verdict": "FAIL"
+        },
+        "diag_positive": {
+          "target_deg": 26.565,
+          "measured_deg": 26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 165,
+          "score": 32.563,
+          "verdict": "PASS"
+        },
+        "vertical": {
+          "target_deg": 90.0,
+          "measured_deg": 90.25,
+          "abs_error_deg": 0.25,
+          "peak_edge_pixels": 68,
+          "score": 8.709,
+          "verdict": "PASS"
+        }
+      },
+      "source_based_conclusion": "FIXED_CAMERA_CONFIRMED_RAW_DIAGNOSTIC_RETAINED",
+      "reason": "d0 negative-family peak -16.065 degrees while positive/vertical agree. Nonhorizontal tiled pitched roof/awning contributes competing edges; independently opened exact camera and floor bounds resolve actual projection."
+    },
+    {
+      "id": "firepit_row",
+      "direction": 0,
+      "source_sha256": "2f3560e9fe7b9075040b502913ecdf17d42ac285ea40337c1f3d2b6c4ec026c5",
+      "physical_png_sha256": "4a80240bf8a033c3b1ca5acacc3a5118287bd0476786bc38cc060b0c247e5ce7",
+      "native_png_sha256": "f993a87237af3a693336ed17389072519d5807e51090dada0e54c7506479e943",
+      "projection_diagnostic_sha256": "ccc4ff5800b2093a7c750be1a15b390169a282d8c585041b3114cbad0434fe26",
+      "raw_status": "FAIL",
+      "raw_families": {
+        "diag_negative": {
+          "target_deg": -26.565,
+          "measured_deg": -14.815,
+          "abs_error_deg": 11.75,
+          "peak_edge_pixels": 62,
+          "score": 10.401,
+          "verdict": "FAIL"
+        },
+        "diag_positive": {
+          "target_deg": 26.565,
+          "measured_deg": 26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 140,
+          "score": 39.466,
+          "verdict": "PASS"
+        },
+        "vertical": {
+          "target_deg": 90.0,
+          "measured_deg": 85.0,
+          "abs_error_deg": 5.0,
+          "peak_edge_pixels": 44,
+          "score": 6.525,
+          "verdict": "FAIL"
+        }
+      },
+      "source_based_conclusion": "FIXED_CAMERA_CONFIRMED_RAW_DIAGNOSTIC_RETAINED",
+      "reason": "Short grill-grate/log-rack edges and microequipment select -14.815 or +14.565-degree peaks; long opposite ground family agrees. Source camera and three fixed root-owned grills exclude direction-specific camera changes."
+    },
+    {
+      "id": "firepit_row",
+      "direction": 1,
+      "source_sha256": "2f3560e9fe7b9075040b502913ecdf17d42ac285ea40337c1f3d2b6c4ec026c5",
+      "physical_png_sha256": "9b42a4b9319e90d2bf093d4dbc1b25631017c18488ec862a670a93e274b39acb",
+      "native_png_sha256": "31d0a3fd50fa221d7993849949d018f5052d51bbd0cc59a22b68614177a94c51",
+      "projection_diagnostic_sha256": "ccc4ff5800b2093a7c750be1a15b390169a282d8c585041b3114cbad0434fe26",
+      "raw_status": "FAIL",
+      "raw_families": {
+        "diag_negative": {
+          "target_deg": -26.565,
+          "measured_deg": -26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 128,
+          "score": 35.478,
+          "verdict": "PASS"
+        },
+        "diag_positive": {
+          "target_deg": 26.565,
+          "measured_deg": 14.565,
+          "abs_error_deg": 12.0,
+          "peak_edge_pixels": 55,
+          "score": 9.522,
+          "verdict": "FAIL"
+        },
+        "vertical": {
+          "target_deg": 90.0,
+          "measured_deg": 90.5,
+          "abs_error_deg": 0.5,
+          "peak_edge_pixels": 45,
+          "score": 6.732,
+          "verdict": "PASS"
+        }
+      },
+      "source_based_conclusion": "FIXED_CAMERA_CONFIRMED_RAW_DIAGNOSTIC_RETAINED",
+      "reason": "Short grill-grate/log-rack edges and microequipment select -14.815 or +14.565-degree peaks; long opposite ground family agrees. Source camera and three fixed root-owned grills exclude direction-specific camera changes."
+    },
+    {
+      "id": "icecream",
+      "direction": 0,
+      "source_sha256": "5ac1641273b1251387a02e6d6d112380c33af0214fd15e7ebcf1f689fdc839a2",
+      "physical_png_sha256": "c5c1b41b42928452da88190f67a4e4502778d26e82fac7668be2385cc420ac38",
+      "native_png_sha256": "d5eba860b9d69dd7d1f21f14518289cda7d87a85a2fd35ea3d4e7b798154be8f",
+      "projection_diagnostic_sha256": "ba75d91ba220ed3c6b2caa78c0c7e98f4c597efed806221a515cd1ef51d04b93",
+      "raw_status": "FAIL",
+      "raw_families": {
+        "diag_negative": {
+          "target_deg": -26.565,
+          "measured_deg": -37.315,
+          "abs_error_deg": 10.75,
+          "peak_edge_pixels": 64,
+          "score": 14.963,
+          "verdict": "FAIL"
+        },
+        "diag_positive": {
+          "target_deg": 26.565,
+          "measured_deg": 26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 60,
+          "score": 14.236,
+          "verdict": "PASS"
+        },
+        "vertical": {
+          "target_deg": 90.0,
+          "measured_deg": 90.75,
+          "abs_error_deg": 0.75,
+          "peak_edge_pixels": 65,
+          "score": 16.073,
+          "verdict": "PASS"
+        }
+      },
+      "source_based_conclusion": "FIXED_CAMERA_CONFIRMED_RAW_DIAGNOSTIC_RETAINED",
+      "reason": "Sloped canopy/case, scallops and small equipment dominate short diagonal segments; failures are direction-dependent while the independent source basis is unchanged."
+    },
+    {
+      "id": "icecream",
+      "direction": 1,
+      "source_sha256": "5ac1641273b1251387a02e6d6d112380c33af0214fd15e7ebcf1f689fdc839a2",
+      "physical_png_sha256": "50affffac9919b9746569f4529143dfe2929ce8478a60841219ae70816e8957c",
+      "native_png_sha256": "be2675c0a000ffc9e599ba96a0013cbd9e922750602555000edc953cab48228f",
+      "projection_diagnostic_sha256": "ba75d91ba220ed3c6b2caa78c0c7e98f4c597efed806221a515cd1ef51d04b93",
+      "raw_status": "FAIL",
+      "raw_families": {
+        "diag_negative": {
+          "target_deg": -26.565,
+          "measured_deg": -26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 60,
+          "score": 13.827,
+          "verdict": "PASS"
+        },
+        "diag_positive": {
+          "target_deg": 26.565,
+          "measured_deg": 33.565,
+          "abs_error_deg": 7.0,
+          "peak_edge_pixels": 59,
+          "score": 13.764,
+          "verdict": "FAIL"
+        },
+        "vertical": {
+          "target_deg": 90.0,
+          "measured_deg": 89.5,
+          "abs_error_deg": 0.5,
+          "peak_edge_pixels": 63,
+          "score": 18.048,
+          "verdict": "PASS"
+        }
+      },
+      "source_based_conclusion": "FIXED_CAMERA_CONFIRMED_RAW_DIAGNOSTIC_RETAINED",
+      "reason": "Sloped canopy/case, scallops and small equipment dominate short diagonal segments; failures are direction-dependent while the independent source basis is unchanged."
+    },
+    {
+      "id": "icecream",
+      "direction": 3,
+      "source_sha256": "5ac1641273b1251387a02e6d6d112380c33af0214fd15e7ebcf1f689fdc839a2",
+      "physical_png_sha256": "92845d39e5a0c260c6f2180d95ec2c36b78fab10bfe1f2c03e213c462afa30c4",
+      "native_png_sha256": "ad9b29c2d99ad708ab7ec9750bb2ae41a51da37adfa8f282b48945448234394f",
+      "projection_diagnostic_sha256": "ba75d91ba220ed3c6b2caa78c0c7e98f4c597efed806221a515cd1ef51d04b93",
+      "raw_status": "FAIL",
+      "raw_families": {
+        "diag_negative": {
+          "target_deg": -26.565,
+          "measured_deg": -38.565,
+          "abs_error_deg": 12.0,
+          "peak_edge_pixels": 61,
+          "score": 15.113,
+          "verdict": "FAIL"
+        },
+        "diag_positive": {
+          "target_deg": 26.565,
+          "measured_deg": 26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 51,
+          "score": 10.995,
+          "verdict": "PASS"
+        },
+        "vertical": {
+          "target_deg": 90.0,
+          "measured_deg": 94.0,
+          "abs_error_deg": 4.0,
+          "peak_edge_pixels": 67,
+          "score": 18.026,
+          "verdict": "WARN"
+        }
+      },
+      "source_based_conclusion": "FIXED_CAMERA_CONFIRMED_RAW_DIAGNOSTIC_RETAINED",
+      "reason": "Sloped canopy/case, scallops and small equipment dominate short diagonal segments; failures are direction-dependent while the independent source basis is unchanged."
+    },
+    {
+      "id": "pension_1f",
+      "direction": 0,
+      "source_sha256": "a4ee7d215b19494e78a9b33834f7cb8007844235211b1593a826d53f3b936441",
+      "physical_png_sha256": "f6a89e9cf9a90d2a353f9fdf1ccac50594f6ab1f1346af8c45533a2b97024eae",
+      "native_png_sha256": "05f53b4c94e829896caeabc22cf7cd10636326a839ddf53dfbb982f93ad79f80",
+      "projection_diagnostic_sha256": "1c5563a8619af393dddcf2b922b5793759c2fbb358a647f69a38e09df50eb56a",
+      "raw_status": "WARN",
+      "raw_families": {
+        "diag_negative": {
+          "target_deg": -26.565,
+          "measured_deg": -26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 99,
+          "score": 10.796,
+          "verdict": "PASS"
+        },
+        "diag_positive": {
+          "target_deg": 26.565,
+          "measured_deg": 26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 92,
+          "score": 15.376,
+          "verdict": "PASS"
+        },
+        "vertical": {
+          "target_deg": 90.0,
+          "measured_deg": 93.0,
+          "abs_error_deg": 3.0,
+          "peak_edge_pixels": 44,
+          "score": 3.466,
+          "verdict": "WARN"
+        }
+      },
+      "source_based_conclusion": "FIXED_CAMERA_CONFIRMED_RAW_DIAGNOSTIC_RETAINED",
+      "reason": "Both ground families match; vertical detector peaks at 93/87 degrees on short wall/trim features beneath dominant pitched-roof edges. Source vertical basis is exactly vertical; weak raster vertical evidence does not demonstrate camera roll."
+    },
+    {
+      "id": "pension_1f",
+      "direction": 2,
+      "source_sha256": "a4ee7d215b19494e78a9b33834f7cb8007844235211b1593a826d53f3b936441",
+      "physical_png_sha256": "11ab08a063f4d96d088545e66c25108b4d178211f27c1bbf5e978b960733c854",
+      "native_png_sha256": "0d511fba3ce8c46e80e06e58320a10b505c4332ba78af7231eeb3bf6719cb924",
+      "projection_diagnostic_sha256": "1c5563a8619af393dddcf2b922b5793759c2fbb358a647f69a38e09df50eb56a",
+      "raw_status": "WARN",
+      "raw_families": {
+        "diag_negative": {
+          "target_deg": -26.565,
+          "measured_deg": -26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 94,
+          "score": 11.758,
+          "verdict": "PASS"
+        },
+        "diag_positive": {
+          "target_deg": 26.565,
+          "measured_deg": 26.815,
+          "abs_error_deg": 0.25,
+          "peak_edge_pixels": 100,
+          "score": 17.731,
+          "verdict": "PASS"
+        },
+        "vertical": {
+          "target_deg": 90.0,
+          "measured_deg": 87.0,
+          "abs_error_deg": 3.0,
+          "peak_edge_pixels": 42,
+          "score": 3.367,
+          "verdict": "WARN"
+        }
+      },
+      "source_based_conclusion": "FIXED_CAMERA_CONFIRMED_RAW_DIAGNOSTIC_RETAINED",
+      "reason": "Both ground families match; vertical detector peaks at 93/87 degrees on short wall/trim features beneath dominant pitched-roof edges. Source vertical basis is exactly vertical; weak raster vertical evidence does not demonstrate camera roll."
+    },
+    {
+      "id": "sikhye",
+      "direction": 0,
+      "source_sha256": "79f719eb99068f44bb340f3bae261938e0cc356d3121d2e6c4693a5a0d80abc5",
+      "physical_png_sha256": "d8866ad446d7ab29f048f421ec4513f4389db34b29fafef81a3c75dea5036483",
+      "native_png_sha256": "825eaaca97612bce62c470c0d5182330835628c1f51f41bfdbd77f24a6398c5a",
+      "projection_diagnostic_sha256": "95e2a927baf03baa21809efc2b616576964d0df9445317d407521b8890de3b3d",
+      "raw_status": "FAIL",
+      "raw_families": {
+        "diag_negative": {
+          "target_deg": -26.565,
+          "measured_deg": -26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 56,
+          "score": 10.191,
+          "verdict": "PASS"
+        },
+        "diag_positive": {
+          "target_deg": 26.565,
+          "measured_deg": 26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 98,
+          "score": 24.829,
+          "verdict": "PASS"
+        },
+        "vertical": {
+          "target_deg": 90.0,
+          "measured_deg": 81.25,
+          "abs_error_deg": 8.75,
+          "peak_edge_pixels": 70,
+          "score": 12.861,
+          "verdict": "FAIL"
+        }
+      },
+      "source_based_conclusion": "FIXED_CAMERA_CONFIRMED_RAW_DIAGNOSTIC_RETAINED",
+      "reason": "Curved jars, taps, eggs and short counter/curtain details give a weak vertical family (81.25/98.75/92.5/81.25); d1 also selects a 14.565-degree diagonal. Both ground families pass in d0/d2/d3. Exact camera excludes actual roll/elevation drift."
+    },
+    {
+      "id": "sikhye",
+      "direction": 1,
+      "source_sha256": "79f719eb99068f44bb340f3bae261938e0cc356d3121d2e6c4693a5a0d80abc5",
+      "physical_png_sha256": "e068faa0b4c9cac942ebc4cdec85e4c07e0a307287fd742560f9fa62fe40e920",
+      "native_png_sha256": "d8009ec7528be636a22411411e90c7f32667c75fcfac13f28bd6415b8bd5b6b5",
+      "projection_diagnostic_sha256": "95e2a927baf03baa21809efc2b616576964d0df9445317d407521b8890de3b3d",
+      "raw_status": "FAIL",
+      "raw_families": {
+        "diag_negative": {
+          "target_deg": -26.565,
+          "measured_deg": -26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 99,
+          "score": 27.68,
+          "verdict": "PASS"
+        },
+        "diag_positive": {
+          "target_deg": 26.565,
+          "measured_deg": 14.565,
+          "abs_error_deg": 12.0,
+          "peak_edge_pixels": 57,
+          "score": 12.074,
+          "verdict": "FAIL"
+        },
+        "vertical": {
+          "target_deg": 90.0,
+          "measured_deg": 98.75,
+          "abs_error_deg": 8.75,
+          "peak_edge_pixels": 53,
+          "score": 9.797,
+          "verdict": "FAIL"
+        }
+      },
+      "source_based_conclusion": "FIXED_CAMERA_CONFIRMED_RAW_DIAGNOSTIC_RETAINED",
+      "reason": "Curved jars, taps, eggs and short counter/curtain details give a weak vertical family (81.25/98.75/92.5/81.25); d1 also selects a 14.565-degree diagonal. Both ground families pass in d0/d2/d3. Exact camera excludes actual roll/elevation drift."
+    },
+    {
+      "id": "sikhye",
+      "direction": 2,
+      "source_sha256": "79f719eb99068f44bb340f3bae261938e0cc356d3121d2e6c4693a5a0d80abc5",
+      "physical_png_sha256": "aa17613fdf8db4c71771a5bc8ac8efdbb10e01d5eb1cdcf28283b700fe508ecc",
+      "native_png_sha256": "d5630b4caf5680239deb0bd3dc61fde89d70dc6bac5a0f2d9cf6e346b77abafc",
+      "projection_diagnostic_sha256": "95e2a927baf03baa21809efc2b616576964d0df9445317d407521b8890de3b3d",
+      "raw_status": "WARN",
+      "raw_families": {
+        "diag_negative": {
+          "target_deg": -26.565,
+          "measured_deg": -26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 61,
+          "score": 10.498,
+          "verdict": "PASS"
+        },
+        "diag_positive": {
+          "target_deg": 26.565,
+          "measured_deg": 26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 96,
+          "score": 27.422,
+          "verdict": "PASS"
+        },
+        "vertical": {
+          "target_deg": 90.0,
+          "measured_deg": 92.5,
+          "abs_error_deg": 2.5,
+          "peak_edge_pixels": 59,
+          "score": 10.604,
+          "verdict": "WARN"
+        }
+      },
+      "source_based_conclusion": "FIXED_CAMERA_CONFIRMED_RAW_DIAGNOSTIC_RETAINED",
+      "reason": "Curved jars, taps, eggs and short counter/curtain details give a weak vertical family (81.25/98.75/92.5/81.25); d1 also selects a 14.565-degree diagonal. Both ground families pass in d0/d2/d3. Exact camera excludes actual roll/elevation drift."
+    },
+    {
+      "id": "sikhye",
+      "direction": 3,
+      "source_sha256": "79f719eb99068f44bb340f3bae261938e0cc356d3121d2e6c4693a5a0d80abc5",
+      "physical_png_sha256": "69bfb226f77bd6594149267f89c587604c301c555c39928106bf1f4942967572",
+      "native_png_sha256": "b8dffe7c5cfd45780e703902c5753c488630c4b543c3b1370121295c65bbedea",
+      "projection_diagnostic_sha256": "95e2a927baf03baa21809efc2b616576964d0df9445317d407521b8890de3b3d",
+      "raw_status": "FAIL",
+      "raw_families": {
+        "diag_negative": {
+          "target_deg": -26.565,
+          "measured_deg": -26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 89,
+          "score": 27.744,
+          "verdict": "PASS"
+        },
+        "diag_positive": {
+          "target_deg": 26.565,
+          "measured_deg": 26.565,
+          "abs_error_deg": 0.0,
+          "peak_edge_pixels": 51,
+          "score": 8.414,
+          "verdict": "PASS"
+        },
+        "vertical": {
+          "target_deg": 90.0,
+          "measured_deg": 81.25,
+          "abs_error_deg": 8.75,
+          "peak_edge_pixels": 49,
+          "score": 9.034,
+          "verdict": "FAIL"
+        }
+      },
+      "source_based_conclusion": "FIXED_CAMERA_CONFIRMED_RAW_DIAGNOSTIC_RETAINED",
+      "reason": "Curved jars, taps, eggs and short counter/curtain details give a weak vertical family (81.25/98.75/92.5/81.25); d1 also selects a 14.565-degree diagonal. Both ground families pass in d0/d2/d3. Exact camera excludes actual roll/elevation drift."
+    }
+  ],
+  "evidence_sha256": {
+    "bungeoppang/facility.blend": "e4ed81742e57028afb065c79f740e495e99241238d9401309e30d6c0fd217701",
+    "bungeoppang/review/summary.json": "c9c5f00d4c90a887bacbddfa51ee03ad89337f1b1373a20e06e5776fc4d6d186",
+    "bungeoppang/review/scene-check.json": "ee9a9cb0877884fce37099a32d5555fa0e631f1b035b832688fb70e07001ba0f",
+    "bungeoppang/review-contract.json": "495e39c55ab0634e9f71ab507c98c25ce6269bb08236c51aebc582fa31d05a4a",
+    "bungeoppang/physical-rotations.json": "3bb36ea3bedcc493715bdfcf2998ed85ca63604dbc25ca1f3412f5ba7e037a60",
+    "bungeoppang/projection-validation.json": "f9cea2f48d2853b06b185691c503940423e8eddcae793361bd4fcba20711e987",
+    "bungeoppang/review/landmark-correspondence.json": "a40340934dd538374c44e88a9d4acf172183b88f3d0c48cabd96c84b10bca3ba",
+    "cafe/facility.blend": "8f8a8948d3cbe7fa81578b8951e31c016818fdfd887732d1c3a5751a8501992b",
+    "cafe/review/summary.json": "9c31775398e2a15760caa1d24bce0cb466a858a9b6961721a6dc72be4635f724",
+    "cafe/review/scene-check.json": "18f4114625bbc007289c82cebca20bd539e7fbe53dc6dc367ee54b1d5a5c04b6",
+    "cafe/review-contract.json": "f79f6908670ce5e17bfefa4981e2971cacecd8231d1492ce6219db34bc966cd1",
+    "cafe/physical-rotations.json": "2eaade1a2335f9022b6d9ca7f4466ee3a7cacad2b50efceab1cea709cbae8518",
+    "cafe/projection-validation.json": "133126d1c9497c7dc88ebb5d1f089e7a9a374b7c9ce270f243f4a058a5eb6141",
+    "cafe/review/landmark-correspondence.json": "357b8062026dd7b9403020524eaa9105dd9b5e63dff67b9633c9f523ade50cb5",
+    "cafe_lv2/facility.blend": "ef35d2e489bae4ffeed945a40657a3c368654f255e29befe583eb6515a311146",
+    "cafe_lv2/review/summary.json": "8d554a20c14ad3be10438aad263edd6ff3cd86db3128e7a0b02e98f8a8e46517",
+    "cafe_lv2/review/scene-check.json": "c993a613a4c98566f0b3123a12dec34a1bd5015ec1d88c9fcfda1795a6ac36e4",
+    "cafe_lv2/review-contract.json": "886eac016b6c386d7ee76f52cf360ae47e2de5f2a7be02bc5078c66831b6e72b",
+    "cafe_lv2/physical-rotations.json": "c6f89d3b4e5984cf31f5c130b3181140af21ef41e808d1a455e6dc92c1394366",
+    "cafe_lv2/projection-validation.json": "a5c86db63979efadb9bc51bd7a6ea1dd8c8433eb5992c4220922412b124be91b",
+    "cafe_lv2/review/landmark-correspondence.json": "bee1af00fe79a4ca48d31e1d52ac04255b9e1fef06bc2e6693905c0aa39be9c7",
+    "cafe_lv3/facility.blend": "5501a33ce2cf022b9520d31f52eaa0064336f74d721cc766487054c6e97d7520",
+    "cafe_lv3/review/summary.json": "30d39c54213a783a3507b702c86a02729f7810179b26f04588c389554ab559bd",
+    "cafe_lv3/review/scene-check.json": "9730eaf3b0b19379017ae81358ab5610aa59acceac567e5386a1312fb169af2f",
+    "cafe_lv3/review-contract.json": "bbe6defcd8b32829c2311767a9358c922ddf9e750ef5c28cceb440f239697f92",
+    "cafe_lv3/physical-rotations.json": "9362a1f95e39934834137f27ea3027d9adb79cab012643853cde52af5bab0b7b",
+    "cafe_lv3/projection-validation.json": "f28e795604cda11451a4fd37996434f801ab7f5bcfe38319a92146f00e9cf662",
+    "cafe_lv3/review/landmark-correspondence.json": "9b3c0865efac38aa27171cc029dbdadac53d1a186ac239a59b6d17b8c19d270f",
+    "chicken/facility.blend": "1323280b9619a4fdde62525af3b0d6f05e2bd879056f86a420813a416fa0df1c",
+    "chicken/review/summary.json": "5b091567df1b56f72198bc830fee520d4ccdfd6daf1353c8645b597226bb99ac",
+    "chicken/review/scene-check.json": "6587c7c837eb3fdde8617cfd95cce316280f769e2cd7f32bb1642f61e4ea6f2b",
+    "chicken/review-contract.json": "3aab0c411cf09e4620b801ce8d25976d1b6d25f673e53705a4e51e08c5e205af",
+    "chicken/physical-rotations.json": "9ebd757c1a04b98ed5fbea7cb31b9105671c90a3fdcd084baa7e9088577fbd53",
+    "chicken/projection-validation.json": "01d9dba024409093e1df65a19f2d2a6f69fa7a76c0ea406bcd97b25c91883f28",
+    "chicken/review/landmark-correspondence.json": "3ee87e539c4dd6d7be16306e69995700728599fc3b243d36298768c737e3d6f4",
+    "firepit_row/facility.blend": "2f3560e9fe7b9075040b502913ecdf17d42ac285ea40337c1f3d2b6c4ec026c5",
+    "firepit_row/review/summary.json": "e4012442bbfd74ef4822ec9244f27d7ea96d9e7d9afff17d345b15edf9aa276e",
+    "firepit_row/review/scene-check.json": "7270bf7eb70a63133aca9d57f80e7cc74092e703e2e93f6bba4f97dbaf21c5ab",
+    "firepit_row/review-contract.json": "bd9ba71f98792a0d9bb7d8a3c04044a2e5147247cc43c07a048d25a4a8f60245",
+    "firepit_row/physical-rotations.json": "c9de749df209be56cfd17b295ae81a9dde9bfbabf2d8c3a0394a629f6dfbc216",
+    "firepit_row/projection-validation.json": "ccc4ff5800b2093a7c750be1a15b390169a282d8c585041b3114cbad0434fe26",
+    "firepit_row/review/landmark-correspondence.json": "b86c66ad3cafe2d58a4b00d223f71495108dd1822249ffc7a5cdb0a09026693d",
+    "icecream/facility.blend": "5ac1641273b1251387a02e6d6d112380c33af0214fd15e7ebcf1f689fdc839a2",
+    "icecream/review/summary.json": "242b531424d0a51f1093046ec4aeb0c75a5d9af93358d669cad3146edc4dfe1c",
+    "icecream/review/scene-check.json": "13b92c46837a3cf4083eefce0eaa07af0938ec06aa82987ac858f615c0544e61",
+    "icecream/review-contract.json": "41b1d43896733cf69bc816f77cc7c67ecd9a474704aa415f2054ba913ba789dd",
+    "icecream/physical-rotations.json": "8e75ab2b2b3638b58b1e143d874c96242236f1ea55a01df142d90987cbe990da",
+    "icecream/projection-validation.json": "ba75d91ba220ed3c6b2caa78c0c7e98f4c597efed806221a515cd1ef51d04b93",
+    "icecream/review/landmark-correspondence.json": "ff94d74bdae9db356217709aff117fe86cb76867fcbffad6df87999fb1385a2a",
+    "pension/facility.blend": "8e2f3b0b5cb12738c6194558498c08c3bc04d81da6580ea5d0f907c2b502fbb8",
+    "pension/review/summary.json": "b9d182a4a65cc7bf52d04ac0883afbbd6ed0396b460e5602c175740405dacba5",
+    "pension/review/scene-check.json": "270960aa5ca1296b71e0c6bee79074ac7c21f3c200bfef90cc8edf52361a83bf",
+    "pension/review-contract.json": "2167f9bfd737a88c0817c0461d99d95f89715a4ff963ac825d612c3f722aff44",
+    "pension/physical-rotations.json": "401c74e921f675f067c42a64581ac59e29727a525ccd2fa643c738fae1874def",
+    "pension/projection-validation.json": "2b87ac9feeb15bdd816fa6f9db1a1c9050e6145b3594e4377a9bb9de7a5ecf38",
+    "pension/review/landmark-correspondence.json": "24c18d3dab03709807d20019e4165e54122bf09148a6a831f989b8ed68eb7e16",
+    "pension_1f/facility.blend": "a4ee7d215b19494e78a9b33834f7cb8007844235211b1593a826d53f3b936441",
+    "pension_1f/review/summary.json": "2bf2a6a1675418eb6c673c4ba0282927a0f132cde8b440f795a62d8228e8c8d9",
+    "pension_1f/review/scene-check.json": "601fbe4a75cd7527ec8aace364b4b5c4a412835ddbae486941c0e29fa206234d",
+    "pension_1f/review-contract.json": "02a1fca0f8c83f438952dfe1710747e8845a2934f0d64fab02151eccad211a9d",
+    "pension_1f/physical-rotations.json": "6ef3a4ac0771bc0e16658c0e0ccff58ea4fcd7562b807c9756882c3363d3ee52",
+    "pension_1f/projection-validation.json": "1c5563a8619af393dddcf2b922b5793759c2fbb358a647f69a38e09df50eb56a",
+    "pension_1f/review/landmark-correspondence.json": "db981979f79470d89b725c232284fe2f2bfbdf2e6ec7839caa53bd3bcf77301f",
+    "pension_2f/facility.blend": "839ec81f429657c419bed9004dae5a5c620de3753f4b6c27e450a37356769337",
+    "pension_2f/review/summary.json": "104e0c42f306c1e0d184c6bda6760b08f2457079447203b2faee463566a890a5",
+    "pension_2f/review/scene-check.json": "a575bece07614179aaffe4da655cadf8d7b9e5230948d85e3540bea5ae5c3f31",
+    "pension_2f/review-contract.json": "4dda3a9f54d7882c8b2d1f2ca756f452891e82fede40d59c1bcccaab116b7fe0",
+    "pension_2f/physical-rotations.json": "9f0102715e064d829958cd6c471f518bb9db7aacfd30b7a69185701db633fd0c",
+    "pension_2f/projection-validation.json": "f9f00c0965280b7b493fb151498f990b0086377ce84c9f5e16ff589fee5bfad7",
+    "pension_2f/review/landmark-correspondence.json": "bdd7a2db6f802a6df9ed65611a0005df03ab8eaa6206c948a489f7a8de9683bd",
+    "sikhye/facility.blend": "79f719eb99068f44bb340f3bae261938e0cc356d3121d2e6c4693a5a0d80abc5",
+    "sikhye/review/summary.json": "9c22a32332387a10af54c00fa6bae586c47ba1d02d62730bc9c553574178f9ea",
+    "sikhye/review/scene-check.json": "d89a21f7a553ec6eaaa8bb94a4bfd0c2f733673198d6993352789cb53e4663a6",
+    "sikhye/review-contract.json": "97a4df4d9f639ddc6e7b3496409695a9345c60aa2019e09787f6b5477deb2012",
+    "sikhye/physical-rotations.json": "1f84f5c8d11424f57ce1c4cf8d8abc303c7233d8a2a4019b32efac4ce99abe4e",
+    "sikhye/projection-validation.json": "95e2a927baf03baa21809efc2b616576964d0df9445317d407521b8890de3b3d",
+    "sikhye/review/landmark-correspondence.json": "10c4658b20f73475774aa6a735f9eb5bd048df3ebff0efc1a5db1b611333e6ae",
+    "cafe/calibration/calibration.json": "f1b907d3dbcd4c74a64bd268ff8fa948a811c618a7fb7af75f8f43e3598c63df",
+    "icecream/calibration/calibration.json": "70778bd3fa4166c79ff0c7c3a674a974b7cc6c2b9e4e3159f4bb3c149527a550"
+  },
+  "main_import": {
+    "status": "PENDING_COORDINATOR_WRITE_AND_SHA_EQUAL_VERIFICATION",
+    "main_modified_by_auditor": false,
+    "expected_native_sha256": {
+      "bungeoppang/d0": "77aecc49e31555309adec83f830140c4ffe344b42915281401ca615f90625eef",
+      "bungeoppang/d1": "1fd3f7d0fe6ba7d9c59d7411e7d60c4d751c02d96111d3414a7d64f189865e9a",
+      "bungeoppang/d2": "7af8a255918b22534d069e32dc5a3d2b917fc1d6a1835f12450fb415e2c28498",
+      "bungeoppang/d3": "e6db5cc72faec09eee1b585e1ea3a6b69a677e6fd6f60b99688d1956b7a09489",
+      "cafe/d0": "38c89373bad8b32ee2dfb6e02e29845cb214faeb114924592c87ab10491f25a5",
+      "cafe/d1": "9e9b3629968502c8a792d01a1a4ce97aaf89fba42bef5762ae0864d3b1257ec6",
+      "cafe/d2": "f6b7d4a219213f5cdd82e1caed97c4fd3d57dda123f54dc1511b4641bbdf402d",
+      "cafe/d3": "2883000888c9892a37a32f2773515854dcde9cb104f9f7eb39b69f2f9c11da9c",
+      "cafe_lv2/d0": "cc3814b8efcc4a874cfafdedbb37ba987effef7c1a2eb243cfd16b464e821e08",
+      "cafe_lv2/d1": "78eb5e02655ca4b8dd1a2cc9aa64fc376788959c95a7f6a11f21b6219e9e648b",
+      "cafe_lv2/d2": "08b133777ae40e6e83185feccee27a94eb28c7f7bdd295df7e9258829ea1ddf5",
+      "cafe_lv2/d3": "fd69163ad6869923c1f49ac275ce823bd39edbfb542500d15ae3d13386b3cb08",
+      "cafe_lv3/d0": "8b52118af2cdfb035d23325d69048eba6bd8ea8e5d4f29587762e86c4c22c2e8",
+      "cafe_lv3/d1": "e8b86be22c6c869e7a9fa59c85c075d43e2e9da4a4461a169c95401193bc2105",
+      "cafe_lv3/d2": "88c411217cc43934309feed371ed47b4d3dcd6ae7bfed2a6c403a526658f0aa8",
+      "cafe_lv3/d3": "b9f58ad1db01aacbec57246b7dbc652689411adefc61f8a40d62aeffb6e68dc9",
+      "chicken/d0": "daef0372d4071f7f4a86af18534273b6ca1e08b6d8ad71e6f3c9b860b6545a63",
+      "chicken/d1": "444662a740d7bf4a2fcaaac2d6de79ca6050c6a40140e3b71cab9e70570cb1da",
+      "chicken/d2": "6bccf5d0b27a32d4fb80d6db08f96a0fc7513e6bb2f436b720e52f4b40fc847a",
+      "chicken/d3": "b6ec611c729b331693e9f894592d8b9a30be8ea49de3a6d3cb3b9c622bff50ac",
+      "firepit_row/d0": "f993a87237af3a693336ed17389072519d5807e51090dada0e54c7506479e943",
+      "firepit_row/d1": "31d0a3fd50fa221d7993849949d018f5052d51bbd0cc59a22b68614177a94c51",
+      "firepit_row/d2": "4acf2d19b331f88ab4dd124cc2faeb03f285edf30825ccb4d13f3dff5e01a7cc",
+      "firepit_row/d3": "6eac214a4e059684d8585c11749a426b95c567cf4fe202b96cd14a30be895754",
+      "icecream/d0": "d5eba860b9d69dd7d1f21f14518289cda7d87a85a2fd35ea3d4e7b798154be8f",
+      "icecream/d1": "be2675c0a000ffc9e599ba96a0013cbd9e922750602555000edc953cab48228f",
+      "icecream/d2": "3ae0992382c5de717ef13766ea9f52e3cc106dee51d893be12ab855c1aebf566",
+      "icecream/d3": "ad9b29c2d99ad708ab7ec9750bb2ae41a51da37adfa8f282b48945448234394f",
+      "pension/d0": "9da3c1673622e5685ce80b3383589c287c40e789333b95526ed60c3988e4fdcb",
+      "pension/d1": "2386edccfdc9470b2e79a97c45ea177e9d4310eb95544b1a05012f87734db818",
+      "pension/d2": "888a75f1ea3bc2d2a2e5f31ccb356b9cb47eda75df857ede1b3f20cf8f97cb7e",
+      "pension/d3": "ccfba831c5f00677af2af7e1d6d7153b7f39c73889a41bd4248641c215689f30",
+      "pension_1f/d0": "05f53b4c94e829896caeabc22cf7cd10636326a839ddf53dfbb982f93ad79f80",
+      "pension_1f/d1": "2c82111c88c9bbfd24b33b96d06732e07aab05a6263ef1f111cbb5b673376e12",
+      "pension_1f/d2": "0d511fba3ce8c46e80e06e58320a10b505c4332ba78af7231eeb3bf6719cb924",
+      "pension_1f/d3": "e55d36a8d5b19637a4254e1022819db29b6d4ece81a84fe6352fff54f568389b",
+      "pension_2f/d0": "a3d97d486040302e5bfad7a76d58fe882d4659594512737c15fe254cc3ee1f3c",
+      "pension_2f/d1": "6e2cf1f1e60254ed10de91d348ffa929c17a099c0046b3ea9f4357c6f1a45ed9",
+      "pension_2f/d2": "9d0849c99d7a2b411b3fc000f81e95e008c3787ba3f18a010d4ec06bb9a7357b",
+      "pension_2f/d3": "4f8325505f03704bd1552b903fb078fbc8b5571e9fbd532dd4eb2c19da153bf1",
+      "sikhye/d0": "825eaaca97612bce62c470c0d5182330835628c1f51f41bfdbd77f24a6398c5a",
+      "sikhye/d1": "d8009ec7528be636a22411411e90c7f32667c75fcfac13f28bd6415b8bd5b6b5",
+      "sikhye/d2": "d5630b4caf5680239deb0bd3dc61fde89d70dc6bac5a0f2d9cf6e346b77abafc",
+      "sikhye/d3": "b8dffe7c5cfd45780e703902c5753c488630c4b543c3b1370121295c65bbedea"
+    }
+  },
+  "counts": {
+    "facilities": 11,
+    "native_directions": 44,
+    "hd_directions": 44,
+    "existing_reopen_RGBA_equal_images": 88,
+    "runtime_RGBA_equal_images": 88,
+    "physical_HD_RGBA_equal_images": 44,
+    "clipped_images": 0,
+    "source_wrong_camera": 0,
+    "raw_projection_PASS": 30,
+    "raw_projection_FAIL": 11,
+    "raw_projection_WARN": 3
+  }
+}

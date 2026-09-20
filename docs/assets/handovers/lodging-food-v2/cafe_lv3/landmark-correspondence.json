@@ -1,0 +1,94 @@
+{
+  "d0": {
+    "entrance": {
+      "pixel": [
+        268.8000183105469,
+        517.252326965332
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "counter": {
+      "pixel": [
+        368.00001525878906,
+        496.14209747314453
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "roof": {
+      "pixel": [
+        384.0,
+        267.99220275878906
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d1": {
+    "entrance": {
+      "pixel": [
+        384.0,
+        574.8523178100586
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "counter": {
+      "pixel": [
+        435.8399963378906,
+        478.2221145629883
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "roof": {
+      "pixel": [
+        384.0,
+        267.99220275878906
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d2": {
+    "entrance": {
+      "pixel": [
+        499.1999816894531,
+        517.252326965332
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "counter": {
+      "pixel": [
+        399.99998474121094,
+        444.3021011352539
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "roof": {
+      "pixel": [
+        384.0,
+        267.99220275878906
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d3": {
+    "entrance": {
+      "pixel": [
+        384.0,
+        459.6523132324219
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "counter": {
+      "pixel": [
+        332.1600036621094,
+        462.22210693359375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "roof": {
+      "pixel": [
+        384.0,
+        267.99220275878906
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  }
+}

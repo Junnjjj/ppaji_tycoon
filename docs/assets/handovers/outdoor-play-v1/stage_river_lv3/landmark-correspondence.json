@@ -1,0 +1,570 @@
+{
+  "d0": {
+    "performer": {
+      "pixel": [
+        590.0800170898438,
+        591.4761962890625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_0": {
+      "pixel": [
+        423.67999267578125,
+        591.6506958007812
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_1": {
+      "pixel": [
+        481.2799987792969,
+        620.45068359375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_2": {
+      "pixel": [
+        577.280029296875,
+        668.45068359375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_3": {
+      "pixel": [
+        634.8800048828125,
+        697.2506713867188
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_4": {
+      "pixel": [
+        362.8800048828125,
+        622.0506896972656
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_5": {
+      "pixel": [
+        420.47998046875,
+        650.8506774902344
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_6": {
+      "pixel": [
+        516.47998046875,
+        698.8506774902344
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_7": {
+      "pixel": [
+        574.0799560546875,
+        727.6506958007812
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_8": {
+      "pixel": [
+        302.08001708984375,
+        652.45068359375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_9": {
+      "pixel": [
+        359.67999267578125,
+        681.2506713867188
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_10": {
+      "pixel": [
+        455.67999267578125,
+        729.2506713867188
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_11": {
+      "pixel": [
+        513.2799682617188,
+        758.0506591796875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "entry": {
+      "pixel": [
+        193.91998291015625,
+        642.5306701660156
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        533.1199951171875,
+        812.1306762695312
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "microphone": {
+      "pixel": [
+        593.9199829101562,
+        524.0387573242188
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "left_speaker": {
+      "pixel": [
+        471.6800231933594,
+        476.1793212890625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_speaker": {
+      "pixel": [
+        705.9199829101562,
+        593.29931640625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "canopy_front": {
+      "pixel": [
+        560.0,
+        456.6466064453125
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "stair": {
+      "pixel": [
+        454.3999938964844,
+        514.1169738769531
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d1": {
+    "performer": {
+      "pixel": [
+        433.91998291015625,
+        591.4761962890625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_0": {
+      "pixel": [
+        389.1199951171875,
+        697.2506713867188
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_1": {
+      "pixel": [
+        446.7200012207031,
+        668.45068359375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_2": {
+      "pixel": [
+        542.719970703125,
+        620.45068359375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_3": {
+      "pixel": [
+        600.3200073242188,
+        591.6506958007812
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_4": {
+      "pixel": [
+        449.9200134277344,
+        727.6506958007812
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_5": {
+      "pixel": [
+        507.5199890136719,
+        698.8506774902344
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_6": {
+      "pixel": [
+        603.52001953125,
+        650.8506774902344
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_7": {
+      "pixel": [
+        661.1199951171875,
+        622.0506896972656
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_8": {
+      "pixel": [
+        510.7200012207031,
+        758.0506591796875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_9": {
+      "pixel": [
+        568.3200073242188,
+        729.2506713867188
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_10": {
+      "pixel": [
+        664.3200073242188,
+        681.2506713867188
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_11": {
+      "pixel": [
+        721.9200439453125,
+        652.45068359375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "entry": {
+      "pixel": [
+        490.8799743652344,
+        812.1306762695312
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        830.0800170898438,
+        642.5306701660156
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "microphone": {
+      "pixel": [
+        446.7200012207031,
+        515.71875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "left_speaker": {
+      "pixel": [
+        318.08001708984375,
+        593.29931640625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_speaker": {
+      "pixel": [
+        552.3200073242188,
+        476.1793212890625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "canopy_front": {
+      "pixel": [
+        464.0,
+        456.6466064453125
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "stair": {
+      "pixel": [
+        256.0,
+        670.9169921875
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d2": {
+    "performer": {
+      "pixel": [
+        433.91998291015625,
+        669.5561828613281
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_0": {
+      "pixel": [
+        600.3200073242188,
+        714.5306701660156
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_1": {
+      "pixel": [
+        542.719970703125,
+        685.7306823730469
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_2": {
+      "pixel": [
+        446.7200012207031,
+        637.7306823730469
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_3": {
+      "pixel": [
+        389.1199951171875,
+        608.9306945800781
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_4": {
+      "pixel": [
+        661.1199951171875,
+        684.1306762695312
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_5": {
+      "pixel": [
+        603.52001953125,
+        655.3306884765625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_6": {
+      "pixel": [
+        507.5199890136719,
+        607.3306884765625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_7": {
+      "pixel": [
+        449.9200134277344,
+        578.5307006835938
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_8": {
+      "pixel": [
+        721.9199829101562,
+        653.7306823730469
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_9": {
+      "pixel": [
+        664.3200073242188,
+        624.9306640625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_10": {
+      "pixel": [
+        568.3200073242188,
+        576.9306640625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_11": {
+      "pixel": [
+        510.7200012207031,
+        548.1306762695312
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "entry": {
+      "pixel": [
+        830.0800170898438,
+        663.6506958007812
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        490.87994384765625,
+        494.0506591796875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "microphone": {
+      "pixel": [
+        430.08001708984375,
+        589.3187561035156
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "left_speaker": {
+      "pixel": [
+        552.3200073242188,
+        670.0993347167969
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_speaker": {
+      "pixel": [
+        318.08001708984375,
+        552.9793395996094
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "canopy_front": {
+      "pixel": [
+        464.0,
+        504.6466064453125
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "stair": {
+      "pixel": [
+        569.6000366210938,
+        770.1169738769531
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d3": {
+    "performer": {
+      "pixel": [
+        590.0800170898438,
+        669.5561828613281
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_0": {
+      "pixel": [
+        634.8800048828125,
+        608.9306945800781
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_1": {
+      "pixel": [
+        577.280029296875,
+        637.7306823730469
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_2": {
+      "pixel": [
+        481.2799987792969,
+        685.7306823730469
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_3": {
+      "pixel": [
+        423.67999267578125,
+        714.5307006835938
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_4": {
+      "pixel": [
+        574.0800170898438,
+        578.5307006835938
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_5": {
+      "pixel": [
+        516.47998046875,
+        607.3306884765625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_6": {
+      "pixel": [
+        420.47998046875,
+        655.3306884765625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_7": {
+      "pixel": [
+        362.8800048828125,
+        684.1306762695312
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_8": {
+      "pixel": [
+        513.280029296875,
+        548.1306762695312
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_9": {
+      "pixel": [
+        455.67999267578125,
+        576.9306945800781
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_10": {
+      "pixel": [
+        359.67999267578125,
+        624.9306640625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "audience_11": {
+      "pixel": [
+        302.08001708984375,
+        653.7306823730469
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "entry": {
+      "pixel": [
+        533.1199951171875,
+        494.0506591796875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        193.91998291015625,
+        663.6506958007812
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "microphone": {
+      "pixel": [
+        577.280029296875,
+        597.6387634277344
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "left_speaker": {
+      "pixel": [
+        705.9200439453125,
+        552.9793395996094
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "right_speaker": {
+      "pixel": [
+        471.67999267578125,
+        670.0993347167969
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "canopy_front": {
+      "pixel": [
+        560.0,
+        504.64654541015625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "stair": {
+      "pixel": [
+        768.0,
+        613.3169555664062
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  }
+}

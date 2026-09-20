@@ -1,0 +1,70 @@
+{
+  "id": "bungee_jump",
+  "sourceSHA": "b1784c8ee17f911d34392274bae7989a2e5ee3fe15dc933e19af5917f6161d45",
+  "presentation": "Full uncut physical building; depth for exterior NPC and doorway presentation",
+  "camera": {
+    "C": [
+      183.71173095703125,
+      -183.71173095703125,
+      217.8822479248047
+    ],
+    "R": [
+      0.7071067094802856,
+      0.7071068286895752,
+      2.9802322387695312e-08
+    ],
+    "U": [
+      -0.3535534143447876,
+      0.3535534143447876,
+      0.8660253286361694
+    ],
+    "F": [
+      -0.6123723983764648,
+      0.6123723983764648,
+      -0.5
+    ]
+  },
+  "tileWorld": 22.627416997969522,
+  "native": 256,
+  "supportTopObjects": [
+    "JumpRunway"
+  ],
+  "directions": [
+    {
+      "d": 0,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {},
+      "finitePixels": 5498,
+      "supportTopExclusions": 207,
+      "maxReprojectionError": 6.866455078125e-05
+    },
+    {
+      "d": 1,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {},
+      "finitePixels": 5540,
+      "supportTopExclusions": 207,
+      "maxReprojectionError": 7.62939453125e-05
+    },
+    {
+      "d": 2,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {},
+      "finitePixels": 5635,
+      "supportTopExclusions": 123,
+      "maxReprojectionError": 7.62939453125e-05
+    },
+    {
+      "d": 3,
+      "hiddenWalls": [],
+      "shownWalls": [],
+      "imageHashes": {},
+      "finitePixels": 5596,
+      "supportTopExclusions": 123,
+      "maxReprojectionError": 6.103515625e-05
+    }
+  ]
+}

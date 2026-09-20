@@ -1,0 +1,133 @@
+{
+  "build": {
+    "sha": "5cea8e9bb1677cd023f3d9122419a2b244cc8123",
+    "shortSha": "5cea8e9bb167",
+    "branch": "main",
+    "sourceDigest": "88aa5560d4986ae0d57bd5c619e9aa910d68974660a9bbb1b09f933c0de6defb",
+    "startedAt": "2026-09-19T18:18:19.280Z"
+  },
+  "tabCount": 8,
+  "tabs": {
+    "indoor": [
+      "rental_tube",
+      "authored_locker_row",
+      "vending_in",
+      "indoor_shop",
+      "dry_room",
+      "authored_shower_row",
+      "authored_changing_row",
+      "pingpong",
+      "sauna",
+      "jjimjilbang",
+      "arcade",
+      "authored_karaoke",
+      "toilet",
+      "info",
+      "authored_infirmary"
+    ],
+    "ppaji": [
+      "float_deck",
+      "boarding_dock",
+      "ppaji_slide",
+      "ppaji_playground",
+      "module_rig_slide",
+      "module_trampoline_w",
+      "module_rig_beam",
+      "module_rig_roller",
+      "module_rig_seesaw",
+      "module_rig_totem",
+      "module_rig_disc",
+      "module_rig_mini_slide",
+      "module_rig_slidedock",
+      "module_rig_kids_park",
+      "module_waterwalk",
+      "module_rig_hammock",
+      "module_rig_sunbed",
+      "module_rig_led_buoy",
+      "diving",
+      "rig_bridge",
+      "rig_stepstone",
+      "rig_blob",
+      "rig_iceberg",
+      "rig_jump_tower",
+      "turtle_island",
+      "watchtower"
+    ],
+    "seat": [
+      "shade_net",
+      "mongol_tent",
+      "pavilion",
+      "authored_parasol",
+      "authored_sunbed_row",
+      "authored_pyeongsang_row",
+      "authored_massage_row",
+      "authored_footbath"
+    ],
+    "lodging": [
+      "caravan",
+      "bungalow",
+      "camp_site",
+      "glamping",
+      "pension_1f",
+      "pension_2f",
+      "pension"
+    ],
+    "food": [
+      "vending_out",
+      "icecream",
+      "sikhye",
+      "bungeoppang",
+      "cafe",
+      "cafe_lv2",
+      "cafe_lv3",
+      "shop",
+      "snackbar",
+      "firepit_row",
+      "chicken",
+      "authored_bbq_zone"
+    ],
+    "play": [
+      "stage_river",
+      "playground",
+      "jump_cushion"
+    ],
+    "slide": [
+      "stripy_slide",
+      "blue_slide"
+    ],
+    "decor": [
+      "merlion",
+      "flowerbed",
+      "photozone",
+      "hydrangea",
+      "sunflower",
+      "aloe",
+      "env_shrubs",
+      "env_rocks",
+      "env_wood_fence",
+      "env_wood_fence_corner",
+      "env_wood_fence_end",
+      "env_stone_wall",
+      "env_stone_wall_corner",
+      "env_stone_wall_end",
+      "env_hedge",
+      "env_hedge_corner",
+      "env_hedge_end",
+      "env_water_rail",
+      "env_water_rail_corner",
+      "env_water_rail_end",
+      "env_flower_pot",
+      "env_long_flowerbed",
+      "env_bench",
+      "env_street_lamp"
+    ]
+  },
+  "expected": {
+    "toilet": "indoor",
+    "pingpong": "indoor",
+    "authored_footbath": "seat",
+    "merlion": "decor",
+    "stage_river": "play"
+  },
+  "retiredAbsent": true
+}

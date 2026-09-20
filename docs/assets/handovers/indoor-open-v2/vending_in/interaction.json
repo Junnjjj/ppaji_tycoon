@@ -1,0 +1,70 @@
+{
+  "id": "vending_in",
+  "currentSize": [
+    1,
+    1
+  ],
+  "size": [
+    1,
+    1
+  ],
+  "floorZ": 0,
+  "accessKind": "service-face",
+  "entry": [
+    0,
+    -1.1,
+    0
+  ],
+  "slots": [
+    {
+      "id": "customer0",
+      "role": "guest",
+      "pose": "idle",
+      "position": [
+        0.08,
+        -0.7,
+        0
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0,
+          -1.1,
+          0
+        ],
+        [
+          0.08,
+          -0.9,
+          0
+        ],
+        [
+          0.08,
+          -0.7,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useSeconds": 4
+    }
+  ],
+  "obstacles": [
+    {
+      "name": "Vending cabinet and pickup lip",
+      "min": [
+        -0.4,
+        -0.375
+      ],
+      "max": [
+        0.4,
+        0.344
+      ]
+    }
+  ],
+  "notes": [
+    "Centered Blender XY tile units; heading radians +X toward +Y.",
+    "Public controls and pickup on -Y only, customer remains outside 1x1 cabinet footprint.",
+    "Standing foot contact z=0 on terrain; no facility floor.",
+    "No building entry, room, canopy, baked customer, branding or text.",
+    "Runtime placement and reaching animation are coordinator-owned; no live capacity/economy changes."
+  ]
+}

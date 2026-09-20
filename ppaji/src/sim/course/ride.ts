@@ -51,7 +51,7 @@ export const RECOVERY_SECONDS_PER_TICK = TICK_MS / 1000;
  * 헤엄 속도 (world 단위/초). 0.3 타일/tick — 기구 기본 속도대와 같은 눈금이라
  * "물을 건너오는 데 얼마나 걸리나"가 코스 길이와 같은 축에서 읽힌다.
  */
-export const RECOVERY_SWIM_SPEED = 2.4;
+export const RECOVERY_SWIM_SPEED = 1;
 /**
  * 복귀는 **낮 동안에는 절대 중간에 접지 않는다** — 화면에서 손님이 사라지는 것은 텔레포트와 같다.
  * 닿을 선착장이 없으면 보이는 채로 계속 헤엄치고, 정리는 폐장(`endOfDay`, 화면 밖)에서만 한다.
@@ -403,18 +403,28 @@ export class CourseRideStore {
 
   // ── 세계 ──────────────────────────────────────────────────
 
+  private recoveryRevision = 0;
   private waterWorld(): WaterWorld {
     if (this.world && this.worldRev === this.rev) return this.world;
     const { w, h } = this.host.gridSize();
     const docks = this.host.docks();
     const yielding = this.yieldingBoats();
+    // A topology identity survives save/load; the invalidation counter does not.
+    if(this.worldRev!==this.rev){
+      let hash=2166136261;
+      const mix=(n:number)=>{hash=Math.imul(hash^n,16777619)>>>0;};
+      mix(w);mix(h);
+      for(let j=0;j<h;j++)for(let i=0;i<w;i++)mix(Number(this.host.isWaterTile(i,j)));
+      for(const d of docks){mix(d.uid);for(const n of [d.water.x,d.water.y,d.land.x,d.land.y])mix(Math.round(n*10000));}
+      this.recoveryRevision=hash;
+    }
     this.world = worldFromGame({
       bounds: [-0.5, -h + 0.5, w - 0.5, 0.5],
       // 타일 한 칸이 한 격자점 — 물 판정과 같은 해상도라 "물인데 못 지난다"가 생기지 않는다
       cellSize: 1,
       isWaterTile: (i, j) => this.host.isWaterTile(i, j),
       docks: docks.map((d) => ({ id: String(d.uid), water: { i: d.water.x, j: d.water.y }, land: { i: d.land.x, j: d.land.y } })),
-      revision: this.rev,
+      revision: this.recoveryRevision,
       boatsAt: () => this.boats().filter((b) => !yielding.has(b.id)),
     });
     // Game render coordinates denote tile centres; recovery grid centres must use the same origin.
@@ -624,7 +634,7 @@ export class CourseRideStore {
       s.age++;
       advanceRecovery(s.state, RECOVERY_SECONDS_PER_TICK, world);
       const at = worldToGame(s.state.position);
-      this.host.placeGuest(s.uid, at.i, at.j, s.state.heading);
+      this.host.placeGuest(s.uid, at.i, at.j, -s.state.heading);
       if (s.state.status === 'done') {
         this.swimmers = this.swimmers.filter((x) => x !== s);
         this.host.onReturn(s.uid, { x: at.i, y: at.j }, s.state.injured);
@@ -737,7 +747,7 @@ export class CourseRideStore {
         guestUid: s.uid,
         pos: { i: at.i, j: at.j },
         height: Math.max(0, at.height),
-        heading: s.state.heading,
+        heading: -s.state.heading,
         status: s.state.status,
         pose: s.state.pose,
         injured: s.state.injured,
@@ -803,7 +813,14 @@ export class CourseRideStore {
       if (schedule.travelTicks <= 0) continue;
       this.rides.push({ ...structuredClone(save), yieldTicks: save.yieldTicks ?? 0, schedule });
     }
-    for (const s of snapshot.swimmers) this.swimmers.push({ uid: s.uid, dockUid: s.dockUid, age: s.age, state: restoreRecovery(s.state) });
+    for (const s of snapshot.swimmers) {
+      const state = restoreRecovery(s.state);
+      if (state.swimSpeed !== RECOVERY_SWIM_SPEED) {
+        state.swimSpeed = RECOVERY_SWIM_SPEED;
+        if (state.status === 'climb') { state.climbOrigin = [...state.position]; state.climbAge = 0; }
+      }
+      this.swimmers.push({ uid: s.uid, dockUid: s.dockUid, age: s.age, state });
+    }
   }
 
   /** 검사 전용 — 운항 목록을 읽는다 */

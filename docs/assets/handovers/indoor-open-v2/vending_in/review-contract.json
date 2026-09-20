@@ -1,0 +1,75 @@
+{
+  "blend": "facility.blend",
+  "concept": "reference.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 0.6,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    1,
+    1
+  ],
+  "floor_mode": "transparent-no-floor",
+  "minimum_native_foreground": 400,
+  "inventory": {
+    "products": {
+      "prefix": "DrinkCan_",
+      "count": 6
+    },
+    "controls": {
+      "prefix": "SelectionButton",
+      "count": 2
+    },
+    "pickup": {
+      "names": [
+        "DispenseBack"
+      ],
+      "count": 1
+    }
+  },
+  "groups": {
+    "footprint_scale": {
+      "names": [
+        "CabinetBase"
+      ]
+    },
+    "body": {
+      "names": [
+        "CabinetBase",
+        "CabinetCore",
+        "SideLeft",
+        "SideRight",
+        "CabinetTop"
+      ]
+    }
+  },
+  "landmarks": {
+    "service": [
+      0,
+      -0.7,
+      0
+    ],
+    "window": [
+      -0.085,
+      -0.32,
+      0.885
+    ],
+    "controls": [
+      0.267,
+      -0.35,
+      0.96
+    ],
+    "pickup": [
+      -0.085,
+      -0.36,
+      0.345
+    ],
+    "rear": [
+      0,
+      0.337,
+      0.62
+    ]
+  }
+}

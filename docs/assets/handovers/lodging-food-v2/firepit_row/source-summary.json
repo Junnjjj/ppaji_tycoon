@@ -1,0 +1,22 @@
+{
+  "status": "TECHNICAL_CHECKS_PASS_ART_USER_REVIEW",
+  "rgba_equal_images": 8,
+  "clipping": 0,
+  "protected": {
+    "blend": "2f3560e9fe7b9075040b502913ecdf17d42ac285ea40337c1f3d2b6c4ec026c5",
+    "concept": "2f8535539f0a32f561bb2408e83defd1016fefa8c3b330e0d9f806044301656c"
+  },
+  "projection": {
+    "d0": "FAIL",
+    "d1": "FAIL",
+    "d2": "PASS",
+    "d3": "PASS"
+  },
+  "scene": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/\uc5d0\uc14b\ub9cc\ub4e4\uae30_v3/assets/generated/kairo-v4-simple-pilot/lodging-food-v2/firepit_row/review/scene-check.json",
+  "review": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/\uc5d0\uc14b\ub9cc\ub4e4\uae30_v3/assets/generated/kairo-v4-simple-pilot/lodging-food-v2/firepit_row/review/review.html",
+  "limitations": [
+    "Bounds selectors and count labels require semantic visual review",
+    "Landmark projections do not prove occlusion",
+    "Runtime, access, family scale and artist approval remain separate"
+  ]
+}

@@ -1,4 +1,62 @@
+# 2026-09-21 Git delivery status
+
+Local main adoption is not Git delivery: 13 new facility definitions, approved images and NPC integration remain uncommitted. [Audit and delivery dependencies](handovers/git-delivery-audit-20260921/README.md). HD/pixel-lab candidates remain excluded.
+
+# 2026-09-20 NPC 이동·피크닉 식탁·모바일 렌더링 후속
+
+메인5189, bundle `main-35nHaY5e.js`. [후속 인계](handovers/outdoor-play-v1/NPC-MOTION-FOLLOWUP.md): V8 인물 일관성, 수영 방향/복귀 속도, 정적 기구 완주 시간/이동 취소, foodcourt_seat 제작본 연결. 모바일 초록 화면 원인은 미확정; 확인된 텍스처 낭비와 context loss 시 시간 진행을 보완. 176 집중검사와 빌드 통과, 강제 렌더러 손실/복구 및 제트스키 브라우저 검수. 실제 iPhone 재확인 필요. 아래 이전 번들/미적용 기록보다 이 상태가 우선한다.
+
+# 2026-09-20 승인 실외 시설·고정 직원 메인 통합
+
+메인5189에 놀이터·정자·포토존·번지점프와 공연무대1/2/3단계(4/8/12석)를 적용하고 실제 GuestStore 이용·퇴장·저장복원을 연결했다. 안내소·실내 매점·구명조끼 대여소·안전망루는 고정 직원 각1명. 직원은 손님 정원과 분리한다. 트로트무대·족구장 및 옛3×2무대는 신규 건설 제외, 기존 저장 배치는 보존. 새 단계 전환/레벨업 규칙은 후속 시스템 작업이다.
+
+현재 정본: main `docs/assets/handovers/outdoor-play-v1/README.md`. 번들 `main-kIWj0xll.js`. 실제 브라우저14방문/10개 만석 사례와 직원16방향을 검수했고, 저장 바이트는 보존했다. 집중검사199개·타입/린트/UI/빌드 통과. 전체 검사 도구의 장기 실행/RPC 시간초과는 인계 README에 별도 기록; 실패한 원래 장기 검증식은 독립 실행 통과. Orca run `run_d440c50c4fde` 작업자3개는 모두 release. 아래의 “메인 미적용/후보” 문구는 과거 이력이며 이 상태가 우선한다.
+
+# 2026-09-20 공연무대2·3단계와 번지 포즈 수정
+
+outdoor-play-v1의 STAGE-UPGRADES.md가 최신. 1단계4×3/4석→2단계5×4/8석→3단계6×5/12석 후보, 공연자각1. 번지idle대신cheer_jump+허리옆청색줄/청록스트랩. 62127에서단계비교·NPC시연. Node13tests/ego1040frames clipping0 errors0; raw projectionFAIL/WARN·미술·차양·부지검토보존. 이번main게임미변경, 실제가격/확장칸검사/기존3×2마이그레이션은별도연결. 새Orca3worker정리완료.
+
+# 2026-09-20 실외 놀이·정자 후보 완료 / 몽골텐트 건설 제외
+
+최신 확정 제작 범위는 놀이터·공연무대·포토존·번지점프·정자5종. 짚라인 제외. outdoor-play-v1에 4방향 모델/NPC 동작/동일배율 결합 시연62127을 준비했다. 신규5종 메인 미채택, 무대4×3제안(기존3×2보존), 정자3×3/4인 유지. 미술·지붕·부지 및 일부 raster 투영 진단은 검토 중. 메인5189에는 mongol_tent 건설제외만 추가(기존배치보존), build tests3와 production build 성공. 상세 에셋 작업트리 `assets/generated/kairo-v4-simple-pilot/outdoor-play-v1/README.md`. 아래 이전계획보다 이 범위/상태가 우선한다.
+
+# 2026-09-20 슬라이드 탭·점프쿠션 건설 제외
+
+사용자 후속 요청으로 슬라이드(class=slide) 신규 건설과 jump_cushion 제외. 건설7탭. 기존 저장 배치와 빠지 조합/모듈은 보존. 실외 놀이 추천은 번지점프와 짚라인이며 신규 제작 확정 아님.
+
+# 2026-09-20 건설 분류 후속 정리
+
+복층펜션·옛 선착장·편의5종 건설 제외, 편의 탭 제거. 탁구/화장실 실내, 족욕 자리, 해태분수 장식, 공연무대 놀이. 새 에셋/NPC 제안은 `plans/2026-09-20-play-photo-stage.md`. 기존 배치 보존.
+
+# 2026-09-20 펜션·카페·먹거리 11종 승인·메인 적용
+
+메인5189에 lodging-food-v2 승인44프레임 반입. 펜션 1/2/3층(5×4), 카페 1/2/3단계(3×2), 먹거리5종. 이전 배치·지형 보존, 신규4단계 카드를 부모와 함께 표시. 메뉴 궁합/해금은 부모 설정 계승. 실제 GuestStore 출입·정원예약·문턱숨김·같은문퇴장과 부가표시 숨김 연결. 신규 업그레이드 규칙은 별도 시스템 작업. 먹거리 세부 서비스/불꽃 시연은 기존 메인 외부이용 동작과 구분한다.
+
+인계: `docs/assets/handovers/lodging-food-v2/README.md` (main). 원본: 에셋만들기_v3 `assets/generated/kairo-v4-simple-pilot/lodging-food-v2`. 아래 후보 상태 이력보다 이 적용 상태가 우선한다.
+
 # 에셋 작업 현재 상태
+
+## 2026-09-20 빠지 목록 정리 · 망루 후보
+
+건설 제외: rent_sup, rent_duck, rent_pedal, rent_kayak, slide_tube, rig_rack, rig_float_bar, rescue_dock, airbounce. 에어바운스는 전용 이용 경로/NPC 모션이 없는 레거시라 제외. 기존 저장은 보존. 안전 망루는 assets worktree의 watchtower-v1에 1×1·4방향·고정직원 시연 후보 제작, 62124에서 확인. 사용자 승인 후 안전 망루 art를 메인5189에 적용 완료. 직원/사다리 모션은 인계 계약만 제공. [적용 기록](handovers/watchtower-v1/README.md).
+
+
+## 2026-09-20 건설 제외 목록 보완
+
+5189 메인에서 takeout(포장 창구)도 제외. 제외 ID: nursing, storage, gear_rack, office, souvenir, room_ondol, takeout. 기존 저장 정의는 유지하며 currentBuildCatalog 회귀 검사 추가. 후속 요청으로 room_tatami(다다미방), stage_hall(실내 무대)도 제외. 잠긴 카드 티저 2개 규칙 때문에 앞 카드를 제외하면 뒤의 기존 카드가 드러났던 문제이며, 시설 신설은 아니었다. 추가로 derived 파생 시설(식탁)이 잠금 티저로 노출되는 오류도 차단했다. 사용자 후속 요청으로 entrance도 건설 목록에서 제외. 입구는 고정 배치이며 기존 배치와 시설 정의는 유지.
+
+
+## 2026-09-20 온돌방 제외 · 식탁 누락 확인
+
+온돌방(room_ondol)을 건설 목록에서 제외했다. 실내 푸드코트 식탁(foodcourt_seat, 3×2·2석)은 다음 제작 대상이며 아직 새 에셋을 적용하지 않았다. [제작 범위](handovers/indoor-service-v1/foodcourt-next.md).
+
+## 2026-09-20 대여소·드라이룸 추가 적용
+
+사용자 승인 후 rental_tube/dry_room의 2×1 새 그림을 메인 건설·배치에 적용했다. 직원/NPC 상호작용은 다른 세션용 비활성 계약만 인계. [상세 인계](handovers/indoor-service-v1/README.md).
+
+## 2026-09-20 실내 제작본 건설 적용
+
+MAIN `ppaji/`(5189)에 실내 12종/48프레임 적용. 크기 변경 5종은 `authored_*` 새 건설 항목으로 추가해 기존 배치를 보존했다. 기존 크기 7종은 외형 교체. NPC 상호작용은 미연결이며 메인 건설은 아직 facing 0/1(정사각형 회전 버튼 숨김)이다. 4방향 이미지와 출입·슬롯·가림 데이터는 준비되어 있다. [적용 ID, 크기, 다음 시스템 작업, 검증 기록](handovers/indoor-open-v2/README.md).
 
 ## 2026-09-19 Remaining rest facilities
 
@@ -10,7 +68,7 @@ Nine more authored facilities are now connected: pavilion/glamping/caravan repla
 The active latest-system game is `ppaji/`, port **5189**. The September 14 note below about a separate system adapter describes the earlier state.
 Authored composites, floating decks, standalone core facilities, 29 passenger equipment types and ride effects are connected. All 14 small modules can also be built individually.
 [Standalone construction and save compatibility](handovers/2026-09-19-standalone-ppaji-construction.md).
-The selected 15 roofed facilities use their native camera anchors; the indoor shop shares selected shop art.
+The selected 15 roofed facilities use their native camera anchors; the indoor shop now uses its own open canopy art (2026-09-20).
 [Selected buildings: findings, applied list, reproduction](handovers/2026-09-19-selected-building-adoption.md).
 
 

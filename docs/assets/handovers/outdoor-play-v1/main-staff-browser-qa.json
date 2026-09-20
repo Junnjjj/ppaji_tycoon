@@ -1,0 +1,102 @@
+{
+  "staffRows": [
+    {
+      "id": "info",
+      "d": 0,
+      "changed": 113,
+      "hidden": true
+    },
+    {
+      "id": "info",
+      "d": 1,
+      "changed": 113,
+      "hidden": true
+    },
+    {
+      "id": "info",
+      "d": 2,
+      "changed": 20,
+      "hidden": true
+    },
+    {
+      "id": "info",
+      "d": 3,
+      "changed": 20,
+      "hidden": true
+    },
+    {
+      "id": "indoor_shop",
+      "d": 0,
+      "changed": 13,
+      "hidden": true
+    },
+    {
+      "id": "indoor_shop",
+      "d": 1,
+      "changed": 13,
+      "hidden": true
+    },
+    {
+      "id": "indoor_shop",
+      "d": 2,
+      "changed": 33,
+      "hidden": true
+    },
+    {
+      "id": "indoor_shop",
+      "d": 3,
+      "changed": 33,
+      "hidden": true
+    },
+    {
+      "id": "rental_tube",
+      "d": 0,
+      "changed": 120,
+      "hidden": true
+    },
+    {
+      "id": "rental_tube",
+      "d": 1,
+      "changed": 131,
+      "hidden": true
+    },
+    {
+      "id": "rental_tube",
+      "d": 2,
+      "changed": 169,
+      "hidden": true
+    },
+    {
+      "id": "rental_tube",
+      "d": 3,
+      "changed": 169,
+      "hidden": true
+    },
+    {
+      "id": "watchtower",
+      "d": 0,
+      "changed": 162,
+      "hidden": true
+    },
+    {
+      "id": "watchtower",
+      "d": 1,
+      "changed": 162,
+      "hidden": true
+    },
+    {
+      "id": "watchtower",
+      "d": 2,
+      "changed": 147,
+      "hidden": true
+    },
+    {
+      "id": "watchtower",
+      "d": 3,
+      "changed": 147,
+      "hidden": true
+    }
+  ],
+  "errors": [],
+  "saveUnchanged": true
+}

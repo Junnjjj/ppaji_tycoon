@@ -1,0 +1,55 @@
+{
+  "state": "ROOF_PROPORTION_USER_APPROVED",
+  "physical_root_sha256": "8e2f3b0b5cb12738c6194558498c08c3bc04d81da6580ea5d0f907c2b502fbb8",
+  "canonical_live_size": [
+    5,
+    4
+  ],
+  "proposed_size": [
+    5,
+    4
+  ],
+  "floor_bounds_tiles": [
+    5,
+    4
+  ],
+  "body_coverage": [
+    0.9,
+    0.8999999761581421
+  ],
+  "roof_bounds_tiles": [
+    [
+      -2.3299999237060547,
+      -0.16999998688697815,
+      4.130000114440918
+    ],
+    [
+      2.3299999237060547,
+      1.8299999237060547,
+      4.2699995040893555
+    ]
+  ],
+  "roof_to_body_ratio": [
+    1.0355555216471355,
+    0.5555555307202868
+  ],
+  "roof_overhang_tiles": {
+    "-x": 0.07999992370605469,
+    "+x": 0.07999992370605469,
+    "-y": 0,
+    "+y": 0.029999923706054643
+  },
+  "main_ridge_rise_tiles": 0,
+  "main_eaves_z_tiles": 4.13,
+  "same_scale_resizing": "NONE",
+  "imagegen_calls": 0,
+  "live_files_modified": false,
+  "comparison": "same-scale-before-candidate.png; concept-reference.png is separate art reference",
+  "roof_notes": "Third stage has single flat suite roof on third storey; no retained second-floor full gable or fourth storey",
+  "canopy_repair": "canopy-clearance-audit.json",
+  "superseded_physical_root_sha256": "7cdf41d86b6828ad7f2a6de69df2d8382317a5482779914e175747c5382da6a4",
+  "main_roof_geometry_exactly_unchanged": true,
+  "canopy_minimum_clearance_tiles": 0.05301332473754883,
+  "previous_state": "ROOF_PROPORTION_USER_REVIEW",
+  "user_decision": "좋다 적용하자, 다 만족해"
+}

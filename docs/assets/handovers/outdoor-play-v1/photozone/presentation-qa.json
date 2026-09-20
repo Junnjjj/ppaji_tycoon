@@ -1,0 +1,69 @@
+{
+  "sourceSHA": "44058f926569d2232ba33f5051bbe1e346ecc26f1243702012dc07db38275441",
+  "review": "photozone/review-v2",
+  "checks": [
+    {
+      "d": 0,
+      "mode": "native",
+      "sha256": "74c13a41c5089d81cf7817c5cd700c81012af058fe148074ae1e7c2150172bea",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 0,
+      "mode": "color",
+      "sha256": "95e9a23414c7bc3f2884c628bef13a4007d1cfb266193b2f312a658f6a2b0c03",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 1,
+      "mode": "native",
+      "sha256": "73859d495c6b601def84050e17f8c90af8ad68d9601c91c1e4eb20ee0e7f86fd",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 1,
+      "mode": "color",
+      "sha256": "58a0237813623a330b8fa7069bf6cfff48c23d2389b7c02abe6270070a3755ee",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 2,
+      "mode": "native",
+      "sha256": "bd43a55939f822222d107b4c8d03116b54ab40dfeea6275fdbae34ab50832895",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 2,
+      "mode": "color",
+      "sha256": "88d5438cbd9a146f2d09b1cf8eb7131fdabf51168f117ec82518bb68d4518cec",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 3,
+      "mode": "native",
+      "sha256": "c7d4f55425b284c898abf10e56393774f4c6cebfa685cee80c310a114d7caa02",
+      "rgbaEqual": true,
+      "clipped": false
+    },
+    {
+      "d": 3,
+      "mode": "color",
+      "sha256": "5e687b4e0087b3fd078c5b3b8e586e1a6c5af32452ca832a715086ae66c24d69",
+      "rgbaEqual": true,
+      "clipped": false
+    }
+  ],
+  "rawProjection": {
+    "d0": "PASS",
+    "d1": "FAIL",
+    "d2": "PASS",
+    "d3": "PASS"
+  },
+  "liveModified": false
+}

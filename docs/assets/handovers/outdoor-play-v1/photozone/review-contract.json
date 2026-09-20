@@ -1,0 +1,103 @@
+{
+  "blend": "facility.blend",
+  "concept": "../../lodging-food-v2/sikhye/review/native-d0.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 1.8,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    2,
+    2
+  ],
+  "floor_mode": "transparent-no-floor",
+  "minimum_native_foreground": 350,
+  "inventory": {
+    "frame_posts": {
+      "prefix": "Frame_Post",
+      "count": 2
+    },
+    "lifebuoy": {
+      "names": [
+        "Blue_Lifebuoy"
+      ],
+      "count": 1
+    },
+    "camera": {
+      "names": [
+        "Camera_Body"
+      ],
+      "count": 1
+    },
+    "subject_marks": {
+      "names": [
+        "Subject_Mark_0",
+        "Subject_Mark_1"
+      ],
+      "count": 2
+    },
+    "flowers": {
+      "prefix": "Flower_Center",
+      "count": 4
+    }
+  },
+  "groups": {
+    "body": {
+      "prefix": "Frame_"
+    },
+    "camera": {
+      "prefix": "Camera_"
+    },
+    "flowers": {
+      "prefix": "Flower_"
+    },
+    "buoy": {
+      "names": [
+        "Blue_Lifebuoy"
+      ]
+    }
+  },
+  "landmarks": {
+    "subject_left": [
+      -0.28,
+      0.28,
+      0.023
+    ],
+    "subject_right": [
+      0.28,
+      0.28,
+      0.023
+    ],
+    "fixed_camera": [
+      0,
+      -0.55,
+      0.84
+    ],
+    "flash": [
+      0.09,
+      -0.715,
+      0.985
+    ],
+    "lifebuoy": [
+      -0.7,
+      0.25,
+      1.04
+    ],
+    "flowers": [
+      0.72,
+      0.58,
+      0.35
+    ],
+    "entry": [
+      -0.78,
+      -0.16,
+      0
+    ],
+    "exit": [
+      0.78,
+      -0.16,
+      0
+    ]
+  }
+}

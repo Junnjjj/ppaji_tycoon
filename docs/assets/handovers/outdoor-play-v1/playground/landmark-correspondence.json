@@ -1,0 +1,206 @@
+{
+  "d0": {
+    "entry": {
+      "pixel": [
+        414.7200164794922,
+        471.3306884765625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "ladder": {
+      "pixel": [
+        372.47998809814453,
+        467.3678970336914
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "sit": {
+      "pixel": [
+        357.12000274658203,
+        479.90128326416016
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slide_mid": {
+      "pixel": [
+        395.5199890136719,
+        523.4002304077148
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "landing": {
+      "pixel": [
+        440.3199920654297,
+        565.3961563110352
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        478.7200012207031,
+        556.4506759643555
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "low_climb": {
+      "pixel": [
+        254.08000946044922,
+        494.20104217529297
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d1": {
+    "entry": {
+      "pixel": [
+        276.47998809814453,
+        509.73067474365234
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "ladder": {
+      "pixel": [
+        318.7199935913086,
+        505.76790618896484
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "sit": {
+      "pixel": [
+        395.5199890136719,
+        487.581298828125
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slide_mid": {
+      "pixel": [
+        433.9199981689453,
+        492.68023681640625
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "landing": {
+      "pixel": [
+        478.7200012207031,
+        489.87615966796875
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        446.71998596191406,
+        477.7306823730469
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "low_climb": {
+      "pixel": [
+        383.36000061035156,
+        559.4810485839844
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d2": {
+    "entry": {
+      "pixel": [
+        353.2800064086914,
+        578.8506889343262
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "ladder": {
+      "pixel": [
+        395.5199890136719,
+        532.6479034423828
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "sit": {
+      "pixel": [
+        410.88002014160156,
+        468.3812942504883
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slide_mid": {
+      "pixel": [
+        372.4800109863281,
+        473.48023223876953
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "landing": {
+      "pixel": [
+        327.6800079345703,
+        470.67615509033203
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        289.2799987792969,
+        493.7306900024414
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "low_climb": {
+      "pixel": [
+        513.9200134277344,
+        494.8410415649414
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  },
+  "d3": {
+    "entry": {
+      "pixel": [
+        491.5199890136719,
+        540.4506912231445
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "ladder": {
+      "pixel": [
+        449.2799835205078,
+        494.2478942871094
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "sit": {
+      "pixel": [
+        372.4800109863281,
+        460.70130157470703
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "slide_mid": {
+      "pixel": [
+        334.0800018310547,
+        504.2002258300781
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "landing": {
+      "pixel": [
+        289.2799987792969,
+        546.1961517333984
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "exit": {
+      "pixel": [
+        321.27999114990234,
+        572.45068359375
+      ],
+      "visibility": "inspect rendered occlusion"
+    },
+    "low_climb": {
+      "pixel": [
+        384.63999938964844,
+        429.5610580444336
+      ],
+      "visibility": "inspect rendered occlusion"
+    }
+  }
+}

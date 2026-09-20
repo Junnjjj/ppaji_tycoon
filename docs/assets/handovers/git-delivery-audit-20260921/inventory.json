@@ -1,0 +1,4627 @@
+{
+  "head": "5cea8e9bb1677cd023f3d9122419a2b244cc8123",
+  "repository": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "definitions_head": 201,
+  "definitions_working": 214,
+  "new_definitions": [
+    {
+      "id": "cafe_lv2",
+      "name": "카페 2단계",
+      "class": "restaurant",
+      "w": 3,
+      "d": 2,
+      "cost": 1300,
+      "pop": 37,
+      "maint": 196,
+      "shopPrice": 2860,
+      "capacity": 4,
+      "useTicks": 12,
+      "hpDelta": 0,
+      "se": 0,
+      "ab": 0,
+      "sprays": false,
+      "heat": 0,
+      "usageFee": 0,
+      "season": [
+        0,
+        0,
+        4,
+        2
+      ],
+      "indoorOnly": false,
+      "unlock": {
+        "source": "rank",
+        "rank": 2
+      },
+      "slide": null,
+      "menuSlots": 5,
+      "desc": "통유리와 목재로 꾸민 현대적인 카페.",
+      "outdoorOnly": true,
+      "variantOf": "cafe"
+    },
+    {
+      "id": "cafe_lv3",
+      "name": "카페 3단계",
+      "class": "restaurant",
+      "w": 3,
+      "d": 2,
+      "cost": 1300,
+      "pop": 37,
+      "maint": 196,
+      "shopPrice": 2860,
+      "capacity": 4,
+      "useTicks": 12,
+      "hpDelta": 0,
+      "se": 0,
+      "ab": 0,
+      "sprays": false,
+      "heat": 0,
+      "usageFee": 0,
+      "season": [
+        0,
+        0,
+        4,
+        2
+      ],
+      "indoorOnly": false,
+      "unlock": {
+        "source": "rank",
+        "rank": 2
+      },
+      "slide": null,
+      "menuSlots": 5,
+      "desc": "천창과 창가 좌석을 갖춘 2층 유리 카페.",
+      "outdoorOnly": true,
+      "variantOf": "cafe"
+    },
+    {
+      "id": "stage_river_lv1",
+      "name": "공연무대 1단계",
+      "class": "decor",
+      "w": 4,
+      "d": 3,
+      "cost": 4500,
+      "pop": 50,
+      "maint": 265,
+      "shopPrice": 9900,
+      "capacity": 4,
+      "useTicks": 20,
+      "hpDelta": 0,
+      "se": 0,
+      "ab": 0,
+      "sprays": false,
+      "heat": 0,
+      "usageFee": 0,
+      "season": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "indoorOnly": false,
+      "unlock": {
+        "source": "wish",
+        "ref": "art_master/2"
+      },
+      "slide": null,
+      "menuSlots": 0,
+      "desc": "목재 무대와 관객석 4석을 갖춘 공연무대.",
+      "scenery": 16,
+      "variantOf": "stage_river"
+    },
+    {
+      "id": "stage_river_lv2",
+      "name": "공연무대 2단계",
+      "class": "decor",
+      "w": 5,
+      "d": 4,
+      "cost": 4500,
+      "pop": 50,
+      "maint": 265,
+      "shopPrice": 9900,
+      "capacity": 8,
+      "useTicks": 20,
+      "hpDelta": 0,
+      "se": 0,
+      "ab": 0,
+      "sprays": false,
+      "heat": 0,
+      "usageFee": 0,
+      "season": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "indoorOnly": false,
+      "unlock": {
+        "source": "wish",
+        "ref": "art_master/2"
+      },
+      "slide": null,
+      "menuSlots": 0,
+      "desc": "차양·조명과 관객석 8석을 갖춘 공연무대.",
+      "scenery": 16,
+      "variantOf": "stage_river"
+    },
+    {
+      "id": "stage_river_lv3",
+      "name": "공연무대 3단계",
+      "class": "decor",
+      "w": 6,
+      "d": 5,
+      "cost": 4500,
+      "pop": 50,
+      "maint": 265,
+      "shopPrice": 9900,
+      "capacity": 12,
+      "useTicks": 20,
+      "hpDelta": 0,
+      "se": 0,
+      "ab": 0,
+      "sprays": false,
+      "heat": 0,
+      "usageFee": 0,
+      "season": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "indoorOnly": false,
+      "unlock": {
+        "source": "wish",
+        "ref": "art_master/2"
+      },
+      "slide": null,
+      "menuSlots": 0,
+      "desc": "확장 무대·음향 장비와 관객석 12석을 갖춘 공연무대.",
+      "scenery": 16,
+      "variantOf": "stage_river"
+    },
+    {
+      "id": "bungee_jump",
+      "name": "번지점프",
+      "class": "attraction",
+      "w": 4,
+      "d": 4,
+      "cost": 1500,
+      "pop": 17,
+      "maint": 90,
+      "shopPrice": 3300,
+      "capacity": 1,
+      "useTicks": 8,
+      "hpDelta": -5,
+      "se": 0,
+      "ab": 0,
+      "sprays": false,
+      "heat": 0,
+      "usageFee": 0,
+      "season": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "indoorOnly": false,
+      "unlock": {
+        "source": "rank",
+        "rank": 1
+      },
+      "slide": null,
+      "menuSlots": 0,
+      "desc": "높은 발판과 허리 하네스를 갖춘 번지점프 타워.",
+      "variantOf": "playground"
+    },
+    {
+      "id": "pension_1f",
+      "name": "펜션 1층",
+      "class": "lounging",
+      "w": 5,
+      "d": 4,
+      "cost": 11400,
+      "pop": 127,
+      "maint": 673,
+      "shopPrice": 25080,
+      "capacity": 6,
+      "useTicks": 18,
+      "hpDelta": 50,
+      "se": 0,
+      "ab": 0,
+      "sprays": false,
+      "heat": 0,
+      "usageFee": 800,
+      "season": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "indoorOnly": false,
+      "unlock": {
+        "source": "invest",
+        "ref": "lounge_11"
+      },
+      "slide": null,
+      "menuSlots": 0,
+      "desc": "목재 외벽과 짙은 지붕의 단층 펜션.",
+      "shade": true,
+      "lodging": true,
+      "variantOf": "pension"
+    },
+    {
+      "id": "pension_2f",
+      "name": "펜션 2층",
+      "class": "lounging",
+      "w": 5,
+      "d": 4,
+      "cost": 11400,
+      "pop": 127,
+      "maint": 673,
+      "shopPrice": 25080,
+      "capacity": 6,
+      "useTicks": 18,
+      "hpDelta": 50,
+      "se": 0,
+      "ab": 0,
+      "sprays": false,
+      "heat": 0,
+      "usageFee": 800,
+      "season": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "indoorOnly": false,
+      "unlock": {
+        "source": "invest",
+        "ref": "lounge_11"
+      },
+      "slide": null,
+      "menuSlots": 0,
+      "desc": "발코니를 갖춘 2층 펜션.",
+      "shade": true,
+      "lodging": true,
+      "variantOf": "pension"
+    },
+    {
+      "id": "authored_locker_row",
+      "name": "코인락커 (제작본)",
+      "class": "utility",
+      "w": 4,
+      "d": 2,
+      "cost": 900,
+      "pop": 10,
+      "maint": 53,
+      "shopPrice": 1980,
+      "capacity": 4,
+      "useTicks": 14,
+      "hpDelta": -4,
+      "se": 0,
+      "ab": 0,
+      "sprays": false,
+      "heat": 0,
+      "usageFee": 0,
+      "season": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "indoorOnly": true,
+      "unlock": {
+        "source": "rank",
+        "rank": 1
+      },
+      "slide": null,
+      "menuSlots": 0,
+      "desc": "제작본 4×2 · 기존 시설과 동일한 해금·이용 조건",
+      "passBy": "enter",
+      "variantOf": "locker_row",
+      "facings": 4
+    },
+    {
+      "id": "authored_infirmary",
+      "name": "의무실 (제작본)",
+      "class": "utility",
+      "w": 3,
+      "d": 2,
+      "cost": 900,
+      "pop": 10,
+      "maint": 53,
+      "shopPrice": 1980,
+      "capacity": 1,
+      "useTicks": 10,
+      "hpDelta": -4,
+      "se": 0,
+      "ab": 0,
+      "sprays": false,
+      "heat": 0,
+      "usageFee": 0,
+      "season": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "indoorOnly": true,
+      "unlock": {
+        "source": "wish",
+        "ref": "doctor/0"
+      },
+      "slide": null,
+      "menuSlots": 0,
+      "desc": "제작본 3×2 · 기존 시설과 동일한 해금·이용 조건",
+      "variantOf": "infirmary",
+      "facings": 4
+    },
+    {
+      "id": "authored_shower_row",
+      "name": "샤워실 (제작본)",
+      "class": "utility",
+      "w": 4,
+      "d": 2,
+      "cost": 900,
+      "pop": 10,
+      "maint": 53,
+      "shopPrice": 1980,
+      "capacity": 4,
+      "useTicks": 6,
+      "hpDelta": -4,
+      "se": 0,
+      "ab": 2,
+      "sprays": true,
+      "heat": 0,
+      "usageFee": 0,
+      "season": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock": {
+        "source": "start"
+      },
+      "slide": null,
+      "menuSlots": 0,
+      "desc": "제작본 4×2 · 기존 시설과 동일한 해금·이용 조건",
+      "indoorOnly": true,
+      "passBy": "leave",
+      "variantOf": "shower_row",
+      "facings": 4
+    },
+    {
+      "id": "authored_changing_row",
+      "name": "탈의실 (제작본)",
+      "class": "utility",
+      "w": 3,
+      "d": 2,
+      "cost": 800,
+      "pop": 9,
+      "maint": 48,
+      "shopPrice": 1760,
+      "capacity": 3,
+      "useTicks": 10,
+      "hpDelta": -4,
+      "se": 0,
+      "ab": 0,
+      "sprays": false,
+      "heat": 0,
+      "usageFee": 0,
+      "season": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "indoorOnly": true,
+      "unlock": {
+        "source": "start"
+      },
+      "slide": null,
+      "menuSlots": 0,
+      "desc": "제작본 3×2 · 기존 시설과 동일한 해금·이용 조건",
+      "passBy": "leave",
+      "variantOf": "changing_row",
+      "facings": 4
+    },
+    {
+      "id": "authored_karaoke",
+      "name": "노래방 (제작본)",
+      "class": "attraction",
+      "w": 3,
+      "d": 3,
+      "cost": 900,
+      "pop": 10,
+      "maint": 53,
+      "shopPrice": 1980,
+      "capacity": 2,
+      "useTicks": 12,
+      "hpDelta": -6,
+      "se": 0,
+      "ab": 0,
+      "sprays": false,
+      "heat": 0,
+      "usageFee": 0,
+      "season": [
+        2,
+        2,
+        2,
+        0
+      ],
+      "indoorOnly": true,
+      "unlock": {
+        "source": "rank",
+        "rank": 2
+      },
+      "slide": null,
+      "menuSlots": 0,
+      "desc": "제작본 3×3 · 기존 시설과 동일한 해금·이용 조건",
+      "noisy": "loud",
+      "variantOf": "karaoke",
+      "facings": 4
+    }
+  ],
+  "manifest_head": 54,
+  "manifest_working": 81,
+  "new_manifest_ids": [
+    "arcade",
+    "authored_changing_row",
+    "authored_infirmary",
+    "authored_karaoke",
+    "authored_locker_row",
+    "authored_shower_row",
+    "bungee_jump",
+    "bungeoppang",
+    "cafe_lv2",
+    "cafe_lv3",
+    "chicken",
+    "dry_room",
+    "firepit_row",
+    "foodcourt_seat",
+    "icecream",
+    "pension",
+    "pension_1f",
+    "pension_2f",
+    "photozone",
+    "playground",
+    "rental_tube",
+    "sikhye",
+    "stage_river_lv1",
+    "stage_river_lv2",
+    "stage_river_lv3",
+    "vending_in",
+    "watchtower"
+  ],
+  "changed_manifest_ids": [
+    "cafe",
+    "indoor_shop",
+    "info",
+    "jjimjilbang",
+    "office",
+    "pavilion",
+    "sauna"
+  ],
+  "asset_folders": 76,
+  "modified_tracked_pngs": 24,
+  "untracked_pngs": 112,
+  "untracked_asset_files": 223,
+  "inventory_not_staging_allowlist": [
+    {
+      "path": "docs/assets/CURRENT.md",
+      "status": "modified",
+      "sha256": "5a006a51fab06fbff3c520e168a3ccf04d91ee81dd475205df65c3071e6f8cd9"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/README.md",
+      "status": "untracked",
+      "sha256": "41f9d8e4469615d68f3c0da98381959b7bdd3b27767bc49467654952aa708b83"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/arcade/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "81972f4a3220c75047028e673a6c062a83da4f3df8e08a0215451adf2a04c195"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/arcade/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "eb3e61366c3ff014f5adf17679c8cd705eb0900d035b03a736b5bf4804031220"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/arcade/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "a37add4c9038de3636eb7b885cb4e3cbe78378d3d46fc7df4de50e8f4aef8e01"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/arcade/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "2241a29019113b8fa85b871e256a26d40ff6eb00baea7a6af86169db24283711"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/arcade/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "9b34da1dba9b6aac8bd836a2b177da9d3876725faeb5907daeb1fa2038941215"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/arcade/interaction.json",
+      "status": "untracked",
+      "sha256": "0098aa762a19f75e9b9651c6e382cc0662ddc1f4887f9af6a6906dad2044dd0c"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/arcade/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "1463a4841204a00d0095472de89e7288d539edd2856177a98e278b1a01faab24"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/arcade/review-contract.json",
+      "status": "untracked",
+      "sha256": "1b63e5cb05a1cbcf552aa9e5751b7af958c7a5da2f62da87b8d52a9a98dea099"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/arcade/support-d0.bin",
+      "status": "untracked",
+      "sha256": "81972f4a3220c75047028e673a6c062a83da4f3df8e08a0215451adf2a04c195"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/arcade/support-d1.bin",
+      "status": "untracked",
+      "sha256": "eb3e61366c3ff014f5adf17679c8cd705eb0900d035b03a736b5bf4804031220"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/arcade/support-d2.bin",
+      "status": "untracked",
+      "sha256": "a37add4c9038de3636eb7b885cb4e3cbe78378d3d46fc7df4de50e8f4aef8e01"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/arcade/support-d3.bin",
+      "status": "untracked",
+      "sha256": "2241a29019113b8fa85b871e256a26d40ff6eb00baea7a6af86169db24283711"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_changing_row/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "cdfe80a69f0a7e187a6577a90795ca3e07070b9a196f9d3e87e885616fb87d63"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_changing_row/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "f5f17b0a8c1848bdc5520b0f975effafd8cb0a99bad83004aeff4cdcedc953c6"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_changing_row/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "61471662c897533ed8761b96738899fbf2a17c5879ec2b6d6716a0847423ac34"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_changing_row/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "245c1dd024f010bba278f28f5abae7626a6916d8e537f500fe377b7e7338daad"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_changing_row/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "c175dc030ca35cbc05559e099e3d63bfc515a6322899d3acbd2dc6a2024e5e1f"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_changing_row/interaction.json",
+      "status": "untracked",
+      "sha256": "4d8ed01b7c422515d8e2eab5b6c7fa75d94f2fb697253762cf7fac0ff832b863"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_changing_row/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "15479d4e324ca416d36cc8deb028b5d352bef5eeafb5edf4349269479afcb6c0"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_changing_row/review-contract.json",
+      "status": "untracked",
+      "sha256": "338f6e5792925382782a175051d11180e6e2efb75aee870e4ecc8960fa7b0542"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_changing_row/support-d0.bin",
+      "status": "untracked",
+      "sha256": "cdfe80a69f0a7e187a6577a90795ca3e07070b9a196f9d3e87e885616fb87d63"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_changing_row/support-d1.bin",
+      "status": "untracked",
+      "sha256": "f5f17b0a8c1848bdc5520b0f975effafd8cb0a99bad83004aeff4cdcedc953c6"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_changing_row/support-d2.bin",
+      "status": "untracked",
+      "sha256": "61471662c897533ed8761b96738899fbf2a17c5879ec2b6d6716a0847423ac34"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_changing_row/support-d3.bin",
+      "status": "untracked",
+      "sha256": "245c1dd024f010bba278f28f5abae7626a6916d8e537f500fe377b7e7338daad"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_infirmary/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "c65d4fa634645ca10181769a67075cbfc96eb3ea9cf9c80c3963f517b0de13e3"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_infirmary/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "a52d588332ac5ef56d4434a7678fa56e17157a10ea23122036586688a09eac07"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_infirmary/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "ca603a0ad9d41d03d0530df4f8c2ea58f6966b1390214bf07e8edd13ded2e24c"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_infirmary/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "fcb6a84a12ba05d2479b1be6eeaca077817d2f4e87952fde39ee4f53851f74a3"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_infirmary/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "4dd5a6f62bc831f7c9b177c43b4ff302b4d09e6c74e6099ae9a5beb3f2faa9f1"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_infirmary/interaction.json",
+      "status": "untracked",
+      "sha256": "2c15f7e06369be61fdd198f2cfe17f5932496c815b77a28cf6d0baa3152fbefd"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_infirmary/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "6f7fa1e57df28a09e8e45947613471a5fea6a6918abfb47c91dbbc1c20e5eba6"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_infirmary/review-contract.json",
+      "status": "untracked",
+      "sha256": "bd2c437604e979ce95db64b7393893f2e5988f0d1c1ca005cfd89ca7370fefb5"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_infirmary/support-d0.bin",
+      "status": "untracked",
+      "sha256": "6c676c2259b2e1d3f454097850dda222c15534131a7a7026ed6bda38db916811"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_infirmary/support-d1.bin",
+      "status": "untracked",
+      "sha256": "4eb749797e501d7693f41098d8e54bcf11df8b4f92a110bef0a45322a25a27dc"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_infirmary/support-d2.bin",
+      "status": "untracked",
+      "sha256": "361f83a7314177bf1670618c16e06682ca3438881036640c39bbffaabf271c9b"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_infirmary/support-d3.bin",
+      "status": "untracked",
+      "sha256": "d5e8f1830b654e114bc88e4c2d64e4f8be7d0fe1e4ba2c6384aba0e36b9561fe"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_karaoke/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "71366718b4174f5bd9b1650dbd6e89e6dd0ca1f4eaf1f3f339972ddcb37179e1"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_karaoke/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "d8b50561d1188376c152d796790357360ffe2d67074edd2f5ee03cb089fce20a"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_karaoke/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "b0d372475c76322b9dab66df32eee1ed49ffa3a747ec49e7a8c9714bb971829a"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_karaoke/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "259725771fceffea876583b616225872927de0803f9cd6f29f8ae4fb3df62edf"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_karaoke/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "1166b2bb110cd90902e9547ba74d60cea0ea0796e438c0428f8c823ab3b0f401"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_karaoke/interaction.json",
+      "status": "untracked",
+      "sha256": "a613b2fe2fde8e9c5827741e048f6958555409e967f36ef63532eac89564ec51"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_karaoke/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "b0e4fc18cfed7267eafd52f33417c4351987ccd7cde751013405569f66f7e928"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_karaoke/review-contract.json",
+      "status": "untracked",
+      "sha256": "f488a6897397d1c59f76d18d5b08956779547cc3ed996e7cf491da1023c5da8d"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_karaoke/support-d0.bin",
+      "status": "untracked",
+      "sha256": "0560da0cd597d05edb4bca740ac15726cea4f50ee5faf8733606775217dad706"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_karaoke/support-d1.bin",
+      "status": "untracked",
+      "sha256": "c60e7828804a56a3e9193b4f5b25af5e71ecb0b2595776e556ca94699cd62b50"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_karaoke/support-d2.bin",
+      "status": "untracked",
+      "sha256": "b46428074a6882f2deecc939aade1225a2986c7c21a289c1500ccf742a2d2188"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_karaoke/support-d3.bin",
+      "status": "untracked",
+      "sha256": "9f5ace8b5752da5ae46c5cb89a8692098f6269841c67517ac0be8daa67e6f0d4"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_locker_row/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "86b21c5aff62223e24c69cdef1cf8d1e60e8b7d9329103318a3570577ac87b2c"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_locker_row/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "8dce11500b567d58c0df111dc64d94db101b7ea233a8528cd0153bd28b28fac7"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_locker_row/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "4344bc57edc4f6d16a7eda6c5e1581efbe6b21b8e39573bac180d668541bca72"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_locker_row/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "f9d88627c06e45ae18cd4ed7fcacc3079c386fb09884ccaeaa712b4b3172bc9b"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_locker_row/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "63b2893114a33c2c06081149f881e439b089882506d9f672b248bab4ef98e0d2"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_locker_row/interaction.json",
+      "status": "untracked",
+      "sha256": "ae4613c360a5c60caf96e8ab74ebbba49016a3c7782e056530ed171326464179"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_locker_row/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "9bf1c86fe0eb839637e647e4a2202a3c6f284543f5d55ca984f8ee17a964f0d7"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_locker_row/review-contract.json",
+      "status": "untracked",
+      "sha256": "1cdf4db5a7173e492ebc373758fa701e5d52679ea18988cd5f6964e4710d23f4"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_locker_row/support-d0.bin",
+      "status": "untracked",
+      "sha256": "86b21c5aff62223e24c69cdef1cf8d1e60e8b7d9329103318a3570577ac87b2c"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_locker_row/support-d1.bin",
+      "status": "untracked",
+      "sha256": "8dce11500b567d58c0df111dc64d94db101b7ea233a8528cd0153bd28b28fac7"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_locker_row/support-d2.bin",
+      "status": "untracked",
+      "sha256": "4344bc57edc4f6d16a7eda6c5e1581efbe6b21b8e39573bac180d668541bca72"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_locker_row/support-d3.bin",
+      "status": "untracked",
+      "sha256": "f9d88627c06e45ae18cd4ed7fcacc3079c386fb09884ccaeaa712b4b3172bc9b"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_shower_row/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "9de3e0d6a49639802830988f30fa3725516e66582a10907212e25fdda0c93af1"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_shower_row/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "fcba1a43e2efea87bd5f917dc3e808d30ec15ad5c1e7f64d2362f4997bfc9baf"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_shower_row/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "2933652e3eedfd252c28584df54d23bd6eda4f4753e9240a05c7ba7d6d95f076"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_shower_row/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "51cec0c826e463d6e95718f18805d6ab2bb4724909033b38efdd112f89621197"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_shower_row/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "60324ba91a122e89412773782e0f034a015307d04e6e1206e9bc4fea2963ec68"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_shower_row/interaction.json",
+      "status": "untracked",
+      "sha256": "b0a8e9020c31936f5295a1a225da4effb0df587a9fb84e472c988b1defde3289"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_shower_row/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "3dfadc2ff45af01f90020959cd33c7596dd788b39bd448e2ee4378d53c182608"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_shower_row/review-contract.json",
+      "status": "untracked",
+      "sha256": "a53f5153932ade84f8ee27bf016e5fdb087c2b680306da0a5d98fd075634ecfd"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_shower_row/support-d0.bin",
+      "status": "untracked",
+      "sha256": "6b16badddabdea163c12edbc5511562cc656dd7890e2f062d16bb3af7769b4b2"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_shower_row/support-d1.bin",
+      "status": "untracked",
+      "sha256": "7385e7aa8410abf25c750d31917e1bf00dc07804d08f5e850817ee8167c112a0"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_shower_row/support-d2.bin",
+      "status": "untracked",
+      "sha256": "f2ccd4f708ae674a69c5d9020ec861e5f04ec5bf8623753e1391d6bda4f59402"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/authored_shower_row/support-d3.bin",
+      "status": "untracked",
+      "sha256": "5942668d7783377ea45d747af5a8800f822bb6b8ddf251ec231f9e6807c75458"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/browser-render-checks.json",
+      "status": "untracked",
+      "sha256": "73472a90b6636e1f06d661568d8fcf83990a4faa569bd141c45ea304b06b0541"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/corrected-test-run.log",
+      "status": "untracked",
+      "sha256": "b7f447b196935bbc6bf1bff26a1caccf2abfebb5c03ceec62a149f16e076a123"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/full-test-run.log",
+      "status": "untracked",
+      "sha256": "c938c2a953cb060540739937694af9c2faf9e6b587e46e80f14b14129f74ad81"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/indoor_shop/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "4b5ca3564ba2481482ad044d2a0b3c2b07637c09cdcdf73d67c9a75887a797ba"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/indoor_shop/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "a94fdaf3a85654ef7b2b356d080355bb833c919b2bffc787c0a160c475ff1de3"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/indoor_shop/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "e1dc5efc0e161c851a71ab710fbf14b26ce0b73e733ad93069d21a8b315d77c0"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/indoor_shop/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "e5fd12dd2123a79f32b0845efbeaa4c9b1f4262f89cfd234f53db21a320759c5"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/indoor_shop/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "bb76bd5362bfb01fe7af03cccae6d667cee8fa8b963a4440036148e315bfeddf"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/indoor_shop/interaction.json",
+      "status": "untracked",
+      "sha256": "387bbdc6ab2b4ddf0a53c246c5a60edd3ac26dcf34f8afbe65718a076110ccd6"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/indoor_shop/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "a4464e1204f231286cf6473dc75f3cc37d1baa6e7fcb27a4b40159ccfed3eb21"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/indoor_shop/review-contract.json",
+      "status": "untracked",
+      "sha256": "c2f42113806c5879327d5070a89bb23e704836077982462d0ea9edcd5d64c78e"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/indoor_shop/support-d0.bin",
+      "status": "untracked",
+      "sha256": "4b5ca3564ba2481482ad044d2a0b3c2b07637c09cdcdf73d67c9a75887a797ba"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/indoor_shop/support-d1.bin",
+      "status": "untracked",
+      "sha256": "a94fdaf3a85654ef7b2b356d080355bb833c919b2bffc787c0a160c475ff1de3"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/indoor_shop/support-d2.bin",
+      "status": "untracked",
+      "sha256": "e1dc5efc0e161c851a71ab710fbf14b26ce0b73e733ad93069d21a8b315d77c0"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/indoor_shop/support-d3.bin",
+      "status": "untracked",
+      "sha256": "e5fd12dd2123a79f32b0845efbeaa4c9b1f4262f89cfd234f53db21a320759c5"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/info/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "2e1c3b5aca3c257d338a3ded7ec906f53219c8fe3ac23d55824ede9a8e6adba1"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/info/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "713d8a5ec7160d4fc2daf14e0c2e8e54ab9f28349edc58707c2e431e292a3c7d"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/info/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "b6cdc92de436c498a2243c58de61fc23a00c760a8438be748a99ed64d3d88b4c"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/info/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "aa5eeb2e4dc31109bdcb90247a736ed78cd72c5a0626259e4a4fff8e9adedc67"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/info/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "59f3fa2fda487c98cdc626e4506e7942b23438b5c30aee4df5efa087b546af26"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/info/interaction.json",
+      "status": "untracked",
+      "sha256": "2d3d6d73eec067e97a0754b7834e72dc64dc87f92c0d56a4167968ca7c562292"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/info/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "ea53c6f2d992ed0a72b6f0c01329a5bf76b8315dfcd0ba1cf882e5301d2bfc59"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/info/review-contract.json",
+      "status": "untracked",
+      "sha256": "b30aec54f048aa56683dff77fcb72e95c7b571fb462f86d52151b3999f71490f"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/info/support-d0.bin",
+      "status": "untracked",
+      "sha256": "2e1c3b5aca3c257d338a3ded7ec906f53219c8fe3ac23d55824ede9a8e6adba1"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/info/support-d1.bin",
+      "status": "untracked",
+      "sha256": "713d8a5ec7160d4fc2daf14e0c2e8e54ab9f28349edc58707c2e431e292a3c7d"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/info/support-d2.bin",
+      "status": "untracked",
+      "sha256": "b6cdc92de436c498a2243c58de61fc23a00c760a8438be748a99ed64d3d88b4c"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/info/support-d3.bin",
+      "status": "untracked",
+      "sha256": "aa5eeb2e4dc31109bdcb90247a736ed78cd72c5a0626259e4a4fff8e9adedc67"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/jjimjilbang/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "91301e442f71826015e5f81f4f92b258518e1cd56d459489325ca01846071e05"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/jjimjilbang/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "465a0f0f59992a7edf8493fb3aca92bb538c8a7cc9896e1f9c5119ee3672d5ef"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/jjimjilbang/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "5098c3e539eb2bfac21af42e47e6a08b6593333cc3eb4195d46a04fbb87835f2"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/jjimjilbang/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "154ed16d1e40f15f3fbf1417b7817854193c0ca184520c4df9167abbda2121d4"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/jjimjilbang/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "6850b7a5746f64324e31b53c2db7b29b5262202d47d6e845fda95c18f02288b3"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/jjimjilbang/interaction.json",
+      "status": "untracked",
+      "sha256": "a2f55ce05dc3759615002683dad68a1de23737c77d11c105f86c0707fa7373d9"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/jjimjilbang/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "59aaf10dda1c247fb9cd5b8a5d3c2026cb9cc349f6a110fc69eaa485b1237522"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/jjimjilbang/review-contract.json",
+      "status": "untracked",
+      "sha256": "4645f9a76ccb925027ab441d9862b1ec8cbda6e938593db70c2d215a1fb36889"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/jjimjilbang/support-d0.bin",
+      "status": "untracked",
+      "sha256": "9a9ee0081fd348d6eca393391e259a2b5e12399eb813db5d43a999db1a981b5e"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/jjimjilbang/support-d1.bin",
+      "status": "untracked",
+      "sha256": "9d068d2ad55af52c7efbe6cb6dfd350a84b3ce7e56d5c7b41516abe0bdcd3c75"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/jjimjilbang/support-d2.bin",
+      "status": "untracked",
+      "sha256": "a1ea2b25951e582091128535d348210ec5c95e1760262d769754c9b816546abc"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/jjimjilbang/support-d3.bin",
+      "status": "untracked",
+      "sha256": "837ca0bd0984a6d50743640407ff291100da79e5e6c3fb4b9b04d54f30561527"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/main-catalog.png",
+      "status": "untracked",
+      "sha256": "5fb670b4b8945853f3ebc1c016b487ba0da8ca3008b2efa597c9ea5b9016ff97"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/main-placed.png",
+      "status": "untracked",
+      "sha256": "d93fb85a3627f3c2c3c581599ffb12a9d947fc33f55785a72d8205432a81cf2a"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/motion.mjs",
+      "status": "untracked",
+      "sha256": "95405213ef0261b13c4a8531a341d940800a009c15af37ad2d8a4034c6d97c2e"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/office/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "d504ab7a87d55c82cecca3a0aaf91b8d89a110e5240cbd46b50d37b6e0b7bf5e"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/office/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "2ba0fe1d9e2799bdad2400bd608f4598aa66e9d8be99869af230b75bf4e276a7"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/office/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "e8db67ffe491cc0d5ffd6f11c34a339181d7a01fada10ceea3b3b6ed22befb82"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/office/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "1a549a566364522049d2d29da91e9bac7246f2e22ff49702b9afd956a2c8ceeb"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/office/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "9ac9a6deb251cd6d188783fa69c8725c80ce7d710e0919355f932246c5ba8f31"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/office/interaction.json",
+      "status": "untracked",
+      "sha256": "afda4921d92f284cc1af94d2a3ad193856d383c0d0e11abb5d859c4f4652dcba"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/office/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "13f28f38757a2e399678c9722bdb6cfa90cf6eb6397392430b6dcc670bfaa985"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/office/review-contract.json",
+      "status": "untracked",
+      "sha256": "0522cc57035cdf983a09f97b549c0a7dfee6199c2deb40b5349264f9e2e96ebb"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/office/support-d0.bin",
+      "status": "untracked",
+      "sha256": "0176d45eeb30e97376aff1f51ad6ea89038ef76c3336e6a23629257291846ff8"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/office/support-d1.bin",
+      "status": "untracked",
+      "sha256": "b7131fad4087e3d1ac633b6ad9de7907826af20a1bcd8f0fbe83daf258edb6b5"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/office/support-d2.bin",
+      "status": "untracked",
+      "sha256": "d96ffd8a3eab8f3271e6f6fa501ad9f98a92558f094f647a7f6f52ae2b483fa0"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/office/support-d3.bin",
+      "status": "untracked",
+      "sha256": "d94fdf436641407cf6e7d664dcd2323971230700e5218603aa7b6df930d2c767"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/previous-manifest.json",
+      "status": "untracked",
+      "sha256": "711083749cb1924736218b21a6a5029a10b0a69cd66bedbcebcc0f8a8ae1727f"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/sauna/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "9f2db80273ddc99cb2a855b33aaeafc08d3f7544b62a97359784dd39c298d891"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/sauna/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "d81289d7626be658b898a14b9ce8b843c8642967aad808044532cfa109ecc0b8"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/sauna/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "e7fe63799880a7ccd1d48597e80248d96f110f082be8d4c58a4baa3ff61e3a98"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/sauna/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "71af8e429a8b618629b3be6853129ca53c5c6d292db98bb2e27d7d5b06c5c73a"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/sauna/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "57be8af71973cc33e8187d97f38f400559e9b1185bee3c14ab7a1b9946b4c2b3"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/sauna/interaction.json",
+      "status": "untracked",
+      "sha256": "98c677f95ddabe953dcfd1a89cea8bd92ea7c36c641cbfa1e6d712e50e206ead"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/sauna/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "f0d8a08710357adcfa49e6c8c63a8a6d28ed7a3e1f2e620e5a5907bc6759efb0"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/sauna/review-contract.json",
+      "status": "untracked",
+      "sha256": "8dd72511713c0f90b2bd70162e6e5884634fa00590941e80dd506b53a0cb42f9"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/sauna/support-d0.bin",
+      "status": "untracked",
+      "sha256": "787cd050aefe3b60f7f63ae2af98f39bf386da2dfc49883609c928f14e019aa0"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/sauna/support-d1.bin",
+      "status": "untracked",
+      "sha256": "7003a8caa7cd7df19bf066b582a33e0714a041a4b526e542976b2db3d91763c3"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/sauna/support-d2.bin",
+      "status": "untracked",
+      "sha256": "ba66b4806c599cd885859590e6ff550972257d297f5221f23acf36a64edc279e"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/sauna/support-d3.bin",
+      "status": "untracked",
+      "sha256": "c5591c3172098170cf4aa9c0ac7ed8b0bc9c689c9502516a1589bd4621d6b1aa"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/source-README.md",
+      "status": "untracked",
+      "sha256": "7adbaf4aaac5d77c05cb1e4c8310f0adfce55947e74dd1ea80596055a2d23460"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/source-final-qa.json",
+      "status": "untracked",
+      "sha256": "84de3a49b39846b9c57d0f7df0bcce69a16548f781b11ce69d67d30cf426ba6b"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/vending_in/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "19902713f6145e1355810cc66a60d244a9a996bca468d33f8648b498eec09ac8"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/vending_in/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "1cfe51c4f481851051562a2d03676d10d46c2c7e01463804cc3a183c6f2f4159"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/vending_in/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "a445c03e3779d8a82379f266d7a6ab4c35420897abc95d5971d9f563dd83db00"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/vending_in/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "288a6b689db3728f322e6711ac09c2000a9afed09829460e51bef04d7bcaa92d"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/vending_in/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "d82b6d4daeef10685dd71937961b0576fc0b6066d07eb217ab1d05cfefb320a6"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/vending_in/interaction.json",
+      "status": "untracked",
+      "sha256": "b082433c6587405f43e591bd0067293582fa3e3c11222c382007a0e9740c44b1"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/vending_in/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "ce0c2fd262b9a058363906e6f4975d2221032307cdf1139c97ccab359c32e1a7"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/vending_in/review-contract.json",
+      "status": "untracked",
+      "sha256": "ade4b7b4f6484856584474b80925a078c2fc3a9fd3540e5f928ffc2bafa72dcc"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/vending_in/support-d0.bin",
+      "status": "untracked",
+      "sha256": "19902713f6145e1355810cc66a60d244a9a996bca468d33f8648b498eec09ac8"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/vending_in/support-d1.bin",
+      "status": "untracked",
+      "sha256": "1cfe51c4f481851051562a2d03676d10d46c2c7e01463804cc3a183c6f2f4159"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/vending_in/support-d2.bin",
+      "status": "untracked",
+      "sha256": "a445c03e3779d8a82379f266d7a6ab4c35420897abc95d5971d9f563dd83db00"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/vending_in/support-d3.bin",
+      "status": "untracked",
+      "sha256": "288a6b689db3728f322e6711ac09c2000a9afed09829460e51bef04d7bcaa92d"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-open-v2/worker-cleanup.json",
+      "status": "untracked",
+      "sha256": "26ab74aa6609c415f3b3b293c52614753ea5f6a3abbd09c87ada9961580c2484"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/README.md",
+      "status": "untracked",
+      "sha256": "c99989fe80761582ef3dceb45cc923afbaea008fb2f2f72e30f84221449c83e1"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/browser-qa.json",
+      "status": "untracked",
+      "sha256": "52d5492155f21ec5782edd4da3364c89cf1b1f9048fcf49a59e228bba99f8ca1"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/catalog-retirement-qa.json",
+      "status": "untracked",
+      "sha256": "f91c6699d7ea1a15c83952e3088d619dcfc059fb329b64cd62fed569572577c6"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/dry_room/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "1f4cc31bc3d8bf9e0faa0b3fd20ec37467d2f058c4b1a7ac71d7d5655ae9fc91"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/dry_room/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "129919ab1ae25fd3b1933e016c09f472985f21cbdf7ccbb20e02284c2aece770"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/dry_room/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "a41e04517080814301e229cc7c73e3b6a0d45e41b498744c4fbbd68ceecfd16d"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/dry_room/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "dedff9bb39b265d77a0671700d206b5e52fb8c2fee6521acfa5ba162baae92db"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/dry_room/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "2b0a39dad6b712cea5b402820032e744f2391aed02ce04618a59e49d134884d4"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/dry_room/interaction.json",
+      "status": "untracked",
+      "sha256": "6327a7d469fa81f77efdffee2eb6934bf38d1cc83c6603e5c8341126e512abec"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/dry_room/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "bf5110e7a9b3ee52e88e29fd5c35b6c86a1fc3eda47712cc5b1e3e6989cc9f6b"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/dry_room/review-contract.json",
+      "status": "untracked",
+      "sha256": "32620f85a0fb558d8c6ac129ed1bf09a99e8cbb4598fb5190bcf4b88e7bf2ee0"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/dry_room/support-d0.bin",
+      "status": "untracked",
+      "sha256": "1f4cc31bc3d8bf9e0faa0b3fd20ec37467d2f058c4b1a7ac71d7d5655ae9fc91"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/dry_room/support-d1.bin",
+      "status": "untracked",
+      "sha256": "129919ab1ae25fd3b1933e016c09f472985f21cbdf7ccbb20e02284c2aece770"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/dry_room/support-d2.bin",
+      "status": "untracked",
+      "sha256": "a41e04517080814301e229cc7c73e3b6a0d45e41b498744c4fbbd68ceecfd16d"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/dry_room/support-d3.bin",
+      "status": "untracked",
+      "sha256": "dedff9bb39b265d77a0671700d206b5e52fb8c2fee6521acfa5ba162baae92db"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/foodcourt-next.md",
+      "status": "untracked",
+      "sha256": "1f13215e83ead0e3f13b71d9b16f8e21a9bc1f8275f5526e9e394890b5efa343"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/main-catalog.png",
+      "status": "untracked",
+      "sha256": "e52331b13751b8b9693379685757c3d4827ad31500c9b43e21635680d98f0821"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/ppaji-catalog-retirement-qa.json",
+      "status": "untracked",
+      "sha256": "f67e136f172f47eed65fd0d89a1f9ef4f05f0e0672f6a4a888fbf005a7cbc4a1"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/rental_tube/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "8d0c8c0fab0f3fa3b0ca281c9752b67866f60019605c1542924f5db645af469c"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/rental_tube/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "db927a6eb1aafb7f8281d3da2677f5965a3fbe416b9ef8dd2ba8f50b4604d983"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/rental_tube/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "f6ba055c50c5011cf42f6f8d35f68f1659fe7910075ed06e1b2499614d70877c"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/rental_tube/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "e6028523a9130e3c84fd21a6f1c3b4f80b14074bd7bfd40f9dfc787edf70a8db"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/rental_tube/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "fa3d892d401e1e6ed37494c64deb8dfce1cc8e46c42b9dccf1edb5634b68e480"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/rental_tube/interaction.json",
+      "status": "untracked",
+      "sha256": "61101ff247fd67f9c5a97644ec54c711fddd38f657a5babf02f1415373589db7"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/rental_tube/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "03547442772d1df6d12111ba75a1b5362c00d2dc785ed4d16781358c314d1c26"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/rental_tube/review-contract.json",
+      "status": "untracked",
+      "sha256": "cead91ee46ba35e34617234bb2852f8b6e0ae860475c1847540b32974ed46f0e"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/rental_tube/support-d0.bin",
+      "status": "untracked",
+      "sha256": "8d0c8c0fab0f3fa3b0ca281c9752b67866f60019605c1542924f5db645af469c"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/rental_tube/support-d1.bin",
+      "status": "untracked",
+      "sha256": "db927a6eb1aafb7f8281d3da2677f5965a3fbe416b9ef8dd2ba8f50b4604d983"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/rental_tube/support-d2.bin",
+      "status": "untracked",
+      "sha256": "f6ba055c50c5011cf42f6f8d35f68f1659fe7910075ed06e1b2499614d70877c"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/rental_tube/support-d3.bin",
+      "status": "untracked",
+      "sha256": "e6028523a9130e3c84fd21a6f1c3b4f80b14074bd7bfd40f9dfc787edf70a8db"
+    },
+    {
+      "path": "docs/assets/handovers/indoor-service-v1/source-final-qa.json",
+      "status": "untracked",
+      "sha256": "dc68054e26bf71d383abbd3591c7d2139488b5b7f1a0dbbf9a5e190d4f1bca57"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/MAIN-PORTAL-IMPLEMENTATION.md",
+      "status": "untracked",
+      "sha256": "04f6da01d59b38064b7768e2c4246dff392a34281f35a52a072291351e0f48e4"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/README.md",
+      "status": "untracked",
+      "sha256": "ccffe11c83fcd212d0bac535c407c88c17df5e5893b03e63450d2d377e1570ba"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/adoption-art-audit.json",
+      "status": "untracked",
+      "sha256": "af5862b95d90dfe8c1a9cf693c8d786c0d18fcb728daeb2b2d7c583aae151818"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/adoption-art-audit.md",
+      "status": "untracked",
+      "sha256": "c27481f1238e5dc84dcf6d9626f6a35cb1a29973d73a69f18dc4240319f8805c"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "c80457893e3a61f6f355ca39fba6b2dede305c091fc5a853e3d13a10ec47eac6"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "61ae9b0a5ede6b02e0a79627a87824a726e9455e27677610151ae1d131d3f4ec"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "121511fd3fb929649c33cadbd121960416e0fccb11b2f9dd5770e17880a3c71d"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "6c475ff79824ea5eb9628976da046de77d468def58b9e74fad92b0c6e905b544"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "85576f5f28b555b30db812d5bb74d848688d023690110a85a46d22317ba0006a"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/interaction.json",
+      "status": "untracked",
+      "sha256": "56ace737de407209aaefd0a4efe8578e853633d5a76ea29e53085423f14c0948"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "a40340934dd538374c44e88a9d4acf172183b88f3d0c48cabd96c84b10bca3ba"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "3bb36ea3bedcc493715bdfcf2998ed85ca63604dbc25ca1f3412f5ba7e037a60"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "e00e091d1848b0a9c6ccf3cfd5b4949bebb95c87ff2e5aa45bdfaab943f40bc9"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/roof-proportion.json",
+      "status": "untracked",
+      "sha256": "99f242f547a39de0c3c926782a8d6ef186d4d919ca3f58352ef21adf09ff0f3f"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/source-summary.json",
+      "status": "untracked",
+      "sha256": "210ef257390a7f16ff0e9c4fc22469451fea1a7478ae26427b14cb43a6046757"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/support-d0.bin",
+      "status": "untracked",
+      "sha256": "c80457893e3a61f6f355ca39fba6b2dede305c091fc5a853e3d13a10ec47eac6"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/support-d1.bin",
+      "status": "untracked",
+      "sha256": "61ae9b0a5ede6b02e0a79627a87824a726e9455e27677610151ae1d131d3f4ec"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/support-d2.bin",
+      "status": "untracked",
+      "sha256": "121511fd3fb929649c33cadbd121960416e0fccb11b2f9dd5770e17880a3c71d"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/support-d3.bin",
+      "status": "untracked",
+      "sha256": "6c475ff79824ea5eb9628976da046de77d468def58b9e74fad92b0c6e905b544"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/bungeoppang/visual-review.json",
+      "status": "untracked",
+      "sha256": "898e0a86c69a8fe4879e7fdb96248965a1b9334ed6e1e98b5796f3c155898947"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "8b072e78e776d3a7396d1613c490c443708d8f8638bade56d6346093384a7e94"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "c5b0454b797712bcdb8d28ea3196d318a6e67a1a724a3105524e30040e3c59a1"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "2edd35433ea4b2109428ba5aec14086cb44a8223f6276499ba7528e4e3013d42"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "bb13e9684d2632dd4751454b7847320e6e9d87e7190f231b1a24f5765d663dc1"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "65bf86070f9d5df796c8dd47fc79734b47d695875803d343343c8d646527726d"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/interaction.json",
+      "status": "untracked",
+      "sha256": "021d9ba7a52911bbb3ab9bbb8ffd82dd548da8daeb4e0f7a666964de0ccd57cb"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "357b8062026dd7b9403020524eaa9105dd9b5e63dff67b9633c9f523ade50cb5"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "2eaade1a2335f9022b6d9ca7f4466ee3a7cacad2b50efceab1cea709cbae8518"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "a224e0f2ddd6f893808028faca7854648997f7a1b386203159299fe4904bf577"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/roof-proportion.json",
+      "status": "untracked",
+      "sha256": "cd886d8c9f232db708301b39a269877a3f5aa2c718c5c6885e37fc650f8e8d17"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/source-summary.json",
+      "status": "untracked",
+      "sha256": "40d158a9e834815c6cc0a35fcb1a88c268952108e963652ecf6ab18b15b5af88"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/support-d0.bin",
+      "status": "untracked",
+      "sha256": "8b072e78e776d3a7396d1613c490c443708d8f8638bade56d6346093384a7e94"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/support-d1.bin",
+      "status": "untracked",
+      "sha256": "c5b0454b797712bcdb8d28ea3196d318a6e67a1a724a3105524e30040e3c59a1"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/support-d2.bin",
+      "status": "untracked",
+      "sha256": "2edd35433ea4b2109428ba5aec14086cb44a8223f6276499ba7528e4e3013d42"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/support-d3.bin",
+      "status": "untracked",
+      "sha256": "bb13e9684d2632dd4751454b7847320e6e9d87e7190f231b1a24f5765d663dc1"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe/visual-review.json",
+      "status": "untracked",
+      "sha256": "a16a701a4561091371cc70df8a641360d0d3d4fe139659062911eecc52908676"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "9b782447602a028ca168b996dc6784b9ddba54908b2917f3ac8cc9085fedad6a"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "63fb7edfc3f18e21c539fb719eb0faf0c802ea2bc4751fe13d8cfe5a2b06b828"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "4d1d42e544728b2a243517bec8afdea8faf1257246905eaef9e632e0dbf6ddf6"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "b4b53495adfc74c1fa315e2c28bb0799adab75696923b3b2fd71d39c9c61f983"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "5c884c89515945de39668df5e7ff26935ea8819d7f8dc50c10fbd72b6be6ccd5"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/interaction.json",
+      "status": "untracked",
+      "sha256": "051463e4c43b15917bcfebd81f26d798cbbd6ba48cbd6f2ecce1e31d051133dd"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "bee1af00fe79a4ca48d31e1d52ac04255b9e1fef06bc2e6693905c0aa39be9c7"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "c6f89d3b4e5984cf31f5c130b3181140af21ef41e808d1a455e6dc92c1394366"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "75cd371ef0dfc4a50524615356b4af48adeb395a8557bb7a44eb28780c359e07"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/roof-proportion.json",
+      "status": "untracked",
+      "sha256": "5d79a1bd868840530d843b8772b09b66f7df82f7836e1c20e5104c1efaa33ce6"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/source-summary.json",
+      "status": "untracked",
+      "sha256": "372a9c6dc3e69ee4acab1a8532390ac7a401ee6392cc0038be1350834ec955ca"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/support-d0.bin",
+      "status": "untracked",
+      "sha256": "9b782447602a028ca168b996dc6784b9ddba54908b2917f3ac8cc9085fedad6a"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/support-d1.bin",
+      "status": "untracked",
+      "sha256": "63fb7edfc3f18e21c539fb719eb0faf0c802ea2bc4751fe13d8cfe5a2b06b828"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/support-d2.bin",
+      "status": "untracked",
+      "sha256": "4d1d42e544728b2a243517bec8afdea8faf1257246905eaef9e632e0dbf6ddf6"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/support-d3.bin",
+      "status": "untracked",
+      "sha256": "b4b53495adfc74c1fa315e2c28bb0799adab75696923b3b2fd71d39c9c61f983"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv2/visual-review.json",
+      "status": "untracked",
+      "sha256": "016fac05fd5a2e426a1d0bbebda1f044dd7709c986ea828399c263d32dedfbc6"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "fc1ad519f89baa56adc8918a8b73268f4853ae5d4002a5c7ed8ba2b19bed0fc2"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "2be6dd2e1f1679ce7172492229b3cc5b0ff8b9a86c3be6ed53db200abf74bd35"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "1fdf0afd28a954adf9587219658bf8d6e00acc72dff0b998e1987078b32911fe"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "e7706570ebad083ba015b87867b200ec02f894ef79f1e8849757300511bee18c"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "21e0a3cd582e8d832a8e22079f3d7f10ff7f19429f024b13fde580c00ba3be30"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/interaction.json",
+      "status": "untracked",
+      "sha256": "50aed0474a2e962a2a5f1fceeae933db03a9be1f3cdbb30883c0cbaf4be428ba"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "9b3c0865efac38aa27171cc029dbdadac53d1a186ac239a59b6d17b8c19d270f"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "9362a1f95e39934834137f27ea3027d9adb79cab012643853cde52af5bab0b7b"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "04de30e30e5c8b5d14ae13e4682f87978e4466b28bc2384bc9494303df839911"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/roof-proportion.json",
+      "status": "untracked",
+      "sha256": "49a8127c1ecdd98814e04448930f488ac2db25cf172c606b86ed4f4cd9eaa614"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/source-summary.json",
+      "status": "untracked",
+      "sha256": "dbb90a3936714e9015a8b951fe1e42d381bd16241841cce69a727e61c1aa86ee"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/support-d0.bin",
+      "status": "untracked",
+      "sha256": "fc1ad519f89baa56adc8918a8b73268f4853ae5d4002a5c7ed8ba2b19bed0fc2"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/support-d1.bin",
+      "status": "untracked",
+      "sha256": "2be6dd2e1f1679ce7172492229b3cc5b0ff8b9a86c3be6ed53db200abf74bd35"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/support-d2.bin",
+      "status": "untracked",
+      "sha256": "1fdf0afd28a954adf9587219658bf8d6e00acc72dff0b998e1987078b32911fe"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/support-d3.bin",
+      "status": "untracked",
+      "sha256": "e7706570ebad083ba015b87867b200ec02f894ef79f1e8849757300511bee18c"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/cafe_lv3/visual-review.json",
+      "status": "untracked",
+      "sha256": "4cff70a39c426f730d58a4824be23248eb9a5f3677d2a0d3e0fa74870a359674"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/catalog-followup-qa.json",
+      "status": "untracked",
+      "sha256": "07494170694d80ea8d2027d7f80e88b026a13bc163bd3763a862e20a139acfac"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "3b0ad65346308e12c155c31a6f9de19cd71d73613ad85f718646da8e011bdd13"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "5686c1f2e74bf1abc79fbe47a0ef7f2b4f862efb4793f46e1276f4d358e7b4c8"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "feb57b8706c6d0336575378efa79cca6dbd19b11ad2b8580c8fcfdd9d1cb0cd4"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "297e524af3a973c0a6a5c9624b8d02f88d5f6886597810f98292ca71ae1b9543"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "f425ad7c381129e2f7b866a7cad2615dc0d4f4e466b4d93f5ac72ad6dd1cb871"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/interaction.json",
+      "status": "untracked",
+      "sha256": "878496404254887a2e20fdf5ac277065217a38bc9ea2e5f73f1b56d468ed88b0"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "3ee87e539c4dd6d7be16306e69995700728599fc3b243d36298768c737e3d6f4"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "9ebd757c1a04b98ed5fbea7cb31b9105671c90a3fdcd084baa7e9088577fbd53"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "7f5cba06957972b00b54b28f7737d88a9ff7b7345828605c74995807f591787a"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/roof-proportion.json",
+      "status": "untracked",
+      "sha256": "725e48bc0c94854c26ae2d5f01baed1737335fb0efeb2e9ad80075fbfd936446"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/source-summary.json",
+      "status": "untracked",
+      "sha256": "e7467c43491e7062f9f7cd28e90dba0a2ec646b2f1528baf284e862521366d33"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/support-d0.bin",
+      "status": "untracked",
+      "sha256": "3b0ad65346308e12c155c31a6f9de19cd71d73613ad85f718646da8e011bdd13"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/support-d1.bin",
+      "status": "untracked",
+      "sha256": "5686c1f2e74bf1abc79fbe47a0ef7f2b4f862efb4793f46e1276f4d358e7b4c8"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/support-d2.bin",
+      "status": "untracked",
+      "sha256": "feb57b8706c6d0336575378efa79cca6dbd19b11ad2b8580c8fcfdd9d1cb0cd4"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/support-d3.bin",
+      "status": "untracked",
+      "sha256": "297e524af3a973c0a6a5c9624b8d02f88d5f6886597810f98292ca71ae1b9543"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/chicken/visual-review.json",
+      "status": "untracked",
+      "sha256": "7d781a842a52734926bef40f1abf7a5bb2674ee217b85b5d3324dea214f5c8c3"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "8f388699e1533ccbcd953602c11dd3f1450069a2562fea55f10e79bc427dcadc"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "55e766748494cf6eb47e4d52912d7e5e37a355139caea05b4b5ad89420a0dbb0"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "a9d98b81a55cf7537bb26f3ef48d9232494c6598096f38df9d35eeb480131ed7"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "a35f287c4c3555c37b7ac21aaca1b2d7b7259012c74f158ac7e5ef94f6389e77"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "4cf5ad1b2721949664228820a9f38ce09fc223549db68726b0c0bb9153349d73"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/interaction.json",
+      "status": "untracked",
+      "sha256": "400697ea3195bdb99219a16c736bc6c6f2fa15947c6b6202fa2931fa8f2183c0"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "b86c66ad3cafe2d58a4b00d223f71495108dd1822249ffc7a5cdb0a09026693d"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "c9de749df209be56cfd17b295ae81a9dde9bfbabf2d8c3a0394a629f6dfbc216"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "4392ca0ee996c2679698c963829188676e789f52252e5269769d0057e61dbc65"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/roof-proportion.json",
+      "status": "untracked",
+      "sha256": "b4b3f6f9765771aa34593aa259ef199976b68b22380e60498d7dbed035d27725"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/source-summary.json",
+      "status": "untracked",
+      "sha256": "9012974ab445f6f03eb485e31ae5e900aa95630b29ed3c8262f802e6fa83de4d"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/support-d0.bin",
+      "status": "untracked",
+      "sha256": "8f388699e1533ccbcd953602c11dd3f1450069a2562fea55f10e79bc427dcadc"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/support-d1.bin",
+      "status": "untracked",
+      "sha256": "55e766748494cf6eb47e4d52912d7e5e37a355139caea05b4b5ad89420a0dbb0"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/support-d2.bin",
+      "status": "untracked",
+      "sha256": "a9d98b81a55cf7537bb26f3ef48d9232494c6598096f38df9d35eeb480131ed7"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/support-d3.bin",
+      "status": "untracked",
+      "sha256": "a35f287c4c3555c37b7ac21aaca1b2d7b7259012c74f158ac7e5ef94f6389e77"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/firepit_row/visual-review.json",
+      "status": "untracked",
+      "sha256": "44b71b13abe0a8867c5ed7cab4f088d817a19895283e2516fc96e6d58f474b0b"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "84836620a4051fe866df3c2feabf486b018b4a00b15ba37286ff4d835b1c510d"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "cb87c42215b0b461931195b5b3b95832fdcf64833ee51e1a791351c4d68480fb"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "a526e84149379029ca2ff4d229b01abcf29352ca95ff94cbac17f3cfc87cc61d"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "9b926cfd8a21534f9d27467c25a73fbcabf72aaac2705e72391c4ec69b813582"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "e308323a0ba73fac7cf7d764d9d1c77c83a8569f2fbceabe85ea3563d17b7795"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/interaction.json",
+      "status": "untracked",
+      "sha256": "e2da6e8c180de297bcf9b070b1001f08f41aea3b8e079e1b1ef2ab8b46514c8a"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "ff94d74bdae9db356217709aff117fe86cb76867fcbffad6df87999fb1385a2a"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "8e75ab2b2b3638b58b1e143d874c96242236f1ea55a01df142d90987cbe990da"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "25a893dda1cf542ab21c9bef5ecee1e8e1a0e415034bbbd16e2365e1390aec24"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/roof-proportion.json",
+      "status": "untracked",
+      "sha256": "170081a335fb666efbc30a39c789598baec262905d8a0ff0d9c38c88dcc2dfb8"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/source-summary.json",
+      "status": "untracked",
+      "sha256": "b5969b05e20746ae81e12a92d3e35edc5d840d2c237779335c526f5866e832c9"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/support-d0.bin",
+      "status": "untracked",
+      "sha256": "84836620a4051fe866df3c2feabf486b018b4a00b15ba37286ff4d835b1c510d"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/support-d1.bin",
+      "status": "untracked",
+      "sha256": "cb87c42215b0b461931195b5b3b95832fdcf64833ee51e1a791351c4d68480fb"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/support-d2.bin",
+      "status": "untracked",
+      "sha256": "a526e84149379029ca2ff4d229b01abcf29352ca95ff94cbac17f3cfc87cc61d"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/support-d3.bin",
+      "status": "untracked",
+      "sha256": "9b926cfd8a21534f9d27467c25a73fbcabf72aaac2705e72391c4ec69b813582"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/icecream/visual-review.json",
+      "status": "untracked",
+      "sha256": "0f631cb5932acdc67bd8bbfd4495e286b3cb8db3529ceba83ec154c41b44b5b3"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/main-adoption-qa.json",
+      "status": "untracked",
+      "sha256": "75861317686334f6d353954e264c653e780446a70446b16ebf52f50dd13e3206"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/main-browser-qa.json",
+      "status": "untracked",
+      "sha256": "953f355608754469504f8324488f940a202de70ac5f00a57d5711cef5ef7e4e2"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/main-frame-qa.json",
+      "status": "untracked",
+      "sha256": "745ad22239c00dcd77f8879841f723eff75fb38949bccf770df4690a99fa4576"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/main-serving-qa.json",
+      "status": "untracked",
+      "sha256": "26aa3632a513c16d24a6698751e263daf5cd015d43a31e8d7a2a53303205dcba"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "1317d2d0995972f4adc6906e38b5dcdf3059601ddd0b6eb84f1de08a69b1a361"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "9040ac93640e5e58c1525d90861a2412b83f1a7808aa8a4b5058f16695c03451"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "173c988b93b36beb7bf96c8beca49b6014e0c360581ac9d500be54628c659e45"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "173c025d594f7800ff401c8b1c4ef4cf88ccb934b965c6b13e3c482d5a509133"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "4915bd1f5e4a2b48023d725331afb892569553558d5f3f7b3264f634358584d8"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/interaction.json",
+      "status": "untracked",
+      "sha256": "dd9019056c16c27c87365f602bb9c513e8c746aca95233cf7ec943fde31e74b6"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "24c18d3dab03709807d20019e4165e54122bf09148a6a831f989b8ed68eb7e16"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "401c74e921f675f067c42a64581ac59e29727a525ccd2fa643c738fae1874def"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "a9aef7c821016dcea956a13b0426a3427a1de5e5795a16369bd656dee8678e39"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/roof-proportion.json",
+      "status": "untracked",
+      "sha256": "7ddaa0ba51d0a3c87f13c55145c874ae02520477d63c9d53d0744f008f9ef9d4"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/source-summary.json",
+      "status": "untracked",
+      "sha256": "04292b59cc4b52469ad46b83fda83c0e431735894fc0e14f2800744a72e6ffa1"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/support-d0.bin",
+      "status": "untracked",
+      "sha256": "1317d2d0995972f4adc6906e38b5dcdf3059601ddd0b6eb84f1de08a69b1a361"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/support-d1.bin",
+      "status": "untracked",
+      "sha256": "9040ac93640e5e58c1525d90861a2412b83f1a7808aa8a4b5058f16695c03451"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/support-d2.bin",
+      "status": "untracked",
+      "sha256": "173c988b93b36beb7bf96c8beca49b6014e0c360581ac9d500be54628c659e45"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/support-d3.bin",
+      "status": "untracked",
+      "sha256": "173c025d594f7800ff401c8b1c4ef4cf88ccb934b965c6b13e3c482d5a509133"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension/visual-review.json",
+      "status": "untracked",
+      "sha256": "a0a7cdceedda6af0009dc56e3b138856067f08f41dd07d1ec282723034cdb6c5"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "fce420a923437296e730a297844a9ae68369f57278bdebc2df64a9bef29620f9"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "e53235fce421ec036b3dcb7bdb8a0078468ac3d3de9c6e721deca6e69707a5ad"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "c84f16f22186a55dccc0ee77f0fada5eeb38ca6ed0bf08f7f0da966c764f9cfc"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "a7598d6fbc7ba247ec606552e0b92818b5d0579d5a124512fa1657feeeff0fe2"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "ea128c188cdd4e3b5c6a9922dd3ae8f264389292b2e45fd75ca7f4d2085733fa"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/interaction.json",
+      "status": "untracked",
+      "sha256": "f7ac11fcf09beae38e5bd37bed78cfb0639db9e52ee01ec29e54a66c6ebbbac0"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "db981979f79470d89b725c232284fe2f2bfbdf2e6ec7839caa53bd3bcf77301f"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "6ef3a4ac0771bc0e16658c0e0ccff58ea4fcd7562b807c9756882c3363d3ee52"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "cf4327b6044f5b8f038e9d85881b4093f534a1046309ed27c0d18c8380c0dff4"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/roof-proportion.json",
+      "status": "untracked",
+      "sha256": "cac5931d4e3d84efdcde445df66f7bbf73f01ba98f11a2b61915212fbd909dc8"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/source-summary.json",
+      "status": "untracked",
+      "sha256": "61e7ac7a0426900beae2b69f9ff80c196bd28db3a1c213bc7737ecc219518629"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/support-d0.bin",
+      "status": "untracked",
+      "sha256": "fce420a923437296e730a297844a9ae68369f57278bdebc2df64a9bef29620f9"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/support-d1.bin",
+      "status": "untracked",
+      "sha256": "e53235fce421ec036b3dcb7bdb8a0078468ac3d3de9c6e721deca6e69707a5ad"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/support-d2.bin",
+      "status": "untracked",
+      "sha256": "c84f16f22186a55dccc0ee77f0fada5eeb38ca6ed0bf08f7f0da966c764f9cfc"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/support-d3.bin",
+      "status": "untracked",
+      "sha256": "a7598d6fbc7ba247ec606552e0b92818b5d0579d5a124512fa1657feeeff0fe2"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_1f/visual-review.json",
+      "status": "untracked",
+      "sha256": "84244fb960a8fcd1b720ab88f2e694535f9678cf56bea2ba84c983b74f20aef0"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "87b1558101e620e621a5332182495681745af0db5f91a6a05125f157c1eb6b57"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "c09f08858b50fad9dd75f2364e975cb30f9eb4c24ea47586d03adf23c13c5adc"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "9e7cf69b7220e9931e26a9c7abb15ee731baed44c87ed78a4b75bb26777f5001"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "27c44dfe6008082b74f5b7e580e4dce853eb79bb4849284c96e89c0d59f1ac3d"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "2c1740e2bb6e5da8032d66a6d76b6dcd6097a583930be3b4f5802ad7fefcfa4f"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/interaction.json",
+      "status": "untracked",
+      "sha256": "1438a0fc021f0053741a0cbe59864b51dc316a682729d07cfd5d6c85ba963428"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "bdd7a2db6f802a6df9ed65611a0005df03ab8eaa6206c948a489f7a8de9683bd"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "9f0102715e064d829958cd6c471f518bb9db7aacfd30b7a69185701db633fd0c"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "b1b2f95b25501f2739ebea69660febeb8213fd510fa932775a279f630943f40a"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/roof-proportion.json",
+      "status": "untracked",
+      "sha256": "48b6cba9ee4b878015518df9782bc93fa32dd7a5588ade12492d251fb385c7d9"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/source-summary.json",
+      "status": "untracked",
+      "sha256": "f3433900756023f727ed5d2e721493b043af3d492ff70acbeee7426e7ce00fb9"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/support-d0.bin",
+      "status": "untracked",
+      "sha256": "87b1558101e620e621a5332182495681745af0db5f91a6a05125f157c1eb6b57"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/support-d1.bin",
+      "status": "untracked",
+      "sha256": "c09f08858b50fad9dd75f2364e975cb30f9eb4c24ea47586d03adf23c13c5adc"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/support-d2.bin",
+      "status": "untracked",
+      "sha256": "9e7cf69b7220e9931e26a9c7abb15ee731baed44c87ed78a4b75bb26777f5001"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/support-d3.bin",
+      "status": "untracked",
+      "sha256": "27c44dfe6008082b74f5b7e580e4dce853eb79bb4849284c96e89c0d59f1ac3d"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/pension_2f/visual-review.json",
+      "status": "untracked",
+      "sha256": "61cf2f6f98816479edbe0f11778b5b6d830d70eb4d22b218c7d84843a18347ac"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "ce2d1b771ffd3e7bcb5d12ee5f6fd667269f600b4843eb13a501c39a6d30eb2b"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "3c139293052bdc9488d112e7210ff67966c5c9698ab8418d85728e77f8f1f2e3"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "fc11aa5e4fb2f1e8043d1c80bfe14e981c73d67b82606d40e0656de080024248"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "f2fb3a34e4551735d751ba4dfa666452b3b13c81782e148551a0ebcd77f8380f"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "63d9cb74f201ab9146db759ec77e789727b6118f9603cb9482e1b3f8901886fc"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/interaction.json",
+      "status": "untracked",
+      "sha256": "6f227eb26ce670ddb15b1225feb4573c9985a44be740832a93b3bd9136217e84"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "10c4658b20f73475774aa6a735f9eb5bd048df3ebff0efc1a5db1b611333e6ae"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "1f84f5c8d11424f57ce1c4cf8d8abc303c7233d8a2a4019b32efac4ce99abe4e"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "f33ce10dc084c194ccd5a3334ae282a0185a31e02519762d4d539e905b0db1d3"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/roof-proportion.json",
+      "status": "untracked",
+      "sha256": "1e33242211431f736523484c75cbf8df4121b3d8839aeaad3179a7ae8da40c01"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/source-summary.json",
+      "status": "untracked",
+      "sha256": "c11fd481819898e5af47d1dda8df0994e6933053cbac8a91310ca663996b31a0"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/support-d0.bin",
+      "status": "untracked",
+      "sha256": "ce2d1b771ffd3e7bcb5d12ee5f6fd667269f600b4843eb13a501c39a6d30eb2b"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/support-d1.bin",
+      "status": "untracked",
+      "sha256": "3c139293052bdc9488d112e7210ff67966c5c9698ab8418d85728e77f8f1f2e3"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/support-d2.bin",
+      "status": "untracked",
+      "sha256": "fc11aa5e4fb2f1e8043d1c80bfe14e981c73d67b82606d40e0656de080024248"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/support-d3.bin",
+      "status": "untracked",
+      "sha256": "f2fb3a34e4551735d751ba4dfa666452b3b13c81782e148551a0ebcd77f8380f"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/sikhye/visual-review.json",
+      "status": "untracked",
+      "sha256": "6820f5e2a2ce7e42a48dc530a7cd50a14b81d4ec6d305851d3bf8cbc3978697f"
+    },
+    {
+      "path": "docs/assets/handovers/lodging-food-v2/user-acceptance.json",
+      "status": "untracked",
+      "sha256": "b5cde12db34483e8855296e551631833cb644c8bce760700251d8ae2c2be75f0"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/MAIN-NPC-RENDER.md",
+      "status": "untracked",
+      "sha256": "9132ec0b4ce2056cad75c8261d69a2bbb14b4348b7e3ff7ab4bec251d734739c"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/MAIN-NPC-SIM.md",
+      "status": "untracked",
+      "sha256": "e2b870625626af10d6c1a1a6316d837a473849df8bacc0ae4a1c3559593ff84f"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/NPC-MOTION-FOLLOWUP.md",
+      "status": "untracked",
+      "sha256": "4b22dbc91af1d7c10f3d8cacb8f30e13481c124e9f8c5440aff139d9b9473f76"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/README.md",
+      "status": "untracked",
+      "sha256": "c8f9ce91d677e2411e328b6013ecb1bb976f8b48d3fde021313d01c1643e0017"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/STAGE-UPGRADES.md",
+      "status": "untracked",
+      "sha256": "0e8fa7f60b78b74dff9ea888743afe93a3da7983f4eb6ca4cdb06908d9d37c15"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/activity.mjs",
+      "status": "untracked",
+      "sha256": "b28fc9a03ca20db6ca418b2270e7c029c93a345af1031b330a40340085413107"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/attendants/REPORT.md",
+      "status": "untracked",
+      "sha256": "23749e57192e9b7bb7bfa4e65776e0d61067053432b96850180bf02abf7f3281"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/attendants/anchors.json",
+      "status": "untracked",
+      "sha256": "cb007853e6e8b28f0bdc21ae1121dd2ea204738196f3456a0a6ee3e0c7d5185a"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/attendants/audit-export.py",
+      "status": "untracked",
+      "sha256": "f8549db05ecbad3f544aace6030341d24f2f7682602912468215d9be4c171fb4"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/attendants/clearance.json",
+      "status": "untracked",
+      "sha256": "61958f389dbb35744247c2375de4528b771a22c13d59e14d2c01a6546f796134"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/attendants/evidence.json",
+      "status": "untracked",
+      "sha256": "1770180665ef016bb74d939f46c508d583b73ec13cdad522233f668f76eda02a"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/attendants/export.log",
+      "status": "untracked",
+      "sha256": "9e1d05c3e490cd317e7c7a527bd063ffd697a8634a2dff12e98746a551e82175"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/attendants/verify.py",
+      "status": "untracked",
+      "sha256": "ab42e83f12ef6c4796665665d62e699a8558c92b06ab8d7f02891a55183f7785"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/base-motion.mjs",
+      "status": "untracked",
+      "sha256": "89fef30bdbadfd7a750114e62ebe6a2af98761b148163dab637036aaad83f2c4"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/bungee_jump/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "e867196258933eb89be57e80bf1f71c337597877e2ec9c03201a36b6fc0026ca"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/bungee_jump/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "0a1c2862d4d750aa7db735e8a7a8f97f808195e09477548a08d8246957d0202c"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/bungee_jump/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "d91e81879dbca75ad84845c47c06f3335c8ba14f19e1604736f6454d1645fe59"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/bungee_jump/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "37ce0c60f46451170cfa0fdcc8516cee35cbc704bf4818d02ac3ed52e81150ae"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/bungee_jump/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "f1c702cbf05dee7d6da7c073e15fad7f1e58530423cfc598e6eb59e6fce54435"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/bungee_jump/interaction.json",
+      "status": "untracked",
+      "sha256": "07c594759bf1e4c775181f6a932461ef51b4fe967db335eacab7c944f1e60dc7"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/bungee_jump/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "48e44e2b621f0718f3e54f2970c0e2c263b4fe5712414f459de81a00d30ca38d"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/bungee_jump/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "3e35e7215a2cabe3cb92a26a85ac2fe6fc0d0aa4451bca9599b62fca810ff2e3"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/bungee_jump/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "4215e0bb276ac3144a66dd718e229f995cc7fe851969f0847ab8ab9d2460e9a2"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/bungee_jump/review-contract.json",
+      "status": "untracked",
+      "sha256": "c9eb1995ae85bbad209e5706a9728066a6006f029a5e1823164b29a1b54203de"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/bungee_jump/support-d0.bin",
+      "status": "untracked",
+      "sha256": "a1cfe35733b02c47d11d44350102f50e98dc5f2b7f6491b1e06e81eabbad9f83"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/bungee_jump/support-d1.bin",
+      "status": "untracked",
+      "sha256": "12799e5f3a55249f44fd839321018fb826f46a7914faf1109f1cc1705ad59ac2"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/bungee_jump/support-d2.bin",
+      "status": "untracked",
+      "sha256": "934a58cf70170519c57efe0f42fc030058b9060b37792a53251c5b0ae8d60b76"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/bungee_jump/support-d3.bin",
+      "status": "untracked",
+      "sha256": "fe4ce93b68c255b5b2ec012a50af9b104f7790ce926ba10e45a821ddb8537538"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/interaction-contracts.json",
+      "status": "untracked",
+      "sha256": "c194240e9ff4e6415855b26f9c42712e3abe49ff48384ed92d41b5c6854ee3ee"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/jetski-mobile-viewport.png",
+      "status": "untracked",
+      "sha256": "1f472f7d1bcb85955d912fa0e520583b7ccb820277d78f4464264ec2f306f831"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/long-bot-check.log",
+      "status": "untracked",
+      "sha256": "230a8dd24e4a5cf26a9ffa19c944dadfa64cc376fa2da33e84a8ff5823939a9c"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/long-bot-check.ts",
+      "status": "untracked",
+      "sha256": "cf754d21c09687e4e2c9d3ad70122492e1167d16f41eb07db3498773c523ef5e"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/main-crowd-browser-qa.json",
+      "status": "untracked",
+      "sha256": "fd655da410ba8f28a33d50ea917098e538d5d5ae0dd93ac50d929a8cc4f57991"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/main-crowd-contact-board.png",
+      "status": "untracked",
+      "sha256": "f27fac241d09ac720cbcd011e5cc46b1fcbfcb709c91d241d5d1d8cbfff40267"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/main-final-build.log",
+      "status": "untracked",
+      "sha256": "aa6b919d72fb585e73d9aaad92d2f8be0912e975accae5a1d653947627275419"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/main-final-catalog-qa.json",
+      "status": "untracked",
+      "sha256": "ea30550a6a85a15b3002ca6e98b54231b9c7f6eee2129a4f0aeb6ab95bccab5a"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/main-final-ui.log",
+      "status": "untracked",
+      "sha256": "f152652c40cffe47983662dcea9c8c25a4a62167654569e42a7868417b3b9292"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/main-full-tests.log",
+      "status": "untracked",
+      "sha256": "85a277e5fb46bc5c5fa0157b4f801e1b5a952aab253d3ba45cb764ca33e78b68"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/main-integration-hashes.json",
+      "status": "untracked",
+      "sha256": "055b0e7ca8cc317654fc6f66437a4eafeafa6af31417ceeb8e906b6550b9d834"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/main-npc-browser-qa.json",
+      "status": "untracked",
+      "sha256": "29a5424776027d71e75f5a028d85ca653dc31a152234fe2dbdfdec117c5d47c6"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/main-npc-contact-board.png",
+      "status": "untracked",
+      "sha256": "b530d43c029d8e4c5c19def380595849e202d7b3fc4eff39003425f7b3b4f0eb"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/main-staff-browser-qa.json",
+      "status": "untracked",
+      "sha256": "2a6904006e8523e10a1dfd7915ae1f8fc0c9dc7d1391d74c6d307dd91c4f7127"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/main-staff-four-facing.png",
+      "status": "untracked",
+      "sha256": "0bea305fd11bbbf21212c50860732b788cb638b11f228e3b9efa4c41814b6a1f"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/npc-table-mobile-browser.json",
+      "status": "untracked",
+      "sha256": "513f3d988300b104cdf1e66826c38c3e916a0b8eb611d98f7aa69c0f77190744"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/npc-table-mobile-tests.log",
+      "status": "untracked",
+      "sha256": "a00be14362743f28dbf170d3abdaa2cb5abd1349c307ede8437e5d2903fc73f0"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "505564e5c895755a0ef4805ffb248aa4ee2548dcec0a34b38d25317e8c4bc9cb"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "7bd19b6d0ac23505e09ab98391aaed9df2baf124423e56d89a83f99c6fdefb69"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "096230d2bc37f0475bed2cd5e16f35264a3e899d47feea03319758fbfd6d8528"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "5cebfcf9fe4dc89bde1693ad0632a7ffc2da0f60020a4b6afb30833c3da61a74"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "c3ebd6447a6e30ca0ab5772d4812610aa51bd6cae0eb42812ffafa670c02289c"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/interaction.json",
+      "status": "untracked",
+      "sha256": "898a6c35e8a133cf5ab3d9cc3f06cdf6be77fe86c954f5872b920f3fe7ff4533"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "e05e65c161dcc6a64b629563bb14fecd01db340fce62ac75c904e326a7bf713d"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "4aef63b6d004223c62acb6a0efa4d7f1863c34316f9317b4b64cefe1069d43ae"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "c33a1ecf8fa5f229ca8d52b815d5ff57b9582c6a3deb92faf8dd20373c0f4f96"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/review-contract.json",
+      "status": "untracked",
+      "sha256": "72a42d70e3b6a5a03bd856dad6514b77499a0c3c0819fd1bc7f5fa3d0364fd34"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/roof-proportion.json",
+      "status": "untracked",
+      "sha256": "13b1b0a338ec4b662a21baee40f658419f4c432e074cfc4b535b8ab3f4d3eb96"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/support-d0.bin",
+      "status": "untracked",
+      "sha256": "ee78d23f1ea952f726e21cf0562d31e894195ef73de1963eabba121d5a98f0c4"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/support-d1.bin",
+      "status": "untracked",
+      "sha256": "3123bf49558b887d590cf318e95b7bbdb386c75a8bad9a0dd1e6bac50ce350ad"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/support-d2.bin",
+      "status": "untracked",
+      "sha256": "7467e945177ef1afe6bb85db8058027974346c071fcbcc2f04214aa597089aba"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/pavilion/support-d3.bin",
+      "status": "untracked",
+      "sha256": "6ead4c2619c614ea51194c8327e86590744e0ebd5ea937df9f0ad68043436fe8"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/photozone/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "626c065424cf66d24ac9b43fe9e16de9173cb4f544b435650c87ebd2ad01cf91"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/photozone/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "a13a217ce5f092b71b619202c21bd3eb88f5a6030b97ef781cf26f75002329d5"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/photozone/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "77166469155003983bb693116560f3814cb2b028e51c9ce9e2072c837dacec6c"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/photozone/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "8710d091ae24a1ad55dc3fba7a83a6af7445d4f544e08cf5b515d8dcf982b750"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/photozone/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "2184f4763eea4067a4ff45d7a21951045b8a419ba97f6f393ae67765f7f92d16"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/photozone/interaction.json",
+      "status": "untracked",
+      "sha256": "dfd0278d5693c382c48caabfa774913c56d7bcd41838d55c5137495a66a215e4"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/photozone/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "e2542df1c9c22c29fb01e0f92ba5177b9413d0c1aa761c975379c6ac623d2f3e"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/photozone/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "8871157d129422e148b794e267b0a5263f704e82f6447b85e94cc20a92250437"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/photozone/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "8575b954340d83fe9258f454cf1295eb44068aa9d2ffe4e45e9edc62ba8ad1e2"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/photozone/review-contract.json",
+      "status": "untracked",
+      "sha256": "532d08d468ce3b80ac9a8c45a41082cbbd87a77719821cb86f0a0d299c5ea406"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/photozone/support-d0.bin",
+      "status": "untracked",
+      "sha256": "b7a91b4188077bba271c07d88c54a4bee9f796ea2eb290888fa64d08b0971199"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/photozone/support-d1.bin",
+      "status": "untracked",
+      "sha256": "f7d263c822c4b74808d1286d2f9d0590b1bc5614f561ebb45182e9bb0c9fcd83"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/photozone/support-d2.bin",
+      "status": "untracked",
+      "sha256": "0e20864a1446a9020d653ac119c953aaa1c1ac1d04e210f1e5ed60fa6493fb56"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/photozone/support-d3.bin",
+      "status": "untracked",
+      "sha256": "1ecee67c26620d3b654e2b293ba81496ac934b61ec59b0e8587cb8231c001752"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/picnic-main.png",
+      "status": "untracked",
+      "sha256": "5b755ac73551fe49b0cb8cfa8d07175df3206ed2fefe482ef6ccfc2b112ff2e5"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/playground/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "880094e52a17ead82c5a2aa9ebe801108fc85c9572ba3edf91595f80f823287f"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/playground/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "bd32a55766edc00bf27eff47d380dd9ee8fd785b6c87463b838daa3edb9d228d"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/playground/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "d1d20a42b584acc528b7b4b0e608edcdf54ec769f9762cceee81f21beee9e1d9"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/playground/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "1880d159059d85d023840df97219b7d756edb1768542dcc3980397586c09e7ea"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/playground/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "d03904cef7799a68f82f2ea3d48e09bda02d1051d893fdeee5dfe7392bcca4b5"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/playground/interaction.json",
+      "status": "untracked",
+      "sha256": "8f03530e749b0d931cb64661092e221f45e261be2b93f84804076a54173ee149"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/playground/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "10a80499f21bf400a9298bbf0a04f4f29296143ce032bf4f36a7f6a59fc51e0d"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/playground/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "8871157d129422e148b794e267b0a5263f704e82f6447b85e94cc20a92250437"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/playground/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "fc7463c66c4528f0595244f60e5fedb63e843bc2bbd9d411c8238f807abf4bc1"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/playground/review-contract.json",
+      "status": "untracked",
+      "sha256": "7880eb45b8411f93a0684c39a82c02a96b02cebed5beae9dc6bcd8874dfade15"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/playground/support-d0.bin",
+      "status": "untracked",
+      "sha256": "280dd209f94556a1399857b50d619ab41b0b5a7810fe49df2eafd4311d9139bc"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/playground/support-d1.bin",
+      "status": "untracked",
+      "sha256": "53e60811541fa633bf31dfdc5c8ef499cd3505890ddcb6de35f7436ca369735c"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/playground/support-d2.bin",
+      "status": "untracked",
+      "sha256": "6119ef5112de0a2fcb8d71c8be8f553f6ce2e687df5d6527c61fbed49e331b9c"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/playground/support-d3.bin",
+      "status": "untracked",
+      "sha256": "2b1ae79773a9f6d8a8b6c0df8bcb74fd8e42c92cff198ffac5de2055a3cd2197"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/review.mjs",
+      "status": "untracked",
+      "sha256": "7963ac9be1dbc1f8f7ddb98521a44bff00821b48bf9c2d659f177f938afbbc18"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage-upgrade-contract.json",
+      "status": "untracked",
+      "sha256": "be6b2e493ecc6586252e90732f1177a91efece2503bb3fca794b877afd9a7232"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv1/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "ed4679306a1b32ed895d79717c9aa81543fb475c2d9ca475a983ff03950a9be9"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv1/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "2c826346012f4a9c8fc55b21ee12c57fbff9e05dbefeaedd15be54a16dcd1820"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv1/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "ae72ab9c2d33b7054a1e35f9e02623a7a959a93fda8eee3a04fd144762092d7c"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv1/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "9b3c915b0b61d2f9303bb084678ff60b4a850a284a8b43f4faa8bf83d95fa2ba"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv1/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "a5e68b1b51b259a198a25b091942fc2f56a037cff5f58b903a954ea279f61435"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv1/interaction.json",
+      "status": "untracked",
+      "sha256": "ac1d557e66231197315141e0d65f4d55343c9cba5ab1eea106dab62148881c7a"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv1/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "a3f14aae954cb2a6dbcd5a5e562aa21438923aa143f29806fe7b58b3152c4cda"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv1/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "b4a53083e1ef40a7e09fcd29af137d9783bf478c191f63a7e131a9b7c72b7ad3"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv1/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "6150a69cdbf176a9337084001b065d8943aba78a30ebdb870be1d929d5f05d4f"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv1/review-contract.json",
+      "status": "untracked",
+      "sha256": "5855782b14a755973d2b79f8474c976b6b2cbdebb69404c7c8cba6d07a59ae93"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv1/support-d0.bin",
+      "status": "untracked",
+      "sha256": "4f0fb5fc008dbc64b157e82220ecebc913e5b81b091845649ed333bd903470e8"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv1/support-d1.bin",
+      "status": "untracked",
+      "sha256": "8d6ace2248027e845bee83b46a49c9507b20e61e9f87c2315d46954cd3b94ea8"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv1/support-d2.bin",
+      "status": "untracked",
+      "sha256": "a15c3f82c1b652acfd8b1d7816b94d6e7e68e6a9cd63d0fc879d7cfd8d575f74"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv1/support-d3.bin",
+      "status": "untracked",
+      "sha256": "0341b8a64e007485ea7813467a0b7de55661aefb130205113f39b77c5e5d53d8"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "5cfbc716005f0060b4301c35331b73c471c17b93122beb1ecc317dc52ef2185b"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "f6f5568a5e79460ffcd0acac76810ef15b0095affad51ba65eacd57ada53d84e"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "3c85f9bd3c2ed3e4019f2a8eac140c905ef8383c920e65ca5f783a8979332ef6"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "afece243e39e064cbc14500a3ea0a4051ce69942231ff8891589215fba8fa8f9"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "f247bdd440c6ddaa49bf3e1a15d718646b4e3676c378c81cfae33ad9157cc2f2"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/interaction.json",
+      "status": "untracked",
+      "sha256": "ec53307afe82429fa768c84fca1dd2aabcc413ac33e9064ce2371437d04d96c4"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "bc3a7bd47ffcba90219763bfc02a595cb2afe6516c085f54f904a482a14ed45f"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "87449c6c9f8febadab727dbaa3fa539e771bb567bdec4ae1a3da79df509f89b3"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "0fb9fe7d1a561fd4f276f619578bead05cd2063f8157fc715404f39431d08127"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/review-contract.json",
+      "status": "untracked",
+      "sha256": "10bee98d4b53f84d8f7bb54fe4def14dfe00b46a6a85bf46662e1db9406728a5"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/roof-proportion.json",
+      "status": "untracked",
+      "sha256": "602a863f29a51785de8d3823f580a2c16aac095fd4328c36213b9eb18e3777f7"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/support-d0.bin",
+      "status": "untracked",
+      "sha256": "d14cf34adc42b6349526ee277ebdfd388dfa4646b1446b75a62b101f0eebae2c"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/support-d1.bin",
+      "status": "untracked",
+      "sha256": "d5c7fa43abdd583343494ccc1dab33cfdb1b11c2b0e54bf6db2faec9a2dbaa7b"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/support-d2.bin",
+      "status": "untracked",
+      "sha256": "2f0dcdacec19b64249933fb34edb5f9026ffc394d078ac55d43decf8f2eae69f"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv2/support-d3.bin",
+      "status": "untracked",
+      "sha256": "8c2b632bc876aa1636cd1a96b3951cef8a26245e8a6ea287f5d3cb8ca10fe217"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "092de43492ffad80e0b17a2385e1df50948a20acdbb855a975e03add6edc92f8"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "69b18fbb68f740363dd1436415b716faccb0b48ef1ed26333e421306387e7a36"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "d78ea07e67e569245814452e37d847a5a9e6f855cbc306cf9c1fd175b1c977e0"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "54d9e606baeebfe3a967da4965aa768708f0eed564f6059c80db46bfc582206b"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "8f5fe4cfee8c952d3d15eef8db8b3d05947b3b57ecaa2ce29db5700a28ee120c"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/interaction.json",
+      "status": "untracked",
+      "sha256": "d35aea28a6a85356b9b4c27cc4d00ab12b3c9513eee3ed7d7a6624d1f2833981"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/landmark-correspondence.json",
+      "status": "untracked",
+      "sha256": "fce37daede2b8d137186fe12faf1baddccaf7b689b6ff13039ff4ba844c73e10"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/physical-rotations.json",
+      "status": "untracked",
+      "sha256": "c85c7d5e66d777eb4edfd6a854eb2c44d66e4219d6e879105ad35ef4f9bb0bb7"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "c11aa27874f3d0a14eaaa5af66b45e279d3d4db7ef766d4ec1c6c538692dde2a"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/review-contract.json",
+      "status": "untracked",
+      "sha256": "b237bb43ad87ecf62550e830af8866d5d9e887ca8fe9f53456c1edb091160d79"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/roof-proportion.json",
+      "status": "untracked",
+      "sha256": "4f633d1a5848f0bcc04bb397aae297ea0c9a54bda256aa34c57b66fc024b757d"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/support-d0.bin",
+      "status": "untracked",
+      "sha256": "4867a400dfa279a00cbca23a6a9ce701a7a06023674d29758e8efc8d1ab26f76"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/support-d1.bin",
+      "status": "untracked",
+      "sha256": "b787dcd079d25a7e0afdea314943b021fed7481b04ab2dac221fb6c394c707e3"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/support-d2.bin",
+      "status": "untracked",
+      "sha256": "7655710fcf43c8520d668a6f8f9d783225f54487732d4d455ab9bbc0b47208d6"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/stage_river_lv3/support-d3.bin",
+      "status": "untracked",
+      "sha256": "99797048db1a42f1d7ba5f0916387359c20e869ab3d851dd0a341b6ffe7672c8"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/user-acceptance.json",
+      "status": "untracked",
+      "sha256": "6be8cb06f535ea86b35c008bcc4afc17763d260446aae824c2cc7095e7265abc"
+    },
+    {
+      "path": "docs/assets/handovers/outdoor-play-v1/validation.json",
+      "status": "untracked",
+      "sha256": "0bd54305d14c292256afd395a3aec2e1905e7f758a55e7d9c8c2ce163c6c3337"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/README.md",
+      "status": "untracked",
+      "sha256": "9d7c8698199d09c21c3e269863fcb6866b32c837d50ef9adf78b2a55c53e1cf7"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/main-catalog.png",
+      "status": "untracked",
+      "sha256": "c2a3f64467cc3e078651c8ebe60eee4ebd0e3a54fafde86552f9adc319c06673"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/main-qa.json",
+      "status": "untracked",
+      "sha256": "4e65830681adceba5c251e7c0dc17ee2ce4e04bbda4605a40c26d98674e302d0"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/source-occupied-qa.json",
+      "status": "untracked",
+      "sha256": "e0296fefcecd804ff1a91c5be18371d12f9dbff5fcd1f2bddb769e8e765a5bbf"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/watchtower/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "a5f559515275e813a9acdd571a8532cbff7824c2ce1d5bfd82471f54d77ce9cc"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/watchtower/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "53d91fea1466887a91428714ed77b7db80aa8048f08e93f5621c605cc10abe70"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/watchtower/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "f23b4417b07f9acf6ce2cef8fb4b9a15f2f9a1397a88c03da866e32c4608e183"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/watchtower/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "4bdbe0105425ec06d76b04ba8e5d3e8077c3e3445db44b25c9d1fdcf4930ce8b"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/watchtower/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "987ac751c14cf1a5f7b27c3cf4cf774d66195bedc1ffb8e6e98de2464b52385b"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/watchtower/interaction.json",
+      "status": "untracked",
+      "sha256": "36650e8e4af15b6dd263d66dc440217ba3ede6a2f6e0111b1002f863b8b53b2f"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/watchtower/presentation-qa.json",
+      "status": "untracked",
+      "sha256": "6b430227a9973345811f4529294d16950cc12761322ad9aaa91fe876be0dfe1a"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/watchtower/review-contract.json",
+      "status": "untracked",
+      "sha256": "f65788932aae238ce07fe8ced3f18380839c1798c7d0bb347c6d571bb13b5f18"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/watchtower/support-d0.bin",
+      "status": "untracked",
+      "sha256": "a5f559515275e813a9acdd571a8532cbff7824c2ce1d5bfd82471f54d77ce9cc"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/watchtower/support-d1.bin",
+      "status": "untracked",
+      "sha256": "53d91fea1466887a91428714ed77b7db80aa8048f08e93f5621c605cc10abe70"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/watchtower/support-d2.bin",
+      "status": "untracked",
+      "sha256": "f23b4417b07f9acf6ce2cef8fb4b9a15f2f9a1397a88c03da866e32c4608e183"
+    },
+    {
+      "path": "docs/assets/handovers/watchtower-v1/watchtower/support-d3.bin",
+      "status": "untracked",
+      "sha256": "4bdbe0105425ec06d76b04ba8e5d3e8077c3e3445db44b25c9d1fdcf4930ce8b"
+    },
+    {
+      "path": "docs/assets/plans/2026-09-20-play-photo-stage.md",
+      "status": "untracked",
+      "sha256": "91dcb2747bebc562b8b1db2bd355e39945993b0e78d5850cdaf6699e7825a56e"
+    },
+    {
+      "path": "ppaji/public/asset-reviews/indoor-facilities-20260919.html",
+      "status": "untracked",
+      "sha256": "524bab114c41b6334fad42909fec0f96cf7650977abf46bf885b641ec81bc3e6"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/arcade/native-d0.png",
+      "status": "untracked",
+      "sha256": "03156923e6a4f5d824a2fc89a491a68975101e347cc73026cc04fda9fc5824c0"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/arcade/native-d1.png",
+      "status": "untracked",
+      "sha256": "8b06222ccff7353c36bf26e872236b360d4957c866ceea7b717fb234b0e2c7ec"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/arcade/native-d2.png",
+      "status": "untracked",
+      "sha256": "d09f24acec0e064eab1ead8d772fdde32d4acfbfb40c3773ffbb29597b02485b"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/arcade/native-d3.png",
+      "status": "untracked",
+      "sha256": "e55fbc1432fa4daf82bbb39a28b36f4a792b780a1ab389082a024019526961c2"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_changing_row/native-d0.png",
+      "status": "untracked",
+      "sha256": "cd03de173f6f6c1bdf213d2ed3251fa5fc08670cf16f2733293eeea5a2521ef5"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_changing_row/native-d1.png",
+      "status": "untracked",
+      "sha256": "74978b4a3134704a7e4bb0f41c2585016d95835024f37b66f983811ead32662c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_changing_row/native-d2.png",
+      "status": "untracked",
+      "sha256": "2247f04b593ed807043a93a0e636fc927d42280ecca7293985635eb7fbaad834"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_changing_row/native-d3.png",
+      "status": "untracked",
+      "sha256": "1ac4488250bb9b97dc48e79629ccf75d07eaee7f13a5437b84be0a93cebf4ea6"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_infirmary/native-d0.png",
+      "status": "untracked",
+      "sha256": "4834e82cd32fe725ed3f6f36e7099bbb3145daec8cd35866831fbc82a6eb8d8d"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_infirmary/native-d1.png",
+      "status": "untracked",
+      "sha256": "8dc9514332b263b35131a106fe563930aad0695340d31b7f351565d9a0be3b60"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_infirmary/native-d2.png",
+      "status": "untracked",
+      "sha256": "c9f5cd3633705953fa32b3a3c3cc65b5c81e5cc60b8d9e9fcfa02887b34091b5"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_infirmary/native-d3.png",
+      "status": "untracked",
+      "sha256": "a6ea469c596abaf81077cc37a8350cae8a892b4493919876ba5b795facdae8fa"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_karaoke/native-d0.png",
+      "status": "untracked",
+      "sha256": "95ecb644256f7f27789c3aaaaf55ef3e0aeafa59d4f8f981b7211adf6b114db1"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_karaoke/native-d1.png",
+      "status": "untracked",
+      "sha256": "bf3700a74bcddf51ce9ff600915be77d1b3e8da862950d0d05a459fdf8531395"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_karaoke/native-d2.png",
+      "status": "untracked",
+      "sha256": "58f1ccd55730ebc872b9abb2521c990ffe71cc2d5b334239a6ed75c5ccdf6860"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_karaoke/native-d3.png",
+      "status": "untracked",
+      "sha256": "af3aa32f71b5828b10c83256b6aeb5c3b6ced588f18f0c85e1e94474046fc280"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_locker_row/native-d0.png",
+      "status": "untracked",
+      "sha256": "9057603b3fcc2868c8118466b964bd5ff0b182584242b0164cb9af05847b84ee"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_locker_row/native-d1.png",
+      "status": "untracked",
+      "sha256": "8dab6e85b082749521e09886357bf055628a4002baa80457a4f7523c7129dba7"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_locker_row/native-d2.png",
+      "status": "untracked",
+      "sha256": "ad9ec7e5b7241c635ad09eab67a9e5e8f00bb6ee98de571656c4f7cb7154ee39"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_locker_row/native-d3.png",
+      "status": "untracked",
+      "sha256": "6f9e451fd7a94e7f3a9331abf03390da3242de2f637254ae7e0283ac512e0c48"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_shower_row/native-d0.png",
+      "status": "untracked",
+      "sha256": "004bcf321a81381bb17e6b56f5b7846891d6c33debe1d16c86d8765be0d73d26"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_shower_row/native-d1.png",
+      "status": "untracked",
+      "sha256": "7aecbd18b29ffe1d595dd23a376282773c05c4ab25bbabc04672df548b60ca58"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_shower_row/native-d2.png",
+      "status": "untracked",
+      "sha256": "8f6c1cce28b9345f55c8170ec57971a1747feccc52c59c74eb77446abfc2f3a6"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/authored_shower_row/native-d3.png",
+      "status": "untracked",
+      "sha256": "4f2fa96ccc8067e9d202f16d6090bd5cb8270a259cd98b9b2dcb93dc6ebb6ba3"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungee_jump/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "e867196258933eb89be57e80bf1f71c337597877e2ec9c03201a36b6fc0026ca"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungee_jump/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "0a1c2862d4d750aa7db735e8a7a8f97f808195e09477548a08d8246957d0202c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungee_jump/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "d91e81879dbca75ad84845c47c06f3335c8ba14f19e1604736f6454d1645fe59"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungee_jump/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "37ce0c60f46451170cfa0fdcc8516cee35cbc704bf4818d02ac3ed52e81150ae"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungee_jump/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "f1c702cbf05dee7d6da7c073e15fad7f1e58530423cfc598e6eb59e6fce54435"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungee_jump/interaction.json",
+      "status": "untracked",
+      "sha256": "07c594759bf1e4c775181f6a932461ef51b4fe967db335eacab7c944f1e60dc7"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungee_jump/native-d0.png",
+      "status": "untracked",
+      "sha256": "589fafb0e580663f535083a729b84399c4a0ed2c3ccb527a152f8be20abe3bb1"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungee_jump/native-d1.png",
+      "status": "untracked",
+      "sha256": "ed498d3f4f64558a9638e36bb02d9597e875cb94de0ca165b959acdd5561948c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungee_jump/native-d2.png",
+      "status": "untracked",
+      "sha256": "8e5a1912c55859a5906bd3cc0d5b4e248c6c07de1c188071f10fb100d5bcd610"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungee_jump/native-d3.png",
+      "status": "untracked",
+      "sha256": "597b7919ef2441062e3e9117065c55d0cb3a58edc1b2d9c145b2259ab5997a9b"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungee_jump/support-d0.bin",
+      "status": "untracked",
+      "sha256": "a1cfe35733b02c47d11d44350102f50e98dc5f2b7f6491b1e06e81eabbad9f83"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungee_jump/support-d1.bin",
+      "status": "untracked",
+      "sha256": "12799e5f3a55249f44fd839321018fb826f46a7914faf1109f1cc1705ad59ac2"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungee_jump/support-d2.bin",
+      "status": "untracked",
+      "sha256": "934a58cf70170519c57efe0f42fc030058b9060b37792a53251c5b0ae8d60b76"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungee_jump/support-d3.bin",
+      "status": "untracked",
+      "sha256": "fe4ce93b68c255b5b2ec012a50af9b104f7790ce926ba10e45a821ddb8537538"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungeoppang/native-d0.png",
+      "status": "untracked",
+      "sha256": "77aecc49e31555309adec83f830140c4ffe344b42915281401ca615f90625eef"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungeoppang/native-d1.png",
+      "status": "untracked",
+      "sha256": "1fd3f7d0fe6ba7d9c59d7411e7d60c4d751c02d96111d3414a7d64f189865e9a"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungeoppang/native-d2.png",
+      "status": "untracked",
+      "sha256": "7af8a255918b22534d069e32dc5a3d2b917fc1d6a1835f12450fb415e2c28498"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/bungeoppang/native-d3.png",
+      "status": "untracked",
+      "sha256": "e6db5cc72faec09eee1b585e1ea3a6b69a677e6fd6f60b99688d1956b7a09489"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/cafe/native-d0.png",
+      "status": "modified",
+      "sha256": "38c89373bad8b32ee2dfb6e02e29845cb214faeb114924592c87ab10491f25a5"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/cafe/native-d1.png",
+      "status": "modified",
+      "sha256": "9e9b3629968502c8a792d01a1a4ce97aaf89fba42bef5762ae0864d3b1257ec6"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/cafe/native-d2.png",
+      "status": "modified",
+      "sha256": "f6b7d4a219213f5cdd82e1caed97c4fd3d57dda123f54dc1511b4641bbdf402d"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/cafe/native-d3.png",
+      "status": "modified",
+      "sha256": "2883000888c9892a37a32f2773515854dcde9cb104f9f7eb39b69f2f9c11da9c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/cafe_lv2/native-d0.png",
+      "status": "untracked",
+      "sha256": "cc3814b8efcc4a874cfafdedbb37ba987effef7c1a2eb243cfd16b464e821e08"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/cafe_lv2/native-d1.png",
+      "status": "untracked",
+      "sha256": "78eb5e02655ca4b8dd1a2cc9aa64fc376788959c95a7f6a11f21b6219e9e648b"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/cafe_lv2/native-d2.png",
+      "status": "untracked",
+      "sha256": "08b133777ae40e6e83185feccee27a94eb28c7f7bdd295df7e9258829ea1ddf5"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/cafe_lv2/native-d3.png",
+      "status": "untracked",
+      "sha256": "fd69163ad6869923c1f49ac275ce823bd39edbfb542500d15ae3d13386b3cb08"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/cafe_lv3/native-d0.png",
+      "status": "untracked",
+      "sha256": "8b52118af2cdfb035d23325d69048eba6bd8ea8e5d4f29587762e86c4c22c2e8"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/cafe_lv3/native-d1.png",
+      "status": "untracked",
+      "sha256": "e8b86be22c6c869e7a9fa59c85c075d43e2e9da4a4461a169c95401193bc2105"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/cafe_lv3/native-d2.png",
+      "status": "untracked",
+      "sha256": "88c411217cc43934309feed371ed47b4d3dcd6ae7bfed2a6c403a526658f0aa8"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/cafe_lv3/native-d3.png",
+      "status": "untracked",
+      "sha256": "b9f58ad1db01aacbec57246b7dbc652689411adefc61f8a40d62aeffb6e68dc9"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/chicken/native-d0.png",
+      "status": "untracked",
+      "sha256": "daef0372d4071f7f4a86af18534273b6ca1e08b6d8ad71e6f3c9b860b6545a63"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/chicken/native-d1.png",
+      "status": "untracked",
+      "sha256": "444662a740d7bf4a2fcaaac2d6de79ca6050c6a40140e3b71cab9e70570cb1da"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/chicken/native-d2.png",
+      "status": "untracked",
+      "sha256": "6bccf5d0b27a32d4fb80d6db08f96a0fc7513e6bb2f436b720e52f4b40fc847a"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/chicken/native-d3.png",
+      "status": "untracked",
+      "sha256": "b6ec611c729b331693e9f894592d8b9a30be8ea49de3a6d3cb3b9c622bff50ac"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/dry_room/native-d0.png",
+      "status": "untracked",
+      "sha256": "0ff3bb225829502a085bf0a9ff665e06bbdf6387fcd72eb775e5fd494f01832d"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/dry_room/native-d1.png",
+      "status": "untracked",
+      "sha256": "192dade02fde2a18328232f0f18379acbe6c72cc4a666ca0f52c8a3b7183941e"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/dry_room/native-d2.png",
+      "status": "untracked",
+      "sha256": "e949325e4f78cf242997a46d534a6e9cb41089a95c491852ac818ceb628a9c25"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/dry_room/native-d3.png",
+      "status": "untracked",
+      "sha256": "99ed2b633c817a52c8ffd619952f8ee7009baed7e1168e0afb30b549e093e350"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/firepit_row/native-d0.png",
+      "status": "untracked",
+      "sha256": "f993a87237af3a693336ed17389072519d5807e51090dada0e54c7506479e943"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/firepit_row/native-d1.png",
+      "status": "untracked",
+      "sha256": "31d0a3fd50fa221d7993849949d018f5052d51bbd0cc59a22b68614177a94c51"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/firepit_row/native-d2.png",
+      "status": "untracked",
+      "sha256": "4acf2d19b331f88ab4dd124cc2faeb03f285edf30825ccb4d13f3dff5e01a7cc"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/firepit_row/native-d3.png",
+      "status": "untracked",
+      "sha256": "6eac214a4e059684d8585c11749a426b95c567cf4fe202b96cd14a30be895754"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/foodcourt_seat/native-d0.png",
+      "status": "untracked",
+      "sha256": "6757cc3ed4c734ed8b413c9c679b976f7f8dd4528d59078b0211c5635435aead"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/foodcourt_seat/native-d1.png",
+      "status": "untracked",
+      "sha256": "9efa9d8a246f8763281e9f3a5fe203ad16fa0428e69313cc6f86f8fd8cfad2bd"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/foodcourt_seat/native-d2.png",
+      "status": "untracked",
+      "sha256": "1e1b170c5a2b80567095744c6cb802f6e66d6370df2d473707848821f651ba91"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/foodcourt_seat/native-d3.png",
+      "status": "untracked",
+      "sha256": "9b4be8678e3fbf5f8082149f3bcaf57cc5e542f24b1c573afe11a5332cc37964"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/icecream/native-d0.png",
+      "status": "untracked",
+      "sha256": "d5eba860b9d69dd7d1f21f14518289cda7d87a85a2fd35ea3d4e7b798154be8f"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/icecream/native-d1.png",
+      "status": "untracked",
+      "sha256": "be2675c0a000ffc9e599ba96a0013cbd9e922750602555000edc953cab48228f"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/icecream/native-d2.png",
+      "status": "untracked",
+      "sha256": "3ae0992382c5de717ef13766ea9f52e3cc106dee51d893be12ab855c1aebf566"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/icecream/native-d3.png",
+      "status": "untracked",
+      "sha256": "ad9b29c2d99ad708ab7ec9750bb2ae41a51da37adfa8f282b48945448234394f"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor-provenance.json",
+      "status": "untracked",
+      "sha256": "bcc3aaff335c542ae61f0bc998733092164cd7ec31034c33dff783cedc901292"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor-service-provenance.json",
+      "status": "untracked",
+      "sha256": "d9b7e230f56a419afae4e6c612fe00bca49f76250abd9dda3b4eeb39f2bdfb0e"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor_shop/native-d0.png",
+      "status": "untracked",
+      "sha256": "37b23ab5fb08562370b1e48c02bbe19c5856ab869d683745e995aecd38689e21"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor_shop/native-d1.png",
+      "status": "untracked",
+      "sha256": "f62ce6791b3bce0033426c04c51acfbf3288aa1ce8cab8dd0c913c559b1956d5"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor_shop/native-d2.png",
+      "status": "untracked",
+      "sha256": "21f40711e4090bfec7651b6ce360fec69ca741bcc37414fb4b2212f4576bf088"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor_shop/native-d3.png",
+      "status": "untracked",
+      "sha256": "0bdf642d25ed2de2d8041af19dcdc7622552840bfda60fa9569dd9f3f06fcfbb"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor_shop/staff-depth-d0.bin",
+      "status": "untracked",
+      "sha256": "4b5ca3564ba2481482ad044d2a0b3c2b07637c09cdcdf73d67c9a75887a797ba"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor_shop/staff-depth-d1.bin",
+      "status": "untracked",
+      "sha256": "a94fdaf3a85654ef7b2b356d080355bb833c919b2bffc787c0a160c475ff1de3"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor_shop/staff-depth-d2.bin",
+      "status": "untracked",
+      "sha256": "e1dc5efc0e161c851a71ab710fbf14b26ce0b73e733ad93069d21a8b315d77c0"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor_shop/staff-depth-d3.bin",
+      "status": "untracked",
+      "sha256": "e5fd12dd2123a79f32b0845efbeaa4c9b1f4262f89cfd234f53db21a320759c5"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor_shop/staff-depth-metadata.json",
+      "status": "untracked",
+      "sha256": "1fd7e5caf8b96d2859de3158e25edfa8156e42c1649589ef23594d06147c1147"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor_shop/staff-support-d0.bin",
+      "status": "untracked",
+      "sha256": "7ea15c77c276aa2467f41ab1f9fa4af830ae35d20e68e4de4ea2dca80d4cf548"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor_shop/staff-support-d1.bin",
+      "status": "untracked",
+      "sha256": "f4e5d09f97cd19d05bc2e29630e2a89dc1204806f5645701c182a8656bfc762d"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor_shop/staff-support-d2.bin",
+      "status": "untracked",
+      "sha256": "e7aa402ddd155ac799df9ba49480a8bc05be1501433f2af4f73f46e6565e0311"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/indoor_shop/staff-support-d3.bin",
+      "status": "untracked",
+      "sha256": "47d66eb79d5198244e401b781d0c89c10a706603b1478a88b9e8fe27ca146e78"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/info/native-d0.png",
+      "status": "modified",
+      "sha256": "8b6e7acc92447f7d79ee601469ab8d74f28bd22f45a72ba8853e1ad6dae50705"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/info/native-d1.png",
+      "status": "modified",
+      "sha256": "99c8394acd9c729ee9f17a65fbd451120ed0e3d0467b0a4587e021d7090fb6cf"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/info/native-d2.png",
+      "status": "modified",
+      "sha256": "567463f3fdc56ce0cebadaee48e16faf272c93958d4052207f09e460e9cdfe33"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/info/native-d3.png",
+      "status": "modified",
+      "sha256": "f8d32a1a231267a93a8632c0b1e631c6ba77f6eb89eaf8d05609e6ea01cb9b65"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/info/staff-depth-d0.bin",
+      "status": "untracked",
+      "sha256": "2e1c3b5aca3c257d338a3ded7ec906f53219c8fe3ac23d55824ede9a8e6adba1"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/info/staff-depth-d1.bin",
+      "status": "untracked",
+      "sha256": "713d8a5ec7160d4fc2daf14e0c2e8e54ab9f28349edc58707c2e431e292a3c7d"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/info/staff-depth-d2.bin",
+      "status": "untracked",
+      "sha256": "b6cdc92de436c498a2243c58de61fc23a00c760a8438be748a99ed64d3d88b4c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/info/staff-depth-d3.bin",
+      "status": "untracked",
+      "sha256": "aa5eeb2e4dc31109bdcb90247a736ed78cd72c5a0626259e4a4fff8e9adedc67"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/info/staff-depth-metadata.json",
+      "status": "untracked",
+      "sha256": "6ec066f1d263098b9bd62bd523dc98c53c6839741eb46a44655dacb049d1c129"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/info/staff-support-d0.bin",
+      "status": "untracked",
+      "sha256": "2e1c3b5aca3c257d338a3ded7ec906f53219c8fe3ac23d55824ede9a8e6adba1"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/info/staff-support-d1.bin",
+      "status": "untracked",
+      "sha256": "713d8a5ec7160d4fc2daf14e0c2e8e54ab9f28349edc58707c2e431e292a3c7d"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/info/staff-support-d2.bin",
+      "status": "untracked",
+      "sha256": "b6cdc92de436c498a2243c58de61fc23a00c760a8438be748a99ed64d3d88b4c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/info/staff-support-d3.bin",
+      "status": "untracked",
+      "sha256": "aa5eeb2e4dc31109bdcb90247a736ed78cd72c5a0626259e4a4fff8e9adedc67"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/jjimjilbang/native-d0.png",
+      "status": "modified",
+      "sha256": "ac7c53e9342144d223ae424a2a85d79a16667ae3e11df47b4ebdd262084f39d2"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/jjimjilbang/native-d1.png",
+      "status": "modified",
+      "sha256": "a024531f59b311bb500c6efbdf78ab255876f9407943b3f2524cd718bde0b842"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/jjimjilbang/native-d2.png",
+      "status": "modified",
+      "sha256": "7bff30d2a79c3e3a59c39728e9c086861a6bdc9eae777af70cfb14605eeb4667"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/jjimjilbang/native-d3.png",
+      "status": "modified",
+      "sha256": "e71906c8a4d4d95bc5da2077755c05687c1aab32381c3eb69e7fc27353ffedd7"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/lodging-food-provenance.json",
+      "status": "untracked",
+      "sha256": "b42955853f77625c259f7dda5983919b748d451eb527fae29f2c87b1683adc56"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/manifest.json",
+      "status": "modified",
+      "sha256": "27ab99b22065cd4073187a92948d9aac805f7698c961d61cccb38193528462cb"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/office/native-d0.png",
+      "status": "modified",
+      "sha256": "b20602a973fd6f8b9308e310ee6bc6421c1b2889af2eda3896718d1191fd6a17"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/office/native-d1.png",
+      "status": "modified",
+      "sha256": "f61b5184e50946fa13d17e85ae6d4e7ab99a12d66cd36d98f9b888f8844491a4"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/office/native-d2.png",
+      "status": "modified",
+      "sha256": "3dce83ceffc44a552fc46dc90f8cdc03e8d76462b962d5786c6dd5e9283b4f21"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/office/native-d3.png",
+      "status": "modified",
+      "sha256": "1fb1c8d0342df3aaa20c57af4fe0ac74ee208af343b2b5035c7acfabafe59641"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/outdoor-provenance.json",
+      "status": "untracked",
+      "sha256": "922c290ac26c448e319f13da84a221fe05fb1c1e0f5a77f0005cc93dee5f88c5"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pavilion/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "505564e5c895755a0ef4805ffb248aa4ee2548dcec0a34b38d25317e8c4bc9cb"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pavilion/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "7bd19b6d0ac23505e09ab98391aaed9df2baf124423e56d89a83f99c6fdefb69"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pavilion/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "096230d2bc37f0475bed2cd5e16f35264a3e899d47feea03319758fbfd6d8528"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pavilion/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "5cebfcf9fe4dc89bde1693ad0632a7ffc2da0f60020a4b6afb30833c3da61a74"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pavilion/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "c3ebd6447a6e30ca0ab5772d4812610aa51bd6cae0eb42812ffafa670c02289c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pavilion/interaction.json",
+      "status": "untracked",
+      "sha256": "898a6c35e8a133cf5ab3d9cc3f06cdf6be77fe86c954f5872b920f3fe7ff4533"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pavilion/native-d0.png",
+      "status": "modified",
+      "sha256": "dc0ab294598f0d4afcc3a468db8ec5e9c7873eaad32650af6db85e94a50cdd55"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pavilion/native-d1.png",
+      "status": "modified",
+      "sha256": "6d4e1f1e7e41c684159e3c8e507ac3aab396f28d0e8aa9ba0ce31a89a9e7416d"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pavilion/native-d2.png",
+      "status": "modified",
+      "sha256": "a8144e91f39a950c842f6cd81254deb9ff21e57538cfa158c20727f8164bd8df"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pavilion/native-d3.png",
+      "status": "modified",
+      "sha256": "ce546736d23b692aef6198f70cdc7660037ca23dc9a2d9613d6402101118833d"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pavilion/support-d0.bin",
+      "status": "untracked",
+      "sha256": "ee78d23f1ea952f726e21cf0562d31e894195ef73de1963eabba121d5a98f0c4"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pavilion/support-d1.bin",
+      "status": "untracked",
+      "sha256": "3123bf49558b887d590cf318e95b7bbdb386c75a8bad9a0dd1e6bac50ce350ad"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pavilion/support-d2.bin",
+      "status": "untracked",
+      "sha256": "7467e945177ef1afe6bb85db8058027974346c071fcbcc2f04214aa597089aba"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pavilion/support-d3.bin",
+      "status": "untracked",
+      "sha256": "6ead4c2619c614ea51194c8327e86590744e0ebd5ea937df9f0ad68043436fe8"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pension/native-d0.png",
+      "status": "untracked",
+      "sha256": "9da3c1673622e5685ce80b3383589c287c40e789333b95526ed60c3988e4fdcb"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pension/native-d1.png",
+      "status": "untracked",
+      "sha256": "2386edccfdc9470b2e79a97c45ea177e9d4310eb95544b1a05012f87734db818"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pension/native-d2.png",
+      "status": "untracked",
+      "sha256": "888a75f1ea3bc2d2a2e5f31ccb356b9cb47eda75df857ede1b3f20cf8f97cb7e"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pension/native-d3.png",
+      "status": "untracked",
+      "sha256": "ccfba831c5f00677af2af7e1d6d7153b7f39c73889a41bd4248641c215689f30"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pension_1f/native-d0.png",
+      "status": "untracked",
+      "sha256": "05f53b4c94e829896caeabc22cf7cd10636326a839ddf53dfbb982f93ad79f80"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pension_1f/native-d1.png",
+      "status": "untracked",
+      "sha256": "2c82111c88c9bbfd24b33b96d06732e07aab05a6263ef1f111cbb5b673376e12"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pension_1f/native-d2.png",
+      "status": "untracked",
+      "sha256": "0d511fba3ce8c46e80e06e58320a10b505c4332ba78af7231eeb3bf6719cb924"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pension_1f/native-d3.png",
+      "status": "untracked",
+      "sha256": "e55d36a8d5b19637a4254e1022819db29b6d4ece81a84fe6352fff54f568389b"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pension_2f/native-d0.png",
+      "status": "untracked",
+      "sha256": "a3d97d486040302e5bfad7a76d58fe882d4659594512737c15fe254cc3ee1f3c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pension_2f/native-d1.png",
+      "status": "untracked",
+      "sha256": "6e2cf1f1e60254ed10de91d348ffa929c17a099c0046b3ea9f4357c6f1a45ed9"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pension_2f/native-d2.png",
+      "status": "untracked",
+      "sha256": "9d0849c99d7a2b411b3fc000f81e95e008c3787ba3f18a010d4ec06bb9a7357b"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/pension_2f/native-d3.png",
+      "status": "untracked",
+      "sha256": "4f8325505f03704bd1552b903fb078fbc8b5571e9fbd532dd4eb2c19da153bf1"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/photozone/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "626c065424cf66d24ac9b43fe9e16de9173cb4f544b435650c87ebd2ad01cf91"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/photozone/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "a13a217ce5f092b71b619202c21bd3eb88f5a6030b97ef781cf26f75002329d5"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/photozone/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "77166469155003983bb693116560f3814cb2b028e51c9ce9e2072c837dacec6c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/photozone/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "8710d091ae24a1ad55dc3fba7a83a6af7445d4f544e08cf5b515d8dcf982b750"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/photozone/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "2184f4763eea4067a4ff45d7a21951045b8a419ba97f6f393ae67765f7f92d16"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/photozone/interaction.json",
+      "status": "untracked",
+      "sha256": "dfd0278d5693c382c48caabfa774913c56d7bcd41838d55c5137495a66a215e4"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/photozone/native-d0.png",
+      "status": "untracked",
+      "sha256": "74c13a41c5089d81cf7817c5cd700c81012af058fe148074ae1e7c2150172bea"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/photozone/native-d1.png",
+      "status": "untracked",
+      "sha256": "73859d495c6b601def84050e17f8c90af8ad68d9601c91c1e4eb20ee0e7f86fd"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/photozone/native-d2.png",
+      "status": "untracked",
+      "sha256": "bd43a55939f822222d107b4c8d03116b54ab40dfeea6275fdbae34ab50832895"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/photozone/native-d3.png",
+      "status": "untracked",
+      "sha256": "c7d4f55425b284c898abf10e56393774f4c6cebfa685cee80c310a114d7caa02"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/photozone/support-d0.bin",
+      "status": "untracked",
+      "sha256": "b7a91b4188077bba271c07d88c54a4bee9f796ea2eb290888fa64d08b0971199"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/photozone/support-d1.bin",
+      "status": "untracked",
+      "sha256": "f7d263c822c4b74808d1286d2f9d0590b1bc5614f561ebb45182e9bb0c9fcd83"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/photozone/support-d2.bin",
+      "status": "untracked",
+      "sha256": "0e20864a1446a9020d653ac119c953aaa1c1ac1d04e210f1e5ed60fa6493fb56"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/photozone/support-d3.bin",
+      "status": "untracked",
+      "sha256": "1ecee67c26620d3b654e2b293ba81496ac934b61ec59b0e8587cb8231c001752"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/playground/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "880094e52a17ead82c5a2aa9ebe801108fc85c9572ba3edf91595f80f823287f"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/playground/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "bd32a55766edc00bf27eff47d380dd9ee8fd785b6c87463b838daa3edb9d228d"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/playground/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "d1d20a42b584acc528b7b4b0e608edcdf54ec769f9762cceee81f21beee9e1d9"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/playground/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "1880d159059d85d023840df97219b7d756edb1768542dcc3980397586c09e7ea"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/playground/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "d03904cef7799a68f82f2ea3d48e09bda02d1051d893fdeee5dfe7392bcca4b5"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/playground/interaction.json",
+      "status": "untracked",
+      "sha256": "8f03530e749b0d931cb64661092e221f45e261be2b93f84804076a54173ee149"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/playground/native-d0.png",
+      "status": "untracked",
+      "sha256": "d01aad91cb38cdd420b2c22adc3ed793bc6362a3c066c4142069589abf5179a2"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/playground/native-d1.png",
+      "status": "untracked",
+      "sha256": "9a049c95aec9b0762a6f6f698342e306790072b7471d95216c01928cb8014743"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/playground/native-d2.png",
+      "status": "untracked",
+      "sha256": "81d501185f92b0e2f2135da76251960f00e9ef176cd4b9b1b1d9b73f7350dbc8"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/playground/native-d3.png",
+      "status": "untracked",
+      "sha256": "c832d022f4d3d0aac2b0e973e28003910daf7bd07aee4d628dcf6e047167f978"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/playground/support-d0.bin",
+      "status": "untracked",
+      "sha256": "280dd209f94556a1399857b50d619ab41b0b5a7810fe49df2eafd4311d9139bc"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/playground/support-d1.bin",
+      "status": "untracked",
+      "sha256": "53e60811541fa633bf31dfdc5c8ef499cd3505890ddcb6de35f7436ca369735c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/playground/support-d2.bin",
+      "status": "untracked",
+      "sha256": "6119ef5112de0a2fcb8d71c8be8f553f6ce2e687df5d6527c61fbed49e331b9c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/playground/support-d3.bin",
+      "status": "untracked",
+      "sha256": "2b1ae79773a9f6d8a8b6c0df8bcb74fd8e42c92cff198ffac5de2055a3cd2197"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/rental_tube/native-d0.png",
+      "status": "untracked",
+      "sha256": "e9c7fe220686399e16d0e0a8835dcc2f60ebc9693e5e60433a6de83a8f5520d2"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/rental_tube/native-d1.png",
+      "status": "untracked",
+      "sha256": "44c860ee99ceb03ec93e1c215e5e485dc90049aadab0b9c366ff914e9045edc6"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/rental_tube/native-d2.png",
+      "status": "untracked",
+      "sha256": "bf9f2c23aea59871aca2d8f70114d6043932b03b4f7d3cc3ce11ae2488e5e503"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/rental_tube/native-d3.png",
+      "status": "untracked",
+      "sha256": "ec072b74401daedbd6501fe20a423b8eaf012c0f889e2030688e32a3d090b165"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/rental_tube/staff-depth-d0.bin",
+      "status": "untracked",
+      "sha256": "8d0c8c0fab0f3fa3b0ca281c9752b67866f60019605c1542924f5db645af469c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/rental_tube/staff-depth-d1.bin",
+      "status": "untracked",
+      "sha256": "db927a6eb1aafb7f8281d3da2677f5965a3fbe416b9ef8dd2ba8f50b4604d983"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/rental_tube/staff-depth-d2.bin",
+      "status": "untracked",
+      "sha256": "f6ba055c50c5011cf42f6f8d35f68f1659fe7910075ed06e1b2499614d70877c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/rental_tube/staff-depth-d3.bin",
+      "status": "untracked",
+      "sha256": "e6028523a9130e3c84fd21a6f1c3b4f80b14074bd7bfd40f9dfc787edf70a8db"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/rental_tube/staff-depth-metadata.json",
+      "status": "untracked",
+      "sha256": "b7da678af78559da4cdb9265442dc35791046dcf5b88b073e7047047de6f912f"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/rental_tube/staff-support-d0.bin",
+      "status": "untracked",
+      "sha256": "8d0c8c0fab0f3fa3b0ca281c9752b67866f60019605c1542924f5db645af469c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/rental_tube/staff-support-d1.bin",
+      "status": "untracked",
+      "sha256": "db927a6eb1aafb7f8281d3da2677f5965a3fbe416b9ef8dd2ba8f50b4604d983"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/rental_tube/staff-support-d2.bin",
+      "status": "untracked",
+      "sha256": "f6ba055c50c5011cf42f6f8d35f68f1659fe7910075ed06e1b2499614d70877c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/rental_tube/staff-support-d3.bin",
+      "status": "untracked",
+      "sha256": "e6028523a9130e3c84fd21a6f1c3b4f80b14074bd7bfd40f9dfc787edf70a8db"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/sauna/native-d0.png",
+      "status": "modified",
+      "sha256": "a8e348a0a002ab46440eec9c545bdf121ec99dbe02d99162df68b6f3f9bc273f"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/sauna/native-d1.png",
+      "status": "modified",
+      "sha256": "1e79401778dbe21014c604f63644f6bc531d1c225c64e394f94e042885cc8fce"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/sauna/native-d2.png",
+      "status": "modified",
+      "sha256": "3c444b9a5941c2969021655cb8285e35d2c6b55a72cfc6e8ee3842ed02e3f032"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/sauna/native-d3.png",
+      "status": "modified",
+      "sha256": "55de9f6e83563b2fcbd01129914b96605185517bb0c80da9d78d93b8f79c33e3"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/sikhye/native-d0.png",
+      "status": "untracked",
+      "sha256": "825eaaca97612bce62c470c0d5182330835628c1f51f41bfdbd77f24a6398c5a"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/sikhye/native-d1.png",
+      "status": "untracked",
+      "sha256": "d8009ec7528be636a22411411e90c7f32667c75fcfac13f28bd6415b8bd5b6b5"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/sikhye/native-d2.png",
+      "status": "untracked",
+      "sha256": "d5630b4caf5680239deb0bd3dc61fde89d70dc6bac5a0f2d9cf6e346b77abafc"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/sikhye/native-d3.png",
+      "status": "untracked",
+      "sha256": "b8dffe7c5cfd45780e703902c5753c488630c4b543c3b1370121295c65bbedea"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv1/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "ed4679306a1b32ed895d79717c9aa81543fb475c2d9ca475a983ff03950a9be9"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv1/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "2c826346012f4a9c8fc55b21ee12c57fbff9e05dbefeaedd15be54a16dcd1820"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv1/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "ae72ab9c2d33b7054a1e35f9e02623a7a959a93fda8eee3a04fd144762092d7c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv1/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "9b3c915b0b61d2f9303bb084678ff60b4a850a284a8b43f4faa8bf83d95fa2ba"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv1/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "a5e68b1b51b259a198a25b091942fc2f56a037cff5f58b903a954ea279f61435"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv1/interaction.json",
+      "status": "untracked",
+      "sha256": "ac1d557e66231197315141e0d65f4d55343c9cba5ab1eea106dab62148881c7a"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv1/native-d0.png",
+      "status": "untracked",
+      "sha256": "beb2ffa888eedf683ed70b54b9e30a8df5ce8b6bee8af302efa422e6d30816cf"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv1/native-d1.png",
+      "status": "untracked",
+      "sha256": "4f6bfbff851b04a8a3ea47abe3b8b1bef89f0d14bbe434fd7a557947f16a9097"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv1/native-d2.png",
+      "status": "untracked",
+      "sha256": "f6f33daac304019cfbc85a788b827330a36ddbee36c606e58a75a0f70faee72d"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv1/native-d3.png",
+      "status": "untracked",
+      "sha256": "c6e6b8aa326dfbca1e60dc71f6b69473321d916cff791738af92994a584cd80a"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv1/support-d0.bin",
+      "status": "untracked",
+      "sha256": "4f0fb5fc008dbc64b157e82220ecebc913e5b81b091845649ed333bd903470e8"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv1/support-d1.bin",
+      "status": "untracked",
+      "sha256": "8d6ace2248027e845bee83b46a49c9507b20e61e9f87c2315d46954cd3b94ea8"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv1/support-d2.bin",
+      "status": "untracked",
+      "sha256": "a15c3f82c1b652acfd8b1d7816b94d6e7e68e6a9cd63d0fc879d7cfd8d575f74"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv1/support-d3.bin",
+      "status": "untracked",
+      "sha256": "0341b8a64e007485ea7813467a0b7de55661aefb130205113f39b77c5e5d53d8"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv2/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "5cfbc716005f0060b4301c35331b73c471c17b93122beb1ecc317dc52ef2185b"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv2/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "f6f5568a5e79460ffcd0acac76810ef15b0095affad51ba65eacd57ada53d84e"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv2/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "3c85f9bd3c2ed3e4019f2a8eac140c905ef8383c920e65ca5f783a8979332ef6"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv2/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "afece243e39e064cbc14500a3ea0a4051ce69942231ff8891589215fba8fa8f9"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv2/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "f247bdd440c6ddaa49bf3e1a15d718646b4e3676c378c81cfae33ad9157cc2f2"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv2/interaction.json",
+      "status": "untracked",
+      "sha256": "ec53307afe82429fa768c84fca1dd2aabcc413ac33e9064ce2371437d04d96c4"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv2/native-d0.png",
+      "status": "untracked",
+      "sha256": "d01eddaf6cec22cea0b8a5d99553ab83f2b7eccbc2fe00a9d6d95bc280a4171d"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv2/native-d1.png",
+      "status": "untracked",
+      "sha256": "704635a201bc0337f35878cc46159d810d68426cc54dfd2072e3c5778a52b01a"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv2/native-d2.png",
+      "status": "untracked",
+      "sha256": "ce7aa07126db21525c67f0503016fb62aac4e6b809316f75de9da46569ac9ec1"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv2/native-d3.png",
+      "status": "untracked",
+      "sha256": "ea2e494ba3fe37c9e6179a2924f31d115d6c7ffeec5210234529bdd21a70cba9"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv2/support-d0.bin",
+      "status": "untracked",
+      "sha256": "d14cf34adc42b6349526ee277ebdfd388dfa4646b1446b75a62b101f0eebae2c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv2/support-d1.bin",
+      "status": "untracked",
+      "sha256": "d5c7fa43abdd583343494ccc1dab33cfdb1b11c2b0e54bf6db2faec9a2dbaa7b"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv2/support-d2.bin",
+      "status": "untracked",
+      "sha256": "2f0dcdacec19b64249933fb34edb5f9026ffc394d078ac55d43decf8f2eae69f"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv2/support-d3.bin",
+      "status": "untracked",
+      "sha256": "8c2b632bc876aa1636cd1a96b3951cef8a26245e8a6ea287f5d3cb8ca10fe217"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv3/depth-d0.bin",
+      "status": "untracked",
+      "sha256": "092de43492ffad80e0b17a2385e1df50948a20acdbb855a975e03add6edc92f8"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv3/depth-d1.bin",
+      "status": "untracked",
+      "sha256": "69b18fbb68f740363dd1436415b716faccb0b48ef1ed26333e421306387e7a36"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv3/depth-d2.bin",
+      "status": "untracked",
+      "sha256": "d78ea07e67e569245814452e37d847a5a9e6f855cbc306cf9c1fd175b1c977e0"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv3/depth-d3.bin",
+      "status": "untracked",
+      "sha256": "54d9e606baeebfe3a967da4965aa768708f0eed564f6059c80db46bfc582206b"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv3/depth-metadata.json",
+      "status": "untracked",
+      "sha256": "8f5fe4cfee8c952d3d15eef8db8b3d05947b3b57ecaa2ce29db5700a28ee120c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv3/interaction.json",
+      "status": "untracked",
+      "sha256": "d35aea28a6a85356b9b4c27cc4d00ab12b3c9513eee3ed7d7a6624d1f2833981"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv3/native-d0.png",
+      "status": "untracked",
+      "sha256": "ddd8f69d327763e0a4c65bea0bc6272e0c86e8d8ee9782af94e21a50d8231f2c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv3/native-d1.png",
+      "status": "untracked",
+      "sha256": "75d1e143e21564bdd88f5950892a9819d2ef9433f1e391dc566c3356621f2558"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv3/native-d2.png",
+      "status": "untracked",
+      "sha256": "894bd63172f0cbab44091487ed1c4c374dd583ee16b7b9a0052a516d8a2b78b0"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv3/native-d3.png",
+      "status": "untracked",
+      "sha256": "e95af3bd0d8d7b2e8b83d82d58bfa747dff20164b50e88158ad5c7885b1ff099"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv3/support-d0.bin",
+      "status": "untracked",
+      "sha256": "4867a400dfa279a00cbca23a6a9ce701a7a06023674d29758e8efc8d1ab26f76"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv3/support-d1.bin",
+      "status": "untracked",
+      "sha256": "b787dcd079d25a7e0afdea314943b021fed7481b04ab2dac221fb6c394c707e3"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv3/support-d2.bin",
+      "status": "untracked",
+      "sha256": "7655710fcf43c8520d668a6f8f9d783225f54487732d4d455ab9bbc0b47208d6"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/stage_river_lv3/support-d3.bin",
+      "status": "untracked",
+      "sha256": "99797048db1a42f1d7ba5f0916387359c20e869ab3d851dd0a341b6ffe7672c8"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/vending_in/native-d0.png",
+      "status": "untracked",
+      "sha256": "8b3a674d00cbd269a489afd8bf1af1dc52bce548eb4ae75a9110d9be80f25254"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/vending_in/native-d1.png",
+      "status": "untracked",
+      "sha256": "4f89a8fceb6fc1fa32d1d01e956afab5b6f72df23ec1a7a1110739f84f796c2a"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/vending_in/native-d2.png",
+      "status": "untracked",
+      "sha256": "bf34a38a406b14980b97b90a2790df49c97fcd8cd1da469b4dc0d19a916a537c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/vending_in/native-d3.png",
+      "status": "untracked",
+      "sha256": "da99f7877143458b9792797b30bcc5d9181d6f7f4e4e59f36706b8b57cfb2b60"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/watchtower-provenance.json",
+      "status": "untracked",
+      "sha256": "1c4f336f23cad36ea0cafe4240222ec70c068ccded76c023d70cd6584885be9c"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/watchtower/native-d0.png",
+      "status": "untracked",
+      "sha256": "3f08926cbca9641eff06f5d0b0f5733a274b43fea5b8683399801e62ffc7f445"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/watchtower/native-d1.png",
+      "status": "untracked",
+      "sha256": "77f13970f1fb029539c33ef5a253e70996e40c22824b480dbe8e7278f44b634b"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/watchtower/native-d2.png",
+      "status": "untracked",
+      "sha256": "3e0adafd275ae665e36bec146007ccb0c4f213b142531d076c396cd3a3a9dd44"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/watchtower/native-d3.png",
+      "status": "untracked",
+      "sha256": "d7dd5619c7368274d272695812ae3fad5d0fed6b38cba1c6b038e15ac41b71a5"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/watchtower/staff-depth-d0.bin",
+      "status": "untracked",
+      "sha256": "a5f559515275e813a9acdd571a8532cbff7824c2ce1d5bfd82471f54d77ce9cc"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/watchtower/staff-depth-d1.bin",
+      "status": "untracked",
+      "sha256": "53d91fea1466887a91428714ed77b7db80aa8048f08e93f5621c605cc10abe70"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/watchtower/staff-depth-d2.bin",
+      "status": "untracked",
+      "sha256": "f23b4417b07f9acf6ce2cef8fb4b9a15f2f9a1397a88c03da866e32c4608e183"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/watchtower/staff-depth-d3.bin",
+      "status": "untracked",
+      "sha256": "4bdbe0105425ec06d76b04ba8e5d3e8077c3e3445db44b25c9d1fdcf4930ce8b"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/watchtower/staff-depth-metadata.json",
+      "status": "untracked",
+      "sha256": "fe4b91263ebdcb0b366697a51d0aab47d3f2d630f2de687fc90a9defcdde9419"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/watchtower/staff-support-d0.bin",
+      "status": "untracked",
+      "sha256": "b14b35fbef4d9e6860670df1144b6c1920375b8a9aba2a308550bc6e2092d2e0"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/watchtower/staff-support-d1.bin",
+      "status": "untracked",
+      "sha256": "a620baeb5bf82de8814884d9c1e6b088fc7dd96d2ab85229e2f9d11cf9a698be"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/watchtower/staff-support-d2.bin",
+      "status": "untracked",
+      "sha256": "12a61cb3a442e0c4a8a4ab6771514c7d7a896f471b2f4a5ae855d2738cb27c7f"
+    },
+    {
+      "path": "ppaji/public/assets/approved-facilities/watchtower/staff-support-d3.bin",
+      "status": "untracked",
+      "sha256": "4e59db6f24ab921656dddc32eb09d9717dfa885c3e1715d781f375aca672a58b"
+    },
+    {
+      "path": "ppaji/src/assets/approved-facilities.ts",
+      "status": "modified",
+      "sha256": "aa9ee2c32a9cebe1112bc7417caaccfe917cc6062099dec3cf350d95c25f2eff"
+    },
+    {
+      "path": "ppaji/src/assets/npc-v8.ts",
+      "status": "modified",
+      "sha256": "da12120f2518cf23707c57ee78fb554b06b00226d9f2368df8d6ea854b5d800f"
+    },
+    {
+      "path": "ppaji/src/assets/watercraft.ts",
+      "status": "modified",
+      "sha256": "7f50d11e18b85b414d153f15b96830ef83e51639df170cabe41208ce03c3f41c"
+    },
+    {
+      "path": "ppaji/src/data/compat.json",
+      "status": "modified",
+      "sha256": "41fde26ce491fef67c350d5a9f7fbaf1a0c49a1a5578c9ab5a19f5e4d766d91a"
+    },
+    {
+      "path": "ppaji/src/data/data.test.ts",
+      "status": "modified",
+      "sha256": "878a5d156608a1138f1826acbb6ae01f66bcbec0579465b6bda90c371c074bfa"
+    },
+    {
+      "path": "ppaji/src/data/facilities.json",
+      "status": "modified",
+      "sha256": "67b85f4366904b1237d69a17f26c60d38b4329d40e31e96018911dc403d2e212"
+    },
+    {
+      "path": "ppaji/src/data/facility-attendants.json",
+      "status": "untracked",
+      "sha256": "01071302f508ee1d8e86a8e30b78a0806d091415896e8b6b05713eb9734b2487"
+    },
+    {
+      "path": "ppaji/src/data/facility-portals.json",
+      "status": "untracked",
+      "sha256": "7d189702f8cf661ce196e0fa35dbf5aadbc8f5f765881b140ff3164b0d45d8db"
+    },
+    {
+      "path": "ppaji/src/data/invest.json",
+      "status": "modified",
+      "sha256": "838630934727944d876a2970df6b11b0f7d025422b7c9de59995b3e1fb9a3da0"
+    },
+    {
+      "path": "ppaji/src/data/outdoor-facility-contracts.json",
+      "status": "untracked",
+      "sha256": "c194240e9ff4e6415855b26f9c42712e3abe49ff48384ed92d41b5c6854ee3ee"
+    },
+    {
+      "path": "ppaji/src/data/static-facility-visits.json",
+      "status": "untracked",
+      "sha256": "64d3aa3f92b037dfcbe8be2a00c8222e0b4a7ee26c2cda69bc3242c0f2936a38"
+    },
+    {
+      "path": "ppaji/src/main.ts",
+      "status": "modified",
+      "sha256": "3d8af954029e733a7a9fd03aed4ee0980f96243d1c63aac85511b63f1e9f514d"
+    },
+    {
+      "path": "ppaji/src/render/course-rides.ts",
+      "status": "modified",
+      "sha256": "1a1ba0ce7a38a4266b748ad6a25cabcface72f4e773390d9a9c3c2befed5b785"
+    },
+    {
+      "path": "ppaji/src/render/facility-portal.test.ts",
+      "status": "untracked",
+      "sha256": "7336aff906574f4b02b534f85f6103ef50428abb9bee2977da86c81e8bb00dff"
+    },
+    {
+      "path": "ppaji/src/render/outdoor-facilities.test.ts",
+      "status": "untracked",
+      "sha256": "94049463f9a778473defe2a6cce38f391ef91fb11a673314f7e0ddff3c0c08ac"
+    },
+    {
+      "path": "ppaji/src/render/outdoor-facilities.ts",
+      "status": "untracked",
+      "sha256": "962c79739fbadf982ab5e9df8f581111f620c66f5b40281e37eb3f13c49732a0"
+    },
+    {
+      "path": "ppaji/src/render/scene.ts",
+      "status": "modified",
+      "sha256": "22c51dfc954bfbf45194b1bc9a3217a1b388ee18636d91e308c4664e436f70c8"
+    },
+    {
+      "path": "ppaji/src/render/static-facilities.ts",
+      "status": "modified",
+      "sha256": "575ff5a3c9912366b7ac361659fe5b1c2ea398c76a0ec56ab163f8d288e24460"
+    },
+    {
+      "path": "ppaji/src/render/static-visit-sample.test.ts",
+      "status": "untracked",
+      "sha256": "3e8ef4941387a8f5d4d590e9cfbbe207522d5a3bd520cb0a93ae119a77ae2cf3"
+    },
+    {
+      "path": "ppaji/src/render/static-visit-sample.ts",
+      "status": "untracked",
+      "sha256": "8a31b84b52fd60b34f2a1c0e19adb62d45be3e00ac46c602660e304e33938531"
+    },
+    {
+      "path": "ppaji/src/render/watercraft-composite.ts",
+      "status": "modified",
+      "sha256": "bacc990b249bee4230529d8b99b45bc4d0382b09dc06c388d55259103714be76"
+    },
+    {
+      "path": "ppaji/src/sim/authored-rest-variants.test.ts",
+      "status": "modified",
+      "sha256": "5f43bb184ee599ce32cbc8aa9c95406443b49ab481b350f24ea2e5a0c0f9ab51"
+    },
+    {
+      "path": "ppaji/src/sim/course/ride.test.ts",
+      "status": "modified",
+      "sha256": "b65825d6309d9054117adfa6bacc5600142d75a0552fc7fad3e0d6cd50afb33c"
+    },
+    {
+      "path": "ppaji/src/sim/course/ride.ts",
+      "status": "modified",
+      "sha256": "2c21794f9c72ff3cb1cb7e84f903159602a238740017ed584e3325531b0fed89"
+    },
+    {
+      "path": "ppaji/src/sim/facility-portal.test.ts",
+      "status": "untracked",
+      "sha256": "ac45e3defc6bd4ab39c3d167ad03810bfb2d4fd94be467575ca3c49146b235c4"
+    },
+    {
+      "path": "ppaji/src/sim/facility-portal.ts",
+      "status": "untracked",
+      "sha256": "1b13111ef18f4f4ccf1b1db04e4aa5691540e5ffc4b36dc23ee98efdd00ef8d9"
+    },
+    {
+      "path": "ppaji/src/sim/facility.ts",
+      "status": "modified",
+      "sha256": "75a7595cf9d36a3b5104dc5fca5d5be4001af74e670c41c41f14a90d6a23cb24"
+    },
+    {
+      "path": "ppaji/src/sim/g53.test.ts",
+      "status": "modified",
+      "sha256": "575601d66cb5fad4cf71a1d610080f20cc38d18ed18611a7c4298aa39260f2cb"
+    },
+    {
+      "path": "ppaji/src/sim/game.ts",
+      "status": "modified",
+      "sha256": "74a4031fea796f52d2c326e03e7e70a4160de0c616389c026e1b7da780dd456a"
+    },
+    {
+      "path": "ppaji/src/sim/guest-motion.test.ts",
+      "status": "untracked",
+      "sha256": "2f5a685ed2a857d03273d827dd084d139841b808f6206c7cd0e9071348d9ea81"
+    },
+    {
+      "path": "ppaji/src/sim/guest-motion.ts",
+      "status": "untracked",
+      "sha256": "7e2249420e105c35aa361b51a884b38f681859e94d65cea771a2b27166f85952"
+    },
+    {
+      "path": "ppaji/src/sim/guest.ts",
+      "status": "modified",
+      "sha256": "1e1be99015773a2dac77ddceb38cc939d34e7019dab5455023456cab481e31b6"
+    },
+    {
+      "path": "ppaji/src/sim/outdoor-activity.test.ts",
+      "status": "untracked",
+      "sha256": "fc184bc014f3b980c377c06ff636446d30d36e12481fe963d50587fa9fe237e9"
+    },
+    {
+      "path": "ppaji/src/sim/outdoor-activity.ts",
+      "status": "untracked",
+      "sha256": "fa24b0aa3c5f0f1e848a3df14d544c6437b8470b4bd2a3cdd99df10a9366a33e"
+    },
+    {
+      "path": "ppaji/src/sim/p21.test.ts",
+      "status": "modified",
+      "sha256": "29e098e4ae02743d4b2e87ac87b86cbe52e3805a46d2d72a8fa69afd020fd7c9"
+    },
+    {
+      "path": "ppaji/src/sim/p26.test.ts",
+      "status": "modified",
+      "sha256": "9212954b44879b3a40a16d33ecec5e2939138da0148ee3e3665c01f95937a857"
+    },
+    {
+      "path": "ppaji/src/sim/static-visit.ts",
+      "status": "untracked",
+      "sha256": "bacbe0bd7369bda1682164cdae6a0fbb1512de15ffcf64db5c0e1a0a05982b0f"
+    },
+    {
+      "path": "ppaji/src/sim/watercraft-core/core.test.ts",
+      "status": "modified",
+      "sha256": "927e285b080a59a99faee78206f7aafa5eeeb1700a1f0698418c46c19a9316af"
+    },
+    {
+      "path": "ppaji/src/sim/watercraft-core/recovery.ts",
+      "status": "modified",
+      "sha256": "2c4f22a57481aed8c0891903c37df1f9d526456adca1d9cdeb52c27b18d68d61"
+    },
+    {
+      "path": "ppaji/src/ui/windows/build.test.ts",
+      "status": "modified",
+      "sha256": "05620fdb8563a7dcac56607938e04b71d3f2de6253e5e721c7c473b0b1741b65"
+    },
+    {
+      "path": "ppaji/src/ui/windows/build.ts",
+      "status": "modified",
+      "sha256": "5f1354744e710002626f1fee9c699ab37ea31ad457e02e593689486579dfabf6"
+    },
+    {
+      "path": "ppaji/src/ui/windows/lodging-food-stages.test.ts",
+      "status": "untracked",
+      "sha256": "dd419e7a9e9cf7f9c59e31caa926bfbf6849947fc1767a6735070a8e7718f46f"
+    },
+    {
+      "path": "ppaji/src/ui/windows/outdoor-asset-adoption.test.ts",
+      "status": "untracked",
+      "sha256": "2b22eff4d1027903ab11bbc2cf5982a0e00b70581d14a1beaa6351a52cf99572"
+    },
+    {
+      "path": "ppaji/tools/verify.ts",
+      "status": "modified",
+      "sha256": "4b45b7b50b50b5ca2eb692305728aabae2d5415787d58d8eefdc4a18b756142a"
+    },
+    {
+      "path": "tools/assets/adopt-indoor-open.py",
+      "status": "untracked",
+      "sha256": "8b58cddd84127e36842283ca8db789666476eb05c076a2f139212c2e9d0e589a"
+    },
+    {
+      "path": "tools/assets/adopt-indoor-service.py",
+      "status": "untracked",
+      "sha256": "98544f9677b571fe8f528a1aae42672cdc254c03461ef4d8b3ac7969e0c136a2"
+    },
+    {
+      "path": "tools/assets/adopt-watchtower.py",
+      "status": "untracked",
+      "sha256": "0f1d3af1da85ef8e5c587ef2c0ee468fdc5f481d892798a3812ba7b6956b8ecc"
+    }
+  ]
+}

@@ -1,0 +1,295 @@
+{
+  "id": "jjimjilbang",
+  "currentSize": [
+    4,
+    4
+  ],
+  "size": [
+    4,
+    4
+  ],
+  "floorZ": 0,
+  "accessKind": "portal",
+  "entry": [
+    0,
+    -2.25,
+    0
+  ],
+  "slots": [
+    {
+      "id": "s0",
+      "pose": "lie",
+      "position": [
+        -1.15,
+        0.2,
+        0.07
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0,
+          -2.25,
+          0
+        ],
+        [
+          0,
+          -1.05,
+          0
+        ],
+        [
+          -1.15,
+          -1.05,
+          0
+        ],
+        [
+          -1.15,
+          -0.8,
+          0
+        ]
+      ],
+      "supportObjects": [
+        "RestMat_0",
+        "Pillow_0"
+      ],
+      "useSeconds": 4
+    },
+    {
+      "id": "s1",
+      "pose": "lie",
+      "position": [
+        0,
+        0.2,
+        0.07
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0,
+          -2.25,
+          0
+        ],
+        [
+          0,
+          -1.05,
+          0
+        ],
+        [
+          0,
+          -1.05,
+          0
+        ],
+        [
+          0,
+          -0.8,
+          0
+        ]
+      ],
+      "supportObjects": [
+        "RestMat_1",
+        "Pillow_1"
+      ],
+      "useSeconds": 4
+    },
+    {
+      "id": "s2",
+      "pose": "lie",
+      "position": [
+        1.15,
+        0.2,
+        0.07
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0,
+          -2.25,
+          0
+        ],
+        [
+          0,
+          -1.05,
+          0
+        ],
+        [
+          1.15,
+          -1.05,
+          0
+        ],
+        [
+          1.15,
+          -0.8,
+          0
+        ]
+      ],
+      "supportObjects": [
+        "RestMat_2",
+        "Pillow_2"
+      ],
+      "useSeconds": 4
+    }
+  ],
+  "obstacles": [
+    {
+      "name": "mat0",
+      "min": [
+        -1.54,
+        -0.545
+      ],
+      "max": [
+        -0.7599999999999999,
+        1.105
+      ]
+    },
+    {
+      "name": "mat1",
+      "min": [
+        -0.39,
+        -0.545
+      ],
+      "max": [
+        0.39,
+        1.105
+      ]
+    },
+    {
+      "name": "mat2",
+      "min": [
+        0.7599999999999999,
+        -0.545
+      ],
+      "max": [
+        1.54,
+        1.105
+      ]
+    },
+    {
+      "name": "heaters",
+      "min": [
+        -1.55,
+        1.58
+      ],
+      "max": [
+        1.55,
+        1.88
+      ]
+    },
+    {
+      "name": "towel shelf",
+      "min": [
+        -1.9,
+        -1.775
+      ],
+      "max": [
+        -1.4,
+        -1.125
+      ]
+    },
+    {
+      "name": "Wall_back",
+      "min": [
+        -2,
+        1.9
+      ],
+      "max": [
+        2,
+        2
+      ]
+    },
+    {
+      "name": "Wall_left",
+      "min": [
+        -2,
+        -1.9
+      ],
+      "max": [
+        -1.9,
+        1.9
+      ]
+    },
+    {
+      "name": "Wall_right",
+      "min": [
+        1.9,
+        -1.9
+      ],
+      "max": [
+        2,
+        1.9
+      ]
+    },
+    {
+      "name": "Wall_front_left",
+      "min": [
+        -2,
+        -2
+      ],
+      "max": [
+        -0.5,
+        -1.9
+      ]
+    },
+    {
+      "name": "Wall_front_right",
+      "min": [
+        0.5,
+        -2
+      ],
+      "max": [
+        2,
+        -1.9
+      ]
+    },
+    {
+      "name": "DoorJamb_left",
+      "min": [
+        -0.5,
+        -2
+      ],
+      "max": [
+        -0.45,
+        -1.9
+      ]
+    },
+    {
+      "name": "DoorJamb_right",
+      "min": [
+        0.45,
+        -2
+      ],
+      "max": [
+        0.5,
+        -1.9
+      ]
+    },
+    {
+      "name": "controller assembly",
+      "min": [
+        1.6855,
+        1.2
+      ],
+      "max": [
+        1.875,
+        1.5
+      ]
+    }
+  ],
+  "notes": [
+    "Candidate station count only; existing economic capacity unchanged.",
+    "All approach points use tile units, standing ground z=0, common adult H=1.12268 tile.",
+    "Rotate heading, entry, contacts, obstacles and paths by same full-root yaw.",
+    "Support-only exclusions must not exclude bench legs, guard, partitions or heating equipment.",
+    "Lie position is proposed pelvis contact at mat top z=.07, head toward +Y pillow. Coordinator must map V8 lie sprite origin (20.40625,27.203125) to pelvis/body support; origin is not assumed to be pelvis.",
+    "Each mat is .78\u00d71.65 tiles; lateral transfer/settling is occupancy motion, not a walking segment through mat.",
+    "V2 all three lie positions, mats, pillows, heater panels, towel shelf and entry/approach points remain unchanged.",
+    "ControllerStand, HeatController and HeatDial shift -0.04 tile X to avoid new boundary wall.",
+    "Full physical wall collision persists when tagged camera-near walls are hidden for display.",
+    "Clear front entry width .90 tile, height1.18 tile; overhead lintel is not a ground obstacle.",
+    "Three candidate lie stations do not change live capacity6 or live entryTiles[[2,4]]; coordinator owns runtime reconciliation."
+  ],
+  "coordinateSystem": "centered local Blender XY tile coordinates; +Z up; rotate all semantics with same root yaw",
+  "proposedSize": [
+    4,
+    4
+  ],
+  "floor_mode": "full-footprint-integral"
+}

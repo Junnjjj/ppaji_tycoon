@@ -24,7 +24,7 @@ describe('P21 해금 재배치', () => {
     }
   });
   it('소원 해금 시설은 34 → 14 (시그니처만 남는다 — 워터 토템은 조합에 흡수됐다)', () => {
-    const wish = [...FACILITY_DEFS.values()].filter((d) => d.unlock.source === 'wish');
+    const wish = [...FACILITY_DEFS.values()].filter((d) => d.unlock.source === 'wish' && !d.variantOf);
     expect(wish.length).toBe(14);
     for (const d of wish) expect(d.deprecated, d.id).toBeUndefined();
   });

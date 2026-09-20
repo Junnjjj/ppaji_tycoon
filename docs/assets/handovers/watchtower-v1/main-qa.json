@@ -1,0 +1,51 @@
+{
+  "build": {
+    "sha": "5cea8e9bb1677cd023f3d9122419a2b244cc8123",
+    "shortSha": "5cea8e9bb167",
+    "branch": "main",
+    "sourceDigest": "f772a13206db1f02a798a929cbfb4e1c91f4645cc1e6bd0139642211a8c00dd8",
+    "startedAt": "2026-09-19T17:23:49.509Z"
+  },
+  "id": "watchtower",
+  "size": [
+    1,
+    1
+  ],
+  "blueprint": "watchtower-v1",
+  "renderOnly": true,
+  "frames": [
+    {
+      "direction": 0,
+      "w": 192,
+      "h": 192
+    },
+    {
+      "direction": 1,
+      "w": 192,
+      "h": 192
+    },
+    {
+      "direction": 2,
+      "w": 192,
+      "h": 192
+    },
+    {
+      "direction": 3,
+      "w": 192,
+      "h": 192
+    }
+  ],
+  "ghosts": [
+    {
+      "direction": 0,
+      "texture": "fac/watchtower/0",
+      "scale": 1
+    },
+    {
+      "direction": 1,
+      "texture": "fac/watchtower/1",
+      "scale": 1
+    }
+  ],
+  "visible": true
+}

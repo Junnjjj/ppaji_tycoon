@@ -1,0 +1,60 @@
+{
+  "blend": "facility.blend",
+  "concept": "reference.png",
+  "root": "FacilityRoot",
+  "tile_world": 22.627416997969522,
+  "ortho_scale": 192,
+  "camera_target_z_tiles": 0.6,
+  "logical_size": 192,
+  "density": 4,
+  "size": [
+    1,
+    1
+  ],
+  "floor_mode": "transparent-no-floor",
+  "minimum_native_foreground": 380,
+  "inventory": {
+    "posts": {
+      "prefix": "Structure_Post_",
+      "count": 4
+    },
+    "steps": {
+      "prefix": "LadderRung_",
+      "count": 5
+    },
+    "rescueRing": {
+      "names": [
+        "RescueRing"
+      ],
+      "count": 1
+    }
+  },
+  "groups": {
+    "body": {
+      "prefix": "Structure_"
+    },
+    "platform": {
+      "prefix": "Platform_"
+    },
+    "rails": {
+      "prefix": "SideRail_"
+    }
+  },
+  "landmarks": {
+    "ladder": [
+      0,
+      -0.43,
+      0.56
+    ],
+    "staff": [
+      0,
+      0,
+      1.01
+    ],
+    "ring": [
+      0.452,
+      0,
+      0.67
+    ]
+  }
+}

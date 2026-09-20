@@ -1,0 +1,349 @@
+{
+  "build": {
+    "sha": "5cea8e9bb1677cd023f3d9122419a2b244cc8123",
+    "shortSha": "5cea8e9bb167",
+    "branch": "main",
+    "sourceDigest": "43dcd779ff1ce629971c41ee6ff53182591ab322fda4095e902088d9dc34974c",
+    "startedAt": "2026-09-19T18:11:05.041Z"
+  },
+  "defs": 210,
+  "lodging": [
+    "caravan",
+    "bungalow",
+    "camp_site",
+    "glamping",
+    "pension_1f",
+    "pension_2f",
+    "pension",
+    "pension_duplex"
+  ],
+  "food": [
+    "vending_out",
+    "icecream",
+    "sikhye",
+    "bungeoppang",
+    "cafe",
+    "cafe_lv2",
+    "cafe_lv3",
+    "shop",
+    "snackbar",
+    "firepit_row",
+    "chicken",
+    "authored_bbq_zone"
+  ],
+  "visits": [
+    {
+      "id": "pension_1f",
+      "face": 0,
+      "uid": 1,
+      "fid": 1,
+      "entry": {
+        "i": 25,
+        "j": 31
+      },
+      "phases": [
+        "entering",
+        "inside",
+        "exiting",
+        "outside"
+      ],
+      "hiddenMistakes": 0,
+      "charged": true,
+      "sameExit": true,
+      "overlayMistakes": 0,
+      "done": true,
+      "threshold": {
+        "i": 25.5,
+        "j": 30.825,
+        "z": 0.22
+      }
+    },
+    {
+      "id": "pension_2f",
+      "face": 0,
+      "uid": 2,
+      "fid": 2,
+      "entry": {
+        "i": 32,
+        "j": 31
+      },
+      "phases": [
+        "entering",
+        "inside",
+        "exiting",
+        "outside"
+      ],
+      "hiddenMistakes": 0,
+      "charged": true,
+      "sameExit": true,
+      "overlayMistakes": 0,
+      "done": true,
+      "threshold": {
+        "i": 32.5,
+        "j": 30.825,
+        "z": 0.22
+      }
+    },
+    {
+      "id": "pension",
+      "face": 0,
+      "uid": 3,
+      "fid": 3,
+      "entry": {
+        "i": 39,
+        "j": 31
+      },
+      "phases": [
+        "entering",
+        "inside",
+        "exiting",
+        "outside"
+      ],
+      "hiddenMistakes": 0,
+      "charged": true,
+      "sameExit": true,
+      "overlayMistakes": 0,
+      "done": true,
+      "threshold": {
+        "i": 39.5,
+        "j": 30.825,
+        "z": 0.22
+      }
+    },
+    {
+      "id": "cafe",
+      "face": 0,
+      "uid": 4,
+      "fid": 4,
+      "entry": {
+        "i": 44,
+        "j": 29
+      },
+      "phases": [
+        "entering",
+        "inside",
+        "exiting",
+        "outside"
+      ],
+      "hiddenMistakes": 0,
+      "charged": true,
+      "sameExit": true,
+      "overlayMistakes": 0,
+      "done": true,
+      "threshold": {
+        "i": 44.6,
+        "j": 28.9,
+        "z": 0.1
+      }
+    },
+    {
+      "id": "cafe_lv2",
+      "face": 0,
+      "uid": 5,
+      "fid": 5,
+      "entry": {
+        "i": 51,
+        "j": 29
+      },
+      "phases": [
+        "entering",
+        "inside",
+        "exiting",
+        "outside"
+      ],
+      "hiddenMistakes": 0,
+      "charged": true,
+      "sameExit": true,
+      "overlayMistakes": 0,
+      "done": true,
+      "threshold": {
+        "i": 51.6,
+        "j": 28.9,
+        "z": 0.15
+      }
+    },
+    {
+      "id": "cafe_lv3",
+      "face": 0,
+      "uid": 6,
+      "fid": 6,
+      "entry": {
+        "i": 58,
+        "j": 29
+      },
+      "phases": [
+        "entering",
+        "inside",
+        "exiting",
+        "outside"
+      ],
+      "hiddenMistakes": 0,
+      "charged": true,
+      "sameExit": true,
+      "overlayMistakes": 0,
+      "done": true,
+      "threshold": {
+        "i": 58.6,
+        "j": 28.9,
+        "z": 0.15
+      }
+    },
+    {
+      "id": "pension_1f",
+      "face": 1,
+      "uid": 7,
+      "fid": 7,
+      "entry": {
+        "i": 27,
+        "j": 39
+      },
+      "phases": [
+        "entering",
+        "inside",
+        "exiting",
+        "outside"
+      ],
+      "hiddenMistakes": 0,
+      "charged": true,
+      "sameExit": true,
+      "overlayMistakes": 0,
+      "done": true,
+      "threshold": {
+        "i": 26.825,
+        "j": 39.5,
+        "z": 0.22
+      }
+    },
+    {
+      "id": "pension_2f",
+      "face": 1,
+      "uid": 8,
+      "fid": 8,
+      "entry": {
+        "i": 34,
+        "j": 39
+      },
+      "phases": [
+        "entering",
+        "inside",
+        "exiting",
+        "outside"
+      ],
+      "hiddenMistakes": 0,
+      "charged": true,
+      "sameExit": true,
+      "overlayMistakes": 0,
+      "done": true,
+      "threshold": {
+        "i": 33.825,
+        "j": 39.5,
+        "z": 0.22
+      }
+    },
+    {
+      "id": "pension",
+      "face": 1,
+      "uid": 9,
+      "fid": 9,
+      "entry": {
+        "i": 41,
+        "j": 39
+      },
+      "phases": [
+        "entering",
+        "inside",
+        "exiting",
+        "outside"
+      ],
+      "hiddenMistakes": 0,
+      "charged": true,
+      "sameExit": true,
+      "overlayMistakes": 0,
+      "done": true,
+      "threshold": {
+        "i": 40.825,
+        "j": 39.5,
+        "z": 0.22
+      }
+    },
+    {
+      "id": "cafe",
+      "face": 1,
+      "uid": 10,
+      "fid": 10,
+      "entry": {
+        "i": 46,
+        "j": 39
+      },
+      "phases": [
+        "entering",
+        "inside",
+        "exiting",
+        "outside"
+      ],
+      "hiddenMistakes": 0,
+      "charged": true,
+      "sameExit": true,
+      "overlayMistakes": 0,
+      "done": true,
+      "threshold": {
+        "i": 45.9,
+        "j": 39.4,
+        "z": 0.1
+      }
+    },
+    {
+      "id": "cafe_lv2",
+      "face": 1,
+      "uid": 11,
+      "fid": 11,
+      "entry": {
+        "i": 53,
+        "j": 39
+      },
+      "phases": [
+        "entering",
+        "inside",
+        "exiting",
+        "outside"
+      ],
+      "hiddenMistakes": 0,
+      "charged": true,
+      "sameExit": true,
+      "overlayMistakes": 0,
+      "done": true,
+      "threshold": {
+        "i": 52.9,
+        "j": 39.4,
+        "z": 0.15
+      }
+    },
+    {
+      "id": "cafe_lv3",
+      "face": 1,
+      "uid": 12,
+      "fid": 12,
+      "entry": {
+        "i": 60,
+        "j": 39
+      },
+      "phases": [
+        "entering",
+        "inside",
+        "exiting",
+        "outside"
+      ],
+      "hiddenMistakes": 0,
+      "charged": true,
+      "sameExit": true,
+      "overlayMistakes": 0,
+      "done": true,
+      "threshold": {
+        "i": 59.9,
+        "j": 39.4,
+        "z": 0.15
+      }
+    }
+  ],
+  "errors": []
+}

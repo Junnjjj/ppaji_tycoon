@@ -1,0 +1,67 @@
+{
+  "status": "CANDIDATE_ART_AND_OCCUPANCY_NOT_LIVE_UPGRADE",
+  "family": "outdoor_performance_stage",
+  "levels": [
+    {
+      "level": 1,
+      "candidateId": "stage_river",
+      "size": [
+        4,
+        3
+      ],
+      "audience": 4,
+      "performers": 1
+    },
+    {
+      "level": 2,
+      "candidateId": "stage_river_lv2",
+      "size": [
+        5,
+        4
+      ],
+      "audience": 8,
+      "performers": 1
+    },
+    {
+      "level": 3,
+      "candidateId": "stage_river_lv3",
+      "size": [
+        6,
+        5
+      ],
+      "audience": 12,
+      "performers": 1
+    }
+  ],
+  "transitions": [
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ]
+  ],
+  "legacyLive": {
+    "id": "stage_river",
+    "size": [
+      3,
+      2
+    ],
+    "capacity": 0,
+    "preserveExistingPlacement": true
+  },
+  "integrationRules": [
+    "Existing live3x2 is not automatically candidatelevel1; choose a distinct newID or explicit migration before adoption.",
+    "On real upgrade, reserve/check every expanded rotated footprint cell against bounds, occupied facilities, roads and placement rules; reject without mutating if blocked.",
+    "Do not stretch sprites, teleport seated guests or change save size implicitly; drain/finish existing audience before swapping slots and capacity.",
+    "Price, unlock, construction duration and occupancy services belong to game system integration; absent values are not zero."
+  ],
+  "preview": {
+    "sequentialAdmission": true,
+    "seatedPoseSwitch": "instant at same foot anchor",
+    "exitOrder": "reverse audience slot order",
+    "separateRuntimeActors": true
+  }
+}

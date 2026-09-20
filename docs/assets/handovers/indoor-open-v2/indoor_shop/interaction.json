@@ -1,0 +1,121 @@
+{
+  "id": "indoor_shop",
+  "currentSize": [
+    2,
+    2
+  ],
+  "size": [
+    2,
+    2
+  ],
+  "floorZ": 0,
+  "accessKind": "service-face",
+  "entry": [
+    0,
+    -1.7,
+    0
+  ],
+  "slots": [
+    {
+      "id": "customer",
+      "role": "guest",
+      "pose": "stand",
+      "position": [
+        0,
+        -1.28,
+        0
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0,
+          -1.7,
+          0
+        ],
+        [
+          0,
+          -1.28,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useSeconds": 4
+    }
+  ],
+  "obstacles": [
+    {
+      "name": "counter including top",
+      "min": [
+        -0.725,
+        -0.94
+      ],
+      "max": [
+        0.725,
+        -0.42
+      ]
+    },
+    {
+      "name": "freestanding shelving",
+      "min": [
+        -0.675,
+        0.47
+      ],
+      "max": [
+        0.675,
+        0.85
+      ]
+    },
+    {
+      "name": "Post_-0.89_-0.89",
+      "min": [
+        -0.95,
+        -0.95
+      ],
+      "max": [
+        -0.8300000000000001,
+        -0.8300000000000001
+      ]
+    },
+    {
+      "name": "Post_-0.89_0.89",
+      "min": [
+        -0.95,
+        0.8300000000000001
+      ],
+      "max": [
+        -0.8300000000000001,
+        0.95
+      ]
+    },
+    {
+      "name": "Post_0.89_-0.89",
+      "min": [
+        0.8300000000000001,
+        -0.95
+      ],
+      "max": [
+        0.95,
+        -0.8300000000000001
+      ]
+    },
+    {
+      "name": "Post_0.89_0.89",
+      "min": [
+        0.8300000000000001,
+        0.8300000000000001
+      ],
+      "max": [
+        0.95,
+        0.95
+      ]
+    }
+  ],
+  "notes": [
+    "Local centered Blender XY tile coordinates; heading atan2(y,x), +Y faces counter.",
+    "Entry is exterior approach anchor, not a portal; customer remains beyond local -Y public face.",
+    "No staff slot: optional staff omitted to avoid cramped interior interactions.",
+    "All sides structurally open: only corner posts, freestanding low counter and shelves; no enclosing walls.",
+    "Counter top .66 tile and clear inner aisle .89 tile; common opaque human H=1.12268 tile.",
+    "Rotate slots, paths and obstacles by same physical yaw as FacilityRoot. Runtime/NPC occlusion QA pending."
+  ]
+}

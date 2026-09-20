@@ -364,7 +364,7 @@
   },
   {
     "id": "cafe",
-    "name": "카페",
+    "name": "카페 1단계",
     "class": "restaurant",
     "w": 3,
     "d": 2,
@@ -395,6 +395,76 @@
     "menuSlots": 5,
     "desc": "커피 한 잔과 그늘. 비 오는 날 손님이 몰린다.",
     "outdoorOnly": true
+  },
+  {
+    "id": "cafe_lv2",
+    "name": "카페 2단계",
+    "class": "restaurant",
+    "w": 3,
+    "d": 2,
+    "cost": 1300,
+    "pop": 37,
+    "maint": 196,
+    "shopPrice": 2860,
+    "capacity": 4,
+    "useTicks": 12,
+    "hpDelta": 0,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      0,
+      0,
+      4,
+      2
+    ],
+    "indoorOnly": false,
+    "unlock": {
+      "source": "rank",
+      "rank": 2
+    },
+    "slide": null,
+    "menuSlots": 5,
+    "desc": "통유리와 목재로 꾸민 현대적인 카페.",
+    "outdoorOnly": true,
+    "variantOf": "cafe"
+  },
+  {
+    "id": "cafe_lv3",
+    "name": "카페 3단계",
+    "class": "restaurant",
+    "w": 3,
+    "d": 2,
+    "cost": 1300,
+    "pop": 37,
+    "maint": 196,
+    "shopPrice": 2860,
+    "capacity": 4,
+    "useTicks": 12,
+    "hpDelta": 0,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      0,
+      0,
+      4,
+      2
+    ],
+    "indoorOnly": false,
+    "unlock": {
+      "source": "rank",
+      "rank": 2
+    },
+    "slide": null,
+    "menuSlots": 5,
+    "desc": "천창과 창가 좌석을 갖춘 2층 유리 카페.",
+    "outdoorOnly": true,
+    "variantOf": "cafe"
   },
   {
     "id": "rent_sup",
@@ -529,6 +599,111 @@
     "menuSlots": 0,
     "desc": "강을 등지고 선 무대. 큰 행사의 축이 된다.",
     "scenery": 16
+  },
+  {
+    "id": "stage_river_lv1",
+    "name": "공연무대 1단계",
+    "class": "decor",
+    "w": 4,
+    "d": 3,
+    "cost": 4500,
+    "pop": 50,
+    "maint": 265,
+    "shopPrice": 9900,
+    "capacity": 4,
+    "useTicks": 20,
+    "hpDelta": 0,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "indoorOnly": false,
+    "unlock": {
+      "source": "wish",
+      "ref": "art_master/2"
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "목재 무대와 관객석 4석을 갖춘 공연무대.",
+    "scenery": 16,
+    "variantOf": "stage_river"
+  },
+  {
+    "id": "stage_river_lv2",
+    "name": "공연무대 2단계",
+    "class": "decor",
+    "w": 5,
+    "d": 4,
+    "cost": 4500,
+    "pop": 50,
+    "maint": 265,
+    "shopPrice": 9900,
+    "capacity": 8,
+    "useTicks": 20,
+    "hpDelta": 0,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "indoorOnly": false,
+    "unlock": {
+      "source": "wish",
+      "ref": "art_master/2"
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "차양·조명과 관객석 8석을 갖춘 공연무대.",
+    "scenery": 16,
+    "variantOf": "stage_river"
+  },
+  {
+    "id": "stage_river_lv3",
+    "name": "공연무대 3단계",
+    "class": "decor",
+    "w": 6,
+    "d": 5,
+    "cost": 4500,
+    "pop": 50,
+    "maint": 265,
+    "shopPrice": 9900,
+    "capacity": 12,
+    "useTicks": 20,
+    "hpDelta": 0,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "indoorOnly": false,
+    "unlock": {
+      "source": "wish",
+      "ref": "art_master/2"
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "확장 무대·음향 장비와 관객석 12석을 갖춘 공연무대.",
+    "scenery": 16,
+    "variantOf": "stage_river"
   },
   {
     "id": "caravan",
@@ -804,7 +979,41 @@
     },
     "slide": null,
     "menuSlots": 0,
-    "desc": "미끄럼틀과 그네. 아이가 물 밖에서도 놀 곳."
+    "desc": "목재 놀이 구조와 낮은 미끄럼틀이 있는 야외 놀이터."
+  },
+  {
+    "id": "bungee_jump",
+    "name": "번지점프",
+    "class": "attraction",
+    "w": 4,
+    "d": 4,
+    "cost": 1500,
+    "pop": 17,
+    "maint": 90,
+    "shopPrice": 3300,
+    "capacity": 1,
+    "useTicks": 8,
+    "hpDelta": -5,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "indoorOnly": false,
+    "unlock": {
+      "source": "rank",
+      "rank": 1
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "높은 발판과 허리 하네스를 갖춘 번지점프 타워.",
+    "variantOf": "playground"
   },
   {
     "id": "merlion",
@@ -870,7 +1079,8 @@
     },
     "slide": null,
     "menuSlots": 0,
-    "desc": "뜨거운 나무방에서 몸을 데운다. 물에서 나온 뒤의 코스."
+    "desc": "뜨거운 나무방에서 몸을 데운다. 물에서 나온 뒤의 코스.",
+    "facings": 4
   },
   {
     "id": "jjimjilbang",
@@ -903,7 +1113,8 @@
     },
     "slide": null,
     "menuSlots": 0,
-    "desc": "누워서 땀을 뺀다. 어른들이 가장 오래 머무는 자리."
+    "desc": "누워서 땀을 뺀다. 어른들이 가장 오래 머무는 자리.",
+    "facings": 4
   },
   {
     "id": "jump_cushion",
@@ -1159,8 +1370,8 @@
     "pop": 8,
     "maint": 42,
     "shopPrice": 1540,
-    "capacity": 0,
-    "useTicks": 0,
+    "capacity": 2,
+    "useTicks": 20,
     "hpDelta": 0,
     "se": 0,
     "ab": 0,
@@ -1180,7 +1391,7 @@
     },
     "slide": null,
     "menuSlots": 0,
-    "desc": "사진을 찍고 가는 자리. 손님이 남기고 싶어 하는 화면.",
+    "desc": "부표와 꽃으로 꾸민 촬영 프레임과 고정 카메라.",
     "scenery": 6
   },
   {
@@ -1420,7 +1631,8 @@
     "slide": null,
     "menuSlots": 0,
     "desc": "동전 몇 개로 시간을 보내는 실내 놀이. 원래는 실내 시설이다.",
-    "noisy": "loud"
+    "noisy": "loud",
+    "facings": 4
   },
   {
     "id": "rent_pedal",
@@ -1520,7 +1732,8 @@
     },
     "slide": null,
     "menuSlots": 0,
-    "desc": "운영진이 앉는 자리. 손님은 들어오지 않는다."
+    "desc": "운영진이 앉는 자리. 손님은 들어오지 않는다.",
+    "facings": 4
   },
   {
     "id": "rent_kayak",
@@ -1997,7 +2210,8 @@
     "slide": null,
     "menuSlots": 5,
     "desc": "24시간 도는 무인 매대. 사람을 안 쓴다. 원래는 실내 시설이다.",
-    "passBy": "both"
+    "passBy": "both",
+    "facings": 4
   },
   {
     "id": "sunbed_row",
@@ -2261,7 +2475,8 @@
     },
     "slide": null,
     "menuSlots": 0,
-    "desc": "길과 요금을 묻는 곳. 처음 온 손님의 첫 대화."
+    "desc": "길과 요금을 묻는 곳. 처음 온 손님의 첫 대화.",
+    "facings": 4
   },
   {
     "id": "parking",
@@ -2398,6 +2613,78 @@
     "lodging": true
   },
   {
+    "id": "pension_1f",
+    "name": "펜션 1층",
+    "class": "lounging",
+    "w": 5,
+    "d": 4,
+    "cost": 11400,
+    "pop": 127,
+    "maint": 673,
+    "shopPrice": 25080,
+    "capacity": 6,
+    "useTicks": 18,
+    "hpDelta": 50,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 800,
+    "season": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "indoorOnly": false,
+    "unlock": {
+      "source": "invest",
+      "ref": "lounge_11"
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "목재 외벽과 짙은 지붕의 단층 펜션.",
+    "shade": true,
+    "lodging": true,
+    "variantOf": "pension"
+  },
+  {
+    "id": "pension_2f",
+    "name": "펜션 2층",
+    "class": "lounging",
+    "w": 5,
+    "d": 4,
+    "cost": 11400,
+    "pop": 127,
+    "maint": 673,
+    "shopPrice": 25080,
+    "capacity": 6,
+    "useTicks": 18,
+    "hpDelta": 50,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 800,
+    "season": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "indoorOnly": false,
+    "unlock": {
+      "source": "invest",
+      "ref": "lounge_11"
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "발코니를 갖춘 2층 펜션.",
+    "shade": true,
+    "lodging": true,
+    "variantOf": "pension"
+  },
+  {
     "id": "pension",
     "name": "펜션 3층",
     "class": "lounging",
@@ -2463,7 +2750,7 @@
     },
     "slide": null,
     "menuSlots": 0,
-    "desc": "지붕이 있는 야외 쉼터. 비가 와도 앉을 수 있다.",
+    "desc": "기와지붕과 열린 목재 기둥, 마루를 갖춘 정자.",
     "shade": true
   },
   {
@@ -3506,7 +3793,8 @@
     "slide": null,
     "menuSlots": 5,
     "desc": "음료와 간식. 복도 곁에 두면 들어오고 나가는 손님이 들른다.",
-    "passBy": "both"
+    "passBy": "both",
+    "facings": 4
   },
   {
     "id": "dry_room",
@@ -7161,6 +7449,183 @@
     "menuSlots": 0,
     "desc": "제작본 3×2 · 기존 시설과 동일한 해금·이용 조건",
     "variantOf": "footbath",
+    "facings": 4
+  },
+  {
+    "id": "authored_locker_row",
+    "name": "코인락커 (제작본)",
+    "class": "utility",
+    "w": 4,
+    "d": 2,
+    "cost": 900,
+    "pop": 10,
+    "maint": 53,
+    "shopPrice": 1980,
+    "capacity": 4,
+    "useTicks": 14,
+    "hpDelta": -4,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "indoorOnly": true,
+    "unlock": {
+      "source": "rank",
+      "rank": 1
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "제작본 4×2 · 기존 시설과 동일한 해금·이용 조건",
+    "passBy": "enter",
+    "variantOf": "locker_row",
+    "facings": 4
+  },
+  {
+    "id": "authored_infirmary",
+    "name": "의무실 (제작본)",
+    "class": "utility",
+    "w": 3,
+    "d": 2,
+    "cost": 900,
+    "pop": 10,
+    "maint": 53,
+    "shopPrice": 1980,
+    "capacity": 1,
+    "useTicks": 10,
+    "hpDelta": -4,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "indoorOnly": true,
+    "unlock": {
+      "source": "wish",
+      "ref": "doctor/0"
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "제작본 3×2 · 기존 시설과 동일한 해금·이용 조건",
+    "variantOf": "infirmary",
+    "facings": 4
+  },
+  {
+    "id": "authored_shower_row",
+    "name": "샤워실 (제작본)",
+    "class": "utility",
+    "w": 4,
+    "d": 2,
+    "cost": 900,
+    "pop": 10,
+    "maint": 53,
+    "shopPrice": 1980,
+    "capacity": 4,
+    "useTicks": 6,
+    "hpDelta": -4,
+    "se": 0,
+    "ab": 2,
+    "sprays": true,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "unlock": {
+      "source": "start"
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "제작본 4×2 · 기존 시설과 동일한 해금·이용 조건",
+    "indoorOnly": true,
+    "passBy": "leave",
+    "variantOf": "shower_row",
+    "facings": 4
+  },
+  {
+    "id": "authored_changing_row",
+    "name": "탈의실 (제작본)",
+    "class": "utility",
+    "w": 3,
+    "d": 2,
+    "cost": 800,
+    "pop": 9,
+    "maint": 48,
+    "shopPrice": 1760,
+    "capacity": 3,
+    "useTicks": 10,
+    "hpDelta": -4,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "indoorOnly": true,
+    "unlock": {
+      "source": "start"
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "제작본 3×2 · 기존 시설과 동일한 해금·이용 조건",
+    "passBy": "leave",
+    "variantOf": "changing_row",
+    "facings": 4
+  },
+  {
+    "id": "authored_karaoke",
+    "name": "노래방 (제작본)",
+    "class": "attraction",
+    "w": 3,
+    "d": 3,
+    "cost": 900,
+    "pop": 10,
+    "maint": 53,
+    "shopPrice": 1980,
+    "capacity": 2,
+    "useTicks": 12,
+    "hpDelta": -6,
+    "se": 0,
+    "ab": 0,
+    "sprays": false,
+    "heat": 0,
+    "usageFee": 0,
+    "season": [
+      2,
+      2,
+      2,
+      0
+    ],
+    "indoorOnly": true,
+    "unlock": {
+      "source": "rank",
+      "rank": 2
+    },
+    "slide": null,
+    "menuSlots": 0,
+    "desc": "제작본 3×3 · 기존 시설과 동일한 해금·이용 조건",
+    "noisy": "loud",
+    "variantOf": "karaoke",
     "facings": 4
   }
 ]

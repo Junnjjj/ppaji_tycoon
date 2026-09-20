@@ -1,0 +1,287 @@
+{
+  "records": [
+    {
+      "id": "playground",
+      "facing": 0,
+      "uses": 1,
+      "facilityUses": 1,
+      "spent": 0,
+      "income": 0,
+      "exit": [
+        45,
+        25
+      ],
+      "ticks": 89
+    },
+    {
+      "id": "playground",
+      "facing": 1,
+      "uses": 1,
+      "facilityUses": 1,
+      "spent": 0,
+      "income": 0,
+      "exit": [
+        43,
+        35
+      ],
+      "ticks": 89
+    },
+    {
+      "id": "photozone",
+      "facing": 0,
+      "uses": 1,
+      "facilityUses": 1,
+      "spent": 0,
+      "income": 0,
+      "exit": [
+        58,
+        25
+      ],
+      "ticks": 92
+    },
+    {
+      "id": "photozone",
+      "facing": 1,
+      "uses": 1,
+      "facilityUses": 1,
+      "spent": 0,
+      "income": 0,
+      "exit": [
+        57,
+        35
+      ],
+      "ticks": 92
+    },
+    {
+      "id": "pavilion",
+      "facing": 0,
+      "uses": 1,
+      "facilityUses": 1,
+      "spent": 0,
+      "income": 0,
+      "exit": [
+        50,
+        27
+      ],
+      "ticks": 113
+    },
+    {
+      "id": "pavilion",
+      "facing": 1,
+      "uses": 1,
+      "facilityUses": 1,
+      "spent": 0,
+      "income": 0,
+      "exit": [
+        52,
+        37
+      ],
+      "ticks": 113
+    },
+    {
+      "id": "stage_river_lv1",
+      "facing": 0,
+      "uses": 1,
+      "facilityUses": 1,
+      "spent": 0,
+      "income": 0,
+      "exit": [
+        66,
+        27
+      ],
+      "ticks": 156
+    },
+    {
+      "id": "stage_river_lv1",
+      "facing": 1,
+      "uses": 1,
+      "facilityUses": 1,
+      "spent": 0,
+      "income": 0,
+      "exit": [
+        66,
+        36
+      ],
+      "ticks": 156
+    },
+    {
+      "id": "stage_river_lv2",
+      "facing": 0,
+      "uses": 1,
+      "facilityUses": 1,
+      "spent": 0,
+      "income": 0,
+      "exit": [
+        74,
+        28
+      ],
+      "ticks": 202
+    },
+    {
+      "id": "stage_river_lv2",
+      "facing": 1,
+      "uses": 1,
+      "facilityUses": 1,
+      "spent": 0,
+      "income": 0,
+      "exit": [
+        74,
+        36
+      ],
+      "ticks": 202
+    },
+    {
+      "id": "stage_river_lv3",
+      "facing": 0,
+      "uses": 1,
+      "facilityUses": 1,
+      "spent": 0,
+      "income": 0,
+      "exit": [
+        82,
+        29
+      ],
+      "ticks": 208
+    },
+    {
+      "id": "stage_river_lv3",
+      "facing": 1,
+      "uses": 1,
+      "facilityUses": 1,
+      "spent": 0,
+      "income": 0,
+      "exit": [
+        82,
+        36
+      ],
+      "ticks": 208
+    },
+    {
+      "id": "bungee_jump",
+      "facing": 0,
+      "uses": 1,
+      "facilityUses": 1,
+      "spent": 0,
+      "income": 0,
+      "exit": [
+        88,
+        27
+      ],
+      "ticks": 211
+    },
+    {
+      "id": "bungee_jump",
+      "facing": 1,
+      "uses": 1,
+      "facilityUses": 1,
+      "spent": 0,
+      "income": 0,
+      "exit": [
+        87,
+        35
+      ],
+      "ticks": 211
+    }
+  ],
+  "phases": {
+    "playground/0": [
+      "entering",
+      "climb",
+      "prepare",
+      "slide",
+      "landing",
+      "hold",
+      "exiting"
+    ],
+    "pavilion/0": [
+      "entering",
+      "hold",
+      "exiting"
+    ],
+    "photozone/0": [
+      "entering",
+      "hold",
+      "exiting"
+    ],
+    "stage_river_lv1/0": [
+      "entering",
+      "hold",
+      "exiting"
+    ],
+    "stage_river_lv2/0": [
+      "entering",
+      "hold",
+      "exiting"
+    ],
+    "stage_river_lv3/0": [
+      "entering",
+      "hold",
+      "exiting"
+    ],
+    "bungee_jump/0": [
+      "entering",
+      "entry",
+      "ascent",
+      "platform",
+      "prepare",
+      "jump",
+      "bounce",
+      "winch",
+      "recover",
+      "exiting"
+    ],
+    "playground/1": [
+      "entering",
+      "climb",
+      "prepare",
+      "slide",
+      "landing",
+      "hold",
+      "exiting"
+    ],
+    "pavilion/1": [
+      "entering",
+      "hold",
+      "exiting"
+    ],
+    "photozone/1": [
+      "entering",
+      "hold",
+      "exiting"
+    ],
+    "stage_river_lv1/1": [
+      "entering",
+      "hold",
+      "exiting"
+    ],
+    "stage_river_lv2/1": [
+      "entering",
+      "hold",
+      "exiting"
+    ],
+    "stage_river_lv3/1": [
+      "entering",
+      "hold",
+      "exiting"
+    ],
+    "bungee_jump/1": [
+      "entering",
+      "entry",
+      "ascent",
+      "platform",
+      "prepare",
+      "jump",
+      "bounce",
+      "winch",
+      "recover",
+      "exiting"
+    ]
+  },
+  "errors": [],
+  "saveUnchanged": true,
+  "bundle": [
+    "http://127.0.0.1:5189/assets/main-kIWj0xll.js",
+    ""
+  ],
+  "fixture": "Disposable fresh session with connected paths, real Game.step and GuestStore visits"
+}

@@ -1,0 +1,104 @@
+{
+  "id": "info",
+  "currentSize": [
+    2,
+    2
+  ],
+  "size": [
+    2,
+    2
+  ],
+  "proposedSize": [
+    2,
+    2
+  ],
+  "floor_mode": "transparent-no-floor",
+  "floorZ": 0,
+  "accessKind": "service-face",
+  "entry": [
+    0,
+    -1.5,
+    0
+  ],
+  "slots": [
+    {
+      "id": "s0",
+      "role": "guest",
+      "pose": "stand",
+      "position": [
+        0,
+        -1.08,
+        0
+      ],
+      "heading": 1.5707963267948966,
+      "approach": [
+        [
+          0,
+          -1.5,
+          0
+        ],
+        [
+          0,
+          -1.08,
+          0
+        ]
+      ],
+      "supportObjects": [],
+      "useSeconds": 4
+    }
+  ],
+  "obstacles": [
+    {
+      "name": "counter complete",
+      "min": [
+        -0.92,
+        -0.84
+      ],
+      "max": [
+        0.92,
+        -0.16
+      ]
+    },
+    {
+      "name": "map board and frame",
+      "min": [
+        -0.845,
+        0.628
+      ],
+      "max": [
+        0.845,
+        0.765
+      ]
+    },
+    {
+      "name": "map foot left",
+      "min": [
+        -0.89,
+        0.57
+      ],
+      "max": [
+        -0.59,
+        0.87
+      ]
+    },
+    {
+      "name": "map foot right",
+      "min": [
+        0.59,
+        0.57
+      ],
+      "max": [
+        0.89,
+        0.87
+      ]
+    }
+  ],
+  "coordinateSystem": "centered Blender local XY tile coordinates, +Z up; rotate heading, landmarks and obstacles with root",
+  "notes": [
+    "Entry is an external approach start, not a portal or doorway into the counter.",
+    "One guest stands outside local -Y public service face, heading +Y; terrain provides standing support.",
+    "All base art empty; runtime guest origin/contact/occlusion pending coordinator.",
+    "No roof, wall room, floor slab or cutaway tags; rear map panel is ground-supported freestanding fixture.",
+    "Review service slot does not change live economy, slots, capacity or entry mapping."
+  ]
+}

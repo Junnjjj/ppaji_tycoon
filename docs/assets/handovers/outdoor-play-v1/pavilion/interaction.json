@@ -1,0 +1,257 @@
+{
+  "id": "pavilion",
+  "size": [
+    3,
+    3
+  ],
+  "canonical_live_size": [
+    3,
+    3
+  ],
+  "proposed_size": [
+    3,
+    3
+  ],
+  "capacity": 4,
+  "canonicalSource": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji/src/data/facilities.json",
+  "cameraTargetZTiles": 1.8,
+  "logicalSize": 192,
+  "accessKind": "flow",
+  "entry": [
+    -1.37,
+    -0.65,
+    0.18
+  ],
+  "exit": [
+    0,
+    -1.37,
+    0.18
+  ],
+  "slots": [
+    {
+      "id": "rear_0",
+      "position": [
+        -0.55,
+        0.75,
+        0.18
+      ],
+      "seatContact": [
+        -0.55,
+        0.99,
+        0.56
+      ],
+      "pose": "sit_chair",
+      "heading": -1.5707963267948966,
+      "approach": [
+        [
+          -1.37,
+          -0.65,
+          0.18
+        ],
+        [
+          -0.65,
+          -0.65,
+          0.18
+        ],
+        [
+          -0.55,
+          0,
+          0.18
+        ],
+        [
+          -0.55,
+          0.75,
+          0.18
+        ]
+      ],
+      "supportObjects": [
+        "Bench_Rear"
+      ]
+    },
+    {
+      "id": "rear_1",
+      "position": [
+        0.55,
+        0.75,
+        0.18
+      ],
+      "seatContact": [
+        0.55,
+        0.99,
+        0.56
+      ],
+      "pose": "sit_chair",
+      "heading": -1.5707963267948966,
+      "approach": [
+        [
+          -1.37,
+          -0.65,
+          0.18
+        ],
+        [
+          -0.65,
+          -0.65,
+          0.18
+        ],
+        [
+          0.55,
+          0,
+          0.18
+        ],
+        [
+          0.55,
+          0.75,
+          0.18
+        ]
+      ],
+      "supportObjects": [
+        "Bench_Rear"
+      ]
+    },
+    {
+      "id": "right_0",
+      "position": [
+        0.77,
+        -0.5,
+        0.18
+      ],
+      "seatContact": [
+        1.01,
+        -0.5,
+        0.56
+      ],
+      "pose": "sit_chair",
+      "heading": 3.141592653589793,
+      "approach": [
+        [
+          -1.37,
+          -0.65,
+          0.18
+        ],
+        [
+          -0.65,
+          -0.65,
+          0.18
+        ],
+        [
+          0.25,
+          -0.65,
+          0.18
+        ],
+        [
+          0.25,
+          -0.5,
+          0.18
+        ],
+        [
+          0.77,
+          -0.5,
+          0.18
+        ]
+      ],
+      "supportObjects": [
+        "Bench_Right"
+      ]
+    },
+    {
+      "id": "right_1",
+      "position": [
+        0.77,
+        0.4,
+        0.18
+      ],
+      "seatContact": [
+        1.01,
+        0.4,
+        0.56
+      ],
+      "pose": "sit_chair",
+      "heading": 3.141592653589793,
+      "approach": [
+        [
+          -1.37,
+          -0.65,
+          0.18
+        ],
+        [
+          -0.65,
+          -0.65,
+          0.18
+        ],
+        [
+          0.25,
+          -0.65,
+          0.18
+        ],
+        [
+          0.25,
+          0.4,
+          0.18
+        ],
+        [
+          0.77,
+          0.4,
+          0.18
+        ]
+      ],
+      "supportObjects": [
+        "Bench_Right"
+      ]
+    }
+  ],
+  "routes": {
+    "entry_to_center": [
+      [
+        -1.37,
+        -0.65,
+        0.18
+      ],
+      [
+        -0.65,
+        -0.65,
+        0.18
+      ],
+      [
+        0,
+        0,
+        0.18
+      ]
+    ],
+    "center_to_exit": [
+      [
+        0,
+        0,
+        0.18
+      ],
+      [
+        0,
+        -0.75,
+        0.18
+      ],
+      [
+        0,
+        -1.37,
+        0.18
+      ]
+    ]
+  },
+  "coordinateUnits": "local XYZ tiles; X=I, Y=-J, Zup; heading0=+X pi/2=+Y",
+  "floorZ": 0.18,
+  "actorRadiusTiles": 0.12,
+  "transition": "standing to sit_chair switch at identical foot anchor without sliding",
+  "entryThreshold": {
+    "position": [
+      -1.37,
+      -0.65,
+      0.18
+    ],
+    "supportZ": 0.18,
+    "groundZ": 0,
+    "kind": "single low step onto integral deck; external approach belongs to surrounding map"
+  },
+  "occlusion": "Roof and posts remain physical; coordinator owns roof-aware NPC depth/visibility preview",
+  "gate": "AUTHORED_NPC_CANDIDATE_USER_REVIEW",
+  "roofGate": "ROOF_PROPORTION_USER_REVIEW",
+  "live_files_modified": false,
+  "sourceCandidateId": "pavilion"
+}
