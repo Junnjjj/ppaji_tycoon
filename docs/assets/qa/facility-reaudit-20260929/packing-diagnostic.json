@@ -1,0 +1,74 @@
+[
+  {
+    "id": "ppaji_slide",
+    "direction": 0,
+    "fitWidthRatio": 0.7682,
+    "fitHeightRatio": 1.0
+  },
+  {
+    "id": "ppaji_slide",
+    "direction": 1,
+    "fitWidthRatio": 1.0,
+    "fitHeightRatio": 0.9844
+  },
+  {
+    "id": "ppaji_slide",
+    "direction": 2,
+    "fitWidthRatio": 0.918,
+    "fitHeightRatio": 1.0
+  },
+  {
+    "id": "ppaji_slide",
+    "direction": 3,
+    "fitWidthRatio": 1.0,
+    "fitHeightRatio": 0.9455
+  },
+  {
+    "id": "module_rig_slidedock",
+    "direction": 0,
+    "fitWidthRatio": 0.884,
+    "fitHeightRatio": 1.0
+  },
+  {
+    "id": "module_rig_slidedock",
+    "direction": 1,
+    "fitWidthRatio": 0.8549,
+    "fitHeightRatio": 1.0
+  },
+  {
+    "id": "module_rig_slidedock",
+    "direction": 2,
+    "fitWidthRatio": 0.935,
+    "fitHeightRatio": 1.0
+  },
+  {
+    "id": "module_rig_slidedock",
+    "direction": 3,
+    "fitWidthRatio": 0.8991,
+    "fitHeightRatio": 1.0
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "direction": 0,
+    "fitWidthRatio": 0.87,
+    "fitHeightRatio": 1.0
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "direction": 1,
+    "fitWidthRatio": 0.8677,
+    "fitHeightRatio": 1.0
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "direction": 2,
+    "fitWidthRatio": 0.8635,
+    "fitHeightRatio": 1.0
+  },
+  {
+    "id": "module_rig_led_buoy",
+    "direction": 3,
+    "fitWidthRatio": 0.8617,
+    "fitHeightRatio": 1.0
+  }
+]

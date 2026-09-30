@@ -1,6 +1,6 @@
 # 빠지 타이쿤 에셋 문서 허브
 
-최종 갱신 2026-09-01. 에셋 작업은 이 문서에서 시작한다. `history/`와
+최종 정리 2026-09-30. 에셋 작업은 [현재 상태](CURRENT.md)부터 읽는다. `history/`와
 `maintenance/legacy-*`는 현행 생산 승인의 근거가 아니다.
 
 ## 작업별 시작 문서
@@ -43,7 +43,9 @@ docs/assets/
 콘셉트 승인, 물리 회전 PASS, 채색 검수, 풋프린트 승인, 라이브 채택은 서로 다른 게이트다.
 한 단계의 PASS를 다음 단계의 승인으로 확대 해석하지 않는다.
 
-## 현재 실내시설 20종 상태
+## 이전 실내시설 20종 승인 기록
+
+아래는 해당 제작 배치의 과거 승인 기록이다. 현재 ImageGen 시설 전체의 검수 완료를 뜻하지 않는다. 현재 미해결 사항은 [CURRENT](CURRENT.md)를 따른다.
 
 정본 실행 결과는
 `artifacts/asset-concept-sheets/indoor-facilities-v1/physical-direction-color-wave-v1/FINAL-VALIDATION.json`이다.
