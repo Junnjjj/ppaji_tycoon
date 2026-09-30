@@ -21,7 +21,8 @@
     "gallery": "node tools/gallery.mjs",
     "prerender": "tsx tools/prerender.ts",
     "scene": "node tools/scene-sample.mjs",
-    "replay": "tsx tools/replay.ts"
+    "replay": "tsx tools/replay.ts",
+    "test:editor": "node --import tsx --test tools/base-map-editor.test.ts"
   },
   "dependencies": {
     "phaser": "3.90.0"

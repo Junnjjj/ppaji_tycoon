@@ -3,8 +3,9 @@ import { viewport } from './upscale.js';
 import { cssVar } from '../ui/tokens.js';
 
 /**
- * Phaser 부팅 — `Scale.NONE` + 캔버스 정수 확대. RESIZE 를 쓰면 CSS 크기가 내부 해상도가 되어
- * 텍셀 1:1 이 깨진다. 카메라 줌은 영구히 1 이다 (부모 실측: 393px 에서 worldView 가 98.25px 밀린다).
+ * Phaser 부팅 — Scale.NONE. Scene에서 논리 좌표와 별도로 고해상도 버퍼를 설정한다.
+ * 레거시 NPC 텍스처는 nearest를 유지하며, HD 시설/지면만 개별 LINEAR 필터를 쓴다.
+ * DetailCamera가 원점 기준 확대와 worldView를 함께 관리한다.
  *
  * `?px=1` 이면 프레임버퍼를 보존한다 — 검증 도구의 `readPixels` 용. 안 켜고 읽으면 검은색이
  * 돌아와 **검사가 조용히 통과한다**.

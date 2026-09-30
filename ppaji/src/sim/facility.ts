@@ -1,3 +1,4 @@
+import { facilityPadding, reservedBounds, reservationsOverlap } from './facility-spacing.js';
 import { outdoorCapacity, outdoorGate, outdoorContract, outdoorWorld } from './outdoor-activity.js';
 /**
  * 시설 — 배치·철거·발자국 점유. 손님 길을 막고(`occupied`), 풀에 인접하면 향·SE/AB 를 준다.
@@ -18,6 +19,8 @@ export interface PlacedFacility {
   rentedBy: number | null;
   /** Authored local passage cells; occupancy still reserves the building footprint. */
   passage?: [number, number][];
+  /** Saved per placement; absent legacy reservations are never enlarged in place. */
+  padding?: number;
   /** 오늘 이용 횟수 (정보 창) */
   usesToday: number;
   /** 개선 단계 1..MAX_LEVEL (G19) — 인기 +15%/단, 정원 +1 (3단·5단) */
@@ -48,7 +51,7 @@ export interface FacilitySnapshot {
   list: PlacedFacility[];
 }
 
-export type FacilityFail = 'unknown' | 'outside-land' | 'bad-floor' | 'on-pool' | 'on-gate' | 'level-mixed' | 'overlap' | 'not-on-ppaji' | 'not-on-ring' | 'depth-mismatch'; // P49-a1 §3.6 셋
+export type FacilityFail = 'unknown' | 'outside-land' | 'bad-floor' | 'on-pool' | 'on-gate' | 'level-mixed' | 'overlap' | 'clearance' | 'not-on-ppaji' | 'not-on-ring' | 'depth-mismatch'; // P49-a1 §3.6 셋
 
 export const FACILITY_FAIL_KO: Record<FacilityFail, string> = {
   unknown: '알 수 없는 시설',
@@ -58,6 +61,7 @@ export const FACILITY_FAIL_KO: Record<FacilityFail, string> = {
   'on-gate': '입구는 막을 수 없습니다',
   'level-mixed': '경사입니다 — 단이 고른 평지에 놓으세요',
   overlap: '다른 시설과 겹칩니다',
+  clearance: '건물 여백과 겹칩니다 — 더 띄워 놓아 주세요',
   'not-on-ppaji': '빠지 안 물 위에만 — 데크로 두른 물에 놓으세요',
   'not-on-ring': '빠지 링(데크) 위에만 놓을 수 있습니다',
   'depth-mismatch': '깊이가 안 맞습니다 — 여울용은 여울에, 깊은 물용은 강에',
@@ -101,6 +105,7 @@ export class FacilityStore {
   /** 타일 → 시설 uid (0 = 빈 칸) */
   private readonly occ: Uint16Array;
   version = 0;
+  spacingEnabled = false;
 
   constructor(
     private readonly grid: Grid,
@@ -251,6 +256,16 @@ export class FacilityStore {
       const o = this.occ[t.j * this.grid.w + t.i] ?? 0;
       if (o !== 0 && o !== ignoreUid) return { ok: false, fail: 'overlap' };
     }
+    if(this.spacingEnabled && facilityPadding(def)>0){
+      const reserve=reservedBounds(def,i,j,facing);
+      for(const other of this.list){
+        if(other.uid===ignoreUid)continue;
+        const od=this.defOf(other);
+        // Attached wall modules, docks and interior furniture do not reserve gaps.
+        if(facilityPadding(od)===0)continue;
+        if(reservationsOverlap(reserve,reservedBounds(od,other.i,other.j,other.facing,other.padding ?? 0)))return {ok:false,fail:'clearance'};
+      }
+    }
     if (def.onRing === true && def.depth !== undefined && def.depth !== 'any') {
       // 링 시설의 깊이 — 4이웃 물 중 하나 이상이 그 깊이
       const isW = (c: number): boolean => c === FLOOR.pool || c === FLOOR.river || c === FLOOR.shallow;
@@ -275,6 +290,7 @@ export class FacilityStore {
     const f: PlacedFacility = { uid: this.nextUid++, defId, i, j, facing, rentedBy: null, usesToday: 0, level: 1, usesTotal: 0, incomeToday: 0, incomeTotal: 0 };
     if (isComposite(def.id) && def.onRing) f.passage=compositeDeckTiles(def.id,0,0,0).map(t=>[t.i,t.j]);
     if (def.id !== 'entrance') for (const t of FacilityStore.footprint(def, i, j, facing)) this.occ[t.j * this.grid.w + t.i] = f.uid; // P42: 입구는 밟고 지나가는 자리 — 점유하지 않는다
+    if(this.spacingEnabled && facilityPadding(def)>0)f.padding=facilityPadding(def);
     this.list.push(f);
     this.version++;
     return f;
@@ -287,6 +303,7 @@ export class FacilityStore {
     const def = this.defOf(f);
     if (def.id !== 'entrance') for (const t of FacilityStore.footprint(def, f.i, f.j, f.facing)) this.occ[t.j * this.grid.w + t.i] = 0;
     f.i = i; f.j = j; f.facing = facing;
+    if(this.spacingEnabled)f.padding=facilityPadding(def);
     if (def.id !== 'entrance') for (const t of FacilityStore.footprint(def, i, j, facing)) this.occ[t.j * this.grid.w + t.i] = f.uid; // P42: 입구는 밟고 지나가는 자리 — 점유하지 않는다
     this.version++;
     return f;
@@ -376,7 +393,7 @@ export class FacilityStore {
     for (const f of s.list) {
       const def = this.defs.get(f.defId);
       if (!def) continue; // 데이터에서 사라진 시설은 조용히 버린다 — 세이브가 데이터를 이기면 안 된다
-      for (const t of FacilityStore.footprint(def, f.i, f.j, f.facing)) this.occ[t.j * this.grid.w + t.i] = f.uid;
+      if (def.id !== 'entrance') for (const t of FacilityStore.footprint(def, f.i, f.j, f.facing)) this.occ[t.j * this.grid.w + t.i] = f.uid;
       this.list.push({ ...f });
     }
     this.version++;

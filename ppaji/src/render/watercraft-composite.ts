@@ -1,3 +1,4 @@
+import { imagegenArt } from '../assets/imagegen-art.js';
 /** Vehicle and rider use the same native camera depth; rails/roofs occlude passengers. */
 import type { WatercraftProvider } from '../assets/watercraft.js';
 import type { AssetProvider } from '../assets/types.js';
@@ -8,11 +9,13 @@ export function riderDepth(di:number,dj:number,z:number):number {return 250+(-.6
 export function craftFacing(h:number):number { return [1,0,3,2][Math.round(h/4)%4]!; }
 export class CraftComposite {
   readonly canvas = document.createElement('canvas');
+  usingImagegen=false;
   private readonly ctx:CanvasRenderingContext2D;
   private readonly bases=new Map<string,{rgba:Uint8ClampedArray;depth:Float32Array}>();
   private readonly npcPixels = new Map<string,ImageData>();
   constructor(private readonly art:Pick<WatercraftProvider, 'pixels'|'depths'|'depthOffsets'|'spec'>,private readonly provider:AssetProvider,size:number) {
     this.canvas.width=size+96; this.canvas.height=size+96;
+
     const ctx=this.canvas.getContext('2d');if(!ctx)throw Error('Craft composite unavailable');this.ctx=ctx;
   }
   destroy():void {this.bases.clear();this.npcPixels.clear();this.canvas.width=this.canvas.height=0;}
@@ -36,7 +39,9 @@ export class CraftComposite {
       if(this.bases.size>=2)this.bases.delete(this.bases.keys().next().value!);
       cached={rgba,depth};this.bases.set(key,cached);
     }
-    out.data.set(cached.rgba);const depth=cached.depth;
+    const hd=imagegenArt.get(imagegenArt.size(key)?key:key.replace('watercraft/','fac/'));
+    this.usingImagegen=!!hd;
+    if(!hd)out.data.set(cached.rgba);const depth=cached.depth;
     const actorDepth=new Float32Array(w*ht);actorDepth.fill(Infinity);
     const ax=spec.ax+margin,ay=spec.ay+margin,visible:number[]=[];
     for(const rider of riders){
@@ -59,10 +64,13 @@ export class CraftComposite {
     }
     if(frontOverlay)for(let y=0;y<frontOverlay.height;y++)for(let x=0;x<frontOverlay.width;x++){
       const src=(y*frontOverlay.width+x)*4,a=frontOverlay.data[src+3]!/255;if(!a)continue;
-      const dst=((y+margin)*w+x+margin)*4,old=out.data[dst+3]!/255,total=a+old*(1-a);
+      const dst=((y+margin)*w+x+margin)*4;
+      if(hd){out.data[dst+3]=Math.round(out.data[dst+3]!*(1-a));continue;}
+      const old=out.data[dst+3]!/255,total=a+old*(1-a);
       for(let ch=0;ch<3;ch++)out.data[dst+ch]=Math.round((frontOverlay.data[src+ch]!*a+out.data[dst+ch]!*old*(1-a))/total);
       out.data[dst+3]=Math.round(total*255);
     }
-    this.ctx.putImageData(out,0,0);return {ax,ay,visible};
+    this.ctx.putImageData(out,0,0);
+    return {ax,ay,visible};
   }
 }

@@ -1,3 +1,4 @@
+import { facilityPadding } from '../../sim/facility-spacing.js';
 /**
  * 배치 Dock — 고른 시설을 **탭한 칸**에 고스트로 놓고 `확정`. 못 놓는 칸이면 이유가 첫 줄에 뜬다.
  * 카이로 문법: 지도를 탭해 자리를 옮기고, 회전은 비정사각만 산다.
@@ -79,7 +80,7 @@ export class PlaceDock {
     this.facing = 0;
     this.at = at ?? null;
     this.root.hidden = false;
-    this.modeLabel.textContent = `${def.name} · ${def.cost.toLocaleString('ko-KR')}G`; // W-15: 한 줄(원작 「Select location」)
+    this.modeLabel.textContent = `${def.name} · 부지 ${def.w+facilityPadding(def)}×${def.d+facilityPadding(def)} · ${def.cost.toLocaleString('ko-KR')}G`; // W-15: 한 줄(원작 「Select location」)
     this.rotateBtn.hidden = def.w === def.d;
     setUiSurface('build');
     this.refresh();

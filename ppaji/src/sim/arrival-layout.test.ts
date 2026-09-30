@@ -1,18 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { Game } from './game.js';
-import { applyArrivalLayout, arrivalRoom, arrivalRoute, canAdoptArrival } from './arrival-layout.js';
+import { applyArrivalLayout, arrivalRoom, canAdoptArrival } from './arrival-layout.js';
 import { FLOOR, isIndoorCode } from './grid.js';
 import { FacilityStore } from './facility.js';
 
 describe('approved initial arrival layout', () => {
   const create = () => new Game(20260902, undefined, { arrival: true });
-  it('reuses the authored layout data exactly, with two working indoor doors', () => {
+  it('keeps the main room and adds a compact annex with working exterior doors', () => {
     expect(readFileSync('src/data/arrival-presentation.json').equals(readFileSync('../src/data/kairo-arrival-presentation.json'))).toBe(true);
     const g = create();
     expect(arrivalRoom(g.gate)).toEqual({ i0: 38, j0: 8, w: 20, h: 13 }); // P57-c 절충: 출입동은 옛 킷 20×13
-    expect(Array.from(g.grid.floor).filter(isIndoorCode)).toHaveLength(259); // 실내 247 + 복도 12
-    expect(g.grid.doors()).toEqual([{ i: 48, j: 9, oi: 48, oj: 8 }, { i: 48, j: 20, oi: 48, oj: 21 }]);
+    expect(Array.from(g.grid.floor).filter(isIndoorCode)).toHaveLength(300); // 본 실내 260 + 준비실 40
+    expect(g.grid.doors()).toEqual([{ i: 48, j: 3, oi: 48, oj: 2 }, { i: 48, j: 20, oi: 48, oj: 21 }, { i: 49, j: 20, oi: 49, oj: 21 }]);
     expect(g.money).toBe(12000);
     expect(g.facilities.all.some(f => ['pyeongsang_row', 'pingpong'].includes(f.defId))).toBe(false);
     expect(g.facilities.all.filter(f => f.defId.startsWith('env_'))).toHaveLength(16); // 20×13 건물에선 정문 옆 화분 2(보도 위)·동쪽 바위 1·물가 산책로 위 셋(벤치·화단·가로등)이 자리를 못 찾는다
@@ -25,8 +25,8 @@ describe('approved initial arrival layout', () => {
     }
     for (let j = 21; j <= 23; j++) for (let i = 47; i <= 49; i++) { expect(g.grid.at(i, j)).toBe(FLOOR.path); expect(g.guests.walkable(i, j)).toBe(true); }
     expect(g.canPlace('env_flower_pot', 48, 12).ok).toBe(false);
-    expect(g.guests.walkable(48, 9)).toBe(true); expect(g.facilities.occupied(48, 9)).toBe(true);
-    expect(g.guests.walkable(47, 9)).toBe(false);
+    expect(g.guests.walkable(48, 9)).toBe(true); expect(g.facilities.occupied(48, 1)).toBe(true);
+    expect(g.guests.walkable(49, 1)).toBe(false);
   });
   it('preserves the system shoreline, heights, pools and dock', () => {
     const g = create(), old = new Game(g.seed);
@@ -40,24 +40,24 @@ describe('approved initial arrival layout', () => {
   it('walks every ticket/indoor cell in order on entry and exit without teleporting', () => {
     const g = create(), guest = g.guests.spawn(), visited: string[] = [];
     let prev = { i: guest.i, j: guest.j };
-    for (let tick = 0; tick < 200 && guest.state !== 'wander'; tick++) {
+    for (let tick = 0; tick < 800 && guest.state !== 'wander'; tick++) {
       g.guests.step(); expect(Math.abs(guest.i - prev.i) + Math.abs(guest.j - prev.j)).toBeLessThanOrEqual(1);
       if (guest.progress === 1 && visited.at(-1) !== `${guest.i},${guest.j}`) visited.push(`${guest.i},${guest.j}`);
       prev = { i: guest.i, j: guest.j };
     }
-    expect(guest.state).toBe('wander'); expect(visited).toEqual(arrivalRoute(g.gate).map(t => `${t.i},${t.j}`));
+    expect(guest.state).toBe('wander'); expect(visited.slice(0,3)).toEqual(['48,1','48,2','48,3']); expect(guest.preparationStep).toBe(3); expect(visited.at(-1)).toBe('48,21');
     guest.state = 'leave';
     for (let tick = 0; tick < 220 && g.guests.count; tick++) {
       g.guests.step(); expect(Math.abs(guest.i - prev.i) + Math.abs(guest.j - prev.j)).toBeLessThanOrEqual(1); prev = { i: guest.i, j: guest.j };
     }
-    expect(g.guests.count).toBe(0); expect([guest.i, guest.j]).toEqual([48, 8]);
+    expect(g.guests.count).toBe(0); expect([guest.i, guest.j]).toEqual([48, 0]);
   });
   it('round-trips an in-flight entry and keeps the same simulation trajectory', () => {
     const g = create(); g.guests.spawn(); for (let n = 0; n < 15; n++) g.guests.step();
     const restored = Game.fromSnapshot(g.toSnapshot());
     for (let n = 0; n < 100; n++) { g.guests.step(); restored.guests.step(); }
     expect(restored.guests.toSnapshot()).toEqual(g.guests.toSnapshot());
-    expect(restored.toSnapshot().arrivalRevision).toBe(2);
+    expect(restored.toSnapshot().arrivalRevision).toBe(3);
     expect(restored.guests.walkable(48, 9)).toBe(true);
   });
   it('adopts only an untouched baseline and leaves edited or occupied parks alone', () => {
@@ -69,4 +69,29 @@ describe('approved initial arrival layout', () => {
     const live = new Game(1); live.guests.spawn(); expect(canAdoptArrival(live, original)).toBe(false);
     const upgraded = new Game(1); upgraded.facilities.all[0]!.level = 2; expect(canAdoptArrival(upgraded, original)).toBe(false);
   });
+  it('keeps the annex partition solid except its two doors and allows upper wing expansion', () => {
+    const g=create();
+    for(let i=44;i<52;i++) expect(g.grid.canCross(i,7,i,8)).toBe(i===48 || i===49);
+    expect(g.ownsTile(40,4)).toBe(true);
+    expect(g.ownsTile(40,0)).toBe(false);
+    expect(g.canPaintIndoor(40,4).ok).toBe(true);
+    const expansion = [{i:43,j:4},{i:52,j:4}];
+    expect(g.paintIndoor(expansion).ok).toBe(true);
+    expect(g.grid.canCross(43,4,44,4)).toBe(false);
+    expect(g.grid.canCross(51,4,52,4)).toBe(false);
+    for(let j=0;j<3;j++) expect(g.guests.walkable(48,j)).toBe(true);
+    expect(g.facilities.all.find(f=>f.defId==='compact_shower')).toMatchObject({i:49,j:5});
+    const restored=Game.fromSnapshot(g.toSnapshot());
+    expect(restored.grid.canCross(44,7,44,8)).toBe(false);
+    expect(restored.gate).toEqual({i:48,j:0});
+  });
+  it('does not reinterpret the gate or floor of a revision 2 save', () => {
+    const old=new Game(8);old.arrivalRevision=2;const snapshot=old.toSnapshot();
+    const restored=Game.fromSnapshot(snapshot);
+    expect(restored.gate).toEqual({i:48,j:8});
+    expect(restored.grid.floor).toEqual(old.grid.floor);
+    expect(restored.land.j0).toBe(8);
+    expect(canAdoptArrival(restored,new Game(8))).toBe(false);
+  });
+
 });

@@ -1,3 +1,6 @@
+import interactionData from '../data/imagegen-interactions.json';
+import { imagegenArt } from '../assets/imagegen-art.js';
+import { LazyResource } from '../assets/lazy-resource.js';
 /** Native outdoor camera compositor. Only simulation-owned visitors occupy guest slots. */
 import type Phaser from 'phaser';
 import contracts from '../data/outdoor-facility-contracts.json';
@@ -13,9 +16,11 @@ import { gridToScreen, depthKey, Z_FACILITY } from './iso.js';
 type Point = [number, number, number];
 export interface OutdoorCamera { C: Point; F: Point }
 export interface OutdoorView { base: ImageData; depth: Float32Array; support: Float32Array }
-export interface OutdoorResource { camera: OutdoorCamera; tileWorld: number; size: number; targetZ: number; views: OutdoorView[] }
-export interface OutdoorDepth { resources: Map<string, OutdoorResource>; errors: Map<string, string> }
-export interface OutdoorActor { uid: number; sample: OutdoorSample; support?: boolean }
+interface InteractionArt {physical?:boolean;painter?:boolean;exactHeading?:boolean;contacts?:{directions:number[][][];foregroundPolygons:(number[][]|null)[];previewAudienceCount:number};fits?:{x:number;y:number;scale:number}[]}
+const interactionArt=interactionData as unknown as Record<string,InteractionArt>;
+export interface OutdoorResource { painter?:boolean; exactHeading?:boolean; id?:string; camera: OutdoorCamera; tileWorld: number; size: number; targetZ: number; views: OutdoorView[] }
+export interface OutdoorDepth { ensure?:(id:string)=>boolean; resources: Map<string, OutdoorResource>; errors: Map<string, string> }
+export interface OutdoorActor { slotId?:string; uid: number; sample: OutdoorSample; support?: boolean }
 interface Attendant { position: Point; heading: number; pose: string; uid: number; depthPrefix: string }
 const attendantOf=(id:string): Attendant|undefined=>(attendants as unknown as Record<string,Attendant>)[id];
 const COS = Math.cos(Math.PI / 6), TILE = Math.sqrt(512), LIFT = TILE * COS;
@@ -49,11 +54,18 @@ export function validateOutdoorMask(buffer: ArrayBuffer, size: number, label: st
 /** A failed facility stays on ordinary rendering, without affecting any other facility. */
 export async function loadOutdoorDepth(art: ApprovedFacilityProvider, base='./assets/approved-facilities'): Promise<OutdoorDepth> {
   const result: OutdoorDepth={resources:new Map(),errors:new Map()};
-  await Promise.all([...Object.keys(contracts),...Object.keys(attendants)].map(async id=>{
+  const supported=new Set([...Object.keys(contracts),...Object.keys(attendants)]);
+  const lazy=new LazyResource(async id=>{
     try {
-      const spec=art.manifest.facilities[id], contract=outdoorContract(id),attendant=attendantOf(id),prefix=attendant?`${attendant.depthPrefix}-`:'';
+      const spec=art.manifest.facilities[id], contract=outdoorContract(id),attendant=attendantOf(id),prefix=attendant&&!interactionArt[id]?.physical?`${attendant.depthPrefix}-`:'';
       if(!spec || (!contract && !attendant)) throw Error(`Missing outdoor contract/art ${id}`);
-      const response=await fetch(`${base}/${id}/${prefix}depth-metadata.json`);
+      const custom=interactionArt[id];
+      if(custom?.painter){
+        const size=spec.logicalSize,views=[0,1,2,3].map(d=>{const c=art.canvas(`fac/${id}/${d}`)!;return {base:c.getContext('2d')!.getImageData(0,0,size,size),depth:new Float32Array(size*size).fill(Infinity),support:new Float32Array(size*size).fill(Infinity)};});
+        result.resources.set(id,{id,painter:true,exactHeading:true,camera:{C:[134.72194,-134.72194,123.57645],F:[-.6123724,.6123724,-.5]},tileWorld:TILE,size,targetZ:(spec.anchor.ay-size/2)/LIFT,views});return;
+      }
+      const resourceBase=custom?.physical?'./assets/imagegen-interactions-v1':base;
+      const response=await fetch(`${resourceBase}/${id}/${prefix}depth-metadata.json`);
       if(!response.ok) throw Error(`Outdoor camera ${id}: ${response.status}`);
       const meta=await response.json() as { camera: OutdoorCamera; tileWorld: number; native: number };
       if(meta.native!==spec.logicalSize || !Number.isFinite(meta.tileWorld) || meta.camera?.C?.length!==3 || meta.camera?.F?.length!==3 || !meta.camera.C.every(Number.isFinite) || !meta.camera.F.every(Number.isFinite)) throw Error(`Invalid outdoor camera ${id}`);
@@ -61,15 +73,17 @@ export async function loadOutdoorDepth(art: ApprovedFacilityProvider, base='./as
         const canvas=art.canvas(`fac/${id}/${d}`),ctx=canvas?.getContext('2d');
         if(!canvas || !ctx || canvas.width!==meta.native || canvas.height!==meta.native) throw Error(`Outdoor RGBA ${id}/${d}`);
         const [depth,support]=await Promise.all(['depth','support'].map(async kind=>{
-          const r=await fetch(`${base}/${id}/${prefix}${kind}-d${d}.bin`);
+          const r=await fetch(`${resourceBase}/${id}/${prefix}${kind}-d${d}.bin`);
           if(!r.ok) throw Error(`Outdoor ${kind} ${id}/${d}: ${r.status}`);
           return validateOutdoorMask(await r.arrayBuffer(),meta.native,`${id}/${kind}/${d}`);
         }));
         return {base:ctx.getImageData(0,0,canvas.width,canvas.height),depth:depth!,support:support!};
       }));
-      result.resources.set(id,{camera:meta.camera,tileWorld:meta.tileWorld,size:meta.native,targetZ:(spec.anchor.ay-meta.native/2)/LIFT,views});
-    } catch(error) { const message=String(error);result.errors.set(id,message);console.error(`[outdoor-facilities] ${id}; keeping base facility and ordinary guests`,error); }
-  }));
+      result.resources.set(id,{id,exactHeading:custom?.exactHeading??false,camera:meta.camera,tileWorld:meta.tileWorld,size:meta.native,targetZ:(spec.anchor.ay-meta.native/2)/LIFT,views});
+      result.errors.delete(id);
+    } catch(error) { result.errors.set(id,String(error));throw error; }
+  });
+  result.ensure=id=>supported.has(id)&&lazy.ensure(id);
   return result;
 }
 function blend(out: Uint8ClampedArray, k: number, color: ArrayLike<number>, alpha: number): void {
@@ -78,22 +92,30 @@ function blend(out: Uint8ClampedArray, k: number, color: ArrayLike<number>, alph
   out[k*4+3]=Math.round(total*255);
 }
 /** Pure pixel composition makes depth/support/effect behavior independently testable. */
-export function composeOutdoor(resource: OutdoorResource, facing: number, actors: readonly OutdoorActor[], provider: AssetProvider, timeMs: number): Uint8ClampedArray {
+export function composeOutdoor(resource: OutdoorResource, facing: number, actors: readonly OutdoorActor[], provider: AssetProvider, timeMs: number, npcOnly=false): Uint8ClampedArray {
   const n=resource.size,v=resource.views[facing];if(!v) throw Error(`Missing outdoor facing ${facing}`);
-  const out=new Uint8ClampedArray(v.base.data),actorDepth=new Float32Array(n*n).fill(Infinity);
-  for(const {uid,sample:s,support} of actors) {
+  const out=npcOnly?new Uint8ClampedArray(v.base.data.length):new Uint8ClampedArray(v.base.data),actorDepth=new Float32Array(n*n).fill(Infinity);
+  for(const {uid,sample:s,support,slotId} of actors) {
     if(s.hidden) continue;
-    const pose=outdoorPose(s.pose),heading=s.heading+facing*Math.PI/2+(pose==='lie'?Math.PI:0);
+    const pose=outdoorPose(s.pose),heading=s.heading+facing*Math.PI/2+(pose==='lie'&&!resource.exactHeading?Math.PI:0);
     const key=npcV8Key(uid,outdoorFacing(heading),pose,timeMs,'happy'),spec=provider.spec(key),canvas=provider.canvas(key),ctx=canvas?.getContext('2d');
     if(!spec || !canvas || !ctx) throw Error(`Missing outdoor NPC frame ${key}`);
     const pix=ctx.getImageData(0,0,canvas.width,canvas.height),p=rotateOutdoor(s.position,facing),q=projectOutdoor(p,n,resource.targetZ);
+    const correction=npcOnly&&resource.id?interactionArt[resource.id]:undefined;
+    const seat=slotId?.startsWith('audience_')?Number(slotId.slice(9)):-1;
+    const raw=seat>=0?correction?.contacts?.directions[facing]?.[seat]:undefined,fit=correction?.fits?.[facing];
+    if(raw&&fit&&resource.id){const slot=outdoorContract(resource.id)?.slots.find(v=>v.id===slotId);if(slot){const original=projectOutdoor(rotateOutdoor(slot.position,facing),n,resource.targetZ),distance=Math.hypot(...s.position.map((v,k)=>v-slot.position[k]!)),u=Math.max(0,1-distance/1.25),weight=u*u*(3-2*u);q[0]+=(fit.x+raw[0]!*fit.scale+spec.ax-20-original[0])*weight;q[1]+=(fit.y+raw[1]!*fit.scale+spec.ay-28-original[1])*weight;}}
+    const polygon=correction?.contacts?.foregroundPolygons[facing];
+    const foreground=(x:number,y:number):boolean=>{if(!polygon||!fit)return false;x=(x-fit.x)/fit.scale;y=(y-fit.y)/fit.scale;let inside=false;for(let i=0,j=polygon.length-1;i<polygon.length;j=i++){const a=polygon[i]!,b=polygon[j]!;if((a[1]!>y)!==(b[1]!>y)&&x<(b[0]!-a[0]!)*(y-a[1]!)/(b[1]!-a[1]!)+a[0]!)inside=!inside;}return inside;};
     const left=Math.round(q[0]-spec.ax),top=Math.round(q[1]-spec.ay),zero=outdoorDepthAt(p,resource.camera,resource.tileWorld);
     const mask=support||['sit','lie','ride'].includes(pose)?v.support:v.depth;
     for(let y=0;y<pix.height;y++)for(let x=0;x<pix.width;x++){
       const src=(y*pix.width+x)*4,alpha=pix.data[src+3]!/255,xx=left+x,yy=top+y;
       if(!alpha || xx<0 || yy<0 || xx>=n || yy>=n) continue;
       const k=yy*n+xx,z=zero+(pose==='lie'?-Math.sqrt(3):.5/COS)*(yy+.5-q[1])-.35;
-      if(z>Math.min(mask[k]!,actorDepth[k]!)+.08) continue;
+      if(raw&&fit){if(foreground(xx,yy)||z>actorDepth[k]!+.08)continue;}
+      else if(resource.painter){const opaque=v.base.data[k*4+3]!>127,behind=pose==='walk'&&q[1]<n/2+resource.targetZ*LIFT-3,roof=(resource.id==='shade_net'||resource.id==='authored_parasol')&&yy<n/2+resource.targetZ*LIFT-15;if(opaque&&(behind||roof)||z>actorDepth[k]!+.08)continue;}
+      else if(z>Math.min(mask[k]!,actorDepth[k]!)+.08) continue;
       blend(out,k,pix.data.subarray(src,src+3),alpha);actorDepth[k]=z;
     }
   }
@@ -134,10 +156,11 @@ export class OutdoorFacilityRenderer {
   update(facilities: readonly PlacedFacility[],guests: readonly Guest[],time: number,liftAt: (i:number,j:number)=>number): void {
     this.hiddenGuestIds.clear();this.hiddenFacilityIds.clear();const seen=new Set<number>();
     for(const f of facilities){
+      if(this.data.ensure&&!this.data.ensure(f.defId))continue;
       const resource=this.data.resources.get(f.defId),contract=outdoorContract(f.defId),attendant=attendantOf(f.defId),spec=this.art.manifest.facilities[f.defId];
       if(!resource||(!contract&&!attendant)||!spec)continue;
       const visitors=guests.filter(g=>outdoorVisitorMatches(g,f)),actors: OutdoorActor[]=[],guestIds: number[]=[];
-      for(const g of visitors){const sample=sampleOutdoorGuest(g);if(sample){actors.push({uid:g.uid,sample});guestIds.push(g.uid);}}
+      for(const g of visitors){const sample=sampleOutdoorGuest(g);if(sample){actors.push({uid:g.uid,sample,slotId:g.outdoor!.slotId});guestIds.push(g.uid);}}
       // One explicitly authored performer is a fixture, never a Guest or seat reservation.
       const performer=contract?.slots.find(s=>s.role==='performer');
       if(performer)actors.push({uid:-110005,sample:{position:performer.position,heading:performer.heading,pose:performer.pose,phase:'performer'}});
@@ -147,18 +170,19 @@ export class OutdoorFacilityRenderer {
         const signature=JSON.stringify([f.defId,f.facing,actors,Math.floor(time*8)]);
         let frame=this.frames.get(f.uid);
         if(!frame || frame.signature!==signature){
-          const rgba=composeOutdoor(resource,f.facing,actors,this.provider,time*1000);
+          const hd=imagegenArt.get(`fac/${f.defId}/${f.facing}`);
+          const rgba=composeOutdoor(resource,f.facing,actors,this.provider,time*1000,!!hd);
           if(!frame){
             const canvas=document.createElement('canvas');canvas.width=canvas.height=resource.size;
             const texture=this.scene.textures.addCanvas(`outdoor-use-${f.uid}`,canvas);if(!texture)throw Error('Outdoor canvas texture');
             frame={canvas,texture,image:this.scene.add.image(0,0,texture.key),signature:''};this.frames.set(f.uid,frame);
           }
-          if(frame.canvas.width!==resource.size){frame.canvas.width=frame.canvas.height=resource.size;}
-          const ctx=frame.canvas.getContext('2d')!;const image=ctx.createImageData(resource.size,resource.size);image.data.set(rgba);ctx.putImageData(image,0,0);frame.texture.refresh();frame.signature=signature;
+          const ctx=frame.canvas.getContext('2d')!;const image=ctx.createImageData(resource.size,resource.size);image.data.set(rgba);
+          ctx.putImageData(image,0,0);frame.texture.refresh();frame.signature=signature;
         }
         const pivot=approvedPivot(f.defId,f.facing,this.art.manifest)!,p=gridToScreen(f.i+pivot[0],f.j+pivot[1]),fp=spec.footprintByFacing[f.facing]!;
-        frame.image.setOrigin(.5,(resource.size/2+resource.targetZ*LIFT)/resource.size).setPosition(p.x,p.y+liftAt(f.i,f.j)).setDepth(depthKey(f.i+fp[0]-1,f.j+fp[1]-1)+Z_FACILITY);
-        seen.add(f.uid);this.hiddenFacilityIds.add(f.uid);
+        frame.image.setOrigin(.5,(resource.size/2+resource.targetZ*LIFT)/resource.size).setPosition(p.x,p.y+liftAt(f.i,f.j)).setDepth(depthKey(f.i+fp[0]-1,f.j+fp[1]-1)+Z_FACILITY+.01);
+        seen.add(f.uid);if(!imagegenArt.get(`fac/${f.defId}/${f.facing}`))this.hiddenFacilityIds.add(f.uid);
         for(const uid of guestIds)this.hiddenGuestIds.add(uid);
       } catch(error){if(!this.failures.has(f.defId)){console.error(`[outdoor-facilities] ${f.defId}; restoring ordinary rendering`,error);this.failures.add(f.defId);}}
     }

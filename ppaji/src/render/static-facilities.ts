@@ -1,3 +1,4 @@
+import { LazyResource } from '../assets/lazy-resource.js';
 import { sampleStaticVisit } from './static-visit-sample.js';
 import Phaser from 'phaser';
 import { loadOutdoorDepth, OutdoorFacilityRenderer, type OutdoorDepth } from './outdoor-facilities.js';
@@ -12,10 +13,12 @@ import { gridToScreen, depthKey, Z_FACILITY } from './iso.js';
 import { TICK_MS } from '../sim/clock.js';
 import type { NpcV8Pose } from '../assets/npc-v8.js';
 
-export interface StaticDepth { outdoor?:OutdoorDepth; pixels:Map<string,ImageData>; depths:Map<string,Float32Array>; slides:Map<string,Float32Array>; poseMasks:Map<string,Float32Array>; overlays:Map<string,ImageData>; depthOffsets:Record<string,{depth_offset?:number}>; spec:AssetProvider['spec'] }
+export interface StaticDepth { ensure?:(id:string)=>boolean; outdoor?:OutdoorDepth; pixels:Map<string,ImageData>; depths:Map<string,Float32Array>; slides:Map<string,Float32Array>; poseMasks:Map<string,Float32Array>; overlays:Map<string,ImageData>; depthOffsets:Record<string,{depth_offset?:number}>; spec:AssetProvider['spec'] }
 export async function loadStaticDepth(art:ApprovedFacilityProvider,base='./assets/approved-facilities'):Promise<StaticDepth>{
   const data:StaticDepth={pixels:new Map(),depths:new Map(),slides:new Map(),poseMasks:new Map(),overlays:new Map(),depthOffsets:{},spec:id=>art.spec(id.replace('watercraft/','fac/'))};
-  await Promise.all(Object.entries(art.manifest.facilities).filter(([,s])=>!s.renderOnly).map(async([id,s])=>Promise.all([0,1,2,3].map(async d=>{
+  const lazy=new LazyResource(async id=>{
+    const s=art.manifest.facilities[id];if(!s||s.renderOnly)return;
+    await Promise.all([0,1,2,3].map(async d=>{
     const canvas=art.canvas(`fac/${id}/${d}`),ctx=canvas?.getContext('2d');if(!canvas||!ctx)throw Error('Approved static frame '+id);
     const key=`watercraft/${id}/${d}`;data.pixels.set(key,ctx.getImageData(0,0,canvas.width,canvas.height));
     const loadPixels=async(file:string):Promise<ImageData>=>{const im=new Image();im.src=`${base}/${id}/${file}-d${d}.png`;await im.decode();const c=document.createElement('canvas');c.width=im.width;c.height=im.height;const x=c.getContext('2d')!;x.drawImage(im,0,0);return x.getImageData(0,0,c.width,c.height);};
@@ -28,7 +31,7 @@ export async function loadStaticDepth(art:ApprovedFacilityProvider,base='./asset
       else if(mode==='slide')data.slides.set(key,z);
       else for(const [pose,mask]of Object.entries(s.poseMasks??{}))if(mask===mode)data.poseMasks.set(`${key}/${pose}`,z);
     }
-  }))));data.outdoor=await loadOutdoorDepth(art,base);return data;
+  }));});data.ensure=id=>lazy.ensure(id);data.outdoor=await loadOutdoorDepth(art,base);return data;
 }
 /** Sampling never adds new guests or loops the route ahead of the simulation's visit. */
 export function sampleApprovedTrack(actor:RouteTrack,time:number):RouteSample{
@@ -53,6 +56,8 @@ export class StaticFacilityRenderer{
     const seen=new Set<number>();
     for(const f of facilities){
       const spec=this.art.manifest.facilities[f.defId];if(!spec)continue;
+      const ready=this.art.routesOf(f.defId)?.tour ? this.depth.ensure?.(f.defId) ?? true : true;
+      if(!ready)continue;
       const visitors=guests.filter(g=>g.state==='use'&&g.target?.kind==='facility'&&g.target.uid===f.uid);if(!visitors.length)continue;
       const routes=this.art.routesOf(f.defId);if(!routes?.tour)continue;
       const pivot=approvedPivot(f.defId,f.facing,this.art.manifest)!;
@@ -71,12 +76,13 @@ export class StaticFacilityRenderer{
         const pose:NpcV8Pose=p.pose==='slide'?'ride':(['idle','walk','swim','sit','lie','jump'].includes(p.pose)?p.pose:'idle') as NpcV8Pose;
         return {uid:g.uid,surfacePose:p.pose,di:p.i-f.i-pivot[0],dj:p.j-f.j-pivot[1],z:p.z,pose,heading:craftHeading(Math.cos(p.heading),Math.sin(p.heading))};
       });
-      seen.add(f.uid);this.hiddenFacilityIds.add(f.uid);let frame=this.frames.get(f.uid);
+      seen.add(f.uid);let frame=this.frames.get(f.uid);
       if(!frame){const compositor=new CraftComposite(this.depth,this.provider,spec.logicalSize),texture=this.scene.textures.addCanvas(`static-use-${f.uid}`,compositor.canvas);if(!texture)throw Error('Static use canvas');frame={compositor,texture,image:this.scene.add.image(0,0,texture.key),signature:''};this.frames.set(f.uid,frame);}
       const signature=JSON.stringify([f.defId,f.facing,riders,Math.floor(time*8)]);
-      if(signature!==frame.signature){const anchor=frame.compositor.draw(f.defId,f.facing,riders,time*1000,this.depth.slides.get(`watercraft/${f.defId}/${f.facing}`),this.depth.poseMasks,this.depth.overlays.get(`watercraft/${f.defId}/${f.facing}`));frame.texture.refresh();frame.image.setOrigin(anchor.ax/frame.compositor.canvas.width,anchor.ay/frame.compositor.canvas.height);frame.signature=signature;}
+      if(signature!==frame.signature){const anchor=frame.compositor.draw(f.defId,f.facing,riders,time*1000,this.depth.slides.get(`watercraft/${f.defId}/${f.facing}`),this.depth.poseMasks,this.depth.overlays.get(`watercraft/${f.defId}/${f.facing}`));frame.image.setDisplaySize(frame.compositor.canvas.width,frame.compositor.canvas.height);frame.texture.refresh();frame.image.setOrigin(anchor.ax/frame.compositor.canvas.width,anchor.ay/frame.compositor.canvas.height);frame.signature=signature;}
+      if(!frame.compositor.usingImagegen)this.hiddenFacilityIds.add(f.uid);
       const p=gridToScreen(f.i+pivot[0],f.j+pivot[1]),fp=spec.footprintByFacing[f.facing]!;
-      frame.image.setPosition(p.x,p.y+liftAt(f.i,f.j)).setDepth(depthKey(f.i+fp[0]-1,f.j+fp[1]-1)+Z_FACILITY);fx.setPosition(0,liftAt(f.i,f.j)).setDepth(frame.image.depth+.01);
+      frame.image.setPosition(p.x,p.y+liftAt(f.i,f.j)).setDepth(depthKey(f.i+fp[0]-1,f.j+fp[1]-1)+Z_FACILITY+.01);fx.setPosition(0,liftAt(f.i,f.j)).setDepth(frame.image.depth+.01);
     }
     for(const [uid,fx]of this.waterEffects)if(!seen.has(uid)){fx.destroy();this.waterEffects.delete(uid);}
     for(const uid of this.wetGuests.keys())if(!this.hiddenGuestIds.has(uid))this.wetGuests.delete(uid);

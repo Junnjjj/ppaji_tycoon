@@ -1,11 +1,25 @@
 import { describe, it, expect } from 'vitest';
 import {
   TILE_W, TILE_H, STEP_X, STEP_Y, GRID_W, GRID_H,
-  gridToScreen, tileCenter, screenToTile, depthKey, footprintAnchor, footprintCanvas, canvasAnchor,
+  gridToScreen, tileCenter, screenToTile, depthKey, groundDepth, footprintAnchor, footprintCanvas, canvasAnchor,
   gridExtent, inGrid, snapCamera, tileRowSpan, tileMaskArea, tileOffsetInCanvas, spanDepthKey,
   Z_GROUND, Z_WATER, Z_FACILITY, Z_GUEST, Z_FACE, Z_EMOTE, Z_GHOST, Z_FX, Z_BAND,
   DEPTH_AIM_MARK, DEPTH_LAND_MARK, DEPTH_SCREEN_FX,
 } from './iso.js';
+
+describe('facility floor visibility', () => {
+  it('every flat ground tile stays below even an earlier facility and above the backdrop', () => {
+    for (let j = 0; j < GRID_H; j++) for (let i = 0; i < GRID_W; i++) {
+      expect(groundDepth(i, j, 0)).toBeGreaterThan(-90);
+      expect(groundDepth(i, j, 0)).toBeLessThan(depthKey(0, 0) + Z_FACILITY);
+    }
+  });
+  it('raised column sides keep their foreground order', () => {
+    expect(groundDepth(44, 15, 1)).toBe(depthKey(44, 15) + Z_GROUND);
+    expect(groundDepth(44, 15, 1)).toBeGreaterThan(depthKey(43, 15) + Z_FACILITY);
+    expect(groundDepth(44, 15, 0)).toBeLessThan(depthKey(43, 15) + Z_FACILITY);
+  });
+});
 
 describe('투영이 정수로 떨어진다', () => {
   it('격자 한 걸음이 정확히 (16, 8) 텍셀', () => {
@@ -106,9 +120,10 @@ describe('앵커', () => {
 });
 
 describe('격자·마스크', () => {
-  it('96×72 는 2688×1344 텍셀, 2:1 가로형 (P43)', () => {
-    expect(gridExtent()).toEqual({ x: 2688, y: 1344 });
-    expect(inGrid(95, 71)).toBe(true);
+  it('96×120 는 3456×1728 텍셀, 2:1 가로형 (P43)', () => {
+    expect(gridExtent()).toEqual({ x: 3456, y: 1728 });
+    expect(inGrid(95, 119)).toBe(true);
+    expect(inGrid(0, 120)).toBe(false);
     expect(inGrid(96, 0)).toBe(false);
   });
   it('스냅', () => {

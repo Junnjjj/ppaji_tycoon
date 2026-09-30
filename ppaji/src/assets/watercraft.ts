@@ -1,3 +1,5 @@
+import { imagegenArt } from './imagegen-art.js';
+import { LazyResource } from './lazy-resource.js';
 /** Native 16-heading authored watercraft. Heading zero travels toward game +J. */
 import type { AssetProvider, SpriteSpec } from './types.js';
 export interface CraftSpec { logical_size: number; capacity: number; camera_target_z_tiles: number; full_bounds_tiles?: number[][]; tow_socket?: number[]; stern?: number[]; seats: { position: [number, number, number]; pose: string; heading: number }[] }
@@ -9,6 +11,9 @@ export class WatercraftProvider implements AssetProvider {
   readonly depths = new Map<string, Float32Array>();
   readonly pixels = new Map<string, ImageData>();
   depthOffsets: Record<string, {depth_offset?:number}> = {};
+  private base = '';
+  private readonly lazy = new LazyResource(id => this.loadCraft(id));
+  ensure(id: string): boolean { return !!this.manifest.equipment[id] && this.lazy.ensure(id); }
   private frames = new Map<string, HTMLCanvasElement>();
   constructor(readonly manifest: CraftManifest) {}
   // Vehicles are composed into a single scene texture; raw headings are never GPU sprites.
@@ -29,23 +34,30 @@ export class WatercraftProvider implements AssetProvider {
   }
   async load(base: string): Promise<void> {
     this.depthOffsets = await (await fetch(`${base}/depth-origins.json`)).json() as Record<string,{depth_offset?:number}>;
-    await Promise.all(Object.keys(this.manifest.equipment).map(async id => {
-      await Promise.all(Array.from({length:16}, async (_,h) => {
-        const image = new Image(); image.src = `${base}/${id}/B/native-h${String(h).padStart(2,'0')}.png`;
-        await image.decode();
-        const c = document.createElement('canvas'); c.width = image.width; c.height = image.height;
-        const ctx = c.getContext('2d'); if (!ctx) throw Error('Watercraft canvas unavailable');
-        ctx.drawImage(image,0,0); const key = `watercraft/${id}/${h}`;
-        const width = c.width, height = c.height;
-        this.pixels.set(key,ctx.getImageData(0,0,width,height));
-        // Release the temporary backing store explicitly (mobile Safari can retain it until GC).
-        c.width = c.height = 0;
-        const response = await fetch(`${base}/${id}/B/depth-h${String(h).padStart(2,'0')}.bin`);
-        if (!response.ok) throw Error(`Missing depth: ${id}/${h}`);
-        const z = new Float32Array(await response.arrayBuffer());
-        if (z.length !== width*height) throw Error(`Wrong depth size: ${id}/${h}`);
-        this.depths.set(key,z);
-      }));
+    this.base = base;
+    // Shop thumbnails need only one color frame, never the depth or 16 headings.
+    await Promise.all(Object.keys(this.manifest.equipment).map(id => this.loadPixels(id, 0)));
+  }
+  private async loadPixels(id: string, h: number): Promise<ImageData> {
+    const key = `watercraft/${id}/${h}`, cached = this.pixels.get(key);
+    if (cached) return cached;
+    const image = new Image(); image.src = `${this.base}/${id}/B/native-h${String(h).padStart(2,'0')}.png`;
+    await image.decode();
+    const c = document.createElement('canvas'); c.width = image.width; c.height = image.height;
+    const ctx = c.getContext('2d'); if (!ctx) throw Error('Watercraft canvas unavailable');
+    ctx.drawImage(image,0,0); const pixels = ctx.getImageData(0,0,c.width,c.height);
+    this.pixels.set(key,pixels); c.width = c.height = 0; return pixels;
+  }
+  private async loadCraft(id: string): Promise<void> {
+    await Promise.all(Array.from({length:16}, async (_,h) => {
+      const key = `watercraft/${id}/${h}`;
+      const [pixels]=await Promise.all([this.loadPixels(id,h),imagegenArt.load(key)]);
+      if (this.depths.has(key)) return;
+      const response = await fetch(`${this.base}/${id}/B/depth-h${String(h).padStart(2,'0')}.bin`);
+      if (!response.ok) throw Error(`Missing depth: ${id}/${h}`);
+      const z = new Float32Array(await response.arrayBuffer());
+      if (z.length !== pixels.width*pixels.height) throw Error(`Wrong depth size: ${id}/${h}`);
+      this.depths.set(key,z);
     }));
   }
 }

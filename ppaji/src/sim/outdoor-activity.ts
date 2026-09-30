@@ -3,7 +3,7 @@ import contracts from '../data/outdoor-facility-contracts.json';
 export type OutdoorPoint = [number, number, number];
 export interface OutdoorSlot { id: string; role?: string; position: OutdoorPoint; pose: string; heading: number; approach: OutdoorPoint[]; exitApproach?: OutdoorPoint[]; seatContact?: OutdoorPoint; supportObjects?: string[] }
 export interface OutdoorContract {
-  id: string; size: [number, number]; capacity?: number; proposalAudienceCount?: number;
+  imagegenInteraction?:boolean; id: string; size: [number, number]; capacity?: number; proposalAudienceCount?: number;
   entry: OutdoorPoint; exit: OutdoorPoint; slots: OutdoorSlot[]; routes?: Record<string, OutdoorPoint[]>;
   admissionOrder?: string[]; exitOrder?: string[]; floorZ?: number; flashPosition?: OutdoorPoint;
   motion?: { ascentSeconds?: number; jumpSeconds?: number; reboundSeconds?: number; recoverSeconds?: number };
@@ -83,11 +83,11 @@ export function createOutdoorVisit(f: OutdoorPlacement & { uid: number }, slotId
     timed('winch',[r.rebound!.at(-1)!,c.rope!.pickupFeet],m.recoverSeconds!*.6,'cheer_jump',{curve:'winch'});
     walk('recover',r.recover!.slice(1),.8);
   } else {
-    walk('entering',s.approach);
+    walk('entering',c.imagegenInteraction?[c.entry,...s.approach]:s.approach);
     segments.push({phase:'hold',path:[s.position],ticks:Math.max(1,holdTicks),pose:s.pose==='sit_chair'?'sit':s.pose==='stand'?'idle':s.pose,heading:s.heading});
     const exit=s.exitApproach ?? (c.id==='photozone'?c.routes!['exit_'+(s.id==='subject-1'?0:1)]!:
       c.id==='pavilion'?[...s.approach.slice(1).reverse(),[0,-.65,c.floorZ!] as OutdoorPoint,c.exit]:[...s.approach].reverse());
-    walk('exiting',exit);
+    walk('exiting',c.imagegenInteraction?[...exit,c.exit]:exit);
   }
   if(c.id==='playground') timed('hold',[c.exit],Math.max(.125,holdTicks/8),'idle');
   walk('exiting',[c.exit,outdoorLocal(f,{i:exitTile.i+.5,j:exitTile.j+.5})]);

@@ -1,3 +1,4 @@
+import { facilityPadding } from '../../sim/facility-spacing.js';
 /**
  * 건설 창 — 7분류 탭 + **카드 격자**(`PictureGrid`, P56-a2 D2 통일). 카드 = 스프라이트 + 좌하 `×놓은 수` + 우하 값 + 잠금 배지.
  * 카드를 고르면 창이 닫히고 **배치 모드**로. 잠긴 시설은 숨기지 않고 잠긴 카드로 남긴다 (가림막이 아니라 예고) —
@@ -108,7 +109,7 @@ export class BuildWindow {
       const memberOf = visibleSetsOf(def.id, setIndex);
       const placed = g.facilities.all.filter((f) => f.defId === def.id).length; // 원작 카드의 좌하 `×N` = 놓인 수
       const sub = unlocked
-        ? `인기 ${def.pop} · 유지 ${def.maint}G/일${def.usageFee ? ` · 이용료 ${def.usageFee}G` : ''}`
+        ? `부지 ${def.w+facilityPadding(def)}×${def.d+facilityPadding(def)} · 인기 ${def.pop} · 유지 ${def.maint}G/일${def.usageFee ? ` · 이용료 ${def.usageFee}G` : ''}`
         : `잠김 · ${UNLOCK_KO[def.unlock.source]}${def.unlock.rank !== undefined ? ` ${def.unlock.rank}` : ''}`;
       const card: PictureCard = {
         id: def.id,

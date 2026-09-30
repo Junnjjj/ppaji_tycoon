@@ -1,3 +1,4 @@
+import { imagegenArt } from '../assets/imagegen-art.js';
 import Phaser from 'phaser';
 import type { AssetProvider } from '../assets/types.js';
 import { craftHeading, type WatercraftProvider } from '../assets/watercraft.js';
@@ -10,7 +11,7 @@ const HEIGHT=Math.sqrt(512)*Math.cos(Math.PI/6);
 function heading(a:number):number{return craftHeading(Math.cos(a),Math.sin(a));}
 function local(p:readonly number[],h:number):{di:number;dj:number;z:number}{const a=h*Math.PI/8;return {di:p[0]!*Math.cos(a)-p[1]!*Math.sin(a),dj:-(p[0]!*Math.sin(a)+p[1]!*Math.cos(a)),z:p[2]??0};}
 function pose(s:string):NpcV8Pose{return s==='slide'?'ride':s==='jump'?'jump':(['idle','walk','swim','sit','lie','ride'].includes(s)?s:'idle') as NpcV8Pose;}
-interface CraftImage {image:Phaser.GameObjects.Image; compositor:CraftComposite; signature:string; texture:Phaser.Textures.CanvasTexture;}
+interface CraftImage {base:Phaser.GameObjects.Image;image:Phaser.GameObjects.Image; compositor:CraftComposite; signature:string; texture:Phaser.Textures.CanvasTexture;}
 /** Read-only presentation of simulation-owned departures. No fees, rolls or guest creation. */
 export class CourseRideRenderer {
   private readonly craft = new Map<string,CraftImage>();
@@ -34,6 +35,8 @@ export class CourseRideRenderer {
     for(const ride of view.rides){
       for(const raw of ride.vehicles){
         const id=`${ride.rideId}:${raw.vehicle}`,root=this.follow(id,raw.pos.i,raw.pos.j,raw.bounce,timeSec),v={...raw,pos:root,bounce:root.z,boat:raw.boat?{...raw.boat,pos:this.follow(id+':boat',raw.boat.pos.i,raw.boat.pos.j,0,timeSec)}:null},h=heading(v.heading),spec=this.art.manifest.equipment[ride.equipId];if(!spec)continue;
+        const craftReady=this.art.ensure(ride.equipId),boatReady=v.boat?this.art.ensure('tow_work'):true;
+        if(!craftReady||!boatReady)continue;
         const riders:CraftRider[]=[];
         for(const p of v.passengers){
           this.hiddenGuestIds.add(p.guestUid);
@@ -68,7 +71,7 @@ export class CourseRideRenderer {
       this.drawImpact(g,id,timeSec);
       if(swimmer.status==='swim'){const q=tileCenter(swimmer.pos.i,swimmer.pos.j);g.lineStyle(1,0xc3edf6,.5);g.strokeEllipse(q.x,q.y+2,9+(timeSec%1)*3,4);}
     }
-    for(const [key,c] of this.craft)if(!seen.has(key)){c.image.destroy();this.scene.textures.remove(c.texture.key);c.compositor.destroy();this.craft.delete(key);this.motion.delete(key);}
+    for(const [key,c] of this.craft)if(!seen.has(key)){c.base.destroy();c.image.destroy();this.scene.textures.remove(c.texture.key);c.compositor.destroy();this.craft.delete(key);this.motion.delete(key);}
     for(const [uid,image]of this.actors)if(!actors.has(uid)){image.destroy();this.actors.delete(uid);this.motion.delete(`actor:${uid}`);}
     for(const [key,g]of this.effects)if(!fxSeen.has(key)){g.destroy();this.effects.delete(key);this.impacts.delete(key);this.lastBounce.delete(key);}
     for(const [key,g]of this.rope)if(!ropeSeen.has(key)){g.destroy();this.rope.delete(key);}
@@ -80,10 +83,12 @@ export class CourseRideRenderer {
   }
   private place(id:string,asset:string,i:number,j:number,z:number,h:number,riders:readonly CraftRider[],time:number,seen:Set<string>):void{
     seen.add(id);let c=this.craft.get(id);
-    if(!c){const compositor=new CraftComposite(this.art,this.provider,this.art.manifest.equipment[asset]!.logical_size);const key=`ride-composite-${++this.sequence}`;const texture=this.scene.textures.addCanvas(key,compositor.canvas);if(!texture)throw Error('Vehicle canvas texture');c={compositor,texture,image:this.scene.add.image(0,0,key),signature:''};this.craft.set(id,c);}
+    if(!c){const compositor=new CraftComposite(this.art,this.provider,this.art.manifest.equipment[asset]!.logical_size);const key=`ride-composite-${++this.sequence}`;const texture=this.scene.textures.addCanvas(key,compositor.canvas);if(!texture)throw Error('Vehicle canvas texture');c={compositor,texture,base:this.scene.add.image(0,0,key).setVisible(false),image:this.scene.add.image(0,0,key),signature:''};this.craft.set(id,c);}
     const sig=JSON.stringify([asset,h,riders]);
-    if(sig!==c.signature){const q=c.compositor.draw(asset,h,riders,time*1000);c.image.setOrigin(q.ax/c.compositor.canvas.width,q.ay/c.compositor.canvas.height);c.texture.refresh();c.signature=sig;}
-    const p=tileCenter(i,j);c.image.setPosition(p.x,p.y-z*HEIGHT).setDepth(this.surfaceDepth(asset,i,j,h));
+    if(sig!==c.signature){const q=c.compositor.draw(asset,h,riders,time*1000);c.image.setOrigin(q.ax/c.compositor.canvas.width,q.ay/c.compositor.canvas.height);c.image.setDisplaySize(c.compositor.canvas.width,c.compositor.canvas.height);c.texture.refresh();c.signature=sig;}
+    const hd=imagegenArt.get(`watercraft/${asset}/${h}`),sprite=this.art.spec(`watercraft/${asset}/${h}`)!;
+    if(hd){const key=`imagegen/watercraft/${asset}/${h}`;if(!this.scene.textures.exists(key))this.scene.textures.addCanvas(key,hd)?.setFilter(Phaser.Textures.FilterMode.LINEAR);c.base.setTexture(key).setDisplaySize(sprite.w,sprite.h).setOrigin(sprite.ax/sprite.w,sprite.ay/sprite.h).setVisible(true);}else c.base.setVisible(false);
+    const p=tileCenter(i,j);c.base.setPosition(p.x,p.y-z*HEIGHT).setDepth(this.surfaceDepth(asset,i,j,h));c.image.setPosition(p.x,p.y-z*HEIGHT).setDepth(this.surfaceDepth(asset,i,j,h)+.01);
   }
   private actor(uid:number,i:number,j:number,z:number,h:number,p:NpcV8Pose,time:number,seen:Set<number>):void{
     const key=npcV8Key(uid,craftFacing(h),p,time*1000,'happy'),spec=this.provider.spec(key);if(!spec)return;

@@ -1,3 +1,4 @@
+import { expandSavedGrid } from './grid-migration.js';
 import authoredRideSeats from '../data/watercraft-seats.json';
 import { adoptApprovedDocks } from './approved-docks.js';
 import { applyArrivalLayout, arrivalRoute } from './arrival-layout.js';
@@ -274,6 +275,9 @@ export interface GameSnapshot {
 export class Game {
   arrivalRevision = 0;
   finalizeArrivalLayout(): void {
+    this.facilities.spacingEnabled = this.arrivalRevision >= 3;
+    this.grid.compactEntrance = this.arrivalRevision >= 3;
+    this.guests.setGate(this.gate);
     this.guests.setArrivalRoute(arrivalRoute(this.gate));
     this.popCache = null;
     this.afterWorldChange();
@@ -797,7 +801,7 @@ export class Game {
     const bs = this.busState;
     if (bs.phase === 'in') {
       bs.t = Math.min(1, bs.t + 1 / travel);
-      if (bs.t >= 1) { bs.phase = 'stop'; bs.t = 0; this.fx.push({ kind: 'bus', i: this.gate.i, j: ROAD_ROWS[1] as number }); } // P43: 차도(도시 띠)
+      if (bs.t >= 1) { bs.phase = 'stop'; bs.t = 0; this.fx.push({ kind: 'bus', i: this.gate.i, j: this.arrivalRevision >= 3 ? -1 : ROAD_ROWS[1] as number }); } // P43: 차도(도시 띠)
       return;
     }
     if (bs.phase === 'stop') {
@@ -1347,7 +1351,7 @@ export class Game {
   }
 
   get gate(): { i: number; j: number } {
-    return gateTile(this.rank);
+    return this.arrivalRevision >= 3 ? { i: gateTile(this.rank).i, j: 0 } : gateTile(this.rank);
   }
 
   /** P40 D50·D51 — 내 땅 = 랭크 사각형(울타리 친 마당). 확장은 랭크 사건이다 */
@@ -1356,7 +1360,7 @@ export class Game {
   openLand(rank: number): void { this.rank = rank; this.grid.openLand(rank); this.guests.invalidate(); }
 
   /** 내 땅 — 랭크 사각형(울타리 친 마당) */
-  get land() { return landRect(this.rank); }
+  get land() { const land = landRect(this.rank); return this.arrivalRevision >= 3 ? { ...land, j0: 1, h: land.h + land.j0 - 1 } : land; }
 
   drainFx(): FxEvent[] {
     const out = this.fx;
@@ -3309,6 +3313,12 @@ export class Game {
     this.syncNightSet(); // P54: 밤 집합은 한 함수가 만든다(실내 놀이 + 밤이 열린 수역의 기구·링 위 매점)
   }
   /** P50-a §3.7 — 기구 발자국을 `blocked` 로, 켜짐을 `computeRigs` 로, 발자국 마스크를 `walkOn` 으로. 「켜져 있다가 꺼진 칸」을 돌려준다(로드 때는 버린다) */
+  /** Rebuild derived world state after applying an authored base map. */
+  refreshMapForEditor(): void {
+    this.refreshRigs(); this.rigLinkCache = null; this.poolCache.clear(); this.guests.invalidate();
+    for (const f of this.facilities.all) if (this.facilities.defOf(f).menuSlots > 0) this.autoEquipMenus(f.uid, 3);
+  }
+
   private refreshRigs(): { i: number; j: number }[] {
     const w = this.grid.w;
     const ks: number[] = [];
@@ -3476,6 +3486,7 @@ export class Game {
   }
 
   static fromSnapshot(s: GameSnapshot, b: Balance = defaultBalance): Game {
+    s = {...s,grid:expandSavedGrid(s.grid)};
     const g = new Game(s.seed, b, { kit: false });
     // 옛 스냅샷에 없는 스트림(P7 workshop)은 새 fork 그대로 둔다
     for (const k of Object.keys(RNG_SALTS) as RngStream[]) if (s.rng[k] !== undefined) g.rng[k].setState(s.rng[k]);
@@ -3543,7 +3554,7 @@ export class Game {
     g.refreshRigs(); // P50-a: 켜짐·walkOn·blocked 는 파생 — 로드 뒤 다시 센다
     g.primePackageCache(); // P50-b1: 자리 패키지 대조 캐시(파생)
     g.arrivalRevision = s.arrivalRevision ?? 0;
-    if (g.arrivalRevision) g.guests.setArrivalRoute(arrivalRoute(g.gate));
+    if (g.arrivalRevision) { g.facilities.spacingEnabled = g.arrivalRevision >= 3; g.grid.compactEntrance = g.arrivalRevision >= 3; g.guests.setGate(g.gate); g.guests.setArrivalRoute(arrivalRoute(g.gate)); }
     g.recomputePassBy(); // P45-b: 복도 곁 점포 집합은 저장하지 않는다 — 복원 때 다시 센다(하루 중간 저장·복원이 같아야 한다, G57)
     return g;
   }

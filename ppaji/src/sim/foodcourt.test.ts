@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { Game } from './game.js';
+import { arrivalRoom } from './arrival-layout.js';
 import { FOODCOURT_SEAT_DEF, courtBlocks, courtSeats } from './foodcourt.js';
 import { TICKS_PER_DAY } from './clock.js';
 
@@ -18,17 +19,17 @@ describe('P58-a 푸드코트', () => {
     expect(g.canPlace(FOODCOURT_SEAT_DEF, 40, 12, 0).ok).toBe(false);
   });
   it('붓: 6×4 → 식탁 4 · 좌석 8 · 비용 24칸×60 · 실내 밖·복도·시설 위·3×2 미만 거절', () => {
-    const g = fresh(); g.money = 100000; const gt = g.gate;
+    const g = fresh(); g.money = 100000; const gt = { ...g.gate, j: arrivalRoom(g.gate).j0 };
     const r = g.makeFoodCourt({ i0: gt.i - 9, j0: gt.j + 6, w: 6, h: 4 });
     expect(r.ok).toBe(true); expect(r.seats).toBe(8); expect(r.cost).toBe(24 * 60);
     expect(courtBlocks({ i0: 0, j0: 0, w: 6, h: 4 }).length).toBe(4);
     expect(why(g.canMakeFoodCourt({ i0: gt.i - 20, j0: gt.j + 30, w: 3, h: 2 }))).toContain('실내 바닥');
     expect(why(g.canMakeFoodCourt({ i0: gt.i - 1, j0: gt.j + 4, w: 3, h: 2 }))).toContain('복도');
-    expect(g.canMakeFoodCourt({ i0: gt.i - 3, j0: gt.j + 3, w: 3, h: 2 }).ok).toBe(false); // 실내 매점(45,11) 위
+    expect(g.canMakeFoodCourt({ i0: gt.i - 5, j0: gt.j + 3, w: 3, h: 2 }).ok).toBe(false); // 실내 매점(43,11) 위
     expect(why(g.canMakeFoodCourt({ i0: gt.i - 9, j0: gt.j + 11, w: 2, h: 2 }))).toContain('3×2');
   });
   it('확장: 기존 영역을 통째로 덮으면 대체 — 새 칸만 값을 내고 좌석은 다시 파생 · 걸치면 거절 · 지우기는 영역째', () => {
-    const g = fresh(); g.money = 100000; const gt = g.gate;
+    const g = fresh(); g.money = 100000; const gt = { ...g.gate, j: arrivalRoom(g.gate).j0 };
     const kit = g.foodcourts.all[0]!; // (gt.i+4, gt.j+2) 3×4
     const before = g.money;
     const r = g.makeFoodCourt({ i0: kit.i0, j0: kit.j0, w: 6, h: 4 });
@@ -46,7 +47,7 @@ describe('P58-a 푸드코트', () => {
     expect(why(g.unpaintIndoor([{ i: kit.i0, j: kit.j0 }]))).toContain('푸드코트');
   });
   it('스냅샷 왕복 — 영역·파생 시설·좌석 수가 같다 · 옛 세이브(필드 없음)는 빈 목록', () => {
-    const g = fresh(); g.money = 100000; const gt = g.gate;
+    const g = fresh(); g.money = 100000; const gt = { ...g.gate, j: arrivalRoom(g.gate).j0 };
     g.makeFoodCourt({ i0: gt.i - 9, j0: gt.j + 6, w: 6, h: 4 });
     const s = JSON.parse(JSON.stringify(g.toSnapshot()));
     const h = Game.fromSnapshot(s);

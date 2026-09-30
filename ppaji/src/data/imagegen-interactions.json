@@ -1,0 +1,962 @@
+{
+  "sauna": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "jjimjilbang": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "arcade": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "vending_in": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "info": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "rental_tube": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "indoor_shop": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "dry_room": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "authored_infirmary": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "authored_karaoke": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "foodcourt_seat": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "icecream": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "sikhye": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "bungeoppang": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "shade_net": {
+    "physical": false,
+    "painter": true,
+    "native": 192,
+    "exactHeading": true
+  },
+  "shop": {
+    "physical": false,
+    "painter": true,
+    "native": 192,
+    "exactHeading": true
+  },
+  "snackbar": {
+    "physical": false,
+    "painter": true,
+    "native": 192,
+    "exactHeading": true
+  },
+  "firepit_row": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "chicken": {
+    "physical": true,
+    "painter": false,
+    "native": 192,
+    "exactHeading": true
+  },
+  "authored_parasol": {
+    "physical": false,
+    "painter": true,
+    "native": 192,
+    "exactHeading": true
+  },
+  "authored_bbq_zone": {
+    "physical": false,
+    "painter": true,
+    "native": 192,
+    "exactHeading": true
+  },
+  "authored_sunbed_row": {
+    "physical": false,
+    "painter": true,
+    "native": 192,
+    "exactHeading": true
+  },
+  "authored_pyeongsang_row": {
+    "physical": false,
+    "painter": true,
+    "native": 192,
+    "exactHeading": true
+  },
+  "authored_massage_row": {
+    "physical": false,
+    "painter": true,
+    "native": 192,
+    "exactHeading": true
+  },
+  "authored_footbath": {
+    "physical": false,
+    "painter": true,
+    "native": 192,
+    "exactHeading": true
+  },
+  "stage_river_lv1": {
+    "contacts": {
+      "status": "GENERATED_REVIEW_CALIBRATION",
+      "units": "raw generated PNG pixels; seated pelvis/support contact",
+      "directions": [
+        [
+          [
+            310,
+            785
+          ],
+          [
+            490,
+            887
+          ],
+          [
+            208,
+            855
+          ],
+          [
+            392,
+            960
+          ]
+        ],
+        [
+          [
+            694,
+            850
+          ],
+          [
+            869,
+            766
+          ],
+          [
+            794,
+            900
+          ],
+          [
+            982,
+            804
+          ]
+        ],
+        [
+          [
+            925,
+            609
+          ],
+          [
+            748,
+            507
+          ],
+          [
+            1030,
+            506
+          ],
+          [
+            850,
+            411
+          ]
+        ],
+        [
+          [
+            578,
+            690
+          ],
+          [
+            465,
+            746
+          ],
+          [
+            531,
+            618
+          ],
+          [
+            420,
+            674
+          ]
+        ]
+      ],
+      "previewAudienceCount": 4,
+      "note": "Per-view calibration requested by user. Canonical source contracts unchanged; original depth remains approximate on generated art.",
+      "foregroundPolygons": {
+        "2": [
+          [
+            150,
+            295
+          ],
+          [
+            731,
+            588
+          ],
+          [
+            734,
+            997
+          ],
+          [
+            146,
+            700
+          ]
+        ],
+        "3": [
+          [
+            619,
+            674
+          ],
+          [
+            994,
+            487
+          ],
+          [
+            994,
+            810
+          ],
+          [
+            619,
+            977
+          ]
+        ]
+      },
+      "occlusion": "Manually annotated 2D foreground roof/backdrop polygons for generated seated audience; approximate, not physical depth. Performer uses source depth."
+    },
+    "fits": [
+      {
+        "scale": 0.06995515695067264,
+        "x": 57.10313901345292,
+        "y": 69.83946188340808,
+        "originalBounds": [
+          62,
+          75,
+          140,
+          147
+        ],
+        "generatedBounds": [
+          70,
+          146,
+          1185,
+          1103
+        ],
+        "fittedBounds": [
+          62.0,
+          80.05291479820629,
+          140.0,
+          147.0
+        ],
+        "method": "alpha>127 uniform min extent; horizontal center and lower opaque-bound contact translation; diagnostic, NOT exact floor registration",
+        "residualWidthPx": 0.0,
+        "residualHeightPx": 5.052914798206288
+      },
+      {
+        "scale": 0.08237986270022883,
+        "x": 35.68192219679634,
+        "y": 61.90160183066362,
+        "originalBounds": [
+          52,
+          75,
+          130,
+          147
+        ],
+        "generatedBounds": [
+          205,
+          159,
+          1138,
+          1033
+        ],
+        "fittedBounds": [
+          52.569794050343255,
+          75.0,
+          129.43020594965677,
+          147.0
+        ],
+        "method": "alpha>127 uniform min extent; horizontal center and lower opaque-bound contact translation; diagnostic, NOT exact floor registration",
+        "residualWidthPx": 1.1395881006864954,
+        "residualHeightPx": 0.0
+      },
+      {
+        "scale": 0.06859205776173286,
+        "x": 48.0956678700361,
+        "y": 78.57761732851985,
+        "originalBounds": [
+          52,
+          96,
+          130,
+          153
+        ],
+        "generatedBounds": [
+          113,
+          254,
+          1138,
+          1085
+        ],
+        "fittedBounds": [
+          55.84657039711192,
+          96.0,
+          126.15342960288808,
+          153.0
+        ],
+        "method": "alpha>127 uniform min extent; horizontal center and lower opaque-bound contact translation; diagnostic, NOT exact floor registration",
+        "residualWidthPx": 7.693140794223822,
+        "residualHeightPx": 0.0
+      },
+      {
+        "scale": 0.1042830540037244,
+        "x": 30.92178770949721,
+        "y": 48.86405959031657,
+        "originalBounds": [
+          62,
+          96,
+          140,
+          152
+        ],
+        "generatedBounds": [
+          313,
+          452,
+          1031,
+          989
+        ],
+        "fittedBounds": [
+          63.56238361266295,
+          96.0,
+          138.43761638733707,
+          152.0
+        ],
+        "method": "alpha>127 uniform min extent; horizontal center and lower opaque-bound contact translation; diagnostic, NOT exact floor registration",
+        "residualWidthPx": 3.1247672253258827,
+        "residualHeightPx": 0.0
+      }
+    ]
+  },
+  "stage_river_lv2": {
+    "contacts": {
+      "status": "GENERATED_REVIEW_CALIBRATION",
+      "units": "raw generated PNG pixels; seated pelvis/support contact",
+      "directions": [
+        [
+          [
+            287,
+            735
+          ],
+          [
+            423,
+            806
+          ],
+          [
+            574,
+            887
+          ],
+          [
+            725,
+            965
+          ],
+          [
+            148,
+            830
+          ],
+          [
+            287,
+            900
+          ],
+          [
+            423,
+            980
+          ],
+          [
+            574,
+            1061
+          ]
+        ],
+        [
+          [
+            553,
+            910
+          ],
+          [
+            675,
+            845
+          ],
+          [
+            830,
+            764
+          ],
+          [
+            948,
+            714
+          ],
+          [
+            670,
+            983
+          ],
+          [
+            789,
+            917
+          ],
+          [
+            943,
+            846
+          ],
+          [
+            1064,
+            777
+          ]
+        ],
+        [
+          [
+            1240,
+            542
+          ],
+          [
+            1142,
+            485
+          ],
+          [
+            992,
+            407
+          ],
+          [
+            890,
+            354
+          ],
+          [
+            1315,
+            445
+          ],
+          [
+            1207,
+            388
+          ],
+          [
+            1097,
+            333
+          ],
+          [
+            995,
+            280
+          ]
+        ],
+        [
+          [
+            947,
+            377
+          ],
+          [
+            845,
+            430
+          ],
+          [
+            733,
+            486
+          ],
+          [
+            568,
+            555
+          ],
+          [
+            861,
+            293
+          ],
+          [
+            773,
+            340
+          ],
+          [
+            630,
+            409
+          ],
+          [
+            533,
+            458
+          ]
+        ]
+      ],
+      "previewAudienceCount": 8,
+      "note": "Per-view calibration requested by user. Canonical source contracts unchanged; original depth remains approximate on generated art.",
+      "foregroundPolygons": {
+        "2": [
+          [
+            485,
+            210
+          ],
+          [
+            665,
+            132
+          ],
+          [
+            1090,
+            369
+          ],
+          [
+            915,
+            448
+          ]
+        ],
+        "3": [
+          [
+            765,
+            374
+          ],
+          [
+            1191,
+            151
+          ],
+          [
+            1355,
+            238
+          ],
+          [
+            931,
+            463
+          ]
+        ]
+      },
+      "occlusion": "Manually annotated 2D foreground roof/backdrop polygons for generated seated audience; approximate, not physical depth. Performer uses source depth."
+    },
+    "fits": [
+      {
+        "scale": 0.09528487229862476,
+        "x": 70.47053045186641,
+        "y": 80.8516699410609,
+        "originalBounds": [
+          75,
+          92,
+          186,
+          189
+        ],
+        "generatedBounds": [
+          84,
+          117,
+          1176,
+          1135
+        ],
+        "fittedBounds": [
+          78.47445972495089,
+          92.0,
+          182.52554027504914,
+          189.0
+        ],
+        "method": "alpha>127 uniform min extent; horizontal center and lower opaque-bound contact translation; diagnostic, NOT exact floor registration",
+        "residualWidthPx": 6.948919449901766,
+        "residualHeightPx": 0.0
+      },
+      {
+        "scale": 0.11686746987951807,
+        "x": 49.59457831325301,
+        "y": 66.28915662650603,
+        "originalBounds": [
+          70,
+          92,
+          181,
+          189
+        ],
+        "generatedBounds": [
+          179,
+          220,
+          1120,
+          1050
+        ],
+        "fittedBounds": [
+          70.51385542168674,
+          92.0,
+          180.48614457831326,
+          189.0
+        ],
+        "method": "alpha>127 uniform min extent; horizontal center and lower opaque-bound contact translation; diagnostic, NOT exact floor registration",
+        "residualWidthPx": 1.027710843373498,
+        "residualHeightPx": 0.0
+      },
+      {
+        "scale": 0.12441679626749612,
+        "x": 10.227838258164851,
+        "y": 95.57698289269051,
+        "originalBounds": [
+          70,
+          112,
+          181,
+          192
+        ],
+        "generatedBounds": [
+          484,
+          132,
+          1369,
+          775
+        ],
+        "fittedBounds": [
+          70.44556765163297,
+          112.0,
+          180.55443234836702,
+          192.0
+        ],
+        "method": "alpha>127 uniform min extent; horizontal center and lower opaque-bound contact translation; diagnostic, NOT exact floor registration",
+        "residualWidthPx": 0.8911353032659406,
+        "residualHeightPx": 0.0
+      },
+      {
+        "scale": 0.1270096463022508,
+        "x": 13.079581993569121,
+        "y": 93.20257234726688,
+        "originalBounds": [
+          75,
+          112,
+          186,
+          191
+        ],
+        "generatedBounds": [
+          488,
+          148,
+          1361,
+          770
+        ],
+        "fittedBounds": [
+          75.06028938906752,
+          112.0,
+          185.93971061093248,
+          191.0
+        ],
+        "method": "alpha>127 uniform min extent; horizontal center and lower opaque-bound contact translation; diagnostic, NOT exact floor registration",
+        "residualWidthPx": 0.12057877813504092,
+        "residualHeightPx": 0.0
+      }
+    ]
+  },
+  "stage_river_lv3": {
+    "contacts": {
+      "status": "GENERATED_REVIEW_CALIBRATION",
+      "units": "raw generated PNG pixels; seated pelvis/support contact",
+      "directions": [
+        [
+          [
+            383,
+            755
+          ],
+          [
+            503,
+            816
+          ],
+          [
+            630,
+            880
+          ],
+          [
+            757,
+            949
+          ],
+          [
+            278,
+            810
+          ],
+          [
+            397,
+            891
+          ],
+          [
+            520,
+            962
+          ],
+          [
+            642,
+            1038
+          ]
+        ],
+        [
+          [
+            530,
+            953
+          ],
+          [
+            682,
+            879
+          ],
+          [
+            832,
+            805
+          ],
+          [
+            981,
+            731
+          ],
+          [
+            635,
+            1031
+          ],
+          [
+            786,
+            958
+          ],
+          [
+            935,
+            884
+          ],
+          [
+            1084,
+            803
+          ]
+        ],
+        [
+          [
+            890,
+            814
+          ],
+          [
+            772,
+            746
+          ],
+          [
+            620,
+            672
+          ],
+          [
+            502,
+            608
+          ],
+          [
+            1009,
+            740
+          ],
+          [
+            889,
+            680
+          ],
+          [
+            737,
+            605
+          ],
+          [
+            618,
+            541
+          ]
+        ],
+        [
+          [
+            804,
+            590
+          ],
+          [
+            699,
+            642
+          ],
+          [
+            512,
+            744
+          ],
+          [
+            397,
+            818
+          ],
+          [
+            683,
+            518
+          ],
+          [
+            570,
+            575
+          ],
+          [
+            402,
+            679
+          ],
+          [
+            280,
+            752
+          ]
+        ]
+      ],
+      "previewAudienceCount": 8,
+      "note": "Per-view calibration requested by user. Canonical source contracts unchanged; original depth remains approximate on generated art.",
+      "limitation": "Generated d1 has only 8 chairs and d0 has 11. Show 8 audience members consistently in all generated directions; 12-seat art restoration remains unresolved. Source comparison retains 12.",
+      "foregroundPolygons": {
+        "2": [
+          [
+            124,
+            389
+          ],
+          [
+            331,
+            305
+          ],
+          [
+            889,
+            597
+          ],
+          [
+            693,
+            680
+          ]
+        ],
+        "3": [
+          [
+            418,
+            570
+          ],
+          [
+            986,
+            277
+          ],
+          [
+            1194,
+            360
+          ],
+          [
+            620,
+            655
+          ]
+        ]
+      },
+      "occlusion": "Manually annotated 2D foreground roof/backdrop polygons for generated seated audience; approximate, not physical depth. Performer uses source depth."
+    },
+    "fits": [
+      {
+        "scale": 0.12831858407079647,
+        "x": 52.00442477876106,
+        "y": 51.30973451327432,
+        "originalBounds": [
+          65,
+          78,
+          203,
+          194
+        ],
+        "generatedBounds": [
+          129,
+          208,
+          1149,
+          1112
+        ],
+        "fittedBounds": [
+          68.5575221238938,
+          77.99999999999999,
+          199.4424778761062,
+          194.0
+        ],
+        "method": "alpha>127 uniform min extent; horizontal center and lower opaque-bound contact translation; diagnostic, NOT exact floor registration",
+        "residualWidthPx": 7.115044247787608,
+        "residualHeightPx": 0.0
+      },
+      {
+        "scale": 0.12146596858638743,
+        "x": 42.98638743455497,
+        "y": 60.023036649214674,
+        "originalBounds": [
+          53,
+          78,
+          191,
+          194
+        ],
+        "generatedBounds": [
+          155,
+          148,
+          1146,
+          1103
+        ],
+        "fittedBounds": [
+          61.81361256544503,
+          78.00000000000001,
+          182.18638743455494,
+          194.0
+        ],
+        "method": "alpha>127 uniform min extent; horizontal center and lower opaque-bound contact translation; diagnostic, NOT exact floor registration",
+        "residualWidthPx": 17.627225130890054,
+        "residualHeightPx": 0.0
+      },
+      {
+        "scale": 0.12367021276595745,
+        "x": 42.60372340425532,
+        "y": 69.28058510638297,
+        "originalBounds": [
+          53,
+          107,
+          191,
+          200
+        ],
+        "generatedBounds": [
+          122,
+          305,
+          1162,
+          1057
+        ],
+        "fittedBounds": [
+          57.691489361702125,
+          107.0,
+          186.3085106382979,
+          200.0
+        ],
+        "method": "alpha>127 uniform min extent; horizontal center and lower opaque-bound contact translation; diagnostic, NOT exact floor registration",
+        "residualWidthPx": 9.38297872340425,
+        "residualHeightPx": 0.0
+      },
+      {
+        "scale": 0.11795543905635648,
+        "x": 56.44429882044561,
+        "y": 74.56225425950197,
+        "originalBounds": [
+          65,
+          107,
+          203,
+          197
+        ],
+        "generatedBounds": [
+          99,
+          275,
+          1216,
+          1038
+        ],
+        "fittedBounds": [
+          68.1218872870249,
+          107.0,
+          199.8781127129751,
+          197.0
+        ],
+        "method": "alpha>127 uniform min extent; horizontal center and lower opaque-bound contact translation; diagnostic, NOT exact floor registration",
+        "residualWidthPx": 6.243774574049809,
+        "residualHeightPx": 0.0
+      }
+    ]
+  }
+}

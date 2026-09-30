@@ -2689,7 +2689,7 @@
       6,
       5
     ],
-    "capacity": 12,
+    "capacity": 8,
     "proposalAudienceCount": 12,
     "proposalPerformerCount": 1,
     "canonical_live_id": "stage_river",
@@ -3398,306 +3398,6 @@
           ]
         ],
         "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
-      },
-      {
-        "id": "audience_8",
-        "role": "audience",
-        "position": [
-          -1.65,
-          -1.63,
-          0
-        ],
-        "seatContact": [
-          -1.65,
-          -1.85,
-          0.38
-        ],
-        "pose": "sit_chair",
-        "heading": 1.5707963267948966,
-        "seatObject": "Chair_8_Seat",
-        "supportObjects": [
-          "Chair_8_Seat"
-        ],
-        "approach": [
-          [
-            -2.65,
-            -2.32,
-            0
-          ],
-          [
-            -2.5,
-            -2.32,
-            0
-          ],
-          [
-            -2.5,
-            -1.37,
-            0
-          ],
-          [
-            -1.65,
-            -1.37,
-            0
-          ],
-          [
-            -1.65,
-            -1.63,
-            0
-          ]
-        ],
-        "exitApproach": [
-          [
-            -1.65,
-            -1.63,
-            0
-          ],
-          [
-            -1.65,
-            -1.37,
-            0
-          ],
-          [
-            -2.5,
-            -1.37,
-            0
-          ],
-          [
-            -2.5,
-            -2.32,
-            0
-          ],
-          [
-            2.65,
-            -2.32,
-            0
-          ]
-        ],
-        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
-      },
-      {
-        "id": "audience_9",
-        "role": "audience",
-        "position": [
-          -0.75,
-          -1.63,
-          0
-        ],
-        "seatContact": [
-          -0.75,
-          -1.85,
-          0.38
-        ],
-        "pose": "sit_chair",
-        "heading": 1.5707963267948966,
-        "seatObject": "Chair_9_Seat",
-        "supportObjects": [
-          "Chair_9_Seat"
-        ],
-        "approach": [
-          [
-            -2.65,
-            -2.32,
-            0
-          ],
-          [
-            0,
-            -2.32,
-            0
-          ],
-          [
-            0,
-            -1.37,
-            0
-          ],
-          [
-            -0.75,
-            -1.37,
-            0
-          ],
-          [
-            -0.75,
-            -1.63,
-            0
-          ]
-        ],
-        "exitApproach": [
-          [
-            -0.75,
-            -1.63,
-            0
-          ],
-          [
-            -0.75,
-            -1.37,
-            0
-          ],
-          [
-            0,
-            -1.37,
-            0
-          ],
-          [
-            0,
-            -2.32,
-            0
-          ],
-          [
-            2.65,
-            -2.32,
-            0
-          ]
-        ],
-        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
-      },
-      {
-        "id": "audience_10",
-        "role": "audience",
-        "position": [
-          0.75,
-          -1.63,
-          0
-        ],
-        "seatContact": [
-          0.75,
-          -1.85,
-          0.38
-        ],
-        "pose": "sit_chair",
-        "heading": 1.5707963267948966,
-        "seatObject": "Chair_10_Seat",
-        "supportObjects": [
-          "Chair_10_Seat"
-        ],
-        "approach": [
-          [
-            -2.65,
-            -2.32,
-            0
-          ],
-          [
-            0,
-            -2.32,
-            0
-          ],
-          [
-            0,
-            -1.37,
-            0
-          ],
-          [
-            0.75,
-            -1.37,
-            0
-          ],
-          [
-            0.75,
-            -1.63,
-            0
-          ]
-        ],
-        "exitApproach": [
-          [
-            0.75,
-            -1.63,
-            0
-          ],
-          [
-            0.75,
-            -1.37,
-            0
-          ],
-          [
-            0,
-            -1.37,
-            0
-          ],
-          [
-            0,
-            -2.32,
-            0
-          ],
-          [
-            2.65,
-            -2.32,
-            0
-          ]
-        ],
-        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
-      },
-      {
-        "id": "audience_11",
-        "role": "audience",
-        "position": [
-          1.65,
-          -1.63,
-          0
-        ],
-        "seatContact": [
-          1.65,
-          -1.85,
-          0.38
-        ],
-        "pose": "sit_chair",
-        "heading": 1.5707963267948966,
-        "seatObject": "Chair_11_Seat",
-        "supportObjects": [
-          "Chair_11_Seat"
-        ],
-        "approach": [
-          [
-            -2.65,
-            -2.32,
-            0
-          ],
-          [
-            2.5,
-            -2.32,
-            0
-          ],
-          [
-            2.5,
-            -1.37,
-            0
-          ],
-          [
-            1.65,
-            -1.37,
-            0
-          ],
-          [
-            1.65,
-            -1.63,
-            0
-          ]
-        ],
-        "exitApproach": [
-          [
-            1.65,
-            -1.63,
-            0
-          ],
-          [
-            1.65,
-            -1.37,
-            0
-          ],
-          [
-            2.5,
-            -1.37,
-            0
-          ],
-          [
-            2.5,
-            -2.32,
-            0
-          ],
-          [
-            2.65,
-            -2.32,
-            0
-          ]
-        ],
-        "transition": "Arrive at foot origin then switch pose in place; pelvis contacts seat 0.38 tile up and 0.22 tile behind foot."
       }
     ],
     "admissionOrder": [
@@ -3708,17 +3408,9 @@
       "audience_5",
       "audience_6",
       "audience_4",
-      "audience_7",
-      "audience_9",
-      "audience_10",
-      "audience_8",
-      "audience_11"
+      "audience_7"
     ],
     "exitOrder": [
-      "audience_11",
-      "audience_8",
-      "audience_10",
-      "audience_9",
       "audience_7",
       "audience_4",
       "audience_6",
@@ -3738,5 +3430,2060 @@
     "gate": "AUTHORED_NPC_CANDIDATE_USER_REVIEW",
     "live_files_modified": false,
     "sourceCandidateId": "stage_river_lv3"
+  },
+  "sauna": {
+    "id": "sauna",
+    "size": [
+      3,
+      3
+    ],
+    "capacity": 3,
+    "entry": [
+      0,
+      -1.75,
+      0
+    ],
+    "exit": [
+      0,
+      -1.75,
+      0
+    ],
+    "slots": [
+      {
+        "id": "s0",
+        "pose": "sit",
+        "position": [
+          -0.55,
+          1,
+          0.4
+        ],
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            0,
+            -1.75,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            -0.55,
+            0.35,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "SeatSlat_back_0",
+          "SeatSlat_back_1",
+          "SeatSlat_back_2",
+          "SeatSlat_back_3"
+        ],
+        "useSeconds": 4
+      },
+      {
+        "id": "s1",
+        "pose": "sit",
+        "position": [
+          0.55,
+          1,
+          0.4
+        ],
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            0,
+            -1.75,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0.55,
+            0.35,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "SeatSlat_back_0",
+          "SeatSlat_back_1",
+          "SeatSlat_back_2",
+          "SeatSlat_back_3"
+        ],
+        "useSeconds": 4
+      },
+      {
+        "id": "s2",
+        "pose": "sit",
+        "position": [
+          -1.05,
+          -0.3,
+          0.4
+        ],
+        "heading": 0,
+        "approach": [
+          [
+            0,
+            -1.75,
+            0
+          ],
+          [
+            0,
+            -0.3,
+            0
+          ],
+          [
+            -0.52,
+            -0.3,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "SeatSlat_left_0",
+          "SeatSlat_left_1",
+          "SeatSlat_left_2",
+          "SeatSlat_left_3"
+        ],
+        "useSeconds": 4
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "jjimjilbang": {
+    "id": "jjimjilbang",
+    "size": [
+      4,
+      4
+    ],
+    "capacity": 3,
+    "entry": [
+      0,
+      -2.25,
+      0
+    ],
+    "exit": [
+      0,
+      -2.25,
+      0
+    ],
+    "slots": [
+      {
+        "id": "s0",
+        "pose": "lie",
+        "position": [
+          -1.15,
+          0.2,
+          0.07
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            0,
+            -2.25,
+            0
+          ],
+          [
+            0,
+            -1.05,
+            0
+          ],
+          [
+            -1.15,
+            -1.05,
+            0
+          ],
+          [
+            -1.15,
+            -0.8,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "RestMat_0",
+          "Pillow_0"
+        ],
+        "useSeconds": 4
+      },
+      {
+        "id": "s1",
+        "pose": "lie",
+        "position": [
+          0,
+          0.2,
+          0.07
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            0,
+            -2.25,
+            0
+          ],
+          [
+            0,
+            -1.05,
+            0
+          ],
+          [
+            0,
+            -1.05,
+            0
+          ],
+          [
+            0,
+            -0.8,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "RestMat_1",
+          "Pillow_1"
+        ],
+        "useSeconds": 4
+      },
+      {
+        "id": "s2",
+        "pose": "lie",
+        "position": [
+          1.15,
+          0.2,
+          0.07
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            0,
+            -2.25,
+            0
+          ],
+          [
+            0,
+            -1.05,
+            0
+          ],
+          [
+            1.15,
+            -1.05,
+            0
+          ],
+          [
+            1.15,
+            -0.8,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "RestMat_2",
+          "Pillow_2"
+        ],
+        "useSeconds": 4
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "arcade": {
+    "id": "arcade",
+    "size": [
+      1,
+      1
+    ],
+    "capacity": 1,
+    "entry": [
+      0,
+      -1.05,
+      0
+    ],
+    "exit": [
+      0,
+      -1.05,
+      0
+    ],
+    "slots": [
+      {
+        "id": "player",
+        "pose": "idle",
+        "role": "guest",
+        "position": [
+          0,
+          -0.7,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            0,
+            -1.05,
+            0
+          ],
+          [
+            0,
+            -0.7,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useSeconds": 4
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "vending_in": {
+    "id": "vending_in",
+    "size": [
+      1,
+      1
+    ],
+    "capacity": 1,
+    "entry": [
+      0,
+      -1.1,
+      0
+    ],
+    "exit": [
+      0,
+      -1.1,
+      0
+    ],
+    "slots": [
+      {
+        "id": "customer0",
+        "role": "guest",
+        "pose": "idle",
+        "position": [
+          0.08,
+          -0.7,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            0,
+            -1.1,
+            0
+          ],
+          [
+            0.08,
+            -0.9,
+            0
+          ],
+          [
+            0.08,
+            -0.7,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useSeconds": 4
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "info": {
+    "id": "info",
+    "size": [
+      2,
+      2
+    ],
+    "capacity": 1,
+    "entry": [
+      0,
+      -1.5,
+      0
+    ],
+    "exit": [
+      0,
+      -1.5,
+      0
+    ],
+    "slots": [
+      {
+        "id": "s0",
+        "role": "guest",
+        "pose": "idle",
+        "position": [
+          0,
+          -1.08,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            0,
+            -1.5,
+            0
+          ],
+          [
+            0,
+            -1.08,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useSeconds": 4
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "rental_tube": {
+    "id": "rental_tube",
+    "size": [
+      2,
+      1
+    ],
+    "capacity": 1,
+    "entry": [
+      -0.57,
+      -1.3,
+      0
+    ],
+    "exit": [
+      -0.57,
+      -1.3,
+      0
+    ],
+    "slots": [
+      {
+        "id": "customer",
+        "role": "guest",
+        "pose": "idle",
+        "position": [
+          -0.57,
+          -0.83,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -0.57,
+            -1.3,
+            0
+          ],
+          [
+            -0.57,
+            -0.83,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useSeconds": 4
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "indoor_shop": {
+    "id": "indoor_shop",
+    "size": [
+      2,
+      2
+    ],
+    "capacity": 1,
+    "entry": [
+      0,
+      -1.7,
+      0
+    ],
+    "exit": [
+      0,
+      -1.7,
+      0
+    ],
+    "slots": [
+      {
+        "id": "customer",
+        "role": "guest",
+        "pose": "idle",
+        "position": [
+          0,
+          -1.28,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            0,
+            -1.7,
+            0
+          ],
+          [
+            0,
+            -1.28,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useSeconds": 4
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "dry_room": {
+    "id": "dry_room",
+    "size": [
+      2,
+      1
+    ],
+    "capacity": 2,
+    "entry": [
+      -0.48,
+      -0.95,
+      0
+    ],
+    "exit": [
+      -0.48,
+      -0.95,
+      0
+    ],
+    "slots": [
+      {
+        "id": "s0",
+        "role": "guest",
+        "pose": "idle",
+        "position": [
+          -0.48,
+          -0.3,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -0.48,
+            -0.95,
+            0
+          ],
+          [
+            -0.48,
+            -0.3,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useSeconds": 4
+      },
+      {
+        "id": "s1",
+        "role": "guest",
+        "pose": "idle",
+        "position": [
+          0.48,
+          -0.3,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            0.48,
+            -0.95,
+            0
+          ],
+          [
+            0.48,
+            -0.3,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useSeconds": 4
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "authored_infirmary": {
+    "id": "authored_infirmary",
+    "size": [
+      3,
+      2
+    ],
+    "capacity": 1,
+    "entry": [
+      0.02,
+      -1.2,
+      0
+    ],
+    "exit": [
+      0.02,
+      -1.2,
+      0
+    ],
+    "slots": [
+      {
+        "id": "bed0",
+        "pose": "lie",
+        "position": [
+          -0.72,
+          -0.05,
+          0.39
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            0.02,
+            -1.2,
+            0
+          ],
+          [
+            0.02,
+            -0.82,
+            0
+          ],
+          [
+            0.02,
+            -0.05,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Mattress",
+          "FoldedBlanket",
+          "Pillow"
+        ],
+        "useSeconds": 4
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "authored_karaoke": {
+    "id": "authored_karaoke",
+    "size": [
+      3,
+      3
+    ],
+    "capacity": 2,
+    "entry": [
+      1.1,
+      -1.75,
+      0
+    ],
+    "exit": [
+      1.1,
+      -1.75,
+      0
+    ],
+    "slots": [
+      {
+        "id": "seat0",
+        "pose": "sit",
+        "position": [
+          -0.79,
+          0.9,
+          0.33
+        ],
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            1.1,
+            -1.75,
+            0
+          ],
+          [
+            1.1,
+            -1.2,
+            0
+          ],
+          [
+            1.1,
+            0.35,
+            0
+          ],
+          [
+            -0.79,
+            0.35,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "SeatCushion_0"
+        ],
+        "useSeconds": 4
+      },
+      {
+        "id": "singer",
+        "pose": "stand",
+        "position": [
+          0.82,
+          -0.32,
+          0
+        ],
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            1.1,
+            -1.75,
+            0
+          ],
+          [
+            1.1,
+            -1.2,
+            0
+          ],
+          [
+            1.1,
+            0.35,
+            0
+          ],
+          [
+            0.82,
+            0.35,
+            0
+          ],
+          [
+            0.82,
+            -0.32,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useSeconds": 4
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "foodcourt_seat": {
+    "id": "foodcourt_seat",
+    "size": [
+      3,
+      2
+    ],
+    "capacity": 2,
+    "entry": [
+      -1.75,
+      -0.9,
+      0
+    ],
+    "exit": [
+      -1.75,
+      -0.9,
+      0
+    ],
+    "slots": [
+      {
+        "id": "s0",
+        "role": "guest",
+        "pose": "sit",
+        "position": [
+          0,
+          -0.61,
+          0.445
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -1.4,
+            -0.9,
+            0
+          ],
+          [
+            0,
+            -0.9,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Bench_0"
+        ],
+        "useSeconds": 5
+      },
+      {
+        "id": "s1",
+        "role": "guest",
+        "pose": "sit",
+        "position": [
+          0,
+          0.61,
+          0.445
+        ],
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            -1.4,
+            0.9,
+            0
+          ],
+          [
+            0,
+            0.9,
+            0
+          ]
+        ],
+        "supportObjects": [
+          "Bench_1"
+        ],
+        "useSeconds": 5
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "icecream": {
+    "id": "icecream",
+    "size": [
+      1,
+      1
+    ],
+    "capacity": 1,
+    "entry": [
+      0,
+      -1.4100000000000001,
+      0
+    ],
+    "exit": [
+      0,
+      -1.4100000000000001,
+      0
+    ],
+    "slots": [
+      {
+        "id": "s0",
+        "role": "guest",
+        "pose": "stand",
+        "position": [
+          0,
+          -0.76,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            0,
+            -1.4100000000000001,
+            0
+          ],
+          [
+            0,
+            -0.76,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useTicks": 10
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "sikhye": {
+    "id": "sikhye",
+    "size": [
+      2,
+      1
+    ],
+    "capacity": 2,
+    "entry": [
+      -0.5,
+      -1.4100000000000001,
+      0
+    ],
+    "exit": [
+      -0.5,
+      -1.4100000000000001,
+      0
+    ],
+    "slots": [
+      {
+        "id": "s0",
+        "role": "guest",
+        "pose": "stand",
+        "position": [
+          -0.5,
+          -0.76,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -0.5,
+            -1.4100000000000001,
+            0
+          ],
+          [
+            -0.5,
+            -0.76,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useTicks": 8
+      },
+      {
+        "id": "s1",
+        "role": "guest",
+        "pose": "stand",
+        "position": [
+          0.5,
+          -0.76,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            0.5,
+            -1.4100000000000001,
+            0
+          ],
+          [
+            0.5,
+            -0.76,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useTicks": 8
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "bungeoppang": {
+    "id": "bungeoppang",
+    "size": [
+      2,
+      1
+    ],
+    "capacity": 1,
+    "entry": [
+      0,
+      -1.4100000000000001,
+      0
+    ],
+    "exit": [
+      0,
+      -1.4100000000000001,
+      0
+    ],
+    "slots": [
+      {
+        "id": "s0",
+        "role": "guest",
+        "pose": "stand",
+        "position": [
+          0,
+          -0.76,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            0,
+            -1.4100000000000001,
+            0
+          ],
+          [
+            0,
+            -0.76,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useTicks": 10
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "shade_net": {
+    "id": "shade_net",
+    "size": [
+      2,
+      2
+    ],
+    "capacity": 1,
+    "entry": [
+      0,
+      -1.5,
+      0
+    ],
+    "exit": [
+      0,
+      -1.5,
+      0
+    ],
+    "slots": [
+      {
+        "id": "shade-rest",
+        "position": [
+          0,
+          0,
+          0.065
+        ],
+        "pose": "idle",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            0,
+            -1.5,
+            0
+          ],
+          [
+            0,
+            -1,
+            0.065
+          ],
+          [
+            0,
+            0,
+            0.065
+          ]
+        ],
+        "contact": "standing review rest; no authored seat"
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "shop": {
+    "id": "shop",
+    "size": [
+      2,
+      2
+    ],
+    "capacity": 2,
+    "entry": [
+      -0.4,
+      -2,
+      0
+    ],
+    "exit": [
+      -0.4,
+      -2,
+      0
+    ],
+    "slots": [
+      {
+        "id": "service0",
+        "pose": "stand",
+        "position": [
+          -0.4,
+          -1.2,
+          0
+        ],
+        "heading": 1.57079632679,
+        "approach": [
+          [
+            -0.4,
+            -2,
+            0
+          ],
+          [
+            -0.4,
+            -1.2,
+            0
+          ]
+        ],
+        "useSeconds": 4
+      },
+      {
+        "id": "service1",
+        "pose": "stand",
+        "position": [
+          0.4,
+          -1.2,
+          0
+        ],
+        "heading": 1.57079632679,
+        "approach": [
+          [
+            0.4,
+            -2,
+            0
+          ],
+          [
+            0.4,
+            -1.2,
+            0
+          ]
+        ],
+        "useSeconds": 4
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "snackbar": {
+    "id": "snackbar",
+    "size": [
+      2,
+      2
+    ],
+    "capacity": 2,
+    "entry": [
+      -0.4,
+      -2,
+      0
+    ],
+    "exit": [
+      -0.4,
+      -2,
+      0
+    ],
+    "slots": [
+      {
+        "id": "service0",
+        "pose": "stand",
+        "position": [
+          -0.4,
+          -1.2,
+          0
+        ],
+        "heading": 1.57079632679,
+        "approach": [
+          [
+            -0.4,
+            -2,
+            0
+          ],
+          [
+            -0.4,
+            -1.2,
+            0
+          ]
+        ],
+        "useSeconds": 4
+      },
+      {
+        "id": "service1",
+        "pose": "stand",
+        "position": [
+          0.4,
+          -1.2,
+          0
+        ],
+        "heading": 1.57079632679,
+        "approach": [
+          [
+            0.4,
+            -2,
+            0
+          ],
+          [
+            0.4,
+            -1.2,
+            0
+          ]
+        ],
+        "useSeconds": 4
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "firepit_row": {
+    "id": "firepit_row",
+    "size": [
+      3,
+      1
+    ],
+    "capacity": 3,
+    "entry": [
+      -2.1,
+      -0.5,
+      0
+    ],
+    "exit": [
+      -2.1,
+      -0.5,
+      0
+    ],
+    "slots": [
+      {
+        "id": "s0",
+        "role": "guest",
+        "pose": "stand",
+        "position": [
+          -1,
+          -0.78,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -2.1,
+            -1.43,
+            0
+          ],
+          [
+            -1,
+            -1.4300000000000002,
+            0
+          ],
+          [
+            -1,
+            -0.78,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useTicks": 12
+      },
+      {
+        "id": "s1",
+        "role": "guest",
+        "pose": "stand",
+        "position": [
+          0,
+          -0.78,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -2.1,
+            -1.43,
+            0
+          ],
+          [
+            0,
+            -1.4300000000000002,
+            0
+          ],
+          [
+            0,
+            -0.78,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useTicks": 12
+      },
+      {
+        "id": "s2",
+        "role": "guest",
+        "pose": "stand",
+        "position": [
+          1,
+          -0.78,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            -2.1,
+            -1.43,
+            0
+          ],
+          [
+            1,
+            -1.4300000000000002,
+            0
+          ],
+          [
+            1,
+            -0.78,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useTicks": 12
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "chicken": {
+    "id": "chicken",
+    "size": [
+      2,
+      2
+    ],
+    "capacity": 1,
+    "entry": [
+      0.37,
+      -2.0100000000000002,
+      0
+    ],
+    "exit": [
+      0.37,
+      -2.0100000000000002,
+      0
+    ],
+    "slots": [
+      {
+        "id": "s0",
+        "role": "guest",
+        "pose": "stand",
+        "position": [
+          0.37,
+          -1.36,
+          0
+        ],
+        "heading": 1.5707963267948966,
+        "approach": [
+          [
+            0.37,
+            -2.0100000000000002,
+            0
+          ],
+          [
+            0.37,
+            -1.36,
+            0
+          ]
+        ],
+        "supportObjects": [],
+        "useTicks": 12
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "authored_parasol": {
+    "id": "authored_parasol",
+    "size": [
+      2,
+      2
+    ],
+    "capacity": 2,
+    "entry": [
+      -1.06,
+      1.5,
+      0
+    ],
+    "exit": [
+      -1.06,
+      1.5,
+      0
+    ],
+    "slots": [
+      {
+        "id": "parasol_left",
+        "position": [
+          -0.58,
+          0.1,
+          0.3000624934909394
+        ],
+        "pose": "sit",
+        "heading": 0.0,
+        "approach": [
+          [
+            -1.06,
+            1.5,
+            0
+          ],
+          [
+            -1.06,
+            0.1,
+            0
+          ],
+          [
+            -0.58,
+            0.1,
+            0
+          ]
+        ],
+        "contact": "pelvis",
+        "sourcePose": "sit"
+      },
+      {
+        "id": "parasol_right",
+        "position": [
+          0.58,
+          0.1,
+          0.3000624934909394
+        ],
+        "pose": "sit",
+        "heading": 3.141592653589793,
+        "approach": [
+          [
+            1.06,
+            1.5,
+            0
+          ],
+          [
+            1.06,
+            0.1,
+            0
+          ],
+          [
+            0.58,
+            0.1,
+            0
+          ]
+        ],
+        "contact": "pelvis",
+        "sourcePose": "sit"
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "authored_bbq_zone": {
+    "id": "authored_bbq_zone",
+    "size": [
+      4,
+      3
+    ],
+    "capacity": 4,
+    "entry": [
+      -0.8,
+      -1.5,
+      0
+    ],
+    "exit": [
+      -0.8,
+      -1.5,
+      0
+    ],
+    "slots": [
+      {
+        "id": "bench0",
+        "pose": "sit",
+        "position": [
+          -0.8,
+          -0.65,
+          0.28
+        ],
+        "heading": 1.57079632679,
+        "approach": [
+          [
+            -0.8,
+            -1.5,
+            0
+          ],
+          [
+            -0.8,
+            -0.9,
+            0
+          ]
+        ],
+        "useSeconds": 5
+      },
+      {
+        "id": "bench1",
+        "pose": "sit",
+        "position": [
+          0.1,
+          -0.65,
+          0.28
+        ],
+        "heading": 1.57079632679,
+        "approach": [
+          [
+            0.1,
+            -1.5,
+            0
+          ],
+          [
+            0.1,
+            -0.9,
+            0
+          ]
+        ],
+        "useSeconds": 5
+      },
+      {
+        "id": "bench2",
+        "pose": "sit",
+        "position": [
+          -0.8,
+          1.05,
+          0.28
+        ],
+        "heading": -1.57079632679,
+        "approach": [
+          [
+            -0.8,
+            -1.5,
+            0
+          ],
+          [
+            -2.2,
+            -1.5,
+            0
+          ],
+          [
+            -2.2,
+            1.9,
+            0
+          ],
+          [
+            -0.8,
+            1.9,
+            0
+          ],
+          [
+            -0.8,
+            1.3,
+            0
+          ]
+        ],
+        "useSeconds": 5,
+        "exitApproach": [
+          [
+            -0.8,
+            1.3,
+            0
+          ],
+          [
+            -0.8,
+            1.9,
+            0
+          ],
+          [
+            -2.2,
+            1.9,
+            0
+          ],
+          [
+            -2.2,
+            -1.5,
+            0
+          ],
+          [
+            -0.8,
+            -1.5,
+            0
+          ]
+        ]
+      },
+      {
+        "id": "bench3",
+        "pose": "sit",
+        "position": [
+          0.1,
+          1.05,
+          0.28
+        ],
+        "heading": -1.57079632679,
+        "approach": [
+          [
+            -0.8,
+            -1.5,
+            0
+          ],
+          [
+            -2.2,
+            -1.5,
+            0
+          ],
+          [
+            -2.2,
+            1.9,
+            0
+          ],
+          [
+            0.1,
+            1.9,
+            0
+          ],
+          [
+            0.1,
+            1.3,
+            0
+          ]
+        ],
+        "useSeconds": 5,
+        "exitApproach": [
+          [
+            0.1,
+            1.3,
+            0
+          ],
+          [
+            0.1,
+            1.9,
+            0
+          ],
+          [
+            -2.2,
+            1.9,
+            0
+          ],
+          [
+            -2.2,
+            -1.5,
+            0
+          ],
+          [
+            -0.8,
+            -1.5,
+            0
+          ]
+        ]
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "authored_sunbed_row": {
+    "id": "authored_sunbed_row",
+    "size": [
+      4,
+      2
+    ],
+    "capacity": 4,
+    "entry": [
+      -1.4,
+      -1.5,
+      0
+    ],
+    "exit": [
+      -1.4,
+      -1.5,
+      0
+    ],
+    "slots": [
+      {
+        "id": "sunbed0",
+        "position": [
+          -1.4,
+          0.1,
+          0.3271964229922337
+        ],
+        "pose": "lie",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            -1.4,
+            -1.5,
+            0
+          ],
+          [
+            -1.4,
+            -0.7694084693572024,
+            0
+          ],
+          [
+            -1.4,
+            0.1,
+            0
+          ]
+        ],
+        "contact": "body_center",
+        "sourcePose": "lie"
+      },
+      {
+        "id": "sunbed1",
+        "position": [
+          -0.47,
+          0.1,
+          0.3271964229922337
+        ],
+        "pose": "lie",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            -0.47,
+            -1.5,
+            0
+          ],
+          [
+            -0.47,
+            -0.7694084693572024,
+            0
+          ],
+          [
+            -0.47,
+            0.1,
+            0
+          ]
+        ],
+        "contact": "body_center",
+        "sourcePose": "lie"
+      },
+      {
+        "id": "sunbed2",
+        "position": [
+          0.47,
+          0.1,
+          0.3271964229922337
+        ],
+        "pose": "lie",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            0.47,
+            -1.5,
+            0
+          ],
+          [
+            0.47,
+            -0.7694084693572024,
+            0
+          ],
+          [
+            0.47,
+            0.1,
+            0
+          ]
+        ],
+        "contact": "body_center",
+        "sourcePose": "lie"
+      },
+      {
+        "id": "sunbed3",
+        "position": [
+          1.4,
+          0.1,
+          0.3271964229922337
+        ],
+        "pose": "lie",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            1.4,
+            -1.5,
+            0
+          ],
+          [
+            1.4,
+            -0.7694084693572024,
+            0
+          ],
+          [
+            1.4,
+            0.1,
+            0
+          ]
+        ],
+        "contact": "body_center",
+        "sourcePose": "lie"
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "authored_pyeongsang_row": {
+    "id": "authored_pyeongsang_row",
+    "size": [
+      4,
+      2
+    ],
+    "capacity": 4,
+    "entry": [
+      -1.37,
+      1.5,
+      0
+    ],
+    "exit": [
+      -1.37,
+      1.5,
+      0
+    ],
+    "slots": [
+      {
+        "id": "platform(0, 0)",
+        "position": [
+          -1.37,
+          0.24,
+          0.36
+        ],
+        "pose": "floor_sit",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            -1.37,
+            1.5,
+            0
+          ],
+          [
+            -1.37,
+            0.72,
+            0
+          ],
+          [
+            -1.37,
+            0.24,
+            0
+          ]
+        ],
+        "contact": "pelvis",
+        "sourcePose": "sit"
+      },
+      {
+        "id": "platform(0, 1)",
+        "position": [
+          -0.63,
+          0.24,
+          0.36
+        ],
+        "pose": "floor_sit",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            -0.63,
+            1.5,
+            0
+          ],
+          [
+            -0.63,
+            0.72,
+            0
+          ],
+          [
+            -0.63,
+            0.24,
+            0
+          ]
+        ],
+        "contact": "pelvis",
+        "sourcePose": "sit"
+      },
+      {
+        "id": "platform(1, 0)",
+        "position": [
+          0.63,
+          0.24,
+          0.36
+        ],
+        "pose": "floor_sit",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            0.63,
+            1.5,
+            0
+          ],
+          [
+            0.63,
+            0.72,
+            0
+          ],
+          [
+            0.63,
+            0.24,
+            0
+          ]
+        ],
+        "contact": "pelvis",
+        "sourcePose": "sit"
+      },
+      {
+        "id": "platform(1, 1)",
+        "position": [
+          1.37,
+          0.24,
+          0.36
+        ],
+        "pose": "floor_sit",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            1.37,
+            1.5,
+            0
+          ],
+          [
+            1.37,
+            0.72,
+            0
+          ],
+          [
+            1.37,
+            0.24,
+            0
+          ]
+        ],
+        "contact": "pelvis",
+        "sourcePose": "sit"
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "authored_massage_row": {
+    "id": "authored_massage_row",
+    "size": [
+      3,
+      2
+    ],
+    "capacity": 3,
+    "entry": [
+      -0.58,
+      1.5,
+      0
+    ],
+    "exit": [
+      -0.58,
+      1.5,
+      0
+    ],
+    "slots": [
+      {
+        "id": "massage0",
+        "position": [
+          -0.94,
+          0.36,
+          0.3000624934909394
+        ],
+        "pose": "sit",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            -0.58,
+            1.5,
+            0
+          ],
+          [
+            -0.58,
+            0.36,
+            0
+          ],
+          [
+            -0.94,
+            0.36,
+            0
+          ]
+        ],
+        "contact": "pelvis",
+        "sourcePose": "recline"
+      },
+      {
+        "id": "massage1",
+        "position": [
+          0,
+          0.36,
+          0.3000624934909394
+        ],
+        "pose": "sit",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            0.36,
+            1.5,
+            0
+          ],
+          [
+            0.36,
+            0.36,
+            0
+          ],
+          [
+            0,
+            0.36,
+            0
+          ]
+        ],
+        "contact": "pelvis",
+        "sourcePose": "recline"
+      },
+      {
+        "id": "massage2",
+        "position": [
+          0.94,
+          0.36,
+          0.3000624934909394
+        ],
+        "pose": "sit",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            1.2999999999999998,
+            1.5,
+            0
+          ],
+          [
+            1.2999999999999998,
+            0.36,
+            0
+          ],
+          [
+            0.94,
+            0.36,
+            0
+          ]
+        ],
+        "contact": "pelvis",
+        "sourcePose": "recline"
+      }
+    ],
+    "imagegenInteraction": true
+  },
+  "authored_footbath": {
+    "id": "authored_footbath",
+    "size": [
+      3,
+      2
+    ],
+    "capacity": 3,
+    "entry": [
+      -0.2829910574805843,
+      1.5,
+      0
+    ],
+    "exit": [
+      -0.2829910574805843,
+      1.5,
+      0
+    ],
+    "slots": [
+      {
+        "id": "footbath_bench0",
+        "position": [
+          -0.6429910574805843,
+          0.26,
+          0.3000624934909394
+        ],
+        "pose": "footbath",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            -0.2829910574805843,
+            1.5,
+            0
+          ],
+          [
+            -0.2829910574805843,
+            0.26,
+            0
+          ],
+          [
+            -0.6429910574805843,
+            0.26,
+            0
+          ]
+        ],
+        "contact": "pelvis",
+        "sourcePose": "sit_feet_water"
+      },
+      {
+        "id": "footbath_bench1",
+        "position": [
+          0.0,
+          0.26,
+          0.3000624934909394
+        ],
+        "pose": "footbath",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            0.36,
+            1.5,
+            0
+          ],
+          [
+            0.36,
+            0.26,
+            0
+          ],
+          [
+            0.0,
+            0.26,
+            0
+          ]
+        ],
+        "contact": "pelvis",
+        "sourcePose": "sit_feet_water"
+      },
+      {
+        "id": "footbath_bench2",
+        "position": [
+          0.6429910574805843,
+          0.26,
+          0.3000624934909394
+        ],
+        "pose": "footbath",
+        "heading": -1.5707963267948966,
+        "approach": [
+          [
+            1.0029910574805843,
+            1.5,
+            0
+          ],
+          [
+            1.0029910574805843,
+            0.26,
+            0
+          ],
+          [
+            0.6429910574805843,
+            0.26,
+            0
+          ]
+        ],
+        "contact": "pelvis",
+        "sourcePose": "sit_feet_water"
+      }
+    ],
+    "imagegenInteraction": true
   }
 }

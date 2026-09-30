@@ -1,3 +1,13 @@
+import { woodlandLayout, type WoodlandPlant } from './woodland-layout.js';
+import { TOWN_LOTS, TOWN_BUILDINGS, TOWN_CROSSINGS, townWalkingLoop, trafficGreen, advanceTownVehicle } from './town-layout.js';
+import { exteriorTile } from './exterior.js';
+import { DetailCamera } from './detail-camera.js';
+import { imagegenArt } from '../assets/imagegen-art.js';
+import type { ImageGenGround } from './imagegen-ground.js';
+import { PreparationRenderer } from './preparation.js';
+import { prepPosition } from '../sim/preparation.js';
+import { reservedBounds } from '../sim/facility-spacing.js';
+import { compactBoundaryLayers, type BoundaryAssets, type BoundaryWall } from './compact-boundary.js';
 import { portalHidden, portalPosition } from '../sim/facility-portal.js';
 import { approvedPivot, approvedAnchor, type ApprovedFacilityProvider } from '../assets/approved-facilities.js';
 import { StaticFacilityRenderer, type StaticDepth } from './static-facilities.js';
@@ -18,7 +28,7 @@ import Phaser from 'phaser';
 import type { AssetProvider } from '../assets/types.js';
 import { Grid, FLOOR, FLOOR_NAMES, ROAD_ROWS, STOP_ROW, CITY_BAND, GRID_W as GW, gateTile, landRect, isIndoorCode, type FloorCode, isWaterCode } from '../sim/grid.js';
 import { Camera } from './camera.js';
-import { gridToScreen, screenToTile, depthKey, spanDepthKey, inGrid, tileCenter, Z_GROUND, Z_GUEST, Z_FACILITY, Z_WALL_BACK, Z_WALL_FRONT, Z_GHOST, DEPTH_AIM_MARK, DEPTH_SCREEN_FX, TILE_W, TILE_H, GRID_W, GRID_H , lift, DEPTH_COURSE_MARK } from './iso.js';
+import { gridToScreen, screenToTile, depthKey, spanDepthKey, inGrid, tileCenter, groundDepth, Z_GUEST, Z_FACILITY, Z_WALL_BACK, Z_WALL_FRONT, Z_GHOST, DEPTH_AIM_MARK, DEPTH_SCREEN_FX, TILE_W, TILE_H, GRID_W, GRID_H , lift, DEPTH_COURSE_MARK } from './iso.js';
 import { drawColumn } from './column.js';
 import { WaterGlint } from './water.js';
 import { GUEST_ANCHOR, GUEST_FRAMES, GUEST_H, GUEST_W, guestTextureKey, type GuestPose } from '../assets/draw/guest.js';
@@ -54,7 +64,10 @@ export interface SceneStats {
 }
 
 export interface SceneDeps {
+  imagegenGround?: ImageGenGround;
   provider: AssetProvider;
+  compactArrival?: () => boolean;
+  compactBoundary?: BoundaryAssets;
   watercraft?: WatercraftProvider;
   approved?: ApprovedFacilityProvider | null;
   staticDepth?: StaticDepth | null;
@@ -166,7 +179,13 @@ export class WaterparkScene extends Phaser.Scene {
     return this.deps.camera;
   }
 
+  /** Two raster samples per logical pixel; ?render=pixel keeps the old comparison. */
+  private readonly renderDensity = new URLSearchParams(location.search).get('render') === 'pixel' ? 1 : 2;
+
   create(): void {
+    const oldCamera = this.cameras.main;
+    this.cameras.addExisting(new DetailCamera(this.scale.width, this.scale.height), true);
+    this.cameras.remove(oldCamera);
     for (const id of this.deps.provider.ids()) {
       // facilityTexture() uploads a building only when it is placed or previewed.
       if (id.startsWith('fac/')) continue;
@@ -182,8 +201,17 @@ export class WaterparkScene extends Phaser.Scene {
     this.weatherGfx = this.add.graphics().setScrollFactor(0).setDepth(DEPTH_SCREEN_FX - 2);
     this.laneGfx = this.add.graphics().setDepth(DEPTH_LAND_MARK - 3);
     this.wallsReady = true;
-    this.surround = new Surround(this, (id) => this.deps.provider.canvas(id), -100); // P44 지도 바깥
-    this.surround.build();
+    this.surround = new Surround(this, this.deps.grid, (floor,i,j,level)=>{
+      const hd=this.deps.imagegenGround;
+      const key=hd?.key(this,FLOOR_NAMES[floor]??'grass',i,j,level);
+      let tint=floor===FLOOR.grass?(cssColorInt(`--grass-season-${this.season}`)||0xffffff):0xffffff;
+      if(j>=CITY_BAND&&!isWaterCode(floor)&&floor!==FLOOR.deck)tint=(Math.round(((tint>>16)&255)*.82)<<16)|(Math.round(((tint>>8)&255)*.82)<<8)|Math.round((tint&255)*.82);
+      if(key)return {...hd!.resolve(key),scale:1/hd!.density,tint};
+      const fallback=this.tileKey(floor,false);
+      if(!this.textures.exists(fallback)){const c=this.deps.provider.canvas(fallback);if(c)this.textures.addCanvas(fallback,c);}
+      return {key:fallback,scale:1};
+    }); // P44 지도 바깥
+    this.surround.build(this.deps.compactArrival?.() ?? false,this.season);
     this.buildLandscape();
     this.buildTraffic();
     this.applyScale(this.cam.upscale);
@@ -200,9 +228,11 @@ export class WaterparkScene extends Phaser.Scene {
     this.fpsAt = this.time.now;
   }
 
+  private prepRenderer: PreparationRenderer | null = null;
   private lastUpdateAt = 0;
   override update(): void {
     if (this.game.renderer instanceof Phaser.Renderer.WebGL.WebGLRenderer && this.game.renderer.contextLost) return;
+    this.stepTown(this.game.loop.delta);
     this.stepTraffic(this.game.loop.delta); // P44-d 도로 위 버스 한 대(장식)
     this.frames++;
     { const now = this.time.now; const dt = this.lastUpdateAt ? Math.min(100, now - this.lastUpdateAt) : 16; this.lastUpdateAt = now; this.tickCourseTrial(dt); this.tickCourseBoats(dt); } // P4-B 시험 운행 · P4-C 보트 시계 (트윈 대신)
@@ -210,12 +240,17 @@ export class WaterparkScene extends Phaser.Scene {
       this.staticRenderer ??= new StaticFacilityRenderer(this, this.deps.approved, this.deps.provider, this.deps.staticDepth);
       this.staticRenderer.update(this.facilitiesRef,this.guestsRef,this.deps.rideTime?.() ?? 0,this.facDefOf??undefined,(i,j)=>this.liftAt(i,j));
     }
+    if(this.deps.compactBoundary && this.deps.compactArrival?.()){
+      this.prepRenderer ??= new PreparationRenderer(this,this.deps.compactBoundary,this.deps.provider);
+      this.prepRenderer.update(this.facilitiesRef,this.guestsRef,this.time.now);
+    }
     this.animFrame++;
     this.tickWater();
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    this.water?.update(reduced);
+    if (!this.deps.imagegenGround) this.water?.update(reduced);
     this.syncGuests();
     this.syncFacilities();
+    this.refreshImagegenSprites();
     if (!reduced) this.tickAmbient();
     this.drawWeather(reduced);
     const now = this.time.now;
@@ -264,19 +299,24 @@ export class WaterparkScene extends Phaser.Scene {
   /** 지면 전부. 타일 텍스처 키는 `tile/<kind>`, 입구 칸만 `tile/gate` */
   private buildGround(): void {
     const g = this.deps.grid;
-    const gate = gateTile(this.deps.rank());
+    const gate = this.deps.compactArrival?.() ? { i: gateTile(this.deps.rank()).i, j: 0 } : gateTile(this.deps.rank());
     for (let j = 0; j < g.h; j++) {
       for (let i = 0; i < g.w; i++) {
         const p = gridToScreen(i, j);
-        const img = this.add.image(p.x, p.y + this.liftAt(i, j), this.columnKey(g.at(i, j), i === gate.i && j === gate.j, i, j));
+        const key=this.columnKey(g.at(i,j),i===gate.i&&j===gate.j,i,j),texture=this.deps.imagegenGround?.resolve(key)??{key};
+        const img = this.add.image(p.x, p.y + this.liftAt(i, j),texture.key,texture.frame);
         this.setGroundOrigin(img, g.at(i, j));
-        img.setDepth(depthKey(i, j) + Z_GROUND);
+        this.deps.imagegenGround?.setWaterTile(this,img,FLOOR_NAMES[g.at(i,j)]??'sand',i,j,this.noLiftForTest?0:g.levelAt(i,j));
+        img.setDepth(groundDepth(i, j, this.noLiftForTest ? 0 : g.levelAt(i, j)));
         this.tiles[j * g.w + i] = img;
       }
     }
+    this.deps.imagegenGround?.flush();
   }
 
   private setGroundOrigin(img: Phaser.GameObjects.Image, floor: FloorCode): void {
+    if (img.texture.key.startsWith('imagegen-ground/')) { img.setOrigin(.5, 0).setScale(1 / this.deps.imagegenGround!.density); return; }
+    img.setScale(img.texture.key==='imagegen/tile/deck'?.25:1);
     const s = floor === FLOOR.deck && this.deps.approved?.spec('tile/deck');
     img.setOrigin(s ? s.ax / s.w : .5, s ? s.ay / s.h : 0);
   }
@@ -294,6 +334,7 @@ export class WaterparkScene extends Phaser.Scene {
     this.noLiftForTest = on;
     for (let j = 0; j < this.deps.grid.h; j++) for (let i = 0; i < this.deps.grid.w; i++) this.refreshTile(i, j);
     this.syncFacilities();
+    this.refreshImagegenSprites();
   }
   tileYForTest(i: number, j: number): number {
     return this.tiles[j * this.deps.grid.w + i]?.y ?? 0;
@@ -302,6 +343,9 @@ export class WaterparkScene extends Phaser.Scene {
   /** 단이 있는 칸의 텍스처 — 윗면 + 치마 한 장 (`<tileKey>|z<n>`), 없으면 구워 둔다 */
   private columnKey(code: FloorCode, isGate: boolean, i: number, j: number): string {
     const base = this.tileKey(code, isGate);
+    const candidate = !isGate && this.deps.imagegenGround?.key(this, FLOOR_NAMES[code] ?? 'sand', i, j, this.noLiftForTest ? 0 : this.deps.grid.levelAt(i,j));
+    if (candidate) return candidate;
+    if(base==='tile/deck'){const hd=imagegenArt.get(base);if(hd){const key='imagegen/tile/deck';if(!this.textures.exists(key))this.textures.addCanvas(key,hd)?.setFilter(Phaser.Textures.FilterMode.LINEAR);return key;}}
     // Flat water/hall tiles also need lazy atlas frames before their first Image is created.
     if (!this.textures.exists(base)) { const c0 = this.deps.provider.canvas(base); if (c0) this.textures.addCanvas(base, c0); }
     const z = this.noLiftForTest ? 0 : this.deps.grid.levelAt(i, j);
@@ -324,6 +368,7 @@ export class WaterparkScene extends Phaser.Scene {
 
   /** 물결 — 20프레임마다 풀 타일의 텍스처를 다음 프레임으로 (G18). 타일 이미지 하나당 setTexture 한 번 */
   private tickWater(): void {
+    if (this.deps.imagegenGround) { this.deps.imagegenGround.tick(this.time.now, !this.tickingEnabled || document.hidden || matchMedia('(prefers-reduced-motion: reduce)').matches); return; }
     if (this.animFrame % 20 !== 0) return;
     this.waterFrame = (this.waterFrame + 1) % WATER_FRAMES;
     const key = `tile/pool:${this.waterFrame}`;
@@ -376,12 +421,15 @@ export class WaterparkScene extends Phaser.Scene {
   refreshTile(i: number, j: number): void {
     const img = this.tiles[j * this.deps.grid.w + i];
     if (!img) return;
-    const gate = gateTile(this.deps.rank());
-    img.setTexture(this.columnKey(this.deps.grid.at(i, j), i === gate.i && j === gate.j, i, j));
+    const gate = this.deps.compactArrival?.() ? { i: gateTile(this.deps.rank()).i, j: 0 } : gateTile(this.deps.rank());
+    const key=this.columnKey(this.deps.grid.at(i,j),i===gate.i&&j===gate.j,i,j),texture=this.deps.imagegenGround?.resolve(key)??{key};
+    img.setTexture(texture.key,texture.frame);this.deps.imagegenGround?.flush();
+    img.setDepth(groundDepth(i, j, this.noLiftForTest ? 0 : this.deps.grid.levelAt(i, j)));
     img.setY(gridToScreen(i, j).y + this.liftAt(i, j)); // P0-B: 풀을 파면 단이 0 으로 내려간다
     const tint = this.poolTint.get(j * this.deps.grid.w + i);
     const floor = this.deps.grid.at(i, j);
     this.setGroundOrigin(img, floor);
+    this.deps.imagegenGround?.setWaterTile(this,img,FLOOR_NAMES[floor]??'sand',i,j,this.noLiftForTest?0:this.deps.grid.levelAt(i,j));
     if (tint !== undefined && floor === FLOOR.pool) img.setTint(tint);
     else if (floor === FLOOR.deck && !this.deps.approved?.spec('tile/deck') && this.ringTint.has(j * this.deps.grid.w + i)) img.setTint(this.ringTint.get(j * this.deps.grid.w + i) as number); // P50-b2 등급별 폰툰 색
     else if (floor === FLOOR.indoor && this.courtTiles.has(j * this.deps.grid.w + i)) img.setTint(cssColorInt('--tile-foodcourt-tint') || 0xffffff); // P58-a: 식탁 영역은 실내 바닥에 아주 연하게 칠한 느낌
@@ -478,6 +526,8 @@ export class WaterparkScene extends Phaser.Scene {
 
   /** 포즈는 상태 + 서 있는 시설에서 파생한다 (G26): 라운지 = lie(의자류)/sit(테이블·소파) · 슬라이드 = ride · 탑 위 = idle */
   private guestPose(g: Guest): GuestPose {
+    if(g.prep)return g.prep.phase==='using' || g.prep.phase==='approach' && g.progress>=1?'idle':'walk';
+    if(g.state==='enter' && (g.arrivalStep??0)>=3 && (g.preparationStep??0)<3 && g.progress>=1)return 'idle';
     if (g.portal && g.portal.phase !== 'inside') return 'walk';
     if (g.state === 'swim') return 'swim';
     if (g.state === 'ride') return 'ride';
@@ -517,6 +567,7 @@ export class WaterparkScene extends Phaser.Scene {
   }
 
   private guestWorld(g: Guest): { x: number; y: number } {
+    if(g.prep && g.prep.phase!=='approach'){const p=prepPosition(g.prep);return gridToScreen(p[0],p[1]);}
     if (g.portal) {
       const pose = portalPosition(g.portal), p = gridToScreen(pose.i, pose.j);
       const f = this.facilitiesRef.find(f => f.uid === g.portal!.uid);
@@ -531,6 +582,12 @@ export class WaterparkScene extends Phaser.Scene {
   }
 
   private guestDepth(g: Guest): number {
+    if(g.prep && g.prep.phase!=='approach'){
+      const f=this.facilitiesRef.find(f=>f.uid===g.prep!.uid);
+      // Locker art is a single long facade; all four contacts are on its front apron.
+      if(f?.defId==='compact_locker')return depthKey(f.i+3,f.j+1)+Z_GUEST;
+      const p=prepPosition(g.prep);return depthKey(p[0]-.5,p[1]-.5)+Z_GUEST;
+    }
     // The whole facade sorts at the footprint front corner; exterior actors and
     // their overlays must share that plane until hidden at the door threshold.
     const f = g.portal && this.facilitiesRef.find(f => f.uid === g.portal!.uid);
@@ -542,7 +599,7 @@ export class WaterparkScene extends Phaser.Scene {
   }
 
   private guestHidden(g: Guest): boolean {
-    return portalHidden(g) || !!this.rideRenderer?.hiddenGuestIds.has(g.uid) || !!this.staticRenderer?.hiddenGuestIds.has(g.uid);
+    return !!this.prepRenderer?.hiddenGuestIds.has(g.uid) || portalHidden(g) || !!this.rideRenderer?.hiddenGuestIds.has(g.uid) || !!this.staticRenderer?.hiddenGuestIds.has(g.uid);
   }
 
   private syncGuests(): void {
@@ -607,7 +664,7 @@ export class WaterparkScene extends Phaser.Scene {
   private busRoad: { i0: number; i1: number; iStop: number; j: number } | null = null;
   /** 도로 띠 — 토지 아래 두 칸, 게이트 앞에 선다 (G33). 토지가 바뀌면 다시 준다 */
   setBusRoad(gate: { i: number; j: number }, land: { i0: number; w: number }): void {
-    void land; this.busRoad = { i0: -3, i1: GW + 2, iStop: gate.i, j: ROAD_ROWS[1] as number }; // P43: 도시 띠의 차도(둘째 줄) — 지도 전폭을 달린다
+    void land; this.busRoad = { i0: -3, i1: GW + 2, iStop: gate.i, j: this.deps.compactArrival?.() ? -1 : ROAD_ROWS[1] as number }; // P43: 도시 띠의 차도(둘째 줄) — 지도 전폭을 달린다
   }
   setBus(state: BusState | null): void {
     this.busRef = state;
@@ -616,11 +673,11 @@ export class WaterparkScene extends Phaser.Scene {
   private syncBus(): void {
     const bs = this.busRef; const road = this.busRoad;
     if (!bs || !road || !this.sys.isActive()) { if (this.busImg) { this.busImg.destroy(); this.busImg = null; } return; }
-    if (!this.busImg) { const bk = this.busTexture(); this.busImg = this.add.image(0, 0, bk).setOrigin(0.5, bk === 'bus/0' ? (BUS_H - 2) / BUS_H : 1); }
+    if (!this.busImg) { const bk = this.busTexture(true); this.busImg = this.add.image(0, 0, bk).setOrigin(0.5, bk === 'bus/0' ? (BUS_H - 2) / BUS_H : .72).setScale(.65).setFlipX(bk !== 'bus/0'); }
     const fi = bs.phase === 'in' ? road.i0 + (road.iStop - road.i0) * bs.t : bs.phase === 'stop' ? road.iStop : road.iStop + (road.i1 - road.iStop) * bs.t;
     const a = tileCenter(Math.floor(fi), road.j); const b = tileCenter(Math.floor(fi) + 1, road.j);
     const f = fi - Math.floor(fi);
-    this.busImg.setPosition(Math.round(a.x + (b.x - a.x) * f), Math.round(a.y + (b.y - a.y) * f + TILE_H / 2 + this.liftAt(Math.round(fi), road.j)));
+    this.busImg.setPosition(Math.round(a.x + (b.x - a.x) * f), Math.round(a.y + (b.y - a.y) * f + (this.deps.compactArrival?.() ? 0 : this.liftAt(Math.round(fi), road.j))));
     this.busImg.setDepth(depthKey(Math.round(fi), road.j) + Z_GUEST);
     void BUS_W;
   }
@@ -634,7 +691,7 @@ export class WaterparkScene extends Phaser.Scene {
   setIllumination(on: boolean): void {
     if (!this.lightsRect) this.lightsRect = this.add.rectangle(0, 0, 4, 4, 0, 0).setOrigin(0, 0).setScrollFactor(0).setDepth(DEPTH_SCREEN_FX - 2);
     this.lightsRect.setFillStyle(cssColorInt('--tint-winter-night'), on ? 0.16 : 0);
-    this.lightsRect.setSize(this.scale.width, this.scale.height);
+    this.lightsRect.setSize(this.cam.bufferSize().w, this.cam.bufferSize().h);
   }
   illuminationOn(): boolean { return (this.lightsRect?.fillAlpha ?? 0) > 0; }
 
@@ -665,47 +722,51 @@ export class WaterparkScene extends Phaser.Scene {
   }
 
   private borderImgs: Phaser.GameObjects.Image[] = [];
+  private woodlandPlants: WoodlandPlant[] = [];
   private surround: Surround | null = null;
   surroundCountForTest(): number { return this.surround?.count() ?? 0; }
-  /**
-   * 마당 밖 (G25 → P44): ① 토지 밖 한 줄 나무 띠 ② 들판의 숲(해시로 드문드문, 암반·물·도시 띠 제외) ③ 도시 띠 가로수(0 줄 · 5·7 줄)
-   * ④ 토지 밖 타일을 어둡게(레거시 setLand — 도시 띠·물은 예외: 영원히 못 사는 땅이지 아직 못 산 땅이 아니다) ⑤ 임시 바깥 장식(P44-d). 토지가 바뀌면 다시 심는다 — 새 마당 안의 숲은 사라진다(땅을 넓히면 밭이 된다)
-   */
+  /** Render stable individual woodland plants and the surrounding town.
+   * Terrain/facility clearance filters the same candidates on each redraw. */
   drawBorder(land: { i0: number; j0: number; w: number; h: number }, gate?: { i: number; j: number }): void {
     for (const im of this.borderImgs) im.destroy();
+    // A rebuild can replace every image while keeping the same child count.
+    // Invalidate the art pass so fresh legacy placeholders are upgraded too.
+    this.imagegenChildren = -1;
     this.borderImgs = [];
+    this.woodlandPlants = [];
+    this.surround?.build(this.deps.compactArrival?.() ?? false,this.season);
+    this.deps.imagegenGround?.flush();
     const gt = gate ?? gateTile(this.deps.rank());
+    const stopRow = gt.j === 0 ? 0 : STOP_ROW;
     const approvedTrees = ['fac/env_deciduous/0', 'fac/env_pine/0', 'fac/env_shrubs/0'];
     const keys = approvedTrees.every(k => this.deps.provider.spec(k)) ? approvedTrees : ['fac/banana_tree/0', 'fac/pine/0', 'fac/ficus/0'];
     for (const k of keys) if (!this.textures.exists(k)) { const c = this.deps.provider.canvas(k); if (c) this.textures.addCanvas(k, c); }
     const grid = this.deps.grid;
     const inLand = (i: number, j: number): boolean => i >= land.i0 && i < land.i0 + land.w && j >= land.j0 && j < land.j0 + land.h;
-    const put = (i: number, j: number, n: number): void => {
+    const put = (plant: WoodlandPlant): void => {
+      const {i,j,kind:n}=plant;
       const key = keys[n % keys.length] as string;
-      if (!this.textures.exists(key) || i < 0 || j < 0 || i >= grid.w || j >= grid.h) return;
-      const c0 = grid.at(i, j);
-      if (isWaterCode(c0) || c0 === FLOOR.deck || c0 === FLOOR.road || c0 === FLOOR.sidewalk) return; // P2: 경계 나무는 물·데크 위에 안 선다
+      if (!this.textures.exists(key)) return;
+      const outside=!grid.inside(i,j),edge=outside?exteriorTile(grid,i,j,gt.j===0):null;
+      const c0 = edge?.floor ?? grid.at(i, j);
+      if (![FLOOR.grass,FLOOR.rock].includes(c0 as 1|14) || this.facilitiesRef.some(f=>FacilityStore.footprint(this.facDefOf!(f),f.i,f.j,f.facing).some(t=>Math.abs(t.i-i)<=2&&Math.abs(t.j-j)<=2)) || isIndoorCode(c0) || (gt.j === 0 && i >= gt.i - 5 && i <= gt.i + 5 && j < 8) || isWaterCode(c0) || c0 === FLOOR.deck || c0 === FLOOR.road || c0 === FLOOR.sidewalk) return; // P2: 경계 나무는 물·데크 위에 안 선다
       const c = tileCenter(i, j);
-      const img = this.add.image(c.x, c.y + TILE_H / 2 + this.liftAt(i, j), key).setOrigin(0.5, 1).setDepth(depthKey(i, j) + Z_GUEST - 1);
+      const img = this.add.image(c.x, c.y + TILE_H / 2 + (edge?lift(edge.level):this.liftAt(i, j)), key).setOrigin(0.5, 1).setDepth(Math.max(0,depthKey(i, j)) + Z_GUEST - 1);
+      img.setScale(plant.scale).setData('woodlandId',plant.id);
+      this.woodlandPlants.push(plant);
       this.borderImgs.push(img);
     };
-    let n = 0;
-    // ① 마당 둘레 나무 띠 — P57-h: 세 칸마다 한 그루(예전 두 칸)
-    for (let i = land.i0 - 1; i <= land.i0 + land.w; i += 3) { put(i, land.j0 - 2, n++); }
-    for (let j = land.j0 - 1; j < land.j0 + land.h; j += 3) { put(land.i0 - 2, j, n++); put(land.i0 + land.w + 1, j, n++); }
-    // ② 들판의 숲 — P57-h: 무작위 7% 산포(370그루, 사용자 「무질서」) 대신 **8×8 블록마다 무리 하나**(확률 0.4 · 2~3그루 · 활엽수 둘 + 관목 하나) — 원작처럼 드물고 덩어리로 선다
-    const hash = (i: number, j: number): number => { let x = (i * 73856093) ^ (j * 19349663); x = (x ^ (x >>> 13)) * 1274126177; return ((x ^ (x >>> 16)) >>> 0) / 4294967296; };
-    const free = (i: number, j: number): boolean => { if (inLand(i, j) || (i >= land.i0 - 2 && i < land.i0 + land.w + 2 && j >= land.j0 - 3 && j < land.j0 + land.h)) return false; const c0 = grid.at(i, j); return c0 === FLOOR.grass || c0 === FLOOR.rock; };
-    for (let bj = CITY_BAND; bj < grid.h; bj += 8) for (let bi = 0; bi < grid.w; bi += 8) {
-      if (hash(bi, bj) > 0.4) continue;
-      const oi = 1 + Math.floor(hash(bj, bi) * 4), oj = 1 + Math.floor(hash(bi + 7, bj + 3) * 4);
-      const spots: [number, number, number][] = [[bi + oi, bj + oj, 0], [bi + oi + 1, bj + oj + 1, 1], [bi + oi + 2, bj + oj, 2]];
-      for (const [si, sj, kind] of spots) if (free(si, sj)) put(si, sj, kind === 2 ? 2 : kind);
+    for(const plant of woodlandLayout(grid.w,grid.h)){
+      if(inLand(plant.i,plant.j))continue;
+      // Keep a grass verge beside paths, river banks and roads, not trunks at their edges.
+      let clear=true;
+      for(let dj=-1;dj<=1&&clear;dj++)for(let di=-1;di<=1;di++){
+        const i=plant.i+di,j=plant.j+dj;
+        const floor=grid.inside(i,j)?grid.at(i,j):exteriorTile(grid,i,j,gt.j===0).floor;
+        if(floor!==FLOOR.grass&&floor!==FLOOR.rock){clear=false;break;}
+      }
+      if(clear)put(plant);
     }
-    // ③ 도시 띠 가로수 — 0 줄은 두 칸마다, 광장(5·7 줄)은 세 칸마다 엇갈려. 입구 열 둘레 세 칸은 비운다(정류장에서 정문까지의 시야)
-    for (let i = 0; i < grid.w; i += 2) put(i, 0, n++);
-    for (let i = 1; i < grid.w; i += 3) { if (Math.abs(i - gt.i) <= 3) continue; put(i, STOP_ROW + 2, n++); }
-    for (let i = 2; i < grid.w; i += 3) { if (Math.abs(i - gt.i) <= 3) continue; put(i, STOP_ROW + 4, n++); }
     // ⑤ P44-d 임시 바깥 장식(sim 밖, 그림은 기존 시설 스프라이트를 빌린다 — 에셋이 오면 교체): 정류장 표지, 가로등, 길 건너 건물 줄, 들판의 이웃 숙소 (주차장은 뺐다 — 사용자)
     const decor = (key: string, i: number, j: number, oy = 1, dz = Z_GUEST - 1): void => {
       if (!this.textures.exists(key)) { const c = this.deps.provider.canvas(key); if (c) this.textures.addCanvas(key, c); }
@@ -717,18 +778,39 @@ export class WaterparkScene extends Phaser.Scene {
     if (!this.textures.exists('busstop/0')) this.textures.addCanvas('busstop/0', drawBusStop());
     const has = (k: string): boolean => { if (!this.textures.exists(k)) { const c = this.deps.provider.canvas(k); if (c) this.textures.addCanvas(k, c); } return this.textures.exists(k); };
     if (!has('fac/env_street_lamp/0') && !this.textures.exists('lamp/0')) this.textures.addCanvas('lamp/0', drawLamp()); // P57-b: main 가로등이 없으면 절차 가로등
-    decor('busstop/0', gt.i + 1, STOP_ROW);
-    decor('fac/env_car/1', gt.i + 8, STOP_ROW + 1);
-    for (let i = 4; i < grid.w; i += 8) decor(has('fac/env_street_lamp/0') ? 'fac/env_street_lamp/0' : 'lamp/0', i, STOP_ROW); // 보도 가로등
+    decor('busstop/0', gt.i + 3, stopRow);
+    if(gt.j!==0)decor('fac/env_car/1', gt.i + 8, stopRow);
+    for (let i = 4; i < grid.w; i += 8) decor(has('fac/env_street_lamp/0') ? 'fac/env_street_lamp/0' : 'lamp/0', i, stopRow); // 보도 가로등
     // 길 건너(격자 위, 줄 −4~−1 은 Surround 잔디) — 마을 건물 줄: 펜션·복층 펜션·창고·안내소를 번갈아
     // P57-b: main 의 마을 건물 6(단독주택·2층 상가·펜션·소형 호텔·편의점·관리창고)이 있으면 그것, 없으면 옛 빌린 그림
     const envTown = ['fac/env_village_house/0', 'fac/env_village_shop/0', 'fac/env_pension/0', 'fac/env_small_hotel/0', 'fac/env_convenience_store/0', 'fac/env_maintenance_shed/0'];
     const town = envTown.every(has) ? envTown : ['fac/pension/0', 'fac/storage/0', 'fac/pension_duplex/0', 'fac/info/0', 'fac/bungalow/0'];
     let tn = 0;
-    for (let i = 4; i < grid.w - 4; i += 11) { decor(town[tn % town.length] as string, i, -3); tn++; }
+    for (const b of TOWN_BUILDINGS) {
+      decor(town[tn % town.length] as string,b.i,gt.j===0?b.j:-3);
+      if(gt.j===0){
+        const lot=TOWN_LOTS[tn]!;
+        for(const [di,j] of lot.benches)decor('fac/env_bench/0',b.i+di,j);
+        for(const [di,j] of lot.pots)decor('fac/env_flower_pot/0',b.i+di,j);
+        for(const [di,j] of lot.trees)decor('fac/env_deciduous/0',b.i+di,j);
+        if(lot.lamp)decor('fac/env_street_lamp/0',b.i+lot.lamp[0],lot.lamp[1]);
+        // Side gardens frame selected lots, leaving the benches and alleys open.
+        for(const [di,row,d] of lot.garden){
+          const garden=this.deps.compactBoundary?.get(`garden-${d}`);
+          if(!garden)continue;
+          const key=`town/garden-${d}`;if(!this.textures.exists(key))this.textures.addImage(key,garden.image);
+          const i=b.i+di+.5,j=row+.5,p=gridToScreen(i,j);
+          this.borderImgs.push(this.add.image(p.x-96,p.y-107.75755076535926,key).setOrigin(0,0).setDepth(Math.max(0,depthKey(i,j))+Z_GUEST-1));
+        }
+        if(lot.car)decor('fac/env_car/1',b.i+lot.car[0],lot.car[1]);
+      }
+      tn++;
+    }
+    if(gt.j===0)this.buildTown();
     // 들판의 이웃 빠지·펜션(마당 좌우 멀찍이) — 확장하면 마당이 삼킨다(그림뿐이라 충돌 없음)
     // P57-h: 들판의 이웃 건물 4채(펜션·단독주택·호텔·창고)는 뺀다 — 마을 건물은 길 건너 한 줄이면 충분(사용자 「복잡함」 원인 D)
     this.landForTint = land;
+    this.refreshImagegenSprites();
     for (let j = 0; j < grid.h; j++) for (let i = 0; i < grid.w; i++) this.refreshTile(i, j); // P44-c 토지 밖 어둡게(레거시 setLand)
   }
   private landForTint: { i0: number; j0: number; w: number; h: number } | null = null;
@@ -746,10 +828,10 @@ export class WaterparkScene extends Phaser.Scene {
   snapshotAt(i: number, j: number, cb: (c: HTMLCanvasElement | null) => void): void {
     const c = tileCenter(i, j);
     const v = this.cam.view();
-    // 캔버스 버퍼는 텍셀 단위(정수 업스케일은 CSS 가 한다) — v.scale 을 곱하면 안 된다
-    const sx = Math.round(c.x - 24 - v.scrollX);
-    const sy = Math.round(c.y - 28 - v.scrollY);
-    const w = 48; const h = 32;
+    // Logical crop coordinates become framebuffer pixels at renderDensity.
+    const sx = Math.round((c.x - 24 - v.scrollX) * this.renderDensity);
+    const sy = Math.round((c.y - 28 - v.scrollY) * this.renderDensity);
+    const w = 48 * this.renderDensity; const h = 32 * this.renderDensity;
     const cw = this.game.canvas.width; const ch = this.game.canvas.height;
     if (sx < 0 || sy < 0 || sx + w > cw || sy + h > ch) { cb(null); return; }
     this.game.renderer.snapshotArea(sx, sy, w, h, (img) => {
@@ -758,7 +840,7 @@ export class WaterparkScene extends Phaser.Scene {
       out.width = 48; out.height = 32;
       const g = out.getContext('2d');
       if (!g) { cb(null); return; }
-      g.imageSmoothingEnabled = false;
+      g.imageSmoothingEnabled = this.renderDensity > 1;
       g.drawImage(img, 0, 0, 48, 32);
       cb(out);
     });
@@ -808,10 +890,30 @@ export class WaterparkScene extends Phaser.Scene {
     this.facilitiesRef = list;
     this.facDefOf = defOf;
     this.syncFacilities();
+    this.refreshImagegenSprites();
   }
 
+  private imagegenRevision=-1;
+  private imagegenChildren=-1;
+  private refreshImagegenSprites():void {
+    if(this.imagegenRevision===imagegenArt.frames.size&&this.imagegenChildren===this.children.length)return;
+    this.imagegenRevision=imagegenArt.frames.size;this.imagegenChildren=this.children.length;
+    for(const child of this.children.list){
+      if(!(child instanceof Phaser.GameObjects.Image))continue;
+      const old=child.texture.key;if(!old.startsWith('fac/')&&old!=='tile/deck')continue;
+      const hd=imagegenArt.get(old);if(!hd)continue;
+      const key=`imagegen/${old}`;
+      if(!this.textures.exists(key))this.textures.addCanvas(key,hd)?.setFilter(Phaser.Textures.FilterMode.LINEAR);
+      const w=child.displayWidth,h=child.displayHeight,info=imagegenArt.size(old)!,pad=info.pad??0,ox=child.originX,oy=child.originY;
+      child.setTexture(key).setDisplaySize(w*(info.w+pad*2)/info.w,h*(info.h+pad*2)/info.h);
+      if(pad)child.setOrigin((ox*info.w+pad)/(info.w+pad*2),(oy*info.h+pad)/(info.h+pad*2));
+    }
+  }
   private facilityTexture(def: FacilityDef, facing: 0 | 1): string {
-    const key = `fac/${def.id}/${facing}`;
+    const original = `fac/${def.id}/${facing}`;
+    const hd=imagegenArt.get(original);
+    const key=hd?`imagegen/${original}`:original;
+    if(hd&&!this.textures.exists(key)){this.textures.addCanvas(key,hd)?.setFilter(Phaser.Textures.FilterMode.LINEAR);}
     if (!this.textures.exists(key)) {
       const c = this.deps.provider.canvas(key);
       if (c) this.textures.addCanvas(key, c);
@@ -820,6 +922,8 @@ export class WaterparkScene extends Phaser.Scene {
   }
 
   private placeFacilityImage(img: Phaser.GameObjects.Image, def: FacilityDef, i: number, j: number, facing: 0 | 1): void {
+    const visual=imagegenArt.size(`fac/${def.id}/${facing}`);
+    if(visual)img.setDisplaySize(visual.w+2*(visual.pad??0),visual.h+2*(visual.pad??0));
     const w = facing === 1 ? def.d : def.w;
     const d = facing === 1 ? def.w : def.d;
     const authored = this.deps.approved;
@@ -828,14 +932,19 @@ export class WaterparkScene extends Phaser.Scene {
     const sprite = this.deps.provider.spec(`fac/${def.id}/${facing}`);
     if (pivot && anchor && sprite) {
       const p = gridToScreen(i + pivot[0],j + pivot[1]);
-      img.setOrigin(anchor.ax/sprite.w,anchor.ay/sprite.h).setPosition(p.x,p.y+this.liftAt(i,j));
+      img.setOrigin((anchor.ax+(visual?.pad??0))/(sprite.w+2*(visual?.pad??0)),(anchor.ay+(visual?.pad??0))/(sprite.h+2*(visual?.pad??0))).setPosition(p.x,p.y+this.liftAt(i,j));
       img.setDepth(depthKey(i+w-1,j+d-1)+Z_FACILITY);
       return;
     }
     const a = footprintAnchor(i, j, w, d);
     const size = facilityCanvasSize(def, facing);
     const ca = canvasAnchor(w, d, BODY_H[def.class]);
-    img.setOrigin(ca.x / size.w, ca.y / size.h);
+    const pad=visual?.pad??0;
+    // Atlas art has its own canvas and ground anchor; procedural body height
+    // cannot locate it once the art has a different height or transparent guard.
+    const sourceW = visual?.w ?? sprite?.w ?? size.w;
+    const sourceH = visual?.h ?? sprite?.h ?? size.h;
+    img.setOrigin(((sprite?.ax ?? ca.x)+pad)/(sourceW+pad*2),((sprite?.ay ?? ca.y)+pad)/(sourceH+pad*2));
     img.setPosition(a.x, a.y + this.liftAt(i, j)); // P0-B: 발자국은 단이 균일하다 (level-mixed 거절)
     // 깊이 = 발자국의 가장 앞 칸
     img.setDepth(depthKey(i + w - 1, j + d - 1) + Z_FACILITY);
@@ -854,7 +963,7 @@ export class WaterparkScene extends Phaser.Scene {
         this.facImgs.set(f.uid, img);
       } else if (img.texture.key !== key) img.setTexture(key);
       this.placeFacilityImage(img, def, f.i, f.j, f.facing);
-      img.setVisible(!this.staticRenderer?.hiddenFacilityIds.has(f.uid));
+      img.setVisible(!this.staticRenderer?.hiddenFacilityIds.has(f.uid) && !this.prepRenderer?.hiddenFacilityIds.has(f.uid));
       if (this.dimUids.has(f.uid)) img.setTint(cssColorInt('--rig-dim') || 0x55697c); else if (img.isTinted) img.clearTint(); // P50-b2 꺼짐 틴트 — 색은 토큰
     }
     for (const [uid, img] of this.facImgs) {
@@ -863,7 +972,6 @@ export class WaterparkScene extends Phaser.Scene {
       this.facImgs.delete(uid);
     }
     if (this.facilitiesRef.length !== this.lastFacCount) { this.lastFacCount = this.facilitiesRef.length; this.drawLanes(); this.rebuildAmbient(); }
-    this.rebuildAmbient();
   }
 
   /** 슬라이드 활강로 — 발자국의 활강로 칸을 따라 반투명 튜브(하늘색 + 흰 하이라이트)를 긋는다 (G12) */
@@ -937,8 +1045,35 @@ export class WaterparkScene extends Phaser.Scene {
   private wallPost(g: Phaser.GameObjects.Graphics, x: number, y: number, h: number): void { g.fillStyle(cssColorInt('--wall-top'), 1); g.fillRect(x - 1, y - h - 1, 3, h + 2); }
 
   /** 벽·울타리·문 전부 다시 그린다 — 세 진입점(drawWalls·drawFence·drawDoors)이 다 여기로 온다(층을 지우고 다시 세우므로 따로 그릴 수 없다) */
+  private compactWallSignature = '';
+  private compactWallKeys: string[] = [];
+  private drawCompactWalls(): void {
+    const grid = this.deps.grid, doors = grid.doors(), walls: BoundaryWall[] = [], tiles = new Set<string>();
+    const inside = (i: number,j: number): boolean => isIndoorCode(grid.at(i,j)) || grid.at(i,j) === FLOOR.pool && this.indoorPool(i,j);
+    for (let j=0;j<grid.h;j++) for(let i=0;i<grid.w;i++) if(inside(i,j)) {
+      tiles.add(`${i},${j}`);
+      for(const [di,dj,d] of [[0,-1,0],[-1,0,1],[0,1,2],[1,0,3]] as const) if(!inside(i+di,j+dj)) {
+        // The ticket cabin occupies these two north-edge panels.
+        if(j===3 && d===0 && (i===49 || i===50)) continue;
+        walls.push({i,j,d,door:doors.some(v=>v.i===i && v.j===j && v.oi===i+di && v.oj===j+dj)});
+      }
+    }
+    for(let i=44;i<52;i++) if(inside(i,7) && inside(i,8)) walls.push({i,j:7,d:2,door:i===48||i===49,partition:true});
+    for(let j=3;j<8;j++) for(const [i,neighbor,d] of [[44,43,1],[51,52,3]] as const)
+      if(inside(i,j) && inside(neighbor,j)) walls.push({i,j,d,door:false,partition:true});
+    for(let i=44;i<52;i++) if(inside(i,2) && inside(i,3)) walls.push({i,j:3,d:0,door:i===48,partition:true});
+    const signature=JSON.stringify(walls);if(signature===this.compactWallSignature)return;
+    this.compactWallSignature=signature;this.clearWallLayers();
+    for(const key of this.compactWallKeys)this.textures.remove(key);this.compactWallKeys=[];
+    for(const [n,layer] of compactBoundaryLayers(this.deps.compactBoundary!,walls,tiles).entries()) {
+      const key=`compact-boundary/${n}`;this.textures.addCanvas(key,layer.canvas);this.compactWallKeys.push(key);
+      this.wallImgs.push(this.add.image(layer.x,layer.y,key).setOrigin(0,0).setDepth(layer.depth));
+    }
+    this.doorCount=doors.length;
+  }
   private redrawWalls(): void {
     if (!this.wallsReady) return;
+    if(this.deps.compactArrival?.() && this.deps.compactBoundary) { this.drawCompactWalls(); return; }
     this.clearWallLayers();
     const grid = this.deps.grid;
     const H = WALL_H;
@@ -999,33 +1134,90 @@ export class WaterparkScene extends Phaser.Scene {
     }
   }
   landscapeCountForTest(): number { return this.landscapeImgs.length; }
-  /** 버스 그림 — main 아틀라스의 지역 버스(`env_bus`)가 있으면 그것, 없으면 절차 상자. 둘 다 원점은 발자국 아래 꼭짓점.
-   * ⚠ 도로(+I, 화면 ↘)와 나란한 면은 **d2**(앞이 오른쪽 아래)다 — d1 은 앞이 왼쪽 아래(+J)라 버스가 도로를 가로질러 서 있었다(P57-h 실측, 사용자 「버스가 가로로 온다」) */
-  private busTexture(): string {
-    const k = 'fac/env_bus/2';
+  /** The accepted d2 bus shows its rear at lower-right (-I travel).
+   * Mirrored d1 shows its front at lower-right (+I arrival). */
+  private busTexture(forward = false): string {
+    const k = forward ? 'fac/env_bus/1' : 'fac/env_bus/2';
     if (!this.textures.exists(k)) { const c = this.deps.provider.canvas(k); if (c) this.textures.addCanvas(k, c); }
     if (this.textures.exists(k)) return k;
     if (!this.textures.exists('bus/0')) this.textures.addCanvas('bus/0', drawBus());
     return 'bus/0';
   }
+  private townMarks:Phaser.GameObjects.Graphics|null=null;
+  private townSignals:Phaser.GameObjects.Graphics|null=null;
+  private townSignalPhase:boolean|null=null;
+  private townPeople:{img:Phaser.GameObjects.Image;route:{i:number;j:number}[];segment:number;progress:number;seed:number;crossing:boolean}[]=[];
+  private buildTown():void {
+    if(this.townMarks)return;
+    const g=this.townMarks=this.add.graphics().setDepth(-70);
+    const quad=(i:number,j:number,w:number,h:number,color:number)=>{g.fillStyle(color,1);g.fillPoints([gridToScreen(i,j),gridToScreen(i+w,j),gridToScreen(i+w,j+h),gridToScreen(i,j+h)],true);};
+    for(const i of TOWN_CROSSINGS){for(let j=-2;j<0;j+=.4)quad(i,j,2,.2,0xf6f1d7);quad(i-1,-2,.12,2,0xf6f1d7);}
+    for(const b of TOWN_BUILDINGS){
+      const i=b.i+7,j=-8;quad(i,j,3,.08,0xe8e4c8);quad(i,j+3,3,.08,0xe8e4c8);for(let x=i;x<=i+3;x+=1.5)quad(x,j,.08,3,0xe8e4c8);
+    }
+    this.townSignals=this.add.graphics();
+    for(let n=0;n<10;n++){
+      const route=townWalkingLoop(n),tex=this.pathWalkerTexture();
+      const img=this.add.image(0,0,tex.key).setOrigin(tex.origin.x,tex.origin.y);
+      this.townPeople.push({img,route,segment:n%4,progress:(n*.17)%1,seed:201+n,crossing:false});
+    }
+    const tex=this.pathWalkerTexture();this.townPeople.push({img:this.add.image(0,0,tex.key),route:[{i:48,j:-3},{i:48,j:0}],segment:0,progress:0,seed:215,crossing:true});
+  }
+  private townCarsMayGo():boolean {return trafficGreen(this.time.now)&&!this.townPeople.some(a=>a.crossing&&a.progress>0);}
+  private stepTown(dtMs:number):void {
+    if(!this.townMarks)return;
+    const green=this.townCarsMayGo();
+    if(this.townSignalPhase!==green){
+      this.townSignalPhase=green;const g=this.townSignals!;g.clear();
+      for(const i of TOWN_CROSSINGS)for(const [di,j] of [[-.5,-2.8],[2.5,.3]]){
+        const p=tileCenter(i+di!,j!);g.lineStyle(1.5,0x515f58,1).lineBetween(p.x,p.y,p.x,p.y-19);
+        g.fillStyle(0x33443e,1).fillRoundedRect(p.x-3,p.y-25,6,12,1);
+        g.fillStyle(green?0x663b36:0xf36a4d,1).fillCircle(p.x,p.y-22,1.6);
+        g.fillStyle(green?0x8dda81:0x375747,1).fillCircle(p.x,p.y-16,1.6);
+      }
+      g.setDepth(10000);
+    }
+    for(const actor of this.townPeople){
+      const a=actor.route[actor.segment]!,b=actor.route[(actor.segment+1)%actor.route.length]!;
+      const distance=Math.abs(b.i-a.i)+Math.abs(b.j-a.j);
+      const waiting=actor.crossing&&actor.progress===0&&(green||this.time.now%16000>11000||this.traffic.some(t=>Math.abs(t.fi-48)<4));
+      if(!waiting)actor.progress=Math.min(1,actor.progress+Math.min(dtMs,100)/1000*(actor.crossing?1:.7)/distance);
+      const i=a.i+(b.i-a.i)*actor.progress,j=a.j+(b.j-a.j)*actor.progress,p=tileCenter(i,j);
+      const facing=b.i>a.i?0:b.j>a.j?1:b.i<a.i?2:3;
+      const key=npcV8Key(actor.seed,facing,waiting?'idle':'walk',this.time.now,'happy');
+      if(!this.textures.exists(key)){const c=this.deps.provider.canvas(key);if(c)this.textures.addCanvas(key,c);}
+      if(this.textures.exists(key)){actor.img.setTexture(key);const spec=this.deps.provider.spec(key)!;actor.img.setOrigin(spec.ax/spec.w,spec.ay/spec.h);}
+      actor.img.setPosition(p.x,p.y).setDepth(Math.max(0,depthKey(i,j))+Z_GUEST);
+      if(actor.progress>=1){actor.progress=0;actor.segment=(actor.segment+1)%actor.route.length;}
+    }
+  }
+  townForTest():{people:number;green:boolean;positions:{i:number;j:number;crossing:boolean}[]}{
+    return {people:this.townPeople.length,green:this.townCarsMayGo(),positions:this.townPeople.map(a=>{const p=a.route[a.segment]!,q=a.route[(a.segment+1)%a.route.length]!;return {i:p.i+(q.i-p.i)*a.progress,j:p.j+(q.j-p.j)*a.progress,crossing:a.crossing};})};
+  }
+
   /** P44-d — 도로 위 시내버스 한 대(장식, sim 밖). 시간이 멈춰도 돈다 — 도시는 내 빠지와 무관하게 산다 */
   private traffic: { img: Phaser.GameObjects.Image; row: number; fi: number; speed: number }[] = [];
   private buildTraffic(): void {
     for (const t of this.traffic) t.img.destroy();
     this.traffic = [];
     const bk = this.busTexture();
-    const img = this.add.image(0, 0, bk).setOrigin(0.5, bk === 'bus/0' ? (BUS_H - 2) / BUS_H : 1);
-    this.traffic.push({ img, row: ROAD_ROWS[0] as number, fi: -20, speed: 4.5 });
+    const img = this.add.image(0, 0, bk).setOrigin(0.5, bk === 'bus/0' ? (BUS_H - 2) / BUS_H : .72).setScale(.65);
+    this.traffic.push({ img, row: this.deps.compactArrival?.() ? -2 : ROAD_ROWS[0] as number, fi: GW+12, speed: -4.5 });
+    if(this.deps.compactArrival?.()){
+      const key='fac/env_car/0';if(!this.textures.exists(key)){const c=this.deps.provider.canvas(key);if(c)this.textures.addCanvas(key,c);}
+      if(this.textures.exists(key))this.traffic.push({img:this.add.image(0,0,key).setOrigin(.5,.82).setScale(.8),row:-1,fi:-12,speed:3});
+    }
     this.stepTraffic(0);
   }
   private stepTraffic(dtMs: number): void {
     for (const t of this.traffic) {
-      t.fi += t.speed * (dtMs / 1000);
+      t.fi=advanceTownVehicle(t.fi,t.speed,dtMs,!this.deps.compactArrival?.()||this.townCarsMayGo());
       if (t.fi > GW + 24) t.fi = -24;
+      if (t.fi < -24) t.fi = GW+24;
       const a = tileCenter(Math.floor(t.fi), t.row); const b = tileCenter(Math.floor(t.fi) + 1, t.row);
       const f = t.fi - Math.floor(t.fi);
-      t.img.setPosition(Math.round(a.x + (b.x - a.x) * f), Math.round(a.y + (b.y - a.y) * f + TILE_H / 2));
-      t.img.setDepth(depthKey(Math.max(0, Math.min(GW - 1, Math.round(t.fi))), t.row) + Z_GUEST);
+      t.img.setPosition(Math.round(a.x + (b.x - a.x) * f), Math.round(a.y + (b.y - a.y) * f));
+      t.img.setDepth(Math.max(0,depthKey(Math.max(0, Math.min(GW - 1, Math.round(t.fi))), t.row)) + Z_GUEST);
       t.img.setVisible(t.fi > -22 && t.fi < GW + 22);
     }
   }
@@ -1083,8 +1275,10 @@ export class WaterparkScene extends Phaser.Scene {
     this.ghost.setDepth(depthKey(i, j) + Z_GHOST + 4096 * 200);
     this.ghost.setAlpha(0.62);
     this.ghost.setTint(ok ? 0xffffff : cssColorInt('--fx-bad'));
-    const w = facing === 1 ? def.d : def.w;
-    const d = facing === 1 ? def.w : def.d;
+    const reservation=reservedBounds(def,i,j,facing);
+    const w = reservation.w;
+    const d = reservation.h;
+    i=reservation.i0;j=reservation.j0;
     const tiles: { i: number; j: number }[] = [];
     for (let a = 0; a < w; a++) for (let b = 0; b < d; b++) tiles.push({ i: i + a, j: j + b });
     this.setSelection(tiles, !ok);
@@ -1095,6 +1289,8 @@ export class WaterparkScene extends Phaser.Scene {
     const lz0 = this.liftAt(i, j);
     const top = { ...gridToScreen(i, j) }; const right = { ...gridToScreen(i + w, j) }; const bottom = { ...gridToScreen(i + w, j + d) }; const left = { ...gridToScreen(i, j + d) };
     top.y += lz0; right.y += lz0; bottom.y += lz0; left.y += lz0;
+    g.lineStyle(1,cssColorInt(ok?'--fx-ok':'--fx-bad'),.8);
+    g.strokePoints([top,right,bottom,left],true);
     const mid = (p: { x: number; y: number }, q: { x: number; y: number }): { x: number; y: number } => ({ x: (p.x + q.x) / 2, y: (p.y + q.y) / 2 });
     const cx = (top.x + bottom.x) / 2; const cy = (top.y + bottom.y) / 2;
     g.fillStyle(cssColorInt(ok ? '--fx-ok' : '--fx-bad'), 0.95);
@@ -1169,6 +1365,7 @@ export class WaterparkScene extends Phaser.Scene {
     this.rigLinks = links;
     this.drawRigLinks();
     this.syncFacilities();
+    this.refreshImagegenSprites();
   }
   private drawRigLinks(): void {
     if (!this.rigLinkGfx) this.rigLinkGfx = this.add.graphics().setDepth(DEPTH_LAND_MARK - 3.5);
@@ -1270,15 +1467,15 @@ export class WaterparkScene extends Phaser.Scene {
     this.drops = [];
     if (!kind) { this.weatherGfx?.clear(); return; }
     const n = kind === 'rain' ? 40 : 30;
-    for (let k = 0; k < n; k++) this.drops.push({ x: (k * 97) % Math.max(1, this.scale.width), y: (k * 53) % Math.max(1, this.scale.height), v: kind === 'rain' ? 6 : 1 });
+    for (let k = 0; k < n; k++) this.drops.push({ x: (k * 97) % Math.max(1, this.cam.bufferSize().w), y: (k * 53) % Math.max(1, this.cam.bufferSize().h), v: kind === 'rain' ? 6 : 1 });
   }
 
   private drawWeather(reduced: boolean): void {
     const g = this.weatherGfx;
     if (!g || !this.weatherKind) return;
     g.clear();
-    const w = this.scale.width;
-    const h = this.scale.height;
+    const w = this.cam.bufferSize().w;
+    const h = this.cam.bufferSize().h;
     g.fillStyle(cssColorInt(this.weatherKind === 'rain' ? '--rain' : '--snow'), this.weatherKind === 'rain' ? 0.55 : 0.9);
     for (const d of this.drops) {
       if (!reduced) {
@@ -1304,7 +1501,7 @@ export class WaterparkScene extends Phaser.Scene {
       alpha = Math.min(0.42, ((h - 18) / 2) * 0.42);
     }
     this.tint?.setFillStyle(color, alpha);
-    this.tint?.setSize(this.scale.width, this.scale.height);
+    this.tint?.setSize(this.cam.bufferSize().w, this.cam.bufferSize().h);
   }
 
   /**
@@ -1317,8 +1514,15 @@ export class WaterparkScene extends Phaser.Scene {
     const v = viewport(cssW, cssH, s, window.devicePixelRatio || 1);
     this.violations = violatesDotGrid(v, s);
     this.cam.setScreenSize(cssW, cssH);
-    if (this.scale.width !== v.bufferW || this.scale.height !== v.bufferH) this.scale.resize(v.bufferW, v.bufferH);
-    if (this.scale.zoom !== s) this.scale.setZoom(s);
+    const density = this.renderDensity;
+    const width = v.bufferW * density, height = v.bufferH * density;
+    if (this.scale.width !== width || this.scale.height !== height) this.scale.resize(width, height);
+    // Phaser NONE resize leaves an old explicit CSS size when zoom is exactly 1.
+    // Refresh it too, otherwise rotation shrinks the canvas and misroutes taps.
+    if (this.scale.zoom !== s / density || this.game.canvas.style.width !== `${v.cssW}px` || this.game.canvas.style.height !== `${v.cssH}px`) this.scale.setZoom(s / density);
+    // Explicit size also handles orientation + zoom changes in the same resize.
+    this.cameras.main.setSize(width, height).setZoom(density);
+    this.game.canvas.style.imageRendering = density === 1 ? 'pixelated' : 'auto';
     this.tint?.setSize(v.bufferW, v.bufferH);
     this.syncCamera();
   }
@@ -1381,8 +1585,8 @@ export class WaterparkScene extends Phaser.Scene {
       const ratio = Math.hypot(pair[0].x - pair[1].x, pair[0].y - pair[1].y) / this.pinchStart;
       const want: Upscale = ratio > 1.35 ? 2 : ratio < 0.74 ? 1 : this.pinchScale;
       if (want === this.cam.upscale) return;
-      // 화면 px → 씬 좌표는 S 로 나눈다 (캔버스 CSS = 버퍼 × S)
-      const s = this.cam.upscale;
+      // CSS pixels -> framebuffer pixels before the camera's inverse transform.
+      const s = this.cam.upscale / this.renderDensity;
       const mid = this.cameras.main.getWorldPoint((pair[0].x + pair[1].x) / 2 / s, (pair[0].y + pair[1].y) / 2 / s);
       this.cam.setUpscale(want, { x: mid.x, y: mid.y });
       this.applyScale(want);
@@ -1602,9 +1806,12 @@ export class WaterparkScene extends Phaser.Scene {
     this.syncCamera();
   }
 
+  editorPointer: ((phase: 'down' | 'move' | 'up', p: Phaser.Input.Pointer) => boolean) | null = null;
+
   private wireInput(): void {
     this.wirePinch();
     this.input.on('pointerdown', (p: Phaser.Input.Pointer) => {
+      if (this.editorPointer?.('down', p)) return;
       this.down.set(p.id, { x: p.x, y: p.y });
       if (this.down.size === 1) {
         const w0 = this.cameras.main.getWorldPoint(p.x, p.y);
@@ -1620,6 +1827,7 @@ export class WaterparkScene extends Phaser.Scene {
     });
 
     this.input.on('pointermove', (p: Phaser.Input.Pointer) => {
+      if (this.editorPointer?.('move', p)) return;
       const prev = this.down.get(p.id);
       if (!prev) return;
       const dxRaw = p.x - prev.x;
@@ -1634,15 +1842,16 @@ export class WaterparkScene extends Phaser.Scene {
         return;
       }
       if (this.down.size >= 2 || !this.dragging) return;
-      // p.x 는 씬 좌표(텍셀). 팬은 화면 픽셀 기준이라 S 를 곱한다
-      const dx = dxRaw * this.cam.upscale;
-      const dy = dyRaw * this.cam.upscale;
+      // Pointer coordinates are framebuffer pixels; pan accepts CSS pixels.
+      const dx = dxRaw * this.cam.upscale / this.renderDensity;
+      const dy = dyRaw * this.cam.upscale / this.renderDensity;
       this.dragMoved += Math.abs(dx) + Math.abs(dy);
       this.cam.pan(dx, dy);
       this.syncCamera();
     });
 
     const end = (p: Phaser.Input.Pointer): void => {
+      if (this.editorPointer?.('up', p)) return;
       this.down.delete(p.id);
       if (this.draggingHandle >= 0) { this.draggingHandle = -1; return; }
       if (this.down.size > 0) return;

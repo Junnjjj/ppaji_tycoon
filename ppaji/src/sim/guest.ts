@@ -1,3 +1,4 @@
+import { PREPARATION_IDS, preparationSlots, prepLength, prepPosition, type PrepVisit } from './preparation.js';
 import { createStaticVisit, type StaticVisit } from './static-visit.js';
 import { advanceGuestMovement, movementFacing } from './guest-motion.js';
 import { outdoorContract, outdoorSlots, createOutdoorVisit, advanceOutdoorVisit, outdoorInAisle, type OutdoorVisit } from './outdoor-activity.js';
@@ -75,6 +76,8 @@ export interface Guest {
   outdoor?: OutdoorVisit;
   staticVisit?: StaticVisit;
   arrivalStep?: number;
+  preparationStep?: number;
+  prep?: PrepVisit;
   departureStep?: number;
   palette: number;
   i: number;
@@ -264,6 +267,7 @@ export class GuestStore {
   private gateField: DistanceField | null = null;
   private arrivalRoute: readonly { i: number; j: number }[] = [];
   private arrivalFields = new Map<number, DistanceField>();
+  setGate(gate: { i: number; j: number }): void { this.gate.i = gate.i; this.gate.j = gate.j; this.invalidate(); }
   setArrivalRoute(route: readonly { i: number; j: number }[]): void { this.arrivalRoute = route; this.arrivalFields.clear(); }
   private followArrival(g: Guest, leaving = false): boolean {
     const prop = leaving ? 'departureStep' : 'arrivalStep';
@@ -278,6 +282,45 @@ export class GuestStore {
     let field = this.arrivalFields.get(index);
     if (!field) { field = buildField(this.grid, [target], this.walkable); this.arrivalFields.set(index, field); }
     this.advance(g, field);
+    return true;
+  }
+  /** Admission is ordered, capacity reserved, and serializable through the whole visit. */
+  private stepPreparation(g: Guest, hooks?: GuestHooks): boolean {
+    if(!this.grid.compactEntrance || (g.arrivalStep ?? 0)<3 || (g.preparationStep ?? 0)>=PREPARATION_IDS.length) return false;
+    const stage=g.preparationStep ?? 0;
+    const f=this.facilities.all.find(f=>f.defId===PREPARATION_IDS[stage]);
+    if(!f){delete g.prep;g.preparationStep=stage+1;return true;}
+    const slots=preparationSlots(f);
+    if(!slots.length){g.preparationStep=stage+1;return true;}
+    if(!g.prep){
+      const busy=new Set(this.list.filter(o=>o.prep?.uid===f.uid).map(o=>o.prep!.slot));
+      const index=slots.findIndex((s,k)=>!busy.has(k)&&this.walkable(s.approach.i,s.approach.j));
+      if(index<0){g.say=null;return true;}
+      const slot=slots[index]!;
+      const field=buildField(this.grid,[slot.approach],this.walkable);
+      if((g.i!==slot.approach.i || g.j!==slot.approach.j)&&!field.next(g.i,g.j)){g.say='준비실 통로가 막혔어요';return true;}
+      g.prep={uid:f.uid,slot:index,phase:'approach',ticks:0,progress:0,approach:slot.approach,path:slot.path};
+      g.target={kind:'facility',uid:f.uid};g.say=null;
+    }
+    const p=g.prep;
+    if(p.phase==='approach'){
+      if(!this.walkable(p.approach.i,p.approach.j)){delete g.prep;g.target=null;return true;}
+      const key=-(f.uid*10+p.slot+1);let field=this.arrivalFields.get(key);
+      if(!field){field=buildField(this.grid,[p.approach],this.walkable);this.arrivalFields.set(key,field);}
+      if(g.i!==p.approach.i || g.j!==p.approach.j || g.progress<1){this.advance(g,field);return true;}
+      p.phase='entering';p.progress=0;g.fromI=g.i;g.fromJ=g.j;g.progress=1;
+    } else if(p.phase==='using'){
+      p.ticks++;
+      if(p.ticks >= [16,32,40][stage]!){p.phase='exiting';p.progress=0;g.say=null;}
+    } else {
+      const before=prepPosition(p);
+      p.progress=Math.min(1,p.progress+1/(this.b.walkTicksPerTile*Math.max(.1,prepLength(p))));
+      const after=prepPosition(p);g.facing=movementFacing(before[0],before[1],after[0],after[1],g.facing);
+      if(p.progress>=1){
+        if(p.phase==='entering'){p.phase='using';p.ticks=0;g.facing=stage===1?2:3;g.say=['짐 보관 중','옷 갈아입는 중','샤워 중'][stage]!;}
+        else {this.finishUse(g,f,hooks);delete g.prep;g.target=null;g.say=null;g.preparationStep=stage+1;if(g.preparationStep===3)g.arrivalStep=Math.max(g.arrivalStep??0,7);}
+      }
+    }
     return true;
   }
   /** 오늘 나간 손님 수 · 입장 수 (일일 집계용) */
@@ -478,6 +521,7 @@ export class GuestStore {
       if (g.portal) { this.stepPortal(g, hooks); continue; }
       switch (g.state) {
         case 'enter':
+          if (this.stepPreparation(g, hooks)) break;
           if (this.followArrival(g)) break;
           g.state = 'wander';
           g.stateTicks = 0;
@@ -912,7 +956,7 @@ export class GuestStore {
   /** P52-b — 사고 확률의 혼잡(busy/cap) 읽기 표면 */
   busyCount(f: PlacedFacility): number { return this.busyAt(f); }
   private busyAt(f: PlacedFacility): number {
-    return this.list.filter((o) => (o.state === 'use' || o.state === 'climb' || o.state === 'ride') && o.portal?.phase !== 'exiting' && o.target?.kind === 'facility' && o.target.uid === f.uid).length;
+    return this.list.filter((o) => o.prep?.uid===f.uid || (o.state === 'use' || o.state === 'climb' || o.state === 'ride') && o.portal?.phase !== 'exiting' && o.target?.kind === 'facility' && o.target.uid === f.uid).length;
   }
 
   /** P61-a — uid 로 손님 하나. 운항(`CourseRideStore`)이 자세를 쓸 때만 부른다 */
@@ -1030,6 +1074,7 @@ export class GuestStore {
       if (capacityOf(def, f) <= 0) continue;
       if (def.guardRadius !== undefined) continue; // P52-b: 망루는 손님 시설이 아니다(알바 자리라 정원 1 이 붙어 있을 뿐) — 실측 128일 망루 「이용」 1,715 이 기구 몫을 0.05 부풀렸다
       if (def.usageFee > 0 && f.rentedBy !== null && f.rentedBy !== rentKey(g)) continue;
+      if(this.grid.compactEntrance && PREPARATION_IDS.some(id=>id===f.defId)) continue;
       const full = this.busyAt(f) >= capacityOf(def, f);
       if (full && this.queueAt(f) >= QUEUE_MAX) continue; // 줄도 찼다
       const d = this.fieldToFacility(f).at(g.i, g.j);
@@ -1100,6 +1145,7 @@ export class GuestStore {
       const f = this.facilities.byUid(uid); if (!f) continue;
       const def = this.facilities.defOf(f);
       if (capacityOf(def, f) <= 0) continue;
+      if(this.grid.compactEntrance && PREPARATION_IDS.some(id=>id===f.defId)) continue;
       const full = this.busyAt(f) >= capacityOf(def, f);
       if (full && this.queueAt(f) >= QUEUE_MAX) continue;
       const d = this.fieldToFacility(f).at(g.i, g.j); if (d >= 0xffff) continue;
@@ -1153,7 +1199,8 @@ export class GuestStore {
   releaseFacility(uid:number):void {
     for(const g of this.list) if(g.target?.kind==='facility' && g.target.uid===uid) {
       if(g.state==='course') {g.target=null;continue;}
-      this.cancelPortal(g);
+      const preparing=!!g.prep;delete g.prep;
+      this.cancelPortal(g);if(preparing)g.state='enter';
     }
   }
 
@@ -1212,12 +1259,12 @@ export class GuestStore {
   }
 
   toSnapshot(): GuestSnapshot {
-    return { nextUid: this.nextUid, guests: this.list.map((g) => ({ ...g, ...(g.portal ? { portal: structuredClone(g.portal) } : {}), ...(g.outdoor ? { outdoor: structuredClone(g.outdoor) } : {}), ...(g.staticVisit ? { staticVisit: structuredClone(g.staticVisit) } : {}) })) };
+    return { nextUid: this.nextUid, guests: this.list.map((g) => ({ ...g, ...(g.prep ? { prep: structuredClone(g.prep) } : {}), ...(g.portal ? { portal: structuredClone(g.portal) } : {}), ...(g.outdoor ? { outdoor: structuredClone(g.outdoor) } : {}), ...(g.staticVisit ? { staticVisit: structuredClone(g.staticVisit) } : {}) })) };
   }
 
   fromSnapshot(s: GuestSnapshot): void {
     this.nextUid = s.nextUid;
-    this.list = s.guests.map((g) => ({ ...g, ...(g.portal ? { portal: structuredClone(g.portal) } : {}), ...(g.outdoor ? { outdoor: structuredClone(g.outdoor) } : {}), ...(g.staticVisit ? { staticVisit: structuredClone(g.staticVisit) } : {}), passBy: g.passBy ?? null, leaving: g.leaving ?? false, nightDone: g.nightDone ?? false, nightPick: g.nightPick ?? false, teamId: g.teamId ?? null, seatUid: g.seatUid ?? null, pkg: g.pkg ?? null, pkgUsed: g.pkgUsed ?? false, slept: g.slept ?? false, stays: g.stays ?? false, hunger: g.hunger ?? 0, name: g.name ?? '손님', age: g.age ?? 20, gender: g.gender ?? 'M', home: g.home ?? '이 동네', spentToday: g.spentToday ?? 0, emote: g.emote ?? null, emoteTtl: g.emoteTtl ?? 0, float: g.float ?? 0, rideIdx: g.rideIdx ?? -1, carry: g.carry ?? false, queuePos: g.queuePos ?? -1 }));
+    this.list = s.guests.map((g) => ({ ...g, ...(g.prep ? { prep: structuredClone(g.prep) } : {}), ...(g.portal ? { portal: structuredClone(g.portal) } : {}), ...(g.outdoor ? { outdoor: structuredClone(g.outdoor) } : {}), ...(g.staticVisit ? { staticVisit: structuredClone(g.staticVisit) } : {}), passBy: g.passBy ?? null, leaving: g.leaving ?? false, nightDone: g.nightDone ?? false, nightPick: g.nightPick ?? false, teamId: g.teamId ?? null, seatUid: g.seatUid ?? null, pkg: g.pkg ?? null, pkgUsed: g.pkgUsed ?? false, slept: g.slept ?? false, stays: g.stays ?? false, hunger: g.hunger ?? 0, name: g.name ?? '손님', age: g.age ?? 20, gender: g.gender ?? 'M', home: g.home ?? '이 동네', spentToday: g.spentToday ?? 0, emote: g.emote ?? null, emoteTtl: g.emoteTtl ?? 0, float: g.float ?? 0, rideIdx: g.rideIdx ?? -1, carry: g.carry ?? false, queuePos: g.queuePos ?? -1 }));
     this.invalidate();
   }
 }

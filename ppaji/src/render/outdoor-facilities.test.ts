@@ -1,3 +1,4 @@
+import interactionArt from '../data/imagegen-interactions.json';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { readFileSync } from 'node:fs';
 import contracts from '../data/outdoor-facility-contracts.json';
@@ -23,18 +24,20 @@ function fixture(depth=Infinity,support=Infinity): OutdoorResource {
 const onePixelProvider: AssetProvider={ids:()=>[],spec:id=>({id,w:1,h:1,ax:0,ay:0,source:'art'}),canvas:()=>({width:1,height:1,getContext:()=>({getImageData:()=>({width:1,height:1,data:new Uint8ClampedArray([200,30,40,255])})})} as unknown as HTMLCanvasElement)};
 const actor=(sample:Partial<OutdoorSample>={})=>({uid:1,sample:{position:[0,0,0] as [number,number,number],heading:0,pose:'idle',phase:'hold',...sample}});
 describe('approved outdoor depth resources',()=>{
-  it('validates all 28 physical depth files plus 28 support masks and metadata',()=>{
-    let count=0;
+  it('validates original and adopted physical depth/support masks and metadata',()=>{
+    let count=0;const custom=interactionArt as Record<string,{physical?:boolean;painter?:boolean}>;
     for(const id of Object.keys(contracts)){
-      const meta=readJSON(`${id}/depth-metadata.json`);
+      if(custom[id]?.painter)continue;
+      const path=custom[id]?.physical?'../imagegen-interactions-v1/'+id:id;
+      const meta=readJSON(`${path}/depth-metadata.json`);
       expect(meta.camera.C).toHaveLength(3);expect(meta.camera.F).toHaveLength(3);
       for(let d=0;d<4;d++)for(const kind of ['depth','support']){
-        const bytes=read(`${id}/${kind}-d${d}.bin`),copy=Uint8Array.from(bytes);
+        const bytes=read(`${path}/${kind}-d${d}.bin`),copy=Uint8Array.from(bytes);
         const values=validateOutdoorMask(copy.buffer,meta.native,`${id}/${kind}/${d}`);
         expect(values.some(Number.isFinite)).toBe(true);if(kind==='depth')count++;
       }
     }
-    expect(count).toBe(28);
+    expect(count).toBe((Object.keys(contracts).length-Object.values(custom).filter(c=>c.painter).length)*4);
   });
   it('validates the four fixed attendants and all sixteen staff depth/support pairs',()=>{
     expect(Object.keys(attendants)).toHaveLength(4);

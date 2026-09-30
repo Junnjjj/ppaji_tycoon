@@ -10,7 +10,7 @@
  * (P49-a2) 물빛 종류 배열은 지웠다 — "여기가 풀인가"는 floor 코드 하나가 답한다.
  */
 export const GRID_W = 96;
-export const GRID_H = 72;
+export const GRID_H = 120; // Editor: retain the far bank of the widened river.
 
 /** 지면 종류 코드. 순서를 바꾸면 세이브가 깨진다 — 끝에만 더할 것 */
 export const FLOOR = {
@@ -355,7 +355,14 @@ export class Grid {
   blobAt(i: number, j: number): number { this.ensureBlobs(); return this.inside(i, j) ? (this.blobIds[j * this.w + i] as number) : 0; }
   doors(): { i: number; j: number; oi: number; oj: number }[] { this.ensureBlobs(); return [...this.blobDoors.values()].flat(); }
   /** 두 칸 사이에 벽이 있나 — 실내/바깥 경계는 벽, 그 덩어리의 문 변만 예외 */
+  compactEntrance = false;
   wallBetween(i: number, j: number, ni: number, nj: number): boolean {
+    if (this.compactEntrance && isIndoorCode(this.at(i,j)) && isIndoorCode(this.at(ni,nj))) {
+      if(i === ni && i >= 44 && i < 52 && i !== 48 && i !== 49 && Math.min(j,nj) === 7 && Math.max(j,nj) === 8) return true;
+      // Expanding the upper wings must not bypass the preparation room.
+      if(j === nj && j >= 3 && j < 8 && ([43,51].includes(Math.min(i,ni))) && Math.abs(i-ni) === 1) return true;
+      if(i === ni && i >= 44 && i < 52 && i !== 48 && Math.min(j,nj) === 2 && Math.max(j,nj) === 3) return true;
+    }
     const a = isIndoorCode(this.at(i, j)), b = isIndoorCode(this.at(ni, nj));
     if (a === b) return false;
     this.ensureBlobs();

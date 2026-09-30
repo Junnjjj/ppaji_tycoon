@@ -10,7 +10,7 @@ import { Game } from './game.js';
 import { Rng } from './rng.js';
 import { outdoorContract, outdoorGate, outdoorSlots, outdoorWorld, outdoorInAisle, sampleOutdoorGuest } from './outdoor-activity.js';
 
-const ids = ['playground','pavilion','photozone','stage_river_lv1','stage_river_lv2','stage_river_lv3','bungee_jump'];
+const ids = ['playground','pavilion','photozone','stage_river_lv1','stage_river_lv2','stage_river_lv3','bungee_jump','sauna','jjimjilbang','arcade','vending_in','info','rental_tube','indoor_shop','dry_room','authored_infirmary','authored_karaoke','foodcourt_seat','icecream','sikhye','bungeoppang','shade_net','shop','snackbar','firepit_row','chicken','authored_parasol','authored_bbq_zone','authored_sunbed_row','authored_pyeongsang_row','authored_massage_row','authored_footbath'];
 function setup(id='pavilion', facing:0|1=0, hold=20) {
   const grid=new Grid(30,30); grid.floor.fill(FLOOR.path);
   const defs=new Map((facilities as unknown as FacilityDef[]).map(d=>[d.id,{...d,useTicks:hold}]));

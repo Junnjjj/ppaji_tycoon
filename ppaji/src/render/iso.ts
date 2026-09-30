@@ -49,6 +49,13 @@ export function depthKey(i: number, j: number): number {
  */
 export const Z_BAND = 4096;
 export const Z_GROUND = 0;
+/** Flat terrain is a surface, not a foreground occluder of facility floor trim.
+ * Keep it above the backdrop/water (-90), below world actors (>=0). Raised
+ * columns retain their painter order so their sides still hide lower objects.
+ */
+export function groundDepth(i: number, j: number, level: number): number {
+  return level <= 0 ? -80 + depthKey(i, j) / (Z_BAND * (GRID_W + GRID_H + 2)) : depthKey(i, j) + Z_GROUND;
+}
 export const Z_WATER = 1;
 export const Z_FACILITY = 2;
 /** P44-b 벽 (레거시 K37 띠): 뒤벽(북·서)은 시설 뒤, 앞벽(남·동)은 시설 앞·손님 뒤 — 벽은 손님보다 낮다 */

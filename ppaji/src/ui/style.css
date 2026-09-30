@@ -366,7 +366,7 @@ body { font-family: var(--font-body); font-size: var(--fs-body); color: var(--in
 #game { position: fixed; inset: 0; overflow: hidden; }
 /* P57-g — DOM UI 뿌리는 통째로 배율을 탄다. 지도에 붙는 말풍선(#hud-bubbles)·스크림·회전 안내는 제외 */
 #hud-top, #hud-right, #hud-ticker, #hud-bottom, #hud-toast, .kbanner, .kwin, .kdock, .ktut, .kevent-tag { zoom: var(--ui-zoom); }
-#game canvas { image-rendering: pixelated; display: block; }
+#game canvas { image-rendering: auto; display: block; }
 button, input { font-family: inherit; font-size: inherit; } /* D64: 폼 컨트롤 기본 13.33px 금지 */
 
 /* ── 아이콘 — 등록부가 준 데이터 URL 을 배경으로. 크기·정렬은 여기가 소유 ── */

@@ -1,3 +1,5 @@
+import { activeStorageKeys } from './storage-keys.js';
+import { expandSavedGrid } from '../sim/grid-migration.js';
 /**
  * 세이브 — `wp.save` 한 키. 버전 + 마이그레이션 체인 (`MIGRATIONS` 가 정본 — 아래 표를 볼 것).
  * 마이그레이션은 **한 단계씩** 올린다 — 건너뛰면 중간 버전이 영영 못 열린다.
@@ -5,8 +7,8 @@
 import type { GameSnapshot } from '../sim/game.js';
 import { GRID_W, GRID_H } from '../sim/grid.js';
 
-export const SAVE_KEY = 'pj.save';
-export const SAVE_VERSION = 5;
+export const SAVE_KEY = activeStorageKeys.save;
+export const SAVE_VERSION = 6;
 
 export interface SaveFile {
   version: number;
@@ -42,6 +44,11 @@ export const MIGRATIONS: readonly Migration[] = [
     const unlocked = game['unlocked'] as Record<string, unknown> | undefined;
     if (unlocked) { const u = { ...unlocked }; delete u['items']; next['unlocked'] = u; }
     return { ...raw, version: 5, game: next };
+  },
+  // v5 -> v6: extend 96x72 land to 96x120, retaining every existing tile and system.
+  (raw) => {
+    const game=raw['game'] as GameSnapshot|null|undefined;
+    return {...raw,version:6,game:game?{...game,grid:expandSavedGrid(game.grid)}:null};
   },
 ];
 

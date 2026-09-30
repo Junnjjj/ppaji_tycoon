@@ -1,3 +1,9 @@
+import { createStartupGame } from './editor/new-game.js';
+import { loadEditorMap } from './editor/document.js';
+import { populateImagegenPreview } from './sim/imagegen-preview.js';
+import { imagegenArt } from './assets/imagegen-art.js';
+import { loadImageGenGround } from './render/imagegen-ground.js';
+import { loadCompactBoundary } from './render/compact-boundary.js';
 import { loadApprovedFacilities } from './assets/approved-facilities.js';
 import { loadStaticDepth } from './render/static-facilities.js';
 import { COURSE_DOCK_IDS } from './sim/course/ride.js';
@@ -22,7 +28,7 @@ import { panelHost, interruptBudget, uiSurface } from './ui/panels.js';
 import { PoolEditDock } from './ui/windows/pool-edit.js';
 import { PoolInfoWindow } from './ui/windows/pool-info.js';
 import { DialogueStrip } from './ui/strip.js';
-import { STORY_CHARACTERS } from './sim/story.js';
+import { STORY_CHARACTERS, STORY_BEATS } from './sim/story.js';
 import { ResultsWindow, type DayCard } from './ui/windows/results.js';
 import { RankingsWindow } from './ui/windows/rankings.js';
 import { StaffWindow } from './ui/windows/staff.js';
@@ -74,7 +80,10 @@ declare const __WP_BUILD__: { sha: string; shortSha: string; branch: string; sou
  */
 const params = new URLSearchParams(location.search);
 const DEBUG = params.get('debug') === '1';
-const FRESH = params.get('fresh') === '1';
+const EDITOR = params.get('editor') === '1' && !params.has('mapTest');
+const MAP_TEST = params.has('mapTest');
+const PREVIEW = params.get('preview') === 'arrival' || EDITOR || MAP_TEST;
+const FRESH = params.get('fresh') === '1' || PREVIEW;
 const SEED = Number(params.get('seed') ?? '20260902') || 20260902;
 
 const parent = document.getElementById('game');
@@ -87,7 +96,7 @@ const NO_KIT = new URLSearchParams(location.search).get('kit') === '0';
 if (new URLSearchParams(location.search).get('events') === '0') FEATURES.randomEvents = false;
 // Explicit reference layout is retained for historical system regression fixtures.
 const APPROVED_ARRIVAL = params.get('layout') !== 'reference';
-const createGame = (seed: number, kit = !NO_KIT): Game => new Game(seed, undefined, { kit, arrival: APPROVED_ARRIVAL });
+const createGame = (seed: number, kit = !NO_KIT): Game => createStartupGame(seed,kit,APPROVED_ARRIVAL,!EDITOR&&!MAP_TEST);
 let arrivalAdopted = false;
 let game = saved ? Game.fromSnapshot(saved.game) : createGame(SEED);
 if (saved && APPROVED_ARRIVAL && !NO_KIT && !game.arrivalRevision) {
@@ -97,17 +106,23 @@ if (saved && APPROVED_ARRIVAL && !NO_KIT && !game.arrivalRevision) {
     try { applyArrivalLayout(candidate); game = candidate; arrivalAdopted = true; } catch (error) { console.warn('초기 배치 보존:', error); }
   }
 }
+const editorLoadError = (EDITOR || MAP_TEST) ? loadEditorMap(game, MAP_TEST) : null;
+game.facilities.spacingEnabled = true;
+if(PREVIEW&&params.get('showcase')==='1')populateImagegenPreview(game);
 const camera = new Camera();
 registerFacilityDefs(FACILITY_DEFS.values());
+const imagegenReady=imagegenArt.init().then(()=>Promise.all([...game.facilities.all.map(f=>imagegenArt.load(`fac/${f.defId}/${f.facing}`)),imagegenArt.load('tile/deck')])).catch((error:unknown)=>{console.warn('ImageGen assets unavailable; retaining original art',error);});
 // 아틀라스(프리렌더 PNG)가 있으면 그것을, 없으면 절차 도트 — 같은 ID 라 게임 코드는 모른다 (G15)
-const [atlas, kairo, landscape, npc, watercraft, approved] = await Promise.all([
-  loadAtlas(), loadKairoAtlas(), loadLandscape(), loadNpcV8(), loadWatercraft(), loadApprovedFacilities(),
+const [atlas, kairo, landscape, npc, watercraft, approved, imagegenGround, compactBoundary] = await Promise.all([
+  loadAtlas(), loadKairoAtlas(), loadLandscape(), loadNpcV8(), loadWatercraft(), loadApprovedFacilities(), loadImageGenGround(),
+  game.arrivalRevision >= 3 ? loadCompactBoundary() : Promise.resolve(undefined),imagegenReady,
 ]);
 const rideSeatSpecs = Object.fromEntries(Object.entries(watercraft.manifest.equipment).map(([id,spec])=>[id,spec.seats]));
 game.setRideSeatSpecs(rideSeatSpecs);
 const staticDepth = approved ? await loadStaticDepth(approved) : null;
-if (!saved) game.checkStory(true);
-setApprovedPictureSource(id => { const match = /^pic\/gear\/([a-z0-9_]+)$/.exec(id); return match ? watercraft.canvas(`watercraft/${match[1]}/0`) : null; });
+if (PREVIEW) { game.story.fromSnapshot(STORY_BEATS.map(b=>b.id)); game.guests.spawn(); }
+if (!saved && !PREVIEW) game.checkStory(true);
+setApprovedPictureSource(id => { const match = /^pic\/gear\/([a-z0-9_]+)$/.exec(id); return match ? imagegenArt.get(`watercraft/${match[1]}/0`)??watercraft.canvas(`watercraft/${match[1]}/0`) : null; });
 const provider = new HybridProvider(approved, new HybridProvider(watercraft, new HybridProvider(npc, new HybridProvider(kairo, new HybridProvider(atlas, new ProceduralProvider())))));
 setNpcFrameSource((id) => provider.canvas(id)); // NPC v8(2026-09-18): 초상(`npcPortrait`)이 씬과 같은 v8 프레임을 읽는다
 const missing = ProceduralProvider.missingDrawers();
@@ -122,9 +137,12 @@ let lastStats: SceneStats | null = null;
 /** 프레임 시간 표본 (하네스가 p95 를 잰다) */
 const frameMs: number[] = [];
 const scene = new WaterparkScene({
+  ...(imagegenGround ? { imagegenGround } : {}),
   onCourseHandleMove: (k, i, j) => courseDock.onHandleMove(k, i, j),
   onCourseDockPick: (k) => courseDock.onDockPick(k),
   provider,
+  compactArrival: () => game.arrivalRevision >= 3,
+  ...(compactBoundary ? { compactBoundary } : {}),
   watercraft,
   approved,
   staticDepth,
@@ -135,7 +153,7 @@ const scene = new WaterparkScene({
   camera,
   rank: () => game.rank,
   // 새 판은 물려받은 풀을 비춘다 (G25) · 저장본은 토지 가운데
-  startTile: (() => { if (!saved || arrivalAdopted) { const gt = game.gate; return game.arrivalRevision ? { i: gt.i + 1, j: gt.j + 5, bottomInsetCss: 100 } : { i: gt.i + 4, j: gt.j + 12, bottomInsetCss: 100 }; } /* P43 정문·실내동·산책로 → 2026-09-11 기본 S=2(원작 줌)라 화면이 절반: 출입동 남쪽 광장 + 선착장 + 킷 빠지 수역이 한 화면에 (실측 (−2,+9) 는 복도 안만 보였다) */ const l = game.land; return { i: l.i0 + Math.floor(l.w / 2), j: l.j0 + Math.floor(l.h / 2), bottomInsetCss: 84 }; })(),
+  startTile: (() => { if (PREVIEW && params.get('view') === 'water') return { i: game.gate.i + 3, j: 26, bottomInsetCss: 100 }; if (!saved || arrivalAdopted) { const gt = game.gate; return game.arrivalRevision ? { i: gt.i + 1, j: gt.j + (game.arrivalRevision >= 3 ? 8 : 5), bottomInsetCss: 100 } : { i: gt.i + 4, j: gt.j + 12, bottomInsetCss: 100 }; } /* P43 정문·실내동·산책로 → 2026-09-11 기본 S=2(원작 줌)라 화면이 절반: 출입동 남쪽 광장 + 선착장 + 킷 빠지 수역이 한 화면에 (실측 (−2,+9) 는 복도 안만 보였다) */ const l = game.land; return { i: l.i0 + Math.floor(l.w / 2), j: l.j0 + Math.floor(l.h / 2), bottomInsetCss: 84 }; })(),
   onFrame: (s) => {
     lastStats = s;
     if (DEBUG) {
@@ -145,7 +163,7 @@ const scene = new WaterparkScene({
       );
     }
   },
-  onTapTile: (i, j) => onTapTile(i, j),
+  onTapTile: (i, j) => { if (!EDITOR) onTapTile(i, j); },
   // 조준 배치(K47-③): 배치 중 지도를 팬하면 화면 중앙 칸이 고스트 자리다 — 탭은 호환(그 칸으로 옮길 뿐)
   onAimCenter: (i, j) => { if (place.isActive) aimPlaceAt(i, j); },
 });
@@ -179,6 +197,9 @@ const syncPoolLook = (): void => {
 };
 
 const syncWorldToScene = (): void => {
+  // Warm installed courses before guests begin boarding. Unbuilt craft stay unloaded.
+  for (const course of game.courses.all) watercraft.ensure(course.equipId);
+  if (game.courses.all.length) watercraft.ensure('tow_work');
   scene.setCourses(game.courses.all);
   scene.setSeason(game.clock.season);
   sfx.setSeason(game.clock.season);
@@ -481,10 +502,11 @@ hud.on('info', () => { sfx.play('open'); rankWin.show(); });
 hud.on('ticker', () => { if (game.pools.all.length === 0) { dock.enter('dig'); return; } if (game.sns.activeWishes().length) { sfx.play('open'); snsWin.show('messages'); return; } sfx.play('open'); rankWin.show(); });
 hud.on('goal:rank', () => { sfx.play('open'); rankWin.show(); });
 hud.on('goal:cert', () => { sfx.play('open'); certWin.show(); });
-hud.on('save', () => { persist(); hud.showToast('저장했다'); sfx.play('coin'); });
+hud.on('save', () => { if(PREVIEW) { hud.showToast('배치 미리보기는 기존 공원에 저장되지 않습니다'); return; } persist(); hud.showToast('저장했다'); sfx.play('coin'); });
 
 // ── 저장 ──────────────────────────────────────────────────────────
 function persist(): void {
+  if (PREVIEW) return;
   try {
     save(game.toSnapshot());
   } catch (e) {
@@ -494,7 +516,7 @@ function persist(): void {
 
 // ── 흐름 ──────────────────────────────────────────────────────────
 // `?freeze=1` — 하네스가 세이브 대조처럼 시간이 멈춘 상태로 부팅할 때
-const flow = { acc: 0, speed: 1, frozen: params.get('freeze') === '1' };
+const flow = { acc: 0, speed: 1, frozen: EDITOR || params.get('freeze') === '1' };
 // Preserve simulation state while the browser restores its drawing context.
 let beforeRenderLoss: boolean | null = null;
 document.addEventListener('webglcontextlost', (event) => {
@@ -731,12 +753,15 @@ const api = {
   TPD: TICKS_PER_DAY,
   JUDGE_TICK,
   assetVersion: ASSET_VERSION,
+  imagegenArt,
   grid: game.grid,
   camera,
   scene,
   phaser,
   hud,
   provider,
+  compactArrival: () => game.arrivalRevision >= 3,
+  ...(compactBoundary ? { compactBoundary } : {}),
   watercraft,
   approved,
   panelHost,
@@ -786,3 +811,6 @@ const api = {
   botFor: () => new Bot(game, BOT_DEFAULTS, game.seed ^ 0x5eed),
 };
 (window as unknown as { __pj: unknown }).__pj = api;
+
+if (EDITOR) { const { attachEditor } = await import('./editor/editor.js'); attachEditor({ game, scene, sync: syncWorldToScene, loadError: editorLoadError }); }
+if (MAP_TEST) { const { attachTestBar } = await import('./editor/editor.js'); attachTestBar(editorLoadError); }

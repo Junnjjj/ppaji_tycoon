@@ -10792,6 +10792,456 @@
         }
       },
       "note": "User-approved picnic art adopted; existing foodcourt simulation and dense-layout policy retained."
+    },
+    "compact_ticket": {
+      "name": "매표소 (입구동)",
+      "renderOnly": true,
+      "cameraTargetZTiles": 0.6,
+      "size": [
+        3,
+        2
+      ],
+      "artSize": [
+        3,
+        2
+      ],
+      "footprintOrigin": [
+        -1.5,
+        -1.0
+      ],
+      "footprintCenter": [
+        0,
+        0
+      ],
+      "logicalSize": 192,
+      "anchor": {
+        "ax": 96,
+        "ay": 107.75755076535926
+      },
+      "deckTopZ": 0,
+      "humanOpaquePx": 22,
+      "pivotByFacing": [
+        [
+          1.5,
+          1.0
+        ],
+        [
+          1.0,
+          1.5
+        ],
+        [
+          1.5,
+          1.0
+        ],
+        [
+          1.0,
+          1.5
+        ]
+      ],
+      "footprintByFacing": [
+        [
+          3,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "entry": [
+        0,
+        0,
+        0
+      ],
+      "exit": [
+        0,
+        0,
+        0
+      ],
+      "landmarks": {},
+      "floorMode": "transparent-no-floor",
+      "reservation": "existing-facility-footprint",
+      "blueprint": "indoor-open-v2",
+      "deckTiles": [],
+      "frames": {
+        "d0": {
+          "file": "compact_ticket/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "46c53fcb2fa91bcef3d5afd4bd7a9dbf80462b703145e50aca47278d4fac9b6b"
+        },
+        "d1": {
+          "file": "compact_ticket/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "801a1bafb3a2f8a2d9ab034a6f6470a2a74dda86faf035ea020c1223242c9ce0"
+        },
+        "d2": {
+          "file": "compact_ticket/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "aacaa5155b762b7bf792d65539761676b2327a2621c5380a5483f7babfe963e3"
+        },
+        "d3": {
+          "file": "compact_ticket/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "40c7e40ae0f64f576aff8e9d589a9e5fa096ca48ea72250a70cbc8041df5e108"
+        }
+      },
+      "note": "Compact entrance authored candidate; legacy definitions remain unchanged."
+    },
+    "compact_locker": {
+      "name": "코인라커 (입구동)",
+      "renderOnly": true,
+      "cameraTargetZTiles": 0.6,
+      "size": [
+        4,
+        2
+      ],
+      "artSize": [
+        4,
+        2
+      ],
+      "footprintOrigin": [
+        -2.0,
+        -1.0
+      ],
+      "footprintCenter": [
+        0,
+        0
+      ],
+      "logicalSize": 192,
+      "anchor": {
+        "ax": 96,
+        "ay": 107.75755076535926
+      },
+      "deckTopZ": 0,
+      "humanOpaquePx": 22,
+      "pivotByFacing": [
+        [
+          2.0,
+          1.0
+        ],
+        [
+          1.0,
+          2.0
+        ],
+        [
+          2.0,
+          1.0
+        ],
+        [
+          1.0,
+          2.0
+        ]
+      ],
+      "footprintByFacing": [
+        [
+          4,
+          2
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          2,
+          4
+        ]
+      ],
+      "entry": [
+        0,
+        0,
+        0
+      ],
+      "exit": [
+        0,
+        0,
+        0
+      ],
+      "landmarks": {
+        "entry": [
+          0,
+          -1.2,
+          0
+        ],
+        "bank_0": [
+          -1.5,
+          0.35,
+          0.87
+        ],
+        "bank_1": [
+          -0.5,
+          0.35,
+          0.87
+        ],
+        "bank_2": [
+          0.5,
+          0.35,
+          0.87
+        ],
+        "bank_3": [
+          1.5,
+          0.35,
+          0.87
+        ]
+      },
+      "floorMode": "transparent-no-floor",
+      "reservation": "existing-facility-footprint",
+      "blueprint": "indoor-open-v2",
+      "deckTiles": [],
+      "frames": {
+        "d0": {
+          "file": "compact_locker/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "9057603b3fcc2868c8118466b964bd5ff0b182584242b0164cb9af05847b84ee"
+        },
+        "d1": {
+          "file": "compact_locker/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "8dab6e85b082749521e09886357bf055628a4002baa80457a4f7523c7129dba7"
+        },
+        "d2": {
+          "file": "compact_locker/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "ad9ec7e5b7241c635ad09eab67a9e5e8f00bb6ee98de571656c4f7cb7154ee39"
+        },
+        "d3": {
+          "file": "compact_locker/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "6f9e451fd7a94e7f3a9331abf03390da3242de2f637254ae7e0283ac512e0c48"
+        }
+      },
+      "note": "Accepted cutaway art only. Physical access/slots are inactive handover data; existing simulation retained."
+    },
+    "compact_changing": {
+      "name": "탈의실 (입구동)",
+      "renderOnly": true,
+      "cameraTargetZTiles": 0.6,
+      "size": [
+        3,
+        2
+      ],
+      "artSize": [
+        3,
+        2
+      ],
+      "footprintOrigin": [
+        -1.5,
+        -1.0
+      ],
+      "footprintCenter": [
+        0,
+        0
+      ],
+      "logicalSize": 192,
+      "anchor": {
+        "ax": 96,
+        "ay": 107.75755076535926
+      },
+      "deckTopZ": 0,
+      "humanOpaquePx": 22,
+      "pivotByFacing": [
+        [
+          1.5,
+          1.0
+        ],
+        [
+          1.0,
+          1.5
+        ],
+        [
+          1.5,
+          1.0
+        ],
+        [
+          1.0,
+          1.5
+        ]
+      ],
+      "footprintByFacing": [
+        [
+          3,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "entry": [
+        0,
+        0,
+        0
+      ],
+      "exit": [
+        0,
+        0,
+        0
+      ],
+      "landmarks": {},
+      "floorMode": "transparent-no-floor",
+      "reservation": "existing-facility-footprint",
+      "blueprint": "indoor-open-v2",
+      "deckTiles": [],
+      "frames": {
+        "d0": {
+          "file": "compact_changing/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "c255e97ff5eebab6e10b1e889484c805ae6d65ac8d810b10139b46906fabf490"
+        },
+        "d1": {
+          "file": "compact_changing/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "3b5eb14cb6fb6beb8eadbb5059bff83fc99e4070741c94e11d6d995bdfcaec10"
+        },
+        "d2": {
+          "file": "compact_changing/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "fd791485421cf6b224fa1c52f484f5a1daccfb65d2e07087917bb766b93d77b0"
+        },
+        "d3": {
+          "file": "compact_changing/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "8970cfc1b4e4c21ff0f164ac649e91571ea56df5f9ae6bd159a7fe2b46e72cf3"
+        }
+      },
+      "note": "Compact entrance authored candidate; legacy definitions remain unchanged."
+    },
+    "compact_shower": {
+      "name": "샤워실 (입구동)",
+      "renderOnly": true,
+      "cameraTargetZTiles": 0.6,
+      "size": [
+        3,
+        2
+      ],
+      "artSize": [
+        3,
+        2
+      ],
+      "footprintOrigin": [
+        -1.5,
+        -1.0
+      ],
+      "footprintCenter": [
+        0,
+        0
+      ],
+      "logicalSize": 192,
+      "anchor": {
+        "ax": 96,
+        "ay": 107.75755076535926
+      },
+      "deckTopZ": 0,
+      "humanOpaquePx": 22,
+      "pivotByFacing": [
+        [
+          1.5,
+          1.0
+        ],
+        [
+          1.0,
+          1.5
+        ],
+        [
+          1.5,
+          1.0
+        ],
+        [
+          1.0,
+          1.5
+        ]
+      ],
+      "footprintByFacing": [
+        [
+          3,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "entry": [
+        0,
+        0,
+        0
+      ],
+      "exit": [
+        0,
+        0,
+        0
+      ],
+      "landmarks": {},
+      "floorMode": "transparent-no-floor",
+      "reservation": "existing-facility-footprint",
+      "blueprint": "indoor-open-v2",
+      "deckTiles": [],
+      "frames": {
+        "d0": {
+          "file": "compact_shower/native-d0.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "27739a02d977f7b4e48dd1674aba4208cc1d84ddd750cb34349018b64ee18070"
+        },
+        "d1": {
+          "file": "compact_shower/native-d1.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "51d2f71089847537fb364c0c5ece00cc5c4d4741514f2c17fecb0fa329ce4ae6"
+        },
+        "d2": {
+          "file": "compact_shower/native-d2.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "66f8a7408cdd55fb2895c32fe9663fbcd19823e8f8274fc0998db6f095a30569"
+        },
+        "d3": {
+          "file": "compact_shower/native-d3.png",
+          "w": 192,
+          "h": 192,
+          "sha256": "71a13f27638f1bc8cb83d3622320ff8e129862466fa5c51945196414d9a721d0"
+        }
+      },
+      "note": "Compact entrance authored candidate; legacy definitions remain unchanged."
     }
   },
   "deckTileRule": "footprint-local integer tiles at facing 0 (i to +I, j to +J from the placed corner); a tile is deck when authored deck rectangles cover >= 50% of it. Rotate with the same R:(I,J)->(J,-I) as the footprint."

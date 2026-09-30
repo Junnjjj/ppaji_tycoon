@@ -1,0 +1,21 @@
+body.map-editing > :not(#game):not(#map-editor):not(script):not(style):not(link) {display:none!important}
+#map-editor {font:14px/1.5 -apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;color:#243c38;position:fixed;inset:0;pointer-events:none;z-index:1000}
+#map-editor * {box-sizing:border-box}
+#map-editor header,#map-editor aside,#map-editor footer {pointer-events:auto;background:#fbfcf7;box-shadow:0 2px 15px #153e3320}
+#map-editor header {position:absolute;inset:0 0 auto;height:82px;display:flex;align-items:center;gap:12px;padding:12px 24px;border-bottom:1px solid #dbe4db}
+#map-editor small {font-size:10px;letter-spacing:2px;color:#6d8a78}
+#map-editor h1 {font-size:21px;margin:0;white-space:nowrap}#map-editor h1 span{font-size:11px;color:#84988e}
+#map-editor header input{margin-left:auto;max-width:260px}
+#map-editor aside {position:absolute;top:94px;right:12px;bottom:54px;width:312px;overflow:auto;border-radius:14px;padding:17px;border:1px solid #dbe4db}
+#map-editor footer {position:absolute;bottom:0;left:0;right:0;min-height:40px;display:flex;gap:22px;align-items:center;padding:9px 18px;font-size:12px}
+#map-editor footer b{margin-right:auto;font-weight:500}#map-editor footer span{color:#6b8178}
+#map-editor button,#map-editor input,#map-editor select{font:inherit;border:1px solid #d4dfd5;background:white;color:inherit;border-radius:7px;padding:8px 10px}
+#map-editor button{cursor:pointer;transition:background .12s}#map-editor button:hover{background:#e6efe3}#map-editor button:disabled{opacity:.4;cursor:default}
+#map-editor .primary,#map-editor button.active{background:#326850;color:white;border-color:#326850}
+#map-editor .tools{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:16px}#map-editor .tools button:last-child{grid-column:span 2}
+#map-editor .intro{font-size:12px;color:#6a8175}#map-editor section{padding-top:16px;margin-top:16px;border-top:1px solid #e3e8df}
+#map-editor section[hidden]{display:none}#map-editor h2{font-size:13px;margin:0 0 10px}#map-editor p{font-size:11px;color:#708276;line-height:1.7;margin:10px 0 0}
+#map-editor .swatches{display:grid;grid-template-columns:1fr 1fr;gap:6px}#map-editor .swatch{text-align:left;font-size:12px}#map-editor .swatch:before{content:'';display:inline-block;width:13px;height:13px;border-radius:3px;background:var(--swatch);vertical-align:-2px;margin-right:9px;border:1px solid #0002}
+#map-editor .row{display:flex;gap:6px;margin-bottom:10px}#map-editor .row button{flex:1;font-size:12px;white-space:nowrap}#map-editor .check{display:flex;gap:6px;align-items:center;margin:10px 0}#map-editor #minimap{display:block;width:100%;height:auto;border-radius:6px;cursor:crosshair;border:1px solid #d4dfd5}#map-editor #facilities,#map-editor #facility-search{width:100%;margin-bottom:8px}#map-editor #facilities{font-size:12px;padding:5px}#map-editor option{padding:5px}#map-editor #reset{margin-top:4px;width:100%;font-size:12px}
+.map-testbar{position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:10000;display:flex;gap:18px;background:#fbfcf7;color:#365044;padding:10px 18px;font:13px sans-serif;box-shadow:0 2px 10px #0003;border-radius:0 0 10px 10px;white-space:nowrap}.map-testbar a{color:#28684f;font-weight:bold}
+@media(max-width:800px){#map-editor aside{width:245px}#map-editor header{padding:10px;gap:6px}#map-editor header input{width:130px}#map-editor h1{font-size:17px}#map-editor header button{font-size:12px}#map-editor footer span:last-child{display:none}}

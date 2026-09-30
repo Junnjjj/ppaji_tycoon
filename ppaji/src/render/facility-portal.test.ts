@@ -1,11 +1,14 @@
-import { expect, it, vi } from 'vitest';
-vi.mock('phaser', () => ({ default: { Scene: class {} } }));
+import { afterEach, expect, it, vi } from 'vitest';
+vi.mock('phaser', () => ({ default: { Scene: class {}, Cameras: { Scene2D: { Camera: class {} } } } }));
 import { WaterparkScene, type SceneDeps } from './scene.js';
 import type { Guest } from '../sim/guest.js';
 import { facilityPortal } from '../sim/facility-portal.js';
 import type { PlacedFacility } from '../sim/facility.js';
 
+afterEach(() => vi.unstubAllGlobals());
+
 it('inside actors hide existing sprites, emotes, HP, friend gauge, speech and hit targets together', () => {
+  vi.stubGlobal('location', { search: '' });
   const scene = new WaterparkScene({} as SceneDeps);
   const portal = facilityPortal({ defId: 'cafe', i: 8, j: 8, facing: 0 } as PlacedFacility)!;
   const g = { uid: 7, state: 'use', i: portal.entry.i, j: portal.entry.j, hp: 1, friendId: 'friend', emote: 'heart', emoteTtl: 10, portal: { ...portal, uid: 3, phase: 'inside', progress: 1 } } as Guest;

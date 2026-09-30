@@ -1,6 +1,7 @@
+import { activeStorageKeys } from './storage-keys.js';
 import type { Carryover } from '../sim/endgame.js';
 
-export const PROFILE_KEY = 'pj.profile';
+export const PROFILE_KEY = activeStorageKeys.profile;
 
 export function loadProfile(storage: Pick<Storage, 'getItem'> = localStorage): Carryover | null {
   try {

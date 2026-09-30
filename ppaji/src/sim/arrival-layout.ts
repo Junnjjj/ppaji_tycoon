@@ -1,16 +1,14 @@
+import { facilityPadding } from './facility-spacing.js';
 import config from '../data/arrival-presentation.json';
 import type { Game } from './game.js';
 import { FLOOR, isIndoorCode, isWaterCode, shoreRow } from './grid.js';
 import { FacilityStore } from './facility.js';
 import { kitIndoorRect } from './startkit.js';
 
-export const ARRIVAL_REVISION = config.revision;
-/**
- * P57-c 절충(2026-09-15 사용자 결정): **출입동은 옛 킷(20×13, D57-b·D63 복도 몰)** 이고 킷 시설·장식·첫 화면은 main 승인 배치다.
- * 그래서 방 사각형은 `kitIndoorRect` 그대로이고 `config.indoor`(13×8) 는 안 쓴다 — JSON 은 main 의 원본과 바이트 동일해야 하므로(검사) 코드에서 덮는다.
- */
+export const ARRIVAL_REVISION = 3;
+/** Main room stays at row 8; revision 3 arrivals start on the roadside at row 0. */
 export function arrivalRoom(gate: { i: number; j: number }) {
-  return kitIndoorRect(gate);
+  return kitIndoorRect({ i: gate.i, j: gate.j === 0 ? 8 : gate.j });
 }
 export function arrivalRoute(gate: { i: number; j: number }): { i: number; j: number }[] {
   const room = arrivalRoom(gate);
@@ -31,15 +29,14 @@ export function canAdoptArrival(g: Game, original: Game): boolean {
 /** Runs only on a new game or a checked clone. Never overwrites an edited park. */
 export function applyArrivalLayout(g: Game): void {
   if (g.arrivalRevision >= ARRIVAL_REVISION) return;
-  const gate = g.gate, room = arrivalRoom(gate), old = kitIndoorRect(gate);
+  const gate = g.gate, room = arrivalRoom(gate);
   const right = room.i0 + room.w - 1, bottom = room.j0 + room.h - 1;
   const money = g.money;
   const paint = (i: number, j: number, code: typeof FLOOR.indoor | typeof FLOOR.path | typeof FLOOR.hall): void => {
     if (isWaterCode(g.grid.at(i, j)) || g.grid.levelAt(i, j) !== 0) throw new Error(`초기 출입동 평지 계약 위반: ${i},${j}`);
     g.grid.set(i, j, code);
   };
-  // 건물은 킷 그대로(실내 247 + 복도 12, 문 둘) — main 은 13×8 로 다시 칠했지만 절충안은 안 건드린다. `old` 는 그 사실의 기록
-  void old; void isIndoorCode;
+  // Preserve the starter main-room footprint and waterfront.
   for (let j = bottom + 1; j <= bottom + config.patio.depth; j++) for (let i = room.i0 - config.patio.sideWidth; i <= right + config.patio.sideWidth; i++) paint(i, j, FLOOR.path);
   for (let j = room.j0; j <= bottom; j++) for (let n = 1; n <= config.patio.sideWidth; n++) { paint(room.i0 - n, j, FLOOR.path); paint(right + n, j, FLOOR.path); }
   for (const f of [...g.facilities.all]) {
@@ -75,6 +72,28 @@ export function applyArrivalLayout(g: Game): void {
   }
   // P58-a D8: 킷 푸드코트 3×4(식탁 2 · 좌석 4) — 출입동 안, 매표소 오른쪽 아래. 돈은 아래에서 되돌린다
   { const r = g.makeFoodCourt({ i0: gate.i + 4, j0: gate.j + 2, w: 3, h: 4 }); if (!r.ok) throw new Error(`킷 푸드코트: ${r.reason}`); }
+  // Compact annex occupies the former approach plaza. The two road lanes now
+  // continue above the grid (-2/-1), with an in-grid sidewalk and spawn at row 0.
+  for (let j = 0; j < 8; j++) for (let i = 0; i < g.grid.w; i++) g.grid.set(i, j, j === 0 ? FLOOR.path : FLOOR.grass);
+  for (let j = 3; j < 8; j++) for (let i = gate.i - 4; i < gate.i + 4; i++) paint(i, j, FLOOR.indoor);
+  for (let j = 1; j <= bottom; j++) {
+    paint(gate.i, j, j < 3 ? FLOOR.path : FLOOR.hall);
+    if (j >= 3 && (j < 5 || j > 6)) paint(gate.i + 1, j, FLOOR.hall);
+  }
+  for (const f of [...g.facilities.all]) if (f.defId === 'ticket') g.facilities.remove(f.uid);
+  const ticket = g.facilities.place('compact_ticket', gate.i, 1, 0);
+  ticket.passage = [[0, 0], [0, 1]];
+  g.facilities.place('compact_locker', gate.i - 4, 3, 0);
+  g.facilities.place('compact_changing', gate.i - 4, 6, 0);
+  g.facilities.place('compact_shower', gate.i + 1, 5, 0);
+  // Preserve the two-cell circulation aisle; move the tall toilet away from tables.
+  for(const f of g.facilities.all){
+    if(f.defId==='indoor_shop')g.facilities.move(f.uid,gate.i-5,room.j0+3,0);
+    if(f.defId==='toilet')g.facilities.move(f.uid,gate.i+2,room.j0+7,0);
+    if(f.defId==='env_bench' && f.i===39 && f.j===22)g.facilities.move(f.uid,36,21,f.facing);
+    if(f.defId==='env_shrubs' && f.j===13)g.facilities.move(f.uid,f.i<gate.i?33:62,14,f.facing);
+    const pad=facilityPadding(g.facilities.defOf(f));if(pad)f.padding=pad;
+  }
   g.arrivalRevision = ARRIVAL_REVISION;
   g.money = money;
   g.finalizeArrivalLayout();

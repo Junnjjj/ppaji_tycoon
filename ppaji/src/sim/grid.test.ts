@@ -4,8 +4,8 @@ import { GRID_W, GRID_H, FLOOR, Grid, landRect, gateTile, inRect, LAND_BY_RANK, 
 describe('격자·토지', () => {
   it('P43 96×72 — 도시 띠 8 · 마당 42 · 강 22, 토지는 랭크마다 줄지 않고 폭만 자란다', () => {
     expect(GRID_W).toBe(96);
-    expect(GRID_H).toBe(72);
-    expect(CITY_BAND + 42 + RIVER.h).toBe(GRID_H);
+    expect(GRID_H).toBe(120);
+    expect(CITY_BAND + 42 + RIVER.h).toBeLessThan(GRID_H);
     expect(RIVER.j0).toBe(CITY_BAND + 42);
     for (let r = 1; r < LAND_BY_RANK.length; r++) {
       const a = landRect(r - 1);
@@ -41,7 +41,7 @@ describe('격자·토지', () => {
     expect(g.at(gate.i + 3, land.j0 + 2)).toBe(FLOOR.grass);
     expect(g.at(land.i0, land.j0 + 2)).toBe(FLOOR.grass);
     expect([FLOOR.grass, FLOOR.rock]).toContain(g.at(land.i0 - 1, land.j0 + 2)); // P44: 토지 밖 뭍은 들판(잔디, 절벽 테두리는 암반)
-    expect(g.at(0, GRID_H - 1)).toBe(FLOOR.river); // 지도 아래는 강
+    expect(g.at(0, GRID_H - 1)).toBe(FLOOR.grass); // 지도 아래는 강
     expect(g.at(-1, 0)).toBe(FLOOR.sand); // 격자 밖은 모래로 답한다
   });
 

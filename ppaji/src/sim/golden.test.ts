@@ -47,9 +47,10 @@ const GOLDEN: Record<number, { hash: number; visitors: number }> = {
   // P57-b (2026-09-14) 재베이크 — env 장식 29 가 시작 해금 18·랭크 해금 11 로 `unlocked.facilities` 에 들어 스냅샷 해시만 바뀐다(봇은 capacity 0 장식을 안 짓는다 — 방문객 820/842/876 · 시설 59/58/59 · 현금 동일)
   // P57-c (2026-09-15) 재베이크 — 골든·봇이 플레이어가 받는 판(main 승인 배치: 출입동은 옛 킷 20×13, 킷 시설은 main — 평상 2줄 없음·env 장식 19·매표/매점/화장실 이동·정문 앞마당)으로 돈다. 방문객 820/842/876 → 823/839/878 · 16일 현금 19~26만 → 15~17만(자리 없는 킷의 실제 효과. 장식이 물가 산책로를 끊던 것을 고친 뒤 값)
   // P57-h (2026-09-15) 재베이크 — 능선 단·암반을 껐다(평지). 방문객 823/839/878 · 현금 동일 — 바닥·단 배열만 바뀌어 해시만 다르다
-  1: { hash: 2761781607, visitors: 469 },
-  2: { hash: 3654535660, visitors: 475 },
-  3: { hash: 2915077026, visitors: 497 },
+  // 2026-09-25: reserved building margins and mandatory locker/changing/shower visits, repeated 16-day runs.
+  1: { hash: 4231390350, visitors: 341 },
+  2: { hash: 3605719051, visitors: 347 },
+  3: { hash: 2199741000, visitors: 352 },
 };
 
 describe('골든 시나리오', () => {
