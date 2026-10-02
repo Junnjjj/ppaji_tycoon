@@ -1,6 +1,6 @@
 ## 2026-10-02 벤치·피크닉 테이블 공통 구조 승격
 
-사용자 승인으로 env_bench 및 foodcourt_seat 각4방향 적용. 기존 패킹·앵커·다른 시설 유지. HTTP파일/무손실 RGBA8개 및 계약/렌더 테스트21개 통과. 브라우저 PNG↔WebP canvas 비교는 미일치 기록이며 별도 통과로 주장하지 않음. [상세 적용 기록](handovers/2026-10-02-furniture-template/README.md). 실내매점은 후보 유지.
+사용자 승인으로 env_bench 및 foodcourt_seat 각4방향 적용. 기존 패킹·앵커·다른 시설 유지. HTTP파일/무손실 RGBA8개 및 계약/렌더 테스트21개 통과. 추가 브라우저 검사: 런타임과 같은 WebP는8/8일치. PNG↔WebP 차이는 반투명RGB에 한정되고 알파/완전불투명RGB는 동일. [상세 적용 기록](handovers/2026-10-02-furniture-template/README.md). 실내매점은 후보 유지.
 
 ## 2026-10-02 자판기·아이스크림 공통 구조 후보 승격
 

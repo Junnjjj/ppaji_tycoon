@@ -1,0 +1,82 @@
+[
+  {
+    "id": "env_bench",
+    "d": 0,
+    "file": "fac_env_bench_0_template_20261002.webp",
+    "runtimeMatchesServedWebP": true,
+    "pngVsWebPDifferingChannels": 3519,
+    "maxChannelDifference": 128,
+    "alphaDifferingPixels": 0,
+    "fullyOpaqueDifferingChannels": 0
+  },
+  {
+    "id": "env_bench",
+    "d": 1,
+    "file": "fac_env_bench_1_template_20261002.webp",
+    "runtimeMatchesServedWebP": true,
+    "pngVsWebPDifferingChannels": 3575,
+    "maxChannelDifference": 128,
+    "alphaDifferingPixels": 0,
+    "fullyOpaqueDifferingChannels": 0
+  },
+  {
+    "id": "env_bench",
+    "d": 2,
+    "file": "fac_env_bench_2_template_20261002.webp",
+    "runtimeMatchesServedWebP": true,
+    "pngVsWebPDifferingChannels": 2642,
+    "maxChannelDifference": 128,
+    "alphaDifferingPixels": 0,
+    "fullyOpaqueDifferingChannels": 0
+  },
+  {
+    "id": "env_bench",
+    "d": 3,
+    "file": "fac_env_bench_3_template_20261002.webp",
+    "runtimeMatchesServedWebP": true,
+    "pngVsWebPDifferingChannels": 2848,
+    "maxChannelDifference": 128,
+    "alphaDifferingPixels": 0,
+    "fullyOpaqueDifferingChannels": 0
+  },
+  {
+    "id": "foodcourt_seat",
+    "d": 0,
+    "file": "fac_foodcourt_seat_0_template_20261002.webp",
+    "runtimeMatchesServedWebP": true,
+    "pngVsWebPDifferingChannels": 4519,
+    "maxChannelDifference": 128,
+    "alphaDifferingPixels": 0,
+    "fullyOpaqueDifferingChannels": 0
+  },
+  {
+    "id": "foodcourt_seat",
+    "d": 1,
+    "file": "fac_foodcourt_seat_1_template_20261002.webp",
+    "runtimeMatchesServedWebP": true,
+    "pngVsWebPDifferingChannels": 4431,
+    "maxChannelDifference": 128,
+    "alphaDifferingPixels": 0,
+    "fullyOpaqueDifferingChannels": 0
+  },
+  {
+    "id": "foodcourt_seat",
+    "d": 2,
+    "file": "fac_foodcourt_seat_2_template_20261002.webp",
+    "runtimeMatchesServedWebP": true,
+    "pngVsWebPDifferingChannels": 4453,
+    "maxChannelDifference": 128,
+    "alphaDifferingPixels": 0,
+    "fullyOpaqueDifferingChannels": 0
+  },
+  {
+    "id": "foodcourt_seat",
+    "d": 3,
+    "file": "fac_foodcourt_seat_3_template_20261002.webp",
+    "runtimeMatchesServedWebP": true,
+    "pngVsWebPDifferingChannels": 4508,
+    "maxChannelDifference": 128,
+    "alphaDifferingPixels": 0,
+    "fullyOpaqueDifferingChannels": 0
+  }
+]
