@@ -11005,28 +11005,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "compact_locker/native-d0.png",
+          "file": "compact_locker/surface-20261002-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "9057603b3fcc2868c8118466b964bd5ff0b182584242b0164cb9af05847b84ee"
+          "sha256": "5bc0359d9f01780851f634aa98d061f3beeba9fffbd7180e151acf1322502d0b"
         },
         "d1": {
-          "file": "compact_locker/native-d1.png",
+          "file": "compact_locker/surface-20261002-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "8dab6e85b082749521e09886357bf055628a4002baa80457a4f7523c7129dba7"
+          "sha256": "dace263fc279dffd6c4c1985e3c7e1976c671972e7b7690fa200ff5d9d709164"
         },
         "d2": {
-          "file": "compact_locker/native-d2.png",
+          "file": "compact_locker/surface-20261002-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "ad9ec7e5b7241c635ad09eab67a9e5e8f00bb6ee98de571656c4f7cb7154ee39"
+          "sha256": "bce8c24fc2095979c4b31d9dcda7aad18d757307128b4f22a4a888c853655654"
         },
         "d3": {
-          "file": "compact_locker/native-d3.png",
+          "file": "compact_locker/surface-20261002-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "6f9e451fd7a94e7f3a9331abf03390da3242de2f637254ae7e0283ac512e0c48"
+          "sha256": "80ae5ed0e66d61965d621a48fec1f92d106599fb13338e30d2bdbb329f8b1ab2"
         }
       },
       "note": "Accepted cutaway art only. Physical access/slots are inactive handover data; existing simulation retained."
@@ -11111,28 +11111,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "compact_changing/native-d0.png",
+          "file": "compact_changing/surface-20261002-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "c255e97ff5eebab6e10b1e889484c805ae6d65ac8d810b10139b46906fabf490"
+          "sha256": "5807b4830df21736c9a0a99b9ba68c222ee501ee2d7c5fc2ff72c6a6bd265278"
         },
         "d1": {
-          "file": "compact_changing/native-d1.png",
+          "file": "compact_changing/surface-20261002-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "3b5eb14cb6fb6beb8eadbb5059bff83fc99e4070741c94e11d6d995bdfcaec10"
+          "sha256": "6bdb127c15ca84199c0ff846ba5e0a47904a7b288520dcba8f00749fbedbb37a"
         },
         "d2": {
-          "file": "compact_changing/native-d2.png",
+          "file": "compact_changing/surface-20261002-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "fd791485421cf6b224fa1c52f484f5a1daccfb65d2e07087917bb766b93d77b0"
+          "sha256": "47e979879b5211fee35fb9d035761ba7c54a03b91f88e5a5587da10deb3f7fc2"
         },
         "d3": {
-          "file": "compact_changing/native-d3.png",
+          "file": "compact_changing/surface-20261002-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "8970cfc1b4e4c21ff0f164ac649e91571ea56df5f9ae6bd159a7fe2b46e72cf3"
+          "sha256": "fabace5dc72c2286ab77f5627cc474ebb34ab1ce4ff2359406b77017456597c1"
         }
       },
       "note": "Compact entrance authored candidate; legacy definitions remain unchanged."

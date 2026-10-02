@@ -339,60 +339,60 @@
       "bytes": 32240
     },
     "fac/compact_locker/0": {
-      "file": "fac_compact_locker_0.webp",
+      "file": "fac_compact_locker_0_surface_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "f39de7457f512cb623868ef1e8f21bd32e31a9fde2f7067383c99174b718c8f7",
-      "bytes": 50038
+      "sha256": "7589e9a32d77da1c8ba959351dd0085b3d67307ad5bd6645c2d63e583f1666e7",
+      "bytes": 52964
     },
     "fac/compact_locker/1": {
-      "file": "fac_compact_locker_1.fix-8eaceba03f54.webp",
+      "file": "fac_compact_locker_1_surface_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "8eaceba03f549bcc50e6cbdcc5da0726df853c8a3264446d7aeaf44b1292d7d6",
-      "bytes": 61938
+      "sha256": "e02b1f1e44b03a2856c1336e5c682f6168d0088ae5679c754101d831b8792810",
+      "bytes": 52730
     },
     "fac/compact_locker/2": {
-      "file": "fac_compact_locker_2.webp",
+      "file": "fac_compact_locker_2_surface_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "40ce3bfbad834dec6037612652efca96f5299ab6b8569beb716763059fca130e",
-      "bytes": 38498
+      "sha256": "7cf3e6f3dc3ccdb64d4a23b7c8d2a345ba6c78984421ecf9537e336e633fa78c",
+      "bytes": 41910
     },
     "fac/compact_locker/3": {
-      "file": "fac_compact_locker_3.webp",
+      "file": "fac_compact_locker_3_surface_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "395876046414e0de7fad6e3f9dacc615d5448ed2c55d8d7cbfe49f24d3cdd9f4",
-      "bytes": 44060
+      "sha256": "d1d5708cc646b9c6aae1814dc0bbeace02c07ba6a4f431906dfbf8fc7b148025",
+      "bytes": 40350
     },
     "fac/compact_changing/0": {
-      "file": "fac_compact_changing_0.fix-5af51a445698.webp",
+      "file": "fac_compact_changing_0_surface_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "5af51a445698046d7984813ffc8232fc06a392d24835eaac03765e172c8fccdb",
-      "bytes": 62430
+      "sha256": "cddd54b10065a2ba174edd87223aeac126041ed373111e06698cb0b1329b5268",
+      "bytes": 52808
     },
     "fac/compact_changing/1": {
-      "file": "fac_compact_changing_1.webp",
+      "file": "fac_compact_changing_1_surface_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "ae9ec764af4ec3470e540faee17e1266801eb3742c9837db1b4d5ee7aa294975",
-      "bytes": 53700
+      "sha256": "b7bd34f1780d70b56f44f254c085e7c83a94e918f3c3db543b61c8c72fc57298",
+      "bytes": 48748
     },
     "fac/compact_changing/2": {
-      "file": "fac_compact_changing_2.webp",
+      "file": "fac_compact_changing_2_surface_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "d11ab8be3efcea8dea93a32b41a937fe7d41105ac70208e79ca3016d202f8561",
-      "bytes": 49060
+      "sha256": "407c6fef87306b88be3d8774beee844774161e18e500bfad459f0d5f79847b1e",
+      "bytes": 48110
     },
     "fac/compact_changing/3": {
-      "file": "fac_compact_changing_3.webp",
+      "file": "fac_compact_changing_3_surface_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "2999abf4a08dae85252ceb986adcc9a6a9699631132e8cdf55cf2e9a3ecf180b",
-      "bytes": 49906
+      "sha256": "6bc078184a38e7283a41ff1af318d138a15d70293ceadde4a17ed037bcda120d",
+      "bytes": 50420
     },
     "fac/compact_shower/0": {
       "file": "fac_compact_shower_0.webp",
