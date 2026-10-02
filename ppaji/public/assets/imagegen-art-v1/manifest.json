@@ -311,32 +311,32 @@
       "bytes": 88500
     },
     "fac/foodcourt_seat/0": {
-      "file": "fac_foodcourt_seat_0.webp",
+      "file": "fac_foodcourt_seat_0_template_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "d44a9656d4ce06639aef63e0190b076cf7d37816223fb0f5c67ab3554a7657db",
-      "bytes": 32282
+      "sha256": "b9afd6e05114ac39f67cb4099b1bb7ac37d00b98bcf6cc93229b1c2ef56b87b3",
+      "bytes": 27252
     },
     "fac/foodcourt_seat/1": {
-      "file": "fac_foodcourt_seat_1.webp",
+      "file": "fac_foodcourt_seat_1_template_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "fa6601ef4c5a88913cc6ee5030ccbff9d5064184fafd321a29a984fda7918f88",
-      "bytes": 34642
+      "sha256": "3d632ef570a954a2377097b6b3824d280e149d640a40b5022c744b4dbe556ae4",
+      "bytes": 27722
     },
     "fac/foodcourt_seat/2": {
-      "file": "fac_foodcourt_seat_2.webp",
+      "file": "fac_foodcourt_seat_2_template_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "e8c374c35de02e063ce3ae5932be86d77324ee9f99eea43400f272c9f198d6f6",
-      "bytes": 36354
+      "sha256": "78dc220edecd7e6a1e3183293e8522eebceb9ebaa9a49a3ba5077539f252f40a",
+      "bytes": 27450
     },
     "fac/foodcourt_seat/3": {
-      "file": "fac_foodcourt_seat_3.webp",
+      "file": "fac_foodcourt_seat_3_template_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "53a789485254ca1c0155b9b8c1207cc322d38366f7025e53419b9b48834e2426",
-      "bytes": 32240
+      "sha256": "b7ebf191cfad4aa7899502954c574c00e0cd7b4dab301623b5146627eddf8e0b",
+      "bytes": 28228
     },
     "fac/compact_locker/0": {
       "file": "fac_compact_locker_0_surface_20261002.webp",
@@ -2119,36 +2119,36 @@
       "bytes": 22782
     },
     "fac/env_bench/0": {
-      "file": "fac_env_bench_0.webp",
+      "file": "fac_env_bench_0_template_20261002.webp",
       "w": 48,
       "h": 56,
       "pad": 16,
-      "sha256": "2c93557fb07ac15357764280ea0682291b71634ec75c48484c42b5ac5f52a229",
-      "bytes": 18530
+      "sha256": "775820eb045dae196b50aef347997d7f3f5ea7f895da0b73e8869156d6dfba1c",
+      "bytes": 17614
     },
     "fac/env_bench/1": {
-      "file": "fac_env_bench_1.webp",
+      "file": "fac_env_bench_1_template_20261002.webp",
       "w": 48,
       "h": 56,
       "pad": 16,
-      "sha256": "63b6bc4e1041752f0e65c4286e6fd0355ebf0aedde0e1cdacbb17430137a1f1a",
-      "bytes": 18944
+      "sha256": "bfa256fe0bce9193f24638080be3b14ebd89a35010cadfd43eb29b63d918bf98",
+      "bytes": 18372
     },
     "fac/env_bench/2": {
-      "file": "fac_env_bench_2.webp",
+      "file": "fac_env_bench_2_template_20261002.webp",
       "w": 48,
       "h": 56,
       "pad": 16,
-      "sha256": "41382ffee99f816003848992e35c191b2147fa59a9fbbe68e61d016fb3a52bc1",
-      "bytes": 11678
+      "sha256": "d2ae122372f8267fb951f78fc4a85b6d6d32a07f2667b28b46d9ddd063aafaff",
+      "bytes": 12454
     },
     "fac/env_bench/3": {
-      "file": "fac_env_bench_3.webp",
+      "file": "fac_env_bench_3_template_20261002.webp",
       "w": 48,
       "h": 56,
       "pad": 16,
-      "sha256": "d7cf5359790b46bce70c2eac5edc4181e53abf3259cd1ea1cd3e2dd696b46fa1",
-      "bytes": 11066
+      "sha256": "7bf8fb6bb5c238e9068e19603ec5c4cd31b33055e158360f91046aef6355a3e4",
+      "bytes": 12814
     },
     "fac/env_street_lamp/0": {
       "file": "fac_env_street_lamp_0.webp",

@@ -10767,28 +10767,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "foodcourt_seat/native-d0.png",
+          "file": "foodcourt_seat/template-20261002-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "6757cc3ed4c734ed8b413c9c679b976f7f8dd4528d59078b0211c5635435aead"
+          "sha256": "159a9bb815f651cdeacd15e2e07fb7f9ed86311335692f2125e38fc04c421cdc"
         },
         "d1": {
-          "file": "foodcourt_seat/native-d1.png",
+          "file": "foodcourt_seat/template-20261002-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "9efa9d8a246f8763281e9f3a5fe203ad16fa0428e69313cc6f86f8fd8cfad2bd"
+          "sha256": "f0d19a03d0d6d32a62073bf04b01ce8feb59001eeccf5ca4329cc7af8f525760"
         },
         "d2": {
-          "file": "foodcourt_seat/native-d2.png",
+          "file": "foodcourt_seat/template-20261002-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "1e1b170c5a2b80567095744c6cb802f6e66d6370df2d473707848821f651ba91"
+          "sha256": "91cec7f1c35328ecbae955805af03d5f6cd3bf623be8b9f008658a145f9a497d"
         },
         "d3": {
-          "file": "foodcourt_seat/native-d3.png",
+          "file": "foodcourt_seat/template-20261002-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "9b4be8678e3fbf5f8082149f3bcaf57cc5e542f24b1c573afe11a5332cc37964"
+          "sha256": "cf5cd4b8d7aa63843fb01da1473f5adbdc4124983cd11a6534c0417502c1fb0a"
         }
       },
       "note": "User-approved picnic art adopted; existing foodcourt simulation and dense-layout policy retained."

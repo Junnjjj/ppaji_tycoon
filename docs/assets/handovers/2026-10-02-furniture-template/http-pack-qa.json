@@ -1,0 +1,50 @@
+[
+  {
+    "id": "env_bench",
+    "d": 0,
+    "http_sha256_matches_manifest": true,
+    "decoded_rgba_matches_reviewed": true
+  },
+  {
+    "id": "env_bench",
+    "d": 1,
+    "http_sha256_matches_manifest": true,
+    "decoded_rgba_matches_reviewed": true
+  },
+  {
+    "id": "env_bench",
+    "d": 2,
+    "http_sha256_matches_manifest": true,
+    "decoded_rgba_matches_reviewed": true
+  },
+  {
+    "id": "env_bench",
+    "d": 3,
+    "http_sha256_matches_manifest": true,
+    "decoded_rgba_matches_reviewed": true
+  },
+  {
+    "id": "foodcourt_seat",
+    "d": 0,
+    "http_sha256_matches_manifest": true,
+    "decoded_rgba_matches_reviewed": true
+  },
+  {
+    "id": "foodcourt_seat",
+    "d": 1,
+    "http_sha256_matches_manifest": true,
+    "decoded_rgba_matches_reviewed": true
+  },
+  {
+    "id": "foodcourt_seat",
+    "d": 2,
+    "http_sha256_matches_manifest": true,
+    "decoded_rgba_matches_reviewed": true
+  },
+  {
+    "id": "foodcourt_seat",
+    "d": 3,
+    "http_sha256_matches_manifest": true,
+    "decoded_rgba_matches_reviewed": true
+  }
+]

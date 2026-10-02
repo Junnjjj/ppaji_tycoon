@@ -1,0 +1,244 @@
+{
+  "status": "USER_ACCEPTED_APPLIED",
+  "authorization": "오 그래 괜찮네 적용하자 그냥",
+  "scope": {
+    "env_bench": "bench-picnic-template-20261002",
+    "foodcourt_seat": "bench-picnic-template-20261002"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "env_bench",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bench-picnic-template-20261002/candidates/env_bench/d0.png",
+      "source_sha256": "426c0b839fe2fe8d703368369476ae536186dc8758d2a008f18b32a1f7b6f6e2",
+      "old": {
+        "file": "fac_env_bench_0.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "2c93557fb07ac15357764280ea0682291b71634ec75c48484c42b5ac5f52a229",
+        "bytes": 18530
+      },
+      "new": {
+        "file": "fac_env_bench_0_template_20261002.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "775820eb045dae196b50aef347997d7f3f5ea7f895da0b73e8869156d6dfba1c",
+        "bytes": 17614
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_bench",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bench-picnic-template-20261002/candidates/env_bench/d1.png",
+      "source_sha256": "a08a93e42808ff29c5d5824ad37c8e2ed3bc5bc3cdcf734c5b3a3a0e21c704e5",
+      "old": {
+        "file": "fac_env_bench_1.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "63b6bc4e1041752f0e65c4286e6fd0355ebf0aedde0e1cdacbb17430137a1f1a",
+        "bytes": 18944
+      },
+      "new": {
+        "file": "fac_env_bench_1_template_20261002.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "bfa256fe0bce9193f24638080be3b14ebd89a35010cadfd43eb29b63d918bf98",
+        "bytes": 18372
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_bench",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bench-picnic-template-20261002/candidates/env_bench/d2.png",
+      "source_sha256": "a784f9a3d24e0fbfe230448e6e7cca7778b4d6071693152aaf399e828c2663ce",
+      "old": {
+        "file": "fac_env_bench_2.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "41382ffee99f816003848992e35c191b2147fa59a9fbbe68e61d016fb3a52bc1",
+        "bytes": 11678
+      },
+      "new": {
+        "file": "fac_env_bench_2_template_20261002.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "d2ae122372f8267fb951f78fc4a85b6d6d32a07f2667b28b46d9ddd063aafaff",
+        "bytes": 12454
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_bench",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bench-picnic-template-20261002/candidates/env_bench/d3.png",
+      "source_sha256": "5e7023828eafcb439c733937c3e6ca94b9e26c5a744d519326d64879e458dad1",
+      "old": {
+        "file": "fac_env_bench_3.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "d7cf5359790b46bce70c2eac5edc4181e53abf3259cd1ea1cd3e2dd696b46fa1",
+        "bytes": 11066
+      },
+      "new": {
+        "file": "fac_env_bench_3_template_20261002.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "7bf8fb6bb5c238e9068e19603ec5c4cd31b33055e158360f91046aef6355a3e4",
+        "bytes": 12814
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "foodcourt_seat",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bench-picnic-template-20261002/candidates/foodcourt_seat/d0.png",
+      "source_sha256": "c9ba030eddf0a55ab82ef50f8d3a8403090c97d7e26a23ee75735eda20bd04c5",
+      "old": {
+        "file": "fac_foodcourt_seat_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "d44a9656d4ce06639aef63e0190b076cf7d37816223fb0f5c67ab3554a7657db",
+        "bytes": 32282
+      },
+      "new": {
+        "file": "fac_foodcourt_seat_0_template_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "b9afd6e05114ac39f67cb4099b1bb7ac37d00b98bcf6cc93229b1c2ef56b87b3",
+        "bytes": 27252
+      },
+      "old_native": {
+        "file": "foodcourt_seat/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "6757cc3ed4c734ed8b413c9c679b976f7f8dd4528d59078b0211c5635435aead"
+      },
+      "new_native": {
+        "file": "foodcourt_seat/template-20261002-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "159a9bb815f651cdeacd15e2e07fb7f9ed86311335692f2125e38fc04c421cdc"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "foodcourt_seat",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bench-picnic-template-20261002/candidates/foodcourt_seat/d1.png",
+      "source_sha256": "5a1eb599a49df783f46f3d77fb60330a0cebd8029557714ec9feed0358b836e5",
+      "old": {
+        "file": "fac_foodcourt_seat_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "fa6601ef4c5a88913cc6ee5030ccbff9d5064184fafd321a29a984fda7918f88",
+        "bytes": 34642
+      },
+      "new": {
+        "file": "fac_foodcourt_seat_1_template_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "3d632ef570a954a2377097b6b3824d280e149d640a40b5022c744b4dbe556ae4",
+        "bytes": 27722
+      },
+      "old_native": {
+        "file": "foodcourt_seat/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "9efa9d8a246f8763281e9f3a5fe203ad16fa0428e69313cc6f86f8fd8cfad2bd"
+      },
+      "new_native": {
+        "file": "foodcourt_seat/template-20261002-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f0d19a03d0d6d32a62073bf04b01ce8feb59001eeccf5ca4329cc7af8f525760"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "foodcourt_seat",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bench-picnic-template-20261002/candidates/foodcourt_seat/d2.png",
+      "source_sha256": "df30e360583989d82651b437b7c225e3d88036b57251c53df09a4dc1ffa95721",
+      "old": {
+        "file": "fac_foodcourt_seat_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e8c374c35de02e063ce3ae5932be86d77324ee9f99eea43400f272c9f198d6f6",
+        "bytes": 36354
+      },
+      "new": {
+        "file": "fac_foodcourt_seat_2_template_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "78dc220edecd7e6a1e3183293e8522eebceb9ebaa9a49a3ba5077539f252f40a",
+        "bytes": 27450
+      },
+      "old_native": {
+        "file": "foodcourt_seat/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "1e1b170c5a2b80567095744c6cb802f6e66d6370df2d473707848821f651ba91"
+      },
+      "new_native": {
+        "file": "foodcourt_seat/template-20261002-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "91cec7f1c35328ecbae955805af03d5f6cd3bf623be8b9f008658a145f9a497d"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "foodcourt_seat",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/bench-picnic-template-20261002/candidates/foodcourt_seat/d3.png",
+      "source_sha256": "1d2cb03896d991239c6a77c9a4f6b007bef1b1b1a98a3a27b75d7a47996c78a9",
+      "old": {
+        "file": "fac_foodcourt_seat_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "53a789485254ca1c0155b9b8c1207cc322d38366f7025e53419b9b48834e2426",
+        "bytes": 32240
+      },
+      "new": {
+        "file": "fac_foodcourt_seat_3_template_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "b7ebf191cfad4aa7899502954c574c00e0cd7b4dab301623b5146627eddf8e0b",
+        "bytes": 28228
+      },
+      "old_native": {
+        "file": "foodcourt_seat/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "9b4be8678e3fbf5f8082149f3bcaf57cc5e542f24b1c573afe11a5332cc37964"
+      },
+      "new_native": {
+        "file": "foodcourt_seat/template-20261002-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "cf5cd4b8d7aa63843fb01da1473f5adbdc4124983cd11a6534c0417502c1fb0a"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

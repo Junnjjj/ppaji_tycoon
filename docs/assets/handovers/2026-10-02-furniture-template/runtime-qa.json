@@ -1,0 +1,50 @@
+[
+  {
+    "id": "env_bench",
+    "d": 0,
+    "file": "fac_env_bench_0_template_20261002.webp",
+    "rgbaExact": false
+  },
+  {
+    "id": "env_bench",
+    "d": 1,
+    "file": "fac_env_bench_1_template_20261002.webp",
+    "rgbaExact": false
+  },
+  {
+    "id": "env_bench",
+    "d": 2,
+    "file": "fac_env_bench_2_template_20261002.webp",
+    "rgbaExact": false
+  },
+  {
+    "id": "env_bench",
+    "d": 3,
+    "file": "fac_env_bench_3_template_20261002.webp",
+    "rgbaExact": false
+  },
+  {
+    "id": "foodcourt_seat",
+    "d": 0,
+    "file": "fac_foodcourt_seat_0_template_20261002.webp",
+    "rgbaExact": false
+  },
+  {
+    "id": "foodcourt_seat",
+    "d": 1,
+    "file": "fac_foodcourt_seat_1_template_20261002.webp",
+    "rgbaExact": false
+  },
+  {
+    "id": "foodcourt_seat",
+    "d": 2,
+    "file": "fac_foodcourt_seat_2_template_20261002.webp",
+    "rgbaExact": false
+  },
+  {
+    "id": "foodcourt_seat",
+    "d": 3,
+    "file": "fac_foodcourt_seat_3_template_20261002.webp",
+    "rgbaExact": false
+  }
+]
