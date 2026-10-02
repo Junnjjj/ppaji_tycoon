@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ppaji Surface Reprojection"
+  short_description: "Preserve painted sprites while correcting rigid facings"
+  default_prompt: "Use $ppaji-surface-reprojection to correct facility angles with original textures and verify lines on the game grid."
