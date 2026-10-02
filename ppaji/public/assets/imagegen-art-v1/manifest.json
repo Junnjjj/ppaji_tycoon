@@ -395,32 +395,32 @@
       "bytes": 50420
     },
     "fac/compact_shower/0": {
-      "file": "fac_compact_shower_0.webp",
+      "file": "fac_compact_shower_0_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "bb03cbee8bf29b5de6c268f278487928871c6fa99422c97ef1852c2c33f10b32",
-      "bytes": 56774
+      "sha256": "2d145fa7b99130b6cf5260355edccd1fd54406f49333db29c057d34fb265cf16",
+      "bytes": 20512
     },
     "fac/compact_shower/1": {
-      "file": "fac_compact_shower_1.webp",
+      "file": "fac_compact_shower_1_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "39e2d48830d0e2e5aaa504021087cb525bceb0546e4f0ad3f2da778a8cd2f3a2",
-      "bytes": 52670
+      "sha256": "03929f7ee56d259f098c656f8e6919e61dfeeef06adcb89399c0cecc7dd001bd",
+      "bytes": 21502
     },
     "fac/compact_shower/2": {
-      "file": "fac_compact_shower_2.webp",
+      "file": "fac_compact_shower_2_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "a24fa93b6acb9fea3bbe83ce63f9d4f46efb4277b1c7dad3749ceb735543a9df",
-      "bytes": 41842
+      "sha256": "53f54ffe3367154551ffdfc847b96f3641188f49291265b22e4cb02580954464",
+      "bytes": 13388
     },
     "fac/compact_shower/3": {
-      "file": "fac_compact_shower_3.webp",
+      "file": "fac_compact_shower_3_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "5706c90e5c9c12acbfa94bfa638b6c3464ac20acab90fe6ecc42a905bc95ea20",
-      "bytes": 45032
+      "sha256": "7ebb56063e1a47825b04e9fe8d4f3b51901a165bae62569c2dd56aa3ca2c9b36",
+      "bytes": 13678
     },
     "fac/icecream/0": {
       "file": "fac_icecream_0_template_20261002.webp",

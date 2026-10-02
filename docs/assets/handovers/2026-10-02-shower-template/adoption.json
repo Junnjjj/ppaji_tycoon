@@ -1,0 +1,143 @@
+{
+  "status": "USER_ACCEPTED_APPLIED",
+  "authorization": "합격 다른건?",
+  "scope": {
+    "compact_shower": "shower-template-20261002"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "compact_shower",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/shower-template-20261002/candidates/compact_shower/d0.png",
+      "source_sha256": "8a39aa7228cf61e838ebd4af5f2f96ae650bcb326ba09ec3e0bcecee17f6843f",
+      "old": {
+        "file": "fac_compact_shower_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "bb03cbee8bf29b5de6c268f278487928871c6fa99422c97ef1852c2c33f10b32",
+        "bytes": 56774
+      },
+      "new": {
+        "file": "fac_compact_shower_0_accepted_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "2d145fa7b99130b6cf5260355edccd1fd54406f49333db29c057d34fb265cf16",
+        "bytes": 20512
+      },
+      "old_native": {
+        "file": "compact_shower/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "27739a02d977f7b4e48dd1674aba4208cc1d84ddd750cb34349018b64ee18070"
+      },
+      "new_native": {
+        "file": "compact_shower/accepted-20261002-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "d7d7729a1d14a648c8c7dbc45fa94dff67b2a234d4def5de26d08c2126fae1b2"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "compact_shower",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/shower-template-20261002/candidates/compact_shower/d1.png",
+      "source_sha256": "94a40dd75dd47cab39a5540977efd68e0846d47f5b3ab95dc80122af39a92d8b",
+      "old": {
+        "file": "fac_compact_shower_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "39e2d48830d0e2e5aaa504021087cb525bceb0546e4f0ad3f2da778a8cd2f3a2",
+        "bytes": 52670
+      },
+      "new": {
+        "file": "fac_compact_shower_1_accepted_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "03929f7ee56d259f098c656f8e6919e61dfeeef06adcb89399c0cecc7dd001bd",
+        "bytes": 21502
+      },
+      "old_native": {
+        "file": "compact_shower/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "51d2f71089847537fb364c0c5ece00cc5c4d4741514f2c17fecb0fa329ce4ae6"
+      },
+      "new_native": {
+        "file": "compact_shower/accepted-20261002-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "c4ed5d2c7e6c74dc122ef1fe5238908922ca2268e713258a60171e212ac02efe"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "compact_shower",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/shower-template-20261002/candidates/compact_shower/d2.png",
+      "source_sha256": "ca36f13941a694ffac6098a0d68a94cb1b80e63339efa2ac74ab09443b4d468e",
+      "old": {
+        "file": "fac_compact_shower_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a24fa93b6acb9fea3bbe83ce63f9d4f46efb4277b1c7dad3749ceb735543a9df",
+        "bytes": 41842
+      },
+      "new": {
+        "file": "fac_compact_shower_2_accepted_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "53f54ffe3367154551ffdfc847b96f3641188f49291265b22e4cb02580954464",
+        "bytes": 13388
+      },
+      "old_native": {
+        "file": "compact_shower/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "66f8a7408cdd55fb2895c32fe9663fbcd19823e8f8274fc0998db6f095a30569"
+      },
+      "new_native": {
+        "file": "compact_shower/accepted-20261002-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "319432122af33f84f229789b9b55ec4a53afb14204a44e9e6f92e2808a97829c"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "compact_shower",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/shower-template-20261002/candidates/compact_shower/d3.png",
+      "source_sha256": "049a923cd5e042c1534508e8b79aa207e98b0a50a9a462d320dee0aaffbdd030",
+      "old": {
+        "file": "fac_compact_shower_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "5706c90e5c9c12acbfa94bfa638b6c3464ac20acab90fe6ecc42a905bc95ea20",
+        "bytes": 45032
+      },
+      "new": {
+        "file": "fac_compact_shower_3_accepted_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "7ebb56063e1a47825b04e9fe8d4f3b51901a165bae62569c2dd56aa3ca2c9b36",
+        "bytes": 13678
+      },
+      "old_native": {
+        "file": "compact_shower/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "71a13f27638f1bc8cb83d3622320ff8e129862466fa5c51945196414d9a721d0"
+      },
+      "new_native": {
+        "file": "compact_shower/accepted-20261002-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "1f9d3c29227550f7c56630433746298fb42b0ccadb515dbea38883bc47f1d818"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

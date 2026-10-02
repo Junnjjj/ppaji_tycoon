@@ -11217,28 +11217,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "compact_shower/native-d0.png",
+          "file": "compact_shower/accepted-20261002-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "27739a02d977f7b4e48dd1674aba4208cc1d84ddd750cb34349018b64ee18070"
+          "sha256": "d7d7729a1d14a648c8c7dbc45fa94dff67b2a234d4def5de26d08c2126fae1b2"
         },
         "d1": {
-          "file": "compact_shower/native-d1.png",
+          "file": "compact_shower/accepted-20261002-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "51d2f71089847537fb364c0c5ece00cc5c4d4741514f2c17fecb0fa329ce4ae6"
+          "sha256": "c4ed5d2c7e6c74dc122ef1fe5238908922ca2268e713258a60171e212ac02efe"
         },
         "d2": {
-          "file": "compact_shower/native-d2.png",
+          "file": "compact_shower/accepted-20261002-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "66f8a7408cdd55fb2895c32fe9663fbcd19823e8f8274fc0998db6f095a30569"
+          "sha256": "319432122af33f84f229789b9b55ec4a53afb14204a44e9e6f92e2808a97829c"
         },
         "d3": {
-          "file": "compact_shower/native-d3.png",
+          "file": "compact_shower/accepted-20261002-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "71a13f27638f1bc8cb83d3622320ff8e129862466fa5c51945196414d9a721d0"
+          "sha256": "1f9d3c29227550f7c56630433746298fb42b0ccadb515dbea38883bc47f1d818"
         }
       },
       "note": "Compact entrance authored candidate; legacy definitions remain unchanged."

@@ -1,3 +1,7 @@
+## 2026-10-02 샤워실 승인본 메인 적용
+
+사용자 “합격”으로compact_shower4방향승격. 기존크기/앵커유지,HTTP및브라우저4/4,관련21테스트통과. [상세](handovers/2026-10-02-shower-template/README.md). 다음식혜·계란코너후보작업. 원격push없음.
+
 ## 2026-10-02 드라이룸·구명조끼 선 수정 및 오락기 승인본 적용
 
 사용자가 수락한 dry_room/rental_tube 최종선수정과 arcade 공통구조를 실제메인에적용. 각4방향12개WebP+12개기존native fallback. 앵커·크기·다른시설불변. HTTP해시/승인PNG파일RGBA12/12, 브라우저실제WebP로드12/12, 관련21테스트통과. [상세 적용기록](handovers/2026-10-02-dry-rental-arcade/README.md). 다음대상 compact_shower(샤워실); 이미승격한코인라커/탈의실은유지. 실내매점은후보유지. 원격push없음.
