@@ -1,0 +1,50 @@
+[
+  {
+    "id": "vending_in",
+    "d": 0,
+    "file": "fac_vending_in_0_template_20261002.webp",
+    "rgbaExact": true
+  },
+  {
+    "id": "vending_in",
+    "d": 1,
+    "file": "fac_vending_in_1_template_20261002.webp",
+    "rgbaExact": true
+  },
+  {
+    "id": "vending_in",
+    "d": 2,
+    "file": "fac_vending_in_2_template_20261002.webp",
+    "rgbaExact": true
+  },
+  {
+    "id": "vending_in",
+    "d": 3,
+    "file": "fac_vending_in_3_template_20261002.webp",
+    "rgbaExact": true
+  },
+  {
+    "id": "icecream",
+    "d": 0,
+    "file": "fac_icecream_0_template_20261002.webp",
+    "rgbaExact": true
+  },
+  {
+    "id": "icecream",
+    "d": 1,
+    "file": "fac_icecream_1_template_20261002.webp",
+    "rgbaExact": true
+  },
+  {
+    "id": "icecream",
+    "d": 2,
+    "file": "fac_icecream_2_template_20261002.webp",
+    "rgbaExact": true
+  },
+  {
+    "id": "icecream",
+    "d": 3,
+    "file": "fac_icecream_3_template_20261002.webp",
+    "rgbaExact": true
+  }
+]

@@ -1,0 +1,276 @@
+{
+  "status": "USER_ACCEPTED_APPLIED",
+  "authorization": "아까 두개는 이걸로 승격시켜주고",
+  "scope": {
+    "vending_in": "vending-template-pilot-20261002",
+    "icecream": "icecream-material-refine-20261002"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "vending_in",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/vending-template-pilot-20261002/candidates/vending_in/d0.png",
+      "source_sha256": "68726cc1853f97620e70422375ed19528653d7fe7a6d1710ac93194319ea75f2",
+      "old": {
+        "file": "fac_vending_in_0.fix-8e43620c4fb9.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "8e43620c4fb90740b4dcf837783128217daccc68d446dd35837f2daba57df4fe",
+        "bytes": 19016
+      },
+      "new": {
+        "file": "fac_vending_in_0_template_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "02e3aba6cd97df64b735d1eeeef05c93e81aa193caf0b8b69fd19630c4493351",
+        "bytes": 16256
+      },
+      "old_native": {
+        "file": "vending_in/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "8b3a674d00cbd269a489afd8bf1af1dc52bce548eb4ae75a9110d9be80f25254"
+      },
+      "new_native": {
+        "file": "vending_in/template-20261002-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "8ced45eafc77a948d4f2275fb94ac76d74e1ef95a09258a3e49457c1172df378"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "vending_in",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/vending-template-pilot-20261002/candidates/vending_in/d1.png",
+      "source_sha256": "dd2c9cd6ec02435bdbf509cb8d6d15ea4d0dd05f5f7dee2c45dd811342febcf0",
+      "old": {
+        "file": "fac_vending_in_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "ebd8caa33843f7dfaf512228e9f6b699c44a4d124a59113c448ba0bf56ed0521",
+        "bytes": 16820
+      },
+      "new": {
+        "file": "fac_vending_in_1_template_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "968bcafbb98085e9c0323edc2f9a69ea08a98ca12e8d87cef49bd6fbc450485b",
+        "bytes": 15986
+      },
+      "old_native": {
+        "file": "vending_in/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "4f89a8fceb6fc1fa32d1d01e956afab5b6f72df23ec1a7a1110739f84f796c2a"
+      },
+      "new_native": {
+        "file": "vending_in/template-20261002-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "aedaec2ba09ce07b3fb1098a657d39867cef9df932c21e240e2f5272046b3fc7"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "vending_in",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/vending-template-pilot-20261002/candidates/vending_in/d2.png",
+      "source_sha256": "99d0a0c1275a2622186e49e1884044a5e3133f8a8e71337788ed41d5f654851b",
+      "old": {
+        "file": "fac_vending_in_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "75c49ccff14bee65e03f9296635cf3c0a2e73b1570d21f7e307c6f75378e03dc",
+        "bytes": 13216
+      },
+      "new": {
+        "file": "fac_vending_in_2_template_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "1297ae3b6e51f4cba404bc407ccb030225f9b42fbe84f034c130f78185610be3",
+        "bytes": 10882
+      },
+      "old_native": {
+        "file": "vending_in/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "bf34a38a406b14980b97b90a2790df49c97fcd8cd1da469b4dc0d19a916a537c"
+      },
+      "new_native": {
+        "file": "vending_in/template-20261002-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "34424b923e9959d4656c483b0ee79e7069766497f6c519bd37bff4c439005dc8"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "vending_in",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/vending-template-pilot-20261002/candidates/vending_in/d3.png",
+      "source_sha256": "d03c3cd4fa3a1942e526e213f2796506885520942979affd3f1e75579afb2512",
+      "old": {
+        "file": "fac_vending_in_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "8cb6c3ab284da46073bcc4e8bd6503f7febf14d0cfc07854729f845dd3ae951a",
+        "bytes": 13386
+      },
+      "new": {
+        "file": "fac_vending_in_3_template_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e27095d49a001a3f773c0ceffb9c1d13416f9992fe5d2e1fa1d32ab4622a82e6",
+        "bytes": 10586
+      },
+      "old_native": {
+        "file": "vending_in/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "da99f7877143458b9792797b30bcc5d9181d6f7f4e4e59f36706b8b57cfb2b60"
+      },
+      "new_native": {
+        "file": "vending_in/template-20261002-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f9ff3df8b0b2f2919eb2145e938ddee177e02fa24e1315ef3c1e1010791dd860"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "icecream",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/icecream-material-refine-20261002/candidates/icecream/d0.png",
+      "source_sha256": "3ce8f035e1b0b75a71e3d0548739944c8d2807499f1dd3362aaf3fe1329b49fd",
+      "old": {
+        "file": "fac_icecream_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "335d966a1117f5e5595ef2674eb8673b1fc1ec0feab7e8b7b36270b595a3c0c0",
+        "bytes": 28408
+      },
+      "new": {
+        "file": "fac_icecream_0_template_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "859df3744072723000faed947ff43fdb69ef8e900ad682e778f8955bb99997c0",
+        "bytes": 24116
+      },
+      "old_native": {
+        "file": "icecream/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "d5eba860b9d69dd7d1f21f14518289cda7d87a85a2fd35ea3d4e7b798154be8f"
+      },
+      "new_native": {
+        "file": "icecream/template-20261002-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "20adea2654f9887af929261760dea5786f9c69665a5d630171c05bf7ea52ee02"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "icecream",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/icecream-material-refine-20261002/candidates/icecream/d1.png",
+      "source_sha256": "25899a0846b5455d03781edcbf5c535dc2757ca7ef1fec981760b6f6bdcf9cd6",
+      "old": {
+        "file": "fac_icecream_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "53e0ebfedd16bf5db8eac5cf58a55924170060ef4a2caca8725e7cb4b81be87c",
+        "bytes": 28618
+      },
+      "new": {
+        "file": "fac_icecream_1_template_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "885b315685c23d8a1bc6c24228c00ab6ce02046228e9fe16edc4ca4623746fa5",
+        "bytes": 24660
+      },
+      "old_native": {
+        "file": "icecream/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "be2675c0a000ffc9e599ba96a0013cbd9e922750602555000edc953cab48228f"
+      },
+      "new_native": {
+        "file": "icecream/template-20261002-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "297327f35aa82a37f2cfa7108dd649779e71db01e3a3aedc6cfc96bd10885f84"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "icecream",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/icecream-material-refine-20261002/candidates/icecream/d2.png",
+      "source_sha256": "bf66001ffe826a2be5712d14e72a849e5940d1e8314e8eb9beef3a339033f110",
+      "old": {
+        "file": "fac_icecream_2.fix-cb9431bf0c77.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "cb9431bf0c778828e27b8b9ca494b3aa98745e29ca9f7aedf2e2ae5217258bd6",
+        "bytes": 24546
+      },
+      "new": {
+        "file": "fac_icecream_2_template_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "303cdbbe3f7ef29394f6c820cf96162bb27c80f83e9570ed8589f3318cd4b027",
+        "bytes": 22242
+      },
+      "old_native": {
+        "file": "icecream/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "3ae0992382c5de717ef13766ea9f52e3cc106dee51d893be12ab855c1aebf566"
+      },
+      "new_native": {
+        "file": "icecream/template-20261002-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "c5feaba6c9d4692a8acff330e0aa0bc26a8c9a17561d1c03028bcb0e20032d31"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "icecream",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/icecream-material-refine-20261002/candidates/icecream/d3.png",
+      "source_sha256": "414e8d06c2e3a093c794396fb361a4df310a59e01f39133e3ffae9766a2a190a",
+      "old": {
+        "file": "fac_icecream_3.fix-a979e7c9dc7b.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a979e7c9dc7bcc1efcc6961dcb5742185b97bbee69d23862d38c6172a26a96c5",
+        "bytes": 29662
+      },
+      "new": {
+        "file": "fac_icecream_3_template_20261002.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a16ab201d9385802d500bcddc43b725aa1d791debd73d06a68dea5638d5fc954",
+        "bytes": 22086
+      },
+      "old_native": {
+        "file": "icecream/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "ad9b29c2d99ad708ab7ec9750bb2ae41a51da37adfa8f282b48945448234394f"
+      },
+      "new_native": {
+        "file": "icecream/template-20261002-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "7968bb0f89203b71611cc02c5ffb3da83164d6c61f00a3059218b59af9287da2"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

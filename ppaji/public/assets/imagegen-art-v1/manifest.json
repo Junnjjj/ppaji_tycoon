@@ -115,32 +115,32 @@
       "bytes": 10836
     },
     "fac/vending_in/0": {
-      "file": "fac_vending_in_0.fix-8e43620c4fb9.webp",
+      "file": "fac_vending_in_0_template_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "8e43620c4fb90740b4dcf837783128217daccc68d446dd35837f2daba57df4fe",
-      "bytes": 19016
+      "sha256": "02e3aba6cd97df64b735d1eeeef05c93e81aa193caf0b8b69fd19630c4493351",
+      "bytes": 16256
     },
     "fac/vending_in/1": {
-      "file": "fac_vending_in_1.webp",
+      "file": "fac_vending_in_1_template_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "ebd8caa33843f7dfaf512228e9f6b699c44a4d124a59113c448ba0bf56ed0521",
-      "bytes": 16820
+      "sha256": "968bcafbb98085e9c0323edc2f9a69ea08a98ca12e8d87cef49bd6fbc450485b",
+      "bytes": 15986
     },
     "fac/vending_in/2": {
-      "file": "fac_vending_in_2.webp",
+      "file": "fac_vending_in_2_template_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "75c49ccff14bee65e03f9296635cf3c0a2e73b1570d21f7e307c6f75378e03dc",
-      "bytes": 13216
+      "sha256": "1297ae3b6e51f4cba404bc407ccb030225f9b42fbe84f034c130f78185610be3",
+      "bytes": 10882
     },
     "fac/vending_in/3": {
-      "file": "fac_vending_in_3.webp",
+      "file": "fac_vending_in_3_template_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "8cb6c3ab284da46073bcc4e8bd6503f7febf14d0cfc07854729f845dd3ae951a",
-      "bytes": 13386
+      "sha256": "e27095d49a001a3f773c0ceffb9c1d13416f9992fe5d2e1fa1d32ab4622a82e6",
+      "bytes": 10586
     },
     "fac/info/0": {
       "file": "fac_info_0.webp",
@@ -423,32 +423,32 @@
       "bytes": 45032
     },
     "fac/icecream/0": {
-      "file": "fac_icecream_0.webp",
+      "file": "fac_icecream_0_template_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "335d966a1117f5e5595ef2674eb8673b1fc1ec0feab7e8b7b36270b595a3c0c0",
-      "bytes": 28408
+      "sha256": "859df3744072723000faed947ff43fdb69ef8e900ad682e778f8955bb99997c0",
+      "bytes": 24116
     },
     "fac/icecream/1": {
-      "file": "fac_icecream_1.webp",
+      "file": "fac_icecream_1_template_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "53e0ebfedd16bf5db8eac5cf58a55924170060ef4a2caca8725e7cb4b81be87c",
-      "bytes": 28618
+      "sha256": "885b315685c23d8a1bc6c24228c00ab6ce02046228e9fe16edc4ca4623746fa5",
+      "bytes": 24660
     },
     "fac/icecream/2": {
-      "file": "fac_icecream_2.fix-cb9431bf0c77.webp",
+      "file": "fac_icecream_2_template_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "cb9431bf0c778828e27b8b9ca494b3aa98745e29ca9f7aedf2e2ae5217258bd6",
-      "bytes": 24546
+      "sha256": "303cdbbe3f7ef29394f6c820cf96162bb27c80f83e9570ed8589f3318cd4b027",
+      "bytes": 22242
     },
     "fac/icecream/3": {
-      "file": "fac_icecream_3.fix-a979e7c9dc7b.webp",
+      "file": "fac_icecream_3_template_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "a979e7c9dc7bcc1efcc6961dcb5742185b97bbee69d23862d38c6172a26a96c5",
-      "bytes": 29662
+      "sha256": "a16ab201d9385802d500bcddc43b725aa1d791debd73d06a68dea5638d5fc954",
+      "bytes": 22086
     },
     "fac/sikhye/0": {
       "file": "fac_sikhye_0.webp",
