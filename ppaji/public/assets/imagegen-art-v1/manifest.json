@@ -87,32 +87,32 @@
       "bytes": 128998
     },
     "fac/arcade/0": {
-      "file": "fac_arcade_0.webp",
+      "file": "fac_arcade_0_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "64108e3fd54efc405601064b5c8406f9434887377eb764ac4ad2578caf28fb5b",
-      "bytes": 13462
+      "sha256": "049e93845569020cc2fe0ada77b872fd86c68da3fba5a7fae64b6e063960cafd",
+      "bytes": 9808
     },
     "fac/arcade/1": {
-      "file": "fac_arcade_1.webp",
+      "file": "fac_arcade_1_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "831313314cfe28af854c6489f9ed376ac9ed9796264248209df9a261690eefd7",
-      "bytes": 13024
+      "sha256": "33864673f40efaf469862380c8d46d3f2c496bcb042ac13411b74b6bd1c1bc7d",
+      "bytes": 10300
     },
     "fac/arcade/2": {
-      "file": "fac_arcade_2.webp",
+      "file": "fac_arcade_2_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "9d35c40f52c6e730489aac1ac028b63f715e0ad870d036ac11dd58cc9ad36c8f",
-      "bytes": 10090
+      "sha256": "48ccb7afd3955a2cb06de8440b51651aa100f4406cc38267ee6357c8fea7e919",
+      "bytes": 6756
     },
     "fac/arcade/3": {
-      "file": "fac_arcade_3.webp",
+      "file": "fac_arcade_3_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "1370eec17730099d25d193476eda033c442bd98ebb23254b3d426f69d46ad7eb",
-      "bytes": 10836
+      "sha256": "f3f181d36c237be5506cce763027f06a0fdc55170b8c7fecc3f5890dc5f3a49b",
+      "bytes": 6612
     },
     "fac/vending_in/0": {
       "file": "fac_vending_in_0_template_20261002.webp",
@@ -171,32 +171,32 @@
       "bytes": 32614
     },
     "fac/rental_tube/0": {
-      "file": "fac_rental_tube_0.fix-5da1c616adc0.webp",
+      "file": "fac_rental_tube_0_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "5da1c616adc0b39ee66f3a859affcc389a1a03489354b7285682d4f75d49f945",
-      "bytes": 27816
+      "sha256": "40010cd3e91f06a2ea101023214f4ce812fa1866209254168efb7f7a9246806d",
+      "bytes": 21586
     },
     "fac/rental_tube/1": {
-      "file": "fac_rental_tube_1.webp",
+      "file": "fac_rental_tube_1_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "62a20588b98f11eb24c2ad531c75e1d926bc4bc4c044585205015256046d4586",
-      "bytes": 20444
+      "sha256": "5ee918771c6c0784ae25ad08229b4349002f4473c51a0f211a458c927f3b3ee8",
+      "bytes": 20854
     },
     "fac/rental_tube/2": {
-      "file": "fac_rental_tube_2.webp",
+      "file": "fac_rental_tube_2_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "b9f7034b31078d11221f8a4ea71f8ac4306f8fa3e3e34c85d2090e595e1c8e5e",
-      "bytes": 23704
+      "sha256": "28b9bf14115debbf1915a5927b0c5ae07384ef9f952f8cf623a52a6187ab248c",
+      "bytes": 18294
     },
     "fac/rental_tube/3": {
-      "file": "fac_rental_tube_3.webp",
+      "file": "fac_rental_tube_3_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "3203132be6cc427b28be1b8a96d33c9d7c0eff56b9249cd875593df436c87087",
-      "bytes": 18318
+      "sha256": "bb98a67ef0d4ac65cc49a3391f4f278f8d8aabfd319eeeea4265f1ffc70ac080",
+      "bytes": 16422
     },
     "fac/indoor_shop/0": {
       "file": "fac_indoor_shop_0.webp",
@@ -227,32 +227,32 @@
       "bytes": 70776
     },
     "fac/dry_room/0": {
-      "file": "fac_dry_room_0.webp",
+      "file": "fac_dry_room_0_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "79494c1bd978f4466ba7d4208e5705ccf436b1bc7869382d8fd4a940ee9cb0c0",
-      "bytes": 30050
+      "sha256": "e9c944860b6a9cfd06b386fb5c47fed000b2912cddf54c1ba7aab63f9bf84e43",
+      "bytes": 21008
     },
     "fac/dry_room/1": {
-      "file": "fac_dry_room_1.webp",
+      "file": "fac_dry_room_1_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "d98b8b9df4849320066c79261cf54e0d954206b26d1fdcf2bf9055c8c160bc64",
-      "bytes": 35874
+      "sha256": "9bd0a73fc86945447e8362b718cfa438615247ca141492d4bc46c6339240e04c",
+      "bytes": 20808
     },
     "fac/dry_room/2": {
-      "file": "fac_dry_room_2.webp",
+      "file": "fac_dry_room_2_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "7647ee7dc62697dc6f9ed9b85fb1656f94a6a0e3e03b315dc2c4db8be1ada53d",
-      "bytes": 24730
+      "sha256": "4975f5eaf510e26d0dc783b68b12a6eb7dcb718269e25a630e244eeeb837e759",
+      "bytes": 15898
     },
     "fac/dry_room/3": {
-      "file": "fac_dry_room_3.webp",
+      "file": "fac_dry_room_3_accepted_20261002.webp",
       "w": 192,
       "h": 192,
-      "sha256": "3c763d8526d53ebf54d677fa3864783bbad671a7bca59aca8cecf1f2e3e8b942",
-      "bytes": 26522
+      "sha256": "3f521bca50677cbbb9202cf3ac64d9e0a14eda514a54f6f6b4dcd024738f5d13",
+      "bytes": 15622
     },
     "fac/authored_infirmary/0": {
       "file": "fac_authored_infirmary_0.webp",

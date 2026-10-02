@@ -1,0 +1,414 @@
+{
+  "status": "SCOPED_DRY_RENTAL_QA_PASS",
+  "assets": [
+    {
+      "id": "dry_room",
+      "faces": 596,
+      "edge_length_error": 2.220446049250313e-16,
+      "closed_curved_components": [
+        {
+          "component": "dryer-0-body/",
+          "shared_edges": 144,
+          "closed": true
+        },
+        {
+          "component": "dryer-0-nozzle/",
+          "shared_edges": 112,
+          "closed": true
+        },
+        {
+          "component": "dryer-1-body/",
+          "shared_edges": 144,
+          "closed": true
+        },
+        {
+          "component": "dryer-1-nozzle/",
+          "shared_edges": 112,
+          "closed": true
+        }
+      ],
+      "support_joints": [
+        {
+          "a": "wood-mirror-back-0",
+          "b": "wood-counter",
+          "overlap": [
+            0.71,
+            0.07500000000000001,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "dryer-0-handle",
+          "b": "wood-counter",
+          "overlap": [
+            0.05400000000000005,
+            0.064,
+            0.13000000000000078
+          ]
+        },
+        {
+          "a": "wood-leg-0-0",
+          "b": "wood-counter",
+          "overlap": [
+            0.14600000000000002,
+            0.14,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "wood-leg-0-1",
+          "b": "wood-counter",
+          "overlap": [
+            0.14600000000000002,
+            0.14000000000000007,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "dryer-0-handle",
+          "b": "curved body",
+          "lower_overlap": 0.7100000000000026
+        },
+        {
+          "a": "wood-mirror-back-1",
+          "b": "wood-counter",
+          "overlap": [
+            0.71,
+            0.07500000000000001,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "dryer-1-handle",
+          "b": "wood-counter",
+          "overlap": [
+            0.053999999999999826,
+            0.064,
+            0.13000000000000078
+          ]
+        },
+        {
+          "a": "wood-leg-1-0",
+          "b": "wood-counter",
+          "overlap": [
+            0.1459999999999999,
+            0.14,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "wood-leg-1-1",
+          "b": "wood-counter",
+          "overlap": [
+            0.1459999999999999,
+            0.14000000000000007,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "dryer-1-handle",
+          "b": "curved body",
+          "lower_overlap": 0.7100000000000026
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "opaque_components": 1,
+          "component_sizes": [
+            18084
+          ],
+          "lower_vertical_edges": [
+            {
+              "side": "left",
+              "samples": 16,
+              "x_span_packed": 0
+            },
+            {
+              "side": "right",
+              "samples": 16,
+              "x_span_packed": 0
+            }
+          ],
+          "clipped": false,
+          "main_original_unchanged": true
+        },
+        {
+          "d": 1,
+          "opaque_components": 1,
+          "component_sizes": [
+            18052
+          ],
+          "lower_vertical_edges": [
+            {
+              "side": "left",
+              "samples": 16,
+              "x_span_packed": 0
+            },
+            {
+              "side": "right",
+              "samples": 16,
+              "x_span_packed": 0
+            }
+          ],
+          "clipped": false,
+          "main_original_unchanged": true
+        },
+        {
+          "d": 2,
+          "opaque_components": 1,
+          "component_sizes": [
+            15724
+          ],
+          "lower_vertical_edges": [
+            {
+              "side": "left",
+              "samples": 16,
+              "x_span_packed": 0
+            },
+            {
+              "side": "right",
+              "samples": 16,
+              "x_span_packed": 0
+            }
+          ],
+          "clipped": false,
+          "main_original_unchanged": true
+        },
+        {
+          "d": 3,
+          "opaque_components": 1,
+          "component_sizes": [
+            15728
+          ],
+          "lower_vertical_edges": [
+            {
+              "side": "left",
+              "samples": 16,
+              "x_span_packed": 0
+            },
+            {
+              "side": "right",
+              "samples": 16,
+              "x_span_packed": 0
+            }
+          ],
+          "clipped": false,
+          "main_original_unchanged": true
+        }
+      ]
+    },
+    {
+      "id": "rental_tube",
+      "faces": 342,
+      "edge_length_error": 2.220446049250313e-16,
+      "closed_curved_components": [
+        {
+          "component": "vest-0-",
+          "shared_edges": 138,
+          "closed": true
+        },
+        {
+          "component": "vest-1-",
+          "shared_edges": 138,
+          "closed": true
+        },
+        {
+          "component": "vest-2-",
+          "shared_edges": 138,
+          "closed": true
+        }
+      ],
+      "support_joints": [
+        {
+          "a": "wood-rack-post-0",
+          "b": "wood-main-counter",
+          "overlap": [
+            0.07400000000000007,
+            0.09000000000000002,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "wood-rack-post-0",
+          "b": "wood-rack-beam",
+          "overlap": [
+            0.07400000000000007,
+            0.09000000000000002,
+            0.9500000000000028
+          ]
+        },
+        {
+          "a": "wood-rack-post-1",
+          "b": "wood-main-counter",
+          "overlap": [
+            0.07399999999999984,
+            0.09000000000000002,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "wood-rack-post-1",
+          "b": "wood-rack-beam",
+          "overlap": [
+            0.07399999999999984,
+            0.09000000000000002,
+            0.9500000000000028
+          ]
+        },
+        {
+          "a": "hanger-0-hook",
+          "b": "wood-rack-beam",
+          "overlap": [
+            0.018000000000000016,
+            0.07299999999999995,
+            0.25
+          ]
+        },
+        {
+          "a": "hanger-0-left",
+          "b": "vest-0",
+          "shoulder_end_inside_side_volume": true
+        },
+        {
+          "a": "hanger-0-right",
+          "b": "vest-0",
+          "shoulder_end_inside_side_volume": true
+        },
+        {
+          "a": "hanger-1-hook",
+          "b": "wood-rack-beam",
+          "overlap": [
+            0.017999999999999794,
+            0.07299999999999995,
+            0.25
+          ]
+        },
+        {
+          "a": "hanger-1-left",
+          "b": "vest-1",
+          "shoulder_end_inside_side_volume": true
+        },
+        {
+          "a": "hanger-1-right",
+          "b": "vest-1",
+          "shoulder_end_inside_side_volume": true
+        },
+        {
+          "a": "hanger-2-hook",
+          "b": "wood-rack-beam",
+          "overlap": [
+            0.017999999999999794,
+            0.07299999999999995,
+            0.25
+          ]
+        },
+        {
+          "a": "hanger-2-left",
+          "b": "vest-2",
+          "shoulder_end_inside_side_volume": true
+        },
+        {
+          "a": "hanger-2-right",
+          "b": "vest-2",
+          "shoulder_end_inside_side_volume": true
+        },
+        {
+          "intentional_gap_between_counters_tiles": 0.04500000000000004
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "opaque_components": 1,
+          "component_sizes": [
+            17362
+          ],
+          "lower_vertical_edges": [
+            {
+              "side": "left",
+              "samples": 16,
+              "x_span_packed": 0
+            },
+            {
+              "side": "right",
+              "samples": 16,
+              "x_span_packed": 0
+            }
+          ],
+          "clipped": false,
+          "main_original_unchanged": true
+        },
+        {
+          "d": 1,
+          "opaque_components": 1,
+          "component_sizes": [
+            16854
+          ],
+          "lower_vertical_edges": [
+            {
+              "side": "left",
+              "samples": 16,
+              "x_span_packed": 0
+            },
+            {
+              "side": "right",
+              "samples": 16,
+              "x_span_packed": 0
+            }
+          ],
+          "clipped": false,
+          "main_original_unchanged": true
+        },
+        {
+          "d": 2,
+          "opaque_components": 1,
+          "component_sizes": [
+            15760
+          ],
+          "lower_vertical_edges": [
+            {
+              "side": "left",
+              "samples": 16,
+              "x_span_packed": 0
+            },
+            {
+              "side": "right",
+              "samples": 16,
+              "x_span_packed": 0
+            }
+          ],
+          "clipped": false,
+          "main_original_unchanged": true
+        },
+        {
+          "d": 3,
+          "opaque_components": 1,
+          "component_sizes": [
+            14644
+          ],
+          "lower_vertical_edges": [
+            {
+              "side": "left",
+              "samples": 16,
+              "x_span_packed": 0
+            },
+            {
+              "side": "right",
+              "samples": 16,
+              "x_span_packed": 0
+            }
+          ],
+          "clipped": false,
+          "main_original_unchanged": true
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "rental small counter intentionally separate: one or two projected alpha components allowed depending occlusion",
+    "garment shoulder contacts are bounded volume checks, not exact collision simulation",
+    "pink guides show geometry; saved-pixel tests cover only 16 lower vertical segments",
+    "source art fidelity and rounded appearance remain visual review; no 95-point claim"
+  ]
+}

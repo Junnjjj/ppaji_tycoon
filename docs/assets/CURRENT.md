@@ -1,3 +1,7 @@
+## 2026-10-02 드라이룸·구명조끼 선 수정 및 오락기 승인본 적용
+
+사용자가 수락한 dry_room/rental_tube 최종선수정과 arcade 공통구조를 실제메인에적용. 각4방향12개WebP+12개기존native fallback. 앵커·크기·다른시설불변. HTTP해시/승인PNG파일RGBA12/12, 브라우저실제WebP로드12/12, 관련21테스트통과. [상세 적용기록](handovers/2026-10-02-dry-rental-arcade/README.md). 다음대상 compact_shower(샤워실); 이미승격한코인라커/탈의실은유지. 실내매점은후보유지. 원격push없음.
+
 ## 2026-10-02 벤치·피크닉 테이블 공통 구조 승격
 
 사용자 승인으로 env_bench 및 foodcourt_seat 각4방향 적용. 기존 패킹·앵커·다른 시설 유지. HTTP파일/무손실 RGBA8개 및 계약/렌더 테스트21개 통과. 추가 브라우저 검사: 런타임과 같은 WebP는8/8일치. PNG↔WebP 차이는 반투명RGB에 한정되고 알파/완전불투명RGB는 동일. [상세 적용 기록](handovers/2026-10-02-furniture-template/README.md). 실내매점은 후보 유지.

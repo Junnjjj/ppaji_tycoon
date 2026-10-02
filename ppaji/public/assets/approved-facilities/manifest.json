@@ -8013,28 +8013,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "arcade/native-d0.png",
+          "file": "arcade/accepted-20261002-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "03156923e6a4f5d824a2fc89a491a68975101e347cc73026cc04fda9fc5824c0"
+          "sha256": "58c265ec66ac35fd378a7328f2bb8f15b47d682be42f1ed0435ed28021ebc621"
         },
         "d1": {
-          "file": "arcade/native-d1.png",
+          "file": "arcade/accepted-20261002-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "8b06222ccff7353c36bf26e872236b360d4957c866ceea7b717fb234b0e2c7ec"
+          "sha256": "bfa5d5e56d4a5bb1390540219d0270700380103b82320e163eee685e80a6cac2"
         },
         "d2": {
-          "file": "arcade/native-d2.png",
+          "file": "arcade/accepted-20261002-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "d09f24acec0e064eab1ead8d772fdde32d4acfbfb40c3773ffbb29597b02485b"
+          "sha256": "0c78f97f695ecdea19fee2dc89f011d384ea1751a0c3b0e47cc702d94669c93f"
         },
         "d3": {
-          "file": "arcade/native-d3.png",
+          "file": "arcade/accepted-20261002-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "e55fbc1432fa4daf82bbb39a28b36f4a792b780a1ab389082a024019526961c2"
+          "sha256": "830e911853868cf602b196d26c8b8a911f02c39b8c9934f73cd49b2804ebd9a5"
         }
       },
       "note": "Accepted cutaway art only. Physical access/slots are inactive handover data; existing simulation retained."
@@ -8135,28 +8135,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "rental_tube/native-d0.png",
+          "file": "rental_tube/accepted-20261002-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "e9c7fe220686399e16d0e0a8835dcc2f60ebc9693e5e60433a6de83a8f5520d2"
+          "sha256": "94d47758b7332976a5073ff704097be5f7d4135bfea83e4acea7fbfd98025811"
         },
         "d1": {
-          "file": "rental_tube/native-d1.png",
+          "file": "rental_tube/accepted-20261002-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "44c860ee99ceb03ec93e1c215e5e485dc90049aadab0b9c366ff914e9045edc6"
+          "sha256": "1c405cc4790e2c01c4bcda9240367e5f7244ddb3eac3d82e6489de20d8acfafe"
         },
         "d2": {
-          "file": "rental_tube/native-d2.png",
+          "file": "rental_tube/accepted-20261002-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "bf9f2c23aea59871aca2d8f70114d6043932b03b4f7d3cc3ce11ae2488e5e503"
+          "sha256": "815c09fb12de746090c0f61a1a7034db08c8fb30395a25a3e2328eab76e8770d"
         },
         "d3": {
-          "file": "rental_tube/native-d3.png",
+          "file": "rental_tube/accepted-20261002-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "ec072b74401daedbd6501fe20a423b8eaf012c0f889e2030688e32a3d090b165"
+          "sha256": "22b6f604764fe72e351924bbdab8434475e6db3e51d1c4b4cd8d66fc690ea604"
         }
       },
       "note": "Approved service fixture art. Staff and guest anchors are inactive handover data; existing simulation retained."
@@ -8262,28 +8262,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "dry_room/native-d0.png",
+          "file": "dry_room/accepted-20261002-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "0ff3bb225829502a085bf0a9ff665e06bbdf6387fcd72eb775e5fd494f01832d"
+          "sha256": "a96c1e508b35c06289e22e7b55f072337a7f7310a2038997e96cc027d8119cf7"
         },
         "d1": {
-          "file": "dry_room/native-d1.png",
+          "file": "dry_room/accepted-20261002-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "192dade02fde2a18328232f0f18379acbe6c72cc4a666ca0f52c8a3b7183941e"
+          "sha256": "6f36615355d5e5403521d762f565b97286803d11a04ae4c46ff8ff01e754d408"
         },
         "d2": {
-          "file": "dry_room/native-d2.png",
+          "file": "dry_room/accepted-20261002-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "e949325e4f78cf242997a46d534a6e9cb41089a95c491852ac818ceb628a9c25"
+          "sha256": "c1cc51e5ad8da54c6bb1a8d03f4631c3b20279fedbb2edb081f47ecc66c4ee32"
         },
         "d3": {
-          "file": "dry_room/native-d3.png",
+          "file": "dry_room/accepted-20261002-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "99ed2b633c817a52c8ffd619952f8ee7009baed7e1168e0afb30b549e093e350"
+          "sha256": "8116cf6170583d7b521e2f48a1d7e9398aa83748edc81fd27d4f5fa3fb11f2f2"
         }
       },
       "note": "Approved service fixture art. Staff and guest anchors are inactive handover data; existing simulation retained."

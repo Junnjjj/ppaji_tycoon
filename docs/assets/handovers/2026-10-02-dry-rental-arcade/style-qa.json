@@ -1,0 +1,191 @@
+{
+  "geometry_exact": true,
+  "thresholds_from": "validation-plan.md",
+  "pass_all": true,
+  "frames": [
+    {
+      "id": "dry_room",
+      "d": 0,
+      "roi": [
+        363,
+        258,
+        411,
+        302
+      ],
+      "slope": 0.4859965262700791,
+      "fit_rmse": 0.6683866129350928,
+      "plateau_median": 4.0,
+      "dark_width_median": 3.5976334904025604,
+      "dark_core_luma": 25.5484,
+      "checks": {
+        "slope": true,
+        "residual": true,
+        "plateau": true,
+        "width": true,
+        "core": true,
+        "alpha_within_3px": true
+      }
+    },
+    {
+      "id": "dry_room",
+      "d": 1,
+      "roi": [
+        365,
+        254,
+        413,
+        298
+      ],
+      "slope": -0.4859965262700863,
+      "fit_rmse": 0.6683866129350924,
+      "plateau_median": 4.0,
+      "dark_width_median": 3.5976334904025498,
+      "dark_core_luma": 25.5484,
+      "checks": {
+        "slope": true,
+        "residual": true,
+        "plateau": true,
+        "width": true,
+        "core": true,
+        "alpha_within_3px": true
+      }
+    },
+    {
+      "id": "dry_room",
+      "d": 2,
+      "roi": [
+        363,
+        306,
+        412,
+        350
+      ],
+      "slope": 0.4871428571428579,
+      "fit_rmse": 0.6646359464206467,
+      "plateau_median": 4.0,
+      "dark_width_median": 3.596011336696796,
+      "dark_core_luma": 25.5484,
+      "checks": {
+        "slope": true,
+        "residual": true,
+        "plateau": true,
+        "width": true,
+        "core": true,
+        "alpha_within_3px": true
+      }
+    },
+    {
+      "id": "dry_room",
+      "d": 3,
+      "roi": [
+        348,
+        310,
+        397,
+        354
+      ],
+      "slope": -0.4871428571428567,
+      "fit_rmse": 0.6646359464206513,
+      "plateau_median": 4.0,
+      "dark_width_median": 3.5960113366967974,
+      "dark_core_luma": 25.5484,
+      "checks": {
+        "slope": true,
+        "residual": true,
+        "plateau": true,
+        "width": true,
+        "core": true,
+        "alpha_within_3px": true
+      }
+    },
+    {
+      "id": "rental_tube",
+      "d": 0,
+      "roi": [
+        393,
+        306,
+        453,
+        358
+      ],
+      "slope": 0.5004167824395696,
+      "fit_rmse": 0.5589703947393404,
+      "plateau_median": 4.0,
+      "dark_width_median": 2.682834160628858,
+      "dark_core_luma": 25.5484,
+      "checks": {
+        "slope": true,
+        "residual": true,
+        "plateau": true,
+        "width": true,
+        "core": true,
+        "alpha_within_3px": true
+      }
+    },
+    {
+      "id": "rental_tube",
+      "d": 1,
+      "roi": [
+        354,
+        288,
+        414,
+        338
+      ],
+      "slope": -0.4979160878021613,
+      "fit_rmse": 0.557850835686704,
+      "plateau_median": 4.0,
+      "dark_width_median": 2.6855163900771384,
+      "dark_core_luma": 25.5484,
+      "checks": {
+        "slope": true,
+        "residual": true,
+        "plateau": true,
+        "width": true,
+        "core": true,
+        "alpha_within_3px": true
+      }
+    },
+    {
+      "id": "rental_tube",
+      "d": 2,
+      "roi": [
+        339,
+        306,
+        399,
+        358
+      ],
+      "slope": 0.5004167824395696,
+      "fit_rmse": 0.5589703947393404,
+      "plateau_median": 4.0,
+      "dark_width_median": 2.682834160628858,
+      "dark_core_luma": 25.5484,
+      "checks": {
+        "slope": true,
+        "residual": true,
+        "plateau": true,
+        "width": true,
+        "core": true,
+        "alpha_within_3px": true
+      }
+    },
+    {
+      "id": "rental_tube",
+      "d": 3,
+      "roi": [
+        337,
+        322,
+        397,
+        374
+      ],
+      "slope": -0.5004167824395618,
+      "fit_rmse": 0.55897039473934,
+      "plateau_median": 4.0,
+      "dark_width_median": 2.6828341606288664,
+      "dark_core_luma": 25.5484,
+      "checks": {
+        "slope": true,
+        "residual": true,
+        "plateau": true,
+        "width": true,
+        "core": true,
+        "alpha_within_3px": true
+      }
+    }
+  ]
+}

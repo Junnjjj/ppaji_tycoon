@@ -1,0 +1,74 @@
+[
+  {
+    "id": "dry_room",
+    "d": 0,
+    "file": "fac_dry_room_0_accepted_20261002.webp",
+    "runtimeMatchesServedWebP": true
+  },
+  {
+    "id": "dry_room",
+    "d": 1,
+    "file": "fac_dry_room_1_accepted_20261002.webp",
+    "runtimeMatchesServedWebP": true
+  },
+  {
+    "id": "dry_room",
+    "d": 2,
+    "file": "fac_dry_room_2_accepted_20261002.webp",
+    "runtimeMatchesServedWebP": true
+  },
+  {
+    "id": "dry_room",
+    "d": 3,
+    "file": "fac_dry_room_3_accepted_20261002.webp",
+    "runtimeMatchesServedWebP": true
+  },
+  {
+    "id": "rental_tube",
+    "d": 0,
+    "file": "fac_rental_tube_0_accepted_20261002.webp",
+    "runtimeMatchesServedWebP": true
+  },
+  {
+    "id": "rental_tube",
+    "d": 1,
+    "file": "fac_rental_tube_1_accepted_20261002.webp",
+    "runtimeMatchesServedWebP": true
+  },
+  {
+    "id": "rental_tube",
+    "d": 2,
+    "file": "fac_rental_tube_2_accepted_20261002.webp",
+    "runtimeMatchesServedWebP": true
+  },
+  {
+    "id": "rental_tube",
+    "d": 3,
+    "file": "fac_rental_tube_3_accepted_20261002.webp",
+    "runtimeMatchesServedWebP": true
+  },
+  {
+    "id": "arcade",
+    "d": 0,
+    "file": "fac_arcade_0_accepted_20261002.webp",
+    "runtimeMatchesServedWebP": true
+  },
+  {
+    "id": "arcade",
+    "d": 1,
+    "file": "fac_arcade_1_accepted_20261002.webp",
+    "runtimeMatchesServedWebP": true
+  },
+  {
+    "id": "arcade",
+    "d": 2,
+    "file": "fac_arcade_2_accepted_20261002.webp",
+    "runtimeMatchesServedWebP": true
+  },
+  {
+    "id": "arcade",
+    "d": 3,
+    "file": "fac_arcade_3_accepted_20261002.webp",
+    "runtimeMatchesServedWebP": true
+  }
+]
