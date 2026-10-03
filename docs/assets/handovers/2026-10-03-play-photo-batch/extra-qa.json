@@ -1,0 +1,76 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "playground",
+      "checks": [
+        {
+          "slide_entry_z": 16.0,
+          "slide_exit_z": 2.2,
+          "monotone_samples": 25,
+          "both_rims_follow_same_profile": true,
+          "foot_ground_contact": true
+        }
+      ]
+    },
+    {
+      "id": "bungee_jump",
+      "checks": [
+        {
+          "post": 0,
+          "ground_foot": true,
+          "post_reaches_deck": true
+        },
+        {
+          "post": 1,
+          "ground_foot": true,
+          "post_reaches_deck": true
+        },
+        {
+          "post": 2,
+          "ground_foot": true,
+          "post_reaches_deck": true
+        },
+        {
+          "post": 3,
+          "ground_foot": true,
+          "post_reaches_deck": true
+        },
+        {
+          "hatch_not_covered": true,
+          "ladder_rungs": 24,
+          "bracing_faces": [
+            "right",
+            "back"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "photozone",
+      "checks": [
+        {
+          "ring": "lifering-upper",
+          "closed_torus_equation_error": 4.551914400963142e-15
+        },
+        {
+          "ring": "buoy-handle",
+          "closed_torus_equation_error": 4.135580766728708e-15
+        },
+        {
+          "camera_fixed_opposite_lens_and_display": true
+        },
+        {
+          "d": 0,
+          "isolated_lifering_center_alpha": 0,
+          "scope": "front/back isolated views; side edge-on views excluded from hole visibility claims"
+        },
+        {
+          "d": 2,
+          "isolated_lifering_center_alpha": 0,
+          "scope": "front/back isolated views; side edge-on views excluded from hole visibility claims"
+        }
+      ]
+    }
+  ]
+}

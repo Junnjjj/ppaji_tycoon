@@ -1,0 +1,13 @@
+{
+  "id": "bungee_jump",
+  "groups": [
+    "tower",
+    "mat"
+  ],
+  "aabb_overlap": [
+    1.23,
+    0.2,
+    3.8
+  ],
+  "finding": "The union box of the tall tower includes empty space under the overhanging gantry. Check every solid part pair instead of declaring this union-box overlap a collision."
+}

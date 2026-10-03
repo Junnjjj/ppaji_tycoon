@@ -1,0 +1,218 @@
+[
+  {
+    "id": "playground",
+    "d": 0,
+    "source_bbox": [
+      220,
+      406,
+      460,
+      580
+    ],
+    "candidate_bbox": [
+      210,
+      402,
+      470,
+      584
+    ],
+    "width_ratio": 1.0833333333333333,
+    "height_ratio": 1.0459770114942528
+  },
+  {
+    "id": "playground",
+    "d": 1,
+    "source_bbox": [
+      289,
+      444,
+      487,
+      608
+    ],
+    "candidate_bbox": [
+      292,
+      428,
+      508,
+      614
+    ],
+    "width_ratio": 1.0909090909090908,
+    "height_ratio": 1.1341463414634145
+  },
+  {
+    "id": "playground",
+    "d": 2,
+    "source_bbox": [
+      313,
+      424,
+      543,
+      576
+    ],
+    "candidate_bbox": [
+      298,
+      408,
+      558,
+      572
+    ],
+    "width_ratio": 1.1304347826086956,
+    "height_ratio": 1.0789473684210527
+  },
+  {
+    "id": "playground",
+    "d": 3,
+    "source_bbox": [
+      271,
+      384,
+      489,
+      559
+    ],
+    "candidate_bbox": [
+      260,
+      382,
+      476,
+      566
+    ],
+    "width_ratio": 0.9908256880733946,
+    "height_ratio": 1.0514285714285714
+  },
+  {
+    "id": "bungee_jump",
+    "d": 0,
+    "source_bbox": [
+      370,
+      152,
+      666,
+      816
+    ],
+    "candidate_bbox": [
+      356,
+      142,
+      682,
+      816
+    ],
+    "width_ratio": 1.1013513513513513,
+    "height_ratio": 1.0150602409638554
+  },
+  {
+    "id": "bungee_jump",
+    "d": 1,
+    "source_bbox": [
+      349,
+      152,
+      663,
+      816
+    ],
+    "candidate_bbox": [
+      350,
+      138,
+      648,
+      826
+    ],
+    "width_ratio": 0.9490445859872612,
+    "height_ratio": 1.036144578313253
+  },
+  {
+    "id": "bungee_jump",
+    "d": 2,
+    "source_bbox": [
+      375,
+      128,
+      638,
+      828
+    ],
+    "candidate_bbox": [
+      342,
+      150,
+      668,
+      830
+    ],
+    "width_ratio": 1.2395437262357414,
+    "height_ratio": 0.9714285714285714
+  },
+  {
+    "id": "bungee_jump",
+    "d": 3,
+    "source_bbox": [
+      361,
+      128,
+      675,
+      828
+    ],
+    "candidate_bbox": [
+      376,
+      154,
+      674,
+      832
+    ],
+    "width_ratio": 0.9490445859872612,
+    "height_ratio": 0.9685714285714285
+  },
+  {
+    "id": "photozone",
+    "d": 0,
+    "source_bbox": [
+      321,
+      356,
+      492,
+      556
+    ],
+    "candidate_bbox": [
+      322,
+      354,
+      488,
+      556
+    ],
+    "width_ratio": 0.9707602339181286,
+    "height_ratio": 1.01
+  },
+  {
+    "id": "photozone",
+    "d": 1,
+    "source_bbox": [
+      296,
+      367,
+      448,
+      556
+    ],
+    "candidate_bbox": [
+      296,
+      346,
+      452,
+      557
+    ],
+    "width_ratio": 1.0263157894736843,
+    "height_ratio": 1.1164021164021165
+  },
+  {
+    "id": "photozone",
+    "d": 2,
+    "source_bbox": [
+      284,
+      381,
+      439,
+      569
+    ],
+    "candidate_bbox": [
+      280,
+      363,
+      446,
+      570
+    ],
+    "width_ratio": 1.070967741935484,
+    "height_ratio": 1.101063829787234
+  },
+  {
+    "id": "photozone",
+    "d": 3,
+    "source_bbox": [
+      319,
+      394,
+      482,
+      581
+    ],
+    "candidate_bbox": [
+      315,
+      370,
+      472,
+      578
+    ],
+    "width_ratio": 0.9631901840490797,
+    "height_ratio": 1.1122994652406417
+  }
+]

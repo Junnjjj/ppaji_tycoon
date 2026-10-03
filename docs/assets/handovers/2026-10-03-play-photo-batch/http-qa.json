@@ -1,0 +1,86 @@
+[
+  {
+    "id": "playground",
+    "d": 0,
+    "sha256": "b7d98e4d936f7aa91828bc17aecb70ffaad8dfe2aa9ef15f2a4c0c73fbc9548d",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "playground",
+    "d": 1,
+    "sha256": "f0e8b0cb2e0d59747061c4b2af98a7d7846443f5dbff1cedd8ed20bf58692011",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "playground",
+    "d": 2,
+    "sha256": "2c3ac9a8bb3a2549f27b2b04bec99683c602403c175c237b9c78149db3afe451",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "playground",
+    "d": 3,
+    "sha256": "c664685a0f56efe2df35e09a9e7395745c875e3f52c1d46f8972a213ec26eccd",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "bungee_jump",
+    "d": 0,
+    "sha256": "aa6b3fff15e6dc8c1e5baa0df6bd0d7490944ec0fc91ea331f0ccf68b48bb16a",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "bungee_jump",
+    "d": 1,
+    "sha256": "097625b7cebba63c5c1a213be7053e55008680aad402ddcb7984231d27da1b30",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "bungee_jump",
+    "d": 2,
+    "sha256": "d9568d763f249c1b1aa480a5a61a8942fd6f0d8834aa8a913d14899167560cef",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "bungee_jump",
+    "d": 3,
+    "sha256": "331e3b1c3f1eb42af7b6afeff3769a93d504df2f2ab2a7759b30da9a7f514fcf",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "photozone",
+    "d": 0,
+    "sha256": "e9e636a6b0e16a181d2f49886244d19a9a6ceb3d5fcd1c8b0b4a7d22ca5bbea4",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "photozone",
+    "d": 1,
+    "sha256": "711a21931f12bf3b2a3dcc776c7563078f0ab6ce6d6d2fedb108035cdc2f062c",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "photozone",
+    "d": 2,
+    "sha256": "fbc1320f9dc53d31a9893158569330b6d135f039249b4c35122703cbd881ffd5",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "photozone",
+    "d": 3,
+    "sha256": "d0524019c419de54e86ba63c0a1d2b522c07bb4a7295d170e7d088019c92f475",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

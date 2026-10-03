@@ -1,0 +1,4756 @@
+{
+  "status": "FAIL",
+  "assets": [
+    {
+      "id": "playground",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "wood-tower-post-0",
+          "b": "wood-platform",
+          "overlap": [
+            0.05500000000000005,
+            0.05499999999999994,
+            1.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-tower-post-1",
+          "b": "wood-platform",
+          "overlap": [
+            0.05499999999999994,
+            0.05499999999999994,
+            1.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-tower-post-2",
+          "b": "wood-platform",
+          "overlap": [
+            0.05500000000000005,
+            0.05500000000000016,
+            1.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-tower-post-3",
+          "b": "wood-platform",
+          "overlap": [
+            0.05499999999999994,
+            0.05500000000000016,
+            1.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-baluster-0-0",
+          "b": "wood-platform",
+          "overlap": [
+            0.04400000000000004,
+            0.02499999999999991,
+            0.05000000000000071
+          ]
+        },
+        {
+          "a": "wood-baluster-0-0",
+          "b": "wood-rail-0",
+          "overlap": [
+            0.04400000000000004,
+            0.04999999999999982,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "wood-baluster-0-1",
+          "b": "wood-platform",
+          "overlap": [
+            0.04400000000000004,
+            0.02499999999999991,
+            0.05000000000000071
+          ]
+        },
+        {
+          "a": "wood-baluster-0-1",
+          "b": "wood-rail-0",
+          "overlap": [
+            0.04400000000000004,
+            0.04999999999999982,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "wood-baluster-0-2",
+          "b": "wood-platform",
+          "overlap": [
+            0.04400000000000004,
+            0.02499999999999991,
+            0.05000000000000071
+          ]
+        },
+        {
+          "a": "wood-baluster-0-2",
+          "b": "wood-rail-0",
+          "overlap": [
+            0.04400000000000004,
+            0.04999999999999982,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "wood-rail-0",
+          "b": "wood-tower-post-0",
+          "overlap": [
+            0.05500000000000005,
+            0.06999999999999984,
+            1.0
+          ]
+        },
+        {
+          "a": "wood-rail-0",
+          "b": "wood-tower-post-1",
+          "overlap": [
+            0.05499999999999994,
+            0.06999999999999984,
+            1.0
+          ]
+        },
+        {
+          "a": "wood-baluster-1-0",
+          "b": "wood-platform",
+          "overlap": [
+            0.04400000000000004,
+            0.02499999999999991,
+            0.05000000000000071
+          ]
+        },
+        {
+          "a": "wood-baluster-1-0",
+          "b": "wood-rail-1",
+          "overlap": [
+            0.04400000000000004,
+            0.04999999999999982,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "wood-baluster-1-1",
+          "b": "wood-platform",
+          "overlap": [
+            0.04400000000000004,
+            0.02499999999999991,
+            0.05000000000000071
+          ]
+        },
+        {
+          "a": "wood-baluster-1-1",
+          "b": "wood-rail-1",
+          "overlap": [
+            0.04400000000000004,
+            0.04999999999999982,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "wood-baluster-1-2",
+          "b": "wood-platform",
+          "overlap": [
+            0.04400000000000004,
+            0.02499999999999991,
+            0.05000000000000071
+          ]
+        },
+        {
+          "a": "wood-baluster-1-2",
+          "b": "wood-rail-1",
+          "overlap": [
+            0.04400000000000004,
+            0.04999999999999982,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "wood-rail-1",
+          "b": "wood-tower-post-2",
+          "overlap": [
+            0.05500000000000005,
+            0.07000000000000028,
+            1.0
+          ]
+        },
+        {
+          "a": "wood-rail-1",
+          "b": "wood-tower-post-3",
+          "overlap": [
+            0.05499999999999994,
+            0.07000000000000028,
+            1.0
+          ]
+        },
+        {
+          "a": "wood-stair-0",
+          "b": "wood-stair-1",
+          "overlap": [
+            0.01200000000000001,
+            0.4700000000000002,
+            4.0
+          ]
+        },
+        {
+          "a": "wood-stair-1",
+          "b": "wood-stair-2",
+          "overlap": [
+            0.01200000000000001,
+            0.4700000000000002,
+            8.0
+          ]
+        },
+        {
+          "a": "wood-stair-2",
+          "b": "wood-stair-3",
+          "overlap": [
+            0.01200000000000001,
+            0.4700000000000002,
+            12.0
+          ]
+        },
+        {
+          "a": "wood-stair-3",
+          "b": "wood-platform",
+          "overlap": [
+            0.0119999999999999,
+            0.4700000000000002,
+            1.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-stairrail-0",
+          "b": "wood-stairpost-0",
+          "overlap": [
+            0.05805884775334444,
+            0.04499999999999993,
+            1.08632217359016
+          ]
+        },
+        {
+          "a": "wood-stairrail-0",
+          "b": "wood-tower-post-0",
+          "overlap": [
+            0.06805884775334448,
+            0.012499999999999956,
+            14.172644347180322
+          ]
+        },
+        {
+          "a": "wood-stairrail-1",
+          "b": "wood-stairpost-1",
+          "overlap": [
+            0.05805884775334444,
+            0.04499999999999993,
+            1.08632217359016
+          ]
+        },
+        {
+          "a": "wood-stairrail-1",
+          "b": "wood-tower-post-2",
+          "overlap": [
+            0.06805884775334448,
+            0.012500000000000178,
+            14.172644347180322
+          ]
+        },
+        {
+          "a": "slide",
+          "b": "wood-platform",
+          "overlap": [
+            0.050000000000000044,
+            0.5799999999999998,
+            1.1999999999999993
+          ]
+        },
+        {
+          "a": "slide-rim-0",
+          "b": "slide",
+          "overlap": [
+            1.2999999999999998,
+            0.030000000000000027,
+            13.999999999999998
+          ]
+        },
+        {
+          "a": "slide-rim-1",
+          "b": "slide",
+          "overlap": [
+            1.2999999999999998,
+            0.029999999999999805,
+            14.0
+          ]
+        },
+        {
+          "a": "slide-foot",
+          "b": "slide",
+          "overlap": [
+            0.1200000000000001,
+            0.3999999999999999,
+            0.8499999999999999
+          ]
+        },
+        {
+          "a": "wood-climber-a-0",
+          "b": "wood-climber-b-0",
+          "overlap": [
+            0.05500000000000005,
+            0.03805755546197931,
+            8.156943192124384
+          ]
+        },
+        {
+          "a": "wood-climber-a-1",
+          "b": "wood-climber-b-1",
+          "overlap": [
+            0.05499999999999994,
+            0.03805755546197931,
+            8.156943192124384
+          ]
+        },
+        {
+          "a": "climber-rung-0",
+          "b": "wood-climber-a-0",
+          "overlap": [
+            0.027500000000000024,
+            0.040000000000000036,
+            1.2800000000000002
+          ]
+        },
+        {
+          "a": "climber-rung-0",
+          "b": "wood-climber-a-1",
+          "overlap": [
+            0.02749999999999997,
+            0.040000000000000036,
+            1.2800000000000002
+          ]
+        },
+        {
+          "a": "climber-rung-1",
+          "b": "wood-climber-a-0",
+          "overlap": [
+            0.027500000000000024,
+            0.040000000000000036,
+            1.2799999999999998
+          ]
+        },
+        {
+          "a": "climber-rung-1",
+          "b": "wood-climber-a-1",
+          "overlap": [
+            0.02749999999999997,
+            0.040000000000000036,
+            1.2799999999999998
+          ]
+        },
+        {
+          "a": "climber-rung-2",
+          "b": "wood-climber-a-0",
+          "overlap": [
+            0.027500000000000024,
+            0.040000000000000036,
+            1.2799999999999994
+          ]
+        },
+        {
+          "a": "climber-rung-2",
+          "b": "wood-climber-a-1",
+          "overlap": [
+            0.02749999999999997,
+            0.040000000000000036,
+            1.2799999999999994
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-platform",
+          "edges": 12
+        },
+        {
+          "name": "wood-tower-post-0",
+          "edges": 72
+        },
+        {
+          "name": "wood-tower-post-1",
+          "edges": 72
+        },
+        {
+          "name": "wood-tower-post-2",
+          "edges": 72
+        },
+        {
+          "name": "wood-tower-post-3",
+          "edges": 72
+        },
+        {
+          "name": "wood-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-0-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-0-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-0-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-1-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-1-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-1-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-stair-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-stair-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-stair-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-stair-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-stairpost-0",
+          "edges": 72
+        },
+        {
+          "name": "wood-stairrail-0",
+          "edges": 60
+        },
+        {
+          "name": "wood-stairpost-1",
+          "edges": 72
+        },
+        {
+          "name": "wood-stairrail-1",
+          "edges": 60
+        },
+        {
+          "name": "slide",
+          "edges": 496
+        },
+        {
+          "name": "slide-rim-0",
+          "edges": 196
+        },
+        {
+          "name": "slide-rim-1",
+          "edges": 196
+        },
+        {
+          "name": "slide-foot",
+          "edges": 12
+        },
+        {
+          "name": "wood-climber-a-0",
+          "edges": 60
+        },
+        {
+          "name": "wood-climber-b-0",
+          "edges": 60
+        },
+        {
+          "name": "wood-climber-foot-0-0",
+          "edges": 72
+        },
+        {
+          "name": "wood-climber-foot-0-1",
+          "edges": 72
+        },
+        {
+          "name": "wood-climber-a-1",
+          "edges": 60
+        },
+        {
+          "name": "wood-climber-b-1",
+          "edges": 60
+        },
+        {
+          "name": "wood-climber-foot-1-0",
+          "edges": 72
+        },
+        {
+          "name": "wood-climber-foot-1-1",
+          "edges": 72
+        },
+        {
+          "name": "climber-rung-0",
+          "edges": 60
+        },
+        {
+          "name": "climber-rung-1",
+          "edges": 60
+        },
+        {
+          "name": "climber-rung-2",
+          "edges": 60
+        }
+      ],
+      "rotation_edge_error": 4.440892098500626e-16,
+      "cutaway": [],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            17768,
+            1904
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "platform",
+              "mode": "top",
+              "samples": 24,
+              "slope": -0.5026086956521734,
+              "expected_slope": -0.4999999999999993,
+              "rms": 0.5587252572091919,
+              "outline_adjusted_residual": 0.8093908156888574,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "platform",
+              "mode": "top",
+              "samples": 37,
+              "slope": 0.5021337126600287,
+              "expected_slope": 0.5000000000000004,
+              "rms": 0.5524297043912436,
+              "outline_adjusted_residual": 0.5683358242726682,
+              "visible_fraction": 0.3783783783783784,
+              "combined": {
+                "samples": 14,
+                "slope": 0.4852771166269992,
+                "rms": 0.5395694416816642,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            15024,
+            1928
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "platform",
+              "mode": "top",
+              "samples": 37,
+              "slope": -0.502133712660025,
+              "expected_slope": -0.5000000000000004,
+              "rms": 0.5524297043912586,
+              "outline_adjusted_residual": 0.5818493377861816,
+              "visible_fraction": 0.3783783783783784,
+              "combined": {
+                "samples": 14,
+                "slope": -0.4852771166269933,
+                "rms": 0.5395694416816684,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "platform",
+              "mode": "top",
+              "samples": 24,
+              "slope": 0.5026086956521708,
+              "expected_slope": 0.5000000000000008,
+              "rms": 0.5587252572091892,
+              "outline_adjusted_residual": 0.6796954078444344,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            16980
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "platform",
+              "mode": "top",
+              "samples": 25,
+              "slope": -0.49538461538460643,
+              "expected_slope": -0.5,
+              "rms": 0.5661204003498768,
+              "outline_adjusted_residual": 0.6581319589031273,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "platform",
+              "mode": "top",
+              "samples": 37,
+              "slope": 0.49786628733996774,
+              "expected_slope": 0.5,
+              "rms": 0.5642046275176704,
+              "outline_adjusted_residual": 0.8296610859591277,
+              "visible_fraction": 0.32432432432432434,
+              "combined": {
+                "samples": 12,
+                "slope": 0.5163853028798422,
+                "rms": 0.5384888193270253,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            17816
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "platform",
+              "mode": "top",
+              "samples": 37,
+              "slope": -0.4978662873399694,
+              "expected_slope": -0.499999999999999,
+              "rms": 0.5642046275176698,
+              "outline_adjusted_residual": 0.8296610859591553,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "platform",
+              "mode": "top",
+              "samples": 25,
+              "slope": 0.5046153846153825,
+              "expected_slope": 0.5,
+              "rms": 0.548900999900993,
+              "outline_adjusted_residual": 0.8193908156888574,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "tower",
+          "d": 0,
+          "connected": true,
+          "pixels": 17768
+        },
+        {
+          "name": "climber",
+          "d": 0,
+          "connected": true,
+          "pixels": 1904
+        },
+        {
+          "name": "platform",
+          "d": 0,
+          "connected": true,
+          "pixels": 3256
+        },
+        {
+          "name": "tower",
+          "d": 1,
+          "connected": true,
+          "pixels": 15024
+        },
+        {
+          "name": "climber",
+          "d": 1,
+          "connected": true,
+          "pixels": 1928
+        },
+        {
+          "name": "platform",
+          "d": 1,
+          "connected": true,
+          "pixels": 3256
+        },
+        {
+          "name": "tower",
+          "d": 2,
+          "connected": true,
+          "pixels": 15164
+        },
+        {
+          "name": "climber",
+          "d": 2,
+          "connected": true,
+          "pixels": 2364
+        },
+        {
+          "name": "platform",
+          "d": 2,
+          "connected": true,
+          "pixels": 3252
+        },
+        {
+          "name": "tower",
+          "d": 3,
+          "connected": true,
+          "pixels": 17712
+        },
+        {
+          "name": "climber",
+          "d": 3,
+          "connected": true,
+          "pixels": 2364
+        },
+        {
+          "name": "platform",
+          "d": 3,
+          "connected": true,
+          "pixels": 3252
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "tower",
+          "b": "climber",
+          "solid_part_pair_checks": 275,
+          "minimum_separating_axis_gap": 0.29499999999999993,
+          "method": "separate solid AABBs rather than a concave group union box"
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_playground_0.webp",
+          "sha256": "5682d477402733ce4ad428c20de997ef823dd9f090049b3ee29f7f4934302619"
+        },
+        {
+          "d": 1,
+          "file": "fac_playground_1.webp",
+          "sha256": "b66a0cb750afcc9ad54ae70f01543adc9dabfecab4625fb1c763cbf6bdf47383"
+        },
+        {
+          "d": 2,
+          "file": "fac_playground_2.webp",
+          "sha256": "0148420a1e4f36ebbdfbc02e66a649b87d94d241c4d84e5d4d561b0cccd9bd79"
+        },
+        {
+          "d": 3,
+          "file": "fac_playground_3.fix-89c522dad6a6.webp",
+          "sha256": "89c522dad6a62a5750a1c2e76b2955b020c7ba8b278b36cda0f751526ac7d639"
+        }
+      ],
+      "limits": [
+        "Original small slide, rounded golden wood and teal palette are preserved as authored forms.",
+        "The source changes stair/mini-frame shapes between facings; one common four-step access and three-rung mini-frame replace those differences.",
+        "Slide is a closed piecewise curved trough with two fixed rims, not a stretched source bitmap.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    },
+    {
+      "id": "bungee_jump",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "wood-tower-0",
+          "b": "tower-foot-0",
+          "overlap": [
+            0.18999999999999995,
+            0.18999999999999995,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-collar-0-0",
+          "b": "wood-tower-0",
+          "overlap": [
+            0.18999999999999995,
+            0.18999999999999995,
+            2.3000000000000003
+          ]
+        },
+        {
+          "a": "wood-collar-0-1",
+          "b": "wood-tower-0",
+          "overlap": [
+            0.18999999999999995,
+            0.18999999999999995,
+            2.5
+          ]
+        },
+        {
+          "a": "wood-tower-1",
+          "b": "tower-foot-1",
+          "overlap": [
+            0.1900000000000004,
+            0.18999999999999995,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-collar-1-0",
+          "b": "wood-tower-1",
+          "overlap": [
+            0.1900000000000004,
+            0.18999999999999995,
+            2.3000000000000003
+          ]
+        },
+        {
+          "a": "wood-collar-1-1",
+          "b": "wood-tower-1",
+          "overlap": [
+            0.1900000000000004,
+            0.18999999999999995,
+            2.5
+          ]
+        },
+        {
+          "a": "wood-tower-2",
+          "b": "tower-foot-2",
+          "overlap": [
+            0.18999999999999995,
+            0.18999999999999995,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-collar-2-0",
+          "b": "wood-tower-2",
+          "overlap": [
+            0.18999999999999995,
+            0.18999999999999995,
+            2.3000000000000003
+          ]
+        },
+        {
+          "a": "wood-collar-2-1",
+          "b": "wood-tower-2",
+          "overlap": [
+            0.18999999999999995,
+            0.18999999999999995,
+            2.5
+          ]
+        },
+        {
+          "a": "wood-tower-3",
+          "b": "tower-foot-3",
+          "overlap": [
+            0.1900000000000004,
+            0.18999999999999995,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-collar-3-0",
+          "b": "wood-tower-3",
+          "overlap": [
+            0.1900000000000004,
+            0.18999999999999995,
+            2.3000000000000003
+          ]
+        },
+        {
+          "a": "wood-collar-3-1",
+          "b": "wood-tower-3",
+          "overlap": [
+            0.1900000000000004,
+            0.18999999999999995,
+            2.5
+          ]
+        },
+        {
+          "a": "brace-right-0-0",
+          "b": "wood-tower-1",
+          "overlap": [
+            0.05750000000000011,
+            0.11769616036035124,
+            54.629462754082226
+          ]
+        },
+        {
+          "a": "brace-right-0-0",
+          "b": "wood-tower-3",
+          "overlap": [
+            0.05750000000000011,
+            0.11769616036035124,
+            54.629462754082226
+          ]
+        },
+        {
+          "a": "brace-right-0-1",
+          "b": "wood-tower-1",
+          "overlap": [
+            0.05750000000000011,
+            0.11769616036035124,
+            54.629462754082226
+          ]
+        },
+        {
+          "a": "brace-right-0-1",
+          "b": "wood-tower-3",
+          "overlap": [
+            0.05750000000000011,
+            0.11769616036035124,
+            54.629462754082226
+          ]
+        },
+        {
+          "a": "brace-plate-right-0",
+          "b": "brace-right-0-0",
+          "overlap": [
+            0.05750000000000011,
+            0.1299999999999999,
+            3.599999999999998
+          ]
+        },
+        {
+          "a": "brace-plate-right-0",
+          "b": "brace-right-0-1",
+          "overlap": [
+            0.05750000000000011,
+            0.1299999999999999,
+            3.599999999999998
+          ]
+        },
+        {
+          "a": "brace-right-1-0",
+          "b": "wood-tower-1",
+          "overlap": [
+            0.05750000000000011,
+            0.11727849544417779,
+            52.163024828834885
+          ]
+        },
+        {
+          "a": "brace-right-1-0",
+          "b": "wood-tower-3",
+          "overlap": [
+            0.05750000000000011,
+            0.11727849544417768,
+            52.163024828834885
+          ]
+        },
+        {
+          "a": "brace-right-1-1",
+          "b": "wood-tower-1",
+          "overlap": [
+            0.05750000000000011,
+            0.11727849544417779,
+            52.163024828834885
+          ]
+        },
+        {
+          "a": "brace-right-1-1",
+          "b": "wood-tower-3",
+          "overlap": [
+            0.05750000000000011,
+            0.11727849544417768,
+            52.163024828834885
+          ]
+        },
+        {
+          "a": "brace-plate-right-1",
+          "b": "brace-right-1-0",
+          "overlap": [
+            0.05750000000000011,
+            0.1299999999999999,
+            3.5999999999999943
+          ]
+        },
+        {
+          "a": "brace-plate-right-1",
+          "b": "brace-right-1-1",
+          "overlap": [
+            0.05750000000000011,
+            0.1299999999999999,
+            3.5999999999999943
+          ]
+        },
+        {
+          "a": "brace-back-0-0",
+          "b": "wood-tower-0",
+          "overlap": [
+            0.11639951457228292,
+            0.05750000000000011,
+            54.728772126468286
+          ]
+        },
+        {
+          "a": "brace-back-0-0",
+          "b": "wood-tower-1",
+          "overlap": [
+            0.11639951457228292,
+            0.05750000000000011,
+            54.728772126468286
+          ]
+        },
+        {
+          "a": "brace-back-0-1",
+          "b": "wood-tower-0",
+          "overlap": [
+            0.11639951457228292,
+            0.05750000000000011,
+            54.728772126468286
+          ]
+        },
+        {
+          "a": "brace-back-0-1",
+          "b": "wood-tower-1",
+          "overlap": [
+            0.11639951457228292,
+            0.05750000000000011,
+            54.728772126468286
+          ]
+        },
+        {
+          "a": "brace-plate-back-0",
+          "b": "brace-back-0-0",
+          "overlap": [
+            0.1299999999999999,
+            0.05750000000000011,
+            3.599999999999998
+          ]
+        },
+        {
+          "a": "brace-plate-back-0",
+          "b": "brace-back-0-1",
+          "overlap": [
+            0.1299999999999999,
+            0.05750000000000011,
+            3.599999999999998
+          ]
+        },
+        {
+          "a": "brace-back-1-0",
+          "b": "wood-tower-0",
+          "overlap": [
+            0.11593574978991805,
+            0.05750000000000011,
+            52.26107104616918
+          ]
+        },
+        {
+          "a": "brace-back-1-0",
+          "b": "wood-tower-1",
+          "overlap": [
+            0.1159357497899185,
+            0.05750000000000011,
+            52.26107104616918
+          ]
+        },
+        {
+          "a": "brace-back-1-1",
+          "b": "wood-tower-0",
+          "overlap": [
+            0.11593574978991805,
+            0.05750000000000011,
+            52.26107104616918
+          ]
+        },
+        {
+          "a": "brace-back-1-1",
+          "b": "wood-tower-1",
+          "overlap": [
+            0.1159357497899185,
+            0.05750000000000011,
+            52.26107104616918
+          ]
+        },
+        {
+          "a": "brace-plate-back-1",
+          "b": "brace-back-1-0",
+          "overlap": [
+            0.1299999999999999,
+            0.05750000000000011,
+            3.5999999999999943
+          ]
+        },
+        {
+          "a": "brace-plate-back-1",
+          "b": "brace-back-1-1",
+          "overlap": [
+            0.1299999999999999,
+            0.05750000000000011,
+            3.5999999999999943
+          ]
+        },
+        {
+          "a": "wood-deck-left",
+          "b": "wood-tower-0",
+          "overlap": [
+            0.18999999999999995,
+            0.18999999999999995,
+            2.5
+          ]
+        },
+        {
+          "a": "wood-deck-left",
+          "b": "wood-tower-2",
+          "overlap": [
+            0.18999999999999995,
+            0.18999999999999995,
+            2.5
+          ]
+        },
+        {
+          "a": "wood-deck-right",
+          "b": "wood-tower-1",
+          "overlap": [
+            0.1900000000000004,
+            0.18999999999999995,
+            2.5
+          ]
+        },
+        {
+          "a": "wood-deck-right",
+          "b": "wood-tower-3",
+          "overlap": [
+            0.1900000000000004,
+            0.18999999999999995,
+            2.5
+          ]
+        },
+        {
+          "a": "wood-jump-platform",
+          "b": "wood-deck-left",
+          "overlap": [
+            0.33999999999999986,
+            0.029999999999999805,
+            2.5
+          ]
+        },
+        {
+          "a": "wood-jump-platform",
+          "b": "wood-deck-front",
+          "overlap": [
+            0.5,
+            0.029999999999999805,
+            2.5
+          ]
+        },
+        {
+          "a": "ladder-rail-0",
+          "b": "wood-deck-left",
+          "overlap": [
+            0.02499999999999991,
+            0.050000000000000044,
+            2.5
+          ]
+        },
+        {
+          "a": "ladder-rail-1",
+          "b": "wood-deck-right",
+          "overlap": [
+            0.02499999999999991,
+            0.050000000000000044,
+            2.5
+          ]
+        },
+        {
+          "a": "ladder-rung-0",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8800000000000003
+          ]
+        },
+        {
+          "a": "ladder-rung-0",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8800000000000003
+          ]
+        },
+        {
+          "a": "ladder-rung-1",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.879999999999999
+          ]
+        },
+        {
+          "a": "ladder-rung-1",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.879999999999999
+          ]
+        },
+        {
+          "a": "ladder-rung-2",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.879999999999999
+          ]
+        },
+        {
+          "a": "ladder-rung-2",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.879999999999999
+          ]
+        },
+        {
+          "a": "ladder-rung-3",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8800000000000026
+          ]
+        },
+        {
+          "a": "ladder-rung-3",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8800000000000026
+          ]
+        },
+        {
+          "a": "ladder-rung-4",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8800000000000026
+          ]
+        },
+        {
+          "a": "ladder-rung-4",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8800000000000026
+          ]
+        },
+        {
+          "a": "ladder-rung-5",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8800000000000026
+          ]
+        },
+        {
+          "a": "ladder-rung-5",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8800000000000026
+          ]
+        },
+        {
+          "a": "ladder-rung-6",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8800000000000026
+          ]
+        },
+        {
+          "a": "ladder-rung-6",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8800000000000026
+          ]
+        },
+        {
+          "a": "ladder-rung-7",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-7",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-8",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-8",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-9",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-9",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-10",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-10",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-11",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-11",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-12",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-12",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-13",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-13",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-14",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-14",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-15",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-15",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-16",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-16",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-17",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-17",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-18",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-18",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-19",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-19",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-20",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-20",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-21",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-21",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-22",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-22",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-23",
+          "b": "ladder-rail-0",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "ladder-rung-23",
+          "b": "ladder-rail-1",
+          "overlap": [
+            0.02499999999999991,
+            0.02750000000000008,
+            0.8799999999999955
+          ]
+        },
+        {
+          "a": "wood-upper-post-0",
+          "b": "wood-deck-left",
+          "overlap": [
+            0.11399999999999988,
+            0.1140000000000001,
+            0.20000000000000284
+          ]
+        },
+        {
+          "a": "wood-upper-post-1",
+          "b": "wood-deck-right",
+          "overlap": [
+            0.11399999999999988,
+            0.1140000000000001,
+            0.20000000000000284
+          ]
+        },
+        {
+          "a": "wood-upper-post-2",
+          "b": "wood-deck-left",
+          "overlap": [
+            0.11399999999999988,
+            0.11399999999999988,
+            0.20000000000000284
+          ]
+        },
+        {
+          "a": "wood-upper-post-3",
+          "b": "wood-deck-right",
+          "overlap": [
+            0.11399999999999988,
+            0.11399999999999988,
+            0.20000000000000284
+          ]
+        },
+        {
+          "a": "guard-back-0",
+          "b": "wood-upper-post-0",
+          "overlap": [
+            0.05699999999999994,
+            0.05999999999999994,
+            1.2000000000000028
+          ]
+        },
+        {
+          "a": "guard-back-0",
+          "b": "wood-upper-post-1",
+          "overlap": [
+            0.05699999999999994,
+            0.05999999999999994,
+            1.2000000000000028
+          ]
+        },
+        {
+          "a": "guard-back-1",
+          "b": "wood-upper-post-0",
+          "overlap": [
+            0.05699999999999994,
+            0.05999999999999994,
+            1.2000000000000028
+          ]
+        },
+        {
+          "a": "guard-back-1",
+          "b": "wood-upper-post-1",
+          "overlap": [
+            0.05699999999999994,
+            0.05999999999999994,
+            1.2000000000000028
+          ]
+        },
+        {
+          "a": "guard-right-0",
+          "b": "wood-upper-post-1",
+          "overlap": [
+            0.06000000000000005,
+            0.05700000000000005,
+            1.2000000000000028
+          ]
+        },
+        {
+          "a": "guard-right-0",
+          "b": "wood-upper-post-3",
+          "overlap": [
+            0.06000000000000005,
+            0.05699999999999994,
+            1.2000000000000028
+          ]
+        },
+        {
+          "a": "guard-right-1",
+          "b": "wood-upper-post-1",
+          "overlap": [
+            0.06000000000000005,
+            0.05700000000000005,
+            1.2000000000000028
+          ]
+        },
+        {
+          "a": "guard-right-1",
+          "b": "wood-upper-post-3",
+          "overlap": [
+            0.06000000000000005,
+            0.05699999999999994,
+            1.2000000000000028
+          ]
+        },
+        {
+          "a": "guard-front-0",
+          "b": "wood-upper-post-3",
+          "overlap": [
+            0.05699999999999994,
+            0.06000000000000005,
+            1.2000000000000028
+          ]
+        },
+        {
+          "a": "guard-front-1",
+          "b": "wood-upper-post-3",
+          "overlap": [
+            0.05699999999999994,
+            0.06000000000000005,
+            1.2000000000000028
+          ]
+        },
+        {
+          "a": "guard-left-0",
+          "b": "wood-upper-post-0",
+          "overlap": [
+            0.06000000000000005,
+            0.05700000000000005,
+            1.2000000000000028
+          ]
+        },
+        {
+          "a": "guard-left-0",
+          "b": "wood-upper-post-2",
+          "overlap": [
+            0.06000000000000005,
+            0.05699999999999994,
+            1.2000000000000028
+          ]
+        },
+        {
+          "a": "guard-left-1",
+          "b": "wood-upper-post-0",
+          "overlap": [
+            0.06000000000000005,
+            0.05700000000000005,
+            1.2000000000000028
+          ]
+        },
+        {
+          "a": "guard-left-1",
+          "b": "wood-upper-post-2",
+          "overlap": [
+            0.06000000000000005,
+            0.05699999999999994,
+            1.2000000000000028
+          ]
+        },
+        {
+          "a": "gantry-left",
+          "b": "wood-upper-post-0",
+          "overlap": [
+            0.11399999999999988,
+            0.1140000000000001,
+            0.9000000000000057
+          ]
+        },
+        {
+          "a": "gantry-right",
+          "b": "wood-upper-post-1",
+          "overlap": [
+            0.11399999999999988,
+            0.1140000000000001,
+            0.9000000000000057
+          ]
+        },
+        {
+          "a": "gantry-left",
+          "b": "wood-upper-post-2",
+          "overlap": [
+            0.11399999999999988,
+            0.11399999999999988,
+            0.9000000000000057
+          ]
+        },
+        {
+          "a": "gantry-right",
+          "b": "wood-upper-post-3",
+          "overlap": [
+            0.11399999999999988,
+            0.11399999999999988,
+            0.9000000000000057
+          ]
+        },
+        {
+          "a": "gantry-back",
+          "b": "gantry-left",
+          "overlap": [
+            0.14000000000000012,
+            0.14,
+            2.9000000000000057
+          ]
+        },
+        {
+          "a": "gantry-back",
+          "b": "gantry-right",
+          "overlap": [
+            0.14000000000000012,
+            0.14,
+            2.9000000000000057
+          ]
+        },
+        {
+          "a": "gantry-front",
+          "b": "gantry-left",
+          "overlap": [
+            0.14000000000000012,
+            0.14000000000000012,
+            2.9000000000000057
+          ]
+        },
+        {
+          "a": "gantry-front",
+          "b": "gantry-right",
+          "overlap": [
+            0.14000000000000012,
+            0.14000000000000012,
+            2.9000000000000057
+          ]
+        },
+        {
+          "a": "sign",
+          "b": "guard-front-0",
+          "overlap": [
+            0.3400000000000003,
+            0.0040000000000000036,
+            0.4000000000000057
+          ]
+        },
+        {
+          "a": "sign-mark",
+          "b": "sign",
+          "overlap": [
+            0.18000000000000016,
+            0.0019999999999997797,
+            3.200000000000003
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "tower-foot-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-tower-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-collar-0-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-collar-0-1",
+          "edges": 12
+        },
+        {
+          "name": "tower-foot-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-tower-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-collar-1-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-collar-1-1",
+          "edges": 12
+        },
+        {
+          "name": "tower-foot-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-tower-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-collar-2-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-collar-2-1",
+          "edges": 12
+        },
+        {
+          "name": "tower-foot-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-tower-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-collar-3-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-collar-3-1",
+          "edges": 12
+        },
+        {
+          "name": "brace-right-0-0",
+          "edges": 60
+        },
+        {
+          "name": "brace-right-0-1",
+          "edges": 60
+        },
+        {
+          "name": "brace-plate-right-0",
+          "edges": 12
+        },
+        {
+          "name": "brace-right-1-0",
+          "edges": 60
+        },
+        {
+          "name": "brace-right-1-1",
+          "edges": 60
+        },
+        {
+          "name": "brace-plate-right-1",
+          "edges": 12
+        },
+        {
+          "name": "brace-back-0-0",
+          "edges": 60
+        },
+        {
+          "name": "brace-back-0-1",
+          "edges": 60
+        },
+        {
+          "name": "brace-plate-back-0",
+          "edges": 12
+        },
+        {
+          "name": "brace-back-1-0",
+          "edges": 60
+        },
+        {
+          "name": "brace-back-1-1",
+          "edges": 60
+        },
+        {
+          "name": "brace-plate-back-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-deck-left",
+          "edges": 12
+        },
+        {
+          "name": "wood-deck-right",
+          "edges": 12
+        },
+        {
+          "name": "wood-deck-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-deck-front",
+          "edges": 12
+        },
+        {
+          "name": "wood-jump-platform",
+          "edges": 12
+        },
+        {
+          "name": "ladder-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "ladder-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "ladder-rung-0",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-1",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-2",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-3",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-4",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-5",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-6",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-7",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-8",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-9",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-10",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-11",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-12",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-13",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-14",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-15",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-16",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-17",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-18",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-19",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-20",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-21",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-22",
+          "edges": 60
+        },
+        {
+          "name": "ladder-rung-23",
+          "edges": 60
+        },
+        {
+          "name": "wood-upper-post-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-upper-post-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-upper-post-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-upper-post-3",
+          "edges": 12
+        },
+        {
+          "name": "guard-back-0",
+          "edges": 12
+        },
+        {
+          "name": "guard-back-1",
+          "edges": 12
+        },
+        {
+          "name": "guard-right-0",
+          "edges": 12
+        },
+        {
+          "name": "guard-right-1",
+          "edges": 12
+        },
+        {
+          "name": "guard-front-0",
+          "edges": 12
+        },
+        {
+          "name": "guard-front-1",
+          "edges": 12
+        },
+        {
+          "name": "guard-left-0",
+          "edges": 12
+        },
+        {
+          "name": "guard-left-1",
+          "edges": 12
+        },
+        {
+          "name": "gantry-back",
+          "edges": 12
+        },
+        {
+          "name": "gantry-right",
+          "edges": 12
+        },
+        {
+          "name": "gantry-front",
+          "edges": 12
+        },
+        {
+          "name": "gantry-left",
+          "edges": 12
+        },
+        {
+          "name": "sign",
+          "edges": 12
+        },
+        {
+          "name": "sign-mark",
+          "edges": 12
+        },
+        {
+          "name": "landing-mat",
+          "edges": 12
+        }
+      ],
+      "rotation_edge_error": 4.440892098500626e-16,
+      "cutaway": [],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            92412,
+            5760
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "mat",
+              "mode": "top",
+              "samples": 37,
+              "slope": -0.5021337126600273,
+              "expected_slope": -0.500000000000001,
+              "rms": 0.5524297043912582,
+              "outline_adjusted_residual": 0.9422279360581041,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 37,
+                "slope": -0.5021337126600273,
+                "rms": 0.5524297043912582,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "mat",
+              "mode": "top",
+              "samples": 37,
+              "slope": 0.4978662873399717,
+              "expected_slope": 0.500000000000001,
+              "rms": 0.5642046275176715,
+              "outline_adjusted_residual": 0.9287144225445906,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 37,
+                "slope": 0.4978662873399717,
+                "rms": 0.5642046275176715,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            97700,
+            5776
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "mat",
+              "mode": "top",
+              "samples": 37,
+              "slope": -0.5021337126600289,
+              "expected_slope": -0.5,
+              "rms": 0.5524297043912382,
+              "outline_adjusted_residual": 0.9557414495716177,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 37,
+                "slope": -0.5021337126600289,
+                "rms": 0.5524297043912382,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "mat",
+              "mode": "top",
+              "samples": 37,
+              "slope": 0.502133712660029,
+              "expected_slope": 0.499999999999999,
+              "rms": 0.5524297043912426,
+              "outline_adjusted_residual": 0.7427218692832835,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 37,
+                "slope": 0.502133712660029,
+                "rms": 0.5524297043912426,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            99903
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "mat",
+              "mode": "top",
+              "samples": 37,
+              "slope": -0.49786628733996807,
+              "expected_slope": -0.499999999999999,
+              "rms": 0.5642046275176738,
+              "outline_adjusted_residual": 0.7697488963103106,
+              "visible_fraction": 0.8108108108108109,
+              "combined": {
+                "samples": 30,
+                "slope": -0.49833147942157924,
+                "rms": 0.5578353913266798,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "mat",
+              "mode": "top",
+              "samples": 37,
+              "slope": 0.5021337126600285,
+              "expected_slope": 0.499999999999999,
+              "rms": 0.5524297043912435,
+              "outline_adjusted_residual": 0.7562353827967971,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 37,
+                "slope": 0.5021337126600285,
+                "rms": 0.5524297043912435,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            103613
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "mat",
+              "mode": "top",
+              "samples": 37,
+              "slope": -0.5021337126600234,
+              "expected_slope": -0.499999999999999,
+              "rms": 0.5524297043912485,
+              "outline_adjusted_residual": 0.7562353827967971,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 37,
+                "slope": -0.5021337126600234,
+                "rms": 0.5524297043912485,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "mat",
+              "mode": "top",
+              "samples": 37,
+              "slope": 0.5021337126600263,
+              "expected_slope": 0.4999999999999995,
+              "rms": 0.5524297043912554,
+              "outline_adjusted_residual": 0.9422279360581041,
+              "visible_fraction": 0.24324324324324326,
+              "combined": {
+                "samples": 9,
+                "slope": 0.49952963311382836,
+                "rms": 0.532815678539958,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "tower",
+          "d": 0,
+          "connected": true,
+          "pixels": 92412
+        },
+        {
+          "name": "mat",
+          "d": 0,
+          "connected": true,
+          "pixels": 5760
+        },
+        {
+          "name": "gantry",
+          "d": 0,
+          "connected": true,
+          "pixels": 13872
+        },
+        {
+          "name": "tower",
+          "d": 1,
+          "connected": true,
+          "pixels": 97700
+        },
+        {
+          "name": "mat",
+          "d": 1,
+          "connected": true,
+          "pixels": 5776
+        },
+        {
+          "name": "gantry",
+          "d": 1,
+          "connected": true,
+          "pixels": 13708
+        },
+        {
+          "name": "tower",
+          "d": 2,
+          "connected": true,
+          "pixels": 94611
+        },
+        {
+          "name": "mat",
+          "d": 2,
+          "connected": true,
+          "pixels": 5872
+        },
+        {
+          "name": "gantry",
+          "d": 2,
+          "connected": true,
+          "pixels": 13708
+        },
+        {
+          "name": "tower",
+          "d": 3,
+          "connected": true,
+          "pixels": 99357
+        },
+        {
+          "name": "mat",
+          "d": 3,
+          "connected": true,
+          "pixels": 5776
+        },
+        {
+          "name": "gantry",
+          "d": 3,
+          "connected": true,
+          "pixels": 13876
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "tower",
+          "b": "mat",
+          "solid_part_pair_checks": 77,
+          "minimum_separating_axis_gap": 0.7199999999999998,
+          "method": "separate solid AABBs rather than a concave group union box"
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_bungee_jump_0.webp",
+          "sha256": "05b8e97f237f068431c52d26458d5d08bf3efcdeac3b2bb79957ca6fec7da629"
+        },
+        {
+          "d": 1,
+          "file": "fac_bungee_jump_1.webp",
+          "sha256": "2217c6733a71488cf48dccf0838161f7aa3eaef2e2a18b6e9e4c7774ff09dd3f"
+        },
+        {
+          "d": 2,
+          "file": "fac_bungee_jump_2.webp",
+          "sha256": "60e428a756656089632331a6d5efed47164c1e8465395c9e2ba0cf5ae566e320"
+        },
+        {
+          "d": 3,
+          "file": "fac_bungee_jump_3.webp",
+          "sha256": "df6f7c7e46c702c6ff78a7340aa713ae2cf8398df0303ab33c8b160c87064339"
+        }
+      ],
+      "limits": [
+        "Tall source tower proportions, cream/gold posts, teal braces/gantry and separate mat are retained.",
+        "The source changes ladder and brace faces between facings; u+ and v- bracing plus one fixed rear ladder are standardized.",
+        "Deck includes an actual ladder opening. This is a static game sprite, not an engineering or structural safety model. No hanging rope/person was visible in the source.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    },
+    {
+      "id": "photozone",
+      "status": "PIXEL_LINE_FAIL",
+      "joints": [
+        {
+          "a": "wood-post-0",
+          "b": "wood-planter-0",
+          "overlap": [
+            0.11399999999999999,
+            0.11399999999999999,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "base-bouquet-0-stem",
+          "b": "base-bouquet-0-root",
+          "overlap": [
+            0.021874999999999978,
+            0.010937500000000044,
+            0.7000000000000002
+          ]
+        },
+        {
+          "a": "base-bouquet-0-root",
+          "b": "wood-planter-0",
+          "overlap": [
+            0.021874999999999978,
+            0.14,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "base-bouquet-0-leaf-0",
+          "b": "base-bouquet-0-stem",
+          "overlap": [
+            0.010937499999999989,
+            0.02187500000000009,
+            1.7000000000000002
+          ]
+        },
+        {
+          "a": "base-bouquet-0-leaf-1",
+          "b": "base-bouquet-0-stem",
+          "overlap": [
+            0.010937499999999989,
+            0.010937500000000044,
+            2.1000000000000005
+          ]
+        },
+        {
+          "a": "base-bouquet-0-leaf-2",
+          "b": "base-bouquet-0-stem",
+          "overlap": [
+            0.021874999999999978,
+            0.010937500000000044,
+            2.1000000000000005
+          ]
+        },
+        {
+          "a": "base-bouquet-0-leaf-3",
+          "b": "base-bouquet-0-stem",
+          "overlap": [
+            0.010937499999999989,
+            0.010937500000000044,
+            1.7000000000000002
+          ]
+        },
+        {
+          "a": "base-bouquet-0-leaf-4",
+          "b": "base-bouquet-0-stem",
+          "overlap": [
+            0.010937499999999989,
+            0.02187500000000009,
+            2.1000000000000005
+          ]
+        },
+        {
+          "a": "base-bouquet-0-leaf-5",
+          "b": "base-bouquet-0-stem",
+          "overlap": [
+            0.010937499999999989,
+            0.010937500000000044,
+            2.1000000000000005
+          ]
+        },
+        {
+          "a": "base-bouquet-0-leaf-6",
+          "b": "base-bouquet-0-stem",
+          "overlap": [
+            0.021874999999999978,
+            0.010937500000000044,
+            1.7000000000000002
+          ]
+        },
+        {
+          "a": "base-bouquet-0-leaf-7",
+          "b": "base-bouquet-0-stem",
+          "overlap": [
+            0.010937499999999989,
+            0.010937500000000044,
+            2.1000000000000005
+          ]
+        },
+        {
+          "a": "base-bouquet-0-flowerstem-0",
+          "b": "base-bouquet-0-stem",
+          "overlap": [
+            0.015036589709197579,
+            0.01603338908152352,
+            1.83906783978221
+          ]
+        },
+        {
+          "a": "base-bouquet-0-flowercenter-0",
+          "b": "base-bouquet-0-flowerstem-0",
+          "overlap": [
+            0.02809908970919761,
+            0.029095889081523496,
+            0.23906783978220947
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-0-0",
+          "b": "base-bouquet-0-flowercenter-0",
+          "overlap": [
+            0.006000000000000061,
+            0.04800000000000004,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-0-1",
+          "b": "base-bouquet-0-flowercenter-0",
+          "overlap": [
+            0.0391671842700026,
+            0.00834928721783268,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-0-2",
+          "b": "base-bouquet-0-flowercenter-0",
+          "overlap": [
+            0.015167184270002576,
+            0.02578630788996128,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-0-3",
+          "b": "base-bouquet-0-flowercenter-0",
+          "overlap": [
+            0.015167184270002576,
+            0.02578630788996139,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-0-4",
+          "b": "base-bouquet-0-flowercenter-0",
+          "overlap": [
+            0.0391671842700026,
+            0.00834928721783268,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-0-flowerstem-1",
+          "b": "base-bouquet-0-stem",
+          "overlap": [
+            0.015585549081696737,
+            0.01608938164880014,
+            1.8185102409421994
+          ]
+        },
+        {
+          "a": "base-bouquet-0-flowercenter-1",
+          "b": "base-bouquet-0-flowerstem-1",
+          "overlap": [
+            0.02864804908169677,
+            0.029151881648800115,
+            0.21851024094219884
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-1-0",
+          "b": "base-bouquet-0-flowercenter-1",
+          "overlap": [
+            0.006000000000000061,
+            0.04800000000000004,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-1-1",
+          "b": "base-bouquet-0-flowercenter-1",
+          "overlap": [
+            0.0391671842700026,
+            0.00834928721783268,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-1-2",
+          "b": "base-bouquet-0-flowercenter-1",
+          "overlap": [
+            0.015167184270002576,
+            0.02578630788996128,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-1-3",
+          "b": "base-bouquet-0-flowercenter-1",
+          "overlap": [
+            0.015167184270002576,
+            0.02578630788996139,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-1-4",
+          "b": "base-bouquet-0-flowercenter-1",
+          "overlap": [
+            0.0391671842700026,
+            0.00834928721783268,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-0-flowerstem-2",
+          "b": "base-bouquet-0-stem",
+          "overlap": [
+            0.011249999999999982,
+            0.01628130620199153,
+            1.7561995099815926
+          ]
+        },
+        {
+          "a": "base-bouquet-0-flowercenter-2",
+          "b": "base-bouquet-0-flowerstem-2",
+          "overlap": [
+            0.011249999999999982,
+            0.029343806201991507,
+            0.15619950998159204
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-2-0",
+          "b": "base-bouquet-0-flowercenter-2",
+          "overlap": [
+            0.006000000000000005,
+            0.04800000000000004,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-2-1",
+          "b": "base-bouquet-0-flowercenter-2",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-2-2",
+          "b": "base-bouquet-0-flowercenter-2",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996128,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-2-3",
+          "b": "base-bouquet-0-flowercenter-2",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996139,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-0-petal-2-4",
+          "b": "base-bouquet-0-flowercenter-2",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-stem",
+          "b": "upper-bouquet-0-root",
+          "overlap": [
+            0.021874999999999978,
+            0.010937500000000044,
+            0.7000000000000028
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-root",
+          "b": "wood-post-0",
+          "overlap": [
+            0.021874999999999978,
+            0.027000000000000024,
+            0.7000000000000028
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-leaf-0",
+          "b": "upper-bouquet-0-stem",
+          "overlap": [
+            0.010937499999999989,
+            0.02187500000000009,
+            1.7000000000000028
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-leaf-1",
+          "b": "upper-bouquet-0-stem",
+          "overlap": [
+            0.010937499999999989,
+            0.010937500000000044,
+            2.1000000000000014
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-leaf-2",
+          "b": "upper-bouquet-0-stem",
+          "overlap": [
+            0.021874999999999978,
+            0.010937500000000044,
+            2.1000000000000014
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-leaf-3",
+          "b": "upper-bouquet-0-stem",
+          "overlap": [
+            0.010937499999999989,
+            0.010937500000000044,
+            1.7000000000000028
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-leaf-4",
+          "b": "upper-bouquet-0-stem",
+          "overlap": [
+            0.010937499999999989,
+            0.02187500000000009,
+            2.1000000000000014
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-leaf-5",
+          "b": "upper-bouquet-0-stem",
+          "overlap": [
+            0.010937499999999989,
+            0.010937500000000044,
+            2.1000000000000014
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-leaf-6",
+          "b": "upper-bouquet-0-stem",
+          "overlap": [
+            0.021874999999999978,
+            0.010937500000000044,
+            1.7000000000000028
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-leaf-7",
+          "b": "upper-bouquet-0-stem",
+          "overlap": [
+            0.010937499999999989,
+            0.010937500000000044,
+            2.1000000000000014
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-flowerstem-0",
+          "b": "upper-bouquet-0-stem",
+          "overlap": [
+            0.015036589709197579,
+            0.01603338908152352,
+            1.83906783978221
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-flowercenter-0",
+          "b": "upper-bouquet-0-flowerstem-0",
+          "overlap": [
+            0.02809908970919761,
+            0.029095889081523496,
+            0.23906783978221213
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-0-0",
+          "b": "upper-bouquet-0-flowercenter-0",
+          "overlap": [
+            0.006000000000000061,
+            0.04800000000000004,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-0-1",
+          "b": "upper-bouquet-0-flowercenter-0",
+          "overlap": [
+            0.0391671842700026,
+            0.00834928721783268,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-0-2",
+          "b": "upper-bouquet-0-flowercenter-0",
+          "overlap": [
+            0.015167184270002576,
+            0.02578630788996128,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-0-3",
+          "b": "upper-bouquet-0-flowercenter-0",
+          "overlap": [
+            0.015167184270002576,
+            0.02578630788996139,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-0-4",
+          "b": "upper-bouquet-0-flowercenter-0",
+          "overlap": [
+            0.0391671842700026,
+            0.00834928721783268,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-flowerstem-1",
+          "b": "upper-bouquet-0-stem",
+          "overlap": [
+            0.015585549081696737,
+            0.01608938164880014,
+            1.8185102409421994
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-flowercenter-1",
+          "b": "upper-bouquet-0-flowerstem-1",
+          "overlap": [
+            0.02864804908169677,
+            0.029151881648800115,
+            0.2185102409422015
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-1-0",
+          "b": "upper-bouquet-0-flowercenter-1",
+          "overlap": [
+            0.006000000000000061,
+            0.04800000000000004,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-1-1",
+          "b": "upper-bouquet-0-flowercenter-1",
+          "overlap": [
+            0.0391671842700026,
+            0.00834928721783268,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-1-2",
+          "b": "upper-bouquet-0-flowercenter-1",
+          "overlap": [
+            0.015167184270002576,
+            0.02578630788996128,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-1-3",
+          "b": "upper-bouquet-0-flowercenter-1",
+          "overlap": [
+            0.015167184270002576,
+            0.02578630788996139,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-1-4",
+          "b": "upper-bouquet-0-flowercenter-1",
+          "overlap": [
+            0.0391671842700026,
+            0.00834928721783268,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-flowerstem-2",
+          "b": "upper-bouquet-0-stem",
+          "overlap": [
+            0.011249999999999982,
+            0.01628130620199153,
+            1.7561995099815917
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-flowercenter-2",
+          "b": "upper-bouquet-0-flowerstem-2",
+          "overlap": [
+            0.011249999999999982,
+            0.029343806201991507,
+            0.15619950998159027
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-2-0",
+          "b": "upper-bouquet-0-flowercenter-2",
+          "overlap": [
+            0.006000000000000005,
+            0.04800000000000004,
+            0.4399999999999977
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-2-1",
+          "b": "upper-bouquet-0-flowercenter-2",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4399999999999977
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-2-2",
+          "b": "upper-bouquet-0-flowercenter-2",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996128,
+            0.4399999999999977
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-2-3",
+          "b": "upper-bouquet-0-flowercenter-2",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996139,
+            0.4399999999999977
+          ]
+        },
+        {
+          "a": "upper-bouquet-0-petal-2-4",
+          "b": "upper-bouquet-0-flowercenter-2",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4399999999999977
+          ]
+        },
+        {
+          "a": "wood-post-1",
+          "b": "wood-planter-1",
+          "overlap": [
+            0.11399999999999988,
+            0.11399999999999999,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "base-bouquet-1-stem",
+          "b": "base-bouquet-1-root",
+          "overlap": [
+            0.02187500000000009,
+            0.010937500000000044,
+            0.7000000000000002
+          ]
+        },
+        {
+          "a": "base-bouquet-1-root",
+          "b": "wood-planter-1",
+          "overlap": [
+            0.02187500000000009,
+            0.14,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "base-bouquet-1-leaf-0",
+          "b": "base-bouquet-1-stem",
+          "overlap": [
+            0.010937500000000044,
+            0.02187500000000009,
+            1.7000000000000002
+          ]
+        },
+        {
+          "a": "base-bouquet-1-leaf-1",
+          "b": "base-bouquet-1-stem",
+          "overlap": [
+            0.010937500000000044,
+            0.010937500000000044,
+            2.1000000000000005
+          ]
+        },
+        {
+          "a": "base-bouquet-1-leaf-2",
+          "b": "base-bouquet-1-stem",
+          "overlap": [
+            0.02187500000000009,
+            0.010937500000000044,
+            2.1000000000000005
+          ]
+        },
+        {
+          "a": "base-bouquet-1-leaf-3",
+          "b": "base-bouquet-1-stem",
+          "overlap": [
+            0.010937500000000044,
+            0.010937500000000044,
+            1.7000000000000002
+          ]
+        },
+        {
+          "a": "base-bouquet-1-leaf-4",
+          "b": "base-bouquet-1-stem",
+          "overlap": [
+            0.010937500000000044,
+            0.02187500000000009,
+            2.1000000000000005
+          ]
+        },
+        {
+          "a": "base-bouquet-1-leaf-5",
+          "b": "base-bouquet-1-stem",
+          "overlap": [
+            0.010937500000000044,
+            0.010937500000000044,
+            2.1000000000000005
+          ]
+        },
+        {
+          "a": "base-bouquet-1-leaf-6",
+          "b": "base-bouquet-1-stem",
+          "overlap": [
+            0.02187500000000009,
+            0.010937500000000044,
+            1.7000000000000002
+          ]
+        },
+        {
+          "a": "base-bouquet-1-leaf-7",
+          "b": "base-bouquet-1-stem",
+          "overlap": [
+            0.010937500000000044,
+            0.010937500000000044,
+            2.1000000000000005
+          ]
+        },
+        {
+          "a": "base-bouquet-1-flowerstem-0",
+          "b": "base-bouquet-1-stem",
+          "overlap": [
+            0.015036589709197745,
+            0.01603338908152352,
+            1.83906783978221
+          ]
+        },
+        {
+          "a": "base-bouquet-1-flowercenter-0",
+          "b": "base-bouquet-1-flowerstem-0",
+          "overlap": [
+            0.028099089709197722,
+            0.029095889081523496,
+            0.23906783978220947
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-0-0",
+          "b": "base-bouquet-1-flowercenter-0",
+          "overlap": [
+            0.006000000000000005,
+            0.04800000000000004,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-0-1",
+          "b": "base-bouquet-1-flowercenter-0",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-0-2",
+          "b": "base-bouquet-1-flowercenter-0",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996128,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-0-3",
+          "b": "base-bouquet-1-flowercenter-0",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996139,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-0-4",
+          "b": "base-bouquet-1-flowercenter-0",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-1-flowerstem-1",
+          "b": "base-bouquet-1-stem",
+          "overlap": [
+            0.015585549081696737,
+            0.01608938164880014,
+            1.8185102409421994
+          ]
+        },
+        {
+          "a": "base-bouquet-1-flowercenter-1",
+          "b": "base-bouquet-1-flowerstem-1",
+          "overlap": [
+            0.028648049081696714,
+            0.029151881648800115,
+            0.21851024094219884
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-1-0",
+          "b": "base-bouquet-1-flowercenter-1",
+          "overlap": [
+            0.006000000000000005,
+            0.04800000000000004,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-1-1",
+          "b": "base-bouquet-1-flowercenter-1",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-1-2",
+          "b": "base-bouquet-1-flowercenter-1",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996128,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-1-3",
+          "b": "base-bouquet-1-flowercenter-1",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996139,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-1-4",
+          "b": "base-bouquet-1-flowercenter-1",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-1-flowerstem-2",
+          "b": "base-bouquet-1-stem",
+          "overlap": [
+            0.011249999999999982,
+            0.01628130620199153,
+            1.7561995099815926
+          ]
+        },
+        {
+          "a": "base-bouquet-1-flowercenter-2",
+          "b": "base-bouquet-1-flowerstem-2",
+          "overlap": [
+            0.011249999999999982,
+            0.029343806201991507,
+            0.15619950998159204
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-2-0",
+          "b": "base-bouquet-1-flowercenter-2",
+          "overlap": [
+            0.006000000000000005,
+            0.04800000000000004,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-2-1",
+          "b": "base-bouquet-1-flowercenter-2",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-2-2",
+          "b": "base-bouquet-1-flowercenter-2",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996128,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-2-3",
+          "b": "base-bouquet-1-flowercenter-2",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996139,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "base-bouquet-1-petal-2-4",
+          "b": "base-bouquet-1-flowercenter-2",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4400000000000004
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-stem",
+          "b": "upper-bouquet-1-root",
+          "overlap": [
+            0.02187500000000009,
+            0.010937500000000044,
+            0.7000000000000028
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-root",
+          "b": "wood-post-1",
+          "overlap": [
+            0.02187500000000009,
+            0.027000000000000024,
+            0.7000000000000028
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-leaf-0",
+          "b": "upper-bouquet-1-stem",
+          "overlap": [
+            0.010937500000000044,
+            0.02187500000000009,
+            1.7000000000000028
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-leaf-1",
+          "b": "upper-bouquet-1-stem",
+          "overlap": [
+            0.010937500000000044,
+            0.010937500000000044,
+            2.1000000000000014
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-leaf-2",
+          "b": "upper-bouquet-1-stem",
+          "overlap": [
+            0.02187500000000009,
+            0.010937500000000044,
+            2.1000000000000014
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-leaf-3",
+          "b": "upper-bouquet-1-stem",
+          "overlap": [
+            0.010937500000000044,
+            0.010937500000000044,
+            1.7000000000000028
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-leaf-4",
+          "b": "upper-bouquet-1-stem",
+          "overlap": [
+            0.010937500000000044,
+            0.02187500000000009,
+            2.1000000000000014
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-leaf-5",
+          "b": "upper-bouquet-1-stem",
+          "overlap": [
+            0.010937500000000044,
+            0.010937500000000044,
+            2.1000000000000014
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-leaf-6",
+          "b": "upper-bouquet-1-stem",
+          "overlap": [
+            0.02187500000000009,
+            0.010937500000000044,
+            1.7000000000000028
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-leaf-7",
+          "b": "upper-bouquet-1-stem",
+          "overlap": [
+            0.010937500000000044,
+            0.010937500000000044,
+            2.1000000000000014
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-flowerstem-0",
+          "b": "upper-bouquet-1-stem",
+          "overlap": [
+            0.015036589709197745,
+            0.01603338908152352,
+            1.83906783978221
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-flowercenter-0",
+          "b": "upper-bouquet-1-flowerstem-0",
+          "overlap": [
+            0.028099089709197722,
+            0.029095889081523496,
+            0.23906783978221213
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-0-0",
+          "b": "upper-bouquet-1-flowercenter-0",
+          "overlap": [
+            0.006000000000000005,
+            0.04800000000000004,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-0-1",
+          "b": "upper-bouquet-1-flowercenter-0",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-0-2",
+          "b": "upper-bouquet-1-flowercenter-0",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996128,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-0-3",
+          "b": "upper-bouquet-1-flowercenter-0",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996139,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-0-4",
+          "b": "upper-bouquet-1-flowercenter-0",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-flowerstem-1",
+          "b": "upper-bouquet-1-stem",
+          "overlap": [
+            0.015585549081696737,
+            0.01608938164880014,
+            1.8185102409421994
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-flowercenter-1",
+          "b": "upper-bouquet-1-flowerstem-1",
+          "overlap": [
+            0.028648049081696714,
+            0.029151881648800115,
+            0.2185102409422015
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-1-0",
+          "b": "upper-bouquet-1-flowercenter-1",
+          "overlap": [
+            0.006000000000000005,
+            0.04800000000000004,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-1-1",
+          "b": "upper-bouquet-1-flowercenter-1",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-1-2",
+          "b": "upper-bouquet-1-flowercenter-1",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996128,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-1-3",
+          "b": "upper-bouquet-1-flowercenter-1",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996139,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-1-4",
+          "b": "upper-bouquet-1-flowercenter-1",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4400000000000013
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-flowerstem-2",
+          "b": "upper-bouquet-1-stem",
+          "overlap": [
+            0.011249999999999982,
+            0.01628130620199153,
+            1.7561995099815917
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-flowercenter-2",
+          "b": "upper-bouquet-1-flowerstem-2",
+          "overlap": [
+            0.011249999999999982,
+            0.029343806201991507,
+            0.15619950998159027
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-2-0",
+          "b": "upper-bouquet-1-flowercenter-2",
+          "overlap": [
+            0.006000000000000005,
+            0.04800000000000004,
+            0.4399999999999977
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-2-1",
+          "b": "upper-bouquet-1-flowercenter-2",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4399999999999977
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-2-2",
+          "b": "upper-bouquet-1-flowercenter-2",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996128,
+            0.4399999999999977
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-2-3",
+          "b": "upper-bouquet-1-flowercenter-2",
+          "overlap": [
+            0.01516718427000252,
+            0.02578630788996139,
+            0.4399999999999977
+          ]
+        },
+        {
+          "a": "upper-bouquet-1-petal-2-4",
+          "b": "upper-bouquet-1-flowercenter-2",
+          "overlap": [
+            0.03916718427000254,
+            0.00834928721783268,
+            0.4399999999999977
+          ]
+        },
+        {
+          "a": "wood-topbeam",
+          "b": "wood-post-0",
+          "overlap": [
+            0.11399999999999999,
+            0.11399999999999999,
+            0.8000000000000007
+          ]
+        },
+        {
+          "a": "wood-topbeam",
+          "b": "wood-post-1",
+          "overlap": [
+            0.11399999999999988,
+            0.11399999999999999,
+            0.8000000000000007
+          ]
+        },
+        {
+          "a": "cream-swag",
+          "b": "wood-topbeam",
+          "overlap": [
+            1.4900000000000002,
+            0.020000000000000018,
+            0.30000000000000426
+          ]
+        },
+        {
+          "a": "cream-swag",
+          "b": "wood-post-0",
+          "overlap": [
+            0.02699999999999997,
+            0.007000000000000006,
+            6.100000000000005
+          ]
+        },
+        {
+          "a": "cream-swag",
+          "b": "wood-post-1",
+          "overlap": [
+            0.027000000000000135,
+            0.007000000000000006,
+            6.100000000000005
+          ]
+        },
+        {
+          "a": "cream-hanging-strip",
+          "b": "wood-post-1",
+          "overlap": [
+            0.07393370492214602,
+            0.012999662846721605,
+            27.8
+          ]
+        },
+        {
+          "a": "cream-hanging-strip",
+          "b": "cream-swag",
+          "overlap": [
+            0.10699916912477136,
+            0.03500000000000003,
+            5.400000000000002
+          ]
+        },
+        {
+          "a": "ring-strap",
+          "b": "wood-post-0",
+          "overlap": [
+            0.04799999999999999,
+            0.017000000000000015,
+            3.0
+          ]
+        },
+        {
+          "a": "lifering-upper",
+          "b": "ring-strap",
+          "overlap": [
+            0.04799999999999999,
+            0.17326035120154126,
+            2.6499999999999986
+          ]
+        },
+        {
+          "a": "buoy",
+          "b": "wood-planter-1",
+          "overlap": [
+            0.17499999999999982,
+            0.17499999999999993,
+            0.7000000000000002
+          ]
+        },
+        {
+          "a": "buoy-handle",
+          "b": "buoy",
+          "overlap": [
+            0.07447491534893302,
+            0.07447491534893302,
+            1.5199999999999996
+          ]
+        },
+        {
+          "a": "vine-0",
+          "b": "wood-post-0",
+          "overlap": [
+            0.038348243849693486,
+            0.002622389573381012,
+            2.24115691640659
+          ]
+        },
+        {
+          "a": "vine-leaf-0",
+          "b": "vine-0",
+          "overlap": [
+            0.01517412192484674,
+            0.007128567398594576,
+            0.9999999999999991
+          ]
+        },
+        {
+          "a": "vine-1",
+          "b": "wood-post-0",
+          "overlap": [
+            0.038348243849693486,
+            0.002622389573381012,
+            2.24115691640659
+          ]
+        },
+        {
+          "a": "vine-leaf-1",
+          "b": "vine-1",
+          "overlap": [
+            0.01517412192484674,
+            0.007128567398594576,
+            1.0
+          ]
+        },
+        {
+          "a": "vine-2",
+          "b": "wood-post-0",
+          "overlap": [
+            0.038348243849693486,
+            0.002622389573381012,
+            2.241156916406588
+          ]
+        },
+        {
+          "a": "vine-leaf-2",
+          "b": "vine-2",
+          "overlap": [
+            0.01517412192484674,
+            0.007128567398594576,
+            1.0
+          ]
+        },
+        {
+          "a": "vine-3",
+          "b": "wood-post-1",
+          "overlap": [
+            0.038348243849693375,
+            0.002622389573381012,
+            2.241156916406588
+          ]
+        },
+        {
+          "a": "vine-leaf-3",
+          "b": "vine-3",
+          "overlap": [
+            0.015174121924846684,
+            0.007128567398594576,
+            1.0
+          ]
+        },
+        {
+          "a": "tripod-leg-0",
+          "b": "tripod-foot-0",
+          "overlap": [
+            0.026874999999999982,
+            0.03147535707032478,
+            0.7037314650002388
+          ]
+        },
+        {
+          "a": "tripod-leg-1",
+          "b": "tripod-foot-1",
+          "overlap": [
+            0.031965892802743534,
+            0.03294696426758126,
+            0.7037314650002389
+          ]
+        },
+        {
+          "a": "tripod-leg-2",
+          "b": "tripod-foot-2",
+          "overlap": [
+            0.031965892802743534,
+            0.03294696426758126,
+            0.7037314650002388
+          ]
+        },
+        {
+          "a": "tripod-head",
+          "b": "tripod-leg-0",
+          "overlap": [
+            0.026874999999999982,
+            0.030537857070324748,
+            0.9237314650002375
+          ]
+        },
+        {
+          "a": "tripod-head",
+          "b": "tripod-leg-1",
+          "overlap": [
+            0.0310283928027435,
+            0.03200946426758122,
+            0.9237314650002375
+          ]
+        },
+        {
+          "a": "tripod-head",
+          "b": "tripod-leg-2",
+          "overlap": [
+            0.0310283928027435,
+            0.03200946426758122,
+            0.9237314650002375
+          ]
+        },
+        {
+          "a": "camera-body",
+          "b": "tripod-head",
+          "overlap": [
+            0.038124999999999964,
+            0.038124999999999964,
+            0.5000000000000018
+          ]
+        },
+        {
+          "a": "camera-display",
+          "b": "camera-body",
+          "overlap": [
+            0.131,
+            0.001000000000000112,
+            1.4499999999999993
+          ]
+        },
+        {
+          "a": "camera-lens",
+          "b": "camera-body",
+          "overlap": [
+            0.06374999999999997,
+            0.030000000000000027,
+            2.039999999999999
+          ]
+        },
+        {
+          "a": "camera-glass",
+          "b": "camera-lens",
+          "overlap": [
+            0.0462499999999999,
+            0.001000000000000112,
+            1.4799999999999969
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-planter-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-0",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-0-stem",
+          "edges": 60
+        },
+        {
+          "name": "base-bouquet-0-root",
+          "edges": 60
+        },
+        {
+          "name": "base-bouquet-0-leaf-0",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-0-leaf-1",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-0-leaf-2",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-0-leaf-3",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-0-leaf-4",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-0-leaf-5",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-0-leaf-6",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-0-leaf-7",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-0-flowerstem-0",
+          "edges": 60
+        },
+        {
+          "name": "base-bouquet-0-flowercenter-0",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-0-0",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-0-1",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-0-2",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-0-3",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-0-4",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-flowerstem-1",
+          "edges": 60
+        },
+        {
+          "name": "base-bouquet-0-flowercenter-1",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-1-0",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-1-1",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-1-2",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-1-3",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-1-4",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-flowerstem-2",
+          "edges": 60
+        },
+        {
+          "name": "base-bouquet-0-flowercenter-2",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-2-0",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-2-1",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-2-2",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-2-3",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-0-petal-2-4",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-stem",
+          "edges": 60
+        },
+        {
+          "name": "upper-bouquet-0-root",
+          "edges": 60
+        },
+        {
+          "name": "upper-bouquet-0-leaf-0",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-0-leaf-1",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-0-leaf-2",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-0-leaf-3",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-0-leaf-4",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-0-leaf-5",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-0-leaf-6",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-0-leaf-7",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-0-flowerstem-0",
+          "edges": 60
+        },
+        {
+          "name": "upper-bouquet-0-flowercenter-0",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-0-0",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-0-1",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-0-2",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-0-3",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-0-4",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-flowerstem-1",
+          "edges": 60
+        },
+        {
+          "name": "upper-bouquet-0-flowercenter-1",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-1-0",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-1-1",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-1-2",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-1-3",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-1-4",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-flowerstem-2",
+          "edges": 60
+        },
+        {
+          "name": "upper-bouquet-0-flowercenter-2",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-2-0",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-2-1",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-2-2",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-2-3",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-0-petal-2-4",
+          "edges": 56
+        },
+        {
+          "name": "wood-planter-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-1",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-1-stem",
+          "edges": 60
+        },
+        {
+          "name": "base-bouquet-1-root",
+          "edges": 60
+        },
+        {
+          "name": "base-bouquet-1-leaf-0",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-1-leaf-1",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-1-leaf-2",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-1-leaf-3",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-1-leaf-4",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-1-leaf-5",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-1-leaf-6",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-1-leaf-7",
+          "edges": 12
+        },
+        {
+          "name": "base-bouquet-1-flowerstem-0",
+          "edges": 60
+        },
+        {
+          "name": "base-bouquet-1-flowercenter-0",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-0-0",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-0-1",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-0-2",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-0-3",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-0-4",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-flowerstem-1",
+          "edges": 60
+        },
+        {
+          "name": "base-bouquet-1-flowercenter-1",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-1-0",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-1-1",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-1-2",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-1-3",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-1-4",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-flowerstem-2",
+          "edges": 60
+        },
+        {
+          "name": "base-bouquet-1-flowercenter-2",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-2-0",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-2-1",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-2-2",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-2-3",
+          "edges": 56
+        },
+        {
+          "name": "base-bouquet-1-petal-2-4",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-stem",
+          "edges": 60
+        },
+        {
+          "name": "upper-bouquet-1-root",
+          "edges": 60
+        },
+        {
+          "name": "upper-bouquet-1-leaf-0",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-1-leaf-1",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-1-leaf-2",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-1-leaf-3",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-1-leaf-4",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-1-leaf-5",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-1-leaf-6",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-1-leaf-7",
+          "edges": 12
+        },
+        {
+          "name": "upper-bouquet-1-flowerstem-0",
+          "edges": 60
+        },
+        {
+          "name": "upper-bouquet-1-flowercenter-0",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-0-0",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-0-1",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-0-2",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-0-3",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-0-4",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-flowerstem-1",
+          "edges": 60
+        },
+        {
+          "name": "upper-bouquet-1-flowercenter-1",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-1-0",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-1-1",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-1-2",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-1-3",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-1-4",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-flowerstem-2",
+          "edges": 60
+        },
+        {
+          "name": "upper-bouquet-1-flowercenter-2",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-2-0",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-2-1",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-2-2",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-2-3",
+          "edges": 56
+        },
+        {
+          "name": "upper-bouquet-1-petal-2-4",
+          "edges": 56
+        },
+        {
+          "name": "wood-topbeam",
+          "edges": 12
+        },
+        {
+          "name": "cream-swag",
+          "edges": 196
+        },
+        {
+          "name": "cream-hanging-strip",
+          "edges": 156
+        },
+        {
+          "name": "ring-strap",
+          "edges": 12
+        },
+        {
+          "name": "lifering-upper",
+          "edges": 384
+        },
+        {
+          "name": "buoy",
+          "edges": 304
+        },
+        {
+          "name": "buoy-handle",
+          "edges": 384
+        },
+        {
+          "name": "vine-0",
+          "edges": 60
+        },
+        {
+          "name": "vine-leaf-0",
+          "edges": 12
+        },
+        {
+          "name": "vine-1",
+          "edges": 60
+        },
+        {
+          "name": "vine-leaf-1",
+          "edges": 12
+        },
+        {
+          "name": "vine-2",
+          "edges": 60
+        },
+        {
+          "name": "vine-leaf-2",
+          "edges": 12
+        },
+        {
+          "name": "vine-3",
+          "edges": 60
+        },
+        {
+          "name": "vine-leaf-3",
+          "edges": 12
+        },
+        {
+          "name": "tripod-leg-0",
+          "edges": 60
+        },
+        {
+          "name": "tripod-foot-0",
+          "edges": 72
+        },
+        {
+          "name": "tripod-leg-1",
+          "edges": 60
+        },
+        {
+          "name": "tripod-foot-1",
+          "edges": 72
+        },
+        {
+          "name": "tripod-leg-2",
+          "edges": 60
+        },
+        {
+          "name": "tripod-foot-2",
+          "edges": 72
+        },
+        {
+          "name": "tripod-head",
+          "edges": 60
+        },
+        {
+          "name": "camera-body",
+          "edges": 12
+        },
+        {
+          "name": "camera-display",
+          "edges": 12
+        },
+        {
+          "name": "camera-lens",
+          "edges": 60
+        },
+        {
+          "name": "camera-glass",
+          "edges": 60
+        }
+      ],
+      "rotation_edge_error": 3.157196726277789e-16,
+      "cutaway": [],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            12962
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "beam",
+              "mode": "top",
+              "samples": 6,
+              "slope": -0.2857142857142793,
+              "expected_slope": -0.5,
+              "rms": 0.5634361698190175,
+              "outline_adjusted_residual": 0.882927210459267,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": false
+            },
+            {
+              "part": "beam",
+              "mode": "top",
+              "samples": 73,
+              "slope": 0.49944465012958106,
+              "expected_slope": 0.5000000000000006,
+              "rms": 0.5618560024033896,
+              "outline_adjusted_residual": 0.710666829439871,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 73,
+                "slope": 0.49944465012958106,
+                "rms": 0.5618560024033896,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            12150
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "beam",
+              "mode": "top",
+              "samples": 73,
+              "slope": -0.5005553498704189,
+              "expected_slope": -0.5,
+              "rms": 0.555811729457054,
+              "outline_adjusted_residual": 0.7158556189107884,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 73,
+                "slope": -0.5005553498704189,
+                "rms": 0.555811729457054,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "beam",
+              "mode": "top",
+              "samples": 6,
+              "slope": 0.4571428571428488,
+              "expected_slope": 0.49999999999999684,
+              "rms": 0.5285499781147254,
+              "outline_adjusted_residual": 0.7162605437925625,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": false
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            12491
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "beam",
+              "mode": "top",
+              "samples": 5,
+              "slope": -0.399999999999978,
+              "expected_slope": -0.5000000000000032,
+              "rms": 0.565685424949238,
+              "outline_adjusted_residual": 0.7196344894133062,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": false
+            },
+            {
+              "part": "beam",
+              "mode": "top",
+              "samples": 73,
+              "slope": 0.4994446501295819,
+              "expected_slope": 0.4999999999999997,
+              "rms": 0.56185600240339,
+              "outline_adjusted_residual": 0.8996647882916381,
+              "visible_fraction": 0.8904109589041096,
+              "combined": {
+                "samples": 65,
+                "slope": 0.49930069930069865,
+                "rms": 0.56217513480652,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            11398
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "beam",
+              "mode": "top",
+              "samples": 73,
+              "slope": -0.4994446501295818,
+              "expected_slope": -0.5,
+              "rms": 0.5618560024033894,
+              "outline_adjusted_residual": 0.8791168430861586,
+              "visible_fraction": 0.821917808219178,
+              "combined": {
+                "samples": 60,
+                "slope": -0.497916087802168,
+                "rms": 0.5578508356867016,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "beam",
+              "mode": "top",
+              "samples": 5,
+              "slope": 0.5999999999999737,
+              "expected_slope": 0.5000000000000032,
+              "rms": 0.48989794855663565,
+              "outline_adjusted_residual": 0.6196344894133062,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": false
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "portal",
+          "d": 0,
+          "connected": true,
+          "pixels": 11945
+        },
+        {
+          "name": "camera",
+          "d": 0,
+          "connected": true,
+          "pixels": 1197
+        },
+        {
+          "name": "beam",
+          "d": 0,
+          "connected": true,
+          "pixels": 2656
+        },
+        {
+          "name": "portal",
+          "d": 1,
+          "connected": true,
+          "pixels": 11467
+        },
+        {
+          "name": "camera",
+          "d": 1,
+          "connected": true,
+          "pixels": 1184
+        },
+        {
+          "name": "beam",
+          "d": 1,
+          "connected": true,
+          "pixels": 2656
+        },
+        {
+          "name": "portal",
+          "d": 2,
+          "connected": true,
+          "pixels": 11703
+        },
+        {
+          "name": "camera",
+          "d": 2,
+          "connected": true,
+          "pixels": 1247
+        },
+        {
+          "name": "beam",
+          "d": 2,
+          "connected": true,
+          "pixels": 2656
+        },
+        {
+          "name": "portal",
+          "d": 3,
+          "connected": true,
+          "pixels": 11069
+        },
+        {
+          "name": "camera",
+          "d": 3,
+          "connected": true,
+          "pixels": 1240
+        },
+        {
+          "name": "beam",
+          "d": 3,
+          "connected": true,
+          "pixels": 2656
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "portal",
+          "b": "camera",
+          "solid_part_pair_checks": 1573,
+          "minimum_separating_axis_gap": 0.4120530357324188,
+          "method": "separate solid AABBs rather than a concave group union box"
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_photozone_0.webp",
+          "sha256": "e3e12e5c4a15c60626cbad387ddf10fd55ddc13fb6ca42f23bc3cbf3e77b0a99"
+        },
+        {
+          "d": 1,
+          "file": "fac_photozone_1.webp",
+          "sha256": "b62465d10510e51449da966fa0e27e7f3b34f1028a7ef179f8e64141fdef68a1"
+        },
+        {
+          "d": 2,
+          "file": "fac_photozone_2.fix-74c9ef95d285.webp",
+          "sha256": "74c9ef95d285c50635c6d0f429bc9076f647fadf37e638851b05676cb5414693"
+        },
+        {
+          "d": 3,
+          "file": "fac_photozone_3.fix-b2f2a78cb5c0.webp",
+          "sha256": "b2f2a78cb5c0df6571ed34406f3af690520510cf611df63a375a284e4dd350bb"
+        }
+      ],
+      "limits": [
+        "Golden photo arch, cream drapes, green/cream flowers, a teal/cream ring and buoy and camera tripod reference source d0.",
+        "Source decoration and camera positions differ by facing; one fixed layout is used, with genuine ring/handle holes and camera front/back surfaces.",
+        "Leaves and flowers are small closed painted solids; no facing-dependent decorative billboards.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,409 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "playground": "play-photo-batch-20261003",
+    "bungee_jump": "play-photo-batch-20261003",
+    "photozone": "play-photo-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "playground",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/play-photo-batch-20261003/candidates/playground/d0.png",
+      "source_sha256": "3a41715197df2d0fe7c17eb8f421309b9a2b2cb8ceab08ce1081acc126d2a91b",
+      "old": {
+        "file": "fac_playground_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "5682d477402733ce4ad428c20de997ef823dd9f090049b3ee29f7f4934302619",
+        "bytes": 37658
+      },
+      "new": {
+        "file": "fac_playground_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "b7d98e4d936f7aa91828bc17aecb70ffaad8dfe2aa9ef15f2a4c0c73fbc9548d",
+        "bytes": 24898
+      },
+      "old_native": {
+        "file": "playground/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "d01aad91cb38cdd420b2c22adc3ed793bc6362a3c066c4142069589abf5179a2"
+      },
+      "new_native": {
+        "file": "playground/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "544fc12b78e8019e4cabf062cdebf91ba5857a7848ca2d3ffd92bb9886120254"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "playground",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/play-photo-batch-20261003/candidates/playground/d1.png",
+      "source_sha256": "3149bdaa1f338eb4726d81141f6d3ad8a4e2a49338919397ce74ee95124da5eb",
+      "old": {
+        "file": "fac_playground_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "b66a0cb750afcc9ad54ae70f01543adc9dabfecab4625fb1c763cbf6bdf47383",
+        "bytes": 31188
+      },
+      "new": {
+        "file": "fac_playground_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "f0e8b0cb2e0d59747061c4b2af98a7d7846443f5dbff1cedd8ed20bf58692011",
+        "bytes": 23344
+      },
+      "old_native": {
+        "file": "playground/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "9a049c95aec9b0762a6f6f698342e306790072b7471d95216c01928cb8014743"
+      },
+      "new_native": {
+        "file": "playground/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "58432b3ddc8ca7f19d2874f9b80d366cf14edeb19477a3de32f834b0d1f8b8c7"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "playground",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/play-photo-batch-20261003/candidates/playground/d2.png",
+      "source_sha256": "50bca0bc3b9e952f7835dd469b56ac465680947ae773cb698fef72b6006e2d7c",
+      "old": {
+        "file": "fac_playground_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "0148420a1e4f36ebbdfbc02e66a649b87d94d241c4d84e5d4d561b0cccd9bd79",
+        "bytes": 35974
+      },
+      "new": {
+        "file": "fac_playground_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "2c3ac9a8bb3a2549f27b2b04bec99683c602403c175c237b9c78149db3afe451",
+        "bytes": 23540
+      },
+      "old_native": {
+        "file": "playground/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "81d501185f92b0e2f2135da76251960f00e9ef176cd4b9b1b1d9b73f7350dbc8"
+      },
+      "new_native": {
+        "file": "playground/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "dbad9e0df6688a518d17e55dab70bdac5c468af1ab227bf563364c9f27f8a9ba"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "playground",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/play-photo-batch-20261003/candidates/playground/d3.png",
+      "source_sha256": "db77787c992ba65e34e215cc003f5d571e3acc948515385717ac47b8f9b24c0a",
+      "old": {
+        "file": "fac_playground_3.fix-89c522dad6a6.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "89c522dad6a62a5750a1c2e76b2955b020c7ba8b278b36cda0f751526ac7d639",
+        "bytes": 48814
+      },
+      "new": {
+        "file": "fac_playground_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "c664685a0f56efe2df35e09a9e7395745c875e3f52c1d46f8972a213ec26eccd",
+        "bytes": 21382
+      },
+      "old_native": {
+        "file": "playground/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "c832d022f4d3d0aac2b0e973e28003910daf7bd07aee4d628dcf6e047167f978"
+      },
+      "new_native": {
+        "file": "playground/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "eb47b4e3580e0559daca25fe9068e0c3cb41562533ca3e8f5c711e381d2742a8"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "bungee_jump",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/play-photo-batch-20261003/candidates/bungee_jump/d0.png",
+      "source_sha256": "8802ce60b7e48d4254d4b575c61ebaef236dd18e7177a33ba0ed43ff5d1097ef",
+      "old": {
+        "file": "fac_bungee_jump_0.webp",
+        "w": 256,
+        "h": 256,
+        "sha256": "05b8e97f237f068431c52d26458d5d08bf3efcdeac3b2bb79957ca6fec7da629",
+        "bytes": 199136
+      },
+      "new": {
+        "file": "fac_bungee_jump_0_accepted_20261003.webp",
+        "w": 256,
+        "h": 256,
+        "sha256": "aa6b3fff15e6dc8c1e5baa0df6bd0d7490944ec0fc91ea331f0ccf68b48bb16a",
+        "bytes": 79272
+      },
+      "old_native": {
+        "file": "bungee_jump/native-d0.png",
+        "w": 256,
+        "h": 256,
+        "sha256": "589fafb0e580663f535083a729b84399c4a0ed2c3ccb527a152f8be20abe3bb1"
+      },
+      "new_native": {
+        "file": "bungee_jump/accepted-20261003-d0.png",
+        "w": 256,
+        "h": 256,
+        "sha256": "ba94e6d607c2d5fc6972ef7a262e56877f25346d7eba7a32b911016e39bf044d"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "bungee_jump",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/play-photo-batch-20261003/candidates/bungee_jump/d1.png",
+      "source_sha256": "baa50133031d26b7724e929f3b1a436b84e5d29bb49ecf4a32d36f9938f8d7ab",
+      "old": {
+        "file": "fac_bungee_jump_1.webp",
+        "w": 256,
+        "h": 256,
+        "sha256": "2217c6733a71488cf48dccf0838161f7aa3eaef2e2a18b6e9e4c7774ff09dd3f",
+        "bytes": 198260
+      },
+      "new": {
+        "file": "fac_bungee_jump_1_accepted_20261003.webp",
+        "w": 256,
+        "h": 256,
+        "sha256": "097625b7cebba63c5c1a213be7053e55008680aad402ddcb7984231d27da1b30",
+        "bytes": 83368
+      },
+      "old_native": {
+        "file": "bungee_jump/native-d1.png",
+        "w": 256,
+        "h": 256,
+        "sha256": "ed498d3f4f64558a9638e36bb02d9597e875cb94de0ca165b959acdd5561948c"
+      },
+      "new_native": {
+        "file": "bungee_jump/accepted-20261003-d1.png",
+        "w": 256,
+        "h": 256,
+        "sha256": "3b793c44b3b5ef8aaa7d962571a3e5bae663e30b14f45305afa488465a25fa6d"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "bungee_jump",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/play-photo-batch-20261003/candidates/bungee_jump/d2.png",
+      "source_sha256": "ae6bea5bb46259f1ec189774e472426f615f74cdae2f3f2c63f222b4918172f2",
+      "old": {
+        "file": "fac_bungee_jump_2.webp",
+        "w": 256,
+        "h": 256,
+        "sha256": "60e428a756656089632331a6d5efed47164c1e8465395c9e2ba0cf5ae566e320",
+        "bytes": 172660
+      },
+      "new": {
+        "file": "fac_bungee_jump_2_accepted_20261003.webp",
+        "w": 256,
+        "h": 256,
+        "sha256": "d9568d763f249c1b1aa480a5a61a8942fd6f0d8834aa8a913d14899167560cef",
+        "bytes": 86856
+      },
+      "old_native": {
+        "file": "bungee_jump/native-d2.png",
+        "w": 256,
+        "h": 256,
+        "sha256": "8e5a1912c55859a5906bd3cc0d5b4e248c6c07de1c188071f10fb100d5bcd610"
+      },
+      "new_native": {
+        "file": "bungee_jump/accepted-20261003-d2.png",
+        "w": 256,
+        "h": 256,
+        "sha256": "555bf2cafb5eee276475159ae34fb8fa8d80016844ab022cead6b4f3f132d30a"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "bungee_jump",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/play-photo-batch-20261003/candidates/bungee_jump/d3.png",
+      "source_sha256": "7df80e71141c9cb59500d58838229ea163145836ca23009f00a19298fd674cee",
+      "old": {
+        "file": "fac_bungee_jump_3.webp",
+        "w": 256,
+        "h": 256,
+        "sha256": "df6f7c7e46c702c6ff78a7340aa713ae2cf8398df0303ab33c8b160c87064339",
+        "bytes": 239458
+      },
+      "new": {
+        "file": "fac_bungee_jump_3_accepted_20261003.webp",
+        "w": 256,
+        "h": 256,
+        "sha256": "331e3b1c3f1eb42af7b6afeff3769a93d504df2f2ab2a7759b30da9a7f514fcf",
+        "bytes": 90356
+      },
+      "old_native": {
+        "file": "bungee_jump/native-d3.png",
+        "w": 256,
+        "h": 256,
+        "sha256": "597b7919ef2441062e3e9117065c55d0cb3a58edc1b2d9c145b2259ab5997a9b"
+      },
+      "new_native": {
+        "file": "bungee_jump/accepted-20261003-d3.png",
+        "w": 256,
+        "h": 256,
+        "sha256": "3351e37d4eab2d2290d408242679d7ecd2c587dd9662802ad9f62a6fcc4bffed"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "photozone",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/play-photo-batch-20261003/candidates/photozone/d0.png",
+      "source_sha256": "526487323f9534feb3ed1f93b3f267d721baaf09adf1bf4b0a7ed85f2d32a326",
+      "old": {
+        "file": "fac_photozone_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e3e12e5c4a15c60626cbad387ddf10fd55ddc13fb6ca42f23bc3cbf3e77b0a99",
+        "bytes": 38932
+      },
+      "new": {
+        "file": "fac_photozone_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e9e636a6b0e16a181d2f49886244d19a9a6ceb3d5fcd1c8b0b4a7d22ca5bbea4",
+        "bytes": 20756
+      },
+      "old_native": {
+        "file": "photozone/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "74c13a41c5089d81cf7817c5cd700c81012af058fe148074ae1e7c2150172bea"
+      },
+      "new_native": {
+        "file": "photozone/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "de17464a5dc862ca851dd1bacb0a9fbf0af84e054cf68b63eb6b7c939c14cae7"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "photozone",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/play-photo-batch-20261003/candidates/photozone/d1.png",
+      "source_sha256": "1c4ef916684090ef1cb406ac7cb2032b6568606fed63c5576538449c00500cdf",
+      "old": {
+        "file": "fac_photozone_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "b62465d10510e51449da966fa0e27e7f3b34f1028a7ef179f8e64141fdef68a1",
+        "bytes": 30324
+      },
+      "new": {
+        "file": "fac_photozone_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "711a21931f12bf3b2a3dcc776c7563078f0ab6ce6d6d2fedb108035cdc2f062c",
+        "bytes": 18734
+      },
+      "old_native": {
+        "file": "photozone/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "73859d495c6b601def84050e17f8c90af8ad68d9601c91c1e4eb20ee0e7f86fd"
+      },
+      "new_native": {
+        "file": "photozone/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "6724e4055f819a75e3b8b910f7367605d4e2ab85776ea1665aaea24a20f8dde6"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "photozone",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/play-photo-batch-20261003/candidates/photozone/d2.png",
+      "source_sha256": "2e354b2321f89b99a9fb615ff7fc12a1164672afc8b595f899772efffad75dfa",
+      "old": {
+        "file": "fac_photozone_2.fix-74c9ef95d285.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "74c9ef95d285c50635c6d0f429bc9076f647fadf37e638851b05676cb5414693",
+        "bytes": 41466
+      },
+      "new": {
+        "file": "fac_photozone_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "fbc1320f9dc53d31a9893158569330b6d135f039249b4c35122703cbd881ffd5",
+        "bytes": 18974
+      },
+      "old_native": {
+        "file": "photozone/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "bd43a55939f822222d107b4c8d03116b54ab40dfeea6275fdbae34ab50832895"
+      },
+      "new_native": {
+        "file": "photozone/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "c961efc3c2aa4b5963bebdc5c0472acb568bf5dd4ad3667bd46f124969ff9a51"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "photozone",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/play-photo-batch-20261003/candidates/photozone/d3.png",
+      "source_sha256": "0758ac45f7751fb44a5944635856883f80ea26d2e1f7b09dd21d5dbb50a11cc2",
+      "old": {
+        "file": "fac_photozone_3.fix-b2f2a78cb5c0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "b2f2a78cb5c0df6571ed34406f3af690520510cf611df63a375a284e4dd350bb",
+        "bytes": 35808
+      },
+      "new": {
+        "file": "fac_photozone_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "d0524019c419de54e86ba63c0a1d2b522c07bb4a7295d170e7d088019c92f475",
+        "bytes": 16436
+      },
+      "old_native": {
+        "file": "photozone/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "c7d4f55425b284c898abf10e56393774f4c6cebfa685cee80c310a114d7caa02"
+      },
+      "new_native": {
+        "file": "photozone/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "85fe284563e95b97af489ee3c94a18e93ab35d7e3503a75fefd4a3d80f47b00f"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

@@ -1179,88 +1179,88 @@
       "bytes": 81868
     },
     "fac/playground/0": {
-      "file": "fac_playground_0.webp",
+      "file": "fac_playground_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "5682d477402733ce4ad428c20de997ef823dd9f090049b3ee29f7f4934302619",
-      "bytes": 37658
+      "sha256": "b7d98e4d936f7aa91828bc17aecb70ffaad8dfe2aa9ef15f2a4c0c73fbc9548d",
+      "bytes": 24898
     },
     "fac/playground/1": {
-      "file": "fac_playground_1.webp",
+      "file": "fac_playground_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "b66a0cb750afcc9ad54ae70f01543adc9dabfecab4625fb1c763cbf6bdf47383",
-      "bytes": 31188
+      "sha256": "f0e8b0cb2e0d59747061c4b2af98a7d7846443f5dbff1cedd8ed20bf58692011",
+      "bytes": 23344
     },
     "fac/playground/2": {
-      "file": "fac_playground_2.webp",
+      "file": "fac_playground_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "0148420a1e4f36ebbdfbc02e66a649b87d94d241c4d84e5d4d561b0cccd9bd79",
-      "bytes": 35974
+      "sha256": "2c3ac9a8bb3a2549f27b2b04bec99683c602403c175c237b9c78149db3afe451",
+      "bytes": 23540
     },
     "fac/playground/3": {
-      "file": "fac_playground_3.fix-89c522dad6a6.webp",
+      "file": "fac_playground_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "89c522dad6a62a5750a1c2e76b2955b020c7ba8b278b36cda0f751526ac7d639",
-      "bytes": 48814
+      "sha256": "c664685a0f56efe2df35e09a9e7395745c875e3f52c1d46f8972a213ec26eccd",
+      "bytes": 21382
     },
     "fac/bungee_jump/0": {
-      "file": "fac_bungee_jump_0.webp",
+      "file": "fac_bungee_jump_0_accepted_20261003.webp",
       "w": 256,
       "h": 256,
-      "sha256": "05b8e97f237f068431c52d26458d5d08bf3efcdeac3b2bb79957ca6fec7da629",
-      "bytes": 199136
+      "sha256": "aa6b3fff15e6dc8c1e5baa0df6bd0d7490944ec0fc91ea331f0ccf68b48bb16a",
+      "bytes": 79272
     },
     "fac/bungee_jump/1": {
-      "file": "fac_bungee_jump_1.webp",
+      "file": "fac_bungee_jump_1_accepted_20261003.webp",
       "w": 256,
       "h": 256,
-      "sha256": "2217c6733a71488cf48dccf0838161f7aa3eaef2e2a18b6e9e4c7774ff09dd3f",
-      "bytes": 198260
+      "sha256": "097625b7cebba63c5c1a213be7053e55008680aad402ddcb7984231d27da1b30",
+      "bytes": 83368
     },
     "fac/bungee_jump/2": {
-      "file": "fac_bungee_jump_2.webp",
+      "file": "fac_bungee_jump_2_accepted_20261003.webp",
       "w": 256,
       "h": 256,
-      "sha256": "60e428a756656089632331a6d5efed47164c1e8465395c9e2ba0cf5ae566e320",
-      "bytes": 172660
+      "sha256": "d9568d763f249c1b1aa480a5a61a8942fd6f0d8834aa8a913d14899167560cef",
+      "bytes": 86856
     },
     "fac/bungee_jump/3": {
-      "file": "fac_bungee_jump_3.webp",
+      "file": "fac_bungee_jump_3_accepted_20261003.webp",
       "w": 256,
       "h": 256,
-      "sha256": "df6f7c7e46c702c6ff78a7340aa713ae2cf8398df0303ab33c8b160c87064339",
-      "bytes": 239458
+      "sha256": "331e3b1c3f1eb42af7b6afeff3769a93d504df2f2ab2a7759b30da9a7f514fcf",
+      "bytes": 90356
     },
     "fac/photozone/0": {
-      "file": "fac_photozone_0.webp",
+      "file": "fac_photozone_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "e3e12e5c4a15c60626cbad387ddf10fd55ddc13fb6ca42f23bc3cbf3e77b0a99",
-      "bytes": 38932
+      "sha256": "e9e636a6b0e16a181d2f49886244d19a9a6ceb3d5fcd1c8b0b4a7d22ca5bbea4",
+      "bytes": 20756
     },
     "fac/photozone/1": {
-      "file": "fac_photozone_1.webp",
+      "file": "fac_photozone_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "b62465d10510e51449da966fa0e27e7f3b34f1028a7ef179f8e64141fdef68a1",
-      "bytes": 30324
+      "sha256": "711a21931f12bf3b2a3dcc776c7563078f0ab6ce6d6d2fedb108035cdc2f062c",
+      "bytes": 18734
     },
     "fac/photozone/2": {
-      "file": "fac_photozone_2.fix-74c9ef95d285.webp",
+      "file": "fac_photozone_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "74c9ef95d285c50635c6d0f429bc9076f647fadf37e638851b05676cb5414693",
-      "bytes": 41466
+      "sha256": "fbc1320f9dc53d31a9893158569330b6d135f039249b4c35122703cbd881ffd5",
+      "bytes": 18974
     },
     "fac/photozone/3": {
-      "file": "fac_photozone_3.fix-b2f2a78cb5c0.webp",
+      "file": "fac_photozone_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "b2f2a78cb5c0df6571ed34406f3af690520510cf611df63a375a284e4dd350bb",
-      "bytes": 35808
+      "sha256": "d0524019c419de54e86ba63c0a1d2b522c07bb4a7295d170e7d088019c92f475",
+      "bytes": 16436
     },
     "fac/env_village_house/0": {
       "file": "fac_env_village_house_0.webp",
