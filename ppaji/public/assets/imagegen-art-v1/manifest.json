@@ -3,32 +3,32 @@
   "density": 4,
   "entries": {
     "fac/toilet/0": {
-      "file": "fac_toilet_0.webp",
+      "file": "fac_toilet_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "f61bef2ede1e6495ef88998ed68a470e887b4f323f7275db5ff9d7ba53b1eb9c",
-      "bytes": 66124
+      "sha256": "e3212f4718ec71f134e9353d6fcc70fd22df17a5b970492bb4dd004b0a850581",
+      "bytes": 42988
     },
     "fac/toilet/1": {
-      "file": "fac_toilet_1.webp",
+      "file": "fac_toilet_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "65eae7ef804988587fbcf7f8fc1d16fa7c481a06a23be1dda0e29a3f3a199cbd",
-      "bytes": 68948
+      "sha256": "688ec4b0bc51b56df18bf9eff498095f5f13dc190505c383299625b68d8c4a1b",
+      "bytes": 40276
     },
     "fac/toilet/2": {
-      "file": "fac_toilet_2.webp",
+      "file": "fac_toilet_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "9be234554e96ec585bd49d1eb75fb822e005338f3c30d4eb3be775f7d0b142dc",
-      "bytes": 59732
+      "sha256": "9cb1feecd1a6935262ec19066fd0b9cf264fd0f94320baa95b2e395d94bb52ed",
+      "bytes": 39016
     },
     "fac/toilet/3": {
-      "file": "fac_toilet_3.webp",
+      "file": "fac_toilet_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "02c16c580577365c433bc625ad79265de423cf03edad77ab1a9bf463528f4d6d",
-      "bytes": 61096
+      "sha256": "8a29402672bf5e5b3ac017037238cec719c862ee2c651bff60bc81818ed7934b",
+      "bytes": 40546
     },
     "fac/sauna/0": {
       "file": "fac_sauna_0.webp",
@@ -871,60 +871,60 @@
       "bytes": 36806
     },
     "fac/authored_massage_row/0": {
-      "file": "fac_authored_massage_row_0.webp",
+      "file": "fac_authored_massage_row_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "4ff50452428f13b2e9b973d1f44f4078e75feeb54f1af6f24170c5e6f27cf6ec",
-      "bytes": 32502
+      "sha256": "414f3dbfa11b227615a3205bbfd7341f5d255449f1cf76d847164ec697c6438e",
+      "bytes": 21156
     },
     "fac/authored_massage_row/1": {
-      "file": "fac_authored_massage_row_1.webp",
+      "file": "fac_authored_massage_row_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "fe3e5ae91204fd0fc9f1230fbe20e29a2c27aed693aa264e70480a51503167b5",
-      "bytes": 33062
+      "sha256": "60ef7de0132f9b027b12f658a46469bf7f785f7521ae2c30b779671ce0c74081",
+      "bytes": 21894
     },
     "fac/authored_massage_row/2": {
-      "file": "fac_authored_massage_row_2.webp",
+      "file": "fac_authored_massage_row_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "d8f104dae2637e9712fc9cad750e32c2eaa6d8e1fd7cc1c359f7bf4ccc55dbc0",
-      "bytes": 23534
+      "sha256": "755cc14969fee65d2d27036de2016e85e5bf05444f316e867bd8c68c7834d439",
+      "bytes": 11108
     },
     "fac/authored_massage_row/3": {
-      "file": "fac_authored_massage_row_3.webp",
+      "file": "fac_authored_massage_row_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "9ded8f9610f4fa3bcfa7c7b9065e0945b7c284b342121399bf4e71f65f47a74e",
-      "bytes": 21924
+      "sha256": "f07ad504cfe0ba8f6c1a3f0d322ba67127a82d77b4a1d8af3151ec8fce754d84",
+      "bytes": 11508
     },
     "fac/authored_footbath/0": {
-      "file": "fac_authored_footbath_0.fix-d985481bef76.webp",
+      "file": "fac_authored_footbath_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "d985481bef761b77261aeeda972cb196d9c7ce4fddf697d9ab68e0d2711a3af0",
-      "bytes": 37792
+      "sha256": "7ccaba93b1e6c46b9e80283552210c728fc9af729a591bd03b502b3d008431e9",
+      "bytes": 20718
     },
     "fac/authored_footbath/1": {
-      "file": "fac_authored_footbath_1.webp",
+      "file": "fac_authored_footbath_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "338ef2d675eb4cd9c3a26746187cba63034145d2833abe7587c3ecd4dbd23016",
-      "bytes": 35240
+      "sha256": "6b1d2aeb888ca60856fb68876635010c2e19de717fff7e4bd1961eaeefbb34ac",
+      "bytes": 20138
     },
     "fac/authored_footbath/2": {
-      "file": "fac_authored_footbath_2.fix-62a7e89ab993.webp",
+      "file": "fac_authored_footbath_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "62a7e89ab993c528c618e0b1a3c91ff90c7aff8cfdb5743c665f19be1767fae1",
-      "bytes": 31716
+      "sha256": "3ec03e8a8d4c32275b215d10f34f6a35754a92279a178d5a8316f118095025de",
+      "bytes": 17822
     },
     "fac/authored_footbath/3": {
-      "file": "fac_authored_footbath_3.fix-0a22be729eba.webp",
+      "file": "fac_authored_footbath_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "0a22be729ebac1c5a04b51eee9c0ddb242835af658c7a4b2c71e6c4d1380cc5d",
-      "bytes": 26478
+      "sha256": "fd3baf85e3d91ab507d2068a7618ee1d87c190fcbd6693d59416ff9539d6682b",
+      "bytes": 18510
     },
     "fac/caravan/0": {
       "file": "fac_caravan_0.webp",

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "authored_massage_row",
+    "d": 0,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_massage_row",
+    "d": 1,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_massage_row",
+    "d": 2,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_massage_row",
+    "d": 3,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_footbath",
+    "d": 0,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_footbath",
+    "d": 1,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_footbath",
+    "d": 2,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_footbath",
+    "d": 3,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "toilet",
+    "d": 0,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "toilet",
+    "d": 1,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "toilet",
+    "d": 2,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "toilet",
+    "d": 3,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  }
+]

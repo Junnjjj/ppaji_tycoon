@@ -1,0 +1,409 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "authored_massage_row": "wellness-toilet-batch-20261003",
+    "authored_footbath": "wellness-toilet-batch-20261003",
+    "toilet": "wellness-toilet-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "authored_massage_row",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/wellness-toilet-batch-20261003/candidates/authored_massage_row/d0.png",
+      "source_sha256": "4d59c90d8fc9bf4b3e5eb8879aa16cc0964e009411a5698cd4964f25f49cb24b",
+      "old": {
+        "file": "fac_authored_massage_row_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "4ff50452428f13b2e9b973d1f44f4078e75feeb54f1af6f24170c5e6f27cf6ec",
+        "bytes": 32502
+      },
+      "new": {
+        "file": "fac_authored_massage_row_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "414f3dbfa11b227615a3205bbfd7341f5d255449f1cf76d847164ec697c6438e",
+        "bytes": 21156
+      },
+      "old_native": {
+        "file": "authored_massage_row/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "1b8f63ec46bf1742ff80a6d0f5373f3ccb98446137780125abc3a2a4a20fee8d"
+      },
+      "new_native": {
+        "file": "authored_massage_row/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "90be8c416c3e0cc2b2a6e9cac7dd300e3ce954e4b7016d93aae6bd8894b0ee15"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_massage_row",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/wellness-toilet-batch-20261003/candidates/authored_massage_row/d1.png",
+      "source_sha256": "92744de43a9286bd526c54b5eb25164efa963734412015e979a3e07ffe3eaf81",
+      "old": {
+        "file": "fac_authored_massage_row_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "fe3e5ae91204fd0fc9f1230fbe20e29a2c27aed693aa264e70480a51503167b5",
+        "bytes": 33062
+      },
+      "new": {
+        "file": "fac_authored_massage_row_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "60ef7de0132f9b027b12f658a46469bf7f785f7521ae2c30b779671ce0c74081",
+        "bytes": 21894
+      },
+      "old_native": {
+        "file": "authored_massage_row/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "30cbf18eb05a4de4573561e091ca0c968a84b7214fa8ec92c4c88785ee686e2f"
+      },
+      "new_native": {
+        "file": "authored_massage_row/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "6002aad1caadcacdd3951e6e4f36627b90178272546a368d3bcea81ee900b12e"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_massage_row",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/wellness-toilet-batch-20261003/candidates/authored_massage_row/d2.png",
+      "source_sha256": "7999e396a954dd2ce7534f32f255f1143fd8defc081ecc6f67766bf8d2afa00c",
+      "old": {
+        "file": "fac_authored_massage_row_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "d8f104dae2637e9712fc9cad750e32c2eaa6d8e1fd7cc1c359f7bf4ccc55dbc0",
+        "bytes": 23534
+      },
+      "new": {
+        "file": "fac_authored_massage_row_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "755cc14969fee65d2d27036de2016e85e5bf05444f316e867bd8c68c7834d439",
+        "bytes": 11108
+      },
+      "old_native": {
+        "file": "authored_massage_row/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "864c5b4a5bf1fca60f9029d0a681d2a647a6f3f1079fee48dbf834a28c5e7f0f"
+      },
+      "new_native": {
+        "file": "authored_massage_row/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "219371cb1f74f70e1058f9575d85d36fe1f44ce10f6772a8bd1e5e7cee7d3667"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_massage_row",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/wellness-toilet-batch-20261003/candidates/authored_massage_row/d3.png",
+      "source_sha256": "a4703c9406d402096a9bd89eb493f1489ce32d7727844579c4b4bfc50c61a9db",
+      "old": {
+        "file": "fac_authored_massage_row_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "9ded8f9610f4fa3bcfa7c7b9065e0945b7c284b342121399bf4e71f65f47a74e",
+        "bytes": 21924
+      },
+      "new": {
+        "file": "fac_authored_massage_row_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "f07ad504cfe0ba8f6c1a3f0d322ba67127a82d77b4a1d8af3151ec8fce754d84",
+        "bytes": 11508
+      },
+      "old_native": {
+        "file": "authored_massage_row/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "daa0b7a1235673917e906f62837684ef2bb32bed2e17f09f8f8a1d40d4f1eee4"
+      },
+      "new_native": {
+        "file": "authored_massage_row/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "efbe99b34a5e2956c142b329974297f1b05a45083e557097e84f518d4379832b"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_footbath",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/wellness-toilet-batch-20261003/candidates/authored_footbath/d0.png",
+      "source_sha256": "eca95a8770c4b38878fad0da7335bfd2f91277e9fef7789d3f1f02b5d1d6795f",
+      "old": {
+        "file": "fac_authored_footbath_0.fix-d985481bef76.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "d985481bef761b77261aeeda972cb196d9c7ce4fddf697d9ab68e0d2711a3af0",
+        "bytes": 37792
+      },
+      "new": {
+        "file": "fac_authored_footbath_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "7ccaba93b1e6c46b9e80283552210c728fc9af729a591bd03b502b3d008431e9",
+        "bytes": 20718
+      },
+      "old_native": {
+        "file": "authored_footbath/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "3706bdccfb4aee5660ac985f0516ed2c5119c41dffe65ca1145e8abf46b7ceb5"
+      },
+      "new_native": {
+        "file": "authored_footbath/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "e10b495a6191ea1e13f4e4021aa743be60db6d4d877eade5a833b9695a0d814f"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_footbath",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/wellness-toilet-batch-20261003/candidates/authored_footbath/d1.png",
+      "source_sha256": "f322fbb5bcbb354b754b2c230eaac7bb9bd35d0b8cb420856738be9c64464eb3",
+      "old": {
+        "file": "fac_authored_footbath_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "338ef2d675eb4cd9c3a26746187cba63034145d2833abe7587c3ecd4dbd23016",
+        "bytes": 35240
+      },
+      "new": {
+        "file": "fac_authored_footbath_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "6b1d2aeb888ca60856fb68876635010c2e19de717fff7e4bd1961eaeefbb34ac",
+        "bytes": 20138
+      },
+      "old_native": {
+        "file": "authored_footbath/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "629c9998af7cba00232286371fd46bc212286c8e3a0d0127f5fdcc7fb1b2c338"
+      },
+      "new_native": {
+        "file": "authored_footbath/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f0efa90b250887df375ab4227232eff5f9368022699afcacc52dd51c8ac325cf"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_footbath",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/wellness-toilet-batch-20261003/candidates/authored_footbath/d2.png",
+      "source_sha256": "7f2aa4032c612391168190db799edce2dcf0c455c61796c0ca83a7ae0e538f6f",
+      "old": {
+        "file": "fac_authored_footbath_2.fix-62a7e89ab993.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "62a7e89ab993c528c618e0b1a3c91ff90c7aff8cfdb5743c665f19be1767fae1",
+        "bytes": 31716
+      },
+      "new": {
+        "file": "fac_authored_footbath_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "3ec03e8a8d4c32275b215d10f34f6a35754a92279a178d5a8316f118095025de",
+        "bytes": 17822
+      },
+      "old_native": {
+        "file": "authored_footbath/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "0a92f0811377c5c940df98c654c54b0d3f8a732f5000d1160b06df632ab7e9cd"
+      },
+      "new_native": {
+        "file": "authored_footbath/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "e2dcde04480839580c897b4bb54582afa4576687650895b9884468f0455891bd"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_footbath",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/wellness-toilet-batch-20261003/candidates/authored_footbath/d3.png",
+      "source_sha256": "7ebb5b74fcb678a7b20d2e91c371612b9a4dca8e66856d2333d092178d0e2adb",
+      "old": {
+        "file": "fac_authored_footbath_3.fix-0a22be729eba.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "0a22be729ebac1c5a04b51eee9c0ddb242835af658c7a4b2c71e6c4d1380cc5d",
+        "bytes": 26478
+      },
+      "new": {
+        "file": "fac_authored_footbath_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "fd3baf85e3d91ab507d2068a7618ee1d87c190fcbd6693d59416ff9539d6682b",
+        "bytes": 18510
+      },
+      "old_native": {
+        "file": "authored_footbath/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "70316e33e888ee6aeb74bdcd92b767a3f0e722324ece56cc79d1a8c4d8c8f830"
+      },
+      "new_native": {
+        "file": "authored_footbath/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "14272abb8a8fd29b920944987d95ee2a1f3c501e497fc35657015ab8b276794d"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "toilet",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/wellness-toilet-batch-20261003/candidates/toilet/d0.png",
+      "source_sha256": "72301350251374cbcf7100e44963e110beceee72d59414efa22421e7e0fa4675",
+      "old": {
+        "file": "fac_toilet_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "f61bef2ede1e6495ef88998ed68a470e887b4f323f7275db5ff9d7ba53b1eb9c",
+        "bytes": 66124
+      },
+      "new": {
+        "file": "fac_toilet_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e3212f4718ec71f134e9353d6fcc70fd22df17a5b970492bb4dd004b0a850581",
+        "bytes": 42988
+      },
+      "old_native": {
+        "file": "toilet/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "a0a999ba784e465f4a428006c689b9ce10650ce1121790f7df7666835e439ca5"
+      },
+      "new_native": {
+        "file": "toilet/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "ebb064d7481a2fa06b280d287ad6ccec4b5d979c19d418e9ca322945357513d7"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "toilet",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/wellness-toilet-batch-20261003/candidates/toilet/d1.png",
+      "source_sha256": "f90c06e600051b29b7cafe008df9258d10d7e06d92fa3f34e0851e6aea3e2692",
+      "old": {
+        "file": "fac_toilet_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "65eae7ef804988587fbcf7f8fc1d16fa7c481a06a23be1dda0e29a3f3a199cbd",
+        "bytes": 68948
+      },
+      "new": {
+        "file": "fac_toilet_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "688ec4b0bc51b56df18bf9eff498095f5f13dc190505c383299625b68d8c4a1b",
+        "bytes": 40276
+      },
+      "old_native": {
+        "file": "toilet/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "8a5dbca1cc72b27786d00d2a4e55f77077ee9f2e0f389cd22dfe37b67d37ff40"
+      },
+      "new_native": {
+        "file": "toilet/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f265b3f46ce8142c976eb06bf98e383c67cd2c7bb21df4cc771589b842ff3797"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "toilet",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/wellness-toilet-batch-20261003/candidates/toilet/d2.png",
+      "source_sha256": "1a6b41dff84164d44d56966a4ca6faaeae9fda25b1d405b8e5685bc28bc977e1",
+      "old": {
+        "file": "fac_toilet_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "9be234554e96ec585bd49d1eb75fb822e005338f3c30d4eb3be775f7d0b142dc",
+        "bytes": 59732
+      },
+      "new": {
+        "file": "fac_toilet_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "9cb1feecd1a6935262ec19066fd0b9cf264fd0f94320baa95b2e395d94bb52ed",
+        "bytes": 39016
+      },
+      "old_native": {
+        "file": "toilet/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "c9fde8011583e19e5967063d5e30e7110d1b39016108a25d98a0d28c098e728c"
+      },
+      "new_native": {
+        "file": "toilet/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "b3fe69d466ef9ec41e5b0e049f3d23cb4e8e2a6d1b6e58c0eb7a26499e7ee442"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "toilet",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/wellness-toilet-batch-20261003/candidates/toilet/d3.png",
+      "source_sha256": "82307cdd32163f7c7368455ab5a731c9dea21c1548fd7bf7339564e045acbc2b",
+      "old": {
+        "file": "fac_toilet_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "02c16c580577365c433bc625ad79265de423cf03edad77ab1a9bf463528f4d6d",
+        "bytes": 61096
+      },
+      "new": {
+        "file": "fac_toilet_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "8a29402672bf5e5b3ac017037238cec719c862ee2c651bff60bc81818ed7934b",
+        "bytes": 40546
+      },
+      "old_native": {
+        "file": "toilet/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "66ed3a713e2fe7e3fd93ae9fb710485544a262dc37d86f56590d3fd330f4a0a1"
+      },
+      "new_native": {
+        "file": "toilet/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "442c75e3e7eb9583c31daf4975186a6c4091ae865482bb2ab1e1107471a8f9ed"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

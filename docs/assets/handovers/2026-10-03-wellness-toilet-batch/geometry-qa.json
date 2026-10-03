@@ -1,0 +1,3519 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "authored_massage_row",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "chair-0-seat",
+          "b": "chair-0-back",
+          "overlap": [
+            0.5499999999999999,
+            0.02380782540740145,
+            1.4559999999999995
+          ]
+        },
+        {
+          "a": "chair-0-seat",
+          "b": "chair-0-foot",
+          "overlap": [
+            0.5499999999999999,
+            0.03308045158377304,
+            1.018711063499575
+          ]
+        },
+        {
+          "a": "chair-0-metal-0-seat",
+          "b": "chair-0-metal-0-back",
+          "overlap": [
+            0.02375000000000005,
+            0.019818869871859213,
+            0.7437193241287368
+          ]
+        },
+        {
+          "a": "chair-0-metal-0-seat",
+          "b": "chair-0-metal-0-foot",
+          "overlap": [
+            0.02375000000000005,
+            0.03313209059848554,
+            0.7465440883256296
+          ]
+        },
+        {
+          "a": "chair-0-metal-0-seat",
+          "b": "chair-0-metal-0-rear-leg",
+          "overlap": [
+            0.02375000000000005,
+            0.056304747952119816,
+            0.49634233068312206
+          ]
+        },
+        {
+          "a": "chair-0-metal-0-seat",
+          "b": "chair-0-metal-0-front-leg",
+          "overlap": [
+            0.02375000000000005,
+            0.06161450549364922,
+            0.45915643011977814
+          ]
+        },
+        {
+          "a": "chair-0-metal-0-seat",
+          "b": "chair-0-metal-0-arm-back",
+          "overlap": [
+            0.02375000000000005,
+            0.023749999999999938,
+            0.3799999999999999
+          ]
+        },
+        {
+          "a": "chair-0-metal-0-seat",
+          "b": "chair-0-metal-0-arm-front",
+          "overlap": [
+            0.02375000000000005,
+            0.02375000000000016,
+            0.3799999999999999
+          ]
+        },
+        {
+          "a": "chair-0-metal-0-lower",
+          "b": "chair-0-metal-0-rear-leg",
+          "overlap": [
+            0.020625000000000004,
+            0.055304747952119815,
+            0.6600000000000001
+          ]
+        },
+        {
+          "a": "chair-0-metal-0-lower",
+          "b": "chair-0-metal-0-front-leg",
+          "overlap": [
+            0.020625000000000004,
+            0.0416145054936492,
+            0.6600000000000001
+          ]
+        },
+        {
+          "a": "chair-0-metal-0-arm",
+          "b": "chair-0-metal-0-arm-back",
+          "overlap": [
+            0.02375000000000005,
+            0.023749999999999938,
+            0.42997255521093614
+          ]
+        },
+        {
+          "a": "chair-0-metal-0-arm",
+          "b": "chair-0-metal-0-arm-front",
+          "overlap": [
+            0.02375000000000005,
+            0.02375000000000016,
+            0.5599725552109351
+          ]
+        },
+        {
+          "a": "chair-0-metal-0-seat",
+          "b": "chair-0-seat",
+          "overlap": [
+            0.009875000000000023,
+            0.45499999999999996,
+            0.47999999999999954
+          ]
+        },
+        {
+          "a": "chair-0-metal-0-back",
+          "b": "chair-0-back",
+          "overlap": [
+            0.009875000000000023,
+            0.23321886987185925,
+            10.777438648257473
+          ]
+        },
+        {
+          "a": "chair-0-metal-0-foot",
+          "b": "chair-0-foot",
+          "overlap": [
+            0.009875000000000023,
+            0.3135402648493113,
+            3.48240395252739
+          ]
+        },
+        {
+          "a": "chair-0-metal-1-seat",
+          "b": "chair-0-metal-1-back",
+          "overlap": [
+            0.02375000000000016,
+            0.019818869871859213,
+            0.7437193241287368
+          ]
+        },
+        {
+          "a": "chair-0-metal-1-seat",
+          "b": "chair-0-metal-1-foot",
+          "overlap": [
+            0.02375000000000016,
+            0.03313209059848554,
+            0.7465440883256296
+          ]
+        },
+        {
+          "a": "chair-0-metal-1-seat",
+          "b": "chair-0-metal-1-rear-leg",
+          "overlap": [
+            0.02375000000000016,
+            0.056304747952119816,
+            0.49634233068312206
+          ]
+        },
+        {
+          "a": "chair-0-metal-1-seat",
+          "b": "chair-0-metal-1-front-leg",
+          "overlap": [
+            0.02375000000000016,
+            0.06161450549364922,
+            0.45915643011977814
+          ]
+        },
+        {
+          "a": "chair-0-metal-1-seat",
+          "b": "chair-0-metal-1-arm-back",
+          "overlap": [
+            0.02375000000000016,
+            0.023749999999999938,
+            0.3799999999999999
+          ]
+        },
+        {
+          "a": "chair-0-metal-1-seat",
+          "b": "chair-0-metal-1-arm-front",
+          "overlap": [
+            0.02375000000000016,
+            0.02375000000000016,
+            0.3799999999999999
+          ]
+        },
+        {
+          "a": "chair-0-metal-1-lower",
+          "b": "chair-0-metal-1-rear-leg",
+          "overlap": [
+            0.020624999999999893,
+            0.055304747952119815,
+            0.6600000000000001
+          ]
+        },
+        {
+          "a": "chair-0-metal-1-lower",
+          "b": "chair-0-metal-1-front-leg",
+          "overlap": [
+            0.020624999999999893,
+            0.0416145054936492,
+            0.6600000000000001
+          ]
+        },
+        {
+          "a": "chair-0-metal-1-arm",
+          "b": "chair-0-metal-1-arm-back",
+          "overlap": [
+            0.02375000000000016,
+            0.023749999999999938,
+            0.42997255521093614
+          ]
+        },
+        {
+          "a": "chair-0-metal-1-arm",
+          "b": "chair-0-metal-1-arm-front",
+          "overlap": [
+            0.02375000000000016,
+            0.02375000000000016,
+            0.5599725552109351
+          ]
+        },
+        {
+          "a": "chair-0-metal-1-seat",
+          "b": "chair-0-seat",
+          "overlap": [
+            0.009874999999999856,
+            0.45499999999999996,
+            0.47999999999999954
+          ]
+        },
+        {
+          "a": "chair-0-metal-1-back",
+          "b": "chair-0-back",
+          "overlap": [
+            0.009874999999999856,
+            0.23321886987185925,
+            10.777438648257473
+          ]
+        },
+        {
+          "a": "chair-0-metal-1-foot",
+          "b": "chair-0-foot",
+          "overlap": [
+            0.009874999999999856,
+            0.3135402648493113,
+            3.48240395252739
+          ]
+        },
+        {
+          "a": "chair-0-cross-0",
+          "b": "chair-0-metal-0-back",
+          "overlap": [
+            0.011875000000000024,
+            0.022499999999999964,
+            0.7200000000000006
+          ]
+        },
+        {
+          "a": "chair-0-cross-0",
+          "b": "chair-0-metal-1-back",
+          "overlap": [
+            0.01187500000000008,
+            0.022499999999999964,
+            0.7200000000000006
+          ]
+        },
+        {
+          "a": "chair-0-cross-1",
+          "b": "chair-0-metal-0-back",
+          "overlap": [
+            0.011875000000000024,
+            0.022499999999999964,
+            0.7199999999999989
+          ]
+        },
+        {
+          "a": "chair-0-cross-1",
+          "b": "chair-0-metal-1-back",
+          "overlap": [
+            0.01187500000000008,
+            0.022499999999999964,
+            0.7199999999999989
+          ]
+        },
+        {
+          "a": "chair-1-seat",
+          "b": "chair-1-back",
+          "overlap": [
+            0.5499999999999998,
+            0.02380782540740145,
+            1.4559999999999995
+          ]
+        },
+        {
+          "a": "chair-1-seat",
+          "b": "chair-1-foot",
+          "overlap": [
+            0.5499999999999998,
+            0.03308045158377304,
+            1.018711063499575
+          ]
+        },
+        {
+          "a": "chair-1-metal-0-seat",
+          "b": "chair-1-metal-0-back",
+          "overlap": [
+            0.02375000000000016,
+            0.019818869871859213,
+            0.7437193241287368
+          ]
+        },
+        {
+          "a": "chair-1-metal-0-seat",
+          "b": "chair-1-metal-0-foot",
+          "overlap": [
+            0.02375000000000016,
+            0.03313209059848554,
+            0.7465440883256296
+          ]
+        },
+        {
+          "a": "chair-1-metal-0-seat",
+          "b": "chair-1-metal-0-rear-leg",
+          "overlap": [
+            0.02375000000000016,
+            0.056304747952119816,
+            0.49634233068312206
+          ]
+        },
+        {
+          "a": "chair-1-metal-0-seat",
+          "b": "chair-1-metal-0-front-leg",
+          "overlap": [
+            0.02375000000000016,
+            0.06161450549364922,
+            0.45915643011977814
+          ]
+        },
+        {
+          "a": "chair-1-metal-0-seat",
+          "b": "chair-1-metal-0-arm-back",
+          "overlap": [
+            0.02375000000000016,
+            0.023749999999999938,
+            0.3799999999999999
+          ]
+        },
+        {
+          "a": "chair-1-metal-0-seat",
+          "b": "chair-1-metal-0-arm-front",
+          "overlap": [
+            0.02375000000000016,
+            0.02375000000000016,
+            0.3799999999999999
+          ]
+        },
+        {
+          "a": "chair-1-metal-0-lower",
+          "b": "chair-1-metal-0-rear-leg",
+          "overlap": [
+            0.020624999999999893,
+            0.055304747952119815,
+            0.6600000000000001
+          ]
+        },
+        {
+          "a": "chair-1-metal-0-lower",
+          "b": "chair-1-metal-0-front-leg",
+          "overlap": [
+            0.020624999999999893,
+            0.0416145054936492,
+            0.6600000000000001
+          ]
+        },
+        {
+          "a": "chair-1-metal-0-arm",
+          "b": "chair-1-metal-0-arm-back",
+          "overlap": [
+            0.02375000000000016,
+            0.023749999999999938,
+            0.42997255521093614
+          ]
+        },
+        {
+          "a": "chair-1-metal-0-arm",
+          "b": "chair-1-metal-0-arm-front",
+          "overlap": [
+            0.02375000000000016,
+            0.02375000000000016,
+            0.5599725552109351
+          ]
+        },
+        {
+          "a": "chair-1-metal-0-seat",
+          "b": "chair-1-seat",
+          "overlap": [
+            0.009874999999999856,
+            0.45499999999999996,
+            0.47999999999999954
+          ]
+        },
+        {
+          "a": "chair-1-metal-0-back",
+          "b": "chair-1-back",
+          "overlap": [
+            0.009874999999999856,
+            0.23321886987185925,
+            10.777438648257473
+          ]
+        },
+        {
+          "a": "chair-1-metal-0-foot",
+          "b": "chair-1-foot",
+          "overlap": [
+            0.009874999999999856,
+            0.3135402648493113,
+            3.48240395252739
+          ]
+        },
+        {
+          "a": "chair-1-metal-1-seat",
+          "b": "chair-1-metal-1-back",
+          "overlap": [
+            0.02375000000000016,
+            0.019818869871859213,
+            0.7437193241287368
+          ]
+        },
+        {
+          "a": "chair-1-metal-1-seat",
+          "b": "chair-1-metal-1-foot",
+          "overlap": [
+            0.02375000000000016,
+            0.03313209059848554,
+            0.7465440883256296
+          ]
+        },
+        {
+          "a": "chair-1-metal-1-seat",
+          "b": "chair-1-metal-1-rear-leg",
+          "overlap": [
+            0.02375000000000016,
+            0.056304747952119816,
+            0.49634233068312206
+          ]
+        },
+        {
+          "a": "chair-1-metal-1-seat",
+          "b": "chair-1-metal-1-front-leg",
+          "overlap": [
+            0.02375000000000016,
+            0.06161450549364922,
+            0.45915643011977814
+          ]
+        },
+        {
+          "a": "chair-1-metal-1-seat",
+          "b": "chair-1-metal-1-arm-back",
+          "overlap": [
+            0.02375000000000016,
+            0.023749999999999938,
+            0.3799999999999999
+          ]
+        },
+        {
+          "a": "chair-1-metal-1-seat",
+          "b": "chair-1-metal-1-arm-front",
+          "overlap": [
+            0.02375000000000016,
+            0.02375000000000016,
+            0.3799999999999999
+          ]
+        },
+        {
+          "a": "chair-1-metal-1-lower",
+          "b": "chair-1-metal-1-rear-leg",
+          "overlap": [
+            0.020624999999999893,
+            0.055304747952119815,
+            0.6600000000000001
+          ]
+        },
+        {
+          "a": "chair-1-metal-1-lower",
+          "b": "chair-1-metal-1-front-leg",
+          "overlap": [
+            0.020624999999999893,
+            0.0416145054936492,
+            0.6600000000000001
+          ]
+        },
+        {
+          "a": "chair-1-metal-1-arm",
+          "b": "chair-1-metal-1-arm-back",
+          "overlap": [
+            0.02375000000000016,
+            0.023749999999999938,
+            0.42997255521093614
+          ]
+        },
+        {
+          "a": "chair-1-metal-1-arm",
+          "b": "chair-1-metal-1-arm-front",
+          "overlap": [
+            0.02375000000000016,
+            0.02375000000000016,
+            0.5599725552109351
+          ]
+        },
+        {
+          "a": "chair-1-metal-1-seat",
+          "b": "chair-1-seat",
+          "overlap": [
+            0.009874999999999856,
+            0.45499999999999996,
+            0.47999999999999954
+          ]
+        },
+        {
+          "a": "chair-1-metal-1-back",
+          "b": "chair-1-back",
+          "overlap": [
+            0.009874999999999856,
+            0.23321886987185925,
+            10.777438648257473
+          ]
+        },
+        {
+          "a": "chair-1-metal-1-foot",
+          "b": "chair-1-foot",
+          "overlap": [
+            0.009874999999999856,
+            0.3135402648493113,
+            3.48240395252739
+          ]
+        },
+        {
+          "a": "chair-1-cross-0",
+          "b": "chair-1-metal-0-back",
+          "overlap": [
+            0.01187500000000008,
+            0.022499999999999964,
+            0.7200000000000006
+          ]
+        },
+        {
+          "a": "chair-1-cross-0",
+          "b": "chair-1-metal-1-back",
+          "overlap": [
+            0.01187500000000008,
+            0.022499999999999964,
+            0.7200000000000006
+          ]
+        },
+        {
+          "a": "chair-1-cross-1",
+          "b": "chair-1-metal-0-back",
+          "overlap": [
+            0.01187500000000008,
+            0.022499999999999964,
+            0.7199999999999989
+          ]
+        },
+        {
+          "a": "chair-1-cross-1",
+          "b": "chair-1-metal-1-back",
+          "overlap": [
+            0.01187500000000008,
+            0.022499999999999964,
+            0.7199999999999989
+          ]
+        },
+        {
+          "a": "chair-2-seat",
+          "b": "chair-2-back",
+          "overlap": [
+            0.5499999999999998,
+            0.02380782540740145,
+            1.4559999999999995
+          ]
+        },
+        {
+          "a": "chair-2-seat",
+          "b": "chair-2-foot",
+          "overlap": [
+            0.5499999999999998,
+            0.03308045158377304,
+            1.018711063499575
+          ]
+        },
+        {
+          "a": "chair-2-metal-0-seat",
+          "b": "chair-2-metal-0-back",
+          "overlap": [
+            0.02375000000000016,
+            0.019818869871859213,
+            0.7437193241287368
+          ]
+        },
+        {
+          "a": "chair-2-metal-0-seat",
+          "b": "chair-2-metal-0-foot",
+          "overlap": [
+            0.02375000000000016,
+            0.03313209059848554,
+            0.7465440883256296
+          ]
+        },
+        {
+          "a": "chair-2-metal-0-seat",
+          "b": "chair-2-metal-0-rear-leg",
+          "overlap": [
+            0.02375000000000016,
+            0.056304747952119816,
+            0.49634233068312206
+          ]
+        },
+        {
+          "a": "chair-2-metal-0-seat",
+          "b": "chair-2-metal-0-front-leg",
+          "overlap": [
+            0.02375000000000016,
+            0.06161450549364922,
+            0.45915643011977814
+          ]
+        },
+        {
+          "a": "chair-2-metal-0-seat",
+          "b": "chair-2-metal-0-arm-back",
+          "overlap": [
+            0.02375000000000016,
+            0.023749999999999938,
+            0.3799999999999999
+          ]
+        },
+        {
+          "a": "chair-2-metal-0-seat",
+          "b": "chair-2-metal-0-arm-front",
+          "overlap": [
+            0.02375000000000016,
+            0.02375000000000016,
+            0.3799999999999999
+          ]
+        },
+        {
+          "a": "chair-2-metal-0-lower",
+          "b": "chair-2-metal-0-rear-leg",
+          "overlap": [
+            0.020624999999999893,
+            0.055304747952119815,
+            0.6600000000000001
+          ]
+        },
+        {
+          "a": "chair-2-metal-0-lower",
+          "b": "chair-2-metal-0-front-leg",
+          "overlap": [
+            0.020624999999999893,
+            0.0416145054936492,
+            0.6600000000000001
+          ]
+        },
+        {
+          "a": "chair-2-metal-0-arm",
+          "b": "chair-2-metal-0-arm-back",
+          "overlap": [
+            0.02375000000000016,
+            0.023749999999999938,
+            0.42997255521093614
+          ]
+        },
+        {
+          "a": "chair-2-metal-0-arm",
+          "b": "chair-2-metal-0-arm-front",
+          "overlap": [
+            0.02375000000000016,
+            0.02375000000000016,
+            0.5599725552109351
+          ]
+        },
+        {
+          "a": "chair-2-metal-0-seat",
+          "b": "chair-2-seat",
+          "overlap": [
+            0.009874999999999856,
+            0.45499999999999996,
+            0.47999999999999954
+          ]
+        },
+        {
+          "a": "chair-2-metal-0-back",
+          "b": "chair-2-back",
+          "overlap": [
+            0.009874999999999856,
+            0.23321886987185925,
+            10.777438648257473
+          ]
+        },
+        {
+          "a": "chair-2-metal-0-foot",
+          "b": "chair-2-foot",
+          "overlap": [
+            0.009874999999999856,
+            0.3135402648493113,
+            3.48240395252739
+          ]
+        },
+        {
+          "a": "chair-2-metal-1-seat",
+          "b": "chair-2-metal-1-back",
+          "overlap": [
+            0.023749999999999716,
+            0.019818869871859213,
+            0.7437193241287368
+          ]
+        },
+        {
+          "a": "chair-2-metal-1-seat",
+          "b": "chair-2-metal-1-foot",
+          "overlap": [
+            0.023749999999999716,
+            0.03313209059848554,
+            0.7465440883256296
+          ]
+        },
+        {
+          "a": "chair-2-metal-1-seat",
+          "b": "chair-2-metal-1-rear-leg",
+          "overlap": [
+            0.023749999999999716,
+            0.056304747952119816,
+            0.49634233068312206
+          ]
+        },
+        {
+          "a": "chair-2-metal-1-seat",
+          "b": "chair-2-metal-1-front-leg",
+          "overlap": [
+            0.023749999999999716,
+            0.06161450549364922,
+            0.45915643011977814
+          ]
+        },
+        {
+          "a": "chair-2-metal-1-seat",
+          "b": "chair-2-metal-1-arm-back",
+          "overlap": [
+            0.023749999999999716,
+            0.023749999999999938,
+            0.3799999999999999
+          ]
+        },
+        {
+          "a": "chair-2-metal-1-seat",
+          "b": "chair-2-metal-1-arm-front",
+          "overlap": [
+            0.023749999999999716,
+            0.02375000000000016,
+            0.3799999999999999
+          ]
+        },
+        {
+          "a": "chair-2-metal-1-lower",
+          "b": "chair-2-metal-1-rear-leg",
+          "overlap": [
+            0.020624999999999893,
+            0.055304747952119815,
+            0.6600000000000001
+          ]
+        },
+        {
+          "a": "chair-2-metal-1-lower",
+          "b": "chair-2-metal-1-front-leg",
+          "overlap": [
+            0.020624999999999893,
+            0.0416145054936492,
+            0.6600000000000001
+          ]
+        },
+        {
+          "a": "chair-2-metal-1-arm",
+          "b": "chair-2-metal-1-arm-back",
+          "overlap": [
+            0.023749999999999716,
+            0.023749999999999938,
+            0.42997255521093614
+          ]
+        },
+        {
+          "a": "chair-2-metal-1-arm",
+          "b": "chair-2-metal-1-arm-front",
+          "overlap": [
+            0.023749999999999716,
+            0.02375000000000016,
+            0.5599725552109351
+          ]
+        },
+        {
+          "a": "chair-2-metal-1-seat",
+          "b": "chair-2-seat",
+          "overlap": [
+            0.009874999999999634,
+            0.45499999999999996,
+            0.47999999999999954
+          ]
+        },
+        {
+          "a": "chair-2-metal-1-back",
+          "b": "chair-2-back",
+          "overlap": [
+            0.009874999999999634,
+            0.23321886987185925,
+            10.777438648257473
+          ]
+        },
+        {
+          "a": "chair-2-metal-1-foot",
+          "b": "chair-2-foot",
+          "overlap": [
+            0.009874999999999634,
+            0.3135402648493113,
+            3.48240395252739
+          ]
+        },
+        {
+          "a": "chair-2-cross-0",
+          "b": "chair-2-metal-0-back",
+          "overlap": [
+            0.01187500000000008,
+            0.022499999999999964,
+            0.7200000000000006
+          ]
+        },
+        {
+          "a": "chair-2-cross-0",
+          "b": "chair-2-metal-1-back",
+          "overlap": [
+            0.011874999999999858,
+            0.022499999999999964,
+            0.7200000000000006
+          ]
+        },
+        {
+          "a": "chair-2-cross-1",
+          "b": "chair-2-metal-0-back",
+          "overlap": [
+            0.01187500000000008,
+            0.022499999999999964,
+            0.7199999999999989
+          ]
+        },
+        {
+          "a": "chair-2-cross-1",
+          "b": "chair-2-metal-1-back",
+          "overlap": [
+            0.011874999999999858,
+            0.022499999999999964,
+            0.7199999999999989
+          ]
+        },
+        {
+          "a": "chair-0-metal-0-seat",
+          "b": "chair-0-metal-0-back",
+          "centerline_distance": 2.9275225451776116e-16,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-0-seat",
+          "b": "chair-0-metal-0-foot",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-0-seat",
+          "b": "chair-0-metal-0-rear-leg",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-0-seat",
+          "b": "chair-0-metal-0-front-leg",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-0-seat",
+          "b": "chair-0-metal-0-arm-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-0-seat",
+          "b": "chair-0-metal-0-arm-front",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-0-lower",
+          "b": "chair-0-metal-0-rear-leg",
+          "centerline_distance": 0.06796841424119363,
+          "combined_radius": 0.71
+        },
+        {
+          "a": "chair-0-metal-0-lower",
+          "b": "chair-0-metal-0-front-leg",
+          "centerline_distance": 0.019268341542311142,
+          "combined_radius": 0.71
+        },
+        {
+          "a": "chair-0-metal-0-arm",
+          "b": "chair-0-metal-0-arm-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-0-arm",
+          "b": "chair-0-metal-0-arm-front",
+          "centerline_distance": 0.004615051277864794,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-1-seat",
+          "b": "chair-0-metal-1-back",
+          "centerline_distance": 2.9275225451776116e-16,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-1-seat",
+          "b": "chair-0-metal-1-foot",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-1-seat",
+          "b": "chair-0-metal-1-rear-leg",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-1-seat",
+          "b": "chair-0-metal-1-front-leg",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-1-seat",
+          "b": "chair-0-metal-1-arm-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-1-seat",
+          "b": "chair-0-metal-1-arm-front",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-1-lower",
+          "b": "chair-0-metal-1-rear-leg",
+          "centerline_distance": 0.06796841424119363,
+          "combined_radius": 0.71
+        },
+        {
+          "a": "chair-0-metal-1-lower",
+          "b": "chair-0-metal-1-front-leg",
+          "centerline_distance": 0.019268341542311142,
+          "combined_radius": 0.71
+        },
+        {
+          "a": "chair-0-metal-1-arm",
+          "b": "chair-0-metal-1-arm-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-metal-1-arm",
+          "b": "chair-0-metal-1-arm-front",
+          "centerline_distance": 0.004615051277864794,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-0-cross-0",
+          "b": "chair-0-metal-0-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.74
+        },
+        {
+          "a": "chair-0-cross-0",
+          "b": "chair-0-metal-1-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.74
+        },
+        {
+          "a": "chair-0-cross-1",
+          "b": "chair-0-metal-0-back",
+          "centerline_distance": 8.881784197001252e-16,
+          "combined_radius": 0.74
+        },
+        {
+          "a": "chair-0-cross-1",
+          "b": "chair-0-metal-1-back",
+          "centerline_distance": 8.881784197001252e-16,
+          "combined_radius": 0.74
+        },
+        {
+          "a": "chair-1-metal-0-seat",
+          "b": "chair-1-metal-0-back",
+          "centerline_distance": 2.9275225451776116e-16,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-0-seat",
+          "b": "chair-1-metal-0-foot",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-0-seat",
+          "b": "chair-1-metal-0-rear-leg",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-0-seat",
+          "b": "chair-1-metal-0-front-leg",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-0-seat",
+          "b": "chair-1-metal-0-arm-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-0-seat",
+          "b": "chair-1-metal-0-arm-front",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-0-lower",
+          "b": "chair-1-metal-0-rear-leg",
+          "centerline_distance": 0.06796841424119363,
+          "combined_radius": 0.71
+        },
+        {
+          "a": "chair-1-metal-0-lower",
+          "b": "chair-1-metal-0-front-leg",
+          "centerline_distance": 0.019268341542311142,
+          "combined_radius": 0.71
+        },
+        {
+          "a": "chair-1-metal-0-arm",
+          "b": "chair-1-metal-0-arm-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-0-arm",
+          "b": "chair-1-metal-0-arm-front",
+          "centerline_distance": 0.004615051277864794,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-1-seat",
+          "b": "chair-1-metal-1-back",
+          "centerline_distance": 2.9275225451776116e-16,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-1-seat",
+          "b": "chair-1-metal-1-foot",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-1-seat",
+          "b": "chair-1-metal-1-rear-leg",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-1-seat",
+          "b": "chair-1-metal-1-front-leg",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-1-seat",
+          "b": "chair-1-metal-1-arm-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-1-seat",
+          "b": "chair-1-metal-1-arm-front",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-1-lower",
+          "b": "chair-1-metal-1-rear-leg",
+          "centerline_distance": 0.06796841424119363,
+          "combined_radius": 0.71
+        },
+        {
+          "a": "chair-1-metal-1-lower",
+          "b": "chair-1-metal-1-front-leg",
+          "centerline_distance": 0.019268341542311142,
+          "combined_radius": 0.71
+        },
+        {
+          "a": "chair-1-metal-1-arm",
+          "b": "chair-1-metal-1-arm-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-metal-1-arm",
+          "b": "chair-1-metal-1-arm-front",
+          "centerline_distance": 0.004615051277864794,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-1-cross-0",
+          "b": "chair-1-metal-0-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.74
+        },
+        {
+          "a": "chair-1-cross-0",
+          "b": "chair-1-metal-1-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.74
+        },
+        {
+          "a": "chair-1-cross-1",
+          "b": "chair-1-metal-0-back",
+          "centerline_distance": 1.7763568394002505e-15,
+          "combined_radius": 0.74
+        },
+        {
+          "a": "chair-1-cross-1",
+          "b": "chair-1-metal-1-back",
+          "centerline_distance": 1.7763568394002505e-15,
+          "combined_radius": 0.74
+        },
+        {
+          "a": "chair-2-metal-0-seat",
+          "b": "chair-2-metal-0-back",
+          "centerline_distance": 2.9275225451776116e-16,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-0-seat",
+          "b": "chair-2-metal-0-foot",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-0-seat",
+          "b": "chair-2-metal-0-rear-leg",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-0-seat",
+          "b": "chair-2-metal-0-front-leg",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-0-seat",
+          "b": "chair-2-metal-0-arm-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-0-seat",
+          "b": "chair-2-metal-0-arm-front",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-0-lower",
+          "b": "chair-2-metal-0-rear-leg",
+          "centerline_distance": 0.06796841424119363,
+          "combined_radius": 0.71
+        },
+        {
+          "a": "chair-2-metal-0-lower",
+          "b": "chair-2-metal-0-front-leg",
+          "centerline_distance": 0.019268341542311142,
+          "combined_radius": 0.71
+        },
+        {
+          "a": "chair-2-metal-0-arm",
+          "b": "chair-2-metal-0-arm-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-0-arm",
+          "b": "chair-2-metal-0-arm-front",
+          "centerline_distance": 0.004615051277864794,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-1-seat",
+          "b": "chair-2-metal-1-back",
+          "centerline_distance": 2.9275225451776116e-16,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-1-seat",
+          "b": "chair-2-metal-1-foot",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-1-seat",
+          "b": "chair-2-metal-1-rear-leg",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-1-seat",
+          "b": "chair-2-metal-1-front-leg",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-1-seat",
+          "b": "chair-2-metal-1-arm-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-1-seat",
+          "b": "chair-2-metal-1-arm-front",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-1-lower",
+          "b": "chair-2-metal-1-rear-leg",
+          "centerline_distance": 0.06796841424119363,
+          "combined_radius": 0.71
+        },
+        {
+          "a": "chair-2-metal-1-lower",
+          "b": "chair-2-metal-1-front-leg",
+          "centerline_distance": 0.019268341542311142,
+          "combined_radius": 0.71
+        },
+        {
+          "a": "chair-2-metal-1-arm",
+          "b": "chair-2-metal-1-arm-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-metal-1-arm",
+          "b": "chair-2-metal-1-arm-front",
+          "centerline_distance": 0.004615051277864794,
+          "combined_radius": 0.76
+        },
+        {
+          "a": "chair-2-cross-0",
+          "b": "chair-2-metal-0-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.74
+        },
+        {
+          "a": "chair-2-cross-0",
+          "b": "chair-2-metal-1-back",
+          "centerline_distance": 0.0,
+          "combined_radius": 0.74
+        },
+        {
+          "a": "chair-2-cross-1",
+          "b": "chair-2-metal-0-back",
+          "centerline_distance": 1.7763568394002505e-15,
+          "combined_radius": 0.74
+        },
+        {
+          "a": "chair-2-cross-1",
+          "b": "chair-2-metal-1-back",
+          "centerline_distance": 1.7763568394002505e-15,
+          "combined_radius": 0.74
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "chair-0-seat",
+          "edges": 360
+        },
+        {
+          "name": "chair-0-back",
+          "edges": 360
+        },
+        {
+          "name": "chair-0-foot",
+          "edges": 360
+        },
+        {
+          "name": "chair-0-metal-0-seat",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-0-back",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-0-foot",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-0-rear-leg",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-0-front-leg",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-0-lower",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-0-arm",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-0-arm-back",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-0-arm-front",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-1-seat",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-1-back",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-1-foot",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-1-rear-leg",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-1-front-leg",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-1-lower",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-1-arm",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-1-arm-back",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-metal-1-arm-front",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-cross-0",
+          "edges": 60
+        },
+        {
+          "name": "chair-0-cross-1",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-seat",
+          "edges": 360
+        },
+        {
+          "name": "chair-1-back",
+          "edges": 360
+        },
+        {
+          "name": "chair-1-foot",
+          "edges": 360
+        },
+        {
+          "name": "chair-1-metal-0-seat",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-0-back",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-0-foot",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-0-rear-leg",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-0-front-leg",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-0-lower",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-0-arm",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-0-arm-back",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-0-arm-front",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-1-seat",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-1-back",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-1-foot",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-1-rear-leg",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-1-front-leg",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-1-lower",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-1-arm",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-1-arm-back",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-metal-1-arm-front",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-cross-0",
+          "edges": 60
+        },
+        {
+          "name": "chair-1-cross-1",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-seat",
+          "edges": 360
+        },
+        {
+          "name": "chair-2-back",
+          "edges": 360
+        },
+        {
+          "name": "chair-2-foot",
+          "edges": 360
+        },
+        {
+          "name": "chair-2-metal-0-seat",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-0-back",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-0-foot",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-0-rear-leg",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-0-front-leg",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-0-lower",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-0-arm",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-0-arm-back",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-0-arm-front",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-1-seat",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-1-back",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-1-foot",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-1-rear-leg",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-1-front-leg",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-1-lower",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-1-arm",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-1-arm-back",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-metal-1-arm-front",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-cross-0",
+          "edges": 60
+        },
+        {
+          "name": "chair-2-cross-1",
+          "edges": 60
+        }
+      ],
+      "rotation_edge_error": 4.440892098500626e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            16032
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "chair-0",
+              "samples": 18,
+              "isolated_slope": -0.5046439628482984,
+              "expected_slope": -0.500000000000001,
+              "rms": 0.2488363008967216,
+              "outline_adjusted_residual": 0.7314040823119399,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-1",
+              "samples": 18,
+              "isolated_slope": -0.5046439628483086,
+              "expected_slope": -0.499999999999999,
+              "rms": 0.24883630089672376,
+              "outline_adjusted_residual": 0.731404082311883,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-2",
+              "samples": 18,
+              "isolated_slope": -0.5046439628482965,
+              "expected_slope": -0.499999999999999,
+              "rms": 0.24883630089671752,
+              "outline_adjusted_residual": 0.731404082311883,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 18,
+                "slope": -0.5046439628482965,
+                "rms": 0.24883630089671835,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            16032
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "chair-0",
+              "samples": 18,
+              "isolated_slope": 0.49535603715170645,
+              "expected_slope": 0.499999999999999,
+              "rms": 0.24883630089672212,
+              "outline_adjusted_residual": 0.731404082311883,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 18,
+                "slope": 0.49535603715170645,
+                "rms": 0.24883630089672215,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "chair-1",
+              "samples": 18,
+              "isolated_slope": 0.4953560371517045,
+              "expected_slope": 0.499999999999999,
+              "rms": 0.24883630089671982,
+              "outline_adjusted_residual": 0.731404082311883,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-2",
+              "samples": 18,
+              "isolated_slope": 0.49535603715170184,
+              "expected_slope": 0.500000000000001,
+              "rms": 0.24883630089672462,
+              "outline_adjusted_residual": 0.7314040823119399,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            8388
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "chair-0",
+              "samples": 17,
+              "isolated_slope": -0.49999999999999467,
+              "expected_slope": -0.500000000000001,
+              "rms": 0.24956709924231088,
+              "outline_adjusted_residual": 0.7461099646648242,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 17,
+                "slope": -0.49999999999999467,
+                "rms": 0.2495670992423109,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "chair-1",
+              "samples": 17,
+              "isolated_slope": -0.4999999999999986,
+              "expected_slope": -0.500000000000001,
+              "rms": 0.2495670992423109,
+              "outline_adjusted_residual": 0.7461099646648242,
+              "visible_fraction": 0.47058823529411764,
+              "combined": {
+                "samples": 8,
+                "slope": -0.49122807017543313,
+                "rms": 0.24779731389168813,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "chair-2",
+              "samples": 17,
+              "isolated_slope": -0.5000000000000029,
+              "expected_slope": -0.500000000000001,
+              "rms": 0.2495670992423109,
+              "outline_adjusted_residual": 0.7461099646648242,
+              "visible_fraction": 0.47058823529411764,
+              "combined": {
+                "samples": 8,
+                "slope": -0.49122807017543246,
+                "rms": 0.247797313891671,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            8388
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "chair-0",
+              "samples": 17,
+              "isolated_slope": 0.5000000000000048,
+              "expected_slope": 0.500000000000001,
+              "rms": 0.2495670992423109,
+              "outline_adjusted_residual": 0.7166981999589419,
+              "visible_fraction": 0.5294117647058824,
+              "combined": {
+                "samples": 9,
+                "slope": 0.5015772870662532,
+                "rms": 0.24837360910947887,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "chair-1",
+              "samples": 17,
+              "isolated_slope": 0.5000000000000028,
+              "expected_slope": 0.500000000000001,
+              "rms": 0.2495670992423109,
+              "outline_adjusted_residual": 0.7166981999589419,
+              "visible_fraction": 0.5294117647058824,
+              "combined": {
+                "samples": 9,
+                "slope": 0.5015772870662384,
+                "rms": 0.24837360910948258,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "chair-2",
+              "samples": 17,
+              "isolated_slope": 0.5,
+              "expected_slope": 0.500000000000001,
+              "rms": 0.2495670992423109,
+              "outline_adjusted_residual": 0.7166981999589419,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 17,
+                "slope": 0.5,
+                "rms": 0.2495670992423109,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "chair-0",
+          "d": 0,
+          "connected": true,
+          "pixels": 5612
+        },
+        {
+          "name": "chair-1",
+          "d": 0,
+          "connected": true,
+          "pixels": 5612
+        },
+        {
+          "name": "chair-2",
+          "d": 0,
+          "connected": true,
+          "pixels": 5612
+        },
+        {
+          "name": "chair-0",
+          "d": 1,
+          "connected": true,
+          "pixels": 5612
+        },
+        {
+          "name": "chair-1",
+          "d": 1,
+          "connected": true,
+          "pixels": 5612
+        },
+        {
+          "name": "chair-2",
+          "d": 1,
+          "connected": true,
+          "pixels": 5612
+        },
+        {
+          "name": "chair-0",
+          "d": 2,
+          "connected": true,
+          "pixels": 3454
+        },
+        {
+          "name": "chair-1",
+          "d": 2,
+          "connected": true,
+          "pixels": 3454
+        },
+        {
+          "name": "chair-2",
+          "d": 2,
+          "connected": true,
+          "pixels": 3454
+        },
+        {
+          "name": "chair-0",
+          "d": 3,
+          "connected": true,
+          "pixels": 3454
+        },
+        {
+          "name": "chair-1",
+          "d": 3,
+          "connected": true,
+          "pixels": 3454
+        },
+        {
+          "name": "chair-2",
+          "d": 3,
+          "connected": true,
+          "pixels": 3454
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "chair-0",
+          "b": "chair-1",
+          "axis_gaps": [
+            0.17224999999999957,
+            -0.9679509604703447,
+            -17.744538895909375
+          ]
+        },
+        {
+          "a": "chair-0",
+          "b": "chair-2",
+          "axis_gaps": [
+            0.9222499999999996,
+            -0.9679509604703447,
+            -17.744538895909375
+          ]
+        },
+        {
+          "a": "chair-1",
+          "b": "chair-2",
+          "axis_gaps": [
+            0.17224999999999957,
+            -0.9679509604703447,
+            -17.744538895909375
+          ]
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_authored_massage_row_0.webp",
+          "sha256": "4ff50452428f13b2e9b973d1f44f4078e75feeb54f1af6f24170c5e6f27cf6ec"
+        },
+        {
+          "d": 1,
+          "file": "fac_authored_massage_row_1.webp",
+          "sha256": "fe3e5ae91204fd0fc9f1230fbe20e29a2c27aed693aa264e70480a51503167b5"
+        },
+        {
+          "d": 2,
+          "file": "fac_authored_massage_row_2.webp",
+          "sha256": "d8f104dae2637e9712fc9cad750e32c2eaa6d8e1fd7cc1c359f7bf4ccc55dbc0"
+        },
+        {
+          "d": 3,
+          "file": "fac_authored_massage_row_3.webp",
+          "sha256": "9ded8f9610f4fa3bcfa7c7b9065e0945b7c284b342121399bf4e71f65f47a74e"
+        }
+      ],
+      "limits": [
+        "One shared recliner with separate inclined back and foot pads, reused three times.",
+        "Source frame struts and back shapes disagree across views; one consistent assembly is authored.",
+        "Saved floor or exposed top boundary samples only; not every interior line. AABB joins are not exact mesh intersection proofs."
+      ]
+    },
+    {
+      "id": "authored_footbath",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "basin-wall-back",
+          "b": "basin-base",
+          "overlap": [
+            2.0999999999999996,
+            0.08999999999999997,
+            0.10000000000000009
+          ]
+        },
+        {
+          "a": "cream-rim-back",
+          "b": "basin-wall-back",
+          "overlap": [
+            2.0999999999999996,
+            0.08999999999999997,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "basin-wall-front",
+          "b": "basin-base",
+          "overlap": [
+            2.0999999999999996,
+            0.09000000000000008,
+            0.10000000000000009
+          ]
+        },
+        {
+          "a": "cream-rim-front",
+          "b": "basin-wall-front",
+          "overlap": [
+            2.0999999999999996,
+            0.09000000000000008,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "basin-wall-left",
+          "b": "basin-base",
+          "overlap": [
+            0.09000000000000002,
+            0.65,
+            0.10000000000000009
+          ]
+        },
+        {
+          "a": "cream-rim-left",
+          "b": "basin-wall-left",
+          "overlap": [
+            0.09000000000000002,
+            0.65,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "basin-wall-right",
+          "b": "basin-base",
+          "overlap": [
+            0.08999999999999986,
+            0.65,
+            0.10000000000000009
+          ]
+        },
+        {
+          "a": "cream-rim-right",
+          "b": "basin-wall-right",
+          "overlap": [
+            0.08999999999999986,
+            0.65,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "water",
+          "b": "basin-wall-back",
+          "overlap": [
+            1.9299999999999997,
+            0.0050000000000000044,
+            0.25
+          ]
+        },
+        {
+          "a": "water",
+          "b": "basin-wall-front",
+          "overlap": [
+            1.9299999999999997,
+            0.0050000000000001155,
+            0.25
+          ]
+        },
+        {
+          "a": "water",
+          "b": "basin-wall-left",
+          "overlap": [
+            0.0050000000000000044,
+            0.4800000000000001,
+            0.25
+          ]
+        },
+        {
+          "a": "water",
+          "b": "basin-wall-right",
+          "overlap": [
+            0.004999999999999893,
+            0.4800000000000001,
+            0.25
+          ]
+        },
+        {
+          "a": "wood-bench-rail-0",
+          "b": "wood-bench-plank-0",
+          "overlap": [
+            0.09000000000000008,
+            0.09300000000000003,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "wood-bench-rail-0",
+          "b": "wood-bench-plank-1",
+          "overlap": [
+            0.09000000000000008,
+            0.11299999999999999,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "wood-bench-rail-0",
+          "b": "wood-bench-plank-2",
+          "overlap": [
+            0.09000000000000008,
+            0.09500000000000008,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "wood-bench-leg-0-0",
+          "b": "wood-bench-rail-0",
+          "overlap": [
+            0.07000000000000006,
+            0.07000000000000006,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-bench-leg-0-1",
+          "b": "wood-bench-rail-0",
+          "overlap": [
+            0.07000000000000006,
+            0.07000000000000006,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-bench-rail-1",
+          "b": "wood-bench-plank-0",
+          "overlap": [
+            0.08999999999999986,
+            0.09300000000000003,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "wood-bench-rail-1",
+          "b": "wood-bench-plank-1",
+          "overlap": [
+            0.08999999999999986,
+            0.11299999999999999,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "wood-bench-rail-1",
+          "b": "wood-bench-plank-2",
+          "overlap": [
+            0.08999999999999986,
+            0.09500000000000008,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "wood-bench-leg-1-0",
+          "b": "wood-bench-rail-1",
+          "overlap": [
+            0.07000000000000028,
+            0.07000000000000006,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-bench-leg-1-1",
+          "b": "wood-bench-rail-1",
+          "overlap": [
+            0.07000000000000028,
+            0.07000000000000006,
+            0.20000000000000018
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "basin-base",
+          "edges": 12
+        },
+        {
+          "name": "basin-wall-back",
+          "edges": 12
+        },
+        {
+          "name": "cream-rim-back",
+          "edges": 12
+        },
+        {
+          "name": "basin-wall-front",
+          "edges": 12
+        },
+        {
+          "name": "cream-rim-front",
+          "edges": 12
+        },
+        {
+          "name": "basin-wall-left",
+          "edges": 12
+        },
+        {
+          "name": "cream-rim-left",
+          "edges": 12
+        },
+        {
+          "name": "basin-wall-right",
+          "edges": 12
+        },
+        {
+          "name": "cream-rim-right",
+          "edges": 12
+        },
+        {
+          "name": "water",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-plank-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-plank-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-plank-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-leg-0-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-leg-0-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-leg-1-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-leg-1-1",
+          "edges": 12
+        }
+      ],
+      "rotation_edge_error": 2.220446049250313e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            15343
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "basin",
+              "samples": 26,
+              "isolated_slope": -0.49777777777777676,
+              "expected_slope": -0.5000000000000007,
+              "rms": 0.5574432099159494,
+              "outline_adjusted_residual": 0.8312879122220326,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 26,
+                "slope": -0.49777777777777676,
+                "rms": 0.5574432099159449,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "basin",
+              "samples": 86,
+              "isolated_slope": 0.49979716024340726,
+              "expected_slope": 0.4999999999999998,
+              "rms": 0.5588733638399359,
+              "outline_adjusted_residual": 0.49837791975154383,
+              "visible_fraction": 0.8837209302325582,
+              "combined": {
+                "samples": 76,
+                "slope": 0.49917772799319865,
+                "rms": 0.5527633137999839,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bench",
+              "samples": 14,
+              "isolated_slope": -0.5098901098901039,
+              "expected_slope": -0.5,
+              "rms": 0.5887485063825308,
+              "outline_adjusted_residual": 0.647035478864406,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 14,
+                "slope": -0.5098901098901039,
+                "rms": 0.5887485063825303,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bench",
+              "samples": 86,
+              "isolated_slope": 0.49979716024340726,
+              "expected_slope": 0.5000000000000002,
+              "rms": 0.5588733638399366,
+              "outline_adjusted_residual": 0.5034825453647349,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 86,
+                "slope": 0.49979716024340726,
+                "rms": 0.5588733638399371,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            15343
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "basin",
+              "samples": 86,
+              "isolated_slope": -0.500193405349309,
+              "expected_slope": -0.4999999999999998,
+              "rms": 0.5537716093234364,
+              "outline_adjusted_residual": 0.4941860465116279,
+              "visible_fraction": 0.872093023255814,
+              "combined": {
+                "samples": 75,
+                "slope": -0.4999376569309446,
+                "rms": 0.5499882162305308,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "basin",
+              "samples": 26,
+              "isolated_slope": 0.5025641025641038,
+              "expected_slope": 0.5000000000000007,
+              "rms": 0.5756395979652212,
+              "outline_adjusted_residual": 0.869749450683571,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 26,
+                "slope": 0.5025641025641038,
+                "rms": 0.5756395979652223,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bench",
+              "samples": 86,
+              "isolated_slope": -0.5002122741638759,
+              "expected_slope": -0.5000000000000002,
+              "rms": 0.5641685785877948,
+              "outline_adjusted_residual": 0.5058139534883721,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 86,
+                "slope": -0.5002122741638759,
+                "rms": 0.5641685785878011,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bench",
+              "samples": 14,
+              "isolated_slope": 0.49230769230768584,
+              "expected_slope": 0.5,
+              "rms": 0.5535669975008762,
+              "outline_adjusted_residual": 0.6841425432477796,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 14,
+                "slope": 0.49230769230768584,
+                "rms": 0.5535669975008759,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            12215
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "basin",
+              "samples": 27,
+              "isolated_slope": -0.49572649572649735,
+              "expected_slope": -0.5,
+              "rms": 0.548963742199866,
+              "outline_adjusted_residual": 0.8419716729057932,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 27,
+                "slope": -0.49572649572649735,
+                "rms": 0.5489637421998659,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "basin",
+              "samples": 86,
+              "isolated_slope": 0.5002122741638766,
+              "expected_slope": 0.5,
+              "rms": 0.5641685785877935,
+              "outline_adjusted_residual": 0.869749450683571,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 86,
+                "slope": 0.5002122741638766,
+                "rms": 0.5641685785877935,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bench",
+              "samples": 15,
+              "isolated_slope": -0.48571428571428216,
+              "expected_slope": -0.5,
+              "rms": 0.5380741673076379,
+              "outline_adjusted_residual": 0.5878830769856601,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 15,
+                "slope": -0.48571428571428216,
+                "rms": 0.5380741673076317,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bench",
+              "samples": 87,
+              "isolated_slope": 0.5004009623095433,
+              "expected_slope": 0.4999999999999998,
+              "rms": 0.5614836712540185,
+              "outline_adjusted_residual": 0.7846230139019964,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            12215
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "basin",
+              "samples": 86,
+              "isolated_slope": -0.4997971602434072,
+              "expected_slope": -0.5,
+              "rms": 0.558873363839935,
+              "outline_adjusted_residual": 0.8581215437068268,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 86,
+                "slope": -0.4997971602434072,
+                "rms": 0.5588733638399347,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "basin",
+              "samples": 27,
+              "isolated_slope": 0.5042735042735003,
+              "expected_slope": 0.4999999999999986,
+              "rms": 0.5661851109176488,
+              "outline_adjusted_residual": 0.8604901914243391,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 27,
+                "slope": 0.5042735042735003,
+                "rms": 0.5661851109176556,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bench",
+              "samples": 87,
+              "isolated_slope": -0.5004009623095429,
+              "expected_slope": -0.4999999999999998,
+              "rms": 0.5614836712540199,
+              "outline_adjusted_residual": 0.7788758874652147,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "bench",
+              "samples": 15,
+              "isolated_slope": 0.5142857142857267,
+              "expected_slope": 0.5,
+              "rms": 0.5701573160798374,
+              "outline_adjusted_residual": 0.6212164103189934,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 15,
+                "slope": 0.5142857142857267,
+                "rms": 0.5701573160798358,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "basin",
+          "d": 0,
+          "connected": true,
+          "pixels": 10116
+        },
+        {
+          "name": "bench",
+          "d": 0,
+          "connected": true,
+          "pixels": 5438
+        },
+        {
+          "name": "basin",
+          "d": 1,
+          "connected": true,
+          "pixels": 10116
+        },
+        {
+          "name": "bench",
+          "d": 1,
+          "connected": true,
+          "pixels": 5438
+        },
+        {
+          "name": "basin",
+          "d": 2,
+          "connected": true,
+          "pixels": 9980
+        },
+        {
+          "name": "bench",
+          "d": 2,
+          "connected": true,
+          "pixels": 5411
+        },
+        {
+          "name": "basin",
+          "d": 3,
+          "connected": true,
+          "pixels": 9980
+        },
+        {
+          "name": "bench",
+          "d": 3,
+          "connected": true,
+          "pixels": 5411
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "basin",
+          "b": "bench",
+          "axis_gaps": [
+            -2.11,
+            0.1170000000000001,
+            -4.8
+          ]
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_authored_footbath_0.fix-d985481bef76.webp",
+          "sha256": "d985481bef761b77261aeeda972cb196d9c7ce4fddf697d9ab68e0d2711a3af0"
+        },
+        {
+          "d": 1,
+          "file": "fac_authored_footbath_1.webp",
+          "sha256": "338ef2d675eb4cd9c3a26746187cba63034145d2833abe7587c3ecd4dbd23016"
+        },
+        {
+          "d": 2,
+          "file": "fac_authored_footbath_2.fix-62a7e89ab993.webp",
+          "sha256": "62a7e89ab993c528c618e0b1a3c91ff90c7aff8cfdb5743c665f19be1767fae1"
+        },
+        {
+          "d": 3,
+          "file": "fac_authored_footbath_3.fix-0a22be729eba.webp",
+          "sha256": "0a22be729ebac1c5a04b51eee9c0ddb242835af658c7a4b2c71e6c4d1380cc5d"
+        }
+      ],
+      "limits": [
+        "Water is painted reflection and depth color on a bounded surface, not physical transparency/refraction.",
+        "Basin and bench are separate assemblies with a real gap.",
+        "Saved floor or exposed top boundary samples only; not every interior line. AABB joins are not exact mesh intersection proofs."
+      ]
+    },
+    {
+      "id": "toilet",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "cream-wall-back",
+          "b": "wood-foundation",
+          "overlap": [
+            1.6400000000000001,
+            0.09000000000000002,
+            0.10000000000000009
+          ]
+        },
+        {
+          "a": "cream-wall-front",
+          "b": "wood-foundation",
+          "overlap": [
+            1.6400000000000001,
+            0.09000000000000008,
+            0.10000000000000009
+          ]
+        },
+        {
+          "a": "cream-wall-left",
+          "b": "wood-foundation",
+          "overlap": [
+            0.09000000000000002,
+            1.6400000000000001,
+            0.10000000000000009
+          ]
+        },
+        {
+          "a": "cream-wall-right",
+          "b": "wood-foundation",
+          "overlap": [
+            0.09000000000000008,
+            1.6400000000000001,
+            0.10000000000000009
+          ]
+        },
+        {
+          "a": "navy-base-back",
+          "b": "wood-foundation",
+          "overlap": [
+            1.65,
+            0.03,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "navy-base-front",
+          "b": "wood-foundation",
+          "overlap": [
+            1.65,
+            0.030000000000000027,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "navy-base-left",
+          "b": "wood-foundation",
+          "overlap": [
+            0.03,
+            1.65,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "navy-base-right",
+          "b": "wood-foundation",
+          "overlap": [
+            0.030000000000000027,
+            1.65,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-foundation",
+          "b": "wood-post-0",
+          "overlap": [
+            0.08000000000000002,
+            0.08000000000000002,
+            0.17000000000000015
+          ]
+        },
+        {
+          "a": "wood-foundation",
+          "b": "wood-post-1",
+          "overlap": [
+            0.08000000000000007,
+            0.08000000000000002,
+            0.17000000000000015
+          ]
+        },
+        {
+          "a": "wood-foundation",
+          "b": "wood-post-2",
+          "overlap": [
+            0.08000000000000002,
+            0.08000000000000007,
+            0.17000000000000015
+          ]
+        },
+        {
+          "a": "wood-foundation",
+          "b": "wood-post-3",
+          "overlap": [
+            0.08000000000000007,
+            0.08000000000000007,
+            0.17000000000000015
+          ]
+        },
+        {
+          "a": "door-0",
+          "b": "cream-wall-front",
+          "overlap": [
+            0.54,
+            0.0020000000000000018,
+            24.5
+          ]
+        },
+        {
+          "a": "wood-doorpost-0-0",
+          "b": "wood-foundation",
+          "overlap": [
+            0.05400000000000002,
+            0.06999999999999984,
+            0.08000000000000007
+          ]
+        },
+        {
+          "a": "wood-doorpost-0-1",
+          "b": "wood-foundation",
+          "overlap": [
+            0.05400000000000005,
+            0.06999999999999984,
+            0.08000000000000007
+          ]
+        },
+        {
+          "a": "wood-doorhead-0",
+          "b": "wood-doorpost-0-0",
+          "overlap": [
+            0.05400000000000002,
+            0.06999999999999984,
+            0.8000000000000007
+          ]
+        },
+        {
+          "a": "wood-doorhead-0",
+          "b": "wood-doorpost-0-1",
+          "overlap": [
+            0.05400000000000005,
+            0.06999999999999984,
+            0.8000000000000007
+          ]
+        },
+        {
+          "a": "handle-dark-0",
+          "b": "door-0",
+          "overlap": [
+            0.06999999999999995,
+            0.009000000000000119,
+            1.700000000000001
+          ]
+        },
+        {
+          "a": "handle-gold-0",
+          "b": "handle-dark-0",
+          "overlap": [
+            0.03199999999999997,
+            0.0040000000000000036,
+            1.0999999999999996
+          ]
+        },
+        {
+          "a": "door-1",
+          "b": "cream-wall-front",
+          "overlap": [
+            0.54,
+            0.0020000000000000018,
+            24.5
+          ]
+        },
+        {
+          "a": "wood-doorpost-1-0",
+          "b": "wood-foundation",
+          "overlap": [
+            0.05400000000000005,
+            0.06999999999999984,
+            0.08000000000000007
+          ]
+        },
+        {
+          "a": "wood-doorpost-1-1",
+          "b": "wood-foundation",
+          "overlap": [
+            0.053999999999999826,
+            0.06999999999999984,
+            0.08000000000000007
+          ]
+        },
+        {
+          "a": "wood-doorhead-1",
+          "b": "wood-doorpost-1-0",
+          "overlap": [
+            0.05400000000000005,
+            0.06999999999999984,
+            0.8000000000000007
+          ]
+        },
+        {
+          "a": "wood-doorhead-1",
+          "b": "wood-doorpost-1-1",
+          "overlap": [
+            0.053999999999999826,
+            0.06999999999999984,
+            0.8000000000000007
+          ]
+        },
+        {
+          "a": "handle-dark-1",
+          "b": "door-1",
+          "overlap": [
+            0.06999999999999984,
+            0.009000000000000119,
+            1.700000000000001
+          ]
+        },
+        {
+          "a": "handle-gold-1",
+          "b": "handle-dark-1",
+          "overlap": [
+            0.03200000000000003,
+            0.0040000000000000036,
+            1.0999999999999996
+          ]
+        },
+        {
+          "a": "roof-tile-0-0",
+          "b": "roof-base-0",
+          "overlap": [
+            0.22555555555555556,
+            1.01,
+            12.558217821782176
+          ]
+        },
+        {
+          "a": "roof-tile-0-1",
+          "b": "roof-base-0",
+          "overlap": [
+            0.2255555555555555,
+            1.01,
+            12.558217821782176
+          ]
+        },
+        {
+          "a": "roof-tile-0-2",
+          "b": "roof-base-0",
+          "overlap": [
+            0.22555555555555556,
+            1.01,
+            12.558217821782176
+          ]
+        },
+        {
+          "a": "roof-tile-0-3",
+          "b": "roof-base-0",
+          "overlap": [
+            0.2255555555555555,
+            1.01,
+            12.558217821782176
+          ]
+        },
+        {
+          "a": "roof-tile-0-4",
+          "b": "roof-base-0",
+          "overlap": [
+            0.2255555555555555,
+            1.01,
+            12.558217821782176
+          ]
+        },
+        {
+          "a": "roof-tile-0-5",
+          "b": "roof-base-0",
+          "overlap": [
+            0.22555555555555573,
+            1.01,
+            12.558217821782176
+          ]
+        },
+        {
+          "a": "roof-tile-0-6",
+          "b": "roof-base-0",
+          "overlap": [
+            0.2255555555555555,
+            1.01,
+            12.558217821782176
+          ]
+        },
+        {
+          "a": "roof-tile-0-7",
+          "b": "roof-base-0",
+          "overlap": [
+            0.2255555555555555,
+            1.01,
+            12.558217821782176
+          ]
+        },
+        {
+          "a": "roof-tile-0-8",
+          "b": "roof-base-0",
+          "overlap": [
+            0.2255555555555553,
+            1.01,
+            12.558217821782176
+          ]
+        },
+        {
+          "a": "roof-tile-1-0",
+          "b": "roof-base-1",
+          "overlap": [
+            0.22555555555555556,
+            1.0099999999999998,
+            12.558217821782172
+          ]
+        },
+        {
+          "a": "roof-tile-1-1",
+          "b": "roof-base-1",
+          "overlap": [
+            0.2255555555555555,
+            1.0099999999999998,
+            12.558217821782172
+          ]
+        },
+        {
+          "a": "roof-tile-1-2",
+          "b": "roof-base-1",
+          "overlap": [
+            0.22555555555555556,
+            1.0099999999999998,
+            12.558217821782172
+          ]
+        },
+        {
+          "a": "roof-tile-1-3",
+          "b": "roof-base-1",
+          "overlap": [
+            0.2255555555555555,
+            1.0099999999999998,
+            12.558217821782172
+          ]
+        },
+        {
+          "a": "roof-tile-1-4",
+          "b": "roof-base-1",
+          "overlap": [
+            0.2255555555555555,
+            1.0099999999999998,
+            12.558217821782172
+          ]
+        },
+        {
+          "a": "roof-tile-1-5",
+          "b": "roof-base-1",
+          "overlap": [
+            0.22555555555555573,
+            1.0099999999999998,
+            12.558217821782172
+          ]
+        },
+        {
+          "a": "roof-tile-1-6",
+          "b": "roof-base-1",
+          "overlap": [
+            0.2255555555555555,
+            1.0099999999999998,
+            12.558217821782172
+          ]
+        },
+        {
+          "a": "roof-tile-1-7",
+          "b": "roof-base-1",
+          "overlap": [
+            0.2255555555555555,
+            1.0099999999999998,
+            12.558217821782172
+          ]
+        },
+        {
+          "a": "roof-tile-1-8",
+          "b": "roof-base-1",
+          "overlap": [
+            0.2255555555555553,
+            1.0099999999999998,
+            12.558217821782172
+          ]
+        },
+        {
+          "a": "wood-post-0",
+          "b": "roof-base-0",
+          "overlap": [
+            0.08000000000000002,
+            0.08000000000000002,
+            3.492079207920792
+          ]
+        },
+        {
+          "a": "wood-post-1",
+          "b": "roof-base-0",
+          "overlap": [
+            0.08000000000000007,
+            0.08000000000000002,
+            3.492079207920792
+          ]
+        },
+        {
+          "a": "wood-post-2",
+          "b": "roof-base-1",
+          "overlap": [
+            0.08000000000000002,
+            0.08000000000000007,
+            3.4920792079207885
+          ]
+        },
+        {
+          "a": "wood-post-3",
+          "b": "roof-base-1",
+          "overlap": [
+            0.08000000000000007,
+            0.08000000000000007,
+            3.4920792079207885
+          ]
+        },
+        {
+          "a": "vent-back",
+          "b": "cream-wall-right",
+          "overlap": [
+            0.0040000000000000036,
+            0.4899999999999999,
+            3.8999999999999986
+          ]
+        },
+        {
+          "a": "vent-bar-0",
+          "b": "vent-back",
+          "overlap": [
+            0.007000000000000117,
+            0.028000000000000025,
+            3.700000000000001
+          ]
+        },
+        {
+          "a": "vent-bar-1",
+          "b": "vent-back",
+          "overlap": [
+            0.007000000000000117,
+            0.028000000000000025,
+            3.700000000000001
+          ]
+        },
+        {
+          "a": "vent-bar-2",
+          "b": "vent-back",
+          "overlap": [
+            0.007000000000000117,
+            0.028000000000000025,
+            3.700000000000001
+          ]
+        },
+        {
+          "a": "vent-bar-3",
+          "b": "vent-back",
+          "overlap": [
+            0.007000000000000117,
+            0.028000000000000025,
+            3.700000000000001
+          ]
+        },
+        {
+          "a": "vent-bar-4",
+          "b": "vent-back",
+          "overlap": [
+            0.007000000000000117,
+            0.028000000000000025,
+            3.700000000000001
+          ]
+        },
+        {
+          "a": "wood-post-0",
+          "b": "pitched roof underside",
+          "overlap": [
+            0.29999999999999716,
+            0.29999999999999716,
+            0.3000000000000007,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "wood-post-1",
+          "b": "pitched roof underside",
+          "overlap": [
+            0.29999999999999716,
+            0.29999999999999716,
+            0.3000000000000007,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "wood-post-2",
+          "b": "pitched roof underside",
+          "overlap": [
+            0.3000000000000007,
+            0.3000000000000007,
+            0.29999999999999716,
+            0.29999999999999716
+          ]
+        },
+        {
+          "a": "wood-post-3",
+          "b": "pitched roof underside",
+          "overlap": [
+            0.3000000000000007,
+            0.3000000000000007,
+            0.29999999999999716,
+            0.29999999999999716
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-foundation",
+          "edges": 12
+        },
+        {
+          "name": "cream-wall-back",
+          "edges": 12
+        },
+        {
+          "name": "cream-wall-front",
+          "edges": 12
+        },
+        {
+          "name": "cream-wall-left",
+          "edges": 12
+        },
+        {
+          "name": "cream-wall-right",
+          "edges": 12
+        },
+        {
+          "name": "navy-base-back",
+          "edges": 12
+        },
+        {
+          "name": "navy-base-front",
+          "edges": 12
+        },
+        {
+          "name": "navy-base-left",
+          "edges": 12
+        },
+        {
+          "name": "navy-base-right",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-3",
+          "edges": 12
+        },
+        {
+          "name": "door-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-doorpost-0-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-doorpost-0-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-doorhead-0",
+          "edges": 12
+        },
+        {
+          "name": "handle-dark-0",
+          "edges": 12
+        },
+        {
+          "name": "handle-gold-0",
+          "edges": 12
+        },
+        {
+          "name": "door-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-doorpost-1-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-doorpost-1-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-doorhead-1",
+          "edges": 12
+        },
+        {
+          "name": "handle-dark-1",
+          "edges": 12
+        },
+        {
+          "name": "handle-gold-1",
+          "edges": 12
+        },
+        {
+          "name": "roof-base-0",
+          "edges": 12
+        },
+        {
+          "name": "roof-tile-0-0",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-1",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-2",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-3",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-4",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-5",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-6",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-7",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-8",
+          "edges": 52
+        },
+        {
+          "name": "roof-base-1",
+          "edges": 12
+        },
+        {
+          "name": "roof-tile-1-0",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-1",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-2",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-3",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-4",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-5",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-6",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-7",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-8",
+          "edges": 52
+        },
+        {
+          "name": "roof-ridge",
+          "edges": 156
+        },
+        {
+          "name": "vent-back",
+          "edges": 12
+        },
+        {
+          "name": "vent-bar-0",
+          "edges": 12
+        },
+        {
+          "name": "vent-bar-1",
+          "edges": 12
+        },
+        {
+          "name": "vent-bar-2",
+          "edges": 12
+        },
+        {
+          "name": "vent-bar-3",
+          "edges": 12
+        },
+        {
+          "name": "vent-bar-4",
+          "edges": 12
+        }
+      ],
+      "rotation_edge_error": 3.2612801348363973e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            47120
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": -0.5002592344364486,
+              "expected_slope": -0.5,
+              "rms": 0.5646912345224561,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": -0.5002592344364486,
+                "rms": 0.5646912345224558,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": 0.49975341114581556,
+              "expected_slope": 0.5,
+              "rms": 0.5588423846168501,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": 0.49975341114581556,
+                "rms": 0.5588423846168501,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            47120
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": -0.5002592344364486,
+              "expected_slope": -0.5,
+              "rms": 0.5646912345224561,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": -0.5002592344364486,
+                "rms": 0.5646912345224558,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": 0.49975341114581556,
+              "expected_slope": 0.5,
+              "rms": 0.5588423846168501,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": 0.49975341114581556,
+                "rms": 0.5588423846168501,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            47120
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": -0.5002592344364486,
+              "expected_slope": -0.5,
+              "rms": 0.5646912345224561,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": -0.5002592344364486,
+                "rms": 0.5646912345224558,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": 0.49975341114581556,
+              "expected_slope": 0.5,
+              "rms": 0.5588423846168501,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": 0.49975341114581556,
+                "rms": 0.5588423846168501,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            47120
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": -0.5002592344364486,
+              "expected_slope": -0.5,
+              "rms": 0.5646912345224561,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": -0.5002592344364486,
+                "rms": 0.5646912345224558,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": 0.49975341114581556,
+              "expected_slope": 0.5,
+              "rms": 0.5588423846168501,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": 0.49975341114581556,
+                "rms": 0.5588423846168501,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [],
+      "assembly_gaps": [],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_toilet_0.webp",
+          "sha256": "f61bef2ede1e6495ef88998ed68a470e887b4f323f7275db5ff9d7ba53b1eb9c"
+        },
+        {
+          "d": 1,
+          "file": "fac_toilet_1.webp",
+          "sha256": "65eae7ef804988587fbcf7f8fc1d16fa7c481a06a23be1dda0e29a3f3a199cbd"
+        },
+        {
+          "d": 2,
+          "file": "fac_toilet_2.webp",
+          "sha256": "9be234554e96ec585bd49d1eb75fb822e005338f3c30d4eb3be775f7d0b142dc"
+        },
+        {
+          "d": 3,
+          "file": "fac_toilet_3.webp",
+          "sha256": "02c16c580577365c433bc625ad79265de423cf03edad77ab1a9bf463528f4d6d"
+        }
+      ],
+      "limits": [
+        "Door/vent identities are fixed across all directions.",
+        "The dark side vent is an opaque painted recess; hidden toilet fixtures are not reconstructed.",
+        "Saved floor or exposed top boundary samples only; not every interior line. AABB joins are not exact mesh intersection proofs."
+      ]
+    }
+  ]
+}
