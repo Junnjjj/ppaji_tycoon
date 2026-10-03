@@ -1,0 +1,74 @@
+[
+  {
+    "id": "authored_bbq_zone",
+    "d": 0,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_bbq_zone",
+    "d": 1,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_bbq_zone",
+    "d": 2,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_bbq_zone",
+    "d": 3,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_pyeongsang_row",
+    "d": 0,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_pyeongsang_row",
+    "d": 1,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_pyeongsang_row",
+    "d": 2,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_pyeongsang_row",
+    "d": 3,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "shade_net",
+    "d": 0,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "shade_net",
+    "d": 1,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "shade_net",
+    "d": 2,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "shade_net",
+    "d": 3,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  }
+]

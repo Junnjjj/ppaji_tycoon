@@ -1,0 +1,2650 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "authored_bbq_zone",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "wood-table-rail-0",
+          "b": "wood-table-plank-0",
+          "overlap": [
+            0.1100000000000001,
+            0.20999999999999996,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-table-rail-0",
+          "b": "wood-table-plank-1",
+          "overlap": [
+            0.1100000000000001,
+            0.22999999999999998,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-table-rail-0",
+          "b": "wood-table-plank-2",
+          "overlap": [
+            0.1100000000000001,
+            0.2100000000000002,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-table-leg-0-0",
+          "b": "wood-table-rail-0",
+          "overlap": [
+            0.1100000000000001,
+            0.10499999999999998,
+            1.0999999999999996
+          ]
+        },
+        {
+          "a": "wood-table-leg-0-1",
+          "b": "wood-table-rail-0",
+          "overlap": [
+            0.1100000000000001,
+            0.10999999999999988,
+            1.0999999999999996
+          ]
+        },
+        {
+          "a": "wood-table-rail-1",
+          "b": "wood-table-plank-0",
+          "overlap": [
+            0.11000000000000032,
+            0.20999999999999996,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-table-rail-1",
+          "b": "wood-table-plank-1",
+          "overlap": [
+            0.11000000000000032,
+            0.22999999999999998,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-table-rail-1",
+          "b": "wood-table-plank-2",
+          "overlap": [
+            0.11000000000000032,
+            0.2100000000000002,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-table-leg-1-0",
+          "b": "wood-table-rail-1",
+          "overlap": [
+            0.11000000000000032,
+            0.10499999999999998,
+            1.0999999999999996
+          ]
+        },
+        {
+          "a": "wood-table-leg-1-1",
+          "b": "wood-table-rail-1",
+          "overlap": [
+            0.11000000000000032,
+            0.10999999999999988,
+            1.0999999999999996
+          ]
+        },
+        {
+          "a": "wood-bench-leg-0-0",
+          "b": "wood-bench-0",
+          "overlap": [
+            0.1100000000000001,
+            0.15999999999999992,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-bench-leg-0-1",
+          "b": "wood-bench-0",
+          "overlap": [
+            0.11000000000000032,
+            0.15999999999999992,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-bench-leg-1-0",
+          "b": "wood-bench-1",
+          "overlap": [
+            0.1100000000000001,
+            0.16000000000000014,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-bench-leg-1-1",
+          "b": "wood-bench-1",
+          "overlap": [
+            0.11000000000000032,
+            0.16000000000000014,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "plate-0",
+          "b": "wood-table-plank-1",
+          "overlap": [
+            0.2240000000000001,
+            0.22199999999999998,
+            0.049999999999998934
+          ]
+        },
+        {
+          "a": "plate-1",
+          "b": "wood-table-plank-1",
+          "overlap": [
+            0.2240000000000002,
+            0.22199999999999998,
+            0.049999999999998934
+          ]
+        },
+        {
+          "a": "plate-2",
+          "b": "wood-table-plank-1",
+          "overlap": [
+            0.2240000000000002,
+            0.22199999999999998,
+            0.049999999999998934
+          ]
+        },
+        {
+          "a": "grill-leg-0",
+          "b": "grill-foot-0",
+          "overlap": [
+            0.040000000000000036,
+            0.040000000000000036,
+            0.4
+          ]
+        },
+        {
+          "a": "grill-leg-1",
+          "b": "grill-foot-1",
+          "overlap": [
+            0.040000000000000036,
+            0.040000000000000036,
+            0.4
+          ]
+        },
+        {
+          "a": "grill-leg-2",
+          "b": "grill-foot-2",
+          "overlap": [
+            0.040000000000000036,
+            0.040000000000000036,
+            0.4
+          ]
+        },
+        {
+          "a": "grill-leg-3",
+          "b": "grill-foot-3",
+          "overlap": [
+            0.040000000000000036,
+            0.040000000000000036,
+            0.4
+          ]
+        },
+        {
+          "a": "grill-leg-0",
+          "b": "grill-pan",
+          "overlap": [
+            0.040000000000000036,
+            0.040000000000000036,
+            1.1000000000000014
+          ]
+        },
+        {
+          "a": "grill-leg-1",
+          "b": "grill-pan",
+          "overlap": [
+            0.040000000000000036,
+            0.040000000000000036,
+            1.1000000000000014
+          ]
+        },
+        {
+          "a": "grill-leg-2",
+          "b": "grill-pan",
+          "overlap": [
+            0.040000000000000036,
+            0.040000000000000036,
+            1.1000000000000014
+          ]
+        },
+        {
+          "a": "grill-leg-3",
+          "b": "grill-pan",
+          "overlap": [
+            0.040000000000000036,
+            0.040000000000000036,
+            1.1000000000000014
+          ]
+        },
+        {
+          "a": "grill-rim-left",
+          "b": "grill-pan",
+          "overlap": [
+            0.02499999999999991,
+            0.7000000000000002,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-rim-right",
+          "b": "grill-pan",
+          "overlap": [
+            0.02499999999999991,
+            0.7000000000000002,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-rim-back",
+          "b": "grill-pan",
+          "overlap": [
+            0.5800000000000001,
+            0.025000000000000133,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-rim-front",
+          "b": "grill-pan",
+          "overlap": [
+            0.5800000000000001,
+            0.025000000000000133,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-grate-0",
+          "b": "grill-rim-left",
+          "overlap": [
+            0.020000000000000018,
+            0.017999999999999794,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-grate-0",
+          "b": "grill-rim-right",
+          "overlap": [
+            0.020000000000000018,
+            0.017999999999999794,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-grate-1",
+          "b": "grill-rim-left",
+          "overlap": [
+            0.020000000000000018,
+            0.017999999999999794,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-grate-1",
+          "b": "grill-rim-right",
+          "overlap": [
+            0.020000000000000018,
+            0.017999999999999794,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-grate-2",
+          "b": "grill-rim-left",
+          "overlap": [
+            0.020000000000000018,
+            0.017999999999999794,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-grate-2",
+          "b": "grill-rim-right",
+          "overlap": [
+            0.020000000000000018,
+            0.017999999999999794,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-grate-3",
+          "b": "grill-rim-left",
+          "overlap": [
+            0.020000000000000018,
+            0.017999999999999794,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-grate-3",
+          "b": "grill-rim-right",
+          "overlap": [
+            0.020000000000000018,
+            0.017999999999999794,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-grate-4",
+          "b": "grill-rim-left",
+          "overlap": [
+            0.020000000000000018,
+            0.017999999999999794,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-grate-4",
+          "b": "grill-rim-right",
+          "overlap": [
+            0.020000000000000018,
+            0.017999999999999794,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-grate-5",
+          "b": "grill-rim-left",
+          "overlap": [
+            0.020000000000000018,
+            0.017999999999999794,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-grate-5",
+          "b": "grill-rim-right",
+          "overlap": [
+            0.020000000000000018,
+            0.017999999999999794,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-grate-6",
+          "b": "grill-rim-left",
+          "overlap": [
+            0.020000000000000018,
+            0.017999999999999794,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "grill-grate-6",
+          "b": "grill-rim-right",
+          "overlap": [
+            0.020000000000000018,
+            0.017999999999999794,
+            0.40000000000000036
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-table-plank-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-plank-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-plank-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-leg-0-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-leg-0-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-leg-1-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-leg-1-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-leg-0-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-leg-0-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-leg-1-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-bench-leg-1-1",
+          "edges": 12
+        },
+        {
+          "name": "plate-0",
+          "edges": 312
+        },
+        {
+          "name": "plate-1",
+          "edges": 312
+        },
+        {
+          "name": "plate-2",
+          "edges": 312
+        },
+        {
+          "name": "grill-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "grill-foot-0",
+          "edges": 12
+        },
+        {
+          "name": "grill-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "grill-foot-1",
+          "edges": 12
+        },
+        {
+          "name": "grill-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "grill-foot-2",
+          "edges": 12
+        },
+        {
+          "name": "grill-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "grill-foot-3",
+          "edges": 12
+        },
+        {
+          "name": "grill-pan",
+          "edges": 12
+        },
+        {
+          "name": "grill-rim-left",
+          "edges": 12
+        },
+        {
+          "name": "grill-rim-right",
+          "edges": 12
+        },
+        {
+          "name": "grill-rim-back",
+          "edges": 12
+        },
+        {
+          "name": "grill-rim-front",
+          "edges": 12
+        },
+        {
+          "name": "grill-grate-0",
+          "edges": 12
+        },
+        {
+          "name": "grill-grate-1",
+          "edges": 12
+        },
+        {
+          "name": "grill-grate-2",
+          "edges": 12
+        },
+        {
+          "name": "grill-grate-3",
+          "edges": 12
+        },
+        {
+          "name": "grill-grate-4",
+          "edges": 12
+        },
+        {
+          "name": "grill-grate-5",
+          "edges": 12
+        },
+        {
+          "name": "grill-grate-6",
+          "edges": 12
+        }
+      ],
+      "rotation_edge_error": 4.440892098500626e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            20133
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "table",
+              "samples": 29,
+              "isolated_slope": -0.5241379310344793,
+              "expected_slope": -0.4999999999999994,
+              "rms": 0.6199228980481158,
+              "outline_adjusted_residual": 0.7128536566372566,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 29,
+                "slope": -0.5241379310344793,
+                "rms": 0.619922898048116,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "table",
+              "samples": 83,
+              "isolated_slope": 0.5004407875404052,
+              "expected_slope": 0.5,
+              "rms": 0.5615972321869461,
+              "outline_adjusted_residual": 0.5037319210925738,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "bench-0",
+              "samples": 10,
+              "isolated_slope": -0.48484848484847703,
+              "expected_slope": -0.49999999999999806,
+              "rms": 0.548275533473868,
+              "outline_adjusted_residual": 0.4919498901367206,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "bench-0",
+              "samples": 89,
+              "isolated_slope": 0.49962546816479336,
+              "expected_slope": 0.4999999999999996,
+              "rms": 0.5613781204322823,
+              "outline_adjusted_residual": 0.5240362514538635,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 89,
+                "slope": 0.49962546816479336,
+                "rms": 0.5613781204322732,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bench-1",
+              "samples": 10,
+              "isolated_slope": -0.48484848484847515,
+              "expected_slope": -0.500000000000001,
+              "rms": 0.5482755334738708,
+              "outline_adjusted_residual": 0.4919498901367206,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "bench-1",
+              "samples": 89,
+              "isolated_slope": 0.49962546816479364,
+              "expected_slope": 0.5,
+              "rms": 0.5613781204322723,
+              "outline_adjusted_residual": 0.6013396222403924,
+              "visible_fraction": 0.8876404494382022,
+              "combined": {
+                "samples": 79,
+                "slope": 0.49951314508276495,
+                "rms": 0.55598746284575,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "grill",
+              "samples": 30,
+              "isolated_slope": -0.4983314794215787,
+              "expected_slope": -0.4999999999999994,
+              "rms": 0.557835391326674,
+              "outline_adjusted_residual": 0.5106833699544268,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "grill",
+              "samples": 25,
+              "isolated_slope": 0.5046153846153876,
+              "expected_slope": 0.4999999999999993,
+              "rms": 0.5489009999009931,
+              "outline_adjusted_residual": 0.48118997802734387,
+              "visible_fraction": 0.4,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            20894
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "table",
+              "samples": 83,
+              "isolated_slope": -0.499559212459595,
+              "expected_slope": -0.4999999999999998,
+              "rms": 0.5561427652500505,
+              "outline_adjusted_residual": 0.5879550906261889,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "table",
+              "samples": 29,
+              "isolated_slope": 0.5034482758620676,
+              "expected_slope": 0.4999999999999994,
+              "rms": 0.550429515565099,
+              "outline_adjusted_residual": 0.48518105342470436,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "bench-0",
+              "samples": 89,
+              "isolated_slope": -0.49962546816479375,
+              "expected_slope": -0.5000000000000004,
+              "rms": 0.5613781204322604,
+              "outline_adjusted_residual": 0.5005589825919503,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 89,
+                "slope": -0.49962546816479375,
+                "rms": 0.5613781204322604,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bench-0",
+              "samples": 9,
+              "isolated_slope": 0.5333333333333573,
+              "expected_slope": 0.5000000000000019,
+              "rms": 0.5258737584977345,
+              "outline_adjusted_residual": 0.4878056165907133,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "bench-1",
+              "samples": 89,
+              "isolated_slope": -0.49962546816479353,
+              "expected_slope": -0.5,
+              "rms": 0.5613781204322632,
+              "outline_adjusted_residual": 0.5023567354009394,
+              "visible_fraction": 0.8651685393258427,
+              "combined": {
+                "samples": 77,
+                "slope": -0.49950049950049913,
+                "rms": 0.5617193491566093,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bench-1",
+              "samples": 9,
+              "isolated_slope": 0.5333333333333358,
+              "expected_slope": 0.5,
+              "rms": 0.525873758497733,
+              "outline_adjusted_residual": 0.4878056165907133,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "grill",
+              "samples": 25,
+              "isolated_slope": -0.5046153846153844,
+              "expected_slope": -0.5,
+              "rms": 0.5489009999009883,
+              "outline_adjusted_residual": 0.72453028564453,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 25,
+                "slope": -0.5046153846153844,
+                "rms": 0.548900999900984,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "grill",
+              "samples": 30,
+              "isolated_slope": 0.5014460511679636,
+              "expected_slope": 0.5,
+              "rms": 0.5437616001430566,
+              "outline_adjusted_residual": 0.637866373697913,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 30,
+                "slope": 0.5014460511679636,
+                "rms": 0.543761600143058,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            19988
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "table",
+              "samples": 30,
+              "isolated_slope": -0.5014460511679663,
+              "expected_slope": -0.4999999999999994,
+              "rms": 0.5437616001430546,
+              "outline_adjusted_residual": 0.520800292968761,
+              "visible_fraction": 0.03333333333333333,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "table",
+              "samples": 83,
+              "isolated_slope": 0.5004407875404054,
+              "expected_slope": 0.5,
+              "rms": 0.5615972321869528,
+              "outline_adjusted_residual": 0.5838521382894805,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "bench-0",
+              "samples": 10,
+              "isolated_slope": -0.48484848484847975,
+              "expected_slope": -0.5000000000000019,
+              "rms": 0.5482755334738753,
+              "outline_adjusted_residual": 0.784150329589852,
+              "visible_fraction": 0.8,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "bench-0",
+              "samples": 89,
+              "isolated_slope": 0.5003745318352061,
+              "expected_slope": 0.5,
+              "rms": 0.5564086087714565,
+              "outline_adjusted_residual": 0.49561516236723124,
+              "visible_fraction": 0.8202247191011236,
+              "combined": {
+                "samples": 73,
+                "slope": 0.5004820412453322,
+                "rms": 0.555826688277659,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bench-1",
+              "samples": 10,
+              "isolated_slope": -0.4848484848484977,
+              "expected_slope": -0.5,
+              "rms": 0.5482755334738735,
+              "outline_adjusted_residual": 0.784150329589852,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "bench-1",
+              "samples": 89,
+              "isolated_slope": 0.49962546816479375,
+              "expected_slope": 0.5,
+              "rms": 0.5613781204322603,
+              "outline_adjusted_residual": 0.717294678420172,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 89,
+                "slope": 0.49962546816479375,
+                "rms": 0.5613781204322729,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "grill",
+              "samples": 30,
+              "isolated_slope": -0.49833147942157796,
+              "expected_slope": -0.5,
+              "rms": 0.5578353913266758,
+              "outline_adjusted_residual": 0.5026499633789058,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 30,
+                "slope": -0.49833147942157796,
+                "rms": 0.5578353913266758,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "grill",
+              "samples": 25,
+              "isolated_slope": 0.5046153846153841,
+              "expected_slope": 0.5,
+              "rms": 0.5489009999009928,
+              "outline_adjusted_residual": 0.49881002197265617,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 25,
+                "slope": 0.5046153846153841,
+                "rms": 0.5489009999009894,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            19090
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "table",
+              "samples": 83,
+              "isolated_slope": -0.4995592124595941,
+              "expected_slope": -0.4999999999999998,
+              "rms": 0.5561427652500491,
+              "outline_adjusted_residual": 0.49602107771907933,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "table",
+              "samples": 29,
+              "isolated_slope": 0.4965517241379299,
+              "expected_slope": 0.5000000000000007,
+              "rms": 0.5653490077770813,
+              "outline_adjusted_residual": 0.5010258431270206,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 29,
+                "slope": 0.4965517241379299,
+                "rms": 0.5653490077770807,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bench-0",
+              "samples": 89,
+              "isolated_slope": -0.4996254681647939,
+              "expected_slope": -0.5,
+              "rms": 0.5613781204322854,
+              "outline_adjusted_residual": 0.7029356710026842,
+              "visible_fraction": 0.8202247191011236,
+              "combined": {
+                "samples": 73,
+                "slope": -0.49938389173304243,
+                "rms": 0.56180892164923,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bench-0",
+              "samples": 9,
+              "isolated_slope": 0.4666666666666608,
+              "expected_slope": 0.5,
+              "rms": 0.570899225718448,
+              "outline_adjusted_residual": 0.569916483561201,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "bench-1",
+              "samples": 89,
+              "isolated_slope": -0.5003745318352057,
+              "expected_slope": -0.5,
+              "rms": 0.5564086087714506,
+              "outline_adjusted_residual": 0.4994353870863327,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 89,
+                "slope": -0.5003745318352057,
+                "rms": 0.5564086087714515,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bench-1",
+              "samples": 9,
+              "isolated_slope": 0.46666666666667384,
+              "expected_slope": 0.5,
+              "rms": 0.5708992257184488,
+              "outline_adjusted_residual": 0.569916483561201,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "grill",
+              "samples": 25,
+              "isolated_slope": -0.49538461538461864,
+              "expected_slope": -0.4999999999999993,
+              "rms": 0.5661204003498821,
+              "outline_adjusted_residual": 0.7069102416992178,
+              "visible_fraction": 0.52,
+              "combined": {
+                "samples": 13,
+                "slope": -0.48351648351647153,
+                "rms": 0.5697354460138744,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "grill",
+              "samples": 30,
+              "isolated_slope": 0.5018909899888737,
+              "expected_slope": 0.4999999999999994,
+              "rms": 0.5734969715859424,
+              "outline_adjusted_residual": 0.5585497436523459,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "table",
+          "d": 0,
+          "connected": true,
+          "pixels": 9539
+        },
+        {
+          "name": "bench-0",
+          "d": 0,
+          "connected": true,
+          "pixels": 4536
+        },
+        {
+          "name": "bench-1",
+          "d": 0,
+          "connected": true,
+          "pixels": 4530
+        },
+        {
+          "name": "grill",
+          "d": 0,
+          "connected": true,
+          "pixels": 4680
+        },
+        {
+          "name": "table",
+          "d": 1,
+          "connected": true,
+          "pixels": 9532
+        },
+        {
+          "name": "bench-0",
+          "d": 1,
+          "connected": true,
+          "pixels": 4550
+        },
+        {
+          "name": "bench-1",
+          "d": 1,
+          "connected": true,
+          "pixels": 4550
+        },
+        {
+          "name": "grill",
+          "d": 1,
+          "connected": true,
+          "pixels": 4626
+        },
+        {
+          "name": "table",
+          "d": 2,
+          "connected": true,
+          "pixels": 9443
+        },
+        {
+          "name": "bench-0",
+          "d": 2,
+          "connected": true,
+          "pixels": 4680
+        },
+        {
+          "name": "bench-1",
+          "d": 2,
+          "connected": true,
+          "pixels": 4546
+        },
+        {
+          "name": "grill",
+          "d": 2,
+          "connected": true,
+          "pixels": 4626
+        },
+        {
+          "name": "table",
+          "d": 3,
+          "connected": true,
+          "pixels": 9444
+        },
+        {
+          "name": "bench-0",
+          "d": 3,
+          "connected": true,
+          "pixels": 4657
+        },
+        {
+          "name": "bench-1",
+          "d": 3,
+          "connected": true,
+          "pixels": 4517
+        },
+        {
+          "name": "grill",
+          "d": 3,
+          "connected": true,
+          "pixels": 4680
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "table",
+          "b": "bench-0",
+          "axis_gaps": [
+            -2.0999999999999996,
+            0.2549999999999999,
+            -8.5
+          ]
+        },
+        {
+          "a": "table",
+          "b": "bench-1",
+          "axis_gaps": [
+            -2.0999999999999996,
+            0.11500000000000021,
+            -8.5
+          ]
+        },
+        {
+          "a": "table",
+          "b": "grill",
+          "axis_gaps": [
+            0.1549999999999998,
+            -0.7149999999999999,
+            -11.610000000000001
+          ]
+        },
+        {
+          "a": "bench-0",
+          "b": "bench-1",
+          "axis_gaps": [
+            -2.17,
+            1.08,
+            -8.5
+          ]
+        },
+        {
+          "a": "bench-0",
+          "b": "grill",
+          "axis_gaps": [
+            0.08499999999999996,
+            0.25,
+            -8.5
+          ]
+        },
+        {
+          "a": "bench-1",
+          "b": "grill",
+          "axis_gaps": [
+            0.08499999999999996,
+            0.10000000000000009,
+            -8.5
+          ]
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_authored_bbq_zone_0.fix-5be5196bd0d9.webp",
+          "sha256": "5be5196bd0d9ee24763c5983ada72fd1a13acc72c319c1513d49bb0ba7008d18"
+        },
+        {
+          "d": 1,
+          "file": "fac_authored_bbq_zone_1.webp",
+          "sha256": "af499038515dfe8b3b3e578b93f5b98f284f24c7aba187150028ed5595c99d4d"
+        },
+        {
+          "d": 2,
+          "file": "fac_authored_bbq_zone_2.webp",
+          "sha256": "4e5c7cd3acb2b786cc65b19426bd3e94e5398d152e067cc22a87ed1c12cabedf"
+        },
+        {
+          "d": 3,
+          "file": "fac_authored_bbq_zone_3.webp",
+          "sha256": "7f6a5d0f737088e0a64aaff9addd22d5f0783b96e10d89348f8acfdaf91f33b7"
+        }
+      ],
+      "limits": [
+        "Table, two benches and grill are separate physical assemblies; they may overlap in projection.",
+        "Original facings disagree on spacing and leg shapes; this uses one common layout.",
+        "Saved floor or exposed top boundary samples only; not every interior line. AABB joins are not exact mesh intersection proofs."
+      ]
+    },
+    {
+      "id": "authored_pyeongsang_row",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "wood-platform-0-left",
+          "b": "wood-platform-0-back",
+          "overlap": [
+            0.07999999999999996,
+            0.044999999999999984,
+            4.4
+          ]
+        },
+        {
+          "a": "wood-platform-0-left",
+          "b": "wood-platform-0-front",
+          "overlap": [
+            0.07999999999999996,
+            0.04499999999999993,
+            4.4
+          ]
+        },
+        {
+          "a": "wood-platform-0-right",
+          "b": "wood-platform-0-back",
+          "overlap": [
+            0.08000000000000007,
+            0.044999999999999984,
+            4.4
+          ]
+        },
+        {
+          "a": "wood-platform-0-right",
+          "b": "wood-platform-0-front",
+          "overlap": [
+            0.08000000000000007,
+            0.04499999999999993,
+            4.4
+          ]
+        },
+        {
+          "a": "wood-plank-0-0",
+          "b": "wood-platform-0-back",
+          "overlap": [
+            0.16066666666666662,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-0",
+          "b": "wood-platform-0-front",
+          "overlap": [
+            0.16066666666666662,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-1",
+          "b": "wood-platform-0-back",
+          "overlap": [
+            0.16066666666666674,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-1",
+          "b": "wood-platform-0-front",
+          "overlap": [
+            0.16066666666666674,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-2",
+          "b": "wood-platform-0-back",
+          "overlap": [
+            0.16066666666666662,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-2",
+          "b": "wood-platform-0-front",
+          "overlap": [
+            0.16066666666666662,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-3",
+          "b": "wood-platform-0-back",
+          "overlap": [
+            0.16066666666666662,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-3",
+          "b": "wood-platform-0-front",
+          "overlap": [
+            0.16066666666666662,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-4",
+          "b": "wood-platform-0-back",
+          "overlap": [
+            0.16066666666666674,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-4",
+          "b": "wood-platform-0-front",
+          "overlap": [
+            0.16066666666666674,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-5",
+          "b": "wood-platform-0-back",
+          "overlap": [
+            0.1606666666666665,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-5",
+          "b": "wood-platform-0-front",
+          "overlap": [
+            0.1606666666666665,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-6",
+          "b": "wood-platform-0-back",
+          "overlap": [
+            0.16066666666666696,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-6",
+          "b": "wood-platform-0-front",
+          "overlap": [
+            0.16066666666666696,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-7",
+          "b": "wood-platform-0-back",
+          "overlap": [
+            0.1606666666666665,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-7",
+          "b": "wood-platform-0-front",
+          "overlap": [
+            0.1606666666666665,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-8",
+          "b": "wood-platform-0-back",
+          "overlap": [
+            0.1606666666666665,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-0-8",
+          "b": "wood-platform-0-front",
+          "overlap": [
+            0.1606666666666665,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-platform-leg-0-0",
+          "b": "wood-plank-0-0",
+          "overlap": [
+            0.09499999999999997,
+            0.10999999999999999,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-platform-leg-0-1",
+          "b": "wood-plank-0-8",
+          "overlap": [
+            0.08899999999999997,
+            0.10999999999999999,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-platform-leg-0-2",
+          "b": "wood-plank-0-0",
+          "overlap": [
+            0.09499999999999997,
+            0.10999999999999988,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-platform-leg-0-3",
+          "b": "wood-plank-0-8",
+          "overlap": [
+            0.08899999999999997,
+            0.10999999999999988,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "cushion-0-0",
+          "b": "wood-plank-0-2",
+          "overlap": [
+            0.16066666666666662,
+            0.5,
+            0.03000000000000025
+          ]
+        },
+        {
+          "a": "cushion-0-1",
+          "b": "wood-plank-0-6",
+          "overlap": [
+            0.16066666666666696,
+            0.5,
+            0.03000000000000025
+          ]
+        },
+        {
+          "a": "wood-platform-1-left",
+          "b": "wood-platform-1-back",
+          "overlap": [
+            0.08000000000000007,
+            0.044999999999999984,
+            4.4
+          ]
+        },
+        {
+          "a": "wood-platform-1-left",
+          "b": "wood-platform-1-front",
+          "overlap": [
+            0.08000000000000007,
+            0.04499999999999993,
+            4.4
+          ]
+        },
+        {
+          "a": "wood-platform-1-right",
+          "b": "wood-platform-1-back",
+          "overlap": [
+            0.08000000000000007,
+            0.044999999999999984,
+            4.4
+          ]
+        },
+        {
+          "a": "wood-platform-1-right",
+          "b": "wood-platform-1-front",
+          "overlap": [
+            0.08000000000000007,
+            0.04499999999999993,
+            4.4
+          ]
+        },
+        {
+          "a": "wood-plank-1-0",
+          "b": "wood-platform-1-back",
+          "overlap": [
+            0.16066666666666674,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-0",
+          "b": "wood-platform-1-front",
+          "overlap": [
+            0.16066666666666674,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-1",
+          "b": "wood-platform-1-back",
+          "overlap": [
+            0.16066666666666718,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-1",
+          "b": "wood-platform-1-front",
+          "overlap": [
+            0.16066666666666718,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-2",
+          "b": "wood-platform-1-back",
+          "overlap": [
+            0.16066666666666674,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-2",
+          "b": "wood-platform-1-front",
+          "overlap": [
+            0.16066666666666674,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-3",
+          "b": "wood-platform-1-back",
+          "overlap": [
+            0.16066666666666718,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-3",
+          "b": "wood-platform-1-front",
+          "overlap": [
+            0.16066666666666718,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-4",
+          "b": "wood-platform-1-back",
+          "overlap": [
+            0.16066666666666674,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-4",
+          "b": "wood-platform-1-front",
+          "overlap": [
+            0.16066666666666674,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-5",
+          "b": "wood-platform-1-back",
+          "overlap": [
+            0.16066666666666674,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-5",
+          "b": "wood-platform-1-front",
+          "overlap": [
+            0.16066666666666674,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-6",
+          "b": "wood-platform-1-back",
+          "overlap": [
+            0.16066666666666718,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-6",
+          "b": "wood-platform-1-front",
+          "overlap": [
+            0.16066666666666718,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-7",
+          "b": "wood-platform-1-back",
+          "overlap": [
+            0.16066666666666674,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-7",
+          "b": "wood-platform-1-front",
+          "overlap": [
+            0.16066666666666674,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-8",
+          "b": "wood-platform-1-back",
+          "overlap": [
+            0.16066666666666674,
+            0.034999999999999976,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-plank-1-8",
+          "b": "wood-platform-1-front",
+          "overlap": [
+            0.16066666666666674,
+            0.03499999999999992,
+            1.2999999999999998
+          ]
+        },
+        {
+          "a": "wood-platform-leg-1-0",
+          "b": "wood-plank-1-0",
+          "overlap": [
+            0.0950000000000002,
+            0.10999999999999999,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-platform-leg-1-1",
+          "b": "wood-plank-1-8",
+          "overlap": [
+            0.08900000000000041,
+            0.10999999999999999,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-platform-leg-1-2",
+          "b": "wood-plank-1-0",
+          "overlap": [
+            0.0950000000000002,
+            0.10999999999999988,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-platform-leg-1-3",
+          "b": "wood-plank-1-8",
+          "overlap": [
+            0.08900000000000041,
+            0.10999999999999988,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "cushion-1-0",
+          "b": "wood-plank-1-2",
+          "overlap": [
+            0.16066666666666674,
+            0.5,
+            0.03000000000000025
+          ]
+        },
+        {
+          "a": "cushion-1-1",
+          "b": "wood-plank-1-6",
+          "overlap": [
+            0.16066666666666718,
+            0.5,
+            0.03000000000000025
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-platform-0-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-platform-0-front",
+          "edges": 12
+        },
+        {
+          "name": "wood-platform-0-left",
+          "edges": 12
+        },
+        {
+          "name": "wood-platform-0-right",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-0-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-0-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-0-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-0-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-0-4",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-0-5",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-0-6",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-0-7",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-0-8",
+          "edges": 12
+        },
+        {
+          "name": "wood-platform-leg-0-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-platform-leg-0-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-platform-leg-0-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-platform-leg-0-3",
+          "edges": 12
+        },
+        {
+          "name": "cushion-0-0",
+          "edges": 360
+        },
+        {
+          "name": "cushion-0-1",
+          "edges": 360
+        },
+        {
+          "name": "wood-platform-1-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-platform-1-front",
+          "edges": 12
+        },
+        {
+          "name": "wood-platform-1-left",
+          "edges": 12
+        },
+        {
+          "name": "wood-platform-1-right",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-1-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-1-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-1-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-1-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-1-4",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-1-5",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-1-6",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-1-7",
+          "edges": 12
+        },
+        {
+          "name": "wood-plank-1-8",
+          "edges": 12
+        },
+        {
+          "name": "wood-platform-leg-1-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-platform-leg-1-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-platform-leg-1-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-platform-leg-1-3",
+          "edges": 12
+        },
+        {
+          "name": "cushion-1-0",
+          "edges": 360
+        },
+        {
+          "name": "cushion-1-1",
+          "edges": 360
+        }
+      ],
+      "rotation_edge_error": 4.440892098500626e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            27930
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "platform-0",
+              "samples": 60,
+              "isolated_slope": -0.4979160878021678,
+              "expected_slope": -0.5000000000000001,
+              "rms": 0.5578508356866991,
+              "outline_adjusted_residual": 0.5151252746582031,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 60,
+                "slope": -0.4979160878021678,
+                "rms": 0.5578508356867098,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "platform-0",
+              "samples": 68,
+              "isolated_slope": 0.49837767683322537,
+              "expected_slope": 0.5,
+              "rms": 0.5581093513109815,
+              "outline_adjusted_residual": 0.6048747253418014,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 68,
+                "slope": 0.49837767683322537,
+                "rms": 0.5581093513109829,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "platform-1",
+              "samples": 60,
+              "isolated_slope": -0.5004167824395651,
+              "expected_slope": -0.5,
+              "rms": 0.5589703947393385,
+              "outline_adjusted_residual": 0.69512527465821,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "platform-1",
+              "samples": 68,
+              "isolated_slope": 0.500324464633355,
+              "expected_slope": 0.5,
+              "rms": 0.558980716949009,
+              "outline_adjusted_residual": 0.6048747253418014,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 68,
+                "slope": 0.500324464633355,
+                "rms": 0.5589807169490099,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            27930
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "platform-0",
+              "samples": 68,
+              "isolated_slope": -0.5009733939000632,
+              "expected_slope": -0.5000000000000001,
+              "rms": 0.5586904127398945,
+              "outline_adjusted_residual": 0.5,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 68,
+                "slope": -0.5009733939000632,
+                "rms": 0.5586904127398956,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "platform-0",
+              "samples": 60,
+              "isolated_slope": 0.4979160878021675,
+              "expected_slope": 0.5,
+              "rms": 0.5578508356866918,
+              "outline_adjusted_residual": 0.5,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "platform-1",
+              "samples": 68,
+              "isolated_slope": -0.5003244646333522,
+              "expected_slope": -0.5,
+              "rms": 0.5589807169490123,
+              "outline_adjusted_residual": 0.5,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 68,
+                "slope": -0.5003244646333522,
+                "rms": 0.5589807169490122,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "platform-1",
+              "samples": 60,
+              "isolated_slope": 0.5004167824395673,
+              "expected_slope": 0.5,
+              "rms": 0.5589703947393446,
+              "outline_adjusted_residual": 0.5,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 60,
+                "slope": 0.5004167824395673,
+                "rms": 0.5589703947393423,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            27930
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "platform-0",
+              "samples": 60,
+              "isolated_slope": -0.5004167824395651,
+              "expected_slope": -0.5,
+              "rms": 0.5589703947393385,
+              "outline_adjusted_residual": 0.69512527465821,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "platform-0",
+              "samples": 68,
+              "isolated_slope": 0.500324464633355,
+              "expected_slope": 0.5,
+              "rms": 0.558980716949009,
+              "outline_adjusted_residual": 0.6048747253418014,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 68,
+                "slope": 0.500324464633355,
+                "rms": 0.5589807169490099,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "platform-1",
+              "samples": 60,
+              "isolated_slope": -0.4979160878021678,
+              "expected_slope": -0.49999999999999956,
+              "rms": 0.5578508356866991,
+              "outline_adjusted_residual": 0.5151252746582002,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 60,
+                "slope": -0.4979160878021678,
+                "rms": 0.5578508356867098,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "platform-1",
+              "samples": 68,
+              "isolated_slope": 0.49837767683322537,
+              "expected_slope": 0.5,
+              "rms": 0.5581093513109815,
+              "outline_adjusted_residual": 0.6048747253418014,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 68,
+                "slope": 0.49837767683322537,
+                "rms": 0.5581093513109829,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            27930
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "platform-0",
+              "samples": 68,
+              "isolated_slope": -0.5003244646333522,
+              "expected_slope": -0.5,
+              "rms": 0.5589807169490123,
+              "outline_adjusted_residual": 0.5,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 68,
+                "slope": -0.5003244646333522,
+                "rms": 0.5589807169490122,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "platform-0",
+              "samples": 60,
+              "isolated_slope": 0.5004167824395673,
+              "expected_slope": 0.4999999999999994,
+              "rms": 0.5589703947393446,
+              "outline_adjusted_residual": 0.49999999999999906,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 60,
+                "slope": 0.5004167824395673,
+                "rms": 0.5589703947393423,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "platform-1",
+              "samples": 68,
+              "isolated_slope": -0.5009733939000632,
+              "expected_slope": -0.5,
+              "rms": 0.5586904127398945,
+              "outline_adjusted_residual": 0.5,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 68,
+                "slope": -0.5009733939000632,
+                "rms": 0.5586904127398956,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "platform-1",
+              "samples": 60,
+              "isolated_slope": 0.4979160878021675,
+              "expected_slope": 0.5,
+              "rms": 0.5578508356866918,
+              "outline_adjusted_residual": 0.5,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "platform-0",
+          "d": 0,
+          "connected": true,
+          "pixels": 14873
+        },
+        {
+          "name": "platform-1",
+          "d": 0,
+          "connected": true,
+          "pixels": 14871
+        },
+        {
+          "name": "platform-0",
+          "d": 1,
+          "connected": true,
+          "pixels": 14871
+        },
+        {
+          "name": "platform-1",
+          "d": 1,
+          "connected": true,
+          "pixels": 14873
+        },
+        {
+          "name": "platform-0",
+          "d": 2,
+          "connected": true,
+          "pixels": 14871
+        },
+        {
+          "name": "platform-1",
+          "d": 2,
+          "connected": true,
+          "pixels": 14873
+        },
+        {
+          "name": "platform-0",
+          "d": 3,
+          "connected": true,
+          "pixels": 14873
+        },
+        {
+          "name": "platform-1",
+          "d": 3,
+          "connected": true,
+          "pixels": 14871
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "platform-0",
+          "b": "platform-1",
+          "axis_gaps": [
+            0.08000000000000007,
+            -1.4699999999999998,
+            -8.382
+          ]
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_authored_pyeongsang_row_0.webp",
+          "sha256": "77b168429c17fb2418a851b796b4abc5f8b379dd149b811719b51bbf51fcefa8"
+        },
+        {
+          "d": 1,
+          "file": "fac_authored_pyeongsang_row_1.fix-6661cfb7b2c1.webp",
+          "sha256": "6661cfb7b2c16947ca93283206ba0671432b87b945604b6233c3fbc043fe8bda"
+        },
+        {
+          "d": 2,
+          "file": "fac_authored_pyeongsang_row_2.webp",
+          "sha256": "a68dc9d0d659adf30ab868ce71c652d507ffc196c8bf9b96a30b2b66b6b852a4"
+        },
+        {
+          "d": 3,
+          "file": "fac_authored_pyeongsang_row_3.webp",
+          "sha256": "252b6bd3c9f01924a5f68de8b95a205ab6857f5a4924788d56d6cd637a48ed60"
+        }
+      ],
+      "limits": [
+        "Two low wooden platforms separated by a real gap.",
+        "Cushions are closed rounded rectangular meshes, not camera-facing patches. Source plank counts vary.",
+        "Saved floor or exposed top boundary samples only; not every interior line. AABB joins are not exact mesh intersection proofs."
+      ]
+    },
+    {
+      "id": "shade_net",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "foot-0",
+          "b": "wood-foundation",
+          "overlap": [
+            0.14399999999999996,
+            0.14399999999999996,
+            0.10000000000000009
+          ]
+        },
+        {
+          "a": "wood-pole-0",
+          "b": "foot-0",
+          "overlap": [
+            0.10199999999999998,
+            0.10199999999999998,
+            0.30000000000000027
+          ]
+        },
+        {
+          "a": "wood-pole-cap-0",
+          "b": "wood-pole-0",
+          "overlap": [
+            0.10199999999999998,
+            0.10199999999999998,
+            0.20000000000000284
+          ]
+        },
+        {
+          "a": "foot-1",
+          "b": "wood-foundation",
+          "overlap": [
+            0.14400000000000013,
+            0.14399999999999996,
+            0.10000000000000009
+          ]
+        },
+        {
+          "a": "wood-pole-1",
+          "b": "foot-1",
+          "overlap": [
+            0.10199999999999987,
+            0.10199999999999998,
+            0.30000000000000027
+          ]
+        },
+        {
+          "a": "wood-pole-cap-1",
+          "b": "wood-pole-1",
+          "overlap": [
+            0.10199999999999987,
+            0.10199999999999998,
+            0.20000000000000284
+          ]
+        },
+        {
+          "a": "foot-2",
+          "b": "wood-foundation",
+          "overlap": [
+            0.14399999999999996,
+            0.14400000000000013,
+            0.10000000000000009
+          ]
+        },
+        {
+          "a": "wood-pole-2",
+          "b": "foot-2",
+          "overlap": [
+            0.10199999999999998,
+            0.10199999999999987,
+            0.30000000000000027
+          ]
+        },
+        {
+          "a": "wood-pole-cap-2",
+          "b": "wood-pole-2",
+          "overlap": [
+            0.10199999999999998,
+            0.10199999999999987,
+            0.20000000000000284
+          ]
+        },
+        {
+          "a": "foot-3",
+          "b": "wood-foundation",
+          "overlap": [
+            0.14400000000000013,
+            0.14400000000000013,
+            0.10000000000000009
+          ]
+        },
+        {
+          "a": "wood-pole-3",
+          "b": "foot-3",
+          "overlap": [
+            0.10199999999999987,
+            0.10199999999999987,
+            0.30000000000000027
+          ]
+        },
+        {
+          "a": "wood-pole-cap-3",
+          "b": "wood-pole-3",
+          "overlap": [
+            0.10199999999999987,
+            0.10199999999999987,
+            0.20000000000000284
+          ]
+        },
+        {
+          "a": "cloth",
+          "b": "wood-pole-0",
+          "overlap": [
+            0.05099999999999999,
+            0.05099999999999999,
+            7.25
+          ]
+        },
+        {
+          "a": "cloth",
+          "b": "wood-pole-1",
+          "overlap": [
+            0.050999999999999934,
+            0.05099999999999999,
+            7.25
+          ]
+        },
+        {
+          "a": "cloth",
+          "b": "wood-pole-2",
+          "overlap": [
+            0.05099999999999999,
+            0.050999999999999934,
+            7.25
+          ]
+        },
+        {
+          "a": "cloth",
+          "b": "wood-pole-3",
+          "overlap": [
+            0.050999999999999934,
+            0.050999999999999934,
+            7.25
+          ]
+        },
+        {
+          "a": "wood-pole-0",
+          "b": "actual cloth corner",
+          "overlap_logical": 0.25
+        },
+        {
+          "a": "wood-pole-1",
+          "b": "actual cloth corner",
+          "overlap_logical": 0.25
+        },
+        {
+          "a": "wood-pole-2",
+          "b": "actual cloth corner",
+          "overlap_logical": 0.25
+        },
+        {
+          "a": "wood-pole-3",
+          "b": "actual cloth corner",
+          "overlap_logical": 0.25
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-foundation",
+          "edges": 12
+        },
+        {
+          "name": "foot-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-pole-0",
+          "edges": 108
+        },
+        {
+          "name": "wood-pole-cap-0",
+          "edges": 108
+        },
+        {
+          "name": "foot-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-pole-1",
+          "edges": 108
+        },
+        {
+          "name": "wood-pole-cap-1",
+          "edges": 108
+        },
+        {
+          "name": "foot-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-pole-2",
+          "edges": 108
+        },
+        {
+          "name": "wood-pole-cap-2",
+          "edges": 108
+        },
+        {
+          "name": "foot-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-pole-3",
+          "edges": 108
+        },
+        {
+          "name": "wood-pole-cap-3",
+          "edges": 108
+        },
+        {
+          "name": "cloth",
+          "edges": 2560
+        }
+      ],
+      "rotation_edge_error": 2.355971320811001e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            33416
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": -0.49975341114581623,
+              "expected_slope": -0.5,
+              "rms": 0.558842384616848,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": -0.49975341114581623,
+                "rms": 0.5588423846168477,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": 0.5002339432719182,
+              "expected_slope": 0.5,
+              "rms": 0.5532287052540865,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": 0.5002339432719182,
+                "rms": 0.5532287052540865,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            33416
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": -0.49975341114581623,
+              "expected_slope": -0.5,
+              "rms": 0.558842384616848,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": -0.49975341114581623,
+                "rms": 0.5588423846168477,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": 0.5002339432719182,
+              "expected_slope": 0.5,
+              "rms": 0.5532287052540865,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": 0.5002339432719182,
+                "rms": 0.5532287052540865,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            33416
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": -0.49975341114581623,
+              "expected_slope": -0.5,
+              "rms": 0.558842384616848,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": -0.49975341114581623,
+                "rms": 0.5588423846168477,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": 0.5002339432719182,
+              "expected_slope": 0.5,
+              "rms": 0.5532287052540865,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": 0.5002339432719182,
+                "rms": 0.5532287052540865,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            33416
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": -0.49975341114581623,
+              "expected_slope": -0.5,
+              "rms": 0.558842384616848,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": -0.49975341114581623,
+                "rms": 0.5588423846168477,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "samples": 78,
+              "isolated_slope": 0.5002339432719182,
+              "expected_slope": 0.5,
+              "rms": 0.5532287052540865,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": 0.5002339432719182,
+                "rms": 0.5532287052540865,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [],
+      "assembly_gaps": [],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_shade_net_0.webp",
+          "sha256": "ea21bc030e34065ac9c7c5cea30ae57e55c047472574b78d421687b337f08d54"
+        },
+        {
+          "d": 1,
+          "file": "fac_shade_net_1.webp",
+          "sha256": "c79657b0fc1c15d7aef356945a3957a759ad469af9175b26291670b1ce85d9be"
+        },
+        {
+          "d": 2,
+          "file": "fac_shade_net_2.webp",
+          "sha256": "70993bd14360dc7d613c8baefaebde5290c37d3b0d3bbea9b8035e6904bbfad7"
+        },
+        {
+          "d": 3,
+          "file": "fac_shade_net_3.webp",
+          "sha256": "b32fbc36506ebd0818ef8a8d4c05b68de8998ee511884ae2f5c01876e9785221"
+        }
+      ],
+      "limits": [
+        "The cloth is an authored tension surface, not a physically simulated reconstruction.",
+        "Floor recesses are painted dark marks; not transparent holes.",
+        "Saved floor or exposed top boundary samples only; not every interior line. AABB joins are not exact mesh intersection proofs."
+      ]
+    }
+  ]
+}

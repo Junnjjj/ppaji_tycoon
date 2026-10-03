@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "tests": {
+    "command": "npx vitest run src/assets/approved-facilities.test.ts src/render/outdoor-facilities.test.ts",
+    "passed": 21
+  },
+  "candidate_frames_exact": 12,
+  "http_hash_and_decoded_rgba_exact": 12,
+  "browser_provider_http_webp_exact": 12,
+  "registration_unchanged": true,
+  "unrelated_entries_unchanged": true,
+  "scope": "authored_bbq_zone authored_pyeongsang_row shade_net; entire 100-asset goal still open"
+}

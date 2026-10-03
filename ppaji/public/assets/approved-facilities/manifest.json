@@ -5865,28 +5865,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "shade_net/native-d0.png",
+          "file": "shade_net/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "1c395be2e7f4ce6fc236632a39b1b1566002fb8f77902fa7f2345ed75fd4ee28"
+          "sha256": "cdbc9f208b388a1e956aa3d2f5fd25ba7b1dce944b8ae85234d0bc8c9c320f5c"
         },
         "d1": {
-          "file": "shade_net/native-d1.png",
+          "file": "shade_net/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "1e8e85727bb5deeda4acb5c6d20eef4f5588e060920cb6d5437aab79f5b22d92"
+          "sha256": "2e98d92d31aa7ef44569b4feb7b3a60e876eb93d17ce39738b2354a9f89d1382"
         },
         "d2": {
-          "file": "shade_net/native-d2.png",
+          "file": "shade_net/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "36a1ecca07ece8e9477a61160e6f49b5da1449be4efe096deabfbd75ea1dfcdc"
+          "sha256": "1573f36ac61ec53c4bf7bc833430911ccdc7ad8003e1172894b39937988cea09"
         },
         "d3": {
-          "file": "shade_net/native-d3.png",
+          "file": "shade_net/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "bb3332c8f52d00ba53217cc9a118b53d62c5958af6bff24d747b0e2a042d8b09"
+          "sha256": "f6e06fb79897025f2cb6c8b810564e02948d6c21a273edfd556b7cfeabfcdba3"
         }
       },
       "note": "Selected building art only; existing simulation access and use behavior preserved."
@@ -6685,28 +6685,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "authored_bbq_zone/native-d0.png",
+          "file": "authored_bbq_zone/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "22b151e1f9206d587c4ff9ed0f57e78da0711aea6c63e454bffc9704be3c0fc3"
+          "sha256": "b05a7077edccaf9e0ba38cabc1b112b56f627925fd5214b8fcbdd83719ec4ec3"
         },
         "d1": {
-          "file": "authored_bbq_zone/native-d1.png",
+          "file": "authored_bbq_zone/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "238c1b1e924f14520d1f1d1de7c8b1e76132d495c93f2808ce939aa314db7023"
+          "sha256": "f33263b6b74c4f4aedaf7cdbe64f5b0c767ce71be4e5ab2595ad0429eac9cb79"
         },
         "d2": {
-          "file": "authored_bbq_zone/native-d2.png",
+          "file": "authored_bbq_zone/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "f63e29465309121a88ee997a3c1d29de4ef7ee43bd1ad644ad2f4b6aa5f2d6d4"
+          "sha256": "4aa88dfa225b781433acc3adf55d6df380b30218b34fa9547d4cd467c026e0e4"
         },
         "d3": {
-          "file": "authored_bbq_zone/native-d3.png",
+          "file": "authored_bbq_zone/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "1788ddcef9594dea85bda9894c64f1f948820c1e14d3d09318d6f86d3981dfb6"
+          "sha256": "f58f41bdaeb9ae054da3e35cb1e528a3dc295592aa8fed1edfd6e5258ea49077"
         }
       },
       "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
@@ -6897,28 +6897,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "authored_pyeongsang_row/native-d0.png",
+          "file": "authored_pyeongsang_row/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "c024a65581011bb283d01b511a726e4a441030a7c24a25f6931bea58b224261e"
+          "sha256": "4a39d4d3543321919e28faedbe8c113ef84267d85a520d0792232e67981a8dc7"
         },
         "d1": {
-          "file": "authored_pyeongsang_row/native-d1.png",
+          "file": "authored_pyeongsang_row/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "7b2309f612bd0d484315091e0fa1cf776a01f56656986275fccd9b336301d6c0"
+          "sha256": "76667ad07adcae8b5763f818e50bfcf8ab5f0da926f8053bea4bd5dfc1b70f4e"
         },
         "d2": {
-          "file": "authored_pyeongsang_row/native-d2.png",
+          "file": "authored_pyeongsang_row/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "15a9487fe444a4de16745d5ee751350355735b809c500bc3e32e9c6a4e893db1"
+          "sha256": "b319ed2713064fd03a27ee6c44c701b5ac7b51a186379c9279dde619c411dfc8"
         },
         "d3": {
-          "file": "authored_pyeongsang_row/native-d3.png",
+          "file": "authored_pyeongsang_row/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "f04ef28c6a038bc129be65cf24add3469445facef27f853d84e6ae59b43ed20e"
+          "sha256": "172b4d7fb2c15cf254865c8c71ecfde94a187063d1bf989d1bb21dc5ba7018ba"
         }
       },
       "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."

@@ -591,32 +591,32 @@
       "bytes": 47876
     },
     "fac/shade_net/0": {
-      "file": "fac_shade_net_0.webp",
+      "file": "fac_shade_net_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "ea21bc030e34065ac9c7c5cea30ae57e55c047472574b78d421687b337f08d54",
-      "bytes": 63188
+      "sha256": "71dab01b0c2f9a69ead421f6935aa777f6c440644c1f223c01229aa9c48d7b88",
+      "bytes": 37186
     },
     "fac/shade_net/1": {
-      "file": "fac_shade_net_1.webp",
+      "file": "fac_shade_net_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "c79657b0fc1c15d7aef356945a3957a759ad469af9175b26291670b1ce85d9be",
-      "bytes": 58170
+      "sha256": "e6a00c0a4807fea9ac8933f3f839fb4ca419f4e6e6d17c6d289479a476c09b55",
+      "bytes": 37802
     },
     "fac/shade_net/2": {
-      "file": "fac_shade_net_2.webp",
+      "file": "fac_shade_net_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "70993bd14360dc7d613c8baefaebde5290c37d3b0d3bbea9b8035e6904bbfad7",
-      "bytes": 54550
+      "sha256": "f4ee8bfe6fa54f4f173dd0a4aedfa2d79431795e21a1f12bca1168c0afaef97c",
+      "bytes": 37030
     },
     "fac/shade_net/3": {
-      "file": "fac_shade_net_3.webp",
+      "file": "fac_shade_net_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "b32fbc36506ebd0818ef8a8d4c05b68de8998ee511884ae2f5c01876e9785221",
-      "bytes": 59942
+      "sha256": "859d11e15362dc4ad074c441fdc1ac77602fae6ba1d4c0ff76fa4f7e59037729",
+      "bytes": 38254
     },
     "fac/shop/0": {
       "file": "fac_shop_0_accepted_20261003.webp",
@@ -787,32 +787,32 @@
       "bytes": 35866
     },
     "fac/authored_bbq_zone/0": {
-      "file": "fac_authored_bbq_zone_0.fix-5be5196bd0d9.webp",
+      "file": "fac_authored_bbq_zone_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "5be5196bd0d9ee24763c5983ada72fd1a13acc72c319c1513d49bb0ba7008d18",
-      "bytes": 46274
+      "sha256": "16c91798b35285aafa0ad798d46975b3eea548fe1cf6a7f2fca6a193ae0ff1b5",
+      "bytes": 25626
     },
     "fac/authored_bbq_zone/1": {
-      "file": "fac_authored_bbq_zone_1.webp",
+      "file": "fac_authored_bbq_zone_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "af499038515dfe8b3b3e578b93f5b98f284f24c7aba187150028ed5595c99d4d",
-      "bytes": 42402
+      "sha256": "ba28dbc57fe3b84b4a69f789d2a0737401c7fd432c0c205eb6c8532a6fbc0749",
+      "bytes": 26648
     },
     "fac/authored_bbq_zone/2": {
-      "file": "fac_authored_bbq_zone_2.webp",
+      "file": "fac_authored_bbq_zone_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "4e5c7cd3acb2b786cc65b19426bd3e94e5398d152e067cc22a87ed1c12cabedf",
-      "bytes": 40804
+      "sha256": "672ae875b75ff8aaf649f877e28b39a85fc9c6eb66cb41751d75b5dc126866a6",
+      "bytes": 25340
     },
     "fac/authored_bbq_zone/3": {
-      "file": "fac_authored_bbq_zone_3.webp",
+      "file": "fac_authored_bbq_zone_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "7f6a5d0f737088e0a64aaff9addd22d5f0783b96e10d89348f8acfdaf91f33b7",
-      "bytes": 32970
+      "sha256": "c6e6e2af3f4da825f2bf31c7710bcc50c672ea499402c657e4fd5299cfba0046",
+      "bytes": 23984
     },
     "fac/authored_sunbed_row/0": {
       "file": "fac_authored_sunbed_row_0.webp",
@@ -843,32 +843,32 @@
       "bytes": 42800
     },
     "fac/authored_pyeongsang_row/0": {
-      "file": "fac_authored_pyeongsang_row_0.webp",
+      "file": "fac_authored_pyeongsang_row_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "77b168429c17fb2418a851b796b4abc5f8b379dd149b811719b51bbf51fcefa8",
-      "bytes": 52756
+      "sha256": "803b6b00766fcbfda538fbf191bf0298e13c80ba123cbe5c182f2d92285be691",
+      "bytes": 37836
     },
     "fac/authored_pyeongsang_row/1": {
-      "file": "fac_authored_pyeongsang_row_1.fix-6661cfb7b2c1.webp",
+      "file": "fac_authored_pyeongsang_row_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "6661cfb7b2c16947ca93283206ba0671432b87b945604b6233c3fbc043fe8bda",
-      "bytes": 54854
+      "sha256": "b9a0d632e2142e4f714cba135288a1c1907c033ffff0ad1412f4b97d535f7813",
+      "bytes": 36628
     },
     "fac/authored_pyeongsang_row/2": {
-      "file": "fac_authored_pyeongsang_row_2.webp",
+      "file": "fac_authored_pyeongsang_row_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "a68dc9d0d659adf30ab868ce71c652d507ffc196c8bf9b96a30b2b66b6b852a4",
-      "bytes": 52922
+      "sha256": "9e83dd45db141c5310738fa1fdc253b0331b4e7a48033cf816c900b339fa0363",
+      "bytes": 36732
     },
     "fac/authored_pyeongsang_row/3": {
-      "file": "fac_authored_pyeongsang_row_3.webp",
+      "file": "fac_authored_pyeongsang_row_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "252b6bd3c9f01924a5f68de8b95a205ab6857f5a4924788d56d6cd637a48ed60",
-      "bytes": 53626
+      "sha256": "6863389f9e0f226564ed23dde2f21984e16e939aed5d2d460ef5f9b751e0286b",
+      "bytes": 36806
     },
     "fac/authored_massage_row/0": {
       "file": "fac_authored_massage_row_0.webp",
