@@ -1,3 +1,4 @@
+import { npcDensity } from './npc-density';
 import { imagegenArt } from '../assets/imagegen-art.js';
 /** Vehicle and rider use the same native camera depth; rails/roofs occlude passengers. */
 import type { WatercraftProvider } from '../assets/watercraft.js';
@@ -10,11 +11,13 @@ export function craftFacing(h:number):number { return [1,0,3,2][Math.round(h/4)%
 export class CraftComposite {
   readonly canvas = document.createElement('canvas');
   usingImagegen=false;
+  readonly density:number;
   private readonly ctx:CanvasRenderingContext2D;
   private readonly bases=new Map<string,{rgba:Uint8ClampedArray;depth:Float32Array}>();
   private readonly npcPixels = new Map<string,ImageData>();
   constructor(private readonly art:Pick<WatercraftProvider, 'pixels'|'depths'|'depthOffsets'|'spec'>,private readonly provider:AssetProvider,size:number) {
-    this.canvas.width=size+96; this.canvas.height=size+96;
+    this.density=npcDensity(provider);
+    this.canvas.width=(size+96)*this.density; this.canvas.height=(size+96)*this.density;
 
     const ctx=this.canvas.getContext('2d');if(!ctx)throw Error('Craft composite unavailable');this.ctx=ctx;
   }
@@ -22,8 +25,8 @@ export class CraftComposite {
   draw(id:string,h:number,riders:readonly CraftRider[],timeMs:number,slideMask?:Float32Array,poseMasks?:ReadonlyMap<string,Float32Array>,frontOverlay?:ImageData):{ax:number;ay:number;visible:number[]} {
     const key=`watercraft/${id}/${h}`,base=this.art.pixels.get(key),mask=this.art.depths.get(key),spec=this.art.spec(key);
     if(!base||!mask||!spec)throw Error(`Missing authored craft ${key}`);
-    const w=this.canvas.width,ht=this.canvas.height,margin=48;
-    const out=this.ctx.createImageData(w,ht);
+    const density=this.density,w=this.canvas.width/density,ht=this.canvas.height/density,margin=48,ow=this.canvas.width,oh=this.canvas.height;
+    const out=this.ctx.createImageData(ow,oh);
     let cached=this.bases.get(key);
     if(!cached){
       const rgba=new Uint8ClampedArray(w*ht*4),depth=new Float32Array(w*ht);depth.fill(Infinity);
@@ -41,20 +44,20 @@ export class CraftComposite {
     }
     const hd=imagegenArt.get(imagegenArt.size(key)?key:key.replace('watercraft/','fac/'));
     this.usingImagegen=!!hd;
-    if(!hd)out.data.set(cached.rgba);const depth=cached.depth;
-    const actorDepth=new Float32Array(w*ht);actorDepth.fill(Infinity);
+    if(!hd)for(let y=0;y<oh;y++)for(let x=0;x<ow;x++){const src=(Math.floor(y/density)*w+Math.floor(x/density))*4;out.data.set(cached.rgba.subarray(src,src+4),(y*ow+x)*4);}const depth=cached.depth;
+    const actorDepth=new Float32Array(ow*oh);actorDepth.fill(Infinity);
     const ax=spec.ax+margin,ay=spec.ay+margin,visible:number[]=[];
     for(const rider of riders){
       const nk=npcV8Key(rider.uid,craftFacing(rider.heading),rider.pose,timeMs,'happy'),ns=this.provider.spec(nk),nc=this.provider.canvas(nk);
       if(!ns||!nc){visible.push(0);continue;}
       let pix=this.npcPixels.get(nk);if(!pix){const ctx=nc.getContext('2d');if(!ctx)continue;pix=ctx.getImageData(0,0,nc.width,nc.height);this.npcPixels.set(nk,pix);}
       const qx=ax+16*(rider.di-rider.dj),qy=ay+8*(rider.di+rider.dj)-rider.z*TW*COS;
-      const left=Math.round(qx-ns.ax),top=Math.round(qy-ns.ay),zero=riderDepth(rider.di,rider.dj,rider.z);let count=0;
+      const nd=ns.density??1,left=Math.round((qx-ns.ax/nd)*density),top=Math.round((qy-ns.ay/nd)*density),zero=riderDepth(rider.di,rider.dj,rider.z);let count=0;
       for(let y=0;y<pix.height;y++)for(let x=0;x<pix.width;x++){
         const p=(y*pix.width+x)*4,a=pix.data[p+3]!;if(!a)continue;
-        const xx=left+x,yy=top+y;if(xx<0||yy<0||xx>=w||yy>=ht)continue;
-        const k=yy*w+xx,z=zero+.5*(yy+.5-qy)/COS-.35;
-        const mx=xx-margin,my=yy-margin, support=poseMasks?.get(`${key}/${rider.surfacePose??rider.pose}`)??(rider.pose==='ride'?slideMask:undefined), override=support&&mx>=0&&my>=0&&mx<base.width&&my<base.height ? support[my*base.width+mx]! : depth[k]!;
+        const xx=left+x,yy=top+y;if(xx<0||yy<0||xx>=ow||yy>=oh)continue;
+        const k=yy*ow+xx,lx=Math.floor(xx/density),ly=Math.floor(yy/density),z=zero+(rider.pose==='lie'?-Math.sqrt(3):.5/COS)*((yy+.5)/density-qy)-.35;
+        const mx=lx-margin,my=ly-margin, support=poseMasks?.get(`${key}/${rider.surfacePose??rider.pose}`)??(rider.pose==='ride'?slideMask:undefined), override=support&&mx>=0&&my>=0&&mx<base.width&&my<base.height ? support[my*base.width+mx]! : depth[ly*w+lx]!;
         if(z>Math.min(override,actorDepth[k]!)+.08)continue;
         const alpha=a/255,old=out.data[k*4+3]!/255,total=alpha+old*(1-alpha);
         for(let ch=0;ch<3;ch++)out.data[k*4+ch]=Math.round((pix.data[p+ch]!*alpha+out.data[k*4+ch]!*old*(1-alpha))/total);
@@ -64,13 +67,15 @@ export class CraftComposite {
     }
     if(frontOverlay)for(let y=0;y<frontOverlay.height;y++)for(let x=0;x<frontOverlay.width;x++){
       const src=(y*frontOverlay.width+x)*4,a=frontOverlay.data[src+3]!/255;if(!a)continue;
-      const dst=((y+margin)*w+x+margin)*4;
-      if(hd){out.data[dst+3]=Math.round(out.data[dst+3]!*(1-a));continue;}
-      const old=out.data[dst+3]!/255,total=a+old*(1-a);
-      for(let ch=0;ch<3;ch++)out.data[dst+ch]=Math.round((frontOverlay.data[src+ch]!*a+out.data[dst+ch]!*old*(1-a))/total);
-      out.data[dst+3]=Math.round(total*255);
+      for(let dy=0;dy<density;dy++)for(let dx=0;dx<density;dx++){
+        const dst=(((y+margin)*density+dy)*ow+(x+margin)*density+dx)*4;
+        if(hd){out.data[dst+3]=Math.round(out.data[dst+3]!*(1-a));continue;}
+        const old=out.data[dst+3]!/255,total=a+old*(1-a);
+        for(let ch=0;ch<3;ch++)out.data[dst+ch]=Math.round((frontOverlay.data[src+ch]!*a+out.data[dst+ch]!*old*(1-a))/total);
+        out.data[dst+3]=Math.round(total*255);
+      }
     }
     this.ctx.putImageData(out,0,0);
-    return {ax,ay,visible};
+    return {ax:ax*density,ay:ay*density,visible};
   }
 }

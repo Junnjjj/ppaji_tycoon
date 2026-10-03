@@ -37,6 +37,7 @@ import { ASSET_VERSION } from './assets/draw/pix.js';
 import { cssVar } from './ui/tokens.js';
 import { loadAtlas, HybridProvider } from './assets/atlas-provider.js';
 import { loadNpcV8 } from './assets/npc-v8.js';
+import { loadNpcSource } from './assets/npc-source.js';
 import { loadKairoAtlas } from './assets/kairo-atlas.js';
 import { loadLandscape } from './assets/landscape.js';
 import { applyUiScale } from './ui/ui-scale.js';
@@ -114,7 +115,7 @@ registerFacilityDefs(FACILITY_DEFS.values());
 const imagegenReady=imagegenArt.init().then(()=>Promise.all([...game.facilities.all.map(f=>imagegenArt.load(`fac/${f.defId}/${f.facing}`)),imagegenArt.load('tile/deck')])).catch((error:unknown)=>{console.warn('ImageGen assets unavailable; retaining original art',error);});
 // 아틀라스(프리렌더 PNG)가 있으면 그것을, 없으면 절차 도트 — 같은 ID 라 게임 코드는 모른다 (G15)
 const [atlas, kairo, landscape, npc, watercraft, approved, imagegenGround, compactBoundary] = await Promise.all([
-  loadAtlas(), loadKairoAtlas(), loadLandscape(), loadNpcV8(), loadWatercraft(), loadApprovedFacilities(), loadImageGenGround(),
+  loadAtlas(), loadKairoAtlas(), loadLandscape(), (params.get('npcRuntime')==='legacy' ? loadNpcV8() : loadNpcSource().then(source=>source??loadNpcV8())), loadWatercraft(), loadApprovedFacilities(), loadImageGenGround(),
   game.arrivalRevision >= 3 ? loadCompactBoundary() : Promise.resolve(undefined),imagegenReady,
 ]);
 const rideSeatSpecs = Object.fromEntries(Object.entries(watercraft.manifest.equipment).map(([id,spec])=>[id,spec.seats]));
@@ -124,7 +125,7 @@ if (PREVIEW) { game.story.fromSnapshot(STORY_BEATS.map(b=>b.id)); game.guests.sp
 if (!saved && !PREVIEW) game.checkStory(true);
 setApprovedPictureSource(id => { const match = /^pic\/gear\/([a-z0-9_]+)$/.exec(id); return match ? imagegenArt.get(`watercraft/${match[1]}/0`)??watercraft.canvas(`watercraft/${match[1]}/0`) : null; });
 const provider = new HybridProvider(approved, new HybridProvider(watercraft, new HybridProvider(npc, new HybridProvider(kairo, new HybridProvider(atlas, new ProceduralProvider())))));
-setNpcFrameSource((id) => provider.canvas(id)); // NPC v8(2026-09-18): 초상(`npcPortrait`)이 씬과 같은 v8 프레임을 읽는다
+setNpcFrameSource((id) => provider.canvas(id),id=>provider.spec(id)?.density??1); // NPC v8(2026-09-18): 초상(`npcPortrait`)이 씬과 같은 v8 프레임을 읽는다
 const missing = ProceduralProvider.missingDrawers();
 if (missing.length > 0) console.error('매니페스트에 그리는 함수가 없는 id:', missing);
 

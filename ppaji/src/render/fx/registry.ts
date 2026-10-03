@@ -37,6 +37,7 @@ export interface FxTarget {
   path?: readonly { x: number; y: number }[];
   /** P60-d `path-walk`: 손님 텍스처 키(씬이 provider 에서 등록해 넘긴다) + 원점(v8 은 spec.ax/ay) */
   texture?: string;
+  density?: number;
   origin?: { x: number; y: number };
 }
 
@@ -122,6 +123,7 @@ const IMPL: Record<FxName, (host: FxHost, t: FxTarget) => Live> = {
     const path = t.path && t.path.length ? t.path : [{ x: t.x, y: t.y }];
     const first = path[0] as { x: number; y: number };
     const img = scene.add.image(first.x, first.y, t.texture ?? '__MISSING');
+    img.setScale(1/(t.density??1));if((t.density??1)>1)img.texture.setFilter(1);
     img.setOrigin(t.origin?.x ?? 0.5, t.origin?.y ?? 1).setDepth(DEPTH_SCREEN_FX).setAlpha(0.9);
     const h: Live = { name: 'path-walk', key: null, amount: 0, text: null, born: scene.time.now, alive: true, kill() { if (!this.alive) return; this.alive = false; img.destroy(); const at = live.indexOf(this); if (at >= 0) live.splice(at, 1); } };
     const total = 1200;

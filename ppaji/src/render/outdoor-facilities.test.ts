@@ -105,9 +105,9 @@ describe('actual outdoor NPC composition',()=>{
 describe('outdoor renderer lifecycle',()=>{
   afterEach(()=>vi.unstubAllGlobals());
   function setup(provider=onePixelProvider){
-    const destroyed=vi.fn(),removed=vi.fn(),position=vi.fn(),origin=vi.fn(),depth=vi.fn();
-    const image={setOrigin:origin,setPosition:position,setDepth:depth,destroy:destroyed};
-    origin.mockReturnValue(image);position.mockReturnValue(image);depth.mockReturnValue(image);
+    const destroyed=vi.fn(),removed=vi.fn(),position=vi.fn(),origin=vi.fn(),depth=vi.fn(),scale=vi.fn();
+    const image={setOrigin:origin,setPosition:position,setDepth:depth,setScale:scale,destroy:destroyed};
+    origin.mockReturnValue(image);position.mockReturnValue(image);depth.mockReturnValue(image);scale.mockReturnValue(image);
     const scene={textures:{addCanvas:(key:string)=>({key,refresh:vi.fn()}),remove:removed},add:{image:()=>image}} as unknown as Phaser.Scene;
     const context={createImageData:(w:number,h:number)=>({data:new Uint8ClampedArray(w*h*4)}),putImageData:vi.fn()};
     vi.stubGlobal('document',{createElement:()=>({width:0,height:0,getContext:()=>context})});

@@ -5,6 +5,8 @@
  */
 export interface SpriteSpec {
   id: string;
+  /** Texture pixels per logical pixel; absent for the original 1x assets. */
+  density?: number;
   /** 텍셀 크기 */
   w: number;
   h: number;

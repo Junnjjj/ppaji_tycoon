@@ -1,0 +1,644 @@
+{
+  "version": 7,
+  "hairShapes": [
+    "short",
+    "bob",
+    "bun"
+  ],
+  "outfitShapes": [
+    "vest",
+    "teal",
+    "rashguard"
+  ],
+  "hairColors": [
+    {
+      "id": "original",
+      "label": "갈색",
+      "swatch": "#91561f"
+    },
+    {
+      "id": "charcoal",
+      "label": "흑갈색",
+      "swatch": "#34313a"
+    },
+    {
+      "id": "chestnut",
+      "label": "밤색",
+      "swatch": "#9c4b38"
+    },
+    {
+      "id": "honey",
+      "label": "꿀색",
+      "swatch": "#c6a064"
+    },
+    {
+      "id": "ash",
+      "label": "애쉬",
+      "swatch": "#929894"
+    },
+    {
+      "id": "rose",
+      "label": "로즈브라운",
+      "swatch": "#b7767e"
+    }
+  ],
+  "outfitColors": [
+    {
+      "id": "original",
+      "label": "원색",
+      "swatch": "#e88b31"
+    },
+    {
+      "id": "coral",
+      "label": "코랄",
+      "swatch": "#dd7767"
+    },
+    {
+      "id": "mint",
+      "label": "민트",
+      "swatch": "#75ad92"
+    },
+    {
+      "id": "sky",
+      "label": "스카이",
+      "swatch": "#719ebd"
+    },
+    {
+      "id": "sun",
+      "label": "살구 노랑",
+      "swatch": "#d6ad5e"
+    },
+    {
+      "id": "lilac",
+      "label": "라일락",
+      "swatch": "#a18aac"
+    }
+  ],
+  "presets": [
+    {
+      "id": "guest-01",
+      "label": "숏 · 갈색 / 원색",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "original",
+      "outfit": "vest",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-02",
+      "label": "숏 · 흑갈색 / 코랄",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "charcoal",
+      "outfit": "vest",
+      "outfitColor": "coral"
+    },
+    {
+      "id": "guest-03",
+      "label": "숏 · 밤색 / 민트",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "chestnut",
+      "outfit": "vest",
+      "outfitColor": "mint"
+    },
+    {
+      "id": "guest-04",
+      "label": "숏 · 꿀색 / 스카이",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "honey",
+      "outfit": "vest",
+      "outfitColor": "sky"
+    },
+    {
+      "id": "guest-05",
+      "label": "숏 · 애쉬 / 살구 노랑",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "ash",
+      "outfit": "vest",
+      "outfitColor": "sun"
+    },
+    {
+      "id": "guest-06",
+      "label": "숏 · 로즈브라운 / 라일락",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "rose",
+      "outfit": "vest",
+      "outfitColor": "lilac"
+    },
+    {
+      "id": "guest-07",
+      "label": "숏 · 갈색 / 원색",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "original",
+      "outfit": "teal",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-08",
+      "label": "숏 · 흑갈색 / 스카이",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "charcoal",
+      "outfit": "teal",
+      "outfitColor": "sky"
+    },
+    {
+      "id": "guest-09",
+      "label": "숏 · 밤색 / 살구 노랑",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "chestnut",
+      "outfit": "teal",
+      "outfitColor": "sun"
+    },
+    {
+      "id": "guest-10",
+      "label": "숏 · 꿀색 / 라일락",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "honey",
+      "outfit": "teal",
+      "outfitColor": "lilac"
+    },
+    {
+      "id": "guest-11",
+      "label": "숏 · 애쉬 / 원색",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "ash",
+      "outfit": "teal",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-12",
+      "label": "숏 · 로즈브라운 / 코랄",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "rose",
+      "outfit": "teal",
+      "outfitColor": "coral"
+    },
+    {
+      "id": "guest-13",
+      "label": "단발 · 갈색 / 원색",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "original",
+      "outfit": "vest",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-14",
+      "label": "단발 · 흑갈색 / 민트",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "charcoal",
+      "outfit": "vest",
+      "outfitColor": "mint"
+    },
+    {
+      "id": "guest-15",
+      "label": "단발 · 밤색 / 스카이",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "chestnut",
+      "outfit": "vest",
+      "outfitColor": "sky"
+    },
+    {
+      "id": "guest-16",
+      "label": "단발 · 꿀색 / 살구 노랑",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "honey",
+      "outfit": "vest",
+      "outfitColor": "sun"
+    },
+    {
+      "id": "guest-17",
+      "label": "단발 · 애쉬 / 라일락",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "ash",
+      "outfit": "vest",
+      "outfitColor": "lilac"
+    },
+    {
+      "id": "guest-18",
+      "label": "단발 · 로즈브라운 / 원색",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "rose",
+      "outfit": "vest",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-19",
+      "label": "단발 · 갈색 / 원색",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "original",
+      "outfit": "teal",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-20",
+      "label": "단발 · 흑갈색 / 살구 노랑",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "charcoal",
+      "outfit": "teal",
+      "outfitColor": "sun"
+    },
+    {
+      "id": "guest-21",
+      "label": "단발 · 밤색 / 라일락",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "chestnut",
+      "outfit": "teal",
+      "outfitColor": "lilac"
+    },
+    {
+      "id": "guest-22",
+      "label": "단발 · 꿀색 / 원색",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "honey",
+      "outfit": "teal",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-23",
+      "label": "단발 · 애쉬 / 코랄",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "ash",
+      "outfit": "teal",
+      "outfitColor": "coral"
+    },
+    {
+      "id": "guest-24",
+      "label": "단발 · 로즈브라운 / 민트",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "rose",
+      "outfit": "teal",
+      "outfitColor": "mint"
+    },
+    {
+      "id": "guest-25",
+      "label": "짧은 머리 / 배색 수영 상의 · 갈색",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "original",
+      "outfit": "rashguard",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-26",
+      "label": "짧은 머리 / 배색 수영 상의 · 흑갈색",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "charcoal",
+      "outfit": "rashguard",
+      "outfitColor": "mint"
+    },
+    {
+      "id": "guest-27",
+      "label": "짧은 머리 / 배색 수영 상의 · 밤색",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "chestnut",
+      "outfit": "rashguard",
+      "outfitColor": "sky"
+    },
+    {
+      "id": "guest-28",
+      "label": "짧은 머리 / 배색 수영 상의 · 꿀색",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "honey",
+      "outfit": "rashguard",
+      "outfitColor": "sun"
+    },
+    {
+      "id": "guest-29",
+      "label": "짧은 머리 / 배색 수영 상의 · 애쉬",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "ash",
+      "outfit": "rashguard",
+      "outfitColor": "lilac"
+    },
+    {
+      "id": "guest-30",
+      "label": "짧은 머리 / 배색 수영 상의 · 로즈브라운",
+      "body": "base-v1",
+      "hair": "short",
+      "hairColor": "rose",
+      "outfit": "rashguard",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-31",
+      "label": "단발 / 배색 수영 상의 · 갈색",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "original",
+      "outfit": "rashguard",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-32",
+      "label": "단발 / 배색 수영 상의 · 흑갈색",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "charcoal",
+      "outfit": "rashguard",
+      "outfitColor": "mint"
+    },
+    {
+      "id": "guest-33",
+      "label": "단발 / 배색 수영 상의 · 밤색",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "chestnut",
+      "outfit": "rashguard",
+      "outfitColor": "sky"
+    },
+    {
+      "id": "guest-34",
+      "label": "단발 / 배색 수영 상의 · 꿀색",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "honey",
+      "outfit": "rashguard",
+      "outfitColor": "sun"
+    },
+    {
+      "id": "guest-35",
+      "label": "단발 / 배색 수영 상의 · 애쉬",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "ash",
+      "outfit": "rashguard",
+      "outfitColor": "lilac"
+    },
+    {
+      "id": "guest-36",
+      "label": "단발 / 배색 수영 상의 · 로즈브라운",
+      "body": "base-v1",
+      "hair": "bob",
+      "hairColor": "rose",
+      "outfit": "rashguard",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-37",
+      "label": "작은 묶음머리 / 구명조끼 · 갈색",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "original",
+      "outfit": "vest",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-38",
+      "label": "작은 묶음머리 / 구명조끼 · 흑갈색",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "charcoal",
+      "outfit": "vest",
+      "outfitColor": "mint"
+    },
+    {
+      "id": "guest-39",
+      "label": "작은 묶음머리 / 구명조끼 · 밤색",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "chestnut",
+      "outfit": "vest",
+      "outfitColor": "sky"
+    },
+    {
+      "id": "guest-40",
+      "label": "작은 묶음머리 / 구명조끼 · 꿀색",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "honey",
+      "outfit": "vest",
+      "outfitColor": "sun"
+    },
+    {
+      "id": "guest-41",
+      "label": "작은 묶음머리 / 구명조끼 · 애쉬",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "ash",
+      "outfit": "vest",
+      "outfitColor": "lilac"
+    },
+    {
+      "id": "guest-42",
+      "label": "작은 묶음머리 / 구명조끼 · 로즈브라운",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "rose",
+      "outfit": "vest",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-43",
+      "label": "작은 묶음머리 / 반소매 상의 · 갈색",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "original",
+      "outfit": "teal",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-44",
+      "label": "작은 묶음머리 / 반소매 상의 · 흑갈색",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "charcoal",
+      "outfit": "teal",
+      "outfitColor": "mint"
+    },
+    {
+      "id": "guest-45",
+      "label": "작은 묶음머리 / 반소매 상의 · 밤색",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "chestnut",
+      "outfit": "teal",
+      "outfitColor": "sky"
+    },
+    {
+      "id": "guest-46",
+      "label": "작은 묶음머리 / 반소매 상의 · 꿀색",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "honey",
+      "outfit": "teal",
+      "outfitColor": "sun"
+    },
+    {
+      "id": "guest-47",
+      "label": "작은 묶음머리 / 반소매 상의 · 애쉬",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "ash",
+      "outfit": "teal",
+      "outfitColor": "lilac"
+    },
+    {
+      "id": "guest-48",
+      "label": "작은 묶음머리 / 반소매 상의 · 로즈브라운",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "rose",
+      "outfit": "teal",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-49",
+      "label": "작은 묶음머리 / 배색 수영 상의 · 갈색",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "original",
+      "outfit": "rashguard",
+      "outfitColor": "original"
+    },
+    {
+      "id": "guest-50",
+      "label": "작은 묶음머리 / 배색 수영 상의 · 흑갈색",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "charcoal",
+      "outfit": "rashguard",
+      "outfitColor": "mint"
+    },
+    {
+      "id": "guest-51",
+      "label": "작은 묶음머리 / 배색 수영 상의 · 밤색",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "chestnut",
+      "outfit": "rashguard",
+      "outfitColor": "sky"
+    },
+    {
+      "id": "guest-52",
+      "label": "작은 묶음머리 / 배색 수영 상의 · 꿀색",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "honey",
+      "outfit": "rashguard",
+      "outfitColor": "sun"
+    },
+    {
+      "id": "guest-53",
+      "label": "작은 묶음머리 / 배색 수영 상의 · 애쉬",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "ash",
+      "outfit": "rashguard",
+      "outfitColor": "lilac"
+    },
+    {
+      "id": "guest-54",
+      "label": "작은 묶음머리 / 배색 수영 상의 · 로즈브라운",
+      "body": "base-v1",
+      "hair": "bun",
+      "hairColor": "rose",
+      "outfit": "rashguard",
+      "outfitColor": "original"
+    }
+  ],
+  "totalIndependentCombinations": 324,
+  "supportedPoses": [
+    "idle",
+    "sit",
+    "swim",
+    "waterstand",
+    "slide",
+    "jump",
+    "cheer_jump"
+  ],
+  "unsupportedPoses": [
+    "walk",
+    "recline"
+  ],
+  "rules": [
+    "Choose a type once per NPC; retain it across state changes.",
+    "No skin/body/gender variation claimed.",
+    "Do not silently fall back on unsupported states.",
+    "Mirrors cover symmetric NPC shapes, not asymmetric logos or held props."
+  ],
+  "candidatePoses": [
+    "lie",
+    "floor_sit",
+    "footbath"
+  ],
+  "reviewPoses": [
+    "walk",
+    "idle",
+    "sit",
+    "swim",
+    "waterstand",
+    "slide",
+    "jump",
+    "cheer_jump",
+    "lie",
+    "floor_sit",
+    "footbath"
+  ],
+  "approval": "V7_WARDROBE_REVIEW_PENDING",
+  "shapeLabels": {
+    "short": "짧은 머리",
+    "bob": "단발",
+    "bun": "작은 묶음머리",
+    "vest": "구명조끼",
+    "teal": "반소매 상의",
+    "rashguard": "배색 수영 상의"
+  },
+  "newPresetIds": [
+    "guest-25",
+    "guest-26",
+    "guest-27",
+    "guest-28",
+    "guest-29",
+    "guest-30",
+    "guest-31",
+    "guest-32",
+    "guest-33",
+    "guest-34",
+    "guest-35",
+    "guest-36",
+    "guest-37",
+    "guest-38",
+    "guest-39",
+    "guest-40",
+    "guest-41",
+    "guest-42",
+    "guest-43",
+    "guest-44",
+    "guest-45",
+    "guest-46",
+    "guest-47",
+    "guest-48",
+    "guest-49",
+    "guest-50",
+    "guest-51",
+    "guest-52",
+    "guest-53",
+    "guest-54"
+  ]
+}

@@ -1,3 +1,4 @@
+import { applyNpcDensity } from './npc-density';
 import { woodlandLayout, type WoodlandPlant } from './woodland-layout.js';
 import { TOWN_LOTS, TOWN_BUILDINGS, TOWN_CROSSINGS, townWalkingLoop, trafficGreen, advanceTownVehicle } from './town-layout.js';
 import { exteriorTile } from './exterior.js';
@@ -242,7 +243,7 @@ export class WaterparkScene extends Phaser.Scene {
     }
     if(this.deps.compactBoundary && this.deps.compactArrival?.()){
       this.prepRenderer ??= new PreparationRenderer(this,this.deps.compactBoundary,this.deps.provider);
-      this.prepRenderer.update(this.facilitiesRef,this.guestsRef,this.time.now);
+      this.prepRenderer.update(this.facilitiesRef,this.guestsRef,(this.deps.rideTime?.() ?? this.time.now/1000)*1000);
     }
     this.animFrame++;
     this.tickWater();
@@ -306,7 +307,7 @@ export class WaterparkScene extends Phaser.Scene {
         const key=this.columnKey(g.at(i,j),i===gate.i&&j===gate.j,i,j),texture=this.deps.imagegenGround?.resolve(key)??{key};
         const img = this.add.image(p.x, p.y + this.liftAt(i, j),texture.key,texture.frame);
         this.setGroundOrigin(img, g.at(i, j));
-        this.deps.imagegenGround?.setWaterTile(this,img,FLOOR_NAMES[g.at(i,j)]??'sand',i,j,this.noLiftForTest?0:g.levelAt(i,j));
+        this.deps.imagegenGround?.setWaterTile(this,img,FLOOR_NAMES[g.at(i,j)]??'sand',i,j,this.noLiftForTest?0:g.levelAt(i,j),FLOOR_NAMES[g.natural[j*g.w+i]!]??'sand');
         img.setDepth(groundDepth(i, j, this.noLiftForTest ? 0 : g.levelAt(i, j)));
         this.tiles[j * g.w + i] = img;
       }
@@ -429,7 +430,7 @@ export class WaterparkScene extends Phaser.Scene {
     const tint = this.poolTint.get(j * this.deps.grid.w + i);
     const floor = this.deps.grid.at(i, j);
     this.setGroundOrigin(img, floor);
-    this.deps.imagegenGround?.setWaterTile(this,img,FLOOR_NAMES[floor]??'sand',i,j,this.noLiftForTest?0:this.deps.grid.levelAt(i,j));
+    this.deps.imagegenGround?.setWaterTile(this,img,FLOOR_NAMES[floor]??'sand',i,j,this.noLiftForTest?0:this.deps.grid.levelAt(i,j),FLOOR_NAMES[this.deps.grid.natural[j*this.deps.grid.w+i]!]??'sand');
     if (tint !== undefined && floor === FLOOR.pool) img.setTint(tint);
     else if (floor === FLOOR.deck && !this.deps.approved?.spec('tile/deck') && this.ringTint.has(j * this.deps.grid.w + i)) img.setTint(this.ringTint.get(j * this.deps.grid.w + i) as number); // P50-b2 등급별 폰툰 색
     else if (floor === FLOOR.indoor && this.courtTiles.has(j * this.deps.grid.w + i)) img.setTint(cssColorInt('--tile-foodcourt-tint') || 0xffffff); // P58-a: 식탁 영역은 실내 바닥에 아주 연하게 칠한 느낌
@@ -511,7 +512,7 @@ export class WaterparkScene extends Phaser.Scene {
       else if (img.texture.key !== key) img.setTexture(key);
       const native = key.startsWith('guest/v8/');
       const spec = native ? this.deps.provider.spec(key) : null; // v8 프레임은 원점이 spec.ax/ay — GUEST_ANCHOR 고정 원점이 아니다
-      img.setOrigin(spec ? spec.ax / spec.w : GUEST_ANCHOR.x / GUEST_W, spec ? spec.ay / spec.h : GUEST_ANCHOR.y / GUEST_H);
+      img.setOrigin(spec ? spec.ax / spec.w : GUEST_ANCHOR.x / GUEST_W, spec ? spec.ay / spec.h : GUEST_ANCHOR.y / GUEST_H);applyNpcDensity(img,spec);
       const a = tileCenter(s.fromI, s.fromJ); const b = tileCenter(s.i, s.j);
       img.setPosition(Math.round(a.x + (b.x - a.x) * s.progress), Math.round(a.y + (b.y - a.y) * s.progress + this.liftAt(s.i, s.j)));
       img.setFlipX(!native && (s.facing === 1 || s.facing === 2)); // v8 키는 mirror 를 키에 담는다
@@ -622,7 +623,7 @@ export class WaterparkScene extends Phaser.Scene {
       }
       const native = key.startsWith('guest/v8/');
       const spec = native ? this.deps.provider.spec(key) : null;
-      img.setOrigin(spec ? spec.ax / spec.w : GUEST_ANCHOR.x / GUEST_W, spec ? spec.ay / spec.h : GUEST_ANCHOR.y / GUEST_H);
+      img.setOrigin(spec ? spec.ax / spec.w : GUEST_ANCHOR.x / GUEST_W, spec ? spec.ay / spec.h : GUEST_ANCHOR.y / GUEST_H);applyNpcDensity(img,spec);
       const p = this.guestWorld(g);
       // 대기 줄 (G34) — 같은 칸에 선 사람들을 뒤로 한 명씩 비켜 세운다
       const qx = g.state === 'queue' ? -6 * g.queuePos : 0; const qy = g.state === 'queue' ? 4 * g.queuePos : 0;
@@ -889,6 +890,7 @@ export class WaterparkScene extends Phaser.Scene {
   setFacilities(list: readonly PlacedFacility[], defOf: (f: PlacedFacility) => FacilityDef): void {
     this.facilitiesRef = list;
     this.facDefOf = defOf;
+    this.deps.imagegenGround?.setDockCells(list.filter(f=>['dock','boarding_dock','boarding_dock2x1'].includes(f.defId)).flatMap(f=>FacilityStore.footprint(defOf(f),f.i,f.j,f.facing)));
     this.syncFacilities();
     this.refreshImagegenSprites();
   }
@@ -1158,7 +1160,7 @@ export class WaterparkScene extends Phaser.Scene {
     this.townSignals=this.add.graphics();
     for(let n=0;n<10;n++){
       const route=townWalkingLoop(n),tex=this.pathWalkerTexture();
-      const img=this.add.image(0,0,tex.key).setOrigin(tex.origin.x,tex.origin.y);
+      const img=this.add.image(0,0,tex.key).setOrigin(tex.origin.x,tex.origin.y);applyNpcDensity(img,this.deps.provider.spec(tex.key));
       this.townPeople.push({img,route,segment:n%4,progress:(n*.17)%1,seed:201+n,crossing:false});
     }
     const tex=this.pathWalkerTexture();this.townPeople.push({img:this.add.image(0,0,tex.key),route:[{i:48,j:-3},{i:48,j:0}],segment:0,progress:0,seed:215,crossing:true});
@@ -1186,7 +1188,7 @@ export class WaterparkScene extends Phaser.Scene {
       const facing=b.i>a.i?0:b.j>a.j?1:b.i<a.i?2:3;
       const key=npcV8Key(actor.seed,facing,waiting?'idle':'walk',this.time.now,'happy');
       if(!this.textures.exists(key)){const c=this.deps.provider.canvas(key);if(c)this.textures.addCanvas(key,c);}
-      if(this.textures.exists(key)){actor.img.setTexture(key);const spec=this.deps.provider.spec(key)!;actor.img.setOrigin(spec.ax/spec.w,spec.ay/spec.h);}
+      if(this.textures.exists(key)){actor.img.setTexture(key);const spec=this.deps.provider.spec(key)!;actor.img.setOrigin(spec.ax/spec.w,spec.ay/spec.h);applyNpcDensity(actor.img,spec);}
       actor.img.setPosition(p.x,p.y).setDepth(Math.max(0,depthKey(i,j))+Z_GUEST);
       if(actor.progress>=1){actor.progress=0;actor.segment=(actor.segment+1)%actor.route.length;}
     }
@@ -1341,7 +1343,7 @@ export class WaterparkScene extends Phaser.Scene {
     const tex = this.pathWalkerTexture();
     const path = tiles.map((t) => { const c = tileCenter(t.i, t.j); return { x: c.x, y: c.y + this.liftAt(t.i, t.j) }; });
     const first = path[0] as { x: number; y: number };
-    this.pathWalk = playFx({ scene: this, reduced }, 'path-walk', { x: first.x, y: first.y, path, texture: tex.key, origin: tex.origin });
+    this.pathWalk = playFx({ scene: this, reduced }, 'path-walk', { x: first.x, y: first.y, path, texture: tex.key, origin: tex.origin, density: this.deps.provider.spec(tex.key)?.density??1 });
   }
   /** P60-d D72 A — 링의 입수구 칸 표식(FX `entry-mark` 한 핸들이 전부 그린다). 빈 배열이면 지운다. 부를 때마다 다시 그린다(조준마다 갱신) */
   showEntryMarks(tiles: readonly { i: number; j: number }[]): void {

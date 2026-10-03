@@ -1,3 +1,5 @@
+import {transferHeading,craftFrameSignature} from './npc-motion';
+import { applyNpcDensity } from './npc-density';
 import { imagegenArt } from '../assets/imagegen-art.js';
 import Phaser from 'phaser';
 import type { AssetProvider } from '../assets/types.js';
@@ -46,7 +48,7 @@ export class CourseRideRenderer {
             const loc=local(seat.position,h),seatedHeading=((h+Math.round(seat.heading/(Math.PI/8))+4)%16+16)%16;
             const u=ride.phase==='boarding'?Math.min(1,ride.boardProgress/(1-CAST_OFF_FRACTION)):ride.phase==='unboarding'?1-Math.max(0,(ride.unboardProgress-CAST_OFF_FRACTION)/(1-CAST_OFF_FRACTION)):1;
             if(u>=1)riders.push({uid:p.guestUid,...loc,heading:seatedHeading,pose:pose(seat.pose)});
-            else {const from={di:p.origin.i-v.pos.i,dj:p.origin.j-v.pos.j};riders.push({uid:p.guestUid,di:from.di+(loc.di-from.di)*u,dj:from.dj+(loc.dj-from.dj)*u,z:.22+(loc.z-.22)*u+.18*4*u*(1-u),heading:craftHeading(loc.di-from.di,loc.dj-from.dj),pose:u<=0?'idle':'jump'});}
+            else {const from={di:p.origin.i-v.pos.i,dj:p.origin.j-v.pos.j};riders.push({uid:p.guestUid,di:from.di+(loc.di-from.di)*u,dj:from.dj+(loc.dj-from.dj)*u,z:.22+(loc.z-.22)*u+.18*4*u*(1-u),heading:transferHeading(loc.di-from.di,loc.dj-from.dj,ride.phase==='unboarding'),pose:u<=0?'idle':'jump'});}
           }
           else this.actor(p.guestUid,p.pos.i,p.pos.j,p.height,heading(p.heading),p.pose==='board'||p.pose==='climb'?'walk':p.pose==='swim'?'swim':p.pose==='fall'?'jump':'idle',timeSec,actors);
         }
@@ -65,11 +67,12 @@ export class CourseRideRenderer {
       }
     }
     for(const swimmer of view.swimmers){
-      this.hiddenGuestIds.add(swimmer.guestUid);this.actor(swimmer.guestUid,swimmer.pos.i,swimmer.pos.j,swimmer.height,heading(swimmer.heading),pose(swimmer.pose),timeSec,actors);
-      const id=`swimmer:${swimmer.guestUid}`;let g=this.effects.get(id);if(!g){g=this.scene.add.graphics();this.effects.set(id,g);}fxSeen.add(id);g.clear().setDepth(depthKey(swimmer.pos.i+.75,swimmer.pos.j+.75)+1.5);
+      this.hiddenGuestIds.add(swimmer.guestUid);const shown=this.actor(swimmer.guestUid,swimmer.pos.i,swimmer.pos.j,swimmer.height,heading(swimmer.heading),pose(swimmer.pose),timeSec,actors);
+      if(!shown)continue;
+      const id=`swimmer:${swimmer.guestUid}`;let g=this.effects.get(id);if(!g){g=this.scene.add.graphics();this.effects.set(id,g);}fxSeen.add(id);g.clear().setDepth(depthKey(shown.i+.75,shown.j+.75)+1.5);
       if(swimmer.status==='splash'&&!this.impacts.has(id))this.impacts.set(id,{...swimmer.pos,at:timeSec});
       this.drawImpact(g,id,timeSec);
-      if(swimmer.status==='swim'){const q=tileCenter(swimmer.pos.i,swimmer.pos.j);g.lineStyle(1,0xc3edf6,.5);g.strokeEllipse(q.x,q.y+2,9+(timeSec%1)*3,4);}
+      if(swimmer.status==='swim'){const q=tileCenter(shown.i,shown.j);g.lineStyle(1,0xc3edf6,.5);g.strokeEllipse(q.x,q.y+2,9+(timeSec%1)*3,4);}
     }
     for(const [key,c] of this.craft)if(!seen.has(key)){c.base.destroy();c.image.destroy();this.scene.textures.remove(c.texture.key);c.compositor.destroy();this.craft.delete(key);this.motion.delete(key);}
     for(const [uid,image]of this.actors)if(!actors.has(uid)){image.destroy();this.actors.delete(uid);this.motion.delete(`actor:${uid}`);}
@@ -83,19 +86,19 @@ export class CourseRideRenderer {
   }
   private place(id:string,asset:string,i:number,j:number,z:number,h:number,riders:readonly CraftRider[],time:number,seen:Set<string>):void{
     seen.add(id);let c=this.craft.get(id);
-    if(!c){const compositor=new CraftComposite(this.art,this.provider,this.art.manifest.equipment[asset]!.logical_size);const key=`ride-composite-${++this.sequence}`;const texture=this.scene.textures.addCanvas(key,compositor.canvas);if(!texture)throw Error('Vehicle canvas texture');c={compositor,texture,base:this.scene.add.image(0,0,key).setVisible(false),image:this.scene.add.image(0,0,key),signature:''};this.craft.set(id,c);}
-    const sig=JSON.stringify([asset,h,riders]);
-    if(sig!==c.signature){const q=c.compositor.draw(asset,h,riders,time*1000);c.image.setOrigin(q.ax/c.compositor.canvas.width,q.ay/c.compositor.canvas.height);c.image.setDisplaySize(c.compositor.canvas.width,c.compositor.canvas.height);c.texture.refresh();c.signature=sig;}
+    if(!c){const compositor=new CraftComposite(this.art,this.provider,this.art.manifest.equipment[asset]!.logical_size);const key=`ride-composite-${++this.sequence}`;const texture=this.scene.textures.addCanvas(key,compositor.canvas);if(!texture)throw Error('Vehicle canvas texture');if(compositor.density>1)texture.setFilter(Phaser.Textures.FilterMode.LINEAR);c={compositor,texture,base:this.scene.add.image(0,0,key).setVisible(false),image:this.scene.add.image(0,0,key),signature:''};this.craft.set(id,c);}
+    const sig=craftFrameSignature(asset,h,riders,time*1000);
+    if(sig!==c.signature){const q=c.compositor.draw(asset,h,riders,time*1000);c.image.setOrigin(q.ax/c.compositor.canvas.width,q.ay/c.compositor.canvas.height);c.image.setDisplaySize(c.compositor.canvas.width/c.compositor.density,c.compositor.canvas.height/c.compositor.density);c.texture.refresh();c.signature=sig;}
     const hd=imagegenArt.get(`watercraft/${asset}/${h}`),sprite=this.art.spec(`watercraft/${asset}/${h}`)!;
     if(hd){const key=`imagegen/watercraft/${asset}/${h}`;if(!this.scene.textures.exists(key))this.scene.textures.addCanvas(key,hd)?.setFilter(Phaser.Textures.FilterMode.LINEAR);c.base.setTexture(key).setDisplaySize(sprite.w,sprite.h).setOrigin(sprite.ax/sprite.w,sprite.ay/sprite.h).setVisible(true);}else c.base.setVisible(false);
     const p=tileCenter(i,j);c.base.setPosition(p.x,p.y-z*HEIGHT).setDepth(this.surfaceDepth(asset,i,j,h));c.image.setPosition(p.x,p.y-z*HEIGHT).setDepth(this.surfaceDepth(asset,i,j,h)+.01);
   }
-  private actor(uid:number,i:number,j:number,z:number,h:number,p:NpcV8Pose,time:number,seen:Set<number>):void{
+  private actor(uid:number,i:number,j:number,z:number,h:number,p:NpcV8Pose,time:number,seen:Set<number>):{i:number;j:number;z:number}|undefined{
     const key=npcV8Key(uid,craftFacing(h),p,time*1000,'happy'),spec=this.provider.spec(key);if(!spec)return;
     if(!this.scene.textures.exists(key)){const canvas=this.provider.canvas(key);if(!canvas)return;this.scene.textures.addCanvas(key,canvas);}
-    seen.add(uid);let img=this.actors.get(uid);if(!img){img=this.scene.add.image(0,0,key);this.actors.set(uid,img);}img.setTexture(key).setOrigin(spec.ax/spec.w,spec.ay/spec.h);
+    seen.add(uid);let img=this.actors.get(uid);if(!img){img=this.scene.add.image(0,0,key);this.actors.set(uid,img);}img.setTexture(key).setOrigin(spec.ax/spec.w,spec.ay/spec.h);applyNpcDensity(img,spec);
     // A swimming silhouette and contact ripple span the water tile in front of the root.
-    const p0=this.follow(`actor:${uid}`,i,j,z,time),q=tileCenter(p0.i,p0.j);img.setPosition(q.x,q.y-p0.z*HEIGHT).setDepth(depthKey(i+.5,j+.5)+Z_GUEST);
+    const p0=this.follow(`actor:${uid}`,i,j,z,time),q=tileCenter(p0.i,p0.j);img.setPosition(q.x,q.y-p0.z*HEIGHT).setDepth(depthKey(p0.i+.5,p0.j+.5)+Z_GUEST);return p0;
   }
   private drawImpact(g:Phaser.GameObjects.Graphics,id:string,time:number):void {
     const impact=this.impacts.get(id);if(!impact)return;const age=time-impact.at;if(age<0||age>.85)return;

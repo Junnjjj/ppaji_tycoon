@@ -1,0 +1,1195 @@
+{
+  "version": 8,
+  "kind": "npc-independent-walk-integrated-candidate",
+  "cell": [
+    64,
+    64
+  ],
+  "humanHeight": 21,
+  "scale": 0.40384615384615385,
+  "frame_layout": {
+    "cellWidth": 64,
+    "cellHeight": 64,
+    "sheetWidth": 256,
+    "sheetHeight": 1408,
+    "rows": {
+      "front_idle": [
+        {
+          "x": 0,
+          "y": 0,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "back_idle": [
+        {
+          "x": 0,
+          "y": 64,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "front_sit": [
+        {
+          "x": 0,
+          "y": 128,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "back_sit": [
+        {
+          "x": 0,
+          "y": 192,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "front_swim": [
+        {
+          "x": 0,
+          "y": 256,
+          "w": 64,
+          "h": 64
+        },
+        {
+          "x": 64,
+          "y": 256,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "back_swim": [
+        {
+          "x": 0,
+          "y": 320,
+          "w": 64,
+          "h": 64
+        },
+        {
+          "x": 64,
+          "y": 320,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "front_jump": [
+        {
+          "x": 0,
+          "y": 384,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "back_jump": [
+        {
+          "x": 0,
+          "y": 448,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "front_cheer_jump": [
+        {
+          "x": 0,
+          "y": 512,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "back_cheer_jump": [
+        {
+          "x": 0,
+          "y": 576,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "front_waterstand": [
+        {
+          "x": 0,
+          "y": 640,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "back_waterstand": [
+        {
+          "x": 0,
+          "y": 704,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "front_slide": [
+        {
+          "x": 0,
+          "y": 768,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "back_slide": [
+        {
+          "x": 0,
+          "y": 832,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "front_lie": [
+        {
+          "x": 0,
+          "y": 896,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "back_lie": [
+        {
+          "x": 0,
+          "y": 960,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "front_floor_sit": [
+        {
+          "x": 0,
+          "y": 1024,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "back_floor_sit": [
+        {
+          "x": 0,
+          "y": 1088,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "front_footbath": [
+        {
+          "x": 0,
+          "y": 1152,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "back_footbath": [
+        {
+          "x": 0,
+          "y": 1216,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "front_walk": [
+        {
+          "x": 0,
+          "y": 1280,
+          "w": 64,
+          "h": 64
+        },
+        {
+          "x": 64,
+          "y": 1280,
+          "w": 64,
+          "h": 64
+        },
+        {
+          "x": 128,
+          "y": 1280,
+          "w": 64,
+          "h": 64
+        },
+        {
+          "x": 192,
+          "y": 1280,
+          "w": 64,
+          "h": 64
+        }
+      ],
+      "back_walk": [
+        {
+          "x": 0,
+          "y": 1344,
+          "w": 64,
+          "h": 64
+        },
+        {
+          "x": 64,
+          "y": 1344,
+          "w": 64,
+          "h": 64
+        },
+        {
+          "x": 128,
+          "y": 1344,
+          "w": 64,
+          "h": 64
+        },
+        {
+          "x": 192,
+          "y": 1344,
+          "w": 64,
+          "h": 64
+        }
+      ]
+    }
+  },
+  "animation": {
+    "rows": {
+      "front_idle": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "back_idle": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "front_sit": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "back_sit": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "front_swim": {
+        "frames": 2,
+        "fps": 3,
+        "loop": true
+      },
+      "back_swim": {
+        "frames": 2,
+        "fps": 3,
+        "loop": true
+      },
+      "front_jump": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "back_jump": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "front_cheer_jump": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "back_cheer_jump": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "front_waterstand": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "back_waterstand": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "front_slide": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "back_slide": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "front_lie": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "back_lie": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "front_floor_sit": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "back_floor_sit": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "front_footbath": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "back_footbath": {
+        "frames": 1,
+        "fps": 1,
+        "loop": false
+      },
+      "front_walk": {
+        "frames": 4,
+        "fps": 5,
+        "durations_ms": [
+          200,
+          200,
+          200,
+          200
+        ],
+        "loop": true
+      },
+      "back_walk": {
+        "frames": 4,
+        "fps": 5,
+        "durations_ms": [
+          200,
+          200,
+          200,
+          200
+        ],
+        "loop": true
+      }
+    }
+  },
+  "parts": {
+    "body": "parts/body.png",
+    "head_skin": "parts/head_skin.png",
+    "hair_short": "parts/hair_short.png",
+    "hair_bob": "parts/hair_bob.png",
+    "vest": "parts/vest.png",
+    "shirt_teal": "parts/shirt_teal.png",
+    "guard": "parts/guard.png",
+    "guard_shirt": "parts/guard_shirt.png",
+    "original": "parts/original.png",
+    "sleeve_mask": "parts/sleeve_mask.png",
+    "hair_bun": "parts/hair_bun.png",
+    "shirt_rashguard": "parts/shirt_rashguard.png",
+    "guard_rashguard": "parts/guard_rashguard.png",
+    "sleeve_rashguard": "parts/sleeve_rashguard.png"
+  },
+  "combinations": {
+    "guest-01": "presets/guest-01.png",
+    "guest-02": "presets/guest-02.png",
+    "guest-03": "presets/guest-03.png",
+    "guest-04": "presets/guest-04.png",
+    "guest-05": "presets/guest-05.png",
+    "guest-06": "presets/guest-06.png",
+    "guest-07": "presets/guest-07.png",
+    "guest-08": "presets/guest-08.png",
+    "guest-09": "presets/guest-09.png",
+    "guest-10": "presets/guest-10.png",
+    "guest-11": "presets/guest-11.png",
+    "guest-12": "presets/guest-12.png",
+    "guest-13": "presets/guest-13.png",
+    "guest-14": "presets/guest-14.png",
+    "guest-15": "presets/guest-15.png",
+    "guest-16": "presets/guest-16.png",
+    "guest-17": "presets/guest-17.png",
+    "guest-18": "presets/guest-18.png",
+    "guest-19": "presets/guest-19.png",
+    "guest-20": "presets/guest-20.png",
+    "guest-21": "presets/guest-21.png",
+    "guest-22": "presets/guest-22.png",
+    "guest-23": "presets/guest-23.png",
+    "guest-24": "presets/guest-24.png",
+    "guest-25": "presets/guest-25.png",
+    "guest-26": "presets/guest-26.png",
+    "guest-27": "presets/guest-27.png",
+    "guest-28": "presets/guest-28.png",
+    "guest-29": "presets/guest-29.png",
+    "guest-30": "presets/guest-30.png",
+    "guest-31": "presets/guest-31.png",
+    "guest-32": "presets/guest-32.png",
+    "guest-33": "presets/guest-33.png",
+    "guest-34": "presets/guest-34.png",
+    "guest-35": "presets/guest-35.png",
+    "guest-36": "presets/guest-36.png",
+    "guest-37": "presets/guest-37.png",
+    "guest-38": "presets/guest-38.png",
+    "guest-39": "presets/guest-39.png",
+    "guest-40": "presets/guest-40.png",
+    "guest-41": "presets/guest-41.png",
+    "guest-42": "presets/guest-42.png",
+    "guest-43": "presets/guest-43.png",
+    "guest-44": "presets/guest-44.png",
+    "guest-45": "presets/guest-45.png",
+    "guest-46": "presets/guest-46.png",
+    "guest-47": "presets/guest-47.png",
+    "guest-48": "presets/guest-48.png",
+    "guest-49": "presets/guest-49.png",
+    "guest-50": "presets/guest-50.png",
+    "guest-51": "presets/guest-51.png",
+    "guest-52": "presets/guest-52.png",
+    "guest-53": "presets/guest-53.png",
+    "guest-54": "presets/guest-54.png"
+  },
+  "contacts": {
+    "front_idle": [
+      32,
+      58
+    ],
+    "back_idle": [
+      32,
+      58
+    ],
+    "front_sit": [
+      29,
+      44
+    ],
+    "back_sit": [
+      29,
+      44
+    ],
+    "front_swim": [
+      33,
+      44
+    ],
+    "back_swim": [
+      31,
+      43
+    ],
+    "front_jump": [
+      32,
+      61
+    ],
+    "back_jump": [
+      32,
+      61
+    ],
+    "front_cheer_jump": [
+      32,
+      61
+    ],
+    "back_cheer_jump": [
+      32,
+      61
+    ],
+    "front_waterstand": [
+      32,
+      43
+    ],
+    "back_waterstand": [
+      32,
+      43
+    ],
+    "front_slide": [
+      29,
+      44
+    ],
+    "back_slide": [
+      29,
+      47
+    ],
+    "front_lie": [
+      34,
+      49
+    ],
+    "back_lie": [
+      34,
+      38
+    ],
+    "front_floor_sit": [
+      32,
+      58
+    ],
+    "back_floor_sit": [
+      32,
+      58
+    ],
+    "front_footbath": [
+      29,
+      44
+    ],
+    "back_footbath": [
+      30,
+      47
+    ],
+    "front_walk": [
+      32,
+      58
+    ],
+    "back_walk": [
+      32,
+      58
+    ]
+  },
+  "directions": {
+    "front": "5",
+    "back": "1",
+    "front_mirror": "7",
+    "back_mirror": "11"
+  },
+  "drawOrder": [
+    "hair",
+    "body",
+    "garment",
+    "original protected-pixel restore"
+  ],
+  "bodyTypes": 1,
+  "liveModified": false,
+  "productionPass": false,
+  "note": "Separate V8 candidate. All 22 previous frames preserved; append 8 accepted gait-source frames with pose-specific hair/outfit donors. Not facility or production adoption.",
+  "typeCatalog": "types.json",
+  "jump": {
+    "poses": [
+      "jump",
+      "cheer_jump"
+    ],
+    "durationMs": 650,
+    "maxHeightPx": 6,
+    "groundPose": "idle",
+    "framePolicy": "one newly drawn airborne keypose, not an interpolated animation strip",
+    "rootPolicy": "ground projection fixed; rendered person y -= height; ground shadow never rises"
+  },
+  "roleVariants": {
+    "hair_short": {
+      "original": "variants/hair_short/original.png",
+      "charcoal": "variants/hair_short/charcoal.png",
+      "chestnut": "variants/hair_short/chestnut.png",
+      "honey": "variants/hair_short/honey.png",
+      "ash": "variants/hair_short/ash.png",
+      "rose": "variants/hair_short/rose.png"
+    },
+    "hair_bob": {
+      "original": "variants/hair_bob/original.png",
+      "charcoal": "variants/hair_bob/charcoal.png",
+      "chestnut": "variants/hair_bob/chestnut.png",
+      "honey": "variants/hair_bob/honey.png",
+      "ash": "variants/hair_bob/ash.png",
+      "rose": "variants/hair_bob/rose.png"
+    },
+    "vest": {
+      "original": "variants/vest/original.png",
+      "coral": "variants/vest/coral.png",
+      "mint": "variants/vest/mint.png",
+      "sky": "variants/vest/sky.png",
+      "sun": "variants/vest/sun.png",
+      "lilac": "variants/vest/lilac.png"
+    },
+    "shirt_teal": {
+      "original": "variants/shirt_teal/original.png",
+      "coral": "variants/shirt_teal/coral.png",
+      "mint": "variants/shirt_teal/mint.png",
+      "sky": "variants/shirt_teal/sky.png",
+      "sun": "variants/shirt_teal/sun.png",
+      "lilac": "variants/shirt_teal/lilac.png"
+    },
+    "hair_bun": {
+      "original": "variants/hair_bun/original.png",
+      "charcoal": "variants/hair_bun/charcoal.png",
+      "chestnut": "variants/hair_bun/chestnut.png",
+      "honey": "variants/hair_bun/honey.png",
+      "ash": "variants/hair_bun/ash.png",
+      "rose": "variants/hair_bun/rose.png"
+    },
+    "shirt_rashguard": {
+      "original": "variants/shirt_rashguard/original.png",
+      "coral": "variants/shirt_rashguard/coral.png",
+      "mint": "variants/shirt_rashguard/mint.png",
+      "sky": "variants/shirt_rashguard/sky.png",
+      "sun": "variants/shirt_rashguard/sun.png",
+      "lilac": "variants/shirt_rashguard/lilac.png"
+    }
+  },
+  "userApproved": false,
+  "compositionOrder": [
+    "hair",
+    "body",
+    "head_skin",
+    "cloth",
+    "exact guarded source pixels",
+    "swim only: exact shared hair+head_skin foreground"
+  ],
+  "guardByOutfit": {
+    "vest": "guard",
+    "teal": "guard_shirt",
+    "rashguard": "guard_rashguard"
+  },
+  "fixedHeadTrack": {
+    "sourceFrame": 0,
+    "fixedRoles": [
+      "head_skin",
+      "hair_short",
+      "hair_bob",
+      "hair_bun"
+    ],
+    "bodyFrames": 2,
+    "notWholeFrameDuplication": true
+  },
+  "candidateGates": {
+    "lie": "V8 independent whole-pose display proportion reviewed; furniture support/fit remains deferred",
+    "floor_sit": "V8 new cross-legged front/back source, modular parts and independent scale reviewed; facility interaction deferred",
+    "footbath": "Dedicated two-shin sources exist; exact pelvis-to-feet geometry still under test",
+    "walk": "Minimum four keyposes per diagonal direction; base temporal capture review passed. Full appearance/browser/visual QA are separate reports, not inferred here."
+  },
+  "unsupported": {
+    "recline": "New sources need leg-support and back-view correction"
+  },
+  "secondaryLandmarks": {
+    "front_footbath": {
+      "feet": [
+        [
+          38,
+          55
+        ],
+        [
+          46,
+          53
+        ]
+      ]
+    },
+    "back_footbath": {
+      "feet": [
+        [
+          38,
+          55
+        ],
+        [
+          45,
+          55
+        ]
+      ]
+    },
+    "front_recline": {
+      "feet": [
+        [
+          43,
+          55
+        ],
+        [
+          51,
+          51
+        ]
+      ],
+      "back": [
+        28,
+        38
+      ]
+    },
+    "back_recline": {
+      "feet": [
+        [
+          46,
+          47
+        ],
+        [
+          54,
+          55
+        ]
+      ],
+      "back": [
+        26,
+        46
+      ]
+    },
+    "front_lie": {
+      "head": [
+        20,
+        42
+      ],
+      "heels": [
+        [
+          51,
+          53
+        ],
+        [
+          54,
+          49
+        ]
+      ]
+    },
+    "back_lie": {
+      "head": [
+        21,
+        45
+      ],
+      "heels": [
+        [
+          51,
+          27
+        ],
+        [
+          55,
+          30
+        ]
+      ]
+    }
+  },
+  "rgbaSources": {
+    "variants/hair_bun/charcoal.png": {
+      "file": "rgba/variants/hair_bun/charcoal.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "601e8ee51a475046be7d89edf4c38025bdcf2640aa73ee7b198ebe8c42833e2d",
+      "pngSha256": "f65e9c2051589c6fa31333f838eff63a1e65323d138d939311c1ae848e6a3424"
+    },
+    "variants/vest/sun.png": {
+      "file": "rgba/variants/vest/sun.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "ef0d53ac2b0d4757854fb19442a910d6aaca8a0a056a34a36c8ac503adc9fc5b",
+      "pngSha256": "3fc794478608c80c5cc5c7c4968c62c99911651e83bcafd26eabc7ab89f7235e"
+    },
+    "variants/hair_bun/honey.png": {
+      "file": "rgba/variants/hair_bun/honey.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "a23a06632e7d13dd840e40c004758927fc4a62c05c9605531e8eaefb3417ecad",
+      "pngSha256": "7de9a06754c70c136644245ced43e4ed2673581349ee6181d2661100a024e702"
+    },
+    "variants/hair_short/honey.png": {
+      "file": "rgba/variants/hair_short/honey.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "88ad44db3664c0c4e899e7cb79e49be9e0a8e8947c683ef47bc976479c4d9c88",
+      "pngSha256": "fd460cb7cb676f72c7c32da11036f2dfdf2359a871c8b1cf2894a99642f59b61"
+    },
+    "variants/shirt_teal/lilac.png": {
+      "file": "rgba/variants/shirt_teal/lilac.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "bc7b9d85d84fb28d80f48ef1d82fbf01d301d0af57bed17f1ffb92b3a141fede",
+      "pngSha256": "2943cfb611ff7a4ae826d99c760e90879d4b91150fb2aaa41826d7e7469d64cf"
+    },
+    "variants/shirt_teal/sun.png": {
+      "file": "rgba/variants/shirt_teal/sun.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "e40a435a6676da03ece756d115e81b750defb7d9265bd89a1431010e91919969",
+      "pngSha256": "59b020c822168edf63ab484c795da9720f8555dce36b4b28c03b1cfcbc4eab02"
+    },
+    "parts/body.png": {
+      "file": "rgba/parts/body.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "0facfa26db68690a3947fad743af1a57c6a6126acd0dd5cc645a659834d81cdf",
+      "pngSha256": "ffda63d95f1e5f7233bf54737b1155445d0132d3ea8df95d2bc6150670b5b477"
+    },
+    "parts/head_skin.png": {
+      "file": "rgba/parts/head_skin.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "5907f661f974d559128c886175a5ca1ad291d0874f7871f3eac7ded3e2ce331b",
+      "pngSha256": "6d2be63deef8f8b24b50336b6f68de1368a04fed9e433cd1fd7e9ac8a5f5e952"
+    },
+    "variants/shirt_teal/sky.png": {
+      "file": "rgba/variants/shirt_teal/sky.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "323cd1662f34dd291eb96bf8efd8ca8fac04e777272b19ba58161c984af91884",
+      "pngSha256": "d46fc0b42098a4d8aa4a43bd0c6593106d40d57c31817b52ef71b0d8077ff3f3"
+    },
+    "parts/hair_bun.png": {
+      "file": "rgba/parts/hair_bun.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "7f3fb9e70a9136f466af22a2af26aee4fffb6ba65adb75ef1b7cae0a71467732",
+      "pngSha256": "0bf340e4af189f4af78774263ec65b234d0334d65b640f72db8fa3c616413565"
+    },
+    "parts/sleeve_rashguard.png": {
+      "file": "rgba/parts/sleeve_rashguard.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "98c08eee1d0449c1490017e3a38cfcfd377344d9bf0026a25d44796dbc2aaeb3",
+      "pngSha256": "a62b8a920cd2167de37667229758453295c8f357f6b42b45470b9a03280bc4d8"
+    },
+    "variants/shirt_rashguard/mint.png": {
+      "file": "rgba/variants/shirt_rashguard/mint.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "2682785dcbba0c35843390e93fc5b43780e4be0b9ba087e5fec8701f9f4c2a9c",
+      "pngSha256": "0543704567d6e30059c2a0541f133ed04ec385177741a0c2d96a8fa8f43aafc9"
+    },
+    "parts/vest.png": {
+      "file": "rgba/parts/vest.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "2d87a7406eff7954fcc4104417f396ce695765d33d4335f70a9a5ce543365675",
+      "pngSha256": "d209d52a831e76b1783a6763cbb1096e6f9776373738dcab1a53507ca511e1fe"
+    },
+    "variants/hair_bun/chestnut.png": {
+      "file": "rgba/variants/hair_bun/chestnut.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "e41933efb891ab900de224c0587177ed89ff819cf98198bfceca3b2687b6491b",
+      "pngSha256": "7ae2ec7b317fe5f86cdd18d0e46650e9f7a50a2a29183d1e2d91aa11e0925846"
+    },
+    "variants/vest/coral.png": {
+      "file": "rgba/variants/vest/coral.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "8603d74257aa7dff1c17858fb4222690252484a21c552dc71473d5094448c9f5",
+      "pngSha256": "ae947aee472b0c18308949e5475e9db5da05410380f39c3adbead6d631328a92"
+    },
+    "variants/shirt_rashguard/sun.png": {
+      "file": "rgba/variants/shirt_rashguard/sun.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "fc75447907a49bbaceb809df0878d6760f58db4210e4e5831cfb602821af663d",
+      "pngSha256": "eff23d10b83bb76503c8386a220d07d24c9f706c04fdcd5e65d0241a63ce3b50"
+    },
+    "parts/shirt_rashguard.png": {
+      "file": "rgba/parts/shirt_rashguard.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "f814dbcde7fcb252fcbdf47be4b19d5ef34d91b71e55761661ba79d91adc2451",
+      "pngSha256": "084de92514ddad9fa026ce298aad1f4f89bff545e889ab46f3a24dd9c2724c0e"
+    },
+    "variants/hair_bob/honey.png": {
+      "file": "rgba/variants/hair_bob/honey.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "d59ce047b8cd73994e71d2abb7c222fdd090eb1f6bf1aea267a81b7bdb0af9ca",
+      "pngSha256": "15e803ef4a1321220e84c9893cfdeb58a41e25b6d46896f00f8c4d0283df53db"
+    },
+    "variants/shirt_teal/coral.png": {
+      "file": "rgba/variants/shirt_teal/coral.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "5d8c2abfa14ae1d436a51dd914a0c12de2b8e14eb7695025197f6935652ded5c",
+      "pngSha256": "9652205c083ad5c455478a6bc16c13229b27512e002932e019bf5376e1af3408"
+    },
+    "variants/shirt_rashguard/coral.png": {
+      "file": "rgba/variants/shirt_rashguard/coral.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "96b6625a56aa61ba1eaabf70b0a679aef6db82641d11f4064f723863b426802a",
+      "pngSha256": "3ed7c2fd948c1515d59b41916f329006a5c9e066515f1b759dffd4f8ec6850aa"
+    },
+    "variants/vest/sky.png": {
+      "file": "rgba/variants/vest/sky.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "98dd7b1d0d7c96cbe9c2c6ca6c73b730978506025ecd4a8bc7a4a55d022bf0e6",
+      "pngSha256": "752c4f7a0de5043823df116c008075d6fef32fa59a7377bca2aada86cd34ed5d"
+    },
+    "variants/hair_bob/rose.png": {
+      "file": "rgba/variants/hair_bob/rose.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "c75415aef06343369bf2308127be48df996685bdc0b60d315d09dbece0ab4591",
+      "pngSha256": "810a0d955f814282ed597779541ae15c70e41776ba9ff5b77ba49ea29cef8e28"
+    },
+    "variants/vest/lilac.png": {
+      "file": "rgba/variants/vest/lilac.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "2e20a835a80e37ce1b35d2b5cd624643252ae4e13621231ecc2b2511a558aac7",
+      "pngSha256": "35690fb5b98907c20411c2acbae1fec1c0d54622603f28581ace6e09dfc55e93"
+    },
+    "variants/hair_bob/original.png": {
+      "file": "rgba/variants/hair_bob/original.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "4a5598e0d975b070ed35983ce3be0fb6c4dfc7a656fb8d2307ee4bd4e160b61f",
+      "pngSha256": "203eed8b5974966b0a7fd9a64bc7e59be190d0aa18ca0e544f4a30f363d9d7c8"
+    },
+    "variants/hair_bun/ash.png": {
+      "file": "rgba/variants/hair_bun/ash.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "8018899dae6c68bd96d72fe3b3ffd8cd083b98085be8e95459737d2bf6572acd",
+      "pngSha256": "b4ca8343f1e3d56e005522fbab831025495ec23b0a159341ab31f41686cf2bc2"
+    },
+    "variants/hair_bun/rose.png": {
+      "file": "rgba/variants/hair_bun/rose.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "732cb6bd85fea2eb4347e9b2accd7077293fe3029d9581015c2492eea785178e",
+      "pngSha256": "301e5991f8e0f972dacc0ecb2f02a7702ccf934e76814a071342efdfddf32eca"
+    },
+    "parts/guard_rashguard.png": {
+      "file": "rgba/parts/guard_rashguard.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "681319073cd0ecbaa91cf60fb70b65469766e35971e60fbec55e70067e0e4cd3",
+      "pngSha256": "19911131f1f75f4c0dd3aa42f3763069a2f730be81542ff6c118dd1810d62c90"
+    },
+    "variants/shirt_teal/mint.png": {
+      "file": "rgba/variants/shirt_teal/mint.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "b2ad67d530ccad14ce1c9f6680daaa02d59e98be515c94c96028adc0aced8515",
+      "pngSha256": "39d29c3c656d81539c1e348bde2a287bb49949f990d2e89a27632f8d95415f8c"
+    },
+    "variants/hair_short/charcoal.png": {
+      "file": "rgba/variants/hair_short/charcoal.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "abab62ca2cca988f489ba6f2e6c60742b3d3682a79ffa71ac1b01abd251178f7",
+      "pngSha256": "8ac4789a132abeef6cdd4063bc2e0176c262d5216ab57bbc4f3a76519784338d"
+    },
+    "parts/shirt_teal.png": {
+      "file": "rgba/parts/shirt_teal.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "a469bba06364b560c90a2539b3fd06d99e6dd20420604e39d29e4f1c115d75d5",
+      "pngSha256": "0710eb33ac61581ccce75cf39ba38db953ad0333fff39b89bf124e356e4b562e"
+    },
+    "variants/hair_bob/charcoal.png": {
+      "file": "rgba/variants/hair_bob/charcoal.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "0b74d8b04be30650ee9c36898f32b3829344df176d79a5ae1a688ac9a15d2a5c",
+      "pngSha256": "c217c5b40683b2fa3b35470fd42b133797fd8c605f2aabc6435225fada2fc279"
+    },
+    "variants/hair_bob/chestnut.png": {
+      "file": "rgba/variants/hair_bob/chestnut.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "6b4921eea5f284a46fcb97f16d1bffe5158f36a3d39bd27c06e269e8142758d2",
+      "pngSha256": "11e9fb8291c87dc7aabdac7e8f6ef61c2b6f1712d5d589acfae27771b256a952"
+    },
+    "parts/guard.png": {
+      "file": "rgba/parts/guard.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "23954ac36429f3adab29b5d760778bb3df2d868535fd5f609a7725a6eff63387",
+      "pngSha256": "dd963d17b18ad5fa5474741bb5aab6a53d31f12ee13dd049cc201aedce99e171"
+    },
+    "variants/hair_short/rose.png": {
+      "file": "rgba/variants/hair_short/rose.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "0a14d2219dfd9a877842ccda99858f8e59a7140f1b72e010df90aa895d7df7cc",
+      "pngSha256": "f0d83178aaa0c55226cfb0649caa46f26277ad3e02daf722685a7a63be62452f"
+    },
+    "variants/hair_bob/ash.png": {
+      "file": "rgba/variants/hair_bob/ash.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "06bf4b2674fe65aca531d729c7c1564e60e31cdccadb6293aa16df4ce90c8ccd",
+      "pngSha256": "1747bd855c6e91b6cf482d81613b5034124b9fb17d22f88ae38e15551277a0ec"
+    },
+    "variants/shirt_teal/original.png": {
+      "file": "rgba/variants/shirt_teal/original.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "a469bba06364b560c90a2539b3fd06d99e6dd20420604e39d29e4f1c115d75d5",
+      "pngSha256": "0710eb33ac61581ccce75cf39ba38db953ad0333fff39b89bf124e356e4b562e"
+    },
+    "variants/shirt_rashguard/lilac.png": {
+      "file": "rgba/variants/shirt_rashguard/lilac.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "d715434c3a1f48a5a6c263ba2b4d2c730fb4e655b68afcfb8749e6dd56b1d503",
+      "pngSha256": "76b331819c1a1284e0305201091fcabb31a716b6efa1a4dfea6f009721e5c966"
+    },
+    "parts/sleeve_mask.png": {
+      "file": "rgba/parts/sleeve_mask.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "fbf413f5ddb7796bcefacb7cf6c9838a8cc55ca32e0a39414fcd5bf2934b5a9d",
+      "pngSha256": "bf58aaa69d2c6d83e5c6a8603f2a10d8354234fe205f1b020dec1eb90adf0e4e"
+    },
+    "variants/hair_bun/original.png": {
+      "file": "rgba/variants/hair_bun/original.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "7f3fb9e70a9136f466af22a2af26aee4fffb6ba65adb75ef1b7cae0a71467732",
+      "pngSha256": "0bf340e4af189f4af78774263ec65b234d0334d65b640f72db8fa3c616413565"
+    },
+    "variants/vest/original.png": {
+      "file": "rgba/variants/vest/original.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "2d87a7406eff7954fcc4104417f396ce695765d33d4335f70a9a5ce543365675",
+      "pngSha256": "d209d52a831e76b1783a6763cbb1096e6f9776373738dcab1a53507ca511e1fe"
+    },
+    "variants/hair_short/ash.png": {
+      "file": "rgba/variants/hair_short/ash.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "8972f9626e683122a5ae2ff81ae73cb13659ad1e32b7c16e9ea4923eb5848889",
+      "pngSha256": "8e9c6d50c9dec04b9171d36be4833d94d07b65b34c4cb0fbf88f78f04ed318d1"
+    },
+    "parts/hair_bob.png": {
+      "file": "rgba/parts/hair_bob.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "4a5598e0d975b070ed35983ce3be0fb6c4dfc7a656fb8d2307ee4bd4e160b61f",
+      "pngSha256": "203eed8b5974966b0a7fd9a64bc7e59be190d0aa18ca0e544f4a30f363d9d7c8"
+    },
+    "variants/shirt_rashguard/sky.png": {
+      "file": "rgba/variants/shirt_rashguard/sky.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "d399bc39190da3bd389a4ef474bfada7f1ada4766c88e591b79d593c1e2a5036",
+      "pngSha256": "eaae8d078efc5878a8b83b735cb34d624cf580440f0629f675748dbfe62591f7"
+    },
+    "parts/original.png": {
+      "file": "rgba/parts/original.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "1c167956233abcde334a75e6349c220c6ed4fe556b8d2a0f1e2233eb776896ad",
+      "pngSha256": "27a9585934ea5e3ab7b1a949883076385229d429e45d001f2c915162fe006bff"
+    },
+    "parts/guard_shirt.png": {
+      "file": "rgba/parts/guard_shirt.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "a96616c15f45eab7e16f70a6c4e9f6c4f704bfc27eb043fc1dffb8e70f7a8390",
+      "pngSha256": "36fe8737331072ea26166f1fe818f4760c303419764af345e15c384cbdb94e70"
+    },
+    "variants/shirt_rashguard/original.png": {
+      "file": "rgba/variants/shirt_rashguard/original.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "f814dbcde7fcb252fcbdf47be4b19d5ef34d91b71e55761661ba79d91adc2451",
+      "pngSha256": "084de92514ddad9fa026ce298aad1f4f89bff545e889ab46f3a24dd9c2724c0e"
+    },
+    "variants/vest/mint.png": {
+      "file": "rgba/variants/vest/mint.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "ccd094d4a819660ecd84e6ed37483a4c83cdc76225067fab7d8c58026bc81dbe",
+      "pngSha256": "b5aba121e480ed0c7a125579a687c834650cf2a81b8d8215e15ce7d4e68b0166"
+    },
+    "parts/hair_short.png": {
+      "file": "rgba/parts/hair_short.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "01d5843071913654c14e729be8cbd96f2f752ec4de42e0df8d456ccf656a03ed",
+      "pngSha256": "2c1a0d5d9016a43eab5414dca8d40178bdb84829552b3c7c6a4e5e5ddb0acd0a"
+    },
+    "variants/hair_short/chestnut.png": {
+      "file": "rgba/variants/hair_short/chestnut.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "0dff98215019be442a4582d861062c0f0993b680e716736718e2adb233a8c739",
+      "pngSha256": "afcda1838ea4fae1695301727aa5e401548811aa0fa6c99e9ee9c86e29cb4a02"
+    },
+    "variants/hair_short/original.png": {
+      "file": "rgba/variants/hair_short/original.png.rgba.gz",
+      "width": 256,
+      "height": 1408,
+      "sha256": "01d5843071913654c14e729be8cbd96f2f752ec4de42e0df8d456ccf656a03ed",
+      "pngSha256": "2c1a0d5d9016a43eab5414dca8d40178bdb84829552b3c7c6a4e5e5ddb0acd0a"
+    }
+  },
+  "rasterization": {
+    "sourceCell": 64,
+    "targetCell": 26,
+    "scale": 0.40625,
+    "compositing": "straight-alpha-integer-before-canvas",
+    "alphaDecode": "gzip RGBA preserves source PNG channel values"
+  },
+  "outfitRoles": {
+    "vest": "vest",
+    "teal": "shirt_teal",
+    "rashguard": "shirt_rashguard"
+  },
+  "displayPoseScale": {
+    "front_lie": 1.131,
+    "back_lie": 0.94,
+    "back_slide": 0.8076923076923077
+  },
+  "facilityInteractions": "DEFERRED_UNTIL_FACILITY_DEFINED",
+  "displayRasterization": {
+    "baseCell": 64,
+    "baseDrawSize": 26,
+    "front_lie": 29,
+    "back_lie": 24,
+    "back_slide": 21,
+    "policy": "Whole assembled character, nearest display, integer size rounding; not facility fit"
+  },
+  "degraded_static_fallback": false,
+  "walkOriginPolicy": "Fixed [32,58] in-place display origin for every phase. Not a contact-foot pin, facility slot or translating stride-speed calibration.",
+  "walkingProvenance": {
+    "partsManifestSha256": "dfa442b279f37881395ac8ec4cd48f63b007efab2a8f80ded59f9588ad945b1f",
+    "sources": [
+      {
+        "direction": "front",
+        "role": "sourceAnatomy",
+        "manifest": "source-archive/npc-independent-v8/walk-r6-front-phases/cycle-runtime.json",
+        "atlasSha256": "33c64de24065e5913dd710d9e660284d23f6ce5e21b1d4231404dde665fcb281",
+        "motionReviewSha256": "c3ef6b991706c45b82e124fd40e29e9dfd7544c508193fa3edc9b5ba52665133",
+        "phaseOrder": [
+          "front_walk_contact_a",
+          "front_walk_passing_a",
+          "front_walk_contact_b",
+          "front_walk_passing_b"
+        ]
+      },
+      {
+        "direction": "front",
+        "role": "bob",
+        "manifest": "source-archive/npc-independent-v8/walk-front-bob/manifest.json",
+        "atlasSha256": "9212ebd767ba24d36a1553c61523bd44f2e4ebdeb7a9e7244b4fec3f79ead3dc"
+      },
+      {
+        "direction": "front",
+        "role": "bun",
+        "manifest": "source-archive/npc-independent-v8/walk-front-bun/manifest.json",
+        "atlasSha256": "577893efebffc80171fc04167d61a3e0578eafd8f4942b2f70ed64d548ab6bda"
+      },
+      {
+        "direction": "back",
+        "role": "sourceAnatomy",
+        "manifest": "source-archive/npc-independent-v8/walk-r6-back-phases/cycle-runtime.json",
+        "atlasSha256": "6778169d0420028cd20a759128c03aa8a83ce0dbaccc6ed7f22158c941261b0a",
+        "motionReviewSha256": "799e5f6ba2280e7de0e31f8b1e029f567ccc2d961d5b8d23759bc6eedd3b102d",
+        "phaseOrder": [
+          "back_walk_contact_a",
+          "back_walk_passing_a",
+          "back_walk_contact_b",
+          "back_walk_passing_b"
+        ]
+      },
+      {
+        "direction": "back",
+        "role": "bob",
+        "manifest": "source-archive/npc-independent-v8/walk-back-bob/manifest.json",
+        "atlasSha256": "03f74c1439ed96886807eeb7937cdd71c6f1a2c2a4d82f60d2653142c34e9791"
+      },
+      {
+        "direction": "back",
+        "role": "bun",
+        "manifest": "source-archive/npc-independent-v8/walk-back-bun/manifest.json",
+        "atlasSha256": "46cb24b25a26cbe73e81badb4cca541cee4205914775f90813a5b1b6c6e08d0b"
+      }
+    ],
+    "phaseOrder": [
+      "contact_a",
+      "passing_a",
+      "contact_b",
+      "passing_b"
+    ],
+    "donorAnatomyAdopted": false,
+    "knownLimitations": [
+      "Back contact B whole-pose scale has a softer native edge; actual26px reviewed separately.",
+      "Temporal capture inference is not continuous-video perception or precise foot sliding certification."
+    ]
+  },
+  "walkPaletteReports": [
+    "walk-color-bakes/hair_short/recolor.report.json",
+    "walk-color-bakes/hair_bob/recolor.report.json",
+    "walk-color-bakes/vest/recolor.report.json",
+    "walk-color-bakes/shirt_teal/recolor.report.json",
+    "walk-color-bakes/hair_bun/recolor.report.json",
+    "walk-color-bakes/shirt_rashguard/recolor.report.json"
+  ],
+  "previousPaletteReports": {
+    "root": "../",
+    "reports": [
+      "variants/hair_short/recolor.report.json",
+      "variants/hair_bob/recolor.report.json",
+      "variants/vest/recolor.report.json",
+      "variants/shirt_teal/recolor.report.json"
+    ]
+  }
+}

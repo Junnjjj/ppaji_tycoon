@@ -25,7 +25,8 @@ export function portraitEl(id: string, mood: 'calm' | 'happy', fallback?: { pale
 
 /** v8 프레임 공급자 — `main.ts` 가 provider 를 만든 뒤 `setNpcFrameSource((id) => provider.canvas(id))` 로 잇는다. 없으면 코드 초상 폴백 */
 export let npcFrameSource: ((id: string) => HTMLCanvasElement | null) | null = null;
-export function setNpcFrameSource(fn: ((id: string) => HTMLCanvasElement | null) | null): void { npcFrameSource = fn; }
+let npcFrameDensity:(id:string)=>number=()=>1;
+export function setNpcFrameSource(fn: ((id: string) => HTMLCanvasElement | null) | null,density:(id:string)=>number=()=>1): void { npcFrameSource = fn;npcFrameDensity=density;headRects.clear(); }
 
 export const NPC_PORTRAIT = 32;
 /** 머리 = 불투명 영역의 위 55% */
@@ -48,7 +49,7 @@ function headRectOf(key: string, src: HTMLCanvasElement): { x: number; y: number
   let rect: { x: number; y: number; w: number; h: number } | null = null;
   if (bottom >= top) {
     const headH = Math.max(1, Math.round((bottom - top + 1) * HEAD_RATIO));
-    const side = NPC_PORTRAIT / 2; // 2배 확대라 원본에서 16 칸
+    const side = NPC_PORTRAIT / 2 * npcFrameDensity(key); // 2배 확대라 원본에서 16 칸
     const cx = Math.round((left + right + 1) / 2);
     rect = { x: cx - side / 2, y: top, w: side, h: Math.min(headH, side) };
   }
@@ -70,8 +71,8 @@ export function npcPortrait(seed: number, mood: 'calm' | 'happy'): HTMLCanvasEle
   c.dataset['npc'] = key;
   const g = c.getContext('2d');
   if (!g) return c;
-  g.imageSmoothingEnabled = false;
-  const dw = rect.w * 2, dh = rect.h * 2;
+  const density=npcFrameDensity(key);g.imageSmoothingEnabled = density>1;
+  const dw = rect.w * 2/density, dh = rect.h * 2/density;
   g.drawImage(src, rect.x, rect.y, rect.w, rect.h, Math.round((NPC_PORTRAIT - dw) / 2), Math.round((NPC_PORTRAIT - dh) / 2), dw, dh);
   return c;
 }

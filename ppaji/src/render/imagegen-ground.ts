@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import { LEVEL_H, TILE_W, TILE_H } from './iso.js';
+import {alignGrout} from './grout-patch.js';
+import {TerrainLayers} from './terrain-layers.js';
 
 const DENSITY = 4;
 const PERIOD = 8;
@@ -15,34 +17,13 @@ export class ImageGenGround {
   private readonly pages = new Map<string, GroundPage>();
   private readonly frames = new Map<string,{key:string;frame:string}>();
   uploads=0;
-  private waterCells=new Map<string,{i:number;j:number;material:string}>();
-  private flowLayers=new Map<string,{sprite:Phaser.GameObjects.TileSprite;mask:Phaser.GameObjects.Graphics}>();
+  private regions:TerrainLayers|null=null;
   private flowScene:Phaser.Scene|null=null;
-  private flowDirty=false;
-  setWaterTile(scene:Phaser.Scene,img:Phaser.GameObjects.Image,material:string,i:number,j:number,z:number):void{
-    if(this.flowScene!==scene){this.flowScene=scene;scene.events.once('shutdown',()=>{for(const l of this.flowLayers.values()){l.sprite.destroy();l.mask.destroy();}this.flowLayers.clear();this.waterCells.clear();this.flowScene=null;});}
-    const key=i+','+j,flow=z===0&&['river','shallow','pool'].includes(material);
-    // Keep the actual water tile as a base surface. The masked animation is
-    // optional: a delayed/failed mask must never reveal the grass backdrop.
-    img.setVisible(true);
-    if(flow){material=material==='river'?'river':'shallow';if(this.waterCells.get(key)?.material!==material){this.waterCells.set(key,{i,j,material});this.flowDirty=true;}}
-    else if(this.waterCells.delete(key))this.flowDirty=true;
+  setWaterTile(scene:Phaser.Scene,img:Phaser.GameObjects.Image,material:string,i:number,j:number,z:number,natural=material):void{
+    if(this.flowScene!==scene){this.regions?.destroy();this.flowScene=scene;this.regions=new TerrainLayers(scene,id=>this.background(id));scene.events.once('shutdown',()=>{this.regions?.destroy();this.regions=null;this.flowScene=null;});}
+    this.regions!.setTile(img,material,i,j,z,natural);
   }
-  private rebuildFlow():void{
-    const scene=this.flowScene;if(!scene||!this.flowDirty)return;this.flowDirty=false;
-    for(const material of ['river','shallow']){
-      const cells=[...this.waterCells.values()].filter(c=>c.material===material);
-      let layer=this.flowLayers.get(material);
-      if(!cells.length){layer?.sprite.setVisible(false);continue;}
-      if(!layer){const key='imagegen-ground/flow/'+material,art=this.background('tile/'+material)!;
-        if(!scene.textures.exists(key))scene.textures.addCanvas(key,art.canvas)?.setFilter(Phaser.Textures.FilterMode.LINEAR);
-        const sprite=scene.add.tileSprite(-2048,-256,4096,4096,key).setOrigin(0,0).setDepth(-79).setTileScale(1/DENSITY);
-        const mask=scene.make.graphics({x:0,y:0},false);sprite.setMask(mask.createGeometryMask());layer={sprite,mask};this.flowLayers.set(material,layer);
-      }
-      layer.sprite.setVisible(true);layer.mask.clear().fillStyle(0xffffff,1);
-      for(const c of cells){const x=16*(c.i-c.j),y=8*(c.i+c.j);layer.mask.fillPoints([{x,y},{x:x+16,y:y+8},{x,y:y+16},{x:x-16,y:y+8}],true);}
-    }
-  }
+  setDockCells(cells:{i:number;j:number}[]):void{this.regions?.setDockCells(cells);}
   private lastTime = -1;
   readonly density = DENSITY;
   updates = 0;
@@ -56,7 +37,7 @@ export class ImageGenGround {
       }
       const data = x.getImageData(0, 0, size, size).data, sum = [0, 0, 0];
       for (let k = 0; k < data.length; k += 4) for (let ch = 0; ch < 3; ch++) sum[ch] = sum[ch]! + data[k + ch]!;
-      return { patch: p, base: `rgb(${sum.map(n => Math.round(n / (data.length / 4))).join(',')})` };
+      return { patch: index===2||index===3 ? alignGrout(p,index===2?'path':'indoor') : p, base: `rgb(${sum.map(n => Math.round(n / (data.length / 4))).join(',')})` };
     });
   }
 
@@ -108,11 +89,7 @@ export class ImageGenGround {
   }
 
   tick(timeMs: number, paused: boolean): void {
-    this.rebuildFlow();if(paused)return;
-    // GPU texture coordinates animate the raw water; no per-frame canvas repaint/upload.
-    for(const [material,layer] of this.flowLayers){const speed=material==='river'?.32:.12,t=timeMs/1000*speed;
-      layer.sprite.setTilePosition((-2048-t*16)*DENSITY,(-256-t*8)*DENSITY);
-    }
+    this.regions?.tick(timeMs,paused);if(paused)return;
     if(timeMs-this.lastTime<100)return;this.lastTime=timeMs;this.updates++;
     // Raised pools retain their individual column geometry.
     for(const page of this.pages.values())if(page.water&&page.z>0){const ctx=page.canvas.getContext('2d')!;for(const f of page.frames.values()){this.paint(page.scratch,page.material,f.i,f.j,page.z,timeMs/1000);ctx.clearRect(f.x,f.y,page.scratch.width,page.scratch.height);ctx.drawImage(page.scratch,f.x,f.y);}page.dirty=true;}
@@ -131,7 +108,7 @@ export class ImageGenGround {
     return {canvas:c,density:DENSITY};
   }
 
-  stats(): { waterTextures: number; updates: number; density: number;pages:number;uploads:number;flowTiles:number;flowLayers:number } { return { waterTextures:[...this.pages.values()].filter(p=>p.water).length, updates:this.updates,density:DENSITY,pages:this.pages.size,uploads:this.uploads,flowTiles:this.waterCells.size,flowLayers:this.flowLayers.size }; }
+  stats(): { waterTextures: number; updates: number; density: number;pages:number;uploads:number;flowTiles:number;flowLayers:number } { return { waterTextures:[...this.pages.values()].filter(p=>p.water).length, updates:this.updates,density:DENSITY,pages:this.pages.size,uploads:this.uploads,flowTiles:this.regions?.stats().waterCells??0,flowLayers:this.regions?.stats().waterLayers??0 }; }
 }
 
 export async function loadImageGenGround(): Promise<ImageGenGround | null> {

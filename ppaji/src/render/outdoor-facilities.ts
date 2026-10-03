@@ -1,3 +1,4 @@
+import { npcDensity } from './npc-density';
 import interactionData from '../data/imagegen-interactions.json';
 import { imagegenArt } from '../assets/imagegen-art.js';
 import { LazyResource } from '../assets/lazy-resource.js';
@@ -94,7 +95,8 @@ function blend(out: Uint8ClampedArray, k: number, color: ArrayLike<number>, alph
 /** Pure pixel composition makes depth/support/effect behavior independently testable. */
 export function composeOutdoor(resource: OutdoorResource, facing: number, actors: readonly OutdoorActor[], provider: AssetProvider, timeMs: number, npcOnly=false): Uint8ClampedArray {
   const n=resource.size,v=resource.views[facing];if(!v) throw Error(`Missing outdoor facing ${facing}`);
-  const out=npcOnly?new Uint8ClampedArray(v.base.data.length):new Uint8ClampedArray(v.base.data),actorDepth=new Float32Array(n*n).fill(Infinity);
+  const density=actors.every(a=>a.sample.hidden)?1:npcDensity(provider),width=n*density,out=new Uint8ClampedArray(width*width*4),actorDepth=new Float32Array(width*width).fill(Infinity);
+  if(!npcOnly)for(let y=0;y<width;y++)for(let x=0;x<width;x++){const k=(Math.floor(y/density)*n+Math.floor(x/density))*4;out.set(v.base.data.subarray(k,k+4),(y*width+x)*4);}
   for(const {uid,sample:s,support,slotId} of actors) {
     if(s.hidden) continue;
     const pose=outdoorPose(s.pose),heading=s.heading+facing*Math.PI/2+(pose==='lie'&&!resource.exactHeading?Math.PI:0);
@@ -104,18 +106,18 @@ export function composeOutdoor(resource: OutdoorResource, facing: number, actors
     const correction=npcOnly&&resource.id?interactionArt[resource.id]:undefined;
     const seat=slotId?.startsWith('audience_')?Number(slotId.slice(9)):-1;
     const raw=seat>=0?correction?.contacts?.directions[facing]?.[seat]:undefined,fit=correction?.fits?.[facing];
-    if(raw&&fit&&resource.id){const slot=outdoorContract(resource.id)?.slots.find(v=>v.id===slotId);if(slot){const original=projectOutdoor(rotateOutdoor(slot.position,facing),n,resource.targetZ),distance=Math.hypot(...s.position.map((v,k)=>v-slot.position[k]!)),u=Math.max(0,1-distance/1.25),weight=u*u*(3-2*u);q[0]+=(fit.x+raw[0]!*fit.scale+spec.ax-20-original[0])*weight;q[1]+=(fit.y+raw[1]!*fit.scale+spec.ay-28-original[1])*weight;}}
+    if(raw&&fit&&resource.id){const slot=outdoorContract(resource.id)?.slots.find(v=>v.id===slotId);if(slot){const original=projectOutdoor(rotateOutdoor(slot.position,facing),n,resource.targetZ),distance=Math.hypot(...s.position.map((v,k)=>v-slot.position[k]!)),u=Math.max(0,1-distance/1.25),weight=u*u*(3-2*u);q[0]+=(fit.x+raw[0]!*fit.scale+spec.ax/(spec.density??1)-20-original[0])*weight;q[1]+=(fit.y+raw[1]!*fit.scale+spec.ay/(spec.density??1)-28-original[1])*weight;}}
     const polygon=correction?.contacts?.foregroundPolygons[facing];
     const foreground=(x:number,y:number):boolean=>{if(!polygon||!fit)return false;x=(x-fit.x)/fit.scale;y=(y-fit.y)/fit.scale;let inside=false;for(let i=0,j=polygon.length-1;i<polygon.length;j=i++){const a=polygon[i]!,b=polygon[j]!;if((a[1]!>y)!==(b[1]!>y)&&x<(b[0]!-a[0]!)*(y-a[1]!)/(b[1]!-a[1]!)+a[0]!)inside=!inside;}return inside;};
-    const left=Math.round(q[0]-spec.ax),top=Math.round(q[1]-spec.ay),zero=outdoorDepthAt(p,resource.camera,resource.tileWorld);
+    const nd=spec.density??1,left=Math.round((q[0]-spec.ax/nd)*density),top=Math.round((q[1]-spec.ay/nd)*density),zero=outdoorDepthAt(p,resource.camera,resource.tileWorld);
     const mask=support||['sit','lie','ride'].includes(pose)?v.support:v.depth;
     for(let y=0;y<pix.height;y++)for(let x=0;x<pix.width;x++){
       const src=(y*pix.width+x)*4,alpha=pix.data[src+3]!/255,xx=left+x,yy=top+y;
-      if(!alpha || xx<0 || yy<0 || xx>=n || yy>=n) continue;
-      const k=yy*n+xx,z=zero+(pose==='lie'?-Math.sqrt(3):.5/COS)*(yy+.5-q[1])-.35;
-      if(raw&&fit){if(foreground(xx,yy)||z>actorDepth[k]!+.08)continue;}
-      else if(resource.painter){const opaque=v.base.data[k*4+3]!>127,behind=pose==='walk'&&q[1]<n/2+resource.targetZ*LIFT-3,roof=(resource.id==='shade_net'||resource.id==='authored_parasol')&&yy<n/2+resource.targetZ*LIFT-15;if(opaque&&(behind||roof)||z>actorDepth[k]!+.08)continue;}
-      else if(z>Math.min(mask[k]!,actorDepth[k]!)+.08) continue;
+      if(!alpha || xx<0 || yy<0 || xx>=width || yy>=width) continue;
+      const k=yy*width+xx,lx=Math.floor(xx/density),ly=Math.floor(yy/density),mk=ly*n+lx,z=zero+(pose==='lie'?-Math.sqrt(3):.5/COS)*((yy+.5)/density-q[1])-.35;
+      if(raw&&fit){if(foreground((xx+.5)/density,(yy+.5)/density)||z>actorDepth[k]!+.08)continue;}
+      else if(resource.painter){const opaque=v.base.data[mk*4+3]!>127,behind=pose==='walk'&&q[1]<n/2+resource.targetZ*LIFT-3,roof=(resource.id==='shade_net'||resource.id==='authored_parasol')&&yy/density<n/2+resource.targetZ*LIFT-15;if(opaque&&(behind||roof)||z>actorDepth[k]!+.08)continue;}
+      else if(z>Math.min(mask[mk]!,actorDepth[k]!)+.08) continue;
       blend(out,k,pix.data.subarray(src,src+3),alpha);actorDepth[k]=z;
     }
   }
@@ -123,8 +125,10 @@ export function composeOutdoor(resource: OutdoorResource, facing: number, actors
     const p=rotateOutdoor(local,facing),q=projectOutdoor(p,n,resource.targetZ),x=Math.round(q[0]),y=Math.round(q[1]);
     if(x<0||y<0||x>=n||y>=n) return;
     const k=y*n+x,z=outdoorDepthAt(p,resource.camera,resource.tileWorld);
-    if(z>Math.min(v.depth[k]!,bodyOverlay?Infinity:actorDepth[k]!)+.10) return;
-    blend(out,k,color,alpha);
+    for(let dy=0;dy<density;dy++)for(let dx=0;dx<density;dx++){const target=(y*density+dy)*width+x*density+dx;
+      if(z>Math.min(v.depth[k]!,bodyOverlay?Infinity:actorDepth[target]!)+.10)continue;
+      blend(out,target,color,alpha);
+    }
   };
   const line=(a: Point,b: Point,color: number[],bodyOverlay=false)=>{
     const count=Math.max(12,Math.ceil(Math.hypot(...a.map((v,k)=>v-b[k]!))*32));
@@ -173,15 +177,15 @@ export class OutdoorFacilityRenderer {
           const hd=imagegenArt.get(`fac/${f.defId}/${f.facing}`);
           const rgba=composeOutdoor(resource,f.facing,actors,this.provider,time*1000,!!hd);
           if(!frame){
-            const canvas=document.createElement('canvas');canvas.width=canvas.height=resource.size;
-            const texture=this.scene.textures.addCanvas(`outdoor-use-${f.uid}`,canvas);if(!texture)throw Error('Outdoor canvas texture');
+            const canvas=document.createElement('canvas');canvas.width=canvas.height=resource.size*npcDensity(this.provider);
+            const texture=this.scene.textures.addCanvas(`outdoor-use-${f.uid}`,canvas);if(!texture)throw Error('Outdoor canvas texture');if(npcDensity(this.provider)>1)texture.setFilter(1 /* Phaser LINEAR */);
             frame={canvas,texture,image:this.scene.add.image(0,0,texture.key),signature:''};this.frames.set(f.uid,frame);
           }
-          const ctx=frame.canvas.getContext('2d')!;const image=ctx.createImageData(resource.size,resource.size);image.data.set(rgba);
+          const ctx=frame.canvas.getContext('2d')!;const image=ctx.createImageData(frame.canvas.width,frame.canvas.height);image.data.set(rgba);
           ctx.putImageData(image,0,0);frame.texture.refresh();frame.signature=signature;
         }
         const pivot=approvedPivot(f.defId,f.facing,this.art.manifest)!,p=gridToScreen(f.i+pivot[0],f.j+pivot[1]),fp=spec.footprintByFacing[f.facing]!;
-        frame.image.setOrigin(.5,(resource.size/2+resource.targetZ*LIFT)/resource.size).setPosition(p.x,p.y+liftAt(f.i,f.j)).setDepth(depthKey(f.i+fp[0]-1,f.j+fp[1]-1)+Z_FACILITY+.01);
+        frame.image.setScale(1/npcDensity(this.provider)).setOrigin(.5,(resource.size/2+resource.targetZ*LIFT)/resource.size).setPosition(p.x,p.y+liftAt(f.i,f.j)).setDepth(depthKey(f.i+fp[0]-1,f.j+fp[1]-1)+Z_FACILITY+.01);
         seen.add(f.uid);if(!imagegenArt.get(`fac/${f.defId}/${f.facing}`))this.hiddenFacilityIds.add(f.uid);
         for(const uid of guestIds)this.hiddenGuestIds.add(uid);
       } catch(error){if(!this.failures.has(f.defId)){console.error(`[outdoor-facilities] ${f.defId}; restoring ordinary rendering`,error);this.failures.add(f.defId);}}

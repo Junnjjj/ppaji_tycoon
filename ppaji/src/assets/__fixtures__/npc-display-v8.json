@@ -1,0 +1,744 @@
+{
+  "front_idle": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      7,
+      3
+    ],
+    "root": [
+      20.0,
+      26.5625
+    ],
+    "sourceContact": [
+      32,
+      58
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "back_idle": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      7,
+      3
+    ],
+    "root": [
+      20.0,
+      26.5625
+    ],
+    "sourceContact": [
+      32,
+      58
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 64,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "front_sit": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      8,
+      9
+    ],
+    "root": [
+      19.78125,
+      26.875
+    ],
+    "sourceContact": [
+      29,
+      44
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 128,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "back_sit": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      8,
+      9
+    ],
+    "root": [
+      19.78125,
+      26.875
+    ],
+    "sourceContact": [
+      29,
+      44
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 192,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "front_swim": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      7,
+      9
+    ],
+    "root": [
+      20.40625,
+      26.875
+    ],
+    "sourceContact": [
+      33,
+      44
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 256,
+        "w": 64,
+        "h": 64
+      },
+      {
+        "x": 64,
+        "y": 256,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 2,
+      "fps": 3,
+      "loop": true
+    }
+  },
+  "back_swim": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      7,
+      10
+    ],
+    "root": [
+      19.59375,
+      27.46875
+    ],
+    "sourceContact": [
+      31,
+      43
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 320,
+        "w": 64,
+        "h": 64
+      },
+      {
+        "x": 64,
+        "y": 320,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 2,
+      "fps": 3,
+      "loop": true
+    }
+  },
+  "front_jump": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      7,
+      2
+    ],
+    "root": [
+      20.0,
+      26.78125
+    ],
+    "sourceContact": [
+      32,
+      61
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 384,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "back_jump": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      7,
+      2
+    ],
+    "root": [
+      20.0,
+      26.78125
+    ],
+    "sourceContact": [
+      32,
+      61
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 448,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "front_cheer_jump": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      7,
+      2
+    ],
+    "root": [
+      20.0,
+      26.78125
+    ],
+    "sourceContact": [
+      32,
+      61
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 512,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "back_cheer_jump": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      7,
+      2
+    ],
+    "root": [
+      20.0,
+      26.78125
+    ],
+    "sourceContact": [
+      32,
+      61
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 576,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "front_waterstand": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      7,
+      10
+    ],
+    "root": [
+      20.0,
+      27.46875
+    ],
+    "sourceContact": [
+      32,
+      43
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 640,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "back_waterstand": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      7,
+      10
+    ],
+    "root": [
+      20.0,
+      27.46875
+    ],
+    "sourceContact": [
+      32,
+      43
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 704,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "front_slide": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      8,
+      9
+    ],
+    "root": [
+      19.78125,
+      26.875
+    ],
+    "sourceContact": [
+      29,
+      44
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 768,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "back_slide": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 21,
+    "offset": [
+      10,
+      12
+    ],
+    "root": [
+      19.515625,
+      27.421875
+    ],
+    "sourceContact": [
+      29,
+      47
+    ],
+    "density": 3.0476190476190474,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 832,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "front_lie": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 29,
+    "offset": [
+      5,
+      5
+    ],
+    "root": [
+      20.40625,
+      27.203125
+    ],
+    "sourceContact": [
+      34,
+      49
+    ],
+    "density": 2.206896551724138,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 896,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "back_lie": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 24,
+    "offset": [
+      7,
+      13
+    ],
+    "root": [
+      19.75,
+      27.25
+    ],
+    "sourceContact": [
+      34,
+      38
+    ],
+    "density": 2.6666666666666665,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 960,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "front_floor_sit": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      7,
+      3
+    ],
+    "root": [
+      20.0,
+      26.5625
+    ],
+    "sourceContact": [
+      32,
+      58
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 1024,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "back_floor_sit": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      7,
+      3
+    ],
+    "root": [
+      20.0,
+      26.5625
+    ],
+    "sourceContact": [
+      32,
+      58
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 1088,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "front_footbath": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      8,
+      9
+    ],
+    "root": [
+      19.78125,
+      26.875
+    ],
+    "sourceContact": [
+      29,
+      44
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 1152,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "back_footbath": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      8,
+      8
+    ],
+    "root": [
+      20.1875,
+      27.09375
+    ],
+    "sourceContact": [
+      30,
+      47
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 1216,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 1,
+      "fps": 1,
+      "loop": false
+    }
+  },
+  "front_walk": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      7,
+      3
+    ],
+    "root": [
+      20.0,
+      26.5625
+    ],
+    "sourceContact": [
+      32,
+      58
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 1280,
+        "w": 64,
+        "h": 64
+      },
+      {
+        "x": 64,
+        "y": 1280,
+        "w": 64,
+        "h": 64
+      },
+      {
+        "x": 128,
+        "y": 1280,
+        "w": 64,
+        "h": 64
+      },
+      {
+        "x": 192,
+        "y": 1280,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 4,
+      "fps": 5,
+      "durations_ms": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "loop": true
+    }
+  },
+  "back_walk": {
+    "sourceCell": 64,
+    "logicalCell": 40,
+    "logicalDrawSize": 26,
+    "offset": [
+      7,
+      3
+    ],
+    "root": [
+      20.0,
+      26.5625
+    ],
+    "sourceContact": [
+      32,
+      58
+    ],
+    "density": 2.4615384615384617,
+    "frameRects": [
+      {
+        "x": 0,
+        "y": 1344,
+        "w": 64,
+        "h": 64
+      },
+      {
+        "x": 64,
+        "y": 1344,
+        "w": 64,
+        "h": 64
+      },
+      {
+        "x": 128,
+        "y": 1344,
+        "w": 64,
+        "h": 64
+      },
+      {
+        "x": 192,
+        "y": 1344,
+        "w": 64,
+        "h": 64
+      }
+    ],
+    "timing": {
+      "frames": 4,
+      "fps": 5,
+      "durations_ms": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "loop": true
+    }
+  }
+}
