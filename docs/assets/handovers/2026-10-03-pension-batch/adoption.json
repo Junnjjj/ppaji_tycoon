@@ -1,0 +1,409 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "pension_1f": "pension-batch-20261003",
+    "pension_2f": "pension-batch-20261003",
+    "pension": "pension-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "pension_1f",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pension-batch-20261003/candidates/pension_1f/d0.png",
+      "source_sha256": "df243e765881497d59fb27ac56b3b2d624e7ba6c5ceb8859c513d46db9b18dce",
+      "old": {
+        "file": "fac_pension_1f_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "5753b15e21f92eeca346c239d41b0f4dded90b96faa5b77f7192b907dd4755f3",
+        "bytes": 192454
+      },
+      "new": {
+        "file": "fac_pension_1f_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a20e0ff4f3f076b73e4a7cb558ec9ac42e11423dc5bc54e81d5fe7c4e45dec53",
+        "bytes": 113842
+      },
+      "old_native": {
+        "file": "pension_1f/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "05f53b4c94e829896caeabc22cf7cd10636326a839ddf53dfbb982f93ad79f80"
+      },
+      "new_native": {
+        "file": "pension_1f/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f6d87b78ab26d49e44a3ff333032ac177f44736cd91b2edba05c46fe37d90d7e"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "pension_1f",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pension-batch-20261003/candidates/pension_1f/d1.png",
+      "source_sha256": "fecec6e6ba67f6c6c241b4de9fcebb414fbed8a0c02e3e3eb068462d6c5bdad5",
+      "old": {
+        "file": "fac_pension_1f_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "7ca1fcb186d29c35823b655efa290a561cd1e6f22d56005f88e6c6e69c92b8e7",
+        "bytes": 192746
+      },
+      "new": {
+        "file": "fac_pension_1f_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "05464d4f379c6fa1e5312cfbd93d0b814fda6590c5bb00e086f57983ff90a1c6",
+        "bytes": 112432
+      },
+      "old_native": {
+        "file": "pension_1f/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "2c82111c88c9bbfd24b33b96d06732e07aab05a6263ef1f111cbb5b673376e12"
+      },
+      "new_native": {
+        "file": "pension_1f/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "32da1c5ee08a2e1ef74ee9417b1a64cc92b4644ddd9a6fa28407bada6d39fdab"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "pension_1f",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pension-batch-20261003/candidates/pension_1f/d2.png",
+      "source_sha256": "bfb1c8907ca0d43dae0643dc973bda52e91d5bd74dae6bf81ac741f74285f994",
+      "old": {
+        "file": "fac_pension_1f_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "265df2acbec4a999490a63585c06fdc2e1d08d7e6a100d668a3ba091b42086c1",
+        "bytes": 178306
+      },
+      "new": {
+        "file": "fac_pension_1f_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "8d8ac1952b4605c44383846257eaf586511aa56bf96a97f4666b917b99a137be",
+        "bytes": 103776
+      },
+      "old_native": {
+        "file": "pension_1f/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "0d511fba3ce8c46e80e06e58320a10b505c4332ba78af7231eeb3bf6719cb924"
+      },
+      "new_native": {
+        "file": "pension_1f/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "24a279d5e534b33e078d0aa6bffdcb76d5743270b9ee73173c7b2cbe343b42c8"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "pension_1f",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pension-batch-20261003/candidates/pension_1f/d3.png",
+      "source_sha256": "0163dc597e63b8b578e5a7a8da81f311a7a8b918a494671256f026f784cb4e6d",
+      "old": {
+        "file": "fac_pension_1f_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "b925137e660d7b2c567d2e9390f3a2272599b64645d3e113a79c59069c874f0a",
+        "bytes": 194226
+      },
+      "new": {
+        "file": "fac_pension_1f_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "9d043ac4bada54adf1234b92a62ddeb2e79dd7d9984ebf3d45ab095cec54b35c",
+        "bytes": 106228
+      },
+      "old_native": {
+        "file": "pension_1f/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "e55d36a8d5b19637a4254e1022819db29b6d4ece81a84fe6352fff54f568389b"
+      },
+      "new_native": {
+        "file": "pension_1f/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "e09ce41db79bfafd71524c8d5f030bdf0349ad922d1e856df2f04015fb470bdf"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "pension_2f",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pension-batch-20261003/candidates/pension_2f/d0.png",
+      "source_sha256": "dc5848f5ab75365ea5b1d736a1452a810c640b43536d7bf920f9834a2d10a5d4",
+      "old": {
+        "file": "fac_pension_2f_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "88afdb4874f201fa97e11645839c1fad2027af5b9fb1cc529c65c81718f436f7",
+        "bytes": 263586
+      },
+      "new": {
+        "file": "fac_pension_2f_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "c497d5b6f68f048e9dfa50c7f323436b5baa2fb74e5a6cf5c9220fd7814463e6",
+        "bytes": 160868
+      },
+      "old_native": {
+        "file": "pension_2f/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "a3d97d486040302e5bfad7a76d58fe882d4659594512737c15fe254cc3ee1f3c"
+      },
+      "new_native": {
+        "file": "pension_2f/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f68446ba2d7f6c352f3b34114ca92955e230102f0966a84fa16656ab1f1746dd"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "pension_2f",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pension-batch-20261003/candidates/pension_2f/d1.png",
+      "source_sha256": "569401964e9f897eddbb4a92c1fa3f05141738853c72ba1a056fb03f97997056",
+      "old": {
+        "file": "fac_pension_2f_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "bba7c6fb240fb2b8d64848958681bbf15b219d062cfef5ff0fdc73f750a48e19",
+        "bytes": 268738
+      },
+      "new": {
+        "file": "fac_pension_2f_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "b5f657525253ba6185f6184ff65834431285b105b91c1d9eb56bd87b2b912839",
+        "bytes": 157488
+      },
+      "old_native": {
+        "file": "pension_2f/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "6e2cf1f1e60254ed10de91d348ffa929c17a099c0046b3ea9f4357c6f1a45ed9"
+      },
+      "new_native": {
+        "file": "pension_2f/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "90ef7839e7aa3137815dfcccc8fb6972f644e6fa793ddb4e373c99bfa987bb9f"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "pension_2f",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pension-batch-20261003/candidates/pension_2f/d2.png",
+      "source_sha256": "836117d3b27556887f64985a3bd5906f8899c5b4230bb7312f9d3295a09460db",
+      "old": {
+        "file": "fac_pension_2f_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "3cfdd119e369e8721cd6f869a584f6f23f560ce747354a11cffc468e6f197217",
+        "bytes": 245482
+      },
+      "new": {
+        "file": "fac_pension_2f_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "9d6957248643d746fe7a63362b090bb87298fca10ebd39df25a1587806beea07",
+        "bytes": 141162
+      },
+      "old_native": {
+        "file": "pension_2f/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "9d0849c99d7a2b411b3fc000f81e95e008c3787ba3f18a010d4ec06bb9a7357b"
+      },
+      "new_native": {
+        "file": "pension_2f/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "43a6baf9e6132b34bd3915f948aeddce1a47dfebdffa5f1f7552e9bab54ca9bd"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "pension_2f",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pension-batch-20261003/candidates/pension_2f/d3.png",
+      "source_sha256": "90f05eae7e7fac3dc5bb5bdf3049d14a114691bb3f5f50ac226bff0a1dfebfe2",
+      "old": {
+        "file": "fac_pension_2f_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "8b762f230c0f7a0ab5a7fd4e76e1d23621938cea946e1d25c1a37e239df147ca",
+        "bytes": 237194
+      },
+      "new": {
+        "file": "fac_pension_2f_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "2062e60daeecb044fc328003f4f13e9f8a2bc66e6af364167f7b799b28e5cb00",
+        "bytes": 144280
+      },
+      "old_native": {
+        "file": "pension_2f/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "4f8325505f03704bd1552b903fb078fbc8b5571e9fbd532dd4eb2c19da153bf1"
+      },
+      "new_native": {
+        "file": "pension_2f/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "28973bed9e41d3dfea16096c889944808d4147a63f59c724ea84c60e46dbc1c3"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "pension",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pension-batch-20261003/candidates/pension/d0.png",
+      "source_sha256": "960c6cdb8dcf86be2644618f8b787aa0552f7adf4ff5f009978579757ad145b6",
+      "old": {
+        "file": "fac_pension_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "6a520d9e5ad5a04f5f295fdf8b5c9b80d144fcabc309c7128acef8bea853c981",
+        "bytes": 330330
+      },
+      "new": {
+        "file": "fac_pension_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e500d2f753e7d51c156176e3560d552f258c90bfa69042f1e9fc99dfaef9d83f",
+        "bytes": 206754
+      },
+      "old_native": {
+        "file": "pension/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "9da3c1673622e5685ce80b3383589c287c40e789333b95526ed60c3988e4fdcb"
+      },
+      "new_native": {
+        "file": "pension/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "4f66437e30ceeffb5c3c24bd1a95f066caa8c5981cb601f0836df11dc5a1f9c4"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "pension",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pension-batch-20261003/candidates/pension/d1.png",
+      "source_sha256": "6370f908009f9bddf6bef143e6e370f6b7db365c27dbb124c840859276b0965a",
+      "old": {
+        "file": "fac_pension_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e4e361bb90e088757e8576d5c5909f0eaed8f3b0d8b9db49fbd7a9384cb1b659",
+        "bytes": 328952
+      },
+      "new": {
+        "file": "fac_pension_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "4736c13fc60dbe5fa4f7cda9a49922a05c0e978c988b98ac96dd4973cfbdb119",
+        "bytes": 203828
+      },
+      "old_native": {
+        "file": "pension/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "2386edccfdc9470b2e79a97c45ea177e9d4310eb95544b1a05012f87734db818"
+      },
+      "new_native": {
+        "file": "pension/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "27e61eb4a00e9ced1ff11ffad773af655a1f1a4246c2b20ccc8d8acc45009d59"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "pension",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pension-batch-20261003/candidates/pension/d2.png",
+      "source_sha256": "d77c369d474d3959651177823638eebdb5380eabad04aef0195e32e069c2cfd0",
+      "old": {
+        "file": "fac_pension_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "f1c7ea9738d123982734cfac702327381437fbbdaaeed99d10806719572b86df",
+        "bytes": 282502
+      },
+      "new": {
+        "file": "fac_pension_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "29fb864570000b75a5495fb2b86ad96d8c6c0d79a1f48fb1c270f7a5987f80eb",
+        "bytes": 170166
+      },
+      "old_native": {
+        "file": "pension/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "888a75f1ea3bc2d2a2e5f31ccb356b9cb47eda75df857ede1b3f20cf8f97cb7e"
+      },
+      "new_native": {
+        "file": "pension/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "3014fa7caff2037237e52b66aee43d7aff9772a7698c35486e01c7e2554d4e12"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "pension",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pension-batch-20261003/candidates/pension/d3.png",
+      "source_sha256": "fa69cd57f055f910c0e13baa1a9117e09ad3531cc55231991459cefe22bc5a71",
+      "old": {
+        "file": "fac_pension_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "0571da11868063b860be4835046b0b20ff23a08d9ec984cb906380f138be2422",
+        "bytes": 262674
+      },
+      "new": {
+        "file": "fac_pension_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "463e1dec5aa4c549640e75586b422c79144f7571949ce51bbd26a07479082af9",
+        "bytes": 169014
+      },
+      "old_native": {
+        "file": "pension/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "ccfba831c5f00677af2af7e1d6d7153b7f39c73889a41bd4248641c215689f30"
+      },
+      "new_native": {
+        "file": "pension/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "fe7725118a488b6c31f5213ddeb8425ba1b1182841b022f53cc7ecd33fdd7bf0"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

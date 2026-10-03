@@ -1,0 +1,7 @@
+{
+  "command": "npx vitest run src/assets/approved-facilities.test.ts src/render/outdoor-facilities.test.ts",
+  "cwd": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon/ppaji",
+  "files_passed": 2,
+  "tests_passed": 21,
+  "status": "PASS"
+}

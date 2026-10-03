@@ -1,0 +1,74 @@
+[
+  {
+    "id": "pension_1f",
+    "d": 0,
+    "file": "fac_pension_1f_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "pension_1f",
+    "d": 1,
+    "file": "fac_pension_1f_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "pension_1f",
+    "d": 2,
+    "file": "fac_pension_1f_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "pension_1f",
+    "d": 3,
+    "file": "fac_pension_1f_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "pension_2f",
+    "d": 0,
+    "file": "fac_pension_2f_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "pension_2f",
+    "d": 1,
+    "file": "fac_pension_2f_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "pension_2f",
+    "d": 2,
+    "file": "fac_pension_2f_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "pension_2f",
+    "d": 3,
+    "file": "fac_pension_2f_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "pension",
+    "d": 0,
+    "file": "fac_pension_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "pension",
+    "d": 1,
+    "file": "fac_pension_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "pension",
+    "d": 2,
+    "file": "fac_pension_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "pension",
+    "d": 3,
+    "file": "fac_pension_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

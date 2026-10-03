@@ -1,0 +1,86 @@
+[
+  {
+    "id": "pension_1f",
+    "d": 0,
+    "sha256": "a20e0ff4f3f076b73e4a7cb558ec9ac42e11423dc5bc54e81d5fe7c4e45dec53",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "pension_1f",
+    "d": 1,
+    "sha256": "05464d4f379c6fa1e5312cfbd93d0b814fda6590c5bb00e086f57983ff90a1c6",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "pension_1f",
+    "d": 2,
+    "sha256": "8d8ac1952b4605c44383846257eaf586511aa56bf96a97f4666b917b99a137be",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "pension_1f",
+    "d": 3,
+    "sha256": "9d043ac4bada54adf1234b92a62ddeb2e79dd7d9984ebf3d45ab095cec54b35c",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "pension_2f",
+    "d": 0,
+    "sha256": "c497d5b6f68f048e9dfa50c7f323436b5baa2fb74e5a6cf5c9220fd7814463e6",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "pension_2f",
+    "d": 1,
+    "sha256": "b5f657525253ba6185f6184ff65834431285b105b91c1d9eb56bd87b2b912839",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "pension_2f",
+    "d": 2,
+    "sha256": "9d6957248643d746fe7a63362b090bb87298fca10ebd39df25a1587806beea07",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "pension_2f",
+    "d": 3,
+    "sha256": "2062e60daeecb044fc328003f4f13e9f8a2bc66e6af364167f7b799b28e5cb00",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "pension",
+    "d": 0,
+    "sha256": "e500d2f753e7d51c156176e3560d552f258c90bfa69042f1e9fc99dfaef9d83f",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "pension",
+    "d": 1,
+    "sha256": "4736c13fc60dbe5fa4f7cda9a49922a05c0e978c988b98ac96dd4973cfbdb119",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "pension",
+    "d": 2,
+    "sha256": "29fb864570000b75a5495fb2b86ad96d8c6c0d79a1f48fb1c270f7a5987f80eb",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "pension",
+    "d": 3,
+    "sha256": "463e1dec5aa4c549640e75586b422c79144f7571949ce51bbd26a07479082af9",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

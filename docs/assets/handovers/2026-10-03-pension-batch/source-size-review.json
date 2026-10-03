@@ -1,0 +1,218 @@
+[
+  {
+    "id": "pension_1f",
+    "d": 0,
+    "source_bbox": [
+      111,
+      260,
+      657,
+      668
+    ],
+    "candidate_bbox": [
+      108,
+      260,
+      660,
+      664
+    ],
+    "width_ratio": 1.010989010989011,
+    "height_ratio": 0.9901960784313726
+  },
+  {
+    "id": "pension_1f",
+    "d": 1,
+    "source_bbox": [
+      107,
+      260,
+      661,
+      668
+    ],
+    "candidate_bbox": [
+      108,
+      260,
+      660,
+      664
+    ],
+    "width_ratio": 0.9963898916967509,
+    "height_ratio": 0.9901960784313726
+  },
+  {
+    "id": "pension_1f",
+    "d": 2,
+    "source_bbox": [
+      108,
+      260,
+      660,
+      668
+    ],
+    "candidate_bbox": [
+      108,
+      260,
+      660,
+      664
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 0.9901960784313726
+  },
+  {
+    "id": "pension_1f",
+    "d": 3,
+    "source_bbox": [
+      107,
+      260,
+      661,
+      668
+    ],
+    "candidate_bbox": [
+      108,
+      260,
+      660,
+      664
+    ],
+    "width_ratio": 0.9963898916967509,
+    "height_ratio": 0.9901960784313726
+  },
+  {
+    "id": "pension_2f",
+    "d": 0,
+    "source_bbox": [
+      105,
+      152,
+      663,
+      668
+    ],
+    "candidate_bbox": [
+      108,
+      152,
+      660,
+      664
+    ],
+    "width_ratio": 0.989247311827957,
+    "height_ratio": 0.9922480620155039
+  },
+  {
+    "id": "pension_2f",
+    "d": 1,
+    "source_bbox": [
+      111,
+      152,
+      657,
+      668
+    ],
+    "candidate_bbox": [
+      108,
+      152,
+      660,
+      664
+    ],
+    "width_ratio": 1.010989010989011,
+    "height_ratio": 0.9922480620155039
+  },
+  {
+    "id": "pension_2f",
+    "d": 2,
+    "source_bbox": [
+      102,
+      152,
+      665,
+      668
+    ],
+    "candidate_bbox": [
+      108,
+      152,
+      660,
+      664
+    ],
+    "width_ratio": 0.9804618117229129,
+    "height_ratio": 0.9922480620155039
+  },
+  {
+    "id": "pension_2f",
+    "d": 3,
+    "source_bbox": [
+      111,
+      152,
+      657,
+      668
+    ],
+    "candidate_bbox": [
+      108,
+      152,
+      660,
+      664
+    ],
+    "width_ratio": 1.010989010989011,
+    "height_ratio": 0.9922480620155039
+  },
+  {
+    "id": "pension",
+    "d": 0,
+    "source_bbox": [
+      107,
+      60,
+      661,
+      668
+    ],
+    "candidate_bbox": [
+      108,
+      56,
+      660,
+      664
+    ],
+    "width_ratio": 0.9963898916967509,
+    "height_ratio": 1.0
+  },
+  {
+    "id": "pension",
+    "d": 1,
+    "source_bbox": [
+      105,
+      60,
+      663,
+      668
+    ],
+    "candidate_bbox": [
+      108,
+      56,
+      660,
+      664
+    ],
+    "width_ratio": 0.989247311827957,
+    "height_ratio": 1.0
+  },
+  {
+    "id": "pension",
+    "d": 2,
+    "source_bbox": [
+      101,
+      112,
+      667,
+      668
+    ],
+    "candidate_bbox": [
+      108,
+      126,
+      660,
+      664
+    ],
+    "width_ratio": 0.9752650176678446,
+    "height_ratio": 0.9676258992805755
+  },
+  {
+    "id": "pension",
+    "d": 3,
+    "source_bbox": [
+      103,
+      112,
+      665,
+      668
+    ],
+    "candidate_bbox": [
+      108,
+      126,
+      660,
+      664
+    ],
+    "width_ratio": 0.9822064056939501,
+    "height_ratio": 0.9676258992805755
+  }
+]

@@ -1,0 +1,327 @@
+{
+  "status": "PASS",
+  "frames": [
+    {
+      "id": "pension_1f",
+      "d": 0,
+      "opaque_only_exact_without_glass": true
+    },
+    {
+      "id": "pension_1f",
+      "d": 1,
+      "opaque_only_exact_without_glass": true
+    },
+    {
+      "id": "pension_1f",
+      "d": 2,
+      "opaque_only_exact_without_glass": true
+    },
+    {
+      "id": "pension_1f",
+      "d": 3,
+      "opaque_only_exact_without_glass": true
+    },
+    {
+      "id": "pension_2f",
+      "d": 0,
+      "opaque_only_exact_without_glass": true
+    },
+    {
+      "id": "pension_2f",
+      "d": 1,
+      "opaque_only_exact_without_glass": true
+    },
+    {
+      "id": "pension_2f",
+      "d": 2,
+      "opaque_only_exact_without_glass": true
+    },
+    {
+      "id": "pension_2f",
+      "d": 3,
+      "opaque_only_exact_without_glass": true
+    },
+    {
+      "id": "pension",
+      "d": 0,
+      "changed_pixels": 51796,
+      "outside_glass_with_filter_support": 0,
+      "transparent_against_background_pixels": 3566,
+      "lounge_front": {
+        "face": "glass-lounge-front",
+        "visible_samples": 95758,
+        "hidden_samples": 18611
+      },
+      "opaque_back_wall": null,
+      "glass_faces": [
+        {
+          "face": "glass-lounge-front",
+          "visible_samples": 95758,
+          "hidden_samples": 18611
+        },
+        {
+          "face": "glass-lounge-left",
+          "visible_samples": 14881,
+          "hidden_samples": 22767
+        },
+        {
+          "face": "glass-lounge-right",
+          "visible_samples": 29440,
+          "hidden_samples": 8356
+        },
+        {
+          "face": "glass-guard-front",
+          "visible_samples": 32785,
+          "hidden_samples": 6475
+        },
+        {
+          "face": "glass-guard-left",
+          "visible_samples": 22129,
+          "hidden_samples": 8811
+        },
+        {
+          "face": "glass-guard-right",
+          "visible_samples": 26609,
+          "hidden_samples": 4331
+        }
+      ]
+    },
+    {
+      "id": "pension",
+      "d": 1,
+      "changed_pixels": 51991,
+      "outside_glass_with_filter_support": 0,
+      "transparent_against_background_pixels": 3570,
+      "lounge_front": {
+        "face": "glass-lounge-front",
+        "visible_samples": 95758,
+        "hidden_samples": 18611
+      },
+      "opaque_back_wall": null,
+      "glass_faces": [
+        {
+          "face": "glass-lounge-front",
+          "visible_samples": 95758,
+          "hidden_samples": 18611
+        },
+        {
+          "face": "glass-lounge-left",
+          "visible_samples": 29440,
+          "hidden_samples": 8356
+        },
+        {
+          "face": "glass-lounge-right",
+          "visible_samples": 14881,
+          "hidden_samples": 22767
+        },
+        {
+          "face": "glass-guard-front",
+          "visible_samples": 32785,
+          "hidden_samples": 6475
+        },
+        {
+          "face": "glass-guard-left",
+          "visible_samples": 26609,
+          "hidden_samples": 4331
+        },
+        {
+          "face": "glass-guard-right",
+          "visible_samples": 22129,
+          "hidden_samples": 8811
+        }
+      ]
+    },
+    {
+      "id": "pension",
+      "d": 2,
+      "changed_pixels": 22528,
+      "outside_glass_with_filter_support": 0,
+      "transparent_against_background_pixels": 4872,
+      "lounge_front": {
+        "face": "glass-lounge-front",
+        "visible_samples": 14968,
+        "hidden_samples": 99686
+      },
+      "opaque_back_wall": {
+        "interior_samples": 22963,
+        "changed": 0,
+        "front_glass_ends_visible_through_sides": true
+      },
+      "glass_faces": [
+        {
+          "face": "glass-lounge-front",
+          "visible_samples": 14968,
+          "hidden_samples": 99686
+        },
+        {
+          "face": "glass-lounge-left",
+          "visible_samples": 29802,
+          "hidden_samples": 7787
+        },
+        {
+          "face": "glass-lounge-right",
+          "visible_samples": 0,
+          "hidden_samples": 37855
+        },
+        {
+          "face": "glass-guard-front",
+          "visible_samples": 31822,
+          "hidden_samples": 7438
+        },
+        {
+          "face": "glass-guard-left",
+          "visible_samples": 26668,
+          "hidden_samples": 4272
+        },
+        {
+          "face": "glass-guard-right",
+          "visible_samples": 5071,
+          "hidden_samples": 25869
+        }
+      ]
+    },
+    {
+      "id": "pension",
+      "d": 3,
+      "changed_pixels": 22778,
+      "outside_glass_with_filter_support": 0,
+      "transparent_against_background_pixels": 4853,
+      "lounge_front": {
+        "face": "glass-lounge-front",
+        "visible_samples": 14968,
+        "hidden_samples": 99686
+      },
+      "opaque_back_wall": {
+        "interior_samples": 23184,
+        "changed": 0,
+        "front_glass_ends_visible_through_sides": true
+      },
+      "glass_faces": [
+        {
+          "face": "glass-lounge-front",
+          "visible_samples": 14968,
+          "hidden_samples": 99686
+        },
+        {
+          "face": "glass-lounge-left",
+          "visible_samples": 0,
+          "hidden_samples": 37855
+        },
+        {
+          "face": "glass-lounge-right",
+          "visible_samples": 29802,
+          "hidden_samples": 7787
+        },
+        {
+          "face": "glass-guard-front",
+          "visible_samples": 31822,
+          "hidden_samples": 7438
+        },
+        {
+          "face": "glass-guard-left",
+          "visible_samples": 5071,
+          "hidden_samples": 25869
+        },
+        {
+          "face": "glass-guard-right",
+          "visible_samples": 26668,
+          "hidden_samples": 4272
+        }
+      ]
+    }
+  ],
+  "geometry": [
+    {
+      "id": "pension_1f",
+      "part": "wood-post-0",
+      "roof_height_error": 2.831068712794149e-15,
+      "roof_underside_overlap": 0.25000000000000006
+    },
+    {
+      "id": "pension_1f",
+      "part": "wood-post-1",
+      "roof_height_error": 2.831068712794149e-15,
+      "roof_underside_overlap": 0.25000000000000006
+    },
+    {
+      "id": "pension_1f",
+      "part": "wood-post-2",
+      "roof_height_error": 2.831068712794149e-15,
+      "roof_underside_overlap": 0.25000000000000006
+    },
+    {
+      "id": "pension_1f",
+      "part": "wood-post-3",
+      "roof_height_error": 2.831068712794149e-15,
+      "roof_underside_overlap": 0.25000000000000006
+    },
+    {
+      "id": "pension_1f",
+      "part": "cream-wall-left",
+      "roof_height_error": 1.4432899320127035e-15,
+      "roof_underside_overlap": 0.15000000000000002
+    },
+    {
+      "id": "pension_1f",
+      "part": "cream-wall-right",
+      "roof_height_error": 1.4432899320127035e-15,
+      "roof_underside_overlap": 0.15000000000000002
+    },
+    {
+      "id": "pension_2f",
+      "part": "wood-post-0",
+      "roof_height_error": 2.831068712794149e-15,
+      "roof_underside_overlap": 0.25000000000000006
+    },
+    {
+      "id": "pension_2f",
+      "part": "wood-post-1",
+      "roof_height_error": 2.831068712794149e-15,
+      "roof_underside_overlap": 0.25000000000000006
+    },
+    {
+      "id": "pension_2f",
+      "part": "wood-post-2",
+      "roof_height_error": 2.831068712794149e-15,
+      "roof_underside_overlap": 0.25000000000000006
+    },
+    {
+      "id": "pension_2f",
+      "part": "wood-post-3",
+      "roof_height_error": 2.831068712794149e-15,
+      "roof_underside_overlap": 0.25000000000000006
+    },
+    {
+      "id": "pension_2f",
+      "part": "cream-wall-left",
+      "roof_height_error": 1.4432899320127035e-15,
+      "roof_underside_overlap": 0.15000000000000002
+    },
+    {
+      "id": "pension_2f",
+      "part": "cream-wall-right",
+      "roof_height_error": 1.4432899320127035e-15,
+      "roof_underside_overlap": 0.15000000000000002
+    },
+    {
+      "id": "pension",
+      "part": "wood-deck-front",
+      "pool_opening_not_covered": true
+    },
+    {
+      "id": "pension",
+      "part": "wood-deck-back",
+      "pool_opening_not_covered": true
+    },
+    {
+      "id": "pension",
+      "part": "wood-deck-left",
+      "pool_opening_not_covered": true
+    },
+    {
+      "id": "pension",
+      "part": "wood-deck-right",
+      "pool_opening_not_covered": true
+    }
+  ]
+}

@@ -1011,88 +1011,88 @@
       "bytes": 56162
     },
     "fac/pension_1f/0": {
-      "file": "fac_pension_1f_0.webp",
+      "file": "fac_pension_1f_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "5753b15e21f92eeca346c239d41b0f4dded90b96faa5b77f7192b907dd4755f3",
-      "bytes": 192454
+      "sha256": "a20e0ff4f3f076b73e4a7cb558ec9ac42e11423dc5bc54e81d5fe7c4e45dec53",
+      "bytes": 113842
     },
     "fac/pension_1f/1": {
-      "file": "fac_pension_1f_1.webp",
+      "file": "fac_pension_1f_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "7ca1fcb186d29c35823b655efa290a561cd1e6f22d56005f88e6c6e69c92b8e7",
-      "bytes": 192746
+      "sha256": "05464d4f379c6fa1e5312cfbd93d0b814fda6590c5bb00e086f57983ff90a1c6",
+      "bytes": 112432
     },
     "fac/pension_1f/2": {
-      "file": "fac_pension_1f_2.webp",
+      "file": "fac_pension_1f_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "265df2acbec4a999490a63585c06fdc2e1d08d7e6a100d668a3ba091b42086c1",
-      "bytes": 178306
+      "sha256": "8d8ac1952b4605c44383846257eaf586511aa56bf96a97f4666b917b99a137be",
+      "bytes": 103776
     },
     "fac/pension_1f/3": {
-      "file": "fac_pension_1f_3.webp",
+      "file": "fac_pension_1f_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "b925137e660d7b2c567d2e9390f3a2272599b64645d3e113a79c59069c874f0a",
-      "bytes": 194226
+      "sha256": "9d043ac4bada54adf1234b92a62ddeb2e79dd7d9984ebf3d45ab095cec54b35c",
+      "bytes": 106228
     },
     "fac/pension_2f/0": {
-      "file": "fac_pension_2f_0.webp",
+      "file": "fac_pension_2f_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "88afdb4874f201fa97e11645839c1fad2027af5b9fb1cc529c65c81718f436f7",
-      "bytes": 263586
+      "sha256": "c497d5b6f68f048e9dfa50c7f323436b5baa2fb74e5a6cf5c9220fd7814463e6",
+      "bytes": 160868
     },
     "fac/pension_2f/1": {
-      "file": "fac_pension_2f_1.webp",
+      "file": "fac_pension_2f_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "bba7c6fb240fb2b8d64848958681bbf15b219d062cfef5ff0fdc73f750a48e19",
-      "bytes": 268738
+      "sha256": "b5f657525253ba6185f6184ff65834431285b105b91c1d9eb56bd87b2b912839",
+      "bytes": 157488
     },
     "fac/pension_2f/2": {
-      "file": "fac_pension_2f_2.webp",
+      "file": "fac_pension_2f_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "3cfdd119e369e8721cd6f869a584f6f23f560ce747354a11cffc468e6f197217",
-      "bytes": 245482
+      "sha256": "9d6957248643d746fe7a63362b090bb87298fca10ebd39df25a1587806beea07",
+      "bytes": 141162
     },
     "fac/pension_2f/3": {
-      "file": "fac_pension_2f_3.webp",
+      "file": "fac_pension_2f_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "8b762f230c0f7a0ab5a7fd4e76e1d23621938cea946e1d25c1a37e239df147ca",
-      "bytes": 237194
+      "sha256": "2062e60daeecb044fc328003f4f13e9f8a2bc66e6af364167f7b799b28e5cb00",
+      "bytes": 144280
     },
     "fac/pension/0": {
-      "file": "fac_pension_0.webp",
+      "file": "fac_pension_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "6a520d9e5ad5a04f5f295fdf8b5c9b80d144fcabc309c7128acef8bea853c981",
-      "bytes": 330330
+      "sha256": "e500d2f753e7d51c156176e3560d552f258c90bfa69042f1e9fc99dfaef9d83f",
+      "bytes": 206754
     },
     "fac/pension/1": {
-      "file": "fac_pension_1.webp",
+      "file": "fac_pension_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "e4e361bb90e088757e8576d5c5909f0eaed8f3b0d8b9db49fbd7a9384cb1b659",
-      "bytes": 328952
+      "sha256": "4736c13fc60dbe5fa4f7cda9a49922a05c0e978c988b98ac96dd4973cfbdb119",
+      "bytes": 203828
     },
     "fac/pension/2": {
-      "file": "fac_pension_2.webp",
+      "file": "fac_pension_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "f1c7ea9738d123982734cfac702327381437fbbdaaeed99d10806719572b86df",
-      "bytes": 282502
+      "sha256": "29fb864570000b75a5495fb2b86ad96d8c6c0d79a1f48fb1c270f7a5987f80eb",
+      "bytes": 170166
     },
     "fac/pension/3": {
-      "file": "fac_pension_3.webp",
+      "file": "fac_pension_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "0571da11868063b860be4835046b0b20ff23a08d9ec984cb906380f138be2422",
-      "bytes": 262674
+      "sha256": "463e1dec5aa4c549640e75586b422c79144f7571949ce51bbd26a07479082af9",
+      "bytes": 169014
     },
     "fac/stage_river_lv1/0": {
       "file": "fac_stage_river_lv1_0.fix-6f693b97b3b0.webp",
