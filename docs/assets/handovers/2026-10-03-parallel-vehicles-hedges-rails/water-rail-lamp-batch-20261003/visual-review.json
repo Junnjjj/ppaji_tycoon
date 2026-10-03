@@ -1,0 +1,23 @@
+{
+  "status": "VISUALLY_REVIEWED",
+  "assets": [
+    "env_water_rail",
+    "env_water_rail_corner",
+    "env_water_rail_end",
+    "env_street_lamp"
+  ],
+  "directions": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "evidence": "Original inspection board, every registered asset board, final candidate overview and chain grid inspected using view_image. Lamp revised to charcoal-olive following coordinator feedback.",
+  "main_modified": false,
+  "runtime_qa": "NOT_RUN",
+  "art95_certified": false,
+  "limits": [
+    "Short fixture edges and intentional curves not straight-line certified.",
+    "Candidate lamp d1 height differs from inconsistent source; fixed shared geometry is retained."
+  ]
+}

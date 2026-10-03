@@ -1,0 +1,112 @@
+{
+  "status": "REVIEWED_FOR_COORDINATOR",
+  "main_modified": false,
+  "runtime_qa": "NOT_RUN",
+  "method": "view_image of original inspection before authoring; final original/candidate/overlay four-facing boards and four chain previews after iteration",
+  "frames": [
+    {
+      "id": "env_hedge",
+      "d": 0,
+      "file": "candidates/env_hedge/d0.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_hedge",
+      "d": 1,
+      "file": "candidates/env_hedge/d1.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_hedge",
+      "d": 2,
+      "file": "candidates/env_hedge/d2.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_hedge",
+      "d": 3,
+      "file": "candidates/env_hedge/d3.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_hedge_corner",
+      "d": 0,
+      "file": "candidates/env_hedge_corner/d0.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_hedge_corner",
+      "d": 1,
+      "file": "candidates/env_hedge_corner/d1.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_hedge_corner",
+      "d": 2,
+      "file": "candidates/env_hedge_corner/d2.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_hedge_corner",
+      "d": 3,
+      "file": "candidates/env_hedge_corner/d3.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_hedge_end",
+      "d": 0,
+      "file": "candidates/env_hedge_end/d0.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_hedge_end",
+      "d": 1,
+      "file": "candidates/env_hedge_end/d1.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_hedge_end",
+      "d": 2,
+      "file": "candidates/env_hedge_end/d2.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_hedge_end",
+      "d": 3,
+      "file": "candidates/env_hedge_end/d3.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_long_flowerbed",
+      "d": 0,
+      "file": "candidates/env_long_flowerbed/d0.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_long_flowerbed",
+      "d": 1,
+      "file": "candidates/env_long_flowerbed/d1.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_long_flowerbed",
+      "d": 2,
+      "file": "candidates/env_long_flowerbed/d2.png",
+      "reviewed": true
+    },
+    {
+      "id": "env_long_flowerbed",
+      "d": 3,
+      "file": "candidates/env_long_flowerbed/d3.png",
+      "reviewed": true
+    }
+  ],
+  "observations": [
+    "Closed 3D leaves have varied scale/color and visible irregular silhouettes; no billboard or green slab substituted.",
+    "Planter/base stays attached and registered on every floor grid.",
+    "Source radial leaf rosettes are interpreted as overlapping authored leaves, not an exact painted-surface reconstruction.",
+    "Orange source band interpreted as stems following coordinator instruction.",
+    "Candidate flora is slightly more angular and leaf-overlap-oriented than source rosettes; art acceptance remains coordinator-owned.",
+    "Seven-module previews are continuous in all directions; original panels and candidate canvases fit completely."
+  ]
+}

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "env_hedge",
+    "d": 0,
+    "file": "fac_env_hedge_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_hedge",
+    "d": 1,
+    "file": "fac_env_hedge_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_hedge",
+    "d": 2,
+    "file": "fac_env_hedge_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_hedge",
+    "d": 3,
+    "file": "fac_env_hedge_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_hedge_corner",
+    "d": 0,
+    "file": "fac_env_hedge_corner_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_hedge_corner",
+    "d": 1,
+    "file": "fac_env_hedge_corner_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_hedge_corner",
+    "d": 2,
+    "file": "fac_env_hedge_corner_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_hedge_corner",
+    "d": 3,
+    "file": "fac_env_hedge_corner_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_hedge_end",
+    "d": 0,
+    "file": "fac_env_hedge_end_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_hedge_end",
+    "d": 1,
+    "file": "fac_env_hedge_end_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_hedge_end",
+    "d": 2,
+    "file": "fac_env_hedge_end_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_hedge_end",
+    "d": 3,
+    "file": "fac_env_hedge_end_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_long_flowerbed",
+    "d": 0,
+    "file": "fac_env_long_flowerbed_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_long_flowerbed",
+    "d": 1,
+    "file": "fac_env_long_flowerbed_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_long_flowerbed",
+    "d": 2,
+    "file": "fac_env_long_flowerbed_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_long_flowerbed",
+    "d": 3,
+    "file": "fac_env_long_flowerbed_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

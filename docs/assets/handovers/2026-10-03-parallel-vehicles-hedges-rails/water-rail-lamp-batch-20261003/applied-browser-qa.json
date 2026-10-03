@@ -1,0 +1,98 @@
+[
+  {
+    "id": "env_water_rail",
+    "d": 0,
+    "file": "fac_env_water_rail_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_water_rail",
+    "d": 1,
+    "file": "fac_env_water_rail_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_water_rail",
+    "d": 2,
+    "file": "fac_env_water_rail_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_water_rail",
+    "d": 3,
+    "file": "fac_env_water_rail_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_water_rail_corner",
+    "d": 0,
+    "file": "fac_env_water_rail_corner_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_water_rail_corner",
+    "d": 1,
+    "file": "fac_env_water_rail_corner_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_water_rail_corner",
+    "d": 2,
+    "file": "fac_env_water_rail_corner_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_water_rail_corner",
+    "d": 3,
+    "file": "fac_env_water_rail_corner_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_water_rail_end",
+    "d": 0,
+    "file": "fac_env_water_rail_end_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_water_rail_end",
+    "d": 1,
+    "file": "fac_env_water_rail_end_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_water_rail_end",
+    "d": 2,
+    "file": "fac_env_water_rail_end_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_water_rail_end",
+    "d": 3,
+    "file": "fac_env_water_rail_end_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_street_lamp",
+    "d": 0,
+    "file": "fac_env_street_lamp_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_street_lamp",
+    "d": 1,
+    "file": "fac_env_street_lamp_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_street_lamp",
+    "d": 2,
+    "file": "fac_env_street_lamp_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_street_lamp",
+    "d": 3,
+    "file": "fac_env_street_lamp_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

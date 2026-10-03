@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "reviewer": "coordinator",
+  "inspected": [
+    "env_water_rail-board.png",
+    "env_water_rail_corner-board.png",
+    "env_water_rail_end-board.png",
+    "env_street_lamp-board.png",
+    "connections-grid.png",
+    "maps/*-candidate.png"
+  ],
+  "findings": [
+    "Four facings maintain common rail/pole geometry, clear transparent bar gaps and registered grounded bases.",
+    "Dark charcoal-olive lamp refinement is accepted; warm glass is visible at game scale.",
+    "Actual runtime chain screenshot shows twenty pieces with continuous straight and corner contacts in four rotations."
+  ],
+  "limits": [
+    "Source-inspired reconstruction, not exact recovery of hidden original geometry.",
+    "Short internal edges and curved fixtures are visually reviewed, not certified by fitted straight-edge tests.",
+    "No numeric art95 score."
+  ]
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "env_bus",
+    "d": 0,
+    "sha256": "f09062d9360f0a789c8957aae1294affbbef04d09b509c47d0016caccc581af4",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_bus",
+    "d": 1,
+    "sha256": "337d4f3d2222512c660c6138230de17de361039e323d6dfe69722bed9e7e763b",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_bus",
+    "d": 2,
+    "sha256": "071a341eeefa6a42b2cc3e8a6837d3cb94d7e3ab3b37f7d9605ab08cf8cd2b41",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_bus",
+    "d": 3,
+    "sha256": "35954f6666e42c2f0c580d7a435635996f353264158b0d47ee8211975381566f",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_car",
+    "d": 0,
+    "sha256": "ea5e52d46e673ff1448fae1b9dc0025c725cffdd1a0342f4a96ff2a3692e51f2",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_car",
+    "d": 1,
+    "sha256": "9caaad33b3c62653c6e17b7d7d71c2e20d309cac888d715345b7e8029cce692a",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_car",
+    "d": 2,
+    "sha256": "f0fcd6023b38f639c408ef5c7cbfaaa17a9d8fa53a1d237839b68cc7aa457e3f",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_car",
+    "d": 3,
+    "sha256": "53448a2c294f535c74aa883cde6bea313361a8f0c9af37bec7092e895508f07e",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

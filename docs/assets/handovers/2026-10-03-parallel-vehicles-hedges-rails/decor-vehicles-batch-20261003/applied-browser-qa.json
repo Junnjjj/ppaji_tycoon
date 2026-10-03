@@ -1,0 +1,50 @@
+[
+  {
+    "id": "env_bus",
+    "d": 0,
+    "file": "fac_env_bus_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_bus",
+    "d": 1,
+    "file": "fac_env_bus_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_bus",
+    "d": 2,
+    "file": "fac_env_bus_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_bus",
+    "d": 3,
+    "file": "fac_env_bus_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_car",
+    "d": 0,
+    "file": "fac_env_car_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_car",
+    "d": 1,
+    "file": "fac_env_car_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_car",
+    "d": 2,
+    "file": "fac_env_car_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_car",
+    "d": 3,
+    "file": "fac_env_car_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

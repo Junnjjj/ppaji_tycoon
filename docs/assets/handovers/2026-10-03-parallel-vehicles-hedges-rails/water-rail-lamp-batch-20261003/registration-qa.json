@@ -1,0 +1,118 @@
+{
+  "status": "PASS",
+  "frames": [
+    {
+      "id": "env_water_rail",
+      "d": 0,
+      "passed": true,
+      "source_sha256": "650d6b67e183434ab961a236420ac1ac85823fee49678b5c7c4ce1f07b1f1e28",
+      "candidate_sha256": "d589f1a02431f0dde417a5b76d0b6d6376c0f1a060c5b33cf923676b1c64036b"
+    },
+    {
+      "id": "env_water_rail",
+      "d": 1,
+      "passed": true,
+      "source_sha256": "b2834b68b7a44d7d7548795a14e34efbe7f5dc64a227fb02755045ea4a1ac871",
+      "candidate_sha256": "353f8cdc603ca96027415fd088f184332571aa70427061062464bd27589e083f"
+    },
+    {
+      "id": "env_water_rail",
+      "d": 2,
+      "passed": true,
+      "source_sha256": "bf7ccde809f235031c5e82cb9c81f54bbba464a0899a575b8fe20620883f9e34",
+      "candidate_sha256": "77516ec644d4114eac514b36ae028e5afcc979084dad42d646b524531f53bdda"
+    },
+    {
+      "id": "env_water_rail",
+      "d": 3,
+      "passed": true,
+      "source_sha256": "b0fe0ec823caddf588ef3d3165b1b0c36622254bf6bfbfa0965c2e173e2e260f",
+      "candidate_sha256": "ac256b9625eea7d8d92741b5ee3e2ffde07caf891cdc8b610f04c7010762802b"
+    },
+    {
+      "id": "env_water_rail_corner",
+      "d": 0,
+      "passed": true,
+      "source_sha256": "ff9e8a3bdced2860d8004a14e63cfc6711b76acbbe0d20c87f66d4c5c58d0459",
+      "candidate_sha256": "57e852c927a1971b9c928e7c09bf57559dec3d6688a5ac372f1bcafcb9245890"
+    },
+    {
+      "id": "env_water_rail_corner",
+      "d": 1,
+      "passed": true,
+      "source_sha256": "dd71a38882418a5792f4d64a306117201388384ba5b5cda56eca23f6a78d65bd",
+      "candidate_sha256": "8629b62f93491d5fd81c250a3d5acb91af89a934133f527051ca3b13b1583de0"
+    },
+    {
+      "id": "env_water_rail_corner",
+      "d": 2,
+      "passed": true,
+      "source_sha256": "97fe416acea9cdcc89f773b1ea48ef90be8d2d88c0a7f17935bc37d72aa442e7",
+      "candidate_sha256": "3e351e1db30409c911a4379e56cc081327ac421251e1e465e3dc76883724a034"
+    },
+    {
+      "id": "env_water_rail_corner",
+      "d": 3,
+      "passed": true,
+      "source_sha256": "1fe0c59fead8ecf6879d9ff0718ebba9590a74fa1125f3636f816dc47c9f99db",
+      "candidate_sha256": "14f7c32a4107f79c9a895440cad853f398968e039e6e549ce60b81732f66231f"
+    },
+    {
+      "id": "env_water_rail_end",
+      "d": 0,
+      "passed": true,
+      "source_sha256": "650d6b67e183434ab961a236420ac1ac85823fee49678b5c7c4ce1f07b1f1e28",
+      "candidate_sha256": "d589f1a02431f0dde417a5b76d0b6d6376c0f1a060c5b33cf923676b1c64036b"
+    },
+    {
+      "id": "env_water_rail_end",
+      "d": 1,
+      "passed": true,
+      "source_sha256": "b2834b68b7a44d7d7548795a14e34efbe7f5dc64a227fb02755045ea4a1ac871",
+      "candidate_sha256": "353f8cdc603ca96027415fd088f184332571aa70427061062464bd27589e083f"
+    },
+    {
+      "id": "env_water_rail_end",
+      "d": 2,
+      "passed": true,
+      "source_sha256": "bf7ccde809f235031c5e82cb9c81f54bbba464a0899a575b8fe20620883f9e34",
+      "candidate_sha256": "77516ec644d4114eac514b36ae028e5afcc979084dad42d646b524531f53bdda"
+    },
+    {
+      "id": "env_water_rail_end",
+      "d": 3,
+      "passed": true,
+      "source_sha256": "b0fe0ec823caddf588ef3d3165b1b0c36622254bf6bfbfa0965c2e173e2e260f",
+      "candidate_sha256": "ac256b9625eea7d8d92741b5ee3e2ffde07caf891cdc8b610f04c7010762802b"
+    },
+    {
+      "id": "env_street_lamp",
+      "d": 0,
+      "passed": true,
+      "source_sha256": "b8cd27a9b871b65e76673c3bac07f545a8ec6594e1f4c43b0c8342e29b88f6e6",
+      "candidate_sha256": "59cf0067a99e02b8265597221c8a17e9423cf55264b7c5af275e5b4459efd7f4"
+    },
+    {
+      "id": "env_street_lamp",
+      "d": 1,
+      "passed": true,
+      "source_sha256": "1a229ca385fe6ed30c1f368cfd30204b15aff62d11625a35bfc641c5be8a7270",
+      "candidate_sha256": "b8877e5f9a41f8617ec6ad1b3ea994ed6adcb813f1d605b533fbb1834dec8098"
+    },
+    {
+      "id": "env_street_lamp",
+      "d": 2,
+      "passed": true,
+      "source_sha256": "6bcdaae45eeddfb22aadee54c35c8bfaa09ebe58398a3426f8336460e205be7d",
+      "candidate_sha256": "d8dd5d6d646c99166dc47fc20c0c3cdc58657eb6690cf79557431419afafe16d"
+    },
+    {
+      "id": "env_street_lamp",
+      "d": 3,
+      "passed": true,
+      "source_sha256": "87e0e0938486cd84c5f2025c4dd92dfd78af79e631b5e7a7cc863040a737a604",
+      "candidate_sha256": "edda2c502e2f883f77a59cf9b014a7408fafec77f014b95031ffd305ad611e42"
+    }
+  ],
+  "survey_sha256": "f8b9f39954c325a04a71517b63465a58cfee1db72d6cee8cff2caec14a1fdd7a"
+}

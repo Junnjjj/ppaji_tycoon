@@ -1,0 +1,718 @@
+[
+  {
+    "id": "env_water_rail",
+    "d": 0,
+    "source": [
+      122,
+      145,
+      206,
+      228
+    ],
+    "source_nonzero_alpha_bbox": [
+      121,
+      144,
+      207,
+      230
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      122,
+      144,
+      206,
+      230
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.036144578313253,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 0,
+      "file": "full-images/env_water_rail-d0.webp",
+      "bbox": [
+        123,
+        146,
+        205,
+        228
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_water_rail",
+    "d": 1,
+    "source": [
+      58,
+      145,
+      142,
+      228
+    ],
+    "source_nonzero_alpha_bbox": [
+      57,
+      144,
+      143,
+      230
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      58,
+      144,
+      142,
+      230
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.036144578313253,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 1,
+      "file": "full-images/env_water_rail-d1.webp",
+      "bbox": [
+        59,
+        146,
+        141,
+        228
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_water_rail",
+    "d": 2,
+    "source": [
+      58,
+      177,
+      142,
+      260
+    ],
+    "source_nonzero_alpha_bbox": [
+      57,
+      176,
+      143,
+      262
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      58,
+      176,
+      142,
+      262
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.036144578313253,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 2,
+      "file": "full-images/env_water_rail-d2.webp",
+      "bbox": [
+        59,
+        178,
+        141,
+        260
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_water_rail",
+    "d": 3,
+    "source": [
+      122,
+      177,
+      206,
+      260
+    ],
+    "source_nonzero_alpha_bbox": [
+      121,
+      176,
+      207,
+      262
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      122,
+      176,
+      206,
+      262
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.036144578313253,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 3,
+      "file": "full-images/env_water_rail-d3.webp",
+      "bbox": [
+        123,
+        178,
+        205,
+        260
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_water_rail_corner",
+    "d": 0,
+    "source": [
+      58,
+      145,
+      206,
+      228
+    ],
+    "source_nonzero_alpha_bbox": [
+      57,
+      144,
+      207,
+      230
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      58,
+      144,
+      206,
+      230
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.036144578313253,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 0,
+      "file": "full-images/env_water_rail_corner-d0.webp",
+      "bbox": [
+        59,
+        146,
+        205,
+        228
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "top",
+          "xy": [
+            163,
+            173.23076923076928,
+            188,
+            184.23076923076925
+          ],
+          "degrees": 23.749494492866745,
+          "error": 2.8155565071332553,
+          "rmse": 0.8765181251227189,
+          "length": 26
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_water_rail_corner",
+    "d": 1,
+    "source": [
+      58,
+      145,
+      142,
+      260
+    ],
+    "source_nonzero_alpha_bbox": [
+      57,
+      144,
+      143,
+      262
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      58,
+      144,
+      142,
+      262
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.0260869565217392,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 1,
+      "file": "full-images/env_water_rail_corner-d1.webp",
+      "bbox": [
+        59,
+        146,
+        141,
+        260
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_water_rail_corner",
+    "d": 2,
+    "source": [
+      58,
+      177,
+      206,
+      260
+    ],
+    "source_nonzero_alpha_bbox": [
+      57,
+      176,
+      207,
+      262
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      58,
+      176,
+      206,
+      262
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.036144578313253,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 2,
+      "file": "full-images/env_water_rail_corner-d2.webp",
+      "bbox": [
+        59,
+        178,
+        205,
+        260
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_water_rail_corner",
+    "d": 3,
+    "source": [
+      122,
+      145,
+      206,
+      260
+    ],
+    "source_nonzero_alpha_bbox": [
+      121,
+      144,
+      207,
+      262
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      122,
+      144,
+      206,
+      262
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.0260869565217392,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 3,
+      "file": "full-images/env_water_rail_corner-d3.webp",
+      "bbox": [
+        123,
+        146,
+        205,
+        260
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_water_rail_end",
+    "d": 0,
+    "source": [
+      122,
+      145,
+      206,
+      228
+    ],
+    "source_nonzero_alpha_bbox": [
+      121,
+      144,
+      207,
+      230
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      122,
+      144,
+      206,
+      230
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.036144578313253,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 0,
+      "file": "full-images/env_water_rail_end-d0.webp",
+      "bbox": [
+        123,
+        146,
+        205,
+        228
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_water_rail_end",
+    "d": 1,
+    "source": [
+      58,
+      145,
+      142,
+      228
+    ],
+    "source_nonzero_alpha_bbox": [
+      57,
+      144,
+      143,
+      230
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      58,
+      144,
+      142,
+      230
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.036144578313253,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 1,
+      "file": "full-images/env_water_rail_end-d1.webp",
+      "bbox": [
+        59,
+        146,
+        141,
+        228
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_water_rail_end",
+    "d": 2,
+    "source": [
+      58,
+      177,
+      142,
+      260
+    ],
+    "source_nonzero_alpha_bbox": [
+      57,
+      176,
+      143,
+      262
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      58,
+      176,
+      142,
+      262
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.036144578313253,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 2,
+      "file": "full-images/env_water_rail_end-d2.webp",
+      "bbox": [
+        59,
+        178,
+        141,
+        260
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_water_rail_end",
+    "d": 3,
+    "source": [
+      122,
+      177,
+      206,
+      260
+    ],
+    "source_nonzero_alpha_bbox": [
+      121,
+      176,
+      207,
+      262
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      122,
+      176,
+      206,
+      262
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.036144578313253,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 3,
+      "file": "full-images/env_water_rail_end-d3.webp",
+      "bbox": [
+        123,
+        178,
+        205,
+        260
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -33,
+      "top": -48,
+      "logical_w": 66.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_street_lamp",
+    "d": 0,
+    "source": [
+      113,
+      80,
+      167,
+      248
+    ],
+    "source_nonzero_alpha_bbox": [
+      112,
+      79,
+      169,
+      249
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      112,
+      80,
+      164,
+      248
+    ],
+    "width_ratio": 0.9629629629629629,
+    "height_ratio": 1.0,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 0,
+      "file": "full-images/env_street_lamp-d0.webp",
+      "bbox": [
+        113,
+        80,
+        167,
+        248
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -52,
+      "logical_w": 64.0,
+      "logical_h": 84.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_street_lamp",
+    "d": 1,
+    "source": [
+      114,
+      64,
+      166,
+      248
+    ],
+    "source_nonzero_alpha_bbox": [
+      113,
+      63,
+      167,
+      249
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      112,
+      78,
+      164,
+      248
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 0.9239130434782609,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 1,
+      "file": "full-images/env_street_lamp-d1.webp",
+      "bbox": [
+        114,
+        64,
+        166,
+        248
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -52,
+      "logical_w": 64.0,
+      "logical_h": 84.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_street_lamp",
+    "d": 2,
+    "source": [
+      68,
+      77,
+      120,
+      248
+    ],
+    "source_nonzero_alpha_bbox": [
+      65,
+      75,
+      123,
+      250
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      92,
+      78,
+      144,
+      248
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 0.9941520467836257,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 2,
+      "file": "full-images/env_street_lamp-d2.webp",
+      "bbox": [
+        68,
+        78,
+        120,
+        247
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -52,
+      "logical_w": 64.0,
+      "logical_h": 84.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_street_lamp",
+    "d": 3,
+    "source": [
+      76,
+      78,
+      125,
+      248
+    ],
+    "source_nonzero_alpha_bbox": [
+      74,
+      75,
+      128,
+      251
+    ],
+    "bbox_threshold": "alpha > 128, excludes near-invisible source speckles",
+    "candidate": [
+      92,
+      80,
+      144,
+      248
+    ],
+    "width_ratio": 1.0612244897959184,
+    "height_ratio": 0.9882352941176471,
+    "canvas_preserved": true,
+    "registration_preserved": {
+      "d": 3,
+      "file": "full-images/env_street_lamp-d3.webp",
+      "bbox": [
+        77,
+        78,
+        125,
+        248
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -52,
+      "logical_w": 64.0,
+      "logical_h": 84.0,
+      "signals": [
+        {
+          "side": "top",
+          "xy": [
+            89,
+            78.60333333333334,
+            112,
+            88.31333333333335
+          ],
+          "degrees": 22.888202486534738,
+          "error": 3.676848513465263,
+          "rmse": 0.8414496061045625,
+          "length": 24
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "status": "VISUALLY_REVIEWED_CANDIDATES",
+  "reviewer": "dispatched worker using view_image",
+  "all_eight_final_facings_reviewed": true,
+  "files": [
+    "env_bus-comparison.png",
+    "env_car-comparison.png"
+  ],
+  "observations": [
+    "Bus proportions corrected from same-scale original board; front/rear and door-side identities remain fixed across rotation.",
+    "Car rear glass now visible; red rear lamps differ from front grille/headlights.",
+    "Rounded body corners, sloped cabin, curved tires and hub details retained.",
+    "Wheel ground contact reviewed on floor grids and checked with saved pixel patches.",
+    "Reports retain full original rectangular canvases and matched registration."
+  ],
+  "limits": [
+    "No art95 score.",
+    "No runtime or browser QA.",
+    "Some far wheels are occluded, not missing geometry.",
+    "Original car facings repeat front details; authored rear interpretation requires coordinator/user visual review."
+  ],
+  "bus_refinement": {
+    "task": "task_89963b04f982",
+    "exact_final_board_reviewed": "env_bus-comparison.png",
+    "observations": [
+      "Both vents show raised shaded side faces and a modest rim in all four facings.",
+      "Cream walls have warm side shading; blue underbody, bumpers and tire bases have richer depth.",
+      "Nonvent geometry, registration and outlines unchanged.",
+      "All four accepted car candidate PNGs remain byte-identical."
+    ],
+    "local_qa": "verification / extra-qa / refinement-qa PASS",
+    "runtime_qa": "PENDING_COORDINATOR"
+  }
+}

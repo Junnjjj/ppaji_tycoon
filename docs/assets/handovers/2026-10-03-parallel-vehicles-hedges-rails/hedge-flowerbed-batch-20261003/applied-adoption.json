@@ -1,0 +1,414 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "env_hedge": "hedge-flowerbed-batch-20261003",
+    "env_hedge_corner": "hedge-flowerbed-batch-20261003",
+    "env_hedge_end": "hedge-flowerbed-batch-20261003",
+    "env_long_flowerbed": "hedge-flowerbed-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "env_hedge",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_hedge/d0.png",
+      "source_sha256": "4f28dc930d5b9d14776281be0f9941a592c2e6156ea76a5ffeb5bfeef5357af6",
+      "old": {
+        "file": "fac_env_hedge_0.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "ac3453e42b7c64f5f919a924c7d651921d92d9db468540368b135776e278cf52",
+        "bytes": 7222
+      },
+      "new": {
+        "file": "fac_env_hedge_0_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "68597129c27b2d2583360a758614412feac6b9ba6e8fa68d381d602eeeb0700a",
+        "bytes": 8246
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_hedge",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_hedge/d1.png",
+      "source_sha256": "8b058dd847ed0e01163040670e0afea250794197a02b2c4c14565285c24df956",
+      "old": {
+        "file": "fac_env_hedge_1.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "362f1532682b31f624af267f1d8cfddd481c6539259ce1b28353b68b46f55a8e",
+        "bytes": 7394
+      },
+      "new": {
+        "file": "fac_env_hedge_1_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "3733ddd233f39e0dcb959281ad464214ba42bd59c00c98609661312fe05400ec",
+        "bytes": 8124
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_hedge",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_hedge/d2.png",
+      "source_sha256": "edf0dced63a057a0fa5c600f52628aa4a9244d90e88498b22fd664433c1ee20d",
+      "old": {
+        "file": "fac_env_hedge_2.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "af5829d7ec4192a5930aafc85d2c42d35ba416bc58176982a3ffa9d70680a9c0",
+        "bytes": 6908
+      },
+      "new": {
+        "file": "fac_env_hedge_2_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "bd8017919b36933edebf5fc81e80229f44f8eaa31c05903befe8b5d647e37ead",
+        "bytes": 8336
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_hedge",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_hedge/d3.png",
+      "source_sha256": "b674151b35435bb8c890e636e5f40371c9d24269f2bc9946fb80a842bbaf6a35",
+      "old": {
+        "file": "fac_env_hedge_3.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "409039a493c61481df43940472b88857a8bc9d7ccfaafb4ee83859423c2e939d",
+        "bytes": 7202
+      },
+      "new": {
+        "file": "fac_env_hedge_3_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "7f10f515c4999ce4f2e9b8a5f1a7afc18e11a1c4db9b8b47a7ea68c899c224aa",
+        "bytes": 8130
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_hedge_corner",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_hedge_corner/d0.png",
+      "source_sha256": "817f6f92f82b314cda9259f46b9451c3e9899ffc1d5742168f6d4348e4cae6c4",
+      "old": {
+        "file": "fac_env_hedge_corner_0.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "313dba3aed9e3471501b5cb6e39ae8167176aaee16f640139aca121eb6bb8701",
+        "bytes": 12010
+      },
+      "new": {
+        "file": "fac_env_hedge_corner_0_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "1375e95ef3640dcd07e532e71cc42bac600d454a9748ac2e7bc479c56168ee4b",
+        "bytes": 14662
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_hedge_corner",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_hedge_corner/d1.png",
+      "source_sha256": "03f891863ffe794c9f71bdc2028594a230facdf7d9fb4dd03a36c2eb4a0f9ec4",
+      "old": {
+        "file": "fac_env_hedge_corner_1.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "50edf037832a71b33913f8a145989f941b990991f91fa9f39cfd0b774964ec98",
+        "bytes": 12326
+      },
+      "new": {
+        "file": "fac_env_hedge_corner_1_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "ee682b97cb07fdf432d0aa0f77d341641e34064bc04749b42c88a4be699096a1",
+        "bytes": 12728
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_hedge_corner",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_hedge_corner/d2.png",
+      "source_sha256": "d8eaf329b4183fd25ad20ed3cf541bd13fec7e3f8b505877bb3451ebb80fc83f",
+      "old": {
+        "file": "fac_env_hedge_corner_2.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "c5fa31ec3663ad0438d267bd908f02208c3f98fcee0b54c209f04311c7ec155f",
+        "bytes": 10984
+      },
+      "new": {
+        "file": "fac_env_hedge_corner_2_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "3f2a472a8c120f54cb9f5a91aa802de30fce8454443ebd35bdba39396670cd43",
+        "bytes": 14960
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_hedge_corner",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_hedge_corner/d3.png",
+      "source_sha256": "88aeaf2ef8ee931cc9d1d7dfdbc0622b701851f1c4ebd439ece62f209a537659",
+      "old": {
+        "file": "fac_env_hedge_corner_3.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "21aa11d0ff1085ad5e8d62b2d8a5bcd6fa01bfe02c973e593619924f641b22a1",
+        "bytes": 11270
+      },
+      "new": {
+        "file": "fac_env_hedge_corner_3_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "d82363ff49e1abf5789fe7077b7efeec9d8eda20d379e5bfee8ba024196f6651",
+        "bytes": 12972
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_hedge_end",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_hedge_end/d0.png",
+      "source_sha256": "4f28dc930d5b9d14776281be0f9941a592c2e6156ea76a5ffeb5bfeef5357af6",
+      "old": {
+        "file": "fac_env_hedge_end_0.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "9cc3825b7b02aa596cc71e82aa66011f96411e01f701a6e6085f93ee931e80e9",
+        "bytes": 7392
+      },
+      "new": {
+        "file": "fac_env_hedge_end_0_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "68597129c27b2d2583360a758614412feac6b9ba6e8fa68d381d602eeeb0700a",
+        "bytes": 8246
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_hedge_end",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_hedge_end/d1.png",
+      "source_sha256": "8b058dd847ed0e01163040670e0afea250794197a02b2c4c14565285c24df956",
+      "old": {
+        "file": "fac_env_hedge_end_1.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "e41469cb03f1ee8fa89f6934b71eebfda553dbff76f853e37e283a4c520e0461",
+        "bytes": 7526
+      },
+      "new": {
+        "file": "fac_env_hedge_end_1_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "3733ddd233f39e0dcb959281ad464214ba42bd59c00c98609661312fe05400ec",
+        "bytes": 8124
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_hedge_end",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_hedge_end/d2.png",
+      "source_sha256": "edf0dced63a057a0fa5c600f52628aa4a9244d90e88498b22fd664433c1ee20d",
+      "old": {
+        "file": "fac_env_hedge_end_2.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "932fdb2c0326551f9b4fd87e2b74e4c5d0b641e8b0a8b68fb04f02b162884ff6",
+        "bytes": 7054
+      },
+      "new": {
+        "file": "fac_env_hedge_end_2_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "bd8017919b36933edebf5fc81e80229f44f8eaa31c05903befe8b5d647e37ead",
+        "bytes": 8336
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_hedge_end",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_hedge_end/d3.png",
+      "source_sha256": "b674151b35435bb8c890e636e5f40371c9d24269f2bc9946fb80a842bbaf6a35",
+      "old": {
+        "file": "fac_env_hedge_end_3.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "faff60fa966c77f2a4bdc85c5de2d2ebad2bd45dde233f22a68812d6662b007b",
+        "bytes": 7322
+      },
+      "new": {
+        "file": "fac_env_hedge_end_3_accepted_20261003.webp",
+        "w": 32,
+        "h": 48,
+        "pad": 16,
+        "sha256": "7f10f515c4999ce4f2e9b8a5f1a7afc18e11a1c4db9b8b47a7ea68c899c224aa",
+        "bytes": 8130
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_long_flowerbed",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_long_flowerbed/d0.png",
+      "source_sha256": "777e3beac4361d48d3137a7e32b46e22dd9871fdb6851d5e7d3285bfd4057236",
+      "old": {
+        "file": "fac_env_long_flowerbed_0.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "fc19f3d2c08c7b59d957ffd2b16b33c882fa389f752766c27344ea261f556f9d",
+        "bytes": 23704
+      },
+      "new": {
+        "file": "fac_env_long_flowerbed_0_accepted_20261003.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "72b2190d86f5c8d0584887eee5bf006785e45b83d1ee980c6bf15711f3c8cd1e",
+        "bytes": 21696
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_long_flowerbed",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_long_flowerbed/d1.png",
+      "source_sha256": "3964940eab8989a2b2a843ac3ce22c4ec05ecb05620742cbcaf4b63cfa04eea3",
+      "old": {
+        "file": "fac_env_long_flowerbed_1.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "a415a80a1e63891fe0f9005cd66f7bd90731b722a68f2bcf66ec3ef7b4c3dd93",
+        "bytes": 22274
+      },
+      "new": {
+        "file": "fac_env_long_flowerbed_1_accepted_20261003.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "fcad9db7b53282328c3dbf8499e17e7c314f7a91c4d0df7b3babc2f3b46ce6c4",
+        "bytes": 22350
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_long_flowerbed",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_long_flowerbed/d2.png",
+      "source_sha256": "389448b033432f5a9ccb8707107cff8ee1a6cfdd82522335a7e4fe47e3b2440e",
+      "old": {
+        "file": "fac_env_long_flowerbed_2.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "dea0c505dd197e68cce9498438aac9901948e6c1c877d9803853d98795741afd",
+        "bytes": 22770
+      },
+      "new": {
+        "file": "fac_env_long_flowerbed_2_accepted_20261003.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "47ff7670060d43d27d3cbeb158002477652df3045d603a9f9a318f626811d052",
+        "bytes": 21920
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_long_flowerbed",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/hedge-flowerbed-batch-20261003/candidates/env_long_flowerbed/d3.png",
+      "source_sha256": "861c7570d17732df1b0a1e5555def94d288f6dc23ed192693b242220f73d15cb",
+      "old": {
+        "file": "fac_env_long_flowerbed_3.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "a4e3fd707d2eefc8488f4e836ab7ec1cd8a2484fe7af99f1513dd5e12b8a1984",
+        "bytes": 22782
+      },
+      "new": {
+        "file": "fac_env_long_flowerbed_3_accepted_20261003.webp",
+        "w": 48,
+        "h": 56,
+        "pad": 16,
+        "sha256": "2dad758b5b2108ca758c27ce4977af60f8bfffb7591f9ec173373b2db9e78542",
+        "bytes": 21942
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

@@ -1,0 +1,282 @@
+[
+  {
+    "id": "env_bus",
+    "d": 0,
+    "canvas": [
+      448,
+      352
+    ],
+    "original_bbox": [
+      14,
+      39,
+      415,
+      347
+    ],
+    "candidate_bbox": [
+      29,
+      33,
+      419,
+      325
+    ],
+    "original_opaque_bbox": [
+      36,
+      41,
+      412,
+      316
+    ],
+    "candidate_opaque_bbox": [
+      30,
+      34,
+      418,
+      324
+    ],
+    "width_ratio": 0.972568578553616,
+    "height_ratio": 0.948051948051948,
+    "registration": "unaltered source frame; no recenter"
+  },
+  {
+    "id": "env_bus",
+    "d": 1,
+    "canvas": [
+      448,
+      352
+    ],
+    "original_bbox": [
+      34,
+      30,
+      415,
+      318
+    ],
+    "candidate_bbox": [
+      29,
+      33,
+      419,
+      325
+    ],
+    "original_opaque_bbox": [
+      36,
+      37,
+      412,
+      316
+    ],
+    "candidate_opaque_bbox": [
+      30,
+      34,
+      418,
+      324
+    ],
+    "width_ratio": 1.0236220472440944,
+    "height_ratio": 1.0138888888888888,
+    "registration": "unaltered source frame; no recenter"
+  },
+  {
+    "id": "env_bus",
+    "d": 2,
+    "canvas": [
+      448,
+      352
+    ],
+    "original_bbox": [
+      33,
+      36,
+      417,
+      345
+    ],
+    "candidate_bbox": [
+      29,
+      33,
+      419,
+      325
+    ],
+    "original_opaque_bbox": [
+      36,
+      39,
+      415,
+      319
+    ],
+    "candidate_opaque_bbox": [
+      30,
+      34,
+      418,
+      324
+    ],
+    "width_ratio": 1.015625,
+    "height_ratio": 0.9449838187702265,
+    "registration": "unaltered source frame; no recenter"
+  },
+  {
+    "id": "env_bus",
+    "d": 3,
+    "canvas": [
+      448,
+      352
+    ],
+    "original_bbox": [
+      35,
+      35,
+      414,
+      318
+    ],
+    "candidate_bbox": [
+      29,
+      33,
+      419,
+      325
+    ],
+    "original_opaque_bbox": [
+      36,
+      35,
+      412,
+      316
+    ],
+    "candidate_opaque_bbox": [
+      30,
+      34,
+      418,
+      324
+    ],
+    "width_ratio": 1.029023746701847,
+    "height_ratio": 1.0318021201413428,
+    "registration": "unaltered source frame; no recenter"
+  },
+  {
+    "id": "env_car",
+    "d": 0,
+    "canvas": [
+      192,
+      224
+    ],
+    "original_bbox": [
+      7,
+      78,
+      185,
+      205
+    ],
+    "candidate_bbox": [
+      9,
+      81,
+      183,
+      211
+    ],
+    "original_opaque_bbox": [
+      8,
+      80,
+      184,
+      204
+    ],
+    "candidate_opaque_bbox": [
+      10,
+      82,
+      182,
+      210
+    ],
+    "width_ratio": 0.9775280898876404,
+    "height_ratio": 1.0236220472440944,
+    "registration": "unaltered source frame; no recenter"
+  },
+  {
+    "id": "env_car",
+    "d": 1,
+    "canvas": [
+      192,
+      224
+    ],
+    "original_bbox": [
+      6,
+      78,
+      186,
+      206
+    ],
+    "candidate_bbox": [
+      9,
+      79,
+      183,
+      211
+    ],
+    "original_opaque_bbox": [
+      8,
+      80,
+      184,
+      204
+    ],
+    "candidate_opaque_bbox": [
+      10,
+      80,
+      182,
+      210
+    ],
+    "width_ratio": 0.9666666666666667,
+    "height_ratio": 1.03125,
+    "registration": "unaltered source frame; no recenter"
+  },
+  {
+    "id": "env_car",
+    "d": 2,
+    "canvas": [
+      192,
+      224
+    ],
+    "original_bbox": [
+      7,
+      82,
+      186,
+      206
+    ],
+    "candidate_bbox": [
+      9,
+      79,
+      183,
+      211
+    ],
+    "original_opaque_bbox": [
+      8,
+      83,
+      184,
+      204
+    ],
+    "candidate_opaque_bbox": [
+      10,
+      80,
+      182,
+      210
+    ],
+    "width_ratio": 0.9720670391061452,
+    "height_ratio": 1.064516129032258,
+    "registration": "unaltered source frame; no recenter"
+  },
+  {
+    "id": "env_car",
+    "d": 3,
+    "canvas": [
+      192,
+      224
+    ],
+    "original_bbox": [
+      7,
+      77,
+      185,
+      205
+    ],
+    "candidate_bbox": [
+      9,
+      81,
+      183,
+      211
+    ],
+    "original_opaque_bbox": [
+      8,
+      78,
+      184,
+      204
+    ],
+    "candidate_opaque_bbox": [
+      10,
+      82,
+      182,
+      210
+    ],
+    "width_ratio": 0.9775280898876404,
+    "height_ratio": 1.015625,
+    "registration": "unaltered source frame; no recenter"
+  }
+]

@@ -1,0 +1,114 @@
+[
+  {
+    "id": "env_hedge",
+    "d": 0,
+    "sha256": "68597129c27b2d2583360a758614412feac6b9ba6e8fa68d381d602eeeb0700a",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_hedge",
+    "d": 1,
+    "sha256": "3733ddd233f39e0dcb959281ad464214ba42bd59c00c98609661312fe05400ec",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_hedge",
+    "d": 2,
+    "sha256": "bd8017919b36933edebf5fc81e80229f44f8eaa31c05903befe8b5d647e37ead",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_hedge",
+    "d": 3,
+    "sha256": "7f10f515c4999ce4f2e9b8a5f1a7afc18e11a1c4db9b8b47a7ea68c899c224aa",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_hedge_corner",
+    "d": 0,
+    "sha256": "1375e95ef3640dcd07e532e71cc42bac600d454a9748ac2e7bc479c56168ee4b",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_hedge_corner",
+    "d": 1,
+    "sha256": "ee682b97cb07fdf432d0aa0f77d341641e34064bc04749b42c88a4be699096a1",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_hedge_corner",
+    "d": 2,
+    "sha256": "3f2a472a8c120f54cb9f5a91aa802de30fce8454443ebd35bdba39396670cd43",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_hedge_corner",
+    "d": 3,
+    "sha256": "d82363ff49e1abf5789fe7077b7efeec9d8eda20d379e5bfee8ba024196f6651",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_hedge_end",
+    "d": 0,
+    "sha256": "68597129c27b2d2583360a758614412feac6b9ba6e8fa68d381d602eeeb0700a",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_hedge_end",
+    "d": 1,
+    "sha256": "3733ddd233f39e0dcb959281ad464214ba42bd59c00c98609661312fe05400ec",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_hedge_end",
+    "d": 2,
+    "sha256": "bd8017919b36933edebf5fc81e80229f44f8eaa31c05903befe8b5d647e37ead",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_hedge_end",
+    "d": 3,
+    "sha256": "7f10f515c4999ce4f2e9b8a5f1a7afc18e11a1c4db9b8b47a7ea68c899c224aa",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_long_flowerbed",
+    "d": 0,
+    "sha256": "72b2190d86f5c8d0584887eee5bf006785e45b83d1ee980c6bf15711f3c8cd1e",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_long_flowerbed",
+    "d": 1,
+    "sha256": "fcad9db7b53282328c3dbf8499e17e7c314f7a91c4d0df7b3babc2f3b46ce6c4",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_long_flowerbed",
+    "d": 2,
+    "sha256": "47ff7670060d43d27d3cbeb158002477652df3045d603a9f9a318f626811d052",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_long_flowerbed",
+    "d": 3,
+    "sha256": "2dad758b5b2108ca758c27ce4977af60f8bfffb7591f9ec173373b2db9e78542",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

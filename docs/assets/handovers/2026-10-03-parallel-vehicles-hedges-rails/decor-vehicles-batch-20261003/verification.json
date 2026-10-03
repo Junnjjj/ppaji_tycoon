@@ -1,0 +1,1674 @@
+{
+  "status": "PASS",
+  "failures": [],
+  "assets": [
+    {
+      "id": "env_bus",
+      "joints": [
+        {
+          "a": "blue-skirt",
+          "b": "body",
+          "aabb_overlap": [
+            4.52,
+            1.46,
+            6.24
+          ],
+          "passed": true
+        },
+        {
+          "a": "axle-0",
+          "b": "body",
+          "aabb_overlap": [
+            0.07000000000000006,
+            1.46,
+            0.42900000000000027
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-0-0",
+          "b": "axle-0",
+          "aabb_overlap": [
+            0.07000000000000006,
+            0.1250000000000002,
+            0.8580000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-0-0--1",
+          "b": "wheel-0-0",
+          "aabb_overlap": [
+            0.16874999999999996,
+            0.003000000000000086,
+            2.6999999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-0-0-1",
+          "b": "wheel-0-0",
+          "aabb_overlap": [
+            0.16874999999999996,
+            0.0030000000000002247,
+            2.6999999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-0-1",
+          "b": "axle-0",
+          "aabb_overlap": [
+            0.07000000000000006,
+            0.125,
+            0.8580000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-0-1--1",
+          "b": "wheel-0-1",
+          "aabb_overlap": [
+            0.16874999999999996,
+            0.0030000000000005578,
+            2.6999999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-0-1-1",
+          "b": "wheel-0-1",
+          "aabb_overlap": [
+            0.16874999999999996,
+            0.0030000000000003357,
+            2.6999999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "axle-1",
+          "b": "body",
+          "aabb_overlap": [
+            0.07000000000000028,
+            1.46,
+            0.42900000000000027
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-1-0",
+          "b": "axle-1",
+          "aabb_overlap": [
+            0.07000000000000028,
+            0.1250000000000002,
+            0.8580000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-1-0--1",
+          "b": "wheel-1-0",
+          "aabb_overlap": [
+            0.16874999999999973,
+            0.003000000000000086,
+            2.6999999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-1-0-1",
+          "b": "wheel-1-0",
+          "aabb_overlap": [
+            0.16874999999999973,
+            0.0030000000000002247,
+            2.6999999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-1-1",
+          "b": "axle-1",
+          "aabb_overlap": [
+            0.07000000000000028,
+            0.125,
+            0.8580000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-1-1--1",
+          "b": "wheel-1-1",
+          "aabb_overlap": [
+            0.16874999999999973,
+            0.0030000000000005578,
+            2.6999999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-1-1-1",
+          "b": "wheel-1-1",
+          "aabb_overlap": [
+            0.16874999999999973,
+            0.0030000000000003357,
+            2.6999999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "roof-vent-0",
+          "b": "body",
+          "aabb_overlap": [
+            0.56,
+            0.54,
+            0.39000000000000057
+          ],
+          "passed": true
+        },
+        {
+          "a": "roof-vent-1",
+          "b": "body",
+          "aabb_overlap": [
+            0.5600000000000005,
+            0.54,
+            0.39000000000000057
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-near-0",
+          "b": "body",
+          "aabb_overlap": [
+            0.25,
+            0.010750000000000037,
+            8.58
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-near-1",
+          "b": "body",
+          "aabb_overlap": [
+            0.53,
+            0.010750000000000037,
+            8.58
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-near-2",
+          "b": "body",
+          "aabb_overlap": [
+            0.5299999999999998,
+            0.010750000000000037,
+            8.58
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-near-3",
+          "b": "body",
+          "aabb_overlap": [
+            0.5300000000000002,
+            0.010750000000000037,
+            8.58
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-near-4",
+          "b": "body",
+          "aabb_overlap": [
+            0.5300000000000002,
+            0.010750000000000037,
+            8.58
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-near-5",
+          "b": "body",
+          "aabb_overlap": [
+            0.41999999999999993,
+            0.010750000000000037,
+            8.58
+          ],
+          "passed": true
+        },
+        {
+          "a": "door-0",
+          "b": "body",
+          "aabb_overlap": [
+            0.3799999999999999,
+            0.016000000000000014,
+            18.720000000000002
+          ],
+          "passed": true
+        },
+        {
+          "a": "door-glass-0",
+          "b": "door-0",
+          "aabb_overlap": [
+            0.28000000000000014,
+            0.013750000000000151,
+            10.14
+          ],
+          "passed": true
+        },
+        {
+          "a": "door-seam-0",
+          "b": "door-0",
+          "aabb_overlap": [
+            0.028000000000000025,
+            0.0040000000000000036,
+            17.94
+          ],
+          "passed": true
+        },
+        {
+          "a": "door-1",
+          "b": "body",
+          "aabb_overlap": [
+            0.3799999999999999,
+            0.016000000000000014,
+            18.720000000000002
+          ],
+          "passed": true
+        },
+        {
+          "a": "door-glass-1",
+          "b": "door-1",
+          "aabb_overlap": [
+            0.28000000000000025,
+            0.013750000000000151,
+            10.14
+          ],
+          "passed": true
+        },
+        {
+          "a": "door-seam-1",
+          "b": "door-1",
+          "aabb_overlap": [
+            0.02799999999999958,
+            0.0040000000000000036,
+            17.94
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-far-0",
+          "b": "body",
+          "aabb_overlap": [
+            0.54,
+            0.010749999999999982,
+            8.58
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-far-1",
+          "b": "body",
+          "aabb_overlap": [
+            0.5399999999999998,
+            0.010749999999999982,
+            8.58
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-far-2",
+          "b": "body",
+          "aabb_overlap": [
+            0.5399999999999998,
+            0.010749999999999982,
+            8.58
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-far-3",
+          "b": "body",
+          "aabb_overlap": [
+            0.54,
+            0.010749999999999982,
+            8.58
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-far-4",
+          "b": "body",
+          "aabb_overlap": [
+            0.54,
+            0.010749999999999982,
+            8.58
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-far-5",
+          "b": "body",
+          "aabb_overlap": [
+            0.54,
+            0.010749999999999982,
+            8.58
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-far-6",
+          "b": "body",
+          "aabb_overlap": [
+            0.3199999999999994,
+            0.010749999999999982,
+            8.58
+          ],
+          "passed": true
+        },
+        {
+          "a": "front-glass",
+          "b": "body",
+          "aabb_overlap": [
+            0.009750000000000009,
+            1.1400000000000001,
+            7.800000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "rear-glass",
+          "b": "body",
+          "aabb_overlap": [
+            0.009749999999999481,
+            1.1400000000000001,
+            7.800000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "front-bumper",
+          "b": "body",
+          "aabb_overlap": [
+            0.038000000000000006,
+            1.4300000000000002,
+            1.0139999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "front-lamp-0",
+          "b": "body",
+          "aabb_overlap": [
+            0.02500000000000005,
+            0.10999999999999999,
+            1.5600000000000005
+          ],
+          "passed": true
+        },
+        {
+          "a": "front-lamp-1",
+          "b": "body",
+          "aabb_overlap": [
+            0.02500000000000005,
+            0.10999999999999988,
+            1.5600000000000005
+          ],
+          "passed": true
+        },
+        {
+          "a": "front-grille",
+          "b": "body",
+          "aabb_overlap": [
+            0.029000000000000054,
+            0.5840000000000001,
+            3.119999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "rear-bumper",
+          "b": "body",
+          "aabb_overlap": [
+            0.038000000000000256,
+            1.4300000000000002,
+            1.0139999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "rear-lamp-0",
+          "b": "body",
+          "aabb_overlap": [
+            0.025000000000000355,
+            0.10999999999999999,
+            1.5600000000000005
+          ],
+          "passed": true
+        },
+        {
+          "a": "rear-lamp-1",
+          "b": "body",
+          "aabb_overlap": [
+            0.025000000000000355,
+            0.10999999999999988,
+            1.5600000000000005
+          ],
+          "passed": true
+        }
+      ],
+      "closed_parts": [
+        {
+          "name": "body",
+          "edges": 240,
+          "passed": true
+        },
+        {
+          "name": "blue-skirt",
+          "edges": 240,
+          "passed": true
+        },
+        {
+          "name": "axle-0",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "wheel-0-0",
+          "edges": 288,
+          "passed": true
+        },
+        {
+          "name": "hub-0-0--1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "hub-0-0-1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "wheel-0-1",
+          "edges": 288,
+          "passed": true
+        },
+        {
+          "name": "hub-0-1--1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "hub-0-1-1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "axle-1",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "wheel-1-0",
+          "edges": 288,
+          "passed": true
+        },
+        {
+          "name": "hub-1-0--1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "hub-1-0-1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "wheel-1-1",
+          "edges": 288,
+          "passed": true
+        },
+        {
+          "name": "hub-1-1--1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "hub-1-1-1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "roof-vent-0",
+          "edges": 240,
+          "passed": true
+        },
+        {
+          "name": "roof-vent-1",
+          "edges": 240,
+          "passed": true
+        },
+        {
+          "name": "window-near-0",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "window-near-1",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "window-near-2",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "window-near-3",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "window-near-4",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "window-near-5",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "door-0",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "door-glass-0",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "door-seam-0",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "door-1",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "door-glass-1",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "door-seam-1",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "window-far-0",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "window-far-1",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "window-far-2",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "window-far-3",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "window-far-4",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "window-far-5",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "window-far-6",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "front-glass",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "rear-glass",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "front-bumper",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "front-lamp-0",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "front-lamp-1",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "front-grille",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "rear-bumper",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "rear-lamp-0",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "rear-lamp-1",
+          "edges": 12,
+          "passed": true
+        }
+      ],
+      "rotation_max_error": 4.440892098500626e-16,
+      "curves_and_contact": [
+        {
+          "part": "wheel-0-0",
+          "radial_rings": [
+            0.0,
+            3.2,
+            4.0
+          ],
+          "min_z": 0.0,
+          "segments": 24,
+          "passed": true
+        },
+        {
+          "part": "wheel-0-1",
+          "radial_rings": [
+            0.0,
+            3.2,
+            4.0
+          ],
+          "min_z": 0.0,
+          "segments": 24,
+          "passed": true
+        },
+        {
+          "part": "wheel-1-0",
+          "radial_rings": [
+            0.0,
+            3.2,
+            4.0
+          ],
+          "min_z": 0.0,
+          "segments": 24,
+          "passed": true
+        },
+        {
+          "part": "wheel-1-1",
+          "radial_rings": [
+            0.0,
+            3.2,
+            4.0
+          ],
+          "min_z": 0.0,
+          "segments": 24,
+          "passed": true
+        }
+      ],
+      "separate_wheels": [
+        {
+          "a": "wheel-0-0",
+          "b": "wheel-0-1",
+          "axis_gaps": [
+            -0.4999999999999999,
+            1.2899999999999998,
+            -8.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-0-0",
+          "b": "wheel-1-0",
+          "axis_gaps": [
+            2.63,
+            -0.17000000000000023,
+            -8.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-0-0",
+          "b": "wheel-1-1",
+          "axis_gaps": [
+            2.63,
+            1.2899999999999998,
+            -8.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-0-1",
+          "b": "wheel-1-0",
+          "axis_gaps": [
+            2.63,
+            1.2899999999999998,
+            -8.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-0-1",
+          "b": "wheel-1-1",
+          "axis_gaps": [
+            2.63,
+            -0.16999999999999993,
+            -8.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-1-0",
+          "b": "wheel-1-1",
+          "axis_gaps": [
+            -0.5,
+            1.2899999999999998,
+            -8.0
+          ],
+          "passed": true
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            66112
+          ],
+          "clipped": false,
+          "line": {
+            "dark_edge_coverage": 1.0,
+            "part": "body",
+            "samples": 177,
+            "missing": [],
+            "expected_slope": 0.5,
+            "saved_slope": 0.49990478004189687,
+            "rms_packed_px": 0.560241737350697,
+            "outline_adjusted_residual": 0.5835593220339009,
+            "visible_in_combined": 177,
+            "combined_coverage": 1.0,
+            "passed": true,
+            "limits": "One long roof silhouette per facing; curved corners excluded, not all interior edges."
+          },
+          "unique_RGB": 4294
+        },
+        {
+          "d": 1,
+          "components": [
+            66136
+          ],
+          "clipped": false,
+          "line": {
+            "dark_edge_coverage": 1.0,
+            "part": "body",
+            "samples": 177,
+            "missing": [],
+            "expected_slope": -0.5,
+            "saved_slope": -0.5000952199581036,
+            "rms_packed_px": 0.5577292400140594,
+            "outline_adjusted_residual": 0.5826553672316321,
+            "visible_in_combined": 177,
+            "combined_coverage": 1.0,
+            "passed": true,
+            "limits": "One long roof silhouette per facing; curved corners excluded, not all interior edges."
+          },
+          "unique_RGB": 4524
+        },
+        {
+          "d": 2,
+          "components": [
+            66136
+          ],
+          "clipped": false,
+          "line": {
+            "dark_edge_coverage": 1.0,
+            "part": "body",
+            "samples": 177,
+            "missing": [],
+            "expected_slope": 0.5,
+            "saved_slope": 0.49990478004189687,
+            "rms_packed_px": 0.560241737350697,
+            "outline_adjusted_residual": 0.5835593220338922,
+            "visible_in_combined": 177,
+            "combined_coverage": 1.0,
+            "passed": true,
+            "limits": "One long roof silhouette per facing; curved corners excluded, not all interior edges."
+          },
+          "unique_RGB": 3956
+        },
+        {
+          "d": 3,
+          "components": [
+            66112
+          ],
+          "clipped": false,
+          "line": {
+            "dark_edge_coverage": 1.0,
+            "part": "body",
+            "samples": 177,
+            "missing": [],
+            "expected_slope": -0.5,
+            "saved_slope": -0.5000952199581036,
+            "rms_packed_px": 0.5577292400140594,
+            "outline_adjusted_residual": 0.5826553672316321,
+            "visible_in_combined": 177,
+            "combined_coverage": 1.0,
+            "passed": true,
+            "limits": "One long roof silhouette per facing; curved corners excluded, not all interior edges."
+          },
+          "unique_RGB": 3969
+        }
+      ],
+      "limits": [
+        "Authored source-inspired geometry, inferred hidden rear details; not original surface recovery.",
+        "AABB joint checks are not exact collision certification. Numeric checks are not art95.",
+        "Saved straight edges exclude intentional curves, short edges and occluded spans."
+      ]
+    },
+    {
+      "id": "env_car",
+      "joints": [
+        {
+          "a": "sill",
+          "b": "body",
+          "aabb_overlap": [
+            1.8199999999999998,
+            0.7400000000000001,
+            2.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "axle-0",
+          "b": "body",
+          "aabb_overlap": [
+            0.06999999999999995,
+            0.7400000000000001,
+            0.04999999999999982
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-0-0",
+          "b": "axle-0",
+          "aabb_overlap": [
+            0.06999999999999995,
+            0.10500000000000001,
+            1.0999999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-0-0--1",
+          "b": "wheel-0-0",
+          "aabb_overlap": [
+            0.16875000000000007,
+            0.003000000000000086,
+            2.7
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-0-0-1",
+          "b": "wheel-0-0",
+          "aabb_overlap": [
+            0.16875000000000007,
+            0.0030000000000000027,
+            2.7
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-0-1",
+          "b": "axle-0",
+          "aabb_overlap": [
+            0.06999999999999995,
+            0.1050000000000002,
+            1.0999999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-0-1--1",
+          "b": "wheel-0-1",
+          "aabb_overlap": [
+            0.16875000000000007,
+            0.0030000000000002247,
+            2.7
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-0-1-1",
+          "b": "wheel-0-1",
+          "aabb_overlap": [
+            0.16875000000000007,
+            0.0030000000000002247,
+            2.7
+          ],
+          "passed": true
+        },
+        {
+          "a": "axle-1",
+          "b": "body",
+          "aabb_overlap": [
+            0.06999999999999984,
+            0.7400000000000001,
+            0.04999999999999982
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-1-0",
+          "b": "axle-1",
+          "aabb_overlap": [
+            0.06999999999999984,
+            0.10500000000000001,
+            1.0999999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-1-0--1",
+          "b": "wheel-1-0",
+          "aabb_overlap": [
+            0.16875000000000018,
+            0.003000000000000086,
+            2.7
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-1-0-1",
+          "b": "wheel-1-0",
+          "aabb_overlap": [
+            0.16875000000000018,
+            0.0030000000000000027,
+            2.7
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-1-1",
+          "b": "axle-1",
+          "aabb_overlap": [
+            0.06999999999999984,
+            0.1050000000000002,
+            1.0999999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-1-1--1",
+          "b": "wheel-1-1",
+          "aabb_overlap": [
+            0.16875000000000018,
+            0.0030000000000002247,
+            2.7
+          ],
+          "passed": true
+        },
+        {
+          "a": "hub-1-1-1",
+          "b": "wheel-1-1",
+          "aabb_overlap": [
+            0.16875000000000018,
+            0.0030000000000002247,
+            2.7
+          ],
+          "passed": true
+        },
+        {
+          "a": "cabin",
+          "b": "body",
+          "aabb_overlap": [
+            1.18,
+            0.69,
+            0.4480000000000004
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-near-0",
+          "b": "cabin",
+          "aabb_overlap": [
+            0.45999999999999996,
+            0.01375000000000004,
+            6.100000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-near-1",
+          "b": "cabin",
+          "aabb_overlap": [
+            0.49,
+            0.01375000000000004,
+            6.100000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "handle-near-0",
+          "b": "body",
+          "aabb_overlap": [
+            0.10000000000000009,
+            0.04100000000000015,
+            0.5999999999999996
+          ],
+          "passed": true
+        },
+        {
+          "a": "handle-near-1",
+          "b": "body",
+          "aabb_overlap": [
+            0.10000000000000009,
+            0.04100000000000015,
+            0.5999999999999996
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-far-0",
+          "b": "cabin",
+          "aabb_overlap": [
+            0.45999999999999996,
+            0.013749999999999984,
+            6.100000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "window-far-1",
+          "b": "cabin",
+          "aabb_overlap": [
+            0.49,
+            0.013749999999999984,
+            6.100000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "handle-far-0",
+          "b": "body",
+          "aabb_overlap": [
+            0.10000000000000009,
+            0.04099999999999998,
+            0.5999999999999996
+          ],
+          "passed": true
+        },
+        {
+          "a": "handle-far-1",
+          "b": "body",
+          "aabb_overlap": [
+            0.10000000000000009,
+            0.04099999999999998,
+            0.5999999999999996
+          ],
+          "passed": true
+        },
+        {
+          "a": "front-glass",
+          "b": "cabin",
+          "aabb_overlap": [
+            0.15666134411106547,
+            0.52,
+            6.074013460438914
+          ],
+          "passed": true
+        },
+        {
+          "a": "rear-glass",
+          "b": "cabin",
+          "aabb_overlap": [
+            0.205100118730978,
+            0.5,
+            6.429264690576689
+          ],
+          "passed": true
+        },
+        {
+          "a": "mirror-stalk-0",
+          "b": "body",
+          "aabb_overlap": [
+            0.04500000000000004,
+            0.02200000000000002,
+            0.40000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "mirror-0",
+          "b": "mirror-stalk-0",
+          "aabb_overlap": [
+            0.04500000000000004,
+            0.086,
+            0.7999999999999989
+          ],
+          "passed": true
+        },
+        {
+          "a": "mirror-stalk-1",
+          "b": "body",
+          "aabb_overlap": [
+            0.04500000000000004,
+            0.02200000000000013,
+            0.40000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "mirror-1",
+          "b": "mirror-stalk-1",
+          "aabb_overlap": [
+            0.04500000000000004,
+            0.08600000000000008,
+            0.7999999999999989
+          ],
+          "passed": true
+        },
+        {
+          "a": "front-bumper",
+          "b": "body",
+          "aabb_overlap": [
+            0.038000000000000006,
+            0.71,
+            1.2000000000000002
+          ],
+          "passed": true
+        },
+        {
+          "a": "front-lamp-0",
+          "b": "body",
+          "aabb_overlap": [
+            0.024999999999999994,
+            0.11000000000000001,
+            1.9000000000000004
+          ],
+          "passed": true
+        },
+        {
+          "a": "front-lamp-1",
+          "b": "body",
+          "aabb_overlap": [
+            0.024999999999999994,
+            0.1100000000000001,
+            1.9000000000000004
+          ],
+          "passed": true
+        },
+        {
+          "a": "front-grille",
+          "b": "body",
+          "aabb_overlap": [
+            0.028999999999999998,
+            0.29600000000000004,
+            1.8999999999999995
+          ],
+          "passed": true
+        },
+        {
+          "a": "rear-bumper",
+          "b": "body",
+          "aabb_overlap": [
+            0.038000000000000034,
+            0.71,
+            1.2000000000000002
+          ],
+          "passed": true
+        },
+        {
+          "a": "rear-lamp-0",
+          "b": "body",
+          "aabb_overlap": [
+            0.02499999999999991,
+            0.11000000000000001,
+            1.9000000000000004
+          ],
+          "passed": true
+        },
+        {
+          "a": "rear-lamp-1",
+          "b": "body",
+          "aabb_overlap": [
+            0.02499999999999991,
+            0.1100000000000001,
+            1.9000000000000004
+          ],
+          "passed": true
+        }
+      ],
+      "closed_parts": [
+        {
+          "name": "body",
+          "edges": 240,
+          "passed": true
+        },
+        {
+          "name": "sill",
+          "edges": 240,
+          "passed": true
+        },
+        {
+          "name": "axle-0",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "wheel-0-0",
+          "edges": 288,
+          "passed": true
+        },
+        {
+          "name": "hub-0-0--1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "hub-0-0-1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "wheel-0-1",
+          "edges": 288,
+          "passed": true
+        },
+        {
+          "name": "hub-0-1--1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "hub-0-1-1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "axle-1",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "wheel-1-0",
+          "edges": 288,
+          "passed": true
+        },
+        {
+          "name": "hub-1-0--1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "hub-1-0-1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "wheel-1-1",
+          "edges": 288,
+          "passed": true
+        },
+        {
+          "name": "hub-1-1--1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "hub-1-1-1",
+          "edges": 144,
+          "passed": true
+        },
+        {
+          "name": "cabin",
+          "edges": 96,
+          "passed": true
+        },
+        {
+          "name": "window-near-0",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "window-near-1",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "handle-near-0",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "handle-near-1",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "window-far-0",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "window-far-1",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "handle-far-0",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "handle-far-1",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "front-glass",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "rear-glass",
+          "edges": 24,
+          "passed": true
+        },
+        {
+          "name": "mirror-0",
+          "edges": 240,
+          "passed": true
+        },
+        {
+          "name": "mirror-stalk-0",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "mirror-1",
+          "edges": 240,
+          "passed": true
+        },
+        {
+          "name": "mirror-stalk-1",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "front-bumper",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "front-lamp-0",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "front-lamp-1",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "front-grille",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "rear-bumper",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "rear-lamp-0",
+          "edges": 12,
+          "passed": true
+        },
+        {
+          "name": "rear-lamp-1",
+          "edges": 12,
+          "passed": true
+        }
+      ],
+      "rotation_max_error": 2.393918396847994e-16,
+      "curves_and_contact": [
+        {
+          "part": "wheel-0-0",
+          "radial_rings": [
+            0.0,
+            2.0,
+            2.5
+          ],
+          "min_z": 0.0,
+          "segments": 24,
+          "passed": true
+        },
+        {
+          "part": "wheel-0-1",
+          "radial_rings": [
+            0.0,
+            2.0,
+            2.5
+          ],
+          "min_z": 0.0,
+          "segments": 24,
+          "passed": true
+        },
+        {
+          "part": "wheel-1-0",
+          "radial_rings": [
+            0.0,
+            2.0,
+            2.5
+          ],
+          "min_z": 0.0,
+          "segments": 24,
+          "passed": true
+        },
+        {
+          "part": "wheel-1-1",
+          "radial_rings": [
+            0.0,
+            2.0,
+            2.5
+          ],
+          "min_z": 0.0,
+          "segments": 24,
+          "passed": true
+        }
+      ],
+      "separate_wheels": [
+        {
+          "a": "wheel-0-0",
+          "b": "wheel-0-1",
+          "axis_gaps": [
+            -0.31249999999999994,
+            0.6099999999999999,
+            -5.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-0-0",
+          "b": "wheel-1-0",
+          "axis_gaps": [
+            0.8175000000000001,
+            -0.13000000000000006,
+            -5.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-0-0",
+          "b": "wheel-1-1",
+          "axis_gaps": [
+            0.8175000000000001,
+            0.6099999999999999,
+            -5.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-0-1",
+          "b": "wheel-1-0",
+          "axis_gaps": [
+            0.8175000000000001,
+            0.6099999999999999,
+            -5.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-0-1",
+          "b": "wheel-1-1",
+          "axis_gaps": [
+            0.8175000000000001,
+            -0.13000000000000023,
+            -5.0
+          ],
+          "passed": true
+        },
+        {
+          "a": "wheel-1-0",
+          "b": "wheel-1-1",
+          "axis_gaps": [
+            -0.3125,
+            0.6099999999999999,
+            -5.0
+          ],
+          "passed": true
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            13708
+          ],
+          "clipped": false,
+          "line": {
+            "dark_edge_coverage": 1.0,
+            "part": "cabin",
+            "samples": 23,
+            "missing": [],
+            "expected_slope": 0.5,
+            "saved_slope": 0.50592885375494,
+            "rms_packed_px": 0.5671902328743741,
+            "outline_adjusted_residual": 0.638695652173916,
+            "visible_in_combined": 23,
+            "combined_coverage": 1.0,
+            "passed": true,
+            "limits": "One long roof silhouette per facing; curved corners excluded, not all interior edges."
+          },
+          "unique_RGB": 2131
+        },
+        {
+          "d": 1,
+          "components": [
+            13692
+          ],
+          "clipped": false,
+          "line": {
+            "dark_edge_coverage": 1.0,
+            "part": "cabin",
+            "samples": 24,
+            "missing": [],
+            "expected_slope": -0.5,
+            "saved_slope": -0.5026086956521756,
+            "rms_packed_px": 0.5587252572091941,
+            "outline_adjusted_residual": 0.6450000000000031,
+            "visible_in_combined": 24,
+            "combined_coverage": 1.0,
+            "passed": true,
+            "limits": "One long roof silhouette per facing; curved corners excluded, not all interior edges."
+          },
+          "unique_RGB": 2360
+        },
+        {
+          "d": 2,
+          "components": [
+            13692
+          ],
+          "clipped": false,
+          "line": {
+            "dark_edge_coverage": 1.0,
+            "part": "cabin",
+            "samples": 24,
+            "missing": [],
+            "expected_slope": 0.5,
+            "saved_slope": 0.48695652173913034,
+            "rms_packed_px": 0.5516772843673701,
+            "outline_adjusted_residual": 0.6450000000000031,
+            "visible_in_combined": 24,
+            "combined_coverage": 1.0,
+            "passed": true,
+            "limits": "One long roof silhouette per facing; curved corners excluded, not all interior edges."
+          },
+          "unique_RGB": 2255
+        },
+        {
+          "d": 3,
+          "components": [
+            13708
+          ],
+          "clipped": false,
+          "line": {
+            "dark_edge_coverage": 1.0,
+            "part": "cabin",
+            "samples": 23,
+            "missing": [],
+            "expected_slope": -0.5,
+            "saved_slope": -0.4940711462450601,
+            "rms_packed_px": 0.5468276238900004,
+            "outline_adjusted_residual": 0.6169565217391334,
+            "visible_in_combined": 23,
+            "combined_coverage": 1.0,
+            "passed": true,
+            "limits": "One long roof silhouette per facing; curved corners excluded, not all interior edges."
+          },
+          "unique_RGB": 2275
+        }
+      ],
+      "limits": [
+        "Authored source-inspired geometry, inferred hidden rear details; not original surface recovery.",
+        "AABB joint checks are not exact collision certification. Numeric checks are not art95.",
+        "Saved straight edges exclude intentional curves, short edges and occluded spans."
+      ]
+    }
+  ],
+  "thresholds": {
+    "slope_error": 0.04,
+    "rms_packed_px": 1.5,
+    "outline_adjusted_residual": 1.5
+  },
+  "runtime_qa": "PENDING_COORDINATOR"
+}

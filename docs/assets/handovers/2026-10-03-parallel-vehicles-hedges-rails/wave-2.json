@@ -1,0 +1,37 @@
+{
+  "run": "run_fc9dbd55012a",
+  "groups": {
+    "decor-vehicles-batch-20261003": [
+      "env_bus",
+      "env_car"
+    ],
+    "hedge-flowerbed-batch-20261003": [
+      "env_hedge",
+      "env_hedge_corner",
+      "env_hedge_end",
+      "env_long_flowerbed"
+    ],
+    "water-rail-lamp-batch-20261003": [
+      "env_water_rail",
+      "env_water_rail_corner",
+      "env_water_rail_end",
+      "env_street_lamp"
+    ]
+  },
+  "dispatches": {
+    "decor-vehicles-batch-20261003": "ctx_c9bded2d9197",
+    "hedge-flowerbed-batch-20261003": "ctx_70595405f32e",
+    "water-rail-lamp-batch-20261003": "ctx_4f7409e92deb"
+  },
+  "applied_before_wave": 59,
+  "main_previous_commit": "bb0f7f6",
+  "status": "applied_and_verified",
+  "refinement_dispatches": {
+    "decor-vehicles-batch-20261003": "ctx_0c44aa604017"
+  },
+  "applied_after_wave": 69,
+  "remaining": 31,
+  "workers": "all succeeded; current owned terminals released",
+  "runtime_frames_exact": 40,
+  "tests_passed": 21
+}

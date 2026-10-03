@@ -1,0 +1,1992 @@
+{
+  "status": "PASS",
+  "connections": [
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail",
+      "d": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            196,
+            220
+          ],
+          "b_pixel": [
+            132,
+            188
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            196,
+            216
+          ],
+          "b_pixel": [
+            132,
+            184
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            196,
+            212
+          ],
+          "b_pixel": [
+            132,
+            180
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            196,
+            208
+          ],
+          "b_pixel": [
+            132,
+            176
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            196,
+            204
+          ],
+          "b_pixel": [
+            132,
+            172
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            196,
+            200
+          ],
+          "b_pixel": [
+            132,
+            168
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            196,
+            196
+          ],
+          "b_pixel": [
+            132,
+            164
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            196,
+            192
+          ],
+          "b_pixel": [
+            132,
+            160
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_end",
+      "d": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            196,
+            220
+          ],
+          "b_pixel": [
+            132,
+            188
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            196,
+            216
+          ],
+          "b_pixel": [
+            132,
+            184
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            196,
+            212
+          ],
+          "b_pixel": [
+            132,
+            180
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            196,
+            208
+          ],
+          "b_pixel": [
+            132,
+            176
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            196,
+            204
+          ],
+          "b_pixel": [
+            132,
+            172
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            196,
+            200
+          ],
+          "b_pixel": [
+            132,
+            168
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            196,
+            196
+          ],
+          "b_pixel": [
+            132,
+            164
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            196,
+            192
+          ],
+          "b_pixel": [
+            132,
+            160
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_corner",
+      "d": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            196,
+            220
+          ],
+          "b_pixel": [
+            132,
+            188
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            196,
+            216
+          ],
+          "b_pixel": [
+            132,
+            184
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            196,
+            212
+          ],
+          "b_pixel": [
+            132,
+            180
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            196,
+            208
+          ],
+          "b_pixel": [
+            132,
+            176
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            196,
+            204
+          ],
+          "b_pixel": [
+            132,
+            172
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            196,
+            200
+          ],
+          "b_pixel": [
+            132,
+            168
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            196,
+            196
+          ],
+          "b_pixel": [
+            132,
+            164
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            196,
+            192
+          ],
+          "b_pixel": [
+            132,
+            160
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail_corner",
+      "b": "env_water_rail",
+      "d": 0,
+      "b_direction": 3,
+      "translation": [
+        -1,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            68,
+            220
+          ],
+          "b_pixel": [
+            196,
+            220
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            68,
+            216
+          ],
+          "b_pixel": [
+            196,
+            216
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            68,
+            212
+          ],
+          "b_pixel": [
+            196,
+            212
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            68,
+            208
+          ],
+          "b_pixel": [
+            196,
+            208
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            68,
+            204
+          ],
+          "b_pixel": [
+            196,
+            204
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            68,
+            200
+          ],
+          "b_pixel": [
+            196,
+            200
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            68,
+            196
+          ],
+          "b_pixel": [
+            196,
+            196
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            68,
+            192
+          ],
+          "b_pixel": [
+            196,
+            192
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail",
+      "d": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            132,
+            188
+          ],
+          "b_pixel": [
+            68,
+            220
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            132,
+            184
+          ],
+          "b_pixel": [
+            68,
+            216
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            132,
+            180
+          ],
+          "b_pixel": [
+            68,
+            212
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            132,
+            176
+          ],
+          "b_pixel": [
+            68,
+            208
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            132,
+            172
+          ],
+          "b_pixel": [
+            68,
+            204
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            132,
+            168
+          ],
+          "b_pixel": [
+            68,
+            200
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            132,
+            164
+          ],
+          "b_pixel": [
+            68,
+            196
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            132,
+            160
+          ],
+          "b_pixel": [
+            68,
+            192
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_end",
+      "d": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            132,
+            188
+          ],
+          "b_pixel": [
+            68,
+            220
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            132,
+            184
+          ],
+          "b_pixel": [
+            68,
+            216
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            132,
+            180
+          ],
+          "b_pixel": [
+            68,
+            212
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            132,
+            176
+          ],
+          "b_pixel": [
+            68,
+            208
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            132,
+            172
+          ],
+          "b_pixel": [
+            68,
+            204
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            132,
+            168
+          ],
+          "b_pixel": [
+            68,
+            200
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            132,
+            164
+          ],
+          "b_pixel": [
+            68,
+            196
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            132,
+            160
+          ],
+          "b_pixel": [
+            68,
+            192
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_corner",
+      "d": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            132,
+            188
+          ],
+          "b_pixel": [
+            68,
+            220
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            132,
+            184
+          ],
+          "b_pixel": [
+            68,
+            216
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            132,
+            180
+          ],
+          "b_pixel": [
+            68,
+            212
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            132,
+            176
+          ],
+          "b_pixel": [
+            68,
+            208
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            132,
+            172
+          ],
+          "b_pixel": [
+            68,
+            204
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            132,
+            168
+          ],
+          "b_pixel": [
+            68,
+            200
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            132,
+            164
+          ],
+          "b_pixel": [
+            68,
+            196
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            132,
+            160
+          ],
+          "b_pixel": [
+            68,
+            192
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail_corner",
+      "b": "env_water_rail",
+      "d": 1,
+      "b_direction": 0,
+      "translation": [
+        1,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            132,
+            252
+          ],
+          "b_pixel": [
+            132,
+            188
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            132,
+            248
+          ],
+          "b_pixel": [
+            132,
+            184
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            132,
+            244
+          ],
+          "b_pixel": [
+            132,
+            180
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            132,
+            240
+          ],
+          "b_pixel": [
+            132,
+            176
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            132,
+            236
+          ],
+          "b_pixel": [
+            132,
+            172
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            132,
+            232
+          ],
+          "b_pixel": [
+            132,
+            168
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            132,
+            228
+          ],
+          "b_pixel": [
+            132,
+            164
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            132,
+            224
+          ],
+          "b_pixel": [
+            132,
+            160
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail",
+      "d": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            68,
+            220
+          ],
+          "b_pixel": [
+            132,
+            252
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            68,
+            216
+          ],
+          "b_pixel": [
+            132,
+            248
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            68,
+            212
+          ],
+          "b_pixel": [
+            132,
+            244
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            68,
+            208
+          ],
+          "b_pixel": [
+            132,
+            240
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            68,
+            204
+          ],
+          "b_pixel": [
+            132,
+            236
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            68,
+            200
+          ],
+          "b_pixel": [
+            132,
+            232
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            68,
+            196
+          ],
+          "b_pixel": [
+            132,
+            228
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            68,
+            192
+          ],
+          "b_pixel": [
+            132,
+            224
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_end",
+      "d": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            68,
+            220
+          ],
+          "b_pixel": [
+            132,
+            252
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            68,
+            216
+          ],
+          "b_pixel": [
+            132,
+            248
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            68,
+            212
+          ],
+          "b_pixel": [
+            132,
+            244
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            68,
+            208
+          ],
+          "b_pixel": [
+            132,
+            240
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            68,
+            204
+          ],
+          "b_pixel": [
+            132,
+            236
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            68,
+            200
+          ],
+          "b_pixel": [
+            132,
+            232
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            68,
+            196
+          ],
+          "b_pixel": [
+            132,
+            228
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            68,
+            192
+          ],
+          "b_pixel": [
+            132,
+            224
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_corner",
+      "d": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            68,
+            220
+          ],
+          "b_pixel": [
+            132,
+            252
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            68,
+            216
+          ],
+          "b_pixel": [
+            132,
+            248
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            68,
+            212
+          ],
+          "b_pixel": [
+            132,
+            244
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            68,
+            208
+          ],
+          "b_pixel": [
+            132,
+            240
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            68,
+            204
+          ],
+          "b_pixel": [
+            132,
+            236
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            68,
+            200
+          ],
+          "b_pixel": [
+            132,
+            232
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            68,
+            196
+          ],
+          "b_pixel": [
+            132,
+            228
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            68,
+            192
+          ],
+          "b_pixel": [
+            132,
+            224
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail_corner",
+      "b": "env_water_rail",
+      "d": 2,
+      "b_direction": 1,
+      "translation": [
+        1,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            196,
+            220
+          ],
+          "b_pixel": [
+            68,
+            220
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            196,
+            216
+          ],
+          "b_pixel": [
+            68,
+            216
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            196,
+            212
+          ],
+          "b_pixel": [
+            68,
+            212
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            196,
+            208
+          ],
+          "b_pixel": [
+            68,
+            208
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            196,
+            204
+          ],
+          "b_pixel": [
+            68,
+            204
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            196,
+            200
+          ],
+          "b_pixel": [
+            68,
+            200
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            196,
+            196
+          ],
+          "b_pixel": [
+            68,
+            196
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            196,
+            192
+          ],
+          "b_pixel": [
+            68,
+            192
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail",
+      "d": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            132,
+            252
+          ],
+          "b_pixel": [
+            196,
+            220
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            132,
+            248
+          ],
+          "b_pixel": [
+            196,
+            216
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            132,
+            244
+          ],
+          "b_pixel": [
+            196,
+            212
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            132,
+            240
+          ],
+          "b_pixel": [
+            196,
+            208
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            132,
+            236
+          ],
+          "b_pixel": [
+            196,
+            204
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            132,
+            232
+          ],
+          "b_pixel": [
+            196,
+            200
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            132,
+            228
+          ],
+          "b_pixel": [
+            196,
+            196
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            132,
+            224
+          ],
+          "b_pixel": [
+            196,
+            192
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_end",
+      "d": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            132,
+            252
+          ],
+          "b_pixel": [
+            196,
+            220
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            132,
+            248
+          ],
+          "b_pixel": [
+            196,
+            216
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            132,
+            244
+          ],
+          "b_pixel": [
+            196,
+            212
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            132,
+            240
+          ],
+          "b_pixel": [
+            196,
+            208
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            132,
+            236
+          ],
+          "b_pixel": [
+            196,
+            204
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            132,
+            232
+          ],
+          "b_pixel": [
+            196,
+            200
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            132,
+            228
+          ],
+          "b_pixel": [
+            196,
+            196
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            132,
+            224
+          ],
+          "b_pixel": [
+            196,
+            192
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_corner",
+      "d": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            132,
+            252
+          ],
+          "b_pixel": [
+            196,
+            220
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            132,
+            248
+          ],
+          "b_pixel": [
+            196,
+            216
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            132,
+            244
+          ],
+          "b_pixel": [
+            196,
+            212
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            132,
+            240
+          ],
+          "b_pixel": [
+            196,
+            208
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            132,
+            236
+          ],
+          "b_pixel": [
+            196,
+            204
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            132,
+            232
+          ],
+          "b_pixel": [
+            196,
+            200
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            132,
+            228
+          ],
+          "b_pixel": [
+            196,
+            196
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            132,
+            224
+          ],
+          "b_pixel": [
+            196,
+            192
+          ],
+          "both_opaque": true
+        }
+      ]
+    },
+    {
+      "a": "env_water_rail_corner",
+      "b": "env_water_rail",
+      "d": 3,
+      "b_direction": 2,
+      "translation": [
+        -1,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true,
+      "saved_pixels": [
+        {
+          "height": 1,
+          "a_pixel": [
+            132,
+            188
+          ],
+          "b_pixel": [
+            132,
+            252
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 2,
+          "a_pixel": [
+            132,
+            184
+          ],
+          "b_pixel": [
+            132,
+            248
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 3,
+          "a_pixel": [
+            132,
+            180
+          ],
+          "b_pixel": [
+            132,
+            244
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 4,
+          "a_pixel": [
+            132,
+            176
+          ],
+          "b_pixel": [
+            132,
+            240
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 5,
+          "a_pixel": [
+            132,
+            172
+          ],
+          "b_pixel": [
+            132,
+            236
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 6,
+          "a_pixel": [
+            132,
+            168
+          ],
+          "b_pixel": [
+            132,
+            232
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 7,
+          "a_pixel": [
+            132,
+            164
+          ],
+          "b_pixel": [
+            132,
+            228
+          ],
+          "both_opaque": true
+        },
+        {
+          "height": 8,
+          "a_pixel": [
+            132,
+            160
+          ],
+          "b_pixel": [
+            132,
+            224
+          ],
+          "both_opaque": true
+        }
+      ]
+    }
+  ],
+  "actual_part_port_checks": [
+    {
+      "id": "env_water_rail",
+      "point": [
+        1,
+        0,
+        0
+      ],
+      "parts": [
+        "rail-post-1"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail",
+      "point": [
+        1,
+        0,
+        4
+      ],
+      "parts": [
+        "rail-post-1"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail",
+      "point": [
+        1,
+        0,
+        8
+      ],
+      "parts": [
+        "rail-post-1"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail",
+      "point": [
+        0,
+        0,
+        0
+      ],
+      "parts": [
+        "rail-post-0"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail",
+      "point": [
+        0,
+        0,
+        4
+      ],
+      "parts": [
+        "rail-post-0"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail",
+      "point": [
+        0,
+        0,
+        8
+      ],
+      "parts": [
+        "rail-post-0"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_corner",
+      "point": [
+        1,
+        0,
+        0
+      ],
+      "parts": [
+        "rail-post-1"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_corner",
+      "point": [
+        1,
+        0,
+        4
+      ],
+      "parts": [
+        "rail-post-1"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_corner",
+      "point": [
+        1,
+        0,
+        8
+      ],
+      "parts": [
+        "rail-post-1"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_corner",
+      "point": [
+        0,
+        1,
+        0
+      ],
+      "parts": [
+        "rail-post-2"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_corner",
+      "point": [
+        0,
+        1,
+        4
+      ],
+      "parts": [
+        "rail-post-2"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_corner",
+      "point": [
+        0,
+        1,
+        8
+      ],
+      "parts": [
+        "rail-post-2"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_end",
+      "point": [
+        1,
+        0,
+        0
+      ],
+      "parts": [
+        "rail-post-1"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_end",
+      "point": [
+        1,
+        0,
+        4
+      ],
+      "parts": [
+        "rail-post-1"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_end",
+      "point": [
+        1,
+        0,
+        8
+      ],
+      "parts": [
+        "rail-post-1"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_end",
+      "point": [
+        0,
+        0,
+        0
+      ],
+      "parts": [
+        "rail-post-0"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_end",
+      "point": [
+        0,
+        0,
+        4
+      ],
+      "parts": [
+        "rail-post-0"
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_end",
+      "point": [
+        0,
+        0,
+        8
+      ],
+      "parts": [
+        "rail-post-0"
+      ],
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "Interior mating ports only; this is sprite continuity, not runtime collision QA.",
+    "Rail posts intentionally overlap exactly at a shared boundary.",
+    "Body AABB coverage is exact only for these axis-aligned closed box parts, not a general mesh collision certificate."
+  ]
+}

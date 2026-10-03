@@ -1,0 +1,114 @@
+[
+  {
+    "id": "env_water_rail",
+    "d": 0,
+    "sha256": "812ca523abd7f8aaba904cb71bff1d55ae814204b82de2d2d08e5bf21e7b8f28",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_water_rail",
+    "d": 1,
+    "sha256": "9e54f68445be0476d08a766353298e326d57b29c8b7cb4713f1f658a42851b01",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_water_rail",
+    "d": 2,
+    "sha256": "1e8ae55c9605e5fc93913741707425f532a792bd922df25e00d86f327f291c9e",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_water_rail",
+    "d": 3,
+    "sha256": "79ae1617f9387f29a577b64a4736d25f7f756e68bab647232873192e67be2797",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_water_rail_corner",
+    "d": 0,
+    "sha256": "6cb0c7a8d601b7b9de377ad971016502758b3305f7e0007ee8282412d51716f8",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_water_rail_corner",
+    "d": 1,
+    "sha256": "9d9d547c7de9a33dad7cdfd004fc41f428ba02477ed88fefd1a65ef5203a2c48",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_water_rail_corner",
+    "d": 2,
+    "sha256": "f0ba677e937bfd3528ce519908133959e2d9790dd252175c47bb49c6bad59b54",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_water_rail_corner",
+    "d": 3,
+    "sha256": "a9eea5f59772425bc14874365f6600e8e950a7736302ba2dd3b8739e4a8120c1",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_water_rail_end",
+    "d": 0,
+    "sha256": "812ca523abd7f8aaba904cb71bff1d55ae814204b82de2d2d08e5bf21e7b8f28",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_water_rail_end",
+    "d": 1,
+    "sha256": "9e54f68445be0476d08a766353298e326d57b29c8b7cb4713f1f658a42851b01",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_water_rail_end",
+    "d": 2,
+    "sha256": "1e8ae55c9605e5fc93913741707425f532a792bd922df25e00d86f327f291c9e",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_water_rail_end",
+    "d": 3,
+    "sha256": "79ae1617f9387f29a577b64a4736d25f7f756e68bab647232873192e67be2797",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_street_lamp",
+    "d": 0,
+    "sha256": "1548197a2b765afa8ef5e185238d664cd378f018d808117120690dbc290ce047",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_street_lamp",
+    "d": 1,
+    "sha256": "d4c857ba153767b695a09fbf3cb8c1186167f06dc34989094f0afcc8fef4d9a5",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_street_lamp",
+    "d": 2,
+    "sha256": "0fa70fbf73b59f851fbc90d9b5b60ff3b2f73d4c6239d307bc58c58442bd5679",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_street_lamp",
+    "d": 3,
+    "sha256": "459c91aed0c5149a0276d3f75c485159f775cbdf12de7db58de5b2a7e47ebfa6",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

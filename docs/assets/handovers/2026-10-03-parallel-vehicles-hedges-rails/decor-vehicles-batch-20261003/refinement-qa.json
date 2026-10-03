@@ -1,0 +1,183 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "check": "registration_unchanged",
+      "passed": true
+    },
+    {
+      "check": "outline_unchanged",
+      "passed": true
+    },
+    {
+      "check": "nonvent_geometry_unchanged",
+      "passed": true
+    },
+    {
+      "check": "car_d0_byte_identical",
+      "passed": true,
+      "sha256": "d880a4e17e9fda4ba523fce279d1a8358a622b2a6bc0b52597bca1af1b414bda"
+    },
+    {
+      "check": "car_d1_byte_identical",
+      "passed": true,
+      "sha256": "8ec19a85fa4d8af48b2ce01fffe8dc0c93166b4eab225a5679f628436af59f3c"
+    },
+    {
+      "check": "car_d2_byte_identical",
+      "passed": true,
+      "sha256": "a856c4f788c6e3830abf872396a18dd021099d90a155c386ca0952a970a349f3"
+    },
+    {
+      "check": "car_d3_byte_identical",
+      "passed": true,
+      "sha256": "948704a2e724c8e0985538c062312695307fc72a501e2bb70ab59bd38e1d7b23"
+    },
+    {
+      "check": "vent_0_raised_rings",
+      "passed": true,
+      "height_rings": [
+        27.79,
+        28.2892,
+        29.6308,
+        30.13
+      ],
+      "above_roof_logical": 1.9499999999999993
+    },
+    {
+      "check": "vent_0_d0_saved_side_shade",
+      "passed": true,
+      "top_rgb": [
+        190.0,
+        199.0,
+        178.0
+      ],
+      "side_rgb": [
+        126.0,
+        146.0,
+        134.0
+      ],
+      "luma_delta": 53.66666666666666
+    },
+    {
+      "check": "vent_0_d1_saved_side_shade",
+      "passed": true,
+      "top_rgb": [
+        190.0,
+        199.0,
+        178.0
+      ],
+      "side_rgb": [
+        111.0,
+        128.0,
+        118.0
+      ],
+      "luma_delta": 70.0
+    },
+    {
+      "check": "vent_0_d2_saved_side_shade",
+      "passed": true,
+      "top_rgb": [
+        190.0,
+        199.0,
+        178.0
+      ],
+      "side_rgb": [
+        129.0,
+        149.0,
+        136.0
+      ],
+      "luma_delta": 51.0
+    },
+    {
+      "check": "vent_0_d3_saved_side_shade",
+      "passed": true,
+      "top_rgb": [
+        190.0,
+        199.0,
+        178.0
+      ],
+      "side_rgb": [
+        113.0,
+        130.0,
+        120.0
+      ],
+      "luma_delta": 68.0
+    },
+    {
+      "check": "vent_1_raised_rings",
+      "passed": true,
+      "height_rings": [
+        27.79,
+        28.2892,
+        29.6308,
+        30.13
+      ],
+      "above_roof_logical": 1.9499999999999993
+    },
+    {
+      "check": "vent_1_d0_saved_side_shade",
+      "passed": true,
+      "top_rgb": [
+        189.0,
+        198.0,
+        177.0
+      ],
+      "side_rgb": [
+        129.0,
+        149.0,
+        136.0
+      ],
+      "luma_delta": 50.0
+    },
+    {
+      "check": "vent_1_d1_saved_side_shade",
+      "passed": true,
+      "top_rgb": [
+        189.0,
+        198.0,
+        177.0
+      ],
+      "side_rgb": [
+        113.0,
+        130.0,
+        120.0
+      ],
+      "luma_delta": 67.0
+    },
+    {
+      "check": "vent_1_d2_saved_side_shade",
+      "passed": true,
+      "top_rgb": [
+        188.0,
+        197.0,
+        176.0
+      ],
+      "side_rgb": [
+        126.0,
+        146.0,
+        134.0
+      ],
+      "luma_delta": 51.66666666666666
+    },
+    {
+      "check": "vent_1_d3_saved_side_shade",
+      "passed": true,
+      "top_rgb": [
+        189.0,
+        198.0,
+        177.0
+      ],
+      "side_rgb": [
+        112.0,
+        129.0,
+        119.0
+      ],
+      "luma_delta": 68.0
+    }
+  ],
+  "limits": [
+    "Pixel samples confirm rendered vent side shading only, not every curve or artistic score.",
+    "Canonical nonvent shape and all registrations are unchanged; main and browser untouched."
+  ]
+}

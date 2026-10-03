@@ -1,0 +1,927 @@
+[
+  {
+    "id": "env_hedge",
+    "d": 0,
+    "source_bbox": [
+      115,
+      156,
+      205,
+      229
+    ],
+    "candidate_bbox": [
+      116,
+      154,
+      204,
+      230
+    ],
+    "source_nonzero_bbox": [
+      114,
+      154,
+      206,
+      231
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.9777777777777777,
+    "height_ratio": 1.0410958904109588,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 0,
+      "file": "full-images/env_hedge-d0.webp",
+      "bbox": [
+        115,
+        156,
+        205,
+        229
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "top",
+          "xy": [
+            115,
+            169.93000000000004,
+            138,
+            155.07000000000005
+          ],
+          "degrees": -32.86597517994763,
+          "error": 6.300924179947632,
+          "rmse": 1.1894920362691908,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_hedge",
+    "d": 1,
+    "source_bbox": [
+      51,
+      156,
+      141,
+      229
+    ],
+    "candidate_bbox": [
+      52,
+      152,
+      140,
+      230
+    ],
+    "source_nonzero_bbox": [
+      50,
+      154,
+      142,
+      231
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.9777777777777777,
+    "height_ratio": 1.0684931506849316,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 1,
+      "file": "full-images/env_hedge-d1.webp",
+      "bbox": [
+        51,
+        156,
+        141,
+        229
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "top",
+          "xy": [
+            51,
+            194.00333333333336,
+            74,
+            178.9133333333333
+          ],
+          "degrees": -33.26835786914223,
+          "error": 6.703306869142228,
+          "rmse": 1.1715503374745435,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_hedge",
+    "d": 2,
+    "source_bbox": [
+      51,
+      188,
+      141,
+      261
+    ],
+    "candidate_bbox": [
+      52,
+      184,
+      140,
+      262
+    ],
+    "source_nonzero_bbox": [
+      50,
+      186,
+      142,
+      263
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.9777777777777777,
+    "height_ratio": 1.0684931506849316,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 2,
+      "file": "full-images/env_hedge-d2.webp",
+      "bbox": [
+        51,
+        188,
+        141,
+        261
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "top",
+          "xy": [
+            51,
+            201.92999999999995,
+            74,
+            187.06999999999994
+          ],
+          "degrees": -32.865975179947654,
+          "error": 6.300924179947653,
+          "rmse": 1.1894920362691885,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_hedge",
+    "d": 3,
+    "source_bbox": [
+      115,
+      188,
+      205,
+      261
+    ],
+    "candidate_bbox": [
+      116,
+      184,
+      204,
+      262
+    ],
+    "source_nonzero_bbox": [
+      114,
+      186,
+      206,
+      263
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.9777777777777777,
+    "height_ratio": 1.0684931506849316,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 3,
+      "file": "full-images/env_hedge-d3.webp",
+      "bbox": [
+        115,
+        188,
+        205,
+        261
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "top",
+          "xy": [
+            115,
+            226.0033333333333,
+            138,
+            210.9133333333333
+          ],
+          "degrees": -33.2683578691421,
+          "error": 6.7033068691421,
+          "rmse": 1.1715503374745464,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_hedge_corner",
+    "d": 0,
+    "source_bbox": [
+      51,
+      156,
+      205,
+      229
+    ],
+    "candidate_bbox": [
+      52,
+      154,
+      204,
+      230
+    ],
+    "source_nonzero_bbox": [
+      50,
+      154,
+      206,
+      231
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.987012987012987,
+    "height_ratio": 1.0410958904109588,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 0,
+      "file": "full-images/env_hedge_corner-d0.webp",
+      "bbox": [
+        51,
+        156,
+        205,
+        229
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "top",
+          "xy": [
+            51,
+            193.7486772486772,
+            77,
+            177.51058201058197
+          ],
+          "degrees": -31.986514188672434,
+          "error": 5.421463188672433,
+          "rmse": 1.1767768738081736,
+          "length": 27
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_hedge_corner",
+    "d": 1,
+    "source_bbox": [
+      44,
+      156,
+      141,
+      261
+    ],
+    "candidate_bbox": [
+      52,
+      152,
+      140,
+      262
+    ],
+    "source_nonzero_bbox": [
+      44,
+      154,
+      142,
+      263
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.9072164948453608,
+    "height_ratio": 1.0476190476190477,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 1,
+      "file": "full-images/env_hedge_corner-d1.webp",
+      "bbox": [
+        44,
+        156,
+        141,
+        261
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_hedge_corner",
+    "d": 2,
+    "source_bbox": [
+      51,
+      188,
+      205,
+      267
+    ],
+    "candidate_bbox": [
+      52,
+      184,
+      204,
+      262
+    ],
+    "source_nonzero_bbox": [
+      50,
+      186,
+      206,
+      268
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.987012987012987,
+    "height_ratio": 0.9873417721518988,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 2,
+      "file": "full-images/env_hedge_corner-d2.webp",
+      "bbox": [
+        51,
+        188,
+        205,
+        266
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_hedge_corner",
+    "d": 3,
+    "source_bbox": [
+      115,
+      156,
+      212,
+      261
+    ],
+    "candidate_bbox": [
+      116,
+      154,
+      204,
+      262
+    ],
+    "source_nonzero_bbox": [
+      114,
+      154,
+      212,
+      263
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.9072164948453608,
+    "height_ratio": 1.0285714285714285,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 3,
+      "file": "full-images/env_hedge_corner-d3.webp",
+      "bbox": [
+        115,
+        156,
+        212,
+        261
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "top",
+          "xy": [
+            115,
+            169.93000000000004,
+            138,
+            155.07000000000005
+          ],
+          "degrees": -32.86597517994763,
+          "error": 6.300924179947632,
+          "rmse": 1.1894920362691908,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_hedge_end",
+    "d": 0,
+    "source_bbox": [
+      115,
+      156,
+      205,
+      230
+    ],
+    "candidate_bbox": [
+      116,
+      154,
+      204,
+      230
+    ],
+    "source_nonzero_bbox": [
+      114,
+      154,
+      206,
+      231
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.9777777777777777,
+    "height_ratio": 1.027027027027027,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 0,
+      "file": "full-images/env_hedge_end-d0.webp",
+      "bbox": [
+        115,
+        156,
+        205,
+        229
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "bottom",
+          "xy": [
+            163,
+            220.01333333333335,
+            186,
+            228.90333333333336
+          ],
+          "degrees": 21.13260074543303,
+          "error": 5.4324502545669695,
+          "rmse": 0.9606729475098686,
+          "length": 24
+        },
+        {
+          "side": "top",
+          "xy": [
+            115,
+            169.93000000000004,
+            138,
+            155.07000000000005
+          ],
+          "degrees": -32.86597517994763,
+          "error": 6.300924179947632,
+          "rmse": 1.1894920362691908,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_hedge_end",
+    "d": 1,
+    "source_bbox": [
+      51,
+      156,
+      141,
+      230
+    ],
+    "candidate_bbox": [
+      52,
+      152,
+      140,
+      230
+    ],
+    "source_nonzero_bbox": [
+      50,
+      154,
+      142,
+      231
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.9777777777777777,
+    "height_ratio": 1.054054054054054,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 1,
+      "file": "full-images/env_hedge_end-d1.webp",
+      "bbox": [
+        51,
+        156,
+        141,
+        229
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "top",
+          "xy": [
+            51,
+            194.00333333333336,
+            74,
+            178.9133333333333
+          ],
+          "degrees": -33.26835786914223,
+          "error": 6.703306869142228,
+          "rmse": 1.1715503374745435,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_hedge_end",
+    "d": 2,
+    "source_bbox": [
+      51,
+      188,
+      141,
+      262
+    ],
+    "candidate_bbox": [
+      52,
+      184,
+      140,
+      262
+    ],
+    "source_nonzero_bbox": [
+      50,
+      186,
+      142,
+      263
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.9777777777777777,
+    "height_ratio": 1.054054054054054,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 2,
+      "file": "full-images/env_hedge_end-d2.webp",
+      "bbox": [
+        51,
+        188,
+        141,
+        261
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "bottom",
+          "xy": [
+            99,
+            252.0133333333333,
+            122,
+            260.90333333333336
+          ],
+          "degrees": 21.132600745433184,
+          "error": 5.432450254566817,
+          "rmse": 0.9606729475098643,
+          "length": 24
+        },
+        {
+          "side": "top",
+          "xy": [
+            51,
+            201.92999999999995,
+            74,
+            187.06999999999994
+          ],
+          "degrees": -32.865975179947654,
+          "error": 6.300924179947653,
+          "rmse": 1.1894920362691885,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_hedge_end",
+    "d": 3,
+    "source_bbox": [
+      115,
+      188,
+      205,
+      262
+    ],
+    "candidate_bbox": [
+      116,
+      184,
+      204,
+      262
+    ],
+    "source_nonzero_bbox": [
+      114,
+      186,
+      206,
+      263
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.9777777777777777,
+    "height_ratio": 1.054054054054054,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 3,
+      "file": "full-images/env_hedge_end-d3.webp",
+      "bbox": [
+        115,
+        188,
+        205,
+        261
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "top",
+          "xy": [
+            115,
+            226.0033333333333,
+            138,
+            210.9133333333333
+          ],
+          "degrees": -33.2683578691421,
+          "error": 6.7033068691421,
+          "rmse": 1.1715503374745464,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_long_flowerbed",
+    "d": 0,
+    "source_bbox": [
+      78,
+      140,
+      242,
+      280
+    ],
+    "candidate_bbox": [
+      72,
+      148,
+      248,
+      284
+    ],
+    "source_nonzero_bbox": [
+      76,
+      139,
+      244,
+      281
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.0731707317073171,
+    "height_ratio": 0.9714285714285714,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 0,
+      "file": "full-images/env_long_flowerbed-d0.webp",
+      "bbox": [
+        78,
+        141,
+        242,
+        280
+      ],
+      "w": 2,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 80.0,
+      "logical_h": 88.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_long_flowerbed",
+    "d": 1,
+    "source_bbox": [
+      76,
+      147,
+      244,
+      280
+    ],
+    "candidate_bbox": [
+      72,
+      148,
+      248,
+      284
+    ],
+    "source_nonzero_bbox": [
+      75,
+      146,
+      245,
+      281
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.0476190476190477,
+    "height_ratio": 1.0225563909774436,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 1,
+      "file": "full-images/env_long_flowerbed-d1.webp",
+      "bbox": [
+        77,
+        147,
+        244,
+        279
+      ],
+      "w": 1,
+      "h": 2,
+      "left": -48,
+      "top": -48,
+      "logical_w": 80.0,
+      "logical_h": 88.0,
+      "signals": [
+        {
+          "side": "bottom",
+          "xy": [
+            152,
+            258.7397849462365,
+            181,
+            245.92688172043006
+          ],
+          "degrees": -23.837004090224948,
+          "error": 2.7280469097750526,
+          "rmse": 0.5143017027999286,
+          "length": 30
+        },
+        {
+          "side": "bottom",
+          "xy": [
+            107,
+            278.920430107527,
+            136,
+            267.94623655913995
+          ],
+          "degrees": -20.72766833048391,
+          "error": 5.837382669516089,
+          "rmse": 1.0250212896191677,
+          "length": 30
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_long_flowerbed",
+    "d": 2,
+    "source_bbox": [
+      76,
+      148,
+      244,
+      280
+    ],
+    "candidate_bbox": [
+      72,
+      148,
+      248,
+      284
+    ],
+    "source_nonzero_bbox": [
+      75,
+      146,
+      245,
+      281
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.0476190476190477,
+    "height_ratio": 1.0303030303030303,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 2,
+      "file": "full-images/env_long_flowerbed-d2.webp",
+      "bbox": [
+        77,
+        148,
+        243,
+        280
+      ],
+      "w": 2,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 80.0,
+      "logical_h": 88.0,
+      "signals": [
+        {
+          "side": "bottom",
+          "xy": [
+            175,
+            270.78620689655173,
+            203,
+            281.2137931034482
+          ],
+          "degrees": 20.42602476308897,
+          "error": 6.139026236911029,
+          "rmse": 1.1811036979466345,
+          "length": 29
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_long_flowerbed",
+    "d": 3,
+    "source_bbox": [
+      76,
+      151,
+      244,
+      280
+    ],
+    "candidate_bbox": [
+      72,
+      148,
+      248,
+      284
+    ],
+    "source_nonzero_bbox": [
+      75,
+      150,
+      245,
+      281
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.0476190476190477,
+    "height_ratio": 1.054263565891473,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 3,
+      "file": "full-images/env_long_flowerbed-d3.webp",
+      "bbox": [
+        76,
+        151,
+        244,
+        280
+      ],
+      "w": 1,
+      "h": 2,
+      "left": -48,
+      "top": -48,
+      "logical_w": 80.0,
+      "logical_h": 88.0,
+      "signals": [
+        {
+          "side": "bottom",
+          "xy": [
+            91,
+            267.3290322580646,
+            120,
+            280.0709677419356
+          ],
+          "degrees": 23.719586184129756,
+          "error": 2.845464815870244,
+          "rmse": 1.0394730703568176,
+          "length": 30
+        }
+      ]
+    }
+  }
+]

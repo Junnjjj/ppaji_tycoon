@@ -1,0 +1,1296 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "env_water_rail",
+      "structural_pass": true,
+      "closed_parts": [
+        {
+          "part": "rail-post-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-cap-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-post-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-cap-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-beam-0-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-beam-0-1",
+          "passed": true,
+          "edges": 12
+        }
+      ],
+      "joints": [
+        {
+          "a": "rail-post-0",
+          "b": "rail-cap-0",
+          "overlap": [
+            0.12,
+            0.12,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-post-1",
+          "b": "rail-cap-1",
+          "overlap": [
+            0.1200000000000001,
+            0.12,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-0-0",
+          "b": "rail-post-0",
+          "overlap": [
+            0.06,
+            0.066,
+            0.8
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-0-0",
+          "b": "rail-post-1",
+          "overlap": [
+            0.06000000000000005,
+            0.066,
+            0.8
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-0-1",
+          "b": "rail-post-0",
+          "overlap": [
+            0.06,
+            0.066,
+            0.7999999999999998
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-0-1",
+          "b": "rail-post-1",
+          "overlap": [
+            0.06000000000000005,
+            0.066,
+            0.7999999999999998
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_edge_error": 1.1102230246251565e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            3180
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 39,
+                "coverage": 0.975,
+                "status": "PASS",
+                "slope": 0.4979757085020235,
+                "rms": 0.5524498818920062
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039399,
+              "rms": 0.5589121032971168,
+              "offset": 0.8120000000000118,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 1,
+          "components": [
+            3180
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": -0.4953095684802994,
+                "rms": 0.5563887852034644
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.4953095684802994,
+              "rms": 0.5563887852034644,
+              "offset": 0.8120000000000118,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 2,
+          "components": [
+            3180
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 39,
+                "coverage": 0.975,
+                "status": "PASS",
+                "slope": 0.4979757085020234,
+                "rms": 0.5524498818920058
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039393,
+              "rms": 0.5589121032971178,
+              "offset": 0.8120000000000118,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 3,
+          "components": [
+            3180
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": -0.49530956848030017,
+                "rms": 0.5563887852034672
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.49530956848030017,
+              "rms": 0.5563887852034672,
+              "offset": 0.8120000000000118,
+              "passed": true
+            }
+          ],
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "env_water_rail_corner",
+      "structural_pass": true,
+      "closed_parts": [
+        {
+          "part": "rail-post-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-cap-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-post-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-cap-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-post-2",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-cap-2",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-beam-0-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-beam-0-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-beam-1-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-beam-1-1",
+          "passed": true,
+          "edges": 12
+        }
+      ],
+      "joints": [
+        {
+          "a": "rail-post-0",
+          "b": "rail-cap-0",
+          "overlap": [
+            0.12,
+            0.12,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-post-1",
+          "b": "rail-cap-1",
+          "overlap": [
+            0.1200000000000001,
+            0.12,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-post-2",
+          "b": "rail-cap-2",
+          "overlap": [
+            0.12,
+            0.1200000000000001,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-0-0",
+          "b": "rail-post-0",
+          "overlap": [
+            0.06,
+            0.066,
+            0.8
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-0-0",
+          "b": "rail-post-1",
+          "overlap": [
+            0.06000000000000005,
+            0.066,
+            0.8
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-0-1",
+          "b": "rail-post-0",
+          "overlap": [
+            0.06,
+            0.066,
+            0.7999999999999998
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-0-1",
+          "b": "rail-post-1",
+          "overlap": [
+            0.06000000000000005,
+            0.066,
+            0.7999999999999998
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-1-0",
+          "b": "rail-post-0",
+          "overlap": [
+            0.066,
+            0.06,
+            0.8
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-1-0",
+          "b": "rail-post-2",
+          "overlap": [
+            0.066,
+            0.06000000000000005,
+            0.8
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-1-1",
+          "b": "rail-post-0",
+          "overlap": [
+            0.066,
+            0.06,
+            0.7999999999999998
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-1-1",
+          "b": "rail-post-2",
+          "overlap": [
+            0.066,
+            0.06000000000000005,
+            0.7999999999999998
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_edge_error": 1.1102230246251565e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            5344
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 39,
+                "coverage": 0.975,
+                "status": "PASS",
+                "slope": 0.4979757085020235,
+                "rms": 0.5524498818920062
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039399,
+              "rms": 0.5589121032971168,
+              "offset": 0.8120000000000118,
+              "passed": true
+            },
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": -0.4953095684802994,
+                "rms": 0.5563887852034644
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 1,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.4953095684802994,
+              "rms": 0.5563887852034644,
+              "offset": 0.8120000000000118,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 1,
+          "components": [
+            5168
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": -0.4953095684802994,
+                "rms": 0.5563887852034644
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.4953095684802994,
+              "rms": 0.5563887852034644,
+              "offset": 0.8120000000000118,
+              "passed": true
+            },
+            {
+              "combined": {
+                "samples": 25,
+                "coverage": 0.625,
+                "status": "PASS",
+                "slope": 0.497246319426947,
+                "rms": 0.5486818732120026
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 1,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039393,
+              "rms": 0.5589121032971178,
+              "offset": 0.8120000000000118,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 2,
+          "components": [
+            5344
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 39,
+                "coverage": 0.975,
+                "status": "PASS",
+                "slope": 0.4979757085020234,
+                "rms": 0.5524498818920058
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039393,
+              "rms": 0.5589121032971178,
+              "offset": 0.8120000000000118,
+              "passed": true
+            },
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": -0.49530956848030017,
+                "rms": 0.5563887852034672
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 1,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.49530956848030017,
+              "rms": 0.5563887852034672,
+              "offset": 0.8120000000000118,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 3,
+          "components": [
+            5168
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 26,
+                "coverage": 0.65,
+                "status": "PASS",
+                "slope": -0.49432321253672784,
+                "rms": 0.5522106828813131
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.49530956848030017,
+              "rms": 0.5563887852034672,
+              "offset": 0.8120000000000118,
+              "passed": true
+            },
+            {
+              "combined": {
+                "samples": 39,
+                "coverage": 0.975,
+                "status": "PASS",
+                "slope": 0.4979757085020235,
+                "rms": 0.5524498818920062
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 1,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039399,
+              "rms": 0.5589121032971168,
+              "offset": 0.8120000000000118,
+              "passed": true
+            }
+          ],
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "env_water_rail_end",
+      "structural_pass": true,
+      "closed_parts": [
+        {
+          "part": "rail-post-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-cap-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-post-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-cap-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-beam-0-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "rail-beam-0-1",
+          "passed": true,
+          "edges": 12
+        }
+      ],
+      "joints": [
+        {
+          "a": "rail-post-0",
+          "b": "rail-cap-0",
+          "overlap": [
+            0.12,
+            0.12,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-post-1",
+          "b": "rail-cap-1",
+          "overlap": [
+            0.1200000000000001,
+            0.12,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-0-0",
+          "b": "rail-post-0",
+          "overlap": [
+            0.06,
+            0.066,
+            0.8
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-0-0",
+          "b": "rail-post-1",
+          "overlap": [
+            0.06000000000000005,
+            0.066,
+            0.8
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-0-1",
+          "b": "rail-post-0",
+          "overlap": [
+            0.06,
+            0.066,
+            0.7999999999999998
+          ],
+          "passed": true
+        },
+        {
+          "a": "rail-beam-0-1",
+          "b": "rail-post-1",
+          "overlap": [
+            0.06000000000000005,
+            0.066,
+            0.7999999999999998
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_edge_error": 1.1102230246251565e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            3180
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 39,
+                "coverage": 0.975,
+                "status": "PASS",
+                "slope": 0.4979757085020235,
+                "rms": 0.5524498818920062
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039399,
+              "rms": 0.5589121032971168,
+              "offset": 0.8120000000000118,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 1,
+          "components": [
+            3180
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": -0.4953095684802994,
+                "rms": 0.5563887852034644
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.4953095684802994,
+              "rms": 0.5563887852034644,
+              "offset": 0.8120000000000118,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 2,
+          "components": [
+            3180
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 39,
+                "coverage": 0.975,
+                "status": "PASS",
+                "slope": 0.4979757085020234,
+                "rms": 0.5524498818920058
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": 0.5,
+              "slope": 0.5009380863039393,
+              "rms": 0.5589121032971178,
+              "offset": 0.8120000000000118,
+              "passed": true
+            }
+          ],
+          "passed": true
+        },
+        {
+          "d": 3,
+          "components": [
+            3180
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "combined": {
+                "samples": 40,
+                "coverage": 1.0,
+                "status": "PASS",
+                "slope": -0.49530956848030017,
+                "rms": 0.5563887852034672
+              },
+              "measurement": "isolated saved silhouette with exact exposed subset in full composite",
+              "segment": 0,
+              "samples": 40,
+              "coverage": 1.0,
+              "expected_slope": -0.5,
+              "slope": -0.49530956848030017,
+              "rms": 0.5563887852034672,
+              "offset": 0.8120000000000118,
+              "passed": true
+            }
+          ],
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "env_street_lamp",
+      "structural_pass": true,
+      "closed_parts": [
+        {
+          "part": "lamp-plinth",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "lamp-foot",
+          "passed": true,
+          "edges": 176
+        },
+        {
+          "part": "lamp-pole",
+          "passed": true,
+          "edges": 144
+        },
+        {
+          "part": "lamp-collar",
+          "passed": true,
+          "edges": 144
+        },
+        {
+          "part": "lamp-top-collar",
+          "passed": true,
+          "edges": 144
+        },
+        {
+          "part": "lamp-finial",
+          "passed": true,
+          "edges": 176
+        },
+        {
+          "part": "lamp-arm",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "lamp-hanger",
+          "passed": true,
+          "edges": 80
+        },
+        {
+          "part": "lamp-glow",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "lamp-frame-0",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "lamp-frame-1",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "lamp-frame-2",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "lamp-frame-3",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "lamp-bottom",
+          "passed": true,
+          "edges": 12
+        },
+        {
+          "part": "lamp-roof",
+          "passed": true,
+          "edges": 208
+        }
+      ],
+      "joints": [
+        {
+          "a": "lamp-frame-0",
+          "b": "lamp-bottom",
+          "overlap": [
+            0.02400000000000002,
+            0.02400000000000002,
+            0.3500000000000014
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-frame-0",
+          "b": "lamp-roof",
+          "overlap": [
+            0.02400000000000002,
+            0.02400000000000002,
+            0.3500000000000014
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-frame-1",
+          "b": "lamp-bottom",
+          "overlap": [
+            0.02400000000000002,
+            0.02400000000000002,
+            0.3500000000000014
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-frame-1",
+          "b": "lamp-roof",
+          "overlap": [
+            0.02400000000000002,
+            0.02400000000000002,
+            0.3500000000000014
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-frame-2",
+          "b": "lamp-bottom",
+          "overlap": [
+            0.02400000000000002,
+            0.02400000000000002,
+            0.3500000000000014
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-frame-2",
+          "b": "lamp-roof",
+          "overlap": [
+            0.02400000000000002,
+            0.02400000000000002,
+            0.3500000000000014
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-frame-3",
+          "b": "lamp-bottom",
+          "overlap": [
+            0.02400000000000002,
+            0.02400000000000002,
+            0.3500000000000014
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-frame-3",
+          "b": "lamp-roof",
+          "overlap": [
+            0.02400000000000002,
+            0.02400000000000002,
+            0.3500000000000014
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-plinth",
+          "b": "lamp-foot",
+          "overlap": [
+            0.19399999999999995,
+            0.19399999999999995,
+            0.25
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-foot",
+          "b": "lamp-pole",
+          "overlap": [
+            0.07800000000000001,
+            0.07800000000000001,
+            0.30000000000000004
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-pole",
+          "b": "lamp-collar",
+          "overlap": [
+            0.07800000000000001,
+            0.07800000000000001,
+            0.75
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-pole",
+          "b": "lamp-top-collar",
+          "overlap": [
+            0.07800000000000001,
+            0.07800000000000001,
+            0.8000000000000043
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-top-collar",
+          "b": "lamp-finial",
+          "overlap": [
+            0.10200000000000004,
+            0.10200000000000004,
+            0.20000000000000284
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-pole",
+          "b": "lamp-arm",
+          "overlap": [
+            0.039000000000000035,
+            0.05400000000000005,
+            0.8500000000000014
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-arm",
+          "b": "lamp-hanger",
+          "overlap": [
+            0.025000000000000022,
+            0.050000000000000044,
+            0.29999999999999716
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-hanger",
+          "b": "lamp-roof",
+          "overlap": [
+            0.050000000000000044,
+            0.050000000000000044,
+            1.1000000000000014
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-glow",
+          "b": "lamp-bottom",
+          "overlap": [
+            0.15000000000000002,
+            0.14999999999999997,
+            0.14999999999999858
+          ],
+          "passed": true
+        },
+        {
+          "a": "lamp-glow",
+          "b": "lamp-roof",
+          "overlap": [
+            0.15000000000000002,
+            0.14999999999999997,
+            0.04999999999999716
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_edge_error": 1.0408340855860843e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            2772
+          ],
+          "clipped": false,
+          "lines": [],
+          "passed": true
+        },
+        {
+          "d": 1,
+          "components": [
+            2660
+          ],
+          "clipped": false,
+          "lines": [],
+          "passed": true
+        },
+        {
+          "d": 2,
+          "components": [
+            2660
+          ],
+          "clipped": false,
+          "lines": [],
+          "passed": true
+        },
+        {
+          "d": 3,
+          "components": [
+            2772
+          ],
+          "clipped": false,
+          "lines": [],
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail",
+      "d": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_end",
+      "d": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_corner",
+      "d": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail_corner",
+      "b": "env_water_rail",
+      "d": 0,
+      "b_direction": 3,
+      "translation": [
+        -1,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail",
+      "d": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_end",
+      "d": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_corner",
+      "d": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail_corner",
+      "b": "env_water_rail",
+      "d": 1,
+      "b_direction": 0,
+      "translation": [
+        1,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail",
+      "d": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_end",
+      "d": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_corner",
+      "d": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail_corner",
+      "b": "env_water_rail",
+      "d": 2,
+      "b_direction": 1,
+      "translation": [
+        1,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail",
+      "d": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_end",
+      "d": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail",
+      "b": "env_water_rail_corner",
+      "d": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    },
+    {
+      "a": "env_water_rail_corner",
+      "b": "env_water_rail",
+      "d": 3,
+      "b_direction": 2,
+      "translation": [
+        -1,
+        -1,
+        0
+      ],
+      "port_error": 0.0,
+      "passed": true
+    }
+  ],
+  "line_counts": {
+    "total": 16,
+    "passed": 16
+  },
+  "limits": [
+    "Boundary port coincidence proves declared placement only; AABB is not exact collision certification.",
+    "Long exposed upper edges sampled; short cap edges and internal painted lines excluded from slope certification.",
+    "Lamp curved surfaces checked separately in extra QA; short fixture edges do not receive slope certification.",
+    "Numeric QA is not art95 certification. Runtime QA not run."
+  ]
+}

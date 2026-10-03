@@ -1,0 +1,400 @@
+{
+  "status": "PASS",
+  "openings": [
+    {
+      "id": "env_water_rail",
+      "d": 0,
+      "axis": "u",
+      "point": [
+        164,
+        190
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail",
+      "d": 1,
+      "axis": "u",
+      "point": [
+        100,
+        190
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail",
+      "d": 2,
+      "axis": "u",
+      "point": [
+        100,
+        222
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail",
+      "d": 3,
+      "axis": "u",
+      "point": [
+        164,
+        222
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_corner",
+      "d": 0,
+      "axis": "u",
+      "point": [
+        164,
+        190
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_corner",
+      "d": 0,
+      "axis": "v",
+      "point": [
+        100,
+        190
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_corner",
+      "d": 1,
+      "axis": "u",
+      "point": [
+        100,
+        190
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_corner",
+      "d": 1,
+      "axis": "v",
+      "point": [
+        100,
+        222
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_corner",
+      "d": 2,
+      "axis": "u",
+      "point": [
+        100,
+        222
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_corner",
+      "d": 2,
+      "axis": "v",
+      "point": [
+        164,
+        222
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_corner",
+      "d": 3,
+      "axis": "u",
+      "point": [
+        164,
+        222
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_corner",
+      "d": 3,
+      "axis": "v",
+      "point": [
+        164,
+        190
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_end",
+      "d": 0,
+      "axis": "u",
+      "point": [
+        164,
+        190
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_end",
+      "d": 1,
+      "axis": "u",
+      "point": [
+        100,
+        190
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_end",
+      "d": 2,
+      "axis": "u",
+      "point": [
+        100,
+        222
+      ],
+      "alpha_max": 0,
+      "passed": true
+    },
+    {
+      "id": "env_water_rail_end",
+      "d": 3,
+      "axis": "u",
+      "point": [
+        164,
+        222
+      ],
+      "alpha_max": 0,
+      "passed": true
+    }
+  ],
+  "curved_parts": [
+    {
+      "part": "lamp-foot",
+      "segments": 16,
+      "profile_rings": 5,
+      "max_radial_error": 5.551115123125783e-17,
+      "passed": true,
+      "scope": "Real 16-sided lathed surface and closed end caps, not billboard."
+    },
+    {
+      "part": "lamp-pole",
+      "segments": 16,
+      "profile_rings": 4,
+      "max_radial_error": 5.551115123125783e-17,
+      "passed": true,
+      "scope": "Real 16-sided lathed surface and closed end caps, not billboard."
+    },
+    {
+      "part": "lamp-collar",
+      "segments": 16,
+      "profile_rings": 4,
+      "max_radial_error": 5.551115123125783e-17,
+      "passed": true,
+      "scope": "Real 16-sided lathed surface and closed end caps, not billboard."
+    },
+    {
+      "part": "lamp-top-collar",
+      "segments": 16,
+      "profile_rings": 4,
+      "max_radial_error": 6.245004513516506e-17,
+      "passed": true,
+      "scope": "Real 16-sided lathed surface and closed end caps, not billboard."
+    },
+    {
+      "part": "lamp-finial",
+      "segments": 16,
+      "profile_rings": 5,
+      "max_radial_error": 6.245004513516506e-17,
+      "passed": true,
+      "scope": "Real 16-sided lathed surface and closed end caps, not billboard."
+    },
+    {
+      "part": "lamp-hanger",
+      "segments": 16,
+      "profile_rings": 2,
+      "max_radial_error": 5.204170427930421e-17,
+      "passed": true,
+      "scope": "Real 16-sided lathed surface and closed end caps, not billboard."
+    },
+    {
+      "part": "lamp-roof",
+      "segments": 16,
+      "profile_rings": 6,
+      "max_radial_error": 8.326672684688674e-17,
+      "passed": true,
+      "scope": "Real 16-sided lathed surface and closed end caps, not billboard."
+    }
+  ],
+  "saved_pole_edges": [
+    {
+      "composite_exposed_samples": 101,
+      "composite_exposed_coverage": 1.0,
+      "composite_slope": 0.0,
+      "composite_rms": 0.0,
+      "d": 0,
+      "side": -1,
+      "samples": 101,
+      "coverage": 1.0,
+      "slope_dx_dy": 0.0,
+      "rms_packed_px": 0.0,
+      "passed": true
+    },
+    {
+      "composite_exposed_samples": 101,
+      "composite_exposed_coverage": 1.0,
+      "composite_slope": -6.539836496139253e-17,
+      "composite_rms": 5.542997518099335e-15,
+      "d": 0,
+      "side": 1,
+      "samples": 101,
+      "coverage": 1.0,
+      "slope_dx_dy": -6.539836496139253e-17,
+      "rms_packed_px": 5.542997518099335e-15,
+      "passed": true
+    },
+    {
+      "composite_exposed_samples": 101,
+      "composite_exposed_coverage": 1.0,
+      "composite_slope": 0.0,
+      "composite_rms": 0.0,
+      "d": 1,
+      "side": -1,
+      "samples": 101,
+      "coverage": 1.0,
+      "slope_dx_dy": 0.0,
+      "rms_packed_px": 0.0,
+      "passed": true
+    },
+    {
+      "composite_exposed_samples": 101,
+      "composite_exposed_coverage": 1.0,
+      "composite_slope": -6.539836496139253e-17,
+      "composite_rms": 5.542997518099335e-15,
+      "d": 1,
+      "side": 1,
+      "samples": 101,
+      "coverage": 1.0,
+      "slope_dx_dy": -6.539836496139253e-17,
+      "rms_packed_px": 5.542997518099335e-15,
+      "passed": true
+    },
+    {
+      "composite_exposed_samples": 101,
+      "composite_exposed_coverage": 1.0,
+      "composite_slope": 0.0,
+      "composite_rms": 0.0,
+      "d": 2,
+      "side": -1,
+      "samples": 101,
+      "coverage": 1.0,
+      "slope_dx_dy": 0.0,
+      "rms_packed_px": 0.0,
+      "passed": true
+    },
+    {
+      "composite_exposed_samples": 101,
+      "composite_exposed_coverage": 1.0,
+      "composite_slope": -6.539836496139253e-17,
+      "composite_rms": 5.542997518099335e-15,
+      "d": 2,
+      "side": 1,
+      "samples": 101,
+      "coverage": 1.0,
+      "slope_dx_dy": -6.539836496139253e-17,
+      "rms_packed_px": 5.542997518099335e-15,
+      "passed": true
+    },
+    {
+      "composite_exposed_samples": 101,
+      "composite_exposed_coverage": 1.0,
+      "composite_slope": 0.0,
+      "composite_rms": 0.0,
+      "d": 3,
+      "side": -1,
+      "samples": 101,
+      "coverage": 1.0,
+      "slope_dx_dy": 0.0,
+      "rms_packed_px": 0.0,
+      "passed": true
+    },
+    {
+      "composite_exposed_samples": 101,
+      "composite_exposed_coverage": 1.0,
+      "composite_slope": -6.539836496139253e-17,
+      "composite_rms": 5.542997518099335e-15,
+      "d": 3,
+      "side": 1,
+      "samples": 101,
+      "coverage": 1.0,
+      "slope_dx_dy": -6.539836496139253e-17,
+      "rms_packed_px": 5.542997518099335e-15,
+      "passed": true
+    }
+  ],
+  "ground_contact": [
+    {
+      "d": 0,
+      "pixel": [
+        128,
+        240
+      ],
+      "alpha": 255,
+      "passed": true
+    },
+    {
+      "d": 1,
+      "pixel": [
+        128,
+        240
+      ],
+      "alpha": 255,
+      "passed": true
+    },
+    {
+      "d": 2,
+      "pixel": [
+        128,
+        240
+      ],
+      "alpha": 255,
+      "passed": true
+    },
+    {
+      "d": 3,
+      "pixel": [
+        128,
+        240
+      ],
+      "alpha": 255,
+      "passed": true
+    }
+  ],
+  "separate_pieces": [
+    {
+      "parts": [
+        "lamp-pole",
+        "lamp-glow"
+      ],
+      "horizontal_gap_tiles": 0.22599999999999998,
+      "passed": true
+    }
+  ],
+  "limits": [
+    "Pole middle 25 logical px measured in isolated saved sprite and exact exposed composite subset; fixture-occluded pixels excluded explicitly, not passed. Fixture edges too short for reliable fitted slope.",
+    "Rails: long upper edges are measured in verify.py with exposed composite subsets; post caps and inner paint are not slope-certified.",
+    "Curved roof and collars are polygonal approximations; radial geometry tests are not artistic acceptance.",
+    "Only declared part separation and AABB joint checks, no exact collision certification.",
+    "No art95 score or actual runtime QA."
+  ]
+}

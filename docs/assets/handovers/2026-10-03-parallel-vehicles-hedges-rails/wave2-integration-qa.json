@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "exact_changed_entries": 40,
+  "registration_unchanged": true,
+  "all_other_entries_unchanged": true,
+  "inventory": {
+    "painted": 400,
+    "errors": [],
+    "images": 69,
+    "broken": [],
+    "overflow": false,
+    "stats": "전체 100종 · 적용 69종 · 남은 31종"
+  }
+}

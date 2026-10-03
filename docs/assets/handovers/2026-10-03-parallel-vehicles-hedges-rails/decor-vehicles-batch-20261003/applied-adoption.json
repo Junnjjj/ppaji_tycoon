@@ -1,0 +1,196 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "env_bus": "decor-vehicles-batch-20261003",
+    "env_car": "decor-vehicles-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "env_bus",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/decor-vehicles-batch-20261003/candidates/env_bus/d0.png",
+      "source_sha256": "be52eb9d1bf198df90cb7eca35f756881945478de41f38bd268600002755d59c",
+      "old": {
+        "file": "fac_env_bus_0.webp",
+        "w": 112,
+        "h": 88,
+        "sha256": "8211516ee5874b00061b85a9f3b63fda8d7e0b34b83298fc2419da30638d8691",
+        "bytes": 74468
+      },
+      "new": {
+        "file": "fac_env_bus_0_accepted_20261003.webp",
+        "w": 112,
+        "h": 88,
+        "sha256": "f09062d9360f0a789c8957aae1294affbbef04d09b509c47d0016caccc581af4",
+        "bytes": 39484
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_bus",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/decor-vehicles-batch-20261003/candidates/env_bus/d1.png",
+      "source_sha256": "640e3b58bf1fca3166f2f09044b93d892714a5723edfd38660707ece8277482b",
+      "old": {
+        "file": "fac_env_bus_1.webp",
+        "w": 112,
+        "h": 88,
+        "sha256": "1bc20d370ee552e2c42531b587101898588f5384b27462dd1e13d107764d6c9f",
+        "bytes": 74806
+      },
+      "new": {
+        "file": "fac_env_bus_1_accepted_20261003.webp",
+        "w": 112,
+        "h": 88,
+        "sha256": "337d4f3d2222512c660c6138230de17de361039e323d6dfe69722bed9e7e763b",
+        "bytes": 40070
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_bus",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/decor-vehicles-batch-20261003/candidates/env_bus/d2.png",
+      "source_sha256": "9e902daf1ecc7dc90391772e6d25a791a13410a975743e992e97169f17411606",
+      "old": {
+        "file": "fac_env_bus_2.fix-d9b23ba83997.webp",
+        "w": 112,
+        "h": 88,
+        "sha256": "d9b23ba83997ef7a63a60610027321c206ecf778f418580ffc30159ec6ce40ad",
+        "bytes": 81994
+      },
+      "new": {
+        "file": "fac_env_bus_2_accepted_20261003.webp",
+        "w": 112,
+        "h": 88,
+        "sha256": "071a341eeefa6a42b2cc3e8a6837d3cb94d7e3ab3b37f7d9605ab08cf8cd2b41",
+        "bytes": 40242
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_bus",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/decor-vehicles-batch-20261003/candidates/env_bus/d3.png",
+      "source_sha256": "1108c9b73df86bdc5fd9a183505eb749fc24aabf378120a6f8be5f9a9a7a9cc5",
+      "old": {
+        "file": "fac_env_bus_3.webp",
+        "w": 112,
+        "h": 88,
+        "sha256": "28584278a90bda6356c88a71b366fec98b1def9cbea3a98b28dcb0b9bba3207c",
+        "bytes": 73878
+      },
+      "new": {
+        "file": "fac_env_bus_3_accepted_20261003.webp",
+        "w": 112,
+        "h": 88,
+        "sha256": "35954f6666e42c2f0c580d7a435635996f353264158b0d47ee8211975381566f",
+        "bytes": 39804
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_car",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/decor-vehicles-batch-20261003/candidates/env_car/d0.png",
+      "source_sha256": "d880a4e17e9fda4ba523fce279d1a8358a622b2a6bc0b52597bca1af1b414bda",
+      "old": {
+        "file": "fac_env_car_0.webp",
+        "w": 48,
+        "h": 56,
+        "sha256": "a957c0f5c9b2627b689e76c6a0fb2e844cc6e1bd0bfd37df2a31eddfc9b2824e",
+        "bytes": 20962
+      },
+      "new": {
+        "file": "fac_env_car_0_accepted_20261003.webp",
+        "w": 48,
+        "h": 56,
+        "sha256": "ea5e52d46e673ff1448fae1b9dc0025c725cffdd1a0342f4a96ff2a3692e51f2",
+        "bytes": 12852
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_car",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/decor-vehicles-batch-20261003/candidates/env_car/d1.png",
+      "source_sha256": "8ec19a85fa4d8af48b2ce01fffe8dc0c93166b4eab225a5679f628436af59f3c",
+      "old": {
+        "file": "fac_env_car_1.webp",
+        "w": 48,
+        "h": 56,
+        "sha256": "9d05224e7a47a8d582e200c829d89fdc0bbe0a14b81354a357f23105ac30e454",
+        "bytes": 22872
+      },
+      "new": {
+        "file": "fac_env_car_1_accepted_20261003.webp",
+        "w": 48,
+        "h": 56,
+        "sha256": "9caaad33b3c62653c6e17b7d7d71c2e20d309cac888d715345b7e8029cce692a",
+        "bytes": 12940
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_car",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/decor-vehicles-batch-20261003/candidates/env_car/d2.png",
+      "source_sha256": "a856c4f788c6e3830abf872396a18dd021099d90a155c386ca0952a970a349f3",
+      "old": {
+        "file": "fac_env_car_2.webp",
+        "w": 48,
+        "h": 56,
+        "sha256": "266a0d607d67d1317eee95100e180ee604dd54fdc3decf06665cd9c1b2bf9583",
+        "bytes": 20770
+      },
+      "new": {
+        "file": "fac_env_car_2_accepted_20261003.webp",
+        "w": 48,
+        "h": 56,
+        "sha256": "f0fcd6023b38f639c408ef5c7cbfaaa17a9d8fa53a1d237839b68cc7aa457e3f",
+        "bytes": 12856
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    },
+    {
+      "id": "env_car",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/decor-vehicles-batch-20261003/candidates/env_car/d3.png",
+      "source_sha256": "948704a2e724c8e0985538c062312695307fc72a501e2bb70ab59bd38e1d7b23",
+      "old": {
+        "file": "fac_env_car_3.webp",
+        "w": 48,
+        "h": 56,
+        "sha256": "0b85db75a052f129eb1a1690b4c039757485b5f318e5790596049d446a97dffb",
+        "bytes": 21634
+      },
+      "new": {
+        "file": "fac_env_car_3_accepted_20261003.webp",
+        "w": 48,
+        "h": 56,
+        "sha256": "53448a2c294f535c74aa883cde6bea313361a8f0c9af37bec7092e895508f07e",
+        "bytes": 13122
+      },
+      "old_native": null,
+      "new_native": null,
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

@@ -1,0 +1,339 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "env_bus",
+      "check": "connected_declared_joint_graph",
+      "parts": 46,
+      "passed": true,
+      "unconnected": []
+    },
+    {
+      "id": "env_bus",
+      "d": 0,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-0-1",
+      "projected_contact": [
+        72.352,
+        214.704
+      ],
+      "dark_pixels_9x9": 55,
+      "passed": true
+    },
+    {
+      "id": "env_bus",
+      "d": 0,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-1-1",
+      "projected_contact": [
+        272.672,
+        314.864
+      ],
+      "dark_pixels_9x9": 57,
+      "passed": true
+    },
+    {
+      "id": "env_bus",
+      "d": 0,
+      "check": "rear_lamp_identity",
+      "passed": true
+    },
+    {
+      "id": "env_bus",
+      "d": 1,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-0-1",
+      "projected_contact": [
+        173.408,
+        315.824
+      ],
+      "dark_pixels_9x9": 56,
+      "passed": true
+    },
+    {
+      "id": "env_bus",
+      "d": 1,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-1-1",
+      "projected_contact": [
+        373.72799999999995,
+        215.664
+      ],
+      "dark_pixels_9x9": 52,
+      "passed": true
+    },
+    {
+      "id": "env_bus",
+      "d": 1,
+      "check": "rear_lamp_identity",
+      "passed": true
+    },
+    {
+      "id": "env_bus",
+      "d": 2,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-0-0",
+      "projected_contact": [
+        274.592,
+        315.824
+      ],
+      "dark_pixels_9x9": 60,
+      "passed": true
+    },
+    {
+      "id": "env_bus",
+      "d": 2,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-1-0",
+      "projected_contact": [
+        74.27200000000002,
+        215.664
+      ],
+      "dark_pixels_9x9": 56,
+      "passed": true
+    },
+    {
+      "id": "env_bus",
+      "d": 2,
+      "check": "rear_lamp_identity",
+      "passed": true
+    },
+    {
+      "id": "env_bus",
+      "d": 3,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-0-0",
+      "projected_contact": [
+        375.64799999999997,
+        214.704
+      ],
+      "dark_pixels_9x9": 51,
+      "passed": true
+    },
+    {
+      "id": "env_bus",
+      "d": 3,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-1-0",
+      "projected_contact": [
+        175.328,
+        314.864
+      ],
+      "dark_pixels_9x9": 55,
+      "passed": true
+    },
+    {
+      "id": "env_bus",
+      "d": 3,
+      "check": "rear_lamp_identity",
+      "passed": true
+    },
+    {
+      "id": "env_bus",
+      "check": "rounded_body_mesh",
+      "height_rings": [
+        4.0,
+        5.248,
+        26.932,
+        28.18
+      ],
+      "unique_u": 19,
+      "passed": true
+    },
+    {
+      "id": "env_car",
+      "check": "connected_declared_joint_graph",
+      "parts": 38,
+      "passed": true,
+      "unconnected": []
+    },
+    {
+      "id": "env_car",
+      "d": 0,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-0-1",
+      "projected_contact": [
+        32.928,
+        171.05599999999998
+      ],
+      "dark_pixels_9x9": 57,
+      "passed": true
+    },
+    {
+      "id": "env_car",
+      "d": 0,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-1-1",
+      "projected_contact": [
+        105.248,
+        207.216
+      ],
+      "dark_pixels_9x9": 57,
+      "passed": true
+    },
+    {
+      "id": "env_car",
+      "d": 0,
+      "check": "rear_lamp_identity",
+      "passed": true
+    },
+    {
+      "id": "env_car",
+      "d": 1,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-0-1",
+      "projected_contact": [
+        86.112,
+        207.536
+      ],
+      "dark_pixels_9x9": 48,
+      "passed": true
+    },
+    {
+      "id": "env_car",
+      "d": 1,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-1-1",
+      "projected_contact": [
+        158.43200000000002,
+        171.376
+      ],
+      "dark_pixels_9x9": 56,
+      "passed": true
+    },
+    {
+      "id": "env_car",
+      "d": 1,
+      "check": "rear_lamp_identity",
+      "passed": true
+    },
+    {
+      "id": "env_car",
+      "d": 2,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-0-0",
+      "projected_contact": [
+        105.888,
+        207.536
+      ],
+      "dark_pixels_9x9": 50,
+      "passed": true
+    },
+    {
+      "id": "env_car",
+      "d": 2,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-1-0",
+      "projected_contact": [
+        33.568,
+        171.376
+      ],
+      "dark_pixels_9x9": 58,
+      "passed": true
+    },
+    {
+      "id": "env_car",
+      "d": 2,
+      "check": "rear_lamp_identity",
+      "passed": true
+    },
+    {
+      "id": "env_car",
+      "d": 3,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-0-0",
+      "projected_contact": [
+        159.072,
+        171.05599999999998
+      ],
+      "dark_pixels_9x9": 56,
+      "passed": true
+    },
+    {
+      "id": "env_car",
+      "d": 3,
+      "check": "visible_tire_ground_contact_patch",
+      "wheel": "wheel-1-0",
+      "projected_contact": [
+        86.752,
+        207.216
+      ],
+      "dark_pixels_9x9": 55,
+      "passed": true
+    },
+    {
+      "id": "env_car",
+      "d": 3,
+      "check": "rear_lamp_identity",
+      "passed": true
+    },
+    {
+      "id": "env_car",
+      "check": "rounded_body_mesh",
+      "height_rings": [
+        3.0,
+        4.12,
+        8.88,
+        10.0
+      ],
+      "unique_u": 19,
+      "passed": true
+    },
+    {
+      "check": "report_image_exists",
+      "file": "env_bus-comparison.png",
+      "passed": true
+    },
+    {
+      "check": "report_image_exists",
+      "file": "candidates/env_bus/d0.png",
+      "passed": true
+    },
+    {
+      "check": "report_image_exists",
+      "file": "candidates/env_bus/d1.png",
+      "passed": true
+    },
+    {
+      "check": "report_image_exists",
+      "file": "candidates/env_bus/d2.png",
+      "passed": true
+    },
+    {
+      "check": "report_image_exists",
+      "file": "candidates/env_bus/d3.png",
+      "passed": true
+    },
+    {
+      "check": "report_image_exists",
+      "file": "env_car-comparison.png",
+      "passed": true
+    },
+    {
+      "check": "report_image_exists",
+      "file": "candidates/env_car/d0.png",
+      "passed": true
+    },
+    {
+      "check": "report_image_exists",
+      "file": "candidates/env_car/d1.png",
+      "passed": true
+    },
+    {
+      "check": "report_image_exists",
+      "file": "candidates/env_car/d2.png",
+      "passed": true
+    },
+    {
+      "check": "report_image_exists",
+      "file": "candidates/env_car/d3.png",
+      "passed": true
+    }
+  ],
+  "failures": [],
+  "limits": [
+    "Near-side two saved-pixel contacts per direction only; occluded far tires certified solely by canonical mesh min-z and radius checks.",
+    "Graph connectivity and AABB overlap do not prove exact mesh collision.",
+    "No runtime or art95 claim."
+  ]
+}

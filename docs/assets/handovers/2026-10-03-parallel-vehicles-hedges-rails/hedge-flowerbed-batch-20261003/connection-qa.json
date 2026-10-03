@@ -1,0 +1,736 @@
+{
+  "status": "PASS",
+  "base_caps": [
+    {
+      "id": "env_hedge",
+      "axis": 0,
+      "port": 0,
+      "closed_base_cross_section": [
+        -0.15,
+        0.15,
+        0,
+        1.7
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_hedge",
+      "axis": 0,
+      "port": 1,
+      "closed_base_cross_section": [
+        -0.15,
+        0.15,
+        0,
+        1.7
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_hedge_corner",
+      "axis": 0,
+      "port": 0,
+      "closed_base_cross_section": [
+        -0.15,
+        0.15,
+        0,
+        1.7
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_hedge_corner",
+      "axis": 0,
+      "port": 1,
+      "closed_base_cross_section": [
+        -0.15,
+        0.15,
+        0,
+        1.7
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_hedge_corner",
+      "axis": 1,
+      "port": 1,
+      "closed_base_cross_section": [
+        -0.15,
+        0.15,
+        0,
+        1.7
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_hedge_end",
+      "axis": 0,
+      "port": 0,
+      "closed_base_cross_section": [
+        -0.15,
+        0.15,
+        0,
+        1.7
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_hedge_end",
+      "axis": 0,
+      "port": 1,
+      "closed_base_cross_section": [
+        -0.15,
+        0.15,
+        0,
+        1.7
+      ],
+      "passed": true
+    }
+  ],
+  "connections": [
+    {
+      "a": "env_hedge",
+      "b": "env_hedge",
+      "d": 0,
+      "b_direction": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "kind": "u-to-u",
+      "port": [
+        1,
+        0,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 73,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge_corner",
+      "b": "env_hedge",
+      "d": 0,
+      "b_direction": 3,
+      "translation": [
+        -1,
+        1,
+        0
+      ],
+      "kind": "v-to-u",
+      "port": [
+        0,
+        1,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 75,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge",
+      "b": "env_hedge_corner",
+      "d": 0,
+      "b_direction": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "kind": "u-to-u",
+      "port": [
+        1,
+        0,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 73,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge",
+      "b": "env_hedge_end",
+      "d": 0,
+      "b_direction": 0,
+      "translation": [
+        1,
+        0,
+        0
+      ],
+      "kind": "u-to-u",
+      "port": [
+        1,
+        0,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 73,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge",
+      "b": "env_hedge",
+      "d": 1,
+      "b_direction": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "kind": "u-to-u",
+      "port": [
+        0,
+        0,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 75,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge_corner",
+      "b": "env_hedge",
+      "d": 1,
+      "b_direction": 0,
+      "translation": [
+        1,
+        1,
+        0
+      ],
+      "kind": "v-to-u",
+      "port": [
+        1,
+        1,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 73,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge",
+      "b": "env_hedge_corner",
+      "d": 1,
+      "b_direction": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "kind": "u-to-u",
+      "port": [
+        0,
+        0,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge",
+      "b": "env_hedge_end",
+      "d": 1,
+      "b_direction": 1,
+      "translation": [
+        0,
+        -1,
+        0
+      ],
+      "kind": "u-to-u",
+      "port": [
+        0,
+        0,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 75,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge",
+      "b": "env_hedge",
+      "d": 2,
+      "b_direction": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "kind": "u-to-u",
+      "port": [
+        0,
+        1,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 73,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge_corner",
+      "b": "env_hedge",
+      "d": 2,
+      "b_direction": 1,
+      "translation": [
+        1,
+        -1,
+        0
+      ],
+      "kind": "v-to-u",
+      "port": [
+        1,
+        0,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 75,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge",
+      "b": "env_hedge_corner",
+      "d": 2,
+      "b_direction": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "kind": "u-to-u",
+      "port": [
+        0,
+        1,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge",
+      "b": "env_hedge_end",
+      "d": 2,
+      "b_direction": 2,
+      "translation": [
+        -1,
+        0,
+        0
+      ],
+      "kind": "u-to-u",
+      "port": [
+        0,
+        1,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 73,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge",
+      "b": "env_hedge",
+      "d": 3,
+      "b_direction": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "kind": "u-to-u",
+      "port": [
+        1,
+        1,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 75,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge_corner",
+      "b": "env_hedge",
+      "d": 3,
+      "b_direction": 2,
+      "translation": [
+        -1,
+        -1,
+        0
+      ],
+      "kind": "v-to-u",
+      "port": [
+        0,
+        0,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 73,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge",
+      "b": "env_hedge_corner",
+      "d": 3,
+      "b_direction": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "kind": "u-to-u",
+      "port": [
+        1,
+        1,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 75,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "a": "env_hedge",
+      "b": "env_hedge_end",
+      "d": 3,
+      "b_direction": 3,
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "kind": "u-to-u",
+      "port": [
+        1,
+        1,
+        0
+      ],
+      "actual_saved_pixel_contacts": [
+        {
+          "z": 0.5,
+          "shared_opaque_pixels": 75,
+          "passed": true
+        },
+        {
+          "z": 3.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 5.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        },
+        {
+          "z": 7.0,
+          "shared_opaque_pixels": 77,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "limits": [
+    "Actual saved PNG alpha contacts sampled at base and three foliage heights; no fit or per-facing recenter.",
+    "Coincident cross-section and overlapping alpha do not certify exact three-dimensional collision.",
+    "Intentional foliage overlap at module contacts; authored corner reuses the same leaf assembly."
+  ]
+}

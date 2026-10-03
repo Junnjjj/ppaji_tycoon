@@ -1,0 +1,202 @@
+[
+  {
+    "ready": true,
+    "id": "env_water_rail",
+    "chainReview": false,
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true,
+    "frames": [
+      {
+        "d": 0,
+        "exact": true
+      },
+      {
+        "d": 1,
+        "exact": true
+      },
+      {
+        "d": 2,
+        "exact": true
+      },
+      {
+        "d": 3,
+        "exact": true
+      }
+    ]
+  },
+  {
+    "ready": true,
+    "id": "env_water_rail_corner",
+    "chainReview": false,
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true,
+    "frames": [
+      {
+        "d": 0,
+        "exact": true
+      },
+      {
+        "d": 1,
+        "exact": true
+      },
+      {
+        "d": 2,
+        "exact": true
+      },
+      {
+        "d": 3,
+        "exact": true
+      }
+    ]
+  },
+  {
+    "ready": true,
+    "id": "env_water_rail_end",
+    "chainReview": false,
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true,
+    "frames": [
+      {
+        "d": 0,
+        "exact": true
+      },
+      {
+        "d": 1,
+        "exact": true
+      },
+      {
+        "d": 2,
+        "exact": true
+      },
+      {
+        "d": 3,
+        "exact": true
+      }
+    ]
+  },
+  {
+    "ready": true,
+    "id": "env_street_lamp",
+    "chainReview": false,
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true,
+    "frames": [
+      {
+        "d": 0,
+        "exact": true
+      },
+      {
+        "d": 1,
+        "exact": true
+      },
+      {
+        "d": 2,
+        "exact": true
+      },
+      {
+        "d": 3,
+        "exact": true
+      }
+    ]
+  }
+]

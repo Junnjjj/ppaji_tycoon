@@ -1,0 +1,157 @@
+[
+  {
+    "file": "build.py",
+    "sha256": "532ca9bab9f20a3a9a7ca4dab702d01dc3d6d6c0b5e530545c2456c1d5d36c5f",
+    "bytes": 8171
+  },
+  {
+    "file": "render.py",
+    "sha256": "17674bf20cb9234fee4950b48cba7a1fb9a136c1ae8b25880ecdf524da31f635",
+    "bytes": 7057
+  },
+  {
+    "file": "line_finish.py",
+    "sha256": "1b714af99694f0a2819adc0d85a17c8716f64d5f4aeb1d5c86f63acd8b70415b",
+    "bytes": 2187
+  },
+  {
+    "file": "materials.py",
+    "sha256": "290586c02a5596da70aff0b40bf4e621365adf62e2364a1340f1843d4791807a",
+    "bytes": 1044
+  },
+  {
+    "file": "surface-spec.json",
+    "sha256": "19071af8e76bd4fe82e1f1c2905df58464169247d1acc926ff613f3c3f8d6869",
+    "bytes": 4158471
+  },
+  {
+    "file": "assembly.json",
+    "sha256": "a35f61c7604473737169816c6affab48c5c9d46ae022f808b4da634feee16563",
+    "bytes": 19757
+  },
+  {
+    "file": "review.json",
+    "sha256": "fbe2a8e7f784b075700f3bd46577d707ca4f184a071249021f001dd5342d31a5",
+    "bytes": 9790
+  },
+  {
+    "file": "prepare-isolated.py",
+    "sha256": "76ff0c63f0bea312a490e80f7c2a5e1dd401746680168a4cf545d9ad7f3f417f",
+    "bytes": 328
+  },
+  {
+    "file": "isolated.json",
+    "sha256": "c326127ae833941778a8a01b2866ec0538d8f7a11e3dbbd5a86c97e42573dc01",
+    "bytes": 192039
+  },
+  {
+    "file": "verify.py",
+    "sha256": "0ad8105f767ffe1584974e07948550fe67264596f0e0c2cc320033d1f8bf1273",
+    "bytes": 7286
+  },
+  {
+    "file": "verify-extra.py",
+    "sha256": "6e63fcd8eeed6b25376742121fa7f0c4b2fef0d3f5f85253683709e4cc44544a",
+    "bytes": 3459
+  },
+  {
+    "file": "build-report.py",
+    "sha256": "f367d36ac9d51098cd69da47c7ee7f3ac7ae692b5b62ac43402bcbfeb6eef093",
+    "bytes": 3536
+  },
+  {
+    "file": "verification.json",
+    "sha256": "ae25f8c3f24fcfa1194aa811021d85ef59798b3c36c2ba2c79151f76fa463481",
+    "bytes": 38752
+  },
+  {
+    "file": "extra-qa.json",
+    "sha256": "5c6eaafbf631bf961ee282772ef978f375bfdcfde6ce0eb4345ab8ec8b312a2b",
+    "bytes": 7121
+  },
+  {
+    "file": "source-size-review.json",
+    "sha256": "037a796cfca2265684d16ce70927be2bd7f12a9753821ea862218e36ec8d213d",
+    "bytes": 4139
+  },
+  {
+    "file": "candidate-hashes.json",
+    "sha256": "471d6cc991a103a2aaab9b4c188eb73e203e7516bca966e9dc8668812f09e84f",
+    "bytes": 2842
+  },
+  {
+    "file": "visual-review.json",
+    "sha256": "4b0c92ea48249ec4e0ff86f3cbd4905e1fe4ae4dc34867a3df4befe47e1516a3",
+    "bytes": 1545
+  },
+  {
+    "file": "index.html",
+    "sha256": "b8a794ea3e8ebd9c1ee744f39c6df15ade3c002f935fcedbffa8312c66aafe7f",
+    "bytes": 2862
+  },
+  {
+    "file": "HANDOVER.md",
+    "sha256": "9b5ee9909a00740bd2ae533a157ef3337f84f685d62675291c92dbaf5eb47df8",
+    "bytes": 8592
+  },
+  {
+    "file": "env_bus-comparison.png",
+    "sha256": "ace10d049fbcd2e0b2dc3fd79cb9300a0b78728c9c8020dd30d2aad94c4cee54",
+    "bytes": 801792
+  },
+  {
+    "file": "env_car-comparison.png",
+    "sha256": "f1ae3ae9eb538e7757e2ed8301121e9f94adb337e03e188fd30123796241a8fd",
+    "bytes": 256128
+  },
+  {
+    "file": "candidates/env_bus/d0.png",
+    "sha256": "be52eb9d1bf198df90cb7eca35f756881945478de41f38bd268600002755d59c",
+    "bytes": 53862
+  },
+  {
+    "file": "candidates/env_bus/d1.png",
+    "sha256": "640e3b58bf1fca3166f2f09044b93d892714a5723edfd38660707ece8277482b",
+    "bytes": 51699
+  },
+  {
+    "file": "candidates/env_bus/d2.png",
+    "sha256": "9e902daf1ecc7dc90391772e6d25a791a13410a975743e992e97169f17411606",
+    "bytes": 54918
+  },
+  {
+    "file": "candidates/env_bus/d3.png",
+    "sha256": "1108c9b73df86bdc5fd9a183505eb749fc24aabf378120a6f8be5f9a9a7a9cc5",
+    "bytes": 52423
+  },
+  {
+    "file": "candidates/env_car/d0.png",
+    "sha256": "d880a4e17e9fda4ba523fce279d1a8358a622b2a6bc0b52597bca1af1b414bda",
+    "bytes": 17301
+  },
+  {
+    "file": "candidates/env_car/d1.png",
+    "sha256": "8ec19a85fa4d8af48b2ce01fffe8dc0c93166b4eab225a5679f628436af59f3c",
+    "bytes": 17232
+  },
+  {
+    "file": "candidates/env_car/d2.png",
+    "sha256": "a856c4f788c6e3830abf872396a18dd021099d90a155c386ca0952a970a349f3",
+    "bytes": 17122
+  },
+  {
+    "file": "candidates/env_car/d3.png",
+    "sha256": "948704a2e724c8e0985538c062312695307fc72a501e2bb70ab59bd38e1d7b23",
+    "bytes": 17265
+  },
+  {
+    "file": "verify-refinement.py",
+    "sha256": "3d9204d84348142ff8852849ca3e592860e749611adcf8cfd9addbac1d0b92b1",
+    "bytes": 2214
+  },
+  {
+    "file": "refinement-qa.json",
+    "sha256": "8be5c12e9de3d744c4ebb6eb333e3796a304d3e8d313c78c86e62518bc4eb463",
+    "bytes": 3565
+  }
+]
