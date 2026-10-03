@@ -1,0 +1,74 @@
+[
+  {
+    "id": "snackbar",
+    "d": 0,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "snackbar",
+    "d": 1,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "snackbar",
+    "d": 2,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "snackbar",
+    "d": 3,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "chicken",
+    "d": 0,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "chicken",
+    "d": 1,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "chicken",
+    "d": 2,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "chicken",
+    "d": 3,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "firepit_row",
+    "d": 0,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "firepit_row",
+    "d": 1,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "firepit_row",
+    "d": 2,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "firepit_row",
+    "d": 3,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  }
+]

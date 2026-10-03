@@ -1,0 +1,409 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "snackbar": "food-fire-batch-20261003",
+    "chicken": "food-fire-batch-20261003",
+    "firepit_row": "food-fire-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "snackbar",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/food-fire-batch-20261003/candidates/snackbar/d0.png",
+      "source_sha256": "95a51360ccd74f5967c1223a16e6b5d8c00a2a236f9ee6bf9d57d56774c7a5bc",
+      "old": {
+        "file": "fac_snackbar_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "6bdb78fdb5a0f129305aaba460af8bb200ebc3645c7fdb58defc2298b3101c6d",
+        "bytes": 83334
+      },
+      "new": {
+        "file": "fac_snackbar_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "af7143e3c96061f416e0b6fb536d1941fc918ccefa8aaa163f47d2c5f3e38c5b",
+        "bytes": 50814
+      },
+      "old_native": {
+        "file": "snackbar/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f5d653c074b615a53e1631c0411b3777cd0367c41f051230c6cb98867e784ea0"
+      },
+      "new_native": {
+        "file": "snackbar/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "745feed19c22c8fca1765d085fdc246d1595344de26e1359120dc6bf8c501a73"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "snackbar",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/food-fire-batch-20261003/candidates/snackbar/d1.png",
+      "source_sha256": "6883b440867971d3fe8b8b6101c6e89e2d12fe14814a955dfb1ca38d88404489",
+      "old": {
+        "file": "fac_snackbar_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "653bf597b8a3b0c36b302eb87d24886fcd60f223eb7ab5f6c46ed0b8a074fe9d",
+        "bytes": 76592
+      },
+      "new": {
+        "file": "fac_snackbar_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "46a308e1a2177a5b1b80b61155fde3e05c204dbad91eb54c80e3b2706dd4049b",
+        "bytes": 50440
+      },
+      "old_native": {
+        "file": "snackbar/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "b1e1a83131bc8b69d0d707b6a069c585fcb01b1a8d1c8a9e282433134d5a7aee"
+      },
+      "new_native": {
+        "file": "snackbar/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "8b82cbe841dc3d0170a7d59ab232614902b482d8418c5e1b2a865599024800aa"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "snackbar",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/food-fire-batch-20261003/candidates/snackbar/d2.png",
+      "source_sha256": "43ba7f12183be7cc07d6f1cfe346a5bd9aedc3020fa5e8537f13ad02b8c7fefa",
+      "old": {
+        "file": "fac_snackbar_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "c186dd215cf68e4357a4e77d83585ee6bf31b1327ce7f47c94d4f0c3b10e2709",
+        "bytes": 67926
+      },
+      "new": {
+        "file": "fac_snackbar_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "06645bebb4f9b61314542da56ffc00bb9831952e3259eaa707ed48ad9a40dd03",
+        "bytes": 43054
+      },
+      "old_native": {
+        "file": "snackbar/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "6fb106b1136fd748f54a1a5a0c31581cca7a29acb290c2927b69ddc09c0c8973"
+      },
+      "new_native": {
+        "file": "snackbar/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "89e857b792cb2e7908a6378aec9d7becd975e4b5a9d244f0939a060f49b5f3fe"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "snackbar",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/food-fire-batch-20261003/candidates/snackbar/d3.png",
+      "source_sha256": "ebaf8da0ddfba4e728c8c893c9d3fdfdf7602eeae227ef2302be44d656600df7",
+      "old": {
+        "file": "fac_snackbar_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a97e95a4255ae4787e63172af9b3dca19f1746b7ce39e6a2452dc1f09742a53b",
+        "bytes": 71024
+      },
+      "new": {
+        "file": "fac_snackbar_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "423f6d77f0fc63c4c44512faf3d15e9337c749a75e94017800f5c22fea7558ae",
+        "bytes": 43442
+      },
+      "old_native": {
+        "file": "snackbar/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "0c17247bfd332c994ab222a35f20e1ae034c1ec74ca6207b4d8f14fdcbd33e26"
+      },
+      "new_native": {
+        "file": "snackbar/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "2b1689843dc6086de3a381c1d31c936c8bc56bddc6a5cc76fb78295cf7e667d3"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "chicken",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/food-fire-batch-20261003/candidates/chicken/d0.png",
+      "source_sha256": "2727ff28c1670de453b537099b473be7622fe5730a0601da829220cb6bc3ca19",
+      "old": {
+        "file": "fac_chicken_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "6937f7d61fdd15b5effef24a69f08d6f78afaa70d8514f50a583e3823827e2b7",
+        "bytes": 77122
+      },
+      "new": {
+        "file": "fac_chicken_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "501b439b30bf107e7a28d536c6c3aa4bb0bc2508e108e84e2f45866ec12316b7",
+        "bytes": 50808
+      },
+      "old_native": {
+        "file": "chicken/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "daef0372d4071f7f4a86af18534273b6ca1e08b6d8ad71e6f3c9b860b6545a63"
+      },
+      "new_native": {
+        "file": "chicken/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "ac734379a50565e2b9d13521bfa793122e392bad5a5bd2f29121ad8dce49e965"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "chicken",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/food-fire-batch-20261003/candidates/chicken/d1.png",
+      "source_sha256": "1ad3785687ec8c1a70cc1c19a4a13ae8d958c4daec019ea667a5c3d8a347ffc7",
+      "old": {
+        "file": "fac_chicken_1.fix-f1886f6715fb.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "f1886f6715fbc70051bc2f4dd9d87cac9061998959f79a8a404510e402f1c304",
+        "bytes": 87076
+      },
+      "new": {
+        "file": "fac_chicken_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "33baf10711f618a204f5e207b9a437b371830ca16e00101dc21ae1ca9a4663fc",
+        "bytes": 48872
+      },
+      "old_native": {
+        "file": "chicken/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "444662a740d7bf4a2fcaaac2d6de79ca6050c6a40140e3b71cab9e70570cb1da"
+      },
+      "new_native": {
+        "file": "chicken/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "d472e2ff9c2a2c25d2641ab28c5d0aae0bc89c8ea9fa10f918f4572493130405"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "chicken",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/food-fire-batch-20261003/candidates/chicken/d2.png",
+      "source_sha256": "fe5caa07434bf7eee525e10257ae6693d6eedc66dbcb6c008383ec612320a03b",
+      "old": {
+        "file": "fac_chicken_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "15adcb0b812e65b029d1d84089804c9bebb323101905c28ab238647b17c21d4c",
+        "bytes": 68358
+      },
+      "new": {
+        "file": "fac_chicken_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "f85078d97d9811845500619242e1de51f01b6ac1aa3b1f62e6545ff4a78b6ae1",
+        "bytes": 42766
+      },
+      "old_native": {
+        "file": "chicken/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "6bccf5d0b27a32d4fb80d6db08f96a0fc7513e6bb2f436b720e52f4b40fc847a"
+      },
+      "new_native": {
+        "file": "chicken/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f4ee1935f4540c1d1431f58d78f8f88696e21bf9ffcea8394e34561ed00924a1"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "chicken",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/food-fire-batch-20261003/candidates/chicken/d3.png",
+      "source_sha256": "14ff25176e6b346678625c50f13a711634e37cdbaa86214ce4e66cc28273885f",
+      "old": {
+        "file": "fac_chicken_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "34f392d02e72481c505f9bb2b5bd425770c6c30a3f1e8d67df1c04e79f7ae6e3",
+        "bytes": 69920
+      },
+      "new": {
+        "file": "fac_chicken_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "d29253ebbe25c44872ea99088883ef1b02ea7fb4a61a7c6827f00be249a99240",
+        "bytes": 46418
+      },
+      "old_native": {
+        "file": "chicken/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "b6ec611c729b331693e9f894592d8b9a30be8ea49de3a6d3cb3b9c622bff50ac"
+      },
+      "new_native": {
+        "file": "chicken/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "81d59d8391368cfc58cd500380da72d1bd2a9edea115cf14b57d6ba1169ce599"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "firepit_row",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/food-fire-batch-20261003/candidates/firepit_row/d0.png",
+      "source_sha256": "614e83923a5681903e2e891db6bdcb6c4caaa549d96ff22293e8f44323d4dd20",
+      "old": {
+        "file": "fac_firepit_row_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "19ebd8f15e216cbcbc61344ed00daeb0841c39c0da8852c72c6652288d47c2be",
+        "bytes": 32794
+      },
+      "new": {
+        "file": "fac_firepit_row_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "974d757f5f872cff4c58000b33fc384d5c82dfa5de262f73080c8926d079c6e6",
+        "bytes": 20170
+      },
+      "old_native": {
+        "file": "firepit_row/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f993a87237af3a693336ed17389072519d5807e51090dada0e54c7506479e943"
+      },
+      "new_native": {
+        "file": "firepit_row/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "0d7de1fb620fe44850a0c1ca0bd31d8ad7b786477d6477bd5eb133e219a5af74"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "firepit_row",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/food-fire-batch-20261003/candidates/firepit_row/d1.png",
+      "source_sha256": "78af977235e993d8426bda5e40f12c12453143945ac7faee6a68fee4b3ebfafd",
+      "old": {
+        "file": "fac_firepit_row_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "3832e0d64c27660e51439129716addc35eef63bc344733e7aed7da8502a38c43",
+        "bytes": 40158
+      },
+      "new": {
+        "file": "fac_firepit_row_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "3a8e633b439f03115f10dc6f0f86cf42b44b73e085087128a1703dade0771711",
+        "bytes": 20384
+      },
+      "old_native": {
+        "file": "firepit_row/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "31d0a3fd50fa221d7993849949d018f5052d51bbd0cc59a22b68614177a94c51"
+      },
+      "new_native": {
+        "file": "firepit_row/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "8c541f1059ef6be14d91b4ea4939ba19a199044b6ff86b2daadf276c95bfc447"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "firepit_row",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/food-fire-batch-20261003/candidates/firepit_row/d2.png",
+      "source_sha256": "1f53e19c1f1c49957f4551be0eef47cf7752503de8a18b3c67b7464017305923",
+      "old": {
+        "file": "fac_firepit_row_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "f85205f34d5d4d45b7ff2fcde50eabb8b7bfe216c09ee21c05cc233459d47597",
+        "bytes": 39158
+      },
+      "new": {
+        "file": "fac_firepit_row_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "862691bad7e662e1a57538e752a2a16fb0fa936073b29d18d2fa9dd7075a3796",
+        "bytes": 20046
+      },
+      "old_native": {
+        "file": "firepit_row/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "4acf2d19b331f88ab4dd124cc2faeb03f285edf30825ccb4d13f3dff5e01a7cc"
+      },
+      "new_native": {
+        "file": "firepit_row/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "4a6b93422ef1115cb7097b93280f2a10ade8c90da4cad1759d04e160b73d14ae"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "firepit_row",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/food-fire-batch-20261003/candidates/firepit_row/d3.png",
+      "source_sha256": "557182be27364e77fccb279c3c5d8ffbde60cb190a2fc38029b659cd8fc57c84",
+      "old": {
+        "file": "fac_firepit_row_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "13a7e750f18f97b821510d4c13f1793604b297e013267f10046dab7e41e31041",
+        "bytes": 41458
+      },
+      "new": {
+        "file": "fac_firepit_row_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "67f05c78736215927e320351e3dfa13d7a302cd5a3474c076250f82bd75a78e2",
+        "bytes": 20612
+      },
+      "old_native": {
+        "file": "firepit_row/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "6eac214a4e059684d8585c11749a426b95c567cf4fe202b96cd14a30be895754"
+      },
+      "new_native": {
+        "file": "firepit_row/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "be5b8a976b13dff51c37290329f49510c8968224096f417f51c6fd9181bc358e"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

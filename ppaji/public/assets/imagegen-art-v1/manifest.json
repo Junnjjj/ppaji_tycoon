@@ -647,88 +647,88 @@
       "bytes": 29124
     },
     "fac/snackbar/0": {
-      "file": "fac_snackbar_0.webp",
+      "file": "fac_snackbar_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "6bdb78fdb5a0f129305aaba460af8bb200ebc3645c7fdb58defc2298b3101c6d",
-      "bytes": 83334
+      "sha256": "af7143e3c96061f416e0b6fb536d1941fc918ccefa8aaa163f47d2c5f3e38c5b",
+      "bytes": 50814
     },
     "fac/snackbar/1": {
-      "file": "fac_snackbar_1.webp",
+      "file": "fac_snackbar_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "653bf597b8a3b0c36b302eb87d24886fcd60f223eb7ab5f6c46ed0b8a074fe9d",
-      "bytes": 76592
+      "sha256": "46a308e1a2177a5b1b80b61155fde3e05c204dbad91eb54c80e3b2706dd4049b",
+      "bytes": 50440
     },
     "fac/snackbar/2": {
-      "file": "fac_snackbar_2.webp",
+      "file": "fac_snackbar_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "c186dd215cf68e4357a4e77d83585ee6bf31b1327ce7f47c94d4f0c3b10e2709",
-      "bytes": 67926
+      "sha256": "06645bebb4f9b61314542da56ffc00bb9831952e3259eaa707ed48ad9a40dd03",
+      "bytes": 43054
     },
     "fac/snackbar/3": {
-      "file": "fac_snackbar_3.webp",
+      "file": "fac_snackbar_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "a97e95a4255ae4787e63172af9b3dca19f1746b7ce39e6a2452dc1f09742a53b",
-      "bytes": 71024
+      "sha256": "423f6d77f0fc63c4c44512faf3d15e9337c749a75e94017800f5c22fea7558ae",
+      "bytes": 43442
     },
     "fac/firepit_row/0": {
-      "file": "fac_firepit_row_0.webp",
+      "file": "fac_firepit_row_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "19ebd8f15e216cbcbc61344ed00daeb0841c39c0da8852c72c6652288d47c2be",
-      "bytes": 32794
+      "sha256": "974d757f5f872cff4c58000b33fc384d5c82dfa5de262f73080c8926d079c6e6",
+      "bytes": 20170
     },
     "fac/firepit_row/1": {
-      "file": "fac_firepit_row_1.webp",
+      "file": "fac_firepit_row_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "3832e0d64c27660e51439129716addc35eef63bc344733e7aed7da8502a38c43",
-      "bytes": 40158
+      "sha256": "3a8e633b439f03115f10dc6f0f86cf42b44b73e085087128a1703dade0771711",
+      "bytes": 20384
     },
     "fac/firepit_row/2": {
-      "file": "fac_firepit_row_2.webp",
+      "file": "fac_firepit_row_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "f85205f34d5d4d45b7ff2fcde50eabb8b7bfe216c09ee21c05cc233459d47597",
-      "bytes": 39158
+      "sha256": "862691bad7e662e1a57538e752a2a16fb0fa936073b29d18d2fa9dd7075a3796",
+      "bytes": 20046
     },
     "fac/firepit_row/3": {
-      "file": "fac_firepit_row_3.webp",
+      "file": "fac_firepit_row_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "13a7e750f18f97b821510d4c13f1793604b297e013267f10046dab7e41e31041",
-      "bytes": 41458
+      "sha256": "67f05c78736215927e320351e3dfa13d7a302cd5a3474c076250f82bd75a78e2",
+      "bytes": 20612
     },
     "fac/chicken/0": {
-      "file": "fac_chicken_0.webp",
+      "file": "fac_chicken_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "6937f7d61fdd15b5effef24a69f08d6f78afaa70d8514f50a583e3823827e2b7",
-      "bytes": 77122
+      "sha256": "501b439b30bf107e7a28d536c6c3aa4bb0bc2508e108e84e2f45866ec12316b7",
+      "bytes": 50808
     },
     "fac/chicken/1": {
-      "file": "fac_chicken_1.fix-f1886f6715fb.webp",
+      "file": "fac_chicken_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "f1886f6715fbc70051bc2f4dd9d87cac9061998959f79a8a404510e402f1c304",
-      "bytes": 87076
+      "sha256": "33baf10711f618a204f5e207b9a437b371830ca16e00101dc21ae1ca9a4663fc",
+      "bytes": 48872
     },
     "fac/chicken/2": {
-      "file": "fac_chicken_2.webp",
+      "file": "fac_chicken_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "15adcb0b812e65b029d1d84089804c9bebb323101905c28ab238647b17c21d4c",
-      "bytes": 68358
+      "sha256": "f85078d97d9811845500619242e1de51f01b6ac1aa3b1f62e6545ff4a78b6ae1",
+      "bytes": 42766
     },
     "fac/chicken/3": {
-      "file": "fac_chicken_3.webp",
+      "file": "fac_chicken_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "34f392d02e72481c505f9bb2b5bd425770c6c30a3f1e8d67df1c04e79f7ae6e3",
-      "bytes": 69920
+      "sha256": "d29253ebbe25c44872ea99088883ef1b02ea7fb4a61a7c6827f00be249a99240",
+      "bytes": 46418
     },
     "fac/pavilion/0": {
       "file": "fac_pavilion_0.webp",

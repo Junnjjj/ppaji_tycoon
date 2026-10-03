@@ -1,0 +1,6 @@
+{
+  "status": "INITIAL_VALIDATION_DESIGN_FAILED",
+  "observed": "firepit_row d0 alpha components=1; lower-rim alpha-edge coverage=0.032",
+  "cause": "Projection overlaps separate grills. Pan bottom and outline expansion also mean alpha exit is not the rim lower geometry edge.",
+  "correction": "Verify positive world-space gaps and each grill isolated as one connected component. Check all 24 upper silhouette lines on isolated saved sprites; check 16 exposed upper lines in combined output. Record 8 occluded edges using isolated/combined alpha evidence. Account for analytic outline extrusion: 2 packed px x and y adds 3 px vertically at slope 0.5. Keep slope/RMS and residual-offset tolerances unchanged."
+}

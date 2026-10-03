@@ -4854,28 +4854,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "snackbar/native-d0.png",
+          "file": "snackbar/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "f5d653c074b615a53e1631c0411b3777cd0367c41f051230c6cb98867e784ea0"
+          "sha256": "745feed19c22c8fca1765d085fdc246d1595344de26e1359120dc6bf8c501a73"
         },
         "d1": {
-          "file": "snackbar/native-d1.png",
+          "file": "snackbar/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "b1e1a83131bc8b69d0d707b6a069c585fcb01b1a8d1c8a9e282433134d5a7aee"
+          "sha256": "8b82cbe841dc3d0170a7d59ab232614902b482d8418c5e1b2a865599024800aa"
         },
         "d2": {
-          "file": "snackbar/native-d2.png",
+          "file": "snackbar/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "6fb106b1136fd748f54a1a5a0c31581cca7a29acb290c2927b69ddc09c0c8973"
+          "sha256": "89e857b792cb2e7908a6378aec9d7becd975e4b5a9d244f0939a060f49b5f3fe"
         },
         "d3": {
-          "file": "snackbar/native-d3.png",
+          "file": "snackbar/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "0c17247bfd332c994ab222a35f20e1ae034c1ec74ca6207b4d8f14fdcbd33e26"
+          "sha256": "2b1689843dc6086de3a381c1d31c936c8bc56bddc6a5cc76fb78295cf7e667d3"
         }
       },
       "note": "Selected building art only; existing simulation access and use behavior preserved."
@@ -9537,28 +9537,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "firepit_row/native-d0.png",
+          "file": "firepit_row/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "f993a87237af3a693336ed17389072519d5807e51090dada0e54c7506479e943"
+          "sha256": "0d7de1fb620fe44850a0c1ca0bd31d8ad7b786477d6477bd5eb133e219a5af74"
         },
         "d1": {
-          "file": "firepit_row/native-d1.png",
+          "file": "firepit_row/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "31d0a3fd50fa221d7993849949d018f5052d51bbd0cc59a22b68614177a94c51"
+          "sha256": "8c541f1059ef6be14d91b4ea4939ba19a199044b6ff86b2daadf276c95bfc447"
         },
         "d2": {
-          "file": "firepit_row/native-d2.png",
+          "file": "firepit_row/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "4acf2d19b331f88ab4dd124cc2faeb03f285edf30825ccb4d13f3dff5e01a7cc"
+          "sha256": "4a6b93422ef1115cb7097b93280f2a10ade8c90da4cad1759d04e160b73d14ae"
         },
         "d3": {
-          "file": "firepit_row/native-d3.png",
+          "file": "firepit_row/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "6eac214a4e059684d8585c11749a426b95c567cf4fe202b96cd14a30be895754"
+          "sha256": "be5b8a976b13dff51c37290329f49510c8968224096f417f51c6fd9181bc358e"
         }
       },
       "note": "User accepted 2026-09-20. Authored same-scale art; portal behavior comes from canonical facility-portals.json and GuestStore, never static ride routes."
@@ -9669,28 +9669,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "chicken/native-d0.png",
+          "file": "chicken/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "daef0372d4071f7f4a86af18534273b6ca1e08b6d8ad71e6f3c9b860b6545a63"
+          "sha256": "ac734379a50565e2b9d13521bfa793122e392bad5a5bd2f29121ad8dce49e965"
         },
         "d1": {
-          "file": "chicken/native-d1.png",
+          "file": "chicken/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "444662a740d7bf4a2fcaaac2d6de79ca6050c6a40140e3b71cab9e70570cb1da"
+          "sha256": "d472e2ff9c2a2c25d2641ab28c5d0aae0bc89c8ea9fa10f918f4572493130405"
         },
         "d2": {
-          "file": "chicken/native-d2.png",
+          "file": "chicken/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "6bccf5d0b27a32d4fb80d6db08f96a0fc7513e6bb2f436b720e52f4b40fc847a"
+          "sha256": "f4ee1935f4540c1d1431f58d78f8f88696e21bf9ffcea8394e34561ed00924a1"
         },
         "d3": {
-          "file": "chicken/native-d3.png",
+          "file": "chicken/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "b6ec611c729b331693e9f894592d8b9a30be8ea49de3a6d3cb3b9c622bff50ac"
+          "sha256": "81d59d8391368cfc58cd500380da72d1bd2a9edea115cf14b57d6ba1169ce599"
         }
       },
       "note": "User accepted 2026-09-20. Authored same-scale art; portal behavior comes from canonical facility-portals.json and GuestStore, never static ride routes."
