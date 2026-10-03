@@ -451,32 +451,32 @@
       "bytes": 22086
     },
     "fac/sikhye/0": {
-      "file": "fac_sikhye_0.webp",
+      "file": "fac_sikhye_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "a8874bc4554dd72d0f092666365ed4a13cac598adf0385c376a35d67c7053a94",
-      "bytes": 30414
+      "sha256": "c1f1488801e114d8b9dad5974b30d59e22c12d0ea531f3265c659f788150563f",
+      "bytes": 17594
     },
     "fac/sikhye/1": {
-      "file": "fac_sikhye_1.webp",
+      "file": "fac_sikhye_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "dcd7d22a9e75a1fc6a088e6ac86981a0dbbf47f7325f4589f284b1b0e03a3896",
-      "bytes": 30828
+      "sha256": "9e8070203ae96ac0bec007c3fb68201a96142a0f7e91467d8c685ea39dfe92fd",
+      "bytes": 18494
     },
     "fac/sikhye/2": {
-      "file": "fac_sikhye_2.fix-422668fed484.webp",
+      "file": "fac_sikhye_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "422668fed48415e441064361a341734a9939454f0e47ba98e99ad77a5b01ae31",
-      "bytes": 27262
+      "sha256": "b63c39eaadb624c9b45c661c198edc0eea406797f68d9cbffa346fd8b3f603ea",
+      "bytes": 16234
     },
     "fac/sikhye/3": {
-      "file": "fac_sikhye_3.webp",
+      "file": "fac_sikhye_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "cb876ae3b2e2e4f85b2a073356488f8524c49ce184b40ae55500c42d638e4f38",
-      "bytes": 30318
+      "sha256": "245f8fbbec4656392a9ec41dd0e06918ee498db2608d1cbfc66548ccde8a4493",
+      "bytes": 17022
     },
     "fac/bungeoppang/0": {
       "file": "fac_bungeoppang_0.webp",

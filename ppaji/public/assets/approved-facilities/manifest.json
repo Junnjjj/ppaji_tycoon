@@ -9268,28 +9268,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "sikhye/native-d0.png",
+          "file": "sikhye/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "825eaaca97612bce62c470c0d5182330835628c1f51f41bfdbd77f24a6398c5a"
+          "sha256": "e4499a87dc06f65a4d8aa3b10e9d96c135adefc18cf7bb336d7ed70d85811c2f"
         },
         "d1": {
-          "file": "sikhye/native-d1.png",
+          "file": "sikhye/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "d8009ec7528be636a22411411e90c7f32667c75fcfac13f28bd6415b8bd5b6b5"
+          "sha256": "0aef3b2d37d10e8c721b4a1af353e194fc8e28aa03c77d4253371e50739cfdec"
         },
         "d2": {
-          "file": "sikhye/native-d2.png",
+          "file": "sikhye/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "d5630b4caf5680239deb0bd3dc61fde89d70dc6bac5a0f2d9cf6e346b77abafc"
+          "sha256": "59dcef0624a4302128b84ece2939635b33c60ab645a9070d9dce7e769d6aab1b"
         },
         "d3": {
-          "file": "sikhye/native-d3.png",
+          "file": "sikhye/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "b8dffe7c5cfd45780e703902c5753c488630c4b543c3b1370121295c65bbedea"
+          "sha256": "75d62ce6519c864b9f92dc767ec8069c8fd8e7f1b6158af9f024789f18aa2c46"
         }
       },
       "note": "User accepted 2026-09-20. Authored same-scale art; portal behavior comes from canonical facility-portals.json and GuestStore, never static ride routes."

@@ -1,0 +1,143 @@
+{
+  "status": "USER_ACCEPTED_APPLIED",
+  "authorization": "좋다 이정도면 만족해 나머지 리스트들을 쭉 보여줄래? 에셋 전체를 대체하는방식으로가자",
+  "scope": {
+    "sikhye": "sikhye-template-20261002"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "sikhye",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sikhye-template-20261002/candidates/sikhye/d0.png",
+      "source_sha256": "bf7b782c47e15074ee7c0a1d13b8a0aa24d98fe2493ee92d6afaecebd955d770",
+      "old": {
+        "file": "fac_sikhye_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a8874bc4554dd72d0f092666365ed4a13cac598adf0385c376a35d67c7053a94",
+        "bytes": 30414
+      },
+      "new": {
+        "file": "fac_sikhye_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "c1f1488801e114d8b9dad5974b30d59e22c12d0ea531f3265c659f788150563f",
+        "bytes": 17594
+      },
+      "old_native": {
+        "file": "sikhye/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "825eaaca97612bce62c470c0d5182330835628c1f51f41bfdbd77f24a6398c5a"
+      },
+      "new_native": {
+        "file": "sikhye/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "e4499a87dc06f65a4d8aa3b10e9d96c135adefc18cf7bb336d7ed70d85811c2f"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "sikhye",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sikhye-template-20261002/candidates/sikhye/d1.png",
+      "source_sha256": "67c60560f09f66fa1f7a7bebdd9a9f6ef7f8b03948df7aec9e0d44efdd5d372f",
+      "old": {
+        "file": "fac_sikhye_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "dcd7d22a9e75a1fc6a088e6ac86981a0dbbf47f7325f4589f284b1b0e03a3896",
+        "bytes": 30828
+      },
+      "new": {
+        "file": "fac_sikhye_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "9e8070203ae96ac0bec007c3fb68201a96142a0f7e91467d8c685ea39dfe92fd",
+        "bytes": 18494
+      },
+      "old_native": {
+        "file": "sikhye/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "d8009ec7528be636a22411411e90c7f32667c75fcfac13f28bd6415b8bd5b6b5"
+      },
+      "new_native": {
+        "file": "sikhye/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "0aef3b2d37d10e8c721b4a1af353e194fc8e28aa03c77d4253371e50739cfdec"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "sikhye",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sikhye-template-20261002/candidates/sikhye/d2.png",
+      "source_sha256": "604ea775ad50890068849a515765919c36fd61c11cf2d69d6efbfefa1894aa17",
+      "old": {
+        "file": "fac_sikhye_2.fix-422668fed484.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "422668fed48415e441064361a341734a9939454f0e47ba98e99ad77a5b01ae31",
+        "bytes": 27262
+      },
+      "new": {
+        "file": "fac_sikhye_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "b63c39eaadb624c9b45c661c198edc0eea406797f68d9cbffa346fd8b3f603ea",
+        "bytes": 16234
+      },
+      "old_native": {
+        "file": "sikhye/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "d5630b4caf5680239deb0bd3dc61fde89d70dc6bac5a0f2d9cf6e346b77abafc"
+      },
+      "new_native": {
+        "file": "sikhye/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "59dcef0624a4302128b84ece2939635b33c60ab645a9070d9dce7e769d6aab1b"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "sikhye",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sikhye-template-20261002/candidates/sikhye/d3.png",
+      "source_sha256": "3b84175dd49fb172dea0cda17e5be6cb26e4efd35fab98654156bfccc5804985",
+      "old": {
+        "file": "fac_sikhye_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "cb876ae3b2e2e4f85b2a073356488f8524c49ce184b40ae55500c42d638e4f38",
+        "bytes": 30318
+      },
+      "new": {
+        "file": "fac_sikhye_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "245f8fbbec4656392a9ec41dd0e06918ee498db2608d1cbfc66548ccde8a4493",
+        "bytes": 17022
+      },
+      "old_native": {
+        "file": "sikhye/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "b8dffe7c5cfd45780e703902c5753c488630c4b543c3b1370121295c65bbedea"
+      },
+      "new_native": {
+        "file": "sikhye/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "75d62ce6519c864b9f92dc767ec8069c8fd8e7f1b6158af9f024789f18aa2c46"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}
