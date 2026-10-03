@@ -1,0 +1,86 @@
+[
+  {
+    "id": "sauna",
+    "d": 0,
+    "sha256": "e7eee0a90df55faef9cf73fd8f5c2c263be2b7c9c691606ab4c33aa2708e3789",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "sauna",
+    "d": 1,
+    "sha256": "4dacf8cbca77ce1abe67a2dc41bbbb7e962e8d4d3164876ffaa7a7fab15bb2b5",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "sauna",
+    "d": 2,
+    "sha256": "81d78361769875bbdf428eee0ddd95533b5dafbb358d3bfb17ae1073ac3d8e3c",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "sauna",
+    "d": 3,
+    "sha256": "337200968cacd26413e282d278a4cc22829f94c20328a9b4bd0aa7defb50caeb",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "jjimjilbang",
+    "d": 0,
+    "sha256": "4caf701d9481bc8c55814e8302cfea87dc4ad228fc3df1f2e16001c0bc4c1826",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "jjimjilbang",
+    "d": 1,
+    "sha256": "8284bbd710362e57a2d3541981f6b241ddb91f34d8c5b44da5660f025d6bd968",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "jjimjilbang",
+    "d": 2,
+    "sha256": "b7446b0d1748f71502b36c1293c2bc57f0cdfc1de366f2f6b74efcb7f15dee8f",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "jjimjilbang",
+    "d": 3,
+    "sha256": "5ef0911d5c636b19b0d4181fd3b7c642f24310de11c13319d7defbe7bfc9931c",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "info",
+    "d": 0,
+    "sha256": "d9a025bdd92b63f3665922bd13526c99cb11585fe8140da2d1466364e42b9c32",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "info",
+    "d": 1,
+    "sha256": "a0b1f9622ff2d4b1965ab23732c4172f254bf96c09da045c535be7c2025a912d",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "info",
+    "d": 2,
+    "sha256": "ca8f947c66b9af7eb157d399e836ed4db24399f114a76cc05a34aed2eee0b477",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "info",
+    "d": 3,
+    "sha256": "b82e2affe311318166f7bf7e2b16377678e95d69bcf4f9d3cabe61574e72cfa7",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

@@ -5225,28 +5225,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "info/native-d0.png",
+          "file": "info/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "8b6e7acc92447f7d79ee601469ab8d74f28bd22f45a72ba8853e1ad6dae50705"
+          "sha256": "2a74435d80683df1a1d5ff663ea7ececf03b7befc353bbb515bbf7060de060ce"
         },
         "d1": {
-          "file": "info/native-d1.png",
+          "file": "info/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "99c8394acd9c729ee9f17a65fbd451120ed0e3d0467b0a4587e021d7090fb6cf"
+          "sha256": "5b8c59ab3d5d2b13f19e8d9f02df90faf457b1c358f344ae38a0489bfdac1673"
         },
         "d2": {
-          "file": "info/native-d2.png",
+          "file": "info/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "567463f3fdc56ce0cebadaee48e16faf272c93958d4052207f09e460e9cdfe33"
+          "sha256": "385c1f1a03607be778723aad546cffd0e820bee1c0f67a2c352eb8bed8e9b237"
         },
         "d3": {
-          "file": "info/native-d3.png",
+          "file": "info/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "f8d32a1a231267a93a8632c0b1e631c6ba77f6eb89eaf8d05609e6ea01cb9b65"
+          "sha256": "7ef41a46ae13e16e1c611788ac86b7af43bb4d5dd6bdaef98108188ff724348e"
         }
       },
       "note": "Accepted cutaway art only. Physical access/slots are inactive handover data; existing simulation retained."
@@ -5494,28 +5494,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "sauna/native-d0.png",
+          "file": "sauna/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "a8e348a0a002ab46440eec9c545bdf121ec99dbe02d99162df68b6f3f9bc273f"
+          "sha256": "d605e4c4271a1196cb452de7ad2205f4ba19eb15bde9f7a444f0ab94ccf67c3e"
         },
         "d1": {
-          "file": "sauna/native-d1.png",
+          "file": "sauna/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "1e79401778dbe21014c604f63644f6bc531d1c225c64e394f94e042885cc8fce"
+          "sha256": "cf7a4b950340a32fa22f16b86edfd16596da1c9a2656dbb055558dd827ed76dc"
         },
         "d2": {
-          "file": "sauna/native-d2.png",
+          "file": "sauna/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "3c444b9a5941c2969021655cb8285e35d2c6b55a72cfc6e8ee3842ed02e3f032"
+          "sha256": "1d13e6025b5f568ef6cf9695833ab87a3d0582a895556bbe37232de71dcddece"
         },
         "d3": {
-          "file": "sauna/native-d3.png",
+          "file": "sauna/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "55de9f6e83563b2fcbd01129914b96605185517bb0c80da9d78d93b8f79c33e3"
+          "sha256": "55d554ed40df6fa2a3b31c5117934df368caef01b510d418a9df8ddeca9f63b6"
         }
       },
       "note": "Accepted cutaway art only. Physical access/slots are inactive handover data; existing simulation retained."
@@ -5641,28 +5641,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "jjimjilbang/native-d0.png",
+          "file": "jjimjilbang/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "ac7c53e9342144d223ae424a2a85d79a16667ae3e11df47b4ebdd262084f39d2"
+          "sha256": "edf659d6bb9dbf6d03f9ebf0c66d408955c16e442fdf051d1704e822e99e2aaa"
         },
         "d1": {
-          "file": "jjimjilbang/native-d1.png",
+          "file": "jjimjilbang/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "a024531f59b311bb500c6efbdf78ab255876f9407943b3f2524cd718bde0b842"
+          "sha256": "da795a4a03deda1df5e8f954739154738481085892c2f2b9f0e0c597541c9d35"
         },
         "d2": {
-          "file": "jjimjilbang/native-d2.png",
+          "file": "jjimjilbang/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "7bff30d2a79c3e3a59c39728e9c086861a6bdc9eae777af70cfb14605eeb4667"
+          "sha256": "46c2192861ef49bbaa54f2a0bd9ce858086e46400889c6446322b66af5cdd318"
         },
         "d3": {
-          "file": "jjimjilbang/native-d3.png",
+          "file": "jjimjilbang/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "e71906c8a4d4d95bc5da2077755c05687c1aab32381c3eb69e7fc27353ffedd7"
+          "sha256": "7d8d53e21aaf81ede50a44cf8a327e6736fac320a0f80e8d8b8c0939709bf8ce"
         }
       },
       "note": "Accepted cutaway art only. Physical access/slots are inactive handover data; existing simulation retained."

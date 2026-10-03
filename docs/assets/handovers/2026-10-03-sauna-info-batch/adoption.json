@@ -1,0 +1,409 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "sauna": "sauna-info-batch-20261003",
+    "jjimjilbang": "sauna-info-batch-20261003",
+    "info": "sauna-info-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "sauna",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna-info-batch-20261003/candidates/sauna/d0.png",
+      "source_sha256": "dc2a58f90227894bf86bc1630d3e2223b7a72f14eda6a61207f84696c5c9058d",
+      "old": {
+        "file": "fac_sauna_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "80fb10eaa32beda5bc8d3a163db2aef332ec1936a95cd02ee262585289f74bd7",
+        "bytes": 102126
+      },
+      "new": {
+        "file": "fac_sauna_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e7eee0a90df55faef9cf73fd8f5c2c263be2b7c9c691606ab4c33aa2708e3789",
+        "bytes": 74822
+      },
+      "old_native": {
+        "file": "sauna/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "a8e348a0a002ab46440eec9c545bdf121ec99dbe02d99162df68b6f3f9bc273f"
+      },
+      "new_native": {
+        "file": "sauna/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "d605e4c4271a1196cb452de7ad2205f4ba19eb15bde9f7a444f0ab94ccf67c3e"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "sauna",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna-info-batch-20261003/candidates/sauna/d1.png",
+      "source_sha256": "61de0ae8581ad7c4317abfe27dcd21e618a3b188b91f480a1204fce35423af46",
+      "old": {
+        "file": "fac_sauna_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "9960d0871dca94d455a5cd95d14a593361ead4fb82a471081161f4241f7c50d6",
+        "bytes": 108734
+      },
+      "new": {
+        "file": "fac_sauna_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "4dacf8cbca77ce1abe67a2dc41bbbb7e962e8d4d3164876ffaa7a7fab15bb2b5",
+        "bytes": 74678
+      },
+      "old_native": {
+        "file": "sauna/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "1e79401778dbe21014c604f63644f6bc531d1c225c64e394f94e042885cc8fce"
+      },
+      "new_native": {
+        "file": "sauna/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "cf7a4b950340a32fa22f16b86edfd16596da1c9a2656dbb055558dd827ed76dc"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "sauna",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna-info-batch-20261003/candidates/sauna/d2.png",
+      "source_sha256": "babe9337ffbce8814d091cc6a031379a7db8184ac8acea83f66105f273f74296",
+      "old": {
+        "file": "fac_sauna_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "346ea996eb8ac5e3841c3672fa46738744b75eb5fe345ddb08a10e4fdcf2511b",
+        "bytes": 99732
+      },
+      "new": {
+        "file": "fac_sauna_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "81d78361769875bbdf428eee0ddd95533b5dafbb358d3bfb17ae1073ac3d8e3c",
+        "bytes": 76050
+      },
+      "old_native": {
+        "file": "sauna/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "3c444b9a5941c2969021655cb8285e35d2c6b55a72cfc6e8ee3842ed02e3f032"
+      },
+      "new_native": {
+        "file": "sauna/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "1d13e6025b5f568ef6cf9695833ab87a3d0582a895556bbe37232de71dcddece"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "sauna",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna-info-batch-20261003/candidates/sauna/d3.png",
+      "source_sha256": "5c2f58ecd3953a530630ba55be5e823fb627cd17a426db38a441081c212578e4",
+      "old": {
+        "file": "fac_sauna_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "cb65a32567a1a1ca06dc0c982f4ffcab69d4d2a42c56bb40b1bfa5c8e7079b4e",
+        "bytes": 106324
+      },
+      "new": {
+        "file": "fac_sauna_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "337200968cacd26413e282d278a4cc22829f94c20328a9b4bd0aa7defb50caeb",
+        "bytes": 73792
+      },
+      "old_native": {
+        "file": "sauna/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "55de9f6e83563b2fcbd01129914b96605185517bb0c80da9d78d93b8f79c33e3"
+      },
+      "new_native": {
+        "file": "sauna/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "55d554ed40df6fa2a3b31c5117934df368caef01b510d418a9df8ddeca9f63b6"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "jjimjilbang",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna-info-batch-20261003/candidates/jjimjilbang/d0.png",
+      "source_sha256": "711fb77cffba0b070e09ebf22ec70d40a68d363c5b12c1dfaeeba2226dd04111",
+      "old": {
+        "file": "fac_jjimjilbang_0.fix-ca3b6cd42dfa.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "ca3b6cd42dfacebe28851009d7c044e4de61ba730e44fc0ddc2b493e52bf8031",
+        "bytes": 164604
+      },
+      "new": {
+        "file": "fac_jjimjilbang_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "4caf701d9481bc8c55814e8302cfea87dc4ad228fc3df1f2e16001c0bc4c1826",
+        "bytes": 59716
+      },
+      "old_native": {
+        "file": "jjimjilbang/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "ac7c53e9342144d223ae424a2a85d79a16667ae3e11df47b4ebdd262084f39d2"
+      },
+      "new_native": {
+        "file": "jjimjilbang/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "edf659d6bb9dbf6d03f9ebf0c66d408955c16e442fdf051d1704e822e99e2aaa"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "jjimjilbang",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna-info-batch-20261003/candidates/jjimjilbang/d1.png",
+      "source_sha256": "864662f07aa3da1fc2efae27b78c480e9b186f1b3c72bfc8a7553e8759d45e27",
+      "old": {
+        "file": "fac_jjimjilbang_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "bdde8911f486bff15537a6d4431b3b1552d55de7fa7e4ccd9be9131e6868b49b",
+        "bytes": 134162
+      },
+      "new": {
+        "file": "fac_jjimjilbang_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "8284bbd710362e57a2d3541981f6b241ddb91f34d8c5b44da5660f025d6bd968",
+        "bytes": 61030
+      },
+      "old_native": {
+        "file": "jjimjilbang/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "a024531f59b311bb500c6efbdf78ab255876f9407943b3f2524cd718bde0b842"
+      },
+      "new_native": {
+        "file": "jjimjilbang/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "da795a4a03deda1df5e8f954739154738481085892c2f2b9f0e0c597541c9d35"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "jjimjilbang",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna-info-batch-20261003/candidates/jjimjilbang/d2.png",
+      "source_sha256": "302435beb183f0f2c7c98a68a490651f80cb8f298373efff64c3c3ac5e4369ef",
+      "old": {
+        "file": "fac_jjimjilbang_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "130711ffb06316d4c26cb75b8908adcef259dd60e33fb02fc88950c307281783",
+        "bytes": 133946
+      },
+      "new": {
+        "file": "fac_jjimjilbang_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "b7446b0d1748f71502b36c1293c2bc57f0cdfc1de366f2f6b74efcb7f15dee8f",
+        "bytes": 61144
+      },
+      "old_native": {
+        "file": "jjimjilbang/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "7bff30d2a79c3e3a59c39728e9c086861a6bdc9eae777af70cfb14605eeb4667"
+      },
+      "new_native": {
+        "file": "jjimjilbang/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "46c2192861ef49bbaa54f2a0bd9ce858086e46400889c6446322b66af5cdd318"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "jjimjilbang",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna-info-batch-20261003/candidates/jjimjilbang/d3.png",
+      "source_sha256": "ccf10fa48dd600e58712cf3cb421b207db1f2271a935f347bdd9b141a530b5a8",
+      "old": {
+        "file": "fac_jjimjilbang_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e044dde4a83e49db68aeaec09eb6ba78364155b15c6cd077cd4d8a0286124dba",
+        "bytes": 128998
+      },
+      "new": {
+        "file": "fac_jjimjilbang_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "5ef0911d5c636b19b0d4181fd3b7c642f24310de11c13319d7defbe7bfc9931c",
+        "bytes": 59702
+      },
+      "old_native": {
+        "file": "jjimjilbang/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "e71906c8a4d4d95bc5da2077755c05687c1aab32381c3eb69e7fc27353ffedd7"
+      },
+      "new_native": {
+        "file": "jjimjilbang/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "7d8d53e21aaf81ede50a44cf8a327e6736fac320a0f80e8d8b8c0939709bf8ce"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "info",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna-info-batch-20261003/candidates/info/d0.png",
+      "source_sha256": "811e5f560d880da131fa467843bdd8e42ea7c9bfbe3f5ea95116f6921dfa609e",
+      "old": {
+        "file": "fac_info_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "b76c33cbd98081bea8331b9781c0297813b5833753348205dc8e176bab1fccf4",
+        "bytes": 42788
+      },
+      "new": {
+        "file": "fac_info_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "d9a025bdd92b63f3665922bd13526c99cb11585fe8140da2d1466364e42b9c32",
+        "bytes": 27192
+      },
+      "old_native": {
+        "file": "info/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "8b6e7acc92447f7d79ee601469ab8d74f28bd22f45a72ba8853e1ad6dae50705"
+      },
+      "new_native": {
+        "file": "info/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "2a74435d80683df1a1d5ff663ea7ececf03b7befc353bbb515bbf7060de060ce"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "info",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna-info-batch-20261003/candidates/info/d1.png",
+      "source_sha256": "aafe5140a76f3bad1671de1d5256329fa93855a628effc022851decccd1efe48",
+      "old": {
+        "file": "fac_info_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "9bf76e845c1a28a7bfb53a55763bc510032f564eb1184af13f3364462bfe22ae",
+        "bytes": 40448
+      },
+      "new": {
+        "file": "fac_info_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a0b1f9622ff2d4b1965ab23732c4172f254bf96c09da045c535be7c2025a912d",
+        "bytes": 26112
+      },
+      "old_native": {
+        "file": "info/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "99c8394acd9c729ee9f17a65fbd451120ed0e3d0467b0a4587e021d7090fb6cf"
+      },
+      "new_native": {
+        "file": "info/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "5b8c59ab3d5d2b13f19e8d9f02df90faf457b1c358f344ae38a0489bfdac1673"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "info",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna-info-batch-20261003/candidates/info/d2.png",
+      "source_sha256": "3c75109718851394725c6199c4794e9ed36490921821798204fa4158a0cd1032",
+      "old": {
+        "file": "fac_info_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a9ae6893b4e917161bab96289bf990d33c728d487aac567c894ecd4d96ad0c02",
+        "bytes": 36556
+      },
+      "new": {
+        "file": "fac_info_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "ca8f947c66b9af7eb157d399e836ed4db24399f114a76cc05a34aed2eee0b477",
+        "bytes": 22246
+      },
+      "old_native": {
+        "file": "info/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "567463f3fdc56ce0cebadaee48e16faf272c93958d4052207f09e460e9cdfe33"
+      },
+      "new_native": {
+        "file": "info/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "385c1f1a03607be778723aad546cffd0e820bee1c0f67a2c352eb8bed8e9b237"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "info",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/sauna-info-batch-20261003/candidates/info/d3.png",
+      "source_sha256": "a0e12443699183e72e178ae5971f21b8b0411af732bcb57a6ad0a618cbb74401",
+      "old": {
+        "file": "fac_info_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "0c212825bc04c3fe7e8db9972cbfdd4a37d29c62a99ea62ee0f33ee7aefb3fce",
+        "bytes": 32614
+      },
+      "new": {
+        "file": "fac_info_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "b82e2affe311318166f7bf7e2b16377678e95d69bcf4f9d3cabe61574e72cfa7",
+        "bytes": 22120
+      },
+      "old_native": {
+        "file": "info/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f8d32a1a231267a93a8632c0b1e631c6ba77f6eb89eaf8d05609e6ea01cb9b65"
+      },
+      "new_native": {
+        "file": "info/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "7ef41a46ae13e16e1c611788ac86b7af43bb4d5dd6bdaef98108188ff724348e"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

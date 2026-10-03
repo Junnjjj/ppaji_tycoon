@@ -31,60 +31,60 @@
       "bytes": 40546
     },
     "fac/sauna/0": {
-      "file": "fac_sauna_0.webp",
+      "file": "fac_sauna_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "80fb10eaa32beda5bc8d3a163db2aef332ec1936a95cd02ee262585289f74bd7",
-      "bytes": 102126
+      "sha256": "e7eee0a90df55faef9cf73fd8f5c2c263be2b7c9c691606ab4c33aa2708e3789",
+      "bytes": 74822
     },
     "fac/sauna/1": {
-      "file": "fac_sauna_1.webp",
+      "file": "fac_sauna_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "9960d0871dca94d455a5cd95d14a593361ead4fb82a471081161f4241f7c50d6",
-      "bytes": 108734
+      "sha256": "4dacf8cbca77ce1abe67a2dc41bbbb7e962e8d4d3164876ffaa7a7fab15bb2b5",
+      "bytes": 74678
     },
     "fac/sauna/2": {
-      "file": "fac_sauna_2.webp",
+      "file": "fac_sauna_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "346ea996eb8ac5e3841c3672fa46738744b75eb5fe345ddb08a10e4fdcf2511b",
-      "bytes": 99732
+      "sha256": "81d78361769875bbdf428eee0ddd95533b5dafbb358d3bfb17ae1073ac3d8e3c",
+      "bytes": 76050
     },
     "fac/sauna/3": {
-      "file": "fac_sauna_3.webp",
+      "file": "fac_sauna_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "cb65a32567a1a1ca06dc0c982f4ffcab69d4d2a42c56bb40b1bfa5c8e7079b4e",
-      "bytes": 106324
+      "sha256": "337200968cacd26413e282d278a4cc22829f94c20328a9b4bd0aa7defb50caeb",
+      "bytes": 73792
     },
     "fac/jjimjilbang/0": {
-      "file": "fac_jjimjilbang_0.fix-ca3b6cd42dfa.webp",
+      "file": "fac_jjimjilbang_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "ca3b6cd42dfacebe28851009d7c044e4de61ba730e44fc0ddc2b493e52bf8031",
-      "bytes": 164604
+      "sha256": "4caf701d9481bc8c55814e8302cfea87dc4ad228fc3df1f2e16001c0bc4c1826",
+      "bytes": 59716
     },
     "fac/jjimjilbang/1": {
-      "file": "fac_jjimjilbang_1.webp",
+      "file": "fac_jjimjilbang_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "bdde8911f486bff15537a6d4431b3b1552d55de7fa7e4ccd9be9131e6868b49b",
-      "bytes": 134162
+      "sha256": "8284bbd710362e57a2d3541981f6b241ddb91f34d8c5b44da5660f025d6bd968",
+      "bytes": 61030
     },
     "fac/jjimjilbang/2": {
-      "file": "fac_jjimjilbang_2.webp",
+      "file": "fac_jjimjilbang_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "130711ffb06316d4c26cb75b8908adcef259dd60e33fb02fc88950c307281783",
-      "bytes": 133946
+      "sha256": "b7446b0d1748f71502b36c1293c2bc57f0cdfc1de366f2f6b74efcb7f15dee8f",
+      "bytes": 61144
     },
     "fac/jjimjilbang/3": {
-      "file": "fac_jjimjilbang_3.webp",
+      "file": "fac_jjimjilbang_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "e044dde4a83e49db68aeaec09eb6ba78364155b15c6cd077cd4d8a0286124dba",
-      "bytes": 128998
+      "sha256": "5ef0911d5c636b19b0d4181fd3b7c642f24310de11c13319d7defbe7bfc9931c",
+      "bytes": 59702
     },
     "fac/arcade/0": {
       "file": "fac_arcade_0_accepted_20261002.webp",
@@ -143,32 +143,32 @@
       "bytes": 10586
     },
     "fac/info/0": {
-      "file": "fac_info_0.webp",
+      "file": "fac_info_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "b76c33cbd98081bea8331b9781c0297813b5833753348205dc8e176bab1fccf4",
-      "bytes": 42788
+      "sha256": "d9a025bdd92b63f3665922bd13526c99cb11585fe8140da2d1466364e42b9c32",
+      "bytes": 27192
     },
     "fac/info/1": {
-      "file": "fac_info_1.webp",
+      "file": "fac_info_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "9bf76e845c1a28a7bfb53a55763bc510032f564eb1184af13f3364462bfe22ae",
-      "bytes": 40448
+      "sha256": "a0b1f9622ff2d4b1965ab23732c4172f254bf96c09da045c535be7c2025a912d",
+      "bytes": 26112
     },
     "fac/info/2": {
-      "file": "fac_info_2.webp",
+      "file": "fac_info_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "a9ae6893b4e917161bab96289bf990d33c728d487aac567c894ecd4d96ad0c02",
-      "bytes": 36556
+      "sha256": "ca8f947c66b9af7eb157d399e836ed4db24399f114a76cc05a34aed2eee0b477",
+      "bytes": 22246
     },
     "fac/info/3": {
-      "file": "fac_info_3.webp",
+      "file": "fac_info_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "0c212825bc04c3fe7e8db9972cbfdd4a37d29c62a99ea62ee0f33ee7aefb3fce",
-      "bytes": 32614
+      "sha256": "b82e2affe311318166f7bf7e2b16377678e95d69bcf4f9d3cabe61574e72cfa7",
+      "bytes": 22120
     },
     "fac/rental_tube/0": {
       "file": "fac_rental_tube_0_accepted_20261002.webp",

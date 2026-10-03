@@ -1,0 +1,74 @@
+[
+  {
+    "id": "sauna",
+    "d": 0,
+    "file": "fac_sauna_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "sauna",
+    "d": 1,
+    "file": "fac_sauna_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "sauna",
+    "d": 2,
+    "file": "fac_sauna_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "sauna",
+    "d": 3,
+    "file": "fac_sauna_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "jjimjilbang",
+    "d": 0,
+    "file": "fac_jjimjilbang_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "jjimjilbang",
+    "d": 1,
+    "file": "fac_jjimjilbang_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "jjimjilbang",
+    "d": 2,
+    "file": "fac_jjimjilbang_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "jjimjilbang",
+    "d": 3,
+    "file": "fac_jjimjilbang_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "info",
+    "d": 0,
+    "file": "fac_info_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "info",
+    "d": 1,
+    "file": "fac_info_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "info",
+    "d": 2,
+    "file": "fac_info_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "info",
+    "d": 3,
+    "file": "fac_info_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

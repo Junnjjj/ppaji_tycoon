@@ -1,0 +1,3007 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "sauna",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "wood-wainscot-u0",
+          "b": "wood-foundation",
+          "overlap": [
+            0.07500000000000001,
+            2.8600000000000003,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-wall-cap-u0",
+          "b": "wood-wainscot-u0",
+          "overlap": [
+            0.07500000000000001,
+            2.8600000000000003,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "wood-wainscot-u1",
+          "b": "wood-foundation",
+          "overlap": [
+            0.07500000000000018,
+            2.8600000000000003,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-wall-cap-u1",
+          "b": "wood-wainscot-u1",
+          "overlap": [
+            0.07500000000000018,
+            2.8600000000000003,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "wood-wainscot-v0",
+          "b": "wood-foundation",
+          "overlap": [
+            2.8600000000000003,
+            0.07500000000000001,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-wall-cap-v0",
+          "b": "wood-wainscot-v0",
+          "overlap": [
+            2.8600000000000003,
+            0.07500000000000001,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "wood-wainscot-v1",
+          "b": "wood-foundation",
+          "overlap": [
+            2.8600000000000003,
+            0.07500000000000018,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-wall-cap-v1",
+          "b": "wood-wainscot-v1",
+          "overlap": [
+            2.8600000000000003,
+            0.07500000000000018,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "door",
+          "b": "wood-wainscot-v1",
+          "overlap": [
+            0.65,
+            0.01200000000000001,
+            24.740000000000002
+          ]
+        },
+        {
+          "a": "wood-doorpost-0",
+          "b": "wood-wainscot-v1",
+          "overlap": [
+            0.06400000000000006,
+            0.07500000000000018,
+            25.400000000000002
+          ]
+        },
+        {
+          "a": "wood-doorpost-1",
+          "b": "wood-wainscot-v1",
+          "overlap": [
+            0.06400000000000006,
+            0.07500000000000018,
+            25.400000000000002
+          ]
+        },
+        {
+          "a": "wood-doorhead",
+          "b": "wood-doorpost-0",
+          "overlap": [
+            0.06400000000000006,
+            0.1280000000000001,
+            0.7000000000000028
+          ]
+        },
+        {
+          "a": "wood-doorhead",
+          "b": "wood-doorpost-1",
+          "overlap": [
+            0.06399999999999983,
+            0.1280000000000001,
+            0.7000000000000028
+          ]
+        },
+        {
+          "a": "wood-corner-0",
+          "b": "wood-foundation",
+          "overlap": [
+            0.024999999999999994,
+            0.024999999999999994,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-corner-1",
+          "b": "wood-foundation",
+          "overlap": [
+            0.02499999999999991,
+            0.024999999999999994,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-corner-2",
+          "b": "wood-foundation",
+          "overlap": [
+            0.02499999999999991,
+            0.02499999999999991,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-corner-3",
+          "b": "wood-foundation",
+          "overlap": [
+            0.024999999999999994,
+            0.02499999999999991,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-long-bench-rail-0",
+          "b": "wood-long-bench-plank-0",
+          "overlap": [
+            0.07200000000000006,
+            0.1413333333333333,
+            0.1200000000000001
+          ]
+        },
+        {
+          "a": "wood-long-bench-rail-0",
+          "b": "wood-long-bench-plank-1",
+          "overlap": [
+            0.07200000000000006,
+            0.15533333333333332,
+            0.1200000000000001
+          ]
+        },
+        {
+          "a": "wood-long-bench-rail-0",
+          "b": "wood-long-bench-plank-2",
+          "overlap": [
+            0.07200000000000006,
+            0.14933333333333332,
+            0.1200000000000001
+          ]
+        },
+        {
+          "a": "wood-long-bench-leg-0-0",
+          "b": "wood-long-bench-rail-0",
+          "overlap": [
+            0.062000000000000055,
+            0.061999999999999944,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-long-bench-leg-0-0",
+          "b": "wood-foundation",
+          "overlap": [
+            0.062000000000000055,
+            0.061999999999999944,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-long-bench-leg-0-1",
+          "b": "wood-long-bench-rail-0",
+          "overlap": [
+            0.062000000000000055,
+            0.062000000000000055,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-long-bench-leg-0-1",
+          "b": "wood-foundation",
+          "overlap": [
+            0.062000000000000055,
+            0.062000000000000055,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-long-bench-rail-1",
+          "b": "wood-long-bench-plank-0",
+          "overlap": [
+            0.07200000000000006,
+            0.1413333333333333,
+            0.1200000000000001
+          ]
+        },
+        {
+          "a": "wood-long-bench-rail-1",
+          "b": "wood-long-bench-plank-1",
+          "overlap": [
+            0.07200000000000006,
+            0.15533333333333332,
+            0.1200000000000001
+          ]
+        },
+        {
+          "a": "wood-long-bench-rail-1",
+          "b": "wood-long-bench-plank-2",
+          "overlap": [
+            0.07200000000000006,
+            0.14933333333333332,
+            0.1200000000000001
+          ]
+        },
+        {
+          "a": "wood-long-bench-leg-1-0",
+          "b": "wood-long-bench-rail-1",
+          "overlap": [
+            0.06200000000000028,
+            0.061999999999999944,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-long-bench-leg-1-0",
+          "b": "wood-foundation",
+          "overlap": [
+            0.06200000000000028,
+            0.061999999999999944,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-long-bench-leg-1-1",
+          "b": "wood-long-bench-rail-1",
+          "overlap": [
+            0.06200000000000028,
+            0.062000000000000055,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-long-bench-leg-1-1",
+          "b": "wood-foundation",
+          "overlap": [
+            0.06200000000000028,
+            0.062000000000000055,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-short-bench-rail-0",
+          "b": "wood-short-bench-plank-0",
+          "overlap": [
+            0.14800000000000002,
+            0.07200000000000006,
+            0.1200000000000001
+          ]
+        },
+        {
+          "a": "wood-short-bench-rail-0",
+          "b": "wood-short-bench-plank-1",
+          "overlap": [
+            0.16199999999999992,
+            0.07200000000000006,
+            0.1200000000000001
+          ]
+        },
+        {
+          "a": "wood-short-bench-rail-0",
+          "b": "wood-short-bench-plank-2",
+          "overlap": [
+            0.15600000000000003,
+            0.07200000000000006,
+            0.1200000000000001
+          ]
+        },
+        {
+          "a": "wood-short-bench-leg-0-0",
+          "b": "wood-short-bench-rail-0",
+          "overlap": [
+            0.061999999999999944,
+            0.06199999999999983,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-short-bench-leg-0-0",
+          "b": "wood-foundation",
+          "overlap": [
+            0.061999999999999944,
+            0.06199999999999983,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-short-bench-leg-0-1",
+          "b": "wood-short-bench-rail-0",
+          "overlap": [
+            0.062000000000000055,
+            0.06199999999999983,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-short-bench-leg-0-1",
+          "b": "wood-foundation",
+          "overlap": [
+            0.062000000000000055,
+            0.06199999999999983,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-short-bench-rail-1",
+          "b": "wood-short-bench-plank-0",
+          "overlap": [
+            0.14800000000000002,
+            0.07200000000000006,
+            0.1200000000000001
+          ]
+        },
+        {
+          "a": "wood-short-bench-rail-1",
+          "b": "wood-short-bench-plank-1",
+          "overlap": [
+            0.16199999999999992,
+            0.07200000000000006,
+            0.1200000000000001
+          ]
+        },
+        {
+          "a": "wood-short-bench-rail-1",
+          "b": "wood-short-bench-plank-2",
+          "overlap": [
+            0.15600000000000003,
+            0.07200000000000006,
+            0.1200000000000001
+          ]
+        },
+        {
+          "a": "wood-short-bench-leg-1-0",
+          "b": "wood-short-bench-rail-1",
+          "overlap": [
+            0.061999999999999944,
+            0.062000000000000055,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-short-bench-leg-1-0",
+          "b": "wood-foundation",
+          "overlap": [
+            0.061999999999999944,
+            0.062000000000000055,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-short-bench-leg-1-1",
+          "b": "wood-short-bench-rail-1",
+          "overlap": [
+            0.062000000000000055,
+            0.062000000000000055,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-short-bench-leg-1-1",
+          "b": "wood-foundation",
+          "overlap": [
+            0.062000000000000055,
+            0.062000000000000055,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "towel",
+          "b": "wood-long-bench-plank-1",
+          "overlap": [
+            0.29000000000000004,
+            0.15533333333333332,
+            0.02999999999999936
+          ]
+        },
+        {
+          "a": "heater-rim",
+          "b": "heater-body",
+          "overlap": [
+            0.5900000000000001,
+            0.5900000000000001,
+            0.14999999999999858
+          ]
+        },
+        {
+          "a": "stone-0",
+          "b": "heater-rim",
+          "overlap": [
+            0.15000000000000013,
+            0.15000000000000013,
+            0.4900000000000002
+          ]
+        },
+        {
+          "a": "stone-1",
+          "b": "heater-rim",
+          "overlap": [
+            0.15000000000000036,
+            0.15000000000000013,
+            0.4900000000000002
+          ]
+        },
+        {
+          "a": "stone-2",
+          "b": "heater-rim",
+          "overlap": [
+            0.13999999999999968,
+            0.1399999999999999,
+            0.4900000000000002
+          ]
+        },
+        {
+          "a": "stone-3",
+          "b": "heater-rim",
+          "overlap": [
+            0.15800000000000014,
+            0.15800000000000036,
+            0.4900000000000002
+          ]
+        },
+        {
+          "a": "stone-4",
+          "b": "heater-rim",
+          "overlap": [
+            0.16800000000000015,
+            0.16800000000000015,
+            0.4900000000000002
+          ]
+        },
+        {
+          "a": "stone-5",
+          "b": "heater-rim",
+          "overlap": [
+            0.15800000000000036,
+            0.15800000000000036,
+            0.4900000000000002
+          ]
+        },
+        {
+          "a": "stone-6",
+          "b": "heater-rim",
+          "overlap": [
+            0.15000000000000013,
+            0.15000000000000036,
+            0.4900000000000002
+          ]
+        },
+        {
+          "a": "stone-7",
+          "b": "heater-rim",
+          "overlap": [
+            0.1559999999999997,
+            0.1559999999999997,
+            0.4900000000000002
+          ]
+        },
+        {
+          "a": "stone-8",
+          "b": "heater-rim",
+          "overlap": [
+            0.13999999999999968,
+            0.13999999999999968,
+            0.4900000000000002
+          ]
+        },
+        {
+          "a": "stone-9",
+          "b": "stone-4",
+          "overlap": [
+            0.129,
+            0.1299999999999999,
+            0.32000000000000206
+          ]
+        },
+        {
+          "a": "wood-heater-post-0",
+          "b": "wood-foundation",
+          "overlap": [
+            0.06999999999999984,
+            0.06999999999999984,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-heater-post-1",
+          "b": "wood-foundation",
+          "overlap": [
+            0.07000000000000028,
+            0.06999999999999984,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-heater-post-2",
+          "b": "wood-foundation",
+          "overlap": [
+            0.07000000000000028,
+            0.07000000000000028,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-heater-post-3",
+          "b": "wood-foundation",
+          "overlap": [
+            0.06999999999999984,
+            0.07000000000000028,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-heater-guard-0-0",
+          "b": "wood-heater-post-0",
+          "overlap": [
+            0.06499999999999995,
+            0.05500000000000016,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-0-0",
+          "b": "wood-heater-post-1",
+          "overlap": [
+            0.06500000000000039,
+            0.05500000000000016,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-0-1",
+          "b": "wood-heater-post-0",
+          "overlap": [
+            0.06499999999999995,
+            0.05500000000000016,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-0-1",
+          "b": "wood-heater-post-1",
+          "overlap": [
+            0.06500000000000039,
+            0.05500000000000016,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-1-0",
+          "b": "wood-heater-post-3",
+          "overlap": [
+            0.06499999999999995,
+            0.054999999999999716,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-1-0",
+          "b": "wood-heater-post-2",
+          "overlap": [
+            0.06500000000000039,
+            0.054999999999999716,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-1-1",
+          "b": "wood-heater-post-3",
+          "overlap": [
+            0.06499999999999995,
+            0.054999999999999716,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-1-1",
+          "b": "wood-heater-post-2",
+          "overlap": [
+            0.06500000000000039,
+            0.054999999999999716,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-2-0",
+          "b": "wood-heater-post-0",
+          "overlap": [
+            0.06000000000000005,
+            0.03499999999999992,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-2-0",
+          "b": "wood-heater-post-3",
+          "overlap": [
+            0.06000000000000005,
+            0.03500000000000014,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-2-1",
+          "b": "wood-heater-post-0",
+          "overlap": [
+            0.06000000000000005,
+            0.03499999999999992,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-2-1",
+          "b": "wood-heater-post-3",
+          "overlap": [
+            0.06000000000000005,
+            0.03500000000000014,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-3-0",
+          "b": "wood-heater-post-1",
+          "overlap": [
+            0.06000000000000005,
+            0.03499999999999992,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-3-0",
+          "b": "wood-heater-post-2",
+          "overlap": [
+            0.06000000000000005,
+            0.03500000000000014,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-3-1",
+          "b": "wood-heater-post-1",
+          "overlap": [
+            0.06000000000000005,
+            0.03499999999999992,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "wood-heater-guard-3-1",
+          "b": "wood-heater-post-2",
+          "overlap": [
+            0.06000000000000005,
+            0.03500000000000014,
+            0.7999999999999998
+          ]
+        },
+        {
+          "a": "heater-leg-0",
+          "b": "wood-foundation",
+          "overlap": [
+            0.050000000000000044,
+            0.04999999999999982,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "heater-leg-0",
+          "b": "heater-body",
+          "overlap": [
+            0.050000000000000044,
+            0.04999999999999982,
+            0.2999999999999998
+          ]
+        },
+        {
+          "a": "heater-leg-1",
+          "b": "wood-foundation",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "heater-leg-1",
+          "b": "heater-body",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.2999999999999998
+          ]
+        },
+        {
+          "a": "heater-leg-2",
+          "b": "wood-foundation",
+          "overlap": [
+            0.050000000000000044,
+            0.04999999999999982,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "heater-leg-2",
+          "b": "heater-body",
+          "overlap": [
+            0.050000000000000044,
+            0.04999999999999982,
+            0.2999999999999998
+          ]
+        },
+        {
+          "a": "heater-leg-3",
+          "b": "wood-foundation",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "heater-leg-3",
+          "b": "heater-body",
+          "overlap": [
+            0.04999999999999982,
+            0.04999999999999982,
+            0.2999999999999998
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-foundation",
+          "edges": 12
+        },
+        {
+          "name": "wood-wainscot-u0",
+          "edges": 12
+        },
+        {
+          "name": "wood-wall-cap-u0",
+          "edges": 12
+        },
+        {
+          "name": "wood-wainscot-u1",
+          "edges": 12
+        },
+        {
+          "name": "wood-wall-cap-u1",
+          "edges": 12
+        },
+        {
+          "name": "wood-wainscot-v0",
+          "edges": 12
+        },
+        {
+          "name": "wood-wall-cap-v0",
+          "edges": 12
+        },
+        {
+          "name": "wood-wainscot-v1",
+          "edges": 12
+        },
+        {
+          "name": "wood-wall-cap-v1",
+          "edges": 12
+        },
+        {
+          "name": "door",
+          "edges": 12
+        },
+        {
+          "name": "wood-doorpost-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-doorpost-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-doorhead",
+          "edges": 12
+        },
+        {
+          "name": "wood-corner-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-corner-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-corner-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-corner-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-long-bench-plank-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-long-bench-plank-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-long-bench-plank-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-long-bench-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-long-bench-leg-0-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-long-bench-leg-0-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-long-bench-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-long-bench-leg-1-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-long-bench-leg-1-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-short-bench-plank-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-short-bench-plank-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-short-bench-plank-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-short-bench-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-short-bench-leg-0-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-short-bench-leg-0-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-short-bench-rail-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-short-bench-leg-1-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-short-bench-leg-1-1",
+          "edges": 12
+        },
+        {
+          "name": "towel",
+          "edges": 360
+        },
+        {
+          "name": "heater-body",
+          "edges": 12
+        },
+        {
+          "name": "heater-rim",
+          "edges": 12
+        },
+        {
+          "name": "stone-0",
+          "edges": 304
+        },
+        {
+          "name": "stone-1",
+          "edges": 304
+        },
+        {
+          "name": "stone-2",
+          "edges": 304
+        },
+        {
+          "name": "stone-3",
+          "edges": 304
+        },
+        {
+          "name": "stone-4",
+          "edges": 304
+        },
+        {
+          "name": "stone-5",
+          "edges": 304
+        },
+        {
+          "name": "stone-6",
+          "edges": 304
+        },
+        {
+          "name": "stone-7",
+          "edges": 304
+        },
+        {
+          "name": "stone-8",
+          "edges": 304
+        },
+        {
+          "name": "stone-9",
+          "edges": 304
+        },
+        {
+          "name": "wood-heater-post-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-heater-post-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-heater-post-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-heater-post-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-heater-guard-0-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-heater-guard-0-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-heater-guard-1-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-heater-guard-1-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-heater-guard-2-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-heater-guard-2-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-heater-guard-3-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-heater-guard-3-1",
+          "edges": 12
+        },
+        {
+          "name": "heater-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "heater-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "heater-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "heater-leg-3",
+          "edges": 12
+        }
+      ],
+      "rotation_edge_error": 4.961309141293668e-16,
+      "cutaway": [
+        {
+          "d": 0,
+          "visible_walls": [
+            "u0",
+            "v0"
+          ],
+          "door_visible": false,
+          "fixed_nonwall_faces": 2062,
+          "nonwall_geometry_sha256": "d1235318fd3b247e3471aa1ee45cb26a3cf59cb3879e64b7d89d954a23aab2c6"
+        },
+        {
+          "d": 1,
+          "visible_walls": [
+            "u1",
+            "v0"
+          ],
+          "door_visible": false,
+          "fixed_nonwall_faces": 2062,
+          "nonwall_geometry_sha256": "d1235318fd3b247e3471aa1ee45cb26a3cf59cb3879e64b7d89d954a23aab2c6"
+        },
+        {
+          "d": 2,
+          "visible_walls": [
+            "u1",
+            "v1"
+          ],
+          "door_visible": true,
+          "fixed_nonwall_faces": 2062,
+          "nonwall_geometry_sha256": "d1235318fd3b247e3471aa1ee45cb26a3cf59cb3879e64b7d89d954a23aab2c6"
+        },
+        {
+          "d": 3,
+          "visible_walls": [
+            "u0",
+            "v1"
+          ],
+          "door_visible": true,
+          "fixed_nonwall_faces": 2062,
+          "nonwall_geometry_sha256": "d1235318fd3b247e3471aa1ee45cb26a3cf59cb3879e64b7d89d954a23aab2c6"
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            78608
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 118,
+              "slope": -0.5001113874493729,
+              "expected_slope": -0.5000000000000003,
+              "rms": 0.5627813898164195,
+              "outline_adjusted_residual": 0.5042372881355937,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 118,
+                "slope": -0.5001113874493729,
+                "rms": 0.5627813898164195,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 118,
+              "slope": 0.499892264598147,
+              "expected_slope": 0.5000000000000001,
+              "rms": 0.5589407076173585,
+              "outline_adjusted_residual": 0.4991491006536092,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 118,
+                "slope": 0.499892264598147,
+                "rms": 0.5589407076173585,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "long-bench",
+              "mode": "top",
+              "samples": 19,
+              "slope": -0.49122807017544246,
+              "expected_slope": -0.49999999999999906,
+              "rms": 0.5435766099940308,
+              "outline_adjusted_residual": 0.910323254352414,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "long-bench",
+              "mode": "top",
+              "samples": 91,
+              "slope": 0.4996336996336997,
+              "expected_slope": 0.4999999999999996,
+              "rms": 0.556410135837378,
+              "outline_adjusted_residual": 0.5928621550819788,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "short-bench",
+              "mode": "top",
+              "samples": 42,
+              "slope": -0.4991491775382847,
+              "expected_slope": -0.5000000000000004,
+              "rms": 0.5584144999623935,
+              "outline_adjusted_residual": 0.8059874147534688,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "short-bench",
+              "mode": "top",
+              "samples": 20,
+              "slope": 0.48120300751879885,
+              "expected_slope": 0.5000000000000009,
+              "rms": 0.5484084971070844,
+              "outline_adjusted_residual": 0.5,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            78608
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 118,
+              "slope": -0.5001113874493729,
+              "expected_slope": -0.5000000000000003,
+              "rms": 0.5627813898164195,
+              "outline_adjusted_residual": 0.5042372881355937,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 118,
+                "slope": -0.5001113874493729,
+                "rms": 0.5627813898164195,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 118,
+              "slope": 0.499892264598147,
+              "expected_slope": 0.5000000000000001,
+              "rms": 0.5589407076173585,
+              "outline_adjusted_residual": 0.4991491006536092,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 118,
+                "slope": 0.499892264598147,
+                "rms": 0.5589407076173585,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "long-bench",
+              "mode": "top",
+              "samples": 90,
+              "slope": -0.5001934395192817,
+              "expected_slope": -0.4999999999999998,
+              "rms": 0.5639417531551015,
+              "outline_adjusted_residual": 0.5934562810752242,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "long-bench",
+              "mode": "top",
+              "samples": 20,
+              "slope": 0.48120300751880085,
+              "expected_slope": 0.49999999999999906,
+              "rms": 0.5484084971070808,
+              "outline_adjusted_residual": 0.5898984692814793,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "short-bench",
+              "mode": "top",
+              "samples": 21,
+              "slope": -0.49350649350649184,
+              "expected_slope": -0.5000000000000009,
+              "rms": 0.5670830439415733,
+              "outline_adjusted_residual": 0.5209427113601405,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "short-bench",
+              "mode": "top",
+              "samples": 42,
+              "slope": 0.5009318531723524,
+              "expected_slope": 0.49999999999999956,
+              "rms": 0.5694534105333562,
+              "outline_adjusted_residual": 0.5119047619047619,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            78608
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 118,
+              "slope": -0.5001113874493729,
+              "expected_slope": -0.5000000000000003,
+              "rms": 0.5627813898164195,
+              "outline_adjusted_residual": 0.5042372881355937,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 118,
+                "slope": -0.5001113874493729,
+                "rms": 0.5627813898164195,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 118,
+              "slope": 0.499892264598147,
+              "expected_slope": 0.5000000000000001,
+              "rms": 0.5589407076173585,
+              "outline_adjusted_residual": 0.4991491006536092,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 118,
+                "slope": 0.499892264598147,
+                "rms": 0.5589407076173585,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "long-bench",
+              "mode": "top",
+              "samples": 20,
+              "slope": -0.5112781954887204,
+              "expected_slope": -0.5000000000000009,
+              "rms": 0.555221286237957,
+              "outline_adjusted_residual": 0.5898984692815077,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "long-bench",
+              "mode": "top",
+              "samples": 90,
+              "slope": 0.5001934395192821,
+              "expected_slope": 0.5000000000000002,
+              "rms": 0.5639417531551014,
+              "outline_adjusted_residual": 0.5582562810752494,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "short-bench",
+              "mode": "top",
+              "samples": 42,
+              "slope": -0.5007697917510716,
+              "expected_slope": -0.49999999999999956,
+              "rms": 0.5481862624271728,
+              "outline_adjusted_residual": 0.4880952380952381,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "short-bench",
+              "mode": "top",
+              "samples": 20,
+              "slope": 0.503759398496236,
+              "expected_slope": 0.5000000000000009,
+              "rms": 0.5585965227138193,
+              "outline_adjusted_residual": 0.6098984692814895,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            78608
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 118,
+              "slope": -0.5001113874493729,
+              "expected_slope": -0.5000000000000003,
+              "rms": 0.5627813898164195,
+              "outline_adjusted_residual": 0.5042372881355937,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 118,
+                "slope": -0.5001113874493729,
+                "rms": 0.5627813898164195,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 118,
+              "slope": 0.499892264598147,
+              "expected_slope": 0.5000000000000001,
+              "rms": 0.5589407076173585,
+              "outline_adjusted_residual": 0.4991491006536092,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 118,
+                "slope": 0.499892264598147,
+                "rms": 0.5589407076173585,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "long-bench",
+              "mode": "top",
+              "samples": 91,
+              "slope": -0.5003663003663001,
+              "expected_slope": -0.5000000000000002,
+              "rms": 0.5613796611370366,
+              "outline_adjusted_residual": 0.5533061784102797,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "long-bench",
+              "mode": "top",
+              "samples": 19,
+              "slope": 0.491228070175441,
+              "expected_slope": 0.5,
+              "rms": 0.5435766099940242,
+              "outline_adjusted_residual": 0.9103232543524709,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "short-bench",
+              "mode": "top",
+              "samples": 20,
+              "slope": -0.5112781954887266,
+              "expected_slope": -0.5000000000000009,
+              "rms": 0.5552212862379635,
+              "outline_adjusted_residual": 0.6098984692814895,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "short-bench",
+              "mode": "top",
+              "samples": 42,
+              "slope": 0.4991491775382862,
+              "expected_slope": 0.5,
+              "rms": 0.5584144999623933,
+              "outline_adjusted_residual": 0.8059874147534688,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "long-bench",
+          "d": 0,
+          "connected": true,
+          "pixels": 6612
+        },
+        {
+          "name": "short-bench",
+          "d": 0,
+          "connected": true,
+          "pixels": 3534
+        },
+        {
+          "name": "long-bench",
+          "d": 1,
+          "connected": true,
+          "pixels": 6624
+        },
+        {
+          "name": "short-bench",
+          "d": 1,
+          "connected": true,
+          "pixels": 3586
+        },
+        {
+          "name": "long-bench",
+          "d": 2,
+          "connected": true,
+          "pixels": 6618
+        },
+        {
+          "name": "short-bench",
+          "d": 2,
+          "connected": true,
+          "pixels": 3582
+        },
+        {
+          "name": "long-bench",
+          "d": 3,
+          "connected": true,
+          "pixels": 6584
+        },
+        {
+          "name": "short-bench",
+          "d": 3,
+          "connected": true,
+          "pixels": 3550
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "long-bench",
+          "b": "short-bench",
+          "axis_gaps": [
+            -0.432,
+            0.27800000000000014,
+            -5.85
+          ]
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_sauna_0.webp",
+          "sha256": "80fb10eaa32beda5bc8d3a163db2aef332ec1936a95cd02ee262585289f74bd7"
+        },
+        {
+          "d": 1,
+          "file": "fac_sauna_1.webp",
+          "sha256": "9960d0871dca94d455a5cd95d14a593361ead4fb82a471081161f4241f7c50d6"
+        },
+        {
+          "d": 2,
+          "file": "fac_sauna_2.webp",
+          "sha256": "346ea996eb8ac5e3841c3672fa46738744b75eb5fe345ddb08a10e4fdcf2511b"
+        },
+        {
+          "d": 3,
+          "file": "fac_sauna_3.webp",
+          "sha256": "cb65a32567a1a1ca06dc0c982f4ffcab69d4d2a42c56bb40b1bfa5c8e7079b4e"
+        }
+      ],
+      "limits": [
+        "Four fixed walls are authored; the two camera-near walls and their attached trim/door are hidden for the source cutaway convention.",
+        "Furniture is never moved to face the camera. Source facings disagree on bench/towel/heater locations; a common d0-inspired layout is used.",
+        "Opaque dark door panel represents the source doorway; hidden room outside is not reconstructed.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    },
+    {
+      "id": "jjimjilbang",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "ochre-wall-u0",
+          "b": "foundation",
+          "overlap": [
+            0.07500000000000001,
+            3.8600000000000003,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-wall-cap-u0",
+          "b": "ochre-wall-u0",
+          "overlap": [
+            0.07500000000000001,
+            3.8600000000000003,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "ochre-wall-u1",
+          "b": "foundation",
+          "overlap": [
+            0.07500000000000018,
+            3.8600000000000003,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-wall-cap-u1",
+          "b": "ochre-wall-u1",
+          "overlap": [
+            0.07500000000000018,
+            3.8600000000000003,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "ochre-wall-v0",
+          "b": "foundation",
+          "overlap": [
+            3.8600000000000003,
+            0.07500000000000001,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-wall-cap-v0",
+          "b": "ochre-wall-v0",
+          "overlap": [
+            3.8600000000000003,
+            0.07500000000000001,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "ochre-wall-v1",
+          "b": "foundation",
+          "overlap": [
+            3.8600000000000003,
+            0.07500000000000018,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-wall-cap-v1",
+          "b": "ochre-wall-v1",
+          "overlap": [
+            3.8600000000000003,
+            0.07500000000000018,
+            0.3000000000000007
+          ]
+        },
+        {
+          "a": "door",
+          "b": "ochre-wall-v1",
+          "overlap": [
+            0.6499999999999999,
+            0.01200000000000001,
+            25.94
+          ]
+        },
+        {
+          "a": "wood-doorpost-0",
+          "b": "ochre-wall-v1",
+          "overlap": [
+            0.06399999999999995,
+            0.07500000000000018,
+            26.6
+          ]
+        },
+        {
+          "a": "wood-doorpost-1",
+          "b": "ochre-wall-v1",
+          "overlap": [
+            0.06400000000000006,
+            0.07500000000000018,
+            26.6
+          ]
+        },
+        {
+          "a": "wood-doorhead",
+          "b": "wood-doorpost-0",
+          "overlap": [
+            0.06399999999999995,
+            0.1280000000000001,
+            0.7000000000000028
+          ]
+        },
+        {
+          "a": "wood-doorhead",
+          "b": "wood-doorpost-1",
+          "overlap": [
+            0.06399999999999983,
+            0.1280000000000001,
+            0.7000000000000028
+          ]
+        },
+        {
+          "a": "wood-corner-0",
+          "b": "foundation",
+          "overlap": [
+            0.024999999999999994,
+            0.024999999999999994,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-corner-1",
+          "b": "foundation",
+          "overlap": [
+            0.02499999999999991,
+            0.024999999999999994,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-corner-2",
+          "b": "foundation",
+          "overlap": [
+            0.02499999999999991,
+            0.02499999999999991,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-corner-3",
+          "b": "foundation",
+          "overlap": [
+            0.024999999999999994,
+            0.02499999999999991,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "mat-0",
+          "b": "foundation",
+          "overlap": [
+            0.78,
+            1.4799999999999998,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "pillow-0",
+          "b": "mat-0",
+          "overlap": [
+            0.53,
+            0.27,
+            0.03720000000000012
+          ]
+        },
+        {
+          "a": "heater-0",
+          "b": "foundation",
+          "overlap": [
+            0.7499999999999999,
+            0.15999999999999998,
+            0.030000000000000027
+          ]
+        },
+        {
+          "a": "heater-slot-0-0",
+          "b": "heater-0",
+          "overlap": [
+            0.05400000000000005,
+            0.0010000000000000009,
+            5.15
+          ]
+        },
+        {
+          "a": "heater-slot-0-1",
+          "b": "heater-0",
+          "overlap": [
+            0.05400000000000005,
+            0.0010000000000000009,
+            5.15
+          ]
+        },
+        {
+          "a": "heater-slot-0-2",
+          "b": "heater-0",
+          "overlap": [
+            0.05399999999999994,
+            0.0010000000000000009,
+            5.15
+          ]
+        },
+        {
+          "a": "heater-slot-0-3",
+          "b": "heater-0",
+          "overlap": [
+            0.053999999999999826,
+            0.0010000000000000009,
+            5.15
+          ]
+        },
+        {
+          "a": "heater-cap-0",
+          "b": "heater-0",
+          "overlap": [
+            0.7499999999999999,
+            0.15999999999999998,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "mat-1",
+          "b": "foundation",
+          "overlap": [
+            0.7800000000000002,
+            1.4799999999999998,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "pillow-1",
+          "b": "mat-1",
+          "overlap": [
+            0.5300000000000002,
+            0.27,
+            0.03720000000000012
+          ]
+        },
+        {
+          "a": "heater-1",
+          "b": "foundation",
+          "overlap": [
+            0.75,
+            0.15999999999999998,
+            0.030000000000000027
+          ]
+        },
+        {
+          "a": "heater-slot-1-0",
+          "b": "heater-1",
+          "overlap": [
+            0.053999999999999826,
+            0.0010000000000000009,
+            5.15
+          ]
+        },
+        {
+          "a": "heater-slot-1-1",
+          "b": "heater-1",
+          "overlap": [
+            0.053999999999999826,
+            0.0010000000000000009,
+            5.15
+          ]
+        },
+        {
+          "a": "heater-slot-1-2",
+          "b": "heater-1",
+          "overlap": [
+            0.05400000000000005,
+            0.0010000000000000009,
+            5.15
+          ]
+        },
+        {
+          "a": "heater-slot-1-3",
+          "b": "heater-1",
+          "overlap": [
+            0.05400000000000027,
+            0.0010000000000000009,
+            5.15
+          ]
+        },
+        {
+          "a": "heater-cap-1",
+          "b": "heater-1",
+          "overlap": [
+            0.75,
+            0.15999999999999998,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "mat-2",
+          "b": "foundation",
+          "overlap": [
+            0.7800000000000002,
+            1.4799999999999998,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "pillow-2",
+          "b": "mat-2",
+          "overlap": [
+            0.5300000000000002,
+            0.27,
+            0.03720000000000012
+          ]
+        },
+        {
+          "a": "heater-2",
+          "b": "foundation",
+          "overlap": [
+            0.75,
+            0.15999999999999998,
+            0.030000000000000027
+          ]
+        },
+        {
+          "a": "heater-slot-2-0",
+          "b": "heater-2",
+          "overlap": [
+            0.05400000000000027,
+            0.0010000000000000009,
+            5.15
+          ]
+        },
+        {
+          "a": "heater-slot-2-1",
+          "b": "heater-2",
+          "overlap": [
+            0.05400000000000027,
+            0.0010000000000000009,
+            5.15
+          ]
+        },
+        {
+          "a": "heater-slot-2-2",
+          "b": "heater-2",
+          "overlap": [
+            0.05400000000000027,
+            0.0010000000000000009,
+            5.15
+          ]
+        },
+        {
+          "a": "heater-slot-2-3",
+          "b": "heater-2",
+          "overlap": [
+            0.05400000000000027,
+            0.0010000000000000009,
+            5.15
+          ]
+        },
+        {
+          "a": "heater-cap-2",
+          "b": "heater-2",
+          "overlap": [
+            0.75,
+            0.15999999999999998,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-towel-basket",
+          "b": "foundation",
+          "overlap": [
+            0.48,
+            0.48,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "rolled-towel-0",
+          "b": "wood-towel-basket",
+          "overlap": [
+            0.10399999999999998,
+            0.40000000000000036,
+            0.6320000000000006
+          ]
+        },
+        {
+          "a": "rolled-towel-1",
+          "b": "wood-towel-basket",
+          "overlap": [
+            0.10399999999999998,
+            0.40000000000000036,
+            0.6320000000000006
+          ]
+        },
+        {
+          "a": "rolled-towel-2",
+          "b": "wood-towel-basket",
+          "overlap": [
+            0.10400000000000004,
+            0.40000000000000036,
+            0.6320000000000006
+          ]
+        },
+        {
+          "a": "rolled-towel-3",
+          "b": "wood-towel-basket",
+          "overlap": [
+            0.10400000000000009,
+            0.40000000000000036,
+            0.6320000000000006
+          ]
+        },
+        {
+          "a": "wood-gauge-post",
+          "b": "foundation",
+          "overlap": [
+            0.05499999999999999,
+            0.05999999999999994,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-gauge-frame",
+          "b": "wood-gauge-post",
+          "overlap": [
+            0.05499999999999999,
+            0.05999999999999994,
+            2.5
+          ]
+        },
+        {
+          "a": "gauge-face",
+          "b": "wood-gauge-frame",
+          "overlap": [
+            0.12999999999999998,
+            0.0040000000000000036,
+            2.6500000000000004
+          ]
+        },
+        {
+          "a": "gauge-mark",
+          "b": "gauge-face",
+          "overlap": [
+            0.02100000000000002,
+            0.0020000000000000018,
+            1.7200000000000006
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "foundation",
+          "edges": 12
+        },
+        {
+          "name": "ochre-wall-u0",
+          "edges": 12
+        },
+        {
+          "name": "wood-wall-cap-u0",
+          "edges": 12
+        },
+        {
+          "name": "ochre-wall-u1",
+          "edges": 12
+        },
+        {
+          "name": "wood-wall-cap-u1",
+          "edges": 12
+        },
+        {
+          "name": "ochre-wall-v0",
+          "edges": 12
+        },
+        {
+          "name": "wood-wall-cap-v0",
+          "edges": 12
+        },
+        {
+          "name": "ochre-wall-v1",
+          "edges": 12
+        },
+        {
+          "name": "wood-wall-cap-v1",
+          "edges": 12
+        },
+        {
+          "name": "door",
+          "edges": 12
+        },
+        {
+          "name": "wood-doorpost-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-doorpost-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-doorhead",
+          "edges": 12
+        },
+        {
+          "name": "wood-corner-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-corner-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-corner-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-corner-3",
+          "edges": 12
+        },
+        {
+          "name": "mat-0",
+          "edges": 360
+        },
+        {
+          "name": "pillow-0",
+          "edges": 360
+        },
+        {
+          "name": "heater-0",
+          "edges": 12
+        },
+        {
+          "name": "heater-slot-0-0",
+          "edges": 12
+        },
+        {
+          "name": "heater-slot-0-1",
+          "edges": 12
+        },
+        {
+          "name": "heater-slot-0-2",
+          "edges": 12
+        },
+        {
+          "name": "heater-slot-0-3",
+          "edges": 12
+        },
+        {
+          "name": "heater-cap-0",
+          "edges": 12
+        },
+        {
+          "name": "mat-1",
+          "edges": 360
+        },
+        {
+          "name": "pillow-1",
+          "edges": 360
+        },
+        {
+          "name": "heater-1",
+          "edges": 12
+        },
+        {
+          "name": "heater-slot-1-0",
+          "edges": 12
+        },
+        {
+          "name": "heater-slot-1-1",
+          "edges": 12
+        },
+        {
+          "name": "heater-slot-1-2",
+          "edges": 12
+        },
+        {
+          "name": "heater-slot-1-3",
+          "edges": 12
+        },
+        {
+          "name": "heater-cap-1",
+          "edges": 12
+        },
+        {
+          "name": "mat-2",
+          "edges": 360
+        },
+        {
+          "name": "pillow-2",
+          "edges": 360
+        },
+        {
+          "name": "heater-2",
+          "edges": 12
+        },
+        {
+          "name": "heater-slot-2-0",
+          "edges": 12
+        },
+        {
+          "name": "heater-slot-2-1",
+          "edges": 12
+        },
+        {
+          "name": "heater-slot-2-2",
+          "edges": 12
+        },
+        {
+          "name": "heater-slot-2-3",
+          "edges": 12
+        },
+        {
+          "name": "heater-cap-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-towel-basket",
+          "edges": 12
+        },
+        {
+          "name": "rolled-towel-0",
+          "edges": 156
+        },
+        {
+          "name": "rolled-towel-1",
+          "edges": 156
+        },
+        {
+          "name": "rolled-towel-2",
+          "edges": 156
+        },
+        {
+          "name": "rolled-towel-3",
+          "edges": 156
+        },
+        {
+          "name": "wood-gauge-post",
+          "edges": 12
+        },
+        {
+          "name": "wood-gauge-frame",
+          "edges": 12
+        },
+        {
+          "name": "gauge-face",
+          "edges": 12
+        },
+        {
+          "name": "gauge-mark",
+          "edges": 12
+        }
+      ],
+      "rotation_edge_error": 5.637851296924623e-16,
+      "cutaway": [
+        {
+          "d": 0,
+          "visible_walls": [
+            "u0",
+            "v0"
+          ],
+          "door_visible": false,
+          "fixed_nonwall_faces": 1920,
+          "nonwall_geometry_sha256": "1460f8f4b0a0cfb2b9f1fede07fb3c8be61fa2060168e3e29488fc2bee51b59a"
+        },
+        {
+          "d": 1,
+          "visible_walls": [
+            "u1",
+            "v0"
+          ],
+          "door_visible": false,
+          "fixed_nonwall_faces": 1920,
+          "nonwall_geometry_sha256": "1460f8f4b0a0cfb2b9f1fede07fb3c8be61fa2060168e3e29488fc2bee51b59a"
+        },
+        {
+          "d": 2,
+          "visible_walls": [
+            "u1",
+            "v1"
+          ],
+          "door_visible": true,
+          "fixed_nonwall_faces": 1920,
+          "nonwall_geometry_sha256": "1460f8f4b0a0cfb2b9f1fede07fb3c8be61fa2060168e3e29488fc2bee51b59a"
+        },
+        {
+          "d": 3,
+          "visible_walls": [
+            "u0",
+            "v1"
+          ],
+          "door_visible": true,
+          "fixed_nonwall_faces": 1920,
+          "nonwall_geometry_sha256": "1460f8f4b0a0cfb2b9f1fede07fb3c8be61fa2060168e3e29488fc2bee51b59a"
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            124008
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 158,
+              "slope": -0.5000616101703939,
+              "expected_slope": -0.5000000000000002,
+              "rms": 0.5618333033221097,
+              "outline_adjusted_residual": 0.5031645569620257,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 158,
+                "slope": -0.5000616101703939,
+                "rms": 0.5618333033221097,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 158,
+              "slope": 0.4999399110683812,
+              "expected_slope": 0.5000000000000001,
+              "rms": 0.5589744459279685,
+              "outline_adjusted_residual": 0.4993645182096575,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 158,
+                "slope": 0.4999399110683812,
+                "rms": 0.5589744459279685,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            124008
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 158,
+              "slope": -0.5000616101703939,
+              "expected_slope": -0.5000000000000002,
+              "rms": 0.5618333033221097,
+              "outline_adjusted_residual": 0.5031645569620257,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 158,
+                "slope": -0.5000616101703939,
+                "rms": 0.5618333033221097,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 158,
+              "slope": 0.4999399110683812,
+              "expected_slope": 0.5000000000000001,
+              "rms": 0.5589744459279685,
+              "outline_adjusted_residual": 0.4993645182096575,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 158,
+                "slope": 0.4999399110683812,
+                "rms": 0.5589744459279685,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            124008
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 158,
+              "slope": -0.5000616101703939,
+              "expected_slope": -0.5000000000000002,
+              "rms": 0.5618333033221097,
+              "outline_adjusted_residual": 0.5031645569620257,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 158,
+                "slope": -0.5000616101703939,
+                "rms": 0.5618333033221097,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 158,
+              "slope": 0.4999399110683812,
+              "expected_slope": 0.5000000000000001,
+              "rms": 0.5589744459279685,
+              "outline_adjusted_residual": 0.4993645182096575,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 158,
+                "slope": 0.4999399110683812,
+                "rms": 0.5589744459279685,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            124008
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 158,
+              "slope": -0.5000616101703939,
+              "expected_slope": -0.5000000000000002,
+              "rms": 0.5618333033221097,
+              "outline_adjusted_residual": 0.5031645569620257,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 158,
+                "slope": -0.5000616101703939,
+                "rms": 0.5618333033221097,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 158,
+              "slope": 0.4999399110683812,
+              "expected_slope": 0.5000000000000001,
+              "rms": 0.5589744459279685,
+              "outline_adjusted_residual": 0.4993645182096575,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 158,
+                "slope": 0.4999399110683812,
+                "rms": 0.5589744459279685,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [],
+      "assembly_gaps": [],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_jjimjilbang_0.fix-ca3b6cd42dfa.webp",
+          "sha256": "ca3b6cd42dfacebe28851009d7c044e4de61ba730e44fc0ddc2b493e52bf8031"
+        },
+        {
+          "d": 1,
+          "file": "fac_jjimjilbang_1.webp",
+          "sha256": "bdde8911f486bff15537a6d4431b3b1552d55de7fa7e4ccd9be9131e6868b49b"
+        },
+        {
+          "d": 2,
+          "file": "fac_jjimjilbang_2.webp",
+          "sha256": "130711ffb06316d4c26cb75b8908adcef259dd60e33fb02fc88950c307281783"
+        },
+        {
+          "d": 3,
+          "file": "fac_jjimjilbang_3.webp",
+          "sha256": "e044dde4a83e49db68aeaec09eb6ba78364155b15c6cd077cd4d8a0286124dba"
+        }
+      ],
+      "limits": [
+        "Two camera-near walls are hidden without moving furniture or door.",
+        "Three mats, heaters, towel basket and gauge use one fixed assembly; inconsistent source details are standardized.",
+        "Frosted door is an opaque panel; no simulated glass/refraction.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    },
+    {
+      "id": "info",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "cream-counter",
+          "b": "wood-counter-base",
+          "overlap": [
+            1.6800000000000002,
+            0.6100000000000001,
+            0.09999999999999987
+          ]
+        },
+        {
+          "a": "teal-counter-band",
+          "b": "cream-counter",
+          "overlap": [
+            1.6800000000000002,
+            0.6100000000000001,
+            0.9000000000000004
+          ]
+        },
+        {
+          "a": "wood-counter-top",
+          "b": "teal-counter-band",
+          "overlap": [
+            1.698,
+            0.6279999999999999,
+            0.10000000000000142
+          ]
+        },
+        {
+          "a": "wood-counter-post-0",
+          "b": "wood-counter-base",
+          "overlap": [
+            0.05399999999999999,
+            0.053999999999999826,
+            0.29999999999999993
+          ]
+        },
+        {
+          "a": "wood-counter-post-0",
+          "b": "wood-counter-top",
+          "overlap": [
+            0.05399999999999999,
+            0.053999999999999826,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-counter-post-1",
+          "b": "wood-counter-base",
+          "overlap": [
+            0.053999999999999826,
+            0.053999999999999826,
+            0.29999999999999993
+          ]
+        },
+        {
+          "a": "wood-counter-post-1",
+          "b": "wood-counter-top",
+          "overlap": [
+            0.053999999999999826,
+            0.053999999999999826,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-counter-post-2",
+          "b": "wood-counter-base",
+          "overlap": [
+            0.05399999999999999,
+            0.053999999999999826,
+            0.29999999999999993
+          ]
+        },
+        {
+          "a": "wood-counter-post-2",
+          "b": "wood-counter-top",
+          "overlap": [
+            0.05399999999999999,
+            0.053999999999999826,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-counter-post-3",
+          "b": "wood-counter-base",
+          "overlap": [
+            0.053999999999999826,
+            0.053999999999999826,
+            0.29999999999999993
+          ]
+        },
+        {
+          "a": "wood-counter-post-3",
+          "b": "wood-counter-top",
+          "overlap": [
+            0.053999999999999826,
+            0.053999999999999826,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "book-pages",
+          "b": "wood-counter-top",
+          "overlap": [
+            0.2599999999999998,
+            0.26,
+            0.010000000000001563
+          ]
+        },
+        {
+          "a": "book-teal",
+          "b": "book-pages",
+          "overlap": [
+            0.2599999999999998,
+            0.26,
+            0.02999999999999936
+          ]
+        },
+        {
+          "a": "wood-board-foot-0",
+          "b": "wood-board-post-0",
+          "overlap": [
+            0.08200000000000002,
+            0.08400000000000002,
+            0.04999999999999993
+          ]
+        },
+        {
+          "a": "wood-board-foot-1",
+          "b": "wood-board-post-1",
+          "overlap": [
+            0.08199999999999985,
+            0.08400000000000002,
+            0.04999999999999993
+          ]
+        },
+        {
+          "a": "wood-board",
+          "b": "wood-board-post-0",
+          "overlap": [
+            0.04100000000000001,
+            0.06,
+            20.7
+          ]
+        },
+        {
+          "a": "wood-board",
+          "b": "wood-board-post-1",
+          "overlap": [
+            0.040999999999999925,
+            0.06,
+            20.7
+          ]
+        },
+        {
+          "a": "teal-board-rail-0",
+          "b": "wood-board",
+          "overlap": [
+            1.54,
+            0.06,
+            0.6500000000000004
+          ]
+        },
+        {
+          "a": "teal-board-rail-1",
+          "b": "wood-board",
+          "overlap": [
+            1.54,
+            0.06,
+            0.3999999999999986
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-counter-base",
+          "edges": 12
+        },
+        {
+          "name": "cream-counter",
+          "edges": 12
+        },
+        {
+          "name": "teal-counter-band",
+          "edges": 12
+        },
+        {
+          "name": "wood-counter-top",
+          "edges": 12
+        },
+        {
+          "name": "wood-counter-post-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-counter-post-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-counter-post-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-counter-post-3",
+          "edges": 12
+        },
+        {
+          "name": "book-pages",
+          "edges": 12
+        },
+        {
+          "name": "book-teal",
+          "edges": 12
+        },
+        {
+          "name": "wood-board-foot-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-board-post-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-board-foot-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-board-post-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-board",
+          "edges": 12
+        },
+        {
+          "name": "teal-board-rail-0",
+          "edges": 12
+        },
+        {
+          "name": "teal-board-rail-1",
+          "edges": 12
+        }
+      ],
+      "rotation_edge_error": 1.6653345369377348e-16,
+      "cutaway": [],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            28080
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "counter",
+              "mode": "top",
+              "samples": 31,
+              "slope": -0.503225806451616,
+              "expected_slope": -0.5,
+              "rms": 0.5653910271021039,
+              "outline_adjusted_residual": 0.6611920670465951,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 31,
+                "slope": -0.503225806451616,
+                "rms": 0.5653910271021039,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "counter",
+              "mode": "top",
+              "samples": 76,
+              "slope": 0.50025974025974,
+              "expected_slope": 0.5,
+              "rms": 0.5589879537767635,
+              "outline_adjusted_residual": 0.9897969385630176,
+              "visible_fraction": 0.6842105263157895,
+              "combined": {
+                "samples": 52,
+                "slope": 0.500709156693571,
+                "rms": 0.5587180667351833,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "board",
+              "mode": "top",
+              "samples": 68,
+              "slope": 0.5003244646333548,
+              "expected_slope": 0.5,
+              "rms": 0.558980716949013,
+              "outline_adjusted_residual": 0.5658984692814812,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 68,
+                "slope": 0.5003244646333548,
+                "rms": 0.558980716949013,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            28080
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "counter",
+              "mode": "top",
+              "samples": 76,
+              "slope": -0.49870129870129937,
+              "expected_slope": -0.5,
+              "rms": 0.558290526239084,
+              "outline_adjusted_residual": 0.9897969385630176,
+              "visible_fraction": 0.6842105263157895,
+              "combined": {
+                "samples": 52,
+                "slope": -0.49904865697385076,
+                "rms": 0.5584849242447445,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "counter",
+              "mode": "top",
+              "samples": 31,
+              "slope": 0.4967741935483876,
+              "expected_slope": 0.5,
+              "rms": 0.5504704260052011,
+              "outline_adjusted_residual": 0.6644047727603346,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 31,
+                "slope": 0.4967741935483876,
+                "rms": 0.5504704260052011,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "board",
+              "mode": "top",
+              "samples": 68,
+              "slope": -0.49837767683322637,
+              "expected_slope": -0.5,
+              "rms": 0.5581093513109826,
+              "outline_adjusted_residual": 0.5658984692814817,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 68,
+                "slope": -0.49837767683322637,
+                "rms": 0.5581093513109826,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            23344
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "counter",
+              "mode": "top",
+              "samples": 32,
+              "slope": -0.5043988269794726,
+              "expected_slope": -0.5,
+              "rms": 0.5575396307731819,
+              "outline_adjusted_residual": 0.6498984692814815,
+              "visible_fraction": 0.125,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "counter",
+              "mode": "top",
+              "samples": 75,
+              "slope": 0.49945945945945946,
+              "expected_slope": 0.5,
+              "rms": 0.5558144741995572,
+              "outline_adjusted_residual": 0.6974944080527621,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 75,
+                "slope": 0.49945945945945946,
+                "rms": 0.5558144741995572,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "board",
+              "mode": "top",
+              "samples": 68,
+              "slope": 0.5003244646333544,
+              "expected_slope": 0.5,
+              "rms": 0.5589807169490109,
+              "outline_adjusted_residual": 0.8457969385630122,
+              "visible_fraction": 0.9264705882352942,
+              "combined": {
+                "samples": 63,
+                "slope": 0.5007680491551457,
+                "rms": 0.5623677149568624,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            23344
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "counter",
+              "mode": "top",
+              "samples": 75,
+              "slope": -0.50054054054054,
+              "expected_slope": -0.5,
+              "rms": 0.5618587769940825,
+              "outline_adjusted_residual": 0.6940331563577486,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 75,
+                "slope": -0.50054054054054,
+                "rms": 0.5618587769940825,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "counter",
+              "mode": "top",
+              "samples": 32,
+              "slope": 0.5014662756598269,
+              "expected_slope": 0.5,
+              "rms": 0.5588530357281082,
+              "outline_adjusted_residual": 0.6498984692814815,
+              "visible_fraction": 0.09375,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "board",
+              "mode": "top",
+              "samples": 68,
+              "slope": -0.5009733939000651,
+              "expected_slope": -0.5,
+              "rms": 0.5586904127398961,
+              "outline_adjusted_residual": 0.8457969385630122,
+              "visible_fraction": 0.9411764705882353,
+              "combined": {
+                "samples": 64,
+                "slope": -0.5010989010989003,
+                "rms": 0.558648290150352,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "counter",
+          "d": 0,
+          "connected": true,
+          "pixels": 14880
+        },
+        {
+          "name": "board",
+          "d": 0,
+          "connected": true,
+          "pixels": 13536
+        },
+        {
+          "name": "counter",
+          "d": 1,
+          "connected": true,
+          "pixels": 14880
+        },
+        {
+          "name": "board",
+          "d": 1,
+          "connected": true,
+          "pixels": 13536
+        },
+        {
+          "name": "counter",
+          "d": 2,
+          "connected": true,
+          "pixels": 14996
+        },
+        {
+          "name": "board",
+          "d": 2,
+          "connected": true,
+          "pixels": 13528
+        },
+        {
+          "name": "counter",
+          "d": 3,
+          "connected": true,
+          "pixels": 14996
+        },
+        {
+          "name": "board",
+          "d": 3,
+          "connected": true,
+          "pixels": 13528
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "counter",
+          "b": "board",
+          "axis_gaps": [
+            -1.8099999999999998,
+            0.7000000000000002,
+            -13.55
+          ]
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_info_0.webp",
+          "sha256": "b76c33cbd98081bea8331b9781c0297813b5833753348205dc8e176bab1fccf4"
+        },
+        {
+          "d": 1,
+          "file": "fac_info_1.webp",
+          "sha256": "9bf76e845c1a28a7bfb53a55763bc510032f564eb1184af13f3364462bfe22ae"
+        },
+        {
+          "d": 2,
+          "file": "fac_info_2.webp",
+          "sha256": "a9ae6893b4e917161bab96289bf990d33c728d487aac567c894ecd4d96ad0c02"
+        },
+        {
+          "d": 3,
+          "file": "fac_info_3.webp",
+          "sha256": "0c212825bc04c3fe7e8db9972cbfdd4a37d29c62a99ea62ee0f33ee7aefb3fce"
+        }
+      ],
+      "limits": [
+        "Map is an authored teal/cream graphic inspired by the original, not a text transcription or exact pixel recovery.",
+        "Board height is fixed across all directions; source d2/d3 board heights differed.",
+        "Counter and board are physically separate with a positive gap.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    }
+  ]
+}
