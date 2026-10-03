@@ -1,0 +1,74 @@
+[
+  {
+    "id": "authored_infirmary",
+    "d": 0,
+    "file": "fac_authored_infirmary_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "authored_infirmary",
+    "d": 1,
+    "file": "fac_authored_infirmary_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "authored_infirmary",
+    "d": 2,
+    "file": "fac_authored_infirmary_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "authored_infirmary",
+    "d": 3,
+    "file": "fac_authored_infirmary_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "authored_karaoke",
+    "d": 0,
+    "file": "fac_authored_karaoke_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "authored_karaoke",
+    "d": 1,
+    "file": "fac_authored_karaoke_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "authored_karaoke",
+    "d": 2,
+    "file": "fac_authored_karaoke_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "authored_karaoke",
+    "d": 3,
+    "file": "fac_authored_karaoke_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "compact_ticket",
+    "d": 0,
+    "file": "fac_compact_ticket_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "compact_ticket",
+    "d": 1,
+    "file": "fac_compact_ticket_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "compact_ticket",
+    "d": 2,
+    "file": "fac_compact_ticket_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "compact_ticket",
+    "d": 3,
+    "file": "fac_compact_ticket_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

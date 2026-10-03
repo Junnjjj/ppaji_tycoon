@@ -255,60 +255,60 @@
       "bytes": 15622
     },
     "fac/authored_infirmary/0": {
-      "file": "fac_authored_infirmary_0.webp",
+      "file": "fac_authored_infirmary_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "5f373e07da279f27c7c15b3bd1c629d06597eee41a259cde257cd65435befac9",
-      "bytes": 68838
+      "sha256": "b2fb644dc2522d229808e23f0d47df5a2effa282ffefb010a7af53688c0baeb2",
+      "bytes": 28884
     },
     "fac/authored_infirmary/1": {
-      "file": "fac_authored_infirmary_1.webp",
+      "file": "fac_authored_infirmary_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "f415591b16e4498b92376ddfc17039c5f3f0c04a29c1eb092eaad3e222a8041a",
-      "bytes": 72224
+      "sha256": "e5485791aca4b252374314dbb0912c56b0c3d553ac71189acd4a11ba86319c4d",
+      "bytes": 30472
     },
     "fac/authored_infirmary/2": {
-      "file": "fac_authored_infirmary_2.webp",
+      "file": "fac_authored_infirmary_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "5b222e056e5026068bd033d7bd7169e002040ad5d16deaf9d2065b093ee53c07",
-      "bytes": 72606
+      "sha256": "f4ab26fff171761284988229981707d476da69e0af38aae06962c65a5d6bf282",
+      "bytes": 28130
     },
     "fac/authored_infirmary/3": {
-      "file": "fac_authored_infirmary_3.webp",
+      "file": "fac_authored_infirmary_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "054e01560a510d47e89eac324aa88268565f1d527b135b93f8bf5ccb110711d6",
-      "bytes": 67744
+      "sha256": "27e50ba1dc591e2bacb4fff21b1cdfff266c122f6aeb2010f7110e1e29a3e555",
+      "bytes": 25954
     },
     "fac/authored_karaoke/0": {
-      "file": "fac_authored_karaoke_0.webp",
+      "file": "fac_authored_karaoke_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "fefd4bd6d31fed895d3ebfb6ca479457ee688c31a19fcd3dc50ee6c42e6ea7db",
-      "bytes": 89464
+      "sha256": "46c70e4c2aeccb0d125ba96b9f1ca6616fee5aedcc9f92bae2e7b63b2c75bf9d",
+      "bytes": 35188
     },
     "fac/authored_karaoke/1": {
-      "file": "fac_authored_karaoke_1.webp",
+      "file": "fac_authored_karaoke_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "6cb61fa27e1ea7c137c51f81fa44daf705298017c98d46f830c7fbec90e463e9",
-      "bytes": 85736
+      "sha256": "39b3c28faf6bb2a3dcdffe0d6b2ab866058cfe7981cb60e187fbb38aa6f57857",
+      "bytes": 35118
     },
     "fac/authored_karaoke/2": {
-      "file": "fac_authored_karaoke_2.webp",
+      "file": "fac_authored_karaoke_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "5d0d28abb5421a9fcb6ad6e09bb12e1055b780e5244eabdb14194fb28d105862",
-      "bytes": 85050
+      "sha256": "0e8924741ad9b806ffb228ccc9b3a8f9dc8c547ee3edb3e52ffb6eba08172b72",
+      "bytes": 30920
     },
     "fac/authored_karaoke/3": {
-      "file": "fac_authored_karaoke_3.webp",
+      "file": "fac_authored_karaoke_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "e56cef8bfa579c5dc7128b0fc1927e0669c0072cf53320d328ea3a67858abd04",
-      "bytes": 88500
+      "sha256": "7171f631b9b8dd9ec77582590a4b144ebc58448ba88af7b02ac8878c63baa61e",
+      "bytes": 30486
     },
     "fac/foodcourt_seat/0": {
       "file": "fac_foodcourt_seat_0_template_20261002.webp",
@@ -6243,32 +6243,32 @@
       "bytes": 47064
     },
     "fac/compact_ticket/0": {
-      "file": "fac_compact_ticket_0.webp",
+      "file": "fac_compact_ticket_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "a8dc7760e3a8724146dadc2a2010af2e30699759522a1d993ab5b9a00c4c4320",
-      "bytes": 100440
+      "sha256": "380f3dc0fa12f7629c4c3da483d2f47b5a1d834da85674848246ca631a4381e1",
+      "bytes": 53662
     },
     "fac/compact_ticket/1": {
-      "file": "fac_compact_ticket_1.webp",
+      "file": "fac_compact_ticket_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "461e07b47cede94220ffa8ccd854c511b721b322aa495c4164d36a0b83b991db",
-      "bytes": 94550
+      "sha256": "807234674cbc597fbd35a8e413e0586dcde50acd70ca1ded93480725ddffc98e",
+      "bytes": 52814
     },
     "fac/compact_ticket/2": {
-      "file": "fac_compact_ticket_2.webp",
+      "file": "fac_compact_ticket_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "5482cd6a9f43d25c64c58a001cae4a5f4ce25187f19e809f3bf65bfd5f33b098",
-      "bytes": 97470
+      "sha256": "18560ce067e4f9f9d29ec6b7012b0f9bfebb48475c3af6af8935f45f7e21e385",
+      "bytes": 52778
     },
     "fac/compact_ticket/3": {
-      "file": "fac_compact_ticket_3.webp",
+      "file": "fac_compact_ticket_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "82e751a664c85f652a8f3ffb1a4cbf071f24326b94c19ef760fb604a05c6196e",
-      "bytes": 97932
+      "sha256": "85c07731bc0329d83a6241d306603f39e3c9135a3be356f51743ee627238c8ab",
+      "bytes": 51160
     }
   },
   "items": [

@@ -1,0 +1,409 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "authored_infirmary": "indoor-ticket-batch-20261003",
+    "authored_karaoke": "indoor-ticket-batch-20261003",
+    "compact_ticket": "indoor-ticket-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "authored_infirmary",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-ticket-batch-20261003/candidates/authored_infirmary/d0.png",
+      "source_sha256": "3da57033d62746dae356beeb9cea152028f64dd444de7ac0fd065519930823da",
+      "old": {
+        "file": "fac_authored_infirmary_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "5f373e07da279f27c7c15b3bd1c629d06597eee41a259cde257cd65435befac9",
+        "bytes": 68838
+      },
+      "new": {
+        "file": "fac_authored_infirmary_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "b2fb644dc2522d229808e23f0d47df5a2effa282ffefb010a7af53688c0baeb2",
+        "bytes": 28884
+      },
+      "old_native": {
+        "file": "authored_infirmary/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "4834e82cd32fe725ed3f6f36e7099bbb3145daec8cd35866831fbc82a6eb8d8d"
+      },
+      "new_native": {
+        "file": "authored_infirmary/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "44fe98eb2d05e527aa85142c142b2b194a5e86c53a1608b16ec98dbdab33ae2c"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_infirmary",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-ticket-batch-20261003/candidates/authored_infirmary/d1.png",
+      "source_sha256": "866a2fa3d1d318375359905770527e2e305c154bbaf975235c81f4b8dba31b9c",
+      "old": {
+        "file": "fac_authored_infirmary_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "f415591b16e4498b92376ddfc17039c5f3f0c04a29c1eb092eaad3e222a8041a",
+        "bytes": 72224
+      },
+      "new": {
+        "file": "fac_authored_infirmary_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e5485791aca4b252374314dbb0912c56b0c3d553ac71189acd4a11ba86319c4d",
+        "bytes": 30472
+      },
+      "old_native": {
+        "file": "authored_infirmary/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "8dc9514332b263b35131a106fe563930aad0695340d31b7f351565d9a0be3b60"
+      },
+      "new_native": {
+        "file": "authored_infirmary/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "5cc7267ea85e54608cbbbc42285dc9839599b4ee29225ae0ac720cf0e18142a9"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_infirmary",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-ticket-batch-20261003/candidates/authored_infirmary/d2.png",
+      "source_sha256": "ec5dbed587e6e7f2b29b855776092f6ab31ec200d7d0569f66e8a8e797a0d546",
+      "old": {
+        "file": "fac_authored_infirmary_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "5b222e056e5026068bd033d7bd7169e002040ad5d16deaf9d2065b093ee53c07",
+        "bytes": 72606
+      },
+      "new": {
+        "file": "fac_authored_infirmary_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "f4ab26fff171761284988229981707d476da69e0af38aae06962c65a5d6bf282",
+        "bytes": 28130
+      },
+      "old_native": {
+        "file": "authored_infirmary/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "c9f5cd3633705953fa32b3a3c3cc65b5c81e5cc60b8d9e9fcfa02887b34091b5"
+      },
+      "new_native": {
+        "file": "authored_infirmary/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "932107d5705c13b04594325690082ec1a210a9f57b5e92164d41506765411c40"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_infirmary",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-ticket-batch-20261003/candidates/authored_infirmary/d3.png",
+      "source_sha256": "ecff42a90aff49143ea9ff1e4429098147a81a8a4e0e3a65a388b3e64761224f",
+      "old": {
+        "file": "fac_authored_infirmary_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "054e01560a510d47e89eac324aa88268565f1d527b135b93f8bf5ccb110711d6",
+        "bytes": 67744
+      },
+      "new": {
+        "file": "fac_authored_infirmary_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "27e50ba1dc591e2bacb4fff21b1cdfff266c122f6aeb2010f7110e1e29a3e555",
+        "bytes": 25954
+      },
+      "old_native": {
+        "file": "authored_infirmary/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "a6ea469c596abaf81077cc37a8350cae8a892b4493919876ba5b795facdae8fa"
+      },
+      "new_native": {
+        "file": "authored_infirmary/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "4606f48be91e5597a88c0bca088c5514ba68ef376fd8ea067470c6c9838a06d8"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_karaoke",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-ticket-batch-20261003/candidates/authored_karaoke/d0.png",
+      "source_sha256": "5102075f3c3cbdcd7b81cbd8f9c335c5e768e7fd753e432512e9e53ce0d51d4d",
+      "old": {
+        "file": "fac_authored_karaoke_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "fefd4bd6d31fed895d3ebfb6ca479457ee688c31a19fcd3dc50ee6c42e6ea7db",
+        "bytes": 89464
+      },
+      "new": {
+        "file": "fac_authored_karaoke_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "46c70e4c2aeccb0d125ba96b9f1ca6616fee5aedcc9f92bae2e7b63b2c75bf9d",
+        "bytes": 35188
+      },
+      "old_native": {
+        "file": "authored_karaoke/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "95ecb644256f7f27789c3aaaaf55ef3e0aeafa59d4f8f981b7211adf6b114db1"
+      },
+      "new_native": {
+        "file": "authored_karaoke/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "dd2aaae377bc43c5204aec5ce1d5800a576f8524ef670d0d63752f3351a895c9"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_karaoke",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-ticket-batch-20261003/candidates/authored_karaoke/d1.png",
+      "source_sha256": "6ffb5c1f6f402e261dc11334db901e75f029d46f3a2ffb5d341af86d553c6c7c",
+      "old": {
+        "file": "fac_authored_karaoke_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "6cb61fa27e1ea7c137c51f81fa44daf705298017c98d46f830c7fbec90e463e9",
+        "bytes": 85736
+      },
+      "new": {
+        "file": "fac_authored_karaoke_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "39b3c28faf6bb2a3dcdffe0d6b2ab866058cfe7981cb60e187fbb38aa6f57857",
+        "bytes": 35118
+      },
+      "old_native": {
+        "file": "authored_karaoke/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "bf3700a74bcddf51ce9ff600915be77d1b3e8da862950d0d05a459fdf8531395"
+      },
+      "new_native": {
+        "file": "authored_karaoke/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "feee85254572ebf6fa0a0ea707066cd5697711229875e4051be09c4fec6fed84"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_karaoke",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-ticket-batch-20261003/candidates/authored_karaoke/d2.png",
+      "source_sha256": "e214a2dda1ab8d703a571b54ed1a1b780e0790b03048b5ec9961120665d360fc",
+      "old": {
+        "file": "fac_authored_karaoke_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "5d0d28abb5421a9fcb6ad6e09bb12e1055b780e5244eabdb14194fb28d105862",
+        "bytes": 85050
+      },
+      "new": {
+        "file": "fac_authored_karaoke_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "0e8924741ad9b806ffb228ccc9b3a8f9dc8c547ee3edb3e52ffb6eba08172b72",
+        "bytes": 30920
+      },
+      "old_native": {
+        "file": "authored_karaoke/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "58f1ccd55730ebc872b9abb2521c990ffe71cc2d5b334239a6ed75c5ccdf6860"
+      },
+      "new_native": {
+        "file": "authored_karaoke/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "69b284b31c1a88ca935a14439ac8e45aff9b9950c67d4d3068c40d8821977e6f"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_karaoke",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-ticket-batch-20261003/candidates/authored_karaoke/d3.png",
+      "source_sha256": "87bfb7bca7a38e99b0ba9bb6493fd52be4157aab7775b35beeeee21b3977c197",
+      "old": {
+        "file": "fac_authored_karaoke_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e56cef8bfa579c5dc7128b0fc1927e0669c0072cf53320d328ea3a67858abd04",
+        "bytes": 88500
+      },
+      "new": {
+        "file": "fac_authored_karaoke_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "7171f631b9b8dd9ec77582590a4b144ebc58448ba88af7b02ac8878c63baa61e",
+        "bytes": 30486
+      },
+      "old_native": {
+        "file": "authored_karaoke/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "af3aa32f71b5828b10c83256b6aeb5c3b6ced588f18f0c85e1e94474046fc280"
+      },
+      "new_native": {
+        "file": "authored_karaoke/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "652c87eea5c6b0a8cb70883af28d226d55a07f75decba643552b5feeed907978"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "compact_ticket",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-ticket-batch-20261003/candidates/compact_ticket/d0.png",
+      "source_sha256": "a58827e324c49fd7c1fa57012f6bb58f0bd398d5a8482b9c57d95d79793980ff",
+      "old": {
+        "file": "fac_compact_ticket_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a8dc7760e3a8724146dadc2a2010af2e30699759522a1d993ab5b9a00c4c4320",
+        "bytes": 100440
+      },
+      "new": {
+        "file": "fac_compact_ticket_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "380f3dc0fa12f7629c4c3da483d2f47b5a1d834da85674848246ca631a4381e1",
+        "bytes": 53662
+      },
+      "old_native": {
+        "file": "compact_ticket/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "46c53fcb2fa91bcef3d5afd4bd7a9dbf80462b703145e50aca47278d4fac9b6b"
+      },
+      "new_native": {
+        "file": "compact_ticket/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "2e725942c622a9c78f328db79b8cc79fed2262560d4e23934a555659454a6866"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "compact_ticket",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-ticket-batch-20261003/candidates/compact_ticket/d1.png",
+      "source_sha256": "757df621b7ff6d893f926b39428b909528976948ecc310115b758b0b5113fd43",
+      "old": {
+        "file": "fac_compact_ticket_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "461e07b47cede94220ffa8ccd854c511b721b322aa495c4164d36a0b83b991db",
+        "bytes": 94550
+      },
+      "new": {
+        "file": "fac_compact_ticket_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "807234674cbc597fbd35a8e413e0586dcde50acd70ca1ded93480725ddffc98e",
+        "bytes": 52814
+      },
+      "old_native": {
+        "file": "compact_ticket/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "801a1bafb3a2f8a2d9ab034a6f6470a2a74dda86faf035ea020c1223242c9ce0"
+      },
+      "new_native": {
+        "file": "compact_ticket/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "691df10cc3ca008c7ba2d6486badb1b18902d0d71844ff199e87ed97b506ba05"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "compact_ticket",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-ticket-batch-20261003/candidates/compact_ticket/d2.png",
+      "source_sha256": "c67e16498325158c30918886882cd42468d0fa9f534f47d36e11dbbf7abb0109",
+      "old": {
+        "file": "fac_compact_ticket_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "5482cd6a9f43d25c64c58a001cae4a5f4ce25187f19e809f3bf65bfd5f33b098",
+        "bytes": 97470
+      },
+      "new": {
+        "file": "fac_compact_ticket_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "18560ce067e4f9f9d29ec6b7012b0f9bfebb48475c3af6af8935f45f7e21e385",
+        "bytes": 52778
+      },
+      "old_native": {
+        "file": "compact_ticket/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "aacaa5155b762b7bf792d65539761676b2327a2621c5380a5483f7babfe963e3"
+      },
+      "new_native": {
+        "file": "compact_ticket/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "731aa99067f5a94a99347e4ec51a83379b159bb9c937092cffb47ac7266f91ec"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "compact_ticket",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/indoor-ticket-batch-20261003/candidates/compact_ticket/d3.png",
+      "source_sha256": "878258d51da207eee23b98179df1f02555711b8ab47b20a7f8fd94c860b0f7e5",
+      "old": {
+        "file": "fac_compact_ticket_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "82e751a664c85f652a8f3ffb1a4cbf071f24326b94c19ef760fb604a05c6196e",
+        "bytes": 97932
+      },
+      "new": {
+        "file": "fac_compact_ticket_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "85c07731bc0329d83a6241d306603f39e3c9135a3be356f51743ee627238c8ab",
+        "bytes": 51160
+      },
+      "old_native": {
+        "file": "compact_ticket/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "40c7e40ae0f64f576aff8e9d589a9e5fa096ca48ea72250a70cbc8041df5e108"
+      },
+      "new_native": {
+        "file": "compact_ticket/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "345b3916330de7525b06cd237bffaa30759c67f45b0a4971dfd875daafd57dc8"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

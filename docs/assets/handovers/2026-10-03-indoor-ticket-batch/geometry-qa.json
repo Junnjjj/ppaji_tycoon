@@ -1,0 +1,3567 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "authored_infirmary",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "room-wall-u0",
+          "b": "foundation",
+          "overlap": [
+            0.07,
+            1.92,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "room-cap-u0",
+          "b": "room-wall-u0",
+          "overlap": [
+            0.07,
+            1.92,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "room-wall-u1",
+          "b": "foundation",
+          "overlap": [
+            0.06999999999999984,
+            1.92,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "room-cap-u1",
+          "b": "room-wall-u1",
+          "overlap": [
+            0.06999999999999984,
+            1.92,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "room-wall-v0",
+          "b": "foundation",
+          "overlap": [
+            2.92,
+            0.07,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "room-cap-v0",
+          "b": "room-wall-v0",
+          "overlap": [
+            2.92,
+            0.07,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "room-wall-v1",
+          "b": "foundation",
+          "overlap": [
+            2.92,
+            0.07000000000000006,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "room-cap-v1",
+          "b": "room-wall-v1",
+          "overlap": [
+            2.92,
+            0.07000000000000006,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "door",
+          "b": "room-wall-v1",
+          "overlap": [
+            0.6000000000000001,
+            0.01200000000000001,
+            21.78
+          ]
+        },
+        {
+          "a": "doorpost-0",
+          "b": "room-wall-v1",
+          "overlap": [
+            0.05600000000000005,
+            0.07000000000000006,
+            22.3
+          ]
+        },
+        {
+          "a": "doorpost-1",
+          "b": "room-wall-v1",
+          "overlap": [
+            0.05600000000000005,
+            0.07000000000000006,
+            22.3
+          ]
+        },
+        {
+          "a": "doorhead",
+          "b": "doorpost-0",
+          "overlap": [
+            0.05600000000000005,
+            0.11799999999999988,
+            0.8000000000000007
+          ]
+        },
+        {
+          "a": "doorhead",
+          "b": "doorpost-1",
+          "overlap": [
+            0.05600000000000005,
+            0.11799999999999988,
+            0.8000000000000007
+          ]
+        },
+        {
+          "a": "corner-0",
+          "b": "foundation",
+          "overlap": [
+            0.023,
+            0.023,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "corner-1",
+          "b": "foundation",
+          "overlap": [
+            0.02300000000000013,
+            0.023,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "corner-2",
+          "b": "foundation",
+          "overlap": [
+            0.02300000000000013,
+            0.02299999999999991,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "corner-3",
+          "b": "foundation",
+          "overlap": [
+            0.023,
+            0.02299999999999991,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-bed-leg-0",
+          "b": "foundation",
+          "overlap": [
+            0.07199999999999995,
+            0.07199999999999995,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-bed-leg-0",
+          "b": "wood-bed-base",
+          "overlap": [
+            0.055999999999999994,
+            0.05599999999999994,
+            1.2000000000000002
+          ]
+        },
+        {
+          "a": "wood-bed-leg-1",
+          "b": "foundation",
+          "overlap": [
+            0.07200000000000006,
+            0.07199999999999995,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-bed-leg-1",
+          "b": "wood-bed-base",
+          "overlap": [
+            0.05600000000000005,
+            0.05599999999999994,
+            1.2000000000000002
+          ]
+        },
+        {
+          "a": "wood-bed-leg-2",
+          "b": "foundation",
+          "overlap": [
+            0.07199999999999995,
+            0.07200000000000006,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-bed-leg-2",
+          "b": "wood-bed-base",
+          "overlap": [
+            0.055999999999999994,
+            0.05600000000000005,
+            1.2000000000000002
+          ]
+        },
+        {
+          "a": "wood-bed-leg-3",
+          "b": "foundation",
+          "overlap": [
+            0.07200000000000006,
+            0.07200000000000006,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-bed-leg-3",
+          "b": "wood-bed-base",
+          "overlap": [
+            0.05600000000000005,
+            0.05600000000000005,
+            1.2000000000000002
+          ]
+        },
+        {
+          "a": "wood-bed-head-rail",
+          "b": "wood-bed-leg-0",
+          "overlap": [
+            0.066,
+            0.07199999999999995,
+            0.9000000000000004
+          ]
+        },
+        {
+          "a": "wood-bed-head-rail",
+          "b": "wood-bed-leg-1",
+          "overlap": [
+            0.06600000000000006,
+            0.07199999999999995,
+            0.9000000000000004
+          ]
+        },
+        {
+          "a": "bed-head-slat-0",
+          "b": "wood-bed-base",
+          "overlap": [
+            0.050000000000000044,
+            0.03699999999999998,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "bed-head-slat-0",
+          "b": "wood-bed-head-rail",
+          "overlap": [
+            0.050000000000000044,
+            0.03699999999999998,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "bed-head-slat-1",
+          "b": "wood-bed-base",
+          "overlap": [
+            0.050000000000000044,
+            0.03699999999999998,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "bed-head-slat-1",
+          "b": "wood-bed-head-rail",
+          "overlap": [
+            0.050000000000000044,
+            0.03699999999999998,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "bed-head-slat-2",
+          "b": "wood-bed-base",
+          "overlap": [
+            0.050000000000000044,
+            0.03699999999999998,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "bed-head-slat-2",
+          "b": "wood-bed-head-rail",
+          "overlap": [
+            0.050000000000000044,
+            0.03699999999999998,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "bed-head-slat-3",
+          "b": "wood-bed-base",
+          "overlap": [
+            0.04999999999999982,
+            0.03699999999999998,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "bed-head-slat-3",
+          "b": "wood-bed-head-rail",
+          "overlap": [
+            0.04999999999999982,
+            0.03699999999999998,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "bed-head-slat-4",
+          "b": "wood-bed-base",
+          "overlap": [
+            0.04999999999999982,
+            0.03699999999999998,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "bed-head-slat-4",
+          "b": "wood-bed-head-rail",
+          "overlap": [
+            0.04999999999999982,
+            0.03699999999999998,
+            0.40000000000000036
+          ]
+        },
+        {
+          "a": "bed-foot-panel",
+          "b": "wood-bed-base",
+          "overlap": [
+            0.99,
+            0.06299999999999994,
+            1.2000000000000002
+          ]
+        },
+        {
+          "a": "mattress",
+          "b": "wood-bed-base",
+          "overlap": [
+            0.98,
+            1.38,
+            0.08000000000000007
+          ]
+        },
+        {
+          "a": "blanket",
+          "b": "mattress",
+          "overlap": [
+            0.98,
+            0.9524999999999999,
+            0.27999999999999936
+          ]
+        },
+        {
+          "a": "pillow",
+          "b": "mattress",
+          "overlap": [
+            0.6600000000000001,
+            0.32000000000000006,
+            0.05999999999999961
+          ]
+        },
+        {
+          "a": "cream-cabinet",
+          "b": "foundation",
+          "overlap": [
+            0.5500000000000003,
+            0.52,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-cabinet-top",
+          "b": "cream-cabinet",
+          "overlap": [
+            0.5500000000000003,
+            0.52,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "cabinet-handle-0",
+          "b": "cream-cabinet",
+          "overlap": [
+            0.1499999999999999,
+            0.001000000000000112,
+            0.3599999999999999
+          ]
+        },
+        {
+          "a": "cabinet-handle-1",
+          "b": "cream-cabinet",
+          "overlap": [
+            0.1499999999999999,
+            0.001000000000000112,
+            0.3600000000000003
+          ]
+        },
+        {
+          "a": "medicine-bottle",
+          "b": "wood-cabinet-top",
+          "overlap": [
+            0.17999999999999972,
+            0.17999999999999994,
+            0.05000000000000071
+          ]
+        },
+        {
+          "a": "medicine-cap",
+          "b": "medicine-bottle",
+          "overlap": [
+            0.09600000000000009,
+            0.09600000000000009,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "medicine-box",
+          "b": "wood-cabinet-top",
+          "overlap": [
+            0.16999999999999993,
+            0.20999999999999996,
+            0.030000000000001137
+          ]
+        },
+        {
+          "a": "medical-plaque",
+          "b": "room-wall-v0",
+          "overlap": [
+            0.29000000000000004,
+            0.014000000000000012,
+            4.300000000000001
+          ]
+        },
+        {
+          "a": "medical-cross-v",
+          "b": "medical-plaque",
+          "overlap": [
+            0.040000000000000036,
+            0.0010000000000000009,
+            2.349999999999998
+          ]
+        },
+        {
+          "a": "medical-cross-h",
+          "b": "medical-plaque",
+          "overlap": [
+            0.1459999999999999,
+            0.0010000000000000009,
+            0.6899999999999977
+          ]
+        },
+        {
+          "a": "medical-shelf",
+          "b": "room-wall-u1",
+          "overlap": [
+            0.029999999999999805,
+            0.6600000000000001,
+            3.3000000000000007
+          ]
+        },
+        {
+          "a": "medical-shelf-box-0",
+          "b": "medical-shelf",
+          "overlap": [
+            0.006999999999999673,
+            0.12999999999999995,
+            2.0
+          ]
+        },
+        {
+          "a": "medical-shelf-box-1",
+          "b": "medical-shelf",
+          "overlap": [
+            0.006999999999999673,
+            0.1299999999999999,
+            2.0
+          ]
+        },
+        {
+          "a": "medical-shelf-box-2",
+          "b": "medical-shelf",
+          "overlap": [
+            0.006999999999999673,
+            0.1299999999999999,
+            2.0
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "foundation",
+          "edges": 12
+        },
+        {
+          "name": "room-wall-u0",
+          "edges": 12
+        },
+        {
+          "name": "room-cap-u0",
+          "edges": 12
+        },
+        {
+          "name": "room-wall-u1",
+          "edges": 12
+        },
+        {
+          "name": "room-cap-u1",
+          "edges": 12
+        },
+        {
+          "name": "room-wall-v0",
+          "edges": 12
+        },
+        {
+          "name": "room-cap-v0",
+          "edges": 12
+        },
+        {
+          "name": "room-wall-v1",
+          "edges": 12
+        },
+        {
+          "name": "room-cap-v1",
+          "edges": 12
+        },
+        {
+          "name": "door",
+          "edges": 12
+        },
+        {
+          "name": "doorpost-0",
+          "edges": 12
+        },
+        {
+          "name": "doorpost-1",
+          "edges": 12
+        },
+        {
+          "name": "doorhead",
+          "edges": 12
+        },
+        {
+          "name": "corner-0",
+          "edges": 12
+        },
+        {
+          "name": "corner-1",
+          "edges": 12
+        },
+        {
+          "name": "corner-2",
+          "edges": 12
+        },
+        {
+          "name": "corner-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-base",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-head-rail",
+          "edges": 12
+        },
+        {
+          "name": "bed-head-slat-0",
+          "edges": 12
+        },
+        {
+          "name": "bed-head-slat-1",
+          "edges": 12
+        },
+        {
+          "name": "bed-head-slat-2",
+          "edges": 12
+        },
+        {
+          "name": "bed-head-slat-3",
+          "edges": 12
+        },
+        {
+          "name": "bed-head-slat-4",
+          "edges": 12
+        },
+        {
+          "name": "bed-foot-panel",
+          "edges": 12
+        },
+        {
+          "name": "mattress",
+          "edges": 360
+        },
+        {
+          "name": "blanket",
+          "edges": 360
+        },
+        {
+          "name": "pillow",
+          "edges": 360
+        },
+        {
+          "name": "cream-cabinet",
+          "edges": 12
+        },
+        {
+          "name": "wood-cabinet-top",
+          "edges": 12
+        },
+        {
+          "name": "cabinet-handle-0",
+          "edges": 12
+        },
+        {
+          "name": "cabinet-handle-1",
+          "edges": 12
+        },
+        {
+          "name": "medicine-bottle",
+          "edges": 176
+        },
+        {
+          "name": "medicine-cap",
+          "edges": 80
+        },
+        {
+          "name": "medicine-box",
+          "edges": 12
+        },
+        {
+          "name": "medical-plaque",
+          "edges": 12
+        },
+        {
+          "name": "medical-cross-v",
+          "edges": 12
+        },
+        {
+          "name": "medical-cross-h",
+          "edges": 12
+        },
+        {
+          "name": "medical-shelf",
+          "edges": 12
+        },
+        {
+          "name": "medical-shelf-box-0",
+          "edges": 12
+        },
+        {
+          "name": "medical-shelf-box-1",
+          "edges": 12
+        },
+        {
+          "name": "medical-shelf-box-2",
+          "edges": 12
+        }
+      ],
+      "rotation_edge_error": 4.440892098500626e-16,
+      "cutaway": [
+        {
+          "d": 0,
+          "visible_walls": [
+            "u0",
+            "v0"
+          ],
+          "door_visible": false,
+          "fixed_nonwall_faces": 972,
+          "nonwall_geometry_sha256": "5d22ede18588fb79aef0d9edf0744d1d652b5f59236901314e0c9eace49dffe4"
+        },
+        {
+          "d": 1,
+          "visible_walls": [
+            "u1",
+            "v0"
+          ],
+          "door_visible": false,
+          "fixed_nonwall_faces": 972,
+          "nonwall_geometry_sha256": "5d22ede18588fb79aef0d9edf0744d1d652b5f59236901314e0c9eace49dffe4"
+        },
+        {
+          "d": 2,
+          "visible_walls": [
+            "u1",
+            "v1"
+          ],
+          "door_visible": true,
+          "fixed_nonwall_faces": 972,
+          "nonwall_geometry_sha256": "5d22ede18588fb79aef0d9edf0744d1d652b5f59236901314e0c9eace49dffe4"
+        },
+        {
+          "d": 3,
+          "visible_walls": [
+            "u0",
+            "v1"
+          ],
+          "door_visible": true,
+          "fixed_nonwall_faces": 972,
+          "nonwall_geometry_sha256": "5d22ede18588fb79aef0d9edf0744d1d652b5f59236901314e0c9eace49dffe4"
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            55952
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 78,
+              "slope": -0.5002592344364504,
+              "expected_slope": -0.5,
+              "rms": 0.5646912345224562,
+              "outline_adjusted_residual": 0.9702030614370187,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": -0.5002592344364504,
+                "rms": 0.5646912345224562,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": 0.5001041739009655,
+              "expected_slope": 0.5,
+              "rms": 0.5590053472574107,
+              "outline_adjusted_residual": 0.9702030614370187,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": 0.5001041739009655,
+                "rms": 0.5590053472574107,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "cabinet",
+              "mode": "top",
+              "samples": 25,
+              "slope": -0.5046153846153906,
+              "expected_slope": -0.4999999999999993,
+              "rms": 0.5489009999009842,
+              "outline_adjusted_residual": 0.7190944080527538,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "cabinet",
+              "mode": "top",
+              "samples": 25,
+              "slope": 0.4953846153846146,
+              "expected_slope": 0.4999999999999993,
+              "rms": 0.5661204003498801,
+              "outline_adjusted_residual": 0.7174944080527621,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            55952
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": -0.5003125217028959,
+              "expected_slope": -0.5,
+              "rms": 0.5589121615794492,
+              "outline_adjusted_residual": 0.9702030614370187,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": -0.5003125217028959,
+                "rms": 0.5589121615794492,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 78,
+              "slope": 0.4997534111458168,
+              "expected_slope": 0.5,
+              "rms": 0.5588423846168491,
+              "outline_adjusted_residual": 0.957382548616506,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": 0.4997534111458168,
+                "rms": 0.5588423846168491,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "cabinet",
+              "mode": "top",
+              "samples": 25,
+              "slope": -0.49538461538461953,
+              "expected_slope": -0.5000000000000007,
+              "rms": 0.5661204003498705,
+              "outline_adjusted_residual": 0.7174944080527621,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "cabinet",
+              "mode": "top",
+              "samples": 24,
+              "slope": 0.5026086956521721,
+              "expected_slope": 0.5000000000000014,
+              "rms": 0.5587252572091912,
+              "outline_adjusted_residual": 0.7498984692814901,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            55952
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 78,
+              "slope": -0.5002592344364504,
+              "expected_slope": -0.5,
+              "rms": 0.5646912345224562,
+              "outline_adjusted_residual": 0.9702030614370187,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": -0.5002592344364504,
+                "rms": 0.5646912345224562,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": 0.5001041739009655,
+              "expected_slope": 0.5,
+              "rms": 0.5590053472574107,
+              "outline_adjusted_residual": 0.9702030614370187,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": 0.5001041739009655,
+                "rms": 0.5590053472574107,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "cabinet",
+              "mode": "top",
+              "samples": 25,
+              "slope": -0.5046153846153821,
+              "expected_slope": -0.5,
+              "rms": 0.5489009999009873,
+              "outline_adjusted_residual": 0.7398944080527644,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "cabinet",
+              "mode": "top",
+              "samples": 26,
+              "slope": 0.4977777777777774,
+              "expected_slope": 0.5,
+              "rms": 0.5574432099159476,
+              "outline_adjusted_residual": 0.9482584770245152,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            55952
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": -0.5003125217028959,
+              "expected_slope": -0.5,
+              "rms": 0.5589121615794492,
+              "outline_adjusted_residual": 0.9702030614370187,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": -0.5003125217028959,
+                "rms": 0.5589121615794492,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 78,
+              "slope": 0.4997534111458168,
+              "expected_slope": 0.5,
+              "rms": 0.5588423846168491,
+              "outline_adjusted_residual": 0.957382548616506,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": 0.4997534111458168,
+                "rms": 0.5588423846168491,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "cabinet",
+              "mode": "top",
+              "samples": 26,
+              "slope": -0.4977777777777769,
+              "expected_slope": -0.5000000000000007,
+              "rms": 0.557443209915954,
+              "outline_adjusted_residual": 0.8713354001014383,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "cabinet",
+              "mode": "top",
+              "samples": 25,
+              "slope": 0.504615384615384,
+              "expected_slope": 0.5000000000000014,
+              "rms": 0.5489009999009874,
+              "outline_adjusted_residual": 0.7190944080527538,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "bed",
+          "d": 0,
+          "connected": true,
+          "pixels": 11530
+        },
+        {
+          "name": "cabinet",
+          "d": 0,
+          "connected": true,
+          "pixels": 4924
+        },
+        {
+          "name": "bed",
+          "d": 1,
+          "connected": true,
+          "pixels": 11515
+        },
+        {
+          "name": "cabinet",
+          "d": 1,
+          "connected": true,
+          "pixels": 4868
+        },
+        {
+          "name": "bed",
+          "d": 2,
+          "connected": true,
+          "pixels": 9865
+        },
+        {
+          "name": "cabinet",
+          "d": 2,
+          "connected": true,
+          "pixels": 4924
+        },
+        {
+          "name": "bed",
+          "d": 3,
+          "connected": true,
+          "pixels": 9880
+        },
+        {
+          "name": "cabinet",
+          "d": 3,
+          "connected": true,
+          "pixels": 4868
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "bed",
+          "b": "cabinet",
+          "axis_gaps": [
+            0.524,
+            -0.7370000000000001,
+            -10.4
+          ]
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_authored_infirmary_0.webp",
+          "sha256": "5f373e07da279f27c7c15b3bd1c629d06597eee41a259cde257cd65435befac9"
+        },
+        {
+          "d": 1,
+          "file": "fac_authored_infirmary_1.webp",
+          "sha256": "f415591b16e4498b92376ddfc17039c5f3f0c04a29c1eb092eaad3e222a8041a"
+        },
+        {
+          "d": 2,
+          "file": "fac_authored_infirmary_2.webp",
+          "sha256": "5b222e056e5026068bd033d7bd7169e002040ad5d16deaf9d2065b093ee53c07"
+        },
+        {
+          "d": 3,
+          "file": "fac_authored_infirmary_3.webp",
+          "sha256": "054e01560a510d47e89eac324aa88268565f1d527b135b93f8bf5ccb110711d6"
+        }
+      ],
+      "limits": [
+        "Common bed/cabinet layout and fixed wall attachments replace inconsistent original facing details.",
+        "Camera-near walls and their attached medical signs/door are omitted; all furniture remains fixed.",
+        "Medicine shelf is fixed on u1, visible d1/d2; original shelf changes wall across facings.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    },
+    {
+      "id": "authored_karaoke",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "room-wall-u0",
+          "b": "foundation",
+          "overlap": [
+            0.07,
+            2.92,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "room-cap-u0",
+          "b": "room-wall-u0",
+          "overlap": [
+            0.07,
+            2.92,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "room-wall-u1",
+          "b": "foundation",
+          "overlap": [
+            0.06999999999999984,
+            2.92,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "room-cap-u1",
+          "b": "room-wall-u1",
+          "overlap": [
+            0.06999999999999984,
+            2.92,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "room-wall-v0",
+          "b": "foundation",
+          "overlap": [
+            2.92,
+            0.07,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "room-cap-v0",
+          "b": "room-wall-v0",
+          "overlap": [
+            2.92,
+            0.07,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "room-wall-v1",
+          "b": "foundation",
+          "overlap": [
+            2.92,
+            0.06999999999999984,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "room-cap-v1",
+          "b": "room-wall-v1",
+          "overlap": [
+            2.92,
+            0.06999999999999984,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "door",
+          "b": "room-wall-v1",
+          "overlap": [
+            0.6000000000000001,
+            0.01200000000000001,
+            22.28
+          ]
+        },
+        {
+          "a": "doorpost-0",
+          "b": "room-wall-v1",
+          "overlap": [
+            0.05600000000000005,
+            0.06999999999999984,
+            22.8
+          ]
+        },
+        {
+          "a": "doorpost-1",
+          "b": "room-wall-v1",
+          "overlap": [
+            0.05600000000000005,
+            0.06999999999999984,
+            22.8
+          ]
+        },
+        {
+          "a": "doorhead",
+          "b": "doorpost-0",
+          "overlap": [
+            0.05600000000000005,
+            0.11799999999999944,
+            0.8000000000000007
+          ]
+        },
+        {
+          "a": "doorhead",
+          "b": "doorpost-1",
+          "overlap": [
+            0.05600000000000005,
+            0.11799999999999944,
+            0.8000000000000007
+          ]
+        },
+        {
+          "a": "corner-0",
+          "b": "foundation",
+          "overlap": [
+            0.023,
+            0.023,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "corner-1",
+          "b": "foundation",
+          "overlap": [
+            0.02300000000000013,
+            0.023,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "corner-2",
+          "b": "foundation",
+          "overlap": [
+            0.02300000000000013,
+            0.02300000000000013,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "corner-3",
+          "b": "foundation",
+          "overlap": [
+            0.023,
+            0.02300000000000013,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "sofa-leg-0",
+          "b": "foundation",
+          "overlap": [
+            0.08000000000000007,
+            0.07999999999999996,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "sofa-leg-0",
+          "b": "sofa-base",
+          "overlap": [
+            0.08000000000000007,
+            0.07999999999999996,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "sofa-leg-1",
+          "b": "foundation",
+          "overlap": [
+            0.08000000000000007,
+            0.07999999999999996,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "sofa-leg-1",
+          "b": "sofa-base",
+          "overlap": [
+            0.08000000000000007,
+            0.07999999999999996,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "sofa-leg-2",
+          "b": "foundation",
+          "overlap": [
+            0.08000000000000007,
+            0.08000000000000007,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "sofa-leg-2",
+          "b": "sofa-base",
+          "overlap": [
+            0.08000000000000007,
+            0.08000000000000007,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "sofa-leg-3",
+          "b": "foundation",
+          "overlap": [
+            0.08000000000000007,
+            0.08000000000000007,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "sofa-leg-3",
+          "b": "sofa-base",
+          "overlap": [
+            0.08000000000000007,
+            0.08000000000000007,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "sofa-back-structure",
+          "b": "sofa-base",
+          "overlap": [
+            1.99,
+            0.10000000000000003,
+            0.75
+          ]
+        },
+        {
+          "a": "sofa-back-pad",
+          "b": "sofa-back-structure",
+          "overlap": [
+            1.87,
+            0.019000000000000017,
+            9.3
+          ]
+        },
+        {
+          "a": "sofa-seat-0",
+          "b": "sofa-base",
+          "overlap": [
+            0.9699999999999999,
+            0.54,
+            0.14999999999999947
+          ]
+        },
+        {
+          "a": "sofa-seat-1",
+          "b": "sofa-base",
+          "overlap": [
+            0.9699999999999998,
+            0.54,
+            0.14999999999999947
+          ]
+        },
+        {
+          "a": "sofa-arm-0",
+          "b": "sofa-base",
+          "overlap": [
+            0.10999999999999988,
+            0.69,
+            1.0499999999999998
+          ]
+        },
+        {
+          "a": "sofa-arm-1",
+          "b": "sofa-base",
+          "overlap": [
+            0.10999999999999988,
+            0.69,
+            1.0499999999999998
+          ]
+        },
+        {
+          "a": "wood-table-leg-0",
+          "b": "wood-table-top",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-table-leg-0",
+          "b": "foundation",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-table-leg-1",
+          "b": "wood-table-top",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-table-leg-1",
+          "b": "foundation",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-table-leg-2",
+          "b": "wood-table-top",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-table-leg-2",
+          "b": "foundation",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-table-leg-3",
+          "b": "wood-table-top",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-table-leg-3",
+          "b": "foundation",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-tv-cabinet",
+          "b": "foundation",
+          "overlap": [
+            1.3199999999999998,
+            0.3400000000000003,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-tv-top",
+          "b": "wood-tv-cabinet",
+          "overlap": [
+            1.3199999999999998,
+            0.3400000000000003,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "tv-foot",
+          "b": "wood-tv-top",
+          "overlap": [
+            0.35,
+            0.20999999999999996,
+            0.049999999999998934
+          ]
+        },
+        {
+          "a": "tv-foot",
+          "b": "tv-frame",
+          "overlap": [
+            0.35,
+            0.08999999999999986,
+            0.25
+          ]
+        },
+        {
+          "a": "speaker-0",
+          "b": "foundation",
+          "overlap": [
+            0.21999999999999997,
+            0.2799999999999998,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "speaker-1",
+          "b": "foundation",
+          "overlap": [
+            0.21999999999999975,
+            0.28,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "mic-base",
+          "b": "foundation",
+          "overlap": [
+            0.21999999999999975,
+            0.21999999999999997,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "mic-pole",
+          "b": "mic-base",
+          "overlap": [
+            0.015625,
+            0.015625,
+            0.3500000000000001
+          ]
+        },
+        {
+          "a": "microphone",
+          "b": "mic-pole",
+          "overlap": [
+            0.015625,
+            0.015625,
+            0.6012733250384432
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "foundation",
+          "edges": 12
+        },
+        {
+          "name": "room-wall-u0",
+          "edges": 12
+        },
+        {
+          "name": "room-cap-u0",
+          "edges": 12
+        },
+        {
+          "name": "room-wall-u1",
+          "edges": 12
+        },
+        {
+          "name": "room-cap-u1",
+          "edges": 12
+        },
+        {
+          "name": "room-wall-v0",
+          "edges": 12
+        },
+        {
+          "name": "room-cap-v0",
+          "edges": 12
+        },
+        {
+          "name": "room-wall-v1",
+          "edges": 12
+        },
+        {
+          "name": "room-cap-v1",
+          "edges": 12
+        },
+        {
+          "name": "door",
+          "edges": 12
+        },
+        {
+          "name": "doorpost-0",
+          "edges": 12
+        },
+        {
+          "name": "doorpost-1",
+          "edges": 12
+        },
+        {
+          "name": "doorhead",
+          "edges": 12
+        },
+        {
+          "name": "corner-0",
+          "edges": 12
+        },
+        {
+          "name": "corner-1",
+          "edges": 12
+        },
+        {
+          "name": "corner-2",
+          "edges": 12
+        },
+        {
+          "name": "corner-3",
+          "edges": 12
+        },
+        {
+          "name": "sofa-base",
+          "edges": 12
+        },
+        {
+          "name": "sofa-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "sofa-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "sofa-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "sofa-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "sofa-back-structure",
+          "edges": 12
+        },
+        {
+          "name": "sofa-back-pad",
+          "edges": 360
+        },
+        {
+          "name": "sofa-seat-0",
+          "edges": 360
+        },
+        {
+          "name": "sofa-seat-1",
+          "edges": 360
+        },
+        {
+          "name": "sofa-arm-0",
+          "edges": 360
+        },
+        {
+          "name": "sofa-arm-1",
+          "edges": 360
+        },
+        {
+          "name": "wood-table-top",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-tv-cabinet",
+          "edges": 12
+        },
+        {
+          "name": "wood-tv-top",
+          "edges": 12
+        },
+        {
+          "name": "tv-foot",
+          "edges": 12
+        },
+        {
+          "name": "tv-frame",
+          "edges": 12
+        },
+        {
+          "name": "speaker-0",
+          "edges": 12
+        },
+        {
+          "name": "speaker-1",
+          "edges": 12
+        },
+        {
+          "name": "mic-base",
+          "edges": 112
+        },
+        {
+          "name": "mic-pole",
+          "edges": 60
+        },
+        {
+          "name": "microphone",
+          "edges": 60
+        }
+      ],
+      "rotation_edge_error": 4.440892098500626e-16,
+      "cutaway": [
+        {
+          "d": 0,
+          "visible_walls": [
+            "u0",
+            "v0"
+          ],
+          "door_visible": false,
+          "fixed_nonwall_faces": 1445,
+          "nonwall_geometry_sha256": "364584438d3226a0e2e8cdce7b02f1439d889fee8f3b8e7ed69b8cfe68f7b7ea"
+        },
+        {
+          "d": 1,
+          "visible_walls": [
+            "u1",
+            "v0"
+          ],
+          "door_visible": false,
+          "fixed_nonwall_faces": 1445,
+          "nonwall_geometry_sha256": "364584438d3226a0e2e8cdce7b02f1439d889fee8f3b8e7ed69b8cfe68f7b7ea"
+        },
+        {
+          "d": 2,
+          "visible_walls": [
+            "u1",
+            "v1"
+          ],
+          "door_visible": true,
+          "fixed_nonwall_faces": 1445,
+          "nonwall_geometry_sha256": "364584438d3226a0e2e8cdce7b02f1439d889fee8f3b8e7ed69b8cfe68f7b7ea"
+        },
+        {
+          "d": 3,
+          "visible_walls": [
+            "u0",
+            "v1"
+          ],
+          "door_visible": true,
+          "fixed_nonwall_faces": 1445,
+          "nonwall_geometry_sha256": "364584438d3226a0e2e8cdce7b02f1439d889fee8f3b8e7ed69b8cfe68f7b7ea"
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            75280
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": -0.5003125217028962,
+              "expected_slope": -0.5,
+              "rms": 0.5589121615794499,
+              "outline_adjusted_residual": 0.9702030614370187,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": -0.5003125217028962,
+                "rms": 0.5589121615794499,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": 0.500104173900965,
+              "expected_slope": 0.5,
+              "rms": 0.5590053472574094,
+              "outline_adjusted_residual": 0.9702030614370187,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": 0.500104173900965,
+                "rms": 0.5590053472574094,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "table",
+              "mode": "top",
+              "samples": 20,
+              "slope": -0.4812030075187982,
+              "expected_slope": -0.5,
+              "rms": 0.5484084971070825,
+              "outline_adjusted_residual": 0.9897969385629608,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "table",
+              "mode": "top",
+              "samples": 33,
+              "slope": 0.49732620320855614,
+              "expected_slope": 0.4999999999999989,
+              "rms": 0.5647220869494795,
+              "outline_adjusted_residual": 0.5042485776193006,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            75280
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": -0.5003125217028962,
+              "expected_slope": -0.5,
+              "rms": 0.5589121615794499,
+              "outline_adjusted_residual": 0.9702030614370187,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": -0.5003125217028962,
+                "rms": 0.5589121615794499,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": 0.500104173900965,
+              "expected_slope": 0.5,
+              "rms": 0.5590053472574094,
+              "outline_adjusted_residual": 0.9702030614370187,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": 0.500104173900965,
+                "rms": 0.5590053472574094,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "table",
+              "mode": "top",
+              "samples": 33,
+              "slope": -0.49732620320855875,
+              "expected_slope": -0.5,
+              "rms": 0.5647220869494796,
+              "outline_adjusted_residual": 0.5042485776193041,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "table",
+              "mode": "top",
+              "samples": 20,
+              "slope": 0.4812030075187989,
+              "expected_slope": 0.5000000000000009,
+              "rms": 0.5484084971070832,
+              "outline_adjusted_residual": 0.5,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            75280
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": -0.5003125217028962,
+              "expected_slope": -0.5,
+              "rms": 0.5589121615794499,
+              "outline_adjusted_residual": 0.9702030614370187,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": -0.5003125217028962,
+                "rms": 0.5589121615794499,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": 0.500104173900965,
+              "expected_slope": 0.5,
+              "rms": 0.5590053472574094,
+              "outline_adjusted_residual": 0.9702030614370187,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": 0.500104173900965,
+                "rms": 0.5590053472574094,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "table",
+              "mode": "top",
+              "samples": 20,
+              "slope": -0.5037593984962422,
+              "expected_slope": -0.5,
+              "rms": 0.5585965227138441,
+              "outline_adjusted_residual": 0.5,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "table",
+              "mode": "top",
+              "samples": 33,
+              "slope": 0.497326203208555,
+              "expected_slope": 0.5,
+              "rms": 0.5647220869494776,
+              "outline_adjusted_residual": 0.6901984228960825,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            75280
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": -0.5003125217028962,
+              "expected_slope": -0.5,
+              "rms": 0.5589121615794499,
+              "outline_adjusted_residual": 0.9702030614370187,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": -0.5003125217028962,
+                "rms": 0.5589121615794499,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 120,
+              "slope": 0.500104173900965,
+              "expected_slope": 0.5,
+              "rms": 0.5590053472574094,
+              "outline_adjusted_residual": 0.9702030614370187,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 120,
+                "slope": 0.500104173900965,
+                "rms": 0.5590053472574094,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "table",
+              "mode": "top",
+              "samples": 34,
+              "slope": -0.4987012987012971,
+              "expected_slope": -0.5000000000000006,
+              "rms": 0.5580973126924585,
+              "outline_adjusted_residual": 0.6451985593237569,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "table",
+              "mode": "top",
+              "samples": 20,
+              "slope": 0.5037593984962366,
+              "expected_slope": 0.5,
+              "rms": 0.5585965227138168,
+              "outline_adjusted_residual": 0.9897969385629608,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "sofa",
+          "d": 0,
+          "connected": true,
+          "pixels": 14292
+        },
+        {
+          "name": "table",
+          "d": 0,
+          "connected": true,
+          "pixels": 3080
+        },
+        {
+          "name": "tv",
+          "d": 0,
+          "connected": true,
+          "pixels": 10880
+        },
+        {
+          "name": "speaker-0",
+          "d": 0,
+          "connected": true,
+          "pixels": 3020
+        },
+        {
+          "name": "speaker-1",
+          "d": 0,
+          "connected": true,
+          "pixels": 3020
+        },
+        {
+          "name": "mic",
+          "d": 0,
+          "connected": true,
+          "pixels": 528
+        },
+        {
+          "name": "sofa",
+          "d": 1,
+          "connected": true,
+          "pixels": 14272
+        },
+        {
+          "name": "table",
+          "d": 1,
+          "connected": true,
+          "pixels": 3132
+        },
+        {
+          "name": "tv",
+          "d": 1,
+          "connected": true,
+          "pixels": 10904
+        },
+        {
+          "name": "speaker-0",
+          "d": 1,
+          "connected": true,
+          "pixels": 3012
+        },
+        {
+          "name": "speaker-1",
+          "d": 1,
+          "connected": true,
+          "pixels": 3012
+        },
+        {
+          "name": "mic",
+          "d": 1,
+          "connected": true,
+          "pixels": 519
+        },
+        {
+          "name": "sofa",
+          "d": 2,
+          "connected": true,
+          "pixels": 10376
+        },
+        {
+          "name": "table",
+          "d": 2,
+          "connected": true,
+          "pixels": 3104
+        },
+        {
+          "name": "tv",
+          "d": 2,
+          "connected": true,
+          "pixels": 10668
+        },
+        {
+          "name": "speaker-0",
+          "d": 2,
+          "connected": true,
+          "pixels": 3012
+        },
+        {
+          "name": "speaker-1",
+          "d": 2,
+          "connected": true,
+          "pixels": 3000
+        },
+        {
+          "name": "mic",
+          "d": 2,
+          "connected": true,
+          "pixels": 525
+        },
+        {
+          "name": "sofa",
+          "d": 3,
+          "connected": true,
+          "pixels": 10360
+        },
+        {
+          "name": "table",
+          "d": 3,
+          "connected": true,
+          "pixels": 3094
+        },
+        {
+          "name": "tv",
+          "d": 3,
+          "connected": true,
+          "pixels": 10664
+        },
+        {
+          "name": "speaker-0",
+          "d": 3,
+          "connected": true,
+          "pixels": 3020
+        },
+        {
+          "name": "speaker-1",
+          "d": 3,
+          "connected": true,
+          "pixels": 2996
+        },
+        {
+          "name": "mic",
+          "d": 3,
+          "connected": true,
+          "pixels": 506
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "sofa",
+          "b": "table",
+          "axis_gaps": [
+            -1.3649999999999998,
+            0.24,
+            -6.8
+          ]
+        },
+        {
+          "a": "sofa",
+          "b": "tv",
+          "axis_gaps": [
+            -1.26,
+            1.28,
+            -13.0
+          ]
+        },
+        {
+          "a": "sofa",
+          "b": "speaker-0",
+          "axis_gaps": [
+            0.06999999999999995,
+            0.78,
+            -13.0
+          ]
+        },
+        {
+          "a": "sofa",
+          "b": "speaker-1",
+          "axis_gaps": [
+            0.050000000000000266,
+            -0.48,
+            -13.0
+          ]
+        },
+        {
+          "a": "sofa",
+          "b": "mic",
+          "axis_gaps": [
+            -0.41999999999999993,
+            0.9099999999999997,
+            -13.0
+          ]
+        },
+        {
+          "a": "table",
+          "b": "tv",
+          "axis_gaps": [
+            -0.4949999999999999,
+            0.55,
+            -6.8
+          ]
+        },
+        {
+          "a": "table",
+          "b": "speaker-0",
+          "axis_gaps": [
+            0.8350000000000002,
+            0.050000000000000044,
+            -6.8
+          ]
+        },
+        {
+          "a": "table",
+          "b": "speaker-1",
+          "axis_gaps": [
+            0.605,
+            0.53,
+            -6.8
+          ]
+        },
+        {
+          "a": "table",
+          "b": "mic",
+          "axis_gaps": [
+            0.1349999999999998,
+            0.17999999999999972,
+            -6.8
+          ]
+        },
+        {
+          "a": "tv",
+          "b": "speaker-0",
+          "axis_gaps": [
+            -0.06999999999999995,
+            0.2200000000000002,
+            -17.7
+          ]
+        },
+        {
+          "a": "tv",
+          "b": "speaker-1",
+          "axis_gaps": [
+            0.9200000000000002,
+            1.57,
+            -17.7
+          ]
+        },
+        {
+          "a": "tv",
+          "b": "mic",
+          "axis_gaps": [
+            0.44999999999999996,
+            0.15000000000000036,
+            -14.601273325038443
+          ]
+        },
+        {
+          "a": "speaker-0",
+          "b": "speaker-1",
+          "axis_gaps": [
+            2.25,
+            1.07,
+            -17.7
+          ]
+        },
+        {
+          "a": "speaker-0",
+          "b": "mic",
+          "axis_gaps": [
+            1.78,
+            -0.15000000000000013,
+            -14.601273325038443
+          ]
+        },
+        {
+          "a": "speaker-1",
+          "b": "mic",
+          "axis_gaps": [
+            0.25000000000000044,
+            1.1999999999999997,
+            -14.601273325038443
+          ]
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_authored_karaoke_0.webp",
+          "sha256": "fefd4bd6d31fed895d3ebfb6ca479457ee688c31a19fcd3dc50ee6c42e6ea7db"
+        },
+        {
+          "d": 1,
+          "file": "fac_authored_karaoke_1.webp",
+          "sha256": "6cb61fa27e1ea7c137c51f81fa44daf705298017c98d46f830c7fbec90e463e9"
+        },
+        {
+          "d": 2,
+          "file": "fac_authored_karaoke_2.webp",
+          "sha256": "5d0d28abb5421a9fcb6ad6e09bb12e1055b780e5244eabdb14194fb28d105862"
+        },
+        {
+          "d": 3,
+          "file": "fac_authored_karaoke_3.webp",
+          "sha256": "e56cef8bfa579c5dc7128b0fc1927e0669c0072cf53320d328ea3a67858abd04"
+        }
+      ],
+      "limits": [
+        "One fixed karaoke furniture layout; front/back screen and speaker faces rotate with their boxes.",
+        "Camera-near wall panels and door trim are omitted, never moved.",
+        "Screen graphic is authored from source blue bar/rectangle motifs, not original text recovery.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    },
+    {
+      "id": "compact_ticket",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "cream-wall-back",
+          "b": "foundation",
+          "overlap": [
+            1.74,
+            0.09,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "cream-wall-front",
+          "b": "foundation",
+          "overlap": [
+            1.74,
+            0.09000000000000008,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "cream-wall-left",
+          "b": "foundation",
+          "overlap": [
+            0.09,
+            1.6600000000000001,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "cream-wall-right",
+          "b": "foundation",
+          "overlap": [
+            0.08999999999999986,
+            1.6600000000000001,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "wood-wainscot-front",
+          "b": "cream-wall-front",
+          "overlap": [
+            1.74,
+            0.0050000000000001155,
+            9.45
+          ]
+        },
+        {
+          "a": "ticket-window-front",
+          "b": "cream-wall-front",
+          "overlap": [
+            1.41,
+            0.02000000000000024,
+            12.100000000000001
+          ]
+        },
+        {
+          "a": "wood-windowpost-front-0",
+          "b": "ticket-window-front",
+          "overlap": [
+            0.023999999999999966,
+            0.050999999999999934,
+            12.100000000000001
+          ]
+        },
+        {
+          "a": "wood-windowpost-front-1",
+          "b": "ticket-window-front",
+          "overlap": [
+            0.02400000000000002,
+            0.050999999999999934,
+            12.100000000000001
+          ]
+        },
+        {
+          "a": "wood-windowrail-front-0",
+          "b": "wood-windowpost-front-0",
+          "overlap": [
+            0.07199999999999995,
+            0.08699999999999997,
+            1.1500000000000004
+          ]
+        },
+        {
+          "a": "wood-windowrail-front-0",
+          "b": "wood-windowpost-front-1",
+          "overlap": [
+            0.07200000000000006,
+            0.08699999999999997,
+            1.1500000000000004
+          ]
+        },
+        {
+          "a": "wood-windowrail-front-1",
+          "b": "wood-windowpost-front-0",
+          "overlap": [
+            0.07199999999999995,
+            0.08699999999999997,
+            0.8000000000000007
+          ]
+        },
+        {
+          "a": "wood-windowrail-front-1",
+          "b": "wood-windowpost-front-1",
+          "overlap": [
+            0.07200000000000006,
+            0.08699999999999997,
+            0.8000000000000007
+          ]
+        },
+        {
+          "a": "wood-windowmullion-front",
+          "b": "ticket-window-front",
+          "overlap": [
+            0.04200000000000004,
+            0.028999999999999915,
+            12.100000000000001
+          ]
+        },
+        {
+          "a": "wood-windowsill-front",
+          "b": "wood-windowrail-front-0",
+          "overlap": [
+            1.506,
+            0.08699999999999997,
+            0.6999999999999993
+          ]
+        },
+        {
+          "a": "wood-wainscot-back",
+          "b": "cream-wall-back",
+          "overlap": [
+            1.74,
+            0.009999999999999981,
+            9.45
+          ]
+        },
+        {
+          "a": "ticket-window-back",
+          "b": "cream-wall-back",
+          "overlap": [
+            1.41,
+            0.01799999999999996,
+            12.100000000000001
+          ]
+        },
+        {
+          "a": "wood-windowpost-back-0",
+          "b": "ticket-window-back",
+          "overlap": [
+            0.023999999999999966,
+            0.05499999999999999,
+            12.100000000000001
+          ]
+        },
+        {
+          "a": "wood-windowpost-back-1",
+          "b": "ticket-window-back",
+          "overlap": [
+            0.02400000000000002,
+            0.05499999999999999,
+            12.100000000000001
+          ]
+        },
+        {
+          "a": "wood-windowrail-back-0",
+          "b": "wood-windowpost-back-0",
+          "overlap": [
+            0.07199999999999995,
+            0.087,
+            1.1500000000000004
+          ]
+        },
+        {
+          "a": "wood-windowrail-back-0",
+          "b": "wood-windowpost-back-1",
+          "overlap": [
+            0.07200000000000006,
+            0.087,
+            1.1500000000000004
+          ]
+        },
+        {
+          "a": "wood-windowrail-back-1",
+          "b": "wood-windowpost-back-0",
+          "overlap": [
+            0.07199999999999995,
+            0.087,
+            0.8000000000000007
+          ]
+        },
+        {
+          "a": "wood-windowrail-back-1",
+          "b": "wood-windowpost-back-1",
+          "overlap": [
+            0.07200000000000006,
+            0.087,
+            0.8000000000000007
+          ]
+        },
+        {
+          "a": "wood-windowmullion-back",
+          "b": "ticket-window-back",
+          "overlap": [
+            0.04200000000000004,
+            0.048000000000000015,
+            12.100000000000001
+          ]
+        },
+        {
+          "a": "wood-windowsill-back",
+          "b": "wood-windowrail-back-0",
+          "overlap": [
+            1.506,
+            0.087,
+            0.6999999999999993
+          ]
+        },
+        {
+          "a": "ticket-window-side",
+          "b": "cream-wall-right",
+          "overlap": [
+            0.006000000000000005,
+            0.58,
+            9.7
+          ]
+        },
+        {
+          "a": "wood-sidepost-0",
+          "b": "cream-wall-right",
+          "overlap": [
+            0.01200000000000001,
+            0.050000000000000044,
+            11.099999999999998
+          ]
+        },
+        {
+          "a": "wood-sidepost-1",
+          "b": "cream-wall-right",
+          "overlap": [
+            0.01200000000000001,
+            0.04999999999999982,
+            11.099999999999998
+          ]
+        },
+        {
+          "a": "wood-siderail-0",
+          "b": "wood-sidepost-0",
+          "overlap": [
+            0.06700000000000017,
+            0.050000000000000044,
+            0.5999999999999996
+          ]
+        },
+        {
+          "a": "wood-siderail-0",
+          "b": "wood-sidepost-1",
+          "overlap": [
+            0.06700000000000017,
+            0.04999999999999982,
+            0.5999999999999996
+          ]
+        },
+        {
+          "a": "wood-siderail-1",
+          "b": "wood-sidepost-0",
+          "overlap": [
+            0.06700000000000017,
+            0.050000000000000044,
+            0.5999999999999979
+          ]
+        },
+        {
+          "a": "wood-siderail-1",
+          "b": "wood-sidepost-1",
+          "overlap": [
+            0.06700000000000017,
+            0.04999999999999982,
+            0.5999999999999979
+          ]
+        },
+        {
+          "a": "roof-tile-0-0",
+          "b": "roof-base-0",
+          "overlap": [
+            0.305,
+            1.03,
+            12.230485436893204
+          ]
+        },
+        {
+          "a": "roof-tile-0-1",
+          "b": "roof-base-0",
+          "overlap": [
+            0.305,
+            1.03,
+            12.230485436893204
+          ]
+        },
+        {
+          "a": "roof-tile-0-2",
+          "b": "roof-base-0",
+          "overlap": [
+            0.3049999999999998,
+            1.03,
+            12.230485436893204
+          ]
+        },
+        {
+          "a": "roof-tile-0-3",
+          "b": "roof-base-0",
+          "overlap": [
+            0.30500000000000027,
+            1.03,
+            12.230485436893204
+          ]
+        },
+        {
+          "a": "roof-tile-0-4",
+          "b": "roof-base-0",
+          "overlap": [
+            0.30499999999999994,
+            1.03,
+            12.230485436893204
+          ]
+        },
+        {
+          "a": "roof-tile-0-5",
+          "b": "roof-base-0",
+          "overlap": [
+            0.3049999999999997,
+            1.03,
+            12.230485436893204
+          ]
+        },
+        {
+          "a": "roof-tile-0-6",
+          "b": "roof-base-0",
+          "overlap": [
+            0.30500000000000016,
+            1.03,
+            12.230485436893204
+          ]
+        },
+        {
+          "a": "roof-tile-0-7",
+          "b": "roof-base-0",
+          "overlap": [
+            0.30500000000000016,
+            1.03,
+            12.230485436893204
+          ]
+        },
+        {
+          "a": "roof-tile-0-8",
+          "b": "roof-base-0",
+          "overlap": [
+            0.30500000000000016,
+            1.03,
+            12.230485436893204
+          ]
+        },
+        {
+          "a": "roof-tile-0-9",
+          "b": "roof-base-0",
+          "overlap": [
+            0.3049999999999997,
+            1.03,
+            12.230485436893204
+          ]
+        },
+        {
+          "a": "wood-eave-0",
+          "b": "roof-base-0",
+          "overlap": [
+            3.05,
+            0.03200000000000003,
+            0.6120000000000019
+          ]
+        },
+        {
+          "a": "roof-tile-1-0",
+          "b": "roof-base-1",
+          "overlap": [
+            0.305,
+            1.0299999999999998,
+            12.2304854368932
+          ]
+        },
+        {
+          "a": "roof-tile-1-1",
+          "b": "roof-base-1",
+          "overlap": [
+            0.305,
+            1.0299999999999998,
+            12.2304854368932
+          ]
+        },
+        {
+          "a": "roof-tile-1-2",
+          "b": "roof-base-1",
+          "overlap": [
+            0.3049999999999998,
+            1.0299999999999998,
+            12.2304854368932
+          ]
+        },
+        {
+          "a": "roof-tile-1-3",
+          "b": "roof-base-1",
+          "overlap": [
+            0.30500000000000027,
+            1.0299999999999998,
+            12.2304854368932
+          ]
+        },
+        {
+          "a": "roof-tile-1-4",
+          "b": "roof-base-1",
+          "overlap": [
+            0.30499999999999994,
+            1.0299999999999998,
+            12.2304854368932
+          ]
+        },
+        {
+          "a": "roof-tile-1-5",
+          "b": "roof-base-1",
+          "overlap": [
+            0.3049999999999997,
+            1.0299999999999998,
+            12.2304854368932
+          ]
+        },
+        {
+          "a": "roof-tile-1-6",
+          "b": "roof-base-1",
+          "overlap": [
+            0.30500000000000016,
+            1.0299999999999998,
+            12.2304854368932
+          ]
+        },
+        {
+          "a": "roof-tile-1-7",
+          "b": "roof-base-1",
+          "overlap": [
+            0.30500000000000016,
+            1.0299999999999998,
+            12.2304854368932
+          ]
+        },
+        {
+          "a": "roof-tile-1-8",
+          "b": "roof-base-1",
+          "overlap": [
+            0.30500000000000016,
+            1.0299999999999998,
+            12.2304854368932
+          ]
+        },
+        {
+          "a": "roof-tile-1-9",
+          "b": "roof-base-1",
+          "overlap": [
+            0.3049999999999997,
+            1.0299999999999998,
+            12.2304854368932
+          ]
+        },
+        {
+          "a": "wood-eave-1",
+          "b": "roof-base-1",
+          "overlap": [
+            3.05,
+            0.03200000000000003,
+            0.6120000000000019
+          ]
+        },
+        {
+          "a": "wood-post-0",
+          "b": "foundation",
+          "overlap": [
+            0.08400000000000002,
+            0.08400000000000002,
+            0.07000000000000006
+          ]
+        },
+        {
+          "a": "wood-post-0",
+          "b": "roof-base-0",
+          "overlap": [
+            0.08400000000000002,
+            0.08400000000000002,
+            3.327864077669904
+          ]
+        },
+        {
+          "a": "wood-post-1",
+          "b": "foundation",
+          "overlap": [
+            0.08400000000000002,
+            0.08400000000000007,
+            0.07000000000000006
+          ]
+        },
+        {
+          "a": "wood-post-1",
+          "b": "roof-base-1",
+          "overlap": [
+            0.08400000000000002,
+            0.08400000000000007,
+            3.3278640776699007
+          ]
+        },
+        {
+          "a": "wood-post-2",
+          "b": "foundation",
+          "overlap": [
+            0.08400000000000007,
+            0.08400000000000002,
+            0.07000000000000006
+          ]
+        },
+        {
+          "a": "wood-post-2",
+          "b": "roof-base-0",
+          "overlap": [
+            0.08400000000000007,
+            0.08400000000000002,
+            3.327864077669904
+          ]
+        },
+        {
+          "a": "wood-post-3",
+          "b": "foundation",
+          "overlap": [
+            0.08400000000000007,
+            0.08400000000000007,
+            0.07000000000000006
+          ]
+        },
+        {
+          "a": "wood-post-3",
+          "b": "roof-base-1",
+          "overlap": [
+            0.08400000000000007,
+            0.08400000000000007,
+            3.3278640776699007
+          ]
+        },
+        {
+          "a": "wood-post-4",
+          "b": "foundation",
+          "overlap": [
+            0.08399999999999963,
+            0.08400000000000002,
+            0.07000000000000006
+          ]
+        },
+        {
+          "a": "wood-post-4",
+          "b": "roof-base-0",
+          "overlap": [
+            0.08399999999999963,
+            0.08400000000000002,
+            3.327864077669904
+          ]
+        },
+        {
+          "a": "wood-post-5",
+          "b": "foundation",
+          "overlap": [
+            0.08399999999999963,
+            0.08400000000000007,
+            0.07000000000000006
+          ]
+        },
+        {
+          "a": "wood-post-5",
+          "b": "roof-base-1",
+          "overlap": [
+            0.08399999999999963,
+            0.08400000000000007,
+            3.3278640776699007
+          ]
+        },
+        {
+          "a": "cream-gable-0-0",
+          "b": "roof-base-0",
+          "overlap": [
+            0.066,
+            0.81,
+            10.200000000000003
+          ]
+        },
+        {
+          "a": "cream-gable-0-0",
+          "b": "wood-post-0",
+          "overlap": [
+            0.065,
+            0.04200000000000001,
+            1.2778640776699035
+          ]
+        },
+        {
+          "a": "cream-gable-0-1",
+          "b": "roof-base-1",
+          "overlap": [
+            0.066,
+            0.81,
+            10.200000000000003
+          ]
+        },
+        {
+          "a": "cream-gable-0-1",
+          "b": "wood-post-1",
+          "overlap": [
+            0.065,
+            0.04200000000000004,
+            1.2778640776699035
+          ]
+        },
+        {
+          "a": "cream-gable-1-0",
+          "b": "roof-base-0",
+          "overlap": [
+            0.06599999999999984,
+            0.81,
+            10.200000000000003
+          ]
+        },
+        {
+          "a": "cream-gable-1-0",
+          "b": "wood-post-2",
+          "overlap": [
+            0.05499999999999994,
+            0.04200000000000001,
+            1.2778640776699035
+          ]
+        },
+        {
+          "a": "cream-gable-1-1",
+          "b": "roof-base-1",
+          "overlap": [
+            0.06599999999999984,
+            0.81,
+            10.200000000000003
+          ]
+        },
+        {
+          "a": "cream-gable-1-1",
+          "b": "wood-post-3",
+          "overlap": [
+            0.05499999999999994,
+            0.04200000000000004,
+            1.2778640776699035
+          ]
+        },
+        {
+          "a": "cream-gable-2-0",
+          "b": "roof-base-0",
+          "overlap": [
+            0.06599999999999984,
+            0.81,
+            10.200000000000003
+          ]
+        },
+        {
+          "a": "cream-gable-2-0",
+          "b": "wood-post-4",
+          "overlap": [
+            0.06599999999999984,
+            0.04200000000000001,
+            1.2778640776699035
+          ]
+        },
+        {
+          "a": "cream-gable-2-1",
+          "b": "roof-base-1",
+          "overlap": [
+            0.06599999999999984,
+            0.81,
+            10.200000000000003
+          ]
+        },
+        {
+          "a": "cream-gable-2-1",
+          "b": "wood-post-5",
+          "overlap": [
+            0.06599999999999984,
+            0.04200000000000004,
+            1.2778640776699035
+          ]
+        },
+        {
+          "a": "gate-post-0",
+          "b": "foundation",
+          "overlap": [
+            0.13000000000000034,
+            0.1100000000000001,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "gate-slot-0",
+          "b": "gate-post-0",
+          "overlap": [
+            0.04699999999999971,
+            0.0010000000000000009,
+            2.0999999999999996
+          ]
+        },
+        {
+          "a": "gate-post-1",
+          "b": "foundation",
+          "overlap": [
+            0.13000000000000034,
+            0.10999999999999988,
+            0.050000000000000044
+          ]
+        },
+        {
+          "a": "gate-slot-1",
+          "b": "gate-post-1",
+          "overlap": [
+            0.04699999999999971,
+            0.0009999999999998899,
+            2.1000000000000005
+          ]
+        },
+        {
+          "a": "wood-post-0",
+          "b": "actual sloped roof underside",
+          "overlap_logical": 0.25
+        },
+        {
+          "a": "wood-post-1",
+          "b": "actual sloped roof underside",
+          "overlap_logical": 0.25
+        },
+        {
+          "a": "wood-post-2",
+          "b": "actual sloped roof underside",
+          "overlap_logical": 0.25
+        },
+        {
+          "a": "wood-post-3",
+          "b": "actual sloped roof underside",
+          "overlap_logical": 0.25
+        },
+        {
+          "a": "wood-post-4",
+          "b": "actual sloped roof underside",
+          "overlap_logical": 0.25
+        },
+        {
+          "a": "wood-post-5",
+          "b": "actual sloped roof underside",
+          "overlap_logical": 0.25
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "foundation",
+          "edges": 12
+        },
+        {
+          "name": "cream-wall-back",
+          "edges": 12
+        },
+        {
+          "name": "cream-wall-front",
+          "edges": 12
+        },
+        {
+          "name": "cream-wall-left",
+          "edges": 12
+        },
+        {
+          "name": "cream-wall-right",
+          "edges": 12
+        },
+        {
+          "name": "wood-wainscot-front",
+          "edges": 12
+        },
+        {
+          "name": "ticket-window-front",
+          "edges": 12
+        },
+        {
+          "name": "wood-windowpost-front-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-windowpost-front-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-windowrail-front-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-windowrail-front-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-windowmullion-front",
+          "edges": 12
+        },
+        {
+          "name": "wood-windowsill-front",
+          "edges": 12
+        },
+        {
+          "name": "wood-wainscot-back",
+          "edges": 12
+        },
+        {
+          "name": "ticket-window-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-windowpost-back-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-windowpost-back-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-windowrail-back-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-windowrail-back-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-windowmullion-back",
+          "edges": 12
+        },
+        {
+          "name": "wood-windowsill-back",
+          "edges": 12
+        },
+        {
+          "name": "ticket-window-side",
+          "edges": 12
+        },
+        {
+          "name": "wood-sidepost-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-sidepost-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-siderail-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-siderail-1",
+          "edges": 12
+        },
+        {
+          "name": "roof-base-0",
+          "edges": 12
+        },
+        {
+          "name": "roof-tile-0-0",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-1",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-2",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-3",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-4",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-5",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-6",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-7",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-8",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-0-9",
+          "edges": 52
+        },
+        {
+          "name": "wood-eave-0",
+          "edges": 156
+        },
+        {
+          "name": "roof-base-1",
+          "edges": 12
+        },
+        {
+          "name": "roof-tile-1-0",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-1",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-2",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-3",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-4",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-5",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-6",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-7",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-8",
+          "edges": 52
+        },
+        {
+          "name": "roof-tile-1-9",
+          "edges": 52
+        },
+        {
+          "name": "wood-eave-1",
+          "edges": 156
+        },
+        {
+          "name": "roof-ridge",
+          "edges": 156
+        },
+        {
+          "name": "wood-post-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-4",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-5",
+          "edges": 12
+        },
+        {
+          "name": "cream-gable-0-0",
+          "edges": 12
+        },
+        {
+          "name": "cream-gable-0-1",
+          "edges": 12
+        },
+        {
+          "name": "cream-gable-1-0",
+          "edges": 12
+        },
+        {
+          "name": "cream-gable-1-1",
+          "edges": 12
+        },
+        {
+          "name": "cream-gable-2-0",
+          "edges": 12
+        },
+        {
+          "name": "cream-gable-2-1",
+          "edges": 12
+        },
+        {
+          "name": "gate-post-0",
+          "edges": 12
+        },
+        {
+          "name": "gate-slot-0",
+          "edges": 12
+        },
+        {
+          "name": "gate-post-1",
+          "edges": 12
+        },
+        {
+          "name": "gate-slot-1",
+          "edges": 12
+        }
+      ],
+      "rotation_edge_error": 4.85722573273506e-16,
+      "cutaway": [],
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            61552
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 78,
+              "slope": -0.4997534111458166,
+              "expected_slope": -0.5,
+              "rms": 0.5588423846168507,
+              "outline_adjusted_residual": 0.5326630299308619,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": -0.4997534111458166,
+                "rms": 0.5588423846168507,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 119,
+              "slope": 0.49978635522005443,
+              "expected_slope": 0.5000000000000001,
+              "rms": 0.5570507857136964,
+              "outline_adjusted_residual": 0.5355628623931505,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 119,
+                "slope": 0.49978635522005443,
+                "rms": 0.5570507857136964,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            62248
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 119,
+              "slope": -0.5002136447799457,
+              "expected_slope": -0.5,
+              "rms": 0.5608409460599817,
+              "outline_adjusted_residual": 0.5397645430654194,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 119,
+                "slope": -0.5002136447799457,
+                "rms": 0.5608409460599817,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 78,
+              "slope": 0.5002339432719176,
+              "expected_slope": 0.5,
+              "rms": 0.5532287052540854,
+              "outline_adjusted_residual": 0.5347195186856576,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": 0.5002339432719176,
+                "rms": 0.5532287052540854,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            62488
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 78,
+              "slope": -0.4997534111458166,
+              "expected_slope": -0.5,
+              "rms": 0.5588423846168507,
+              "outline_adjusted_residual": 0.5326630299308619,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": -0.4997534111458166,
+                "rms": 0.5588423846168507,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 119,
+              "slope": 0.49978635522005443,
+              "expected_slope": 0.5,
+              "rms": 0.5570507857136964,
+              "outline_adjusted_residual": 0.5355628623931505,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 119,
+                "slope": 0.49978635522005443,
+                "rms": 0.5570507857136964,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            61372
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 119,
+              "slope": -0.5002136447799457,
+              "expected_slope": -0.5,
+              "rms": 0.5608409460599817,
+              "outline_adjusted_residual": 0.5397645430654194,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 119,
+                "slope": -0.5002136447799457,
+                "rms": 0.5608409460599817,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "mode": "bottom",
+              "samples": 78,
+              "slope": 0.5002339432719176,
+              "expected_slope": 0.5,
+              "rms": 0.5532287052540854,
+              "outline_adjusted_residual": 0.5347195186856576,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 78,
+                "slope": 0.5002339432719176,
+                "rms": 0.5532287052540854,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [],
+      "assembly_gaps": [],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_compact_ticket_0.webp",
+          "sha256": "a8dc7760e3a8724146dadc2a2010af2e30699759522a1d993ab5b9a00c4c4320"
+        },
+        {
+          "d": 1,
+          "file": "fac_compact_ticket_1.webp",
+          "sha256": "461e07b47cede94220ffa8ccd854c511b721b322aa495c4164d36a0b83b991db"
+        },
+        {
+          "d": 2,
+          "file": "fac_compact_ticket_2.webp",
+          "sha256": "5482cd6a9f43d25c64c58a001cae4a5f4ce25187f19e809f3bf65bfd5f33b098"
+        },
+        {
+          "d": 3,
+          "file": "fac_compact_ticket_3.webp",
+          "sha256": "82e751a664c85f652a8f3ffb1a4cbf071f24326b94c19ef760fb604a05c6196e"
+        }
+      ],
+      "limits": [
+        "Source two opposite glazed service windows are represented by fixed opaque blue reflection panels. No glass/interior refraction is claimed.",
+        "Tall/short gate post positions stay fixed in the passage; no added barrier arms.",
+        "Roof, booth and covered passage share one assembly and original registration.",
+        "Saved floor and exposed boundary samples only, not every interior line. AABB joins do not certify all mesh intersections."
+      ]
+    }
+  ]
+}

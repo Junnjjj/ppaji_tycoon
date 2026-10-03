@@ -1,0 +1,86 @@
+[
+  {
+    "id": "authored_infirmary",
+    "d": 0,
+    "sha256": "b2fb644dc2522d229808e23f0d47df5a2effa282ffefb010a7af53688c0baeb2",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "authored_infirmary",
+    "d": 1,
+    "sha256": "e5485791aca4b252374314dbb0912c56b0c3d553ac71189acd4a11ba86319c4d",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "authored_infirmary",
+    "d": 2,
+    "sha256": "f4ab26fff171761284988229981707d476da69e0af38aae06962c65a5d6bf282",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "authored_infirmary",
+    "d": 3,
+    "sha256": "27e50ba1dc591e2bacb4fff21b1cdfff266c122f6aeb2010f7110e1e29a3e555",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "authored_karaoke",
+    "d": 0,
+    "sha256": "46c70e4c2aeccb0d125ba96b9f1ca6616fee5aedcc9f92bae2e7b63b2c75bf9d",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "authored_karaoke",
+    "d": 1,
+    "sha256": "39b3c28faf6bb2a3dcdffe0d6b2ab866058cfe7981cb60e187fbb38aa6f57857",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "authored_karaoke",
+    "d": 2,
+    "sha256": "0e8924741ad9b806ffb228ccc9b3a8f9dc8c547ee3edb3e52ffb6eba08172b72",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "authored_karaoke",
+    "d": 3,
+    "sha256": "7171f631b9b8dd9ec77582590a4b144ebc58448ba88af7b02ac8878c63baa61e",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "compact_ticket",
+    "d": 0,
+    "sha256": "380f3dc0fa12f7629c4c3da483d2f47b5a1d834da85674848246ca631a4381e1",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "compact_ticket",
+    "d": 1,
+    "sha256": "807234674cbc597fbd35a8e413e0586dcde50acd70ca1ded93480725ddffc98e",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "compact_ticket",
+    "d": 2,
+    "sha256": "18560ce067e4f9f9d29ec6b7012b0f9bfebb48475c3af6af8935f45f7e21e385",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "compact_ticket",
+    "d": 3,
+    "sha256": "85c07731bc0329d83a6241d306603f39e3c9135a3be356f51743ee627238c8ab",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

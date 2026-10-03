@@ -7368,28 +7368,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "authored_infirmary/native-d0.png",
+          "file": "authored_infirmary/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "4834e82cd32fe725ed3f6f36e7099bbb3145daec8cd35866831fbc82a6eb8d8d"
+          "sha256": "44fe98eb2d05e527aa85142c142b2b194a5e86c53a1608b16ec98dbdab33ae2c"
         },
         "d1": {
-          "file": "authored_infirmary/native-d1.png",
+          "file": "authored_infirmary/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "8dc9514332b263b35131a106fe563930aad0695340d31b7f351565d9a0be3b60"
+          "sha256": "5cc7267ea85e54608cbbbc42285dc9839599b4ee29225ae0ac720cf0e18142a9"
         },
         "d2": {
-          "file": "authored_infirmary/native-d2.png",
+          "file": "authored_infirmary/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "c9f5cd3633705953fa32b3a3c3cc65b5c81e5cc60b8d9e9fcfa02887b34091b5"
+          "sha256": "932107d5705c13b04594325690082ec1a210a9f57b5e92164d41506765411c40"
         },
         "d3": {
-          "file": "authored_infirmary/native-d3.png",
+          "file": "authored_infirmary/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "a6ea469c596abaf81077cc37a8350cae8a892b4493919876ba5b795facdae8fa"
+          "sha256": "4606f48be91e5597a88c0bca088c5514ba68ef376fd8ea067470c6c9838a06d8"
         }
       },
       "note": "Accepted cutaway art only. Physical access/slots are inactive handover data; existing simulation retained."
@@ -7754,28 +7754,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "authored_karaoke/native-d0.png",
+          "file": "authored_karaoke/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "95ecb644256f7f27789c3aaaaf55ef3e0aeafa59d4f8f981b7211adf6b114db1"
+          "sha256": "dd2aaae377bc43c5204aec5ce1d5800a576f8524ef670d0d63752f3351a895c9"
         },
         "d1": {
-          "file": "authored_karaoke/native-d1.png",
+          "file": "authored_karaoke/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "bf3700a74bcddf51ce9ff600915be77d1b3e8da862950d0d05a459fdf8531395"
+          "sha256": "feee85254572ebf6fa0a0ea707066cd5697711229875e4051be09c4fec6fed84"
         },
         "d2": {
-          "file": "authored_karaoke/native-d2.png",
+          "file": "authored_karaoke/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "58f1ccd55730ebc872b9abb2521c990ffe71cc2d5b334239a6ed75c5ccdf6860"
+          "sha256": "69b284b31c1a88ca935a14439ac8e45aff9b9950c67d4d3068c40d8821977e6f"
         },
         "d3": {
-          "file": "authored_karaoke/native-d3.png",
+          "file": "authored_karaoke/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "af3aa32f71b5828b10c83256b6aeb5c3b6ced588f18f0c85e1e94474046fc280"
+          "sha256": "652c87eea5c6b0a8cb70883af28d226d55a07f75decba643552b5feeed907978"
         }
       },
       "note": "Accepted cutaway art only. Physical access/slots are inactive handover data; existing simulation retained."
@@ -10873,28 +10873,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "compact_ticket/native-d0.png",
+          "file": "compact_ticket/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "46c53fcb2fa91bcef3d5afd4bd7a9dbf80462b703145e50aca47278d4fac9b6b"
+          "sha256": "2e725942c622a9c78f328db79b8cc79fed2262560d4e23934a555659454a6866"
         },
         "d1": {
-          "file": "compact_ticket/native-d1.png",
+          "file": "compact_ticket/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "801a1bafb3a2f8a2d9ab034a6f6470a2a74dda86faf035ea020c1223242c9ce0"
+          "sha256": "691df10cc3ca008c7ba2d6486badb1b18902d0d71844ff199e87ed97b506ba05"
         },
         "d2": {
-          "file": "compact_ticket/native-d2.png",
+          "file": "compact_ticket/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "aacaa5155b762b7bf792d65539761676b2327a2621c5380a5483f7babfe963e3"
+          "sha256": "731aa99067f5a94a99347e4ec51a83379b159bb9c937092cffb47ac7266f91ec"
         },
         "d3": {
-          "file": "compact_ticket/native-d3.png",
+          "file": "compact_ticket/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "40c7e40ae0f64f576aff8e9d589a9e5fa096ca48ea72250a70cbc8041df5e108"
+          "sha256": "345b3916330de7525b06cd237bffaa30759c67f45b0a4971dfd875daafd57dc8"
         }
       },
       "note": "Compact entrance authored candidate; legacy definitions remain unchanged."
