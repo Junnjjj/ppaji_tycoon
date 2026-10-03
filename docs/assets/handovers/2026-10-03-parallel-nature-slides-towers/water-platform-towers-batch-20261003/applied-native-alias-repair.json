@@ -1,0 +1,59 @@
+{
+  "reason": "Existing visualSource alias contract requires identical native frame references after source replacement",
+  "source": "diving",
+  "alias": "diving_tower",
+  "old_frames": {
+    "d0": {
+      "file": "diving/native-d0.png",
+      "w": 128,
+      "h": 128,
+      "sha256": "0f5f1535cc83311d1c0b9db4161fd88fb0e802294f6ad7f909197c5930e668cd"
+    },
+    "d1": {
+      "file": "diving/native-d1.png",
+      "w": 128,
+      "h": 128,
+      "sha256": "177014bebe2fe2f5ed53266dde20ef279eb55e92cf670c321fd339da3cc629b4"
+    },
+    "d2": {
+      "file": "diving/native-d2.png",
+      "w": 128,
+      "h": 128,
+      "sha256": "930dea58bbbd9e444c8336923154120ccae86203aab8ea69c20075f7f185c681"
+    },
+    "d3": {
+      "file": "diving/native-d3.png",
+      "w": 128,
+      "h": 128,
+      "sha256": "19049a73ea72311040cccfd8c796a9e4e1f6d89787d9e3239ea63b6b17df75e7"
+    }
+  },
+  "new_frames": {
+    "d0": {
+      "file": "diving/accepted-20261003-d0.png",
+      "w": 128,
+      "h": 128,
+      "sha256": "880a7822211ee0b35de0724bd7b1ce535f7875f16c8c572444c77613acf2e5d1"
+    },
+    "d1": {
+      "file": "diving/accepted-20261003-d1.png",
+      "w": 128,
+      "h": 128,
+      "sha256": "2adb36fb5290062c8c0efc2bdfbddd92ef72b364a2fc376d1f12403a126ef7c8"
+    },
+    "d2": {
+      "file": "diving/accepted-20261003-d2.png",
+      "w": 128,
+      "h": 128,
+      "sha256": "119b84e24e9f617144ce5a6b67317b43e00cf3d287117c5c4e467b77e800a1f5"
+    },
+    "d3": {
+      "file": "diving/accepted-20261003-d3.png",
+      "w": 128,
+      "h": 128,
+      "sha256": "e02a41d35f41af46518f58ca65154bed3d6661fb6b5c8ec1a750bec02213fd3f"
+    }
+  },
+  "metadata_and_other_entries_unchanged": true,
+  "new_pixels": false
+}

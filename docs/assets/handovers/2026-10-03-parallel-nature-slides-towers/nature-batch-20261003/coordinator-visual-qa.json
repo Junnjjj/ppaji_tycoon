@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "reviewer": "coordinator",
+  "scope": "Six registered all-facing boards and six actual candidate maps inspected against immutable source boards; runtime exact24 and local structural/organic/root QA pass.",
+  "findings": [
+    "Pine has broad layered crowns and attached exposed branches; willow now has varied pointed lobes and visible base rather than dense rectangular curtain.",
+    "All four common rotations stay grounded on the same grid with no detached major foliage, clipping or per-facing shifts.",
+    "Shrubs, irregular rock group and wood pot retain green/stone/wood identity at actual scale."
+  ],
+  "limits": [
+    "Authored reconstruction, not exact recovery: leaf clusters are more faceted and patterned, trunks straighter, rocks lower and paler than some source facings.",
+    "Zero organic long straight lines certified; pot16 short/occluded edges unmeasured.",
+    "No numeric art95 certification."
+  ],
+  "inspected_assets": [
+    "env_pine",
+    "env_deciduous",
+    "env_willow",
+    "env_shrubs",
+    "env_rocks",
+    "env_flower_pot"
+  ]
+}

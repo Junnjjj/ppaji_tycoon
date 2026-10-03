@@ -1,0 +1,114 @@
+[
+  {
+    "id": "module_rig_slide",
+    "d": 0,
+    "sha256": "70c8568555404430825cdf0f3bcc88a43c06ae7484beb19d442a55548b4d04d4",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_slide",
+    "d": 1,
+    "sha256": "fd04a9b9eb8d94567ed5ccde118dcba423f7d23b258dfb1fdf86c7470ec552fe",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_slide",
+    "d": 2,
+    "sha256": "6903334cfedb507a5e7436be6d132bc55c46dbd7cfcf283418475aa356f7b0fe",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_slide",
+    "d": 3,
+    "sha256": "75efd04a2a55d334d05df8573be562364a4f1cf5da81d2d88f8dd99cab8f8965",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_mini_slide",
+    "d": 0,
+    "sha256": "20be7ba277938400ef320c09a3d450510386c3eb8967163d3524ad7e96e0bead",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_mini_slide",
+    "d": 1,
+    "sha256": "f88362495e7e7004bfc3b30c2316bf775c7abfbc5ae23a4e9c8fb6b172210606",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_mini_slide",
+    "d": 2,
+    "sha256": "181dd869fdf7a80475c2ebedb6d4288aa5803c1cfbc2f91e3759ac4865b87b85",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_mini_slide",
+    "d": 3,
+    "sha256": "9098cd0ae3017203ba3c2e77e378149d1cc1e7b2ba6b20b13fcf0fcf7c92acf9",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_slidedock",
+    "d": 0,
+    "sha256": "2d55df3db87c8d26ee6d60f2157c24e032e7cdc90443e2818d1dc0bf682054c2",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_slidedock",
+    "d": 1,
+    "sha256": "64a663c871cf8bd1ea14382d553bdff87a1f2db4bf74a65371d03afa80e25e4d",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_slidedock",
+    "d": 2,
+    "sha256": "0c65e1f46bf963fc86d3fd363935449c28b47b98c27b1f5583c5dddf99e05526",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "module_rig_slidedock",
+    "d": 3,
+    "sha256": "5cdbc49ed217c745776b805bd10c1263a8e60d852390ed02eec72b6eb90f862b",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "ppaji_slide",
+    "d": 0,
+    "sha256": "1c036a950541d8e8f92a36e4565164cde2671aeeb40fad00fb3d76a779ef6e09",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "ppaji_slide",
+    "d": 1,
+    "sha256": "bdbe3e0bc1291d6ef1e0c263e494d77d471adcdd65d277667686915768b5d7cc",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "ppaji_slide",
+    "d": 2,
+    "sha256": "8d5ae1b32c2aaac4df5a75e0483a1d43c9fbc9738f7afedef904113708c56863",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "ppaji_slide",
+    "d": 3,
+    "sha256": "9a4d68faa6eb5bcde0303ebad82a2f5121e69e42dfe560ea6d7a5dbd196a9639",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

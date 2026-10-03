@@ -1,0 +1,24 @@
+# 수상 고정 시설 25종 · 다음 제작 조사
+
+2026-10-03 조정자가 immutable d0 전체25종을 water-source-overview.png로 시각 확인했습니다. 이 파일은 다음 제작 분해용 관찰이며 후보 또는 검수 완료 기록이 아닙니다. 실제 제작자는 반드시 d0–d3 원본을 각각 다시 확인해야 합니다.
+
+- 공통 재질: 진한 파랑 부유 모듈, 노랑 상판/손잡이, 연두 프레임. 기존 마을 건물의 목재 줄무늬를 플라스틱 위에 그대로 적용하지 않습니다. 원본의 강한 명암과 부푼 둥근 끝을 유지합니다.
+- boarding_dock / float_deck: 파란 격자 모듈의 실제 경계·볼트·승하선 고리·짧은 연결판. 이동 보트가 아니라 고정 시설입니다.
+- rig_jump_tower / diving / watchtower: 경사 계단·사다리와 고정 난간, 타워 지지대. 의도된 계단/사다리의 각도는 지면 아이소 선 기울기로 판정하지 않습니다.
+- ppaji_slide / module_rig_slide / module_rig_mini_slide / module_rig_slidedock: 각각 다른 높이·곡선·지지 방식. 공통 매개곡선으로 측면 턱과 활주면이 맞아야 하고 급경사/끝 완화와 플랫폼 접촉을 별도 검수합니다. ppaji_slide는 과거 실루엣 실패 이력이 있어 특히 원본 비율 비교가 필요합니다.
+- rig_blob / module_trampoline_w / module_rig_roller / module_rig_totem / module_rig_disc: 팽창 원통, 고리, 롤러, 세로 돌기, 원판의 다른 형상을 보존합니다. 트램폴린은 중앙 빈 고리 안의 어두운 탄성망이 있고, 공통 회전에서 내부 가림을 확인합니다.
+- rig_bridge / rig_stepstone / module_rig_beam / module_rig_seesaw / module_rig_kids_park: 고정 발판, 프레임, 중앙 회전축과 연결 부품. 시소는 정적 대표 자세를 만들며 새 애니메이션은 범위가 아닙니다.
+- module_rig_hammock / module_rig_sunbed / module_rig_led_buoy: 처진 천·경사 등받이·램프의 곡면. 해먹 천은 지지 끝점과 실제로 만나야 합니다.
+- rig_iceberg: 흰/연파랑 비대칭 암벽형 덩어리와 한쪽의 파랑/노랑 홀드. 단순 원뿔로 바꾸지 않고 원본의 비대칭 능선을 작성합니다.
+- module_waterwalk: 투명한 청색 공의 표면·하이라이트·뒤쪽 구조 가림/투과를 구분합니다. 불투명한 파란 공으로 대체하지 않습니다.
+- ppaji_playground: 큰 외곽 부유 데크와 여러 놀이 부품이 모인 복합 시설. 개별 모듈의 선언된 기하를 변환해 한 조립 구조로 렌더하는 재사용은 가능하지만 서로 다른 방향의 완성 스프라이트 붙이기는 안 됩니다. 이 시설은 개별 부품 제작 후 별도 통합 작업으로 배정하는 것이 좋습니다.
+
+실게임 검토는 기존 62142 review app에서 고정 배치와 격자로 먼저 확인하고 물 위 맵 비교도 추가합니다. 후보를 승격하기 전에만 원본맵을 캡처합니다. 투명도·곡면과 내부 구조는 긴 바닥선 검사 통과로 대신 인증하지 않습니다.
+
+## Remaining16 d0 identity review after wave3 — coordinator
+
+`remaining16-source-d0.png` is a source-only cropped identity board; crops are not registration evidence. All4 still required for authoring. Proposed next parallel split: (1) rig_blob / rig_iceberg / module_trampoline_w / module_rig_roller (curved major shapes); (2) rig_bridge / rig_stepstone / module_rig_beam / module_rig_seesaw / module_rig_totem / module_rig_disc / module_rig_kids_park (obstacle modules); (3) module_waterwalk / module_rig_hammock / module_rig_sunbed / module_rig_led_buoy (rest and transparency). Finally ppaji_playground uses fixed geometry from completed modules and one common surrounding deck, after source all4 layout interpretation.
+
+Specific visible identity: blob has tower plus long rounded green/yellow striped inflatable capsule; iceberg is a broad irregular pale faceted climbing mound with holds on one flank; bridge has two thick rounded yellow arches; stepstone is one squat square green/yellow cushion; beam has narrow yellow beam with green sideface and four short green upright end guards; roller has transverse green/yellow cylinder between A-frames and perforated entry ramp; seesaw is a yellow plank with green pads and yellow handles over one green pivot; totem is a tall green round cylinder with alternating short yellow side pegs; disc has radial green/yellow wedges and six open yellow handles plus blue side dock; kids park has two large green/yellow gate frames and a low yellow cylinder. Waterwalk includes yellow front gate, two green side arches and transparent lightblue sphere over tiled deck. Hammock is sagged yellow fabric suspended from two stout green frames with thin suspension lines; sunbed is one low split yellow cushion/green frame; LED buoy has blue base, yellow stem, pale lamp globe and green top.
+
+Avoid repeating wave3 first-pass thin-plastic fault: blue float depth, round post radius and bright crown/dark side material must be established against source before first render. Long-edge tests cannot replace curve seams, physical mounting, silhouette and aperture samples. Preserve full-resolution RGB and2packedpx line-only coverage; onepx feature exceptions require explicit saved-pixel evidence.

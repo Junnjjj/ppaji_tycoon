@@ -1,0 +1,675 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "boarding_dock": "water-platform-towers-batch-20261003",
+    "float_deck": "water-platform-towers-batch-20261003",
+    "rig_jump_tower": "water-platform-towers-batch-20261003",
+    "diving": "water-platform-towers-batch-20261003",
+    "watchtower": "water-platform-towers-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "boarding_dock",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/boarding_dock/d0.png",
+      "source_sha256": "ab49f831969972c8b0df13d1b67ccc43411952a6939f13261898dd6aebed3208",
+      "old": {
+        "file": "fac_boarding_dock_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "9748db41b5f35fe6f4b04f620eb06eb0af034664c50be172491937e97b57e17e",
+        "bytes": 23372
+      },
+      "new": {
+        "file": "fac_boarding_dock_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "566e16717138739f43fae08d7e59aacd9e2708c90463113451dbfc7b4dfbe430",
+        "bytes": 6720
+      },
+      "old_native": {
+        "file": "boarding_dock/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "a7ffe90de417d0247a4c3d512244204568747bcb988617563b07bb74c831b84d"
+      },
+      "new_native": {
+        "file": "boarding_dock/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "e152007ef117947309bf9d431e5fa46d761f7f654b26f939ce0e19b41b139931"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "boarding_dock",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/boarding_dock/d1.png",
+      "source_sha256": "d43bb6e12a1af9b81a7c088007d0a87f8de3e8c945dfd6132d7b108fb8014967",
+      "old": {
+        "file": "fac_boarding_dock_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "ae81abf914f75351d28ad8c2007c8861e493aa39c52f355a5e01928730aec888",
+        "bytes": 23626
+      },
+      "new": {
+        "file": "fac_boarding_dock_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "25092ce5e7560bf9aa16f4d61de0a9bb383c5ba493a49e82628ba30ca644dded",
+        "bytes": 7330
+      },
+      "old_native": {
+        "file": "boarding_dock/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "5356321ff23d41a7eb0f8232d4f4d3bde88e7b4928c556e6e59567caa09b3117"
+      },
+      "new_native": {
+        "file": "boarding_dock/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "9b0729b9bf7b1fe20cfb89118fc7d1fdc9e0bd8388fb690f6eb28a5157b45844"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "boarding_dock",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/boarding_dock/d2.png",
+      "source_sha256": "62a480afdb0cf4ca679cecf7f590df7c192c44f482f269d81196162c77e26f82",
+      "old": {
+        "file": "fac_boarding_dock_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "73afe343595b3a0b67811bff8ae3bfb35298c9bafecca6d64e2ab7247566073d",
+        "bytes": 23850
+      },
+      "new": {
+        "file": "fac_boarding_dock_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "303aae78cf6d539d67f891ff45e60cdf15966c34065aa109ad65bc3ad78c3769",
+        "bytes": 6850
+      },
+      "old_native": {
+        "file": "boarding_dock/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "cd0d4449aae15b185e73fd9277914a591917b017d9400ae50884426605e8aa25"
+      },
+      "new_native": {
+        "file": "boarding_dock/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "7490649e8fdf16872e86518c781406e95c187f8f6faa9128aed1701a39be17f2"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "boarding_dock",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/boarding_dock/d3.png",
+      "source_sha256": "c324c310601533f16f2845ea799dcb0bdbe0c75bcfa709e09a400f08d40f1c4e",
+      "old": {
+        "file": "fac_boarding_dock_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "b699521d714c6a690385da9e9ac2fc3dc3e1e1afaf1284f66e29e6ee29ad5c1a",
+        "bytes": 24220
+      },
+      "new": {
+        "file": "fac_boarding_dock_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "9af75cc573375beddaf57ea7f4248fb6c3823333fd29a6f6223d6017ed314181",
+        "bytes": 6820
+      },
+      "old_native": {
+        "file": "boarding_dock/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "c4f59e37ebaf966e0a7a2b76eb5be7c3f1de97f53063416b2839b210ccb37c88"
+      },
+      "new_native": {
+        "file": "boarding_dock/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "1681d6aea7c946da6d89a5070253f346ca1d1689605aef89081189af5e8d9d1f"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "float_deck",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/float_deck/d0.png",
+      "source_sha256": "9b5f61a8256a6b6f7921abe8def6bc761093536b9059948e26886acd9827afe8",
+      "old": {
+        "file": "fac_float_deck_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "3e5399f78eb29a9f6bb309121dd20dffe39cc1cb6e6359ab41f2906353bda4c5",
+        "bytes": 12874
+      },
+      "new": {
+        "file": "fac_float_deck_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "367620ec86071a590b2d5881f68567cb061c904555b18fac04201393430962f5",
+        "bytes": 2362
+      },
+      "old_native": {
+        "file": "float_deck/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "bebad8aaa7de710e1f8f3a933cf29599333198aa73330738b6c4699826319d8f"
+      },
+      "new_native": {
+        "file": "float_deck/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "4fcc47910c02b758105686b52c00133da14d5b1da4596b9a54033cf4b12fa822"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "float_deck",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/float_deck/d1.png",
+      "source_sha256": "3975794e1c2cb70994426943d5ce17cc47559bb7ddba41a7098523dd87848838",
+      "old": {
+        "file": "fac_float_deck_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "3e5399f78eb29a9f6bb309121dd20dffe39cc1cb6e6359ab41f2906353bda4c5",
+        "bytes": 12874
+      },
+      "new": {
+        "file": "fac_float_deck_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "3573c9d367a62b669658fc18b08a01069295971e93f4d5bd026cccb1c4f8c4db",
+        "bytes": 2456
+      },
+      "old_native": {
+        "file": "float_deck/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "9e36487b6d167fbaf4e08858d46c33e443538b6310614ef301f54c3d2e4d83f1"
+      },
+      "new_native": {
+        "file": "float_deck/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "69b883ec17a118c535b68e781be935a586f6fb86c59fe636021c10522c306249"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "float_deck",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/float_deck/d2.png",
+      "source_sha256": "dc423becce2163363fa0732cbfc9d647bf9177a3d9da91ceaebaa3a69a15568a",
+      "old": {
+        "file": "fac_float_deck_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "3e5399f78eb29a9f6bb309121dd20dffe39cc1cb6e6359ab41f2906353bda4c5",
+        "bytes": 12874
+      },
+      "new": {
+        "file": "fac_float_deck_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "3c8ce08255ab52b2cc24a741d1e854f49247b6e71d168410ddb73c0e960e8b3b",
+        "bytes": 2376
+      },
+      "old_native": {
+        "file": "float_deck/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "838df3600b70dc67477d62c5541113ce92fb9c9ff9b99fedd179f51c4eca162a"
+      },
+      "new_native": {
+        "file": "float_deck/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "0b1950f44e77f8e709204dee9a770c217ee154befff8a41b94e6a2339b17c820"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "float_deck",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/float_deck/d3.png",
+      "source_sha256": "e25b2b30756e98387cf83aff18bd639669fbcca050a2cdcca84f167c676c3026",
+      "old": {
+        "file": "fac_float_deck_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "3e5399f78eb29a9f6bb309121dd20dffe39cc1cb6e6359ab41f2906353bda4c5",
+        "bytes": 12874
+      },
+      "new": {
+        "file": "fac_float_deck_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "2632e8b21da5fddde3f96d67964d17a3848945a9d4777984904d65a05fbe7e59",
+        "bytes": 2480
+      },
+      "old_native": {
+        "file": "float_deck/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "10ee33995b0412d54db82e0a44a0432d21f63c134f7950202de1bac25ac57a97"
+      },
+      "new_native": {
+        "file": "float_deck/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "9dee13671e0a65112794a2d6379ecb0c3ff3997cedc6795d09157f8c50655cc5"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_jump_tower",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/rig_jump_tower/d0.png",
+      "source_sha256": "06a901ef93f753c3c354d3aaecf5a9d2db7254b40abf6f1acfa1330a7d9532b9",
+      "old": {
+        "file": "fac_rig_jump_tower_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "8a2c945613e33cb1cf42225debfdf58e455d8615498aedef49c08c2a8b92eae8",
+        "bytes": 54188
+      },
+      "new": {
+        "file": "fac_rig_jump_tower_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "8bc07859b99baccc25a756c47d99eed95bd4211c5595340789f1bf451e537486",
+        "bytes": 25146
+      },
+      "old_native": {
+        "file": "rig_jump_tower/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "a350d650ea13fe8ef562f442e06838a19ec829dfd7c7a3785ee8fb75a3b2f244"
+      },
+      "new_native": {
+        "file": "rig_jump_tower/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "61eb070af61058b1d8fe50eac3929b10542cfdb9b0ca8ebb02dc2eee75b9d7b5"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_jump_tower",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/rig_jump_tower/d1.png",
+      "source_sha256": "decc2a36a4401ce3525fd9d71852bf6762d8a8de8c3227c160dc106d80ec33c9",
+      "old": {
+        "file": "fac_rig_jump_tower_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "c0034738355746b3d10c19a61c8b4e1d346b8e4985c37ed9b8e94f57adbcec77",
+        "bytes": 55046
+      },
+      "new": {
+        "file": "fac_rig_jump_tower_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "81f1ac1e5af0967c71f78806225fcb5b9d05185a446077b803699c052539ba7d",
+        "bytes": 25152
+      },
+      "old_native": {
+        "file": "rig_jump_tower/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "f0b018a603dda1fde3b0dd38f34570c3f05c0cfdfc96e79f541ef58166f7f48b"
+      },
+      "new_native": {
+        "file": "rig_jump_tower/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "81811c8358f61c43fa8920d772b74661cf14e6c43b9ff45790b57a53e18c6a0e"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_jump_tower",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/rig_jump_tower/d2.png",
+      "source_sha256": "01a405e8a533f928ab77251559fa350fdf013e21cd958ba1aa01141de452554f",
+      "old": {
+        "file": "fac_rig_jump_tower_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "f084cf3a475a0a1ee79057aee1a86fd85e4b1b44c54761a057edaa6f71fcc506",
+        "bytes": 40082
+      },
+      "new": {
+        "file": "fac_rig_jump_tower_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "5815968727538a7da31066eca23ff0f18b39b191aa90f546066f3db069815148",
+        "bytes": 14536
+      },
+      "old_native": {
+        "file": "rig_jump_tower/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "773b7d1c140a3b29d046035b52ef14a57ebbe920a96a789a37a749fb42fc2f54"
+      },
+      "new_native": {
+        "file": "rig_jump_tower/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "209a315289860a0ebd24aacd791eef60bad0b5d71381f79d12ffc57d3fe09a53"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "rig_jump_tower",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/rig_jump_tower/d3.png",
+      "source_sha256": "d645e4427c508de31f58172124e9ebf5d980ec8f5a7a63d35452bf891ba8e5b4",
+      "old": {
+        "file": "fac_rig_jump_tower_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "c5db5ba3870f1bf05149ae655503a8009d63aa91fd821c9e10093673d4015a7b",
+        "bytes": 44510
+      },
+      "new": {
+        "file": "fac_rig_jump_tower_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "a19f3fa8d81d11d01fb7cb95d75b756417a21d6924d7e34e792d1a59e90f0ed7",
+        "bytes": 16752
+      },
+      "old_native": {
+        "file": "rig_jump_tower/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "dbf776320ebc4475cfd461f3837ac284da7a416b80cd23f81fd2f6c6281faaa5"
+      },
+      "new_native": {
+        "file": "rig_jump_tower/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "582a76707de9a73bedae94bcdb2d549aa6eddbf46c5980d0cfc39a9387b5f516"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "diving",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/diving/d0.png",
+      "source_sha256": "abfee76f58922eb84560a7d7429005aeb41c8e870c084e48cdda67a29444981f",
+      "old": {
+        "file": "fac_diving_0.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "003f2db223dff270b6a2405e48befaa021d239d12ba8af19d8d64a855d071d0b",
+        "bytes": 49182
+      },
+      "new": {
+        "file": "fac_diving_0_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "51c9c85edadbb7370efe2125f1109fcb457b6d5f038de98629804d8089b62629",
+        "bytes": 24770
+      },
+      "old_native": {
+        "file": "diving/native-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "0f5f1535cc83311d1c0b9db4161fd88fb0e802294f6ad7f909197c5930e668cd"
+      },
+      "new_native": {
+        "file": "diving/accepted-20261003-d0.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "880a7822211ee0b35de0724bd7b1ce535f7875f16c8c572444c77613acf2e5d1"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "diving",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/diving/d1.png",
+      "source_sha256": "31206c3f906202d6f01045d77838c4eb590d3612680d03bf8945f3a69cd90d8b",
+      "old": {
+        "file": "fac_diving_1.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "2a0237d5712a8d826261e621260c7f51113557501c48249a11e018e1c29de60a",
+        "bytes": 45696
+      },
+      "new": {
+        "file": "fac_diving_1_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "f4de6c39a42059c4e902ec9b4fea3f8295b99dc3e3e0ff9156425e9dcaaa193f",
+        "bytes": 24396
+      },
+      "old_native": {
+        "file": "diving/native-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "177014bebe2fe2f5ed53266dde20ef279eb55e92cf670c321fd339da3cc629b4"
+      },
+      "new_native": {
+        "file": "diving/accepted-20261003-d1.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "2adb36fb5290062c8c0efc2bdfbddd92ef72b364a2fc376d1f12403a126ef7c8"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "diving",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/diving/d2.png",
+      "source_sha256": "ca402b7bd91ffe6d10e76217baa5a9f4d617f7500c1926dcc5ebd87451a8fe73",
+      "old": {
+        "file": "fac_diving_2.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "450679ce8bd9b4a6ecea0a124e940f060deb03817ceb99efe40ef9cba6e4a4f1",
+        "bytes": 34444
+      },
+      "new": {
+        "file": "fac_diving_2_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "add2b201cd0ed98455b3835350a0de6bcb5c97309aa95c0298cffe397cf64985",
+        "bytes": 13820
+      },
+      "old_native": {
+        "file": "diving/native-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "930dea58bbbd9e444c8336923154120ccae86203aab8ea69c20075f7f185c681"
+      },
+      "new_native": {
+        "file": "diving/accepted-20261003-d2.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "119b84e24e9f617144ce5a6b67317b43e00cf3d287117c5c4e467b77e800a1f5"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "diving",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/diving/d3.png",
+      "source_sha256": "00c6a70bfe9a30921e55cabadbcafe4d8ec08cae0fbd398ee6e080056b88852d",
+      "old": {
+        "file": "fac_diving_3.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "f2fd8c3c48fb361f2fa7f33d23fc0eabbc93fb73744f4bd8d43e0c8ef3809316",
+        "bytes": 35576
+      },
+      "new": {
+        "file": "fac_diving_3_accepted_20261003.webp",
+        "w": 128,
+        "h": 128,
+        "sha256": "4953f87ed6f2a64eb756d426054fd407cb07898845e9af1fac6e5ba68a503f61",
+        "bytes": 16052
+      },
+      "old_native": {
+        "file": "diving/native-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "19049a73ea72311040cccfd8c796a9e4e1f6d89787d9e3239ea63b6b17df75e7"
+      },
+      "new_native": {
+        "file": "diving/accepted-20261003-d3.png",
+        "w": 128,
+        "h": 128,
+        "sha256": "e02a41d35f41af46518f58ca65154bed3d6661fb6b5c8ec1a750bec02213fd3f"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "watchtower",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/watchtower/d0.png",
+      "source_sha256": "cffb5f10b62da4807bcf15d28d583100f1f9ae13c60d6dd4fdf6a11faf6d30bf",
+      "old": {
+        "file": "fac_watchtower_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "41fde937ee7f2c5e2ce1a47c4c1a50a987a64be5496e87532823ebd3daf3536c",
+        "bytes": 29274
+      },
+      "new": {
+        "file": "fac_watchtower_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "036a06192bcec2101edf8ceb40621e1b79a830f2544c732d2038de88f8e63557",
+        "bytes": 17676
+      },
+      "old_native": {
+        "file": "watchtower/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "3f08926cbca9641eff06f5d0b0f5733a274b43fea5b8683399801e62ffc7f445"
+      },
+      "new_native": {
+        "file": "watchtower/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "5b747502506cd8df1a845b9e7ee5f01ba21ba219753b0ea0c1c674c1849f0e88"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "watchtower",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/watchtower/d1.png",
+      "source_sha256": "53230fb1a84b4ebea831506db218053e99cfcc55ed2d5470654d8c24bd8ee7e1",
+      "old": {
+        "file": "fac_watchtower_1.fix-035e5938f298.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "035e5938f29825f61b8ee72477bd7fcdbd7554706eb45ce65e2d2b744218adac",
+        "bytes": 28556
+      },
+      "new": {
+        "file": "fac_watchtower_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e99f8c8bc997302f9a8ea28ed2b1cb6e083326c85ecb37e0fa2ee73258d389bb",
+        "bytes": 16344
+      },
+      "old_native": {
+        "file": "watchtower/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "77f13970f1fb029539c33ef5a253e70996e40c22824b480dbe8e7278f44b634b"
+      },
+      "new_native": {
+        "file": "watchtower/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "75c13905a86baac5169f40a47b569b7d89c0c2c0c4d717f7756c997ddad9d7a1"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "watchtower",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/watchtower/d2.png",
+      "source_sha256": "9f76e17bda98020902886bba76123e4c2cb9e010cb83aec7012a4136b0cbc72e",
+      "old": {
+        "file": "fac_watchtower_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "7384784360e32b397078405b1e79a025680d079163efa5ad5fec769a475f8282",
+        "bytes": 21966
+      },
+      "new": {
+        "file": "fac_watchtower_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "9d3e053ed45bd4c2cb1706345ac8818d8d68182b828c251bfa3fae9522db8d7e",
+        "bytes": 14138
+      },
+      "old_native": {
+        "file": "watchtower/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "3e0adafd275ae665e36bec146007ccb0c4f213b142531d076c396cd3a3a9dd44"
+      },
+      "new_native": {
+        "file": "watchtower/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "12627cb80ebd35165cf0184cc29a4dbf1533583430290f1f2778f03dfc7eaec1"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "watchtower",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/water-platform-towers-batch-20261003/candidates/watchtower/d3.png",
+      "source_sha256": "04ff58d3d1382dffb70cc3ae6207a0937f93ec3f3991f85baa6a334150f4015e",
+      "old": {
+        "file": "fac_watchtower_3.fix-d46a80170576.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "d46a8017057648e3124a0fe87b5fdf4d10a2361477644f4ebd6ac5befd0c493f",
+        "bytes": 27204
+      },
+      "new": {
+        "file": "fac_watchtower_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a1b9bc9c44f7d5189844c79bf4a5ca44d9bcdff3ddd42799a2d1322bcbd32dbc",
+        "bytes": 14538
+      },
+      "old_native": {
+        "file": "watchtower/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "d7dd5619c7368274d272695812ae3fad5d0fed6b38cba1c6b038e15ac41b71a5"
+      },
+      "new_native": {
+        "file": "watchtower/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "9015c270e4e18993ee96b7c6fb3d49b50e2eaa43d280718650a2268d1f971343"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

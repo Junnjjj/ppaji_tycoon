@@ -1,0 +1,482 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "module_rig_slide",
+      "registration_footprint_canvas_unchanged": true,
+      "maximum_height_unchanged": [
+        41.0,
+        41.0
+      ],
+      "floats": [
+        {
+          "part": "stair-float",
+          "depth": 5.2,
+          "top": 2.8000000000000003,
+          "bottom": -2.4
+        },
+        {
+          "part": "tower-float",
+          "depth": 5.2,
+          "top": 2.8000000000000003,
+          "bottom": -2.4
+        }
+      ],
+      "saved_pixel_band_checks": [
+        {
+          "d": 0,
+          "samples": [
+            {
+              "t": 0.18,
+              "pixel": [
+                296,
+                173
+              ],
+              "rgb": [
+                255.0,
+                243.0,
+                138.0
+              ]
+            },
+            {
+              "t": 0.48,
+              "pixel": [
+                255,
+                240
+              ],
+              "rgb": [
+                255.0,
+                231.0,
+                75.0
+              ]
+            },
+            {
+              "t": 0.84,
+              "pixel": [
+                205,
+                320
+              ],
+              "rgb": [
+                255.0,
+                242.0,
+                138.0
+              ]
+            }
+          ],
+          "pale_band_blue_channel_delta": [
+            63.0,
+            63.0
+          ],
+          "passed": true
+        },
+        {
+          "d": 1,
+          "samples": [
+            {
+              "t": 0.18,
+              "pixel": [
+                231,
+                165
+              ],
+              "rgb": [
+                255.0,
+                243.0,
+                138.0
+              ]
+            },
+            {
+              "t": 0.48,
+              "pixel": [
+                272,
+                232
+              ],
+              "rgb": [
+                255.0,
+                231.0,
+                75.0
+              ]
+            },
+            {
+              "t": 0.84,
+              "pixel": [
+                322,
+                312
+              ],
+              "rgb": [
+                255.0,
+                242.0,
+                138.0
+              ]
+            }
+          ],
+          "pale_band_blue_channel_delta": [
+            63.0,
+            63.0
+          ],
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "module_rig_mini_slide",
+      "registration_footprint_canvas_unchanged": true,
+      "maximum_height_unchanged": [
+        25.0,
+        25.0
+      ],
+      "floats": [
+        {
+          "part": "full-float",
+          "depth": 5.2,
+          "top": 2.8000000000000003,
+          "bottom": -2.4
+        },
+        {
+          "part": "stair-float",
+          "depth": 5.2,
+          "top": 2.8000000000000003,
+          "bottom": -2.4
+        },
+        {
+          "part": "tower-float",
+          "depth": 5.2,
+          "top": 2.8000000000000003,
+          "bottom": -2.4
+        }
+      ],
+      "saved_pixel_band_checks": [
+        {
+          "d": 2,
+          "samples": [
+            {
+              "t": 0.18,
+              "pixel": [
+                277,
+                241
+              ],
+              "rgb": [
+                255.0,
+                243.0,
+                138.0
+              ]
+            },
+            {
+              "t": 0.48,
+              "pixel": [
+                253,
+                273
+              ],
+              "rgb": [
+                255.0,
+                232.0,
+                76.0
+              ]
+            },
+            {
+              "t": 0.84,
+              "pixel": [
+                225,
+                313
+              ],
+              "rgb": [
+                255.0,
+                244.0,
+                139.0
+              ]
+            }
+          ],
+          "pale_band_blue_channel_delta": [
+            62.0,
+            63.0
+          ],
+          "passed": true
+        },
+        {
+          "d": 3,
+          "samples": [
+            {
+              "t": 0.18,
+              "pixel": [
+                250,
+                233
+              ],
+              "rgb": [
+                255.0,
+                243.0,
+                138.0
+              ]
+            },
+            {
+              "t": 0.48,
+              "pixel": [
+                274,
+                266
+              ],
+              "rgb": [
+                255.0,
+                232.0,
+                76.0
+              ]
+            },
+            {
+              "t": 0.84,
+              "pixel": [
+                302,
+                305
+              ],
+              "rgb": [
+                255.0,
+                244.0,
+                139.0
+              ]
+            }
+          ],
+          "pale_band_blue_channel_delta": [
+            62.0,
+            63.0
+          ],
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "module_rig_slidedock",
+      "registration_footprint_canvas_unchanged": true,
+      "maximum_height_unchanged": [
+        12.0,
+        12.0
+      ],
+      "floats": [
+        {
+          "part": "entry-float",
+          "depth": 5.2,
+          "top": 2.8000000000000003,
+          "bottom": -2.4
+        }
+      ],
+      "saved_pixel_band_checks": [
+        {
+          "d": 0,
+          "samples": [
+            {
+              "t": 0.18,
+              "pixel": [
+                233,
+                265
+              ],
+              "rgb": [
+                254.0,
+                242.0,
+                137.0
+              ]
+            },
+            {
+              "t": 0.48,
+              "pixel": [
+                274,
+                296
+              ],
+              "rgb": [
+                255.0,
+                231.0,
+                75.0
+              ]
+            },
+            {
+              "t": 0.84,
+              "pixel": [
+                324,
+                333
+              ],
+              "rgb": [
+                255.0,
+                244.0,
+                139.0
+              ]
+            }
+          ],
+          "pale_band_blue_channel_delta": [
+            62.0,
+            64.0
+          ],
+          "passed": true
+        },
+        {
+          "d": 3,
+          "samples": [
+            {
+              "t": 0.18,
+              "pixel": [
+                279,
+                265
+              ],
+              "rgb": [
+                254.0,
+                242.0,
+                137.0
+              ]
+            },
+            {
+              "t": 0.48,
+              "pixel": [
+                238,
+                296
+              ],
+              "rgb": [
+                255.0,
+                231.0,
+                75.0
+              ]
+            },
+            {
+              "t": 0.84,
+              "pixel": [
+                188,
+                333
+              ],
+              "rgb": [
+                255.0,
+                244.0,
+                139.0
+              ]
+            }
+          ],
+          "pale_band_blue_channel_delta": [
+            62.0,
+            64.0
+          ],
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "ppaji_slide",
+      "registration_footprint_canvas_unchanged": true,
+      "maximum_height_unchanged": [
+        38.0,
+        38.0
+      ],
+      "floats": [
+        {
+          "part": "adjacent-float",
+          "depth": 5.2,
+          "top": 2.8000000000000003,
+          "bottom": -2.4
+        },
+        {
+          "part": "bridge-float",
+          "depth": 5.2,
+          "top": 2.8000000000000003,
+          "bottom": -2.4
+        },
+        {
+          "part": "stair-float",
+          "depth": 5.2,
+          "top": 2.8000000000000003,
+          "bottom": -2.4
+        },
+        {
+          "part": "tower-float",
+          "depth": 5.2,
+          "top": 2.8000000000000003,
+          "bottom": -2.4
+        }
+      ],
+      "saved_pixel_band_checks": [
+        {
+          "d": 0,
+          "samples": [
+            {
+              "t": 0.18,
+              "pixel": [
+                689,
+                466
+              ],
+              "rgb": [
+                255.0,
+                243.0,
+                138.0
+              ]
+            },
+            {
+              "t": 0.48,
+              "pixel": [
+                631,
+                537
+              ],
+              "rgb": [
+                254.0,
+                230.0,
+                74.0
+              ]
+            },
+            {
+              "t": 0.84,
+              "pixel": [
+                562,
+                621
+              ],
+              "rgb": [
+                254.0,
+                242.0,
+                137.0
+              ]
+            }
+          ],
+          "pale_band_blue_channel_delta": [
+            64.0,
+            63.0
+          ],
+          "passed": true
+        },
+        {
+          "d": 1,
+          "samples": [
+            {
+              "t": 0.18,
+              "pixel": [
+                540,
+                364
+              ],
+              "rgb": [
+                255.0,
+                243.0,
+                138.0
+              ]
+            },
+            {
+              "t": 0.48,
+              "pixel": [
+                598,
+                434
+              ],
+              "rgb": [
+                254.0,
+                230.0,
+                74.0
+              ]
+            },
+            {
+              "t": 0.84,
+              "pixel": [
+                667,
+                519
+              ],
+              "rgb": [
+                254.0,
+                242.0,
+                137.0
+              ]
+            }
+          ],
+          "pale_band_blue_channel_delta": [
+            64.0,
+            63.0
+          ],
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "limits": "Band pixels sampled only in unobstructed bed-center views; structural and line QA remain separate in verification.json."
+}

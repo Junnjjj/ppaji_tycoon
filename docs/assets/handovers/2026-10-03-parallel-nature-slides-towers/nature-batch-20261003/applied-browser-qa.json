@@ -1,0 +1,146 @@
+[
+  {
+    "id": "env_pine",
+    "d": 0,
+    "file": "fac_env_pine_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_pine",
+    "d": 1,
+    "file": "fac_env_pine_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_pine",
+    "d": 2,
+    "file": "fac_env_pine_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_pine",
+    "d": 3,
+    "file": "fac_env_pine_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_deciduous",
+    "d": 0,
+    "file": "fac_env_deciduous_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_deciduous",
+    "d": 1,
+    "file": "fac_env_deciduous_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_deciduous",
+    "d": 2,
+    "file": "fac_env_deciduous_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_deciduous",
+    "d": 3,
+    "file": "fac_env_deciduous_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_willow",
+    "d": 0,
+    "file": "fac_env_willow_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_willow",
+    "d": 1,
+    "file": "fac_env_willow_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_willow",
+    "d": 2,
+    "file": "fac_env_willow_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_willow",
+    "d": 3,
+    "file": "fac_env_willow_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_shrubs",
+    "d": 0,
+    "file": "fac_env_shrubs_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_shrubs",
+    "d": 1,
+    "file": "fac_env_shrubs_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_shrubs",
+    "d": 2,
+    "file": "fac_env_shrubs_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_shrubs",
+    "d": 3,
+    "file": "fac_env_shrubs_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_rocks",
+    "d": 0,
+    "file": "fac_env_rocks_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_rocks",
+    "d": 1,
+    "file": "fac_env_rocks_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_rocks",
+    "d": 2,
+    "file": "fac_env_rocks_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_rocks",
+    "d": 3,
+    "file": "fac_env_rocks_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_flower_pot",
+    "d": 0,
+    "file": "fac_env_flower_pot_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_flower_pot",
+    "d": 1,
+    "file": "fac_env_flower_pot_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_flower_pot",
+    "d": 2,
+    "file": "fac_env_flower_pot_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "env_flower_pot",
+    "d": 3,
+    "file": "fac_env_flower_pot_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

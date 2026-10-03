@@ -1,0 +1,7650 @@
+{
+  "status": "PASS",
+  "main_modified": false,
+  "runtime_qa": "NOT_RUN_COORDINATOR_OWNED",
+  "assets": [
+    {
+      "id": "boarding_dock",
+      "closed_meshes": [
+        {
+          "name": "float-0-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-0-0-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-0-0-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-1-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-1-0-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-1-0-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-1-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-2-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-2-0-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-2-0-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-2-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-3-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-3-0-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-3-0-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-3-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-0-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-0-1-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-0-1-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-v-0-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-1-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-1-1-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-1-1-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-1-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "link-v-1-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-2-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-2-1-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-2-1-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-2-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "link-v-2-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-3-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-3-1-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-3-1-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-3-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "link-v-3-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "brown-join-plate-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "brown-join-plate-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "brown-join-plate-2",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "cleat-0-plate",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "cleat-0-stem",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "cleat-0-horn",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "cleat-1-plate",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "cleat-1-stem",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "cleat-1-horn",
+          "edges": 60,
+          "pass": true
+        }
+      ],
+      "joints": [
+        {
+          "a": "float-0-0-bolt-0",
+          "b": "float-0-0",
+          "overlap": [
+            0.027999999999999997,
+            0.027999999999999997,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-0-0-bolt-1",
+          "b": "float-0-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-0-bolt-0",
+          "b": "float-1-0",
+          "overlap": [
+            0.028000000000000025,
+            0.027999999999999997,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-0-bolt-1",
+          "b": "float-1-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-0",
+          "b": "float-1-0",
+          "overlap": [
+            0.04500000000000004,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-0",
+          "b": "float-0-0",
+          "overlap": [
+            0.044999999999999984,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-2-0-bolt-0",
+          "b": "float-2-0",
+          "overlap": [
+            0.028000000000000025,
+            0.027999999999999997,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-2-0-bolt-1",
+          "b": "float-2-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-2-0",
+          "b": "float-2-0",
+          "overlap": [
+            0.04500000000000015,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-2-0",
+          "b": "float-1-0",
+          "overlap": [
+            0.04500000000000004,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-3-0-bolt-0",
+          "b": "float-3-0",
+          "overlap": [
+            0.028000000000000025,
+            0.027999999999999997,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-3-0-bolt-1",
+          "b": "float-3-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-3-0",
+          "b": "float-3-0",
+          "overlap": [
+            0.04500000000000015,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-3-0",
+          "b": "float-2-0",
+          "overlap": [
+            0.04500000000000015,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-0-1-bolt-0",
+          "b": "float-0-1",
+          "overlap": [
+            0.027999999999999997,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-0-1-bolt-1",
+          "b": "float-0-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-0-1",
+          "b": "float-0-1",
+          "overlap": [
+            0.08999999999999997,
+            0.04500000000000004,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-0-1",
+          "b": "float-0-0",
+          "overlap": [
+            0.08999999999999997,
+            0.044999999999999984,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-1-bolt-0",
+          "b": "float-1-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-1-bolt-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.04500000000000004,
+            0.09000000000000008,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-1",
+          "b": "float-0-1",
+          "overlap": [
+            0.044999999999999984,
+            0.09000000000000008,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-1-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.09000000000000008,
+            0.04500000000000004,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-1-1",
+          "b": "float-1-0",
+          "overlap": [
+            0.09000000000000008,
+            0.044999999999999984,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-2-1-bolt-0",
+          "b": "float-2-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-2-1-bolt-1",
+          "b": "float-2-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-2-1",
+          "b": "float-2-1",
+          "overlap": [
+            0.04500000000000015,
+            0.09000000000000008,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-2-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.04500000000000004,
+            0.09000000000000008,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-2-1",
+          "b": "float-2-1",
+          "overlap": [
+            0.08999999999999986,
+            0.04500000000000004,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-2-1",
+          "b": "float-2-0",
+          "overlap": [
+            0.08999999999999986,
+            0.044999999999999984,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-3-1-bolt-0",
+          "b": "float-3-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-3-1-bolt-1",
+          "b": "float-3-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-3-1",
+          "b": "float-3-1",
+          "overlap": [
+            0.04500000000000015,
+            0.09000000000000008,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-3-1",
+          "b": "float-2-1",
+          "overlap": [
+            0.04500000000000015,
+            0.09000000000000008,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-3-1",
+          "b": "float-3-1",
+          "overlap": [
+            0.08999999999999986,
+            0.04500000000000004,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-3-1",
+          "b": "float-3-0",
+          "overlap": [
+            0.08999999999999986,
+            0.044999999999999984,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "brown-join-plate-0",
+          "b": "float-0-0",
+          "overlap": [
+            0.05099999999999999,
+            0.06,
+            0.08000000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "brown-join-plate-0",
+          "b": "float-1-0",
+          "overlap": [
+            0.051000000000000045,
+            0.06,
+            0.08000000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "brown-join-plate-1",
+          "b": "float-1-0",
+          "overlap": [
+            0.051000000000000045,
+            0.06,
+            0.08000000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "brown-join-plate-1",
+          "b": "float-2-0",
+          "overlap": [
+            0.051000000000000156,
+            0.06,
+            0.08000000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "brown-join-plate-2",
+          "b": "float-2-0",
+          "overlap": [
+            0.051000000000000156,
+            0.06,
+            0.08000000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "brown-join-plate-2",
+          "b": "float-3-0",
+          "overlap": [
+            0.051000000000000156,
+            0.06,
+            0.08000000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "cleat-0-plate",
+          "b": "float-0-1",
+          "overlap": [
+            0.13,
+            0.1200000000000001,
+            0.10000000000000009
+          ],
+          "pass": true
+        },
+        {
+          "a": "cleat-0-stem",
+          "b": "cleat-0-plate",
+          "overlap": [
+            0.04799999999999999,
+            0.04800000000000004,
+            0.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "cleat-0-horn",
+          "b": "cleat-0-stem",
+          "overlap": [
+            0.04799999999999999,
+            0.02750000000000008,
+            0.4400000000000004
+          ],
+          "pass": true
+        },
+        {
+          "a": "cleat-1-plate",
+          "b": "float-3-1",
+          "overlap": [
+            0.1299999999999999,
+            0.1200000000000001,
+            0.10000000000000009
+          ],
+          "pass": true
+        },
+        {
+          "a": "cleat-1-stem",
+          "b": "cleat-1-plate",
+          "overlap": [
+            0.04800000000000004,
+            0.04800000000000004,
+            0.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "cleat-1-horn",
+          "b": "cleat-1-stem",
+          "overlap": [
+            0.04800000000000004,
+            0.02750000000000008,
+            0.4400000000000004
+          ],
+          "pass": true
+        }
+      ],
+      "rotation_edge_max_error": 7.868705687030797e-15,
+      "feature_checks": [
+        {
+          "module_separation": [
+            {
+              "a": "float-0-0",
+              "b": "float-1-0",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-2-0",
+              "separating_gap": 0.5139999999999999,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-3-0",
+              "separating_gap": 1.0139999999999998,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-0-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-1-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-2-1",
+              "separating_gap": 0.5139999999999999,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-3-1",
+              "separating_gap": 1.0139999999999998,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-2-0",
+              "separating_gap": 0.013999999999999901,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-3-0",
+              "separating_gap": 0.5139999999999999,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-0-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-1-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-2-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-3-1",
+              "separating_gap": 0.5139999999999999,
+              "pass": true
+            },
+            {
+              "a": "float-2-0",
+              "b": "float-3-0",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            },
+            {
+              "a": "float-2-0",
+              "b": "float-0-1",
+              "separating_gap": 0.5139999999999999,
+              "pass": true
+            },
+            {
+              "a": "float-2-0",
+              "b": "float-1-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-2-0",
+              "b": "float-2-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-2-0",
+              "b": "float-3-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-3-0",
+              "b": "float-0-1",
+              "separating_gap": 1.0139999999999998,
+              "pass": true
+            },
+            {
+              "a": "float-3-0",
+              "b": "float-1-1",
+              "separating_gap": 0.5139999999999999,
+              "pass": true
+            },
+            {
+              "a": "float-3-0",
+              "b": "float-2-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-3-0",
+              "b": "float-3-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-0-1",
+              "b": "float-1-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-0-1",
+              "b": "float-2-1",
+              "separating_gap": 0.5139999999999999,
+              "pass": true
+            },
+            {
+              "a": "float-0-1",
+              "b": "float-3-1",
+              "separating_gap": 1.0139999999999998,
+              "pass": true
+            },
+            {
+              "a": "float-1-1",
+              "b": "float-2-1",
+              "separating_gap": 0.013999999999999901,
+              "pass": true
+            },
+            {
+              "a": "float-1-1",
+              "b": "float-3-1",
+              "separating_gap": 0.5139999999999999,
+              "pass": true
+            },
+            {
+              "a": "float-2-1",
+              "b": "float-3-1",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            }
+          ],
+          "base_z": 0,
+          "limitation": "Small declared connectors cross gaps; module solid AABBs remain separate."
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "bbox": [
+            160,
+            244,
+            352,
+            356
+          ],
+          "components": [
+            11852
+          ],
+          "lines": [
+            {
+              "part": "float-3-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923627,
+              "expected": -0.5,
+              "rms_packed": 0.5825895794196579,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371517028,
+              "expected": 0.5000000000000009,
+              "rms_packed": 0.555727527562632,
+              "offset_packed": 0.49986666666666224,
+              "pass": true
+            },
+            {
+              "part": "float-1-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371517039,
+              "expected": 0.5000000000000009,
+              "rms_packed": 0.5557275275626351,
+              "offset_packed": 0.49986666666666224,
+              "pass": true
+            },
+            {
+              "part": "float-2-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371516986,
+              "expected": 0.5000000000000004,
+              "rms_packed": 0.55572752756263,
+              "offset_packed": 0.49986666666666224,
+              "pass": true
+            },
+            {
+              "part": "float-3-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923587,
+              "expected": -0.5,
+              "rms_packed": 0.5825895794196662,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-3-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.49535603715170096,
+              "expected": 0.5000000000000009,
+              "rms_packed": 0.5557275275626312,
+              "offset_packed": 0.49986666666666224,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-3-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-0-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-1-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-2-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [],
+          "sha256": "ab49f831969972c8b0df13d1b67ccc43411952a6939f13261898dd6aebed3208"
+        },
+        {
+          "d": 1,
+          "bbox": [
+            160,
+            244,
+            352,
+            356
+          ],
+          "components": [
+            11852
+          ],
+          "lines": [
+            {
+              "part": "float-0-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371517044,
+              "expected": 0.5000000000000004,
+              "rms_packed": 0.555727527562631,
+              "offset_packed": 0.49986666666666224,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923672,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196756,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371517043,
+              "expected": 0.5000000000000004,
+              "rms_packed": 0.5557275275626312,
+              "offset_packed": 0.49986666666666224,
+              "pass": true
+            },
+            {
+              "part": "float-1-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923641,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196694,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-2-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923604,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196834,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-3-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923641,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196585,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-0-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-1-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-2-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-3-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [],
+          "sha256": "d43bb6e12a1af9b81a7c088007d0a87f8de3e8c945dfd6132d7b108fb8014967"
+        },
+        {
+          "d": 2,
+          "bbox": [
+            160,
+            244,
+            352,
+            356
+          ],
+          "components": [
+            11852
+          ],
+          "lines": [
+            {
+              "part": "float-0-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923587,
+              "expected": -0.5,
+              "rms_packed": 0.5825895794196662,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-0-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.49535603715170096,
+              "expected": 0.5000000000000009,
+              "rms_packed": 0.5557275275626312,
+              "offset_packed": 0.49986666666666224,
+              "pass": true
+            },
+            {
+              "part": "float-1-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371516986,
+              "expected": 0.5000000000000009,
+              "rms_packed": 0.55572752756263,
+              "offset_packed": 0.49986666666666224,
+              "pass": true
+            },
+            {
+              "part": "float-2-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371517039,
+              "expected": 0.5000000000000004,
+              "rms_packed": 0.5557275275626351,
+              "offset_packed": 0.49986666666666224,
+              "pass": true
+            },
+            {
+              "part": "float-3-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371517028,
+              "expected": 0.5000000000000004,
+              "rms_packed": 0.555727527562632,
+              "offset_packed": 0.49986666666666224,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923627,
+              "expected": -0.5,
+              "rms_packed": 0.5825895794196579,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-1-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-2-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-3-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-0-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [],
+          "sha256": "62a480afdb0cf4ca679cecf7f590df7c192c44f482f269d81196162c77e26f82"
+        },
+        {
+          "d": 3,
+          "bbox": [
+            160,
+            244,
+            352,
+            356
+          ],
+          "components": [
+            11852
+          ],
+          "lines": [
+            {
+              "part": "float-0-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923641,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196585,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-1-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923604,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196834,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-2-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923641,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196694,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-3-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923672,
+              "expected": -0.5000000000000004,
+              "rms_packed": 0.5825895794196756,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-3-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371517043,
+              "expected": 0.5000000000000004,
+              "rms_packed": 0.5557275275626312,
+              "offset_packed": 0.49986666666666224,
+              "pass": true
+            },
+            {
+              "part": "float-3-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371517044,
+              "expected": 0.5000000000000004,
+              "rms_packed": 0.555727527562631,
+              "offset_packed": 0.49986666666666224,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-0-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-1-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-2-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-3-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [],
+          "sha256": "c324c310601533f16f2845ea799dcb0bdbe0c75bcfa709e09a400f08d40f1c4e"
+        }
+      ]
+    },
+    {
+      "id": "float_deck",
+      "closed_meshes": [
+        {
+          "name": "float-0-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-0-0-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-0-0-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-1-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-1-0-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-1-0-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-1-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-0-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-0-1-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-0-1-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-v-0-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-1-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-1-1-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-1-1-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-1-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "link-v-1-1",
+          "edges": 180,
+          "pass": true
+        }
+      ],
+      "joints": [
+        {
+          "a": "float-0-0-bolt-0",
+          "b": "float-0-0",
+          "overlap": [
+            0.027999999999999997,
+            0.027999999999999997,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-0-0-bolt-1",
+          "b": "float-0-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-0-bolt-0",
+          "b": "float-1-0",
+          "overlap": [
+            0.028000000000000025,
+            0.027999999999999997,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-0-bolt-1",
+          "b": "float-1-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-0",
+          "b": "float-1-0",
+          "overlap": [
+            0.04500000000000004,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-0",
+          "b": "float-0-0",
+          "overlap": [
+            0.044999999999999984,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-0-1-bolt-0",
+          "b": "float-0-1",
+          "overlap": [
+            0.027999999999999997,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-0-1-bolt-1",
+          "b": "float-0-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-0-1",
+          "b": "float-0-1",
+          "overlap": [
+            0.08999999999999997,
+            0.04500000000000004,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-0-1",
+          "b": "float-0-0",
+          "overlap": [
+            0.08999999999999997,
+            0.044999999999999984,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-1-bolt-0",
+          "b": "float-1-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-1-bolt-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.04500000000000004,
+            0.09000000000000008,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-1",
+          "b": "float-0-1",
+          "overlap": [
+            0.044999999999999984,
+            0.09000000000000008,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-1-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.09000000000000008,
+            0.04500000000000004,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-1-1",
+          "b": "float-1-0",
+          "overlap": [
+            0.09000000000000008,
+            0.044999999999999984,
+            1.3000000000000003
+          ],
+          "pass": true
+        }
+      ],
+      "rotation_edge_max_error": 3.913536161803677e-15,
+      "feature_checks": [
+        {
+          "module_separation": [
+            {
+              "a": "float-0-0",
+              "b": "float-1-0",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-0-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-1-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-0-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-1-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-0-1",
+              "b": "float-1-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            }
+          ],
+          "base_z": 0,
+          "limitation": "Small declared connectors cross gaps; module solid AABBs remain separate."
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "bbox": [
+            192,
+            258,
+            320,
+            340
+          ],
+          "components": [
+            6656
+          ],
+          "lines": [
+            {
+              "part": "float-1-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923604,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196834,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371517039,
+              "expected": 0.5000000000000009,
+              "rms_packed": 0.5557275275626351,
+              "offset_packed": 0.49984592778998327,
+              "pass": true
+            },
+            {
+              "part": "float-1-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923641,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196694,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-1-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371516986,
+              "expected": 0.5000000000000009,
+              "rms_packed": 0.55572752756263,
+              "offset_packed": 0.49984592778998327,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-1-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-0-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [],
+          "sha256": "9b5f61a8256a6b6f7921abe8def6bc761093536b9059948e26886acd9827afe8"
+        },
+        {
+          "d": 1,
+          "bbox": [
+            192,
+            258,
+            320,
+            340
+          ],
+          "components": [
+            6656
+          ],
+          "lines": [
+            {
+              "part": "float-0-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371517039,
+              "expected": 0.5000000000000009,
+              "rms_packed": 0.5557275275626351,
+              "offset_packed": 0.49984592778998327,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923641,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196694,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371516986,
+              "expected": 0.5000000000000009,
+              "rms_packed": 0.55572752756263,
+              "offset_packed": 0.49984592778998327,
+              "pass": true
+            },
+            {
+              "part": "float-1-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923604,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196834,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-0-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-1-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [],
+          "sha256": "3975794e1c2cb70994426943d5ce17cc47559bb7ddba41a7098523dd87848838"
+        },
+        {
+          "d": 2,
+          "bbox": [
+            192,
+            258,
+            320,
+            340
+          ],
+          "components": [
+            6656
+          ],
+          "lines": [
+            {
+              "part": "float-0-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923641,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196694,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-0-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371516986,
+              "expected": 0.5000000000000009,
+              "rms_packed": 0.55572752756263,
+              "offset_packed": 0.49984592778998327,
+              "pass": true
+            },
+            {
+              "part": "float-1-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371517039,
+              "expected": 0.5000000000000009,
+              "rms_packed": 0.5557275275626351,
+              "offset_packed": 0.49984592778998327,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923604,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196834,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-1-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-0-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [],
+          "sha256": "dc423becce2163363fa0732cbfc9d647bf9177a3d9da91ceaebaa3a69a15568a"
+        },
+        {
+          "d": 3,
+          "bbox": [
+            192,
+            258,
+            320,
+            340
+          ],
+          "components": [
+            6656
+          ],
+          "lines": [
+            {
+              "part": "float-0-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923604,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196834,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-1-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": -0.5056759545923641,
+              "expected": -0.5000000000000009,
+              "rms_packed": 0.5825895794196694,
+              "offset_packed": 0.5277777777777778,
+              "pass": true
+            },
+            {
+              "part": "float-1-0",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371516986,
+              "expected": 0.5000000000000009,
+              "rms_packed": 0.55572752756263,
+              "offset_packed": 0.49984592778998327,
+              "pass": true
+            },
+            {
+              "part": "float-1-1",
+              "samples": 18,
+              "visible_fraction": 1.0,
+              "slope": 0.4953560371517039,
+              "expected": 0.5000000000000009,
+              "rms_packed": 0.5557275275626351,
+              "offset_packed": 0.49984592778998327,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-0-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-1-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [],
+          "sha256": "e25b2b30756e98387cf83aff18bd639669fbcca050a2cdcca84f167c676c3026"
+        }
+      ]
+    },
+    {
+      "id": "rig_jump_tower",
+      "closed_meshes": [
+        {
+          "name": "float-0-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-0-0-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-0-0-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-1-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-1-0-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-1-0-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-1-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-2-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-2-0-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-2-0-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-2-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-0-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-0-1-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-0-1-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-v-0-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-1-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-1-1-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-1-1-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-1-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "link-v-1-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-2-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-2-1-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-2-1-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-2-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "link-v-2-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-landing",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "green-support-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "green-support-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "green-support-2",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "green-support-3",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-2",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-3",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-4",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-5",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-6",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-7",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "green-stringer-0",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "green-stringer-1",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "guard-post-0-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "guard-post-0-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "yellow-grip-0",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "guard-post-1-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "guard-post-1-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "yellow-grip-1",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-0-0",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-0-1",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-0-2",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-0-3",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-0-4",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-0-5",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-0-6",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-1-0",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-1-1",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-1-2",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-1-3",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-1-4",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-1-5",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-1-6",
+          "edges": 60,
+          "pass": true
+        }
+      ],
+      "joints": [
+        {
+          "a": "float-0-0-bolt-0",
+          "b": "float-0-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-0-0-bolt-1",
+          "b": "float-0-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-0-bolt-0",
+          "b": "float-1-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-0-bolt-1",
+          "b": "float-1-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-0",
+          "b": "float-1-0",
+          "overlap": [
+            0.04500000000000004,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-0",
+          "b": "float-0-0",
+          "overlap": [
+            0.04500000000000004,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-2-0-bolt-0",
+          "b": "float-2-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-2-0-bolt-1",
+          "b": "float-2-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-2-0",
+          "b": "float-2-0",
+          "overlap": [
+            0.04500000000000015,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-2-0",
+          "b": "float-1-0",
+          "overlap": [
+            0.04500000000000015,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-0-1-bolt-0",
+          "b": "float-0-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-0-1-bolt-1",
+          "b": "float-0-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-0-1",
+          "b": "float-0-1",
+          "overlap": [
+            0.08999999999999997,
+            0.04500000000000015,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-0-1",
+          "b": "float-0-0",
+          "overlap": [
+            0.08999999999999997,
+            0.04500000000000015,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-1-bolt-0",
+          "b": "float-1-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-1-bolt-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.04500000000000004,
+            0.08999999999999986,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-1",
+          "b": "float-0-1",
+          "overlap": [
+            0.04500000000000004,
+            0.08999999999999986,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-1-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.09000000000000008,
+            0.04500000000000015,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-1-1",
+          "b": "float-1-0",
+          "overlap": [
+            0.09000000000000008,
+            0.04500000000000015,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-2-1-bolt-0",
+          "b": "float-2-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-2-1-bolt-1",
+          "b": "float-2-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-2-1",
+          "b": "float-2-1",
+          "overlap": [
+            0.04500000000000015,
+            0.08999999999999986,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-2-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.04500000000000015,
+            0.08999999999999986,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-2-1",
+          "b": "float-2-1",
+          "overlap": [
+            0.08999999999999986,
+            0.04500000000000015,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-2-1",
+          "b": "float-2-0",
+          "overlap": [
+            0.08999999999999986,
+            0.04500000000000015,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-0",
+          "b": "float-0-0",
+          "overlap": [
+            0.14200000000000002,
+            0.1419999999999999,
+            0.3500000000000001
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-0",
+          "b": "yellow-landing",
+          "overlap": [
+            0.14200000000000002,
+            0.1419999999999999,
+            1.3500000000000014
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-1",
+          "b": "float-1-0",
+          "overlap": [
+            0.1419999999999999,
+            0.1419999999999999,
+            0.3500000000000001
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-1",
+          "b": "yellow-landing",
+          "overlap": [
+            0.1419999999999999,
+            0.1419999999999999,
+            1.3500000000000014
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-2",
+          "b": "float-0-0",
+          "overlap": [
+            0.14200000000000002,
+            0.1419999999999999,
+            0.3500000000000001
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-2",
+          "b": "yellow-landing",
+          "overlap": [
+            0.14200000000000002,
+            0.121,
+            1.3500000000000014
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-3",
+          "b": "float-1-0",
+          "overlap": [
+            0.1419999999999999,
+            0.1419999999999999,
+            0.3500000000000001
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-3",
+          "b": "yellow-landing",
+          "overlap": [
+            0.1419999999999999,
+            0.121,
+            1.3500000000000014
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-step-1",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.66,
+            0.006000000000000005,
+            3.95
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-step-2",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.66,
+            0.006000000000000005,
+            7.7
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-step-3",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.66,
+            0.006000000000000005,
+            11.45
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-step-4",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.66,
+            0.006000000000000005,
+            15.2
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-step-5",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.66,
+            0.006000000000000005,
+            18.95
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-step-6",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.66,
+            0.006000000000000005,
+            22.7
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-step-7",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.66,
+            0.006000000000000005,
+            26.45
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-step-7",
+          "b": "yellow-landing",
+          "overlap": [
+            0.66,
+            0.06000000000000005,
+            2.0
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-step-0",
+          "b": "float-0-1",
+          "overlap": [
+            0.2629999999999999,
+            0.11725000000000008,
+            0.20000000000000018
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-step-0",
+          "b": "float-1-1",
+          "overlap": [
+            0.3830000000000001,
+            0.11725000000000008,
+            0.20000000000000018
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            3.95
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.0068749999999999645,
+            0.11724999999999985,
+            7.7
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            11.45
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.0068749999999999645,
+            0.11724999999999985,
+            15.2
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            18.95
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            22.7
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            26.45
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-7",
+          "overlap": [
+            0.0068749999999999645,
+            0.11724999999999985,
+            30.2
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-landing",
+          "overlap": [
+            0.07374999999999998,
+            0.11160115746301646,
+            2.0
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            3.95
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.0068749999999999645,
+            0.11724999999999985,
+            7.7
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            11.45
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.0068749999999999645,
+            0.11724999999999985,
+            15.2
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            18.95
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            22.7
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            26.45
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-7",
+          "overlap": [
+            0.0068749999999999645,
+            0.11724999999999985,
+            30.2
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-landing",
+          "overlap": [
+            0.07374999999999998,
+            0.11160115746301646,
+            2.0
+          ],
+          "pass": true
+        },
+        {
+          "a": "guard-post-0-0",
+          "b": "yellow-landing",
+          "overlap": [
+            0.10999999999999999,
+            0.1100000000000001,
+            0.20000000000000284
+          ],
+          "pass": true
+        },
+        {
+          "a": "guard-post-0-1",
+          "b": "yellow-landing",
+          "overlap": [
+            0.10999999999999999,
+            0.1050000000000001,
+            0.20000000000000284
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-grip-0",
+          "b": "guard-post-0-0",
+          "overlap": [
+            0.07625000000000004,
+            0.09499999999999997,
+            1.2199999999999989
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-grip-0",
+          "b": "guard-post-0-1",
+          "overlap": [
+            0.07625000000000004,
+            0.08999999999999997,
+            1.2199999999999989
+          ],
+          "pass": true
+        },
+        {
+          "a": "guard-post-1-0",
+          "b": "yellow-landing",
+          "overlap": [
+            0.10999999999999988,
+            0.1100000000000001,
+            0.20000000000000284
+          ],
+          "pass": true
+        },
+        {
+          "a": "guard-post-1-1",
+          "b": "yellow-landing",
+          "overlap": [
+            0.10999999999999988,
+            0.1050000000000001,
+            0.20000000000000284
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-grip-1",
+          "b": "guard-post-1-0",
+          "overlap": [
+            0.07624999999999993,
+            0.09499999999999997,
+            1.2199999999999989
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-grip-1",
+          "b": "guard-post-1-1",
+          "overlap": [
+            0.07624999999999993,
+            0.08999999999999997,
+            1.2199999999999989
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-1",
+          "b": "water-access-0-0",
+          "overlap": [
+            0.04187500000000011,
+            0.03382754712879543,
+            0.5279763303954574
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-2",
+          "b": "water-access-0-1",
+          "overlap": [
+            0.04187500000000011,
+            0.016570663622046844,
+            1.1875428059861406
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-3",
+          "b": "water-access-0-2",
+          "overlap": [
+            0.04187500000000011,
+            0.003680616493251465,
+            1.329566475590683
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-4",
+          "b": "water-access-0-3",
+          "overlap": [
+            0.04187500000000011,
+            0.003680616493251465,
+            1.329566475590683
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-5",
+          "b": "water-access-0-4",
+          "overlap": [
+            0.04187500000000011,
+            0.016570663622046844,
+            1.1875428059861406
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-6",
+          "b": "water-access-0-5",
+          "overlap": [
+            0.04187500000000011,
+            0.03382754712879543,
+            0.5279763303954574
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-0",
+          "b": "float-2-1",
+          "overlap": [
+            0.04187500000000011,
+            0.04187500000000011,
+            0.10000000000000009
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-6",
+          "b": "float-2-1",
+          "overlap": [
+            0.04187500000000011,
+            0.04187500000000011,
+            0.10000000000000009
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-1",
+          "b": "water-access-1-0",
+          "overlap": [
+            0.04187500000000011,
+            0.03382754712879543,
+            0.5279763303954574
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-2",
+          "b": "water-access-1-1",
+          "overlap": [
+            0.04187500000000011,
+            0.016570663622046844,
+            1.1875428059861406
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-3",
+          "b": "water-access-1-2",
+          "overlap": [
+            0.04187500000000011,
+            0.003680616493251465,
+            1.329566475590683
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-4",
+          "b": "water-access-1-3",
+          "overlap": [
+            0.04187500000000011,
+            0.003680616493251465,
+            1.329566475590683
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-5",
+          "b": "water-access-1-4",
+          "overlap": [
+            0.04187500000000011,
+            0.016570663622046844,
+            1.1875428059861406
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-6",
+          "b": "water-access-1-5",
+          "overlap": [
+            0.04187500000000011,
+            0.03382754712879543,
+            0.5279763303954574
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-0",
+          "b": "float-2-1",
+          "overlap": [
+            0.04187500000000011,
+            0.04187500000000011,
+            0.10000000000000009
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-6",
+          "b": "float-2-1",
+          "overlap": [
+            0.04187500000000011,
+            0.04187500000000011,
+            0.10000000000000009
+          ],
+          "pass": true
+        }
+      ],
+      "rotation_edge_max_error": 8.881784197001252e-15,
+      "feature_checks": [
+        {
+          "module_separation": [
+            {
+              "a": "float-0-0",
+              "b": "float-1-0",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-2-0",
+              "separating_gap": 0.564,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-0-1",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-1-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-2-1",
+              "separating_gap": 0.564,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-2-0",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-0-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-1-1",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-2-1",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            },
+            {
+              "a": "float-2-0",
+              "b": "float-0-1",
+              "separating_gap": 0.564,
+              "pass": true
+            },
+            {
+              "a": "float-2-0",
+              "b": "float-1-1",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            },
+            {
+              "a": "float-2-0",
+              "b": "float-2-1",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            },
+            {
+              "a": "float-0-1",
+              "b": "float-1-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-0-1",
+              "b": "float-2-1",
+              "separating_gap": 0.564,
+              "pass": true
+            },
+            {
+              "a": "float-1-1",
+              "b": "float-2-1",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            }
+          ],
+          "base_z": 0,
+          "limitation": "Small declared connectors cross gaps; module solid AABBs remain separate."
+        },
+        {
+          "stairs": {
+            "direction": "-v",
+            "count": 8,
+            "landing_z": 34.0,
+            "base_z": 4,
+            "u": [
+              0.38,
+              1.04
+            ],
+            "v": [
+              0.99,
+              1.88
+            ],
+            "green_stringers": 2,
+            "upper_supports": 4
+          },
+          "tread_heights": [
+            7.75,
+            11.5,
+            15.25,
+            19.0,
+            22.75,
+            26.5,
+            30.25,
+            34.0
+          ],
+          "stringer_step_joints": 16,
+          "limitation": "AABB joints are attachment screens, not exact collision certification."
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "bbox": [
+            134,
+            104,
+            328,
+            364
+          ],
+          "components": [
+            26004
+          ],
+          "lines": [
+            {
+              "part": "float-2-0",
+              "samples": 26,
+              "visible_fraction": 1.0,
+              "slope": -0.49777777777777704,
+              "expected": -0.49999999999999933,
+              "rms_packed": 0.5574432099159475,
+              "offset_packed": 0.5001066653761654,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 20,
+              "visible_fraction": 1.0,
+              "slope": 0.5037593984962406,
+              "expected": 0.4999999999999996,
+              "rms_packed": 0.5585965227138179,
+              "offset_packed": 0.5,
+              "pass": true
+            },
+            {
+              "part": "float-1-1",
+              "samples": 20,
+              "visible_fraction": 1.0,
+              "slope": 0.5112781954887204,
+              "expected": 0.49999999999999917,
+              "rms_packed": 0.5552212862379545,
+              "offset_packed": 0.5,
+              "pass": true
+            },
+            {
+              "part": "float-2-1",
+              "samples": 25,
+              "visible_fraction": 1.0,
+              "slope": -0.5046153846153895,
+              "expected": -0.5000000000000013,
+              "rms_packed": 0.548900999900986,
+              "offset_packed": 0.490055465995606,
+              "pass": true
+            },
+            {
+              "part": "float-2-1",
+              "samples": 21,
+              "visible_fraction": 1.0,
+              "slope": 0.5064935064935064,
+              "expected": 0.5000000000000008,
+              "rms_packed": 0.5467242831305241,
+              "offset_packed": 0.48802920714808806,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-2-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-0-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-1-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [
+            {
+              "name": "yellow-grip-0",
+              "pixel": [
+                224,
+                130
+              ],
+              "clear_3x3": true,
+              "status": "visible_air"
+            },
+            {
+              "name": "yellow-grip-1",
+              "pixel": [
+                270,
+                153
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            }
+          ],
+          "sha256": "06a901ef93f753c3c354d3aaecf5a9d2db7254b40abf6f1acfa1330a7d9532b9"
+        },
+        {
+          "d": 1,
+          "bbox": [
+            176,
+            122,
+            368,
+            368
+          ],
+          "components": [
+            25084
+          ],
+          "lines": [
+            {
+              "part": "float-0-0",
+              "samples": 25,
+              "visible_fraction": 1.0,
+              "slope": 0.5046153846153818,
+              "expected": 0.49999999999999967,
+              "rms_packed": 0.5489009999009912,
+              "offset_packed": 0.5572789420571393,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 20,
+              "visible_fraction": 1.0,
+              "slope": -0.5112781954887299,
+              "expected": -0.4999999999999975,
+              "rms_packed": 0.5552212862379486,
+              "offset_packed": 0.5,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 25,
+              "visible_fraction": 1.0,
+              "slope": 0.5046153846153851,
+              "expected": 0.5,
+              "rms_packed": 0.5489009999009886,
+              "offset_packed": 0.5772789420571394,
+              "pass": true
+            },
+            {
+              "part": "float-1-1",
+              "samples": 21,
+              "visible_fraction": 1.0,
+              "slope": -0.506493506493508,
+              "expected": -0.5,
+              "rms_packed": 0.5467242831305237,
+              "offset_packed": 0.4881612690423881,
+              "pass": true
+            },
+            {
+              "part": "float-2-1",
+              "samples": 21,
+              "visible_fraction": 1.0,
+              "slope": -0.4935064935064974,
+              "expected": -0.5000000000000008,
+              "rms_packed": 0.5670830439415727,
+              "offset_packed": 0.5119707928519119,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-0-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-1-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-2-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [
+            {
+              "name": "yellow-grip-0",
+              "pixel": [
+                206,
+                171
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            },
+            {
+              "name": "yellow-grip-1",
+              "pixel": [
+                252,
+                148
+              ],
+              "clear_3x3": true,
+              "status": "visible_air"
+            }
+          ],
+          "sha256": "decc2a36a4401ce3525fd9d71852bf6762d8a8de8c3227c160dc106d80ec33c9"
+        },
+        {
+          "d": 2,
+          "bbox": [
+            184,
+            132,
+            378,
+            348
+          ],
+          "components": [
+            21556
+          ],
+          "lines": [
+            {
+              "part": "float-0-0",
+              "samples": 26,
+              "visible_fraction": 1.0,
+              "slope": -0.4977777777777784,
+              "expected": -0.5000000000000007,
+              "rms_packed": 0.5574432099159493,
+              "offset_packed": 0.5493600077430231,
+              "pass": true
+            },
+            {
+              "part": "float-0-0",
+              "samples": 21,
+              "visible_fraction": 1.0,
+              "slope": 0.5064935064935041,
+              "expected": 0.5000000000000017,
+              "rms_packed": 0.5467242831305239,
+              "offset_packed": 0.6587974691051711,
+              "pass": true
+            },
+            {
+              "part": "float-1-0",
+              "samples": 21,
+              "visible_fraction": 1.0,
+              "slope": 0.4935064935064975,
+              "expected": 0.4999999999999996,
+              "rms_packed": 0.5670830439415706,
+              "offset_packed": 0.6494057214756594,
+              "pass": true
+            },
+            {
+              "part": "float-2-0",
+              "samples": 20,
+              "visible_fraction": 1.0,
+              "slope": 0.48120300751879463,
+              "expected": 0.49999999999999917,
+              "rms_packed": 0.5484084971070828,
+              "offset_packed": 0.674306675054936,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 26,
+              "visible_fraction": 1.0,
+              "slope": -0.5025641025640998,
+              "expected": -0.49999999999999933,
+              "rms_packed": 0.5756395979652171,
+              "offset_packed": 0.5878215462045616,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-1-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-2-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-0-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [
+            {
+              "name": "yellow-grip-0",
+              "pixel": [
+                288,
+                180
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            },
+            {
+              "name": "yellow-grip-1",
+              "pixel": [
+                242,
+                157
+              ],
+              "clear_3x3": true,
+              "status": "visible_air"
+            }
+          ],
+          "sha256": "01a405e8a533f928ab77251559fa350fdf013e21cd958ba1aa01141de452554f"
+        },
+        {
+          "d": 3,
+          "bbox": [
+            144,
+            114,
+            336,
+            344
+          ],
+          "components": [
+            23280
+          ],
+          "lines": [
+            {
+              "part": "float-0-0",
+              "samples": 21,
+              "visible_fraction": 1.0,
+              "slope": -0.5064935064935125,
+              "expected": -0.5000000000000017,
+              "rms_packed": 0.5467242831305111,
+              "offset_packed": 0.6826069929146948,
+              "pass": true
+            },
+            {
+              "part": "float-1-0",
+              "samples": 21,
+              "visible_fraction": 1.0,
+              "slope": -0.49350649350649634,
+              "expected": -0.5,
+              "rms_packed": 0.5670830439415687,
+              "offset_packed": 0.7064165167242187,
+              "pass": true
+            },
+            {
+              "part": "float-2-0",
+              "samples": 20,
+              "visible_fraction": 1.0,
+              "slope": -0.48120300751879524,
+              "expected": -0.49999999999999917,
+              "rms_packed": 0.5484084971070734,
+              "offset_packed": 0.674306675054936,
+              "pass": true
+            },
+            {
+              "part": "float-2-0",
+              "samples": 25,
+              "visible_fraction": 1.0,
+              "slope": 0.5046153846153848,
+              "expected": 0.49999999999999967,
+              "rms_packed": 0.5489009999009924,
+              "offset_packed": 0.489944534004394,
+              "pass": true
+            },
+            {
+              "part": "float-2-1",
+              "samples": 25,
+              "visible_fraction": 1.0,
+              "slope": 0.504615384615384,
+              "expected": 0.49999999999999967,
+              "rms_packed": 0.5489009999009922,
+              "offset_packed": 0.490055465995606,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-0-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-1-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-2-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [
+            {
+              "name": "yellow-grip-0",
+              "pixel": [
+                306,
+                139
+              ],
+              "clear_3x3": true,
+              "status": "visible_air"
+            },
+            {
+              "name": "yellow-grip-1",
+              "pixel": [
+                260,
+                162
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            }
+          ],
+          "sha256": "d645e4427c508de31f58172124e9ebf5d980ec8f5a7a63d35452bf891ba8e5b4"
+        }
+      ]
+    },
+    {
+      "id": "diving",
+      "closed_meshes": [
+        {
+          "name": "float-0-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-0-0-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-0-0-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-1-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-1-0-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-1-0-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-1-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-2-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-2-0-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-2-0-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-2-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-0-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-0-1-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-0-1-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-v-0-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-1-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-1-1-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-1-1-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-1-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "link-v-1-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-2-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "float-2-1-bolt-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "float-2-1-bolt-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "link-u-2-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "link-v-2-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-landing",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "green-support-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "green-support-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "green-support-2",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "green-support-3",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-left-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-right-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-0-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-0-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-0-2",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-0-3",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-0-4",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-0-5",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-left-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-right-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-1-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-1-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-1-2",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-1-3",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-1-4",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-1-5",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-2",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-left-2",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-right-2",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-2-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-2-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-2-2",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-2-3",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-2-4",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-2-5",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-3",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-left-3",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-right-3",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-3-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-3-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-3-2",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-3-3",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-3-4",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-3-5",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-4",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-left-4",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-right-4",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-4-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-4-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-4-2",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-4-3",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-4-4",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-4-5",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-5",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-left-5",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-right-5",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-5-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-5-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-5-2",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-5-3",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-5-4",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-5-5",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-6",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-left-6",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-right-6",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-6-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-6-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-6-2",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-6-3",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-6-4",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-6-5",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-step-7",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-left-7",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "yellow-side-right-7",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-7-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-7-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-7-2",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-7-3",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-7-4",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "riser-bar-7-5",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "green-stringer-0",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "green-stringer-1",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "guard-post-0-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "guard-post-0-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "yellow-grip-0",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "guard-post-1-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "guard-post-1-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "yellow-grip-1",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "diving-lip",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "water-access-0-0",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-0-1",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-0-2",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-0-3",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-0-4",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-0-5",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-0-6",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-1-0",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-1-1",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-1-2",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-1-3",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-1-4",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-1-5",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "water-access-1-6",
+          "edges": 60,
+          "pass": true
+        }
+      ],
+      "joints": [
+        {
+          "a": "float-0-0-bolt-0",
+          "b": "float-0-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-0-0-bolt-1",
+          "b": "float-0-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-0-bolt-0",
+          "b": "float-1-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-0-bolt-1",
+          "b": "float-1-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-0",
+          "b": "float-1-0",
+          "overlap": [
+            0.04500000000000004,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-0",
+          "b": "float-0-0",
+          "overlap": [
+            0.04500000000000004,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-2-0-bolt-0",
+          "b": "float-2-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-2-0-bolt-1",
+          "b": "float-2-0",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-2-0",
+          "b": "float-2-0",
+          "overlap": [
+            0.04500000000000015,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-2-0",
+          "b": "float-1-0",
+          "overlap": [
+            0.04500000000000015,
+            0.08999999999999997,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-0-1-bolt-0",
+          "b": "float-0-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-0-1-bolt-1",
+          "b": "float-0-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-0-1",
+          "b": "float-0-1",
+          "overlap": [
+            0.08999999999999997,
+            0.04500000000000015,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-0-1",
+          "b": "float-0-0",
+          "overlap": [
+            0.08999999999999997,
+            0.04500000000000015,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-1-bolt-0",
+          "b": "float-1-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-1-1-bolt-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.04500000000000004,
+            0.08999999999999986,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-1-1",
+          "b": "float-0-1",
+          "overlap": [
+            0.04500000000000004,
+            0.08999999999999986,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-1-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.09000000000000008,
+            0.04500000000000015,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-1-1",
+          "b": "float-1-0",
+          "overlap": [
+            0.09000000000000008,
+            0.04500000000000015,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-2-1-bolt-0",
+          "b": "float-2-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "float-2-1-bolt-1",
+          "b": "float-2-1",
+          "overlap": [
+            0.028000000000000025,
+            0.028000000000000025,
+            0.13999999999999968
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-2-1",
+          "b": "float-2-1",
+          "overlap": [
+            0.04500000000000015,
+            0.08999999999999986,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-u-2-1",
+          "b": "float-1-1",
+          "overlap": [
+            0.04500000000000015,
+            0.08999999999999986,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-2-1",
+          "b": "float-2-1",
+          "overlap": [
+            0.08999999999999986,
+            0.04500000000000015,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "link-v-2-1",
+          "b": "float-2-0",
+          "overlap": [
+            0.08999999999999986,
+            0.04500000000000015,
+            1.3000000000000003
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-0",
+          "b": "float-0-0",
+          "overlap": [
+            0.14200000000000002,
+            0.1419999999999999,
+            0.3500000000000001
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-0",
+          "b": "yellow-landing",
+          "overlap": [
+            0.14200000000000002,
+            0.1419999999999999,
+            1.3500000000000014
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-1",
+          "b": "float-1-0",
+          "overlap": [
+            0.1419999999999999,
+            0.1419999999999999,
+            0.3500000000000001
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-1",
+          "b": "yellow-landing",
+          "overlap": [
+            0.1419999999999999,
+            0.1419999999999999,
+            1.3500000000000014
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-2",
+          "b": "float-0-0",
+          "overlap": [
+            0.14200000000000002,
+            0.1419999999999999,
+            0.3500000000000001
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-2",
+          "b": "yellow-landing",
+          "overlap": [
+            0.14200000000000002,
+            0.131,
+            1.3500000000000014
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-3",
+          "b": "float-1-0",
+          "overlap": [
+            0.1419999999999999,
+            0.1419999999999999,
+            0.3500000000000001
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-support-3",
+          "b": "yellow-landing",
+          "overlap": [
+            0.1419999999999999,
+            0.131,
+            1.3500000000000014
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-0",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.068,
+            0.11725000000000008,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-0",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.06800000000000006,
+            0.11725000000000008,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-0-0",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-0-1",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-0-2",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-0-3",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-0-4",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-0-5",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-1",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.068,
+            0.11724999999999985,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-1",
+          "b": "yellow-side-left-0",
+          "overlap": [
+            0.068,
+            0.006000000000000005,
+            1.7750000000000004
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-1",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.06800000000000006,
+            0.11724999999999985,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-1",
+          "b": "yellow-side-right-0",
+          "overlap": [
+            0.06800000000000006,
+            0.006000000000000005,
+            1.7750000000000004
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-1-0",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-1-0",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-1-1",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-1-1",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-1-2",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-1-2",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-1-3",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-1-3",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-1-4",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-1-4",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-1-5",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-1-5",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-2",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.068,
+            0.11725000000000008,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-2",
+          "b": "yellow-side-left-1",
+          "overlap": [
+            0.068,
+            0.006000000000000005,
+            4.15
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-2",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.06800000000000006,
+            0.11725000000000008,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-2",
+          "b": "yellow-side-right-1",
+          "overlap": [
+            0.06800000000000006,
+            0.006000000000000005,
+            4.15
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-2-0",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-2-0",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-2-1",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-2-1",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-2-2",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-2-2",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-2-3",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-2-3",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-2-4",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-2-4",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-2-5",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-2-5",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-3",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.068,
+            0.11724999999999985,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-3",
+          "b": "yellow-side-left-2",
+          "overlap": [
+            0.068,
+            0.006000000000000005,
+            6.5249999999999995
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-3",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.06800000000000006,
+            0.11724999999999985,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-3",
+          "b": "yellow-side-right-2",
+          "overlap": [
+            0.06800000000000006,
+            0.006000000000000005,
+            6.5249999999999995
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-3-0",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-3-0",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-3-1",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-3-1",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-3-2",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-3-2",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-3-3",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-3-3",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-3-4",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-3-4",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-3-5",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-3-5",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-4",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.068,
+            0.11725000000000008,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-4",
+          "b": "yellow-side-left-3",
+          "overlap": [
+            0.068,
+            0.006000000000000005,
+            8.899999999999999
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-4",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.06800000000000006,
+            0.11725000000000008,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-4",
+          "b": "yellow-side-right-3",
+          "overlap": [
+            0.06800000000000006,
+            0.006000000000000005,
+            8.899999999999999
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-4-0",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-4-0",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-4-1",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-4-1",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-4-2",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-4-2",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-4-3",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-4-3",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-4-4",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-4-4",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-4-5",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-4-5",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-5",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.068,
+            0.11725000000000008,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-5",
+          "b": "yellow-side-left-4",
+          "overlap": [
+            0.068,
+            0.006000000000000005,
+            11.274999999999999
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-5",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.06800000000000006,
+            0.11725000000000008,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-5",
+          "b": "yellow-side-right-4",
+          "overlap": [
+            0.06800000000000006,
+            0.006000000000000005,
+            11.274999999999999
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-5-0",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-5-0",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-5-1",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-5-1",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-5-2",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-5-2",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-5-3",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-5-3",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-5-4",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-5-4",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-5-5",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-5-5",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.09999999999999964
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-6",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.068,
+            0.11725000000000008,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-6",
+          "b": "yellow-side-left-5",
+          "overlap": [
+            0.068,
+            0.006000000000000005,
+            13.649999999999999
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-6",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.06800000000000006,
+            0.11725000000000008,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-6",
+          "b": "yellow-side-right-5",
+          "overlap": [
+            0.06800000000000006,
+            0.006000000000000005,
+            13.649999999999999
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-6-0",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-6-0",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-6-1",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-6-1",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-6-2",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-6-2",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-6-3",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-6-3",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-6-4",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-6-4",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-6-5",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-6-5",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-7",
+          "b": "yellow-step-7",
+          "overlap": [
+            0.068,
+            0.11724999999999985,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-7",
+          "b": "yellow-side-left-6",
+          "overlap": [
+            0.068,
+            0.006000000000000005,
+            16.025
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-7",
+          "b": "yellow-step-7",
+          "overlap": [
+            0.06800000000000006,
+            0.11724999999999985,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-7",
+          "b": "yellow-side-right-6",
+          "overlap": [
+            0.06800000000000006,
+            0.006000000000000005,
+            16.025
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-7-0",
+          "b": "yellow-step-7",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-7-0",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-7-1",
+          "b": "yellow-step-7",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-7-1",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-7-2",
+          "b": "yellow-step-7",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-7-2",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-7-3",
+          "b": "yellow-step-7",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-7-3",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-7-4",
+          "b": "yellow-step-7",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-7-4",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-7-5",
+          "b": "yellow-step-7",
+          "overlap": [
+            0.04200000000000004,
+            0.03499999999999992,
+            0.25
+          ],
+          "pass": true
+        },
+        {
+          "a": "riser-bar-7-5",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.04200000000000004,
+            0.006000000000000005,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-step-7",
+          "b": "yellow-landing",
+          "overlap": [
+            0.66,
+            0.07000000000000006,
+            1.0500000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-left-0",
+          "b": "float-0-1",
+          "overlap": [
+            0.068,
+            0.11725000000000008,
+            0.20000000000000018
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-side-right-0",
+          "b": "float-1-1",
+          "overlap": [
+            0.06800000000000006,
+            0.11725000000000008,
+            0.20000000000000018
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            1.0499999999999998
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.0068749999999999645,
+            0.11724999999999985,
+            1.0499999999999998
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            1.0500000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.0068749999999999645,
+            0.11724999999999985,
+            1.0500000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            1.0500000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            1.0500000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            1.0500000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-step-7",
+          "overlap": [
+            0.0068749999999999645,
+            0.11724999999999985,
+            1.0500000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-0",
+          "b": "yellow-landing",
+          "overlap": [
+            0.07374999999999998,
+            0.11544005379964017,
+            2.0
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-0",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            1.0499999999999998
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-1",
+          "overlap": [
+            0.0068749999999999645,
+            0.11724999999999985,
+            1.0499999999999998
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-2",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            1.0500000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-3",
+          "overlap": [
+            0.0068749999999999645,
+            0.11724999999999985,
+            1.0500000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-4",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            1.0500000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-5",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            1.0500000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-6",
+          "overlap": [
+            0.0068749999999999645,
+            0.11725000000000008,
+            1.0500000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-step-7",
+          "overlap": [
+            0.0068749999999999645,
+            0.11724999999999985,
+            1.0500000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-stringer-1",
+          "b": "yellow-landing",
+          "overlap": [
+            0.07374999999999998,
+            0.11544005379964017,
+            2.0
+          ],
+          "pass": true
+        },
+        {
+          "a": "guard-post-0-0",
+          "b": "yellow-landing",
+          "overlap": [
+            0.10999999999999999,
+            0.1100000000000001,
+            0.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "guard-post-0-1",
+          "b": "yellow-landing",
+          "overlap": [
+            0.10999999999999999,
+            0.10999999999999999,
+            0.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-grip-0",
+          "b": "guard-post-0-0",
+          "overlap": [
+            0.07625000000000004,
+            0.09499999999999997,
+            1.2199999999999989
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-grip-0",
+          "b": "guard-post-0-1",
+          "overlap": [
+            0.07625000000000004,
+            0.08999999999999997,
+            1.2199999999999989
+          ],
+          "pass": true
+        },
+        {
+          "a": "guard-post-1-0",
+          "b": "yellow-landing",
+          "overlap": [
+            0.10999999999999988,
+            0.1100000000000001,
+            0.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "guard-post-1-1",
+          "b": "yellow-landing",
+          "overlap": [
+            0.10999999999999988,
+            0.10999999999999999,
+            0.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-grip-1",
+          "b": "guard-post-1-0",
+          "overlap": [
+            0.07624999999999993,
+            0.09499999999999997,
+            1.2199999999999989
+          ],
+          "pass": true
+        },
+        {
+          "a": "yellow-grip-1",
+          "b": "guard-post-1-1",
+          "overlap": [
+            0.07624999999999993,
+            0.08999999999999997,
+            1.2199999999999989
+          ],
+          "pass": true
+        },
+        {
+          "a": "diving-lip",
+          "b": "yellow-landing",
+          "overlap": [
+            0.95,
+            0.09000000000000008,
+            1.8000000000000007
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-1",
+          "b": "water-access-0-0",
+          "overlap": [
+            0.04187500000000011,
+            0.03382754712879543,
+            0.5279763303954574
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-2",
+          "b": "water-access-0-1",
+          "overlap": [
+            0.04187500000000011,
+            0.016570663622046844,
+            1.1875428059861406
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-3",
+          "b": "water-access-0-2",
+          "overlap": [
+            0.04187500000000011,
+            0.003680616493251465,
+            1.329566475590683
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-4",
+          "b": "water-access-0-3",
+          "overlap": [
+            0.04187500000000011,
+            0.003680616493251465,
+            1.329566475590683
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-5",
+          "b": "water-access-0-4",
+          "overlap": [
+            0.04187500000000011,
+            0.016570663622046844,
+            1.1875428059861406
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-6",
+          "b": "water-access-0-5",
+          "overlap": [
+            0.04187500000000011,
+            0.03382754712879543,
+            0.5279763303954574
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-0",
+          "b": "float-2-1",
+          "overlap": [
+            0.04187500000000011,
+            0.04187500000000011,
+            0.10000000000000009
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-0-6",
+          "b": "float-2-1",
+          "overlap": [
+            0.04187500000000011,
+            0.04187500000000011,
+            0.10000000000000009
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-1",
+          "b": "water-access-1-0",
+          "overlap": [
+            0.04187500000000011,
+            0.03382754712879543,
+            0.5279763303954574
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-2",
+          "b": "water-access-1-1",
+          "overlap": [
+            0.04187500000000011,
+            0.016570663622046844,
+            1.1875428059861406
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-3",
+          "b": "water-access-1-2",
+          "overlap": [
+            0.04187500000000011,
+            0.003680616493251465,
+            1.329566475590683
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-4",
+          "b": "water-access-1-3",
+          "overlap": [
+            0.04187500000000011,
+            0.003680616493251465,
+            1.329566475590683
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-5",
+          "b": "water-access-1-4",
+          "overlap": [
+            0.04187500000000011,
+            0.016570663622046844,
+            1.1875428059861406
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-6",
+          "b": "water-access-1-5",
+          "overlap": [
+            0.04187500000000011,
+            0.03382754712879543,
+            0.5279763303954574
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-0",
+          "b": "float-2-1",
+          "overlap": [
+            0.04187500000000011,
+            0.04187500000000011,
+            0.10000000000000009
+          ],
+          "pass": true
+        },
+        {
+          "a": "water-access-1-6",
+          "b": "float-2-1",
+          "overlap": [
+            0.04187500000000011,
+            0.04187500000000011,
+            0.10000000000000009
+          ],
+          "pass": true
+        }
+      ],
+      "rotation_edge_max_error": 8.881784197001252e-15,
+      "feature_checks": [
+        {
+          "module_separation": [
+            {
+              "a": "float-0-0",
+              "b": "float-1-0",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-2-0",
+              "separating_gap": 0.564,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-0-1",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-1-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-0-0",
+              "b": "float-2-1",
+              "separating_gap": 0.564,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-2-0",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-0-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-1-1",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            },
+            {
+              "a": "float-1-0",
+              "b": "float-2-1",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            },
+            {
+              "a": "float-2-0",
+              "b": "float-0-1",
+              "separating_gap": 0.564,
+              "pass": true
+            },
+            {
+              "a": "float-2-0",
+              "b": "float-1-1",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            },
+            {
+              "a": "float-2-0",
+              "b": "float-2-1",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            },
+            {
+              "a": "float-0-1",
+              "b": "float-1-1",
+              "separating_gap": 0.014000000000000012,
+              "pass": true
+            },
+            {
+              "a": "float-0-1",
+              "b": "float-2-1",
+              "separating_gap": 0.564,
+              "pass": true
+            },
+            {
+              "a": "float-1-1",
+              "b": "float-2-1",
+              "separating_gap": 0.01399999999999979,
+              "pass": true
+            }
+          ],
+          "base_z": 0,
+          "limitation": "Small declared connectors cross gaps; module solid AABBs remain separate."
+        },
+        {
+          "stairs": {
+            "direction": "-v",
+            "count": 8,
+            "landing_z": 23.0,
+            "base_z": 4,
+            "u": [
+              0.38,
+              1.04
+            ],
+            "v": [
+              0.99,
+              1.88
+            ],
+            "green_stringers": 2,
+            "upper_supports": 4
+          },
+          "tread_heights": [
+            6.375,
+            8.75,
+            11.125,
+            13.5,
+            15.875,
+            18.25,
+            20.625,
+            23.0
+          ],
+          "stringer_step_joints": 16,
+          "limitation": "AABB joints are attachment screens, not exact collision certification."
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "bbox": [
+            134,
+            148,
+            328,
+            364
+          ],
+          "components": [
+            22004
+          ],
+          "lines": [
+            {
+              "part": "float-2-0",
+              "samples": 26,
+              "visible_fraction": 1.0,
+              "slope": -0.49777777777777704,
+              "expected": -0.49999999999999933,
+              "rms_packed": 0.5574432099159475,
+              "offset_packed": 0.5001066653761654,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 20,
+              "visible_fraction": 1.0,
+              "slope": 0.5037593984962406,
+              "expected": 0.4999999999999996,
+              "rms_packed": 0.5585965227138179,
+              "offset_packed": 0.5,
+              "pass": true
+            },
+            {
+              "part": "float-1-1",
+              "samples": 20,
+              "visible_fraction": 1.0,
+              "slope": 0.5112781954887204,
+              "expected": 0.49999999999999917,
+              "rms_packed": 0.5552212862379545,
+              "offset_packed": 0.5,
+              "pass": true
+            },
+            {
+              "part": "float-2-1",
+              "samples": 25,
+              "visible_fraction": 1.0,
+              "slope": -0.5046153846153895,
+              "expected": -0.5000000000000013,
+              "rms_packed": 0.548900999900986,
+              "offset_packed": 0.490055465995606,
+              "pass": true
+            },
+            {
+              "part": "float-2-1",
+              "samples": 21,
+              "visible_fraction": 1.0,
+              "slope": 0.5064935064935064,
+              "expected": 0.5000000000000008,
+              "rms_packed": 0.5467242831305241,
+              "offset_packed": 0.48802920714808806,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-2-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-0-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-1-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [
+            {
+              "name": "yellow-grip-0",
+              "pixel": [
+                224,
+                174
+              ],
+              "clear_3x3": true,
+              "status": "visible_air"
+            },
+            {
+              "name": "yellow-grip-1",
+              "pixel": [
+                270,
+                197
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            }
+          ],
+          "sha256": "abfee76f58922eb84560a7d7429005aeb41c8e870c084e48cdda67a29444981f"
+        },
+        {
+          "d": 1,
+          "bbox": [
+            176,
+            166,
+            368,
+            368
+          ],
+          "components": [
+            21196
+          ],
+          "lines": [
+            {
+              "part": "float-0-0",
+              "samples": 25,
+              "visible_fraction": 1.0,
+              "slope": 0.5046153846153818,
+              "expected": 0.49999999999999967,
+              "rms_packed": 0.5489009999009912,
+              "offset_packed": 0.5572789420571393,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 20,
+              "visible_fraction": 1.0,
+              "slope": -0.5112781954887299,
+              "expected": -0.4999999999999975,
+              "rms_packed": 0.5552212862379486,
+              "offset_packed": 0.5,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 25,
+              "visible_fraction": 1.0,
+              "slope": 0.5046153846153851,
+              "expected": 0.5,
+              "rms_packed": 0.5489009999009886,
+              "offset_packed": 0.5772789420571394,
+              "pass": true
+            },
+            {
+              "part": "float-1-1",
+              "samples": 21,
+              "visible_fraction": 1.0,
+              "slope": -0.506493506493508,
+              "expected": -0.5,
+              "rms_packed": 0.5467242831305237,
+              "offset_packed": 0.4881612690423881,
+              "pass": true
+            },
+            {
+              "part": "float-2-1",
+              "samples": 21,
+              "visible_fraction": 1.0,
+              "slope": -0.4935064935064974,
+              "expected": -0.5000000000000008,
+              "rms_packed": 0.5670830439415727,
+              "offset_packed": 0.5119707928519119,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-0-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-1-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-2-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [
+            {
+              "name": "yellow-grip-0",
+              "pixel": [
+                206,
+                215
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            },
+            {
+              "name": "yellow-grip-1",
+              "pixel": [
+                252,
+                192
+              ],
+              "clear_3x3": true,
+              "status": "visible_air"
+            }
+          ],
+          "sha256": "31206c3f906202d6f01045d77838c4eb590d3612680d03bf8945f3a69cd90d8b"
+        },
+        {
+          "d": 2,
+          "bbox": [
+            184,
+            176,
+            378,
+            348
+          ],
+          "components": [
+            17440
+          ],
+          "lines": [
+            {
+              "part": "float-0-0",
+              "samples": 26,
+              "visible_fraction": 1.0,
+              "slope": -0.4977777777777784,
+              "expected": -0.5000000000000007,
+              "rms_packed": 0.5574432099159493,
+              "offset_packed": 0.5493600077430231,
+              "pass": true
+            },
+            {
+              "part": "float-0-0",
+              "samples": 21,
+              "visible_fraction": 1.0,
+              "slope": 0.5064935064935041,
+              "expected": 0.5000000000000017,
+              "rms_packed": 0.5467242831305239,
+              "offset_packed": 0.6587974691051711,
+              "pass": true
+            },
+            {
+              "part": "float-1-0",
+              "samples": 21,
+              "visible_fraction": 1.0,
+              "slope": 0.4935064935064975,
+              "expected": 0.4999999999999996,
+              "rms_packed": 0.5670830439415706,
+              "offset_packed": 0.6494057214756594,
+              "pass": true
+            },
+            {
+              "part": "float-2-0",
+              "samples": 20,
+              "visible_fraction": 1.0,
+              "slope": 0.48120300751879463,
+              "expected": 0.49999999999999917,
+              "rms_packed": 0.5484084971070828,
+              "offset_packed": 0.674306675054936,
+              "pass": true
+            },
+            {
+              "part": "float-0-1",
+              "samples": 26,
+              "visible_fraction": 1.0,
+              "slope": -0.5025641025640998,
+              "expected": -0.49999999999999933,
+              "rms_packed": 0.5756395979652171,
+              "offset_packed": 0.5878215462045616,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-1-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-2-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-0-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [
+            {
+              "name": "yellow-grip-0",
+              "pixel": [
+                288,
+                224
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            },
+            {
+              "name": "yellow-grip-1",
+              "pixel": [
+                242,
+                201
+              ],
+              "clear_3x3": true,
+              "status": "visible_air"
+            }
+          ],
+          "sha256": "ca402b7bd91ffe6d10e76217baa5a9f4d617f7500c1926dcc5ebd87451a8fe73"
+        },
+        {
+          "d": 3,
+          "bbox": [
+            144,
+            158,
+            336,
+            344
+          ],
+          "components": [
+            19056
+          ],
+          "lines": [
+            {
+              "part": "float-0-0",
+              "samples": 21,
+              "visible_fraction": 1.0,
+              "slope": -0.5064935064935125,
+              "expected": -0.5000000000000017,
+              "rms_packed": 0.5467242831305111,
+              "offset_packed": 0.6826069929146948,
+              "pass": true
+            },
+            {
+              "part": "float-1-0",
+              "samples": 21,
+              "visible_fraction": 1.0,
+              "slope": -0.49350649350649634,
+              "expected": -0.5,
+              "rms_packed": 0.5670830439415687,
+              "offset_packed": 0.7064165167242187,
+              "pass": true
+            },
+            {
+              "part": "float-2-0",
+              "samples": 20,
+              "visible_fraction": 1.0,
+              "slope": -0.48120300751879524,
+              "expected": -0.49999999999999917,
+              "rms_packed": 0.5484084971070734,
+              "offset_packed": 0.674306675054936,
+              "pass": true
+            },
+            {
+              "part": "float-2-0",
+              "samples": 25,
+              "visible_fraction": 1.0,
+              "slope": 0.5046153846153848,
+              "expected": 0.49999999999999967,
+              "rms_packed": 0.5489009999009924,
+              "offset_packed": 0.489944534004394,
+              "pass": true
+            },
+            {
+              "part": "float-2-1",
+              "samples": 25,
+              "visible_fraction": 1.0,
+              "slope": 0.504615384615384,
+              "expected": 0.49999999999999967,
+              "rms_packed": 0.5489009999009922,
+              "offset_packed": 0.490055465995606,
+              "pass": true
+            }
+          ],
+          "line_limitations": [
+            {
+              "part": "float-0-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-1-0",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            },
+            {
+              "part": "float-2-1",
+              "reason": "occluded combined bottom edge",
+              "visible_fraction": 0.0
+            }
+          ],
+          "openings": [
+            {
+              "name": "yellow-grip-0",
+              "pixel": [
+                306,
+                183
+              ],
+              "clear_3x3": true,
+              "status": "visible_air"
+            },
+            {
+              "name": "yellow-grip-1",
+              "pixel": [
+                260,
+                206
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            }
+          ],
+          "sha256": "00c6a70bfe9a30921e55cabadbcafe4d8ec08cae0fbd398ee6e080056b88852d"
+        }
+      ]
+    },
+    {
+      "id": "watchtower",
+      "closed_meshes": [
+        {
+          "name": "wood-deck",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "green-leg-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "cream-foot-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "teal-post-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "cream-cap-0",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "green-leg-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "cream-foot-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "teal-post-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "cream-cap-1",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "green-leg-2",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "cream-foot-2",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "teal-post-2",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "cream-cap-2",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "green-leg-3",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "cream-foot-3",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "teal-post-3",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "cream-cap-3",
+          "edges": 180,
+          "pass": true
+        },
+        {
+          "name": "teal-rail-back",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "wood-baluster-back-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "wood-baluster-back-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "wood-baluster-back-2",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "teal-rail-right",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "wood-baluster-right-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "wood-baluster-right-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "wood-baluster-right-2",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "teal-rail-left",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "wood-baluster-left-0",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "wood-baluster-left-1",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "wood-baluster-left-2",
+          "edges": 108,
+          "pass": true
+        },
+        {
+          "name": "wood-ladder-rail-0",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "wood-ladder-rail-1",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "wood-ladder-rung-0",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "wood-ladder-rung-1",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "wood-ladder-rung-2",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "wood-ladder-rung-3",
+          "edges": 60,
+          "pass": true
+        },
+        {
+          "name": "lifebuoy",
+          "edges": 768,
+          "pass": true
+        },
+        {
+          "name": "buoy-rope",
+          "edges": 60,
+          "pass": true
+        }
+      ],
+      "joints": [
+        {
+          "a": "green-leg-0",
+          "b": "cream-foot-0",
+          "overlap": [
+            0.16200000000000003,
+            0.16200000000000003,
+            0.9500000000000001
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-leg-0",
+          "b": "wood-deck",
+          "overlap": [
+            0.15660000000000002,
+            0.15660000000000002,
+            1.4000000000000021
+          ],
+          "pass": true
+        },
+        {
+          "a": "teal-post-0",
+          "b": "wood-deck",
+          "overlap": [
+            0.11232000000000003,
+            0.11232000000000003,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "cream-cap-0",
+          "b": "teal-post-0",
+          "overlap": [
+            0.11232000000000003,
+            0.11232000000000003,
+            0.34999999999999787
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-leg-1",
+          "b": "cream-foot-1",
+          "overlap": [
+            0.16199999999999992,
+            0.16200000000000003,
+            0.9500000000000001
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-leg-1",
+          "b": "wood-deck",
+          "overlap": [
+            0.15659999999999996,
+            0.15660000000000002,
+            1.4000000000000021
+          ],
+          "pass": true
+        },
+        {
+          "a": "teal-post-1",
+          "b": "wood-deck",
+          "overlap": [
+            0.1123200000000002,
+            0.11232000000000003,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "cream-cap-1",
+          "b": "teal-post-1",
+          "overlap": [
+            0.1123200000000002,
+            0.11232000000000003,
+            0.34999999999999787
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-leg-2",
+          "b": "cream-foot-2",
+          "overlap": [
+            0.16200000000000003,
+            0.16199999999999992,
+            0.9500000000000001
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-leg-2",
+          "b": "wood-deck",
+          "overlap": [
+            0.15660000000000002,
+            0.15659999999999996,
+            1.4000000000000021
+          ],
+          "pass": true
+        },
+        {
+          "a": "teal-post-2",
+          "b": "wood-deck",
+          "overlap": [
+            0.11232000000000003,
+            0.1123200000000002,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "cream-cap-2",
+          "b": "teal-post-2",
+          "overlap": [
+            0.11232000000000003,
+            0.1123200000000002,
+            0.34999999999999787
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-leg-3",
+          "b": "cream-foot-3",
+          "overlap": [
+            0.16199999999999992,
+            0.16199999999999992,
+            0.9500000000000001
+          ],
+          "pass": true
+        },
+        {
+          "a": "green-leg-3",
+          "b": "wood-deck",
+          "overlap": [
+            0.15659999999999996,
+            0.15659999999999996,
+            1.4000000000000021
+          ],
+          "pass": true
+        },
+        {
+          "a": "teal-post-3",
+          "b": "wood-deck",
+          "overlap": [
+            0.1123200000000002,
+            0.1123200000000002,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "cream-cap-3",
+          "b": "teal-post-3",
+          "overlap": [
+            0.1123200000000002,
+            0.1123200000000002,
+            0.34999999999999787
+          ],
+          "pass": true
+        },
+        {
+          "a": "teal-rail-back",
+          "b": "teal-post-0",
+          "overlap": [
+            0.05616000000000004,
+            0.08100000000000007,
+            1.3999999999999986
+          ],
+          "pass": true
+        },
+        {
+          "a": "teal-rail-back",
+          "b": "teal-post-1",
+          "overlap": [
+            0.0561600000000001,
+            0.08100000000000007,
+            1.3999999999999986
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-back-0",
+          "b": "wood-deck",
+          "overlap": [
+            0.038880000000000026,
+            0.038879999999999915,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-back-0",
+          "b": "teal-rail-back",
+          "overlap": [
+            0.038880000000000026,
+            0.038879999999999915,
+            1.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-back-1",
+          "b": "wood-deck",
+          "overlap": [
+            0.038880000000000026,
+            0.038879999999999915,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-back-1",
+          "b": "teal-rail-back",
+          "overlap": [
+            0.038880000000000026,
+            0.038879999999999915,
+            1.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-back-2",
+          "b": "wood-deck",
+          "overlap": [
+            0.03888000000000014,
+            0.038879999999999915,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-back-2",
+          "b": "teal-rail-back",
+          "overlap": [
+            0.03888000000000014,
+            0.038879999999999915,
+            1.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "teal-rail-right",
+          "b": "teal-post-1",
+          "overlap": [
+            0.08099999999999996,
+            0.05616000000000004,
+            1.3999999999999986
+          ],
+          "pass": true
+        },
+        {
+          "a": "teal-rail-right",
+          "b": "teal-post-3",
+          "overlap": [
+            0.08099999999999996,
+            0.0561600000000001,
+            1.3999999999999986
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-right-0",
+          "b": "wood-deck",
+          "overlap": [
+            0.038880000000000026,
+            0.038880000000000026,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-right-0",
+          "b": "teal-rail-right",
+          "overlap": [
+            0.038880000000000026,
+            0.038880000000000026,
+            1.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-right-1",
+          "b": "wood-deck",
+          "overlap": [
+            0.038880000000000026,
+            0.038880000000000026,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-right-1",
+          "b": "teal-rail-right",
+          "overlap": [
+            0.038880000000000026,
+            0.038880000000000026,
+            1.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-right-2",
+          "b": "wood-deck",
+          "overlap": [
+            0.038880000000000026,
+            0.03888000000000014,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-right-2",
+          "b": "teal-rail-right",
+          "overlap": [
+            0.038880000000000026,
+            0.03888000000000014,
+            1.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "teal-rail-left",
+          "b": "teal-post-0",
+          "overlap": [
+            0.08100000000000007,
+            0.05616000000000004,
+            1.3999999999999986
+          ],
+          "pass": true
+        },
+        {
+          "a": "teal-rail-left",
+          "b": "teal-post-2",
+          "overlap": [
+            0.08100000000000007,
+            0.0561600000000001,
+            1.3999999999999986
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-left-0",
+          "b": "wood-deck",
+          "overlap": [
+            0.038879999999999915,
+            0.038880000000000026,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-left-0",
+          "b": "teal-rail-left",
+          "overlap": [
+            0.038879999999999915,
+            0.038880000000000026,
+            1.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-left-1",
+          "b": "wood-deck",
+          "overlap": [
+            0.038879999999999915,
+            0.038880000000000026,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-left-1",
+          "b": "teal-rail-left",
+          "overlap": [
+            0.038879999999999915,
+            0.038880000000000026,
+            1.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-left-2",
+          "b": "wood-deck",
+          "overlap": [
+            0.038879999999999915,
+            0.03888000000000014,
+            0.10000000000000142
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-baluster-left-2",
+          "b": "teal-rail-left",
+          "overlap": [
+            0.038879999999999915,
+            0.03888000000000014,
+            1.1999999999999993
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-ladder-rail-0",
+          "b": "wood-deck",
+          "overlap": [
+            0.07087500000000002,
+            0.14161577668615233,
+            1.6000000000000014
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-ladder-rail-1",
+          "b": "wood-deck",
+          "overlap": [
+            0.07087500000000013,
+            0.14161577668615233,
+            1.6000000000000014
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-ladder-rung-0",
+          "b": "wood-ladder-rail-0",
+          "overlap": [
+            0.03543750000000001,
+            0.047250000000000014,
+            1.4000000000000004
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-ladder-rung-0",
+          "b": "wood-ladder-rail-1",
+          "overlap": [
+            0.03543750000000012,
+            0.047250000000000014,
+            1.4000000000000004
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-ladder-rung-1",
+          "b": "wood-ladder-rail-0",
+          "overlap": [
+            0.03543750000000001,
+            0.047250000000000014,
+            1.3999999999999986
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-ladder-rung-1",
+          "b": "wood-ladder-rail-1",
+          "overlap": [
+            0.03543750000000012,
+            0.047250000000000014,
+            1.3999999999999986
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-ladder-rung-2",
+          "b": "wood-ladder-rail-0",
+          "overlap": [
+            0.03543750000000001,
+            0.047250000000000014,
+            1.3999999999999986
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-ladder-rung-2",
+          "b": "wood-ladder-rail-1",
+          "overlap": [
+            0.03543750000000012,
+            0.047250000000000014,
+            1.3999999999999986
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-ladder-rung-3",
+          "b": "wood-ladder-rail-0",
+          "overlap": [
+            0.03543750000000001,
+            0.047250000000000014,
+            1.3999999999999986
+          ],
+          "pass": true
+        },
+        {
+          "a": "wood-ladder-rung-3",
+          "b": "wood-ladder-rail-1",
+          "overlap": [
+            0.03543750000000012,
+            0.047250000000000014,
+            1.3999999999999986
+          ],
+          "pass": true
+        },
+        {
+          "a": "buoy-rope",
+          "b": "wood-deck",
+          "overlap": [
+            0.04917803337721849,
+            0.01619999999999988,
+            1.6000000000000014
+          ],
+          "pass": true
+        },
+        {
+          "a": "buoy-rope",
+          "b": "lifebuoy",
+          "overlap": [
+            0.03972803337721853,
+            0.01619999999999988,
+            1.161944607890785
+          ],
+          "pass": true
+        }
+      ],
+      "rotation_edge_max_error": 4.440892098500626e-15,
+      "feature_checks": [
+        {
+          "torus_equation_max_error": 7.327471962526033e-15,
+          "inner_radius": 2.9,
+          "fixed_plane": "v-z",
+          "ladder": {
+            "rungs": 4,
+            "rails": 2,
+            "top_z": 21.5,
+            "base_z": 0.4
+          }
+        }
+      ],
+      "frames": [
+        {
+          "d": 0,
+          "bbox": [
+            330,
+            292,
+            438,
+            458
+          ],
+          "components": [
+            13204
+          ],
+          "lines": [],
+          "line_limitations": [
+            {
+              "reason": "Watchtower feet/rails are short or curved; straight pixel-edge slopes not certified by deck test."
+            }
+          ],
+          "openings": [
+            {
+              "name": "teal-rail-back",
+              "pixel": [
+                405,
+                326
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            },
+            {
+              "name": "teal-rail-right",
+              "pixel": [
+                405,
+                348
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            },
+            {
+              "name": "teal-rail-left",
+              "pixel": [
+                363,
+                326
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            }
+          ],
+          "sha256": "cffb5f10b62da4807bcf15d28d583100f1f9ae13c60d6dd4fdf6a11faf6d30bf"
+        },
+        {
+          "d": 1,
+          "bbox": [
+            330,
+            292,
+            438,
+            458
+          ],
+          "components": [
+            12584
+          ],
+          "lines": [],
+          "line_limitations": [
+            {
+              "reason": "Watchtower feet/rails are short or curved; straight pixel-edge slopes not certified by deck test."
+            }
+          ],
+          "openings": [
+            {
+              "name": "teal-rail-back",
+              "pixel": [
+                363,
+                326
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            },
+            {
+              "name": "teal-rail-right",
+              "pixel": [
+                405,
+                326
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            },
+            {
+              "name": "teal-rail-left",
+              "pixel": [
+                363,
+                348
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            }
+          ],
+          "sha256": "53230fb1a84b4ebea831506db218053e99cfcc55ed2d5470654d8c24bd8ee7e1"
+        },
+        {
+          "d": 2,
+          "bbox": [
+            330,
+            292,
+            438,
+            458
+          ],
+          "components": [
+            11464
+          ],
+          "lines": [],
+          "line_limitations": [
+            {
+              "reason": "Watchtower feet/rails are short or curved; straight pixel-edge slopes not certified by deck test."
+            }
+          ],
+          "openings": [
+            {
+              "name": "teal-rail-back",
+              "pixel": [
+                363,
+                348
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            },
+            {
+              "name": "teal-rail-right",
+              "pixel": [
+                363,
+                326
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            },
+            {
+              "name": "teal-rail-left",
+              "pixel": [
+                405,
+                348
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            }
+          ],
+          "sha256": "9f76e17bda98020902886bba76123e4c2cb9e010cb83aec7012a4136b0cbc72e"
+        },
+        {
+          "d": 3,
+          "bbox": [
+            330,
+            292,
+            438,
+            458
+          ],
+          "components": [
+            11400
+          ],
+          "lines": [],
+          "line_limitations": [
+            {
+              "reason": "Watchtower feet/rails are short or curved; straight pixel-edge slopes not certified by deck test."
+            }
+          ],
+          "openings": [
+            {
+              "name": "teal-rail-back",
+              "pixel": [
+                405,
+                348
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            },
+            {
+              "name": "teal-rail-right",
+              "pixel": [
+                363,
+                348
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            },
+            {
+              "name": "teal-rail-left",
+              "pixel": [
+                405,
+                326
+              ],
+              "clear_3x3": false,
+              "status": "projected_other_geometry_or_baluster"
+            }
+          ],
+          "sha256": "04ff58d3d1382dffb70cc3ae6207a0937f93ec3f3991f85baa6a334150f4015e"
+        }
+      ]
+    }
+  ],
+  "failures": [],
+  "limits": [
+    "AABB joints do not certify exact collision.",
+    "Numeric checks do not certify art95 or source fidelity.",
+    "Pixel slope coverage excludes occluded, curved and short segments; all exclusions reported.",
+    "Full-resolution RGB; 2-packed-pixel coverage finish on all parts."
+  ]
+}

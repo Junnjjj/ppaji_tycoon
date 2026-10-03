@@ -1,0 +1,308 @@
+[
+  {
+    "ready": true,
+    "id": "env_pine",
+    "chainReview": false,
+    "waterReview": false,
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true,
+    "frames": [
+      {
+        "d": 0,
+        "exact": true
+      },
+      {
+        "d": 1,
+        "exact": true
+      },
+      {
+        "d": 2,
+        "exact": true
+      },
+      {
+        "d": 3,
+        "exact": true
+      }
+    ]
+  },
+  {
+    "ready": true,
+    "id": "env_deciduous",
+    "chainReview": false,
+    "waterReview": false,
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true,
+    "frames": [
+      {
+        "d": 0,
+        "exact": true
+      },
+      {
+        "d": 1,
+        "exact": true
+      },
+      {
+        "d": 2,
+        "exact": true
+      },
+      {
+        "d": 3,
+        "exact": true
+      }
+    ]
+  },
+  {
+    "ready": true,
+    "id": "env_willow",
+    "chainReview": false,
+    "waterReview": false,
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true,
+    "frames": [
+      {
+        "d": 0,
+        "exact": true
+      },
+      {
+        "d": 1,
+        "exact": true
+      },
+      {
+        "d": 2,
+        "exact": true
+      },
+      {
+        "d": 3,
+        "exact": true
+      }
+    ]
+  },
+  {
+    "ready": true,
+    "id": "env_shrubs",
+    "chainReview": false,
+    "waterReview": false,
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true,
+    "frames": [
+      {
+        "d": 0,
+        "exact": true
+      },
+      {
+        "d": 1,
+        "exact": true
+      },
+      {
+        "d": 2,
+        "exact": true
+      },
+      {
+        "d": 3,
+        "exact": true
+      }
+    ]
+  },
+  {
+    "ready": true,
+    "id": "env_rocks",
+    "chainReview": false,
+    "waterReview": false,
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true,
+    "frames": [
+      {
+        "d": 0,
+        "exact": true
+      },
+      {
+        "d": 1,
+        "exact": true
+      },
+      {
+        "d": 2,
+        "exact": true
+      },
+      {
+        "d": 3,
+        "exact": true
+      }
+    ]
+  },
+  {
+    "ready": true,
+    "id": "env_flower_pot",
+    "chainReview": false,
+    "waterReview": false,
+    "placements": [
+      {
+        "uid": 85,
+        "i": 42,
+        "j": 24,
+        "facing": 0
+      },
+      {
+        "uid": 86,
+        "i": 49,
+        "j": 17,
+        "facing": 1
+      },
+      {
+        "uid": 87,
+        "i": 56,
+        "j": 24,
+        "facing": 2
+      },
+      {
+        "uid": 88,
+        "i": 49,
+        "j": 31,
+        "facing": 3
+      }
+    ],
+    "storageUnchanged": true,
+    "frames": [
+      {
+        "d": 0,
+        "exact": true
+      },
+      {
+        "d": 1,
+        "exact": true
+      },
+      {
+        "d": 2,
+        "exact": true
+      },
+      {
+        "d": 3,
+        "exact": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,3012 @@
+{
+  "status": "PASS",
+  "assets": [
+    {
+      "id": "module_rig_slide",
+      "status": "PASS",
+      "errors": [],
+      "closed_parts": [
+        {
+          "part": "slide-bed",
+          "edges": 1144,
+          "bad": 0
+        },
+        {
+          "part": "slide-rail-0",
+          "edges": 664,
+          "bad": 0
+        },
+        {
+          "part": "slide-rail-1",
+          "edges": 664,
+          "bad": 0
+        },
+        {
+          "part": "step-0",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-1",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-2",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-3",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-4",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-5",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-6",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-7",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-8",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-9",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "stair-float",
+          "edges": 72,
+          "bad": 0
+        },
+        {
+          "part": "entry-platform",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "green-post-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "guardpost-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "green-post-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "guardpost-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "guardtop",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "tower-float",
+          "edges": 72,
+          "bad": 0
+        },
+        {
+          "part": "exit-support",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "stair-handrail",
+          "edges": 60,
+          "bad": 0
+        }
+      ],
+      "joints": [
+        {
+          "a": "slide-rail-0",
+          "b": "slide-bed",
+          "overlap": [
+            0.10999999999999999,
+            2.1599999999999997,
+            30.799999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "slide-rail-1",
+          "b": "slide-bed",
+          "overlap": [
+            0.1100000000000001,
+            2.1599999999999997,
+            30.799999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-1",
+          "b": "step-0",
+          "overlap": [
+            0.4,
+            0.017999999999999794,
+            3.22
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-2",
+          "b": "step-1",
+          "overlap": [
+            0.4,
+            0.017999999999999794,
+            6.24
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-3",
+          "b": "step-2",
+          "overlap": [
+            0.4,
+            0.017999999999999794,
+            9.26
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-4",
+          "b": "step-3",
+          "overlap": [
+            0.4,
+            0.018000000000000016,
+            12.28
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-5",
+          "b": "step-4",
+          "overlap": [
+            0.4,
+            0.018000000000000016,
+            15.299999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-6",
+          "b": "step-5",
+          "overlap": [
+            0.4,
+            0.018000000000000016,
+            18.319999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-7",
+          "b": "step-6",
+          "overlap": [
+            0.4,
+            0.018000000000000016,
+            21.34
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-8",
+          "b": "step-7",
+          "overlap": [
+            0.4,
+            0.018000000000000016,
+            24.36
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-9",
+          "b": "step-8",
+          "overlap": [
+            0.4,
+            0.018000000000000016,
+            27.38
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-0",
+          "b": "stair-float",
+          "overlap": [
+            0.4,
+            0.23399999999999999,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-1",
+          "b": "stair-float",
+          "overlap": [
+            0.4,
+            0.23399999999999954,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-2",
+          "b": "stair-float",
+          "overlap": [
+            0.4,
+            0.23399999999999999,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-3",
+          "b": "stair-float",
+          "overlap": [
+            0.4,
+            0.23399999999999954,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-4",
+          "b": "stair-float",
+          "overlap": [
+            0.4,
+            0.2340000000000002,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-5",
+          "b": "stair-float",
+          "overlap": [
+            0.4,
+            0.23399999999999976,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-6",
+          "b": "stair-float",
+          "overlap": [
+            0.4,
+            0.2340000000000002,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-7",
+          "b": "stair-float",
+          "overlap": [
+            0.4,
+            0.23399999999999976,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-8",
+          "b": "stair-float",
+          "overlap": [
+            0.4,
+            0.2340000000000001,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-9",
+          "b": "stair-float",
+          "overlap": [
+            0.4,
+            0.23399999999999999,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "entry-platform",
+          "b": "step-9",
+          "overlap": [
+            0.4,
+            0.025000000000000022,
+            0.8999999999999986
+          ],
+          "passed": true
+        },
+        {
+          "a": "entry-platform",
+          "b": "slide-bed",
+          "overlap": [
+            0.8599999999999999,
+            0.025000000000000022,
+            0.8999999999999986
+          ],
+          "passed": true
+        },
+        {
+          "a": "green-post-0",
+          "b": "entry-platform",
+          "overlap": [
+            0.1503125,
+            0.24062499999999998,
+            0.8999999999999986
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardpost-0",
+          "b": "entry-platform",
+          "overlap": [
+            0.083125,
+            0.10624999999999998,
+            0.20000000000000284
+          ],
+          "passed": true
+        },
+        {
+          "a": "green-post-1",
+          "b": "entry-platform",
+          "overlap": [
+            0.1903125000000001,
+            0.24062499999999998,
+            0.8999999999999986
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardpost-1",
+          "b": "entry-platform",
+          "overlap": [
+            0.10625000000000018,
+            0.10624999999999998,
+            0.20000000000000284
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardtop",
+          "b": "guardpost-0",
+          "overlap": [
+            0.053125000000000006,
+            0.10624999999999998,
+            1.7000000000000028
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardtop",
+          "b": "guardpost-1",
+          "overlap": [
+            0.05312500000000009,
+            0.10624999999999998,
+            1.7000000000000028
+          ],
+          "passed": true
+        },
+        {
+          "a": "green-post-0",
+          "b": "tower-float",
+          "overlap": [
+            0.24062499999999998,
+            0.24062499999999998,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "green-post-1",
+          "b": "tower-float",
+          "overlap": [
+            0.2406250000000001,
+            0.24062499999999998,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "exit-support",
+          "b": "slide-bed",
+          "overlap": [
+            0.7599999999999998,
+            0.10000000000000009,
+            0.7999999999999998
+          ],
+          "passed": true
+        },
+        {
+          "a": "stair-handrail",
+          "b": "step-0",
+          "overlap": [
+            0.005937500000000012,
+            0.19653161064026747,
+            0.578500640459545
+          ],
+          "passed": true
+        },
+        {
+          "a": "stair-handrail",
+          "b": "step-9",
+          "overlap": [
+            0.005937500000000012,
+            0.22453161064026694,
+            27.758500640459545
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_max_error": 3.677613769070831e-16,
+      "curve_qa": {
+        "monotone_descent": true,
+        "nonlinear_height_second_differences": 0.21375000000000632,
+        "segments": 40,
+        "bed_thickness": 0.8,
+        "rail_bottom_relative": -0.25,
+        "bed_edge_relative": 0.55,
+        "rail_top_relative": 2.9,
+        "rail_bed_overlap_height": 0.8,
+        "shared_curve": true,
+        "entry_exit_zero_analytic_slope": true,
+        "actual_sample_rail_bed_contacts": 82,
+        "actual_min_overlap": 0.7999999999999972,
+        "declared_contact_graph_connected": true,
+        "actual_entry_bed_midpoint_inside_support": true,
+        "actual_exit_support_overlap": 0.4870772843316553,
+        "step_pair_count": 9
+      },
+      "frames": [
+        {
+          "d": 0,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            42432
+          ],
+          "sha256": "cca4968559874dacb434c9d3a15a885c678b1d7ebd775592aafd24b05ad0ec6c",
+          "lines": [
+            {
+              "part": "stair-float",
+              "status": "PASS",
+              "samples": 20,
+              "actual_mesh_edge": [
+                [
+                  0.09500000000000015,
+                  2.8,
+                  -2.4
+                ],
+                [
+                  0.5750000000000002,
+                  2.8,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 30.72,
+              "coverage": 1.0,
+              "slope": 0.5037593984962399,
+              "expected": 0.5000000000000004,
+              "rms": 0.5585965227138158,
+              "offset": 0.5
+            },
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.1509433962264151,
+              "samples": 16,
+              "actual_mesh_edge": [
+                [
+                  0.6200000000000002,
+                  2.755,
+                  -2.4
+                ],
+                [
+                  0.6200000000000002,
+                  0.16499999999999998,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 165.76,
+              "required_samples": 12
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.7692307692307693,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  1.77,
+                  0.415,
+                  -2.4
+                ],
+                [
+                  1.77,
+                  0.16499999999999998,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            51008
+          ],
+          "sha256": "5fb7d7eaf827edb852810f372064f001d4080dc9cb660d38c243d161bc607b69",
+          "lines": [
+            {
+              "part": "stair-float",
+              "status": "PASS",
+              "samples": 106,
+              "actual_mesh_edge": [
+                [
+                  0.050000000000000155,
+                  0.16499999999999998,
+                  -2.4
+                ],
+                [
+                  0.050000000000000155,
+                  2.755,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 165.75999999999996,
+              "coverage": 1.0,
+              "slope": 0.49986648865153477,
+              "expected": 0.5000000000000001,
+              "rms": 0.5589224556568121,
+              "offset": 0.858820612154258
+            },
+            {
+              "part": "stair-float",
+              "status": "PASS",
+              "samples": 20,
+              "actual_mesh_edge": [
+                [
+                  0.09500000000000015,
+                  2.8,
+                  -2.4
+                ],
+                [
+                  0.5750000000000002,
+                  2.8,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 30.720000000000027,
+              "coverage": 1.0,
+              "slope": -0.5037593984962349,
+              "expected": -0.5,
+              "rms": 0.5585965227138172,
+              "offset": 0.5
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  0.050000000000000155,
+                  0.16499999999999998,
+                  -2.4
+                ],
+                [
+                  0.050000000000000155,
+                  0.415,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.7692307692307693,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            34948
+          ],
+          "sha256": "e02ca2fa5d4587b14a273784140ec281e59b11e8abb2d9b8a933568298ae1e25",
+          "lines": [
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "stair-float",
+              "status": "PASS",
+              "samples": 106,
+              "actual_mesh_edge": [
+                [
+                  0.050000000000000155,
+                  0.16499999999999998,
+                  -2.4
+                ],
+                [
+                  0.050000000000000155,
+                  2.755,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 165.76000000000002,
+              "coverage": 1.0,
+              "slope": -0.4998664886515355,
+              "expected": -0.5000000000000002,
+              "rms": 0.5589224556568119,
+              "offset": 0.8588206121542714
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.7692307692307693,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  0.050000000000000155,
+                  0.16499999999999998,
+                  -2.4
+                ],
+                [
+                  0.050000000000000155,
+                  0.415,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            31444
+          ],
+          "sha256": "35eae31220b6f1105d50278d658f4d51e1324a12245c54f81a29530ffde70193",
+          "lines": [
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.6226415094339622,
+              "samples": 66,
+              "actual_mesh_edge": [
+                [
+                  0.6200000000000002,
+                  2.755,
+                  -2.4
+                ],
+                [
+                  0.6200000000000002,
+                  0.16499999999999998,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 165.76,
+              "required_samples": 12
+            },
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  1.77,
+                  0.415,
+                  -2.4
+                ],
+                [
+                  1.77,
+                  0.16499999999999998,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.7692307692307693,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "module_rig_mini_slide",
+      "status": "PASS",
+      "errors": [],
+      "closed_parts": [
+        {
+          "part": "slide-bed",
+          "edges": 1144,
+          "bad": 0
+        },
+        {
+          "part": "slide-rail-0",
+          "edges": 664,
+          "bad": 0
+        },
+        {
+          "part": "slide-rail-1",
+          "edges": 664,
+          "bad": 0
+        },
+        {
+          "part": "step-0",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-1",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-2",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-3",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "stair-float",
+          "edges": 72,
+          "bad": 0
+        },
+        {
+          "part": "entry-platform",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "green-post-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "guardpost-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "green-post-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "guardpost-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "guardtop",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "tower-float",
+          "edges": 72,
+          "bad": 0
+        },
+        {
+          "part": "yellow-back-panel",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "full-float",
+          "edges": 72,
+          "bad": 0
+        }
+      ],
+      "joints": [
+        {
+          "a": "slide-rail-0",
+          "b": "slide-bed",
+          "overlap": [
+            0.10999999999999988,
+            1.23,
+            14.4
+          ],
+          "passed": true
+        },
+        {
+          "a": "slide-rail-1",
+          "b": "slide-bed",
+          "overlap": [
+            0.1100000000000001,
+            1.23,
+            14.4
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-1",
+          "b": "step-0",
+          "overlap": [
+            0.3999999999999999,
+            0.018000000000000016,
+            3.7499999999999996
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-2",
+          "b": "step-1",
+          "overlap": [
+            0.3999999999999999,
+            0.018000000000000016,
+            7.299999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-3",
+          "b": "step-2",
+          "overlap": [
+            0.3999999999999999,
+            0.018000000000000016,
+            10.85
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-0",
+          "b": "stair-float",
+          "overlap": [
+            0.3999999999999999,
+            0.3254999999999999,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-1",
+          "b": "stair-float",
+          "overlap": [
+            0.3999999999999999,
+            0.3254999999999999,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-2",
+          "b": "stair-float",
+          "overlap": [
+            0.3999999999999999,
+            0.3255000000000001,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-3",
+          "b": "stair-float",
+          "overlap": [
+            0.3999999999999999,
+            0.3255000000000001,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "entry-platform",
+          "b": "step-3",
+          "overlap": [
+            0.3999999999999999,
+            0.025000000000000133,
+            0.8999999999999986
+          ],
+          "passed": true
+        },
+        {
+          "a": "entry-platform",
+          "b": "slide-bed",
+          "overlap": [
+            0.7199999999999998,
+            0.025000000000000133,
+            0.8999999999999986
+          ],
+          "passed": true
+        },
+        {
+          "a": "green-post-0",
+          "b": "entry-platform",
+          "overlap": [
+            0.15031249999999985,
+            0.24062499999999987,
+            0.8999999999999986
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardpost-0",
+          "b": "entry-platform",
+          "overlap": [
+            0.0831249999999999,
+            0.10625000000000018,
+            0.1999999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "green-post-1",
+          "b": "entry-platform",
+          "overlap": [
+            0.1903125000000001,
+            0.24062499999999987,
+            0.8999999999999986
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardpost-1",
+          "b": "entry-platform",
+          "overlap": [
+            0.10625000000000018,
+            0.10625000000000018,
+            0.1999999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardtop",
+          "b": "guardpost-0",
+          "overlap": [
+            0.05312499999999987,
+            0.10625000000000018,
+            1.6999999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardtop",
+          "b": "guardpost-1",
+          "overlap": [
+            0.05312500000000009,
+            0.10625000000000018,
+            1.6999999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "green-post-0",
+          "b": "tower-float",
+          "overlap": [
+            0.24062499999999987,
+            0.24062499999999987,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "green-post-1",
+          "b": "tower-float",
+          "overlap": [
+            0.2406250000000001,
+            0.24062499999999987,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "yellow-back-panel",
+          "b": "entry-platform",
+          "overlap": [
+            1.1849999999999998,
+            0.09999999999999987,
+            0.1999999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "yellow-back-panel",
+          "b": "tower-float",
+          "overlap": [
+            1.1849999999999998,
+            0.09999999999999987,
+            0.10000000000000009
+          ],
+          "passed": true
+        },
+        {
+          "a": "full-float",
+          "b": "stair-float",
+          "overlap": [
+            0.5700000000000001,
+            1.7500000000000002,
+            5.2
+          ],
+          "passed": true
+        },
+        {
+          "a": "full-float",
+          "b": "tower-float",
+          "overlap": [
+            1.5799999999999998,
+            0.3400000000000001,
+            5.2
+          ],
+          "passed": true
+        },
+        {
+          "a": "full-float",
+          "b": "slide-bed",
+          "overlap": [
+            0.7199999999999998,
+            1.23,
+            0.20000000000000062
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_max_error": 0,
+      "curve_qa": {
+        "monotone_descent": true,
+        "nonlinear_height_second_differences": 0.0969000000000011,
+        "segments": 40,
+        "bed_thickness": 0.8,
+        "rail_bottom_relative": -0.25,
+        "bed_edge_relative": 0.55,
+        "rail_top_relative": 2.9,
+        "rail_bed_overlap_height": 0.8,
+        "shared_curve": true,
+        "entry_exit_zero_analytic_slope": true,
+        "actual_sample_rail_bed_contacts": 82,
+        "actual_min_overlap": 0.7999999999999989,
+        "declared_contact_graph_connected": true,
+        "actual_entry_bed_midpoint_inside_support": true,
+        "step_pair_count": 3
+      },
+      "frames": [
+        {
+          "d": 0,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            22948
+          ],
+          "sha256": "b350263da0e8f08feb9fcf54aa94d8319471bfd91dc8830cf103474842a3ae32",
+          "lines": [
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  1.88,
+                  1.865,
+                  -2.4
+                ],
+                [
+                  1.88,
+                  1.615,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            },
+            {
+              "part": "full-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "full-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            22724
+          ],
+          "sha256": "903a98acfedee719e991762e388575375324f492bf60746776e3c7e319d898d0",
+          "lines": [
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  0.30000000000000004,
+                  1.615,
+                  -2.4
+                ],
+                [
+                  0.30000000000000004,
+                  1.865,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "full-float",
+              "status": "PASS",
+              "samples": 70,
+              "actual_mesh_edge": [
+                [
+                  0.30000000000000004,
+                  0.1449999999999998,
+                  -2.4
+                ],
+                [
+                  0.30000000000000004,
+                  1.865,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 110.08000000000001,
+              "coverage": 1.0,
+              "slope": 0.5003236812177402,
+              "expected": 0.5000000000000001,
+              "rms": 0.5653318361652233,
+              "offset": 0.849386649890107
+            },
+            {
+              "part": "full-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            28020
+          ],
+          "sha256": "609187efe443137dfb54aca245d230cc0efb544f958f2a609e18ab3c481c742b",
+          "lines": [
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  0.30000000000000004,
+                  1.615,
+                  -2.4
+                ],
+                [
+                  0.30000000000000004,
+                  1.865,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            },
+            {
+              "part": "full-float",
+              "status": "PASS",
+              "samples": 61,
+              "actual_mesh_edge": [
+                [
+                  1.835,
+                  0.09999999999999987,
+                  -2.4
+                ],
+                [
+                  0.345,
+                  0.09999999999999987,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 95.36000000000001,
+              "coverage": 1.0,
+              "slope": 0.4992067689053408,
+              "expected": 0.5,
+              "rms": 0.5623629920154789,
+              "offset": 0.7111637073212366
+            },
+            {
+              "part": "full-float",
+              "status": "PASS",
+              "samples": 71,
+              "actual_mesh_edge": [
+                [
+                  0.30000000000000004,
+                  0.1449999999999998,
+                  -2.4
+                ],
+                [
+                  0.30000000000000004,
+                  1.865,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 110.07999999999998,
+              "coverage": 1.0,
+              "slope": -0.49939637826961736,
+              "expected": -0.5000000000000002,
+              "rms": 0.555620605607132,
+              "offset": 0.8599500301717972
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            28896
+          ],
+          "sha256": "354d6f87a9cfe71a158e3ac6aefc3dabbdc7b4ea8f45f204a85b77c826d2400d",
+          "lines": [
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  1.88,
+                  1.865,
+                  -2.4
+                ],
+                [
+                  1.88,
+                  1.615,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "full-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "full-float",
+              "status": "PASS",
+              "samples": 61,
+              "actual_mesh_edge": [
+                [
+                  1.835,
+                  0.09999999999999987,
+                  -2.4
+                ],
+                [
+                  0.345,
+                  0.09999999999999987,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 95.35999999999996,
+              "coverage": 1.0,
+              "slope": -0.5007932310946598,
+              "expected": -0.5000000000000003,
+              "rms": 0.5551484359679316,
+              "offset": 0.6947702646982569
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "module_rig_slidedock",
+      "status": "PASS",
+      "errors": [],
+      "closed_parts": [
+        {
+          "part": "slide-bed",
+          "edges": 1144,
+          "bad": 0
+        },
+        {
+          "part": "slide-rail-0",
+          "edges": 664,
+          "bad": 0
+        },
+        {
+          "part": "slide-rail-1",
+          "edges": 664,
+          "bad": 0
+        },
+        {
+          "part": "entry-float",
+          "edges": 72,
+          "bad": 0
+        },
+        {
+          "part": "entry-contact",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "grabpost-0-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "grabpost-0-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "grabtop-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "grabpost-1-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "grabpost-1-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "grabtop-1",
+          "edges": 60,
+          "bad": 0
+        }
+      ],
+      "joints": [
+        {
+          "a": "slide-rail-0",
+          "b": "slide-bed",
+          "overlap": [
+            2.16,
+            0.10999999999999999,
+            7.5
+          ],
+          "passed": true
+        },
+        {
+          "a": "slide-rail-1",
+          "b": "slide-bed",
+          "overlap": [
+            2.16,
+            0.10999999999999999,
+            7.5
+          ],
+          "passed": true
+        },
+        {
+          "a": "entry-float",
+          "b": "entry-contact",
+          "overlap": [
+            0.12,
+            0.6800000000000002,
+            0.10000000000000009
+          ],
+          "passed": true
+        },
+        {
+          "a": "entry-contact",
+          "b": "slide-bed",
+          "overlap": [
+            0.07999999999999996,
+            0.6800000000000002,
+            5.499999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "grabpost-0-0",
+          "b": "entry-float",
+          "overlap": [
+            0.059374999999999956,
+            0.059375000000000004,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "grabpost-0-1",
+          "b": "entry-float",
+          "overlap": [
+            0.059374999999999956,
+            0.059375000000000004,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "grabtop-0",
+          "b": "grabpost-0-0",
+          "overlap": [
+            0.029687499999999978,
+            0.059375000000000004,
+            0.9500000000000002
+          ],
+          "passed": true
+        },
+        {
+          "a": "grabtop-0",
+          "b": "grabpost-0-1",
+          "overlap": [
+            0.029687499999999978,
+            0.059375000000000004,
+            0.9500000000000002
+          ],
+          "passed": true
+        },
+        {
+          "a": "grabpost-1-0",
+          "b": "entry-float",
+          "overlap": [
+            0.059374999999999956,
+            0.059374999999999956,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "grabpost-1-1",
+          "b": "entry-float",
+          "overlap": [
+            0.059374999999999956,
+            0.059374999999999956,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "grabtop-1",
+          "b": "grabpost-1-0",
+          "overlap": [
+            0.029687499999999978,
+            0.059374999999999956,
+            0.9500000000000002
+          ],
+          "passed": true
+        },
+        {
+          "a": "grabtop-1",
+          "b": "grabpost-1-1",
+          "overlap": [
+            0.029687499999999978,
+            0.059374999999999956,
+            0.9500000000000002
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_max_error": 3.3306690738754696e-16,
+      "curve_qa": {
+        "monotone_descent": true,
+        "nonlinear_height_second_differences": 0.0477374999999991,
+        "segments": 40,
+        "bed_thickness": 0.8,
+        "rail_bottom_relative": -0.25,
+        "bed_edge_relative": 0.55,
+        "rail_top_relative": 2.9,
+        "rail_bed_overlap_height": 0.8,
+        "shared_curve": true,
+        "entry_exit_zero_analytic_slope": true,
+        "actual_sample_rail_bed_contacts": 82,
+        "actual_min_overlap": 0.7999999999999998,
+        "declared_contact_graph_connected": true,
+        "actual_entry_bed_midpoint_inside_support": true,
+        "step_pair_count": 0
+      },
+      "frames": [
+        {
+          "d": 0,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            16464
+          ],
+          "sha256": "2f7a2e34b6f4add317f2640abe899149fc1996279d8cf96c61ad36fa65640e2d",
+          "lines": [
+            {
+              "part": "entry-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.8285714285714286,
+              "samples": 29,
+              "actual_mesh_edge": [
+                [
+                  0.83,
+                  0.06900000000000002,
+                  -2.4
+                ],
+                [
+                  0.83,
+                  0.9309999999999999,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 55.168000000000006,
+              "required_samples": 12
+            },
+            {
+              "part": "entry-float",
+              "status": "PASS",
+              "samples": 26,
+              "actual_mesh_edge": [
+                [
+                  0.7849999999999999,
+                  0.976,
+                  -2.4
+                ],
+                [
+                  0.14499999999999996,
+                  0.976,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 40.96000000000001,
+              "coverage": 1.0,
+              "slope": 0.5018803418803431,
+              "expected": 0.5000000000000003,
+              "rms": 0.5413597218624253,
+              "offset": 0.6225928114792816
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            16392
+          ],
+          "sha256": "1e8e1766c0cf899907957db50f9ab5ad73eb295c3dbf0a70fae048e28479b666",
+          "lines": [
+            {
+              "part": "entry-float",
+              "status": "PASS",
+              "samples": 26,
+              "actual_mesh_edge": [
+                [
+                  0.7849999999999999,
+                  0.976,
+                  -2.4
+                ],
+                [
+                  0.14499999999999996,
+                  0.976,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 40.96000000000001,
+              "coverage": 1.0,
+              "slope": -0.4977777777777797,
+              "expected": -0.5000000000000003,
+              "rms": 0.5574432099159458,
+              "offset": 0.6023322999493005
+            },
+            {
+              "part": "entry-float",
+              "status": "PASS",
+              "samples": 36,
+              "actual_mesh_edge": [
+                [
+                  0.09999999999999998,
+                  0.9309999999999999,
+                  -2.4
+                ],
+                [
+                  0.09999999999999998,
+                  0.06900000000000002,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 55.168000000000006,
+              "coverage": 1.0,
+              "slope": 0.5011583011583001,
+              "expected": 0.5,
+              "rms": 0.5588874773648187,
+              "offset": 0.6996933249450592
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            16392
+          ],
+          "sha256": "cc431ef2b03b51701117650ea990569bd116c01d0d8eb69cb956c573779c4563",
+          "lines": [
+            {
+              "part": "entry-float",
+              "status": "PASS",
+              "samples": 36,
+              "actual_mesh_edge": [
+                [
+                  0.09999999999999998,
+                  0.9309999999999999,
+                  -2.4
+                ],
+                [
+                  0.09999999999999998,
+                  0.06900000000000002,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 55.168000000000006,
+              "coverage": 1.0,
+              "slope": -0.49420849420849566,
+              "expected": -0.5,
+              "rms": 0.5557700143767321,
+              "offset": 0.6996933249450592
+            },
+            {
+              "part": "entry-float",
+              "status": "PASS",
+              "samples": 26,
+              "actual_mesh_edge": [
+                [
+                  0.14499999999999996,
+                  0.02400000000000002,
+                  -2.4
+                ],
+                [
+                  0.7849999999999999,
+                  0.02400000000000002,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 40.95999999999998,
+              "coverage": 1.0,
+              "slope": 0.501880341880346,
+              "expected": 0.5000000000000007,
+              "rms": 0.5413597218624283,
+              "offset": 0.6225928114793121
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            16464
+          ],
+          "sha256": "487ff29e0637a70c4ea4cb2d7b2283199f6a052f076ce277e37d9d61fbd1053f",
+          "lines": [
+            {
+              "part": "entry-float",
+              "status": "PASS",
+              "samples": 26,
+              "actual_mesh_edge": [
+                [
+                  0.14499999999999996,
+                  0.02400000000000002,
+                  -2.4
+                ],
+                [
+                  0.7849999999999999,
+                  0.02400000000000002,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 40.95999999999998,
+              "coverage": 1.0,
+              "slope": -0.4977777777777781,
+              "expected": -0.5000000000000007,
+              "rms": 0.5574432099159431,
+              "offset": 0.6023322999492743
+            },
+            {
+              "part": "entry-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.8571428571428571,
+              "samples": 30,
+              "actual_mesh_edge": [
+                [
+                  0.83,
+                  0.06900000000000002,
+                  -2.4
+                ],
+                [
+                  0.83,
+                  0.9309999999999999,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 55.168000000000006,
+              "required_samples": 12
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ppaji_slide",
+      "status": "PASS",
+      "errors": [],
+      "closed_parts": [
+        {
+          "part": "slide-bed",
+          "edges": 1144,
+          "bad": 0
+        },
+        {
+          "part": "slide-rail-0",
+          "edges": 664,
+          "bad": 0
+        },
+        {
+          "part": "slide-rail-1",
+          "edges": 664,
+          "bad": 0
+        },
+        {
+          "part": "step-0",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-1",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-2",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-3",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-4",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-5",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-6",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-7",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-8",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "step-9",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "stair-float",
+          "edges": 72,
+          "bad": 0
+        },
+        {
+          "part": "entry-platform",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "green-post-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "guardpost-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "green-post-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "guardpost-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "guardtop",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "tower-float",
+          "edges": 72,
+          "bad": 0
+        },
+        {
+          "part": "exit-support",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "stair-handrail",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "adjacent-float",
+          "edges": 72,
+          "bad": 0
+        },
+        {
+          "part": "bridge-float",
+          "edges": 72,
+          "bad": 0
+        },
+        {
+          "part": "arch-post-0",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "arch-step-0",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "arch-post-1",
+          "edges": 60,
+          "bad": 0
+        },
+        {
+          "part": "arch-step-1",
+          "edges": 12,
+          "bad": 0
+        },
+        {
+          "part": "arch-crown",
+          "edges": 60,
+          "bad": 0
+        }
+      ],
+      "joints": [
+        {
+          "a": "slide-rail-0",
+          "b": "slide-bed",
+          "overlap": [
+            0.11000000000000032,
+            3.0,
+            27.8
+          ],
+          "passed": true
+        },
+        {
+          "a": "slide-rail-1",
+          "b": "slide-bed",
+          "overlap": [
+            0.11000000000000032,
+            3.0,
+            27.8
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-1",
+          "b": "step-0",
+          "overlap": [
+            0.40000000000000036,
+            0.017999999999999794,
+            2.9199999999999995
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-2",
+          "b": "step-1",
+          "overlap": [
+            0.40000000000000036,
+            0.018000000000000682,
+            5.639999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-3",
+          "b": "step-2",
+          "overlap": [
+            0.40000000000000036,
+            0.017999999999999794,
+            8.360000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-4",
+          "b": "step-3",
+          "overlap": [
+            0.40000000000000036,
+            0.017999999999999794,
+            11.08
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-5",
+          "b": "step-4",
+          "overlap": [
+            0.40000000000000036,
+            0.017999999999999794,
+            13.799999999999999
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-6",
+          "b": "step-5",
+          "overlap": [
+            0.40000000000000036,
+            0.017999999999999794,
+            16.52
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-7",
+          "b": "step-6",
+          "overlap": [
+            0.40000000000000036,
+            0.017999999999999794,
+            19.24
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-8",
+          "b": "step-7",
+          "overlap": [
+            0.40000000000000036,
+            0.018000000000000238,
+            21.959999999999997
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-9",
+          "b": "step-8",
+          "overlap": [
+            0.40000000000000036,
+            0.018000000000000238,
+            24.679999999999996
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-0",
+          "b": "stair-float",
+          "overlap": [
+            0.40000000000000036,
+            0.3179999999999996,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-1",
+          "b": "stair-float",
+          "overlap": [
+            0.40000000000000036,
+            0.3180000000000005,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-2",
+          "b": "stair-float",
+          "overlap": [
+            0.40000000000000036,
+            0.31800000000000006,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-3",
+          "b": "stair-float",
+          "overlap": [
+            0.40000000000000036,
+            0.3179999999999996,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-4",
+          "b": "stair-float",
+          "overlap": [
+            0.40000000000000036,
+            0.31800000000000006,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-5",
+          "b": "stair-float",
+          "overlap": [
+            0.40000000000000036,
+            0.3179999999999996,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-6",
+          "b": "stair-float",
+          "overlap": [
+            0.40000000000000036,
+            0.3179999999999996,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-7",
+          "b": "stair-float",
+          "overlap": [
+            0.40000000000000036,
+            0.31800000000000006,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-8",
+          "b": "stair-float",
+          "overlap": [
+            0.40000000000000036,
+            0.3180000000000005,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "step-9",
+          "b": "stair-float",
+          "overlap": [
+            0.40000000000000036,
+            0.31800000000000006,
+            0.20000000000000018
+          ],
+          "passed": true
+        },
+        {
+          "a": "entry-platform",
+          "b": "step-9",
+          "overlap": [
+            0.40000000000000036,
+            0.025000000000000133,
+            0.8999999999999986
+          ],
+          "passed": true
+        },
+        {
+          "a": "entry-platform",
+          "b": "slide-bed",
+          "overlap": [
+            1.1500000000000004,
+            0.025000000000000133,
+            0.8999999999999986
+          ],
+          "passed": true
+        },
+        {
+          "a": "green-post-0",
+          "b": "entry-platform",
+          "overlap": [
+            0.15031249999999918,
+            0.24062499999999987,
+            0.8999999999999986
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardpost-0",
+          "b": "entry-platform",
+          "overlap": [
+            0.0831249999999999,
+            0.10624999999999996,
+            0.1999999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "green-post-1",
+          "b": "entry-platform",
+          "overlap": [
+            0.190312500000001,
+            0.24062499999999987,
+            0.8999999999999986
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardpost-1",
+          "b": "entry-platform",
+          "overlap": [
+            0.10625000000000018,
+            0.10624999999999996,
+            0.1999999999999993
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardtop",
+          "b": "guardpost-0",
+          "overlap": [
+            0.05312500000000053,
+            0.10624999999999996,
+            1.7000000000000028
+          ],
+          "passed": true
+        },
+        {
+          "a": "guardtop",
+          "b": "guardpost-1",
+          "overlap": [
+            0.05312500000000053,
+            0.10624999999999996,
+            1.7000000000000028
+          ],
+          "passed": true
+        },
+        {
+          "a": "green-post-0",
+          "b": "tower-float",
+          "overlap": [
+            0.24062499999999964,
+            0.24062499999999987,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "green-post-1",
+          "b": "tower-float",
+          "overlap": [
+            0.24062500000000053,
+            0.24062499999999987,
+            0.15000000000000036
+          ],
+          "passed": true
+        },
+        {
+          "a": "exit-support",
+          "b": "slide-bed",
+          "overlap": [
+            1.0500000000000007,
+            0.10000000000000053,
+            0.7999999999999998
+          ],
+          "passed": true
+        },
+        {
+          "a": "stair-handrail",
+          "b": "step-0",
+          "overlap": [
+            0.005937499999999929,
+            0.2771325570191223,
+            0.3180010460505791
+          ],
+          "passed": true
+        },
+        {
+          "a": "stair-handrail",
+          "b": "step-9",
+          "overlap": [
+            0.005937499999999929,
+            0.30513255701912256,
+            24.79800104605058
+          ],
+          "passed": true
+        },
+        {
+          "a": "bridge-float",
+          "b": "stair-float",
+          "overlap": [
+            0.2400000000000002,
+            0.3400000000000001,
+            5.2
+          ],
+          "passed": true
+        },
+        {
+          "a": "bridge-float",
+          "b": "adjacent-float",
+          "overlap": [
+            0.09999999999999964,
+            0.3400000000000001,
+            5.2
+          ],
+          "passed": true
+        },
+        {
+          "a": "arch-post-0",
+          "b": "adjacent-float",
+          "overlap": [
+            0.2625000000000002,
+            0.2625000000000002,
+            0.10000000000000009
+          ],
+          "passed": true
+        },
+        {
+          "a": "arch-step-0",
+          "b": "adjacent-float",
+          "overlap": [
+            0.3700000000000001,
+            0.45999999999999996,
+            0.050000000000000266
+          ],
+          "passed": true
+        },
+        {
+          "a": "arch-post-1",
+          "b": "adjacent-float",
+          "overlap": [
+            0.2625000000000002,
+            0.2625000000000002,
+            0.10000000000000009
+          ],
+          "passed": true
+        },
+        {
+          "a": "arch-step-1",
+          "b": "adjacent-float",
+          "overlap": [
+            0.3700000000000001,
+            0.45999999999999996,
+            0.050000000000000266
+          ],
+          "passed": true
+        },
+        {
+          "a": "arch-crown",
+          "b": "arch-post-0",
+          "overlap": [
+            0.2625000000000002,
+            0.1312500000000001,
+            6.300000000000001
+          ],
+          "passed": true
+        },
+        {
+          "a": "arch-crown",
+          "b": "arch-post-1",
+          "overlap": [
+            0.2625000000000002,
+            0.1312500000000001,
+            6.300000000000001
+          ],
+          "passed": true
+        }
+      ],
+      "rotation_max_error": 8.881784197001252e-16,
+      "curve_qa": {
+        "monotone_descent": true,
+        "nonlinear_height_second_differences": 0.1923750000000064,
+        "segments": 40,
+        "bed_thickness": 0.8,
+        "rail_bottom_relative": -0.25,
+        "bed_edge_relative": 0.55,
+        "rail_top_relative": 2.9,
+        "rail_bed_overlap_height": 0.8,
+        "shared_curve": true,
+        "entry_exit_zero_analytic_slope": true,
+        "actual_sample_rail_bed_contacts": 82,
+        "actual_min_overlap": 0.7999999999999989,
+        "declared_contact_graph_connected": true,
+        "actual_entry_bed_midpoint_inside_support": true,
+        "actual_exit_support_overlap": 0.6522939999999986,
+        "step_pair_count": 9
+      },
+      "frames": [
+        {
+          "d": 0,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            76596
+          ],
+          "sha256": "1289fb586d11024574864640d6b83bc1df2c33846d677fed6394257c07b2474e",
+          "lines": [
+            {
+              "part": "stair-float",
+              "status": "PASS",
+              "samples": 19,
+              "actual_mesh_edge": [
+                [
+                  4.43,
+                  4.84,
+                  -2.4
+                ],
+                [
+                  4.91,
+                  4.84,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 30.720000000000027,
+              "coverage": 1.0,
+              "slope": 0.4912280701754455,
+              "expected": 0.5,
+              "rms": 0.5435766099940199,
+              "offset": 0.7697263157895062
+            },
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.0,
+              "samples": 0,
+              "actual_mesh_edge": [
+                [
+                  4.955,
+                  4.795,
+                  -2.4
+                ],
+                [
+                  4.955,
+                  1.365,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 219.51999999999998,
+              "required_samples": 12
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.8461538461538461,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  6.395,
+                  1.615,
+                  -2.4
+                ],
+                [
+                  6.395,
+                  1.365,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            },
+            {
+              "part": "adjacent-float",
+              "status": "PASS",
+              "samples": 55,
+              "actual_mesh_edge": [
+                [
+                  2.92,
+                  5.449999999999999,
+                  -2.4
+                ],
+                [
+                  4.26,
+                  5.449999999999999,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 85.75999999999999,
+              "coverage": 1.0,
+              "slope": 0.4989898989898987,
+              "expected": 0.49999999999999867,
+              "rms": 0.5545371749671701,
+              "offset": 0.8355636363636325
+            },
+            {
+              "part": "adjacent-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.0,
+              "samples": 0,
+              "actual_mesh_edge": [
+                [
+                  4.305,
+                  5.404999999999999,
+                  -2.4
+                ],
+                [
+                  4.305,
+                  0.9449999999999998,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 285.43999999999994,
+              "required_samples": 12
+            },
+            {
+              "part": "bridge-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.35384615384615387,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "bridge-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  4.625,
+                  1.615,
+                  -2.4
+                ],
+                [
+                  4.625,
+                  1.365,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            97888
+          ],
+          "sha256": "9e7effd2ca45af916f36abe94e4011e0e681fee0011cf8b64eb83764d53c7116",
+          "lines": [
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.0,
+              "samples": 0,
+              "actual_mesh_edge": [
+                [
+                  4.385,
+                  1.365,
+                  -2.4
+                ],
+                [
+                  4.385,
+                  4.795,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 219.51999999999998,
+              "required_samples": 12
+            },
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.35,
+              "samples": 7,
+              "actual_mesh_edge": [
+                [
+                  4.43,
+                  4.84,
+                  -2.4
+                ],
+                [
+                  4.91,
+                  4.84,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 30.720000000000027,
+              "required_samples": 12
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  4.385,
+                  1.365,
+                  -2.4
+                ],
+                [
+                  4.385,
+                  1.615,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.8461538461538461,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "adjacent-float",
+              "status": "PASS",
+              "samples": 183,
+              "actual_mesh_edge": [
+                [
+                  2.875,
+                  0.9449999999999998,
+                  -2.4
+                ],
+                [
+                  2.875,
+                  5.404999999999999,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 285.43999999999994,
+              "coverage": 1.0,
+              "slope": 0.5000900738605655,
+              "expected": 0.4999999999999998,
+              "rms": 0.5602156838372735,
+              "offset": 0.5016349726775953
+            },
+            {
+              "part": "adjacent-float",
+              "status": "PASS",
+              "samples": 55,
+              "actual_mesh_edge": [
+                [
+                  2.92,
+                  5.449999999999999,
+                  -2.4
+                ],
+                [
+                  4.26,
+                  5.449999999999999,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 85.75999999999999,
+              "coverage": 1.0,
+              "slope": -0.5010101010101047,
+              "expected": -0.49999999999999867,
+              "rms": 0.5628211765451582,
+              "offset": 0.8446545454545417
+            },
+            {
+              "part": "bridge-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  4.205,
+                  1.365,
+                  -2.4
+                ],
+                [
+                  4.205,
+                  1.615,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            },
+            {
+              "part": "bridge-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.35384615384615387,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            79648
+          ],
+          "sha256": "0a900078c99a5a22d1fd506d157626af5dbdf73b571013fd8b7672014082f6f1",
+          "lines": [
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.0,
+              "samples": 0,
+              "actual_mesh_edge": [
+                [
+                  4.385,
+                  1.365,
+                  -2.4
+                ],
+                [
+                  4.385,
+                  4.795,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 219.51999999999998,
+              "required_samples": 12
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.8461538461538461,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  4.385,
+                  1.365,
+                  -2.4
+                ],
+                [
+                  4.385,
+                  1.615,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            },
+            {
+              "part": "adjacent-float",
+              "status": "PASS",
+              "samples": 55,
+              "actual_mesh_edge": [
+                [
+                  4.26,
+                  0.8999999999999999,
+                  -2.4
+                ],
+                [
+                  2.92,
+                  0.8999999999999999,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 85.75999999999999,
+              "coverage": 1.0,
+              "slope": 0.5010101010101013,
+              "expected": 0.5,
+              "rms": 0.5628211765451586,
+              "offset": 0.5977890909091002
+            },
+            {
+              "part": "adjacent-float",
+              "status": "PASS",
+              "samples": 183,
+              "actual_mesh_edge": [
+                [
+                  2.875,
+                  0.9449999999999998,
+                  -2.4
+                ],
+                [
+                  2.875,
+                  5.404999999999999,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 285.43999999999994,
+              "coverage": 1.0,
+              "slope": -0.5000900738605648,
+              "expected": -0.5000000000000002,
+              "rms": 0.560215683837275,
+              "offset": 0.5010972677595632
+            },
+            {
+              "part": "bridge-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.35384615384615387,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "bridge-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  4.205,
+                  1.365,
+                  -2.4
+                ],
+                [
+                  4.205,
+                  1.615,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "registration": true,
+          "clipped": false,
+          "saved_pixel_components": [
+            59176
+          ],
+          "sha256": "e9039eac4373a3cd1c9c2166b1aa74bda5205bb72964a3df8da337fa25ae9d6d",
+          "lines": [
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.7659574468085106,
+              "samples": 108,
+              "actual_mesh_edge": [
+                [
+                  4.955,
+                  4.795,
+                  -2.4
+                ],
+                [
+                  4.955,
+                  1.365,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 219.51999999999998,
+              "required_samples": 12
+            },
+            {
+              "part": "stair-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.0,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  6.395,
+                  1.615,
+                  -2.4
+                ],
+                [
+                  6.395,
+                  1.365,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            },
+            {
+              "part": "tower-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.8461538461538461,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            },
+            {
+              "part": "adjacent-float",
+              "status": "UNMEASURED_OCCLUDED_OR_SHORT",
+              "coverage": 0.0,
+              "samples": 0,
+              "actual_mesh_edge": [
+                [
+                  4.305,
+                  5.404999999999999,
+                  -2.4
+                ],
+                [
+                  4.305,
+                  0.9449999999999998,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 285.43999999999994,
+              "required_samples": 12
+            },
+            {
+              "part": "adjacent-float",
+              "status": "PASS",
+              "samples": 55,
+              "actual_mesh_edge": [
+                [
+                  4.26,
+                  0.8999999999999999,
+                  -2.4
+                ],
+                [
+                  2.92,
+                  0.8999999999999999,
+                  -2.4
+                ]
+              ],
+              "actual_projected_span": 85.75999999999999,
+              "coverage": 1.0,
+              "slope": -0.49898989898990137,
+              "expected": -0.5,
+              "rms": 0.5545371749671706,
+              "offset": 0.6050327272727373
+            },
+            {
+              "part": "bridge-float",
+              "status": "UNMEASURED_SHORT",
+              "span": 16.0,
+              "actual_mesh_edge": [
+                [
+                  4.625,
+                  1.615,
+                  -2.4
+                ],
+                [
+                  4.625,
+                  1.365,
+                  -2.4
+                ]
+              ],
+              "minimum_span": 20
+            },
+            {
+              "part": "bridge-float",
+              "status": "UNMEASURED_JOINT_OCCLUSION",
+              "geometry_visible_fraction": 0.35384615384615387,
+              "reason": "shared coplanar float partly covers target; required90%exposure not established"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "AABB contacts are broad structural checks, not exact collision certification.",
+    "Curved beds/rails and sloping stair rails are intentionally excluded from horizontal iso-line tests.",
+    "Occluded and short base segments are explicitly unmeasured; numeric results do not establish art95 or runtime QA."
+  ]
+}

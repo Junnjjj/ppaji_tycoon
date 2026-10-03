@@ -1,0 +1,98 @@
+[
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_pine/d0.png",
+    "sha256": "e36c4ecadbcfe23ce5696e4d67aa18f5dd3705a83b74689c50ff9b892c31c723"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_pine/d1.png",
+    "sha256": "a8547835e9271605da58dccd98c26210e4e859369dce71529ea0b5ac3379bd68"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_pine/d2.png",
+    "sha256": "e22b1e970555632012165964c145c04ce8a073e97e6099cdececd94aa96f4078"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_pine/d3.png",
+    "sha256": "a1557e6f8e2338b2a662e77028ff20d738ffa9c41198d20612dc9f19b59c7ebf"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_deciduous/d0.png",
+    "sha256": "de729d94f837763aa547f43d3f5347de04ba916084fd8c558bb4c88d313e6a16"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_deciduous/d1.png",
+    "sha256": "5cfc6446ac722c0b1baf587716027e0fe950ffaee78509c7022a89eb6641451c"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_deciduous/d2.png",
+    "sha256": "ed4b15e9cd0d54261a7bc510de4eabea034f73333dc1e5acae334a5c5f4126e6"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_deciduous/d3.png",
+    "sha256": "bbb96ac96e749a55a2b5019a6e0afc32737d0a269ae670b35a253fe2c4353d8e"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_willow/d0.png",
+    "sha256": "ca7d4e3239dc4c7e6d5f3823040a1076f0ecc405e8f99e1084b8857d74294718"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_willow/d1.png",
+    "sha256": "2b1fe70140f66f840366d946da2392de77fbdf2613fcb99c8fe5ce3808df0107"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_willow/d2.png",
+    "sha256": "b49e275dfb00531b030285f5d78eeda457af1b3b0fcdf23e8021cdc117c1132c"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_willow/d3.png",
+    "sha256": "4b01354dd92f4b060ca56705d818f2b3beb3e2a261b49d4ab7c4659f91ac66ff"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_shrubs/d0.png",
+    "sha256": "01dd1ddc9ac82221473b723c21606eb7986b3b57911310d25a3fa1b0217d782e"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_shrubs/d1.png",
+    "sha256": "e2fa655de122e605ef22fe082bfce862e3b978e96fd9a1958a2624bd5b9d84e7"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_shrubs/d2.png",
+    "sha256": "3ecae410ac3ca93f6964c6c39cd3c2e22d4d4d96b0ec1cc19906fce63c75423f"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_shrubs/d3.png",
+    "sha256": "b34c5b8d727092dc9e6f19fe27712601586612a7f923b44a844df359778b5bfc"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_rocks/d0.png",
+    "sha256": "bb5d710cecceb1cbd4a75240622297fb33883b566013d8d71ff5f3fd73743e55"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_rocks/d1.png",
+    "sha256": "a1ba6d8646aa0435a4bf21f22f557eae0dc0e3951d76be564c6307a76ef2c4db"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_rocks/d2.png",
+    "sha256": "67a1189a505805ef43b2392bc6a1bf0845b3d9f45ff3b9844da4258903301924"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_rocks/d3.png",
+    "sha256": "7ea66286880980134aab988819fddf335b406918cf96a2bd8168826b789934d0"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_flower_pot/d0.png",
+    "sha256": "4c7270ad6fc09bbbf9434aecfc6f1ba3a1a962284c0368fca2ab8bd9f61917f2"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_flower_pot/d1.png",
+    "sha256": "b2a5116f828b2091560191a491e90da2a9dc1751c4ce32a2830381ef8f901a32"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_flower_pot/d2.png",
+    "sha256": "82dfe08ea6e2df0f6a116b31447623c710fc4bf66c4f4e890ef4701498dc603f"
+  },
+  {
+    "path": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/nature-batch-20261003/candidates/env_flower_pot/d3.png",
+    "sha256": "da81b3bc5fdee4bac5dbba92dab8ad8f6373cb6205f518155cdde4020c3b93f0"
+  }
+]

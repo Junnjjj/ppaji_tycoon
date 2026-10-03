@@ -1,0 +1,134 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "env_pine",
+      "check": "fixed asymmetric multilobe crown and scaffold",
+      "count": 7,
+      "branch_count": 9,
+      "passed": true
+    },
+    {
+      "id": "env_pine",
+      "check": "saved RGB diversity and changing rotated silhouette",
+      "rgb_colors": [
+        8723,
+        8253,
+        7982,
+        8155
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_deciduous",
+      "check": "fixed asymmetric multilobe crown and scaffold",
+      "count": 7,
+      "branch_count": 9,
+      "passed": true
+    },
+    {
+      "id": "env_deciduous",
+      "check": "saved RGB diversity and changing rotated silhouette",
+      "rgb_colors": [
+        7869,
+        7730,
+        7245,
+        7457
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_willow",
+      "check": "fixed asymmetric multilobe crown and scaffold",
+      "count": 15,
+      "branch_count": 17,
+      "passed": true
+    },
+    {
+      "id": "env_willow",
+      "check": "ten attached descending stems and elongated pendant cores",
+      "passed": true
+    },
+    {
+      "id": "env_willow",
+      "check": "saved RGB diversity and changing rotated silhouette",
+      "rgb_colors": [
+        11097,
+        11661,
+        11215,
+        11062
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_shrubs",
+      "check": "three rooted unequal shrub lobes",
+      "passed": true
+    },
+    {
+      "id": "env_shrubs",
+      "check": "saved RGB diversity and changing rotated silhouette",
+      "rgb_colors": [
+        2714,
+        2810,
+        2914,
+        2544
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_rocks",
+      "check": "four unequal individually closed boulders, non-axis facet vertices",
+      "radii": [
+        [
+          0.44179999999999997,
+          0.35719999999999996,
+          5.6000000000000005
+        ],
+        [
+          0.2914,
+          0.27259999999999995,
+          3.6
+        ],
+        [
+          0.1974,
+          0.17859999999999998,
+          2.08
+        ],
+        [
+          0.20679999999999998,
+          0.1974,
+          2.32
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_rocks",
+      "check": "saved RGB diversity and changing rotated silhouette",
+      "rgb_colors": [
+        1585,
+        1753,
+        1678,
+        1679
+      ],
+      "passed": true
+    },
+    {
+      "id": "env_flower_pot",
+      "check": "saved RGB diversity and changing rotated silhouette",
+      "rgb_colors": [
+        1193,
+        1114,
+        1202,
+        1232
+      ],
+      "passed": true
+    }
+  ],
+  "limits": [
+    "AABB joints are broad-phase evidence only",
+    "Four individual rocks may touch or separate in projection; no exact rock collision claim",
+    "Pixel diversity is not visual quality certification"
+  ]
+}

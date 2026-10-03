@@ -1,0 +1,142 @@
+[
+  {
+    "id": "boarding_dock",
+    "d": 0,
+    "sha256": "566e16717138739f43fae08d7e59aacd9e2708c90463113451dbfc7b4dfbe430",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "boarding_dock",
+    "d": 1,
+    "sha256": "25092ce5e7560bf9aa16f4d61de0a9bb383c5ba493a49e82628ba30ca644dded",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "boarding_dock",
+    "d": 2,
+    "sha256": "303aae78cf6d539d67f891ff45e60cdf15966c34065aa109ad65bc3ad78c3769",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "boarding_dock",
+    "d": 3,
+    "sha256": "9af75cc573375beddaf57ea7f4248fb6c3823333fd29a6f6223d6017ed314181",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "float_deck",
+    "d": 0,
+    "sha256": "367620ec86071a590b2d5881f68567cb061c904555b18fac04201393430962f5",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "float_deck",
+    "d": 1,
+    "sha256": "3573c9d367a62b669658fc18b08a01069295971e93f4d5bd026cccb1c4f8c4db",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "float_deck",
+    "d": 2,
+    "sha256": "3c8ce08255ab52b2cc24a741d1e854f49247b6e71d168410ddb73c0e960e8b3b",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "float_deck",
+    "d": 3,
+    "sha256": "2632e8b21da5fddde3f96d67964d17a3848945a9d4777984904d65a05fbe7e59",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_jump_tower",
+    "d": 0,
+    "sha256": "8bc07859b99baccc25a756c47d99eed95bd4211c5595340789f1bf451e537486",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_jump_tower",
+    "d": 1,
+    "sha256": "81f1ac1e5af0967c71f78806225fcb5b9d05185a446077b803699c052539ba7d",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_jump_tower",
+    "d": 2,
+    "sha256": "5815968727538a7da31066eca23ff0f18b39b191aa90f546066f3db069815148",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "rig_jump_tower",
+    "d": 3,
+    "sha256": "a19f3fa8d81d11d01fb7cb95d75b756417a21d6924d7e34e792d1a59e90f0ed7",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "diving",
+    "d": 0,
+    "sha256": "51c9c85edadbb7370efe2125f1109fcb457b6d5f038de98629804d8089b62629",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "diving",
+    "d": 1,
+    "sha256": "f4de6c39a42059c4e902ec9b4fea3f8295b99dc3e3e0ff9156425e9dcaaa193f",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "diving",
+    "d": 2,
+    "sha256": "add2b201cd0ed98455b3835350a0de6bcb5c97309aa95c0298cffe397cf64985",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "diving",
+    "d": 3,
+    "sha256": "4953f87ed6f2a64eb756d426054fd407cb07898845e9af1fac6e5ba68a503f61",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "watchtower",
+    "d": 0,
+    "sha256": "036a06192bcec2101edf8ceb40621e1b79a830f2544c732d2038de88f8e63557",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "watchtower",
+    "d": 1,
+    "sha256": "e99f8c8bc997302f9a8ea28ed2b1cb6e083326c85ecb37e0fa2ee73258d389bb",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "watchtower",
+    "d": 2,
+    "sha256": "9d3e053ed45bd4c2cb1706345ac8818d8d68182b828c251bfa3fae9522db8d7e",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "watchtower",
+    "d": 3,
+    "sha256": "a1b9bc9c44f7d5189844c79bf4a5ca44d9bcdff3ddd42799a2d1322bcbd32dbc",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

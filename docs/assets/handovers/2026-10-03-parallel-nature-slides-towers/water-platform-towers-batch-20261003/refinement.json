@@ -1,0 +1,199 @@
+{
+  "status": "PASS",
+  "task_id": "task_dbeb01552dfd",
+  "dispatch_id": "ctx_6d1126edee76",
+  "main_modified": false,
+  "runtime_qa": "NOT_RUN_COORDINATOR_OWNED",
+  "canonical_watchtower_ground_scale": 1.08,
+  "height_scale": 1,
+  "ladder_rungs": 4,
+  "leg_radius_before_scale": 0.075,
+  "water_grip_radius": 0.67,
+  "closed_parts": 281,
+  "declared_aabb_joints": 402,
+  "saved_straight_edges": 80,
+  "unmeasured_edges_or_scopes": 52,
+  "isolated_views": 56,
+  "transparent_samples": 69,
+  "exact_ladder_axis_joints": 8,
+  "ladder_pixel_samples": {
+    "id": "watchtower--ladder",
+    "frames": [
+      {
+        "d": 0,
+        "opening_samples": [
+          {
+            "world": [
+              0.5,
+              0.96872,
+              6.73
+            ],
+            "pixel": [
+              354,
+              419
+            ],
+            "transparent": true
+          },
+          {
+            "world": [
+              0.5,
+              0.9212,
+              10.950000000000001
+            ],
+            "pixel": [
+              357,
+              401
+            ],
+            "transparent": true
+          },
+          {
+            "world": [
+              0.5,
+              0.87368,
+              15.17
+            ],
+            "pixel": [
+              360,
+              382
+            ],
+            "transparent": true
+          }
+        ],
+        "visible_air_count": 3
+      },
+      {
+        "d": 1,
+        "opening_samples": [
+          {
+            "world": [
+              0.5,
+              0.96872,
+              6.73
+            ],
+            "pixel": [
+              414,
+              419
+            ],
+            "transparent": true
+          },
+          {
+            "world": [
+              0.5,
+              0.9212,
+              10.950000000000001
+            ],
+            "pixel": [
+              411,
+              401
+            ],
+            "transparent": true
+          },
+          {
+            "world": [
+              0.5,
+              0.87368,
+              15.17
+            ],
+            "pixel": [
+              408,
+              382
+            ],
+            "transparent": true
+          }
+        ],
+        "visible_air_count": 3
+      },
+      {
+        "d": 2,
+        "opening_samples": [
+          {
+            "world": [
+              0.5,
+              0.96872,
+              6.73
+            ],
+            "pixel": [
+              414,
+              389
+            ],
+            "transparent": true
+          },
+          {
+            "world": [
+              0.5,
+              0.9212,
+              10.950000000000001
+            ],
+            "pixel": [
+              411,
+              374
+            ],
+            "transparent": false
+          },
+          {
+            "world": [
+              0.5,
+              0.87368,
+              15.17
+            ],
+            "pixel": [
+              408,
+              358
+            ],
+            "transparent": true
+          }
+        ],
+        "visible_air_count": 2
+      },
+      {
+        "d": 3,
+        "opening_samples": [
+          {
+            "world": [
+              0.5,
+              0.96872,
+              6.73
+            ],
+            "pixel": [
+              354,
+              389
+            ],
+            "transparent": true
+          },
+          {
+            "world": [
+              0.5,
+              0.9212,
+              10.950000000000001
+            ],
+            "pixel": [
+              357,
+              374
+            ],
+            "transparent": false
+          },
+          {
+            "world": [
+              0.5,
+              0.87368,
+              15.17
+            ],
+            "pixel": [
+              360,
+              358
+            ],
+            "transparent": false
+          }
+        ],
+        "visible_air_count": 1
+      }
+    ]
+  },
+  "pre_refinement": "pre-refinement-20261003/",
+  "remaining_differences": [
+    "Kept watchtower height plus larger cream caps: alpha height1.064\u20131.107source.",
+    "Three of twelve ladder gap-center samples remain covered by ink;9samples transparent and eachviewhasair.",
+    "Original is softer/more irregularly painted; full-resolution RGB and fixed2px line finish remain.",
+    "No AABB exact-collision, art95 or runtime certification."
+  ]
+}

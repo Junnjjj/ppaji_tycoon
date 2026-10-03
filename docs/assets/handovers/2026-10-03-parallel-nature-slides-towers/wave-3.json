@@ -1,0 +1,55 @@
+{
+  "run": "run_fc9dbd55012a",
+  "groups": {
+    "nature-batch-20261003": [
+      "env_pine",
+      "env_deciduous",
+      "env_willow",
+      "env_shrubs",
+      "env_rocks",
+      "env_flower_pot"
+    ],
+    "water-slides-batch-20261003": [
+      "ppaji_slide",
+      "module_rig_slide",
+      "module_rig_mini_slide",
+      "module_rig_slidedock"
+    ],
+    "water-platform-towers-batch-20261003": [
+      "boarding_dock",
+      "float_deck",
+      "rig_jump_tower",
+      "diving",
+      "watchtower"
+    ]
+  },
+  "dispatches": {
+    "nature-batch-20261003": "ctx_41095014286a",
+    "water-slides-batch-20261003": "ctx_d5efc504062c",
+    "water-platform-towers-batch-20261003": "ctx_6d1126edee76"
+  },
+  "applied_before_wave": 69,
+  "main_previous_commit": "1999004",
+  "status": "applied_validated",
+  "settled_released": [
+    "ctx_41095014286a",
+    "ctx_d5efc504062c",
+    "ctx_6d1126edee76"
+  ],
+  "applied_packs": [
+    "nature-batch-20261003",
+    "water-slides-batch-20261003",
+    "water-platform-towers-batch-20261003"
+  ],
+  "applied_current": 84,
+  "superseded_settled": [
+    "ctx_fa607e3aac30",
+    "ctx_3d64ba3391b6",
+    "ctx_1ca5d829544d"
+  ],
+  "remaining": 16,
+  "tests_passed": 21,
+  "packed_frames": 60,
+  "native_frames": 36,
+  "native_alias": "diving_tower -> diving"
+}

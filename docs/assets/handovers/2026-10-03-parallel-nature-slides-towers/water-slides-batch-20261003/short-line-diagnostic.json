@@ -1,0 +1,104 @@
+{
+  "p": [
+    783.04,
+    590.3092
+  ],
+  "q": [
+    804.8,
+    579.4292
+  ],
+  "samples": [
+    [
+      787,
+      589
+    ],
+    [
+      788,
+      589
+    ],
+    [
+      789,
+      589
+    ],
+    [
+      790,
+      589
+    ],
+    [
+      791,
+      589
+    ],
+    [
+      792,
+      587
+    ],
+    [
+      793,
+      587
+    ],
+    [
+      794,
+      587
+    ],
+    [
+      795,
+      587
+    ],
+    [
+      796,
+      585
+    ],
+    [
+      797,
+      585
+    ],
+    [
+      798,
+      585
+    ],
+    [
+      799,
+      585
+    ],
+    [
+      800,
+      583
+    ]
+  ],
+  "source_corner": [
+    6.395,
+    1.66,
+    -2.4
+  ],
+  "target_corner": [
+    6.395,
+    1.3199999999999998,
+    -2.4
+  ],
+  "actual_mesh_edge": [
+    [
+      6.395,
+      1.615,
+      -2.4
+    ],
+    [
+      6.395,
+      1.365,
+      -2.4
+    ]
+  ],
+  "actual_projected_edge": [
+    [
+      785.92,
+      588.8692000000001
+    ],
+    [
+      801.92,
+      580.8692000000001
+    ]
+  ],
+  "actual_span": 16,
+  "virtual_aabb_span": 21.75999999999999,
+  "retained_minimum_span": 20,
+  "diagnosis": "Virtual AABB spans21.76px; genuine straight ground edge spans16px after two2.88px chamfers, below pre-existing20px criterion. Old14samples include the rounded corner/dilated flat run; not a certified straight-edge fit. Actual saved straight run shows regular4pixel-wide/2pixel-high tread steps, not an authored bend. No candidate pixels or tolerances changed."
+}

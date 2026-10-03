@@ -1,0 +1,170 @@
+[
+  {
+    "id": "env_pine",
+    "d": 0,
+    "sha256": "c15604fa43c4880f892e2d2d23faceb7fd4f9bc190d5b24757c8d86eadf349c7",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_pine",
+    "d": 1,
+    "sha256": "a7cc87ffaaed3d19f305ab78f344011b620099d8b5e8bdddb9d94e36f79e5c63",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_pine",
+    "d": 2,
+    "sha256": "7dafdc4ea7dc5d54ee470cafd1933e7ba36d0156c93a0265216a49ff500b3891",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_pine",
+    "d": 3,
+    "sha256": "d7e50a6c049bf83514bdefac07bd2fcb5c9e0262467a006e93926753126b8571",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_deciduous",
+    "d": 0,
+    "sha256": "64718b720bea60c309a9fee3de753289f69a3f049337fa13f09f3e3704878973",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_deciduous",
+    "d": 1,
+    "sha256": "3e27fcd6c44defef4efa037078794b4866d45e93d9fecc9dbc5c1eeac6ad8cd1",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_deciduous",
+    "d": 2,
+    "sha256": "57cd8c0bf82e6003008384f5c137d58a3b9e89c4077deca77fcfed869c658eb5",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_deciduous",
+    "d": 3,
+    "sha256": "3bfaeeedc5b0f3bd82e0aed0924db77f04dc7c22efaa6b95fd0e54e6406f4b75",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_willow",
+    "d": 0,
+    "sha256": "fbd90971f75d7307c5a567db0d6e48d0bc82238b2ddfa391abe489a297f02f8c",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_willow",
+    "d": 1,
+    "sha256": "ff751d1bf550e9988d1a9b48c05749b937fa4871de97d3cbdf4d150769253624",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_willow",
+    "d": 2,
+    "sha256": "765d7992cd81e2c067515652c07530197705c65c06a1938e48b22a2081780c6c",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_willow",
+    "d": 3,
+    "sha256": "5d13b52b07c3e6b6818687546621cf2aafdc7d13940568c066db874ae2e33f92",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_shrubs",
+    "d": 0,
+    "sha256": "0643c98e6a9af4ed36a990076d6013ece276370670e0b263f155810bd1358170",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_shrubs",
+    "d": 1,
+    "sha256": "695959c661cb747e7be0f87f41506eb855a2d26e20146398c1c8bda1dc5630fd",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_shrubs",
+    "d": 2,
+    "sha256": "c91301abc9e79ac364431f1971fe3081a6acca6b65a74b21b4755e2df0a49b19",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_shrubs",
+    "d": 3,
+    "sha256": "8ddccb3ad9a30d75eb1b3bb1b38ca3264a6f91c209f503debcf031dfd8784d3f",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_rocks",
+    "d": 0,
+    "sha256": "0293643717797d5fe5b607d50cf2666b4038f2c9dc95abf2317e61818b27562a",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_rocks",
+    "d": 1,
+    "sha256": "17ce8032aa1e171a48667a8b680092822ecfae23245c23d05359e0062f936b4d",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_rocks",
+    "d": 2,
+    "sha256": "50dc9ba30e2be750dc5a7e8ea4a12ad7ac26f15b7b76a07b311c88d7be87fdf8",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_rocks",
+    "d": 3,
+    "sha256": "80b4f0737dee88e488b36d3fe6acd769f5b4be8cd3805daa0a47d8513c08f73f",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_flower_pot",
+    "d": 0,
+    "sha256": "407e236a5569b520c94ef7e5bc2e3bf46a5db9092c7e659fcb8536311ca3fba8",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_flower_pot",
+    "d": 1,
+    "sha256": "e4b8b94c8d6271bc978d0f451cb98161a130da4c35f0ee9c19aae75664186900",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_flower_pot",
+    "d": 2,
+    "sha256": "13f94f02382bd2ad22e7dff28d2bb89c9e2fecd8daed2e9d2ea639223aaa57d2",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  },
+  {
+    "id": "env_flower_pot",
+    "d": 3,
+    "sha256": "ac8827713ac4e039f6d401105137a14419ed187a0d566dee083c255078c18eed",
+    "http_hash_exact": true,
+    "rgba_exact": true
+  }
+]

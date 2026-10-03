@@ -1,0 +1,122 @@
+[
+  {
+    "id": "boarding_dock",
+    "d": 0,
+    "file": "fac_boarding_dock_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "boarding_dock",
+    "d": 1,
+    "file": "fac_boarding_dock_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "boarding_dock",
+    "d": 2,
+    "file": "fac_boarding_dock_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "boarding_dock",
+    "d": 3,
+    "file": "fac_boarding_dock_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "float_deck",
+    "d": 0,
+    "file": "fac_float_deck_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "float_deck",
+    "d": 1,
+    "file": "fac_float_deck_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "float_deck",
+    "d": 2,
+    "file": "fac_float_deck_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "float_deck",
+    "d": 3,
+    "file": "fac_float_deck_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_jump_tower",
+    "d": 0,
+    "file": "fac_rig_jump_tower_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_jump_tower",
+    "d": 1,
+    "file": "fac_rig_jump_tower_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_jump_tower",
+    "d": 2,
+    "file": "fac_rig_jump_tower_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "rig_jump_tower",
+    "d": 3,
+    "file": "fac_rig_jump_tower_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "diving",
+    "d": 0,
+    "file": "fac_diving_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "diving",
+    "d": 1,
+    "file": "fac_diving_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "diving",
+    "d": 2,
+    "file": "fac_diving_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "diving",
+    "d": 3,
+    "file": "fac_diving_3_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "watchtower",
+    "d": 0,
+    "file": "fac_watchtower_0_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "watchtower",
+    "d": 1,
+    "file": "fac_watchtower_1_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "watchtower",
+    "d": 2,
+    "file": "fac_watchtower_2_accepted_20261003.webp",
+    "exact": true
+  },
+  {
+    "id": "watchtower",
+    "d": 3,
+    "file": "fac_watchtower_3_accepted_20261003.webp",
+    "exact": true
+  }
+]

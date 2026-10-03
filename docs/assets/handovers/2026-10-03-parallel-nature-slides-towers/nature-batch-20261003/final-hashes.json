@@ -1,0 +1,421 @@
+{
+  "files": {
+    "HANDOVER.md": {
+      "sha256": "7916e333da2fc40886785bcabd948d142f27e14e8d92ff1f7b3e5c21e35b22c7",
+      "bytes": 5398
+    },
+    "assembly.json": {
+      "sha256": "6352eba246d4d452a4d0da3fe1e778e1c3839833032faaf89a9962f5448690f3",
+      "bytes": 1424157
+    },
+    "bootstrap.py": {
+      "sha256": "eb04f8e196f1821b209f8031e08d9b54f075a37e4101d952a362a63d6f0f5c8c",
+      "bytes": 285
+    },
+    "build-report.py": {
+      "sha256": "2fe35a6c821d90f9ed661ec0e698f8a8bcea6ec5a1337ac7d6fe0519334bafbc",
+      "bytes": 2461
+    },
+    "build.py": {
+      "sha256": "5d16d6e6a1b9eaeb4bb44d9aa452b3f9fd4ed18e39ad6d5a4e1d9fe844227558",
+      "bytes": 9575
+    },
+    "candidates/env_deciduous/d0.png": {
+      "sha256": "de729d94f837763aa547f43d3f5347de04ba916084fd8c558bb4c88d313e6a16",
+      "bytes": 47757
+    },
+    "candidates/env_deciduous/d1.png": {
+      "sha256": "5cfc6446ac722c0b1baf587716027e0fe950ffaee78509c7022a89eb6641451c",
+      "bytes": 48160
+    },
+    "candidates/env_deciduous/d2.png": {
+      "sha256": "ed4b15e9cd0d54261a7bc510de4eabea034f73333dc1e5acae334a5c5f4126e6",
+      "bytes": 44193
+    },
+    "candidates/env_deciduous/d3.png": {
+      "sha256": "bbb96ac96e749a55a2b5019a6e0afc32737d0a269ae670b35a253fe2c4353d8e",
+      "bytes": 45629
+    },
+    "candidates/env_deciduous-assembly.json": {
+      "sha256": "1d03b166ada6be27fbbd1e4928b05262208a2984243e25b17fff2f0d9e4b003a",
+      "bytes": 4551126
+    },
+    "candidates/env_deciduous-surface-board.png": {
+      "sha256": "6c74a52536bf4adc0affd7d1008ba53f402b9320ba4437efac37f8b917ac644c",
+      "bytes": 156922
+    },
+    "candidates/env_flower_pot/d0.png": {
+      "sha256": "4c7270ad6fc09bbbf9434aecfc6f1ba3a1a962284c0368fca2ab8bd9f61917f2",
+      "bytes": 5728
+    },
+    "candidates/env_flower_pot/d1.png": {
+      "sha256": "b2a5116f828b2091560191a491e90da2a9dc1751c4ce32a2830381ef8f901a32",
+      "bytes": 5814
+    },
+    "candidates/env_flower_pot/d2.png": {
+      "sha256": "82dfe08ea6e2df0f6a116b31447623c710fc4bf66c4f4e890ef4701498dc603f",
+      "bytes": 5809
+    },
+    "candidates/env_flower_pot/d3.png": {
+      "sha256": "da81b3bc5fdee4bac5dbba92dab8ad8f6373cb6205f518155cdde4020c3b93f0",
+      "bytes": 5692
+    },
+    "candidates/env_flower_pot-assembly.json": {
+      "sha256": "a07d808969ea4935cc07a02ed04ec7a42de702d60dfae8f3bec0d0158894e923",
+      "bytes": 489430
+    },
+    "candidates/env_flower_pot-surface-board.png": {
+      "sha256": "3a75dfd935eb321f999599fa259da9b0dfb88f66ec5afaf216e7afe20b6bf54d",
+      "bytes": 21028
+    },
+    "candidates/env_pine/d0.png": {
+      "sha256": "e36c4ecadbcfe23ce5696e4d67aa18f5dd3705a83b74689c50ff9b892c31c723",
+      "bytes": 52245
+    },
+    "candidates/env_pine/d1.png": {
+      "sha256": "a8547835e9271605da58dccd98c26210e4e859369dce71529ea0b5ac3379bd68",
+      "bytes": 50079
+    },
+    "candidates/env_pine/d2.png": {
+      "sha256": "e22b1e970555632012165964c145c04ce8a073e97e6099cdececd94aa96f4078",
+      "bytes": 45910
+    },
+    "candidates/env_pine/d3.png": {
+      "sha256": "a1557e6f8e2338b2a662e77028ff20d738ffa9c41198d20612dc9f19b59c7ebf",
+      "bytes": 47841
+    },
+    "candidates/env_pine-assembly.json": {
+      "sha256": "bfc7cdc4438fd53b3e764f8a2eab4bb9fa88f2989438f790d37fed167e8a4181",
+      "bytes": 4549394
+    },
+    "candidates/env_pine-surface-board.png": {
+      "sha256": "11bfbac17d64e445fca15dac8d4abd49403b1a74523534ee09ae2dd53eee66d0",
+      "bytes": 165322
+    },
+    "candidates/env_rocks/d0.png": {
+      "sha256": "bb5d710cecceb1cbd4a75240622297fb33883b566013d8d71ff5f3fd73743e55",
+      "bytes": 13958
+    },
+    "candidates/env_rocks/d1.png": {
+      "sha256": "a1ba6d8646aa0435a4bf21f22f557eae0dc0e3951d76be564c6307a76ef2c4db",
+      "bytes": 14472
+    },
+    "candidates/env_rocks/d2.png": {
+      "sha256": "67a1189a505805ef43b2392bc6a1bf0845b3d9f45ff3b9844da4258903301924",
+      "bytes": 14040
+    },
+    "candidates/env_rocks/d3.png": {
+      "sha256": "7ea66286880980134aab988819fddf335b406918cf96a2bd8168826b789934d0",
+      "bytes": 13462
+    },
+    "candidates/env_rocks-assembly.json": {
+      "sha256": "c4b54a36c1df31af04912e743fc12238da71b064e31c37d27f6a5aab53a7fab1",
+      "bytes": 3453458
+    },
+    "candidates/env_rocks-surface-board.png": {
+      "sha256": "3dea39dde8acc50a183f57a1e6775b511936d79d96c6040a1599d11683c1d5b8",
+      "bytes": 48341
+    },
+    "candidates/env_shrubs/d0.png": {
+      "sha256": "01dd1ddc9ac82221473b723c21606eb7986b3b57911310d25a3fa1b0217d782e",
+      "bytes": 11454
+    },
+    "candidates/env_shrubs/d1.png": {
+      "sha256": "e2fa655de122e605ef22fe082bfce862e3b978e96fd9a1958a2624bd5b9d84e7",
+      "bytes": 12035
+    },
+    "candidates/env_shrubs/d2.png": {
+      "sha256": "3ecae410ac3ca93f6964c6c39cd3c2e22d4d4d96b0ec1cc19906fce63c75423f",
+      "bytes": 12041
+    },
+    "candidates/env_shrubs/d3.png": {
+      "sha256": "b34c5b8d727092dc9e6f19fe27712601586612a7f923b44a844df359778b5bfc",
+      "bytes": 10869
+    },
+    "candidates/env_shrubs-assembly.json": {
+      "sha256": "0dceb23199ab9e35426bcb435062de90885c5144cbc450a1e93782c67b18700b",
+      "bytes": 1530522
+    },
+    "candidates/env_shrubs-surface-board.png": {
+      "sha256": "c1b90332c0f5227aedb909892472919b10ce9efa2331f670452654a8ee51423b",
+      "bytes": 40371
+    },
+    "candidates/env_willow/d0.png": {
+      "sha256": "ca7d4e3239dc4c7e6d5f3823040a1076f0ecc405e8f99e1084b8857d74294718",
+      "bytes": 65048
+    },
+    "candidates/env_willow/d1.png": {
+      "sha256": "2b1fe70140f66f840366d946da2392de77fbdf2613fcb99c8fe5ce3808df0107",
+      "bytes": 66480
+    },
+    "candidates/env_willow/d2.png": {
+      "sha256": "b49e275dfb00531b030285f5d78eeda457af1b3b0fcdf23e8021cdc117c1132c",
+      "bytes": 64877
+    },
+    "candidates/env_willow/d3.png": {
+      "sha256": "4b01354dd92f4b060ca56705d818f2b3beb3e2a261b49d4ab7c4659f91ac66ff",
+      "bytes": 66439
+    },
+    "candidates/env_willow-assembly.json": {
+      "sha256": "59393853e62a4fd53db22aa8e73474efc0d810b24da7f2a9a00d1311fdea4671",
+      "bytes": 7768721
+    },
+    "candidates/env_willow-surface-board.png": {
+      "sha256": "7c30f338c6fa252da9890b8f50f1b165555558096da651c8ecdc97557f2492a2",
+      "bytes": 225084
+    },
+    "candidates/surface-lines.json": {
+      "sha256": "d2b0ff1505f1337858fd52c7f8957985f9b9bf38b0e88874a92919fc35946a14",
+      "bytes": 115252688
+    },
+    "env_deciduous-board.png": {
+      "sha256": "b341a67e19e92a0690d878fe589878c8effc641891a5ef0f075e5e498663e178",
+      "bytes": 549000
+    },
+    "env_flower_pot-board.png": {
+      "sha256": "00b419387a9447108fecc46cad1b1b35abed519c65601962e2b898682a8e8ad7",
+      "bytes": 104053
+    },
+    "env_pine-board.png": {
+      "sha256": "1ce5d1ffb9511224654a1f84e18e7253ee395d18127e2d362e5a3f093e59ffb5",
+      "bytes": 585411
+    },
+    "env_rocks-board.png": {
+      "sha256": "fcdcb799091d10747bea47f2fa1554c08c6d8aae1a3f02d3b5f125e4f2661567",
+      "bytes": 213082
+    },
+    "env_shrubs-board.png": {
+      "sha256": "8a0281fbd77c63246bd89f11f2dc8aca96a1ebeefaae3e4fb422086b58a0b847",
+      "bytes": 162252
+    },
+    "env_willow-board.png": {
+      "sha256": "702425fdd8bfa429041bae68f081cc4fd79c9e251428760d4f3cc4117b93db26",
+      "bytes": 728682
+    },
+    "first-qa-failures.json": {
+      "sha256": "b33a36946b93d5e7b3388af75b2ff920d78d65c8359edebb84a83f80ad7fa868",
+      "bytes": 1197088
+    },
+    "first-sparse-willow.png": {
+      "sha256": "0f8b895541a25b726c69fffb1ba6a85af9522b0248c8c9ff81ceb520f6a74239",
+      "bytes": 169832
+    },
+    "geometry.py": {
+      "sha256": "28bb52bd88d77717d30e529fca712397961d647548ed783359c9e81909812ace",
+      "bytes": 4013
+    },
+    "hash-pack.py": {
+      "sha256": "20dff4fd818ad4815a0b8209cf30b39422232f4a14dec3d244f98ad2ead6fc54",
+      "bytes": 617
+    },
+    "index.html": {
+      "sha256": "2dde55ab8025c76713d23866cef215dd85ccdac3d16f42e6976fd0f43bb7bbce",
+      "bytes": 1316
+    },
+    "line_finish.py": {
+      "sha256": "31f6f7cae02896a8c3715cbfbdb061e1cbb97683ffd7c7c2a7ef13adfd3f3544",
+      "bytes": 2227
+    },
+    "materials.py": {
+      "sha256": "287c88ba7b14e05a4637e243f6010ca598e8d8dc3fc4181bafe93a367faed79b",
+      "bytes": 1174
+    },
+    "organic-qa.json": {
+      "sha256": "fc75e2edaf7c17a878691d4a9fe369f9f70c0bbb3256c722457ce816cf53e419",
+      "bytes": 2852
+    },
+    "original-inspection.png": {
+      "sha256": "9cd01479289ad417f6a9b95a55ab7f8d46d00fa7480b8fb23bf73fa495e59855",
+      "bytes": 380703
+    },
+    "overlays/env_deciduous-d0.png": {
+      "sha256": "de729d94f837763aa547f43d3f5347de04ba916084fd8c558bb4c88d313e6a16",
+      "bytes": 47757
+    },
+    "overlays/env_deciduous-d1.png": {
+      "sha256": "5cfc6446ac722c0b1baf587716027e0fe950ffaee78509c7022a89eb6641451c",
+      "bytes": 48160
+    },
+    "overlays/env_deciduous-d2.png": {
+      "sha256": "ed4b15e9cd0d54261a7bc510de4eabea034f73333dc1e5acae334a5c5f4126e6",
+      "bytes": 44193
+    },
+    "overlays/env_deciduous-d3.png": {
+      "sha256": "bbb96ac96e749a55a2b5019a6e0afc32737d0a269ae670b35a253fe2c4353d8e",
+      "bytes": 45629
+    },
+    "overlays/env_flower_pot-d0.png": {
+      "sha256": "1f75a0886d2626b90225fa30b2d373f833ccb47e2bab26425a85ecde3a7528d8",
+      "bytes": 5946
+    },
+    "overlays/env_flower_pot-d1.png": {
+      "sha256": "56fbae498355c409f7db200b976384df7224a2b09328251459c347367984720b",
+      "bytes": 5961
+    },
+    "overlays/env_flower_pot-d2.png": {
+      "sha256": "83b0133b72f579a2ff4f1f738a51a77010638f1acddcbf4b93124bae85025cc8",
+      "bytes": 5987
+    },
+    "overlays/env_flower_pot-d3.png": {
+      "sha256": "97b6d481678b970fb9362a4247887f4aab4cc32a5862a504f7789c4fe3ebf817",
+      "bytes": 5923
+    },
+    "overlays/env_pine-d0.png": {
+      "sha256": "e36c4ecadbcfe23ce5696e4d67aa18f5dd3705a83b74689c50ff9b892c31c723",
+      "bytes": 52245
+    },
+    "overlays/env_pine-d1.png": {
+      "sha256": "a8547835e9271605da58dccd98c26210e4e859369dce71529ea0b5ac3379bd68",
+      "bytes": 50079
+    },
+    "overlays/env_pine-d2.png": {
+      "sha256": "e22b1e970555632012165964c145c04ce8a073e97e6099cdececd94aa96f4078",
+      "bytes": 45910
+    },
+    "overlays/env_pine-d3.png": {
+      "sha256": "a1557e6f8e2338b2a662e77028ff20d738ffa9c41198d20612dc9f19b59c7ebf",
+      "bytes": 47841
+    },
+    "overlays/env_rocks-d0.png": {
+      "sha256": "bb5d710cecceb1cbd4a75240622297fb33883b566013d8d71ff5f3fd73743e55",
+      "bytes": 13958
+    },
+    "overlays/env_rocks-d1.png": {
+      "sha256": "a1ba6d8646aa0435a4bf21f22f557eae0dc0e3951d76be564c6307a76ef2c4db",
+      "bytes": 14472
+    },
+    "overlays/env_rocks-d2.png": {
+      "sha256": "67a1189a505805ef43b2392bc6a1bf0845b3d9f45ff3b9844da4258903301924",
+      "bytes": 14040
+    },
+    "overlays/env_rocks-d3.png": {
+      "sha256": "7ea66286880980134aab988819fddf335b406918cf96a2bd8168826b789934d0",
+      "bytes": 13462
+    },
+    "overlays/env_shrubs-d0.png": {
+      "sha256": "01dd1ddc9ac82221473b723c21606eb7986b3b57911310d25a3fa1b0217d782e",
+      "bytes": 11454
+    },
+    "overlays/env_shrubs-d1.png": {
+      "sha256": "e2fa655de122e605ef22fe082bfce862e3b978e96fd9a1958a2624bd5b9d84e7",
+      "bytes": 12035
+    },
+    "overlays/env_shrubs-d2.png": {
+      "sha256": "3ecae410ac3ca93f6964c6c39cd3c2e22d4d4d96b0ec1cc19906fce63c75423f",
+      "bytes": 12041
+    },
+    "overlays/env_shrubs-d3.png": {
+      "sha256": "b34c5b8d727092dc9e6f19fe27712601586612a7f923b44a844df359778b5bfc",
+      "bytes": 10869
+    },
+    "overlays/env_willow-d0.png": {
+      "sha256": "ca7d4e3239dc4c7e6d5f3823040a1076f0ecc405e8f99e1084b8857d74294718",
+      "bytes": 65048
+    },
+    "overlays/env_willow-d1.png": {
+      "sha256": "2b1fe70140f66f840366d946da2392de77fbdf2613fcb99c8fe5ce3808df0107",
+      "bytes": 66480
+    },
+    "overlays/env_willow-d2.png": {
+      "sha256": "b49e275dfb00531b030285f5d78eeda457af1b3b0fcdf23e8021cdc117c1132c",
+      "bytes": 64877
+    },
+    "overlays/env_willow-d3.png": {
+      "sha256": "4b01354dd92f4b060ca56705d818f2b3beb3e2a261b49d4ab7c4659f91ac66ff",
+      "bytes": 66439
+    },
+    "plant-root-qa.json": {
+      "sha256": "48d486f73e806b01485eca684c0444085e0660cab404dbbe16afd821376d89b4",
+      "bytes": 492507
+    },
+    "rejected-dense-willow.png": {
+      "sha256": "a90c88ed050f84f96eda150429786eac5cb365224ce0d972be5ed13abc283f0f",
+      "bytes": 757738
+    },
+    "rejected-round-crowns/assembly.json": {
+      "sha256": "e805fe4a93308c570c5c425d3f5a9f06dcd4ce4c0bffe94df017e30bd6611179",
+      "bytes": 2002203
+    },
+    "rejected-round-crowns/env_deciduous-board.png": {
+      "sha256": "5084568382eb94105e944d16427a7437b64e6be1943628a9e888bfcb57909cd7",
+      "bytes": 513629
+    },
+    "rejected-round-crowns/env_flower_pot-board.png": {
+      "sha256": "766b4a207205708553a27a1ef76812e9fb3e2dc84220b719cacb7f5bc67072d9",
+      "bytes": 110935
+    },
+    "rejected-round-crowns/env_pine-board.png": {
+      "sha256": "50e880097bef851fa58bf7feabb0836d9aeedfa0afdf8fc6212a11c42cf06e13",
+      "bytes": 541054
+    },
+    "rejected-round-crowns/env_rocks-board.png": {
+      "sha256": "b5893c30bc39196d89b4fc81c08a8a5db7573e382beb9d15bea0b40917953b47",
+      "bytes": 210838
+    },
+    "rejected-round-crowns/env_shrubs-board.png": {
+      "sha256": "9559951d67c8b46425a3a81ddae52be629526767c93339fb8ae9ef4c3a004bc7",
+      "bytes": 161200
+    },
+    "rejected-round-crowns/env_willow-board.png": {
+      "sha256": "4aa0e486d612eb3d3713a559ba814877ff6a34bd6dabe38da2b25a63cf590f7e",
+      "bytes": 695893
+    },
+    "rejected-round-crowns/surface-spec.json": {
+      "sha256": "14840f1b551e643dc17c44982e7b45a7c4a9d7fb5649627dfd612d5f4b3c50c9",
+      "bytes": 29773838
+    },
+    "rejected-round-crowns/verification.json": {
+      "sha256": "a79c27a72698fd776396572ce81c67cf5c4f8266e9d679721754e5fa335bdad1",
+      "bytes": 1624156
+    },
+    "render.py": {
+      "sha256": "291c2459cfebedaef5b4175a9ab5238c3764e7e71e3db41f04c6c39ff160f0c8",
+      "bytes": 7193
+    },
+    "review.json": {
+      "sha256": "cf692fdebb3ebe8ae5d7b969ad03a22705332b8fcf4cd06d40cd839055499937",
+      "bytes": 21580
+    },
+    "setup-qa.py": {
+      "sha256": "40ee63ee39bc94deca77e9ad8e15b656aa7bc78270cc6cd17d3e72fece605226",
+      "bytes": 1874
+    },
+    "source-hashes.json": {
+      "sha256": "50372a6397c4588ab545b39b98ca34ccb94caaf551f4ad3c15b6322f89f7c28a",
+      "bytes": 2514
+    },
+    "source-size-review.json": {
+      "sha256": "97eb8901b2f51d18af0b940e88fbb57eedf2ec7c15573ba75995c071f12f5800",
+      "bytes": 21375
+    },
+    "surface-spec.json": {
+      "sha256": "ff9864018555d8420e8f91523cc26e9f2e074ed20ed04fd2b763f013c1f0f551",
+      "bytes": 22386142
+    },
+    "verification.json": {
+      "sha256": "191a496bb226563561dd40f0d175ef5d955610ee7bddd1f1898c83f51b4df139",
+      "bytes": 1145311
+    },
+    "verify-organic.py": {
+      "sha256": "50facadfef80cf8ba9b7c25bd36cfde675b9d33affdd018d4c93bbee38bba2fb",
+      "bytes": 2363
+    },
+    "verify-plant-roots.py": {
+      "sha256": "a4a179a95dc519f6f8e9c663d1363380fa1c4a8d431da76043df5150547b59c8",
+      "bytes": 1587
+    },
+    "verify.py": {
+      "sha256": "37f7f9cac7ad1b16624885390e96d169f89e6e53794f5992df03ad682ac9a976",
+      "bytes": 7333
+    },
+    "visual-review.json": {
+      "sha256": "518a5c6e43508c965f7e784527aa6848fadfb5d8079b1073d2ac51d326b11853",
+      "bytes": 2872
+    },
+    "willow-fine-stem-pixel-failure.json": {
+      "sha256": "9efc76a827014ab66a1e2f9bab8947493844d36fdae05116f3b9ace95c00c47c",
+      "bytes": 1145338
+    }
+  },
+  "candidate_count": 24
+}

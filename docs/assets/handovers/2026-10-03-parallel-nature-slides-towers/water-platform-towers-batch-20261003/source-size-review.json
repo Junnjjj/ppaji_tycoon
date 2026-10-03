@@ -1,0 +1,382 @@
+[
+  {
+    "id": "boarding_dock",
+    "d": 0,
+    "original_bbox": [
+      159,
+      243,
+      353,
+      355
+    ],
+    "candidate_bbox": [
+      160,
+      244,
+      352,
+      356
+    ],
+    "width_ratio": 0.9896907216494846,
+    "height_ratio": 1.0,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "boarding_dock",
+    "d": 1,
+    "original_bbox": [
+      159,
+      242,
+      353,
+      355
+    ],
+    "candidate_bbox": [
+      160,
+      244,
+      352,
+      356
+    ],
+    "width_ratio": 0.9896907216494846,
+    "height_ratio": 0.9911504424778761,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "boarding_dock",
+    "d": 2,
+    "original_bbox": [
+      159,
+      240,
+      353,
+      355
+    ],
+    "candidate_bbox": [
+      160,
+      244,
+      352,
+      356
+    ],
+    "width_ratio": 0.9896907216494846,
+    "height_ratio": 0.9739130434782609,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "boarding_dock",
+    "d": 3,
+    "original_bbox": [
+      159,
+      239,
+      353,
+      355
+    ],
+    "candidate_bbox": [
+      160,
+      244,
+      352,
+      356
+    ],
+    "width_ratio": 0.9896907216494846,
+    "height_ratio": 0.9655172413793104,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "float_deck",
+    "d": 0,
+    "original_bbox": [
+      191,
+      258,
+      320,
+      339
+    ],
+    "candidate_bbox": [
+      192,
+      258,
+      320,
+      340
+    ],
+    "width_ratio": 0.9922480620155039,
+    "height_ratio": 1.0123456790123457,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "float_deck",
+    "d": 1,
+    "original_bbox": [
+      191,
+      258,
+      320,
+      339
+    ],
+    "candidate_bbox": [
+      192,
+      258,
+      320,
+      340
+    ],
+    "width_ratio": 0.9922480620155039,
+    "height_ratio": 1.0123456790123457,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "float_deck",
+    "d": 2,
+    "original_bbox": [
+      191,
+      258,
+      320,
+      339
+    ],
+    "candidate_bbox": [
+      192,
+      258,
+      320,
+      340
+    ],
+    "width_ratio": 0.9922480620155039,
+    "height_ratio": 1.0123456790123457,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "float_deck",
+    "d": 3,
+    "original_bbox": [
+      191,
+      258,
+      320,
+      339
+    ],
+    "candidate_bbox": [
+      192,
+      258,
+      320,
+      340
+    ],
+    "width_ratio": 0.9922480620155039,
+    "height_ratio": 1.0123456790123457,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "rig_jump_tower",
+    "d": 0,
+    "original_bbox": [
+      133,
+      122,
+      331,
+      368
+    ],
+    "candidate_bbox": [
+      134,
+      104,
+      328,
+      364
+    ],
+    "width_ratio": 0.9797979797979798,
+    "height_ratio": 1.056910569105691,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "rig_jump_tower",
+    "d": 1,
+    "original_bbox": [
+      172,
+      122,
+      380,
+      368
+    ],
+    "candidate_bbox": [
+      176,
+      122,
+      368,
+      368
+    ],
+    "width_ratio": 0.9230769230769231,
+    "height_ratio": 1.0,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "rig_jump_tower",
+    "d": 2,
+    "original_bbox": [
+      180,
+      141,
+      380,
+      348
+    ],
+    "candidate_bbox": [
+      184,
+      132,
+      378,
+      348
+    ],
+    "width_ratio": 0.97,
+    "height_ratio": 1.0434782608695652,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "rig_jump_tower",
+    "d": 3,
+    "original_bbox": [
+      132,
+      127,
+      340,
+      344
+    ],
+    "candidate_bbox": [
+      144,
+      114,
+      336,
+      344
+    ],
+    "width_ratio": 0.9230769230769231,
+    "height_ratio": 1.0599078341013826,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "diving",
+    "d": 0,
+    "original_bbox": [
+      134,
+      156,
+      329,
+      368
+    ],
+    "candidate_bbox": [
+      134,
+      148,
+      328,
+      364
+    ],
+    "width_ratio": 0.9948717948717949,
+    "height_ratio": 1.0188679245283019,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "diving",
+    "d": 1,
+    "original_bbox": [
+      180,
+      164,
+      366,
+      368
+    ],
+    "candidate_bbox": [
+      176,
+      166,
+      368,
+      368
+    ],
+    "width_ratio": 1.032258064516129,
+    "height_ratio": 0.9901960784313726,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "diving",
+    "d": 2,
+    "original_bbox": [
+      186,
+      187,
+      374,
+      348
+    ],
+    "candidate_bbox": [
+      184,
+      176,
+      378,
+      348
+    ],
+    "width_ratio": 1.0319148936170213,
+    "height_ratio": 1.0683229813664596,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "diving",
+    "d": 3,
+    "original_bbox": [
+      143,
+      180,
+      336,
+      344
+    ],
+    "candidate_bbox": [
+      144,
+      158,
+      336,
+      344
+    ],
+    "width_ratio": 0.9948186528497409,
+    "height_ratio": 1.1341463414634145,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "watchtower",
+    "d": 0,
+    "original_bbox": [
+      330,
+      309,
+      437,
+      462
+    ],
+    "candidate_bbox": [
+      330,
+      292,
+      438,
+      458
+    ],
+    "width_ratio": 1.0093457943925233,
+    "height_ratio": 1.0849673202614378,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "watchtower",
+    "d": 1,
+    "original_bbox": [
+      329,
+      306,
+      438,
+      462
+    ],
+    "candidate_bbox": [
+      330,
+      292,
+      438,
+      458
+    ],
+    "width_ratio": 0.9908256880733946,
+    "height_ratio": 1.064102564102564,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "watchtower",
+    "d": 2,
+    "original_bbox": [
+      330,
+      312,
+      438,
+      462
+    ],
+    "candidate_bbox": [
+      330,
+      292,
+      438,
+      458
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.1066666666666667,
+    "same_canvas_and_registration": true
+  },
+  {
+    "id": "watchtower",
+    "d": 3,
+    "original_bbox": [
+      330,
+      310,
+      438,
+      463
+    ],
+    "candidate_bbox": [
+      330,
+      292,
+      438,
+      458
+    ],
+    "width_ratio": 1.0,
+    "height_ratio": 1.0849673202614378,
+    "same_canvas_and_registration": true
+  }
+]

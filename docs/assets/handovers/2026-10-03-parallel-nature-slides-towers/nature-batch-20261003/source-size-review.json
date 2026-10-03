@@ -1,0 +1,1221 @@
+[
+  {
+    "id": "env_pine",
+    "d": 0,
+    "source_bbox": [
+      97,
+      84,
+      299,
+      296
+    ],
+    "candidate_bbox": [
+      92,
+      72,
+      288,
+      298
+    ],
+    "source_nonzero_bbox": [
+      96,
+      83,
+      300,
+      297
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.9702970297029703,
+    "height_ratio": 1.0660377358490567,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 0,
+      "file": "full-images/env_pine-d0.webp",
+      "bbox": [
+        97,
+        84,
+        299,
+        296
+      ],
+      "w": 2,
+      "h": 2,
+      "left": -48,
+      "top": -57,
+      "logical_w": 96.0,
+      "logical_h": 105.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_pine",
+    "d": 1,
+    "source_bbox": [
+      86,
+      64,
+      298,
+      296
+    ],
+    "candidate_bbox": [
+      92,
+      66,
+      304,
+      298
+    ],
+    "source_nonzero_bbox": [
+      84,
+      63,
+      299,
+      297
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.0,
+    "height_ratio": 1.0,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 1,
+      "file": "full-images/env_pine-d1.webp",
+      "bbox": [
+        86,
+        64,
+        298,
+        296
+      ],
+      "w": 2,
+      "h": 2,
+      "left": -48,
+      "top": -57,
+      "logical_w": 96.0,
+      "logical_h": 105.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_pine",
+    "d": 2,
+    "source_bbox": [
+      82,
+      80,
+      286,
+      296
+    ],
+    "candidate_bbox": [
+      96,
+      64,
+      292,
+      298
+    ],
+    "source_nonzero_bbox": [
+      81,
+      79,
+      287,
+      297
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.9607843137254902,
+    "height_ratio": 1.0833333333333333,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 2,
+      "file": "full-images/env_pine-d2.webp",
+      "bbox": [
+        82,
+        80,
+        286,
+        296
+      ],
+      "w": 2,
+      "h": 2,
+      "left": -48,
+      "top": -57,
+      "logical_w": 96.0,
+      "logical_h": 105.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_pine",
+    "d": 3,
+    "source_bbox": [
+      87,
+      76,
+      298,
+      296
+    ],
+    "candidate_bbox": [
+      82,
+      58,
+      292,
+      298
+    ],
+    "source_nonzero_bbox": [
+      86,
+      50,
+      299,
+      297
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.995260663507109,
+    "height_ratio": 1.0909090909090908,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 3,
+      "file": "full-images/env_pine-d3.webp",
+      "bbox": [
+        87,
+        76,
+        297,
+        295
+      ],
+      "w": 2,
+      "h": 2,
+      "left": -48,
+      "top": -57,
+      "logical_w": 96.0,
+      "logical_h": 105.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_deciduous",
+    "d": 0,
+    "source_bbox": [
+      103,
+      88,
+      289,
+      304
+    ],
+    "candidate_bbox": [
+      100,
+      64,
+      284,
+      306
+    ],
+    "source_nonzero_bbox": [
+      101,
+      87,
+      290,
+      305
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.989247311827957,
+    "height_ratio": 1.1203703703703705,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 0,
+      "file": "full-images/env_deciduous-d0.webp",
+      "bbox": [
+        103,
+        89,
+        289,
+        304
+      ],
+      "w": 2,
+      "h": 2,
+      "left": -48,
+      "top": -59,
+      "logical_w": 96.0,
+      "logical_h": 107.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_deciduous",
+    "d": 1,
+    "source_bbox": [
+      93,
+      72,
+      283,
+      304
+    ],
+    "candidate_bbox": [
+      102,
+      74,
+      294,
+      306
+    ],
+    "source_nonzero_bbox": [
+      92,
+      71,
+      284,
+      306
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.0105263157894737,
+    "height_ratio": 1.0,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 1,
+      "file": "full-images/env_deciduous-d1.webp",
+      "bbox": [
+        93,
+        73,
+        282,
+        304
+      ],
+      "w": 2,
+      "h": 2,
+      "left": -48,
+      "top": -59,
+      "logical_w": 96.0,
+      "logical_h": 107.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_deciduous",
+    "d": 2,
+    "source_bbox": [
+      93,
+      84,
+      283,
+      304
+    ],
+    "candidate_bbox": [
+      100,
+      68,
+      284,
+      306
+    ],
+    "source_nonzero_bbox": [
+      92,
+      46,
+      284,
+      306
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.968421052631579,
+    "height_ratio": 1.0818181818181818,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 2,
+      "file": "full-images/env_deciduous-d2.webp",
+      "bbox": [
+        93,
+        84,
+        283,
+        304
+      ],
+      "w": 2,
+      "h": 2,
+      "left": -48,
+      "top": -59,
+      "logical_w": 96.0,
+      "logical_h": 107.0,
+      "signals": [
+        {
+          "side": "bottom",
+          "xy": [
+            127,
+            190.0672268907563,
+            160,
+            214.52100840336135
+          ],
+          "degrees": 36.53932168758797,
+          "error": 9.974270687587971,
+          "rmse": 1.1124482036063972,
+          "length": 34
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_deciduous",
+    "d": 3,
+    "source_bbox": [
+      103,
+      64,
+      289,
+      304
+    ],
+    "candidate_bbox": [
+      90,
+      68,
+      282,
+      306
+    ],
+    "source_nonzero_bbox": [
+      70,
+      63,
+      291,
+      306
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.032258064516129,
+    "height_ratio": 0.9916666666666667,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 3,
+      "file": "full-images/env_deciduous-d3.webp",
+      "bbox": [
+        103,
+        64,
+        289,
+        304
+      ],
+      "w": 2,
+      "h": 2,
+      "left": -48,
+      "top": -59,
+      "logical_w": 96.0,
+      "logical_h": 107.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_willow",
+    "d": 0,
+    "source_bbox": [
+      101,
+      76,
+      287,
+      300
+    ],
+    "candidate_bbox": [
+      96,
+      64,
+      280,
+      302
+    ],
+    "source_nonzero_bbox": [
+      99,
+      74,
+      288,
+      301
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.989247311827957,
+    "height_ratio": 1.0625,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 0,
+      "file": "full-images/env_willow-d0.webp",
+      "bbox": [
+        102,
+        76,
+        287,
+        300
+      ],
+      "w": 2,
+      "h": 2,
+      "left": -48,
+      "top": -58,
+      "logical_w": 96.0,
+      "logical_h": 106.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_willow",
+    "d": 1,
+    "source_bbox": [
+      92,
+      83,
+      284,
+      300
+    ],
+    "candidate_bbox": [
+      102,
+      66,
+      288,
+      302
+    ],
+    "source_nonzero_bbox": [
+      91,
+      70,
+      309,
+      302
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.96875,
+    "height_ratio": 1.087557603686636,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 1,
+      "file": "full-images/env_willow-d1.webp",
+      "bbox": [
+        92,
+        84,
+        283,
+        300
+      ],
+      "w": 2,
+      "h": 2,
+      "left": -48,
+      "top": -58,
+      "logical_w": 96.0,
+      "logical_h": 106.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_willow",
+    "d": 2,
+    "source_bbox": [
+      96,
+      84,
+      284,
+      300
+    ],
+    "candidate_bbox": [
+      104,
+      72,
+      288,
+      302
+    ],
+    "source_nonzero_bbox": [
+      75,
+      71,
+      285,
+      301
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.9787234042553191,
+    "height_ratio": 1.0648148148148149,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 2,
+      "file": "full-images/env_willow-d2.webp",
+      "bbox": [
+        97,
+        84,
+        283,
+        299
+      ],
+      "w": 2,
+      "h": 2,
+      "left": -48,
+      "top": -58,
+      "logical_w": 96.0,
+      "logical_h": 106.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_willow",
+    "d": 3,
+    "source_bbox": [
+      100,
+      67,
+      292,
+      300
+    ],
+    "candidate_bbox": [
+      96,
+      64,
+      282,
+      302
+    ],
+    "source_nonzero_bbox": [
+      89,
+      66,
+      293,
+      301
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.96875,
+    "height_ratio": 1.0214592274678111,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 3,
+      "file": "full-images/env_willow-d3.webp",
+      "bbox": [
+        100,
+        67,
+        292,
+        300
+      ],
+      "w": 2,
+      "h": 2,
+      "left": -48,
+      "top": -58,
+      "logical_w": 96.0,
+      "logical_h": 106.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_shrubs",
+    "d": 0,
+    "source_bbox": [
+      80,
+      176,
+      164,
+      240
+    ],
+    "candidate_bbox": [
+      86,
+      170,
+      170,
+      236
+    ],
+    "source_nonzero_bbox": [
+      79,
+      175,
+      165,
+      241
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.0,
+    "height_ratio": 1.03125,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 0,
+      "file": "full-images/env_shrubs-d0.webp",
+      "bbox": [
+        81,
+        176,
+        163,
+        240
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_shrubs",
+    "d": 1,
+    "source_bbox": [
+      88,
+      180,
+      172,
+      240
+    ],
+    "candidate_bbox": [
+      88,
+      162,
+      168,
+      236
+    ],
+    "source_nonzero_bbox": [
+      87,
+      179,
+      173,
+      241
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.9523809523809523,
+    "height_ratio": 1.2333333333333334,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 1,
+      "file": "full-images/env_shrubs-d1.webp",
+      "bbox": [
+        88,
+        180,
+        172,
+        240
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "bottom",
+          "xy": [
+            100,
+            225.65999999999994,
+            123,
+            234.33999999999995
+          ],
+          "degrees": 20.676070481956728,
+          "error": 5.888980518043272,
+          "rmse": 0.7133306244022788,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_shrubs",
+    "d": 2,
+    "source_bbox": [
+      96,
+      172,
+      172,
+      236
+    ],
+    "candidate_bbox": [
+      86,
+      170,
+      170,
+      238
+    ],
+    "source_nonzero_bbox": [
+      95,
+      171,
+      173,
+      237
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.105263157894737,
+    "height_ratio": 1.0625,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 2,
+      "file": "full-images/env_shrubs-d2.webp",
+      "bbox": [
+        96,
+        172,
+        172,
+        236
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_shrubs",
+    "d": 3,
+    "source_bbox": [
+      85,
+      168,
+      167,
+      236
+    ],
+    "candidate_bbox": [
+      88,
+      170,
+      168,
+      236
+    ],
+    "source_nonzero_bbox": [
+      84,
+      167,
+      168,
+      237
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 0.975609756097561,
+    "height_ratio": 0.9705882352941176,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 3,
+      "file": "full-images/env_shrubs-d3.webp",
+      "bbox": [
+        86,
+        169,
+        166,
+        235
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": [
+        {
+          "side": "bottom",
+          "xy": [
+            98,
+            219.38000000000005,
+            121,
+            233.37000000000003
+          ],
+          "degrees": 31.31051276565232,
+          "error": 4.745461765652319,
+          "rmse": 1.0030478914108596,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_rocks",
+    "d": 0,
+    "source_bbox": [
+      89,
+      172,
+      207,
+      264
+    ],
+    "candidate_bbox": [
+      90,
+      182,
+      222,
+      268
+    ],
+    "source_nonzero_bbox": [
+      87,
+      171,
+      209,
+      265
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.11864406779661,
+    "height_ratio": 0.9347826086956522,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 0,
+      "file": "full-images/env_rocks-d0.webp",
+      "bbox": [
+        89,
+        172,
+        207,
+        264
+      ],
+      "w": 2,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 80.0,
+      "logical_h": 88.0,
+      "signals": [
+        {
+          "side": "bottom",
+          "xy": [
+            149,
+            245.95,
+            172,
+            255.29999999999998
+          ],
+          "degrees": 22.12281101146181,
+          "error": 4.442239988538191,
+          "rmse": 0.805607611178296,
+          "length": 24
+        },
+        {
+          "side": "bottom",
+          "xy": [
+            113,
+            237.5400000000002,
+            136,
+            247.21000000000015
+          ],
+          "degrees": 22.803578240737917,
+          "error": 3.761472759262084,
+          "rmse": 0.9207058571347935,
+          "length": 24
+        },
+        {
+          "side": "top",
+          "xy": [
+            113,
+            177.30000000000007,
+            136,
+            170.45000000000005
+          ],
+          "degrees": -16.584904374776045,
+          "error": 9.980146625223956,
+          "rmse": 0.9708150617177166,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_rocks",
+    "d": 1,
+    "source_bbox": [
+      88,
+      208,
+      216,
+      272
+    ],
+    "candidate_bbox": [
+      94,
+      192,
+      224,
+      272
+    ],
+    "source_nonzero_bbox": [
+      87,
+      207,
+      217,
+      273
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.015625,
+    "height_ratio": 1.25,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 1,
+      "file": "full-images/env_rocks-d1.webp",
+      "bbox": [
+        88,
+        208,
+        216,
+        272
+      ],
+      "w": 1,
+      "h": 2,
+      "left": -48,
+      "top": -48,
+      "logical_w": 80.0,
+      "logical_h": 88.0,
+      "signals": [
+        {
+          "side": "bottom",
+          "xy": [
+            100,
+            258.15999999999985,
+            123,
+            264.8399999999999
+          ],
+          "degrees": 16.195135042137586,
+          "error": 10.369915957862414,
+          "rmse": 0.6768426272251027,
+          "length": 24
+        },
+        {
+          "side": "bottom",
+          "xy": [
+            160,
+            267.6700000000001,
+            183,
+            253.0800000000001
+          ],
+          "degrees": -32.388910232268074,
+          "error": 5.823859232268074,
+          "rmse": 0.9324756670097135,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_rocks",
+    "d": 2,
+    "source_bbox": [
+      117,
+      196,
+      227,
+      264
+    ],
+    "candidate_bbox": [
+      98,
+      192,
+      230,
+      270
+    ],
+    "source_nonzero_bbox": [
+      116,
+      195,
+      228,
+      265
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.2,
+    "height_ratio": 1.1470588235294117,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 2,
+      "file": "full-images/env_rocks-d2.webp",
+      "bbox": [
+        118,
+        196,
+        227,
+        264
+      ],
+      "w": 2,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 80.0,
+      "logical_h": 88.0,
+      "signals": [
+        {
+          "side": "bottom",
+          "xy": [
+            166,
+            254.20666666666676,
+            189,
+            264.3766666666667
+          ],
+          "degrees": 23.853764071283074,
+          "error": 2.711286928716927,
+          "rmse": 0.649130782621541,
+          "length": 24
+        },
+        {
+          "side": "top",
+          "xy": [
+            178,
+            199.33666666666653,
+            201,
+            208.7466666666666
+          ],
+          "degrees": 22.25096361825781,
+          "error": 4.3140873817421905,
+          "rmse": 0.9233648558423879,
+          "length": 24
+        },
+        {
+          "side": "bottom",
+          "xy": [
+            154,
+            249.12666666666672,
+            177,
+            258.9566666666667
+          ],
+          "degrees": 23.14144213579419,
+          "error": 3.4236088642058107,
+          "rmse": 1.05860575062943,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_rocks",
+    "d": 3,
+    "source_bbox": [
+      104,
+      182,
+      232,
+      260
+    ],
+    "candidate_bbox": [
+      96,
+      180,
+      226,
+      266
+    ],
+    "source_nonzero_bbox": [
+      103,
+      181,
+      233,
+      262
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.015625,
+    "height_ratio": 1.1025641025641026,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 3,
+      "file": "full-images/env_rocks-d3.webp",
+      "bbox": [
+        104,
+        182,
+        232,
+        260
+      ],
+      "w": 1,
+      "h": 2,
+      "left": -48,
+      "top": -48,
+      "logical_w": 80.0,
+      "logical_h": 88.0,
+      "signals": [
+        {
+          "side": "bottom",
+          "xy": [
+            188,
+            244.43333333333328,
+            211,
+            237.73333333333323
+          ],
+          "degrees": -16.241071037454404,
+          "error": 10.323979962545597,
+          "rmse": 0.4206332929640239,
+          "length": 24
+        }
+      ]
+    }
+  },
+  {
+    "id": "env_flower_pot",
+    "d": 0,
+    "source_bbox": [
+      108,
+      179,
+      148,
+      232
+    ],
+    "candidate_bbox": [
+      106,
+      176,
+      150,
+      234
+    ],
+    "source_nonzero_bbox": [
+      107,
+      178,
+      149,
+      233
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.1,
+    "height_ratio": 1.0943396226415094,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 0,
+      "file": "full-images/env_flower_pot-d0.webp",
+      "bbox": [
+        108,
+        179,
+        148,
+        232
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_flower_pot",
+    "d": 1,
+    "source_bbox": [
+      104,
+      171,
+      148,
+      232
+    ],
+    "candidate_bbox": [
+      106,
+      176,
+      150,
+      234
+    ],
+    "source_nonzero_bbox": [
+      103,
+      169,
+      149,
+      233
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.0,
+    "height_ratio": 0.9508196721311475,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 1,
+      "file": "full-images/env_flower_pot-d1.webp",
+      "bbox": [
+        105,
+        171,
+        147,
+        232
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_flower_pot",
+    "d": 2,
+    "source_bbox": [
+      108,
+      172,
+      148,
+      232
+    ],
+    "candidate_bbox": [
+      106,
+      176,
+      150,
+      234
+    ],
+    "source_nonzero_bbox": [
+      107,
+      171,
+      148,
+      233
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.1,
+    "height_ratio": 0.9666666666666667,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 2,
+      "file": "full-images/env_flower_pot-d2.webp",
+      "bbox": [
+        108,
+        173,
+        148,
+        231
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  },
+  {
+    "id": "env_flower_pot",
+    "d": 3,
+    "source_bbox": [
+      108,
+      175,
+      152,
+      232
+    ],
+    "candidate_bbox": [
+      106,
+      176,
+      150,
+      234
+    ],
+    "source_nonzero_bbox": [
+      107,
+      174,
+      153,
+      233
+    ],
+    "bbox_threshold": "alpha >128",
+    "width_ratio": 1.0,
+    "height_ratio": 1.0175438596491229,
+    "canvas_preserved": true,
+    "registration_preserved": true,
+    "frame": {
+      "d": 3,
+      "file": "full-images/env_flower_pot-d3.webp",
+      "bbox": [
+        108,
+        176,
+        152,
+        232
+      ],
+      "w": 1,
+      "h": 1,
+      "left": -32,
+      "top": -48,
+      "logical_w": 64.0,
+      "logical_h": 80.0,
+      "signals": []
+    }
+  }
+]

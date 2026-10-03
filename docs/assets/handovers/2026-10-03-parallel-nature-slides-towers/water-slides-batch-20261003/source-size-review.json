@@ -1,0 +1,306 @@
+[
+  {
+    "id": "module_rig_slide",
+    "d": 0,
+    "original_bbox": [
+      108,
+      77,
+      404,
+      357
+    ],
+    "candidate_bbox": [
+      111,
+      73,
+      393,
+      363
+    ],
+    "width_ratio": 0.9527027027027027,
+    "height_ratio": 1.0357142857142858,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "module_rig_slide",
+    "d": 1,
+    "original_bbox": [
+      97,
+      79,
+      397,
+      386
+    ],
+    "candidate_bbox": [
+      107,
+      79,
+      381,
+      391
+    ],
+    "width_ratio": 0.9133333333333333,
+    "height_ratio": 1.01628664495114,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "module_rig_slide",
+    "d": 2,
+    "original_bbox": [
+      106,
+      152,
+      406,
+      385
+    ],
+    "candidate_bbox": [
+      119,
+      163,
+      401,
+      393
+    ],
+    "width_ratio": 0.94,
+    "height_ratio": 0.9871244635193133,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "module_rig_slide",
+    "d": 3,
+    "original_bbox": [
+      121,
+      156,
+      407,
+      386
+    ],
+    "candidate_bbox": [
+      131,
+      155,
+      405,
+      387
+    ],
+    "width_ratio": 0.958041958041958,
+    "height_ratio": 1.008695652173913,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "module_rig_mini_slide",
+    "d": 0,
+    "original_bbox": [
+      134,
+      203,
+      378,
+      370
+    ],
+    "candidate_bbox": [
+      153,
+      213,
+      371,
+      375
+    ],
+    "width_ratio": 0.8934426229508197,
+    "height_ratio": 0.9700598802395209,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "module_rig_mini_slide",
+    "d": 1,
+    "original_bbox": [
+      143,
+      215,
+      370,
+      370
+    ],
+    "candidate_bbox": [
+      153,
+      207,
+      371,
+      369
+    ],
+    "width_ratio": 0.960352422907489,
+    "height_ratio": 1.0451612903225806,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "module_rig_mini_slide",
+    "d": 2,
+    "original_bbox": [
+      130,
+      162,
+      383,
+      370
+    ],
+    "candidate_bbox": [
+      141,
+      155,
+      359,
+      369
+    ],
+    "width_ratio": 0.8616600790513834,
+    "height_ratio": 1.0288461538461537,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "module_rig_mini_slide",
+    "d": 3,
+    "original_bbox": [
+      129,
+      169,
+      383,
+      370
+    ],
+    "candidate_bbox": [
+      141,
+      161,
+      359,
+      375
+    ],
+    "width_ratio": 0.8582677165354331,
+    "height_ratio": 1.064676616915423,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "module_rig_slidedock",
+    "d": 0,
+    "original_bbox": [
+      144,
+      223,
+      363,
+      361
+    ],
+    "candidate_bbox": [
+      135,
+      219,
+      379,
+      363
+    ],
+    "width_ratio": 1.1141552511415524,
+    "height_ratio": 1.0434782608695652,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "module_rig_slidedock",
+    "d": 1,
+    "original_bbox": [
+      148,
+      230,
+      359,
+      370
+    ],
+    "candidate_bbox": [
+      135,
+      225,
+      379,
+      379
+    ],
+    "width_ratio": 1.1563981042654028,
+    "height_ratio": 1.1,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "module_rig_slidedock",
+    "d": 2,
+    "original_bbox": [
+      144,
+      231,
+      374,
+      369
+    ],
+    "candidate_bbox": [
+      133,
+      225,
+      377,
+      379
+    ],
+    "width_ratio": 1.0608695652173914,
+    "height_ratio": 1.1159420289855073,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "module_rig_slidedock",
+    "d": 3,
+    "original_bbox": [
+      147,
+      223,
+      370,
+      361
+    ],
+    "candidate_bbox": [
+      133,
+      219,
+      377,
+      363
+    ],
+    "width_ratio": 1.094170403587444,
+    "height_ratio": 1.0434782608695652,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "ppaji_slide",
+    "d": 0,
+    "original_bbox": [
+      305,
+      364,
+      845,
+      658
+    ],
+    "candidate_bbox": [
+      315,
+      357,
+      805,
+      673
+    ],
+    "width_ratio": 0.9074074074074074,
+    "height_ratio": 1.0748299319727892,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "ppaji_slide",
+    "d": 1,
+    "original_bbox": [
+      290,
+      203,
+      717,
+      705
+    ],
+    "candidate_bbox": [
+      273,
+      271,
+      745,
+      673
+    ],
+    "width_ratio": 1.1053864168618266,
+    "height_ratio": 0.8007968127490039,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "ppaji_slide",
+    "d": 2,
+    "original_bbox": [
+      126,
+      376,
+      771,
+      673
+    ],
+    "candidate_bbox": [
+      219,
+      399,
+      709,
+      693
+    ],
+    "width_ratio": 0.7596899224806202,
+    "height_ratio": 0.98989898989899,
+    "registered_same_canvas": true
+  },
+  {
+    "id": "ppaji_slide",
+    "d": 3,
+    "original_bbox": [
+      306,
+      423,
+      736,
+      769
+    ],
+    "candidate_bbox": [
+      279,
+      441,
+      751,
+      721
+    ],
+    "width_ratio": 1.0976744186046512,
+    "height_ratio": 0.8092485549132948,
+    "registered_same_canvas": true
+  }
+]

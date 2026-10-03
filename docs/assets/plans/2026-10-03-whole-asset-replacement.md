@@ -2,7 +2,7 @@
 
 사용자 승인: “좋다 이정도면 만족해 … 에셋 전체를 대체하는방식으로가자”. 식혜·붕어빵(3방향)·카페2·실내매점·카페1·카페3·야외매점·분식·치킨·화로대 열·BBQ존·평상·그늘막·정자·파라솔·선베드 열·안마의자·족욕·화장실·사우나·찜질방·안내소·의무실·노래방·매표소·카라반·방갈로·글램핑·펜션1/2/3층·강변무대1/2/3·놀이터·번지점프·포토존·마을건물6종·울타리/돌담6종은 메인에 적용. 원본 색감·질감·귀여운 비율을 참고한 공통 구조 + 네 방향 + 선 표현 검수로 확대한다.
 
-**100종: 적용 69 / 새 방식 제작 대기 31.** 코인라커·탈의실은 이전 표면 재투영 승인본이다. 붕어빵은 d1 원본 예외를 유지한다.
+**100종: 적용 84 / 새 방식 제작 대기 16.** 코인라커·탈의실은 이전 표면 재투영 승인본이다. 붕어빵은 d1 원본 예외를 유지한다.
 
 [현재 메인 400방향 연속 격자 목록 + 승인본 실제 맵](http://100.114.231.15:62140/whole-replacement/)
 
@@ -14,42 +14,22 @@
 
 | 에셋 | ID | 상태 |
 |---|---|---|
-| 빠지 슬라이드 | `ppaji_slide` | 전체 교체 대기 |
 | 빠지 놀이터 | `ppaji_playground` | 전체 교체 대기 |
-| 승하선 데크 | `boarding_dock` | 전체 교체 대기 |
-| 플로팅덱 | `float_deck` | 전체 교체 대기 |
 | 블롭 점프 | `rig_blob` | 전체 교체 대기 |
-| 점프 타워 | `rig_jump_tower` | 전체 교체 대기 |
-| 다이빙대 | `diving` | 전체 교체 대기 |
 | 아이스버그 | `rig_iceberg` | 전체 교체 대기 |
 | 장애물 다리 | `rig_bridge` | 전체 교체 대기 |
 | 징검다리 | `rig_stepstone` | 전체 교체 대기 |
-| 플로팅 슬라이드 | `module_rig_slide` | 전체 교체 대기 |
 | 수상 트램폴린 | `module_trampoline_w` | 전체 교체 대기 |
 | 밸런스 빔 | `module_rig_beam` | 전체 교체 대기 |
 | 워터 롤러 | `module_rig_roller` | 전체 교체 대기 |
 | 시소 플로트 | `module_rig_seesaw` | 전체 교체 대기 |
 | 워터 토템 | `module_rig_totem` | 전체 교체 대기 |
 | 회전 원반 | `module_rig_disc` | 전체 교체 대기 |
-| 미니 슬라이드 | `module_rig_mini_slide` | 전체 교체 대기 |
-| 미끄럼 도크 | `module_rig_slidedock` | 전체 교체 대기 |
 | 키즈 워터 놀이터 | `module_rig_kids_park` | 전체 교체 대기 |
 | 워터워크볼 | `module_waterwalk` | 전체 교체 대기 |
 | 해먹 라운지 | `module_rig_hammock` | 전체 교체 대기 |
 | 선베드 플로트 | `module_rig_sunbed` | 전체 교체 대기 |
 | LED 조명 부표 | `module_rig_led_buoy` | 전체 교체 대기 |
-| 안전 망루 | `watchtower` | 전체 교체 대기 |
-
-## 나무·바위·식물
-
-| 에셋 | ID | 상태 |
-|---|---|---|
-| 큰 소나무 | `env_pine` | 전체 교체 대기 |
-| 활엽수 | `env_deciduous` | 전체 교체 대기 |
-| 버드나무 | `env_willow` | 전체 교체 대기 |
-| 관목 군집 | `env_shrubs` | 전체 교체 대기 |
-| 강변 바위 | `env_rocks` | 전체 교체 대기 |
-| 화분 | `env_flower_pot` | 전체 교체 대기 |
 
 ## 메인 적용 완료
 
@@ -124,3 +104,18 @@
 | 수변 난간 모서리 | `env_water_rail_corner` | 메인 적용 완료 |
 | 수변 난간 끝 | `env_water_rail_end` | 메인 적용 완료 |
 | 가로등 | `env_street_lamp` | 메인 적용 완료 |
+| 큰 소나무 | `env_pine` | 메인 적용 완료 |
+| 활엽수 | `env_deciduous` | 메인 적용 완료 |
+| 버드나무 | `env_willow` | 메인 적용 완료 |
+| 관목 군집 | `env_shrubs` | 메인 적용 완료 |
+| 강변 바위 | `env_rocks` | 메인 적용 완료 |
+| 화분 | `env_flower_pot` | 메인 적용 완료 |
+| 빠지 슬라이드 | `ppaji_slide` | 메인 적용 완료 |
+| 플로팅 슬라이드 | `module_rig_slide` | 메인 적용 완료 |
+| 미니 슬라이드 | `module_rig_mini_slide` | 메인 적용 완료 |
+| 미끄럼 도크 | `module_rig_slidedock` | 메인 적용 완료 |
+| 승하선 데크 | `boarding_dock` | 메인 적용 완료 |
+| 플로팅덱 | `float_deck` | 메인 적용 완료 |
+| 점프 타워 | `rig_jump_tower` | 메인 적용 완료 |
+| 다이빙대 | `diving` | 메인 적용 완료 |
+| 안전 망루 | `watchtower` | 메인 적용 완료 |

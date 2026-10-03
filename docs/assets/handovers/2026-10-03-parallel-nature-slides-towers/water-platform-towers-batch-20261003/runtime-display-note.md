@@ -1,0 +1,1 @@
+Scoped game captures use real renderer and terrain, frozen simulation and unchanged storage. The existing scene.setRigLook API clears inactive-rig tint in the review only, identically for original/candidate. These are art placement and color reviews, not operating or accessibility checks. Main game code untouched.

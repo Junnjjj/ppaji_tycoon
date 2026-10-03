@@ -1,0 +1,1722 @@
+{
+  "status": "PASS",
+  "opening_renders": [
+    {
+      "id": "rig_jump_tower--watergrip0",
+      "frames": [
+        {
+          "d": 0,
+          "opening_samples": [
+            {
+              "world": [
+                1.34,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                229,
+                318
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 1,
+          "opening_samples": [
+            {
+              "world": [
+                1.34,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                326,
+                296
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 2,
+          "opening_samples": [
+            {
+              "world": [
+                1.34,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                283,
+                248
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 3,
+          "opening_samples": [
+            {
+              "world": [
+                1.34,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                186,
+                270
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        }
+      ]
+    },
+    {
+      "id": "rig_jump_tower--watergrip1",
+      "frames": [
+        {
+          "d": 0,
+          "opening_samples": [
+            {
+              "world": [
+                1.61,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                247,
+                327
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 1,
+          "opening_samples": [
+            {
+              "world": [
+                1.61,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                344,
+                288
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 2,
+          "opening_samples": [
+            {
+              "world": [
+                1.61,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                265,
+                239
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 3,
+          "opening_samples": [
+            {
+              "world": [
+                1.61,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                168,
+                278
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        }
+      ]
+    },
+    {
+      "id": "rig_jump_tower--guard0",
+      "frames": [
+        {
+          "d": 0,
+          "opening_samples": [
+            {
+              "world": [
+                0.355,
+                0.86,
+                37.5
+              ],
+              "pixel": [
+                224,
+                132
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 1,
+          "opening_samples": [
+            {
+              "world": [
+                0.355,
+                0.86,
+                37.5
+              ],
+              "pixel": [
+                206,
+                173
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 2,
+          "opening_samples": [
+            {
+              "world": [
+                0.355,
+                0.86,
+                37.5
+              ],
+              "pixel": [
+                288,
+                182
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 3,
+          "opening_samples": [
+            {
+              "world": [
+                0.355,
+                0.86,
+                37.5
+              ],
+              "pixel": [
+                306,
+                141
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        }
+      ]
+    },
+    {
+      "id": "rig_jump_tower--guard1",
+      "frames": [
+        {
+          "d": 0,
+          "opening_samples": [
+            {
+              "world": [
+                1.075,
+                0.86,
+                37.5
+              ],
+              "pixel": [
+                270,
+                155
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 1,
+          "opening_samples": [
+            {
+              "world": [
+                1.075,
+                0.86,
+                37.5
+              ],
+              "pixel": [
+                252,
+                150
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 2,
+          "opening_samples": [
+            {
+              "world": [
+                1.075,
+                0.86,
+                37.5
+              ],
+              "pixel": [
+                242,
+                159
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 3,
+          "opening_samples": [
+            {
+              "world": [
+                1.075,
+                0.86,
+                37.5
+              ],
+              "pixel": [
+                260,
+                164
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        }
+      ]
+    },
+    {
+      "id": "diving--watergrip0",
+      "frames": [
+        {
+          "d": 0,
+          "opening_samples": [
+            {
+              "world": [
+                1.34,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                229,
+                318
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 1,
+          "opening_samples": [
+            {
+              "world": [
+                1.34,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                326,
+                296
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 2,
+          "opening_samples": [
+            {
+              "world": [
+                1.34,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                283,
+                248
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 3,
+          "opening_samples": [
+            {
+              "world": [
+                1.34,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                186,
+                270
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        }
+      ]
+    },
+    {
+      "id": "diving--watergrip1",
+      "frames": [
+        {
+          "d": 0,
+          "opening_samples": [
+            {
+              "world": [
+                1.61,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                247,
+                327
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 1,
+          "opening_samples": [
+            {
+              "world": [
+                1.61,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                344,
+                288
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 2,
+          "opening_samples": [
+            {
+              "world": [
+                1.61,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                265,
+                239
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 3,
+          "opening_samples": [
+            {
+              "world": [
+                1.61,
+                1.7575,
+                6.0
+              ],
+              "pixel": [
+                168,
+                278
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        }
+      ]
+    },
+    {
+      "id": "diving--guard0",
+      "frames": [
+        {
+          "d": 0,
+          "opening_samples": [
+            {
+              "world": [
+                0.355,
+                0.86,
+                26.5
+              ],
+              "pixel": [
+                224,
+                176
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 1,
+          "opening_samples": [
+            {
+              "world": [
+                0.355,
+                0.86,
+                26.5
+              ],
+              "pixel": [
+                206,
+                217
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 2,
+          "opening_samples": [
+            {
+              "world": [
+                0.355,
+                0.86,
+                26.5
+              ],
+              "pixel": [
+                288,
+                226
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 3,
+          "opening_samples": [
+            {
+              "world": [
+                0.355,
+                0.86,
+                26.5
+              ],
+              "pixel": [
+                306,
+                185
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        }
+      ]
+    },
+    {
+      "id": "diving--guard1",
+      "frames": [
+        {
+          "d": 0,
+          "opening_samples": [
+            {
+              "world": [
+                1.075,
+                0.86,
+                26.5
+              ],
+              "pixel": [
+                270,
+                199
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 1,
+          "opening_samples": [
+            {
+              "world": [
+                1.075,
+                0.86,
+                26.5
+              ],
+              "pixel": [
+                252,
+                194
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 2,
+          "opening_samples": [
+            {
+              "world": [
+                1.075,
+                0.86,
+                26.5
+              ],
+              "pixel": [
+                242,
+                203
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 3,
+          "opening_samples": [
+            {
+              "world": [
+                1.075,
+                0.86,
+                26.5
+              ],
+              "pixel": [
+                260,
+                208
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        }
+      ]
+    },
+    {
+      "id": "diving--riser",
+      "frames": [
+        {
+          "d": 0,
+          "opening_samples": [],
+          "visible_air_count": 0
+        },
+        {
+          "d": 1,
+          "opening_samples": [],
+          "visible_air_count": 0
+        },
+        {
+          "d": 2,
+          "opening_samples": [],
+          "visible_air_count": 0
+        },
+        {
+          "d": 3,
+          "opening_samples": [],
+          "visible_air_count": 0
+        }
+      ]
+    },
+    {
+      "id": "watchtower--back",
+      "frames": [
+        {
+          "d": 0,
+          "opening_samples": [
+            {
+              "world": [
+                0.2489,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                389,
+                318
+              ],
+              "transparent": false
+            },
+            {
+              "world": [
+                0.4163,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                400,
+                324
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.5837,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                411,
+                329
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.7510999999999999,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                421,
+                334
+              ],
+              "transparent": false
+            }
+          ],
+          "visible_air_count": 2
+        },
+        {
+          "d": 1,
+          "opening_samples": [
+            {
+              "world": [
+                0.2489,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                347,
+                334
+              ],
+              "transparent": false
+            },
+            {
+              "world": [
+                0.4163,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                357,
+                329
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.5837,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                368,
+                324
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.7510999999999999,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                379,
+                318
+              ],
+              "transparent": false
+            }
+          ],
+          "visible_air_count": 2
+        },
+        {
+          "d": 2,
+          "opening_samples": [
+            {
+              "world": [
+                0.2489,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                379,
+                356
+              ],
+              "transparent": false
+            },
+            {
+              "world": [
+                0.4163,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                368,
+                350
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.5837,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                357,
+                345
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.7510999999999999,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                347,
+                340
+              ],
+              "transparent": false
+            }
+          ],
+          "visible_air_count": 2
+        },
+        {
+          "d": 3,
+          "opening_samples": [
+            {
+              "world": [
+                0.2489,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                421,
+                340
+              ],
+              "transparent": false
+            },
+            {
+              "world": [
+                0.4163,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                411,
+                345
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.5837,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                400,
+                350
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.7510999999999999,
+                0.16519999999999996,
+                23.5
+              ],
+              "pixel": [
+                389,
+                356
+              ],
+              "transparent": false
+            }
+          ],
+          "visible_air_count": 2
+        }
+      ]
+    },
+    {
+      "id": "watchtower--right",
+      "frames": [
+        {
+          "d": 0,
+          "opening_samples": [
+            {
+              "world": [
+                0.8348000000000001,
+                0.2489,
+                23.5
+              ],
+              "pixel": [
+                421,
+                340
+              ],
+              "transparent": false
+            },
+            {
+              "world": [
+                0.8348000000000001,
+                0.4163,
+                23.5
+              ],
+              "pixel": [
+                411,
+                345
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.8348000000000001,
+                0.5837,
+                23.5
+              ],
+              "pixel": [
+                400,
+                350
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.8348000000000001,
+                0.7510999999999999,
+                23.5
+              ],
+              "pixel": [
+                389,
+                356
+              ],
+              "transparent": false
+            }
+          ],
+          "visible_air_count": 2
+        },
+        {
+          "d": 1,
+          "opening_samples": [
+            {
+              "world": [
+                0.8348000000000001,
+                0.2489,
+                23.5
+              ],
+              "pixel": [
+                389,
+                318
+              ],
+              "transparent": false
+            },
+            {
+              "world": [
+                0.8348000000000001,
+                0.4163,
+                23.5
+              ],
+              "pixel": [
+                400,
+                324
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.8348000000000001,
+                0.5837,
+                23.5
+              ],
+              "pixel": [
+                411,
+                329
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.8348000000000001,
+                0.7510999999999999,
+                23.5
+              ],
+              "pixel": [
+                421,
+                334
+              ],
+              "transparent": false
+            }
+          ],
+          "visible_air_count": 2
+        },
+        {
+          "d": 2,
+          "opening_samples": [
+            {
+              "world": [
+                0.8348000000000001,
+                0.2489,
+                23.5
+              ],
+              "pixel": [
+                347,
+                334
+              ],
+              "transparent": false
+            },
+            {
+              "world": [
+                0.8348000000000001,
+                0.4163,
+                23.5
+              ],
+              "pixel": [
+                357,
+                329
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.8348000000000001,
+                0.5837,
+                23.5
+              ],
+              "pixel": [
+                368,
+                324
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.8348000000000001,
+                0.7510999999999999,
+                23.5
+              ],
+              "pixel": [
+                379,
+                318
+              ],
+              "transparent": false
+            }
+          ],
+          "visible_air_count": 2
+        },
+        {
+          "d": 3,
+          "opening_samples": [
+            {
+              "world": [
+                0.8348000000000001,
+                0.2489,
+                23.5
+              ],
+              "pixel": [
+                379,
+                356
+              ],
+              "transparent": false
+            },
+            {
+              "world": [
+                0.8348000000000001,
+                0.4163,
+                23.5
+              ],
+              "pixel": [
+                368,
+                350
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.8348000000000001,
+                0.5837,
+                23.5
+              ],
+              "pixel": [
+                357,
+                345
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.8348000000000001,
+                0.7510999999999999,
+                23.5
+              ],
+              "pixel": [
+                347,
+                340
+              ],
+              "transparent": false
+            }
+          ],
+          "visible_air_count": 2
+        }
+      ]
+    },
+    {
+      "id": "watchtower--left",
+      "frames": [
+        {
+          "d": 0,
+          "opening_samples": [
+            {
+              "world": [
+                0.16519999999999996,
+                0.2489,
+                23.5
+              ],
+              "pixel": [
+                379,
+                318
+              ],
+              "transparent": false
+            },
+            {
+              "world": [
+                0.16519999999999996,
+                0.4163,
+                23.5
+              ],
+              "pixel": [
+                368,
+                324
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.16519999999999996,
+                0.5837,
+                23.5
+              ],
+              "pixel": [
+                357,
+                329
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.16519999999999996,
+                0.7510999999999999,
+                23.5
+              ],
+              "pixel": [
+                347,
+                334
+              ],
+              "transparent": false
+            }
+          ],
+          "visible_air_count": 2
+        },
+        {
+          "d": 1,
+          "opening_samples": [
+            {
+              "world": [
+                0.16519999999999996,
+                0.2489,
+                23.5
+              ],
+              "pixel": [
+                347,
+                340
+              ],
+              "transparent": false
+            },
+            {
+              "world": [
+                0.16519999999999996,
+                0.4163,
+                23.5
+              ],
+              "pixel": [
+                357,
+                345
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.16519999999999996,
+                0.5837,
+                23.5
+              ],
+              "pixel": [
+                368,
+                350
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.16519999999999996,
+                0.7510999999999999,
+                23.5
+              ],
+              "pixel": [
+                379,
+                356
+              ],
+              "transparent": false
+            }
+          ],
+          "visible_air_count": 2
+        },
+        {
+          "d": 2,
+          "opening_samples": [
+            {
+              "world": [
+                0.16519999999999996,
+                0.2489,
+                23.5
+              ],
+              "pixel": [
+                389,
+                356
+              ],
+              "transparent": false
+            },
+            {
+              "world": [
+                0.16519999999999996,
+                0.4163,
+                23.5
+              ],
+              "pixel": [
+                400,
+                350
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.16519999999999996,
+                0.5837,
+                23.5
+              ],
+              "pixel": [
+                411,
+                345
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.16519999999999996,
+                0.7510999999999999,
+                23.5
+              ],
+              "pixel": [
+                421,
+                340
+              ],
+              "transparent": false
+            }
+          ],
+          "visible_air_count": 2
+        },
+        {
+          "d": 3,
+          "opening_samples": [
+            {
+              "world": [
+                0.16519999999999996,
+                0.2489,
+                23.5
+              ],
+              "pixel": [
+                421,
+                334
+              ],
+              "transparent": false
+            },
+            {
+              "world": [
+                0.16519999999999996,
+                0.4163,
+                23.5
+              ],
+              "pixel": [
+                411,
+                329
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.16519999999999996,
+                0.5837,
+                23.5
+              ],
+              "pixel": [
+                400,
+                324
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.16519999999999996,
+                0.7510999999999999,
+                23.5
+              ],
+              "pixel": [
+                389,
+                318
+              ],
+              "transparent": false
+            }
+          ],
+          "visible_air_count": 2
+        }
+      ]
+    },
+    {
+      "id": "watchtower--ring",
+      "frames": [
+        {
+          "d": 0,
+          "opening_samples": [
+            {
+              "world": [
+                0.932,
+                0.5216000000000001,
+                14.0
+              ],
+              "pixel": [
+                410,
+                390
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 1,
+          "opening_samples": [
+            {
+              "world": [
+                0.932,
+                0.5216000000000001,
+                14.0
+              ],
+              "pixel": [
+                413,
+                362
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 2,
+          "opening_samples": [
+            {
+              "world": [
+                0.932,
+                0.5216000000000001,
+                14.0
+              ],
+              "pixel": [
+                358,
+                361
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        },
+        {
+          "d": 3,
+          "opening_samples": [
+            {
+              "world": [
+                0.932,
+                0.5216000000000001,
+                14.0
+              ],
+              "pixel": [
+                355,
+                388
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 1
+        }
+      ]
+    },
+    {
+      "id": "watchtower--ladder",
+      "frames": [
+        {
+          "d": 0,
+          "opening_samples": [
+            {
+              "world": [
+                0.5,
+                0.96872,
+                6.73
+              ],
+              "pixel": [
+                354,
+                419
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.5,
+                0.9212,
+                10.950000000000001
+              ],
+              "pixel": [
+                357,
+                401
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.5,
+                0.87368,
+                15.17
+              ],
+              "pixel": [
+                360,
+                382
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 3
+        },
+        {
+          "d": 1,
+          "opening_samples": [
+            {
+              "world": [
+                0.5,
+                0.96872,
+                6.73
+              ],
+              "pixel": [
+                414,
+                419
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.5,
+                0.9212,
+                10.950000000000001
+              ],
+              "pixel": [
+                411,
+                401
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.5,
+                0.87368,
+                15.17
+              ],
+              "pixel": [
+                408,
+                382
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 3
+        },
+        {
+          "d": 2,
+          "opening_samples": [
+            {
+              "world": [
+                0.5,
+                0.96872,
+                6.73
+              ],
+              "pixel": [
+                414,
+                389
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.5,
+                0.9212,
+                10.950000000000001
+              ],
+              "pixel": [
+                411,
+                374
+              ],
+              "transparent": false
+            },
+            {
+              "world": [
+                0.5,
+                0.87368,
+                15.17
+              ],
+              "pixel": [
+                408,
+                358
+              ],
+              "transparent": true
+            }
+          ],
+          "visible_air_count": 2
+        },
+        {
+          "d": 3,
+          "opening_samples": [
+            {
+              "world": [
+                0.5,
+                0.96872,
+                6.73
+              ],
+              "pixel": [
+                354,
+                389
+              ],
+              "transparent": true
+            },
+            {
+              "world": [
+                0.5,
+                0.9212,
+                10.950000000000001
+              ],
+              "pixel": [
+                357,
+                374
+              ],
+              "transparent": false
+            },
+            {
+              "world": [
+                0.5,
+                0.87368,
+                15.17
+              ],
+              "pixel": [
+                360,
+                358
+              ],
+              "transparent": false
+            }
+          ],
+          "visible_air_count": 1
+        }
+      ]
+    }
+  ],
+  "ladder_axis_joints": [
+    {
+      "rung": 0,
+      "side": "p0",
+      "axis_distance": 0.0,
+      "rail_fraction": 0.2,
+      "pass": true
+    },
+    {
+      "rung": 0,
+      "side": "p1",
+      "axis_distance": 0.0,
+      "rail_fraction": 0.2,
+      "pass": true
+    },
+    {
+      "rung": 1,
+      "side": "p0",
+      "axis_distance": 0.0,
+      "rail_fraction": 0.4,
+      "pass": true
+    },
+    {
+      "rung": 1,
+      "side": "p1",
+      "axis_distance": 0.0,
+      "rail_fraction": 0.4,
+      "pass": true
+    },
+    {
+      "rung": 2,
+      "side": "p0",
+      "axis_distance": 0.0,
+      "rail_fraction": 0.6,
+      "pass": true
+    },
+    {
+      "rung": 2,
+      "side": "p1",
+      "axis_distance": 0.0,
+      "rail_fraction": 0.6,
+      "pass": true
+    },
+    {
+      "rung": 3,
+      "side": "p0",
+      "axis_distance": 0.0,
+      "rail_fraction": 0.8,
+      "pass": true
+    },
+    {
+      "rung": 3,
+      "side": "p1",
+      "axis_distance": 0.0,
+      "rail_fraction": 0.8,
+      "pass": true
+    }
+  ],
+  "diving_riser_openings": [
+    {
+      "step": 0,
+      "actual_open_slot_count": 5,
+      "slot_widths_tile": [
+        0.05879999999999991,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.058800000000000074
+      ],
+      "pass": true
+    },
+    {
+      "step": 1,
+      "actual_open_slot_count": 5,
+      "slot_widths_tile": [
+        0.05879999999999991,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.058800000000000074
+      ],
+      "pass": true
+    },
+    {
+      "step": 2,
+      "actual_open_slot_count": 5,
+      "slot_widths_tile": [
+        0.05879999999999991,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.058800000000000074
+      ],
+      "pass": true
+    },
+    {
+      "step": 3,
+      "actual_open_slot_count": 5,
+      "slot_widths_tile": [
+        0.05879999999999991,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.058800000000000074
+      ],
+      "pass": true
+    },
+    {
+      "step": 4,
+      "actual_open_slot_count": 5,
+      "slot_widths_tile": [
+        0.05879999999999991,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.058800000000000074
+      ],
+      "pass": true
+    },
+    {
+      "step": 5,
+      "actual_open_slot_count": 5,
+      "slot_widths_tile": [
+        0.05879999999999991,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.058800000000000074
+      ],
+      "pass": true
+    },
+    {
+      "step": 6,
+      "actual_open_slot_count": 5,
+      "slot_widths_tile": [
+        0.05879999999999991,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.058800000000000074
+      ],
+      "pass": true
+    },
+    {
+      "step": 7,
+      "actual_open_slot_count": 5,
+      "slot_widths_tile": [
+        0.05879999999999991,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.05879999999999996,
+        0.058800000000000074
+      ],
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "limits": [
+    "Isolated guard air samples certify local openings, not all openings visible through unrelated final geometry.",
+    "Watchtower tiny baluster gaps use single packed-pixel samples; no broad-hole claim.",
+    "Lifebuoy side views remain foreshortened; fixed torus geometry is checked separately.",
+    "Diving narrow riser slots may show another tread behind them in the combined image."
+  ]
+}
