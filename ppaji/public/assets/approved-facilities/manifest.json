@@ -6261,28 +6261,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "pavilion/native-d0.png",
+          "file": "pavilion/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "dc0ab294598f0d4afcc3a468db8ec5e9c7873eaad32650af6db85e94a50cdd55"
+          "sha256": "bca5d916e05e0b8ed326dfb51f44226e6c01b4fcc771d69a6dd6e248eaeaa996"
         },
         "d1": {
-          "file": "pavilion/native-d1.png",
+          "file": "pavilion/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "6d4e1f1e7e41c684159e3c8e507ac3aab396f28d0e8aa9ba0ce31a89a9e7416d"
+          "sha256": "0c4c518291e5838ff2e1360d40ff6644a24dba037b518489b719275e84236207"
         },
         "d2": {
-          "file": "pavilion/native-d2.png",
+          "file": "pavilion/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "a8144e91f39a950c842f6cd81254deb9ff21e57538cfa158c20727f8164bd8df"
+          "sha256": "d059b519162c94d57e3e5c4d54ea05dec777604d735b137341c5efa52f0130cf"
         },
         "d3": {
-          "file": "pavilion/native-d3.png",
+          "file": "pavilion/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "ce546736d23b692aef6198f70cdc7660037ca23dc9a2d9613d6402101118833d"
+          "sha256": "f76a306f4cd42b43924c69dc83827baad92b5ee3299dac2cc8cba5a8d92027ea"
         }
       },
       "note": "User accepted 2026-09-20. Art/catalog adoption only. Authored NPC interactions and stage upgrade rules remain separate handover; preserve legacy stage_river3x2."
@@ -6579,28 +6579,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "authored_parasol/native-d0.png",
+          "file": "authored_parasol/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "356921eb9b2ab3d8cd48a763a39324cd8f61ea7016e68fd760016ff6598b1e5d"
+          "sha256": "df958183ce01128dd16a028fb78a8c8c4453e5cce35d42a8b784ee34af3a9bcd"
         },
         "d1": {
-          "file": "authored_parasol/native-d1.png",
+          "file": "authored_parasol/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "1f41272ec86bbcd62b2a64db590f01fb0fbfd7bfdb7b5d25b7e721cfe0ab4b0b"
+          "sha256": "882f4c24b56fc42db12e3f71e3898f9599589077cde83f2864243ce2bb22d5b3"
         },
         "d2": {
-          "file": "authored_parasol/native-d2.png",
+          "file": "authored_parasol/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "4f2d8da72ae8c0dcd7a1a4494a0ddd3df7f7cce44c7e6977876e755541de2ee3"
+          "sha256": "d7adf0c5b7ee4e4486f354022080b36fbc8218d675b2093c271a670058044dc0"
         },
         "d3": {
-          "file": "authored_parasol/native-d3.png",
+          "file": "authored_parasol/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "794426d438edcdc68ec94373e9cea231e6e33246f0f92e6eae312c8d8062be37"
+          "sha256": "88dbbefafec0bb25464a14999894795dd7e5dddaecb90b112019b18355caec6c"
         }
       },
       "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."
@@ -6791,28 +6791,28 @@
       "deckTiles": [],
       "frames": {
         "d0": {
-          "file": "authored_sunbed_row/native-d0.png",
+          "file": "authored_sunbed_row/accepted-20261003-d0.png",
           "w": 192,
           "h": 192,
-          "sha256": "f0b54cdf94d1578b3b59c0021ffe078f7d8fb4c6c7726b2c4ba7bf1ebd4802a3"
+          "sha256": "c290ddf39020a925fa9db3c0d44a0d71fd5e4e05cea69ffa16ed016a4dda19c5"
         },
         "d1": {
-          "file": "authored_sunbed_row/native-d1.png",
+          "file": "authored_sunbed_row/accepted-20261003-d1.png",
           "w": 192,
           "h": 192,
-          "sha256": "3697cf2dd2d1e982380918d400a0d84942562518af16157217ea368dab58bdc9"
+          "sha256": "664c82b562eb6156fb73700848ecddc045d1c6280833c2da510fc612303a4848"
         },
         "d2": {
-          "file": "authored_sunbed_row/native-d2.png",
+          "file": "authored_sunbed_row/accepted-20261003-d2.png",
           "w": 192,
           "h": 192,
-          "sha256": "757d5c378fc89344d9f8300d752622b216ecb736ed75a8377062a18b6ce5ce86"
+          "sha256": "0b4636b95aa9f53a707a26fa874cf9f83b43bdff7f79f8484fe74aa92fa25bae"
         },
         "d3": {
-          "file": "authored_sunbed_row/native-d3.png",
+          "file": "authored_sunbed_row/accepted-20261003-d3.png",
           "w": 192,
           "h": 192,
-          "sha256": "7babda14261e2761559905669e66dfa94fd236e5d30f88465f1b266eac08993b"
+          "sha256": "e9809e2cdf216cfbdb20ef025bed7953e36afcd7ae6aec2f950c8b14126f4737"
         }
       },
       "note": "User-requested existing artwork adoption. Existing simulation use behavior retained."

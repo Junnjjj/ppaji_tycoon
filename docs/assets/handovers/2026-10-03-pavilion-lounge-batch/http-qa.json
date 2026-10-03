@@ -1,0 +1,74 @@
+[
+  {
+    "id": "pavilion",
+    "d": 0,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "pavilion",
+    "d": 1,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "pavilion",
+    "d": 2,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "pavilion",
+    "d": 3,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_parasol",
+    "d": 0,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_parasol",
+    "d": 1,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_parasol",
+    "d": 2,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_parasol",
+    "d": 3,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_sunbed_row",
+    "d": 0,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_sunbed_row",
+    "d": 1,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_sunbed_row",
+    "d": 2,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  },
+  {
+    "id": "authored_sunbed_row",
+    "d": 3,
+    "http_hash_exact": true,
+    "decoded_rgba_exact": true
+  }
+]

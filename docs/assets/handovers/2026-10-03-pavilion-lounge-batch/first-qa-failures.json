@@ -1,0 +1,17 @@
+[
+  {
+    "issue": "Pavilion post-to-roof overlap 0.7517 exceeded declared 0.35-0.60 range",
+    "cause": "Uniform mesh diagonal crossed the opposite hip crease and interpolated below the authored roof surface",
+    "fix": "Triangulate roof cells and post caps along the actual u+v=3 hip crease; actual mesh underside contact remains checked."
+  },
+  {
+    "issue": "Parasol chair-0 d0 seat lower alpha coverage 10/17 = 0.588 < 0.65",
+    "cause": "Narrow seat boundary is interrupted by its own four legs/back uprights",
+    "fix": "Every excluded boundary sample must intersect the independently projected named leg geometry with a 1px outline margin. Measure all other saved boundary samples. Require 4 visible pixels, and only certify slopes when span >10px; shorter segments receive guide residual only. Store all excluded x positions. Other top boundaries retain >=65% coverage. Slope/RMS limits remain unchanged."
+  },
+  {
+    "issue": "Sunbed lower boundaries: all slopes/RMS passed, 10 residual offsets 1.545-1.61 slightly exceeded 1.5px",
+    "cause": "Geometric guide used pixel-edge coordinates while saved image boundary samples were compared using pixel indices. A pixel center is (x+0.5,y+0.5).",
+    "fix": "Compare saved pixel centers to the geometric guide at x+0.5; all bounds unchanged. Preserve pixel-origin-failure.json. This changes coordinate interpretation, not sprites or thresholds."
+  }
+]

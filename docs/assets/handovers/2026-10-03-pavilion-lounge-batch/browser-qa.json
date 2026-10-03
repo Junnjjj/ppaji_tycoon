@@ -1,0 +1,62 @@
+[
+  {
+    "id": "pavilion",
+    "d": 0,
+    "provider_matches_http_webp": true
+  },
+  {
+    "id": "pavilion",
+    "d": 1,
+    "provider_matches_http_webp": true
+  },
+  {
+    "id": "pavilion",
+    "d": 2,
+    "provider_matches_http_webp": true
+  },
+  {
+    "id": "pavilion",
+    "d": 3,
+    "provider_matches_http_webp": true
+  },
+  {
+    "id": "authored_parasol",
+    "d": 0,
+    "provider_matches_http_webp": true
+  },
+  {
+    "id": "authored_parasol",
+    "d": 1,
+    "provider_matches_http_webp": true
+  },
+  {
+    "id": "authored_parasol",
+    "d": 2,
+    "provider_matches_http_webp": true
+  },
+  {
+    "id": "authored_parasol",
+    "d": 3,
+    "provider_matches_http_webp": true
+  },
+  {
+    "id": "authored_sunbed_row",
+    "d": 0,
+    "provider_matches_http_webp": true
+  },
+  {
+    "id": "authored_sunbed_row",
+    "d": 1,
+    "provider_matches_http_webp": true
+  },
+  {
+    "id": "authored_sunbed_row",
+    "d": 2,
+    "provider_matches_http_webp": true
+  },
+  {
+    "id": "authored_sunbed_row",
+    "d": 3,
+    "provider_matches_http_webp": true
+  }
+]

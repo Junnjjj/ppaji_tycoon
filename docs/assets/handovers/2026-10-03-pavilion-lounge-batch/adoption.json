@@ -1,0 +1,409 @@
+{
+  "status": "USER_AUTHORIZED_REVIEWED_APPLIED",
+  "authorization": "진행해줘 전체교체",
+  "scope": {
+    "pavilion": "pavilion-lounge-batch-20261003",
+    "authored_parasol": "pavilion-lounge-batch-20261003",
+    "authored_sunbed_row": "pavilion-lounge-batch-20261003"
+  },
+  "main": "/Users/jangjunpyo/Desktop/ppaji/ppaji_tycoon",
+  "records": [
+    {
+      "id": "pavilion",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pavilion-lounge-batch-20261003/candidates/pavilion/d0.png",
+      "source_sha256": "3e17a89465d5676288b18ecd0ab61ed752becc1bd385e5014f948bc789e3ebb0",
+      "old": {
+        "file": "fac_pavilion_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "3a999410a66abeb7a30f62f334580396c4d78f73ce5430d71e28725ab3f98dc2",
+        "bytes": 130894
+      },
+      "new": {
+        "file": "fac_pavilion_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "70b5f8a9aae0232e52a673cdd826df0bd8a81eaf02aaa900543ad3f89a2dbb4a",
+        "bytes": 89802
+      },
+      "old_native": {
+        "file": "pavilion/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "dc0ab294598f0d4afcc3a468db8ec5e9c7873eaad32650af6db85e94a50cdd55"
+      },
+      "new_native": {
+        "file": "pavilion/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "bca5d916e05e0b8ed326dfb51f44226e6c01b4fcc771d69a6dd6e248eaeaa996"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "pavilion",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pavilion-lounge-batch-20261003/candidates/pavilion/d1.png",
+      "source_sha256": "9f0931b291058df207efc03bba7d7ff64f42ee58ad8ad66d095afe942b8e69f8",
+      "old": {
+        "file": "fac_pavilion_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "3a326c8ad13b7812cdcd3e30ed6939ab3e8842bfd2fc5ae36e15aacef936c79a",
+        "bytes": 125208
+      },
+      "new": {
+        "file": "fac_pavilion_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "780be26528eb6d1f65f969ded617fb0fe2bac5140f95f86379d9a069bf41b36a",
+        "bytes": 88624
+      },
+      "old_native": {
+        "file": "pavilion/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "6d4e1f1e7e41c684159e3c8e507ac3aab396f28d0e8aa9ba0ce31a89a9e7416d"
+      },
+      "new_native": {
+        "file": "pavilion/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "0c4c518291e5838ff2e1360d40ff6644a24dba037b518489b719275e84236207"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "pavilion",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pavilion-lounge-batch-20261003/candidates/pavilion/d2.png",
+      "source_sha256": "e0944b467bedade52629ad2e5192b2ff7edd9c0478238f469475074e63623865",
+      "old": {
+        "file": "fac_pavilion_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "eb5296ca79b0a72695669c0386bd2d888a29e40c89e76be63d91ad4ebc878344",
+        "bytes": 122712
+      },
+      "new": {
+        "file": "fac_pavilion_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "2bef756bd60b2a60f3f30dea008ca3744d278e8e1499cd976a6bf637edadc547",
+        "bytes": 87748
+      },
+      "old_native": {
+        "file": "pavilion/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "a8144e91f39a950c842f6cd81254deb9ff21e57538cfa158c20727f8164bd8df"
+      },
+      "new_native": {
+        "file": "pavilion/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "d059b519162c94d57e3e5c4d54ea05dec777604d735b137341c5efa52f0130cf"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "pavilion",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pavilion-lounge-batch-20261003/candidates/pavilion/d3.png",
+      "source_sha256": "55f5bdd3a647a44999e0dcbb28d645979d6178d0e52a31d171e4291a72e945a5",
+      "old": {
+        "file": "fac_pavilion_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "61a591259d8b862c6e1d2afe7ed8d98896ccb67112e58386db15bbca03b4a268",
+        "bytes": 124034
+      },
+      "new": {
+        "file": "fac_pavilion_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a063c85c5f5d0a232e0251b3457a15cdbfb42ed26663930b5a833510e8b30acb",
+        "bytes": 89478
+      },
+      "old_native": {
+        "file": "pavilion/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "ce546736d23b692aef6198f70cdc7660037ca23dc9a2d9613d6402101118833d"
+      },
+      "new_native": {
+        "file": "pavilion/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f76a306f4cd42b43924c69dc83827baad92b5ee3299dac2cc8cba5a8d92027ea"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_parasol",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pavilion-lounge-batch-20261003/candidates/authored_parasol/d0.png",
+      "source_sha256": "65850e8d60b395c45b5af71e477ee3d7c70edcc789c11d7579534f7c0c6f827a",
+      "old": {
+        "file": "fac_authored_parasol_0.fix-be8ce70d1e35.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "be8ce70d1e351cb33382ae020c57f560b2bf81afce942a40d7c1e518acea62bd",
+        "bytes": 40660
+      },
+      "new": {
+        "file": "fac_authored_parasol_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "a5f948798a956b981a59259a73c98561b9095106f996c02b64fb5d0f43938869",
+        "bytes": 23948
+      },
+      "old_native": {
+        "file": "authored_parasol/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "356921eb9b2ab3d8cd48a763a39324cd8f61ea7016e68fd760016ff6598b1e5d"
+      },
+      "new_native": {
+        "file": "authored_parasol/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "df958183ce01128dd16a028fb78a8c8c4453e5cce35d42a8b784ee34af3a9bcd"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_parasol",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pavilion-lounge-batch-20261003/candidates/authored_parasol/d1.png",
+      "source_sha256": "2e7f88f884388815e8382252ddefc3be57a6be55b3fd7fd82f7c411320e829da",
+      "old": {
+        "file": "fac_authored_parasol_1.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "2532cd1e8a6e76d7ed5c343ece0f0af13b0a0a5d82ecdcd6a5fa3e3aafe53e50",
+        "bytes": 36208
+      },
+      "new": {
+        "file": "fac_authored_parasol_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "161696da0a82f0f00fe0b51bc9b21d9ad85507a13327caf2d2eb0db947c7670b",
+        "bytes": 23852
+      },
+      "old_native": {
+        "file": "authored_parasol/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "1f41272ec86bbcd62b2a64db590f01fb0fbfd7bfdb7b5d25b7e721cfe0ab4b0b"
+      },
+      "new_native": {
+        "file": "authored_parasol/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "882f4c24b56fc42db12e3f71e3898f9599589077cde83f2864243ce2bb22d5b3"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_parasol",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pavilion-lounge-batch-20261003/candidates/authored_parasol/d2.png",
+      "source_sha256": "a7f6ad562a06f05d998f5f8156baf300f8f7f3d69e0bb36fddd035e2902e6c43",
+      "old": {
+        "file": "fac_authored_parasol_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "aa400df72810cde94677da205e7e655592c836f6c1bc97fd755559021d45a84a",
+        "bytes": 39512
+      },
+      "new": {
+        "file": "fac_authored_parasol_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "55ef44280fc05d704f40136f8210296cdab58ac9368a50ba4bbb8b5fb1f8c18a",
+        "bytes": 23778
+      },
+      "old_native": {
+        "file": "authored_parasol/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "4f2d8da72ae8c0dcd7a1a4494a0ddd3df7f7cce44c7e6977876e755541de2ee3"
+      },
+      "new_native": {
+        "file": "authored_parasol/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "d7adf0c5b7ee4e4486f354022080b36fbc8218d675b2093c271a670058044dc0"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_parasol",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pavilion-lounge-batch-20261003/candidates/authored_parasol/d3.png",
+      "source_sha256": "f92dc776edf59998be535e2533a58313de31ef73bb298f5965cdabcb5cd07083",
+      "old": {
+        "file": "fac_authored_parasol_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "641f4d76b3199f52966b02cfc7390035c5fc7fc11c12676ced32538e30735ce2",
+        "bytes": 35866
+      },
+      "new": {
+        "file": "fac_authored_parasol_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "926d13619c0acd116de226176a16a7373c26faae8948853e87d677d77dabf602",
+        "bytes": 23976
+      },
+      "old_native": {
+        "file": "authored_parasol/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "794426d438edcdc68ec94373e9cea231e6e33246f0f92e6eae312c8d8062be37"
+      },
+      "new_native": {
+        "file": "authored_parasol/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "88dbbefafec0bb25464a14999894795dd7e5dddaecb90b112019b18355caec6c"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_sunbed_row",
+      "d": 0,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pavilion-lounge-batch-20261003/candidates/authored_sunbed_row/d0.png",
+      "source_sha256": "4b79ee63088593c3c8224ece514960c4432ee5ed43cd07708a10ea9868d14e54",
+      "old": {
+        "file": "fac_authored_sunbed_row_0.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "eb88d6afef3f73faa5fa6f8b134fd29c8150aa6adbb7b004a31f03d88fcd306e",
+        "bytes": 40830
+      },
+      "new": {
+        "file": "fac_authored_sunbed_row_0_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "7ec07547be82547fdf56e88b49d35bd536f45c6d4bac06d1e5d29da77b62b7ac",
+        "bytes": 29804
+      },
+      "old_native": {
+        "file": "authored_sunbed_row/native-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "f0b54cdf94d1578b3b59c0021ffe078f7d8fb4c6c7726b2c4ba7bf1ebd4802a3"
+      },
+      "new_native": {
+        "file": "authored_sunbed_row/accepted-20261003-d0.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "c290ddf39020a925fa9db3c0d44a0d71fd5e4e05cea69ffa16ed016a4dda19c5"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_sunbed_row",
+      "d": 1,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pavilion-lounge-batch-20261003/candidates/authored_sunbed_row/d1.png",
+      "source_sha256": "4fd827898419c0e2465645ad7dbec0b6fe867f9107431ad0c0a7e890cfab4fcb",
+      "old": {
+        "file": "fac_authored_sunbed_row_1.fix-4fb217a564a6.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "4fb217a564a63441b4ec58df00dd45f301234c0c54db310d57b2c0b01b83af00",
+        "bytes": 42706
+      },
+      "new": {
+        "file": "fac_authored_sunbed_row_1_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "4b64e4558c50eb3fa213c61bf147da51ee9777bc8e56c2f1069e7762bb7c3578",
+        "bytes": 30374
+      },
+      "old_native": {
+        "file": "authored_sunbed_row/native-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "3697cf2dd2d1e982380918d400a0d84942562518af16157217ea368dab58bdc9"
+      },
+      "new_native": {
+        "file": "authored_sunbed_row/accepted-20261003-d1.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "664c82b562eb6156fb73700848ecddc045d1c6280833c2da510fc612303a4848"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_sunbed_row",
+      "d": 2,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pavilion-lounge-batch-20261003/candidates/authored_sunbed_row/d2.png",
+      "source_sha256": "fa400a5052406c9bbf8b193f9ea7e8036e7f2e970a65cb1ca329737dfb6b5b20",
+      "old": {
+        "file": "fac_authored_sunbed_row_2.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "8163ef6b2e3c8018cc3aca056d061b4ffd0bb1b601ee508ccdb93404c6d4dbfc",
+        "bytes": 41882
+      },
+      "new": {
+        "file": "fac_authored_sunbed_row_2_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "073f8bcaf59295911f46dbf691f6b382bc16ef0b94b9fc9a8951ead8bb9a00a2",
+        "bytes": 30294
+      },
+      "old_native": {
+        "file": "authored_sunbed_row/native-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "757d5c378fc89344d9f8300d752622b216ecb736ed75a8377062a18b6ce5ce86"
+      },
+      "new_native": {
+        "file": "authored_sunbed_row/accepted-20261003-d2.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "0b4636b95aa9f53a707a26fa874cf9f83b43bdff7f79f8484fe74aa92fa25bae"
+      },
+      "rgba_exact": true
+    },
+    {
+      "id": "authored_sunbed_row",
+      "d": 3,
+      "source": "/Users/jangjunpyo/orca/workspaces/ppaji_tycoon/에셋만들기_v3/assets/generated/kairo-v4-simple-pilot/pavilion-lounge-batch-20261003/candidates/authored_sunbed_row/d3.png",
+      "source_sha256": "cb44507b9b44c3fe16fde5e147a1edb3568c5ed6f61a7933a57370c180fdff18",
+      "old": {
+        "file": "fac_authored_sunbed_row_3.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "e74b2ca066beb4c917d765fd6e79148081b541615be61b6efdc2c1e9df2dc96f",
+        "bytes": 42800
+      },
+      "new": {
+        "file": "fac_authored_sunbed_row_3_accepted_20261003.webp",
+        "w": 192,
+        "h": 192,
+        "sha256": "9e1e7e748717b0688fabbd16107c24ca48ebf7482679b7974140df8e0dccc94c",
+        "bytes": 30638
+      },
+      "old_native": {
+        "file": "authored_sunbed_row/native-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "7babda14261e2761559905669e66dfa94fd236e5d30f88465f1b266eac08993b"
+      },
+      "new_native": {
+        "file": "authored_sunbed_row/accepted-20261003-d3.png",
+        "w": 192,
+        "h": 192,
+        "sha256": "e9809e2cdf216cfbdb20ef025bed7953e36afcd7ae6aec2f950c8b14126f4737"
+      },
+      "rgba_exact": true
+    }
+  ],
+  "unrelated_entries_unchanged": true
+}

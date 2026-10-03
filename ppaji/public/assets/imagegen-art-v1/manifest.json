@@ -731,60 +731,60 @@
       "bytes": 46418
     },
     "fac/pavilion/0": {
-      "file": "fac_pavilion_0.webp",
+      "file": "fac_pavilion_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "3a999410a66abeb7a30f62f334580396c4d78f73ce5430d71e28725ab3f98dc2",
-      "bytes": 130894
+      "sha256": "70b5f8a9aae0232e52a673cdd826df0bd8a81eaf02aaa900543ad3f89a2dbb4a",
+      "bytes": 89802
     },
     "fac/pavilion/1": {
-      "file": "fac_pavilion_1.webp",
+      "file": "fac_pavilion_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "3a326c8ad13b7812cdcd3e30ed6939ab3e8842bfd2fc5ae36e15aacef936c79a",
-      "bytes": 125208
+      "sha256": "780be26528eb6d1f65f969ded617fb0fe2bac5140f95f86379d9a069bf41b36a",
+      "bytes": 88624
     },
     "fac/pavilion/2": {
-      "file": "fac_pavilion_2.webp",
+      "file": "fac_pavilion_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "eb5296ca79b0a72695669c0386bd2d888a29e40c89e76be63d91ad4ebc878344",
-      "bytes": 122712
+      "sha256": "2bef756bd60b2a60f3f30dea008ca3744d278e8e1499cd976a6bf637edadc547",
+      "bytes": 87748
     },
     "fac/pavilion/3": {
-      "file": "fac_pavilion_3.webp",
+      "file": "fac_pavilion_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "61a591259d8b862c6e1d2afe7ed8d98896ccb67112e58386db15bbca03b4a268",
-      "bytes": 124034
+      "sha256": "a063c85c5f5d0a232e0251b3457a15cdbfb42ed26663930b5a833510e8b30acb",
+      "bytes": 89478
     },
     "fac/authored_parasol/0": {
-      "file": "fac_authored_parasol_0.fix-be8ce70d1e35.webp",
+      "file": "fac_authored_parasol_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "be8ce70d1e351cb33382ae020c57f560b2bf81afce942a40d7c1e518acea62bd",
-      "bytes": 40660
+      "sha256": "a5f948798a956b981a59259a73c98561b9095106f996c02b64fb5d0f43938869",
+      "bytes": 23948
     },
     "fac/authored_parasol/1": {
-      "file": "fac_authored_parasol_1.webp",
+      "file": "fac_authored_parasol_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "2532cd1e8a6e76d7ed5c343ece0f0af13b0a0a5d82ecdcd6a5fa3e3aafe53e50",
-      "bytes": 36208
+      "sha256": "161696da0a82f0f00fe0b51bc9b21d9ad85507a13327caf2d2eb0db947c7670b",
+      "bytes": 23852
     },
     "fac/authored_parasol/2": {
-      "file": "fac_authored_parasol_2.webp",
+      "file": "fac_authored_parasol_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "aa400df72810cde94677da205e7e655592c836f6c1bc97fd755559021d45a84a",
-      "bytes": 39512
+      "sha256": "55ef44280fc05d704f40136f8210296cdab58ac9368a50ba4bbb8b5fb1f8c18a",
+      "bytes": 23778
     },
     "fac/authored_parasol/3": {
-      "file": "fac_authored_parasol_3.webp",
+      "file": "fac_authored_parasol_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "641f4d76b3199f52966b02cfc7390035c5fc7fc11c12676ced32538e30735ce2",
-      "bytes": 35866
+      "sha256": "926d13619c0acd116de226176a16a7373c26faae8948853e87d677d77dabf602",
+      "bytes": 23976
     },
     "fac/authored_bbq_zone/0": {
       "file": "fac_authored_bbq_zone_0_accepted_20261003.webp",
@@ -815,32 +815,32 @@
       "bytes": 23984
     },
     "fac/authored_sunbed_row/0": {
-      "file": "fac_authored_sunbed_row_0.webp",
+      "file": "fac_authored_sunbed_row_0_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "eb88d6afef3f73faa5fa6f8b134fd29c8150aa6adbb7b004a31f03d88fcd306e",
-      "bytes": 40830
+      "sha256": "7ec07547be82547fdf56e88b49d35bd536f45c6d4bac06d1e5d29da77b62b7ac",
+      "bytes": 29804
     },
     "fac/authored_sunbed_row/1": {
-      "file": "fac_authored_sunbed_row_1.fix-4fb217a564a6.webp",
+      "file": "fac_authored_sunbed_row_1_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "4fb217a564a63441b4ec58df00dd45f301234c0c54db310d57b2c0b01b83af00",
-      "bytes": 42706
+      "sha256": "4b64e4558c50eb3fa213c61bf147da51ee9777bc8e56c2f1069e7762bb7c3578",
+      "bytes": 30374
     },
     "fac/authored_sunbed_row/2": {
-      "file": "fac_authored_sunbed_row_2.webp",
+      "file": "fac_authored_sunbed_row_2_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "8163ef6b2e3c8018cc3aca056d061b4ffd0bb1b601ee508ccdb93404c6d4dbfc",
-      "bytes": 41882
+      "sha256": "073f8bcaf59295911f46dbf691f6b382bc16ef0b94b9fc9a8951ead8bb9a00a2",
+      "bytes": 30294
     },
     "fac/authored_sunbed_row/3": {
-      "file": "fac_authored_sunbed_row_3.webp",
+      "file": "fac_authored_sunbed_row_3_accepted_20261003.webp",
       "w": 192,
       "h": 192,
-      "sha256": "e74b2ca066beb4c917d765fd6e79148081b541615be61b6efdc2c1e9df2dc96f",
-      "bytes": 42800
+      "sha256": "9e1e7e748717b0688fabbd16107c24ca48ebf7482679b7974140df8e0dccc94c",
+      "bytes": 30638
     },
     "fac/authored_pyeongsang_row/0": {
       "file": "fac_authored_pyeongsang_row_0_accepted_20261003.webp",

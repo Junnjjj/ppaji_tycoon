@@ -1,0 +1,3496 @@
+{
+  "status": "FAIL",
+  "assets": [
+    {
+      "id": "pavilion",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "post-foot-0",
+          "b": "wood-foundation",
+          "overlap": [
+            0.16000000000000003,
+            0.16000000000000003,
+            0.04999999999999982
+          ]
+        },
+        {
+          "a": "wood-post-0",
+          "b": "post-foot-0",
+          "overlap": [
+            0.10999999999999999,
+            0.10999999999999999,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "post-foot-1",
+          "b": "wood-foundation",
+          "overlap": [
+            0.16000000000000014,
+            0.16000000000000003,
+            0.04999999999999982
+          ]
+        },
+        {
+          "a": "wood-post-1",
+          "b": "post-foot-1",
+          "overlap": [
+            0.11000000000000032,
+            0.10999999999999999,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "post-foot-2",
+          "b": "wood-foundation",
+          "overlap": [
+            0.16000000000000003,
+            0.16000000000000014,
+            0.04999999999999982
+          ]
+        },
+        {
+          "a": "wood-post-2",
+          "b": "post-foot-2",
+          "overlap": [
+            0.10999999999999999,
+            0.11000000000000032,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "post-foot-3",
+          "b": "wood-foundation",
+          "overlap": [
+            0.16000000000000014,
+            0.16000000000000014,
+            0.04999999999999982
+          ]
+        },
+        {
+          "a": "wood-post-3",
+          "b": "post-foot-3",
+          "overlap": [
+            0.11000000000000032,
+            0.11000000000000032,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-rail-back-base",
+          "b": "wood-post-0",
+          "overlap": [
+            0.05499999999999999,
+            0.09000000000000002,
+            0.8499999999999996
+          ]
+        },
+        {
+          "a": "wood-rail-back-base",
+          "b": "wood-post-1",
+          "overlap": [
+            0.05500000000000016,
+            0.09000000000000002,
+            0.8499999999999996
+          ]
+        },
+        {
+          "a": "wood-rail-back-top",
+          "b": "wood-post-0",
+          "overlap": [
+            0.05499999999999999,
+            0.09000000000000002,
+            1.4000000000000004
+          ]
+        },
+        {
+          "a": "wood-rail-back-top",
+          "b": "wood-post-1",
+          "overlap": [
+            0.05500000000000016,
+            0.09000000000000002,
+            1.4000000000000004
+          ]
+        },
+        {
+          "a": "wood-baluster-back-0",
+          "b": "wood-rail-back-base",
+          "overlap": [
+            0.04400000000000004,
+            0.055999999999999994,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-back-0",
+          "b": "wood-rail-back-top",
+          "overlap": [
+            0.04400000000000004,
+            0.055999999999999994,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-back-1",
+          "b": "wood-rail-back-base",
+          "overlap": [
+            0.04400000000000004,
+            0.055999999999999994,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-back-1",
+          "b": "wood-rail-back-top",
+          "overlap": [
+            0.04400000000000004,
+            0.055999999999999994,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-back-2",
+          "b": "wood-rail-back-base",
+          "overlap": [
+            0.04400000000000004,
+            0.055999999999999994,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-back-2",
+          "b": "wood-rail-back-top",
+          "overlap": [
+            0.04400000000000004,
+            0.055999999999999994,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-back-3",
+          "b": "wood-rail-back-base",
+          "overlap": [
+            0.04400000000000004,
+            0.055999999999999994,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-back-3",
+          "b": "wood-rail-back-top",
+          "overlap": [
+            0.04400000000000004,
+            0.055999999999999994,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-back-4",
+          "b": "wood-rail-back-base",
+          "overlap": [
+            0.04400000000000004,
+            0.055999999999999994,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-back-4",
+          "b": "wood-rail-back-top",
+          "overlap": [
+            0.04400000000000004,
+            0.055999999999999994,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-back-5",
+          "b": "wood-rail-back-base",
+          "overlap": [
+            0.04400000000000004,
+            0.055999999999999994,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-back-5",
+          "b": "wood-rail-back-top",
+          "overlap": [
+            0.04400000000000004,
+            0.055999999999999994,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-back-6",
+          "b": "wood-rail-back-base",
+          "overlap": [
+            0.04400000000000004,
+            0.055999999999999994,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-back-6",
+          "b": "wood-rail-back-top",
+          "overlap": [
+            0.04400000000000004,
+            0.055999999999999994,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-back-7",
+          "b": "wood-rail-back-base",
+          "overlap": [
+            0.043999999999999595,
+            0.055999999999999994,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-back-7",
+          "b": "wood-rail-back-top",
+          "overlap": [
+            0.043999999999999595,
+            0.055999999999999994,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-back-8",
+          "b": "wood-rail-back-base",
+          "overlap": [
+            0.043999999999999595,
+            0.055999999999999994,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-back-8",
+          "b": "wood-rail-back-top",
+          "overlap": [
+            0.043999999999999595,
+            0.055999999999999994,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-rail-right-base",
+          "b": "wood-post-1",
+          "overlap": [
+            0.08999999999999986,
+            0.05499999999999999,
+            0.8499999999999996
+          ]
+        },
+        {
+          "a": "wood-rail-right-base",
+          "b": "wood-post-3",
+          "overlap": [
+            0.08999999999999986,
+            0.05500000000000016,
+            0.8499999999999996
+          ]
+        },
+        {
+          "a": "wood-rail-right-top",
+          "b": "wood-post-1",
+          "overlap": [
+            0.08999999999999986,
+            0.05499999999999999,
+            1.4000000000000004
+          ]
+        },
+        {
+          "a": "wood-rail-right-top",
+          "b": "wood-post-3",
+          "overlap": [
+            0.08999999999999986,
+            0.05500000000000016,
+            1.4000000000000004
+          ]
+        },
+        {
+          "a": "wood-baluster-right-0",
+          "b": "wood-rail-right-base",
+          "overlap": [
+            0.05600000000000005,
+            0.04400000000000004,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-right-0",
+          "b": "wood-rail-right-top",
+          "overlap": [
+            0.05600000000000005,
+            0.04400000000000004,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-right-1",
+          "b": "wood-rail-right-base",
+          "overlap": [
+            0.05600000000000005,
+            0.04400000000000004,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-right-1",
+          "b": "wood-rail-right-top",
+          "overlap": [
+            0.05600000000000005,
+            0.04400000000000004,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-right-2",
+          "b": "wood-rail-right-base",
+          "overlap": [
+            0.05600000000000005,
+            0.04400000000000004,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-right-2",
+          "b": "wood-rail-right-top",
+          "overlap": [
+            0.05600000000000005,
+            0.04400000000000004,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-right-3",
+          "b": "wood-rail-right-base",
+          "overlap": [
+            0.05600000000000005,
+            0.04400000000000004,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-right-3",
+          "b": "wood-rail-right-top",
+          "overlap": [
+            0.05600000000000005,
+            0.04400000000000004,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-right-4",
+          "b": "wood-rail-right-base",
+          "overlap": [
+            0.05600000000000005,
+            0.04400000000000004,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-right-4",
+          "b": "wood-rail-right-top",
+          "overlap": [
+            0.05600000000000005,
+            0.04400000000000004,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-right-5",
+          "b": "wood-rail-right-base",
+          "overlap": [
+            0.05600000000000005,
+            0.04400000000000004,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-right-5",
+          "b": "wood-rail-right-top",
+          "overlap": [
+            0.05600000000000005,
+            0.04400000000000004,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-right-6",
+          "b": "wood-rail-right-base",
+          "overlap": [
+            0.05600000000000005,
+            0.04400000000000004,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-right-6",
+          "b": "wood-rail-right-top",
+          "overlap": [
+            0.05600000000000005,
+            0.04400000000000004,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-right-7",
+          "b": "wood-rail-right-base",
+          "overlap": [
+            0.05600000000000005,
+            0.043999999999999595,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-right-7",
+          "b": "wood-rail-right-top",
+          "overlap": [
+            0.05600000000000005,
+            0.043999999999999595,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-baluster-right-8",
+          "b": "wood-rail-right-base",
+          "overlap": [
+            0.05600000000000005,
+            0.043999999999999595,
+            0.09999999999999964
+          ]
+        },
+        {
+          "a": "wood-baluster-right-8",
+          "b": "wood-rail-right-top",
+          "overlap": [
+            0.05600000000000005,
+            0.043999999999999595,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-post-0",
+          "b": "roof-tile",
+          "overlap": [
+            0.10999999999999999,
+            0.10999999999999999,
+            2.456743791135615
+          ]
+        },
+        {
+          "a": "wood-post-1",
+          "b": "roof-tile",
+          "overlap": [
+            0.11000000000000032,
+            0.10999999999999999,
+            2.456743791135615
+          ]
+        },
+        {
+          "a": "wood-post-2",
+          "b": "roof-tile",
+          "overlap": [
+            0.10999999999999999,
+            0.11000000000000032,
+            2.456743791135615
+          ]
+        },
+        {
+          "a": "wood-post-3",
+          "b": "roof-tile",
+          "overlap": [
+            0.11000000000000032,
+            0.11000000000000032,
+            2.456743791135615
+          ]
+        },
+        {
+          "a": "roof-hip-0",
+          "b": "roof-tile",
+          "overlap": [
+            1.4957106781186547,
+            1.4957106781186547,
+            21.372079682253755
+          ]
+        },
+        {
+          "a": "roof-hip-1",
+          "b": "roof-tile",
+          "overlap": [
+            1.4957106781186544,
+            1.4957106781186547,
+            21.372079682253755
+          ]
+        },
+        {
+          "a": "roof-hip-2",
+          "b": "roof-tile",
+          "overlap": [
+            1.4957106781186544,
+            1.4957106781186544,
+            21.372079682253755
+          ]
+        },
+        {
+          "a": "roof-hip-3",
+          "b": "roof-tile",
+          "overlap": [
+            1.4957106781186547,
+            1.4957106781186544,
+            21.372079682253755
+          ]
+        },
+        {
+          "a": "roof-finial",
+          "b": "roof-tile",
+          "overlap": [
+            0.18999999999999995,
+            0.18999999999999995,
+            0.29999999999999716
+          ]
+        },
+        {
+          "a": "wood-post-0",
+          "b": "actual roof triangles underside",
+          "overlap": [
+            0.390064814435263,
+            0.3941459274130281,
+            0.3941459274130281,
+            0.41457531865591335
+          ]
+        },
+        {
+          "a": "wood-post-1",
+          "b": "actual roof triangles underside",
+          "overlap": [
+            0.3993452345760957,
+            0.41457531865590624,
+            0.390064814435263,
+            0.3993452345760957
+          ]
+        },
+        {
+          "a": "wood-post-2",
+          "b": "actual roof triangles underside",
+          "overlap": [
+            0.3993452345760957,
+            0.390064814435263,
+            0.41457531865590624,
+            0.3993452345760957
+          ]
+        },
+        {
+          "a": "wood-post-3",
+          "b": "actual roof triangles underside",
+          "overlap": [
+            0.41457531865590624,
+            0.3941459274130281,
+            0.3941459274130281,
+            0.390064814435263
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-foundation",
+          "edges": 12
+        },
+        {
+          "name": "post-foot-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-0",
+          "edges": 13
+        },
+        {
+          "name": "post-foot-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-1",
+          "edges": 13
+        },
+        {
+          "name": "post-foot-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-2",
+          "edges": 13
+        },
+        {
+          "name": "post-foot-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-post-3",
+          "edges": 13
+        },
+        {
+          "name": "wood-rail-back-base",
+          "edges": 12
+        },
+        {
+          "name": "wood-rail-back-top",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-back-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-back-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-back-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-back-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-back-4",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-back-5",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-back-6",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-back-7",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-back-8",
+          "edges": 12
+        },
+        {
+          "name": "wood-rail-right-base",
+          "edges": 12
+        },
+        {
+          "name": "wood-rail-right-top",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-right-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-right-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-right-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-right-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-right-4",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-right-5",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-right-6",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-right-7",
+          "edges": 12
+        },
+        {
+          "name": "wood-baluster-right-8",
+          "edges": 12
+        },
+        {
+          "name": "roof-tile",
+          "edges": 3648
+        },
+        {
+          "name": "roof-hip-0",
+          "edges": 576
+        },
+        {
+          "name": "roof-hip-1",
+          "edges": 576
+        },
+        {
+          "name": "roof-hip-2",
+          "edges": 576
+        },
+        {
+          "name": "roof-hip-3",
+          "edges": 576
+        },
+        {
+          "name": "roof-finial",
+          "edges": 156
+        }
+      ],
+      "rotation_edge_error": 4.440892098500626e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            80450
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5550802059952411,
+              "samples": 114,
+              "coverage": 1,
+              "leg_occluded_x": [],
+              "isolated_slope": -0.5001113788704163,
+              "expected_slope": -0.5,
+              "rms": 0.555068105040036,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 114,
+                "slope": -0.5001113788704163,
+                "rms": 0.555068105040036,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5589481668698386,
+              "samples": 114,
+              "coverage": 1,
+              "leg_occluded_x": [],
+              "isolated_slope": 0.4998845709888418,
+              "expected_slope": 0.49999999999999983,
+              "rms": 0.558935259775908,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 114,
+                "slope": 0.4998845709888418,
+                "rms": 0.5589352597759044,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            82108
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5550802059952411,
+              "samples": 114,
+              "coverage": 1,
+              "leg_occluded_x": [],
+              "isolated_slope": -0.5001113788704163,
+              "expected_slope": -0.5,
+              "rms": 0.555068105040036,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 114,
+                "slope": -0.5001113788704163,
+                "rms": 0.555068105040036,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5589481668698386,
+              "samples": 114,
+              "coverage": 1,
+              "leg_occluded_x": [],
+              "isolated_slope": 0.4998845709888418,
+              "expected_slope": 0.49999999999999983,
+              "rms": 0.558935259775908,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 114,
+                "slope": 0.4998845709888418,
+                "rms": 0.5589352597759044,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            80450
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5550802059952411,
+              "samples": 114,
+              "coverage": 1,
+              "leg_occluded_x": [],
+              "isolated_slope": -0.5001113788704163,
+              "expected_slope": -0.5,
+              "rms": 0.555068105040036,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 114,
+                "slope": -0.5001113788704163,
+                "rms": 0.555068105040036,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5589481668698386,
+              "samples": 114,
+              "coverage": 1,
+              "leg_occluded_x": [],
+              "isolated_slope": 0.4998845709888418,
+              "expected_slope": 0.49999999999999983,
+              "rms": 0.558935259775908,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 114,
+                "slope": 0.4998845709888418,
+                "rms": 0.5589352597759044,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            79128
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "floor",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5550802059952411,
+              "samples": 114,
+              "coverage": 1,
+              "leg_occluded_x": [],
+              "isolated_slope": -0.5001113788704163,
+              "expected_slope": -0.5,
+              "rms": 0.555068105040036,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 114,
+                "slope": -0.5001113788704163,
+                "rms": 0.555068105040036,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "floor",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5589481668698386,
+              "samples": 114,
+              "coverage": 1,
+              "leg_occluded_x": [],
+              "isolated_slope": 0.4998845709888418,
+              "expected_slope": 0.49999999999999983,
+              "rms": 0.558935259775908,
+              "outline_adjusted_residual": null,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 114,
+                "slope": 0.4998845709888418,
+                "rms": 0.5589352597759044,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [],
+      "assembly_gaps": [],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_pavilion_0.webp",
+          "sha256": "3a999410a66abeb7a30f62f334580396c4d78f73ce5430d71e28725ab3f98dc2"
+        },
+        {
+          "d": 1,
+          "file": "fac_pavilion_1.webp",
+          "sha256": "3a326c8ad13b7812cdcd3e30ed6939ab3e8842bfd2fc5ae36e15aacef936c79a"
+        },
+        {
+          "d": 2,
+          "file": "fac_pavilion_2.webp",
+          "sha256": "eb5296ca79b0a72695669c0386bd2d888a29e40c89e76be63d91ad4ebc878344"
+        },
+        {
+          "d": 3,
+          "file": "fac_pavilion_3.webp",
+          "sha256": "61a591259d8b862c6e1d2afe7ed8d98896ccb67112e58386db15bbca03b4a268"
+        }
+      ],
+      "limits": [
+        "Original rail locations and roof patterns differ across facings; this authors one consistent placement.",
+        "Roof tile grooves are painted on the common curved shell rather than individually modeled ceramic tiles.",
+        "Saved floor or exposed top boundary samples only; not every interior line. AABB joins are not exact mesh intersection proofs."
+      ]
+    },
+    {
+      "id": "authored_parasol",
+      "status": "PASS",
+      "joints": [
+        {
+          "a": "wood-table-leg-0",
+          "b": "wood-tabletop",
+          "overlap": [
+            0.07000000000000006,
+            0.07000000000000006,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-table-leg-1",
+          "b": "wood-tabletop",
+          "overlap": [
+            0.06999999999999984,
+            0.07000000000000006,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-table-leg-2",
+          "b": "wood-tabletop",
+          "overlap": [
+            0.07000000000000006,
+            0.06999999999999984,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-table-leg-3",
+          "b": "wood-tabletop",
+          "overlap": [
+            0.06999999999999984,
+            0.06999999999999984,
+            0.1999999999999993
+          ]
+        },
+        {
+          "a": "wood-chair-0-leg-0",
+          "b": "wood-chair-0-seat",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            1.1500000000000004
+          ]
+        },
+        {
+          "a": "wood-chair-0-leg-1",
+          "b": "wood-chair-0-seat",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-chair-0-leg-2",
+          "b": "wood-chair-0-seat",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            1.1500000000000004
+          ]
+        },
+        {
+          "a": "wood-chair-0-leg-3",
+          "b": "wood-chair-0-seat",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-chair-0-slat-0",
+          "b": "wood-chair-0-seat",
+          "overlap": [
+            0.050000000000000044,
+            0.040000000000000036,
+            0.10000000000000053
+          ]
+        },
+        {
+          "a": "wood-chair-0-slat-0",
+          "b": "wood-chair-0-backtop",
+          "overlap": [
+            0.050000000000000044,
+            0.040000000000000036,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-chair-0-slat-1",
+          "b": "wood-chair-0-seat",
+          "overlap": [
+            0.050000000000000044,
+            0.040000000000000036,
+            0.10000000000000053
+          ]
+        },
+        {
+          "a": "wood-chair-0-slat-1",
+          "b": "wood-chair-0-backtop",
+          "overlap": [
+            0.050000000000000044,
+            0.040000000000000036,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-chair-0-slat-2",
+          "b": "wood-chair-0-seat",
+          "overlap": [
+            0.050000000000000044,
+            0.040000000000000036,
+            0.10000000000000053
+          ]
+        },
+        {
+          "a": "wood-chair-0-slat-2",
+          "b": "wood-chair-0-backtop",
+          "overlap": [
+            0.050000000000000044,
+            0.040000000000000036,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-chair-1-leg-0",
+          "b": "wood-chair-1-seat",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-chair-1-leg-1",
+          "b": "wood-chair-1-seat",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            1.1500000000000004
+          ]
+        },
+        {
+          "a": "wood-chair-1-leg-2",
+          "b": "wood-chair-1-seat",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            0.20000000000000018
+          ]
+        },
+        {
+          "a": "wood-chair-1-leg-3",
+          "b": "wood-chair-1-seat",
+          "overlap": [
+            0.06400000000000006,
+            0.06400000000000006,
+            1.1500000000000004
+          ]
+        },
+        {
+          "a": "wood-chair-1-slat-0",
+          "b": "wood-chair-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            0.10000000000000053
+          ]
+        },
+        {
+          "a": "wood-chair-1-slat-0",
+          "b": "wood-chair-1-backtop",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-chair-1-slat-1",
+          "b": "wood-chair-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            0.10000000000000053
+          ]
+        },
+        {
+          "a": "wood-chair-1-slat-1",
+          "b": "wood-chair-1-backtop",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-chair-1-slat-2",
+          "b": "wood-chair-1-seat",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            0.10000000000000053
+          ]
+        },
+        {
+          "a": "wood-chair-1-slat-2",
+          "b": "wood-chair-1-backtop",
+          "overlap": [
+            0.04999999999999982,
+            0.040000000000000036,
+            0.20000000000000107
+          ]
+        },
+        {
+          "a": "wood-pole",
+          "b": "wood-tabletop",
+          "overlap": [
+            0.06000000000000005,
+            0.06000000000000005,
+            0.15000000000000036
+          ]
+        },
+        {
+          "a": "canopy",
+          "b": "wood-pole",
+          "overlap": [
+            0.06000000000000005,
+            0.06000000000000005,
+            4.98
+          ]
+        },
+        {
+          "a": "wood-finial",
+          "b": "canopy",
+          "overlap": [
+            0.09600000000000009,
+            0.09600000000000009,
+            0.04999999999999716
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-tabletop",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-table-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-backtop",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-slat-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-slat-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-0-slat-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-seat",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-backtop",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-slat-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-slat-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-chair-1-slat-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-pole",
+          "edges": 108
+        },
+        {
+          "name": "canopy",
+          "edges": 2784
+        },
+        {
+          "name": "wood-finial",
+          "edges": 108
+        }
+      ],
+      "rotation_edge_error": 3.157196726277789e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            18368
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "table",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5415433784741817,
+              "samples": 26,
+              "coverage": 1.0,
+              "leg_occluded_x": [],
+              "isolated_slope": -0.5018803418803383,
+              "expected_slope": -0.4999999999999993,
+              "rms": 0.5413597218624265,
+              "outline_adjusted_residual": 0.4807692307692308,
+              "visible_fraction": 0.5769230769230769,
+              "combined": {
+                "samples": 15,
+                "slope": -0.4857142857142833,
+                "rms": 0.5380741673076495,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "table",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5576923076923079,
+              "samples": 26,
+              "coverage": 1.0,
+              "leg_occluded_x": [],
+              "isolated_slope": 0.4977777777777802,
+              "expected_slope": 0.4999999999999993,
+              "rms": 0.5574432099159458,
+              "outline_adjusted_residual": 0.5037305157001128,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 26,
+                "slope": 0.4977777777777802,
+                "rms": 0.5574432099159468,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "chair-0",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.47619047619047616,
+              "leg_occluded_x": [
+                353,
+                354,
+                355,
+                356,
+                357,
+                368,
+                369,
+                370,
+                371,
+                372,
+                373
+              ],
+              "isolated_slope": -0.5151515151515221,
+              "expected_slope": -0.5,
+              "rms": 0.24618298195867036,
+              "outline_adjusted_residual": 1.3402505493164085,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-0",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.5882352941176471,
+              "leg_occluded_x": [
+                325,
+                326,
+                327,
+                328,
+                329,
+                330,
+                341
+              ],
+              "isolated_slope": 0.4848484848484721,
+              "expected_slope": 0.5,
+              "rms": 0.24618298195866825,
+              "outline_adjusted_residual": 0.6002505493163994,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-1",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.47619047619047616,
+              "leg_occluded_x": [
+                422,
+                423,
+                424,
+                425,
+                426,
+                437,
+                438,
+                439,
+                440,
+                441,
+                442
+              ],
+              "isolated_slope": -0.48484848484847054,
+              "expected_slope": -0.5,
+              "rms": 0.24618298195866267,
+              "outline_adjusted_residual": 1.460250549316413,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-1",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.5882352941176471,
+              "leg_occluded_x": [
+                394,
+                395,
+                396,
+                397,
+                398,
+                399,
+                410
+              ],
+              "isolated_slope": 0.5151515151515108,
+              "expected_slope": 0.5,
+              "rms": 0.24618298195866126,
+              "outline_adjusted_residual": 0.6002505493163994,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            18368
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "table",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5415433784741817,
+              "samples": 26,
+              "coverage": 1.0,
+              "leg_occluded_x": [],
+              "isolated_slope": -0.5018803418803383,
+              "expected_slope": -0.4999999999999993,
+              "rms": 0.5413597218624265,
+              "outline_adjusted_residual": 0.4807692307692308,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 26,
+                "slope": -0.5018803418803383,
+                "rms": 0.5413597218624265,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "table",
+              "fit_scope": "line fit",
+              "guide_rms": 0.557692307692307,
+              "samples": 26,
+              "coverage": 1.0,
+              "leg_occluded_x": [],
+              "isolated_slope": 0.4977777777777802,
+              "expected_slope": 0.4999999999999986,
+              "rms": 0.5574432099159458,
+              "outline_adjusted_residual": 0.503730515700126,
+              "visible_fraction": 0.5384615384615384,
+              "combined": {
+                "samples": 14,
+                "slope": 0.4923076923076959,
+                "rms": 0.5535669975008749,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "chair-0",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.5882352941176471,
+              "leg_occluded_x": [
+                368,
+                369,
+                370,
+                371,
+                372,
+                373,
+                374
+              ],
+              "isolated_slope": -0.5151515151515137,
+              "expected_slope": -0.5,
+              "rms": 0.2461829819586725,
+              "outline_adjusted_residual": 1.1002505493163994,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-0",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.47619047619047616,
+              "leg_occluded_x": [
+                326,
+                327,
+                328,
+                329,
+                330,
+                341,
+                342,
+                343,
+                344,
+                345,
+                346
+              ],
+              "isolated_slope": 0.48484848484846044,
+              "expected_slope": 0.5,
+              "rms": 0.24618298195866753,
+              "outline_adjusted_residual": 0.9602505493164131,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-1",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.5882352941176471,
+              "leg_occluded_x": [
+                437,
+                438,
+                439,
+                440,
+                441,
+                442,
+                443
+              ],
+              "isolated_slope": -0.4848484848484742,
+              "expected_slope": -0.5,
+              "rms": 0.2461829819586606,
+              "outline_adjusted_residual": 1.1002505493163994,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-1",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.47619047619047616,
+              "leg_occluded_x": [
+                395,
+                396,
+                397,
+                398,
+                399,
+                410,
+                411,
+                412,
+                413,
+                414,
+                415
+              ],
+              "isolated_slope": 0.515151515151512,
+              "expected_slope": 0.5,
+              "rms": 0.24618298195866756,
+              "outline_adjusted_residual": 0.8402505493164085,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            18368
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "table",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5415433784741817,
+              "samples": 26,
+              "coverage": 1.0,
+              "leg_occluded_x": [],
+              "isolated_slope": -0.5018803418803383,
+              "expected_slope": -0.4999999999999993,
+              "rms": 0.5413597218624265,
+              "outline_adjusted_residual": 0.4807692307692308,
+              "visible_fraction": 0.5769230769230769,
+              "combined": {
+                "samples": 15,
+                "slope": -0.4857142857142833,
+                "rms": 0.5380741673076495,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "table",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5576923076923079,
+              "samples": 26,
+              "coverage": 1.0,
+              "leg_occluded_x": [],
+              "isolated_slope": 0.4977777777777802,
+              "expected_slope": 0.4999999999999993,
+              "rms": 0.5574432099159458,
+              "outline_adjusted_residual": 0.5037305157001128,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 26,
+                "slope": 0.4977777777777802,
+                "rms": 0.5574432099159468,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "chair-0",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.47619047619047616,
+              "leg_occluded_x": [
+                422,
+                423,
+                424,
+                425,
+                426,
+                437,
+                438,
+                439,
+                440,
+                441,
+                442
+              ],
+              "isolated_slope": -0.48484848484847054,
+              "expected_slope": -0.5,
+              "rms": 0.24618298195866267,
+              "outline_adjusted_residual": 1.460250549316413,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-0",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.5882352941176471,
+              "leg_occluded_x": [
+                394,
+                395,
+                396,
+                397,
+                398,
+                399,
+                410
+              ],
+              "isolated_slope": 0.5151515151515108,
+              "expected_slope": 0.5,
+              "rms": 0.24618298195866126,
+              "outline_adjusted_residual": 0.6002505493163994,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-1",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.47619047619047616,
+              "leg_occluded_x": [
+                353,
+                354,
+                355,
+                356,
+                357,
+                368,
+                369,
+                370,
+                371,
+                372,
+                373
+              ],
+              "isolated_slope": -0.5151515151515221,
+              "expected_slope": -0.5,
+              "rms": 0.24618298195867036,
+              "outline_adjusted_residual": 1.3402505493164085,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-1",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.5882352941176471,
+              "leg_occluded_x": [
+                325,
+                326,
+                327,
+                328,
+                329,
+                330,
+                341
+              ],
+              "isolated_slope": 0.4848484848484721,
+              "expected_slope": 0.5,
+              "rms": 0.24618298195866825,
+              "outline_adjusted_residual": 0.6002505493163994,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            18368
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "table",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5415433784741817,
+              "samples": 26,
+              "coverage": 1.0,
+              "leg_occluded_x": [],
+              "isolated_slope": -0.5018803418803383,
+              "expected_slope": -0.4999999999999986,
+              "rms": 0.5413597218624265,
+              "outline_adjusted_residual": 0.4807692307692308,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 26,
+                "slope": -0.5018803418803383,
+                "rms": 0.5413597218624265,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "table",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5576923076923079,
+              "samples": 26,
+              "coverage": 1.0,
+              "leg_occluded_x": [],
+              "isolated_slope": 0.4977777777777802,
+              "expected_slope": 0.4999999999999993,
+              "rms": 0.5574432099159458,
+              "outline_adjusted_residual": 0.5037305157001128,
+              "visible_fraction": 0.5384615384615384,
+              "combined": {
+                "samples": 14,
+                "slope": 0.4923076923076959,
+                "rms": 0.5535669975008749,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "chair-0",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.5882352941176471,
+              "leg_occluded_x": [
+                437,
+                438,
+                439,
+                440,
+                441,
+                442,
+                443
+              ],
+              "isolated_slope": -0.4848484848484742,
+              "expected_slope": -0.5,
+              "rms": 0.2461829819586606,
+              "outline_adjusted_residual": 1.1002505493163994,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-0",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.47619047619047616,
+              "leg_occluded_x": [
+                395,
+                396,
+                397,
+                398,
+                399,
+                410,
+                411,
+                412,
+                413,
+                414,
+                415
+              ],
+              "isolated_slope": 0.515151515151512,
+              "expected_slope": 0.5,
+              "rms": 0.24618298195866756,
+              "outline_adjusted_residual": 0.8402505493164085,
+              "visible_fraction": 0.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-1",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.5882352941176471,
+              "leg_occluded_x": [
+                368,
+                369,
+                370,
+                371,
+                372,
+                373,
+                374
+              ],
+              "isolated_slope": -0.5151515151515137,
+              "expected_slope": -0.5,
+              "rms": 0.2461829819586725,
+              "outline_adjusted_residual": 1.1002505493163994,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            },
+            {
+              "part": "chair-1",
+              "fit_scope": "short guide residual only; slope unverified",
+              "guide_rms": 0.25,
+              "samples": 10,
+              "coverage": 0.47619047619047616,
+              "leg_occluded_x": [
+                326,
+                327,
+                328,
+                329,
+                330,
+                341,
+                342,
+                343,
+                344,
+                345,
+                346
+              ],
+              "isolated_slope": 0.48484848484846044,
+              "expected_slope": 0.5,
+              "rms": 0.24618298195866753,
+              "outline_adjusted_residual": 0.9602505493164131,
+              "visible_fraction": 1.0,
+              "combined": null,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "table",
+          "d": 0,
+          "connected": true,
+          "pixels": 13984
+        },
+        {
+          "name": "chair-0",
+          "d": 0,
+          "connected": true,
+          "pixels": 3126
+        },
+        {
+          "name": "chair-1",
+          "d": 0,
+          "connected": true,
+          "pixels": 2685
+        },
+        {
+          "name": "table",
+          "d": 1,
+          "connected": true,
+          "pixels": 13984
+        },
+        {
+          "name": "chair-0",
+          "d": 1,
+          "connected": true,
+          "pixels": 2685
+        },
+        {
+          "name": "chair-1",
+          "d": 1,
+          "connected": true,
+          "pixels": 3126
+        },
+        {
+          "name": "table",
+          "d": 2,
+          "connected": true,
+          "pixels": 13984
+        },
+        {
+          "name": "chair-0",
+          "d": 2,
+          "connected": true,
+          "pixels": 2685
+        },
+        {
+          "name": "chair-1",
+          "d": 2,
+          "connected": true,
+          "pixels": 3126
+        },
+        {
+          "name": "table",
+          "d": 3,
+          "connected": true,
+          "pixels": 13984
+        },
+        {
+          "name": "chair-0",
+          "d": 3,
+          "connected": true,
+          "pixels": 3126
+        },
+        {
+          "name": "chair-1",
+          "d": 3,
+          "connected": true,
+          "pixels": 2685
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "table",
+          "b": "chair-0",
+          "axis_gaps": [
+            0.015000000000000013,
+            -0.5749999999999998,
+            -10.4
+          ]
+        },
+        {
+          "a": "table",
+          "b": "chair-1",
+          "axis_gaps": [
+            0.014999999999999902,
+            -0.5749999999999998,
+            -10.4
+          ]
+        },
+        {
+          "a": "chair-0",
+          "b": "chair-1",
+          "axis_gaps": [
+            0.6699999999999999,
+            -0.5099999999999999,
+            -14.8
+          ]
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_authored_parasol_0.fix-be8ce70d1e35.webp",
+          "sha256": "be8ce70d1e351cb33382ae020c57f560b2bf81afce942a40d7c1e518acea62bd"
+        },
+        {
+          "d": 1,
+          "file": "fac_authored_parasol_1.webp",
+          "sha256": "2532cd1e8a6e76d7ed5c343ece0f0af13b0a0a5d82ecdcd6a5fa3e3aafe53e50"
+        },
+        {
+          "d": 2,
+          "file": "fac_authored_parasol_2.webp",
+          "sha256": "aa400df72810cde94677da205e7e655592c836f6c1bc97fd755559021d45a84a"
+        },
+        {
+          "d": 3,
+          "file": "fac_authored_parasol_3.webp",
+          "sha256": "641f4d76b3199f52966b02cfc7390035c5fc7fc11c12676ced32538e30735ce2"
+        }
+      ],
+      "limits": [
+        "Source chairs and canopy widths differ per facing; two facing chairs and a fixed striped umbrella are authored.",
+        "Chairs are separate from the table; projection overlap is not a physical attachment.",
+        "Saved floor or exposed top boundary samples only; not every interior line. AABB joins are not exact mesh intersection proofs."
+      ]
+    },
+    {
+      "id": "authored_sunbed_row",
+      "status": "PIXEL_LINE_FAIL",
+      "joints": [
+        {
+          "a": "wood-bed-0-leg-0",
+          "b": "wood-bed-0-base",
+          "overlap": [
+            0.06600000000000006,
+            0.06600000000000006,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-bed-0-leg-1",
+          "b": "wood-bed-0-base",
+          "overlap": [
+            0.06600000000000006,
+            0.06600000000000006,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-bed-0-leg-2",
+          "b": "wood-bed-0-base",
+          "overlap": [
+            0.06600000000000006,
+            0.06599999999999984,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-bed-0-leg-3",
+          "b": "wood-bed-0-base",
+          "overlap": [
+            0.06600000000000006,
+            0.06599999999999984,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "mattress-0",
+          "b": "wood-bed-0-base",
+          "overlap": [
+            0.595,
+            1.1799999999999997,
+            0.03000000000000025
+          ]
+        },
+        {
+          "a": "pillow-0",
+          "b": "mattress-0",
+          "overlap": [
+            0.52,
+            0.26,
+            0.2239999999999993
+          ]
+        },
+        {
+          "a": "wood-bed-1-leg-0",
+          "b": "wood-bed-1-base",
+          "overlap": [
+            0.06599999999999984,
+            0.06600000000000006,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-bed-1-leg-1",
+          "b": "wood-bed-1-base",
+          "overlap": [
+            0.06599999999999984,
+            0.06600000000000006,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-bed-1-leg-2",
+          "b": "wood-bed-1-base",
+          "overlap": [
+            0.06599999999999984,
+            0.06599999999999984,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-bed-1-leg-3",
+          "b": "wood-bed-1-base",
+          "overlap": [
+            0.06599999999999984,
+            0.06599999999999984,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "mattress-1",
+          "b": "wood-bed-1-base",
+          "overlap": [
+            0.5950000000000002,
+            1.1799999999999997,
+            0.03000000000000025
+          ]
+        },
+        {
+          "a": "pillow-1",
+          "b": "mattress-1",
+          "overlap": [
+            0.52,
+            0.26,
+            0.2239999999999993
+          ]
+        },
+        {
+          "a": "wood-bed-2-leg-0",
+          "b": "wood-bed-2-base",
+          "overlap": [
+            0.06599999999999984,
+            0.06600000000000006,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-bed-2-leg-1",
+          "b": "wood-bed-2-base",
+          "overlap": [
+            0.06599999999999984,
+            0.06600000000000006,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-bed-2-leg-2",
+          "b": "wood-bed-2-base",
+          "overlap": [
+            0.06599999999999984,
+            0.06599999999999984,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-bed-2-leg-3",
+          "b": "wood-bed-2-base",
+          "overlap": [
+            0.06599999999999984,
+            0.06599999999999984,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "mattress-2",
+          "b": "wood-bed-2-base",
+          "overlap": [
+            0.5949999999999998,
+            1.1799999999999997,
+            0.03000000000000025
+          ]
+        },
+        {
+          "a": "pillow-2",
+          "b": "mattress-2",
+          "overlap": [
+            0.5199999999999996,
+            0.26,
+            0.2239999999999993
+          ]
+        },
+        {
+          "a": "wood-bed-3-leg-0",
+          "b": "wood-bed-3-base",
+          "overlap": [
+            0.06599999999999984,
+            0.06600000000000006,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-bed-3-leg-1",
+          "b": "wood-bed-3-base",
+          "overlap": [
+            0.06599999999999984,
+            0.06600000000000006,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-bed-3-leg-2",
+          "b": "wood-bed-3-base",
+          "overlap": [
+            0.06599999999999984,
+            0.06599999999999984,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "wood-bed-3-leg-3",
+          "b": "wood-bed-3-base",
+          "overlap": [
+            0.06599999999999984,
+            0.06599999999999984,
+            0.19999999999999973
+          ]
+        },
+        {
+          "a": "mattress-3",
+          "b": "wood-bed-3-base",
+          "overlap": [
+            0.5949999999999998,
+            1.1799999999999997,
+            0.03000000000000025
+          ]
+        },
+        {
+          "a": "pillow-3",
+          "b": "mattress-3",
+          "overlap": [
+            0.5200000000000005,
+            0.26,
+            0.2239999999999993
+          ]
+        }
+      ],
+      "closed_meshes": [
+        {
+          "name": "wood-bed-0-base",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-0-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-0-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-0-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-0-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "mattress-0",
+          "edges": 360
+        },
+        {
+          "name": "pillow-0",
+          "edges": 360
+        },
+        {
+          "name": "wood-bed-1-base",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-1-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-1-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-1-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-1-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "mattress-1",
+          "edges": 360
+        },
+        {
+          "name": "pillow-1",
+          "edges": 360
+        },
+        {
+          "name": "wood-bed-2-base",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-2-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-2-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-2-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-2-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "mattress-2",
+          "edges": 360
+        },
+        {
+          "name": "pillow-2",
+          "edges": 360
+        },
+        {
+          "name": "wood-bed-3-base",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-3-leg-0",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-3-leg-1",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-3-leg-2",
+          "edges": 12
+        },
+        {
+          "name": "wood-bed-3-leg-3",
+          "edges": 12
+        },
+        {
+          "name": "mattress-3",
+          "edges": 360
+        },
+        {
+          "name": "pillow-3",
+          "edges": 360
+        }
+      ],
+      "rotation_edge_error": 4.440892098500626e-16,
+      "frames": [
+        {
+          "d": 0,
+          "components": [
+            20245
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "bed-0",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749475,
+              "samples": 48,
+              "coverage": 0.9411764705882353,
+              "leg_occluded_x": [
+                341,
+                342,
+                343
+              ],
+              "isolated_slope": -0.5006513243595309,
+              "expected_slope": -0.5,
+              "rms": 0.5589441693541986,
+              "outline_adjusted_residual": 0.9602505493164131,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 48,
+                "slope": -0.5006513243595309,
+                "rms": 0.5589441693541971,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-0",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5703152773430976,
+              "samples": 17,
+              "coverage": 0.6296296296296297,
+              "leg_occluded_x": [
+                245,
+                246,
+                247,
+                248,
+                249,
+                250,
+                251,
+                252,
+                253,
+                254
+              ],
+              "isolated_slope": 0.49019607843137974,
+              "expected_slope": 0.5000000000000007,
+              "rms": 0.5682892841642917,
+              "outline_adjusted_residual": 1.1043681963752594,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 17,
+                "slope": 0.49019607843137974,
+                "rms": 0.5682892841642917,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-1",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5637294169996498,
+              "samples": 47,
+              "coverage": 0.9215686274509803,
+              "leg_occluded_x": [
+                398,
+                399,
+                400,
+                401
+              ],
+              "isolated_slope": -0.5013876040703077,
+              "expected_slope": -0.4999999999999993,
+              "rms": 0.5634150989283806,
+              "outline_adjusted_residual": 1.5655696982525733,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 47,
+                "slope": -0.5013876040703077,
+                "rms": 0.5634150989283789,
+                "passed": true
+              },
+              "passed": false
+            },
+            {
+              "part": "bed-1",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749475,
+              "samples": 16,
+              "coverage": 0.6153846153846154,
+              "leg_occluded_x": [
+                303,
+                304,
+                305,
+                306,
+                307,
+                308,
+                309,
+                310,
+                311,
+                312
+              ],
+              "isolated_slope": 0.5058823529411739,
+              "expected_slope": 0.4999999999999986,
+              "rms": 0.5583589400039675,
+              "outline_adjusted_residual": 1.060250549316386,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 16,
+                "slope": 0.5058823529411739,
+                "rms": 0.5583589400039664,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-2",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749506,
+              "samples": 48,
+              "coverage": 0.9411764705882353,
+              "leg_occluded_x": [
+                456,
+                457,
+                458
+              ],
+              "isolated_slope": -0.496743378202345,
+              "expected_slope": -0.5000000000000007,
+              "rms": 0.5571935134012832,
+              "outline_adjusted_residual": 1.1602505493164326,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 48,
+                "slope": -0.496743378202345,
+                "rms": 0.5571935134012804,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-2",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5455069703232767,
+              "samples": 17,
+              "coverage": 0.6538461538461539,
+              "leg_occluded_x": [
+                361,
+                362,
+                363,
+                364,
+                365,
+                366,
+                367,
+                368,
+                369
+              ],
+              "isolated_slope": 0.5098039215686331,
+              "expected_slope": 0.5,
+              "rms": 0.5433884886490634,
+              "outline_adjusted_residual": 1.074956431669377,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 17,
+                "slope": 0.5098039215686331,
+                "rms": 0.5433884886490634,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-3",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749475,
+              "samples": 48,
+              "coverage": 0.9411764705882353,
+              "leg_occluded_x": [
+                514,
+                515,
+                516
+              ],
+              "isolated_slope": -0.5019539730785938,
+              "expected_slope": -0.5000000000000003,
+              "rms": 0.5583612272494661,
+              "outline_adjusted_residual": 0.7602505493163676,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 48,
+                "slope": -0.5019539730785938,
+                "rms": 0.5583612272494677,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-3",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749475,
+              "samples": 16,
+              "coverage": 0.6153846153846154,
+              "leg_occluded_x": [
+                418,
+                419,
+                420,
+                421,
+                422,
+                423,
+                424,
+                425,
+                426,
+                427
+              ],
+              "isolated_slope": 0.47058823529412386,
+              "expected_slope": 0.5000000000000007,
+              "rms": 0.5423261445466423,
+              "outline_adjusted_residual": 1.060250549316379,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 16,
+                "slope": 0.47058823529412386,
+                "rms": 0.542326144546642,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 1,
+          "components": [
+            20245
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "bed-0",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749475,
+              "samples": 16,
+              "coverage": 0.6153846153846154,
+              "leg_occluded_x": [
+                341,
+                342,
+                343,
+                344,
+                345,
+                346,
+                347,
+                348,
+                349,
+                350
+              ],
+              "isolated_slope": -0.505882352941183,
+              "expected_slope": -0.5000000000000007,
+              "rms": 0.5583589400039642,
+              "outline_adjusted_residual": 1.560250549316379,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 16,
+                "slope": -0.505882352941183,
+                "rms": 0.5583589400039602,
+                "passed": true
+              },
+              "passed": false
+            },
+            {
+              "part": "bed-0",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5544113349880051,
+              "samples": 49,
+              "coverage": 0.9607843137254902,
+              "leg_occluded_x": [
+                252,
+                253
+              ],
+              "isolated_slope": 0.5012244897959189,
+              "expected_slope": 0.5,
+              "rms": 0.554140824440071,
+              "outline_adjusted_residual": 0.5052298721002165,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 49,
+                "slope": 0.5012244897959189,
+                "rms": 0.554140824440071,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-1",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5455069703232767,
+              "samples": 17,
+              "coverage": 0.6538461538461539,
+              "leg_occluded_x": [
+                399,
+                400,
+                401,
+                402,
+                403,
+                404,
+                405,
+                406,
+                407
+              ],
+              "isolated_slope": -0.5098039215686239,
+              "expected_slope": -0.5,
+              "rms": 0.5433884886490583,
+              "outline_adjusted_residual": 1.5455446669634947,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 17,
+                "slope": -0.5098039215686239,
+                "rms": 0.5433884886490634,
+                "passed": true
+              },
+              "passed": false
+            },
+            {
+              "part": "bed-1",
+              "fit_scope": "line fit",
+              "guide_rms": 0.563354030279276,
+              "samples": 49,
+              "coverage": 0.9607843137254902,
+              "leg_occluded_x": [
+                310,
+                311
+              ],
+              "isolated_slope": 0.4987755102040809,
+              "expected_slope": 0.5000000000000007,
+              "rms": 0.5630878158687497,
+              "outline_adjusted_residual": 0.6925665843730188,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 49,
+                "slope": 0.4987755102040809,
+                "rms": 0.5630878158687552,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-2",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5416025603090542,
+              "samples": 15,
+              "coverage": 0.5769230769230769,
+              "leg_occluded_x": [
+                455,
+                456,
+                457,
+                458,
+                459,
+                460,
+                461,
+                462,
+                463,
+                464,
+                465
+              ],
+              "isolated_slope": -0.48571428571428177,
+              "expected_slope": -0.4999999999999986,
+              "rms": 0.5380741673076395,
+              "outline_adjusted_residual": 1.6102505493163828,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 15,
+                "slope": -0.48571428571428177,
+                "rms": 0.538074167307631,
+                "passed": true
+              },
+              "passed": false
+            },
+            {
+              "part": "bed-2",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749475,
+              "samples": 48,
+              "coverage": 0.9411764705882353,
+              "leg_occluded_x": [
+                367,
+                368,
+                369
+              ],
+              "isolated_slope": 0.5019539730785929,
+              "expected_slope": 0.5,
+              "rms": 0.5583612272494628,
+              "outline_adjusted_residual": 1.060250549316379,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 48,
+                "slope": 0.5019539730785929,
+                "rms": 0.5583612272494642,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-3",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749475,
+              "samples": 16,
+              "coverage": 0.5925925925925926,
+              "leg_occluded_x": [
+                513,
+                514,
+                515,
+                516,
+                517,
+                518,
+                519,
+                520,
+                521,
+                522,
+                523
+              ],
+              "isolated_slope": -0.5058823529411801,
+              "expected_slope": -0.5000000000000014,
+              "rms": 0.5583589400039701,
+              "outline_adjusted_residual": 1.5602505493164216,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 16,
+                "slope": -0.5058823529411801,
+                "rms": 0.5583589400039701,
+                "passed": true
+              },
+              "passed": false
+            },
+            {
+              "part": "bed-3",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5544113349880051,
+              "samples": 49,
+              "coverage": 0.9607843137254902,
+              "leg_occluded_x": [
+                425,
+                426
+              ],
+              "isolated_slope": 0.5012244897959168,
+              "expected_slope": 0.5,
+              "rms": 0.5541408244400715,
+              "outline_adjusted_residual": 0.5970666067940883,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 49,
+                "slope": 0.5012244897959168,
+                "rms": 0.5541408244400707,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 2,
+          "components": [
+            19753
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "bed-0",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5637294169996501,
+              "samples": 47,
+              "coverage": 0.9215686274509803,
+              "leg_occluded_x": [
+                513,
+                514,
+                515,
+                516
+              ],
+              "isolated_slope": -0.5013876040703062,
+              "expected_slope": -0.5000000000000003,
+              "rms": 0.5634150989283798,
+              "outline_adjusted_residual": 0.7549314003801973,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 47,
+                "slope": -0.5013876040703062,
+                "rms": 0.5634150989283769,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-0",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5703152773430975,
+              "samples": 17,
+              "coverage": 0.6538461538461539,
+              "leg_occluded_x": [
+                418,
+                419,
+                420,
+                421,
+                422,
+                423,
+                424,
+                425,
+                426
+              ],
+              "isolated_slope": 0.49019607843136553,
+              "expected_slope": 0.5000000000000007,
+              "rms": 0.5682892841642903,
+              "outline_adjusted_residual": 1.1043681963752026,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 17,
+                "slope": 0.49019607843136553,
+                "rms": 0.5682892841642926,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-1",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5540092155868744,
+              "samples": 47,
+              "coverage": 0.9215686274509803,
+              "leg_occluded_x": [
+                455,
+                456,
+                457,
+                458
+              ],
+              "isolated_slope": -0.4986123959296958,
+              "expected_slope": -0.5000000000000007,
+              "rms": 0.5536893795847022,
+              "outline_adjusted_residual": 1.1762079961249439,
+              "visible_fraction": 0.9148936170212766,
+              "combined": {
+                "samples": 43,
+                "slope": -0.4969024477546183,
+                "rms": 0.5483715277646478,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-1",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5455069703232767,
+              "samples": 17,
+              "coverage": 0.6538461538461539,
+              "leg_occluded_x": [
+                361,
+                362,
+                363,
+                364,
+                365,
+                366,
+                367,
+                368,
+                369
+              ],
+              "isolated_slope": 0.5098039215686331,
+              "expected_slope": 0.5,
+              "rms": 0.5433884886490634,
+              "outline_adjusted_residual": 1.074956431669377,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 17,
+                "slope": 0.5098039215686331,
+                "rms": 0.5433884886490634,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-2",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5637294169996497,
+              "samples": 47,
+              "coverage": 0.9215686274509803,
+              "leg_occluded_x": [
+                398,
+                399,
+                400,
+                401
+              ],
+              "isolated_slope": -0.5013876040703077,
+              "expected_slope": -0.5,
+              "rms": 0.5634150989283806,
+              "outline_adjusted_residual": 1.565569698252549,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 47,
+                "slope": -0.5013876040703077,
+                "rms": 0.5634150989283789,
+                "passed": true
+              },
+              "passed": false
+            },
+            {
+              "part": "bed-2",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5703152773430975,
+              "samples": 17,
+              "coverage": 0.6538461538461539,
+              "leg_occluded_x": [
+                303,
+                304,
+                305,
+                306,
+                307,
+                308,
+                309,
+                310,
+                311
+              ],
+              "isolated_slope": 0.49019607843137286,
+              "expected_slope": 0.4999999999999986,
+              "rms": 0.5682892841642937,
+              "outline_adjusted_residual": 1.0161329022575654,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 17,
+                "slope": 0.49019607843137286,
+                "rms": 0.5682892841642874,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-3",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5637294169996497,
+              "samples": 47,
+              "coverage": 0.9215686274509803,
+              "leg_occluded_x": [
+                340,
+                341,
+                342,
+                343
+              ],
+              "isolated_slope": -0.5013876040703072,
+              "expected_slope": -0.5,
+              "rms": 0.5634150989283824,
+              "outline_adjusted_residual": 0.9655696982525833,
+              "visible_fraction": 0.8723404255319149,
+              "combined": {
+                "samples": 41,
+                "slope": -0.49837509672043423,
+                "rms": 0.5583782941154595,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-3",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5562495665139107,
+              "samples": 18,
+              "coverage": 0.6666666666666666,
+              "leg_occluded_x": [
+                245,
+                246,
+                247,
+                248,
+                249,
+                250,
+                251,
+                252,
+                253
+              ],
+              "isolated_slope": 0.4953560371517038,
+              "expected_slope": 0.5000000000000007,
+              "rms": 0.5557275275626276,
+              "outline_adjusted_residual": 1.1158061048719914,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 18,
+                "slope": 0.4953560371517038,
+                "rms": 0.5557275275626276,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        },
+        {
+          "d": 3,
+          "components": [
+            19753
+          ],
+          "clipped": false,
+          "lines": [
+            {
+              "part": "bed-0",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5455069703232767,
+              "samples": 17,
+              "coverage": 0.6296296296296297,
+              "leg_occluded_x": [
+                514,
+                515,
+                516,
+                517,
+                518,
+                519,
+                520,
+                521,
+                522,
+                523
+              ],
+              "isolated_slope": -0.5098039215686306,
+              "expected_slope": -0.5000000000000014,
+              "rms": 0.5433884886490657,
+              "outline_adjusted_residual": 1.5749564316693603,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 17,
+                "slope": -0.5098039215686306,
+                "rms": 0.5433884886490653,
+                "passed": true
+              },
+              "passed": false
+            },
+            {
+              "part": "bed-0",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749475,
+              "samples": 48,
+              "coverage": 0.9411764705882353,
+              "leg_occluded_x": [
+                425,
+                426,
+                427
+              ],
+              "isolated_slope": 0.5019539730785928,
+              "expected_slope": 0.5,
+              "rms": 0.5583612272494645,
+              "outline_adjusted_residual": 0.6051252746582065,
+              "visible_fraction": 0.875,
+              "combined": {
+                "samples": 42,
+                "slope": 0.4994041200839899,
+                "rms": 0.5543676345117677,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-1",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749379,
+              "samples": 16,
+              "coverage": 0.6153846153846154,
+              "leg_occluded_x": [
+                456,
+                457,
+                458,
+                459,
+                460,
+                461,
+                462,
+                463,
+                464,
+                465
+              ],
+              "isolated_slope": -0.47058823529412686,
+              "expected_slope": -0.4999999999999986,
+              "rms": 0.5423261445466493,
+              "outline_adjusted_residual": 1.560250549316386,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 16,
+                "slope": -0.47058823529412686,
+                "rms": 0.5423261445466396,
+                "passed": true
+              },
+              "passed": false
+            },
+            {
+              "part": "bed-1",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749477,
+              "samples": 48,
+              "coverage": 0.9411764705882353,
+              "leg_occluded_x": [
+                367,
+                368,
+                369
+              ],
+              "isolated_slope": 0.5019539730785929,
+              "expected_slope": 0.4999999999999993,
+              "rms": 0.5583612272494628,
+              "outline_adjusted_residual": 1.0602505493164038,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 48,
+                "slope": 0.5019539730785929,
+                "rms": 0.5583612272494642,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-2",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749475,
+              "samples": 16,
+              "coverage": 0.6153846153846154,
+              "leg_occluded_x": [
+                398,
+                399,
+                400,
+                401,
+                402,
+                403,
+                404,
+                405,
+                406,
+                407
+              ],
+              "isolated_slope": -0.5176470588235292,
+              "expected_slope": -0.5,
+              "rms": 0.5530663187549719,
+              "outline_adjusted_residual": 1.5602505493164358,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 16,
+                "slope": -0.5176470588235292,
+                "rms": 0.5530663187549631,
+                "passed": true
+              },
+              "passed": false
+            },
+            {
+              "part": "bed-2",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749475,
+              "samples": 48,
+              "coverage": 0.9411764705882353,
+              "leg_occluded_x": [
+                310,
+                311,
+                312
+              ],
+              "isolated_slope": 0.5006513243595313,
+              "expected_slope": 0.5000000000000007,
+              "rms": 0.5589441693542009,
+              "outline_adjusted_residual": 0.7051252746582151,
+              "visible_fraction": 0.9166666666666666,
+              "combined": {
+                "samples": 44,
+                "slope": 0.4992707484635417,
+                "rms": 0.5570679018206418,
+                "passed": true
+              },
+              "passed": true
+            },
+            {
+              "part": "bed-3",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749475,
+              "samples": 16,
+              "coverage": 0.6153846153846154,
+              "leg_occluded_x": [
+                341,
+                342,
+                343,
+                344,
+                345,
+                346,
+                347,
+                348,
+                349,
+                350
+              ],
+              "isolated_slope": -0.505882352941183,
+              "expected_slope": -0.5000000000000007,
+              "rms": 0.5583589400039642,
+              "outline_adjusted_residual": 1.560250549316379,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 16,
+                "slope": -0.505882352941183,
+                "rms": 0.5583589400039602,
+                "passed": true
+              },
+              "passed": false
+            },
+            {
+              "part": "bed-3",
+              "fit_scope": "line fit",
+              "guide_rms": 0.5590169943749475,
+              "samples": 48,
+              "coverage": 0.9411764705882353,
+              "leg_occluded_x": [
+                252,
+                253,
+                254
+              ],
+              "isolated_slope": 0.5006513243595304,
+              "expected_slope": 0.5,
+              "rms": 0.5589441693541987,
+              "outline_adjusted_residual": 0.5051252746582122,
+              "visible_fraction": 1.0,
+              "combined": {
+                "samples": 48,
+                "slope": 0.5006513243595304,
+                "rms": 0.5589441693541986,
+                "passed": true
+              },
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "isolated_checks": [
+        {
+          "name": "bed-0",
+          "d": 0,
+          "connected": true,
+          "pixels": 5073
+        },
+        {
+          "name": "bed-1",
+          "d": 0,
+          "connected": true,
+          "pixels": 5048
+        },
+        {
+          "name": "bed-2",
+          "d": 0,
+          "connected": true,
+          "pixels": 5074
+        },
+        {
+          "name": "bed-3",
+          "d": 0,
+          "connected": true,
+          "pixels": 5101
+        },
+        {
+          "name": "bed-0",
+          "d": 1,
+          "connected": true,
+          "pixels": 5101
+        },
+        {
+          "name": "bed-1",
+          "d": 1,
+          "connected": true,
+          "pixels": 5074
+        },
+        {
+          "name": "bed-2",
+          "d": 1,
+          "connected": true,
+          "pixels": 5048
+        },
+        {
+          "name": "bed-3",
+          "d": 1,
+          "connected": true,
+          "pixels": 5073
+        },
+        {
+          "name": "bed-0",
+          "d": 2,
+          "connected": true,
+          "pixels": 4977
+        },
+        {
+          "name": "bed-1",
+          "d": 2,
+          "connected": true,
+          "pixels": 4942
+        },
+        {
+          "name": "bed-2",
+          "d": 2,
+          "connected": true,
+          "pixels": 4931
+        },
+        {
+          "name": "bed-3",
+          "d": 2,
+          "connected": true,
+          "pixels": 4952
+        },
+        {
+          "name": "bed-0",
+          "d": 3,
+          "connected": true,
+          "pixels": 4952
+        },
+        {
+          "name": "bed-1",
+          "d": 3,
+          "connected": true,
+          "pixels": 4931
+        },
+        {
+          "name": "bed-2",
+          "d": 3,
+          "connected": true,
+          "pixels": 4942
+        },
+        {
+          "name": "bed-3",
+          "d": 3,
+          "connected": true,
+          "pixels": 4977
+        }
+      ],
+      "assembly_gaps": [
+        {
+          "a": "bed-0",
+          "b": "bed-1",
+          "axis_gaps": [
+            0.26,
+            -1.2400000000000002,
+            -6.5520000000000005
+          ]
+        },
+        {
+          "a": "bed-0",
+          "b": "bed-2",
+          "axis_gaps": [
+            1.1600000000000004,
+            -1.2400000000000002,
+            -6.5520000000000005
+          ]
+        },
+        {
+          "a": "bed-0",
+          "b": "bed-3",
+          "axis_gaps": [
+            2.0600000000000005,
+            -1.2400000000000002,
+            -6.5520000000000005
+          ]
+        },
+        {
+          "a": "bed-1",
+          "b": "bed-2",
+          "axis_gaps": [
+            0.26000000000000023,
+            -1.2400000000000002,
+            -6.5520000000000005
+          ]
+        },
+        {
+          "a": "bed-1",
+          "b": "bed-3",
+          "axis_gaps": [
+            1.1600000000000001,
+            -1.2400000000000002,
+            -6.5520000000000005
+          ]
+        },
+        {
+          "a": "bed-2",
+          "b": "bed-3",
+          "axis_gaps": [
+            0.26000000000000023,
+            -1.2400000000000002,
+            -6.5520000000000005
+          ]
+        }
+      ],
+      "main_at_verification": [
+        {
+          "d": 0,
+          "file": "fac_authored_sunbed_row_0.webp",
+          "sha256": "eb88d6afef3f73faa5fa6f8b134fd29c8150aa6adbb7b004a31f03d88fcd306e"
+        },
+        {
+          "d": 1,
+          "file": "fac_authored_sunbed_row_1.fix-4fb217a564a6.webp",
+          "sha256": "4fb217a564a63441b4ec58df00dd45f301234c0c54db310d57b2c0b01b83af00"
+        },
+        {
+          "d": 2,
+          "file": "fac_authored_sunbed_row_2.webp",
+          "sha256": "8163ef6b2e3c8018cc3aca056d061b4ffd0bb1b601ee508ccdb93404c6d4dbfc"
+        },
+        {
+          "d": 3,
+          "file": "fac_authored_sunbed_row_3.webp",
+          "sha256": "e74b2ca066beb4c917d765fd6e79148081b541615be61b6efdc2c1e9df2dc96f"
+        }
+      ],
+      "limits": [
+        "Source is low flat loungers, without invented tall backrests.",
+        "Mattresses and pillows have rounded closed geometry, with a fixed head end and alternating colors.",
+        "Saved floor or exposed top boundary samples only; not every interior line. AABB joins are not exact mesh intersection proofs."
+      ]
+    }
+  ]
+}
